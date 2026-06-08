@@ -15,30 +15,58 @@ By the end, you can:
 - make a simple negative sentence with **не**;
 - avoid common preference traps such as **Я люблю малюю** and **Я подобається це**.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 At a language exchange, Anna and Viktor are having tea. The sentences stay
 small, but they already sound like a real first conversation about interests.
 
-<DialogueBox uk="Анна: Добрий день, Вікторе!" en="Anna: Good afternoon, Viktor!" />
-<DialogueBox uk="Віктор: Добрий день, Анно!" en="Viktor: Good afternoon, Anna!" />
-<DialogueBox uk="Анна: Що ти любиш робити?" en="Anna: What do you like to do?" />
-<DialogueBox uk="Віктор: Я люблю читати." en="Viktor: I like to read." />
-<DialogueBox uk="Анна: А ти любиш слухати музику?" en="Anna: And do you like to listen to music?" />
-<DialogueBox uk="Віктор: Так, я люблю слухати музику." en="Viktor: Yes, I like to listen to music." />
-<DialogueBox uk="Віктор: А ти?" en="Viktor: And you?" />
-<DialogueBox uk="Анна: Я люблю малювати і гуляти." en="Anna: I like to draw and walk." />
+```text
+Анна: Добрий день, Вікторе!
+Віктор: Добрий день, Анно!
+Анна: Що ти любиш робити?
+Віктор: Я люблю читати.
+Анна: А ти любиш слухати музику?
+Віктор: Так, я люблю слухати музику.
+Віктор: А ти?
+Анна: Я люблю малювати і гуляти.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Анна: Добрий день, Вікторе!** | Anna: Good afternoon, Viktor! |
+| **Віктор: Добрий день, Анно!** | Viktor: Good afternoon, Anna! |
+| **Анна: Що ти любиш робити?** | Anna: What do you like to do? |
+| **Віктор: Я люблю читати.** | Viktor: I like to read. |
+| **Анна: А ти любиш слухати музику?** | Anna: And do you like to listen to music? |
+| **Віктор: Так, я люблю слухати музику.** | Viktor: Yes, I like to listen to music. |
+| **Віктор: А ти?** | Viktor: And you? |
+| **Анна: Я люблю малювати і гуляти.** | Anna: I like to draw and walk. |
 
 Now the same people talk about things, not actions.
 
-<DialogueBox uk="Анна: Тобі подобається ця книга?" en="Anna: Do you like this book?" />
-<DialogueBox uk="Віктор: Так, мені подобається ця книга." en="Viktor: Yes, I like this book." />
-<DialogueBox uk="Анна: А цей фільм?" en="Anna: And this film?" />
-<DialogueBox uk="Віктор: Ні, мені не подобається цей фільм." en="Viktor: No, I do not like this film." />
-<DialogueBox uk="Віктор: Мені подобається музика." en="Viktor: I like music." />
-<DialogueBox uk="Анна: Мені теж." en="Anna: Me too." />
+```text
+Анна: Тобі подобається ця книга?
+Віктор: Так, мені подобається ця книга.
+Анна: А цей фільм?
+Віктор: Ні, мені не подобається цей фільм.
+Віктор: Мені подобається музика.
+Анна: Мені теж.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Анна: Тобі подобається ця книга?** | Anna: Do you like this book? |
+| **Віктор: Так, мені подобається ця книга.** | Viktor: Yes, I like this book. |
+| **Анна: А цей фільм?** | Anna: And this film? |
+| **Віктор: Ні, мені не подобається цей фільм.** | Viktor: No, I do not like this film. |
+| **Віктор: Мені подобається музика.** | Viktor: I like music. |
+| **Анна: Мені теж.** | Anna: Me too. |
 
 The question **Що ти любиш робити?** is your main tool. The short answer
 **А ти?** keeps the conversation moving without a new grammar rule. You can
@@ -98,12 +126,25 @@ for things.
 Use **Мені подобається + thing** when a thing, place, or activity is pleasing
 to you. At A1, treat **мені подобається** as one ready chunk.
 
-<DialogueBox uk="Мені подобається музика." en="I like music." />
-<DialogueBox uk="Мені подобається ця книга." en="I like this book." />
-<DialogueBox uk="Мені подобається Київ." en="I like Kyiv." />
-<DialogueBox uk="Тобі подобається цей фільм?" en="Do you like this film?" />
-<DialogueBox uk="Так, мені подобається." en="Yes, I like it." />
-<DialogueBox uk="Ні, мені не подобається." en="No, I do not like it." />
+```text
+Мені подобається музика.
+Мені подобається ця книга.
+Мені подобається Київ.
+Тобі подобається цей фільм?
+Так, мені подобається.
+Ні, мені не подобається.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Мені подобається музика.** | I like music. |
+| **Мені подобається ця книга.** | I like this book. |
+| **Мені подобається Київ.** | I like Kyiv. |
+| **Тобі подобається цей фільм?** | Do you like this film? |
+| **Так, мені подобається.** | Yes, I like it. |
+| **Ні, мені не подобається.** | No, I do not like it. |
 
 The feeling is not built like English. Do not say **Я подобається це**. The
 safe sentence is **Мені подобається це**. You will study why **мені** works
@@ -146,9 +187,19 @@ or **Мені подобається...** pattern.
 They are useful, but most of them need later case grammar. For today, your
 productive tools are smaller:
 
-<DialogueBox uk="Я люблю читати." en="I like to read." />
-<DialogueBox uk="Мені подобається музика." en="I like music." />
-<DialogueBox uk="Моє захоплення - музика." en="My interest is music." />
+```text
+Я люблю читати.
+Мені подобається музика.
+Моє захоплення - музика.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я люблю читати.** | I like to read. |
+| **Мені подобається музика.** | I like music. |
+| **Моє захоплення - музика.** | My interest is music. |
 
 One more clean Ukrainian chunk matters: **брати участь**. If you mean "take
 part," use **Я беру участь**. Do not build the habit **Я приймаю участь**.

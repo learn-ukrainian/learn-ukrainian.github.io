@@ -15,27 +15,48 @@ By the end, you can:
 - avoid adding **є** before a present-tense verb;
 - recognize future-looking forms such as **читатиму** as later material.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 At a study table, Marta and Oleh talk about ordinary things: reading, work,
 music, and dinner. The Ukrainian lines are short enough to reuse.
 
-<DialogueBox uk="Марта: Привіт, Олеже!" en="Marta: Hi, Oleh!" />
-<DialogueBox uk="Олег: Привіт, Марто!" en="Oleh: Hi, Marta!" />
-<DialogueBox uk="Марта: Що ти читаєш?" en="Marta: What are you reading?" />
-<DialogueBox uk="Олег: Я читаю текст." en="Oleh: I am reading a text." />
-<DialogueBox uk="Марта: Ти знаєш це слово?" en="Marta: Do you know this word?" />
-<DialogueBox uk="Олег: Так, я знаю це слово." en="Oleh: Yes, I know this word." />
-<DialogueBox uk="Марта: Анна слухає музику?" en="Marta: Is Anna listening to music?" />
-<DialogueBox uk="Олег: Так, вона слухає музику." en="Oleh: Yes, she is listening to music." />
-<DialogueBox uk="Марта: Ми готуємо вечерю?" en="Marta: Are we cooking dinner?" />
-<DialogueBox uk="Олег: Так, ми готуємо вечерю." en="Oleh: Yes, we are cooking dinner." />
-<DialogueBox uk="Марта: Ви працюєте сьогодні?" en="Marta: Are you working today?" />
-<DialogueBox uk="Олег: Так, ми працюємо сьогодні." en="Oleh: Yes, we are working today." />
-<DialogueBox uk="Марта: Вони гуляють?" en="Marta: Are they walking?" />
-<DialogueBox uk="Олег: Так, вони гуляють." en="Oleh: Yes, they are walking." />
+```text
+Марта: Привіт, Олеже!
+Олег: Привіт, Марто!
+Марта: Що ти читаєш?
+Олег: Я читаю текст.
+Марта: Ти знаєш це слово?
+Олег: Так, я знаю це слово.
+Марта: Анна слухає музику?
+Олег: Так, вона слухає музику.
+Марта: Ми готуємо вечерю?
+Олег: Так, ми готуємо вечерю.
+Марта: Ви працюєте сьогодні?
+Олег: Так, ми працюємо сьогодні.
+Марта: Вони гуляють?
+Олег: Так, вони гуляють.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Марта: Привіт, Олеже!** | Marta: Hi, Oleh! |
+| **Олег: Привіт, Марто!** | Oleh: Hi, Marta! |
+| **Марта: Що ти читаєш?** | Marta: What are you reading? |
+| **Олег: Я читаю текст.** | Oleh: I am reading a text. |
+| **Марта: Ти знаєш це слово?** | Marta: Do you know this word? |
+| **Олег: Так, я знаю це слово.** | Oleh: Yes, I know this word. |
+| **Марта: Анна слухає музику?** | Marta: Is Anna listening to music? |
+| **Олег: Так, вона слухає музику.** | Oleh: Yes, she is listening to music. |
+| **Марта: Ми готуємо вечерю?** | Marta: Are we cooking dinner? |
+| **Олег: Так, ми готуємо вечерю.** | Oleh: Yes, we are cooking dinner. |
+| **Марта: Ви працюєте сьогодні?** | Marta: Are you working today? |
+| **Олег: Так, ми працюємо сьогодні.** | Oleh: Yes, we are working today. |
+| **Марта: Вони гуляють?** | Marta: Are they walking? |
+| **Олег: Так, вони гуляють.** | Oleh: Yes, they are walking. |
 
 :::tip
 Ukrainian present-tense verbs already show the person. **Читаю** clearly
@@ -74,13 +95,23 @@ Two more Group One verbs are immediately useful:
 
 The verb already carries the person, so keep the sentence clean:
 
-<DialogueBox uk="Я читаю книжку." en="I am reading a book." />
-<DialogueBox uk="Ти слухаєш музику?" en="Are you listening to music?" />
-<DialogueBox uk="Вона гуляє." en="She is walking." />
+```text
+Я читаю книжку.
+Ти слухаєш музику?
+Вона гуляє.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я читаю книжку.** | I am reading a book. |
+| **Ти слухаєш музику?** | Are you listening to music? |
+| **Вона гуляє.** | She is walking. |
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
-### Знати and розуміти
+### Mini-pattern: знати and розуміти
 
 **Знати** works nicely with the Group One endings:
 
@@ -97,9 +128,19 @@ You may also meet the high-frequency **Тип «розуміти»**: **розу
 розумієш, розуміє**. Keep it as a useful mini-pattern, not a new full lesson.
 Related words you can recognize include **розуміти**, **вміти**, and **чути**.
 
-<DialogueBox uk="Я розумію." en="I understand." />
-<DialogueBox uk="Ти розумієш?" en="Do you understand?" />
-<DialogueBox uk="Він розуміє мене." en="He understands me." />
+```text
+Я розумію.
+Ти розумієш?
+Він розуміє мене.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я розумію.** | I understand. |
+| **Ти розумієш?** | Do you understand? |
+| **Він розуміє мене.** | He understands me. |
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
@@ -132,7 +173,7 @@ If you hesitate, ask two questions:
 1. Who is doing it: **я, ти, він/вона, ми, ви, вони**?
 2. Which ending fits: **-ю, -єш, -є, -ємо, -єте, -ють**?
 
-### Працювати and готувати
+### Use працювати and готувати
 
 Some Group One verbs end in **-увати** or **-ювати**. This is **Тип
 «працювати»**. In the present tense, do not keep the full **-ува-** sound.
@@ -150,10 +191,21 @@ the hyphen; it only shows where the form is built.
 
 Use whole forms in sentences:
 
-<DialogueBox uk="Я працюю вдома." en="I work at home." />
-<DialogueBox uk="Ти готуєш вечерю?" en="Are you cooking dinner?" />
-<DialogueBox uk="Вони працюють сьогодні." en="They are working today." />
-<DialogueBox uk="Ми готуємо каву." en="We are making coffee." />
+```text
+Я працюю вдома.
+Ти готуєш вечерю?
+Вони працюють сьогодні.
+Ми готуємо каву.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я працюю вдома.** | I work at home. |
+| **Ти готуєш вечерю?** | Are you cooking dinner? |
+| **Вони працюють сьогодні.** | They are working today. |
+| **Ми готуємо каву.** | We are making coffee. |
 
 For everyday speech, keep the sentence frame predictable. Put the person
 first, then the verb, then one small object or place. This gives you useful

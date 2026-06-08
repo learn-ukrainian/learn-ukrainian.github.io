@@ -15,25 +15,44 @@ By the end, you can:
 - keep tricky first-person forms such as **роблю** and **ходжу** as ready chunks;
 - recognize exceptions such as **спати**, **дати**, and **їсти** without making them active grammar yet.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 Marta and Oleh are still studying. This time they talk about speaking,
 seeing, doing, asking, and walking.
 
-<DialogueBox uk="Марта: Олеже, ти говориш українською?" en="Marta: Oleh, do you speak Ukrainian?" />
-<DialogueBox uk="Олег: Так, я говорю українською." en="Oleh: Yes, I speak Ukrainian." />
-<DialogueBox uk="Марта: Анна говорить англійською?" en="Marta: Does Anna speak English?" />
-<DialogueBox uk="Олег: Так, вона говорить англійською." en="Oleh: Yes, she speaks English." />
-<DialogueBox uk="Марта: Що ти робиш?" en="Marta: What are you doing?" />
-<DialogueBox uk="Олег: Я роблю вправу." en="Oleh: I am doing an exercise." />
-<DialogueBox uk="Марта: Ти бачиш це слово?" en="Marta: Do you see this word?" />
-<DialogueBox uk="Олег: Так, я бачу це слово." en="Oleh: Yes, I see this word." />
-<DialogueBox uk="Марта: Ми вчимо нові форми?" en="Marta: Are we learning new forms?" />
-<DialogueBox uk="Олег: Так, ми вчимо нові форми." en="Oleh: Yes, we are learning new forms." />
-<DialogueBox uk="Марта: Вони ходять до школи?" en="Marta: Do they go to school?" />
-<DialogueBox uk="Олег: Так, вони ходять до школи." en="Oleh: Yes, they go to school." />
+```text
+Марта: Олеже, ти говориш українською?
+Олег: Так, я говорю українською.
+Марта: Анна говорить англійською?
+Олег: Так, вона говорить англійською.
+Марта: Що ти робиш?
+Олег: Я роблю вправу.
+Марта: Ти бачиш це слово?
+Олег: Так, я бачу це слово.
+Марта: Ми вчимо нові форми?
+Олег: Так, ми вчимо нові форми.
+Марта: Вони ходять до школи?
+Олег: Так, вони ходять до школи.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Марта: Олеже, ти говориш українською?** | Marta: Oleh, do you speak Ukrainian? |
+| **Олег: Так, я говорю українською.** | Oleh: Yes, I speak Ukrainian. |
+| **Марта: Анна говорить англійською?** | Marta: Does Anna speak English? |
+| **Олег: Так, вона говорить англійською.** | Oleh: Yes, she speaks English. |
+| **Марта: Що ти робиш?** | Marta: What are you doing? |
+| **Олег: Я роблю вправу.** | Oleh: I am doing an exercise. |
+| **Марта: Ти бачиш це слово?** | Marta: Do you see this word? |
+| **Олег: Так, я бачу це слово.** | Oleh: Yes, I see this word. |
+| **Марта: Ми вчимо нові форми?** | Marta: Are we learning new forms? |
+| **Олег: Так, ми вчимо нові форми.** | Oleh: Yes, we are learning new forms. |
+| **Марта: Вони ходять до школи?** | Marta: Do they go to school? |
+| **Олег: Так, вони ходять до школи.** | Oleh: Yes, they go to school. |
 
 :::tip
 Use the **вони** form as your quick check: **читають** points to Group One,
@@ -90,7 +109,7 @@ That source note is for orientation only. Your active verbs are **говорит
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
-### Говорити, робити, бачити
+### Use говорити, робити, бачити
 
 Use these three verbs first.
 
@@ -104,11 +123,23 @@ The **я** form can change inside the word. Do not calculate it today. Learn a
 `готовий чанк`: **я роблю**, **я ходжу**, **я прошу**, **я сиджу**, **я бачу**.
 Then use the simple **ти** and **він/вона** forms:
 
-<DialogueBox uk="Я роблю вправу." en="I am doing an exercise." />
-<DialogueBox uk="Ти робиш вправу?" en="Are you doing an exercise?" />
-<DialogueBox uk="Він робить вправу." en="He is doing an exercise." />
-<DialogueBox uk="Я бачу слово." en="I see a word." />
-<DialogueBox uk="Ти бачиш слово?" en="Do you see a word?" />
+```text
+Я роблю вправу.
+Ти робиш вправу?
+Він робить вправу.
+Я бачу слово.
+Ти бачиш слово?
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я роблю вправу.** | I am doing an exercise. |
+| **Ти робиш вправу?** | Are you doing an exercise? |
+| **Він робить вправу.** | He is doing an exercise. |
+| **Я бачу слово.** | I see a word. |
+| **Ти бачиш слово?** | Do you see a word? |
 
 When you write your own line, choose one verb and one useful object. Keep the
 object familiar:
@@ -143,10 +174,21 @@ Use the **вони** ending when you need a fast comparison.
 **Стояти** and **сидіти** are useful but slightly tricky, so keep them in
 short present-tense chunks:
 
-<DialogueBox uk="Він стоїть." en="He is standing." />
-<DialogueBox uk="Вона сидить." en="She is sitting." />
-<DialogueBox uk="Вони стоять." en="They are standing." />
-<DialogueBox uk="Вони сидять." en="They are sitting." />
+```text
+Він стоїть.
+Вона сидить.
+Вони стоять.
+Вони сидять.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Він стоїть.** | He is standing. |
+| **Вона сидить.** | She is sitting. |
+| **Вони стоять.** | They are standing. |
+| **Вони сидять.** | They are sitting. |
 
 ### More useful Group Two chunks
 
@@ -162,10 +204,21 @@ Use these in small sentences:
 You already know **любити** from preferences. Now you can recognize why
 **ти любиш** and **вони люблять** fit the Group Two pattern.
 
-<DialogueBox uk="Я ходжу до школи." en="I go to school." />
-<DialogueBox uk="Ти просиш каву?" en="Are you asking for coffee?" />
-<DialogueBox uk="Ми вчимо українську." en="We are learning Ukrainian." />
-<DialogueBox uk="Вони люблять музику." en="They like music." />
+```text
+Я ходжу до школи.
+Ти просиш каву?
+Ми вчимо українську.
+Вони люблять музику.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я ходжу до школи.** | I go to school. |
+| **Ти просиш каву?** | Are you asking for coffee? |
+| **Ми вчимо українську.** | We are learning Ukrainian. |
+| **Вони люблять музику.** | They like music. |
 
 ### Recognition-only exceptions
 

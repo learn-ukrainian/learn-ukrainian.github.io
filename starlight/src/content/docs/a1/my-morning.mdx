@@ -4,10 +4,8 @@ description: "Прокидаюся, вмиваюся — зворотні діє
 sidebar:
   order: 20
   label: "20. Мій ранок"
-pipeline: linear-phase-4
-build_status: validated
 prev: questions
-next: false
+next: checkpoint-actions
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -82,25 +80,42 @@ informal writing: **прокидаюся / прокидаюсь**. For your own 
 full form **-ся** first. Recognize **-сь**, but keep your active pattern
 simple.
 
+## Діалоги
+
 ### Hear the reflexive ending
 
 <TrueFalse client:only='react' items={JSON.parse(`[{"statement": "In прокидаєшся, the written -шся is pronounced like [с':а].", "isTrue": true, "explanation": "Say [прокидайес':а], not each written letter separately."}, {"statement": "In одягається, the written -ться is pronounced like [ц':а].", "isTrue": true, "explanation": "The final sounds merge smoothly."}, {"statement": "Прокидаєшся should be pronounced [прокидайешся] letter by letter.", "isTrue": false, "explanation": "Do not keep a separate [ш] sound here."}, {"statement": "The spelling -ся can sound like [с':а].", "isTrue": true, "explanation": "This is the soft final sound to recognize."}]`)} />
 
-## Діалоги
-
 Read the first dialogue as a morning check-in between roommates. The Ukrainian
 chunks are short and repeat the same safe pattern.
 
-<DialogueBox uk="Ліна: Коли ти прокидаєшся?" en="Lina: When do you wake up?" />
-<DialogueBox uk="Настя: Я прокидаюся о сьомій." en="Nastia: I wake up at seven." />
-<DialogueBox uk="Ліна: Що ти робиш потім?" en="Lina: What do you do then?" />
-<DialogueBox uk="Настя: Вмиваюся, одягаюся і снідаю." en="Nastia: I wash up, get dressed, and have breakfast." />
-<DialogueBox uk="Ліна: Ти поспішаєш?" en="Lina: Are you hurrying?" />
-<DialogueBox uk="Настя: Так, трохи. Потім я йду на роботу." en="Nastia: Yes, a little. Then I go to work." />
-<DialogueBox uk="Ліна: У ванній є рушник?" en="Lina: Is there a towel in the bathroom?" />
-<DialogueBox uk="Настя: Так, є рушник, мило і зубна паста." en="Nastia: Yes, there is a towel, soap, and toothpaste." />
-<DialogueBox uk="Ліна: Ти робиш руханку?" en="Lina: Do you do a short exercise routine?" />
-<DialogueBox uk="Настя: Так, але швидко." en="Nastia: Yes, but quickly." />
+```text
+Ліна: Коли ти прокидаєшся?
+Настя: Я прокидаюся о сьомій.
+Ліна: Що ти робиш потім?
+Настя: Вмиваюся, одягаюся і снідаю.
+Ліна: Ти поспішаєш?
+Настя: Так, трохи. Потім я йду на роботу.
+Ліна: У ванній є рушник?
+Настя: Так, є рушник, мило і зубна паста.
+Ліна: Ти робиш руханку?
+Настя: Так, але швидко.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Ліна: Коли ти прокидаєшся?** | Lina: When do you wake up? |
+| **Настя: Я прокидаюся о сьомій.** | Nastia: I wake up at seven. |
+| **Ліна: Що ти робиш потім?** | Lina: What do you do then? |
+| **Настя: Вмиваюся, одягаюся і снідаю.** | Nastia: I wash up, get dressed, and have breakfast. |
+| **Ліна: Ти поспішаєш?** | Lina: Are you hurrying? |
+| **Настя: Так, трохи. Потім я йду на роботу.** | Nastia: Yes, a little. Then I go to work. |
+| **Ліна: У ванній є рушник?** | Lina: Is there a towel in the bathroom? |
+| **Настя: Так, є рушник, мило і зубна паста.** | Nastia: Yes, there is a towel, soap, and toothpaste. |
+| **Ліна: Ти робиш руханку?** | Lina: Do you do a short exercise routine? |
+| **Настя: Так, але швидко.** | Nastia: Yes, but quickly. |
 
 Notice the difference between a reflexive morning action and a regular action.
 **Вмиваюся** and **одягаюся** end in **-ся**. **Снідаю** does not. You do not
@@ -114,10 +129,21 @@ sentences are still real Ukrainian when the order is clear.
 
 The second dialogue compares a weekday and a free morning.
 
-<DialogueBox uk="Настя: У суботу я не поспішаю." en="Nastia: On Saturday I do not hurry." />
-<DialogueBox uk="Настя: Прокидаюся пізно і снідаю вдома." en="Nastia: I wake up late and have breakfast at home." />
-<DialogueBox uk="Ліна: А я вранці навчаюся." en="Lina: And I study in the morning." />
-<DialogueBox uk="Ліна: Потім збираюся і гуляю." en="Lina: Then I get ready and walk." />
+```text
+Настя: У суботу я не поспішаю.
+Настя: Прокидаюся пізно і снідаю вдома.
+Ліна: А я вранці навчаюся.
+Ліна: Потім збираюся і гуляю.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Настя: У суботу я не поспішаю.** | Nastia: On Saturday I do not hurry. |
+| **Настя: Прокидаюся пізно і снідаю вдома.** | Nastia: I wake up late and have breakfast at home. |
+| **Ліна: А я вранці навчаюся.** | Lina: And I study in the morning. |
+| **Ліна: Потім збираюся і гуляю.** | Lina: Then I get ready and walk. |
 
 **Навчатися** is also a **-ся** verb: **я навчаюся**, **ти навчаєшся**. Some
 verbs on **-уватися / -юватися** change the inside of the word in the present
@@ -206,14 +232,6 @@ the morning story useful without forcing you to invent new grammar. A good A1
 answer can be direct: **Спочатку я прокидаюся о восьмій. Потім вмиваюся. Після
 цього снідаю. Нарешті йду в університет.**
 
-### Finish the roommate dialogue
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Коли ти ___?", "answer": "прокидаєшся", "options": ["прокидаєшся", "прокидаюся", "прокидається"]}, {"sentence": "Я ___ о сьомій.", "answer": "прокидаюся", "options": ["прокидаюся", "прокидаєшся", "прокидається"]}, {"sentence": "Що ти робиш ___?", "answer": "потім", "options": ["потім", "сніданок", "рушник"]}, {"sentence": "Я вмиваюся і ___.", "answer": "одягаюся", "options": ["одягаюся", "одягаєшся", "одягається"]}, {"sentence": "Після цього я ___.", "answer": "снідаю", "options": ["снідаю", "снідаєшся", "сніданок"]}]`)} />
-
-### Active pattern or recognition chunk
-
-<GroupSort client:only='react' groups={JSON.parse(`{"Build with Group One + -ся": ["прокидаюся", "прокидаєшся", "одягається", "збираємося", "вмиваються"], "Recognize as a ready chunk": ["дивлюся", "вчуся", "користуюся"], "No -ся today": ["снідаю", "п'ю воду", "йду на роботу"]}`)} />
-
 ## 📋 Підсумок
 
 The active pattern is regular verb form plus **-ся**: **я прокидаюся**,
@@ -253,16 +271,6 @@ Do not explain these endings through any other language. Ukrainian has its own
 clear pattern: choose the Ukrainian verb form, add **-ся / -сь**, and pronounce
 the final cluster smoothly.
 
-### Build my morning line
-
-<Translate client:only='react' questions={JSON.parse(`[{"source": "First I wake up.", "options": [{"text": "Спочатку я прокидаюся.", "correct": true}, {"text": "Спочатку я прокидаєшся.", "correct": false}, {"text": "Спочатку я прокидатися.", "correct": false}], "explanation": "Я needs прокидаюся."}, {"source": "Then I wash up.", "options": [{"text": "Потім я вмиваюся.", "correct": true}, {"text": "Потім я мию себе.", "correct": false}, {"text": "Потім я вмиваєшся.", "correct": false}], "explanation": "Use the routine verb вмиваюся."}, {"source": "After that I have breakfast.", "options": [{"text": "Після цього я снідаю.", "correct": true}, {"text": "Після цього я снідаюся.", "correct": false}, {"text": "Після цього я сніданок.", "correct": false}], "explanation": "Снідати is regular in this routine."}, {"source": "Finally I go to work.", "options": [{"text": "Нарешті я йду на роботу.", "correct": true}, {"text": "Нарешті я йдеш на роботу.", "correct": false}, {"text": "Нарешті я йти на роботу.", "correct": false}], "explanation": "Learn я йду as the ready chunk."}]`)} />
-
-<span id="repair-traps"></span>
-
-### Repair morning traps
-
-<ErrorCorrection client:only='react' instruction="Choose the standard Ukrainian repair." items={JSON.parse(`[{"sentence": "Я прокидаєшся.", "errorWord": "Я прокидаєшся.", "correctForm": "Я прокидаюся.", "options": ["Я прокидаюся.", "Я прокидаєшся.", "Я прокидається."], "explanation": "Я uses the -юся form."}, {"sentence": "Він прокидаюся.", "errorWord": "Він прокидаюся.", "correctForm": "Він прокидається.", "options": ["Він прокидається.", "Він прокидаюся.", "Він прокидаєшся."], "explanation": "Він uses the -ється form."}, {"sentence": "Вимова: [прокидайешся].", "errorWord": "[прокидайешся]", "correctForm": "[прокидайес':а]", "options": ["[прокидайес':а]", "[прокидайешся]", "[прокидайец':а]"], "explanation": "Written -шся is pronounced [с':а]."}, {"sentence": "Вимова: [одягайет'с'а].", "errorWord": "[одягайет'с'а]", "correctForm": "[одягайец':а]", "options": ["[одягайец':а]", "[одягайет'с'а]", "[одягайес':а]"], "explanation": "Written -ться is pronounced [ц':а]."}, {"sentence": "Я мию себе.", "errorWord": "Я мию себе.", "correctForm": "Я вмиваюся.", "options": ["Я вмиваюся.", "Я мию себе.", "Я вмиваю себе."], "explanation": "The natural routine verb is reflexive."}, {"sentence": "Я дивюся / Я дивюсь.", "errorWord": "Я дивюся / Я дивюсь.", "correctForm": "Я дивлюся.", "options": ["Я дивлюся.", "Я дивлюся в дзеркало.", "Я дивлюся фільм."], "explanation": "Learn я дивлюся as a ready chunk."}, {"sentence": "Я користуювася.", "errorWord": "Я користуювася.", "correctForm": "Я користуюся.", "options": ["Я користуюся.", "Я користуюся телефоном.", "Я використовую телефон."], "explanation": "The -ува- part drops in the present-tense form."}, {"sentence": "Це мій завтрак.", "errorWord": "завтрак", "correctForm": "Це мій сніданок.", "options": ["Це мій сніданок.", "Це мій завтрак.", "Це моя снідати."], "explanation": "Use сніданок for breakfast."}]`)} />
-
 </TabItem>
 <TabItem label="Vocabulary">
 
@@ -272,22 +280,6 @@ the final cluster smoothly.
 
 </TabItem>
 <TabItem label="Activities">
-
-### Hear the reflexive ending
-
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "In прокидаєшся, the written -шся is pronounced like [с':а].", "isTrue": true, "explanation": "Say [прокидайес':а], not each written letter separately."}, {"statement": "In одягається, the written -ться is pronounced like [ц':а].", "isTrue": true, "explanation": "The final sounds merge smoothly."}, {"statement": "Прокидаєшся should be pronounced [прокидайешся] letter by letter.", "isTrue": false, "explanation": "Do not keep a separate [ш] sound here."}, {"statement": "The spelling -ся can sound like [с':а].", "isTrue": true, "explanation": "This is the soft final sound to recognize."}]`)} />
-
-### Add the morning ending
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ о сьомій.", "answer": "прокидаюся", "options": ["прокидаюся", "прокидаєшся", "прокидається"]}, {"sentence": "Ти ___ рано?", "answer": "прокидаєшся", "options": ["прокидаєшся", "прокидаюся", "прокидається"]}, {"sentence": "Вона ___ швидко.", "answer": "одягається", "options": ["одягається", "одягаюся", "одягаєшся"]}, {"sentence": "Я ___ у ванній.", "answer": "вмиваюся", "options": ["вмиваюся", "вмиваєшся", "вмивається"]}, {"sentence": "Ми ___ вдома.", "answer": "збираємося", "options": ["збираємося", "збираєтеся", "збираються"]}, {"sentence": "Вони ___ о восьмій.", "answer": "прокидаються", "options": ["прокидаються", "прокидаємося", "прокидаєтеся"]}]`)} />
-
-### Reflexive or regular
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "I wash up in the morning.", "options": [{"text": "Я вмиваюся вранці.", "correct": true}, {"text": "Я мию себе вранці.", "correct": false}, {"text": "Я вмиваю вранці.", "correct": false}], "explanation": "The routine action is Я вмиваюся."}, {"question": "I have breakfast at home.", "options": [{"text": "Я снідаю вдома.", "correct": true}, {"text": "Я снідаюся вдома.", "correct": false}, {"text": "Я сніданок вдома.", "correct": false}], "explanation": "Снідати is regular here; do not add -ся."}, {"question": "I get dressed quickly.", "options": [{"text": "Я швидко одягаюся.", "correct": true}, {"text": "Я швидко одягаю.", "correct": false}, {"text": "Я швидко одягатися.", "correct": false}], "explanation": "Use the present form одягаюся."}, {"question": "I use a phone.", "options": [{"text": "Я користуюся телефоном.", "correct": true}, {"text": "Я користуювася телефоном.", "correct": false}, {"text": "Я користую телефоном.", "correct": false}], "explanation": "Recognize користуватися -> користуюся."}]`)} />
-
-### Put the morning in order
-
-<Order client:only='react' items={JSON.parse(`["Спочатку я прокидаюся.", "Потім вмиваюся.", "Після цього одягаюся.", "Потім снідаю.", "Нарешті йду на роботу."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4]`)} instruction={"Put the routine from first to last."} isUkrainian={false} />
 
 ### Finish the roommate dialogue
 
