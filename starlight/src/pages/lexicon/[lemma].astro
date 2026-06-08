@@ -76,6 +76,15 @@ const TRACK_LABELS_UK: Record<string, string> = {
   ruth: "Русинський бароко",
 };
 
+// Maps the manifest's machine context tokens (built_vocabulary /
+// plan_required / plan_recommended) to human-readable Ukrainian badge
+// labels. Without this the raw token leaks into the course-link badge.
+const CONTEXT_LABELS_UK: Record<string, string> = {
+  built_vocabulary: "вивчається",
+  plan_required: "обов’язкова",
+  plan_recommended: "рекомендована",
+};
+
 export async function getStaticPaths() {
   const data = manifest as LexiconManifest;
   return data.entries.map((entry) => ({
@@ -136,7 +145,9 @@ const posLabel = entry.pos ? POS_LABELS_UK[entry.pos] ?? entry.pos : null;
               {TRACK_LABELS_UK[u.track] ?? u.track.toUpperCase()} ·{" "}
               М{String(u.module_num).padStart(2, "0")} · {u.slug}
             </a>
-            <span class="lex-context-tag">{u.context}</span>
+            <span class="lex-context-tag" title={u.context}>
+              {CONTEXT_LABELS_UK[u.context] ?? u.context}
+            </span>
           </li>
         ))}
     </ul>
