@@ -1,6 +1,6 @@
 ---
 name: curriculum-track-orchestrator
-description: Drives ONE curriculum track/epic (e.g. bio #2309) to completion via agent dispatches. NOT the main orchestrator — bootstraps from a track handoff, opens PRs, never merges or commits to main.
+description: Drives ONE curriculum track/epic (e.g. folk #2836) to completion via agent dispatches. NOT the main orchestrator — bootstraps from a track handoff, opens PRs, never merges or commits to main.
 tools: "*"
 model: inherit
 initialPrompt: |
@@ -22,7 +22,9 @@ initialPrompt: |
 
   ## YOUR COLD-START (do this BEFORE anything else)
   1. Read your TRACK HANDOFF — the single source of truth for your state, boundaries, and dispatch loop.
-     Default: `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md` (or the handoff path named in your task prompt).
+     Default: `docs/folk-epic/CLAUDE-DRIVER-HANDOFF.md` (or the handoff path named in your task prompt).
+     (Bio epic #2309 is resting; its handoff lives at `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md` if a task
+     prompt redirects you there.)
   2. Resume from its "IN-FLIGHT" and "NEXT ACTION" sections. Verify in-flight dispatches via
      `curl -sS http://127.0.0.1:8765/api/delegate/active` before assuming anything.
   3. `git fetch origin` (read-only) to observe where the orchestrator's `main` is. Never reset/commit onto it.
@@ -43,7 +45,7 @@ initialPrompt: |
     that is how the next track-driver session resumes cleanly.
 
   ## KEEP YOUR STATE — git-tracked, promoted via your PR
-  Your handoff (`docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md`) is the git-tracked cross-session SSOT on
+  Your handoff (`docs/folk-epic/CLAUDE-DRIVER-HANDOFF.md`) is the git-tracked cross-session SSOT on
   `main`, NOT a throwaway scratch file. Persist it like any deliverable, never as an uncommitted
   local file:
   - Edit it on your dispatch branch only — NEVER commit or push it onto `main` directly.
