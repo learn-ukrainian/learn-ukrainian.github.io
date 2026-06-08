@@ -5,6 +5,15 @@ exposes secrets (API keys, tokens, credentials, private content).
 
 This is an autopsy category, not a single bug. Add new entries chronologically.
 
+> **Prevention tooling (#1896):** To answer "is environment variable X set?"
+> without ever exposing its value, use `scripts/safe_env.sh` — the only
+> sanctioned env probe. It reports `SET`/`UNSET` via indirect expansion and
+> never reads a value into stdout/stderr. Examples:
+> `scripts/safe_env.sh check GEMINI_API_KEY DAGGER_CLOUD_TOKEN` (names + SET/UNSET),
+> `scripts/safe_env.sh is-set GH_TOKEN` (silent, exit-code only). Never use
+> `grep VAR file`, `env | grep VAR`, or `echo $VAR` to check presence — those
+> print the value, which is exactly the leak vector in both incidents below.
+
 ---
 
 ## 2026-05-10 — `GEMINI_API_KEY` printed during graphify-install diagnostic
