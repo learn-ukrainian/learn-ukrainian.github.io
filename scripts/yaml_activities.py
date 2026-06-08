@@ -748,7 +748,17 @@ class ActivityParser:
 
         # If explicit blanks are provided, use them
         if explicit_blanks:
-            blanks = [ClozeBlank(id=b['id'], answer=b['answer'], options=b.get('options', [])) for b in explicit_blanks]
+            blanks = []
+            used_blank_ids = {str(b['id']) for b in explicit_blanks if isinstance(b, dict) and b.get('id') is not None}
+            next_blank_id = 0
+            for b in explicit_blanks:
+                blank_id = b.get('id')
+                if blank_id is None:
+                    while str(next_blank_id) in used_blank_ids:
+                        next_blank_id += 1
+                    blank_id = next_blank_id
+                used_blank_ids.add(str(blank_id))
+                blanks.append(ClozeBlank(id=blank_id, answer=b['answer'], options=b.get('options', [])))
         else:
             # Parse inline format: {option1|option2|option3} where first option is correct
             blanks = []
@@ -1046,7 +1056,11 @@ class ActivityParser:
 
     def _parse_translation_critique(self, data: dict) -> TranslationCritiqueActivity:
         translations = []
-        for t in data.get('translations', []):
+        for index, t in enumerate(data.get('translations', []), start=1):
+            if isinstance(t, str):
+                t = {'translator': f'Option {index}', 'text': t}
+            elif not isinstance(t, dict):
+                t = {'translator': f'Option {index}', 'text': str(t)}
             translations.append(TranslationItem(
                 translator=t.get('translator', ''),
                 text=t.get('text', ''),

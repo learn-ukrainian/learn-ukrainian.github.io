@@ -3,9 +3,11 @@ from __future__ import annotations
 import re
 
 from scripts.build.linear_pipeline import assemble_mdx
+from scripts.generate_mdx.core import backfill_missing_activity_ids
+from scripts.yaml_activities import ActivityParser
 
 _ACTIVITY_COMPONENT_RE = re.compile(
-    r"<(?:Quiz|FillIn|MatchUp|TrueFalse|GroupSort|Unjumble|Observe|Order)\b"
+    r"<(?:Quiz|FillIn|MatchUp|TrueFalse|GroupSort|Unjumble|Observe|Order|Cloze|TranslationCritique)\b"
 )
 
 
@@ -63,8 +65,7 @@ references:
   examples:
     - text: мию → миюся
     - text: одягаю → одягаюся
-- id: act-2
-  type: order
+- type: order
   title: Workbook order
   instruction: Put the actions in order.
   items: [прокидатися, вмиватися, снідати]
@@ -75,18 +76,37 @@ references:
   items:
     - statement: Настя прокидається о сьомій.
       correct: true
-- id: act-4
+- id: act-2
   type: match-up
   title: Workbook match
   pairs:
     - left: прокидатися
       right: to wake up
-- id: act-5
+- id: "  "
   type: fill-in
   title: Workbook fill
   items:
     - sentence: Я ___ о сьомій.
       answer: прокидаюся
+- type: cloze
+  title: Workbook cloze
+  passage: "Я {прокидаюся|снідаю} о сьомій і {снідаю|сплю} після уроку."
+  blanks:
+    - id: 0
+      answer: прокидаюся
+      options: [прокидаюся, снідаю]
+    - id:
+      answer: снідаю
+      options: [снідаю, сплю]
+- type: translation-critique
+  title: Workbook translation critique
+  original: Я прокидаюся о сьомій.
+  translations:
+    - I wake up at seven.
+    - I have breakfast at seven.
+    - 7
+  focus_points:
+    - Чи точно передано дію?
 """,
         encoding="utf-8",
     )
@@ -117,6 +137,29 @@ references:
         encoding="utf-8",
     )
 
+    parsed_activities = ActivityParser().parse(module_dir / "activities.yaml")
+    normalized_activities = backfill_missing_activity_ids(parsed_activities)
+    normalized_ids = [activity.id for activity in normalized_activities]
+
+    assert all(activity_id.strip() for activity_id in normalized_ids)
+    assert normalized_ids == ["act-1", "act-2-order", "act-3", "act-2", "act-5", "act-6", "act-7"]
+    assert len(normalized_ids) == len(set(normalized_ids))
+    assert [activity.id for activity in backfill_missing_activity_ids(normalized_activities)] == normalized_ids
+    cloze_activity = next(activity for activity in normalized_activities if activity.type == "cloze")
+    assert [blank.id for blank in cloze_activity.blanks] == [0, 1]
+
+    dict_activities = [
+        {"id": 0, "type": "quiz"},
+        {"type": "quiz"},
+        {"id": "act-2", "type": "fill-in"},
+    ]
+    backfill_missing_activity_ids(dict_activities)
+    assert dict_activities == [
+        {"id": 0, "type": "quiz"},
+        {"type": "quiz", "id": "act-2-quiz"},
+        {"id": "act-2", "type": "fill-in"},
+    ]
+
     mdx = assemble_mdx(module_dir, out_path, plan_path)
 
     assert "pipeline: linear-phase-4" in mdx
@@ -130,7 +173,7 @@ references:
     lesson_tab = _tab_item(mdx, "Lesson")
     activities_tab = _tab_item(mdx, "Activities")
     assert len(_ACTIVITY_COMPONENT_RE.findall(lesson_tab)) == 2
-    assert len(_ACTIVITY_COMPONENT_RE.findall(activities_tab)) == 3
+    assert len(_ACTIVITY_COMPONENT_RE.findall(activities_tab)) == 5
     assert "<Observe" in lesson_tab
     assert "<TrueFalse" in lesson_tab
     assert "<Observe" not in activities_tab
@@ -138,6 +181,9 @@ references:
     assert "<Order" in activities_tab
     assert "<MatchUp" in activities_tab
     assert "<FillIn" in activities_tab
+    assert "<Cloze" in activities_tab
+    assert "<TranslationCritique" in activities_tab
+    assert '"text": "7"' in activities_tab
     assert "Inline observe" not in activities_tab
     assert "Inline true false" not in activities_tab
     assert "*(see lesson)*" not in activities_tab
@@ -151,3 +197,4 @@ references:
     assert "writer telemetry" not in mdx
     assert "wiki_query_id" not in mdx
     assert "vesum_query_id" not in mdx
+    assert out_path.exists()

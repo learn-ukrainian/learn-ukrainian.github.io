@@ -159,6 +159,54 @@ def _activity_plans_to_jsx(plans: list[dict]) -> str:
 _INJECT_ACTIVITY_RE = re.compile(r'<!--\s*INJECT_ACTIVITY:\s*([A-Za-z0-9_-]+)\s*-->')
 
 
+def _activity_id(activity: Activity | dict) -> str:
+    activity_id = activity.get('id', '') if isinstance(activity, dict) else getattr(activity, 'id', '')
+    return '' if activity_id is None else str(activity_id).strip()
+
+
+def _activity_type(activity: Activity | dict) -> str:
+    activity_type = activity.get('type', '') if isinstance(activity, dict) else getattr(activity, 'type', '')
+    if activity_type is None:
+        return 'unknown'
+    return str(activity_type).strip() or 'unknown'
+
+
+def _set_activity_id(activity: Activity | dict, activity_id: str) -> None:
+    if isinstance(activity, dict):
+        activity['id'] = activity_id
+    else:
+        activity.id = activity_id
+
+
+def backfill_missing_activity_ids(activities: list[Activity | dict]) -> list[Activity | dict]:
+    """Assign deterministic IDs to idless activities without changing existing IDs."""
+    used_ids = {
+        activity_id
+        for activity in activities
+        if (activity_id := _activity_id(activity))
+    }
+
+    for index, activity in enumerate(activities, start=1):
+        if _activity_id(activity):
+            continue
+
+        preferred_id = f'act-{index}'
+        candidate_id = preferred_id
+        if candidate_id in used_ids:
+            candidate_id = f'{preferred_id}-{_activity_type(activity)}'
+
+        suffix = 2
+        base_id = candidate_id
+        while candidate_id in used_ids:
+            candidate_id = f'{base_id}-{suffix}'
+            suffix += 1
+
+        _set_activity_id(activity, candidate_id)
+        used_ids.add(candidate_id)
+
+    return activities
+
+
 def _inject_inline_activities(
     body: str,
     yaml_activities: list[Activity] | None,
@@ -170,9 +218,9 @@ def _inject_inline_activities(
 
     parser = ActivityParser()
     by_id = {
-        str(getattr(activity, 'id', '')): (index, activity)
+        _activity_id(activity): (index, activity)
         for index, activity in enumerate(yaml_activities)
-        if getattr(activity, 'id', '')
+        if _activity_id(activity)
     }
     injected_ids: set[str] = set()
     injected_positions: set[int] = set()
@@ -238,6 +286,9 @@ def generate_mdx(
                     body = body[heading_match.start():]
     else:
         fm, body = parse_frontmatter(md_content)
+
+    if yaml_activities:
+        yaml_activities = backfill_missing_activity_ids(list(yaml_activities))
 
     # Determine if Ukrainian headers are forced
     is_ukrainian_forced = False
