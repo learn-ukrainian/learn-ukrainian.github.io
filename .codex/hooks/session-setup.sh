@@ -30,6 +30,18 @@ if [ -f "$PYENV_SHIM_LOCK" ] && \
   rm -f "$PYENV_SHIM_LOCK"
 fi
 
+# Repo-health canary: core.bare MUST be false on this working repo. A stray
+# `git config core.bare true` silently breaks git status/add/commit/worktree for
+# the main checkout AND every linked worktree at once (they share .git/config),
+# and is never pushed so CI cannot catch it — only a local canary can. Auto-heal
+# so no session inherits a broken tree. Runs BEFORE the headless-skip because
+# pipeline jobs need a work tree too. See issue #2842.
+_LU_REPO="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
+if [ "$(git -C "$_LU_REPO" config --get core.bare 2>/dev/null)" = "true" ]; then
+  git -C "$_LU_REPO" config --local core.bare false 2>/dev/null \
+    && echo "⚠️  repo-health: reset core.bare true→false (git work tree was broken; see #2842)" >&2
+fi
+
 # Skip in non-interactive (headless) mode
 if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UKRAINIAN_PIPELINE" ] || [ -n "$GEMINI_SESSION" ]; then
   exit 0
