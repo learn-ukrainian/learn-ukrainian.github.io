@@ -123,6 +123,54 @@ def test_parse_response_accepts_stdout_marker_shape() -> None:
     ]
 
 
+def test_parse_response_inlines_safe_saved_tool_result_pointer(tmp_path: Path) -> None:
+    app_data = tmp_path / "antigravity-cli"
+    log_file = tmp_path / "agy.log"
+    log_file.write_text(
+        f"I0521 printmode.go:130] Print mode: conversation={CONVERSATION_ID}, sending message\n",
+        encoding="utf-8",
+    )
+    conversation_root = app_data / "brain" / CONVERSATION_ID
+    output_file = conversation_root / "steps" / "103" / "output.txt"
+    output_file.parent.mkdir(parents=True)
+    output_file.write_text("inline result from agy steps file", encoding="utf-8")
+    transcript = conversation_root / ".system_generated" / "logs" / "transcript.jsonl"
+    transcript.parent.mkdir(parents=True)
+    transcript.write_text(
+        "\n".join(
+            [
+                (
+                    '{"created_at":"2026-05-21T14:12:12Z",'
+                    '"tool_calls":[{"name":"call_mcp_tool","args":{'
+                    '"ServerName":"\\"sources\\"",'
+                    '"ToolName":"\\"search_text\\"",'
+                    '"Arguments":"{\\"query\\":\\"ранок\\"}"}}]}'
+                ),
+                (
+                    '{"type":"MCP_TOOL","content":"The output was large and was '
+                    f'saved to: {output_file.as_uri()}"}}'
+                ),
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    result = AgyAdapter().parse_response(
+        stdout="Final response.",
+        stderr="",
+        returncode=0,
+        output_file=None,
+        plan=_plan(tmp_path, log_file=log_file, app_data=app_data),
+    )
+
+    assert result.tool_calls[0]["result"] == [
+        {"type": "text", "text": "inline result from agy steps file"}
+    ]
+    assert result.tool_calls[0]["output_summary"] == (
+        '[{"text": "inline result from agy steps file", "type": "text"}]'
+    )
+
+
 def test_render_writer_prompt_includes_agy_specific_directives() -> None:
     plan_path = linear_pipeline.plan_path_for("a1", "my-morning")
     plan = linear_pipeline.plan_check(plan_path)

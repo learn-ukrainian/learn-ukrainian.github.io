@@ -51,6 +51,7 @@ import os
 import re
 import shutil
 import tempfile
+import urllib.parse
 import uuid
 from collections.abc import Mapping
 from pathlib import Path
@@ -80,6 +81,12 @@ _STDOUT_MARKER_RE = re.compile(
     r"^\s*●\s+(?P<tool>mcp_sources_[A-Za-z0-9_]+)\((?P<args>.*)\)\s*$"
 )
 _STDOUT_RESULT_PREFIX = "⎿"
+_SAVED_OUTPUT_POINTER_RE = re.compile(
+    r"(?:The output was large and was saved to:\s*)?"
+    r"(?P<uri>file://[^\s)]+)",
+    re.IGNORECASE,
+)
+_MAX_INLINE_TOOL_RESULT_BYTES = 1_000_000
 
 # Canonical model display strings accepted by ``agy --model`` (verbatim from
 # ``agy models``). A caller may pass a slug (``gemini-3.1-pro-high``) or the
@@ -379,6 +386,10 @@ def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, 
             continue
         call = pending.pop(0)
         result_text = _strip_agy_task_metadata(str(event.get("content") or ""))
+        result_text = _inline_saved_tool_result_pointer(
+            result_text,
+            transcript_path=transcript_path,
+        )
         result = [{"type": "text", "text": result_text}]
         call["output_summary"] = summarize_tool_output(result)
         call["result"] = result
@@ -473,6 +484,83 @@ def _build_tool_call(tool_name: str, args: dict[str, Any], result_text: str) -> 
     if result is not None:
         call["result"] = result
     return call
+
+
+def _inline_saved_tool_result_pointer(text: str, *, transcript_path: Path) -> str:
+    """Inline agy's safe ``file://.../steps/.../output.txt`` tool-result pointer."""
+    match = _SAVED_OUTPUT_POINTER_RE.search(text)
+    if not match:
+        return text
+
+    parsed = urllib.parse.urlparse(match.group("uri"))
+    if parsed.scheme != "file" or not parsed.path:
+        return text
+
+    path = Path(urllib.parse.unquote(parsed.path))
+    try:
+        resolved_path = path.resolve(strict=True)
+    except OSError:
+        _logger.warning("agy tool result pointer missing: %s", path)
+        return text
+
+    allowed_roots = _allowed_tool_result_roots(transcript_path)
+    if not any(_is_relative_to(resolved_path, root) for root in allowed_roots):
+        _logger.warning("agy refused unsafe tool result pointer: %s", resolved_path)
+        return text
+
+    try:
+        size = resolved_path.stat().st_size
+        with resolved_path.open("rb") as handle:
+            raw = handle.read(_MAX_INLINE_TOOL_RESULT_BYTES + 1)
+    except OSError:
+        _logger.warning("agy failed to read tool result pointer: %s", resolved_path)
+        return text
+
+    truncated = len(raw) > _MAX_INLINE_TOOL_RESULT_BYTES
+    if truncated:
+        raw = raw[:_MAX_INLINE_TOOL_RESULT_BYTES]
+    inline = raw.decode("utf-8", errors="replace")
+    if truncated:
+        inline = (
+            inline.rstrip()
+            + f"\n\n[agy tool result truncated at {_MAX_INLINE_TOOL_RESULT_BYTES} bytes]"
+        )
+        _logger.warning(
+            "agy inlined truncated tool result pointer %s (%s bytes)",
+            resolved_path,
+            size,
+        )
+    else:
+        _logger.info(
+            "agy inlined tool result pointer %s (%s bytes)",
+            resolved_path,
+            size,
+        )
+    return text[: match.start()] + inline + text[match.end():]
+
+
+def _allowed_tool_result_roots(transcript_path: Path) -> tuple[Path, ...]:
+    # transcript.jsonl lives at:
+    #   <app-data>/brain/<conversation>/.system_generated/logs/transcript.jsonl
+    # Only follow pointers inside that conversation's steps dirs.
+    conversation_root = transcript_path.parent.parent.parent
+    candidates = (
+        conversation_root / "steps",
+        conversation_root / ".system_generated" / "steps",
+    )
+    roots: list[Path] = []
+    for candidate in candidates:
+        with contextlib.suppress(OSError):
+            roots.append(candidate.resolve())
+    return tuple(roots)
+
+
+def _is_relative_to(path: Path, root: Path) -> bool:
+    try:
+        path.relative_to(root)
+    except ValueError:
+        return False
+    return True
 
 
 def _coerce_args(value: Any) -> dict[str, Any]:

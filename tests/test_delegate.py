@@ -39,6 +39,12 @@ def tmp_tasks_dir(tmp_path, monkeypatch):
     return tasks_dir
 
 
+def _sanitize_git_env_for_test(monkeypatch) -> None:
+    for key in tuple(os.environ):
+        if key.startswith(("GIT_", "PRE_COMMIT")):
+            monkeypatch.delenv(key, raising=False)
+
+
 # ---------------------------------------------------------------------------
 # State file helpers
 # ---------------------------------------------------------------------------
@@ -917,6 +923,7 @@ def test_run_worker_marks_needs_finalize_for_dirty_danger_worktree(
     monkeypatch,
 ):
     """Danger dispatches with edits but no commits surface needs_finalize (#2134)."""
+    _sanitize_git_env_for_test(monkeypatch)
     state_path = delegate._state_path("needs-finalize")
     subprocess.run(["git", "init"], cwd=tmp_path, check=True, capture_output=True)
     subprocess.run(
@@ -954,6 +961,15 @@ def test_run_worker_marks_needs_finalize_for_dirty_danger_worktree(
     )()
 
     monkeypatch.setattr(delegate, "_count_commits_ahead", lambda *_a, **_k: 0)
+    monkeypatch.setattr(
+        delegate,
+        "_auto_finalize_dirty_worktree",
+        lambda **_kwargs: delegate.AutoFinalizeResult(
+            ok=False,
+            error="simulated finalize failure",
+            changed_files=("orphan.txt",),
+        ),
+    )
 
     with (
         patch("agent_runtime.runner.invoke", return_value=mock_result),
@@ -977,6 +993,144 @@ def test_run_worker_marks_needs_finalize_for_dirty_danger_worktree(
     assert state["needs_finalize"] is True
     assert state["commits_ahead"] == 0
     assert state["worktree_dirty_on_exit"] is True
+    assert state["auto_finalize"]["ok"] is False
+    assert state["auto_finalize"]["error"] == "simulated finalize failure"
+
+
+def test_run_worker_auto_finalizes_dirty_agy_worktree(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Agy dispatches with clean rc=0, dirty worktree, and zero commits finalize."""
+    _sanitize_git_env_for_test(monkeypatch)
+    origin = tmp_path / "origin.git"
+    worktree = tmp_path / "worktree"
+    subprocess.run(
+        ["git", "init", "--bare", str(origin)],
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "init", "--initial-branch=main", str(worktree)],
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.email", "test@example.com"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "test"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+    )
+    (worktree / "README.md").write_text("base\n", encoding="utf-8")
+    subprocess.run(["git", "add", "README.md"], cwd=worktree, check=True)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=worktree, check=True)
+    subprocess.run(
+        ["git", "remote", "add", "origin", str(origin)],
+        cwd=worktree,
+        check=True,
+    )
+    subprocess.run(
+        ["git", "push", "-u", "origin", "main"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "checkout", "-b", "agy/auto-finalize-test"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+    )
+
+    state_path = delegate._state_path("agy-auto-finalize-test")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "agy-auto-finalize-test",
+        "worktree_path": str(worktree),
+        "worktree_branch": "agy/auto-finalize-test",
+        "worktree_base": "main",
+    })
+    (worktree / "artifact.txt").write_text("agy wrote this\n", encoding="utf-8")
+
+    pushed: list[str] = []
+    created_prs: list[dict[str, str]] = []
+
+    def fake_push(_worktree: Path, branch: str) -> None:
+        pushed.append(branch)
+
+    def fake_create_pr(
+        _worktree: Path,
+        *,
+        branch: str,
+        base_branch: str,
+        title: str,
+        body: str,
+    ) -> str:
+        created_prs.append({
+            "branch": branch,
+            "base_branch": base_branch,
+            "title": title,
+            "body": body,
+        })
+        return "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/999"
+
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", fake_push)
+    monkeypatch.setattr(delegate, "_create_auto_finalize_pr", fake_create_pr)
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": False,
+            "response": "",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gemini-3.5-flash-high",
+            "effort": "unknown",
+            "cli_version": "1.0.0",
+        },
+    )()
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result):
+        rc = delegate._run_worker(
+            task_id="agy-auto-finalize-test",
+            agent="agy",
+            prompt="hi",
+            mode="danger",
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            effort=None,
+        )
+
+    assert rc == 0
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] == "done"
+    assert state["needs_finalize"] is False
+    assert state["worktree_dirty_on_exit"] is False
+    assert state["commits_ahead"] == 1
+    assert state["auto_finalize"]["ok"] is True
+    assert state["auto_finalize"]["changed_files"] == ["artifact.txt"]
+    assert pushed == ["agy/auto-finalize-test"]
+    assert created_prs[0]["branch"] == "agy/auto-finalize-test"
+    assert created_prs[0]["base_branch"] == "main"
+
+    message = subprocess.run(
+        ["git", "log", "-1", "--format=%B"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout
+    assert "X-Agent: agy/auto-finalize-test" in message
 
 
 def test_run_worker_forwards_max_budget_usd_to_runtime(tmp_tasks_dir, tmp_path):
