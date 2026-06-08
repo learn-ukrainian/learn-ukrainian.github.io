@@ -343,6 +343,7 @@ Auto-generated index of compiled wiki articles.
 - [Український фольклор: Народні анекдоти та небилиці: Сміхова культура](folk/prose/narodni-anekdoty.md) (2,174 words)
 - [Український фольклор: Народні балади: Трагізм і доля](folk/prose/narodni-balady.md) (1,946 words)
 - [Український фольклор: Народні легенди та народне християнство](folk/prose/narodni-lehendy.md) (5,311 words)
+- [Українська календарна обрядовість і звичаї](folk/ritual/kalendarna-obriadovist-zvychai.md) (2,462 words)
 - [Український фольклор: Колядки та щедрівки та міф про створення світу](folk/ritual/koliadky-shchedrivky.md) (2,109 words)
 - [Український фольклор: Купальські пісні та магія літнього сонцестояння](folk/ritual/kupalski-pisni.md) (1,960 words)
 - [Український фольклор: Обжинкові пісні: Апофеоз хліборобської праці](folk/ritual/obzhynkovi-pisni.md) (2,371 words)
