@@ -50,6 +50,7 @@ const { syncKey = 'tabs' } = Astro.props as TabsProps;
 
     const buttons = panels.map((panel, index) => {
       const label = panel.dataset.label || `Tab ${index + 1}`;
+      const display = panel.dataset.display || label;
       const id = panel.id || `tab-panel-${index}`;
       panel.id = id;
       panel.setAttribute('role', 'tabpanel');
@@ -60,7 +61,7 @@ const { syncKey = 'tabs' } = Astro.props as TabsProps;
       button.id = `${id}-tab`;
       button.type = 'button';
       button.role = 'tab';
-      button.textContent = label;
+      button.textContent = display;
       button.setAttribute('aria-controls', id);
       button.addEventListener('click', () => activate(panels, buttons, index, true));
       buttonBar.appendChild(button);

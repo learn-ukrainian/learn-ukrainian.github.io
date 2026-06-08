@@ -4,8 +4,22 @@ interface TabItemProps {
 }
 
 const { label } = Astro.props as TabItemProps;
+
+// Render-time localization of the standard lesson tab chrome to Ukrainian,
+// matching the POC design (docs/poc/poc-lesson-design.html) and the folk
+// lessons (which already ship Ukrainian labels). The English `label` stays
+// the semantic key — it drives the stable #hash anchor and tab activation —
+// while only the displayed button text is localized. Unknown labels
+// (already-Ukrainian folk tabs, or any future tab) fall through unchanged.
+const TAB_LABELS_UK: Record<string, string> = {
+  Lesson: "Урок",
+  Vocabulary: "Словник",
+  Activities: "Зошит",
+  Resources: "Ресурси",
+};
+const display = TAB_LABELS_UK[label] ?? label;
 ---
 
-<section class="lu-tab-panel" data-label={label}>
+<section class="lu-tab-panel" data-label={label} data-display={display}>
   <slot />
 </section>
