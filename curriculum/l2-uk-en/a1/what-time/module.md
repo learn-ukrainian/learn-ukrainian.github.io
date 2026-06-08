@@ -17,22 +17,37 @@ By the end, you can:
 - repair common unsafe time phrases such as **у вісім годин**, **пів восьмої**,
   **чверть після сьомої**, and **без двадцяти три**.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 Read these two short phone scenes aloud. They show the two questions you need:
 one question asks what time it is now, and the other asks what time an action
 happens.
 
-<DialogueBox uk="Марина: Добрий день, Олексію! Котра година?" en="Maryna: Good afternoon, Oleksii! What time is it?" />
-<DialogueBox uk="Олексій: Десята година." en="Oleksii: It is ten o'clock." />
-<DialogueBox uk="Марина: О котрій ти працюєш?" en="Maryna: What time do you work?" />
-<DialogueBox uk="Олексій: Я працюю о дев'ятій." en="Oleksii: I work at nine." />
-<DialogueBox uk="Марина: А обідаєш?" en="Maryna: And do you have lunch?" />
-<DialogueBox uk="Олексій: Обідаю о першій." en="Oleksii: I have lunch at one." />
-<DialogueBox uk="Марина: Тоді зустріч о другій?" en="Maryna: Then a meeting at two?" />
-<DialogueBox uk="Олексій: Так, о другій добре." en="Oleksii: Yes, at two is good." />
+```text
+Марина: Добрий день, Олексію! Котра година?
+Олексій: Десята година.
+Марина: О котрій ти працюєш?
+Олексій: Я працюю о дев'ятій.
+Марина: А обідаєш?
+Олексій: Обідаю о першій.
+Марина: Тоді зустріч о другій?
+Олексій: Так, о другій добре.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Марина: Добрий день, Олексію! Котра година?** | Maryna: Good afternoon, Oleksii! What time is it? |
+| **Олексій: Десята година.** | Oleksii: It is ten o'clock. |
+| **Марина: О котрій ти працюєш?** | Maryna: What time do you work? |
+| **Олексій: Я працюю о дев'ятій.** | Oleksii: I work at nine. |
+| **Марина: А обідаєш?** | Maryna: And do you have lunch? |
+| **Олексій: Обідаю о першій.** | Oleksii: I have lunch at one. |
+| **Марина: Тоді зустріч о другій?** | Maryna: Then a meeting at two? |
+| **Олексій: Так, о другій добре.** | Oleksii: Yes, at two is good. |
 
 Notice the pattern. **Котра година?** asks for the time on the clock:
 **десята година**, **перша година**, **п'ята година**. In quick speech, people
@@ -48,12 +63,25 @@ paradigm. Your active job is to pair a daily action with a time:
 
 Here is the same pattern inside a daily routine:
 
-<DialogueBox uk="Олена: Коли ти снідаєш?" en="Olena: When do you have breakfast?" />
-<DialogueBox uk="Данило: О восьмій ранку." en="Danylo: At eight in the morning." />
-<DialogueBox uk="Олена: А коли обідаєш?" en="Olena: And when do you have lunch?" />
-<DialogueBox uk="Данило: О першій дня." en="Danylo: At one in the afternoon." />
-<DialogueBox uk="Олена: Вечеряєш удома?" en="Olena: Do you have dinner at home?" />
-<DialogueBox uk="Данило: Так, вечеряю о сьомій вечора." en="Danylo: Yes, I have dinner at seven in the evening." />
+```text
+Олена: Коли ти снідаєш?
+Данило: О восьмій ранку.
+Олена: А коли обідаєш?
+Данило: О першій дня.
+Олена: Вечеряєш удома?
+Данило: Так, вечеряю о сьомій вечора.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Коли ти снідаєш?** | Olena: When do you have breakfast? |
+| **Данило: О восьмій ранку.** | Danylo: At eight in the morning. |
+| **Олена: А коли обідаєш?** | Olena: And when do you have lunch? |
+| **Данило: О першій дня.** | Danylo: At one in the afternoon. |
+| **Олена: Вечеряєш удома?** | Olena: Do you have dinner at home? |
+| **Данило: Так, вечеряю о сьомій вечора.** | Danylo: Yes, I have dinner at seven in the evening. |
 
 The time-of-day words help avoid ambiguity: **ранку**, **дня**, **вечора**,
 **ночі**. Say **о сьомій ранку** for 7 AM and **о сьомій вечора** for 7 PM.
@@ -173,15 +201,35 @@ Keep three cards in your head.
 
 First card: ask for the time now.
 
-<DialogueBox uk="Котра година?" en="What time is it?" />
-<DialogueBox uk="Зараз друга." en="It is two." />
-<DialogueBox uk="Зараз пів на третю." en="It is half past two." />
+```text
+Котра година?
+Зараз друга.
+Зараз пів на третю.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Котра година?** | What time is it? |
+| **Зараз друга.** | It is two. |
+| **Зараз пів на третю.** | It is half past two. |
 
 Second card: ask for the time of an action.
 
-<DialogueBox uk="О котрій годині зустріч?" en="What time is the meeting?" />
-<DialogueBox uk="Зустріч о другій." en="The meeting is at two." />
-<DialogueBox uk="Фільм об одинадцятій." en="The film is at eleven." />
+```text
+О котрій годині зустріч?
+Зустріч о другій.
+Фільм об одинадцятій.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **О котрій годині зустріч?** | What time is the meeting? |
+| **Зустріч о другій.** | The meeting is at two. |
+| **Фільм об одинадцятій.** | The film is at eleven. |
 
 Third card: repair the unsafe time habits before they become automatic.
 
@@ -206,11 +254,23 @@ For your own answer, write five short lines. Use one line for the time now, one
 line for waking up, one line for work or study, one line for lunch or dinner,
 and one line for a meeting:
 
-<DialogueBox uk="Зараз восьма." en="It is eight now." />
-<DialogueBox uk="Я прокидаюся о сьомій ранку." en="I wake up at seven in the morning." />
-<DialogueBox uk="Я працюю о дев'ятій." en="I work at nine." />
-<DialogueBox uk="Обідаю о першій дня." en="I have lunch at one in the afternoon." />
-<DialogueBox uk="Зустріч о третій." en="The meeting is at three." />
+```text
+Зараз восьма.
+Я прокидаюся о сьомій ранку.
+Я працюю о дев'ятій.
+Обідаю о першій дня.
+Зустріч о третій.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Зараз восьма.** | It is eight now. |
+| **Я прокидаюся о сьомій ранку.** | I wake up at seven in the morning. |
+| **Я працюю о дев'ятій.** | I work at nine. |
+| **Обідаю о першій дня.** | I have lunch at one in the afternoon. |
+| **Зустріч о третій.** | The meeting is at three. |
 
 If you only remember one rule, remember this: **котра? -> перша, друга,
 третя** for the clock; **о котрій? -> о першій, о другій, о третій** for the

@@ -16,35 +16,71 @@ By the end, you can:
 - invite someone with **Ходімо!** and informal **Давай!**;
 - combine A1.4 pieces: day + clock time + weather + activity.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 The first scene is at a community center notice board. Вітя and Оленка choose a
 weekend activity. Notice the order: invitation + place + day + time.
 
-<DialogueBox uk="Вітя: Добрий день, Оленко!" en="Vitia: Good afternoon, Olenka!" />
-<DialogueBox uk="Оленка: Добрий день! Що ти робиш у вихідні?" en="Olenka: Good afternoon! What do you do on weekends?" />
-<DialogueBox uk="Вітя: Зазвичай я гуляю і читаю." en="Vitia: Usually I walk and read." />
-<DialogueBox uk="Оленка: Ходімо в кіно в суботу!" en="Olenka: Let's go to the cinema on Saturday!" />
-<DialogueBox uk="Вітя: Добре! О котрій?" en="Vitia: Good! At what time?" />
-<DialogueBox uk="Оленка: О п'ятій. Якщо буде дощ, ходімо в музей." en="Olenka: At five. If it rains, let's go to the museum." />
-<DialogueBox uk="Вітя: Чудово!" en="Vitia: Great!" />
+```text
+Вітя: Добрий день, Оленко!
+Оленка: Добрий день! Що ти робиш у вихідні?
+Вітя: Зазвичай я гуляю і читаю.
+Оленка: Ходімо в кіно в суботу!
+Вітя: Добре! О котрій?
+Оленка: О п'ятій. Якщо буде дощ, ходімо в музей.
+Вітя: Чудово!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Вітя: Добрий день, Оленко!** | Vitia: Good afternoon, Olenka! |
+| **Оленка: Добрий день! Що ти робиш у вихідні?** | Olenka: Good afternoon! What do you do on weekends? |
+| **Вітя: Зазвичай я гуляю і читаю.** | Vitia: Usually I walk and read. |
+| **Оленка: Ходімо в кіно в суботу!** | Olenka: Let's go to the cinema on Saturday! |
+| **Вітя: Добре! О котрій?** | Vitia: Good! At what time? |
+| **Оленка: О п'ятій. Якщо буде дощ, ходімо в музей.** | Olenka: At five. If it rains, let's go to the museum. |
+| **Вітя: Чудово!** | Vitia: Great! |
 
 Use **Ходімо!** when you mean "let's go." It already contains the idea of "we."
 For a friendly short invitation, you can also use **Давай!**:
 
-<DialogueBox uk="Давай грати разом." en="Let's play together." />
-<DialogueBox uk="Давай слухати музику." en="Let's listen to music." />
+```text
+Давай грати разом.
+Давай слухати музику.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Давай грати разом.** | Let's play together. |
+| **Давай слухати музику.** | Let's listen to music. |
 
 The second scene adds hobbies and frequency.
 
-<DialogueBox uk="Оленка: Ти любиш спорт?" en="Olenka: Do you like sport?" />
-<DialogueBox uk="Вітя: Так, я граю у футбол." en="Vitia: Yes, I play football." />
-<DialogueBox uk="Оленка: Як часто?" en="Olenka: How often?" />
-<DialogueBox uk="Вітя: Двічі на тиждень, у вівторок і четвер." en="Vitia: Twice a week, on Tuesday and Thursday." />
-<DialogueBox uk="Оленка: А ще?" en="Olenka: Anything else?" />
-<DialogueBox uk="Вітя: Іноді слухаю музику і малюю." en="Vitia: Sometimes I listen to music and draw." />
+```text
+Оленка: Ти любиш спорт?
+Вітя: Так, я граю у футбол.
+Оленка: Як часто?
+Вітя: Двічі на тиждень, у вівторок і четвер.
+Оленка: А ще?
+Вітя: Іноді слухаю музику і малюю.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Оленка: Ти любиш спорт?** | Olenka: Do you like sport? |
+| **Вітя: Так, я граю у футбол.** | Vitia: Yes, I play football. |
+| **Оленка: Як часто?** | Olenka: How often? |
+| **Вітя: Двічі на тиждень, у вівторок і четвер.** | Vitia: Twice a week, on Tuesday and Thursday. |
+| **Оленка: А ще?** | Olenka: Anything else? |
+| **Вітя: Іноді слухаю музику і малюю.** | Vitia: Sometimes I listen to music and draw. |
 
 The question **Як часто?** asks for frequency. Answer with one adverb
 (**часто**, **іноді**, **рідко**) or a time phrase (**раз на тиждень**,
@@ -52,8 +88,17 @@ The question **Як часто?** asks for frequency. Answer with one adverb
 
 Two useful interview questions are:
 
-<DialogueBox uk="Чим ти любиш займатись у вільний від навчання час?" en="What do you like doing in your free time away from study?" />
-<DialogueBox uk="Які фільми ти любиш дивитися?" en="What films do you like watching?" />
+```text
+Чим ти любиш займатись у вільний від навчання час?
+Які фільми ти любиш дивитися?
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Чим ти любиш займатись у вільний від навчання час?** | What do you like doing in your free time away from study? |
+| **Які фільми ти любиш дивитися?** | What films do you like watching? |
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
@@ -81,18 +126,41 @@ English-style word-for-word phrases.
 For sports and games, use **грати у/в**. For musical instruments, use
 **грати на**. Treat these as set phrases for now:
 
-<DialogueBox uk="Я читаю, а ти читаєш." en="I read, and you read." />
-<DialogueBox uk="Я граю у футбол." en="I play football." />
-<DialogueBox uk="Вона грає у теніс." en="She plays tennis." />
-<DialogueBox uk="Він грає на гітарі." en="He plays guitar." />
-<DialogueBox uk="Ми граємо на піаніно." en="We play piano." />
+```text
+Я читаю, а ти читаєш.
+Я граю у футбол.
+Вона грає у теніс.
+Він грає на гітарі.
+Ми граємо на піаніно.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я читаю, а ти читаєш.** | I read, and you read. |
+| **Я граю у футбол.** | I play football. |
+| **Вона грає у теніс.** | She plays tennis. |
+| **Він грає на гітарі.** | He plays guitar. |
+| **Ми граємо на піаніно.** | We play piano. |
 
 Culture places use **ходити в** or **ходити на** as ready chunks:
 
-<DialogueBox uk="Я люблю ходити в кіно." en="I like going to the cinema." />
-<DialogueBox uk="Ми ходимо в театр раз на місяць." en="We go to the theater once a month." />
-<DialogueBox uk="Вони ходять на концерт у Львові." en="They go to a concert in Lviv." />
-<DialogueBox uk="У Києві я часто ходжу в музей." en="In Kyiv I often go to a museum." />
+```text
+Я люблю ходити в кіно.
+Ми ходимо в театр раз на місяць.
+Вони ходять на концерт у Львові.
+У Києві я часто ходжу в музей.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я люблю ходити в кіно.** | I like going to the cinema. |
+| **Ми ходимо в театр раз на місяць.** | We go to the theater once a month. |
+| **Вони ходять на концерт у Львові.** | They go to a concert in Lviv. |
+| **У Києві я часто ходжу в музей.** | In Kyiv I often go to a museum. |
 
 You do not need to analyze the case endings in these phrases yet. Keep the
 chunks whole: **в кіно**, **в театр**, **на концерт**, **в музей**. Use modern
@@ -127,31 +195,65 @@ Frequency words usually stand before the verb:
 
 The word **ніколи** needs **не**:
 
-<DialogueBox uk="Я ніколи не працюю у неділю." en="I never work on Sunday." />
-<DialogueBox uk="Він ніколи не грає в гру вночі." en="He never plays a game at night." />
+```text
+Я ніколи не працюю у неділю.
+Він ніколи не грає в гру вночі.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я ніколи не працюю у неділю.** | I never work on Sunday. |
+| **Він ніколи не грає в гру вночі.** | He never plays a game at night. |
 
 Do not write **Я ніколи працюю**. Ukrainian uses the negative particle with
 **ніколи**.
 
 You can also count how often:
 
-<DialogueBox uk="Коли ти читаєш? — Вранці, після уроків або на вихідних." en="When do you read? — In the morning, after lessons, or on weekends." />
-<DialogueBox uk="Він щодня грає у футбол." en="He plays football every day." />
-<DialogueBox uk="Я граю у футбол раз на тиждень." en="I play football once a week." />
-<DialogueBox uk="Вона грає у теніс двічі на тиждень." en="She plays tennis twice a week." />
-<DialogueBox uk="Ми ходимо в театр раз на місяць." en="We go to the theater once a month." />
-<DialogueBox uk="Вони тренуються тричі на тиждень." en="They train three times a week." />
-<DialogueBox uk="Я читаю кожен день." en="I read every day." />
+```text
+Коли ти читаєш? — Вранці, після уроків або на вихідних.
+Він щодня грає у футбол.
+Я граю у футбол раз на тиждень.
+Вона грає у теніс двічі на тиждень.
+Ми ходимо в театр раз на місяць.
+Вони тренуються тричі на тиждень.
+Я читаю кожен день.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Коли ти читаєш? — Вранці, після уроків або на вихідних.** | When do you read? — In the morning, after lessons, or on weekends. |
+| **Він щодня грає у футбол.** | He plays football every day. |
+| **Я граю у футбол раз на тиждень.** | I play football once a week. |
+| **Вона грає у теніс двічі на тиждень.** | She plays tennis twice a week. |
+| **Ми ходимо в театр раз на місяць.** | We go to the theater once a month. |
+| **Вони тренуються тричі на тиждень.** | They train three times a week. |
+| **Я читаю кожен день.** | I read every day. |
 
 Build a complete A1.4 plan with four pieces. **Підмет + Присудок + Обставина
 часу** is the safe sentence shape: **Я часто читаю цікаві книги на вихідних.**
 At A1, you do not need the case labels, but the roles are clear: subject,
 action, object, and time.
 
-<DialogueBox uk="У суботу о п'ятій ходімо в кіно." en="On Saturday at five, let's go to the cinema." />
-<DialogueBox uk="У неділю буде тепло, тому давай гуляти в парку." en="On Sunday it will be warm, so let's walk in the park." />
-<DialogueBox uk="Якщо буде дощ, ходімо в музей." en="If it rains, let's go to the museum." />
-<DialogueBox uk="У Карпатах холодно, але ми часто фотографуємо." en="In the Carpathians it is cold, but we often take photos." />
+```text
+У суботу о п'ятій ходімо в кіно.
+У неділю буде тепло, тому давай гуляти в парку.
+Якщо буде дощ, ходімо в музей.
+У Карпатах холодно, але ми часто фотографуємо.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **У суботу о п'ятій ходімо в кіно.** | On Saturday at five, let's go to the cinema. |
+| **У неділю буде тепло, тому давай гуляти в парку.** | On Sunday it will be warm, so let's walk in the park. |
+| **Якщо буде дощ, ходімо в музей.** | If it rains, let's go to the museum. |
+| **У Карпатах холодно, але ми часто фотографуємо.** | In the Carpathians it is cold, but we often take photos. |
 
 For a short contrast, use **а** or **але**: **Я часто читаю, а брат часто грає
 у футбол.** **Я люблю сучасну музику, а мій брат любить активний спорт.** For
@@ -164,19 +266,47 @@ For free time, keep three patterns in your head:
 
 **Action chunk + frequency + time = a useful sentence.**
 
-<DialogueBox uk="Я часто читаю на вихідних." en="I often read on weekends." />
-<DialogueBox uk="Іноді я слухаю музику ввечері." en="Sometimes I listen to music in the evening." />
-<DialogueBox uk="Ми рідко ходимо в театр." en="We rarely go to the theater." />
+```text
+Я часто читаю на вихідних.
+Іноді я слухаю музику ввечері.
+Ми рідко ходимо в театр.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я часто читаю на вихідних.** | I often read on weekends. |
+| **Іноді я слухаю музику ввечері.** | Sometimes I listen to music in the evening. |
+| **Ми рідко ходимо в театр.** | We rarely go to the theater. |
 
 **Invitation + place + day + time = a useful plan.**
 
-<DialogueBox uk="Ходімо в кіно в суботу о п'ятій." en="Let's go to the cinema on Saturday at five." />
-<DialogueBox uk="Давай грати у футбол у четвер." en="Let's play football on Thursday." />
+```text
+Ходімо в кіно в суботу о п'ятій.
+Давай грати у футбол у четвер.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Ходімо в кіно в суботу о п'ятій.** | Let's go to the cinema on Saturday at five. |
+| **Давай грати у футбол у четвер.** | Let's play football on Thursday. |
 
 **Weather + alternative = a safe A1.4 answer.**
 
-<DialogueBox uk="Сьогодні сонячно, тому ходімо гуляти." en="Today it is sunny, so let's go for a walk." />
-<DialogueBox uk="Буде дощ, тому ходімо в музей." en="It will rain, so let's go to the museum." />
+```text
+Сьогодні сонячно, тому ходімо гуляти.
+Буде дощ, тому ходімо в музей.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Сьогодні сонячно, тому ходімо гуляти.** | Today it is sunny, so let's go for a walk. |
+| **Буде дощ, тому ходімо в музей.** | It will rain, so let's go to the museum. |
 
 :::caution
 Build this topic from Ukrainian chunks. For Ukrainian learning by foreigners,
@@ -192,8 +322,20 @@ calques.
 
 Write five short lines about your free time:
 
-<DialogueBox uk="У вільний час я читаю." en="In my free time I read." />
-<DialogueBox uk="Зазвичай я слухаю музику ввечері." en="Usually I listen to music in the evening." />
-<DialogueBox uk="Я граю у футбол двічі на тиждень." en="I play football twice a week." />
-<DialogueBox uk="У суботу о п'ятій ходімо в кіно." en="On Saturday at five, let's go to the cinema." />
-<DialogueBox uk="Якщо буде дощ, ходімо в музей." en="If it rains, let's go to the museum." />
+```text
+У вільний час я читаю.
+Зазвичай я слухаю музику ввечері.
+Я граю у футбол двічі на тиждень.
+У суботу о п'ятій ходімо в кіно.
+Якщо буде дощ, ходімо в музей.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **У вільний час я читаю.** | In my free time I read. |
+| **Зазвичай я слухаю музику ввечері.** | Usually I listen to music in the evening. |
+| **Я граю у футбол двічі на тиждень.** | I play football twice a week. |
+| **У суботу о п'ятій ходімо в кіно.** | On Saturday at five, let's go to the cinema. |
+| **Якщо буде дощ, ходімо в музей.** | If it rains, let's go to the museum. |

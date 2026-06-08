@@ -4,10 +4,8 @@ description: "Котра година? О котрій? — позначення
 sidebar:
   order: 22
   label: "22. Котра година?"
-pipeline: linear-phase-4
-build_status: validated
 prev: checkpoint-actions
-next: false
+next: days-and-months
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -75,24 +73,39 @@ By the end, you can:
 - repair common unsafe time phrases such as **у вісім годин**, **пів восьмої**,
   **чверть після сьомої**, and **без двадцяти три**.
 
+## Діалоги
+
 ### Choose the clock answer
 
 <Quiz client:only='react' questions={JSON.parse(`[{"question": "1:00", "options": [{"text": "Перша.", "correct": true}, {"text": "Один година.", "correct": false}, {"text": "О першій.", "correct": false}], "explanation": "Котра година? asks for the clock label: перша."}, {"question": "5:00", "options": [{"text": "П'ята.", "correct": true}, {"text": "П'ять годин.", "correct": false}, {"text": "О п'ятій.", "correct": false}], "explanation": "П'ята is the point on the clock; п'ять годин is duration."}, {"question": "8:00", "options": [{"text": "Восьма.", "correct": true}, {"text": "Вісім годин.", "correct": false}, {"text": "У восьмій.", "correct": false}], "explanation": "Use the feminine ordinal form for the hour."}, {"question": "11:00", "options": [{"text": "Одинадцята.", "correct": true}, {"text": "Об одинадцятій.", "correct": false}, {"text": "Одинадцять годин.", "correct": false}], "explanation": "Одинадцята answers what time it is now."}]`)} />
-
-## Діалоги
 
 Read these two short phone scenes aloud. They show the two questions you need:
 one question asks what time it is now, and the other asks what time an action
 happens.
 
-<DialogueBox uk="Марина: Добрий день, Олексію! Котра година?" en="Maryna: Good afternoon, Oleksii! What time is it?" />
-<DialogueBox uk="Олексій: Десята година." en="Oleksii: It is ten o'clock." />
-<DialogueBox uk="Марина: О котрій ти працюєш?" en="Maryna: What time do you work?" />
-<DialogueBox uk="Олексій: Я працюю о дев'ятій." en="Oleksii: I work at nine." />
-<DialogueBox uk="Марина: А обідаєш?" en="Maryna: And do you have lunch?" />
-<DialogueBox uk="Олексій: Обідаю о першій." en="Oleksii: I have lunch at one." />
-<DialogueBox uk="Марина: Тоді зустріч о другій?" en="Maryna: Then a meeting at two?" />
-<DialogueBox uk="Олексій: Так, о другій добре." en="Oleksii: Yes, at two is good." />
+```text
+Марина: Добрий день, Олексію! Котра година?
+Олексій: Десята година.
+Марина: О котрій ти працюєш?
+Олексій: Я працюю о дев'ятій.
+Марина: А обідаєш?
+Олексій: Обідаю о першій.
+Марина: Тоді зустріч о другій?
+Олексій: Так, о другій добре.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Марина: Добрий день, Олексію! Котра година?** | Maryna: Good afternoon, Oleksii! What time is it? |
+| **Олексій: Десята година.** | Oleksii: It is ten o'clock. |
+| **Марина: О котрій ти працюєш?** | Maryna: What time do you work? |
+| **Олексій: Я працюю о дев'ятій.** | Oleksii: I work at nine. |
+| **Марина: А обідаєш?** | Maryna: And do you have lunch? |
+| **Олексій: Обідаю о першій.** | Oleksii: I have lunch at one. |
+| **Марина: Тоді зустріч о другій?** | Maryna: Then a meeting at two? |
+| **Олексій: Так, о другій добре.** | Oleksii: Yes, at two is good. |
 
 Notice the pattern. **Котра година?** asks for the time on the clock:
 **десята година**, **перша година**, **п'ята година**. In quick speech, people
@@ -108,12 +121,25 @@ paradigm. Your active job is to pair a daily action with a time:
 
 Here is the same pattern inside a daily routine:
 
-<DialogueBox uk="Олена: Коли ти снідаєш?" en="Olena: When do you have breakfast?" />
-<DialogueBox uk="Данило: О восьмій ранку." en="Danylo: At eight in the morning." />
-<DialogueBox uk="Олена: А коли обідаєш?" en="Olena: And when do you have lunch?" />
-<DialogueBox uk="Данило: О першій дня." en="Danylo: At one in the afternoon." />
-<DialogueBox uk="Олена: Вечеряєш удома?" en="Olena: Do you have dinner at home?" />
-<DialogueBox uk="Данило: Так, вечеряю о сьомій вечора." en="Danylo: Yes, I have dinner at seven in the evening." />
+```text
+Олена: Коли ти снідаєш?
+Данило: О восьмій ранку.
+Олена: А коли обідаєш?
+Данило: О першій дня.
+Олена: Вечеряєш удома?
+Данило: Так, вечеряю о сьомій вечора.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Коли ти снідаєш?** | Olena: When do you have breakfast? |
+| **Данило: О восьмій ранку.** | Danylo: At eight in the morning. |
+| **Олена: А коли обідаєш?** | Olena: And when do you have lunch? |
+| **Данило: О першій дня.** | Danylo: At one in the afternoon. |
+| **Олена: Вечеряєш удома?** | Olena: Do you have dinner at home? |
+| **Данило: Так, вечеряю о сьомій вечора.** | Danylo: Yes, I have dinner at seven in the evening. |
 
 The time-of-day words help avoid ambiguity: **ранку**, **дня**, **вечора**,
 **ночі**. Say **о сьомій ранку** for 7 AM and **о сьомій вечора** for 7 PM.
@@ -233,29 +259,41 @@ answers: **з дев'ятої до п'ятої**. A workday sentence can be simp
 **Я працюю з дев'ятої до п'ятої.** This is enough for A1. The full grammar of
 these forms comes later.
 
-### What job does the phrase do?
-
-<GroupSort client:only='react' groups={JSON.parse(`{"Clock answer": ["перша", "п'ята", "десята", "дванадцята"], "Schedule answer": ["о першій", "о п'ятій", "об одинадцятій", "о дванадцятій"], "Time of day": ["ранку", "дня", "вечора", "ночі"]}`)} />
-
-### Set the meeting time
-
-<Order client:only='react' items={JSON.parse(`["Добрий день! Котра година?", "Зараз десята.", "О котрій ти працюєш?", "Я працюю о дев'ятій.", "Тоді зустріч о другій?", "Так, о другій добре."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5]`)} instruction={"Put the phone exchange in a natural order."} isUkrainian={false} />
-
 ## 📋 Підсумок
 
 Keep three cards in your head.
 
 First card: ask for the time now.
 
-<DialogueBox uk="Котра година?" en="What time is it?" />
-<DialogueBox uk="Зараз друга." en="It is two." />
-<DialogueBox uk="Зараз пів на третю." en="It is half past two." />
+```text
+Котра година?
+Зараз друга.
+Зараз пів на третю.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Котра година?** | What time is it? |
+| **Зараз друга.** | It is two. |
+| **Зараз пів на третю.** | It is half past two. |
 
 Second card: ask for the time of an action.
 
-<DialogueBox uk="О котрій годині зустріч?" en="What time is the meeting?" />
-<DialogueBox uk="Зустріч о другій." en="The meeting is at two." />
-<DialogueBox uk="Фільм об одинадцятій." en="The film is at eleven." />
+```text
+О котрій годині зустріч?
+Зустріч о другій.
+Фільм об одинадцятій.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **О котрій годині зустріч?** | What time is the meeting? |
+| **Зустріч о другій.** | The meeting is at two. |
+| **Фільм об одинадцятій.** | The film is at eleven. |
 
 Third card: repair the unsafe time habits before they become automatic.
 
@@ -280,23 +318,27 @@ For your own answer, write five short lines. Use one line for the time now, one
 line for waking up, one line for work or study, one line for lunch or dinner,
 and one line for a meeting:
 
-<DialogueBox uk="Зараз восьма." en="It is eight now." />
-<DialogueBox uk="Я прокидаюся о сьомій ранку." en="I wake up at seven in the morning." />
-<DialogueBox uk="Я працюю о дев'ятій." en="I work at nine." />
-<DialogueBox uk="Обідаю о першій дня." en="I have lunch at one in the afternoon." />
-<DialogueBox uk="Зустріч о третій." en="The meeting is at three." />
+```text
+Зараз восьма.
+Я прокидаюся о сьомій ранку.
+Я працюю о дев'ятій.
+Обідаю о першій дня.
+Зустріч о третій.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Зараз восьма.** | It is eight now. |
+| **Я прокидаюся о сьомій ранку.** | I wake up at seven in the morning. |
+| **Я працюю о дев'ятій.** | I work at nine. |
+| **Обідаю о першій дня.** | I have lunch at one in the afternoon. |
+| **Зустріч о третій.** | The meeting is at three. |
 
 If you only remember one rule, remember this: **котра? -> перша, друга,
 третя** for the clock; **о котрій? -> о першій, о другій, о третій** for the
 schedule.
-
-### Build a safe time line
-
-<Translate client:only='react' questions={JSON.parse(`[{"source": "It is seven now.", "options": [{"text": "Зараз сьома.", "correct": true}, {"text": "Зараз сім годин.", "correct": false}, {"text": "Зараз є сім.", "correct": false}], "explanation": "Clock time uses the ordinal hour word."}, {"source": "I wake up at seven in the morning.", "options": [{"text": "Я прокидаюся о сьомій ранку.", "correct": true}, {"text": "Я прокидаюся у сім годин.", "correct": false}, {"text": "Я прокидаюся сьома ранку.", "correct": false}], "explanation": "A schedule uses о сьомій."}, {"source": "The meeting is at two.", "options": [{"text": "Зустріч о другій.", "correct": true}, {"text": "Зустріч у дві години.", "correct": false}, {"text": "Зустріч друга.", "correct": false}], "explanation": "Use о другій for the planned time."}, {"source": "It is half past six.", "options": [{"text": "Пів на сьому.", "correct": true}, {"text": "Пів сьомої.", "correct": false}, {"text": "Половина після шостої.", "correct": false}], "explanation": "The safe chunk is пів на + next hour."}]`)} />
-
-### Repair time traps
-
-<ErrorCorrection client:only='react' instruction="Choose the standard Ukrainian repair." items={JSON.parse(`[{"sentence": "Зараз є п'ять годин.", "errorWord": "Зараз є п'ять годин.", "correctForm": "Зараз п'ята (година).", "options": ["Зараз п'ята (година).", "Зараз є п'ять годин.", "Зараз о п'ятій."], "explanation": "For clock time, use the feminine ordinal hour and no є."}, {"sentence": "Уроки починаються у вісім годин.", "errorWord": "у вісім годин", "correctForm": "Уроки починаються о восьмій.", "options": ["Уроки починаються о восьмій.", "Уроки починаються у вісім годин.", "Уроки починаються восьма."], "explanation": "Scheduled time uses о/об, not у/в."}, {"sentence": "Чверть після сьомої.", "errorWord": "після", "correctForm": "Чверть на восьму. (або чверть по сьомій)", "options": ["Чверть на восьму. (або чверть по сьомій)", "Чверть після сьомої.", "Чверть без восьмої."], "explanation": "Use на or по for the first half of the hour."}, {"sentence": "Пів восьмої.", "errorWord": "Пів восьмої.", "correctForm": "Пів на восьму.", "options": ["Пів на восьму.", "Пів восьмої.", "Половина після сьомої."], "explanation": "На is part of the half-hour chunk."}, {"sentence": "Без двадцяти три.", "errorWord": "Без", "correctForm": "За двадцять третя. (або двадцять до третьої)", "options": ["За двадцять третя. (або двадцять до третьої)", "Без двадцяти три.", "Після двадцяти третьої."], "explanation": "Use за or до, not без, for time before the next hour."}]`)} />
 
 </TabItem>
 <TabItem label="Vocabulary">
@@ -307,22 +349,6 @@ schedule.
 
 </TabItem>
 <TabItem label="Activities">
-
-### Choose the clock answer
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "1:00", "options": [{"text": "Перша.", "correct": true}, {"text": "Один година.", "correct": false}, {"text": "О першій.", "correct": false}], "explanation": "Котра година? asks for the clock label: перша."}, {"question": "5:00", "options": [{"text": "П'ята.", "correct": true}, {"text": "П'ять годин.", "correct": false}, {"text": "О п'ятій.", "correct": false}], "explanation": "П'ята is the point on the clock; п'ять годин is duration."}, {"question": "8:00", "options": [{"text": "Восьма.", "correct": true}, {"text": "Вісім годин.", "correct": false}, {"text": "У восьмій.", "correct": false}], "explanation": "Use the feminine ordinal form for the hour."}, {"question": "11:00", "options": [{"text": "Одинадцята.", "correct": true}, {"text": "Об одинадцятій.", "correct": false}, {"text": "Одинадцять годин.", "correct": false}], "explanation": "Одинадцята answers what time it is now."}]`)} />
-
-### Digital time to Ukrainian chunk
-
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "2:00", "right": "друга"}, {"left": "4:00", "right": "четверта"}, {"left": "7:00", "right": "сьома"}, {"left": "10:00", "right": "десята"}, {"left": "1:30", "right": "пів на другу"}, {"left": "6:30", "right": "пів на сьому"}, {"left": "7:15", "right": "чверть на восьму"}, {"left": "7:45", "right": "за чверть восьма"}]`)} />
-
-### Schedule time gaps
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я прокидаюся ___.", "answer": "о сьомій", "options": ["о сьомій", "сьома", "у сім годин"]}, {"sentence": "Ми снідаємо ___.", "answer": "о восьмій", "options": ["о восьмій", "восьма", "у восьму"]}, {"sentence": "Зустріч ___.", "answer": "о другій", "options": ["о другій", "друга", "у два"]}, {"sentence": "Фільм починається ___.", "answer": "об одинадцятій", "options": ["об одинадцятій", "о одинадцятій", "одинадцята"]}, {"sentence": "Обід ___.", "answer": "о першій дня", "options": ["о першій дня", "перша дня", "у один день"]}, {"sentence": "Вечеря ___.", "answer": "о сьомій вечора", "options": ["о сьомій вечора", "сьома вечора", "у сьому вечора"]}]`)} />
-
-### Full hour or duration
-
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Зараз п'ята means it is five o'clock.", "isTrue": true, "explanation": "П'ята is the clock-hour label."}, {"statement": "П'ять годин means five o'clock.", "isTrue": false, "explanation": "П'ять годин means a duration of five hours."}, {"statement": "Котра година? asks for the current time.", "isTrue": true, "explanation": "Answer with перша, друга, третя, and so on."}, {"statement": "О котрій годині? asks when an action happens.", "isTrue": true, "explanation": "Answer with о першій, о другій, о третій."}, {"statement": "Пів на восьму means 7:30.", "isTrue": true, "explanation": "The half-hour chunk looks toward the next hour."}, {"statement": "Пів восьмої is the safe A1 chunk.", "isTrue": false, "explanation": "Use пів на восьму."}]`)} />
 
 ### What job does the phrase do?
 
