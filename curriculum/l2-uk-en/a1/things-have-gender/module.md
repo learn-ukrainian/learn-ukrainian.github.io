@@ -105,15 +105,31 @@ adjective table yet.
 
 ## Предмети навколо
 
-Use **У мене є...** from the family module with objects.
+Use **У мене є...** from the family module with objects. Read the Ukrainian
+dialogue first. Use the support table after the dialogue to check meaning.
 
-<DialogueBox uk="Марія: Привіт! Дивись, це моя кімната." en="Mariia: Hi! Look, this is my room." />
-<DialogueBox uk="Оленка: Класно! У тебе є стіл?" en="Olenka: Nice! Do you have a table?" />
-<DialogueBox uk="Марія: Так, у мене є стіл і ліжко." en="Mariia: Yes, I have a table and a bed." />
-<DialogueBox uk="Оленка: А це твоя лампа?" en="Olenka: And is this your lamp?" />
-<DialogueBox uk="Марія: Так. Це моя лампа. Вона тут." en="Mariia: Yes. This is my lamp. It is here." />
-<DialogueBox uk="Оленка: А вікно?" en="Olenka: And the window?" />
-<DialogueBox uk="Марія: Ось воно. Моє вікно велике." en="Mariia: Here it is. My window is big." />
+```text
+Марія: Привіт! Дивись, це моя кімната.
+Оленка: Класно! У тебе є стіл?
+Марія: Так, у мене є стіл і ліжко.
+Оленка: А це твоя лампа?
+Марія: Так. Це моя лампа. Вона тут.
+Оленка: А вікно?
+Марія: Ось воно. Моє вікно велике.
+```
+
+Support after the dialogue:
+
+| Українська | English support |
+| --- | --- |
+| **Привіт!** | Hi! |
+| **Дивись, це моя кімната.** | Look, this is my room. |
+| **У тебе є стіл?** | Do you have a table? |
+| **У мене є стіл і ліжко.** | I have a table and a bed. |
+| **А це твоя лампа?** | And is this your lamp? |
+| **Вона тут.** | It is here. The word **лампа** chooses **вона**. |
+| **Ось воно.** | Here it is. The word **вікно** chooses **воно**. |
+| **Моє вікно велике.** | My window is big. |
 
 Read the object lines again and notice the pronoun:
 
@@ -126,9 +142,19 @@ choose the pronoun.
 
 Now move to a bag:
 
-<DialogueBox uk="Що у тебе є?" en="What do you have?" />
-<DialogueBox uk="У мене є книга, телефон і фото." en="I have a book, a phone, and a photo." />
-<DialogueBox uk="А у мене є ручка і зошит." en="And I have a pen and a notebook." />
+```text
+Оленка: Що у тебе є?
+Марія: У мене є книга, телефон і фото.
+Оленка: А у мене є ручка і зошит.
+```
+
+Support after the dialogue:
+
+| Українська | English support |
+| --- | --- |
+| **Що у тебе є?** | What do you have? |
+| **У мене є книга, телефон і фото.** | I have a book, a phone, and a photo. |
+| **А у мене є ручка і зошит.** | And I have a pen and a notebook. |
 
 **Фото** is a useful beginner word. Store it as **воно**: **моє фото**.
 
@@ -175,15 +201,31 @@ For people, choose the form that fits the person.
 
 Use the feminine profession as the normal form for a woman:
 
-<DialogueBox uk="Вона студентка." en="She is a student." />
-<DialogueBox uk="Вона вчителька." en="She is a teacher." />
-<DialogueBox uk="Вона лікарка." en="She is a doctor." />
+```text
+Вона студентка.
+Вона вчителька.
+Вона лікарка.
+```
+
+| Українська | English support |
+| --- | --- |
+| **Вона студентка.** | She is a student. |
+| **Вона вчителька.** | She is a teacher. |
+| **Вона лікарка.** | She is a doctor. |
 
 For a man:
 
-<DialogueBox uk="Він студент." en="He is a student." />
-<DialogueBox uk="Він вчитель." en="He is a teacher." />
-<DialogueBox uk="Він лікар." en="He is a doctor." />
+```text
+Він студент.
+Він вчитель.
+Він лікар.
+```
+
+| Українська | English support |
+| --- | --- |
+| **Він студент.** | He is a student. |
+| **Він вчитель.** | He is a teacher. |
+| **Він лікар.** | He is a doctor. |
 
 Keep the earlier identity rule: **Я студент. Я студентка.** Do not force
 **є** into that A1 sentence.
@@ -218,28 +260,37 @@ The gender-flip mini-check uses five words that are not your active vocabulary:
 props. The point is simple: trust the Ukrainian gender test, not an instinct
 from another language.
 
-### Textbook check
+### Самоперевірка
 
-Cover the English side and say the Ukrainian aloud:
+Cover the English support and say the Ukrainian aloud:
 
-| English cue | Ukrainian |
+| Українська | English support |
 | --- | --- |
-| This is my room. | **Це моя кімната.** |
-| I have a table. | **У мене є стіл.** |
-| I have a book. | **У мене є книга.** |
-| I have a window. | **У мене є вікно.** |
-| My table | **мій стіл** |
-| My pen | **моя ручка** |
-| My bed | **моє ліжко** |
-| Where is the table? It is here. | **Де стіл? Він тут.** |
-| Where is the book? It is here. | **Де книга? Вона тут.** |
-| Where is the window? It is here. | **Де вікно? Воно тут.** |
+| **Це моя кімната.** | This is my room. |
+| **У мене є стіл.** | I have a table. |
+| **У мене є книга.** | I have a book. |
+| **У мене є вікно.** | I have a window. |
+| **мій стіл** | my table |
+| **моя ручка** | my pen |
+| **моє ліжко** | my bed |
+| **Де стіл? Він тут.** | Where is the table? It is here. |
+| **Де книга? Вона тут.** | Where is the book? It is here. |
+| **Де вікно? Воно тут.** | Where is the window? It is here. |
 
-Then make three tiny room lines:
+Then make three tiny room lines. Read the Ukrainian first, then check the
+support.
 
-<DialogueBox uk="Це моя кімната." en="This is my room." />
-<DialogueBox uk="У мене є стіл, книга і вікно." en="I have a table, a book, and a window." />
-<DialogueBox uk="Мій стіл тут, моя книга тут, моє вікно там." en="My table is here, my book is here, my window is there." />
+```text
+Це моя кімната.
+У мене є стіл, книга і вікно.
+Мій стіл тут, моя книга тут, моє вікно там.
+```
+
+| Українська | English support |
+| --- | --- |
+| **Це моя кімната.** | This is my room. |
+| **У мене є стіл, книга і вікно.** | I have a table, a book, and a window. |
+| **Мій стіл тут, моя книга тут, моє вікно там.** | My table is here, my book is here, my window is there. |
 
 Workbook practice will make the pattern automatic: sort nouns by gender, choose
 **він / вона / воно**, complete **мій / моя / моє**, use **У мене є...**, and
