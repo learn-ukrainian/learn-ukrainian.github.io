@@ -27,6 +27,17 @@ def test_shared_ladder_order_includes_agy_after_pro():
     assert len(ladder) == 7
 
 
+def test_lint_agent_trailer_accepts_agy():
+    from audit.lint_agent_trailer import _TRAILER_RE
+
+    sample = "X-Agent: agy/2739-gemini-takeover"
+    match = _TRAILER_RE.search(sample)
+
+    assert match is not None, "lint_agent_trailer rejected agy-authored trailer"
+    assert match.group("agent") == "agy"
+    assert match.group("task") == "2739-gemini-takeover"
+
+
 def test_agy_retryable_error_advances_to_flash_rung():
     outcomes = {
         (PRIMARY_GEMINI_MODEL, "api"): AttemptOutcome(

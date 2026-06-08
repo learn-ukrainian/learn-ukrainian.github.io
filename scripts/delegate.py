@@ -95,6 +95,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -404,6 +405,7 @@ def _resolve_sha(path: Path, ref: str = "HEAD") -> str | None:
         capture_output=True,
         text=True,
         check=False,
+        env=_sanitized_git_env(),
     )
     if proc.returncode != 0:
         return None
@@ -419,6 +421,7 @@ def _count_commits_ahead(worktree: Path, base_ref: str) -> int | None:
         capture_output=True,
         text=True,
         check=False,
+        env=_sanitized_git_env(),
     )
     if proc.returncode != 0:
         return None
@@ -426,6 +429,321 @@ def _count_commits_ahead(worktree: Path, base_ref: str) -> int | None:
         return int((proc.stdout or "").strip())
     except ValueError:
         return None
+
+
+def _origin_base_ref(base_branch: str) -> str:
+    """Return the remote ref used for ahead-count checks."""
+    if base_branch.startswith("origin/"):
+        return base_branch
+    return f"origin/{base_branch}"
+
+
+def _base_branch_name(base_branch: str) -> str:
+    """Return a PR base branch name without the remote prefix."""
+    return base_branch.removeprefix("origin/")
+
+
+_GIT_ENV_DENYLIST = {
+    "GIT_DIR",
+    "GIT_WORK_TREE",
+    "GIT_INDEX_FILE",
+    "GIT_OBJECT_DIRECTORY",
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+    "GIT_NAMESPACE",
+    "GIT_CEILING_DIRECTORIES",
+    "GIT_DISCOVERY_ACROSS_FILESYSTEM",
+    "GIT_COMMON_DIR",
+}
+
+
+def _sanitized_git_env() -> dict[str, str]:
+    """Drop repo-redirecting Git env so ``cwd=worktree`` resolves that repo."""
+    return {
+        key: value
+        for key, value in os.environ.items()
+        if key not in _GIT_ENV_DENYLIST and not key.startswith("PRE_COMMIT")
+    }
+
+
+@dataclass(frozen=True)
+class AutoFinalizeResult:
+    ok: bool
+    commit_sha: str | None = None
+    pr_url: str | None = None
+    error: str | None = None
+    changed_files: tuple[str, ...] = ()
+
+
+def _format_process_failure(proc: subprocess.CompletedProcess[str]) -> str:
+    detail = (proc.stderr or proc.stdout or "").strip()
+    if detail:
+        return detail.splitlines()[-1]
+    return f"exit {proc.returncode}"
+
+
+def _worktree_is_dirty(worktree: Path) -> bool | None:
+    try:
+        status_proc = subprocess.run(
+            ["git", "status", "--porcelain"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+        )
+    except OSError:
+        return None
+    if status_proc.returncode != 0:
+        return None
+    return bool((status_proc.stdout or "").strip())
+
+
+def _auto_finalize_changed_files(worktree: Path) -> tuple[str, ...]:
+    tracked = subprocess.run(
+        ["git", "diff", "--name-only", "HEAD", "--"],
+        cwd=worktree,
+        capture_output=True,
+        text=True,
+        check=False,
+        env=_sanitized_git_env(),
+    )
+    untracked = subprocess.run(
+        ["git", "ls-files", "--others", "--exclude-standard"],
+        cwd=worktree,
+        capture_output=True,
+        text=True,
+        check=False,
+        env=_sanitized_git_env(),
+    )
+    if tracked.returncode != 0 or untracked.returncode != 0:
+        return ()
+    changed = {
+        path.strip()
+        for path in (*tracked.stdout.splitlines(), *untracked.stdout.splitlines())
+        if path.strip()
+    }
+    return tuple(sorted(changed))
+
+
+def _current_branch(worktree: Path) -> str | None:
+    proc = subprocess.run(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+        cwd=worktree,
+        capture_output=True,
+        text=True,
+        check=False,
+        env=_sanitized_git_env(),
+    )
+    if proc.returncode != 0:
+        return None
+    branch = (proc.stdout or "").strip()
+    return branch or None
+
+
+def _x_agent_task_id(agent: str, task_id: str) -> str:
+    normalized = _normalize_task_id(agent, task_id)
+    safe = re.sub(r"[^A-Za-z0-9._-]+", "-", normalized).strip(".-")
+    return safe or "task"
+
+
+def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:
+    proc = subprocess.run(
+        ["git", "push", "-u", "origin", branch],
+        cwd=worktree,
+        capture_output=True,
+        text=True,
+        check=False,
+        env=_sanitized_git_env(),
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(f"git push failed: {_format_process_failure(proc)}")
+
+
+def _create_auto_finalize_pr(
+    worktree: Path,
+    *,
+    branch: str,
+    base_branch: str,
+    title: str,
+    body: str,
+) -> str | None:
+    proc = subprocess.run(
+        [
+            "gh",
+            "pr",
+            "create",
+            "--draft",
+            "--base",
+            base_branch,
+            "--head",
+            branch,
+            "--title",
+            title,
+            "--body",
+            body,
+        ],
+        cwd=worktree,
+        capture_output=True,
+        text=True,
+        check=False,
+        env=_sanitized_git_env(),
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(f"gh pr create failed: {_format_process_failure(proc)}")
+    lines = [line.strip() for line in (proc.stdout or "").splitlines() if line.strip()]
+    return lines[-1] if lines else None
+
+
+def _auto_finalize_dirty_worktree(
+    *,
+    worktree: Path,
+    task_id: str,
+    agent: str,
+    branch: str | None,
+    base_branch: str,
+) -> AutoFinalizeResult:
+    """Stage, commit, push, and draft-PR a cleanly exited dirty dispatch."""
+    changed_files = _auto_finalize_changed_files(worktree)
+    try:
+        worktree_proc = subprocess.run(
+            ["git", "rev-parse", "--is-inside-work-tree"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+        )
+    except OSError:
+        return AutoFinalizeResult(
+            ok=False,
+            error="not a git worktree",
+            changed_files=changed_files,
+        )
+    if worktree_proc.returncode != 0 or (worktree_proc.stdout or "").strip() != "true":
+        return AutoFinalizeResult(
+            ok=False,
+            error="not a git worktree",
+            changed_files=changed_files,
+        )
+
+    if not changed_files:
+        return AutoFinalizeResult(ok=False, error="clean-tree")
+
+    resolved_branch = branch or _current_branch(worktree)
+    if not resolved_branch or resolved_branch in {"HEAD", "main", "master"}:
+        return AutoFinalizeResult(
+            ok=False,
+            error=f"unsafe or unresolved branch {resolved_branch!r}",
+            changed_files=changed_files,
+        )
+
+    safe_task = _x_agent_task_id(agent, task_id)
+    subject = f"chore(dispatch): finalize {agent} task {safe_task}"
+    body = (
+        "Auto-finalized a dirty delegate worktree after the agent exited "
+        "with returncode 0 but made no commits.\n\n"
+        f"Delegate task: {task_id}\n"
+        f"Agent: {agent}"
+    )
+
+    commit_sha: str | None = None
+    try:
+        add_proc = subprocess.run(
+            ["git", "add", "-A"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+        )
+        if add_proc.returncode != 0:
+            return AutoFinalizeResult(
+                ok=False,
+                error=f"git add failed: {_format_process_failure(add_proc)}",
+                changed_files=changed_files,
+            )
+
+        commit_proc = subprocess.run(
+            [
+                "git",
+                "commit",
+                "-m",
+                subject,
+                "-m",
+                body,
+                "--trailer",
+                f"X-Agent: {agent}/{safe_task}",
+            ],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+        )
+        if commit_proc.returncode != 0:
+            subprocess.run(
+                ["git", "restore", "--staged", "--", *changed_files],
+                cwd=worktree,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=_sanitized_git_env(),
+            )
+            return AutoFinalizeResult(
+                ok=False,
+                error=f"git commit failed: {_format_process_failure(commit_proc)}",
+                changed_files=changed_files,
+            )
+
+        commit_sha = _resolve_sha(worktree)
+        _push_auto_finalize_branch(worktree, resolved_branch)
+        pr_url = _create_auto_finalize_pr(
+            worktree,
+            branch=resolved_branch,
+            base_branch=_base_branch_name(base_branch),
+            title=subject,
+            body=(
+                f"Auto-finalized delegate task `{task_id}` for `{agent}`.\n\n"
+                "The agent exited with `returncode=0`, left a dirty worktree, "
+                "and had made zero commits, so delegate.py staged the work, "
+                "created the commit, pushed the branch, and opened this draft PR."
+            ),
+        )
+    except (OSError, RuntimeError) as exc:
+        error = str(exc)
+        if commit_sha is not None:
+            try:
+                reset_proc = subprocess.run(
+                    ["git", "reset", "--soft", "HEAD~1"],
+                    cwd=worktree,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    env=_sanitized_git_env(),
+                )
+            except OSError as reset_exc:
+                error = f"{error}; git reset failed: {reset_exc}"
+            else:
+                if reset_proc.returncode != 0:
+                    error = (
+                        f"{error}; git reset failed: "
+                        f"{_format_process_failure(reset_proc)}"
+                    )
+                else:
+                    commit_sha = None
+        return AutoFinalizeResult(
+            ok=False,
+            commit_sha=commit_sha,
+            error=error,
+            changed_files=changed_files,
+        )
+
+    return AutoFinalizeResult(
+        ok=True,
+        commit_sha=commit_sha,
+        pr_url=pr_url,
+        changed_files=changed_files,
+    )
 
 
 def _validate_existing_worktree(
@@ -847,34 +1165,37 @@ def _run_worker(
     dirty_on_exit: bool | None = None
     worktree_path = final_state.get("worktree_path")
     if worktree_path:
-        try:
-            status_proc = subprocess.run(
-                ["git", "status", "--porcelain"],
-                cwd=worktree_path,
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-            if status_proc.returncode == 0:
-                dirty_on_exit = bool((status_proc.stdout or "").strip())
-        except OSError:
-            dirty_on_exit = None
+        dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
 
     commits_ahead: int | None = None
     needs_finalize = False
+    auto_finalize: AutoFinalizeResult | None = None
     if worktree_path and mode == "danger":
-        base_branch = final_state.get("worktree_base") or "main"
+        base_branch = str(final_state.get("worktree_base") or "main")
+        base_ref = _origin_base_ref(base_branch)
         commits_ahead = _count_commits_ahead(
             Path(worktree_path),
-            f"origin/{base_branch}",
+            base_ref,
         )
         if commits_ahead == 0 and dirty_on_exit:
             needs_finalize = True
 
-    if needs_finalize and (
-        final_status == "done"
-        or (final_status == "failed" and dirty_on_exit)
-    ):
+        if needs_finalize and returncode == 0:
+            auto_finalize = _auto_finalize_dirty_worktree(
+                worktree=Path(worktree_path),
+                task_id=task_id,
+                agent=agent,
+                branch=final_state.get("worktree_branch"),
+                base_branch=base_branch,
+            )
+            dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
+            commits_ahead = _count_commits_ahead(Path(worktree_path), base_ref)
+            if auto_finalize.ok:
+                needs_finalize = False
+                ok_outcome = True
+                final_status = "done"
+
+    if needs_finalize:
         final_status = "needs_finalize"
 
     final_state.update({
@@ -891,6 +1212,17 @@ def _run_worker(
         "worktree_dirty_on_exit": dirty_on_exit,
         "commits_ahead": commits_ahead,
         "needs_finalize": needs_finalize,
+        "auto_finalize": (
+            {
+                "ok": auto_finalize.ok,
+                "commit_sha": auto_finalize.commit_sha,
+                "pr_url": auto_finalize.pr_url,
+                "error": auto_finalize.error,
+                "changed_files": list(auto_finalize.changed_files),
+            }
+            if auto_finalize is not None
+            else None
+        ),
     })
     _write_state_atomic(state_path, final_state)
 
