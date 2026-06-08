@@ -74,16 +74,23 @@ Built via `v7_build folk … --worktree --writer claude-tools`; gate now passes;
 - ✅ **Dossier #1 `narodna-kultura-yak-systema`** (frame) — DONE, Claude corpus-hammer **SHIP** → **PR #2858**
   (HELD, no merge). Independently re-verified 3 §4 quotes at 1.0 + exact chunk ids; Берегиня flagged as
   romantic reconstruction; do-not-quote section present. **Wiki NOT yet compiled.**
-- ⏳ **Dossier #2 `narodni-viruvannia-mifolohiia-demonolohiia`** — IN FLIGHT (dispatch
-  `folk-dossier-narodni-viruvannia`, codex/gpt-5.5; watcher `b4p1gnvdz`). Needs Claude corpus-hammer
-  review on landing (esp. the anti-pantheon/Берегиня discipline — this is the highest-risk topic for it).
-- ⏳ **To fire next:** dossiers for `koliadky-shchedrivky`, `rodynna-obriadovist-zvychai`,
-  `dumy-nevilnytski-lytsarski` (all NEW; old April wikis exist but are pre-dossier — rebuild with dossier).
+- ✅ **Dossier #2 `narodni-viruvannia-mifolohiia-demonolohiia`** — DONE, Claude corpus-hammer **SHIP** →
+  **PR #2859** (HELD). Independently re-verified 5 quotes at 1.0 + exact chunk ids (incl. Крип'якевич
+  русалочка, Коцюбинський чугайстир); Берегиня rejected as ancient-goddess (search_heritage=СУМ-20 only);
+  anti-pantheon discipline exemplary; honest do-not-quote. **Wiki NOT yet compiled.**
+- ⏳ **Dossiers #3 `koliadky-shchedrivky` + #4 `rodynna-obriadovist-zvychai`** — IN FLIGHT (dispatches
+  `folk-dossier-koliadky`, `folk-dossier-rodynna`, codex/gpt-5.5). **UNREVIEWED** — need Claude
+  corpus-hammer review on landing (independent verify_quote sample, esp. koliadky's Щедрик do-not-quote).
+- ⏸ **Dossier #5 `dumy-nevilnytski-lytsarski` — HELD, do NOT fire yet:** the user has pending feedback on
+  m19 (`dumy-lytsarski`) that should shape this duma topic. Fire only after that feedback lands.
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **Review in-flight dossier #2** (`folk-dossier-narodni-viruvannia`, watcher `b4p1gnvdz`): read content,
-   INDEPENDENTLY re-run `verify_quote` on a §4 sample (don't trust self-report), check the
-   `search_heritage("берегиня")` discipline, `check_russian_shadow` on demon names. SHIP/REVISE → comment on its PR.
+1. **Review in-flight dossiers #3 koliadky + #4 rodynna** (dispatches `folk-dossier-koliadky`,
+   `folk-dossier-rodynna`): read content, INDEPENDENTLY re-run `verify_quote` on a §4 sample (don't trust
+   self-report — codex's self-report had truncated/mis-attributed samples that re-verified fine, so
+   re-check with the dossier's exact text+author), check decolonization/anti-pantheon discipline,
+   `check_russian_shadow` on key terms. SHIP/REVISE → comment on each PR. (#1 narodna-kultura #2858 and
+   #2 narodni-viruvannia #2859 are already SHIP.)
 2. **COMPILE WIKIS** for the SHIP'd dossiers (#1 narodna-kultura ready now; #2 after review). ⚠ CORPUS-ACCESS
    NOTE: `scripts/wiki/compile.py` uses `load_dossier_text(track,slug)` + dense retrieval which needs
    `data/` — worktrees SPARSE-EXCLUDE `data/`. So run compile from a `data/`-bearing checkout: copy the
