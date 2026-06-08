@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from scripts.agent_runtime.adapters import agy as agy_module
 from scripts.agent_runtime.adapters.agy import AgyAdapter
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.build import linear_pipeline
@@ -169,6 +170,19 @@ def test_parse_response_inlines_safe_saved_tool_result_pointer(tmp_path: Path) -
     assert result.tool_calls[0]["output_summary"] == (
         '[{"text": "inline result from agy steps file", "type": "text"}]'
     )
+
+
+def test_saved_tool_result_pointer_requires_prefix(tmp_path: Path) -> None:
+    text = "bare pointer file:///etc/hosts"
+    transcript = tmp_path / "transcript.jsonl"
+
+    result = agy_module._inline_saved_tool_result_pointer(
+        text,
+        transcript_path=transcript,
+    )
+
+    assert result == text
+    assert agy_module._SAVED_OUTPUT_POINTER_RE.search(text) is None
 
 
 def test_render_writer_prompt_includes_agy_specific_directives() -> None:

@@ -45,6 +45,24 @@ def _sanitize_git_env_for_test(monkeypatch) -> None:
             monkeypatch.delenv(key, raising=False)
 
 
+def test_sanitized_git_env_keeps_benign_git_transport_env(monkeypatch):
+    monkeypatch.setenv("GIT_SSH_COMMAND", "ssh -i test-key")
+    monkeypatch.setenv("GIT_SSH_VARIANT", "ssh")
+    monkeypatch.setenv("GIT_TRACE", "1")
+    monkeypatch.setenv("GIT_DIR", "/tmp/wrong-git-dir")
+    monkeypatch.setenv("GIT_WORK_TREE", "/tmp/wrong-work-tree")
+    monkeypatch.setenv("PRE_COMMIT_HOME", "/tmp/pre-commit")
+
+    env = delegate._sanitized_git_env()
+
+    assert env["GIT_SSH_COMMAND"] == "ssh -i test-key"
+    assert env["GIT_SSH_VARIANT"] == "ssh"
+    assert env["GIT_TRACE"] == "1"
+    assert "GIT_DIR" not in env
+    assert "GIT_WORK_TREE" not in env
+    assert "PRE_COMMIT_HOME" not in env
+
+
 # ---------------------------------------------------------------------------
 # State file helpers
 # ---------------------------------------------------------------------------
@@ -1131,6 +1149,107 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
         text=True,
     ).stdout
     assert "X-Agent: agy/auto-finalize-test" in message
+
+
+def test_auto_finalize_push_failure_soft_resets_local_commit(tmp_path, monkeypatch):
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = tmp_path / "worktree"
+    subprocess.run(
+        ["git", "init", "--initial-branch=main", str(worktree)],
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.email", "test@example.com"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "test"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+    )
+    (worktree / "README.md").write_text("base\n", encoding="utf-8")
+    subprocess.run(["git", "add", "README.md"], cwd=worktree, check=True)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=worktree, check=True)
+    subprocess.run(
+        ["git", "checkout", "-b", "agy/push-fails"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+    )
+    base_head = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    (worktree / "artifact.txt").write_text("agy wrote this\n", encoding="utf-8")
+
+    def fail_push(_worktree: Path, _branch: str) -> None:
+        raise RuntimeError("simulated push failure")
+
+    def fail_create_pr(**_kwargs: Any) -> str:
+        pytest.fail("PR creation must not run after push failure")
+
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", fail_push)
+    monkeypatch.setattr(delegate, "_create_auto_finalize_pr", fail_create_pr)
+
+    result = delegate._auto_finalize_dirty_worktree(
+        worktree=worktree,
+        task_id="agy-push-fails",
+        agent="agy",
+        branch="agy/push-fails",
+        base_branch="main",
+    )
+
+    status = subprocess.run(
+        ["git", "status", "--porcelain"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    head = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    log_subjects = subprocess.run(
+        ["git", "log", "--format=%s"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout
+
+    assert status
+    assert head == base_head
+    assert "chore(dispatch): finalize agy task agy-push-fails" not in log_subjects
+    assert result.ok is False
+    assert result.error == "simulated push failure"
+    assert result.commit_sha is None
+
+
+def test_auto_finalize_rejects_non_git_worktree(tmp_path):
+    (tmp_path / "artifact.txt").write_text("not in git\n", encoding="utf-8")
+
+    result = delegate._auto_finalize_dirty_worktree(
+        worktree=tmp_path,
+        task_id="not-git",
+        agent="agy",
+        branch="agy/not-git",
+        base_branch="main",
+    )
+
+    assert result.ok is False
+    assert "worktree" in (result.error or "")
+    assert not (tmp_path / ".git").exists()
 
 
 def test_run_worker_forwards_max_budget_usd_to_runtime(tmp_tasks_dir, tmp_path):

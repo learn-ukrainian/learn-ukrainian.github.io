@@ -443,12 +443,25 @@ def _base_branch_name(base_branch: str) -> str:
     return base_branch.removeprefix("origin/")
 
 
+_GIT_ENV_DENYLIST = {
+    "GIT_DIR",
+    "GIT_WORK_TREE",
+    "GIT_INDEX_FILE",
+    "GIT_OBJECT_DIRECTORY",
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+    "GIT_NAMESPACE",
+    "GIT_CEILING_DIRECTORIES",
+    "GIT_DISCOVERY_ACROSS_FILESYSTEM",
+    "GIT_COMMON_DIR",
+}
+
+
 def _sanitized_git_env() -> dict[str, str]:
-    """Drop ambient hook Git env so ``cwd=worktree`` resolves that repo."""
+    """Drop repo-redirecting Git env so ``cwd=worktree`` resolves that repo."""
     return {
         key: value
         for key, value in os.environ.items()
-        if not key.startswith(("GIT_", "PRE_COMMIT"))
+        if key not in _GIT_ENV_DENYLIST and not key.startswith("PRE_COMMIT")
     }
 
 
@@ -591,6 +604,28 @@ def _auto_finalize_dirty_worktree(
 ) -> AutoFinalizeResult:
     """Stage, commit, push, and draft-PR a cleanly exited dirty dispatch."""
     changed_files = _auto_finalize_changed_files(worktree)
+    try:
+        worktree_proc = subprocess.run(
+            ["git", "rev-parse", "--is-inside-work-tree"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+        )
+    except OSError:
+        return AutoFinalizeResult(
+            ok=False,
+            error="not a git worktree",
+            changed_files=changed_files,
+        )
+    if worktree_proc.returncode != 0 or (worktree_proc.stdout or "").strip() != "true":
+        return AutoFinalizeResult(
+            ok=False,
+            error="not a git worktree",
+            changed_files=changed_files,
+        )
+
     if not changed_files:
         return AutoFinalizeResult(ok=False, error="clean-tree")
 
@@ -611,6 +646,7 @@ def _auto_finalize_dirty_worktree(
         f"Agent: {agent}"
     )
 
+    commit_sha: str | None = None
     try:
         add_proc = subprocess.run(
             ["git", "add", "-A"],
@@ -674,10 +710,31 @@ def _auto_finalize_dirty_worktree(
             ),
         )
     except (OSError, RuntimeError) as exc:
+        error = str(exc)
+        if commit_sha is not None:
+            try:
+                reset_proc = subprocess.run(
+                    ["git", "reset", "--soft", "HEAD~1"],
+                    cwd=worktree,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    env=_sanitized_git_env(),
+                )
+            except OSError as reset_exc:
+                error = f"{error}; git reset failed: {reset_exc}"
+            else:
+                if reset_proc.returncode != 0:
+                    error = (
+                        f"{error}; git reset failed: "
+                        f"{_format_process_failure(reset_proc)}"
+                    )
+                else:
+                    commit_sha = None
         return AutoFinalizeResult(
             ok=False,
-            commit_sha=_resolve_sha(worktree),
-            error=str(exc),
+            commit_sha=commit_sha,
+            error=error,
             changed_files=changed_files,
         )
 

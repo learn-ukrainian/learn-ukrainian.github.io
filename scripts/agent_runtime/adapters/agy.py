@@ -82,7 +82,7 @@ _STDOUT_MARKER_RE = re.compile(
 )
 _STDOUT_RESULT_PREFIX = "⎿"
 _SAVED_OUTPUT_POINTER_RE = re.compile(
-    r"(?:The output was large and was saved to:\s*)?"
+    r"The output was large and was saved to:\s*"
     r"(?P<uri>file://[^\s)]+)",
     re.IGNORECASE,
 )
