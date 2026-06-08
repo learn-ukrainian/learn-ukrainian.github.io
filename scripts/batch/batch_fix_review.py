@@ -184,7 +184,7 @@ def count_engagement(content_path: Path) -> int:
 
 def assemble_fix_prompt(files: dict, review_path: Path) -> Path:
     """Assemble fix prompt from template."""
-    template = REPO / "claude_extensions/phases/gemini/phase-fix.md"
+    template = REPO / "agents_extensions/shared/phases/gemini/phase-fix.md"
     dest = files["orchestration"] / "fix-prompt.md"
     files["orchestration"].mkdir(parents=True, exist_ok=True)
 
@@ -206,7 +206,7 @@ def assemble_fix_prompt(files: dict, review_path: Path) -> Path:
 
 def assemble_review_prompt(files: dict, level: str) -> Path:
     """Assemble review prompt from template."""
-    template = REPO / "claude_extensions/phases/gemini/phase-5-review.md"
+    template = REPO / "agents_extensions/shared/phases/gemini/phase-5-review.md"
     dest = files["orchestration"] / "phase-5-review-prompt.md"
     files["orchestration"].mkdir(parents=True, exist_ok=True)
 

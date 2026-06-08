@@ -7,7 +7,7 @@ placeholders remain, and writes the filled result.
 
 Usage:
     .venv/bin/python scripts/fill_template.py \
-        --template claude_extensions/phases/gemini/phase-2-content.md \
+        --template agents_extensions/shared/phases/gemini/phase-2-content.md \
         --placeholders orchestration/{slug}/placeholders.yaml \
         --output orchestration/{slug}/phase-2-prompt.md
 

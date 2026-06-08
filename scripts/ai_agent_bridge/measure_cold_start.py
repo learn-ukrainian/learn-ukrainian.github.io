@@ -76,9 +76,9 @@ MANUAL_FILE_READS: list[str] = [
 # down). Kept in the JSON so the delta in the baseline doc is
 # visible — the list should trend to zero.
 FALLBACK_FILE_READS: list[str] = [
-    "claude_extensions/rules/critical-rules.md",
-    "claude_extensions/rules/non-negotiable-rules.md",
-    "claude_extensions/rules/workflow.md",
+    "agents_extensions/shared/rules/critical-rules.md",
+    "agents_extensions/shared/rules/non-negotiable-rules.md",
+    "agents_extensions/shared/rules/workflow.md",
     "docs/best-practices/agent-cooperation.md",
     "docs/session-state/current.md",
     "docs/MONITOR-API.md",

@@ -17,8 +17,8 @@ on:
       # changes to hooks, statusline, rules, commands, etc. also trigger CI
       # and satisfy the required `Test (pytest)` branch-protection check.
       # Prior recurrence: #1544 widened for scripts/build/phases/**/*.md,
-      # #1546 widened for claude_extensions/** after statusline PR blocked.
-      - 'claude_extensions/**'
+      # #1546 widened for agents_extensions/shared/** after statusline PR blocked.
+      - 'agents_extensions/shared/**'
       - 'gemini_extensions/**'
       - 'scripts/build/phases/**/*.md'
       - 'scripts/build/contracts/**/*.md'
@@ -65,7 +65,7 @@ jobs:
               - 'pyproject.toml'
               - 'scripts/**/*.py'
               - 'tests/**/*.py'
-              - 'claude_extensions/**'
+              - 'agents_extensions/shared/**'
               - 'gemini_extensions/**'
               - 'scripts/build/phases/**/*.md'
               - 'scripts/build/contracts/**/*.md'
@@ -80,7 +80,7 @@ jobs:
               - 'pyproject.toml'
               - 'scripts/**/*.py'
               - 'tests/**/*.py'
-              - 'claude_extensions/**'
+              - 'agents_extensions/shared/**'
               - 'gemini_extensions/**'
               - 'scripts/build/phases/**/*.md'
               - 'scripts/build/contracts/**/*.md'

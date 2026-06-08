@@ -2,7 +2,7 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-HOOK="$REPO_ROOT/claude_extensions/hooks/session-setup.sh"
+HOOK="$REPO_ROOT/agents_extensions/shared/hooks/session-setup.sh"
 TMP_ROOT="$(mktemp -d)"
 trap 'rm -rf "$TMP_ROOT"' EXIT
 

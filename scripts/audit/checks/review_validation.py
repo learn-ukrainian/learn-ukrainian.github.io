@@ -68,7 +68,7 @@ TIER_CONFIG = {
         'levels': {'A1', 'A2'},
         'tracks': set(),
         'review_cmd': 'the matching v5/v6 review phase (tier-1-beginner)',
-        'tier_ref': 'claude_extensions/commands/review-tiers/tier-1-beginner.md',
+        'tier_ref': 'agents_extensions/shared/commands/review-tiers/tier-1-beginner.md',
         'min_chars': 400,
         'min_dimensions': 7,
         'required_headers': [
@@ -83,7 +83,7 @@ TIER_CONFIG = {
         'levels': {'B1', 'B2'},
         'tracks': set(),
         'review_cmd': 'the matching v5/v6 review phase',
-        'tier_ref': 'claude_extensions/commands/review-tiers/tier-2-core.md',
+        'tier_ref': 'agents_extensions/shared/commands/review-tiers/tier-2-core.md',
         'min_chars': 800,
         'min_dimensions': 8,
         'required_headers': [
@@ -99,7 +99,7 @@ TIER_CONFIG = {
         'levels': set(),
         'tracks': TIER_3_TRACKS,
         'review_cmd': 'the matching v5/v6 review phase',
-        'tier_ref': 'claude_extensions/commands/review-tiers/tier-3-seminar.md',
+        'tier_ref': 'agents_extensions/shared/commands/review-tiers/tier-3-seminar.md',
         'min_chars': 1500,
         'min_dimensions': 10,
         'required_headers': [
@@ -115,7 +115,7 @@ TIER_CONFIG = {
         'levels': {'C1', 'C2'},
         'tracks': {'c2-pro'},
         'review_cmd': 'the matching v5/v6 review phase',
-        'tier_ref': 'claude_extensions/commands/review-tiers/tier-4-advanced.md',
+        'tier_ref': 'agents_extensions/shared/commands/review-tiers/tier-4-advanced.md',
         'min_chars': 800,
         'min_dimensions': 8,
         'required_headers': [

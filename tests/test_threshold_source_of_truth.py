@@ -6,7 +6,7 @@ Guards against drift by rejecting:
      contexts anywhere in ``scripts/`` outside the source-of-truth module.
 
 Related incident: ISTORIO 3500 vs 4000 drift (Jan 2026), recorded in
-``claude_extensions/rules/non-negotiable-rules.md`` §1. EPIC #1451 P2-A.
+``agents_extensions/shared/rules/non-negotiable-rules.md`` §1. EPIC #1451 P2-A.
 """
 
 from __future__ import annotations

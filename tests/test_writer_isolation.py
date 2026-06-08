@@ -166,7 +166,7 @@ def test_claude_toolsearch_annotation_passes_isolation() -> None:
 
 
 def test_curriculum_writer_agent_exposes_v72_source_tools() -> None:
-    agent = (REPO_ROOT / "claude_extensions/agents/curriculum-writer.md").read_text(encoding="utf-8")
+    agent = (REPO_ROOT / "agents_extensions/shared/agents/curriculum-writer.md").read_text(encoding="utf-8")
 
     required = {
         "ToolSearch",
@@ -186,7 +186,7 @@ def test_curriculum_writer_agent_exposes_v72_source_tools() -> None:
 
 
 def test_claude_writer_agent_deploys_from_tracked_source(tmp_path: Path) -> None:
-    source = tmp_path / "claude_extensions" / "agents" / "curriculum-writer.md"
+    source = tmp_path / "agents_extensions/shared" / "agents" / "curriculum-writer.md"
     target = tmp_path / ".claude" / "agents" / "curriculum-writer.md"
     source.parent.mkdir(parents=True)
     source.write_text("tools: ToolSearch, mcp__sources__verify_words\n", encoding="utf-8")

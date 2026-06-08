@@ -36,6 +36,6 @@ Before writing prose, you MUST plan the emotional and engagement architecture:
 - **Phase 5**: Review-Content-v4 (14 dimensions, score 0-10, be brutally honest).
 
 ## 5. Review Protocol (v4 Enforcement)
-Rigorously apply `claude_extensions/commands/review-content-v4.md`.
+Rigorously apply `agents_extensions/shared/commands/review-content-v4.md`.
 - **Gating**: Richness 95%+, Naturalness 10/10, Immersion 95%+.
 - **Output**: Save report to `review/{slug}-review.md`. Reject shallow or robotic content.

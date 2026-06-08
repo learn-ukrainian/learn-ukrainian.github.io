@@ -1,6 +1,6 @@
 """Parsers for the /goal status-line grammar.
 
-Grammar source of truth: ``claude_extensions/rules/goal-driven-runs.md``.
+Grammar source of truth: ``agents_extensions/shared/rules/goal-driven-runs.md``.
 Every /goal turn ends with one of:
 
 * ``GOAL_STATUS turn=N/M blocked=N/M no_progress=N/M queue_head=<token>``

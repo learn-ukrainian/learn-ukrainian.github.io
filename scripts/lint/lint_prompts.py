@@ -3,7 +3,7 @@
 Prompt linter — catches known anti-patterns in Gemini skill/phase files
 and (optionally) curriculum research files.
 
-Runs automatically during `npm run claude:deploy` (add to package.json).
+Runs automatically during `npm run agents:deploy` (add to package.json).
 Can also be run standalone:
   .venv/bin/python scripts/lint_prompts.py               # Prompts only (deploy gate)
   .venv/bin/python scripts/lint_prompts.py --curriculum   # Also check research files
@@ -22,7 +22,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 # Directories to scan for prompt/skill files (deploy gate)
 PROMPT_SCAN_DIRS = [
     PROJECT_ROOT / "gemini_extensions" / "skills",
-    PROJECT_ROOT / "claude_extensions" / "phases",
+    PROJECT_ROOT / "agents_extensions/shared" / "phases",
 ]
 
 # Directories to scan for curriculum research files (--curriculum mode)

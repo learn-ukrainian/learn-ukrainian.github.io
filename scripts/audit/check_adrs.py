@@ -86,7 +86,7 @@ ORPHAN_REF_SCOPES: tuple[str, ...] = (
     "docs/best-practices",
     "docs/architecture",
     "curriculum",
-    "claude_extensions",
+    "agents_extensions/shared",
 )
 
 INDEX_START = "<!-- ADR-INDEX-START"

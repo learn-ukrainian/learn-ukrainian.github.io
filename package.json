@@ -31,6 +31,7 @@
     "build:landing": ".venv/bin/python scripts/build_landing_pages.py",
     "sync:landing": ".venv/bin/python scripts/sync_landing_pages.py",
     "sync:landing:dry": ".venv/bin/python scripts/sync_landing_pages.py --dry-run",
+    "agents:deploy": "scripts/deploy_prompts.sh",
     "claude:deploy": "scripts/deploy_prompts.sh",
     "lint:md": "markdownlint-cli2 \"curriculum/**/*.md\" \"docs/**/*.md\" \"*.md\"",
     "lint:md:fix": "markdownlint-cli2 --fix \"curriculum/**/*.md\" \"docs/**/*.md\" \"*.md\"",

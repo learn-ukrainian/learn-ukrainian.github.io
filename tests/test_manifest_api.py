@@ -30,12 +30,12 @@ client = TestClient(api_main.app, raise_server_exceptions=False)
 def test_rule_sources_includes_all_unscoped_files():
     """All 6 always-load Claude rule files must be served by /api/rules."""
     expected = {
-        "claude_extensions/rules/critical-rules.md",
-        "claude_extensions/rules/non-negotiable-rules.md",
-        "claude_extensions/rules/workflow.md",
-        "claude_extensions/rules/delegate-must-use-worktree.md",
-        "claude_extensions/rules/cli-help-standard.md",
-        "claude_extensions/rules/model-assignment.md",
+        "agents_extensions/shared/rules/critical-rules.md",
+        "agents_extensions/shared/rules/non-negotiable-rules.md",
+        "agents_extensions/shared/rules/workflow.md",
+        "agents_extensions/shared/rules/delegate-must-use-worktree.md",
+        "agents_extensions/shared/rules/cli-help-standard.md",
+        "agents_extensions/shared/rules/model-assignment.md",
     }
     assert set(rules_router.RULE_SOURCES) == expected
 

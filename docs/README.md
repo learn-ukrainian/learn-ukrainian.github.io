@@ -38,7 +38,7 @@ When in doubt: V7 doc overrides → V6 doc fills in → V5 doc fills in.
 
 ### Pipeline architecture
 
-- `claude_extensions/rules/pipeline.md` (deployed to `.claude/rules/pipeline.md`, `.codex/rules/pipeline.md`, etc.) — **current V7 policy.** Reviewer/writer assignment, decision-card links.
+- `agents_extensions/shared/rules/pipeline.md` (deployed to `.claude/rules/pipeline.md`, `.codex/rules/pipeline.md`, etc.) — **current V7 policy.** Reviewer/writer assignment, decision-card links.
 - `docs/architecture/ARCHITECTURE.md` — **V5/V6 era** per its own banner at line 5. Still authoritative for pedagogy + agent-cooperation patterns V7 didn't override.
 - `docs/architecture/RFC-410-MANIFEST-DRIVEN-ARCHITECTURE.md` — manifest-driven curriculum structure (Approved 2026-01-17).
 - `docs/architecture/adr/*.md` — sequential architectural decision records.
@@ -62,10 +62,11 @@ When in doubt: V7 doc overrides → V6 doc fills in → V5 doc fills in.
 
 ### Behavioral / rules
 
-- `claude_extensions/rules/*.md` — source (canonical). `.claude/`, `.agent/`, `.codex/`, `.gemini/` are deploy targets.
-- `claude_extensions/rules/goal-driven-runs.md` — `/goal` convention (#1884)
-- `claude_extensions/rules/mcp-sources-and-dictionaries.md` — MCP tool inventory
-- `claude_extensions/rules/critical-rules.md` (loaded via Monitor API, see `_load-via-api.md`)
+- `agents_extensions/shared/rules/*.md` — shared source (canonical). `.claude/`, `.agent/`, `.codex/`, `.gemini/` are deploy targets.
+- `agents_extensions/codex/` — Codex-owned overlays such as durable memory.
+- `agents_extensions/shared/rules/goal-driven-runs.md` — `/goal` convention (#1884)
+- `agents_extensions/shared/rules/mcp-sources-and-dictionaries.md` — MCP tool inventory
+- `agents_extensions/shared/rules/critical-rules.md` (loaded via Monitor API, see `_load-via-api.md`)
 
 ### Tracks
 
@@ -91,7 +92,7 @@ When in doubt: V7 doc overrides → V6 doc fills in → V5 doc fills in.
 
 1. **36 top-level docs/ files, no semantic grouping.** Authoritative `north-star.md` sits among April archives. Use this README as primary index.
 2. **18 HTML/MD duplicate pairs.** Prefer `.md` for AI-consumption; `.html` is a human-rendering companion only.
-3. **Rule deploy drift risk.** `claude_extensions/rules/*.md` is source; deployed copies may lag if `scripts/deploy_prompts.sh` hasn't been run. Verify with `diff claude_extensions/rules/X.md .claude/rules/X.md`.
+3. **Rule deploy drift risk.** `agents_extensions/` is source; deployed copies may lag if `npm run agents:deploy` hasn't been run. Verify with `scripts/check_rules_deployment.sh`.
 4. **V5/V6 era docs not in `_legacy/`.** `docs/architecture/ARCHITECTURE.md` is legacy but at canonical path. Read its own banner before treating as current.
 5. **`docs/architecture/adr/` vs `docs/decisions/`.** ADRs are architectural decisions; decisions are operational/policy. Both authoritative within scope.
 

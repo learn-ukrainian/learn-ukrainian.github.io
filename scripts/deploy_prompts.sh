@@ -25,6 +25,10 @@ set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
+AGENT_EXTENSIONS_ROOT="agents_extensions"
+SHARED_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/shared"
+CODEX_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/codex"
+
 DRY_RUN=false
 if [[ "${1:-}" == "--dry-run" ]]; then
     DRY_RUN=true
@@ -49,9 +53,10 @@ ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees"
 ORPHAN_PATHS_AGENT="wake cache *-thread-bootstrap.md *-thread-lease.json"
 ORPHAN_PATHS_AGENTS=""
 # agents/curriculum-orchestrator.toml and agents/curriculum-writer.toml —
-# Codex agent definitions with no claude_extensions equivalent.
+# Codex agent definitions with no shared equivalent.
+# memory/ — Codex-owned durable memory deployed from agents_extensions/codex/.
 # config.toml and hooks.json — Codex CLI configuration files managed directly by Codex.
-ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml agents/curriculum-writer.toml config.toml hooks.json"
+ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml agents/curriculum-writer.toml config.toml hooks.json memory"
 # tmp/ — Gemini CLI runtime workspace (e.g. .gemini/tmp/learn-ukrainian/);
 #        local working state, NOT a deploy artifact. Preserve across rsync --delete.
 # config.yaml — repository-level Gemini Code Assist for GitHub configuration.
@@ -62,7 +67,7 @@ ORPHAN_PATHS_GEMINI="config.yaml docs/ rules/ tmp/"
 # the system prompt. These six always-load rules are now served by the
 # Monitor API (`/api/rules?format=markdown`) and must not be deployed
 # to the Claude target. Other targets still receive them from
-# claude_extensions unchanged.
+# agents_extensions/shared unchanged.
 CLAUDE_RULE_AUTOLOAD_EXCLUDES=(
     "rules/critical-rules.md"
     "rules/non-negotiable-rules.md"
@@ -123,12 +128,12 @@ check_orphans() {
 # Step 0: Preflight — assert no undeclared orphan paths in destinations
 echo "=== Preflight (orphan-path guard) ==="
 orphan_fail=false
-check_orphans "claude_extensions" ".claude" "$ORPHAN_PATHS_CLAUDE" "claude_extensions → .claude" || orphan_fail=true
-check_orphans "claude_extensions" ".agent" "$ORPHAN_PATHS_AGENT" "claude_extensions → .agent" || orphan_fail=true
-check_orphans "claude_extensions/skills" ".agents/skills" "$ORPHAN_PATHS_AGENTS" "claude_extensions/skills → .agents/skills" || orphan_fail=true
-check_orphans "claude_extensions" ".codex" "$ORPHAN_PATHS_CODEX" "claude_extensions → .codex" || orphan_fail=true
+check_orphans "$SHARED_EXTENSIONS" ".claude" "$ORPHAN_PATHS_CLAUDE" "$SHARED_EXTENSIONS → .claude" || orphan_fail=true
+check_orphans "$SHARED_EXTENSIONS" ".agent" "$ORPHAN_PATHS_AGENT" "$SHARED_EXTENSIONS → .agent" || orphan_fail=true
+check_orphans "$SHARED_EXTENSIONS/skills" ".agents/skills" "$ORPHAN_PATHS_AGENTS" "$SHARED_EXTENSIONS/skills → .agents/skills" || orphan_fail=true
+check_orphans "$SHARED_EXTENSIONS" ".codex" "$ORPHAN_PATHS_CODEX" "$SHARED_EXTENSIONS → .codex" || orphan_fail=true
 check_orphans "gemini_extensions" ".gemini" "$ORPHAN_PATHS_GEMINI" "gemini_extensions → .gemini" || orphan_fail=true
-check_orphans "claude_extensions/rules" ".gemini/rules" "" "claude_extensions/rules → .gemini/rules" || orphan_fail=true
+check_orphans "$SHARED_EXTENSIONS/rules" ".gemini/rules" "" "$SHARED_EXTENSIONS/rules → .gemini/rules" || orphan_fail=true
 if [[ "$orphan_fail" == true ]]; then
     echo ""
     echo "❌ Deploy aborted: undeclared orphan paths would be deleted."
@@ -187,16 +192,51 @@ diff_dirs() {
     fi
 }
 
+diff_overlay_files() {
+    local src="$1" dst="$2" label="$3"
+    if [[ ! -d "$dst" ]]; then
+        echo "  $label: destination does not exist yet (will be created)"
+        has_changes=true
+        return
+    fi
+
+    local diff_out=""
+    local rel
+    while IFS= read -r rel; do
+        if [[ ! -f "$dst/$rel" ]]; then
+            diff_out+="Only in $src: $rel"$'\n'
+        elif ! cmp -s "$src/$rel" "$dst/$rel"; then
+            diff_out+="Files $src/$rel and $dst/$rel differ"$'\n'
+        fi
+    done < <(cd "$src" && find . -type f ! -name '.DS_Store' -print | sed 's#^\./##' | sort)
+
+    if [[ -n "$diff_out" ]]; then
+        echo "  $label:"
+        echo "$diff_out" | head -30 | sed 's/^/    /'
+        local count
+        count=$(echo "$diff_out" | wc -l | tr -d ' ')
+        if (( count > 30 )); then
+            echo "    ... ($count total changes)"
+        fi
+        has_changes=true
+    else
+        echo "  $label: no changes"
+    fi
+}
+
 diff_dirs \
-    "claude_extensions" \
+    "$SHARED_EXTENSIONS" \
     ".claude" \
-    "claude_extensions → .claude" \
+    "$SHARED_EXTENSIONS → .claude" \
     "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS"
-diff_dirs "claude_extensions" ".agent" "claude_extensions → .agent" "$ORPHAN_PATHS_AGENT"
-diff_dirs "claude_extensions/skills" ".agents/skills" "claude_extensions/skills → .agents/skills" "$ORPHAN_PATHS_AGENTS"
-diff_dirs "claude_extensions" ".codex" "claude_extensions → .codex" "$ORPHAN_PATHS_CODEX"
+diff_dirs "$SHARED_EXTENSIONS" ".agent" "$SHARED_EXTENSIONS → .agent" "$ORPHAN_PATHS_AGENT"
+diff_dirs "$SHARED_EXTENSIONS/skills" ".agents/skills" "$SHARED_EXTENSIONS/skills → .agents/skills" "$ORPHAN_PATHS_AGENTS"
+diff_dirs "$SHARED_EXTENSIONS" ".codex" "$SHARED_EXTENSIONS → .codex" "$ORPHAN_PATHS_CODEX"
+if [[ -d "$CODEX_EXTENSIONS" ]]; then
+    diff_overlay_files "$CODEX_EXTENSIONS" ".codex" "$CODEX_EXTENSIONS → .codex"
+fi
 diff_dirs "gemini_extensions" ".gemini" "gemini_extensions → .gemini" "$ORPHAN_PATHS_GEMINI"
-diff_dirs "claude_extensions/rules" ".gemini/rules" "claude_extensions/rules → .gemini/rules" ""
+diff_dirs "$SHARED_EXTENSIONS/rules" ".gemini/rules" "$SHARED_EXTENSIONS/rules → .gemini/rules" ""
 echo ""
 
 if [[ "$has_changes" == false ]]; then
@@ -212,11 +252,14 @@ fi
 # Step 3: Sync — with per-target --exclude for declared orphan paths
 echo "=== Syncing ==="
 # shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS") claude_extensions/ .claude/
+rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS") "$SHARED_EXTENSIONS/" .claude/
 # shellcheck disable=SC2046
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENT") claude_extensions/ .agent/
+rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENT") "$SHARED_EXTENSIONS/" .agent/
 # shellcheck disable=SC2046
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX") claude_extensions/ .codex/
+rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX") "$SHARED_EXTENSIONS/" .codex/
+if [[ -d "$CODEX_EXTENSIONS" ]]; then
+    rsync -av "$CODEX_EXTENSIONS/" .codex/
+fi
 # shellcheck disable=SC2046
 # rsync needs the destination's parent dir to exist before it can create
 # `.agents/skills/`. On a clean checkout (e.g. the test fixture in
@@ -224,9 +267,9 @@ rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX") claude_extensions/ .c
 # and rsync fails with `mkdir ".agents/skills" failed: No such file or
 # directory (2)`. Pre-create the parent so a fresh clone works.
 mkdir -p .agents
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENTS") claude_extensions/skills/ .agents/skills/
+rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENTS") "$SHARED_EXTENSIONS/skills/" .agents/skills/
 # shellcheck disable=SC2046
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_GEMINI") gemini_extensions/ .gemini/
-rsync -av --delete claude_extensions/rules/ .gemini/rules/
+rsync -av --delete "$SHARED_EXTENSIONS/rules/" .gemini/rules/
 echo ""
 echo "Deploy complete."

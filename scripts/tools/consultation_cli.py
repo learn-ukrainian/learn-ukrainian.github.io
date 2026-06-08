@@ -40,10 +40,10 @@ sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 from pipeline.consultation import TemplateChange, apply_template_patch
 
-QUEUE_DIR = PROJECT_ROOT / "claude_extensions" / "consultation-queue"
+QUEUE_DIR = PROJECT_ROOT / "agents_extensions/shared" / "consultation-queue"
 APPLIED_DIR = QUEUE_DIR / "applied"
 REJECTED_DIR = QUEUE_DIR / "rejected"
-TEMPLATE_DIR = PROJECT_ROOT / "claude_extensions" / "phases" / "gemini"
+TEMPLATE_DIR = PROJECT_ROOT / "agents_extensions/shared" / "phases" / "gemini"
 
 # ANSI colors
 GREEN = "\033[32m"

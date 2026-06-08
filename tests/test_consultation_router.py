@@ -26,13 +26,13 @@ SAMPLE_PROPOSAL = {
         {
             "find": "Write a 3-word unjumble",
             "replace": "Write a 5-word unjumble with case markers",
-            "file": "claude_extensions/phases/gemini/content.md",
+            "file": "agents_extensions/shared/phases/gemini/content.md",
             "rationale": "A2 needs more complex sentences",
         },
         {
             "find": "Use simple vocabulary",
             "replace": "Use graded vocabulary with frequency markers",
-            "file": "claude_extensions/phases/gemini/content.md",
+            "file": "agents_extensions/shared/phases/gemini/content.md",
             "rationale": "Better vocabulary progression",
         },
     ],

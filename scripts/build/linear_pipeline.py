@@ -39,7 +39,7 @@ SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 TEXTBOOK_SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
-CLAUDE_WRITER_AGENT_SOURCE = PROJECT_ROOT / "claude_extensions" / "agents" / "curriculum-writer.md"
+CLAUDE_WRITER_AGENT_SOURCE = PROJECT_ROOT / "agents_extensions/shared" / "agents" / "curriculum-writer.md"
 CLAUDE_WRITER_AGENT_TARGET = PROJECT_ROOT / ".claude" / "agents" / "curriculum-writer.md"
 
 from scripts.audit.failure_classes import FailureClass, FailureRecord
@@ -328,8 +328,8 @@ WRITER_INFRA_DENYLIST_PATHS = (
     "CLAUDE.md",
     "scripts/delegate.py",
     "scripts/ai_agent_bridge/**",
-    "claude_extensions/agents/curriculum-orchestrator.md",
-    "claude_extensions/rules/**",
+    "agents_extensions/shared/agents/curriculum-orchestrator.md",
+    "agents_extensions/shared/rules/**",
     ".claude/rules/**",
     "*handoff*",
     "*orchestration*",
@@ -7231,7 +7231,7 @@ def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
 # Per-activity-type allowed top-level fields in the **authoring YAML
 # wire format** (what `ActivityParser._parse_activity` in
 # `scripts/yaml_activities.py` consumes, what writers are told to emit
-# in `claude_extensions/quick-ref/ACTIVITY-SCHEMAS.md` and the per-level
+# in `agents_extensions/shared/quick-ref/ACTIVITY-SCHEMAS.md` and the per-level
 # `schemas/activities-*.schema.json` JSON Schemas).
 #
 # This is intentionally NOT sourced from `docs/lesson-schema.yaml` —

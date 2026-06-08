@@ -248,7 +248,7 @@ Exit codes:
   1  Input was missing, dependencies were missing, or the destination appears hand-curated and --force was not used.
 
 Related:
-  GH issue #1823; claude_extensions/memory/MEMORY.md #M-2; cli-help-standard.md.
+  GH issue #1823; agents_extensions/shared/memory/MEMORY.md #M-2; cli-help-standard.md.
 """,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )

@@ -12,7 +12,7 @@ on:
       - 'scripts/check_rules_deployment.sh'
       - 'scripts/lint_prompts.py'
       - 'scripts/lint/**/*.py'
-      - 'claude_extensions/**'
+      - 'agents_extensions/shared/**'
       - 'gemini_extensions/**'
       - 'tests/test_deploy_script_idempotency.py'
   pull_request:
@@ -22,7 +22,7 @@ on:
       - 'scripts/check_rules_deployment.sh'
       - 'scripts/lint_prompts.py'
       - 'scripts/lint/**/*.py'
-      - 'claude_extensions/**'
+      - 'agents_extensions/shared/**'
       - 'gemini_extensions/**'
       - 'tests/test_deploy_script_idempotency.py'
   workflow_dispatch:
