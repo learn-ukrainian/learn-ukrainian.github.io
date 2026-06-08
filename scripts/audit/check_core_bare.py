@@ -82,7 +82,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--repo",
         type=Path,
-        default=Path(__file__).resolve().parents[1],
+        default=Path(__file__).resolve().parents[2],
         help="repo path to check (default: this project root)",
     )
     args = parser.parse_args(argv)

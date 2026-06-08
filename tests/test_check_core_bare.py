@@ -9,7 +9,7 @@ from pathlib import Path
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
-from check_core_bare import check_core_bare, main
+from audit.check_core_bare import check_core_bare, main
 
 
 def _init_repo(path: Path) -> Path:
