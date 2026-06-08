@@ -12,10 +12,9 @@
  *   /etymology/<slug>/           — polysemy landing for slugs with >1 entry (2,142 paths)
  *   /etymology/<slug>-<vol>-<page>(-N)?/   — individual disambig entry under a polysemy slug
  *
- * Wraps content in <StarlightPage> so every page has full Starlight chrome
- * (top nav, search, theme toggle) and respects the site theme system.
+ * Wraps content in the custom course shell.
  */
-import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import CourseLayout from '../../layouts/CourseLayout.astro';
 import manifest from '../../data/etymology-manifest.json';
 
 interface EtymEntry {
@@ -76,35 +75,42 @@ export async function getStaticPaths() {
     (process.env.BUILD_ETYMOLOGY_ROUTES ?? '').toLowerCase(),
   );
 
-  if (!buildEtymologyRoutes) {
-    console.warn(
-      '[etymology] Skipping ESUM dynamic routes. Set BUILD_ETYMOLOGY_ROUTES=1 for the full reference build.',
-    );
-    return [];
-  }
-
   const data = manifest as Manifest;
   const byPageSlug = new Map<string, EtymEntry>();
   for (const e of data.entries) byPageSlug.set(e.page_slug, e);
 
   const paths: Array<{ params: { slug: string }; props: RouteProps }> = [];
+  const seen = new Set<string>();
+  const addPath = (slug: string, props: RouteProps) => {
+    if (seen.has(slug)) return;
+    seen.add(slug);
+    paths.push({ params: { slug }, props });
+  };
+  const addSlugGroup = (slug: string, page_slugs: string[]) => {
+    if (page_slugs.length === 1) {
+      const entry = byPageSlug.get(page_slugs[0]);
+      if (entry) addPath(slug, { kind: 'entry', entry });
+    } else {
+      const entries = page_slugs.map((ps) => byPageSlug.get(ps)).filter(Boolean) as EtymEntry[];
+      if (entries.length === 0) return;
+      addPath(slug, { kind: 'landing', slug, entries });
+      for (const entry of entries) addPath(entry.page_slug, { kind: 'entry', entry });
+    }
+  };
+
+  if (!buildEtymologyRoutes) {
+    console.warn(
+      '[etymology] Skipping full ESUM dynamic routes. Set BUILD_ETYMOLOGY_ROUTES=1 for the full reference build.',
+    );
+    const featuredSlugs = new Set(['dim', 'zhinka', 'khlib', 'voda']);
+    for (const [slug, page_slugs] of Object.entries(data.slug_groups)) {
+      if (featuredSlugs.has(slug)) addSlugGroup(slug, page_slugs);
+    }
+    return paths;
+  }
 
   for (const [slug, page_slugs] of Object.entries(data.slug_groups)) {
-    if (page_slugs.length === 1) {
-      // Unique slug → canonical URL maps to the only entry.
-      const entry = byPageSlug.get(page_slugs[0])!;
-      paths.push({ params: { slug }, props: { kind: 'entry', entry } });
-    } else {
-      // Polysemy: canonical slug renders a landing; each disambig slug renders its own entry.
-      const entries = page_slugs.map((ps) => byPageSlug.get(ps)!);
-      paths.push({ params: { slug }, props: { kind: 'landing', slug, entries } });
-      for (const entry of entries) {
-        paths.push({
-          params: { slug: entry.page_slug },
-          props: { kind: 'entry', entry },
-        });
-      }
-    }
+    addSlugGroup(slug, page_slugs);
   }
 
   return paths;
@@ -115,7 +121,7 @@ const props = Astro.props as RouteProps;
 const ARCHIVE_URL =
   'https://archive.org/search?query=Етимологічний%20словник%20української%20мови';
 
-// Build the StarlightPage frontmatter + content body based on the route kind.
+// Build the page frontmatter + content body based on the route kind.
 function entryFrontmatter(entry: EtymEntry) {
   return {
     title: entry.lemma,
@@ -125,7 +131,7 @@ function entryFrontmatter(entry: EtymEntry) {
   };
 }
 
-function landingFrontmatter(slug: string, entries: EtymEntry[]) {
+function landingFrontmatter(entries: EtymEntry[]) {
   const lemmas = Array.from(new Set(entries.map((e) => e.lemma))).slice(0, 3).join(' / ');
   return {
     title: lemmas,
@@ -134,6 +140,10 @@ function landingFrontmatter(slug: string, entries: EtymEntry[]) {
     pagefind: true,
   };
 }
+
+const pageMeta = props.kind === 'entry'
+  ? entryFrontmatter(props.entry)
+  : landingFrontmatter(props.entries);
 
 const summary = (text: string, length = 90): string => {
   const collapsed = text.replace(/\s+/g, ' ').trim();
@@ -282,8 +292,16 @@ function renderEtymologyBody(rawText: string): string {
 }
 ---
 
-{props.kind === 'entry' ? (
-  <StarlightPage frontmatter={entryFrontmatter(props.entry)}>
+<CourseLayout
+  title={pageMeta.title}
+  description={pageMeta.description}
+  eyebrow="Etymology"
+  subtitle={pageMeta.description}
+  currentPath={props.kind === 'entry' ? `/etymology/${props.entry.slug}/` : `/etymology/${props.slug}/`}
+  heroVariant="lexicon"
+>
+  {props.kind === 'entry' ? (
+    <>
     <p class="esum-ref">
       <strong>Том {props.entry.vol}, с. {props.entry.page}</strong> • Етимологічний словник української мови (ЕСУМ)
     </p>
@@ -336,9 +354,9 @@ function renderEtymologyBody(rawText: string): string {
     <p class="esum-muted">
       <a href="/etymology/">← Усі статті</a>
     </p>
-  </StarlightPage>
-) : (
-  <StarlightPage frontmatter={landingFrontmatter(props.slug, props.entries)}>
+    </>
+  ) : (
+    <>
     <p class="esum-ref">
       Це слово має <strong>{props.entries.length}</strong> статей в ЕСУМ — від різних коренів
       або різних значень.
@@ -359,8 +377,9 @@ function renderEtymologyBody(rawText: string): string {
     <p class="esum-muted">
       <a href="/etymology/">← Усі статті</a>
     </p>
-  </StarlightPage>
-)}
+    </>
+  )}
+</CourseLayout>
 
 <style>
   .esum-ref {

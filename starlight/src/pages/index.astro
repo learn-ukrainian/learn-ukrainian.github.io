@@ -1,0 +1,317 @@
+---
+import CourseLayout from '../layouts/CourseLayout.astro';
+import curriculumStats from '../data/curriculum-stats.json';
+
+type TrackStats = Record<string, { modules?: number } | number>;
+
+const stats = curriculumStats as TrackStats;
+const moduleCount = (id: string) => {
+  const entry = stats[id];
+  return typeof entry === 'object' && entry ? entry.modules ?? 0 : 0;
+};
+
+const coreTracks = [
+  { id: 'a2', label: 'A2', title: 'Elementary Core', status: 'Next core target' },
+  { id: 'b1', label: 'B1', title: 'Intermediate Core', status: 'Planned' },
+  { id: 'b2', label: 'B2', title: 'Upper Intermediate Core', status: 'Planned' },
+  { id: 'c1', label: 'C1', title: 'Advanced Core', status: 'Planned' },
+  { id: 'c2', label: 'C2', title: 'Mastery Core', status: 'Long-range' },
+];
+
+const seminarTracks = [
+  { id: 'folk', label: 'Folk', title: 'Folk Culture', status: 'Seminar test track' },
+  { id: 'bio', label: 'BIO', title: 'Biographies', status: 'Planned seminar' },
+  { id: 'hist', label: 'HIST', title: 'History Of Ukraine', status: 'Planned seminar' },
+  { id: 'istorio', label: 'ISTORIO', title: 'Historiography', status: 'Planned seminar' },
+  { id: 'lit', label: 'LIT', title: 'Ukrainian Literature', status: 'Planned seminar' },
+  { id: 'lit-essay', label: 'LIT-ESSAY', title: 'Essays', status: 'Planned seminar' },
+  { id: 'lit-hist-fic', label: 'LIT-HIST-FIC', title: 'Historical Fiction', status: 'Planned seminar' },
+  { id: 'lit-fantastika', label: 'LIT-FANTASTIKA', title: 'Fantastika', status: 'Planned seminar' },
+  { id: 'lit-war', label: 'LIT-WAR', title: 'War Literature', status: 'Planned seminar' },
+  { id: 'lit-humor', label: 'LIT-HUMOR', title: 'Humor', status: 'Planned seminar' },
+  { id: 'lit-youth', label: 'LIT-YOUTH', title: 'Youth Literature', status: 'Planned seminar' },
+  { id: 'lit-drama', label: 'LIT-DRAMA', title: 'Drama', status: 'Planned seminar' },
+  { id: 'oes', label: 'OES', title: 'Old East Slavic', status: 'Planned seminar' },
+  { id: 'ruth', label: 'RUTH', title: 'Ruthenian Baroque', status: 'Planned seminar' },
+].filter((track) => moduleCount(track.id) > 0);
+---
+
+<CourseLayout
+  title="Learn Ukrainian"
+  description="A lightweight Ukrainian course UI for A1 beta, A2 next, and the Folk seminar test track."
+  eyebrow="A1 beta release"
+  subtitle="A practical learner course, not a generic documentation site."
+  currentPath="/"
+  wide
+>
+  <section class="home-intro">
+    <div>
+      <p class="home-kicker">Ukrainian for real use</p>
+      <h2>A1 is the first release track. Folk runs in parallel as the seminar test lane.</h2>
+      <p>
+        Start with A1 if you are learning independently. Use the Folk seminar path for advanced cultural
+        source work. A2 is next after A1 release cleanup; the broader seminar inventory is shown below
+        without promising a distant publication order.
+      </p>
+      <div class="home-actions">
+        <a class="home-primary" href="/a1/">Start A1</a>
+        <a class="home-secondary" href="/folk/">Open Folk</a>
+      </div>
+    </div>
+    <aside class="roadmap-panel" aria-label="Roadmap">
+      <div><strong>A1</strong><span>Beta / release focus</span></div>
+      <div><strong>A2</strong><span>Next regeneration target</span></div>
+      <div><strong>Folk</strong><span>Seminar test track</span></div>
+      <div><strong>BIO</strong><span>Biographies planned</span></div>
+      <div><strong>HIST</strong><span>History planned</span></div>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Course Surfaces</h2>
+    <div class="lu-card-grid">
+      <a class="lu-card" href="/a1/">
+        <span class="track-badge a1">A1</span>
+        <h3>Beginner Course</h3>
+        <p>55 modules for sounds, reading, first conversations, everyday needs, and an A1 finale.</p>
+      </a>
+      <a class="lu-card" href="/folk/">
+        <span class="track-badge folk">Folk</span>
+        <h3>Seminar Test Track</h3>
+        <p>Advanced Ukrainian cultural source work with oral tradition, ritual, and decolonization framing.</p>
+      </a>
+      <a class="lu-card" href="/lexicon/">
+        <span class="track-badge atlas">Atlas</span>
+        <h3>Word Atlas</h3>
+        <p>A growing lexicon that links course vocabulary to morphology, etymology, and usage context.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="track-inventory" aria-labelledby="upcoming-tracks">
+    <div class="section-heading">
+      <h2 id="upcoming-tracks">Upcoming Tracks</h2>
+      <p>
+        These are the active curriculum tracks in the current inventory. Publication order can change as
+        A1 release work, A2 regeneration, and seminar testing progress.
+      </p>
+    </div>
+
+    <div class="track-inventory-grid">
+      <section class="track-column">
+        <h3>Core Ladder</h3>
+        <ul>
+          {coreTracks.map((track) => (
+            <li>
+              <span class="track-code">{track.label}</span>
+              <span class="track-title">{track.title}</span>
+              <span class="track-meta">{moduleCount(track.id)} modules · {track.status}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+      <section class="track-column">
+        <h3>Seminar Tracks</h3>
+        <ul>
+          {seminarTracks.map((track) => (
+            <li>
+              <span class="track-code">{track.label}</span>
+              <span class="track-title">{track.title}</span>
+              <span class="track-meta">{moduleCount(track.id)} modules · {track.status}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  </section>
+
+  <section class="teacher-note">
+    <h2>Teachers And Inspiration</h2>
+    <p>
+      Self-study is allowed and encouraged, but trained native Ukrainian teachers are best. These materials
+      are practice support and do not replace devoted teachers.
+    </p>
+    <p>
+      We promote Ukrainian Lessons / ULP and thank Anna Ohoiko for pedagogical inspiration and help. This
+      course is independently written, with no copied or book-derived ULP content and no implied formal
+      endorsement unless explicitly granted.
+    </p>
+  </section>
+
+  <style>
+    .home-intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.8fr);
+      gap: 28px;
+      align-items: stretch;
+      margin: 10px 0 42px;
+    }
+    .home-kicker {
+      margin: 0 0 8px;
+      color: var(--lu-blue);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .home-intro h2 {
+      margin-top: 0;
+      color: var(--lu-gray-900);
+      border: 0;
+      font-size: 2rem;
+      max-width: 720px;
+    }
+    .home-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+    .home-primary,
+    .home-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 22px;
+      border-radius: 8px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .home-primary {
+      background: var(--lu-yellow);
+      color: var(--lu-gray-900);
+    }
+    .home-secondary {
+      border: 2px solid var(--lu-blue);
+      color: var(--lu-blue);
+    }
+    .roadmap-panel {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      border-radius: var(--lu-radius);
+      background: var(--lu-surface-raised);
+      box-shadow: var(--lu-shadow);
+    }
+    .roadmap-panel div {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--lu-border);
+    }
+    .roadmap-panel div:last-child {
+      border-bottom: 0;
+    }
+    .roadmap-panel strong {
+      color: var(--lu-blue);
+    }
+    .roadmap-panel span {
+      color: var(--lu-gray-600);
+      font-size: 0.86rem;
+      text-align: right;
+    }
+    .track-badge {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 3px 10px;
+      border-radius: 6px;
+      color: #FFFFFF;
+      font-size: 0.76rem;
+      font-weight: 900;
+    }
+    .track-badge.a1 { background: var(--lu-green); }
+    .track-badge.folk { background: #A4133C; }
+    .track-badge.atlas { background: var(--lu-teal); }
+    .teacher-note {
+      margin-top: 42px;
+      padding: 22px;
+      border: 2px solid var(--lu-yellow);
+      border-radius: var(--lu-radius);
+      background: var(--lu-yellow-light);
+    }
+    .section-heading {
+      max-width: 760px;
+      margin-bottom: 16px;
+    }
+    .section-heading p {
+      margin-top: 0;
+      color: var(--lu-gray-600);
+    }
+    .track-inventory {
+      margin-top: 38px;
+    }
+    .track-inventory-grid {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.75fr) minmax(0, 1.25fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .track-column {
+      border: 1px solid var(--lu-border);
+      border-radius: var(--lu-radius);
+      background: var(--lu-surface-raised);
+      box-shadow: var(--lu-shadow);
+      overflow: hidden;
+    }
+    .track-column h3 {
+      margin: 0;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--lu-border);
+      color: var(--lu-blue);
+      font-size: 0.96rem;
+    }
+    .track-column ul {
+      display: grid;
+      gap: 0;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .track-column li {
+      display: grid;
+      grid-template-columns: minmax(92px, 0.38fr) minmax(130px, 0.72fr) minmax(150px, 0.74fr);
+      gap: 10px;
+      align-items: center;
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--lu-border);
+      font-size: 0.86rem;
+    }
+    .track-column li:last-child {
+      border-bottom: 0;
+    }
+    .track-code {
+      color: var(--lu-blue);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .track-title {
+      color: var(--lu-gray-900);
+      font-weight: 700;
+    }
+    .track-meta {
+      color: var(--lu-gray-600);
+      font-size: 0.8rem;
+      text-align: right;
+    }
+    @media (max-width: 820px) {
+      .home-intro {
+        grid-template-columns: 1fr;
+      }
+      .home-intro h2 {
+        font-size: 1.55rem;
+      }
+      .track-inventory-grid {
+        grid-template-columns: 1fr;
+      }
+      .track-column li {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+      .track-meta {
+        text-align: left;
+      }
+    }
+  </style>
+</CourseLayout>

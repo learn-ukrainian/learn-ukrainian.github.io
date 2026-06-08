@@ -1,0 +1,194 @@
+---
+import '../styles/course.css';
+
+type NavItem = {
+  href: string;
+  label: string;
+};
+
+type Props = {
+  title: string;
+  description?: string;
+  eyebrow?: string;
+  subtitle?: string;
+  currentPath?: string;
+  heroVariant?: 'core' | 'folk' | 'lexicon' | 'seminar' | 'lit' | 'history' | 'unavailable';
+  wide?: boolean;
+  navItems?: NavItem[];
+  showHero?: boolean;
+};
+
+const {
+  title,
+  description,
+  eyebrow = 'Learn Ukrainian',
+  subtitle = description,
+  currentPath = '/',
+  heroVariant = 'core',
+  wide = false,
+  navItems = [],
+  showHero = true,
+} = Astro.props as Props;
+
+const canonicalPath = currentPath.endsWith('/') ? currentPath : `${currentPath}/`;
+
+const topNav = [
+  { href: '/', label: 'Home' },
+  { href: '/a1/', label: 'A1 Beta' },
+  { href: '/a2/', label: 'A2 Next' },
+  { href: '/folk/', label: 'Folk Seminar' },
+  { href: '/lexicon/', label: 'Word Atlas' },
+  { href: '/search/', label: 'Search' },
+];
+
+const isActive = (href: string) => {
+  if (href === '/') return canonicalPath === '/';
+  return canonicalPath.startsWith(href);
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>{title} · Learn Ukrainian</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="icon" href="/favicon.svg" />
+    <script is:inline>
+      (() => {
+        const query = window.matchMedia('(prefers-color-scheme: dark)');
+        const params = new URLSearchParams(window.location.search);
+        const requestedTheme = params.get('theme');
+        const isTheme = (value) => value === 'dark' || value === 'light';
+        const storedTheme = (() => {
+          try {
+            return window.localStorage.getItem('lu-theme');
+          } catch {
+            return null;
+          }
+        })();
+        const applyTheme = () => {
+          const explicitTheme = isTheme(requestedTheme) ? requestedTheme : isTheme(storedTheme) ? storedTheme : null;
+          document.documentElement.dataset.theme = explicitTheme ?? (query.matches ? 'dark' : 'light');
+        };
+        if (isTheme(requestedTheme)) {
+          try {
+            window.localStorage.setItem('lu-theme', requestedTheme);
+          } catch {
+            // Storage can be unavailable in hardened browser contexts.
+          }
+        }
+        applyTheme();
+        query.addEventListener?.('change', applyTheme);
+      })();
+    </script>
+    <script is:inline defer data-domain="learn-ukrainian.github.io" src="https://plausible.io/js/script.js"></script>
+  </head>
+  <body>
+    <div class="lu-shell">
+      <a class="lu-skip-link" href="#main-content">Skip to content</a>
+      <header class="lu-header">
+        <div class="lu-header-inner">
+          <a class="lu-logo" href="/" aria-label="Learn Ukrainian home">
+            <span class="lu-logo-mark">LU</span>
+            <span>Learn Ukrainian</span>
+          </a>
+          <nav class="lu-nav" aria-label="Primary">
+            {topNav.map((item) => (
+              <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            ))}
+            <span class="lu-nav-divider" aria-hidden="true"></span>
+            <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io">GitHub</a>
+          </nav>
+          <details class="lu-mobile-menu">
+            <summary aria-label="Open navigation">Menu</summary>
+            <nav aria-label="Mobile primary">
+              {topNav.map((item) => (
+                <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              ))}
+              <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io">GitHub</a>
+            </nav>
+          </details>
+        </div>
+      </header>
+
+      <main id="main-content" class="lu-main" tabindex="-1">
+        {showHero && (
+          <section class:list={[
+            'lu-hero',
+            heroVariant === 'folk' && 'folk',
+            heroVariant === 'lexicon' && 'lexicon',
+            heroVariant === 'seminar' && 'seminar',
+            heroVariant === 'lit' && 'lit',
+            heroVariant === 'history' && 'history',
+            heroVariant === 'unavailable' && 'unavailable',
+          ]}>
+            <div class="lu-hero-inner">
+              <span class="lu-badge">{eyebrow}</span>
+              <h1>{title}</h1>
+              {subtitle && <p>{subtitle}</p>}
+            </div>
+          </section>
+        )}
+
+        {navItems.length > 0 && (
+          <nav class="lu-breadcrumbs" aria-label="Course navigation">
+            {navItems.map((item, index) => (
+              <>
+                {index > 0 && <span>/</span>}
+                <a href={item.href}>{item.label}</a>
+              </>
+            ))}
+          </nav>
+        )}
+
+        <article class:list={['lu-page', wide && 'wide']}>
+          <div class="lu-content">
+            <slot />
+          </div>
+        </article>
+      </main>
+
+      <footer class="lu-footer">
+        <div class="lu-footer-inner">
+          <div class="lu-footer-grid">
+            <section>
+              <h2>Learn Ukrainian</h2>
+              <p>
+                Self-study is welcome here, but the best learning happens with trained native Ukrainian teachers.
+                These materials support practice; they do not replace devoted teachers.
+              </p>
+              <p>
+                Pedagogical inspiration comes in part from Ukrainian Lessons and the public teaching work of
+                Anna Ohoiko, with gratitude for inspiration and help. Course content here is independently written:
+                it is not copied from ULP or Anna Ohoiko-authored books and does not imply formal endorsement.
+              </p>
+            </section>
+            <section>
+              <h3>Course</h3>
+              <a href="/a1/">A1 Beta</a>
+              <a href="/a2/">A2 Next</a>
+              <a href="/folk/">Folk Seminar</a>
+              <a href="/lexicon/">Word Atlas</a>
+            </section>
+            <section>
+              <h3>External</h3>
+              <a href="https://www.ukrainianlessons.com/">Ukrainian Lessons</a>
+              <a href="https://www.ukrainianlessons.com/the-inukrainian-podcast/">ULP Podcast</a>
+              <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io">Source repository</a>
+            </section>
+          </div>
+          <div class="lu-footer-bottom">
+            Мова - душа народу · Language is the soul of a nation
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

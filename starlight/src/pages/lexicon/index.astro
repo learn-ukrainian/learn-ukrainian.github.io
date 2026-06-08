@@ -6,7 +6,7 @@
  * starting letter. v1 has ~80 lemmas — flat list is fine. v3+ will
  * add search UI (per docs/best-practices/word-atlas-design.md §9).
  */
-import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import CourseLayout from "../../layouts/CourseLayout.astro";
 import manifest from "../../data/lexicon-manifest.json";
 
 interface LexiconEntry {
@@ -54,7 +54,15 @@ const frontmatter = {
 };
 ---
 
-<StarlightPage frontmatter={frontmatter}>
+<CourseLayout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  eyebrow="Word Atlas"
+  subtitle="Course vocabulary linked to usage, morphology, etymology, and heritage notes."
+  currentPath="/lexicon/"
+  heroVariant="lexicon"
+  wide
+>
   <p class="lex-intro">
     Це <strong>Лексикон</strong> — окрема частина курсу, де кожна стаття
     розкриває одне слово через VESUM-морфологію, ЕСУМ-етимологію, СУМ-20
@@ -72,6 +80,21 @@ const frontmatter = {
     ).
   </p>
 
+  <form class="lex-filter" role="search" data-lex-filter>
+    <label for="lexicon-search">Пошук у Лексиконі</label>
+    <div>
+      <input id="lexicon-search" name="q" type="search" placeholder="вікно, кава, добрий день..." autocomplete="off" data-lex-search />
+      <button type="submit">Filter</button>
+    </div>
+  </form>
+
+  <div class="lex-empty-state" data-lex-empty hidden>
+    <span class="state-code">Empty Atlas</span>
+    <h2>Немає статей для цього запиту.</h2>
+    <p>Спробуйте коротшу форму слова або відкрийте загальний пошук курсу.</p>
+    <a href="/search/">Search course pages</a>
+  </div>
+
   {/* Letter jump-nav */}
   <nav class="lex-jump-nav" aria-label="Алфавіт">
     {sortedGroups.map(({ letter }) => (
@@ -80,11 +103,11 @@ const frontmatter = {
   </nav>
 
   {sortedGroups.map(({ letter, entries }) => (
-    <section class="lex-letter-section">
+    <section class="lex-letter-section" data-lex-section>
       <h2 id={`letter-${letter}`}>{letter}</h2>
       <ul class="lex-entry-list">
         {entries.map((e) => (
-          <li>
+          <li data-lex-entry data-search={`${e.lemma} ${e.gloss ?? ""}`}>
             <a class="lex-entry-lemma" href={`/lexicon/${e.url_slug}/`}>
               {e.lemma}
             </a>
@@ -100,7 +123,41 @@ const frontmatter = {
       </ul>
     </section>
   ))}
-</StarlightPage>
+
+  <script is:inline>
+    const root = document.querySelector('[data-lex-filter]');
+    const input = document.querySelector('[data-lex-search]');
+    const empty = document.querySelector('[data-lex-empty]');
+    const entries = Array.from(document.querySelectorAll('[data-lex-entry]'));
+    const sections = Array.from(document.querySelectorAll('[data-lex-section]'));
+    const normalize = (value) => String(value || '').toLocaleLowerCase('uk');
+    const applyFilter = (query) => {
+      const q = normalize(query).trim();
+      let visible = 0;
+      for (const entry of entries) {
+        const match = !q || normalize(entry.dataset.search).includes(q);
+        entry.hidden = !match;
+        if (match) visible += 1;
+      }
+      for (const section of sections) {
+        section.hidden = !section.querySelector('[data-lex-entry]:not([hidden])');
+      }
+      empty.hidden = visible !== 0 || !q;
+    };
+    const params = new URLSearchParams(window.location.search);
+    if (input) {
+      input.value = params.get('q') || '';
+      input.addEventListener('input', () => applyFilter(input.value));
+    }
+    root?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const query = input?.value || '';
+      window.history.replaceState(null, '', query ? `/lexicon/?q=${encodeURIComponent(query)}` : '/lexicon/');
+      applyFilter(query);
+    });
+    applyFilter(input?.value || '');
+  </script>
+</CourseLayout>
 
 <style>
   .lex-intro {
@@ -110,10 +167,70 @@ const frontmatter = {
   .lex-stats {
     color: var(--sl-color-gray-2);
     font-size: var(--sl-text-sm);
-    background: var(--sl-color-gray-6);
+    background: var(--lu-surface-muted);
     padding: 0.6rem 0.9rem;
-    border-radius: 4px;
-    border-left: 3px solid var(--sl-color-accent-low);
+    border: 1px solid var(--lu-border);
+    border-left: 4px solid var(--lu-teal);
+    border-radius: 8px;
+  }
+
+  .lex-filter {
+    margin: 1.2rem 0;
+    padding: 1rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface-raised);
+    box-shadow: var(--lu-shadow);
+  }
+  .lex-filter label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: var(--lu-text);
+    font-weight: 800;
+  }
+  .lex-filter div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.6rem;
+  }
+  .lex-filter input {
+    min-height: 42px;
+    padding: 0 0.75rem;
+    border: 2px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface);
+    color: var(--lu-text);
+    font: inherit;
+  }
+  .lex-filter button,
+  .lex-empty-state a {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+    border: 0;
+    border-radius: 8px;
+    background: var(--lu-yellow);
+    color: var(--lu-gray-900);
+    font: inherit;
+    font-weight: 900;
+    text-decoration: none;
+  }
+  .lex-empty-state {
+    margin: 1.2rem 0;
+    padding: 1.2rem;
+    border: 1px solid var(--lu-border);
+    border-left: 4px solid var(--lu-orange);
+    border-radius: 8px;
+    background: var(--lu-surface-muted);
+  }
+  .lex-empty-state h2,
+  .lex-empty-state p {
+    margin: 0.25rem 0 0;
+  }
+  .lex-empty-state p {
+    color: var(--lu-text-muted);
   }
 
   .lex-jump-nav {
@@ -122,8 +239,9 @@ const frontmatter = {
     gap: 0.4rem;
     margin: 1.4rem 0;
     padding: 0.7rem;
-    background: var(--sl-color-gray-6);
-    border-radius: 6px;
+    background: var(--lu-surface-raised);
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
   }
   .lex-jump-nav a {
     display: inline-block;
@@ -149,33 +267,54 @@ const frontmatter = {
     margin-bottom: 0.6rem;
   }
   .lex-entry-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 10px;
     list-style: none;
     padding: 0;
     margin: 0;
   }
   .lex-entry-list li {
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--sl-color-gray-5);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-    align-items: baseline;
-  }
-  .lex-entry-list li:last-child {
-    border-bottom: none;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.18rem 0.75rem;
+    align-items: start;
+    min-height: 86px;
+    padding: 0.75rem 0.85rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface-raised);
+    box-shadow: var(--lu-shadow);
   }
   .lex-entry-lemma {
+    grid-column: 1 / -1;
     font-weight: 600;
-    min-width: 12ch;
   }
   .lex-entry-gloss {
+    min-width: 0;
     color: var(--sl-color-gray-2);
     font-style: italic;
-    flex: 1;
   }
   .lex-entry-usage {
     font-size: 0.8em;
     color: var(--sl-color-gray-3);
     font-family: var(--sl-font-mono, ui-monospace, monospace);
+    white-space: nowrap;
+    text-align: right;
+  }
+  @media (max-width: 520px) {
+    .lex-entry-list {
+      grid-template-columns: 1fr;
+    }
+    .lex-entry-list li {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+    .lex-entry-usage {
+      text-align: left;
+    }
+    .lex-filter div {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

@@ -1,0 +1,11 @@
+---
+interface TabItemProps {
+  label: string;
+}
+
+const { label } = Astro.props as TabItemProps;
+---
+
+<section class="lu-tab-panel" data-label={label}>
+  <slot />
+</section>

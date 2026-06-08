@@ -2,14 +2,12 @@
 /**
  * Etymology landing page at /etymology/.
  *
- * Single Astro page using <StarlightPage> for chrome consistency with the
- * curriculum. Reads stats from the build manifest; links to a handful of
+ * Single Astro page using the custom course shell. Reads stats from the build manifest; links to a handful of
  * featured high-frequency lemmas as try-it-now entry points.
  *
  * Phase 2 will add client-side search/typeahead + alphabetical browse here.
  */
-import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
-import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+import CourseLayout from '../../layouts/CourseLayout.astro';
 import manifest from '../../data/etymology-manifest.json';
 
 const data = manifest as {
@@ -45,12 +43,14 @@ const featured: Array<{ slug: string; lemma: string; gloss: string }> = [
 const fmtCount = (n: number) => n.toLocaleString('uk-UA');
 ---
 
-<StarlightPage frontmatter={{
-  title: 'Етимологія',
-  description: `Етимологічний словник української мови — ${data.stats.total_entries.toLocaleString('uk-UA')} статей з ЕСУМ, томи 1–6`,
-  template: 'doc',
-  pagefind: true,
-}}>
+<CourseLayout
+  title="Етимологія"
+  description={`Етимологічний словник української мови — ${data.stats.total_entries.toLocaleString('uk-UA')} статей з ЕСУМ, томи 1–6`}
+  eyebrow="Reference"
+  subtitle="ЕСУМ entries rendered as a static reference surface."
+  currentPath="/etymology/"
+  heroVariant="lexicon"
+>
   <p class="lead">
     {fmtCount(data.stats.total_entries)} статей з <strong>Етимологічного словника української мови</strong>
     (ЕСУМ, томи 1–6) — походження слів, праслов'янські корені, когнати в інших слов'янських мовах.
@@ -59,11 +59,32 @@ const fmtCount = (n: number) => n.toLocaleString('uk-UA');
 
   <h2>Спробувати</h2>
 
-  <CardGrid>
+  <form class="esum-filter" role="search" data-esum-filter>
+    <label for="esum-search">Фільтр демонстраційних статей</label>
+    <div>
+      <input id="esum-search" name="q" type="search" placeholder="дім, вода, хліб..." autocomplete="off" data-esum-search />
+      <button type="submit">Filter</button>
+    </div>
+  </form>
+
+  <div class="esum-empty-state" data-esum-empty hidden>
+    <span class="state-code">Empty Reference</span>
+    <h2>Немає демонстраційної статті для цього запиту.</h2>
+    <p>
+      Повний ЕСУМ має десятки тисяч статей; ця foundation-сторінка показує
+      пошуковий стан на обмеженому наборі прикладів.
+    </p>
+    <a href="/empty-reference/">Open empty-reference template</a>
+  </div>
+
+  <div class="lu-reference-card-grid" data-esum-results>
     {featured.map((f) => (
-      <LinkCard title={f.lemma} href={`/etymology/${f.slug}/`} description={f.gloss} />
+      <a class="lu-reference-card" href={`/etymology/${f.slug}/`} data-esum-entry data-search={`${f.lemma} ${f.gloss}`}>
+        <strong>{f.lemma}</strong>
+        <span>{f.gloss}</span>
+      </a>
     ))}
-  </CardGrid>
+  </div>
 
   <h2>Як шукати</h2>
 
@@ -100,12 +121,100 @@ const fmtCount = (n: number) => n.toLocaleString('uk-UA');
     Київ, 1982–2012). Текст оцифровано з архівних PDF; OCR-артефакти можуть зустрічатися
     у щільніх блоках транскрипції та квадратних дужок.
   </p>
-</StarlightPage>
+
+  <script is:inline>
+    const filter = document.querySelector('[data-esum-filter]');
+    const input = document.querySelector('[data-esum-search]');
+    const empty = document.querySelector('[data-esum-empty]');
+    const entries = Array.from(document.querySelectorAll('[data-esum-entry]'));
+    const normalize = (value) => String(value || '').toLocaleLowerCase('uk');
+    const applyFilter = (query) => {
+      const q = normalize(query).trim();
+      let visible = 0;
+      for (const entry of entries) {
+        const match = !q || normalize(entry.dataset.search).includes(q);
+        entry.hidden = !match;
+        if (match) visible += 1;
+      }
+      empty.hidden = visible !== 0 || !q;
+    };
+    const params = new URLSearchParams(window.location.search);
+    if (input) {
+      input.value = params.get('q') || '';
+      input.addEventListener('input', () => applyFilter(input.value));
+    }
+    filter?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const query = input?.value || '';
+      window.history.replaceState(null, '', query ? `/etymology/?q=${encodeURIComponent(query)}` : '/etymology/');
+      applyFilter(query);
+    });
+    applyFilter(input?.value || '');
+  </script>
+</CourseLayout>
 
 <style>
   .lead {
     font-size: var(--sl-text-lg);
     color: var(--sl-color-gray-2);
+  }
+  .esum-filter {
+    margin: 1rem 0;
+    padding: 1rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface-raised);
+    box-shadow: var(--lu-shadow);
+  }
+  .esum-filter label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: var(--lu-text);
+    font-weight: 800;
+  }
+  .esum-filter div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.6rem;
+  }
+  .esum-filter input {
+    min-height: 42px;
+    padding: 0 0.75rem;
+    border: 2px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface);
+    color: var(--lu-text);
+    font: inherit;
+  }
+  .esum-filter button,
+  .esum-empty-state a {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+    border: 0;
+    border-radius: 8px;
+    background: var(--lu-yellow);
+    color: var(--lu-gray-900);
+    font: inherit;
+    font-weight: 900;
+    text-decoration: none;
+  }
+  .esum-empty-state {
+    margin: 1rem 0;
+    padding: 1.2rem;
+    border: 1px solid var(--lu-border);
+    border-left: 4px solid var(--lu-orange);
+    border-radius: 8px;
+    background: var(--lu-surface-muted);
+  }
+  .esum-empty-state h2,
+  .esum-empty-state p {
+    margin: 0.25rem 0 0;
+  }
+  .esum-empty-state p {
+    color: var(--lu-text-muted);
   }
   .esum-stats {
     width: 100%;
@@ -126,5 +235,10 @@ const fmtCount = (n: number) => n.toLocaleString('uk-UA');
   .esum-stats td {
     font-variant-numeric: tabular-nums;
     font-weight: 600;
+  }
+  @media (max-width: 520px) {
+    .esum-filter div {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

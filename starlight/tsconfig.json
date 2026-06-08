@@ -5,7 +5,8 @@
     "**/*"
   ],
   "exclude": [
-    "dist"
+    "dist",
+    "src/components/overrides"
   ],
   "compilerOptions": {
     "jsx": "react-jsx",
