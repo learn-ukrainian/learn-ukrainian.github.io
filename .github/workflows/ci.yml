@@ -319,7 +319,7 @@ jobs:
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install PyYAML
+          .venv/bin/python -m pip install PyYAML jsonschema
 
       - name: Regenerate changed curriculum MDX and check drift
         run: |
