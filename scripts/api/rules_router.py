@@ -16,7 +16,7 @@ on ``/api/state/manifest`` and only refetch when rules actually change.
 
 Source of truth is the Claude extensions rule directory — `.claude/rules/`,
 `.agent/rules/`, and `.gemini/rules/` are deployed copies
-(``npm run claude:deploy``). We read the source so a fresh checkout
+(``npm run agents:deploy``). We read the source so a fresh checkout
 (or a worktree that hasn't deployed) still gets the current rules.
 """
 
@@ -63,12 +63,12 @@ def _matches_etag(if_none_match: str | None, digest: str) -> bool:
 # this order is a user-visible contract change — agents that cache the
 # concatenated blob by hash will see a new hash and refetch.
 RULE_SOURCES: tuple[str, ...] = (
-    "claude_extensions/rules/critical-rules.md",
-    "claude_extensions/rules/non-negotiable-rules.md",
-    "claude_extensions/rules/workflow.md",
-    "claude_extensions/rules/delegate-must-use-worktree.md",
-    "claude_extensions/rules/cli-help-standard.md",
-    "claude_extensions/rules/model-assignment.md",
+    "agents_extensions/shared/rules/critical-rules.md",
+    "agents_extensions/shared/rules/non-negotiable-rules.md",
+    "agents_extensions/shared/rules/workflow.md",
+    "agents_extensions/shared/rules/delegate-must-use-worktree.md",
+    "agents_extensions/shared/rules/cli-help-standard.md",
+    "agents_extensions/shared/rules/model-assignment.md",
 )
 
 # Separator between files. Explicit so the concatenation is stable

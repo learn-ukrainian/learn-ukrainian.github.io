@@ -1931,7 +1931,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  0 on successful command completion; non-zero on CLI misuse or worker/task failures.\n\n"
             "Related:\n"
             "  Runtime: scripts/agent_runtime/\n"
-            "  Rule: claude_extensions/rules/delegate-must-use-worktree.md\n"
+            "  Rule: agents_extensions/shared/rules/delegate-must-use-worktree.md\n"
             "  Issue: #1379\n"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,

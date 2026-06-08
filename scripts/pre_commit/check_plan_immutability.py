@@ -230,7 +230,7 @@ def main(argv: list[str] | None = None) -> int:
         file=sys.stderr,
     )
     print(
-        "See: claude_extensions/rules/non-negotiable-rules.md §7",
+        "See: agents_extensions/shared/rules/non-negotiable-rules.md §7",
         file=sys.stderr,
     )
     print("", file=sys.stderr)

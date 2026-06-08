@@ -265,7 +265,7 @@ def _find_normalized_span(
 # Approval queue
 # ---------------------------------------------------------------------------
 
-QUEUE_DIR = Path(__file__).resolve().parent.parent.parent / "claude_extensions" / "consultation-queue"
+QUEUE_DIR = Path(__file__).resolve().parent.parent.parent / "agents_extensions/shared" / "consultation-queue"
 
 
 def queue_for_approval(

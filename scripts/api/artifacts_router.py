@@ -98,7 +98,7 @@ def _word_target_met(audit: dict, word_target: int) -> bool:
 
     Explicitly returns ``False`` when ``word_target == 0`` — per
     project rule "word targets are MINIMUMS" (see
-    ``claude_extensions/rules/non-negotiable-rules.md``), a module
+    ``agents_extensions/shared/rules/non-negotiable-rules.md``), a module
     with no resolvable target is a plan bug, not a pass. Shipping
     it would hide that the plan is incomplete. Reviewer CONCERN
     Gemini-B / #1309: this is intentional; the plan-review step

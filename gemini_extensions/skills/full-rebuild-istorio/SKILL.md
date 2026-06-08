@@ -63,11 +63,11 @@ Each turn corresponds to a phase template. **Read and execute ALL instructions i
 
 | Turn | Phase | Template |
 |------|-------|----------|
-| 1 | Research | `claude_extensions/phases/gemini/phase-0-research-seminar.md` |
-| 2 | Meta (if requested) | `claude_extensions/phases/gemini/phase-1-meta.md` |
-| 3 | Content | `claude_extensions/phases/gemini/phase-2-content.md` |
-| 4 | Activities + Vocabulary | `claude_extensions/phases/gemini/phase-3-activities.md` |
-| 5 | Review (NEW session) | `claude_extensions/phases/gemini/phase-6-review.md` |
+| 1 | Research | `agents_extensions/shared/phases/gemini/phase-0-research-seminar.md` |
+| 2 | Meta (if requested) | `agents_extensions/shared/phases/gemini/phase-1-meta.md` |
+| 3 | Content | `agents_extensions/shared/phases/gemini/phase-2-content.md` |
+| 4 | Activities + Vocabulary | `agents_extensions/shared/phases/gemini/phase-3-activities.md` |
+| 5 | Review (NEW session) | `agents_extensions/shared/phases/gemini/phase-6-review.md` |
 
 **Turn 3 notes:**
 - Adopt your assigned PERSONA_FLAVOR throughout

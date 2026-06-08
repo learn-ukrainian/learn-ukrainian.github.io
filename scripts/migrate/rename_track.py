@@ -129,7 +129,7 @@ def filesystem_renames(old_slug: str, new_slug: str, config: dict, dry_run: bool
         # Activity schema
         (f"schemas/activities-{old_slug}.schema.json", f"schemas/activities-{new_slug}.schema.json"),
         # Quick-ref
-        (f"claude_extensions/quick-ref/{old_upper}.md", f"claude_extensions/quick-ref/{new_upper}.md"),
+        (f"agents_extensions/shared/quick-ref/{old_upper}.md", f"agents_extensions/shared/quick-ref/{new_upper}.md"),
         # Batch state checkpoint
         (f"batch_state/checkpoint_{old_slug}.json", f"batch_state/checkpoint_{new_slug}.json"),
         # Batch state API usage summary

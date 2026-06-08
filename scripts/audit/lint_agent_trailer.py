@@ -170,7 +170,7 @@ def main(argv: list[str] | None = None) -> int:
             "   Add a trailer to each failing commit. Example for an orchestrator inline commit:\n"
             "       git commit --amend --trailer 'X-Agent: claude-inline/orchestrator'\n"
             "   For dispatched-agent commits, the dispatch brief should specify the trailer.\n"
-            "   See AGENTS.md rule #11 / GEMINI.md / claude_extensions/rules/delegate-must-use-worktree.md."
+            "   See AGENTS.md rule #11 / GEMINI.md / agents_extensions/shared/rules/delegate-must-use-worktree.md."
         )
         return 1
 

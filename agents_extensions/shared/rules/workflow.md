@@ -1,0 +1,258 @@
+# How We Work (Mandatory Workflow)
+
+<critical>
+
+## Cold-start sequence (do this first every session)
+
+Use the Monitor API instead of reading files. One-shot bootstrap:
+
+```python
+  # Python one-liner equivalent — see scripts/monitor_client.py
+from ai_agent_bridge.monitor_client import MonitorClient
+boot = MonitorClient().bootstrap()
+  # boot["rules"].body    — condensed rules markdown
+  # boot["session"].body  — condensed session summary
+```
+
+Shell equivalent:
+
+```bash
+curl -s http://localhost:8765/api/state/manifest         # ~1 KB index
+curl -s http://localhost:8765/api/rules?format=markdown  # only if hash changed
+curl -s 'http://localhost:8765/api/session/current?agent=orchestrator'  # only if hash changed
+curl -s http://localhost:8765/api/orient                 # always-fresh, has meta
+curl -s 'http://localhost:8765/api/comms/inbox?agent=claude'  # unread messages
+```
+
+**Do NOT read `CLAUDE.md`, `agents_extensions/shared/rules/*.md`, or
+`docs/session-state/current.md` directly on cold start.** Those are
+the source of truth the endpoints above serve. Reading them separately
+costs 5+ tool calls and ignores the hash-based cache. If an endpoint
+is unreachable (API server down), THEN fall back to files.
+
+For Claude specifically, `.claude/rules/` now carries only a small API
+pointer plus path-scoped rules. The canonical always-load rule set for
+Claude is `/api/rules?format=markdown`; use the source files directly
+only as the offline fallback above.
+
+After a write that needs to be immediately visible (just-committed
+change, just-filed issue), pass `?fresh=true` to `/api/orient`.
+
+## Two-tier handoffs (epic #1865 item #1, shipped 2026-05-11)
+
+Every new session handoff ships as a **PAIR**:
+
+- **`docs/session-state/<date>-<slug>-brief.md`** (~2-5KB) — machine-readable, cold-start entry point. YAML frontmatter + bullet-list body. Agents read THIS.
+- **`docs/session-state/<date>-<slug>.html`** (~20-40KB) — rich human-readable. Narrative, tables, KPIs, callouts. Humans read THIS. Agents only open it if the brief flags something they need narrative for.
+
+**Cold-start rule:** after the Monitor API bootstrap above, use the agent-specific
+session endpoint when you know your role:
+
+```bash
+curl -s 'http://localhost:8765/api/session/current?agent=claude'
+curl -s 'http://localhost:8765/api/session/current?agent=codex'
+curl -s 'http://localhost:8765/api/session/current?agent=gemini'
+curl -s 'http://localhost:8765/api/session/current?agent=orchestrator'
+```
+
+`docs/session-state/current.md` is now a small compatibility router. It keeps
+`Latest-Brief: docs/session-state/current.orchestrator.md` for legacy hooks and
+an `Agent-Handoff:` mapping for `current.<agent>.md`. Read the router only to
+discover paths; detailed state belongs in the agent-specific file. Do NOT read
+the `.html` unless the agent-specific handoff points you there.
+
+### Brief frontmatter schema (required fields)
+
+```yaml
+---
+date: 2026-05-10                              # YYYY-MM-DD
+session: "Evening — short title"              # human-readable session label
+status: ok                                    # ok | warn | fail
+detail: <date>-<slug>.html                    # paired HTML filename, relative to docs/session-state/
+main_sha: 99d3844e9                           # short SHA at end-of-session
+main_green: true                              # CI state on main
+open_prs: 0                                   # count at end-of-session
+active_dispatches: 0                          # count at end-of-session
+merged_today: [1861, 1863, 1864]              # PR numbers
+rejected_today: [1862]                        # PR numbers (closed without merge)
+filed_today: [1860, 1863, 1865]               # issue + PR numbers filed
+closed_today: [1762, 1860]                    # issues closed
+in_flight: []                                 # list of {pr/issue/dispatch} still active
+blocked: []                                   # list of {item, reason}
+next_p0: "one-line description of next priority"
+agents: [claude, codex, gemini]               # agents that participated
+---
+```
+
+Optional/extensible fields are allowed (e.g. `ci_notes`, `worktrees_open`, `incidents`) but the required block above MUST be present for cold-start parsing.
+
+### Brief body shape
+
+After the frontmatter, the body is a **bullet-list summary**, NOT narrative. Recommended sections:
+
+1. `## TL;DR` — 2-4 lines.
+2. `## What shipped` — table of PR/issue with one-line "what".
+3. `## What rejected` (if any) — short reason + lesson encoded.
+4. `## Carry-over queue` — priority-ordered list of items NOT done.
+5. `## Decisions encoded` — short bullets.
+6. `## Pending decisions` (if any) — links to `docs/decisions/pending/*`.
+7. `## Cold-start orientation for next agent` — explicit instructions to the next session.
+
+Reserve all narrative, anecdotes, KPIs, and rich rationale for the `.html` companion. The brief is a state snapshot, not a story.
+
+### Pair authoring rule
+
+Brief and HTML are authored together in the same orchestrator turn. Never ship one without the other for sessions going forward.
+
+Every orchestrator router update to `docs/session-state/current.md` MUST keep
+the top-level `Latest-Brief:` marker and the `Agent-Handoff:` mapping parseable.
+Non-orchestrator agents update only `docs/session-state/current.<agent>.md`
+unless a task explicitly authorizes a router update. The SessionStart hook
+parses `Latest-Brief:` before falling back to table regex; marker drift would
+silently reintroduce the old cold-start budget tax.
+
+### Backfill policy
+
+Older `current.md` rows are HTML-only. Backfill is OPTIONAL — only worth it if a future thread needs to re-pickup that session. The cold-start fallback handles the missing-brief case.
+
+## Scoped queries — call the API instead of filesystem spelunking
+
+When you need deterministic answers about a specific module / range /
+worktree, use these endpoints instead of grepping `orchestration/`,
+`status/`, or `review/` directly. They are the source of truth for
+agent-side reasoning.
+
+| Question | Endpoint |
+|---|---|
+| What's module `{slug}` doing right now? | `GET /api/state/module/{track}/slug/{slug}` |
+| Give me the dashboard for modules N..M on {track} | `GET /api/state/range/{track}?start=N&end=M` |
+| Which files would `--force` delete for this module? | `GET /api/artifacts/{track}/{slug}/force-preview` |
+| Classify every file tied to this module (source/generated/published/stale) | `GET /api/artifacts/{track}/{slug}/files` |
+| Latest main + style reviews + "reviewer gaming" flag | `GET /api/artifacts/{track}/{slug}/review-snapshot` |
+| Does state.json agree with audit / reviews / published MDX? | `GET /api/artifacts/{track}/{slug}/drift` |
+| Can I ship this module? (every gate green) | `GET /api/artifacts/{track}/{slug}` |
+| Aggregate list of ship-ready modules | `GET /api/artifacts/ship-ready[?track=...]` |
+| Is the public site actually reachable? | `GET /api/site/health` |
+| Recent GH Pages deployments | `GET /api/site/deployments` |
+| Which worktrees exist and which branches are they on? | `GET /api/worktrees` |
+| Open issues grouped by category, with supersede hints | `GET /api/issues/map` |
+| Per-agent auth mode (Gemini subscription vs API) | `GET /api/runtime/auth` |
+
+**Rule of thumb:** if you're about to run `ls`, `cat`, `grep`, or
+`find` against `curriculum/` / `orchestration/` / `review/` /
+`status/` / `.git/worktrees/` — check the table above first. A
+single API call almost always returns the structured answer you
+were trying to reconstruct.
+
+**Full reference:** [`docs/MONITOR-API.md`](../../docs/MONITOR-API.md).
+
+### Don't confuse `claude agents` with active-dispatch state
+
+The Claude Code v2.1.139 `claude agents` command is a **static
+configuration lister**, not a live-session view. Its output lists
+loaded agent DEFINITIONS (e.g. `curriculum-orchestrator`, `Explore`,
+`Plan`, `claude`) and labels them "active" — meaning "loaded into the
+current process," NOT "running a session." Verified 2026-05-12 against
+Claude Code 2.1.139 (`claude agents --format json` is rejected with
+`unknown option`; only the plaintext lister exists).
+
+To check ACTIVE DISPATCHES, use `/api/delegate/active` (Monitor API).
+To check OPEN PRs, use `gh pr list`. To check IN-FLIGHT WORKTREES,
+use `/api/worktrees`. `claude agents` does not replace any of these.
+
+(Encoded 2026-05-12 after queue item #2 in `2026-05-12-cold-start-followups-brief.md` was filed under the wrong assumption.)
+
+---
+
+## Mandatory task workflow
+
+Every task follows this workflow. No exceptions for non-trivial changes.
+
+1. **Create GH issue** — describe the problem, draft a plan
+2. **Adversarial review of plan** — send to Gemini, incorporate feedback
+3. **Finalize ACs** — update issue with concrete acceptance criteria
+4. **Implement** — work through ACs one by one
+5. **Verify all ACs** — every AC checked and documented on the issue
+6. **Adversarial review of implementation** — send code to Gemini, fix findings
+7. **Close** — only when all ACs pass and review is clean
+
+**Goal-Driven Execution (step 4)**: Transform imperative tasks into verifiable goals. For multi-step work, state a plan with explicit verification at each step:
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+```
+Strong success criteria enable independent looping. Weak criteria ("make it work") require constant clarification.
+
+**Skip plan review** (step 2) only for trivial changes (< 50 lines, config/typo fixes).
+
+**Adversarial review command** (steps 2 & 6). Always use `--model gemini-3.1-pro-preview`. Document findings on the GH issue.
+```bash
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
+  "Adversarial review for #NNN. Read {path}." \
+  --task-id issue-NNN --model gemini-3.1-pro-preview
+```
+
+## Channel bridge (#1190, shipped 2026-04-12)
+
+The agent bridge now supports **topic-scoped channels** — preferred
+for sustained multi-turn conversations because they eliminate the
+need to re-paste project context on every round.
+
+**Five seeded channels**: `shared`, `pipeline`, `content`,
+`architecture`, `reviews`. Every post auto-prepends:
+1. The channel's pinned `context.md` (via the include chain, so
+   `shared` is merged into everything)
+2. A Monitor API snapshot of volatile project state
+3. Recent channel history, character-budget truncated
+
+**Preferred for:** code reviews (multi-round), design debates,
+cross-agent discussions, anything that needs pinned context.
+**Not preferred for:** one-off drive-by questions — use `ask-*` for
+those.
+
+**Quick reference**:
+```bash
+  # List / inspect
+ab channel list
+ab channel info pipeline
+ab channel tail reviews -n 20
+ab channel tail reviews --thread THREAD_ID
+
+  # Post (short form — single recipient)
+ab p reviews gemini "quick question about module X"
+
+  # Post (long form — multi-recipient, threading, parent/corr ids)
+ab post reviews "Review of #NNN" --to gemini,codex --parent MSG_ID
+
+  # Multi-agent bounded discussion
+ab discuss architecture "Should we extract the V6 god object?" \
+    --with claude,gemini,codex --max-rounds 2
+```
+
+`ab discuss` runs rounds in parallel via ThreadPoolExecutor,
+short-circuits when all agents end their response with `[AGREE]`,
+and caps at 4 rounds. Default: 2 rounds, 1 agent. The transcript
+lands in `channel_messages` with proper `parent_id` threading so
+you can tail it later with `ab channel tail --thread`.
+
+**Web dashboard**: `http://localhost:8765/channels.html` (localhost
+only, read + post).
+
+**Full docs**: `docs/best-practices/agent-bridge.md`.
+
+The legacy `ask-gemini` / `ask-claude` / `ask-codex` commands are
+NOT deprecated — they stay alive for one-shot delegations. Use
+channels for anything that will have >1 turn.
+
+**Why**: GH issues are persistent memory. Without them, context is lost between sessions and work gets repeated or silently broken.
+
+**Issue discipline (coding issues)**:
+- **Never leave half-done.** If you open it, finish it. If you can't finish it now, document exactly where you stopped and what remains.
+- **Never close unless ALL acceptance criteria are verified.** Partial completion = still open.
+- **Aim to fully resolve and close.** Open issues are debt. Minimize them aggressively.
+- **The human manages content generation issues.** Claude owns coding/infrastructure issues. But proactively remind when it's time to start building a new track or batch — initiative is welcome.
+
+**Proactive issue hygiene**: At the start of each session, check open coding issues. Prioritize, resolve, close — don't let them go stale.
+
+</critical>

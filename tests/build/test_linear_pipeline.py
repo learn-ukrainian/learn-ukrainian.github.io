@@ -1145,7 +1145,7 @@ def test_validate_writer_json_artifact_accepts_error_correction_items() -> None:
 
 def test_validate_writer_json_artifact_accepts_quiz_items_authoring_shape() -> None:
     """`quiz` authoring YAML uses `items: [...]` (per
-    `claude_extensions/quick-ref/ACTIVITY-SCHEMAS.md`). The MDX adapter
+    `agents_extensions/shared/quick-ref/ACTIVITY-SCHEMAS.md`). The MDX adapter
     `_quiz_to_mdx` renames this to the React component's `questions=`
     prop. The strict-JSON validator must accept the AUTHORING shape.
     """

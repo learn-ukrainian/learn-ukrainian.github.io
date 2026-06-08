@@ -47,12 +47,47 @@ check_pair() {
     echo "OK: $src -> $dst"
 }
 
+check_overlay() {
+    local src="$1"
+    local dst="$2"
+
+    if [[ ! -d "$src" ]]; then
+        echo "::error::Overlay source dir missing: $src"
+        return 1
+    fi
+
+    if [[ ! -d "$dst" ]]; then
+        echo "::error::Deploy did not create target: $dst"
+        return 1
+    fi
+
+    local diff_out=""
+    local rel
+    while IFS= read -r rel; do
+        if [[ ! -f "$dst/$rel" ]]; then
+            diff_out+="Missing deployed overlay file: $dst/$rel"$'\n'
+        elif ! cmp -s "$src/$rel" "$dst/$rel"; then
+            diff_out+="Deploy-script overlay drift between $src/$rel and $dst/$rel"$'\n'
+        fi
+    done < <(cd "$src" && find . -type f ! -name '.DS_Store' -print | sed 's#^\./##' | sort)
+
+    if [[ -n "$diff_out" ]]; then
+        echo "::error::Deploy-script drift between $src and $dst:"
+        echo "$diff_out"
+        echo
+        echo "This means scripts/deploy_prompts.sh is out of sync with its source overlay."
+        return 1
+    fi
+
+    echo "OK: $src -> $dst"
+}
+
 drift=0
 
 # These pairs and orphan exclusions must stay in lock-step with the
 # rsync calls and ORPHAN_PATHS_* declarations in scripts/deploy_prompts.sh.
 check_pair \
-    "claude_extensions" \
+    "agents_extensions/shared" \
     ".claude" \
     "scheduled_tasks.lock" \
     "worktrees" \
@@ -62,16 +97,18 @@ check_pair \
     "rules/delegate-must-use-worktree.md" \
     "rules/cli-help-standard.md" \
     "rules/model-assignment.md" || drift=1
-check_pair "claude_extensions" ".agent" "wake" "cache" || drift=1
+check_pair "agents_extensions/shared" ".agent" "wake" "cache" || drift=1
 check_pair \
-    "claude_extensions" \
+    "agents_extensions/shared" \
     ".codex" \
     "agents/curriculum-orchestrator.toml" \
     "agents/curriculum-writer.toml" \
     "config.toml" \
-    "hooks.json" || drift=1
-check_pair "claude_extensions/skills" ".agents/skills" || drift=1
+    "hooks.json" \
+    "memory" || drift=1
+check_overlay "agents_extensions/codex" ".codex" || drift=1
+check_pair "agents_extensions/shared/skills" ".agents/skills" || drift=1
 check_pair "gemini_extensions" ".gemini" "config.yaml" "docs/" "rules/" || drift=1
-check_pair "claude_extensions/rules" ".gemini/rules" || drift=1
+check_pair "agents_extensions/shared/rules" ".gemini/rules" || drift=1
 
 exit "$drift"

@@ -435,7 +435,7 @@ def _parse_section(section: Any) -> tuple[str, int]:
 # 14. Review Tier Helpers
 # ============================================================================
 
-REVIEW_TIERS_DIR = PROJECT_ROOT / "claude_extensions" / "skills" / "plan-review" / "review-tiers"
+REVIEW_TIERS_DIR = PROJECT_ROOT / "agents_extensions/shared" / "skills" / "plan-review" / "review-tiers"
 
 TIER_MAP: dict[str, str] = {
     "a1": "tier-1-beginner.md",

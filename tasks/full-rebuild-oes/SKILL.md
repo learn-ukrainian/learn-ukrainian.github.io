@@ -34,6 +34,6 @@ You are a **Professor of Historical Linguistics (Slavist)**. Your goal is a Tier
 - **Phase 5**: Review-Content-v4 (14 dimensions, score 0-10).
 
 ## 5. Review Protocol (v4 Enforcement)
-Rigorously apply `claude_extensions/commands/review-content-v4.md`.
+Rigorously apply `agents_extensions/shared/commands/review-content-v4.md`.
 - **Gating**: Richness 95%+, Naturalness 10/10.
 - **Output**: JSON status report via `status/{slug}.json`.

@@ -99,7 +99,7 @@ class TestResearchRules:
 class TestTemplateVariables:
     """Verify all active templates have resolvable placeholders."""
 
-    ACTIVE_TEMPLATES_DIR = ROOT / "claude_extensions" / "phases" / "gemini"
+    ACTIVE_TEMPLATES_DIR = ROOT / "agents_extensions/shared" / "phases" / "gemini"
 
     # Known valid placeholders — extracted from all active templates.
     # If a new placeholder is added to a template, add it here too.
@@ -188,7 +188,7 @@ class TestTemplateVariables:
     }
 
     @pytest.mark.parametrize("template_file", sorted(
-        (ROOT / "claude_extensions" / "phases" / "gemini").glob("*.md")
+        (ROOT / "agents_extensions/shared" / "phases" / "gemini").glob("*.md")
     ), ids=lambda p: p.name)
     def test_template_placeholders_known(self, template_file):
         """Every placeholder in active templates should be in the known set."""
@@ -220,7 +220,7 @@ class TestScanIntegration:
 
     def test_retired_templates_exist(self):
         """Retired templates should be in _retired/ directory."""
-        retired_dir = ROOT / "claude_extensions" / "phases" / "gemini" / "_retired"
+        retired_dir = ROOT / "agents_extensions/shared" / "phases" / "gemini" / "_retired"
         if not retired_dir.exists():
             pytest.skip("No retired directory yet")
         retired_files = list(retired_dir.glob("*.md"))

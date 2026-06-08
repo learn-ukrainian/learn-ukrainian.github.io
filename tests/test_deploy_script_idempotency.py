@@ -32,7 +32,7 @@ CLAUDE_RULE_FILES = (
 
 
 def _copy_repo_subset(target: Path) -> None:
-    for directory in ("claude_extensions", "gemini_extensions"):
+    for directory in ("agents_extensions/shared", "agents_extensions/codex", "gemini_extensions"):
         shutil.copytree(REPO_ROOT / directory, target / directory, symlinks=True)
 
     for relative_path in (
@@ -101,6 +101,7 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
         f"stdout: {check_result.stdout}\nstderr: {check_result.stderr}"
     )
     assert (repo / CODEX_HOOK_TARGET).exists()
+    assert (repo / ".codex" / "memory" / "MEMORY.md").exists()
     assert (repo / ".gemini/config.yaml").exists()
     deployed_claude_rules = sorted(
         path.name for path in (repo / ".claude" / "rules").glob("*.md")
@@ -114,7 +115,7 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
 
     codex_hooks_diff = _run_command(
         repo,
-        ["diff", "-rq", "claude_extensions/hooks", ".codex/hooks"],
+        ["diff", "-rq", "agents_extensions/shared/hooks", ".codex/hooks"],
     )
     assert codex_hooks_diff.returncode == 0, (
         "Codex hooks drift after fresh deploy:\n"
@@ -142,7 +143,8 @@ def test_second_deploy_is_noop_for_codex_target(tmp_path: Path) -> None:
     assert second_result.returncode == 0, (
         f"second deploy failed:\nstdout: {second_result.stdout}\nstderr: {second_result.stderr}"
     )
-    assert "claude_extensions → .codex: no changes" in second_result.stdout
+    assert "agents_extensions/shared → .codex: no changes" in second_result.stdout
+    assert "agents_extensions/codex → .codex: no changes" in second_result.stdout
     assert "No changes to deploy." in second_result.stdout
 
 
@@ -157,7 +159,7 @@ def test_codex_orphan_is_caught(tmp_path: Path) -> None:
     combined_output = f"{deploy_result.stdout}\n{deploy_result.stderr}"
 
     assert deploy_result.returncode != 0
-    assert "claude_extensions → .codex" in combined_output
+    assert "agents_extensions/shared → .codex" in combined_output
     assert "undeclared orphan 'stale-only.txt'" in combined_output
 
 
@@ -180,5 +182,5 @@ def test_drift_is_caught(tmp_path: Path) -> None:
     check_result = _run(repo, CHECK_SCRIPT)
     combined_output = f"{check_result.stdout}\n{check_result.stderr}"
     assert check_result.returncode != 0
-    assert "Deploy-script drift between claude_extensions and .claude" in combined_output
+    assert "Deploy-script drift between agents_extensions/shared and .claude" in combined_output
     assert "pipeline.md" in combined_output

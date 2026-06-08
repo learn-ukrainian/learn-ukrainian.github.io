@@ -1,7 +1,7 @@
 """Unit tests for the main-worktree branch guard hook.
 
 Exercises the pure decision logic in
-``claude_extensions/hooks/guard-branch-switch-in-main.py``:
+``agents_extensions/shared/hooks/guard-branch-switch-in-main.py``:
 
   * branch switch / create detection (pre-existing behavior),
   * the new ``git branch -D/-M/-f`` force-delete / force-rename blocking,
@@ -23,7 +23,7 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-HOOK_PATH = REPO_ROOT / "claude_extensions" / "hooks" / "guard-branch-switch-in-main.py"
+HOOK_PATH = REPO_ROOT / "agents_extensions/shared" / "hooks" / "guard-branch-switch-in-main.py"
 
 
 def _load_hook():

@@ -233,7 +233,7 @@ def _parse_factual_review(raw_output: str, extract_delimiter_fn, extract_delimit
 # Track calibration
 # ---------------------------------------------------------------------------
 
-_CALIBRATION_DIR = Path(__file__).resolve().parent.parent.parent / "claude_extensions" / "phases" / "calibration"
+_CALIBRATION_DIR = Path(__file__).resolve().parent.parent.parent / "agents_extensions/shared" / "phases" / "calibration"
 
 
 def _get_track_calibration(level: str, module_num: int) -> str:

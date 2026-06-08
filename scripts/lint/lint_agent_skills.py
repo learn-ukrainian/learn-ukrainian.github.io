@@ -14,7 +14,7 @@ from pathlib import Path
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-SKILLS_DIR = PROJECT_ROOT / "claude_extensions" / "skills"
+SKILLS_DIR = PROJECT_ROOT / "agents_extensions/shared" / "skills"
 REQUIRED_KEYS = {"name", "description"}
 
 

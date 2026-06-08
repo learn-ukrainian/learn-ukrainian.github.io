@@ -1410,7 +1410,7 @@ class TestBatchFixReviewCheckExistingReviews:
 class TestBatchFixReviewAssembleFixPrompt:
     def test_assemble(self, tmp_path):
         from batch.batch_fix_review import REPO, assemble_fix_prompt
-        template_dir = REPO / "claude_extensions" / "phases" / "gemini"
+        template_dir = REPO / "agents_extensions/shared" / "phases" / "gemini"
         if not (template_dir / "phase-fix.md").exists():
             pytest.skip("Template file not found")
 

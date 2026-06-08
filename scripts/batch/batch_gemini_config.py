@@ -19,8 +19,8 @@ VENV_PYTHON = str(PROJECT_ROOT / ".venv" / "bin" / "python")
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 CURRICULUM_YAML = CURRICULUM_DIR / "curriculum.yaml"
 PLANS_DIR = CURRICULUM_DIR / "plans"
-PHASES_DIR = PROJECT_ROOT / "claude_extensions" / "phases" / "gemini"
-QUICK_REF_DIR = PROJECT_ROOT / "claude_extensions" / "quick-ref"
+PHASES_DIR = PROJECT_ROOT / "agents_extensions/shared" / "phases" / "gemini"
+QUICK_REF_DIR = PROJECT_ROOT / "agents_extensions/shared" / "quick-ref"
 
 # Model Tiering — Gemini (3 tiers, mirrors Claude: Pro≈Opus, Flash≈Sonnet, Flash-Lite≈Haiku)
 PRO_MODEL = "gemini-3.1-pro-preview"                 # Deep reasoning: writing, content, review
