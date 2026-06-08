@@ -12,9 +12,9 @@ has drifted to ``true``, ``--fix`` resets it.
 
 Usage::
 
-    python scripts/check_core_bare.py            # check only; exit 1 if core.bare=true
-    python scripts/check_core_bare.py --fix      # reset to false if drifted; exit 0
-    python scripts/check_core_bare.py --fix -q   # silent unless it had to fix
+    python scripts/audit/check_core_bare.py            # check only; exit 1 if core.bare=true
+    python scripts/audit/check_core_bare.py --fix      # reset to false if drifted; exit 0
+    python scripts/audit/check_core_bare.py --fix -q   # silent unless it had to fix
 
 Runs independently of a working tree (``git config`` works even in the broken
 ``core.bare=true`` state), so it functions *while* the repo is broken — which is
