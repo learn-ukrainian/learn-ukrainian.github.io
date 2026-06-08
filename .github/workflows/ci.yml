@@ -25,6 +25,7 @@ on:
       - 'docs/lesson-contract.md'
       - 'docs/lesson-schema.yaml'
       - 'starlight/**'
+      - 'curriculum/l2-uk-en/**'
   # CI/docs-only required-check note:
   # Keep PRs unfiltered so the required `Test (pytest)` check is always emitted.
   # Docs-only PRs otherwise leave branch protection stuck on "expected" (#1641).
@@ -44,8 +45,9 @@ jobs:
       # python = Python/test paths only. Gates pytest + ruff/radon/prompt/root/schema.
       # Deliberately EXCLUDES starlight/** so content/MDX PRs do NOT run pytest.
       python: ${{ steps.filter.outputs.python }}
-      # frontend = starlight site (code + generated MDX). Gates the build/vitest
-      # job and MDX source-parity, so MDX is still build-validated without pytest.
+      # frontend = generated site inputs/outputs. Gates the build/vitest job plus
+      # MDX source/drift checks, so curriculum source edits cannot leave stale
+      # committed MDX.
       frontend: ${{ steps.filter.outputs.frontend }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -70,6 +72,7 @@ jobs:
               - 'docs/lesson-contract.md'
               - 'docs/lesson-schema.yaml'
               - 'starlight/**'
+              - 'curriculum/l2-uk-en/**'
             python:
               - '.github/workflows/ci.yml'
               - 'requirements*.txt'
@@ -86,6 +89,7 @@ jobs:
             frontend:
               - '.github/workflows/ci.yml'
               - 'starlight/**'
+              - 'curriculum/l2-uk-en/**'
 
   lint:
     name: Lint (ruff)
@@ -295,6 +299,31 @@ jobs:
           MDX_PARITY_BULK_REGEN: ${{ contains(github.event.pull_request.title, '[regen-mdx]') || contains(github.event.pull_request.title, '[bulk-regen]') || contains(github.event.pull_request.body, '[regen-mdx]') || contains(github.event.pull_request.body, '[bulk-regen]') && '1' || '0' }}
         run: |
           python scripts/audit/check_mdx_source_parity.py --changed-vs-base origin/main
+
+  mdx-generation-drift:
+    name: MDX Generation Drift
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true' && github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.12'
+
+      - name: Install generator dependencies
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install PyYAML
+
+      - name: Regenerate changed curriculum MDX and check drift
+        run: |
+          .venv/bin/python scripts/audit/check_mdx_generation_drift.py --changed-vs-base origin/main
 
   lesson-schema-drift:
     name: Lesson Schema Drift
