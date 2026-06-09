@@ -235,3 +235,8 @@ The workbook repeats easy words and a few longer words on purpose. Repetition
 is how the alphabet becomes automatic.
 
 <!-- INJECT_ACTIVITY: act-5 -->
+
+## Далі
+
+Тепер переходь до словника й вправ. Keep the same routine there: find the
+vowel sounds first, then read the whole word.

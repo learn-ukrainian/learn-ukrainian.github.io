@@ -232,6 +232,8 @@ Keep the earlier identity rule: **Я студент. Я студентка.** Do
 
 <!-- INJECT_ACTIVITY: act-9 -->
 
+## Імена, пастки й самоперевірка
+
 Some male names end in **-а**, **-я**, or **-о**: **Микола**, **Ілля**,
 **Павло**. They are still **він** because they name men. Family words such as
 **тато**, **батько**, and **дядько** are also masculine.
