@@ -45,6 +45,8 @@ from yaml_activities import (
     ActivityParser,
 )
 
+from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
+
 VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
 
 
@@ -157,6 +159,7 @@ def _activity_plans_to_jsx(plans: list[dict]) -> str:
 
 
 _INJECT_ACTIVITY_RE = re.compile(r'<!--\s*INJECT_ACTIVITY:\s*([A-Za-z0-9_-]+)\s*-->')
+_INLINE_SECTION_HEADING_RE = re.compile(r'^#{2,3}\s+(.+?)\s*#*\s*$')
 
 
 def _activity_id(activity: Activity | dict) -> str:
@@ -207,16 +210,30 @@ def backfill_missing_activity_ids(activities: list[Activity | dict]) -> list[Act
     return activities
 
 
+def _inline_activity_section_titles(body: str) -> dict[str, str]:
+    """Map inline activity ids to the nearest preceding H2/H3 section title."""
+    section_title = ""
+    titles: dict[str, str] = {}
+    for line in body.splitlines():
+        heading_match = _INLINE_SECTION_HEADING_RE.match(line.strip())
+        if heading_match:
+            section_title = heading_match.group(1).strip()
+        for marker_match in _INJECT_ACTIVITY_RE.finditer(line):
+            titles[marker_match.group(1)] = section_title
+    return titles
+
+
 def _inject_inline_activities(
     body: str,
     yaml_activities: list[Activity] | None,
     is_ukrainian_forced: bool,
-) -> tuple[str, set[str], set[int], set[str]]:
+) -> tuple[str, set[str], set[int], set[str], dict[str, str]]:
     """Replace Tab 1 INJECT_ACTIVITY markers with matching component JSX."""
     if not yaml_activities or "INJECT_ACTIVITY" not in body:
-        return body, set(), set(), set()
+        return body, set(), set(), set(), {}
 
     parser = ActivityParser()
+    section_titles = _inline_activity_section_titles(body)
     by_id = {
         _activity_id(activity): (index, activity)
         for index, activity in enumerate(yaml_activities)
@@ -237,7 +254,13 @@ def _inject_inline_activities(
         injected_fingerprints.add(activity_identity_key(activity))
         return parser._activity_to_mdx(activity, is_ukrainian_forced)
 
-    return _INJECT_ACTIVITY_RE.sub(replace_marker, body), injected_ids, injected_positions, injected_fingerprints
+    return (
+        _INJECT_ACTIVITY_RE.sub(replace_marker, body),
+        injected_ids,
+        injected_positions,
+        injected_fingerprints,
+        section_titles,
+    )
 
 
 def generate_mdx(
@@ -293,7 +316,11 @@ def generate_mdx(
     # Determine if Ukrainian headers are forced
     is_ukrainian_forced = False
     lvl = level.lower()
-    if any(lvl.startswith(p) for p in ['b2', 'c1', 'c2', 'lit']) or (lvl.startswith('b1') and module_num > 5):
+    if (
+        lvl in SEMINAR_LEVELS
+        or any(lvl.startswith(p) for p in ['b2', 'c1', 'c2', 'lit'])
+        or (lvl.startswith('b1') and module_num > 5)
+    ):
         is_ukrainian_forced = True
 
     # Component imports
@@ -390,6 +417,7 @@ sidebar:
         injected_activity_ids,
         _injected_activity_positions,
         _injected_activity_fingerprints,
+        _injected_activity_section_titles,
     ) = _inject_inline_activities(
         lesson_content,
         yaml_activities,
@@ -420,6 +448,7 @@ sidebar:
             inline_cross_ref_ids=injected_activity_ids,
             inline_cross_ref_positions=_injected_activity_positions,
             inline_cross_ref_fingerprints=_injected_activity_fingerprints,
+            inline_cross_ref_section_titles=_injected_activity_section_titles,
         )
         if not activities_content.strip() and injected_activity_ids:
             activities_content = f"*{no_workbook_msg}*"

@@ -36,6 +36,20 @@ def _activity_id(activity: Activity) -> str:
     return str(getattr(activity, 'id', '') or '').strip()
 
 
+def _activity_type(activity: Activity) -> str:
+    if isinstance(activity, dict):
+        return str(activity.get('type', '') or '').strip() or 'unknown'
+    return str(getattr(activity, 'type', '') or '').strip() or 'unknown'
+
+
+def _activity_title_or_type(activity: Activity) -> str:
+    if isinstance(activity, dict):
+        title = str(activity.get('title', '') or '').strip()
+    else:
+        title = str(getattr(activity, 'title', '') or '').strip()
+    return title or _activity_type(activity)
+
+
 def activity_identity_key(activity: Activity) -> str:
     """Return a stable activity key that ignores optional renderer IDs."""
     if is_dataclass(activity):
@@ -58,12 +72,14 @@ def yaml_activities_to_jsx(
     inline_cross_ref_ids: set[str] | None = None,
     inline_cross_ref_positions: set[int] | None = None,
     inline_cross_ref_fingerprints: set[str] | None = None,
+    inline_cross_ref_section_titles: dict[str, str] | None = None,
 ) -> str:
     """Convert YAML activities to JSX components using the shared ActivityParser.
 
-    Activities already injected into the Lesson tab are omitted from the
-    workbook tab. Matching uses ID first, plus the matched list position and a
-    structural fingerprint so idless duplicates do not render in full.
+    Activities already injected into the Lesson tab render as compact
+    cross-references in the workbook tab. Matching uses ID first, plus the
+    matched list position; structural fingerprints still suppress duplicate
+    idless copies so they do not render in full.
     """
     parser = ActivityParser()
     inline_ids = {
@@ -73,22 +89,48 @@ def yaml_activities_to_jsx(
     }
     inline_positions = set(inline_cross_ref_positions or set())
     inline_fingerprints = set(inline_cross_ref_fingerprints or set())
+    section_titles = inline_cross_ref_section_titles or {}
     if not (inline_ids or inline_positions or inline_fingerprints):
         return parser.to_mdx(activities, is_ukrainian_forced)
 
     mdx_parts = []
     for index, activity in enumerate(activities):
-        if (
-            index in inline_positions
-            or _activity_id(activity) in inline_ids
-            or activity_identity_key(activity) in inline_fingerprints
-        ):
+        activity_id = _activity_id(activity)
+        if index in inline_positions or activity_id in inline_ids:
+            mdx_parts.append(
+                _inline_activity_cross_ref_to_mdx(
+                    activity,
+                    section_titles.get(activity_id, ""),
+                    is_ukrainian_forced,
+                )
+            )
+            continue
+        if activity_identity_key(activity) in inline_fingerprints:
             continue
         mdx = parser._activity_to_mdx(activity, is_ukrainian_forced)
         if not mdx:
             continue
         mdx_parts.append(mdx)
     return '\n\n'.join(mdx_parts)
+
+
+def _inline_activity_cross_ref_to_mdx(
+    activity: Activity,
+    section_title: str,
+    is_ukrainian_forced: bool,
+) -> str:
+    title = escape_jsx(_activity_title_or_type(activity))
+    section_title = section_title.strip()
+    if section_title:
+        if is_ukrainian_forced:
+            reference = f"див. урок, §{escape_jsx(section_title)}"
+        else:
+            reference = f"see lesson, §{escape_jsx(section_title)}"
+    elif is_ukrainian_forced:
+        reference = "див. вкладку «Урок»"
+    else:
+        reference = "see lesson tab"
+    return f"### {title}\n\n*({reference})*"
 
 
 def highlight_morphemes_to_jsx(item: HighlightMorphemesItem, title: str, is_ukrainian_forced: bool = False) -> str:

@@ -21,6 +21,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.agent_runtime.errors import AgentStalledError
+from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
 from scripts.build import linear_pipeline, run_archive
 from scripts.build.phases.implementation_map import (
     read_implementation_map,
@@ -1100,6 +1101,12 @@ def _phase_artifact_passes(module_dir: Path, phase: str) -> bool:
     return False
 
 
+def _run_stress_annotation_for_level(module_dir: Path, level: str) -> dict[str, Any]:
+    if level.lower() in SEMINAR_LEVELS:
+        return linear_pipeline.strip_stress_marks_for_seminar(module_dir)
+    return linear_pipeline.run_stress_annotation(module_dir)
+
+
 def _run(args: argparse.Namespace) -> int:
     level = args.level.lower()
     slug = args.slug
@@ -1348,7 +1355,13 @@ def _run(args: argparse.Namespace) -> int:
         phase = "stress_annotation"
         _phase_started(archive, phase)
         started_at = time.monotonic()
-        if (
+        if level in SEMINAR_LEVELS:
+            stress_annotation = _run_stress_annotation_for_level(module_dir, level)
+            linear_pipeline.write_json(
+                module_dir / "stress_annotation.json",
+                stress_annotation,
+            )
+        elif (
             resume_enabled
             and not force_rerun
             and _phase_artifact_passes(module_dir, "stress_annotation")
@@ -1358,7 +1371,7 @@ def _run(args: argparse.Namespace) -> int:
         else:
             if resume_enabled:
                 force_rerun = True
-            stress_annotation = linear_pipeline.run_stress_annotation(module_dir)
+            stress_annotation = _run_stress_annotation_for_level(module_dir, level)
             linear_pipeline.write_json(
                 module_dir / "stress_annotation.json",
                 stress_annotation,
