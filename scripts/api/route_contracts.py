@@ -103,11 +103,11 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "/api/dashboard", "prefix", "http",
         "Rich dashboard projections for audit, curriculum, pipeline, and comms pages.",
         "Dashboard helper scans over plans, status cache, research, reviews, orchestration, and broker data.",
-        "Dashboard helper caches are process-local: track detail 30s, summary 60s, overview reuses state summary 60s.",
+        "Dashboard helper caches are process-local: track detail 30s, summary 60s, overview reuses state summary 60s. /overview includes meta (derived from state-summary + dashboard caches); most other payloads do not.",
         ("audit-dashboard.html", "curriculum-dashboard.html", "index.html"),
         "Overlaps /api/state counts; richer module/audit detail remains distinct.",
         "medium if consumers treat it as canonical fresh state",
-        "keep for page-specific detail; use /api/state for freshness-sensitive counts",
+        "keep for page-specific detail; use /api/state/* (with ?fresh=true + meta) for canonical freshness-sensitive counts and state. Dashboard meta is secondary/derived.",
     ),
     RouteContract(
         "/api/blue/live-status", "exact", "http",
