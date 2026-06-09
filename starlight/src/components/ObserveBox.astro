@@ -1,0 +1,66 @@
+---
+interface ObservePair {
+  /**
+   * @schemaDescription Left-side observation item, optionally with trusted inline HTML.
+   * @ukrainianText true
+   */
+  left: string;
+  /**
+   * @schemaDescription Right-side comparison or explanation, optionally with trusted inline HTML.
+   * @ukrainianText true
+   */
+  right: string;
+}
+
+interface ObserveBoxProps {
+  /**
+   * @schemaDescription Display title shown next to the observe badge.
+   * @ukrainianText true
+   */
+  title?: string;
+  /**
+   * @schemaDescription Short badge text for the observe activity frame.
+   * @ukrainianText false
+   */
+  badge?: string;
+  /**
+   * @schemaDescription Paired observations rendered in the observe grid.
+   * @ukrainianText true
+   */
+  pairs?: ObservePair[];
+  /**
+   * @schemaDescription Prompt shown below the observation pairs.
+   * @ukrainianText true
+   */
+  question?: string;
+}
+
+const {
+  title = "\u041f\u043e\u0440\u0456\u0432\u043d\u044f\u0439\u0442\u0435",
+  badge = "Observe",
+  pairs = [],
+  question,
+} = Astro.props as ObserveBoxProps;
+---
+
+<div class="exercise">
+  <div class="exercise-header">
+    <span class="exercise-badge badge-observe">{badge}</span>
+    {title && <span class="exercise-title">{title}</span>}
+  </div>
+  <div class="observe-box">
+    {pairs.length > 0 ? (
+      <div class="observe-pairs">
+        {pairs.map((pair) => (
+          <>
+            <div class="observe-item" set:html={pair.left}></div>
+            <div class="observe-item" set:html={pair.right}></div>
+          </>
+        ))}
+      </div>
+    ) : (
+      <slot />
+    )}
+    {question && <div class="observe-question">{question}</div>}
+  </div>
+</div>

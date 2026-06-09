@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: starlight/src/components/{*.tsx, *.astro}
-  components_sha256: 83fd61d4a2ed5894e1868a147372debc667f688378a0514c87ca320ba7813284
+  components_sha256: 385746c9b1a798356cb06482ed87ded195a427fb800c5ed0ce1e12ff6e7c1200
   config_tables_sha256: e7e2ba824c0d215f2854d9bb923e6e02b7370bba1323d0dad57d730db940d62b
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -480,7 +480,7 @@ components:
       instruction: Приклад
     deprecated: false
     deprecation_reason: null
-  DialogueBox:
+  Dialogue:
     tab: lesson
     level_scope: &id001
     - a1
@@ -495,6 +495,40 @@ components:
     - lit
     - oes
     - ruth
+    activity_type: null
+    placement: n/a
+    props:
+      required: []
+      optional:
+      - name: title
+        type: string
+        description: Short context label shown above the dialogue.
+        ukrainian_text: 'false'
+      - name: lines
+        type: DialogueLine[]
+        description: Dialogue turns rendered as speaker, Ukrainian line, and support translation.
+        ukrainian_text: 'true'
+    nested_types:
+      DialogueLine:
+      - name: speaker
+        type: string
+        description: Speaker label shown before the dialogue line.
+        ukrainian_text: 'true'
+      - name: uk
+        type: string
+        description: Ukrainian dialogue line, optionally with trusted inline HTML.
+        ukrainian_text: 'true'
+      - name: trans
+        type: string
+        description: English support translation shown after the Ukrainian line.
+        ukrainian_text: 'false'
+    example:
+      title: Приклад
+    deprecated: false
+    deprecation_reason: null
+  DialogueBox:
+    tab: lesson
+    level_scope: *id001
     activity_type: null
     placement: n/a
     props:
@@ -1117,6 +1151,41 @@ components:
       instruction: Приклад
     deprecated: false
     deprecation_reason: null
+  MythBox:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: claim
+        type: string
+        description: Misleading claim shown for source-critical comparison.
+        ukrainian_text: 'true'
+      - name: truth
+        type: string
+        description: Corrected explanation or evidence-based framing.
+        ukrainian_text: 'true'
+      optional:
+      - name: claimSource
+        type: string
+        description: Citation or provenance note for the misleading claim.
+        ukrainian_text: 'false'
+      - name: truthSource
+        type: string
+        description: Citation or provenance note for the corrected explanation.
+        ukrainian_text: 'false'
+      - name: title
+        type: string
+        description: Display title shown above the myth/truth comparison.
+        ukrainian_text: 'false'
+    nested_types: {}
+    example:
+      claim: Приклад
+      truth: Приклад
+      title: Приклад
+    deprecated: false
+    deprecation_reason: null
   MythBuster:
     tab: lesson
     level_scope: *id001
@@ -1176,6 +1245,44 @@ components:
         default: false
     nested_types: {}
     example: {}
+    deprecated: false
+    deprecation_reason: null
+  ObserveBox:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required: []
+      optional:
+      - name: title
+        type: string
+        description: Display title shown next to the observe badge.
+        ukrainian_text: 'true'
+      - name: badge
+        type: string
+        description: Short badge text for the observe activity frame.
+        ukrainian_text: 'false'
+      - name: pairs
+        type: ObservePair[]
+        description: Paired observations rendered in the observe grid.
+        ukrainian_text: 'true'
+      - name: question
+        type: string
+        description: Prompt shown below the observation pairs.
+        ukrainian_text: 'true'
+    nested_types:
+      ObservePair:
+      - name: left
+        type: string
+        description: Left-side observation item, optionally with trusted inline HTML.
+        ukrainian_text: 'true'
+      - name: right
+        type: string
+        description: Right-side comparison or explanation, optionally with trusted inline HTML.
+        ukrainian_text: 'true'
+    example:
+      title: Приклад
     deprecated: false
     deprecation_reason: null
   OddOneOut:

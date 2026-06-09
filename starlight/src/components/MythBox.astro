@@ -1,0 +1,52 @@
+---
+interface MythBoxProps {
+  /**
+   * @schemaDescription Misleading claim shown for source-critical comparison.
+   * @ukrainianText true
+   */
+  claim: string;
+  /**
+   * @schemaDescription Citation or provenance note for the misleading claim.
+   * @ukrainianText false
+   */
+  claimSource?: string;
+  /**
+   * @schemaDescription Corrected explanation or evidence-based framing.
+   * @ukrainianText true
+   */
+  truth: string;
+  /**
+   * @schemaDescription Citation or provenance note for the corrected explanation.
+   * @ukrainianText false
+   */
+  truthSource?: string;
+  /**
+   * @schemaDescription Display title shown above the myth/truth comparison.
+   * @ukrainianText false
+   */
+  title?: string;
+}
+
+const {
+  claim,
+  claimSource,
+  truth,
+  truthSource,
+  title = "Myth vs Truth",
+} = Astro.props as MythBoxProps;
+---
+
+<div class="myth-box">
+  <div class="myth-box-header">
+    <span aria-hidden="true">&#x1F6A8;</span>
+    <span>{title}</span>
+  </div>
+  <div class="myth-claim">
+    <div set:html={claim}></div>
+    {claimSource && <div class="myth-source">{claimSource}</div>}
+  </div>
+  <div class="myth-truth">
+    <div set:html={truth}></div>
+    {truthSource && <div class="myth-source">{truthSource}</div>}
+  </div>
+</div>

@@ -497,6 +497,18 @@ const sidebar = props.kind === 'doc'
       };
     })()
   : undefined;
+
+const lessonHeader = props.kind === 'doc' && docTrack === 'a1' && docRoute !== docTrack
+  ? (() => {
+      const order = props.entry.data.sidebar?.order;
+      return {
+        variant: 'core' as const,
+        label: order ? `A1 Module ${String(order).padStart(2, '0')}` : 'A1 Lesson',
+        title: props.entry.data.title,
+        subtitle: props.entry.data.description ?? TRACKS[docTrack]?.subtitle,
+      };
+    })()
+  : undefined;
 ---
 
 <CourseLayout
@@ -510,6 +522,7 @@ const sidebar = props.kind === 'doc'
   sidebar={sidebar}
   wide={pageMeta.wide}
   showHero
+  lessonHeader={lessonHeader}
 >
   {props.kind === 'track' && pageTrack ? (
     <section class:list={['track-overview', `track-${props.track}`, pageTrack.family, pageTrack.state]}>

@@ -814,3 +814,734 @@ details.solution-block > *:last-child {
   background: rgba(255, 255, 255, 0.05);
   border-left-color: var(--co-blue-light);
 }
+
+/* ============= POC LESSON FRAMEWORK ============= */
+/* Scoped to lesson pages so lexicon, home, track landings, and reference
+   surfaces keep their existing design. */
+
+.lu-main > .header {
+  padding: 24px 0;
+  border-bottom: 4px solid #FFD700;
+}
+
+.lu-main > .header.core {
+  background: #0057B8;
+  color: #FFFFFF;
+}
+
+.lu-main > .header .header-inner {
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.lu-main > .header .level-badge {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 2px 10px;
+  border-radius: 4px;
+  background: #FFD700;
+  color: #212121;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.lu-main > .header h1 {
+  margin: 0 0 4px;
+  color: #FFFFFF;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.lu-main > .header .subtitle {
+  color: #FFFFFF;
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.lesson-shell {
+  --poc-blue: #0057B8;
+  --poc-yellow: #FFD700;
+  --poc-blue-light: #E8F0FE;
+  --poc-yellow-light: #FFF9E0;
+  --poc-green: #2E7D32;
+  --poc-green-light: #E8F5E9;
+  --poc-red: #C62828;
+  --poc-red-light: #FFEBEE;
+  --poc-purple: #6A1B9A;
+  --poc-purple-light: #F3E5F5;
+  --poc-orange: #E65100;
+  --poc-orange-light: #FFF3E0;
+  --poc-teal: #00695C;
+  --poc-teal-light: #E0F2F1;
+  --poc-brown: #5D4037;
+  --poc-brown-light: #EFEBE9;
+  --poc-gray-50: #FAFAFA;
+  --poc-gray-100: #F5F5F5;
+  --poc-gray-200: #EEEEEE;
+  --poc-gray-300: #E0E0E0;
+  --poc-gray-600: #757575;
+  --poc-gray-800: #424242;
+  --poc-gray-900: #212121;
+  --poc-radius: 12px;
+  --poc-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --poc-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.lesson-shell .ukr {
+  color: var(--poc-blue);
+  font-weight: 600;
+}
+
+.lesson-shell .trans {
+  color: var(--poc-gray-600);
+  font-size: 14px;
+  font-style: italic;
+}
+
+.lesson-shell .dialogue {
+  margin: 18px 0;
+  padding: 18px 22px;
+  border: 0;
+  border-left: 4px solid var(--poc-blue);
+  border-radius: var(--poc-radius);
+  background: #FFFFFF;
+  box-shadow: var(--poc-shadow);
+}
+
+.lesson-shell .dialogue-title {
+  margin-bottom: 14px;
+  color: var(--poc-gray-600);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.lesson-shell .dialogue-line {
+  position: relative;
+  margin-bottom: 10px;
+  padding-left: 14px;
+  font-size: 15px;
+}
+
+.lesson-shell .dialogue-line:last-child {
+  margin-bottom: 0;
+}
+
+.lesson-shell .dialogue-line::before {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--poc-blue);
+  content: "";
+}
+
+.lesson-shell .dialogue-line:nth-of-type(odd)::before {
+  background: var(--poc-yellow);
+}
+
+.lesson-shell .speaker {
+  font-weight: 700;
+}
+
+.lesson-shell .rule-box {
+  margin: 22px 0;
+  padding: 18px 22px;
+  border: 2px solid var(--poc-yellow);
+  border-radius: var(--poc-radius);
+  background: var(--poc-yellow-light);
+  box-shadow: none;
+}
+
+.lesson-shell .rule-box-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: var(--poc-gray-900);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.lesson-shell .rule-box-icon {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--poc-yellow);
+  color: var(--poc-gray-900);
+  font-size: 16px;
+}
+
+.lesson-shell .rule-box table {
+  width: 100%;
+  margin-top: 10px;
+  border: 0;
+  border-collapse: collapse;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  display: table;
+  overflow: visible;
+  font-size: 14px;
+}
+
+.lesson-shell .rule-box th {
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 4px;
+  background: rgba(255, 215, 0, 0.3);
+  color: var(--poc-gray-900);
+  text-align: left;
+}
+
+.lesson-shell .rule-box td {
+  min-width: 0;
+  padding: 7px 10px;
+  border: 0;
+  color: var(--poc-gray-900);
+}
+
+.lesson-shell .gender-m {
+  color: var(--poc-blue);
+  font-weight: 700;
+}
+
+.lesson-shell .gender-f {
+  color: #C2185B;
+  font-weight: 700;
+}
+
+.lesson-shell .gender-n {
+  color: var(--poc-green);
+  font-weight: 700;
+}
+
+.lesson-shell .myth-box {
+  margin: 22px 0;
+  padding: 18px 22px;
+  border: 2px solid var(--poc-red);
+  border-radius: var(--poc-radius);
+  background: var(--poc-red-light);
+}
+
+.lesson-shell .myth-box-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: var(--poc-red);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.lesson-shell .myth-box .myth-claim,
+.lesson-shell .myth-box .myth-truth {
+  margin: 8px 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+
+.lesson-shell .myth-box .myth-claim {
+  border-left: 3px solid var(--poc-red);
+  background: rgba(198, 40, 40, 0.08);
+  font-style: italic;
+}
+
+.lesson-shell .myth-box .myth-truth {
+  border-left: 3px solid var(--poc-green);
+  background: var(--poc-green-light);
+}
+
+.lesson-shell .source-box {
+  margin: 22px 0;
+  padding: 18px 22px;
+  border: 2px solid var(--poc-purple);
+  border-radius: var(--poc-radius);
+  background: var(--poc-purple-light);
+  box-shadow: none;
+}
+
+.lesson-shell .source-box-header {
+  margin-bottom: 8px;
+  color: var(--poc-purple);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.lesson-shell .source-box blockquote {
+  margin: 10px 0;
+  padding-left: 14px;
+  border-left: 3px solid var(--poc-purple);
+  background: transparent;
+  color: var(--poc-gray-800);
+  font-style: italic;
+}
+
+.lesson-shell .source-box .source-cite {
+  color: var(--poc-gray-600);
+  font-size: 13px;
+  text-align: right;
+}
+
+.lesson-shell .exercise,
+.lesson-shell [class*="activityContainer"] {
+  margin: 22px 0;
+  padding: 22px;
+  border: 2px solid var(--poc-gray-200);
+  border-radius: var(--poc-radius);
+  background: #FFFFFF;
+  box-shadow: var(--poc-shadow);
+}
+
+.lesson-shell [class*="activityContainer"]:hover {
+  box-shadow: var(--poc-shadow-lg);
+}
+
+.lesson-shell .exercise-header,
+.lesson-shell [class*="activityHeader"] {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.lesson-shell .exercise-badge,
+.lesson-shell [class*="activityIcon"] {
+  padding: 3px 10px;
+  border-radius: 4px;
+  background: var(--poc-blue);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.lesson-shell [class*="activityIcon"] {
+  font-size: 0;
+}
+
+.lesson-shell [class*="activityIcon"]::after {
+  content: "Activity";
+  font-size: 11px;
+}
+
+.lesson-shell .exercise-title,
+.lesson-shell [class*="activityHeader"] > span:not([class*="activityIcon"]) {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.lesson-shell .exercise-instruction,
+.lesson-shell [class*="instruction"] {
+  margin-bottom: 14px;
+  color: var(--poc-gray-600);
+  font-size: 13px;
+  font-style: italic;
+}
+
+.lesson-shell .exercise-num {
+  margin-left: auto;
+  color: var(--poc-gray-600);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.lesson-shell .badge-quiz,
+.lesson-shell [data-activity="quiz"] [class*="activityIcon"] {
+  background: var(--poc-blue);
+}
+
+.lesson-shell [data-activity="quiz"] [class*="activityIcon"]::after {
+  content: "Quiz";
+}
+
+.lesson-shell .badge-fillin,
+.lesson-shell [data-activity="fill-in"] [class*="activityIcon"],
+.lesson-shell [class*="activityContainer"]:has([data-activity="fillin-question"]) [class*="activityIcon"] {
+  background: var(--poc-green);
+}
+
+.lesson-shell [data-activity="fill-in"] [class*="activityIcon"]::after,
+.lesson-shell [class*="activityContainer"]:has([data-activity="fillin-question"]) [class*="activityIcon"]::after {
+  content: "Fill-in";
+}
+
+.lesson-shell .badge-matchup,
+.lesson-shell [data-activity="match-up"] [class*="activityIcon"] {
+  background: var(--poc-orange);
+}
+
+.lesson-shell [data-activity="match-up"] [class*="activityIcon"]::after {
+  content: "Match-up";
+}
+
+.lesson-shell .badge-groupsort,
+.lesson-shell [data-activity="group-sort"] [class*="activityIcon"] {
+  background: var(--poc-purple);
+}
+
+.lesson-shell [data-activity="group-sort"] [class*="activityIcon"]::after {
+  content: "Group Sort";
+}
+
+.lesson-shell .badge-truefalse,
+.lesson-shell [data-activity="true-false"] [class*="activityIcon"] {
+  background: #00695C;
+}
+
+.lesson-shell [data-activity="true-false"] [class*="activityIcon"]::after {
+  content: "True/False";
+}
+
+.lesson-shell .badge-error,
+.lesson-shell [data-activity="error-correction"] [class*="activityIcon"] {
+  background: var(--poc-red);
+}
+
+.lesson-shell [data-activity="error-correction"] [class*="activityIcon"]::after {
+  content: "Error";
+}
+
+.lesson-shell .badge-anagram,
+.lesson-shell [class*="activityContainer"]:has([class*="anagram"]) [class*="activityIcon"] {
+  background: #5D4037;
+}
+
+.lesson-shell [class*="activityContainer"]:has([class*="anagram"]) [class*="activityIcon"]::after {
+  content: "Anagram";
+}
+
+.lesson-shell .badge-translate,
+.lesson-shell [data-activity="translate"] [class*="activityIcon"] {
+  background: #1565C0;
+}
+
+.lesson-shell [data-activity="translate"] [class*="activityIcon"]::after {
+  content: "Translate";
+}
+
+.lesson-shell .badge-cloze,
+.lesson-shell [data-activity="cloze"] [class*="activityIcon"] {
+  background: #37474F;
+}
+
+.lesson-shell [data-activity="cloze"] [class*="activityIcon"]::after {
+  content: "Cloze";
+}
+
+.lesson-shell .badge-unjumble,
+.lesson-shell [class*="activityContainer"]:has([class*="unjumble"]) [class*="activityIcon"] {
+  background: #AD1457;
+}
+
+.lesson-shell [class*="activityContainer"]:has([class*="unjumble"]) [class*="activityIcon"]::after {
+  content: "Unjumble";
+}
+
+.lesson-shell .badge-select,
+.lesson-shell [class*="activityContainer"]:has([class*="selectQuestion"]) [class*="activityIcon"] {
+  background: #00838F;
+}
+
+.lesson-shell [class*="activityContainer"]:has([class*="selectQuestion"]) [class*="activityIcon"]::after {
+  content: "Select";
+}
+
+.lesson-shell .badge-grammar,
+.lesson-shell [class*="activityContainer"]:has([class*="grammar"]) [class*="activityIcon"] {
+  background: #1B5E20;
+}
+
+.lesson-shell .badge-observe,
+.lesson-shell [class*="activityContainer"]:has([class*="observe"]) [class*="activityIcon"] {
+  background: #263238;
+}
+
+.lesson-shell [class*="activityContainer"]:has([class*="observe"]) [class*="activityIcon"]::after {
+  content: "Observe";
+}
+
+.lesson-shell .badge-classify,
+.lesson-shell [class*="activityContainer"]:has([class*="classify"]) [class*="activityIcon"] {
+  background: #4E342E;
+}
+
+.lesson-shell .badge-mark,
+.lesson-shell [class*="activityContainer"]:has([class*="mark"]) [class*="activityIcon"] {
+  background: #1A237E;
+}
+
+.lesson-shell .badge-morpheme,
+.lesson-shell [class*="activityContainer"]:has([class*="morpheme"]) [class*="activityIcon"] {
+  background: #880E4F;
+}
+
+.lesson-shell .badge-image2letter,
+.lesson-shell [class*="activityContainer"]:has([class*="img"]) [class*="activityIcon"] {
+  background: #F57F17;
+  color: var(--poc-gray-900);
+}
+
+.lesson-shell .badge-lettergrid,
+.lesson-shell [class*="activityContainer"]:has([class*="letterGrid"]) [class*="activityIcon"] {
+  background: #01579B;
+}
+
+.lesson-shell .badge-phrasetable {
+  background: #33691E;
+}
+
+.lesson-shell .badge-essay,
+.lesson-shell [class*="activityContainer"]:has([class*="essay"]) [class*="activityIcon"] {
+  background: var(--poc-purple);
+}
+
+.lesson-shell .badge-critical,
+.lesson-shell [class*="activityContainer"]:has([class*="critical"]) [class*="activityIcon"] {
+  background: #BF360C;
+}
+
+.lesson-shell .badge-source,
+.lesson-shell [class*="activityContainer"]:has([class*="source"]) [class*="activityIcon"] {
+  background: #4A148C;
+}
+
+.lesson-shell .badge-reading,
+.lesson-shell [class*="activityContainer"]:has([class*="reading"]) [class*="activityIcon"] {
+  background: #006064;
+}
+
+.lesson-shell .badge-comparative,
+.lesson-shell [class*="activityContainer"]:has([class*="comparison"]) [class*="activityIcon"] {
+  background: #004D40;
+}
+
+.lesson-shell .badge-authorial {
+  background: #311B92;
+}
+
+.lesson-shell .badge-debate,
+.lesson-shell [class*="activityContainer"]:has([class*="debate"]) [class*="activityIcon"] {
+  background: #B71C1C;
+}
+
+.lesson-shell .badge-etymology,
+.lesson-shell [class*="activityContainer"]:has([class*="etymology"]) [class*="activityIcon"] {
+  background: #3E2723;
+}
+
+.lesson-shell .badge-transcritique {
+  background: #0D47A1;
+}
+
+.lesson-shell .badge-transcription,
+.lesson-shell [class*="activityContainer"]:has([class*="transcription"]) [class*="activityIcon"] {
+  background: #827717;
+}
+
+.lesson-shell .badge-paleography,
+.lesson-shell [class*="activityContainer"]:has([class*="paleography"]) [class*="activityIcon"] {
+  background: #4A148C;
+}
+
+.lesson-shell .badge-dialect,
+.lesson-shell [class*="activityContainer"]:has([class*="dialect"]) [class*="activityIcon"] {
+  background: #1B5E20;
+}
+
+.lesson-shell .quiz-question,
+.lesson-shell [class*="quizQuestion"] {
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--poc-gray-200);
+}
+
+.lesson-shell .quiz-question:last-child,
+.lesson-shell [class*="quizQuestion"]:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.lesson-shell .quiz-q,
+.lesson-shell [class*="questionText"] {
+  margin-bottom: 8px;
+  color: var(--poc-gray-900);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.lesson-shell .quiz-options,
+.lesson-shell [class*="options"],
+.lesson-shell [class*="optionChips"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lesson-shell .quiz-option,
+.lesson-shell [class*="option"],
+.lesson-shell [class*="chip"] {
+  border: 2px solid var(--poc-gray-200);
+  border-radius: 8px;
+  background: #FFFFFF;
+  color: var(--poc-gray-900);
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.lesson-shell .quiz-option:hover,
+.lesson-shell [class*="option"]:hover:not(:disabled),
+.lesson-shell [class*="chip"]:hover {
+  border-color: var(--poc-blue);
+  background: var(--poc-blue-light);
+}
+
+.lesson-shell [class*="correct"] {
+  border-color: var(--poc-green);
+}
+
+.lesson-shell [class*="incorrect"],
+.lesson-shell [class*="wrong"] {
+  border-color: var(--poc-red);
+}
+
+.lesson-shell .matchup,
+.lesson-shell [class*="matchUpContainer"] {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.lesson-shell .matchup-left,
+.lesson-shell .matchup-right,
+.lesson-shell [class*="matchItem"] {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.lesson-shell .matchup-left,
+.lesson-shell [class*="matchColumn"]:first-child [class*="matchItem"] {
+  background: var(--poc-blue-light);
+}
+
+.lesson-shell .matchup-right,
+.lesson-shell [class*="matchColumn"]:last-child [class*="matchItem"] {
+  background: var(--poc-orange-light);
+}
+
+.lesson-shell .observe-box {
+  margin: 14px 0;
+  padding: 18px;
+  border-radius: var(--poc-radius);
+  background: var(--poc-blue-light);
+}
+
+.lesson-shell .observe-pairs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.lesson-shell .observe-item {
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #FFFFFF;
+  color: var(--poc-gray-900);
+  font-size: 15px;
+  text-align: center;
+}
+
+.lesson-shell .observe-question {
+  margin-top: 14px;
+  color: var(--poc-blue);
+  font-style: italic;
+  font-weight: 600;
+}
+
+.lesson-shell .flashcards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.lesson-shell .flashcard {
+  height: 130px;
+  cursor: pointer;
+  perspective: 600px;
+}
+
+.lesson-shell .flashcard-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+}
+
+.lesson-shell .flashcard.flipped .flashcard-inner {
+  transform: rotateY(180deg);
+}
+
+.lesson-shell .flashcard-front,
+.lesson-shell .flashcard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 14px;
+  border-radius: var(--poc-radius);
+  backface-visibility: hidden;
+  box-shadow: var(--poc-shadow);
+}
+
+.lesson-shell .flashcard-front {
+  border: 2px solid var(--poc-blue);
+  background: #FFFFFF;
+}
+
+.lesson-shell .flashcard-back {
+  background: var(--poc-blue);
+  color: #FFFFFF;
+  transform: rotateY(180deg);
+}
+
+.lesson-shell .flashcard-word {
+  color: inherit;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .lu-main > .header h1 {
+    font-size: 20px;
+  }
+
+  .lesson-shell .flashcards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .lesson-shell .matchup,
+  .lesson-shell [class*="matchUpContainer"],
+  .lesson-shell .observe-pairs {
+    grid-template-columns: 1fr;
+  }
+}

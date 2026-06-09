@@ -29,7 +29,11 @@ function readInterface(node, source) {
   };
 }
 function extract(filePath) {
-  const text = readFileSync(filePath, "utf8");
+  const rawText = readFileSync(filePath, "utf8");
+  const frontmatterEnd = rawText.indexOf("\n---", 4);
+  const text = filePath.endsWith(".astro") && rawText.startsWith("---\n") && frontmatterEnd !== -1
+    ? rawText.slice(4, frontmatterEnd)
+    : rawText;
   const source = ts.createSourceFile(filePath, text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
   const interfaces = [];
   function visit(node) {

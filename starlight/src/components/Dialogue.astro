@@ -1,0 +1,54 @@
+---
+interface DialogueLine {
+  /**
+   * @schemaDescription Speaker label shown before the dialogue line.
+   * @ukrainianText true
+   */
+  speaker?: string;
+  /**
+   * @schemaDescription Ukrainian dialogue line, optionally with trusted inline HTML.
+   * @ukrainianText true
+   */
+  uk: string;
+  /**
+   * @schemaDescription English support translation shown after the Ukrainian line.
+   * @ukrainianText false
+   */
+  trans?: string;
+}
+
+interface DialogueProps {
+  /**
+   * @schemaDescription Short context label shown above the dialogue.
+   * @ukrainianText false
+   */
+  title?: string;
+  /**
+   * @schemaDescription Dialogue turns rendered as speaker, Ukrainian line, and support translation.
+   * @ukrainianText true
+   */
+  lines?: DialogueLine[];
+}
+
+const { title, lines = [] } = Astro.props as DialogueProps;
+const speakerLabel = (speaker?: string) => {
+  if (!speaker) return "";
+  return speaker.endsWith(":") ? speaker : `${speaker}:`;
+};
+---
+
+<div class="dialogue">
+  {title && <div class="dialogue-title">{title}</div>}
+  {lines.length > 0 ? (
+    lines.map((line) => (
+      <div class="dialogue-line">
+        {line.speaker && <span class="speaker">{speakerLabel(line.speaker)}</span>}
+        {line.speaker && " "}
+        <span set:html={line.uk}></span>
+        {line.trans && <> <span class="trans">({line.trans})</span></>}
+      </div>
+    ))
+  ) : (
+    <slot />
+  )}
+</div>

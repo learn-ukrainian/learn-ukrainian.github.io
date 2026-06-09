@@ -44,6 +44,9 @@ import LetterGrid from '@site/src/components/LetterGrid';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import VocabCard from '@site/src/components/VocabCard';
 import DialogueBox from '@site/src/components/DialogueBox';
+import Dialogue from '@site/src/components/Dialogue.astro';
+import RuleBox from '@site/src/components/RuleBox.astro';
+import ObserveBox from '@site/src/components/ObserveBox.astro';
 import HashTabSync from '@site/src/components/HashTabSync';
 import ActivityHelp from '@site/src/components/ActivityHelp';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
@@ -120,11 +123,48 @@ you.
 The fastest A1 habit is the **він / вона / воно** test. Endings help you guess
 when the word is new.
 
-| Signal | Usually | Examples |
-| --- | --- | --- |
-| consonant ending | **він**, **мій** | **стіл**, **телефон**, **зошит**, **ключ** |
-| **-а / -я** | **вона**, **моя** | **книга**, **лампа**, **кімната**, **ручка** |
-| **-о / -е** | **воно**, **моє** | **вікно**, **ліжко**, **дзеркало**, **море** |
+<RuleBox title="Правило: gender by ending">
+  <table>
+    <thead>
+      <tr>
+        <th>Рід</th>
+        <th>Signal</th>
+        <th>Usually</th>
+        <th>Examples</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="gender-m">Чоловічий (м)</span></td>
+        <td>consonant ending</td>
+        <td><strong>він</strong>, <strong>мій</strong></td>
+        <td><strong>стіл</strong>, <strong>телефон</strong>, <strong>зошит</strong>, <strong>ключ</strong></td>
+      </tr>
+      <tr>
+        <td><span class="gender-f">Жіночий (ж)</span></td>
+        <td><strong>-а / -я</strong></td>
+        <td><strong>вона</strong>, <strong>моя</strong></td>
+        <td><strong>книга</strong>, <strong>лампа</strong>, <strong>кімната</strong>, <strong>ручка</strong></td>
+      </tr>
+      <tr>
+        <td><span class="gender-n">Середній (с)</span></td>
+        <td><strong>-о / -е</strong></td>
+        <td><strong>воно</strong>, <strong>моє</strong></td>
+        <td><strong>вікно</strong>, <strong>ліжко</strong>, <strong>дзеркало</strong>, <strong>море</strong></td>
+      </tr>
+    </tbody>
+  </table>
+</RuleBox>
+
+<ObserveBox
+  title="Порівняйте"
+  pairs={[
+    { left: "<strong>мій</strong> стіл", right: "стіл ends in <strong>-л</strong> (consonant)" },
+    { left: "<strong>моя</strong> книга", right: "книга ends in <strong>-а</strong>" },
+    { left: "<strong>моє</strong> вікно", right: "вікно ends in <strong>-о</strong>" },
+  ]}
+  question="What pattern do you see between the noun ending and the gender-test word?"
+/>
 
 At A1, this covers the clear everyday words you need. Some nouns are not clear
 from the ending. You have already seen one important pattern: **тато** and
@@ -156,30 +196,20 @@ adjective table yet.
 ## Предмети навколо
 
 Use **У мене є...** from the family module with objects. Read the Ukrainian
-dialogue first. Use the support table after the dialogue to check meaning.
+dialogue first, then use the English support in each line to check meaning.
 
-```text
-Марія: Привіт! Дивись, це моя кімната.
-Оленка: Класно! У тебе є стіл?
-Марія: Так, у мене є стіл і ліжко.
-Оленка: А це твоя лампа?
-Марія: Так. Це моя лампа. Вона тут.
-Оленка: А вікно?
-Марія: Ось воно. Моє вікно велике.
-```
-
-Support after the dialogue:
-
-| Українська | English support |
-| --- | --- |
-| **Привіт!** | Hi! |
-| **Дивись, це моя кімната.** | Look, this is my room. |
-| **У тебе є стіл?** | Do you have a table? |
-| **У мене є стіл і ліжко.** | I have a table and a bed. |
-| **А це твоя лампа?** | And is this your lamp? |
-| **Вона тут.** | It is here. The word **лампа** chooses **вона**. |
-| **Ось воно.** | Here it is. The word **вікно** chooses **воно**. |
-| **Моє вікно велике.** | My window is big. |
+<Dialogue
+  title="At the window"
+  lines={[
+    { speaker: "Марія", uk: "Привіт! Дивись, це моя кімната.", trans: "Hi! Look, this is my room." },
+    { speaker: "Оленка", uk: "Класно! У тебе є стіл?", trans: "Cool! Do you have a table?" },
+    { speaker: "Марія", uk: "Так, у мене є стіл і ліжко.", trans: "Yes, I have a table and a bed." },
+    { speaker: "Оленка", uk: "А це твоя лампа?", trans: "And is this your lamp?" },
+    { speaker: "Марія", uk: "Так. Це моя лампа. Вона тут.", trans: "Yes. This is my lamp. It is here." },
+    { speaker: "Оленка", uk: "А вікно?", trans: "And the window?" },
+    { speaker: "Марія", uk: "Ось воно. Моє вікно велике.", trans: "Here it is. My window is big." },
+  ]}
+/>
 
 Read the object lines again and notice the pronoun:
 
@@ -192,19 +222,14 @@ choose the pronoun.
 
 Now move to a bag:
 
-```text
-Оленка: Що у тебе є?
-Марія: У мене є книга, телефон і фото.
-Оленка: А у мене є ручка і зошит.
-```
-
-Support after the dialogue:
-
-| Українська | English support |
-| --- | --- |
-| **Що у тебе є?** | What do you have? |
-| **У мене є книга, телефон і фото.** | I have a book, a phone, and a photo. |
-| **А у мене є ручка і зошит.** | And I have a pen and a notebook. |
+<Dialogue
+  title="In the bag"
+  lines={[
+    { speaker: "Оленка", uk: "Що у тебе є?", trans: "What do you have?" },
+    { speaker: "Марія", uk: "У мене є книга, телефон і фото.", trans: "I have a book, a phone, and a photo." },
+    { speaker: "Оленка", uk: "А у мене є ручка і зошит.", trans: "And I have a pen and a notebook." },
+  ]}
+/>
 
 **Фото** is a useful beginner word. Store it as **воно**: **моє фото**.
 

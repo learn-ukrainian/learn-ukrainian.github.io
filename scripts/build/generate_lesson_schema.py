@@ -75,10 +75,13 @@ LEVEL_KEY_MAP = {
 }
 
 TAB_BY_COMPONENT = {
+    "Dialogue": "lesson",
     "RuleBox": "lesson",
     "DialogueBox": "lesson",
+    "ObserveBox": "lesson",
     "YouTubeVideo": "lesson",
     "AuthorialIntent": "activities",
+    "MythBox": "lesson",
     "MythBuster": "lesson",
     "ComparativeStudy": "activities",
     "CriticalAnalysis": "activities",

@@ -1,0 +1,24 @@
+---
+interface RuleBoxProps {
+  /**
+   * @schemaDescription Display title shown above the grammar rule.
+   * @ukrainianText true
+   */
+  title: string;
+  /**
+   * @schemaDescription Icon value shown in the rule-box header.
+   * @ukrainianText false
+   */
+  icon?: string;
+}
+
+const { title, icon = "\u{1F4D0}" } = Astro.props as RuleBoxProps;
+---
+
+<div class="rule-box">
+  <div class="rule-box-header">
+    <div class="rule-box-icon" aria-hidden="true">{icon}</div>
+    <span>{title}</span>
+  </div>
+  <slot />
+</div>

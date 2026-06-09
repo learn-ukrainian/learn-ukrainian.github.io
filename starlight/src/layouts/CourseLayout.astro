@@ -22,6 +22,13 @@ type Sidebar = {
   links: SidebarLink[];
 };
 
+type LessonHeader = {
+  variant: 'core';
+  label: string;
+  title: string;
+  subtitle?: string;
+};
+
 type Props = {
   title: string;
   description?: string;
@@ -33,6 +40,7 @@ type Props = {
   navItems?: NavItem[];
   sidebar?: Sidebar;
   showHero?: boolean;
+  lessonHeader?: LessonHeader;
 };
 
 const {
@@ -46,6 +54,7 @@ const {
   navItems = [],
   sidebar,
   showHero = true,
+  lessonHeader,
 } = Astro.props as Props;
 
 const sidebarPct =
@@ -143,21 +152,31 @@ const isActive = (href: string) => {
 
       <main id="main-content" class="lu-main" tabindex="-1">
         {showHero && (
-          <section class:list={[
-            'lu-hero',
-            heroVariant === 'folk' && 'folk',
-            heroVariant === 'lexicon' && 'lexicon',
-            heroVariant === 'seminar' && 'seminar',
-            heroVariant === 'lit' && 'lit',
-            heroVariant === 'history' && 'history',
-            heroVariant === 'unavailable' && 'unavailable',
-          ]}>
-            <div class="lu-hero-inner">
-              <span class="lu-badge">{eyebrow}</span>
-              <h1>{title}</h1>
-              {subtitle && <p>{subtitle}</p>}
-            </div>
-          </section>
+          lessonHeader?.variant === 'core' ? (
+            <section class="header core">
+              <div class="header-inner">
+                <span class="level-badge">{lessonHeader.label}</span>
+                <h1>{lessonHeader.title}</h1>
+                {lessonHeader.subtitle && <div class="subtitle">{lessonHeader.subtitle}</div>}
+              </div>
+            </section>
+          ) : (
+            <section class:list={[
+              'lu-hero',
+              heroVariant === 'folk' && 'folk',
+              heroVariant === 'lexicon' && 'lexicon',
+              heroVariant === 'seminar' && 'seminar',
+              heroVariant === 'lit' && 'lit',
+              heroVariant === 'history' && 'history',
+              heroVariant === 'unavailable' && 'unavailable',
+            ]}>
+              <div class="lu-hero-inner">
+                <span class="lu-badge">{eyebrow}</span>
+                <h1>{title}</h1>
+                {subtitle && <p>{subtitle}</p>}
+              </div>
+            </section>
+          )
         )}
 
         {navItems.length > 0 && (

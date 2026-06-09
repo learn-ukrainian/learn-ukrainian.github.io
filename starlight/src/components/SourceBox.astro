@@ -1,0 +1,28 @@
+---
+interface SourceBoxProps {
+  /**
+   * @schemaDescription Display title shown above the source excerpt.
+   * @ukrainianText false
+   */
+  title: string;
+  /**
+   * @schemaDescription Quoted source excerpt preserved in its source language.
+   * @ukrainianText maybe
+   */
+  quote: string;
+  /**
+   * @schemaDescription Citation metadata preserved verbatim.
+   * @ukrainianText false
+   */
+  citation: string;
+}
+
+const { title, quote, citation } = Astro.props as SourceBoxProps;
+---
+
+<div class="source-box">
+  <div class="source-box-header">{title}</div>
+  <blockquote>{quote}</blockquote>
+  <div class="source-cite">&mdash; {citation}</div>
+  <slot />
+</div>
