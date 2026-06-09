@@ -4,10 +4,8 @@ description: "Автобус, метро, таксі — як пересуват
 sidebar:
   order: 32
   label: "32. Транспорт"
-pipeline: linear-phase-4
-build_status: validated
 prev: where-to
-next: false
+next: around-the-city
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -72,21 +70,34 @@ By the end, you can:
 - use transport with direction: **їду на вокзал**, **їду до Львова**;
 - avoid transport calques such as **брати автобус** for "take a bus."
 
+## Діалоги
+
 ### Transport to situation
 
 <MatchUp client:only='react' pairs={JSON.parse(`[{"left": "airport to hotel, faster but expensive", "right": "таксі"}, {"left": "city route number seven", "right": "автобус"}, {"left": "underground city travel", "right": "метро"}, {"left": "rail trip to Lviv", "right": "потяг"}, {"left": "city rails on the street", "right": "трамвай"}, {"left": "electric city bus with wires", "right": "тролейбус"}, {"left": "flight to another country", "right": "літак"}, {"left": "small route minibus", "right": "маршрутка"}]`)} />
 
-## Діалоги
-
 The first dialogue begins at the airport. You need a hotel route, so the useful
 question is **Як дістатися до готелю?**
 
-<DialogueBox uk="Приїжджий: Добрий день! Як дістатися до готелю?" en="Visitor: Good afternoon! How do I get to the hotel?" />
-<DialogueBox uk="Друг: Їдьте автобусом до метро, а потім на метро до центру." en="Friend: Go by bus to the metro, and then by metro to the center." />
-<DialogueBox uk="Приїжджий: А можна на таксі?" en="Visitor: And can I go by taxi?" />
-<DialogueBox uk="Друг: Так, можна. Таксі швидше, але дорожче." en="Friend: Yes, you can. A taxi is faster, but more expensive." />
-<DialogueBox uk="Приїжджий: Де зупинка автобуса?" en="Visitor: Where is the bus stop?" />
-<DialogueBox uk="Друг: Зупинка ось там. Автобус номер сім." en="Friend: The stop is over there. Bus number seven." />
+```text
+Приїжджий: Добрий день! Як дістатися до готелю?
+Друг: Їдьте автобусом до метро, а потім на метро до центру.
+Приїжджий: А можна на таксі?
+Друг: Так, можна. Таксі швидше, але дорожче.
+Приїжджий: Де зупинка автобуса?
+Друг: Зупинка ось там. Автобус номер сім.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Приїжджий: Добрий день! Як дістатися до готелю?** | Visitor: Good afternoon! How do I get to the hotel? |
+| **Друг: Їдьте автобусом до метро, а потім на метро до центру.** | Friend: Go by bus to the metro, and then by metro to the center. |
+| **Приїжджий: А можна на таксі?** | Visitor: And can I go by taxi? |
+| **Друг: Так, можна. Таксі швидше, але дорожче.** | Friend: Yes, you can. A taxi is faster, but more expensive. |
+| **Приїжджий: Де зупинка автобуса?** | Visitor: Where is the bus stop? |
+| **Друг: Зупинка ось там. Автобус номер сім.** | Friend: The stop is over there. Bus number seven. |
 
 This is the basic passenger pattern: **їхати автобусом**, **їхати потягом**,
 **їхати трамваєм**, but **їхати на метро** and **їхати на таксі**. Learn the
@@ -94,12 +105,25 @@ transport word together with its travel model.
 
 The second dialogue is at a station.
 
-<DialogueBox uk="Пасажир: Один квиток до Львова, будь ласка." en="Passenger: One ticket to Lviv, please." />
-<DialogueBox uk="Касир: В один бік чи туди й назад?" en="Cashier: One way or there and back?" />
-<DialogueBox uk="Пасажир: Туди й назад. Скільки коштує?" en="Passenger: There and back. How much does it cost?" />
-<DialogueBox uk="Касир: П'ятсот гривень." en="Cashier: Five hundred hryvnias." />
-<DialogueBox uk="Пасажир: О котрій відбуває потяг?" en="Passenger: At what time does the train depart?" />
-<DialogueBox uk="Касир: О дев'ятій ранку. Колія третя." en="Cashier: At nine in the morning. Track three." />
+```text
+Пасажир: Один квиток до Львова, будь ласка.
+Касир: В один бік чи туди й назад?
+Пасажир: Туди й назад. Скільки коштує?
+Касир: П'ятсот гривень.
+Пасажир: О котрій відбуває потяг?
+Касир: О дев'ятій ранку. Колія третя.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Пасажир: Один квиток до Львова, будь ласка.** | Passenger: One ticket to Lviv, please. |
+| **Касир: В один бік чи туди й назад?** | Cashier: One way or there and back? |
+| **Пасажир: Туди й назад. Скільки коштує?** | Passenger: There and back. How much does it cost? |
+| **Касир: П'ятсот гривень.** | Cashier: Five hundred hryvnias. |
+| **Пасажир: О котрій відбуває потяг?** | Passenger: At what time does the train depart? |
+| **Касир: О дев'ятій ранку. Колія третя.** | Cashier: At nine in the morning. Track three. |
 
 :::tip
 For A1 travel, memorize whole chunks: **один квиток до...**, **де зупинка?**,
@@ -197,14 +221,6 @@ Keep the transport vocabulary clean. Use **зупинка**, not "останов
 **квиток**, not "білет", for this lesson. Start a polite transport exchange
 with **Добрий день**, not "Здрастуйте".
 
-### Airport to hotel route
-
-<Order client:only='react' items={JSON.parse(`["Вийдіть з аеропорту.", "Знайдіть зупинку автобуса.", "Їдьте автобусом до метро.", "Потім їдьте на метро до центру.", "На станції йдіть прямо.", "Готель праворуч."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5]`)} instruction={"Put the route instructions in a helpful order."} isUkrainian={false} />
-
-### Transport culture
-
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Добрий день is a natural polite opening.", "isTrue": true, "explanation": "Use Добрий день in transport dialogues."}, {"statement": "Квиток is the lesson word for ticket.", "isTrue": true, "explanation": "Use квиток."}, {"statement": "Зупинка is the lesson word for stop.", "isTrue": true, "explanation": "Use зупинка."}, {"statement": "Потяг рушає is a natural transport sentence.", "isTrue": true, "explanation": "Рушає works for a vehicle starting to move."}, {"statement": "Я в автобусі means I am inside the bus.", "isTrue": true, "explanation": "That is static location."}]`)} />
-
 <span id="підсумок"></span>
 
 ## 📋 Підсумок
@@ -250,14 +266,6 @@ one transport word: **автобусом**, **потягом**, **трамває
 **на таксі**. If the travel model stays stable while the vehicle changes, this
 module has done its job.
 
-### Find the odd transport chunk
-
-<OddOneOut client:only='react' instruction={"Choose the phrase that does not fit the pattern."} items={JSON.parse(`[{"words": ["автобусом", "потягом", "трамваєм", "на метрі"], "correct": 3, "explanation": "Use на метро."}, {"words": ["квиток", "зупинка", "вокзал", "білет"], "correct": 3, "explanation": "Use квиток in this lesson."}, {"words": ["у таксі", "на метро", "у метро", "в таксію"], "correct": 3, "explanation": "Таксі does not change."}, {"words": ["потяг рушає", "автобус відбуває", "ми вирушаємо", "брати автобус"], "correct": 3, "explanation": "Say їхати автобусом or сідати в автобус."}]`)} />
-
-### Repair transport interference
-
-<ErrorCorrection client:only='react' instruction="Choose the natural Ukrainian transport sentence." items={JSON.parse(`[{"sentence": "Брати автобус (Take a bus)", "errorWord": "брати автобус", "correctForm": "Їхати автобусом / Сідати в автобус", "options": ["Їхати автобусом / Сідати в автобус", "Брати автобус", "Їхати за автобусом"], "explanation": "Ukrainian uses the transport as means or says to get into it."}, {"sentence": "Автобус відправляється", "errorWord": "відправляється", "correctForm": "Автобус відбуває / Автобус рушає", "options": ["Автобус відбуває / Автобус рушає", "Автобус відправляється", "Автобус бере дорогу"], "explanation": "For a vehicle, use відбуває or рушає."}, {"sentence": "Ми відправляємося в дорогу", "errorWord": "відправляємося", "correctForm": "Ми вирушаємо в дорогу", "options": ["Ми вирушаємо в дорогу", "Ми відправляємося в дорогу", "Ми рушає автобусом"], "explanation": "For people starting a trip, use вирушаємо."}, {"sentence": "Їхати за автобусом (Travel by bus)", "errorWord": "за автобусом", "correctForm": "Їхати автобусом", "options": ["Їхати автобусом", "Їхати за автобусом", "Їхати біля автобуса"], "explanation": "Means of transport uses the instrumental without a preposition."}, {"sentence": "В таксію / на метрі (In the taxi / on the metro)", "errorWord": "таксію / метрі", "correctForm": "У таксі / на метро", "options": ["У таксі / на метро", "В таксію / на метрі", "У таксієм / на метрою"], "explanation": "Таксі and метро do not change."}, {"sentence": "Я приїхав на вокзалі", "errorWord": "на вокзалі", "correctForm": "Я приїхав на вокзал", "options": ["Я приїхав на вокзал", "Я приїхав на вокзалі", "Я в вокзал приїхав"], "explanation": "Приїхав answers куди?, so use на вокзал."}]`)} />
-
 </TabItem>
 <TabItem label="Vocabulary">
 
@@ -270,19 +278,19 @@ module has done its job.
 
 ### Transport to situation
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "airport to hotel, faster but expensive", "right": "таксі"}, {"left": "city route number seven", "right": "автобус"}, {"left": "underground city travel", "right": "метро"}, {"left": "rail trip to Lviv", "right": "потяг"}, {"left": "city rails on the street", "right": "трамвай"}, {"left": "electric city bus with wires", "right": "тролейбус"}, {"left": "flight to another country", "right": "літак"}, {"left": "small route minibus", "right": "маршрутка"}]`)} />
+*(see lesson, §Діалоги)*
 
 ### Ticket window
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Один ___ до Львова, будь ласка.", "answer": "квиток", "options": ["квиток", "зупинка", "водій"]}, {"sentence": "___ коштує квиток?", "answer": "Скільки", "options": ["Скільки", "Куди", "Де"]}, {"sentence": "В один бік чи ___ й назад?", "answer": "туди", "options": ["туди", "там", "тут"]}, {"sentence": "Потяг відбуває ___ дев'ятій.", "answer": "о", "options": ["о", "в", "на"]}, {"sentence": "Колія ___.", "answer": "третя", "options": ["третя", "три", "третє"]}]`)} />
+*(see lesson, §Діалоги)*
 
 ### Автобусом чи на метро?
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "How do you say by bus?", "options": [{"text": "автобусом", "correct": true}, {"text": "за автобусом", "correct": false}, {"text": "на автобусі", "correct": false}], "explanation": "Use the instrumental: автобусом."}, {"question": "How do you say by metro?", "options": [{"text": "на метро", "correct": true}, {"text": "метром", "correct": false}, {"text": "на метрі", "correct": false}], "explanation": "Метро does not change: на метро."}, {"question": "How do you say by taxi?", "options": [{"text": "на таксі", "correct": true}, {"text": "таксієм", "correct": false}, {"text": "в таксію", "correct": false}], "explanation": "Таксі does not change: на таксі."}, {"question": "How do you say by train?", "options": [{"text": "потягом", "correct": true}, {"text": "за потягом", "correct": false}, {"text": "до потяга", "correct": false}], "explanation": "Use potiahom: потягом."}]`)} />
+*(see lesson, §Види транспорту)*
 
 ### Passenger shelves
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Vehicles": ["автобус", "метро", "таксі", "трамвай"], "Passenger words": ["квиток", "зупинка", "вокзал", "пасажир"], "Direction words": ["прямо", "направо", "наліво", "до центру"], "Public phrases": ["Обережно, двері зачиняються!", "Сплачуйте за проїзд.", "Поступайтесь місцем старшому."]}`)} />
+*(see lesson, §Види транспорту)*
 
 ### Airport to hotel route
 

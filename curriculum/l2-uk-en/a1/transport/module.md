@@ -14,19 +14,32 @@ By the end, you can:
 - use transport with direction: **їду на вокзал**, **їду до Львова**;
 - avoid transport calques such as **брати автобус** for "take a bus."
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 The first dialogue begins at the airport. You need a hotel route, so the useful
 question is **Як дістатися до готелю?**
 
-<DialogueBox uk="Приїжджий: Добрий день! Як дістатися до готелю?" en="Visitor: Good afternoon! How do I get to the hotel?" />
-<DialogueBox uk="Друг: Їдьте автобусом до метро, а потім на метро до центру." en="Friend: Go by bus to the metro, and then by metro to the center." />
-<DialogueBox uk="Приїжджий: А можна на таксі?" en="Visitor: And can I go by taxi?" />
-<DialogueBox uk="Друг: Так, можна. Таксі швидше, але дорожче." en="Friend: Yes, you can. A taxi is faster, but more expensive." />
-<DialogueBox uk="Приїжджий: Де зупинка автобуса?" en="Visitor: Where is the bus stop?" />
-<DialogueBox uk="Друг: Зупинка ось там. Автобус номер сім." en="Friend: The stop is over there. Bus number seven." />
+```text
+Приїжджий: Добрий день! Як дістатися до готелю?
+Друг: Їдьте автобусом до метро, а потім на метро до центру.
+Приїжджий: А можна на таксі?
+Друг: Так, можна. Таксі швидше, але дорожче.
+Приїжджий: Де зупинка автобуса?
+Друг: Зупинка ось там. Автобус номер сім.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Приїжджий: Добрий день! Як дістатися до готелю?** | Visitor: Good afternoon! How do I get to the hotel? |
+| **Друг: Їдьте автобусом до метро, а потім на метро до центру.** | Friend: Go by bus to the metro, and then by metro to the center. |
+| **Приїжджий: А можна на таксі?** | Visitor: And can I go by taxi? |
+| **Друг: Так, можна. Таксі швидше, але дорожче.** | Friend: Yes, you can. A taxi is faster, but more expensive. |
+| **Приїжджий: Де зупинка автобуса?** | Visitor: Where is the bus stop? |
+| **Друг: Зупинка ось там. Автобус номер сім.** | Friend: The stop is over there. Bus number seven. |
 
 This is the basic passenger pattern: **їхати автобусом**, **їхати потягом**,
 **їхати трамваєм**, but **їхати на метро** and **їхати на таксі**. Learn the
@@ -34,12 +47,25 @@ transport word together with its travel model.
 
 The second dialogue is at a station.
 
-<DialogueBox uk="Пасажир: Один квиток до Львова, будь ласка." en="Passenger: One ticket to Lviv, please." />
-<DialogueBox uk="Касир: В один бік чи туди й назад?" en="Cashier: One way or there and back?" />
-<DialogueBox uk="Пасажир: Туди й назад. Скільки коштує?" en="Passenger: There and back. How much does it cost?" />
-<DialogueBox uk="Касир: П'ятсот гривень." en="Cashier: Five hundred hryvnias." />
-<DialogueBox uk="Пасажир: О котрій відбуває потяг?" en="Passenger: At what time does the train depart?" />
-<DialogueBox uk="Касир: О дев'ятій ранку. Колія третя." en="Cashier: At nine in the morning. Track three." />
+```text
+Пасажир: Один квиток до Львова, будь ласка.
+Касир: В один бік чи туди й назад?
+Пасажир: Туди й назад. Скільки коштує?
+Касир: П'ятсот гривень.
+Пасажир: О котрій відбуває потяг?
+Касир: О дев'ятій ранку. Колія третя.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Пасажир: Один квиток до Львова, будь ласка.** | Passenger: One ticket to Lviv, please. |
+| **Касир: В один бік чи туди й назад?** | Cashier: One way or there and back? |
+| **Пасажир: Туди й назад. Скільки коштує?** | Passenger: There and back. How much does it cost? |
+| **Касир: П'ятсот гривень.** | Cashier: Five hundred hryvnias. |
+| **Пасажир: О котрій відбуває потяг?** | Passenger: At what time does the train depart? |
+| **Касир: О дев'ятій ранку. Колія третя.** | Cashier: At nine in the morning. Track three. |
 
 :::tip
 For A1 travel, memorize whole chunks: **один квиток до...**, **де зупинка?**,
@@ -130,8 +156,6 @@ person or group **вирушає**. This gives you natural A1 lines without a le
 Keep the transport vocabulary clean. Use **зупинка**, not "остановка". Use
 **квиток**, not "білет", for this lesson. Start a polite transport exchange
 with **Добрий день**, not "Здрастуйте".
-
-
 
 <span id="підсумок"></span>
 

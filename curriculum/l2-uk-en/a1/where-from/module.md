@@ -15,20 +15,34 @@ By the end, you can:
 - connect origin with identity: **я з України**, **я українець/українка**,
   **я говорю українською**.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 The first dialogue is an international student meeting in Kyiv. Listen for the
 question **звідки?** and the short answer **я з...**
 
-<DialogueBox uk="Марко: Добрий день! Мене звати Марко. А тебе?" en="Marko: Good afternoon! My name is Marko. And you?" />
-<DialogueBox uk="Анна: Мене звати Анна. Дуже приємно." en="Anna: My name is Anna. Nice to meet you." />
-<DialogueBox uk="Марко: Звідки ти?" en="Marko: Where are you from?" />
-<DialogueBox uk="Анна: Я з Канади, із Торонто. А ти?" en="Anna: I am from Canada, from Toronto. And you?" />
-<DialogueBox uk="Марко: Я з України, з Києва." en="Marko: I am from Ukraine, from Kyiv." />
-<DialogueBox uk="Анна: Ти говориш українською?" en="Anna: Do you speak Ukrainian?" />
-<DialogueBox uk="Марко: Так. Я українець і говорю українською." en="Marko: Yes. I am Ukrainian and I speak Ukrainian." />
+```text
+Марко: Добрий день! Мене звати Марко. А тебе?
+Анна: Мене звати Анна. Дуже приємно.
+Марко: Звідки ти?
+Анна: Я з Канади, із Торонто. А ти?
+Марко: Я з України, з Києва.
+Анна: Ти говориш українською?
+Марко: Так. Я українець і говорю українською.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Марко: Добрий день! Мене звати Марко. А тебе?** | Marko: Good afternoon! My name is Marko. And you? |
+| **Анна: Мене звати Анна. Дуже приємно.** | Anna: My name is Anna. Nice to meet you. |
+| **Марко: Звідки ти?** | Marko: Where are you from? |
+| **Анна: Я з Канади, із Торонто. А ти?** | Anna: I am from Canada, from Toronto. And you? |
+| **Марко: Я з України, з Києва.** | Marko: I am from Ukraine, from Kyiv. |
+| **Анна: Ти говориш українською?** | Anna: Do you speak Ukrainian? |
+| **Марко: Так. Я українець і говорю українською.** | Marko: Yes. I am Ukrainian and I speak Ukrainian. |
 
 **Канонічні фрази ідентифікації.** Keep the first answer short. Ukrainian does
 not need **є** in the present-tense identity line: **Я з України**, not **Я є з
@@ -38,12 +52,25 @@ the city only after the country: **Я з України, з Києва. Я з К
 
 The second dialogue is about movement away from a place.
 
-<DialogueBox uk="Оксана: Звідки ти йдеш?" en="Oksana: Where are you coming from?" />
-<DialogueBox uk="Степан: Я йду з роботи. А ти?" en="Stepan: I am coming from work. And you?" />
-<DialogueBox uk="Оксана: Я йду зі школи, а потім іду додому." en="Oksana: I am coming from school, and then I am going home." />
-<DialogueBox uk="Степан: А Олена?" en="Stepan: And Olena?" />
-<DialogueBox uk="Оксана: Вона йде з магазину. Потім їде в центр." en="Oksana: She is coming from the shop. Then she is going to the center." />
-<DialogueBox uk="Степан: Добре. До зустрічі!" en="Stepan: Good. See you!" />
+```text
+Оксана: Звідки ти йдеш?
+Степан: Я йду з роботи. А ти?
+Оксана: Я йду зі школи, а потім іду додому.
+Степан: А Олена?
+Оксана: Вона йде з магазину. Потім їде в центр.
+Степан: Добре. До зустрічі!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Оксана: Звідки ти йдеш?** | Oksana: Where are you coming from? |
+| **Степан: Я йду з роботи. А ти?** | Stepan: I am coming from work. And you? |
+| **Оксана: Я йду зі школи, а потім іду додому.** | Oksana: I am coming from school, and then I am going home. |
+| **Степан: А Олена?** | Stepan: And Olena? |
+| **Оксана: Вона йде з магазину. Потім їде в центр.** | Oksana: She is coming from the shop. Then she is going to the center. |
+| **Степан: Добре. До зустрічі!** | Stepan: Good. See you! |
 
 Use one mental map. **Де?** asks about static location. **Куди?** asks about
 the destination. **Звідки?** asks about the source or origin.
@@ -149,8 +176,6 @@ Keep the toponyms Ukrainian. In English, use **Kyiv**, **Lviv**, **Kharkiv**,
 and **Odesa**. The Russian-imperial spellings **Kiev**, **Lvov**, **Kharkov**,
 and **Odessa** are not course forms. In Ukrainian, use **Київ**, **Львів**,
 **Харків**, **Одеса**, **Дніпро**, and write them with a capital letter.
-
-
 
 <span id="підсумок"></span>
 

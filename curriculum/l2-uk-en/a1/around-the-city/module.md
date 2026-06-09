@@ -13,19 +13,32 @@ By the end, you can:
 - describe a daily route with **пішки**, **на метро**, **автобусом**, and
   **п'ять хвилин**.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 The first dialogue is a street question. Use **Вибачте** before asking a
 stranger.
 
-<DialogueBox uk="Турист: Вибачте, як дістатися до бібліотеки?" en="Tourist: Excuse me, how do I get to the library?" />
-<DialogueBox uk="Містянка: Ідіть прямо, потім направо. Бібліотека на розі." en="Local woman: Go straight, then right. The library is on the corner." />
-<DialogueBox uk="Турист: А музей?" en="Tourist: And the museum?" />
-<DialogueBox uk="Містянка: Музей далеко. Їдьте на метро до центру." en="Local woman: The museum is far. Go by metro to the center." />
-<DialogueBox uk="Турист: Дякую!" en="Tourist: Thank you!" />
-<DialogueBox uk="Містянка: Будь ласка. Гарного дня!" en="Local woman: You're welcome. Have a good day!" />
+```text
+Турист: Вибачте, як дістатися до бібліотеки?
+Містянка: Ідіть прямо, потім направо. Бібліотека на розі.
+Турист: А музей?
+Містянка: Музей далеко. Їдьте на метро до центру.
+Турист: Дякую!
+Містянка: Будь ласка. Гарного дня!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Турист: Вибачте, як дістатися до бібліотеки?** | Tourist: Excuse me, how do I get to the library? |
+| **Містянка: Ідіть прямо, потім направо. Бібліотека на розі.** | Local woman: Go straight, then right. The library is on the corner. |
+| **Турист: А музей?** | Tourist: And the museum? |
+| **Містянка: Музей далеко. Їдьте на метро до центру.** | Local woman: The museum is far. Go by metro to the center. |
+| **Турист: Дякую!** | Tourist: Thank you! |
+| **Містянка: Будь ласка. Гарного дня!** | Local woman: You're welcome. Have a good day! |
 
 The answer combines old tools: direction words, city places, and transport.
 **Бібліотека на розі** answers **де?**. **Ідіть прямо** and **їдьте на метро**
@@ -33,12 +46,25 @@ answer what to do next.
 
 The second dialogue describes a daily route.
 
-<DialogueBox uk="Гід: Як ти дістаєшся на роботу?" en="Guide: How do you get to work?" />
-<DialogueBox uk="Олена: Спочатку йду на зупинку." en="Olena: First I walk to the stop." />
-<DialogueBox uk="Гід: А потім?" en="Guide: And then?" />
-<DialogueBox uk="Олена: Потім їду автобусом до центру." en="Olena: Then I go by bus to the center." />
-<DialogueBox uk="Гід: Де твоя робота?" en="Guide: Where is your work?" />
-<DialogueBox uk="Олена: Робота в офісі на площі. Потім іду пішки п'ять хвилин." en="Olena: Work is in an office on the square. Then I walk five minutes." />
+```text
+Гід: Як ти дістаєшся на роботу?
+Олена: Спочатку йду на зупинку.
+Гід: А потім?
+Олена: Потім їду автобусом до центру.
+Гід: Де твоя робота?
+Олена: Робота в офісі на площі. Потім іду пішки п'ять хвилин.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Гід: Як ти дістаєшся на роботу?** | Guide: How do you get to work? |
+| **Олена: Спочатку йду на зупинку.** | Olena: First I walk to the stop. |
+| **Гід: А потім?** | Guide: And then? |
+| **Олена: Потім їду автобусом до центру.** | Olena: Then I go by bus to the center. |
+| **Гід: Де твоя робота?** | Guide: Where is your work? |
+| **Олена: Робота в офісі на площі. Потім іду пішки п'ять хвилин.** | Olena: Work is in an office on the square. Then I walk five minutes. |
 
 :::tip
 For city routes, build in three beats: **де я зараз?**, **куди далі?**,
@@ -124,8 +150,6 @@ Ukrainian **милозвучність**. People pay in **гривня**, and th
 buildings is **синьо-жовтий**. A polite street opening is **Добрий день**. When
 you introduce yourself, say **Мене звати Олена**. For age, say **Мені двадцять
 років**.
-
-
 
 <span id="підсумок"></span>
 

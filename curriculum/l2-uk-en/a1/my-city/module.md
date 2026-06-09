@@ -12,19 +12,32 @@ By the end, you can:
 - describe a neighborhood with **є**: **Біля дому є магазин і кафе**;
 - avoid English place calques such as **в вулиці** or **місто має**.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 Start with a map for a friend. A city sentence often has three pieces: a place,
 a location word, and one practical action.
 
-<DialogueBox uk="Ігор: Вибачте, де тут аптека?" en="Ihor: Excuse me, where is the pharmacy here?" />
-<DialogueBox uk="Аліна: Аптека на вулиці Шевченка." en="Alina: The pharmacy is on Shevchenko Street." />
-<DialogueBox uk="Ігор: А бібліотека?" en="Ihor: And the library?" />
-<DialogueBox uk="Аліна: Бібліотека в центрі, біля парку." en="Alina: The library is downtown, near the park." />
-<DialogueBox uk="Ігор: Дякую!" en="Ihor: Thank you!" />
-<DialogueBox uk="Аліна: Будь ласка!" en="Alina: You are welcome!" />
+```text
+Ігор: Вибачте, де тут аптека?
+Аліна: Аптека на вулиці Шевченка.
+Ігор: А бібліотека?
+Аліна: Бібліотека в центрі, біля парку.
+Ігор: Дякую!
+Аліна: Будь ласка!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Ігор: Вибачте, де тут аптека?** | Ihor: Excuse me, where is the pharmacy here? |
+| **Аліна: Аптека на вулиці Шевченка.** | Alina: The pharmacy is on Shevchenko Street. |
+| **Ігор: А бібліотека?** | Ihor: And the library? |
+| **Аліна: Бібліотека в центрі, біля парку.** | Alina: The library is downtown, near the park. |
+| **Ігор: Дякую!** | Ihor: Thank you! |
+| **Аліна: Будь ласка!** | Alina: You are welcome! |
 
 The chunks from the dialogue are ready to reuse: **де тут аптека?**,
 **на вулиці Шевченка**, **в центрі**, **біля парку**. Notice that **біля**
@@ -37,12 +50,25 @@ a long list you cannot say.
 
 The second dialogue is about a neighborhood.
 
-<DialogueBox uk="Ігор: Що є біля твого дому?" en="Ihor: What is near your home?" />
-<DialogueBox uk="Аліна: Біля дому є магазин і кафе." en="Alina: Near my home there is a shop and a cafe." />
-<DialogueBox uk="Ігор: А школа?" en="Ihor: And the school?" />
-<DialogueBox uk="Аліна: Школа далеко, у центрі міста." en="Alina: The school is far away, downtown." />
-<DialogueBox uk="Ігор: А парк?" en="Ihor: And the park?" />
-<DialogueBox uk="Аліна: Парк близько. Він тут, біля бібліотеки." en="Alina: The park is close. It is here, near the library." />
+```text
+Ігор: Що є біля твого дому?
+Аліна: Біля дому є магазин і кафе.
+Ігор: А школа?
+Аліна: Школа далеко, у центрі міста.
+Ігор: А парк?
+Аліна: Парк близько. Він тут, біля бібліотеки.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Ігор: Що є біля твого дому?** | Ihor: What is near your home? |
+| **Аліна: Біля дому є магазин і кафе.** | Alina: Near my home there is a shop and a cafe. |
+| **Ігор: А школа?** | Ihor: And the school? |
+| **Аліна: Школа далеко, у центрі міста.** | Alina: The school is far away, downtown. |
+| **Ігор: А парк?** | Ihor: And the park? |
+| **Аліна: Парк близько. Він тут, біля бібліотеки.** | Alina: The park is close. It is here, near the library. |
 
 :::tip
 Use **є** for what exists in a place: **У місті є парк. Біля дому є магазин.**
@@ -130,8 +156,6 @@ Keep Ukrainian city language clean. Use **Київ** and **Kyiv**, not the
 Russian-imperial spelling. Use **Одеса / Odesa**, **Львів / Lviv**, and
 **Харків / Kharkiv**. Say **площа**, not the Russian street word; say
 **синьо-жовтий прапор**, **Тризуб**, and **гривня** for Ukrainian city life.
-
-
 
 <span id="підсумок"></span>
 

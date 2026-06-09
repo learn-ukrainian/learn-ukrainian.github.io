@@ -15,9 +15,9 @@ By the end, you can:
 - use euphony while talking about places in **Київ**, **Львів**, an **офіс**, a
   **парк**, a **театр**, or a **школа**.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 Begin with practical hearing. **Практичне відчуття звучності** means you read
 pairs aloud and notice which one gives your mouth an easier path. Say both
@@ -34,11 +34,23 @@ you make a grammar choice:
 You do not need a long theory before speaking. The first question is simple:
 which version has fewer heavy sound collisions?
 
-<DialogueBox uk="Наталка: Де ти живеш?" en="Natalka: Where do you live?" />
-<DialogueBox uk="Марко: Я живу в Києві. А ти?" en="Marko: I live in Kyiv. And you?" />
-<DialogueBox uk="Наталка: Я живу у Львові." en="Natalka: I live in Lviv." />
-<DialogueBox uk="Марко: У Львові гарно?" en="Marko: Is it nice in Lviv?" />
-<DialogueBox uk="Наталка: Так. А в Києві великий парк." en="Natalka: Yes. And in Kyiv there is a big park." />
+```text
+Наталка: Де ти живеш?
+Марко: Я живу в Києві. А ти?
+Наталка: Я живу у Львові.
+Марко: У Львові гарно?
+Наталка: Так. А в Києві великий парк.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Наталка: Де ти живеш?** | Natalka: Where do you live? |
+| **Марко: Я живу в Києві. А ти?** | Marko: I live in Kyiv. And you? |
+| **Наталка: Я живу у Львові.** | Natalka: I live in Lviv. |
+| **Марко: У Львові гарно?** | Marko: Is it nice in Lviv? |
+| **Наталка: Так. А в Києві великий парк.** | Natalka: Yes. And in Kyiv there is a big park. |
 
 Notice **живу в Києві** but **живу у Львові**. The meaning is the same: in or
 at a place. The sound neighborhood is different. After **живу**, the sound ends
@@ -47,10 +59,21 @@ cluster, so **у Львові** is smoother.
 
 The second dialogue connects people and a plan.
 
-<DialogueBox uk="Олена: Ти й Іван ідете в театр?" en="Olena: Are you and Ivan going to the theater?" />
-<DialogueBox uk="Софія: Ні, я і Максим ідемо в парк." en="Sofiia: No, Maksym and I are going to the park." />
-<DialogueBox uk="Олена: А Іван і Яна?" en="Olena: And Ivan and Yana?" />
-<DialogueBox uk="Софія: Вони йдуть у театр." en="Sofiia: They are going to the theater." />
+```text
+Олена: Ти й Іван ідете в театр?
+Софія: Ні, я і Максим ідемо в парк.
+Олена: А Іван і Яна?
+Софія: Вони йдуть у театр.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Ти й Іван ідете в театр?** | Olena: Are you and Ivan going to the theater? |
+| **Софія: Ні, я і Максим ідемо в парк.** | Sofiia: No, Maksym and I are going to the park. |
+| **Олена: А Іван і Яна?** | Olena: And Ivan and Yana? |
+| **Софія: Вони йдуть у театр.** | Sofiia: They are going to the theater. |
 
 Use **й** after a vowel when the next word begins cleanly: **ти й Іван**.
 Use **і** between consonants: **Максим іде**, **брат і сестра**. Keep **і**
@@ -79,12 +102,25 @@ Use this as an A1 working rule:
 
 Say the pairs aloud:
 
-<DialogueBox uk="Вона в школі." en="She is at school." />
-<DialogueBox uk="Тарас у школі." en="Taras is at school." />
-<DialogueBox uk="Я працюю в офісі." en="I work in an office." />
-<DialogueBox uk="Максим працює у банку." en="Maksym works in a bank." />
-<DialogueBox uk="У місті є аптека." en="There is a pharmacy in the city." />
-<DialogueBox uk="В університеті тихо." en="It is quiet at the university." />
+```text
+Вона в школі.
+Тарас у школі.
+Я працюю в офісі.
+Максим працює у банку.
+У місті є аптека.
+В університеті тихо.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Вона в школі.** | She is at school. |
+| **Тарас у школі.** | Taras is at school. |
+| **Я працюю в офісі.** | I work in an office. |
+| **Максим працює у банку.** | Maksym works in a bank. |
+| **У місті є аптека.** | There is a pharmacy in the city. |
+| **В університеті тихо.** | It is quiet at the university. |
 
 The **position at the beginning of a sentence or after a pause** is about
 sentence edges. At the beginning of a sentence, choose the form that gives the
@@ -96,8 +132,17 @@ sound start.
 
 After a comma, pause, or colon, the same idea returns:
 
-<DialogueBox uk="Так, у нас є час." en="Yes, we have time." />
-<DialogueBox uk="Сьогодні тепло: у парку багато людей." en="It is warm today: there are many people in the park." />
+```text
+Так, у нас є час.
+Сьогодні тепло: у парку багато людей.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Так, у нас є час.** | Yes, we have time. |
+| **Сьогодні тепло: у парку багато людей.** | It is warm today: there are many people in the park. |
 
 **Фонетичні винятки** keep the line from becoming physically awkward. Before
 words like **Львів**, **фірма**, **твій**, or **хвилина**, prefer **у**, even
@@ -130,10 +175,21 @@ For **і/й**, use the same sound logic.
 
 Say these aloud:
 
-<DialogueBox uk="Брат і сестра в школі." en="Brother and sister are at school." />
-<DialogueBox uk="Мама й тато в театрі." en="Mother and father are at the theater." />
-<DialogueBox uk="Марія і Яна в місті." en="Mariia and Yana are in the city." />
-<DialogueBox uk="Відео і ютуб - це тема для перерви." en="Video and YouTube are a break topic." />
+```text
+Брат і сестра в школі.
+Мама й тато в театрі.
+Марія і Яна в місті.
+Відео і ютуб - це тема для перерви.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Брат і сестра в школі.** | Brother and sister are at school. |
+| **Мама й тато в театрі.** | Mother and father are at the theater. |
+| **Марія і Яна в місті.** | Mariia and Yana are in the city. |
+| **Відео і ютуб - це тема для перерви.** | Video and YouTube are a break topic. |
 
 A later recognition note: sometimes **і** stays because two ideas are being
 contrasted or named as a pair. This is **логічне зіставлення**:
@@ -161,8 +217,6 @@ When you are unsure, read the whole phrase aloud once. Do not translate "in" or
 lets the phrase move smoothly.
 :::
 
-
-
 ## Підсумок
 
 Euphony is not decoration. It is a normal Ukrainian habit that keeps speech
@@ -186,15 +240,35 @@ Keep these repair pairs in memory:
 
 For the next places lessons, you will reuse these choices constantly:
 
-<DialogueBox uk="Я живу в Києві." en="I live in Kyiv." />
-<DialogueBox uk="Сестра у Львові." en="My sister is in Lviv." />
-<DialogueBox uk="У місті є парк і театр." en="There is a park and a theater in the city." />
-<DialogueBox uk="Мама й тато в офісі." en="Mother and father are at the office." />
-<DialogueBox uk="Я йду зі школи." en="I am coming from school." />
+```text
+Я живу в Києві.
+Сестра у Львові.
+У місті є парк і театр.
+Мама й тато в офісі.
+Я йду зі школи.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я живу в Києві.** | I live in Kyiv. |
+| **Сестра у Львові.** | My sister is in Lviv. |
+| **У місті є парк і театр.** | There is a park and a theater in the city. |
+| **Мама й тато в офісі.** | Mother and father are at the office. |
+| **Я йду зі школи.** | I am coming from school. |
 
 One last practice line:
 
-<DialogueBox uk="У вівторок Іван і Яна працюють в офісі, а ввечері йдуть у театр." en="On Tuesday Ivan and Yana work in an office, and in the evening they go to the theater." />
+```text
+У вівторок Іван і Яна працюють в офісі, а ввечері йдуть у театр.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **У вівторок Іван і Яна працюють в офісі, а ввечері йдуть у театр.** | On Tuesday Ivan and Yana work in an office, and in the evening they go to the theater. |
 
 If you can say that line smoothly, you are ready for **Де це?**
 
