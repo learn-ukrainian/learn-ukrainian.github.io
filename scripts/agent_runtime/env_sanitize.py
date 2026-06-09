@@ -9,7 +9,10 @@ from __future__ import annotations
 
 import os
 import re
+import shutil
+import tempfile
 from collections.abc import Mapping
+from pathlib import Path
 
 _SENSITIVE_NAME_RE = re.compile(
     r"TOKEN|SECRET|PASSWORD|PASSWD|PRIVATE|CREDENTIALS?|API_?KEY|"
@@ -116,6 +119,47 @@ def _looks_sensitive_value(value: str) -> bool:
     return bool(_SENSITIVE_VALUE_RE.search(value))
 
 
+def _isolated_git_env(home: str | None) -> dict[str, str]:
+    """Git ``--global`` config isolation for spawned agent CLIs (issue #2842).
+
+    A stray ``git config`` write from an agent subprocess can brick git for the
+    main checkout AND every linked worktree at once (e.g. ``core.bare true`` on
+    the shared config). Point the subprocess's **global** config at a throwaway
+    **copy** of the real one, so commit identity (``user.name`` / ``user.email``)
+    and other global settings stay readable, but ``git config --global`` writes
+    land in the copy instead of the developer's ``~/.gitconfig``.
+
+    Deliberately NOT touched:
+
+    - System config is left intact (no ``GIT_CONFIG_NOSYSTEM``): on this host it
+      carries ``credential.helper=osxkeychain`` with no global fallback, so
+      disabling it would break agent push/fetch auth — a worse failure than the
+      one we're guarding against.
+    - Repo-local shared config cannot be guarded by env vars at all; that vector
+      is backstopped by the health-endpoint canary
+      (``scripts/audit/check_core_bare.py``), which auto-detects + resets drift.
+
+    Never raises: isolation failure must not block spawning an agent.
+    """
+    try:
+        sandbox_dir = Path(tempfile.gettempdir()) / "lu-agent-runtime-git"
+        sandbox_dir.mkdir(parents=True, exist_ok=True)
+        sandbox_global = sandbox_dir / "agent.gitconfig"
+        real_global = Path(
+            os.environ.get("GIT_CONFIG_GLOBAL")
+            or ((Path(home) if home else Path.home()) / ".gitconfig")
+        )
+        if real_global.is_file():
+            shutil.copyfile(real_global, sandbox_global)
+        elif not sandbox_global.exists():
+            sandbox_global.write_text("", encoding="utf-8")
+        return {"GIT_CONFIG_GLOBAL": str(sandbox_global)}
+    except OSError:
+        # Copy failed; leave GIT_CONFIG_GLOBAL unset so the agent falls back to
+        # the real ~/.gitconfig rather than losing identity entirely.
+        return {}
+
+
 def build_agent_env(
     *,
     provider: str,
@@ -150,5 +194,9 @@ def build_agent_env(
         env["PATH"] = raw["PATH"]
     if "HOME" not in env and "HOME" in raw and not _looks_sensitive_value(raw["HOME"]):
         env["HOME"] = raw["HOME"]
+
+    # Git-config isolation (#2842) — applied last so it always wins; agents
+    # cannot persist a repo-bricking core.bare write into system/global config.
+    env.update(_isolated_git_env(env.get("HOME") or raw.get("HOME")))
 
     return env

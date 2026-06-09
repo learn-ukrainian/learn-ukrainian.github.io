@@ -77,3 +77,25 @@ def test_secrets_still_scrubbed() -> None:
     assert env["USER"] == "example"
     assert env["LOGNAME"] == "example"
     assert "GITHUB_TOKEN" not in env
+
+
+def test_git_global_config_sandboxed_system_left_intact() -> None:
+    """#2842: agent `git config --global` writes go to a throwaway sandbox copy,
+    while system config (the host's credential.helper) is left untouched."""
+    with patch.dict(
+        "os.environ",
+        {
+            "PATH": "/usr/bin",
+            "HOME": "/Users/example",
+            "USER": "example",
+        },
+        clear=True,
+    ):
+        env = build_agent_env(provider="claude")
+
+    # Global config redirected to the runtime's throwaway sandbox copy.
+    assert env["GIT_CONFIG_GLOBAL"].endswith("agent.gitconfig")
+    assert "lu-agent-runtime-git" in env["GIT_CONFIG_GLOBAL"]
+    # System config deliberately NOT disabled — credential.helper must survive.
+    assert "GIT_CONFIG_NOSYSTEM" not in env
+    assert "GIT_CONFIG_SYSTEM" not in env
