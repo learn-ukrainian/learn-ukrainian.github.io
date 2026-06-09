@@ -89,3 +89,21 @@ def test_writer_prompt_contains_v7_register_rule(
     assert f"rule_id: {rule_id}" in prompt
     for anchor in anchors:
         assert _normalize(anchor) in normalized
+
+
+def test_writer_prompt_contains_seminar_folk_qg_hardening() -> None:
+    prompt = _prompt()
+    normalized = _normalize(prompt)
+
+    required = (
+        "For seminar tracks, especially `LEVEL=folk`, treat the wiki `[S#]` registry",
+        "`citations_resolve` hard-rejects unresolved citations",
+        "When `{WORD_TARGET}=5000`, the 92% tolerance still requires about 4600 accepted words",
+        "call `mcp__sources__check_russian_shadow` and `mcp__sources__search_style_guide`",
+        "Use `аранжування`, not `<!-- bad -->аранжировку<!-- /bad -->`",
+        "Put those fragments in blockquotes or the module's verbatim-quote convention",
+        "bare archaic/dialectal folk forms in exposition fail VESUM",
+    )
+
+    for anchor in required:
+        assert _normalize(anchor) in normalized
