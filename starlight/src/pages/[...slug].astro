@@ -35,6 +35,7 @@ type LexiconManifest = {
 };
 type RouteProps =
   | { kind: 'doc'; entry: DocsEntry }
+  | { kind: 'landingDoc'; entry: DocsEntry }
   | { kind: 'track'; track: string }
   | { kind: 'search' }
   | { kind: 'state'; state: 'missing-content' | 'empty-reference' | 'not-found' };
@@ -275,6 +276,7 @@ const TRACKS: Record<string, TrackOverview> = {
 
 const HIDDEN_DOCS = new Set(['a1/review-clears-needs-human']);
 const PUBLIC_LESSON_PREFIXES = new Set(['a1', 'a2', 'folk']);
+const LANDING_DOC_TRACKS = new Set(['a2']);
 const normalizeId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
 const hrefFromRoute = (route: string) => `/${route}/`;
 const trackIds = Object.keys(TRACKS);
@@ -289,10 +291,14 @@ const visibleDocs = allDocs.filter((entry) => {
 });
 
 const deployedDocsByTrack = new Map<string, DocsEntry[]>();
+const landingDocsByTrack = new Map<string, DocsEntry>();
 for (const entry of visibleDocs) {
   const id = normalizeId(entry.id);
   const track = id.split('/')[0];
-  if (id === track) continue;
+  if (id === track) {
+    if (LANDING_DOC_TRACKS.has(track)) landingDocsByTrack.set(track, entry);
+    continue;
+  }
   const bucket = deployedDocsByTrack.get(track) ?? [];
   bucket.push(entry);
   deployedDocsByTrack.set(track, bucket);
@@ -348,13 +354,19 @@ const searchItems: SearchItem[] = [
 export async function getStaticPaths() {
   const normalizeDocId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
   const publicLessonPrefixes = new Set(['a1', 'a2', 'folk']);
+  const landingDocTracks = new Set(['a2']);
   const hiddenDocs = new Set(['a1/review-clears-needs-human']);
   const tracks = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'folk', 'bio', 'hist', 'istorio', 'lit', 'oes', 'ruth'];
-  const docs = (await getCollection('docs')).filter((entry) => {
+  const pathDocs = await getCollection('docs');
+  const landingDocsByPathTrack = new Map<string, DocsEntry>();
+  const docs = pathDocs.filter((entry) => {
     const id = normalizeDocId(entry.id);
     const track = id.split('/')[0];
     if (!publicLessonPrefixes.has(track)) return false;
-    if (id === track) return false;
+    if (id === track) {
+      if (landingDocTracks.has(track)) landingDocsByPathTrack.set(track, entry);
+      return false;
+    }
     if (hiddenDocs.has(id)) return false;
     if (entry.data.draft) return false;
     return true;
@@ -363,7 +375,9 @@ export async function getStaticPaths() {
   return [
     ...tracks.map((track) => ({
       params: { slug: track },
-      props: { kind: 'track', track },
+      props: landingDocsByPathTrack.has(track)
+        ? { kind: 'landingDoc', entry: landingDocsByPathTrack.get(track)! }
+        : { kind: 'track', track },
     })),
     { params: { slug: 'search' }, props: { kind: 'search' } },
     { params: { slug: 'missing-content' }, props: { kind: 'state', state: 'missing-content' } },
@@ -378,6 +392,8 @@ export async function getStaticPaths() {
 const props = Astro.props as RouteProps;
 const pageTrack = props.kind === 'track'
   ? TRACKS[props.track]
+  : props.kind === 'landingDoc'
+    ? TRACKS[normalizeId(props.entry.id).split('/')[0]]
   : props.kind === 'doc'
     ? TRACKS[normalizeId(props.entry.id).split('/')[0]]
     : undefined;
@@ -389,16 +405,18 @@ let isSeminarLesson = false;
 let previousLink: { href: string; label: string } | undefined;
 let nextLink: { href: string; label: string } | undefined;
 
-if (props.kind === 'doc') {
+if (props.kind === 'doc' || props.kind === 'landingDoc') {
   const rendered = await render(props.entry);
   Content = rendered.Content;
   docRoute = normalizeId(props.entry.id);
   docTrack = docRoute.split('/')[0];
   isSeminarLesson = TRACKS[docTrack]?.family === 'seminar';
-  const prev = props.entry.data.prev;
-  const next = props.entry.data.next;
-  if (typeof prev === 'string') previousLink = { href: `/${docTrack}/${prev}/`, label: 'Previous' };
-  if (typeof next === 'string') nextLink = { href: `/${docTrack}/${next}/`, label: 'Next' };
+  if (props.kind === 'doc') {
+    const prev = props.entry.data.prev;
+    const next = props.entry.data.next;
+    if (typeof prev === 'string') previousLink = { href: `/${docTrack}/${prev}/`, label: 'Previous' };
+    if (typeof next === 'string') nextLink = { href: `/${docTrack}/${next}/`, label: 'Next' };
+  }
 }
 
 const pageMeta = (() => {
@@ -411,6 +429,19 @@ const pageMeta = (() => {
       subtitle: track.subtitle,
       currentPath: `/${props.track}/`,
       heroVariant: track.heroVariant,
+      wide: true,
+    };
+  }
+  if (props.kind === 'landingDoc') {
+    const route = normalizeId(props.entry.id);
+    const track = route.split('/')[0];
+    return {
+      title: props.entry.data.title,
+      description: props.entry.data.description ?? TRACKS[track]?.subtitle,
+      eyebrow: TRACKS[track]?.eyebrow ?? `${track.toUpperCase()} landing`,
+      subtitle: props.entry.data.description ?? TRACKS[track]?.subtitle,
+      currentPath: hrefFromRoute(route),
+      heroVariant: TRACKS[track]?.heroVariant ?? 'core',
       wide: true,
     };
   }
@@ -462,6 +493,11 @@ const navItems = props.kind === 'doc'
       { href: `/${docTrack}/`, label: TRACKS[docTrack]?.label ?? docTrack.toUpperCase() },
       { href: hrefFromRoute(docRoute), label: props.entry.data.sidebar?.label ?? props.entry.data.title },
     ]
+  : props.kind === 'landingDoc'
+    ? [
+        { href: '/', label: 'Home' },
+        { href: hrefFromRoute(docRoute), label: TRACKS[docTrack]?.label ?? props.entry.data.title },
+      ]
   : [
       { href: '/', label: 'Home' },
       { href: pageMeta.currentPath, label: pageMeta.title },
@@ -509,9 +545,11 @@ const sidebar = props.kind === 'doc'
   navItems={navItems}
   sidebar={sidebar}
   wide={pageMeta.wide}
-  showHero
+  showHero={props.kind !== 'landingDoc'}
 >
-  {props.kind === 'track' && pageTrack ? (
+  {props.kind === 'landingDoc' && Content ? (
+    <Content />
+  ) : props.kind === 'track' && pageTrack ? (
     <section class:list={['track-overview', `track-${props.track}`, pageTrack.family, pageTrack.state]}>
       <div class="track-status-panel">
         <span>{pageTrack.status}</span>
