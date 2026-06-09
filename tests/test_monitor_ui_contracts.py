@@ -11,6 +11,7 @@ PRIMARY_NAV_HREFS = [
     "/comms.html",
     "/artifacts/",
     "/runtime.html",
+    "/docs",
 ]
 
 

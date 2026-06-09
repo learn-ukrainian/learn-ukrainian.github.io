@@ -53,6 +53,7 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
     <a href="/comms.html">Comms</a>
     <a href="/artifacts/">Artifacts</a>
     <a href="/runtime.html">Runtime</a>
+    <a href="/docs">API</a>
   </nav>
 </div>
 
@@ -60,11 +61,13 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
 <section class="hero">
   <div>
     <h2>Operations launchpad</h2>
-    <p>All Monitor API surfaces in one place: curriculum status, agent communications, build events, runtime health, artifacts, and review queues.</p>
+    <p>All Monitor API surfaces in one place: curriculum status, agent communications, build events, runtime health, artifacts, and review queues. <a href="/docs">Interactive API docs</a> and <a href="/api/contracts/routes">route contracts</a> available.</p>
   </div>
 </section>
 
 <div class="stats-row" id="stats-row"></div>
+
+<div id="api-surfaces" class="contracts-note" style="font-size:12px;color:var(--text3);margin:0 0 16px 0;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;"></div>
 
 <div class="cards">
   <a class="card" href="/admin.html" style="border-left: 3px solid var(--gray);">
@@ -177,7 +180,7 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
   </a>
 </div>
 
-<div class="footer">Serving from localhost:8765</div>
+<div class="footer">Serving from localhost:8765 — <a href="/docs">API docs</a> • <a href="/api/contracts/routes">contracts</a></div>
 </main>
 
 <script>
@@ -283,7 +286,7 @@ function buildStateSummary(pv, trackIds) {
 async function loadStats() {
   let buildState = { current: 0, backlog: 0, builtPct: 0 };
   let pendingConsultations = 0;
-  const [data, pv, cMetrics, summary, comms, weakPoints, orient, runtimeAgents, delegate, buildEvents, wiki, cost] = await Promise.all([
+  const [data, pv, cMetrics, summary, comms, weakPoints, orient, runtimeAgents, delegate, buildEvents, wiki, cost, contracts] = await Promise.all([
     safeFetch('/api/dashboard/overview'),
     safeFetch('/api/state/pipeline-versions?fresh=true'),
     safeFetch('/api/consultation/metrics'),
@@ -296,6 +299,7 @@ async function loadStats() {
     safeFetch('/api/build/events/active'),
     safeFetch('/api/wiki/status'),
     safeFetch('/api/analytics/cost'),
+    safeFetch('/api/contracts/routes'),
   ]);
 
   try {
@@ -386,6 +390,23 @@ async function loadStats() {
     const amount = Number(cost.windows?.last_7_days?.totals?.cost_usd_est || 0);
     setStat('card-stat-cost', `~$${amount.toFixed(2)} last 7d`);
   }
+
+  // Visualize the contracts (definition authority for public surface) per Claude review.
+  try {
+    const el = document.getElementById('api-surfaces');
+    if (el && contracts && contracts.route_contracts) {
+      const routes = contracts.route_contracts || [];
+      const pages = contracts.page_contracts || [];
+      const families = routes.length;
+      const dashboards = pages.length;
+      // Show a compact summary of key sources + link to full contracts.
+      const sample = routes.slice(0, 3).map(r => r.source_of_truth || r.pattern).filter(Boolean);
+      el.innerHTML = `API surface: <strong>${families} route families</strong> • <strong>${dashboards} dashboard pages</strong>. ` +
+        `Sources include ${sample.join(', ')}… ` +
+        `<a href="/api/contracts/routes">full contracts</a> • <a href="/docs">Swagger</a>. ` +
+        `See definition authority in route_contracts.py and MONITOR-API.md.`;
+    }
+  } catch (e) { /* non-fatal */ }
 }
 
 loadStats();

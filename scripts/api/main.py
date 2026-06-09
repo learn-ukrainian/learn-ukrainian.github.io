@@ -96,6 +96,14 @@ async def _lifespan(_app: FastAPI):
 app = FastAPI(
     title="Playground API",
     version="2.0.0",
+    description=(
+        "Monitor API for the Ukrainian curriculum pipeline. "
+        "Powers the ukraine-ops dashboards (root /), agent cold-start (orient, rules, session), "
+        "state queries, comms, delegate, build events, and operational tooling. "
+        "Interactive explorer: /docs (Swagger) and /redoc. "
+        "Machine-readable route contracts: /api/contracts/routes. "
+        "See docs/MONITOR-API.md for the full reference."
+    ),
     lifespan=_lifespan,
 )
 

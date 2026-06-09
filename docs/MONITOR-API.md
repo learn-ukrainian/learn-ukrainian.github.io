@@ -4,6 +4,10 @@ Base URL: `http://localhost:8765`
 
 FastAPI auto-docs: `http://localhost:8765/docs` (Swagger UI)
 
+**Definition authority for the public surface**: `GET /api/contracts/routes` (returns the full `route_contracts` + `page_contracts` registry with `purpose`, `source_of_truth`, `freshness`, `consumers`, `overlap`, `stale_risk`, `recommendation`, `mutates`, `replacement` for every endpoint family and every `dashboards/*.html` page).
+
+This (plus the live `meta` objects returned by many endpoints) is the enforced, machine-readable definition of the declared API surface. The running code in `scripts/api/*.py` is the ultimate behavioral authority. `docs/MONITOR-API.md` is the human narrative. Dashboards are consumers/visualizers that should (and increasingly do) derive from the contracts. See `scripts/api/route_contracts.py` and `tests/test_monitor_route_contracts.py`. The 2026-06-07 Monitor API/UI Audit (#2794) is the origin of this registry.
+
 ---
 
 ## Optional Context Telemetry Footer
