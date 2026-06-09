@@ -759,6 +759,8 @@ _ERROR_CORRECTION_TYPE = "error-correction"
 _ERROR_CORRECTION_INTENTIONAL_FIELDS = frozenset(
     {"error", "errors", "errorWord", "error_word", "explanation", "sentence"}
 )
+_HIGHLIGHT_MORPHEMES_TYPE = "highlight-morphemes"
+_HIGHLIGHT_MORPHEMES_ANSWER_KEY_FIELDS = frozenset({"morphemes"})
 _ERROR_CORRECTION_REQUIRED_ITEM_FIELDS = frozenset({"sentence", "error"})
 _ERROR_CORRECTION_OPTIONAL_ITEM_FIELDS = frozenset({"answer", "correction", "options", "explanation"})
 _ACTIVITY_ITEM_AUTHORING_FIELDS: dict[str, frozenset[str]] = {
@@ -8941,10 +8943,18 @@ def _activity_vesum_text(
     verified; missing answers fail soft by skipping the statement. True
     statements also get a narrow safety net for sentence-final negative examples
     like ``X, а не дивюся.`` where the tail is named as wrong teaching content.
+
+    For highlight-morphemes activities, `morphemes:` is an answer key of bare
+    sub-word units. Skip that subtree while keeping `text:`, `word:`, title,
+    and instruction strings in VESUM scope.
     """
     activity_type = activity.get("type")
     activity_id = str(activity.get("id") or "")
-    skip_subtree = _ERROR_CORRECTION_INTENTIONAL_FIELDS if activity_type == _ERROR_CORRECTION_TYPE else frozenset()
+    skip_subtree: set[str] = set()
+    if activity_type == _ERROR_CORRECTION_TYPE:
+        skip_subtree.update(_ERROR_CORRECTION_INTENTIONAL_FIELDS)
+    if activity_type == _HIGHLIGHT_MORPHEMES_TYPE:
+        skip_subtree.update(_HIGHLIGHT_MORPHEMES_ANSWER_KEY_FIELDS)
 
     out: list[str] = []
 
