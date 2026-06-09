@@ -11,7 +11,7 @@ const moduleCount = (id: string) => {
 };
 
 const coreTracks = [
-  { id: 'a2', label: 'A2', title: 'Elementary Core', status: 'Next core target' },
+  { id: 'a2', label: 'A2', title: 'Elementary Core', status: 'Beta preview' },
   { id: 'b1', label: 'B1', title: 'Intermediate Core', status: 'Planned' },
   { id: 'b2', label: 'B2', title: 'Upper Intermediate Core', status: 'Planned' },
   { id: 'c1', label: 'C1', title: 'Advanced Core', status: 'Planned' },
@@ -38,7 +38,7 @@ const seminarTracks = [
 
 <CourseLayout
   title="Learn Ukrainian"
-  description="A lightweight Ukrainian course UI for the released A1 course, A2 next, and the Folk seminar test track."
+  description="A lightweight Ukrainian course UI for the released A1 course, A2 beta preview, and the Folk seminar test track."
   eyebrow="A1 release"
   subtitle="A practical learner course, not a generic documentation site."
   currentPath="/"
@@ -47,10 +47,10 @@ const seminarTracks = [
   <section class="home-intro">
     <div>
       <p class="home-kicker">Ukrainian for real use</p>
-      <h2>A1 is the released beginner track. Folk runs in parallel as the seminar test lane.</h2>
+      <h2>A1 is released. A2 is in beta preview. Folk runs in parallel as the seminar test lane.</h2>
       <p>
         Start with A1 if you are learning independently. Use the Folk seminar path for advanced cultural
-        source work. A2 is the next core target; the broader seminar inventory is shown below
+        source work. A2 beta preview starts with the bridge module; the broader seminar inventory is shown below
         without promising a distant publication order.
       </p>
       <div class="home-actions">
@@ -60,7 +60,7 @@ const seminarTracks = [
     </div>
     <aside class="roadmap-panel" aria-label="Roadmap">
       <div><strong>A1</strong><span>Released beginner course</span></div>
-      <div><strong>A2</strong><span>Next regeneration target</span></div>
+      <div><strong>A2</strong><span>Beta preview: bridge module</span></div>
       <div><strong>Folk</strong><span>Seminar test track</span></div>
       <div><strong>BIO</strong><span>Biographies planned</span></div>
       <div><strong>HIST</strong><span>History planned</span></div>
@@ -74,6 +74,11 @@ const seminarTracks = [
         <span class="track-badge a1">A1</span>
         <h3>Beginner Course</h3>
         <p>55 modules for sounds, reading, first conversations, everyday needs, and an A1 finale.</p>
+      </a>
+      <a class="lu-card" href="/a2/">
+        <span class="track-badge a2">A2</span>
+        <h3>Beta Preview</h3>
+        <p>The first A2 bridge module is available; later modules stay locked while quality review continues.</p>
       </a>
       <a class="lu-card" href="/folk/">
         <span class="track-badge folk">Folk</span>
@@ -222,6 +227,7 @@ const seminarTracks = [
       font-weight: 900;
     }
     .track-badge.a1 { background: var(--lu-green); }
+    .track-badge.a2 { background: #1565C0; }
     .track-badge.folk { background: #A4133C; }
     .track-badge.atlas { background: var(--lu-teal); }
     /* In dark mode --lu-green/--lu-teal go pale → white text fails. The folk

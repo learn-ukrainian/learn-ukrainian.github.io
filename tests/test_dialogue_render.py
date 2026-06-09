@@ -26,7 +26,7 @@ def test_process_dialogues_converts_v7_blockquote_dialogue_to_dialogue_box():
 
     assert mdx.count("<DialogueBox") == 1
     assert 'title="Діалог 1 — Будній ранок"' in mdx
+    assert "**Діалог 1 — Будній ранок**" not in mdx
     assert mdx.count('"speaker"') == 9
     assert "Коли ти прокидаєшся?" in mdx
     assert "> **Ліна:**" not in mdx
-

@@ -1,0 +1,16 @@
+- title: "Plan: A2 bridge"
+  role: internal plan
+  source_ref: "curriculum/l2-uk-en/plans/a2/a2-bridge.yaml"
+  notes: "Source plan for A2 module 1: A1 grammar review, sound alternations, euphony, and A2 roadmap."
+- title: "Wiki: grammar/a2/a2-bridge"
+  role: internal wiki
+  source_ref: "wiki/grammar/a2/a2-bridge"
+  notes: "Compiled grammar substrate for euphony and A2 bridge priorities; used selectively to avoid overloading module 1."
+- title: "Internal module A1: euphony"
+  role: prerequisite pattern
+  source_ref: "curriculum/l2-uk-en/a1/euphony/module.md"
+  notes: "Provides the A1 baseline for у/в, і/й, and з/із/зі practice."
+- title: "Internal module A1: A1 finale"
+  role: prerequisite pattern
+  source_ref: "curriculum/l2-uk-en/a1/a1-finale/module.md"
+  notes: "Provides the released A1 structure reference for integrated review and transition language."

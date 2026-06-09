@@ -479,7 +479,10 @@ def process_dialogues(content: str) -> str:
 
             # Only wrap if we have 2+ dialog lines (actual conversation)
             if len(exchanges) >= 2:
-                result.append(_dialogue_box_mdx(exchanges, _dialogue_title(result)))
+                title, title_index = _dialogue_title(result)
+                if title_index is not None:
+                    del result[title_index]
+                result.append(_dialogue_box_mdx(exchanges, title))
             else:
                 # Single line - just keep as-is
                 result.extend(lines[start:i])
@@ -503,13 +506,15 @@ def _parse_dialogue_line(stripped_line: str) -> dict[str, str] | None:
     return {"speaker": match.group('speaker').strip(), "text": text}
 
 
-def _dialogue_title(previous_lines: list[str]) -> str:
-    for line in reversed(previous_lines[-3:]):
+def _dialogue_title(previous_lines: list[str]) -> tuple[str, int | None]:
+    start = max(0, len(previous_lines) - 3)
+    for index in range(len(previous_lines) - 1, start - 1, -1):
+        line = previous_lines[index]
         stripped = line.strip()
         match = re.match(r'^\*\*(Діалог\s+\d+\s+[\u2014-]\s+.+?)\*\*$', stripped)
         if match:
-            return match.group(1)
-    return "Діалог"
+            return match.group(1), index
+    return "Діалог", None
 
 
 def _dialogue_box_mdx(exchanges: list[dict[str, str]], title: str) -> str:
