@@ -29,6 +29,8 @@
   --lesson-red-light: #FFEBEE;
   --lesson-purple: #6A1B9A;
   --lesson-purple-light: #F3E5F5;
+  --lesson-teal: #00897B;
+  --lesson-teal-light: #E0F2F1;
   --lesson-orange: #E65100;
   --lesson-orange-light: #FFF3E0;
   --lesson-radius: 12px;
@@ -47,6 +49,8 @@
   --lesson-red-light: rgba(239, 83, 80, 0.15);
   --lesson-purple: #AB47BC;
   --lesson-purple-light: rgba(171, 71, 188, 0.15);
+  --lesson-teal: #4DB6AC;
+  --lesson-teal-light: rgba(77, 182, 172, 0.15);
   --lesson-orange: #FF7043;
   --lesson-orange-light: rgba(255, 112, 67, 0.15);
   --lesson-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
@@ -218,6 +222,51 @@
   font-size: 0.8125rem;
   color: var(--ifm-color-emphasis-600, #757575);
   margin-top: 0.25rem;
+}
+
+/* ============= 5a. HIGH-CULTURE BRIDGE (folk) ============= */
+.bridge-box {
+  background: var(--lesson-teal-light);
+  border: 2px solid var(--lesson-teal);
+  border-radius: var(--lesson-radius);
+  padding: 1.125rem 1.375rem;
+  margin: 1.375rem 0;
+}
+
+.bridge-head {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.625rem;
+  color: var(--lesson-teal);
+}
+
+.bridge-flow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.bridge-node {
+  border: 1px solid var(--lesson-teal);
+  border-radius: 8px;
+  padding: 0.375rem 0.75rem;
+  background: var(--ifm-background-color);
+  font-weight: 600;
+}
+
+.bridge-arrow {
+  color: var(--lesson-teal);
+  font-weight: 700;
+}
+
+.bridge-note {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
 }
 
 /* ============= 6. SOURCE BOX (seminar) ============= */

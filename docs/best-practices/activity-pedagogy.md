@@ -150,10 +150,19 @@ These survive because Ukrainian school materials and ZNO exams use them at every
 | Type | Purpose | Where |
 |---|---|---|
 | `essay-response` | 50–500 word free writing to a prompt | B1+ and all seminars, workbook only |
-| `reading` | Long passage (200+ words) + comprehension questions | B2+ and all seminars, workbook only |
+| `reading` | Long passage (200+ words) + comprehension questions | B2+ and seminar tracks except FOLK, workbook only |
 | `critical-analysis` | Deep argumentative response to a claim or source | C1+, all seminars, workbook only |
 | `translation-critique` | Compare two translations of the same Ukrainian text | B2+, LIT, workbook only |
 | `comparative-study` | Multi-text comparison | C1+, all seminars except pure HIST early, workbook only |
+
+### Folk-experiential (FOLK)
+
+| Type | Purpose | Where |
+|---|---|---|
+| `ritual-sequencing` | Order the steps of a rite or seasonal practice | FOLK, inline and workbook |
+| `variant-comparison` | Compare regional or textual variants of a song, rite, or formula | FOLK, workbook only |
+| `motif-formula` | Identify a recurring formula or motif in a passage | FOLK, inline and workbook |
+| `performance` | Perform or recite a fragment with self-review criteria | FOLK, workbook only |
 
 ### Seminar-specific
 
@@ -205,55 +214,61 @@ This matrix is generated directly from `ACTIVITY_CONFIGS`. To regenerate, see th
 | bio | 10 | 3–4 | 7–9 | 4 | 30 |
 | istorio | 10 | 3–4 | 7–9 | 4 | 30 |
 | lit | 10 | 3–4 | 7–9 | 4 | 0 (no vocab gate) |
+| folk | 10 | 3–4 | 7–9 | 4 | 35 |
 | oes | 10 | 3–4 | 7–9 | 4 | 35 |
 | ruth | 10 | 3–4 | 7–9 | 4 | 35 |
 
 ### Type → level matrix
 
-| Type | a1 | a2 | b1-core | b2 | c1-core | c2 | hist | bio | istorio | lit | oes | ruth |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| image-to-letter      | I | - | - | - | - | - | - | - | - | - | - | - |
-| letter-grid          | I | - | - | - | - | - | - | - | - | - | - | - |
-| watch-and-repeat     | I | - | - | - | - | - | - | - | - | - | - | - |
-| divide-words         | B | - | - | - | - | - | - | - | - | - | - | - |
-| count-syllables      | B | - | - | - | - | - | - | - | - | - | - | - |
-| pick-syllables       | B | - | - | - | - | - | - | - | - | - | - | - |
-| anagram              | W | - | - | - | - | - | - | - | - | - | - | - |
-| unjumble             | B | B | B | - | - | - | - | - | - | - | - | - |
-| order                | B | B | B | - | - | - | - | - | - | - | - | - |
-| odd-one-out          | B | B | W | - | - | - | - | - | - | - | - | - |
-| observe              | B | B | - | - | - | - | - | - | - | - | - | - |
-| phrase-table         | B | W | - | - | - | - | - | - | - | - | - | - |
-| classify             | - | - | - | - | - | - | - | - | - | - | - | - |
-| match-up             | B | B | B | B | I | - | I | I | I | I | - | - |
-| group-sort           | B | B | B | B | - | - | - | - | - | - | - | - |
-| quiz                 | B | B | B | I | I | I | I | I | I | I | I | I |
-| true-false           | B | B | B | B | - | - | I | I | I | I | I | I |
-| fill-in              | B | B | B | B | B | I | I | I | I | I | I | I |
-| mark-the-words       | - | B | B | B | B | I | B | B | B | B | B | B |
-| error-correction     | W | B | B | B | B | W | - | - | - | - | - | - |
-| cloze                | - | W | W | W | W | W | - | - | - | - | - | - |
-| translate            | W | W | W | W | W | - | - | - | - | - | - | - |
-| grammar-identify     | - | - | B | B | B | B | - | - | - | - | B | B |
-| highlight-morphemes  | - | - | B | B | B | B | - | - | - | - | B | B |
-| essay-response       | - | - | W | W | W | W | W | W | W | W | W | W |
-| reading              | - | - | - | W | W | W | W | W | W | W | W | W |
-| critical-analysis    | - | - | - | - | W | W | W | W | W | W | W | W |
-| translation-critique | - | - | - | W | W | W | - | - | - | W | - | - |
-| comparative-study    | - | - | - | - | W | W | W | W | W | W | W | W |
-| source-evaluation    | - | - | - | - | - | - | W | W | W | - | - | - |
-| authorial-intent     | - | - | - | - | - | W | - | W | - | W | - | - |
-| debate               | - | - | - | - | - | W | - | - | - | W | - | - |
-| etymology-trace      | - | - | - | - | W | W | - | - | - | - | W | W |
-| paleography-analysis | - | - | - | - | - | - | - | - | - | - | W | W |
-| dialect-comparison   | - | - | - | - | - | - | - | - | - | - | - | W |
-| transcription        | - | - | - | - | - | - | - | - | - | - | W | W |
+| Type | a1 | a2 | b1-core | b2 | c1-core | c2 | hist | bio | istorio | lit | folk | oes | ruth |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| image-to-letter        | I | - | - | - | - | - | - | - | - | - | - | - | - |
+| letter-grid            | I | - | - | - | - | - | - | - | - | - | - | - | - |
+| watch-and-repeat       | I | - | - | - | - | - | - | - | - | - | - | - | - |
+| divide-words           | B | - | - | - | - | - | - | - | - | - | - | - | - |
+| count-syllables        | B | - | - | - | - | - | - | - | - | - | - | - | - |
+| pick-syllables         | B | - | - | - | - | - | - | - | - | - | - | - | - |
+| anagram                | W | - | - | - | - | - | - | - | - | - | - | - | - |
+| unjumble               | B | B | B | - | - | - | - | - | - | - | - | - | - |
+| order                  | B | B | B | - | - | - | - | - | - | - | - | - | - |
+| odd-one-out            | B | B | W | - | - | - | - | - | - | - | - | - | - |
+| observe                | B | B | - | - | - | - | - | - | - | - | - | - | - |
+| phrase-table           | B | W | - | - | - | - | - | - | - | - | - | - | - |
+| classify               | - | - | - | - | - | - | - | - | - | - | - | - | - |
+| match-up               | B | B | B | B | I | - | I | I | I | I | - | - | - |
+| group-sort             | B | B | B | B | - | - | - | - | - | - | - | - | - |
+| quiz                   | B | B | B | I | I | I | I | I | I | I | - | I | I |
+| true-false             | B | B | B | B | - | - | I | I | I | I | - | I | I |
+| fill-in                | B | B | B | B | B | I | I | I | I | I | - | I | I |
+| mark-the-words         | - | B | B | B | B | I | B | B | B | B | - | B | B |
+| error-correction       | W | B | B | B | B | W | - | - | - | - | - | - | - |
+| cloze                  | - | W | W | W | W | W | - | - | - | - | - | - | - |
+| translate              | W | W | W | W | W | - | - | - | - | - | - | - | - |
+| grammar-identify       | - | - | B | B | B | B | - | - | - | - | - | B | B |
+| highlight-morphemes    | - | - | B | B | B | B | - | - | - | - | - | B | B |
+| essay-response         | - | - | W | W | W | W | W | W | W | W | W | W | W |
+| reading                | - | - | - | W | W | W | W | W | W | W | - | W | W |
+| critical-analysis      | - | - | - | - | W | W | W | W | W | W | W | W | W |
+| translation-critique   | - | - | - | W | W | W | - | - | - | W | - | - | - |
+| comparative-study      | - | - | - | - | W | W | W | W | W | W | W | W | W |
+| source-evaluation      | - | - | - | - | - | - | W | W | W | - | - | - | - |
+| authorial-intent       | - | - | - | - | - | W | - | W | - | W | - | - | - |
+| debate                 | - | - | - | - | - | W | - | - | - | W | - | - | - |
+| etymology-trace        | - | - | - | - | W | W | - | - | - | - | - | W | W |
+| ritual-sequencing      | - | - | - | - | - | - | - | - | - | - | B | - | - |
+| variant-comparison     | - | - | - | - | - | - | - | - | - | - | W | - | - |
+| motif-formula          | - | - | - | - | - | - | - | - | - | - | B | - | - |
+| performance            | - | - | - | - | - | - | - | - | - | - | W | - | - |
+| paleography-analysis   | - | - | - | - | - | - | - | - | - | - | - | W | W |
+| dialect-comparison     | - | - | - | - | - | - | - | - | - | - | - | - | W |
+| transcription          | - | - | - | - | - | - | - | - | - | - | - | W | W |
 
 Reading the matrix:
 
 - A column full of `-` except for A1 means a phonetics type (Principle 2).
 - Puzzle-gamification types (`anagram`, `unjumble`, `order`, `odd-one-out`, `observe`, `phrase-table`) form a triangle shrinking from A1 to B1, then empty from B2 onward (Principle 1).
 - `quiz`, `fill-in`, `mark-the-words`, `match-up` are the backbone rows — present at almost every level.
+- FOLK uses `ritual-sequencing`, `variant-comparison`, `motif-formula`, and `performance` instead of the generic seminar true-false/group-sort/match-up pattern.
 - The bottom block (`essay-response` through `transcription`) is strictly workbook-only production/academic types, earning in at progressively higher levels (Principles 4, 6, 7).
 
 ---
@@ -275,7 +290,7 @@ These are short visual aids that cannot work inside the workbook tab. If a write
 ```
 essay-response, reading, cloze, critical-analysis,
 source-evaluation, debate, comparative-study,
-authorial-intent, translation-critique,
+authorial-intent, translation-critique, variant-comparison, performance,
 etymology-trace, paleography-analysis,
 transcription, dialect-comparison
 ```

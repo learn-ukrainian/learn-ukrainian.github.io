@@ -2,8 +2,8 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: starlight/src/components/{*.tsx, *.astro}
-  components_sha256: 83fd61d4a2ed5894e1868a147372debc667f688378a0514c87ca320ba7813284
-  config_tables_sha256: e7e2ba824c0d215f2854d9bb923e6e02b7370bba1323d0dad57d730db940d62b
+  components_sha256: fd5b945fbe6b214a92b0d9921f2eaf2746a39201474ee2c967966f9248e31003
+  config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
   Anagram:
@@ -198,6 +198,7 @@ components:
     - bio
     - istorio
     - lit
+    - folk
     - oes
     - ruth
     activity_type: comparative-study
@@ -293,6 +294,7 @@ components:
     - bio
     - istorio
     - lit
+    - folk
     - oes
     - ruth
     activity_type: critical-analysis
@@ -493,6 +495,7 @@ components:
     - bio
     - istorio
     - lit
+    - folk
     - oes
     - ruth
     activity_type: null
@@ -644,6 +647,7 @@ components:
     - bio
     - istorio
     - lit
+    - folk
     - oes
     - ruth
     activity_type: essay-response
@@ -915,6 +919,33 @@ components:
     example: {}
     deprecated: false
     deprecation_reason: null
+  HighCultureBridge:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: nodes
+        type: string[]
+        description: Ordered folk-to-high-culture nodes shown in the bridge flow.
+        ukrainian_text: 'true'
+      optional:
+      - name: title
+        type: string
+        description: Title shown in the bridge header.
+        ukrainian_text: 'true'
+      - name: note
+        type: string
+        description: Explanatory note below the bridge flow.
+        ukrainian_text: 'true'
+    nested_types: {}
+    example:
+      nodes:
+      - Приклад
+      title: Приклад
+    deprecated: false
+    deprecation_reason: null
   HighlightMorphemes:
     tab: activities
     level_scope:
@@ -1117,6 +1148,66 @@ components:
       instruction: Приклад
     deprecated: false
     deprecation_reason: null
+  MotifFormula:
+    tab: activities
+    level_scope:
+    - folk
+    activity_type: motif-formula
+    placement: both
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: passage
+        type: string
+        description: Text passage shown to the learner.
+        ukrainian_text: 'true'
+      - name: formulas
+        type: FormulaItem[]
+        description: Formula or motif answers embedded in the passage.
+        ukrainian_text: 'true'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: prompt
+        type: string
+        description: Prompt shown to guide the learner response.
+        ukrainian_text: 'true'
+      - name: modelAnswer
+        type: string
+        description: Model answer for review or self-check.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      FormulaItem:
+      - name: text
+        type: string
+        description: Formula or motif text the learner identifies in the passage.
+        ukrainian_text: 'true'
+      - name: label
+        type: string
+        description: Short label for the formula or motif.
+        ukrainian_text: 'true'
+      - name: explanation
+        type: string
+        description: Explanation shown after the learner selects the formula.
+        ukrainian_text: 'true'
+    example:
+      title: Приклад
+      passage: Приклад
+      formulas:
+      - <FormulaItem>
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
   MythBuster:
     tab: lesson
     level_scope: *id001
@@ -1133,6 +1224,10 @@ components:
         description: Truth value consumed by this component.
         ukrainian_text: 'true'
       optional:
+      - name: title
+        type: string
+        description: Title shown in the myth-box header.
+        ukrainian_text: 'true'
       - name: claimSource
         type: string
         description: Claim Source value consumed by this component.
@@ -1145,6 +1240,7 @@ components:
     example:
       claim: Приклад
       truth: Приклад
+      title: Приклад
     deprecated: false
     deprecation_reason: null
   Observe:
@@ -1299,6 +1395,55 @@ components:
       imageUrl: Приклад
       hotspots:
       - <Hotspot>
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  PerformanceActivity:
+    tab: activities
+    level_scope:
+    - folk
+    activity_type: performance
+    placement: workbook
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: prompt
+        type: string
+        description: Prompt shown to guide the learner performance.
+        ukrainian_text: 'true'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: fragment
+        type: string
+        description: Fragment to recite, chant, or perform.
+        ukrainian_text: 'true'
+      - name: selfCheck
+        type: string[]
+        description: Self-check criteria for the learner.
+        ukrainian_text: 'true'
+      - name: showRecordButton
+        type: boolean
+        description: Whether to display the record-style action button.
+        ukrainian_text: 'false'
+      - name: modelAnswer
+        type: string
+        description: Model answer for review or self-check.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types: {}
+    example:
+      title: Приклад
+      prompt: Приклад
       instruction: Приклад
     deprecated: false
     deprecation_reason: null
@@ -1484,6 +1629,50 @@ components:
       title: Приклад
       tasks:
       - Приклад
+    deprecated: false
+    deprecation_reason: null
+  RitualSequencing:
+    tab: activities
+    level_scope:
+    - folk
+    activity_type: ritual-sequencing
+    placement: both
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: steps
+        type: string[]
+        description: Ordered or shuffled rite steps shown to the learner.
+        ukrainian_text: 'true'
+      - name: correctOrder
+        type: number[]
+        description: Zero-based order indices for the correct ritual sequence.
+        ukrainian_text: 'false'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: modelAnswer
+        type: string
+        description: Model answer for review or self-check.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types: {}
+    example:
+      title: Приклад
+      steps:
+      - Приклад
+      correctOrder:
+      - 1
+      instruction: Приклад
     deprecated: false
     deprecation_reason: null
   RuleBox:
@@ -1910,6 +2099,71 @@ components:
         description: Hint value consumed by this component.
         ukrainian_text: 'true'
     example:
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  VariantComparison:
+    tab: activities
+    level_scope:
+    - folk
+    activity_type: variant-comparison
+    placement: workbook
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: variants
+        type: VariantItem[]
+        description: Regional or textual variants to compare.
+        ukrainian_text: 'true'
+      - name: features
+        type: string[]
+        description: Feature rows learners compare across variants.
+        ukrainian_text: 'true'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: prompt
+        type: string
+        description: Prompt shown to guide the learner response.
+        ukrainian_text: 'true'
+      - name: modelAnswer
+        type: string
+        description: Model answer for review or self-check.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      VariantItem:
+      - name: label
+        type: string
+        description: Display label for one regional or textual variant.
+        ukrainian_text: 'true'
+      - name: text
+        type: string
+        description: Variant excerpt or description.
+        ukrainian_text: 'true'
+      - name: region
+        type: string
+        description: Region associated with this variant.
+        ukrainian_text: 'true'
+      - name: source
+        type: string
+        description: Source label for this variant.
+        ukrainian_text: 'false'
+    example:
+      title: Приклад
+      variants:
+      - <VariantItem>
+      features:
+      - Приклад
       instruction: Приклад
     deprecated: false
     deprecation_reason: null

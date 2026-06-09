@@ -112,3 +112,54 @@ class ComparativeStudyData:
     content: str
     task: str
     modelAnswer: str
+
+
+@dataclass
+class RitualSequencingData:
+    steps: list[str]
+    correctOrder: list[int]
+    instruction: str = ''
+    modelAnswer: str = ''
+
+
+@dataclass
+class VariantComparisonVariant:
+    label: str
+    text: str = ''
+    region: str = ''
+    source: str = ''
+
+
+@dataclass
+class VariantComparisonData:
+    variants: list[VariantComparisonVariant]
+    features: list[str]
+    instruction: str = ''
+    prompt: str = ''
+    modelAnswer: str = ''
+
+
+@dataclass
+class FormulaItem:
+    text: str
+    label: str = ''
+    explanation: str = ''
+
+
+@dataclass
+class MotifFormulaData:
+    passage: str
+    formulas: list[FormulaItem]
+    instruction: str = ''
+    prompt: str = ''
+    modelAnswer: str = ''
+
+
+@dataclass
+class PerformanceData:
+    prompt: str
+    instruction: str = ''
+    fragment: str = ''
+    selfCheck: list[str] | None = None
+    showRecordButton: bool = True
+    modelAnswer: str = ''

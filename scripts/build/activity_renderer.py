@@ -92,6 +92,10 @@ _TYPE_TO_COMPONENT: dict[str, str] = {
     "source-evaluation": "SourceEvaluation",
     "reading": "ReadingActivity",
     "comparative-study": "ComparativeStudy",
+    "ritual-sequencing": "RitualSequencing",
+    "variant-comparison": "VariantComparison",
+    "motif-formula": "MotifFormula",
+    "performance": "PerformanceActivity",
     "authorial-intent": "AuthorialIntent",
     "debate": "Debate",
     "etymology-trace": "EtymologyTrace",
@@ -818,6 +822,63 @@ def _render_dialect_comparison(act: dict) -> str:
     return _component("DialectComparison", props)
 
 
+def _render_ritual_sequencing(act: dict) -> str:
+    """ritual-sequencing → <RitualSequencing ... />"""
+    steps = act.get("steps") or act.get("items", [])
+    correct_order = act.get("correct_order", [])
+    if correct_order and all(isinstance(index, int) for index in correct_order):
+        if min(correct_order) == 1 and max(correct_order) == len(steps):
+            correct_order = [index - 1 for index in correct_order]
+        elif min(correct_order) < 0 or max(correct_order) >= len(steps):
+            raise ValueError(f"ritual-sequencing correct_order index out of bounds: {correct_order}")
+    props = _prop("title", act.get("title", ""))
+    props += _opt_prop("instruction", act.get("instruction"))
+    props += _prop("steps", steps)
+    props += _prop("correctOrder", correct_order)
+    props += _opt_prop("modelAnswer", act.get("model_answer"))
+    return _component("RitualSequencing", props)
+
+
+def _render_variant_comparison(act: dict) -> str:
+    """variant-comparison → <VariantComparison ... />"""
+    props = _prop("title", act.get("title", ""))
+    props += _opt_prop("instruction", act.get("instruction"))
+    props += _prop("variants", act.get("variants", []))
+    props += _prop("features", act.get("features", []))
+    props += _opt_prop("prompt", act.get("prompt"))
+    props += _opt_prop("modelAnswer", act.get("model_answer"))
+    return _component("VariantComparison", props)
+
+
+def _render_motif_formula(act: dict) -> str:
+    """motif-formula → <MotifFormula ... />"""
+    formulas = []
+    for item in act.get("formulas", []):
+        if isinstance(item, dict):
+            formulas.append(item)
+        else:
+            formulas.append({"text": str(item)})
+    props = _prop("title", act.get("title", ""))
+    props += _opt_prop("instruction", act.get("instruction"))
+    props += _prop("passage", act.get("passage") or act.get("text", ""))
+    props += _prop("formulas", formulas)
+    props += _opt_prop("prompt", act.get("prompt"))
+    props += _opt_prop("modelAnswer", act.get("model_answer"))
+    return _component("MotifFormula", props)
+
+
+def _render_performance(act: dict) -> str:
+    """performance → <PerformanceActivity ... />"""
+    props = _prop("title", act.get("title", ""))
+    props += _opt_prop("instruction", act.get("instruction"))
+    props += _prop("prompt", act.get("prompt", ""))
+    props += _opt_prop("fragment", act.get("fragment"))
+    props += _opt_prop("selfCheck", act.get("self_check"))
+    props += _opt_prop("showRecordButton", act.get("show_record_button"), True)
+    props += _opt_prop("modelAnswer", act.get("model_answer"))
+    return _component("PerformanceActivity", props)
+
+
 # ---------------------------------------------------------------------------
 # Registry
 # ---------------------------------------------------------------------------
@@ -855,6 +916,10 @@ _RENDERERS: dict[str, Any] = {
     "source-evaluation": _render_source_evaluation,
     "reading": _render_reading,
     "comparative-study": _render_comparative_study,
+    "ritual-sequencing": _render_ritual_sequencing,
+    "variant-comparison": _render_variant_comparison,
+    "motif-formula": _render_motif_formula,
+    "performance": _render_performance,
     "authorial-intent": _render_authorial_intent,
     "debate": _render_debate,
     "etymology-trace": _render_etymology_trace,

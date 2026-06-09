@@ -888,6 +888,8 @@ WORKBOOK_ONLY_TYPES: set[str] = {
     "comparative-study",    # multi-text comparison
     "authorial-intent",     # deep interpretation of author's choices
     "translation-critique", # compare two translations of same text
+    "variant-comparison",   # regional-variant table
+    "performance",          # perform/recite + self-review
     "etymology-trace",      # historical linguistics exercise
     "paleography-analysis", # script/manuscript analysis
     "transcription",        # transcribe from old orthography
@@ -1128,6 +1130,22 @@ ACTIVITY_CONFIGS: dict[str, dict[str, str]] = {
         "REQUIRED_TYPES": "reading, essay-response, critical-analysis",
         "PRIORITY_TYPES": "reading, critical-analysis, essay-response, authorial-intent",
     },
+    "folk": {
+        "TOTAL_TARGET": "10",
+        "INLINE_MIN": "3", "INLINE_MAX": "4",
+        "WORKBOOK_MIN": "7", "WORKBOOK_MAX": "9",
+        "ITEMS_MIN": "4",
+        "VOCAB_COUNT_TARGET": "35",
+        "INLINE_ALLOWED_TYPES": "ritual-sequencing, motif-formula",
+        "WORKBOOK_ALLOWED_TYPES": "ritual-sequencing, variant-comparison, motif-formula, performance, essay-response, critical-analysis, comparative-study",
+        "INLINE_PRIORITY_TYPES": "motif-formula, ritual-sequencing",
+        "WORKBOOK_PRIORITY_TYPES": "variant-comparison, performance, ritual-sequencing, motif-formula",
+        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "12",
+        "ALLOWED_ACTIVITY_TYPES": "ritual-sequencing, variant-comparison, motif-formula, performance, essay-response, critical-analysis, comparative-study",
+        "FORBIDDEN_ACTIVITY_TYPES": "image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, anagram, unjumble, order, odd-one-out, observe, phrase-table, classify, match-up, group-sort, quiz, true-false, fill-in, mark-the-words, error-correction, cloze, translate, grammar-identify, highlight-morphemes, reading, translation-critique, source-evaluation, authorial-intent, debate, etymology-trace, paleography-analysis, dialect-comparison, transcription, select",
+        "REQUIRED_TYPES": "",
+        "PRIORITY_TYPES": "ritual-sequencing, variant-comparison, motif-formula, performance",
+    },
     # =====================================================================
     # OES / RUTH — Old East Slavonic / Ruthenian philology
     # Specialized types: transcription, paleography-analysis, etymology-trace
@@ -1195,7 +1213,7 @@ def get_golden_fragment(track: str, module_num: int) -> str:
     intermediate (B1), advanced (B2-C2), seminar (HIST/BIO/LIT/etc.).
     """
     base = track.split("-")[0] if track not in ("hist", "bio", "istorio") else track
-    if base in ("hist", "bio", "istorio", "lit", "oes", "ruth"):
+    if base in ("hist", "bio", "istorio", "lit", "folk", "oes", "ruth"):
         return GOLDEN_FRAGMENTS["seminar"]
     if base == "a1":
         if module_num <= 14:
@@ -1362,7 +1380,7 @@ def get_item_minimums_table(track: str, module_num: int) -> str:
     # Resolve the audit config level key
     _TRACK_TO_AUDIT = {
         "hist": "history", "bio": "B2-biography", "istorio": "istorio",
-        "lit": "lit", "oes": "C2", "ruth": "C2",
+        "lit": "lit", "folk": "FOLK", "oes": "C2", "ruth": "C2",
     }
     level_key = _TRACK_TO_AUDIT.get(track, track.upper().replace("-BRIDGE", "").replace("-CORE", ""))
     if track == "b1" and module_num <= 5:
@@ -1397,6 +1415,7 @@ _TRACK_FOCUS_MAP: dict[str, tuple[str, str | None]] = {
     "bio": ("C1", "biography"),
     "istorio": ("C1", "history"),
     "lit": ("C1", "literature"),
+    "folk": ("C1", "seminar"),
     "oes": ("C2", "seminar"),
     "ruth": ("C2", "seminar"),
 }

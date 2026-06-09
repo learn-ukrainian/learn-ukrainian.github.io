@@ -7373,6 +7373,11 @@ _ACTIVITY_AUTHORING_FIELDS: dict[str, frozenset[str]] = {
     "comparative-study": _activity(
         "source_reading", "items_to_compare", "criteria", "prompt", "model_answer", "source_a", "source_b", "task"
     ),
+    # FOLK text-layer activity families (#42-#45).
+    "ritual-sequencing": _activity("steps", "items", "correct_order", "model_answer"),
+    "variant-comparison": _activity("variants", "features", "prompt", "model_answer"),
+    "motif-formula": _activity("passage", "text", "formulas", "answers", "prompt", "model_answer"),
+    "performance": _activity("prompt", "fragment", "self_check", "self_checklist", "show_record_button", "model_answer"),
     "authorial-intent": _activity("source_reading", "text_excerpt", "prompt", "techniques_to_identify", "model_answer"),
     # ISTORIO / HIST.
     "source-evaluation": _activity(
@@ -7461,6 +7466,22 @@ _COMPONENT_TO_AUTHORING_RENAMES: dict[str, dict[str, str]] = {
     # `<SourceEvaluation sourceText={activity.source_text}>`
     "source-evaluation": {
         "sourceText": "source_text",
+    },
+    # FOLK text-layer activity families.
+    "ritual-sequencing": {
+        "correctOrder": "correct_order",
+        "modelAnswer": "model_answer",
+    },
+    "variant-comparison": {
+        "modelAnswer": "model_answer",
+    },
+    "motif-formula": {
+        "modelAnswer": "model_answer",
+    },
+    "performance": {
+        "selfCheck": "self_check",
+        "showRecordButton": "show_record_button",
+        "modelAnswer": "model_answer",
     },
 }
 

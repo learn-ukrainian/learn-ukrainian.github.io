@@ -14,12 +14,18 @@ from dataclasses import asdict, is_dataclass
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 from .dataclasses_ import (
     ComparativeStudyData,
     EssayResponseData,
     HighlightMorphemesItem,
+    MotifFormulaData,
+    PerformanceData,
+    RitualSequencingData,
+    VariantComparisonData,
 )
-from .utils import escape_jsx
+from .utils import dump_json_for_jsx, escape_jsx
 
 # Ensure scripts/ is on sys.path for sibling imports
 _SCRIPTS_DIR = Path(__file__).resolve().parent.parent
@@ -187,6 +193,136 @@ def comparative_study_to_jsx(data: ComparativeStudyData, title: str, is_ukrainia
   modelAnswer={{`{escape_jsx(data.modelAnswer)}`}}
   isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}
 />'''
+
+
+def ritual_sequencing_to_jsx(data: RitualSequencingData, title: str, is_ukrainian_forced: bool = False) -> str:
+    """Convert ritual-sequencing data to JSX RitualSequencing component."""
+    instruction_prop = f'\n  instruction={{`{escape_jsx(data.instruction)}`}}' if data.instruction else ''
+    model_prop = f'\n  modelAnswer={{`{escape_jsx(data.modelAnswer)}`}}' if data.modelAnswer else ''
+    return f'''### {title}
+
+<RitualSequencing client:only='react'
+  title="{escape_jsx(title)}"{instruction_prop}
+  steps={{JSON.parse(`{dump_json_for_jsx(data.steps)}`)}}
+  correctOrder={{JSON.parse(`{dump_json_for_jsx(data.correctOrder)}`)}}{model_prop}
+  isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}
+/>'''
+
+
+def variant_comparison_to_jsx(data: VariantComparisonData, title: str, is_ukrainian_forced: bool = False) -> str:
+    """Convert variant-comparison data to JSX VariantComparison component."""
+    variants = [
+        {'label': item.label, 'text': item.text, 'region': item.region, 'source': item.source}
+        for item in data.variants
+    ]
+    instruction_prop = f'\n  instruction={{`{escape_jsx(data.instruction)}`}}' if data.instruction else ''
+    prompt_prop = f'\n  prompt={{`{escape_jsx(data.prompt)}`}}' if data.prompt else ''
+    model_prop = f'\n  modelAnswer={{`{escape_jsx(data.modelAnswer)}`}}' if data.modelAnswer else ''
+    return f'''### {title}
+
+<VariantComparison client:only='react'
+  title="{escape_jsx(title)}"{instruction_prop}
+  variants={{JSON.parse(`{dump_json_for_jsx(variants)}`)}}
+  features={{JSON.parse(`{dump_json_for_jsx(data.features)}`)}}{prompt_prop}{model_prop}
+  isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}
+/>'''
+
+
+def motif_formula_to_jsx(data: MotifFormulaData, title: str, is_ukrainian_forced: bool = False) -> str:
+    """Convert motif-formula data to JSX MotifFormula component."""
+    formulas = [
+        {'text': item.text, 'label': item.label, 'explanation': item.explanation}
+        for item in data.formulas
+    ]
+    instruction_prop = f'\n  instruction={{`{escape_jsx(data.instruction)}`}}' if data.instruction else ''
+    prompt_prop = f'\n  prompt={{`{escape_jsx(data.prompt)}`}}' if data.prompt else ''
+    model_prop = f'\n  modelAnswer={{`{escape_jsx(data.modelAnswer)}`}}' if data.modelAnswer else ''
+    return f'''### {title}
+
+<MotifFormula client:only='react'
+  title="{escape_jsx(title)}"{instruction_prop}
+  passage={{`{escape_jsx(data.passage)}`}}
+  formulas={{JSON.parse(`{dump_json_for_jsx(formulas)}`)}}{prompt_prop}{model_prop}
+  isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}
+/>'''
+
+
+def performance_to_jsx(data: PerformanceData, title: str, is_ukrainian_forced: bool = False) -> str:
+    """Convert performance data to JSX PerformanceActivity component."""
+    instruction_prop = f'\n  instruction={{`{escape_jsx(data.instruction)}`}}' if data.instruction else ''
+    fragment_prop = f'\n  fragment={{`{escape_jsx(data.fragment)}`}}' if data.fragment else ''
+    self_check = data.selfCheck or []
+    self_check_prop = f'\n  selfCheck={{JSON.parse(`{dump_json_for_jsx(self_check)}`)}}' if self_check else ''
+    model_prop = f'\n  modelAnswer={{`{escape_jsx(data.modelAnswer)}`}}' if data.modelAnswer else ''
+    record_value = 'true' if data.showRecordButton else 'false'
+    return f'''### {title}
+
+<PerformanceActivity client:only='react'
+  title="{escape_jsx(title)}"{instruction_prop}
+  prompt={{`{escape_jsx(data.prompt)}`}}{fragment_prop}{self_check_prop}
+  showRecordButton={{{record_value}}}{model_prop}
+  isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}
+/>'''
+
+
+# =============================================================================
+# FOLK CONTENT BLOCK PROCESSING
+# =============================================================================
+
+_FOLK_CONTENT_BLOCK_RE = re.compile(
+    r"^:::(myth-box|high-culture-bridge)\s*\n(.*?)\n:::\s*$",
+    re.MULTILINE | re.DOTALL,
+)
+
+
+def _yaml_directive_payload(raw: str) -> dict[str, Any]:
+    payload = yaml.safe_load(raw) if raw.strip() else {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def convert_folk_content_blocks(content: str) -> str:
+    """Convert folk text-layer directives to dedicated MDX components."""
+
+    def replace(match: re.Match[str]) -> str:
+        block_type = match.group(1)
+        payload = _yaml_directive_payload(match.group(2))
+        if block_type == 'myth-box':
+            claim = str(payload.get('claim', '')).strip()
+            truth = str(payload.get('truth', '')).strip()
+            if not claim or not truth:
+                return "{/** Invalid myth-box: claim and truth are required */}"
+            title = str(payload.get('title', '')).strip()
+            claim_source = str(payload.get('claim_source') or payload.get('claimSource') or '').strip()
+            truth_source = str(payload.get('truth_source') or payload.get('truthSource') or '').strip()
+            title_prop = f'\n  title={{`{escape_jsx(title)}`}}' if title else ''
+            claim_source_prop = f'\n  claimSource={{`{escape_jsx(claim_source)}`}}' if claim_source else ''
+            truth_source_prop = f'\n  truthSource={{`{escape_jsx(truth_source)}`}}' if truth_source else ''
+            return (
+                "<MythBuster"
+                f"{title_prop}\n"
+                f"  claim={{`{escape_jsx(claim)}`}}{claim_source_prop}\n"
+                f"  truth={{`{escape_jsx(truth)}`}}{truth_source_prop}\n"
+                "/>"
+            )
+
+        nodes = payload.get('nodes', [])
+        if not isinstance(nodes, list) or len(nodes) < 2:
+            return "{/** Invalid high-culture-bridge: at least two nodes are required */}"
+        clean_nodes = [str(node).strip() for node in nodes if str(node).strip()]
+        if len(clean_nodes) < 2:
+            return "{/** Invalid high-culture-bridge: at least two nodes are required */}"
+        title = str(payload.get('title', '')).strip()
+        note = str(payload.get('note', '')).strip()
+        title_prop = f'\n  title={{`{escape_jsx(title)}`}}' if title else ''
+        note_prop = f'\n  note={{`{escape_jsx(note)}`}}' if note else ''
+        return (
+            "<HighCultureBridge"
+            f"{title_prop}\n"
+            f"  nodes={{JSON.parse(`{dump_json_for_jsx(clean_nodes)}`)}}{note_prop}\n"
+            "/>"
+        )
+
+    return _FOLK_CONTENT_BLOCK_RE.sub(replace, content)
 
 
 # =============================================================================

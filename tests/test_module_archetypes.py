@@ -45,9 +45,11 @@ def test_folk_uses_experiential_archetype():
     contract = resolve_module_archetype("folk", 4)
 
     assert contract["id"] == "folk-experiential"
-    assert "#40 Aural Genre-ID" in contract["activity_families"]
-    assert "#45 Performance" in contract["activity_families"]
-    assert any("audio-block" in block for block in contract["lesson_blocks"])
+    assert "#42 Ritual Sequencing (`ritual-sequencing`)" in contract["activity_families"]
+    assert "#45 Performance (`performance`)" in contract["activity_families"]
+    assert not any("#40" in family for family in contract["activity_families"])
+    assert not any("#41" in family for family in contract["activity_families"])
+    assert any("deferred surfaces" in block for block in contract["lesson_blocks"])
     assert any("myth-box" in block for block in contract["lesson_blocks"])
 
 
@@ -72,7 +74,7 @@ def test_format_folk_archetype_includes_lesson_blocks():
 
     assert "MODULE ARCHETYPE: folk-experiential" in text
     assert "Required lesson blocks:" in text
-    assert "audio-block" in text
-    assert "symbolic-decode" in text
+    assert "deferred surfaces" in text
+    assert "aural genre-ID" in text
     assert "high-culture bridge" in text
     assert "myth-box" in text
