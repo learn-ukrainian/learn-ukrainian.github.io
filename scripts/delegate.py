@@ -1948,8 +1948,9 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=_dispatch_help_formatter,
     )
     d.add_argument("--agent", required=True,
-                   choices=["codex", "gemini", "claude", "grok", "deepseek", "qwen", "agy", "cursor"],
-                   help="Agent to run for the task: codex, gemini, claude, grok, deepseek, qwen, agy, or cursor.")
+                   choices=["codex", "gemini", "claude", "grok", "grok-build", "deepseek", "qwen", "agy", "cursor"],
+                   help="Agent to run for the task: codex, gemini, claude, grok (Hermes), "
+                        "grok-build (native grok CLI), deepseek, qwen, agy, or cursor.")
     d.add_argument("--task-id", required=True,
                    help="Stable task identifier used for state/log files, e.g. review-123.")
     d.add_argument("--prompt", help="Prompt text, or '-' to read the prompt from stdin.")
