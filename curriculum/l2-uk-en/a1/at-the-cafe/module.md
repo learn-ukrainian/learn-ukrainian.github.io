@@ -32,19 +32,33 @@ Treat **велику каву** and **маленьку каву** as whole order
 not an adjective-declension lesson.
 :::
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ### Замовлення в кафе
 
-<DialogueBox uk="Офіціантка: Добрий день! Ось меню." en="Server: Good afternoon! Here is the menu." />
-<DialogueBox uk="Клієнт: Дякую. Що ви рекомендуєте?" en="Customer: Thank you. What do you recommend?" />
-<DialogueBox uk="Офіціантка: Борщ дуже смачний." en="Server: The borscht is very tasty." />
-<DialogueBox uk="Клієнт: Добре, мені борщ і хліб, будь ласка." en="Customer: Good, borscht and bread for me, please." />
-<DialogueBox uk="Офіціантка: А що будете пити?" en="Server: And what will you drink?" />
-<DialogueBox uk="Клієнт: Каву з молоком." en="Customer: Coffee with milk." />
-<DialogueBox uk="Офіціантка: Добре, одну хвилинку." en="Server: Good, one minute." />
+```text
+Офіціантка: Добрий день! Ось меню.
+Клієнт: Дякую. Що ви рекомендуєте?
+Офіціантка: Борщ дуже смачний.
+Клієнт: Добре, мені борщ і хліб, будь ласка.
+Офіціантка: А що будете пити?
+Клієнт: Каву з молоком.
+Офіціантка: Добре, одну хвилинку.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Офіціантка: Добрий день! Ось меню.** | Server: Good afternoon! Here is the menu. |
+| **Клієнт: Дякую. Що ви рекомендуєте?** | Customer: Thank you. What do you recommend? |
+| **Офіціантка: Борщ дуже смачний.** | Server: The borscht is very tasty. |
+| **Клієнт: Добре, мені борщ і хліб, будь ласка.** | Customer: Good, borscht and bread for me, please. |
+| **Офіціантка: А що будете пити?** | Server: And what will you drink? |
+| **Клієнт: Каву з молоком.** | Customer: Coffee with milk. |
+| **Офіціантка: Добре, одну хвилинку.** | Server: Good, one minute. |
 
 The greeting is **Добрий день!** in a neutral public-service scene. Depending
 on the time, **Доброго ранку!** and **Добрий вечір!** are also normal. If you need
@@ -59,12 +73,25 @@ usable cafe line.
 
 ### Оплата рахунку
 
-<DialogueBox uk="Клієнт: Рахунок, будь ласка." en="Customer: The bill, please." />
-<DialogueBox uk="Офіціантка: Ось, будь ласка. Сто двадцять гривень." en="Server: Here you are. One hundred twenty hryvnias." />
-<DialogueBox uk="Клієнт: Можна карткою?" en="Customer: Can I pay by card?" />
-<DialogueBox uk="Офіціантка: Так, звичайно." en="Server: Yes, of course." />
-<DialogueBox uk="Клієнт: Дякую, дуже смачно було!" en="Customer: Thank you, it was very tasty!" />
-<DialogueBox uk="Офіціантка: Дякуємо, приходьте ще!" en="Server: Thank you, come again!" />
+```text
+Клієнт: Рахунок, будь ласка.
+Офіціантка: Ось, будь ласка. Сто двадцять гривень.
+Клієнт: Можна карткою?
+Офіціантка: Так, звичайно.
+Клієнт: Дякую, дуже смачно було!
+Офіціантка: Дякуємо, приходьте ще!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Клієнт: Рахунок, будь ласка.** | Customer: The bill, please. |
+| **Офіціантка: Ось, будь ласка. Сто двадцять гривень.** | Server: Here you are. One hundred twenty hryvnias. |
+| **Клієнт: Можна карткою?** | Customer: Can I pay by card? |
+| **Офіціантка: Так, звичайно.** | Server: Yes, of course. |
+| **Клієнт: Дякую, дуже смачно було!** | Customer: Thank you, it was very tasty! |
+| **Офіціантка: Дякуємо, приходьте ще!** | Server: Thank you, come again! |
 
 In many Ukrainian cafes, the bill does not always arrive automatically. Ask:
 **Рахунок, будь ласка.** You can pay **карткою** or **готівкою**. A common tip
@@ -73,13 +100,27 @@ praise line is **Дуже смачно було!** or **Все було дуже
 
 ### Кава із собою
 
-<DialogueBox uk="Бариста: Доброго ранку!" en="Barista: Good morning!" />
-<DialogueBox uk="Гість: Доброго ранку. Велику каву, будь ласка." en="Guest: Good morning. A large coffee, please." />
-<DialogueBox uk="Бариста: Вам тут чи із собою?" en="Barista: For here or to go?" />
-<DialogueBox uk="Гість: Із собою, дякую." en="Guest: To go, thank you." />
-<DialogueBox uk="Бариста: Щось іще?" en="Barista: Anything else?" />
-<DialogueBox uk="Гість: Ні, дякую." en="Guest: No, thank you." />
-<DialogueBox uk="Бариста: З вас сімдесят п'ять гривень." en="Barista: That will be seventy-five hryvnias." />
+```text
+Бариста: Доброго ранку!
+Гість: Доброго ранку. Велику каву, будь ласка.
+Бариста: Вам тут чи із собою?
+Гість: Із собою, дякую.
+Бариста: Щось іще?
+Гість: Ні, дякую.
+Бариста: З вас сімдесят п'ять гривень.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Бариста: Доброго ранку!** | Barista: Good morning! |
+| **Гість: Доброго ранку. Велику каву, будь ласка.** | Guest: Good morning. A large coffee, please. |
+| **Бариста: Вам тут чи із собою?** | Barista: For here or to go? |
+| **Гість: Із собою, дякую.** | Guest: To go, thank you. |
+| **Бариста: Щось іще?** | Barista: Anything else? |
+| **Гість: Ні, дякую.** | Guest: No, thank you. |
+| **Бариста: З вас сімдесят п'ять гривень.** | Barista: That will be seventy-five hryvnias. |
 
 The course form is **кава із собою**, not
 **<!-- bad -->кава на винос<!-- /bad -->**. The question **Вам тут чи із
@@ -104,11 +145,23 @@ Use these frames for **замовлення**. They are polite, short, and usefu
 The blank is normally the direct object from M37. This is why **кава** becomes
 **каву** and **вода** becomes **воду**:
 
-<DialogueBox uk="Мені каву, будь ласка." en="Coffee for me, please." />
-<DialogueBox uk="Можна воду?" en="May I have water?" />
-<DialogueBox uk="Дайте, будь ласка, піцу." en="Please give me pizza." />
-<DialogueBox uk="Принесіть, будь ласка, чай." en="Please bring tea." />
-<DialogueBox uk="Я буду маленьку каву." en="I'll have a small coffee." />
+```text
+Мені каву, будь ласка.
+Можна воду?
+Дайте, будь ласка, піцу.
+Принесіть, будь ласка, чай.
+Я буду маленьку каву.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Мені каву, будь ласка.** | Coffee for me, please. |
+| **Можна воду?** | May I have water? |
+| **Дайте, будь ласка, піцу.** | Please give me pizza. |
+| **Принесіть, будь ласка, чай.** | Please bring tea. |
+| **Я буду маленьку каву.** | I'll have a small coffee. |
 
 In a short service exchange, **прОшу** can mean "please" as an inserted polite
 word. Keep the stress on the first syllable in that use: **прОшу**. Do not
@@ -127,8 +180,17 @@ For size, stay with the cafe chunks **велику каву** and **малень
 Do not stop to explain adjective endings here. The learner needs to hear and
 use the complete order:
 
-<DialogueBox uk="Велику каву, будь ласка." en="A large coffee, please." />
-<DialogueBox uk="Маленьку каву із собою, будь ласка." en="A small coffee to go, please." />
+```text
+Велику каву, будь ласка.
+Маленьку каву із собою, будь ласка.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Велику каву, будь ласка.** | A large coffee, please. |
+| **Маленьку каву із собою, будь ласка.** | A small coffee to go, please. |
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
@@ -154,19 +216,43 @@ Useful cafe words:
 
 Ask for a seat or menu politely:
 
-<DialogueBox uk="Тут вільно?" en="Is this free?" />
-<DialogueBox uk="Можна меню?" en="May I have the menu?" />
-<DialogueBox uk="Перепрошую, можна рахунок?" en="Excuse me, may I have the bill?" />
+```text
+Тут вільно?
+Можна меню?
+Перепрошую, можна рахунок?
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Тут вільно?** | Is this free? |
+| **Можна меню?** | May I have the menu? |
+| **Перепрошую, можна рахунок?** | Excuse me, may I have the bill? |
 
 If the server offers something extra, answer softly:
 
-<DialogueBox uk="Щось іще?" en="Anything else?" />
-<DialogueBox uk="Ні, дякую." en="No, thank you." />
-<DialogueBox uk="Дякую, не треба." en="Thank you, no need." />
-<DialogueBox uk="Дякую, але я не хочу." en="Thank you, but I do not want it." />
-<DialogueBox uk="Спасибі, але наступним разом." en="Thanks, but next time." />
-<DialogueBox uk="Так, із задоволенням." en="Yes, with pleasure." />
-<DialogueBox uk="Охоче." en="Gladly." />
+```text
+Щось іще?
+Ні, дякую.
+Дякую, не треба.
+Дякую, але я не хочу.
+Спасибі, але наступним разом.
+Так, із задоволенням.
+Охоче.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Щось іще?** | Anything else? |
+| **Ні, дякую.** | No, thank you. |
+| **Дякую, не треба.** | Thank you, no need. |
+| **Дякую, але я не хочу.** | Thank you, but I do not want it. |
+| **Спасибі, але наступним разом.** | Thanks, but next time. |
+| **Так, із задоволенням.** | Yes, with pleasure. |
+| **Охоче.** | Gladly. |
 
 A busy barista may ask **Вам тут чи з собою?**. This course keeps the answer
 chunk as **із собою, будь ласка** or **тут, будь ласка**.
@@ -194,19 +280,33 @@ Use Ukrainian cafe words, not Russian or hybrid service language.
 The phrase **кава із собою** is the clean order. You may hear other forms in
 the world, but this course gives you the Ukrainian standard to use.
 
-
 ## Підсумок
 
 A complete cafe visit can stay small:
 
-<DialogueBox uk="Добрий день! Можна меню?" en="Good afternoon! May I have the menu?" />
-<DialogueBox uk="Що ви рекомендуєте?" en="What do you recommend?" />
-<DialogueBox uk="Мені борщ і хліб, будь ласка." en="Borscht and bread for me, please." />
-<DialogueBox uk="А мені маленьку каву із собою." en="And a small coffee to go for me." />
-<DialogueBox uk="Рахунок, будь ласка." en="The bill, please." />
-<DialogueBox uk="Можна карткою?" en="Can I pay by card?" />
-<DialogueBox uk="Дякую, все було дуже смачно!" en="Thank you, everything was very tasty!" />
-<DialogueBox uk="До побачення!" en="Goodbye!" />
+```text
+Добрий день! Можна меню?
+Що ви рекомендуєте?
+Мені борщ і хліб, будь ласка.
+А мені маленьку каву із собою.
+Рахунок, будь ласка.
+Можна карткою?
+Дякую, все було дуже смачно!
+До побачення!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Добрий день! Можна меню?** | Good afternoon! May I have the menu? |
+| **Що ви рекомендуєте?** | What do you recommend? |
+| **Мені борщ і хліб, будь ласка.** | Borscht and bread for me, please. |
+| **А мені маленьку каву із собою.** | And a small coffee to go for me. |
+| **Рахунок, будь ласка.** | The bill, please. |
+| **Можна карткою?** | Can I pay by card? |
+| **Дякую, все було дуже смачно!** | Thank you, everything was very tasty! |
+| **До побачення!** | Goodbye! |
 
 Self-check:
 

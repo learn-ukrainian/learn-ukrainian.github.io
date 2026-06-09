@@ -14,9 +14,9 @@ By the end, you can:
 - keep Ukrainian food and payment language clean: **сир**, **страва**,
   **гривня**, **Смачного!**
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Що ми знаємо?
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 A1.6 started with food words. Review the food by gender and by use:
 
@@ -53,19 +53,39 @@ You also know daily food verbs as blocks: **я хочу**, **ти любиш**,
 
 Read the story aloud. It combines the whole A1.6 day.
 
-<DialogueBox uk="Сьогодні Анна готує вечерю." en="Today Anna is preparing dinner." />
-<DialogueBox uk="Вранці вона йде на ринок." en="In the morning she goes to the market." />
-<DialogueBox uk="Вона купує помідори, сир, хліб і кілограм яблук." en="She buys tomatoes, cheese, bread, and a kilogram of apples." />
-<DialogueBox uk="Продавчиня каже: З вас сто сорок гривень." en="The saleswoman says: That is one hundred forty hryvnias." />
-<DialogueBox uk="Анна платить карткою." en="Anna pays by card." />
-<DialogueBox uk="Потім Анна йде в кафе." en="Then Anna goes to a cafe." />
-<DialogueBox uk="Вона замовляє борщ, воду і каву з молоком." en="She orders borscht, water, and coffee with milk." />
-<DialogueBox uk="Офіціантка питає: Вам тут чи із собою?" en="The server asks: For here or to go?" />
-<DialogueBox uk="Анна відповідає: Тут, будь ласка." en="Anna answers: For here, please." />
-<DialogueBox uk="У кафе Анна бачить Олену і знайомить її з братом." en="In the cafe Anna sees Olena and introduces her to her brother." />
-<DialogueBox uk="Увечері Анна готує вареники з картоплею, салат і чай." en="In the evening Anna prepares varenyky with potato, salad, and tea." />
-<DialogueBox uk="Гості сідають за стіл, беруть тарілки і склянки." en="The guests sit at the table and take plates and glasses." />
-<DialogueBox uk="Анна каже: Смачного!" en="Anna says: Bon appetit!" />
+```text
+Сьогодні Анна готує вечерю.
+Вранці вона йде на ринок.
+Вона купує помідори, сир, хліб і кілограм яблук.
+Продавчиня каже: З вас сто сорок гривень.
+Анна платить карткою.
+Потім Анна йде в кафе.
+Вона замовляє борщ, воду і каву з молоком.
+Офіціантка питає: Вам тут чи із собою?
+Анна відповідає: Тут, будь ласка.
+У кафе Анна бачить Олену і знайомить її з братом.
+Увечері Анна готує вареники з картоплею, салат і чай.
+Гості сідають за стіл, беруть тарілки і склянки.
+Анна каже: Смачного!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Сьогодні Анна готує вечерю.** | Today Anna is preparing dinner. |
+| **Вранці вона йде на ринок.** | In the morning she goes to the market. |
+| **Вона купує помідори, сир, хліб і кілограм яблук.** | She buys tomatoes, cheese, bread, and a kilogram of apples. |
+| **Продавчиня каже: З вас сто сорок гривень.** | The saleswoman says: That is one hundred forty hryvnias. |
+| **Анна платить карткою.** | Anna pays by card. |
+| **Потім Анна йде в кафе.** | Then Anna goes to a cafe. |
+| **Вона замовляє борщ, воду і каву з молоком.** | She orders borscht, water, and coffee with milk. |
+| **Офіціантка питає: Вам тут чи із собою?** | The server asks: For here or to go? |
+| **Анна відповідає: Тут, будь ласка.** | Anna answers: For here, please. |
+| **У кафе Анна бачить Олену і знайомить її з братом.** | In the cafe Anna sees Olena and introduces her to her brother. |
+| **Увечері Анна готує вареники з картоплею, салат і чай.** | In the evening Anna prepares varenyky with potato, salad, and tea. |
+| **Гості сідають за стіл, беруть тарілки і склянки.** | The guests sit at the table and take plates and glasses. |
+| **Анна каже: Смачного!** | Anna says: Bon appetit! |
 
 Answer:
 
@@ -151,40 +171,83 @@ This is the A1.6 contrast: **Я люблю борщ** but **Я люблю бра
 
 ### День покупок і їжі
 
-<DialogueBox uk="Олена: Що ти їси на сніданок?" en="Olena: What do you eat for breakfast?" />
-<DialogueBox uk="Анна: Я їм кашу і п'ю каву з молоком." en="Anna: I eat porridge and drink coffee with milk." />
-<DialogueBox uk="Олена: А потім?" en="Olena: And then?" />
-<DialogueBox uk="Анна: Потім іду на ринок." en="Anna: Then I go to the market." />
-<DialogueBox uk="Анна: Скільки коштують помідори?" en="Anna: How much are the tomatoes?" />
-<DialogueBox uk="Продавчиня: Тридцять гривень." en="Saleswoman: Thirty hryvnias." />
-<DialogueBox uk="Анна: Дайте кілограм, будь ласка." en="Anna: Give me a kilogram, please." />
-<DialogueBox uk="Олена: А потім у кафе?" en="Olena: And then in the cafe?" />
-<DialogueBox uk="Анна: Мені борщ і воду, будь ласка." en="Anna: Borscht and water for me, please." />
-<DialogueBox uk="Анна: О, я бачу Олену! Олено, привіт!" en="Anna: Oh, I see Olena! Olena, hi!" />
-<DialogueBox uk="Анна: Ти знаєш мого брата?" en="Anna: Do you know my brother?" />
+```text
+Олена: Що ти їси на сніданок?
+Анна: Я їм кашу і п'ю каву з молоком.
+Олена: А потім?
+Анна: Потім іду на ринок.
+Анна: Скільки коштують помідори?
+Продавчиня: Тридцять гривень.
+Анна: Дайте кілограм, будь ласка.
+Олена: А потім у кафе?
+Анна: Мені борщ і воду, будь ласка.
+Анна: О, я бачу Олену! Олено, привіт!
+Анна: Ти знаєш мого брата?
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Що ти їси на сніданок?** | Olena: What do you eat for breakfast? |
+| **Анна: Я їм кашу і п'ю каву з молоком.** | Anna: I eat porridge and drink coffee with milk. |
+| **Олена: А потім?** | Olena: And then? |
+| **Анна: Потім іду на ринок.** | Anna: Then I go to the market. |
+| **Анна: Скільки коштують помідори?** | Anna: How much are the tomatoes? |
+| **Продавчиня: Тридцять гривень.** | Saleswoman: Thirty hryvnias. |
+| **Анна: Дайте кілограм, будь ласка.** | Anna: Give me a kilogram, please. |
+| **Олена: А потім у кафе?** | Olena: And then in the cafe? |
+| **Анна: Мені борщ і воду, будь ласка.** | Anna: Borscht and water for me, please. |
+| **Анна: О, я бачу Олену! Олено, привіт!** | Anna: Oh, I see Olena! Olena, hi! |
+| **Анна: Ти знаєш мого брата?** | Anna: Do you know my brother? |
 
 ### Ще одне замовлення
 
-<DialogueBox uk="Олена: Що ти замовила?" en="Olena: What did you order?" />
-<DialogueBox uk="Анна: Я вже замовила борщ і чай." en="Anna: I already ordered borscht and tea." />
-<DialogueBox uk="Олена: Я візьму вареники з картоплею і компот." en="Olena: I will take varenyky with potato and kompot." />
-<DialogueBox uk="Анна: Чудовий вибір! Хочеш салат?" en="Anna: Great choice! Do you want salad?" />
-<DialogueBox uk="Олена: Так, я візьму овочевий салат і шматок хліба." en="Olena: Yes, I will take a vegetable salad and a piece of bread." />
-<DialogueBox uk="Олена: Дайте нам, будь ласка, ще одну склянку води." en="Olena: Please give us one more glass of water." />
+```text
+Олена: Що ти замовила?
+Анна: Я вже замовила борщ і чай.
+Олена: Я візьму вареники з картоплею і компот.
+Анна: Чудовий вибір! Хочеш салат?
+Олена: Так, я візьму овочевий салат і шматок хліба.
+Олена: Дайте нам, будь ласка, ще одну склянку води.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Що ти замовила?** | Olena: What did you order? |
+| **Анна: Я вже замовила борщ і чай.** | Anna: I already ordered borscht and tea. |
+| **Олена: Я візьму вареники з картоплею і компот.** | Olena: I will take varenyky with potato and kompot. |
+| **Анна: Чудовий вибір! Хочеш салат?** | Anna: Great choice! Do you want salad? |
+| **Олена: Так, я візьму овочевий салат і шматок хліба.** | Olena: Yes, I will take a vegetable salad and a piece of bread. |
+| **Олена: Дайте нам, будь ласка, ще одну склянку води.** | Olena: Please give us one more glass of water. |
 
 ### Оплата і прощання
 
-<DialogueBox uk="Анна: Скільки коштує наш обід разом?" en="Anna: How much is our lunch together?" />
-<DialogueBox uk="Офіціантка: Двісті п'ятдесят гривень." en="Server: Two hundred fifty hryvnias." />
-<DialogueBox uk="Анна: Дайте, будь ласка, рахунок. Я плачу за нас обох." en="Anna: Please give us the bill. I am paying for both of us." />
-<DialogueBox uk="Олена: Дякую, було дуже смачно!" en="Olena: Thank you, it was very tasty!" />
-<DialogueBox uk="Анна: Скуштуй ще цей десерт із подругою наступного разу." en="Anna: Try this dessert with a friend next time." />
-<DialogueBox uk="Олена: Гаразд, до зустрічі!" en="Olena: All right, see you!" />
+```text
+Анна: Скільки коштує наш обід разом?
+Офіціантка: Двісті п'ятдесят гривень.
+Анна: Дайте, будь ласка, рахунок. Я плачу за нас обох.
+Олена: Дякую, було дуже смачно!
+Анна: Скуштуй ще цей десерт із подругою наступного разу.
+Олена: Гаразд, до зустрічі!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Анна: Скільки коштує наш обід разом?** | Anna: How much is our lunch together? |
+| **Офіціантка: Двісті п'ятдесят гривень.** | Server: Two hundred fifty hryvnias. |
+| **Анна: Дайте, будь ласка, рахунок. Я плачу за нас обох.** | Anna: Please give us the bill. I am paying for both of us. |
+| **Олена: Дякую, було дуже смачно!** | Olena: Thank you, it was very tasty! |
+| **Анна: Скуштуй ще цей десерт із подругою наступного разу.** | Anna: Try this dessert with a friend next time. |
+| **Олена: Гаразд, до зустрічі!** | Olena: All right, see you! |
 
 The dialogue is a role play. It uses etiquette formulas and a cafe invitation
 idea: **Хочеш, аби твої друзі розділили з тобою свято?** For A1, that becomes
 a simple invitation: **Ходімо в кафе. Я хочу каву і торт.**
-
 
 ## Підсумок
 

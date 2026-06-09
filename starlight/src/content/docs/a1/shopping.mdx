@@ -4,10 +4,8 @@ description: "Скільки коштує? — ціни, кількості та
 sidebar:
   order: 39
   label: "39. Покупки"
-pipeline: linear-phase-4
-build_status: validated
 prev: at-the-cafe
-next: false
+next: people-around-me
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -89,23 +87,39 @@ Treat the quantity phrases as shopping chunks. **Кілограм яблук**,
 case lesson.
 :::
 
+## Діалоги
+
 ### Price questions
 
 <FillIn client:only='react' items={JSON.parse(`[{"sentence": "Скільки ___ хліб?", "answer": "коштує", "options": ["коштує", "коштують", "коштувати"]}, {"sentence": "Скільки ___ молоко?", "answer": "коштує", "options": ["коштує", "коштують", "коштувала"]}, {"sentence": "Скільки ___ цей сир?", "answer": "коштує", "options": ["коштує", "коштують", "коштуєте"]}, {"sentence": "Скільки ___ яблука?", "answer": "коштують", "options": ["коштують", "коштує", "коштувати"]}, {"sentence": "Скільки ___ помідори?", "answer": "коштують", "options": ["коштують", "коштує", "коштуєш"]}, {"sentence": "Скільки ___ пляшка води?", "answer": "коштує", "options": ["коштує", "коштують", "коштуємо"]}, {"sentence": "Скільки ___ три пляшки води?", "answer": "коштують", "options": ["коштують", "коштує", "коштувала"]}, {"sentence": "Скільки ___ ця сукня?", "answer": "коштує", "options": ["коштує", "коштують", "коштуємо"]}]`)} />
 
-## Діалоги
-
 ### На ринку
 
-<DialogueBox uk="Покупець: Добрий день!" en="Customer: Good afternoon!" />
-<DialogueBox uk="Продавчиня: Добрий день!" en="Saleswoman: Good afternoon!" />
-<DialogueBox uk="Покупець: Скільки коштує кілограм яблук?" en="Customer: How much is a kilogram of apples?" />
-<DialogueBox uk="Продавчиня: Сорок гривень." en="Saleswoman: Forty hryvnias." />
-<DialogueBox uk="Покупець: А помідори?" en="Customer: And tomatoes?" />
-<DialogueBox uk="Продавчиня: Тридцять п'ять гривень за кілограм." en="Saleswoman: Thirty-five hryvnias per kilogram." />
-<DialogueBox uk="Покупець: Дайте, будь ласка, два кілограми помідорів і один кілограм яблук." en="Customer: Please give me two kilograms of tomatoes and one kilogram of apples." />
-<DialogueBox uk="Продавчиня: Сімдесят п'ять гривень." en="Saleswoman: Seventy-five hryvnias." />
-<DialogueBox uk="Покупець: Ось, будь ласка." en="Customer: Here you are." />
+```text
+Покупець: Добрий день!
+Продавчиня: Добрий день!
+Покупець: Скільки коштує кілограм яблук?
+Продавчиня: Сорок гривень.
+Покупець: А помідори?
+Продавчиня: Тридцять п'ять гривень за кілограм.
+Покупець: Дайте, будь ласка, два кілограми помідорів і один кілограм яблук.
+Продавчиня: Сімдесят п'ять гривень.
+Покупець: Ось, будь ласка.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Покупець: Добрий день!** | Customer: Good afternoon! |
+| **Продавчиня: Добрий день!** | Saleswoman: Good afternoon! |
+| **Покупець: Скільки коштує кілограм яблук?** | Customer: How much is a kilogram of apples? |
+| **Продавчиня: Сорок гривень.** | Saleswoman: Forty hryvnias. |
+| **Покупець: А помідори?** | Customer: And tomatoes? |
+| **Продавчиня: Тридцять п'ять гривень за кілограм.** | Saleswoman: Thirty-five hryvnias per kilogram. |
+| **Покупець: Дайте, будь ласка, два кілограми помідорів і один кілограм яблук.** | Customer: Please give me two kilograms of tomatoes and one kilogram of apples. |
+| **Продавчиня: Сімдесят п'ять гривень.** | Saleswoman: Seventy-five hryvnias. |
+| **Покупець: Ось, будь ласка.** | Customer: Here you are. |
 
 This is the basic market frame. You do not need to explain every ending in
 **два кілограми помідорів**. The learner needs the whole buying phrase. The
@@ -113,14 +127,29 @@ same is true for **Дайте, будь ласка, два кілограми п
 
 ### У супермаркеті
 
-<DialogueBox uk="Дочка: Вибачте, де тут хліб?" en="Daughter: Excuse me, where is the bread here?" />
-<DialogueBox uk="Працівниця: Хліб у третьому ряді." en="Employee: Bread is in the third aisle." />
-<DialogueBox uk="Дочка: А молоко?" en="Daughter: And milk?" />
-<DialogueBox uk="Працівниця: Молоко в холодильнику, там." en="Employee: Milk is in the refrigerator, over there." />
-<DialogueBox uk="Дочка: Скільки коштує цей сир?" en="Daughter: How much is this cheese?" />
-<DialogueBox uk="Працівниця: Сто двадцять гривень." en="Employee: One hundred twenty hryvnias." />
-<DialogueBox uk="Дочка: Дорого! А є дешевший?" en="Daughter: Expensive! Is there a cheaper one?" />
-<DialogueBox uk="Працівниця: Так, ось цей - вісімдесят дев'ять гривень." en="Employee: Yes, this one is eighty-nine hryvnias." />
+```text
+Дочка: Вибачте, де тут хліб?
+Працівниця: Хліб у третьому ряді.
+Дочка: А молоко?
+Працівниця: Молоко в холодильнику, там.
+Дочка: Скільки коштує цей сир?
+Працівниця: Сто двадцять гривень.
+Дочка: Дорого! А є дешевший?
+Працівниця: Так, ось цей - вісімдесят дев'ять гривень.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Дочка: Вибачте, де тут хліб?** | Daughter: Excuse me, where is the bread here? |
+| **Працівниця: Хліб у третьому ряді.** | Employee: Bread is in the third aisle. |
+| **Дочка: А молоко?** | Daughter: And milk? |
+| **Працівниця: Молоко в холодильнику, там.** | Employee: Milk is in the refrigerator, over there. |
+| **Дочка: Скільки коштує цей сир?** | Daughter: How much is this cheese? |
+| **Працівниця: Сто двадцять гривень.** | Employee: One hundred twenty hryvnias. |
+| **Дочка: Дорого! А є дешевший?** | Daughter: Expensive! Is there a cheaper one? |
+| **Працівниця: Так, ось цей - вісімдесят дев'ять гривень.** | Employee: Yes, this one is eighty-nine hryvnias. |
 
 Use **У вас є хліб?** or **Чи є у вас хліб?** when you ask about availability.
 The old textbook example is **— Чи є у вас трембіта? — Так, є**. Use the same
@@ -128,12 +157,25 @@ availability frame with everyday goods.
 
 ### На касі
 
-<DialogueBox uk="Касирка: Ось ваші яблука, молоко і сир." en="Cashier: Here are your apples, milk, and cheese." />
-<DialogueBox uk="Касирка: З вас сто сім гривень." en="Cashier: That is one hundred seven hryvnias from you." />
-<DialogueBox uk="Покупець: Можна карткою?" en="Customer: Can I pay by card?" />
-<DialogueBox uk="Касирка: Так." en="Cashier: Yes." />
-<DialogueBox uk="Покупець: Карткою, будь ласка." en="Customer: By card, please." />
-<DialogueBox uk="Касирка: Дякую. Гарного дня!" en="Cashier: Thank you. Have a good day!" />
+```text
+Касирка: Ось ваші яблука, молоко і сир.
+Касирка: З вас сто сім гривень.
+Покупець: Можна карткою?
+Касирка: Так.
+Покупець: Карткою, будь ласка.
+Касирка: Дякую. Гарного дня!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Касирка: Ось ваші яблука, молоко і сир.** | Cashier: Here are your apples, milk, and cheese. |
+| **Касирка: З вас сто сім гривень.** | Cashier: That is one hundred seven hryvnias from you. |
+| **Покупець: Можна карткою?** | Customer: Can I pay by card? |
+| **Касирка: Так.** | Cashier: Yes. |
+| **Покупець: Карткою, будь ласка.** | Customer: By card, please. |
+| **Касирка: Дякую. Гарного дня!** | Cashier: Thank you. Have a good day! |
 
 A shopping dialogue should not stop after **Дайте, будь ласка**. It reaches a
 natural checkout: **З вас ... гривень**, **Можна карткою?**, and
@@ -198,10 +240,21 @@ types.
 
 Use these location questions:
 
-<DialogueBox uk="Вибачте, де тут хліб?" en="Excuse me, where is the bread here?" />
-<DialogueBox uk="У вас є вода?" en="Do you have water?" />
-<DialogueBox uk="А є дешевший сир?" en="Is there a cheaper cheese?" />
-<DialogueBox uk="А є дешевша вода?" en="Is there cheaper water?" />
+```text
+Вибачте, де тут хліб?
+У вас є вода?
+А є дешевший сир?
+А є дешевша вода?
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Вибачте, де тут хліб?** | Excuse me, where is the bread here? |
+| **У вас є вода?** | Do you have water? |
+| **А є дешевший сир?** | Is there a cheaper cheese? |
+| **А є дешевша вода?** | Is there cheaper water? |
 
 Now add quantity chunks. Memorize the whole phrases:
 
@@ -234,15 +287,31 @@ A small optional clothing extension can appear at the end of shopping practice:
 
 A complete shopping visit can sound like this:
 
-<DialogueBox uk="Добрий день! У вас є яблука?" en="Good afternoon! Do you have apples?" />
-<DialogueBox uk="Так, є." en="Yes, we do." />
-<DialogueBox uk="Скільки коштує кілограм яблук?" en="How much is a kilogram of apples?" />
-<DialogueBox uk="Сорок гривень." en="Forty hryvnias." />
-<DialogueBox uk="Дайте, будь ласка, один кілограм яблук і літр молока." en="Please give me one kilogram of apples and a liter of milk." />
-<DialogueBox uk="З вас сто сім гривень." en="That is one hundred seven hryvnias." />
-<DialogueBox uk="Можна карткою?" en="Can I pay by card?" />
-<DialogueBox uk="Карткою, будь ласка." en="By card, please." />
-<DialogueBox uk="Дякую. До побачення!" en="Thank you. Goodbye!" />
+```text
+Добрий день! У вас є яблука?
+Так, є.
+Скільки коштує кілограм яблук?
+Сорок гривень.
+Дайте, будь ласка, один кілограм яблук і літр молока.
+З вас сто сім гривень.
+Можна карткою?
+Карткою, будь ласка.
+Дякую. До побачення!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Добрий день! У вас є яблука?** | Good afternoon! Do you have apples? |
+| **Так, є.** | Yes, we do. |
+| **Скільки коштує кілограм яблук?** | How much is a kilogram of apples? |
+| **Сорок гривень.** | Forty hryvnias. |
+| **Дайте, будь ласка, один кілограм яблук і літр молока.** | Please give me one kilogram of apples and a liter of milk. |
+| **З вас сто сім гривень.** | That is one hundred seven hryvnias. |
+| **Можна карткою?** | Can I pay by card? |
+| **Карткою, будь ласка.** | By card, please. |
+| **Дякую. До побачення!** | Thank you. Goodbye! |
 
 Self-check:
 
@@ -273,24 +342,6 @@ Use these repairs in shopping scenes:
 | weak quantity chunk | **Дайте, будь ласка, один кілограм яблук.** |
 | wrong currency ending | **Це коштує 50 гривень.** |
 
-### Shopping shelves
-
-<GroupSort client:only='react' groups={JSON.parse(`{"Start or availability": ["Добрий день!", "У вас є хліб?", "Чи є у вас яблука?"], "Price": ["Скільки коштує?", "Скільки коштують яблука?", "Дорого!"], "Quantity": ["один кілограм яблук", "літр молока", "пляшка води"], "Checkout": ["З вас сто сім гривень.", "Можна карткою?", "Карткою, будь ласка."]}`)} />
-
-### One shopping visit
-
-<Order client:only='react' items={JSON.parse(`["Добрий день! У вас є яблука?", "Так, є.", "Скільки коштує кілограм яблук?", "Сорок гривень.", "Дайте, будь ласка, один кілограм яблук.", "З вас сорок гривень.", "Можна карткою?", "Карткою, будь ласка."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5, 6, 7]`)} instruction={"Put the shopping visit in order."} isUkrainian={false} />
-
-### Shopping decisions
-
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Скільки коштує? asks about price.", "isTrue": true, "explanation": "Коштує is the price verb."}, {"statement": "Скільки коштують яблука? is used for plural apples.", "isTrue": true, "explanation": "Use коштують with plural items."}, {"statement": "Кілограм яблук is taught here as a ready shopping chunk.", "isTrue": true, "explanation": "The module avoids a full case lesson."}, {"statement": "Карткою, будь ласка means by card, please.", "isTrue": true, "explanation": "It is the checkout payment chunk."}, {"statement": "З вас сто сім гривень is a greeting.", "isTrue": false, "explanation": "It is a checkout total."}, {"statement": "Приміряти is useful when trying on clothes.", "isTrue": true, "explanation": "Use приміряти for clothing."}, {"statement": "Скільки це є? is the course price question.", "isTrue": false, "explanation": "Use Скільки це коштує?"}, {"statement": "Грн is the common price-label abbreviation for гривня.", "isTrue": true, "explanation": "Грн appears on price labels."}]`)} />
-
-<span id="repair-shopping-interference"></span>
-
-### Repair shopping interference
-
-<ErrorCorrection client:only='react' instruction="Choose the clean Ukrainian repair." items={JSON.parse(`[{"sentence": "How much is it? → Скільки це є?", "errorWord": "How much is it? → Скільки це є?", "correctForm": "Скільки це коштує?", "options": ["Скільки це коштує?", "Скільки це є?", "Скільки це має?"], "explanation": "Use коштує for price questions."}, {"sentence": "I have 20 hryvnias. → Я маю 20 гривнів.", "errorWord": "I have 20 hryvnias. → Я маю 20 гривнів.", "correctForm": "У мене є 20 гривень.", "options": ["У мене є 20 гривень.", "Я маю 20 гривнів.", "У мене 20 гривні."], "explanation": "Use У мене є and гривень."}, {"sentence": "Do you have...? → Ви маєте хліб?", "errorWord": "Do you have...? → Ви маєте хліб?", "correctForm": "У вас є хліб?", "options": ["У вас є хліб?", "Ви маєте хліб?", "Вас є хліб?"], "explanation": "Use the shop availability chunk У вас є."}, {"sentence": "I will pay with a card. → Я плачу з карткою.", "errorWord": "I will pay with a card. → Я плачу з карткою.", "correctForm": "Карткою, будь ласка.", "options": ["Карткою, будь ласка.", "Я плачу з карткою.", "З карткою, будь ласка."], "explanation": "At checkout, use the chunk Карткою, будь ласка."}, {"sentence": "Give me one kilo apples. → Дайте один кілограм яблука.", "errorWord": "Give me one kilo apples. → Дайте один кілограм яблука.", "correctForm": "Дайте, будь ласка, один кілограм яблук.", "options": ["Дайте, будь ласка, один кілограм яблук.", "Дайте один кілограм яблука.", "Дайте одна кілограм яблук."], "explanation": "Use the whole chunk один кілограм яблук."}, {"sentence": "It costs 50 grivnas. → Це коштує 50 гривн.", "errorWord": "It costs 50 grivnas. → Це коштує 50 гривн.", "correctForm": "Це коштує 50 гривень.", "options": ["Це коштує 50 гривень.", "Це коштує 50 гривн.", "Це коштує 50 гривні."], "explanation": "The money word is гривня; 50 uses гривень."}, {"sentence": "Я хочу поміряти пальто.", "errorWord": "поміряти", "correctForm": "Я хочу приміряти пальто.", "options": ["Я хочу приміряти пальто.", "Я хочу поміряти пальто.", "Я хочу міряти пальто."], "explanation": "Use приміряти for trying on clothes."}, {"sentence": "Два яблука коштує сорок гривень.", "errorWord": "коштує", "correctForm": "Два яблука коштують сорок гривень.", "options": ["Два яблука коштують сорок гривень.", "Два яблука коштує сорок гривень.", "Два яблука коштувати сорок гривень."], "explanation": "Use коштують with plural apples."}]`)} />
-
 </TabItem>
 <TabItem label="Vocabulary">
 
@@ -303,19 +354,19 @@ Use these repairs in shopping scenes:
 
 ### Price questions
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Скільки ___ хліб?", "answer": "коштує", "options": ["коштує", "коштують", "коштувати"]}, {"sentence": "Скільки ___ молоко?", "answer": "коштує", "options": ["коштує", "коштують", "коштувала"]}, {"sentence": "Скільки ___ цей сир?", "answer": "коштує", "options": ["коштує", "коштують", "коштуєте"]}, {"sentence": "Скільки ___ яблука?", "answer": "коштують", "options": ["коштують", "коштує", "коштувати"]}, {"sentence": "Скільки ___ помідори?", "answer": "коштують", "options": ["коштують", "коштує", "коштуєш"]}, {"sentence": "Скільки ___ пляшка води?", "answer": "коштує", "options": ["коштує", "коштують", "коштуємо"]}, {"sentence": "Скільки ___ три пляшки води?", "answer": "коштують", "options": ["коштують", "коштує", "коштувала"]}, {"sentence": "Скільки ___ ця сукня?", "answer": "коштує", "options": ["коштує", "коштують", "коштуємо"]}]`)} />
+*(see lesson, §Діалоги)*
 
 ### Гривня, гривні, гривень
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "21 ___", "options": [{"text": "гривня", "correct": true}, {"text": "гривні", "correct": false}, {"text": "гривень", "correct": false}], "explanation": "21 ends like 1: гривня."}, {"question": "32 ___", "options": [{"text": "гривні", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривень", "correct": false}], "explanation": "32 ends like 2: гривні."}, {"question": "45 ___", "options": [{"text": "гривень", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривні", "correct": false}], "explanation": "45 uses гривень."}, {"question": "100 ___", "options": [{"text": "гривень", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривні", "correct": false}], "explanation": "100 uses гривень."}, {"question": "1 ___", "options": [{"text": "гривня", "correct": true}, {"text": "гривні", "correct": false}, {"text": "гривень", "correct": false}], "explanation": "1 is гривня."}, {"question": "3 ___", "options": [{"text": "гривні", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривень", "correct": false}], "explanation": "3 is гривні."}, {"question": "10 ___", "options": [{"text": "гривень", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривні", "correct": false}], "explanation": "10 is гривень."}, {"question": "54 ___", "options": [{"text": "гривні", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривень", "correct": false}], "explanation": "54 ends like 4: гривні."}]`)} />
+*(see lesson, §На касі)*
 
 ### Where do you buy it?
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "помідори", "right": "ринок"}, {"left": "м'ясо", "right": "м'ясний відділ"}, {"left": "сир", "right": "молочний відділ"}, {"left": "хліб", "right": "крамниця"}, {"left": "молоко", "right": "супермаркет"}, {"left": "вода", "right": "магазин"}, {"left": "сукня", "right": "магазин одягу"}, {"left": "книжка", "right": "книгарня"}]`)} />
+*(see lesson, §Скільки коштує?)*
 
 ### Quantity chunks
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Дайте, будь ласка, ___ яблук.", "answer": "один кілограм", "options": ["один кілограм", "одна пляшка", "один літр"]}, {"sentence": "Дайте ___ молока.", "answer": "літр", "options": ["літр", "пляшку", "буханку"]}, {"sentence": "Дайте ___ води.", "answer": "пляшку", "options": ["пляшку", "кілограм", "буханку"]}, {"sentence": "Дайте ___ чаю.", "answer": "пачку", "options": ["пачку", "літр", "пляшку"]}, {"sentence": "Дайте ___ хліба.", "answer": "буханку", "options": ["буханку", "літр", "пляшку"]}, {"sentence": "Дайте, будь ласка, ___ помідорів.", "answer": "два кілограми", "options": ["два кілограми", "дві пляшки", "два літри"]}, {"sentence": "Купіть три ___ води.", "answer": "пляшки", "options": ["пляшки", "пляшка", "кілограм"]}]`)} />
+*(see lesson, §Де купити?)*
 
 ### Shopping shelves
 

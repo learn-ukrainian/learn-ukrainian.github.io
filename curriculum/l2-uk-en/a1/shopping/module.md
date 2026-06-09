@@ -31,21 +31,37 @@ Treat the quantity phrases as shopping chunks. **Кілограм яблук**,
 case lesson.
 :::
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ### На ринку
 
-<DialogueBox uk="Покупець: Добрий день!" en="Customer: Good afternoon!" />
-<DialogueBox uk="Продавчиня: Добрий день!" en="Saleswoman: Good afternoon!" />
-<DialogueBox uk="Покупець: Скільки коштує кілограм яблук?" en="Customer: How much is a kilogram of apples?" />
-<DialogueBox uk="Продавчиня: Сорок гривень." en="Saleswoman: Forty hryvnias." />
-<DialogueBox uk="Покупець: А помідори?" en="Customer: And tomatoes?" />
-<DialogueBox uk="Продавчиня: Тридцять п'ять гривень за кілограм." en="Saleswoman: Thirty-five hryvnias per kilogram." />
-<DialogueBox uk="Покупець: Дайте, будь ласка, два кілограми помідорів і один кілограм яблук." en="Customer: Please give me two kilograms of tomatoes and one kilogram of apples." />
-<DialogueBox uk="Продавчиня: Сімдесят п'ять гривень." en="Saleswoman: Seventy-five hryvnias." />
-<DialogueBox uk="Покупець: Ось, будь ласка." en="Customer: Here you are." />
+```text
+Покупець: Добрий день!
+Продавчиня: Добрий день!
+Покупець: Скільки коштує кілограм яблук?
+Продавчиня: Сорок гривень.
+Покупець: А помідори?
+Продавчиня: Тридцять п'ять гривень за кілограм.
+Покупець: Дайте, будь ласка, два кілограми помідорів і один кілограм яблук.
+Продавчиня: Сімдесят п'ять гривень.
+Покупець: Ось, будь ласка.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Покупець: Добрий день!** | Customer: Good afternoon! |
+| **Продавчиня: Добрий день!** | Saleswoman: Good afternoon! |
+| **Покупець: Скільки коштує кілограм яблук?** | Customer: How much is a kilogram of apples? |
+| **Продавчиня: Сорок гривень.** | Saleswoman: Forty hryvnias. |
+| **Покупець: А помідори?** | Customer: And tomatoes? |
+| **Продавчиня: Тридцять п'ять гривень за кілограм.** | Saleswoman: Thirty-five hryvnias per kilogram. |
+| **Покупець: Дайте, будь ласка, два кілограми помідорів і один кілограм яблук.** | Customer: Please give me two kilograms of tomatoes and one kilogram of apples. |
+| **Продавчиня: Сімдесят п'ять гривень.** | Saleswoman: Seventy-five hryvnias. |
+| **Покупець: Ось, будь ласка.** | Customer: Here you are. |
 
 This is the basic market frame. You do not need to explain every ending in
 **два кілограми помідорів**. The learner needs the whole buying phrase. The
@@ -53,14 +69,29 @@ same is true for **Дайте, будь ласка, два кілограми п
 
 ### У супермаркеті
 
-<DialogueBox uk="Дочка: Вибачте, де тут хліб?" en="Daughter: Excuse me, where is the bread here?" />
-<DialogueBox uk="Працівниця: Хліб у третьому ряді." en="Employee: Bread is in the third aisle." />
-<DialogueBox uk="Дочка: А молоко?" en="Daughter: And milk?" />
-<DialogueBox uk="Працівниця: Молоко в холодильнику, там." en="Employee: Milk is in the refrigerator, over there." />
-<DialogueBox uk="Дочка: Скільки коштує цей сир?" en="Daughter: How much is this cheese?" />
-<DialogueBox uk="Працівниця: Сто двадцять гривень." en="Employee: One hundred twenty hryvnias." />
-<DialogueBox uk="Дочка: Дорого! А є дешевший?" en="Daughter: Expensive! Is there a cheaper one?" />
-<DialogueBox uk="Працівниця: Так, ось цей - вісімдесят дев'ять гривень." en="Employee: Yes, this one is eighty-nine hryvnias." />
+```text
+Дочка: Вибачте, де тут хліб?
+Працівниця: Хліб у третьому ряді.
+Дочка: А молоко?
+Працівниця: Молоко в холодильнику, там.
+Дочка: Скільки коштує цей сир?
+Працівниця: Сто двадцять гривень.
+Дочка: Дорого! А є дешевший?
+Працівниця: Так, ось цей - вісімдесят дев'ять гривень.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Дочка: Вибачте, де тут хліб?** | Daughter: Excuse me, where is the bread here? |
+| **Працівниця: Хліб у третьому ряді.** | Employee: Bread is in the third aisle. |
+| **Дочка: А молоко?** | Daughter: And milk? |
+| **Працівниця: Молоко в холодильнику, там.** | Employee: Milk is in the refrigerator, over there. |
+| **Дочка: Скільки коштує цей сир?** | Daughter: How much is this cheese? |
+| **Працівниця: Сто двадцять гривень.** | Employee: One hundred twenty hryvnias. |
+| **Дочка: Дорого! А є дешевший?** | Daughter: Expensive! Is there a cheaper one? |
+| **Працівниця: Так, ось цей - вісімдесят дев'ять гривень.** | Employee: Yes, this one is eighty-nine hryvnias. |
 
 Use **У вас є хліб?** or **Чи є у вас хліб?** when you ask about availability.
 The old textbook example is **— Чи є у вас трембіта? — Так, є**. Use the same
@@ -68,12 +99,25 @@ availability frame with everyday goods.
 
 ### На касі
 
-<DialogueBox uk="Касирка: Ось ваші яблука, молоко і сир." en="Cashier: Here are your apples, milk, and cheese." />
-<DialogueBox uk="Касирка: З вас сто сім гривень." en="Cashier: That is one hundred seven hryvnias from you." />
-<DialogueBox uk="Покупець: Можна карткою?" en="Customer: Can I pay by card?" />
-<DialogueBox uk="Касирка: Так." en="Cashier: Yes." />
-<DialogueBox uk="Покупець: Карткою, будь ласка." en="Customer: By card, please." />
-<DialogueBox uk="Касирка: Дякую. Гарного дня!" en="Cashier: Thank you. Have a good day!" />
+```text
+Касирка: Ось ваші яблука, молоко і сир.
+Касирка: З вас сто сім гривень.
+Покупець: Можна карткою?
+Касирка: Так.
+Покупець: Карткою, будь ласка.
+Касирка: Дякую. Гарного дня!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Касирка: Ось ваші яблука, молоко і сир.** | Cashier: Here are your apples, milk, and cheese. |
+| **Касирка: З вас сто сім гривень.** | Cashier: That is one hundred seven hryvnias from you. |
+| **Покупець: Можна карткою?** | Customer: Can I pay by card? |
+| **Касирка: Так.** | Cashier: Yes. |
+| **Покупець: Карткою, будь ласка.** | Customer: By card, please. |
+| **Касирка: Дякую. Гарного дня!** | Cashier: Thank you. Have a good day! |
 
 A shopping dialogue should not stop after **Дайте, будь ласка**. It reaches a
 natural checkout: **З вас ... гривень**, **Можна карткою?**, and
@@ -134,10 +178,21 @@ types.
 
 Use these location questions:
 
-<DialogueBox uk="Вибачте, де тут хліб?" en="Excuse me, where is the bread here?" />
-<DialogueBox uk="У вас є вода?" en="Do you have water?" />
-<DialogueBox uk="А є дешевший сир?" en="Is there a cheaper cheese?" />
-<DialogueBox uk="А є дешевша вода?" en="Is there cheaper water?" />
+```text
+Вибачте, де тут хліб?
+У вас є вода?
+А є дешевший сир?
+А є дешевша вода?
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Вибачте, де тут хліб?** | Excuse me, where is the bread here? |
+| **У вас є вода?** | Do you have water? |
+| **А є дешевший сир?** | Is there a cheaper cheese? |
+| **А є дешевша вода?** | Is there cheaper water? |
 
 Now add quantity chunks. Memorize the whole phrases:
 
@@ -168,15 +223,31 @@ A small optional clothing extension can appear at the end of shopping practice:
 
 A complete shopping visit can sound like this:
 
-<DialogueBox uk="Добрий день! У вас є яблука?" en="Good afternoon! Do you have apples?" />
-<DialogueBox uk="Так, є." en="Yes, we do." />
-<DialogueBox uk="Скільки коштує кілограм яблук?" en="How much is a kilogram of apples?" />
-<DialogueBox uk="Сорок гривень." en="Forty hryvnias." />
-<DialogueBox uk="Дайте, будь ласка, один кілограм яблук і літр молока." en="Please give me one kilogram of apples and a liter of milk." />
-<DialogueBox uk="З вас сто сім гривень." en="That is one hundred seven hryvnias." />
-<DialogueBox uk="Можна карткою?" en="Can I pay by card?" />
-<DialogueBox uk="Карткою, будь ласка." en="By card, please." />
-<DialogueBox uk="Дякую. До побачення!" en="Thank you. Goodbye!" />
+```text
+Добрий день! У вас є яблука?
+Так, є.
+Скільки коштує кілограм яблук?
+Сорок гривень.
+Дайте, будь ласка, один кілограм яблук і літр молока.
+З вас сто сім гривень.
+Можна карткою?
+Карткою, будь ласка.
+Дякую. До побачення!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Добрий день! У вас є яблука?** | Good afternoon! Do you have apples? |
+| **Так, є.** | Yes, we do. |
+| **Скільки коштує кілограм яблук?** | How much is a kilogram of apples? |
+| **Сорок гривень.** | Forty hryvnias. |
+| **Дайте, будь ласка, один кілограм яблук і літр молока.** | Please give me one kilogram of apples and a liter of milk. |
+| **З вас сто сім гривень.** | That is one hundred seven hryvnias. |
+| **Можна карткою?** | Can I pay by card? |
+| **Карткою, будь ласка.** | By card, please. |
+| **Дякую. До побачення!** | Thank you. Goodbye! |
 
 Self-check:
 

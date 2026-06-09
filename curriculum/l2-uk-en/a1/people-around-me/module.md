@@ -26,18 +26,31 @@ This is an A1 people-and-direct-object lesson. Use the model sentences first;
 do not turn the page into a full declension table.
 :::
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ### Кого ти бачиш?
 
-<DialogueBox uk="Марко: Кого ти бачиш на фото?" en="Marko: Whom do you see in the photo?" />
-<DialogueBox uk="Олена: Я бачу маму і тата." en="Olena: I see mom and dad." />
-<DialogueBox uk="Марко: А хто це?" en="Marko: And who is this?" />
-<DialogueBox uk="Олена: Це мій брат. Ти знаєш мого брата?" en="Olena: This is my brother. Do you know my brother?" />
-<DialogueBox uk="Марко: Ні, я не знаю твого брата." en="Marko: No, I do not know your brother." />
-<DialogueBox uk="Олена: Ходімо, я тебе познайомлю!" en="Olena: Come on, I will introduce you!" />
+```text
+Марко: Кого ти бачиш на фото?
+Олена: Я бачу маму і тата.
+Марко: А хто це?
+Олена: Це мій брат. Ти знаєш мого брата?
+Марко: Ні, я не знаю твого брата.
+Олена: Ходімо, я тебе познайомлю!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Марко: Кого ти бачиш на фото?** | Marko: Whom do you see in the photo? |
+| **Олена: Я бачу маму і тата.** | Olena: I see mom and dad. |
+| **Марко: А хто це?** | Marko: And who is this? |
+| **Олена: Це мій брат. Ти знаєш мого брата?** | Olena: This is my brother. Do you know my brother? |
+| **Марко: Ні, я не знаю твого брата.** | Marko: No, I do not know your brother. |
+| **Олена: Ходімо, я тебе познайомлю!** | Olena: Come on, I will introduce you! |
 
 The question **кого?** points to a person. Notice the forms:
 **маму**, **тата**, **мого брата**, **твого брата**. A male person changes:
@@ -46,11 +59,23 @@ from M37: **мама → маму**, just as **кава → каву**.
 
 ### На роботі
 
-<DialogueBox uk="Ірина: Ти знаєш нашу вчительку?" en="Iryna: Do you know our teacher?" />
-<DialogueBox uk="Данило: Так, я знаю Олену Петрівну." en="Danylo: Yes, I know Olena Petrivna." />
-<DialogueBox uk="Ірина: А нового лікаря?" en="Iryna: And the new doctor?" />
-<DialogueBox uk="Данило: Ні, я ще не знаю лікаря." en="Danylo: No, I do not know the doctor yet." />
-<DialogueBox uk="Ірина: Він дуже добрий. Я чекаю його зараз." en="Iryna: He is very kind. I am waiting for him now." />
+```text
+Ірина: Ти знаєш нашу вчительку?
+Данило: Так, я знаю Олену Петрівну.
+Ірина: А нового лікаря?
+Данило: Ні, я ще не знаю лікаря.
+Ірина: Він дуже добрий. Я чекаю його зараз.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Ірина: Ти знаєш нашу вчительку?** | Iryna: Do you know our teacher? |
+| **Данило: Так, я знаю Олену Петрівну.** | Danylo: Yes, I know Olena Petrivna. |
+| **Ірина: А нового лікаря?** | Iryna: And the new doctor? |
+| **Данило: Ні, я ще не знаю лікаря.** | Danylo: No, I do not know the doctor yet. |
+| **Ірина: Він дуже добрий. Я чекаю його зараз.** | Iryna: He is very kind. I am waiting for him now. |
 
 Here the people are not only family. You can talk about **вчительку**,
 **Олену Петрівну**, **лікаря**, and **його**. Keep the pronouns as chunks:
@@ -58,13 +83,27 @@ Here the people are not only family. You can talk about **вчительку**,
 
 ### Весільні фото
 
-<DialogueBox uk="Наречена: Ось фото з весілля." en="Bride: Here is a photo from the wedding." />
-<DialogueBox uk="Друг: Бачиш маму? А тата?" en="Friend: Do you see mom? And dad?" />
-<DialogueBox uk="Наречена: Так, я бачу маму і тата." en="Bride: Yes, I see mom and dad." />
-<DialogueBox uk="Друг: Знаєш Олену?" en="Friend: Do you know Olena?" />
-<DialogueBox uk="Наречена: Так, я знаю Олену. А це мій дядько і моя тітка." en="Bride: Yes, I know Olena. And this is my uncle and my aunt." />
-<DialogueBox uk="Друг: А хто це?" en="Friend: And who is this?" />
-<DialogueBox uk="Наречена: Це наречений." en="Bride: This is the groom." />
+```text
+Наречена: Ось фото з весілля.
+Друг: Бачиш маму? А тата?
+Наречена: Так, я бачу маму і тата.
+Друг: Знаєш Олену?
+Наречена: Так, я знаю Олену. А це мій дядько і моя тітка.
+Друг: А хто це?
+Наречена: Це наречений.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Наречена: Ось фото з весілля.** | Bride: Here is a photo from the wedding. |
+| **Друг: Бачиш маму? А тата?** | Friend: Do you see mom? And dad? |
+| **Наречена: Так, я бачу маму і тата.** | Bride: Yes, I see mom and dad. |
+| **Друг: Знаєш Олену?** | Friend: Do you know Olena? |
+| **Наречена: Так, я знаю Олену. А це мій дядько і моя тітка.** | Bride: Yes, I know Olena. And this is my uncle and my aunt. |
+| **Друг: А хто це?** | Friend: And who is this? |
+| **Наречена: Це наречений.** | Bride: This is the groom. |
 
 Photo talk is useful because every line points to a visible person. Use the
 same small verbs: **бачу**, **знаю**, **люблю**, **чекаю**, **шукаю**. The
@@ -115,11 +154,23 @@ the **називний відмінок**. The direct object answers **кого?
 For **Люди навколо мене**, use **бачити**, **знати**, **любити**, **чекати**, and **шукати** with
 **кого?** when the object is a person:
 
-<DialogueBox uk="Я бачу маму." en="I see mom." />
-<DialogueBox uk="Я знаю Олену." en="I know Olena." />
-<DialogueBox uk="Я люблю тата." en="I love dad." />
-<DialogueBox uk="Я чекаю лікаря." en="I am waiting for the doctor." />
-<DialogueBox uk="Я шукаю подругу." en="I am looking for a female friend." />
+```text
+Я бачу маму.
+Я знаю Олену.
+Я люблю тата.
+Я чекаю лікаря.
+Я шукаю подругу.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я бачу маму.** | I see mom. |
+| **Я знаю Олену.** | I know Olena. |
+| **Я люблю тата.** | I love dad. |
+| **Я чекаю лікаря.** | I am waiting for the doctor. |
+| **Я шукаю подругу.** | I am looking for a female friend. |
 
 Female-person forms follow the same practical pattern as M37 feminine things:
 

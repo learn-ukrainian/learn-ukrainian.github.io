@@ -31,19 +31,33 @@ Ask **що?** after **їсти**, **пити**, **хотіти**, **любити
 expect **-у/-ю**.
 :::
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ### Розмова за сніданком
 
-<DialogueBox uk="Мама: Що ти їси на сніданок?" en="Mom: What are you eating for breakfast?" />
-<DialogueBox uk="Данило: Я їм кашу і п'ю каву." en="Danylo: I am eating porridge and drinking coffee." />
-<DialogueBox uk="Мама: А Олена?" en="Mom: And Olena?" />
-<DialogueBox uk="Данило: Вона їсть хліб з маслом і п'є чай." en="Danylo: She eats bread with butter and drinks tea." />
-<DialogueBox uk="Мама: А діти?" en="Mom: And the children?" />
-<DialogueBox uk="Данило: Вони їдять яйця і п'ють молоко." en="Danylo: They eat eggs and drink milk." />
-<DialogueBox uk="Мама: Добре. Смачного!" en="Mom: Good. Enjoy your meal!" />
+```text
+Мама: Що ти їси на сніданок?
+Данило: Я їм кашу і п'ю каву.
+Мама: А Олена?
+Данило: Вона їсть хліб з маслом і п'є чай.
+Мама: А діти?
+Данило: Вони їдять яйця і п'ють молоко.
+Мама: Добре. Смачного!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Мама: Що ти їси на сніданок?** | Mom: What are you eating for breakfast? |
+| **Данило: Я їм кашу і п'ю каву.** | Danylo: I am eating porridge and drinking coffee. |
+| **Мама: А Олена?** | Mom: And Olena? |
+| **Данило: Вона їсть хліб з маслом і п'є чай.** | Danylo: She eats bread with butter and drinks tea. |
+| **Мама: А діти?** | Mom: And the children? |
+| **Данило: Вони їдять яйця і п'ють молоко.** | Danylo: They eat eggs and drink milk. |
+| **Мама: Добре. Смачного!** | Mom: Good. Enjoy your meal! |
 
 The dialogue gives the full sound of both verbs without a chart first:
 **я їм**, **вона їсть**, **вони їдять**; **я п'ю**, **вона п'є**,
@@ -60,12 +74,25 @@ and **яйце** stay the same in these inanimate food lines.
 
 ### За обідом на роботі
 
-<DialogueBox uk="Ірина: Що ви їсте на обід?" en="Iryna: What are you eating for lunch?" />
-<DialogueBox uk="Колеги: Ми їмо суп і салат." en="Coworkers: We are eating soup and salad." />
-<DialogueBox uk="Ірина: А що п'єте?" en="Iryna: And what are you drinking?" />
-<DialogueBox uk="Колеги: Ми п'ємо воду або сік." en="Coworkers: We are drinking water or juice." />
-<DialogueBox uk="Ірина: Я теж хочу суп і воду." en="Iryna: I also want soup and water." />
-<DialogueBox uk="Колега: Добре, замовляй." en="Coworker: Good, order." />
+```text
+Ірина: Що ви їсте на обід?
+Колеги: Ми їмо суп і салат.
+Ірина: А що п'єте?
+Колеги: Ми п'ємо воду або сік.
+Ірина: Я теж хочу суп і воду.
+Колега: Добре, замовляй.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Ірина: Що ви їсте на обід?** | Iryna: What are you eating for lunch? |
+| **Колеги: Ми їмо суп і салат.** | Coworkers: We are eating soup and salad. |
+| **Ірина: А що п'єте?** | Iryna: And what are you drinking? |
+| **Колеги: Ми п'ємо воду або сік.** | Coworkers: We are drinking water or juice. |
+| **Ірина: Я теж хочу суп і воду.** | Iryna: I also want soup and water. |
+| **Колега: Добре, замовляй.** | Coworker: Good, order. |
 
 Here **ми їмо** and **ми п'ємо** move the verbs into the plural. The direct
 objects stay simple: **суп**, **салат**, **сік** do not change; **вода** becomes
@@ -110,10 +137,21 @@ The verb **пити** is more regular, but its apostrophe matters.
 
 Use the verbs with a direct object:
 
-<DialogueBox uk="Я їм хліб." en="I eat bread." />
-<DialogueBox uk="Ти їси рибу?" en="Do you eat fish?" />
-<DialogueBox uk="Вона п'є воду." en="She drinks water." />
-<DialogueBox uk="Ми п'ємо чай." en="We drink tea." />
+```text
+Я їм хліб.
+Ти їси рибу?
+Вона п'є воду.
+Ми п'ємо чай.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я їм хліб.** | I eat bread. |
+| **Ти їси рибу?** | Do you eat fish? |
+| **Вона п'є воду.** | She drinks water. |
+| **Ми п'ємо чай.** | We drink tea. |
 
 These are direct actions. The action goes straight to the food or drink. Later,
 the same tool helps with **я читаю книгу**, **я бачу прапор**, and **я купую
@@ -138,17 +176,39 @@ For inanimate food and drink words, the A1 rule is small:
 This is enough for the food-and-drink path. Do not turn the lesson into the
 whole accusative case. Learn the live contrast:
 
-<DialogueBox uk="Це кава. Я п'ю каву." en="This is coffee. I drink coffee." />
-<DialogueBox uk="Це вода. Я п'ю воду." en="This is water. I drink water." />
-<DialogueBox uk="Це риба. Я їм рибу." en="This is fish. I eat fish." />
-<DialogueBox uk="Це картопля. Я їм картоплю." en="This is potato. I eat potato." />
+```text
+Це кава. Я п'ю каву.
+Це вода. Я п'ю воду.
+Це риба. Я їм рибу.
+Це картопля. Я їм картоплю.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Це кава. Я п'ю каву.** | This is coffee. I drink coffee. |
+| **Це вода. Я п'ю воду.** | This is water. I drink water. |
+| **Це риба. Я їм рибу.** | This is fish. I eat fish. |
+| **Це картопля. Я їм картоплю.** | This is potato. I eat potato. |
 
 Masculine and neuter food words make the learner's job easier:
 
-<DialogueBox uk="Це суп. Я їм суп." en="This is soup. I eat soup." />
-<DialogueBox uk="Це сік. Я п'ю сік." en="This is juice. I drink juice." />
-<DialogueBox uk="Це молоко. Я п'ю молоко." en="This is milk. I drink milk." />
-<DialogueBox uk="Це яблуко. Я їм яблуко." en="This is an apple. I eat an apple." />
+```text
+Це суп. Я їм суп.
+Це сік. Я п'ю сік.
+Це молоко. Я п'ю молоко.
+Це яблуко. Я їм яблуко.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Це суп. Я їм суп.** | This is soup. I eat soup. |
+| **Це сік. Я п'ю сік.** | This is juice. I drink juice. |
+| **Це молоко. Я п'ю молоко.** | This is milk. I drink milk. |
+| **Це яблуко. Я їм яблуко.** | This is an apple. I eat an apple. |
 
 The words **любити**, **бачити**, and **купувати** also use the same direct
 object idea when they act on a thing: the action **переходить** to the object.
@@ -185,16 +245,27 @@ The contrast also repairs a common learner line:
 **Я хочу воду**. Both are useful. The first uses an infinitive. The second uses
 the direct object **воду**.
 
-
 ## Підсумок
 
 You can now build a small food day with correct verbs and direct objects:
 
-<DialogueBox uk="Вранці я їм кашу і п'ю каву." en="In the morning I eat porridge and drink coffee." />
-<DialogueBox uk="На обід я їм суп, салат і хліб." en="For lunch I eat soup, salad, and bread." />
-<DialogueBox uk="Я п'ю воду або сік." en="I drink water or juice." />
-<DialogueBox uk="Увечері ми їмо рибу і картоплю." en="In the evening we eat fish and potato." />
-<DialogueBox uk="Діти п'ють молоко." en="The children drink milk." />
+```text
+Вранці я їм кашу і п'ю каву.
+На обід я їм суп, салат і хліб.
+Я п'ю воду або сік.
+Увечері ми їмо рибу і картоплю.
+Діти п'ють молоко.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Вранці я їм кашу і п'ю каву.** | In the morning I eat porridge and drink coffee. |
+| **На обід я їм суп, салат і хліб.** | For lunch I eat soup, salad, and bread. |
+| **Я п'ю воду або сік.** | I drink water or juice. |
+| **Увечері ми їмо рибу і картоплю.** | In the evening we eat fish and potato. |
+| **Діти п'ють молоко.** | The children drink milk. |
 
 Keep three checks in your head:
 
