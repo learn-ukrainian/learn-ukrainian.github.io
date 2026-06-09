@@ -1,0 +1,215 @@
+"""GrokBuildAdapter — wraps the native ``grok`` CLI (Grok Build) headless.
+
+DISTINCT from the Hermes-backed ``grok`` agent (``HermesGrokAdapter``,
+``grok-4.3`` / ``grok-4.20`` via the Hermes OAuth API path). This adapter drives
+the local ``grok`` CLI binary (``~/.local/bin/grok`` — "Grok Build TUI") in
+single-turn headless mode:
+
+    grok -p "<prompt>" --output-format json [-m MODEL] [--effort LEVEL] \
+         --permission-mode <mode> --cwd <dir> --no-alt-screen
+
+Headless JSON output is a single object: ``{text, stopReason, sessionId, ...}``.
+The CLI uses its own stored auth under ``~/.grok`` (OAuth), so no API key is
+injected — HOME (already allow-listed by env_sanitize) is sufficient.
+
+Mode → ``--permission-mode``:
+- ``read-only``       → ``plan``               (analysis only, no mutations)
+- ``workspace-write`` → ``acceptEdits``        (auto-accept file edits, headless)
+- ``danger``          → ``bypassPermissions``  (full autonomy)
+
+``resume_policy`` is ``never`` in the registry: the CLI's ``--resume`` +
+cross-session memory risk worktree contamination — the same footgun as Codex.
+The grok CLI is Claude-Code-shaped, so this mirrors ``claude.py`` closely.
+"""
+from __future__ import annotations
+
+import json
+import logging
+import re
+import shutil
+import tempfile
+from pathlib import Path
+
+from ..result import ParseResult
+from .base import InvocationPlan
+
+_logger = logging.getLogger(__name__)
+
+_RATE_LIMIT_RE = re.compile(
+    r"rate limit|rate_limit|usage limit|quota exceeded|too many requests|\b429\b",
+    re.IGNORECASE,
+)
+
+# Runtime mode → grok CLI --permission-mode value.
+_MODE_PERMISSION: dict[str, str] = {
+    "read-only": "plan",
+    "workspace-write": "acceptEdits",
+    "danger": "bypassPermissions",
+}
+
+
+class GrokBuildAdapter:
+    """Adapter for the native ``grok`` CLI in single-turn headless mode."""
+
+    name: str = "grok-build"
+    # None → let the grok CLI pick its own default model; override via `model`.
+    default_model: str | None = None
+    supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
+
+    def build_invocation(
+        self,
+        *,
+        prompt: str,
+        mode: str,
+        cwd: Path,
+        model: str | None,
+        task_id: str | None,
+        session_id: str | None,
+        tool_config: dict | None,
+        effort: str | None = None,
+    ) -> InvocationPlan:
+        if mode not in self.supported_modes:
+            raise ValueError(
+                f"GrokBuildAdapter: unsupported mode {mode!r} "
+                f"(supported: {sorted(self.supported_modes)})"
+            )
+        grok_bin = shutil.which("grok")
+        if not grok_bin:
+            raise RuntimeError(
+                "grok CLI (Grok Build) not found on PATH. Install the xAI grok "
+                "CLI (provides `grok`) to dispatch the grok-build agent."
+            )
+        tc = tool_config or {}
+
+        cmd: list[str] = [grok_bin]
+        # Prompt: inline via -p for the common case; a hyphen-leading prompt
+        # would be misparsed by clap as a flag, so route those through a temp
+        # --prompt-file instead (robust for any content).
+        if prompt.startswith("-"):
+            with tempfile.NamedTemporaryFile(
+                "w", suffix=".grok-prompt.txt", delete=False, encoding="utf-8"
+            ) as handle:
+                handle.write(prompt)
+                prompt_path = handle.name
+            cmd.extend(["--prompt-file", prompt_path])
+        else:
+            cmd.extend(["-p", prompt])
+
+        cmd.extend(["--output-format", "json", "--no-alt-screen"])
+        cmd.extend(["--permission-mode", _MODE_PERMISSION[mode]])
+        cmd.extend(["--cwd", str(cwd)])
+
+        if model:
+            cmd.extend(["-m", model])
+        if effort:
+            # grok accepts the same levels as the runtime: low|medium|high|xhigh|max
+            cmd.extend(["--effort", effort])
+
+        disallowed = tc.get("disallowed_tools")
+        if disallowed:
+            cmd.extend(["--disallowed-tools", str(disallowed)])
+        allowed = tc.get("allowed_tools")
+        if allowed:
+            cmd.extend(["--tools", str(allowed)])
+
+        # Resume only if the caller explicitly opts in (delegate dispatch never
+        # should — resume_policy=never — to avoid cross-worktree contamination).
+        if session_id and tc.get("resume"):
+            cmd.extend(["--resume", session_id])
+
+        _logger.debug(
+            "grok-build invocation: task=%s mode=%s permission=%s model=%s effort=%s",
+            task_id,
+            mode,
+            _MODE_PERMISSION[mode],
+            model,
+            effort,
+        )
+
+        return InvocationPlan(
+            cmd=cmd,
+            cwd=cwd,
+            stdin_payload="",
+            output_file=None,
+            env_overrides={},
+            liveness_paths=self._liveness_paths(),
+        )
+
+    def parse_response(
+        self,
+        *,
+        stdout: str,
+        stderr: str,
+        returncode: int,
+        output_file: Path | None,
+        plan: InvocationPlan | None = None,
+        call_start_time: float | None = None,
+    ) -> ParseResult:
+        _ = (output_file, plan, call_start_time)  # grok -p flushes to stdout
+
+        obj = _parse_json_object(stdout)
+        if obj is not None:
+            text = str(obj.get("text") or "").strip()
+            sid = obj.get("sessionId") or obj.get("session_id")
+            session_id = sid if isinstance(sid, str) and sid else None
+        else:
+            # Fallback: --output-format plain, or noise before the JSON.
+            text = (stdout or "").strip()
+            session_id = None
+
+        usable = bool(text)
+        failed = returncode != 0 or not usable
+        rate_limited = failed and bool(
+            _RATE_LIMIT_RE.search(f"{stderr or ''}\n{stdout or ''}")
+        )
+        ok = returncode == 0 and usable and not rate_limited
+
+        stderr_excerpt: str | None = None
+        if not ok:
+            source = (stderr or "").strip() or (stdout or "").strip() or ""
+            stderr_excerpt = source[:500] or None
+
+        return ParseResult(
+            ok=ok,
+            response=text if ok else "",
+            stderr_excerpt=stderr_excerpt,
+            rate_limited=rate_limited,
+            session_id=session_id,
+            tokens=None,  # grok JSON does not report token counts
+            tool_calls=[],
+        )
+
+    def liveness_signal_paths(self, plan: InvocationPlan) -> tuple[Path, ...]:
+        _ = plan
+        return self._liveness_paths()
+
+    def _liveness_paths(self) -> tuple[Path, ...]:
+        # grok keeps session/leader state under ~/.grok; mtime bumps there are
+        # a liveness signal when stdout is quiet.
+        grok_home = Path.home() / ".grok"
+        return (grok_home,) if grok_home.exists() else ()
+
+
+def _parse_json_object(stdout: str) -> dict | None:
+    """Parse the single JSON object grok emits in --output-format json.
+
+    Tolerant of leading/trailing log noise: tries a strict parse first, then
+    extracts the outermost ``{...}`` span.
+    """
+    text = (stdout or "").strip()
+    if not text:
+        return None
+    try:
+        value = json.loads(text)
+        return value if isinstance(value, dict) else None
+    except ValueError:
+        pass
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end > start:
+        try:
+            value = json.loads(text[start : end + 1])
+            return value if isinstance(value, dict) else None
+        except ValueError:
+            return None
+    return None

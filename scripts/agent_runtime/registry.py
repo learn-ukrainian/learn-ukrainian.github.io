@@ -100,6 +100,8 @@ AGENTS: dict[str, AgentEntry] = {
         "resume_policy": "bridge_only",
     },
     "grok": {
+        # Hermes-backed Grok (grok-4.3 / grok-4.20) via the OAuth API path.
+        # DISTINCT from "grok-build" below, which drives the native grok CLI.
         "adapter": "scripts.agent_runtime.adapters.hermes_grok:HermesGrokAdapter",
         "default_model": "grok-4.3",
         "cost_tier": "low",
@@ -107,6 +109,22 @@ AGENTS: dict[str, AgentEntry] = {
             "content_writing",
             "content_review",
             "adversarial_review",
+        }),
+        "cli_available": True,
+        "resume_policy": "never",
+    },
+    "grok-build": {
+        # Native `grok` CLI ("Grok Build") in headless single-turn mode — a
+        # Claude-Code-shaped agentic coding CLI. Separate from the Hermes
+        # `grok` entry above (different transport, different use: coding vs
+        # content). Uses ~/.grok OAuth; model defaults to the CLI's own.
+        "adapter": "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter",
+        "default_model": None,
+        "cost_tier": "medium",
+        "capabilities": frozenset({
+            "code_writing",
+            "code_review",
+            "debugging",
         }),
         "cli_available": True,
         "resume_policy": "never",

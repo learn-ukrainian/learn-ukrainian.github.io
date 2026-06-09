@@ -278,6 +278,9 @@ def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) ->
     if agent_name == "claude":
         prefix = _claude_version_prefix(plan.cmd) if plan is not None else ("claude",)
         return claude_cli_version(prefix)
+    if agent_name == "grok-build":
+        # Native `grok` CLI (Grok Build) — NOT hermes-backed; probe it directly.
+        return _probe_version(("grok",))
     if agent_name in ("grok", "deepseek"):
         # Both grok and deepseek run through hermes; one shared version probe.
         prefix = _hermes_version_prefix(plan.cmd) if plan is not None else ("hermes",)
