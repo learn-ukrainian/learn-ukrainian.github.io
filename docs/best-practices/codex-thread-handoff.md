@@ -44,16 +44,17 @@ prompt, scoped by agent name:
 - Durable Codex orchestrator handoff:
   `docs/session-state/codex-orchestrator-handoff.md`
 - Other durable agent handoffs: `docs/session-state/current.<agent>.md`
-- Compatibility router: `docs/session-state/current.md`
+- Compatibility router: `docs/session-state/current.md` (git-tracked; not used
+  for normal thread rollover)
 - Script: `scripts/orchestration/thread_handoff.py`
 
 Agent names are lower-case slugs matching `[a-z][a-z0-9-]*`. The standard
 agents are `orchestrator`, `codex`, `claude`, and `gemini`; additional agents
 can use the same naming rule.
 
-`docs/session-state/current.md` is intentionally small. It is a router with a
-stable `Latest-Brief:` marker plus an `Agent-Handoff:` mapping for each agent.
-Do not put detailed state in the router.
+`docs/session-state/current.md` is git-tracked compatibility state. It may
+exist for historical Monitor API compatibility, but it is not the thread
+rollover mechanism. Do not write it during context-threshold handoff.
 
 For compatibility, `docs/session-state/current.orchestrator.md` remains as a
 thin pointer to `docs/session-state/codex-orchestrator-handoff.md`. Do not put
@@ -80,7 +81,6 @@ zone:
 ```bash
 .venv/bin/python scripts/orchestration/thread_handoff.py prepare \
   --agent orchestrator \
-  --write-current \
   --context-percent 86
 ```
 
@@ -89,7 +89,6 @@ If the active thread id or automation id is known, include them:
 ```bash
 .venv/bin/python scripts/orchestration/thread_handoff.py prepare \
   --agent orchestrator \
-  --write-current \
   --active-thread-id <current-thread-id> \
   --active-automation-id <old-heartbeat-automation-id> \
   --context-percent 86
@@ -100,7 +99,8 @@ This writes:
 - `.agent/orchestrator-thread-lease.json`
 - `.agent/orchestrator-thread-bootstrap.md`
 - `.agent/orchestrator-thread-handoff.md`
-- `docs/session-state/current.md` router only when `--write-current` is present
+
+It does not modify git-tracked handoff files by default.
 
 The generated prompt is the exact replacement-thread bootstrap. If the Codex
 app `create_thread` tool is available to the current agent, use it with that
@@ -151,9 +151,10 @@ That writes `.agent/codex-thread-lease.json`,
 `.agent/codex-thread-handoff.md`. It does not modify
 `docs/session-state/current.md` and does not touch durable role handoff files.
 
-Only pass `--write-current` for a non-orchestrator agent when the task
-explicitly authorizes a router update. The router must stay tiny and must keep
-`Latest-Brief:` plus the `Agent-Handoff:` mapping.
+`--write-current` is deprecated and rejected unless paired with
+`--allow-git-router`. Use that pair only for an explicitly approved
+compatibility-router update, never for thread rollover. The router must stay
+tiny and must keep `Latest-Brief:` plus the `Agent-Handoff:` mapping.
 
 Confirm the replacement with the same agent name:
 
@@ -189,7 +190,6 @@ discard the corrupt lease and start a new one, run:
 .venv/bin/python scripts/orchestration/thread_handoff.py prepare \
   --agent orchestrator \
   --force-reset-state \
-  --write-current \
   --context-percent 86
 ```
 
@@ -262,11 +262,12 @@ Include live Monitor API state in the audit:
 
 At 75 percent context, run `prepare --dry-run` to verify the packet renders.
 
-At 82 percent context or higher, run `prepare --write-current` and start the
-replacement thread for the orchestrator. Other agents run `prepare --agent
-<name>` without `--write-current` unless explicitly asked to update the shared
-router. Keep the old heartbeat active until `confirm-started --agent <name>`
-records the replacement thread id.
+At 82 percent context or higher, run `prepare --agent <name>` and start the
+replacement thread using `.agent/<name>-thread-bootstrap.md`. If the Codex app
+thread-management tools are available, create/fork/send the continuation with
+that bootstrap prompt. Otherwise ask the user to start a fresh thread with the
+same prompt. Keep the old heartbeat active until `confirm-started --agent
+<name>` records the replacement thread id.
 
 At 90 percent context or higher, stop non-handoff work. The current thread
 should only write the handoff packet, start or prompt for the replacement

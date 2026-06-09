@@ -514,7 +514,6 @@ def render_bootstrap_prompt(
     prompt_path = replacement.get("bootstrap_prompt_path") or default_bootstrap_path(agent).as_posix()
     handoff_path = handoff_path or default_thread_handoff_path(agent)
     role_handoff_path = role_handoff_path or default_handoff_path(agent)
-    router_text = router_path.as_posix()
     handoff_text = role_handoff_path.as_posix()
     thread_handoff_text = handoff_path.as_posix()
     active_generation = active.get("generation") or "unknown"
@@ -530,21 +529,20 @@ def render_bootstrap_prompt(
         f"Previous active generation: {active_generation}",
         f"Role handoff: {handoff_text}",
         f"Thread handoff: {thread_handoff_text}",
-        f"Global router: {router_text}",
         "",
         "Read first:",
-        f"- {router_text}",
-        f"- {handoff_text}",
         f"- {thread_handoff_text}",
+        f"- {handoff_text}",
         "- AGENTS.md",
         "- docs/best-practices/agent-cooperation.md",
         "- docs/best-practices/codex-thread-handoff.md",
         "",
         "Rules:",
         "- Continue from the handoff exactly; do not restart from scratch.",
-        "- Keep the main checkout read-only except handoff updates.",
+        "- Keep the main checkout read-only; thread rollover state belongs in gitignored .agent/ files.",
         "- Use dispatch worktrees for implementation work: .worktrees/dispatch/<agent>/<task>/.",
         "- Do not edit generated status/audit/review artifacts, linter configs, or .python-version.",
+        "- Do not write docs/session-state/current.md for thread rollover.",
         "- Do not delete or migrate the old heartbeat automation until the confirm-started command below has succeeded.",
         "",
         "Start by orienting from the local monitor and PR state:",
@@ -812,6 +810,16 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     role_handoff_path = repo_root / role_handoff_file
     router_path = repo_root / router_file
 
+    if args.write_current and not args.allow_git_router:
+        print(json.dumps({
+            "error": "--write-current is disabled by default because docs/session-state/current.md is git-tracked. "
+            "Use the default .agent/ handoff files for thread rollover, or pass --allow-git-router only for an explicitly approved compatibility-router update.",
+            "agent": agent,
+            "thread_handoff_file": rel(handoff_path, repo_root),
+            "bootstrap_file": rel(bootstrap_path, repo_root),
+        }, indent=2))
+        return 2
+
     state = load_state(state_path)
     state_error = state_error_payload(state, state_path, repo_root)
     if state_error and not args.force_reset_state:
@@ -978,7 +986,16 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Discard an unreadable lease state file and start a new lease.",
     )
-    prepare.add_argument("--write-current", action="store_true", help="Also overwrite the shared current.md router.")
+    prepare.add_argument(
+        "--write-current",
+        action="store_true",
+        help="Deprecated: also overwrite the shared current.md router. Requires --allow-git-router.",
+    )
+    prepare.add_argument(
+        "--allow-git-router",
+        action="store_true",
+        help="Explicitly unlock --write-current for an approved compatibility-router update.",
+    )
     prepare.add_argument("--dry-run", action="store_true", help="Print the generated packet without writing files.")
     prepare.set_defaults(func=cmd_prepare)
 

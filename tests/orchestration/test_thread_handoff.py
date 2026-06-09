@@ -108,9 +108,10 @@ def test_render_bootstrap_prompt_contains_guardrails(tmp_path: Path):
     prompt = th.render_bootstrap_prompt(sample_snapshot(tmp_path), state, context_threshold=82.0)
 
     assert "You are the replacement Codex orchestrator thread." in prompt
-    assert "docs/session-state/current.md" in prompt
     assert "Role handoff: docs/session-state/codex-orchestrator-handoff.md" in prompt
     assert "Thread handoff: .agent/orchestrator-thread-handoff.md" in prompt
+    assert "Global router:" not in prompt
+    assert "Do not write docs/session-state/current.md for thread rollover." in prompt
     assert "confirm-started --agent orchestrator --new-thread-id <replacement-thread-id>" in prompt
     assert "Only after that command reports old_automation_ready_to_delete=true" in prompt
     assert "Context estimate: 90.0% (ROLL OVER NOW; threshold 82.0%)." in prompt
@@ -164,7 +165,11 @@ def test_default_agent_paths_are_agent_specific():
     assert th.default_handoff_path("claude") == Path("docs/session-state/current.claude.md")
 
 
-def test_prepare_orchestrator_writes_router_and_agent_handoff(tmp_path: Path, capsys, monkeypatch):
+def test_prepare_orchestrator_writes_only_local_thread_handoff_by_default(
+    tmp_path: Path,
+    capsys,
+    monkeypatch,
+):
     monkeypatch.setattr(th, "gather_snapshot", lambda repo_root, base_url: sample_snapshot(repo_root))
 
     rc = th.main([
@@ -173,7 +178,6 @@ def test_prepare_orchestrator_writes_router_and_agent_handoff(tmp_path: Path, ca
         "prepare",
         "--agent",
         "orchestrator",
-        "--write-current",
         "--context-percent",
         "86",
     ])
@@ -186,12 +190,59 @@ def test_prepare_orchestrator_writes_router_and_agent_handoff(tmp_path: Path, ca
     assert payload["handoff_file"] == ".agent/orchestrator-thread-handoff.md"
     assert payload["thread_handoff_file"] == ".agent/orchestrator-thread-handoff.md"
     assert payload["role_handoff_file"] == "docs/session-state/codex-orchestrator-handoff.md"
+    assert payload["router_file"] is None
+    assert not (tmp_path / "docs/session-state/current.md").exists()
+    assert "## Thread Lease" in (
+        tmp_path / ".agent/orchestrator-thread-handoff.md"
+    ).read_text(encoding="utf-8")
+
+
+def test_prepare_rejects_write_current_without_explicit_router_unlock(
+    tmp_path: Path,
+    capsys,
+    monkeypatch,
+):
+    monkeypatch.setattr(th, "gather_snapshot", lambda repo_root, base_url: sample_snapshot(repo_root))
+
+    rc = th.main([
+        "--repo-root",
+        str(tmp_path),
+        "prepare",
+        "--agent",
+        "orchestrator",
+        "--write-current",
+    ])
+    payload = json.loads(capsys.readouterr().out)
+
+    assert rc == 2
+    assert "--write-current is disabled by default" in payload["error"]
+    assert payload["thread_handoff_file"] == ".agent/orchestrator-thread-handoff.md"
+    assert not (tmp_path / "docs/session-state/current.md").exists()
+    assert not (tmp_path / ".agent/orchestrator-thread-handoff.md").exists()
+
+
+def test_prepare_writes_router_only_when_explicitly_unlocked(
+    tmp_path: Path,
+    capsys,
+    monkeypatch,
+):
+    monkeypatch.setattr(th, "gather_snapshot", lambda repo_root, base_url: sample_snapshot(repo_root))
+
+    rc = th.main([
+        "--repo-root",
+        str(tmp_path),
+        "prepare",
+        "--agent",
+        "orchestrator",
+        "--write-current",
+        "--allow-git-router",
+    ])
+    payload = json.loads(capsys.readouterr().out)
+
+    assert rc == 0
     assert payload["router_file"] == "docs/session-state/current.md"
     assert "Latest-Brief: docs/session-state/codex-orchestrator-handoff.md" in (
         tmp_path / "docs/session-state/current.md"
-    ).read_text(encoding="utf-8")
-    assert "## Thread Lease" in (
-        tmp_path / ".agent/orchestrator-thread-handoff.md"
     ).read_text(encoding="utf-8")
 
 

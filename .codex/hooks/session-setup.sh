@@ -224,11 +224,24 @@ if command -v git >/dev/null 2>&1 && [ -d "$PROJECT_DIR/.git" ]; then
   fi
 fi
 
-# 13. Session handoff — point at docs/session-state/current.md latest brief.
-# This is the zero-touch rehydrate: current.md keeps a stable Latest-Brief
-# marker so the hook can inject a compact pointer instead of dumping the index.
+# 13. Session handoff — prefer gitignored local thread rollover packets.
+# Do not read/dump docs/session-state/current.md by default. That router is
+# git-tracked and has repeatedly dirtied the shared main checkout. Rollover
+# state belongs in .agent/<agent>-thread-handoff.md, produced by
+# scripts/orchestration/thread_handoff.py prepare.
 HANDOFF_FILE="$PROJECT_DIR/docs/session-state/current.md"
-HANDOFF_AGENT="${SESSION_HANDOFF_AGENT:-claude}"
+if [ -n "${SESSION_HANDOFF_AGENT:-}" ]; then
+    HANDOFF_AGENT="$SESSION_HANDOFF_AGENT"
+elif [[ "${0:-}" == *"/.codex/"* ]]; then
+    HANDOFF_AGENT="codex"
+elif [[ "${0:-}" == *"/.gemini/"* ]]; then
+    HANDOFF_AGENT="gemini"
+elif [ -n "${CODEX_THREAD_ID:-}${CODEX_SESSION_ID:-}" ]; then
+    HANDOFF_AGENT="codex"
+else
+    HANDOFF_AGENT="claude"
+fi
+LOCAL_THREAD_HANDOFF="$PROJECT_DIR/.agent/${HANDOFF_AGENT}-thread-handoff.md"
 HANDOFF_CONTEXT=""
 HANDOFF_WARNINGS=""
 
@@ -245,9 +258,24 @@ Cold-start protocol: agents_extensions/shared/rules/workflow.md § "Two-tier han
 EOF
 }
 
+build_local_handoff_pointer() {
+  local handoff_path="$1"
+  local bootstrap_path=".agent/${HANDOFF_AGENT}-thread-bootstrap.md"
+  cat <<EOF
+PREVIOUS-SESSION HANDOFF — read the local thread rollover packet first.
+
+Agent: $HANDOFF_AGENT
+Thread handoff: $handoff_path
+Bootstrap prompt: $bootstrap_path
+Read with: Read tool. These files are gitignored local state and must not be committed.
+Cold-start protocol: docs/best-practices/codex-thread-handoff.md
+
+---
+EOF
+}
+
 build_handoff_fallback() {
   local warning_text="$1"
-  local handoff_head="$2"
   local prefix=""
 
   if [ -n "$warning_text" ]; then
@@ -257,15 +285,18 @@ build_handoff_fallback() {
   fi
 
   cat <<EOF
-${prefix}PREVIOUS-SESSION HANDOFF (from docs/session-state/current.md — read this FIRST before anything else):
+${prefix}PREVIOUS-SESSION HANDOFF — legacy git router opt-in could not locate a compact handoff.
 
-$handoff_head
+Do not dump or rewrite docs/session-state/current.md. For thread rollover, run:
+.venv/bin/python scripts/orchestration/thread_handoff.py prepare --agent $HANDOFF_AGENT
 
 ---
 EOF
 }
 
-if [ -f "$HANDOFF_FILE" ]; then
+if [ -f "$LOCAL_THREAD_HANDOFF" ]; then
+  HANDOFF_CONTEXT=$(build_local_handoff_pointer ".agent/${HANDOFF_AGENT}-thread-handoff.md")
+elif [ "${SESSION_HANDOFF_ALLOW_GIT_ROUTER:-0}" = "1" ] && [ -f "$HANDOFF_FILE" ]; then
   AGENT_HANDOFF=$(sed -n "s/^[[:space:]]*-[[:space:]]*${HANDOFF_AGENT}:[[:space:]]*//p" "$HANDOFF_FILE" 2>/dev/null | head -1 | sed 's/[[:space:]]*$//')
   if [ -n "$AGENT_HANDOFF" ]; then
     if [ -f "$PROJECT_DIR/$AGENT_HANDOFF" ]; then
@@ -306,10 +337,8 @@ if [ -f "$HANDOFF_FILE" ]; then
 
   if [ -z "$HANDOFF_CONTEXT" ]; then
     HANDOFF_WARNINGS="${HANDOFF_WARNINGS:+$HANDOFF_WARNINGS
-}WARN: Could not locate latest brief in current.md — dumping head -200 verbatim. Cold-start budget tax: ~30KB. Fix current.md format."
-    # Cap at 200 lines — this is the last-resort compatibility path.
-    HANDOFF_HEAD=$(head -200 "$HANDOFF_FILE" 2>/dev/null)
-    HANDOFF_CONTEXT=$(build_handoff_fallback "$HANDOFF_WARNINGS" "$HANDOFF_HEAD")
+}WARN: Could not locate latest brief in current.md under legacy router opt-in. Not dumping git-tracked router contents."
+    HANDOFF_CONTEXT=$(build_handoff_fallback "$HANDOFF_WARNINGS")
   fi
 fi
 

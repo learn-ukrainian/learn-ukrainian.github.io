@@ -97,7 +97,14 @@ check_pair \
     "rules/delegate-must-use-worktree.md" \
     "rules/cli-help-standard.md" \
     "rules/model-assignment.md" || drift=1
-check_pair "agents_extensions/shared" ".agent" "wake" "cache" || drift=1
+check_pair \
+    "agents_extensions/shared" \
+    ".agent" \
+    "wake" \
+    "cache" \
+    "*-thread-bootstrap.md" \
+    "*-thread-handoff.md" \
+    "*-thread-lease.json" || drift=1
 check_pair \
     "agents_extensions/shared" \
     ".codex" \
