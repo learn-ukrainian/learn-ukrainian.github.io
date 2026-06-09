@@ -34,20 +34,35 @@ Stay with language. Say the problem, place, name, and phone number in short A1
 phrases.
 :::
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ### Дзвінок на 112
 
-<DialogueBox uk="Оператор: Служба 112. Слухаю вас." en="Operator: 112 service. I am listening." />
-<DialogueBox uk="Анна: Допоможіть! Тут аварія." en="Anna: Help! There is an accident here." />
-<DialogueBox uk="Оператор: Де ви?" en="Operator: Where are you?" />
-<DialogueBox uk="Анна: Я на вулиці Шевченка, будинок п'ять." en="Anna: I am on Shevchenka Street, building five." />
-<DialogueBox uk="Оператор: Як вас звати?" en="Operator: What is your name?" />
-<DialogueBox uk="Анна: Мене звати Анна Коваль." en="Anna: My name is Anna Koval." />
-<DialogueBox uk="Оператор: Ваш номер телефону?" en="Operator: Your phone number?" />
-<DialogueBox uk="Анна: Нуль дев'яносто три, сто двадцять, сорок п'ять, шістдесят сім." en="Anna: Zero ninety-three, one hundred twenty, forty-five, sixty-seven." />
+```text
+Оператор: Служба 112. Слухаю вас.
+Анна: Допоможіть! Тут аварія.
+Оператор: Де ви?
+Анна: Я на вулиці Шевченка, будинок п'ять.
+Оператор: Як вас звати?
+Анна: Мене звати Анна Коваль.
+Оператор: Ваш номер телефону?
+Анна: Нуль дев'яносто три, сто двадцять, сорок п'ять, шістдесят сім.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Оператор: Служба 112. Слухаю вас.** | Operator: 112 service. I am listening. |
+| **Анна: Допоможіть! Тут аварія.** | Anna: Help! There is an accident here. |
+| **Оператор: Де ви?** | Operator: Where are you? |
+| **Анна: Я на вулиці Шевченка, будинок п'ять.** | Anna: I am on Shevchenka Street, building five. |
+| **Оператор: Як вас звати?** | Operator: What is your name? |
+| **Анна: Мене звати Анна Коваль.** | Anna: My name is Anna Koval. |
+| **Оператор: Ваш номер телефону?** | Operator: Your phone number? |
+| **Анна: Нуль дев'яносто три, сто двадцять, сорок п'ять, шістдесят сім.** | Anna: Zero ninety-three, one hundred twenty, forty-five, sixty-seven. |
 
 This call uses only four learner jobs:
 
@@ -61,14 +76,29 @@ If the operator speaks quickly, use **Повторіть, будь ласка** 
 
 ### Попросіть людину подзвонити
 
-<DialogueBox uk="Турист: Вибачте! Допоможіть, будь ласка." en="Tourist: Excuse me! Help, please." />
-<DialogueBox uk="Перехожий: Що сталося?" en="Passerby: What happened?" />
-<DialogueBox uk="Турист: Тут пожежа. Подзвоніть за номером 101, будь ласка." en="Tourist: There is a fire here. Please call 101." />
-<DialogueBox uk="Перехожий: Де?" en="Passerby: Where?" />
-<DialogueBox uk="Турист: Тут, біля метро." en="Tourist: Here, near the metro." />
-<DialogueBox uk="Перехожий: Як вас звати?" en="Passerby: What is your name?" />
-<DialogueBox uk="Турист: Мене звати Марко. Я не розумію швидко." en="Tourist: My name is Marko. I do not understand fast speech." />
-<DialogueBox uk="Перехожий: Добре, я говорю повільно." en="Passerby: Okay, I am speaking slowly." />
+```text
+Турист: Вибачте! Допоможіть, будь ласка.
+Перехожий: Що сталося?
+Турист: Тут пожежа. Подзвоніть за номером 101, будь ласка.
+Перехожий: Де?
+Турист: Тут, біля метро.
+Перехожий: Як вас звати?
+Турист: Мене звати Марко. Я не розумію швидко.
+Перехожий: Добре, я говорю повільно.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Турист: Вибачте! Допоможіть, будь ласка.** | Tourist: Excuse me! Help, please. |
+| **Перехожий: Що сталося?** | Passerby: What happened? |
+| **Турист: Тут пожежа. Подзвоніть за номером 101, будь ласка.** | Tourist: There is a fire here. Please call 101. |
+| **Перехожий: Де?** | Passerby: Where? |
+| **Турист: Тут, біля метро.** | Tourist: Here, near the metro. |
+| **Перехожий: Як вас звати?** | Passerby: What is your name? |
+| **Турист: Мене звати Марко. Я не розумію швидко.** | Tourist: My name is Marko. I do not understand fast speech. |
+| **Перехожий: Добре, я говорю повільно.** | Passerby: Okay, I am speaking slowly. |
 
 The phrase **Подзвоніть за номером...** is useful when another person has the
 phone. Keep the number clear:
@@ -133,8 +163,6 @@ a woman or girl.
 For an A1 call, one problem sentence is enough. Add location next. Keep each
 line separate: help, problem, place, identity, repair.
 
-
-
 ## Де ви?
 
 Emergency language needs place words you already know from the city modules.
@@ -160,7 +188,6 @@ Say numbers slowly. If you need time to repeat, use:
 
 **Повільніше, будь ласка. Я повторюю адресу.**
 
-
 ### Особиста інформація
 
 The operator or helper may ask for basic personal information. These are A1
@@ -181,7 +208,6 @@ Keep the answer slow and separate:
 
 This is not a story. It is a clear information block.
 
-
 ## Підсумок
 
 Your A1 emergency-language toolkit:
@@ -201,6 +227,14 @@ Your A1 emergency-language toolkit:
 
 One complete A1 call can be very short:
 
-<DialogueBox uk="Допоможіть! Тут пожежа. Я в Києві, на вулиці Франка, будинок десять. Мене звати Сара Браун. Мій номер телефону: нуль дев'яносто сім, триста десять, двадцять два, сорок один. Повторіть, будь ласка." en="Help! There is a fire here. I am in Kyiv, on Franka Street, building ten. My name is Sarah Brown. My phone number is zero ninety-seven, three hundred ten, twenty-two, forty-one. Please repeat." />
+```text
+Допоможіть! Тут пожежа. Я в Києві, на вулиці Франка, будинок десять. Мене звати Сара Браун. Мій номер телефону: нуль дев'яносто сім, триста десять, двадцять два, сорок один. Повторіть, будь ласка.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Допоможіть! Тут пожежа. Я в Києві, на вулиці Франка, будинок десять. Мене звати Сара Браун. Мій номер телефону: нуль дев'яносто сім, триста десять, двадцять два, сорок один. Повторіть, будь ласка.** | Help! There is a fire here. I am in Kyiv, on Franka Street, building ten. My name is Sarah Brown. My phone number is zero ninety-seven, three hundred ten, twenty-two, forty-one. Please repeat. |
 
 That is the goal: a clear problem, a clear place, and clear identity words.

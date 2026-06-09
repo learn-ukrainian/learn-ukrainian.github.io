@@ -27,20 +27,35 @@ invitation only as a fixed chunk: **Ходімо!** or **Давай зустрі
 п'ятій!**
 :::
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ### Будуємо плани
 
-<DialogueBox uk="Олена: Що ти будеш робити у суботу?" en="Olena: What will you do on Saturday?" />
-<DialogueBox uk="Тарас: Зранку я буду прибирати квартиру." en="Taras: In the morning I will clean the apartment." />
-<DialogueBox uk="Олена: А вдень?" en="Olena: And during the day?" />
-<DialogueBox uk="Тарас: Вдень я буду відпочивати." en="Taras: During the day I will rest." />
-<DialogueBox uk="Олена: Ти будеш вільний ввечері?" en="Olena: Will you be free in the evening?" />
-<DialogueBox uk="Тарас: Так, буду." en="Taras: Yes, I will." />
-<DialogueBox uk="Олена: Ходімо в кіно о шостій!" en="Olena: Let's go to the cinema at six!" />
-<DialogueBox uk="Тарас: З задоволенням. До зустрічі у суботу!" en="Taras: With pleasure. See you on Saturday!" />
+```text
+Олена: Що ти будеш робити у суботу?
+Тарас: Зранку я буду прибирати квартиру.
+Олена: А вдень?
+Тарас: Вдень я буду відпочивати.
+Олена: Ти будеш вільний ввечері?
+Тарас: Так, буду.
+Олена: Ходімо в кіно о шостій!
+Тарас: З задоволенням. До зустрічі у суботу!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Що ти будеш робити у суботу?** | Olena: What will you do on Saturday? |
+| **Тарас: Зранку я буду прибирати квартиру.** | Taras: In the morning I will clean the apartment. |
+| **Олена: А вдень?** | Olena: And during the day? |
+| **Тарас: Вдень я буду відпочивати.** | Taras: During the day I will rest. |
+| **Олена: Ти будеш вільний ввечері?** | Olena: Will you be free in the evening? |
+| **Тарас: Так, буду.** | Taras: Yes, I will. |
+| **Олена: Ходімо в кіно о шостій!** | Olena: Let's go to the cinema at six! |
+| **Тарас: З задоволенням. До зустрічі у суботу!** | Taras: With pleasure. See you on Saturday! |
 
 The plan uses the M50 future pattern:
 
@@ -54,15 +69,31 @@ day and time.
 
 ### Насичений тиждень
 
-<DialogueBox uk="Максим: У тебе є план на тиждень?" en="Maksym: Do you have a plan for the week?" />
-<DialogueBox uk="Олена: Так. У понеділок я буду працювати допізна." en="Olena: Yes. On Monday I will work until late." />
-<DialogueBox uk="Максим: А у вівторок?" en="Maksym: And on Tuesday?" />
-<DialogueBox uk="Олена: У вівторок я буду вчити українську." en="Olena: On Tuesday I will study Ukrainian." />
-<DialogueBox uk="Максим: Коли буде зустріч?" en="Maksym: When will the meeting be?" />
-<DialogueBox uk="Олена: У середу о п'ятій буде зустріч з друзями." en="Olena: On Wednesday at five there will be a meeting with friends." />
-<DialogueBox uk="Максим: А вечірка?" en="Maksym: And the party?" />
-<DialogueBox uk="Олена: У п'ятницю ввечері буде вечірка. Ти будеш?" en="Olena: On Friday evening there will be a party. Will you be there?" />
-<DialogueBox uk="Максим: Звичайно буду!" en="Maksym: Of course I will!" />
+```text
+Максим: У тебе є план на тиждень?
+Олена: Так. У понеділок я буду працювати допізна.
+Максим: А у вівторок?
+Олена: У вівторок я буду вчити українську.
+Максим: Коли буде зустріч?
+Олена: У середу о п'ятій буде зустріч з друзями.
+Максим: А вечірка?
+Олена: У п'ятницю ввечері буде вечірка. Ти будеш?
+Максим: Звичайно буду!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Максим: У тебе є план на тиждень?** | Maksym: Do you have a plan for the week? |
+| **Олена: Так. У понеділок я буду працювати допізна.** | Olena: Yes. On Monday I will work until late. |
+| **Максим: А у вівторок?** | Maksym: And on Tuesday? |
+| **Олена: У вівторок я буду вчити українську.** | Olena: On Tuesday I will study Ukrainian. |
+| **Максим: Коли буде зустріч?** | Maksym: When will the meeting be? |
+| **Олена: У середу о п'ятій буде зустріч з друзями.** | Olena: On Wednesday at five there will be a meeting with friends. |
+| **Максим: А вечірка?** | Maksym: And the party? |
+| **Олена: У п'ятницю ввечері буде вечірка. Ти будеш?** | Olena: On Friday evening there will be a party. Will you be there? |
+| **Максим: Звичайно буду!** | Maksym: Of course I will! |
 
 This dialogue combines:
 
@@ -163,9 +194,6 @@ For a group chat, make each message short. One friend can write **Я буду
 прибирати зранку.** Another can answer **Я буду вільна о шостій.** Then the
 invitation can be only **Ходімо в кіно!**
 
-
-
-
 ### Repair traps
 
 Keep the M50 rule inside your weekly plan:
@@ -195,7 +223,6 @@ Use **у / в** with days:
 - **у п'ятницю**;
 - **у суботу**;
 - **в неділю**.
-
 
 ## Підсумок
 

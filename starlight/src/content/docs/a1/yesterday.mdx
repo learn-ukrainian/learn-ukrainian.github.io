@@ -4,10 +4,8 @@ description: "Учора я прокинувся, поснідав і пішов
 sidebar:
   order: 49
   label: "49. Учора"
-pipeline: linear-phase-4
-build_status: validated
 prev: what-happened
-next: false
+next: what-will-happen
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -74,22 +72,37 @@ the feminine form: **я поснідала**, **я пішла**, **я повер
 switch to **я поснідав** unless the speaker changes.
 :::
 
+## Діалоги
+
 ### Put the day in order
 
 <Order client:only='react' items={JSON.parse(`["Зранку я прокинулася о сьомій.", "Спочатку я поснідала.", "Потім я пішла на роботу.", "Вдень я обідала з колегою.", "Ввечері я повернулася додому.", "Нарешті я лягла спати."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5]`)} instruction={"Arrange Анна's yesterday from morning to night."} isUkrainian={false} />
 
-## Діалоги
-
 ### Як минув день?
 
-<DialogueBox uk="Олена: Анно, як минув твій день учора?" en="Olena: Anna, how was your day yesterday?" />
-<DialogueBox uk="Анна: Добре. Зранку я прокинулася о сьомій." en="Anna: Good. In the morning I woke up at seven." />
-<DialogueBox uk="Олена: Що ти робила зранку?" en="Olena: What did you do in the morning?" />
-<DialogueBox uk="Анна: Я поснідала і пішла на роботу." en="Anna: I had breakfast and went to work." />
-<DialogueBox uk="Олена: А вдень?" en="Olena: And in the afternoon?" />
-<DialogueBox uk="Анна: Вдень я обідала з колегою." en="Anna: In the afternoon I had lunch with a colleague." />
-<DialogueBox uk="Олена: А ввечері?" en="Olena: And in the evening?" />
-<DialogueBox uk="Анна: Ввечері я повернулася додому, дивилася серіал і лягла спати." en="Anna: In the evening I returned home, watched a series, and went to bed." />
+```text
+Олена: Анно, як минув твій день учора?
+Анна: Добре. Зранку я прокинулася о сьомій.
+Олена: Що ти робила зранку?
+Анна: Я поснідала і пішла на роботу.
+Олена: А вдень?
+Анна: Вдень я обідала з колегою.
+Олена: А ввечері?
+Анна: Ввечері я повернулася додому, дивилася серіал і лягла спати.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Анно, як минув твій день учора?** | Olena: Anna, how was your day yesterday? |
+| **Анна: Добре. Зранку я прокинулася о сьомій.** | Anna: Good. In the morning I woke up at seven. |
+| **Олена: Що ти робила зранку?** | Olena: What did you do in the morning? |
+| **Анна: Я поснідала і пішла на роботу.** | Anna: I had breakfast and went to work. |
+| **Олена: А вдень?** | Olena: And in the afternoon? |
+| **Анна: Вдень я обідала з колегою.** | Anna: In the afternoon I had lunch with a colleague. |
+| **Олена: А ввечері?** | Olena: And in the evening? |
+| **Анна: Ввечері я повернулася додому, дивилася серіал і лягла спати.** | Anna: In the evening I returned home, watched a series, and went to bed. |
 
 Анна tells one clean day story. The time words hold the story together:
 
@@ -106,12 +119,25 @@ speaker. The story is easier to follow because the grammar does not jump.
 
 ### Коротка перевірка дня
 
-<DialogueBox uk="Олена: Ти була вдома зранку?" en="Olena: Were you at home in the morning?" />
-<DialogueBox uk="Анна: Так, я була вдома і пила каву." en="Anna: Yes, I was at home and drank coffee." />
-<DialogueBox uk="Олена: Потім ти була в офісі?" en="Olena: Then were you in the office?" />
-<DialogueBox uk="Анна: Так, потім я працювала в офісі." en="Anna: Yes, then I worked in the office." />
-<DialogueBox uk="Олена: Ввечері ти була в магазині?" en="Olena: In the evening were you in a store?" />
-<DialogueBox uk="Анна: Так. Я купила продукти і повернулася додому." en="Anna: Yes. I bought groceries and returned home." />
+```text
+Олена: Ти була вдома зранку?
+Анна: Так, я була вдома і пила каву.
+Олена: Потім ти була в офісі?
+Анна: Так, потім я працювала в офісі.
+Олена: Ввечері ти була в магазині?
+Анна: Так. Я купила продукти і повернулася додому.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Ти була вдома зранку?** | Olena: Were you at home in the morning? |
+| **Анна: Так, я була вдома і пила каву.** | Anna: Yes, I was at home and drank coffee. |
+| **Олена: Потім ти була в офісі?** | Olena: Then were you in the office? |
+| **Анна: Так, потім я працювала в офісі.** | Anna: Yes, then I worked in the office. |
+| **Олена: Ввечері ти була в магазині?** | Olena: In the evening were you in a store? |
+| **Анна: Так. Я купила продукти і повернулася додому.** | Anna: Yes. I bought groceries and returned home. |
 
 This second dialogue adds places: **вдома**, **в офісі**, **в магазині**,
 **додому**. A day narrative often needs only time, place, and one action.
@@ -240,18 +266,6 @@ Do not mix the two templates inside one story. If the story begins **я
 **я лягла**. If the story begins **я прокинувся**, continue with
 **я поснідав**, **я пішов**, **я повернувся**, **я ліг**.
 
-### Infinitive to story form
-
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "прокинутися", "right": "прокинулася"}, {"left": "поснідати", "right": "поснідала"}, {"left": "піти", "right": "пішла"}, {"left": "обідати", "right": "обідала"}, {"left": "повернутися", "right": "повернулася"}, {"left": "лягти", "right": "лягла"}]`)} />
-
-### Does the story stay consistent?
-
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Учора я прокинулася о сьомій.", "isTrue": true, "explanation": "This can fit Анна's story."}, {"statement": "Потім я поснідав.", "isTrue": false, "explanation": "For Анна, use поснідала."}, {"statement": "Вдень я обідала з колегою.", "isTrue": true, "explanation": "Обідала matches the female speaker."}, {"statement": "Ввечері я повернувся додому.", "isTrue": false, "explanation": "For Анна, use повернулася."}, {"statement": "Нарешті я лягла спати.", "isTrue": true, "explanation": "Лягла matches the female speaker."}, {"statement": "Учора я працює в офісі.", "isTrue": false, "explanation": "Учора needs a past form: працювала."}]`)} />
-
-### Build yesterday sentences
-
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Учора / я / прокинулася / о / сьомій", "answer": "Учора я прокинулася о сьомій."}, {"jumbled": "Потім / я / поснідала", "answer": "Потім я поснідала."}, {"jumbled": "Вдень / я / обідала / з / колегою", "answer": "Вдень я обідала з колегою."}, {"jumbled": "Ввечері / я / купила / продукти", "answer": "Ввечері я купила продукти."}, {"jumbled": "Нарешті / я / лягла / спати", "answer": "Нарешті я лягла спати."}]`)} />
-
 ### Build a short day story
 
 You can make the story from cards:
@@ -277,10 +291,6 @@ module. If you want more detail, add only one familiar piece at a time: a place
 such as **кафе**, a person such as **колега**, or an object such as
 **продукти**. The time line should still be easy to scan from morning to
 evening.
-
-### Say the day in Ukrainian
-
-<Translate client:only='react' questions={JSON.parse(`[{"source": "Yesterday I woke up at seven. (female speaker)", "options": [{"text": "Учора я прокинулася о сьомій.", "correct": true}, {"text": "Учора я прокинувся о сьомій.", "correct": false}, {"text": "Учора я прокидаюся о сьомій.", "correct": false}], "explanation": "For a female speaker in the past, use прокинулася."}, {"source": "Then I had breakfast. (female speaker)", "options": [{"text": "Потім я поснідала.", "correct": true}, {"text": "Потім я поснідав.", "correct": false}, {"text": "Потім я снідаю.", "correct": false}], "explanation": "Поснідала fits the female speaker."}, {"source": "In the afternoon I had lunch with a colleague. (female speaker)", "options": [{"text": "Вдень я обідала з колегою.", "correct": true}, {"text": "Вдень я обідав з колегою.", "correct": false}, {"text": "Завтра я буду обідати з колегою.", "correct": false}], "explanation": "The time is yesterday, so use past tense."}, {"source": "In the evening I watched a series. (female speaker)", "options": [{"text": "Ввечері я дивилася серіал.", "correct": true}, {"text": "Ввечері я дивився серіал.", "correct": false}, {"text": "Ввечері я дивлюся серіал.", "correct": false}], "explanation": "Дивилася matches the female speaker."}]`)} />
 
 ## 📋 Підсумок
 
@@ -323,14 +333,6 @@ Self-check with one six-sentence story:
 
 If every verb matches the same speaker, the story is doing its job.
 
-### Complete Анна's story
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Учора я ___ о пів на сьому.", "answer": "прокинулася", "options": ["прокинулася", "прокинувся", "прокинулися"]}, {"sentence": "Потім я ___ кашу і пила каву.", "answer": "їла", "options": ["їла", "їв", "їли"]}, {"sentence": "Вдень я ___ салат.", "answer": "замовила", "options": ["замовила", "замовив", "замовили"]}, {"sentence": "Після роботи я ___ продукти.", "answer": "купила", "options": ["купила", "купив", "купили"]}, {"sentence": "Об одинадцятій я ___ спати.", "answer": "лягла", "options": ["лягла", "ліг", "лягли"]}]`)} />
-
-### Repair the yesterday narrative
-
-<ErrorCorrection client:only='react' instruction="Fix the sentence so it matches one female speaker's day." items={JSON.parse(`[{"sentence": "Зранку я прокинувся о сьомій.", "errorWord": "прокинувся", "correctForm": "прокинулася", "options": [], "explanation": "Анна is the speaker, so use прокинулася."}, {"sentence": "Потім я поснідав.", "errorWord": "поснідав", "correctForm": "поснідала", "options": [], "explanation": "Keep the feminine form."}, {"sentence": "Вдень я обідав з колегою.", "errorWord": "обідав", "correctForm": "обідала", "options": [], "explanation": "Обідала matches the female speaker."}, {"sentence": "Ввечері я повернувся додому.", "errorWord": "повернувся", "correctForm": "повернулася", "options": [], "explanation": "Use повернулася for Анна."}, {"sentence": "Нарешті я ліг спати.", "errorWord": "ліг", "correctForm": "лягла", "options": [], "explanation": "Use лягла for a female speaker."}, {"sentence": "Учора я працює в офісі.", "errorWord": "працює", "correctForm": "працювала", "options": [], "explanation": "Учора needs the past form працювала."}]`)} />
-
 </TabItem>
 <TabItem label="Vocabulary">
 
@@ -343,19 +345,19 @@ If every verb matches the same speaker, the story is doing its job.
 
 ### Put the day in order
 
-<Order client:only='react' items={JSON.parse(`["Зранку я прокинулася о сьомій.", "Спочатку я поснідала.", "Потім я пішла на роботу.", "Вдень я обідала з колегою.", "Ввечері я повернулася додому.", "Нарешті я лягла спати."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5]`)} instruction={"Arrange Анна's yesterday from morning to night."} isUkrainian={false} />
+*(see lesson, §Діалоги)*
 
 ### Time words for yesterday
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ я прокинулася о сьомій.", "answer": "Зранку", "options": ["Зранку", "Ввечері", "Нарешті"]}, {"sentence": "___ я пішла на роботу.", "answer": "Потім", "options": ["Потім", "Учора", "Вночі"]}, {"sentence": "___ я обідала в кафе.", "answer": "Вдень", "options": ["Вдень", "Зранку", "Нарешті"]}, {"sentence": "___ я повернулася додому.", "answer": "Ввечері", "options": ["Ввечері", "Спочатку", "Зранку"]}, {"sentence": "___ я лягла спати.", "answer": "Нарешті", "options": ["Нарешті", "Вдень", "Після цього"]}]`)} />
+*(see lesson, §Коротка перевірка дня)*
 
 ### Sort story words
 
-<GroupSort client:only='react' groups={JSON.parse(`{"time markers": ["учора", "зранку", "вдень", "ввечері", "потім", "нарешті"], "routine actions": ["прокинулася", "поснідала", "обідала", "повернулася", "лягла спати"], "small details": ["з колегою", "біля офісу", "продукти", "серіал"]}`)} />
+*(see lesson, §Розповідь про день)*
 
 ### Keep the speaker consistent
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Анна says: Зранку я прокинулася. What should come next?", "options": [{"text": "Потім я поснідала.", "correct": true}, {"text": "Потім я поснідав.", "correct": false}, {"text": "Потім я поснідали.", "correct": false}], "explanation": "Анна keeps the feminine form поснідала."}, {"question": "Which pair fits one female speaker?", "options": [{"text": "Я пішла. Я повернулася.", "correct": true}, {"text": "Я пішла. Я повернувся.", "correct": false}, {"text": "Я пішов. Я повернулася.", "correct": false}], "explanation": "Both verbs stay feminine."}, {"question": "Which line is a clean end to Анна's day?", "options": [{"text": "Нарешті я лягла спати.", "correct": true}, {"text": "Нарешті я ліг спати.", "correct": false}, {"text": "Нарешті я лягли спати.", "correct": false}], "explanation": "For Анна, use лягла."}, {"question": "What does учора do in the story?", "options": [{"text": "It places the story in the past day.", "correct": true}, {"text": "It means the story happens tomorrow.", "correct": false}, {"text": "It changes the verb into the present tense.", "correct": false}], "explanation": "Учора is the time marker for yesterday."}]`)} />
+*(see lesson, §Розповідь про день)*
 
 ### Infinitive to story form
 

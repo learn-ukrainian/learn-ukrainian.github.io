@@ -4,10 +4,8 @@ description: "У суботу я буду... — розклад та плани 
 sidebar:
   order: 51
   label: "51. Мої плани"
-pipeline: linear-phase-4
-build_status: validated
 prev: what-will-happen
-next: false
+next: my-story
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -85,22 +83,37 @@ invitation only as a fixed chunk: **Ходімо!** or **Давай зустрі
 п'ятій!**
 :::
 
+## Діалоги
+
 ### Build a dated plan
 
 <FillIn client:only='react' items={JSON.parse(`[{"sentence": "У ___ я буду працювати.", "answer": "понеділок", "options": ["понеділок", "третій", "шостій"]}, {"sentence": "У суботу ___ я буду прибирати квартиру.", "answer": "зранку", "options": ["зранку", "о", "план"]}, {"sentence": "___ шостій ми будемо дивитися кіно.", "answer": "О", "options": ["О", "У", "На"]}, {"sentence": "У неділю він буде ___.", "answer": "відпочивати", "options": ["відпочивати", "відпочиває", "відпочивав"]}, {"sentence": "У п'ятницю ввечері буде ___.", "answer": "вечірка", "options": ["вечірка", "квартира", "тиждень"]}]`)} />
 
-## Діалоги
-
 ### Будуємо плани
 
-<DialogueBox uk="Олена: Що ти будеш робити у суботу?" en="Olena: What will you do on Saturday?" />
-<DialogueBox uk="Тарас: Зранку я буду прибирати квартиру." en="Taras: In the morning I will clean the apartment." />
-<DialogueBox uk="Олена: А вдень?" en="Olena: And during the day?" />
-<DialogueBox uk="Тарас: Вдень я буду відпочивати." en="Taras: During the day I will rest." />
-<DialogueBox uk="Олена: Ти будеш вільний ввечері?" en="Olena: Will you be free in the evening?" />
-<DialogueBox uk="Тарас: Так, буду." en="Taras: Yes, I will." />
-<DialogueBox uk="Олена: Ходімо в кіно о шостій!" en="Olena: Let's go to the cinema at six!" />
-<DialogueBox uk="Тарас: З задоволенням. До зустрічі у суботу!" en="Taras: With pleasure. See you on Saturday!" />
+```text
+Олена: Що ти будеш робити у суботу?
+Тарас: Зранку я буду прибирати квартиру.
+Олена: А вдень?
+Тарас: Вдень я буду відпочивати.
+Олена: Ти будеш вільний ввечері?
+Тарас: Так, буду.
+Олена: Ходімо в кіно о шостій!
+Тарас: З задоволенням. До зустрічі у суботу!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Що ти будеш робити у суботу?** | Olena: What will you do on Saturday? |
+| **Тарас: Зранку я буду прибирати квартиру.** | Taras: In the morning I will clean the apartment. |
+| **Олена: А вдень?** | Olena: And during the day? |
+| **Тарас: Вдень я буду відпочивати.** | Taras: During the day I will rest. |
+| **Олена: Ти будеш вільний ввечері?** | Olena: Will you be free in the evening? |
+| **Тарас: Так, буду.** | Taras: Yes, I will. |
+| **Олена: Ходімо в кіно о шостій!** | Olena: Let's go to the cinema at six! |
+| **Тарас: З задоволенням. До зустрічі у суботу!** | Taras: With pleasure. See you on Saturday! |
 
 The plan uses the M50 future pattern:
 
@@ -114,15 +127,31 @@ day and time.
 
 ### Насичений тиждень
 
-<DialogueBox uk="Максим: У тебе є план на тиждень?" en="Maksym: Do you have a plan for the week?" />
-<DialogueBox uk="Олена: Так. У понеділок я буду працювати допізна." en="Olena: Yes. On Monday I will work until late." />
-<DialogueBox uk="Максим: А у вівторок?" en="Maksym: And on Tuesday?" />
-<DialogueBox uk="Олена: У вівторок я буду вчити українську." en="Olena: On Tuesday I will study Ukrainian." />
-<DialogueBox uk="Максим: Коли буде зустріч?" en="Maksym: When will the meeting be?" />
-<DialogueBox uk="Олена: У середу о п'ятій буде зустріч з друзями." en="Olena: On Wednesday at five there will be a meeting with friends." />
-<DialogueBox uk="Максим: А вечірка?" en="Maksym: And the party?" />
-<DialogueBox uk="Олена: У п'ятницю ввечері буде вечірка. Ти будеш?" en="Olena: On Friday evening there will be a party. Will you be there?" />
-<DialogueBox uk="Максим: Звичайно буду!" en="Maksym: Of course I will!" />
+```text
+Максим: У тебе є план на тиждень?
+Олена: Так. У понеділок я буду працювати допізна.
+Максим: А у вівторок?
+Олена: У вівторок я буду вчити українську.
+Максим: Коли буде зустріч?
+Олена: У середу о п'ятій буде зустріч з друзями.
+Максим: А вечірка?
+Олена: У п'ятницю ввечері буде вечірка. Ти будеш?
+Максим: Звичайно буду!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Максим: У тебе є план на тиждень?** | Maksym: Do you have a plan for the week? |
+| **Олена: Так. У понеділок я буду працювати допізна.** | Olena: Yes. On Monday I will work until late. |
+| **Максим: А у вівторок?** | Maksym: And on Tuesday? |
+| **Олена: У вівторок я буду вчити українську.** | Olena: On Tuesday I will study Ukrainian. |
+| **Максим: Коли буде зустріч?** | Maksym: When will the meeting be? |
+| **Олена: У середу о п'ятій буде зустріч з друзями.** | Olena: On Wednesday at five there will be a meeting with friends. |
+| **Максим: А вечірка?** | Maksym: And the party? |
+| **Олена: У п'ятницю ввечері буде вечірка. Ти будеш?** | Olena: On Friday evening there will be a party. Will you be there? |
+| **Максим: Звичайно буду!** | Maksym: Of course I will! |
 
 This dialogue combines:
 
@@ -229,18 +258,6 @@ For a group chat, make each message short. One friend can write **Я буду
 прибирати зранку.** Another can answer **Я буду вільна о шостій.** Then the
 invitation can be only **Ходімо в кіно!**
 
-### Check the weekly plan
-
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "У суботу я буду прибирати квартиру.", "isTrue": true, "explanation": "Буду + прибирати is correct."}, {"statement": "У неділю ми будемо відпочивати.", "isTrue": true, "explanation": "Будемо + відпочивати is correct."}, {"statement": "О шостій ви будете дивитеся кіно.", "isTrue": false, "explanation": "After будете, use дивитися."}, {"statement": "У п'ятницю ввечері буде вечірка.", "isTrue": true, "explanation": "This is a clear scheduled event."}, {"statement": "У середу я буду вчу українську.", "isTrue": false, "explanation": "After буду, use вчити."}, {"statement": "Ти будеш вільний у суботу?", "isTrue": true, "explanation": "This asks about future availability."}]`)} />
-
-### Build planning lines
-
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "У / суботу / я / буду / прибирати / квартиру", "answer": "У суботу я буду прибирати квартиру."}, {"jumbled": "О / шостій / ми / будемо / дивитися / кіно", "answer": "О шостій ми будемо дивитися кіно."}, {"jumbled": "Ти / будеш / вільна / у / суботу", "answer": "Ти будеш вільна у суботу?"}, {"jumbled": "Давай / зустрінемося / о / п'ятій", "answer": "Давай зустрінемося о п'ятій!"}, {"jumbled": "На / жаль / не / можу", "answer": "На жаль, не можу."}]`)} />
-
-### Put the week in order
-
-<Order client:only='react' items={JSON.parse(`["У понеділок я буду працювати.", "У вівторок я буду вчити українську.", "У середу буде зустріч.", "У четвер я буду готувати.", "У п'ятницю буде вечірка.", "У суботу я буду прибирати.", "В неділю я буду відпочивати."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5, 6]`)} instruction={"Arrange the days from Monday to Sunday."} isUkrainian={false} />
-
 ### Repair traps
 
 Keep the M50 rule inside your weekly plan:
@@ -270,10 +287,6 @@ Use **у / в** with days:
 - **у п'ятницю**;
 - **у суботу**;
 - **в неділю**.
-
-### Complete the week schedule
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У вівторок я ___ українську.", "answer": "буду вчити", "options": ["буду вчити", "вчив", "вчу"]}, {"sentence": "У середу ми ___ вечерю.", "answer": "будемо готувати", "options": ["будемо готувати", "готували", "готуємо"]}, {"sentence": "У четвер вона ___ допізна.", "answer": "буде працювати", "options": ["буде працювати", "працювала", "працює"]}, {"sentence": "___, не можу. У суботу я буду працювати.", "answer": "На жаль", "options": ["На жаль", "Звичайно", "З задоволенням"]}]`)} />
 
 ## 📋 Підсумок
 
@@ -309,14 +322,6 @@ Self-check:
 Stop here after your week plan. The next module moves to a personal story, but
 this module stays with plans, invitations, days, and times.
 
-### Say your plans
-
-<Translate client:only='react' questions={JSON.parse(`[{"source": "On Saturday I will clean the apartment.", "options": [{"text": "У суботу я буду прибирати квартиру.", "correct": true}, {"text": "У суботу я прибираю вчора.", "correct": false}, {"text": "У суботу я прибирала учора.", "correct": false}], "explanation": "Use буду прибирати for a future plan."}, {"source": "At six we will watch a film.", "options": [{"text": "О шостій ми будемо дивитися кіно.", "correct": true}, {"text": "О шостій ми дивилися кіно.", "correct": false}, {"text": "О шостій ми дивимося учора.", "correct": false}], "explanation": "Use о шостій + будемо дивитися."}, {"source": "Will you be free on Saturday? (to a female friend)", "options": [{"text": "Ти будеш вільна у суботу?", "correct": true}, {"text": "Ти була вільна у суботу?", "correct": false}, {"text": "Ти буде вільна у суботу?", "correct": false}], "explanation": "Ти takes будеш."}, {"source": "Unfortunately, I cannot.", "options": [{"text": "На жаль, не можу.", "correct": true}, {"text": "З задоволенням!", "correct": false}, {"text": "Звичайно буду!", "correct": false}], "explanation": "На жаль, не можу is the polite refusal."}]`)} />
-
-### Repair plan sentences
-
-<ErrorCorrection client:only='react' instruction="Fix the weekly plan by keeping the compound future." items={JSON.parse(`[{"sentence": "У суботу я буду прибираю квартиру.", "errorWord": "прибираю", "correctForm": "прибирати", "options": [], "explanation": "After буду, use the infinitive прибирати."}, {"sentence": "У неділю ми будемо відпочиваємо.", "errorWord": "відпочиваємо", "correctForm": "відпочивати", "options": [], "explanation": "After будемо, use відпочивати."}, {"sentence": "О шостій ви будете дивитеся кіно.", "errorWord": "дивитеся", "correctForm": "дивитися", "options": [], "explanation": "After будете, use дивитися."}, {"sentence": "Вони будуть готують на вечірку.", "errorWord": "готують", "correctForm": "готувати", "options": [], "explanation": "After будуть, use готувати."}, {"sentence": "У середу я буду вчу українську.", "errorWord": "вчу", "correctForm": "вчити", "options": [], "explanation": "After буду, use вчити."}, {"sentence": "Я буду роблю домашнє завдання.", "errorWord": "Я буду роблю домашнє завдання.", "correctForm": "Я буду робити домашнє завдання.", "options": [], "explanation": "After буду, use the infinitive робити."}, {"sentence": "На понеділок я маю урок.", "errorWord": "На понеділок", "correctForm": "У понеділок", "options": [], "explanation": "Use у with weekdays: у понеділок."}, {"sentence": "На шостій ми будемо дивитися кіно.", "errorWord": "На шостій", "correctForm": "О шостій", "options": [], "explanation": "Use о with clock time: о шостій."}]`)} />
-
 </TabItem>
 <TabItem label="Vocabulary">
 
@@ -329,19 +334,19 @@ this module stays with plans, invitations, days, and times.
 
 ### Build a dated plan
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У ___ я буду працювати.", "answer": "понеділок", "options": ["понеділок", "третій", "шостій"]}, {"sentence": "У суботу ___ я буду прибирати квартиру.", "answer": "зранку", "options": ["зранку", "о", "план"]}, {"sentence": "___ шостій ми будемо дивитися кіно.", "answer": "О", "options": ["О", "У", "На"]}, {"sentence": "У неділю він буде ___.", "answer": "відпочивати", "options": ["відпочивати", "відпочиває", "відпочивав"]}, {"sentence": "У п'ятницю ввечері буде ___.", "answer": "вечірка", "options": ["вечірка", "квартира", "тиждень"]}]`)} />
+*(see lesson, §Діалоги)*
 
 ### Invitations and answers
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Ходімо в кіно!", "right": "З задоволенням!"}, {"left": "Давай зустрінемося о п'ятій!", "right": "Чудово! До зустрічі!"}, {"left": "Ти будеш вільний у суботу?", "right": "На жаль, не можу."}, {"left": "Ходімо в кафе о шостій!", "right": "Добре! О шостій."}, {"left": "Ти будеш на вечірці?", "right": "Звичайно буду!"}]`)} />
+*(see lesson, §Насичений тиждень)*
 
 ### Planning pattern
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Which line gives a day, time, and compound future?", "options": [{"text": "У суботу о третій я буду готувати.", "correct": true}, {"text": "У суботу о третій я готую вчора.", "correct": false}, {"text": "У суботу о третій я готував.", "correct": false}], "explanation": "The plan uses day + time + буду + infinitive."}, {"question": "Which invitation reuses the M43 chunk?", "options": [{"text": "Ходімо в кіно!", "correct": true}, {"text": "Я буду кіно.", "correct": false}, {"text": "Кіно буде прибирати.", "correct": false}], "explanation": "Ходімо is a familiar invitation chunk."}, {"question": "Which answer politely refuses?", "options": [{"text": "На жаль, не можу.", "correct": true}, {"text": "З задоволенням!", "correct": false}, {"text": "Звичайно буду!", "correct": false}], "explanation": "На жаль, не можу is a polite refusal."}, {"question": "Which phrase asks about availability?", "options": [{"text": "Ти будеш вільна у суботу?", "correct": true}, {"text": "Ти була вільна учора?", "correct": false}, {"text": "Ти вільна о вчора?", "correct": false}], "explanation": "Будеш вільна asks about future availability."}]`)} />
+*(see lesson, §Invitations and answers)*
 
 ### Sort planning phrases
 
-<GroupSort client:only='react' groups={JSON.parse(`{"days": ["у понеділок", "у середу", "у суботу", "в неділю"], "times": ["о третій", "о п'ятій", "о шостій", "ввечері"], "invitations": ["Ходімо в кіно!", "Давай зустрінемося!"], "answers": ["З задоволенням!", "На жаль, не можу.", "Звичайно буду!"]}`)} />
+*(see lesson, §Invitations and answers)*
 
 ### Check the weekly plan
 
