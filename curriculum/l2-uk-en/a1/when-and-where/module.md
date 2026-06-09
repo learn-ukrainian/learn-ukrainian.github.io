@@ -28,18 +28,31 @@ When **що**, **де**, or **коли** connects two parts of a sentence, write
 before it: **Я знаю, де кафе.**
 :::
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ### Домовляємося про зустріч
 
-<DialogueBox uk="Олена: Ти знаєш, де нове кафе?" en="Olena: Do you know where the new cafe is?" />
-<DialogueBox uk="Тарас: Так, я знаю, де воно." en="Taras: Yes, I know where it is." />
-<DialogueBox uk="Олена: Скажи, коли ти вільний." en="Olena: Tell me when you are free." />
-<DialogueBox uk="Тарас: Я вільний о шостій." en="Taras: I am free at six." />
-<DialogueBox uk="Олена: Я думаю, що о шостій добре." en="Olena: I think that six is good." />
-<DialogueBox uk="Тарас: Добре. Тоді о шостій біля кафе." en="Taras: Good. Then at six near the cafe." />
+```text
+Олена: Ти знаєш, де нове кафе?
+Тарас: Так, я знаю, де воно.
+Олена: Скажи, коли ти вільний.
+Тарас: Я вільний о шостій.
+Олена: Я думаю, що о шостій добре.
+Тарас: Добре. Тоді о шостій біля кафе.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Ти знаєш, де нове кафе?** | Olena: Do you know where the new cafe is? |
+| **Тарас: Так, я знаю, де воно.** | Taras: Yes, I know where it is. |
+| **Олена: Скажи, коли ти вільний.** | Olena: Tell me when you are free. |
+| **Тарас: Я вільний о шостій.** | Taras: I am free at six. |
+| **Олена: Я думаю, що о шостій добре.** | Olena: I think that six is good. |
+| **Тарас: Добре. Тоді о шостій біля кафе.** | Taras: Good. Then at six near the cafe. |
 
 The dialogue repeats three useful frames:
 
@@ -53,12 +66,25 @@ one clear A1 sentence.
 
 ### Гість шукає будинок
 
-<DialogueBox uk="Гість: Привіт, Олено! Я біля фонтану." en="Guest: Hi, Olena! I am near the fountain." />
-<DialogueBox uk="Олена: Добре. Ти знаєш, де парк?" en="Olena: Good. Do you know where the park is?" />
-<DialogueBox uk="Гість: Ні, я не знаю, де парк." en="Guest: No, I do not know where the park is." />
-<DialogueBox uk="Олена: Іди прямо. Де фонтан, там вулиця Садова." en="Olena: Go straight. Where the fountain is, there is Sadova Street." />
-<DialogueBox uk="Гість: Я бачу будинок, що стоїть біля дерева." en="Guest: I see the building that stands near the tree." />
-<DialogueBox uk="Олена: Так, це мій будинок. Заходь!" en="Olena: Yes, that is my building. Come in!" />
+```text
+Гість: Привіт, Олено! Я біля фонтану.
+Олена: Добре. Ти знаєш, де парк?
+Гість: Ні, я не знаю, де парк.
+Олена: Іди прямо. Де фонтан, там вулиця Садова.
+Гість: Я бачу будинок, що стоїть біля дерева.
+Олена: Так, це мій будинок. Заходь!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Гість: Привіт, Олено! Я біля фонтану.** | Guest: Hi, Olena! I am near the fountain. |
+| **Олена: Добре. Ти знаєш, де парк?** | Olena: Good. Do you know where the park is? |
+| **Гість: Ні, я не знаю, де парк.** | Guest: No, I do not know where the park is. |
+| **Олена: Іди прямо. Де фонтан, там вулиця Садова.** | Olena: Go straight. Where the fountain is, there is Sadova Street. |
+| **Гість: Я бачу будинок, що стоїть біля дерева.** | Guest: I see the building that stands near the tree. |
+| **Олена: Так, це мій будинок. Заходь!** | Olena: Yes, that is my building. Come in! |
 
 This scene keeps the place words concrete: **фонтан**, **парк**, **будинок**,
 **дерево**, **вулиця**. Notice that **де** can point to a place, and **що** can
@@ -73,11 +99,23 @@ connects a description to a noun.
 
 ### Новина про друга
 
-<DialogueBox uk="Марія: Ти знаєш, що Андрій уже в Києві?" en="Mariia: Do you know that Andrii is already in Kyiv?" />
-<DialogueBox uk="Іван: Ні. А де він живе?" en="Ivan: No. And where does he live?" />
-<DialogueBox uk="Марія: Я не знаю, де саме." en="Mariia: I do not know exactly where." />
-<DialogueBox uk="Іван: Скажи йому, коли зустріч у кафе." en="Ivan: Tell him when the meeting at the cafe is." />
-<DialogueBox uk="Марія: Добре. Я кажу йому, що ти хочеш зустрітися." en="Mariia: Good. I tell him that you want to meet." />
+```text
+Марія: Ти знаєш, що Андрій уже в Києві?
+Іван: Ні. А де він живе?
+Марія: Я не знаю, де саме.
+Іван: Скажи йому, коли зустріч у кафе.
+Марія: Добре. Я кажу йому, що ти хочеш зустрітися.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Марія: Ти знаєш, що Андрій уже в Києві?** | Mariia: Do you know that Andrii is already in Kyiv? |
+| **Іван: Ні. А де він живе?** | Ivan: No. And where does he live? |
+| **Марія: Я не знаю, де саме.** | Mariia: I do not know exactly where. |
+| **Іван: Скажи йому, коли зустріч у кафе.** | Ivan: Tell him when the meeting at the cafe is. |
+| **Марія: Добре. Я кажу йому, що ти хочеш зустрітися.** | Mariia: Good. I tell him that you want to meet. |
 
 This is a real communication pattern: people share a fact, ask for a place, and
 ask for a time. The whole module is built around those three needs:
@@ -186,8 +224,6 @@ Many English speakers write the Ukrainian sentence like English:
 
 The last repair matters because **що** is not a universal question word. Use
 **де** for a place and **коли** for a time.
-
-
 
 <span id="підсумок"></span>
 

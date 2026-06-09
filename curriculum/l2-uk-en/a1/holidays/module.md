@@ -24,18 +24,31 @@ Use **на + свято** when you mean time:
 **На Різдво ми співаємо колядки.**
 :::
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ### Листівка до зимових свят
 
-<DialogueBox uk="Марта: Привіт, Даниле! Я пишу листівку бабусі." en="Marta: Hi, Danylo! I am writing a card to my grandmother." />
-<DialogueBox uk="Данило: Що ти пишеш?" en="Danylo: What are you writing?" />
-<DialogueBox uk="Марта: Вітаю з Новим роком! Бажаю здоров'я і радості." en="Marta: Happy New Year! I wish you health and joy." />
-<DialogueBox uk="Данило: Гарно. А я пишу другові: З Різдвом Христовим!" en="Danylo: Nice. And I am writing to a friend: Merry Christmas!" />
-<DialogueBox uk="Марта: Додай: веселих свят і добрих канікул." en="Marta: Add: happy holidays and good vacation." />
-<DialogueBox uk="Данило: Добре. Це коротко і тепло." en="Danylo: Good. It is short and warm." />
+```text
+Марта: Привіт, Даниле! Я пишу листівку бабусі.
+Данило: Що ти пишеш?
+Марта: Вітаю з Новим роком! Бажаю здоров'я і радості.
+Данило: Гарно. А я пишу другові: З Різдвом Христовим!
+Марта: Додай: веселих свят і добрих канікул.
+Данило: Добре. Це коротко і тепло.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Марта: Привіт, Даниле! Я пишу листівку бабусі.** | Marta: Hi, Danylo! I am writing a card to my grandmother. |
+| **Данило: Що ти пишеш?** | Danylo: What are you writing? |
+| **Марта: Вітаю з Новим роком! Бажаю здоров'я і радості.** | Marta: Happy New Year! I wish you health and joy. |
+| **Данило: Гарно. А я пишу другові: З Різдвом Христовим!** | Danylo: Nice. And I am writing to a friend: Merry Christmas! |
+| **Марта: Додай: веселих свят і добрих канікул.** | Marta: Add: happy holidays and good vacation. |
+| **Данило: Добре. Це коротко і тепло.** | Danylo: Good. It is short and warm. |
 
 This is the most useful holiday skill: a short message. A good A1 card can be
 only two lines:
@@ -50,12 +63,25 @@ You can change only the holiday name:
 
 ### Що ви робите на Різдво і Великдень?
 
-<DialogueBox uk="Алекс: Оксано, що ви робите на Різдво?" en="Alex: Oksana, what do you do at Christmas?" />
-<DialogueBox uk="Оксана: Ми святкуємо вдома. Співаємо колядки і приймаємо гостей." en="Oksana: We celebrate at home. We sing koliadky and receive guests." />
-<DialogueBox uk="Алекс: А на Великдень?" en="Alex: And at Easter?" />
-<DialogueBox uk="Оксана: На Великдень ми печемо паски і фарбуємо яйця." en="Oksana: At Easter we bake pasky and dye eggs." />
-<DialogueBox uk="Алекс: Я знаю, що писанка дуже гарна." en="Alex: I know that a pysanka is very beautiful." />
-<DialogueBox uk="Оксана: Так. З Великоднем!" en="Oksana: Yes. Happy Easter!" />
+```text
+Алекс: Оксано, що ви робите на Різдво?
+Оксана: Ми святкуємо вдома. Співаємо колядки і приймаємо гостей.
+Алекс: А на Великдень?
+Оксана: На Великдень ми печемо паски і фарбуємо яйця.
+Алекс: Я знаю, що писанка дуже гарна.
+Оксана: Так. З Великоднем!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Алекс: Оксано, що ви робите на Різдво?** | Alex: Oksana, what do you do at Christmas? |
+| **Оксана: Ми святкуємо вдома. Співаємо колядки і приймаємо гостей.** | Oksana: We celebrate at home. We sing koliadky and receive guests. |
+| **Алекс: А на Великдень?** | Alex: And at Easter? |
+| **Оксана: На Великдень ми печемо паски і фарбуємо яйця.** | Oksana: At Easter we bake pasky and dye eggs. |
+| **Алекс: Я знаю, що писанка дуже гарна.** | Alex: I know that a pysanka is very beautiful. |
+| **Оксана: Так. З Великоднем!** | Oksana: Yes. Happy Easter! |
 
 Keep the two grammar patterns separate:
 
@@ -69,12 +95,25 @@ uses **святкувати Різдво** without **на**.
 
 ### Державне свято
 
-<DialogueBox uk="Софія: Коли День Незалежності України?" en="Sofiia: When is Independence Day of Ukraine?" />
-<DialogueBox uk="Ігор: Двадцять четвертого серпня." en="Ihor: On the twenty-fourth of August." />
-<DialogueBox uk="Софія: Це державне свято України." en="Sofiia: It is a state holiday of Ukraine." />
-<DialogueBox uk="Ігор: На це свято люди бачать синьо-жовті прапори." en="Ihor: On this holiday people see blue-and-yellow flags." />
-<DialogueBox uk="Софія: З Днем Незалежності України!" en="Sofiia: Happy Independence Day of Ukraine!" />
-<DialogueBox uk="Ігор: Дякую!" en="Ihor: Thank you!" />
+```text
+Софія: Коли День Незалежності України?
+Ігор: Двадцять четвертого серпня.
+Софія: Це державне свято України.
+Ігор: На це свято люди бачать синьо-жовті прапори.
+Софія: З Днем Незалежності України!
+Ігор: Дякую!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Софія: Коли День Незалежності України?** | Sofiia: When is Independence Day of Ukraine? |
+| **Ігор: Двадцять четвертого серпня.** | Ihor: On the twenty-fourth of August. |
+| **Софія: Це державне свято України.** | Sofiia: It is a state holiday of Ukraine. |
+| **Ігор: На це свято люди бачать синьо-жовті прапори.** | Ihor: On this holiday people see blue-and-yellow flags. |
+| **Софія: З Днем Незалежності України!** | Sofiia: Happy Independence Day of Ukraine! |
+| **Ігор: Дякую!** | Ihor: Thank you! |
 
 The active date is:
 
@@ -177,7 +216,6 @@ You can recognize the traditional formula, but your active A1 phrase can stay
 simple: **З Великоднем!**
 
 <!-- INJECT_ACTIVITY: act-4 -->
-
 
 ## Державні свята і підсумок
 

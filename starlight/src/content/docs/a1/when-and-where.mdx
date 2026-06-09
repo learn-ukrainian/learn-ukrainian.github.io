@@ -1,13 +1,11 @@
 ---
 title: "Коли і де"
-description: "Що, де, коли — як будувати перші короткі складні речення"
+description: "Що, де, коли — будуємо перші складні речення"
 sidebar:
   order: 45
   label: "45. Коли і де"
-pipeline: linear-phase-4
-build_status: validated
 prev: linking-ideas
-next: false
+next: holidays
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -86,20 +84,33 @@ When **що**, **де**, or **коли** connects two parts of a sentence, write
 before it: **Я знаю, де кафе.**
 :::
 
+## Діалоги
+
 ### Choose що, де, or коли
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence":"Я знаю, ___ це кафе.","answer":"що","options":["що","де","коли"]},{"sentence":"Я не знаю, ___ парк.","answer":"де","options":["де","що","коли"]},{"sentence":"Скажи, ___ урок.","answer":"коли","options":["коли","де","що"]},{"sentence":"Вона каже, ___ магазин близько.","answer":"що","options":["що","коли","де"]},{"sentence":"Я знаю, ___ ти живеш.","answer":"де","options":["де","що","куди"]},{"sentence":"Ти знаєш, ___ зустріч?","answer":"коли","options":["коли","що","де"]},{"sentence":"Я думаю, ___ це правильно.","answer":"що","options":["що","де","коли"]},{"sentence":"Скажи, ___ нове кафе.","answer":"де","options":["де","коли","що"]}]`)} />
-
-## Діалоги
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я знаю, ___ це кафе.", "answer": "що", "options": ["що", "де", "коли"]}, {"sentence": "Я не знаю, ___ парк.", "answer": "де", "options": ["де", "що", "коли"]}, {"sentence": "Скажи, ___ урок.", "answer": "коли", "options": ["коли", "де", "що"]}, {"sentence": "Вона каже, ___ магазин близько.", "answer": "що", "options": ["що", "коли", "де"]}, {"sentence": "Я знаю, ___ ти живеш.", "answer": "де", "options": ["де", "що", "куди"]}, {"sentence": "Ти знаєш, ___ зустріч?", "answer": "коли", "options": ["коли", "що", "де"]}, {"sentence": "Я думаю, ___ це правильно.", "answer": "що", "options": ["що", "де", "коли"]}, {"sentence": "Скажи, ___ нове кафе.", "answer": "де", "options": ["де", "коли", "що"]}]`)} />
 
 ### Домовляємося про зустріч
 
-<DialogueBox uk="Олена: Ти знаєш, де нове кафе?" en="Olena: Do you know where the new cafe is?" />
-<DialogueBox uk="Тарас: Так, я знаю, де воно." en="Taras: Yes, I know where it is." />
-<DialogueBox uk="Олена: Скажи, коли ти вільний." en="Olena: Tell me when you are free." />
-<DialogueBox uk="Тарас: Я вільний о шостій." en="Taras: I am free at six." />
-<DialogueBox uk="Олена: Я думаю, що о шостій добре." en="Olena: I think that six is good." />
-<DialogueBox uk="Тарас: Добре. Тоді о шостій біля кафе." en="Taras: Good. Then at six near the cafe." />
+```text
+Олена: Ти знаєш, де нове кафе?
+Тарас: Так, я знаю, де воно.
+Олена: Скажи, коли ти вільний.
+Тарас: Я вільний о шостій.
+Олена: Я думаю, що о шостій добре.
+Тарас: Добре. Тоді о шостій біля кафе.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Ти знаєш, де нове кафе?** | Olena: Do you know where the new cafe is? |
+| **Тарас: Так, я знаю, де воно.** | Taras: Yes, I know where it is. |
+| **Олена: Скажи, коли ти вільний.** | Olena: Tell me when you are free. |
+| **Тарас: Я вільний о шостій.** | Taras: I am free at six. |
+| **Олена: Я думаю, що о шостій добре.** | Olena: I think that six is good. |
+| **Тарас: Добре. Тоді о шостій біля кафе.** | Taras: Good. Then at six near the cafe. |
 
 The dialogue repeats three useful frames:
 
@@ -113,12 +124,25 @@ one clear A1 sentence.
 
 ### Гість шукає будинок
 
-<DialogueBox uk="Гість: Привіт, Олено! Я біля фонтану." en="Guest: Hi, Olena! I am near the fountain." />
-<DialogueBox uk="Олена: Добре. Ти знаєш, де парк?" en="Olena: Good. Do you know where the park is?" />
-<DialogueBox uk="Гість: Ні, я не знаю, де парк." en="Guest: No, I do not know where the park is." />
-<DialogueBox uk="Олена: Іди прямо. Де фонтан, там вулиця Садова." en="Olena: Go straight. Where the fountain is, there is Sadova Street." />
-<DialogueBox uk="Гість: Я бачу будинок, що стоїть біля дерева." en="Guest: I see the building that stands near the tree." />
-<DialogueBox uk="Олена: Так, це мій будинок. Заходь!" en="Olena: Yes, that is my building. Come in!" />
+```text
+Гість: Привіт, Олено! Я біля фонтану.
+Олена: Добре. Ти знаєш, де парк?
+Гість: Ні, я не знаю, де парк.
+Олена: Іди прямо. Де фонтан, там вулиця Садова.
+Гість: Я бачу будинок, що стоїть біля дерева.
+Олена: Так, це мій будинок. Заходь!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Гість: Привіт, Олено! Я біля фонтану.** | Guest: Hi, Olena! I am near the fountain. |
+| **Олена: Добре. Ти знаєш, де парк?** | Olena: Good. Do you know where the park is? |
+| **Гість: Ні, я не знаю, де парк.** | Guest: No, I do not know where the park is. |
+| **Олена: Іди прямо. Де фонтан, там вулиця Садова.** | Olena: Go straight. Where the fountain is, there is Sadova Street. |
+| **Гість: Я бачу будинок, що стоїть біля дерева.** | Guest: I see the building that stands near the tree. |
+| **Олена: Так, це мій будинок. Заходь!** | Olena: Yes, that is my building. Come in! |
 
 This scene keeps the place words concrete: **фонтан**, **парк**, **будинок**,
 **дерево**, **вулиця**. Notice that **де** can point to a place, and **що** can
@@ -133,11 +157,23 @@ connects a description to a noun.
 
 ### Новина про друга
 
-<DialogueBox uk="Марія: Ти знаєш, що Андрій уже в Києві?" en="Mariia: Do you know that Andrii is already in Kyiv?" />
-<DialogueBox uk="Іван: Ні. А де він живе?" en="Ivan: No. And where does he live?" />
-<DialogueBox uk="Марія: Я не знаю, де саме." en="Mariia: I do not know exactly where." />
-<DialogueBox uk="Іван: Скажи йому, коли зустріч у кафе." en="Ivan: Tell him when the meeting at the cafe is." />
-<DialogueBox uk="Марія: Добре. Я кажу йому, що ти хочеш зустрітися." en="Mariia: Good. I tell him that you want to meet." />
+```text
+Марія: Ти знаєш, що Андрій уже в Києві?
+Іван: Ні. А де він живе?
+Марія: Я не знаю, де саме.
+Іван: Скажи йому, коли зустріч у кафе.
+Марія: Добре. Я кажу йому, що ти хочеш зустрітися.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Марія: Ти знаєш, що Андрій уже в Києві?** | Mariia: Do you know that Andrii is already in Kyiv? |
+| **Іван: Ні. А де він живе?** | Ivan: No. And where does he live? |
+| **Марія: Я не знаю, де саме.** | Mariia: I do not know exactly where. |
+| **Іван: Скажи йому, коли зустріч у кафе.** | Ivan: Tell him when the meeting at the cafe is. |
+| **Марія: Добре. Я кажу йому, що ти хочеш зустрітися.** | Mariia: Good. I tell him that you want to meet. |
 
 This is a real communication pattern: people share a fact, ask for a place, and
 ask for a time. The whole module is built around those three needs:
@@ -148,7 +184,7 @@ ask for a time. The whole module is built around those three needs:
 
 ### Question word or connector?
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question":"Де кафе?","options":[{"text":"question word","correct":true},{"text":"connector","correct":false},{"text":"reason word","correct":false}],"explanation":"The sentence asks a question and ends with a question mark."},{"question":"Я знаю, де кафе.","options":[{"text":"connector","correct":true},{"text":"question word","correct":false},{"text":"choice word","correct":false}],"explanation":"Де connects the detail to Я знаю."},{"question":"Коли урок?","options":[{"text":"question word","correct":true},{"text":"connector","correct":false},{"text":"contrast word","correct":false}],"explanation":"It asks for a time."},{"question":"Скажи, коли урок.","options":[{"text":"connector","correct":true},{"text":"question word","correct":false},{"text":"add word","correct":false}],"explanation":"Коли connects the time detail to Скажи."},{"question":"Що це?","options":[{"text":"question word","correct":true},{"text":"connector","correct":false},{"text":"place word","correct":false}],"explanation":"It asks what something is."},{"question":"Я думаю, що це добре.","options":[{"text":"connector","correct":true},{"text":"question word","correct":false},{"text":"time word","correct":false}],"explanation":"Що connects the thought to its content."}]`)} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Де кафе?", "options": [{"text": "question word", "correct": true}, {"text": "connector", "correct": false}, {"text": "reason word", "correct": false}], "explanation": "The sentence asks a question and ends with a question mark."}, {"question": "Я знаю, де кафе.", "options": [{"text": "connector", "correct": true}, {"text": "question word", "correct": false}, {"text": "choice word", "correct": false}], "explanation": "Де connects the detail to Я знаю."}, {"question": "Коли урок?", "options": [{"text": "question word", "correct": true}, {"text": "connector", "correct": false}, {"text": "contrast word", "correct": false}], "explanation": "It asks for a time."}, {"question": "Скажи, коли урок.", "options": [{"text": "connector", "correct": true}, {"text": "question word", "correct": false}, {"text": "add word", "correct": false}], "explanation": "Коли connects the time detail to Скажи."}, {"question": "Що це?", "options": [{"text": "question word", "correct": true}, {"text": "connector", "correct": false}, {"text": "place word", "correct": false}], "explanation": "It asks what something is."}, {"question": "Я думаю, що це добре.", "options": [{"text": "connector", "correct": true}, {"text": "question word", "correct": false}, {"text": "time word", "correct": false}], "explanation": "Що connects the thought to its content."}]`)} />
 
 ## Складне речення
 
@@ -203,11 +239,11 @@ writing does not. The pause is small, but the comma is still there.
 
 ### Build the frame
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence":"___, що це добре.","answer":"Я думаю","options":["Я думаю","Де","Коли"]},{"sentence":"___, де магазин.","answer":"Я не знаю","options":["Я не знаю","Що","Але"]},{"sentence":"___, коли зустріч.","answer":"Скажи","options":["Скажи","Де","Бо"]},{"sentence":"___, що урок сьогодні.","answer":"Вона каже","options":["Вона каже","Коли","Чи"]},{"sentence":"___, де парк.","answer":"Ти знаєш","options":["Ти знаєш","Що","Коли"]},{"sentence":"___, що він тут.","answer":"Я знаю","options":["Я знаю","Де","Куди"]}]`)} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___, що це добре.", "answer": "Я думаю", "options": ["Я думаю", "Де", "Коли"]}, {"sentence": "___, де магазин.", "answer": "Я не знаю", "options": ["Я не знаю", "Що", "Але"]}, {"sentence": "___, коли зустріч.", "answer": "Скажи", "options": ["Скажи", "Де", "Бо"]}, {"sentence": "___, що урок сьогодні.", "answer": "Вона каже", "options": ["Вона каже", "Коли", "Чи"]}, {"sentence": "___, де парк.", "answer": "Ти знаєш", "options": ["Ти знаєш", "Що", "Коли"]}, {"sentence": "___, що він тут.", "answer": "Я знаю", "options": ["Я знаю", "Де", "Куди"]}]`)} />
 
 ### Where does the comma go?
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question":"I know where the cafe is.","options":[{"text":"Я знаю, де кафе.","correct":true},{"text":"Я знаю де кафе.","correct":false},{"text":"Я, знаю де кафе.","correct":false}],"explanation":"Put the comma before де."},{"question":"I think that this is good.","options":[{"text":"Я думаю, що це добре.","correct":true},{"text":"Я думаю що це добре.","correct":false},{"text":"Я, думаю що це добре.","correct":false}],"explanation":"Put the comma before що."},{"question":"Tell me when the lesson is.","options":[{"text":"Скажи, коли урок.","correct":true},{"text":"Скажи коли урок.","correct":false},{"text":"Скажи коли, урок.","correct":false}],"explanation":"Put the comma before коли."},{"question":"She says that the shop is close.","options":[{"text":"Вона каже, що магазин близько.","correct":true},{"text":"Вона каже що магазин близько.","correct":false},{"text":"Вона, каже що магазин близько.","correct":false}],"explanation":"Каже, що uses a comma before що."}]`)} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "I know where the cafe is.", "options": [{"text": "Я знаю, де кафе.", "correct": true}, {"text": "Я знаю де кафе.", "correct": false}, {"text": "Я, знаю де кафе.", "correct": false}], "explanation": "Put the comma before де."}, {"question": "I think that this is good.", "options": [{"text": "Я думаю, що це добре.", "correct": true}, {"text": "Я думаю що це добре.", "correct": false}, {"text": "Я, думаю що це добре.", "correct": false}], "explanation": "Put the comma before що."}, {"question": "Tell me when the lesson is.", "options": [{"text": "Скажи, коли урок.", "correct": true}, {"text": "Скажи коли урок.", "correct": false}, {"text": "Скажи коли, урок.", "correct": false}], "explanation": "Put the comma before коли."}, {"question": "She says that the shop is close.", "options": [{"text": "Вона каже, що магазин близько.", "correct": true}, {"text": "Вона каже що магазин близько.", "correct": false}, {"text": "Вона, каже що магазин близько.", "correct": false}], "explanation": "Каже, що uses a comma before що."}]`)} />
 
 ## Що, де, коли: two roles
 
@@ -252,14 +288,6 @@ Many English speakers write the Ukrainian sentence like English:
 
 The last repair matters because **що** is not a universal question word. Use
 **де** for a place and **коли** for a time.
-
-### Word job
-
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left":"що","right":"fact or content"},{"left":"де","right":"place"},{"left":"коли","right":"time"},{"left":"Я знаю, що...","right":"I know that..."},{"left":"Я знаю, де...","right":"I know where..."},{"left":"Скажи, коли...","right":"Tell me when..."}]`)} />
-
-### Build short complex sentences
-
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled":"Я / знаю / що / це / кафе","answer":"Я знаю, що це кафе."},{"jumbled":"Я / не / знаю / де / парк","answer":"Я не знаю, де парк."},{"jumbled":"Скажи / коли / урок","answer":"Скажи, коли урок."},{"jumbled":"Вона / каже / що / магазин / близько","answer":"Вона каже, що магазин близько."},{"jumbled":"Ти / знаєш / де / нове / кафе","answer":"Ти знаєш, де нове кафе?"},{"jumbled":"Я / думаю / що / це / правильно","answer":"Я думаю, що це правильно."}]`)} />
 
 <span id="підсумок"></span>
 
@@ -310,14 +338,6 @@ Use this mini-checklist:
 | Did I use **що** for a time? | Use **коли**. |
 | Is the second part too long? | Make it short and A1. |
 
-### Connector checks
-
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement":"Що can ask a question and can also connect a fact.","isTrue":true,"explanation":"Що це? and Я знаю, що це кафе both work."},{"statement":"Де is the basic word for a static place.","isTrue":true,"explanation":"Use де in Де кафе? and Я знаю, де кафе."},{"statement":"Коли is useful for asking or giving a time.","isTrue":true,"explanation":"Коли урок? and Скажи, коли урок."},{"statement":"Ukrainian never writes a comma before що, де, or коли.","isTrue":false,"explanation":"When these words connect two parts, write the comma before them."},{"statement":"Куди ти живеш? is the best A1 question for a home address.","isTrue":false,"explanation":"Use Де ти живеш? for a static place."},{"statement":"At A1, the second part should stay short.","isTrue":true,"explanation":"Short frames are the goal here."},{"statement":"Що is a universal replacement for де and коли.","isTrue":false,"explanation":"Use де for place and коли for time."},{"statement":"Я думаю, що це добре is a useful A1 frame.","isTrue":true,"explanation":"It is short and practical."}]`)} />
-
-### Repair what, where, when
-
-<ErrorCorrection client:only='react' instruction="Correct the connector, comma, or place/time word." items={JSON.parse(`[{"sentence":"Я знаю де кафе.","errorWord":"знаю де","correctForm":"знаю, де","options":[],"explanation":"Add the comma before де."},{"sentence":"Скажи коли урок.","errorWord":"Скажи коли","correctForm":"Скажи, коли","options":[],"explanation":"Add the comma before коли."},{"sentence":"Я думаю що це добре.","errorWord":"думаю що","correctForm":"думаю, що","options":[],"explanation":"Add the comma before що."},{"sentence":"Куди ти живеш?","errorWord":"Куди","correctForm":"Де","options":[],"explanation":"Use де for a static place."},{"sentence":"Я знаю, що парк.","errorWord":"що","correctForm":"де","options":[],"explanation":"A park location needs де."},{"sentence":"Скажи, що зустріч.","errorWord":"що","correctForm":"коли","options":[],"explanation":"A meeting time needs коли."},{"sentence":"Вона каже що урок сьогодні.","errorWord":"каже що","correctForm":"каже, що","options":[],"explanation":"Add the comma before що."},{"sentence":"Я не знаю, куди магазин.","errorWord":"куди","correctForm":"де","options":[],"explanation":"A shop is located somewhere, so use де."}]`)} />
-
 </TabItem>
 <TabItem label="Vocabulary">
 
@@ -330,35 +350,35 @@ Use this mini-checklist:
 
 ### Choose що, де, or коли
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence":"Я знаю, ___ це кафе.","answer":"що","options":["що","де","коли"]},{"sentence":"Я не знаю, ___ парк.","answer":"де","options":["де","що","коли"]},{"sentence":"Скажи, ___ урок.","answer":"коли","options":["коли","де","що"]},{"sentence":"Вона каже, ___ магазин близько.","answer":"що","options":["що","коли","де"]},{"sentence":"Я знаю, ___ ти живеш.","answer":"де","options":["де","що","куди"]},{"sentence":"Ти знаєш, ___ зустріч?","answer":"коли","options":["коли","що","де"]},{"sentence":"Я думаю, ___ це правильно.","answer":"що","options":["що","де","коли"]},{"sentence":"Скажи, ___ нове кафе.","answer":"де","options":["де","коли","що"]}]`)} />
+*(see lesson, §Діалоги)*
 
 ### Question word or connector?
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question":"Де кафе?","options":[{"text":"question word","correct":true},{"text":"connector","correct":false},{"text":"reason word","correct":false}],"explanation":"The sentence asks a question and ends with a question mark."},{"question":"Я знаю, де кафе.","options":[{"text":"connector","correct":true},{"text":"question word","correct":false},{"text":"choice word","correct":false}],"explanation":"Де connects the detail to Я знаю."},{"question":"Коли урок?","options":[{"text":"question word","correct":true},{"text":"connector","correct":false},{"text":"contrast word","correct":false}],"explanation":"It asks for a time."},{"question":"Скажи, коли урок.","options":[{"text":"connector","correct":true},{"text":"question word","correct":false},{"text":"add word","correct":false}],"explanation":"Коли connects the time detail to Скажи."},{"question":"Що це?","options":[{"text":"question word","correct":true},{"text":"connector","correct":false},{"text":"place word","correct":false}],"explanation":"It asks what something is."},{"question":"Я думаю, що це добре.","options":[{"text":"connector","correct":true},{"text":"question word","correct":false},{"text":"time word","correct":false}],"explanation":"Що connects the thought to its content."}]`)} />
+*(see lesson, §Новина про друга)*
 
 ### Build the frame
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence":"___, що це добре.","answer":"Я думаю","options":["Я думаю","Де","Коли"]},{"sentence":"___, де магазин.","answer":"Я не знаю","options":["Я не знаю","Що","Але"]},{"sentence":"___, коли зустріч.","answer":"Скажи","options":["Скажи","Де","Бо"]},{"sentence":"___, що урок сьогодні.","answer":"Вона каже","options":["Вона каже","Коли","Чи"]},{"sentence":"___, де парк.","answer":"Ти знаєш","options":["Ти знаєш","Що","Коли"]},{"sentence":"___, що він тут.","answer":"Я знаю","options":["Я знаю","Де","Куди"]}]`)} />
+*(see lesson, §The comma is part of the pattern)*
 
 ### Where does the comma go?
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question":"I know where the cafe is.","options":[{"text":"Я знаю, де кафе.","correct":true},{"text":"Я знаю де кафе.","correct":false},{"text":"Я, знаю де кафе.","correct":false}],"explanation":"Put the comma before де."},{"question":"I think that this is good.","options":[{"text":"Я думаю, що це добре.","correct":true},{"text":"Я думаю що це добре.","correct":false},{"text":"Я, думаю що це добре.","correct":false}],"explanation":"Put the comma before що."},{"question":"Tell me when the lesson is.","options":[{"text":"Скажи, коли урок.","correct":true},{"text":"Скажи коли урок.","correct":false},{"text":"Скажи коли, урок.","correct":false}],"explanation":"Put the comma before коли."},{"question":"She says that the shop is close.","options":[{"text":"Вона каже, що магазин близько.","correct":true},{"text":"Вона каже що магазин близько.","correct":false},{"text":"Вона, каже що магазин близько.","correct":false}],"explanation":"Каже, що uses a comma before що."}]`)} />
+*(see lesson, §The comma is part of the pattern)*
 
 ### Word job
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left":"що","right":"fact or content"},{"left":"де","right":"place"},{"left":"коли","right":"time"},{"left":"Я знаю, що...","right":"I know that..."},{"left":"Я знаю, де...","right":"I know where..."},{"left":"Скажи, коли...","right":"Tell me when..."}]`)} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "що", "right": "fact or content"}, {"left": "де", "right": "place"}, {"left": "коли", "right": "time"}, {"left": "Я знаю, що...", "right": "I know that..."}, {"left": "Я знаю, де...", "right": "I know where..."}, {"left": "Скажи, коли...", "right": "Tell me when..."}]`)} />
 
 ### Build short complex sentences
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled":"Я / знаю / що / це / кафе","answer":"Я знаю, що це кафе."},{"jumbled":"Я / не / знаю / де / парк","answer":"Я не знаю, де парк."},{"jumbled":"Скажи / коли / урок","answer":"Скажи, коли урок."},{"jumbled":"Вона / каже / що / магазин / близько","answer":"Вона каже, що магазин близько."},{"jumbled":"Ти / знаєш / де / нове / кафе","answer":"Ти знаєш, де нове кафе?"},{"jumbled":"Я / думаю / що / це / правильно","answer":"Я думаю, що це правильно."}]`)} />
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Я / знаю / що / це / кафе", "answer": "Я знаю, що це кафе."}, {"jumbled": "Я / не / знаю / де / парк", "answer": "Я не знаю, де парк."}, {"jumbled": "Скажи / коли / урок", "answer": "Скажи, коли урок."}, {"jumbled": "Вона / каже / що / магазин / близько", "answer": "Вона каже, що магазин близько."}, {"jumbled": "Ти / знаєш / де / нове / кафе", "answer": "Ти знаєш, де нове кафе?"}, {"jumbled": "Я / думаю / що / це / правильно", "answer": "Я думаю, що це правильно."}]`)} />
 
 ### Connector checks
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement":"Що can ask a question and can also connect a fact.","isTrue":true,"explanation":"Що це? and Я знаю, що це кафе both work."},{"statement":"Де is the basic word for a static place.","isTrue":true,"explanation":"Use де in Де кафе? and Я знаю, де кафе."},{"statement":"Коли is useful for asking or giving a time.","isTrue":true,"explanation":"Коли урок? and Скажи, коли урок."},{"statement":"Ukrainian never writes a comma before що, де, or коли.","isTrue":false,"explanation":"When these words connect two parts, write the comma before them."},{"statement":"Куди ти живеш? is the best A1 question for a home address.","isTrue":false,"explanation":"Use Де ти живеш? for a static place."},{"statement":"At A1, the second part should stay short.","isTrue":true,"explanation":"Short frames are the goal here."},{"statement":"Що is a universal replacement for де and коли.","isTrue":false,"explanation":"Use де for place and коли for time."},{"statement":"Я думаю, що це добре is a useful A1 frame.","isTrue":true,"explanation":"It is short and practical."}]`)} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Що can ask a question and can also connect a fact.", "isTrue": true, "explanation": "Що це? and Я знаю, що це кафе both work."}, {"statement": "Де is the basic word for a static place.", "isTrue": true, "explanation": "Use де in Де кафе? and Я знаю, де кафе."}, {"statement": "Коли is useful for asking or giving a time.", "isTrue": true, "explanation": "Коли урок? and Скажи, коли урок."}, {"statement": "Ukrainian never writes a comma before що, де, or коли.", "isTrue": false, "explanation": "When these words connect two parts, write the comma before them."}, {"statement": "Куди ти живеш? is the best A1 question for a home address.", "isTrue": false, "explanation": "Use Де ти живеш? for a static place."}, {"statement": "At A1, the second part should stay short.", "isTrue": true, "explanation": "Short frames are the goal here."}, {"statement": "Що is a universal replacement for де and коли.", "isTrue": false, "explanation": "Use де for place and коли for time."}, {"statement": "Я думаю, що це добре is a useful A1 frame.", "isTrue": true, "explanation": "It is short and practical."}]`)} />
 
 ### Repair what, where, when
 
-<ErrorCorrection client:only='react' instruction="Correct the connector, comma, or place/time word." items={JSON.parse(`[{"sentence":"Я знаю де кафе.","errorWord":"знаю де","correctForm":"знаю, де","options":[],"explanation":"Add the comma before де."},{"sentence":"Скажи коли урок.","errorWord":"Скажи коли","correctForm":"Скажи, коли","options":[],"explanation":"Add the comma before коли."},{"sentence":"Я думаю що це добре.","errorWord":"думаю що","correctForm":"думаю, що","options":[],"explanation":"Add the comma before що."},{"sentence":"Куди ти живеш?","errorWord":"Куди","correctForm":"Де","options":[],"explanation":"Use де for a static place."},{"sentence":"Я знаю, що парк.","errorWord":"що","correctForm":"де","options":[],"explanation":"A park location needs де."},{"sentence":"Скажи, що зустріч.","errorWord":"що","correctForm":"коли","options":[],"explanation":"A meeting time needs коли."},{"sentence":"Вона каже що урок сьогодні.","errorWord":"каже що","correctForm":"каже, що","options":[],"explanation":"Add the comma before що."},{"sentence":"Я не знаю, куди магазин.","errorWord":"куди","correctForm":"де","options":[],"explanation":"A shop is located somewhere, so use де."}]`)} />
+<ErrorCorrection client:only='react' instruction="Correct the connector, comma, or place/time word." items={JSON.parse(`[{"sentence": "Я знаю де кафе.", "errorWord": "знаю де", "correctForm": "знаю, де", "options": [], "explanation": "Add the comma before де."}, {"sentence": "Скажи коли урок.", "errorWord": "Скажи коли", "correctForm": "Скажи, коли", "options": [], "explanation": "Add the comma before коли."}, {"sentence": "Я думаю що це добре.", "errorWord": "думаю що", "correctForm": "думаю, що", "options": [], "explanation": "Add the comma before що."}, {"sentence": "Куди ти живеш?", "errorWord": "Куди", "correctForm": "Де", "options": [], "explanation": "Use де for a static place."}, {"sentence": "Я знаю, що парк.", "errorWord": "що", "correctForm": "де", "options": [], "explanation": "A park location needs де."}, {"sentence": "Скажи, що зустріч.", "errorWord": "що", "correctForm": "коли", "options": [], "explanation": "A meeting time needs коли."}, {"sentence": "Вона каже що урок сьогодні.", "errorWord": "каже що", "correctForm": "каже, що", "options": [], "explanation": "Add the comma before що."}, {"sentence": "Я не знаю, куди магазин.", "errorWord": "куди", "correctForm": "де", "options": [], "explanation": "A shop is located somewhere, so use де."}]`)} />
 
 </TabItem>
 <TabItem label="Resources">
@@ -366,10 +386,10 @@ Use this mini-checklist:
 :::info[🎧 🔗 External Resources]
 
 **🔗 Online resources:**
-- 🔗 **State Standard 2024, §4.3.2** — Plan reference for basic complex sentences with що, де, and коли; narrowed here to A1 sentence frames.
-- 🔗 **Заболотний Grade 9, p.79** — Source-registry support for subordinate connectors and punctuation; adapted here as short A1 comma habits.
-- 🔗 **Авраменко Grade 9, p.32** — Source-registry support for time/place questions and dependent clauses; simplified for beginner production.
+- 🔗 **State Standard 2024, §4.3.2** — for basic complex sentences with що, де, and коли; narrowed here to A1 sentence frames.
 - 🔗 **Wiki: pedagogy/a1/when-and-where** — Pedagogical brief for M45, including L2 repairs, punctuation cautions, and decolonized place/time framing.
+- 🔗 **Авраменко Grade 9, p.32** — Source-registry support for time/place questions and dependent clauses; simplified for beginner production.
+- 🔗 **Заболотний Grade 9, p.79** — Source-registry support for subordinate connectors and punctuation; adapted here as short A1 comma habits.
 :::
 
 </TabItem>
