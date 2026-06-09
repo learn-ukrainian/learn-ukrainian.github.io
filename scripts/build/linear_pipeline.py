@@ -613,6 +613,18 @@ _INJECT_RE = re.compile(r"<!--\s*INJECT_ACTIVITY:\s*([A-Za-z0-9_-]+)\s*-->")
 _HEADING_RE = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
 _VESUM_SHORT_DECORATED_WORDS = frozenset({"ся", "сь"})
 _VESUM_STRESS_MARKS = frozenset({"\u0300", "\u0301"})
+# O-grade plural obliques (`-остей`, `-остями`, `-остях`, `-остям`) overlap
+# Russian `-ость` forms such as `новостей`; keep that fallback to longer
+# stems so it does not pass merely because short bases like `новий` verify.
+_VESUM_PRODUCTIVE_IST_ENDINGS = (
+    ("остями", 5),
+    ("остей", 5),
+    ("остях", 5),
+    ("остям", 5),
+    ("істю", 1),
+    ("ості", 1),
+    ("ість", 1),
+)
 
 # Metalinguistic content that must be stripped before VESUM lookup:
 # phonetic transcriptions like [с':а] and inline code in backticks contain
@@ -8207,6 +8219,36 @@ def _vesum_gate(
                     resolved_compounds.add(compound)
             missing_lc -= resolved_compounds
     if missing_lc:
+        ist_adjective_candidates_by_missing = {
+            word: candidates
+            for word in missing_lc
+            if (candidates := _productive_ist_adjective_candidates(word))
+        }
+        ist_adjective_lookups = {
+            candidate
+            for candidates in ist_adjective_candidates_by_missing.values()
+            for candidate in candidates
+        }
+        if ist_adjective_lookups:
+            try:
+                ist_adjective_verified = verify_words_fn(sorted(ist_adjective_lookups))
+            except Exception as exc:
+                return {
+                    "passed": False,
+                    "error": str(exc),
+                    "checked": len(unchecked_pairs),
+                }
+            verified_adjectives = {
+                word
+                for word, matches in ist_adjective_verified.items()
+                if any(_vesum_match_is_adjective(match) for match in matches)
+            }
+            missing_lc -= {
+                word
+                for word, candidates in ist_adjective_candidates_by_missing.items()
+                if any(candidate in verified_adjectives for candidate in candidates)
+            }
+    if missing_lc:
         missing_lc = {word for word in missing_lc if not _is_sung_vowel_practice_lookup(word)}
     missing = sorted({surface for surface, lower, _original in unchecked_pairs if lower in missing_lc})
     ignored_missing_lc = _vesum_missing_exclusion_keys(
@@ -8458,6 +8500,21 @@ def _vesum_missing_exclusion_keys(
             if len(word) >= min_word_length:
                 keys.add(word.lower())
     return frozenset(keys)
+
+
+def _productive_ist_adjective_candidates(word: str) -> tuple[str, ...]:
+    for ending, min_stem_length in _VESUM_PRODUCTIVE_IST_ENDINGS:
+        if not word.endswith(ending):
+            continue
+        stem = word[: -len(ending)]
+        if len(stem) < min_stem_length:
+            return ()
+        return (f"{stem}ий", f"{stem}ій")
+    return ()
+
+
+def _vesum_match_is_adjective(match: Mapping[str, Any]) -> bool:
+    return str(match.get("pos", "")).lower() in {"adj", "adjective"}
 
 
 def _iter_vesum_lookup_surface_pairs(
