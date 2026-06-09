@@ -8,7 +8,7 @@ type DocsEntry = CollectionEntry<'docs'>;
 type TrackStats = Record<string, { modules?: number } | number>;
 type HeroVariant = 'core' | 'folk' | 'lexicon' | 'seminar' | 'lit' | 'history' | 'unavailable';
 type TrackFamily = 'core' | 'seminar' | 'reference';
-type TrackState = 'beta' | 'next' | 'planned' | 'test' | 'unavailable';
+type TrackState = 'released' | 'beta' | 'next' | 'planned' | 'test' | 'unavailable';
 type TrackOverview = {
   label: string;
   title: string;
@@ -50,16 +50,16 @@ const TRACKS: Record<string, TrackOverview> = {
   a1: {
     label: 'A1',
     title: 'Перші кроки · First Steps',
-    eyebrow: 'A1 beta release',
+    eyebrow: 'A1 release',
     subtitle: 'Beginner Ukrainian for sounds, reading, first conversations, everyday needs, and the A1 finale.',
-    status: 'Beta / release focus',
+    status: 'Released beginner course',
     family: 'core',
-    state: 'beta',
+    state: 'released',
     heroVariant: 'core',
     primaryAction: { href: '/a1/sounds-letters-and-hello/', label: 'Start Module 1' },
     secondaryAction: { href: '/lexicon/', label: 'Open Word Atlas' },
     points: [
-      'A1 is the public release focus and the first track learners should use today.',
+      'A1 is the released public beginner track and the first course learners should use today.',
       'Lessons keep Ukrainian first with English support where it helps beginners move.',
       'Self-study is supported, but trained native Ukrainian teachers are still the best path.',
     ],
@@ -515,7 +515,11 @@ const sidebar = props.kind === 'doc'
     <section class:list={['track-overview', `track-${props.track}`, pageTrack.family, pageTrack.state]}>
       <div class="track-status-panel">
         <span>{pageTrack.status}</span>
-        <strong>{moduleCount(props.track)} planned modules</strong>
+        <strong>
+          {moduleCount(props.track)}
+          {' '}
+          {pageTrack.state === 'released' || pageTrack.state === 'test' ? 'available modules' : 'planned modules'}
+        </strong>
       </div>
 
       <div class="track-overview-grid">
@@ -572,7 +576,7 @@ const sidebar = props.kind === 'doc'
             The learner UI keeps the route visible so navigation, search, and future publishing have
             a real template, but it does not claim this content is ready for study.
           </p>
-          <a href="/a1/">Use the available A1 beta track</a>
+          <a href="/a1/">Use the available A1 track</a>
         </section>
       ) : (
         <section class="module-preview">
@@ -719,7 +723,7 @@ const sidebar = props.kind === 'doc'
             : 'Atlas and reference indexes should communicate when a filter or future dataset has no records.'}
       </p>
       <div class="state-actions">
-        <a href="/a1/">A1 Beta</a>
+        <a href="/a1/">A1 Release</a>
         <a href="/folk/">Folk Seminar</a>
         <a href="/search/">Search</a>
         <a href="/lexicon/">Word Atlas</a>
