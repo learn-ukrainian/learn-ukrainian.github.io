@@ -6,6 +6,22 @@ type NavItem = {
   label: string;
 };
 
+type SidebarLink = {
+  href: string;
+  label: string;
+  num: string;
+  active: boolean;
+};
+
+type Sidebar = {
+  backHref: string;
+  backLabel: string;
+  positionLabel: string;
+  progressDone: number;
+  progressTotal: number;
+  links: SidebarLink[];
+};
+
 type Props = {
   title: string;
   description?: string;
@@ -15,6 +31,7 @@ type Props = {
   heroVariant?: 'core' | 'folk' | 'lexicon' | 'seminar' | 'lit' | 'history' | 'unavailable';
   wide?: boolean;
   navItems?: NavItem[];
+  sidebar?: Sidebar;
   showHero?: boolean;
 };
 
@@ -27,8 +44,14 @@ const {
   heroVariant = 'core',
   wide = false,
   navItems = [],
+  sidebar,
   showHero = true,
 } = Astro.props as Props;
+
+const sidebarPct =
+  sidebar && sidebar.progressTotal > 0
+    ? Math.round((sidebar.progressDone / sidebar.progressTotal) * 100)
+    : 0;
 
 const canonicalPath = currentPath.endsWith('/') ? currentPath : `${currentPath}/`;
 
@@ -148,12 +171,52 @@ const isActive = (href: string) => {
           </nav>
         )}
 
-        <article class:list={['lu-page', wide && 'wide']}>
+        <article class:list={['lu-page', wide && 'wide', sidebar && 'has-sidebar']}>
+          {sidebar && (
+            <details class="lu-sidebar" open>
+              <summary class="lu-sidebar-toggle">
+                Lessons · {sidebar.positionLabel}
+              </summary>
+              <div class="lu-sidebar-body">
+                <a class="lu-sidebar-back" href={sidebar.backHref}>← {sidebar.backLabel}</a>
+                <div class="lu-sidebar-progress">
+                  <div>{sidebar.positionLabel}</div>
+                  <div class="lu-mini-bar">
+                    <div class="lu-mini-fill" style={`width:${sidebarPct}%`} />
+                  </div>
+                </div>
+                <nav class="lu-sidebar-nav" aria-label="Lessons in this track">
+                  {sidebar.links.map((link) => (
+                    <a
+                      class:list={['lu-sidebar-link', link.active && 'active']}
+                      href={link.href}
+                      aria-current={link.active ? 'page' : undefined}
+                    >
+                      <span class="lu-sidebar-num">{link.num}</span>
+                      <span class="lu-sidebar-text">{link.label}</span>
+                    </a>
+                  ))}
+                </nav>
+              </div>
+            </details>
+          )}
           <div class="lu-content">
             <slot />
           </div>
         </article>
       </main>
+      {sidebar && (
+        <script is:inline>
+          {/* Desktop keeps the lesson sidebar open (sticky column); collapse it
+              by default on narrow screens so it doesn't push content down. */}
+          (() => {
+            const details = document.querySelector('.lu-sidebar');
+            if (details && window.matchMedia('(max-width: 899px)').matches) {
+              details.open = false;
+            }
+          })();
+        </script>
+      )}
 
       <footer class="lu-footer">
         <div class="lu-footer-inner">

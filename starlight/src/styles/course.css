@@ -325,6 +325,133 @@ body {
   max-width: var(--lu-max-width);
 }
 
+/* ── Doc-layout lesson sidebar (#2823) ─────────────────────────────── */
+.lu-page.has-sidebar {
+  max-width: var(--lu-max-width);
+}
+.lu-sidebar-toggle {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--lu-text);
+  background: var(--lu-surface-muted);
+  border: 1px solid var(--lu-border);
+  border-radius: 10px;
+}
+.lu-sidebar-toggle::-webkit-details-marker {
+  display: none;
+}
+.lu-sidebar-toggle::before {
+  content: "☰";
+  color: var(--lu-blue);
+}
+.lu-sidebar-body {
+  margin-top: 8px;
+  padding: 16px;
+  background: var(--lu-surface);
+  border: 1px solid var(--lu-border);
+  border-radius: 12px;
+}
+.lu-sidebar-back {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--lu-blue);
+  text-decoration: none;
+}
+.lu-sidebar-back:hover {
+  text-decoration: underline;
+}
+.lu-sidebar-progress {
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  font-size: 0.8rem;
+  color: var(--lu-text-muted);
+  border-bottom: 1px solid var(--lu-border);
+}
+.lu-mini-bar {
+  margin-top: 6px;
+  height: 5px;
+  background: var(--lu-surface-muted);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.lu-mini-fill {
+  height: 100%;
+  background: var(--lu-blue);
+  border-radius: 3px;
+}
+.lu-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.lu-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  font-size: 0.88rem;
+  line-height: 1.3;
+  color: var(--lu-text);
+  text-decoration: none;
+  border-radius: 8px;
+}
+.lu-sidebar-link:hover {
+  background: var(--lu-surface-muted);
+}
+.lu-sidebar-link.active {
+  background: var(--lu-blue-light);
+  color: var(--lu-blue-dark);
+  font-weight: 600;
+}
+.lu-sidebar-num {
+  flex-shrink: 0;
+  min-width: 1.6em;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--lu-text-muted);
+}
+.lu-sidebar-link.active .lu-sidebar-num {
+  color: var(--lu-blue);
+}
+.lu-sidebar-text {
+  flex: 1;
+}
+
+@media (min-width: 900px) {
+  .lu-page.has-sidebar {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 40px;
+    align-items: start;
+  }
+  .lu-sidebar {
+    position: sticky;
+    top: 80px;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+  }
+  .lu-sidebar-toggle {
+    display: none;
+  }
+  /* Force the lesson list visible on desktop regardless of <details> state. */
+  .lu-sidebar-body {
+    display: block;
+    margin-top: 28px;
+    border: none;
+    padding: 0;
+    background: none;
+  }
+}
+
 .lu-hero {
   color: #FFFFFF;
   background: var(--lu-hero-grad);

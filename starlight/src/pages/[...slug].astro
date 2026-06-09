@@ -466,6 +466,37 @@ const navItems = props.kind === 'doc'
       { href: '/', label: 'Home' },
       { href: pageMeta.currentPath, label: pageMeta.title },
     ];
+
+// Doc-layout lesson sidebar (#2823): persistent track navigation built from the
+// same per-track sorted lesson list the track landing page uses.
+const sidebar = props.kind === 'doc'
+  ? (() => {
+      const lessons = deployedDocsByTrack.get(docTrack) ?? [];
+      if (lessons.length === 0) return undefined;
+      const links = lessons.map((entry) => {
+        const id = normalizeId(entry.id);
+        const order = entry.data.sidebar?.order;
+        return {
+          href: hrefFromRoute(id),
+          label: entry.data.title,
+          num: order ? String(order).padStart(2, '0') : '•',
+          active: id === docRoute,
+        };
+      });
+      const currentIndex = links.findIndex((link) => link.active);
+      const position = currentIndex >= 0 ? currentIndex + 1 : 0;
+      return {
+        backHref: `/${docTrack}/`,
+        backLabel: TRACKS[docTrack]?.label ?? docTrack.toUpperCase(),
+        positionLabel: position > 0
+          ? `Lesson ${position} of ${links.length}`
+          : `${links.length} lessons`,
+        progressDone: position,
+        progressTotal: links.length,
+        links,
+      };
+    })()
+  : undefined;
 ---
 
 <CourseLayout
@@ -476,6 +507,7 @@ const navItems = props.kind === 'doc'
   currentPath={pageMeta.currentPath}
   heroVariant={pageMeta.heroVariant}
   navItems={navItems}
+  sidebar={sidebar}
   wide={pageMeta.wide}
   showHero
 >
