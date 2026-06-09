@@ -15,19 +15,32 @@ By the end, you can:
 - keep Ukrainian place language clean: **Київ / Kyiv**, **в Україні**,
   **в Україну**.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 First listen for the movement verb. **Іти** usually means going on foot.
 **Їхати** means going by transport. Both can answer **куди?**
 
-<DialogueBox uk="Оксана: Добрий день, Степане! Куди ти йдеш?" en="Oksana: Good afternoon, Stepan! Where are you going?" />
-<DialogueBox uk="Степан: Я йду в банк. А ти?" en="Stepan: I am going to the bank. And you?" />
-<DialogueBox uk="Оксана: Я йду на пошту, а потім на роботу." en="Oksana: I am going to the post office, and then to work." />
-<DialogueBox uk="Степан: Після банку я йду в магазин." en="Stepan: After the bank I am going to the shop." />
-<DialogueBox uk="Оксана: Чудово. Потім ходімо в кафе." en="Oksana: Great. Then let's go to a cafe." />
-<DialogueBox uk="Степан: Добре. До зустрічі в кафе!" en="Stepan: Good. See you at the cafe!" />
+```text
+Оксана: Добрий день, Степане! Куди ти йдеш?
+Степан: Я йду в банк. А ти?
+Оксана: Я йду на пошту, а потім на роботу.
+Степан: Після банку я йду в магазин.
+Оксана: Чудово. Потім ходімо в кафе.
+Степан: Добре. До зустрічі в кафе!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Оксана: Добрий день, Степане! Куди ти йдеш?** | Oksana: Good afternoon, Stepan! Where are you going? |
+| **Степан: Я йду в банк. А ти?** | Stepan: I am going to the bank. And you? |
+| **Оксана: Я йду на пошту, а потім на роботу.** | Oksana: I am going to the post office, and then to work. |
+| **Степан: Після банку я йду в магазин.** | Stepan: After the bank I am going to the shop. |
+| **Оксана: Чудово. Потім ходімо в кафе.** | Oksana: Great. Then let's go to a cafe. |
+| **Степан: Добре. До зустрічі в кафе!** | Stepan: Good. See you at the cafe! |
 
 The same place can have two useful forms. If you are already there, ask
 **де?** and use the locative chunk: **Я в банку. Оксана на пошті. Ми в
@@ -36,12 +49,25 @@ The same place can have two useful forms. If you are already there, ask
 
 The second dialogue is about travel between cities.
 
-<DialogueBox uk="Оксана: Куди ти їдеш у суботу?" en="Oksana: Where are you going on Saturday?" />
-<DialogueBox uk="Степан: Я їду у Львів. А Олена?" en="Stepan: I am going to Lviv. And Olena?" />
-<DialogueBox uk="Оксана: Вона їде в Одесу, а брат їде в Київ." en="Oksana: She is going to Odesa, and her brother is going to Kyiv." />
-<DialogueBox uk="Степан: А Марко?" en="Stepan: And Marko?" />
-<DialogueBox uk="Оксана: Марко йде до лікаря, а потім додому." en="Oksana: Marko is going to the doctor, and then home." />
-<DialogueBox uk="Степан: Добре, до побачення!" en="Stepan: Good, goodbye!" />
+```text
+Оксана: Куди ти їдеш у суботу?
+Степан: Я їду у Львів. А Олена?
+Оксана: Вона їде в Одесу, а брат їде в Київ.
+Степан: А Марко?
+Оксана: Марко йде до лікаря, а потім додому.
+Степан: Добре, до побачення!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Оксана: Куди ти їдеш у суботу?** | Oksana: Where are you going on Saturday? |
+| **Степан: Я їду у Львів. А Олена?** | Stepan: I am going to Lviv. And Olena? |
+| **Оксана: Вона їде в Одесу, а брат їде в Київ.** | Oksana: She is going to Odesa, and her brother is going to Kyiv. |
+| **Степан: А Марко?** | Stepan: And Marko? |
+| **Оксана: Марко йде до лікаря, а потім додому.** | Oksana: Marko is going to the doctor, and then home. |
+| **Степан: Добре, до побачення!** | Stepan: Good, goodbye! |
 
 Notice two guardrails. For countries and cities, use Ukrainian names and
 Ukrainian direction: **Київ / Kyiv**, **Львів / Lviv**, **Одеса / Odesa**,
@@ -140,8 +166,6 @@ Here are the common repairs you need now:
 | Ми були в концерті. | **Ми були на концерті.** | Events use the familiar **на** chunk. |
 | Книжка на столу. | **Книжка на столі.** | Static surface location uses **на столі**. |
 | Аптека — в аптекі. | **Аптека — в аптеці.** | **к -> ц** before **-і** in this form. |
-
-
 
 <span id="підсумок"></span>
 

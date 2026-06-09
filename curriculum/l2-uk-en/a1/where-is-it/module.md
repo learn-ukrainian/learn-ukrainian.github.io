@@ -13,19 +13,32 @@ By the end, you can:
 - keep static location **де?** separate from direction **куди?**;
 - say **в Україні**, **у Києві**, and **у Львові** with confidence.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 Start with a simple scene in a new city. The grammar appears because the
 neighbor is answering one useful question again and again: **Де?**
 
-<DialogueBox uk="Новий мешканець: Добрий день! Де аптека?" en="New resident: Good afternoon! Where is the pharmacy?" />
-<DialogueBox uk="Сусід: Аптека на вулиці Лесі Українки." en="Neighbor: The pharmacy is on Lesia Ukrainka Street." />
-<DialogueBox uk="Новий мешканець: А банк?" en="New resident: And the bank?" />
-<DialogueBox uk="Сусід: Банк у центрі, біля пошти." en="Neighbor: The bank is downtown, near the post office." />
-<DialogueBox uk="Новий мешканець: Де пошта?" en="New resident: Where is the post office?" />
-<DialogueBox uk="Сусід: Пошта на площі. Ми кажемо: я на пошті." en="Neighbor: The post office is on the square. We say: I am at the post office." />
+```text
+Новий мешканець: Добрий день! Де аптека?
+Сусід: Аптека на вулиці Лесі Українки.
+Новий мешканець: А банк?
+Сусід: Банк у центрі, біля пошти.
+Новий мешканець: Де пошта?
+Сусід: Пошта на площі. Ми кажемо: я на пошті.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Новий мешканець: Добрий день! Де аптека?** | New resident: Good afternoon! Where is the pharmacy? |
+| **Сусід: Аптека на вулиці Лесі Українки.** | Neighbor: The pharmacy is on Lesia Ukrainka Street. |
+| **Новий мешканець: А банк?** | New resident: And the bank? |
+| **Сусід: Банк у центрі, біля пошти.** | Neighbor: The bank is downtown, near the post office. |
+| **Новий мешканець: Де пошта?** | New resident: Where is the post office? |
+| **Сусід: Пошта на площі. Ми кажемо: я на пошті.** | Neighbor: The post office is on the square. We say: I am at the post office. |
 
 The useful chunks are small but important:
 
@@ -40,12 +53,25 @@ The useful chunks are small but important:
 
 The next dialogue connects city, street, building, and floor.
 
-<DialogueBox uk="Олена: Де ти живеш?" en="Olena: Where do you live?" />
-<DialogueBox uk="Марко: Я живу в Україні, у Києві." en="Marko: I live in Ukraine, in Kyiv." />
-<DialogueBox uk="Олена: На якій вулиці?" en="Olena: On what street?" />
-<DialogueBox uk="Марко: На вулиці Хрещатик." en="Marko: On Khreshchatyk Street." />
-<DialogueBox uk="Олена: А де ти працюєш?" en="Olena: And where do you work?" />
-<DialogueBox uk="Марко: В офісі, на другому поверсі." en="Marko: In an office, on the second floor." />
+```text
+Олена: Де ти живеш?
+Марко: Я живу в Україні, у Києві.
+Олена: На якій вулиці?
+Марко: На вулиці Хрещатик.
+Олена: А де ти працюєш?
+Марко: В офісі, на другому поверсі.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Де ти живеш?** | Olena: Where do you live? |
+| **Марко: Я живу в Україні, у Києві.** | Marko: I live in Ukraine, in Kyiv. |
+| **Олена: На якій вулиці?** | Olena: On what street? |
+| **Марко: На вулиці Хрещатик.** | Marko: On Khreshchatyk Street. |
+| **Олена: А де ти працюєш?** | Olena: And where do you work? |
+| **Марко: В офісі, на другому поверсі.** | Marko: In an office, on the second floor. |
 
 Here **живу**, **працюю**, and **є** describe a static place. They answer
 **де?**, not **куди?** You are saying where someone or something is located.
@@ -149,8 +175,6 @@ jobs. **На білочці руда шубка** answers **на кому?** and
 **нагороду мені**. For this A1 module, keep the simple test: locative place
 phrases almost always have **в/у** or **на**.
 
-
-
 <span id="підсумок"></span>
 
 ## Підсумок
@@ -188,9 +212,19 @@ Common repairs:
 
 Now answer three real questions:
 
-<DialogueBox uk="Де ви живете?" en="Where do you live?" />
-<DialogueBox uk="Де ви працюєте або вчитеся?" en="Where do you work or study?" />
-<DialogueBox uk="Де найближча аптека?" en="Where is the nearest pharmacy?" />
+```text
+Де ви живете?
+Де ви працюєте або вчитеся?
+Де найближча аптека?
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Де ви живете?** | Where do you live? |
+| **Де ви працюєте або вчитеся?** | Where do you work or study? |
+| **Де найближча аптека?** | Where is the nearest pharmacy? |
 
 Use short A1 answers first: **Я живу в Україні. Я живу у Львові. Я працюю в
 офісі. Аптека на вулиці. Пошта на площі.** Those chunks are enough to move into

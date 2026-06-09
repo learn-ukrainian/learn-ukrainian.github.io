@@ -18,9 +18,9 @@ By the end, you can:
   **зі школи**, **з роботи**;
 - keep Ukrainian city names and Ukrainian grammar independent and precise.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Що ми знаємо?
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 A1.5 gives you a small city map. Do not begin with a full case table. Begin
 with the question you need.
@@ -68,16 +68,33 @@ without explaining subordinate clauses or advanced syntax.
 Read the city note aloud. It combines Kyiv, transport, directions, and the
 three place questions.
 
-<DialogueBox uk="Сьогодні Анна в Києві." en="Today Anna is in Kyiv." />
-<DialogueBox uk="Вона з Канади, із Торонто, але зараз живе в Україні." en="She is from Canada, from Toronto, but now lives in Ukraine." />
-<DialogueBox uk="Анна хоче йти в музей у центрі." en="Anna wants to go to a museum in the center." />
-<DialogueBox uk="Біля метро вона питає: Де тут музей?" en="Near the metro she asks: Where is the museum here?" />
-<DialogueBox uk="Олег відповідає: Музей на площі. Їдьте на метро до центру." en="Oleh answers: The museum is on the square. Take the metro to the center." />
-<DialogueBox uk="Потім ідіть прямо і поверніть направо." en="Then go straight and turn right." />
-<DialogueBox uk="Анна їде на метро, виходить і йде направо." en="Anna takes the metro, exits, and goes right." />
-<DialogueBox uk="На площі вона бачить музей і кафе." en="On the square she sees the museum and a cafe." />
-<DialogueBox uk="Після музею Анна йде в кафе, а потім їде на вокзал." en="After the museum Anna goes to a cafe, and then goes to the station." />
-<DialogueBox uk="На вокзалі вона каже: Я їду у Львів." en="At the station she says: I am going to Lviv." />
+```text
+Сьогодні Анна в Києві.
+Вона з Канади, із Торонто, але зараз живе в Україні.
+Анна хоче йти в музей у центрі.
+Біля метро вона питає: Де тут музей?
+Олег відповідає: Музей на площі. Їдьте на метро до центру.
+Потім ідіть прямо і поверніть направо.
+Анна їде на метро, виходить і йде направо.
+На площі вона бачить музей і кафе.
+Після музею Анна йде в кафе, а потім їде на вокзал.
+На вокзалі вона каже: Я їду у Львів.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Сьогодні Анна в Києві.** | Today Anna is in Kyiv. |
+| **Вона з Канади, із Торонто, але зараз живе в Україні.** | She is from Canada, from Toronto, but now lives in Ukraine. |
+| **Анна хоче йти в музей у центрі.** | Anna wants to go to a museum in the center. |
+| **Біля метро вона питає: Де тут музей?** | Near the metro she asks: Where is the museum here? |
+| **Олег відповідає: Музей на площі. Їдьте на метро до центру.** | Oleh answers: The museum is on the square. Take the metro to the center. |
+| **Потім ідіть прямо і поверніть направо.** | Then go straight and turn right. |
+| **Анна їде на метро, виходить і йде направо.** | Anna takes the metro, exits, and goes right. |
+| **На площі вона бачить музей і кафе.** | On the square she sees the museum and a cafe. |
+| **Після музею Анна йде в кафе, а потім їде на вокзал.** | After the museum Anna goes to a cafe, and then goes to the station. |
+| **На вокзалі вона каже: Я їду у Львів.** | At the station she says: I am going to Lviv. |
 
 Answer in short phrases:
 
@@ -103,10 +120,21 @@ Use this checkpoint as a repair map, not as a new declension chart.
 
 For a static place, keep the whole chunk together:
 
-<DialogueBox uk="Я в Україні." en="I am in Ukraine." />
-<DialogueBox uk="Він у Києві." en="He is in Kyiv." />
-<DialogueBox uk="Мама на роботі." en="Mom is at work." />
-<DialogueBox uk="Книга на столі." en="The book is on the table." />
+```text
+Я в Україні.
+Він у Києві.
+Мама на роботі.
+Книга на столі.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я в Україні.** | I am in Ukraine. |
+| **Він у Києві.** | He is in Kyiv. |
+| **Мама на роботі.** | Mom is at work. |
+| **Книга на столі.** | The book is on the table. |
 
 The most common beginner error is leaving the noun unchanged after the
 preposition. Repair it by asking **де?** first: **в школа** becomes
@@ -123,10 +151,21 @@ models.
 
 The same place chunk can follow state or in-place action verbs:
 
-<DialogueBox uk="Я живу в Одесі." en="I live in Odesa." />
-<DialogueBox uk="Вона працює на пошті." en="She works at the post office." />
-<DialogueBox uk="Ми вчимося в школі." en="We study at school." />
-<DialogueBox uk="Друзі гуляють у парку." en="Friends walk in the park." />
+```text
+Я живу в Одесі.
+Вона працює на пошті.
+Ми вчимося в школі.
+Друзі гуляють у парку.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я живу в Одесі.** | I live in Odesa. |
+| **Вона працює на пошті.** | She works at the post office. |
+| **Ми вчимося в школі.** | We study at school. |
+| **Друзі гуляють у парку.** | Friends walk in the park. |
 
 Some places prefer **на** as a fixed Ukrainian habit: **на пошті**,
 **на вокзалі**, **на роботі**, **на площі**. Do not translate English
@@ -141,12 +180,25 @@ one place.
 
 Motion changes the job of the phrase:
 
-<DialogueBox uk="Я в школі." en="I am at school." />
-<DialogueBox uk="Я йду в школу." en="I am going to school." />
-<DialogueBox uk="Олена на роботі." en="Olena is at work." />
-<DialogueBox uk="Олена йде на роботу." en="Olena is going to work." />
-<DialogueBox uk="Ми в Україні." en="We are in Ukraine." />
-<DialogueBox uk="Ми їдемо в Україну." en="We are going to Ukraine." />
+```text
+Я в школі.
+Я йду в школу.
+Олена на роботі.
+Олена йде на роботу.
+Ми в Україні.
+Ми їдемо в Україну.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я в школі.** | I am at school. |
+| **Я йду в школу.** | I am going to school. |
+| **Олена на роботі.** | Olena is at work. |
+| **Олена йде на роботу.** | Olena is going to work. |
+| **Ми в Україні.** | We are in Ukraine. |
+| **Ми їдемо в Україну.** | We are going to Ukraine. |
 
 If the verb is **іти** or **їхати**, check whether the question is **куди?**
 before using a static place form. The contrast is the point: **Де?** keeps you
@@ -156,11 +208,23 @@ inside the place, while **куди?** sends you toward the place.
 
 For source, use **з/із/зі** plus the from-place chunks:
 
-<DialogueBox uk="Я з України." en="I am from Ukraine." />
-<DialogueBox uk="Марко з Києва." en="Marko is from Kyiv." />
-<DialogueBox uk="Олена зі Львова." en="Olena is from Lviv." />
-<DialogueBox uk="Студент іде зі школи." en="The student is coming from school." />
-<DialogueBox uk="Тато йде з роботи." en="Dad is coming from work." />
+```text
+Я з України.
+Марко з Києва.
+Олена зі Львова.
+Студент іде зі школи.
+Тато йде з роботи.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я з України.** | I am from Ukraine. |
+| **Марко з Києва.** | Marko is from Kyiv. |
+| **Олена зі Львова.** | Olena is from Lviv. |
+| **Студент іде зі школи.** | The student is coming from school. |
+| **Тато йде з роботи.** | Dad is coming from work. |
 
 This is where euphony matters again. **Зі Львова**, **зі школи**, and
 **зі США** make the sound path easier. **З України** and **з Одеси** are light
@@ -170,15 +234,24 @@ without an extra syllable.
 
 These words help you speak before you know many endings:
 
-<DialogueBox uk="Музей там." en="The museum is there." />
-<DialogueBox uk="Я йду туди." en="I am going there." />
-<DialogueBox uk="Вона йде звідти." en="She is coming from there." />
+```text
+Музей там.
+Я йду туди.
+Вона йде звідти.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Музей там.** | The museum is there. |
+| **Я йду туди.** | I am going there. |
+| **Вона йде звідти.** | She is coming from there. |
 
 Use them as complete A1 tools. You do not need to analyze bigger sentences
 with **де**, **куди**, and **звідки** as conjunctions yet.
 
 <!-- INJECT_ACTIVITY: act-4 -->
-
 
 ## Діалог
 
@@ -186,19 +259,39 @@ This video call takes place during a walk in Odesa. It reviews city names,
 location, destination, origin, route language, transport, and euphony in one
 scene.
 
-<DialogueBox uk="Марія: Привіт, Лука! Я зараз в Одесі." en="Maria: Hi, Luka! I am in Odesa now." />
-<DialogueBox uk="Лука: Чудово! Де саме ти?" en="Luka: Great! Where exactly are you?" />
-<DialogueBox uk="Марія: Я на Дерибасівській вулиці." en="Maria: I am on Derybasivska Street." />
-<DialogueBox uk="Лука: Звідки ти йдеш?" en="Luka: Where are you coming from?" />
-<DialogueBox uk="Марія: Я йду з кафе. Спочатку була в центрі." en="Maria: I am coming from a cafe. First I was in the center." />
-<DialogueBox uk="Лука: Куди ти йдеш тепер?" en="Luka: Where are you going now?" />
-<DialogueBox uk="Марія: Я йду до Потьомкінських сходів, а потім у порт." en="Maria: I am going to the Potemkin Stairs, and then to the port." />
-<DialogueBox uk="Лука: Як дістатися до порту?" en="Luka: How do you get to the port?" />
-<DialogueBox uk="Марія: Іду прямо, потім направо. Можна також їхати автобусом." en="Maria: I go straight, then right. You can also go by bus." />
-<DialogueBox uk="Лука: А пляж?" en="Luka: And the beach?" />
-<DialogueBox uk="Марія: Після порту я йду на пляж. Увечері їду на вокзал." en="Maria: After the port I am going to the beach. In the evening I go to the station." />
-<DialogueBox uk="Лука: Ти з Одеси?" en="Luka: Are you from Odesa?" />
-<DialogueBox uk="Марія: Ні, я з України, з Києва, але Одеса дуже гарна." en="Maria: No, I am from Ukraine, from Kyiv, but Odesa is very beautiful." />
+```text
+Марія: Привіт, Лука! Я зараз в Одесі.
+Лука: Чудово! Де саме ти?
+Марія: Я на Дерибасівській вулиці.
+Лука: Звідки ти йдеш?
+Марія: Я йду з кафе. Спочатку була в центрі.
+Лука: Куди ти йдеш тепер?
+Марія: Я йду до Потьомкінських сходів, а потім у порт.
+Лука: Як дістатися до порту?
+Марія: Іду прямо, потім направо. Можна також їхати автобусом.
+Лука: А пляж?
+Марія: Після порту я йду на пляж. Увечері їду на вокзал.
+Лука: Ти з Одеси?
+Марія: Ні, я з України, з Києва, але Одеса дуже гарна.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Марія: Привіт, Лука! Я зараз в Одесі.** | Maria: Hi, Luka! I am in Odesa now. |
+| **Лука: Чудово! Де саме ти?** | Luka: Great! Where exactly are you? |
+| **Марія: Я на Дерибасівській вулиці.** | Maria: I am on Derybasivska Street. |
+| **Лука: Звідки ти йдеш?** | Luka: Where are you coming from? |
+| **Марія: Я йду з кафе. Спочатку була в центрі.** | Maria: I am coming from a cafe. First I was in the center. |
+| **Лука: Куди ти йдеш тепер?** | Luka: Where are you going now? |
+| **Марія: Я йду до Потьомкінських сходів, а потім у порт.** | Maria: I am going to the Potemkin Stairs, and then to the port. |
+| **Лука: Як дістатися до порту?** | Luka: How do you get to the port? |
+| **Марія: Іду прямо, потім направо. Можна також їхати автобусом.** | Maria: I go straight, then right. You can also go by bus. |
+| **Лука: А пляж?** | Luka: And the beach? |
+| **Марія: Після порту я йду на пляж. Увечері їду на вокзал.** | Maria: After the port I am going to the beach. In the evening I go to the station. |
+| **Лука: Ти з Одеси?** | Luka: Are you from Odesa? |
+| **Марія: Ні, я з України, з Києва, але Одеса дуже гарна.** | Maria: No, I am from Ukraine, from Kyiv, but Odesa is very beautiful. |
 
 The dialogue is longer than a single drill, but its pieces are small. You can
 answer it with a checklist:
@@ -215,19 +308,31 @@ In English use **Kyiv**, **Lviv**, **Kharkiv**, and **Odesa**. Do not use
 Russian-imperial spellings as course forms. Keep the country phrase precise:
 **в Україні**, **в Україну**, **з України**.
 
-
 <span id="підсумок"></span>
 
 ## Підсумок
 
 A1.5 is ready when you can build one connected city answer:
 
-<DialogueBox uk="Добрий день! Я з Канади, але зараз живу в Україні." en="Good afternoon! I am from Canada, but now I live in Ukraine." />
-<DialogueBox uk="Сьогодні я в Києві, у центрі." en="Today I am in Kyiv, in the center." />
-<DialogueBox uk="Я йду в музей, потім у кафе." en="I am going to a museum, then to a cafe." />
-<DialogueBox uk="До музею їду на метро." en="To the museum I go by metro." />
-<DialogueBox uk="Після метро йду прямо і направо." en="After the metro I go straight and right." />
-<DialogueBox uk="Увечері їду на вокзал, а завтра їду у Львів." en="In the evening I go to the station, and tomorrow I go to Lviv." />
+```text
+Добрий день! Я з Канади, але зараз живу в Україні.
+Сьогодні я в Києві, у центрі.
+Я йду в музей, потім у кафе.
+До музею їду на метро.
+Після метро йду прямо і направо.
+Увечері їду на вокзал, а завтра їду у Львів.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Добрий день! Я з Канади, але зараз живу в Україні.** | Good afternoon! I am from Canada, but now I live in Ukraine. |
+| **Сьогодні я в Києві, у центрі.** | Today I am in Kyiv, in the center. |
+| **Я йду в музей, потім у кафе.** | I am going to a museum, then to a cafe. |
+| **До музею їду на метро.** | To the museum I go by metro. |
+| **Після метро йду прямо і направо.** | After the metro I go straight and right. |
+| **Увечері їду на вокзал, а завтра їду у Львів.** | In the evening I go to the station, and tomorrow I go to Lviv. |
 
 :::caution
 Keep the place system Ukrainian. Do not explain **у/в**, **і/й**, or
