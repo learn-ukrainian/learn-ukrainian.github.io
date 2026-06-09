@@ -75,6 +75,14 @@ def test_orient_returns_all_top_level_keys(monkeypatch):
     assert expected <= set(data)
 
 
+def test_health_includes_core_bare_canary():
+    """#2842: the health section surfaces the git core.bare detection canary."""
+    health = api_main._collect_health_orient_data()
+    assert "git_core_bare_ok" in health
+    # This repo has a working tree, so core.bare must be false → canary reports ok.
+    assert health["git_core_bare_ok"] is True
+
+
 def test_orient_swallows_failing_subquery(monkeypatch):
     _patch_orient_sources(monkeypatch)
 

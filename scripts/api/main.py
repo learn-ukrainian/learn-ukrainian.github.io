@@ -11,6 +11,7 @@ Each team owns their router file. No conflicts.
 
 import asyncio
 import json
+import logging
 import os
 import socket
 import subprocess
@@ -440,6 +441,9 @@ def _collect_governance_orient_data() -> dict[str, int]:
     return collect_governance_summary()
 
 
+logger = logging.getLogger(__name__)
+
+
 def _port_open(host: str, port: int, timeout_s: float) -> bool:
     try:
         with socket.create_connection((host, port), timeout=timeout_s):
@@ -452,12 +456,37 @@ def _readable_file(path: Path) -> bool:
     return path.exists() and path.is_file() and os.access(path, os.R_OK)
 
 
+def _core_bare_canary() -> bool:
+    """Detection canary for issue #2842: ``core.bare`` must stay false.
+
+    ``core.bare`` lives in the SHARED ``.git/config``; if any subprocess flips it
+    to ``true`` it silently breaks ``git`` work-tree ops for the main checkout AND
+    every linked worktree at once. Reading/writing git config does not need a work
+    tree, so this check still functions while the footgun is active — which is when
+    it's needed. On drift it auto-resets to false and logs an alert. Never raises:
+    the canary must not break health collection.
+    """
+    try:
+        from scripts.audit.check_core_bare import check_core_bare
+    except ImportError:  # path-flavoured import for test/script contexts
+        from audit.check_core_bare import check_core_bare
+    try:
+        ok, message = check_core_bare(PROJECT_ROOT, fix=True)
+    except Exception:
+        logger.exception("core.bare canary (#2842) failed to run")
+        return True  # fail-open: don't raise a false alarm on canary error
+    if "reset" in message or not ok:
+        logger.warning("core.bare canary (#2842): %s", message)
+    return ok
+
+
 def _collect_health_orient_data() -> dict:
     return {
         "api": True,
         "mcp_rag": _port_open("127.0.0.1", 8766, 0.2),
         "sources_db": _readable_file(SOURCES_DB_PATH),
         "message_broker": _readable_file(MESSAGE_DB),
+        "git_core_bare_ok": _core_bare_canary(),
     }
 
 
