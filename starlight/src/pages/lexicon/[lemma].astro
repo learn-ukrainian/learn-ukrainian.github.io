@@ -28,9 +28,16 @@ interface CourseUsage {
   context: string;
 }
 
-interface MeaningOrEtymology {
+interface SourcedText {
   text: string;
   source: string;
+  note?: string;
+}
+
+interface Meaning {
+  definitions: string[];
+  source: string;
+  synonyms?: string[];
   note?: string;
 }
 
@@ -41,8 +48,9 @@ interface Enrichment {
     forms: Array<{ form: string; label: string }>;
     source: string;
   };
-  meaning?: MeaningOrEtymology;
-  etymology?: MeaningOrEtymology;
+  meaning?: Meaning;
+  attestation?: SourcedText;
+  etymology?: SourcedText;
   sources?: string[];
 }
 
@@ -126,7 +134,11 @@ const frontmatter = {
 const posLabel = entry.pos ? POS_LABELS_UK[entry.pos] ?? entry.pos : null;
 const enrichment = entry.enrichment;
 const hasEnrichment = Boolean(
-  enrichment && (enrichment.morphology || enrichment.meaning || enrichment.etymology),
+  enrichment &&
+    (enrichment.morphology ||
+      enrichment.meaning ||
+      enrichment.attestation ||
+      enrichment.etymology),
 );
 ---
 
@@ -176,17 +188,36 @@ const hasEnrichment = Boolean(
     </ul>
   )}
 
-  {/* ---------- Значення (Грінченко 1907 / СУМ-11) ---------- */}
+  {/* ---------- Значення (Вікісловник / СУМ-11 — modern Ukrainian) ---------- */}
   {enrichment?.meaning && (
     <>
-      <h2>Значення та засвідчення</h2>
-      <blockquote class="lex-meaning">
-        <p>{enrichment.meaning.text}</p>
-        <cite>{enrichment.meaning.source}</cite>
-      </blockquote>
+      <h2>Значення</h2>
+      <ol class="lex-defs">
+        {enrichment.meaning.definitions.map((d) => (
+          <li>{d}</li>
+        ))}
+      </ol>
+      {enrichment.meaning.synonyms && enrichment.meaning.synonyms.length > 0 && (
+        <p class="lex-synonyms">
+          <span class="lex-syn-label">Синоніми:</span>{" "}
+          {enrichment.meaning.synonyms.join(", ")}
+        </p>
+      )}
+      <p class="lex-source-cite">{enrichment.meaning.source}</p>
       {enrichment.meaning.note && (
         <p class="lex-source-note">{enrichment.meaning.note}</p>
       )}
+    </>
+  )}
+
+  {/* ---------- Історичне засвідчення (Грінченко 1907) ---------- */}
+  {enrichment?.attestation && (
+    <>
+      <h2>Історичне засвідчення</h2>
+      <blockquote class="lex-meaning">
+        <p>{enrichment.attestation.text}</p>
+        <cite>{enrichment.attestation.source}</cite>
+      </blockquote>
     </>
   )}
 
@@ -336,7 +367,31 @@ const hasEnrichment = Boolean(
   .lex-source-note {
     font-size: 0.82em;
     color: var(--sl-color-gray-3);
-    margin: -0.8rem 0 1.4rem 0;
+    margin: -0.2rem 0 1.4rem 0;
+  }
+
+  /* Modern definitions (Вікісловник / СУМ-11) --------------------------- */
+  .lex-defs {
+    margin: 0.4rem 0 0.6rem 0;
+    padding-left: 1.4rem;
+  }
+  .lex-defs li {
+    margin: 0.25rem 0;
+  }
+  .lex-synonyms {
+    margin: 0.4rem 0 0.6rem 0;
+    font-size: 0.92em;
+    color: var(--sl-color-gray-2);
+  }
+  .lex-syn-label {
+    font-weight: 600;
+    color: var(--sl-color-accent-high);
+  }
+  .lex-source-cite {
+    font-size: 0.8em;
+    font-weight: 600;
+    color: var(--sl-color-accent-high);
+    margin: 0 0 1.4rem 0;
   }
 
   /* Morphology paradigm ------------------------------------------------- */

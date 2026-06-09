@@ -24,6 +24,7 @@ Run from the repo root (needs ``data/`` which is excluded from worktrees)::
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
 import sys
 from pathlib import Path
@@ -116,25 +117,72 @@ def _morphology(lemma: str) -> dict | None:
     }
 
 
+def _clean_wiki_def(raw: str) -> str:
+    """Strip Вікісловник wiki-markup noise (templates, quote leaks, refs)."""
+    text = re.sub(r"\{\{[^{}]*\}\}", "", raw)
+    text = re.split(r"\.\s{2,}", text)[0]  # cut a leaked quotation after the def
+    text = re.split(r"[|{}\[]", text)[0]  # cut residual template/ref markers
+    text = re.sub(r"\s+", " ", text).strip()
+    return text.strip(" .,;:—-")
+
+
+def _clean_wiki_defs(raw: str | None) -> list[str]:
+    try:
+        arr = json.loads(raw or "[]")
+    except (ValueError, TypeError):
+        return []
+    out: list[str] = []
+    for d in arr:
+        cleaned = _clean_wiki_def(str(d))
+        if len(cleaned) >= 6 and cleaned not in out:
+            out.append(cleaned)
+    return out[:3]
+
+
 def _meaning(conn: sqlite3.Connection, lemma: str) -> dict | None:
-    """Grinchenko 1907 (preferred) → СУМ-11 fallback, by headword."""
+    """Modern Ukrainian meaning: Вікісловник (clean, + synonyms) → СУМ-11 fallback.
+
+    Грінченко is intentionally NOT used here — its 1907 Russian glosses are
+    surfaced separately as historical *attestation*, not as the primary meaning.
+    """
     word = lemma.strip()
     row = conn.execute(
-        "SELECT definition FROM grinchenko WHERE word = ? AND definition != '' LIMIT 1",
+        "SELECT definitions, synonyms FROM wiktionary WHERE word = ? LIMIT 1",
         (word,),
     ).fetchone()
-    if row and row[0]:
-        return {"text": row[0].strip()[:600], "source": "Грінченко (1907)"}
+    if row:
+        defs = _clean_wiki_defs(row[0])
+        if defs:
+            syns = []
+            try:
+                syns = [s for s in json.loads(row[1] or "[]") if s and s != word][:8]
+            except (ValueError, TypeError):
+                syns = []
+            block: dict[str, object] = {"definitions": defs, "source": "Вікісловник"}
+            if syns:
+                block["synonyms"] = syns
+            return block
     row = conn.execute(
         "SELECT definition FROM sum11 WHERE word = ? AND definition != '' LIMIT 1",
         (word,),
     ).fetchone()
     if row and row[0]:
         return {
-            "text": row[0].strip()[:600],
+            "definitions": [row[0].strip()[:600]],
             "source": "СУМ-11",
             "note": "СУМ-11 — частково засоюзлене видання; перевіряйте ідеологічно навантажені статті.",
         }
+    return None
+
+
+def _attestation(conn: sqlite3.Connection, lemma: str) -> dict | None:
+    """Грінченко 1907 — historical attestation with Ukrainian usage quotations."""
+    row = conn.execute(
+        "SELECT definition FROM grinchenko WHERE word = ? AND definition != '' LIMIT 1",
+        (lemma.strip(),),
+    ).fetchone()
+    if row and row[0]:
+        return {"text": row[0].strip()[:600], "source": "Грінченко (1907)"}
     return None
 
 
@@ -171,6 +219,9 @@ def enrich() -> tuple[int, int]:
             meaning = _meaning(conn, lemma)
             if meaning:
                 block["meaning"] = meaning
+            attestation = _attestation(conn, lemma)
+            if attestation:
+                block["attestation"] = attestation
             etym = _etymology(conn, lemma)
             if etym:
                 block["etymology"] = etym
