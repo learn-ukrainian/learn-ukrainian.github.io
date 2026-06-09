@@ -27,7 +27,79 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 5 HANDOFF (2026-06-09 — e2e MODULE BUILT; OPTION B DONE; MDX FIX DONE) — **RESUME HERE**
+## ▶▶▶ SESSION 6 HANDOFF (2026-06-09 — SEMINAR FIXES SHIPPED; 2 REBUILDS BLOCKED BY VESUM GATE BUG) — **RESUME HERE**
+
+> **USER GOAL (active):** deliver **2 fully-rebuilt e2e folk modules = the NEW PILOT**, served on the
+> local site for review: `kalendarna-obriadovist-zvychai` (ritual) + `dumy-nevilnytski-lytsarski` (epic).
+> "Fully rebuild" = full `v7_build` pipeline (not re-assembly). The old pilot #2857 is merged but
+> superseded by the rebuild-to-come.
+
+### ✅ SHIPPED THIS SESSION (merged to main)
+- **#2855** seminar wiki-completeness gate + `folk` registered (OPTION B) — `c3dccc3bed`.
+- **#2856** MDX activity-id backfill — `b968dcfa16`.
+- **#2863** SEMINAR RENDERING FIXES — `406102bbcb`: (1) no stress marks for seminars
+  (`strip_stress_marks_for_seminar` + skip phase, both call-sites gated), (2) UK tab labels
+  (`is_ukrainian_forced` includes SEMINAR_LEVELS), (3) P2 inline-and-aggregate cross-refs
+  (`(див. урок, §…)`). Verified on re-assembled pilot. 700 tests. (the 3 fixes the user asked for.)
+- **#2857** old kalendarna pilot (merged, superseded). **#2864** dumy dossier (SHIP). **#2866** dumy wiki
+  (SHIP) — both MERGED → dumy dossier+wiki are on main, ready for its module build.
+
+### 🧱 THE BLOCKER (confirmed root cause — DO NOT blind-rebuild) → VESUM GATE BUG
+Both `kalendarna` full-rebuild attempts FAILED at `python_qg`. Root cause CONFIRMED:
+**the `vesum_verified` QG tokenizer false-flags VALID hyphenated/compound words.** Evidence: gate reported
+`missing=[будьякий, купаль, обжинк, ськ]`, but `verify_words` confirms `будь-який/обжинки/обжинковий/
+Купала/купальський/жниварський` are ALL valid whole words in VESUM, and the flagged fragments do NOT
+appear whole in module.md (`grep -owc`=0). The tokenizer strips hyphens (будь-**я**кий) + emits sub-word
+fragments → false "missing" → build fails on correct content; correction loop can't fix correct words.
+Likely site: `scripts/audit/_judge_eval_lib.py` (`CYRILLIC_TOKEN_RE`/`_vesum_unknown`) + PR #2206
+constituent fallback. **Secondary issue:** word_count ~4200-4279 < 4600 min (writer under-produces vs the
+folk 5000 target). #1 = NO threshold lowering → the writer must produce enough (the original build did, so
+it's achievable / variance); a writer-prompt length nudge is the proper fix, NOT lowering the bar.
+
+### 🔭 IN-FLIGHT (verify: `curl -s :8765/api/delegate/active`)
+- ⏳ **`qg-vesum-tokenizer-falsepos`** (codex/gpt-5.5) — the VESUM tokenizer fix → opens a PR, **NO
+  auto-merge**. Brief: `/tmp/vesum-tokenizer-falsepos-brief.md` (fix false-positives WITHOUT weakening
+  real Russianism/bad-form detection; regression test required). **User chose: REVIEW THIS FRESH** (it's
+  an all-builds gate change; prior session was too deep in context for a safe review).
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order — FRESH context)
+1. **Review the VESUM fix PR** (`qg-vesum-tokenizer-falsepos`): confirm (a) the 4 false-positives clear on
+   the failing build's module.md, (b) `будь-який/обжинки/Купала` pass, (c) a REAL bad-form/Russianism is
+   STILL flagged (the gate must keep its teeth), (d) tests + CI green. Cross-family (deepseek) advisable.
+   Self-merge under the folk grant when clean.
+2. **Rebuild BOTH modules** (full `v7_build`, ONE AT A TIME per #M-9):
+   `v7_build folk kalendarna-obriadovist-zvychai --worktree --writer claude-tools` then
+   `v7_build folk dumy-nevilnytski-lytsarski --worktree --writer claude-tools`. Monitor JSONL. The 3
+   render-fixes + the VESUM fix now apply. If word_count fails (variance), re-fire (original proves ≥4600
+   achievable) or nudge writer length — do NOT lower the gate.
+3. **Promote + serve each:** copy build artifacts → `curriculum/l2-uk-en/folk/<slug>/` + assemble MDX via
+   `linear_pipeline.assemble_mdx(module_dir, out, plan_path)` → `starlight/src/content/docs/folk/<slug>.mdx`
+   (worktree off origin/main; copy build dir's artifacts in; commit; PR; merge; ff main). Then
+   `./services.sh restart astro` (clears Astro cache → re-indexes; content.config globs `{a1,folk}`).
+   VERIFY at `http://127.0.0.1:4321/folk/<slug>/`: 4 tabs render, NO stress marks (`grep -P '\x{0301}'`
+   empty), UK tab labels (Урок/Словник/Вправи/Ресурси), P2 cross-refs (`див. урок`). These 2 = the new pilot.
+4. Tell the user when both are live for review.
+
+### ⚠ CARRY-FORWARD / NOTES
+- **dumy wiki §Мовні зразки fragment 7** «побусурменилась» is 1 vowel off Драгоманов «побусурманилась» —
+  verify vs its cited [S2] textbook during the dumy module review.
+- **claude-tools writer tics for folk:** `будь-*` written without hyphen (recurs every build); word-count
+  shortfall. Consider a writer-prompt nudge (hyphenate будь-*, hit length) as a follow-up.
+- **Held (earlier overnight) dossier PRs, still OPEN, NOT part of the 2-module focus:** #2858
+  narodna-kultura, #2859 narodni-viruvannia, #2860 koliadky, #2861 rodynna (all corpus-hammer SHIP). Their
+  wikis+modules are future work after the 2-module pilot lands.
+- **Service rename** `starlight/`→`site/` — user AGREED; pending follow-up (touches package.json,
+  services.sh, content.config.ts, scripts/generate_mdx output path — careful refactor, reviewed PR).
+- Failed build worktrees (`.worktrees/builds/folk-kalendarna-...-20260609-065136` and `-072531`) hold
+  forensics (#M-10 auto-committed); safe to `git worktree remove --force` after review.
+- **#2855 follow-ups still open:** `_percent` exact-100%, trivially-empty-section test, test rename.
+
+### 📊 FLEET — module writer **claude-tools** (C1 cultural); wiki writer **gpt-5.5**; reviewers
+**deepseek-flash** (code) / Claude corpus-hammer (culture). Cross-family always.
+
+---
+
+## ▶▶▶ SESSION 5 HANDOFF (2026-06-09 — e2e MODULE BUILT; OPTION B DONE; MDX FIX DONE) — (superseded by Session 6)
 
 > **USER DIRECTIVE (2026-06-08 PM, going to sleep):** *"keep driving the track. after pilot keep
 > building the rest according to the plan. morning I will review the pilot. when you finish the pilot
