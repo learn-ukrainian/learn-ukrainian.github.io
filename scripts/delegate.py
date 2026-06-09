@@ -746,6 +746,46 @@ def _auto_finalize_dirty_worktree(
     )
 
 
+def _reap_finished_worktree(worktree: Path) -> dict[str, Any]:
+    """Try to reap a clean successful delegate worktree, returning state metadata."""
+    if str(_REPO_ROOT) not in sys.path:
+        sys.path.insert(0, str(_REPO_ROOT))
+    from scripts.orchestration import reap_worktrees
+
+    try:
+        results = reap_worktrees.reap_worktrees(
+            repo_root=_REPO_ROOT,
+            apply=True,
+            preserve_then_reap=False,
+            target_paths=[worktree],
+        )
+    except Exception as exc:
+        return {
+            "action": "error",
+            "path": str(worktree),
+            "reason": "reaper raised",
+            "error": f"{type(exc).__name__}: {exc}",
+        }
+
+    if not results:
+        return {
+            "action": "skipped",
+            "path": str(worktree),
+            "reason": "target path was not evaluated",
+            "error": None,
+        }
+    result = results[0]
+    return {
+        "action": result.action,
+        "path": result.path,
+        "branch": result.branch,
+        "reason": result.reason,
+        "dirty": result.dirty,
+        "pr": result.pr,
+        "error": result.error,
+    }
+
+
 def _validate_existing_worktree(
     *, path: Path, expected_branch: str, base: str,
 ) -> bool:
@@ -1024,6 +1064,7 @@ def _run_worker(
     effort: str | None = None,
     max_budget_usd: float | None = None,
     initial_response_timeout: int = DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
+    keep_worktree: bool = False,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
 
@@ -1198,6 +1239,17 @@ def _run_worker(
     if needs_finalize:
         final_status = "needs_finalize"
 
+    worktree_reap: dict[str, Any] | None = None
+    if (
+        worktree_path
+        and mode == "danger"
+        and not keep_worktree
+        and final_status == "done"
+        and returncode == 0
+        and dirty_on_exit is False
+    ):
+        worktree_reap = _reap_finished_worktree(Path(worktree_path))
+
     final_state.update({
         "model": getattr(result, "model", final_state.get("model")),
         "effort": getattr(result, "effort", final_state.get("effort")),
@@ -1212,6 +1264,8 @@ def _run_worker(
         "worktree_dirty_on_exit": dirty_on_exit,
         "commits_ahead": commits_ahead,
         "needs_finalize": needs_finalize,
+        "keep_worktree": keep_worktree,
+        "worktree_reap": worktree_reap,
         "auto_finalize": (
             {
                 "ok": auto_finalize.ok,
@@ -1265,6 +1319,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
     )
     max_budget_usd = getattr(args, "max_budget_usd", None)
+    keep_worktree = bool(getattr(args, "keep_worktree", False))
 
     if args.mode == "danger" and not worktree_arg:
         print(
@@ -1388,6 +1443,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "worktree_rebased": bool(worktree_telemetry.get("rebased")),
         "worktree_reused": bool(worktree_telemetry.get("reused")),
         "worktree_layout": worktree_layout,
+        "keep_worktree": keep_worktree,
         "hard_timeout": args.hard_timeout,
         "silence_timeout": silence_timeout,
         "initial_response_timeout": initial_response_timeout,
@@ -1444,6 +1500,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "--silence-timeout", str(silence_timeout),
         "--initial-response-timeout", str(initial_response_timeout),
     ]
+    if keep_worktree:
+        cmd.append("--keep-worktree")
     if max_budget_usd is not None:
         cmd.extend(["--max-budget-usd", str(max_budget_usd)])
     if args.model:
@@ -1898,6 +1956,7 @@ def cmd_worker(args: argparse.Namespace) -> int:
             "initial_response_timeout",
             DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
         ),
+        keep_worktree=bool(getattr(args, "keep_worktree", False)),
     )
 
 
@@ -1987,6 +2046,14 @@ def build_parser() -> argparse.ArgumentParser:
             "(back-compat with existing `.worktrees/{agent}-{task}/` "
             "layout), or `--worktree` alone to auto-derive the new default "
             "`.worktrees/dispatch/{agent}/{task}/`."
+        ),
+    )
+    d.add_argument(
+        "--keep-worktree",
+        action="store_true",
+        help=(
+            "Keep a successful clean dispatch worktree instead of reaping it "
+            "after the branch is recoverable from origin or PR state."
         ),
     )
     d.add_argument(
@@ -2155,6 +2222,7 @@ def build_parser() -> argparse.ArgumentParser:
         type=int,
         default=DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
     )
+    wk.add_argument("--keep-worktree", action="store_true")
     wk.add_argument("--max-budget-usd", type=float, default=None)
     wk.set_defaults(func=cmd_worker)
 
