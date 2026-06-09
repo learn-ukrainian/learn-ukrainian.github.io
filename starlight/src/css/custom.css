@@ -346,6 +346,71 @@ a {
 }
 
 /* ============= ADMONITIONS / ALERTS ============= */
+.admonition {
+  --admonition-accent: var(--co-info);
+  --admonition-bg: rgba(66, 133, 244, 0.08);
+  --admonition-border: rgba(66, 133, 244, 0.24);
+
+  background: var(--admonition-bg);
+  border: 1px solid var(--admonition-border);
+  border-left: 4px solid var(--admonition-accent);
+  border-radius: 8px;
+  box-shadow: var(--ifm-global-shadow-lw);
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+}
+
+.admonition-info {
+  --admonition-accent: var(--co-blue-bright);
+  --admonition-bg: rgba(26, 115, 232, 0.08);
+  --admonition-border: rgba(26, 115, 232, 0.24);
+}
+
+.admonition-tip {
+  --admonition-accent: var(--co-success);
+  --admonition-bg: rgba(52, 168, 83, 0.1);
+  --admonition-border: rgba(52, 168, 83, 0.24);
+}
+
+.admonition-caution,
+.admonition-warning {
+  --admonition-accent: var(--co-warning);
+  --admonition-bg: rgba(251, 188, 4, 0.12);
+  --admonition-border: rgba(251, 188, 4, 0.3);
+}
+
+.admonition-note {
+  --admonition-accent: var(--co-gray-600);
+  --admonition-bg: rgba(95, 99, 104, 0.08);
+  --admonition-border: rgba(95, 99, 104, 0.24);
+}
+
+.admonition-danger {
+  --admonition-accent: var(--co-error);
+  --admonition-bg: rgba(234, 67, 53, 0.1);
+  --admonition-border: rgba(234, 67, 53, 0.24);
+}
+
+.admonition-title {
+  color: var(--admonition-accent);
+  font-weight: 700;
+  margin: 0 0 0.65rem;
+}
+
+.admonition > :first-child {
+  margin-top: 0;
+}
+
+.admonition > :last-child {
+  margin-bottom: 0;
+}
+
+[data-theme='dark'] .admonition-note {
+  --admonition-accent: var(--co-gray-300);
+  --admonition-bg: rgba(255, 255, 255, 0.06);
+  --admonition-border: rgba(255, 255, 255, 0.16);
+}
+
 .alert {
   border-radius: 12px;
   border-left-width: 4px;

@@ -19,6 +19,22 @@ import { readdirSync, existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
 const STARLIGHT_DIR = join(__dirname, '..', '..');
+const RAW_ADMONITION_RE = /:::(info|tip|caution|note|danger|warning)/g;
+
+function collectHtmlFiles(dir: string): string[] {
+  if (!existsSync(dir)) return [];
+
+  const files: string[] = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...collectHtmlFiles(path));
+    } else if (entry.name.endsWith('.html')) {
+      files.push(path);
+    }
+  }
+  return files;
+}
 
 describe('Astro build renders all pages', () => {
   let buildOutput: string;
@@ -115,5 +131,26 @@ describe('Astro build renders all pages', () => {
     expect(html).not.toContain('starlight-tab-item');
     expect((html.match(/role="tab"/g) || []).length).toBeGreaterThan(0);
     expect((html.match(/role="tabpanel"/g) || []).length).toBeGreaterThan(0);
+  });
+
+  it('renders directive admonitions instead of raw directive markers', () => {
+    const htmlFiles = [
+      ...collectHtmlFiles(join(STARLIGHT_DIR, 'dist', 'a1')),
+      ...collectHtmlFiles(join(STARLIGHT_DIR, 'dist', 'folk')),
+    ];
+    if (htmlFiles.length === 0) return;
+
+    const rawMatches: string[] = [];
+    let renderedAdmonitionCount = 0;
+
+    for (const file of htmlFiles) {
+      const html = readFileSync(file, 'utf-8');
+      const matches = html.match(RAW_ADMONITION_RE);
+      if (matches) rawMatches.push(...matches.map((match) => `${file}: ${match}`));
+      if (html.includes('class="admonition admonition-')) renderedAdmonitionCount += 1;
+    }
+
+    expect(rawMatches).toEqual([]);
+    expect(renderedAdmonitionCount).toBeGreaterThan(0);
   });
 });
