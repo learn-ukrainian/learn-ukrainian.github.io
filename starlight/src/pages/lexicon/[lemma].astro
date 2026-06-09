@@ -28,6 +28,24 @@ interface CourseUsage {
   context: string;
 }
 
+interface MeaningOrEtymology {
+  text: string;
+  source: string;
+  note?: string;
+}
+
+interface Enrichment {
+  morphology?: {
+    pos: string;
+    form_count: number;
+    forms: Array<{ form: string; label: string }>;
+    source: string;
+  };
+  meaning?: MeaningOrEtymology;
+  etymology?: MeaningOrEtymology;
+  sources?: string[];
+}
+
 interface LexiconEntry {
   lemma: string;
   url_slug: string;
@@ -36,6 +54,7 @@ interface LexiconEntry {
   ipa: string | null;
   primary_source: string;
   course_usage: CourseUsage[];
+  enrichment?: Enrichment;
 }
 
 interface LexiconManifest {
@@ -105,6 +124,10 @@ const frontmatter = {
 };
 
 const posLabel = entry.pos ? POS_LABELS_UK[entry.pos] ?? entry.pos : null;
+const enrichment = entry.enrichment;
+const hasEnrichment = Boolean(
+  enrichment && (enrichment.morphology || enrichment.meaning || enrichment.etymology),
+);
 ---
 
 <CourseLayout
@@ -153,58 +176,68 @@ const posLabel = entry.pos ? POS_LABELS_UK[entry.pos] ?? entry.pos : null;
     </ul>
   )}
 
-  {/* ---------- Placeholder sections (v1.1+) ---------- */}
-  <h2>Значення, етимологія, морфологія, статус…</h2>
-  <p class="lex-stub">
-    Цей розділ буде заповнено наступними версіями Лексикону. Заплановані
-    джерела (див.{" "}
-    <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/blob/main/docs/best-practices/word-atlas-design.md">
-      design doc §4
-    </a>
-    ):
-  </p>
-  <ul class="lex-stub-list">
-    <li>
-      <strong>Значення</strong> — СУМ-20 (slovnyk.me), Грінченко 1907, СУМ-11
-      (з прапором русифікації)
-    </li>
-    <li>
-      <strong>Етимологія</strong> — ЕСУМ томи 1-6 (jsonl)
-    </li>
-    <li>
-      <strong>Морфологія</strong> — повна парадигма з VESUM
-    </li>
-    <li>
-      <strong>Походження + статус</strong> — heritage merger (Грінченко + ЕСУМ
-      + slovnyk.me + Антоненко-Давидович)
-    </li>
-    <li>
-      <strong>Стилістичні нотатки</strong> — Антоненко-Давидович + UA-GEC
-    </li>
-    <li>
-      <strong>Синоніми, антоніми</strong> — Ukrajinet WordNet
-    </li>
-    <li>
-      <strong>Фразеологізми</strong> — Фразеологічний словник (25K)
-    </li>
-    <li>
-      <strong>Літературні засвідчення</strong> — корпус 125K чанків (літописи,
-      поезія, правові)
-    </li>
-    <li>
-      <strong>Підручники</strong> — корпус 23K чанків (1-11 клас)
-    </li>
-    <li>
-      <strong>Зовнішні матеріали</strong> — ULP блоги/YouTube, Похрібний,
-      Історія мови, Реальна історія, Комік історик, IMTGSH
-    </li>
-    <li>
-      <strong>Переклад</strong> — Балла EN→UK
-    </li>
-    <li>
-      <strong>Wikipedia</strong> — uk.wikipedia.org
-    </li>
-  </ul>
+  {/* ---------- Значення (Грінченко 1907 / СУМ-11) ---------- */}
+  {enrichment?.meaning && (
+    <>
+      <h2>Значення та засвідчення</h2>
+      <blockquote class="lex-meaning">
+        <p>{enrichment.meaning.text}</p>
+        <cite>{enrichment.meaning.source}</cite>
+      </blockquote>
+      {enrichment.meaning.note && (
+        <p class="lex-source-note">{enrichment.meaning.note}</p>
+      )}
+    </>
+  )}
+
+  {/* ---------- Етимологія (ЕСУМ) ---------- */}
+  {enrichment?.etymology && (
+    <>
+      <h2>Етимологія</h2>
+      <blockquote class="lex-meaning">
+        <p>{enrichment.etymology.text}</p>
+        <cite>{enrichment.etymology.source}</cite>
+      </blockquote>
+    </>
+  )}
+
+  {/* ---------- Морфологія (повна парадигма VESUM) ---------- */}
+  {enrichment?.morphology && (
+    <>
+      <h2>Морфологія</h2>
+      <p class="lex-morph-meta">
+        {enrichment.morphology.pos}
+        {" · "}
+        {enrichment.morphology.form_count} форм{" · "}
+        <span class="lex-source-inline">{enrichment.morphology.source}</span>
+      </p>
+      <ul class="lex-forms">
+        {enrichment.morphology.forms.map((f) => (
+          <li>
+            <span class="lex-form">{f.form}</span>
+            {f.label && <span class="lex-form-label">{f.label}</span>}
+          </li>
+        ))}
+      </ul>
+    </>
+  )}
+
+  {/* ---------- Honest note when a lemma has no dictionary data yet ---------- */}
+  {!hasEnrichment && (
+    <>
+      <h2>Значення, етимологія, морфологія</h2>
+      <p class="lex-stub">
+        Для цього слова ще немає словникових даних у локальних джерелах
+        (VESUM, Грінченко, ЕСУМ). Розділ заповниться з розширенням корпусу.
+      </p>
+    </>
+  )}
+
+  {enrichment?.sources && enrichment.sources.length > 0 && (
+    <p class="lex-sources-line">
+      Джерела: {enrichment.sources.join(" · ")}
+    </p>
+  )}
 
   <hr />
   <p class="lex-muted">
@@ -283,18 +316,73 @@ const posLabel = entry.pos ? POS_LABELS_UK[entry.pos] ?? entry.pos : null;
     border-radius: 4px;
   }
 
-  /* Placeholder sections ------------------------------------------------ */
+  /* Meaning / etymology (source-cited dictionary blocks) ---------------- */
+  .lex-meaning {
+    margin: 0.6rem 0 1.4rem 0;
+    padding: 0.8rem 1.1rem;
+    border-left: 3px solid var(--lu-blue);
+    background: var(--lu-surface-muted);
+    border-radius: 0 8px 8px 0;
+  }
+  .lex-meaning p {
+    margin: 0 0 0.4rem 0;
+  }
+  .lex-meaning cite {
+    font-size: 0.8em;
+    font-style: normal;
+    font-weight: 600;
+    color: var(--sl-color-accent-high);
+  }
+  .lex-source-note {
+    font-size: 0.82em;
+    color: var(--sl-color-gray-3);
+    margin: -0.8rem 0 1.4rem 0;
+  }
+
+  /* Morphology paradigm ------------------------------------------------- */
+  .lex-morph-meta {
+    color: var(--sl-color-gray-2);
+    margin-bottom: 0.7rem;
+  }
+  .lex-source-inline {
+    font-weight: 600;
+    color: var(--sl-color-accent-high);
+  }
+  .lex-forms {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.6rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.3rem 1.2rem;
+  }
+  .lex-forms li {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.6rem;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--lu-border);
+  }
+  .lex-form {
+    font-weight: 600;
+  }
+  .lex-form-label {
+    font-size: 0.78em;
+    color: var(--sl-color-gray-3);
+    text-align: right;
+  }
+  .lex-sources-line {
+    font-size: 0.82em;
+    color: var(--sl-color-gray-3);
+    border-top: 1px solid var(--lu-border);
+    padding-top: 0.8rem;
+  }
+
+  /* No-data fallback ---------------------------------------------------- */
   .lex-stub {
     color: var(--sl-color-gray-2);
     font-style: italic;
     margin-bottom: 0.6rem;
-  }
-  .lex-stub-list {
-    color: var(--sl-color-gray-2);
-    font-size: 0.95em;
-  }
-  .lex-stub-list li {
-    margin: 0.3rem 0;
   }
 
   /* Empty + muted ------------------------------------------------------- */
