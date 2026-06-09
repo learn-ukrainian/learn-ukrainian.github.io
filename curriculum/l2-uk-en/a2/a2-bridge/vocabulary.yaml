@@ -1,0 +1,80 @@
+- word: відмінок
+  translation: case
+  pos: noun
+  example: "Називний - це відмінок."
+- word: називний
+  translation: nominative
+  pos: adjective
+  example: "Студент - це називний відмінок."
+- word: знахідний
+  translation: accusative
+  pos: adjective
+  example: "Я читаю книжку: книжку - це знахідний."
+- word: місцевий
+  translation: locative
+  pos: adjective
+  example: "У Києві - це місцевий відмінок."
+- word: кличний
+  translation: vocative
+  pos: adjective
+  example: "Олено - це кличний відмінок."
+- word: родовий
+  translation: genitive
+  pos: adjective
+  example: "Немає часу: часу - це родовий."
+- word: давальний
+  translation: dative
+  pos: adjective
+  example: "Мені холодно: мені - це давальний."
+- word: орудний
+  translation: instrumental
+  pos: adjective
+  example: "З подругою: подругою - це орудний."
+- word: чергування
+  translation: alternation
+  pos: noun
+  example: "Рука і ручка показують чергування."
+- word: голосний
+  translation: vowel
+  pos: noun
+  example: "А - це голосний."
+- word: приголосний
+  translation: consonant
+  pos: noun
+  example: "М - це приголосний."
+- word: наголос
+  translation: stress, accent
+  pos: noun
+  example: "Наголос може змінювати значення слова."
+- word: милозвучність
+  translation: euphony, smooth sound
+  pos: noun
+  example: "Милозвучність допомагає говорити природніше."
+- word: огляд
+  translation: review, overview
+  pos: noun
+  example: "Це короткий огляд А1."
+- word: правило
+  translation: rule
+  pos: noun
+  example: "Правило допомагає, але слух теж важливий."
+- word: основа
+  translation: stem, base
+  pos: noun
+  example: "У слові може змінюватися основа."
+- word: закінчення
+  translation: ending
+  pos: noun
+  example: "Закінчення показує роль слова."
+- word: готовий
+  translation: ready
+  pos: adjective
+  example: "Я готовий до А2."
+- word: готова
+  translation: ready
+  pos: adjective
+  example: "Я готова до А2."
+- word: повторювати
+  translation: to review, to repeat
+  pos: verb
+  example: "Ми повторюємо А1."

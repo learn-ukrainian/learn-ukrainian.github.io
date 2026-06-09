@@ -68,20 +68,20 @@ const TRACKS: Record<string, TrackOverview> = {
   a2: {
     label: 'A2',
     title: 'A2 · Elementary Ukrainian',
-    eyebrow: 'Next core target',
-    subtitle: 'The next regeneration lane after the A1 learner surface is stable.',
-    status: 'Next after A1',
+    eyebrow: 'A2 beta preview',
+    subtitle: 'Pre-intermediate Ukrainian is opening in quality-first preview slices after the A1 release.',
+    status: 'Beta preview in progress',
     family: 'core',
-    state: 'next',
+    state: 'beta',
     heroVariant: 'core',
-    primaryAction: { href: '/a1/', label: 'Use A1 First' },
-    secondaryAction: { href: '/lexicon/', label: 'Open Word Atlas' },
+    primaryAction: { href: '/a2/a2-bridge/', label: 'Start A2 Bridge' },
+    secondaryAction: { href: '/a1/', label: 'Use A1 First' },
     points: [
-      'A2 is visible as the next core track without stale release promises.',
-      'Locked module inventories communicate scope without pretending the content is ready.',
-      'The same core lesson template will host A2 once regenerated modules land.',
+      'A2 is a beta/preview lane, not a released course.',
+      'Only reviewed preview modules are public; the rest of the inventory stays locked.',
+      'The bridge module refreshes A1 and starts preparing learners for the Ukrainian-led B1 transition.',
     ],
-    pattern: ['course roadmap', 'locked modules', 'core grammar ladder', 'future lesson shell'],
+    pattern: ['beta preview', 'locked modules', 'core grammar ladder', 'A2-to-B1 bridge'],
   },
   b1: {
     label: 'B1',
@@ -274,7 +274,7 @@ const TRACKS: Record<string, TrackOverview> = {
 };
 
 const HIDDEN_DOCS = new Set(['a1/review-clears-needs-human']);
-const PUBLIC_LESSON_PREFIXES = new Set(['a1', 'folk']);
+const PUBLIC_LESSON_PREFIXES = new Set(['a1', 'a2', 'folk']);
 const normalizeId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
 const hrefFromRoute = (route: string) => `/${route}/`;
 const trackIds = Object.keys(TRACKS);
@@ -347,7 +347,7 @@ const searchItems: SearchItem[] = [
 
 export async function getStaticPaths() {
   const normalizeDocId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
-  const publicLessonPrefixes = new Set(['a1', 'folk']);
+  const publicLessonPrefixes = new Set(['a1', 'a2', 'folk']);
   const hiddenDocs = new Set(['a1/review-clears-needs-human']);
   const tracks = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'folk', 'bio', 'hist', 'istorio', 'lit', 'oes', 'ruth'];
   const docs = (await getCollection('docs')).filter((entry) => {
