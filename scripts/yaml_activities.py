@@ -355,6 +355,65 @@ class ComparativeStudyActivity:
 
 
 @dataclass
+class RitualSequencingActivity:
+    type: str = "ritual-sequencing"
+    title: str = ""
+    instruction: str = ""
+    steps: list[str] = field(default_factory=list)
+    correct_order: list[int] = field(default_factory=list)
+    model_answer: str = ""
+
+
+@dataclass
+class VariantComparisonVariant:
+    label: str = ""
+    text: str = ""
+    region: str = ""
+    source: str = ""
+
+
+@dataclass
+class VariantComparisonActivity:
+    type: str = "variant-comparison"
+    title: str = ""
+    instruction: str = ""
+    variants: list[VariantComparisonVariant] = field(default_factory=list)
+    features: list[str] = field(default_factory=list)
+    prompt: str = ""
+    model_answer: str = ""
+
+
+@dataclass
+class MotifFormulaItem:
+    text: str = ""
+    label: str = ""
+    explanation: str = ""
+
+
+@dataclass
+class MotifFormulaActivity:
+    type: str = "motif-formula"
+    title: str = ""
+    instruction: str = ""
+    passage: str = ""
+    formulas: list[MotifFormulaItem] = field(default_factory=list)
+    prompt: str = ""
+    model_answer: str = ""
+
+
+@dataclass
+class PerformanceActivity:
+    type: str = "performance"
+    title: str = ""
+    instruction: str = ""
+    prompt: str = ""
+    fragment: str = ""
+    self_check: list[str] = field(default_factory=list)
+    show_record_button: bool = True
+    model_answer: str = ""
+
+
+@dataclass
 class AuthorialIntentActivity:
     type: str = "authorial-intent"
     title: str = ""
@@ -566,6 +625,8 @@ Activity = Union[  # noqa: UP007
     TranslateActivity, AnagramActivity, ReadingActivity,
     EssayResponseActivity, CriticalAnalysisActivity,
     ComparativeStudyActivity, AuthorialIntentActivity,
+    RitualSequencingActivity, VariantComparisonActivity, MotifFormulaActivity,
+    PerformanceActivity,
     SourceEvaluationActivity, DebateActivity,
     EtymologyTraceActivity, GrammarIdentifyActivity,
     ClassifyActivity, ImageToLetterActivity, WatchAndRepeatActivity,
@@ -662,6 +723,10 @@ class ActivityParser:
             'essay-response': self._parse_essay_response,
             'critical-analysis': self._parse_critical_analysis,
             'comparative-study': self._parse_comparative_study,
+            'ritual-sequencing': self._parse_ritual_sequencing,
+            'variant-comparison': self._parse_variant_comparison,
+            'motif-formula': self._parse_motif_formula,
+            'performance': self._parse_performance,
             'authorial-intent': self._parse_authorial_intent,
             'source-evaluation': self._parse_source_evaluation,
             'debate': self._parse_debate,
@@ -924,6 +989,117 @@ class ActivityParser:
             task=data.get('task', ''),
             prompt=data.get('prompt', ''),
             model_answer=data.get('model_answer', '')
+        )
+
+    def _parse_ritual_sequencing(self, data: dict) -> RitualSequencingActivity:
+        raw_steps = data.get('steps') or data.get('items')
+        if not isinstance(raw_steps, list) or not raw_steps:
+            raise ValueError("ritual-sequencing requires non-empty steps list")
+        steps = [
+            str(item.get('text', '') if isinstance(item, dict) else item).strip()
+            for item in raw_steps
+        ]
+        if not all(steps):
+            raise ValueError("ritual-sequencing steps must be non-empty strings")
+        correct_order = data.get('correct_order') or list(range(len(steps)))
+        if not isinstance(correct_order, list) or not correct_order:
+            raise ValueError("ritual-sequencing requires non-empty correct_order list")
+        if (all(isinstance(entry, str) for entry in correct_order)
+                and len(steps) == len(set(steps))
+                and len(correct_order) == len(steps)
+                and set(correct_order) == set(steps)):
+            correct_order = [steps.index(entry) for entry in correct_order]
+        if not all(isinstance(index, int) for index in correct_order):
+            raise TypeError("ritual-sequencing correct_order must contain integers")
+        if min(correct_order) == 1 and max(correct_order) == len(steps):
+            correct_order = [index - 1 for index in correct_order]
+        if any(index < 0 or index >= len(steps) for index in correct_order):
+            raise ValueError("ritual-sequencing correct_order index out of range")
+        return RitualSequencingActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            steps=steps,
+            correct_order=correct_order,
+            model_answer=data.get('model_answer', ''),
+        )
+
+    def _parse_variant_comparison(self, data: dict) -> VariantComparisonActivity:
+        raw_variants = data.get('variants')
+        if not isinstance(raw_variants, list) or len(raw_variants) < 2:
+            raise ValueError("variant-comparison requires at least two variants")
+        variants = []
+        for raw in raw_variants:
+            if isinstance(raw, dict):
+                label = str(raw.get('label') or raw.get('region') or '').strip()
+                text = str(raw.get('text', '')).strip()
+                region = str(raw.get('region', '')).strip()
+                source = str(raw.get('source', '')).strip()
+            else:
+                label = str(raw).strip()
+                text = ""
+                region = ""
+                source = ""
+            if not label:
+                raise ValueError("variant-comparison variant requires label")
+            variants.append(VariantComparisonVariant(label=label, text=text, region=region, source=source))
+        features = [str(item).strip() for item in data.get('features', [])]
+        if not features or not all(features):
+            raise ValueError("variant-comparison requires non-empty features list")
+        return VariantComparisonActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            variants=variants,
+            features=features,
+            prompt=data.get('prompt', ''),
+            model_answer=data.get('model_answer', ''),
+        )
+
+    def _parse_motif_formula(self, data: dict) -> MotifFormulaActivity:
+        passage = str(data.get('passage') or data.get('text') or '').strip()
+        if not passage:
+            raise ValueError("motif-formula requires passage")
+        raw_formulas = data.get('formulas') or data.get('answers')
+        if not isinstance(raw_formulas, list) or not raw_formulas:
+            raise ValueError("motif-formula requires non-empty formulas list")
+        formulas = []
+        for raw in raw_formulas:
+            if isinstance(raw, dict):
+                text = str(raw.get('text') or raw.get('formula') or '').strip()
+                label = str(raw.get('label', '')).strip()
+                explanation = str(raw.get('explanation', '')).strip()
+            else:
+                text = str(raw).strip()
+                label = ""
+                explanation = ""
+            if not text:
+                raise ValueError("motif-formula formula text must be non-empty")
+            formulas.append(MotifFormulaItem(text=text, label=label, explanation=explanation))
+        return MotifFormulaActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            passage=passage,
+            formulas=formulas,
+            prompt=data.get('prompt', ''),
+            model_answer=data.get('model_answer', ''),
+        )
+
+    def _parse_performance(self, data: dict) -> PerformanceActivity:
+        prompt = str(data.get('prompt') or data.get('instruction') or '').strip()
+        if not prompt:
+            raise ValueError("performance requires prompt")
+        raw_self_check = data.get('self_check', data.get('self_checklist', []))
+        if raw_self_check is None:
+            raw_self_check = []
+        if not isinstance(raw_self_check, list):
+            raise TypeError("performance self_check must be a list")
+        return PerformanceActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            prompt=prompt,
+            fragment=str(data.get('fragment', '')).strip(),
+            self_check=[str(item).strip() for item in raw_self_check if str(item).strip()],
+            show_record_button=bool(data.get('show_record_button', True)),
+            model_answer=data.get('model_answer', ''),
         )
 
     def _parse_authorial_intent(self, data: dict) -> AuthorialIntentActivity:
@@ -1398,6 +1574,14 @@ class ActivityParser:
             return self._critical_analysis_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, ComparativeStudyActivity):
             return self._comparative_study_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, RitualSequencingActivity):
+            return self._ritual_sequencing_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, VariantComparisonActivity):
+            return self._variant_comparison_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, MotifFormulaActivity):
+            return self._motif_formula_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, PerformanceActivity):
+            return self._performance_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, AuthorialIntentActivity):
             return self._authorial_intent_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, SourceEvaluationActivity):
@@ -1471,6 +1655,14 @@ class ActivityParser:
             return self._critical_analysis_to_mdx(activity, is_ukrainian_forced)
         if activity_type == 'comparative-study':
             return self._comparative_study_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'ritual-sequencing':
+            return self._ritual_sequencing_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'variant-comparison':
+            return self._variant_comparison_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'motif-formula':
+            return self._motif_formula_to_mdx(activity, is_ukrainian_forced)
+        if activity_type == 'performance':
+            return self._performance_to_mdx(activity, is_ukrainian_forced)
         if activity_type == 'authorial-intent':
             return self._authorial_intent_to_mdx(activity, is_ukrainian_forced)
         if activity_type == 'source-evaluation':
@@ -1651,6 +1843,66 @@ class ActivityParser:
         criteria_prop = f' criteria={{JSON.parse(`{self._dump_safe_json(activity.criteria)}`)}}' if activity.criteria else ''
         prompt_prop = f' prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}}' if activity.prompt else ''
         return f"### {self._escape_jsx(activity.title)}\n\n<ComparativeStudy client:only='react' title=\"{self._escape_jsx(activity.title)}\" content={{{json.dumps(activity.source_a, ensure_ascii=False)}}} task={{{json.dumps(activity.task, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}{items_prop}{criteria_prop}{prompt_prop} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+
+    def _ritual_sequencing_to_mdx(self, activity: RitualSequencingActivity, is_ukrainian_forced: bool = False) -> str:
+        heading = activity.title or 'Ritual Sequencing'
+        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        model_prop = f' modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}' if activity.model_answer else ''
+        return (
+            f"### {self._escape_jsx(heading)}\n\n"
+            f"<RitualSequencing client:only='react' title=\"{self._escape_jsx(heading)}\"{instruction_prop} "
+            f"steps={{JSON.parse(`{self._dump_safe_json(activity.steps)}`)}} "
+            f"correctOrder={{JSON.parse(`{self._dump_safe_json(activity.correct_order)}`)}}{model_prop} "
+            f"isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        )
+
+    def _variant_comparison_to_mdx(self, activity: VariantComparisonActivity, is_ukrainian_forced: bool = False) -> str:
+        heading = activity.title or 'Variant Comparison'
+        variants = [
+            {'label': item.label, 'text': item.text, 'region': item.region, 'source': item.source}
+            for item in activity.variants
+        ]
+        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        prompt_prop = f' prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}}' if activity.prompt else ''
+        model_prop = f' modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}' if activity.model_answer else ''
+        return (
+            f"### {self._escape_jsx(heading)}\n\n"
+            f"<VariantComparison client:only='react' title=\"{self._escape_jsx(heading)}\"{instruction_prop} "
+            f"variants={{JSON.parse(`{self._dump_safe_json(variants)}`)}} "
+            f"features={{JSON.parse(`{self._dump_safe_json(activity.features)}`)}}{prompt_prop}{model_prop} "
+            f"isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        )
+
+    def _motif_formula_to_mdx(self, activity: MotifFormulaActivity, is_ukrainian_forced: bool = False) -> str:
+        heading = activity.title or 'Motif / Formula'
+        formulas = [
+            {'text': item.text, 'label': item.label, 'explanation': item.explanation}
+            for item in activity.formulas
+        ]
+        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        prompt_prop = f' prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}}' if activity.prompt else ''
+        model_prop = f' modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}' if activity.model_answer else ''
+        return (
+            f"### {self._escape_jsx(heading)}\n\n"
+            f"<MotifFormula client:only='react' title=\"{self._escape_jsx(heading)}\"{instruction_prop} "
+            f"passage={{{json.dumps(activity.passage, ensure_ascii=False)}}} "
+            f"formulas={{JSON.parse(`{self._dump_safe_json(formulas)}`)}}{prompt_prop}{model_prop} "
+            f"isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        )
+
+    def _performance_to_mdx(self, activity: PerformanceActivity, is_ukrainian_forced: bool = False) -> str:
+        heading = activity.title or 'Performance'
+        instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        fragment_prop = f' fragment={{{json.dumps(activity.fragment, ensure_ascii=False)}}}' if activity.fragment else ''
+        self_check_prop = f' selfCheck={{JSON.parse(`{self._dump_safe_json(activity.self_check)}`)}}' if activity.self_check else ''
+        model_prop = f' modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}' if activity.model_answer else ''
+        record_prop = f' showRecordButton={{{"true" if activity.show_record_button else "false"}}}'
+        return (
+            f"### {self._escape_jsx(heading)}\n\n"
+            f"<PerformanceActivity client:only='react' title=\"{self._escape_jsx(heading)}\"{instruction_prop} "
+            f"prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}}{fragment_prop}{self_check_prop}{record_prop}{model_prop} "
+            f"isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        )
 
     def _authorial_intent_to_mdx(self, activity: AuthorialIntentActivity, is_ukrainian_forced: bool = False) -> str:
         questions = self._dump_safe_json(activity.questions)

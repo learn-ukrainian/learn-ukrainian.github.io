@@ -17,6 +17,7 @@ from .converters import (
     activity_identity_key,
     convert_bad_form_markers,
     convert_callouts,
+    convert_folk_content_blocks,
     normalize_mdx,
     process_dialogues,
     process_story_sections,
@@ -337,11 +338,17 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import RitualSequencing from '@site/src/components/RitualSequencing';
+import VariantComparison from '@site/src/components/VariantComparison';
+import MotifFormula from '@site/src/components/MotifFormula';
+import PerformanceActivity from '@site/src/components/PerformanceActivity';
 import EssayResponse from '@site/src/components/EssayResponse';
 import ComparativeStudy from '@site/src/components/ComparativeStudy';
 import ReadingActivity from '@site/src/components/ReadingActivity';
 import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
 import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import MythBuster from '@site/src/components/MythBuster';
+import HighCultureBridge from '@site/src/components/HighCultureBridge';
 import SourceEvaluation from '@site/src/components/SourceEvaluation';
 import Debate from '@site/src/components/Debate';
 import EtymologyTrace from '@site/src/components/EtymologyTrace';
@@ -475,6 +482,7 @@ sidebar:
     # =========================================================================
     def _apply_shared_transforms(text: str, strip_bad_forms: bool = False) -> str:
         """Apply callout conversion, slug links, HTML fixes, comments, stories, dialogues."""
+        text = convert_folk_content_blocks(text)
         text = convert_callouts(text, is_ukrainian_forced)
         text = resolve_slug_links(text)
         text = convert_bad_form_markers(text, strip_only=strip_bad_forms)

@@ -258,6 +258,26 @@ Before emitting any uncertain Ukrainian term in seminar/FOLK prose, call `mcp__s
 
 For FOLK, verbatim song, duma, or ritual fragments may contain authentic archaic/dialectal forms such as `Дівоцькую`, `гаїлки`, `дівочок`, or `рубочки`. Put those fragments in blockquotes or the module's verbatim-quote convention so the quote is visibly evidence, not exposition. Teacher prose around the quote must use standard modern Ukrainian forms; bare archaic/dialectal folk forms in exposition fail VESUM.
 
+**FOLK experiential TEXT layer.** For `LEVEL=folk` modules, emit the implemented text-achievable folk layer, not the generic seminar activity mix. In `module.md`, include at least one `:::myth-box` and at least one `:::high-culture-bridge` where wiki/dossier evidence supports them. In `activities.yaml`, use folk activity families `ritual-sequencing` (#42), `variant-comparison` (#43), `motif-formula` (#44), and `performance` (#45) where the wiki/dossier supports the surface, in place of generic `true-false`, `group-sort`, or `match-up` tasks. Do NOT emit `audio-block`, `symbolic-decode`, or `aural-genre-id`; audio and symbolic-decode surfaces are deferred.
+
+Canonical `module.md` source shapes:
+
+```md
+:::myth-box
+claim: "..."
+truth: "..."
+claim_source: "..."
+truth_source: "..."
+:::
+
+:::high-culture-bridge
+nodes:
+  - "народна форма"
+  - "опера / література / мистецтво / культурна циркуляція"
+note: "..."
+:::
+```
+
 <!-- rule_id: #R-SINGLE-VOICE-A1 -->
 **Single teacher voice at A1.** One teacher voice across the whole module: warm, clear, direct ("you" / "your"). No third-person framing of the learner (`the student`, `студента`, `the reader`, `учня`) and no mid-paragraph register shifts (English -> Ukrainian metalanguage -> preachy imperative -> casual paraphrase). Good: "You use **я креслю** when you describe your own action." Bad: "the student enters an authentic space."
 

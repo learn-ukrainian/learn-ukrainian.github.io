@@ -149,6 +149,18 @@
           "$ref": "#/$defs/comparative-study"
         },
         {
+          "$ref": "#/$defs/ritual-sequencing"
+        },
+        {
+          "$ref": "#/$defs/variant-comparison"
+        },
+        {
+          "$ref": "#/$defs/motif-formula"
+        },
+        {
+          "$ref": "#/$defs/performance"
+        },
+        {
           "$ref": "#/$defs/authorial-intent"
         },
         {
@@ -1696,6 +1708,233 @@
         "title": {
           "type": "string",
           "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ritual-sequencing": {
+      "type": "object",
+      "required": [
+        "type",
+        "steps",
+        "correct_order"
+      ],
+      "properties": {
+        "type": {
+          "const": "ritual-sequencing"
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "correct_order": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "model_answer": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "variant-comparison": {
+      "type": "object",
+      "required": [
+        "type",
+        "variants",
+        "features"
+      ],
+      "properties": {
+        "type": {
+          "const": "variant-comparison"
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "variants": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "label"
+            ],
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "text": {
+                "type": "string"
+              },
+              "region": {
+                "type": "string"
+              },
+              "source": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "features": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "model_answer": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "motif-formula": {
+      "type": "object",
+      "required": [
+        "type",
+        "passage",
+        "formulas"
+      ],
+      "properties": {
+        "type": {
+          "const": "motif-formula"
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "passage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "formulas": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "object",
+                "required": [
+                  "text"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "label": {
+                    "type": "string"
+                  },
+                  "explanation": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "model_answer": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "performance": {
+      "type": "object",
+      "required": [
+        "type",
+        "prompt"
+      ],
+      "properties": {
+        "type": {
+          "const": "performance"
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fragment": {
+          "type": "string"
+        },
+        "self_check": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "show_record_button": {
+          "type": "boolean"
+        },
+        "model_answer": {
+          "type": "string"
         }
       },
       "additionalProperties": false

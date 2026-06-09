@@ -502,6 +502,19 @@ ACTIVITY_COMPLEXITY = {
         'B2': {'min_items': 1},
         'C1': {'min_items': 1},
         'C2': {'min_items': 1},
+        'FOLK': {'min_items': 1},
+    },
+    'ritual-sequencing': {
+        'FOLK': {'min_items': 1},
+    },
+    'variant-comparison': {
+        'FOLK': {'min_items': 1},
+    },
+    'motif-formula': {
+        'FOLK': {'min_items': 1},
+    },
+    'performance': {
+        'FOLK': {'min_items': 1},
     },
     'authorial-intent': {
         'B2': {'min_items': 1},
@@ -604,6 +617,7 @@ VALID_ACTIVITY_TYPES = [
     "mark-the-words",
     # Seminar-style activities (LIT, HIST, BIO tracks)
     "reading", "essay-response", "critical-analysis", "comparative-study", "authorial-intent",
+    "ritual-sequencing", "variant-comparison", "motif-formula", "performance",
     "creative-writing",  # Imaginary letters, interpretations, creative exercises
     # OES/RUTH specific (ISSUE-502: Historical Linguistics Types)
     "etymology-trace", "transcription", "grammar-identify",
