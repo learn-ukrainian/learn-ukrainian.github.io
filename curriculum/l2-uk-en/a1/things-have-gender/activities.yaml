@@ -1,3 +1,4 @@
+---
 inline:
   - id: act-1
     type: quiz
@@ -198,7 +199,7 @@ inline:
         explanation: Фото is neuter in this lesson.
   - id: act-9
     type: quiz
-    title: Profession forms
+    title: Profession form check
     instruction: Choose the natural profession form.
     items:
       - prompt: She is a teacher.

@@ -212,3 +212,8 @@ Use the signs as reading instructions, not decorations. A useful final routine
 is: find the sign, say what it does, then read the word once.
 
 <!-- INJECT_ACTIVITY: act-5 -->
+
+## Далі
+
+Тепер переходь до словника й вправ. Keep using the same small routine: find
+the sign, say what it does, then read the word.
