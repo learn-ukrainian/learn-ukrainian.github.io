@@ -32,9 +32,9 @@ control, greeting chunks, self-introduction, noun gender habits, vocative
 address, and modern chat etiquette. Use that order as a checklist, not as new
 grammar to memorize.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Що ми знаємо?
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 You now have six small toolkits.
 
@@ -95,7 +95,7 @@ closing.
 Ду́же приє́мно познайо́митися!
 ```
 
-Support after the text:
+English support after the Ukrainian text:
 
 | Українська | English support |
 | --- | --- |
@@ -184,7 +184,7 @@ both people use **ти**.
 Соломі́я: Мені́ теж. До поба́чення!
 ```
 
-Support after the dialogue:
+English support after the Ukrainian dialogue:
 
 | Українська | English support |
 | --- | --- |
@@ -225,7 +225,7 @@ practice.
 Том: Мені́ теж.
 ```
 
-Support after the chat:
+English support after the Ukrainian chat:
 
 | Українська | English support |
 | --- | --- |

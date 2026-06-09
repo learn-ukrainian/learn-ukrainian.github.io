@@ -189,7 +189,7 @@ Read the Ukrainian first:
 Тара́с: Чудо́во!
 ```
 
-Support after the dialogue:
+English support after the Ukrainian dialogue:
 
 | Українська | English support |
 | --- | --- |
@@ -207,7 +207,7 @@ Use **А у тебе́?** after **Як спра́ви?**. For a name exchange, u
 Марко́: Мене́ зва́ти Марко́.
 ```
 
-Support after the dialogue:
+English support after the Ukrainian dialogue:
 
 | Українська | English support |
 | --- | --- |
