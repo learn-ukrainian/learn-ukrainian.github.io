@@ -4,10 +4,8 @@ description: "Я їм хліб, п'ю каву — знахідний відмі
 sidebar:
   order: 37
   label: "37. Я їм, я п'ю"
-pipeline: linear-phase-4
-build_status: validated
 prev: food-and-drink
-next: false
+next: at-the-cafe
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -89,21 +87,35 @@ Ask **що?** after **їсти**, **пити**, **хотіти**, **любити
 expect **-у/-ю**.
 :::
 
+## Діалоги
+
 ### Direct object endings
 
 <FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я їм ___.", "answer": "рибу", "options": ["рибу", "риба", "рибі"]}, {"sentence": "Вона п'є ___.", "answer": "воду", "options": ["воду", "вода", "воді"]}, {"sentence": "Він їсть ___.", "answer": "хліб", "options": ["хліб", "хлібу", "хлібом"]}, {"sentence": "Ми п'ємо ___.", "answer": "молоко", "options": ["молоко", "молоку", "молоком"]}, {"sentence": "Вони їдять ___.", "answer": "кашу", "options": ["кашу", "каша", "каші"]}, {"sentence": "Ти п'єш ___.", "answer": "каву", "options": ["каву", "кава", "каві"]}, {"sentence": "Я їм ___.", "answer": "суп", "options": ["суп", "супу", "супом"]}, {"sentence": "Вона їсть ___.", "answer": "картоплю", "options": ["картоплю", "картопля", "картоплі"]}]`)} />
 
-## Діалоги
-
 ### Розмова за сніданком
 
-<DialogueBox uk="Мама: Що ти їси на сніданок?" en="Mom: What are you eating for breakfast?" />
-<DialogueBox uk="Данило: Я їм кашу і п'ю каву." en="Danylo: I am eating porridge and drinking coffee." />
-<DialogueBox uk="Мама: А Олена?" en="Mom: And Olena?" />
-<DialogueBox uk="Данило: Вона їсть хліб з маслом і п'є чай." en="Danylo: She eats bread with butter and drinks tea." />
-<DialogueBox uk="Мама: А діти?" en="Mom: And the children?" />
-<DialogueBox uk="Данило: Вони їдять яйця і п'ють молоко." en="Danylo: They eat eggs and drink milk." />
-<DialogueBox uk="Мама: Добре. Смачного!" en="Mom: Good. Enjoy your meal!" />
+```text
+Мама: Що ти їси на сніданок?
+Данило: Я їм кашу і п'ю каву.
+Мама: А Олена?
+Данило: Вона їсть хліб з маслом і п'є чай.
+Мама: А діти?
+Данило: Вони їдять яйця і п'ють молоко.
+Мама: Добре. Смачного!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Мама: Що ти їси на сніданок?** | Mom: What are you eating for breakfast? |
+| **Данило: Я їм кашу і п'ю каву.** | Danylo: I am eating porridge and drinking coffee. |
+| **Мама: А Олена?** | Mom: And Olena? |
+| **Данило: Вона їсть хліб з маслом і п'є чай.** | Danylo: She eats bread with butter and drinks tea. |
+| **Мама: А діти?** | Mom: And the children? |
+| **Данило: Вони їдять яйця і п'ють молоко.** | Danylo: They eat eggs and drink milk. |
+| **Мама: Добре. Смачного!** | Mom: Good. Enjoy your meal! |
 
 The dialogue gives the full sound of both verbs without a chart first:
 **я їм**, **вона їсть**, **вони їдять**; **я п'ю**, **вона п'є**,
@@ -120,12 +132,25 @@ and **яйце** stay the same in these inanimate food lines.
 
 ### За обідом на роботі
 
-<DialogueBox uk="Ірина: Що ви їсте на обід?" en="Iryna: What are you eating for lunch?" />
-<DialogueBox uk="Колеги: Ми їмо суп і салат." en="Coworkers: We are eating soup and salad." />
-<DialogueBox uk="Ірина: А що п'єте?" en="Iryna: And what are you drinking?" />
-<DialogueBox uk="Колеги: Ми п'ємо воду або сік." en="Coworkers: We are drinking water or juice." />
-<DialogueBox uk="Ірина: Я теж хочу суп і воду." en="Iryna: I also want soup and water." />
-<DialogueBox uk="Колега: Добре, замовляй." en="Coworker: Good, order." />
+```text
+Ірина: Що ви їсте на обід?
+Колеги: Ми їмо суп і салат.
+Ірина: А що п'єте?
+Колеги: Ми п'ємо воду або сік.
+Ірина: Я теж хочу суп і воду.
+Колега: Добре, замовляй.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Ірина: Що ви їсте на обід?** | Iryna: What are you eating for lunch? |
+| **Колеги: Ми їмо суп і салат.** | Coworkers: We are eating soup and salad. |
+| **Ірина: А що п'єте?** | Iryna: And what are you drinking? |
+| **Колеги: Ми п'ємо воду або сік.** | Coworkers: We are drinking water or juice. |
+| **Ірина: Я теж хочу суп і воду.** | Iryna: I also want soup and water. |
+| **Колега: Добре, замовляй.** | Coworker: Good, order. |
 
 Here **ми їмо** and **ми п'ємо** move the verbs into the plural. The direct
 objects stay simple: **суп**, **салат**, **сік** do not change; **вода** becomes
@@ -172,10 +197,21 @@ The verb **пити** is more regular, but its apostrophe matters.
 
 Use the verbs with a direct object:
 
-<DialogueBox uk="Я їм хліб." en="I eat bread." />
-<DialogueBox uk="Ти їси рибу?" en="Do you eat fish?" />
-<DialogueBox uk="Вона п'є воду." en="She drinks water." />
-<DialogueBox uk="Ми п'ємо чай." en="We drink tea." />
+```text
+Я їм хліб.
+Ти їси рибу?
+Вона п'є воду.
+Ми п'ємо чай.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Я їм хліб.** | I eat bread. |
+| **Ти їси рибу?** | Do you eat fish? |
+| **Вона п'є воду.** | She drinks water. |
+| **Ми п'ємо чай.** | We drink tea. |
 
 These are direct actions. The action goes straight to the food or drink. Later,
 the same tool helps with **я читаю книгу**, **я бачу прапор**, and **я купую
@@ -202,17 +238,39 @@ For inanimate food and drink words, the A1 rule is small:
 This is enough for the food-and-drink path. Do not turn the lesson into the
 whole accusative case. Learn the live contrast:
 
-<DialogueBox uk="Це кава. Я п'ю каву." en="This is coffee. I drink coffee." />
-<DialogueBox uk="Це вода. Я п'ю воду." en="This is water. I drink water." />
-<DialogueBox uk="Це риба. Я їм рибу." en="This is fish. I eat fish." />
-<DialogueBox uk="Це картопля. Я їм картоплю." en="This is potato. I eat potato." />
+```text
+Це кава. Я п'ю каву.
+Це вода. Я п'ю воду.
+Це риба. Я їм рибу.
+Це картопля. Я їм картоплю.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Це кава. Я п'ю каву.** | This is coffee. I drink coffee. |
+| **Це вода. Я п'ю воду.** | This is water. I drink water. |
+| **Це риба. Я їм рибу.** | This is fish. I eat fish. |
+| **Це картопля. Я їм картоплю.** | This is potato. I eat potato. |
 
 Masculine and neuter food words make the learner's job easier:
 
-<DialogueBox uk="Це суп. Я їм суп." en="This is soup. I eat soup." />
-<DialogueBox uk="Це сік. Я п'ю сік." en="This is juice. I drink juice." />
-<DialogueBox uk="Це молоко. Я п'ю молоко." en="This is milk. I drink milk." />
-<DialogueBox uk="Це яблуко. Я їм яблуко." en="This is an apple. I eat an apple." />
+```text
+Це суп. Я їм суп.
+Це сік. Я п'ю сік.
+Це молоко. Я п'ю молоко.
+Це яблуко. Я їм яблуко.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Це суп. Я їм суп.** | This is soup. I eat soup. |
+| **Це сік. Я п'ю сік.** | This is juice. I drink juice. |
+| **Це молоко. Я п'ю молоко.** | This is milk. I drink milk. |
+| **Це яблуко. Я їм яблуко.** | This is an apple. I eat an apple. |
 
 The words **любити**, **бачити**, and **купувати** also use the same direct
 object idea when they act on a thing: the action **переходить** to the object.
@@ -251,19 +309,27 @@ The contrast also repairs a common learner line:
 **Я хочу воду**. Both are useful. The first uses an infinitive. The second uses
 the direct object **воду**.
 
-### What changes in the direct object?
-
-<GroupSort client:only='react' groups={JSON.parse(`{"Changes to -у/-ю": ["кава -> каву", "вода -> воду", "риба -> рибу", "каша -> кашу", "картопля -> картоплю"], "No change": ["хліб -> хліб", "сік -> сік", "молоко -> молоко", "м'ясо -> м'ясо", "яблуко -> яблуко"]}`)} />
-
 ## 📋 Підсумок
 
 You can now build a small food day with correct verbs and direct objects:
 
-<DialogueBox uk="Вранці я їм кашу і п'ю каву." en="In the morning I eat porridge and drink coffee." />
-<DialogueBox uk="На обід я їм суп, салат і хліб." en="For lunch I eat soup, salad, and bread." />
-<DialogueBox uk="Я п'ю воду або сік." en="I drink water or juice." />
-<DialogueBox uk="Увечері ми їмо рибу і картоплю." en="In the evening we eat fish and potato." />
-<DialogueBox uk="Діти п'ють молоко." en="The children drink milk." />
+```text
+Вранці я їм кашу і п'ю каву.
+На обід я їм суп, салат і хліб.
+Я п'ю воду або сік.
+Увечері ми їмо рибу і картоплю.
+Діти п'ють молоко.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Вранці я їм кашу і п'ю каву.** | In the morning I eat porridge and drink coffee. |
+| **На обід я їм суп, салат і хліб.** | For lunch I eat soup, salad, and bread. |
+| **Я п'ю воду або сік.** | I drink water or juice. |
+| **Увечері ми їмо рибу і картоплю.** | In the evening we eat fish and potato. |
+| **Діти п'ють молоко.** | The children drink milk. |
 
 Keep three checks in your head:
 
@@ -295,20 +361,6 @@ being squeezed into English or Russian frames.
 For self-check, name three things you eat today and three things you drink.
 Say them aloud with **я їм** and **я п'ю**.
 
-### Direct object checks
-
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я п'ю каву is correct.", "isTrue": true, "explanation": "Кава becomes каву."}, {"statement": "Я п'ю кава is correct.", "isTrue": false, "explanation": "Use каву after п'ю."}, {"statement": "Я їм хліб is correct.", "isTrue": true, "explanation": "Хліб stays хліб."}, {"statement": "Ми п'ємо молоко is correct.", "isTrue": true, "explanation": "Молоко stays молоко."}, {"statement": "Ти їсиш яблуко is correct.", "isTrue": false, "explanation": "The correct verb form is ти їси."}, {"statement": "Він їст суп is correct.", "isTrue": false, "explanation": "Use він їсть with the soft sign."}, {"statement": "Я хочу пити is a safe A1 line.", "isTrue": true, "explanation": "Хотіти can take an infinitive."}, {"statement": "Я хочу воду is also possible.", "isTrue": true, "explanation": "Вода becomes воду as the object of хочу."}]`)} />
-
-### Lunch-box conversation
-
-<Order client:only='react' items={JSON.parse(`["Що ти їси на обід?", "Я їм суп і салат.", "А що ти п'єш?", "Я п'ю воду або сік.", "Олена їсть хліб з маслом.", "Діти п'ють молоко.", "Смачного!"]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5, 6]`)} instruction={"Put the conversation in a natural order."} isUkrainian={false} />
-
-<span id="repair-i-eat-i-drink-interference"></span>
-
-### Repair eat and drink interference
-
-<ErrorCorrection client:only='react' instruction="Choose the clean Ukrainian repair." items={JSON.parse(`[{"sentence": "Я є їм хліб.", "errorWord": "Я є їм хліб.", "correctForm": "Я їм хліб.", "options": ["Я їм хліб.", "Я є їм хліб.", "Я є їсти хліб."], "explanation": "Do not use є as an English-style helper."}, {"sentence": "Я хочу вода.", "errorWord": "Я хочу вода.", "correctForm": "Я хочу пити. або Я хочу воду.", "options": ["Я хочу пити. або Я хочу воду.", "Я хочу вода.", "Я хочу воді."], "explanation": "Use an infinitive or the direct object воду."}, {"sentence": "Він їст суп.", "errorWord": "Він їст суп.", "correctForm": "Він їсть суп.", "options": ["Він їсть суп.", "Він їст суп.", "Він їси суп."], "explanation": "Write їсть with the soft sign."}, {"sentence": "Ти їсиш яблуко.", "errorWord": "Ти їсиш яблуко.", "correctForm": "Ти їси яблуко.", "options": ["Ти їси яблуко.", "Ти їсиш яблуко.", "Ти їсть яблуко."], "explanation": "The form is ти їси."}, {"sentence": "Я мию мене.", "errorWord": "Я мию мене.", "correctForm": "Я вмиваюся.", "options": ["Я вмиваюся.", "Я мию мене.", "Я мию я."], "explanation": "Use the Ukrainian reflexive verb вмиватися."}, {"sentence": "На перерві: Я п'ю кава.", "errorWord": "Я п'ю кава.", "correctForm": "Я п'ю каву.", "options": ["Я п'ю кава.", "Я п'ю каві.", "Я п'ю каву."], "explanation": "Кава becomes каву after п'ю."}]`)} />
-
 </TabItem>
 <TabItem label="Vocabulary">
 
@@ -321,19 +373,19 @@ Say them aloud with **я їм** and **я п'ю**.
 
 ### Direct object endings
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я їм ___.", "answer": "рибу", "options": ["рибу", "риба", "рибі"]}, {"sentence": "Вона п'є ___.", "answer": "воду", "options": ["воду", "вода", "воді"]}, {"sentence": "Він їсть ___.", "answer": "хліб", "options": ["хліб", "хлібу", "хлібом"]}, {"sentence": "Ми п'ємо ___.", "answer": "молоко", "options": ["молоко", "молоку", "молоком"]}, {"sentence": "Вони їдять ___.", "answer": "кашу", "options": ["кашу", "каша", "каші"]}, {"sentence": "Ти п'єш ___.", "answer": "каву", "options": ["каву", "кава", "каві"]}, {"sentence": "Я їм ___.", "answer": "суп", "options": ["суп", "супу", "супом"]}, {"sentence": "Вона їсть ___.", "answer": "картоплю", "options": ["картоплю", "картопля", "картоплі"]}]`)} />
+*(see lesson, §Діалоги)*
 
 ### Choose the food line
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я п'ю...", "options": [{"text": "каву", "correct": true}, {"text": "кава", "correct": false}, {"text": "кави", "correct": false}], "explanation": "After п'ю, feminine кава becomes каву."}, {"question": "Він їсть...", "options": [{"text": "рибу", "correct": true}, {"text": "риба", "correct": false}, {"text": "рибі", "correct": false}], "explanation": "Риба becomes рибу as a direct object."}, {"question": "Ми п'ємо...", "options": [{"text": "сік", "correct": true}, {"text": "соку", "correct": false}, {"text": "соком", "correct": false}], "explanation": "Сік is masculine inanimate and stays сік."}, {"question": "Вона їсть...", "options": [{"text": "м'ясо", "correct": true}, {"text": "м'ясу", "correct": false}, {"text": "м'яса", "correct": false}], "explanation": "М'ясо is neuter and stays м'ясо."}, {"question": "Вони п'ють...", "options": [{"text": "воду", "correct": true}, {"text": "вода", "correct": false}, {"text": "воді", "correct": false}], "explanation": "Вода becomes воду."}, {"question": "Ти їси...", "options": [{"text": "кашу", "correct": true}, {"text": "каша", "correct": false}, {"text": "каші", "correct": false}], "explanation": "Каша becomes кашу."}]`)} />
+*(see lesson, §За обідом на роботі)*
 
 ### Verb person pairs
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "я + їсти", "right": "я їм"}, {"left": "ти + їсти", "right": "ти їси"}, {"left": "він + їсти", "right": "він їсть"}, {"left": "ми + їсти", "right": "ми їмо"}, {"left": "вони + їсти", "right": "вони їдять"}, {"left": "я + пити", "right": "я п'ю"}, {"left": "ми + пити", "right": "ми п'ємо"}, {"left": "вони + пити", "right": "вони п'ють"}]`)} />
+*(see lesson, §Їсти і пити)*
 
 ### Eat and drink forms
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ суп.", "answer": "їм", "options": ["їм", "їси", "їсть"]}, {"sentence": "Ми ___ чай.", "answer": "п'ємо", "options": ["п'ємо", "п'єте", "п'ють"]}, {"sentence": "Вона ___ хліб.", "answer": "їсть", "options": ["їсть", "їст", "їси"]}, {"sentence": "Вони ___ воду.", "answer": "п'ють", "options": ["п'ють", "п'єте", "п'ю"]}, {"sentence": "Ти ___ рибу?", "answer": "їси", "options": ["їси", "їсиш", "їсть"]}, {"sentence": "Ви ___ каву?", "answer": "п'єте", "options": ["п'єте", "п'ємо", "п'єш"]}, {"sentence": "Він ___ сік.", "answer": "п'є", "options": ["п'є", "п'ю", "п'єш"]}, {"sentence": "Вони ___ кашу.", "answer": "їдять", "options": ["їдять", "їдете", "їсте"]}]`)} />
+*(see lesson, §Знахідний відмінок — неживе)*
 
 ### What changes in the direct object?
 

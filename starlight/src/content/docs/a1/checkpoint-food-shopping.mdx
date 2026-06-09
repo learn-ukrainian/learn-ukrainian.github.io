@@ -4,10 +4,8 @@ description: "Чи вмієте ви замовляти їжу та купува
 sidebar:
   order: 41
   label: "41. Підсумок: Їжа та покупки"
-pipeline: linear-phase-4
-build_status: validated
 prev: people-around-me
-next: false
+next: hey-friend
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -72,11 +70,11 @@ By the end, you can:
 - keep Ukrainian food and payment language clean: **сир**, **страва**,
   **гривня**, **Смачного!**
 
+## Що ми знаємо?
+
 ### Food by gender
 
 <GroupSort client:only='react' groups={JSON.parse(`{"Masculine": ["сир", "борщ", "хліб", "чай"], "Feminine": ["вода", "кава", "каша", "піца"], "Neuter": ["молоко", "яблуко", "меню", "м'ясо"], "Plural": ["вареники", "помідори", "тарілки", "склянки"]}`)} />
-
-## Що ми знаємо?
 
 A1.6 started with food words. Review the food by gender and by use:
 
@@ -115,19 +113,39 @@ You also know daily food verbs as blocks: **я хочу**, **ти любиш**,
 
 Read the story aloud. It combines the whole A1.6 day.
 
-<DialogueBox uk="Сьогодні Анна готує вечерю." en="Today Anna is preparing dinner." />
-<DialogueBox uk="Вранці вона йде на ринок." en="In the morning she goes to the market." />
-<DialogueBox uk="Вона купує помідори, сир, хліб і кілограм яблук." en="She buys tomatoes, cheese, bread, and a kilogram of apples." />
-<DialogueBox uk="Продавчиня каже: З вас сто сорок гривень." en="The saleswoman says: That is one hundred forty hryvnias." />
-<DialogueBox uk="Анна платить карткою." en="Anna pays by card." />
-<DialogueBox uk="Потім Анна йде в кафе." en="Then Anna goes to a cafe." />
-<DialogueBox uk="Вона замовляє борщ, воду і каву з молоком." en="She orders borscht, water, and coffee with milk." />
-<DialogueBox uk="Офіціантка питає: Вам тут чи із собою?" en="The server asks: For here or to go?" />
-<DialogueBox uk="Анна відповідає: Тут, будь ласка." en="Anna answers: For here, please." />
-<DialogueBox uk="У кафе Анна бачить Олену і знайомить її з братом." en="In the cafe Anna sees Olena and introduces her to her brother." />
-<DialogueBox uk="Увечері Анна готує вареники з картоплею, салат і чай." en="In the evening Anna prepares varenyky with potato, salad, and tea." />
-<DialogueBox uk="Гості сідають за стіл, беруть тарілки і склянки." en="The guests sit at the table and take plates and glasses." />
-<DialogueBox uk="Анна каже: Смачного!" en="Anna says: Bon appetit!" />
+```text
+Сьогодні Анна готує вечерю.
+Вранці вона йде на ринок.
+Вона купує помідори, сир, хліб і кілограм яблук.
+Продавчиня каже: З вас сто сорок гривень.
+Анна платить карткою.
+Потім Анна йде в кафе.
+Вона замовляє борщ, воду і каву з молоком.
+Офіціантка питає: Вам тут чи із собою?
+Анна відповідає: Тут, будь ласка.
+У кафе Анна бачить Олену і знайомить її з братом.
+Увечері Анна готує вареники з картоплею, салат і чай.
+Гості сідають за стіл, беруть тарілки і склянки.
+Анна каже: Смачного!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Сьогодні Анна готує вечерю.** | Today Anna is preparing dinner. |
+| **Вранці вона йде на ринок.** | In the morning she goes to the market. |
+| **Вона купує помідори, сир, хліб і кілограм яблук.** | She buys tomatoes, cheese, bread, and a kilogram of apples. |
+| **Продавчиня каже: З вас сто сорок гривень.** | The saleswoman says: That is one hundred forty hryvnias. |
+| **Анна платить карткою.** | Anna pays by card. |
+| **Потім Анна йде в кафе.** | Then Anna goes to a cafe. |
+| **Вона замовляє борщ, воду і каву з молоком.** | She orders borscht, water, and coffee with milk. |
+| **Офіціантка питає: Вам тут чи із собою?** | The server asks: For here or to go? |
+| **Анна відповідає: Тут, будь ласка.** | Anna answers: For here, please. |
+| **У кафе Анна бачить Олену і знайомить її з братом.** | In the cafe Anna sees Olena and introduces her to her brother. |
+| **Увечері Анна готує вареники з картоплею, салат і чай.** | In the evening Anna prepares varenyky with potato, salad, and tea. |
+| **Гості сідають за стіл, беруть тарілки і склянки.** | The guests sit at the table and take plates and glasses. |
+| **Анна каже: Смачного!** | Anna says: Bon appetit! |
 
 Answer:
 
@@ -217,43 +235,83 @@ This is the A1.6 contrast: **Я люблю борщ** but **Я люблю бра
 
 ### День покупок і їжі
 
-<DialogueBox uk="Олена: Що ти їси на сніданок?" en="Olena: What do you eat for breakfast?" />
-<DialogueBox uk="Анна: Я їм кашу і п'ю каву з молоком." en="Anna: I eat porridge and drink coffee with milk." />
-<DialogueBox uk="Олена: А потім?" en="Olena: And then?" />
-<DialogueBox uk="Анна: Потім іду на ринок." en="Anna: Then I go to the market." />
-<DialogueBox uk="Анна: Скільки коштують помідори?" en="Anna: How much are the tomatoes?" />
-<DialogueBox uk="Продавчиня: Тридцять гривень." en="Saleswoman: Thirty hryvnias." />
-<DialogueBox uk="Анна: Дайте кілограм, будь ласка." en="Anna: Give me a kilogram, please." />
-<DialogueBox uk="Олена: А потім у кафе?" en="Olena: And then in the cafe?" />
-<DialogueBox uk="Анна: Мені борщ і воду, будь ласка." en="Anna: Borscht and water for me, please." />
-<DialogueBox uk="Анна: О, я бачу Олену! Олено, привіт!" en="Anna: Oh, I see Olena! Olena, hi!" />
-<DialogueBox uk="Анна: Ти знаєш мого брата?" en="Anna: Do you know my brother?" />
+```text
+Олена: Що ти їси на сніданок?
+Анна: Я їм кашу і п'ю каву з молоком.
+Олена: А потім?
+Анна: Потім іду на ринок.
+Анна: Скільки коштують помідори?
+Продавчиня: Тридцять гривень.
+Анна: Дайте кілограм, будь ласка.
+Олена: А потім у кафе?
+Анна: Мені борщ і воду, будь ласка.
+Анна: О, я бачу Олену! Олено, привіт!
+Анна: Ти знаєш мого брата?
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Що ти їси на сніданок?** | Olena: What do you eat for breakfast? |
+| **Анна: Я їм кашу і п'ю каву з молоком.** | Anna: I eat porridge and drink coffee with milk. |
+| **Олена: А потім?** | Olena: And then? |
+| **Анна: Потім іду на ринок.** | Anna: Then I go to the market. |
+| **Анна: Скільки коштують помідори?** | Anna: How much are the tomatoes? |
+| **Продавчиня: Тридцять гривень.** | Saleswoman: Thirty hryvnias. |
+| **Анна: Дайте кілограм, будь ласка.** | Anna: Give me a kilogram, please. |
+| **Олена: А потім у кафе?** | Olena: And then in the cafe? |
+| **Анна: Мені борщ і воду, будь ласка.** | Anna: Borscht and water for me, please. |
+| **Анна: О, я бачу Олену! Олено, привіт!** | Anna: Oh, I see Olena! Olena, hi! |
+| **Анна: Ти знаєш мого брата?** | Anna: Do you know my brother? |
 
 ### Ще одне замовлення
 
-<DialogueBox uk="Олена: Що ти замовила?" en="Olena: What did you order?" />
-<DialogueBox uk="Анна: Я вже замовила борщ і чай." en="Anna: I already ordered borscht and tea." />
-<DialogueBox uk="Олена: Я візьму вареники з картоплею і компот." en="Olena: I will take varenyky with potato and kompot." />
-<DialogueBox uk="Анна: Чудовий вибір! Хочеш салат?" en="Anna: Great choice! Do you want salad?" />
-<DialogueBox uk="Олена: Так, я візьму овочевий салат і шматок хліба." en="Olena: Yes, I will take a vegetable salad and a piece of bread." />
-<DialogueBox uk="Олена: Дайте нам, будь ласка, ще одну склянку води." en="Olena: Please give us one more glass of water." />
+```text
+Олена: Що ти замовила?
+Анна: Я вже замовила борщ і чай.
+Олена: Я візьму вареники з картоплею і компот.
+Анна: Чудовий вибір! Хочеш салат?
+Олена: Так, я візьму овочевий салат і шматок хліба.
+Олена: Дайте нам, будь ласка, ще одну склянку води.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Що ти замовила?** | Olena: What did you order? |
+| **Анна: Я вже замовила борщ і чай.** | Anna: I already ordered borscht and tea. |
+| **Олена: Я візьму вареники з картоплею і компот.** | Olena: I will take varenyky with potato and kompot. |
+| **Анна: Чудовий вибір! Хочеш салат?** | Anna: Great choice! Do you want salad? |
+| **Олена: Так, я візьму овочевий салат і шматок хліба.** | Olena: Yes, I will take a vegetable salad and a piece of bread. |
+| **Олена: Дайте нам, будь ласка, ще одну склянку води.** | Olena: Please give us one more glass of water. |
 
 ### Оплата і прощання
 
-<DialogueBox uk="Анна: Скільки коштує наш обід разом?" en="Anna: How much is our lunch together?" />
-<DialogueBox uk="Офіціантка: Двісті п'ятдесят гривень." en="Server: Two hundred fifty hryvnias." />
-<DialogueBox uk="Анна: Дайте, будь ласка, рахунок. Я плачу за нас обох." en="Anna: Please give us the bill. I am paying for both of us." />
-<DialogueBox uk="Олена: Дякую, було дуже смачно!" en="Olena: Thank you, it was very tasty!" />
-<DialogueBox uk="Анна: Скуштуй ще цей десерт із подругою наступного разу." en="Anna: Try this dessert with a friend next time." />
-<DialogueBox uk="Олена: Гаразд, до зустрічі!" en="Olena: All right, see you!" />
+```text
+Анна: Скільки коштує наш обід разом?
+Офіціантка: Двісті п'ятдесят гривень.
+Анна: Дайте, будь ласка, рахунок. Я плачу за нас обох.
+Олена: Дякую, було дуже смачно!
+Анна: Скуштуй ще цей десерт із подругою наступного разу.
+Олена: Гаразд, до зустрічі!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Анна: Скільки коштує наш обід разом?** | Anna: How much is our lunch together? |
+| **Офіціантка: Двісті п'ятдесят гривень.** | Server: Two hundred fifty hryvnias. |
+| **Анна: Дайте, будь ласка, рахунок. Я плачу за нас обох.** | Anna: Please give us the bill. I am paying for both of us. |
+| **Олена: Дякую, було дуже смачно!** | Olena: Thank you, it was very tasty! |
+| **Анна: Скуштуй ще цей десерт із подругою наступного разу.** | Anna: Try this dessert with a friend next time. |
+| **Олена: Гаразд, до зустрічі!** | Olena: All right, see you! |
 
 The dialogue is a role play. It uses etiquette formulas and a cafe invitation
 idea: **Хочеш, аби твої друзі розділили з тобою свято?** For A1, that becomes
 a simple invitation: **Ходімо в кафе. Я хочу каву і торт.**
-
-### Food-shopping checks
-
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Борщ is presented as a Ukrainian cultural food form.", "isTrue": true, "explanation": "The checkpoint keeps борщ in Ukrainian cultural context."}, {"statement": "Вареники з картоплею is treated as a useful food chunk.", "isTrue": true, "explanation": "Use the phrase as a memorized chunk here."}, {"statement": "Adding -а to борщ is not the A1.6 target form.", "isTrue": false, "explanation": "Use Я люблю борщ."}, {"statement": "Мені каву з молоком, будь ласка is a cafe order.", "isTrue": true, "explanation": "It is the ordering frame from M38."}, {"statement": "Скільки коштують помідори? asks a price for plural tomatoes.", "isTrue": true, "explanation": "Plural помідори takes коштують."}, {"statement": "Я знаю брата uses кого? for a person.", "isTrue": true, "explanation": "The person form is брата."}, {"statement": "Смачного! is a natural line when serving guests.", "isTrue": true, "explanation": "Use Смачного! before eating."}, {"statement": "This checkpoint starts A1.7 phone and email content.", "isTrue": false, "explanation": "A1.7 comes next; this checkpoint closes A1.6."}]`)} />
 
 ## 📋 Підсумок
 
@@ -285,18 +343,6 @@ inside this checkpoint. Finish A1.6 by making the food-shopping story smooth.
 | **Чи не могли б ви дати мені рахунок?** | **Дайте, будь ласка, рахунок.** |
 | payment with a non-Ukrainian currency | **Я плачу гривнями.** |
 
-### Build food-shopping lines
-
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Анна / йде / на / ринок", "answer": "Анна йде на ринок."}, {"jumbled": "Вона / купує / помідори / сир / і / хліб", "answer": "Вона купує помідори, сир і хліб."}, {"jumbled": "З / вас / сто / сорок / гривень", "answer": "З вас сто сорок гривень."}, {"jumbled": "Анна / платить / карткою", "answer": "Анна платить карткою."}, {"jumbled": "Потім / Анна / йде / в / кафе", "answer": "Потім Анна йде в кафе."}, {"jumbled": "Вона / замовляє / борщ / і / каву / з / молоком", "answer": "Вона замовляє борщ і каву з молоком."}, {"jumbled": "У / кафе / Анна / бачить / Олену", "answer": "У кафе Анна бачить Олену."}, {"jumbled": "Анна / готує / вареники / з / картоплею", "answer": "Анна готує вареники з картоплею."}, {"jumbled": "Гості / беруть / тарілки / і / склянки", "answer": "Гості беруть тарілки і склянки."}, {"jumbled": "Анна / каже / Смачного", "answer": "Анна каже: Смачного!"}]`)} />
-
-### Serve the table
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Анна готує ___ з картоплею.", "answer": "вареники", "options": ["вареники", "рахунок", "картку"]}, {"sentence": "Вона ставить на стіл ___.", "answer": "тарілки", "options": ["тарілки", "гривні", "лікаря"]}, {"sentence": "Гості беруть ___.", "answer": "склянки", "options": ["склянки", "магазин", "брата"]}, {"sentence": "Анна каже: ___", "answer": "Смачного!", "options": ["Смачного!", "Скільки коштує?", "Плачу карткою."]}, {"sentence": "Олена бере ___ хліба.", "answer": "шматок", "options": ["шматок", "літр", "пляшку"]}, {"sentence": "Анна наливає ___ води.", "answer": "склянку", "options": ["склянку", "кілограм", "буханку"]}]`)} />
-
-### Repair A1.6 interference
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Repair: Я хочу вода.", "options": [{"text": "Я хочу воду. (Або: Я хочу води).", "correct": true}, {"text": "Я хочу вода.", "correct": false}, {"text": "Я хочу водою.", "correct": false}], "explanation": "Use the direct-object form or the memorized service chunk."}, {"question": "Repair: Я люблю борща.", "options": [{"text": "Я люблю борщ.", "correct": true}, {"text": "Я люблю борща.", "correct": false}, {"text": "Я люблю борщу.", "correct": false}], "explanation": "Борщ stays борщ as a food object."}, {"question": "Repair: Смачний кава.", "options": [{"text": "Смачна кава.", "correct": true}, {"text": "Смачний кава.", "correct": false}, {"text": "Смачне кава.", "correct": false}], "explanation": "Кава is feminine: смачна кава."}, {"question": "Repair: Я є голодний.", "options": [{"text": "Я голодний. (Або: Я хочу їсти).", "correct": true}, {"text": "Я є голодний.", "correct": false}, {"text": "Я маю голодний.", "correct": false}], "explanation": "Omit є in this present-tense state line."}, {"question": "Repair: Моє ім'я є Джон, і я хочу меню.", "options": [{"text": "Мене звати Джон, дайте меню.", "correct": true}, {"text": "Моє ім'я є Джон, і я хочу меню.", "correct": false}, {"text": "Я є Джон і я маю меню.", "correct": false}], "explanation": "Use Мене звати for introducing yourself."}, {"question": "Repair: Чи не могли б ви дати мені рахунок?", "options": [{"text": "Дайте, будь ласка, рахунок.", "correct": true}, {"text": "Чи не могли б ви дати мені рахунок?", "correct": false}, {"text": "Дайте мені рахунком.", "correct": false}], "explanation": "The A1 service request is direct and polite."}, {"question": "Repair: Я плачу рублями.", "options": [{"text": "Я плачу гривнями.", "correct": true}, {"text": "Я плачу рублями.", "correct": false}, {"text": "Я плачу гривень.", "correct": false}], "explanation": "Use гривня for Ukrainian currency."}]`)} />
-
 </TabItem>
 <TabItem label="Vocabulary">
 
@@ -309,19 +355,19 @@ inside this checkpoint. Finish A1.6 by making the food-shopping story smooth.
 
 ### Food by gender
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Masculine": ["сир", "борщ", "хліб", "чай"], "Feminine": ["вода", "кава", "каша", "піца"], "Neuter": ["молоко", "яблуко", "меню", "м'ясо"], "Plural": ["вареники", "помідори", "тарілки", "склянки"]}`)} />
+*(see lesson, §Що ми знаємо?)*
 
 ### Accusative checkpoint
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я їм ___.", "options": [{"text": "салат", "correct": true}, {"text": "салата", "correct": false}, {"text": "салату", "correct": false}], "explanation": "Салат is masculine inanimate and stays салат."}, {"question": "Я бачу ___.", "options": [{"text": "брата", "correct": true}, {"text": "брат", "correct": false}, {"text": "брату", "correct": false}], "explanation": "Брат is a male person, so use брата."}, {"question": "Я п'ю ___.", "options": [{"text": "воду", "correct": true}, {"text": "вода", "correct": false}, {"text": "води", "correct": false}], "explanation": "Вода becomes воду for the direct object."}, {"question": "Я знаю ___.", "options": [{"text": "Олену", "correct": true}, {"text": "Олена", "correct": false}, {"text": "Олени", "correct": false}], "explanation": "Use Олену after знаю."}, {"question": "Я люблю ___.", "options": [{"text": "борщ", "correct": true}, {"text": "борщу", "correct": false}, {"text": "борщем", "correct": false}], "explanation": "Борщ is food and stays борщ."}, {"question": "Я чекаю ___.", "options": [{"text": "друга", "correct": true}, {"text": "друг", "correct": false}, {"text": "другу", "correct": false}], "explanation": "Use друга for the person you are waiting for."}, {"question": "Я купую ___.", "options": [{"text": "хліб", "correct": true}, {"text": "хліба", "correct": false}, {"text": "хлібу", "correct": false}], "explanation": "Хліб stays хліб here."}, {"question": "Я бачу ___.", "options": [{"text": "лікаря", "correct": true}, {"text": "лікар", "correct": false}, {"text": "лікарю", "correct": false}], "explanation": "Use лікаря after бачу."}, {"question": "Я їм ___.", "options": [{"text": "піцу", "correct": true}, {"text": "піца", "correct": false}, {"text": "піци", "correct": false}], "explanation": "Choose піцу after я їм."}, {"question": "Я люблю ___.", "options": [{"text": "маму", "correct": true}, {"text": "мама", "correct": false}, {"text": "мами", "correct": false}], "explanation": "Use маму as the direct object."}]`)} />
+*(see lesson, §Що ми знаємо?)*
 
 ### Market and cafe day
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "— Що ти їси на сніданок? — Я їм ___ і п'ю каву.", "answer": "кашу", "options": ["кашу", "каша", "каші"]}, {"sentence": "— Потім іду на ринок. Скільки ___ помідори?", "answer": "коштують", "options": ["коштують", "коштує", "коштувати"]}, {"sentence": "— Тридцять ___.", "answer": "гривень", "options": ["гривень", "гривні", "гривня"]}, {"sentence": "— Дайте ___ яблук, будь ласка.", "answer": "кілограм", "options": ["кілограм", "літр", "пляшку"]}, {"sentence": "— Потім у кафе: ___ борщ і воду, будь ласка.", "answer": "Мені", "options": ["Мені", "Я", "Мною"]}, {"sentence": "— Рахунок, будь ласка. Можна ___?", "answer": "карткою", "options": ["карткою", "картка", "картки"]}, {"sentence": "— О, я бачу ___! Олено, привіт!", "answer": "Олену", "options": ["Олену", "Олена", "Олени"]}, {"sentence": "— Ти знаєш мого ___?", "answer": "брата", "options": ["брата", "брат", "братом"]}]`)} />
+*(see lesson, §Читання)*
 
 ### Situation to phrase
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "In the checkpoint cafe, you ask for coffee with milk.", "right": "Мені каву з молоком, будь ласка."}, {"left": "You ask for the price.", "right": "Скільки коштує?"}, {"left": "At the register, you check whether card payment is possible.", "right": "Можна карткою?"}, {"left": "The server asks where you will eat.", "right": "Тут чи із собою?"}, {"left": "You ask for one kilogram of apples.", "right": "Дайте кілограм яблук."}, {"left": "The price feels high.", "right": "Дорого!"}, {"left": "You ask if a seat is free.", "right": "Тут вільно?"}, {"left": "After lunch, you thank the server for the meal.", "right": "Було дуже смачно, дякую!"}]`)} />
+*(see lesson, §People around the table)*
 
 ### Food-shopping checks
 

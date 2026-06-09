@@ -27,19 +27,33 @@ food-and-drink chunks. Do not stop the A1 lesson for a formal case
 explanation.
 :::
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ### Вранці вдома
 
-<DialogueBox uk="Мама: Доброго ранку! Що ти хочеш на сніданок?" en="Mom: Good morning! What do you want for breakfast?" />
-<DialogueBox uk="Леся: Я хочу каву з молоком і хліб з маслом." en="Lesia: I want coffee with milk and bread with butter." />
-<DialogueBox uk="Мама: А чай?" en="Mom: And tea?" />
-<DialogueBox uk="Леся: Чай без цукру, будь ласка." en="Lesia: Tea without sugar, please." />
-<DialogueBox uk="Мама: Добре. Є ще каша і яблуко." en="Mom: Good. There is also porridge and an apple." />
-<DialogueBox uk="Леся: Чудово. Я снідаю вдома." en="Lesia: Great. I have breakfast at home." />
-<DialogueBox uk="Мама: Смачного!" en="Mom: Enjoy your meal!" />
+```text
+Мама: Доброго ранку! Що ти хочеш на сніданок?
+Леся: Я хочу каву з молоком і хліб з маслом.
+Мама: А чай?
+Леся: Чай без цукру, будь ласка.
+Мама: Добре. Є ще каша і яблуко.
+Леся: Чудово. Я снідаю вдома.
+Мама: Смачного!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Мама: Доброго ранку! Що ти хочеш на сніданок?** | Mom: Good morning! What do you want for breakfast? |
+| **Леся: Я хочу каву з молоком і хліб з маслом.** | Lesia: I want coffee with milk and bread with butter. |
+| **Мама: А чай?** | Mom: And tea? |
+| **Леся: Чай без цукру, будь ласка.** | Lesia: Tea without sugar, please. |
+| **Мама: Добре. Є ще каша і яблуко.** | Mom: Good. There is also porridge and an apple. |
+| **Леся: Чудово. Я снідаю вдома.** | Lesia: Great. I have breakfast at home. |
+| **Мама: Смачного!** | Mom: Enjoy your meal! |
 
 The useful question is **Що ти хочеш?** You already know **хотіти** from the
 earlier modules. Here it works with food as a service phrase: **я хочу каву**,
@@ -54,13 +68,27 @@ For the other meals, say **я обідаю** and **я вечеряю**. You can 
 
 ### Готуємо борщ із бабусею
 
-<DialogueBox uk="Бабуся: Сьогодні готуємо борщ." en="Grandmother: Today we are cooking borscht." />
-<DialogueBox uk="Онука: Що нам потрібно?" en="Granddaughter: What do we need?" />
-<DialogueBox uk="Бабуся: Буряк, картопля, капуста, морква, цибуля і м'ясо." en="Grandmother: Beet, potato, cabbage, carrot, onion, and meat." />
-<DialogueBox uk="Онука: А сметана?" en="Granddaughter: And sour cream?" />
-<DialogueBox uk="Бабуся: Так, борщ зі сметаною дуже добрий." en="Grandmother: Yes, borscht with sour cream is very good." />
-<DialogueBox uk="Онука: Я люблю борщ. Він дуже смачний." en="Granddaughter: I like borscht. It is very tasty." />
-<DialogueBox uk="Бабуся: Так, борщ - це українська родинна страва." en="Grandmother: Yes, borscht is a Ukrainian family dish." />
+```text
+Бабуся: Сьогодні готуємо борщ.
+Онука: Що нам потрібно?
+Бабуся: Буряк, картопля, капуста, морква, цибуля і м'ясо.
+Онука: А сметана?
+Бабуся: Так, борщ зі сметаною дуже добрий.
+Онука: Я люблю борщ. Він дуже смачний.
+Бабуся: Так, борщ - це українська родинна страва.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Бабуся: Сьогодні готуємо борщ.** | Grandmother: Today we are cooking borscht. |
+| **Онука: Що нам потрібно?** | Granddaughter: What do we need? |
+| **Бабуся: Буряк, картопля, капуста, морква, цибуля і м'ясо.** | Grandmother: Beet, potato, cabbage, carrot, onion, and meat. |
+| **Онука: А сметана?** | Granddaughter: And sour cream? |
+| **Бабуся: Так, борщ зі сметаною дуже добрий.** | Grandmother: Yes, borscht with sour cream is very good. |
+| **Онука: Я люблю борщ. Він дуже смачний.** | Granddaughter: I like borscht. It is very tasty. |
+| **Бабуся: Так, борщ - це українська родинна страва.** | Grandmother: Yes, borscht is a Ukrainian family dish. |
 
 Borscht is taught here as a Ukrainian cultural form, not as a generic regional
 soup. Families have their own versions, but the core classroom scene is simple:
@@ -76,12 +104,25 @@ adjective table.
 
 ### Щоденні звички
 
-<DialogueBox uk="Марко: Що ти зазвичай їси на сніданок?" en="Marko: What do you usually eat for breakfast?" />
-<DialogueBox uk="Олена: Кашу, яблуко і чай." en="Olena: Porridge, an apple, and tea." />
-<DialogueBox uk="Марко: А що ти їси на обід?" en="Marko: And what do you eat for lunch?" />
-<DialogueBox uk="Олена: Суп або борщ, салат і хліб." en="Olena: Soup or borscht, salad, and bread." />
-<DialogueBox uk="Марко: Що ти п'єш?" en="Marko: What do you drink?" />
-<DialogueBox uk="Олена: Воду або компот. Увечері я вечеряю вдома." en="Olena: Water or compote. In the evening I have dinner at home." />
+```text
+Марко: Що ти зазвичай їси на сніданок?
+Олена: Кашу, яблуко і чай.
+Марко: А що ти їси на обід?
+Олена: Суп або борщ, салат і хліб.
+Марко: Що ти п'єш?
+Олена: Воду або компот. Увечері я вечеряю вдома.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Марко: Що ти зазвичай їси на сніданок?** | Marko: What do you usually eat for breakfast? |
+| **Олена: Кашу, яблуко і чай.** | Olena: Porridge, an apple, and tea. |
+| **Марко: А що ти їси на обід?** | Marko: And what do you eat for lunch? |
+| **Олена: Суп або борщ, салат і хліб.** | Olena: Soup or borscht, salad, and bread. |
+| **Марко: Що ти п'єш?** | Marko: What do you drink? |
+| **Олена: Воду або компот. Увечері я вечеряю вдома.** | Olena: Water or compote. In the evening I have dinner at home. |
 
 Use **що ти їси?** for food and **що ти п'єш?** for drinks. Ukrainian normally
 says **я їм борщ**, not "I drink borscht." Soups are eaten. For the meal
@@ -128,12 +169,25 @@ to explain food history. The goal is to name these foods on Ukrainian terms.
 
 Use small description lines:
 
-<DialogueBox uk="Борщ дуже смачний." en="Borscht is very tasty." />
-<DialogueBox uk="Чай гарячий." en="Tea is hot." />
-<DialogueBox uk="Каша гаряча." en="The porridge is hot." />
-<DialogueBox uk="Вода холодна." en="The water is cold." />
-<DialogueBox uk="Сік солодкий." en="The juice is sweet." />
-<DialogueBox uk="Сіль солона." en="Salt is salty." />
+```text
+Борщ дуже смачний.
+Чай гарячий.
+Каша гаряча.
+Вода холодна.
+Сік солодкий.
+Сіль солона.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Борщ дуже смачний.** | Borscht is very tasty. |
+| **Чай гарячий.** | Tea is hot. |
+| **Каша гаряча.** | The porridge is hot. |
+| **Вода холодна.** | The water is cold. |
+| **Сік солодкий.** | The juice is sweet. |
+| **Сіль солона.** | Salt is salty. |
 
 These examples help you hear gender agreement without a formal table. The
 lesson gives you pairs such as **смачний борщ**, **смачна каша**, and
@@ -165,10 +219,21 @@ The most useful drink phrases are chunks:
 Do not turn these into a lesson on the instrumental or genitive case. At A1,
 the task is to make the service line automatic:
 
-<DialogueBox uk="Мені каву з молоком, будь ласка." en="Coffee with milk for me, please." />
-<DialogueBox uk="Чай без цукру, будь ласка." en="Tea without sugar, please." />
-<DialogueBox uk="Воду з газом, будь ласка." en="Sparkling water, please." />
-<DialogueBox uk="Без молока, будь ласка." en="Without milk, please." />
+```text
+Мені каву з молоком, будь ласка.
+Чай без цукру, будь ласка.
+Воду з газом, будь ласка.
+Без молока, будь ласка.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Мені каву з молоком, будь ласка.** | Coffee with milk for me, please. |
+| **Чай без цукру, будь ласка.** | Tea without sugar, please. |
+| **Воду з газом, будь ласка.** | Sparkling water, please. |
+| **Без молока, будь ласка.** | Without milk, please. |
 
 The polite frame **будь ласка** keeps the line useful in a cafe or at home.
 When someone gives you food, answer with **дякую**. When people begin eating,
@@ -190,11 +255,23 @@ Ukrainian food culture.
 
 Here is a safe cafe exchange:
 
-<DialogueBox uk="Офіціантка: Добрий день! Що ви хочете?" en="Server: Good afternoon! What would you like?" />
-<DialogueBox uk="Клієнт: Мені борщ зі сметаною і воду без газу, будь ласка." en="Customer: Borscht with sour cream and still water for me, please." />
-<DialogueBox uk="Офіціантка: Добре. А на десерт?" en="Server: Good. And for dessert?" />
-<DialogueBox uk="Клієнт: Вареники із сиром." en="Customer: Varenyky with cheese." />
-<DialogueBox uk="Офіціантка: Смачного!" en="Server: Enjoy your meal!" />
+```text
+Офіціантка: Добрий день! Що ви хочете?
+Клієнт: Мені борщ зі сметаною і воду без газу, будь ласка.
+Офіціантка: Добре. А на десерт?
+Клієнт: Вареники із сиром.
+Офіціантка: Смачного!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Офіціантка: Добрий день! Що ви хочете?** | Server: Good afternoon! What would you like? |
+| **Клієнт: Мені борщ зі сметаною і воду без газу, будь ласка.** | Customer: Borscht with sour cream and still water for me, please. |
+| **Офіціантка: Добре. А на десерт?** | Server: Good. And for dessert? |
+| **Клієнт: Вареники із сиром.** | Customer: Varenyky with cheese. |
+| **Офіціантка: Смачного!** | Server: Enjoy your meal! |
 
 The greeting is **Добрий день!** in a simple public-service scene. Keep the
 course language Ukrainian and precise. The cultural foods stay Ukrainian:
@@ -206,18 +283,31 @@ You may also recognize simple buying measures: **літр**, **грам**, and
 **сто грамів сиру**, **кілограм картоплі**. The detailed number patterns belong
 to later shopping practice.
 
-
 ## Щоденний раціон
 
 A daily food story can stay very small:
 
-<DialogueBox uk="Вранці я снідаю вдома." en="In the morning I have breakfast at home." />
-<DialogueBox uk="Я їм кашу і яблуко." en="I eat porridge and an apple." />
-<DialogueBox uk="Я п'ю каву з молоком." en="I drink coffee with milk." />
-<DialogueBox uk="Вдень я обідаю на роботі." en="During the day I have lunch at work." />
-<DialogueBox uk="Я їм суп або борщ." en="I eat soup or borscht." />
-<DialogueBox uk="Увечері я вечеряю вдома." en="In the evening I have dinner at home." />
-<DialogueBox uk="Я їм рибу з рисом і п'ю чай без цукру." en="I eat fish with rice and drink tea without sugar." />
+```text
+Вранці я снідаю вдома.
+Я їм кашу і яблуко.
+Я п'ю каву з молоком.
+Вдень я обідаю на роботі.
+Я їм суп або борщ.
+Увечері я вечеряю вдома.
+Я їм рибу з рисом і п'ю чай без цукру.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Вранці я снідаю вдома.** | In the morning I have breakfast at home. |
+| **Я їм кашу і яблуко.** | I eat porridge and an apple. |
+| **Я п'ю каву з молоком.** | I drink coffee with milk. |
+| **Вдень я обідаю на роботі.** | During the day I have lunch at work. |
+| **Я їм суп або борщ.** | I eat soup or borscht. |
+| **Увечері я вечеряю вдома.** | In the evening I have dinner at home. |
+| **Я їм рибу з рисом і п'ю чай без цукру.** | I eat fish with rice and drink tea without sugar. |
 
 This story deliberately repeats **я їм**, **я п'ю**, **я снідаю**, **я
 обідаю**, and **я вечеряю**. Repetition is useful here because meals are one of
@@ -227,10 +317,21 @@ natural tool.
 
 You can also talk about liking food:
 
-<DialogueBox uk="Мені подобається борщ." en="I like borscht." />
-<DialogueBox uk="Я люблю вареники." en="I like varenyky." />
-<DialogueBox uk="Мені не подобається чай з цукром." en="I do not like tea with sugar." />
-<DialogueBox uk="Я люблю каву без молока." en="I like coffee without milk." />
+```text
+Мені подобається борщ.
+Я люблю вареники.
+Мені не подобається чай з цукром.
+Я люблю каву без молока.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Мені подобається борщ.** | I like borscht. |
+| **Я люблю вареники.** | I like varenyky. |
+| **Мені не подобається чай з цукром.** | I do not like tea with sugar. |
+| **Я люблю каву без молока.** | I like coffee without milk. |
 
 The basic eating and drinking verbs are **їсти** and **пити**. For liking,
 keep two recognition chunks available: **Мені подобається…** and
@@ -240,7 +341,6 @@ as **мені подобається борщ** are enough.
 
 Again, keep the chunks whole. **Без цукру** and **без молока** are service
 phrases, not a case chart. You will meet the grammar later with more room.
-
 
 <span id="repair-food-and-drink-interference"></span>
 
@@ -262,18 +362,30 @@ The goal is not to shame a learner who has heard mixed forms. The goal is to
 give the learner clean, memorable Ukrainian forms early. Food vocabulary is
 high-frequency, so early repairs matter.
 
-
 ## Підсумок
 
 You are ready for M36 when you can say a simple food day and keep the cultural
 and repair points clean:
 
-<DialogueBox uk="Вранці я снідаю вдома." en="In the morning I have breakfast at home." />
-<DialogueBox uk="Я хочу каву з молоком і хліб з маслом." en="I want coffee with milk and bread with butter." />
-<DialogueBox uk="На обід я їм борщ зі сметаною." en="For lunch I eat borscht with sour cream." />
-<DialogueBox uk="Борщ - українська родинна страва." en="Borscht is a Ukrainian family dish." />
-<DialogueBox uk="Увечері я вечеряю: риба з рисом і чай без цукру." en="In the evening I have dinner: fish with rice and tea without sugar." />
-<DialogueBox uk="Смачного!" en="Enjoy your meal!" />
+```text
+Вранці я снідаю вдома.
+Я хочу каву з молоком і хліб з маслом.
+На обід я їм борщ зі сметаною.
+Борщ - українська родинна страва.
+Увечері я вечеряю: риба з рисом і чай без цукру.
+Смачного!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Вранці я снідаю вдома.** | In the morning I have breakfast at home. |
+| **Я хочу каву з молоком і хліб з маслом.** | I want coffee with milk and bread with butter. |
+| **На обід я їм борщ зі сметаною.** | For lunch I eat borscht with sour cream. |
+| **Борщ - українська родинна страва.** | Borscht is a Ukrainian family dish. |
+| **Увечері я вечеряю: риба з рисом і чай без цукру.** | In the evening I have dinner: fish with rice and tea without sugar. |
+| **Смачного!** | Enjoy your meal! |
 
 Final self-check:
 
