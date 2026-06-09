@@ -29,18 +29,31 @@ Put a comma before **а**, **але**, **бо**, and **тому що** when they
 parts of a thought: **Я працюю, а брат навчається.**
 :::
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ### У кафе
 
-<DialogueBox uk="Олена: Ти хочеш каву чи чай?" en="Olena: Do you want coffee or tea?" />
-<DialogueBox uk="Тарас: Каву, бо я дуже втомлений." en="Taras: Coffee, because I am very tired." />
-<DialogueBox uk="Олена: А я хочу чай, але без цукру." en="Olena: And I want tea, but without sugar." />
-<DialogueBox uk="Тарас: Ходімо в кафе, і я візьму ще тістечко." en="Taras: Let's go to a cafe, and I will take a cake too." />
-<DialogueBox uk="Олена: Я теж хочу, але я на дієті." en="Olena: I want one too, but I am on a diet." />
-<DialogueBox uk="Тарас: Добре, тоді кава і чай." en="Taras: All right, then coffee and tea." />
+```text
+Олена: Ти хочеш каву чи чай?
+Тарас: Каву, бо я дуже втомлений.
+Олена: А я хочу чай, але без цукру.
+Тарас: Ходімо в кафе, і я візьму ще тістечко.
+Олена: Я теж хочу, але я на дієті.
+Тарас: Добре, тоді кава і чай.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Ти хочеш каву чи чай?** | Olena: Do you want coffee or tea? |
+| **Тарас: Каву, бо я дуже втомлений.** | Taras: Coffee, because I am very tired. |
+| **Олена: А я хочу чай, але без цукру.** | Olena: And I want tea, but without sugar. |
+| **Тарас: Ходімо в кафе, і я візьму ще тістечко.** | Taras: Let's go to a cafe, and I will take a cake too. |
+| **Олена: Я теж хочу, але я на дієті.** | Olena: I want one too, but I am on a diet. |
+| **Тарас: Добре, тоді кава і чай.** | Taras: All right, then coffee and tea. |
 
 Notice the job of each connector:
 
@@ -52,12 +65,25 @@ Notice the job of each connector:
 
 ### Про день
 
-<DialogueBox uk="Андрій: Що ти робила сьогодні?" en="Andrii: What did you do today?" />
-<DialogueBox uk="Марія: Я працювала, а потім ходила в магазин." en="Mariia: I worked, and then I went to the store." />
-<DialogueBox uk="Андрій: Я хотів зателефонувати, але ти не відповідала." en="Andrii: I wanted to call, but you did not answer." />
-<DialogueBox uk="Марія: Вибач, бо телефон був без звуку." en="Mariia: Sorry, because the phone was on silent." />
-<DialogueBox uk="Андрій: Нічого. Завтра я вільний, і ми можемо зустрітися." en="Andrii: No problem. Tomorrow I am free, and we can meet." />
-<DialogueBox uk="Марія: Добре. Я знаю кафе, і воно близько." en="Mariia: Good. I know a cafe, and it is close." />
+```text
+Андрій: Що ти робила сьогодні?
+Марія: Я працювала, а потім ходила в магазин.
+Андрій: Я хотів зателефонувати, але ти не відповідала.
+Марія: Вибач, бо телефон був без звуку.
+Андрій: Нічого. Завтра я вільний, і ми можемо зустрітися.
+Марія: Добре. Я знаю кафе, і воно близько.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Андрій: Що ти робила сьогодні?** | Andrii: What did you do today? |
+| **Марія: Я працювала, а потім ходила в магазин.** | Mariia: I worked, and then I went to the store. |
+| **Андрій: Я хотів зателефонувати, але ти не відповідала.** | Andrii: I wanted to call, but you did not answer. |
+| **Марія: Вибач, бо телефон був без звуку.** | Mariia: Sorry, because the phone was on silent. |
+| **Андрій: Нічого. Завтра я вільний, і ми можемо зустрітися.** | Andrii: No problem. Tomorrow I am free, and we can meet. |
+| **Марія: Добре. Я знаю кафе, і воно близько.** | Mariia: Good. I know a cafe, and it is close. |
 
 In a daily story, connectors make the order of thoughts easy to follow:
 **працювала, а потім ходила**; **хотів, але ти не відповідала**; **вільний, і
@@ -65,12 +91,25 @@ In a daily story, connectors make the order of thoughts easy to follow:
 
 ### Відпустка: Карпати чи море?
 
-<DialogueBox uk="Іван: Куди поїдемо у відпустку: в Карпати чи на море?" en="Ivan: Where shall we go on vacation: to the Carpathians or to the sea?" />
-<DialogueBox uk="Леся: Гори гарні, але далеко." en="Lesia: The mountains are beautiful, but far away." />
-<DialogueBox uk="Іван: Море тепле, бо літо." en="Ivan: The sea is warm because it is summer." />
-<DialogueBox uk="Леся: Я хочу в гори, а ти - на море?" en="Lesia: I want to go to the mountains, and you to the sea?" />
-<DialogueBox uk="Іван: Поїдемо в Карпати, бо там дешевше." en="Ivan: Let's go to the Carpathians because it is cheaper there." />
-<DialogueBox uk="Леся: Добре. Карпати і море - це дві хороші ідеї, але зараз оберімо Карпати." en="Lesia: Good. The Carpathians and the sea are two good ideas, but now let us choose the Carpathians." />
+```text
+Іван: Куди поїдемо у відпустку: в Карпати чи на море?
+Леся: Гори гарні, але далеко.
+Іван: Море тепле, бо літо.
+Леся: Я хочу в гори, а ти - на море?
+Іван: Поїдемо в Карпати, бо там дешевше.
+Леся: Добре. Карпати і море - це дві хороші ідеї, але зараз оберімо Карпати.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Іван: Куди поїдемо у відпустку: в Карпати чи на море?** | Ivan: Where shall we go on vacation: to the Carpathians or to the sea? |
+| **Леся: Гори гарні, але далеко.** | Lesia: The mountains are beautiful, but far away. |
+| **Іван: Море тепле, бо літо.** | Ivan: The sea is warm because it is summer. |
+| **Леся: Я хочу в гори, а ти - на море?** | Lesia: I want to go to the mountains, and you to the sea? |
+| **Іван: Поїдемо в Карпати, бо там дешевше.** | Ivan: Let's go to the Carpathians because it is cheaper there. |
+| **Леся: Добре. Карпати і море - це дві хороші ідеї, але зараз оберімо Карпати.** | Lesia: Good. The Carpathians and the sea are two good ideas, but now let us choose the Carpathians. |
 
 This dialogue uses the plan scene. Keep the sentence work simple:
 **Карпати чи море?** **Гори гарні, але далеко.** **Море тепле, бо літо.**
@@ -224,7 +263,6 @@ You will also see forms to recognize:
 Long connectors such as **у зв'язку з тим що**, **з тієї причини що**, and
 **незважаючи на те що** are outside this early module. You may see them later;
 do not use them as A1 production targets.
-
 
 <span id="підсумок"></span>
 

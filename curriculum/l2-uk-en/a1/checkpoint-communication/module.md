@@ -13,9 +13,9 @@ The checkpoint scene is simple: friends organize a small holiday table and a
 school fair. You need to speak clearly, ask politely, and keep the sentence
 connections short.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Що ми знаємо?
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 Use this quick self-check before the longer dialogue.
 
@@ -132,21 +132,37 @@ Write the comma before **що**, **де**, and **коли** when they connect tw
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-
 ## Діалог
 
 ### Святкова зустріч
 
-<DialogueBox uk="Олена: Друзі, добрий день! Сьогодні ми готуємо святковий стіл." en="Olena: Friends, good afternoon! Today we are preparing a holiday table." />
-<DialogueBox uk="Тарас: Олено, скажи, де стоїть стіл." en="Taras: Olena, tell me where the table is." />
-<DialogueBox uk="Олена: Стіл біля вікна. Тарасе, постав його тут, будь ласка." en="Olena: The table is near the window. Taras, put it here, please." />
-<DialogueBox uk="Марія: А що я роблю?" en="Mariia: And what do I do?" />
-<DialogueBox uk="Олена: Маріє, принеси листівки і маркери." en="Olena: Mariia, bring the cards and markers." />
-<DialogueBox uk="Марія: Добре. Я знаю, де маркери." en="Mariia: Good. I know where the markers are." />
-<DialogueBox uk="Тарас: Я хочу допомогти, але я не знаю, що писати." en="Taras: I want to help, but I do not know what to write." />
-<DialogueBox uk="Олена: Напиши: З Різдвом Христовим! Бажаю здоров'я і радості." en="Olena: Write: Merry Christmas! I wish you health and joy." />
-<DialogueBox uk="Марія: А на Новий рік?" en="Mariia: And for New Year?" />
-<DialogueBox uk="Олена: З Новим роком! Веселих свят!" en="Olena: Happy New Year! Happy holidays!" />
+```text
+Олена: Друзі, добрий день! Сьогодні ми готуємо святковий стіл.
+Тарас: Олено, скажи, де стоїть стіл.
+Олена: Стіл біля вікна. Тарасе, постав його тут, будь ласка.
+Марія: А що я роблю?
+Олена: Маріє, принеси листівки і маркери.
+Марія: Добре. Я знаю, де маркери.
+Тарас: Я хочу допомогти, але я не знаю, що писати.
+Олена: Напиши: З Різдвом Христовим! Бажаю здоров'я і радості.
+Марія: А на Новий рік?
+Олена: З Новим роком! Веселих свят!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Друзі, добрий день! Сьогодні ми готуємо святковий стіл.** | Olena: Friends, good afternoon! Today we are preparing a holiday table. |
+| **Тарас: Олено, скажи, де стоїть стіл.** | Taras: Olena, tell me where the table is. |
+| **Олена: Стіл біля вікна. Тарасе, постав його тут, будь ласка.** | Olena: The table is near the window. Taras, put it here, please. |
+| **Марія: А що я роблю?** | Mariia: And what do I do? |
+| **Олена: Маріє, принеси листівки і маркери.** | Olena: Mariia, bring the cards and markers. |
+| **Марія: Добре. Я знаю, де маркери.** | Mariia: Good. I know where the markers are. |
+| **Тарас: Я хочу допомогти, але я не знаю, що писати.** | Taras: I want to help, but I do not know what to write. |
+| **Олена: Напиши: З Різдвом Христовим! Бажаю здоров'я і радості.** | Olena: Write: Merry Christmas! I wish you health and joy. |
+| **Марія: А на Новий рік?** | Mariia: And for New Year? |
+| **Олена: З Новим роком! Веселих свят!** | Olena: Happy New Year! Happy holidays! |
 
 This dialogue integrates the unit:
 
@@ -158,19 +174,33 @@ This dialogue integrates the unit:
 
 ### Шкільний ярмарок
 
-<DialogueBox uk="Організатор: Олено, принеси плакати, будь ласка." en="Organizer: Olena, bring the posters, please." />
-<DialogueBox uk="Олена: Добре. Я знаю, де плакати." en="Olena: Good. I know where the posters are." />
-<DialogueBox uk="Організатор: Тарасе, постав столи, бо людей багато." en="Organizer: Taras, set up the tables because there are many people." />
-<DialogueBox uk="Тарас: Добре. А де стільці?" en="Taras: Good. And where are the chairs?" />
-<DialogueBox uk="Марія: Я знаю, де стільці. Друже, допоможи мені." en="Mariia: I know where the chairs are. Friend, help me." />
-<DialogueBox uk="Організатор: Дякую! Ми маємо квитки і напої." en="Organizer: Thank you! We have tickets and drinks." />
-<DialogueBox uk="Олена: Я думаю, що все готово." en="Olena: I think that everything is ready." />
-<DialogueBox uk="Усі: З Днем Незалежності України!" en="Everyone: Happy Independence Day of Ukraine!" />
+```text
+Організатор: Олено, принеси плакати, будь ласка.
+Олена: Добре. Я знаю, де плакати.
+Організатор: Тарасе, постав столи, бо людей багато.
+Тарас: Добре. А де стільці?
+Марія: Я знаю, де стільці. Друже, допоможи мені.
+Організатор: Дякую! Ми маємо квитки і напої.
+Олена: Я думаю, що все готово.
+Усі: З Днем Незалежності України!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Організатор: Олено, принеси плакати, будь ласка.** | Organizer: Olena, bring the posters, please. |
+| **Олена: Добре. Я знаю, де плакати.** | Olena: Good. I know where the posters are. |
+| **Організатор: Тарасе, постав столи, бо людей багато.** | Organizer: Taras, set up the tables because there are many people. |
+| **Тарас: Добре. А де стільці?** | Taras: Good. And where are the chairs? |
+| **Марія: Я знаю, де стільці. Друже, допоможи мені.** | Mariia: I know where the chairs are. Friend, help me. |
+| **Організатор: Дякую! Ми маємо квитки і напої.** | Organizer: Thank you! We have tickets and drinks. |
+| **Олена: Я думаю, що все готово.** | Olena: I think that everything is ready. |
+| **Усі: З Днем Незалежності України!** | Everyone: Happy Independence Day of Ukraine! |
 
 This second scene uses the plan vocabulary: **плакати**, **квитки**, **напої**,
 **столи**, **стільці**. It also shows how a checkpoint works: the topic can
 change, but the communication tools stay the same.
-
 
 <span id="підсумок"></span>
 
