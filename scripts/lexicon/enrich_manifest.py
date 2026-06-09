@@ -23,6 +23,7 @@ Run from the repo root (needs ``data/`` which is excluded from worktrees)::
 
 from __future__ import annotations
 
+import html
 import json
 import re
 import sqlite3
@@ -139,6 +140,92 @@ def _clean_wiki_defs(raw: str | None) -> list[str]:
     return out[:3]
 
 
+def get_apostrophe_variants(word: str) -> list[str]:
+    """Generate all apostrophe combinations of a word."""
+    variants = {word}
+    for char in ["'", "’", "ʼ"]:
+        if char in word:
+            for replacement in ["'", "’", "ʼ"]:
+                variants.add(word.replace(char, replacement))
+    return sorted(list(variants))
+
+
+def _get_wordnet_synonyms(conn: sqlite3.Connection, lemma: str) -> list[str]:
+    """Look up synonyms in the ukrajinet table for the lemma."""
+    # 1. Get variants by splitting on / and ,
+    lemma_variants = []
+    for p in lemma.split("/"):
+        for pp in p.split(","):
+            val = pp.strip()
+            if val:
+                lemma_variants.append(val)
+
+    # Generate apostrophe variants for the lookup and filtering
+    search_variants = []
+    for var in lemma_variants:
+        search_variants.extend(get_apostrophe_variants(var))
+    # Deduplicate search_variants while preserving order
+    seen_search = set()
+    search_variants = [x for x in search_variants if not (x in seen_search or seen_search.add(x))]
+
+    search_variants_lower = {v.lower() for v in search_variants}
+
+    synonyms_set = set()
+    synonyms_ordered = []
+
+    for var in search_variants:
+        var_l = var.lower()
+        # Query using LIKE.
+        cursor = conn.execute("SELECT words FROM ukrajinet WHERE lower(words) LIKE ?", (f"%{var_l}%",))
+        for (words_json,) in cursor:
+            try:
+                words = json.loads(words_json)
+            except Exception:
+                continue
+            cleaned_words = [w.strip() for w in words]
+            # Check if any word in the synset matches the search variant (case-insensitively)
+            if any(var_l == w.lower() for w in cleaned_words):
+                for w in cleaned_words:
+                    # Drop the lemma variants
+                    if w.lower() not in search_variants_lower and w not in synonyms_set:
+                        synonyms_set.add(w)
+                        synonyms_ordered.append(w)
+
+    return synonyms_ordered[:8]
+
+
+def clean_gloss(gloss: str) -> str:
+    """Strip the pedagogical 'chunk' annotation from a gloss."""
+    if not gloss:
+        return gloss
+    # Remove " — chunk" or " - chunk" at the end
+    res = re.sub(r"\s*[\u2014-]\s*chunk$", "", gloss)
+    # Remove " chunk" at the end
+    res = re.sub(r"\s+chunk$", "", res)
+    # Replace "chunk" word with empty string
+    res = re.sub(r"\bchunk\b", "", res)
+    # Clean up "— , " or "- , " -> "— "
+    res = re.sub(r"([\u2014-])\s*,\s*", r"\1 ", res)
+    # Clean up spaces before punctuation
+    res = re.sub(r"\s+,", ",", res)
+    # Collapse multiple spaces
+    res = re.sub(r"\s+", " ", res)
+    # Clean up trailing punctuation
+    res = re.sub(r"\s*,\s*$", "", res)
+    res = re.sub(r"\s*[\u2014-]\s*$", "", res)
+    return res.strip()
+
+
+def clean_html_entities(text: str) -> str:
+    """Unescape HTML entities (handling double-escaped ones) and normalise spaces."""
+    if not text:
+        return text
+    u1 = html.unescape(text)
+    u2 = html.unescape(u1)
+    u2 = u2.replace("\u00a0", " ")
+    return u2
+
+
 def _meaning(conn: sqlite3.Connection, lemma: str) -> dict | None:
     """Modern Ukrainian meaning: Вікісловник (clean, + synonyms) → СУМ-11 fallback.
 
@@ -146,55 +233,74 @@ def _meaning(conn: sqlite3.Connection, lemma: str) -> dict | None:
     surfaced separately as historical *attestation*, not as the primary meaning.
     """
     word = lemma.strip()
-    row = conn.execute(
-        "SELECT definitions, synonyms FROM wiktionary WHERE word = ? LIMIT 1",
-        (word,),
-    ).fetchone()
+    row = None
+    for w_var in get_apostrophe_variants(word):
+        row = conn.execute(
+            "SELECT definitions FROM wiktionary WHERE word = ? LIMIT 1",
+            (w_var,),
+        ).fetchone()
+        if row:
+            break
+
+    block = None
     if row:
         defs = _clean_wiki_defs(row[0])
         if defs:
-            syns = []
-            try:
-                syns = [s for s in json.loads(row[1] or "[]") if s and s != word][:8]
-            except (ValueError, TypeError):
-                syns = []
-            block: dict[str, object] = {"definitions": defs, "source": "Вікісловник"}
-            if syns:
-                block["synonyms"] = syns
-            return block
-    row = conn.execute(
-        "SELECT definition FROM sum11 WHERE word = ? AND definition != '' LIMIT 1",
-        (word,),
-    ).fetchone()
-    if row and row[0]:
-        return {
-            "definitions": [row[0].strip()[:600]],
-            "source": "СУМ-11",
-            "note": "СУМ-11 — частково засоюзлене видання; перевіряйте ідеологічно навантажені статті.",
-        }
-    return None
+            block = {"definitions": [clean_html_entities(d) for d in defs], "source": "Вікісловник"}
+    else:
+        for w_var in get_apostrophe_variants(word):
+            row = conn.execute(
+                "SELECT definition FROM sum11 WHERE word = ? AND definition != '' LIMIT 1",
+                (w_var,),
+            ).fetchone()
+            if row and row[0]:
+                block = {
+                    "definitions": [clean_html_entities(row[0].strip()[:600])],
+                    "source": "СУМ-11",
+                    "note": "СУМ-11 — частково засоюзлене видання; перевіряйте ідеологічно навантажені статті.",
+                }
+                break
+
+    if block:
+        syns = _get_wordnet_synonyms(conn, word)
+        if syns:
+            block["synonyms"] = syns
+
+    return block
 
 
 def _attestation(conn: sqlite3.Connection, lemma: str) -> dict | None:
     """Грінченко 1907 — historical attestation with Ukrainian usage quotations."""
-    row = conn.execute(
-        "SELECT definition FROM grinchenko WHERE word = ? AND definition != '' LIMIT 1",
-        (lemma.strip(),),
-    ).fetchone()
+    word = lemma.strip()
+    row = None
+    for w_var in get_apostrophe_variants(word):
+        row = conn.execute(
+            "SELECT definition FROM grinchenko WHERE word = ? AND definition != '' LIMIT 1",
+            (w_var,),
+        ).fetchone()
+        if row:
+            break
+
     if row and row[0]:
-        return {"text": row[0].strip()[:600], "source": "Грінченко (1907)"}
+        return {"text": clean_html_entities(row[0].strip()[:600]), "source": "Грінченко (1907)"}
     return None
 
 
 def _etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
     """ЕСУМ etymology (А–Г PoC coverage), by lemma."""
-    if " " in lemma.strip():
+    word = lemma.strip()
+    if " " in word:
         return None
-    row = conn.execute(
-        "SELECT etymology_text, vol, page FROM esum_etymology "
-        "WHERE lemma = ? AND etymology_text != '' LIMIT 1",
-        (lemma.strip(),),
-    ).fetchone()
+    row = None
+    for w_var in get_apostrophe_variants(word):
+        row = conn.execute(
+            "SELECT etymology_text, vol, page FROM esum_etymology "
+            "WHERE lemma = ? AND etymology_text != '' LIMIT 1",
+            (w_var,),
+        ).fetchone()
+        if row:
+            break
+
     if not row or not row[0]:
         return None
     cite = "ЕСУМ"
@@ -202,7 +308,7 @@ def _etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
         cite += f", т. {row[1]}"
     if row[2]:
         cite += f", с. {row[2]}"
-    return {"text": row[0].strip()[:600], "source": cite}
+    return {"text": clean_html_entities(row[0].strip()[:600]), "source": cite}
 
 
 def enrich() -> tuple[int, int]:
@@ -211,6 +317,8 @@ def enrich() -> tuple[int, int]:
     enriched = 0
     try:
         for entry in manifest["entries"]:
+            if "gloss" in entry:
+                entry["gloss"] = clean_html_entities(clean_gloss(entry["gloss"]))
             lemma = entry["lemma"]
             block: dict[str, object] = {}
             morph = _morphology(lemma)
