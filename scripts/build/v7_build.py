@@ -29,6 +29,7 @@ from scripts.build.phases.implementation_map import (
     write_implementation_map,
 )
 from scripts.common.thresholds import QG_DIMS, terminal_dims_for
+from scripts.orchestration import reap_worktrees
 
 DEFAULT_WRITER_TIMEOUT_S = 1800
 FETCH_TIMEOUT_S = 30
@@ -395,11 +396,19 @@ def _print_worktree_summary(
     level: str,
     slug: str,
     result: str,
+    cleanup_result: reap_worktrees.ReapResult | None = None,
 ) -> None:
     print(f"BUILD_WORKTREE={worktree.path}")
     print(f"BUILD_BRANCH={worktree.branch}")
     print(f"BUILD_BASE={worktree.base_sha}")
     print(f"BUILD_RESULT={result}")
+    if cleanup_result is not None:
+        print(f"BUILD_WORKTREE_CLEANUP={cleanup_result.action}: {cleanup_result.reason}")
+        if cleanup_result.error:
+            print(f"BUILD_WORKTREE_CLEANUP_ERROR={cleanup_result.error}")
+    if cleanup_result is not None and cleanup_result.action == "removed":
+        print("Build worktree removed after artifact commit; branch retained for recovery.")
+        return
     print("Next steps if successful:")
     print(f"  cd {worktree.path}")
     print("  git status")
@@ -422,7 +431,7 @@ def _persist_build_artifacts(
     level: str,
     slug: str,
     result: str,
-) -> None:
+) -> bool:
     """Commit ALL build artifacts to the worktree's build branch.
 
     Build artifacts (writer_prompt.md, writer_output.raw.md, hermes.write.jsonl,
@@ -476,6 +485,7 @@ def _persist_build_artifacts(
             capture_output=True,
             text=True,
         )
+        return True
     except (subprocess.CalledProcessError, OSError) as exc:
         stderr_tail = ""
         if isinstance(exc, subprocess.CalledProcessError) and exc.stderr:
@@ -485,6 +495,7 @@ def _persist_build_artifacts(
             f"branch {worktree.branch!r}: {exc}. {stderr_tail}".rstrip(),
             file=sys.stderr,
         )
+        return False
 
 
 def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
@@ -552,8 +563,27 @@ def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
         # the writer_prompt + partial writer_output remain queryable via
         # the build branch SHA. Without this, `git worktree remove`
         # silently destroys forensic evidence.
-        _persist_build_artifacts(worktree, level=level, slug=slug, result=result)
-        _print_worktree_summary(worktree, level=level, slug=slug, result=result)
+        persisted = _persist_build_artifacts(
+            worktree,
+            level=level,
+            slug=slug,
+            result=result,
+        )
+        cleanup_result = None
+        if result == "success" and persisted and not args.keep_worktree:
+            cleanup_result = reap_worktrees.reap_success_worktree(
+                repo_root=worktree.repo_root,
+                worktree_path=worktree.path,
+                reason="build success after artifact commit",
+                apply=True,
+            )
+        _print_worktree_summary(
+            worktree,
+            level=level,
+            slug=slug,
+            result=result,
+            cleanup_result=cleanup_result,
+        )
     return exit_code
 
 
@@ -974,6 +1004,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             "and branch build/{level}/{slug}-{YYYYMMDD-HHMMSS}. With PATH, "
             "uses that path and derives the branch from its basename when "
             "possible."
+        ),
+    )
+    parser.add_argument(
+        "--keep-worktree",
+        action="store_true",
+        help=(
+            "When --worktree succeeds, keep the build worktree instead of "
+            "reaping it after artifact persistence."
         ),
     )
     parser.add_argument(
