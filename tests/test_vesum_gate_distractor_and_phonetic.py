@@ -99,6 +99,73 @@ def test_error_correction_sentence_not_verified() -> None:
     assert "снідаюся" not in sent_for_verification
 
 
+def test_highlight_morphemes_answer_key_not_verified() -> None:
+    """highlight-morphemes `morphemes:` values are bare answer-key fragments."""
+    activity = {
+        "type": "highlight-morphemes",
+        "text": "обрядовість посівання колядування веснянка",
+        "items": [
+            {"word": "веснянка", "morphemes": ["весн", "янк", "а"]},
+            {"word": "колядування", "morphemes": ["коляд", "ува", "ння"]},
+            {"word": "посівання", "morphemes": ["по", "сів", "ання"]},
+        ],
+    }
+    sent_for_verification: set[str] = set()
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        sent_for_verification.update(words)
+        return {word: [{"lemma": word}] for word in words}
+
+    result = _vesum_gate(
+        module_text="",
+        activities=[activity],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert result["passed"] is True
+    assert result["missing"] == []
+    assert {"весн", "янк", "коляд", "ува", "ння", "сів", "ання"}.isdisjoint(
+        sent_for_verification
+    )
+    assert {"обрядовість", "посівання", "колядування", "веснянка"}.issubset(
+        sent_for_verification
+    )
+
+
+def test_highlight_morphemes_text_still_verified() -> None:
+    """A bad form in highlight-morphemes `text:` still fails VESUM."""
+    activity = {
+        "type": "highlight-morphemes",
+        "text": "веснянка дивюся",
+        "items": [
+            {"word": "веснянка", "morphemes": ["весн", "янк", "а"]},
+        ],
+    }
+    sent_for_verification: set[str] = set()
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        sent_for_verification.update(words)
+        return {
+            word: ([{"lemma": word}] if word == "веснянка" else [])
+            for word in words
+        }
+
+    result = _vesum_gate(
+        module_text="",
+        activities=[activity],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert result["passed"] is False
+    assert result["missing"] == ["дивюся"]
+    assert "дивюся" in sent_for_verification
+    assert {"весн", "янк"}.isdisjoint(sent_for_verification)
+
+
 def test_dialect_abbreviation_not_verified() -> None:
     """Textbook abbreviation `діал.` is metadata, not a VESUM lemma."""
     sent_for_verification: set[str] = set()
