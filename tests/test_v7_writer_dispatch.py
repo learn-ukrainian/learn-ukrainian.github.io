@@ -184,6 +184,53 @@ def test_v7_build_invokes_gemini_tools_from_project_root(
     )
 
 
+def test_v7_build_seminar_stress_path_strips_combining_acute(tmp_path: Path) -> None:
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    (module_dir / "module.md").write_text("# Те́ма\n\nПро́за.\n", encoding="utf-8")
+    (module_dir / "vocabulary.yaml").write_text("- lemma: сло́во\n", encoding="utf-8")
+    (module_dir / "activities.yaml").write_text("- title: Впра́ва\n", encoding="utf-8")
+
+    result = v7_build._run_stress_annotation_for_level(module_dir, "folk")
+
+    assert result["passed"] is True
+    assert result["skipped"] is True
+    assert result["total_removed"] == 4
+    assert "\u0301" not in (module_dir / "module.md").read_text(encoding="utf-8")
+    assert "\u0301" not in (module_dir / "vocabulary.yaml").read_text(encoding="utf-8")
+    assert "\u0301" not in (module_dir / "activities.yaml").read_text(encoding="utf-8")
+
+
+def test_v7_build_core_stress_path_keeps_existing_marks(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    (module_dir / "module.md").write_text("# Те́ма\n\nПро́за.\n", encoding="utf-8")
+    (module_dir / "vocabulary.yaml").write_text("- lemma: сло́во\n", encoding="utf-8")
+    (module_dir / "activities.yaml").write_text("- title: Впра́ва\n", encoding="utf-8")
+    calls: list[Path] = []
+
+    def fake_run_stress_annotation(path: Path) -> dict[str, Any]:
+        calls.append(path)
+        return {"phase": "stress_annotation", "passed": True}
+
+    monkeypatch.setattr(
+        v7_build.linear_pipeline,
+        "run_stress_annotation",
+        fake_run_stress_annotation,
+    )
+
+    result = v7_build._run_stress_annotation_for_level(module_dir, "a1")
+
+    assert result["passed"] is True
+    assert calls == [module_dir]
+    assert "\u0301" in (module_dir / "module.md").read_text(encoding="utf-8")
+    assert "\u0301" in (module_dir / "vocabulary.yaml").read_text(encoding="utf-8")
+    assert "\u0301" in (module_dir / "activities.yaml").read_text(encoding="utf-8")
+
+
 def test_v7_build_dry_run_telemetry_out_writes_file_not_stdout(
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],

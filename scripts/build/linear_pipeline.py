@@ -43,6 +43,7 @@ CLAUDE_WRITER_AGENT_SOURCE = PROJECT_ROOT / "agents_extensions/shared" / "agents
 CLAUDE_WRITER_AGENT_TARGET = PROJECT_ROOT / ".claude" / "agents" / "curriculum-writer.md"
 
 from scripts.audit.failure_classes import FailureClass, FailureRecord
+from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
 from scripts.build.citation_matcher import (
     CitationKey,
     citation_keys_match,
@@ -3952,6 +3953,27 @@ def run_stress_annotation(module_dir: Path) -> dict[str, Any]:
     }
 
 
+def strip_stress_marks_for_seminar(module_dir: Path) -> dict[str, Any]:
+    """Remove residual stress marks from seminar authoring artifacts."""
+    targets = ("module.md", "vocabulary.yaml", "activities.yaml")
+    counts: dict[str, int] = {}
+    for target in targets:
+        path = module_dir / target
+        text = _read_required(path)
+        count = text.count("\u0301")
+        counts[target] = count
+        if count:
+            path.write_text(text.replace("\u0301", ""), encoding="utf-8")
+    return {
+        "passed": True,
+        "phase": "stress_annotation",
+        "skipped": True,
+        "reason": "seminar level - no stress",
+        "files": counts,
+        "total_removed": sum(counts.values()),
+    }
+
+
 def run_ulp_fidelity_gate(
     module_dir: Path,
     plan_path: Path,
@@ -4001,7 +4023,12 @@ def run_ulp_fidelity_with_correction(
         "strict_json_artifacts",
         "writer_artifacts_mapping",
     }:
-        stress_annotation = run_stress_annotation(module_dir)
+        plan = plan_check(plan_path)
+        level = str(plan.get("level") or "").lower()
+        if level in SEMINAR_LEVELS:
+            stress_annotation = strip_stress_marks_for_seminar(module_dir)
+        else:
+            stress_annotation = run_stress_annotation(module_dir)
         write_json(module_dir / "stress_annotation.json", stress_annotation)
         artifact["stress_annotation"] = stress_annotation
         report = run_ulp_fidelity_gate(module_dir, plan_path, profile=profile)

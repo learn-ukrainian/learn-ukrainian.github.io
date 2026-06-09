@@ -150,7 +150,7 @@ class TestParseFrontmatter:
         assert body.strip() == "Body"
 
 
-def test_v7_tab3_omits_inline_activities_and_keeps_workbook_only(tmp_path):
+def test_v7_tab3_cross_refs_inline_activities_and_keeps_workbook_only(tmp_path):
     activities_yaml = tmp_path / "activities.yaml"
     activities_yaml.write_text(
         """
@@ -218,12 +218,83 @@ Practice there.
     assert "act-1 inline greeting" in lesson_tab
     assert "act-2 inline thanks" in lesson_tab
 
-    assert "act-1 inline greeting" not in tab3
-    assert "act-2 inline thanks" not in tab3
+    assert "### act-1 inline greeting\n\n*(see lesson, §Section One)*" in tab3
+    assert "### act-2 inline thanks\n\n*(see lesson, §Section Two)*" in tab3
     assert "### act-3 workbook yes\n\n<Quiz" in tab3
     assert "### act-4 workbook no\n\n<Quiz" in tab3
     assert "*(see lesson)*" not in tab3
     assert tab3.count("<Quiz") == 2
+
+
+def test_v7_seminar_tabs_force_ukrainian_labels(tmp_path):
+    activities_yaml = tmp_path / "activities.yaml"
+    activities_yaml.write_text("[]\n", encoding="utf-8")
+    activities = ActivityParser().parse(activities_yaml)
+    md_content = """---
+title: Seminar Labels
+subtitle: Test
+---
+# Seminar Labels
+
+## Розділ
+
+Текст.
+"""
+
+    folk_mdx = generate_mdx(md_content, 1, yaml_activities=activities, level="folk")
+    a1_mdx = generate_mdx(md_content, 1, yaml_activities=activities, level="a1")
+
+    assert '<TabItem label="Урок">' in folk_mdx
+    assert '<TabItem label="Словник">' in folk_mdx
+    assert '<TabItem label="Вправи">' in folk_mdx
+    assert '<TabItem label="Ресурси">' in folk_mdx
+    assert '<TabItem label="Lesson">' in a1_mdx
+    assert '<TabItem label="Vocabulary">' in a1_mdx
+    assert '<TabItem label="Activities">' in a1_mdx
+    assert '<TabItem label="Resources">' in a1_mdx
+
+
+def test_v7_seminar_tab3_inline_cross_refs_use_ukrainian(tmp_path):
+    activities_yaml = tmp_path / "activities.yaml"
+    activities_yaml.write_text(
+        """
+- id: act-1
+  type: quiz
+  title: Перевірка понять
+  items:
+    - question: Оберіть поняття.
+      options: [обряд, дата]
+      answer: обряд
+- id: act-2
+  type: quiz
+  title: Робоча вправа
+  items:
+    - question: Оберіть слово.
+      options: [мотив, помилка]
+      answer: мотив
+""",
+        encoding="utf-8",
+    )
+    activities = ActivityParser().parse(activities_yaml)
+    md_content = """---
+title: Семінар
+subtitle: Test
+---
+# Семінар
+
+## Постановка проблеми
+
+Текст.
+
+<!-- INJECT_ACTIVITY: act-1 -->
+"""
+
+    mdx = generate_mdx(md_content, 1, yaml_activities=activities, level="folk")
+    tab3 = mdx.split('<TabItem label="Вправи">', 1)[1].split("</TabItem>", 1)[0]
+
+    assert "### Перевірка понять\n\n*(див. урок, §Постановка проблеми)*" in tab3
+    assert "### Робоча вправа\n\n<Quiz" in tab3
+    assert tab3.count("<Quiz") == 1
 
 
 def test_generated_tabs_include_hash_target_sync_script():
@@ -287,7 +358,8 @@ Practice here.
 
     assert "Inline fill duplicate" in lesson_tab
     assert "<FillIn" in lesson_tab
-    assert "Inline fill duplicate" not in tab3
+    assert "### Inline fill duplicate\n\n*(see lesson tab)*" in tab3
+    assert tab3.count("Inline fill duplicate") == 1
     assert "<FillIn" not in tab3
     assert "Workbook-only quiz" in tab3
     assert "<Quiz" in tab3
@@ -329,9 +401,9 @@ subtitle: Test
     mdx = generate_mdx(md_content, 1, yaml_activities=activities, level="a1")
     tab3 = mdx.split('<TabItem label="Activities">', 1)[1].split("</TabItem>", 1)[0]
 
-    assert "No workbook activities for this module; see the Lesson tab." in tab3
-    assert "Inline one" not in tab3
-    assert "Inline two" not in tab3
+    assert "No workbook activities for this module; see the Lesson tab." not in tab3
+    assert "### Inline one\n\n*(see lesson tab)*" in tab3
+    assert "### Inline two\n\n*(see lesson tab)*" in tab3
     assert "<Quiz" not in tab3
     assert "*(see lesson)*" not in tab3
 
