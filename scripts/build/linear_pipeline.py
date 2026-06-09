@@ -8132,6 +8132,29 @@ def _vesum_gate(
                 return {"passed": False, "error": str(exc), "checked": len(unchecked_pairs)}
             resolved_lc = {surface.lower() for surface, matches in original_case_verified.items() if matches}
             missing_lc -= resolved_lc
+    # Textbook syllable-break notation such as `за-пи-са-ний` should still
+    # resolve to the canonical VESUM form, but only after the intact whole
+    # hyphenated token has had a chance to verify. Doing this as a fallback
+    # prevents real lexical compounds like `будь-який` from being fused into
+    # non-words before lookup.
+    if missing_lc:
+        syllable_lookup_by_missing = {
+            word: collapsed
+            for word in missing_lc
+            if "-" in word
+            for collapsed in (_collapse_syllable_break(word),)
+            if collapsed != word and len(collapsed) >= VESUM_MIN_WORD_LENGTH
+        }
+        if syllable_lookup_by_missing:
+            try:
+                syllable_verified = verify_words_fn(sorted(set(syllable_lookup_by_missing.values())))
+            except Exception as exc:
+                return {"passed": False, "error": str(exc), "checked": len(unchecked_pairs)}
+            missing_lc -= {
+                word
+                for word, collapsed in syllable_lookup_by_missing.items()
+                if syllable_verified.get(collapsed)
+            }
     # Hyphenated multi-word constructions fallback (per user direction
     # 2026-05-23). Many legitimate Ukrainian forms appear as hyphenated
     # compounds that VESUM only indexes by individual lemma: adverbial
@@ -8335,17 +8358,10 @@ def _normalize_for_vesum(lemma: str) -> str:
     while previous != text:
         previous = text
         # Strip emphasis wrappers (bold/italic/code/italic-underscore).
-        # Hyphens INSIDE emphasis are conditionally stripped: pedagogical
-        # morpheme breaks like `прокида**ю-ся**` and `**-ться**` (where
-        # a hyphen splits a short morpheme fragment) collapse to the
-        # canonical VESUM lemma; real compound words like `**темно-синій**`
-        # (both halves are full-length lexemes) preserve their hyphen.
-        # The heuristic: strip the hyphen only if either side is ≤3 chars
-        # (morpheme-fragment width). 3-char threshold captures all observed
-        # Ukrainian reflexive/aspectual suffixes (`ся/сь/ть/єть/єте/ємо/...`)
-        # while keeping every Ukrainian compound noun/adjective intact
-        # (compound halves are ≥4 chars in practice: `темно`, `синій`,
-        # `жовто`, `гарячий`, …).
+        # Hyphens INSIDE emphasis are stripped only for explicit grammar
+        # morpheme notation like `прокида**ю-ся**` and `**-ться**`. Lexical
+        # hyphenated words must stay hyphenated because VESUM contains forms
+        # like `будь-що` and `по-перше` as whole entries.
         #
         # 2026-05-17 regression context: PR #2068 introduced unconditional
         # hyphen-strip-inside-emphasis to fix m20's `прокида**ю-ся**`
@@ -8369,10 +8385,42 @@ def _normalize_for_vesum(lemma: str) -> str:
     return text.strip()
 
 
-def _strip_morpheme_hyphen(emphasis_inner: str, *, fragment_max_chars: int = 3) -> str:
+_VESUM_MORPHEME_HYPHEN_PARTS = frozenset(
+    {
+        "ся",
+        "сь",
+        "тся",
+        "тсь",
+        "ться",
+        "шся",
+        "шсь",
+        "чся",
+        "чсь",
+        "ть",
+        "ш",
+        "мо",
+        "те",
+        "ю",
+        "юся",
+        "є",
+        "єш",
+        "єшся",
+        "єть",
+        "ємо",
+        "ємося",
+        "єте",
+        "єтеся",
+        "ють",
+        "ються",
+        "ється",
+        "ва",
+    }
+)
+
+
+def _strip_morpheme_hyphen(emphasis_inner: str) -> str:
     """Collapse a morpheme-break hyphen INSIDE markdown emphasis, but only
-    when at least one side of the hyphen is short enough to be a morpheme
-    fragment (≤``fragment_max_chars`` chars by default).
+    when one side is an explicit grammar morpheme fragment.
 
     See ``_normalize_for_vesum`` for the rationale + regression context.
     """
@@ -8385,7 +8433,13 @@ def _strip_morpheme_hyphen(emphasis_inner: str, *, fragment_max_chars: int = 3) 
     if len(parts) != 2:
         return emphasis_inner
     left, right = parts
-    if len(left) <= fragment_max_chars or len(right) <= fragment_max_chars:
+    if not left and right in _VESUM_MORPHEME_HYPHEN_PARTS:
+        return right
+    if not right and left in _VESUM_MORPHEME_HYPHEN_PARTS:
+        return left
+    if not left or not right:
+        return emphasis_inner
+    if left in _VESUM_MORPHEME_HYPHEN_PARTS or right in _VESUM_MORPHEME_HYPHEN_PARTS:
         return left + right
     return emphasis_inner
 
@@ -8483,7 +8537,6 @@ def _iter_vesum_word_surfaces(text: str) -> list[str]:
             continue
         if word.lower() in _STANDALONE_POSTFIX_FRAGMENTS:
             continue
-        word = _collapse_syllable_break(word)
         words.append(word)
     return words
 

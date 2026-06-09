@@ -36,11 +36,17 @@ def test_reflexive_verb_not_split() -> None:
 
 
 def test_compound_hyphen_word_not_split() -> None:
-    text = "синьо-жовтий англо-український"
+    text = "синьо-жовтий англо-український будь-який будь-що по-перше"
 
     tokens = _iter_vesum_word_surfaces(text)
 
-    assert tokens == ["синьо-жовтий", "англо-український"]
+    assert tokens == [
+        "синьо-жовтий",
+        "англо-український",
+        "будь-який",
+        "будь-що",
+        "по-перше",
+    ]
 
 
 def test_em_dash_splits_sentences() -> None:
@@ -74,6 +80,13 @@ def test_normalize_for_vesum_strips_stress_and_markdown() -> None:
     assert _normalize_for_vesum("вмива́ю") == "вмиваю"
     assert _normalize_for_vesum("**ся**") == "ся"
     assert _normalize_for_vesum("чу́до**в**") == "чудов"
+    assert _normalize_for_vesum("прокида**ю-ся**") == "прокидаюся"
+    assert _normalize_for_vesum("прокида**-юся**") == "прокидаюся"
+    assert _normalize_for_vesum("**будь-що**") == "будь-що"
+    assert _normalize_for_vesum("будь**-що**") == "будь-що"
+    assert _normalize_for_vesum("будь**-який**") == "будь-який"
+    assert _normalize_for_vesum("**по-перше**") == "по-перше"
+    assert _normalize_for_vesum("по**-перше**") == "по-перше"
 
 
 def test_vesum_gate_normalizes_stress_and_markdown_before_lookup() -> None:
@@ -128,6 +141,84 @@ def test_vesum_gate_ignores_sung_vowel_practice_strings() -> None:
 
     assert gate["passed"] is False
     assert gate["missing"] == ["фейкслово"]
+
+
+def test_vesum_gate_verifies_valid_hyphenated_compounds_as_whole_words() -> None:
+    seen: list[list[str]] = []
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        seen.append(words)
+        valid = {
+            "будь-який",
+            "будь-що",
+            "по-перше",
+            "вибір",
+            "обжинки",
+            "обжинковий",
+            "день",
+            "Купала",
+            "купальський",
+            "жниварський",
+            "спів",
+        }
+        return {word: ([{"lemma": word}] if word in valid else []) for word in words}
+
+    gate = _vesum_gate(
+        module_text=(
+            "Будь-який вибір, **будь-що** і **по-перше**. "
+            "Обжинки, обжинковий день, Купала, купальський і жниварський спів."
+        ),
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    looked_up = {word for call in seen for word in call}
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert {"будь-який", "будь-що", "по-перше", "Купала"} <= looked_up
+    assert not {"будьякий", "будьщо", "поперше", "купаль", "обжинк", "ськ"} & looked_up
+
+
+def test_vesum_gate_still_flags_known_bad_form_after_hyphen_fix() -> None:
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        valid = {"будь-який"}
+        return {word: ([{"lemma": word}] if word in valid else []) for word in words}
+
+    gate = _vesum_gate(
+        module_text="Будь-який приклад, але празднік лишається помилкою.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert gate["passed"] is False
+    assert "празднік" in gate["missing"]
+    assert "Будьякий" not in gate["missing"]
+
+
+def test_vesum_gate_resolves_textbook_syllable_break_after_whole_lookup() -> None:
+    seen: list[list[str]] = []
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        seen.append(words)
+        valid = {"день", "записаний", "мій", "тут", "увесь"}
+        return {word: ([{"lemma": word}] if word in valid else []) for word in words}
+
+    gate = _vesum_gate(
+        module_text="Тут за-пи-са-ний у-весь мій день.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert "за-пи-са-ний" in seen[0]
+    assert {"записаний", "увесь"} <= set(seen[1])
 
 
 def test_vesum_gate_ignores_morphological_stem_fragments() -> None:
