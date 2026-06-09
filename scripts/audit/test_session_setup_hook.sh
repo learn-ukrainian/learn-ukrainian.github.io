@@ -49,17 +49,46 @@ setup_fixture() {
 
 run_hook() {
   local root="$1"
+  local allow_git_router="${2:-0}"
 
   HOME="$TMP_ROOT/home" \
     CLAUDE_PROJECT_DIR="$root" \
     CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS=32000 \
+    SESSION_HANDOFF_AGENT=claude \
+    SESSION_HANDOFF_ALLOW_GIT_ROUTER="$allow_git_router" \
     "$HOOK"
 }
 
 fixture_root="$TMP_ROOT/project"
 fallback_warn_count=0
 
-# 1. Marker path hits.
+# 1. Local gitignored thread handoff wins by default.
+setup_fixture "$fixture_root"
+mkdir -p "$fixture_root/.agent" "$fixture_root/docs/session-state"
+printf '# local handoff\n' > "$fixture_root/.agent/claude-thread-handoff.md"
+cat > "$fixture_root/docs/session-state/current.md" <<'EOF'
+# Current
+
+CURRENT BODY SHOULD NOT APPEAR
+EOF
+output="$(run_hook "$fixture_root")"
+assert_contains "$output" "Thread handoff: .agent/claude-thread-handoff.md" "local handoff"
+assert_contains "$output" "Bootstrap prompt: .agent/claude-thread-bootstrap.md" "local handoff"
+assert_not_contains "$output" "CURRENT BODY SHOULD NOT APPEAR" "local handoff"
+assert_not_contains "$output" "WARN:" "local handoff"
+
+# 2. current.md is ignored by default when no local thread handoff exists.
+setup_fixture "$fixture_root"
+cat > "$fixture_root/docs/session-state/current.md" <<'EOF'
+# Current
+
+DEFAULT ROUTER BODY SHOULD NOT APPEAR
+EOF
+output="$(run_hook "$fixture_root")"
+assert_not_contains "$output" "DEFAULT ROUTER BODY SHOULD NOT APPEAR" "router ignored by default"
+assert_not_contains "$output" "WARN: Could not locate latest brief in current.md" "router ignored by default"
+
+# 3. Legacy marker path hits only when explicitly enabled.
 setup_fixture "$fixture_root"
 mkdir -p "$fixture_root/foo"
 printf 'brief body\n' > "$fixture_root/foo/bar-brief.md"
@@ -70,14 +99,14 @@ Latest-Brief: foo/bar-brief.md
 
 HEAD BODY SHOULD NOT APPEAR
 EOF
-output="$(run_hook "$fixture_root")"
+output="$(run_hook "$fixture_root" 1)"
 assert_contains "$output" "PREVIOUS-SESSION HANDOFF" "marker hit"
 assert_contains "$output" "Brief: foo/bar-brief.md" "marker hit"
 assert_not_contains "$output" "HEAD BODY SHOULD NOT APPEAR" "marker hit"
 assert_not_contains "$output" "WARN:" "marker hit"
 marker_bytes="$(printf '%s' "$output" | wc -c | tr -d ' ')"
 
-# 2. Agent-Handoff mapping wins over the compatibility Latest-Brief marker.
+# 4. Agent-Handoff mapping wins over the compatibility Latest-Brief marker when legacy router is enabled.
 setup_fixture "$fixture_root"
 mkdir -p "$fixture_root/docs/session-state"
 printf 'orchestrator body\n' > "$fixture_root/docs/session-state/codex-orchestrator-handoff.md"
@@ -91,12 +120,12 @@ Agent-Handoff:
 - orchestrator: docs/session-state/codex-orchestrator-handoff.md
 - claude: docs/session-state/current.claude.md
 EOF
-output="$(run_hook "$fixture_root")"
+output="$(run_hook "$fixture_root" 1)"
 assert_contains "$output" "Brief: docs/session-state/current.claude.md" "agent handoff"
 assert_not_contains "$output" "Brief: docs/session-state/codex-orchestrator-handoff.md" "agent handoff"
 assert_not_contains "$output" "WARN:" "agent handoff"
 
-# 3. Table regex fallback.
+# 5. Table regex fallback when legacy router is enabled.
 setup_fixture "$fixture_root"
 mkdir -p "$fixture_root/foo"
 printf 'brief body\n' > "$fixture_root/foo/bar-brief.md"
@@ -109,13 +138,13 @@ cat > "$fixture_root/docs/session-state/current.md" <<'EOF'
 
 TABLE FALLBACK BODY SHOULD NOT APPEAR
 EOF
-output="$(run_hook "$fixture_root")"
+output="$(run_hook "$fixture_root" 1)"
 assert_contains "$output" "Brief: foo/bar-brief.md" "table fallback"
 assert_contains "$output" "WARN: Latest-Brief marker missing in current.md" "table fallback"
 assert_not_contains "$output" "TABLE FALLBACK BODY SHOULD NOT APPEAR" "table fallback"
 fallback_warn_count=$((fallback_warn_count + $(count_warns "$output")))
 
-# 4. Brief missing.
+# 6. Brief missing when legacy router is enabled.
 setup_fixture "$fixture_root"
 cat > "$fixture_root/docs/session-state/current.md" <<'EOF'
 # Current
@@ -124,21 +153,23 @@ Latest-Brief: foo/missing-brief.md
 
 MISSING MARKER FALLBACK BODY
 EOF
-output="$(run_hook "$fixture_root")"
+output="$(run_hook "$fixture_root" 1)"
 assert_contains "$output" "WARN: Latest-Brief pointed to foo/missing-brief.md but file missing on disk." "missing brief"
-assert_contains "$output" "MISSING MARKER FALLBACK BODY" "missing brief"
+assert_contains "$output" "legacy git router opt-in could not locate a compact handoff" "missing brief"
+assert_not_contains "$output" "MISSING MARKER FALLBACK BODY" "missing brief"
 fallback_warn_count=$((fallback_warn_count + $(count_warns "$output")))
 
-# 5. No handoff table at all.
+# 7. No handoff table at all when legacy router is enabled.
 setup_fixture "$fixture_root"
 cat > "$fixture_root/docs/session-state/current.md" <<'EOF'
 # Current
 
 NO TABLE FALLBACK BODY
 EOF
-output="$(run_hook "$fixture_root")"
-assert_contains "$output" "WARN: Could not locate latest brief in current.md" "no table"
-assert_contains "$output" "NO TABLE FALLBACK BODY" "no table"
+output="$(run_hook "$fixture_root" 1)"
+assert_contains "$output" "WARN: Could not locate latest brief in current.md under legacy router opt-in." "no table"
+assert_contains "$output" "thread_handoff.py prepare --agent claude" "no table"
+assert_not_contains "$output" "NO TABLE FALLBACK BODY" "no table"
 fallback_warn_count=$((fallback_warn_count + $(count_warns "$output")))
 
 printf 'marker_hit_stdout_bytes=%s\n' "$marker_bytes"

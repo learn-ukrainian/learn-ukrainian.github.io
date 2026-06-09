@@ -40,6 +40,14 @@ change, just-filed issue), pass `?fresh=true` to `/api/orient`.
 
 ## Two-tier handoffs (epic #1865 item #1, shipped 2026-05-11)
 
+Thread rollover handoffs are separate from durable session records. When a
+thread approaches context threshold, run
+`.venv/bin/python scripts/orchestration/thread_handoff.py prepare --agent <name>`
+and continue from `.agent/<name>-thread-bootstrap.md` plus
+`.agent/<name>-thread-handoff.md`. Those files are gitignored local state.
+Do **not** write `docs/session-state/current.md` or any other git-tracked
+handoff file just to survive compaction.
+
 Every new session handoff ships as a **PAIR**:
 
 - **`docs/session-state/<date>-<slug>-brief.md`** (~2-5KB) — machine-readable, cold-start entry point. YAML frontmatter + bullet-list body. Agents read THIS.
@@ -55,11 +63,13 @@ curl -s 'http://localhost:8765/api/session/current?agent=gemini'
 curl -s 'http://localhost:8765/api/session/current?agent=orchestrator'
 ```
 
-`docs/session-state/current.md` is now a small compatibility router. It keeps
-`Latest-Brief: docs/session-state/current.orchestrator.md` for legacy hooks and
-an `Agent-Handoff:` mapping for `current.<agent>.md`. Read the router only to
-discover paths; detailed state belongs in the agent-specific file. Do NOT read
-the `.html` unless the agent-specific handoff points you there.
+`docs/session-state/current.md` is a git-tracked compatibility router, not a
+scratchpad and not the context-threshold rollover mechanism. It keeps
+`Latest-Brief: docs/session-state/current.orchestrator.md` for legacy API
+compatibility and an `Agent-Handoff:` mapping for `current.<agent>.md`. Read
+the router only to discover paths; detailed state belongs in the agent-specific
+file. Do NOT read the `.html` unless the agent-specific handoff points you
+there.
 
 ### Brief frontmatter schema (required fields)
 
@@ -104,12 +114,13 @@ Reserve all narrative, anecdotes, KPIs, and rich rationale for the `.html` compa
 
 Brief and HTML are authored together in the same orchestrator turn. Never ship one without the other for sessions going forward.
 
-Every orchestrator router update to `docs/session-state/current.md` MUST keep
-the top-level `Latest-Brief:` marker and the `Agent-Handoff:` mapping parseable.
-Non-orchestrator agents update only `docs/session-state/current.<agent>.md`
-unless a task explicitly authorizes a router update. The SessionStart hook
-parses `Latest-Brief:` before falling back to table regex; marker drift would
-silently reintroduce the old cold-start budget tax.
+Every approved compatibility-router update to `docs/session-state/current.md`
+MUST keep the top-level `Latest-Brief:` marker and the `Agent-Handoff:` mapping
+parseable. Non-orchestrator agents update only
+`docs/session-state/current.<agent>.md` unless a task explicitly authorizes a
+router update. The SessionStart hook no longer reads this router by default;
+set `SESSION_HANDOFF_ALLOW_GIT_ROUTER=1` only for legacy compatibility tests or
+an explicitly approved router-oriented cold start.
 
 ### Backfill policy
 
@@ -123,7 +134,7 @@ worktree, use these endpoints instead of grepping `orchestration/`,
 agent-side reasoning.
 
 | Question | Endpoint |
-|---|---|
+| --- | --- |
 | What's module `{slug}` doing right now? | `GET /api/state/module/{track}/slug/{slug}` |
 | Give me the dashboard for modules N..M on {track} | `GET /api/state/range/{track}?start=N&end=M` |
 | Which files would `--force` delete for this module? | `GET /api/artifacts/{track}/{slug}/force-preview` |
