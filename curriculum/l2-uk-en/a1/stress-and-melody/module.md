@@ -97,6 +97,8 @@ three safe models:
 The punctuation helps you choose the melody, but your voice must still do the
 work.
 
+<!-- INJECT_ACTIVITY: act-4 -->
+
 Now add the most important beginner exception. A question with a question word
 usually falls, not rises:
 
@@ -164,7 +166,7 @@ Read the Ukrainian dialogue first:
 Тара́с: До́бре! ↘
 ```
 
-Support after the dialogue:
+English support after the Ukrainian dialogue:
 
 | Українська | English support |
 | --- | --- |
@@ -188,7 +190,7 @@ Now read a second tiny exchange:
 Тара́с: Як га́рно! ↘↘
 ```
 
-Support after the dialogue:
+English support after the Ukrainian dialogue:
 
 | Українська | English support |
 | --- | --- |
@@ -255,5 +257,3 @@ of the sentence melody.
 
 The workbook adds extra practice with the same skills: clear-vowel repair,
 stress sorting, quick facts, and word recognition.
-
-<!-- INJECT_ACTIVITY: act-4 -->

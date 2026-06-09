@@ -34,7 +34,7 @@ of possession. Treat **У ме́не є** and **У те́бе є** as whole chun
 Марк: Його́ зва́ти Ко́ля.
 ```
 
-Support after the dialogue:
+English support after the Ukrainian dialogue:
 
 | Українська | English support |
 | --- | --- |
@@ -55,7 +55,7 @@ Now use **це** to identify people in a family photo.
 Да́ша: Так, її́ зва́ти Тетя́на.
 ```
 
-Support after the dialogue:
+English support after the Ukrainian dialogue:
 
 | Українська | English support |
 | --- | --- |

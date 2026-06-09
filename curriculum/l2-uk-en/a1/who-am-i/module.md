@@ -43,7 +43,7 @@ read. The support table comes after the dialogue.
 Оле́на: Я з Украї́ни.
 ```
 
-Support after the dialogue:
+English support after the Ukrainian dialogue:
 
 | Українська | English support |
 | --- | --- |
@@ -66,7 +66,7 @@ Now read a formal first meeting:
 Петро́: Так, я з Ки́єва.
 ```
 
-Support after the dialogue:
+English support after the Ukrainian dialogue:
 
 | Українська | English support |
 | --- | --- |
@@ -89,7 +89,7 @@ The third dialogue introduces another person:
 Ната́лка: Ду́же приє́мно, Окса́но.
 ```
 
-Support after the dialogue:
+English support after the Ukrainian dialogue:
 
 | Українська | English support |
 | --- | --- |
