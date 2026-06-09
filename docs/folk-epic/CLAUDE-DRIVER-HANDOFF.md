@@ -27,7 +27,94 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 4 HANDOFF (2026-06-08 #2 — e2e WIKI PROVEN; MODULE BLOCKED → DO OPTION B) — **RESUME HERE**
+## ▶▶▶ SESSION 5 HANDOFF (2026-06-09 — e2e MODULE BUILT; OPTION B DONE; MDX FIX DONE) — **RESUME HERE**
+
+> **USER DIRECTIVE (2026-06-08 PM, going to sleep):** *"keep driving the track. after pilot keep
+> building the rest according to the plan. morning I will review the pilot. when you finish the pilot
+> keep working on the rest but UP TO WIKI, and we will finish them [the modules] after the pilot was
+> reviewed."* → Sequence: (1) finish pilot e2e [DONE], (2) drive the rest dossier→**wiki only** (NO
+> modules — modules wait for the pilot review), (3) leave the pilot MODULE as a PR for user review.
+
+### ✅ SHIPPED THIS SESSION (merged to main)
+- **#2855 seminar wiki-completeness gate** (`c3dccc3bed`) — OPTION B DONE. Implemented the deferred
+  seminar branch (section-presence + ≥2 distinct sources + 100% citation resolution + source-ref
+  resolution + all-chunk verify_quote seam) + registered `folk` in `SEMINAR_LEVELS`. Cross-track (all
+  seminar levels); strictly-less-restrictive (was NotImplementedError/ValueError), zero regression.
+  Inline review + deepseek-flash cross-family = SHIP; 15 tests; CI green. verify_quote_fn left `None`
+  with a precise TODO (no in-process registry-backed entry point; MCP `handle_verify_quote` takes
+  author/text). **3 non-blocking follow-ups** noted on the PR: (1) `_percent` exact-100% hardening
+  (rounds 199/200→100, unreachable at seminar sizes), (2) test for trivially-empty section, (3) rename
+  `test_..._seminar_deferred`.
+- **#2856 MDX activity-id backfill** (`b968dcfa16`) — the pilot build hard-failed at MDX
+  (`KeyError: 'id'`): writer authored ids only for inline act-1..act-4, workbook acts 5-16 were id-less.
+  Fix: deterministic `backfill_missing_activity_ids` in `scripts/generate_mdx/core.py` (preserves
+  writer/inline ids, `act-{index}` + collision fallback, idempotent) + cloze-blank-id + translation-
+  critique robustness in `yaml_activities.py`. 535 tests; repro assembles the pilot. **CI-gap noted on
+  PR for @main:** `MDX Generation Drift` is path-filtered to content and SKIPS on generator-code changes.
+
+### ⭐ PILOT MODULE BUILT — `folk/kalendarna-obriadovist-zvychai` (THIS PR, DO NOT MERGE — user reviews)
+Built via `v7_build folk … --worktree --writer claude-tools`; gate now passes; MDX re-assembled
+(73KB, 16 activities, 4 tabs) from the build artifacts (no writer re-run) at
+`starlight/src/content/docs/folk/kalendarna-obriadovist-zvychai.mdx`. Build worktree (full forensics):
+`.worktrees/builds/folk-kalendarna-obriadovist-zvychai-20260608-220114/` (#M-10 auto-committed to a
+`build/folk/…` branch). **Claude review (content, not just metrics):**
+- ✅ 4 tabs all populated; Activities tab non-empty (19 components — no m20 empty-tab repeat); 30-lemma
+  FlashcardDeck; prose is strong C1 Ukrainian with real decolonization framing ("не низка свят, а
+  система"); VESUM-clean (3 flagged words auto-corrected: будьяку/працююча/Семінарний); activity split
+  valid (5 inline/11 workbook per FOLK config); writer used corpus (verify_words, query_wikipedia,
+  search_style_guide). LLM QG 7.0 terminal-PASS.
+- **ISSUES FOR USER REVIEW (documented, not build-blockers):** (a) ❌ stress marks applied at FULL
+  density across all prose + bleed into 5 H2 headings — likely over-scaffolding for C1; follow-up =
+  stress_annotation should skip headings + reconsider C1 density; (b) ⚠ tab labels are EN
+  (Lesson/Vocabulary/Activities/Resources) not UK (Урок/Словник/Вправи/Ресурси per contract P1);
+  (c) ⚠ P2 inline-and-aggregate cross-refs absent (known-broken §5 #3, not new); (d) ⚠ LLM 7.0/REVISE
+  warnings on pedagogical/engagement/tone — worth a content read.
+
+### 🔭 PHASE-2 PROGRESS (the rest, up-to-wiki) + IN-FLIGHT (verify: `curl -s :8765/api/delegate/active`)
+- ✅ **Dossier #1 `narodna-kultura-yak-systema`** (frame) — DONE, Claude corpus-hammer **SHIP** → **PR #2858**
+  (HELD, no merge). Independently re-verified 3 §4 quotes at 1.0 + exact chunk ids; Берегиня flagged as
+  romantic reconstruction; do-not-quote section present. **Wiki NOT yet compiled.**
+- ✅ **Dossier #2 `narodni-viruvannia-mifolohiia-demonolohiia`** — DONE, Claude corpus-hammer **SHIP** →
+  **PR #2859** (HELD). Independently re-verified 5 quotes at 1.0 + exact chunk ids (incl. Крип'якевич
+  русалочка, Коцюбинський чугайстир); Берегиня rejected as ancient-goddess (search_heritage=СУМ-20 only);
+  anti-pantheon discipline exemplary; honest do-not-quote. **Wiki NOT yet compiled.**
+- ✅ **Dossier #3 `koliadky-shchedrivky`** — DONE, Claude corpus-hammer **SHIP** → **PR #2860** (HELD).
+  Re-verified «Коли не било з нащада світа»→1.0 feaa5fa7_c0596, «Щедрий вечір…»→0.99 feaa5fa7_c0598;
+  Щедрик lyric correctly do-not-quote'd (false 0.58); Леонтович/Cheka UINP-sourced. (dispatch ended rc=-9
+  silence-SIGKILL AFTER opening PR — #M-8; artifact intact, 51KB.)
+- ✅ **Dossier #4 `rodynna-obriadovist-zvychai`** — DONE, Claude corpus-hammer **SHIP** → **PR #2861** (HELD).
+  Re-verified «Ой, сій мати, овес…»→1.0 feaa5fa7_c0615, голосіння→1.0 da46aa92_c0218; anti-pantheon caution
+  present. MINOR: full §4 chunk-id audit recommended before grounding a module (spot-check 2/2 at 1.0).
+- ⏸ **Dossier #5 `dumy-nevilnytski-lytsarski` — HELD, do NOT fire yet:** the user has pending feedback on
+  m19 (`dumy-lytsarski`) that should shape this duma topic. Fire only after that feedback lands.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **Get user's m19 (`dumy-lytsarski`) feedback**, then fire dossier #5 `dumy-nevilnytski-lytsarski`
+   (proven loop: codex/gpt-5.5 write → Claude corpus-hammer review). All 4 other build-order dossiers are
+   SHIP (#2858/#2859/#2860/#2861, HELD).
+2. **COMPILE WIKIS** for the 4 SHIP'd dossiers (#1 narodna-kultura, #2 narodni-viruvannia, #3 koliadky,
+   #4 rodynna — all ready). ⚠ CORPUS-ACCESS NOTE: `scripts/wiki/compile.py` uses
+   `load_dossier_text(track,slug)` + dense retrieval which needs `data/` — worktrees SPARSE-EXCLUDE `data/`.
+   So run compile from a `data/`-bearing checkout: copy the dossier into the MAIN root's
+   `docs/research/folk/<slug>.md` (untracked working file, NOT a commit), run
+   `.venv/bin/python scripts/wiki/compile.py --track folk --slug <slug> --writer gpt-5.5 --review` from main
+   root (Monitor it), then move the wiki+sources.yaml onto that dossier's PR branch + push. Corpus-hammer
+   review each wiki (verify_quote a §4 sample). The seminar wiki-completeness gate (#2855, live) gates the
+   eventual module build — the wikis must pass it.
+3. **After user reviews pilot #2857:** address the pilot follow-ups (stress-annotation skips headings +
+   reconsider C1 density; UK tab labels per P1; P2 inline-and-aggregate §5 #3), then build the rest's
+   modules. **Build NO modules for the rest until then.**
+
+### 📌 HOLD DECISION (told the user): all phase-2 dossier+wiki PRs stay OPEN/unmerged until the pilot
+review sets the approach. State lives on PR branches (#2857 carries this handoff; #2858 = dossier #1).
+Cold-start: `gh pr list` + `/api/delegate/active` + read this handoff on the `claude/folk-pilot-module` branch.
+
+### 📊 FLEET — wiki writer **gpt-5.5** (dossier-grounded); module writer **claude-tools** (C1+ cultural);
+reviewers **deepseek-flash** (code) / Claude corpus-hammer (culture content). Cross-family always.
+
+---
+
+## ▶▶▶ SESSION 4 HANDOFF (2026-06-08 #2 — e2e WIKI PROVEN; MODULE BLOCKED → DO OPTION B) — (superseded by Session 5)
 
 > **ROLE (user 2026-06-08): Claude is the FOLK TRACK ORCHESTRATOR.** Own folk end-to-end: dossier →
 > wiki → **module** (Claude builds the module too now, NOT Codex-UI). Still don't touch

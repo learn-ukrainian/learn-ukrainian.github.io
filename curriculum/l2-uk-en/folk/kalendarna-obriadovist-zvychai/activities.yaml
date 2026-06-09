@@ -1,0 +1,350 @@
+- id: act-1
+  type: match-up
+  title: Три робочі поняття
+  instruction: З'єднай кожне поняття з його означенням.
+  pairs:
+  - left: обряд
+    right: усталена символічна дія, повторювана в певний час і простір
+  - left: мотив
+    right: повторюваний образ або словесна формула в тексті
+  - left: варіант
+    right: регіональна чи виконавська форма того самого тексту
+  - left: цикл
+    right: послідовність обрядів у межах однієї пори року
+- id: act-2
+  type: group-sort
+  title: Чотири цикли року
+  instruction: Розподіли обряди й жанри за сезонними циклами.
+  groups:
+  - label: Зимовий цикл
+    items:
+    - колядки
+    - щедрівки
+    - посівання
+    - вертеп
+  - label: Весняний цикл
+    items:
+    - веснянки
+    - гаївки
+  - label: Літній цикл
+    items:
+    - русалії
+    - Купало
+  - label: Осінній цикл
+    items:
+    - зажинки
+    - жнива
+    - обжинки
+- id: act-3
+  type: quiz
+  title: Синкретизм весняної формули
+  instruction: Обери правильну відповідь.
+  items:
+  - question: Що поєднує формула «Вже весна воскресла»?
+    options:
+    - text: християнську лексику воскресання й аграрну логіку оновлення
+      correct: true
+    - text: лише церковні молитви
+      correct: false
+    - text: лише господарські накази
+      correct: false
+    explanation: The spring formula fuses Christian resurrection vocabulary with the
+      agrarian logic of seasonal renewal — that fusion is syncretism.
+  - question: Як називають поєднання дохристиянського й християнського шарів в обряді?
+    options:
+    - text: синкретизм
+      correct: true
+    - text: варіант
+      correct: false
+    - text: мотив
+      correct: false
+    explanation: Syncretism names the blending of pre-Christian and Christian layers
+      within one rite.
+- id: act-4
+  type: true-false
+  title: Слово і тіло
+  instruction: Познач, чи правдиве твердження.
+  items:
+  - statement: 'У веснянках та гаївках спів поєднується з рухом: колом, рядами, ігровим
+      діалогом.'
+    answer: true
+    explanation: У весняному циклі слово й тіло діють разом — коло, ряди та ігровий
+      діалог.
+  - statement: Календарний обряд існує тільки як писаний текст, без виконання.
+    answer: false
+    explanation: Обряд живе у виконанні — голосом, рухом, спільною дією громади, а
+      не лише на папері.
+- type: fill-in
+  title: Деколонізована рамка
+  instruction: Устав слово, що найкраще завершує речення.
+  items:
+  - sentence: Імперські рамки розчиняли українську обрядовість у нечіткому «загальнослов'янському»
+      ____.
+    answer: матеріалі
+    options:
+    - матеріалі
+    - вінку
+    - снопі
+  - sentence: Деколонізований підхід починає опис із українських назв, регіонів і
+      ____.
+    answer: джерел
+    options:
+    - джерел
+    - снопів
+    - вінків
+- type: match-up
+  title: Символи та їхні значення
+  instruction: З'єднай символ із його значенням.
+  pairs:
+  - left: дідух
+    right: обрядовий сніп, символ роду й врожаю
+  - left: кутя
+    right: обрядова страва зимового циклу
+  - left: вінок
+    right: символ єдності та захисту
+  - left: ватра
+    right: очисний вогонь купальської ночі
+  - left: обжинки
+    right: обряд завершення жнив
+- type: group-sort
+  title: Стихії та сфери символів
+  instruction: Розподіли символи й обряди за їхньою сферою.
+  groups:
+  - label: Вогонь і сонце
+    items:
+    - ватра
+    - Купало
+  - label: Вода й очищення
+    items:
+    - вінок
+    - русалії
+  - label: Зерно й урожай
+    items:
+    - дідух
+    - сніп
+    - обжинки
+    - посівання
+- type: quiz
+  title: Поняття й метод
+  instruction: Обери правильну відповідь.
+  items:
+  - question: Що означає поняття «варіант» в аналізі обряду?
+    options:
+    - text: регіональна чи виконавська форма того самого тексту
+      correct: true
+    - text: випадкова помилка співака
+      correct: false
+    - text: назва зимового свята
+      correct: false
+    explanation: A variant is a regional, temporal or performance form of the same
+      text or practice.
+  - question: Який підхід відповідає науковій доброчесності?
+    options:
+    - text: розрізняти засвідчене в тексті й припущення
+      correct: true
+    - text: перетворювати кожен образ на доказ культу божества
+      correct: false
+    - text: вважати обряд простою розвагою
+      correct: false
+    explanation: Integrity means separating what the source attests from what remains
+      a hypothesis.
+  - question: Чим щедрівка відрізняється від колядки?
+    options:
+    - text: вона прив'язана до новорічного вечора
+      correct: true
+    - text: її співають лише влітку
+      correct: false
+    - text: вона не має мотиву врожаю
+      correct: false
+    explanation: A shchedrivka belongs to the New Year eve; its key motif is the call
+      for harvest and increase.
+  - question: Як «Щедрик» потрапив на світову сцену?
+    options:
+    - text: через хорове аранжування Миколи Леонтовича
+      correct: true
+    - text: як купальська гра з вогнем
+      correct: false
+    - text: як осіння жниварська формула
+      correct: false
+    explanation: Leontovych's choral arrangement of the shchedrivka «Щедрик» became
+      world-famous.
+- type: true-false
+  title: Система, а не уламок
+  instruction: Познач, чи правдиве твердження.
+  items:
+  - statement: Календарний обряд поєднує слово, дію, час і символ.
+    answer: true
+    explanation: Це чотири опори поетики обряду.
+  - statement: Імперські й радянські рамки часто розчиняли українську обрядовість
+      у «загальнослов'янському» матеріалі.
+    answer: true
+    explanation: Знеособлення стирало українські назви, регіони й джерела.
+  - statement: Веснянки виконують нерухомо, без танцю й гри.
+    answer: false
+    explanation: 'Веснянки нерозривні з рухом: коло, ряди, ігровий діалог.'
+  - statement: Дідуха роблять із останнього снопа жнив.
+    answer: true
+    explanation: Останній сніп ставав дідухом — символом роду й врожаю.
+  - statement: Кожен обрядовий мотив є прямим доказом культу окремого божества.
+    answer: false
+    explanation: Джерело часто показує лише мотив, а не цілу релігію з іменами богів.
+- type: fill-in
+  title: Цикли та символи
+  instruction: Устав слово, що найкраще завершує речення.
+  items:
+  - sentence: Зимовий ____ відкриває народний рік.
+    answer: цикл
+    options:
+    - цикл
+    - вінок
+    - сніп
+  - sentence: З останнього снопа роблять ____.
+    answer: дідуха
+    options:
+    - дідуха
+    - вінок
+    - кутю
+  - sentence: На Купала дівчата плетуть ____ і пускають їх на воду.
+    answer: вінки
+    options:
+    - вінки
+    - снопи
+    - колядки
+  - sentence: Обжинки завершують ____.
+    answer: жнива
+    options:
+    - жнива
+    - вертеп
+    - посівання
+  - sentence: Гурти колядників обходять двори й співають ____.
+    answer: колядки
+    options:
+    - колядки
+    - гаївки
+    - русалії
+- type: cloze
+  title: Весняний цикл
+  instruction: Заповни пропуски словами з переліку.
+  passage: 'Весняний ____ — це обрядовість руху й оновлення. Молодь співала ____ і
+    гаївки, поєднуючи спів із рухом. Громада ніби виводила ____ у спільний простір.
+    Аграрна основа лишалася: люди закликали ____ і добрий лад у природі.'
+  blanks:
+  - answer: цикл
+    options:
+    - цикл
+    - сніп
+    - вінок
+  - answer: веснянки
+    options:
+    - веснянки
+    - колядки
+    - обжинки
+  - answer: весну
+    options:
+    - весну
+    - зиму
+    - осінь
+  - answer: тепло
+    options:
+    - тепло
+    - вогонь
+    - воду
+- type: mark-the-words
+  title: Познач обрядові терміни
+  instruction: Познач у тексті всі назви обрядів, жанрів і символів.
+  text: Узимку громада водила вертеп і співала щедрівки. Навесні молодь виходила на
+    гаївки. Влітку на Купала плели вінки. Восени обжинки завершували жнива, а з останнього
+    снопа робили дідуха.
+  answers:
+  - вертеп
+  - щедрівки
+  - гаївки
+  - вінки
+  - обжинки
+  - дідуха
+- type: translate
+  title: Переклади ключові речення
+  instruction: Обери найточніший англійський переклад.
+  items:
+  - source: Обряд тримає громаду разом.
+    options:
+    - text: A rite holds the community together.
+      correct: true
+    - text: A rite divides the village.
+      correct: false
+    - text: A custom forgets the family.
+      correct: false
+    explanation: «тримає ... разом» = holds together; «громада» = community.
+  - source: Веснянка закликала тепло й оновлення природи.
+    options:
+    - text: The spring song called for warmth and the renewal of nature.
+      correct: true
+    - text: The carol thanked the field for the harvest.
+      correct: false
+    - text: The bonfire purified the water.
+      correct: false
+    explanation: «веснянка» = spring song; «закликала тепло» = called for warmth.
+  - source: З останнього снопа робили дідуха.
+    options:
+    - text: They made the didukh from the last sheaf.
+      correct: true
+    - text: They made a wreath from the first sheaf.
+      correct: false
+    - text: They burned the last sheaf in the fire.
+      correct: false
+    explanation: «останній сніп» = the last sheaf; «дідух» = the ritual sheaf.
+  - source: Синкретизм поєднує давній і християнський шари обряду.
+    options:
+    - text: Syncretism blends the ancient and Christian layers of the rite.
+      correct: true
+    - text: Syncretism separates the song from the dance.
+      correct: false
+    - text: Syncretism is a regional variant of a carol.
+      correct: false
+    explanation: «синкретизм» = syncretism, the blending of cultural layers.
+- type: translation-critique
+  title: Оціни переклади терміна
+  instruction: Порівняй три англійські варіанти й визнач найточніший культурно.
+  original: Обжинки дякували ниві за врожай.
+  translations:
+  - The harvest-end rite (obzhynky) thanked the field for the harvest.
+  - Obzhynky gave thanks to the field for the crop.
+  - The reaping party thanked the soil for the food.
+  focus_points:
+  - Чи передано обрядовий характер слова «обжинки»?
+  - Чи збережено зв'язок «нива → врожай»?
+  - Який варіант найточніший культурно й не зводить обряд до побутової дії?
+- type: essay-response
+  title: Опиши обряд як систему
+  instruction: Напиши коротке аналітичне есе українською.
+  prompt: 'Опиши один календарний обряд (на вибір) як систему: назви обряд, його мотив
+    і регіональний варіант. Поясни, як у ньому поєднуються слово, дія, час і символ.'
+  min_words: 120
+  model_answer: 'Обжинки — це осінній обряд завершення жнив. Його головний мотив —
+    подяка ниві за врожай і прохання про новий добрий рік. Женці лишали в полі останнє
+    колосся, з останнього снопа робили дідуха, а з колосся плели обжинковий вінок.
+    Цей вінок із піснями несли господареві. На Поліссі та в Галичині обряд має свої
+    варіанти: різняться пісні, рух і слова формули. Так в обжинках поєднуються слово,
+    дія, час і символ. Пісня звучить саме під час жнив, у конкретному просторі громади,
+    а вінок і дідух несуть значення врожаю та роду. Через виконання гуртом обряд тримає
+    громаду разом і передає варіанти молодшим.'
+  rubric:
+  - Названо обряд, його мотив і регіональний варіант.
+  - Показано поєднання слова, дії, часу й символу.
+  - Використано поняття обряд / мотив / варіант точно.
+  - Мова природна, без знеособлення традиції.
+  peer_review_guidelines: Перевір, чи автор назвав конкретний обряд (а не «свято взагалі»),
+    чи відрізнив мотив від варіанта й чи показав виконання, а не лише текст.
+  source_reading: Розділи «Поетика, символіка і виконання» та «Корпус і контекст».
+- type: match-up
+  title: Мотив і обряд
+  instruction: З'єднай мотив із обрядом, у якому він звучить.
+  pairs:
+  - left: заклик урожаю та приплоду
+    right: щедрівка
+  - left: воскресання весни
+    right: веснянки
+  - left: очищення вогнем і водою
+    right: Купало
+  - left: вдячність ниві за врожай
+    right: обжинки
