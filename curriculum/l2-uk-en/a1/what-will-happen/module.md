@@ -22,20 +22,35 @@ In this A1 pattern, change only **бути**: **буду**, **будеш**, **б
 **читати**, **робити**, **відпочивати**.
 :::
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ### Плани на завтра
 
-<DialogueBox uk="Олена: Що ти будеш робити завтра?" en="Olena: What will you do tomorrow?" />
-<DialogueBox uk="Тарас: Завтра я буду працювати." en="Taras: Tomorrow I will work." />
-<DialogueBox uk="Олена: А ввечері?" en="Olena: And in the evening?" />
-<DialogueBox uk="Тарас: Ввечері я буду готувати вечерю." en="Taras: In the evening I will cook dinner." />
-<DialogueBox uk="Тарас: А що буде робити Анна?" en="Taras: And what will Anna do?" />
-<DialogueBox uk="Олена: Вона буде читати книжку." en="Olena: She will read a book." />
-<DialogueBox uk="Тарас: А ми будемо гуляти?" en="Taras: And will we walk?" />
-<DialogueBox uk="Олена: Так, ми будемо гуляти в парку." en="Olena: Yes, we will walk in the park." />
+```text
+Олена: Що ти будеш робити завтра?
+Тарас: Завтра я буду працювати.
+Олена: А ввечері?
+Тарас: Ввечері я буду готувати вечерю.
+Тарас: А що буде робити Анна?
+Олена: Вона буде читати книжку.
+Тарас: А ми будемо гуляти?
+Олена: Так, ми будемо гуляти в парку.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Що ти будеш робити завтра?** | Olena: What will you do tomorrow? |
+| **Тарас: Завтра я буду працювати.** | Taras: Tomorrow I will work. |
+| **Олена: А ввечері?** | Olena: And in the evening? |
+| **Тарас: Ввечері я буду готувати вечерю.** | Taras: In the evening I will cook dinner. |
+| **Тарас: А що буде робити Анна?** | Taras: And what will Anna do? |
+| **Олена: Вона буде читати книжку.** | Olena: She will read a book. |
+| **Тарас: А ми будемо гуляти?** | Taras: And will we walk? |
+| **Олена: Так, ми будемо гуляти в парку.** | Olena: Yes, we will walk in the park. |
 
 Every answer uses **буду / буде / будемо + infinitive**:
 
@@ -50,12 +65,25 @@ The question uses the same pattern:
 
 ### Вихідні
 
-<DialogueBox uk="Максим: Що ви будете робити на вихідних?" en="Maksym: What will you do on the weekend?" />
-<DialogueBox uk="Олена: У суботу ми будемо відпочивати." en="Olena: On Saturday we will rest." />
-<DialogueBox uk="Максим: А в неділю?" en="Maksym: And on Sunday?" />
-<DialogueBox uk="Олена: У неділю я буду готувати, а Тарас буде дивитися футбол." en="Olena: On Sunday I will cook, and Taras will watch football." />
-<DialogueBox uk="Максим: Звучить добре." en="Maksym: Sounds good." />
-<DialogueBox uk="Олена: Наступного тижня ми будемо працювати багато." en="Olena: Next week we will work a lot." />
+```text
+Максим: Що ви будете робити на вихідних?
+Олена: У суботу ми будемо відпочивати.
+Максим: А в неділю?
+Олена: У неділю я буду готувати, а Тарас буде дивитися футбол.
+Максим: Звучить добре.
+Олена: Наступного тижня ми будемо працювати багато.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Максим: Що ви будете робити на вихідних?** | Maksym: What will you do on the weekend? |
+| **Олена: У суботу ми будемо відпочивати.** | Olena: On Saturday we will rest. |
+| **Максим: А в неділю?** | Maksym: And on Sunday? |
+| **Олена: У неділю я буду готувати, а Тарас буде дивитися футбол.** | Olena: On Sunday I will cook, and Taras will watch football. |
+| **Максим: Звучить добре.** | Maksym: Sounds good. |
+| **Олена: Наступного тижня ми будемо працювати багато.** | Olena: Next week we will work a lot. |
 
 This dialogue adds planning words:
 
@@ -188,9 +216,6 @@ For a quick spoken answer, repeat the pattern twice: **Завтра я буду
 працювати. Ввечері я буду відпочивати.** The repetition is useful because the
 infinitives stay visible.
 
-
-
-
 ### Repair traps
 
 The most common A1 trap is mixing future **бути** with a changed second verb.
@@ -214,7 +239,6 @@ Another trap is choosing the wrong future form of **бути**:
 | <del>**ти буду робити**</del> | **ти будеш робити** |
 | <del>**ми буде робити**</del> | **ми будемо робити** |
 | <del>**вони будемо робити**</del> | **вони будуть робити** |
-
 
 ## Підсумок
 

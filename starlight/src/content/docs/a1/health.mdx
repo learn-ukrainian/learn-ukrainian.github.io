@@ -4,10 +4,8 @@ description: "У мене болить голова — частини тіла 
 sidebar:
   order: 53
   label: "53. Здоров'я"
-pipeline: linear-phase-4
-build_status: validated
 prev: my-story
-next: false
+next: emergencies
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -16,8 +14,43 @@ import FillIn from '@site/src/components/FillIn';
 import TrueFalse from '@site/src/components/TrueFalse';
 import Unjumble from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
 import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <Tabs syncKey="module-tab">
@@ -47,22 +80,37 @@ This is phrase practice only. Say the symptom, ask for help, and stop. Do not
 guess what the problem is or tell anyone what to do.
 :::
 
+## Діалоги
+
 ### Complete the health phrase
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence":"У мене болить ___.","answer":"голова","options":["голова","лікар","аптека"]},{"sentence":"Мені потрібен ___.","answer":"лікар","options":["лікар","голова","кашель"]},{"sentence":"У мене ___.","answer":"температура","options":["температура","праворуч","квиток"]},{"sentence":"___, будь ласка.","answer":"Повторіть","options":["Повторіть","Болить","Нежить"]}]`)} />
-
-## Діалоги
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У мене болить ___.", "answer": "голова", "options": ["голова", "лікар", "аптека"]}, {"sentence": "Мені потрібен ___.", "answer": "лікар", "options": ["лікар", "голова", "кашель"]}, {"sentence": "У мене ___.", "answer": "температура", "options": ["температура", "праворуч", "квиток"]}, {"sentence": "___, будь ласка.", "answer": "Повторіть", "options": ["Повторіть", "Болить", "Нежить"]}]`)} />
 
 ### Що у вас болить?
 
-<DialogueBox uk="Лікар: Добрий день. Що у вас болить?" en="Doctor: Good afternoon. What hurts?" />
-<DialogueBox uk="Анна: Добрий день. У мене болить голова." en="Anna: Good afternoon. My head hurts." />
-<DialogueBox uk="Лікар: Ще щось?" en="Doctor: Anything else?" />
-<DialogueBox uk="Анна: У мене болить горло. І в мене температура." en="Anna: My throat hurts. And I have a fever." />
-<DialogueBox uk="Лікар: Повторіть, будь ласка: голова і горло?" en="Doctor: Please repeat: head and throat?" />
-<DialogueBox uk="Анна: Так. Голова і горло." en="Anna: Yes. Head and throat." />
-<DialogueBox uk="Лікар: Зрозуміло." en="Doctor: Understood." />
-<DialogueBox uk="Анна: Дякую." en="Anna: Thank you." />
+```text
+Лікар: Добрий день. Що у вас болить?
+Анна: Добрий день. У мене болить голова.
+Лікар: Ще щось?
+Анна: У мене болить горло. І в мене температура.
+Лікар: Повторіть, будь ласка: голова і горло?
+Анна: Так. Голова і горло.
+Лікар: Зрозуміло.
+Анна: Дякую.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Лікар: Добрий день. Що у вас болить?** | Doctor: Good afternoon. What hurts? |
+| **Анна: Добрий день. У мене болить голова.** | Anna: Good afternoon. My head hurts. |
+| **Лікар: Ще щось?** | Doctor: Anything else? |
+| **Анна: У мене болить горло. І в мене температура.** | Anna: My throat hurts. And I have a fever. |
+| **Лікар: Повторіть, будь ласка: голова і горло?** | Doctor: Please repeat: head and throat? |
+| **Анна: Так. Голова і горло.** | Anna: Yes. Head and throat. |
+| **Лікар: Зрозуміло.** | Doctor: Understood. |
+| **Анна: Дякую.** | Anna: Thank you. |
 
 The learner line is short:
 
@@ -75,14 +123,29 @@ questions. Your A1 task is to make the first message clear.
 
 ### В аптеці
 
-<DialogueBox uk="Покупець: Добрий день. Де тут аптека?" en="Customer: Good afternoon. Where is the pharmacy here?" />
-<DialogueBox uk="Жінка: Аптека прямо і праворуч." en="Woman: The pharmacy is straight ahead and to the right." />
-<DialogueBox uk="Покупець: Дякую." en="Customer: Thank you." />
-<DialogueBox uk="Фармацевт: Добрий день." en="Pharmacist: Good afternoon." />
-<DialogueBox uk="Покупець: Добрий день. У мене болить живіт." en="Customer: Good afternoon. My stomach hurts." />
-<DialogueBox uk="Фармацевт: Я вас розумію. Вам потрібен лікар?" en="Pharmacist: I understand you. Do you need a doctor?" />
-<DialogueBox uk="Покупець: Так, мені потрібен лікар. Я не розумію адресу." en="Customer: Yes, I need a doctor. I do not understand the address." />
-<DialogueBox uk="Фармацевт: Повторюю повільно." en="Pharmacist: I will repeat slowly." />
+```text
+Покупець: Добрий день. Де тут аптека?
+Жінка: Аптека прямо і праворуч.
+Покупець: Дякую.
+Фармацевт: Добрий день.
+Покупець: Добрий день. У мене болить живіт.
+Фармацевт: Я вас розумію. Вам потрібен лікар?
+Покупець: Так, мені потрібен лікар. Я не розумію адресу.
+Фармацевт: Повторюю повільно.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Покупець: Добрий день. Де тут аптека?** | Customer: Good afternoon. Where is the pharmacy here? |
+| **Жінка: Аптека прямо і праворуч.** | Woman: The pharmacy is straight ahead and to the right. |
+| **Покупець: Дякую.** | Customer: Thank you. |
+| **Фармацевт: Добрий день.** | Pharmacist: Good afternoon. |
+| **Покупець: Добрий день. У мене болить живіт.** | Customer: Good afternoon. My stomach hurts. |
+| **Фармацевт: Я вас розумію. Вам потрібен лікар?** | Pharmacist: I understand you. Do you need a doctor? |
+| **Покупець: Так, мені потрібен лікар. Я не розумію адресу.** | Customer: Yes, I need a doctor. I do not understand the address. |
+| **Фармацевт: Повторюю повільно.** | Pharmacist: I will repeat slowly. |
 
 This dialogue practices location and help language. It keeps the learner's
 message to a clear first report. The useful phrases are:
@@ -94,7 +157,7 @@ message to a clear first report. The useful phrases are:
 
 ### Body words
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left":"голова","right":"head"},{"left":"горло","right":"throat"},{"left":"живіт","right":"stomach"},{"left":"спина","right":"back"},{"left":"рука","right":"hand / arm"},{"left":"нога","right":"leg / foot"},{"left":"зуб","right":"tooth"},{"left":"вухо","right":"ear"}]`)} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "голова", "right": "head"}, {"left": "горло", "right": "throat"}, {"left": "живіт", "right": "stomach"}, {"left": "спина", "right": "back"}, {"left": "рука", "right": "hand / arm"}, {"left": "нога", "right": "leg / foot"}, {"left": "зуб", "right": "tooth"}, {"left": "вухо", "right": "ear"}]`)} />
 
 ## Тіло
 
@@ -145,11 +208,11 @@ Clear short speech is better than a long sentence with many mistakes.
 
 ### Sort health words
 
-<GroupSort client:only='react' groups={JSON.parse(`{"body parts":["голова","горло","живіт","спина","зуб"],"symptom phrases":["У мене температура","У мене кашель","У мене нежить","Мені погано"],"help phrases":["Мені потрібен лікар","Де тут аптека?","Повторіть, будь ласка"]}`)} />
+<GroupSort client:only='react' groups={JSON.parse(`{"body parts": ["голова", "горло", "живіт", "спина", "зуб"], "symptom phrases": ["У мене температура", "У мене кашель", "У мене нежить", "Мені погано"], "help phrases": ["Мені потрібен лікар", "Де тут аптека?", "Повторіть, будь ласка"]}`)} />
 
 ### Choose the clear A1 phrase
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question":"You want to say: My stomach hurts.","options":[{"text":"У мене болить живіт.","correct":true},{"text":"Я живіт болить.","correct":false},{"text":"Мій живіт є болить.","correct":false}],"explanation":"Use У мене болить + body part."},{"question":"You need a doctor.","options":[{"text":"Мені потрібен лікар.","correct":true},{"text":"Я потрібно лікар.","correct":false},{"text":"Лікар болить.","correct":false}],"explanation":"Мені потрібен лікар is the fixed help phrase."},{"question":"You do not understand.","options":[{"text":"Я не розумію.","correct":true},{"text":"Я не аптека.","correct":false},{"text":"У мене розумію.","correct":false}],"explanation":"Я не розумію is the repair phrase."}]`)} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "You want to say: My stomach hurts.", "options": [{"text": "У мене болить живіт.", "correct": true}, {"text": "Я живіт болить.", "correct": false}, {"text": "Мій живіт є болить.", "correct": false}], "explanation": "Use У мене болить + body part."}, {"question": "You need a doctor.", "options": [{"text": "Мені потрібен лікар.", "correct": true}, {"text": "Я потрібно лікар.", "correct": false}, {"text": "Лікар болить.", "correct": false}], "explanation": "Мені потрібен лікар is the fixed help phrase."}, {"question": "You do not understand.", "options": [{"text": "Я не розумію.", "correct": true}, {"text": "Я не аптека.", "correct": false}, {"text": "У мене розумію.", "correct": false}], "explanation": "Я не розумію is the repair phrase."}]`)} />
 
 ## У мене болить...
 
@@ -178,14 +241,6 @@ Other useful fixed phrases:
 
 Use **хворий** if you speak as a man or boy. Use **хвора** if you speak as a
 woman or girl.
-
-### Phrase-level health check
-
-<TrueFalse client:only='react' instruction="Decide whether the sentence is a clear A1 health phrase." items={JSON.parse(`[{"statement":"У мене болить горло.","isTrue":true,"explanation":"This follows У мене болить + body part."},{"statement":"Моя голова болить.","isTrue":false,"explanation":"Use the more natural A1 phrase: У мене болить голова."},{"statement":"У мене кашель.","isTrue":true,"explanation":"This is a fixed symptom phrase."},{"statement":"Я є хворий.","isTrue":false,"explanation":"Drop є: Я хворий."},{"statement":"Мені потрібен лікар.","isTrue":true,"explanation":"This is the help phrase."}]`)} />
-
-### Build health lines
-
-<Unjumble client:only='react' items={JSON.parse(`[{"words":"У/мене/болить/голова","answer":"У мене болить голова."},{"words":"Мені/потрібен/лікар","answer":"Мені потрібен лікар."},{"words":"Я/не/розумію","answer":"Я не розумію."},{"words":"Повторіть/будь/ласка","answer":"Повторіть, будь ласка."}]`)} />
 
 ## Просити про допомогу
 
@@ -220,22 +275,42 @@ Use these scripts as ready-made cards. Replace only the body word or place word.
 
 **Script 1: at a reception desk**
 
-<DialogueBox uk="Добрий день. У мене болить спина. Мені потрібен лікар. Я не розумію. Повторіть, будь ласка." en="Good afternoon. My back hurts. I need a doctor. I do not understand. Please repeat." />
+```text
+Добрий день. У мене болить спина. Мені потрібен лікар. Я не розумію. Повторіть, будь ласка.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Добрий день. У мене болить спина. Мені потрібен лікар. Я не розумію. Повторіть, будь ласка.** | Good afternoon. My back hurts. I need a doctor. I do not understand. Please repeat. |
 
 **Script 2: asking for a place**
 
-<DialogueBox uk="Вибачте. Де тут лікарня? Мені погано. Говоріть повільніше, будь ласка." en="Excuse me. Where is the hospital here? I feel unwell. Please speak more slowly." />
+```text
+Вибачте. Де тут лікарня? Мені погано. Говоріть повільніше, будь ласка.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Вибачте. Де тут лікарня? Мені погано. Говоріть повільніше, будь ласка.** | Excuse me. Where is the hospital here? I feel unwell. Please speak more slowly. |
 
 **Script 3: describing two symptoms**
 
-<DialogueBox uk="Добрий день. У мене болить горло. У мене кашель. Мені потрібен лікар." en="Good afternoon. My throat hurts. I have a cough. I need a doctor." />
+```text
+Добрий день. У мене болить горло. У мене кашель. Мені потрібен лікар.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Добрий день. У мене болить горло. У мене кашель. Мені потрібен лікар.** | Good afternoon. My throat hurts. I have a cough. I need a doctor. |
 
 These scripts repeat the same safe pattern: greet, name the symptom, ask for a
 doctor, and use a repair phrase. You can say them slowly and still be clear.
-
-### Doctor or pharmacy phrases
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence":"Добрий день. У мене болить ___.","answer":"спина","options":["спина","лікар","аптека"]},{"sentence":"Вибачте. Де тут ___?","answer":"аптека","options":["аптека","болить","нога"]},{"sentence":"Мені ___.","answer":"погано","options":["погано","голова","кашель"]},{"sentence":"___, будь ласка. Я не розумію.","answer":"Повільніше","options":["Повільніше","Голова","Температура"]}]`)} />
 
 ### Repair traps
 
@@ -252,11 +327,7 @@ Keep the Ukrainian phrase shape.
 These repairs are about natural Ukrainian phrases. You do not need to name the
 grammar. Memorize the safe chunks and use them.
 
-### Repair health phrases
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question":"Repair: Моя рука болить.","options":[{"text":"У мене болить рука.","correct":true},{"text":"У мене рука лікар.","correct":false},{"text":"Рука потрібен мене.","correct":false}],"explanation":"Use У мене болить + body part."},{"question":"Repair: Я потрібно лікар.","options":[{"text":"Мені потрібен лікар.","correct":true},{"text":"Я потрібен лікар.","correct":false},{"text":"Лікар потрібно я.","correct":false}],"explanation":"Use the fixed phrase Мені потрібен лікар."},{"question":"Repair: У мене є нежить.","options":[{"text":"У мене нежить.","correct":true},{"text":"Я нежить болить.","correct":false},{"text":"Нежить потрібен.","correct":false}],"explanation":"Use the simple phrase У мене нежить."}]`)} />
-
-## Підсумок
+## 📋 Підсумок
 
 Your A1 health toolkit:
 
@@ -271,52 +342,78 @@ Your A1 health toolkit:
 
 One complete A1 message can be this short:
 
-<DialogueBox uk="Добрий день. У мене болить горло. У мене температура. Мені потрібен лікар. Повторіть, будь ласка." en="Good afternoon. My throat hurts. I have a fever. I need a doctor. Please repeat." />
+```text
+Добрий день. У мене болить горло. У мене температура. Мені потрібен лікар. Повторіть, будь ласка.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Добрий день. У мене болить горло. У мене температура. Мені потрібен лікар. Повторіть, будь ласка.** | Good afternoon. My throat hurts. I have a fever. I need a doctor. Please repeat. |
 
 That is enough for this module: say the symptom, ask for help, and use repair
 phrases when you need them.
 
-### Say what hurts
-
-<Translate client:only='react' instruction="Choose the Ukrainian phrase that matches the English prompt." questions={JSON.parse(`[{"source":"My throat hurts.","options":[{"text":"У мене болить горло.","correct":true},{"text":"Мені потрібен лікар.","correct":false},{"text":"У мене нежить.","correct":false}],"explanation":"Use У мене болить + горло."},{"source":"I need a doctor.","options":[{"text":"Мені потрібен лікар.","correct":true},{"text":"У мене болить зуб.","correct":false},{"text":"Де тут аптека?","correct":false}],"explanation":"Мені потрібен лікар is the help phrase."},{"source":"Please repeat.","options":[{"text":"Повторіть, будь ласка.","correct":true},{"text":"Мені погано.","correct":false},{"text":"У мене кашель.","correct":false}],"explanation":"Use Повторіть, будь ласка."}]`)} />
-
 </TabItem>
 <TabItem label="Vocabulary">
 
-## Словник
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"здоров'я","translation":"health","pos":"noun","example":"Це тема про здоров'я.","examples":["health","Це тема про здоров'я."]},{"word":"голова","translation":"head","pos":"noun","example":"У мене болить голова.","examples":["head","У мене болить голова."]},{"word":"горло","translation":"throat","pos":"noun","example":"У мене болить горло.","examples":["throat","У мене болить горло."]},{"word":"живіт","translation":"stomach","pos":"noun","example":"У мене болить живіт.","examples":["stomach","У мене болить живіт."]},{"word":"спина","translation":"back","pos":"noun","example":"У мене болить спина.","examples":["back","У мене болить спина."]},{"word":"рука","translation":"hand, arm","pos":"noun","example":"У мене болить рука.","examples":["hand, arm","У мене болить рука."]},{"word":"нога","translation":"leg, foot","pos":"noun","example":"У мене болить нога.","examples":["leg, foot","У мене болить нога."]},{"word":"зуб","translation":"tooth","pos":"noun","example":"У мене болить зуб.","examples":["tooth","У мене болить зуб."]},{"word":"вухо","translation":"ear","pos":"noun","example":"У мене болить вухо.","examples":["ear","У мене болить вухо."]},{"word":"око","translation":"eye","pos":"noun","example":"У мене болить око.","examples":["eye","У мене болить око."]},{"word":"ніс","translation":"nose","pos":"noun","example":"У мене нежить.","examples":["nose","У мене нежить."]},{"word":"болить","translation":"hurts","pos":"verb","example":"У мене болить голова.","examples":["hurts","У мене болить голова."]},{"word":"температура","translation":"fever, temperature","pos":"noun","example":"У мене температура.","examples":["fever, temperature","У мене температура."]},{"word":"кашель","translation":"cough","pos":"noun","example":"У мене кашель.","examples":["cough","У мене кашель."]},{"word":"нежить","translation":"runny nose","pos":"noun","example":"У мене нежить.","examples":["runny nose","У мене нежить."]},{"word":"лікар","translation":"doctor","pos":"noun","example":"Мені потрібен лікар.","examples":["doctor","Мені потрібен лікар."]},{"word":"лікарня","translation":"hospital","pos":"noun","example":"Де тут лікарня?","examples":["hospital","Де тут лікарня?"]},{"word":"аптека","translation":"pharmacy","pos":"noun","example":"Де тут аптека?","examples":["pharmacy","Де тут аптека?"]},{"word":"хворий","translation":"sick, masculine","pos":"adjective","example":"Я хворий.","examples":["sick, masculine","Я хворий."]},{"word":"хвора","translation":"sick, feminine","pos":"adjective","example":"Я хвора.","examples":["sick, feminine","Я хвора."]},{"word":"погано","translation":"badly, unwell","pos":"adverb","example":"Мені погано.","examples":["badly, unwell","Мені погано."]}]`)} title="Vocabulary" />
 
-| Word | Translation | Example |
-| --- | --- | --- |
-| **здоров'я** | health | **Це тема про здоров'я.** |
-| **голова** | head | **У мене болить голова.** |
-| **горло** | throat | **У мене болить горло.** |
-| **живіт** | stomach | **У мене болить живіт.** |
-| **спина** | back | **У мене болить спина.** |
-| **рука** | hand, arm | **У мене болить рука.** |
-| **нога** | leg, foot | **У мене болить нога.** |
-| **зуб** | tooth | **У мене болить зуб.** |
-| **вухо** | ear | **У мене болить вухо.** |
-| **око** | eye | **У мене болить око.** |
-| **ніс** | nose | **У мене нежить.** |
-| **болить** | hurts | **У мене болить голова.** |
-| **температура** | fever, temperature | **У мене температура.** |
-| **кашель** | cough | **У мене кашель.** |
-| **нежить** | runny nose | **У мене нежить.** |
-| **лікар** | doctor | **Мені потрібен лікар.** |
-| **лікарня** | hospital | **Де тут лікарня?** |
-| **аптека** | pharmacy | **Де тут аптека?** |
-| **хворий / хвора** | sick | **Я хворий. Я хвора.** |
-| **погано** | badly, unwell | **Мені погано.** |
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"здоров'я","back":"health"},{"front":"голова","back":"head"},{"front":"горло","back":"throat"},{"front":"живіт","back":"stomach"},{"front":"спина","back":"back"},{"front":"рука","back":"hand, arm"},{"front":"нога","back":"leg, foot"},{"front":"зуб","back":"tooth"},{"front":"вухо","back":"ear"},{"front":"око","back":"eye"},{"front":"ніс","back":"nose"},{"front":"болить","back":"hurts"},{"front":"температура","back":"fever, temperature"},{"front":"кашель","back":"cough"},{"front":"нежить","back":"runny nose"},{"front":"лікар","back":"doctor"},{"front":"лікарня","back":"hospital"},{"front":"аптека","back":"pharmacy"},{"front":"хворий","back":"sick, masculine"},{"front":"хвора","back":"sick, feminine"},{"front":"погано","back":"badly, unwell"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Complete the health phrase
+
+*(see lesson, §Діалоги)*
+
+### Body words
+
+*(see lesson, §В аптеці)*
+
+### Sort health words
+
+*(see lesson, §Short answers to short questions)*
+
+### Choose the clear A1 phrase
+
+*(see lesson, §Short answers to short questions)*
+
+### Phrase-level health check
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "У мене болить горло.", "isTrue": true, "explanation": "This follows У мене болить + body part."}, {"statement": "Моя голова болить.", "isTrue": false, "explanation": "Use the more natural A1 phrase: У мене болить голова."}, {"statement": "У мене кашель.", "isTrue": true, "explanation": "This is a fixed symptom phrase."}, {"statement": "Я є хворий.", "isTrue": false, "explanation": "Drop є: Я хворий."}, {"statement": "Мені потрібен лікар.", "isTrue": true, "explanation": "This is the help phrase."}]`)} />
+
+### Build health lines
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "У / мене / болить / голова", "answer": "У мене болить голова."}, {"jumbled": "Мені / потрібен / лікар", "answer": "Мені потрібен лікар."}, {"jumbled": "Я / не / розумію", "answer": "Я не розумію."}, {"jumbled": "Повторіть / будь / ласка", "answer": "Повторіть, будь ласка."}]`)} />
+
+### Doctor or pharmacy phrases
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Добрий день. У мене болить ___.", "answer": "спина", "options": ["спина", "лікар", "аптека"]}, {"sentence": "Вибачте. Де тут ___?", "answer": "аптека", "options": ["аптека", "болить", "нога"]}, {"sentence": "Мені ___.", "answer": "погано", "options": ["погано", "голова", "кашель"]}, {"sentence": "___, будь ласка. Я не розумію.", "answer": "Повільніше", "options": ["Повільніше", "Голова", "Температура"]}]`)} />
+
+### Repair health phrases
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Repair: Моя рука болить.", "options": [{"text": "У мене болить рука.", "correct": true}, {"text": "У мене рука лікар.", "correct": false}, {"text": "Рука потрібен мене.", "correct": false}], "explanation": "Use У мене болить + body part."}, {"question": "Repair: Я потрібно лікар.", "options": [{"text": "Мені потрібен лікар.", "correct": true}, {"text": "Я потрібен лікар.", "correct": false}, {"text": "Лікар потрібно я.", "correct": false}], "explanation": "Use the fixed phrase Мені потрібен лікар."}, {"question": "Repair: У мене є нежить.", "options": [{"text": "У мене нежить.", "correct": true}, {"text": "Я нежить болить.", "correct": false}, {"text": "Нежить потрібен.", "correct": false}], "explanation": "Use the simple phrase У мене нежить."}]`)} />
+
+### Say what hurts
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "My throat hurts.", "options": [{"text": "У мене болить горло.", "correct": true}, {"text": "Мені потрібен лікар.", "correct": false}, {"text": "У мене нежить.", "correct": false}], "explanation": "Use У мене болить + горло."}, {"source": "I need a doctor.", "options": [{"text": "Мені потрібен лікар.", "correct": true}, {"text": "У мене болить зуб.", "correct": false}, {"text": "Де тут аптека?", "correct": false}], "explanation": "Мені потрібен лікар is the help phrase."}, {"source": "Please repeat.", "options": [{"text": "Повторіть, будь ласка.", "correct": true}, {"text": "Мені погано.", "correct": false}, {"text": "У мене кашель.", "correct": false}], "explanation": "Use Повторіть, будь ласка."}]`)} />
 
 </TabItem>
 <TabItem label="Resources">
 
-## Resources
+:::info[🎧 🔗 External Resources]
 
+**🔗 Online resources:**
+- 🔗 **Internal module M30: my-city** — Reuses city-place words such as аптека and лікарня as location vocabulary.
+- 🔗 **Internal module M43: please-do-this** — Reuses polite request chunks such as Повторіть, будь ласка.
+- 🔗 **State Standard 2024, §3** — for health as a basic communicative topic.
 - 🔗 **Wiki: pedagogy/a1/health** — Pedagogical brief for body-part vocabulary, physical-state chunks, and L2 repair traps.
-- 📘 **State Standard 2024, §3** — Plan reference for health as a basic communicative topic.
-- 🔁 **Internal module M43: please-do-this** — Reuses polite request chunks such as **Повторіть, будь ласка**.
-- 🔁 **Internal module M30: my-city** — Reuses city-place words such as **аптека** and **лікарня** as location vocabulary.
+:::
 
 </TabItem>
 </Tabs>
+
+<HashTabSync />

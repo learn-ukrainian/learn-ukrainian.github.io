@@ -16,20 +16,35 @@ the feminine form: **я поснідала**, **я пішла**, **я повер
 switch to **я поснідав** unless the speaker changes.
 :::
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ### Як минув день?
 
-<DialogueBox uk="Олена: Анно, як минув твій день учора?" en="Olena: Anna, how was your day yesterday?" />
-<DialogueBox uk="Анна: Добре. Зранку я прокинулася о сьомій." en="Anna: Good. In the morning I woke up at seven." />
-<DialogueBox uk="Олена: Що ти робила зранку?" en="Olena: What did you do in the morning?" />
-<DialogueBox uk="Анна: Я поснідала і пішла на роботу." en="Anna: I had breakfast and went to work." />
-<DialogueBox uk="Олена: А вдень?" en="Olena: And in the afternoon?" />
-<DialogueBox uk="Анна: Вдень я обідала з колегою." en="Anna: In the afternoon I had lunch with a colleague." />
-<DialogueBox uk="Олена: А ввечері?" en="Olena: And in the evening?" />
-<DialogueBox uk="Анна: Ввечері я повернулася додому, дивилася серіал і лягла спати." en="Anna: In the evening I returned home, watched a series, and went to bed." />
+```text
+Олена: Анно, як минув твій день учора?
+Анна: Добре. Зранку я прокинулася о сьомій.
+Олена: Що ти робила зранку?
+Анна: Я поснідала і пішла на роботу.
+Олена: А вдень?
+Анна: Вдень я обідала з колегою.
+Олена: А ввечері?
+Анна: Ввечері я повернулася додому, дивилася серіал і лягла спати.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Анно, як минув твій день учора?** | Olena: Anna, how was your day yesterday? |
+| **Анна: Добре. Зранку я прокинулася о сьомій.** | Anna: Good. In the morning I woke up at seven. |
+| **Олена: Що ти робила зранку?** | Olena: What did you do in the morning? |
+| **Анна: Я поснідала і пішла на роботу.** | Anna: I had breakfast and went to work. |
+| **Олена: А вдень?** | Olena: And in the afternoon? |
+| **Анна: Вдень я обідала з колегою.** | Anna: In the afternoon I had lunch with a colleague. |
+| **Олена: А ввечері?** | Olena: And in the evening? |
+| **Анна: Ввечері я повернулася додому, дивилася серіал і лягла спати.** | Anna: In the evening I returned home, watched a series, and went to bed. |
 
 Анна tells one clean day story. The time words hold the story together:
 
@@ -46,12 +61,25 @@ speaker. The story is easier to follow because the grammar does not jump.
 
 ### Коротка перевірка дня
 
-<DialogueBox uk="Олена: Ти була вдома зранку?" en="Olena: Were you at home in the morning?" />
-<DialogueBox uk="Анна: Так, я була вдома і пила каву." en="Anna: Yes, I was at home and drank coffee." />
-<DialogueBox uk="Олена: Потім ти була в офісі?" en="Olena: Then were you in the office?" />
-<DialogueBox uk="Анна: Так, потім я працювала в офісі." en="Anna: Yes, then I worked in the office." />
-<DialogueBox uk="Олена: Ввечері ти була в магазині?" en="Olena: In the evening were you in a store?" />
-<DialogueBox uk="Анна: Так. Я купила продукти і повернулася додому." en="Anna: Yes. I bought groceries and returned home." />
+```text
+Олена: Ти була вдома зранку?
+Анна: Так, я була вдома і пила каву.
+Олена: Потім ти була в офісі?
+Анна: Так, потім я працювала в офісі.
+Олена: Ввечері ти була в магазині?
+Анна: Так. Я купила продукти і повернулася додому.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Ти була вдома зранку?** | Olena: Were you at home in the morning? |
+| **Анна: Так, я була вдома і пила каву.** | Anna: Yes, I was at home and drank coffee. |
+| **Олена: Потім ти була в офісі?** | Olena: Then were you in the office? |
+| **Анна: Так, потім я працювала в офісі.** | Anna: Yes, then I worked in the office. |
+| **Олена: Ввечері ти була в магазині?** | Olena: In the evening were you in a store? |
+| **Анна: Так. Я купила продукти і повернулася додому.** | Anna: Yes. I bought groceries and returned home. |
 
 This second dialogue adds places: **вдома**, **в офісі**, **в магазині**,
 **додому**. A day narrative often needs only time, place, and one action.
@@ -174,9 +202,6 @@ Do not mix the two templates inside one story. If the story begins **я
 **я лягла**. If the story begins **я прокинувся**, continue with
 **я поснідав**, **я пішов**, **я повернувся**, **я ліг**.
 
-
-
-
 ### Build a short day story
 
 You can make the story from cards:
@@ -202,7 +227,6 @@ module. If you want more detail, add only one familiar piece at a time: a place
 such as **кафе**, a person such as **колега**, or an object such as
 **продукти**. The time line should still be easy to scan from morning to
 evening.
-
 
 ## Підсумок
 

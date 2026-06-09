@@ -26,20 +26,35 @@ same ending because the ending is masculine singular. The ending is not the
 person ending from the present tense.
 :::
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ### Понеділок на роботі
 
-<DialogueBox uk="Олена: Що ти робив учора?" en="Olena: What were you doing yesterday?" />
-<DialogueBox uk="Тарас: Я читав книжку." en="Taras: I was reading a book." />
-<DialogueBox uk="Тарас: А ти що робила?" en="Taras: And what were you doing?" />
-<DialogueBox uk="Олена: Я готувала вечерю." en="Olena: I was cooking dinner." />
-<DialogueBox uk="Олена: А що робив Іван?" en="Olena: And what was Ivan doing?" />
-<DialogueBox uk="Тарас: Він гуляв у парку." en="Taras: He was walking in the park." />
-<DialogueBox uk="Тарас: А Марія?" en="Taras: And Mariia?" />
-<DialogueBox uk="Олена: Вона працювала вдома." en="Olena: She was working at home." />
+```text
+Олена: Що ти робив учора?
+Тарас: Я читав книжку.
+Тарас: А ти що робила?
+Олена: Я готувала вечерю.
+Олена: А що робив Іван?
+Тарас: Він гуляв у парку.
+Тарас: А Марія?
+Олена: Вона працювала вдома.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Що ти робив учора?** | Olena: What were you doing yesterday? |
+| **Тарас: Я читав книжку.** | Taras: I was reading a book. |
+| **Тарас: А ти що робила?** | Taras: And what were you doing? |
+| **Олена: Я готувала вечерю.** | Olena: I was cooking dinner. |
+| **Олена: А що робив Іван?** | Olena: And what was Ivan doing? |
+| **Тарас: Він гуляв у парку.** | Taras: He was walking in the park. |
+| **Тарас: А Марія?** | Taras: And Mariia? |
+| **Олена: Вона працювала вдома.** | Olena: She was working at home. |
 
 The grammar work is small but important:
 
@@ -50,14 +65,29 @@ The grammar work is small but important:
 
 ### Вихідні
 
-<DialogueBox uk="Марія: Як ти провів вихідні?" en="Mariia: How did you spend the weekend?" />
-<DialogueBox uk="Іван: Добре. У суботу я гуляв." en="Ivan: Good. On Saturday I walked." />
-<DialogueBox uk="Іван: У неділю я дивився фільм." en="Ivan: On Sunday I watched a film." />
-<DialogueBox uk="Іван: А ти що робила?" en="Ivan: And what were you doing?" />
-<DialogueBox uk="Марія: Я ходила в кафе." en="Mariia: I went to a cafe." />
-<DialogueBox uk="Марія: Ми їли торт." en="Mariia: We ate cake." />
-<DialogueBox uk="Іван: Ви пили каву?" en="Ivan: Did you drink coffee?" />
-<DialogueBox uk="Марія: Так, ми пили каву." en="Mariia: Yes, we drank coffee." />
+```text
+Марія: Як ти провів вихідні?
+Іван: Добре. У суботу я гуляв.
+Іван: У неділю я дивився фільм.
+Іван: А ти що робила?
+Марія: Я ходила в кафе.
+Марія: Ми їли торт.
+Іван: Ви пили каву?
+Марія: Так, ми пили каву.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Марія: Як ти провів вихідні?** | Mariia: How did you spend the weekend? |
+| **Іван: Добре. У суботу я гуляв.** | Ivan: Good. On Saturday I walked. |
+| **Іван: У неділю я дивився фільм.** | Ivan: On Sunday I watched a film. |
+| **Іван: А ти що робила?** | Ivan: And what were you doing? |
+| **Марія: Я ходила в кафе.** | Mariia: I went to a cafe. |
+| **Марія: Ми їли торт.** | Mariia: We ate cake. |
+| **Іван: Ви пили каву?** | Ivan: Did you drink coffee? |
+| **Марія: Так, ми пили каву.** | Mariia: Yes, we drank coffee. |
 
 Notice the plural forms: **ми їли**, **ми пили**, **ви пили**. In the plural,
 use **-ли**. Do not add present-tense person endings after it.
@@ -164,9 +194,6 @@ That is why the past tense is not a person table. **Я**, **ти**, and **він
 can all use **читав** when the subject is masculine singular. **Я**, **ти**,
 and **вона** can all use **читала** when the subject is feminine singular.
 
-
-
-
 ### Repair traps
 
 Use the repair list to keep English habits from taking over:
@@ -215,7 +242,6 @@ same speaker. Do not start with **я працював** and then switch to
 **я гуляла** unless the speaker changes. A clean A1 story repeats one pattern
 until your ear notices it.
 
-
 ## Підсумок
 
 Use this compact map:
@@ -247,8 +273,6 @@ Self-check:
 
 Stop here when the endings feel visible. The next module uses the same forms
 to tell a simple story about yesterday.
-
-
 
 <span id="repair-past-gender-interference"></span>
 

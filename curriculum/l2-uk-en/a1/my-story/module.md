@@ -21,20 +21,35 @@ Use the compound future only: **я буду жити**, **вона буде пр
 будемо вчити**. Later levels add another future pattern; this story does not.
 :::
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ### Розкажи про себе
 
-<DialogueBox uk="Олена: Розкажи про себе." en="Olena: Tell me about yourself." />
-<DialogueBox uk="Данило: Я народився в Канаді, у Торонто." en="Danylo: I was born in Canada, in Toronto." />
-<DialogueBox uk="Олена: А зараз ти живеш тут?" en="Olena: And do you live here now?" />
-<DialogueBox uk="Данило: Так, зараз я живу в Києві." en="Danylo: Yes, now I live in Kyiv." />
-<DialogueBox uk="Олена: Чому ти вчиш українську?" en="Olena: Why are you studying Ukrainian?" />
-<DialogueBox uk="Данило: Моя бабуся з України. Я хочу говорити з родиною." en="Danylo: My grandmother is from Ukraine. I want to speak with my family." />
-<DialogueBox uk="Олена: А що ти будеш робити далі?" en="Olena: And what will you do next?" />
-<DialogueBox uk="Данило: Далі я буду працювати тут і буду вчити мову." en="Danylo: Next I will work here and will study the language." />
+```text
+Олена: Розкажи про себе.
+Данило: Я народився в Канаді, у Торонто.
+Олена: А зараз ти живеш тут?
+Данило: Так, зараз я живу в Києві.
+Олена: Чому ти вчиш українську?
+Данило: Моя бабуся з України. Я хочу говорити з родиною.
+Олена: А що ти будеш робити далі?
+Данило: Далі я буду працювати тут і буду вчити мову.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Розкажи про себе.** | Olena: Tell me about yourself. |
+| **Данило: Я народився в Канаді, у Торонто.** | Danylo: I was born in Canada, in Toronto. |
+| **Олена: А зараз ти живеш тут?** | Olena: And do you live here now? |
+| **Данило: Так, зараз я живу в Києві.** | Danylo: Yes, now I live in Kyiv. |
+| **Олена: Чому ти вчиш українську?** | Olena: Why are you studying Ukrainian? |
+| **Данило: Моя бабуся з України. Я хочу говорити з родиною.** | Danylo: My grandmother is from Ukraine. I want to speak with my family. |
+| **Олена: А що ти будеш робити далі?** | Olena: And what will you do next? |
+| **Данило: Далі я буду працювати тут і буду вчити мову.** | Danylo: Next I will work here and will study the language. |
 
 The story has three clear pieces:
 
@@ -47,13 +62,27 @@ Notice that the dialogue does not explain new cases. It uses ready A1 chunks:
 
 ### Історія Марії
 
-<DialogueBox uk="Марія: Я народилася у Львові." en="Mariia: I was born in Lviv." />
-<DialogueBox uk="Марія: У дитинстві я жила з батьками і ходила в школу." en="Mariia: In childhood I lived with my parents and went to school." />
-<DialogueBox uk="Марія: Потім я переїхала в Київ." en="Mariia: Then I moved to Kyiv." />
-<DialogueBox uk="Марія: Зараз я працюю в кафе і вивчаю українську." en="Mariia: Now I work in a cafe and study Ukrainian." />
-<DialogueBox uk="Марія: У вільний час я читаю і гуляю." en="Mariia: In my free time I read and walk." />
-<DialogueBox uk="Марія: Далі я буду подорожувати." en="Mariia: Next I will travel." />
-<DialogueBox uk="Марія: Я буду бачити нові міста і буду писати короткі історії." en="Mariia: I will see new cities and will write short stories." />
+```text
+Марія: Я народилася у Львові.
+Марія: У дитинстві я жила з батьками і ходила в школу.
+Марія: Потім я переїхала в Київ.
+Марія: Зараз я працюю в кафе і вивчаю українську.
+Марія: У вільний час я читаю і гуляю.
+Марія: Далі я буду подорожувати.
+Марія: Я буду бачити нові міста і буду писати короткі історії.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Марія: Я народилася у Львові.** | Mariia: I was born in Lviv. |
+| **Марія: У дитинстві я жила з батьками і ходила в школу.** | Mariia: In childhood I lived with my parents and went to school. |
+| **Марія: Потім я переїхала в Київ.** | Mariia: Then I moved to Kyiv. |
+| **Марія: Зараз я працюю в кафе і вивчаю українську.** | Mariia: Now I work in a cafe and study Ukrainian. |
+| **Марія: У вільний час я читаю і гуляю.** | Mariia: In my free time I read and walk. |
+| **Марія: Далі я буду подорожувати.** | Mariia: Next I will travel. |
+| **Марія: Я буду бачити нові міста і буду писати короткі історії.** | Mariia: I will see new cities and will write short stories. |
 
 This story moves like a simple timeline:
 
@@ -165,9 +194,6 @@ If a line feels hard, shorten it. A strong A1 story can be only six sentences:
 **Мене звати Адам. Я народився в Канаді. Раніше я жив у Торонто. Зараз я живу
 в Києві. Я вивчаю українську. Далі я буду працювати і подорожувати.**
 
-
-
-
 ### Repair traps
 
 Keep the time word and the verb in the same time.
@@ -183,7 +209,6 @@ Keep the time word and the verb in the same time.
 
 The last repair is important. Ukrainian does not need the English-style
 sentence **my name is...**. Use the familiar A1 chunk **Мене звати...**.
-
 
 ## Підсумок
 
@@ -201,7 +226,15 @@ Your A1 story toolkit:
 
 One final model:
 
-<DialogueBox uk="Мене звати Марко. Я народився у Львові. Раніше я жив з родиною. Зараз я живу в Києві і працюю в школі. Я вивчаю українську, тому що люблю цю мову. Далі я буду подорожувати і буду говорити українською щодня." en="My name is Marko. I was born in Lviv. Earlier I lived with my family. Now I live in Kyiv and work at a school. I study Ukrainian because I love this language. Next I will travel and will speak Ukrainian every day." />
+```text
+Мене звати Марко. Я народився у Львові. Раніше я жив з родиною. Зараз я живу в Києві і працюю в школі. Я вивчаю українську, тому що люблю цю мову. Далі я буду подорожувати і буду говорити українською щодня.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Мене звати Марко. Я народився у Львові. Раніше я жив з родиною. Зараз я живу в Києві і працюю в школі. Я вивчаю українську, тому що люблю цю мову. Далі я буду подорожувати і буду говорити українською щодня.** | My name is Marko. I was born in Lviv. Earlier I lived with my family. Now I live in Kyiv and work at a school. I study Ukrainian because I love this language. Next I will travel and will speak Ukrainian every day. |
 
 Stop here. If you can tell this kind of story, you can connect past, present,
 and future without leaving A1.

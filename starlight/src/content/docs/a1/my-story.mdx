@@ -4,10 +4,8 @@ description: "Я народився, я живу, я буду... — твоє ж
 sidebar:
   order: 52
   label: "52. Моя історія"
-pipeline: linear-phase-4
-build_status: validated
 prev: my-plans
-next: false
+next: health
 ---
 
 import Quiz from '@site/src/components/Quiz';
@@ -16,9 +14,43 @@ import FillIn from '@site/src/components/FillIn';
 import TrueFalse from '@site/src/components/TrueFalse';
 import Unjumble from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-import DialogueBox from '@site/src/components/DialogueBox';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
 import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <Tabs syncKey="module-tab">
@@ -45,22 +77,37 @@ Use the compound future only: **я буду жити**, **вона буде пр
 будемо вчити**. Later levels add another future pattern; this story does not.
 :::
 
+## Діалоги
+
 ### Choose the time signal
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence":"___ я жив у Торонто.","answer":"Раніше","options":["Раніше","Зараз","Далі"]},{"sentence":"___ я живу в Києві.","answer":"Зараз","options":["Зараз","Учора","Далі"]},{"sentence":"___ я буду вчити українську.","answer":"Далі","options":["Далі","У дитинстві","Раніше"]},{"sentence":"___ я ходила в школу.","answer":"У дитинстві","options":["У дитинстві","Завтра","Зараз"]}]`)} />
-
-## Діалоги
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ я жив у Торонто.", "answer": "Раніше", "options": ["Раніше", "Зараз", "Далі"]}, {"sentence": "___ я живу в Києві.", "answer": "Зараз", "options": ["Зараз", "Учора", "Далі"]}, {"sentence": "___ я буду вчити українську.", "answer": "Далі", "options": ["Далі", "У дитинстві", "Раніше"]}, {"sentence": "___ я ходила в школу.", "answer": "У дитинстві", "options": ["У дитинстві", "Завтра", "Зараз"]}]`)} />
 
 ### Розкажи про себе
 
-<DialogueBox uk="Олена: Розкажи про себе." en="Olena: Tell me about yourself." />
-<DialogueBox uk="Данило: Я народився в Канаді, у Торонто." en="Danylo: I was born in Canada, in Toronto." />
-<DialogueBox uk="Олена: А зараз ти живеш тут?" en="Olena: And do you live here now?" />
-<DialogueBox uk="Данило: Так, зараз я живу в Києві." en="Danylo: Yes, now I live in Kyiv." />
-<DialogueBox uk="Олена: Чому ти вчиш українську?" en="Olena: Why are you studying Ukrainian?" />
-<DialogueBox uk="Данило: Моя бабуся з України. Я хочу говорити з родиною." en="Danylo: My grandmother is from Ukraine. I want to speak with my family." />
-<DialogueBox uk="Олена: А що ти будеш робити далі?" en="Olena: And what will you do next?" />
-<DialogueBox uk="Данило: Далі я буду працювати тут і буду вчити мову." en="Danylo: Next I will work here and will study the language." />
+```text
+Олена: Розкажи про себе.
+Данило: Я народився в Канаді, у Торонто.
+Олена: А зараз ти живеш тут?
+Данило: Так, зараз я живу в Києві.
+Олена: Чому ти вчиш українську?
+Данило: Моя бабуся з України. Я хочу говорити з родиною.
+Олена: А що ти будеш робити далі?
+Данило: Далі я буду працювати тут і буду вчити мову.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Розкажи про себе.** | Olena: Tell me about yourself. |
+| **Данило: Я народився в Канаді, у Торонто.** | Danylo: I was born in Canada, in Toronto. |
+| **Олена: А зараз ти живеш тут?** | Olena: And do you live here now? |
+| **Данило: Так, зараз я живу в Києві.** | Danylo: Yes, now I live in Kyiv. |
+| **Олена: Чому ти вчиш українську?** | Olena: Why are you studying Ukrainian? |
+| **Данило: Моя бабуся з України. Я хочу говорити з родиною.** | Danylo: My grandmother is from Ukraine. I want to speak with my family. |
+| **Олена: А що ти будеш робити далі?** | Olena: And what will you do next? |
+| **Данило: Далі я буду працювати тут і буду вчити мову.** | Danylo: Next I will work here and will study the language. |
 
 The story has three clear pieces:
 
@@ -73,13 +120,27 @@ Notice that the dialogue does not explain new cases. It uses ready A1 chunks:
 
 ### Історія Марії
 
-<DialogueBox uk="Марія: Я народилася у Львові." en="Mariia: I was born in Lviv." />
-<DialogueBox uk="Марія: У дитинстві я жила з батьками і ходила в школу." en="Mariia: In childhood I lived with my parents and went to school." />
-<DialogueBox uk="Марія: Потім я переїхала в Київ." en="Mariia: Then I moved to Kyiv." />
-<DialogueBox uk="Марія: Зараз я працюю в кафе і вивчаю українську." en="Mariia: Now I work in a cafe and study Ukrainian." />
-<DialogueBox uk="Марія: У вільний час я читаю і гуляю." en="Mariia: In my free time I read and walk." />
-<DialogueBox uk="Марія: Далі я буду подорожувати." en="Mariia: Next I will travel." />
-<DialogueBox uk="Марія: Я буду бачити нові міста і буду писати короткі історії." en="Mariia: I will see new cities and will write short stories." />
+```text
+Марія: Я народилася у Львові.
+Марія: У дитинстві я жила з батьками і ходила в школу.
+Марія: Потім я переїхала в Київ.
+Марія: Зараз я працюю в кафе і вивчаю українську.
+Марія: У вільний час я читаю і гуляю.
+Марія: Далі я буду подорожувати.
+Марія: Я буду бачити нові міста і буду писати короткі історії.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Марія: Я народилася у Львові.** | Mariia: I was born in Lviv. |
+| **Марія: У дитинстві я жила з батьками і ходила в школу.** | Mariia: In childhood I lived with my parents and went to school. |
+| **Марія: Потім я переїхала в Київ.** | Mariia: Then I moved to Kyiv. |
+| **Марія: Зараз я працюю в кафе і вивчаю українську.** | Mariia: Now I work in a cafe and study Ukrainian. |
+| **Марія: У вільний час я читаю і гуляю.** | Mariia: In my free time I read and walk. |
+| **Марія: Далі я буду подорожувати.** | Mariia: Next I will travel. |
+| **Марія: Я буду бачити нові міста і буду писати короткі історії.** | Mariia: I will see new cities and will write short stories. |
 
 This story moves like a simple timeline:
 
@@ -92,7 +153,7 @@ For A1, that is enough. A good story is clear, not long.
 
 ### Put the life story in order
 
-<Order client:only='react' instruction="Arrange the lines from past to future." items={JSON.parse(`["Я народився в Канаді.","У дитинстві я жив у Торонто.","Потім я переїхав у Київ.","Зараз я живу в Києві.","Далі я буду вчити українську."]`)} correct_order={JSON.parse(`[0,1,2,3,4]`)} />
+<Order client:only='react' items={JSON.parse(`["Я народився в Канаді.", "У дитинстві я жив у Торонто.", "Потім я переїхав у Київ.", "Зараз я живу в Києві.", "Далі я буду вчити українську."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4]`)} instruction={"Arrange the lines from past to future."} isUkrainian={false} />
 
 ## Три часи разом
 
@@ -152,11 +213,11 @@ The future verb after **буду / буде / будемо** stays in the infini
 
 ### Match the tense
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left":"я народився","right":"past"},{"left":"я жила","right":"past"},{"left":"я живу","right":"present"},{"left":"я працюю","right":"present"},{"left":"я буду подорожувати","right":"future"},{"left":"ми будемо вчити","right":"future"}]`)} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "я народився", "right": "past"}, {"left": "я жила", "right": "past"}, {"left": "я живу", "right": "present"}, {"left": "я працюю", "right": "present"}, {"left": "я буду подорожувати", "right": "future"}, {"left": "ми будемо вчити", "right": "future"}]`)} />
 
 ### Sort story pieces
 
-<GroupSort client:only='react' groups={JSON.parse(`{"past":["я народився","я жила","переїхав","у дитинстві"],"present":["зараз","я живу","я працюю","я вивчаю"],"future":["далі","я буду жити","ми будемо вчити","вона буде працювати"]}`)} />
+<GroupSort client:only='react' groups={JSON.parse(`{"past": ["я народився", "я жила", "переїхав", "у дитинстві"], "present": ["зараз", "я живу", "я працюю", "я вивчаю"], "future": ["далі", "я буду жити", "ми будемо вчити", "вона буде працювати"]}`)} />
 
 ## Моя історія
 
@@ -166,7 +227,7 @@ Here is a complete A1 model. Read it as a timeline, not as a grammar table.
 сестрою. Я ходила в школу і любила малювати. Потім я переїхала в Київ. Зараз я
 живу в Києві і працюю в офісі. Я вивчаю українську, тому що моя родина говорить
 українською. У вільний час я читаю, готую і гуляю в парку. Далі я буду
-подорожувати Україною. Я буду бачити нові міста і буду писати короткі історії
+подорожувати Україною. Я буду бачити нові міста і буду говорити українською
 щодня.**
 
 The structure is simple:
@@ -197,18 +258,6 @@ If a line feels hard, shorten it. A strong A1 story can be only six sentences:
 **Мене звати Адам. Я народився в Канаді. Раніше я жив у Торонто. Зараз я живу
 в Києві. Я вивчаю українську. Далі я буду працювати і подорожувати.**
 
-### A1 story check
-
-<TrueFalse client:only='react' instruction="Decide whether the sentence stays in the A1 story frame." items={JSON.parse(`[{"statement":"Раніше я жив у Варшаві.","isTrue":true,"explanation":"Раніше plus past жив is a clear past sentence."},{"statement":"Зараз я буду живу в Києві.","isTrue":false,"explanation":"Do not put буду before a present form. Use Зараз я живу."},{"statement":"Далі я буду подорожувати.","isTrue":true,"explanation":"Буду + infinitive is the A1 future pattern."},{"statement":"Мене звати Софія.","isTrue":true,"explanation":"This is the normal A1 name chunk."},{"statement":"Моє ім'я є Софія.","isTrue":false,"explanation":"Use Мене звати..., not an English-style my-name-is sentence."}]`)} />
-
-### Build story lines
-
-<Unjumble client:only='react' items={JSON.parse(`[{"words":"Раніше/я/жив/у/Торонто","answer":"Раніше я жив у Торонто."},{"words":"Зараз/я/живу/в/Києві","answer":"Зараз я живу в Києві."},{"words":"Далі/я/буду/вчити/українську","answer":"Далі я буду вчити українську."},{"words":"Мене/звати/Софія","answer":"Мене звати Софія."}]`)} />
-
-### Complete the mini biography
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence":"Я ___ у Львові.","answer":"народилася","options":["народилася","народжуся","народжуюся"]},{"sentence":"Раніше я ___ в Одесі.","answer":"жила","options":["жила","живу","буду жити"]},{"sentence":"Зараз я ___ в офісі.","answer":"працюю","options":["працюю","працювала","буду працювати"]},{"sentence":"Далі я ___ українську щодня.","answer":"буду вчити","options":["буду вчити","вчила","вчу"]}]`)} />
-
 ### Repair traps
 
 Keep the time word and the verb in the same time.
@@ -225,11 +274,7 @@ Keep the time word and the verb in the same time.
 The last repair is important. Ukrainian does not need the English-style
 sentence **my name is...**. Use the familiar A1 chunk **Мене звати...**.
 
-### Repair the story
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question":"Which sentence matches the time word?","options":[{"text":"Зараз я живу в Києві.","correct":true},{"text":"Зараз я жив у Києві.","correct":false},{"text":"Зараз я буду живу в Києві.","correct":false}],"explanation":"Зараз uses the present form живу."},{"question":"Which sentence uses the A1 future?","options":[{"text":"Далі я буду працювати.","correct":true},{"text":"Далі я працював.","correct":false},{"text":"Далі я працюю учора.","correct":false}],"explanation":"Буду + infinitive is the A1 future."},{"question":"Which is the natural name sentence?","options":[{"text":"Мене звати Данило.","correct":true},{"text":"Моє ім'я є Данило.","correct":false},{"text":"Я звати Данило.","correct":false}],"explanation":"Use the chunk Мене звати..."}]`)} />
-
-## Підсумок
+## 📋 Підсумок
 
 Your A1 story toolkit:
 
@@ -245,47 +290,78 @@ Your A1 story toolkit:
 
 One final model:
 
-<DialogueBox uk="Мене звати Марко. Я народився у Львові. Раніше я жив з родиною. Зараз я живу в Києві і працюю в школі. Я вивчаю українську, тому що люблю цю мову. Далі я буду подорожувати і буду говорити українською щодня." en="My name is Marko. I was born in Lviv. Earlier I lived with my family. Now I live in Kyiv and work at a school. I study Ukrainian because I love this language. Next I will travel and will speak Ukrainian every day." />
+```text
+Мене звати Марко. Я народився у Львові. Раніше я жив з родиною. Зараз я живу в Києві і працюю в школі. Я вивчаю українську, тому що люблю цю мову. Далі я буду подорожувати і буду говорити українською щодня.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Мене звати Марко. Я народився у Львові. Раніше я жив з родиною. Зараз я живу в Києві і працюю в школі. Я вивчаю українську, тому що люблю цю мову. Далі я буду подорожувати і буду говорити українською щодня.** | My name is Marko. I was born in Lviv. Earlier I lived with my family. Now I live in Kyiv and work at a school. I study Ukrainian because I love this language. Next I will travel and will speak Ukrainian every day. |
 
 Stop here. If you can tell this kind of story, you can connect past, present,
 and future without leaving A1.
 
-### Say your story
-
-<Translate client:only='react' instruction="Choose the Ukrainian sentence that matches the English prompt." questions={JSON.parse(`[{"source":"Earlier I lived in Toronto.","options":[{"text":"Раніше я жив у Торонто.","correct":true},{"text":"Зараз я живу в Торонто.","correct":false},{"text":"Далі я буду жити в Торонто.","correct":false}],"explanation":"Earlier points to the past."},{"source":"Now I live in Kyiv.","options":[{"text":"Зараз я живу в Києві.","correct":true},{"text":"Раніше я жив у Києві.","correct":false},{"text":"Далі я буду жити в Києві.","correct":false}],"explanation":"Now points to the present."},{"source":"Next I will study Ukrainian.","options":[{"text":"Далі я буду вчити українську.","correct":true},{"text":"Далі я вчив українську.","correct":false},{"text":"Зараз я вчив українську.","correct":false}],"explanation":"Use буду + infinitive for the future."}]`)} />
-
 </TabItem>
 <TabItem label="Vocabulary">
 
-## Словник
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"історія","translation":"story, history","pos":"noun","example":"Це моя історія.","examples":["story, history","Це моя історія."]},{"word":"народитися","translation":"to be born","pos":"verb","example":"Я народився в Канаді.","examples":["to be born","Я народився в Канаді."]},{"word":"народилася","translation":"was born (feminine)","pos":"verb","example":"Вона народилася у Львові.","examples":["was born (feminine)","Вона народилася у Львові."]},{"word":"раніше","translation":"earlier, before","pos":"adverb","example":"Раніше я жив у Торонто.","examples":["earlier, before","Раніше я жив у Торонто."]},{"word":"зараз","translation":"now","pos":"adverb","example":"Зараз я живу в Києві.","examples":["now","Зараз я живу в Києві."]},{"word":"далі","translation":"next, further","pos":"adverb","example":"Далі я буду вчити українську.","examples":["next, further","Далі я буду вчити українську."]},{"word":"у дитинстві","translation":"in childhood","pos":"phrase","example":"У дитинстві я ходила в школу.","examples":["in childhood","У дитинстві я ходила в школу."]},{"word":"жити","translation":"to live","pos":"verb","example":"Я буду жити у Львові.","examples":["to live","Я буду жити у Львові."]},{"word":"жив","translation":"lived (masculine)","pos":"verb","example":"Раніше я жив у Варшаві.","examples":["lived (masculine)","Раніше я жив у Варшаві."]},{"word":"жила","translation":"lived (feminine)","pos":"verb","example":"Раніше я жила в Одесі.","examples":["lived (feminine)","Раніше я жила в Одесі."]},{"word":"переїхати","translation":"to move, relocate","pos":"verb","example":"Потім я переїхав у Київ.","examples":["to move, relocate","Потім я переїхав у Київ."]},{"word":"працювати","translation":"to work","pos":"verb","example":"Далі я буду працювати тут.","examples":["to work","Далі я буду працювати тут."]},{"word":"вивчати","translation":"to study","pos":"verb","example":"Зараз я вивчаю українську.","examples":["to study","Зараз я вивчаю українську."]},{"word":"подорожувати","translation":"to travel","pos":"verb","example":"Ми будемо подорожувати Україною.","examples":["to travel","Ми будемо подорожувати Україною."]},{"word":"родина","translation":"family","pos":"noun","example":"Моя родина говорить українською.","examples":["family","Моя родина говорить українською."]},{"word":"щодня","translation":"every day","pos":"adverb","example":"Я буду говорити українською щодня.","examples":["every day","Я буду говорити українською щодня."]}]`)} title="Vocabulary" />
 
-| Word | Translation | Example |
-| --- | --- | --- |
-| **історія** | story, history | **Це моя історія.** |
-| **народитися** | to be born | **Я народився в Канаді.** |
-| **народилася** | was born, feminine | **Вона народилася у Львові.** |
-| **раніше** | earlier, before | **Раніше я жив у Торонто.** |
-| **зараз** | now | **Зараз я живу в Києві.** |
-| **далі** | next, further | **Далі я буду вчити українську.** |
-| **у дитинстві** | in childhood | **У дитинстві я ходила в школу.** |
-| **жити** | to live | **Я буду жити у Львові.** |
-| **жив / жила** | lived | **Раніше я жив / жила в Одесі.** |
-| **переїхати** | to move, relocate | **Потім я переїхав у Київ.** |
-| **працювати** | to work | **Далі я буду працювати тут.** |
-| **вивчати** | to study | **Зараз я вивчаю українську.** |
-| **подорожувати** | to travel | **Ми будемо подорожувати Україною.** |
-| **родина** | family | **Моя родина говорить українською.** |
-| **щодня** | every day | **Я буду говорити українською щодня.** |
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"історія","back":"story, history"},{"front":"народитися","back":"to be born"},{"front":"народилася","back":"was born (feminine)"},{"front":"раніше","back":"earlier, before"},{"front":"зараз","back":"now"},{"front":"далі","back":"next, further"},{"front":"у дитинстві","back":"in childhood"},{"front":"жити","back":"to live"},{"front":"жив","back":"lived (masculine)"},{"front":"жила","back":"lived (feminine)"},{"front":"переїхати","back":"to move, relocate"},{"front":"працювати","back":"to work"},{"front":"вивчати","back":"to study"},{"front":"подорожувати","back":"to travel"},{"front":"родина","back":"family"},{"front":"щодня","back":"every day"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Choose the time signal
+
+*(see lesson, §Діалоги)*
+
+### Put the life story in order
+
+*(see lesson, §Історія Марії)*
+
+### Match the tense
+
+*(see lesson, §Future forms for your story)*
+
+### Sort story pieces
+
+*(see lesson, §Future forms for your story)*
+
+### A1 story check
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Раніше я жив у Варшаві.", "isTrue": true, "explanation": "Раніше plus past жив is a clear past sentence."}, {"statement": "Зараз я буду живу в Києві.", "isTrue": false, "explanation": "Do not put буду before a present form. Use Зараз я живу."}, {"statement": "Далі я буду подорожувати.", "isTrue": true, "explanation": "Буду + infinitive is the A1 future pattern."}, {"statement": "Мене звати Софія.", "isTrue": true, "explanation": "This is the normal A1 name chunk."}, {"statement": "Моє ім'я є Софія.", "isTrue": false, "explanation": "Use Мене звати..., not an English-style my-name-is sentence."}]`)} />
+
+### Build story lines
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Раніше / я / жив / у / Торонто", "answer": "Раніше я жив у Торонто."}, {"jumbled": "Зараз / я / живу / в / Києві", "answer": "Зараз я живу в Києві."}, {"jumbled": "Далі / я / буду / вчити / українську", "answer": "Далі я буду вчити українську."}, {"jumbled": "Мене / звати / Софія", "answer": "Мене звати Софія."}]`)} />
+
+### Complete the mini biography
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ у Львові.", "answer": "народилася", "options": ["народилася", "народжуся", "народжуюся"]}, {"sentence": "Раніше я ___ в Одесі.", "answer": "жила", "options": ["жила", "живу", "буду жити"]}, {"sentence": "Зараз я ___ в офісі.", "answer": "працюю", "options": ["працюю", "працювала", "буду працювати"]}, {"sentence": "Далі я ___ українську щодня.", "answer": "буду вчити", "options": ["буду вчити", "вчила", "вчу"]}]`)} />
+
+### Repair the story
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Which sentence matches the time word?", "options": [{"text": "Зараз я живу в Києві.", "correct": true}, {"text": "Зараз я жив у Києві.", "correct": false}, {"text": "Зараз я буду живу в Києві.", "correct": false}], "explanation": "Зараз uses the present form живу."}, {"question": "Which sentence uses the A1 future?", "options": [{"text": "Далі я буду працювати.", "correct": true}, {"text": "Далі я працював.", "correct": false}, {"text": "Далі я працюю учора.", "correct": false}], "explanation": "Буду + infinitive is the A1 future."}, {"question": "Which is the natural name sentence?", "options": [{"text": "Мене звати Данило.", "correct": true}, {"text": "Моє ім'я є Данило.", "correct": false}, {"text": "Я звати Данило.", "correct": false}], "explanation": "Use the chunk Мене звати..."}]`)} />
+
+### Say your story
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "Earlier I lived in Toronto.", "options": [{"text": "Раніше я жив у Торонто.", "correct": true}, {"text": "Зараз я живу в Торонто.", "correct": false}, {"text": "Далі я буду жити в Торонто.", "correct": false}], "explanation": "Earlier points to the past."}, {"source": "Now I live in Kyiv.", "options": [{"text": "Зараз я живу в Києві.", "correct": true}, {"text": "Раніше я жив у Києві.", "correct": false}, {"text": "Далі я буду жити в Києві.", "correct": false}], "explanation": "Now points to the present."}, {"source": "Next I will study Ukrainian.", "options": [{"text": "Далі я буду вчити українську.", "correct": true}, {"text": "Далі я вчив українську.", "correct": false}, {"text": "Зараз я вчив українську.", "correct": false}], "explanation": "Use буду + infinitive for the future."}]`)} />
 
 </TabItem>
 <TabItem label="Resources">
 
-## Resources
+:::info[🎧 🔗 External Resources]
 
+**🔗 Online resources:**
+- 🔗 **Internal module M48: what-happened** — Reuses past-tense gender endings without expanding beyond the taught A1 set.
+- 🔗 **Internal module M50: what-will-happen** — Reuses compound future only: буду / буде / будемо + infinitive.
+- 🔗 **State Standard 2024, §4.2.4.1** — for combining past, present, and future in short communicative narratives.
 - 🔗 **Wiki: pedagogy/a1/my-story** — Pedagogical brief for A1 first-person life stories, time sequencing, and micro-narratives.
-- 📘 **State Standard 2024, §4.2.4.1** — Plan reference for combining past, present, and future in short communicative narratives.
-- 🔁 **Internal module M48: what-happened** — Past-tense gender endings reused inside simple life-story sentences.
-- 🔁 **Internal module M50: what-will-happen** — Compound future reused as **буду / буде / будемо + infinitive**.
+:::
 
 </TabItem>
 </Tabs>
+
+<HashTabSync />

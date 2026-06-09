@@ -24,20 +24,35 @@ This is phrase practice only. Say the symptom, ask for help, and stop. Do not
 guess what the problem is or tell anyone what to do.
 :::
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ## Діалоги
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ### Що у вас болить?
 
-<DialogueBox uk="Лікар: Добрий день. Що у вас болить?" en="Doctor: Good afternoon. What hurts?" />
-<DialogueBox uk="Анна: Добрий день. У мене болить голова." en="Anna: Good afternoon. My head hurts." />
-<DialogueBox uk="Лікар: Ще щось?" en="Doctor: Anything else?" />
-<DialogueBox uk="Анна: У мене болить горло. І в мене температура." en="Anna: My throat hurts. And I have a fever." />
-<DialogueBox uk="Лікар: Повторіть, будь ласка: голова і горло?" en="Doctor: Please repeat: head and throat?" />
-<DialogueBox uk="Анна: Так. Голова і горло." en="Anna: Yes. Head and throat." />
-<DialogueBox uk="Лікар: Зрозуміло." en="Doctor: Understood." />
-<DialogueBox uk="Анна: Дякую." en="Anna: Thank you." />
+```text
+Лікар: Добрий день. Що у вас болить?
+Анна: Добрий день. У мене болить голова.
+Лікар: Ще щось?
+Анна: У мене болить горло. І в мене температура.
+Лікар: Повторіть, будь ласка: голова і горло?
+Анна: Так. Голова і горло.
+Лікар: Зрозуміло.
+Анна: Дякую.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Лікар: Добрий день. Що у вас болить?** | Doctor: Good afternoon. What hurts? |
+| **Анна: Добрий день. У мене болить голова.** | Anna: Good afternoon. My head hurts. |
+| **Лікар: Ще щось?** | Doctor: Anything else? |
+| **Анна: У мене болить горло. І в мене температура.** | Anna: My throat hurts. And I have a fever. |
+| **Лікар: Повторіть, будь ласка: голова і горло?** | Doctor: Please repeat: head and throat? |
+| **Анна: Так. Голова і горло.** | Anna: Yes. Head and throat. |
+| **Лікар: Зрозуміло.** | Doctor: Understood. |
+| **Анна: Дякую.** | Anna: Thank you. |
 
 The learner line is short:
 
@@ -50,14 +65,29 @@ questions. Your A1 task is to make the first message clear.
 
 ### В аптеці
 
-<DialogueBox uk="Покупець: Добрий день. Де тут аптека?" en="Customer: Good afternoon. Where is the pharmacy here?" />
-<DialogueBox uk="Жінка: Аптека прямо і праворуч." en="Woman: The pharmacy is straight ahead and to the right." />
-<DialogueBox uk="Покупець: Дякую." en="Customer: Thank you." />
-<DialogueBox uk="Фармацевт: Добрий день." en="Pharmacist: Good afternoon." />
-<DialogueBox uk="Покупець: Добрий день. У мене болить живіт." en="Customer: Good afternoon. My stomach hurts." />
-<DialogueBox uk="Фармацевт: Я вас розумію. Вам потрібен лікар?" en="Pharmacist: I understand you. Do you need a doctor?" />
-<DialogueBox uk="Покупець: Так, мені потрібен лікар. Я не розумію адресу." en="Customer: Yes, I need a doctor. I do not understand the address." />
-<DialogueBox uk="Фармацевт: Повторюю повільно." en="Pharmacist: I will repeat slowly." />
+```text
+Покупець: Добрий день. Де тут аптека?
+Жінка: Аптека прямо і праворуч.
+Покупець: Дякую.
+Фармацевт: Добрий день.
+Покупець: Добрий день. У мене болить живіт.
+Фармацевт: Я вас розумію. Вам потрібен лікар?
+Покупець: Так, мені потрібен лікар. Я не розумію адресу.
+Фармацевт: Повторюю повільно.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Покупець: Добрий день. Де тут аптека?** | Customer: Good afternoon. Where is the pharmacy here? |
+| **Жінка: Аптека прямо і праворуч.** | Woman: The pharmacy is straight ahead and to the right. |
+| **Покупець: Дякую.** | Customer: Thank you. |
+| **Фармацевт: Добрий день.** | Pharmacist: Good afternoon. |
+| **Покупець: Добрий день. У мене болить живіт.** | Customer: Good afternoon. My stomach hurts. |
+| **Фармацевт: Я вас розумію. Вам потрібен лікар?** | Pharmacist: I understand you. Do you need a doctor? |
+| **Покупець: Так, мені потрібен лікар. Я не розумію адресу.** | Customer: Yes, I need a doctor. I do not understand the address. |
+| **Фармацевт: Повторюю повільно.** | Pharmacist: I will repeat slowly. |
 
 This dialogue practices location and help language. It keeps the learner's
 message to a clear first report. The useful phrases are:
@@ -148,8 +178,6 @@ Other useful fixed phrases:
 Use **хворий** if you speak as a man or boy. Use **хвора** if you speak as a
 woman or girl.
 
-
-
 ## Просити про допомогу
 
 When you are not sure what to say, keep the message in three short lines.
@@ -183,19 +211,42 @@ Use these scripts as ready-made cards. Replace only the body word or place word.
 
 **Script 1: at a reception desk**
 
-<DialogueBox uk="Добрий день. У мене болить спина. Мені потрібен лікар. Я не розумію. Повторіть, будь ласка." en="Good afternoon. My back hurts. I need a doctor. I do not understand. Please repeat." />
+```text
+Добрий день. У мене болить спина. Мені потрібен лікар. Я не розумію. Повторіть, будь ласка.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Добрий день. У мене болить спина. Мені потрібен лікар. Я не розумію. Повторіть, будь ласка.** | Good afternoon. My back hurts. I need a doctor. I do not understand. Please repeat. |
 
 **Script 2: asking for a place**
 
-<DialogueBox uk="Вибачте. Де тут лікарня? Мені погано. Говоріть повільніше, будь ласка." en="Excuse me. Where is the hospital here? I feel unwell. Please speak more slowly." />
+```text
+Вибачте. Де тут лікарня? Мені погано. Говоріть повільніше, будь ласка.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Вибачте. Де тут лікарня? Мені погано. Говоріть повільніше, будь ласка.** | Excuse me. Where is the hospital here? I feel unwell. Please speak more slowly. |
 
 **Script 3: describing two symptoms**
 
-<DialogueBox uk="Добрий день. У мене болить горло. У мене кашель. Мені потрібен лікар." en="Good afternoon. My throat hurts. I have a cough. I need a doctor." />
+```text
+Добрий день. У мене болить горло. У мене кашель. Мені потрібен лікар.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Добрий день. У мене болить горло. У мене кашель. Мені потрібен лікар.** | Good afternoon. My throat hurts. I have a cough. I need a doctor. |
 
 These scripts repeat the same safe pattern: greet, name the symptom, ask for a
 doctor, and use a repair phrase. You can say them slowly and still be clear.
-
 
 ### Repair traps
 
@@ -212,7 +263,6 @@ Keep the Ukrainian phrase shape.
 These repairs are about natural Ukrainian phrases. You do not need to name the
 grammar. Memorize the safe chunks and use them.
 
-
 ## Підсумок
 
 Your A1 health toolkit:
@@ -228,7 +278,15 @@ Your A1 health toolkit:
 
 One complete A1 message can be this short:
 
-<DialogueBox uk="Добрий день. У мене болить горло. У мене температура. Мені потрібен лікар. Повторіть, будь ласка." en="Good afternoon. My throat hurts. I have a fever. I need a doctor. Please repeat." />
+```text
+Добрий день. У мене болить горло. У мене температура. Мені потрібен лікар. Повторіть, будь ласка.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Добрий день. У мене болить горло. У мене температура. Мені потрібен лікар. Повторіть, будь ласка.** | Good afternoon. My throat hurts. I have a fever. I need a doctor. Please repeat. |
 
 That is enough for this module: say the symptom, ask for help, and use repair
 phrases when you need them.
