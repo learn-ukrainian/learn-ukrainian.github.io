@@ -78,31 +78,32 @@ Built via `v7_build folk … --worktree --writer claude-tools`; gate now passes;
   **PR #2859** (HELD). Independently re-verified 5 quotes at 1.0 + exact chunk ids (incl. Крип'якевич
   русалочка, Коцюбинський чугайстир); Берегиня rejected as ancient-goddess (search_heritage=СУМ-20 only);
   anti-pantheon discipline exemplary; honest do-not-quote. **Wiki NOT yet compiled.**
-- ⏳ **Dossiers #3 `koliadky-shchedrivky` + #4 `rodynna-obriadovist-zvychai`** — IN FLIGHT (dispatches
-  `folk-dossier-koliadky`, `folk-dossier-rodynna`, codex/gpt-5.5). **UNREVIEWED** — need Claude
-  corpus-hammer review on landing (independent verify_quote sample, esp. koliadky's Щедрик do-not-quote).
+- ✅ **Dossier #3 `koliadky-shchedrivky`** — DONE, Claude corpus-hammer **SHIP** → **PR #2860** (HELD).
+  Re-verified «Коли не било з нащада світа»→1.0 feaa5fa7_c0596, «Щедрий вечір…»→0.99 feaa5fa7_c0598;
+  Щедрик lyric correctly do-not-quote'd (false 0.58); Леонтович/Cheka UINP-sourced. (dispatch ended rc=-9
+  silence-SIGKILL AFTER opening PR — #M-8; artifact intact, 51KB.)
+- ✅ **Dossier #4 `rodynna-obriadovist-zvychai`** — DONE, Claude corpus-hammer **SHIP** → **PR #2861** (HELD).
+  Re-verified «Ой, сій мати, овес…»→1.0 feaa5fa7_c0615, голосіння→1.0 da46aa92_c0218; anti-pantheon caution
+  present. MINOR: full §4 chunk-id audit recommended before grounding a module (spot-check 2/2 at 1.0).
 - ⏸ **Dossier #5 `dumy-nevilnytski-lytsarski` — HELD, do NOT fire yet:** the user has pending feedback on
   m19 (`dumy-lytsarski`) that should shape this duma topic. Fire only after that feedback lands.
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **Review in-flight dossiers #3 koliadky + #4 rodynna** (dispatches `folk-dossier-koliadky`,
-   `folk-dossier-rodynna`): read content, INDEPENDENTLY re-run `verify_quote` on a §4 sample (don't trust
-   self-report — codex's self-report had truncated/mis-attributed samples that re-verified fine, so
-   re-check with the dossier's exact text+author), check decolonization/anti-pantheon discipline,
-   `check_russian_shadow` on key terms. SHIP/REVISE → comment on each PR. (#1 narodna-kultura #2858 and
-   #2 narodni-viruvannia #2859 are already SHIP.)
-2. **COMPILE WIKIS** for the SHIP'd dossiers (#1 narodna-kultura ready now; #2 after review). ⚠ CORPUS-ACCESS
-   NOTE: `scripts/wiki/compile.py` uses `load_dossier_text(track,slug)` + dense retrieval which needs
-   `data/` — worktrees SPARSE-EXCLUDE `data/`. So run compile from a `data/`-bearing checkout: copy the
-   dossier into the MAIN root's `docs/research/folk/<slug>.md` (untracked working file, NOT a commit),
-   run `.venv/bin/python scripts/wiki/compile.py --track folk --slug <slug> --writer gpt-5.5 --review`
-   from main root, then move the wiki+sources.yaml onto the dossier's PR branch + push. Monitor the
-   compile via the `Monitor` tool. Corpus-hammer review the wiki (verify_quote a §4 sample). The seminar
-   wiki-completeness gate (#2855, now live) will gate the eventual module build.
-3. **Continue the rest** up-to-wiki (fire dossiers koliadky→rodynna→dumy; review; compile wikis). HOLD all
-   as PRs — do NOT lock main before the user reviews the pilot. **Build NO modules for the rest yet.**
-4. **After user reviews pilot #2857:** address the pilot follow-ups (stress-annotation skips headings +
-   C1 density; UK tab labels; P2 inline-and-aggregate §5 #3), then build the rest's modules.
+1. **Get user's m19 (`dumy-lytsarski`) feedback**, then fire dossier #5 `dumy-nevilnytski-lytsarski`
+   (proven loop: codex/gpt-5.5 write → Claude corpus-hammer review). All 4 other build-order dossiers are
+   SHIP (#2858/#2859/#2860/#2861, HELD).
+2. **COMPILE WIKIS** for the 4 SHIP'd dossiers (#1 narodna-kultura, #2 narodni-viruvannia, #3 koliadky,
+   #4 rodynna — all ready). ⚠ CORPUS-ACCESS NOTE: `scripts/wiki/compile.py` uses
+   `load_dossier_text(track,slug)` + dense retrieval which needs `data/` — worktrees SPARSE-EXCLUDE `data/`.
+   So run compile from a `data/`-bearing checkout: copy the dossier into the MAIN root's
+   `docs/research/folk/<slug>.md` (untracked working file, NOT a commit), run
+   `.venv/bin/python scripts/wiki/compile.py --track folk --slug <slug> --writer gpt-5.5 --review` from main
+   root (Monitor it), then move the wiki+sources.yaml onto that dossier's PR branch + push. Corpus-hammer
+   review each wiki (verify_quote a §4 sample). The seminar wiki-completeness gate (#2855, live) gates the
+   eventual module build — the wikis must pass it.
+3. **After user reviews pilot #2857:** address the pilot follow-ups (stress-annotation skips headings +
+   reconsider C1 density; UK tab labels per P1; P2 inline-and-aggregate §5 #3), then build the rest's
+   modules. **Build NO modules for the rest until then.**
 
 ### 📌 HOLD DECISION (told the user): all phase-2 dossier+wiki PRs stay OPEN/unmerged until the pilot
 review sets the approach. State lives on PR branches (#2857 carries this handoff; #2858 = dossier #1).
