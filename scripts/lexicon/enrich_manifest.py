@@ -34,6 +34,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
+from scripts.lexicon.heritage_classifier import classify_lemma
 from scripts.verification.vesum import verify_lemma
 
 MANIFEST = ROOT / "starlight" / "src" / "data" / "lexicon-manifest.json"
@@ -484,6 +485,7 @@ def enrich() -> tuple[int, int]:
             if entry.get("gloss"):
                 entry["gloss"] = clean_gloss(str(entry["gloss"]))
             lemma = entry["lemma"]
+            entry["heritage_status"] = classify_lemma(lemma)
             block: dict[str, object] = {}
             morph = _morphology(lemma)
             if morph:
