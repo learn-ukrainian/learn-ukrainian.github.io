@@ -1,0 +1,124 @@
+- word: студент
+  translation: student
+  pos: noun
+  gender: m
+  example: "Я пишу студентові."
+- word: студентові
+  translation: to the student
+  pos: noun
+  gender: m
+  example: "Студентові потрібен підручник."
+- word: сестра
+  translation: sister
+  pos: noun
+  gender: f
+  example: "Сестра живе у Львові."
+- word: сестрі
+  translation: to the sister
+  pos: noun
+  gender: f
+  example: "Я дарую сестрі квіти."
+- word: друг
+  translation: friend
+  pos: noun
+  gender: m
+  example: "Друг телефонує ввечері."
+- word: другові
+  translation: to the friend
+  pos: noun
+  gender: m
+  example: "Напиши другові."
+- word: герой
+  translation: hero
+  pos: noun
+  gender: m
+  example: "Герой є у казці."
+- word: героєві
+  translation: to the hero
+  pos: noun
+  gender: m
+  example: "Музей присвятив зал героєві."
+- word: дитина
+  translation: child
+  pos: noun
+  gender: f
+  example: "Дитина читає книжку."
+- word: дитині
+  translation: to the child
+  pos: noun
+  gender: f
+  example: "Допоможіть дитині."
+- word: станція
+  translation: station
+  pos: noun
+  gender: f
+  example: "Станція недалеко."
+- word: станції
+  translation: to the station
+  pos: noun
+  gender: f
+  example: "Дайте назву станції."
+- word: немовля
+  translation: baby, infant
+  pos: noun
+  gender: n
+  example: "Немовля спить."
+- word: немовляті
+  translation: to the baby, for the baby
+  pos: noun
+  gender: n
+  example: "Допоможіть немовляті."
+- word: курча
+  translation: chick
+  pos: noun
+  gender: n
+  example: "Курча маленьке."
+- word: курчаті
+  translation: to the chick, for the chick
+  pos: noun
+  gender: n
+  example: "Дайте воду курчаті."
+- word: подарувати
+  translation: to give as a gift
+  pos: verb
+  example: "Я хочу подарувати братові книгу."
+- word: показати
+  translation: to show
+  pos: verb
+  example: "Покажіть студентці карту."
+- word: написати
+  translation: to write
+  pos: verb
+  example: "Я написав подрузі листа."
+- word: розповісти
+  translation: to tell, to narrate
+  pos: verb
+  example: "Розповісти мамі новину."
+- word: пояснити
+  translation: to explain
+  pos: verb
+  example: "Поясніть дитині правило."
+- word: відповісти
+  translation: to answer, to reply
+  pos: verb
+  example: "Відповісти вчителеві."
+- word: закінчення
+  translation: ending
+  pos: noun
+  gender: n
+  example: "Закінчення показує відмінок."
+- word: чергування
+  translation: alternation
+  pos: noun
+  gender: n
+  example: "Подруга - подрузі має чергування."
+- word: відміна
+  translation: declension
+  pos: noun
+  gender: f
+  example: "Відміна допомагає вибрати закінчення."
+- word: одержувач
+  translation: recipient
+  pos: noun
+  gender: m
+  example: "Одержувач стоїть у давальному відмінку."

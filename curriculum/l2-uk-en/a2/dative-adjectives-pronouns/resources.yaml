@@ -1,0 +1,25 @@
+- title: "ULP: Possessive Pronouns Declension"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /possessive-pronouns-declension/"
+  url: "https://www.ukrainianlessons.com/possessive-pronouns-declension/"
+  notes: "Learner-facing table for мій, твій, наш, ваш and related possessive forms."
+- title: "ULP: Pronouns This and That"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /pronouns-this-that/"
+  url: "https://www.ukrainianlessons.com/pronouns-this-that/"
+  notes: "Support for цей/той before applying dative agreement."
+- title: "ULP: Adjectives and Adverbs Chart"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /adjectives-adverbs-chart/"
+  url: "https://www.ukrainianlessons.com/adjectives-adverbs-chart/"
+  notes: "Reference for adjective agreement patterns."
+- title: "Dobra Forma: Dative Case of Adjectives"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-058"
+  url: "https://opentext.ku.edu/dobraforma/chapter/18-2/"
+  notes: "Practice for adjective endings in dative noun phrases."
+- title: "Talk Ukrainian: Possessive Pronouns - мій, твій vs свій"
+  role: article
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-011"
+  url: "https://talkukrainian.com/possessive-pronouns/"
+  notes: "Compact follow-up for possessive pronouns before case agreement practice."

@@ -1,0 +1,20 @@
+- title: "ULP: Ukrainian Cases"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-dative-pronouns"
+  url: "https://www.ukrainianlessons.com/intro-cases/"
+  notes: "Learner-facing overview of Ukrainian cases for review before dative pronoun practice."
+- title: "Dobra Forma: Personal Pronouns - Dative Case Forms"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-048"
+  url: "https://opentext.ku.edu/dobraforma/chapter/15-1/"
+  notes: "Structured practice for forms like мені, тобі, йому, їй, нам, вам, їм."
+- title: "Dobra Forma: Personal Pronouns - Dative Case for Indirect Object"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-049"
+  url: "https://opentext.ku.edu/dobraforma/chapter/15-2/"
+  notes: "Practice with dative pronouns as indirect objects."
+- title: "Talk Ukrainian: Dative case"
+  role: article
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-017"
+  url: "https://talkukrainian.com/dative-case/"
+  notes: "Short grammar-guide follow-up for the dative case."
