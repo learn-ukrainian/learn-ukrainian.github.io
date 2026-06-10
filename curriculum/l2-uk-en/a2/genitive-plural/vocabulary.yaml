@@ -94,3 +94,28 @@
   pos: noun
   gender: m
   example: "Десять олівців для уроку."
+- word: квиток
+  translation: ticket
+  pos: noun
+  gender: m
+  example: "Треба п'ять квитків."
+- word: урок
+  translation: lesson
+  pos: noun
+  gender: m
+  example: "Сьогодні багато уроків."
+- word: місце
+  translation: place, seat
+  pos: noun
+  gender: n
+  example: "У класі мало місць."
+- word: рис
+  translation: rice
+  pos: noun
+  gender: m
+  example: "Купіть кілька пакетів рису."
+- word: запас
+  translation: supply, stock
+  pos: noun
+  gender: m
+  example: "Ми перевіряємо запас води."
