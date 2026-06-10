@@ -1,0 +1,20 @@
+- title: "ULP: Prepositions and Cases"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /prepositions-cases/"
+  url: "https://www.ukrainianlessons.com/prepositions-cases/"
+  notes: "Learner-facing overview of Ukrainian prepositions and the cases they require."
+- title: "ULP: Genitive Case (Родовий відмінок)"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /genitive-case/"
+  url: "https://www.ukrainianlessons.com/genitive-case/"
+  notes: "Reference for genitive forms and common genitive contexts."
+- title: "Dobra Forma: Genitive Case after Prepositions біля, після, для and без"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-024"
+  url: "https://opentext.ku.edu/dobraforma/chapter/7-2/"
+  notes: "Practice page directly aligned to для, без, біля, and після."
+- title: "Talk Ukrainian: Ukrainian prepositions"
+  role: article
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-034"
+  url: "https://talkukrainian.com/prepositions/"
+  notes: "Short learner-facing guide to common Ukrainian prepositions."

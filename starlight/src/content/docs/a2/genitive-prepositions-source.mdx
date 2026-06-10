@@ -1,0 +1,349 @@
+---
+title: "Звідки ти? З чого це зроблено?"
+description: "Прийменники з/із/зі, від, після з родовим відмінком"
+sidebar:
+  order: 9
+  label: "09. Звідки ти? З чого це зроблено?"
+prev: checkpoint-foundations
+next: genitive-prepositions-purpose
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import RitualSequencing from '@site/src/components/RitualSequencing';
+import VariantComparison from '@site/src/components/VariantComparison';
+import MotifFormula from '@site/src/components/MotifFormula';
+import PerformanceActivity from '@site/src/components/PerformanceActivity';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import MythBuster from '@site/src/components/MythBuster';
+import HighCultureBridge from '@site/src/components/HighCultureBridge';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+У цьому модулі родовий відмінок працює після трьох дуже частих
+прийменників: `з/із/зі`, `від`, `після`.
+
+Це не нова таблиця для запам'ятовування. Це три живі питання:
+
+- `Звідки?` - з України, зі Львова, із села;
+- `Від кого?` - від мами, від друга, від викладачки;
+- `Після чого?` - після уроку, після роботи, після вечері.
+
+На А2 важливо навчитися чути коротку модель: прийменник плюс родовий
+відмінок. Якщо є `з`, `від` або `після`, наступне слово часто відповідає
+на питання `кого? чого?`.
+
+Після контрольної точки A2.1 ми вже впевнено питаємо `скільки?`,
+`коли?` і `чого немає?`. Тепер додаємо напрямок від джерела:
+`звідки?`, `від кого?`, `після чого?`.
+
+## Діалог: вечеря в складчину
+
+Група друзів зібралася на міжнародну вечерю. Кожен приніс щось зі
+своєї країни або від своєї родини.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог 1 - що на столі?"
+  exchanges={JSON.parse('[{"speaker":"Марта","text":"Ого, скільки всього! Що це?"},{"speaker":"Андрій","text":"Це сир з Франції. Його привезла Софі."},{"speaker":"Софі","text":"А це оливки з Греції. Вони від моєї сусідки."},{"speaker":"Марта","text":"А шоколад?"},{"speaker":"Лукас","text":"Шоколад від бабусі з Бельгії."},{"speaker":"Андрій","text":"Супер. А це печиво після нашої подорожі до Італії."},{"speaker":"Софі","text":"Після подорожі ми тепер любимо все італійське."}]')}
+/>
+
+Подивіться на короткі фрази:
+
+| Фраза | Питання | Значення |
+| --- | --- | --- |
+| з Франції | звідки? | походження |
+| з Греції | звідки? | походження |
+| від сусідки | від кого? | людина-джерело |
+| від бабусі | від кого? | людина-джерело |
+| після подорожі | після чого? | подія перед цим |
+
+Усі ці фрази мають родовий відмінок: `Франції`, `Греції`, `сусідки`,
+`бабусі`, `подорожі`.
+
+### Що означає фраза?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "сир з Франції", "options": [{"text": "походження", "correct": true}, {"text": "людина-джерело", "correct": false}, {"text": "час після події", "correct": false}], "explanation": "З Франції відповідає на питання звідки?"}, {"question": "лист від мами", "options": [{"text": "людина-джерело", "correct": true}, {"text": "матеріал", "correct": false}, {"text": "часовий старт", "correct": false}], "explanation": "Від мами показує, від кого лист."}, {"question": "після уроку", "options": [{"text": "час після події", "correct": true}, {"text": "походження", "correct": false}, {"text": "матеріал", "correct": false}], "explanation": "Після уроку означає, що урок був раніше."}, {"question": "сукня з шовку", "options": [{"text": "матеріал", "correct": true}, {"text": "відстань", "correct": false}, {"text": "людина-джерело", "correct": false}], "explanation": "З шовку відповідає на питання з чого?"}, {"question": "далеко від центру", "options": [{"text": "відстань", "correct": true}, {"text": "походження", "correct": false}, {"text": "матеріал", "correct": false}], "explanation": "Від центру показує орієнтир для відстані."}, {"question": "з понеділка", "options": [{"text": "початкова точка в часі", "correct": true}, {"text": "подарунок", "correct": false}, {"text": "подія після", "correct": false}], "explanation": "З понеділка означає починаючи з понеділка."}, {"question": "парасолька від дощу", "options": [{"text": "захист", "correct": true}, {"text": "походження", "correct": false}, {"text": "матеріал", "correct": false}], "explanation": "Від дощу означає захист від дощу."}, {"question": "ми знайомі з дитинства", "options": [{"text": "початкова точка в часі", "correct": true}, {"text": "відстань", "correct": false}, {"text": "людина-джерело", "correct": false}], "explanation": "З дитинства означає since childhood."}]`)} />
+
+## Звідки? З, із, зі плюс родовий
+
+`З/із/зі` часто показує, звідки щось або хтось походить.
+
+> Я з України.
+>
+> Вона зі Львова.
+>
+> Це лист із Канади.
+>
+> Ми повернулися з Одеси.
+
+Після прийменника стоїть родовий відмінок:
+
+| Називний | Родовий з `з/із/зі` |
+| --- | --- |
+| Україна | з України |
+| Львів | зі Львова |
+| Одеса | з Одеси |
+| Канада | із Канади |
+| школа | зі школи |
+
+Не треба робити довгу паузу перед кожною формою. На А2 корисніше
+бачити готові пари: `Львів - зі Львова`, `Україна - з України`,
+`школа - зі школи`.
+
+### З чого це зроблено?
+
+Цей самий прийменник може показувати матеріал або склад.
+
+> Сік з яблук.
+>
+> Сукня з шовку.
+>
+> Каблучка із золота.
+>
+> Стіл з дерева.
+
+Тут питання не `звідки?`, а `з чого?`. Але граматика така сама:
+`з/із/зі` плюс родовий відмінок.
+
+### З якого часу?
+
+`З` також може показувати початкову точку в часі.
+
+> Я працюю з ранку.
+>
+> Курс починається з понеділка.
+>
+> Ми знайомі з дитинства.
+
+Тут `з` означає "from/since" як часовий старт. Не змішуйте це з `після`.
+`З ранку` показує початок періоду, а `після ранку` звучить неприродно
+для щоденного розкладу.
+
+## Милозвучність: з, із чи зі?
+
+Усі три форми мають те саме базове значення. Вибір залежить від звуку
+поруч.
+
+| Форма | Коли безпечно вживати | Приклади |
+| --- | --- | --- |
+| з | перед голосним або простим приголосним | з Одеси, з України, з дому |
+| із | коли `з` звучить важко | із села, із золота, лист із Канади |
+| зі | перед важким збігом, особливо з л, шк, зн, ст | зі Львова, зі школи, зі стола |
+
+Це правило служить вимові. Спробуйте сказати вголос:
+
+> Я з Львова.
+>
+> Я зі Львова.
+
+Друга фраза легша. Тому природно: `зі Львова`.
+
+:::tip[Безпечне правило А2]
+Якщо після прийменника починається важкий збіг приголосних, оберіть
+`зі`: `зі школи`, `зі Львова`, `зі стола`.
+:::
+
+### З, із чи зі?
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ України.", "answer": "з", "options": ["з", "із", "зі"]}, {"sentence": "Вона ___ Львова.", "answer": "зі", "options": ["зі", "з", "із"]}, {"sentence": "Це лист ___ Канади.", "answer": "із", "options": ["із", "зі", "з"]}, {"sentence": "Ми повернулися ___ Одеси.", "answer": "з", "options": ["з", "зі", "із"]}, {"sentence": "Діти йдуть ___ школи.", "answer": "зі", "options": ["зі", "з", "із"]}, {"sentence": "Каблучка ___ золота.", "answer": "із", "options": ["із", "з", "зі"]}, {"sentence": "Ключі впали ___ стола.", "answer": "зі", "options": ["зі", "з", "із"]}, {"sentence": "Ми починаємо ___ ранку.", "answer": "з", "options": ["з", "із", "зі"]}]`)} />
+
+## Від кого? Від плюс родовий
+
+`Від` часто показує людину, організацію або джерело.
+
+> Лист від мами.
+>
+> Подарунок від друга.
+>
+> Повідомлення від університету.
+>
+> Новини від сусіда.
+
+Порівняйте:
+
+| З | Від |
+| --- | --- |
+| Я з Києва. | Лист від Олени. |
+| Сир з Франції. | Подарунок від тата. |
+| Ми повернулися з роботи. | Порада від лікаря. |
+
+`З` частіше відповідає на питання `звідки? з чого?`.
+`Від` частіше відповідає на питання `від кого? від чого?`.
+
+`Від` також працює з відстанню і захистом:
+
+> Кафе далеко від центру.
+>
+> Аптека недалеко від вокзалу.
+>
+> Парасолька від дощу.
+>
+> Ліки від головного болю.
+
+У цих фразах після `від` знову родовий: `центру`, `вокзалу`, `дощу`,
+`болю`.
+
+## Після чого? Після плюс родовий
+
+`Після` показує подію або період, який був раніше.
+
+> Після уроку я п'ю каву.
+>
+> Після роботи ми йдемо додому.
+>
+> Після вечері я читаю.
+>
+> Після канікул починається новий семестр.
+
+Форми можуть бути знайомі з попередніх модулів:
+
+| Називний | Після плюс родовий |
+| --- | --- |
+| урок | після уроку |
+| обід | після обіду |
+| робота | після роботи |
+| лекція | після лекції |
+| свято | після свята |
+| канікули | після канікул |
+
+`До` і `після` утворюють корисну пару:
+
+> До уроку я повторюю слова.
+>
+> Після уроку я роблю вправи.
+
+Не треба ще знати всі значення `до`. У цьому модулі достатньо контрасту:
+`до уроку` - перед уроком, `після уроку` - коли урок уже закінчився.
+
+### Називний і родовий
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Україна", "right": "з України"}, {"left": "Львів", "right": "зі Львова"}, {"left": "мама", "right": "від мами"}, {"left": "друг", "right": "від друга"}, {"left": "урок", "right": "після уроку"}, {"left": "робота", "right": "після роботи"}, {"left": "шовк", "right": "з шовку"}, {"left": "центр", "right": "від центру"}]`)} />
+
+## Міні-розмова: мій день
+
+Прочитайте і помітьте всі фрази з родовим відмінком.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог 2 - після заняття"
+  exchanges={JSON.parse('[{"speaker":"Викладачка","text":"Що ви робите після заняття?"},{"speaker":"Студентка","text":"Після заняття я йду до кав\'ярні."},{"speaker":"Викладачка","text":"Вона далеко від школи?"},{"speaker":"Студентка","text":"Ні, недалеко від центру. Там кава з Бразилії."},{"speaker":"Викладачка","text":"А хто порадив це місце?"},{"speaker":"Студентка","text":"Це порада від подруги зі Львова."}]')}
+/>
+
+Карта діалогу:
+
+- `після заняття` - часова послідовність;
+- `від школи`, `від центру` - відстань;
+- `з Бразилії` - походження;
+- `від подруги` - людина-джерело;
+- `зі Львова` - походження з місця.
+
+## 📋 Підсумок
+
+Три прийменники цього модуля завжди ведуть вас до родового відмінка:
+
+| Прийменник | Питання | Приклади |
+| --- | --- | --- |
+| з/із/зі | звідки? з чого? з якого часу? | з України, із золота, з ранку |
+| від | від кого? від чого? | від мами, від дощу, від центру |
+| після | після чого? | після уроку, після роботи |
+
+Для А2 ваша ціль проста: помітити прийменник, вибрати родовий відмінок
+і сказати коротку фразу природно.
+
+### Три прийменники
+
+<GroupSort client:only='react' groups={JSON.parse(`{"з/із/зі": ["з України", "із золота", "зі школи", "з ранку"], "від": ["від мами", "від дощу", "від центру", "від сусіда"], "після": ["після уроку", "після роботи", "після вечері", "після канікул"]}`)} />
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"прийменник","translation":"preposition","pos":"noun","gender":"m","example":"З - це прийменник.","examples":["preposition","З - це прийменник."]},{"word":"джерело","translation":"source","pos":"noun","gender":"n","example":"Від мами - це джерело повідомлення.","examples":["source","Від мами - це джерело повідомлення."]},{"word":"походження","translation":"origin","pos":"noun","gender":"n","example":"З України показує походження.","examples":["origin","З України показує походження."]},{"word":"матеріал","translation":"material","pos":"noun","gender":"m","example":"Сукня з шовку: шовк - це матеріал.","examples":["material","Сукня з шовку: шовк - це матеріал."]},{"word":"шовк","translation":"silk","pos":"noun","gender":"m","example":"Це хустка з шовку.","examples":["silk","Це хустка з шовку."]},{"word":"золото","translation":"gold","pos":"noun","gender":"n","example":"Каблучка із золота.","examples":["gold","Каблучка із золота."]},{"word":"подарунок","translation":"gift","pos":"noun","gender":"m","example":"Це подарунок від друга.","examples":["gift","Це подарунок від друга."]},{"word":"сусід","translation":"neighbor","pos":"noun","gender":"m","example":"Новини від сусіда.","examples":["neighbor","Новини від сусіда."]},{"word":"сніданок","translation":"breakfast","pos":"noun","gender":"m","example":"Після сніданку я п'ю чай.","examples":["breakfast","Після сніданку я п'ю чай."]},{"word":"вечеря","translation":"dinner, supper","pos":"noun","gender":"f","example":"Після вечері ми гуляємо.","examples":["dinner, supper","Після вечері ми гуляємо."]},{"word":"канікули","translation":"vacation, holidays","pos":"noun","example":"Після канікул починається курс.","examples":["vacation, holidays","Після канікул починається курс."]},{"word":"дитинство","translation":"childhood","pos":"noun","gender":"n","example":"Ми знайомі з дитинства.","examples":["childhood","Ми знайомі з дитинства."]},{"word":"далеко","translation":"far","pos":"adverb","example":"Кафе далеко від центру.","examples":["far","Кафе далеко від центру."]},{"word":"недалеко","translation":"not far, nearby","pos":"adverb","example":"Аптека недалеко від вокзалу.","examples":["not far, nearby","Аптека недалеко від вокзалу."]},{"word":"парасолька","translation":"umbrella","pos":"noun","gender":"f","example":"Парасолька від дощу.","examples":["umbrella","Парасолька від дощу."]},{"word":"дощ","translation":"rain","pos":"noun","gender":"m","example":"Я маю куртку від дощу.","examples":["rain","Я маю куртку від дощу."]},{"word":"подорож","translation":"trip, journey","pos":"noun","gender":"f","example":"Після подорожі ми втомилися.","examples":["trip, journey","Після подорожі ми втомилися."]},{"word":"порада","translation":"advice, recommendation","pos":"noun","gender":"f","example":"Це порада від подруги.","examples":["advice, recommendation","Це порада від подруги."]},{"word":"центр","translation":"center","pos":"noun","gender":"m","example":"Ми живемо недалеко від центру.","examples":["center","Ми живемо недалеко від центру."]},{"word":"вокзал","translation":"train station","pos":"noun","gender":"m","example":"Готель далеко від вокзалу.","examples":["train station","Готель далеко від вокзалу."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"прийменник","back":"preposition"},{"front":"джерело","back":"source"},{"front":"походження","back":"origin"},{"front":"матеріал","back":"material"},{"front":"шовк","back":"silk"},{"front":"золото","back":"gold"},{"front":"подарунок","back":"gift"},{"front":"сусід","back":"neighbor"},{"front":"сніданок","back":"breakfast"},{"front":"вечеря","back":"dinner, supper"},{"front":"канікули","back":"vacation, holidays"},{"front":"дитинство","back":"childhood"},{"front":"далеко","back":"far"},{"front":"недалеко","back":"not far, nearby"},{"front":"парасолька","back":"umbrella"},{"front":"дощ","back":"rain"},{"front":"подорож","back":"trip, journey"},{"front":"порада","back":"advice, recommendation"},{"front":"центр","back":"center"},{"front":"вокзал","back":"train station"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Що означає фраза?
+
+*(див. урок, §Діалог: вечеря в складчину)*
+
+### З, із чи зі?
+
+*(див. урок, §Милозвучність: з, із чи зі?)*
+
+### Називний і родовий
+
+*(див. урок, §Після чого? Після плюс родовий)*
+
+### Три прийменники
+
+*(див. урок, §Підсумок)*
+
+### Перевірка родового
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "з України", "isTrue": true, "explanation": "України - родовий відмінок."}, {"statement": "від мама", "isTrue": false, "explanation": "Потрібно: від мами."}, {"statement": "після уроку", "isTrue": true, "explanation": "Уроку - родовий відмінок."}, {"statement": "зі Львова", "isTrue": true, "explanation": "Форма зі природна перед Львова."}, {"statement": "після робота", "isTrue": false, "explanation": "Потрібно: після роботи."}, {"statement": "подарунок від друга", "isTrue": true, "explanation": "Від друга правильно показує джерело."}, {"statement": "сукня з шовк", "isTrue": false, "explanation": "Потрібно: сукня з шовку."}, {"statement": "далеко від центру", "isTrue": true, "explanation": "Від центру правильно показує відстань."}]`)} />
+
+### Мій день після уроку
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ уроку я п'ю каву.", "answer": "Після", "options": ["Після", "Від", "З"]}, {"sentence": "Кава ___ Бразилії.", "answer": "з", "options": ["з", "від", "після"]}, {"sentence": "Це порада ___ подруги.", "answer": "від", "options": ["від", "після", "зі"]}, {"sentence": "Кафе недалеко ___ школи.", "answer": "від", "options": ["від", "після", "з"]}, {"sentence": "Ми працюємо ___ понеділка.", "answer": "з", "options": ["з", "після", "від"]}, {"sentence": "Парасолька ___ дощу лежить у сумці.", "answer": "від", "options": ["від", "з", "після"]}, {"sentence": "___ вечері ми дивимося фільм.", "answer": "Після", "options": ["Після", "Від", "Зі"]}, {"sentence": "Я ___ школи йду додому.", "answer": "зі", "options": ["зі", "від", "після"]}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Dobra Forma: Genitive Case after Prepositions з, до, and в/у](https://opentext.ku.edu/dobraforma/chapter/7-1/) — Practice page with genitive after common prepositions, useful for з/із/зі.
+- 📄 [ULP: Genitive Case (Родовий відмінок](https://www.ukrainianlessons.com/genitive-case/) — Learner-facing overview of common genitive uses, including after prepositions.
+- 📄 [ULP: Prepositions and Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Reference for which Ukrainian prepositions trigger which cases.
+- 📄 [МійКлас: Основні випадки чергування у-в, і-й, з-із-зі](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/osnovni-vipadki-cherguvannia-u-v-i-i-z-iz-zi-pravila-milozvuchnosti-41612) — Ukrainian-language school reference for choosing з, із, and зі.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

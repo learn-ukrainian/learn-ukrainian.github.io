@@ -1,0 +1,100 @@
+- word: призначення
+  translation: purpose, intended use
+  pos: noun
+  gender: n
+  example: "Для показує призначення."
+- word: мета
+  translation: goal, purpose
+  pos: noun
+  gender: f
+  example: "Для навчання - це мета."
+- word: відпочинок
+  translation: rest, relaxation
+  pos: noun
+  gender: m
+  example: "У мене є час для відпочинку."
+- word: допомога
+  translation: help, assistance
+  pos: noun
+  gender: f
+  example: "Без допомоги важко."
+- word: сумнів
+  translation: doubt
+  pos: noun
+  gender: m
+  example: "Без сумніву, це правильно."
+- word: будинок
+  translation: building, house
+  pos: noun
+  gender: m
+  example: "Я стою біля будинку."
+- word: зупинка
+  translation: stop (bus or tram)
+  pos: noun
+  gender: f
+  example: "Зупинка біля школи."
+- word: бібліотека
+  translation: library
+  pos: noun
+  gender: f
+  example: "Кафе навпроти бібліотеки."
+- word: лікарня
+  translation: hospital
+  pos: noun
+  gender: f
+  example: "Аптека біля лікарні."
+- word: площа
+  translation: square (city)
+  pos: noun
+  gender: f
+  example: "Станція біля площі."
+- word: станція
+  translation: station
+  pos: noun
+  gender: f
+  example: "Я біля станції метро."
+- word: навчання
+  translation: studying, education
+  pos: noun
+  gender: n
+  example: "Цей зошит для навчання."
+- word: церква
+  translation: church
+  pos: noun
+  gender: f
+  example: "Музей навпроти церкви."
+- word: вокзал
+  translation: train station
+  pos: noun
+  gender: m
+  example: "Банк навпроти вокзалу."
+- word: річка
+  translation: river
+  pos: noun
+  gender: f
+  example: "Намет біля річки."
+- word: ліхтарик
+  translation: flashlight
+  pos: noun
+  gender: m
+  example: "Без ліхтарика темно."
+- word: ковдра
+  translation: blanket
+  pos: noun
+  gender: f
+  example: "Ця ковдра для Олени."
+- word: намет
+  translation: tent
+  pos: noun
+  gender: m
+  example: "Намет стоїть біля річки."
+- word: дорога
+  translation: road
+  pos: noun
+  gender: f
+  example: "Не ставте намет навпроти дороги."
+- word: карта
+  translation: map
+  pos: noun
+  gender: f
+  example: "Я без карти."

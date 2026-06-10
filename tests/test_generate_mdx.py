@@ -297,6 +297,32 @@ subtitle: Test
     assert tab3.count("<Quiz") == 1
 
 
+def test_a2_2_preview_tabs_force_ukrainian_zoshyt_labels(tmp_path):
+    activities_yaml = tmp_path / "activities.yaml"
+    activities_yaml.write_text("[]\n", encoding="utf-8")
+    activities = ActivityParser().parse(activities_yaml)
+    md_content = """---
+title: A2.2 Labels
+subtitle: Test
+---
+# A2.2 Labels
+
+## Розділ
+
+Текст.
+"""
+
+    a2_bridge_mdx = generate_mdx(md_content, 1, yaml_activities=activities, level="a2")
+    a2_2_mdx = generate_mdx(md_content, 9, yaml_activities=activities, level="a2")
+
+    assert '<TabItem label="Lesson">' in a2_bridge_mdx
+    assert '<TabItem label="Activities">' in a2_bridge_mdx
+    assert '<TabItem label="Урок">' in a2_2_mdx
+    assert '<TabItem label="Словник">' in a2_2_mdx
+    assert '<TabItem label="Зошит">' in a2_2_mdx
+    assert '<TabItem label="Ресурси">' in a2_2_mdx
+
+
 def test_generated_tabs_include_hash_target_sync_script():
     md_content = """---
 title: Hash Tab Test

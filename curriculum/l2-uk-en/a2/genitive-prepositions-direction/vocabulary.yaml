@@ -1,0 +1,96 @@
+- word: напрямок
+  translation: direction
+  pos: noun
+  gender: m
+  example: "До вокзалу показує напрямок."
+- word: межа
+  translation: boundary, limit
+  pos: noun
+  gender: f
+  example: "До вечора - це часова межа."
+- word: мета
+  translation: goal, purpose
+  pos: noun
+  gender: f
+  example: "До лікаря показує мету руху."
+- word: музей
+  translation: museum
+  pos: noun
+  gender: m
+  example: "Ми йдемо до музею."
+- word: лікар
+  translation: doctor
+  pos: noun
+  gender: m
+  example: "Я записався до лікаря."
+- word: бабуся
+  translation: grandmother
+  pos: noun
+  gender: f
+  example: "Вона їде до бабусі."
+- word: вечір
+  translation: evening
+  pos: noun
+  gender: m
+  example: "Чекайте до вечора."
+- word: ранок
+  translation: morning
+  pos: noun
+  gender: m
+  example: "Ми говорили до ранку."
+- word: екзамен
+  translation: exam
+  pos: noun
+  gender: m
+  example: "Я готовий до екзамену."
+- word: побачення
+  translation: meeting, date; goodbye in до побачення
+  pos: noun
+  gender: n
+  example: "До побачення!"
+- word: список
+  translation: list
+  pos: noun
+  gender: m
+  example: "Додайте це до списку."
+- word: ставлення
+  translation: attitude
+  pos: noun
+  gender: n
+  example: "Яке ваше ставлення до роботи?"
+- word: інтерес
+  translation: interest
+  pos: noun
+  gender: m
+  example: "У мене інтерес до мови."
+- word: готовий
+  translation: ready
+  pos: adjective
+  example: "Я готовий до уроку."
+- word: готова
+  translation: ready
+  pos: adjective
+  example: "Я готова до екзамену."
+- word: завтра
+  translation: tomorrow
+  pos: adverb
+  example: "Чекайте до завтра."
+- word: готель
+  translation: hotel
+  pos: noun
+  gender: m
+  example: "Таксі їде до готелю."
+- word: аптека
+  translation: pharmacy
+  pos: noun
+  gender: f
+  example: "Мені треба до аптеки."
+- word: п'ятниця
+  translation: Friday
+  pos: noun
+  gender: f
+  example: "Завдання до п'ятниці."
+- word: центральний
+  translation: central
+  pos: adjective
+  example: "Ми їдемо до центрального вокзалу."

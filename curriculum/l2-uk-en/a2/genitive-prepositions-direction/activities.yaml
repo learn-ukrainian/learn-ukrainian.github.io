@@ -1,0 +1,256 @@
+inline:
+- id: act-1
+  type: quiz
+  title: Що означає до?
+  instruction: Оберіть функцію прийменника до в реченні.
+  items:
+  - options:
+    - напрямок до місця
+    - часова межа
+    - матеріал
+    explanation: До вокзалу відповідає на питання куди?
+    question: До вокзалу, будь ласка.
+    correct: 0
+  - options:
+    - часова межа
+    - напрямок до міста
+    - відсутність
+    explanation: До п'ятої означає until five.
+    question: Чекайте до п'ятої.
+    correct: 0
+  - options:
+    - напрямок до людини
+    - походження
+    - місце поруч
+    explanation: До лікаря означає to see the doctor.
+    question: Я йду до лікаря.
+    correct: 0
+  - options:
+    - часова межа
+    - одержувач
+    - джерело
+    explanation: До дев'ятої показує, коли робота закінчується.
+    question: Магазин відкритий до дев'ятої.
+    correct: 0
+  - options:
+    - напрямок до міста
+    - час після події
+    - захист
+    explanation: До Львова відповідає на питання куди?
+    question: Ми їдемо до Львова.
+    correct: 0
+  - options:
+    - готовність
+    - відстань
+    - матеріал
+    explanation: Готовий/готова до чогось - стала модель.
+    question: Я готова до екзамену.
+    correct: 0
+  - options:
+    - додавання
+    - походження
+    - відсутність
+    explanation: Додати до списку - корисна фраза з до.
+    question: Додайте це до списку.
+    correct: 0
+  - options:
+    - стала фраза
+    - напрямок до місця
+    - матеріал
+    explanation: До побачення запам'ятовуємо як готову фразу.
+    question: До побачення!
+    correct: 0
+- id: act-2
+  type: fill-in
+  title: До плюс родовий
+  instruction: Оберіть правильну форму після до.
+  items:
+  - sentence: Ми їдемо до ___.
+    answer: вокзалу
+    options:
+    - вокзалу
+    - вокзал
+    - вокзалом
+    explanation: 'До вимагає родового: вокзалу.'
+  - sentence: Я йду до ___.
+    answer: аптеки
+    options:
+    - аптеки
+    - аптека
+    - аптеку
+    explanation: До аптеки - правильна форма.
+  - sentence: Вона їде до ___.
+    answer: бабусі
+    options:
+    - бабусі
+    - бабуся
+    - бабусю
+    explanation: До бабусі - родовий.
+  - sentence: Ми йдемо до ___.
+    answer: музею
+    options:
+    - музею
+    - музей
+    - музеєм
+    explanation: До музею - родовий.
+  - sentence: Чекайте до ___.
+    answer: вечора
+    options:
+    - вечора
+    - вечір
+    - вечером
+    explanation: До вечора - часова межа.
+  - sentence: Завдання до ___.
+    answer: п'ятниці
+    options:
+    - п'ятниці
+    - п'ятниця
+    - п'ятницю
+    explanation: До п'ятниці - дедлайн.
+  - sentence: Додайте це до ___.
+    answer: списку
+    options:
+    - списку
+    - список
+    - списком
+    explanation: До списку - родовий.
+  - sentence: Я готовий до ___.
+    answer: екзамену
+    options:
+    - екзамену
+    - екзамен
+    - екзаменом
+    explanation: Готовий до екзамену - правильна модель.
+- id: act-3
+  type: match-up
+  title: Фраза і функція
+  instruction: Зіставте фразу з її функцією.
+  pairs:
+  - left: до вокзалу
+    right: напрямок до місця
+  - left: до лікаря
+    right: напрямок до людини
+  - left: до вечора
+    right: часова межа
+  - left: до п'ятниці
+    right: дедлайн
+  - left: до побачення
+    right: стала фраза
+  - left: до списку
+    right: додавання
+  - left: до мови
+    right: інтерес або ставлення
+  - left: до музею
+    right: напрямок до місця
+- id: act-4
+  type: group-sort
+  title: Три значення до
+  instruction: Розсортуйте фрази за значенням.
+  groups:
+  - label: місце
+    items:
+    - до вокзалу
+    - до аптеки
+    - до музею
+    - до готелю
+  - label: людина
+    items:
+    - до лікаря
+    - до бабусі
+    - до друга
+    - до вчительки
+  - label: час
+    items:
+    - до вечора
+    - до ранку
+    - до п'ятниці
+    - до п'ятої
+workbook:
+- type: true-false
+  title: До і родовий
+  instruction: Визначте, чи правильна фраза.
+  items:
+  - statement: до вокзалу
+    correct: true
+    explanation: Вокзалу - родовий відмінок.
+  - statement: до аптека
+    correct: false
+    explanation: 'Потрібно: до аптеки.'
+  - statement: до лікаря
+    correct: true
+    explanation: Лікаря - правильна форма.
+  - statement: до музей
+    correct: false
+    explanation: 'Потрібно: до музею.'
+  - statement: до вечора
+    correct: true
+    explanation: До вечора - правильна часова фраза.
+  - statement: до п'ятниця
+    correct: false
+    explanation: 'Потрібно: до п''ятниці.'
+  - statement: готовий до екзамену
+    correct: true
+    explanation: Готовий до чого? До екзамену.
+  - statement: додати до списку
+    correct: true
+    explanation: До списку - правильна стала модель.
+- type: fill-in
+  title: План маршруту
+  instruction: Оберіть природне завершення.
+  items:
+  - sentence: Спочатку я йду ___.
+    answer: до аптеки
+    options:
+    - до аптеки
+    - до аптека
+    - біля аптеки
+    explanation: Після до потрібен родовий.
+  - sentence: Потім ми їдемо ___.
+    answer: до вокзалу
+    options:
+    - до вокзалу
+    - до вокзал
+    - без вокзалу
+    explanation: До вокзалу показує напрямок.
+  - sentence: Вона зайнята ___.
+    answer: до шостої
+    options:
+    - до шостої
+    - до шоста
+    - з шостої
+    explanation: До шостої показує часову межу.
+  - sentence: Музей відкритий ___.
+    answer: до дев'ятої
+    options:
+    - до дев'ятої
+    - до дев'ята
+    - після дев'ятої
+    explanation: До дев'ятої означає until nine.
+  - sentence: Я записався ___.
+    answer: до лікаря
+    options:
+    - до лікаря
+    - до лікар
+    - від лікаря
+    explanation: Записатися до лікаря - природна фраза.
+  - sentence: У мене інтерес ___.
+    answer: до мови
+    options:
+    - до мови
+    - до мова
+    - без мови
+    explanation: Інтерес до мови - стала модель.
+  - sentence: Додайте ім'я ___.
+    answer: до списку
+    options:
+    - до списку
+    - до список
+    - від списку
+    explanation: Додати до списку - правильна фраза.
+  - sentence: ___, пані Олено!
+    answer: До побачення
+    options:
+    - До побачення
+    - До вокзалу
+    - До списку
+    explanation: До побачення - формула прощання.
