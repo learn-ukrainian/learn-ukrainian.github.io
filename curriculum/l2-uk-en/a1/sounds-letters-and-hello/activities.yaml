@@ -1,290 +1,448 @@
-version: '1.0'
-module: 'sounds-letters-and-hello'
-level: 'a1'
-
-inline:
-  - id: act-1
-    type: quiz
-    title: Звук чи лі́тера
-    instruction: Обери правильну опору.
+- id: act-1
+  type: quiz
+  title: Sound or letter?
+  instruction: Choose the correct answer.
+  items:
+  - prompt: What is a звук?
+    options:
+    - text: A sound you hear and say
+      correct: true
+    - text: A letter you see and write
+      correct: false
+    - text: A whole sentence
+      correct: false
+    explanation: A звук belongs to hearing and speaking.
+  - prompt: What is a лі́тера?
+    options:
+    - text: A letter you see and write
+      correct: true
+    - text: A sound you hear and say
+      correct: false
+    - text: A greeting
+      correct: false
+    explanation: A лі́тера belongs to reading and writing.
+  - prompt: How many letters are in the Ukrainian alphabet?
+    options:
+    - text: '33'
+      correct: true
+    - text: '38'
+      correct: false
+    - text: '6'
+      correct: false
+    explanation: Ukrainian has 33 letters.
+  - prompt: How many basic Ukrainian vowel sounds are there?
+    options:
+    - text: '6'
+      correct: true
+    - text: '10'
+      correct: false
+    - text: '33'
+      correct: false
+    explanation: The six basic vowel sounds are [а], [о], [у], [е], [и], [і].
+  - prompt: Does ь have its own sound?
+    options:
+    - text: 'No'
+      correct: true
+    - text: 'Yes'
+      correct: false
+    - text: Only in Приві́т
+      correct: false
+    explanation: The soft sign ь has no sound of its own.
+  - prompt: What does Приві́т mean?
+    options:
+    - text: Hi
+      correct: true
+    - text: Goodbye
+      correct: false
+    - text: Milk
+      correct: false
+    explanation: Приві́т is the informal word for Hi.
+- id: act-2
+  type: count-syllables
+  title: Count склади
+  instruction: Count vowel sounds. Each vowel sound makes one склад.
+  max_count: 3
+  items:
+  - word: день
+    correct: 1
+  - word: ма́ма
+    correct: 2
+  - word: Приві́т
+    correct: 2
+  - word: молоко́
+    correct: 3
+  - word: та́то
+    correct: 2
+  - word: о́ко
+    correct: 2
+- id: act-3
+  type: watch-and-repeat
+  title: Full alphabet pronunciation pass
+  instruction: Watch the pronunciation model, say the letter, and repeat the key word.
+  items:
+  - letter: А
+    word: анана́с
+    video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+  - letter: Б
+    word: бана́н
+    video: https://www.youtube.com/watch?v=V1hxBE_JbGg
+  - letter: В
+    word: вода́
+    video: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+  - letter: Г
+    word: гора́
+    video: https://www.youtube.com/watch?v=gVnclpSI0DU
+  - letter: Ґ
+    word: ґу́дзик
+    video: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+  - letter: Д
+    word: дім
+    video: https://www.youtube.com/watch?v=g4Bh-lqzd48
+  - letter: Е
+    word: екра́н
+    video: https://www.youtube.com/watch?v=KFlsroBW0dk
+  - letter: Є
+    word: єно́т
+    video: https://www.youtube.com/watch?v=O0bwRyyBQSc
+  - letter: Ж
+    word: жук
+    video: https://www.youtube.com/watch?v=dIrGVcqPwqM
+  - letter: З
+    word: зуб
+    video: https://www.youtube.com/watch?v=BhASNxitC1A
+  - letter: И
+    word: сир
+    video: https://www.youtube.com/watch?v=W-1rCu0indE
+  - letter: І
+    word: ім'я́
+    video: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+  - letter: Ї
+    word: їжа́к
+    video: https://www.youtube.com/watch?v=UcjdjQXhAY8
+  - letter: Й
+    word: йо́гурт
+    video: https://www.youtube.com/watch?v=aq0cjB90s3w
+  - letter: К
+    word: кіт
+    video: https://www.youtube.com/watch?v=J7sGEI4-xJo
+  - letter: Л
+    word: лимо́н
+    video: https://www.youtube.com/watch?v=v6-3Xg52Buk
+  - letter: М
+    word: ма́ма
+    video: https://www.youtube.com/watch?v=Ez95H4ibuJo
+  - letter: Н
+    word: ніс
+    video: https://www.youtube.com/watch?v=vNUfiKHPYaU
+  - letter: О
+    word: о́ко
+    video: https://www.youtube.com/watch?v=gJFxRIPRZbI
+  - letter: П
+    word: пес
+    video: https://www.youtube.com/watch?v=JksSjjxyW5Y
+  - letter: Р
+    word: рука́
+    video: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+  - letter: С
+    word: сон
+    video: https://www.youtube.com/watch?v=7UsFBgSL91E
+  - letter: Т
+    word: та́то
+    video: https://www.youtube.com/watch?v=m-jcLR_gK0k
+  - letter: У
+    word: уро́к
+    video: https://www.youtube.com/watch?v=VB1O6PmtYRU
+  - letter: Ф
+    word: фо́то
+    video: https://www.youtube.com/watch?v=haHRsFFZRQI
+  - letter: Х
+    word: ха́та
+    video: https://www.youtube.com/watch?v=vpr58zJSJKc
+  - letter: Ц
+    word: цу́кор
+    video: https://www.youtube.com/watch?v=u44eCjR2Oz8
+  - letter: Ч
+    word: час
+    video: https://www.youtube.com/watch?v=UsJkbdsY2RA
+  - letter: Ш
+    word: шко́ла
+    video: https://www.youtube.com/watch?v=1D-6MIw3OXY
+  - letter: Щ
+    word: щу́ка
+    video: https://www.youtube.com/watch?v=QmBLieIuf6Q
+  - letter: Ь
+    word: день
+    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+  - letter: Ю
+    word: ю́шка
+    video: https://www.youtube.com/watch?v=9JdIBYCTWGw
+  - letter: Я
+    word: я́блуко
+    video: https://www.youtube.com/watch?v=yhSAf41LX8I
+- id: act-4
+  type: quiz
+  title: Find the useful letters
+  instruction: Choose the letter or sign that matches the clue.
+  items:
+  - question: Which letter is the hard g sound?
+    options:
+    - Ґ
+    - Г
+    - Ї
+    correct: 0
+    explanation: Ґ is the hard g sound; Г is the Ukrainian h-like sound.
+  - question: Which letter is always [йі]?
+    options:
+    - Ї
+    - І
+    - И
+    correct: 0
+    explanation: Ї is always [йі]. І is the plain [і] vowel.
+  - question: Which sign has no sound of its own?
+    options:
+    - Ь
+    - Й
+    - Я
+    correct: 0
+    explanation: Ь is the soft sign; it changes the previous consonant.
+  - question: Which letter is the clean [о] sound in молоко́?
+    options:
+    - О
+    - А
+    - У
+    correct: 0
+    explanation: Ukrainian О stays clean in молоко́.
+  - question: In Приві́т, which two vowel letters are different?
+    options:
+    - И and І
+    - О and У
+    - А and Е
+    correct: 0
+    explanation: Приві́т contains both И [и] and І [і].
+- id: act-5
+  type: fill-in
+  title: First conversations
+  instruction: Choose the phrase that completes the line.
+  items:
+  - sentence: ____! Як спра́ви?
+    answer: Приві́т
+    options:
+    - Приві́т
+    - Молоко́
+    - Лі́тера
+  - sentence: ____. А у тебе́?
+    answer: До́бре
+    options:
+    - До́бре
+    - День
+    - Звук
+  - sentence: Як тебе́ ____?
+    answer: зва́ти
+    options:
+    - зва́ти
+    - до́бре
+    - день
+  - sentence: Ме́не ____ Анна.
+    answer: зва́ти
+    options:
+    - зва́ти
+    - спра́ви
+    - звук
+  - sentence: До ____!
+    answer: поба́чення
+    options:
+    - поба́чення
+    - тебе́
+    - ма́ма
+  - sentence: На все ____!
+    answer: до́бре
+    options:
+    - до́бре
+    - лі́тера
+    - звук
+- id: act-6
+  type: true-false
+  title: Pronunciation safety check
+  instruction: Choose true or false.
+  items:
+  - statement: In молоко́, every о stays clean.
+    correct: true
+    explanation: Ukrainian о does not blur into а in this beginner model.
+  - statement: The letters и and і always sound the same.
+    correct: false
+    explanation: Приві́т contains both [и] and [і].
+  - statement: Ь has no sound of its own.
+    correct: true
+    explanation: Ь softens the previous consonant.
+  - statement: Ї is always [йі].
+    correct: true
+    explanation: Treat Ї as [йі] at this level.
+  - statement: Г and Ґ are the same letter.
+    correct: false
+    explanation: Г is h-like; Ґ is hard g.
+  - statement: Щ is [шч].
+    correct: true
+    explanation: Щ represents two sounds together.
+- id: act-7
+  type: group-sort
+  title: Vowel or consonant sound?
+  instruction: Sort the sounds, not the letters.
+  groups:
+  - label: Vowel sounds
     items:
-      - question: Звук — що ми робимо?
-        options:
-          - бачимо на сторі́нці
-          - чуємо й вимовля́ємо
-          - ставимо апо́строф
-        correct: 1
-        explanation: Звук — це те, що ми чуємо й вимовля́ємо.
-      - question: Лі́тера — що ми робимо?
-        options:
-          - бачимо й пишемо
-          - чуємо без сторі́нки
-          - рахуємо як склад
-        correct: 0
-        explanation: Лі́тера — це письмовий знак.
-      - question: Українська абе́тка — скільки лі́тер?
-        options:
-          - '38'
-          - '33'
-          - '6'
-        correct: 1
-        explanation: Стандартна українська абе́тка має 33 лі́тери.
-      - question: Я, Ю, Є, Ї — чому вони особливі?
-        options:
-          - мають більше ніж одну роботу
-          - завжди мовчать
-          - завжди є при́голосними
-        correct: 0
-        explanation: Деякі українські лі́тери мають більше ніж одну роботу.
-      - question: Ь — що правильно?
-        options:
-          - має власний голосни́й звук
-          - не має власного звука
-          - це літера О
-        correct: 1
-        explanation: Ь не має власного звука.
-      - question: Молоко́ — скільки голосних звуків?
-        options:
-          - два
-          - три
-          - один
-        correct: 1
-        explanation: 'Молоко́ має три голосні звуки: о + о + о.'
-
-  - id: act-2
-    type: count-syllables
-    title: Кількість складів
-    instruction: Рахуй голосні звуки в слові.
-    maxCount: 3
+    - '[а]'
+    - '[о]'
+    - '[у]'
+    - '[е]'
+    - '[и]'
+    - '[і]'
+  - label: Consonant sounds
     items:
-      - word: ма́ма
-        correct: 2
-      - word: молоко́
-        correct: 3
-      - word: вода́
-        correct: 2
-      - word: приві́т
-        correct: 2
-      - word: о́ко
-        correct: 2
-      - word: та́то
-        correct: 2
-
-  - id: act-3
-    type: match-up
-    title: Звук і літера
-    instruction: З'єднай літеру з її звуком або функцією.
-    pairs:
-      - left: І
-        right: '[і]'
-      - left: В
-        right: '[в]'
-      - left: А
-        right: '[а]'
-      - left: О
-        right: '[о]'
-      - left: У
-        right: '[у]'
-      - left: Н
-        right: '[н]'
-      - left: Ч
-        right: '[ч]'
-      - left: Ь
-        right: м'якшить попередній при́голосний
-      - left: Я
-        right: "[йа] або м'якшить попередній при́голосний"
-      - left: Ї
-        right: '[йі]'
-      - left: Щ
-        right: '[шч]'
-      - left: Д
-        right: '[д]'
-
-  - id: act-4
-    type: watch-and-repeat
-    title: Алфавітний повтор
-    instruction: Дивись відео, проговорюй літеру, звук і слово.
-    items:
-      - letter: А
-        word: анана́с
-        video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
-      - letter: Б
-        word: банду́ра
-        video: https://www.youtube.com/watch?v=V1hxBE_JbGg
-      - letter: В
-        word: вода́
-        video: https://www.youtube.com/watch?v=aFcvYfvQ2X4
-      - letter: Г
-        word: гора́
-        video: https://www.youtube.com/watch?v=gVnclpSI0DU
-      - letter: Ґ
-        word: ґу́дзик
-        video: https://www.youtube.com/watch?v=gNjHqjTW9WQ
-      - letter: Д
-        word: дім
-        video: https://www.youtube.com/watch?v=g4Bh-lqzd48
-      - letter: Е
-        word: екра́н
-        video: https://www.youtube.com/watch?v=KFlsroBW0dk
-      - letter: Є
-        word: єно́т
-        video: https://www.youtube.com/watch?v=O0bwRyyBQSc
-      - letter: Ж
-        word: жук
-        video: https://www.youtube.com/watch?v=dIrGVcqPwqM
-      - letter: З
-        word: зуб
-        video: https://www.youtube.com/watch?v=BhASNxitC1A
-      - letter: И
-        word: сир
-        video: https://www.youtube.com/watch?v=W-1rCu0indE
-      - letter: І
-        word: ім'я́
-        video: https://www.youtube.com/watch?v=Z9TH0H4ShGo
-      - letter: Ї
-        word: їжа́к
-        video: https://www.youtube.com/watch?v=UcjdjQXhAY8
-      - letter: Й
-        word: йо́гурт
-        video: https://www.youtube.com/watch?v=aq0cjB90s3w
-      - letter: К
-        word: кіт
-        video: https://www.youtube.com/watch?v=J7sGEI4-xJo
-      - letter: Л
-        word: лис
-        video: https://www.youtube.com/watch?v=v6-3Xg52Buk
-      - letter: М
-        word: ма́ма
-        video: https://www.youtube.com/watch?v=Ez95H4ibuJo
-      - letter: Н
-        word: ніс
-        video: https://www.youtube.com/watch?v=vNUfiKHPYaU
-      - letter: О
-        word: о́ко
-        video: https://www.youtube.com/watch?v=gJFxRIPRZbI
-      - letter: П
-        word: піт
-        video: https://www.youtube.com/watch?v=JksSjjxyW5Y
-      - letter: Р
-        word: рука́
-        video: https://www.youtube.com/watch?v=fMGsQ5KPQgg
-      - letter: С
-        word: сон
-        video: https://www.youtube.com/watch?v=7UsFBgSL91E
-      - letter: Т
-        word: та́то
-        video: https://www.youtube.com/watch?v=m-jcLR_gK0k
-      - letter: У
-        word: уро́к
-        video: https://www.youtube.com/watch?v=VB1O6PmtYRU
-      - letter: Ф
-        word: фо́то
-        video: https://www.youtube.com/watch?v=haHRsFFZRQI
-      - letter: Х
-        word: ха́та
-        video: https://www.youtube.com/watch?v=vpr58zJSJKc
-      - letter: Ц
-        word: цу́кор
-        video: https://www.youtube.com/watch?v=u44eCjR2Oz8
-      - letter: Ч
-        word: час
-        video: https://www.youtube.com/watch?v=UsJkbdsY2RA
-      - letter: Ш
-        word: шко́ла
-        video: https://www.youtube.com/watch?v=1D-6MIw3OXY
-      - letter: Щ
-        word: щу́ка
-        video: https://www.youtube.com/watch?v=QmBLieIuf6Q
-      - letter: Ь
-        word: день
-        video: https://www.youtube.com/watch?v=cJlal8XKBxo
-      - letter: Ю
-        word: ю́шка
-        video: https://www.youtube.com/watch?v=9JdIBYCTWGw
-      - letter: Я
-        word: я́блуко
-        video: https://www.youtube.com/watch?v=yhSAf41LX8I
-
-  - id: act-5
-    type: fill-in
-    title: Короткий діало́г
-    instruction: Обери фра́зу, яка доповнює український рядок.
-    items:
-      - sentence: Приві́т! ___ спра́ви?
-        answer: Як
-        options:
-          - Як
-          - Що
-          - Де
-      - sentence: До́бре. ___ у тебе́?
-        answer: А
-        options:
-          - А
-          - На
-          - У
-      - sentence: Як тебе́ зва́ти? Мене́ зва́ти Анна. ___?
-        answer: А тебе́
-        options:
-          - А тебе́
-          - А у тебе́
-          - А тобі́
-      - sentence: '___ тебе́ ба́чити! (говорить жінка)'
-        answer: Рада
-        options:
-          - Рада
-          - Радий
-          - Раді
-      - sentence: '___ тебе́ ба́чити! (говорить чоловік)'
-        answer: Радий
-        options:
-          - Радий
-          - Рада
-          - Раді
-
-workbook:
-  - type: true-false
-    title: Швидка переві́рка звуків
-    instruction: Обери правда чи неправда.
-    items:
-      - statement: Звук — це те, що ми чуємо й вимовля́ємо.
-        correct: true
-        explanation: Звук — це те, що ми чуємо й вимовля́ємо.
-      - statement: Ь має власний голосни́й звук.
-        correct: false
-        explanation: Ь не має власного звука; він м'якшить попередній при́голосний.
-      - statement: Молоко́ має три голосні звуки.
-        correct: true
-        explanation: 'Голосні звуки: о + о + о.'
-      - statement: До́брий день — це вітальна фра́за.
-        correct: true
-        explanation: Це одна з перших готових фраз вітання в уро́ці.
-      - statement: У цьому модулі Щ = [ш].
-        correct: false
-        explanation: У цьому модулі Щ = [шч].
-
-  - type: order
-    title: Склади діало́г
-    instruction: Put the mini-dialogue in a natural order.
-    items:
-      - А у тебе́?
-      - Приві́т!
-      - До́бре.
-      - Як спра́ви?
-    correct_order:
-      - 1
-      - 3
-      - 2
-      - 0
-
-  - type: match-up
-    title: Друк і зошит
-    instruction: З'єднай друковану картку з підказкою в зо́шиті.
-    pairs:
-      - left: 'друк: П п'
-        right: 'зошит: учитель пише п'
-      - left: 'друк: М м'
-        right: 'зошит: учитель пише м'
-      - left: 'друк: Приві́т'
-        right: 'зошит: приві́т'
-      - left: 'друк: ма́ма'
-        right: 'зошит: ма́ма'
+    - '[п]'
+    - '[р]'
+    - '[в]'
+    - '[т]'
+    - '[м]'
+    - '[н]'
+    - '[к]'
+    - '[с]'
+- id: act-8
+  type: match-up
+  title: See a letter, hear a sound
+  instruction: Match each letter with its beginner sound clue.
+  pairs:
+  - left: А
+    right: '[а]'
+  - left: О
+    right: '[о]'
+  - left: У
+    right: '[у]'
+  - left: М
+    right: '[м]'
+  - left: Н
+    right: '[н]'
+  - left: Г
+    right: h-like [г]
+  - left: Ґ
+    right: hard [g]
+  - left: Ї
+    right: '[йі]'
+  - left: Ь
+    right: no sound
+- id: act-9
+  type: translate
+  title: Phrase meanings
+  instruction: Choose the English meaning.
+  items:
+  - source: Приві́т!
+    options:
+    - text: Hi!
+      correct: true
+    - text: Goodbye!
+      correct: false
+    - text: What is your name?
+      correct: false
+    explanation: Приві́т is the informal everyday greeting.
+  - source: До́брий день!
+    options:
+    - text: Hello! / Good day!
+      correct: true
+    - text: Milk!
+      correct: false
+    - text: And you?
+      correct: false
+    explanation: До́брий день is the neutral daytime greeting.
+  - source: Доброго ра́нку!
+    options:
+    - text: Good morning!
+      correct: true
+    - text: Good evening!
+      correct: false
+    - text: My name is Anna.
+      correct: false
+    explanation: Ра́нок means morning, so Доброго ра́нку is Good morning.
+  - source: До́брий ве́чір!
+    options:
+    - text: Good evening!
+      correct: true
+    - text: Good morning!
+      correct: false
+    - text: Fine.
+      correct: false
+    explanation: Ве́чір means evening, so До́брий ве́чір is Good evening.
+  - source: Як спра́ви?
+    options:
+    - text: How are you?
+      correct: true
+    - text: Goodbye!
+      correct: false
+    - text: Letter
+      correct: false
+    explanation: Як спра́ви? asks how someone is doing.
+  - source: До поба́чення!
+    options:
+    - text: Goodbye!
+      correct: true
+    - text: Hi!
+      correct: false
+    - text: Sound
+      correct: false
+    explanation: До поба́чення is the leaving phrase Goodbye.
+  - source: Ра́да тебе́ ба́чити.
+    options:
+    - text: Glad to see you. (female speaker)
+      correct: true
+    - text: What is your name?
+      correct: false
+    - text: Good evening!
+      correct: false
+    explanation: Ра́да is the form a female speaker uses in this phrase.
+- id: act-10
+  type: error-correction
+  title: Pronunciation traps
+  instruction: Choose the safer Ukrainian habit.
+  items:
+  - sentence: Do not call А, О, У голосними літерами.
+    error: голосними літерами
+    correction: літерами, що позначають голосні звуки
+    options:
+    - літерами, що позначають голосні звуки
+    - приголосними літерами
+    explanation: >-
+      Safer habit: sounds are голосні or приголосні. Letters represent sounds,
+      so call А, О, У letters that mark vowel sounds.
+  - sentence: Do not say м[а]локо for молоко.
+    error: м[а]локо
+    correction: молоко
+    options:
+    - молоко
+    - молоко́
+    explanation: >-
+      Safer habit: keep Ukrainian о clean. Say молоко́ with three clear о
+      sounds: мо-ло-ко́.
+  - sentence: Do not add a tiny sound after день.
+    error: add a tiny sound after день
+    correction: soften н, then stop
+    options:
+    - soften н, then stop
+    - add і after нь
+    explanation: >-
+      Safer habit: ь has no sound of its own. In день, soften н and stop;
+      do not add a tiny vowel after it.
+  - sentence: Do not treat Ї as a softening letter.
+    error: treat Ї as a softening letter
+    correction: read Ї as [йі]
+    options:
+    - read Ї as [йі]
+    - read Ї as plain [і]
+    explanation: >-
+      Safer habit: Ї is not a softening letter. Read it as [йі] every time.
+  - sentence: Do not make one fixed glad phrase for every speaker.
+    error: one fixed glad phrase
+    correction: Радий тебе бачити / Рада тебе бачити
+    options:
+    - Радий тебе бачити / Рада тебе бачити
+    - Радий тебе бачити for everyone
+    explanation: >-
+      Safer habit: match the phrase to the speaker. A male speaker says
+      Радий тебе бачити; a female speaker says Рада тебе бачити.
