@@ -1,0 +1,494 @@
+---
+/**
+ * Атлас слів (Лексикон) — full А-Я index view.
+ */
+import CourseLayout from "../../../layouts/CourseLayout.astro";
+import manifest from "../../../data/lexicon-manifest.json";
+
+interface CourseUsage {
+  track: string;
+  module_num: number;
+  slug: string;
+  context: string;
+}
+
+interface LexiconEntry {
+  lemma: string;
+  url_slug: string;
+  gloss: string | null;
+  pos?: string | null;
+  primary_source: string;
+  course_usage: CourseUsage[];
+}
+
+interface LexiconManifest {
+  version: string;
+  generated_at: string;
+  stats: Record<string, number>;
+  entries: LexiconEntry[];
+}
+
+const data = manifest as LexiconManifest;
+const ukCollator = new Intl.Collator("uk", { sensitivity: "base" });
+
+const SOURCE_LABELS_UK: Record<string, string> = {
+  built_vocabulary: "вивчається",
+  plan_required: "обов’язкова",
+  plan_recommended: "рекомендована",
+};
+
+const groups = new Map<string, LexiconEntry[]>();
+for (const entry of data.entries) {
+  const letter = entry.lemma.charAt(0).toLocaleUpperCase("uk");
+  const bucket = groups.get(letter) ?? [];
+  bucket.push(entry);
+  groups.set(letter, bucket);
+}
+
+const sortedGroups = Array.from(groups.entries())
+  .sort(([a], [b]) => ukCollator.compare(a, b))
+  .map(([letter, entries]) => ({
+    letter,
+    entries: entries.slice().sort((a, b) => ukCollator.compare(a.lemma, b.lemma)),
+  }));
+
+const sourceOptions = Array.from(
+  new Set(data.entries.map((entry) => entry.primary_source).filter(Boolean)),
+).sort((a, b) =>
+  ukCollator.compare(SOURCE_LABELS_UK[a] ?? a, SOURCE_LABELS_UK[b] ?? b),
+);
+
+const frontmatter = {
+  title: "А-Я покажчик",
+  description: "Повний алфавітний покажчик статей Лексикону.",
+  template: "doc" as const,
+  pagefind: true,
+};
+---
+
+<CourseLayout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  eyebrow="Лексикон · повний перегляд"
+  subtitle={`${data.stats.lemmas_total} леми з курсового корпусу, згруповані за українським алфавітом.`}
+  currentPath="/lexicon/index/"
+  heroVariant="lexicon"
+  wide
+>
+  <div class="atlas-index" data-lex-index>
+    <nav class="atlas-view-nav" aria-label="Навігація Лексикону">
+      <a href="/lexicon/">Пошук</a>
+      <a href="/lexicon/index/" aria-current="page">А-Я покажчик</a>
+    </nav>
+
+    <form class="atlas-index-filter" role="search" data-lex-filter>
+      <label for="lexicon-index-search">Шукати у покажчику</label>
+      <div class="atlas-filter-row">
+        <input
+          id="lexicon-index-search"
+          name="q"
+          type="search"
+          placeholder="слово, переклад або модуль..."
+          autocomplete="off"
+          data-lex-search
+        />
+        <button class="atlas-button atlas-button-search" type="submit">Шукати</button>
+        <button
+          class="atlas-button atlas-button-filter"
+          type="button"
+          aria-expanded="false"
+          aria-controls="lex-index-filter-panel"
+          data-lex-filter-toggle
+        >
+          Фільтр
+        </button>
+      </div>
+
+      <div class="atlas-filter-panel" id="lex-index-filter-panel" hidden data-lex-filter-panel>
+        <label for="lexicon-index-source">Тип появи</label>
+        <select id="lexicon-index-source" name="source" data-lex-source>
+          <option value="">Усі слова</option>
+          {sourceOptions.map((source) => (
+            <option value={source}>{SOURCE_LABELS_UK[source] ?? source}</option>
+          ))}
+        </select>
+      </div>
+    </form>
+
+    <div class="atlas-empty-state" data-lex-empty hidden>
+      <p class="atlas-empty-code">Немає збігів</p>
+      <h2>У покажчику немає статей для цього фільтра.</h2>
+      <p>Спробуйте коротший запит або приберіть обмеження за типом появи.</p>
+    </div>
+
+    <nav class="atlas-letter-nav" aria-label="Український алфавіт">
+      {sortedGroups.map(({ letter }) => (
+        <a href={`#letter-${letter}`}>{letter}</a>
+      ))}
+    </nav>
+
+    <div class="atlas-letter-groups">
+      {sortedGroups.map(({ letter, entries }) => (
+        <section class="atlas-letter-section" data-lex-section>
+          <h2 id={`letter-${letter}`}>{letter}</h2>
+          <ul class="atlas-entry-list">
+            {entries.map((entry) => {
+              const usageLabel = entry.course_usage.length === 1 ? "модуль" : "модулів";
+              const searchText = [
+                entry.lemma,
+                entry.gloss ?? "",
+                entry.primary_source,
+                ...entry.course_usage.map((usage) => `${usage.track} ${usage.slug}`),
+              ].join(" ");
+
+              return (
+                <li
+                  data-lex-entry
+                  data-source={entry.primary_source}
+                  data-search={searchText}
+                >
+                  <a class="atlas-entry-lemma" href={`/lexicon/${entry.url_slug}/`}>
+                    {entry.lemma}
+                  </a>
+                  {entry.gloss && <span class="atlas-entry-gloss">«{entry.gloss}»</span>}
+                  <span class="atlas-entry-source">
+                    {SOURCE_LABELS_UK[entry.primary_source] ?? entry.primary_source}
+                  </span>
+                  <span class="atlas-entry-usage">
+                    {entry.course_usage.length} {usageLabel}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </div>
+
+  <script is:inline>
+    const scope = document.querySelector('[data-lex-index]');
+    const form = scope?.querySelector('[data-lex-filter]');
+    const input = scope?.querySelector('[data-lex-search]');
+    const source = scope?.querySelector('[data-lex-source]');
+    const toggle = scope?.querySelector('[data-lex-filter-toggle]');
+    const panel = scope?.querySelector('[data-lex-filter-panel]');
+    const empty = scope?.querySelector('[data-lex-empty]');
+    const entries = Array.from(scope?.querySelectorAll('[data-lex-entry]') ?? []);
+    const sections = Array.from(scope?.querySelectorAll('[data-lex-section]') ?? []);
+    const normalize = (value) => String(value || '').toLocaleLowerCase('uk');
+    const applyLexicon = () => {
+      const query = normalize(input?.value).trim();
+      const sourceValue = source?.value || '';
+      let visible = 0;
+
+      for (const entry of entries) {
+        const matchesQuery = !query || normalize(entry.dataset.search).includes(query);
+        const matchesSource = !sourceValue || entry.dataset.source === sourceValue;
+        const isVisible = matchesQuery && matchesSource;
+        entry.hidden = !isVisible;
+        if (isVisible) visible += 1;
+      }
+
+      for (const section of sections) {
+        section.hidden = !section.querySelector('[data-lex-entry]:not([hidden])');
+      }
+
+      if (empty) empty.hidden = visible !== 0;
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    if (input) input.value = params.get('q') || '';
+    if (source) source.value = params.get('source') || '';
+
+    toggle?.addEventListener('click', () => {
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!expanded));
+      if (panel) panel.hidden = expanded;
+    });
+
+    input?.addEventListener('input', applyLexicon);
+    source?.addEventListener('change', applyLexicon);
+    form?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const next = new URLSearchParams();
+      const query = input?.value || '';
+      const sourceValue = source?.value || '';
+      if (query) next.set('q', query);
+      if (sourceValue) next.set('source', sourceValue);
+      window.history.replaceState(null, '', next.toString() ? `/lexicon/index/?${next}` : '/lexicon/index/');
+      applyLexicon();
+    });
+    applyLexicon();
+  </script>
+</CourseLayout>
+
+<style>
+  .atlas-index {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .atlas-view-nav,
+  .atlas-index-filter,
+  .atlas-letter-nav,
+  .atlas-entry-list li,
+  .atlas-empty-state {
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface);
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--lu-text) 8%, transparent);
+  }
+
+  .atlas-view-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: fit-content;
+    padding: 0.35rem;
+    background: var(--lu-surface-muted);
+  }
+
+  .atlas-view-nav a {
+    min-height: 2.2rem;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 0.85rem;
+    border-radius: 6px;
+    color: var(--lu-text-muted);
+    font-weight: 900;
+    text-decoration: none;
+  }
+
+  .atlas-view-nav a[aria-current="page"] {
+    background: var(--lu-state-active);
+    color: var(--lu-primary);
+  }
+
+  .atlas-index-filter {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: 1rem;
+    border-top: 4px solid var(--lu-accent);
+    overflow: hidden;
+  }
+
+  .atlas-index-filter::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 4px;
+    background: var(--lu-id-lexicon);
+  }
+
+  .atlas-index-filter label {
+    color: var(--lu-text);
+    font-weight: 800;
+  }
+
+  .atlas-filter-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 0.6rem;
+  }
+
+  .atlas-filter-row input,
+  .atlas-filter-panel select {
+    min-height: 42px;
+    width: 100%;
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface-muted);
+    color: var(--lu-text);
+    font: inherit;
+  }
+
+  .atlas-filter-row input {
+    padding: 0 0.8rem;
+  }
+
+  .atlas-filter-row input::placeholder {
+    color: var(--lu-text-muted);
+    opacity: 1;
+  }
+
+  .atlas-button {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  .atlas-button-search {
+    background: var(--lu-state-active);
+    color: var(--lu-primary);
+    border-color: var(--lu-primary);
+  }
+
+  .atlas-button-filter {
+    background: var(--lu-accent);
+    color: var(--lu-on-accent);
+    border-color: var(--lu-accent);
+  }
+
+  .atlas-filter-panel {
+    display: grid;
+    grid-template-columns: auto minmax(12rem, 1fr);
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.8rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface-muted);
+  }
+
+  .atlas-filter-panel[hidden],
+  .atlas-empty-state[hidden],
+  .atlas-letter-section[hidden],
+  .atlas-entry-list li[hidden] {
+    display: none;
+  }
+
+  .atlas-empty-state {
+    padding: 1rem;
+    border-left: 4px solid var(--lu-accent);
+  }
+
+  .atlas-empty-state h2 {
+    margin: 0.35rem 0 0;
+    padding: 0;
+    border: 0;
+    color: var(--lu-text);
+    font-size: 1.1rem;
+  }
+
+  .atlas-empty-code,
+  .atlas-empty-state p {
+    margin: 0.35rem 0 0;
+  }
+
+  .atlas-empty-code {
+    color: var(--lu-primary);
+    font-weight: 900;
+  }
+
+  .atlas-empty-state p {
+    color: var(--lu-text-muted);
+  }
+
+  .atlas-letter-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding: 0.75rem;
+  }
+
+  .atlas-letter-nav a {
+    min-width: 2rem;
+    min-height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    color: var(--lu-primary);
+    font-weight: 900;
+    text-decoration: none;
+  }
+
+  .atlas-letter-nav a:hover {
+    background: var(--lu-state-active);
+  }
+
+  .atlas-letter-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+
+  .atlas-letter-section h2 {
+    margin: 0 0 0.7rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 2px solid var(--lu-accent);
+    color: var(--lu-primary);
+    font-size: 1.3rem;
+  }
+
+  .atlas-entry-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 0.7rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .atlas-entry-list li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.28rem 0.65rem;
+    align-items: start;
+    min-height: 7.6rem;
+    padding: 0.85rem;
+    border-left: 4px solid var(--lu-primary);
+  }
+
+  .atlas-entry-lemma {
+    grid-column: 1 / -1;
+    color: var(--lu-text);
+    font-size: 1.05rem;
+    font-weight: 900;
+    text-decoration: none;
+  }
+
+  .atlas-entry-lemma:hover {
+    color: var(--lu-primary);
+  }
+
+  .atlas-entry-gloss {
+    min-width: 0;
+    color: var(--lu-text-muted);
+    font-style: italic;
+  }
+
+  .atlas-entry-source,
+  .atlas-entry-usage {
+    align-self: end;
+    padding: 0.1rem 0.5rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 4px;
+    background: var(--lu-surface-muted);
+    color: var(--lu-text-muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+
+  .atlas-entry-usage {
+    white-space: nowrap;
+  }
+
+  @media (max-width: 680px) {
+    .atlas-filter-row,
+    .atlas-filter-panel,
+    .atlas-entry-list li {
+      grid-template-columns: 1fr;
+    }
+
+    .atlas-view-nav {
+      width: 100%;
+    }
+
+    .atlas-view-nav a {
+      flex: 1;
+      justify-content: center;
+    }
+  }
+</style>
