@@ -187,6 +187,15 @@ def test_folk_vesum_gate_accepts_productive_derivational_bases() -> None:
 
 
 @requires_sources_db
+def test_folk_vesum_gate_accepts_inflected_denominal_adjectives() -> None:
+    gate = _gate("веснянкова веснянкове веснянкові")
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert gate["heritage_attested"] == 3
+
+
+@requires_sources_db
 def test_morphology_fallback_does_not_leak_russianism_via_verb_root() -> None:
     # CRITICAL teeth check: `діюча` is a russianism (→ чинна/дійова) whose lemma is
     # the *standard* verb `діяти`. The russianism guard must stop the morphology

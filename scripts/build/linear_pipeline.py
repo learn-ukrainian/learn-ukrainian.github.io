@@ -614,6 +614,16 @@ _INJECT_RE = re.compile(r"<!--\s*INJECT_ACTIVITY:\s*([A-Za-z0-9_-]+)\s*-->")
 _HEADING_RE = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
 _VESUM_SHORT_DECORATED_WORDS = frozenset({"ся", "сь"})
 _VESUM_STRESS_MARKS = frozenset({"\u0300", "\u0301"})
+_VESUM_APOSTROPHE_TRANSLATION = str.maketrans(
+    {
+        "\u02bc": "'",
+        "\u2019": "'",
+        "\u2018": "'",
+        "`": "'",
+        "\u00b4": "'",
+    }
+)
+_VESUM_WORD_EDGE_CHARS = "-'ʼ’‘`´"
 # O-grade plural obliques (`-остей`, `-остями`, `-остях`, `-остям`) overlap
 # Russian `-ость` forms such as `новостей`; keep that fallback to longer
 # stems so it does not pass merely because short bases like `новий` verify.
@@ -8671,11 +8681,12 @@ def _is_sung_vowel_practice_lookup(word: str) -> bool:
 
 
 def _normalize_for_vesum(lemma: str) -> str:
-    """Strip stress marks and Markdown wrappers before VESUM lookup.
+    """Strip stress marks, Markdown wrappers, and apostrophe variants before VESUM lookup.
 
     Writer output may contain combining accents such as U+0301 and local
-    emphasis like `вмива́ю**ся**`. The QG report still keeps the original
-    surface form; this helper is only for the VESUM lookup key.
+    emphasis like `вмива́ю**ся**`. VESUM stores Ukrainian apostrophe words
+    with ASCII U+0027, so lookup keys canonicalize U+02BC/curly/backtick/acute
+    apostrophes after Markdown stripping.
     """
     text = unicodedata.normalize("NFD", lemma)
     text = "".join(char for char in text if char not in _VESUM_STRESS_MARKS)
@@ -8708,7 +8719,11 @@ def _normalize_for_vesum(lemma: str) -> str:
             lambda m: _strip_morpheme_hyphen(m.group(1)),
             text,
         )
-    return text.strip()
+    return _canonicalize_vesum_apostrophes(text).strip()
+
+
+def _canonicalize_vesum_apostrophes(text: str) -> str:
+    return str(text).translate(_VESUM_APOSTROPHE_TRANSLATION)
 
 
 _VESUM_MORPHEME_HYPHEN_PARTS = frozenset(
@@ -8808,11 +8823,12 @@ def _iter_vesum_lookup_surface_pairs(
         word for word in _iter_vesum_word_surfaces(_normalize_for_vesum(text)) if len(word) >= min_word_length
     }
     decorated_by_lower: dict[str, set[tuple[str, str]]] = {}
-    for match in _VESUM_DECORATED_WORD_RE.finditer(text):
-        raw = match.group(0).strip("-'ʼ")
+    decorated_text = _canonicalize_vesum_apostrophes(text)
+    for match in _VESUM_DECORATED_WORD_RE.finditer(decorated_text):
+        raw = match.group(0).strip(_VESUM_WORD_EDGE_CHARS)
         if not raw or "__" in raw or not _has_vesum_lookup_decoration(raw):
             continue
-        if _looks_like_stem_fragment(text, match.start(), match.end()):
+        if _looks_like_stem_fragment(decorated_text, match.start(), match.end()):
             continue
         normalized = _normalize_for_vesum(raw)
         for word in _iter_vesum_candidate_words(normalized):
@@ -8842,8 +8858,9 @@ def _has_vesum_lookup_decoration(text: str) -> bool:
 
 def _iter_vesum_candidate_words(text: str) -> list[str]:
     words: list[str] = []
+    text = _canonicalize_vesum_apostrophes(text)
     for match in _UK_WORD_RE.finditer(text):
-        word = match.group(0).strip("-'ʼ")
+        word = match.group(0).strip(_VESUM_WORD_EDGE_CHARS)
         if word:
             words.append(word)
     return words
@@ -8852,6 +8869,7 @@ def _iter_vesum_candidate_words(text: str) -> list[str]:
 def _iter_vesum_word_surfaces(text: str) -> list[str]:
     """Extract Ukrainian surface forms that are meaningful VESUM candidates."""
     words: list[str] = []
+    text = _canonicalize_vesum_apostrophes(text)
     for match in _UK_WORD_RE.finditer(text):
         if _touches_blank_marker(text, match.start(), match.end()):
             continue
@@ -8873,7 +8891,7 @@ def _iter_vesum_word_surfaces(text: str) -> list[str]:
         raw = match.group(0)
         if _looks_like_elided_notation(text, match.start(), raw):
             continue
-        word = raw.strip("-'ʼ")
+        word = raw.strip(_VESUM_WORD_EDGE_CHARS)
         if not word:
             continue
         if word.lower() in _STANDALONE_POSTFIX_FRAGMENTS:

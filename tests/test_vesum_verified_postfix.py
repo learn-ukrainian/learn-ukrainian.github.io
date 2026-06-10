@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pytest
 import yaml
 
 from scripts.build.linear_pipeline import (
@@ -89,6 +90,14 @@ def test_normalize_for_vesum_strips_stress_and_markdown() -> None:
     assert _normalize_for_vesum("по**-перше**") == "по-перше"
 
 
+def test_normalize_for_vesum_canonicalizes_apostrophe_variants() -> None:
+    assert _normalize_for_vesum("вʼють") == "в'ють"
+    assert _normalize_for_vesum("в’ють") == "в'ють"
+    assert _normalize_for_vesum("в‘ють") == "в'ють"
+    assert _normalize_for_vesum("в`ють") == "в'ють"
+    assert _normalize_for_vesum("в´ють") == "в'ють"
+
+
 def test_vesum_gate_normalizes_stress_and_markdown_before_lookup() -> None:
     seen: list[list[str]] = []
 
@@ -108,6 +117,58 @@ def test_vesum_gate_normalizes_stress_and_markdown_before_lookup() -> None:
     assert gate["passed"] is True
     assert seen == [["вмиваю", "вмиваюся", "ся", "чудов"]]
     assert gate["missing"] == []
+
+
+def test_vesum_gate_canonicalizes_apostrophes_before_lookup() -> None:
+    seen: list[list[str]] = []
+    valid = {
+        "в'ють",
+        "запам'ятавши",
+        "ім'я",
+        "об'єкт",
+        "п'ять",
+        "пам'яттю",
+        "сім'я",
+    }
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        seen.append(words)
+        return {word: ([{"lemma": word}] if word in valid else []) for word in words}
+
+    u02bc_words = "вʼють памʼяттю запамʼятавши сімʼя пʼять обʼєкт імʼя"
+    ascii_words = "в'ють пам'яттю запам'ятавши сім'я п'ять об'єкт ім'я"
+    gate = _vesum_gate(
+        module_text=f"{u02bc_words} {ascii_words}",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert seen == [sorted(valid)]
+
+
+@pytest.mark.parametrize("apostrophe", ["’", "‘", "`", "´"])
+def test_vesum_gate_does_not_split_decorated_apostrophe_variants(apostrophe: str) -> None:
+    seen: list[list[str]] = []
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        seen.append(words)
+        return {word: ([{"lemma": word}] if word == "п'ять" else []) for word in words}
+
+    gate = _vesum_gate(
+        module_text=f"п{apostrophe}**ять**",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert seen == [["п'ять"]]
 
 
 def test_vesum_gate_missing_report_preserves_decorated_surface() -> None:

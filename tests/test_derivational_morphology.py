@@ -17,6 +17,11 @@ def test_denominal_adjective_rules_emit_full_noun_bases() -> None:
     assert "київ" in _bases("київський")
 
 
+@pytest.mark.parametrize("surface", ["веснянкова", "веснянкове", "веснянкові"])
+def test_inflected_denominal_adjectives_emit_full_noun_base(surface: str) -> None:
+    assert "веснянка" in _bases(surface)
+
+
 def test_deverbal_adjective_rules_emit_full_infinitive_bases() -> None:
     assert "знеособлювати" in _bases("знеособлювальними")
     assert "читати" in _bases("читальний")

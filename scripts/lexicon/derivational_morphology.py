@@ -14,6 +14,56 @@ from typing import Any
 _ACUTE_RE = re.compile("[\u0301\u0300]")
 _UK_MORPH_ANALYZER: Any = None
 _UK_MORPH_ANALYZER_TRIED = False
+_INFLECTED_ADJECTIVE_LEMMA_ENDINGS: tuple[tuple[str, str], ...] = (
+    ("овими", "овий"),
+    ("ового", "овий"),
+    ("овому", "овий"),
+    ("овою", "овий"),
+    ("ових", "овий"),
+    ("овим", "овий"),
+    ("ової", "овий"),
+    ("овій", "овий"),
+    ("ова", "овий"),
+    ("ове", "овий"),
+    ("ові", "овий"),
+    ("ову", "овий"),
+    ("евими", "евий"),
+    ("евого", "евий"),
+    ("евому", "евий"),
+    ("евою", "евий"),
+    ("евих", "евий"),
+    ("евим", "евий"),
+    ("евої", "евий"),
+    ("евій", "евий"),
+    ("ева", "евий"),
+    ("еве", "евий"),
+    ("еві", "евий"),
+    ("еву", "евий"),
+    ("ськими", "ський"),
+    ("ського", "ський"),
+    ("ському", "ський"),
+    ("ською", "ський"),
+    ("ських", "ський"),
+    ("ським", "ський"),
+    ("ської", "ський"),
+    ("ській", "ський"),
+    ("ська", "ський"),
+    ("ське", "ський"),
+    ("ські", "ський"),
+    ("ську", "ський"),
+    ("ними", "ний"),
+    ("ного", "ний"),
+    ("ному", "ний"),
+    ("ною", "ний"),
+    ("них", "ний"),
+    ("ним", "ний"),
+    ("ної", "ний"),
+    ("ній", "ний"),
+    ("на", "ний"),
+    ("не", "ний"),
+    ("ні", "ний"),
+    ("ну", "ний"),
+)
 
 
 def derivational_bases(surface: str) -> list[dict[str, str]]:
@@ -113,20 +163,36 @@ def _lemma_candidates(surface: str) -> list[tuple[str, str]]:
     candidates: list[tuple[str, str]] = []
     seen: set[str] = set()
     try:
-        parses = analyzer.parse(surface)[:5]
+        parses = analyzer.parse(surface)[:12]
     except Exception:
         return []
 
+    has_adjective_parse = False
     for parse in parses:
         lemma = _normalize(str(parse.normal_form or ""))
         if not lemma or lemma in seen:
             continue
         tag = str(parse.tag)
+        if "ADJF" in tag:
+            has_adjective_parse = True
         if not any(part in tag for part in ("ADJF", "VERB", "INFN")):
             continue
         seen.add(lemma)
         candidates.append((lemma, tag))
+    if has_adjective_parse:
+        for lemma in _inflected_adjective_lemma_candidates(surface):
+            if lemma in seen:
+                continue
+            seen.add(lemma)
+            candidates.append((lemma, "ADJF"))
     return candidates
+
+
+def _inflected_adjective_lemma_candidates(surface: str) -> Iterable[str]:
+    for ending, lemma_ending in _INFLECTED_ADJECTIVE_LEMMA_ENDINGS:
+        if not surface.endswith(ending) or len(surface) <= len(ending) + 2:
+            continue
+        yield f"{surface[: -len(ending)]}{lemma_ending}"
 
 
 def _uk_morph_analyzer() -> Any:
