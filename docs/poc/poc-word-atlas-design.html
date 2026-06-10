@@ -3,54 +3,160 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>POC: Word Atlas (Лексикон) — learn-ukrainian</title>
+<title>POC: Атлас слів (Лексикон) — learn-ukrainian</title>
 <style>
   :root {
-    --blue: #0057B8;
-    --yellow: #FFD700;
-    --yellow-dark: #B8860B;
-    --blue-light: #E8F0FE;
-    --yellow-light: #FFF9E0;
-    --green: #2E7D32;
-    --green-light: #E8F5E9;
-    --red: #C62828;
-    --red-light: #FFEBEE;
+    color-scheme: light;
+    --lu-bg: #ffffff;
+    --lu-surface: #ffffff;
+    --lu-surface-muted: #f8f9fa;
+    --lu-border: #ebeced;
+    --lu-text: #1c1e21;
+    --lu-text-muted: #6b6b6b;
+    --lu-primary: #0057B7;
+    --lu-accent: #FFD700;
+    --lu-on-accent: #1c1e21;
+    --lu-state-active: rgba(0,87,183,.08);
+    --lu-state-correct-bg: rgba(46,125,50,.08);
+    --lu-state-correct-fg: #2E7D32;
+    --lu-state-wrong-bg: rgba(198,40,40,.08);
+    --lu-state-wrong-fg: #C62828;
+    --lu-state-missed: rgba(251,188,4,.15);
+    --lu-state-drag: rgba(106,27,154,.08);
+    --lu-match-right: rgba(230,81,0,.08);
+    --lu-id-lexicon: linear-gradient(135deg, #00695C, #004D40);
+
+    --blue: var(--lu-primary);
+    --blue-light: var(--lu-state-active);
+    --yellow: var(--lu-accent);
+    --yellow-dark: var(--lu-accent);
+    --yellow-light: var(--lu-state-missed);
+    --green: var(--lu-state-correct-fg);
+    --green-light: var(--lu-state-correct-bg);
+    --red: var(--lu-state-wrong-fg);
+    --red-light: var(--lu-state-wrong-bg);
     --purple: #6A1B9A;
-    --purple-light: #F3E5F5;
+    --purple-light: var(--lu-state-drag);
     --orange: #E65100;
-    --orange-light: #FFF3E0;
+    --orange-light: var(--lu-match-right);
     --teal: #00695C;
+    --teal-fill: #00695C;
     --teal-light: #E0F2F1;
     --brown: #5D4037;
     --brown-light: #EFEBE9;
-    --gray-50: #FAFAFA; --gray-100: #F5F5F5; --gray-200: #EEEEEE;
-    --gray-300: #E0E0E0; --gray-600: #757575; --gray-800: #424242; --gray-900: #212121;
+    --gray-50: var(--lu-bg);
+    --gray-100: var(--lu-surface-muted);
+    --gray-200: var(--lu-border);
+    --gray-300: #dadde1;
+    --gray-600: var(--lu-text-muted);
+    --gray-800: #444950;
+    --gray-900: var(--lu-text);
     --radius: 12px;
     --shadow: 0 2px 8px rgba(0,0,0,0.08);
     --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
     --content-width: 920px;
   }
+  [data-theme='dark'] {
+    color-scheme: dark;
+    --lu-bg: #0f0f1a;
+    --lu-surface: #242526;
+    --lu-surface-muted: #1a1a2e;
+    --lu-border: #303846;
+    --lu-text: #e3e3e3;
+    --lu-text-muted: #989898;
+    --lu-primary: #5B9BD5;
+    --lu-accent: #FFD700;
+    --lu-on-accent: #1c1e21;
+    --lu-state-active: rgba(91,155,213,.22);
+    --lu-state-correct-bg: rgba(46,160,70,.26);
+    --lu-state-correct-fg: #81C995;
+    --lu-state-wrong-bg: rgba(210,70,70,.26);
+    --lu-state-wrong-fg: #F28B82;
+    --lu-state-missed: rgba(251,188,4,.22);
+    --lu-state-drag: rgba(167,130,224,.18);
+    --lu-match-right: rgba(230,145,56,.20);
+    --lu-id-lexicon: linear-gradient(135deg, #175A50, #123F39);
+
+    --blue: var(--lu-primary);
+    --blue-light: var(--lu-state-active);
+    --yellow: var(--lu-accent);
+    --yellow-dark: var(--lu-accent);
+    --yellow-light: var(--lu-state-missed);
+    --green: var(--lu-state-correct-fg);
+    --green-light: var(--lu-state-correct-bg);
+    --red: var(--lu-state-wrong-fg);
+    --red-light: var(--lu-state-wrong-bg);
+    --purple: #C79CFF;
+    --purple-light: var(--lu-state-drag);
+    --orange: #E69138;
+    --orange-light: var(--lu-match-right);
+    --teal: #7AD7CB;
+    --teal-fill: #175A50;
+    --teal-light: rgba(122, 215, 203, 0.14);
+    --brown: #D5A28A;
+    --brown-light: rgba(213, 162, 138, 0.14);
+    --gray-50: var(--lu-bg);
+    --gray-100: var(--lu-surface-muted);
+    --gray-200: var(--lu-border);
+    --gray-300: #444950;
+    --gray-600: var(--lu-text-muted);
+    --gray-800: #dadde1;
+    --gray-900: var(--lu-text);
+    --shadow: 0 2px 10px rgba(0,0,0,0.32);
+    --shadow-lg: 0 4px 18px rgba(0,0,0,0.42);
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: var(--gray-900); background: var(--gray-50); line-height: 1.7; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: var(--lu-text); background: var(--lu-bg); line-height: 1.7; }
 
   /* Word switcher (reused from lesson PoC module-switch) */
   .word-switch {
-    background: var(--gray-900); color: white; padding: 10px 24px;
-    display: flex; align-items: center; gap: 16px; font-size: 13px;
+    background: var(--lu-surface); color: var(--lu-text); padding: 10px 24px;
+    border-bottom: 1px solid var(--lu-border);
+    display: flex; align-items: center; gap: 12px; font-size: 13px;
     position: sticky; top: 0; z-index: 100;
+    flex-wrap: wrap;
   }
   .word-switch label { opacity: 0.7; }
   .word-switch select {
-    background: var(--gray-800); color: white; border: 1px solid var(--gray-600);
+    background: var(--lu-surface-muted); color: var(--lu-text); border: 1px solid var(--lu-border);
     padding: 4px 12px; border-radius: 6px; font-size: 13px;
   }
   .word-switch .poc-label {
-    margin-left: auto; color: var(--yellow); font-weight: 600; letter-spacing: 0.5px;
+    margin-left: auto; color: var(--lu-primary); font-weight: 600; letter-spacing: 0.5px;
+  }
+  .atlas-search {
+    display: flex; align-items: center; gap: 8px; flex: 1 1 280px; min-width: 260px;
+  }
+  .atlas-search input {
+    width: 100%; min-width: 140px; padding: 6px 10px; border: 1px solid var(--lu-border);
+    border-radius: 6px; background: var(--lu-surface-muted); color: var(--lu-text); font-size: 13px;
+  }
+  .atlas-search input::placeholder { color: var(--lu-text-muted); opacity: 1; }
+  .atlas-button {
+    border: 1px solid var(--lu-border); border-radius: 6px; padding: 6px 12px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  .atlas-button.search {
+    background: var(--lu-state-active); color: var(--lu-primary); border-color: var(--lu-primary);
+  }
+  .atlas-button.filter {
+    background: var(--lu-accent); color: var(--lu-on-accent); border-color: var(--lu-accent);
+  }
+  .theme-toggle {
+    display: inline-flex; padding: 2px; border: 1px solid var(--lu-border);
+    border-radius: 8px; background: var(--lu-surface-muted);
+  }
+  .theme-toggle button {
+    border: 0; border-radius: 6px; padding: 4px 10px; color: var(--lu-text-muted);
+    background: transparent; font-size: 12px; font-weight: 700; cursor: pointer;
+  }
+  .theme-toggle button.active {
+    color: var(--lu-text); background: var(--lu-state-active);
   }
 
   /* Top-nav strip (for context — shows the atlas as a new top-level section) */
   .topnav {
-    background: white; border-bottom: 1px solid var(--gray-200); padding: 14px 24px;
+    background: var(--lu-surface); border-bottom: 1px solid var(--lu-border); padding: 14px 24px;
   }
   .topnav-inner { max-width: var(--content-width); margin: 0 auto; display: flex; align-items: center; gap: 28px; font-size: 14px; }
   .topnav-brand { font-weight: 700; color: var(--blue); }
@@ -60,7 +166,7 @@
 
   /* Hero — atlas-specific gradient (teal+yellow distinguishes from core-blue and seminar-purple) */
   .word-hero {
-    background: linear-gradient(135deg, var(--teal), var(--yellow-dark));
+    background: var(--lu-id-lexicon);
     color: white; padding: 32px 0; border-bottom: 4px solid var(--yellow);
   }
   .word-hero-inner { max-width: var(--content-width); margin: 0 auto; padding: 0 24px; }
@@ -77,12 +183,12 @@
     font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 4px;
     display: inline-flex; align-items: center; gap: 6px;
   }
-  .status-badge.heritage-ok { background: var(--green); color: white; }
-  .status-badge.heritage-warn { background: var(--red); color: white; }
-  .status-badge.cefr { background: var(--yellow); color: var(--gray-900); }
-  .status-badge.dialect { background: #00838F; color: white; }
-  .status-badge.borrowing { background: var(--blue); color: white; }
-  .status-badge.archaic { background: var(--brown); color: white; }
+  .status-badge.heritage-ok { background: var(--lu-surface); color: var(--lu-state-correct-fg); border: 1px solid var(--lu-state-correct-fg); }
+  .status-badge.heritage-warn { background: var(--lu-surface); color: var(--lu-state-wrong-fg); border: 1px solid var(--lu-state-wrong-fg); }
+  .status-badge.cefr { background: var(--lu-accent); color: var(--lu-on-accent); }
+  .status-badge.dialect { background: var(--teal-fill); color: #ffffff; }
+  .status-badge.borrowing { background: var(--lu-surface); color: var(--lu-primary); border: 1px solid var(--lu-primary); }
+  .status-badge.archaic { background: var(--lu-surface); color: var(--brown); border: 1px solid var(--brown); }
 
   /* Content shell */
   .content-area { max-width: var(--content-width); margin: 0 auto; padding: 0 24px 80px; }
@@ -101,7 +207,7 @@
     padding: 16px 22px; margin: 22px 0;
   }
   .editorial-warn-header { font-weight: 700; color: var(--red); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; }
-  .editorial-warn-icon { width: 28px; height: 28px; background: var(--red); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .editorial-warn-icon { width: 28px; height: 28px; background: var(--lu-state-wrong-bg); color: var(--lu-state-wrong-fg); border: 1px solid var(--lu-state-wrong-fg); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
   .editorial-warn p { margin-bottom: 6px; font-size: 14px; }
 
   /* Editorial banner — heritage-defense success (green inverted myth-box) */
@@ -110,7 +216,7 @@
     padding: 16px 22px; margin: 22px 0;
   }
   .editorial-success-header { font-weight: 700; color: var(--green); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; }
-  .editorial-success-icon { width: 28px; height: 28px; background: var(--green); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .editorial-success-icon { width: 28px; height: 28px; background: var(--lu-state-correct-bg); color: var(--lu-state-correct-fg); border: 1px solid var(--lu-state-correct-fg); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
   .editorial-success p { margin-bottom: 6px; font-size: 14px; }
 
   /* Editorial banner — calque warning (yellow rule-box) */
@@ -120,29 +226,36 @@
   }
   .editorial-calque-header { font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; }
   .editorial-calque-icon { width: 28px; height: 28px; background: var(--yellow); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .editorial-calque.info { background: var(--blue-light); border-color: var(--blue); }
+  .editorial-calque.info .editorial-calque-header { color: var(--blue); }
+  .editorial-info-icon {
+    width: 28px; height: 28px; background: var(--blue-light); color: var(--blue);
+    border: 1px solid var(--blue); border-radius: 8px; display: flex; align-items: center;
+    justify-content: center; font-size: 16px;
+  }
 
   /* Definition cards */
   .def-card {
-    background: white; border-radius: var(--radius); border-left: 4px solid var(--blue);
+    background: var(--lu-surface); border-radius: var(--radius); border-left: 4px solid var(--blue);
     padding: 16px 22px; margin: 12px 0; box-shadow: var(--shadow);
   }
   .def-card.sum20 { border-left-color: var(--teal); }
   .def-card.grinchenko { border-left-color: var(--brown); }
   .def-card.sum11 { border-left-color: var(--gray-600); }
-  .def-card.sum11-flagged { border-left-color: var(--red); background: rgba(198,40,40,0.03); }
+  .def-card.sum11-flagged { border-left-color: var(--red); background: var(--lu-state-wrong-bg); }
   .def-source { font-size: 11px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
   .def-source .src-pill { padding: 2px 8px; border-radius: 3px; }
   .def-card.sum20 .src-pill { background: var(--teal-light); color: var(--teal); }
   .def-card.grinchenko .src-pill { background: var(--brown-light); color: var(--brown); }
   .def-card.sum11 .src-pill { background: var(--gray-200); color: var(--gray-800); }
-  .def-card.sum11-flagged .src-pill { background: var(--red); color: white; }
+  .def-card.sum11-flagged .src-pill { background: var(--lu-state-wrong-bg); color: var(--lu-state-wrong-fg); border: 1px solid var(--lu-state-wrong-fg); }
   .def-text { font-size: 15px; line-height: 1.7; }
   .def-flag-inline { font-size: 12px; color: var(--red); font-weight: 600; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--red); }
 
   /* Etymology timeline — reused from PoC #27 EtymologyTrace */
   .ety-timeline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 16px 0; }
   .ety-stage {
-    flex: 1; min-width: 140px; padding: 14px; background: white; border: 2px solid var(--gray-200);
+    flex: 1; min-width: 140px; padding: 14px; background: var(--lu-surface); border: 2px solid var(--gray-200);
     border-radius: var(--radius); text-align: center; cursor: pointer; transition: all 0.2s;
   }
   .ety-stage:hover { border-color: var(--teal); box-shadow: var(--shadow); }
@@ -154,8 +267,8 @@
   .ety-note { margin-top: 12px; padding: 12px 16px; background: var(--gray-100); border-radius: 8px; font-size: 13px; color: var(--gray-800); }
 
   /* Morphology paradigm table */
-  .paradigm-table { width: 100%; border-collapse: collapse; margin: 12px 0; background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
-  .paradigm-table th { background: var(--teal); color: white; padding: 10px 14px; text-align: left; font-size: 13px; font-weight: 600; }
+  .paradigm-table { width: 100%; border-collapse: collapse; margin: 12px 0; background: var(--lu-surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  .paradigm-table th { background: var(--teal-fill); color: #ffffff; padding: 10px 14px; text-align: left; font-size: 13px; font-weight: 600; }
   .paradigm-table th.col-case { width: 28%; }
   .paradigm-table td { padding: 9px 14px; border-bottom: 1px solid var(--gray-200); font-size: 14px; }
   .paradigm-table tr:last-child td { border-bottom: none; }
@@ -172,7 +285,7 @@
 
   /* Resource cards */
   .resource-card {
-    background: white; border-radius: var(--radius); border-left: 4px solid var(--blue);
+    background: var(--lu-surface); border-radius: var(--radius); border-left: 4px solid var(--blue);
     padding: 14px 20px; margin: 10px 0; box-shadow: var(--shadow); transition: all 0.2s;
   }
   .resource-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
@@ -204,9 +317,9 @@
     padding: 6px 14px; background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal);
     border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s;
   }
-  .chip:hover { background: var(--teal); color: white; }
+  .chip:hover { background: var(--teal-fill); color: #ffffff; }
   .chip.antonym { background: var(--red-light); color: var(--red); border-color: var(--red); }
-  .chip.antonym:hover { background: var(--red); color: white; }
+  .chip.antonym:hover { background: var(--lu-state-wrong-bg); color: var(--lu-state-wrong-fg); }
   .chip-label { font-size: 12px; color: var(--gray-600); margin-right: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
   /* Caveat banner for auto-translated data (e.g. WordNet) */
@@ -217,20 +330,20 @@
 
   /* Course usage cards */
   .course-card {
-    background: white; border-radius: var(--radius); padding: 12px 18px; margin: 8px 0;
+    background: var(--lu-surface); border-radius: var(--radius); padding: 12px 18px; margin: 8px 0;
     box-shadow: var(--shadow); display: flex; align-items: center; gap: 14px;
   }
   .course-card .level-badge-sm {
     display: inline-block; padding: 3px 10px; border-radius: 4px; font-weight: 700; font-size: 11px;
-    background: var(--blue); color: white;
+    background: var(--lu-state-active); color: var(--lu-primary); border: 1px solid var(--lu-primary);
   }
-  .course-card.seminar .level-badge-sm { background: var(--purple); }
+  .course-card.seminar .level-badge-sm { background: var(--purple-light); color: var(--purple); border-color: var(--purple); }
   .course-card .course-title { font-weight: 600; flex: 1; }
   .course-card .course-gloss { font-size: 13px; color: var(--gray-600); font-style: italic; }
 
   /* Translation block */
   .translation-block {
-    background: white; border-radius: var(--radius); padding: 14px 20px; margin: 12px 0;
+    background: var(--lu-surface); border-radius: var(--radius); padding: 14px 20px; margin: 12px 0;
     box-shadow: var(--shadow); display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
   }
   .translation-block .uk-side { font-weight: 700; color: var(--teal); font-size: 17px; }
@@ -240,7 +353,7 @@
 
   /* Wikipedia card */
   .wiki-card {
-    background: white; border-radius: var(--radius); padding: 16px 22px; margin: 12px 0;
+    background: var(--lu-surface); border-radius: var(--radius); padding: 16px 22px; margin: 12px 0;
     border-left: 4px solid #757575; box-shadow: var(--shadow);
   }
   .wiki-card h4 { font-size: 15px; margin-bottom: 6px; }
@@ -254,14 +367,14 @@
   .provenance-footer h3 { font-size: 13px; color: var(--gray-800); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
   .provenance-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
   .provenance-list .src {
-    padding: 4px 10px; background: white; border: 1px solid var(--gray-300); border-radius: 4px;
+    padding: 4px 10px; background: var(--lu-surface); border: 1px solid var(--gray-300); border-radius: 4px;
     font-size: 11px; font-family: monospace;
   }
   .provenance-footer .meta-line { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; }
 
   /* "Used in modules" sidebar pattern */
   .used-in-card {
-    background: white; padding: 8px 14px; margin: 4px 0; border-radius: 8px; border-left: 3px solid var(--teal);
+    background: var(--lu-surface); padding: 8px 14px; margin: 4px 0; border-radius: 8px; border-left: 3px solid var(--teal);
     display: flex; align-items: center; gap: 12px; font-size: 14px;
   }
   .used-in-card .module-id { font-weight: 700; color: var(--teal); min-width: 80px; }
@@ -269,27 +382,36 @@
   .used-in-card .lesson-gloss { color: var(--gray-600); font-style: italic; font-size: 12px; }
 </style>
 </head>
-<body>
+<body data-theme="light">
 
 <div class="word-switch">
   <label>Слово:</label>
   <select onchange="switchWord(this.value)">
-    <option value="knyaz">князь — rich data, no editorial issues</option>
-    <option value="prapor">прапор — sovietization warning</option>
-    <option value="faynyy">файний — heritage-defense (galicianism)</option>
+    <option value="knyaz">князь — повні дані без редакційних ризиків</option>
+    <option value="prapor">прапор — попередження про радянські формулювання</option>
+    <option value="faynyy">файний — захист питомості (галицизм)</option>
   </select>
-  <span class="poc-label">POC: Word Atlas (Лексикон) — V7 separate-section design</span>
+  <div class="atlas-search">
+    <input type="search" aria-label="Шукати" placeholder="Шукати слово або джерело">
+    <button class="atlas-button search" type="button">Шукати</button>
+    <button class="atlas-button filter" type="button">Фільтр</button>
+  </div>
+  <div class="theme-toggle" role="group" aria-label="Тема">
+    <button type="button" class="active" data-theme-choice="light">Світла</button>
+    <button type="button" data-theme-choice="dark">Темна</button>
+  </div>
+  <span class="poc-label">POC: Атлас слів (Лексикон) — дизайн окремого розділу V7</span>
 </div>
 
 <!-- Top-nav for context: shows the atlas is its OWN top-level section -->
 <div class="topnav">
   <div class="topnav-inner">
     <span class="topnav-brand">learn-ukrainian</span>
-    <a class="topnav-link" href="#">Home</a>
+    <a class="topnav-link" href="#">Головна</a>
     <a class="topnav-link" href="#">A1–C2</a>
-    <a class="topnav-link" href="#">Seminars</a>
+    <a class="topnav-link" href="#">Семінари</a>
     <a class="topnav-link active" href="#">Лексикон</a>
-    <a class="topnav-link" href="#">About</a>
+    <a class="topnav-link" href="#">Про проєкт</a>
   </div>
 </div>
 
@@ -340,7 +462,7 @@
       <div class="def-card sum11">
         <div class="def-source"><span class="src-pill">СУМ-11</span><span>радянське видання · перевірено: чисто</span></div>
         <div class="def-text">Голова феодально-монархічної держави або великого державного утворення в слов'янських народів періоду феодалізму. У Київській та Галицько-Волинській державах — верховний правитель.</div>
-        <div style="font-size: 11px; color: var(--green); margin-top: 8px;">↳ sovietization_risk=0 (чисто) · keywords flagged: none</div>
+        <div style="font-size: 11px; color: var(--green); margin-top: 8px;">↳ sovietization_risk=0 (чисто) · ключові слова: не виявлено</div>
       </div>
     </section>
 
@@ -564,13 +686,13 @@
       <div class="wiki-card">
         <h4>Князь</h4>
         <p>Князь — спадковий титул володаря держави або найвищого аристократичного звання у феодальній і середньовічній державі слов'ян. У Київській Русі та Галицько-Волинській державі — верховний правитель. У XV–XVI ст. — найвищий титул шляхетства Великого князівства Литовського і Польської Корони…</p>
-        <p class="wiki-source">Джерело: <a href="https://uk.wikipedia.org/wiki/Князь" target="_blank">uk.wikipedia.org/wiki/Князь</a> · freshness: 2026-05-23</p>
+        <p class="wiki-source">Джерело: <a href="https://uk.wikipedia.org/wiki/Князь" target="_blank">uk.wikipedia.org/wiki/Князь</a> · актуальність: 2026-05-23</p>
       </div>
     </section>
 
     <!-- 14. Provenance footer -->
     <div class="provenance-footer">
-      <h3>Походження даних · Provenance</h3>
+      <h3>Походження даних</h3>
       <div class="provenance-list">
         <span class="src">vesum</span>
         <span class="src">sum20 (slovnyk.me)</span>
@@ -646,7 +768,7 @@
       </div>
 
       <div class="def-card sum11-flagged">
-        <div class="def-source"><span class="src-pill">СУМ-11 · ⚠ flagged</span><span>радянське видання · risk=2</span></div>
+        <div class="def-source"><span class="src-pill">СУМ-11 · ⚠ позначено</span><span>радянське видання · risk=2</span></div>
         <div class="def-text">Полотнище певного кольору і розміру, прикріплене до древка чи шнура, що є офіційним символом держави, певної організації або частини збройних сил. <em>Червоний прапор Радянського Союзу майорів над Рейхстагом. Над сільрадою — червоний прапор з серпом і молотом. Прапор Леніна освітлює шлях радянському народові.</em></div>
         <div class="def-flag-inline">⚠ Дефініція ілюстрована радянською ідеологією. Триггери: «Радянський Союз», «серп і молот», «прапор Леніна». Рекомендуємо звернутися до СУМ-20 або Грінченка для нейтрального тлумачення.</div>
       </div>
@@ -681,7 +803,7 @@
         <span class="src">vesum</span>
         <span class="src">grinchenko_1907</span>
         <span class="src">sum20</span>
-        <span class="src" style="background:var(--red-light);color:var(--red);">sum11 · flagged risk=2</span>
+        <span class="src" style="background:var(--red-light);color:var(--red);">СУМ-11 · позначено risk=2</span>
         <span class="src">esum</span>
         <span class="src">literary_fts</span>
       </div>
@@ -720,7 +842,7 @@
         <div class="editorial-success-header"><div class="editorial-success-icon">✓</div>Питома українська — це НЕ калька і НЕ запозичення з російської</div>
         <p>Слово «файний» — давній галицький регіоналізм, засвідчений у Грінченка 1907 з прикладами з фольклору. Походить від <em>німецького fein</em> через польське посередництво (XVIII–XIX ст., період Австро-Угорщини), <strong>не з російської</strong>. У сучасній літературній мові — стилістично марковане як <em>розмовне, регіональне, літературне</em>.</p>
         <p style="margin-top: 10px;">У стандартному вжитку синонімами є <strong>гарний, добрий, чудовий, славний</strong>. У повсякденному мовленні Західної України — норма; в офіційно-діловому стилі — недоречно.</p>
-        <p style="font-size: 12px; color: var(--gray-600); margin-top: 10px;">Тригер heritage-defense: <code>search_heritage → classification=regional · is_russianism=false · pre_soviet_attestation=[grinchenko_1907, esum]</code></p>
+        <p style="font-size: 12px; color: var(--gray-600); margin-top: 10px;">Тригер захисту питомості: <code>search_heritage → classification=regional · is_russianism=false · pre_soviet_attestation=[grinchenko_1907, esum]</code></p>
       </div>
     </section>
 
@@ -766,8 +888,8 @@
 
     <section class="atlas-section">
       <h2>Стилістичні нотатки</h2>
-      <div class="editorial-calque" style="background: var(--blue-light); border-color: var(--blue);">
-        <div class="editorial-calque-header" style="color: var(--blue);"><div class="editorial-calque-icon" style="background: var(--blue); color: white;">ℹ</div>Регіоналізм — не помилка, але стильово маркований</div>
+      <div class="editorial-calque info">
+        <div class="editorial-calque-header"><div class="editorial-info-icon">ℹ</div>Регіоналізм — не помилка, але стильово маркований</div>
         <p style="font-size: 14px;">Антоненко-Давидович не заперечує проти слова, але радить у літературній мові обирати <strong>гарний</strong>, <strong>добрий</strong>, <strong>славний</strong> у нейтральному стилі. У художній прозі та поезії — повна свобода: «файний» широко використовують Стефаник, Франко, сучасні західноукраїнські письменники.</p>
       </div>
     </section>
@@ -811,7 +933,7 @@
       </div>
       <div class="meta-line">
         <span>згенеровано: 2026-05-23T10:42Z</span>
-        <span>classification: regional · is_russianism: false</span>
+        <span>класифікація: регіоналізм · не русизм</span>
       </div>
     </div>
   </div>
@@ -830,6 +952,14 @@ function toggleEty(el, infoId, text) {
   var info = document.getElementById(infoId);
   if (info) { info.textContent = text; info.style.background = 'var(--teal-light)'; }
 }
+document.querySelectorAll('[data-theme-choice]').forEach(function(button) {
+  button.addEventListener('click', function() {
+    document.body.setAttribute('data-theme', button.dataset.themeChoice);
+    document.querySelectorAll('[data-theme-choice]').forEach(function(item) {
+      item.classList.toggle('active', item === button);
+    });
+  });
+});
 </script>
 
 </body>
