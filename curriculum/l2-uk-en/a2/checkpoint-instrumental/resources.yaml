@@ -1,0 +1,25 @@
+- title: "ULP: Instrumental Case"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /instrumental-case/"
+  url: "https://www.ukrainianlessons.com/instrumental-case/"
+  notes: "Learner-facing overview for final self-review of instrumental forms and uses."
+- title: "Dobra Forma 9-1: Instrumental Case Intro"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-029"
+  url: "https://opentext.ku.edu/dobraforma/chapter/9-1/"
+  notes: "Structured review of core singular instrumental endings."
+- title: "Dobra Forma 9-2: Instrumental Case Other Endings"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-030"
+  url: "https://opentext.ku.edu/dobraforma/chapter/9-2/"
+  notes: "Additional singular endings and stem-change practice for self-review."
+- title: "Dobra Forma 9-3: Instrumental Case Plural Nouns"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-031"
+  url: "https://opentext.ku.edu/dobraforma/chapter/9-3/"
+  notes: "Plural instrumental noun practice, including forms such as руками and дітьми."
+- title: "Dobra Forma 19-1: Instrumental Case of Adjectives"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-059"
+  url: "https://opentext.ku.edu/dobraforma/chapter/19-1/"
+  notes: "Adjective agreement support for phrases such as з моїм новим другом."
