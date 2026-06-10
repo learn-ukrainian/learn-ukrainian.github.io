@@ -38,6 +38,21 @@ interface Enrichment {
   sources?: string[];
 }
 
+interface HeritageAttestation {
+  source: string;
+  ref: string;
+  detail?: string;
+}
+
+interface HeritageStatus {
+  classification: string;
+  attestations: HeritageAttestation[];
+  is_russianism: boolean;
+  russian_shadow: boolean;
+  sovietization_risk: number;
+  calque_warning?: { detail?: string } | null;
+}
+
 interface LexiconEntry {
   lemma: string;
   url_slug: string;
@@ -47,6 +62,7 @@ interface LexiconEntry {
   primary_source: string;
   course_usage: CourseUsage[];
   enrichment?: Enrichment;
+  heritage_status?: HeritageStatus | null;
 }
 
 interface LexiconManifest {
@@ -92,6 +108,19 @@ const CONTEXT_LABELS_UK: Record<string, string> = {
   plan_recommended: "рекомендована",
 };
 
+// Heritage classification → UK label + one-line gloss. Authentic Ukrainian
+// statuses (archaism/historism/dialect/borrowing) are the decolonization layer:
+// they prove a word is inherited Ukrainian, not a Russianism. Keyed off the
+// classifier's `classification`; the русизм warning is keyed off `is_russianism`.
+const HERITAGE_CLASSIFICATION_UK: Record<string, { label: string; gloss: string; tone: string }> = {
+  standard: { label: "Сучасна норма", gloss: "Кодифікована сучасна українська форма (VESUM).", tone: "norm" },
+  archaism: { label: "Архаїзм", gloss: "Застаріле українське слово, засвідчене в питомих джерелах.", tone: "heritage" },
+  "authentic-archaism": { label: "Архаїзм", gloss: "Застаріле українське слово, засвідчене в питомих джерелах.", tone: "heritage" },
+  historism: { label: "Історизм", gloss: "Слово на позначення зниклої реалії; питома українська лексика.", tone: "heritage" },
+  dialect: { label: "Діалектизм", gloss: "Регіональна українська форма, засвідчена в словниках.", tone: "heritage" },
+  borrowing: { label: "Запозичення", gloss: "Засвоєне запозичення в межах української норми.", tone: "heritage" },
+};
+
 export async function getStaticPaths() {
   const data = manifest as LexiconManifest;
   return data.entries.map((entry) => ({
@@ -116,6 +145,34 @@ const hasDictionaryData = Boolean(
     enrichment?.meaning ||
     enrichment?.attestation ||
     enrichment?.etymology,
+);
+
+const heritage = entry.heritage_status ?? null;
+const heritageClass = heritage ? HERITAGE_CLASSIFICATION_UK[heritage.classification] ?? null : null;
+const russianAlternatives = heritage?.is_russianism
+  ? Array.from(
+      new Set(
+        heritage.attestations
+          .filter((a) => a.source === "standard_alternative" && a.ref)
+          .map((a) => a.ref),
+      ),
+    )
+  : [];
+const sovietRisk = heritage?.sovietization_risk ?? 0;
+// "standard" is the unremarkable default (codified modern norm) — it gets the
+// glanceable header pill but no dedicated section. The section is reserved for
+// the noteworthy cases: a non-standard authentic status (archaism/historism/
+// dialect/borrowing) or any decolonization warning (русизм/shadow/soviet/calque).
+const isNoteworthyClass = Boolean(
+  heritage && heritageClass && heritage.classification !== "standard",
+);
+const showHeritage = Boolean(
+  heritage &&
+    (isNoteworthyClass ||
+      heritage.is_russianism ||
+      heritage.russian_shadow ||
+      sovietRisk > 0 ||
+      heritage.calque_warning),
 );
 
 const frontmatter = {
@@ -158,6 +215,14 @@ const frontmatter = {
         <span>{CONTEXT_LABELS_UK[entry.primary_source] ?? entry.primary_source}</span>
         <span>{courseUsage.length} {courseUsage.length === 1 ? "модуль" : "модулів"}</span>
         {enrichment?.morphology && <span>{enrichment.morphology.form_count} форм</span>}
+        {heritage?.is_russianism && (
+          <span class="atlas-heritage-pill atlas-heritage-pill--russism">Русизм</span>
+        )}
+        {!heritage?.is_russianism && heritageClass && (
+          <span class={`atlas-heritage-pill atlas-heritage-pill--${heritageClass.tone}`}>
+            {heritageClass.label}
+          </span>
+        )}
       </div>
     </header>
 
@@ -179,6 +244,63 @@ const frontmatter = {
         )}
       </div>
     </section>
+
+    {showHeritage && (
+      <section class="atlas-section atlas-heritage" aria-labelledby="atlas-heritage-title">
+        <div class="atlas-section-head">
+          <p class="atlas-kicker">Деколонізація</p>
+          <h2 id="atlas-heritage-title">Походження та статус</h2>
+        </div>
+
+        {heritage?.is_russianism ? (
+          <div class="atlas-heritage-card atlas-heritage-card--russism">
+            <p class="atlas-source-label">Русизм</p>
+            <p>
+              Ця форма має ознаки русизму. Українська норма послуговується іншим
+              словом — використовуйте відповідник нижче.
+            </p>
+            {russianAlternatives.length > 0 && (
+              <p class="atlas-chip-line">
+                <strong>Українська норма:</strong>{" "}
+                {russianAlternatives.map((alt) => (
+                  <span>{alt}</span>
+                ))}
+              </p>
+            )}
+          </div>
+        ) : heritageClass ? (
+          <div class={`atlas-heritage-card atlas-heritage-card--${heritageClass.tone}`}>
+            <p class="atlas-source-label">{heritageClass.label}</p>
+            <p>{heritageClass.gloss}</p>
+          </div>
+        ) : (
+          <div class="atlas-heritage-card">
+            <p class="atlas-source-label">Статус уточнюється</p>
+            <p>Класифікацію цієї форми ще не визначено за локальними джерелами.</p>
+          </div>
+        )}
+
+        {heritage?.russian_shadow && !heritage?.is_russianism && (
+          <p class="atlas-heritage-warn">
+            ⚠ Морфологічна тінь російської форми — перевірте відмінювання за VESUM
+            та Правописом 2019.
+          </p>
+        )}
+        {sovietRisk > 0 && (
+          <p class="atlas-heritage-warn">
+            ⚠{" "}
+            {sovietRisk >= 2
+              ? "Радянське ідеологічне трактування у словниковому джерелі — тлумачення подано нейтрально."
+              : "Радянські конотації у словниковому джерелі — тлумачення подано обережно."}
+          </p>
+        )}
+        {heritage?.calque_warning && (
+          <p class="atlas-heritage-warn">
+            ⚠ Калька{heritage.calque_warning.detail ? `: ${heritage.calque_warning.detail}` : ""}.
+          </p>
+        )}
+      </section>
+    )}
 
     <section class="atlas-section" aria-labelledby="atlas-course-title">
       <div class="atlas-section-head">
@@ -439,6 +561,72 @@ const frontmatter = {
     background: var(--lu-accent);
     color: var(--lu-on-accent);
     border-color: var(--lu-accent);
+  }
+
+  /* Heritage pills. Scoped under `.atlas-status-badges span` so they beat the
+     generic badge rule (element+class) on specificity. Colours pair a state
+     colour as TEXT/BORDER on a neutral surface — never fg-on-its-own-bg, which
+     collapses to red-on-red in dark mode. */
+  .atlas-status-badges span.atlas-heritage-pill {
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .atlas-status-badges span.atlas-heritage-pill--russism {
+    background: var(--lu-surface-muted);
+    color: var(--lu-state-wrong-fg);
+    border-color: var(--lu-state-wrong-fg);
+  }
+
+  .atlas-status-badges span.atlas-heritage-pill--heritage {
+    background: var(--lu-surface-muted);
+    color: var(--lu-text);
+    border-color: var(--lu-accent);
+  }
+
+  .atlas-status-badges span.atlas-heritage-pill--norm {
+    background: var(--lu-surface-muted);
+    color: var(--lu-text-muted);
+    border-color: var(--lu-border);
+  }
+
+  /* Cards/warnings follow the page's border-left-as-signal pattern: neutral
+     surface + a coloured left border, with body text in --lu-text for AA
+     contrast in both themes. */
+  .atlas-heritage-card {
+    padding: 1rem;
+    border-left: 4px solid var(--lu-primary);
+    background: var(--lu-surface-muted);
+  }
+
+  .atlas-heritage-card--russism {
+    border-left-color: var(--lu-state-wrong-fg);
+  }
+
+  .atlas-heritage-card--heritage {
+    border-left-color: var(--lu-accent);
+  }
+
+  .atlas-heritage-card .atlas-source-label {
+    color: var(--lu-text);
+  }
+
+  .atlas-heritage-card--russism .atlas-source-label {
+    color: var(--lu-state-wrong-fg);
+  }
+
+  .atlas-heritage-card p {
+    margin: 0.3rem 0 0;
+    color: var(--lu-text);
+  }
+
+  .atlas-heritage-warn {
+    margin: 0.6rem 0 0;
+    padding: 0.55rem 0.8rem;
+    border-left: 3px solid var(--lu-accent);
+    background: var(--lu-surface-muted);
+    color: var(--lu-text);
+    font-size: 0.9rem;
   }
 
   .atlas-callout {
