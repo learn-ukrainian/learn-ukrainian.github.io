@@ -50,7 +50,11 @@ ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees"
 #          Runtime-only, machine-specific (live timestamps + snapshot); NOT
 #          source-tracked. Without these entries the deploy aborts on any
 #          machine where the handoff automation has run.
-ORPHAN_PATHS_AGENT="wake cache *-thread-bootstrap.md *-thread-handoff.md *-thread-lease.json"
+# prompts/ — per-dispatch prompt files (.agent/prompts/<task_id>.md) written into
+#          .agent/ by the dispatch tooling when a dispatch fires. Runtime-only,
+#          NOT source-tracked. Without this entry the deploy aborts on any machine
+#          where a dispatch has run since the last clean .agent/ deploy.
+ORPHAN_PATHS_AGENT="wake cache prompts *-thread-bootstrap.md *-thread-handoff.md *-thread-lease.json"
 ORPHAN_PATHS_AGENTS=""
 # agents/curriculum-orchestrator.toml and agents/curriculum-writer.toml —
 # Codex agent definitions with no shared equivalent.
