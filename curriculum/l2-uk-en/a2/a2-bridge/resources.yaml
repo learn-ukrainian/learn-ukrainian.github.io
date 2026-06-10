@@ -1,16 +1,20 @@
-- title: "Plan: A2 bridge"
-  role: internal plan
-  source_ref: "curriculum/l2-uk-en/plans/a2/a2-bridge.yaml"
-  notes: "Source plan for A2 module 1: A1 grammar review, sound alternations, euphony, and A2 roadmap."
-- title: "Wiki: grammar/a2/a2-bridge"
-  role: internal wiki
-  source_ref: "wiki/grammar/a2/a2-bridge"
-  notes: "Compiled grammar substrate for euphony and A2 bridge priorities; used selectively to avoid overloading module 1."
-- title: "Internal module A1: euphony"
-  role: prerequisite pattern
-  source_ref: "curriculum/l2-uk-en/a1/euphony/module.md"
-  notes: "Provides the A1 baseline for у/в, і/й, and з/із/зі practice."
-- title: "Internal module A1: A1 finale"
-  role: prerequisite pattern
-  source_ref: "curriculum/l2-uk-en/a1/a1-finale/module.md"
-  notes: "Provides the released A1 structure reference for integrated review and transition language."
+- title: "ULP 6-213: Милозвучність української мови"
+  role: podcast
+  source_ref: "Ukrainian Lessons Podcast episode 213"
+  url: "https://www.ukrainianlessons.com/episode213/"
+  notes: "Learner-facing listening support for Ukrainian euphony and smoother connected speech."
+- title: "Difference between Ukrainian Prepositions У (В) and На"
+  role: article
+  source_ref: "Ukrainian Lessons"
+  url: "https://www.ukrainianlessons.com/prepositions-u-na/"
+  notes: "Practical review of у/в with place language; useful after the bridge euphony section."
+- title: "Ukrainian Conjunctions"
+  role: article
+  source_ref: "Ukrainian Lessons"
+  url: "https://www.ukrainianlessons.com/ukrainian-conjunctions/"
+  notes: "Follow-up reference for simple linking words, including і/й in connected speech."
+- title: "Основні випадки чергування у-в, і-й, з-із-зі"
+  role: article
+  source_ref: "МійКлас"
+  url: "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/osnovni-vipadki-cherguvannia-u-v-i-i-z-iz-zi-pravila-milozvuchnosti-41612"
+  notes: "Ukrainian-language rule reference for the euphony set practiced in this module."
