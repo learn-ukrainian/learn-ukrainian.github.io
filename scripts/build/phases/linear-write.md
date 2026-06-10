@@ -258,6 +258,9 @@ Before emitting any uncertain Ukrainian term in seminar/FOLK prose, call `mcp__s
 
 For FOLK, verbatim song, duma, or ritual fragments may contain authentic archaic/dialectal forms such as `Дівоцькую`, `гаїлки`, `дівочок`, or `рубочки`. Put those fragments in blockquotes or the module's verbatim-quote convention so the quote is visibly evidence, not exposition. Teacher prose around the quote must use modern Ukrainian or explicitly verified VESUM/slovnyk.me heritage terms; bare unattested archaic/dialectal folk forms in exposition fail.
 
+<!-- rule_id: #R-FOLK-PRIMARY-TEXTS -->
+**FOLK: embed the primary texts.** The dossier's «ВЕРБАТИМ примірники» (§4) are `verify_quote`'d fragments with `[S#]` sources. Surface **≥4** of them in the Урок body as **cited blockquotes** (`>` + the exact fragment + its `[S#]`); quote verbatim, never normalize archaic forms. Anchor «Корпус і контекст» and «Поетика» on these quoted lines instead of paraphrasing — that also fills their word budget. Never invent or quote a fragment the dossier did not `verify_quote`.
+
 <!-- rule_id: #R-FOLK-GROUNDED-VOCAB -->
 **FOLK regional/ethnographic vocabulary — grounded in VESUM or cited slovnyk.me/heritage.** Naming regional genre-variants is a decolonization goal: authentic regional and archaic variants are ENCOURAGED, not flattened away. A folk term used in EXPOSITION is acceptable when it is attested in VESUM OR in slovnyk.me/heritage (`mcp__sources__search_slovnyk_me` / `mcp__sources__search_heritage`) with `is_russianism == false`; `vesum_verified` accepts the committed slovnyk.me/heritage fallback for FOLK/seminar terms. Get it right in the first pass:
 
