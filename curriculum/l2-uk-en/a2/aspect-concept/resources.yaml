@@ -1,15 +1,15 @@
 - title: "Talk Ukrainian: Verb Aspect"
   role: article
-  source_ref: "Talk Ukrainian: Verb Aspect"
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-030"
   url: https://talkukrainian.com/verb-aspect/
   notes: "Short learner-facing overview of process vs result, useful after the lesson dialogue."
 - title: "Perfective Verbs"
   role: article
-  source_ref: "Ukrainian Lessons: Perfective Verbs"
+  source_ref: "docs/resources/ulp-articles-index.yaml: /perfective-verbs/"
   url: https://www.ukrainianlessons.com/perfective-verbs/
   notes: "Adds simple contrasts and extra examples of completed actions."
 - title: "Dobra Forma: Introduction to Verbal Aspect (Prefixed Perfective Verbs)"
   role: article
-  source_ref: "Dobra Forma 27-1"
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-078"
   url: https://opentext.ku.edu/dobraforma/chapter/27-1/
   notes: "Guided practice for the first contrast between imperfective and perfective verbs."

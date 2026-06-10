@@ -368,7 +368,7 @@ def _public_resource_text(value: object) -> str:
     text = _PIPELINE_METADATA_FRAGMENT_RE.sub('', text)
     text = re.sub(r'\s+', ' ', text)
     text = re.sub(r'\s+([,.;:])', r'\1', text)
-    text = re.sub(r'^[\s,.;:()/-]+|[\s,;:()/-]+$', '', text)
+    text = re.sub(r'^[\s,.;:/-]+|[\s,;:/-]+$', '', text)
     return text
 
 
