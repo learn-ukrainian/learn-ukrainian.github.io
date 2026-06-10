@@ -42,7 +42,15 @@ fi
 # Estimate tokens from transcript size: ~7 chars/token for the jsonl transcript.
 # JSON envelope + tool-call metadata pushes the ratio above the 4 chars/token
 # that raw prose hits. Conservative (slight over-estimate on warnings is safe).
-SIZE=$(wc -c < "$TRANSCRIPT" 2>/dev/null || echo 0)
+#
+# CRITICAL: strip base64 blobs first. A browser screenshot is ~1MB of base64 in
+# the transcript but only ~1.5K tokens to the model; counting its bytes inflates
+# the estimate 2-3x (measured 2026-06-10: raw bytes/7 read 52-115% while the live
+# context was a true 38% — the gap was entirely screenshot base64). Collapse any
+# run of >=800 base64-charset chars (real text/JSON never has such a run) so the
+# size reflects actual text tokens, not encoded image bytes.
+SIZE=$(LC_ALL=C sed -E 's#[A-Za-z0-9+/]{800,}={0,2}#B64#g' "$TRANSCRIPT" 2>/dev/null | wc -c)
+[ -z "$SIZE" ] && SIZE=0
 TOKENS=$((SIZE / 7))
 
 # Read autoCompactWindow from settings; default to 1M (this project's variant).
