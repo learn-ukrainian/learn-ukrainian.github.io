@@ -1,0 +1,394 @@
+---
+title: "Контрольна робота — давальний відмінок"
+description: "Перевірка засвоєння давального відмінка (М15-М19)"
+sidebar:
+  order: 23
+  label: "23. Контрольна робота — давальний відмінок"
+prev: services-and-communication
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Організаторка","text":"Колеги, кому подарувати книжку на Таємного Санту?"},{"speaker":"Марко","text":"Олексієві. Він багато читає. А Наталці можна подарувати шоколад."},{"speaker":"Ірина","text":"Новому колезі потрібна чашка для офісу."},{"speaker":"Організаторка","text":"Добре. А шефові?"},{"speaker":"Марко","text":"Шефу краще подарувати каву. Йому подобається добра кава."},{"speaker":"Ірина","text":"Мені потрібно надіслати листа бабусі після роботи. На пошті біля офісу зручно."},{"speaker":"Марко","text":"Допомогти тобі з адресою?"},{"speaker":"Ірина","text":"Так, дякую тобі. Мені ще холодно, зачинімо вікно."},{"speaker":"Організаторка","text":"Чудово. Мені подобається наш план."}]')}
+/>
+
+Це контрольна точка A2.3 після модулів про давальний відмінок,
+місцевий відмінок у нових контекстах і сервісні розмови. Тут немає нової
+теорії. Завдання - спокійно перевірити, чи ви бачите роль слова в
+реченні: кому щось дають, кому дякують, кому допомагають, кому щось
+подобається, кому потрібно щось зробити, кому холодно, і де просто місце
+на пошті.
+
+Діалог показує майже весь блок:
+
+| Фраза | Що перевіряє |
+| --- | --- |
+| Олексієві, Наталці, новому колезі | одержувач подарунка |
+| йому подобається | людина, якій щось подобається |
+| мені потрібно | безособова конструкція з давальним |
+| надіслати листа бабусі | сервісна дія і одержувач |
+| допомогти тобі, дякую тобі | дієслова, що керують давальним |
+| мені холодно | стан людини через давальний |
+| на пошті, біля офісу | місце, не давальний адресат |
+
+Як працювати з checkpoint: не намагайтеся одразу згадати всі таблиці.
+Спершу поставте просте питання. Якщо це людина-одержувач, запитайте
+`кому?` Якщо це місце, запитайте `де?` Якщо це прямий об'єкт після
+`бачити`, `знати`, `любити`, запитайте `кого? що?` Так ви відокремите
+давальний від знахідного, родового і місцевого без довгих пояснень.
+
+## Частина 1 - впізнавання
+
+Перше вміння - впізнати форму. На цьому етапі не треба творити довгі
+речення. Треба побачити, яку роль має слово.
+
+| Речення | Питання | Роль |
+| --- | --- | --- |
+| Мені холодно. | кому холодно? | людина відчуває стан |
+| Їй подобається чай. | кому подобається? | досвідник |
+| Я допомагаю сестрі. | кому допомагаю? | адресат дії |
+| Я бачу сестру. | кого бачу? | прямий об'єкт, не давальний |
+| На пошті тихо. | де тихо? | місце |
+
+Особові займенники треба впізнавати швидко: `мені`, `тобі`, `йому`,
+`їй`, `нам`, `вам`, `їм`. Вони часто стоять на початку речення:
+
+> Мені потрібно заповнити бланк.
+>
+> Тобі подобається ця нова послуга?
+>
+> Їм холодно в кімнаті.
+
+Усі три речення мають давальний, але функція трохи різна: потреба,
+вподобання, стан. Для A2 достатньо бачити спільний сигнал: людина не
+просто діє, а переживає стан або отримує дію.
+
+### Що тут перевіряємо
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Мені двадцять вісім років.", "options": [{"text": "вік у моделі з давальним", "correct": true}, {"text": "місце на пошті", "correct": false}, {"text": "родовий після без", "correct": false}], "explanation": "Мені + роки — це модель віку."}, {"question": "Моїй новій вчительці.", "options": [{"text": "узгоджена група в давальному", "correct": true}, {"text": "називний без змін", "correct": false}, {"text": "родовий множини", "correct": false}], "explanation": "Прикметник і іменник узгоджуються в давальному."}, {"question": "Їй подобається чай.", "options": [{"text": "та, кому щось подобається", "correct": true}, {"text": "об'єкт у знахідному", "correct": false}, {"text": "місце події", "correct": false}], "explanation": "Їй — це досвідник у давальному."}, {"question": "На пошті мені зручно.", "options": [{"text": "місце", "correct": true}, {"text": "одержувач", "correct": false}, {"text": "відсутність", "correct": false}], "explanation": "На пошті називає місце, не адресата."}, {"question": "Допомагати сестрі.", "options": [{"text": "дієслово, що керує давальним", "correct": true}, {"text": "родовий після без", "correct": false}, {"text": "вік", "correct": false}], "explanation": "Після допомагати стоїть давальний."}, {"question": "Братові.", "options": [{"text": "чоловічий іменник у давальному", "correct": true}, {"text": "знахідний множини", "correct": false}, {"text": "прикметник у місцевому", "correct": false}], "explanation": "Братові — типова форма чоловічого роду в давальному."}, {"question": "Моїм друзям.", "options": [{"text": "давальний множини з узгодженням", "correct": true}, {"text": "родовий однини", "correct": false}, {"text": "називний множини", "correct": false}], "explanation": "Моїм друзям — повна дативна форма множини."}, {"question": "Мені потрібно відправити листа.", "options": [{"text": "безособова модель", "correct": true}, {"text": "діалог про місце", "correct": false}, {"text": "родовий після кількості", "correct": false}], "explanation": "Мені потрібно — типова безособова конструкція."}, {"question": "Мені холодно.", "options": [{"text": "безособовий стан з давальним", "correct": true}, {"text": "місце на пошті", "correct": false}, {"text": "знахідний прямий об'єкт", "correct": false}], "explanation": "Людина, якій холодно, стоїть у давальному."}, {"question": "Я бачу брата.", "options": [{"text": "знахідний, не давальний", "correct": true}, {"text": "давальний одержувач", "correct": false}, {"text": "місцевий контекст", "correct": false}], "explanation": "Бачити кого? - брата, тобто це не давальний."}]`)} />
+
+## Частина 2 - вибір форми
+
+Друге вміння - вибрати правильне закінчення. Тут важлива не швидкість, а
+контроль. Знайдіть іменник, визначте рід і подивіться, чи є перед ним
+займенник або прикметник.
+
+| Називний | Давальний |
+| --- | --- |
+| брат | братові / брату |
+| колега | колезі |
+| подруга | подрузі |
+| сестра | сестрі |
+| мати | матері |
+| дитина | дитині |
+| новий працівник | новому працівникові |
+| моя нова вчителька | моїй новій вчительці |
+| мої друзі | моїм друзям |
+
+Не треба робити з паралельних форм проблему. `Братові` і `брату` можуть
+бути правильними. У цьому checkpoint головне - не втратити давальну роль:
+`я телефоную братові`, `я допомагаю брату`, `я подарую братові книжку`.
+
+Повна група узгоджується вся:
+
+> моїй новій вчительці
+>
+> нашому старому сусідові
+>
+> цим добрим людям
+
+Якщо змінюється тільки іменник, фраза ламається: `моїй нова вчительці`
+не звучить правильно. Якщо змінюється тільки прикметник, теж ламається:
+`новому колега` не є повною формою. У давальному вся група має працювати
+разом.
+
+### Вибери форму
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я дякую ___ сестрі за пораду.", "answer": "моїй", "options": ["моїй", "мою", "моя"]}, {"sentence": "Пані Оксано, ___ потрібен бланк.", "answer": "вам", "options": ["вам", "вас", "вашими"]}, {"sentence": "___ подобається цей сервіс.", "answer": "Мені", "options": ["Мені", "Мене", "Мною"]}, {"sentence": "Я допомагаю ___ працівникові.", "answer": "новому", "options": ["новому", "нового", "новим"]}, {"sentence": "___ двадцять шість років.", "answer": "Мені", "options": ["Мені", "Мене", "Мною"]}, {"sentence": "Я надсилаю посилку ___ подрузі.", "answer": "своїй", "options": ["своїй", "свою", "своя"]}, {"sentence": "Я телефоную ___ братові.", "answer": "моєму", "options": ["моєму", "мою", "моїм"]}, {"sentence": "___ пошті я отримую листа.", "answer": "На", "options": ["На", "До", "З"]}, {"sentence": "Я хочу подарувати книжку ___ братові.", "answer": "моєму", "options": ["моєму", "мого", "мій"]}, {"sentence": "Потрібно надіслати листа ___ вчительці.", "answer": "новій", "options": ["новій", "нову", "нова"]}]`)} />
+
+## Частина 3 - керування, подобатися, вік
+
+Третє вміння - знати дієслова і конструкції, після яких часто з'являється
+давальний відмінок.
+
+| Модель | Приклад |
+| --- | --- |
+| допомагати кому? | Я допомагаю сестрі. |
+| дякувати кому? | Дякую вам за допомогу. |
+| дзвонити кому? | Вона дзвонить другові. |
+| радити кому? | Ми радимо тобі відпочити. |
+| заважати кому? | Не заважай мені. |
+| відповідати кому? | Я відповідаю колезі. |
+
+У сервісних ситуаціях та сама логіка:
+
+> Я хочу надіслати листа бабусі.
+>
+> Працівниця дала квитанцію клієнтові.
+>
+> Ми хочемо подарувати книжку новому колезі.
+
+`Листа`, `квитанцію`, `книжку` - це предмети. Вони відповідають на
+`що?` Людина, яка отримує предмет або повідомлення, відповідає на
+`кому?` Саме вона стоїть у давальному.
+
+Окремо тримайте `подобатися`. В англійській можна думати "I like", але
+в українській A2 модель інша:
+
+> Мені подобається ця книжка.
+>
+> Їй подобаються ці фільми.
+>
+> Нам подобається цей курс.
+
+Давальний показує людину, а називний показує те, що подобається. Тому
+дієслово узгоджується з книжкою, фільмами або курсом, а не з `мені`,
+`їй`, `нам`.
+
+Ще дві важливі безособові моделі:
+
+> Мені потрібно заповнити бланк.
+>
+> Тобі холодно?
+
+У цих реченнях людина стоїть у давальному. Для checkpoint достатньо
+тримати готові блоки: `мені потрібно`, `тобі потрібно`, `мені холодно`,
+`їй холодно`.
+
+Вік теж перевіряється тут:
+
+> Мені двадцять вісім років.
+>
+> Братові шістнадцять років.
+>
+> Нашій доньці п'ять років.
+
+Не додавайте зайве `є`: нормальна A2 фраза - `Мені двадцять вісім
+років`.
+
+### Форма і функція
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "мені", "right": "особовий займенник у давальному"}, {"left": "сестрі", "right": "іменник жіночого роду в давальному"}, {"left": "братові", "right": "іменник чоловічого роду в давальному"}, {"left": "моїй новій наставниці", "right": "узгоджена група в давальному"}, {"left": "допомагати", "right": "керує давальним"}, {"left": "подобається", "right": "досвідник у давальному"}, {"left": "двадцять п'ять років", "right": "вік"}, {"left": "на пошті", "right": "місце / місцевий"}, {"left": "подарувати книжку подрузі", "right": "подарунок + одержувач у давальному"}, {"left": "надіслати листа бабусі", "right": "сервісна дія + одержувач"}]`)} />
+
+## Частина 4 - коротке редагування
+
+Остання частина checkpoint перевіряє, чи ви можете знайти маленьку
+помилку в готовому реченні. Редагуйте не за відчуттям "десь не так", а
+за питанням.
+
+1. `допомагати`, `дякувати`, `дзвонити`, `радити`, `заважати`,
+   `відповідати` - шукайте `кому?`
+2. `бачити`, `знати`, `любити` - часто шукайте `кого? що?`
+3. `подобатися` - людина в давальному, річ у називному.
+4. `потрібно`, `холодно`, вік - людина в давальному.
+5. `на пошті`, `у відділенні`, `на роботі` - це місце або контекст, не
+   адресат.
+
+Порівняйте:
+
+| Не так | Питання | Так |
+| --- | --- | --- |
+| Я дякую мою сестру. | кому дякую? | Я дякую моїй сестрі. |
+| Мені подобаються цей чай. | що подобається? | Мені подобається цей чай. |
+| Подаруйте книжку мою подругу. | кому подарувати? | Подаруйте книжку моїй подрузі. |
+| На пошти тихо. | де? | На пошті тихо. |
+| Мені холодний. | кому холодно? | Мені холодно. |
+
+Зверніть увагу на поштові фрази. У бланку може бути `адреса
+одержувача` - це родовий, бо питання `чия адреса?` Але в дії буде
+давальний:
+
+> Надішліть листа одержувачеві.
+>
+> Напишіть бабусі коротке повідомлення.
+>
+> Покажіть мені бланк.
+
+Цей checkpoint не вимагає ідеального вільного мовлення. Він вимагає
+надійної A2 перевірки: ви бачите роль, вибираєте форму, узгоджуєте групу
+і виправляєте типову помилку.
+
+Перед останньою вправою зробіть коротке контрольоване продукування.
+Візьміть одну ситуацію і побудуйте три речення за моделлю. Не потрібно
+писати довгий текст. Достатньо, щоб кожне речення мало зрозумілу роль.
+
+**Ситуація 1: подарунок.**
+
+> Я хочу подарувати книжку моїй подрузі.
+>
+> Їй подобаються історії про подорожі.
+>
+> Мені потрібно купити листівку.
+
+**Ситуація 2: пошта.**
+
+> На пошті я хочу надіслати листа бабусі.
+>
+> Працівниця допомагає мені з бланком.
+>
+> Я дякую їй за допомогу.
+
+**Ситуація 3: офіс.**
+
+> Новому колезі холодно біля вікна.
+>
+> Я телефоную йому після обіду.
+>
+> Ми радимо йому сісти в іншій кімнаті.
+
+Коли перевіряєте свої речення, позначте олівцем дві речі: людину в
+давальному і предмет або місце, якщо вони є. Наприклад, у реченні
+`Я хочу подарувати книжку моїй подрузі` слово `книжку` відповідає на
+`що?`, а `моїй подрузі` відповідає на `кому?` У реченні `На пошті я
+надсилаю листа бабусі` фраза `на пошті` відповідає на `де?`, `листа`
+відповідає на `що?`, а `бабусі` відповідає на `кому?`
+
+Цей маленький розбір важливіший за кількість речень. Якщо ви можете
+пояснити, чому форма стоїть саме так, ви готові рухатися далі. Якщо
+пояснення зупиняється, поверніться до відповідної частини: займенники,
+іменники, узгодження, дієслова або сервісні фрази. Так checkpoint стає
+не оцінкою "склав / не склав", а картою повторення.
+
+### Виправте речення
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильний варіант речення." items={JSON.parse(`[{"sentence": "Я дякую мою сестру за допомогу.", "errorWord": "мою сестру", "correctForm": "моїй сестрі", "options": ["моїй сестрі", "мою сестру"], "explanation": "Після дякувати потрібен давальний."}, {"sentence": "Мені подобаються цей чай.", "errorWord": "подобаються", "correctForm": "подобається", "options": ["подобається", "подобаються"], "explanation": "Чай — один предмет, тому форма однини."}, {"sentence": "На пошти я відправляю листа.", "errorWord": "пошти", "correctForm": "пошті", "options": ["пошті", "пошти"], "explanation": "Тут має бути місце з правильним місцевим закінченням."}, {"sentence": "Вона допомагає новий працівник.", "errorWord": "новий працівник", "correctForm": "новому працівникові", "options": ["новому працівникові", "новий працівник"], "explanation": "Після допомагає потрібен давальний."}, {"sentence": "Тобі двадцять сім рік.", "errorWord": "рік", "correctForm": "років", "options": ["років", "рік"], "explanation": "У моделі віку потрібна форма років."}, {"sentence": "Подаруйте книжку нашій старший вчительці.", "errorWord": "старший", "correctForm": "старшій", "options": ["старшій", "старший"], "explanation": "Прикметник теж має бути в давальному."}, {"sentence": "Я телефоную моєму брата.", "errorWord": "брата", "correctForm": "братові", "options": ["братові", "брата"], "explanation": "Після телефоную потрібен давальний."}, {"sentence": "Йому подобаються ця нова послуга.", "errorWord": "подобаються", "correctForm": "подобається", "options": ["подобається", "подобаються"], "explanation": "Одна послуга — одна форма присудка."}, {"sentence": "Мені холодний.", "errorWord": "холодний", "correctForm": "холодно", "options": ["холодно", "холодний"], "explanation": "Для стану людини потрібна безособова форма холодно."}, {"sentence": "Я хочу подарувати книжку мою подругу.", "errorWord": "мою подругу", "correctForm": "моїй подрузі", "options": ["моїй подрузі", "мою подругу"], "explanation": "Одержувач подарунка стоїть у давальному."}]`)} />
+
+## Після перевірки
+
+Якщо помилки є, не переписуйте весь модуль. Повторіть саме той крок,
+який зламався.
+
+| Якщо помилка тут | Повторіть |
+| --- | --- |
+| `мене холодно`, `тобі потрібен` | займенники і безособові моделі |
+| `допомагаю маму`, `дякую вас` | дієслова з питанням `кому?` |
+| `новий колезі`, `мою сестрі` | узгодження прикметника або займенника |
+| `подобаються цей чай` | `подобатися` і називний предмет |
+| `на пошти` | місцевий для місця |
+
+Міні-самооцінка:
+
+- Я можу назвати всі займенники в давальному.
+- Я можу сказати, кому хочу подарувати або надіслати річ.
+- Я можу відрізнити `бачу сестру` від `допомагаю сестрі`.
+- Я можу сказати `мені потрібно`, `мені холодно`, `мені двадцять років`.
+- Я можу написати коротку сервісну фразу без змішування місця й адресата.
+
+Остання швидка перевірка перед наступним модулем: складіть усно чотири
+речення про себе або вигадану людину. Перше речення має бути з
+`допомагати` або `дякувати`, друге - з `подобатися`, третє - з
+`потрібно` або `холодно`, четверте - з дією `подарувати` або
+`надіслати`. Наприклад: `Я дякую моїй сестрі`, `Мені подобається ця
+книжка`, `Мені потрібно заповнити бланк`, `Я хочу надіслати листа
+бабусі`. Якщо ви можете підкреслити в кожному реченні форму на питання
+`кому?`, checkpoint виконав свою роботу.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"давальний відмінок","translation":"dative case","pos":"noun","gender":"m","example":"Давальний відмінок відповідає на питання кому? чому?","examples":["dative case","Давальний відмінок відповідає на питання кому? чому?"]},{"word":"мені","translation":"to me","pos":"pron","example":"Мені подобається цей чай.","examples":["to me","Мені подобається цей чай."]},{"word":"тобі","translation":"to you","pos":"pron","example":"Тобі потрібен бланк.","examples":["to you","Тобі потрібен бланк."]},{"word":"йому","translation":"to him","pos":"pron","example":"Йому двадцять сім років.","examples":["to him","Йому двадцять сім років."]},{"word":"їй","translation":"to her","pos":"pron","example":"Їй подобається книжка.","examples":["to her","Їй подобається книжка."]},{"word":"нам","translation":"to us","pos":"pron","example":"Нам допомагають у відділенні.","examples":["to us","Нам допомагають у відділенні."]},{"word":"вам","translation":"to you (plural/formal)","pos":"pron","example":"Вам потрібен новий бланк.","examples":["to you (plural/formal)","Вам потрібен новий бланк."]},{"word":"їм","translation":"to them","pos":"pron","example":"Їм надсилають листа.","examples":["to them","Їм надсилають листа."]},{"word":"допомагати","translation":"to help","pos":"verb","example":"Я допомагаю сестрі.","examples":["to help","Я допомагаю сестрі."]},{"word":"дякувати","translation":"to thank","pos":"verb","example":"Я дякую вчительці.","examples":["to thank","Я дякую вчительці."]},{"word":"подобатися","translation":"to be pleasing to, to like","pos":"verb","example":"Мені подобається ця нова послуга.","examples":["to be pleasing to, to like","Мені подобається ця нова послуга."]},{"word":"надіслати","translation":"to send","pos":"verb","example":"Я хочу надіслати посилку подрузі.","examples":["to send","Я хочу надіслати посилку подрузі."]},{"word":"подарувати","translation":"to give as a gift","pos":"verb","example":"Я хочу подарувати книжку братові.","examples":["to give as a gift","Я хочу подарувати книжку братові."]},{"word":"потрібно","translation":"necessary, needed","pos":"adv","example":"Мені потрібно заповнити бланк.","examples":["necessary, needed","Мені потрібно заповнити бланк."]},{"word":"холодно","translation":"cold","pos":"adv","example":"Мені холодно біля вікна.","examples":["cold","Мені холодно біля вікна."]},{"word":"телефонувати","translation":"to call","pos":"verb","example":"Я телефоную братові.","examples":["to call","Я телефоную братові."]},{"word":"років","translation":"years","pos":"noun","gender":"m","example":"Мені двадцять шість років.","examples":["years","Мені двадцять шість років."]},{"word":"пошта","translation":"post office","pos":"noun","gender":"f","example":"На пошті тихо.","examples":["post office","На пошті тихо."]},{"word":"відділення","translation":"branch, office","pos":"noun","gender":"n","example":"У відділенні є бланки.","examples":["branch, office","У відділенні є бланки."]},{"word":"лист","translation":"letter","pos":"noun","gender":"m","example":"Я надсилаю листа сестрі.","examples":["letter","Я надсилаю листа сестрі."]},{"word":"посилка","translation":"parcel, package","pos":"noun","gender":"f","example":"Посилка для колеги вже готова.","examples":["parcel, package","Посилка для колеги вже готова."]},{"word":"працівник","translation":"worker, staff member","pos":"noun","gender":"m","example":"Працівникові потрібна допомога.","examples":["worker, staff member","Працівникові потрібна допомога."]},{"word":"вчителька","translation":"teacher (female)","pos":"noun","gender":"f","example":"Моїй новій вчительці дякують.","examples":["teacher (female)","Моїй новій вчительці дякують."]},{"word":"подруга","translation":"female friend","pos":"noun","gender":"f","example":"Я телефоную своїй подрузі.","examples":["female friend","Я телефоную своїй подрузі."]},{"word":"колега","translation":"colleague","pos":"noun","gender":"m","example":"Новому колезі потрібна адреса.","examples":["colleague","Новому колезі потрібна адреса."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"давальний відмінок","back":"dative case"},{"front":"мені","back":"to me"},{"front":"тобі","back":"to you"},{"front":"йому","back":"to him"},{"front":"їй","back":"to her"},{"front":"нам","back":"to us"},{"front":"вам","back":"to you (plural/formal)"},{"front":"їм","back":"to them"},{"front":"допомагати","back":"to help"},{"front":"дякувати","back":"to thank"},{"front":"подобатися","back":"to be pleasing to, to like"},{"front":"надіслати","back":"to send"},{"front":"подарувати","back":"to give as a gift"},{"front":"потрібно","back":"necessary, needed"},{"front":"холодно","back":"cold"},{"front":"телефонувати","back":"to call"},{"front":"років","back":"years"},{"front":"пошта","back":"post office"},{"front":"відділення","back":"branch, office"},{"front":"лист","back":"letter"},{"front":"посилка","back":"parcel, package"},{"front":"працівник","back":"worker, staff member"},{"front":"вчителька","back":"teacher (female)"},{"front":"подруга","back":"female friend"},{"front":"колега","back":"colleague"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Що тут перевіряємо
+
+*(див. урок, §Частина 1 - впізнавання)*
+
+### Вибери форму
+
+*(див. урок, §Частина 2 - вибір форми)*
+
+### Форма і функція
+
+*(див. урок, §Частина 3 - керування, подобатися, вік)*
+
+### Виправте речення
+
+*(див. урок, §Частина 4 - коротке редагування)*
+
+### Швидка перевірка
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Мені двадцять вісім років.", "isTrue": true, "explanation": "Модель віку тут правильна."}, {"statement": "«На пошті» називає місце.", "isTrue": true, "explanation": "Це місце, а не адресат."}, {"statement": "«Допомагати» керує знахідним відмінком.", "isTrue": false, "explanation": "Допомагати керує давальним."}, {"statement": "«Моїй новій вчительці» — це узгоджена дативна група.", "isTrue": true, "explanation": "Прикметник і іменник стоять у давальному."}, {"statement": "Йому подобається ця книжка.", "isTrue": true, "explanation": "Це природна модель з давальним досвідника."}, {"statement": "«Братові» — форма чоловічого роду в давальному.", "isTrue": true, "explanation": "Так, це типова дативна форма."}, {"statement": "«У відділенні» — це дативний адресат.", "isTrue": false, "explanation": "Це місце, тобто місцевий контекст."}, {"statement": "«Їм» — форма множини в давальному.", "isTrue": true, "explanation": "Їм — одна з базових форм займенника в давальному."}]`)} />
+
+### Міні-підсумок
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "мені", "right": "особовий займенник у давальному"}, {"left": "сестрі", "right": "іменник жіночого роду в давальному"}, {"left": "братові", "right": "іменник чоловічого роду в давальному"}, {"left": "моїй новій наставниці", "right": "узгоджена група в давальному"}, {"left": "допомагати", "right": "керує давальним"}, {"left": "подобається", "right": "досвідник у давальному"}, {"left": "двадцять п'ять років", "right": "вік"}, {"left": "на пошті", "right": "місце / місцевий"}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Dobra Forma: Dative Case - Feminine Nouns](https://opentext.ku.edu/dobraforma/chapter/11-1/) — Useful for сестрі, подрузі, працівниці, вчительці.
+- 📄 [Dobra Forma: Dative Case - Masculine and Neuter Nouns](https://opentext.ku.edu/dobraforma/chapter/11-2/) — Useful for братові, колезі, відділенню.
+- 📄 [Dobra Forma: Dative Case - Plural Nouns](https://opentext.ku.edu/dobraforma/chapter/11-4/) — Supports plural checkpoint forms like друзям and колегам.
+- 📄 [Dobra Forma: Dative Case of Adjectives](https://opentext.ku.edu/dobraforma/chapter/18-2/) — Reference for agreement in phrases like моїй новій вчительці.
+- 📄 [Dobra Forma: Locative Case - в, у and на](https://opentext.ku.edu/dobraforma/chapter/4-2/) — Contrast for place phrases such as на пошті and у відділенні.
+- 📄 [Dobra Forma: Personal Pronouns - Dative Case for Indirect Object](https://opentext.ku.edu/dobraforma/chapter/15-2/) — Practice with dative pronouns in recipient and request patterns.
+- 📄 [Dobra Forma: Personal Pronouns - Dative Case Forms](https://opentext.ku.edu/dobraforma/chapter/15-1/) — Reference for мені, тобі, йому, їй, нам, вам, їм.
+- 📄 [Talk Ukrainian: Dative case](https://talkukrainian.com/dative-case/) — Concise learner guide for dative forms and core uses.
+- 📄 [ULP: Ukrainian Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/) — Broad case chart for quick checkpoint review without using broken dative/locative article URLs.
+
+**🎧 Аудіо:**
+- 🎧 [FMU 1-09: How to pick up a parcel at Nova Poshta](https://www.ukrainianlessons.com/fmu9/) — Postal-service scenario aligned with parcel and service language.
+- 🎧 [ULP 2-52 Buying a phone in Ukraine + Dative case](https://www.ukrainianlessons.com/episode52/) — Service-style dialogue with dative case in a practical transaction.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

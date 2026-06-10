@@ -1,0 +1,55 @@
+- title: "ULP: Ukrainian Cases Chart"
+  role: article
+  source_ref: "docs/resources/ukrainianlessons/blog_db.json: ulp-blog-006"
+  url: https://www.ukrainianlessons.com/ukrainian-cases-chart/
+  notes: "Broad case chart for quick checkpoint review without using broken dative/locative article URLs."
+- title: "Dobra Forma: Personal Pronouns - Dative Case Forms"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-048"
+  url: https://opentext.ku.edu/dobraforma/chapter/15-1/
+  notes: "Reference for мені, тобі, йому, їй, нам, вам, їм."
+- title: "Dobra Forma: Personal Pronouns - Dative Case for Indirect Object"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-049"
+  url: https://opentext.ku.edu/dobraforma/chapter/15-2/
+  notes: "Practice with dative pronouns in recipient and request patterns."
+- title: "Dobra Forma: Dative Case - Feminine Nouns"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-036"
+  url: https://opentext.ku.edu/dobraforma/chapter/11-1/
+  notes: "Useful for сестрі, подрузі, працівниці, вчительці."
+- title: "Dobra Forma: Dative Case - Masculine and Neuter Nouns"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-037"
+  url: https://opentext.ku.edu/dobraforma/chapter/11-2/
+  notes: "Useful for братові, колезі, відділенню."
+- title: "Dobra Forma: Dative Case - Plural Nouns"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-039"
+  url: https://opentext.ku.edu/dobraforma/chapter/11-4/
+  notes: "Supports plural checkpoint forms like друзям and колегам."
+- title: "Dobra Forma: Dative Case of Adjectives"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-058"
+  url: https://opentext.ku.edu/dobraforma/chapter/18-2/
+  notes: "Reference for agreement in phrases like моїй новій вчительці."
+- title: "Dobra Forma: Locative Case - в, у and на"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-011"
+  url: https://opentext.ku.edu/dobraforma/chapter/4-2/
+  notes: "Contrast for place phrases such as на пошті and у відділенні."
+- title: "Talk Ukrainian: Dative case"
+  role: article
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-017"
+  url: https://talkukrainian.com/dative-case/
+  notes: "Concise learner guide for dative forms and core uses."
+- title: "FMU 1-09: How to pick up a parcel at Nova Poshta"
+  role: podcast
+  source_ref: "docs/resources/ukrainianlessons/blog_db.json: fmu-ep-009"
+  url: https://www.ukrainianlessons.com/fmu9/
+  notes: "Postal-service scenario aligned with parcel and service language."
+- title: "ULP 2-52 Buying a phone in Ukraine + Dative case"
+  role: podcast
+  source_ref: "docs/resources/ukrainianlessons/blog_db.json: ulp-ep-052"
+  url: https://www.ukrainianlessons.com/episode52/
+  notes: "Service-style dialogue with dative case in a practical transaction."
