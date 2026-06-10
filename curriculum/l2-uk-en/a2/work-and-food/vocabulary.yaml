@@ -1,0 +1,104 @@
+- word: готувати
+  translation: to cook, to prepare
+  pos: verb
+  example: "Я люблю готувати вареники."
+- word: різати
+  translation: to cut
+  pos: verb
+  example: "Ріжемо огірок ножем."
+- word: мішати
+  translation: to stir, to mix
+  pos: verb
+  example: "Мішаємо тісто ложкою."
+- word: посипати
+  translation: to sprinkle
+  pos: verb
+  example: "Посипаємо салат сіллю."
+- word: поливати
+  translation: to pour over, to dress
+  pos: verb
+  example: "Поливаємо овочі олією."
+- word: подавати
+  translation: to serve
+  pos: verb
+  example: "Подаємо борщ зі сметаною."
+- word: вареники
+  translation: varenyky, dumplings
+  pos: noun
+  number: plural
+  example: "Я люблю вареники з картоплею."
+- word: картопля
+  translation: potato
+  pos: noun
+  gender: f
+  example: "Вареники з картоплею дуже смачні."
+- word: помідор
+  translation: tomato
+  pos: noun
+  gender: m
+  example: "Салат з помідорами і огірками."
+- word: огірок
+  translation: cucumber
+  pos: noun
+  gender: m
+  example: "Ріжемо огірок ножем."
+- word: сіль
+  translation: salt
+  pos: noun
+  gender: f
+  example: "Посипаємо салат сіллю."
+- word: олія
+  translation: oil
+  pos: noun
+  gender: f
+  example: "Поливаємо овочі олією."
+- word: виделка
+  translation: fork
+  pos: noun
+  gender: f
+  example: "Я їм салат виделкою."
+- word: ніж
+  translation: knife
+  pos: noun
+  gender: m
+  example: "Ріжемо овочі ножем."
+- word: ложка
+  translation: spoon
+  pos: noun
+  gender: f
+  example: "Мішаємо тісто ложкою."
+- word: рецепт
+  translation: recipe
+  pos: noun
+  gender: m
+  example: "Я читаю рецепт українською."
+- word: інгредієнт
+  translation: ingredient
+  pos: noun
+  gender: m
+  example: "Картопля - головний інгредієнт."
+- word: нарада
+  translation: meeting
+  pos: noun
+  gender: f
+  example: "Перед нарадою я п'ю каву."
+- word: колега
+  translation: colleague
+  pos: noun
+  gender: common
+  example: "Я обідаю з колегою."
+- word: начальник
+  translation: boss, manager
+  pos: noun
+  gender: m
+  example: "Я говорю з начальником."
+- word: кухня
+  translation: kitchen; cuisine
+  pos: noun
+  gender: f
+  example: "Я цікавлюся українською кухнею."
+- word: команда
+  translation: team
+  pos: noun
+  gender: f
+  example: "Я працюю з маленькою командою."

@@ -1,0 +1,25 @@
+- title: "ULP: Food festivals + Genitive case"
+  role: podcast
+  source_ref: "docs/resources/external_resources.yaml: a2-work-and-food"
+  url: "https://www.ukrainianlessons.com/episode47/"
+  notes: "Catalogued food-context episode for practicing food vocabulary around case forms."
+- title: "ULP 5 Minute Ukrainian: Staple food in Ukrainian"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-work-and-food"
+  url: "https://www.ukrainianlessons.com/fmu48/"
+  notes: "Learner-facing staple-food vocabulary for recipe and ingredient practice."
+- title: "ULP 5 Minute Ukrainian: How to talk about your job / occupation"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-education-and-work"
+  url: "https://www.ukrainianlessons.com/fmu31/"
+  notes: "Catalogued work and occupation phrases for the profession half of the lesson."
+- title: "Dobra Forma 10-3: Instrumental with працювати, бути, стати"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-instrumental-profession"
+  url: "https://opentext.ku.edu/dobraforma/chapter/10-3/"
+  notes: "Focused practice for profession predicates with the instrumental case."
+- title: "ULP: Phrasebook Food"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /ph-food/"
+  url: "https://www.ukrainianlessons.com/ph-food/"
+  notes: "Phrasebook support for food ordering and ingredient language."

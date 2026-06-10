@@ -1,0 +1,284 @@
+---
+title: "Професії та кулінарія"
+description: "Застосування орудного відмінка у розмовах про роботу та приготування їжі"
+sidebar:
+  order: 30
+  label: "30. Професії та кулінарія"
+prev: instrumental-adjectives-pronouns
+next: checkpoint-instrumental
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: співбесіда в ресторані
+
+Почніть із ситуації, де робота і кухня природно зустрічаються. Кандидат
+говорить із шеф-кухарем і показує, що він уміє готувати.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Шеф-кухар","text":"Добрий день. Ким ви працювали раніше?"},{"speaker":"Кандидат","text":"Я працював кухарем у маленькому кафе."},{"speaker":"Шеф-кухар","text":"Чим ви найбільше цікавитеся?"},{"speaker":"Кандидат","text":"Українською кухнею. Я люблю готувати борщ з яловичиною і вареники з картоплею."},{"speaker":"Шеф-кухар","text":"Добре. Чим ви ріжете овочі?"},{"speaker":"Кандидат","text":"Гострим ножем. Потім мішаю тісто великою ложкою."},{"speaker":"Шеф-кухар","text":"А з ким ви любите працювати?"},{"speaker":"Кандидат","text":"З невеликою командою. Мені подобається працювати з уважними людьми."}]')}
+/>
+
+У цьому діалозі орудний відмінок виконує кілька різних робіт.
+
+| Функція | Приклади |
+| --- | --- |
+| професія | працював кухарем |
+| інтерес | цікавлюся українською кухнею |
+| інгредієнт | борщ з яловичиною, вареники з картоплею |
+| знаряддя | ножем, великою ложкою |
+| команда | з невеликою командою |
+
+Це не нова граматика з нуля. Це синтез того, що ви вже вивчали в
+модулях про орудний відмінок.
+
+## Розмова про роботу
+
+Для професії та інтересів потрібні короткі, готові питання.
+
+| Питання | Відповідь |
+| --- | --- |
+| Ким ти працюєш? | Я працюю програмістом. |
+| Ким ви працювали раніше? | Я працювала вчителькою. |
+| Ким ти хочеш стати? | Я хочу стати лікарем. |
+| Чим ти цікавишся? | Я цікавлюся фотографією. |
+| Чим ти захоплюєшся? | Я захоплююся музикою. |
+| З ким ти працюєш? | Я працюю з командою. |
+
+Зверніть увагу на питання:
+
+- `ким?` - професія або роль: `кухарем`, `вчителькою`, `лікарем`;
+- `чим?` - інтерес або заняття: `фотографією`, `музикою`, `спортом`;
+- `з ким?` - люди поруч: `з командою`, `з колегами`.
+
+### Питання про роботу
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Ким ти працюєш?", "right": "Я працюю програмістом."}, {"left": "Ким вона стала?", "right": "Вона стала лікаркою."}, {"left": "Чим ти цікавишся?", "right": "Я цікавлюся фотографією."}, {"left": "З ким ви працюєте?", "right": "Ми працюємо з командою."}]`)} />
+
+## На кухні
+
+Кухня дає дуже природні фрази з орудним відмінком.
+
+| Дія | Чим? |
+| --- | --- |
+| різати | ножем |
+| мішати | ложкою |
+| посипати | сіллю |
+| поливати | олією |
+| їсти | виделкою |
+| писати рецепт | ручкою |
+
+Почніть із коротких інструкцій:
+
+> Ріжемо огірок ножем.
+>
+> Мішаємо тісто ложкою.
+>
+> Посипаємо салат сіллю.
+>
+> Поливаємо овочі олією.
+
+`На сковорідці` або `у каструлі` - це вже місце, не орудний відмінок.
+У цьому уроці головна модель для знаряддя: `чим?` - `ножем`, `ложкою`,
+`виделкою`.
+
+### Чим на кухні?
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Ріжемо огірок ___.", "answer": "ножем", "options": ["ніж", "ножем", "ножа"]}, {"sentence": "Мішаємо тісто великою ___.", "answer": "ложкою", "options": ["ложка", "ложкою", "ложку"]}, {"sentence": "Посипаємо салат ___.", "answer": "сіллю", "options": ["сіль", "сіллю", "солі"]}, {"sentence": "Поливаємо овочі ___.", "answer": "олією", "options": ["олія", "олію", "олією"]}]`)} />
+
+## З чим страва?
+
+Коли ми описуємо інгредієнти, часто використовуємо `з/із/зі + орудний`.
+
+| Страва або напій | З чим? |
+| --- | --- |
+| борщ | зі сметаною |
+| салат | з помідорами і огірками |
+| вареники | з картоплею |
+| чай | з медом |
+| бутерброд | з маслом і сиром |
+| каша | з молоком |
+
+Ця модель схожа на `з другом`, але значення інше. Там людина разом з
+вами. Тут інгредієнт у страві або поруч зі стравою.
+
+> Я люблю вареники з картоплею.
+>
+> Мені подобається салат з помідорами і огірками.
+>
+> Подайте борщ зі сметаною, будь ласка.
+
+### Яка функція?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я працюю кухарем.", "options": [{"text": "професія", "correct": true}, {"text": "знаряддя", "correct": false}, {"text": "місце", "correct": false}], "explanation": "Кухарем називає професію."}, {"question": "Я їду автобусом.", "options": [{"text": "інгредієнт", "correct": false}, {"text": "засіб пересування", "correct": true}, {"text": "команда", "correct": false}], "explanation": "Автобусом показує засіб."}, {"question": "Салат з помідорами.", "options": [{"text": "інгредієнт", "correct": true}, {"text": "професія", "correct": false}, {"text": "час", "correct": false}], "explanation": "Помідори - інгредієнт у салаті."}, {"question": "Мій офіс між кафе і аптекою.", "options": [{"text": "місце", "correct": true}, {"text": "знаряддя", "correct": false}, {"text": "професія", "correct": false}], "explanation": "Між кафе і аптекою описує місце."}]`)} />
+
+## Мій робочий день
+
+Тепер поєднаємо різні функції в одному короткому тексті.
+
+> Я працюю адміністраторкою в мовній школі. Вранці їду на роботу
+> автобусом. Перед уроками п'ю каву з молоком. Мій стіл стоїть між
+> вікном і шафою. Я працюю з маленькою командою і часто говорю з новими
+> студентами. Увечері вдома готую салат з помідорами і огірками, ріжу
+> овочі ножем і посипаю їх сіллю.
+
+У тексті є багато орудного відмінка:
+
+| Фраза | Функція |
+| --- | --- |
+| адміністраторкою | професія |
+| автобусом | засіб пересування |
+| перед уроками | час |
+| каву з молоком | інгредієнт |
+| між вікном і шафою | місце |
+| з маленькою командою | люди поруч |
+| з новими студентами | люди поруч |
+| ножем, сіллю | знаряддя або матеріал |
+
+### Робота чи кухня?
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Робота": ["працюю вчителькою", "з моїми колегами", "перед нарадою", "за комп'ютером"], "Кухня": ["ріжу ножем", "вареники з картоплею", "посипаю сіллю", "салат з огірками"]}`)} />
+
+## Завдання: коротка розмова
+
+Проведіть міні-діалог. Один студент ставить питання, інший відповідає.
+
+| Питання | Модель відповіді |
+| --- | --- |
+| Ким ти працюєш? | Я працюю... |
+| Чим ти цікавишся? | Я цікавлюся... |
+| З ким ти обідаєш? | Я обідаю з... |
+| Чим ти їдеш на роботу? | Я їду... |
+| Що ти любиш готувати? | Я люблю... з... |
+| Чим ти це ріжеш або мішаєш? | Я ріжу... / мішаю... |
+
+Можна відповідати коротко. Головна мета - сказати форму орудного
+відмінка правильно.
+
+## Типові помилки
+
+| Не так | Краще | Чому |
+| --- | --- | --- |
+| працюю кухар | працюю кухарем | після `працювати` потрібен орудний |
+| цікавлюся музика | цікавлюся музикою | `цікавитися чим?` |
+| ріжу ніж | ріжу ножем | знаряддя відповідає на `чим?` |
+| салат з помідори | салат з помідорами | після `з` потрібен орудний |
+| з мій командою | з моєю командою | займенник теж змінюється |
+
+## 📋 Підсумок
+
+У реальній розмові орудний відмінок часто працює не один раз, а кілька
+разів у різних функціях:
+
+- професія: `працюю кухарем`;
+- інтерес: `цікавлюся українською кухнею`;
+- засіб або знаряддя: `їду автобусом`, `ріжу ножем`;
+- супровід або команда: `з колегами`, `з невеликою командою`;
+- інгредієнт: `вареники з картоплею`;
+- місце або час: `між вікнами`, `перед обідом`.
+
+Самоперевірка: напишіть шість речень про ваш день. Використайте принаймні
+три різні функції орудного відмінка: роботу, їжу, транспорт, людей або
+місце.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"готувати","translation":"to cook, to prepare","pos":"verb","example":"Я люблю готувати вареники.","examples":["to cook, to prepare","Я люблю готувати вареники."]},{"word":"різати","translation":"to cut","pos":"verb","example":"Ріжемо огірок ножем.","examples":["to cut","Ріжемо огірок ножем."]},{"word":"мішати","translation":"to stir, to mix","pos":"verb","example":"Мішаємо тісто ложкою.","examples":["to stir, to mix","Мішаємо тісто ложкою."]},{"word":"посипати","translation":"to sprinkle","pos":"verb","example":"Посипаємо салат сіллю.","examples":["to sprinkle","Посипаємо салат сіллю."]},{"word":"поливати","translation":"to pour over, to dress","pos":"verb","example":"Поливаємо овочі олією.","examples":["to pour over, to dress","Поливаємо овочі олією."]},{"word":"подавати","translation":"to serve","pos":"verb","example":"Подаємо борщ зі сметаною.","examples":["to serve","Подаємо борщ зі сметаною."]},{"word":"вареники","translation":"varenyky, dumplings","pos":"noun","example":"Я люблю вареники з картоплею.","examples":["varenyky, dumplings","Я люблю вареники з картоплею."]},{"word":"картопля","translation":"potato","pos":"noun","gender":"f","example":"Вареники з картоплею дуже смачні.","examples":["potato","Вареники з картоплею дуже смачні."]},{"word":"помідор","translation":"tomato","pos":"noun","gender":"m","example":"Салат з помідорами і огірками.","examples":["tomato","Салат з помідорами і огірками."]},{"word":"огірок","translation":"cucumber","pos":"noun","gender":"m","example":"Ріжемо огірок ножем.","examples":["cucumber","Ріжемо огірок ножем."]},{"word":"сіль","translation":"salt","pos":"noun","gender":"f","example":"Посипаємо салат сіллю.","examples":["salt","Посипаємо салат сіллю."]},{"word":"олія","translation":"oil","pos":"noun","gender":"f","example":"Поливаємо овочі олією.","examples":["oil","Поливаємо овочі олією."]},{"word":"виделка","translation":"fork","pos":"noun","gender":"f","example":"Я їм салат виделкою.","examples":["fork","Я їм салат виделкою."]},{"word":"ніж","translation":"knife","pos":"noun","gender":"m","example":"Ріжемо овочі ножем.","examples":["knife","Ріжемо овочі ножем."]},{"word":"ложка","translation":"spoon","pos":"noun","gender":"f","example":"Мішаємо тісто ложкою.","examples":["spoon","Мішаємо тісто ложкою."]},{"word":"рецепт","translation":"recipe","pos":"noun","gender":"m","example":"Я читаю рецепт українською.","examples":["recipe","Я читаю рецепт українською."]},{"word":"інгредієнт","translation":"ingredient","pos":"noun","gender":"m","example":"Картопля - головний інгредієнт.","examples":["ingredient","Картопля - головний інгредієнт."]},{"word":"нарада","translation":"meeting","pos":"noun","gender":"f","example":"Перед нарадою я п'ю каву.","examples":["meeting","Перед нарадою я п'ю каву."]},{"word":"колега","translation":"colleague","pos":"noun","gender":"common","example":"Я обідаю з колегою.","examples":["colleague","Я обідаю з колегою."]},{"word":"начальник","translation":"boss, manager","pos":"noun","gender":"m","example":"Я говорю з начальником.","examples":["boss, manager","Я говорю з начальником."]},{"word":"кухня","translation":"kitchen; cuisine","pos":"noun","gender":"f","example":"Я цікавлюся українською кухнею.","examples":["kitchen; cuisine","Я цікавлюся українською кухнею."]},{"word":"команда","translation":"team","pos":"noun","gender":"f","example":"Я працюю з маленькою командою.","examples":["team","Я працюю з маленькою командою."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"готувати","back":"to cook, to prepare"},{"front":"різати","back":"to cut"},{"front":"мішати","back":"to stir, to mix"},{"front":"посипати","back":"to sprinkle"},{"front":"поливати","back":"to pour over, to dress"},{"front":"подавати","back":"to serve"},{"front":"вареники","back":"varenyky, dumplings"},{"front":"картопля","back":"potato"},{"front":"помідор","back":"tomato"},{"front":"огірок","back":"cucumber"},{"front":"сіль","back":"salt"},{"front":"олія","back":"oil"},{"front":"виделка","back":"fork"},{"front":"ніж","back":"knife"},{"front":"ложка","back":"spoon"},{"front":"рецепт","back":"recipe"},{"front":"інгредієнт","back":"ingredient"},{"front":"нарада","back":"meeting"},{"front":"колега","back":"colleague"},{"front":"начальник","back":"boss, manager"},{"front":"кухня","back":"kitchen; cuisine"},{"front":"команда","back":"team"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Питання про роботу
+
+*(див. урок, §Розмова про роботу)*
+
+### Чим на кухні?
+
+*(див. урок, §На кухні)*
+
+### Яка функція?
+
+*(див. урок, §З чим страва?)*
+
+### Робота чи кухня?
+
+*(див. урок, §Мій робочий день)*
+
+### Робочий день
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Вона працює лікаркою.", "isTrue": true, "explanation": "Після працює потрібна форма лікаркою."}, {"statement": "Я їду на роботу автобус.", "isTrue": false, "explanation": "Потрібно автобусом."}, {"statement": "Ми обідаємо з колегами.", "isTrue": true, "explanation": "З ким? З колегами."}, {"statement": "Він цікавиться музика.", "isTrue": false, "explanation": "Потрібно музикою."}]`)} />
+
+### Виправте рецепт
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильне речення." items={JSON.parse(`[{"sentence": "Ріжемо овочі ніж.", "errorWord": "ніж", "correctForm": "Ріжемо овочі ножем.", "options": ["Ріжемо овочі ножем.", "Ріжемо овочі ніж."], "explanation": "Чим? Ножем."}, {"sentence": "Салат з помідори і огірки.", "errorWord": "з помідори і огірки", "correctForm": "Салат з помідорами і огірками.", "options": ["Салат з помідорами і огірками.", "Салат з помідори і огірки."], "explanation": "Після з потрібен орудний відмінок множини."}, {"sentence": "Вареники з картопля.", "errorWord": "картопля", "correctForm": "Вареники з картоплею.", "options": ["Вареники з картоплею.", "Вареники з картопля."], "explanation": "З чим? З картоплею."}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Dobra Forma 10-3: Instrumental with працювати, бути, стати](https://opentext.ku.edu/dobraforma/chapter/10-3/) — Focused practice for profession predicates with the instrumental case.
+- 📄 [ULP 5 Minute Ukrainian: How to talk about your job / occupation](https://www.ukrainianlessons.com/fmu31/) — Catalogued work and occupation phrases for the profession half of the lesson.
+- 📄 [ULP 5 Minute Ukrainian: Staple food in Ukrainian](https://www.ukrainianlessons.com/fmu48/) — Learner-facing staple-food vocabulary for recipe and ingredient practice.
+- 📄 [ULP: Phrasebook Food](https://www.ukrainianlessons.com/ph-food/) — Phrasebook support for food ordering and ingredient language.
+
+**🎧 Аудіо:**
+- 🎧 [ULP: Food festivals + Genitive case](https://www.ukrainianlessons.com/episode47/) — Catalogued food-context episode for practicing food vocabulary around case forms.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
