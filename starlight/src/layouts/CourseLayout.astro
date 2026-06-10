@@ -105,9 +105,48 @@ const isActive = (href: string) => {
         }
         applyTheme();
         query.addEventListener?.('change', applyTheme);
+        // Manual dark/light toggle (delegated so it works regardless of when
+        // the button mounts). Persists to the same `lu-theme` key the loader reads.
+        document.addEventListener('click', (event) => {
+          const toggle = event.target.closest?.('#lu-theme-toggle');
+          if (!toggle) return;
+          const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+          document.documentElement.dataset.theme = next;
+          try {
+            window.localStorage.setItem('lu-theme', next);
+          } catch {
+            // Storage can be unavailable in hardened browser contexts.
+          }
+        });
       })();
     </script>
     <script is:inline defer data-domain="learn-ukrainian.github.io" src="https://plausible.io/js/script.js"></script>
+    <style is:global>
+      .lu-theme-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        margin-left: 0.25rem;
+        padding: 0;
+        border: 1px solid var(--lu-border, color-mix(in srgb, currentColor 22%, transparent));
+        border-radius: 8px;
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+        font-size: 15px;
+        line-height: 1;
+      }
+      .lu-theme-toggle:hover {
+        background: var(--lu-surface-muted, rgba(127, 127, 127, 0.14));
+      }
+      .lu-theme-icon { pointer-events: none; }
+      .lu-theme-icon--sun { display: none; }
+      .lu-theme-icon--moon { display: inline; }
+      [data-theme='dark'] .lu-theme-icon--moon { display: none; }
+      [data-theme='dark'] .lu-theme-icon--sun { display: inline; }
+    </style>
   </head>
   <body>
     <div class="lu-shell">
@@ -126,6 +165,10 @@ const isActive = (href: string) => {
             ))}
             <span class="lu-nav-divider" aria-hidden="true"></span>
             <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io">GitHub</a>
+            <button id="lu-theme-toggle" class="lu-theme-toggle" type="button" aria-label="Toggle dark and light theme" title="Toggle dark / light theme">
+              <span class="lu-theme-icon lu-theme-icon--moon" aria-hidden="true">🌙</span>
+              <span class="lu-theme-icon lu-theme-icon--sun" aria-hidden="true">☀️</span>
+            </button>
           </nav>
           <details class="lu-mobile-menu">
             <summary aria-label="Open navigation">Menu</summary>
