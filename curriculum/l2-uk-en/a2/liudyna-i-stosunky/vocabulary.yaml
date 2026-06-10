@@ -1,0 +1,60 @@
+- word: людина
+  translation: person, human being
+  pos: noun
+  example: "Вона добра людина."
+- word: стосунок
+  translation: relationship
+  pos: noun
+  example: "Наші стосунки дуже теплі."
+- word: характер
+  translation: character, personality
+  pos: noun
+  example: "У нього спокійний характер."
+- word: зовнішність
+  translation: appearance
+  pos: noun
+  example: "Ми описуємо зовнішність і характер."
+- word: привітний
+  translation: friendly, welcoming
+  pos: adjective
+  example: "Мій сусід дуже привітний."
+- word: щирий
+  translation: sincere
+  pos: adjective
+  example: "Це щира людина."
+- word: працьовитий
+  translation: hardworking
+  pos: adjective
+  example: "Колега працьовитий і відповідальний."
+- word: терплячий
+  translation: patient
+  pos: adjective
+  example: "Викладач терплячий."
+- word: сусід
+  translation: neighbor
+  pos: noun
+  example: "Сусід допоміг мені з валізою."
+- word: описувати
+  translation: to describe
+  pos: verb
+  example: "Я описую свою подругу."
+- word: впертий
+  translation: stubborn, persistent
+  pos: adjective
+  example: "Він упертий, але наполегливий."
+- word: чуйний
+  translation: caring, responsive
+  pos: adjective
+  example: "Вона чуйна і добра."
+- word: наполегливий
+  translation: persistent, determined
+  pos: adjective
+  example: "Наполеглива людина не здається."
+- word: родич
+  translation: relative
+  pos: noun
+  example: "Мій родич живе в Полтаві."
+- word: знайомий
+  translation: acquaintance
+  pos: noun
+  example: "Це мій знайомий з курсу."

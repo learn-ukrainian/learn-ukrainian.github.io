@@ -1,0 +1,44 @@
+- word: вправа
+  translation: exercise
+  pos: noun
+  example: "Це коротка вправа."
+- word: перевірка
+  translation: check, test
+  pos: noun
+  example: "Сьогодні перевірка A2.1."
+- word: контрольна точка
+  translation: checkpoint
+  pos: noun
+  example: "Контрольна точка допомагає повторити тему."
+- word: завдання
+  translation: task
+  pos: noun
+  example: "Завдання коротке."
+- word: текст
+  translation: text
+  pos: noun
+  example: "Прочитайте текст."
+- word: речення
+  translation: sentence
+  pos: noun
+  example: "Напишіть одне речення."
+- word: відповідь
+  translation: answer
+  pos: noun
+  example: "Дайте коротку відповідь."
+- word: правильний
+  translation: correct
+  pos: adjective
+  example: "Виберіть правильний варіант."
+- word: варіант
+  translation: option, variant
+  pos: noun
+  example: "Є два варіанти."
+- word: обрати
+  translation: to choose
+  pos: verb
+  example: "Оберіть форму дієслова."
+- word: написати
+  translation: to write
+  pos: verb
+  example: "Напишіть коротку відповідь."

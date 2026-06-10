@@ -2618,3 +2618,102 @@
 [data-theme='dark'] .vocabTable {
   background: var(--ifm-background-color);
 }
+
+/* ============================================================
+   DARK-MODE STATE TINTS  [activity-darkmode-contrast]
+   The rgba(R,G,B, 0.05–0.15) state backgrounds defined above are
+   tuned for a WHITE surface; on the dark theme they are near-
+   invisible, leaving hover / selection / match / correct / wrong
+   feedback unreadable across activities. These overrides restore
+   legible contrast for EVERY activity type in dark mode.
+   Additive — light mode is untouched.
+   ============================================================ */
+
+/* neutral · hover · selected → blue */
+[data-theme='dark'] .option:hover:not(:disabled),
+[data-theme='dark'] .option.selected,
+[data-theme='dark'] .chip:hover,
+[data-theme='dark'] .blankDropZone:hover,
+[data-theme='dark'] .matchColumn:first-child .matchItem,
+[data-theme='dark'] .matchItem.selected,
+[data-theme='dark'] .letterTile,
+[data-theme='dark'] .wordTile.selectedWord,
+[data-theme='dark'] .wordHoverable:hover,
+[data-theme='dark'] .wordSelected,
+[data-theme='dark'] .checkboxOption:hover,
+[data-theme='dark'] .checkboxOption.checked,
+[data-theme='dark'] .translateOption:hover:not(:disabled),
+[data-theme='dark'] .translateOption.selected,
+[data-theme='dark'] .markableWord:hover,
+[data-theme='dark'] .charButton:hover,
+[data-theme='dark'] .featureTable tr.featureSelected,
+[data-theme='dark'] .translationSelected,
+[data-theme='dark'] .vocabTable tr:hover td {
+  background: rgba(91, 155, 213, 0.22);
+}
+
+[data-theme='dark'] .blankDropZone {
+  background: rgba(91, 155, 213, 0.10);
+}
+
+/* match-up right column → amber-orange (distinct from the blue left) */
+[data-theme='dark'] .matchColumn:last-child .matchItem {
+  background: rgba(230, 145, 56, 0.20);
+}
+
+/* drag pools · prompts → violet */
+[data-theme='dark'] .chipDraggable,
+[data-theme='dark'] .wordPool.dropTarget,
+[data-theme='dark'] .debateQuestion,
+[data-theme='dark'] .essayPrompt {
+  background: rgba(167, 130, 224, 0.18);
+}
+
+/* correct · matched → green (+ legible text) */
+[data-theme='dark'] .option.correct,
+[data-theme='dark'] .blank.correct,
+[data-theme='dark'] .matchItem.matched,
+[data-theme='dark'] .trueButton:hover:not(:disabled),
+[data-theme='dark'] .tfButton.correct,
+[data-theme='dark'] .answerZone.correct,
+[data-theme='dark'] .sentenceBuilder.correct,
+[data-theme='dark'] .noErrorButton:hover,
+[data-theme='dark'] .checkboxOption.correctAnswer,
+[data-theme='dark'] .translateOption.correct,
+[data-theme='dark'] .clozeSelect.correct,
+[data-theme='dark'] .markableWord.correctMark,
+[data-theme='dark'] .markableWord.missedMark,
+[data-theme='dark'] .dialogueLine.correct,
+[data-theme='dark'] .grammarInput input.correct,
+[data-theme='dark'] .correctAnswer,
+[data-theme='dark'] .transcriptionInput textarea.correct {
+  background: rgba(46, 160, 70, 0.26) !important;
+  color: #81C995;
+}
+
+/* incorrect · wrong → red (+ legible text) */
+[data-theme='dark'] .option.incorrect,
+[data-theme='dark'] .blank.incorrect,
+[data-theme='dark'] .matchItem.wrong,
+[data-theme='dark'] .falseButton:hover:not(:disabled),
+[data-theme='dark'] .tfButton.incorrect,
+[data-theme='dark'] .answerZone.incorrect,
+[data-theme='dark'] .sentenceBuilder.incorrect,
+[data-theme='dark'] .wordWrong,
+[data-theme='dark'] .noErrorWrong,
+[data-theme='dark'] .checkboxOption.wrongAnswer,
+[data-theme='dark'] .translateOption.incorrect,
+[data-theme='dark'] .clozeSelect.incorrect,
+[data-theme='dark'] .markableWord.wrongMark,
+[data-theme='dark'] .dialogueLine.incorrect,
+[data-theme='dark'] .grammarInput input.incorrect,
+[data-theme='dark'] .transcriptionInput textarea.incorrect {
+  background: rgba(210, 70, 70, 0.26) !important;
+  color: #F28B82;
+}
+
+/* missed answer · transcription highlight → amber */
+[data-theme='dark'] .checkboxOption.missedAnswer,
+[data-theme='dark'] .transcriptionOriginal {
+  background: rgba(251, 188, 4, 0.22);
+}
