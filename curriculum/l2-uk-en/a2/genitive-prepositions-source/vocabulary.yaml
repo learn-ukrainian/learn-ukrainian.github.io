@@ -51,7 +51,6 @@
 - word: канікули
   translation: vacation, holidays
   pos: noun
-  gender: pl
   example: "Після канікул починається курс."
 - word: дитинство
   translation: childhood
