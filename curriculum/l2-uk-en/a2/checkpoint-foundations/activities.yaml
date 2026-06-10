@@ -1,0 +1,103 @@
+inline:
+  - id: act-1
+    type: quiz
+    title: Знайди граматику
+    instruction: Choose what the highlighted phrase practices.
+    items:
+      - prompt: "Я довго готував вечерю."
+        options:
+          - text: "недоконаний вид, процес"
+            correct: true
+          - text: "родовий множини"
+            correct: false
+        explanation: Довго готував is process.
+      - prompt: "Я приготував салат."
+        options:
+          - text: "доконаний вид, результат"
+            correct: true
+          - text: "дата"
+            correct: false
+        explanation: Приготував shows result.
+      - prompt: "Немає молока."
+        options:
+          - text: "родовий після немає"
+            correct: true
+          - text: "називний однини"
+            correct: false
+        explanation: Молока is genitive.
+  - id: act-2
+    type: fill-in
+    title: Обери форму
+    instruction: Choose the correct word.
+    items:
+      - sentence: "У мене немає ___."
+        answer: "часу"
+        options: ["час", "часу"]
+        explanation: Немає takes genitive.
+      - sentence: "П'ять ___."
+        answer: "студентів"
+        options: ["студенти", "студентів"]
+        explanation: Five takes genitive plural.
+      - sentence: "Учора я ___ листа."
+        answer: "написав"
+        options: ["писав", "написав"]
+        explanation: The sentence points to a completed result.
+  - id: act-3
+    type: match-up
+    title: Запитання і граматика
+    instruction: Match each question with the grammar it usually asks for.
+    pairs:
+      - left: "Що ти робив?"
+        right: "недоконаний вид"
+      - left: "Що ти зробив?"
+        right: "доконаний вид"
+      - left: "Чого немає?"
+        right: "родовий відмінок"
+      - left: "Скільки гостей?"
+        right: "числівник + форма іменника"
+  - id: act-4
+    type: error-correction
+    title: Змішані помилки
+    instruction: Choose the corrected sentence.
+    items:
+      - sentence: "У мене немає квиток."
+        error: "квиток"
+        correction: "У мене немає квитка."
+        options: ["У мене немає квитка.", "У мене немає квиток."]
+        explanation: Немає requires genitive.
+      - sentence: "П'ять студент."
+        error: "студент"
+        correction: "П'ять студентів."
+        options: ["П'ять студентів.", "П'ять студент."]
+        explanation: Five requires genitive plural.
+      - sentence: "Я вже писав лист."
+        error: "писав"
+        correction: "Я вже написав лист."
+        options: ["Я вже написав лист.", "Я вже писав лист."]
+        explanation: Уже points to result.
+workbook:
+  - type: true-false
+    title: Самоперевірка
+    instruction: Decide whether each statement is true.
+    items:
+      - statement: "Робив usually focuses on process."
+        answer: true
+        explanation: It is imperfective.
+      - statement: "Зробив usually focuses on result."
+        answer: true
+        explanation: It is perfective.
+      - statement: "Немає брат is the target form."
+        answer: false
+        explanation: The target form is немає брата.
+  - type: match-up
+    title: Міні-повторення
+    instruction: Match the phrase with its label.
+    pairs:
+      - left: "п'яте березня"
+        right: "дата"
+      - left: "багато друзів"
+        right: "кількість"
+      - left: "читав"
+        right: "процес"
+      - left: "прочитав"
+        right: "результат"

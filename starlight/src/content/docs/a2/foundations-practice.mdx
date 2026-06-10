@@ -1,0 +1,231 @@
+---
+title: "Перші кроки в А2"
+description: "Практикуємо видові пари та родовий відмінок у діалогах"
+sidebar:
+  order: 7
+  label: "07. Перші кроки в А2"
+prev: genitive-dates-numbers
+next: checkpoint-foundations
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import RitualSequencing from '@site/src/components/RitualSequencing';
+import VariantComparison from '@site/src/components/VariantComparison';
+import MotifFormula from '@site/src/components/MotifFormula';
+import PerformanceActivity from '@site/src/components/PerformanceActivity';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import MythBuster from '@site/src/components/MythBuster';
+import HighCultureBridge from '@site/src/components/HighCultureBridge';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+Це практичний модуль. Ми не додаємо велику нову тему, а збираємо разом
+те, що вже з'явилося: видові пари, родовий відмінок, кількість,
+відсутність і короткі реальні діалоги.
+
+## Сценарій 1 — плануємо вечірку
+
+- **Марта:** У суботу буде новосілля. Що треба купити?
+- **Денис:** Треба купити напої, фрукти і торт.
+- **Марта:** У нас немає серветок.
+- **Денис:** Я куплю серветки. А ти будеш готувати салат?
+- **Марта:** Так. Я вже купила овочі, але ще не приготувала салат.
+
+Тут є три шари:
+
+- плани: `будеш готувати`;
+- результат: `купила`, `куплю`;
+- родовий: `немає серветок`.
+
+## Сценарій 2 — на ринку
+
+- **Покупець:** Дайте, будь ласка, два кілограми яблук.
+- **Продавчиня:** Добре. Ще щось?
+- **Покупець:** П'ять лимонів і один кілограм меду.
+- **Продавчиня:** Лимонів сьогодні немає.
+- **Покупець:** Тоді кілька груш, будь ласка.
+
+У цій ситуації родовий потрібен одразу:
+
+| Фраза | Чому так |
+| --- | --- |
+| два кілограми яблук | кількість |
+| п'ять лимонів | 5+ |
+| кілограм меду | частина / кількість |
+| немає лимонів | відсутність |
+
+### На ринку
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Дайте два кілограми ___.", "answer": "яблук", "options": ["яблука", "яблук"]}, {"sentence": "У нас немає ___.", "answer": "лимонів", "options": ["лимони", "лимонів"]}, {"sentence": "Купіть п'ять ___.", "answer": "груш", "options": ["груші", "груш"]}]`)} />
+
+## Сценарій 3 — як пройшов день?
+
+- **Ірина:** Що ти робив учора ввечері?
+- **Олег:** Я довго писав листа.
+- **Ірина:** І написав?
+- **Олег:** Так, написав і відправив. А потім читав книжку.
+- **Ірина:** Прочитав?
+- **Олег:** Ні, тільки читав. Вона довга.
+
+Питання `що ти робив?` просить процес. Питання `що ти зробив?` просить
+результат.
+
+| Питання | Типова відповідь |
+| --- | --- |
+| Що ти робив? | Я готував, читав, писав. |
+| Що ти зробив? | Я приготував, прочитав, написав. |
+
+### Робив чи зробив?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що ти робив увечері?", "options": [{"text": "Я писав листа.", "correct": true}, {"text": "Я написав листа.", "correct": false}], "explanation": "The question asks about process."}, {"question": "Що ти зробив?", "options": [{"text": "Я написав список.", "correct": true}, {"text": "Я писав список.", "correct": false}], "explanation": "The question asks about result."}, {"question": "Я вже...", "options": [{"text": "купив овочі", "correct": true}, {"text": "купував овочі", "correct": false}], "explanation": "Уже points to result."}]`)} />
+
+## Практична модель
+
+Коли говорите про план або день, тримайте коротку схему:
+
+1. Що треба робити?
+2. Чого немає?
+3. Скільки потрібно?
+4. Що вже зроблено?
+
+Приклад:
+
+> Завтра ми будемо готувати вечерю. У нас немає хліба і мало овочів.
+> Треба купити два кілограми картоплі. Я вже купив сир і написав список.
+
+Це A2-речення: коротке, конкретне, з реальною граматикою.
+
+### Питання і відповідь
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Чого немає?", "right": "Немає серветок."}, {"left": "Скільки гостей?", "right": "Десять гостей."}, {"left": "Що ти будеш робити?", "right": "Буду готувати салат."}, {"left": "Що ти вже зробив?", "right": "Я купив овочі."}]`)} />
+
+## Рольова гра без поспіху
+
+Спробуйте зіграти одну з трьох ситуацій. Один студент ставить питання,
+інший відповідає коротко. Після двох-трьох реплік поміняйтеся ролями.
+
+| Ситуація | Що треба використати |
+| --- | --- |
+| Новосілля | `немає`, `треба купити`, `я вже купив/купила` |
+| Ринок | числа, кілограми, `немає лимонів` |
+| Учорашній день | `що робив?`, `що зробив?` |
+
+Мета не в тому, щоб говорити швидко. Мета - не губити граматику, коли
+розмова стає трохи живішою.
+
+Приклад:
+
+- **А:** Що треба купити для вечірки?
+- **Б:** Треба купити два торти і багато фруктів.
+- **А:** У нас є напої?
+- **Б:** Ні, напоїв немає. Але я вже купив серветки.
+
+Після діалогу зробіть коротку самоперевірку:
+
+- Чи була хоча б одна фраза з `немає`?
+- Чи була хоча б одна кількість?
+- Чи було видно різницю між процесом і результатом?
+
+## 📋 Підсумок
+
+Перші модулі A2 працюють разом. Вид дієслова допомагає відрізняти
+процес від результату. Родовий відмінок допомагає говорити про
+відсутність і кількість. У діалозі ці теми майже завжди з'являються
+разом.
+
+### Граматика в діалозі
+
+<GroupSort client:only='react' groups={JSON.parse(`{"вид": ["писав листа", "написав листа", "буду готувати", "приготувала"], "родовий": ["немає серветок", "п'ять гостей", "мало овочів", "кілька груш"]}`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"планувати / запланувати","translation":"to plan","pos":"verb pair","example":"Ми плануємо вечірку.","examples":["to plan","Ми плануємо вечірку."]},{"word":"купувати / купити","translation":"to buy","pos":"verb pair","example":"Я купую овочі і вже купив хліб.","examples":["to buy","Я купую овочі і вже купив хліб."]},{"word":"готувати / приготувати","translation":"to cook, prepare","pos":"verb pair","example":"Вона готує салат і скоро приготує вечерю.","examples":["to cook, prepare","Вона готує салат і скоро приготує вечерю."]},{"word":"ринок","translation":"market","pos":"noun","example":"Ми йдемо на ринок.","examples":["market","Ми йдемо на ринок."]},{"word":"коштувати","translation":"to cost","pos":"verb","example":"Скільки коштує мед?","examples":["to cost","Скільки коштує мед?"]},{"word":"кілограм","translation":"kilogram","pos":"noun","example":"Дайте кілограм яблук.","examples":["kilogram","Дайте кілограм яблук."]},{"word":"вечірка","translation":"party","pos":"noun","example":"У суботу буде вечірка.","examples":["party","У суботу буде вечірка."]},{"word":"день","translation":"day","pos":"noun","example":"Як пройшов день?","examples":["day","Як пройшов день?"]},{"word":"сценарій","translation":"scenario","pos":"noun","example":"Це практичний сценарій.","examples":["scenario","Це практичний сценарій."]},{"word":"діалог","translation":"dialogue","pos":"noun","example":"Ми читаємо діалог на ринку.","examples":["dialogue","Ми читаємо діалог на ринку."]},{"word":"обговорювати","translation":"to discuss","pos":"verb","example":"Друзі обговорюють план.","examples":["to discuss","Друзі обговорюють план."]},{"word":"замовляти / замовити","translation":"to order","pos":"verb pair","example":"Я замовляю каву і замовив торт.","examples":["to order","Я замовляю каву і замовив торт."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"планувати / запланувати","back":"to plan"},{"front":"купувати / купити","back":"to buy"},{"front":"готувати / приготувати","back":"to cook, prepare"},{"front":"ринок","back":"market"},{"front":"коштувати","back":"to cost"},{"front":"кілограм","back":"kilogram"},{"front":"вечірка","back":"party"},{"front":"день","back":"day"},{"front":"сценарій","back":"scenario"},{"front":"діалог","back":"dialogue"},{"front":"обговорювати","back":"to discuss"},{"front":"замовляти / замовити","back":"to order"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### На ринку
+
+*(see lesson, §Сценарій 2 — на ринку)*
+
+### Робив чи зробив?
+
+*(see lesson, §Сценарій 3 — як пройшов день?)*
+
+### Питання і відповідь
+
+*(see lesson, §Практична модель)*
+
+### Граматика в діалозі
+
+*(see lesson, §Підсумок)*
+
+### Практика A2.1
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Що ти робив? usually asks about process.", "isTrue": true, "explanation": "It invites imperfective."}, {"statement": "Немає лимонів is a genitive phrase.", "isTrue": true, "explanation": "Лимонів is genitive plural."}, {"statement": "П'ять лимони is the target A2 form.", "isTrue": false, "explanation": "The target form is п'ять лимонів."}]`)} />
+
+### Виправ діалог
+
+<ErrorCorrection client:only='react' instruction="Choose the corrected sentence." items={JSON.parse(`[{"sentence": "У нас немає серветки.", "errorWord": "серветки", "correctForm": "У нас немає серветок.", "options": ["У нас немає серветок.", "У нас немає серветки."], "explanation": "In this party context, plural absence is needed."}, {"sentence": "Я вже готував салат.", "errorWord": "готував", "correctForm": "Я вже приготував салат.", "options": ["Я вже приготував салат.", "Я вже готував салат."], "explanation": "Уже points to completed result."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**📝 Articles:**
+- 📄 [Genitive Case (Родовий відмінок](https://www.ukrainianlessons.com/genitive-case/) — Review reference for absence and quantity patterns used in the practice dialogues.
+- 📄 [Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/) — Follow-up for market quantities and the 1, 2-4, 5+ pattern.
+- 📄 [Talk Ukrainian: Verb Aspect](https://talkukrainian.com/verb-aspect/) — Compact reminder of process/result contrasts before role-play practice.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

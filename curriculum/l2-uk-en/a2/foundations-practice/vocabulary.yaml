@@ -1,0 +1,48 @@
+- word: планувати / запланувати
+  translation: to plan
+  pos: verb pair
+  example: "Ми плануємо вечірку."
+- word: купувати / купити
+  translation: to buy
+  pos: verb pair
+  example: "Я купую овочі і вже купив хліб."
+- word: готувати / приготувати
+  translation: to cook, prepare
+  pos: verb pair
+  example: "Вона готує салат і скоро приготує вечерю."
+- word: ринок
+  translation: market
+  pos: noun
+  example: "Ми йдемо на ринок."
+- word: коштувати
+  translation: to cost
+  pos: verb
+  example: "Скільки коштує мед?"
+- word: кілограм
+  translation: kilogram
+  pos: noun
+  example: "Дайте кілограм яблук."
+- word: вечірка
+  translation: party
+  pos: noun
+  example: "У суботу буде вечірка."
+- word: день
+  translation: day
+  pos: noun
+  example: "Як пройшов день?"
+- word: сценарій
+  translation: scenario
+  pos: noun
+  example: "Це практичний сценарій."
+- word: діалог
+  translation: dialogue
+  pos: noun
+  example: "Ми читаємо діалог на ринку."
+- word: обговорювати
+  translation: to discuss
+  pos: verb
+  example: "Друзі обговорюють план."
+- word: замовляти / замовити
+  translation: to order
+  pos: verb pair
+  example: "Я замовляю каву і замовив торт."

@@ -1,0 +1,48 @@
+- word: число
+  translation: date, number
+  pos: noun
+  example: "Яке сьогодні число?"
+- word: місяць
+  translation: month
+  pos: noun
+  example: "Березень - це місяць."
+- word: січень / січня
+  translation: January
+  pos: noun
+  example: "Перше січня - свято."
+- word: лютий / лютого
+  translation: February
+  pos: noun
+  example: "Друге лютого."
+- word: березень / березня
+  translation: March
+  pos: noun
+  example: "П'яте березня."
+- word: квітень / квітня
+  translation: April
+  pos: noun
+  example: "Десяте квітня."
+- word: травень / травня
+  translation: May
+  pos: noun
+  example: "Перше травня."
+- word: листопад / листопада
+  translation: November
+  pos: noun
+  example: "Двадцяте листопада."
+- word: заперечення
+  translation: negation
+  pos: noun
+  example: "У запереченні можливий родовий."
+- word: числівник
+  translation: numeral
+  pos: noun
+  example: "Числівник змінює форму іменника."
+- word: додаток
+  translation: grammatical object
+  pos: noun
+  example: "Додаток може стояти в родовому."
+- word: правило
+  translation: rule
+  pos: noun
+  example: "Правило 1, 2-4, 5+ дуже важливе."

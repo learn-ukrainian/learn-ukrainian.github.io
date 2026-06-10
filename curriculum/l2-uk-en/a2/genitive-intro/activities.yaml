@@ -1,0 +1,94 @@
+inline:
+  - id: act-1
+    type: match-up
+    title: Є чи немає
+    instruction: Match the positive phrase with the genitive negative phrase.
+    pairs:
+      - left: "є брат"
+        right: "немає брата"
+      - left: "є плита"
+        right: "немає плити"
+      - left: "є дзеркало"
+        right: "немає дзеркала"
+      - left: "є квиток"
+        right: "немає квитка"
+  - id: act-2
+    type: fill-in
+    title: Форма після немає
+    instruction: Choose the genitive form.
+    items:
+      - sentence: "У мене немає ___."
+        answer: "часу"
+        options: ["час", "часу"]
+        explanation: Немає takes genitive.
+      - sentence: "Тут немає ___."
+        answer: "кави"
+        options: ["кава", "кави"]
+        explanation: Кава becomes кави.
+      - sentence: "У кімнаті немає ___."
+        answer: "вікна"
+        options: ["вікно", "вікна"]
+        explanation: Вікно becomes вікна.
+  - id: act-3
+    type: quiz
+    title: Багато чи мало
+    instruction: Choose the phrase with a natural genitive plural.
+    items:
+      - prompt: "many friends"
+        options:
+          - text: "багато друзів"
+            correct: true
+          - text: "багато друзі"
+            correct: false
+        explanation: Багато needs genitive plural.
+      - prompt: "few books"
+        options:
+          - text: "мало книжок"
+            correct: true
+          - text: "мало книги"
+            correct: false
+        explanation: Мало also takes genitive plural.
+      - prompt: "several students"
+        options:
+          - text: "кілька студентів"
+            correct: true
+          - text: "кілька студенти"
+            correct: false
+        explanation: Кілька takes genitive plural.
+  - id: act-4
+    type: group-sort
+    title: Однина чи множина?
+    instruction: Sort the phrases by the genitive pattern.
+    groups:
+      - name: "немає + однина"
+        items: ["немає брата", "немає кави", "немає місця"]
+      - name: "кількість + множина"
+        items: ["багато друзів", "мало грошей", "кілька книжок"]
+workbook:
+  - type: true-false
+    title: Родовий старт
+    instruction: Decide whether each statement is true.
+    items:
+      - statement: "Після немає часто стоїть родовий відмінок."
+        answer: true
+        explanation: У мене немає брата.
+      - statement: "Багато студентів uses genitive plural."
+        answer: true
+        explanation: Студентів is genitive plural.
+      - statement: "Немає плита is the correct A2 form."
+        answer: false
+        explanation: The correct phrase is немає плити.
+  - type: error-correction
+    title: Виправ родовий
+    instruction: Choose the corrected sentence.
+    items:
+      - sentence: "У мене немає квиток."
+        error: "квиток"
+        correction: "У мене немає квитка."
+        options: ["У мене немає квитка.", "У мене немає квиток."]
+        explanation: Квиток becomes квитка.
+      - sentence: "У нас багато коробки."
+        error: "коробки"
+        correction: "У нас багато коробок."
+        options: ["У нас багато коробок.", "У нас багато коробки."]
+        explanation: Багато requires genitive plural.

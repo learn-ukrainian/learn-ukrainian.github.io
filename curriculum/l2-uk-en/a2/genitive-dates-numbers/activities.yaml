@@ -1,0 +1,106 @@
+inline:
+  - id: act-1
+    type: match-up
+    title: Місяць у даті
+    instruction: Match the month with its date form.
+    pairs:
+      - left: "січень"
+        right: "січня"
+      - left: "лютий"
+        right: "лютого"
+      - left: "березень"
+        right: "березня"
+      - left: "квітень"
+        right: "квітня"
+      - left: "листопад"
+        right: "листопада"
+  - id: act-2
+    type: fill-in
+    title: 1, 2-4, 5+
+    instruction: Choose the noun form after the number.
+    items:
+      - sentence: "один ___"
+        answer: "номер"
+        options: ["номер", "номери", "номерів"]
+        explanation: One takes nominative singular.
+      - sentence: "два ___"
+        answer: "номери"
+        options: ["номер", "номери", "номерів"]
+        explanation: Two takes nominative plural.
+      - sentence: "п'ять ___"
+        answer: "номерів"
+        options: ["номер", "номери", "номерів"]
+        explanation: Five takes genitive plural.
+      - sentence: "три ___"
+        answer: "книги"
+        options: ["книга", "книги", "книг"]
+        explanation: Three takes nominative plural.
+      - sentence: "шість ___"
+        answer: "книг"
+        options: ["книга", "книги", "книг"]
+        explanation: Six takes genitive plural.
+  - id: act-3
+    type: quiz
+    title: Заперечення
+    instruction: Choose the natural genitive negation.
+    items:
+      - prompt: "Я бачу паспорт -> Я не бачу..."
+        options:
+          - text: "паспорта"
+            correct: true
+          - text: "паспорт"
+            correct: false
+        explanation: Genitive is a common negation pattern.
+      - prompt: "Вона читає книгу -> Вона не читає..."
+        options:
+          - text: "книги"
+            correct: true
+          - text: "книга"
+            correct: false
+        explanation: Книга becomes книги.
+      - prompt: "Він купив машину -> Він не купив..."
+        options:
+          - text: "машини"
+            correct: true
+          - text: "машина"
+            correct: false
+        explanation: Машина becomes машини.
+  - id: act-4
+    type: group-sort
+    title: Дата, кількість, заперечення
+    instruction: Sort phrases by what they practice.
+    groups:
+      - name: "дата"
+        items: ["п'яте березня", "перше січня"]
+      - name: "кількість"
+        items: ["два номери", "п'ять гостей"]
+      - name: "заперечення"
+        items: ["не бачу паспорта", "не читаю книги"]
+workbook:
+  - type: true-false
+    title: Числа і родовий
+    instruction: Decide whether each statement is true.
+    items:
+      - statement: "П'ять гостей uses genitive plural."
+        answer: true
+        explanation: Гостей is genitive plural.
+      - statement: "Два номери follows the 2-4 pattern."
+        answer: true
+        explanation: The noun is nominative plural.
+      - statement: "У даті місяць залишається у називному відмінку."
+        answer: false
+        explanation: We say п'яте березня.
+  - type: error-correction
+    title: Виправ форму
+    instruction: Choose the corrected phrase.
+    items:
+      - sentence: "п'ять номер"
+        error: "номер"
+        correction: "п'ять номерів"
+        options: ["п'ять номерів", "п'ять номер"]
+        explanation: Five takes genitive plural.
+      - sentence: "перше січень"
+        error: "січень"
+        correction: "перше січня"
+        options: ["перше січня", "перше січень"]
+        explanation: Month name is genitive in dates.
