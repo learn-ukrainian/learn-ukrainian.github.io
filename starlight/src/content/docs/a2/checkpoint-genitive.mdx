@@ -1,0 +1,296 @@
+---
+title: "Контрольна робота — родовий відмінок"
+description: "Перевірка знань з модулів 9-15: прийменники, узгодження, множина, ситуації"
+sidebar:
+  order: 16
+  label: "16. Контрольна робота — родовий відмінок"
+prev: shopping-and-health
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import RitualSequencing from '@site/src/components/RitualSequencing';
+import VariantComparison from '@site/src/components/VariantComparison';
+import MotifFormula from '@site/src/components/MotifFormula';
+import PerformanceActivity from '@site/src/components/PerformanceActivity';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import MythBuster from '@site/src/components/MythBuster';
+import HighCultureBridge from '@site/src/components/HighCultureBridge';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+Це checkpoint для всього блоку A2.2 про родовий відмінок. Це не нова
+велика тема, а спокійна перевірка: що вже працює, а що треба повторити.
+
+Ви перевіряєте чотири вміння:
+
+- прийменники з родовим: `з/із/зі`, `від`, `після`, `для`, `без`,
+  `біля`, `навпроти`, `коло`, `до`;
+- повні фрази: `мого нового друга`, `цієї старої книги`;
+- родовий множини: `багато студентів`, `немає булок`;
+- реальні ситуації: покупки, здоров'я, місто, час.
+
+## Діалог: екскурсія Києвом
+
+Гід пояснює маршрут групі. Тут зібрані різні моделі родового.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог 1 - біля собору"
+  exchanges={JSON.parse('[{"speaker":"Гід","text":"Ми стоїмо біля Софійського собору."},{"speaker":"Турист 1","text":"До Хрещатика далеко?"},{"speaker":"Гід","text":"До Хрещатика п’ять хвилин пішки."},{"speaker":"Турист 2","text":"А без квитка можна зайти?"},{"speaker":"Гід","text":"Ні, без квитка не можна. Для групи з десяти людей є знижка."},{"speaker":"Турист 1","text":"Після екскурсії ми йдемо до музею?"},{"speaker":"Гід","text":"Так, музей навпроти старої школи, недалеко від парку."}]')}
+/>
+
+Карта діалогу:
+
+| Фраза | Модель | Функція |
+| --- | --- | --- |
+| біля Софійського собору | біля + родовий | розташування |
+| до Хрещатика | до + родовий | напрямок |
+| без квитка | без + родовий | відсутність |
+| для групи | для + родовий | призначення |
+| з десяти людей | з + родовий | склад групи |
+| після екскурсії | після + родовий | час |
+| навпроти старої школи | навпроти + родовий | розташування |
+| від парку | від + родовий | відстань |
+
+### Прийменник і функція
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я йду до аптеки.", "options": [{"text": "напрямок", "correct": true}, {"text": "відсутність", "correct": false}, {"text": "матеріал", "correct": false}], "explanation": "До аптеки показує напрямок."}, {"question": "Ми стоїмо біля собору.", "options": [{"text": "розташування", "correct": true}, {"text": "час після події", "correct": false}, {"text": "причина", "correct": false}], "explanation": "Біля собору показує місце."}, {"question": "Після уроку я вільний.", "options": [{"text": "час", "correct": true}, {"text": "напрямок", "correct": false}, {"text": "призначення", "correct": false}], "explanation": "Після уроку показує час."}, {"question": "Це подарунок для сестри.", "options": [{"text": "призначення", "correct": true}, {"text": "джерело", "correct": false}, {"text": "матеріал", "correct": false}], "explanation": "Для сестри показує призначення."}, {"question": "Я без квитка.", "options": [{"text": "відсутність", "correct": true}, {"text": "напрямок", "correct": false}, {"text": "час", "correct": false}], "explanation": "Без квитка означає, що квитка немає."}, {"question": "Музей навпроти школи.", "options": [{"text": "розташування", "correct": true}, {"text": "джерело", "correct": false}, {"text": "кількість", "correct": false}], "explanation": "Навпроти школи показує місце."}, {"question": "Новини від друга.", "options": [{"text": "джерело", "correct": true}, {"text": "мета", "correct": false}, {"text": "час", "correct": false}], "explanation": "Від друга показує джерело."}, {"question": "Вона повертається зі школи.", "options": [{"text": "звідки", "correct": true}, {"text": "куди", "correct": false}, {"text": "для кого", "correct": false}], "explanation": "Зі школи відповідає на питання звідки?"}, {"question": "Чекайте до шостої.", "options": [{"text": "часова межа", "correct": true}, {"text": "місце поруч", "correct": false}, {"text": "матеріал", "correct": false}], "explanation": "До шостої показує часову межу."}, {"question": "Коло парку є кав'ярня.", "options": [{"text": "розташування", "correct": true}, {"text": "відсутність", "correct": false}, {"text": "причина", "correct": false}], "explanation": "Коло парку означає біля парку."}]`)} />
+
+## Частина 1: впізнавання
+
+Спочатку не творіть форму, а впізнайте її.
+
+Питання:
+
+1. Який прийменник у реченні?
+2. Яке значення він має?
+3. Яка форма після нього?
+
+Приклади:
+
+| Речення | Прийменник | Значення | Форма |
+| --- | --- | --- | --- |
+| Я йду до аптеки. | до | напрямок | аптеки |
+| Ми сидимо біля вікна. | біля | місце | вікна |
+| Після уроку я вільний. | після | час | уроку |
+| Це подарунок для мого брата. | для | призначення | мого брата |
+
+Якщо бачите `немає`, теж думайте про родовий:
+
+> Немає квитків.
+>
+> Немає температури.
+>
+> Немає часу.
+
+## Частина 2: вибір правильної форми
+
+Тепер перевіряйте повну фразу.
+
+| Називний | Родовий |
+| --- | --- |
+| мій новий друг | мого нового друга |
+| ця стара книга | цієї старої книги |
+| наш великий будинок | нашого великого будинку |
+| ваша нова лікарня | вашої нової лікарні |
+
+Міні-алгоритм:
+
+1. Знайдіть іменник.
+2. Визначте рід: чоловічий, жіночий, середній.
+3. Поставте іменник у родовий.
+4. Узгодьте прикметник або займенник.
+
+> без мого нового друга
+>
+> біля цієї старої школи
+>
+> до вашої нової лікарні
+
+### Правильна форма
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "без ___ друга", "answer": "мого нового", "options": ["мого нового", "моєї нової", "мій новий"]}, {"sentence": "біля ___ школи", "answer": "цієї старої", "options": ["цієї старої", "цього старого", "ця стара"]}, {"sentence": "до ___ лікарні", "answer": "нашої нової", "options": ["нашої нової", "нашого нового", "наша нова"]}, {"sentence": "після ___ дня", "answer": "того важливого", "options": ["того важливого", "тієї важливої", "той важливий"]}, {"sentence": "багато ___", "answer": "студентів", "options": ["студентів", "студенти", "студент"]}, {"sentence": "немає ___", "answer": "питань", "options": ["питань", "питання", "питанні"]}, {"sentence": "кілька ___", "answer": "днів", "options": ["днів", "дні", "день"]}, {"sentence": "кілограм ___", "answer": "яблук", "options": ["яблук", "яблука", "яблуко"]}, {"sentence": "ліки від ___", "answer": "кашлю", "options": ["кашлю", "кашель", "кашлем"]}, {"sentence": "чекайте до ___", "answer": "вечора", "options": ["вечора", "вечір", "вечером"]}]`)} />
+
+## Частина 3: родовий множини
+
+Родовий множини треба вчити групами.
+
+| Модель | Приклади |
+| --- | --- |
+| -ів | студентів, столів, зошитів |
+| нульове закінчення | книг, булок, міст, яблук |
+| зміна основи | днів, слів, людей |
+| м'який знак | питань, завдань, пісень |
+
+Після кількості:
+
+> багато студентів
+>
+> мало книг
+>
+> кілька днів
+>
+> п'ять пляшок води
+>
+> скільки людей?
+
+Після `немає`:
+
+> немає квитків
+>
+> немає булок
+>
+> немає питань
+
+### Ситуація і фраза
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "купити яблука", "right": "кілограм яблук"}, {"left": "попросити ліки", "right": "ліки від кашлю"}, {"left": "сказати, що температури немає", "right": "температури немає"}, {"left": "знайти аптеку", "right": "до аптеки"}, {"left": "описати місце", "right": "біля цього ринку"}, {"left": "сказати для кого подарунок", "right": "для моєї сестри"}, {"left": "сказати після чого", "right": "після уроку"}, {"left": "сказати кількість людей", "right": "десять людей"}, {"left": "сказати без документа", "right": "без рецепта"}, {"left": "сказати звідки", "right": "зі школи"}]`)} />
+
+## Частина 4: реальні ситуації
+
+Перевірте себе в коротких сценаріях.
+
+**На ринку**
+
+> Дайте, будь ласка, кілограм яблук і пляшку води.
+
+**У лікаря**
+
+> Температури немає, але немає сил.
+
+**У місті**
+
+> Як пройти до аптеки? Вона біля цього нового ринку?
+
+**Про час**
+
+> Після роботи я йду до лікаря. Чекайте до шостої.
+
+## ✅ Самооцінка
+
+Позначте для себе:
+
+| Я можу... | Так / ще повторити |
+| --- | --- |
+| вибрати прийменник `до`, `для`, `без`, `біля`, `після` |  |
+| утворити `мого нового друга` / `цієї старої книги` |  |
+| сказати `багато студентів`, `немає питань` |  |
+| попросити продукти на ринку |  |
+| описати симптоми у лікаря |  |
+
+### Чотири зони родового
+
+<GroupSort client:only='react' groups={JSON.parse(`{"прийменники": ["до аптеки", "біля школи", "після уроку", "без квитка"], "узгодження": ["мого нового друга", "цієї старої книги", "нашого будинку", "вашої лікарні"], "множина": ["багато студентів", "мало книг", "кілька днів", "немає питань"], "ситуації": ["кілограм яблук", "пляшка води", "ліки від кашлю", "після їжі"]}`)} />
+
+## 📋 Підсумок
+
+Родовий відмінок у цьому блоці має кілька різних дверей, але всі вони
+ведуть до практичного мовлення.
+
+| Двері | Приклад |
+| --- | --- |
+| прийменники | до аптеки, біля школи, без квитка |
+| узгодження | мого нового друга, цієї старої книги |
+| множина | багато книг, мало студентів |
+| ситуації | кілограм яблук, ліки від кашлю |
+
+Самоперевірка:
+
+- Опишіть три місця у кімнаті з `біля`, `навпроти`, `коло`.
+- Складіть одну фразу з `мого`, одну з `цієї`, одну з `нашої`.
+- Скажіть три кількості: `багато ...`, `кілька ...`, `п'ять ...`.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"родовий відмінок","translation":"genitive case","pos":"noun","gender":"m","example":"Родовий відмінок відповідає на питання кого? чого?","examples":["genitive case","Родовий відмінок відповідає на питання кого? чого?"]},{"word":"прийменник","translation":"preposition","pos":"noun","gender":"m","example":"До - це прийменник.","examples":["preposition","До - це прийменник."]},{"word":"узгодження","translation":"agreement","pos":"noun","gender":"n","example":"У фразі «мого нового друга» є узгодження.","examples":["agreement","У фразі «мого нового друга» є узгодження."]},{"word":"множина","translation":"plural","pos":"noun","gender":"f","example":"Студенти - це множина.","examples":["plural","Студенти - це множина."]},{"word":"однина","translation":"singular","pos":"noun","gender":"f","example":"Студент - це однина.","examples":["singular","Студент - це однина."]},{"word":"закінчення","translation":"ending","pos":"noun","gender":"n","example":"Закінчення змінюється у відмінку.","examples":["ending","Закінчення змінюється у відмінку."]},{"word":"перевірка","translation":"check, review","pos":"noun","gender":"f","example":"Це перевірка блоку.","examples":["check, review","Це перевірка блоку."]},{"word":"помилка","translation":"mistake, error","pos":"noun","gender":"f","example":"Знайдіть помилку.","examples":["mistake, error","Знайдіть помилку."]},{"word":"виправити","translation":"to correct","pos":"verb","example":"Виправте речення.","examples":["to correct","Виправте речення."]},{"word":"впізнати","translation":"to recognize","pos":"verb","example":"Впізнайте прийменник.","examples":["to recognize","Впізнайте прийменник."]},{"word":"вибрати","translation":"to choose","pos":"verb","example":"Виберіть правильну форму.","examples":["to choose","Виберіть правильну форму."]},{"word":"напрямок","translation":"direction","pos":"noun","gender":"m","example":"До аптеки показує напрямок.","examples":["direction","До аптеки показує напрямок."]},{"word":"розташування","translation":"location","pos":"noun","gender":"n","example":"Біля школи показує розташування.","examples":["location","Біля школи показує розташування."]},{"word":"відсутність","translation":"absence","pos":"noun","gender":"f","example":"Без квитка показує відсутність.","examples":["absence","Без квитка показує відсутність."]},{"word":"призначення","translation":"purpose, intended recipient","pos":"noun","gender":"n","example":"Для сестри показує призначення.","examples":["purpose, intended recipient","Для сестри показує призначення."]},{"word":"джерело","translation":"source","pos":"noun","gender":"n","example":"Від друга показує джерело.","examples":["source","Від друга показує джерело."]},{"word":"межа","translation":"boundary","pos":"noun","gender":"f","example":"До шостої - часова межа.","examples":["boundary","До шостої - часова межа."]},{"word":"гід","translation":"guide","pos":"noun","gender":"m","example":"Гід говорить українською.","examples":["guide","Гід говорить українською."]},{"word":"турист","translation":"tourist","pos":"noun","gender":"m","example":"Турист питає дорогу.","examples":["tourist","Турист питає дорогу."]},{"word":"знижка","translation":"discount","pos":"noun","gender":"f","example":"Для групи є знижка.","examples":["discount","Для групи є знижка."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"родовий відмінок","back":"genitive case"},{"front":"прийменник","back":"preposition"},{"front":"узгодження","back":"agreement"},{"front":"множина","back":"plural"},{"front":"однина","back":"singular"},{"front":"закінчення","back":"ending"},{"front":"перевірка","back":"check, review"},{"front":"помилка","back":"mistake, error"},{"front":"виправити","back":"to correct"},{"front":"впізнати","back":"to recognize"},{"front":"вибрати","back":"to choose"},{"front":"напрямок","back":"direction"},{"front":"розташування","back":"location"},{"front":"відсутність","back":"absence"},{"front":"призначення","back":"purpose, intended recipient"},{"front":"джерело","back":"source"},{"front":"межа","back":"boundary"},{"front":"гід","back":"guide"},{"front":"турист","back":"tourist"},{"front":"знижка","back":"discount"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Прийменник і функція
+
+*(див. урок, §Діалог: екскурсія Києвом)*
+
+### Правильна форма
+
+*(див. урок, §Частина 2: вибір правильної форми)*
+
+### Ситуація і фраза
+
+*(див. урок, §Частина 3: родовий множини)*
+
+### Чотири зони родового
+
+*(див. урок, §Самооцінка)*
+
+### Швидка перевірка
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "до аптеки", "isTrue": true, "explanation": "До вимагає родового."}, {"statement": "до аптека", "isTrue": false, "explanation": "Потрібно до аптеки."}, {"statement": "без мого друга", "isTrue": true, "explanation": "Мого друга - правильне узгодження."}, {"statement": "без моєї друга", "isTrue": false, "explanation": "Друг - чоловічий рід, тому мого."}, {"statement": "біля цієї школи", "isTrue": true, "explanation": "Школа - жіночий рід."}, {"statement": "багато студентів", "isTrue": true, "explanation": "Студентів - родовий множини."}, {"statement": "багато студенти", "isTrue": false, "explanation": "Потрібно багато студентів."}, {"statement": "немає температури", "isTrue": true, "explanation": "Температури - родовий."}, {"statement": "ліки від кашель", "isTrue": false, "explanation": "Потрібно від кашлю."}, {"statement": "після їжі", "isTrue": true, "explanation": "Після їжі - правильна фраза."}]`)} />
+
+### Міні-іспит
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Музей ___.", "answer": "біля старої школи", "options": ["біля старої школи", "біля стара школа", "біля старою школою"]}, {"sentence": "Я йду ___.", "answer": "до лікаря", "options": ["до лікаря", "до лікар", "до лікарем"]}, {"sentence": "Це подарунок ___.", "answer": "для мого брата", "options": ["для мого брата", "для моєї брата", "для мій брат"]}, {"sentence": "Після ___ я вільний.", "answer": "роботи", "options": ["роботи", "робота", "роботою"]}, {"sentence": "У групі десять ___.", "answer": "людей", "options": ["людей", "люди", "людина"]}, {"sentence": "На ринку я купую ___.", "answer": "пляшку води", "options": ["пляшку води", "пляшку вода", "пляшка води"]}, {"sentence": "У мене немає ___.", "answer": "сил", "options": ["сил", "сили", "сила"]}, {"sentence": "Візьму щось ___.", "answer": "від головного болю", "options": ["від головного болю", "від головний біль", "від головним болем"]}, {"sentence": "Вона повертається ___.", "answer": "зі школи", "options": ["зі школи", "зі школа", "зі школою"]}, {"sentence": "Чекайте ___.", "answer": "до шостої", "options": ["до шостої", "до шоста", "до шостою"]}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Dobra Forma: Genitive Case after Prepositions](https://opentext.ku.edu/dobraforma/chapter/7-2/) — Practice page for біля, після, для, and без with genitive forms.
+- 📄 [ULP: Genitive Case - Родовий відмінок](https://www.ukrainianlessons.com/genitive-case/) — Core learner-facing review of genitive functions.
+- 📄 [ULP: Prepositions and Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Reference for prepositions and the cases they require.
+- 📄 [ULP: Ukrainian Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/) — Broad case chart for checkpoint self-review.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

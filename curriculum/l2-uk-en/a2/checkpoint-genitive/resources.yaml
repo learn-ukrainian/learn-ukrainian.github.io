@@ -1,0 +1,20 @@
+- title: "ULP: Genitive Case - Родовий відмінок"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /genitive-case/"
+  url: "https://www.ukrainianlessons.com/genitive-case/"
+  notes: "Core learner-facing review of genitive functions."
+- title: "ULP: Prepositions and Cases"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /prepositions-cases/"
+  url: "https://www.ukrainianlessons.com/prepositions-cases/"
+  notes: "Reference for prepositions and the cases they require."
+- title: "ULP: Ukrainian Cases Chart"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /ukrainian-cases-chart/"
+  url: "https://www.ukrainianlessons.com/ukrainian-cases-chart/"
+  notes: "Broad case chart for checkpoint self-review."
+- title: "Dobra Forma: Genitive Case after Prepositions"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-024"
+  url: "https://opentext.ku.edu/dobraforma/chapter/7-2/"
+  notes: "Practice page for біля, після, для, and без with genitive forms."

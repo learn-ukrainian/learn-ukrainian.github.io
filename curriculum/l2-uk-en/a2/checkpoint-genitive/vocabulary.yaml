@@ -1,0 +1,97 @@
+- word: родовий відмінок
+  translation: genitive case
+  pos: noun
+  gender: m
+  example: "Родовий відмінок відповідає на питання кого? чого?"
+- word: прийменник
+  translation: preposition
+  pos: noun
+  gender: m
+  example: "До - це прийменник."
+- word: узгодження
+  translation: agreement
+  pos: noun
+  gender: n
+  example: "У фразі «мого нового друга» є узгодження."
+- word: множина
+  translation: plural
+  pos: noun
+  gender: f
+  example: "Студенти - це множина."
+- word: однина
+  translation: singular
+  pos: noun
+  gender: f
+  example: "Студент - це однина."
+- word: закінчення
+  translation: ending
+  pos: noun
+  gender: n
+  example: "Закінчення змінюється у відмінку."
+- word: перевірка
+  translation: check, review
+  pos: noun
+  gender: f
+  example: "Це перевірка блоку."
+- word: помилка
+  translation: mistake, error
+  pos: noun
+  gender: f
+  example: "Знайдіть помилку."
+- word: виправити
+  translation: to correct
+  pos: verb
+  example: "Виправте речення."
+- word: впізнати
+  translation: to recognize
+  pos: verb
+  example: "Впізнайте прийменник."
+- word: вибрати
+  translation: to choose
+  pos: verb
+  example: "Виберіть правильну форму."
+- word: напрямок
+  translation: direction
+  pos: noun
+  gender: m
+  example: "До аптеки показує напрямок."
+- word: розташування
+  translation: location
+  pos: noun
+  gender: n
+  example: "Біля школи показує розташування."
+- word: відсутність
+  translation: absence
+  pos: noun
+  gender: f
+  example: "Без квитка показує відсутність."
+- word: призначення
+  translation: purpose, intended recipient
+  pos: noun
+  gender: n
+  example: "Для сестри показує призначення."
+- word: джерело
+  translation: source
+  pos: noun
+  gender: n
+  example: "Від друга показує джерело."
+- word: межа
+  translation: boundary
+  pos: noun
+  gender: f
+  example: "До шостої - часова межа."
+- word: гід
+  translation: guide
+  pos: noun
+  gender: m
+  example: "Гід говорить українською."
+- word: турист
+  translation: tourist
+  pos: noun
+  gender: m
+  example: "Турист питає дорогу."
+- word: знижка
+  translation: discount
+  pos: noun
+  gender: f
+  example: "Для групи є знижка."

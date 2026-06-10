@@ -1,0 +1,331 @@
+---
+title: "На ринку та у лікаря"
+description: "Родовий відмінок у реальних ситуаціях — покупки та здоров'я"
+sidebar:
+  order: 15
+  label: "15. На ринку та у лікаря"
+prev: genitive-plural
+next: checkpoint-genitive
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import RitualSequencing from '@site/src/components/RitualSequencing';
+import VariantComparison from '@site/src/components/VariantComparison';
+import MotifFormula from '@site/src/components/MotifFormula';
+import PerformanceActivity from '@site/src/components/PerformanceActivity';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import MythBuster from '@site/src/components/MythBuster';
+import HighCultureBridge from '@site/src/components/HighCultureBridge';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+У цьому модулі родовий відмінок виходить із таблиць у реальне життя.
+Ви купуєте продукти, описуєте самопочуття, говорите з лікарем і
+фармацевтом.
+
+Головна ідея проста:
+
+- кількість часто бере родовий: `кілограм яблук`, `пляшка води`;
+- відсутність часто бере родовий: `немає температури`, `без рецепта`;
+- `від` може означати засіб або причину: `ліки від кашлю`, `болить від
+  холоду`.
+
+## Діалог: ринок, лікар, аптека
+
+Це один день. Спочатку покупка на ринку, потім короткий візит до
+лікаря, потім аптека.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог 1 - день із родовим"
+  exchanges={JSON.parse('[{"speaker":"Покупець","text":"Добрий день. Дайте, будь ласка, кілограм помідорів і пів кіло сиру."},{"speaker":"Продавець","text":"Звісно. Огірків треба?"},{"speaker":"Покупець","text":"Так, пів кіло огірків і пляшку води. Скільки це коштує?"},{"speaker":"Продавець","text":"Двісті гривень."},{"speaker":"Лікар","text":"Що вас турбує?"},{"speaker":"Пацієнт","text":"Болить горло. Температури немає, але немає сил."},{"speaker":"Лікар","text":"Пийте багато води й відпочивайте. В аптеці можна взяти щось від кашлю."},{"speaker":"Фармацевт","text":"Вам ліки від кашлю чи краплі від нежитю?"},{"speaker":"Пацієнт","text":"Ліки від кашлю, будь ласка. Без рецепта?"}]')}
+/>
+
+Карта діалогу:
+
+| Фраза | Модель | Значення |
+| --- | --- | --- |
+| кілограм помідорів | міра + родовий множини | кількість |
+| пів кіло сиру | міра + родовий | частина продукту |
+| пляшку води | контейнер + родовий | кількість |
+| температури немає | немає + родовий | відсутність |
+| немає сил | немає + родовий множини | стан |
+| ліки від кашлю | від + родовий | засіб проти проблеми |
+| без рецепта | без + родовий | відсутність документа |
+
+### На ринку
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Дайте кілограм ___.", "answer": "яблук", "options": ["яблук", "яблука", "яблуко"]}, {"sentence": "Мені пів кіло ___.", "answer": "сиру", "options": ["сиру", "сир", "сиром"]}, {"sentence": "Візьму пляшку ___.", "answer": "води", "options": ["води", "вода", "воду"]}, {"sentence": "Дайте пачку ___.", "answer": "масла", "options": ["масла", "масло", "маслом"]}, {"sentence": "Мені банку ___.", "answer": "меду", "options": ["меду", "мед", "медом"]}, {"sentence": "Візьму шматок ___.", "answer": "хліба", "options": ["хліба", "хліб", "хлібом"]}, {"sentence": "Дайте десяток ___.", "answer": "яєць", "options": ["яєць", "яйця", "яйце"]}, {"sentence": "Мені пів кіло ___.", "answer": "огірків", "options": ["огірків", "огірки", "огірок"]}]`)} />
+
+## На ринку: скільки вам?
+
+На ринку родовий відмінок часто з'являється після слів міри.
+
+| Міра | Приклад |
+| --- | --- |
+| кілограм | кілограм яблук, кілограм помідорів |
+| пів кіло | пів кіло сиру, пів кіло огірків |
+| літр | літр молока |
+| пляшка | пляшка води |
+| пачка | пачка масла |
+| банка | банка меду |
+| шматок | шматок хліба |
+| десяток | десяток яєць |
+
+Природний діалог має не тільки граматику, а й ввічливість.
+
+> Добрий день. Що сьогодні свіже?
+>
+> Дайте, будь ласка, кілограм яблук.
+>
+> Мені пів кіло сиру.
+>
+> Скільки коштує кілограм?
+>
+> Це дорого чи нормально?
+
+`Пів кіло` в розмові дуже часте. Також можна почути `півкіло`.
+
+> Пів кіло помідорів, будь ласка.
+>
+> Мені півкіло сиру.
+
+Не плутайте:
+
+| Називний | Після міри |
+| --- | --- |
+| яблука | кілограм яблук |
+| помідори | пів кіло помідорів |
+| сир | пів кіло сиру |
+| вода | пляшка води |
+| яйця | десяток яєць |
+
+## У лікаря: що вас турбує?
+
+У лікаря вам потрібні короткі й точні речення. Родовий відмінок часто
+працює з `немає`.
+
+> Температури немає.
+>
+> Немає апетиту.
+>
+> Немає сил.
+>
+> Немає кашлю, але болить горло.
+
+Питання лікаря:
+
+> Що вас турбує?
+>
+> Як давно?
+>
+> Чи є температура?
+>
+> Чи є алергія на ліки?
+>
+> Ви маєте рецепт?
+
+Відповіді пацієнта:
+
+> У мене болить горло.
+>
+> У мене кашель.
+>
+> Температури немає.
+>
+> У мене алергія на ці ліки.
+>
+> Рецепта немає.
+
+`Від` може показувати причину:
+
+> болить від холоду
+>
+> кашель від алергії
+>
+> голова болить від стресу
+
+Але в аптеці `від` часто означає "проти":
+
+> ліки від кашлю
+>
+> краплі від нежитю
+>
+> таблетки від головного болю
+
+### У лікаря
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Ви хочете сказати, що температури немає.", "options": [{"text": "Температури немає.", "correct": true}, {"text": "Температура немає.", "correct": false}, {"text": "Немає температура.", "correct": false}], "explanation": "Немає чого? Температури."}, {"question": "Ви хочете сказати, що апетиту немає.", "options": [{"text": "Немає апетиту.", "correct": true}, {"text": "Немає апетит.", "correct": false}, {"text": "Без апетит.", "correct": false}], "explanation": "Апетиту - родовий."}, {"question": "Ви хочете сказати, що немає сил.", "options": [{"text": "Немає сил.", "correct": true}, {"text": "Немає сили.", "correct": false}, {"text": "Немає сила.", "correct": false}], "explanation": "Сил - родовий множини."}, {"question": "Вам потрібні ліки, коли є кашель.", "options": [{"text": "ліки від кашлю", "correct": true}, {"text": "ліки від кашель", "correct": false}, {"text": "ліки кашлю", "correct": false}], "explanation": "Від кашлю - родовий."}, {"question": "Вам потрібні краплі, коли є нежить.", "options": [{"text": "краплі від нежитю", "correct": true}, {"text": "краплі від нежить", "correct": false}, {"text": "краплі нежитю", "correct": false}], "explanation": "Від нежитю - родовий."}, {"question": "Лікар питає про алергію.", "options": [{"text": "Чи є алергія на ліки?", "correct": true}, {"text": "Чи є алергії на ліки?", "correct": false}, {"text": "Чи є алергію на ліки?", "correct": false}], "explanation": "У питанні з є тут називний: алергія."}, {"question": "Ви не маєте рецепта.", "options": [{"text": "Рецепта немає.", "correct": true}, {"text": "Рецепт немає.", "correct": false}, {"text": "Рецептом немає.", "correct": false}], "explanation": "Рецепта - родовий."}, {"question": "Інструкція: приймати після їжі.", "options": [{"text": "після їжі", "correct": true}, {"text": "після їжа", "correct": false}, {"text": "після їжею", "correct": false}], "explanation": "Після їжі - родовий."}]`)} />
+
+## В аптеці
+
+В аптеці корисні три моделі:
+
+| Модель | Приклад |
+| --- | --- |
+| Мені потрібно ... | Мені потрібні краплі. |
+| Що ви порадите від ...? | Що ви порадите від кашлю? |
+| Чи це без ...? | Це без рецепта? |
+
+Міні-діалог:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Фармацевт","text":"Добрий день. Що вам потрібно?"},{"speaker":"Пацієнт","text":"Щось від головного болю, будь ласка."},{"speaker":"Фармацевт","text":"Є таблетки. У вас є алергія?"},{"speaker":"Пацієнт","text":"Ні, алергії немає. Це без рецепта?"},{"speaker":"Фармацевт","text":"Так, без рецепта. Пийте після їжі."}]')}
+/>
+
+`Після їжі` - ще одна фраза з родовим. Вона дуже практична.
+
+> Приймайте після їжі.
+>
+> Пийте багато води.
+>
+> Без кави сьогодні краще.
+
+### Проблема і засіб
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "кашель", "right": "ліки від кашлю"}, {"left": "нежить", "right": "краплі від нежитю"}, {"left": "головний біль", "right": "таблетки від головного болю"}, {"left": "температура", "right": "щось від температури"}, {"left": "алергія", "right": "щось від алергії"}, {"left": "біль у горлі", "right": "спрей від болю в горлі"}, {"left": "немає рецепта", "right": "без рецепта"}, {"left": "інструкція лікаря", "right": "після їжі"}]`)} />
+
+## Один день: ринок і здоров'я
+
+Ринок і здоров'я виглядають різними темами, але граматика повторюється.
+
+| Ситуація | Родовий |
+| --- | --- |
+| покупка | кілограм яблук |
+| упаковка | пляшка води |
+| відсутність | немає температури |
+| ліки | таблетки від головного болю |
+| режим | після їжі |
+| обмеження | без цукру, без кофеїну |
+
+Міні-завдання:
+
+1. Складіть список із трьох продуктів: `кілограм ...`, `пляшка ...`,
+   `пачка ...`.
+2. Скажіть лікарю дві фрази: `болить ...`, `немає ...`.
+3. Запитайте в аптеці: `Що ви порадите від ...?`
+
+<DialogueBox
+  client:only="react"
+  title="Діалог 2 - ваша черга"
+  exchanges={JSON.parse('[{"speaker":"Продавець","text":"Що вам дати?"},{"speaker":"Ви","text":"Мені, будь ласка, ..."},{"speaker":"Лікар","text":"Що вас турбує?"},{"speaker":"Ви","text":"У мене ..."},{"speaker":"Фармацевт","text":"Що вам потрібно?"},{"speaker":"Ви","text":"Щось від ..."}]')}
+/>
+
+### Яка модель?
+
+<GroupSort client:only='react' groups={JSON.parse(`{"кількість": ["кілограм яблук", "пляшка води", "пачка масла", "десяток яєць"], "відсутність": ["немає температури", "немає сил", "без рецепта", "без цукру"], "засіб або режим": ["ліки від кашлю", "краплі від нежитю", "таблетки від болю", "після їжі"]}`)} />
+
+## 📋 Підсумок
+
+У покупках і здоров'ї родовий відмінок працює дуже практично.
+
+| Функція | Модель | Приклади |
+| --- | --- | --- |
+| кількість | міра + родовий | кілограм яблук, пляшка води |
+| відсутність | немає / без + родовий | немає температури, без рецепта |
+| засіб | від + родовий | ліки від кашлю |
+| режим | після + родовий | після їжі |
+
+Самоперевірка:
+
+- Як попросити `десяток яєць`?
+- Як сказати лікарю `I have no fever`?
+- Як попросити в аптеці `something for a headache`?
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"ринок","translation":"market","pos":"noun","gender":"m","example":"На ринку я купую овочі.","examples":["market","На ринку я купую овочі."]},{"word":"кілограм","translation":"kilogram","pos":"noun","gender":"m","example":"Дайте кілограм яблук.","examples":["kilogram","Дайте кілограм яблук."]},{"word":"пляшка","translation":"bottle","pos":"noun","gender":"f","example":"Пляшка води коштує двадцять гривень.","examples":["bottle","Пляшка води коштує двадцять гривень."]},{"word":"пачка","translation":"pack","pos":"noun","gender":"f","example":"Мені пачку масла.","examples":["pack","Мені пачку масла."]},{"word":"шматок","translation":"piece","pos":"noun","gender":"m","example":"Візьму шматок хліба.","examples":["piece","Візьму шматок хліба."]},{"word":"здоров'я","translation":"health","pos":"noun","gender":"n","example":"Для здоров'я важливо спати.","examples":["health","Для здоров'я важливо спати."]},{"word":"температура","translation":"fever, temperature","pos":"noun","gender":"f","example":"Температури немає.","examples":["fever, temperature","Температури немає."]},{"word":"рецепт","translation":"prescription, recipe","pos":"noun","gender":"m","example":"Це без рецепта?","examples":["prescription, recipe","Це без рецепта?"]},{"word":"аптека","translation":"pharmacy","pos":"noun","gender":"f","example":"Аптека біля лікарні.","examples":["pharmacy","Аптека біля лікарні."]},{"word":"ліки","translation":"medicine","pos":"noun","gender":"pl","example":"Мені потрібні ліки від кашлю.","examples":["medicine","Мені потрібні ліки від кашлю."]},{"word":"кашель","translation":"cough","pos":"noun","gender":"m","example":"У мене кашель.","examples":["cough","У мене кашель."]},{"word":"апетит","translation":"appetite","pos":"noun","gender":"m","example":"Немає апетиту.","examples":["appetite","Немає апетиту."]},{"word":"помідор","translation":"tomato","pos":"noun","gender":"m","example":"Пів кіло помідорів, будь ласка.","examples":["tomato","Пів кіло помідорів, будь ласка."]},{"word":"огірок","translation":"cucumber","pos":"noun","gender":"m","example":"Кілограм огірків коштує недорого.","examples":["cucumber","Кілограм огірків коштує недорого."]},{"word":"сир","translation":"cheese","pos":"noun","gender":"m","example":"Мені пів кіло сиру.","examples":["cheese","Мені пів кіло сиру."]},{"word":"нежить","translation":"runny nose","pos":"noun","gender":"m","example":"Краплі від нежитю.","examples":["runny nose","Краплі від нежитю."]},{"word":"алергія","translation":"allergy","pos":"noun","gender":"f","example":"Алергії немає.","examples":["allergy","Алергії немає."]},{"word":"таблетка","translation":"pill, tablet","pos":"noun","gender":"f","example":"Таблетки від головного болю.","examples":["pill, tablet","Таблетки від головного болю."]},{"word":"фармацевт","translation":"pharmacist","pos":"noun","gender":"m","example":"Фармацевт дає пораду.","examples":["pharmacist","Фармацевт дає пораду."]},{"word":"турбувати","translation":"to bother, concern","pos":"verb","example":"Що вас турбує?","examples":["to bother, concern","Що вас турбує?"]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"ринок","back":"market"},{"front":"кілограм","back":"kilogram"},{"front":"пляшка","back":"bottle"},{"front":"пачка","back":"pack"},{"front":"шматок","back":"piece"},{"front":"здоров'я","back":"health"},{"front":"температура","back":"fever, temperature"},{"front":"рецепт","back":"prescription, recipe"},{"front":"аптека","back":"pharmacy"},{"front":"ліки","back":"medicine"},{"front":"кашель","back":"cough"},{"front":"апетит","back":"appetite"},{"front":"помідор","back":"tomato"},{"front":"огірок","back":"cucumber"},{"front":"сир","back":"cheese"},{"front":"нежить","back":"runny nose"},{"front":"алергія","back":"allergy"},{"front":"таблетка","back":"pill, tablet"},{"front":"фармацевт","back":"pharmacist"},{"front":"турбувати","back":"to bother, concern"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### На ринку
+
+*(див. урок, §Діалог: ринок, лікар, аптека)*
+
+### У лікаря
+
+*(див. урок, §У лікаря: що вас турбує?)*
+
+### Проблема і засіб
+
+*(див. урок, §В аптеці)*
+
+### Яка модель?
+
+*(див. урок, §Один день: ринок і здоров'я)*
+
+### Покупки і здоров'я
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "кілограм яблук", "isTrue": true, "explanation": "Яблук - родовий множини."}, {"statement": "кілограм яблука", "isTrue": false, "explanation": "Потрібно кілограм яблук."}, {"statement": "пляшка води", "isTrue": true, "explanation": "Води - родовий."}, {"statement": "пляшка вода", "isTrue": false, "explanation": "Потрібно пляшка води."}, {"statement": "немає температури", "isTrue": true, "explanation": "Температури - родовий."}, {"statement": "немає температура", "isTrue": false, "explanation": "Потрібно немає температури."}, {"statement": "ліки від кашлю", "isTrue": true, "explanation": "Від кашлю - родовий."}, {"statement": "краплі від нежить", "isTrue": false, "explanation": "Потрібно від нежитю."}]`)} />
+
+### Ваш день
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "На ринку я купую ___.", "answer": "кілограм помідорів", "options": ["кілограм помідорів", "кілограм помідори", "кілограм помідор"]}, {"sentence": "Я беру ___.", "answer": "пів кіло сиру", "options": ["пів кіло сиру", "пів кіло сир", "пів кіло сиром"]}, {"sentence": "У лікаря я кажу: ___.", "answer": "температури немає", "options": ["температури немає", "температура немає", "температурою немає"]}, {"sentence": "В аптеці я прошу ___.", "answer": "ліки від кашлю", "options": ["ліки від кашлю", "ліки від кашель", "ліки кашлю"]}, {"sentence": "Фармацевт каже приймати ___.", "answer": "після їжі", "options": ["після їжі", "після їжа", "після їжею"]}, {"sentence": "Я питаю: це ___?", "answer": "без рецепта", "options": ["без рецепта", "без рецепт", "без рецептом"]}, {"sentence": "Мені потрібно щось ___.", "answer": "від головного болю", "options": ["від головного болю", "від головний біль", "від головним болем"]}, {"sentence": "Лікар радить пити ___.", "answer": "багато води", "options": ["багато води", "багато вода", "багато водою"]}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**🎧 Аудіо:**
+- 🎧 [ULP 1-09: How much does it cost? At the market in Ukraine](https://www.ukrainianlessons.com/episode9/) — Market dialogue support for prices, quantities, and shopping phrases.
+- 🎧 [ULP 2-46: At the grocery store + Genitive case](https://www.ukrainianlessons.com/episode46/) — Learner-facing grocery-store episode focused on genitive after quantities.
+
+**🔗 Онлайн-ресурси:**
+- 🔗 [ULP: Phrasebook Food](https://www.ukrainianlessons.com/ph-food/) — Food vocabulary support for market and grocery-store practice.
+- 🔗 [ULP: Phrasebook Health](https://www.ukrainianlessons.com/ph-health/) — Health phrase support for doctor and pharmacy dialogues.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
