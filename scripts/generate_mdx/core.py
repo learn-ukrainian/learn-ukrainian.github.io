@@ -320,6 +320,7 @@ def generate_mdx(
     if (
         lvl in SEMINAR_LEVELS
         or any(lvl.startswith(p) for p in ['b2', 'c1', 'c2', 'lit'])
+        or lvl.startswith('a2')
         or (lvl.startswith('b1') and module_num > 5)
     ):
         is_ukrainian_forced = True
@@ -528,7 +529,7 @@ sidebar:
     tabs = [
         ("Lesson",     "\u0423\u0440\u043e\u043a",    lesson_content),
         ("Vocabulary", "\u0421\u043b\u043e\u0432\u043d\u0438\u043a",  vocab_content),
-        ("Activities", "\u0412\u043f\u0440\u0430\u0432\u0438",   activities_content),
+        ("Activities", "\u0417\u043e\u0448\u0438\u0442",   activities_content),
         ("Resources",  "\u0420\u0435\u0441\u0443\u0440\u0441\u0438",  resources_content),
     ]
     tab_items = '\n'.join(

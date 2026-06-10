@@ -1,0 +1,331 @@
+---
+title: "Куди? До якого часу?"
+description: "Прийменник до з родовим відмінком для напрямку, мети та часу"
+sidebar:
+  order: 11
+  label: "11. Куди? До якого часу?"
+prev: genitive-prepositions-purpose
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import RitualSequencing from '@site/src/components/RitualSequencing';
+import VariantComparison from '@site/src/components/VariantComparison';
+import MotifFormula from '@site/src/components/MotifFormula';
+import PerformanceActivity from '@site/src/components/PerformanceActivity';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import MythBuster from '@site/src/components/MythBuster';
+import HighCultureBridge from '@site/src/components/HighCultureBridge';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+У цьому модулі все тримається на одному прийменнику: `до`.
+
+`До` дуже частий і дуже корисний. Він може показувати:
+
+- напрямок до місця: `до вокзалу`, `до аптеки`;
+- напрямок до людини: `до лікаря`, `до бабусі`;
+- часову межу: `до вечора`, `до п'ятої`;
+- готовність або мету в сталих фразах: `готовий до екзамену`,
+  `до побачення`.
+
+Після `до` майже завжди стоїть родовий відмінок.
+
+## Діалог: у таксі
+
+Пасажир пояснює таксисту маршрут на день. У маршруті є місця, люди і
+часова межа.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог 1 - маршрут"
+  exchanges={JSON.parse('[{"speaker":"Пасажир","text":"Добрий день. До вокзалу, будь ласка."},{"speaker":"Таксист","text":"Добрий день. До центрального вокзалу?"},{"speaker":"Пасажир","text":"Так. Потім до аптеки біля готелю."},{"speaker":"Таксист","text":"Добре. Скільки часу чекати?"},{"speaker":"Пасажир","text":"Чекайте до п\'ятої години."},{"speaker":"Таксист","text":"А потім?"},{"speaker":"Пасажир","text":"Потім до лікаря, а ввечері до готелю."}]')}
+/>
+
+Карта діалогу:
+
+| Фраза | Питання | Значення |
+| --- | --- | --- |
+| до вокзалу | куди? | напрямок до місця |
+| до аптеки | куди? | напрямок до місця |
+| до п'ятої години | до якого часу? | часова межа |
+| до лікаря | до кого? | напрямок до людини |
+| до готелю | куди? | напрямок до місця |
+
+### Що означає до?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "До вокзалу, будь ласка.", "options": [{"text": "напрямок до місця", "correct": true}, {"text": "часова межа", "correct": false}, {"text": "матеріал", "correct": false}], "explanation": "До вокзалу відповідає на питання куди?"}, {"question": "Чекайте до п'ятої.", "options": [{"text": "часова межа", "correct": true}, {"text": "напрямок до міста", "correct": false}, {"text": "відсутність", "correct": false}], "explanation": "До п'ятої означає until five."}, {"question": "Я йду до лікаря.", "options": [{"text": "напрямок до людини", "correct": true}, {"text": "походження", "correct": false}, {"text": "місце поруч", "correct": false}], "explanation": "До лікаря означає to see the doctor."}, {"question": "Магазин відкритий до дев'ятої.", "options": [{"text": "часова межа", "correct": true}, {"text": "одержувач", "correct": false}, {"text": "джерело", "correct": false}], "explanation": "До дев'ятої показує, коли робота закінчується."}, {"question": "Ми їдемо до Львова.", "options": [{"text": "напрямок до міста", "correct": true}, {"text": "час після події", "correct": false}, {"text": "захист", "correct": false}], "explanation": "До Львова відповідає на питання куди?"}, {"question": "Я готова до екзамену.", "options": [{"text": "готовність", "correct": true}, {"text": "відстань", "correct": false}, {"text": "матеріал", "correct": false}], "explanation": "Готовий/готова до чогось - стала модель."}, {"question": "Додайте це до списку.", "options": [{"text": "додавання", "correct": true}, {"text": "походження", "correct": false}, {"text": "відсутність", "correct": false}], "explanation": "Додати до списку - корисна фраза з до."}, {"question": "До побачення!", "options": [{"text": "стала фраза", "correct": true}, {"text": "напрямок до місця", "correct": false}, {"text": "матеріал", "correct": false}], "explanation": "До побачення запам'ятовуємо як готову фразу."}]`)} />
+
+## Куди? До плюс родовий для напрямку
+
+`До` часто показує, що ви рухаєтеся в напрямку певного місця.
+
+> Я йду до школи.
+>
+> Ми їдемо до вокзалу.
+>
+> Вона повертається до готелю.
+>
+> Вони летять до Польщі.
+
+Після `до` форма родового відмінка:
+
+| Називний | До плюс родовий |
+| --- | --- |
+| вокзал | до вокзалу |
+| аптека | до аптеки |
+| готель | до готелю |
+| школа | до школи |
+| музей | до музею |
+| Україна | до України |
+| Польща | до Польщі |
+
+Для міст і країн `до` теж дуже природне:
+
+> Ми їдемо до Львова.
+>
+> Я лечу до Варшави.
+>
+> Вони повертаються до України.
+
+## До людини
+
+`До` може показувати не тільки місце, а й людину. Часто це означає
+"to someone's place" або "to see someone".
+
+> Я йду до друга.
+>
+> Вона їде до бабусі.
+>
+> Ми записалися до лікаря.
+>
+> Діти пішли до вчительки.
+
+Тут питання може бути `до кого?`
+
+| Називний | До плюс родовий |
+| --- | --- |
+| друг | до друга |
+| бабуся | до бабусі |
+| лікар | до лікаря |
+| вчителька | до вчительки |
+
+Фраза `до лікаря` дуже важлива в реальному житті. Вона означає "to the
+doctor" як напрямок або візит.
+
+### До плюс родовий
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Ми їдемо до ___.", "answer": "вокзалу", "options": ["вокзалу", "вокзал", "вокзалом"]}, {"sentence": "Я йду до ___.", "answer": "аптеки", "options": ["аптеки", "аптека", "аптеку"]}, {"sentence": "Вона їде до ___.", "answer": "бабусі", "options": ["бабусі", "бабуся", "бабусю"]}, {"sentence": "Ми йдемо до ___.", "answer": "музею", "options": ["музею", "музей", "музеєм"]}, {"sentence": "Чекайте до ___.", "answer": "вечора", "options": ["вечора", "вечір", "вечером"]}, {"sentence": "Завдання до ___.", "answer": "п'ятниці", "options": ["п'ятниці", "п'ятниця", "п'ятницю"]}, {"sentence": "Додайте це до ___.", "answer": "списку", "options": ["списку", "список", "списком"]}, {"sentence": "Я готовий до ___.", "answer": "екзамену", "options": ["екзамену", "екзамен", "екзаменом"]}]`)} />
+
+## До чи в/на?
+
+В українській можна сказати і `до магазину`, і `в магазин`. Обидві
+конструкції нормальні, але акцент різний.
+
+| Фраза | Акцент |
+| --- | --- |
+| Іду до магазину. | напрямок, шлях до місця |
+| Іду в магазин. | вхід або кінцева точка |
+| Їду до школи. | напрямок до школи |
+| Їду в школу. | школа як місце заняття |
+
+На А2 не треба будувати ієрархію "краще/гірше". Думайте про акцент.
+Якщо важливо сказати, куди ви прямуєте, `до` безпечне.
+
+> Як пройти до аптеки?
+>
+> Я йду до музею.
+>
+> Ми їдемо до центру.
+
+## До якого часу?
+
+`До` також показує часову межу: коли щось закінчується або до якого
+моменту треба чекати.
+
+> Магазин відкритий до дев'ятої.
+>
+> Я працюю до шостої.
+>
+> Чекайте до вечора.
+>
+> Завдання треба зробити до п'ятниці.
+
+Корисні готові фрази:
+
+| Фраза | Значення |
+| --- | --- |
+| до ранку | until morning |
+| до вечора | until evening |
+| до понеділка | by/until Monday |
+| до завтра | until tomorrow |
+| до п'ятої | until five |
+
+`З` і `до` разом показують проміжок:
+
+> з ранку до вечора
+>
+> з понеділка до п'ятниці
+>
+> від дев'ятої до шостої
+
+У цих парах обидві межі керують родовим або часовою формою, яку треба
+вивчати як готовий блок.
+
+### Фраза і функція
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "до вокзалу", "right": "напрямок до місця"}, {"left": "до лікаря", "right": "напрямок до людини"}, {"left": "до вечора", "right": "часова межа"}, {"left": "до п'ятниці", "right": "дедлайн"}, {"left": "до побачення", "right": "стала фраза"}, {"left": "до списку", "right": "додавання"}, {"left": "до мови", "right": "інтерес або ставлення"}, {"left": "до музею", "right": "напрямок до місця"}]`)} />
+
+## До в сталих фразах
+
+Деякі фрази з `до` краще запам'ятати цілими.
+
+> До побачення!
+>
+> До речі, я маю питання.
+>
+> Я готовий до екзамену.
+>
+> Додайте це до списку.
+>
+> У мене інтерес до мови.
+
+У цих прикладах `до` не завжди означає фізичний рух. Але граматична
+рамка та сама: `до` плюс родовий.
+
+Порівняйте три прийменники з цього блоку A2.2:
+
+| Прийменник | Напрямок значення | Приклади |
+| --- | --- | --- |
+| з/із/зі | звідки, початок | з Києва, з ранку |
+| після | що було раніше | після уроку |
+| до | куди, до якої межі | до Києва, до вечора |
+
+## Міні-рольова гра: план дня
+
+Прочитайте план і замініть місця на свої.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог 2 - що далі?"
+  exchanges={JSON.parse('[{"speaker":"Олена","text":"Куди ти йдеш після роботи?"},{"speaker":"Марко","text":"Спочатку до аптеки, потім до бабусі."},{"speaker":"Олена","text":"До котрої ти зайнятий?"},{"speaker":"Марко","text":"До сьомої. А після сьомої я вільний."},{"speaker":"Олена","text":"Тоді ходімо до музею."},{"speaker":"Марко","text":"Добре. До речі, музей відкритий до дев\'ятої."}]')}
+/>
+
+Фрази для вашої відповіді:
+
+- `Після роботи я йду до ...`
+- `Я зайнятий/зайнята до ...`
+- `Потім я хочу до ...`
+- `Це місце відкрите до ...`
+
+## 📋 Підсумок
+
+`До` плюс родовий допомагає говорити про напрямок, людей і часову межу:
+
+| Питання | Приклади |
+| --- | --- |
+| Куди? | до вокзалу, до аптеки, до Львова |
+| До кого? | до лікаря, до бабусі, до друга |
+| До якого часу? | до вечора, до п'ятниці, до п'ятої |
+| У сталій фразі | до побачення, до речі, готовий до екзамену |
+
+Ціль модуля: коли бачите або хочете сказати `до`, одразу чекайте
+родовий відмінок.
+
+### Три значення до
+
+<GroupSort client:only='react' groups={JSON.parse(`{"місце": ["до вокзалу", "до аптеки", "до музею", "до готелю"], "людина": ["до лікаря", "до бабусі", "до друга", "до вчительки"], "час": ["до вечора", "до ранку", "до п'ятниці", "до п'ятої"]}`)} />
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"напрямок","translation":"direction","pos":"noun","gender":"m","example":"До вокзалу показує напрямок.","examples":["direction","До вокзалу показує напрямок."]},{"word":"межа","translation":"boundary, limit","pos":"noun","gender":"f","example":"До вечора - це часова межа.","examples":["boundary, limit","До вечора - це часова межа."]},{"word":"мета","translation":"goal, purpose","pos":"noun","gender":"f","example":"До лікаря показує мету руху.","examples":["goal, purpose","До лікаря показує мету руху."]},{"word":"музей","translation":"museum","pos":"noun","gender":"m","example":"Ми йдемо до музею.","examples":["museum","Ми йдемо до музею."]},{"word":"лікар","translation":"doctor","pos":"noun","gender":"m","example":"Я записався до лікаря.","examples":["doctor","Я записався до лікаря."]},{"word":"бабуся","translation":"grandmother","pos":"noun","gender":"f","example":"Вона їде до бабусі.","examples":["grandmother","Вона їде до бабусі."]},{"word":"вечір","translation":"evening","pos":"noun","gender":"m","example":"Чекайте до вечора.","examples":["evening","Чекайте до вечора."]},{"word":"ранок","translation":"morning","pos":"noun","gender":"m","example":"Ми говорили до ранку.","examples":["morning","Ми говорили до ранку."]},{"word":"екзамен","translation":"exam","pos":"noun","gender":"m","example":"Я готовий до екзамену.","examples":["exam","Я готовий до екзамену."]},{"word":"побачення","translation":"meeting, date; goodbye in до побачення","pos":"noun","gender":"n","example":"До побачення!","examples":["meeting, date; goodbye in до побачення","До побачення!"]},{"word":"список","translation":"list","pos":"noun","gender":"m","example":"Додайте це до списку.","examples":["list","Додайте це до списку."]},{"word":"ставлення","translation":"attitude","pos":"noun","gender":"n","example":"Яке ваше ставлення до роботи?","examples":["attitude","Яке ваше ставлення до роботи?"]},{"word":"інтерес","translation":"interest","pos":"noun","gender":"m","example":"У мене інтерес до мови.","examples":["interest","У мене інтерес до мови."]},{"word":"готовий","translation":"ready","pos":"adjective","example":"Я готовий до уроку.","examples":["ready","Я готовий до уроку."]},{"word":"готова","translation":"ready","pos":"adjective","example":"Я готова до екзамену.","examples":["ready","Я готова до екзамену."]},{"word":"завтра","translation":"tomorrow","pos":"adverb","example":"Чекайте до завтра.","examples":["tomorrow","Чекайте до завтра."]},{"word":"готель","translation":"hotel","pos":"noun","gender":"m","example":"Таксі їде до готелю.","examples":["hotel","Таксі їде до готелю."]},{"word":"аптека","translation":"pharmacy","pos":"noun","gender":"f","example":"Мені треба до аптеки.","examples":["pharmacy","Мені треба до аптеки."]},{"word":"п'ятниця","translation":"Friday","pos":"noun","gender":"f","example":"Завдання до п'ятниці.","examples":["Friday","Завдання до п'ятниці."]},{"word":"центральний","translation":"central","pos":"adjective","example":"Ми їдемо до центрального вокзалу.","examples":["central","Ми їдемо до центрального вокзалу."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"напрямок","back":"direction"},{"front":"межа","back":"boundary, limit"},{"front":"мета","back":"goal, purpose"},{"front":"музей","back":"museum"},{"front":"лікар","back":"doctor"},{"front":"бабуся","back":"grandmother"},{"front":"вечір","back":"evening"},{"front":"ранок","back":"morning"},{"front":"екзамен","back":"exam"},{"front":"побачення","back":"meeting, date; goodbye in до побачення"},{"front":"список","back":"list"},{"front":"ставлення","back":"attitude"},{"front":"інтерес","back":"interest"},{"front":"готовий","back":"ready"},{"front":"готова","back":"ready"},{"front":"завтра","back":"tomorrow"},{"front":"готель","back":"hotel"},{"front":"аптека","back":"pharmacy"},{"front":"п'ятниця","back":"Friday"},{"front":"центральний","back":"central"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Що означає до?
+
+*(див. урок, §Діалог: у таксі)*
+
+### До плюс родовий
+
+*(див. урок, §До людини)*
+
+### Фраза і функція
+
+*(див. урок, §До якого часу?)*
+
+### Три значення до
+
+*(див. урок, §Підсумок)*
+
+### До і родовий
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "до вокзалу", "isTrue": true, "explanation": "Вокзалу - родовий відмінок."}, {"statement": "до аптека", "isTrue": false, "explanation": "Потрібно: до аптеки."}, {"statement": "до лікаря", "isTrue": true, "explanation": "Лікаря - правильна форма."}, {"statement": "до музей", "isTrue": false, "explanation": "Потрібно: до музею."}, {"statement": "до вечора", "isTrue": true, "explanation": "До вечора - правильна часова фраза."}, {"statement": "до п'ятниця", "isTrue": false, "explanation": "Потрібно: до п'ятниці."}, {"statement": "готовий до екзамену", "isTrue": true, "explanation": "Готовий до чого? До екзамену."}, {"statement": "додати до списку", "isTrue": true, "explanation": "До списку - правильна стала модель."}]`)} />
+
+### План маршруту
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Спочатку я йду ___.", "answer": "до аптеки", "options": ["до аптеки", "до аптека", "біля аптеки"]}, {"sentence": "Потім ми їдемо ___.", "answer": "до вокзалу", "options": ["до вокзалу", "до вокзал", "без вокзалу"]}, {"sentence": "Вона зайнята ___.", "answer": "до шостої", "options": ["до шостої", "до шоста", "з шостої"]}, {"sentence": "Музей відкритий ___.", "answer": "до дев'ятої", "options": ["до дев'ятої", "до дев'ята", "після дев'ятої"]}, {"sentence": "Я записався ___.", "answer": "до лікаря", "options": ["до лікаря", "до лікар", "від лікаря"]}, {"sentence": "У мене інтерес ___.", "answer": "до мови", "options": ["до мови", "до мова", "без мови"]}, {"sentence": "Додайте ім'я ___.", "answer": "до списку", "options": ["до списку", "до список", "від списку"]}, {"sentence": "___, пані Олено!", "answer": "До побачення", "options": ["До побачення", "До вокзалу", "До списку"]}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Dobra Forma: Genitive Case after Prepositions з, до, and в/у](https://opentext.ku.edu/dobraforma/chapter/7-1/) — Practice with до plus genitive and related preposition contrasts.
+- 📄 [ULP: Genitive Case (Родовий відмінок](https://www.ukrainianlessons.com/genitive-case/) — General genitive guide for forms after prepositions.
+- 📄 [ULP: Location vs Destination Prepositions](https://www.ukrainianlessons.com/location-destination-prepositions/) — Learner-facing reference for place and destination prepositions.
+- 📄 [ULP: Prepositions of Time](https://www.ukrainianlessons.com/prepositions-of-time-in-ukrainian/) — Useful follow-up for до in time-boundary phrases.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

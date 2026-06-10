@@ -1,0 +1,256 @@
+inline:
+- id: act-1
+  type: quiz
+  title: Що означає фраза?
+  instruction: Оберіть значення фрази з родовим відмінком.
+  items:
+  - options:
+    - походження
+    - людина-джерело
+    - час після події
+    explanation: З Франції відповідає на питання звідки?
+    question: сир з Франції
+    correct: 0
+  - options:
+    - людина-джерело
+    - матеріал
+    - часовий старт
+    explanation: Від мами показує, від кого лист.
+    question: лист від мами
+    correct: 0
+  - options:
+    - час після події
+    - походження
+    - матеріал
+    explanation: Після уроку означає, що урок був раніше.
+    question: після уроку
+    correct: 0
+  - options:
+    - матеріал
+    - відстань
+    - людина-джерело
+    explanation: З шовку відповідає на питання з чого?
+    question: сукня з шовку
+    correct: 0
+  - options:
+    - відстань
+    - походження
+    - матеріал
+    explanation: Від центру показує орієнтир для відстані.
+    question: далеко від центру
+    correct: 0
+  - options:
+    - початкова точка в часі
+    - подарунок
+    - подія після
+    explanation: З понеділка означає починаючи з понеділка.
+    question: з понеділка
+    correct: 0
+  - options:
+    - захист
+    - походження
+    - матеріал
+    explanation: Від дощу означає захист від дощу.
+    question: парасолька від дощу
+    correct: 0
+  - options:
+    - початкова точка в часі
+    - відстань
+    - людина-джерело
+    explanation: З дитинства означає since childhood.
+    question: ми знайомі з дитинства
+    correct: 0
+- id: act-2
+  type: fill-in
+  title: З, із чи зі?
+  instruction: Доповніть фразу природною формою прийменника.
+  items:
+  - sentence: Я ___ України.
+    answer: з
+    options:
+    - з
+    - із
+    - зі
+    explanation: Перед голосним у слові України природно з.
+  - sentence: Вона ___ Львова.
+    answer: зі
+    options:
+    - зі
+    - з
+    - із
+    explanation: Перед важким збігом льв природно зі.
+  - sentence: Це лист ___ Канади.
+    answer: із
+    options:
+    - із
+    - зі
+    - з
+    explanation: Лист із Канади звучить плавно між приголосними.
+  - sentence: Ми повернулися ___ Одеси.
+    answer: з
+    options:
+    - з
+    - зі
+    - із
+    explanation: Перед голосним о природно з.
+  - sentence: Діти йдуть ___ школи.
+    answer: зі
+    options:
+    - зі
+    - з
+    - із
+    explanation: Перед шк природно зі.
+  - sentence: Каблучка ___ золота.
+    answer: із
+    options:
+    - із
+    - з
+    - зі
+    explanation: Із золота допомагає вимові.
+  - sentence: Ключі впали ___ стола.
+    answer: зі
+    options:
+    - зі
+    - з
+    - із
+    explanation: Перед ст часто природно зі.
+  - sentence: Ми починаємо ___ ранку.
+    answer: з
+    options:
+    - з
+    - із
+    - зі
+    explanation: З ранку - звична часова фраза.
+- id: act-3
+  type: match-up
+  title: Називний і родовий
+  instruction: Зіставте словникову форму з фразою після прийменника.
+  pairs:
+  - left: Україна
+    right: з України
+  - left: Львів
+    right: зі Львова
+  - left: мама
+    right: від мами
+  - left: друг
+    right: від друга
+  - left: урок
+    right: після уроку
+  - left: робота
+    right: після роботи
+  - left: шовк
+    right: з шовку
+  - left: центр
+    right: від центру
+- id: act-4
+  type: group-sort
+  title: Три прийменники
+  instruction: Розсортуйте фрази за головним прийменником.
+  groups:
+  - label: з/із/зі
+    items:
+    - з України
+    - із золота
+    - зі школи
+    - з ранку
+  - label: від
+    items:
+    - від мами
+    - від дощу
+    - від центру
+    - від сусіда
+  - label: після
+    items:
+    - після уроку
+    - після роботи
+    - після вечері
+    - після канікул
+workbook:
+- type: true-false
+  title: Перевірка родового
+  instruction: Визначте, чи правильно побудована фраза.
+  items:
+  - statement: з України
+    correct: true
+    explanation: України - родовий відмінок.
+  - statement: від мама
+    correct: false
+    explanation: 'Потрібно: від мами.'
+  - statement: після уроку
+    correct: true
+    explanation: Уроку - родовий відмінок.
+  - statement: зі Львова
+    correct: true
+    explanation: Форма зі природна перед Львова.
+  - statement: після робота
+    correct: false
+    explanation: 'Потрібно: після роботи.'
+  - statement: подарунок від друга
+    correct: true
+    explanation: Від друга правильно показує джерело.
+  - statement: сукня з шовк
+    correct: false
+    explanation: 'Потрібно: сукня з шовку.'
+  - statement: далеко від центру
+    correct: true
+    explanation: Від центру правильно показує відстань.
+- type: fill-in
+  title: Мій день після уроку
+  instruction: Оберіть прийменник.
+  items:
+  - sentence: ___ уроку я п'ю каву.
+    answer: Після
+    options:
+    - Після
+    - Від
+    - З
+    explanation: Після показує подію перед цим.
+  - sentence: Кава ___ Бразилії.
+    answer: з
+    options:
+    - з
+    - від
+    - після
+    explanation: З Бразилії показує походження.
+  - sentence: Це порада ___ подруги.
+    answer: від
+    options:
+    - від
+    - після
+    - зі
+    explanation: Від подруги показує людину-джерело.
+  - sentence: Кафе недалеко ___ школи.
+    answer: від
+    options:
+    - від
+    - після
+    - з
+    explanation: Від школи показує орієнтир для відстані.
+  - sentence: Ми працюємо ___ понеділка.
+    answer: з
+    options:
+    - з
+    - після
+    - від
+    explanation: З понеділка показує початок періоду.
+  - sentence: Парасолька ___ дощу лежить у сумці.
+    answer: від
+    options:
+    - від
+    - з
+    - після
+    explanation: Від дощу означає захист.
+  - sentence: ___ вечері ми дивимося фільм.
+    answer: Після
+    options:
+    - Після
+    - Від
+    - Зі
+    explanation: Після вечері означає after dinner.
+  - sentence: Я ___ школи йду додому.
+    answer: зі
+    options:
+    - зі
+    - від
+    - після
+    explanation: Зі школи - природна фраза походження/руху з місця.

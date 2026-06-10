@@ -1,0 +1,20 @@
+- title: "ULP: Genitive Case (Родовий відмінок)"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /genitive-case/"
+  url: "https://www.ukrainianlessons.com/genitive-case/"
+  notes: "Learner-facing overview of common genitive uses, including after prepositions."
+- title: "ULP: Prepositions and Cases"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /prepositions-cases/"
+  url: "https://www.ukrainianlessons.com/prepositions-cases/"
+  notes: "Reference for which Ukrainian prepositions trigger which cases."
+- title: "Dobra Forma: Genitive Case after Prepositions з, до, and в/у"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-023"
+  url: "https://opentext.ku.edu/dobraforma/chapter/7-1/"
+  notes: "Practice page with genitive after common prepositions, useful for з/із/зі."
+- title: "МійКлас: Основні випадки чергування у-в, і-й, з-із-зі"
+  role: article
+  source_ref: "docs/resources/miyklas-resources.yaml: a1.euphony"
+  url: "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/osnovni-vipadki-cherguvannia-u-v-i-i-z-iz-zi-pravila-milozvuchnosti-41612"
+  notes: "Ukrainian-language school reference for choosing з, із, and зі."

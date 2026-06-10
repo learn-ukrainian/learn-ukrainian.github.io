@@ -1,0 +1,20 @@
+- title: "ULP: Location vs Destination Prepositions"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /location-destination-prepositions/"
+  url: "https://www.ukrainianlessons.com/location-destination-prepositions/"
+  notes: "Learner-facing reference for place and destination prepositions."
+- title: "ULP: Prepositions of Time"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /prepositions-of-time-in-ukrainian/"
+  url: "https://www.ukrainianlessons.com/prepositions-of-time-in-ukrainian/"
+  notes: "Useful follow-up for до in time-boundary phrases."
+- title: "ULP: Genitive Case (Родовий відмінок)"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /genitive-case/"
+  url: "https://www.ukrainianlessons.com/genitive-case/"
+  notes: "General genitive guide for forms after prepositions."
+- title: "Dobra Forma: Genitive Case after Prepositions з, до, and в/у"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-023"
+  url: "https://opentext.ku.edu/dobraforma/chapter/7-1/"
+  notes: "Practice with до plus genitive and related preposition contrasts."

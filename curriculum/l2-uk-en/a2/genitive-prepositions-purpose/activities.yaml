@@ -1,0 +1,256 @@
+inline:
+- id: act-1
+  type: quiz
+  title: Для, без чи біля?
+  instruction: Оберіть прийменник за значенням.
+  items:
+  - options:
+    - Для
+    - Без
+    - Біля
+    explanation: Ковдра призначена для Олени.
+    question: ___ Олени ця ковдра?
+    correct: 0
+  - options:
+    - без
+    - для
+    - навпроти
+    explanation: Без показує відсутність потрібної речі.
+    question: Ми не поїдемо ___ ліхтарика.
+    correct: 0
+  - options:
+    - біля
+    - для
+    - без
+    explanation: Біля показує місце поруч.
+    question: Намет стоїть ___ річки.
+    correct: 0
+  - options:
+    - навпроти
+    - без
+    - для
+    explanation: Навпроти означає on the opposite side.
+    question: Кафе ___ бібліотеки.
+    correct: 0
+  - options:
+    - без
+    - для
+    - коло
+    explanation: Без цукру означає no sugar.
+    question: Чай ___ цукру.
+    correct: 0
+  - options:
+    - для
+    - без
+    - біля
+    explanation: Для відпочинку показує мету.
+    question: Час ___ відпочинку.
+    correct: 0
+  - options:
+    - коло
+    - без
+    - для
+    explanation: Коло дороги означає біля дороги.
+    question: Автобус стоїть ___ дороги.
+    correct: 0
+  - options:
+    - біля
+    - для
+    - без
+    explanation: Біля лікарні показує місце.
+    question: Аптека ___ лікарні.
+    correct: 0
+- id: act-2
+  type: fill-in
+  title: Родовий після прийменника
+  instruction: Оберіть правильну форму.
+  items:
+  - sentence: Це подарунок для ___.
+    answer: мами
+    options:
+    - мами
+    - мама
+    - маму
+    explanation: 'Для вимагає родового: мами.'
+  - sentence: Кава без ___.
+    answer: цукру
+    options:
+    - цукру
+    - цукор
+    - цукром
+    explanation: 'Без вимагає родового: цукру.'
+  - sentence: Зупинка біля ___.
+    answer: школи
+    options:
+    - школи
+    - школа
+    - школу
+    explanation: 'Біля вимагає родового: школи.'
+  - sentence: Банк навпроти ___.
+    answer: вокзалу
+    options:
+    - вокзалу
+    - вокзал
+    - вокзалом
+    explanation: 'Навпроти вимагає родового: вокзалу.'
+  - sentence: Ми без ___.
+    answer: карти
+    options:
+    - карти
+    - карта
+    - карту
+    explanation: Без карти - правильна форма.
+  - sentence: Місце для ___.
+    answer: намету
+    options:
+    - намету
+    - намет
+    - наметом
+    explanation: Для намету - родовий.
+  - sentence: Коло ___ росте дерево.
+    answer: хати
+    options:
+    - хати
+    - хата
+    - хату
+    explanation: Коло хати - родовий.
+  - sentence: Аптека біля ___.
+    answer: лікарні
+    options:
+    - лікарні
+    - лікарня
+    - лікарню
+    explanation: Біля лікарні - родовий.
+- id: act-3
+  type: match-up
+  title: Ситуація і фраза
+  instruction: Зіставте ситуацію з природною фразою.
+  pairs:
+  - left: gift for mother
+    right: подарунок для мами
+  - left: coffee without sugar
+    right: кава без цукру
+  - left: near the school
+    right: біля школи
+  - left: opposite the library
+    right: навпроти бібліотеки
+  - left: near the house
+    right: коло хати
+  - left: time for rest
+    right: час для відпочинку
+  - left: without help
+    right: без допомоги
+  - left: near the station
+    right: біля станції
+- id: act-4
+  type: group-sort
+  title: Значення прийменників
+  instruction: Розсортуйте фрази за значенням.
+  groups:
+  - label: призначення
+    items:
+    - для мами
+    - для навчання
+    - для відпочинку
+    - для групи
+  - label: відсутність
+    items:
+    - без цукру
+    - без молока
+    - без карти
+    - без допомоги
+  - label: місце
+    items:
+    - біля школи
+    - навпроти бібліотеки
+    - коло хати
+    - біля станції
+workbook:
+- type: true-false
+  title: Правильно чи ні?
+  instruction: Перевірте форму після прийменника.
+  items:
+  - statement: для мами
+    correct: true
+    explanation: Мами - родовий відмінок.
+  - statement: без молоко
+    correct: false
+    explanation: 'Потрібно: без молока.'
+  - statement: біля школи
+    correct: true
+    explanation: Школи - родовий відмінок.
+  - statement: навпроти вокзал
+    correct: false
+    explanation: 'Потрібно: навпроти вокзалу.'
+  - statement: коло дороги
+    correct: true
+    explanation: Дороги - родовий відмінок.
+  - statement: для навчання
+    correct: true
+    explanation: Навчання вже має форму родового/називного, але фраза правильна.
+  - statement: без парасолька
+    correct: false
+    explanation: 'Потрібно: без парасольки.'
+  - statement: біля площі
+    correct: true
+    explanation: Площі - правильна форма.
+- type: fill-in
+  title: Моя карта
+  instruction: Доповніть короткі речення.
+  items:
+  - sentence: Я живу ___ школи.
+    answer: біля
+    options:
+    - біля
+    - без
+    - для
+    explanation: Біля школи показує місце.
+  - sentence: Це зошит ___ навчання.
+    answer: для
+    options:
+    - для
+    - без
+    - навпроти
+    explanation: Для навчання показує призначення.
+  - sentence: Я п'ю чай ___ цукру.
+    answer: без
+    options:
+    - без
+    - біля
+    - для
+    explanation: Без цукру показує відсутність.
+  - sentence: Кафе ___ ринку.
+    answer: навпроти
+    options:
+    - навпроти
+    - без
+    - для
+    explanation: Навпроти ринку показує розташування.
+  - sentence: Ми сидимо ___ вогню.
+    answer: коло
+    options:
+    - коло
+    - без
+    - для
+    explanation: Коло вогню означає біля вогню.
+  - sentence: Це важливо ___ мене.
+    answer: для
+    options:
+    - для
+    - біля
+    - без
+    explanation: Для мене - готова корисна фраза.
+  - sentence: Я прийшов ___ карти.
+    answer: без
+    options:
+    - без
+    - навпроти
+    - коло
+    explanation: Без карти показує відсутність.
+  - sentence: Зупинка ___ лікарні.
+    answer: біля
+    options:
+    - біля
+    - без
+    - для
+    explanation: Біля лікарні показує місце.

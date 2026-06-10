@@ -1,0 +1,98 @@
+- word: прийменник
+  translation: preposition
+  pos: noun
+  gender: m
+  example: "З - це прийменник."
+- word: джерело
+  translation: source
+  pos: noun
+  gender: n
+  example: "Від мами - це джерело повідомлення."
+- word: походження
+  translation: origin
+  pos: noun
+  gender: n
+  example: "З України показує походження."
+- word: матеріал
+  translation: material
+  pos: noun
+  gender: m
+  example: "Сукня з шовку: шовк - це матеріал."
+- word: шовк
+  translation: silk
+  pos: noun
+  gender: m
+  example: "Це хустка з шовку."
+- word: золото
+  translation: gold
+  pos: noun
+  gender: n
+  example: "Каблучка із золота."
+- word: подарунок
+  translation: gift
+  pos: noun
+  gender: m
+  example: "Це подарунок від друга."
+- word: сусід
+  translation: neighbor
+  pos: noun
+  gender: m
+  example: "Новини від сусіда."
+- word: сніданок
+  translation: breakfast
+  pos: noun
+  gender: m
+  example: "Після сніданку я п'ю чай."
+- word: вечеря
+  translation: dinner, supper
+  pos: noun
+  gender: f
+  example: "Після вечері ми гуляємо."
+- word: канікули
+  translation: vacation, holidays
+  pos: noun
+  gender: pl
+  example: "Після канікул починається курс."
+- word: дитинство
+  translation: childhood
+  pos: noun
+  gender: n
+  example: "Ми знайомі з дитинства."
+- word: далеко
+  translation: far
+  pos: adverb
+  example: "Кафе далеко від центру."
+- word: недалеко
+  translation: not far, nearby
+  pos: adverb
+  example: "Аптека недалеко від вокзалу."
+- word: парасолька
+  translation: umbrella
+  pos: noun
+  gender: f
+  example: "Парасолька від дощу."
+- word: дощ
+  translation: rain
+  pos: noun
+  gender: m
+  example: "Я маю куртку від дощу."
+- word: подорож
+  translation: trip, journey
+  pos: noun
+  gender: f
+  example: "Після подорожі ми втомилися."
+- word: порада
+  translation: advice, recommendation
+  pos: noun
+  gender: f
+  example: "Це порада від подруги."
+- word: центр
+  translation: center
+  pos: noun
+  gender: m
+  example: "Ми живемо недалеко від центру."
+- word: вокзал
+  translation: train station
+  pos: noun
+  gender: m
+  example: "Готель далеко від вокзалу."
