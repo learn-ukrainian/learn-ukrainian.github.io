@@ -2,7 +2,7 @@ inline:
   - id: act-1
     type: match-up
     title: Є чи немає
-    instruction: Match the positive phrase with the genitive negative phrase.
+    instruction: З'єднайте ствердну фразу з заперечною фразою в родовому.
     pairs:
       - left: "є брат"
         right: "немає брата"
@@ -15,24 +15,24 @@ inline:
   - id: act-2
     type: fill-in
     title: Форма після немає
-    instruction: Choose the genitive form.
+    instruction: Оберіть форму родового відмінка.
     items:
       - sentence: "У мене немає ___."
         answer: "часу"
         options: ["час", "часу"]
-        explanation: Немає takes genitive.
+        explanation: Немає вимагає родового відмінка.
       - sentence: "Тут немає ___."
         answer: "кави"
         options: ["кава", "кави"]
-        explanation: Кава becomes кави.
+        explanation: Кава переходить у форму кави.
       - sentence: "У кімнаті немає ___."
         answer: "вікна"
         options: ["вікно", "вікна"]
-        explanation: Вікно becomes вікна.
+        explanation: Вікно переходить у форму вікна.
   - id: act-3
     type: quiz
     title: Багато чи мало
-    instruction: Choose the phrase with a natural genitive plural.
+    instruction: Оберіть фразу з природним родовим множини.
     items:
       - prompt: "many friends"
         options:
@@ -40,25 +40,25 @@ inline:
             correct: true
           - text: "багато друзі"
             correct: false
-        explanation: Багато needs genitive plural.
+        explanation: Багато потребує родового множини.
       - prompt: "few books"
         options:
           - text: "мало книжок"
             correct: true
           - text: "мало книги"
             correct: false
-        explanation: Мало also takes genitive plural.
+        explanation: Мало також потребує родового множини.
       - prompt: "several students"
         options:
           - text: "кілька студентів"
             correct: true
           - text: "кілька студенти"
             correct: false
-        explanation: Кілька takes genitive plural.
+        explanation: Кілька потребує родового множини.
   - id: act-4
     type: group-sort
     title: Однина чи множина?
-    instruction: Sort the phrases by the genitive pattern.
+    instruction: Розподіліть фрази за моделлю родового відмінка.
     groups:
       - name: "немає + однина"
         items: ["немає брата", "немає кави", "немає місця"]
@@ -67,28 +67,28 @@ inline:
 workbook:
   - type: true-false
     title: Родовий старт
-    instruction: Decide whether each statement is true.
+    instruction: Визначте, чи правильне кожне твердження.
     items:
       - statement: "Після немає часто стоїть родовий відмінок."
         answer: true
         explanation: У мене немає брата.
       - statement: "Багато студентів uses genitive plural."
         answer: true
-        explanation: Студентів is genitive plural.
+        explanation: Студентів - це родовий множини.
       - statement: "Немає плита is the correct A2 form."
         answer: false
-        explanation: The correct phrase is немає плити.
+        explanation: Правильна фраза - немає плити.
   - type: error-correction
     title: Виправ родовий
-    instruction: Choose the corrected sentence.
+    instruction: Оберіть виправлене речення.
     items:
       - sentence: "У мене немає квиток."
         error: "квиток"
         correction: "У мене немає квитка."
         options: ["У мене немає квитка.", "У мене немає квиток."]
-        explanation: Квиток becomes квитка.
+        explanation: Квиток переходить у форму квитка.
       - sentence: "У нас багато коробки."
         error: "коробки"
         correction: "У нас багато коробок."
         options: ["У нас багато коробок.", "У нас багато коробки."]
-        explanation: Багато requires genitive plural.
+        explanation: Багато потребує родового множини.

@@ -185,7 +185,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Звичка чи один вчинок?
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Він завжди допомагає сусідам.", "options": [{"text": "звична риса, недоконаний вид", "correct": true}, {"text": "один завершений вчинок", "correct": false}], "explanation": "Завжди points to repeated behavior."}, {"question": "Учора він допоміг мені.", "options": [{"text": "один конкретний результат", "correct": true}, {"text": "постійна звичка", "correct": false}], "explanation": "Учора and допоміг show one completed act."}, {"question": "Оксана часто підказує новим колегам.", "options": [{"text": "звичка", "correct": true}, {"text": "один результат", "correct": false}], "explanation": "Часто marks repeated action."}]`)} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Він завжди допомагає сусідам.", "options": [{"text": "звична риса, недоконаний вид", "correct": true}, {"text": "один завершений вчинок", "correct": false}], "explanation": "Завжди вказує на повторювану поведінку."}, {"question": "Учора він допоміг мені.", "options": [{"text": "один конкретний результат", "correct": true}, {"text": "постійна звичка", "correct": false}], "explanation": "Учора і допоміг показують одну завершену дію."}, {"question": "Оксана часто підказує новим колегам.", "options": [{"text": "звичка", "correct": true}, {"text": "один результат", "correct": false}], "explanation": "Часто позначає повторювану дію."}]`)} />
 
 ## Описуємо людину цілком
 
@@ -243,11 +243,11 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Опис людини
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Друг і знайомий означають однакову близькість.", "isTrue": false, "explanation": "Друг is closer than знайомий."}, {"statement": "Для звичних рис характеру часто потрібен недоконаний вид.", "isTrue": true, "explanation": "Завжди допомагає describes a habit."}, {"statement": "Добра людина is a meaningful compliment.", "isTrue": true, "explanation": "It points to character and behavior."}]`)} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Друг і знайомий означають однакову близькість.", "isTrue": false, "explanation": "Друг ближчий, ніж знайомий."}, {"statement": "Для звичних рис характеру часто потрібен недоконаний вид.", "isTrue": true, "explanation": "Завжди допомагає описує звичку."}, {"statement": "Добра людина is a meaningful compliment.", "isTrue": true, "explanation": "Це вказує на характер і поведінку."}]`)} />
 
 ### Виправ опис
 
-<ErrorCorrection client:only='react' instruction="Choose the natural correction." items={JSON.parse(`[{"sentence": "Моя сестра високий.", "errorWord": "високий", "correctForm": "Моя сестра висока.", "options": ["Моя сестра висока.", "Моя сестра високий."], "explanation": "Feminine noun needs feminine adjective."}, {"sentence": "Учора він допомагає мені з валізою.", "errorWord": "допомагає", "correctForm": "Учора він допоміг мені з валізою.", "options": ["Учора він допоміг мені з валізою.", "Учора він допомагає мені з валізою."], "explanation": "One completed act yesterday needs perfective past."}]`)} />
+<ErrorCorrection client:only='react' instruction="Оберіть природне виправлення." items={JSON.parse(`[{"sentence": "Моя сестра високий.", "errorWord": "високий", "correctForm": "Моя сестра висока.", "options": ["Моя сестра висока.", "Моя сестра високий."], "explanation": "Іменник жіночого роду потребує прикметника жіночого роду."}, {"sentence": "Учора він допомагає мені з валізою.", "errorWord": "допомагає", "correctForm": "Учора він допоміг мені з валізою.", "options": ["Учора він допоміг мені з валізою.", "Учора він допомагає мені з валізою."], "explanation": "Одна завершена дія вчора потребує доконаного минулого."}]`)} />
 
 </TabItem>
 <TabItem label="Resources">

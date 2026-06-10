@@ -94,7 +94,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Знайди граматику
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я довго готував вечерю.", "options": [{"text": "недоконаний вид, процес", "correct": true}, {"text": "родовий множини", "correct": false}], "explanation": "Довго готував is process."}, {"question": "Я приготував салат.", "options": [{"text": "доконаний вид, результат", "correct": true}, {"text": "дата", "correct": false}], "explanation": "Приготував shows result."}, {"question": "Немає молока.", "options": [{"text": "родовий після немає", "correct": true}, {"text": "називний однини", "correct": false}], "explanation": "Молока is genitive."}]`)} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я довго готував вечерю.", "options": [{"text": "недоконаний вид, процес", "correct": true}, {"text": "родовий множини", "correct": false}], "explanation": "Довго готував - це процес."}, {"question": "Я приготував салат.", "options": [{"text": "доконаний вид, результат", "correct": true}, {"text": "дата", "correct": false}], "explanation": "Приготував показує результат."}, {"question": "Немає молока.", "options": [{"text": "родовий після немає", "correct": true}, {"text": "називний однини", "correct": false}], "explanation": "Молока - це родовий відмінок."}]`)} />
 
 ## Частина 2 — вибір
 
@@ -182,7 +182,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Змішані помилки
 
-<ErrorCorrection client:only='react' instruction="Choose the corrected sentence." items={JSON.parse(`[{"sentence": "У мене немає квиток.", "errorWord": "квиток", "correctForm": "У мене немає квитка.", "options": ["У мене немає квитка.", "У мене немає квиток."], "explanation": "Немає requires genitive."}, {"sentence": "П'ять студент.", "errorWord": "студент", "correctForm": "П'ять студентів.", "options": ["П'ять студентів.", "П'ять студент."], "explanation": "Five requires genitive plural."}, {"sentence": "Я вже писав лист.", "errorWord": "писав", "correctForm": "Я вже написав лист.", "options": ["Я вже написав лист.", "Я вже писав лист."], "explanation": "Уже points to result."}]`)} />
+<ErrorCorrection client:only='react' instruction="Оберіть виправлене речення." items={JSON.parse(`[{"sentence": "У мене немає квиток.", "errorWord": "квиток", "correctForm": "У мене немає квитка.", "options": ["У мене немає квитка.", "У мене немає квиток."], "explanation": "Немає вимагає родового відмінка."}, {"sentence": "П'ять студент.", "errorWord": "студент", "correctForm": "П'ять студентів.", "options": ["П'ять студентів.", "П'ять студент."], "explanation": "Після п'ять потрібен родовий множини."}, {"sentence": "Я вже писав лист.", "errorWord": "писав", "correctForm": "Я вже написав лист.", "options": ["Я вже написав лист.", "Я вже писав лист."], "explanation": "Уже вказує на результат."}]`)} />
 
 </TabItem>
 <TabItem label="Vocabulary">
@@ -212,7 +212,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Самоперевірка
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Робив usually focuses on process.", "isTrue": true, "explanation": "It is imperfective."}, {"statement": "Зробив usually focuses on result.", "isTrue": true, "explanation": "It is perfective."}, {"statement": "Немає брат is the target form.", "isTrue": false, "explanation": "The target form is немає брата."}]`)} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Робив usually focuses on process.", "isTrue": true, "explanation": "Це недоконаний вид."}, {"statement": "Зробив usually focuses on result.", "isTrue": true, "explanation": "Це доконаний вид."}, {"statement": "Немає брат is the target form.", "isTrue": false, "explanation": "Цільова форма - немає брата."}]`)} />
 
 ### Міні-повторення
 

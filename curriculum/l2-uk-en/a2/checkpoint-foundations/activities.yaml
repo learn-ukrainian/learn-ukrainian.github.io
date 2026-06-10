@@ -2,7 +2,7 @@ inline:
   - id: act-1
     type: quiz
     title: Знайди граматику
-    instruction: Choose what the highlighted phrase practices.
+    instruction: Оберіть, що тренує виділена фраза.
     items:
       - prompt: "Я довго готував вечерю."
         options:
@@ -10,42 +10,42 @@ inline:
             correct: true
           - text: "родовий множини"
             correct: false
-        explanation: Довго готував is process.
+        explanation: Довго готував - це процес.
       - prompt: "Я приготував салат."
         options:
           - text: "доконаний вид, результат"
             correct: true
           - text: "дата"
             correct: false
-        explanation: Приготував shows result.
+        explanation: Приготував показує результат.
       - prompt: "Немає молока."
         options:
           - text: "родовий після немає"
             correct: true
           - text: "називний однини"
             correct: false
-        explanation: Молока is genitive.
+        explanation: Молока - це родовий відмінок.
   - id: act-2
     type: fill-in
     title: Обери форму
-    instruction: Choose the correct word.
+    instruction: Оберіть правильне слово.
     items:
       - sentence: "У мене немає ___."
         answer: "часу"
         options: ["час", "часу"]
-        explanation: Немає takes genitive.
+        explanation: Немає вимагає родового відмінка.
       - sentence: "П'ять ___."
         answer: "студентів"
         options: ["студенти", "студентів"]
-        explanation: Five takes genitive plural.
+        explanation: Після п'ять стоїть родовий множини.
       - sentence: "Учора я ___ листа."
         answer: "написав"
         options: ["писав", "написав"]
-        explanation: The sentence points to a completed result.
+        explanation: Речення вказує на завершений результат.
   - id: act-3
     type: match-up
     title: Запитання і граматика
-    instruction: Match each question with the grammar it usually asks for.
+    instruction: З'єднайте кожне запитання з граматикою, яку воно зазвичай просить.
     pairs:
       - left: "Що ти робив?"
         right: "недоконаний вид"
@@ -58,40 +58,40 @@ inline:
   - id: act-4
     type: error-correction
     title: Змішані помилки
-    instruction: Choose the corrected sentence.
+    instruction: Оберіть виправлене речення.
     items:
       - sentence: "У мене немає квиток."
         error: "квиток"
         correction: "У мене немає квитка."
         options: ["У мене немає квитка.", "У мене немає квиток."]
-        explanation: Немає requires genitive.
+        explanation: Немає вимагає родового відмінка.
       - sentence: "П'ять студент."
         error: "студент"
         correction: "П'ять студентів."
         options: ["П'ять студентів.", "П'ять студент."]
-        explanation: Five requires genitive plural.
+        explanation: Після п'ять потрібен родовий множини.
       - sentence: "Я вже писав лист."
         error: "писав"
         correction: "Я вже написав лист."
         options: ["Я вже написав лист.", "Я вже писав лист."]
-        explanation: Уже points to result.
+        explanation: Уже вказує на результат.
 workbook:
   - type: true-false
     title: Самоперевірка
-    instruction: Decide whether each statement is true.
+    instruction: Визначте, чи правильне кожне твердження.
     items:
       - statement: "Робив usually focuses on process."
         answer: true
-        explanation: It is imperfective.
+        explanation: Це недоконаний вид.
       - statement: "Зробив usually focuses on result."
         answer: true
-        explanation: It is perfective.
+        explanation: Це доконаний вид.
       - statement: "Немає брат is the target form."
         answer: false
-        explanation: The target form is немає брата.
+        explanation: Цільова форма - немає брата.
   - type: match-up
     title: Міні-повторення
-    instruction: Match the phrase with its label.
+    instruction: З'єднайте фразу з її підписом.
     pairs:
       - left: "п'яте березня"
         right: "дата"

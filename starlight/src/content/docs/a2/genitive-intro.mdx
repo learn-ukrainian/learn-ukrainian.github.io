@@ -167,7 +167,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Багато чи мало
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "many friends", "options": [{"text": "багато друзів", "correct": true}, {"text": "багато друзі", "correct": false}], "explanation": "Багато needs genitive plural."}, {"question": "few books", "options": [{"text": "мало книжок", "correct": true}, {"text": "мало книги", "correct": false}], "explanation": "Мало also takes genitive plural."}, {"question": "several students", "options": [{"text": "кілька студентів", "correct": true}, {"text": "кілька студенти", "correct": false}], "explanation": "Кілька takes genitive plural."}]`)} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "many friends", "options": [{"text": "багато друзів", "correct": true}, {"text": "багато друзі", "correct": false}], "explanation": "Багато потребує родового множини."}, {"question": "few books", "options": [{"text": "мало книжок", "correct": true}, {"text": "мало книги", "correct": false}], "explanation": "Мало також потребує родового множини."}, {"question": "several students", "options": [{"text": "кілька студентів", "correct": true}, {"text": "кілька студенти", "correct": false}], "explanation": "Кілька потребує родового множини."}]`)} />
 
 ## Маленька карта квартири
 
@@ -235,11 +235,11 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Родовий старт
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Після немає часто стоїть родовий відмінок.", "isTrue": true, "explanation": "У мене немає брата."}, {"statement": "Багато студентів uses genitive plural.", "isTrue": true, "explanation": "Студентів is genitive plural."}, {"statement": "Немає плита is the correct A2 form.", "isTrue": false, "explanation": "The correct phrase is немає плити."}]`)} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Після немає часто стоїть родовий відмінок.", "isTrue": true, "explanation": "У мене немає брата."}, {"statement": "Багато студентів uses genitive plural.", "isTrue": true, "explanation": "Студентів - це родовий множини."}, {"statement": "Немає плита is the correct A2 form.", "isTrue": false, "explanation": "Правильна фраза - немає плити."}]`)} />
 
 ### Виправ родовий
 
-<ErrorCorrection client:only='react' instruction="Choose the corrected sentence." items={JSON.parse(`[{"sentence": "У мене немає квиток.", "errorWord": "квиток", "correctForm": "У мене немає квитка.", "options": ["У мене немає квитка.", "У мене немає квиток."], "explanation": "Квиток becomes квитка."}, {"sentence": "У нас багато коробки.", "errorWord": "коробки", "correctForm": "У нас багато коробок.", "options": ["У нас багато коробок.", "У нас багато коробки."], "explanation": "Багато requires genitive plural."}]`)} />
+<ErrorCorrection client:only='react' instruction="Оберіть виправлене речення." items={JSON.parse(`[{"sentence": "У мене немає квиток.", "errorWord": "квиток", "correctForm": "У мене немає квитка.", "options": ["У мене немає квитка.", "У мене немає квиток."], "explanation": "Квиток переходить у форму квитка."}, {"sentence": "У нас багато коробки.", "errorWord": "коробки", "correctForm": "У нас багато коробок.", "options": ["У нас багато коробок.", "У нас багато коробки."], "explanation": "Багато потребує родового множини."}]`)} />
 
 </TabItem>
 <TabItem label="Resources">

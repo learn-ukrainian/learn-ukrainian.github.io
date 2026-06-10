@@ -120,7 +120,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Робив чи зробив?
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що ти робив увечері?", "options": [{"text": "Я писав листа.", "correct": true}, {"text": "Я написав листа.", "correct": false}], "explanation": "The question asks about process."}, {"question": "Що ти зробив?", "options": [{"text": "Я написав список.", "correct": true}, {"text": "Я писав список.", "correct": false}], "explanation": "The question asks about result."}, {"question": "Я вже...", "options": [{"text": "купив овочі", "correct": true}, {"text": "купував овочі", "correct": false}], "explanation": "Уже points to result."}]`)} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що ти робив увечері?", "options": [{"text": "Я писав листа.", "correct": true}, {"text": "Я написав листа.", "correct": false}], "explanation": "Запитання просить процес."}, {"question": "Що ти зробив?", "options": [{"text": "Я написав список.", "correct": true}, {"text": "Я писав список.", "correct": false}], "explanation": "Запитання просить результат."}, {"question": "Я вже...", "options": [{"text": "купив овочі", "correct": true}, {"text": "купував овочі", "correct": false}], "explanation": "Уже вказує на результат."}]`)} />
 
 ## Практична модель
 
@@ -208,11 +208,11 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Практика A2.1
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Що ти робив? usually asks about process.", "isTrue": true, "explanation": "It invites imperfective."}, {"statement": "Немає лимонів is a genitive phrase.", "isTrue": true, "explanation": "Лимонів is genitive plural."}, {"statement": "П'ять лимони is the target A2 form.", "isTrue": false, "explanation": "The target form is п'ять лимонів."}]`)} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Що ти робив? usually asks about process.", "isTrue": true, "explanation": "Тут природний недоконаний вид."}, {"statement": "Немає лимонів is a genitive phrase.", "isTrue": true, "explanation": "Лимонів - це родовий множини."}, {"statement": "П'ять лимони is the target A2 form.", "isTrue": false, "explanation": "Цільова форма - п'ять лимонів."}]`)} />
 
 ### Виправ діалог
 
-<ErrorCorrection client:only='react' instruction="Choose the corrected sentence." items={JSON.parse(`[{"sentence": "У нас немає серветки.", "errorWord": "серветки", "correctForm": "У нас немає серветок.", "options": ["У нас немає серветок.", "У нас немає серветки."], "explanation": "In this party context, plural absence is needed."}, {"sentence": "Я вже готував салат.", "errorWord": "готував", "correctForm": "Я вже приготував салат.", "options": ["Я вже приготував салат.", "Я вже готував салат."], "explanation": "Уже points to completed result."}]`)} />
+<ErrorCorrection client:only='react' instruction="Оберіть виправлене речення." items={JSON.parse(`[{"sentence": "У нас немає серветки.", "errorWord": "серветки", "correctForm": "У нас немає серветок.", "options": ["У нас немає серветок.", "У нас немає серветки."], "explanation": "У цій ситуації потрібна відсутність у множині."}, {"sentence": "Я вже готував салат.", "errorWord": "готував", "correctForm": "Я вже приготував салат.", "options": ["Я вже приготував салат.", "Я вже готував салат."], "explanation": "Уже вказує на завершений результат."}]`)} />
 
 </TabItem>
 <TabItem label="Resources">

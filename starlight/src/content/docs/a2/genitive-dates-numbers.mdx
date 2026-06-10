@@ -170,7 +170,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Заперечення
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я бачу паспорт -> Я не бачу...", "options": [{"text": "паспорта", "correct": true}, {"text": "паспорт", "correct": false}], "explanation": "Genitive is a common negation pattern."}, {"question": "Вона читає книгу -> Вона не читає...", "options": [{"text": "книги", "correct": true}, {"text": "книга", "correct": false}], "explanation": "Книга becomes книги."}, {"question": "Він купив машину -> Він не купив...", "options": [{"text": "машини", "correct": true}, {"text": "машина", "correct": false}], "explanation": "Машина becomes машини."}]`)} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я бачу паспорт -> Я не бачу...", "options": [{"text": "паспорта", "correct": true}, {"text": "паспорт", "correct": false}], "explanation": "Родовий - часта модель у запереченні."}, {"question": "Вона читає книгу -> Вона не читає...", "options": [{"text": "книги", "correct": true}, {"text": "книга", "correct": false}], "explanation": "Книга переходить у форму книги."}, {"question": "Він купив машину -> Він не купив...", "options": [{"text": "машини", "correct": true}, {"text": "машина", "correct": false}], "explanation": "Машина переходить у форму машини."}]`)} />
 
 ## Міні-історія з датами
 
@@ -232,11 +232,11 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Числа і родовий
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "П'ять гостей uses genitive plural.", "isTrue": true, "explanation": "Гостей is genitive plural."}, {"statement": "Два номери follows the 2-4 pattern.", "isTrue": true, "explanation": "The noun is nominative plural."}, {"statement": "У даті місяць залишається у називному відмінку.", "isTrue": false, "explanation": "We say п'яте березня."}]`)} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "П'ять гостей uses genitive plural.", "isTrue": true, "explanation": "Гостей - це родовий множини."}, {"statement": "Два номери follows the 2-4 pattern.", "isTrue": true, "explanation": "Іменник стоїть у називному множини."}, {"statement": "У даті місяць залишається у називному відмінку.", "isTrue": false, "explanation": "Українською кажемо п'яте березня."}]`)} />
 
 ### Виправ форму
 
-<ErrorCorrection client:only='react' instruction="Choose the corrected phrase." items={JSON.parse(`[{"sentence": "п'ять номер", "errorWord": "номер", "correctForm": "п'ять номерів", "options": ["п'ять номерів", "п'ять номер"], "explanation": "Five takes genitive plural."}, {"sentence": "перше січень", "errorWord": "січень", "correctForm": "перше січня", "options": ["перше січня", "перше січень"], "explanation": "Month name is genitive in dates."}]`)} />
+<ErrorCorrection client:only='react' instruction="Оберіть виправлену фразу." items={JSON.parse(`[{"sentence": "п'ять номер", "errorWord": "номер", "correctForm": "п'ять номерів", "options": ["п'ять номерів", "п'ять номер"], "explanation": "Після п'ять стоїть родовий множини."}, {"sentence": "перше січень", "errorWord": "січень", "correctForm": "перше січня", "options": ["перше січня", "перше січень"], "explanation": "Назва місяця в датах стоїть у родовому."}]`)} />
 
 </TabItem>
 <TabItem label="Resources">

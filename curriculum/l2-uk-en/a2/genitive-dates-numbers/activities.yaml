@@ -2,7 +2,7 @@ inline:
   - id: act-1
     type: match-up
     title: Місяць у даті
-    instruction: Match the month with its date form.
+    instruction: З'єднайте місяць із формою для дати.
     pairs:
       - left: "січень"
         right: "січня"
@@ -17,32 +17,32 @@ inline:
   - id: act-2
     type: fill-in
     title: 1, 2-4, 5+
-    instruction: Choose the noun form after the number.
+    instruction: Оберіть форму іменника після числа.
     items:
       - sentence: "один ___"
         answer: "номер"
         options: ["номер", "номери", "номерів"]
-        explanation: One takes nominative singular.
+        explanation: Після один стоїть називний однини.
       - sentence: "два ___"
         answer: "номери"
         options: ["номер", "номери", "номерів"]
-        explanation: Two takes nominative plural.
+        explanation: Після два стоїть називний множини.
       - sentence: "п'ять ___"
         answer: "номерів"
         options: ["номер", "номери", "номерів"]
-        explanation: Five takes genitive plural.
+        explanation: Після п'ять стоїть родовий множини.
       - sentence: "три ___"
         answer: "книги"
         options: ["книга", "книги", "книг"]
-        explanation: Three takes nominative plural.
+        explanation: Після три стоїть називний множини.
       - sentence: "шість ___"
         answer: "книг"
         options: ["книга", "книги", "книг"]
-        explanation: Six takes genitive plural.
+        explanation: Після шість стоїть родовий множини.
   - id: act-3
     type: quiz
     title: Заперечення
-    instruction: Choose the natural genitive negation.
+    instruction: Оберіть природне заперечення з родовим.
     items:
       - prompt: "Я бачу паспорт -> Я не бачу..."
         options:
@@ -50,25 +50,25 @@ inline:
             correct: true
           - text: "паспорт"
             correct: false
-        explanation: Genitive is a common negation pattern.
+        explanation: Родовий - часта модель у запереченні.
       - prompt: "Вона читає книгу -> Вона не читає..."
         options:
           - text: "книги"
             correct: true
           - text: "книга"
             correct: false
-        explanation: Книга becomes книги.
+        explanation: Книга переходить у форму книги.
       - prompt: "Він купив машину -> Він не купив..."
         options:
           - text: "машини"
             correct: true
           - text: "машина"
             correct: false
-        explanation: Машина becomes машини.
+        explanation: Машина переходить у форму машини.
   - id: act-4
     type: group-sort
     title: Дата, кількість, заперечення
-    instruction: Sort phrases by what they practice.
+    instruction: Розподіліть фрази за тим, що вони тренують.
     groups:
       - name: "дата"
         items: ["п'яте березня", "перше січня"]
@@ -79,28 +79,28 @@ inline:
 workbook:
   - type: true-false
     title: Числа і родовий
-    instruction: Decide whether each statement is true.
+    instruction: Визначте, чи правильне кожне твердження.
     items:
       - statement: "П'ять гостей uses genitive plural."
         answer: true
-        explanation: Гостей is genitive plural.
+        explanation: Гостей - це родовий множини.
       - statement: "Два номери follows the 2-4 pattern."
         answer: true
-        explanation: The noun is nominative plural.
+        explanation: Іменник стоїть у називному множини.
       - statement: "У даті місяць залишається у називному відмінку."
         answer: false
-        explanation: We say п'яте березня.
+        explanation: Українською кажемо п'яте березня.
   - type: error-correction
     title: Виправ форму
-    instruction: Choose the corrected phrase.
+    instruction: Оберіть виправлену фразу.
     items:
       - sentence: "п'ять номер"
         error: "номер"
         correction: "п'ять номерів"
         options: ["п'ять номерів", "п'ять номер"]
-        explanation: Five takes genitive plural.
+        explanation: Після п'ять стоїть родовий множини.
       - sentence: "перше січень"
         error: "січень"
         correction: "перше січня"
         options: ["перше січня", "перше січень"]
-        explanation: Month name is genitive in dates.
+        explanation: Назва місяця в датах стоїть у родовому.
