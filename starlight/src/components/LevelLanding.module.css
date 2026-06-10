@@ -122,7 +122,7 @@
 }
 
 .moduleLocked {
-  opacity: 0.5;
+  background: var(--sl-color-gray-7, var(--sl-color-bg, white));
 }
 .moduleLocked:hover {
   transform: none;
@@ -130,7 +130,14 @@
   border-color: var(--sl-color-gray-6, #eee);
 }
 .moduleLocked .moduleTitle {
+  color: var(--sl-color-gray-2);
+}
+.moduleLocked .moduleSub,
+.moduleLocked .moduleSubEn {
   color: var(--sl-color-gray-3);
+}
+.moduleLocked .moduleStatus {
+  opacity: 0.75;
 }
 
 /* Module number badges */

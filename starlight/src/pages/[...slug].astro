@@ -1,6 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import CourseLayout from '../layouts/CourseLayout.astro';
+import LevelLanding from '../components/LevelLanding';
 import curriculumStats from '../data/curriculum-stats.json';
 import lexiconManifest from '../data/lexicon-manifest.json';
 
@@ -276,7 +277,6 @@ const TRACKS: Record<string, TrackOverview> = {
 
 const HIDDEN_DOCS = new Set(['a1/review-clears-needs-human']);
 const PUBLIC_LESSON_PREFIXES = new Set(['a1', 'a2', 'folk']);
-const LANDING_DOC_TRACKS = new Set(['a2']);
 const normalizeId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
 const hrefFromRoute = (route: string) => `/${route}/`;
 const trackIds = Object.keys(TRACKS);
@@ -287,7 +287,7 @@ const visibleDocs = allDocs.filter((entry) => {
   const track = id.split('/')[0];
   if (HIDDEN_DOCS.has(id)) return false;
   if (entry.data.draft) return false;
-  return track in TRACKS;
+  return track in TRACKS || (id !== 'index' && id === track);
 });
 
 const deployedDocsByTrack = new Map<string, DocsEntry[]>();
@@ -296,7 +296,7 @@ for (const entry of visibleDocs) {
   const id = normalizeId(entry.id);
   const track = id.split('/')[0];
   if (id === track) {
-    if (LANDING_DOC_TRACKS.has(track)) landingDocsByTrack.set(track, entry);
+    landingDocsByTrack.set(track, entry);
     continue;
   }
   const bucket = deployedDocsByTrack.get(track) ?? [];
@@ -354,23 +354,23 @@ const searchItems: SearchItem[] = [
 export async function getStaticPaths() {
   const normalizeDocId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
   const publicLessonPrefixes = new Set(['a1', 'a2', 'folk']);
-  const landingDocTracks = new Set(['a2']);
   const hiddenDocs = new Set(['a1/review-clears-needs-human']);
-  const tracks = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'folk', 'bio', 'hist', 'istorio', 'lit', 'oes', 'ruth'];
+  const configuredTracks = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'folk', 'bio', 'hist', 'istorio', 'lit', 'oes', 'ruth'];
   const pathDocs = await getCollection('docs');
   const landingDocsByPathTrack = new Map<string, DocsEntry>();
   const docs = pathDocs.filter((entry) => {
     const id = normalizeDocId(entry.id);
     const track = id.split('/')[0];
-    if (!publicLessonPrefixes.has(track)) return false;
-    if (id === track) {
-      if (landingDocTracks.has(track)) landingDocsByPathTrack.set(track, entry);
+    if (id !== 'index' && id === track) {
+      landingDocsByPathTrack.set(track, entry);
       return false;
     }
+    if (!publicLessonPrefixes.has(track)) return false;
     if (hiddenDocs.has(id)) return false;
     if (entry.data.draft) return false;
     return true;
   });
+  const tracks = [...new Set([...configuredTracks, ...landingDocsByPathTrack.keys()])];
 
   return [
     ...tracks.map((track) => ({
@@ -533,6 +533,23 @@ const sidebar = props.kind === 'doc'
       };
     })()
   : undefined;
+
+const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
+  const count = moduleCount(track);
+  return [{
+    unit: `${trackOverview.label} planned modules`,
+    items: Array.from({ length: count }, (_, index) => {
+      const num = index + 1;
+      return {
+        num,
+        slug: `planned-${String(num).padStart(2, '0')}`,
+        title: `Planned module ${String(num).padStart(2, '0')}`,
+        sub: 'Mapped curriculum slot; not released for study yet.',
+        status: 'locked' as const,
+      };
+    }),
+  }];
+};
 ---
 
 <CourseLayout
@@ -545,112 +562,23 @@ const sidebar = props.kind === 'doc'
   navItems={navItems}
   sidebar={sidebar}
   wide={pageMeta.wide}
-  showHero={props.kind !== 'landingDoc'}
+  showHero={props.kind !== 'landingDoc' && props.kind !== 'track'}
 >
   {props.kind === 'landingDoc' && Content ? (
     <Content />
   ) : props.kind === 'track' && pageTrack ? (
-    <section class:list={['track-overview', `track-${props.track}`, pageTrack.family, pageTrack.state]}>
-      <div class="track-status-panel">
-        <span>{pageTrack.status}</span>
-        <strong>
-          {moduleCount(props.track)}
-          {' '}
-          {pageTrack.state === 'released' || pageTrack.state === 'test' ? 'available modules' : 'planned modules'}
-        </strong>
-      </div>
-
-      <div class="track-overview-grid">
-        <section class="track-lead">
-          <p class="track-family">{pageTrack.family === 'core' ? 'Core ladder' : 'Seminar track'}</p>
-          <h2>{pageTrack.title}</h2>
-          <p>{pageTrack.subtitle}</p>
-          <div class="track-actions">
-            {pageTrack.primaryAction && <a class="track-primary" href={pageTrack.primaryAction.href}>{pageTrack.primaryAction.label}</a>}
-            {pageTrack.secondaryAction && <a class="track-secondary" href={pageTrack.secondaryAction.href}>{pageTrack.secondaryAction.label}</a>}
-          </div>
-        </section>
-
-        <section class="track-notes" aria-label={`${pageTrack.label} notes`}>
-          {pageTrack.points.map((point) => (
-            <p>{point}</p>
-          ))}
-        </section>
-      </div>
-
-      <section class="track-pattern">
-        <h2>Template Pattern</h2>
-        <div class="track-pattern-grid">
-          {pageTrack.pattern.map((item) => (
-            <span>{item}</span>
-          ))}
-        </div>
-      </section>
-
-      {pageTrack.family === 'seminar' && (
-        <section class="seminar-frame">
-          <div>
-            <h2>Seminar Reading Frame</h2>
-            <p>
-              Source-heavy lessons use a different rhythm from the core ladder: evidence first,
-              interpretation second, and practice that asks learners to compare claims rather than
-              memorize isolated facts.
-            </p>
-          </div>
-          <ul>
-            <li>source note with provenance and limits</li>
-            <li>context card before claims get interpreted</li>
-            <li>decolonization or bias check where the topic requires it</li>
-            <li>workbook tasks for comparison, evaluation, and response</li>
-          </ul>
-        </section>
-      )}
-
-      {pageTrack.state === 'unavailable' || pageTrack.state === 'planned' || pageTrack.state === 'next' ? (
-        <section class="route-state-card">
-          <p class="state-code">{pageTrack.state === 'next' ? 'Next Track' : 'Unavailable Today'}</p>
-          <h2>This track is mapped, not released.</h2>
-          <p>
-            The learner UI keeps the route visible so navigation, search, and future publishing have
-            a real template, but it does not claim this content is ready for study.
-          </p>
-          <a href="/a1/">Use the available A1 track</a>
-        </section>
-      ) : (
-        <section class="module-preview">
-          <h2>Available Modules</h2>
-          <div class="module-preview-list">
-            {(deployedDocsByTrack.get(props.track) ?? []).map((entry) => {
-              const id = normalizeId(entry.id);
-              return (
-                <a href={hrefFromRoute(id)}>
-                  <span>{entry.data.sidebar?.order ? String(entry.data.sidebar.order).padStart(2, '0') : 'Lesson'}</span>
-                  <strong>{entry.data.title}</strong>
-                </a>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
-      <section class="track-support">
-        <h2>Learning Support</h2>
-        <div class="track-support-grid">
-          <a href="/lexicon/">
-            <strong>Word Atlas</strong>
-            <span>Static vocabulary, morphology, etymology, and course usage pages.</span>
-          </a>
-          <a href="/search/">
-            <strong>Search</strong>
-            <span>Find lessons, track pages, Word Atlas entries, and reference surfaces.</span>
-          </a>
-          <a href="https://www.ukrainianlessons.com/">
-            <strong>Ukrainian Lessons</strong>
-            <span>Recommended external learning ecosystem; inspiration only, not copied content.</span>
-          </a>
-        </div>
-      </section>
-    </section>
+    <LevelLanding
+      client:load
+      level={pageTrack.label.toUpperCase()}
+      title={pageTrack.title}
+      subtitle={pageTrack.subtitle}
+      moduleCount={moduleCount(props.track)}
+      wordTarget={4000}
+      color={`var(--lu-id-${props.track})`}
+      progressTitle={`${pageTrack.label} Build Status`}
+      progressDescription={`0 available · ${moduleCount(props.track)} planned`}
+      modules={plannedModuleGroups(props.track, pageTrack)}
+    />
   ) : props.kind === 'search' ? (
     <section class="search-page" data-search-root>
       <form class="search-panel" role="search">

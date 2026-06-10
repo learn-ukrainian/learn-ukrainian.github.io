@@ -9,10 +9,13 @@ import LevelLanding from '@site/src/components/LevelLanding';
 <LevelLanding
   client:load
   level="lit"
-  levelName="LIT - Українська література"
+  title="LIT - Українська література"
   subtitle="Literature Track — 221 modules"
-  introduction="Literature — Ukrainian classics and literary analysis"
-  totalPlanned={221}
+  moduleCount={221}
+  wordTarget={4000}
+  color="var(--lu-id-lit)"
+  progressTitle="LIT Build Status"
+  progressDescription="0 available · 221 planned"
   modules={[
   { num: 1, title: "Феномен Івана Котляревського", slug: "introduction-to-kotliarevsky", status: "wip" },
   { num: 2, title: "Енеїда: Сміх над Безоднею (Частина I)", slug: "eneida-part-1", status: "wip" },
