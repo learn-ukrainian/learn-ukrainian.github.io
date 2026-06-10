@@ -147,3 +147,52 @@ def test_folk_vesum_gate_still_rejects_unknown_coinage_via_engine() -> None:
     assert gate["passed"] is False
     assert gate["missing"] == ["городалька"]
     assert gate["heritage_attested"] == 0
+
+
+# --- Morphology fallback: VESUM-gap inflections + negated participles ------
+# VESUM enumerates the headword of a dialectal noun (гагілка) but not every
+# oblique case (гагілку, ягілками), and not the regular `не`-negation of a
+# standard participle (незгладжений←згладжений). The gate lemmatises / strips
+# `не` and re-checks the base via the classifier, so valid inflected Ukrainian
+# passes — while russianisms and coinages stay flagged.
+
+
+@requires_sources_db
+def test_folk_vesum_gate_accepts_oblique_inflections_of_dialect_words() -> None:
+    # гагілку (acc.sg) / ягілками (instr.pl): lemma → гагілка / ягілка → dialect.
+    gate = _gate("гагілку ягілками")
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert gate["heritage_attested"] == 2
+
+
+@requires_sources_db
+def test_folk_vesum_gate_accepts_negated_participles_of_standard_bases() -> None:
+    # незгладжений / непідперта: strip `не` → згладжений / підперта → standard.
+    gate = _gate("незгладжений непідперта")
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert gate["heritage_attested"] == 2
+
+
+@requires_sources_db
+def test_morphology_fallback_does_not_leak_russianism_via_verb_root() -> None:
+    # CRITICAL teeth check: `діюча` is a russianism (→ чинна/дійова) whose lemma is
+    # the *standard* verb `діяти`. The russianism guard must stop the morphology
+    # rescue from leaking it — `діюча` stays flagged despite a standard lemma.
+    gate = _gate("діюча")
+
+    assert gate["passed"] is False
+    assert gate["missing"] == ["діюча"]
+    assert gate["heritage_attested"] == 0
+
+
+def test_morphology_fallback_does_not_apply_to_core_levels() -> None:
+    # The heritage/morphology fallback is seminar/folk-scoped only.
+    gate = _gate("гагілку", level="a1")
+
+    assert gate["passed"] is False
+    assert gate["missing"] == ["гагілку"]
+    assert gate["heritage_attested"] == 0

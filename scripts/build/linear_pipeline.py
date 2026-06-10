@@ -8189,6 +8189,68 @@ def _engine_classifies_authentic(candidate: str) -> bool:
     )
 
 
+def _engine_flags_russianism(candidate: str) -> bool:
+    """True iff the shared classifier directly flags ``candidate`` as a russianism.
+
+    Such a form must NEVER be morphology-rescued via a standard base: e.g. the
+    russianism ``діюча`` (→ чинна/дійова) lemmatises to the standard verb ``діяти``,
+    but ``діюча`` itself stays a russianism and must remain flagged. Degrades to
+    ``False`` when the classifier is unavailable (CI) — the independent russianism
+    gates still apply."""
+    try:
+        from scripts.lexicon.heritage_classifier import classify_surface_form
+
+        return bool(classify_surface_form(candidate).get("is_russianism", False))
+    except Exception:
+        return False
+
+
+_UK_MORPH_ANALYZER: Any = None
+_UK_MORPH_ANALYZER_TRIED = False
+
+
+def _uk_morph_analyzer() -> Any:
+    """Lazy Ukrainian morphological analyzer (pymorphy3); None if unavailable."""
+    global _UK_MORPH_ANALYZER, _UK_MORPH_ANALYZER_TRIED
+    if not _UK_MORPH_ANALYZER_TRIED:
+        _UK_MORPH_ANALYZER_TRIED = True
+        try:
+            import pymorphy3
+
+            _UK_MORPH_ANALYZER = pymorphy3.MorphAnalyzer(lang="uk")
+        except Exception:
+            _UK_MORPH_ANALYZER = None
+    return _UK_MORPH_ANALYZER
+
+
+def _morphological_base_candidates(word: str) -> set[str]:
+    """Derived bases offered to the heritage classifier for an authentic-vocabulary
+    surface form: the lemma (resolving oblique inflections of dialectal words, e.g.
+    ``гагілку``→``гагілка``, ``ягілками``→``ягілка``) and a regular ``не``-stripped
+    base (negated participles, e.g. ``незгладжений``→``згладжений``).
+
+    A base is only *offered* — it is accepted solely when the classifier itself rules
+    it authentic-and-not-russianism, so coinages (``обрядознавчий``) and russianisms
+    (``протиріччя``) that lemmatise to themselves stay flagged and the russianism guard
+    is untouched. Empty when the analyzer is unavailable (CI), leaving the surface-form
+    + committed-allowlist checks unchanged. Secondary-imperfective aspect pairs
+    (``виворожувати``←``виворожити``) are NOT derived here — that is a separate
+    follow-up; they remain flagged for now."""
+    candidates: set[str] = set()
+    analyzer = _uk_morph_analyzer()
+    if analyzer is not None:
+        try:
+            for parse in analyzer.parse(word)[:3]:
+                lemma = (parse.normal_form or "").strip().lower()
+                if lemma and lemma != word:
+                    candidates.add(lemma)
+        except Exception:
+            pass
+    if word.startswith("не") and len(word) > 4:
+        candidates.add(word[2:])
+    return candidates
+
+
 def _resolve_folk_heritage_attested_missing(
     missing_lc: set[str],
     unchecked_pairs: Sequence[tuple[str, str, str]],
@@ -8216,7 +8278,21 @@ def _resolve_folk_heritage_attested_missing(
         if attestation_index and any(candidate in attestation_index for candidate in candidates):
             attested.add(word)
             continue
-        if any(_engine_classifies_authentic(candidate) for candidate in candidates):
+        # Russianism guard: never morphology-rescue a form the classifier directly
+        # flags as a russianism. A russianism participle/adjective lemmatises to its
+        # standard verb root (діюча→діяти), which would otherwise leak it through —
+        # but діюча itself must stay flagged. This keeps the gate's teeth.
+        if any(_engine_flags_russianism(candidate) for candidate in candidates):
+            continue
+        # Offer each surface candidate plus its morphological bases (lemma + regular
+        # `не`-stripped base) to the classifier. This resolves oblique inflections of
+        # dialectal words (гагілку→гагілка) and negated participles of standard bases
+        # (незгладжений→згладжений) that VESUM does not enumerate — VESUM-absence of a
+        # valid inflected form, not a russianism.
+        engine_candidates = set(candidates)
+        for candidate in candidates:
+            engine_candidates |= _morphological_base_candidates(candidate)
+        if any(_engine_classifies_authentic(candidate) for candidate in engine_candidates):
             attested.add(word)
     return attested
 
