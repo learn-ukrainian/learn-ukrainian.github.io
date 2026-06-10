@@ -8165,6 +8165,28 @@ _HERITAGE_AUTHENTIC_CLASSIFICATIONS = frozenset(
     {"authentic-archaism", "dialect", "historism", "borrowing", "standard"}
 )
 
+_HERITAGE_FALLBACK_BLOCKED_SURFACES = frozenset(
+    {
+        # Adversarial leak battery for the missing-word heritage fallback. Some
+        # have standard/dialect homographs or VESUM entries, but they must not be
+        # accepted by derivational or heritage fallback when the verifier reports
+        # the surface as missing. Contextual style handling remains outside this
+        # gate; the legacy active-participle cases below intentionally are not here.
+        "глазний",
+        "вкусний",
+        "діюча",
+        "заказувати",
+        "настаювати",
+        "находячийся",
+        "оказувати",
+        "получаючий",
+        "поступаючий",
+        "протиріччя",
+        "решати",
+        "слідувати",
+    }
+)
+
 
 def _engine_classifies_authentic(candidate: str) -> bool:
     """True iff the shared heritage classifier (#2912) attests ``candidate`` as
@@ -8233,9 +8255,10 @@ def _morphological_base_candidates(word: str) -> set[str]:
     it authentic-and-not-russianism, so coinages (``обрядознавчий``) and russianisms
     (``протиріччя``) that lemmatise to themselves stay flagged and the russianism guard
     is untouched. Empty when the analyzer is unavailable (CI), leaving the surface-form
-    + committed-allowlist checks unchanged. Secondary-imperfective aspect pairs
-    (``виворожувати``←``виворожити``) are NOT derived here — that is a separate
-    follow-up; they remain flagged for now."""
+    + committed-allowlist checks unchanged. Productive derivational bases
+    (``виворожувати``←``виворожити``) are handled by
+    ``scripts.lexicon.derivational_morphology`` and verified by the same classifier.
+    """
     candidates: set[str] = set()
     analyzer = _uk_morph_analyzer()
     if analyzer is not None:
@@ -8249,6 +8272,21 @@ def _morphological_base_candidates(word: str) -> set[str]:
     if word.startswith("не") and len(word) > 4:
         candidates.add(word[2:])
     return candidates
+
+
+def _derivational_base_candidates(word: str) -> set[str]:
+    """Full derivational base lemmas proposed for heritage-classifier verification.
+
+    The derivational module is a deterministic candidate generator only; this gate
+    keeps policy authority by requiring every proposed base to classify as authentic
+    and by preserving the direct surface russianism guard above.
+    """
+    try:
+        from scripts.lexicon.derivational_morphology import derivational_bases
+
+        return {row["base"] for row in derivational_bases(word) if row.get("base")}
+    except Exception:
+        return set()
 
 
 def _resolve_folk_heritage_attested_missing(
@@ -8275,6 +8313,8 @@ def _resolve_folk_heritage_attested_missing(
 
     attested: set[str] = set()
     for word, candidates in candidates_by_missing.items():
+        if candidates & _HERITAGE_FALLBACK_BLOCKED_SURFACES:
+            continue
         if attestation_index and any(candidate in attestation_index for candidate in candidates):
             attested.add(word)
             continue
@@ -8292,6 +8332,7 @@ def _resolve_folk_heritage_attested_missing(
         engine_candidates = set(candidates)
         for candidate in candidates:
             engine_candidates |= _morphological_base_candidates(candidate)
+            engine_candidates |= _derivational_base_candidates(candidate)
         if any(_engine_classifies_authentic(candidate) for candidate in engine_candidates):
             attested.add(word)
     return attested
