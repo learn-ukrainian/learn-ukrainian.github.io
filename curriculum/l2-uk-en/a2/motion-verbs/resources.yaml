@@ -1,0 +1,20 @@
+- title: "Dobra Forma 28-1: Verbs of Motion"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: 28-1"
+  url: "https://opentext.ku.edu/dobraforma/chapter/28-1/"
+  notes: "Learner-facing introduction to unidirectional and multidirectional motion verbs."
+- title: "Dobra Forma 28-2: Verbs of Motion (Past and Future)"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: 28-2"
+  url: "https://opentext.ku.edu/dobraforma/chapter/28-2/"
+  notes: "Practice with motion verbs across tense and aspect."
+- title: "Dobra Forma 28-3: Verbs of Motion (Prefixed)"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-motion-verbs"
+  url: "https://opentext.ku.edu/dobraforma/chapter/28-3/"
+  notes: "Catalogued extension for learners ready to notice prefixed motion forms."
+- title: "ULP: Verbs of Motion in Ukrainian"
+  role: article
+  source_ref: "docs/resources/ulp-article-mappings.yaml: transport"
+  url: "https://www.ukrainianlessons.com/motion/"
+  notes: "Picture-supported learner overview of basic motion verb contrasts."

@@ -1,0 +1,265 @@
+---
+title: "Розповіді та подорожі"
+description: "Розповідаємо про минуле з видом дієслова та плануємо подорожі з дієсловами руху"
+sidebar:
+  order: 45
+  label: "45. Розповіді та подорожі"
+draft: true
+prev: imperative-complete
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: історія з вокзалу
+
+Друзі зустрілися після вихідних. Один розповідає коротку історію, інша
+людина ставить уточнювальні питання.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Наталка","text":"Ти їздив до Львова на вихідних?"},{"speaker":"Андрій","text":"Так. Ми поїхали потягом у п\'ятницю ввечері."},{"speaker":"Наталка","text":"Як дорога?"},{"speaker":"Андрій","text":"Спочатку все було спокійно. Ми сиділи біля вікна, пили чай і дивилися на міста. Раптом потяг зупинився на маленькій станції."},{"speaker":"Наталка","text":"І що сталося?"},{"speaker":"Андрій","text":"Ми чекали двадцять хвилин, а потім поїхали далі. У Львові ходили центром, відвідали музей і купили каву додому."},{"speaker":"Наталка","text":"Звучить добре. Куди поїдете наступного разу?"},{"speaker":"Андрій","text":"Можливо, поїдемо в Карпати."}]')}
+/>
+
+У діалозі разом працюють три теми:
+
+| Тема | Приклади |
+| --- | --- |
+| фон у минулому | сиділи, пили, дивилися, чекали |
+| події сюжету | поїхали, зупинився, відвідали, купили |
+| рух і подорож | їздив, поїхали, ходили, поїдемо |
+
+### Розповідь із пропусками
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Минулої суботи ми ___ до Одеси.", "answer": "їздили", "options": ["їздили", "поїхали й залишилися"]}, {"sentence": "У потязі ми ___ чай і ___ у вікно.", "answer": "пили / дивилися", "options": ["випили / подивилися", "пили / дивилися"]}, {"sentence": "Раптом я ___ квиток у книжці.", "answer": "знайшов", "options": ["шукав", "знайшов"]}, {"sentence": "Увечері ми ___ центром і ___ музей.", "answer": "ходили / відвідали", "options": ["ходили / відвідали", "пішли / відвідували"]}, {"sentence": "Після обіду ми ___ квитки на завтра.", "answer": "купили", "options": ["купували", "купили"]}, {"sentence": "Поки ми ___ на пероні, почався дощ.", "answer": "чекали", "options": ["чекали", "почекали"]}, {"sentence": "Наступного дня ми ___ в Карпати.", "answer": "поїхали", "options": ["поїхали", "їздили щодня"]}, {"sentence": "Після поїздки я ___ коротку історію.", "answer": "розповів", "options": ["розповідав", "розповів"]}]`)} />
+
+## Як будувати просту історію
+
+Для A2 достатньо чіткої структури.
+
+1. Сцена: де ви були, коли це було.
+2. Фон: що тривало або повторювалося.
+3. Подія: що раптом сталося.
+4. Наступні кроки: що ви зробили потім.
+5. Враження: як це було.
+
+Модель:
+
+> Минулої суботи ми їхали до Одеси. У потязі ми пили чай і говорили про
+> море. Раптом я не знайшов квиток. Я відкрив сумку, перевірив кишені й
+> нарешті знайшов квиток у книжці. Було смішно.
+
+`Їхали`, `пили`, `говорили` створюють фон. `Не знайшов`, `відкрив`,
+`перевірив`, `знайшов` рухають історію вперед.
+
+## Плануємо подорож
+
+Коли ви плануєте конкретну поїздку, часто потрібні доконані форми:
+
+> Ми поїдемо потягом до Львова.
+>
+> Купимо квитки сьогодні.
+>
+> Зупинимося в маленькому готелі.
+
+Коли ви говорите про заняття під час подорожі, часто потрібен процес:
+
+> Будемо ходити центром.
+>
+> Будемо фотографувати старі будинки.
+>
+> Будемо пробувати місцеву їжу.
+
+| Питання | Корисна відповідь |
+| --- | --- |
+| Куди поїдете? | Поїдемо до Львова / в Карпати / на море. |
+| Як поїдете? | Поїдемо потягом / автобусом / машиною. |
+| Де зупинитеся? | Зупинимося в готелі / у друзів. |
+| Що будете робити? | Будемо гуляти, фотографувати, відпочивати. |
+
+### Частини історії
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Ми сиділи біля вікна і пили чай.", "options": [{"text": "фон", "correct": true}, {"text": "раптова подія", "correct": false}, {"text": "наказ", "correct": false}], "explanation": "Сиділи і пили створюють сцену."}, {"question": "Раптом потяг зупинився.", "options": [{"text": "подія сюжету", "correct": true}, {"text": "звичка", "correct": false}, {"text": "майбутній план", "correct": false}], "explanation": "Раптом вводить окрему подію."}, {"question": "У Львові ми ходили центром.", "options": [{"text": "рух у різних місцях", "correct": true}, {"text": "вирушення в один бік", "correct": false}, {"text": "побажання", "correct": false}], "explanation": "Ходили центром = гуляли там."}, {"question": "Ми поїхали потягом.", "options": [{"text": "конкретне вирушення", "correct": true}, {"text": "регулярна звичка", "correct": false}, {"text": "фонова дія", "correct": false}], "explanation": "Поїхали називає один виїзд."}, {"question": "Ми чекали двадцять хвилин.", "options": [{"text": "тривала дія", "correct": true}, {"text": "один готовий результат", "correct": false}, {"text": "форма наказу", "correct": false}], "explanation": "Чекали показує тривалість."}, {"question": "Ми відвідали музей.", "options": [{"text": "завершена подія", "correct": true}, {"text": "звичка", "correct": false}, {"text": "фон без результату", "correct": false}], "explanation": "Відвідали називає конкретну подію."}, {"question": "Мені дуже сподобалося.", "options": [{"text": "враження", "correct": true}, {"text": "напрямок", "correct": false}, {"text": "заборона", "correct": false}], "explanation": "Це фраза для враження."}, {"question": "Наступного разу поїдемо в Карпати.", "options": [{"text": "план подорожі", "correct": true}, {"text": "історія в минулому", "correct": false}, {"text": "звертання", "correct": false}], "explanation": "Поїдемо називає майбутню конкретну поїздку."}]`)} />
+
+## Розкажіть про поїздку
+
+Коли поїздка вже була, оберіть дієслово руху за змістом.
+
+> Я їздив до Києва. - був там і повернувся.
+>
+> Я поїхав до Києва. - вирушив; можливо, ще там.
+>
+> Ми ходили по місту. - гуляли в різних місцях.
+>
+> Ми пішли до музею. - вирушили в один конкретний бік.
+
+Для вражень використовуйте короткі A2-фрази:
+
+> Мені дуже сподобалося.
+>
+> Було цікаво, але трохи втомливо.
+>
+> Я хочу поїхати ще раз.
+
+### Подорож і модель
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "конкретна поїздка до Львова", "right": "поїдемо до Львова"}, {"left": "регулярні поїздки влітку", "right": "їздимо влітку"}, {"left": "рух містом дві години", "right": "ходили по місту"}, {"left": "транспорт", "right": "потягом / автобусом"}, {"left": "враження", "right": "мені сподобалося"}, {"left": "готель", "right": "зупинимося в готелі"}, {"left": "раптова подія", "right": "потяг зупинився"}, {"left": "фон у дорозі", "right": "ми пили чай"}]`)} />
+
+## Зразок короткої розповіді
+
+> Минулого місяця ми їздили до Чернівців. Поїхали потягом у п'ятницю
+> ввечері. У дорозі ми читали, пили чай і дивилися у вікно. Вранці
+> приїхали до міста і пішли до готелю. Потім ходили центром, відвідали
+> університет і зробили багато фотографій. Мені дуже сподобалося.
+
+Після читання знайдіть:
+
+- три фонові дії;
+- три завершені події;
+- два дієслова руху;
+- одне речення про враження.
+
+### Виправте подорож
+
+<ErrorCorrection client:only='react' instruction="Оберіть кращий варіант." items={JSON.parse(`[{"sentence": "Ми будемо купити квитки.", "errorWord": "будемо купити", "correctForm": "Ми купимо квитки.", "options": ["Ми купимо квитки.", "Ми будемо купити квитки."], "explanation": "Купити - доконаний вид."}, {"sentence": "Ми поїхали по місту дві години.", "errorWord": "поїхали", "correctForm": "Ми ходили по місту дві години.", "options": ["Ми ходили по місту дві години.", "Ми поїхали по місту дві години."], "explanation": "Рух у різних місцях: ходили."}, {"sentence": "Коли ми приїхали, ми чекали потяг.", "errorWord": "чекали потяг", "correctForm": "Коли ми приїхали, ми чекали на потяг.", "options": ["Коли ми приїхали, ми чекали на потяг.", "Коли ми приїхали, ми чекали потяг."], "explanation": "Стандартна модель: чекати на."}, {"sentence": "Я їздив до Києва і ще там.", "errorWord": "їздив", "correctForm": "Я поїхав до Києва і ще там.", "options": ["Я поїхав до Києва і ще там.", "Я їздив до Києва і ще там."], "explanation": "Їздив зазвичай означає повернення."}, {"sentence": "У потязі ми випили чай цілу годину.", "errorWord": "випили", "correctForm": "У потязі ми пили чай цілу годину.", "options": ["У потязі ми пили чай цілу годину.", "У потязі ми випили чай цілу годину."], "explanation": "Цілу годину показує процес."}, {"sentence": "Ми ходили до Львова потягом.", "errorWord": "ходили", "correctForm": "Ми їздили до Львова потягом.", "options": ["Ми їздили до Львова потягом.", "Ми ходили до Львова потягом."], "explanation": "Потягом -> їхати / їздити."}, {"sentence": "Ми приїжджали до міста і одразу купили каву.", "errorWord": "приїжджали", "correctForm": "Ми приїхали до міста і одразу купили каву.", "options": ["Ми приїхали до міста і одразу купили каву.", "Ми приїжджали до міста і одразу купили каву."], "explanation": "Один завершений приїзд: приїхали."}, {"sentence": "Мені сподобалося враження.", "errorWord": "сподобалося враження", "correctForm": "У мене добрі враження.", "options": ["У мене добрі враження.", "Мені сподобалося враження."], "explanation": "Так природніше для підсумку."}]`)} />
+
+## Завдання: моя подорож
+
+Напишіть 8-10 речень про реальну або уявну подорож.
+
+Обов'язково включіть:
+
+- куди ви їздили або поїдете;
+- як ви подорожували;
+- що тривало як фон;
+- які події сталися;
+- що вам сподобалося.
+
+Каркас:
+
+> Минулого [час] я їздив/їздила до [місце].
+>
+> Ми поїхали [транспорт].
+>
+> У дорозі ми [фонова дія].
+>
+> Потім ми [подія 1], [подія 2] і [подія 3].
+>
+> Мені сподобалося [враження].
+
+## Типові помилки
+
+| Не так | Краще | Чому |
+| --- | --- | --- |
+| Ми поїхали по місту дві години. | Ми ходили по місту дві години. | рух у різних місцях |
+| Я їздив до Львова і ще там. | Я поїхав до Львова і ще там. | `поїхав` = вирушив |
+| Ми будемо купити квитки. | Ми купимо квитки. | доконаний результат без `буду` |
+| Коли ми приїхали, ми чекали потяг. | Коли ми приїхали, ми чекали на потяг. | стандартна модель `чекати на` |
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"подорож","translation":"trip, journey","pos":"noun","example":"Моя подорож до Львова була цікавою.","examples":["trip, journey","Моя подорож до Львова була цікавою."]},{"word":"розповідати / розповісти","translation":"to tell, to narrate","pos":"verb pair","example":"Я розповім коротку історію.","examples":["to tell, to narrate","Я розповім коротку історію."]},{"word":"трапитися","translation":"to happen","pos":"verb","example":"Що трапилося на вокзалі?","examples":["to happen","Що трапилося на вокзалі?"]},{"word":"квиток","translation":"ticket","pos":"noun","example":"Я купив квиток онлайн.","examples":["ticket","Я купив квиток онлайн."]},{"word":"потяг","translation":"train","pos":"noun","example":"Потяг зупинився на станції.","examples":["train","Потяг зупинився на станції."]},{"word":"вокзал","translation":"train station","pos":"noun","example":"Ми зустрілися на вокзалі.","examples":["train station","Ми зустрілися на вокзалі."]},{"word":"станція","translation":"station","pos":"noun","example":"Потяг стояв на маленькій станції.","examples":["station","Потяг стояв на маленькій станції."]},{"word":"зупинитися","translation":"to stop, to stay","pos":"verb","example":"Ми зупинимося в готелі.","examples":["to stop, to stay","Ми зупинимося в готелі."]},{"word":"доїхати","translation":"to arrive by vehicle","pos":"verb","example":"Ми доїхали за десять годин.","examples":["to arrive by vehicle","Ми доїхали за десять годин."]},{"word":"поїхати / їздити","translation":"to go once / to go and return regularly","pos":"motion contrast","example":"Я поїхав до Києва, але часто їжджу до Львова.","examples":["to go once / to go and return regularly","Я поїхав до Києва, але часто їжджу до Львова."]},{"word":"ходити по місту","translation":"to walk around the city","pos":"phrase","example":"Ми ходили по місту дві години.","examples":["to walk around the city","Ми ходили по місту дві години."]},{"word":"потягом","translation":"by train","pos":"instrument","example":"Ми поїхали потягом.","examples":["by train","Ми поїхали потягом."]},{"word":"автобусом","translation":"by bus","pos":"instrument","example":"Вони поїдуть автобусом.","examples":["by bus","Вони поїдуть автобусом."]},{"word":"готель","translation":"hotel","pos":"noun","example":"Ми зупинилися в готелі.","examples":["hotel","Ми зупинилися в готелі."]},{"word":"центр","translation":"center, downtown","pos":"noun","example":"Ми ходили центром.","examples":["center, downtown","Ми ходили центром."]},{"word":"музей","translation":"museum","pos":"noun","example":"Ми відвідали музей.","examples":["museum","Ми відвідали музей."]},{"word":"сувенір","translation":"souvenir","pos":"noun","example":"Вона купила сувенір.","examples":["souvenir","Вона купила сувенір."]},{"word":"враження","translation":"impression","pos":"noun","example":"Мої враження дуже добрі.","examples":["impression","Мої враження дуже добрі."]},{"word":"сподобатися","translation":"to like, to enjoy","pos":"verb","example":"Мені дуже сподобалося.","examples":["to like, to enjoy","Мені дуже сподобалося."]},{"word":"спочатку","translation":"at first","pos":"adverb","example":"Спочатку ми їхали потягом.","examples":["at first","Спочатку ми їхали потягом."]},{"word":"потім","translation":"then","pos":"adverb","example":"Потім ми пішли до музею.","examples":["then","Потім ми пішли до музею."]},{"word":"після цього","translation":"after that","pos":"phrase","example":"Після цього ми купили каву.","examples":["after that","Після цього ми купили каву."]},{"word":"раптом","translation":"suddenly","pos":"adverb","example":"Раптом потяг зупинився.","examples":["suddenly","Раптом потяг зупинився."]},{"word":"тим часом","translation":"meanwhile","pos":"phrase","example":"Тим часом ми чекали на пероні.","examples":["meanwhile","Тим часом ми чекали на пероні."]},{"word":"нарешті","translation":"finally","pos":"adverb","example":"Нарешті ми знайшли квиток.","examples":["finally","Нарешті ми знайшли квиток."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"подорож","back":"trip, journey"},{"front":"розповідати / розповісти","back":"to tell, to narrate"},{"front":"трапитися","back":"to happen"},{"front":"квиток","back":"ticket"},{"front":"потяг","back":"train"},{"front":"вокзал","back":"train station"},{"front":"станція","back":"station"},{"front":"зупинитися","back":"to stop, to stay"},{"front":"доїхати","back":"to arrive by vehicle"},{"front":"поїхати / їздити","back":"to go once / to go and return regularly"},{"front":"ходити по місту","back":"to walk around the city"},{"front":"потягом","back":"by train"},{"front":"автобусом","back":"by bus"},{"front":"готель","back":"hotel"},{"front":"центр","back":"center, downtown"},{"front":"музей","back":"museum"},{"front":"сувенір","back":"souvenir"},{"front":"враження","back":"impression"},{"front":"сподобатися","back":"to like, to enjoy"},{"front":"спочатку","back":"at first"},{"front":"потім","back":"then"},{"front":"після цього","back":"after that"},{"front":"раптом","back":"suddenly"},{"front":"тим часом","back":"meanwhile"},{"front":"нарешті","back":"finally"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Розповідь із пропусками
+
+*(див. урок, §Діалог: історія з вокзалу)*
+
+### Частини історії
+
+*(див. урок, §Плануємо подорож)*
+
+### Подорож і модель
+
+*(див. урок, §Розкажіть про поїздку)*
+
+### Виправте подорож
+
+*(див. урок, §Зразок короткої розповіді)*
+
+### Порядок історії
+
+<Order client:only='react' items={JSON.parse(`["Спочатку ми їхали потягом і дивилися у вікно.", "Раптом потяг зупинився.", "Потім ми поїхали далі.", "У Львові ми відвідали музей."]`)} correct_order={JSON.parse(`[0, 1, 2, 3]`)} instruction={"Поставте речення в природний порядок."} isUkrainian={true} />
+
+### Подорож і вид
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Фонові дії в історії часто мають недоконаний вид.", "isTrue": true, "explanation": "Сиділи, пили, чекали."}, {"statement": "Раптом часто вводить доконану подію.", "isTrue": true, "explanation": "Раптом зупинився, подзвонив, знайшов."}, {"statement": "Їздив завжди означає, що людина ще в дорозі.", "isTrue": false, "explanation": "Часто це поїздка туди й назад."}, {"statement": "Потягом - це орудний відмінок для способу подорожі.", "isTrue": true, "explanation": "Їхати потягом, автобусом, машиною."}]`)} />
+
+### План подорожі
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У липні ми ___ в Карпати.", "answer": "поїдемо", "options": ["поїдемо", "будемо поїхати"]}, {"sentence": "Квитки ми ___ сьогодні ввечері.", "answer": "купимо", "options": ["купимо", "будемо купити"]}, {"sentence": "У горах ми ___ стежками.", "answer": "будемо ходити", "options": ["будемо ходити", "підемо всі стежки"]}, {"sentence": "Після поїздки я ___ коротку історію.", "answer": "розповім", "options": ["розповім", "буду розповісти"]}]`)} />
+
+### Чекліст розповіді
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "місце", "right": "до Чернівців"}, {"left": "транспорт", "right": "потягом"}, {"left": "фон", "right": "ми читали і пили чай"}, {"left": "подія", "right": "ми відвідали музей"}, {"left": "враження", "right": "мені дуже сподобалося"}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Dobra Forma 24-1: Past Tense](https://opentext.ku.edu/dobraforma/chapter/24-1/) — Past-tense review for learners preparing travel stories.
+
+**🎧 Аудіо:**
+- 🎧 [ULP 1-26: Talking about traveling](https://www.ukrainianlessons.com/episode26/) — Catalogued A1/A2 listening review for travel in the past tense.
+- 🎧 [ULP 1-27: Traveling in Ukraine in winter](https://www.ukrainianlessons.com/episode27/) — Travel narrative listening with more past-tense practice.
+- 🎧 [ULP 3-99: Travel plan](https://www.ukrainianlessons.com/episode99/) — Catalogued listening context for planning a trip.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

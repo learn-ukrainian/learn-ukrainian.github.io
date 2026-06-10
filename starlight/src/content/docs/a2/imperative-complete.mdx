@@ -1,0 +1,292 @@
+---
+title: "Хай він прочитає!"
+description: "Наказовий спосіб для всіх осіб — хай/нехай, -мо, кличний + побажання"
+sidebar:
+  order: 44
+  label: "44. Хай він прочитає!"
+draft: true
+prev: motion-verbs
+next: telling-stories-and-travel
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: кулінарний майстер-клас
+
+Шеф-кухар веде короткий майстер-клас. У розмові є команди для `ви`,
+пропозиції для `ми`, непрямі накази з `хай/нехай` і побажання.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Шеф","text":"Друзі, починаймо. Оленко, наріжте цибулю дрібно."},{"speaker":"Оленка","text":"Добре. А воду вже ставити?"},{"speaker":"Шеф","text":"Так, хай вода закипить. Марку, помішуйте соус повільно."},{"speaker":"Марко","text":"Зрозуміло. Додаємо сіль зараз?"},{"speaker":"Шеф","text":"Додаймо трохи солі й спробуймо. Нехай соус постоїть дві хвилини."},{"speaker":"Оленка","text":"Пахне чудово!"},{"speaker":"Шеф","text":"Будьте уважними, і все вийде."}]')}
+/>
+
+Карта форм:
+
+| Функція | Модель | Приклад |
+| --- | --- | --- |
+| команда співрозмовнику | форма наказового способу | наріжте, помішуйте |
+| пропозиція для групи | -мо / -імо | починаймо, додаймо |
+| третя особа | хай/нехай + форма дієслова | хай закипить |
+| побажання | кличний + будь/будьте + орудний | друзі, будьте уважними |
+
+### Хай або нехай
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Хай він ___ інструкцію.", "answer": "прочитає", "options": ["прочитає", "читати"]}, {"sentence": "Нехай вони ___ після уроку.", "answer": "подзвонять", "options": ["подзвонять", "подзвонити"]}, {"sentence": "Хай вода ___ дві хвилини.", "answer": "кипить", "options": ["кипить", "кипіти"]}, {"sentence": "Нехай соус ___ трохи.", "answer": "постоїть", "options": ["стоїть", "постоїть"]}, {"sentence": "Хай діти ___ у дворі.", "answer": "граються", "options": ["граються", "гратися"]}, {"sentence": "Нехай Олена ___ відповідь.", "answer": "напише", "options": ["напише", "писати"]}, {"sentence": "Хай Марко ___ до каси.", "answer": "піде", "options": ["піде", "ходити"]}, {"sentence": "Нехай вони ___ п'ять хвилин.", "answer": "відпочинуть", "options": ["відпочинуть", "відпочивати"]}]`)} />
+
+## Хай і нехай
+
+`Хай` і `нехай` допомагають дати наказ, дозвіл або побажання для третьої
+особи: не `ти` і не `ви`, а `він`, `вона`, `вони`.
+
+> Хай він прочитає інструкцію.
+>
+> Нехай вона подзвонить після уроку.
+>
+> Хай діти граються у дворі.
+
+`Нехай` звучить трохи формальніше; `хай` дуже часте в живому мовленні.
+Обидва слова правильні.
+
+Вибір виду працює так само:
+
+> Хай пише. - нехай буде в процесі.
+>
+> Хай напише. - нехай зробить і матиме результат.
+
+## Читаймо, ходімо, зробімо
+
+Коли ми пропонуємо дію для групи, українська має форми на `-мо` або
+`-імо`.
+
+| Основа | Пропозиція |
+| --- | --- |
+| читай | читаймо |
+| ходи | ходімо |
+| зроби | зробімо |
+| поїдь | поїдьмо |
+| починай | починаймо |
+
+Це літературна модель для `let's`. У цьому курсі не будуємо наказовий
+спосіб через `давай/давайте`; на A2 тримайтеся форм `читаймо`, `ходімо`,
+`зробімо`, `поговорімо`.
+
+### Вид у наказі
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Загальна порада для щоденної практики.", "options": [{"text": "Читайте щодня.", "correct": true}, {"text": "Прочитайте щодня.", "correct": false}, {"text": "Будете читати щодня.", "correct": false}], "explanation": "Звична дія: недоконаний вид."}, {"question": "Конкретне завдання: закінчити одну сторінку.", "options": [{"text": "Прочитайте цю сторінку.", "correct": true}, {"text": "Читайте цю сторінку до кінця вже.", "correct": false}, {"text": "Читати цю сторінку.", "correct": false}], "explanation": "Потрібен результат: прочитайте."}, {"question": "Ввічлива інструкція в аудиторії.", "options": [{"text": "Сідайте, будь ласка.", "correct": true}, {"text": "Сядьтеся, будь ласка.", "correct": false}, {"text": "Сісти, будь ласка.", "correct": false}], "explanation": "Сідайте - природна ввічлива форма."}, {"question": "Попередження.", "options": [{"text": "Не забудь паспорт!", "correct": true}, {"text": "Не забувай паспорт уже!", "correct": false}, {"text": "Не забути паспорт!", "correct": false}], "explanation": "Доконана форма може звучати як попередження."}, {"question": "Загальна порада про мовлення.", "options": [{"text": "Говоріть українською частіше.", "correct": true}, {"text": "Скажіть українською частіше.", "correct": false}, {"text": "Будете сказати українською.", "correct": false}], "explanation": "Загальна практика: говоріть."}, {"question": "Конкретне прохання написати сьогодні.", "options": [{"text": "Напиши мені сьогодні.", "correct": true}, {"text": "Пиши мені сьогодні і готово.", "correct": false}, {"text": "Будеш написати сьогодні.", "correct": false}], "explanation": "Один завершений крок: напиши."}, {"question": "Заборона відкривати вікно.", "options": [{"text": "Не відкривайте вікно.", "correct": true}, {"text": "Не відкрийте вікно.", "correct": false}, {"text": "Не відкрити вікно.", "correct": false}], "explanation": "Заперечна інструкція зазвичай недоконана."}, {"question": "Пропозиція для всієї групи.", "options": [{"text": "Починаймо.", "correct": true}, {"text": "Починати.", "correct": false}, {"text": "Починаєте.", "correct": false}], "explanation": "Форма на -мо."}]`)} />
+
+## Кличний + побажання
+
+Побажання часто починається зі звертання.
+
+> Оленко, будь щасливою!
+>
+> Марку, будь здоровим!
+>
+> Друзі, будьте уважними!
+>
+> Мамо, будь спокійною!
+
+Модель:
+
+| Звертання | Наказова форма | Орудний |
+| --- | --- | --- |
+| Оленко | будь | щасливою |
+| Марку | будь | здоровим |
+| друзі | будьте | уважними |
+
+Орудний відповідає на питання `ким/яким бути?` У побажанні він звучить
+природно: `будь здоровим`, `будьте щасливими`.
+
+## Вид у наказовому способі
+
+Недоконаний вид часто дає загальну пораду, звичку або ввічливу
+інструкцію.
+
+> Читайте щодня.
+>
+> Пишіть повільно.
+>
+> Сідайте, будь ласка.
+
+Доконаний вид часто дає конкретне завдання з результатом.
+
+> Прочитайте цю сторінку.
+>
+> Напиши мені сьогодні.
+>
+> Закрий двері, будь ласка.
+
+У заперечних наказах часто стоїть недоконаний вид:
+
+> Не відкривайте вікно.
+>
+> Не читай це повідомлення.
+
+Доконаний вид у запереченні може звучати як попередження:
+
+> Не впади!
+>
+> Не забудь паспорт!
+
+### Побажання
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Оленко", "right": "будь щасливою"}, {"left": "Марку", "right": "будь здоровим"}, {"left": "Друзі", "right": "будьте уважними"}, {"left": "Мамо", "right": "будь спокійною"}, {"left": "Колеги", "right": "будьте готовими"}, {"left": "Ірино", "right": "будь сміливою"}, {"left": "Пане Андрію", "right": "будьте обережним"}, {"left": "Студенти", "right": "будьте активними"}]`)} />
+
+## Мінідіалоги
+
+Змініть форму за ситуацією.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Учитель","text":"Прочитайте текст до кінця."},{"speaker":"Студенти","text":"Добре. А потім?"},{"speaker":"Учитель","text":"Обговорімо відповіді разом."}]')}
+/>
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Друг","text":"Марку, будь уважним на дорозі."},{"speaker":"Марко","text":"Дякую. Не хвилюйся."}]')}
+/>
+
+### Складіть наказ
+
+<Order client:only='react' items={JSON.parse(`["хай / він / прочитає / інструкцію", "нехай / вони / подзвонять / після уроку", "Оленко / будь / щасливою", "друзі / будьте / уважними", "зробімо / це / сьогодні", "поговорімо / після / уроку", "не / відкривайте / вікно", "прочитайте / цю / сторінку"]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5, 6, 7]`)} instruction={"Поставте слова в правильний порядок."} isUkrainian={true} />
+
+## Завдання: короткі інструкції
+
+Напишіть 6 коротких реплік для однієї ситуації: кухня, поїздка, урок або
+робота в групі.
+
+Використайте:
+
+- одну форму `хай/нехай`;
+- дві форми на `-мо / -імо`;
+- одне побажання з кличним;
+- один наказ недоконаного виду;
+- один наказ доконаного виду.
+
+Каркас:
+
+> [Ім'я у кличному], будь [орудний].
+>
+> [Дієслово]-мо разом.
+>
+> Хай [людина] [дієслово].
+
+## Типові помилки
+
+| Не так | Краще | Чому |
+| --- | --- | --- |
+| Давайте прочитаємо як наказова форма. | Прочитаймо / прочитаймо разом. | у курсі вчимо нормативну форму на -мо |
+| Олена, будь щаслива. | Оленко, будь щасливою. | звертання + орудний |
+| Хай він читати. | Хай він читає / прочитає. | після хай потрібна форма дієслова |
+| Не відкрийте вікно. | Не відкривайте вікно. | заперечна інструкція зазвичай недоконана |
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"наказовий спосіб","translation":"imperative mood","pos":"noun","example":"Наказовий спосіб потрібен для команд і прохань.","examples":["imperative mood","Наказовий спосіб потрібен для команд і прохань."]},{"word":"хай","translation":"let, may","pos":"particle","example":"Хай він прочитає інструкцію.","examples":["let, may","Хай він прочитає інструкцію."]},{"word":"нехай","translation":"let, may","pos":"particle","example":"Нехай вона подзвонить після уроку.","examples":["let, may","Нехай вона подзвонить після уроку."]},{"word":"читаймо","translation":"let's read","pos":"imperative","example":"Читаймо текст разом.","examples":["let's read","Читаймо текст разом."]},{"word":"ходімо","translation":"let's go","pos":"imperative","example":"Ходімо до класу.","examples":["let's go","Ходімо до класу."]},{"word":"зробімо","translation":"let's do, let's make","pos":"imperative","example":"Зробімо це сьогодні.","examples":["let's do, let's make","Зробімо це сьогодні."]},{"word":"поїдьмо","translation":"let's go by vehicle","pos":"imperative","example":"Поїдьмо потягом.","examples":["let's go by vehicle","Поїдьмо потягом."]},{"word":"поговорімо","translation":"let's talk","pos":"imperative","example":"Поговорімо після уроку.","examples":["let's talk","Поговорімо після уроку."]},{"word":"будь","translation":"be","pos":"imperative","example":"Марку, будь уважним.","examples":["be","Марку, будь уважним."]},{"word":"будьте","translation":"be","pos":"imperative","example":"Друзі, будьте здоровими.","examples":["be","Друзі, будьте здоровими."]},{"word":"побажання","translation":"wish, blessing","pos":"noun","example":"Будьте щасливими - це побажання.","examples":["wish, blessing","Будьте щасливими - це побажання."]},{"word":"кличний відмінок","translation":"vocative case","pos":"noun","example":"Оленко - це кличний відмінок.","examples":["vocative case","Оленко - це кличний відмінок."]},{"word":"орудний відмінок","translation":"instrumental case","pos":"noun","example":"Щасливою - це орудний відмінок.","examples":["instrumental case","Щасливою - це орудний відмінок."]},{"word":"щасливий / щасливою","translation":"happy","pos":"adjective","example":"Оленко, будь щасливою.","examples":["happy","Оленко, будь щасливою."]},{"word":"здоровий / здоровим","translation":"healthy","pos":"adjective","example":"Марку, будь здоровим.","examples":["healthy","Марку, будь здоровим."]},{"word":"уважний / уважним","translation":"attentive","pos":"adjective","example":"Будьте уважними на дорозі.","examples":["attentive","Будьте уважними на дорозі."]},{"word":"спокійний / спокійною","translation":"calm","pos":"adjective","example":"Мамо, будь спокійною.","examples":["calm","Мамо, будь спокійною."]},{"word":"готовий / готовими","translation":"ready","pos":"adjective","example":"Колеги, будьте готовими.","examples":["ready","Колеги, будьте готовими."]},{"word":"прочитайте","translation":"read","pos":"imperative","example":"Прочитайте цю сторінку.","examples":["read","Прочитайте цю сторінку."]},{"word":"пишіть","translation":"write","pos":"imperative","example":"Пишіть повільно.","examples":["write","Пишіть повільно."]},{"word":"наріжте","translation":"cut, slice","pos":"imperative","example":"Наріжте цибулю.","examples":["cut, slice","Наріжте цибулю."]},{"word":"помішуйте","translation":"stir","pos":"imperative","example":"Помішуйте соус повільно.","examples":["stir","Помішуйте соус повільно."]},{"word":"не відкривайте","translation":"do not open","pos":"negative imperative","example":"Не відкривайте вікно.","examples":["do not open","Не відкривайте вікно."]},{"word":"не забудь","translation":"do not forget","pos":"warning","example":"Не забудь паспорт.","examples":["do not forget","Не забудь паспорт."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"наказовий спосіб","back":"imperative mood"},{"front":"хай","back":"let, may"},{"front":"нехай","back":"let, may"},{"front":"читаймо","back":"let's read"},{"front":"ходімо","back":"let's go"},{"front":"зробімо","back":"let's do, let's make"},{"front":"поїдьмо","back":"let's go by vehicle"},{"front":"поговорімо","back":"let's talk"},{"front":"будь","back":"be"},{"front":"будьте","back":"be"},{"front":"побажання","back":"wish, blessing"},{"front":"кличний відмінок","back":"vocative case"},{"front":"орудний відмінок","back":"instrumental case"},{"front":"щасливий / щасливою","back":"happy"},{"front":"здоровий / здоровим","back":"healthy"},{"front":"уважний / уважним","back":"attentive"},{"front":"спокійний / спокійною","back":"calm"},{"front":"готовий / готовими","back":"ready"},{"front":"прочитайте","back":"read"},{"front":"пишіть","back":"write"},{"front":"наріжте","back":"cut, slice"},{"front":"помішуйте","back":"stir"},{"front":"не відкривайте","back":"do not open"},{"front":"не забудь","back":"do not forget"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Хай або нехай
+
+*(див. урок, §Діалог: кулінарний майстер-клас)*
+
+### Вид у наказі
+
+*(див. урок, §Читаймо, ходімо, зробімо)*
+
+### Побажання
+
+*(див. урок, §Вид у наказовому способі)*
+
+### Складіть наказ
+
+*(див. урок, §Мінідіалоги)*
+
+### Яка форма наказу?
+
+<GroupSort client:only='react' groups={JSON.parse(`{"2-га особа": ["прочитайте текст", "наріжте цибулю", "пишіть повільно", "не відкривайте вікно"], "1-ша особа множини": ["починаймо", "поговорімо", "зробімо це", "поїдьмо разом"], "3-тя особа з хай/нехай": ["хай він прийде", "нехай вона прочитає", "хай вони відпочинуть", "нехай соус постоїть"]}`)} />
+
+### Виправте наказ
+
+<ErrorCorrection client:only='react' instruction="Оберіть нормативний варіант." items={JSON.parse(`[{"sentence": "Хай він читати.", "errorWord": "читати", "correctForm": "Хай він читає.", "options": ["Хай він читає.", "Хай він читати."], "explanation": "Після хай потрібна особова форма."}, {"sentence": "Олена, будь щаслива.", "errorWord": "Олена / щаслива", "correctForm": "Оленко, будь щасливою.", "options": ["Оленко, будь щасливою.", "Олена, будь щаслива."], "explanation": "Звертання + орудний."}, {"sentence": "Давай робити це як наказову форму.", "errorWord": "давай робити", "correctForm": "Зробімо це.", "options": ["Зробімо це.", "Давай робити це."], "explanation": "У курсі тримаємо нормативну форму на -мо."}, {"sentence": "Не відкрийте вікно.", "errorWord": "відкрийте", "correctForm": "Не відкривайте вікно.", "options": ["Не відкривайте вікно.", "Не відкрийте вікно."], "explanation": "Заперечна інструкція зазвичай недоконана."}]`)} />
+
+### Зробімо разом
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "читати", "right": "читаймо"}, {"left": "ходити", "right": "ходімо"}, {"left": "зробити", "right": "зробімо"}, {"left": "поїхати", "right": "поїдьмо"}, {"left": "поговорити", "right": "поговорімо"}]`)} />
+
+### Наказовий спосіб
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Хай і нехай можуть вводити наказ або побажання для третьої особи.", "isTrue": true, "explanation": "Так: хай він прочитає, нехай вони прийдуть."}, {"statement": "Читаймо означає let's read.", "isTrue": true, "explanation": "Це форма першої особи множини."}, {"statement": "Будь здоровим має орудний відмінок.", "isTrue": true, "explanation": "Здоровим - орудний."}, {"statement": "Після хай завжди стоїть інфінітив.", "isTrue": false, "explanation": "Потрібна особова форма: хай читає."}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Dobra Forma 29-1: Imperatives (Читай Type)](https://opentext.ku.edu/dobraforma/chapter/29-1/) — Learner-facing practice with common imperative forms.
+- 📄 [Dobra Forma 29-2: Imperatives (Пиши Type)](https://opentext.ku.edu/dobraforma/chapter/29-2/) — Additional imperative patterns for learners who want form practice.
+
+**🎧 Аудіо:**
+- 🎧 [ULP 3-111: Birthday presents + Imperative mood](https://www.ukrainianlessons.com/episode111/) — Catalogued listening context for imperative mood in everyday requests.
+- 🎧 [ULP 3-114: How to make pysanky + Let's forms](https://www.ukrainianlessons.com/episode114/) — Listening context for first-person plural invitation forms.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

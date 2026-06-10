@@ -1,0 +1,100 @@
+- word: подорож
+  translation: trip, journey
+  pos: noun
+  example: "Моя подорож до Львова була цікавою."
+- word: розповідати / розповісти
+  translation: to tell, to narrate
+  pos: verb pair
+  example: "Я розповім коротку історію."
+- word: трапитися
+  translation: to happen
+  pos: verb
+  example: "Що трапилося на вокзалі?"
+- word: квиток
+  translation: ticket
+  pos: noun
+  example: "Я купив квиток онлайн."
+- word: потяг
+  translation: train
+  pos: noun
+  example: "Потяг зупинився на станції."
+- word: вокзал
+  translation: train station
+  pos: noun
+  example: "Ми зустрілися на вокзалі."
+- word: станція
+  translation: station
+  pos: noun
+  example: "Потяг стояв на маленькій станції."
+- word: зупинитися
+  translation: to stop, to stay
+  pos: verb
+  example: "Ми зупинимося в готелі."
+- word: доїхати
+  translation: to arrive by vehicle
+  pos: verb
+  example: "Ми доїхали за десять годин."
+- word: поїхати / їздити
+  translation: to go once / to go and return regularly
+  pos: motion contrast
+  example: "Я поїхав до Києва, але часто їжджу до Львова."
+- word: ходити по місту
+  translation: to walk around the city
+  pos: phrase
+  example: "Ми ходили по місту дві години."
+- word: потягом
+  translation: by train
+  pos: instrument
+  example: "Ми поїхали потягом."
+- word: автобусом
+  translation: by bus
+  pos: instrument
+  example: "Вони поїдуть автобусом."
+- word: готель
+  translation: hotel
+  pos: noun
+  example: "Ми зупинилися в готелі."
+- word: центр
+  translation: center, downtown
+  pos: noun
+  example: "Ми ходили центром."
+- word: музей
+  translation: museum
+  pos: noun
+  example: "Ми відвідали музей."
+- word: сувенір
+  translation: souvenir
+  pos: noun
+  example: "Вона купила сувенір."
+- word: враження
+  translation: impression
+  pos: noun
+  example: "Мої враження дуже добрі."
+- word: сподобатися
+  translation: to like, to enjoy
+  pos: verb
+  example: "Мені дуже сподобалося."
+- word: спочатку
+  translation: at first
+  pos: adverb
+  example: "Спочатку ми їхали потягом."
+- word: потім
+  translation: then
+  pos: adverb
+  example: "Потім ми пішли до музею."
+- word: після цього
+  translation: after that
+  pos: phrase
+  example: "Після цього ми купили каву."
+- word: раптом
+  translation: suddenly
+  pos: adverb
+  example: "Раптом потяг зупинився."
+- word: тим часом
+  translation: meanwhile
+  pos: phrase
+  example: "Тим часом ми чекали на пероні."
+- word: нарешті
+  translation: finally
+  pos: adverb
+  example: "Нарешті ми знайшли квиток."

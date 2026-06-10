@@ -1,0 +1,96 @@
+- word: наказовий спосіб
+  translation: imperative mood
+  pos: noun
+  example: "Наказовий спосіб потрібен для команд і прохань."
+- word: хай
+  translation: let, may
+  pos: particle
+  example: "Хай він прочитає інструкцію."
+- word: нехай
+  translation: let, may
+  pos: particle
+  example: "Нехай вона подзвонить після уроку."
+- word: читаймо
+  translation: let's read
+  pos: imperative
+  example: "Читаймо текст разом."
+- word: ходімо
+  translation: let's go
+  pos: imperative
+  example: "Ходімо до класу."
+- word: зробімо
+  translation: let's do, let's make
+  pos: imperative
+  example: "Зробімо це сьогодні."
+- word: поїдьмо
+  translation: let's go by vehicle
+  pos: imperative
+  example: "Поїдьмо потягом."
+- word: поговорімо
+  translation: let's talk
+  pos: imperative
+  example: "Поговорімо після уроку."
+- word: будь
+  translation: be
+  pos: imperative
+  example: "Марку, будь уважним."
+- word: будьте
+  translation: be
+  pos: imperative
+  example: "Друзі, будьте здоровими."
+- word: побажання
+  translation: wish, blessing
+  pos: noun
+  example: "Будьте щасливими - це побажання."
+- word: кличний відмінок
+  translation: vocative case
+  pos: noun
+  example: "Оленко - це кличний відмінок."
+- word: орудний відмінок
+  translation: instrumental case
+  pos: noun
+  example: "Щасливою - це орудний відмінок."
+- word: щасливий / щасливою
+  translation: happy
+  pos: adjective
+  example: "Оленко, будь щасливою."
+- word: здоровий / здоровим
+  translation: healthy
+  pos: adjective
+  example: "Марку, будь здоровим."
+- word: уважний / уважним
+  translation: attentive
+  pos: adjective
+  example: "Будьте уважними на дорозі."
+- word: спокійний / спокійною
+  translation: calm
+  pos: adjective
+  example: "Мамо, будь спокійною."
+- word: готовий / готовими
+  translation: ready
+  pos: adjective
+  example: "Колеги, будьте готовими."
+- word: прочитайте
+  translation: read
+  pos: imperative
+  example: "Прочитайте цю сторінку."
+- word: пишіть
+  translation: write
+  pos: imperative
+  example: "Пишіть повільно."
+- word: наріжте
+  translation: cut, slice
+  pos: imperative
+  example: "Наріжте цибулю."
+- word: помішуйте
+  translation: stir
+  pos: imperative
+  example: "Помішуйте соус повільно."
+- word: не відкривайте
+  translation: do not open
+  pos: negative imperative
+  example: "Не відкривайте вікно."
+- word: не забудь
+  translation: do not forget
+  pos: warning
+  example: "Не забудь паспорт."
