@@ -1,0 +1,15 @@
+- title: "ULP: Ukrainian Euphony Rules"
+  role: article
+  source_ref: "curriculum/l2-uk-en/plans/a2/euphony-advanced.yaml"
+  url: "https://www.ukrainianlessons.com/euphony/"
+  notes: "Learner-facing guide to у/в, і/й, and з/із/зі alternations."
+- title: "МійКлас: Основні випадки чергування у-в, і-й, з-із-зі"
+  role: article
+  source_ref: "docs/resources/miyklas-resources.yaml: a1.euphony"
+  url: "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/osnovni-vipadki-cherguvannia-u-v-i-i-z-iz-zi-pravila-milozvuchnosti-41612"
+  notes: "Ukrainian-language reference with concise school examples of euphony rules."
+- title: "ULP: Prepositions and Cases"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /prepositions-cases/"
+  url: "https://www.ukrainianlessons.com/prepositions-cases/"
+  notes: "Useful support for seeing how euphonic prepositions also interact with case choice."

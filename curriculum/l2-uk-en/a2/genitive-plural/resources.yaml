@@ -1,0 +1,20 @@
+- title: "ULP: Genitive Case (Родовий відмінок)"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /genitive-case/"
+  url: "https://www.ukrainianlessons.com/genitive-case/"
+  notes: "Learner-facing overview of genitive functions, including plural genitive examples."
+- title: "ULP: Plural of Ukrainian Nouns - Special Forms"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /plural-of-ukrainian-nouns-special-forms/"
+  url: "https://www.ukrainianlessons.com/plural-of-ukrainian-nouns-special-forms/"
+  notes: "Useful support for plural noun patterns and irregular plural forms."
+- title: "ULP: Nouns After Numbers"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /nouns-after-numbers/"
+  url: "https://www.ukrainianlessons.com/nouns-after-numbers/"
+  notes: "Practice reference for noun forms after numerals, including the 5+ pattern."
+- title: "Talk Ukrainian: Genitive Case"
+  role: article
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-016"
+  url: "https://talkukrainian.com/genitive-case/"
+  notes: "Additional learner-facing explanation of the genitive case."

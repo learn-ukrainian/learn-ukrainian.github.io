@@ -1,0 +1,95 @@
+- word: милозвучність
+  translation: euphony, melodiousness
+  pos: noun
+  gender: f
+  example: "Милозвучність допомагає реченню звучати природно."
+- word: евфонія
+  translation: euphony
+  pos: noun
+  gender: f
+  example: "Евфонія - наукове слово для милозвучності."
+- word: чергування
+  translation: alternation
+  pos: noun
+  gender: n
+  example: "У/в - це чергування."
+- word: голосний
+  translation: vowel
+  pos: noun
+  gender: m
+  example: "А - це голосний звук."
+- word: приголосний
+  translation: consonant
+  pos: noun
+  gender: m
+  example: "Л - це приголосний звук."
+- word: збіг
+  translation: cluster, collision
+  pos: noun
+  gender: m
+  example: "Збіг приголосних може звучати важко."
+- word: межа
+  translation: boundary
+  pos: noun
+  gender: f
+  example: "Кома створює межу між частинами речення."
+- word: фраза
+  translation: phrase
+  pos: noun
+  gender: f
+  example: "Прочитайте фразу вголос."
+- word: прийменник
+  translation: preposition
+  pos: noun
+  gender: m
+  example: "З - це прийменник."
+- word: сполучник
+  translation: conjunction
+  pos: noun
+  gender: m
+  example: "І - це сполучник."
+- word: вживати
+  translation: to use
+  pos: verb
+  example: "Коли треба вживати зі?"
+- word: уникати
+  translation: to avoid
+  pos: verb
+  example: "Українська уникає важких звуків."
+- word: складний
+  translation: complex, difficult
+  pos: adjective
+  example: "Це складний збіг приголосних."
+- word: природний
+  translation: natural
+  pos: adjective
+  example: "Цей варіант звучить природно."
+- word: плавний
+  translation: smooth
+  pos: adjective
+  example: "Плавний звук легше вимовляти."
+- word: задоволення
+  translation: pleasure
+  pos: noun
+  gender: n
+  example: "Із задоволенням!"
+- word: сестра
+  translation: sister
+  pos: noun
+  gender: f
+  example: "Я їду із сестрою."
+- word: школа
+  translation: school
+  pos: noun
+  gender: f
+  example: "Вона повертається зі школи."
+- word: університет
+  translation: university
+  pos: noun
+  gender: m
+  example: "Він навчається в університеті."
+- word: маршрут
+  translation: route
+  pos: noun
+  gender: m
+  example: "Наш маршрут починається у Львові."

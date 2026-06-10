@@ -1,0 +1,341 @@
+---
+title: "Мого друга, цієї книги"
+description: "Узгодження прикметників, присвійних та вказівних займенників у родовому відмінку"
+sidebar:
+  order: 13
+  label: "13. Мого друга, цієї книги"
+prev: euphony-advanced
+next: genitive-plural
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import RitualSequencing from '@site/src/components/RitualSequencing';
+import VariantComparison from '@site/src/components/VariantComparison';
+import MotifFormula from '@site/src/components/MotifFormula';
+import PerformanceActivity from '@site/src/components/PerformanceActivity';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import MythBuster from '@site/src/components/MythBuster';
+import HighCultureBridge from '@site/src/components/HighCultureBridge';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+У попередніх модулях ви вже бачили родовий відмінок після прийменників:
+`без друга`, `для сестри`, `до лікаря`, `біля школи`.
+
+Тепер додаємо повну фразу:
+
+> без мого нового друга
+>
+> для цієї молодої вчительки
+>
+> біля нашого старого будинку
+
+У родовому змінюється не тільки іменник. Прикметник і займенник теж
+мають узгодитися з іменником.
+
+## Діалог: бюро знахідок
+
+Людина описує загублені речі. Щоб працівник зрозумів, потрібні точні
+фрази.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог 1 - що ви загубили?"
+  exchanges={JSON.parse('[{"speaker":"Власник","text":"Добрий день. Тут немає мого чорного рюкзака?"},{"speaker":"Працівник","text":"Чорного рюкзака? Якого розміру?"},{"speaker":"Власник","text":"Великого. Це рюкзак мого старшого брата."},{"speaker":"Працівник","text":"Зрозуміло. А що всередині?"},{"speaker":"Власник","text":"Документи, зошит і ключі від нашої квартири."},{"speaker":"Працівник","text":"Ми маємо одну чорну сумку, але без цієї червоної наліпки."},{"speaker":"Власник","text":"Ні, мій рюкзак саме з цією червоною наліпкою."}]')}
+/>
+
+Карта діалогу:
+
+| Фраза | Рід іменника | Родовий |
+| --- | --- | --- |
+| мій чорний рюкзак | чоловічий | мого чорного рюкзака |
+| мій старший брат | чоловічий | мого старшого брата |
+| наша квартира | жіночий | нашої квартири |
+| ця червона наліпка | жіночий | цієї червоної наліпки |
+
+### Якого? Якої?
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "без ___ друга", "answer": "нового", "options": ["нового", "нової", "новий"]}, {"sentence": "біля ___ школи", "answer": "старої", "options": ["старої", "старого", "стара"]}, {"sentence": "з ___ міста", "answer": "великого", "options": ["великого", "великої", "велике"]}, {"sentence": "для ___ вчительки", "answer": "молодої", "options": ["молодої", "молодого", "молода"]}, {"sentence": "до ___ моря", "answer": "синього", "options": ["синього", "синьої", "синє"]}, {"sentence": "без ___ парасольки", "answer": "червоної", "options": ["червоної", "червоного", "червона"]}, {"sentence": "біля ___ будинку", "answer": "старого", "options": ["старого", "старої", "старий"]}, {"sentence": "після ___ дня", "answer": "важливого", "options": ["важливого", "важливої", "важливий"]}]`)} />
+
+## Прикметник: який? якого? якої?
+
+У родовому відмінку однини прикметники мають дуже впізнавані закінчення.
+
+| Називний | Рід | Родовий |
+| --- | --- | --- |
+| новий друг | чоловічий | нового друга |
+| велике місто | середній | великого міста |
+| стара школа | жіночий | старої школи |
+| синя сукня | жіночий | синьої сукні |
+
+Для чоловічого і середнього роду форма прикметника однакова:
+`-ого` або `-ього`.
+
+> без нового підручника
+>
+> біля старого будинку
+>
+> з великого міста
+>
+> до синього моря
+
+Для жіночого роду:
+`-ої` або `-ьої`.
+
+> без нової книги
+>
+> біля старої церкви
+>
+> для молодої вчительки
+>
+> від синьої сумки
+
+Практична порада: спочатку знайдіть іменник і його рід, а потім
+поставте прикметник у ту саму форму.
+
+| Крок | Приклад |
+| --- | --- |
+| Іменник | друг |
+| Родовий іменника | друга |
+| Прикметник | новий |
+| Повна фраза | нового друга |
+
+## Присвійні займенники: мого, моєї
+
+Присвійні займенники працюють майже як прикметники.
+
+| Називний | Родовий чоловічий/середній | Родовий жіночий |
+| --- | --- | --- |
+| мій / моє / моя | мого | моєї |
+| твій / твоє / твоя | твого | твоєї |
+| наш / наше / наша | нашого | нашої |
+| ваш / ваше / ваша | вашого | вашої |
+| їхній / їхнє / їхня | їхнього | їхньої |
+
+Приклади:
+
+> без мого телефона
+>
+> для твоєї сестри
+>
+> біля нашого будинку
+>
+> до вашої лікарні
+>
+> з їхнього міста
+
+`Його` та `її` як присвійні слова не змінюються:
+
+> його книга - без його книги
+>
+> її сумка - біля її сумки
+
+Тут змінюється іменник, але `його` / `її` лишаються ті самі.
+
+### Мій, моя, наше
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "без ___ телефона", "options": [{"text": "мого", "correct": true}, {"text": "моєї", "correct": false}, {"text": "мій", "correct": false}], "explanation": "Телефон - чоловічий рід, тому мого."}, {"question": "для ___ сестри", "options": [{"text": "моєї", "correct": true}, {"text": "мого", "correct": false}, {"text": "моя", "correct": false}], "explanation": "Сестра - жіночий рід, тому моєї."}, {"question": "біля ___ будинку", "options": [{"text": "нашого", "correct": true}, {"text": "нашої", "correct": false}, {"text": "наш", "correct": false}], "explanation": "Будинок - чоловічий рід."}, {"question": "до ___ лікарні", "options": [{"text": "вашої", "correct": true}, {"text": "вашого", "correct": false}, {"text": "ваша", "correct": false}], "explanation": "Лікарня - жіночий рід."}, {"question": "з ___ міста", "options": [{"text": "їхнього", "correct": true}, {"text": "їхньої", "correct": false}, {"text": "їхня", "correct": false}], "explanation": "Місто - середній рід, тому їхнього."}, {"question": "від ___ квартири", "options": [{"text": "нашої", "correct": true}, {"text": "нашого", "correct": false}, {"text": "наш", "correct": false}], "explanation": "Квартира - жіночий рід."}, {"question": "без ___ дозволу", "options": [{"text": "твого", "correct": true}, {"text": "твоєї", "correct": false}, {"text": "твій", "correct": false}], "explanation": "Дозвіл - чоловічий рід."}, {"question": "біля ___ школи", "options": [{"text": "її", "correct": true}, {"text": "його", "correct": false}, {"text": "їй", "correct": false}], "explanation": "Її як присвійне слово не змінюється."}]`)} />
+
+## Вказівні займенники: цього, цієї
+
+Вказівні займенники `цей` і `той` теж узгоджуються з іменником.
+
+| Називний | Родовий чоловічий/середній | Родовий жіночий |
+| --- | --- | --- |
+| цей / це / ця | цього | цієї |
+| той / те / та | того | тієї |
+
+Приклади:
+
+> біля цього будинку
+>
+> після того дня
+>
+> для цієї дівчини
+>
+> без тієї книги
+
+Повна фраза може мати кілька слів перед іменником:
+
+> біля цього нового ринку
+>
+> для моєї старшої сестри
+>
+> без того важливого документа
+>
+> до нашої нової лікарні
+
+Порядок слів зазвичай простий:
+
+> вказівний займенник + присвійний або прикметник + іменник
+
+Але на А2 не треба будувати дуже довгі фрази. Дві частини перед
+іменником уже достатньо:
+
+> цього нового ринку
+>
+> моєї старшої сестри
+>
+> тієї старої школи
+
+### Називний і родовий
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "цей новий ринок", "right": "біля цього нового ринку"}, {"left": "ця стара школа", "right": "біля цієї старої школи"}, {"left": "мій молодший брат", "right": "для мого молодшого брата"}, {"left": "моя старша сестра", "right": "для моєї старшої сестри"}, {"left": "той важливий документ", "right": "без того важливого документа"}, {"left": "та червона сумка", "right": "без тієї червоної сумки"}, {"left": "наше нове місто", "right": "з нашого нового міста"}, {"left": "ваша нова лікарня", "right": "до вашої нової лікарні"}]`)} />
+
+## Конструктор фраз
+
+Будуйте фразу поступово.
+
+| Крок | Приклад |
+| --- | --- |
+| Називний | цей новий ринок |
+| Родовий іменника | ринку |
+| Родовий прикметника | нового |
+| Родовий займенника | цього |
+| Повна фраза | біля цього нового ринку |
+
+Ще приклади:
+
+| Називний | Родовий з прийменником |
+| --- | --- |
+| моя молодша сестра | для моєї молодшої сестри |
+| наш старий будинок | біля нашого старого будинку |
+| той важливий документ | без того важливого документа |
+| ця червона парасолька | без цієї червоної парасольки |
+
+Типові помилки:
+
+| Помилка | Краще | Чому |
+| --- | --- | --- |
+| без нової друга | без нового друга | `друг` чоловічого роду |
+| біля цей будинку | біля цього будинку | після `біля` родовий |
+| для моєї брата | для мого брата | `брат` чоловічого роду |
+| без цього книги | без цієї книги | `книга` жіночого роду |
+
+## Міні-рольова гра: опис речі
+
+<DialogueBox
+  client:only="react"
+  title="Діалог 2 - чи це ваше?"
+  exchanges={JSON.parse('[{"speaker":"Працівник","text":"Це ваша сумка?"},{"speaker":"Студентка","text":"Ні, моя сумка без цієї білої стрічки."},{"speaker":"Працівник","text":"А це зошит?"},{"speaker":"Студентка","text":"Так, це зошит мого молодшого брата."},{"speaker":"Працівник","text":"І ключі?"},{"speaker":"Студентка","text":"Так, це ключі від нашої квартири."}]')}
+/>
+
+Фрази для вашої відповіді:
+
+- `Це річ мого/моєї ...`
+- `Вона без цього/цієї ...`
+- `Це ключі від нашого/нашої ...`
+
+### Чоловічий/середній чи жіночий?
+
+<GroupSort client:only='react' groups={JSON.parse(`{"-ого": ["нового друга", "старого будинку", "мого брата", "цього міста"], "-ої": ["нової книги", "старої школи", "моєї сестри", "цієї парасольки"], "-ього/-ьої": ["синього моря", "синьої сукні", "давнього міста", "давньої історії"]}`)} />
+
+## 📋 Підсумок
+
+У родовому відмінку повна фраза має узгодження.
+
+| Рід іменника | Прикметник | Присвійний | Вказівний |
+| --- | --- | --- | --- |
+| чоловічий | нового друга | мого друга | цього друга |
+| середній | нового міста | мого міста | цього міста |
+| жіночий | нової книги | моєї книги | цієї книги |
+
+Самоперевірка:
+
+- Як сказати `без мій новий друг` правильно?
+- Чому `біля цієї школи`, але `біля цього будинку`?
+- Напишіть три фрази: з `мого`, з `моєї`, з `цього` або `цієї`.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"прикметник","translation":"adjective","pos":"noun","gender":"m","example":"Новий - це прикметник.","examples":["adjective","Новий - це прикметник."]},{"word":"займенник","translation":"pronoun","pos":"noun","gender":"m","example":"Мій - це займенник.","examples":["pronoun","Мій - це займенник."]},{"word":"присвійний","translation":"possessive","pos":"adjective","example":"Мій - присвійний займенник.","examples":["possessive","Мій - присвійний займенник."]},{"word":"вказівний","translation":"demonstrative","pos":"adjective","example":"Цей - вказівний займенник.","examples":["demonstrative","Цей - вказівний займенник."]},{"word":"узгодження","translation":"agreement","pos":"noun","gender":"n","example":"Узгодження показує рід і відмінок.","examples":["agreement","Узгодження показує рід і відмінок."]},{"word":"дозвіл","translation":"permission","pos":"noun","gender":"m","example":"Без твого дозволу я не піду.","examples":["permission","Без твого дозволу я не піду."]},{"word":"підручник","translation":"textbook","pos":"noun","gender":"m","example":"Немає нового підручника.","examples":["textbook","Немає нового підручника."]},{"word":"документ","translation":"document","pos":"noun","gender":"m","example":"Без важливого документа не можна.","examples":["document","Без важливого документа не можна."]},{"word":"вчителька","translation":"female teacher","pos":"noun","gender":"f","example":"Для молодої вчительки є лист.","examples":["female teacher","Для молодої вчительки є лист."]},{"word":"наліпка","translation":"sticker","pos":"noun","gender":"f","example":"Рюкзак без червоної наліпки.","examples":["sticker","Рюкзак без червоної наліпки."]},{"word":"рюкзак","translation":"backpack","pos":"noun","gender":"m","example":"Я шукаю мого чорного рюкзака.","examples":["backpack","Я шукаю мого чорного рюкзака."]},{"word":"квартира","translation":"apartment","pos":"noun","gender":"f","example":"Ключі від нашої квартири.","examples":["apartment","Ключі від нашої квартири."]},{"word":"парасолька","translation":"umbrella","pos":"noun","gender":"f","example":"Немає цієї червоної парасольки.","examples":["umbrella","Немає цієї червоної парасольки."]},{"word":"старший","translation":"older, elder","pos":"adjective","example":"Це сумка мого старшого брата.","examples":["older, elder","Це сумка мого старшого брата."]},{"word":"молодший","translation":"younger","pos":"adjective","example":"Це зошит мого молодшого брата.","examples":["younger","Це зошит мого молодшого брата."]},{"word":"важливий","translation":"important","pos":"adjective","example":"Немає важливого документа.","examples":["important","Немає важливого документа."]},{"word":"чорний","translation":"black","pos":"adjective","example":"Я шукаю чорний рюкзак.","examples":["black","Я шукаю чорний рюкзак."]},{"word":"червоний","translation":"red","pos":"adjective","example":"Сумка без червоної наліпки.","examples":["red","Сумка без червоної наліпки."]},{"word":"синій","translation":"blue","pos":"adjective","example":"Біля синього моря красиво.","examples":["blue","Біля синього моря красиво."]},{"word":"бюро знахідок","translation":"lost and found office","pos":"noun","gender":"n","example":"Ми йдемо до бюро знахідок.","examples":["lost and found office","Ми йдемо до бюро знахідок."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"прикметник","back":"adjective"},{"front":"займенник","back":"pronoun"},{"front":"присвійний","back":"possessive"},{"front":"вказівний","back":"demonstrative"},{"front":"узгодження","back":"agreement"},{"front":"дозвіл","back":"permission"},{"front":"підручник","back":"textbook"},{"front":"документ","back":"document"},{"front":"вчителька","back":"female teacher"},{"front":"наліпка","back":"sticker"},{"front":"рюкзак","back":"backpack"},{"front":"квартира","back":"apartment"},{"front":"парасолька","back":"umbrella"},{"front":"старший","back":"older, elder"},{"front":"молодший","back":"younger"},{"front":"важливий","back":"important"},{"front":"чорний","back":"black"},{"front":"червоний","back":"red"},{"front":"синій","back":"blue"},{"front":"бюро знахідок","back":"lost and found office"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Якого? Якої?
+
+*(див. урок, §Діалог: бюро знахідок)*
+
+### Мій, моя, наше
+
+*(див. урок, §Присвійні займенники: мого, моєї)*
+
+### Називний і родовий
+
+*(див. урок, §Вказівні займенники: цього, цієї)*
+
+### Чоловічий/середній чи жіночий?
+
+*(див. урок, §Міні-рольова гра: опис речі)*
+
+### Чи є узгодження?
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "без нового друга", "isTrue": true, "explanation": "Друг - чоловічий рід, нового друга."}, {"statement": "без нової друга", "isTrue": false, "explanation": "Потрібно нового друга."}, {"statement": "біля цієї школи", "isTrue": true, "explanation": "Школа - жіночий рід."}, {"statement": "біля цього школи", "isTrue": false, "explanation": "Потрібно цієї школи."}, {"statement": "для мого брата", "isTrue": true, "explanation": "Брат - чоловічий рід."}, {"statement": "для моєї брата", "isTrue": false, "explanation": "Потрібно мого брата."}, {"statement": "з нашого міста", "isTrue": true, "explanation": "Місто має форму нашого."}, {"statement": "без тієї книги", "isTrue": true, "explanation": "Книга - жіночий рід."}]`)} />
+
+### Повна фраза
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я не бачу ___.", "answer": "мого чорного рюкзака", "options": ["мого чорного рюкзака", "моєї чорної рюкзака", "мій чорний рюкзак"]}, {"sentence": "Ключі від ___.", "answer": "нашої квартири", "options": ["нашої квартири", "нашого квартири", "наша квартира"]}, {"sentence": "Ми стоїмо біля ___.", "answer": "цього нового ринку", "options": ["цього нового ринку", "цієї нового ринку", "цей новий ринок"]}, {"sentence": "Вона без ___.", "answer": "цієї червоної парасольки", "options": ["цієї червоної парасольки", "цього червоного парасольки", "ця червона парасолька"]}, {"sentence": "Це документи ___.", "answer": "мого старшого брата", "options": ["мого старшого брата", "моєї старшої брата", "мій старший брат"]}, {"sentence": "Ми йдемо до ___.", "answer": "вашої нової лікарні", "options": ["вашої нової лікарні", "вашого нового лікарні", "ваша нова лікарня"]}, {"sentence": "Вони повертаються з ___.", "answer": "їхнього великого міста", "options": ["їхнього великого міста", "їхньої великої міста", "їхнє велике місто"]}, {"sentence": "Немає ___.", "answer": "того важливого документа", "options": ["того важливого документа", "тієї важливої документа", "той важливий документ"]}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [ULP: Adjectives and Adverbs Chart](https://www.ukrainianlessons.com/adjectives-adverbs-chart/) — Learner-facing adjective reference for reviewing adjective forms before genitive agreement practice.
+- 📄 [ULP: Possessive Pronouns Declension](https://www.ukrainianlessons.com/possessive-pronouns-declension/) — Learner-facing table for мій, твій, наш, ваш and related possessive forms.
+- 📄 [ULP: Pronouns This and That](https://www.ukrainianlessons.com/pronouns-this-that/) — Support for цей/той forms, including genitive цього, цієї, того, тієї.
+- 📄 [МійКлас: Відмінювання прикметників](https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/prikmetnik-47431/vidminiuvannia-prikmetnikiv-47111) — Ukrainian-language school reference for adjective declension patterns.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

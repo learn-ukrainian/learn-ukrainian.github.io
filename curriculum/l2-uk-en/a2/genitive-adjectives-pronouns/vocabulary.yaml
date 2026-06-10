@@ -1,0 +1,92 @@
+- word: прикметник
+  translation: adjective
+  pos: noun
+  gender: m
+  example: "Новий - це прикметник."
+- word: займенник
+  translation: pronoun
+  pos: noun
+  gender: m
+  example: "Мій - це займенник."
+- word: присвійний
+  translation: possessive
+  pos: adjective
+  example: "Мій - присвійний займенник."
+- word: вказівний
+  translation: demonstrative
+  pos: adjective
+  example: "Цей - вказівний займенник."
+- word: узгодження
+  translation: agreement
+  pos: noun
+  gender: n
+  example: "Узгодження показує рід і відмінок."
+- word: дозвіл
+  translation: permission
+  pos: noun
+  gender: m
+  example: "Без твого дозволу я не піду."
+- word: підручник
+  translation: textbook
+  pos: noun
+  gender: m
+  example: "Немає нового підручника."
+- word: документ
+  translation: document
+  pos: noun
+  gender: m
+  example: "Без важливого документа не можна."
+- word: вчителька
+  translation: female teacher
+  pos: noun
+  gender: f
+  example: "Для молодої вчительки є лист."
+- word: наліпка
+  translation: sticker
+  pos: noun
+  gender: f
+  example: "Рюкзак без червоної наліпки."
+- word: рюкзак
+  translation: backpack
+  pos: noun
+  gender: m
+  example: "Я шукаю мого чорного рюкзака."
+- word: квартира
+  translation: apartment
+  pos: noun
+  gender: f
+  example: "Ключі від нашої квартири."
+- word: парасолька
+  translation: umbrella
+  pos: noun
+  gender: f
+  example: "Немає цієї червоної парасольки."
+- word: старший
+  translation: older, elder
+  pos: adjective
+  example: "Це сумка мого старшого брата."
+- word: молодший
+  translation: younger
+  pos: adjective
+  example: "Це зошит мого молодшого брата."
+- word: важливий
+  translation: important
+  pos: adjective
+  example: "Немає важливого документа."
+- word: чорний
+  translation: black
+  pos: adjective
+  example: "Я шукаю чорний рюкзак."
+- word: червоний
+  translation: red
+  pos: adjective
+  example: "Сумка без червоної наліпки."
+- word: синій
+  translation: blue
+  pos: adjective
+  example: "Біля синього моря красиво."
+- word: бюро знахідок
+  translation: lost and found office
+  pos: noun
+  gender: n
+  example: "Ми йдемо до бюро знахідок."
