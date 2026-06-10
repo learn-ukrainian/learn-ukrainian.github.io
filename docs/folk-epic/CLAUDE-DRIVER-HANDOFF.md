@@ -42,10 +42,40 @@
 ### ✅ THE WALL IS BROKEN (corrected diagnosis)
 Original "writer over-reach" read was HALF-WRONG: 5 of 8 flagged terms (`риндзівка`/`ягілка`/`гаївка`/`гагілка`/`ягівка`) are **authentic** (slovnyk.me СУМ-20/ВТС/Голоскевич/Франко) — the **gate** was false-flagging real folk vocab. Fixed by #2899. **Rebuild #3 (`-005100`): 8 flagged → 1** (`перекличка`), and **vocab RETAINED not gutted** (гагілки×3, веснянки×23, гаївки×13). Only `перекличка` blocked → seeded THIS PR. Genuine non-words (`городалька`, `побажальний`, `Імперсько-етнографічна` fused compound) correctly still fail — writer rephrases.
 
+### ✅ REBUILD #4 (`-013527`) + CORRECTED DIAGNOSIS (the design pivot)
+#2903 merged (`5a09a38fc2`: перекличка seeded + `#R-FOLK-PRIMARY-TEXTS`). Rebuild #4: **embed-quotes WORKED**
+(blockquotes 2→**15**), vocab retained (гагілки×5, гаївки×11, веснянки×21), but FAILED `python_qg` on a
+**mixed** flag set — and the split matters (user asked "quote or teaching narrative?"):
+- **`другоє` = QUOTED archaic content** — inside a **verify_quote=1.0** Kupala song («на другоє літо
+  поховаємо», ЕУ-1955 `feaa5fa7_c0572`). The `-оє` ending is authentic poetic Ukrainian; `check_russian_shadow`
+  FALSE-positives (homograph of RU `другое`). The `vesum_verified` walk does **NOT exempt `>` blockquotes**
+  (`_build_vesum_text` only strips metalinguistic) → gate false-flags real folk text. **GATE bug, not writer.**
+- **`протиріччя`/`діюча`/`діючі` = TEACHING-PROSE russianisms** (→ суперечність/чинні) — gate CORRECT; the
+  correction loop already fixes these (final artifact's only residual flag was `другоє`).
+
+### 🎯 DESIGN PIVOT (user 2026-06-10: "elegant solution first before refiring"; "document it in our workflows")
+VESUM-absence ≠ russianism. Authentic archaic/poetic/dialectal Ukrainian (другоє, ягілки, перекличка, archaic
+`-оє`) pervades folk/lit/hist/oes — needs a GENERAL fix, not folk whack-a-mole. **= the Word Atlas §5/§6
+heritage layer** (`word-atlas-design.md`, #2882 Task 6, IN FLIGHT in the Atlas lane). Build ONCE, two consumers:
+Atlas renders badges; `vesum_verified` consumes the verdict (allow authentic / block russianisms). **Spec written
+THIS PR: `docs/best-practices/heritage-attestation-engine.md`** (+ wired into `v7-design-and-corpus.md §5 #8`).
+`#2899` folk allowlist = interim override layer.
+
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **Merge THIS PR**, then **rebuild #4** (`v7_build folk kalendarna-obriadovist-zvychai --worktree --writer claude-tools --effort xhigh`, Monitor JSONL). EXPECT: passes `python_qg` (перекличка now attested) AND ≥4 cited verbatim blockquotes present (vs #3's 2). If a NEW VESUM-gap word appears (writer variance) → verify in slovnyk.me, add via `add_folk_attestation.py`, re-fire. If whack-a-mole persists, escalate to the dynamic option: gate consults slovnyk.me live+cached for any missing word (determinism note: gate runs at BUILD time, CI tests use mocks).
-2. **Promote + serve 04** — assemble_mdx → `starlight/src/content/docs/folk/`; **at promotion add source URLs** (recover from JSONL `source_url` where present; verified work-URLs else: Грушевський→litopys.org.ua/hrushukr, ЕУ→izbornyk.org.ua/encycl) into the source registry + Ресурси rendering (LINK half of the requirement; EMBED half = #R-FOLK-PRIMARY-TEXTS). PR; merge; ff; `./services.sh restart astro`. Verify at `http://127.0.0.1:4321/folk/kalendarna-obriadovist-zvychai/` vs POC: 4 UK tabs, myth-box, bridge, folk activities, ≥4 cited verbatim blockquotes WITH source links, authentic regional vocab. audio-block/symbolic-decode EXPECTED-ABSENT.
-3. THEN **01 (koliadky)** → **dumy-nevilnytski-lytsarski** (retire old `dumy-lytsarski.mdx` + `[...slug].astro` hero routing) → continue `phase-folk-queue.md`.
+1. **HOLD the kalendarna re-fire.** Do NOT whack-a-mole more attestation rows. Coordinate with the Atlas/lexicon
+   lane (#2882 Task 6 heritage classification, in flight — PR #2895 agy wordnet, codex sensefix). When their
+   heritage classifier lands as a shared `scripts/lexicon/` module, **review + apply it** to `_vesum_gate`
+   (consume, don't duplicate) per `heritage-attestation-engine.md`. Ping orchestrator re: the convergence.
+2. **The gate fix the engine enables** (or a focused interim): exempt verbatim `>` blockquote content from the
+   `vesum_verified` walk (seminar/folk-scoped) — fixes `другоє` + all archaic QUOTED forms without per-word
+   seeding. The prose russianisms (протиріччя/діюча) keep failing (correct) + the correction loop fixes them.
+   This + the heritage engine = the clean path; THEN re-fire kalendarna.
+3. **Then promote + serve 04** — assemble_mdx → `starlight/src/content/docs/folk/`; add source URLs (JSONL
+   `source_url` / verified work-URLs: Грушевський→litopys.org.ua/hrushukr, ЕУ→izbornyk.org.ua/encycl) into the
+   registry + Ресурси (the LINK half; EMBED half = `#R-FOLK-PRIMARY-TEXTS`, working). Verify vs POC: 4 UK tabs,
+   myth-box, bridge, folk activities, ≥4 cited+linked verbatim blockquotes, authentic regional vocab.
+4. THEN **01 (koliadky)** → **dumy-nevilnytski-lytsarski** (retire old `dumy-lytsarski.mdx` + `[...slug].astro`
+   hero routing) → continue `phase-folk-queue.md`.
 
 ### ⚠ CARRY-FORWARD
 - **Source-link mechanism** (#2901): JSONL has `source_url`; only ~25 literary JSONLs on disk (wave7-ЕУ/wave4-istlit absent → use verified work-URLs). The real fix = `source_url` column re-propagated on ingest (benefits all tracks).
