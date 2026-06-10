@@ -27,7 +27,79 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 9 HANDOFF (2026-06-10 — TEXT LAYER MERGED; VESUM WALL BROKEN via slovnyk.me HERITAGE GATE; NOW EMBEDDING PRIMARY TEXTS) — **RESUME HERE**
+## ▶▶▶ SESSION 10 HANDOFF (2026-06-10 PM — HERITAGE ENGINE CONSUMED + MORPHOLOGY FALLBACK MERGED; 3 KALENDARNA BUILDS EXPOSED THE PRODUCTIVE-DERIVATION GAP; BUILDING THE DERIVATIONAL-MORPHOLOGY LAYER w/ CODEX+GEMINI) — **RESUME HERE**
+
+> **⏱ LATEST STATE (2026-06-10 PM):** The orchestrator's **Heritage Attestation Engine (#2912)** landed →
+> I **consumed** it into `_vesum_gate` (#2931) + added a **morphology fallback** (#2950). Both merged + teeth-validated.
+> This broke the *attestation/archaism* wall (`другоє`/`ягілки`/`перекличка` pass; russianisms still blocked).
+> BUT **3 live kalendarna builds** exposed the NEXT, deeper wall: **VESUM under-enumerates productive derivations**,
+> so rich C1 folk prose false-flags **valid** Ukrainian — denominal adj `гаївковий`←`гаївка`, deverbal adj
+> `знеособлювальний`←`знеособлювати`, secondary impf `виворожувати`←`виворожити`. Per-class patches DON'T converge
+> (the writer hits a different valid derivation each build; correction loop trades one for another). pymorphy3
+> confidence does NOT discriminate (compound `двохоровий` 0.75 dict vs valid `гаївковий` 0.17 guess).
+> **USER DECISION (2026-06-10):** build the **derivational-morphology layer (Option 1)** *collaboratively with
+> codex + gemini* — it's the durable fix that **unblocks lit/hist and clears the path to open ruth/oes** (all
+> morphologically-rich seminar tracks). NOT a folk-only patch.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **Drive the derivational-layer collaboration.** Design brief = `/tmp/derivational-morphology-gate-design.md`
+   (promote to `docs/best-practices/derivational-morphology-gate.md` once agreed). Codex design consult IN FLIGHT
+   (`ask-codex --task-id deriv-morph-design`, watcher `b1pw8ft4b`); **gemini/agy consult next** (#M-9: one local
+   agent at a time). Synthesize their input on: (a) least-brittle base-derivation source (pymorphy3 lemma ≠
+   derivational base — need suffix-strip rules or a reverse-derivation table), (b) russianism-leak guard
+   sufficiency + battery, (c) engine-side vs gate-side home.
+2. **Dispatch codex to IMPLEMENT** the layer against the acceptance battery (VALID must pass: гаївковий,
+   знеособлювальними, виворожувати + existing другоє/ягілки/гагілку/незгладжений; RUSSIANISM must stay flagged:
+   діюча, протиріччя, получаючий + panel set; COINAGE must stay flagged: двохоровий, обрядознавчий, городалька;
+   full vesum suite green). **Claude reviews the leak check** (the діюча-style catch — I found a real leak in my
+   own #2950 first pass, so adversarial leak-testing is MANDATORY before merge).
+3. **Re-fire kalendarna** (`v7_build folk kalendarna-obriadovist-zvychai --worktree --writer claude-tools
+   --effort xhigh`, Monitor JSONL) → verify artifact → promote 04 → serve → then 01 (koliadky) → dumy.
+4. **Unblock lit/hist** (same gate) + **open ruth/oes** once the layer is in.
+5. Resume folk dossier queue: **#07 kupalski-rusalni-pisni MERGED**; **#08 zhnyvarski-obzhynkovi QUEUED**
+   (was codex-cap-blocked; fire when a slot is free), then #10 vesilni, #11 holosinnya, #13 dumy-sotsialno-pobutovi.
+
+### ✅ DONE THIS SESSION (merged to main)
+- **3 folk dossiers corpus-hammer-reviewed + merged:** #2914 zamovliannia-zaklynannia-prymovky, #2915
+  vesnianky-hayivky, #2926 kupalski-rusalni-pisni. Independently re-ran `verify_quote` on a §4 sample of each
+  (100% match incl. chunk IDs) + `check_russian_shadow` + §9 decolonization. **8 folk dossiers now on main.**
+- **#2931 — `_vesum_gate` consumes `heritage_classifier.classify_surface_form()`** (the convergence; #2899 YAML
+  allowlist → thin override). Accept `classification ∈ {authentic-archaism,dialect,historism,borrowing,standard}`
+  & `!is_russianism`. Fixed a CI stub-DB test-skip (size-gated, like `test_heritage_classifier.py`).
+- **#2950 — morphology fallback** in `_resolve_folk_heritage_attested_missing`: offers the classifier the
+  **pymorphy3 lemma** + a **`не`-stripped base** (fixes oblique inflections `гагілку`→`гагілка` + negated
+  participles `незгладжений`→`згладжений`). **TEETH GUARD `_engine_flags_russianism`:** never morphology-rescue a
+  form the classifier flags `is_russianism` (else `діюча`→lemma `діяти`-standard LEAKS — I caught this in my own
+  first pass). Validated: russianism battery shows **0 new leaks** vs main. 69 vesum-suite tests green.
+- **A1 landing investigation** (user side-task): the 4-tab lesson design (Урок/Словник/Зошит/Ресурси) hides 3/4
+  behind a click; recommended hybrid (stacked anchored sections). Orchestrator's `landings-unify` +
+  `split-word-atlas-poc` dispatches already cover it — nothing left for folk lane.
+- **~5GB `.worktrees` cleanup** (obsolete folk build-forensics + merged dispatch worktrees; forensics preserved on
+  `build/folk/*` branches per #M-10).
+
+### 🔑 GATE TECHNICAL STATE (for whoever builds the derivational layer)
+- `_vesum_gate` (`scripts/build/linear_pipeline.py:~8189`) → heritage step `_resolve_folk_heritage_attested_missing`
+  (~8192) → `_engine_classifies_authentic` (#2931) + `_morphological_base_candidates` (#2950, lemma+не-strip) +
+  `_engine_flags_russianism` guard. Seminar/folk-scoped via `_vesum_heritage_attestation_enabled` (SEMINAR_LEVELS).
+- Degrades gracefully (engine/pymorphy3/DB absent → surface+allowlist only). CI ships a STUB `sources.db` (<100MB)
+  → DB-requiring tests size-gate-skip.
+- **`-ючий` calques (`діючий`/`наступаючий`/`оточуючий`) PASS via dictionary-attestation** — NOT a leak:
+  `check_russian_shadow`=false (<0.7), no Антоненко flag. They're a STYLE preference (активні дієприкметники), not a
+  hard russianism. The derivational layer should NOT try to block these (out of scope / separate style concern).
+- **The діюча catch is the canonical leak test.** Any base-derivation rule MUST keep `is_russianism` surface forms flagged.
+
+### ⚠ CARRY-FORWARD
+- Build forensics: 3 failed kalendarna builds on `build/folk/kalendarna-obriadovist-zvychai-20260610-{113504,152534,185904}` branches (worktrees removed).
+- `git push` folk → `--no-verify`; recheck `git config --local core.bare` after commits (#2842).
+- Monitor API :8765 + sources MCP :8766 had a ~1h outage this session (recovered) — unrelated to content.
+
+### 📊 FLEET — module writer **claude-tools** (C1 cultural; user reaffirmed Option-1 fix over switching writers);
+gate/derivational-layer = **codex implements + Claude reviews (adversarial leak-test)**, gemini/agy consults;
+wiki **gpt-5.5**; reviewers **deepseek-flash** (code) / Claude corpus-hammer (culture). Cross-family always.
+
+---
+
+## ▶▶▶ SESSION 9 HANDOFF (2026-06-10 — TEXT LAYER MERGED; VESUM WALL BROKEN via slovnyk.me HERITAGE GATE; NOW EMBEDDING PRIMARY TEXTS) — (superseded by Session 10)
 
 > **⏱ LATEST STATE (2026-06-10 PM #2 — session rollover, all dispatches idle):**
 > - **BLOCKER — HOLD on kalendarna module re-fire** — gated on the shared **Heritage Attestation Engine**.
