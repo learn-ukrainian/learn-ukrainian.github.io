@@ -258,6 +258,15 @@ Before emitting any uncertain Ukrainian term in seminar/FOLK prose, call `mcp__s
 
 For FOLK, verbatim song, duma, or ritual fragments may contain authentic archaic/dialectal forms such as `Дівоцькую`, `гаїлки`, `дівочок`, or `рубочки`. Put those fragments in blockquotes or the module's verbatim-quote convention so the quote is visibly evidence, not exposition. Teacher prose around the quote must use standard modern Ukrainian forms; bare archaic/dialectal folk forms in exposition fail VESUM.
 
+<!-- rule_id: #R-FOLK-GROUNDED-VOCAB -->
+**FOLK regional/ethnographic vocabulary — grounded and VESUM-valid, or quoted.** Naming regional genre-variants is a decolonization goal (surface regional diversity; do not flatten everything to one codified term) — but every such term used in EXPOSITION must pass VESUM, and `vesum_verified` allows only ONE correction attempt, so an ungrounded coinage that survives your pass fails the build and guts sections during the correction rewrite. Get it right in the first pass:
+
+1. **Lead with the codified headword** VESUM accepts (for example `гаївки`, `веснянки`), then name regional variants beside it.
+2. **Name a regional variant only when it is BOTH** (a) attested in THIS module's provided wiki/dossier, AND (b) VESUM-valid in the exact form and number you write. If a singular or oblique form is not in VESUM, use the plural lemma that is — write `гагілки`, never `гагілка`/`гагілкою`. Run `mcp__sources__verify_word` on each regional form before you emit it.
+3. **Never invent a regional genre-name that is absent from the provided wiki/dossier.** If the source does not name a regional variant, do not supply one from memory (do not introduce, e.g., `риндзівки`, `ягілки`, or `городальки` unless they appear verbatim in this build's wiki/dossier). Ungrounded names cannot be verified and will fail the gate.
+4. **Do not coin fused-compound or relational adjectives that VESUM lacks.** Split or rephrase into VESUM-valid words: `імперська етнографічна рамка`, not `імперсько-етнографічна`; `пісня-побажання` / `з побажаннями`, not `побажальна`.
+5. **If a non-VESUM regional/dialectal term is genuinely essential, present it ONLY as an explicitly cited quoted term** (the verbatim-quote convention above) — never bare in exposition.
+
 **FOLK experiential TEXT layer.** For `LEVEL=folk` modules, emit the implemented text-achievable folk layer, not the generic seminar activity mix. In `module.md`, include at least one `:::myth-box` and at least one `:::high-culture-bridge` where wiki/dossier evidence supports them. In `activities.yaml`, use folk activity families `ritual-sequencing` (#42), `variant-comparison` (#43), `motif-formula` (#44), and `performance` (#45) where the wiki/dossier supports the surface, in place of generic `true-false`, `group-sort`, or `match-up` tasks. Do NOT emit `audio-block`, `symbolic-decode`, or `aural-genre-id`; audio and symbolic-decode surfaces are deferred.
 
 Canonical `module.md` source shapes:
