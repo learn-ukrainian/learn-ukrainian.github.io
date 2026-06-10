@@ -136,6 +136,19 @@ def test_format_resources_for_mdx_filters_internal_wiki_references():
     assert "[Wikipedia article](https://uk.wikipedia.org/wiki/Ранок)" in mdx
 
 
+def test_format_resources_for_mdx_preserves_parenthesized_titles():
+    mdx = format_resources_for_mdx([
+        {
+            "title": "ULP: Genitive Case (Родовий відмінок)",
+            "url": "https://www.ukrainianlessons.com/genitive-case/",
+            "notes": "Learner-facing overview.",
+            "role": "article",
+        },
+    ])
+
+    assert "[ULP: Genitive Case (Родовий відмінок)]" in mdx
+
+
 def test_format_resources_for_mdx_strips_pipeline_metadata_from_public_text():
     mdx = format_resources_for_mdx([
         {

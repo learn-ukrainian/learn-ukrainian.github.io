@@ -1,15 +1,15 @@
 - title: "50 Verb Pairs"
   role: video
-  source_ref: "Let's Learn Ukrainian"
+  source_ref: "docs/resources/external_resources.yaml: a2-aspect-in-vocabulary"
   url: https://www.youtube.com/watch?v=iK4uNlozmFE
   notes: "Extra listening and repetition support for common aspectual pairs."
 - title: "Perfective Verbs"
   role: article
-  source_ref: "Ukrainian Lessons: Perfective Verbs"
+  source_ref: "docs/resources/ulp-articles-index.yaml: /perfective-verbs/"
   url: https://www.ukrainianlessons.com/perfective-verbs/
   notes: "Learner-facing follow-up on how completed-action verbs are formed and recognized."
 - title: "Dobra Forma: Verbal Aspect (Other Types of Aspectual Pairs)"
   role: article
-  source_ref: "Dobra Forma 27-3"
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-080"
   url: https://opentext.ku.edu/dobraforma/chapter/27-3/
   notes: "Practice page for less transparent pairs such as stem or suffix changes."

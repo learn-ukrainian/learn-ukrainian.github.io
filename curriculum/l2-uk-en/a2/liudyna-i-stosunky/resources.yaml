@@ -1,15 +1,15 @@
 - title: "Common Adjectives"
   role: article
-  source_ref: "Ukrainian Lessons"
+  source_ref: "docs/resources/external_resources.yaml: a1-what-is-it-like"
   url: https://www.ukrainianlessons.com/vocabulary-adjectives/
   notes: "Learner-facing adjective vocabulary that supports short descriptions of people."
 - title: "Talk Ukrainian: Adjectives"
   role: article
-  source_ref: "Talk Ukrainian"
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-022"
   url: https://talkukrainian.com/adjectives/
   notes: "Compact grammar reference for adjective gender and number agreement."
 - title: "Dobra Forma: Adjectives (Gender and Number in Nominative)"
   role: article
-  source_ref: "Dobra Forma 16-1"
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-050"
   url: https://opentext.ku.edu/dobraforma/chapter/16-1/
   notes: "Structured practice for adjective agreement in nominative descriptions."
