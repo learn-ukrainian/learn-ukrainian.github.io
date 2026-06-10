@@ -455,7 +455,7 @@ body {
 .lu-hero {
   color: #FFFFFF;
   background: var(--lu-hero-grad);
-  border-bottom: 4px solid var(--lu-yellow);
+  border-bottom: 4px solid var(--lu-accent);
 }
 
 .lu-hero.folk {
@@ -463,7 +463,7 @@ body {
 }
 
 .lu-hero.lexicon {
-  background: linear-gradient(135deg, #00695C, #004D40);
+  background: var(--lu-id-lexicon);
 }
 
 .lu-hero.seminar {
@@ -493,8 +493,8 @@ body {
   margin-bottom: 8px;
   padding: 3px 10px;
   border-radius: 4px;
-  background: var(--lu-yellow);
-  color: var(--lu-on-yellow);
+  background: var(--lu-accent);
+  color: var(--lu-on-accent);
   font-size: 0.75rem;
   font-weight: 800;
 }

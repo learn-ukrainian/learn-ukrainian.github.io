@@ -126,18 +126,18 @@
 
 .option:hover:not(:disabled) {
   border-color: var(--ifm-color-primary);
-  background: rgba(0, 87, 183, 0.08);
+  background: var(--lu-state-active);
 }
 
 .option.selected {
   border-color: var(--ifm-color-primary);
-  background: rgba(0, 87, 183, 0.08);
+  background: var(--lu-state-active);
 }
 
 .option.correct {
-  border-color: #2E7D32 !important;
-  background: rgba(46, 125, 50, 0.08) !important;
-  color: #2E7D32;
+  border-color: var(--lu-state-correct-fg) !important;
+  background: var(--lu-state-correct-bg) !important;
+  color: var(--lu-state-correct-fg);
   font-weight: 600;
   position: relative;
 }
@@ -147,9 +147,9 @@
 }
 
 .option.incorrect {
-  border-color: #C62828 !important;
-  background: rgba(198, 40, 40, 0.08) !important;
-  color: #C62828;
+  border-color: var(--lu-state-wrong-fg) !important;
+  background: var(--lu-state-wrong-bg) !important;
+  color: var(--lu-state-wrong-fg);
   position: relative;
 }
 
@@ -187,25 +187,15 @@
 }
 
 .feedbackCorrect {
-  background: rgba(46, 125, 50, 0.08);
-  color: #2E7D32;
-  border: 1px solid #2E7D32;
+  background: var(--lu-state-correct-bg);
+  color: var(--lu-state-correct-fg);
+  border: 1px solid var(--lu-state-correct-fg);
 }
 
 .feedbackIncorrect {
-  background: rgba(198, 40, 40, 0.08);
-  color: #C62828;
-  border: 1px solid #C62828;
-}
-
-[data-theme='dark'] .feedbackCorrect {
-  background: rgba(46, 125, 50, 0.2);
-  color: #81C995;
-}
-
-[data-theme='dark'] .feedbackIncorrect {
-  background: rgba(198, 40, 40, 0.2);
-  color: #F28B82;
+  background: var(--lu-state-wrong-bg);
+  color: var(--lu-state-wrong-fg);
+  border: 1px solid var(--lu-state-wrong-fg);
 }
 
 .explanation {
@@ -239,16 +229,16 @@
 
 .blank.correct {
   border-bottom-style: solid;
-  border-color: #2E7D32;
-  background: rgba(46, 125, 50, 0.08);
-  color: #2E7D32;
+  border-color: var(--lu-state-correct-fg);
+  background: var(--lu-state-correct-bg);
+  color: var(--lu-state-correct-fg);
   border-radius: 4px;
 }
 
 .blank.incorrect {
-  border-color: #C62828;
-  background: rgba(198, 40, 40, 0.08);
-  color: #C62828;
+  border-color: var(--lu-state-wrong-fg);
+  background: var(--lu-state-wrong-bg);
+  color: var(--lu-state-wrong-fg);
 }
 
 .optionChips {
@@ -271,14 +261,14 @@
 
 .chip:hover {
   border-color: var(--ifm-color-primary);
-  background: rgba(0, 87, 183, 0.08);
+  background: var(--lu-state-active);
 }
 
 .chipDraggable {
   padding: 6px 14px;
-  border: 1px solid #6A1B9A;
+  border: 1px solid var(--lu-state-drag);
   border-radius: 20px;
-  background: rgba(106, 27, 154, 0.08);
+  background: var(--lu-state-drag);
   cursor: grab;
   transition: all 0.2s ease;
   font-size: 13px;
@@ -286,8 +276,8 @@
 }
 
 .chipDraggable:hover {
-  background: #6A1B9A;
-  color: white;
+  background: var(--lu-state-drag);
+  color: var(--lu-text);
 }
 
 .chipDraggable:active {
@@ -299,7 +289,7 @@
   padding: 0.4rem 1rem;
   border: 2px dashed var(--ifm-color-emphasis-300);
   border-radius: 8px;
-  background: rgba(0, 87, 183, 0.05);
+  background: var(--lu-state-active);
   color: var(--ifm-color-emphasis-500);
   font-style: italic;
   min-width: 80px;
@@ -308,17 +298,17 @@
 }
 
 .blankDropZone:hover {
-  background: rgba(0, 87, 183, 0.1);
+  background: var(--lu-state-active);
   border-color: var(--ifm-color-primary);
 }
 
 .blankDropZone.correct {
-  border-color: #2E7D32;
+  border-color: var(--lu-state-correct-fg);
   border-style: solid;
 }
 
 .blankDropZone.incorrect {
-  border-color: #C62828;
+  border-color: var(--lu-state-wrong-fg);
   border-style: solid;
 }
 
@@ -350,13 +340,13 @@
 
 /* Left column items */
 .matchColumn:first-child .matchItem {
-  background: rgba(0, 87, 183, 0.08);
+  background: var(--lu-state-active);
   text-align: right;
 }
 
 /* Right column items */
 .matchColumn:last-child .matchItem {
-  background: rgba(230, 81, 0, 0.08);
+  background: var(--lu-match-right);
 }
 
 .matchItem:hover:not(:disabled) {
@@ -365,12 +355,12 @@
 
 .matchItem.selected {
   border-color: var(--ifm-color-primary);
-  box-shadow: 0 0 0 2px rgba(0, 87, 183, 0.2);
+  box-shadow: 0 0 0 2px var(--lu-state-active);
 }
 
 .matchItem.matched {
-  border-color: #2E7D32;
-  background: rgba(46, 125, 50, 0.08);
+  border-color: var(--lu-state-correct-fg);
+  background: var(--lu-state-correct-bg);
   cursor: default;
 }
 
@@ -379,8 +369,8 @@
 }
 
 .matchItem.wrong {
-  border-color: #C62828;
-  background: rgba(198, 40, 40, 0.08);
+  border-color: var(--lu-state-wrong-fg);
+  background: var(--lu-state-wrong-bg);
   animation: shake 0.5s ease;
 }
 
@@ -442,27 +432,27 @@
 }
 
 .trueButton:hover:not(:disabled) {
-  border-color: #2E7D32;
-  background: rgba(46, 125, 50, 0.08);
-  color: #2E7D32;
+  border-color: var(--lu-state-correct-fg);
+  background: var(--lu-state-correct-bg);
+  color: var(--lu-state-correct-fg);
 }
 
 .falseButton:hover:not(:disabled) {
-  border-color: #C62828;
-  background: rgba(198, 40, 40, 0.08);
-  color: #C62828;
+  border-color: var(--lu-state-wrong-fg);
+  background: var(--lu-state-wrong-bg);
+  color: var(--lu-state-wrong-fg);
 }
 
 .tfButton.correct {
-  border-color: #2E7D32 !important;
-  background: rgba(46, 125, 50, 0.08) !important;
-  color: #2E7D32;
+  border-color: var(--lu-state-correct-fg) !important;
+  background: var(--lu-state-correct-bg) !important;
+  color: var(--lu-state-correct-fg);
 }
 
 .tfButton.incorrect {
-  border-color: #C62828 !important;
-  background: rgba(198, 40, 40, 0.08) !important;
-  color: #C62828;
+  border-color: var(--lu-state-wrong-fg) !important;
+  background: var(--lu-state-wrong-bg) !important;
+  color: var(--lu-state-wrong-fg);
 }
 
 /* ============= ANAGRAM ============= */
@@ -492,12 +482,12 @@
 
 .answerZone.correct {
   border-color: #2E7D32;
-  background: rgba(46, 125, 50, 0.08);
+  background: var(--lu-state-correct-bg);
 }
 
 .answerZone.incorrect {
   border-color: #C62828;
-  background: rgba(198, 40, 40, 0.08);
+  background: var(--lu-state-wrong-bg);
 }
 
 /* Letter Bank */
@@ -531,7 +521,7 @@
   padding: 0;
   border: 2px solid var(--ifm-color-primary);
   border-radius: 8px;
-  background: rgba(0, 87, 183, 0.08);
+  background: var(--lu-state-active);
   font-size: 18px;
   font-weight: 700;
   transition: all 0.15s ease;
@@ -606,12 +596,12 @@
 
 .sentenceBuilder.correct {
   border-color: #2E7D32;
-  background: rgba(46, 125, 50, 0.08);
+  background: var(--lu-state-correct-bg);
 }
 
 .sentenceBuilder.incorrect {
   border-color: #C62828;
-  background: rgba(198, 40, 40, 0.08);
+  background: var(--lu-state-wrong-bg);
 }
 
 .placeholder {
@@ -742,7 +732,7 @@
 
 .groupBucket.dropTarget {
   border-color: #6A1B9A;
-  background: rgba(106, 27, 154, 0.08);
+  background: var(--lu-state-drag);
 }
 
 .groupTitle {
@@ -849,7 +839,7 @@
 }
 
 .wordWrong {
-  background: rgba(198, 40, 40, 0.08);
+  background: var(--lu-state-wrong-bg);
   color: #C62828;
   text-decoration: underline wavy #C62828;
   animation: shake 0.3s ease;
@@ -860,7 +850,7 @@
     background: rgba(198, 40, 40, 0.15);
   }
   100% {
-    background: rgba(198, 40, 40, 0.08);
+    background: var(--lu-state-wrong-bg);
   }
 }
 
@@ -899,13 +889,13 @@
 
 .noErrorButton:hover {
   border-color: #2E7D32;
-  background: rgba(46, 125, 50, 0.08);
+  background: var(--lu-state-correct-bg);
   color: #2E7D32;
 }
 
 .noErrorWrong {
   border-color: #C62828 !important;
-  background: rgba(198, 40, 40, 0.08) !important;
+  background: var(--lu-state-wrong-bg) !important;
   animation: shake 0.3s ease;
 }
 
@@ -956,22 +946,22 @@
 
 .checkboxOption.checked {
   border-color: var(--ifm-color-primary);
-  background: rgba(0, 87, 183, 0.08);
+  background: var(--lu-state-active);
 }
 
 .checkboxOption.correctAnswer {
   border-color: #2E7D32 !important;
-  background: rgba(46, 125, 50, 0.08) !important;
+  background: var(--lu-state-correct-bg) !important;
 }
 
 .checkboxOption.wrongAnswer {
   border-color: #C62828 !important;
-  background: rgba(198, 40, 40, 0.08) !important;
+  background: var(--lu-state-wrong-bg) !important;
 }
 
 .checkboxOption.missedAnswer {
   border-color: #FBBC04 !important;
-  background: rgba(251, 188, 4, 0.15) !important;
+  background: var(--lu-state-missed) !important;
 }
 
 .checkboxOption.missedAnswer::after {
@@ -1047,17 +1037,17 @@
 
 .translateOption.selected {
   border-color: var(--ifm-color-primary);
-  background: rgba(0, 87, 183, 0.08);
+  background: var(--lu-state-active);
 }
 
 .translateOption.correct {
   border-color: #2E7D32 !important;
-  background: rgba(46, 125, 50, 0.08) !important;
+  background: var(--lu-state-correct-bg) !important;
 }
 
 .translateOption.incorrect {
   border-color: #C62828 !important;
-  background: rgba(198, 40, 40, 0.08) !important;
+  background: var(--lu-state-wrong-bg) !important;
 }
 
 /* ============= CLOZE ============= */
@@ -1076,7 +1066,7 @@
   margin: 0 2px;
   border: 2px solid var(--ifm-color-primary);
   border-radius: 6px;
-  background: rgba(0, 87, 183, 0.08);
+  background: var(--lu-state-active);
   font-size: 14px;
   font-family: inherit;
   cursor: pointer;
@@ -1089,14 +1079,14 @@
 
 .clozeSelect.correct {
   border-color: #2E7D32;
-  background: rgba(46, 125, 50, 0.08);
+  background: var(--lu-state-correct-bg);
   color: #2E7D32;
   font-weight: 600;
 }
 
 .clozeSelect.incorrect {
   border-color: #C62828;
-  background: rgba(198, 40, 40, 0.08);
+  background: var(--lu-state-wrong-bg);
 }
 
 /* ============= MARK THE WORDS ============= */
@@ -1126,7 +1116,7 @@
 }
 
 .markableWord:hover {
-  background: rgba(0, 87, 183, 0.08);
+  background: var(--lu-state-active);
 }
 
 .markableWord.marked {
@@ -1135,18 +1125,18 @@
 }
 
 .markableWord.correctMark {
-  background: rgba(46, 125, 50, 0.08);
+  background: var(--lu-state-correct-bg);
   border: 2px solid #2E7D32;
   font-weight: 600;
 }
 
 .markableWord.missedMark {
-  background: rgba(46, 125, 50, 0.08);
+  background: var(--lu-state-correct-bg);
   border: 2px dashed #2E7D32;
 }
 
 .markableWord.wrongMark {
-  background: rgba(198, 40, 40, 0.08);
+  background: var(--lu-state-wrong-bg);
   border: 2px solid #C62828;
   text-decoration: line-through;
 }
@@ -1196,12 +1186,12 @@
 
 .dialogueLine.correct {
   border-color: #2E7D32;
-  background: rgba(46, 125, 50, 0.08);
+  background: var(--lu-state-correct-bg);
 }
 
 .dialogueLine.incorrect {
   border-color: #C62828;
-  background: rgba(198, 40, 40, 0.08);
+  background: var(--lu-state-wrong-bg);
 }
 
 .speakerLabel {
@@ -1245,7 +1235,7 @@
   gap: 10px;
   margin-bottom: 14px;
   padding: 18px;
-  background: rgba(0, 87, 183, 0.08);
+  background: var(--lu-state-active);
   border-radius: 12px;
 }
 
@@ -1435,7 +1425,7 @@
 /* ============= DEBATE ============= */
 .debateQuestion {
   padding: 16px 20px;
-  background: rgba(106, 27, 154, 0.08);
+  background: var(--lu-state-drag);
   border-radius: 12px;
   border-left: 4px solid #6A1B9A;
   margin-bottom: 14px;
@@ -1548,7 +1538,7 @@
 /* ============= ESSAY / MODEL ANSWER SHARED ============= */
 .essayPrompt {
   padding: 16px 20px;
-  background: rgba(106, 27, 154, 0.08);
+  background: var(--lu-state-drag);
   border-radius: 12px;
   border-left: 4px solid #6A1B9A;
   margin-bottom: 14px;
@@ -1757,19 +1747,19 @@
 
 .grammarInput input.correct {
   border-color: #2E7D32;
-  background: rgba(46, 125, 50, 0.08);
+  background: var(--lu-state-correct-bg);
 }
 
 .grammarInput input.incorrect {
   border-color: #C62828;
-  background: rgba(198, 40, 40, 0.08);
+  background: var(--lu-state-wrong-bg);
 }
 
 .correctAnswer {
   color: #2E7D32;
   font-size: 0.9rem;
   padding: 0.5rem;
-  background: rgba(46, 125, 50, 0.08);
+  background: var(--lu-state-correct-bg);
   border-radius: 6px;
 }
 
@@ -1847,7 +1837,7 @@
 }
 
 .charButton:hover {
-  background: rgba(0, 87, 183, 0.08);
+  background: var(--lu-state-active);
   border-color: var(--ifm-color-primary);
 }
 
@@ -2102,7 +2092,7 @@
 }
 
 .featureTable tr.featureSelected {
-  background: rgba(0, 87, 183, 0.08);
+  background: var(--lu-state-active);
 }
 
 .dialectValueA {
@@ -2225,7 +2215,7 @@
 }
 
 .scoreHigh {
-  background: rgba(46, 125, 50, 0.08);
+  background: var(--lu-state-correct-bg);
   color: #2E7D32;
 }
 
@@ -2235,7 +2225,7 @@
 }
 
 .scoreLow {
-  background: rgba(198, 40, 40, 0.08);
+  background: var(--lu-state-wrong-bg);
   color: #C62828;
 }
 
@@ -2267,7 +2257,7 @@
 
 /* ============= OBSERVE BOX (from POC) ============= */
 .observeBox {
-  background: rgba(0, 87, 183, 0.08);
+  background: var(--lu-state-active);
   border-radius: 12px;
   padding: 18px;
   margin: 14px 0;
@@ -2324,7 +2314,7 @@
 }
 
 .vocabTable tr:hover td {
-  background: rgba(0, 87, 183, 0.08);
+  background: var(--lu-state-active);
 }
 
 /* ============= FOLK TEXT LAYER ============= */
@@ -2380,12 +2370,12 @@
 
 .ritualAnswerZone.correct {
   border-color: #2e7d32;
-  background: rgba(46, 125, 50, 0.08);
+  background: var(--lu-state-correct-bg);
 }
 
 .ritualAnswerZone.incorrect {
   border-color: #c62828;
-  background: rgba(198, 40, 40, 0.08);
+  background: var(--lu-state-wrong-bg);
 }
 
 .ritualStepButton {
@@ -2575,22 +2565,22 @@
 
 [data-theme='dark'] .dialectHighlight,
 [data-theme='dark'] .focusHighlight {
-  background: rgba(255, 193, 7, 0.25);
+  background: var(--lu-state-missed);
 }
 
 [data-theme='dark'] .scoreHigh {
-  background: rgba(46, 125, 50, 0.25);
-  color: #81C995;
+  background: var(--lu-state-correct-bg);
+  color: var(--lu-state-correct-fg);
 }
 
 [data-theme='dark'] .scoreMedium {
-  background: rgba(251, 188, 4, 0.25);
-  color: #FDD663;
+  background: var(--lu-state-missed);
+  color: var(--lu-text);
 }
 
 [data-theme='dark'] .scoreLow {
-  background: rgba(198, 40, 40, 0.25);
-  color: #F28B82;
+  background: var(--lu-state-wrong-bg);
+  color: var(--lu-state-wrong-fg);
 }
 
 [data-theme='dark'] .option,
@@ -2607,7 +2597,7 @@
 
 [data-theme='dark'] .observeExamples,
 [data-theme='dark'] .observeBox {
-  background: rgba(0, 87, 183, 0.15);
+  background: var(--lu-state-active);
 }
 
 [data-theme='dark'] .observeExample,
@@ -2621,12 +2611,9 @@
 
 /* ============================================================
    DARK-MODE STATE TINTS  [activity-darkmode-contrast]
-   The rgba(R,G,B, 0.05–0.15) state backgrounds defined above are
-   tuned for a WHITE surface; on the dark theme they are near-
-   invisible, leaving hover / selection / match / correct / wrong
-   feedback unreadable across activities. These overrides restore
-   legible contrast for EVERY activity type in dark mode.
-   Additive — light mode is untouched.
+   Light-mode state backgrounds are tuned for a light surface; on the
+   dark theme the same selectors need the shared dual-mode state tokens
+   so hover / selection / match / correct / wrong feedback stays legible.
    ============================================================ */
 
 /* neutral · hover · selected → blue */
@@ -2649,16 +2636,16 @@
 [data-theme='dark'] .featureTable tr.featureSelected,
 [data-theme='dark'] .translationSelected,
 [data-theme='dark'] .vocabTable tr:hover td {
-  background: rgba(91, 155, 213, 0.22);
+  background: var(--lu-state-active);
 }
 
 [data-theme='dark'] .blankDropZone {
-  background: rgba(91, 155, 213, 0.10);
+  background: var(--lu-state-active);
 }
 
 /* match-up right column → amber-orange (distinct from the blue left) */
 [data-theme='dark'] .matchColumn:last-child .matchItem {
-  background: rgba(230, 145, 56, 0.20);
+  background: var(--lu-match-right);
 }
 
 /* drag pools · prompts → violet */
@@ -2666,7 +2653,7 @@
 [data-theme='dark'] .wordPool.dropTarget,
 [data-theme='dark'] .debateQuestion,
 [data-theme='dark'] .essayPrompt {
-  background: rgba(167, 130, 224, 0.18);
+  background: var(--lu-state-drag);
 }
 
 /* correct · matched → green (+ legible text) */
@@ -2687,8 +2674,8 @@
 [data-theme='dark'] .grammarInput input.correct,
 [data-theme='dark'] .correctAnswer,
 [data-theme='dark'] .transcriptionInput textarea.correct {
-  background: rgba(46, 160, 70, 0.26) !important;
-  color: #81C995;
+  background: var(--lu-state-correct-bg) !important;
+  color: var(--lu-state-correct-fg);
 }
 
 /* incorrect · wrong → red (+ legible text) */
@@ -2708,12 +2695,12 @@
 [data-theme='dark'] .dialogueLine.incorrect,
 [data-theme='dark'] .grammarInput input.incorrect,
 [data-theme='dark'] .transcriptionInput textarea.incorrect {
-  background: rgba(210, 70, 70, 0.26) !important;
-  color: #F28B82;
+  background: var(--lu-state-wrong-bg) !important;
+  color: var(--lu-state-wrong-fg);
 }
 
 /* missed answer · transcription highlight → amber */
 [data-theme='dark'] .checkboxOption.missedAnswer,
 [data-theme='dark'] .transcriptionOriginal {
-  background: rgba(251, 188, 4, 0.22);
+  background: var(--lu-state-missed);
 }
