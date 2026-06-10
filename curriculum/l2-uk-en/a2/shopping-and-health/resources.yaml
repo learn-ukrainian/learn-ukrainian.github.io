@@ -1,0 +1,20 @@
+- title: "ULP 1-09: How much does it cost? At the market in Ukraine"
+  role: podcast
+  source_ref: "docs/resources/podcasts/podcast_db.json: ULP-009"
+  url: "https://www.ukrainianlessons.com/episode9/"
+  notes: "Market dialogue support for prices, quantities, and shopping phrases."
+- title: "ULP 2-46: At the grocery store + Genitive case"
+  role: podcast
+  source_ref: "docs/resources/podcasts/podcast_db.json: ULP-046"
+  url: "https://www.ukrainianlessons.com/episode46/"
+  notes: "Learner-facing grocery-store episode focused on genitive after quantities."
+- title: "ULP: Phrasebook Food"
+  role: phrasebook
+  source_ref: "docs/resources/ulp-articles-index.yaml: /ph-food/"
+  url: "https://www.ukrainianlessons.com/ph-food/"
+  notes: "Food vocabulary support for market and grocery-store practice."
+- title: "ULP: Phrasebook Health"
+  role: phrasebook
+  source_ref: "docs/resources/ulp-articles-index.yaml: /ph-health/"
+  url: "https://www.ukrainianlessons.com/ph-health/"
+  notes: "Health phrase support for doctor and pharmacy dialogues."

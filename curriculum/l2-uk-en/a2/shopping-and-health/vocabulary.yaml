@@ -1,0 +1,99 @@
+- word: ринок
+  translation: market
+  pos: noun
+  gender: m
+  example: "На ринку я купую овочі."
+- word: кілограм
+  translation: kilogram
+  pos: noun
+  gender: m
+  example: "Дайте кілограм яблук."
+- word: пляшка
+  translation: bottle
+  pos: noun
+  gender: f
+  example: "Пляшка води коштує двадцять гривень."
+- word: пачка
+  translation: pack
+  pos: noun
+  gender: f
+  example: "Мені пачку масла."
+- word: шматок
+  translation: piece
+  pos: noun
+  gender: m
+  example: "Візьму шматок хліба."
+- word: здоров'я
+  translation: health
+  pos: noun
+  gender: n
+  example: "Для здоров'я важливо спати."
+- word: температура
+  translation: fever, temperature
+  pos: noun
+  gender: f
+  example: "Температури немає."
+- word: рецепт
+  translation: prescription, recipe
+  pos: noun
+  gender: m
+  example: "Це без рецепта?"
+- word: аптека
+  translation: pharmacy
+  pos: noun
+  gender: f
+  example: "Аптека біля лікарні."
+- word: ліки
+  translation: medicine
+  pos: noun
+  gender: pl
+  example: "Мені потрібні ліки від кашлю."
+- word: кашель
+  translation: cough
+  pos: noun
+  gender: m
+  example: "У мене кашель."
+- word: апетит
+  translation: appetite
+  pos: noun
+  gender: m
+  example: "Немає апетиту."
+- word: помідор
+  translation: tomato
+  pos: noun
+  gender: m
+  example: "Пів кіло помідорів, будь ласка."
+- word: огірок
+  translation: cucumber
+  pos: noun
+  gender: m
+  example: "Кілограм огірків коштує недорого."
+- word: сир
+  translation: cheese
+  pos: noun
+  gender: m
+  example: "Мені пів кіло сиру."
+- word: нежить
+  translation: runny nose
+  pos: noun
+  gender: m
+  example: "Краплі від нежитю."
+- word: алергія
+  translation: allergy
+  pos: noun
+  gender: f
+  example: "Алергії немає."
+- word: таблетка
+  translation: pill, tablet
+  pos: noun
+  gender: f
+  example: "Таблетки від головного болю."
+- word: фармацевт
+  translation: pharmacist
+  pos: noun
+  gender: m
+  example: "Фармацевт дає пораду."
+- word: турбувати
+  translation: to bother, concern
+  pos: verb
+  example: "Що вас турбує?"
