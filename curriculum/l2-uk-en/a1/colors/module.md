@@ -1,4 +1,4 @@
-# Colors
+# Кольори
 
 You already know how Ukrainian adjectives change with a noun:
 **новий стіл**, **нова книга**, **нове фото**, **нові речі**. Colors use the

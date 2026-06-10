@@ -2,7 +2,7 @@
 inline:
   - id: act-1
     type: quiz
-    title: Count 0-10
+    title: Лічи від 0 до 10
     instruction: Choose the correct Ukrainian number or chunk.
     items:
       - prompt: 0
@@ -61,7 +61,7 @@ inline:
         explanation: Use дві with feminine plural chunks.
   - id: act-3
     type: match-up
-    title: Prices
+    title: Ціни
     instruction: Match the price with the Ukrainian phrase.
     pairs:
       - left: 1 UAH
@@ -82,7 +82,7 @@ inline:
         right: тисяча гривень
   - id: act-4
     type: fill-in
-    title: Age chunks
+    title: Вік у фразах
     instruction: Choose рік, роки, or років.
     items:
       - sentence: Мені двадцять один ___.
@@ -129,7 +129,7 @@ inline:
         explanation: Ask Скільки тобі років?
   - id: act-5
     type: quiz
-    title: Phone number groups
+    title: Групи номера телефону
     instruction: Choose the line that reads the number naturally.
     items:
       - prompt: 097
@@ -179,7 +179,7 @@ inline:
         explanation: Say нуль and п'ятдесят.
 workbook:
   - type: fill-in
-    title: Write the number
+    title: Напиши число
     instruction: Choose the Ukrainian written form.
     items:
       - sentence: 5 = ___
@@ -253,7 +253,7 @@ workbook:
           - дев'яносят
         explanation: Ninety is дев'яносто.
   - type: group-sort
-    title: 1 / 2-4 / 5+ chunks
+    title: Фрази 1 / 2-4 / 5+
     instruction: Sort each noun chunk by the number pattern.
     groups:
       - label: 1
@@ -275,7 +275,7 @@ workbook:
           - десять зошитів
           - шість студентів
   - type: error-correction
-    title: Repair number traps
+    title: Виправ числові пастки
     instruction: Choose the standard Ukrainian correction.
     items:
       - sentence: п'ять столи / п'ять студентів (якщо вжито як Називний множини)
@@ -327,7 +327,7 @@ workbook:
           - одне тисяча / одне мільйон
         explanation: Use тисяча and мільйон as standalone chunks.
   - type: fill-in
-    title: Numeral spell-check
+    title: Перевір правопис числівників
     instruction: Choose the standard form.
     items:
       - sentence: У мене ___ книг.
@@ -380,7 +380,7 @@ workbook:
           - половина шостого
         explanation: Use the Ukrainian time chunk пів на шосту.
   - type: translate
-    title: Choose the Ukrainian line
+    title: Обери український рядок
     instruction: Choose the Ukrainian sentence that matches the English cue.
     items:
       - source: How much does the cake cost?
@@ -438,7 +438,7 @@ workbook:
             correct: false
         explanation: Use двісті п'ятдесят гривень.
   - type: true-false
-    title: Quick number checkpoint
+    title: Швидка перевірка чисел
     instruction: Decide if the statement is right.
     items:
       - statement: П'ять зошитів.

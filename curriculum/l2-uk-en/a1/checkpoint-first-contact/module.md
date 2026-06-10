@@ -211,7 +211,7 @@ family line, and closing. That is enough for the checkpoint.
 
 <!-- INJECT_ACTIVITY: act-5 -->
 
-### Digital first contact
+### Перше знайомство онлайн
 
 A modern first contact may happen in a course chat. The same etiquette applies:
 start with a greeting, name yourself, ask one clear question, and close

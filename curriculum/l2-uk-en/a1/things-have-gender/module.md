@@ -1,4 +1,4 @@
-# Things Have Gender
+# Речі мають рід
 
 English has "he," "she," and "it." Ukrainian also has **він**, **вона**,
 and **воно**, but Ukrainian uses them for every noun, including things in your
@@ -33,7 +33,7 @@ You are learning to store a noun with its gender cue.
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
-### Question words
+### Питальні слова
 
 Start with the noun question.
 
@@ -160,7 +160,7 @@ Support after the dialogue:
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-### My, my, my
+### Мій, моя, моє
 
 The possessive word follows the noun.
 
@@ -238,7 +238,7 @@ Some male names end in **-а**, **-я**, or **-о**: **Микола**, **Ілл�
 **Павло**. They are still **він** because they name men. Family words such as
 **тато**, **батько**, and **дядько** are also masculine.
 
-### Watch the traps
+### Пильнуй пастки
 
 Most errors come from using English habits too directly or from trusting the
 ending when the word is an exception.

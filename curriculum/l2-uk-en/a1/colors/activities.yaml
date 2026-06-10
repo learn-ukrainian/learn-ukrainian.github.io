@@ -2,7 +2,7 @@
 inline:
   - id: act-1
     type: quiz
-    title: Ask about color
+    title: Запитай про колір
     instruction: Choose the natural question or short answer.
     items:
       - prompt: You point to a pencil and ask its color.
@@ -61,7 +61,7 @@ inline:
         explanation: The standard chunk is синьо-жовтий прапор.
   - id: act-2
     type: fill-in
-    title: Color endings
+    title: Закінчення кольорів
     instruction: Choose the ending or form that matches the noun.
     items:
       - sentence: червон__ олівець
@@ -136,7 +136,7 @@ inline:
         explanation: With вікно say синє.
   - id: act-3
     type: group-sort
-    title: Hard or soft color
+    title: Тверда чи м'яка форма
     instruction: Sort the color chunks by adjective pattern.
     groups:
       - label: Hard pattern -ий/-а/-е
@@ -157,7 +157,7 @@ inline:
           - сині речі
   - id: act-4
     type: quiz
-    title: Синій or блакитний
+    title: Синій чи блакитний
     instruction: Choose the better A1 color chunk.
     items:
       - prompt: A clear sky
@@ -216,7 +216,7 @@ inline:
         explanation: Treat темно-зелений as one compound color chunk.
 workbook:
   - type: match-up
-    title: Appearance chunks
+    title: Опис зовнішності
     instruction: Match each Ukrainian chunk with its natural context.
     pairs:
       - left: карі очі
@@ -232,7 +232,7 @@ workbook:
       - left: синьо-жовтий прапор
         right: Ukrainian flag colors
   - type: error-correction
-    title: Repair color traps
+    title: Виправ кольорові пастки
     instruction: Choose the standard Ukrainian correction.
     items:
       - sentence: Сукня є червона.
@@ -284,7 +284,7 @@ workbook:
           - чорний, білий
         explanation: In these common color words, stress is on the root.
   - type: fill-in
-    title: Room and clothes colors
+    title: Кольори кімнати й одягу
     instruction: Complete each practical sentence.
     items:
       - sentence: Моя кімната ___.
@@ -344,7 +344,7 @@ workbook:
           - блакитна
         explanation: Небо is neuter.
   - type: translate
-    title: Choose the Ukrainian line
+    title: Обери український рядок
     instruction: Choose the Ukrainian sentence that matches the English cue.
     items:
       - source: The dress is red.
@@ -402,7 +402,7 @@ workbook:
             correct: false
         explanation: Keep синьо-жовтий as the fixed flag color chunk.
   - type: true-false
-    title: Color checkpoint
+    title: Перевірка кольорів
     instruction: Decide if the statement is right.
     items:
       - statement: Якого кольору светр?
@@ -430,7 +430,7 @@ workbook:
         answer: true
         explanation: Keep this exact phrase.
   - type: match-up
-    title: Color chunks
+    title: Фрази з кольорами
     instruction: Match each color chunk with the object or image it best fits.
     pairs:
       - left: червоний олівець

@@ -2,7 +2,7 @@
 inline:
   - id: act-1
     type: quiz
-    title: Which question word?
+    title: Яке питальне слово?
     instruction: Choose the question word that fits the noun.
     items:
       - prompt: стіл
@@ -61,7 +61,7 @@ inline:
         explanation: Вікно is neuter.
   - id: act-2
     type: fill-in
-    title: Finish the adjective
+    title: Заверши прикметник
     instruction: Choose the adjective ending that matches the noun.
     items:
       - sentence: велик__ стіл
@@ -136,7 +136,7 @@ inline:
         explanation: Plural A1 chunks use нові.
   - id: act-3
     type: group-sort
-    title: Sort the chunks
+    title: Сортуй фрази
     instruction: Sort each adjective-noun chunk by the question it answers.
     groups:
       - label: Який?
@@ -165,7 +165,7 @@ inline:
           - дешеві листівки
   - id: act-4
     type: match-up
-    title: Match opposites
+    title: Поєднай протилежності
     instruction: Match each adjective with its opposite.
     pairs:
       - left: великий
@@ -182,7 +182,7 @@ inline:
         right: темний
 workbook:
   - type: quiz
-    title: Sentence frame
+    title: Модель речення
     instruction: Choose the natural A1 sentence.
     items:
       - prompt: The book is new.
@@ -240,7 +240,7 @@ workbook:
             correct: false
         explanation: Plural chunks use цікаві.
   - type: fill-in
-    title: Describe the room
+    title: Опиши кімнату
     instruction: Complete the short room lines.
     items:
       - sentence: Моя кімната ___ і світла.
@@ -286,7 +286,7 @@ workbook:
           - нове
         explanation: Стіл is masculine.
   - type: error-correction
-    title: Repair adjective agreement
+    title: Виправ узгодження прикметників
     instruction: Fix the adjective or sentence frame.
     items:
       - sentence: Він є добрий студент.
@@ -338,7 +338,7 @@ workbook:
           - Це моє синє ручка.
         explanation: Ручка is feminine, and синій is a soft-stem adjective.
   - type: fill-in
-    title: Adjective trap repair
+    title: Виправ прикметникові пастки
     instruction: Choose the standard Ukrainian adjective.
     items:
       - sentence: Цей суп дуже ___.
@@ -396,7 +396,7 @@ workbook:
           - ленивий
         explanation: Use лінивий.
   - type: translate
-    title: Choose the Ukrainian line
+    title: Обери український рядок
     instruction: Choose the Ukrainian sentence that matches the English cue.
     items:
       - source: My room is small but nice.
@@ -454,7 +454,7 @@ workbook:
             correct: false
         explanation: Plural chunks use цікаві.
   - type: true-false
-    title: Quick checkpoint
+    title: Швидка перевірка
     instruction: Decide if the statement is right.
     items:
       - statement: Стіл новий.
