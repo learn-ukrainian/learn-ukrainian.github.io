@@ -1,0 +1,60 @@
+- word: професія
+  translation: profession
+  pos: noun
+  example: "Яка у тебе професія?"
+- word: фах
+  translation: specialty, profession
+  pos: noun
+  example: "Хто ти за фахом?"
+- word: працювати
+  translation: to work
+  pos: verb
+  example: "Я працюю інженером."
+- word: стати
+  translation: to become
+  pos: verb
+  example: "Вона стала лікаркою."
+- word: бути
+  translation: to be
+  pos: verb
+  example: "Він буде вчителем."
+- word: лікар
+  translation: doctor
+  pos: noun
+  example: "Мій брат працює лікарем."
+- word: лікарка
+  translation: female doctor
+  pos: noun
+  example: "Олена стала лікаркою."
+- word: вчитель
+  translation: male teacher
+  pos: noun
+  example: "Він буде вчителем."
+- word: вчителька
+  translation: female teacher
+  pos: noun
+  example: "Наталя працює вчителькою."
+- word: інженер
+  translation: engineer
+  pos: noun
+  example: "Андрій працює інженером."
+- word: програмістка
+  translation: female programmer
+  pos: noun
+  example: "Вона стала програмісткою."
+- word: цікавитися
+  translation: to be interested in
+  pos: verb
+  example: "Я цікавлюся історією."
+- word: захоплюватися
+  translation: to be passionate about
+  pos: verb
+  example: "Він захоплюється музикою."
+- word: пишатися
+  translation: to be proud of
+  pos: verb
+  example: "Ми пишаємося командою."
+- word: займатися
+  translation: to do, to be engaged in
+  pos: verb
+  example: "Вона займається спортом."
