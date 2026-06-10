@@ -95,3 +95,43 @@
   pos: noun
   gender: f
   example: "Для групи є знижка."
+- word: собор
+  translation: cathedral
+  pos: noun
+  gender: m
+  example: "Ми стоїмо біля Софійського собору."
+- word: музей
+  translation: museum
+  pos: noun
+  gender: m
+  example: "Музей навпроти старої школи."
+- word: квиток
+  translation: ticket
+  pos: noun
+  gender: m
+  example: "Без квитка не можна."
+- word: екскурсія
+  translation: excursion, guided tour
+  pos: noun
+  gender: f
+  example: "Після екскурсії ми йдемо до музею."
+- word: парк
+  translation: park
+  pos: noun
+  gender: m
+  example: "Музей недалеко від парку."
+- word: школа
+  translation: school
+  pos: noun
+  gender: f
+  example: "Аптека навпроти нової школи."
+- word: функція
+  translation: function
+  pos: noun
+  gender: f
+  example: "Назвіть функцію прийменника."
+- word: сигнал
+  translation: signal, cue
+  pos: noun
+  gender: m
+  example: "Підкресліть сигнал родового."
