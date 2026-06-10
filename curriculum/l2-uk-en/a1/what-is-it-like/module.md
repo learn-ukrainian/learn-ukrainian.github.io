@@ -1,4 +1,4 @@
-# What Is It Like?
+# Який він?
 
 In the last module, you learned that every Ukrainian noun has a gender signal:
 **стіл** is **він**, **книга** is **вона**, and **вікно** is **воно**. Now you
@@ -207,7 +207,7 @@ Cover the English and answer aloud:
 - **Який стіл?** — **Новий і чистий.**
 - **Яке ліжко?** — **Старе, але зручне.**
 
-### Watch the traps
+### Пильнуй пастки
 
 Adjectives are a common interference zone. Keep Ukrainian on its own terms.
 Do not explain endings through another language, and do not trust look-alike

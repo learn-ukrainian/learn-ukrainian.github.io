@@ -32,7 +32,7 @@ By the end, you can:
 - sort words into **м'яки́й знак**, **апо́строф**, and **без зна́ка**;
 - choose the safer form when a visual habit creates a mistake.
 
-## Йотовані голосні first
+## Йотовані голосні
 
 **Я Ю Є Ї** — the four special vowel letters.
 

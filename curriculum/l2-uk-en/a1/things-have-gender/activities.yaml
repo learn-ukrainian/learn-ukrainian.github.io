@@ -2,7 +2,7 @@
 inline:
   - id: act-1
     type: quiz
-    title: Who or what?
+    title: Хто чи що?
     instruction: Choose the question or pronoun that fits the noun.
     items:
       - prompt: тато
@@ -61,7 +61,7 @@ inline:
         explanation: Вікно is neuter.
   - id: act-3
     type: quiz
-    title: Він, вона, or воно?
+    title: Він, вона чи воно?
     instruction: Choose the Ukrainian gender-test word.
     items:
       - prompt: стіл
@@ -138,7 +138,7 @@ inline:
         explanation: Микола is a masculine name.
   - id: act-4
     type: fill-in
-    title: My object
+    title: Мій предмет
     instruction: Choose мій, моя, or моє.
     items:
       - sentence: Це ___ стіл.
@@ -199,7 +199,7 @@ inline:
         explanation: Фото is neuter in this lesson.
   - id: act-9
     type: quiz
-    title: Profession form check
+    title: Форми професій
     instruction: Choose the natural profession form.
     items:
       - prompt: She is a teacher.
@@ -240,7 +240,7 @@ inline:
         explanation: Акторка is the feminine profession form.
 workbook:
   - type: group-sort
-    title: Sort by gender
+    title: Сортуй за родом
     instruction: Sort each noun by its A1 gender signal.
     groups:
       - label: він / мій
@@ -265,7 +265,7 @@ workbook:
           - дзеркало
           - фото
   - type: match-up
-    title: Room and bag words
+    title: Слова для кімнати й сумки
     instruction: Match each Ukrainian noun with its English cue.
     pairs:
       - left: стіл
@@ -285,7 +285,7 @@ workbook:
       - left: зошит
         right: notebook
   - type: fill-in
-    title: I have objects
+    title: У мене є предмети
     instruction: Complete the object sentence.
     items:
       - sentence: ___ мене є стіл.
@@ -338,7 +338,7 @@ workbook:
           - Він
         explanation: Вікно is neuter, so use воно.
   - type: error-correction
-    title: Fix gender traps
+    title: Виправ пастки роду
     instruction: Choose the safer Ukrainian sentence.
     items:
       - sentence: Мій книга, мій ручка (якщо говорить чоловік).
@@ -405,7 +405,7 @@ workbook:
           - Моє ім'я є Джон.
         explanation: Мене звати... is the safe name chunk.
   - type: quiz
-    title: Gender-flip diagnostic
+    title: Перевірка роду
     instruction: Choose the Ukrainian gender-test word. These are diagnostic props, not new active vocabulary.
     items:
       - prompt: Який у мене сильний біль у плечі!

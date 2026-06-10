@@ -79,11 +79,11 @@ You are learning to store a noun with its gender cue.
 
 ## Діалоги
 
-### Who or what?
+### Хто чи що?
 
 <Quiz client:only='react' questions={JSON.parse(`[{"question": "тато", "options": [{"text": "Хто це?", "correct": true}, {"text": "Що це?", "correct": false}, {"text": "Воно?", "correct": false}], "explanation": "Тато is a person word, so ask Хто це?"}, {"question": "стіл", "options": [{"text": "Що це?", "correct": true}, {"text": "Хто це?", "correct": false}, {"text": "Вона?", "correct": false}], "explanation": "Стіл is a thing word, so ask Що це?"}, {"question": "сестра", "options": [{"text": "вона", "correct": true}, {"text": "він", "correct": false}, {"text": "воно", "correct": false}], "explanation": "Сестра is feminine."}, {"question": "брат", "options": [{"text": "він", "correct": true}, {"text": "вона", "correct": false}, {"text": "воно", "correct": false}], "explanation": "Брат is masculine."}, {"question": "книга", "options": [{"text": "вона", "correct": true}, {"text": "він", "correct": false}, {"text": "воно", "correct": false}], "explanation": "Книга is feminine."}, {"question": "вікно", "options": [{"text": "воно", "correct": true}, {"text": "вона", "correct": false}, {"text": "він", "correct": false}], "explanation": "Вікно is neuter."}]`)} />
 
-### Question words
+### Питальні слова
 
 Start with the noun question.
 
@@ -149,7 +149,7 @@ Keep these chunks whole:
 Those last two chunks preview the next module. Do not turn them into a full
 adjective table yet.
 
-### Він, вона, or воно?
+### Він, вона чи воно?
 
 <Quiz client:only='react' questions={JSON.parse(`[{"question": "стіл", "options": [{"text": "він", "correct": true}, {"text": "вона", "correct": false}, {"text": "воно", "correct": false}], "explanation": "Стіл ends in a consonant and is masculine."}, {"question": "книга", "options": [{"text": "вона", "correct": true}, {"text": "він", "correct": false}, {"text": "воно", "correct": false}], "explanation": "Книга is feminine."}, {"question": "вікно", "options": [{"text": "воно", "correct": true}, {"text": "він", "correct": false}, {"text": "вона", "correct": false}], "explanation": "Вікно is neuter."}, {"question": "телефон", "options": [{"text": "він", "correct": true}, {"text": "вона", "correct": false}, {"text": "воно", "correct": false}], "explanation": "Телефон is masculine."}, {"question": "лампа", "options": [{"text": "вона", "correct": true}, {"text": "воно", "correct": false}, {"text": "він", "correct": false}], "explanation": "Лампа is feminine."}, {"question": "ліжко", "options": [{"text": "воно", "correct": true}, {"text": "вона", "correct": false}, {"text": "він", "correct": false}], "explanation": "Ліжко is neuter."}, {"question": "тато", "options": [{"text": "він", "correct": true}, {"text": "воно", "correct": false}, {"text": "вона", "correct": false}], "explanation": "Тато is masculine because it names a male person."}, {"question": "Микола", "options": [{"text": "він", "correct": true}, {"text": "вона", "correct": false}, {"text": "воно", "correct": false}], "explanation": "Микола is a masculine name."}]`)} />
 
@@ -208,11 +208,11 @@ Support after the dialogue:
 
 **Фото** is a useful beginner word. Store it as **воно**: **моє фото**.
 
-### My object
+### Мій предмет
 
 <FillIn client:only='react' items={JSON.parse(`[{"sentence": "Це ___ стіл.", "answer": "мій", "options": ["мій", "моя", "моє"]}, {"sentence": "Це ___ книга.", "answer": "моя", "options": ["моя", "мій", "моє"]}, {"sentence": "Це ___ вікно.", "answer": "моє", "options": ["моє", "мій", "моя"]}, {"sentence": "Це ___ кімната.", "answer": "моя", "options": ["моя", "мій", "моє"]}, {"sentence": "Це ___ ліжко.", "answer": "моє", "options": ["моє", "моя", "мій"]}, {"sentence": "Це ___ телефон.", "answer": "мій", "options": ["мій", "моя", "моє"]}, {"sentence": "Це ___ ручка.", "answer": "моя", "options": ["моя", "мій", "моє"]}, {"sentence": "Це ___ фото.", "answer": "моє", "options": ["моє", "моя", "мій"]}]`)} />
 
-### My, my, my
+### Мій, моя, моє
 
 The possessive word follows the noun.
 
@@ -282,7 +282,7 @@ For a man:
 Keep the earlier identity rule: **Я студент. Я студентка.** Do not force
 **є** into that A1 sentence.
 
-### Profession form check
+### Форми професій
 
 <Quiz client:only='react' questions={JSON.parse(`[{"question": "She is a teacher.", "options": [{"text": "Вона вчителька.", "correct": true}, {"text": "Вона вчитель.", "correct": false}, {"text": "Воно вчителька.", "correct": false}], "explanation": "Use the feminine profession form for a woman."}, {"question": "She is a doctor.", "options": [{"text": "Вона лікарка.", "correct": true}, {"text": "Вона лікар.", "correct": false}, {"text": "Він лікарка.", "correct": false}], "explanation": "Лікарка is the feminine form."}, {"question": "He is a student.", "options": [{"text": "Він студент.", "correct": true}, {"text": "Він студентка.", "correct": false}, {"text": "Вона студент.", "correct": false}], "explanation": "Студент is the masculine form."}, {"question": "She is an actor.", "options": [{"text": "Вона акторка.", "correct": true}, {"text": "Вона актор.", "correct": false}, {"text": "Воно акторка.", "correct": false}], "explanation": "Акторка is the feminine profession form."}]`)} />
 
@@ -292,7 +292,7 @@ Some male names end in **-а**, **-я**, or **-о**: **Микола**, **Ілл�
 **Павло**. They are still **він** because they name men. Family words such as
 **тато**, **батько**, and **дядько** are also masculine.
 
-### Watch the traps
+### Пильнуй пастки
 
 Most errors come from using English habits too directly or from trusting the
 ending when the word is an exception.
@@ -362,39 +362,39 @@ repair the gender traps.
 </TabItem>
 <TabItem label="Activities">
 
-### Who or what?
+### Хто чи що?
 
 *(see lesson, §Діалоги)*
 
-### Він, вона, or воно?
+### Він, вона чи воно?
 
 *(see lesson, §Він, вона, воно)*
 
-### My object
+### Мій предмет
 
 *(see lesson, §Предмети навколо)*
 
-### Profession form check
+### Форми професій
 
 *(see lesson, §Підсумок)*
 
-### Sort by gender
+### Сортуй за родом
 
 <GroupSort client:only='react' groups={JSON.parse(`{"він / мій": ["стіл", "телефон", "зошит", "ключ", "тато"], "вона / моя": ["книга", "лампа", "кімната", "ручка", "сестра"], "воно / моє": ["вікно", "ліжко", "крісло", "дзеркало", "фото"]}`)} />
 
-### Room and bag words
+### Слова для кімнати й сумки
 
 <MatchUp client:only='react' pairs={JSON.parse(`[{"left": "стіл", "right": "table"}, {"left": "книга", "right": "book"}, {"left": "вікно", "right": "window"}, {"left": "кімната", "right": "room"}, {"left": "ліжко", "right": "bed"}, {"left": "телефон", "right": "phone"}, {"left": "ручка", "right": "pen"}, {"left": "зошит", "right": "notebook"}]`)} />
 
-### I have objects
+### У мене є предмети
 
 <FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ мене є стіл.", "answer": "У", "options": ["У", "Це", "Хто"]}, {"sentence": "У мене ___ книга.", "answer": "є", "options": ["є", "звати", "моя"]}, {"sentence": "У ___ є телефон?", "answer": "тебе", "options": ["тебе", "мене", "мій"]}, {"sentence": "У мене є ___.", "answer": "вікно", "options": ["вікно", "він", "моя"]}, {"sentence": "Де стіл? ___ тут.", "answer": "Він", "options": ["Він", "Вона", "Воно"]}, {"sentence": "Де книга? ___ тут.", "answer": "Вона", "options": ["Вона", "Він", "Воно"]}, {"sentence": "Де вікно? ___ там.", "answer": "Воно", "options": ["Воно", "Вона", "Він"]}]`)} />
 
-### Fix gender traps
+### Виправ пастки роду
 
 <ErrorCorrection client:only='react' instruction="Choose the safer Ukrainian sentence." items={JSON.parse(`[{"sentence": "Мій книга, мій ручка (якщо говорить чоловік).", "errorWord": "Мій книга, мій ручка (якщо говорить чоловік).", "correctForm": "Моя книга, моя ручка.", "options": ["Моя книга, моя ручка.", "Мій книга, мій ручка."], "explanation": "The possessive follows the nouns книга and ручка, not the speaker."}, {"sentence": "Мій книга тут.", "errorWord": "Мій книга тут.", "correctForm": "Моя книга тут.", "options": ["Моя книга тут.", "Мій книга тут."], "explanation": "Книга is feminine, so use моя."}, {"sentence": "Мій ручка там.", "errorWord": "Мій ручка там.", "correctForm": "Моя ручка там.", "options": ["Моя ручка там.", "Мій ручка там."], "explanation": "Ручка is feminine, so use моя."}, {"sentence": "Де стіл? — Воно там. (Where is the table? — It is there.)", "errorWord": "Де стіл? — Воно там. (Where is the table? — It is there.)", "correctForm": "Де стіл? — Він там.", "options": ["Де стіл? — Він там.", "Де стіл? — Воно там."], "explanation": "Стіл is masculine, so the pronoun is він."}, {"sentence": "Це моя тато.", "errorWord": "Це моя тато.", "correctForm": "Це мій тато.", "options": ["Це мій тато.", "Це моя тато."], "explanation": "Тато is masculine."}, {"sentence": "Вона Микола.", "errorWord": "Вона Микола.", "correctForm": "Він Микола.", "options": ["Він Микола.", "Вона Микола."], "explanation": "Микола is a masculine name."}, {"sentence": "Моя собака дуже гарна.", "errorWord": "Моя собака дуже гарна.", "correctForm": "Мій собака дуже гарний.", "options": ["Мій собака дуже гарний.", "Моя собака дуже гарна."], "explanation": "Собака is masculine in Ukrainian; memorize мій собака."}, {"sentence": "Я є студент.", "errorWord": "Я є студент.", "correctForm": "Я студент.", "options": ["Я студент.", "Я є студент."], "explanation": "Present identity normally omits є."}, {"sentence": "Моє ім'я є Джон.", "errorWord": "Моє ім'я є Джон.", "correctForm": "Мене звати Джон.", "options": ["Мене звати Джон.", "Моє ім'я є Джон."], "explanation": "Мене звати... is the safe name chunk."}]`)} />
 
-### Gender-flip diagnostic
+### Перевірка роду
 
 <Quiz client:only='react' questions={JSON.parse(`[{"question": "Який у мене сильний біль у плечі!", "options": [{"text": "він", "correct": true}, {"text": "вона", "correct": false}, {"text": "воно", "correct": false}], "explanation": "Біль is masculine in Ukrainian."}, {"question": "Український степ широкий і вітряний.", "options": [{"text": "він", "correct": true}, {"text": "вона", "correct": false}, {"text": "воно", "correct": false}], "explanation": "Степ is masculine in Ukrainian."}, {"question": "Цей розпис на стіні — робота українського художника.", "options": [{"text": "він", "correct": true}, {"text": "вона", "correct": false}, {"text": "воно", "correct": false}], "explanation": "Розпис is masculine in Ukrainian."}, {"question": "Давній літопис розповідає про Київську Русь.", "options": [{"text": "він", "correct": true}, {"text": "вона", "correct": false}, {"text": "воно", "correct": false}], "explanation": "Літопис is masculine in Ukrainian."}, {"question": "Книжне / урочисте: у далеку путь.", "options": [{"text": "вона", "correct": true}, {"text": "він", "correct": false}, {"text": "воно", "correct": false}], "explanation": "Путь is feminine in this diagnostic expression."}]`)} />
 

@@ -1,4 +1,4 @@
-# How Many?
+# Скільки?
 
 Numbers are useful immediately: prices, ages, bags, notebooks, and phone
 numbers. Ukrainian numbers also change the noun after them, so this module
@@ -187,7 +187,7 @@ repair phrase for real conversations.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-### How old?
+### Скільки років?
 
 Use age as one ready formula:
 
@@ -238,7 +238,7 @@ of the age formula, not as a new grammar topic to unpack today.
 
 <!-- INJECT_ACTIVITY: act-5 -->
 
-### Phone numbers
+### Номери телефонів
 
 Ukrainian mobile numbers often appear as **+380 XX XXX XX XX**. When speaking,
 read them in small groups. Say **нуль**, not "oh."
@@ -275,7 +275,7 @@ number (**п'ятдесят шість**). The practical goal is clarity. Speak 
 pause between groups, and repeat the number back before you trust that you
 wrote it correctly.
 
-## Number Traps
+## Числові пастки
 
 Keep these repairs automatic:
 
