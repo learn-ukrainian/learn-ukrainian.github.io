@@ -1,0 +1,256 @@
+inline:
+- id: act-1
+  type: quiz
+  title: Коли родовий множини?
+  instruction: Оберіть правильну форму після слова кількості.
+  items:
+  - question: багато ___
+    options:
+    - студентів
+    - студенти
+    - студент
+    correct: 0
+    explanation: Після багато потрібен родовий множини.
+  - question: мало ___
+    options:
+    - книг
+    - книги
+    - книга
+    correct: 0
+    explanation: Мало книг - родовий множини.
+  - question: скільки ___?
+    options:
+    - квитків
+    - квитки
+    - квиток
+    correct: 0
+    explanation: Скільки квитків? - правильна модель.
+  - question: немає ___
+    options:
+    - булок
+    - булки
+    - булка
+    correct: 0
+    explanation: Немає булок - родовий множини.
+  - question: п'ять ___
+    options:
+    - столів
+    - столи
+    - стіл
+    correct: 0
+    explanation: Після п'ять потрібен родовий множини.
+  - question: десять ___
+    options:
+    - міст
+    - міста
+    - місто
+    correct: 0
+    explanation: Десять міст - родовий множини.
+  - question: кілька ___
+    options:
+    - днів
+    - дні
+    - день
+    correct: 0
+    explanation: Кілька днів - родовий множини.
+  - question: багато ___
+    options:
+    - питань
+    - питання
+    - питанні
+    correct: 0
+    explanation: Багато питань - часта форма.
+- id: act-2
+  type: match-up
+  title: Однина і родовий множини
+  instruction: Зіставте називний однини з родовим множини.
+  pairs:
+  - left: студент
+    right: студентів
+  - left: брат
+    right: братів
+  - left: олівець
+    right: олівців
+  - left: день
+    right: днів
+  - left: громадянин
+    right: громадян
+  - left: будинок
+    right: будинків
+  - left: підручник
+    right: підручників
+  - left: хлопець
+    right: хлопців
+- id: act-3
+  type: fill-in
+  title: Жіночий і середній рід
+  instruction: Оберіть родовий множини.
+  items:
+  - sentence: багато ___
+    answer: книг
+    options:
+    - книг
+    - книги
+    - книга
+    explanation: Книга - книг.
+  - sentence: кілька ___
+    answer: банок
+    options:
+    - банок
+    - банки
+    - банка
+    explanation: Банка - банок.
+  - sentence: мало ___
+    answer: сестер
+    options:
+    - сестер
+    - сестри
+    - сестра
+    explanation: Сестра - сестер.
+  - sentence: немає ___
+    answer: пісень
+    options:
+    - пісень
+    - пісні
+    - пісня
+    explanation: Пісня - пісень.
+  - sentence: багато ___
+    answer: міст
+    options:
+    - міст
+    - міста
+    - місто
+    explanation: Місто - міст.
+  - sentence: мало ___
+    answer: слів
+    options:
+    - слів
+    - слова
+    - слово
+    explanation: Слово - слів.
+  - sentence: кілька ___
+    answer: вікон
+    options:
+    - вікон
+    - вікна
+    - вікно
+    explanation: Вікно - вікон.
+  - sentence: немає ___
+    answer: питань
+    options:
+    - питань
+    - питання
+    - питанні
+    explanation: Питання - питань.
+- id: act-4
+  type: group-sort
+  title: Яке закінчення?
+  instruction: Розсортуйте форми родового множини за моделлю.
+  groups:
+  - label: -ів
+    items:
+    - студентів
+    - братів
+    - столів
+    - олівців
+  - label: нульове
+    items:
+    - книг
+    - булок
+    - міст
+    - яблук
+  - label: зміна основи
+    items:
+    - днів
+    - людей
+    - слів
+    - імен
+workbook:
+- type: true-false
+  title: Кількість і форма
+  instruction: Позначте, чи фраза правильна.
+  items:
+  - statement: багато студентів
+    correct: true
+    explanation: Студентів - родовий множини.
+  - statement: багато студенти
+    correct: false
+    explanation: Потрібно багато студентів.
+  - statement: немає булок
+    correct: true
+    explanation: Булка - булок.
+  - statement: немає булки
+    correct: false
+    explanation: Потрібно немає булок.
+  - statement: кілька днів
+    correct: true
+    explanation: День - днів.
+  - statement: скільки квитки?
+    correct: false
+    explanation: Потрібно скільки квитків?
+  - statement: мало питань
+    correct: true
+    explanation: Питання - питань.
+  - statement: десять міст
+    correct: true
+    explanation: Місто - міст.
+- type: fill-in
+  title: Список покупок
+  instruction: Оберіть правильну форму для списку.
+  items:
+  - sentence: Треба п'ять ___ води.
+    answer: пляшок
+    options:
+    - пляшок
+    - пляшки
+    - пляшка
+    explanation: Пляшка - пляшок.
+  - sentence: Немає свіжих ___.
+    answer: булок
+    options:
+    - булок
+    - булки
+    - булка
+    explanation: Немає булок.
+  - sentence: Купіть кілька ___ рису.
+    answer: пакетів
+    options:
+    - пакетів
+    - пакети
+    - пакет
+    explanation: Пакет - пакетів.
+  - sentence: У нас мало ___.
+    answer: яблук
+    options:
+    - яблук
+    - яблука
+    - яблуко
+    explanation: Яблуко - яблук.
+  - sentence: Для уроку треба десять ___.
+    answer: олівців
+    options:
+    - олівців
+    - олівці
+    - олівець
+    explanation: Олівець - олівців.
+  - sentence: Тут багато ___.
+    answer: зошитів
+    options:
+    - зошитів
+    - зошити
+    - зошит
+    explanation: Зошит - зошитів.
+  - sentence: У мене немає ___.
+    answer: питань
+    options:
+    - питань
+    - питання
+    - питанні
+    explanation: Питання - питань.
+  - sentence: Скільки ___ у групі?
+    answer: людей
+    options:
+    - людей
+    - люди
+    - людина
+    explanation: Люди - людей.

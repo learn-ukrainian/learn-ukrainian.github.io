@@ -1,0 +1,96 @@
+- word: множина
+  translation: plural
+  pos: noun
+  gender: f
+  example: "Множина слова книга - книги."
+- word: нульове закінчення
+  translation: zero ending
+  pos: noun
+  gender: n
+  example: "Книг має нульове закінчення."
+- word: кілька
+  translation: a few, several
+  pos: numeral
+  example: "Кілька днів - це більше ніж один день."
+- word: багато
+  translation: a lot, many
+  pos: adverb
+  example: "У класі багато студентів."
+- word: мало
+  translation: few, little
+  pos: adverb
+  example: "У нас мало часу."
+- word: скільки
+  translation: how many, how much
+  pos: adverb
+  example: "Скільки квитків треба?"
+- word: людина
+  translation: person
+  pos: noun
+  gender: f
+  example: "Одна людина чекає біля входу."
+- word: люди
+  translation: people
+  pos: noun
+  gender: pl
+  example: "Скільки людей у групі?"
+- word: стаття
+  translation: article
+  pos: noun
+  gender: f
+  example: "Багато статей є онлайн."
+- word: завдання
+  translation: task, assignment
+  pos: noun
+  gender: n
+  example: "У мене багато завдань."
+- word: питання
+  translation: question
+  pos: noun
+  gender: n
+  example: "Немає питань."
+- word: виняток
+  translation: exception
+  pos: noun
+  gender: m
+  example: "Це частий виняток."
+- word: вставний голосний
+  translation: inserted vowel
+  pos: noun
+  gender: m
+  example: "У слові банок є вставний голосний."
+- word: пляшка
+  translation: bottle
+  pos: noun
+  gender: f
+  example: "П'ять пляшок води."
+- word: банка
+  translation: jar, can
+  pos: noun
+  gender: f
+  example: "Кілька банок меду."
+- word: булка
+  translation: bun, roll
+  pos: noun
+  gender: f
+  example: "Немає булок."
+- word: пакет
+  translation: bag, packet
+  pos: noun
+  gender: m
+  example: "Кілька пакетів рису."
+- word: яблуко
+  translation: apple
+  pos: noun
+  gender: n
+  example: "Мало свіжих яблук."
+- word: зошит
+  translation: notebook
+  pos: noun
+  gender: m
+  example: "Багато зошитів на столі."
+- word: олівець
+  translation: pencil
+  pos: noun
+  gender: m
+  example: "Десять олівців для уроку."

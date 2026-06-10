@@ -1,0 +1,256 @@
+inline:
+- id: act-1
+  type: quiz
+  title: Послухайте сусідні звуки
+  instruction: Оберіть природний варіант для речення.
+  items:
+  - question: Ми їдемо ___ Львів.
+    options:
+    - у
+    - в
+    - й
+    correct: 0
+    explanation: Перед збігом Льв- природніше у.
+  - question: Вони були ___ Одесі.
+    options:
+    - в
+    - у
+    - із
+    correct: 0
+    explanation: Перед голосним о природніше в.
+  - question: Я працюю ___ школі.
+    options:
+    - у
+    - в
+    - й
+    correct: 0
+    explanation: Перед шк- допомагає у.
+  - question: Він навчається ___ університеті.
+    options:
+    - в
+    - у
+    - і
+    correct: 0
+    explanation: У університеті звучить важко, тому в університеті.
+  - question: Я піду ___ Олею.
+    options:
+    - з
+    - зі
+    - із
+    correct: 0
+    explanation: Перед голосним достатньо короткого з.
+  - question: Вона прийшла ___ школи.
+    options:
+    - зі
+    - з
+    - із
+    correct: 0
+    explanation: Перед шк- природна форма зі.
+  - question: Це Марко ___ Денис.
+    options:
+    - й
+    - і
+    - у
+    correct: 0
+    explanation: Марко закінчується на голосний, тому перед Денисом природне й.
+  - question: Це Олена ___ Тарас.
+    options:
+    - й
+    - і
+    - в
+    correct: 0
+    explanation: Після голосного у слові Олена природно звучить й.
+- id: act-2
+  type: fill-in
+  title: З, із чи зі?
+  instruction: Оберіть природну форму.
+  items:
+  - sentence: Я повертаюся ___ школи.
+    answer: зі
+    options:
+    - зі
+    - з
+    - із
+    explanation: Перед шк- уживаємо зі.
+  - sentence: Вона їде ___ Львова.
+    answer: зі
+    options:
+    - зі
+    - з
+    - із
+    explanation: Зі Львова звучить плавніше через збіг Льв-.
+  - sentence: Ми говорили ___ Оленою.
+    answer: з
+    options:
+    - з
+    - зі
+    - із
+    explanation: Перед голосним о коротке з звучить природно.
+  - sentence: Він працює ___ сестрою.
+    answer: із
+    options:
+    - із
+    - зі
+    - з
+    explanation: Із сестрою - зручний варіант перед с + приголосний.
+  - sentence: "Я йду ___ мною? Ні, скажіть: ти йдеш ___ мною."
+    answer: зі
+    options:
+    - зі
+    - з
+    - із
+    explanation: Стала природна форма - зі мною.
+  - sentence: Вона прийшла ___ університету.
+    answer: з
+    options:
+    - з
+    - зі
+    - із
+    explanation: Перед голосним у достатньо з.
+  - sentence: Ми зробили це ___ задоволенням.
+    answer: із
+    options:
+    - із
+    - з
+    - у
+    explanation: Із задоволенням - природна стала фраза.
+  - sentence: Новини ___ Києва.
+    answer: з
+    options:
+    - з
+    - зі
+    - із
+    explanation: З Києва звучить нормально.
+- id: act-3
+  type: match-up
+  title: Важко чи природно?
+  instruction: Зіставте важку фразу з природнішою.
+  pairs:
+  - left: в Львові
+    right: у Львові
+  - left: у Одесі
+    right: в Одесі
+  - left: з школи
+    right: зі школи
+  - left: з мною
+    right: зі мною
+  - left: із Оленою
+    right: з Оленою
+  - left: брат й сестра
+    right: брат і сестра
+  - left: мама і тато
+    right: мама й тато
+  - left: у університеті
+    right: в університеті
+- id: act-4
+  type: group-sort
+  title: Яке правило працює?
+  instruction: Розсортуйте фрази за типом милозвучності.
+  groups:
+  - label: у/в
+    items:
+    - у Львові
+    - в Одесі
+    - у школі
+    - в університеті
+  - label: з/із/зі
+    items:
+    - з Олею
+    - із сестрою
+    - зі школи
+    - зі мною
+  - label: і/й
+    items:
+    - брат і сестра
+    - мама й тато
+    - Олена й Тарас
+    - Марко й Денис
+workbook:
+- type: true-false
+  title: Перевірка милозвучності
+  instruction: Позначте, чи фраза звучить природно.
+  items:
+  - statement: у Львові
+    correct: true
+    explanation: Перед Льв- природно у.
+  - statement: у Одесі
+    correct: false
+    explanation: Природніше в Одесі.
+  - statement: зі школи
+    correct: true
+    explanation: Перед шк- уживаємо зі.
+  - statement: зі ним
+    correct: false
+    explanation: Природніше з ним.
+  - statement: з Оленою
+    correct: true
+    explanation: Перед голосним о достатньо з.
+  - statement: з мною
+    correct: false
+    explanation: Природніше зі мною.
+  - statement: мама й тато
+    correct: true
+    explanation: Після голосного часто природно й.
+  - statement: Він прийшов, й ми почали.
+    correct: false
+    explanation: Після паузи безпечніше і.
+- type: fill-in
+  title: Один маршрут
+  instruction: Оберіть природний варіант у кожному реченні.
+  items:
+  - sentence: Ми їдемо ___ Львів.
+    answer: у
+    options:
+    - у
+    - в
+    - з
+    explanation: У Львів звучить природно.
+  - sentence: Потім ми будемо ___ Одесі.
+    answer: в
+    options:
+    - в
+    - у
+    - і
+    explanation: В Одесі уникає зіткнення голосних.
+  - sentence: Я поїду ___ сестрою.
+    answer: із
+    options:
+    - із
+    - зі
+    - в
+    explanation: Із сестрою звучить плавно.
+  - sentence: Вона повертається ___ школи.
+    answer: зі
+    options:
+    - зі
+    - з
+    - в
+    explanation: Зі школи - природна форма.
+  - sentence: Олена ___ Тарас купили квитки.
+    answer: й
+    options:
+    - й
+    - і
+    - у
+    explanation: Після голосного в Олена природно й.
+  - sentence: Ми прийшли, ___ каса вже працювала.
+    answer: і
+    options:
+    - і
+    - й
+    - у
+    explanation: Після коми безпечне і.
+  - sentence: Вони живуть ___ університеті.
+    answer: в
+    options:
+    - в
+    - у
+    - з
+    explanation: В університеті звучить краще, ніж у університеті.
+  - sentence: Я говорив ___ Олею.
+    answer: з
+    options:
+    - з
+    - зі
+    - із
+    explanation: Перед голосним о коротке з нормальне.

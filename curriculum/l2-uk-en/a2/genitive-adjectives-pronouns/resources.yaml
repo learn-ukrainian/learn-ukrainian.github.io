@@ -1,0 +1,20 @@
+- title: "ULP: Adjectives and Adverbs Chart"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /adjectives-adverbs-chart/"
+  url: "https://www.ukrainianlessons.com/adjectives-adverbs-chart/"
+  notes: "Learner-facing adjective reference for reviewing adjective forms before genitive agreement practice."
+- title: "ULP: Possessive Pronouns Declension"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /possessive-pronouns-declension/"
+  url: "https://www.ukrainianlessons.com/possessive-pronouns-declension/"
+  notes: "Learner-facing table for мій, твій, наш, ваш and related possessive forms."
+- title: "ULP: Pronouns This and That"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /pronouns-this-that/"
+  url: "https://www.ukrainianlessons.com/pronouns-this-that/"
+  notes: "Support for цей/той forms, including genitive цього, цієї, того, тієї."
+- title: "МійКлас: Відмінювання прикметників"
+  role: article
+  source_ref: "docs/resources/miyklas-url-index.yaml: grade_6.adjectives"
+  url: "https://www.miyklas.com.ua/p/ukrainska-mova/6-klas/prikmetnik-47431/vidminiuvannia-prikmetnikiv-47111"
+  notes: "Ukrainian-language school reference for adjective declension patterns."

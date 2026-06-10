@@ -1,0 +1,358 @@
+---
+title: "Багато книг, мало студентів"
+description: "Родовий відмінок множини — найскладніша форма"
+sidebar:
+  order: 14
+  label: "14. Багато книг, мало студентів"
+prev: genitive-adjectives-pronouns
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import RitualSequencing from '@site/src/components/RitualSequencing';
+import VariantComparison from '@site/src/components/VariantComparison';
+import MotifFormula from '@site/src/components/MotifFormula';
+import PerformanceActivity from '@site/src/components/PerformanceActivity';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import MythBuster from '@site/src/components/MythBuster';
+import HighCultureBridge from '@site/src/components/HighCultureBridge';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+Родовий відмінок множини - одна з найскладніших форм в українській.
+Це нормально. Навіть носії мови іноді перевіряють рідкісні слова.
+
+На А2 ваша мета практична:
+
+- розпізнавати найчастіші моделі;
+- правильно казати поширені фрази з кількістю;
+- не боятися винятків, а вчити їх маленькими групами.
+
+## Діалог: у маленькому магазині
+
+Продавець і помічник перевіряють, що залишилося на полицях.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог 1 - скільки є?"
+  exchanges={JSON.parse('[{"speaker":"Продавець","text":"Скільки пляшок води?"},{"speaker":"Помічник","text":"П\'ять пляшок."},{"speaker":"Продавець","text":"А банок меду?"},{"speaker":"Помічник","text":"Три банки. Але немає маленьких пакетів."},{"speaker":"Продавець","text":"Скільки булок?"},{"speaker":"Помічник","text":"Немає булок. І мало свіжих яблук."},{"speaker":"Продавець","text":"Добре. Запишіть: багато студентів питають про воду, але немає булок."}]')}
+/>
+
+Карта діалогу:
+
+| Фраза | Називний однини | Родовий множини |
+| --- | --- | --- |
+| п'ять пляшок | пляшка | пляшок |
+| банок меду | банка | банок |
+| немає пакетів | пакет | пакетів |
+| немає булок | булка | булок |
+| мало яблук | яблуко | яблук |
+| багато студентів | студент | студентів |
+
+### Коли родовий множини?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "багато ___", "options": [{"text": "студентів", "correct": true}, {"text": "студенти", "correct": false}, {"text": "студент", "correct": false}], "explanation": "Після багато потрібен родовий множини."}, {"question": "мало ___", "options": [{"text": "книг", "correct": true}, {"text": "книги", "correct": false}, {"text": "книга", "correct": false}], "explanation": "Мало книг - родовий множини."}, {"question": "скільки ___?", "options": [{"text": "квитків", "correct": true}, {"text": "квитки", "correct": false}, {"text": "квиток", "correct": false}], "explanation": "Скільки квитків? - правильна модель."}, {"question": "немає ___", "options": [{"text": "булок", "correct": true}, {"text": "булки", "correct": false}, {"text": "булка", "correct": false}], "explanation": "Немає булок - родовий множини."}, {"question": "п'ять ___", "options": [{"text": "столів", "correct": true}, {"text": "столи", "correct": false}, {"text": "стіл", "correct": false}], "explanation": "Після п'ять потрібен родовий множини."}, {"question": "десять ___", "options": [{"text": "міст", "correct": true}, {"text": "міста", "correct": false}, {"text": "місто", "correct": false}], "explanation": "Десять міст - родовий множини."}, {"question": "кілька ___", "options": [{"text": "днів", "correct": true}, {"text": "дні", "correct": false}, {"text": "день", "correct": false}], "explanation": "Кілька днів - родовий множини."}, {"question": "багато ___", "options": [{"text": "питань", "correct": true}, {"text": "питання", "correct": false}, {"text": "питанні", "correct": false}], "explanation": "Багато питань - часта форма."}]`)} />
+
+## Коли потрібен родовий множини?
+
+Родовий множини часто з'являється після слів кількості:
+
+> багато студентів
+>
+> мало книг
+>
+> кілька днів
+>
+> скільки людей?
+>
+> немає квитків
+
+Після числівників від 5 і більше теж часто потрібен родовий множини:
+
+> п'ять столів
+>
+> шість книжок
+>
+> десять міст
+>
+> двадцять студентів
+
+На А2 просто запам'ятайте контраст:
+
+| Фраза | Форма |
+| --- | --- |
+| один студент | однина |
+| два студенти | інша модель, не фокус цього модуля |
+| п'ять студентів | родовий множини |
+| багато студентів | родовий множини |
+
+## Чоловічий рід: найчастіше -ів
+
+Для багатьох іменників чоловічого роду родовий множини має закінчення
+`-ів`.
+
+| Називний однини | Родовий множини |
+| --- | --- |
+| студент | студентів |
+| брат | братів |
+| стіл | столів |
+| будинок | будинків |
+| підручник | підручників |
+| олівець | олівців |
+
+Деякі слова змінюють основу:
+
+| Називний | Родовий множини | Коментар |
+| --- | --- | --- |
+| день | днів | голосний зникає |
+| хлопець | хлопців | е зникає |
+| українець | українців | е зникає |
+
+Є невелика група людей на `-ин/-їн`, де закінчення нульове:
+
+> громадянин - громадян
+>
+> селянин - селян
+
+Але це не основна модель. Для більшості звичайних чоловічих слів на А2
+безпечна перша гіпотеза: `-ів`.
+
+### Однина і родовий множини
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "студент", "right": "студентів"}, {"left": "брат", "right": "братів"}, {"left": "олівець", "right": "олівців"}, {"left": "день", "right": "днів"}, {"left": "громадянин", "right": "громадян"}, {"left": "будинок", "right": "будинків"}, {"left": "підручник", "right": "підручників"}, {"left": "хлопець", "right": "хлопців"}]`)} />
+
+## Жіночий рід: часто нульове закінчення
+
+Багато іменників жіночого роду в родовому множини втрачають `-а` або
+`-я`.
+
+| Називний однини | Родовий множини |
+| --- | --- |
+| книга | книг |
+| школа | шкіл |
+| сестра | сестер |
+| банка | банок |
+| сумка | сумок |
+| зупинка | зупинок |
+| пісня | пісень |
+
+Іноді з'являється вставний голосний `о` або `е`, щоб кінець слова було
+легше вимовити:
+
+> банка - банок
+>
+> сумка - сумок
+>
+> сестра - сестер
+>
+> зупинка - зупинок
+
+Деякі часті слова мають форму на `-ей`:
+
+> стаття - статей
+>
+> сім'я - сімей
+>
+> миша - мишей
+
+Слова на `-ія` часто мають форму без `-я`:
+
+> лекція - лекцій
+>
+> станція - станцій
+>
+> історія - історій
+
+Не намагайтесь вивести все з одного правила. Вивчайте модель плюс
+кілька частих прикладів.
+
+## Середній рід: нульове, -ів або особлива основа
+
+У середньому роді є кілька дуже частих моделей.
+
+| Називний однини | Родовий множини |
+| --- | --- |
+| місто | міст |
+| слово | слів |
+| вікно | вікон |
+| яблуко | яблук |
+| море | морів |
+| поле | полів |
+| завдання | завдань |
+| питання | питань |
+| ім'я | імен |
+
+Зверніть увагу:
+
+> багато міст
+>
+> мало слів
+>
+> кілька вікон
+>
+> немає питань
+
+Форми `завдань` і `питань` дуже корисні для навчання:
+
+> У мене багато завдань.
+>
+> У вас є кілька питань?
+>
+> Немає питань.
+
+### Жіночий і середній рід
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "багато ___", "answer": "книг", "options": ["книг", "книги", "книга"]}, {"sentence": "кілька ___", "answer": "банок", "options": ["банок", "банки", "банка"]}, {"sentence": "мало ___", "answer": "сестер", "options": ["сестер", "сестри", "сестра"]}, {"sentence": "немає ___", "answer": "пісень", "options": ["пісень", "пісні", "пісня"]}, {"sentence": "багато ___", "answer": "міст", "options": ["міст", "міста", "місто"]}, {"sentence": "мало ___", "answer": "слів", "options": ["слів", "слова", "слово"]}, {"sentence": "кілька ___", "answer": "вікон", "options": ["вікон", "вікна", "вікно"]}, {"sentence": "немає ___", "answer": "питань", "options": ["питань", "питання", "питанні"]}]`)} />
+
+## Кількість у реальному мовленні
+
+Найкраще вчити родовий множини в готових фразах.
+
+| Слово кількості | Приклад |
+| --- | --- |
+| багато | багато студентів, багато книг |
+| мало | мало місць, мало питань |
+| кілька | кілька днів, кілька зупинок |
+| скільки | скільки людей, скільки квитків |
+| немає | немає булок, немає пакетів |
+
+Міні-діалог:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Покупець","text":"Скільки є яблук?"},{"speaker":"Продавець","text":"Десять кілограмів."},{"speaker":"Покупець","text":"А булок?"},{"speaker":"Продавець","text":"Немає булок, але є багато пакетів печива."}]')}
+/>
+
+Пам'ятайте: після `багато`, `мало`, `кілька`, `скільки`, `немає` ви
+дуже часто питаєте себе: «яка форма множини в родовому?»
+
+## Міні-рольова гра: список запасів
+
+<DialogueBox
+  client:only="react"
+  title="Діалог 2 - що треба купити?"
+  exchanges={JSON.parse('[{"speaker":"Ірина","text":"У нас мало яблук і немає булок."},{"speaker":"Павло","text":"Скільки треба пляшок води?"},{"speaker":"Ірина","text":"Шість пляшок. І кілька пакетів рису."},{"speaker":"Павло","text":"А для уроку?"},{"speaker":"Ірина","text":"Багато зошитів і десять олівців."}]')}
+/>
+
+Фрази для вашої відповіді:
+
+- `У нас багато ...`
+- `У нас мало ...`
+- `Немає ...`
+- `Треба п'ять/шість/десять ...`
+
+### Яке закінчення?
+
+<GroupSort client:only='react' groups={JSON.parse(`{"-ів": ["студентів", "братів", "столів", "олівців"], "нульове": ["книг", "булок", "міст", "яблук"], "зміна основи": ["днів", "людей", "слів", "імен"]}`)} />
+
+## 📋 Підсумок
+
+Родовий множини має багато варіантів, але A2-стратегія проста:
+
+| Тип | Частий результат | Приклади |
+| --- | --- | --- |
+| чоловічий рід | -ів | студентів, столів, підручників |
+| жіночий рід | нульове закінчення, часто зі вставним голосним | книг, банок, сестер |
+| середній рід | нульове, -ів або особлива форма | міст, морів, питань |
+| кількість | часто родовий множини | багато книг, п'ять студентів |
+
+Самоперевірка:
+
+- Як сказати `many students`?
+- Як сказати `no buns`?
+- Яка форма після `скільки`: `квитки` чи `квитків`?
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"множина","translation":"plural","pos":"noun","gender":"f","example":"Множина слова книга - книги.","examples":["plural","Множина слова книга - книги."]},{"word":"нульове закінчення","translation":"zero ending","pos":"noun","gender":"n","example":"Книг має нульове закінчення.","examples":["zero ending","Книг має нульове закінчення."]},{"word":"кілька","translation":"a few, several","pos":"numeral","example":"Кілька днів - це більше ніж один день.","examples":["a few, several","Кілька днів - це більше ніж один день."]},{"word":"багато","translation":"a lot, many","pos":"adverb","example":"У класі багато студентів.","examples":["a lot, many","У класі багато студентів."]},{"word":"мало","translation":"few, little","pos":"adverb","example":"У нас мало часу.","examples":["few, little","У нас мало часу."]},{"word":"скільки","translation":"how many, how much","pos":"adverb","example":"Скільки квитків треба?","examples":["how many, how much","Скільки квитків треба?"]},{"word":"людина","translation":"person","pos":"noun","gender":"f","example":"Одна людина чекає біля входу.","examples":["person","Одна людина чекає біля входу."]},{"word":"люди","translation":"people","pos":"noun","gender":"pl","example":"Скільки людей у групі?","examples":["people","Скільки людей у групі?"]},{"word":"стаття","translation":"article","pos":"noun","gender":"f","example":"Багато статей є онлайн.","examples":["article","Багато статей є онлайн."]},{"word":"завдання","translation":"task, assignment","pos":"noun","gender":"n","example":"У мене багато завдань.","examples":["task, assignment","У мене багато завдань."]},{"word":"питання","translation":"question","pos":"noun","gender":"n","example":"Немає питань.","examples":["question","Немає питань."]},{"word":"виняток","translation":"exception","pos":"noun","gender":"m","example":"Це частий виняток.","examples":["exception","Це частий виняток."]},{"word":"вставний голосний","translation":"inserted vowel","pos":"noun","gender":"m","example":"У слові банок є вставний голосний.","examples":["inserted vowel","У слові банок є вставний голосний."]},{"word":"пляшка","translation":"bottle","pos":"noun","gender":"f","example":"П'ять пляшок води.","examples":["bottle","П'ять пляшок води."]},{"word":"банка","translation":"jar, can","pos":"noun","gender":"f","example":"Кілька банок меду.","examples":["jar, can","Кілька банок меду."]},{"word":"булка","translation":"bun, roll","pos":"noun","gender":"f","example":"Немає булок.","examples":["bun, roll","Немає булок."]},{"word":"пакет","translation":"bag, packet","pos":"noun","gender":"m","example":"Кілька пакетів рису.","examples":["bag, packet","Кілька пакетів рису."]},{"word":"яблуко","translation":"apple","pos":"noun","gender":"n","example":"Мало свіжих яблук.","examples":["apple","Мало свіжих яблук."]},{"word":"зошит","translation":"notebook","pos":"noun","gender":"m","example":"Багато зошитів на столі.","examples":["notebook","Багато зошитів на столі."]},{"word":"олівець","translation":"pencil","pos":"noun","gender":"m","example":"Десять олівців для уроку.","examples":["pencil","Десять олівців для уроку."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"множина","back":"plural"},{"front":"нульове закінчення","back":"zero ending"},{"front":"кілька","back":"a few, several"},{"front":"багато","back":"a lot, many"},{"front":"мало","back":"few, little"},{"front":"скільки","back":"how many, how much"},{"front":"людина","back":"person"},{"front":"люди","back":"people"},{"front":"стаття","back":"article"},{"front":"завдання","back":"task, assignment"},{"front":"питання","back":"question"},{"front":"виняток","back":"exception"},{"front":"вставний голосний","back":"inserted vowel"},{"front":"пляшка","back":"bottle"},{"front":"банка","back":"jar, can"},{"front":"булка","back":"bun, roll"},{"front":"пакет","back":"bag, packet"},{"front":"яблуко","back":"apple"},{"front":"зошит","back":"notebook"},{"front":"олівець","back":"pencil"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Коли родовий множини?
+
+*(див. урок, §Діалог: у маленькому магазині)*
+
+### Однина і родовий множини
+
+*(див. урок, §Чоловічий рід: найчастіше -ів)*
+
+### Жіночий і середній рід
+
+*(див. урок, §Середній рід: нульове, -ів або особлива основа)*
+
+### Яке закінчення?
+
+*(див. урок, §Міні-рольова гра: список запасів)*
+
+### Кількість і форма
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "багато студентів", "isTrue": true, "explanation": "Студентів - родовий множини."}, {"statement": "багато студенти", "isTrue": false, "explanation": "Потрібно багато студентів."}, {"statement": "немає булок", "isTrue": true, "explanation": "Булка - булок."}, {"statement": "немає булки", "isTrue": false, "explanation": "Потрібно немає булок."}, {"statement": "кілька днів", "isTrue": true, "explanation": "День - днів."}, {"statement": "скільки квитки?", "isTrue": false, "explanation": "Потрібно скільки квитків?"}, {"statement": "мало питань", "isTrue": true, "explanation": "Питання - питань."}, {"statement": "десять міст", "isTrue": true, "explanation": "Місто - міст."}]`)} />
+
+### Список покупок
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Треба п'ять ___ води.", "answer": "пляшок", "options": ["пляшок", "пляшки", "пляшка"]}, {"sentence": "Немає свіжих ___.", "answer": "булок", "options": ["булок", "булки", "булка"]}, {"sentence": "Купіть кілька ___ рису.", "answer": "пакетів", "options": ["пакетів", "пакети", "пакет"]}, {"sentence": "У нас мало ___.", "answer": "яблук", "options": ["яблук", "яблука", "яблуко"]}, {"sentence": "Для уроку треба десять ___.", "answer": "олівців", "options": ["олівців", "олівці", "олівець"]}, {"sentence": "Тут багато ___.", "answer": "зошитів", "options": ["зошитів", "зошити", "зошит"]}, {"sentence": "У мене немає ___.", "answer": "питань", "options": ["питань", "питання", "питанні"]}, {"sentence": "Скільки ___ у групі?", "answer": "людей", "options": ["людей", "люди", "людина"]}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Talk Ukrainian: Genitive Case](https://talkukrainian.com/genitive-case/) — Additional learner-facing explanation of the genitive case.
+- 📄 [ULP: Genitive Case (Родовий відмінок](https://www.ukrainianlessons.com/genitive-case/) — Learner-facing overview of genitive functions, including plural genitive examples.
+- 📄 [ULP: Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/) — Practice reference for noun forms after numerals, including the 5+ pattern.
+- 📄 [ULP: Plural of Ukrainian Nouns - Special Forms](https://www.ukrainianlessons.com/plural-of-ukrainian-nouns-special-forms/) — Useful support for plural noun patterns and irregular plural forms.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
