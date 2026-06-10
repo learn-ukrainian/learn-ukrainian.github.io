@@ -5,7 +5,7 @@
 - word: стосунок
   translation: relationship
   pos: noun
-  example: "Наші стосунки дуже теплі."
+  example: "У нас теплі стосунки."
 - word: характер
   translation: character, personality
   pos: noun
@@ -14,14 +14,58 @@
   translation: appearance
   pos: noun
   example: "Ми описуємо зовнішність і характер."
+- word: описувати
+  translation: to describe
+  pos: verb
+  example: "Я описую свою подругу."
+- word: виглядати
+  translation: to look, to appear
+  pos: verb
+  example: "Як виглядає твій брат?"
+- word: мати
+  translation: to have
+  pos: verb
+  example: "Вона має карі очі."
+- word: високий
+  translation: tall
+  pos: adjective
+  example: "Мій брат високий."
+- word: низький
+  translation: short, low
+  pos: adjective
+  example: "Моя сусідка низька."
+- word: темноволосий
+  translation: dark-haired
+  pos: adjective
+  example: "Це темноволосий чоловік."
+- word: світловолосий
+  translation: fair-haired
+  pos: adjective
+  example: "Моя подруга світловолоса."
+- word: кароокий
+  translation: brown-eyed
+  pos: adjective
+  example: "Кароокий хлопець стоїть біля дверей."
 - word: привітний
   translation: friendly, welcoming
   pos: adjective
   example: "Мій сусід дуже привітний."
 - word: щирий
-  translation: sincere
+  translation: sincere, genuine
   pos: adjective
   example: "Це щира людина."
+- word: чуйний
+  translation: caring, responsive
+  pos: adjective
+  example: "Вона чуйна і добра."
+- word: веселий
+  translation: cheerful
+  pos: adjective
+  example: "Мій друг веселий."
+- word: спокійний
+  translation: calm
+  pos: adjective
+  example: "Керівник спокійний."
 - word: працьовитий
   translation: hardworking
   pos: adjective
@@ -30,22 +74,18 @@
   translation: patient
   pos: adjective
   example: "Викладач терплячий."
-- word: сусід
-  translation: neighbor
-  pos: noun
-  example: "Сусід допоміг мені з валізою."
-- word: описувати
-  translation: to describe
-  pos: verb
-  example: "Я описую свою подругу."
+- word: відповідальний
+  translation: responsible
+  pos: adjective
+  example: "Наша керівниця відповідальна."
+- word: справедливий
+  translation: fair, just
+  pos: adjective
+  example: "Назар серйозний, але справедливий."
 - word: впертий
   translation: stubborn, persistent
   pos: adjective
   example: "Він упертий, але наполегливий."
-- word: чуйний
-  translation: caring, responsive
-  pos: adjective
-  example: "Вона чуйна і добра."
 - word: наполегливий
   translation: persistent, determined
   pos: adjective
@@ -54,7 +94,51 @@
   translation: relative
   pos: noun
   example: "Мій родич живе в Полтаві."
+- word: друг
+  translation: friend
+  pos: noun
+  example: "Мій друг дуже щирий."
+- word: подруга
+  translation: female friend
+  pos: noun
+  example: "Моя подруга має карі очі."
+- word: сусід
+  translation: neighbor
+  pos: noun
+  example: "Сусід допоміг мені з валізою."
+- word: сусідка
+  translation: female neighbor
+  pos: noun
+  example: "Сусідка часто вітається першою."
+- word: колега
+  translation: colleague
+  pos: noun
+  example: "Моя колега відповідальна."
 - word: знайомий
   translation: acquaintance
   pos: noun
   example: "Це мій знайомий з курсу."
+- word: довіряти
+  translation: to trust
+  pos: verb
+  example: "Вона мені довіряє."
+- word: поважати
+  translation: to respect
+  pos: verb
+  example: "Він мене поважає."
+- word: допомагати
+  translation: to help, habitually or in process
+  pos: verb
+  example: "Вона часто допомагає родині."
+- word: допомогти
+  translation: to help, completed action
+  pos: verb
+  example: "Учора він допоміг мені."
+- word: підказувати
+  translation: to prompt, to give hints habitually
+  pos: verb
+  example: "Оксана завжди підказує новим працівникам."
+- word: підказати
+  translation: to prompt, to give one helpful hint
+  pos: verb
+  example: "Колега підказав мені адресу."
