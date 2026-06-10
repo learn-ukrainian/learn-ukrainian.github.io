@@ -119,6 +119,30 @@ echo ""
 export CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000
 export LEARN_UKRAINIAN_TELEMETRY_FOOTER="${LEARN_UKRAINIAN_TELEMETRY_FOOTER:-1}"
 
+# Self-heal: ensure Claude's native binary is wired up.
+# npx installs @anthropic-ai/claude-code (incl. the ~212MB platform binary that
+# ships in the optional dep) but in some npm/npx versions does NOT run the
+# package's postinstall (install.cjs) — so the binary is never linked into place
+# and the launcher dies with "claude native binary not installed". Detect that
+# and run the postinstall in the npx cache. Idempotent; a no-op once wired. The
+# npx cache is keyed by package spec, so this also heals other projects.
+ensure_claude_native() {
+    if npx @anthropic-ai/claude-code@latest --version >/dev/null 2>&1; then
+        return 0
+    fi
+    echo "Claude native binary not wired up — running postinstall in npx cache..."
+    for cjs in "$HOME"/.npm/_npx/*/node_modules/@anthropic-ai/claude-code/install.cjs; do
+        [ -f "$cjs" ] || continue
+        ( cd "$(dirname "$cjs")" && node install.cjs ) >/dev/null 2>&1 || true
+    done
+    if npx @anthropic-ai/claude-code@latest --version >/dev/null 2>&1; then
+        echo "Native binary wired up."
+    else
+        echo "Warning: auto-wire failed. Try: npm cache clean --force, then re-run."
+    fi
+}
+ensure_claude_native
+
 # Launch via npx to avoid cache bugs (stale binary + prompt caching issues)
 echo "Launching Claude Code via npx (cache-safe)..."
 npx @anthropic-ai/claude-code@latest --chrome --permission-mode bypassPermissions "$@"
