@@ -9,10 +9,13 @@ import LevelLanding from '@site/src/components/LevelLanding';
 <LevelLanding
   client:load
   level="ruth"
-  levelName="RUTH - Руська мова XIV-XVIII"
+  title="RUTH - Руська мова XIV-XVIII"
   subtitle="Ruthenian Track — 115 modules"
-  introduction="Ruthenian — Middle Ukrainian language XIV-XVIII century"
-  totalPlanned={115}
+  moduleCount={115}
+  wordTarget={4000}
+  color="var(--lu-id-ruth)"
+  progressTitle="RUTH Build Status"
+  progressDescription="0 available · 115 planned"
   modules={[
   { num: 1, title: "Вступ до руської мови", slug: "intro-to-ruth", status: "wip" },
   { num: 2, title: "Господар і держава", slug: "sovereign-state", status: "wip" },

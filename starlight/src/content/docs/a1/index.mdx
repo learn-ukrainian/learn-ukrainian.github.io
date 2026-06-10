@@ -39,6 +39,8 @@ export const _modulesWithStatus = A1_UNITS.map((group) => ({
   subtitle="Ukrainian for absolute beginners — 55 modules, ~1,200 target words"
   moduleCount={55}
   wordTarget={1200}
-  color="#2E7D32"
+  color="var(--lu-id-a1)"
+  progressTitle="A1 Build Status"
+  progressDescription={`${_deployedSlugs.size} available · ${55 - _deployedSlugs.size} locked`}
   modules={_modulesWithStatus}
 />

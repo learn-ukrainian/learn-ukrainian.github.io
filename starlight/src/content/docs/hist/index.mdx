@@ -9,10 +9,13 @@ import LevelLanding from '@site/src/components/LevelLanding';
 <LevelLanding
   client:load
   level="hist"
-  levelName="HIST - Історія України"
+  title="HIST - Історія України"
   subtitle="History Track — 140 modules"
-  introduction="History — Ukrainian history from origins to present"
-  totalPlanned={140}
+  moduleCount={140}
+  wordTarget={4000}
+  color="var(--lu-id-hist)"
+  progressTitle="HIST Build Status"
+  progressDescription="0 available · 140 planned"
   modules={[
   { num: 1, title: "Трипільська цивілізація", slug: "trypillian-civilization", status: "wip" },
   { num: 2, title: "Скіфи та сармати — Володарі степу", slug: "scythians-sarmatians", status: "wip" },

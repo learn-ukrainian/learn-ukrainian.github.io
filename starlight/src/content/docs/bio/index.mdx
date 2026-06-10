@@ -9,10 +9,13 @@ import LevelLanding from '@site/src/components/LevelLanding';
 <LevelLanding
   client:load
   level="bio"
-  levelName="BIO - Біографії українців"
+  title="BIO - Біографії українців"
   subtitle="Biography Track — 310 modules"
-  introduction="Biographies — Notable Ukrainians through history"
-  totalPlanned={310}
+  moduleCount={310}
+  wordTarget={4000}
+  color="var(--lu-id-bio)"
+  progressTitle="BIO Build Status"
+  progressDescription="0 available · 310 planned"
   modules={[
   { num: 1, title: "Княгиня Ольга: Дипломатія та реформи", slug: "knyahynia-olha", status: "wip" },
   { num: 2, title: "Князь Святослав: Воїн-завойовник", slug: "kniaz-sviatoslav", status: "wip" },

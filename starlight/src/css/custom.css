@@ -59,6 +59,26 @@
   --lu-id-lit: linear-gradient(135deg, #4A148C, #AD1457);
   --lu-id-seminar: linear-gradient(135deg, #4E342E, #00695C);
   --lu-id-history: linear-gradient(135deg, #BF360C, #6D4C41);
+  --lu-id-a1: var(--lu-id-core);
+  --lu-id-a2: var(--lu-id-core);
+  --lu-id-b1: var(--lu-id-core);
+  --lu-id-b2: var(--lu-id-core);
+  --lu-id-c1: var(--lu-id-core);
+  --lu-id-c2: var(--lu-id-core);
+  --lu-id-b2-pro: var(--lu-id-core);
+  --lu-id-c1-pro: var(--lu-id-core);
+  --lu-id-hist: var(--lu-id-history);
+  --lu-id-bio: var(--lu-id-seminar);
+  --lu-id-istorio: var(--lu-id-history);
+  --lu-id-oes: var(--lu-id-seminar);
+  --lu-id-ruth: var(--lu-id-seminar);
+  --lu-id-lit-drama: var(--lu-id-lit);
+  --lu-id-lit-essay: var(--lu-id-lit);
+  --lu-id-lit-fantastika: var(--lu-id-lit);
+  --lu-id-lit-hist-fic: var(--lu-id-lit);
+  --lu-id-lit-humor: var(--lu-id-lit);
+  --lu-id-lit-war: var(--lu-id-lit);
+  --lu-id-lit-youth: var(--lu-id-lit);
 
   /* ── Infima / Docusaurus compatibility shim ──────────────────────────────
    * Starlight does not define --ifm-* variables. Activities.module.css and

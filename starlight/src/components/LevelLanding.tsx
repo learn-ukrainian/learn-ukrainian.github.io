@@ -108,14 +108,22 @@ export default function LevelLanding(props: LevelLandingProps): ReactNode {
   const totalModules = props.moduleCount || props.totalPlanned || 0;
   const wordTarget = props.wordTarget || 0;
 
-  // Color defaults per level
+  // Color defaults per track. These are gradient/background tokens; the
+  // solid accent map below is used where CSS requires an actual color.
   const defaultColors: Record<string, string> = {
-    a1: '#2E7D32', a2: '#1565C0', b1: '#E65100', b2: '#C62828',
-    c1: '#6A1B9A', c2: '#8D6E00', hist: '#BF360C', bio: '#0D47A1',
-    istorio: '#880E4F', lit: '#4A148C', oes: '#33691E', ruth: '#004D40',
-    folk: '#33691E', 'b2-pro': '#455A64', 'c1-pro': '#37474F',
+    a1: 'var(--lu-id-a1)', a2: 'var(--lu-id-a2)', b1: 'var(--lu-id-b1)',
+    b2: 'var(--lu-id-b2)', c1: 'var(--lu-id-c1)', c2: 'var(--lu-id-c2)',
+    hist: 'var(--lu-id-hist)', bio: 'var(--lu-id-bio)',
+    istorio: 'var(--lu-id-istorio)', lit: 'var(--lu-id-lit)',
+    oes: 'var(--lu-id-oes)', ruth: 'var(--lu-id-ruth)',
+    folk: 'var(--lu-id-folk)', 'b2-pro': 'var(--lu-id-b2-pro)',
+    'c1-pro': 'var(--lu-id-c1-pro)', 'lit-drama': 'var(--lu-id-lit-drama)',
+    'lit-essay': 'var(--lu-id-lit-essay)', 'lit-fantastika': 'var(--lu-id-lit-fantastika)',
+    'lit-hist-fic': 'var(--lu-id-lit-hist-fic)', 'lit-humor': 'var(--lu-id-lit-humor)',
+    'lit-war': 'var(--lu-id-lit-war)', 'lit-youth': 'var(--lu-id-lit-youth)',
   };
-  const color = props.color || defaultColors[level.toLowerCase()] || '#0057B8';
+  const color = props.color || defaultColors[level.toLowerCase()] || 'var(--lu-id-core)';
+  const accentColor = getAccentColor(level);
 
   // Normalize modules: support both old flat array and new grouped format
   let unitGroups: UnitGroup[];
@@ -141,14 +149,14 @@ export default function LevelLanding(props: LevelLandingProps): ReactNode {
   const doneCount = unitGroups.reduce((acc, g) => acc + g.items.filter(m => m.status === 'done').length, 0);
   const moduleCount = totalModules || unitGroups.reduce((acc, g) => acc + g.items.length, 0);
   const pct = moduleCount > 0 ? Math.round((doneCount / moduleCount) * 100) : 0;
-  const darkerColor = adjustColor(color, -40);
+  const heroBackground = getHeroBackground(color, accentColor);
   const progressTitle = props.progressTitle ?? 'Your Progress';
   const progressDescription = props.progressDescription ?? `${doneCount} of ${moduleCount} completed (${pct}%)`;
 
   return (
     <div className={styles.container}>
       {/* Hero */}
-      <div className={styles.hero} style={{ background: `linear-gradient(135deg, ${color}, ${darkerColor})` }}>
+      <div className={styles.hero} style={{ background: heroBackground }}>
         <span className={styles.badge}>{level.toUpperCase()} — {getBadgeLabel(level)}</span>
         <h1 className={styles.heroTitle}>{displayTitle}</h1>
         {displaySub && <div className={styles.heroSub}>{displaySub}</div>}
@@ -176,7 +184,7 @@ export default function LevelLanding(props: LevelLandingProps): ReactNode {
           <div className={styles.unitTitle}>{group.unit}</div>
           <div className={styles.moduleList}>
             {group.items.map(mod => (
-              <ModuleCard key={mod.num} mod={mod} level={level} color={color} />
+              <ModuleCard key={mod.num} mod={mod} level={level} color={accentColor} />
             ))}
           </div>
         </div>
@@ -191,6 +199,27 @@ function getBadgeLabel(level: string): string {
     B2: 'Upper-Intermediate', C1: 'Advanced', C2: 'Mastery',
   };
   return labels[level.toUpperCase()] || level;
+}
+
+function getAccentColor(level: string): string {
+  const accents: Record<string, string> = {
+    a1: '#0057B8', a2: '#0057B8', b1: '#0057B8', b2: '#0057B8',
+    c1: '#0057B8', c2: '#0057B8', 'b2-pro': '#0057B8', 'c1-pro': '#0057B8',
+    folk: '#A4133C',
+    hist: '#BF360C', istorio: '#BF360C',
+    bio: '#4E342E', oes: '#4E342E', ruth: '#4E342E',
+    lit: '#4A148C', 'lit-drama': '#4A148C', 'lit-essay': '#4A148C',
+    'lit-fantastika': '#4A148C', 'lit-hist-fic': '#4A148C',
+    'lit-humor': '#4A148C', 'lit-war': '#4A148C', 'lit-youth': '#4A148C',
+  };
+  return accents[level.toLowerCase()] || '#0057B8';
+}
+
+function getHeroBackground(color: string, fallbackColor: string): string {
+  if (/^#[0-9a-f]{6}$/i.test(color)) {
+    return `linear-gradient(135deg, ${color}, ${adjustColor(color, -40)})`;
+  }
+  return color || `linear-gradient(135deg, ${fallbackColor}, ${adjustColor(fallbackColor, -40)})`;
 }
 
 function adjustColor(hex: string, amount: number): string {

@@ -3,7 +3,13 @@ import { glob } from 'astro/loaders';
 
 export const collections = {
 	docs: defineCollection({
-		loader: glob({ pattern: '{a1,a2,folk}/**/*.{md,mdx}', base: './src/content/docs' }),
+		loader: glob({
+			pattern: [
+				'{a1,a2,folk}/**/*.{md,mdx}',
+				'{b1,b2-pro,bio,c1-pro,hist,istorio,lit,lit-drama,lit-essay,lit-fantastika,lit-hist-fic,lit-humor,lit-war,lit-youth,oes,ruth}/index.{md,mdx}',
+			],
+			base: './src/content/docs',
+		}),
 		schema: z.object({
 			title: z.string(),
 			description: z.string().optional(),
