@@ -1,4 +1,6 @@
 // @ts-check
+import { realpathSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
@@ -10,6 +12,8 @@ import remarkAdmonitions from './plugins/remark-admonitions.mjs';
 import vocabEtymologyLinker from './plugins/vocab-etymology-link.mjs';
 
 const remarkPlugins = [remarkDirective, remarkAdmonitions, remarkGfm, vocabEtymologyLinker];
+const starlightRoot = fileURLToPath(new URL('.', import.meta.url));
+const starlightNodeModules = realpathSync(fileURLToPath(new URL('./node_modules', import.meta.url)));
 
 // https://astro.build/config
 export default defineConfig({
@@ -25,10 +29,15 @@ export default defineConfig({
 
   // Prevent duplicate React instances (SSR + client hydration)
   vite: {
+    server: {
+      fs: {
+        allow: [starlightRoot, starlightNodeModules],
+      },
+    },
     resolve: {
       alias: {
-        '@site': new URL('.', import.meta.url).pathname,
-        '@astrojs/starlight/components': new URL('./src/starlight-compat/index.ts', import.meta.url).pathname,
+        '@site': starlightRoot,
+        '@astrojs/starlight/components': fileURLToPath(new URL('./src/starlight-compat/index.ts', import.meta.url)),
       },
       dedupe: ['react', 'react-dom'],
     },
