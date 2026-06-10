@@ -1,0 +1,269 @@
+---
+title: "Я буду вчителькою"
+description: "Орудний відмінок для професії та стану; дієслова з орудним відмінком"
+sidebar:
+  order: 26
+  label: "26. Я буду вчителькою"
+prev: instrumental-means
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import RitualSequencing from '@site/src/components/RitualSequencing';
+import VariantComparison from '@site/src/components/VariantComparison';
+import MotifFormula from '@site/src/components/MotifFormula';
+import PerformanceActivity from '@site/src/components/PerformanceActivity';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import MythBuster from '@site/src/components/MythBuster';
+import HighCultureBridge from '@site/src/components/HighCultureBridge';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: зустріч після університету
+
+На зустрічі колишні однокурсники говорять про роботу, плани й
+інтереси. Тут орудний відмінок відповідає на питання `ким?` і `чим?`.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Наталя","text":"Привіт, Андрію! Ким ти працюєш?"},{"speaker":"Андрій","text":"Я працюю інженером. А ти?"},{"speaker":"Наталя","text":"Я вчителька. Але наступного року буду директоркою маленької школи."},{"speaker":"Андрій","text":"Справді? Вітаю! Чим ти зараз найбільше цікавишся?"},{"speaker":"Наталя","text":"Освітою і психологією. А ти?"},{"speaker":"Андрій","text":"Я захоплююся музикою і пишаюся нашою командою на роботі."}]')}
+/>
+
+У діалозі є кілька моделей:
+
+- `працюю інженером`;
+- `буду директоркою`;
+- `цікавлюся освітою`;
+- `захоплююся музикою`;
+- `пишаюся командою`.
+
+## Хто ти? Ким ти працюєш?
+
+У теперішньому часі українська часто каже просто:
+
+> Я вчителька.
+>
+> Він лікар.
+>
+> Вона програмістка.
+
+Але після `працювати`, `стати`, `бути` в минулому або майбутньому часі
+часто стоїть орудний відмінок.
+
+| Теперішній стан | Орудний після дієслова |
+| --- | --- |
+| Я вчителька. | Я працюю вчителькою. |
+| Він лікар. | Він буде лікарем. |
+| Вона програмістка. | Вона стала програмісткою. |
+| Мій брат інженер. | Мій брат працює інженером. |
+
+Це не зміна ідентичності. Це граматична модель після певних дієслів.
+
+### Називний чи орудний?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я ___.", "options": [{"text": "вчителька", "correct": true}, {"text": "вчителькою", "correct": false}, {"text": "вчительці", "correct": false}], "explanation": "У теперішньому стані часто вживаємо називний."}, {"question": "Я працюю ___.", "options": [{"text": "вчителька", "correct": false}, {"text": "вчителькою", "correct": true}, {"text": "вчительці", "correct": false}], "explanation": "Працювати ким? - вчителькою."}, {"question": "Він буде ___.", "options": [{"text": "лікар", "correct": false}, {"text": "лікарем", "correct": true}, {"text": "лікаря", "correct": false}], "explanation": "Бути в майбутньому часі потребує орудного."}, {"question": "Вона стала ___.", "options": [{"text": "інженерка", "correct": false}, {"text": "інженеркою", "correct": true}, {"text": "інженерки", "correct": false}], "explanation": "Стати ким? - інженеркою."}]`)} />
+
+## Професії в орудному
+
+Українська природно має чоловічі й жіночі назви професій. На A2 краще
+бачити обидві форми поруч.
+
+| Називний | Орудний | Приклад |
+| --- | --- | --- |
+| лікар | лікарем | Він працює лікарем. |
+| лікарка | лікаркою | Вона працює лікаркою. |
+| вчитель | вчителем | Він буде вчителем. |
+| вчителька | вчителькою | Вона буде вчителькою. |
+| інженер | інженером | Андрій став інженером. |
+| інженерка | інженеркою | Олена стала інженеркою. |
+| кухар | кухарем | Він працював кухарем. |
+| кухарка | кухаркою | Вона працювала кухаркою. |
+| журналіст | журналістом | Мій друг став журналістом. |
+| журналістка | журналісткою | Моя подруга стала журналісткою. |
+
+:::tip[Опора]
+Питання `Ким?` часто відкриває професію в орудному: `Ким ти працюєш?`
+- `Працюю інженером / вчителькою / кухарем`.
+:::
+
+### Професія і форма
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "лікар", "right": "лікарем"}, {"left": "лікарка", "right": "лікаркою"}, {"left": "інженер", "right": "інженером"}, {"left": "вчителька", "right": "вчителькою"}]`)} />
+
+## Дієслова з орудним відмінком
+
+Деякі дієслова постійно кличуть орудний відмінок.
+
+| Дієслово | Питання | Приклади |
+| --- | --- | --- |
+| захоплюватися | чим? | захоплююся музикою, спортом |
+| цікавитися | чим? | цікавлюся історією, медициною |
+| пишатися | ким? чим? | пишаюся родиною, командою |
+| займатися | чим? | займаюся спортом, йогою |
+| володіти | чим? | володію українською мовою |
+
+Форми `захоплююся`, `цікавлюся`, `пишаюся` можуть виглядати довгими.
+Не вчіть усю таблицю за один раз. Почніть з готових відповідей:
+
+> Я цікавлюся історією.
+>
+> Я захоплююся музикою.
+>
+> Я займаюся спортом.
+
+### Дієслова з орудним
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я цікавлюся ___.", "answer": "історією", "options": ["історія", "історію", "історією"]}, {"sentence": "Вона захоплюється ___.", "answer": "музикою", "options": ["музика", "музику", "музикою"]}, {"sentence": "Ми пишаємося ___.", "answer": "командою", "options": ["команда", "команду", "командою"]}, {"sentence": "Андрій займається ___.", "answer": "спортом", "options": ["спорт", "спортом", "спорту"]}]`)} />
+
+## Питання для знайомства
+
+У реальній розмові питання часто йдуть ланцюжком.
+
+| Питання | Можлива відповідь |
+| --- | --- |
+| Ким ти працюєш? | Я працюю програмісткою. |
+| Хто ти за фахом? | Я лікар. |
+| Ким ти хочеш стати? | Хочу стати журналістом. |
+| Чим ти цікавишся? | Цікавлюся психологією. |
+| Чим ти захоплюєшся? | Захоплююся фотографією. |
+
+`Хто ти за фахом?` питає про спеціальність або професійну освіту.
+`Ким ти працюєш?` питає про теперішню роботу. Іноді відповідь та сама,
+іноді ні.
+
+## Міні-практика
+
+Побудуйте три короткі відповіді за моделлю.
+
+> Я працюю ...
+>
+> Я хочу стати ...
+>
+> Я цікавлюся ...
+
+Приклади:
+
+> Я працюю вчителькою.
+>
+> Я хочу стати психологом.
+>
+> Я цікавлюся освітою.
+
+### Професія чи інтерес?
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Професія": ["працюю лікарем", "буду вчителькою", "стала журналісткою", "працював кухарем"], "Інтерес або діяльність": ["цікавлюся історією", "захоплююся музикою", "займаюся спортом", "пишаюся командою"]}`)} />
+
+## 📋 Підсумок
+
+Професія в теперішньому стані часто стоїть у називному:
+`Я лікар`, `Вона вчителька`. Але після `працювати`, `стати`, `бути`
+в минулому або майбутньому часі використовуйте орудний:
+`працюю лікарем`, `буду вчителькою`, `стала інженеркою`.
+
+Дієслова `цікавитися`, `захоплюватися`, `пишатися`, `займатися` також
+часто потребують орудного:
+
+- `цікавлюся історією`;
+- `захоплююся музикою`;
+- `пишаюся родиною`;
+- `займаюся спортом`.
+
+Самоперевірка: скажіть, ким ви працюєте або ким хочете стати, і назвіть
+дві речі, якими ви цікавитеся.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"професія","translation":"profession","pos":"noun","example":"Яка у тебе професія?","examples":["profession","Яка у тебе професія?"]},{"word":"фах","translation":"specialty, profession","pos":"noun","example":"Хто ти за фахом?","examples":["specialty, profession","Хто ти за фахом?"]},{"word":"працювати","translation":"to work","pos":"verb","example":"Я працюю інженером.","examples":["to work","Я працюю інженером."]},{"word":"стати","translation":"to become","pos":"verb","example":"Вона стала лікаркою.","examples":["to become","Вона стала лікаркою."]},{"word":"бути","translation":"to be","pos":"verb","example":"Він буде вчителем.","examples":["to be","Він буде вчителем."]},{"word":"лікар","translation":"doctor","pos":"noun","example":"Мій брат працює лікарем.","examples":["doctor","Мій брат працює лікарем."]},{"word":"лікарка","translation":"female doctor","pos":"noun","example":"Олена стала лікаркою.","examples":["female doctor","Олена стала лікаркою."]},{"word":"вчитель","translation":"male teacher","pos":"noun","example":"Він буде вчителем.","examples":["male teacher","Він буде вчителем."]},{"word":"вчителька","translation":"female teacher","pos":"noun","example":"Наталя працює вчителькою.","examples":["female teacher","Наталя працює вчителькою."]},{"word":"інженер","translation":"engineer","pos":"noun","example":"Андрій працює інженером.","examples":["engineer","Андрій працює інженером."]},{"word":"програмістка","translation":"female programmer","pos":"noun","example":"Вона стала програмісткою.","examples":["female programmer","Вона стала програмісткою."]},{"word":"цікавитися","translation":"to be interested in","pos":"verb","example":"Я цікавлюся історією.","examples":["to be interested in","Я цікавлюся історією."]},{"word":"захоплюватися","translation":"to be passionate about","pos":"verb","example":"Він захоплюється музикою.","examples":["to be passionate about","Він захоплюється музикою."]},{"word":"пишатися","translation":"to be proud of","pos":"verb","example":"Ми пишаємося командою.","examples":["to be proud of","Ми пишаємося командою."]},{"word":"займатися","translation":"to do, to be engaged in","pos":"verb","example":"Вона займається спортом.","examples":["to do, to be engaged in","Вона займається спортом."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"професія","back":"profession"},{"front":"фах","back":"specialty, profession"},{"front":"працювати","back":"to work"},{"front":"стати","back":"to become"},{"front":"бути","back":"to be"},{"front":"лікар","back":"doctor"},{"front":"лікарка","back":"female doctor"},{"front":"вчитель","back":"male teacher"},{"front":"вчителька","back":"female teacher"},{"front":"інженер","back":"engineer"},{"front":"програмістка","back":"female programmer"},{"front":"цікавитися","back":"to be interested in"},{"front":"захоплюватися","back":"to be passionate about"},{"front":"пишатися","back":"to be proud of"},{"front":"займатися","back":"to do, to be engaged in"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Називний чи орудний?
+
+*(див. урок, §Хто ти? Ким ти працюєш?)*
+
+### Професія і форма
+
+*(див. урок, §Професії в орудному)*
+
+### Дієслова з орудним
+
+*(див. урок, §Дієслова з орудним відмінком)*
+
+### Професія чи інтерес?
+
+*(див. урок, §Міні-практика)*
+
+### Кар'єрна перевірка
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я працюю інженером.", "isTrue": true, "explanation": "Працювати ким? - інженером."}, {"statement": "Вона буде лікарка.", "isTrue": false, "explanation": "Потрібно буде лікаркою."}, {"statement": "Я цікавлюся освітою.", "isTrue": true, "explanation": "Цікавитися чим? - освітою."}, {"statement": "Він захоплюється музика.", "isTrue": false, "explanation": "Потрібно музикою."}]`)} />
+
+### Виправте професію
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильний варіант." items={JSON.parse(`[{"sentence": "Наталя працює вчителька.", "errorWord": "вчителька", "correctForm": "Наталя працює вчителькою.", "options": ["Наталя працює вчителькою.", "Наталя працює вчителька."], "explanation": "Працювати ким? - вчителькою."}, {"sentence": "Андрій цікавиться історія.", "errorWord": "історія", "correctForm": "Андрій цікавиться історією.", "options": ["Андрій цікавиться історією.", "Андрій цікавиться історія."], "explanation": "Цікавитися чим? - історією."}, {"sentence": "Вона стала журналістка.", "errorWord": "журналістка", "correctForm": "Вона стала журналісткою.", "options": ["Вона стала журналісткою.", "Вона стала журналістка."], "explanation": "Стати ким? - журналісткою."}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Dobra Forma 10-3: Instrumental with працювати, бути, стати](https://opentext.ku.edu/dobraforma/chapter/10-3/) — Focused practice for professions and instrumental after key verbs.
+- 📄 [ULP 5 Minute Ukrainian: How to talk about your job / occupation](https://www.ukrainianlessons.com/fmu31/) — Learner-facing work and occupation phrases for conversation practice.
+- 📄 [ULP 5 Minute Ukrainian: Professions in Ukrainian](https://www.ukrainianlessons.com/fmu34/) — Catalogued professions vocabulary with masculine and feminine forms.
+
+**🎧 Аудіо:**
+- 🎧 [ULP 1-62: New Year's Eve in Ukraine + Instrumental case of Pronouns](https://www.ukrainianlessons.com/episode62/) — Learner-facing instrumental episode that reinforces pronoun and case forms.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

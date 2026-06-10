@@ -1,0 +1,139 @@
+inline:
+  - id: act-1
+    type: match-up
+    title: З ким? З чим?
+    instruction: З'єднайте питання з природною відповіддю.
+    pairs:
+      - left: З ким ти йдеш?
+        right: з Олегом
+      - left: З ким вона живе?
+        right: із сестрою
+      - left: Чай з чим?
+        right: з лимоном
+      - left: Борщ з чим?
+        right: зі сметаною
+  - id: act-2
+    type: quiz
+    title: З, із чи зі
+    instruction: Оберіть форму прийменника, яка звучить природно.
+    items:
+      - question: "___ другом"
+        options:
+          - з
+          - із
+          - зі
+        correct: 0
+        explanation: З другом - проста вимова.
+      - question: "___ сестрою"
+        options:
+          - з
+          - із
+          - зі
+        correct: 1
+        explanation: Із сестрою допомагає уникнути важкого збігу.
+      - question: "___ сметаною"
+        options:
+          - з
+          - із
+          - зі
+        correct: 2
+        explanation: Зі часто з'являється перед с-.
+      - question: "___ молоком"
+        options:
+          - з
+          - із
+          - зі
+        correct: 0
+        explanation: З молоком - природна базова форма.
+  - id: act-3
+    type: fill-in
+    title: Форма після з
+    instruction: Оберіть правильну форму орудного відмінка.
+    items:
+      - sentence: "Я гуляю з ___."
+        answer: другом
+        options:
+          - друг
+          - другом
+          - друга
+        explanation: З ким? - з другом.
+      - sentence: "Вона прийде із ___."
+        answer: сестрою
+        options:
+          - сестра
+          - сестру
+          - сестрою
+        explanation: Із ким? - із сестрою.
+      - sentence: "Мені чай з ___."
+        answer: лимоном
+        options:
+          - лимон
+          - лимоном
+          - лимона
+        explanation: З чим? - з лимоном.
+      - sentence: "Борщ зі ___."
+        answer: сметаною
+        options:
+          - сметана
+          - сметану
+          - сметаною
+        explanation: Зі чим? - зі сметаною.
+  - id: act-4
+    type: group-sort
+    title: Супровід чи інгредієнт?
+    instruction: Розсортуйте фрази за значенням.
+    groups:
+      - label: Супровід
+        items:
+          - з другом
+          - із сестрою
+          - з Олегом
+          - з мамою
+      - label: Інгредієнт
+        items:
+          - з лимоном
+          - з молоком
+          - з маслом
+          - зі сметаною
+workbook:
+  - type: true-false
+    title: Швидка перевірка
+    instruction: Позначте, чи фраза правильна.
+    items:
+      - statement: "Я йду з другом."
+        correct: true
+        explanation: Друг стоїть в орудному відмінку.
+      - statement: "Кава з молоко."
+        correct: false
+        explanation: Потрібно кава з молоком.
+      - statement: "Борщ зі сметаною."
+        correct: true
+        explanation: Зі сметаною звучить природно.
+      - statement: "Вона прийде з сестра."
+        correct: false
+        explanation: Потрібно із сестрою або з сестрою.
+  - type: error-correction
+    title: Виправте форму
+    instruction: Оберіть правильне речення.
+    items:
+      - sentence: "Я говорю з Олег."
+        error: Олег
+        correction: "Я говорю з Олегом."
+        options:
+          - "Я говорю з Олегом."
+          - "Я говорю з Олег."
+        explanation: Ім'я Олег отримує форму Олегом.
+      - sentence: "Мені чай з лимон."
+        error: лимон
+        correction: "Мені чай з лимоном."
+        options:
+          - "Мені чай з лимоном."
+          - "Мені чай з лимон."
+        explanation: З чим? - з лимоном.
+      - sentence: "Вона живе із сестра."
+        error: сестра
+        correction: "Вона живе із сестрою."
+        options:
+          - "Вона живе із сестрою."
+          - "Вона живе із сестра."
+        explanation: Із ким? - із сестрою.
