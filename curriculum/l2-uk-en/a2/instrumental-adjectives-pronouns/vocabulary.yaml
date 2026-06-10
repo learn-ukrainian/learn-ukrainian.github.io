@@ -1,0 +1,94 @@
+- word: прикметник
+  translation: adjective
+  pos: noun
+  gender: m
+  example: "Гарний - це прикметник."
+- word: займенник
+  translation: pronoun
+  pos: noun
+  gender: m
+  example: "Мій - це займенник."
+- word: присвійний
+  translation: possessive
+  pos: adjective
+  example: "Мій - присвійний займенник."
+- word: вказівний
+  translation: demonstrative
+  pos: adjective
+  example: "Цей - вказівний займенник."
+- word: узгодження
+  translation: agreement
+  pos: noun
+  gender: n
+  example: "Узгодження показує рід і відмінок."
+- word: мій
+  translation: my
+  pos: pronoun
+  example: "Я говорю з моїм братом."
+- word: твій
+  translation: your, informal
+  pos: pronoun
+  example: "Вона говорить з твоєю сестрою."
+- word: наш
+  translation: our
+  pos: pronoun
+  example: "Ми їдемо нашим автобусом."
+- word: ваш
+  translation: your, formal or plural
+  pos: pronoun
+  example: "Це за вашим будинком?"
+- word: цей
+  translation: this
+  pos: pronoun
+  example: "Я їду цим автобусом."
+- word: той
+  translation: that
+  pos: pronoun
+  example: "Ми сидимо за тим столом."
+- word: новий
+  translation: new
+  pos: adjective
+  example: "Я їду новим автобусом."
+- word: старий
+  translation: old
+  pos: adjective
+  example: "За старим будинком є парк."
+- word: великий
+  translation: big, large
+  pos: adjective
+  example: "Книга під великою лампою."
+- word: гарний
+  translation: nice, beautiful
+  pos: adjective
+  example: "Я гуляю з гарним другом."
+- word: найкращий
+  translation: best
+  pos: adjective
+  example: "Я говорю з моїм найкращим другом."
+- word: домашній
+  translation: home, domestic
+  pos: adjective
+  example: "Я займаюся домашнім завданням."
+- word: синій
+  translation: blue
+  pos: adjective
+  example: "Вона пише синім олівцем."
+- word: сусід
+  translation: male neighbor
+  pos: noun
+  gender: m
+  example: "Я говорю з новим сусідом."
+- word: сусідка
+  translation: female neighbor
+  pos: noun
+  gender: f
+  example: "Він говорить з новою сусідкою."
+- word: ялинка
+  translation: fir tree
+  pos: noun
+  gender: f
+  example: "Подарунок під великою ялинкою."
+- word: тим часом
+  translation: meanwhile
+  pos: phrase
+  example: "Тим часом ми готуємо вечерю."
