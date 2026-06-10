@@ -1,0 +1,186 @@
+inline:
+  - id: act-1
+    type: quiz
+    title: Слово кількості
+    instruction: Оберіть форму після слова кількості.
+    items:
+      - question: "багато ___"
+        options:
+          - книг
+          - книги
+          - книгам
+        correct: 0
+        explanation: Після багато потрібен родовий множини.
+      - question: "скільки ___?"
+        options:
+          - студентів
+          - студенти
+          - студентами
+        correct: 0
+        explanation: Скільки студентів? - родовий множини.
+      - question: "немає ___"
+        options:
+          - місця
+          - місць
+          - місцями
+        correct: 1
+        explanation: Немає місць - форма родового множини.
+      - question: "п'ять ___"
+        options:
+          - гривень
+          - гривні
+          - гривнями
+        correct: 0
+        explanation: Після п'ять потрібен родовий множини.
+  - id: act-2
+    type: match-up
+    title: Початкова форма і родовий множини
+    instruction: З'єднайте називний однини з родовим множини.
+    pairs:
+      - left: книга
+        right: книг
+      - left: ложка
+        right: ложок
+      - left: сестра
+        right: сестер
+      - left: пісня
+        right: пісень
+      - left: сім'я
+        right: сімей
+  - id: act-3
+    type: fill-in
+    title: Скільки в їдальні?
+    instruction: Оберіть правильну форму родового множини.
+    items:
+      - sentence: "У нас немає чистих ___."
+        answer: склянок
+        options:
+          - склянки
+          - склянок
+          - склянками
+        explanation: Немає склянок - родовий множини.
+      - sentence: "На столі десять ___."
+        answer: ложок
+        options:
+          - ложки
+          - ложок
+          - ложкам
+        explanation: Десять ложок - родовий множини.
+      - sentence: "Потрібно кілька нових ___."
+        answer: ножів
+        options:
+          - ножі
+          - ножів
+          - ножами
+        explanation: Кілька ножів - родовий множини.
+      - sentence: "У класі багато ___."
+        answer: студентів
+        options:
+          - студенти
+          - студентів
+          - студентам
+        explanation: Багато студентів - родовий множини.
+  - id: act-4
+    type: true-false
+    title: Природно чи ні?
+    instruction: Визначте, чи правильна форма родового множини.
+    items:
+      - statement: "багато книг"
+        correct: true
+        explanation: Книга - книг.
+      - statement: "п'ять столів"
+        correct: true
+        explanation: Стіл - столів.
+      - statement: "немає містів"
+        correct: false
+        explanation: Місто - міст.
+      - statement: "кілька дітей"
+        correct: true
+        explanation: Дитина - діти, родовий множини дітей.
+workbook:
+  - type: group-sort
+    title: Яка модель?
+    instruction: Розсортуйте форми за моделлю родового множини.
+    groups:
+      - label: Коротка форма
+        items:
+          - книг
+          - міст
+          - вікон
+          - слів
+      - label: -ів / -їв
+        items:
+          - студентів
+          - столів
+          - ножів
+          - олівців
+      - label: -ей
+        items:
+          - гостей
+          - коней
+          - сімей
+          - статей
+  - type: error-correction
+    title: Виправте кількість
+    instruction: Оберіть правильну фразу.
+    items:
+      - sentence: "багато книгів"
+        error: книгів
+        correction: "багато книг"
+        options:
+          - "багато книг"
+          - "багато книгів"
+        explanation: Книга має коротку форму книг.
+      - sentence: "п'ять студенти"
+        error: студенти
+        correction: "п'ять студентів"
+        options:
+          - "п'ять студентів"
+          - "п'ять студенти"
+        explanation: Після п'ять потрібен родовий множини.
+      - sentence: "немає склянки"
+        error: склянки
+        correction: "немає склянок"
+        options:
+          - "немає склянок"
+          - "немає склянки"
+        explanation: Тут множина, тому склянок.
+      - sentence: "десять містів"
+        error: містів
+        correction: "десять міст"
+        options:
+          - "десять міст"
+          - "десять містів"
+        explanation: Місто має форму міст.
+  - type: fill-in
+    title: Мій список
+    instruction: Доповніть речення правильною формою.
+    items:
+      - sentence: "У мене багато (книга) ___."
+        answer: книг
+        options:
+          - книг
+          - книги
+          - книгам
+        explanation: Багато книг.
+      - sentence: "На столі п'ять (яблуко) ___."
+        answer: яблук
+        options:
+          - яблука
+          - яблук
+          - яблуками
+        explanation: П'ять яблук.
+      - sentence: "У сумці немає (квиток) ___."
+        answer: квитків
+        options:
+          - квитки
+          - квитків
+          - квитками
+        explanation: Немає квитків.
+      - sentence: "Після уроку кілька (питання) ___."
+        answer: питань
+        options:
+          - питання
+          - питань
+          - питаннями
+        explanation: Кілька питань.

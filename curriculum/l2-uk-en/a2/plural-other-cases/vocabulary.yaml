@@ -1,0 +1,80 @@
+- word: давальний відмінок
+  translation: dative case
+  pos: phrase
+  example: "Давальний відповідає на питання кому?"
+- word: орудний відмінок
+  translation: instrumental case
+  pos: phrase
+  example: "Орудний відповідає на питання ким? чим?"
+- word: місцевий відмінок
+  translation: locative case
+  pos: phrase
+  example: "Місцевий часто стоїть після у, в або на."
+- word: кому
+  translation: to whom
+  pos: pron
+  example: "Кому ти телефонуєш?"
+- word: з ким
+  translation: with whom
+  pos: phrase
+  example: "З ким ти подорожуєш?"
+- word: чим
+  translation: with what, by what
+  pos: pron
+  example: "Чим ви їдете?"
+- word: де
+  translation: where
+  pos: adv
+  example: "Де лежать книги?"
+- word: допомагати
+  translation: to help
+  pos: verb
+  example: "Ми допомагаємо дітям."
+- word: дякувати
+  translation: to thank
+  pos: verb
+  example: "Студенти дякують учителям."
+- word: пояснювати
+  translation: to explain
+  pos: verb
+  example: "Учитель пояснює правила групам."
+- word: подарунок
+  translation: gift
+  pos: noun
+  gender: m
+  example: "Ми даємо подарунки друзям."
+- word: квіти
+  translation: flowers
+  pos: noun
+  gender: pl
+  example: "Кімнату прикрасили квітами."
+- word: діти
+  translation: children
+  pos: noun
+  gender: pl
+  example: "Ми подорожуємо з дітьми."
+- word: люди
+  translation: people
+  pos: noun
+  gender: pl
+  example: "Вона працює з людьми."
+- word: заняття
+  translation: class, lesson
+  pos: noun
+  gender: n
+  example: "На заняттях ми багато говоримо."
+- word: полиця
+  translation: shelf
+  pos: noun
+  gender: f
+  example: "Книги лежать на полицях."
+- word: автобус
+  translation: bus
+  pos: noun
+  gender: m
+  example: "Ми їдемо автобусами."
+- word: готель
+  translation: hotel
+  pos: noun
+  gender: m
+  example: "Туристи живуть у готелях."

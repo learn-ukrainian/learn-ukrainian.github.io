@@ -1,0 +1,25 @@
+- title: "Dobra Forma 6-1: Genitive with Expressions of Quantity (Masculine Plural)"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-020"
+  url: "https://opentext.ku.edu/dobraforma/chapter/6-1/"
+  notes: "Open textbook practice for masculine genitive plural after quantity expressions."
+- title: "Dobra Forma 6-2: Genitive with Expressions of Quantity (Feminine and Neuter Plural)"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-021"
+  url: "https://opentext.ku.edu/dobraforma/chapter/6-2/"
+  notes: "Focused practice for common feminine and neuter genitive plural patterns."
+- title: "Dobra Forma 6-3: Genitive with Expressions of Quantity (Exceptions)"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-022"
+  url: "https://opentext.ku.edu/dobraforma/chapter/6-3/"
+  notes: "Learner-facing practice with common exception groups."
+- title: "ULP: Nouns After Numbers"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /nouns-after-numbers/"
+  url: "https://www.ukrainianlessons.com/nouns-after-numbers/"
+  notes: "Useful review for quantity expressions and noun forms after numerals."
+- title: "ULP: Genitive Case"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /genitive-case/"
+  url: "https://www.ukrainianlessons.com/genitive-case/"
+  notes: "Broad genitive-case reference for self-review after the lesson."

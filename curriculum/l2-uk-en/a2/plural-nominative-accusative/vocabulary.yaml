@@ -1,0 +1,86 @@
+- word: множина
+  translation: plural
+  pos: noun
+  gender: f
+  example: "Множина слова друг - друзі."
+- word: називний відмінок
+  translation: nominative case
+  pos: phrase
+  example: "Називний відмінок називає підмет."
+- word: знахідний відмінок
+  translation: accusative case
+  pos: phrase
+  example: "Після бачу часто стоїть знахідний відмінок."
+- word: істота
+  translation: animate being
+  pos: noun
+  gender: f
+  example: "Людина - це істота."
+- word: неістота
+  translation: inanimate thing
+  pos: noun
+  gender: f
+  example: "Книга - це неістота."
+- word: підмет
+  translation: subject
+  pos: noun
+  gender: m
+  example: "У реченні Діти грають слово діти - підмет."
+- word: прямий додаток
+  translation: direct object
+  pos: phrase
+  example: "У реченні Я бачу дітей слово дітей - прямий додаток."
+- word: закінчення
+  translation: ending
+  pos: noun
+  gender: n
+  example: "Закінчення показує число і відмінок."
+- word: лев
+  translation: lion
+  pos: noun
+  gender: m
+  example: "У зоопарку є леви."
+- word: жираф
+  translation: giraffe
+  pos: noun
+  gender: m
+  example: "Я бачу жирафів."
+- word: мавпа
+  translation: monkey
+  pos: noun
+  gender: f
+  example: "Мавпи сидять біля дерева."
+- word: пінгвін
+  translation: penguin
+  pos: noun
+  gender: m
+  example: "Діти фотографують пінгвінів."
+- word: люди
+  translation: people
+  pos: noun
+  gender: pl
+  example: "У парку багато людей."
+- word: діти
+  translation: children
+  pos: noun
+  gender: pl
+  example: "Діти грають у парку."
+- word: речі
+  translation: things
+  pos: noun
+  gender: pl
+  example: "На столі лежать мої речі."
+- word: очі
+  translation: eyes
+  pos: noun
+  gender: pl
+  example: "У неї зелені очі."
+- word: вуха
+  translation: ears
+  pos: noun
+  gender: pl
+  example: "У зайця довгі вуха."
+- word: фотографувати
+  translation: to photograph
+  pos: verb
+  example: "Ми фотографуємо квіти."
