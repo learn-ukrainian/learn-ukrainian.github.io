@@ -1,4 +1,4 @@
-# Many Things
+# Багато речей
 
 Ukrainian does not add one universal ending for "more than one." You learn a
 few useful plural shapes, then keep each new noun together with its plural
@@ -221,7 +221,7 @@ Then add pointing words from the last module:
 - **Ті стільці старі.**
 - **Мої ручки сині.**
 
-### With numbers
+### З числами
 
 You already met the number pattern in prices and ages. Here it helps with
 classroom objects.
@@ -284,7 +284,7 @@ Third, combine plural helpers:
 - **мої сині зошити**
 - **які червоні ручки?**
 
-### Repair traps
+### Виправ пастки
 
 Use these repairs when English tries to keep Ukrainian too simple:
 
@@ -299,7 +299,7 @@ Use these repairs when English tries to keep Ukrainian too simple:
 | **для ми** | **для нас** | Pronouns change in chunks |
 | **з ми** | **з нами** | After **з**, use **нами** |
 
-### Mini room check
+### Мініперевірка: кімната
 
 Look around your desk or room. Make six tiny plural sentences:
 

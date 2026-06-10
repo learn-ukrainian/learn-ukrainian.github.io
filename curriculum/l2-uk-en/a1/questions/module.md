@@ -1,4 +1,4 @@
-# Questions
+# Питання
 
 Questions turn the verbs from the last lessons into real conversation. You can
 ask who, what, where, where to, when, why, and how without changing the whole
@@ -197,7 +197,7 @@ If the sentence is yes/no, make sure the written question mark is there and say
 it with rising intonation. If the sentence is negative, find the verb and put
 **не** right before it.
 
-### Repair traps
+### Виправ пастки
 
 | Avoid | Use | Why |
 | --- | --- | --- |

@@ -2,7 +2,7 @@
 inline:
   - id: act-1
     type: quiz
-    title: Checkpoint warm-up
+    title: Розігрів перед підсумком
     instruction: Choose the safe Ukrainian line.
     items:
       - prompt: My name is John.
@@ -43,7 +43,7 @@ inline:
         explanation: Окуляри is plural-only.
   - id: act-2
     type: match-up
-    title: Gender and control words
+    title: Рід і слова-підказки
     instruction: Match each noun with the control word.
     pairs:
       - left: стіл
@@ -64,7 +64,7 @@ inline:
         right: він
   - id: act-3
     type: fill-in
-    title: Marketplace dialogue
+    title: Діалог на ринку
     instruction: Complete the checkpoint dialogue.
     items:
       - sentence: ___ вишиванка біла.
@@ -111,7 +111,7 @@ inline:
         explanation: Сто гривень is the price chunk.
   - id: act-4
     type: group-sort
-    title: Review categories
+    title: Категорії повторення
     instruction: Sort the words by checkpoint category.
     groups:
       - name: Objects
@@ -134,7 +134,7 @@ inline:
           - гривень
 workbook:
   - type: quiz
-    title: Singular, plural, and description
+    title: Однина, множина й опис
     instruction: Choose the sentence that matches the noun.
     items:
       - prompt: стіл
@@ -174,7 +174,7 @@ workbook:
             correct: false
         explanation: Книги is plural.
   - type: quiz
-    title: Repair checkpoint traps
+    title: Виправ підсумкові пастки
     instruction: Choose the corrected Ukrainian sentence.
     items:
       - prompt: Я є студент.
@@ -232,7 +232,7 @@ workbook:
             correct: false
         explanation: Age uses Мені ... років.
   - type: fill-in
-    title: Write your checkpoint text
+    title: Напиши підсумковий текст
     instruction: Complete a short personal description.
     items:
       - sentence: Мене ___ Анна.
@@ -278,7 +278,7 @@ workbook:
           - рік
         explanation: Use the learned age chunk.
   - type: quiz
-    title: Ukrainian cultural frame
+    title: Український культурний контекст
     instruction: Choose the learner-safe course form.
     items:
       - prompt: The national flag colors

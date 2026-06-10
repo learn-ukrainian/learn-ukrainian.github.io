@@ -1,4 +1,4 @@
-# I Want, I Can
+# Я хочу, я можу
 
 You already know simple present-tense verbs. This lesson adds three helper
 verbs for everyday plans: **хотіти** "to want," **могти** "can / be able," and
@@ -262,7 +262,7 @@ Recognition-only pronunciation note: words ending in **-ться** are pronounce
 with **[ц':а]**. A textbook example writes **сміється** and shows
 **[см’ійец:а]**. You do not need to produce this pattern today.
 
-### Repair traps
+### Виправ пастки
 
 | Avoid | Use | Why |
 | --- | --- | --- |

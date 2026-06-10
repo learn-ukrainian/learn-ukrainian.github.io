@@ -2,7 +2,7 @@
 inline:
   - id: act-1
     type: quiz
-    title: Choose the safe modal line
+    title: Обери правильний модальний рядок
     instruction: Choose the Ukrainian line that fits each situation.
     items:
       - prompt: You want to read, not say that you are reading now.
@@ -34,7 +34,7 @@ inline:
         explanation: Learn я мушу plus an infinitive.
   - id: act-2
     type: order
-    title: Build tonight's plan
+    title: Склади план на вечір
     instruction: Put the short exchange in a natural order.
     items:
       - Ти хочеш піти в кіно?
@@ -52,7 +52,7 @@ inline:
       - 5
   - id: act-3
     type: fill-in
-    title: Хотіти forms
+    title: Форми хотіти
     instruction: Choose the form of хотіти that fits the person.
     items:
       - sentence: Я ___ читати.
@@ -99,7 +99,7 @@ inline:
         explanation: Вони хочуть.
   - id: act-4
     type: unjumble
-    title: Put the helper before the action
+    title: Постав дієслово-помічник перед дією
     instruction: Rebuild each sentence with the helper verb before the infinitive.
     items:
       - words:
@@ -134,7 +134,7 @@ inline:
         answer: Вони можуть гуляти
 workbook:
   - type: true-false
-    title: Modal job check
+    title: Перевір роль модального дієслова
     instruction: Decide whether each statement is safe for this lesson.
     items:
       - statement: After хочу, use an infinitive in Я хочу читати.
@@ -150,7 +150,7 @@ workbook:
         answer: true
         explanation: Use this chunk before practicing blunt wants in service speech.
   - type: translate
-    title: Café politeness
+    title: Ввічливість у кав'ярні
     instruction: Choose the polite Ukrainian café line.
     items:
       - source: Ask for coffee politely.
@@ -181,7 +181,7 @@ workbook:
             correct: false
         explanation: Тоді ще борщ, будь ласка is a natural A1 order chunk.
   - type: match-up
-    title: Situation to line
+    title: Ситуація → рядок
     instruction: Match each English situation to the Ukrainian line.
     pairs:
       - left: You want to go tomorrow.
@@ -195,7 +195,7 @@ workbook:
       - left: You ask for coffee politely.
         right: Можна мені, будь ласка, каву?
   - type: error-correction
-    title: Repair modal-verb traps
+    title: Виправ пастки модальних дієслів
     instruction: Choose the standard Ukrainian repair.
     anchor_id: repair-traps
     items:

@@ -1,4 +1,4 @@
-# Checkpoint: My World
+# Підсумок: Мій світ
 
 This checkpoint ties together the A1.2 world: things, gender, descriptions,
 colors, numbers, pointing words, and simple plurals. Nothing here needs a new
@@ -264,7 +264,7 @@ Support after the Ukrainian lines:
 | **Ці книги нові.** | These books are new. |
 | **Мені 20 років.** | I am 20 years old. |
 
-### Repair traps
+### Виправ пастки
 
 Keep these repairs close:
 
