@@ -2,7 +2,7 @@ inline:
   - id: act-1
     type: quiz
     title: Чотири знайомі відмінки
-    instruction: Choose the case that explains the highlighted A1 sentence.
+    instruction: Оберіть відмінок, який пояснює речення з А1.
     items:
       - prompt: "Я студентка."
         options:
@@ -12,7 +12,7 @@ inline:
             correct: false
           - text: "кличний: звертання"
             correct: false
-        explanation: Студентка names who the person is, so it is nominative.
+        explanation: Студентка називає, хто це, тому це називний.
       - prompt: "Я вивчаю українську мову."
         options:
           - text: "знахідний: що?"
@@ -21,7 +21,7 @@ inline:
             correct: false
           - text: "кличний: звертання"
             correct: false
-        explanation: Українську мову is the object of вивчаю.
+        explanation: Українську мову - це те, що я вивчаю.
       - prompt: "Ми в школі."
         options:
           - text: "місцевий: де?"
@@ -30,7 +30,7 @@ inline:
             correct: false
           - text: "орудний: чим?"
             correct: false
-        explanation: В школі answers where the people are.
+        explanation: В школі відповідає на питання де?
       - prompt: "Олено, повторіть, будь ласка."
         options:
           - text: "кличний: звертання"
@@ -39,7 +39,7 @@ inline:
             correct: false
           - text: "давальний: кому?"
             correct: false
-        explanation: Олено is a direct address to the person.
+        explanation: Олено - це пряме звертання до людини.
       - prompt: "Подруга телефонує."
         options:
           - text: "називний: хто телефонує?"
@@ -48,7 +48,7 @@ inline:
             correct: false
           - text: "місцевий: де?"
             correct: false
-        explanation: Подруга is the person doing the action.
+        explanation: Подруга - це людина, яка виконує дію.
       - prompt: "Я купую квиток."
         options:
           - text: "знахідний: що купую?"
@@ -57,7 +57,7 @@ inline:
             correct: false
           - text: "місцевий: де?"
             correct: false
-        explanation: Квиток is what I am buying.
+        explanation: Квиток - це те, що я купую.
       - prompt: "Пане Андрію, можна запитання?"
         options:
           - text: "кличний: ввічливе звертання"
@@ -66,7 +66,7 @@ inline:
             correct: false
           - text: "родовий: кого?"
             correct: false
-        explanation: Пане Андрію is the person being addressed.
+        explanation: Пане Андрію - це ввічливе звертання.
       - prompt: "Кава на столі."
         options:
           - text: "місцевий: де?"
@@ -75,11 +75,11 @@ inline:
             correct: false
           - text: "давальний: кому?"
             correct: false
-        explanation: На столі tells where the coffee is.
+        explanation: На столі показує, де кава.
   - id: act-2
     type: match-up
     title: Впізнай змінену основу
-    instruction: Match each changed form with the word it belongs to.
+    instruction: З'єднайте змінену форму зі словом, до якого вона належить.
     pairs:
       - left: "стола"
         right: "стіл"
@@ -100,7 +100,7 @@ inline:
   - id: act-3
     type: fill-in
     title: У, в, і, й
-    instruction: Choose the smoother short word.
+    instruction: Оберіть коротке слово, яке звучить плавніше.
     items:
       - sentence: "Тарас ___ школі."
         answer: "у"
@@ -108,60 +108,60 @@ inline:
           - "у"
           - "в"
           - "й"
-        explanation: After the consonant in Тарас before шк, у is smoother.
+        explanation: Після приголосного в слові Тарас перед шк плавніше звучить у.
       - sentence: "Олена ___ школі."
         answer: "в"
         options:
           - "в"
           - "у"
           - "і"
-        explanation: After the vowel in Олена before школі, в is natural.
+        explanation: Після голосного в слові Олена перед школі природно звучить в.
       - sentence: "Я працюю ___ офісі."
         answer: "в"
         options:
           - "в"
           - "у"
           - "із"
-        explanation: Before the vowel at the start of офісі, в is smooth.
+        explanation: Перед голосним на початку слова офісі плавно звучить в.
       - sentence: "Сестра ___ Львові."
         answer: "у"
         options:
           - "у"
           - "в"
           - "зі"
-        explanation: У Львові avoids the heavy cluster в льв.
+        explanation: У Львові допомагає уникнути важкого збігу в льв.
       - sentence: "Брат ___ сестра вдома."
         answer: "і"
         options:
           - "і"
           - "й"
           - "в"
-        explanation: Between consonants, і is smoother than й.
+        explanation: Між приголосними і звучить плавніше, ніж й.
       - sentence: "Мама ___ тато на кухні."
         answer: "й"
         options:
           - "й"
           - "і"
           - "у"
-        explanation: After the vowel in мама before тато, й is smooth.
+        explanation: Після голосного в слові мама перед тато плавно звучить й.
       - sentence: "Марія ___ Яна в кафе."
         answer: "і"
         options:
           - "і"
           - "й"
           - "в"
-        explanation: Before Яна, і is safer because я already starts with a й-sound.
+        explanation: Перед Яна безпечніше і, бо я вже має й-подібний початок.
       - sentence: "Я ___ Києва."
         answer: "із"
         options:
           - "із"
           - "зі"
           - "й"
-        explanation: Із Києва is a smooth source phrase.
+        explanation: Із Києва - плавна фраза для походження або руху звідкись.
   - id: act-4
     type: group-sort
     title: Карта А2
-    instruction: Sort each phrase into the A2 road it belongs to.
+    instruction: Розподіліть фрази за дорогою А2, до якої вони належать.
     groups:
       - name: "відмінки"
         items:
@@ -189,30 +189,30 @@ inline:
           - "закінчення"
 workbook:
   - type: true-false
-    title: A2 bridge checks
-    instruction: Decide whether the statement fits this opening A2 module.
+    title: Перевірка старту А2
+    instruction: Визначте, чи підходить твердження до першого модуля А2.
     items:
-      - statement: "Називний often names who or what the sentence is about."
+      - statement: "Називний часто називає, хто або що є в реченні."
         answer: true
-        explanation: Називний answers хто? or що? in simple A1 sentences.
-      - statement: "Кличний is only for grammar tables, not real conversation."
+        explanation: У простих реченнях називний відповідає на хто? або що?
+      - statement: "Кличний потрібен тільки для таблиць, а не для живої розмови."
         answer: false
-        explanation: "Кличний is used in direct address: Олено, Марку, пане Андрію."
-      - statement: "У and в have the same basic meaning in place phrases, but the sound context can change the form."
+        explanation: "Кличний працює в прямому звертанні: Олено, Марку, пане Андрію."
+      - statement: "У і в мають близьке значення в місцевих фразах, але звук поруч може змінити вибір."
         answer: true
-        explanation: Тарас у школі and Олена в школі show sound-based choice.
-      - statement: "A2 requires full B1-level mastery of aspect in module 1."
+        explanation: Тарас у школі й Олена в школі показують вибір за звучанням.
+      - statement: "У першому модулі А2 треба повністю володіти видом на рівні B1."
         answer: false
-        explanation: Module 1 only previews the idea of process and result.
-      - statement: "Recognizing Києва as a form of Київ is an A2 skill."
+        explanation: Перший модуль тільки готує ідею процесу й результату.
+      - statement: "Впізнати Києва як форму слова Київ - це корисна навичка А2."
         answer: true
-        explanation: Recognition of changed stems helps learners read and listen.
-      - statement: "The late A2 metalanguage modules prepare learners for more Ukrainian-led B1 lessons."
+        explanation: Впізнавання зміненої основи допомагає читати й слухати.
+      - statement: "Пізніші модулі А2 про граматичні слова готують до більш українськомовного B1."
         answer: true
-        explanation: Terms like відмінок, дієслово, основа, and закінчення build autonomy.
+        explanation: Терміни відмінок, дієслово, основа й закінчення будують автономію.
   - type: error-correction
-    title: Smooth the A2 starter lines
-    instruction: Choose the more natural repair.
+    title: Зробіть стартові фрази плавнішими
+    instruction: Оберіть природніше виправлення.
     items:
       - sentence: "Тарас в школі."
         error: "в школі"
@@ -220,38 +220,38 @@ workbook:
         options:
           - "Тарас у школі."
           - "Тарас й школі."
-        explanation: After a consonant before шк, use у.
+        explanation: Після приголосного перед шк краще звучить у.
       - sentence: "Брат й сестра вдома."
         error: "й сестра"
         correction: "Брат і сестра вдома."
         options:
           - "Брат і сестра вдома."
           - "Брат в сестра вдома."
-        explanation: Between consonants, і is smoother.
+        explanation: Між приголосними плавніше звучить і.
       - sentence: "Олена у школі."
         error: "у школі"
         correction: "Олена в школі."
         options:
           - "Олена в школі."
           - "Олена й школі."
-        explanation: After a vowel before школі, в is natural.
+        explanation: Після голосного перед школі природно звучить в.
       - sentence: "Марія й Яна в кафе."
         error: "й Яна"
         correction: "Марія і Яна в кафе."
         options:
           - "Марія і Яна в кафе."
           - "Марія в Яна в кафе."
-        explanation: Before Яна, keep і because я begins with a й-sound.
+        explanation: Перед Яна залишаємо і, бо я вже має й-подібний початок.
       - sentence: "Я не знаю слово Києва."
         error: "не впізнано Київ"
         correction: "Києва - це форма слова Київ."
         options:
           - "Києва - це форма слова Київ."
           - "Києва - це окреме місто."
-        explanation: A2 learners should recognize changed forms of familiar words.
+        explanation: На А2 важливо впізнавати змінені форми знайомих слів.
   - type: match-up
-    title: Question to case
-    instruction: Match the question with the case name.
+    title: Питання до відмінка
+    instruction: З'єднайте питання з назвою відмінка.
     pairs:
       - left: "Хто? Що?"
         right: "називний"
@@ -268,8 +268,8 @@ workbook:
       - left: "Ким? Чим?"
         right: "орудний"
   - type: translate
-    title: New grammar words
-    instruction: Read the Ukrainian term, then choose the English support.
+    title: Коротка англійська опора
+    instruction: Прочитайте український термін і оберіть коротку англійську підказку.
     items:
       - source: "відмінок"
         options:
@@ -279,7 +279,7 @@ workbook:
             correct: false
           - text: "vowel"
             correct: false
-        explanation: Відмінок means grammatical case.
+        explanation: Відмінок - це граматична роль слова в реченні.
       - source: "чергування"
         options:
           - text: "alternation"
@@ -288,7 +288,7 @@ workbook:
             correct: false
           - text: "address"
             correct: false
-        explanation: Чергування is a sound or form alternation.
+        explanation: Чергування - це зміна звука або форми.
       - source: "голосний"
         options:
           - text: "vowel"
@@ -297,7 +297,7 @@ workbook:
             correct: false
           - text: "ending"
             correct: false
-        explanation: А, е, и, і, о, у are vowels.
+        explanation: А, е, и, і, о, у - це голосні.
       - source: "приголосний"
         options:
           - text: "consonant"
@@ -306,7 +306,7 @@ workbook:
             correct: false
           - text: "case"
             correct: false
-        explanation: М, т, к, в, с, ш are examples of consonants.
+        explanation: М, т, к, в, с, ш - це приклади приголосних.
       - source: "милозвучність"
         options:
           - text: "euphony / smooth sound"
@@ -315,4 +315,70 @@ workbook:
             correct: false
           - text: "profession"
             correct: false
-        explanation: Милозвучність helps Ukrainian avoid rough sound clusters.
+        explanation: Милозвучність допомагає уникати важких збігів звуків.
+  - type: true-false
+    title: Наголос і живі звуки
+    instruction: Визначте, чи правильне твердження.
+    items:
+      - statement: "Наголос може допомагати розрізняти слова або форми."
+        answer: true
+        explanation: На А2 достатньо помічати, що наголос є частиною звучання слова.
+      - statement: "Дж і дз завжди треба читати як дві різко окремі літери."
+        answer: false
+        explanation: У словах джерело й дзвінок ці сполуки часто звучать як один щільний звук.
+      - statement: "У слові вокзал сусідні приголосні можуть впливати на вимову."
+        answer: true
+        explanation: Жива вимова часто зближує сусідні звуки.
+      - statement: "На початку А2 треба знати всі правила рухомого наголосу напам'ять."
+        answer: false
+        explanation: Тут важливіше слухати й упізнавати модель, а не заучувати повну систему.
+  - type: match-up
+    title: Звукова підказка
+    instruction: З'єднайте приклад із тим, що треба помітити.
+    pairs:
+      - left: "стіл / стола"
+        right: "і може чергуватися з о"
+      - left: "рука / ручка"
+        right: "к може перейти в ч"
+      - left: "джерело"
+        right: "дж звучить як щільний звук"
+      - left: "дзвінок"
+        right: "дз звучить як щільний звук"
+      - left: "просьба"
+        right: "перед б звук стає дзвінкішим"
+      - left: "вода / воду"
+        right: "слухайте форму разом із наголосом"
+  - type: fill-in
+    title: Ще трохи плавності
+    instruction: Оберіть варіант, який звучить природніше.
+    items:
+      - sentence: "Ми зустрілися ___ школі."
+        answer: "у"
+        options:
+          - "у"
+          - "й"
+        explanation: Перед школі після приголосного часто зручно сказати у.
+      - sentence: "Анна ___ Марко на занятті."
+        answer: "й"
+        options:
+          - "й"
+          - "у"
+        explanation: Після голосного в Анна перед Марко плавно звучить й.
+      - sentence: "Я повернувся ___ Львова."
+        answer: "зі"
+        options:
+          - "зі"
+          - "й"
+        explanation: Зі Львова допомагає уникнути важкого збігу приголосних.
+      - sentence: "Олег ___ Ірина готові."
+        answer: "і"
+        options:
+          - "і"
+          - "в"
+        explanation: Перед Ірина потрібне і.
+      - sentence: "Вона працює ___ університеті."
+        answer: "в"
+        options:
+          - "в"
+          - "й"
+        explanation: Перед голосним на початку університеті природно звучить в.
