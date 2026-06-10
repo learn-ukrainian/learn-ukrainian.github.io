@@ -1,0 +1,160 @@
+- word: видова пара
+  translation: aspect pair
+  pos: noun
+  example: "Писати / написати - це видова пара."
+- word: префікс
+  translation: prefix
+  pos: noun
+  example: "Префікс на- утворює форму написати."
+- word: суфікс
+  translation: suffix
+  pos: noun
+  example: "Суфікс може змінювати вид дієслова."
+- word: основа
+  translation: stem
+  pos: noun
+  example: "У парі допомагати / допомогти змінюється основа."
+- word: модель
+  translation: pattern, model
+  pos: noun
+  example: "Ця модель допомагає вчити нові пари."
+- word: контекст
+  translation: context
+  pos: noun
+  example: "Контекст допомагає вибрати вид."
+- word: послідовність
+  translation: sequence
+  pos: noun
+  example: "Послідовність завершених дій часто має доконаний вид."
+- word: звичка
+  translation: habit
+  pos: noun
+  example: "Звичка часто потребує недоконаного виду."
+- word: заперечення
+  translation: negation
+  pos: noun
+  example: "Заперечення може змінювати значення виду."
+- word: готовий
+  translation: ready
+  pos: adjective
+  example: "Текст готовий: я його написав."
+- word: писати / написати
+  translation: to write
+  pos: verb pair
+  example: "Я писав відповідь і написав її."
+- word: читати / прочитати
+  translation: to read
+  pos: verb pair
+  example: "Вона читала статтю і прочитала її."
+- word: робити / зробити
+  translation: to do, to make
+  pos: verb pair
+  example: "Ми робили вправу і зробили її."
+- word: готувати / приготувати
+  translation: to cook, to prepare
+  pos: verb pair
+  example: "Тато готував вечерю і приготував салат."
+- word: брати / взяти
+  translation: to take
+  pos: verb pair
+  example: "Візьми паспорт, будь ласка."
+- word: давати / дати
+  translation: to give
+  pos: verb pair
+  example: "Вона дала мені добру пораду."
+- word: говорити / сказати
+  translation: to speak, to say
+  pos: verb pair
+  example: "Ми говорили довго, а потім він сказав головне."
+- word: відповідати / відповісти
+  translation: to answer
+  pos: verb pair
+  example: "Студент відповів правильно."
+- word: пояснювати / пояснити
+  translation: to explain
+  pos: verb pair
+  example: "Викладач пояснив правило."
+- word: вчити / вивчити
+  translation: to study, to learn
+  pos: verb pair
+  example: "Я вивчив десять нових слів."
+- word: розуміти / зрозуміти
+  translation: to understand
+  pos: verb pair
+  example: "Спочатку я не розумів, але потім зрозумів."
+- word: купувати / купити
+  translation: to buy
+  pos: verb pair
+  example: "Ми купили квитки онлайн."
+- word: допомагати / допомогти
+  translation: to help
+  pos: verb pair
+  example: "Вона допомогла подрузі з переїздом."
+- word: починати / почати
+  translation: to begin
+  pos: verb pair
+  example: "Ми почали урок о дев'ятій."
+- word: закінчувати / закінчити
+  translation: to finish
+  pos: verb pair
+  example: "Я закінчив роботу о шостій."
+- word: їсти / з'їсти
+  translation: to eat
+  pos: verb pair
+  example: "Дитина їла суп і з'їла всю порцію."
+- word: пити / випити
+  translation: to drink
+  pos: verb pair
+  example: "Він випив склянку води."
+- word: варити / зварити
+  translation: to boil, to cook
+  pos: verb pair
+  example: "Бабуся зварила картоплю."
+- word: мити / помити
+  translation: to wash
+  pos: verb pair
+  example: "Я помив руки перед обідом."
+- word: прибирати / прибрати
+  translation: to clean, to tidy
+  pos: verb pair
+  example: "Ми прибрали кімнату за пів години."
+- word: прасувати / випрасувати
+  translation: to iron
+  pos: verb pair
+  example: "Вона випрасувала сорочку."
+- word: питати / запитати
+  translation: to ask
+  pos: verb pair
+  example: "Студент запитав про домашнє завдання."
+- word: розповідати / розповісти
+  translation: to tell, to narrate
+  pos: verb pair
+  example: "Подруга розповіла цікаву історію."
+- word: записувати / записати
+  translation: to write down, to record
+  pos: verb pair
+  example: "Я записав адресу в телефон."
+- word: перекладати / перекласти
+  translation: to translate
+  pos: verb pair
+  example: "Вони переклали короткий текст."
+- word: повторювати / повторити
+  translation: to repeat, to review
+  pos: verb pair
+  example: "Ми повторили правило перед тестом."
+- word: класти / покласти
+  translation: to put, to place
+  pos: verb pair
+  example: "Поклади ключі на стіл."
+- word: відкривати / відкрити
+  translation: to open
+  pos: verb pair
+  example: "Він відкрив вікно."
+- word: закривати / закрити
+  translation: to close
+  pos: verb pair
+  example: "Закрий двері, будь ласка."
+- word: платити / заплатити
+  translation: to pay
+  pos: verb pair
+  example: "Ми заплатили за квитки онлайн."

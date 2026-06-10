@@ -1,0 +1,80 @@
+- word: минулий час
+  translation: past tense
+  pos: noun
+  example: "У минулому часі дієслово узгоджується з родом і числом."
+- word: недоконаний вид
+  translation: imperfective aspect
+  pos: noun
+  example: "Недоконаний вид показує процес або звичку."
+- word: доконаний вид
+  translation: perfective aspect
+  pos: noun
+  example: "Доконаний вид показує завершений результат."
+- word: процес
+  translation: process
+  pos: noun
+  example: "Слово довго часто показує процес."
+- word: результат
+  translation: result
+  pos: noun
+  example: "У цьому реченні важливий результат."
+- word: фон
+  translation: background
+  pos: noun
+  example: "Фонова дія стоїть у недоконаному виді."
+- word: подія
+  translation: event
+  pos: noun
+  example: "Раптом сталася нова подія."
+- word: звичка
+  translation: habit
+  pos: noun
+  example: "Щоденна прогулянка була моєю звичкою."
+- word: повторення
+  translation: repetition
+  pos: noun
+  example: "Часто показує повторення."
+- word: завершений
+  translation: completed
+  pos: adjective
+  example: "Це завершений крок у розповіді."
+- word: раптом
+  translation: suddenly
+  pos: adv
+  example: "Раптом хтось постукав у двері."
+- word: нарешті
+  translation: finally
+  pos: adv
+  example: "Я нарешті написав листа."
+- word: довго
+  translation: for a long time
+  pos: adv
+  example: "Вона довго читала роман."
+- word: щодня
+  translation: every day
+  pos: adv
+  example: "Раніше я щодня бігав у парку."
+- word: одного разу
+  translation: once, one time
+  pos: phrase
+  example: "Одного разу ми заблукали в місті."
+- word: читати / прочитати
+  translation: to read
+  pos: verb pair
+  example: "Я читав статтю і ввечері прочитав її."
+- word: писати / написати
+  translation: to write
+  pos: verb pair
+  example: "Вона писала лист і нарешті написала його."
+- word: готувати / приготувати
+  translation: to cook, to prepare
+  pos: verb pair
+  example: "Ми готували борщ і приготували його до вечері."
+- word: робити / зробити
+  translation: to do, to make
+  pos: verb pair
+  example: "Учора я робив вправи і зробив усі завдання."
+- word: дзвонити / подзвонити
+  translation: to call
+  pos: verb pair
+  example: "Коли я вечеряв, мені подзвонила мама."

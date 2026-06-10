@@ -349,7 +349,10 @@ def generate_mdx(
         and pipeline_version not in ("v5", "v6")
         and not (pipeline_version == "linear-phase-4" and build_status in {"validated", "reviewed"})
     )
-    if should_hide_draft:
+    explicit_draft = fm.get("draft")
+    if isinstance(explicit_draft, bool):
+        extra_fm_lines += f"\ndraft: {str(explicit_draft).lower()}"
+    elif should_hide_draft:
         extra_fm_lines += "\ndraft: true"
 
     try:

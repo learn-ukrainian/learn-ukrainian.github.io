@@ -1,0 +1,326 @@
+---
+title: "Я напишу!"
+description: "Простий майбутній час доконаного виду та складений майбутній недоконаного"
+sidebar:
+  order: 41
+  label: "41. Я напишу!"
+draft: true
+prev: aspect-in-past
+next: aspect-mastery
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: плани на завтра
+
+Двоє сусідів зустрілися біля під'їзду. Вони говорять про конкретні
+справи на завтра і про те, чим будуть займатися довше.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Марко","text":"Що ти будеш робити завтра?"},{"speaker":"Ірина","text":"Зранку буду працювати вдома. Потім напишу листа до банку."},{"speaker":"Марко","text":"А ввечері?"},{"speaker":"Ірина","text":"Буду готувати вечерю. Якщо матиму час, прочитаю статтю для курсу."},{"speaker":"Марко","text":"Я теж завтра буду вчитися. Але спочатку подзвоню лікарю і куплю ліки."},{"speaker":"Ірина","text":"Добре. А потім відпочинь!"}]')}
+/>
+
+У діалозі є дві моделі майбутнього часу:
+
+| Модель | Приклад | Що бачимо |
+| --- | --- | --- |
+| доконаний вид без `буду` | напишу, прочитаю, подзвоню, куплю | один завершений результат |
+| `буду` + інфінітив недоконаного виду | буду працювати, буду готувати, буду вчитися | процес, заняття, тривалість |
+
+В англійській часто достатньо `will`. В українській вибір майбутнього
+часу пов'язаний з видом дієслова.
+
+## Два майбутні фокуси
+
+Українська питає не тільки `коли це буде?`, а й `як ми бачимо дію?`
+
+Порівняйте:
+
+| Речення | Значення |
+| --- | --- |
+| Я напишу листа. | лист буде готовий |
+| Я буду писати листа. | я буду в процесі письма |
+| Вона прочитає статтю. | стаття буде прочитана |
+| Вона буде читати статтю. | вона буде займатися читанням |
+
+Дієслова доконаного виду не мають справжнього теперішнього значення.
+Тому форми `напишу`, `зроблю`, `скажу`, `прочитаю` дивляться в
+майбутнє.
+
+Недоконаний вид може мати теперішній час: `я пишу`, `я читаю`, `я
+працюю`. Щоб сказати про майбутній процес, на A2 найпростіша модель:
+`буду` + інфінітив.
+
+### Два майбутні часи
+
+<GroupSort client:only='react' groups={JSON.parse(`{"доконаний результат": ["напишу", "прочитає", "зробимо", "подзвонять"], "майбутній процес": ["буду писати", "буде читати", "будемо працювати", "будуть дзвонити"]}`)} />
+
+## Простий майбутній доконаного виду
+
+Якщо дія має одну межу і майбутній результат, беріть доконаний вид.
+Форма виглядає як теперішній час, але значення майбутнє.
+
+| Інфінітив | Я | Ти | Він/вона | Ми |
+| --- | --- | --- | --- | --- |
+| написати | напишу | напишеш | напише | напишемо |
+| зробити | зроблю | зробиш | зробить | зробимо |
+| прочитати | прочитаю | прочитаєш | прочитає | прочитаємо |
+| сказати | скажу | скажеш | скаже | скажемо |
+
+Типові речення:
+
+> Я напишу тобі ввечері.
+>
+> Ми зробимо вправу після перерви.
+>
+> Вона прочитає інструкцію і відповість.
+>
+> Я скажу це українською.
+
+Ця модель добре працює з конкретними обіцянками, планами і результатами:
+`подзвоню`, `куплю`, `заплачу`, `приготую`, `відповім`.
+
+## Складений майбутній недоконаного виду
+
+Якщо важливий процес, заняття або повторення в майбутньому, беріть
+`буду` + інфінітив недоконаного виду.
+
+| Особа | Форма |
+| --- | --- |
+| я | буду читати |
+| ти | будеш читати |
+| він/вона | буде читати |
+| ми | будемо читати |
+| ви | будете читати |
+| вони | будуть читати |
+
+Приклади:
+
+> Завтра я буду працювати вдома.
+>
+> Увечері ми будемо дивитися фільм.
+>
+> Наступного місяця вони будуть вивчати нову тему.
+>
+> Влітку вона буде багато подорожувати.
+
+Тут ми не обіцяємо готовий результат. Ми називаємо дію як заняття або
+процес.
+
+:::tip[Форма, яку ви можете зустріти]
+Українська також має форми на кшталт `писатиму`, `читатимеш`,
+`працюватимемо`. На цьому уроці достатньо їх упізнавати як майбутній
+час недоконаного виду. Для власного мовлення на A2 безпечно
+використовувати `буду писати`, `буду читати`, `будемо працювати`.
+:::
+
+### Оберіть форму майбутнього
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Завтра я ___ листа до школи.", "answer": "напишу", "options": ["напишу", "буду написати"]}, {"sentence": "Увечері я ___ листа годину.", "answer": "буду писати", "options": ["напишу", "буду писати"]}, {"sentence": "Ми ___ квитки сьогодні.", "answer": "купимо", "options": ["будемо купити", "купимо"]}, {"sentence": "Вони ___ українську все літо.", "answer": "будуть вивчати", "options": ["вивчать", "будуть вивчати"]}, {"sentence": "Після роботи я ___ лікарю.", "answer": "подзвоню", "options": ["подзвоню", "буду подзвонити"]}, {"sentence": "Наступного тижня ми ___ про подорож.", "answer": "будемо говорити", "options": ["скажемо", "будемо говорити"]}]`)} />
+
+## Як обрати форму
+
+Ставте просте питання: `я хочу показати результат чи процес?`
+
+| Контекст | Краще |
+| --- | --- |
+| один завершений лист | Я напишу листа. |
+| година письма | Я буду писати листа годину. |
+| один дзвінок | Я подзвоню лікарю. |
+| регулярні дзвінки | Я буду дзвонити щодня. |
+| готова вечеря | Я приготую вечерю. |
+| заняття на вечір | Я буду готувати вечерю. |
+
+Слова `завтра`, `увечері`, `на вихідних` самі не вирішують вид. Вид
+вирішує зміст.
+
+> Завтра я буду читати книжку.
+>
+> Завтра я прочитаю книжку.
+
+У першому реченні важлива дія читання. У другому важливо, що книжка
+буде дочитана.
+
+### Результат чи процес?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Ти обіцяєш відправити один лист.", "options": [{"text": "Я надішлю листа.", "correct": true}, {"text": "Я буду надсилати листа.", "correct": false}, {"text": "Я буду надіслати листа.", "correct": false}], "explanation": "Один завершений крок: надішлю."}, {"question": "Ти весь вечір займатимешся читанням.", "options": [{"text": "Я буду читати весь вечір.", "correct": true}, {"text": "Я прочитаю весь вечір.", "correct": false}, {"text": "Я буду прочитати весь вечір.", "correct": false}], "explanation": "Весь вечір показує процес."}, {"question": "Команда обіцяє закінчити проєкт.", "options": [{"text": "Ми закінчимо проєкт.", "correct": true}, {"text": "Ми будемо закінчити проєкт.", "correct": false}, {"text": "Ми будемо закінчили проєкт.", "correct": false}], "explanation": "Закінчити = довести до результату."}, {"question": "Людина описує регулярні дзвінки щодня.", "options": [{"text": "Я буду дзвонити щодня.", "correct": true}, {"text": "Я подзвоню щодня.", "correct": false}, {"text": "Я буду подзвонити щодня.", "correct": false}], "explanation": "Щодня потребує недоконаного виду."}]`)} />
+
+## Плани, обіцянки і м'які наміри
+
+Для конкретних обіцянок українська часто бере доконаний вид:
+
+> Я напишу тобі після роботи.
+>
+> Ми купимо квитки сьогодні.
+>
+> Я перевірю адресу.
+
+Для опису заняття або м'якого плану часто природний недоконаний вид:
+
+> Я буду працювати над проєктом.
+>
+> Ми будемо говорити про подорож.
+>
+> Вони будуть вчитися онлайн.
+
+У діалозі можна поєднати обидва:
+
+> Завтра я буду працювати вдома, а після обіду напишу листа.
+>
+> Увечері ми будемо готувати вечерю, а потім подивимося фільм.
+
+Так українська показує ритм дня: довші заняття плюс завершені кроки.
+
+### Знайдіть пару планів
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "буду писати листа", "right": "напишу листа"}, {"left": "буду читати статтю", "right": "прочитаю статтю"}, {"left": "буду готувати вечерю", "right": "приготую вечерю"}, {"left": "буду шукати адресу", "right": "знайду адресу"}, {"left": "буду дзвонити клієнтам", "right": "подзвоню клієнту"}, {"left": "буду робити вправи", "right": "зроблю вправи"}]`)} />
+
+## Завдання: мій реалістичний план
+
+Напишіть 6 речень про завтра або найближчі вихідні. Використайте:
+
+- два речення з `буду` + інфінітив;
+- три речення з доконаним майбутнім (`напишу`, `куплю`, `прочитаю`);
+- одне речення з обома моделями.
+
+Каркас:
+
+> Завтра зранку я буду [процес або заняття].
+>
+> Потім я [готовий результат].
+>
+> Увечері я буду [процес], а після цього [готовий результат].
+
+Після письма перевірте кожне дієслово. Якщо це процес або заняття,
+поясніть чому. Якщо це результат, назвіть результат.
+
+## Типові помилки
+
+| Не так | Краще | Чому |
+| --- | --- | --- |
+| Я буду написати листа. | Я напишу листа. | доконаний результат без `буду` |
+| Я зроблю вправи щодня. | Я буду робити вправи щодня. | `щодня` = повторення |
+| Вона буде прочитати статтю. | Вона прочитає статтю. | `прочитати` вже доконаний вид |
+| Ми будемо купити квитки. | Ми купимо квитки. | конкретний результат |
+| Я напишу листа дві години. | Я буду писати листа дві години. | тривалість = процес |
+
+## 📋 Підсумок
+
+Для майбутнього часу в A2 тримайте дві опори. Якщо дія має готовий
+результат, використовуйте доконаний вид: `напишу`, `зроблю`, `скажу`,
+`прочитаю`. Якщо дія буде процесом, заняттям або повторенням,
+використовуйте `буду` + інфінітив недоконаного виду: `буду писати`,
+`будемо працювати`, `будуть читати`.
+
+Самоперевірка: поясніть різницю між `я прочитаю статтю` і `я буду
+читати статтю`. Потім скажіть три речі, які ви зробите завтра, і дві
+речі, які будете робити.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"майбутній час","translation":"future tense","pos":"noun","example":"Майбутній час залежить від виду дієслова.","examples":["future tense","Майбутній час залежить від виду дієслова."]},{"word":"простий майбутній","translation":"simple future","pos":"noun","example":"Простий майбутній доконаного виду показує результат.","examples":["simple future","Простий майбутній доконаного виду показує результат."]},{"word":"складений майбутній","translation":"compound future","pos":"noun","example":"Складений майбутній має форму буду + інфінітив.","examples":["compound future","Складений майбутній має форму буду + інфінітив."]},{"word":"інфінітив","translation":"infinitive","pos":"noun","example":"У фразі буду читати слово читати - інфінітив.","examples":["infinitive","У фразі буду читати слово читати - інфінітив."]},{"word":"обіцянка","translation":"promise","pos":"noun","example":"Я напишу тобі - це конкретна обіцянка.","examples":["promise","Я напишу тобі - це конкретна обіцянка."]},{"word":"план","translation":"plan","pos":"noun","example":"Мій план на завтра дуже простий.","examples":["plan","Мій план на завтра дуже простий."]},{"word":"намір","translation":"intention","pos":"noun","example":"Це м'який намір, а не обіцянка.","examples":["intention","Це м'який намір, а не обіцянка."]},{"word":"процес","translation":"process","pos":"noun","example":"Буду працювати показує процес.","examples":["process","Буду працювати показує процес."]},{"word":"результат","translation":"result","pos":"noun","example":"Напишу листа показує результат.","examples":["result","Напишу листа показує результат."]},{"word":"завтра","translation":"tomorrow","pos":"adv","example":"Завтра я подзвоню лікарю.","examples":["tomorrow","Завтра я подзвоню лікарю."]},{"word":"увечері","translation":"in the evening","pos":"adv","example":"Увечері ми будемо готувати.","examples":["in the evening","Увечері ми будемо готувати."]},{"word":"наступного тижня","translation":"next week","pos":"phrase","example":"Наступного тижня вони будуть вчитися онлайн.","examples":["next week","Наступного тижня вони будуть вчитися онлайн."]},{"word":"написати / напишу","translation":"to write, I will write","pos":"future form","example":"Я напишу короткий лист.","examples":["to write, I will write","Я напишу короткий лист."]},{"word":"зробити / зроблю","translation":"to do, I will do","pos":"future form","example":"Я зроблю вправу після перерви.","examples":["to do, I will do","Я зроблю вправу після перерви."]},{"word":"сказати / скажу","translation":"to say, I will say","pos":"future form","example":"Я скажу це українською.","examples":["to say, I will say","Я скажу це українською."]},{"word":"прочитати / прочитаю","translation":"to read through, I will read","pos":"future form","example":"Я прочитаю статтю до вечора.","examples":["to read through, I will read","Я прочитаю статтю до вечора."]},{"word":"подзвонити / подзвоню","translation":"to call, I will call","pos":"future form","example":"Після роботи я подзвоню мамі.","examples":["to call, I will call","Після роботи я подзвоню мамі."]},{"word":"купити / куплю","translation":"to buy, I will buy","pos":"future form","example":"Ми купимо квитки сьогодні.","examples":["to buy, I will buy","Ми купимо квитки сьогодні."]},{"word":"буду працювати","translation":"I will be working","pos":"phrase","example":"Завтра я буду працювати вдома.","examples":["I will be working","Завтра я буду працювати вдома."]},{"word":"будемо говорити","translation":"we will be talking","pos":"phrase","example":"Ми будемо говорити про подорож.","examples":["we will be talking","Ми будемо говорити про подорож."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"майбутній час","back":"future tense"},{"front":"простий майбутній","back":"simple future"},{"front":"складений майбутній","back":"compound future"},{"front":"інфінітив","back":"infinitive"},{"front":"обіцянка","back":"promise"},{"front":"план","back":"plan"},{"front":"намір","back":"intention"},{"front":"процес","back":"process"},{"front":"результат","back":"result"},{"front":"завтра","back":"tomorrow"},{"front":"увечері","back":"in the evening"},{"front":"наступного тижня","back":"next week"},{"front":"написати / напишу","back":"to write, I will write"},{"front":"зробити / зроблю","back":"to do, I will do"},{"front":"сказати / скажу","back":"to say, I will say"},{"front":"прочитати / прочитаю","back":"to read through, I will read"},{"front":"подзвонити / подзвоню","back":"to call, I will call"},{"front":"купити / куплю","back":"to buy, I will buy"},{"front":"буду працювати","back":"I will be working"},{"front":"будемо говорити","back":"we will be talking"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Два майбутні часи
+
+*(див. урок, §Два майбутні фокуси)*
+
+### Оберіть форму майбутнього
+
+*(див. урок, §Складений майбутній недоконаного виду)*
+
+### Результат чи процес?
+
+*(див. урок, §Як обрати форму)*
+
+### Знайдіть пару планів
+
+*(див. урок, §Плани, обіцянки і м'які наміри)*
+
+### Виправте майбутній час
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильне виправлення." items={JSON.parse(`[{"sentence": "Я буду написати відповідь.", "errorWord": "буду написати", "correctForm": "Я напишу відповідь.", "options": ["Я напишу відповідь.", "Я буду написати відповідь."], "explanation": "Доконаний вид не бере буду."}, {"sentence": "Він прочитає цілий вечір.", "errorWord": "прочитає", "correctForm": "Він буде читати цілий вечір.", "options": ["Він буде читати цілий вечір.", "Він прочитає цілий вечір."], "explanation": "Цілий вечір показує тривалість."}, {"sentence": "Ми будемо купити квитки.", "errorWord": "будемо купити", "correctForm": "Ми купимо квитки.", "options": ["Ми купимо квитки.", "Ми будемо купити квитки."], "explanation": "Купити - доконаний вид."}, {"sentence": "Вона зробить вправи щодня.", "errorWord": "зробить", "correctForm": "Вона буде робити вправи щодня.", "options": ["Вона буде робити вправи щодня.", "Вона зробить вправи щодня."], "explanation": "Щодня означає повторення."}]`)} />
+
+### Плани на вихідні
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У суботу зранку я ___ вдома.", "answer": "буду працювати", "options": ["буду працювати", "попрацюю"]}, {"sentence": "Після обіду я ___ домашнє завдання.", "answer": "зроблю", "options": ["буду зробити", "зроблю"]}, {"sentence": "Увечері ми ___ фільм.", "answer": "будемо дивитися", "options": ["будемо дивитися", "подивимося"]}, {"sentence": "Перед сном я ___ коротке повідомлення.", "answer": "напишу", "options": ["напишу", "буду написати"]}]`)} />
+
+### Майбутнє і вид
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Форма напишу має майбутнє значення.", "isTrue": true, "explanation": "Доконаний вид не має справжнього теперішнього значення."}, {"statement": "Буду написати - це стандартна A2-модель.", "isTrue": false, "explanation": "Потрібно: напишу або буду писати."}, {"statement": "Буду читати підкреслює процес або заняття.", "isTrue": true, "explanation": "Це складений майбутній недоконаного виду."}, {"statement": "Завтра автоматично вимагає доконаного виду.", "isTrue": false, "explanation": "Завтра може бути і процесом, і результатом."}, {"statement": "Для конкретної обіцянки часто природний доконаний вид.", "isTrue": true, "explanation": "Я подзвоню, куплю, перевірю."}]`)} />
+
+### План дня
+
+<Order client:only='react' items={JSON.parse(`["Зранку я буду працювати вдома.", "Після обіду я напишу листа.", "Увечері ми будемо говорити про подорож.", "Потім я прочитаю інструкцію."]`)} correct_order={JSON.parse(`[0, 1, 2, 3]`)} instruction={"Поставте речення в логічний порядок."} isUkrainian={true} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Dobra Forma 27-4: Verbal Aspect (Future Tense)](https://opentext.ku.edu/dobraforma/chapter/27-4/) — Catalogued learner-facing practice for aspect choices in the future tense.
+- 📄 [Talk Ukrainian: Future Tense](https://talkukrainian.com/future-tense/) — Short learner-facing summary of future-tense forms.
+- 📄 [ULP: Future Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-future/) — Future-tense overview with forms learners can compare after the lesson.
+
+**🎧 Аудіо:**
+- 🎧 [ULP 3-97: Plans for winter holidays](https://www.ukrainianlessons.com/episode97/) — Catalogued listening context for future tense and motion-verb planning.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

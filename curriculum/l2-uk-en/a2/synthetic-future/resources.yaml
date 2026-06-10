@@ -1,0 +1,20 @@
+- title: "Dobra Forma 27-4: Verbal Aspect (Future Tense)"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-synthetic-future"
+  url: "https://opentext.ku.edu/dobraforma/chapter/27-4/"
+  notes: "Catalogued learner-facing practice for aspect choices in the future tense."
+- title: "ULP: Future Tense in Ukrainian"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-synthetic-future"
+  url: "https://www.ukrainianlessons.com/grammar-future/"
+  notes: "Future-tense overview with forms learners can compare after the lesson."
+- title: "ULP 3-97: Plans for winter holidays"
+  role: podcast
+  source_ref: "docs/resources/podcasts/ulp_mapping.yaml: ULP 3-97"
+  url: "https://www.ukrainianlessons.com/episode97/"
+  notes: "Catalogued listening context for future tense and motion-verb planning."
+- title: "Talk Ukrainian: Future Tense"
+  role: article
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: future-tense"
+  url: "https://talkukrainian.com/future-tense/"
+  notes: "Short learner-facing summary of future-tense forms."
