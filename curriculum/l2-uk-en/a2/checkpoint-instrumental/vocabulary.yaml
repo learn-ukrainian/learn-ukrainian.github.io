@@ -1,0 +1,85 @@
+- word: орудний відмінок
+  translation: instrumental case
+  pos: noun phrase
+  example: "Орудний відмінок відповідає на питання ким? чим?"
+- word: вправа
+  translation: exercise
+  pos: noun
+  gender: f
+  example: "Ця вправа перевіряє форми."
+- word: контрольна точка
+  translation: checkpoint
+  pos: noun phrase
+  example: "Контрольна точка допомагає повторити тему."
+- word: завдання
+  translation: task
+  pos: noun
+  gender: n
+  example: "Прочитайте завдання уважно."
+- word: речення
+  translation: sentence
+  pos: noun
+  gender: n
+  example: "У реченні є орудний відмінок."
+- word: відповідь
+  translation: answer
+  pos: noun
+  gender: f
+  example: "Перевірте свою відповідь."
+- word: текст
+  translation: text
+  pos: noun
+  gender: m
+  example: "Знайдіть форми в тексті."
+- word: перевірка
+  translation: check, test
+  pos: noun
+  gender: f
+  example: "Це коротка перевірка."
+- word: правильний
+  translation: correct
+  pos: adjective
+  example: "Оберіть правильний варіант."
+- word: словосполучення
+  translation: phrase, word combination
+  pos: noun
+  gender: n
+  example: "З моїм другом - словосполучення."
+- word: описати
+  translation: to describe
+  pos: verb
+  example: "Опишіть свій день."
+- word: визначити
+  translation: to identify, to determine
+  pos: verb
+  example: "Визначте функцію орудного відмінка."
+- word: функція
+  translation: function
+  pos: noun
+  gender: f
+  example: "Яка функція цієї форми?"
+- word: знаряддя
+  translation: tool, instrument
+  pos: noun
+  gender: n
+  example: "Ніж - знаряддя."
+- word: засіб
+  translation: means
+  pos: noun
+  gender: m
+  example: "Автобус - засіб пересування."
+- word: супровід
+  translation: accompaniment, company
+  pos: noun
+  gender: m
+  example: "З другом - супровід."
+- word: інгредієнт
+  translation: ingredient
+  pos: noun
+  gender: m
+  example: "Мед - інгредієнт у чаї."
+- word: професія
+  translation: profession
+  pos: noun
+  gender: f
+  example: "Лікар - професія."

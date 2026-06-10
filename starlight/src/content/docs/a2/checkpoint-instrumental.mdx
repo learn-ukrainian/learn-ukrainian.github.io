@@ -1,0 +1,287 @@
+---
+title: "Контрольна точка: Орудний відмінок"
+description: "Перевірка знань: усі функції орудного відмінка"
+sidebar:
+  order: 31
+  label: "31. Контрольна точка: Орудний відмінок"
+prev: work-and-food
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import RitualSequencing from '@site/src/components/RitualSequencing';
+import VariantComparison from '@site/src/components/VariantComparison';
+import MotifFormula from '@site/src/components/MotifFormula';
+import PerformanceActivity from '@site/src/components/PerformanceActivity';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import MythBuster from '@site/src/components/MythBuster';
+import HighCultureBridge from '@site/src/components/HighCultureBridge';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Ситуація: пікнік після роботи
+
+Почніть із короткого тексту. Він збирає всі головні функції орудного
+відмінка з цього блоку.
+
+> Учора ми поїхали автобусом до парку. Я була з моїм колегою Андрієм і
+> з його сестрою. Андрій працює фотографом, а його сестра хоче стати
+> лікаркою. Ми сиділи під великим деревом, між річкою і старим мостом.
+> На столі були бутерброди з сиром, салат з помідорами і чай з медом. Я
+> різала хліб ножем, а Андрій мішав салат великою ложкою. Перед обідом
+> ми говорили про роботу, музику і подорожі.
+
+Знайдіть у тексті знайомі фрази:
+
+| Фраза | Функція |
+| --- | --- |
+| автобусом | засіб пересування |
+| з моїм колегою, з його сестрою | люди поруч |
+| фотографом, лікаркою | професія або роль |
+| під великим деревом | місце |
+| між річкою і старим мостом | місце |
+| з сиром, з помідорами, з медом | інгредієнти |
+| ножем, великою ложкою | знаряддя |
+| перед обідом | час |
+
+Ця контрольна точка перевіряє не одну форму, а вашу здатність вибрати
+правильну модель у короткій ситуації.
+
+## Частина 1: розпізнавання
+
+Спочатку визначайте функцію. Це допомагає не змішувати різні моделі.
+
+| Питання | Функція | Приклад |
+| --- | --- | --- |
+| з ким? | супровід | з другом, з колегами |
+| з чим? | інгредієнт або супровід | чай з медом |
+| чим? | знаряддя або засіб | ручкою, автобусом |
+| ким? | професія або роль | працюю лікарем |
+| де? | місце після прийменника | під столом, між вікнами |
+| коли? | час після `перед` | перед уроком |
+
+Коли ви бачите речення, ставте коротке питання:
+
+> Я їду трамваєм. - Чим? Засіб.
+>
+> Вона прийшла з братом. - З ким? Супровід.
+>
+> Кафе за музеєм. - Де? Місце.
+
+### Визначте функцію
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я пишу ручкою.", "options": [{"text": "знаряддя", "correct": true}, {"text": "професія", "correct": false}, {"text": "супровід", "correct": false}], "explanation": "Ручкою відповідає на питання чим?"}, {"question": "Вона працює лікаркою.", "options": [{"text": "місце", "correct": false}, {"text": "професія", "correct": true}, {"text": "інгредієнт", "correct": false}], "explanation": "Лікаркою називає професію."}, {"question": "Кафе за музеєм.", "options": [{"text": "місце", "correct": true}, {"text": "засіб пересування", "correct": false}, {"text": "професія", "correct": false}], "explanation": "За музеєм відповідає на питання де?"}, {"question": "Чай з медом.", "options": [{"text": "інгредієнт", "correct": true}, {"text": "професія", "correct": false}, {"text": "час", "correct": false}], "explanation": "Мед - інгредієнт у чаї."}]`)} />
+
+## Частина 2: форми
+
+Повторіть базові закінчення іменників.
+
+| Називний | Орудний | Приклад |
+| --- | --- | --- |
+| брат | братом | з братом |
+| Олег | Олегом | з Олегом |
+| вчитель | вчителем | працюю вчителем |
+| чай | чаєм | з чаєм |
+| море | морем | над морем |
+| сестра | сестрою | із сестрою |
+| земля | землею | над землею |
+| мрія | мрією | з мрією |
+| руки | руками | працюю руками |
+| олівці | олівцями | писати олівцями |
+| діти | дітьми | з дітьми |
+
+Не намагайтеся вгадати все одразу. Спочатку визначте число і рід, потім
+оберіть знайому модель.
+
+### Форма орудного
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я говорю з ___.", "answer": "братом", "options": ["брат", "братом", "брата"]}, {"sentence": "Ми сидимо над ___.", "answer": "морем", "options": ["море", "морем", "моря"]}, {"sentence": "Вона працює ___.", "answer": "вчителькою", "options": ["вчителька", "вчителькою", "вчительку"]}, {"sentence": "Діти пишуть ___.", "answer": "олівцями", "options": ["олівці", "олівцями", "олівців"]}]`)} />
+
+## Частина 3: прийменник чи без прийменника?
+
+Орудний може бути без прийменника або з прийменником.
+
+| Без прийменника | З прийменником |
+| --- | --- |
+| писати ручкою | з другом |
+| їхати автобусом | з молоком |
+| працювати лікарем | під столом |
+| цікавитися музикою | перед уроком |
+
+Практичний контраст:
+
+> Я пишу ручкою. - знаряддя, без `з`.
+>
+> Я йду з подругою. - людина поруч, з `з`.
+>
+> Я п'ю каву з молоком. - інгредієнт, з `з`.
+
+### Розсортуйте функції
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Знаряддя або засіб": ["ручкою", "автобусом", "ножем"], "Супровід або інгредієнт": ["з другом", "з молоком", "з помідорами"], "Професія": ["лікарем", "вчителькою", "кухарем"], "Місце або час": ["під столом", "між вікнами", "перед обідом"]}`)} />
+
+## Частина 4: узгодження
+
+Якщо перед іменником є займенник або прикметник, він теж змінюється.
+
+| Називний | Орудний |
+| --- | --- |
+| мій новий друг | з моїм новим другом |
+| моя добра подруга | з моєю доброю подругою |
+| цей автобус | цим автобусом |
+| ця велика ялинка | під цією великою ялинкою |
+| наш старий будинок | за нашим старим будинком |
+
+Перевіряйте весь ланцюжок:
+
+> з моїм новим другом
+>
+> з моєю новою подругою
+>
+> під цією великою лампою
+
+### Виправте речення
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильний варіант." items={JSON.parse(`[{"sentence": "Я їду автобус.", "errorWord": "автобус", "correctForm": "Я їду автобусом.", "options": ["Я їду автобусом.", "Я їду автобус."], "explanation": "Засіб пересування має форму орудного відмінка."}, {"sentence": "Вона гуляє з подруга.", "errorWord": "подруга", "correctForm": "Вона гуляє з подругою.", "options": ["Вона гуляє з подругою.", "Вона гуляє з подруга."], "explanation": "Після з потрібен орудний відмінок."}, {"sentence": "Парк між школа і бібліотека.", "errorWord": "школа і бібліотека", "correctForm": "Парк між школою і бібліотекою.", "options": ["Парк між школою і бібліотекою.", "Парк між школа і бібліотека."], "explanation": "Між для місця вимагає орудного відмінка."}, {"sentence": "з мій новий друг", "errorWord": "мій новий друг", "correctForm": "з моїм новим другом", "options": ["з моїм новим другом", "з мій новий друг"], "explanation": "Усі слова в ланцюжку мають форму орудного відмінка."}]`)} />
+
+## Частина 5: коротке письмо
+
+Напишіть 6-8 речень про типовий день або про один вихідний. Використайте
+мінімум шість фраз з орудним відмінком.
+
+Можна взяти цей каркас:
+
+> Я працюю ___.
+>
+> На роботу їду ___.
+>
+> Перед роботою ___.
+>
+> Я обідаю з ___.
+>
+> Увечері готую **_ з _**.
+>
+> Ріжу **_ ножем або мішаю _** ложкою.
+>
+> Мій стіл / моя кімната / кафе знаходиться ___.
+
+Після письма підкресліть кожну фразу з орудним відмінком і підпишіть
+функцію: `професія`, `засіб`, `супровід`, `інгредієнт`, `місце`,
+`час`, `узгодження`.
+
+## Контрольний список
+
+Перед тим як іти далі, перевірте себе:
+
+- Я можу сказати `з ким?` і `з чим?`: `з другом`, `чай з медом`.
+- Я можу сказати `чим?`: `ручкою`, `автобусом`, `ножем`.
+- Я можу назвати професію після `працювати`, `бути`, `стати`:
+  `вчителькою`, `лікарем`.
+- Я можу описати місце: `над столом`, `під ліжком`, `між вікнами`.
+- Я можу додати прикметник або займенник: `з моїм новим другом`,
+  `під цією великою лампою`.
+
+## 📋 Підсумок
+
+Орудний відмінок відповідає на кілька корисних питань: `ким?`, `чим?`,
+`з ким?`, `з чим?`, `де?`, `коли?`. На A2 вам не потрібно звучати
+ідеально академічно. Вам потрібно впевнено вибирати модель у звичайних
+розмовах про людей, роботу, транспорт, їжу і простір.
+
+Самоперевірка: поясніть різницю між `писати ручкою`, `гуляти з другом`,
+`працювати лікарем`, `кафе за музеєм` і `салат з помідорами`.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"орудний відмінок","translation":"instrumental case","pos":"noun phrase","example":"Орудний відмінок відповідає на питання ким? чим?","examples":["instrumental case","Орудний відмінок відповідає на питання ким? чим?"]},{"word":"вправа","translation":"exercise","pos":"noun","gender":"f","example":"Ця вправа перевіряє форми.","examples":["exercise","Ця вправа перевіряє форми."]},{"word":"контрольна точка","translation":"checkpoint","pos":"noun phrase","example":"Контрольна точка допомагає повторити тему.","examples":["checkpoint","Контрольна точка допомагає повторити тему."]},{"word":"завдання","translation":"task","pos":"noun","gender":"n","example":"Прочитайте завдання уважно.","examples":["task","Прочитайте завдання уважно."]},{"word":"речення","translation":"sentence","pos":"noun","gender":"n","example":"У реченні є орудний відмінок.","examples":["sentence","У реченні є орудний відмінок."]},{"word":"відповідь","translation":"answer","pos":"noun","gender":"f","example":"Перевірте свою відповідь.","examples":["answer","Перевірте свою відповідь."]},{"word":"текст","translation":"text","pos":"noun","gender":"m","example":"Знайдіть форми в тексті.","examples":["text","Знайдіть форми в тексті."]},{"word":"перевірка","translation":"check, test","pos":"noun","gender":"f","example":"Це коротка перевірка.","examples":["check, test","Це коротка перевірка."]},{"word":"правильний","translation":"correct","pos":"adjective","example":"Оберіть правильний варіант.","examples":["correct","Оберіть правильний варіант."]},{"word":"словосполучення","translation":"phrase, word combination","pos":"noun","gender":"n","example":"З моїм другом - словосполучення.","examples":["phrase, word combination","З моїм другом - словосполучення."]},{"word":"описати","translation":"to describe","pos":"verb","example":"Опишіть свій день.","examples":["to describe","Опишіть свій день."]},{"word":"визначити","translation":"to identify, to determine","pos":"verb","example":"Визначте функцію орудного відмінка.","examples":["to identify, to determine","Визначте функцію орудного відмінка."]},{"word":"функція","translation":"function","pos":"noun","gender":"f","example":"Яка функція цієї форми?","examples":["function","Яка функція цієї форми?"]},{"word":"знаряддя","translation":"tool, instrument","pos":"noun","gender":"n","example":"Ніж - знаряддя.","examples":["tool, instrument","Ніж - знаряддя."]},{"word":"засіб","translation":"means","pos":"noun","gender":"m","example":"Автобус - засіб пересування.","examples":["means","Автобус - засіб пересування."]},{"word":"супровід","translation":"accompaniment, company","pos":"noun","gender":"m","example":"З другом - супровід.","examples":["accompaniment, company","З другом - супровід."]},{"word":"інгредієнт","translation":"ingredient","pos":"noun","gender":"m","example":"Мед - інгредієнт у чаї.","examples":["ingredient","Мед - інгредієнт у чаї."]},{"word":"професія","translation":"profession","pos":"noun","gender":"f","example":"Лікар - професія.","examples":["profession","Лікар - професія."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"орудний відмінок","back":"instrumental case"},{"front":"вправа","back":"exercise"},{"front":"контрольна точка","back":"checkpoint"},{"front":"завдання","back":"task"},{"front":"речення","back":"sentence"},{"front":"відповідь","back":"answer"},{"front":"текст","back":"text"},{"front":"перевірка","back":"check, test"},{"front":"правильний","back":"correct"},{"front":"словосполучення","back":"phrase, word combination"},{"front":"описати","back":"to describe"},{"front":"визначити","back":"to identify, to determine"},{"front":"функція","back":"function"},{"front":"знаряддя","back":"tool, instrument"},{"front":"засіб","back":"means"},{"front":"супровід","back":"accompaniment, company"},{"front":"інгредієнт","back":"ingredient"},{"front":"професія","back":"profession"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Визначте функцію
+
+*(див. урок, §Частина 1: розпізнавання)*
+
+### Форма орудного
+
+*(див. урок, §Частина 2: форми)*
+
+### Розсортуйте функції
+
+*(див. урок, §Частина 3: прийменник чи без прийменника?)*
+
+### Виправте речення
+
+*(див. урок, §Частина 4: узгодження)*
+
+### Швидка перевірка
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я працюю програмістом.", "isTrue": true, "explanation": "Професія після працюю має орудний відмінок."}, {"statement": "Ми п'ємо чай з мед.", "isTrue": false, "explanation": "Потрібно з медом."}, {"statement": "Лампа над столом.", "isTrue": true, "explanation": "Над столом описує місце."}, {"statement": "Вона пише ручка.", "isTrue": false, "explanation": "Потрібно пише ручкою."}]`)} />
+
+### Змішана практика
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я вечеряю ___.", "answer": "з моєю сім'єю", "options": ["з моєю сім'єю", "з моя сім'я", "мою сім'ю"]}, {"sentence": "Мій офіс знаходиться ___.", "answer": "між кафе і аптекою", "options": ["між кафе і аптекою", "між кафе і аптека", "між кафе і аптеку"]}, {"sentence": "Він став ___.", "answer": "інженером", "options": ["інженер", "інженером", "інженера"]}, {"sentence": "Книга лежить під ___.", "answer": "цією великою лампою", "options": ["ця велика лампа", "цією великою лампою", "цим великим лампою"]}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Dobra Forma 19-1: Instrumental Case of Adjectives](https://opentext.ku.edu/dobraforma/chapter/19-1/) — Adjective agreement support for phrases such as з моїм новим другом.
+- 📄 [Dobra Forma 9-1: Instrumental Case Intro](https://opentext.ku.edu/dobraforma/chapter/9-1/) — Structured review of core singular instrumental endings.
+- 📄 [Dobra Forma 9-2: Instrumental Case Other Endings](https://opentext.ku.edu/dobraforma/chapter/9-2/) — Additional singular endings and stem-change practice for self-review.
+- 📄 [Dobra Forma 9-3: Instrumental Case Plural Nouns](https://opentext.ku.edu/dobraforma/chapter/9-3/) — Plural instrumental noun practice, including forms such as руками and дітьми.
+- 📄 [ULP: Instrumental Case](https://www.ukrainianlessons.com/instrumental-case/) — Learner-facing overview for final self-review of instrumental forms and uses.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
