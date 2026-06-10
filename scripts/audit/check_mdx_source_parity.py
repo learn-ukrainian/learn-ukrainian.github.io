@@ -44,6 +44,29 @@ def get_changed_files(base: str | None = None, cached: bool = False) -> list[Pat
     except subprocess.CalledProcessError:
         return []
 
+def get_deleted_files(base: str | None = None, cached: bool = False) -> set[Path]:
+    cmd = ["git", "diff", "--name-status"]
+    if cached:
+        cmd.append("--cached")
+    elif base:
+        try:
+            merge_base = subprocess.check_output(["git", "merge-base", base, "HEAD"], text=True).strip()
+            cmd.append(f"{merge_base}...HEAD")
+        except subprocess.CalledProcessError:
+            cmd.append(f"{base}...HEAD")
+
+    deleted = set()
+    try:
+        output = subprocess.check_output(cmd, text=True)
+    except subprocess.CalledProcessError:
+        return deleted
+
+    for line in output.splitlines():
+        status, _, path = line.partition("\t")
+        if status == "D" and path:
+            deleted.add(PROJECT_ROOT / path)
+    return deleted
+
 def is_whitespace_only(file_path: Path, base: str | None = None, cached: bool = False) -> bool:
     """Check if the diff for a file is purely whitespace."""
     cmd = ["git", "diff", "-U0", "-w", "--shortstat"]
@@ -66,6 +89,7 @@ def is_whitespace_only(file_path: Path, base: str | None = None, cached: bool = 
 
 def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | None = None, cached: bool = False) -> list[tuple[Path, str]]:
     legacy_levels = get_legacy_levels()
+    deleted_files = get_deleted_files(base, cached)
     violations = []
 
     # Extract level and slug for each changed MDX file
@@ -96,6 +120,9 @@ def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | No
             continue
 
         expected_source_dir = SOURCE_DIR / level / slug
+
+        if mdx_path in deleted_files and not expected_source_dir.exists():
+            continue
 
         # Did any file in expected_source_dir change?
         source_changed = False

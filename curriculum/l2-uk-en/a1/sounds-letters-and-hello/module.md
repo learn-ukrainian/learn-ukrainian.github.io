@@ -1,33 +1,34 @@
 # Звуки, літери та привіт
 
-**Приві́т! Звук. Лі́тера.** — Hi! Sound. Letter.
+**Приві́т!** Сьогодні ви почуєте перші українські звуки, побачите
+перші літери й скажете коротке привітання.
 
-Спо́чатку слуха́ємо: **звук**. Поті́м ба́чимо на сторі́нці:
-**лі́тера**. English support: hear, see, repeat, then greet.
+Починаємо повільно: **слухаємо**, **дивимося**, **повторюємо**,
+а потім говоримо одну готову фразу.
 
-| Українська опора | English support |
+| Українська опора | Meaning |
 | --- | --- |
-| **звук** | what your mouth says and your ear hears |
-| **лі́тера** | the written sign on the page |
+| **звук** | sound |
+| **лі́тера** | letter |
 | **абе́тка** | the alphabet |
 
-Work in this small order:
+Працюємо в такому порядку:
 
-1. **слу́хай** — hear a sound;
-2. **диви́сь** — see the letter;
-3. **повтори́** — repeat one short word;
-4. **скажи́** — use one greeting phrase.
+1. **слу́хай** — listen;
+2. **диви́сь** — look;
+3. **повтори́** — repeat;
+4. **скажи́** — say it.
 
-You need only a few stable anchors today: **звук**, **лі́тера**,
-**ма́ма**, **молоко́**, **Приві́т**, and **До́брий день**.
+На сьогодні достатньо кількох надійних опор: **звук**, **лі́тера**,
+**ма́ма**, **молоко́**, **Приві́т** і **До́брий день**.
 
 ## Звук і лі́тера
 
-**звук** — what you hear and pronounce.
+**звук** — те, що ми чуємо й вимовляємо.
 
-**лі́тера** — what you see and write.
+**лі́тера** — те, що ми бачимо й пишемо.
 
-Keep the two ideas separate:
+Не плутайте ці дві опори:
 
 | Я ба́чу | Я чу́ю |
 | --- | --- |
@@ -35,31 +36,32 @@ Keep the two ideas separate:
 | **лі́тера М** | **[м]** |
 | **лі́тера О** | **[о]** |
 
-Українська абе́тка має **33 лі́тери**. In speech, Ukrainian has more
-sounds because some letters can point to more than one sound or modify a
-nearby sound.
+Українська абе́тка має **33 лі́тери**. У мовленні звуків більше,
+бо деякі літери можуть позначати більше ніж один звук або змінювати
+сусідній звук.
 
-Three beginner clues:
+Три перші підказки:
 
-- **Я, Ю, Є, Ї** can point to **й + vowel** in some positions.
-- **Ь** has no sound of its own; it softens the previous consonant.
-- **Щ** is taught here as **[шч]**.
+- **Я, Ю, Є, Ї** іноді позначають **й + голосний**.
+- **Ь** не має власного звука; він пом'якшує попередній приголосний.
+- **Щ** тут читаємо як **[шч]**.
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
 ## Голосні звуки
 
-**[а] [о] [у] [е] [и] [і]** — six simple vowel sounds.
+**[а] [о] [у] [е] [и] [і]** — шість простих голосних звуків.
 
-**Голосни́й звук** — vowel sound. A vowel is open and easy to sing.
+**Голосни́й звук** — vowel sound. Голосний відкритий, його легко
+проспівати.
 
-The simple vowel letters are:
+Прості голосні літери:
 
 **А О У Е И І**
 
-Use the beginner rule:
+Перше правило для читання:
 
-**one vowel sound = one склад**
+**one vowel sound = one склад** — один голосний звук = один склад
 
 | Слово́ | Голосні звуки | Склади́ |
 | --- | --- | --- |
@@ -68,108 +70,92 @@ Use the beginner rule:
 | **Приві́т** | **и + і** | 2 |
 | **о́ко** | **о + о** | 2 |
 
-Important habit: keep **о** clear. In **молоко́**, every **о** is still
-**о**. Do not blur it into a reduced vowel.
+Важлива звичка: вимовляйте **о** чітко. У слові **молоко́** кожне
+**о** залишається **о**.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
 ## При́голосні звуки
 
-**[м] [п] [т] [н]** — four easy consonant sounds.
+**[м] [п] [т] [н]** — чотири прості приголосні звуки.
 
-**При́голосний звук** — consonant sound. A consonant uses a small block
-or contact in the mouth: lips, teeth, tongue, or throat.
+**При́голосний звук** — consonant sound. Приголосний має маленьку
+перешкоду в роті: губи, зуби, язик або горло.
 
-Try the body cue first:
+Спершу відчуйте звук:
 
-| Звук | Body cue |
+| Звук | Підказка для вимови |
 | --- | --- |
-| **[м]** | close your lips and hum |
-| **[п]** | close your lips and release |
-| **[т]** | touch your tongue behind the teeth |
-| **[н]** | let sound pass through the nose |
+| **[м]** | закрийте губи й промовте звук через ніс |
+| **[п]** | закрийте губи й коротко відкрийте |
+| **[т]** | торкніться язиком місця за зубами |
+| **[н]** | пустіть звук через ніс |
 
-Now take **Приві́т** apart:
+Розберімо слово **Приві́т**:
 
-| Лі́тера | Type |
+| Лі́тера | Що це? |
 | --- | --- |
-| **П** | consonant |
-| **Р** | consonant |
-| **И** | vowel |
-| **В** | consonant |
-| **І** | vowel |
-| **Т** | consonant |
+| **П** | приголосний |
+| **Р** | приголосний |
+| **И** | голосний |
+| **В** | приголосний |
+| **І** | голосний |
+| **Т** | приголосний |
 
-**Приві́т** has **2 vowel sounds** and **4 consonant sounds**.
+У слові **Приві́т** є **2 голосні звуки** й **4 приголосні звуки**.
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
-## Абетка: first video pass
+## Абетка: перше знайомство
 
-**А, Б, В... Я** — the full Ukrainian alphabet.
+**А, Б, В... Я** — повна українська абетка.
 
-Use this as a first pass. Do not try to master all 33 letters in one
-sitting. Repeat a small group, then add more. The linked public videos
-are for listening and repeating; do not download or reuse the audio.
+Не треба вивчати всі 33 літери за один раз. Спершу впізнавайте
+форму літери, слухайте звук і повторюйте коротке слово.
 
-| Лі́тера | Sound | Small word | Video |
-| --- | --- | --- | --- |
-| А | [а] | анана́с | https://www.youtube.com/watch?v=hvB3VpcR3ZE |
-| Б | [б] | банду́ра | https://www.youtube.com/watch?v=V1hxBE_JbGg |
-| В | [в] | вода́ | https://www.youtube.com/watch?v=aFcvYfvQ2X4 |
-| Г | [ɦ] | гора́ | https://www.youtube.com/watch?v=gVnclpSI0DU |
-| Ґ | [g] | ґу́дзик | https://www.youtube.com/watch?v=gNjHqjTW9WQ |
-| Д | [д] | дім | https://www.youtube.com/watch?v=g4Bh-lqzd48 |
-| Е | [е] | екра́н | https://www.youtube.com/watch?v=KFlsroBW0dk |
-| Є | [йе] | єно́т | https://www.youtube.com/watch?v=O0bwRyyBQSc |
-| Ж | [ж] | жук | https://www.youtube.com/watch?v=dIrGVcqPwqM |
-| З | [з] | зуб | https://www.youtube.com/watch?v=BhASNxitC1A |
-| И | [и] | сир | https://www.youtube.com/watch?v=W-1rCu0indE |
-| І | [і] | ім'я́ | https://www.youtube.com/watch?v=Z9TH0H4ShGo |
-| Ї | [йі] | їжа́к | https://www.youtube.com/watch?v=UcjdjQXhAY8 |
-| Й | [й] | йо́гурт | https://www.youtube.com/watch?v=aq0cjB90s3w |
-| К | [к] | кіт | https://www.youtube.com/watch?v=J7sGEI4-xJo |
-| Л | [л] | лис | https://www.youtube.com/watch?v=v6-3Xg52Buk |
-| М | [м] | ма́ма | https://www.youtube.com/watch?v=Ez95H4ibuJo |
-| Н | [н] | ніс | https://www.youtube.com/watch?v=vNUfiKHPYaU |
-| О | [о] | о́ко | https://www.youtube.com/watch?v=gJFxRIPRZbI |
-| П | [п] | піт | https://www.youtube.com/watch?v=JksSjjxyW5Y |
-| Р | [р] | рука́ | https://www.youtube.com/watch?v=fMGsQ5KPQgg |
-| С | [с] | сон | https://www.youtube.com/watch?v=7UsFBgSL91E |
-| Т | [т] | та́то | https://www.youtube.com/watch?v=m-jcLR_gK0k |
-| У | [у] | уро́к | https://www.youtube.com/watch?v=VB1O6PmtYRU |
-| Ф | [ф] | фо́то | https://www.youtube.com/watch?v=haHRsFFZRQI |
-| Х | [х] | ха́та | https://www.youtube.com/watch?v=vpr58zJSJKc |
-| Ц | [ц] | цу́кор | https://www.youtube.com/watch?v=u44eCjR2Oz8 |
-| Ч | [ч] | час | https://www.youtube.com/watch?v=UsJkbdsY2RA |
-| Ш | [ш] | шко́ла | https://www.youtube.com/watch?v=1D-6MIw3OXY |
-| Щ | [шч] | щу́ка | https://www.youtube.com/watch?v=QmBLieIuf6Q |
-| Ь | no sound | день | https://www.youtube.com/watch?v=cJlal8XKBxo |
-| Ю | [йу] | ю́шка | https://www.youtube.com/watch?v=9JdIBYCTWGw |
-| Я | [йа] | я́блуко | https://www.youtube.com/watch?v=yhSAf41LX8I |
+Повна абетка:
 
-**Друк / зошит** — print / notebook recognition.
+**А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я**
 
-Recognition comes before handwriting production. Use original text on this
-page, your own notebook, or a teacher/tutor's live handwriting. Do not copy a
-third-party handwriting sample.
+Перші опори:
 
-| Друк | Зошит: recognition cue | What to do |
+| Лі́тера | Звук | Слово |
 | --- | --- | --- |
-| **П п** | teacher writes **п** by hand | point to **П** |
-| **М м** | teacher writes **м** by hand | point to **М** |
-| **Приві́т** | notebook label **приві́т** | match the word |
-| **ма́ма** | notebook label **ма́ма** | match the word |
+| А | [а] | анана́с |
+| М | [м] | ма́ма |
+| О | [о] | о́ко |
+| П | [п] | піт |
+| Т | [т] | та́то |
+| І | [і] | ім'я́ |
+| И | [и] | сир |
+| Ь | немає власного звука | день |
+
+У вправі нижче можна послухати всі літери по черзі. Відео потрібні
+тільки для слухання й повторення; не завантажуйте й не перевикористовуйте
+чужий аудіоматеріал.
+
+**Друк і зошит** — впізнавання друкованих і рукописних форм.
+
+Спершу впізнавайте форму, а вже потім пишіть самостійно. Використовуйте
+текст цього уроку, власний зошит або живий почерк викладача. Не копіюйте
+чужі рукописні зразки.
+
+| Друк | Зошит: підказка | Дія |
+| --- | --- | --- |
+| **П п** | викладач пише **п** від руки | знайдіть **П** |
+| **М м** | викладач пише **м** від руки | знайдіть **М** |
+| **Приві́т** | у зошиті написано **приві́т** | знайдіть слово |
+| **ма́ма** | у зошиті написано **ма́ма** | знайдіть слово |
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-## Приві́т: first greeting phrases
+## Приві́т: перші привітання
 
 **Приві́т!** — Hi!
 
-Use these as whole phrases first. Grammar can wait.
+Спершу вчіть ці привітання як готові фрази. Граматика зачекає.
 
-| Українська | English support |
+| Українська | Meaning |
 | --- | --- |
 | **Приві́т!** | Hi! |
 | **До́брий день!** | Hello / good day |
@@ -178,7 +164,7 @@ Use these as whole phrases first. Grammar can wait.
 | **До поба́чення!** | Goodbye |
 | **На все до́бре!** | All the best |
 
-Read the Ukrainian first:
+Спершу прочитайте український діалог:
 
 ```text
 О́ля: Приві́т!
@@ -189,17 +175,17 @@ Read the Ukrainian first:
 Тара́с: Чудо́во!
 ```
 
-English support after the Ukrainian dialogue:
+Підтримка англійською після діалогу:
 
-| Українська | English support |
+| Українська | Meaning |
 | --- | --- |
 | **Як спра́ви?** | How are you? |
 | **До́бре.** | Fine / good. |
 | **А у тебе́?** | And you? |
 | **Чудо́во!** | Great! |
 
-Use **А у тебе́?** after **Як спра́ви?**. For a name exchange, use
-**А тебе́?**
+Після **Як спра́ви?** відповідаємо **А у тебе́?**. Коли питаємо ім'я,
+використовуємо **А тебе́?**
 
 ```text
 Марко́: Як тебе́ зва́ти?
@@ -207,34 +193,34 @@ Use **А у тебе́?** after **Як спра́ви?**. For a name exchange, u
 Марко́: Мене́ зва́ти Марко́.
 ```
 
-English support after the Ukrainian dialogue:
+Підтримка англійською після діалогу:
 
-| Українська | English support |
+| Українська | Meaning |
 | --- | --- |
 | **Як тебе́ зва́ти?** | What is your name? |
 | **Мене́ зва́ти...** | My name is... |
 | **А тебе́?** | And you? |
 
-Two ready phrases also show speaker gender:
+Дві готові фрази також показують стать мовця:
 
-| Speaker | Phrase |
+| Хто говорить | Фраза |
 | --- | --- |
-| man | **Радий тебе́ ба́чити.** |
-| woman | **Рада тебе́ ба́чити.** |
+| чоловік | **Радий тебе́ ба́чити.** |
+| жінка | **Рада тебе́ ба́чити.** |
 
 <!-- INJECT_ACTIVITY: act-5 -->
 
-## First-month habits
+## Звички першого місяця
 
-Keep this module small and clean:
+Тримайте цей урок малим і точним:
 
-1. Keep **о** clear in **молоко́**.
-2. Hear the difference between **и** and **і** in **Приві́т**.
-3. Remember that **Ь** has no sound of its own.
-4. Match print to notebook handwriting before you try to write fast.
-5. Ask a native Ukrainian teacher or tutor to listen to **Приві́т**,
-   **До́брий день**, and **Мене́ зва́ти...**
+1. Вимовляйте **о** чітко в слові **молоко́**.
+2. Слухайте різницю між **и** та **і** в слові **Приві́т**.
+3. Пам'ятайте: **Ь** не має власного звука.
+4. Спершу впізнавайте друк і зошит, а вже потім пишіть швидко.
+5. Попросіть носія української або викладача послухати **Приві́т**,
+   **До́брий день** та **Мене́ зва́ти...**
 
-End with one reliable line:
+Закінчіть одним надійним рядком:
 
 **Приві́т! Як тебе́ зва́ти? Мене́ зва́ти Анна. А тебе́?**
