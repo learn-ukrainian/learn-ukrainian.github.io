@@ -1,0 +1,90 @@
+- word: пошта
+  translation: post office, mail
+  pos: noun
+  gender: f
+  example: "Я на пошті."
+- word: відділення
+  translation: branch office
+  pos: noun
+  gender: n
+  example: "Відділення працює до шостої."
+- word: лист
+  translation: letter
+  pos: noun
+  gender: m
+  example: "Я хочу надіслати листа."
+- word: конверт
+  translation: envelope
+  pos: noun
+  gender: m
+  example: "Дайте мені конверт."
+- word: марка
+  translation: stamp
+  pos: noun
+  gender: f
+  example: "Потрібна одна марка."
+- word: посилка
+  translation: parcel, package
+  pos: noun
+  gender: f
+  example: "Я відправляю посилку сестрі."
+- word: бандероль
+  translation: small parcel, book post
+  pos: noun
+  gender: f
+  example: "Це бандероль для бабусі."
+- word: бланк
+  translation: form
+  pos: noun
+  gender: m
+  example: "Заповніть бланк, будь ласка."
+- word: адреса
+  translation: address
+  pos: noun
+  gender: f
+  example: "Адреса одержувача тут."
+- word: індекс
+  translation: postal code
+  pos: noun
+  gender: m
+  example: "Я не знаю індекс."
+- word: одержувач
+  translation: recipient
+  pos: noun
+  gender: m
+  example: "Одержувач - моя сестра."
+- word: відправник
+  translation: sender
+  pos: noun
+  gender: m
+  example: "Відправник - я."
+- word: квитанція
+  translation: receipt
+  pos: noun
+  gender: f
+  example: "Ось ваша квитанція."
+- word: листоноша
+  translation: mail carrier
+  pos: noun
+  gender: m
+  example: "Я передам листоноші посилку."
+- word: допомагати
+  translation: to help
+  pos: verb
+  example: "Допоможіть мені, будь ласка."
+- word: дякувати
+  translation: to thank
+  pos: verb
+  example: "Дякую вам."
+- word: надіслати
+  translation: to send
+  pos: verb
+  example: "Я хочу надіслати листа."
+- word: відправити
+  translation: to dispatch, to send
+  pos: verb
+  example: "Відправте посилку сьогодні."
+- word: отримати
+  translation: to receive, to get
+  pos: verb
+  example: "Я хочу отримати посилку."

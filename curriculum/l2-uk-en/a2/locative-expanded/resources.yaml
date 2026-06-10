@@ -1,0 +1,25 @@
+- title: "Dobra Forma: Locative Case - в, у and на"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-011"
+  url: https://opentext.ku.edu/dobraforma/chapter/4-2/
+  notes: "Practice with locative prepositions в, у, and на."
+- title: "ULP: Prepositions of Time"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /prepositions-of-time-in-ukrainian/"
+  url: https://www.ukrainianlessons.com/prepositions-of-time-in-ukrainian/
+  notes: "Useful for month and week expressions that extend the locative into time."
+- title: "Talk Ukrainian: Locative case"
+  role: article
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-020"
+  url: https://talkukrainian.com/locative-case/
+  notes: "Concise learner guide for locative forms and their main uses."
+- title: "ULP 2-66 Sharing memories + Locative case with places"
+  role: podcast
+  source_ref: "docs/resources/ukrainianlessons/blog_db.json: ulp-ep-066"
+  url: https://www.ukrainianlessons.com/episode66/
+  notes: "Natural locative practice with places and lived experience."
+- title: "ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case"
+  role: podcast
+  source_ref: "docs/resources/ukrainianlessons/blog_db.json: ulp-ep-067"
+  url: https://www.ukrainianlessons.com/episode67/
+  notes: "Strong support for time expressions that use the locative."
