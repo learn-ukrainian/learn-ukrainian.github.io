@@ -1,15 +1,15 @@
 - title: "Genitive Case (Родовий відмінок)"
   role: article
-  source_ref: "Ukrainian Lessons"
+  source_ref: "docs/resources/ulp-articles-index.yaml: /genitive-case/"
   url: https://www.ukrainianlessons.com/genitive-case/
   notes: "Learner-facing overview of genitive meanings, including absence and quantity."
 - title: "Talk Ukrainian: Genitive case"
   role: article
-  source_ref: "Talk Ukrainian"
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-016"
   url: https://talkukrainian.com/genitive-case/
   notes: "Concise grammar-guide follow-up for forms and common examples."
 - title: "Dobra Forma: Genitive Case with Expressions of Quantity (Masculine Plural)"
   role: article
-  source_ref: "Dobra Forma 6-1"
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-020"
   url: https://opentext.ku.edu/dobraforma/chapter/6-1/
   notes: "Extra practice for quantity phrases with genitive plural."

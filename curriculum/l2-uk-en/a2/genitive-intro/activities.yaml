@@ -29,32 +29,51 @@ inline:
         answer: "вікна"
         options: ["вікно", "вікна"]
         explanation: Вікно переходить у форму вікна.
+      - sentence: "У нас немає ___."
+        answer: "квитків"
+        options: ["квитки", "квитків"]
+        explanation: Немає може вимагати родового множини.
+      - sentence: "На столі немає ___."
+        answer: "ключа"
+        options: ["ключ", "ключа"]
+        explanation: Ключ переходить у форму ключа.
+      - sentence: "У валізі немає ___."
+        answer: "місця"
+        options: ["місце", "місця"]
+        explanation: Місце переходить у форму місця.
   - id: act-3
     type: quiz
     title: Багато чи мало
     instruction: Оберіть фразу з природним родовим множини.
     items:
-      - prompt: "many friends"
+      - prompt: "Багато + друг"
         options:
           - text: "багато друзів"
             correct: true
           - text: "багато друзі"
             correct: false
         explanation: Багато потребує родового множини.
-      - prompt: "few books"
+      - prompt: "Мало + книжка"
         options:
           - text: "мало книжок"
             correct: true
           - text: "мало книги"
             correct: false
         explanation: Мало також потребує родового множини.
-      - prompt: "several students"
+      - prompt: "Кілька + студент"
         options:
           - text: "кілька студентів"
             correct: true
           - text: "кілька студенти"
             correct: false
         explanation: Кілька потребує родового множини.
+      - prompt: "Декілька + яблуко"
+        options:
+          - text: "декілька яблук"
+            correct: true
+          - text: "декілька яблука"
+            correct: false
+        explanation: Після декілька потрібна форма яблук.
   - id: act-4
     type: group-sort
     title: Однина чи множина?
@@ -72,12 +91,21 @@ workbook:
       - statement: "Після немає часто стоїть родовий відмінок."
         answer: true
         explanation: У мене немає брата.
-      - statement: "Багато студентів uses genitive plural."
+      - statement: "Багато студентів - природна фраза з родовим множини."
         answer: true
         explanation: Студентів - це родовий множини.
-      - statement: "Немає плита is the correct A2 form."
+      - statement: "Немає плита - правильна A2-форма."
         answer: false
         explanation: Правильна фраза - немає плити.
+      - statement: "У мене немає часу - природна фраза."
+        answer: true
+        explanation: Час у цій фразі має форму часу.
+      - statement: "Кілька яблук - родовий множини."
+        answer: true
+        explanation: Яблуко переходить у форму яблук.
+      - statement: "Мало гроші - правильна фраза."
+        answer: false
+        explanation: Потрібно мало грошей.
   - type: error-correction
     title: Виправ родовий
     instruction: Оберіть виправлене речення.
@@ -92,3 +120,187 @@ workbook:
         correction: "У нас багато коробок."
         options: ["У нас багато коробок.", "У нас багато коробки."]
         explanation: Багато потребує родового множини.
+      - sentence: "Тут немає дзеркало."
+        error: "дзеркало"
+        correction: "Тут немає дзеркала."
+        options: ["Тут немає дзеркала.", "Тут немає дзеркало."]
+        explanation: Дзеркало переходить у форму дзеркала.
+      - sentence: "У мене мало гроші."
+        error: "гроші"
+        correction: "У мене мало грошей."
+        options: ["У мене мало грошей.", "У мене мало гроші."]
+        explanation: Мало потребує форми грошей.
+      - sentence: "У магазині немає лимони."
+        error: "лимони"
+        correction: "У магазині немає лимонів."
+        options: ["У магазині немає лимонів.", "У магазині немає лимони."]
+        explanation: Немає лимонів - родовий множини.
+      - sentence: "У валізі немає місце."
+        error: "місце"
+        correction: "У валізі немає місця."
+        options: ["У валізі немає місця.", "У валізі немає місце."]
+        explanation: Місце переходить у форму місця.
+  - type: fill-in
+    title: Квартира Олени
+    instruction: Оберіть форму, яка природно завершує речення.
+    items:
+      - sentence: "У квартирі немає ___."
+        answer: "холодильника"
+        options: ["холодильник", "холодильника", "холодильником"]
+        explanation: Після немає потрібна форма холодильника.
+      - sentence: "На кухні немає ___."
+        answer: "плити"
+        options: ["плита", "плити", "плиту"]
+        explanation: Плита переходить у форму плити.
+      - sentence: "У кімнаті багато ___."
+        answer: "коробок"
+        options: ["коробки", "коробок", "коробка"]
+        explanation: Багато коробок - родовий множини.
+      - sentence: "У коробках кілька ___."
+        answer: "книжок"
+        options: ["книжки", "книжок", "книжка"]
+        explanation: Кілька книжок - родовий множини.
+      - sentence: "У ванній немає ___."
+        answer: "рушників"
+        options: ["рушники", "рушників", "рушник"]
+        explanation: Немає рушників - родовий множини.
+      - sentence: "У квартирі мало ___."
+        answer: "меблів"
+        options: ["меблі", "меблів", "меблями"]
+        explanation: Мало меблів - стала корисна фраза.
+  - type: match-up
+    title: Називний і родовий
+    instruction: З'єднайте початкове слово з формою після немає.
+    pairs:
+      - left: "холодильник"
+        right: "холодильника"
+      - left: "плита"
+        right: "плити"
+      - left: "дзеркало"
+        right: "дзеркала"
+      - left: "ключ"
+        right: "ключа"
+      - left: "кава"
+        right: "кави"
+      - left: "місце"
+        right: "місця"
+  - type: group-sort
+    title: Сигнал родового
+    instruction: Розподіліть фрази за словом-сигналом.
+    groups:
+      - name: "немає"
+        items:
+          - "немає квитка"
+          - "немає часу"
+          - "немає лимонів"
+      - name: "багато"
+        items:
+          - "багато друзів"
+          - "багато коробок"
+          - "багато яблук"
+      - name: "мало"
+        items:
+          - "мало грошей"
+          - "мало місця"
+          - "мало меблів"
+      - name: "кілька/декілька"
+        items:
+          - "кілька книжок"
+          - "кілька студентів"
+          - "декілька яблук"
+  - type: unjumble
+    title: Складіть речення
+    instruction: Поставте слова в природний порядок.
+    items:
+      - words: ["У", "мене", "немає", "часу"]
+        answer: "У мене немає часу."
+      - words: ["Тут", "немає", "дзеркала"]
+        answer: "Тут немає дзеркала."
+      - words: ["У", "нас", "багато", "коробок"]
+        answer: "У нас багато коробок."
+      - words: ["У", "магазині", "немає", "лимонів"]
+        answer: "У магазині немає лимонів."
+      - words: ["Купіть", "кілька", "яблук"]
+        answer: "Купіть кілька яблук."
+      - words: ["У", "валізі", "мало", "місця"]
+        answer: "У валізі мало місця."
+  - type: quiz
+    title: Що вибрати?
+    instruction: Оберіть найприродніше речення.
+    items:
+      - prompt: "Потрібно сказати, що холодильника немає."
+        options:
+          - text: "Тут немає холодильника."
+            correct: true
+          - text: "Тут немає холодильник."
+            correct: false
+          - text: "Тут є немає холодильника."
+            correct: false
+        explanation: Після немає потрібна форма холодильника.
+      - prompt: "Потрібно сказати про велику кількість друзів."
+        options:
+          - text: "У мене багато друзів."
+            correct: true
+          - text: "У мене багато друзі."
+            correct: false
+          - text: "У мене друзі багато."
+            correct: false
+        explanation: Багато друзів - родовий множини.
+      - prompt: "Потрібно сказати, що грошей мало."
+        options:
+          - text: "У мене мало грошей."
+            correct: true
+          - text: "У мене мало гроші."
+            correct: false
+          - text: "У мене грошей мало немає."
+            correct: false
+        explanation: Мало грошей - природна фраза.
+      - prompt: "Потрібно попросити кілька яблук."
+        options:
+          - text: "Дайте, будь ласка, кілька яблук."
+            correct: true
+          - text: "Дайте, будь ласка, кілька яблука."
+            correct: false
+          - text: "Дайте, будь ласка, яблук кілька немає."
+            correct: false
+        explanation: Після кілька потрібна форма яблук.
+  - type: translate
+    title: Коротка підказка, українська фраза
+    instruction: Оберіть українське речення, яке найкраще передає зміст.
+    items:
+      - source: "no time"
+        options:
+          - text: "немає часу"
+            correct: true
+          - text: "немає час"
+            correct: false
+          - text: "багато часу немає"
+            correct: false
+        explanation: Час переходить у форму часу.
+      - source: "many boxes"
+        options:
+          - text: "багато коробок"
+            correct: true
+          - text: "багато коробки"
+            correct: false
+          - text: "немає коробка"
+            correct: false
+        explanation: Багато коробок - родовий множини.
+      - source: "several books"
+        options:
+          - text: "кілька книжок"
+            correct: true
+          - text: "кілька книжки"
+            correct: false
+          - text: "мало книжка"
+            correct: false
+        explanation: Кілька книжок - природна форма.
+      - source: "no ticket"
+        options:
+          - text: "немає квитка"
+            correct: true
+          - text: "немає квиток"
+            correct: false
+          - text: "багато квитка"
+            correct: false
+        explanation: Квиток переходить у форму квитка.
