@@ -1,0 +1,95 @@
+from __future__ import annotations
+
+import yaml
+
+from scripts.build import linear_pipeline
+
+
+def _vesum_rejects_all(words: list[str]) -> dict[str, list[dict[str, str]]]:
+    return {word: [] for word in words}
+
+
+def _gate(text: str, *, level: str = "folk") -> dict[str, object]:
+    return linear_pipeline._vesum_gate(
+        module_text=text,
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=_vesum_rejects_all,
+        level=level,
+    )
+
+
+def test_folk_vesum_gate_accepts_committed_slovnyk_attested_terms() -> None:
+    gate = _gate("риндзівка ягілка гагілка ягівка")
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert gate["heritage_attested"] == 4
+    assert gate["heritage_attested_words"] == ["гагілка", "риндзівка", "ягівка", "ягілка"]
+
+
+def test_folk_vesum_gate_accepts_committed_attested_plural_surfaces() -> None:
+    gate = _gate("риндзівки ягілки гагілки ягівки")
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert gate["heritage_attested"] == 4
+
+
+def test_folk_vesum_gate_still_rejects_russianism_not_in_attestations() -> None:
+    gate = _gate("аранжировку")
+
+    assert gate["passed"] is False
+    assert gate["missing"] == ["аранжировку"]
+    assert gate["heritage_attested"] == 0
+
+
+def test_folk_vesum_gate_still_rejects_unattested_coinages() -> None:
+    gate = _gate("городалька побажальний")
+
+    assert gate["passed"] is False
+    assert gate["missing"] == ["городалька", "побажальний"]
+    assert gate["heritage_attested"] == 0
+
+
+def test_attestation_row_marked_russianism_does_not_satisfy_gate(tmp_path, monkeypatch) -> None:
+    path = tmp_path / "folk_heritage_attestations.yaml"
+    path.write_text(
+        yaml.safe_dump(
+            {
+                "attestations": [
+                    {
+                        "lemma": "фантомка",
+                        "is_russianism": True,
+                        "citations": [
+                            {
+                                "dictionary_slug": "newsum",
+                                "url": "https://slovnyk.me/dict/newsum/fantomka",
+                            }
+                        ],
+                        "gloss": "guard row",
+                        "accepted_surfaces": ["фантомка"],
+                    }
+                ]
+            },
+            allow_unicode=True,
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(linear_pipeline, "FOLK_HERITAGE_ATTESTATIONS_PATH", path)
+
+    gate = _gate("фантомка")
+
+    assert gate["passed"] is False
+    assert gate["missing"] == ["фантомка"]
+    assert gate["heritage_attested"] == 0
+
+
+def test_core_level_vesum_gate_does_not_use_folk_attestation_fallback() -> None:
+    gate = _gate("риндзівка", level="a1")
+
+    assert gate["passed"] is False
+    assert gate["missing"] == ["риндзівка"]
+    assert gate["heritage_attested"] == 0

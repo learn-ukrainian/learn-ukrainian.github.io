@@ -39,6 +39,7 @@ SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 TEXTBOOK_SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+FOLK_HERITAGE_ATTESTATIONS_PATH = PROJECT_ROOT / "data" / "folk_heritage_attestations.yaml"
 CLAUDE_WRITER_AGENT_SOURCE = PROJECT_ROOT / "agents_extensions/shared" / "agents" / "curriculum-writer.md"
 CLAUDE_WRITER_AGENT_TARGET = PROJECT_ROOT / ".claude" / "agents" / "curriculum-writer.md"
 
@@ -6772,6 +6773,7 @@ def run_python_qg(
             vocabulary=vocabulary,
             resources=resources,
             verify_words_fn=verify_words_fn,
+            level=level,
             ignored_missing_surfaces=ignored_vesum_missing_surfaces,
         ),
     )
@@ -8094,6 +8096,96 @@ def _extract_section_text(text: str, title: str, *, archetype_key: str | None = 
     return text[match.end() : match.end() + next_heading.start()]
 
 
+def _vesum_heritage_attestation_enabled(level: str | None) -> bool:
+    return str(level or "").strip().lower() in SEMINAR_LEVELS
+
+
+def _folk_heritage_attestation_citations(row: Mapping[str, Any]) -> list[Mapping[str, Any]]:
+    citations = row.get("citations")
+    if isinstance(citations, list):
+        return [citation for citation in citations if isinstance(citation, Mapping)]
+
+    dictionary = row.get("dictionary")
+    url = row.get("url")
+    if isinstance(dictionary, str) and isinstance(url, str):
+        return [{"dictionary": dictionary, "url": url}]
+    return []
+
+
+def _folk_heritage_attestation_is_valid(row: Mapping[str, Any]) -> bool:
+    if row.get("is_russianism") is not False:
+        return False
+    for citation in _folk_heritage_attestation_citations(row):
+        dictionary = str(citation.get("dictionary_slug") or citation.get("dictionary") or "").strip()
+        url = str(citation.get("url") or "").strip()
+        if dictionary and url.startswith("https://slovnyk.me/dict/"):
+            return True
+    return False
+
+
+def _folk_heritage_attestation_index(
+    path: Path | None = None,
+) -> dict[str, Mapping[str, Any]]:
+    source_path = path or FOLK_HERITAGE_ATTESTATIONS_PATH
+    if not source_path.exists():
+        return {}
+
+    data = yaml.safe_load(source_path.read_text(encoding="utf-8")) or {}
+    if not isinstance(data, Mapping):
+        raise ValueError(f"{source_path} must contain a YAML mapping")
+    rows = data.get("attestations", [])
+    if not isinstance(rows, list):
+        raise ValueError(f"{source_path} field 'attestations' must be a list")
+
+    index: dict[str, Mapping[str, Any]] = {}
+    for row in rows:
+        if not isinstance(row, Mapping) or not _folk_heritage_attestation_is_valid(row):
+            continue
+        lemma = _normalize_for_vesum(str(row.get("lemma") or "")).lower()
+        if not lemma:
+            continue
+        surfaces = {lemma}
+        accepted_surfaces = row.get("accepted_surfaces", [])
+        if accepted_surfaces is None:
+            accepted_surfaces = []
+        if not isinstance(accepted_surfaces, list):
+            raise ValueError(
+                f"{source_path} lemma {lemma!r} field 'accepted_surfaces' must be a list"
+            )
+        for surface in accepted_surfaces:
+            normalized = _normalize_for_vesum(str(surface or "")).lower()
+            if normalized:
+                surfaces.add(normalized)
+        for surface in surfaces:
+            index[surface] = row
+    return index
+
+
+def _resolve_folk_heritage_attested_missing(
+    missing_lc: set[str],
+    unchecked_pairs: Sequence[tuple[str, str, str]],
+) -> set[str]:
+    if not missing_lc:
+        return set()
+
+    attestation_index = _folk_heritage_attestation_index()
+    if not attestation_index:
+        return set()
+
+    candidates_by_missing: dict[str, set[str]] = {word: {word} for word in missing_lc}
+    for surface, lower, original_case_lookup in unchecked_pairs:
+        if lower not in missing_lc:
+            continue
+        candidates_by_missing[lower].add(_normalize_for_vesum(surface).lower())
+        candidates_by_missing[lower].add(_normalize_for_vesum(original_case_lookup).lower())
+
+    return {
+        word
+        for word, candidates in candidates_by_missing.items()
+        if any(candidate in attestation_index for candidate in candidates)
+    }
+
+
 def _vesum_gate(
     *,
     module_text: str,
@@ -8101,6 +8193,7 @@ def _vesum_gate(
     vocabulary: list[dict[str, Any]],
     resources: list[dict[str, Any]],
     verify_words_fn: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None,
+    level: str | None = None,
     ignored_missing_surfaces: Collection[str] = (),
 ) -> dict[str, Any]:
     """Verify Ukrainian words against VESUM, walking artifacts structurally.
@@ -8271,7 +8364,21 @@ def _vesum_gate(
             }
     if missing_lc:
         missing_lc = {word for word in missing_lc if not _is_sung_vowel_practice_lookup(word)}
+    heritage_attested_lc: set[str] = set()
+    if missing_lc and _vesum_heritage_attestation_enabled(level):
+        try:
+            heritage_attested_lc = _resolve_folk_heritage_attested_missing(missing_lc, unchecked_pairs)
+        except Exception as exc:
+            return {
+                "passed": False,
+                "error": str(exc),
+                "checked": len(unchecked_pairs),
+            }
+        missing_lc -= heritage_attested_lc
     missing = sorted({surface for surface, lower, _original in unchecked_pairs if lower in missing_lc})
+    heritage_attested_words = sorted(
+        {surface for surface, lower, _original in unchecked_pairs if lower in heritage_attested_lc}
+    )
     ignored_missing_lc = _vesum_missing_exclusion_keys(
         ignored_missing_surfaces,
         min_word_length=VESUM_MIN_WORD_LENGTH,
@@ -8282,6 +8389,8 @@ def _vesum_gate(
         "passed": not missing,
         "checked": len(unchecked_pairs),
         "whitelisted": len(surface_pairs) - len(unchecked_pairs),
+        "heritage_attested": len(heritage_attested_words),
+        "heritage_attested_words": heritage_attested_words[:100],
         "missing": missing[:100],
         "missing_count": len(missing),
     }
