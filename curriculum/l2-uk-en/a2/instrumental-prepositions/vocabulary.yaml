@@ -1,0 +1,95 @@
+- word: над
+  translation: above, over
+  pos: preposition
+  example: "Лампа висить над столом."
+- word: під
+  translation: under, below
+  pos: preposition
+  example: "Кіт сидить під столом."
+- word: перед
+  translation: in front of; before
+  pos: preposition
+  example: "Машина стоїть перед будинком."
+- word: за
+  translation: behind; according to
+  pos: preposition
+  example: "Кафе за музеєм."
+- word: між
+  translation: between
+  pos: preposition
+  example: "Парк між школою і бібліотекою."
+- word: стіл
+  translation: table
+  pos: noun
+  gender: m
+  example: "Лампа над столом."
+- word: будинок
+  translation: building, house
+  pos: noun
+  gender: m
+  example: "Сад за будинком."
+- word: ліжко
+  translation: bed
+  pos: noun
+  gender: n
+  example: "Книга під ліжком."
+- word: стіна
+  translation: wall
+  pos: noun
+  gender: f
+  example: "Стіл біля стіни."
+- word: обід
+  translation: lunch
+  pos: noun
+  gender: m
+  example: "Ми прийдемо перед обідом."
+- word: стеля
+  translation: ceiling
+  pos: noun
+  gender: f
+  example: "Лампа під стелею."
+- word: підлога
+  translation: floor
+  pos: noun
+  gender: f
+  example: "Килим на підлозі."
+- word: кут
+  translation: corner
+  pos: noun
+  gender: m
+  example: "Крісло стоїть у куті."
+- word: розклад
+  translation: schedule
+  pos: noun
+  gender: m
+  example: "Ми працюємо за розкладом."
+- word: сон
+  translation: sleep, dream
+  pos: noun
+  gender: m
+  example: "Я читаю перед сном."
+- word: музей
+  translation: museum
+  pos: noun
+  gender: m
+  example: "Кафе за музеєм."
+- word: камін
+  translation: fireplace
+  pos: noun
+  gender: m
+  example: "Картина над каміном."
+- word: вікно
+  translation: window
+  pos: noun
+  gender: n
+  example: "Скульптура стоїть між вікнами."
+- word: крісло
+  translation: armchair
+  pos: noun
+  gender: n
+  example: "Рюкзак лежить за кріслом."
+- word: допомога
+  translation: help
+  pos: noun
+  gender: f
+  example: "Дякую за допомогу."
