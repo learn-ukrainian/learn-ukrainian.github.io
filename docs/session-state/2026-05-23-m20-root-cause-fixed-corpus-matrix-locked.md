@@ -23,7 +23,7 @@ next_session_first_item: "Poll/review the writer-prompt rebuild Codex dispatch (
 ## TL;DR — what changed in this session
 
 | # | Action | State |
-|---|---|---|
+| --- | --- | --- |
 | 1 | Diagnosed real m20 root cause: TWO separate bugs (`promote_module` MDX path + `learner_state` vocab source) | both fixed |
 | 2 | PR #2211 (learner_state planned-vocab fallback) | merged @ `c75d1694a6` — verified m20 now sees 295 lemmas + band `a1-m07-14` |
 | 3 | PR #2212 (promote_module reads MDX from curriculum tree, not stale starlight tree) | merged @ `edcb872323` |
@@ -87,7 +87,7 @@ Note: `a1-m07-14` is named by module-range from when bands were tied to module#,
 User interview (questions Q1-Q14 in main session) produced this binding matrix. The writer-prompt rebuild brief (`docs/dispatch-briefs/2026-05-23-writer-prompt-rebuild-codex.md`) implements it verbatim in `scripts/build/phases/linear-write.md`.
 
 | Level | Posture | Textbooks | Literary | External | Vocab source | Grammar/style |
-|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- |
 | **a1** | scaffold-grounded | G1-4 (prefer G1-2) | curated subset (children's lit, folk songs, iconic phrases) | ULP (`ulp_blogs` + `ulp_youtube`) + `pohribnyi_pronunciation` | PULS A1 → freq top-1000 → ULP S1-S2 (stacked) | Pravopys + Antonenko (writer-side); UA-GEC + heritage + russian_shadow (reviewer-side) |
 | **a2** | (same) | G1-5 | widened curated subset | (same as a1) | PULS A1+A2 → top-2000 → ULP S1-S4 | (same) |
 | **b1** | (same) | G1-11 (full) | FULL `search_literary` corpus | All 8 collections | PULS A1+A2+B1 → top-5000 → ULP S1-S6 | (same) |
@@ -110,7 +110,7 @@ The editorial moat over slovnyk.me is the decolonization layer:
 - **Russian morphological shadow** (red pill) for `check_russian_shadow=true`
 - **Course cross-links** ("Used in HIST M23, OES M44") — none of slovnyk.me's competitors have curriculum back-links
 
-Visual proof: `docs/poc/poc-word-atlas-design.html` shows three contrasting words (`князь` rich data clean; `прапор` sovietization warning visible; `файний` heritage-defense badge for galicianism). All visual primitives reused from `poc-lesson-design.html` — same CSS tokens, same `.myth-box`/`.rule-box`/`.source-box`/`.ety-stage` patterns. Distinguishing teal-yellow hero gradient marks the atlas as the third top-level section.
+Visual proof: `docs/poc/word-atlas/README.md` maps three contrasting split POC files (`князь` rich data clean; `прапор` sovietization warning visible; `файний` heritage-defense badge for galicianism). All visual primitives reused from `poc-lesson-design.html` — same CSS tokens, same `.myth-box`/`.rule-box`/`.source-box`/`.ety-stage` patterns. Distinguishing teal-yellow hero gradient marks the atlas as the third top-level section.
 
 Design doc covers data model, page contract (15 sections in flow, omit-if-empty), V7 pipeline integration (writer deeplinks to atlas; reviewer audits against atlas as ground truth), deterministic quality gates (all 7), v0→v5 phasing, scope exclusions, and 5 open questions for user (naming, URL scheme, pre-build vs on-demand rendering, cross-link integrity gate, editorial overrides).
 
@@ -139,7 +139,7 @@ Each build will now produce: (a) correct cumulative_vocab from planned-vocab fal
 ## Follow-ups captured for future sessions
 
 | # | Item | Blocks |
-|---|---|---|
+| --- | --- | --- |
 | F1 | Build curated-literary filter layer (`tag:a1-curated`, `tag:a2-curated`) on `search_literary` — children's lit, folk songs, fairy-tale openings, iconic phrases | A1+A2 builds (advisory until built; writer prompt references it as future scope) |
 | F2 | Ingest peer-reviewed UA academic scholarship (Hrushevsky, Plokhy, Yakovenko, etc.) | C1+ builds + all seminar builds |
 | F3 | Ingest Ruthenian Baroque corpus (Прокопович, Туптало sermons + religious treatises) | All seminar builds |
@@ -166,15 +166,18 @@ Each build will now produce: (a) correct cumulative_vocab from planned-vocab fal
 ## Lessons from this session (autopsy notes)
 
 ### What was wrong in how I read the prior handoff
+
 - I took the prior handoff's framing ("Tab 3 fallback eaten by transforms") at face value and started tracing transforms instead of tracing the actual file path from build write → promote read. Reading the build's git log + `git show --stat` on the promote commit would have surfaced the path mismatch in ~5 minutes; instead I burned ~30 minutes chasing the wrong layer.
 - The diagnose-the-right-layer principle: when a build artifact looks wrong on main, check ALL the layers (writer → assembler → promote → deploy). The bug is often in a layer that the prior session ASSUMED worked.
 
 ### What was wrong in how I conducted the interview
+
 - Mid-session the user explicitly told me "you can bring up several options, that won't change how i want it. i am just getting annoyed from these options. how many time i told you this and you just dont care." This violates #M-1 (direct order obedience: stop alternative paths, do the thing) and #0A (frustrated user: brief actions only — no menus, no "two options").
 - Pattern that triggered the frustration: presenting AskUserQuestion blocks AFTER the user had already given a clear direction. Interview mode is for OPEN questions, not for confirming directions the user has already stated.
 - Specific case: the user described the inline-vs-workbook split clearly ("we have some activities during the theory parts since every book is like that, much more activities in the workbook part"). I then proposed 4 P2 rendering options when the user had already implicitly answered. Cost: a frustrated message + a wasted decision card.
 
 ### What's working
+
 - The interview matrix itself is a strong artifact — A1-C2 + seminars captured in one binding table that drives the writer-prompt rebuild brief verbatim.
 - Codex dispatch for the learner_state fix landed clean (5 new tests, all 9 acceptance criteria green, all blocking CI passed). Inline PR review + merge took ~5 min.
 - The promote_module fix was a clean root-cause find: traced through the m20 worktree's git log to the promote commit, identified the path mismatch, fixed with one function rename + one new function + 3-line policy change + a new regression test that pollutes the stale starlight path and asserts the fresh curriculum path is what lands.

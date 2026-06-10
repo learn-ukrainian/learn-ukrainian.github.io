@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POC: Атлас слів — landing</title>
+<link rel="stylesheet" href="word-atlas.css">
+</head>
+<body data-theme="light">
+
+
+<div class="word-switch">
+  <label>Слово:</label>
+  <select onchange="switchWord(this.value)">
+    <option value="knyaz" selected>князь — повні дані без редакційних ризиків</option>
+    <option value="prapor">прапор — попередження про радянські формулювання</option>
+    <option value="faynyy">файний — захист питомості (галицизм)</option>
+  </select>
+  <div class="atlas-search">
+    <input type="search" aria-label="Шукати" placeholder="Шукати слово або джерело">
+    <button class="atlas-button search" type="button">Шукати</button>
+    <button class="atlas-button filter" type="button">Фільтр</button>
+  </div>
+  <div class="theme-toggle" role="group" aria-label="Тема">
+    <button type="button" class="active" data-theme-choice="light">Світла</button>
+    <button type="button" data-theme-choice="dark">Темна</button>
+  </div>
+  <span class="poc-label">POC: Атлас слів (Лексикон) — дизайн окремого розділу V7</span>
+</div>
+
+<!-- Top-nav for context: shows the atlas is its OWN top-level section -->
+<div class="topnav">
+  <div class="topnav-inner">
+    <span class="topnav-brand">learn-ukrainian</span>
+    <a class="topnav-link" href="#">Головна</a>
+    <a class="topnav-link" href="#">A1–C2</a>
+    <a class="topnav-link" href="#">Семінари</a>
+    <a class="topnav-link active" href="#">Лексикон</a>
+    <a class="topnav-link" href="#">Про проєкт</a>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     PAGE 1: князь — rich data, no editorial issues
+     Demonstrates: full 15-section render, heritage-OK badge,
+     etymology timeline, literary attestation, course cross-link.
+     ============================================================ -->
+<div id="word-knyaz">
+  <div class="word-hero">
+    <div class="word-hero-inner">
+      <span class="lexicon-badge">Лексикон · A‑Я · К</span>
+      <h1 class="word-title">князь <span class="word-stress">[кня́зь]</span></h1>
+      <div class="word-pos">іменник · чоловічий рід · істота</div>
+      <div class="word-badges">
+        <span class="status-badge heritage-ok">✓ Питома українська лексика</span>
+        <span class="status-badge cefr">CEFR B2</span>
+        <span class="status-badge archaic" title="Modern use is historical / honorific only">Історизм у сучасному вжитку</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-area">
+
+    <!-- 1. Editorial banner: heritage-defense success (this word is authentic UK heritage) -->
+    <section class="atlas-section">
+      <div class="editorial-success">
+        <div class="editorial-success-header"><div class="editorial-success-icon">✓</div>Питома українська лексика</div>
+        <p>Слово засвідчене у староруських літописах (XI–XIII ст.) та зафіксоване Б. Грінченком (1907) задовго до радянської епохи. Спільнослов'янське походження від прагерманського <em>*kuningaz</em> через готське посередництво.</p>
+        <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерела підтвердження: <a href="#">Грінченко 1907</a> · <a href="#">ЕСУМ, т. 2</a> · <a href="#">Галицько-Волинський літопис</a></p>
+      </div>
+    </section>
+
+    <!-- 2. Значення (Definitions) -->
+    <section class="atlas-section">
+      <h2>Значення</h2>
+
+      <div class="def-card sum20">
+        <div class="def-source"><span class="src-pill">СУМ-20</span><span>сучасний тлумачний словник</span></div>
+        <div class="def-text">1. У слов'янських народів давньої та середньовічної доби — феодальний правитель князівства, голова княжої династії. 2. Спадковий титул нащадків давніх удільних правителів і деяких представників вищої аристократії. 3. <em>перен.</em> Особа, що посідає визначне становище в певній сфері діяльності.</div>
+      </div>
+
+      <div class="def-card grinchenko">
+        <div class="def-source"><span class="src-pill">Грінченко 1907</span><span>історичний словник</span></div>
+        <div class="def-text">Князь, -зя, м. 1) Княжескій титулъ. 2) Молодой въ день свадьбы. <em>Молодий — князь, а молода — княгиня. Чуб. IV. 38.</em> 3) Игра въ «князя». <em>Чуб. IV. 51.</em></div>
+      </div>
+
+      <div class="def-card sum11">
+        <div class="def-source"><span class="src-pill">СУМ-11</span><span>радянське видання · перевірено: чисто</span></div>
+        <div class="def-text">Голова феодально-монархічної держави або великого державного утворення в слов'янських народів періоду феодалізму. У Київській та Галицько-Волинській державах — верховний правитель.</div>
+        <div style="font-size: 11px; color: var(--green); margin-top: 8px;">↳ sovietization_risk=0 (чисто) · ключові слова: не виявлено</div>
+      </div>
+    </section>
+
+    <!-- 3. Етимологія (Etymology) — PoC #27 timeline pattern reused -->
+    <section class="atlas-section">
+      <h2>Етимологія</h2>
+      <div class="ety-timeline">
+        <div class="ety-stage" onclick="toggleEty(this, 'ety-info-knyaz', 'Готське *kuningaz означало «один з роду» (від *kuni — «рід, плем'я»). Запозичено в праслов'янську через готське посередництво у V–VI ст.')">
+          <div class="ety-period">Прагерманська</div>
+          <div class="ety-word archaic">*kuningaz</div>
+        </div>
+        <div class="ety-arrow">→</div>
+        <div class="ety-stage" onclick="toggleEty(this, 'ety-info-knyaz', 'Звукові зміни: u → ъ; g → з через стадії [g→ɣ→dz→z]. Засвідчено у пам'ятках старослов'янської мови (X–XI ст.).')">
+          <div class="ety-period">Праслов'янська</div>
+          <div class="ety-word archaic">*kъnędzь</div>
+        </div>
+        <div class="ety-arrow">→</div>
+        <div class="ety-stage" onclick="toggleEty(this, 'ety-info-knyaz', 'Староукраїнська (давньоруська) форма літописів — Києво-Печерський патерик, Галицько-Волинський літопис, Слово о полку Ігоревім. Жіноча форма — княгиня, княжна.')">
+          <div class="ety-period">Давньоукраїнська</div>
+          <div class="ety-word archaic">кънязь</div>
+        </div>
+        <div class="ety-arrow">→</div>
+        <div class="ety-stage" onclick="toggleEty(this, 'ety-info-knyaz', 'Сучасна українська форма. Єр (ъ) випав; м'який знак збережений. Наголос на першому складі: кня́зь. Пор. рос. князь, біл. князь, пол. ksiądz («священник» — з тим самим коренем, але інший семантичний розвиток).')">
+          <div class="ety-period">Сучасна українська</div>
+          <div class="ety-word modern">князь</div>
+        </div>
+      </div>
+      <div class="ety-note" id="ety-info-knyaz">Натисніть на стадію, щоб побачити деталі звукових змін та засвідчення.</div>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерело: <a href="#">ЕСУМ, т. 2, с. 462</a></p>
+    </section>
+
+    <!-- 4. Морфологія (Morphology) — VESUM paradigm -->
+    <section class="atlas-section">
+      <h2>Морфологія</h2>
+      <p style="font-size: 14px; color: var(--gray-600);">Іменник 2-ї відміни (м'яка група), чоловічий рід, істота. Чергування у непрямих відмінках: <strong>з → ж</strong> (князь → князем). Жіноча відповідність: княгиня (заст. княжна).</p>
+      <table class="paradigm-table">
+        <tr><th class="col-case">Відмінок</th><th>Однина</th><th>Множина</th></tr>
+        <tr><td class="case-name">Називний</td><td class="form">кня́зь</td><td class="form">кня́зі</td></tr>
+        <tr><td class="case-name">Родовий</td><td class="form">кня́зя</td><td class="form">кня́зів</td></tr>
+        <tr><td class="case-name">Давальний</td><td class="form">кня́зеві / кня́зю</td><td class="form">кня́зям</td></tr>
+        <tr><td class="case-name">Знахідний</td><td class="form">кня́зя</td><td class="form">кня́зів</td></tr>
+        <tr><td class="case-name">Орудний</td><td class="form">кня́зем</td><td class="form">кня́зями</td></tr>
+        <tr><td class="case-name">Місцевий</td><td class="form">(на) кня́зеві / кня́зі</td><td class="form">(на) кня́зях</td></tr>
+        <tr><td class="case-name">Кличний</td><td class="form">кня́зю</td><td class="form">кня́зі</td></tr>
+      </table>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерело: <a href="#">VESUM 409K · paradigm class N2/m-anim-soft</a></p>
+    </section>
+
+    <!-- 5. Стилістичні нотатки (Style notes) — Антоненко + UA-GEC -->
+    <section class="atlas-section">
+      <h2>Стилістичні нотатки</h2>
+      <p style="font-size: 14px; color: var(--gray-600);">Жодних калькових або помилкових форм у нашій базі немає для цього слова. Стилістичних застережень з боку Антоненка-Давидовича не виявлено.</p>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Перевірено: Антоненко-Давидович (342 структурованих + 169 фрагментів) · UA-GEC (8,937 пар) → <strong>0 hits</strong></p>
+    </section>
+
+    <!-- 6. Синоніми + антоніми -->
+    <section class="atlas-section">
+      <h2>Синоніми та антоніми</h2>
+      <div>
+        <div class="chip-label">Синоніми:</div>
+        <div class="chip-row">
+          <span class="chip">правитель</span>
+          <span class="chip">володар</span>
+          <span class="chip">государ</span>
+          <span class="chip">князь-володар</span>
+          <span class="chip">кагáн</span>
+        </div>
+      </div>
+      <div style="margin-top: 14px;">
+        <div class="chip-label">Антоніми:</div>
+        <div class="chip-row">
+          <span class="chip antonym">холоп</span>
+          <span class="chip antonym">смерд</span>
+          <span class="chip antonym">підданий</span>
+        </div>
+      </div>
+      <div class="data-caveat">⚠ Дані синсетів автоматично перекладено з Open English WordNet — точність перевіряється (issue #1657). Звіряти з контекстом перед використанням.</div>
+    </section>
+
+    <!-- 7. Фразеологізми (Idioms) -->
+    <section class="atlas-section">
+      <h2>Фразеологізми та сталі вирази</h2>
+      <div class="resource-card">
+        <h4>з князів та в грязь</h4>
+        <p>Про різке зниження соціального становища; від багатства й влади до бідності.</p>
+        <span class="tag">Фразеологічний словник</span>
+      </div>
+      <div class="resource-card">
+        <h4>не вчи рибу плавати, а князя — княжити</h4>
+        <p>Прислів'я про недоречність порад досвідченій людині.</p>
+        <span class="tag">Прислів'я</span>
+      </div>
+    </section>
+
+    <!-- 8. Літературні засвідчення — PoC source-box pattern reused -->
+    <section class="atlas-section">
+      <h2>Літературні засвідчення</h2>
+
+      <div class="source-box">
+        <div class="source-box-header">Галицько-Волинський літопис (XIII ст.)</div>
+        <blockquote>«Данило ж, князь добрий, хоробрий і мудрий, збудував городи многі, і церкви поставив, і оздобив їх різними прикрасами…»</blockquote>
+        <div class="source-cite">— про Данила Романовича Галицького</div>
+      </div>
+
+      <div class="source-box">
+        <div class="source-box-header">Слово о полку Ігоревім (XII ст.)</div>
+        <blockquote>«Тогда вступи Игорь князь въ златъ стремень и поѣха по чистому полю…»</blockquote>
+        <div class="source-cite">— староукраїнська пам'ятка</div>
+      </div>
+
+      <div class="source-box">
+        <div class="source-box-header">Тарас Шевченко · «Іван Підкова» (1839)</div>
+        <blockquote>«Гей, по синьому морю йдуть козаки на байдаки… не страшний нам ні князь, ні цар, ні турецький султан…»</blockquote>
+        <div class="source-cite">— Кобзар, 1840</div>
+      </div>
+
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерело: <code>literary_fts</code> 125K chunks · показано 3 з 47 знайдених засвідчень · <a href="#">переглянути всі →</a></p>
+    </section>
+
+    <!-- 9. Підручники (Textbook usage) -->
+    <section class="atlas-section">
+      <h2>У шкільних підручниках</h2>
+      <div class="resource-card textbook">
+        <h4>Кравцова та ін., «Я досліджую світ», 4 клас, с. 112</h4>
+        <p>«Володимир Великий — київський князь, який охрестив Русь у 988 році…»</p>
+        <span class="tag">Підручник · Грамота · 4 клас</span>
+      </div>
+      <div class="resource-card textbook">
+        <h4>Власов, «Історія України», 7 клас, с. 84</h4>
+        <p>Розділ «Галицько-Волинська держава» — Роман, Данило, Лев Данилович.</p>
+        <span class="tag">Підручник · 7 клас</span>
+      </div>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерело: <code>search_text</code> · показано 2 з 18 згадок у підручниках 4–11 класів</p>
+    </section>
+
+    <!-- 10. Зовнішні матеріали — 8 collections grouped -->
+    <section class="atlas-section">
+      <h2>Зовнішні матеріали</h2>
+
+      <div class="external-group">
+        <div class="external-group-header">ULP YouTube <span class="external-group-count">3</span></div>
+        <div class="resource-card youtube">
+          <h4>Anna Ohoiko · «How to talk about Ukrainian history in Ukrainian: Princes, Hetmans, and Kings»</h4>
+          <p>Епізод S3-12, 14 хв. Княжа доба та козацька доба як ключові періоди.</p>
+          <span class="tag">YouTube · subtitles</span>
+        </div>
+      </div>
+
+      <div class="external-group">
+        <div class="external-group-header">Історія мови <span class="external-group-count">2</span></div>
+        <div class="resource-card blog">
+          <h4>«Чому в українській 'князь', а в російській 'князь' звучить інакше?»</h4>
+          <p>Стаття про різні шляхи розвитку слова в українській та російській мовах.</p>
+          <span class="tag">Блог</span>
+        </div>
+      </div>
+
+      <div class="external-group">
+        <div class="external-group-header">Реальна історія <span class="external-group-count">1</span></div>
+        <div class="resource-card youtube">
+          <h4>«Київські князі: династія Рюриковичів і її кінець»</h4>
+          <p>Документальний цикл, серія 4.</p>
+          <span class="tag">YouTube · subtitles</span>
+        </div>
+      </div>
+
+      <div class="external-group">
+        <div class="external-group-header">Комік історик <span class="external-group-count">1</span></div>
+        <div class="resource-card youtube">
+          <h4>«Данило Галицький — король, якого ніхто не пам'ятає»</h4>
+          <p>Освітньо-розважальний епізод.</p>
+          <span class="tag">YouTube · subtitles</span>
+        </div>
+      </div>
+
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерело: <code>search_external</code> по 8 колекціях · знайдено: 7 матеріалів</p>
+    </section>
+
+    <!-- 11. Курсові посилання (Course cross-links) -->
+    <section class="atlas-section">
+      <h2>У курсі — модулі, де зустрічається це слово</h2>
+      <div class="used-in-card">
+        <span class="module-id">HIST M23</span>
+        <span class="module-title">Данило Галицький</span>
+        <span class="lesson-gloss">«король, якого папа коронував»</span>
+        <a href="#" style="font-size: 13px;">відкрити →</a>
+      </div>
+      <div class="used-in-card">
+        <span class="module-id">HIST M08</span>
+        <span class="module-title">Київські князі IX–X ст.</span>
+        <span class="lesson-gloss">«правитель княжої династії»</span>
+        <a href="#" style="font-size: 13px;">відкрити →</a>
+      </div>
+      <div class="used-in-card">
+        <span class="module-id">LIT M14</span>
+        <span class="module-title">Слово о полку Ігоревім</span>
+        <span class="lesson-gloss">«князь Ігор Святославич»</span>
+        <a href="#" style="font-size: 13px;">відкрити →</a>
+      </div>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Сканування <code>curriculum/l2-uk-en/&#42;/&#42;/vocabulary.yaml</code> · 3 модулі</p>
+    </section>
+
+    <!-- 12. Переклад (Translation) -->
+    <section class="atlas-section">
+      <h2>Переклад</h2>
+      <div class="translation-block">
+        <span class="uk-side">князь</span>
+        <span class="arrow">↔</span>
+        <div class="en-side">
+          <span class="en-term">prince</span>
+          <span class="en-term">duke</span>
+          <span class="en-term">ruler (medieval)</span>
+        </div>
+      </div>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерело: Балла EN→UK (79K пар) + dmklinger UK→EN</p>
+    </section>
+
+    <!-- 13. Wikipedia -->
+    <section class="atlas-section">
+      <h2>Wikipedia</h2>
+      <div class="wiki-card">
+        <h4>Князь</h4>
+        <p>Князь — спадковий титул володаря держави або найвищого аристократичного звання у феодальній і середньовічній державі слов'ян. У Київській Русі та Галицько-Волинській державі — верховний правитель. У XV–XVI ст. — найвищий титул шляхетства Великого князівства Литовського і Польської Корони…</p>
+        <p class="wiki-source">Джерело: <a href="https://uk.wikipedia.org/wiki/Князь" target="_blank">uk.wikipedia.org/wiki/Князь</a> · актуальність: 2026-05-23</p>
+      </div>
+    </section>
+
+    <!-- 14. Provenance footer -->
+    <div class="provenance-footer">
+      <h3>Походження даних</h3>
+      <div class="provenance-list">
+        <span class="src">vesum</span>
+        <span class="src">sum20 (slovnyk.me)</span>
+        <span class="src">grinchenko_1907</span>
+        <span class="src">sum11</span>
+        <span class="src">esum (vol. 2)</span>
+        <span class="src">literary_fts</span>
+        <span class="src">search_idioms</span>
+        <span class="src">balla_en_uk</span>
+        <span class="src">search_external (ulp_youtube · istoria_movy · realna_istoria · komik_istoryk)</span>
+        <span class="src">curriculum_vocabulary</span>
+        <span class="src">query_wikipedia</span>
+      </div>
+      <div class="meta-line">
+        <span>згенеровано: 2026-05-23T10:42Z</span>
+        <span>наступна перевірка: при наступному збиранні</span>
+        <span><a href="#">повідомити про помилку даних</a></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchWord(w) {
+  var routes = {
+    knyaz: 'landing.html',
+    prapor: 'detail.html',
+    faynyy: 'heritage-defense.html'
+  };
+  if (routes[w]) { window.location.href = routes[w]; }
+}
+function toggleEty(el, infoId, text) {
+  document.querySelectorAll('.ety-stage').forEach(function(s) { s.style.borderColor = ''; });
+  el.style.borderColor = 'var(--teal)';
+  el.style.boxShadow = '0 0 0 2px rgba(0,105,92,0.18)';
+  var info = document.getElementById(infoId);
+  if (info) { info.textContent = text; info.style.background = 'var(--teal-light)'; }
+}
+document.querySelectorAll('[data-theme-choice]').forEach(function(button) {
+  button.addEventListener('click', function() {
+    document.body.setAttribute('data-theme', button.dataset.themeChoice);
+    document.querySelectorAll('[data-theme-choice]').forEach(function(item) {
+      item.classList.toggle('active', item === button);
+    });
+  });
+});
+</script>
+
+</body>
+</html>

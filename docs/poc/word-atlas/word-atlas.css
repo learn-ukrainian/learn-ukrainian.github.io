@@ -1,0 +1,375 @@
+  :root {
+    color-scheme: light;
+    --lu-bg: #ffffff;
+    --lu-surface: #ffffff;
+    --lu-surface-muted: #f8f9fa;
+    --lu-border: #ebeced;
+    --lu-text: #1c1e21;
+    --lu-text-muted: #6b6b6b;
+    --lu-primary: #0057B7;
+    --lu-accent: #FFD700;
+    --lu-on-accent: #1c1e21;
+    --lu-state-active: rgba(0,87,183,.08);
+    --lu-state-correct-bg: rgba(46,125,50,.08);
+    --lu-state-correct-fg: #2E7D32;
+    --lu-state-wrong-bg: rgba(198,40,40,.08);
+    --lu-state-wrong-fg: #C62828;
+    --lu-state-missed: rgba(251,188,4,.15);
+    --lu-state-drag: rgba(106,27,154,.08);
+    --lu-match-right: rgba(230,81,0,.08);
+    --lu-id-lexicon: linear-gradient(135deg, #00695C, #004D40);
+
+    --blue: var(--lu-primary);
+    --blue-light: var(--lu-state-active);
+    --yellow: var(--lu-accent);
+    --yellow-dark: var(--lu-accent);
+    --yellow-light: var(--lu-state-missed);
+    --green: var(--lu-state-correct-fg);
+    --green-light: var(--lu-state-correct-bg);
+    --red: var(--lu-state-wrong-fg);
+    --red-light: var(--lu-state-wrong-bg);
+    --purple: #6A1B9A;
+    --purple-light: var(--lu-state-drag);
+    --orange: #E65100;
+    --orange-light: var(--lu-match-right);
+    --teal: #00695C;
+    --teal-fill: #00695C;
+    --teal-light: #E0F2F1;
+    --brown: #5D4037;
+    --brown-light: #EFEBE9;
+    --gray-50: var(--lu-bg);
+    --gray-100: var(--lu-surface-muted);
+    --gray-200: var(--lu-border);
+    --gray-300: #dadde1;
+    --gray-600: var(--lu-text-muted);
+    --gray-800: #444950;
+    --gray-900: var(--lu-text);
+    --radius: 12px;
+    --shadow: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
+    --content-width: 920px;
+  }
+  [data-theme='dark'] {
+    color-scheme: dark;
+    --lu-bg: #0f0f1a;
+    --lu-surface: #242526;
+    --lu-surface-muted: #1a1a2e;
+    --lu-border: #303846;
+    --lu-text: #e3e3e3;
+    --lu-text-muted: #989898;
+    --lu-primary: #5B9BD5;
+    --lu-accent: #FFD700;
+    --lu-on-accent: #1c1e21;
+    --lu-state-active: rgba(91,155,213,.22);
+    --lu-state-correct-bg: rgba(46,160,70,.26);
+    --lu-state-correct-fg: #81C995;
+    --lu-state-wrong-bg: rgba(210,70,70,.26);
+    --lu-state-wrong-fg: #F28B82;
+    --lu-state-missed: rgba(251,188,4,.22);
+    --lu-state-drag: rgba(167,130,224,.18);
+    --lu-match-right: rgba(230,145,56,.20);
+    --lu-id-lexicon: linear-gradient(135deg, #175A50, #123F39);
+
+    --blue: var(--lu-primary);
+    --blue-light: var(--lu-state-active);
+    --yellow: var(--lu-accent);
+    --yellow-dark: var(--lu-accent);
+    --yellow-light: var(--lu-state-missed);
+    --green: var(--lu-state-correct-fg);
+    --green-light: var(--lu-state-correct-bg);
+    --red: var(--lu-state-wrong-fg);
+    --red-light: var(--lu-state-wrong-bg);
+    --purple: #C79CFF;
+    --purple-light: var(--lu-state-drag);
+    --orange: #E69138;
+    --orange-light: var(--lu-match-right);
+    --teal: #7AD7CB;
+    --teal-fill: #175A50;
+    --teal-light: rgba(122, 215, 203, 0.14);
+    --brown: #D5A28A;
+    --brown-light: rgba(213, 162, 138, 0.14);
+    --gray-50: var(--lu-bg);
+    --gray-100: var(--lu-surface-muted);
+    --gray-200: var(--lu-border);
+    --gray-300: #444950;
+    --gray-600: var(--lu-text-muted);
+    --gray-800: #dadde1;
+    --gray-900: var(--lu-text);
+    --shadow: 0 2px 10px rgba(0,0,0,0.32);
+    --shadow-lg: 0 4px 18px rgba(0,0,0,0.42);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: var(--lu-text); background: var(--lu-bg); line-height: 1.7; }
+
+  /* Word switcher (reused from lesson PoC module-switch) */
+  .word-switch {
+    background: var(--lu-surface); color: var(--lu-text); padding: 10px 24px;
+    border-bottom: 1px solid var(--lu-border);
+    display: flex; align-items: center; gap: 12px; font-size: 13px;
+    position: sticky; top: 0; z-index: 100;
+    flex-wrap: wrap;
+  }
+  .word-switch label { opacity: 0.7; }
+  .word-switch select {
+    background: var(--lu-surface-muted); color: var(--lu-text); border: 1px solid var(--lu-border);
+    padding: 4px 12px; border-radius: 6px; font-size: 13px;
+  }
+  .word-switch .poc-label {
+    margin-left: auto; color: var(--lu-primary); font-weight: 600; letter-spacing: 0.5px;
+  }
+  .atlas-search {
+    display: flex; align-items: center; gap: 8px; flex: 1 1 280px; min-width: 260px;
+  }
+  .atlas-search input {
+    width: 100%; min-width: 140px; padding: 6px 10px; border: 1px solid var(--lu-border);
+    border-radius: 6px; background: var(--lu-surface-muted); color: var(--lu-text); font-size: 13px;
+  }
+  .atlas-search input::placeholder { color: var(--lu-text-muted); opacity: 1; }
+  .atlas-button {
+    border: 1px solid var(--lu-border); border-radius: 6px; padding: 6px 12px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  .atlas-button.search {
+    background: var(--lu-state-active); color: var(--lu-primary); border-color: var(--lu-primary);
+  }
+  .atlas-button.filter {
+    background: var(--lu-accent); color: var(--lu-on-accent); border-color: var(--lu-accent);
+  }
+  .theme-toggle {
+    display: inline-flex; padding: 2px; border: 1px solid var(--lu-border);
+    border-radius: 8px; background: var(--lu-surface-muted);
+  }
+  .theme-toggle button {
+    border: 0; border-radius: 6px; padding: 4px 10px; color: var(--lu-text-muted);
+    background: transparent; font-size: 12px; font-weight: 700; cursor: pointer;
+  }
+  .theme-toggle button.active {
+    color: var(--lu-text); background: var(--lu-state-active);
+  }
+
+  /* Top-nav strip (for context — shows the atlas as a new top-level section) */
+  .topnav {
+    background: var(--lu-surface); border-bottom: 1px solid var(--lu-border); padding: 14px 24px;
+  }
+  .topnav-inner { max-width: var(--content-width); margin: 0 auto; display: flex; align-items: center; gap: 28px; font-size: 14px; }
+  .topnav-brand { font-weight: 700; color: var(--blue); }
+  .topnav-link { color: var(--gray-600); text-decoration: none; }
+  .topnav-link:hover { color: var(--blue); }
+  .topnav-link.active { color: var(--teal); font-weight: 700; border-bottom: 2px solid var(--teal); padding-bottom: 12px; margin-bottom: -14px; }
+
+  /* Hero — atlas-specific gradient (teal+yellow distinguishes from core-blue and seminar-purple) */
+  .word-hero {
+    background: var(--lu-id-lexicon);
+    color: white; padding: 32px 0; border-bottom: 4px solid var(--yellow);
+  }
+  .word-hero-inner { max-width: var(--content-width); margin: 0 auto; padding: 0 24px; }
+  .word-hero .lexicon-badge {
+    display: inline-block; background: rgba(255,255,255,0.18); color: white;
+    font-weight: 600; font-size: 11px; padding: 3px 10px; border-radius: 4px; margin-bottom: 10px;
+    letter-spacing: 0.6px; text-transform: uppercase;
+  }
+  .word-title { font-size: 44px; font-weight: 700; line-height: 1.1; margin-bottom: 4px; }
+  .word-stress { font-size: 26px; font-weight: 400; opacity: 0.85; font-family: 'SF Mono', Menlo, monospace; margin-left: 14px; }
+  .word-pos { font-size: 14px; opacity: 0.9; margin-bottom: 14px; font-style: italic; }
+  .word-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+  .status-badge {
+    font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 4px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .status-badge.heritage-ok { background: var(--lu-surface); color: var(--lu-state-correct-fg); border: 1px solid var(--lu-state-correct-fg); }
+  .status-badge.heritage-warn { background: var(--lu-surface); color: var(--lu-state-wrong-fg); border: 1px solid var(--lu-state-wrong-fg); }
+  .status-badge.cefr { background: var(--lu-accent); color: var(--lu-on-accent); }
+  .status-badge.dialect { background: var(--teal-fill); color: #ffffff; }
+  .status-badge.borrowing { background: var(--lu-surface); color: var(--lu-primary); border: 1px solid var(--lu-primary); }
+  .status-badge.archaic { background: var(--lu-surface); color: var(--brown); border: 1px solid var(--brown); }
+
+  /* Content shell */
+  .content-area { max-width: var(--content-width); margin: 0 auto; padding: 0 24px 80px; }
+  .atlas-section { margin: 32px 0; }
+  h2 { font-size: 22px; color: var(--teal); margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid var(--yellow); }
+  h3 { font-size: 16px; margin: 14px 0 8px; color: var(--gray-800); }
+  p { margin-bottom: 12px; font-size: 15px; }
+  .ukr { font-weight: 600; color: var(--teal); }
+  .trans { color: var(--gray-600); font-style: italic; font-size: 14px; }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Editorial banner — sovietization (red myth-box pattern, reused) */
+  .editorial-warn {
+    background: var(--red-light); border: 2px solid var(--red); border-radius: var(--radius);
+    padding: 16px 22px; margin: 22px 0;
+  }
+  .editorial-warn-header { font-weight: 700; color: var(--red); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; }
+  .editorial-warn-icon { width: 28px; height: 28px; background: var(--lu-state-wrong-bg); color: var(--lu-state-wrong-fg); border: 1px solid var(--lu-state-wrong-fg); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .editorial-warn p { margin-bottom: 6px; font-size: 14px; }
+
+  /* Editorial banner — heritage-defense success (green inverted myth-box) */
+  .editorial-success {
+    background: var(--green-light); border: 2px solid var(--green); border-radius: var(--radius);
+    padding: 16px 22px; margin: 22px 0;
+  }
+  .editorial-success-header { font-weight: 700; color: var(--green); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; }
+  .editorial-success-icon { width: 28px; height: 28px; background: var(--lu-state-correct-bg); color: var(--lu-state-correct-fg); border: 1px solid var(--lu-state-correct-fg); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .editorial-success p { margin-bottom: 6px; font-size: 14px; }
+
+  /* Editorial banner — calque warning (yellow rule-box) */
+  .editorial-calque {
+    background: var(--yellow-light); border: 2px solid var(--yellow); border-radius: var(--radius);
+    padding: 16px 22px; margin: 22px 0;
+  }
+  .editorial-calque-header { font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; }
+  .editorial-calque-icon { width: 28px; height: 28px; background: var(--yellow); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .editorial-calque.info { background: var(--blue-light); border-color: var(--blue); }
+  .editorial-calque.info .editorial-calque-header { color: var(--blue); }
+  .editorial-info-icon {
+    width: 28px; height: 28px; background: var(--blue-light); color: var(--blue);
+    border: 1px solid var(--blue); border-radius: 8px; display: flex; align-items: center;
+    justify-content: center; font-size: 16px;
+  }
+
+  /* Definition cards */
+  .def-card {
+    background: var(--lu-surface); border-radius: var(--radius); border-left: 4px solid var(--blue);
+    padding: 16px 22px; margin: 12px 0; box-shadow: var(--shadow);
+  }
+  .def-card.sum20 { border-left-color: var(--teal); }
+  .def-card.grinchenko { border-left-color: var(--brown); }
+  .def-card.sum11 { border-left-color: var(--gray-600); }
+  .def-card.sum11-flagged { border-left-color: var(--red); background: var(--lu-state-wrong-bg); }
+  .def-source { font-size: 11px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .def-source .src-pill { padding: 2px 8px; border-radius: 3px; }
+  .def-card.sum20 .src-pill { background: var(--teal-light); color: var(--teal); }
+  .def-card.grinchenko .src-pill { background: var(--brown-light); color: var(--brown); }
+  .def-card.sum11 .src-pill { background: var(--gray-200); color: var(--gray-800); }
+  .def-card.sum11-flagged .src-pill { background: var(--lu-state-wrong-bg); color: var(--lu-state-wrong-fg); border: 1px solid var(--lu-state-wrong-fg); }
+  .def-text { font-size: 15px; line-height: 1.7; }
+  .def-flag-inline { font-size: 12px; color: var(--red); font-weight: 600; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--red); }
+
+  /* Etymology timeline — reused from PoC #27 EtymologyTrace */
+  .ety-timeline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 16px 0; }
+  .ety-stage {
+    flex: 1; min-width: 140px; padding: 14px; background: var(--lu-surface); border: 2px solid var(--gray-200);
+    border-radius: var(--radius); text-align: center; cursor: pointer; transition: all 0.2s;
+  }
+  .ety-stage:hover { border-color: var(--teal); box-shadow: var(--shadow); }
+  .ety-period { font-size: 11px; color: var(--gray-600); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .ety-word { font-size: 18px; font-weight: 700; color: var(--teal); }
+  .ety-word.archaic { color: var(--brown); font-style: italic; }
+  .ety-word.modern { color: var(--blue); }
+  .ety-arrow { color: var(--gray-300); font-size: 22px; }
+  .ety-note { margin-top: 12px; padding: 12px 16px; background: var(--gray-100); border-radius: 8px; font-size: 13px; color: var(--gray-800); }
+
+  /* Morphology paradigm table */
+  .paradigm-table { width: 100%; border-collapse: collapse; margin: 12px 0; background: var(--lu-surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  .paradigm-table th { background: var(--teal-fill); color: #ffffff; padding: 10px 14px; text-align: left; font-size: 13px; font-weight: 600; }
+  .paradigm-table th.col-case { width: 28%; }
+  .paradigm-table td { padding: 9px 14px; border-bottom: 1px solid var(--gray-200); font-size: 14px; }
+  .paradigm-table tr:last-child td { border-bottom: none; }
+  .paradigm-table tr:hover td { background: var(--teal-light); }
+  .paradigm-table .case-name { font-weight: 600; color: var(--gray-800); }
+  .paradigm-table .form { color: var(--teal); font-weight: 600; }
+  .paradigm-table .stress-mark { color: var(--red); font-weight: 700; }
+
+  /* Source-box (literary attestation) — reused from PoC seminar */
+  .source-box { background: var(--purple-light); border: 2px solid var(--purple); border-radius: var(--radius); padding: 16px 22px; margin: 14px 0; }
+  .source-box-header { font-weight: 700; color: var(--purple); margin-bottom: 8px; font-size: 14px; }
+  .source-box blockquote { font-style: italic; border-left: 3px solid var(--purple); padding-left: 14px; margin: 8px 0; color: var(--gray-800); }
+  .source-box .source-cite { font-size: 12px; color: var(--gray-600); text-align: right; }
+
+  /* Resource cards */
+  .resource-card {
+    background: var(--lu-surface); border-radius: var(--radius); border-left: 4px solid var(--blue);
+    padding: 14px 20px; margin: 10px 0; box-shadow: var(--shadow); transition: all 0.2s;
+  }
+  .resource-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+  .resource-card h4 { font-size: 15px; margin-bottom: 4px; color: var(--gray-900); }
+  .resource-card p { font-size: 13px; color: var(--gray-600); margin-bottom: 6px; }
+  .resource-card .tag {
+    display: inline-block; background: var(--blue-light); color: var(--blue); font-size: 11px;
+    padding: 2px 8px; border-radius: 3px; font-weight: 600;
+  }
+  .resource-card.ulp { border-left-color: var(--purple); }
+  .resource-card.youtube { border-left-color: var(--red); }
+  .resource-card.podcast { border-left-color: var(--orange); }
+  .resource-card.textbook { border-left-color: var(--green); }
+  .resource-card.blog { border-left-color: var(--teal); }
+
+  /* External collection group */
+  .external-group { margin: 14px 0; }
+  .external-group-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+    font-size: 13px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .external-group-count {
+    background: var(--gray-200); color: var(--gray-800); font-size: 11px; padding: 2px 8px; border-radius: 3px;
+  }
+
+  /* Chip layouts (synonyms / antonyms / idioms) — reused groupsort-chip pattern */
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+  .chip {
+    padding: 6px 14px; background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal);
+    border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+  }
+  .chip:hover { background: var(--teal-fill); color: #ffffff; }
+  .chip.antonym { background: var(--red-light); color: var(--red); border-color: var(--red); }
+  .chip.antonym:hover { background: var(--lu-state-wrong-bg); color: var(--lu-state-wrong-fg); }
+  .chip-label { font-size: 12px; color: var(--gray-600); margin-right: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* Caveat banner for auto-translated data (e.g. WordNet) */
+  .data-caveat {
+    background: var(--yellow-light); padding: 8px 14px; border-radius: 8px; font-size: 12px;
+    color: var(--gray-800); margin-top: 10px; border-left: 3px solid var(--yellow-dark);
+  }
+
+  /* Course usage cards */
+  .course-card {
+    background: var(--lu-surface); border-radius: var(--radius); padding: 12px 18px; margin: 8px 0;
+    box-shadow: var(--shadow); display: flex; align-items: center; gap: 14px;
+  }
+  .course-card .level-badge-sm {
+    display: inline-block; padding: 3px 10px; border-radius: 4px; font-weight: 700; font-size: 11px;
+    background: var(--lu-state-active); color: var(--lu-primary); border: 1px solid var(--lu-primary);
+  }
+  .course-card.seminar .level-badge-sm { background: var(--purple-light); color: var(--purple); border-color: var(--purple); }
+  .course-card .course-title { font-weight: 600; flex: 1; }
+  .course-card .course-gloss { font-size: 13px; color: var(--gray-600); font-style: italic; }
+
+  /* Translation block */
+  .translation-block {
+    background: var(--lu-surface); border-radius: var(--radius); padding: 14px 20px; margin: 12px 0;
+    box-shadow: var(--shadow); display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  }
+  .translation-block .uk-side { font-weight: 700; color: var(--teal); font-size: 17px; }
+  .translation-block .arrow { color: var(--gray-300); font-size: 18px; }
+  .translation-block .en-side { display: flex; gap: 8px; flex-wrap: wrap; }
+  .translation-block .en-term { padding: 4px 10px; background: var(--blue-light); color: var(--blue); border-radius: 4px; font-size: 14px; font-weight: 500; }
+
+  /* Wikipedia card */
+  .wiki-card {
+    background: var(--lu-surface); border-radius: var(--radius); padding: 16px 22px; margin: 12px 0;
+    border-left: 4px solid #757575; box-shadow: var(--shadow);
+  }
+  .wiki-card h4 { font-size: 15px; margin-bottom: 6px; }
+  .wiki-card .wiki-source { font-size: 11px; color: var(--gray-600); margin-top: 8px; }
+
+  /* Provenance footer */
+  .provenance-footer {
+    margin-top: 50px; padding: 22px; background: var(--gray-100); border-radius: var(--radius);
+    font-size: 12px; color: var(--gray-600);
+  }
+  .provenance-footer h3 { font-size: 13px; color: var(--gray-800); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .provenance-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .provenance-list .src {
+    padding: 4px 10px; background: var(--lu-surface); border: 1px solid var(--gray-300); border-radius: 4px;
+    font-size: 11px; font-family: monospace;
+  }
+  .provenance-footer .meta-line { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; }
+
+  /* "Used in modules" sidebar pattern */
+  .used-in-card {
+    background: var(--lu-surface); padding: 8px 14px; margin: 4px 0; border-radius: 8px; border-left: 3px solid var(--teal);
+    display: flex; align-items: center; gap: 12px; font-size: 14px;
+  }
+  .used-in-card .module-id { font-weight: 700; color: var(--teal); min-width: 80px; }
+  .used-in-card .module-title { color: var(--gray-800); flex: 1; }
+  .used-in-card .lesson-gloss { color: var(--gray-600); font-style: italic; font-size: 12px; }

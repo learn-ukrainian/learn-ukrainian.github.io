@@ -22,7 +22,7 @@ This is V7 scope. It compounds with the writer + reviewer prompt rebuild that #M
 ## 1. Motivation
 
 | What's true today | Why the atlas closes it |
-|---|---|
+| --- | --- |
 | `data/sources.db` holds VESUM, СУМ-11, Грінченко, ESUM vol 1, style guide, idioms, UA-GEC, paronyms, PULS CEFR, Балла, dmklinger, literary, external articles + jsonl companions for 8 external collections | None of it is reachable by a human reader without invoking MCP tools. The data is LLM-only today. |
 | The m20 revert (2026-05-23) surfaced that the writer prompt only knows ~6 of the 30+ MCP tools available | A word page is the visual proof that we have corpus depth. Once it exists, the writer prompt can be REQUIRED to deeplink to it instead of duplicating data inline. |
 | slovnyk.me is the de-facto Ukrainian word-page experience | slovnyk.me is a flat aggregator with no editorial voice. We have four moats they structurally can't add: sovietization flag, heritage-defense, calque warning, course cross-link. |
@@ -56,7 +56,7 @@ Same nav-level visibility as `Seminars`. Distinct visual identity (proposed: tea
 Sections, in flow (top-to-bottom). Each section is OMITTED if it has no data — never shown empty. Every section carries a provenance footer (source dictionary + URL where available).
 
 | # | Section | Source(s) | Visual primitive (reused from PoC) |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 | **Шапка** | header derived from VESUM + stress dict + PULS CEFR + heritage status | hero gradient (atlas-specific colors) |
 | 2 | **Значення** | СУМ-20 (slovnyk.me) → Грінченко 1907 → СУМ-11 (sovietization-flagged per entry) | definition cards; sovietized entries get red badge |
 | 3 | **Етимологія** | ESUM vol 1-6 jsonl | reused from PoC #27 EtymologyTrace pattern (`.ety-stage` / `.ety-arrow`) |
@@ -78,7 +78,7 @@ Sections, in flow (top-to-bottom). Each section is OMITTED if it has no data —
 Each editorial signal maps to an existing PoC visual primitive — no new components needed:
 
 | Editorial signal | Visual treatment | PoC pattern reused | Trigger |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | **Sovietization warning** | red `.myth-box` at top of any СУМ-11 entry with `risk≥1` | myth-box | `sovietization_risk` field from `search_definitions` |
 | **Heritage-defense success** | green inverted myth-box at top of «Походження» | myth-box (green variant) | `search_heritage` returns `is_russianism=false` + pre-Soviet attestation |
 | **Calque warning** | yellow `.rule-box` with header «Можлива калька» | rule-box | Антоненко-Давидович structured OR prose entry hits this lemma |
@@ -183,28 +183,33 @@ sources_used: [vesum, sum20, grinchenko_1907, esum, literary_fts, balla, query_w
 The atlas is its own section. It does NOT embed into lessons. But the V7 pipeline gains awareness of it.
 
 ### Writer prompt directive (added during the prompt rebuild that #M-11 mandates)
+>
 > "When introducing a vocabulary item, link to `/lexicon/{lemma}` rather than expanding its etymology, paradigm, sovietization status, or heritage notes in `module.md`. The atlas holds that data; `module.md` is the lesson — not the dictionary. This frees you to focus on lesson-specific examples and pedagogical sequencing."
 
 Effect: writer's prompt-space shrinks. Fabrication paths close (writer can't invent etymology because it's no longer their responsibility).
 
 ### Reviewer prompt audit (added during reviewer rebuild)
+>
 > "For each vocabulary item in the module, verify a matching atlas page exists OR is queued for generation (`data/lexicon/_queue.txt`). If atlas data conflicts with the writer's lesson-specific gloss / example, flag as `content_vs_canonical_mismatch`."
 
 Effect: lesson-canonical drift is caught deterministically.
 
 ### Lesson Tab 2 VocabCard
+
 Existing `<VocabCard>` gains a "more →" link to the atlas page. Card itself stays minimal (lemma + lesson-gloss + lesson-example). Tap → full atlas page.
 
 ### Lesson Tab 4 Resources
+
 `format_resources_for_mdx()` gains a "Related lexicon entries" subsection listing atlas links for every vocab item in the module. This is one of the things that makes Tab 4 cite the corpus — atlas entries ARE corpus citations.
 
 ### MDX assembler
+
 No new transforms required for v0. Atlas links are plain Markdown links; Starlight rendering handles them.
 
 ## 8. Gates / quality floors (deterministic, not LLM)
 
 | Gate | Rule | Failure mode |
-|---|---|---|
+| --- | --- | --- |
 | `lemma_in_vesum` | Every atlas page MUST exist as a lemma in VESUM | 404 if not (no orphan pages) |
 | `provenance_per_section` | Every section MUST cite a source + URL where the dictionary has one | missing provenance fails the build |
 | `section_omitted_not_empty` | Sections with no data are OMITTED, not rendered empty | empty section in HTML fails the gate |
@@ -218,8 +223,8 @@ These are deterministic checks. No LLM in the rendering path. The atlas is a fun
 ## 9. Phases
 
 | Phase | Scope | Lemma count | Effort |
-|---|---|---|---|
-| **v0 (this PoC)** | render 1 page hand-built for design review (`князь`, `прапор`, `файний` showcased in one HTML file with a switcher) | 3 (visual) | this design package |
+| --- | --- | --- | --- |
+| **v0 (this PoC)** | render hand-built pages for design review (`князь`, `прапор`, `файний` split into one HTML file per view) | 3 (visual) | this design package |
 | **v1** | render m20 (a1/my-morning) + m1 (a1/sounds-letters) + m08 (a1/things-have-gender) vocabulary lemmas via Astro dynamic route | ~80 | 1-2 days |
 | **v2** | scale to A1+A2+B1 curriculum-referenced lemmas (intersected with `puls_cefr` + frequency) | ~3-5K | ~1 week |
 | **v3** | alphabetical hub page (`/lexicon/`) + search UI + section anchor links | same lemma set | 3-5 days |
@@ -246,9 +251,9 @@ These are deterministic checks. No LLM in the rendering path. The atlas is a fun
 
 ## 12. Visual reference
 
-HTML PoC: [`docs/poc/poc-word-atlas-design.html`](../poc/poc-word-atlas-design.html)
+HTML PoC route map: [`docs/poc/word-atlas/README.md`](../poc/word-atlas/README.md)
 
-Shows three words via a switcher (pattern reused from `poc-lesson-design.html`):
+Shows three words as separate route-design files (pattern reused from `poc-lesson-design.html`):
 
 - **князь** — rich data, no editorial issues; demonstrates etymology timeline + literary attestation + course cross-link
 - **прапор** — sovietization badge visible at top; demonstrates the editorial moat
