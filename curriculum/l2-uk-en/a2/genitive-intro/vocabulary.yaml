@@ -18,6 +18,10 @@
   translation: a few, several
   pos: numeral
   example: "Купи кілька яблук."
+- word: декілька
+  translation: a few, several
+  pos: numeral
+  example: "Купи декілька яблук."
 - word: скільки
   translation: how many, how much
   pos: question word
@@ -50,3 +54,35 @@
   translation: time
   pos: noun
   example: "Сьогодні мало часу."
+- word: холодильник
+  translation: refrigerator
+  pos: noun
+  example: "У квартирі немає холодильника."
+- word: плита
+  translation: stove
+  pos: noun
+  example: "На кухні немає плити."
+- word: дзеркало
+  translation: mirror
+  pos: noun
+  example: "У кімнаті немає дзеркала."
+- word: квиток
+  translation: ticket
+  pos: noun
+  example: "У мене немає квитка."
+- word: ключ
+  translation: key
+  pos: noun
+  example: "На столі немає ключа."
+- word: яблуко
+  translation: apple
+  pos: noun
+  example: "Купіть кілька яблук."
+- word: меблі
+  translation: furniture
+  pos: noun
+  example: "У квартирі мало меблів."
+- word: місце
+  translation: place, space
+  pos: noun
+  example: "У валізі немає місця."
