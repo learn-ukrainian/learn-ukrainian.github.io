@@ -1,0 +1,313 @@
+---
+title: "Над, під, між"
+description: "Просторові та часові прийменники з орудним відмінком"
+sidebar:
+  order: 28
+  label: "28. Над, під, між"
+prev: vocative-expanded
+next: instrumental-adjectives-pronouns
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import RitualSequencing from '@site/src/components/RitualSequencing';
+import VariantComparison from '@site/src/components/VariantComparison';
+import MotifFormula from '@site/src/components/MotifFormula';
+import PerformanceActivity from '@site/src/components/PerformanceActivity';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import MythBuster from '@site/src/components/MythBuster';
+import HighCultureBridge from '@site/src/components/HighCultureBridge';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: у музеї
+
+Почніть із простору. Гід показує зал, а відвідувачі питають, де що
+знаходиться.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Гід","text":"Подивіться, будь ласка. Велика картина висить над каміном."},{"speaker":"Відвідувачка","text":"А де скульптура?"},{"speaker":"Гід","text":"Скульптура стоїть між двома вікнами."},{"speaker":"Відвідувач","text":"Лавка під деревом теж частина експозиції?"},{"speaker":"Гід","text":"Так. А кафе за музеєм, якщо ви хочете каву після екскурсії."},{"speaker":"Відвідувачка","text":"Чудово. Ми прийдемо до кафе перед обідом."}]')}
+/>
+
+У цьому діалозі прийменники відкривають карту простору:
+
+| Питання | Фраза |
+| --- | --- |
+| Де картина? | над каміном |
+| Де скульптура? | між вікнами |
+| Де лавка? | під деревом |
+| Де кафе? | за музеєм |
+| Коли ми прийдемо? | перед обідом |
+
+Після `над`, `під`, `перед`, `за`, `між` часто стоїть орудний відмінок,
+коли ми відповідаємо на питання `де?` або `коли?`.
+
+## Де це?
+
+Ось п'ять базових прийменників для опису місця.
+
+| Прийменник | Значення | Приклад |
+| --- | --- | --- |
+| над | вище | Лампа над столом. |
+| під | нижче | Кіт під столом. |
+| перед | спереду | Машина перед будинком. |
+| за | позаду | Сад за будинком. |
+| між | посередині | Парк між школою і бібліотекою. |
+
+Форма після прийменника змінюється:
+
+| Називний | Орудний | Фраза |
+| --- | --- | --- |
+| стіл | столом | над столом, під столом |
+| будинок | будинком | перед будинком, за будинком |
+| дерево | деревом | під деревом |
+| школа | школою | між школою і бібліотекою |
+| вікно | вікнами | між вікнами |
+
+:::tip[Опора]
+Питайте себе: `де?` Якщо відповідь описує місце, часто потрібна модель
+`прийменник + орудний відмінок`: `під столом`, `за будинком`.
+:::
+
+### Де це?
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Де лампа?", "right": "над столом"}, {"left": "Де кіт?", "right": "під столом"}, {"left": "Де кафе?", "right": "за музеєм"}, {"left": "Де парк?", "right": "між школою і бібліотекою"}]`)} />
+
+## Описуємо кімнату
+
+Візьмемо просту кімнату. Не треба складної мови: короткі речення добре
+працюють.
+
+> Стіл стоїть перед вікном.
+>
+> Лампа висить над столом.
+>
+> Килим лежить під столом.
+>
+> Шафа стоїть між дверима і полицею.
+>
+> Рюкзак лежить за кріслом.
+
+У розмові можна відповідати навіть неповним реченням:
+
+> **Де лампа?** Над столом.
+>
+> **Де рюкзак?** За кріслом.
+>
+> **Де килим?** Під столом.
+
+Це природно в живій українській мові. Повне речення корисне для
+письма, коротка відповідь корисна для діалогу.
+
+### Орудний після прийменника
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Лампа висить над ___.", "answer": "столом", "options": ["стіл", "столом", "столу"]}, {"sentence": "Книга лежить під ___.", "answer": "ліжком", "options": ["ліжко", "ліжком", "ліжка"]}, {"sentence": "Машина стоїть перед ___.", "answer": "будинком", "options": ["будинок", "будинком", "будинку"]}, {"sentence": "Скульптура стоїть між ___.", "answer": "вікнами", "options": ["вікна", "вікнами", "вікон"]}]`)} />
+
+## Перед обідом
+
+`Перед` має і просторове, і часове значення.
+
+| Простір: де? | Час: коли? |
+| --- | --- |
+| перед будинком | перед обідом |
+| перед школою | перед уроком |
+| перед кафе | перед роботою |
+| перед театром | перед виставою |
+
+Форма після `перед` у цих прикладах однакова: орудний відмінок.
+Значення змінює контекст.
+
+> Я п'ю каву перед роботою.
+>
+> Ми говоримо перед уроком.
+>
+> Вона читає перед сном.
+
+Є також сталі фрази з `за + орудний`:
+
+> за розкладом
+>
+> за планом
+>
+> за правилами
+
+Вони означають `according to` або `following`.
+
+## За будинком чи за допомогу?
+
+Прийменник `за` може працювати з різними відмінками. На цьому уроці
+головна модель така:
+
+| Значення | Питання | Приклад |
+| --- | --- | --- |
+| місце позаду | де? | Кафе за музеєм. |
+| за правилами | як? | Ми працюємо за планом. |
+
+Але ви вже могли бачити іншу модель:
+
+| Значення | Приклад |
+| --- | --- |
+| подяка або причина | Дякую за допомогу. |
+| підтримка | Я за цю ідею. |
+
+Тут після `за` не орудний відмінок. Не треба зараз вивчати всю систему.
+Просто розпізнавайте контраст:
+
+- `за будинком` - місце, позаду будинку;
+- `за допомогу` - причина подяки;
+- `за планом` - за правилами або відповідно до плану.
+
+### Простір чи інше значення?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Кафе за музеєм.", "options": [{"text": "місце позаду", "correct": true}, {"text": "подяка", "correct": false}, {"text": "підтримка", "correct": false}], "explanation": "За музеєм означає позаду музею."}, {"question": "Дякую за допомогу.", "options": [{"text": "місце позаду", "correct": false}, {"text": "причина подяки", "correct": true}, {"text": "розклад", "correct": false}], "explanation": "За допомогу не описує місце."}, {"question": "Ми працюємо за планом.", "options": [{"text": "відповідно до плану", "correct": true}, {"text": "позаду плану", "correct": false}, {"text": "перед планом", "correct": false}], "explanation": "За планом означає according to the plan."}, {"question": "Сад за будинком.", "options": [{"text": "позаду будинку", "correct": true}, {"text": "заради будинку", "correct": false}, {"text": "без будинку", "correct": false}], "explanation": "Це просторове значення з орудним відмінком."}]`)} />
+
+## Де? чи куди?
+
+Для A2 важливо бачити різницю між місцем і рухом.
+
+| Де? місце | Куди? рух |
+| --- | --- |
+| Кіт сидить під столом. | Кіт заліз під стіл. |
+| М'яч лежить за диваном. | Дитина кинула м'яч за диван. |
+
+У лівій колонці ми описуємо розташування: `де?` Тому маємо орудний
+відмінок: `під столом`, `за диваном`, `перед дверима`.
+
+У правій колонці є рух у напрямку: `куди?` Там часто з'являється інша
+форма. На цьому уроці не треба активно будувати всі такі речення.
+Достатньо впевнено робити ліву колонку.
+
+### Де? чи коли?
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Місце": ["перед будинком", "під столом", "між вікнами", "за музеєм"], "Час": ["перед обідом", "перед роботою", "перед уроком", "перед сном"]}`)} />
+
+## Міні-практика: мій район
+
+Опишіть три місця у вашому районі. Можна використати готові рамки:
+
+> Аптека за будинком.
+>
+> Парк між школою і магазином.
+>
+> Зупинка перед супермаркетом.
+
+Потім додайте одну часову фразу:
+
+> Я п'ю каву перед роботою.
+>
+> Я читаю перед сном.
+>
+> Ми зустрічаємося перед обідом.
+
+## 📋 Підсумок
+
+`Над`, `під`, `перед`, `за`, `між` часто вимагають орудного відмінка,
+коли ви відповідаєте на питання `де?`:
+
+- `над столом`;
+- `під ліжком`;
+- `перед будинком`;
+- `за музеєм`;
+- `між вікнами`.
+
+`Перед + орудний` також дає часове значення: `перед обідом`,
+`перед роботою`, `перед сном`.
+
+Самоперевірка: опишіть вашу кімнату або робоче місце трьома фразами з
+`над`, `під`, `перед`, `за` або `між`. Додайте одну фразу з `перед`
+для часу.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"над","translation":"above, over","pos":"preposition","example":"Лампа висить над столом.","examples":["above, over","Лампа висить над столом."]},{"word":"під","translation":"under, below","pos":"preposition","example":"Кіт сидить під столом.","examples":["under, below","Кіт сидить під столом."]},{"word":"перед","translation":"in front of; before","pos":"preposition","example":"Машина стоїть перед будинком.","examples":["in front of; before","Машина стоїть перед будинком."]},{"word":"за","translation":"behind; according to","pos":"preposition","example":"Кафе за музеєм.","examples":["behind; according to","Кафе за музеєм."]},{"word":"між","translation":"between","pos":"preposition","example":"Парк між школою і бібліотекою.","examples":["between","Парк між школою і бібліотекою."]},{"word":"стіл","translation":"table","pos":"noun","gender":"m","example":"Лампа над столом.","examples":["table","Лампа над столом."]},{"word":"будинок","translation":"building, house","pos":"noun","gender":"m","example":"Сад за будинком.","examples":["building, house","Сад за будинком."]},{"word":"ліжко","translation":"bed","pos":"noun","gender":"n","example":"Книга під ліжком.","examples":["bed","Книга під ліжком."]},{"word":"стіна","translation":"wall","pos":"noun","gender":"f","example":"Стіл біля стіни.","examples":["wall","Стіл біля стіни."]},{"word":"обід","translation":"lunch","pos":"noun","gender":"m","example":"Ми прийдемо перед обідом.","examples":["lunch","Ми прийдемо перед обідом."]},{"word":"стеля","translation":"ceiling","pos":"noun","gender":"f","example":"Лампа під стелею.","examples":["ceiling","Лампа під стелею."]},{"word":"підлога","translation":"floor","pos":"noun","gender":"f","example":"Килим на підлозі.","examples":["floor","Килим на підлозі."]},{"word":"кут","translation":"corner","pos":"noun","gender":"m","example":"Крісло стоїть у куті.","examples":["corner","Крісло стоїть у куті."]},{"word":"розклад","translation":"schedule","pos":"noun","gender":"m","example":"Ми працюємо за розкладом.","examples":["schedule","Ми працюємо за розкладом."]},{"word":"сон","translation":"sleep, dream","pos":"noun","gender":"m","example":"Я читаю перед сном.","examples":["sleep, dream","Я читаю перед сном."]},{"word":"музей","translation":"museum","pos":"noun","gender":"m","example":"Кафе за музеєм.","examples":["museum","Кафе за музеєм."]},{"word":"камін","translation":"fireplace","pos":"noun","gender":"m","example":"Картина над каміном.","examples":["fireplace","Картина над каміном."]},{"word":"вікно","translation":"window","pos":"noun","gender":"n","example":"Скульптура стоїть між вікнами.","examples":["window","Скульптура стоїть між вікнами."]},{"word":"крісло","translation":"armchair","pos":"noun","gender":"n","example":"Рюкзак лежить за кріслом.","examples":["armchair","Рюкзак лежить за кріслом."]},{"word":"допомога","translation":"help","pos":"noun","gender":"f","example":"Дякую за допомогу.","examples":["help","Дякую за допомогу."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"над","back":"above, over"},{"front":"під","back":"under, below"},{"front":"перед","back":"in front of; before"},{"front":"за","back":"behind; according to"},{"front":"між","back":"between"},{"front":"стіл","back":"table"},{"front":"будинок","back":"building, house"},{"front":"ліжко","back":"bed"},{"front":"стіна","back":"wall"},{"front":"обід","back":"lunch"},{"front":"стеля","back":"ceiling"},{"front":"підлога","back":"floor"},{"front":"кут","back":"corner"},{"front":"розклад","back":"schedule"},{"front":"сон","back":"sleep, dream"},{"front":"музей","back":"museum"},{"front":"камін","back":"fireplace"},{"front":"вікно","back":"window"},{"front":"крісло","back":"armchair"},{"front":"допомога","back":"help"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Де це?
+
+*(див. урок, §Де це?)*
+
+### Орудний після прийменника
+
+*(див. урок, §Описуємо кімнату)*
+
+### Простір чи інше значення?
+
+*(див. урок, §За будинком чи за допомогу?)*
+
+### Де? чи коли?
+
+*(див. урок, §Де? чи куди?)*
+
+### Перевірка місця
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Лампа над столом.", "isTrue": true, "explanation": "Над столом - правильна форма."}, {"statement": "Кіт під стіл.", "isTrue": false, "explanation": "Для місця потрібно під столом."}, {"statement": "Парк між школою і бібліотекою.", "isTrue": true, "explanation": "Між + орудний відмінок."}, {"statement": "Кафе за музей.", "isTrue": false, "explanation": "Для місця потрібно за музеєм."}]`)} />
+
+### Виправте фразу
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильне речення." items={JSON.parse(`[{"sentence": "Лавка під дерево.", "errorWord": "під дерево", "correctForm": "Лавка під деревом.", "options": ["Лавка під деревом.", "Лавка під дерево."], "explanation": "Де? Під деревом."}, {"sentence": "Кафе за музей.", "errorWord": "за музей", "correctForm": "Кафе за музеєм.", "options": ["Кафе за музеєм.", "Кафе за музей."], "explanation": "За музеєм описує місце позаду музею."}, {"sentence": "Ми говоримо перед урок.", "errorWord": "перед урок", "correctForm": "Ми говоримо перед уроком.", "options": ["Ми говоримо перед уроком.", "Ми говоримо перед урок."], "explanation": "Перед уроком - часове значення з орудним."}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Dobra Forma 4-1: Locative Case в and у](https://opentext.ku.edu/dobraforma/chapter/4-1/) — Catalogued place-preposition practice; useful as a contrast with instrumental place phrases.
+- 📄 [Dobra Forma 9-1: Instrumental Case Intro](https://opentext.ku.edu/dobraforma/chapter/9-1/) — General instrumental reference for reviewing case endings before preposition practice.
+- 📄 [ULP: Location and Destination Prepositions in Ukrainian](https://www.ukrainianlessons.com/location-destination-prepositions/) — Support for contrasting location and destination with place prepositions.
+- 📄 [ULP: Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Learner-facing overview of which cases follow common Ukrainian prepositions.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

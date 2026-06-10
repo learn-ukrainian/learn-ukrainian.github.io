@@ -1,0 +1,20 @@
+- title: "ULP 2-69: Ukrainian Children's Poem + Vocative case in Ukrainian"
+  role: podcast
+  source_ref: "docs/resources/external_resources.yaml: a1-hey-friend"
+  url: "https://www.ukrainianlessons.com/episode69/"
+  notes: "Catalogued learner-facing vocative lesson; useful for hearing vocative forms in context."
+- title: "Dobra Forma 3-1: Vocative Case Feminine Nouns"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-007"
+  url: "https://opentext.ku.edu/dobraforma/chapter/3-1/"
+  notes: "Structured practice with feminine vocative forms such as Маріє and пані вчителько."
+- title: "Dobra Forma 3-2: Vocative Case Masculine Nouns"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-008"
+  url: "https://opentext.ku.edu/dobraforma/chapter/3-2/"
+  notes: "Structured practice with masculine vocative forms such as друже and лікарю."
+- title: "Dobra Forma 3-3: Vocative Case Plural Nouns"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-009"
+  url: "https://opentext.ku.edu/dobraforma/chapter/3-3/"
+  notes: "Supplement for plural address forms after the main A2 singular practice."

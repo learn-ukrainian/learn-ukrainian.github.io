@@ -1,0 +1,304 @@
+---
+title: "Пане лікарю! Друже мій!"
+description: "Кличний відмінок у формальних, професійних та емоційних звертаннях"
+sidebar:
+  order: 27
+  label: "27. Пане лікарю! Друже мій!"
+prev: instrumental-profession
+next: instrumental-prepositions
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import RitualSequencing from '@site/src/components/RitualSequencing';
+import VariantComparison from '@site/src/components/VariantComparison';
+import MotifFormula from '@site/src/components/MotifFormula';
+import PerformanceActivity from '@site/src/components/PerformanceActivity';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import MythBuster from '@site/src/components/MythBuster';
+import HighCultureBridge from '@site/src/components/HighCultureBridge';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: у поліклініці
+
+Почніть із ситуації, де одна людина говорить формально, а потім
+переходить до дружнього тону.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Олег","text":"Добрий день, пане лікарю. Мені потрібна довідка для роботи."},{"speaker":"Лікар","text":"Добрий день, пане Ковальчуку. Сідайте, будь ласка."},{"speaker":"Олег","text":"Дякую. Я трохи хвилююся."},{"speaker":"Лікар","text":"Не хвилюйтеся. Усе добре."},{"speaker":"Олег телефонує другові","text":"Андрію, друже мій, уяви собі: лікар каже,"}]')}
+/>
+> що я здоровий!
+>
+> **Андрій:** Чудово, Олеже. Тоді ввечері гуляємо?
+
+У діалозі є кілька звертань. Вони не називають тему речення, а кличуть
+людину.
+
+| Контекст | Звертання |
+| --- | --- |
+| офіційно до лікаря | пане лікарю |
+| офіційно до пацієнта | пане Ковальчуку |
+| дружньо до Андрія | Андрію, друже мій |
+| дружньо до Олега | Олеже |
+
+Кличний відмінок відповідає не на питання `хто?`, а на ситуацію
+звертання: `Пане лікарю!`, `Маріє!`, `Друже!`.
+
+## Пане і пані
+
+Для формальної української мови базова модель дуже проста:
+
+| Модель | Приклади |
+| --- | --- |
+| пане + професія | пане лікарю, пане директоре, пане професоре |
+| пані + професія | пані вчителько, пані лікарко, пані директорко |
+| пане + прізвище | пане Ковальчуку, пане Шевченку |
+| пані + прізвище | пані Ковальчук, пані Шевченко |
+
+`Пан` сам змінюється на `пане`. Слово після нього теж часто має форму
+кличного відмінка: `пане лікарю`, `пане директоре`.
+
+`Пані` не змінюється, але професія після неї може мати кличну форму:
+`пані вчителько`, `пані лікарко`.
+
+:::tip[Опора]
+Коли ситуація офіційна, почніть із готової формули: `пане` або `пані` +
+професія чи прізвище.
+:::
+
+### Формальна формула
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "лікар", "right": "пане лікарю"}, {"left": "директор", "right": "пане директоре"}, {"left": "вчителька", "right": "пані вчителько"}, {"left": "лікарка", "right": "пані лікарко"}]`)} />
+
+## Професійні звертання
+
+У школі, лікарні, офісі або університеті ми часто звертаємося до людини
+за роллю.
+
+| Називний | Кличний | Фраза |
+| --- | --- | --- |
+| лікар | лікарю | Пане лікарю, допоможіть, будь ласка. |
+| вчитель | вчителю | Пане вчителю, можна запитання? |
+| вчителька | вчителько | Пані вчителько, я не розумію. |
+| директор | директоре | Пане директоре, добрий день. |
+| професор | професоре | Пане професоре, дякую за лист. |
+| колега | колего | Колего, ви маєте хвилину? |
+| подруга | подруго | Подруго, ходімо на каву. |
+| друг | друже | Друже, слухай новину. |
+
+Не треба вивчати всі закінчення одразу. На A2 важливі готові безпечні
+форми з частими словами.
+
+> Пане лікарю, у мене болить голова.
+>
+> Пані вчителько, я зробив домашнє завдання.
+>
+> Колего, можна з вами поговорити?
+
+Українська природно використовує фемінітиви: `лікарка`, `вчителька`,
+`директорка`, `професорка`. У звертанні вони теж мають кличну форму:
+`пані лікарко`, `пані директорко`.
+
+### Оберіть кличний
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Пане ___, у мене питання.", "options": [{"text": "лікар", "correct": false}, {"text": "лікарю", "correct": true}, {"text": "лікаря", "correct": false}], "explanation": "У звертанні потрібна форма лікарю."}, {"question": "Пані ___, можна повторити?", "options": [{"text": "вчителька", "correct": false}, {"text": "вчительку", "correct": false}, {"text": "вчителько", "correct": true}], "explanation": "Кличний відмінок від вчителька - вчителько."}, {"question": "___, ходімо на каву.", "options": [{"text": "Друже", "correct": true}, {"text": "Друг", "correct": false}, {"text": "Друга", "correct": false}], "explanation": "Друг у звертанні має форму друже."}, {"question": "___, це ваш кабінет?", "options": [{"text": "Пане директор", "correct": false}, {"text": "Пане директоре", "correct": true}, {"text": "Пана директора", "correct": false}], "explanation": "Формальна модель - пане директоре."}]`)} />
+
+## Імена в кличному
+
+Ви вже бачили базові форми на A1. Тут вони повертаються поруч із
+формальними звертаннями.
+
+| Ім'я | Кличний | Приклад |
+| --- | --- | --- |
+| Марія | Маріє | Маріє, читай далі. |
+| Оксана | Оксано | Оксано, ходімо. |
+| Андрій | Андрію | Андрію, тихіше, будь ласка. |
+| Олег | Олеже | Олеже, це твій документ? |
+| Тарас | Тарасе | Тарасе, почекай хвилину. |
+| Наталя | Наталю | Наталю, вітаю! |
+
+З іменами тон залежить від ситуації. `Андрію` може бути дружнім у
+розмові з другом або нейтральним у класі. `Пане Андрію` звучить
+формальніше.
+
+## Друже мій, люба моя
+
+З близькими людьми кличний відмінок може бути теплим:
+
+| Нейтрально | Тепліше |
+| --- | --- |
+| друже | друже мій |
+| подруго | подруго моя |
+| любий | любий мій |
+| люба | люба моя |
+| синку | синку мій |
+| доню | доню моя |
+| мамо | мамо моя |
+
+У таких звертаннях присвійний займенник часто стоїть після слова:
+`друже мій`, `мамо моя`, `люба моя`. Це звучить природно і дуже
+українсько.
+
+Пестливі слова теж можливі, але використовуйте їх тільки з близькими
+людьми або з дитиною:
+
+> Сонечко, ходи сюди.
+>
+> Серденько, не плач.
+>
+> Любий, як ти?
+
+### Регістр звертання
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Формально": ["пане лікарю", "пані директорко", "пане Ковальчуку"], "Дружньо": ["Андрію", "Оксано", "друже"], "Тепло": ["друже мій", "люба моя", "сонечко"]}`)} />
+
+## Який регістр обрати?
+
+Одна людина може мати кілька форм звертання.
+
+| Ситуація | Добрий вибір |
+| --- | --- |
+| лист до лікаря | Пане лікарю |
+| розмова з директоркою | Пані директорко |
+| дзвінок другові | Андрію або друже |
+| тепла розмова з близькою людиною | люба моя |
+| звертання до колеги | колего або пане/пані + ім'я |
+| класна кімната | Маріє, Андрію, пані вчителько |
+
+Слова `добродію` і `добродійко` зрозумілі, але в сучасній щоденній
+мові вони звучать книжно або дуже ввічливо. Для A2 достатньо впевнено
+володіти `пане`, `пані`, іменами та кількома дружніми формами.
+
+Історичне слово `товаришу` може з'являтися в текстах про радянський
+період або у спеціальному контексті. У сучасній нейтральній українській
+комунікації безпечніше обрати `пане`, `пані`, `колего`, ім'я або
+професію.
+
+### Виправте звертання
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильний варіант." items={JSON.parse(`[{"sentence": "Пан лікар, добрий день.", "errorWord": "Пан лікар", "correctForm": "Пане лікарю, добрий день.", "options": ["Пане лікарю, добрий день.", "Пан лікар, добрий день."], "explanation": "Формальна форма - пане лікарю."}, {"sentence": "Пані вчителька, я не розумію.", "errorWord": "Пані вчителька", "correctForm": "Пані вчителько, я не розумію.", "options": ["Пані вчителько, я не розумію.", "Пані вчителька, я не розумію."], "explanation": "Після пані професія має форму кличного відмінка."}, {"sentence": "Друг мій, слухай.", "errorWord": "Друг мій", "correctForm": "Друже мій, слухай.", "options": ["Друже мій, слухай.", "Друг мій, слухай."], "explanation": "У звертанні друг змінюється на друже."}]`)} />
+
+## Типові помилки
+
+| Не так | Краще | Чому |
+| --- | --- | --- |
+| пан лікар | пане лікарю | після `пане` потрібне звертання |
+| пані вчителька | пані вчителько | професія у кличному |
+| друг мій | друже мій | `друг` має кличну форму `друже` |
+| подруга моя | подруго моя | у звертанні потрібна форма `подруго` |
+| пане Олег | пане Олеже | ім'я теж має кличну форму |
+
+Не всі українці завжди говорять ідеально книжно, але для навчання краще
+мати чітку норму. Вона допомагає звучати ввічливо і природно.
+
+## 📋 Підсумок
+
+Кличний відмінок потрібен, коли ви звертаєтеся до людини:
+`Олеже`, `Маріє`, `пане лікарю`, `пані вчителько`, `друже мій`.
+
+Запам'ятайте три рівні:
+
+- формально: `пане лікарю`, `пані директорко`;
+- нейтрально або дружньо: `Андрію`, `Оксано`, `колего`;
+- тепло: `друже мій`, `люба моя`, `сонечко`.
+
+Самоперевірка: як ви звернетеся до лікаря-чоловіка, вчительки, друга
+Андрія і близької людини? Скажіть чотири короткі фрази вголос.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"кличний","translation":"vocative","pos":"adjective","example":"Кличний відмінок потрібен для звертання.","examples":["vocative","Кличний відмінок потрібен для звертання."]},{"word":"звертання","translation":"form of address","pos":"noun","gender":"n","example":"Пане лікарю - ввічливе звертання.","examples":["form of address","Пане лікарю - ввічливе звертання."]},{"word":"пан","translation":"Mr., sir","pos":"noun","gender":"m","example":"Пане директоре, добрий день.","examples":["Mr., sir","Пане директоре, добрий день."]},{"word":"пані","translation":"Ms., Mrs., madam","pos":"noun","gender":"f","example":"Пані вчителько, можна запитання?","examples":["Ms., Mrs., madam","Пані вчителько, можна запитання?"]},{"word":"лікар","translation":"doctor","pos":"noun","gender":"m","example":"Пане лікарю, мені потрібна довідка.","examples":["doctor","Пане лікарю, мені потрібна довідка."]},{"word":"лікарка","translation":"female doctor","pos":"noun","gender":"f","example":"Пані лікарко, дякую.","examples":["female doctor","Пані лікарко, дякую."]},{"word":"вчитель","translation":"male teacher","pos":"noun","gender":"m","example":"Пане вчителю, можна повторити?","examples":["male teacher","Пане вчителю, можна повторити?"]},{"word":"вчителька","translation":"female teacher","pos":"noun","gender":"f","example":"Пані вчителько, я не розумію.","examples":["female teacher","Пані вчителько, я не розумію."]},{"word":"директор","translation":"director, principal","pos":"noun","gender":"m","example":"Пане директоре, це мій документ.","examples":["director, principal","Пане директоре, це мій документ."]},{"word":"директорка","translation":"female director, principal","pos":"noun","gender":"f","example":"Пані директорко, добрий день.","examples":["female director, principal","Пані директорко, добрий день."]},{"word":"професор","translation":"professor","pos":"noun","gender":"m","example":"Пане професоре, дякую за лист.","examples":["professor","Пане професоре, дякую за лист."]},{"word":"колега","translation":"colleague","pos":"noun","gender":"common","example":"Колего, ви маєте хвилину?","examples":["colleague","Колего, ви маєте хвилину?"]},{"word":"друг","translation":"friend","pos":"noun","gender":"m","example":"Друже мій, я радий тебе бачити.","examples":["friend","Друже мій, я радий тебе бачити."]},{"word":"подруга","translation":"female friend","pos":"noun","gender":"f","example":"Подруго моя, ходімо.","examples":["female friend","Подруго моя, ходімо."]},{"word":"ввічливий","translation":"polite","pos":"adjective","example":"Це ввічливий тон.","examples":["polite","Це ввічливий тон."]},{"word":"офіційний","translation":"official, formal","pos":"adjective","example":"Офіційний лист починається ввічливо.","examples":["official, formal","Офіційний лист починається ввічливо."]},{"word":"емоційний","translation":"emotional","pos":"adjective","example":"Друже мій - емоційне звертання.","examples":["emotional","Друже мій - емоційне звертання."]},{"word":"ніжний","translation":"tender, affectionate","pos":"adjective","example":"Сонечко - ніжне слово.","examples":["tender, affectionate","Сонечко - ніжне слово."]},{"word":"довідка","translation":"certificate, note","pos":"noun","gender":"f","example":"Мені потрібна довідка для роботи.","examples":["certificate, note","Мені потрібна довідка для роботи."]},{"word":"хвилюватися","translation":"to worry","pos":"verb","example":"Я трохи хвилююся.","examples":["to worry","Я трохи хвилююся."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"кличний","back":"vocative"},{"front":"звертання","back":"form of address"},{"front":"пан","back":"Mr., sir"},{"front":"пані","back":"Ms., Mrs., madam"},{"front":"лікар","back":"doctor"},{"front":"лікарка","back":"female doctor"},{"front":"вчитель","back":"male teacher"},{"front":"вчителька","back":"female teacher"},{"front":"директор","back":"director, principal"},{"front":"директорка","back":"female director, principal"},{"front":"професор","back":"professor"},{"front":"колега","back":"colleague"},{"front":"друг","back":"friend"},{"front":"подруга","back":"female friend"},{"front":"ввічливий","back":"polite"},{"front":"офіційний","back":"official, formal"},{"front":"емоційний","back":"emotional"},{"front":"ніжний","back":"tender, affectionate"},{"front":"довідка","back":"certificate, note"},{"front":"хвилюватися","back":"to worry"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Формальна формула
+
+*(див. урок, §Пане і пані)*
+
+### Оберіть кличний
+
+*(див. урок, §Професійні звертання)*
+
+### Регістр звертання
+
+*(див. урок, §Друже мій, люба моя)*
+
+### Виправте звертання
+
+*(див. урок, §Який регістр обрати?)*
+
+### Доповніть звертання
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Пане ___, мені потрібна довідка.", "answer": "лікарю", "options": ["лікар", "лікарю", "лікарем"]}, {"sentence": "Пані ___, я зробив завдання.", "answer": "вчителько", "options": ["вчителька", "вчителькою", "вчителько"]}, {"sentence": "___, ти маєш хвилину?", "answer": "колего", "options": ["колега", "колего", "колегою"]}, {"sentence": "___ мій, я радий тебе бачити.", "answer": "друже", "options": ["друг", "друже", "другом"]}]`)} />
+
+### Чи доречний регістр?
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "У лікарні: Пане лікарю, добрий день.", "isTrue": true, "explanation": "Це ввічлива формальна форма."}, {"statement": "До директора в офіційному листі: друже мій.", "isTrue": false, "explanation": "Для офіційного листа краще пане директоре."}, {"statement": "До близької подруги: подруго моя.", "isTrue": true, "explanation": "Це тепле дружнє звертання."}, {"statement": "У класі до вчительки: пані вчителько.", "isTrue": true, "explanation": "Це природне ввічливе звертання."}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Dobra Forma 3-1: Vocative Case Feminine Nouns](https://opentext.ku.edu/dobraforma/chapter/3-1/) — Structured practice with feminine vocative forms such as Маріє and пані вчителько.
+- 📄 [Dobra Forma 3-2: Vocative Case Masculine Nouns](https://opentext.ku.edu/dobraforma/chapter/3-2/) — Structured practice with masculine vocative forms such as друже and лікарю.
+- 📄 [Dobra Forma 3-3: Vocative Case Plural Nouns](https://opentext.ku.edu/dobraforma/chapter/3-3/) — Supplement for plural address forms after the main A2 singular practice.
+
+**🎧 Аудіо:**
+- 🎧 [ULP 2-69: Ukrainian Children's Poem + Vocative case in Ukrainian](https://www.ukrainianlessons.com/episode69/) — Catalogued learner-facing vocative lesson; useful for hearing vocative forms in context.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

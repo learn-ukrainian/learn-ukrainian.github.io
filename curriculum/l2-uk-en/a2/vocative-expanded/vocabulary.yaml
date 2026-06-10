@@ -1,0 +1,94 @@
+- word: кличний
+  translation: vocative
+  pos: adjective
+  example: "Кличний відмінок потрібен для звертання."
+- word: звертання
+  translation: form of address
+  pos: noun
+  gender: n
+  example: "Пане лікарю - ввічливе звертання."
+- word: пан
+  translation: Mr., sir
+  pos: noun
+  gender: m
+  example: "Пане директоре, добрий день."
+- word: пані
+  translation: Ms., Mrs., madam
+  pos: noun
+  gender: f
+  example: "Пані вчителько, можна запитання?"
+- word: лікар
+  translation: doctor
+  pos: noun
+  gender: m
+  example: "Пане лікарю, мені потрібна довідка."
+- word: лікарка
+  translation: female doctor
+  pos: noun
+  gender: f
+  example: "Пані лікарко, дякую."
+- word: вчитель
+  translation: male teacher
+  pos: noun
+  gender: m
+  example: "Пане вчителю, можна повторити?"
+- word: вчителька
+  translation: female teacher
+  pos: noun
+  gender: f
+  example: "Пані вчителько, я не розумію."
+- word: директор
+  translation: director, principal
+  pos: noun
+  gender: m
+  example: "Пане директоре, це мій документ."
+- word: директорка
+  translation: female director, principal
+  pos: noun
+  gender: f
+  example: "Пані директорко, добрий день."
+- word: професор
+  translation: professor
+  pos: noun
+  gender: m
+  example: "Пане професоре, дякую за лист."
+- word: колега
+  translation: colleague
+  pos: noun
+  gender: common
+  example: "Колего, ви маєте хвилину?"
+- word: друг
+  translation: friend
+  pos: noun
+  gender: m
+  example: "Друже мій, я радий тебе бачити."
+- word: подруга
+  translation: female friend
+  pos: noun
+  gender: f
+  example: "Подруго моя, ходімо."
+- word: ввічливий
+  translation: polite
+  pos: adjective
+  example: "Це ввічливий тон."
+- word: офіційний
+  translation: official, formal
+  pos: adjective
+  example: "Офіційний лист починається ввічливо."
+- word: емоційний
+  translation: emotional
+  pos: adjective
+  example: "Друже мій - емоційне звертання."
+- word: ніжний
+  translation: tender, affectionate
+  pos: adjective
+  example: "Сонечко - ніжне слово."
+- word: довідка
+  translation: certificate, note
+  pos: noun
+  gender: f
+  example: "Мені потрібна довідка для роботи."
+- word: хвилюватися
+  translation: to worry
+  pos: verb
+  example: "Я трохи хвилююся."

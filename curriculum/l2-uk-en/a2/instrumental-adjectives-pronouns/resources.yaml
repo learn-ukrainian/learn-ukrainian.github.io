@@ -1,0 +1,25 @@
+- title: "Dobra Forma 19-1: Instrumental Case of Adjectives"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-059"
+  url: "https://opentext.ku.edu/dobraforma/chapter/19-1/"
+  notes: "Focused reference for adjective endings in the instrumental case."
+- title: "ULP 1-62: New Year's Eve in Ukraine + Instrumental case of Pronouns"
+  role: podcast
+  source_ref: "docs/resources/external_resources.yaml: a2-instrumental-profession"
+  url: "https://www.ukrainianlessons.com/episode62/"
+  notes: "Learner-facing instrumental episode that reinforces pronoun forms."
+- title: "ULP: Possessive Pronouns Declension"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /possessive-pronouns-declension/"
+  url: "https://www.ukrainianlessons.com/possessive-pronouns-declension/"
+  notes: "Table support for мій, твій, наш, ваш and related possessive forms."
+- title: "ULP: Pronouns This and That"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /pronouns-this-that/"
+  url: "https://www.ukrainianlessons.com/pronouns-this-that/"
+  notes: "Support for цей/той before practicing цим/цією and тим/тією."
+- title: "ULP: Adjectives and Adverbs Chart"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /adjectives-adverbs-chart/"
+  url: "https://www.ukrainianlessons.com/adjectives-adverbs-chart/"
+  notes: "Learner-facing adjective reference for reviewing base adjective forms."
