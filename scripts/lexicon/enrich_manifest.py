@@ -10,12 +10,13 @@ no fabrication):
 - **meaning** — Грінченко 1907 (pre-Soviet, clean) preferred, СУМ-11 fallback
   (flagged, since it is partially Sovietised — issue #1659).
 - **synonyms** — source-attested, A1-sense allowlisted Ukrainian candidates only.
-- **etymology** — ЕСУМ (``data/sources.db``; PoC volume coverage А–Г only).
+- **etymology** — Goroh cached extracts first, ЕСУМ fallback
+  (``data/sources.db``; deterministic local lookup only).
 
 Every field carries its ``source`` so the UI can attribute it. Lemmas with no
 dictionary hit simply get an empty enrichment and the UI keeps its honest
 "not yet available" note. Multi-word phrases are skipped for single-lemma
-morphology/etymology.
+morphology and ЕСУМ fallback etymology.
 
 Run from the repo root (needs ``data/`` which is excluded from worktrees)::
 
@@ -29,6 +30,7 @@ import json
 import re
 import sqlite3
 import sys
+import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -43,6 +45,7 @@ SOURCES_DB = ROOT / "data" / "sources.db"
 _CYRILLIC_WORD_CHARS = "A-Za-zА-Яа-яЄєІіЇїҐґ0-9'’ʼ-"
 _LATIN_RE = re.compile(r"[A-Za-z]")
 _UKRAINIAN_TEXT_RE = re.compile(r"^[А-Яа-яЄєІіЇїҐґ'’ʼ -]+$")
+_STRESS_MARK_RE = re.compile("[\u0300\u0301]")
 
 # Same-sense A1 allowlist. A synonym is emitted only when it is both present in
 # a source row and included here for the lemma's course gloss sense.
@@ -452,7 +455,56 @@ def _attestation(conn: sqlite3.Connection, lemma: str) -> dict | None:
     return None
 
 
-def _etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
+def _lookup_key(value: str) -> str:
+    """Match Goroh headwords without stress marks or apostrophe variants."""
+    normalized = unicodedata.normalize("NFKD", clean_html_entities(str(value or "")))
+    normalized = _STRESS_MARK_RE.sub("", normalized)
+    normalized = unicodedata.normalize("NFC", normalized)
+    normalized = normalized.replace("`", "'").replace("’", "'").replace("ʼ", "'")
+    return re.sub(r"\s+", " ", normalized).strip().casefold()
+
+
+def _etymology_lookup_variants(lemma: str) -> list[str]:
+    variants = [lemma.strip()]
+    variants.extend(_split_lemma_variants(lemma))
+    seen: set[str] = set()
+    return [v for v in variants if v and not (v.casefold() in seen or seen.add(v.casefold()))]
+
+
+def _goroh_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
+    """Goroh cached etymology, by requested Atlas lemma then canonical headword."""
+    variants = _etymology_lookup_variants(lemma)
+    row = None
+    try:
+        for variant in variants:
+            row = conn.execute(
+                "SELECT etymology_text, source_url FROM goroh_etymology "
+                "WHERE requested_lemma = ? AND etymology_text != '' LIMIT 1",
+                (variant,),
+            ).fetchone()
+            if row:
+                break
+        if not row:
+            for variant in variants:
+                row = conn.execute(
+                    "SELECT etymology_text, source_url FROM goroh_etymology "
+                    "WHERE headword = ? AND etymology_text != '' LIMIT 1",
+                    (_lookup_key(variant),),
+                ).fetchone()
+                if row:
+                    break
+    except sqlite3.OperationalError:
+        return None
+    if not row or not row[0]:
+        return None
+    return {
+        "text": clean_html_entities(row[0].strip()[:600]),
+        "source": "Горох (за ЕСУМ)",
+        "source_url": row[1],
+    }
+
+
+def _esum_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
     """ЕСУМ etymology (А–Г PoC coverage), by lemma."""
     word = lemma.strip()
     if " " in word:
@@ -474,6 +526,11 @@ def _etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
     if row[2]:
         cite += f", с. {row[2]}"
     return {"text": clean_html_entities(row[0].strip()[:600]), "source": cite}
+
+
+def _etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
+    """Cached Goroh etymology first, with ЕСУМ fallback."""
+    return _goroh_etymology(conn, lemma) or _esum_etymology(conn, lemma)
 
 
 def enrich() -> tuple[int, int]:
@@ -519,7 +576,7 @@ def enrich() -> tuple[int, int]:
 
 def main() -> None:
     enriched, total = enrich()
-    print(f"enriched {enriched}/{total} lexicon entries from VESUM + Грінченко/СУМ + ЕСУМ")
+    print(f"enriched {enriched}/{total} lexicon entries from VESUM + Грінченко/СУМ + Горох/ЕСУМ")
 
 
 if __name__ == "__main__":
