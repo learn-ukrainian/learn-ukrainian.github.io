@@ -1,32 +1,34 @@
-# Current — Claude Thread Handoff (2026-06-10)
+# Current — Claude Session Handoff (2026-06-10)
 
 > Router: read `docs/session-state/current.md` first.
-> **Latest detailed handoff: `docs/session-state/2026-06-10-claude-a1-atlas-design-pilot.md`** — read it.
+> **Latest detailed handoff: `docs/session-state/2026-06-10-claude-continuation-pr-sweep-deploy-fix.md`** — read it top-to-bottom.
+> Prior detailed handoff (Word Atlas/heritage/hook): `docs/session-state/2026-06-10-claude-word-atlas-heritage-hookfix.md`.
 
-## ⏳ RESUME HERE — A1 POC lesson pilot in flight
-`codex/a1-poc-lesson-pilot` dispatch RUNNING (B-pilot Step A: POC lesson component framework +
-`things-have-gender.mdx` reference module, **LOCAL ONLY — no deploy, no writer-prompt change**).
-On land: review PR (don't merge), verify `/a1/things-have-gender/` locally vs `docs/poc/poc-lesson-design.html`,
-hand the URL to the user for sign-off. Then Step B (writer-prompt + batch regen, verify-local-before-deploy).
+## ⏳ RESUME HERE
+1. **Confirm `npm run agents:deploy` stays clean** — deploy-drift root cause fixed this session (two
+   undeclared `.agent/` orphans: `prompts` #2935, `tmp` #2936). Preflight now passes end-to-end.
+2. **`poc-site-design.html` is the one real POC-split candidate** (Homepage + 404 + lesson-shell via a
+   PAGE SWITCHER). The other 3 POCs are already single-design. Confirm intent (view-split vs
+   folder-convention-normalize) before dispatching — marginal value.
+3. **Word Atlas feature roadmap** (the real next work) — render heritage badges in `[lemma].astro` from
+   `classify_lemma()`; etymology = Горох + Wiktionary; idioms; curated attestations (dep #2901). Full
+   roadmap in both detailed handoffs.
 
-## Decisions locked
-- **Design = B** (regenerate to POC structure) with "verify locally before rollout" — A1 lessons + Word Atlas.
-- **Etymology = Горох + Wiktionary** (NOT v2 ESUM — cognates OCR-garbled; NOT the DjVu scan). Tear down the 36K OCR `etymology-manifest.json` surface.
+## ✅ Done this session (continuation thread)
+Merged #2923, #2929, #2925, #2933 (recovered stalled A2 content), #2935, #2936. Closed #2895
+(superseded), #2932 (handoff — see autopsy note in the detailed handoff). Reaped 6 worktrees.
+Root-caused + fixed deploy drift. Finalized prior session's session_start.sh worktree auto-reap.
 
-## Shipped + live this session
-A1 `:::` admonitions fixed + dev jsxDEV hardened (**#2887**, deployed live). Worktree reaper shipped
-(**#2883**, `scripts/orchestration/reap_worktrees.py`). A1 + Word Atlas rolled out live. PR queue drained
-(#2880 merged, #2850 closed). #2884 filed (build-pollutes-main; forensics on `salvage/main-pollution-a2792`).
-
-## Key gotchas
-- Deploy = manual: `gh workflow run deploy-pages.yml --ref main` (~2-3min). NOT auto.
-- Local dev empty islands / `jsxDEV is not a function` → `rm -rf starlight/node_modules/.vite && ./services.sh restart astro`.
-- Reaper on main: `scripts/orchestration/reap_worktrees.py --dry-run|--apply`.
+## ⚠️ Watch-outs
+- **GitHub graphql API was 401'ing intermittently** (secondary rate-limit). `gh pr create` failed →
+  use `gh api -X POST repos/.../pulls` (REST). Non-required checks (zizmor/submit-pypi/CodeQL Analyze)
+  failed only on API status-report steps; **only required check is `Test (pytest)`**.
+- Folk lane is progressing in its own track (kalendarna building with the heritage gate). Awareness-only.
 
 ## Restart
 ```bash
 cd /Users/krisztiankoos/projects/learn-ukrainian
 git fetch origin -q && git merge --ff-only origin/main
-curl -s http://localhost:8765/api/delegate/active   # a1-poc-lesson-pilot done?
-gh pr list --state open --json number,title,headRefName
+gh pr list --state open --json number,title,isDraft   # #2892/#2854/#2601 = track-owned/draft/stale
+npm run agents:deploy                                  # should stay clean
 ```
