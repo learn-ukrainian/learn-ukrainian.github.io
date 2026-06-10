@@ -1,23 +1,121 @@
 inline:
   - id: act-1
-    type: match-up
-    title: Місяць у даті
-    instruction: З'єднайте місяць із формою для дати.
-    pairs:
-      - left: "січень"
-        right: "січня"
-      - left: "лютий"
-        right: "лютого"
-      - left: "березень"
-        right: "березня"
-      - left: "квітень"
-        right: "квітня"
-      - left: "листопад"
-        right: "листопада"
+    type: quiz
+    title: Усі місяці в даті
+    instruction: Оберіть форму місяця, яка потрібна в даті.
+    items:
+      - prompt: "перше ___"
+        options:
+          - text: "січня"
+            correct: true
+          - text: "січень"
+            correct: false
+          - text: "січнем"
+            correct: false
+        explanation: У даті назва місяця стоїть у родовому.
+      - prompt: "друге ___"
+        options:
+          - text: "лютого"
+            correct: true
+          - text: "лютий"
+            correct: false
+          - text: "лютому"
+            correct: false
+        explanation: Кажемо друге лютого.
+      - prompt: "п'яте ___"
+        options:
+          - text: "березня"
+            correct: true
+          - text: "березень"
+            correct: false
+          - text: "березнем"
+            correct: false
+        explanation: Березень у даті має форму березня.
+      - prompt: "десяте ___"
+        options:
+          - text: "квітня"
+            correct: true
+          - text: "квітень"
+            correct: false
+          - text: "квітні"
+            correct: false
+        explanation: У даті потрібна форма квітня.
+      - prompt: "дев'яте ___"
+        options:
+          - text: "травня"
+            correct: true
+          - text: "травень"
+            correct: false
+          - text: "травнем"
+            correct: false
+        explanation: Кажемо дев'яте травня.
+      - prompt: "двадцяте ___"
+        options:
+          - text: "червня"
+            correct: true
+          - text: "червень"
+            correct: false
+          - text: "червні"
+            correct: false
+        explanation: Червень у даті має форму червня.
+      - prompt: "сьоме ___"
+        options:
+          - text: "липня"
+            correct: true
+          - text: "липень"
+            correct: false
+          - text: "липнем"
+            correct: false
+        explanation: У даті потрібна форма липня.
+      - prompt: "двадцять четверте ___"
+        options:
+          - text: "серпня"
+            correct: true
+          - text: "серпень"
+            correct: false
+          - text: "серпні"
+            correct: false
+        explanation: Кажемо двадцять четверте серпня.
+      - prompt: "перше ___"
+        options:
+          - text: "вересня"
+            correct: true
+          - text: "вересень"
+            correct: false
+          - text: "вереснем"
+            correct: false
+        explanation: Вересень у даті має форму вересня.
+      - prompt: "чотирнадцяте ___"
+        options:
+          - text: "жовтня"
+            correct: true
+          - text: "жовтень"
+            correct: false
+          - text: "жовтні"
+            correct: false
+        explanation: У даті потрібна форма жовтня.
+      - prompt: "двадцять перше ___"
+        options:
+          - text: "листопада"
+            correct: true
+          - text: "листопад"
+            correct: false
+          - text: "листопадом"
+            correct: false
+        explanation: Листопад у даті має форму листопада.
+      - prompt: "двадцять п'яте ___"
+        options:
+          - text: "грудня"
+            correct: true
+          - text: "грудень"
+            correct: false
+          - text: "грудні"
+            correct: false
+        explanation: Кажемо двадцять п'яте грудня.
   - id: act-2
     type: fill-in
-    title: 1, 2-4, 5+
-    instruction: Оберіть форму іменника після числа.
+    title: 1, 2-4, 5+ і 11-14
+    instruction: Оберіть правильну форму іменника після числа.
     items:
       - sentence: "один ___"
         answer: "номер"
@@ -27,80 +125,132 @@ inline:
         answer: "номери"
         options: ["номер", "номери", "номерів"]
         explanation: Після два стоїть називний множини.
+      - sentence: "чотири ___"
+        answer: "квитки"
+        options: ["квиток", "квитки", "квитків"]
+        explanation: Після чотири стоїть називний множини.
       - sentence: "п'ять ___"
+        answer: "квитків"
+        options: ["квиток", "квитки", "квитків"]
+        explanation: Після п'ять стоїть родовий множини.
+      - sentence: "одинадцять ___"
+        answer: "гостей"
+        options: ["гість", "гості", "гостей"]
+        explanation: Числа 11-14 беруть родовий множини.
+      - sentence: "дванадцять ___"
         answer: "номерів"
         options: ["номер", "номери", "номерів"]
-        explanation: Після п'ять стоїть родовий множини.
-      - sentence: "три ___"
-        answer: "книги"
-        options: ["книга", "книги", "книг"]
-        explanation: Після три стоїть називний множини.
-      - sentence: "шість ___"
-        answer: "книг"
-        options: ["книга", "книги", "книг"]
-        explanation: Після шість стоїть родовий множини.
+        explanation: Дванадцять належить до зони 11-14.
+      - sentence: "чотирнадцять ___"
+        answer: "кімнат"
+        options: ["кімната", "кімнати", "кімнат"]
+        explanation: Чотирнадцять вимагає родового множини.
+      - sentence: "двадцять один ___"
+        answer: "гість"
+        options: ["гість", "гості", "гостей"]
+        explanation: Остання частина один вимагає називного однини.
+      - sentence: "двадцять два ___"
+        answer: "гості"
+        options: ["гість", "гості", "гостей"]
+        explanation: Остання частина два вимагає називного множини.
+      - sentence: "двадцять чотири ___"
+        answer: "номери"
+        options: ["номер", "номери", "номерів"]
+        explanation: Остання частина чотири вимагає називного множини.
+      - sentence: "двадцять п'ять ___"
+        answer: "номерів"
+        options: ["номер", "номери", "номерів"]
+        explanation: Остання частина п'ять вимагає родового множини.
+      - sentence: "тридцять п'ять ___"
+        answer: "кімнат"
+        options: ["кімната", "кімнати", "кімнат"]
+        explanation: 35 належить до групи 5+.
   - id: act-3
-    type: quiz
-    title: Заперечення
-    instruction: Оберіть природне заперечення з родовим.
-    items:
-      - prompt: "Я бачу паспорт -> Я не бачу..."
-        options:
-          - text: "паспорта"
-            correct: true
-          - text: "паспорт"
-            correct: false
-        explanation: Родовий - часта модель у запереченні.
-      - prompt: "Вона читає книгу -> Вона не читає..."
-        options:
-          - text: "книги"
-            correct: true
-          - text: "книга"
-            correct: false
-        explanation: Книга переходить у форму книги.
-      - prompt: "Він купив машину -> Він не купив..."
-        options:
-          - text: "машини"
-            correct: true
-          - text: "машина"
-            correct: false
-        explanation: Машина переходить у форму машини.
+    type: match-up
+    title: Заперечення і родовий
+    instruction: З'єднайте позитивне речення із запереченням.
+    pairs:
+      - left: "Я бачу паспорт."
+        right: "Я не бачу паспорта."
+      - left: "Вона читає книгу."
+        right: "Вона не читає книги."
+      - left: "Він купив квиток."
+        right: "Він не купив квитка."
+      - left: "Ми знайшли адресу."
+        right: "Ми не знайшли адреси."
+      - left: "Я маю час."
+        right: "Я не маю часу."
+      - left: "Вони замовили номер."
+        right: "Вони не замовили номера."
+      - left: "Ти бачиш проблему."
+        right: "Ти не бачиш проблеми."
+      - left: "Адміністратор має карту."
+        right: "Адміністратор не має карти."
   - id: act-4
-    type: group-sort
-    title: Дата, кількість, заперечення
-    instruction: Розподіліть фрази за тим, що вони тренують.
-    groups:
-      - name: "дата"
-        items: ["п'яте березня", "перше січня"]
-      - name: "кількість"
-        items: ["два номери", "п'ять гостей"]
-      - name: "заперечення"
-        items: ["не бачу паспорта", "не читаю книги"]
+    type: match-up
+    title: Питання і відповідь
+    instruction: З'єднайте питання з природною A2-відповіддю.
+    pairs:
+      - left: "Яке сьогодні число?"
+        right: "Сьогодні п'яте березня."
+      - left: "Коли у вас день народження?"
+        right: "Дванадцятого травня."
+      - left: "З якого числа номер?"
+        right: "З двадцять першого липня."
+      - left: "До якого числа бронювання?"
+        right: "До двадцять четвертого липня."
+      - left: "Скільки гостей буде?"
+        right: "Одинадцять гостей."
+      - left: "Скільки номерів потрібно?"
+        right: "Два номери."
+      - left: "Чого немає?"
+        right: "Немає великих номерів."
+      - left: "Що ви не бачите?"
+        right: "Я не бачу проблеми."
 workbook:
   - type: true-false
-    title: Числа і родовий
+    title: Числа без пасток
     instruction: Визначте, чи правильне кожне твердження.
     items:
-      - statement: "П'ять гостей uses genitive plural."
+      - statement: "Після 11-14 потрібен родовий множини: одинадцять гостей."
         answer: true
-        explanation: Гостей - це родовий множини.
-      - statement: "Два номери follows the 2-4 pattern."
-        answer: true
-        explanation: Іменник стоїть у називному множини.
-      - statement: "У даті місяць залишається у називному відмінку."
+        explanation: Це спеціальна зона, яка поводиться як 5+.
+      - statement: "Двадцять два номерів is the target A2 form."
         answer: false
-        explanation: Українською кажемо п'яте березня.
+        explanation: Потрібно двадцять два номери.
+      - statement: "Дванадцять кімнат uses genitive plural."
+        answer: true
+        explanation: Дванадцять належить до 11-14.
+      - statement: "Двадцять п'ять гостей follows the 5+ pattern."
+        answer: true
+        explanation: Остання частина п'ять вимагає родового множини.
+      - statement: "У даті місяць стоїть у родовому: перше січня."
+        answer: true
+        explanation: Січня - форма для дати.
+      - statement: "Перше січень is the target date form."
+        answer: false
+        explanation: Потрібно перше січня.
   - type: error-correction
-    title: Виправ форму
+    title: Виправ дату або кількість
     instruction: Оберіть виправлену фразу.
     items:
-      - sentence: "п'ять номер"
-        error: "номер"
-        correction: "п'ять номерів"
-        options: ["п'ять номерів", "п'ять номер"]
-        explanation: Після п'ять стоїть родовий множини.
       - sentence: "перше січень"
         error: "січень"
         correction: "перше січня"
         options: ["перше січня", "перше січень"]
-        explanation: Назва місяця в датах стоїть у родовому.
+        explanation: У даті назва місяця стоїть у родовому.
+      - sentence: "дванадцять номери"
+        error: "номери"
+        correction: "дванадцять номерів"
+        options: ["дванадцять номерів", "дванадцять номери"]
+        explanation: Числа 11-14 вимагають родового множини.
+      - sentence: "двадцять два номерів"
+        error: "номерів"
+        correction: "двадцять два номери"
+        options: ["двадцять два номери", "двадцять два номерів"]
+        explanation: Остання частина два вимагає називного множини.
+      - sentence: "Я не бачу паспорт."
+        error: "паспорт"
+        correction: "Я не бачу паспорта."
+        options: ["Я не бачу паспорта.", "Я не бачу паспорт."]
+        explanation: Родовий після заперечення - цільова модель.

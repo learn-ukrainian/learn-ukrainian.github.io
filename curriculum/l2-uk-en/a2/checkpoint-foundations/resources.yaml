@@ -1,15 +1,20 @@
-- title: "Genitive Case (Родовий відмінок)"
+- title: "ULP: Verb Aspect in Ukrainian"
   role: article
-  source_ref: "Ukrainian Lessons"
-  url: https://www.ukrainianlessons.com/genitive-case/
-  notes: "Review reference for genitive absence, quantity, and negation."
-- title: "Nouns After Numbers"
+  source_ref: "docs/resources/ulp-articles-index.yaml: /verb-aspect-in-ukrainian-differences/"
+  url: "https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/"
+  notes: "Catalog-backed review for checkpoint aspect recognition and choices."
+- title: "ULP: Perfective Verbs"
   role: article
-  source_ref: "Ukrainian Lessons"
-  url: https://www.ukrainianlessons.com/nouns-after-numbers/
-  notes: "Review reference for the 1, 2-4, 5+ number pattern."
-- title: "Talk Ukrainian: Verb Aspect"
+  source_ref: "docs/resources/ulp-articles-index.yaml: /perfective-verbs/"
+  url: "https://www.ukrainianlessons.com/perfective-verbs/"
+  notes: "Follow-up for common perfective forms and completed-result meanings."
+- title: "ULP: Genitive Case (Родовий відмінок)"
   role: article
-  source_ref: "Talk Ukrainian"
-  url: https://talkukrainian.com/verb-aspect/
-  notes: "Review reference for imperfective/perfective process-result contrasts."
+  source_ref: "docs/resources/ulp-articles-index.yaml: /genitive-case/"
+  url: "https://www.ukrainianlessons.com/genitive-case/"
+  notes: "Review reference for genitive absence, negation, and quantity."
+- title: "ULP: Nouns After Numbers"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /nouns-after-numbers/"
+  url: "https://www.ukrainianlessons.com/nouns-after-numbers/"
+  notes: "Checkpoint support for 1, 2-4, 5+ and 11-14 number patterns."
