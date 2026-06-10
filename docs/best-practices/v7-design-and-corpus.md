@@ -219,6 +219,7 @@ These need fix before next promote:
 5. **Writer prompt under-specifies INLINE/WORKBOOK split** — has placeholder values for `{INLINE_ALLOWED_TYPES}` + `{WORKBOOK_ALLOWED_TYPES}` but doesn't explain "most go to workbook" intent.
 6. **Reviewer prompt not yet audited for corpus + student-aware awareness** (`scripts/build/phases/linear-review-dim.md`).
 7. **ULP-derivation actual output for a module not yet verified** — flag is on, function exists, placeholders are wired, but no smoke test confirming the `rule` text + cumulative-vocab signal actually flows through to writer for a real module.
+8. **`vesum_verified` false-flags authentic archaisms / dialectisms / poetic forms** — VESUM is the modern-standard dictionary, so authentic Ukrainian that it doesn't enumerate (`другоє` in a verify_quote'd folk song, `ягілки`/`перекличка`, archaic `-оє` poetic endings) is wrongly treated as a bad-form/russianism. Hits folk, lit (poetry), hist (chronicles), oes/ruth (philology). **Design fix = shared Heritage Attestation Engine** — see [`heritage-attestation-engine.md`](heritage-attestation-engine.md). It is the SAME classifier as the Word Atlas §5/§6 decolonization layer (`word-atlas-design.md`, #2882): build once, two consumers (Atlas renders badges; the gate allows authentic / blocks russianisms). `#2899` folk allowlist is the interim stopgap.
 
 ---
 
