@@ -1,8 +1,20 @@
 from __future__ import annotations
 
+from pathlib import Path
+
+import pytest
 import yaml
 
 from scripts.build import linear_pipeline
+
+# Mirror the heritage-classifier convention (tests/test_heritage_classifier.py):
+# CI ships only a stub sources.db, so existence is not enough — require the full
+# ~1.7GB corpus. The engine is verified locally; these cases skip on CI.
+requires_sources_db = pytest.mark.skipif(
+    not Path("data/sources.db").exists()
+    or Path("data/sources.db").stat().st_size < 100_000_000,
+    reason="requires the full ~1.7GB corpus sources.db; CI has only a stub; heritage engine verified locally",
+)
 
 
 def _vesum_rejects_all(words: list[str]) -> dict[str, list[dict[str, str]]]:
@@ -92,4 +104,46 @@ def test_core_level_vesum_gate_does_not_use_folk_attestation_fallback() -> None:
 
     assert gate["passed"] is False
     assert gate["missing"] == ["риндзівка"]
+    assert gate["heritage_attested"] == 0
+
+
+# --- Heritage classifier consumption (#2912) -------------------------------
+# The shared classifier is now the primary authority; the committed YAML
+# allowlist (#2899) is a thin override. These cases are attested ONLY by the
+# classifier (corpus/dictionary evidence), not by the committed allowlist, so
+# they prove the gate consumes the engine rather than re-listing terms by hand.
+
+
+@requires_sources_db
+def test_folk_vesum_gate_accepts_engine_authentic_not_in_allowlist() -> None:
+    # `другоє` (poetic archaic `-оє`, verified in a 1955 Kupala song) and
+    # `Кострубонько` (ritual figure) are NOT in folk_heritage_attestations.yaml;
+    # only the classifier attests them as authentic-archaism.
+    gate = _gate("другоє Кострубонько")
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert gate["heritage_attested"] == 2
+
+
+@requires_sources_db
+def test_folk_vesum_gate_still_rejects_teaching_prose_russianisms() -> None:
+    # Teaching-prose russianisms the classifier flags is_russianism=True must
+    # keep failing the gate (→ суперечність / чинна). Gate teeth preserved.
+    gate = _gate("протиріччя діюча")
+
+    assert gate["passed"] is False
+    # _vesum_gate sorts `missing` internally; Cyrillic order: діюча < протиріччя.
+    assert gate["missing"] == ["діюча", "протиріччя"]
+    assert gate["heritage_attested"] == 0
+
+
+def test_folk_vesum_gate_still_rejects_unknown_coinage_via_engine() -> None:
+    # `городалька` is an unknown coinage (classification="unknown") — neither the
+    # allowlist nor the classifier attests it. Stays flagged with or without the
+    # corpus DB (engine degrades to False when unavailable), so no DB guard.
+    gate = _gate("городалька")
+
+    assert gate["passed"] is False
+    assert gate["missing"] == ["городалька"]
     assert gate["heritage_attested"] == 0

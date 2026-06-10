@@ -8161,15 +8161,39 @@ def _folk_heritage_attestation_index(
     return index
 
 
+_HERITAGE_AUTHENTIC_CLASSIFICATIONS = frozenset(
+    {"authentic-archaism", "dialect", "historism", "borrowing", "standard"}
+)
+
+
+def _engine_classifies_authentic(candidate: str) -> bool:
+    """True iff the shared heritage classifier (#2912) attests ``candidate`` as
+    authentic Ukrainian (archaism / dialect / historism / borrowing / standard)
+    and NOT a russianism.
+
+    Reads ``data/sources.db`` directly via ``scripts.lexicon.heritage_classifier``.
+    A Russian-shadow morphology hit never decides on its own — the classifier
+    records it as a warning but authentic dictionary/quote evidence overrides it
+    (so поетичне ``другоє`` and dialectal ``ягілка`` pass while ``протиріччя``
+    stays a russianism). Degrades to ``False`` (committed-allowlist-only fallback)
+    when the classifier is unavailable — e.g. the corpus DB is absent on CI."""
+    try:
+        from scripts.lexicon.heritage_classifier import classify_surface_form
+
+        verdict = classify_surface_form(candidate)
+    except Exception:
+        return False
+    return (
+        verdict.get("classification") in _HERITAGE_AUTHENTIC_CLASSIFICATIONS
+        and not verdict.get("is_russianism", False)
+    )
+
+
 def _resolve_folk_heritage_attested_missing(
     missing_lc: set[str],
     unchecked_pairs: Sequence[tuple[str, str, str]],
 ) -> set[str]:
     if not missing_lc:
-        return set()
-
-    attestation_index = _folk_heritage_attestation_index()
-    if not attestation_index:
         return set()
 
     candidates_by_missing: dict[str, set[str]] = {word: {word} for word in missing_lc}
@@ -8179,11 +8203,22 @@ def _resolve_folk_heritage_attested_missing(
         candidates_by_missing[lower].add(_normalize_for_vesum(surface).lower())
         candidates_by_missing[lower].add(_normalize_for_vesum(original_case_lookup).lower())
 
-    return {
-        word
-        for word, candidates in candidates_by_missing.items()
-        if any(candidate in attestation_index for candidate in candidates)
-    }
+    # Primary authority: the shared heritage classifier (#2912). It accepts
+    # authentic archaic/dialectal/standard Ukrainian and keeps russianisms +
+    # unknown coinages flagged, replacing the per-term whack-a-mole allowlist.
+    # The committed slovnyk.me allowlist (#2899) collapses to a thin deterministic
+    # override — consulted first (cheap dict lookup) and as the offline fallback
+    # when the corpus DB is absent (CI).
+    attestation_index = _folk_heritage_attestation_index()
+
+    attested: set[str] = set()
+    for word, candidates in candidates_by_missing.items():
+        if attestation_index and any(candidate in attestation_index for candidate in candidates):
+            attested.add(word)
+            continue
+        if any(_engine_classifies_authentic(candidate) for candidate in candidates):
+            attested.add(word)
+    return attested
 
 
 def _vesum_gate(
