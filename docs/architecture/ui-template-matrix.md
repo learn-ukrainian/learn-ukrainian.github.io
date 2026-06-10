@@ -8,7 +8,7 @@ The POC files are design intent, not source to copy:
 
 - `docs/poc/poc-site-design.html`
 - `docs/poc/poc-lesson-design.html`
-- `docs/poc/poc-word-atlas-design.html`
+- `docs/poc/word-atlas/README.md`
 - `docs/poc/poc-folk-lesson-design.html`
 - `docs/poc/poc-lit-lesson-design.html`
 

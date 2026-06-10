@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POC: Атлас слів — heritage defense</title>
+<link rel="stylesheet" href="word-atlas.css">
+</head>
+<body data-theme="light">
+
+
+<div class="word-switch">
+  <label>Слово:</label>
+  <select onchange="switchWord(this.value)">
+    <option value="knyaz">князь — повні дані без редакційних ризиків</option>
+    <option value="prapor">прапор — попередження про радянські формулювання</option>
+    <option value="faynyy" selected>файний — захист питомості (галицизм)</option>
+  </select>
+  <div class="atlas-search">
+    <input type="search" aria-label="Шукати" placeholder="Шукати слово або джерело">
+    <button class="atlas-button search" type="button">Шукати</button>
+    <button class="atlas-button filter" type="button">Фільтр</button>
+  </div>
+  <div class="theme-toggle" role="group" aria-label="Тема">
+    <button type="button" class="active" data-theme-choice="light">Світла</button>
+    <button type="button" data-theme-choice="dark">Темна</button>
+  </div>
+  <span class="poc-label">POC: Атлас слів (Лексикон) — дизайн окремого розділу V7</span>
+</div>
+
+<!-- Top-nav for context: shows the atlas is its OWN top-level section -->
+<div class="topnav">
+  <div class="topnav-inner">
+    <span class="topnav-brand">learn-ukrainian</span>
+    <a class="topnav-link" href="#">Головна</a>
+    <a class="topnav-link" href="#">A1–C2</a>
+    <a class="topnav-link" href="#">Семінари</a>
+    <a class="topnav-link active" href="#">Лексикон</a>
+    <a class="topnav-link" href="#">Про проєкт</a>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     PAGE 3: файний — heritage-defense (galicianism)
+     Demonstrates: heritage-defense classification, dialect
+     badge, Грінченко + ЕСУМ as pre-Soviet attestation, no
+     Russianism despite "looks foreign" intuition.
+     ============================================================ -->
+<div id="word-faynyy">
+  <div class="word-hero">
+    <div class="word-hero-inner">
+      <span class="lexicon-badge">Лексикон · A‑Я · Ф</span>
+      <h1 class="word-title">файний <span class="word-stress">[фа́йний]</span></h1>
+      <div class="word-pos">прикметник · якісний</div>
+      <div class="word-badges">
+        <span class="status-badge heritage-ok">✓ Питома українська (галицизм)</span>
+        <span class="status-badge dialect">Регіонально-літературне · Галичина</span>
+        <span class="status-badge cefr">CEFR B1</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-area">
+
+    <section class="atlas-section">
+      <div class="editorial-success">
+        <div class="editorial-success-header"><div class="editorial-success-icon">✓</div>Питома українська — це НЕ калька і НЕ запозичення з російської</div>
+        <p>Слово «файний» — давній галицький регіоналізм, засвідчений у Грінченка 1907 з прикладами з фольклору. Походить від <em>німецького fein</em> через польське посередництво (XVIII–XIX ст., період Австро-Угорщини), <strong>не з російської</strong>. У сучасній літературній мові — стилістично марковане як <em>розмовне, регіональне, літературне</em>.</p>
+        <p style="margin-top: 10px;">У стандартному вжитку синонімами є <strong>гарний, добрий, чудовий, славний</strong>. У повсякденному мовленні Західної України — норма; в офіційно-діловому стилі — недоречно.</p>
+        <p style="font-size: 12px; color: var(--gray-600); margin-top: 10px;">Тригер захисту питомості: <code>search_heritage → classification=regional · is_russianism=false · pre_soviet_attestation=[grinchenko_1907, esum]</code></p>
+      </div>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Походження</h2>
+      <div class="ety-timeline">
+        <div class="ety-stage">
+          <div class="ety-period">Середньоверхньонімецька</div>
+          <div class="ety-word archaic">fīn</div>
+        </div>
+        <div class="ety-arrow">→</div>
+        <div class="ety-stage">
+          <div class="ety-period">Польська (XVII ст.)</div>
+          <div class="ety-word archaic">fajny</div>
+        </div>
+        <div class="ety-arrow">→</div>
+        <div class="ety-stage">
+          <div class="ety-period">Галицька укр. (XIX ст.)</div>
+          <div class="ety-word archaic">файний</div>
+        </div>
+        <div class="ety-arrow">→</div>
+        <div class="ety-stage">
+          <div class="ety-period">Сучасна укр.</div>
+          <div class="ety-word modern">файний</div>
+        </div>
+      </div>
+      <div class="ety-note">Запозичення XVIII–XIX ст. через польське посередництво в період Австро-Угорщини. Споріднені слова в інших слов'янських мовах: пол. <em>fajny</em>, чеськ. <em>fajn</em>, словац. <em>fajn</em>. Прийшло в українську ЗАХІДНИМ шляхом, незалежно від російського мовного контакту.</div>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Значення</h2>
+
+      <div class="def-card grinchenko">
+        <div class="def-source"><span class="src-pill">Грінченко 1907</span><span>дорадянське засвідчення</span></div>
+        <div class="def-text">Файный, -на, -не. <em>Зап.</em> Хорошій, красивый. <em>Файна дівка, нема й що казати. Гн. II. 47.</em></div>
+      </div>
+
+      <div class="def-card sum20">
+        <div class="def-source"><span class="src-pill">СУМ-20 / slovnyk.me</span><span>сучасний тлумачний словник</span></div>
+        <div class="def-text">Гарний, приємний, чудовий, який викликає схвалення. <em>Розм., рег.</em> Поширене переважно в західних діалектах української мови.</div>
+      </div>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Стилістичні нотатки</h2>
+      <div class="editorial-calque info">
+        <div class="editorial-calque-header"><div class="editorial-info-icon">ℹ</div>Регіоналізм — не помилка, але стильово маркований</div>
+        <p style="font-size: 14px;">Антоненко-Давидович не заперечує проти слова, але радить у літературній мові обирати <strong>гарний</strong>, <strong>добрий</strong>, <strong>славний</strong> у нейтральному стилі. У художній прозі та поезії — повна свобода: «файний» широко використовують Стефаник, Франко, сучасні західноукраїнські письменники.</p>
+      </div>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Літературні засвідчення</h2>
+      <div class="source-box">
+        <div class="source-box-header">Василь Стефаник · «Кленові листки» (1900)</div>
+        <blockquote>«Файна молодиця, файна, дай їй Боже…»</blockquote>
+        <div class="source-cite">— зразок галицького літературного вжитку</div>
+      </div>
+      <div class="source-box">
+        <div class="source-box-header">Іван Франко · «Захар Беркут» (1883)</div>
+        <blockquote>«А чи файний той парубок? — запитала вона батька. — Файний, — відповів той. — І гарної кості, і доброго серця…»</blockquote>
+      </div>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерело: <code>literary_fts</code> · показано 2 з 31 засвідчень переважно у західноукраїнських авторів</p>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Синоніми</h2>
+      <div class="chip-row">
+        <span class="chip">гарний</span>
+        <span class="chip">добрий</span>
+        <span class="chip">славний</span>
+        <span class="chip">чудовий</span>
+        <span class="chip">приємний</span>
+        <span class="chip">красний</span>
+      </div>
+    </section>
+
+    <!-- Provenance footer -->
+    <div class="provenance-footer">
+      <h3>Походження даних</h3>
+      <div class="provenance-list">
+        <span class="src">vesum</span>
+        <span class="src">grinchenko_1907</span>
+        <span class="src">esum</span>
+        <span class="src">slovnyk_me · regional dictionaries</span>
+        <span class="src">search_heritage merger</span>
+        <span class="src">literary_fts</span>
+      </div>
+      <div class="meta-line">
+        <span>згенеровано: 2026-05-23T10:42Z</span>
+        <span>класифікація: регіоналізм · не русизм</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchWord(w) {
+  var routes = {
+    knyaz: 'landing.html',
+    prapor: 'detail.html',
+    faynyy: 'heritage-defense.html'
+  };
+  if (routes[w]) { window.location.href = routes[w]; }
+}
+function toggleEty(el, infoId, text) {
+  document.querySelectorAll('.ety-stage').forEach(function(s) { s.style.borderColor = ''; });
+  el.style.borderColor = 'var(--teal)';
+  el.style.boxShadow = '0 0 0 2px rgba(0,105,92,0.18)';
+  var info = document.getElementById(infoId);
+  if (info) { info.textContent = text; info.style.background = 'var(--teal-light)'; }
+}
+document.querySelectorAll('[data-theme-choice]').forEach(function(button) {
+  button.addEventListener('click', function() {
+    document.body.setAttribute('data-theme', button.dataset.themeChoice);
+    document.querySelectorAll('[data-theme-choice]').forEach(function(item) {
+      item.classList.toggle('active', item === button);
+    });
+  });
+});
+</script>
+
+</body>
+</html>

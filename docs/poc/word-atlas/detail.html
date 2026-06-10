@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POC: Атлас слів — lemma detail</title>
+<link rel="stylesheet" href="word-atlas.css">
+</head>
+<body data-theme="light">
+
+
+<div class="word-switch">
+  <label>Слово:</label>
+  <select onchange="switchWord(this.value)">
+    <option value="knyaz">князь — повні дані без редакційних ризиків</option>
+    <option value="prapor" selected>прапор — попередження про радянські формулювання</option>
+    <option value="faynyy">файний — захист питомості (галицизм)</option>
+  </select>
+  <div class="atlas-search">
+    <input type="search" aria-label="Шукати" placeholder="Шукати слово або джерело">
+    <button class="atlas-button search" type="button">Шукати</button>
+    <button class="atlas-button filter" type="button">Фільтр</button>
+  </div>
+  <div class="theme-toggle" role="group" aria-label="Тема">
+    <button type="button" class="active" data-theme-choice="light">Світла</button>
+    <button type="button" data-theme-choice="dark">Темна</button>
+  </div>
+  <span class="poc-label">POC: Атлас слів (Лексикон) — дизайн окремого розділу V7</span>
+</div>
+
+<!-- Top-nav for context: shows the atlas is its OWN top-level section -->
+<div class="topnav">
+  <div class="topnav-inner">
+    <span class="topnav-brand">learn-ukrainian</span>
+    <a class="topnav-link" href="#">Головна</a>
+    <a class="topnav-link" href="#">A1–C2</a>
+    <a class="topnav-link" href="#">Семінари</a>
+    <a class="topnav-link active" href="#">Лексикон</a>
+    <a class="topnav-link" href="#">Про проєкт</a>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     PAGE 2: прапор — sovietization warning
+     Demonstrates: red editorial banner at top, sovietized
+     СУМ-11 entry shown but flagged, Грінченко as pre-Soviet
+     baseline.
+     ============================================================ -->
+<div id="word-prapor">
+  <div class="word-hero">
+    <div class="word-hero-inner">
+      <span class="lexicon-badge">Лексикон · A‑Я · П</span>
+      <h1 class="word-title">прапор <span class="word-stress">[пра́пор]</span></h1>
+      <div class="word-pos">іменник · чоловічий рід · неістота</div>
+      <div class="word-badges">
+        <span class="status-badge heritage-ok">✓ Питома українська лексика</span>
+        <span class="status-badge cefr">CEFR A2</span>
+        <span class="status-badge heritage-warn">⚠ Радянські формулювання в СУМ-11</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-area">
+
+    <section class="atlas-section">
+      <div class="editorial-warn">
+        <div class="editorial-warn-header"><div class="editorial-warn-icon">⚠</div>Радянські ідеологічні формулювання у СУМ-11</div>
+        <p>Тлумачення слова «прапор» у СУМ-11 (1970–1980) подане в радянському ідеологічному ключі: дефініції містять обов'язкові посилання на «прапор СРСР», «прапор Леніна», «прапор партії». Це <strong>не означає, що саме слово негативне</strong> — слово питоме, давнє, спільнослов'янське. Йдеться про <strong>радянську редакторську політику словника</strong>.</p>
+        <p style="margin-top: 10px;">Для нейтральної довідки звертайтеся до Грінченка (1907) та ЕСУМ. СУМ-11 показано нижче <em>з позначками</em> для прозорості.</p>
+        <p style="font-size: 12px; color: var(--gray-600); margin-top: 10px;">Тригер: <code>sovietization_risk=2</code> · keywords: <code>радянськ, ленін, партійн</code> · аудит #1659</p>
+      </div>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Походження + статус</h2>
+      <div class="editorial-success">
+        <div class="editorial-success-header"><div class="editorial-success-icon">✓</div>Питома українська лексика — давня, не русизм</div>
+        <p>Слово засвідчене у Грінченка 1907 з прикладами фольклорного вжитку. Спільнослов'янський корінь, споріднений з польс. <em>proporzec</em>, чеськ. <em>prapor</em>. Невелика частина словникового запасу, що зберіглась без сильного контактного впливу.</p>
+      </div>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Значення</h2>
+
+      <div class="def-card grinchenko">
+        <div class="def-source"><span class="src-pill">Грінченко 1907</span><span>дорадянське засвідчення</span></div>
+        <div class="def-text">Прапоръ, -ра, м. Знамя. <em>Розгорнули червоні прапори. О. 1862. III. 23.</em></div>
+      </div>
+
+      <div class="def-card sum20">
+        <div class="def-source"><span class="src-pill">СУМ-20</span><span>сучасний тлумачний словник</span></div>
+        <div class="def-text">1. Знамено, прикріплене до древка, що є офіційним символом держави, військового підрозділу, організації. 2. <em>перен.</em> Ідейний символ, гасло руху або боротьби.</div>
+      </div>
+
+      <div class="def-card sum11-flagged">
+        <div class="def-source"><span class="src-pill">СУМ-11 · ⚠ позначено</span><span>радянське видання · risk=2</span></div>
+        <div class="def-text">Полотнище певного кольору і розміру, прикріплене до древка чи шнура, що є офіційним символом держави, певної організації або частини збройних сил. <em>Червоний прапор Радянського Союзу майорів над Рейхстагом. Над сільрадою — червоний прапор з серпом і молотом. Прапор Леніна освітлює шлях радянському народові.</em></div>
+        <div class="def-flag-inline">⚠ Дефініція ілюстрована радянською ідеологією. Триггери: «Радянський Союз», «серп і молот», «прапор Леніна». Рекомендуємо звернутися до СУМ-20 або Грінченка для нейтрального тлумачення.</div>
+      </div>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Морфологія</h2>
+      <table class="paradigm-table">
+        <tr><th class="col-case">Відмінок</th><th>Однина</th><th>Множина</th></tr>
+        <tr><td class="case-name">Називний</td><td class="form">пра́пор</td><td class="form">прапори́</td></tr>
+        <tr><td class="case-name">Родовий</td><td class="form">пра́пора</td><td class="form">прапорі́в</td></tr>
+        <tr><td class="case-name">Орудний</td><td class="form">пра́пором</td><td class="form">прапора́ми</td></tr>
+        <tr><td class="case-name">Місцевий</td><td class="form">(на) пра́порі</td><td class="form">(на) прапора́х</td></tr>
+      </table>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">(скорочений вигляд — повна парадигма у розгорнутому вигляді)</p>
+    </section>
+
+    <section class="atlas-section">
+      <h2>Літературні засвідчення</h2>
+      <div class="source-box">
+        <div class="source-box-header">Шевченко · «Гайдамаки» (1841)</div>
+        <blockquote>«Гомоніла Україна, довго гомоніла, довго, довго кров степами текла, червоніла…»</blockquote>
+        <div class="source-cite">прапор як символ козацького повстання</div>
+      </div>
+      <p style="font-size: 12px; color: var(--gray-600); margin-top: 8px;">Джерело: <code>literary_fts</code> · показано 1 з 23 засвідчень</p>
+    </section>
+
+    <!-- Provenance footer -->
+    <div class="provenance-footer">
+      <h3>Походження даних</h3>
+      <div class="provenance-list">
+        <span class="src">vesum</span>
+        <span class="src">grinchenko_1907</span>
+        <span class="src">sum20</span>
+        <span class="src" style="background:var(--red-light);color:var(--red);">СУМ-11 · позначено risk=2</span>
+        <span class="src">esum</span>
+        <span class="src">literary_fts</span>
+      </div>
+      <div class="meta-line">
+        <span>згенеровано: 2026-05-23T10:42Z</span>
+        <span>СУМ-11 показано через прозорість, з обов'язковим прапорцем</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchWord(w) {
+  var routes = {
+    knyaz: 'landing.html',
+    prapor: 'detail.html',
+    faynyy: 'heritage-defense.html'
+  };
+  if (routes[w]) { window.location.href = routes[w]; }
+}
+function toggleEty(el, infoId, text) {
+  document.querySelectorAll('.ety-stage').forEach(function(s) { s.style.borderColor = ''; });
+  el.style.borderColor = 'var(--teal)';
+  el.style.boxShadow = '0 0 0 2px rgba(0,105,92,0.18)';
+  var info = document.getElementById(infoId);
+  if (info) { info.textContent = text; info.style.background = 'var(--teal-light)'; }
+}
+document.querySelectorAll('[data-theme-choice]').forEach(function(button) {
+  button.addEventListener('click', function() {
+    document.body.setAttribute('data-theme', button.dataset.themeChoice);
+    document.querySelectorAll('[data-theme-choice]').forEach(function(item) {
+      item.classList.toggle('active', item === button);
+    });
+  });
+});
+</script>
+
+</body>
+</html>
