@@ -236,7 +236,10 @@ def _clean_wiki_def(raw: str) -> str:
     """Strip Вікісловник wiki-markup noise (templates, quote leaks, refs)."""
     text = _unescape_html_entities(raw)
     text = re.sub(r"<br\s*/?>", " ", text, flags=re.IGNORECASE)
-    text = re.sub(r"<!--.*?-->", "", text)
+    # [\s\S] (not .) so multi-line comments are stripped too — `.` stops at the
+    # first newline, leaking the rest of a multi-line comment (CodeQL
+    # py/bad-tag-filter). Input is trusted Вікісловник DB text, but match fully.
+    text = re.sub(r"<!--[\s\S]*?-->", "", text)
     text = re.sub(r"\{\{[^{}]*\}\}", "", text)
     text = re.split(r"\.\s{2,}", text)[0]  # cut a leaked quotation after the def
     text = re.split(r"[|{}\[]", text)[0]  # cut residual template/ref markers
