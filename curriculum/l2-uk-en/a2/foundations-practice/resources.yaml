@@ -1,15 +1,20 @@
-- title: "Genitive Case (Родовий відмінок)"
+- title: "ULP: Verb Aspect in Ukrainian"
   role: article
-  source_ref: "Ukrainian Lessons"
-  url: https://www.ukrainianlessons.com/genitive-case/
-  notes: "Review reference for absence and quantity patterns used in the practice dialogues."
-- title: "Nouns After Numbers"
-  role: article
-  source_ref: "Ukrainian Lessons"
-  url: https://www.ukrainianlessons.com/nouns-after-numbers/
-  notes: "Follow-up for market quantities and the 1, 2-4, 5+ pattern."
+  source_ref: "docs/resources/ulp-articles-index.yaml: /verb-aspect-in-ukrainian-differences/"
+  url: "https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/"
+  notes: "Catalog-backed review of imperfective/perfective process-result contrasts."
 - title: "Talk Ukrainian: Verb Aspect"
   role: article
-  source_ref: "Talk Ukrainian"
-  url: https://talkukrainian.com/verb-aspect/
-  notes: "Compact reminder of process/result contrasts before role-play practice."
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-030"
+  url: "https://talkukrainian.com/verb-aspect/"
+  notes: "Compact learner-facing reminder before scenario role-play."
+- title: "ULP: Nouns After Numbers"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /nouns-after-numbers/"
+  url: "https://www.ukrainianlessons.com/nouns-after-numbers/"
+  notes: "Reference for market quantities and the 1, 2-4, 5+ pattern."
+- title: "ULP: Genitive Case (Родовий відмінок)"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /genitive-case/"
+  url: "https://www.ukrainianlessons.com/genitive-case/"
+  notes: "Review support for absence, negation, and quantity in the dialogues."

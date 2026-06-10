@@ -2,6 +2,10 @@
   translation: date, number
   pos: noun
   example: "Яке сьогодні число?"
+- word: дата
+  translation: date
+  pos: noun
+  example: "Дата бронювання - п'яте березня."
 - word: місяць
   translation: month
   pos: noun
@@ -25,11 +29,47 @@
 - word: травень / травня
   translation: May
   pos: noun
-  example: "Перше травня."
+  example: "Дев'яте травня."
+- word: червень / червня
+  translation: June
+  pos: noun
+  example: "Двадцяте червня."
+- word: липень / липня
+  translation: July
+  pos: noun
+  example: "Сьоме липня."
+- word: серпень / серпня
+  translation: August
+  pos: noun
+  example: "Двадцять четверте серпня."
+- word: вересень / вересня
+  translation: September
+  pos: noun
+  example: "Перше вересня."
+- word: жовтень / жовтня
+  translation: October
+  pos: noun
+  example: "Чотирнадцяте жовтня."
 - word: листопад / листопада
   translation: November
   pos: noun
-  example: "Двадцяте листопада."
+  example: "Двадцять перше листопада."
+- word: грудень / грудня
+  translation: December
+  pos: noun
+  example: "Двадцять п'яте грудня."
+- word: бронювання
+  translation: booking, reservation
+  pos: noun
+  example: "Бронювання з п'ятого березня."
+- word: номер
+  translation: hotel room, number
+  pos: noun
+  example: "Нам потрібні два номери."
+- word: гість
+  translation: guest
+  pos: noun
+  example: "Буде одинадцять гостей."
 - word: заперечення
   translation: negation
   pos: noun

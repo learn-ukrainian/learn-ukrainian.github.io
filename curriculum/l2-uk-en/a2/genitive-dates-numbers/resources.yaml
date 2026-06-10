@@ -1,15 +1,20 @@
-- title: "Nouns After Numbers"
+- title: "ULP: Nouns After Numbers"
   role: article
-  source_ref: "Ukrainian Lessons"
-  url: https://www.ukrainianlessons.com/nouns-after-numbers/
-  notes: "Learner-facing explanation of the 1, 2-4, 5+ noun agreement pattern."
-- title: "Dobra Forma: Genitive Case for Direct Objects after Negation (Neuter and Masculine)"
+  source_ref: "docs/resources/ulp-articles-index.yaml: /nouns-after-numbers/"
+  url: "https://www.ukrainianlessons.com/nouns-after-numbers/"
+  notes: "Catalog-backed learner reference for noun forms after numerals."
+- title: "ULP: Genitive Case (Родовий відмінок)"
   role: article
-  source_ref: "Dobra Forma 5-3"
-  url: https://opentext.ku.edu/dobraforma/chapter/5-3/
-  notes: "Practice for genitive direct objects after negation."
-- title: "Dobra Forma: Genitive Case with Expressions of Quantity (Feminine and Neuter Plural)"
+  source_ref: "docs/resources/ulp-articles-index.yaml: /genitive-case/"
+  url: "https://www.ukrainianlessons.com/genitive-case/"
+  notes: "Catalog-backed overview of genitive uses, including negation and quantity."
+- title: "Dobra Forma: Genitive Case for Direct Objects after Negation"
   role: article
-  source_ref: "Dobra Forma 6-2"
-  url: https://opentext.ku.edu/dobraforma/chapter/6-2/
-  notes: "Extra quantity practice with feminine and neuter plural nouns."
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-018"
+  url: "https://opentext.ku.edu/dobraforma/chapter/5-3/"
+  notes: "Practice support for genitive direct objects after negative verbs."
+- title: "Dobra Forma: Genitive Case with Expressions of Quantity"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-021"
+  url: "https://opentext.ku.edu/dobraforma/chapter/6-2/"
+  notes: "Additional quantity practice for plural genitive noun forms."

@@ -1,15 +1,23 @@
 - word: планувати / запланувати
   translation: to plan
   pos: verb pair
-  example: "Ми плануємо вечірку."
+  example: "Ми плануємо вечірку і вже запланували час."
 - word: купувати / купити
   translation: to buy
   pos: verb pair
-  example: "Я купую овочі і вже купив хліб."
+  example: "Я буду купувати продукти, а потім куплю серветки."
 - word: готувати / приготувати
   translation: to cook, prepare
   pos: verb pair
-  example: "Вона готує салат і скоро приготує вечерю."
+  example: "Вона буде готувати салат і приготує його до вечора."
+- word: писати / написати
+  translation: to write
+  pos: verb pair
+  example: "Я писав листа і нарешті написав його."
+- word: читати / прочитати
+  translation: to read
+  pos: verb pair
+  example: "Я читав книжку, але ще не прочитав її."
 - word: ринок
   translation: market
   pos: noun
@@ -21,15 +29,27 @@
 - word: кілограм
   translation: kilogram
   pos: noun
-  example: "Дайте кілограм яблук."
+  example: "Дайте кілограм меду."
 - word: вечірка
   translation: party
   pos: noun
   example: "У суботу буде вечірка."
+- word: новосілля
+  translation: housewarming party
+  pos: noun
+  example: "У суботу буде новосілля."
 - word: день
   translation: day
   pos: noun
   example: "Як пройшов день?"
+- word: серветка
+  translation: napkin
+  pos: noun
+  example: "У нас немає серветок."
+- word: список
+  translation: list
+  pos: noun
+  example: "Я вже написав список."
 - word: сценарій
   translation: scenario
   pos: noun

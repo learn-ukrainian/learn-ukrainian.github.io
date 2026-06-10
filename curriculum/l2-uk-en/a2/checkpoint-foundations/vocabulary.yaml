@@ -26,6 +26,18 @@
   translation: answer
   pos: noun
   example: "Дайте коротку відповідь."
+- word: розпізнавати
+  translation: to recognize
+  pos: verb
+  example: "Учень розпізнає вид дієслова."
+- word: трансформація
+  translation: transformation
+  pos: noun
+  example: "Трансформація змінює речення."
+- word: видова пара
+  translation: aspect pair
+  pos: noun
+  example: "Писати / написати - видова пара."
 - word: правильний
   translation: correct
   pos: adjective
@@ -42,3 +54,7 @@
   translation: to write
   pos: verb
   example: "Напишіть коротку відповідь."
+- word: самооцінка
+  translation: self-assessment
+  pos: noun
+  example: "Самооцінка допомагає побачити прогрес."
