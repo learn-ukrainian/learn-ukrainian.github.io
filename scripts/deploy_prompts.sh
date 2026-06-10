@@ -54,7 +54,10 @@ ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees"
 #          .agent/ by the dispatch tooling when a dispatch fires. Runtime-only,
 #          NOT source-tracked. Without this entry the deploy aborts on any machine
 #          where a dispatch has run since the last clean .agent/ deploy.
-ORPHAN_PATHS_AGENT="wake cache prompts *-thread-bootstrap.md *-thread-handoff.md *-thread-lease.json"
+# tmp/ — runtime scratch (issue/PR draft bodies, transient tarballs) written into
+#          .agent/ by orchestration tooling. Runtime-only, NOT source-tracked.
+#          Same rationale as prompts/: declare so rsync --delete preserves it.
+ORPHAN_PATHS_AGENT="wake cache prompts tmp *-thread-bootstrap.md *-thread-handoff.md *-thread-lease.json"
 ORPHAN_PATHS_AGENTS=""
 # agents/curriculum-orchestrator.toml and agents/curriculum-writer.toml —
 # Codex agent definitions with no shared equivalent.

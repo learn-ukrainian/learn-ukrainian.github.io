@@ -41,6 +41,40 @@ echo -e "${BOLD}==============================================${NC}"
 echo ""
 
 # ---------------------------------------------------------------------------
+# 0. Worktree hygiene — auto-reap finished dispatch/build worktrees
+#    The disk-bleed backstop: dispatch worktrees are each a full ~700MB
+#    checkout, and delegate.py only reaps them on the happy path (danger
+#    mode + status=done + clean). Everything else (needs_finalize, crashed,
+#    dirty, review mode) leaked forever → 11GB before this was wired in.
+#    reap_worktrees.py is safe-by-default: it ONLY reaps worktrees whose PR
+#    is MERGED/CLOSED or whose HEAD matches origin/<branch>, prunes merged
+#    branches, and preserves dirty ones (surfaced below, never auto-touched).
+#    Guarded with set +e + timeout so it can never abort session start.
+# ---------------------------------------------------------------------------
+if [ -x .venv/bin/python ] && [ -f scripts/orchestration/reap_worktrees.py ]; then
+    if command -v timeout > /dev/null 2>&1; then TIMEOUT_CMD="timeout 90"
+    elif command -v gtimeout > /dev/null 2>&1; then TIMEOUT_CMD="gtimeout 90"
+    else TIMEOUT_CMD=""; fi
+    set +e
+    REAP_OUT=$($TIMEOUT_CMD .venv/bin/python scripts/orchestration/reap_worktrees.py \
+        --apply --prune-merged-branches 2>/dev/null)
+    reaped=$(printf '%s\n' "$REAP_OUT" | grep -cE '^(REMOVED|PRESERVED_THEN_REMOVED) ')
+    dirty_q=$(printf '%s\n' "$REAP_OUT" | grep -c 'dirty; qualifies for reap')
+    wt_disk=$(du -sh .worktrees 2>/dev/null | cut -f1)
+    set -e
+    if [ "${reaped:-0}" -gt 0 ]; then
+        echo -e "${BOLD}WORKTREE HYGIENE${NC}  ${GREEN}reaped ${reaped}${NC} finished worktree(s); .worktrees now ${wt_disk:-?}"
+    else
+        echo -e "${BOLD}WORKTREE HYGIENE${NC}  ${DIM}nothing to reap; .worktrees ${wt_disk:-?}${NC}"
+    fi
+    if [ "${dirty_q:-0}" -gt 0 ]; then
+        echo -e "  ${YELLOW}${dirty_q} dirty worktree(s) qualify but are preserved${NC} — save work + reclaim with:"
+        echo -e "  ${DIM}.venv/bin/python scripts/orchestration/reap_worktrees.py --apply --prune-merged-branches --preserve-then-reap${NC}"
+    fi
+    echo ""
+fi
+
+# ---------------------------------------------------------------------------
 # 1. Project totals
 # ---------------------------------------------------------------------------
 SUMMARY=$(curl -s "$API/api/state/summary")
