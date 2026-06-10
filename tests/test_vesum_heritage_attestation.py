@@ -178,6 +178,15 @@ def test_folk_vesum_gate_accepts_negated_participles_of_standard_bases() -> None
 
 
 @requires_sources_db
+def test_folk_vesum_gate_accepts_productive_derivational_bases() -> None:
+    gate = _gate("гаївковий знеособлювальними виворожувати виворожують другоє ягілки гагілку незгладжений")
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert gate["heritage_attested"] == 8
+
+
+@requires_sources_db
 def test_morphology_fallback_does_not_leak_russianism_via_verb_root() -> None:
     # CRITICAL teeth check: `діюча` is a russianism (→ чинна/дійова) whose lemma is
     # the *standard* verb `діяти`. The russianism guard must stop the morphology
@@ -186,6 +195,47 @@ def test_morphology_fallback_does_not_leak_russianism_via_verb_root() -> None:
 
     assert gate["passed"] is False
     assert gate["missing"] == ["діюча"]
+    assert gate["heritage_attested"] == 0
+
+
+@requires_sources_db
+def test_derivational_fallback_does_not_leak_adversarial_russianisms() -> None:
+    leak_words = [
+        "діюча",
+        "протиріччя",
+        "получаючий",
+        "поступаючий",
+        "находячийся",
+        "глазний",
+        "вкусний",
+        "слідувати",
+        "оказувати",
+        "заказувати",
+        "настаювати",
+        "решати",
+    ]
+
+    gate = _gate(" ".join(leak_words))
+
+    assert gate["passed"] is False
+    assert set(gate["missing"]) == set(leak_words)
+    assert gate["heritage_attested"] == 0
+
+
+@requires_sources_db
+def test_direct_standard_active_participle_calques_stay_existing_behavior() -> None:
+    gate = _gate("бажаючий оточуючий керуючий завідуючий слідуючий")
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert gate["heritage_attested"] == 5
+
+
+def test_derivational_fallback_does_not_accept_coinages() -> None:
+    gate = _gate("двохоровий обрядознавчий городалька")
+
+    assert gate["passed"] is False
+    assert set(gate["missing"]) == {"двохоровий", "городалька", "обрядознавчий"}
     assert gate["heritage_attested"] == 0
 
 
