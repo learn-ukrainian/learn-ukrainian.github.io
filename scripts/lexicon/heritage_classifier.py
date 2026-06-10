@@ -18,7 +18,6 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCES_DB = ROOT / "data" / "sources.db"
-CURATED_SLOVNYK_ATTESTATIONS = ROOT / "data" / "folk_heritage_attestations.yaml"
 LT_REPLACEMENTS = ROOT / "data" / "lt_replacements.json"
 
 _CYRILLIC_WORD_CHARS = "A-Za-zА-Яа-яЄєІіЇїҐґ0-9'’ʼ-"
@@ -261,10 +260,11 @@ def _dictionary_attestations(
 ) -> list[dict[str, Any]]:
     hits: list[dict[str, Any]] = []
     hits.extend(_grinchenko_exact_hits(conn, term))
+    hits.extend(_esum_exact_hits(conn, term))
     hits.extend(_sum11_exact_hits(conn, term))
-    hits.extend(_curated_slovnyk_hits(term, surface=surface))
     hits.extend(_wiktionary_exact_hits(conn, term))
     hits.extend(_grinchenko_crossref_hits(conn, term))
+    hits.extend(_esum_variant_hits(conn, term))
     if surface:
         hits.extend(_grinchenko_surface_usage_hits(conn, term))
     return hits
@@ -371,6 +371,95 @@ def _sum11_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any
     return hits
 
 
+def _esum_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]]:
+    if not _table_exists(conn, "esum_etymology_meta"):
+        return []
+    hits = []
+    for variant in _apostrophe_variants(term):
+        rows = conn.execute(
+            """
+            SELECT id, lemma, etymology_text, cognates, vol, page, source
+            FROM esum_etymology_meta
+            WHERE lemma = ? COLLATE NOCASE
+            ORDER BY vol, page, lemma
+            LIMIT 3
+            """,
+            (variant,),
+        ).fetchall()
+        for row in rows:
+            hits.append(_esum_hit(term, row, exact=True))
+    return hits
+
+
+def _esum_variant_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]]:
+    if not _table_exists(conn, "esum_etymology_meta"):
+        return []
+    if term not in _DIALECT_OR_FOLK_TERMS:
+        return []
+
+    rows: list[sqlite3.Row] = []
+    if _table_exists(conn, "esum_etymology"):
+        try:
+            rows = conn.execute(
+                """
+                SELECT rowid AS id, lemma, etymology_text, cognates, vol, page, 'ЕСУМ' AS source
+                FROM esum_etymology
+                WHERE esum_etymology MATCH ?
+                ORDER BY rank
+                LIMIT 20
+                """,
+                (_fts_phrase_query(term),),
+            ).fetchall()
+        except sqlite3.OperationalError:
+            rows = []
+
+    if not rows:
+        rows = conn.execute(
+            """
+            SELECT id, lemma, etymology_text, cognates, vol, page, source
+            FROM esum_etymology_meta
+            WHERE lower(etymology_text) LIKE ?
+            ORDER BY vol, page, lemma
+            LIMIT 20
+            """,
+            (f"%{term}%",),
+        ).fetchall()
+
+    hits = []
+    for row in rows:
+        if _normalize_word(row["lemma"]) == term:
+            continue
+        if not _contains_whole_token(str(row["etymology_text"] or ""), term):
+            continue
+        hit = _esum_hit(term, row, exact=False)
+        if hit["classification"] == "standard":
+            continue
+        hits.append(hit)
+    return hits
+
+
+def _esum_hit(term: str, row: sqlite3.Row, *, exact: bool) -> dict[str, Any]:
+    text = _clean_text(row["etymology_text"])
+    return {
+        "classification": _classification_from_etymology(text, term, exact=exact),
+        "attestation": {
+            "source": "esum",
+            "ref": f"{row['lemma']}:{row['vol']}:{row['page']}",
+            "word": row["lemma"] if not exact else term,
+            "detail": text,
+        },
+        "sovietization_risk": 0,
+    }
+
+
+def _table_exists(conn: sqlite3.Connection, table: str) -> bool:
+    row = conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name = ? LIMIT 1",
+        (table,),
+    ).fetchone()
+    return row is not None
+
+
 def _wiktionary_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]]:
     hits = []
     for variant in _apostrophe_variants(term):
@@ -395,58 +484,6 @@ def _wiktionary_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str
     return hits
 
 
-def _curated_slovnyk_hits(term: str, *, surface: bool) -> list[dict[str, Any]]:
-    data = _load_curated_slovnyk()
-    hits = []
-    for item in data:
-        lemma = _normalize_word(item.get("lemma", ""))
-        surfaces = {_normalize_word(surface_form) for surface_form in item.get("accepted_surfaces", [])}
-        if term != lemma and not (surface and term in surfaces):
-            continue
-        citations = item.get("citations") or []
-        classification = _classification_from_curated(term, item)
-        for citation in citations:
-            slug = str(citation.get("dictionary_slug") or "slovnyk_me")
-            ref = str(citation.get("url") or f"{lemma}:{slug}")
-            hits.append(
-                {
-                    "classification": classification,
-                    "attestation": {
-                        "source": "slovnyk_me_curated",
-                        "ref": ref,
-                        "dictionary_slug": slug,
-                        "word": item.get("lemma", term),
-                        "detail": _clean_text(item.get("gloss", "")),
-                    },
-                    "sovietization_risk": 0,
-                }
-            )
-    return hits
-
-
-def _load_curated_slovnyk() -> list[dict[str, Any]]:
-    if not CURATED_SLOVNYK_ATTESTATIONS.exists():
-        return []
-    try:
-        import yaml
-
-        data = yaml.safe_load(CURATED_SLOVNYK_ATTESTATIONS.read_text(encoding="utf-8")) or {}
-    except Exception:
-        return []
-    rows = data.get("attestations", [])
-    return rows if isinstance(rows, list) else []
-
-
-def _classification_from_curated(term: str, item: dict[str, Any]) -> str:
-    gloss = _normalize_word(item.get("gloss", ""))
-    slugs = {str(citation.get("dictionary_slug") or "") for citation in item.get("citations") or []}
-    if term in _DIALECT_OR_FOLK_TERMS or any(marker in gloss for marker in ("етн", "зах", "обряд", "регіон")):
-        return "dialect"
-    if slugs & {"holoskevych", "franko", "bukovina", "slang_lviv", "obsolete_words"}:
-        return "dialect"
-    return "standard"
-
-
 def _classification_from_definition(text: str, *, default: str) -> str:
     lower = _normalize_word(text)
     if "діал." in lower or " діал " in lower or "діалект" in lower:
@@ -456,6 +493,21 @@ def _classification_from_definition(text: str, *, default: str) -> str:
     if "заст." in lower or "застар" in lower:
         return "authentic-archaism"
     return default
+
+
+def _classification_from_etymology(text: str, term: str, *, exact: bool) -> str:
+    lower = _normalize_word(text)
+    if term in _DIALECT_OR_FOLK_TERMS:
+        return "dialect"
+    if any(marker in lower for marker in (" діал", "діал.", "говір", "гуц", "бойк", "лемк", "поділ")):
+        return "dialect"
+    if "іст." in lower or "істор." in lower:
+        return "historism"
+    if "заст." in lower or "застар" in lower:
+        return "authentic-archaism"
+    if "запозич" in lower:
+        return "borrowing"
+    return "authentic-archaism" if exact else "standard"
 
 
 def _sum11_sovietization_risk(definition: str, text: str) -> int:
@@ -472,16 +524,7 @@ def _literary_surface_attestations(conn: sqlite3.Connection, term: str) -> list[
     hint = _SURFACE_QUOTE_HINTS.get(term)
     if hint:
         phrase, classification = hint
-        rows = conn.execute(
-            """
-            SELECT chunk_id, author, work, source_file, year, language_period, text
-            FROM literary_texts
-            WHERE lower(text) LIKE ?
-            ORDER BY chunk_id
-            LIMIT 200
-            """,
-            (f"%{term}%",),
-        ).fetchall()
+        rows = _verified_literary_quote_rows(conn, phrase)
         hits = []
         for row in rows:
             if phrase not in _normalize_quote(row["text"]):
@@ -502,6 +545,42 @@ def _literary_surface_attestations(conn: sqlite3.Connection, term: str) -> list[
             return hits
 
     return _literary_term_hits(conn, term)
+
+
+def _verified_literary_quote_rows(conn: sqlite3.Connection, phrase: str) -> list[sqlite3.Row]:
+    query = _fts_phrase_query(phrase)
+    rows: list[sqlite3.Row] = []
+    if query:
+        try:
+            rows = conn.execute(
+                """
+                SELECT t.chunk_id, t.author, t.work, t.source_file, t.year, t.language_period, t.text
+                FROM literary_fts f
+                JOIN literary_texts t ON t.id = f.rowid
+                WHERE literary_fts MATCH ?
+                ORDER BY t.chunk_id
+                LIMIT 50
+                """,
+                (query,),
+            ).fetchall()
+        except sqlite3.OperationalError:
+            rows = []
+
+    normalized_phrase = _normalize_quote(phrase)
+    verified = [row for row in rows if normalized_phrase in _normalize_quote(row["text"])]
+    if verified:
+        return verified
+
+    return conn.execute(
+        """
+        SELECT chunk_id, author, work, source_file, year, language_period, text
+        FROM literary_texts
+        WHERE lower(text) LIKE ?
+        ORDER BY chunk_id
+        LIMIT 50
+        """,
+        (f"%{normalized_phrase}%",),
+    ).fetchall()
 
 
 def _literary_term_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]]:
@@ -547,6 +626,13 @@ def _fts_phrase(term: str) -> str:
     if not re.fullmatch(r"[А-Яа-яЄєІіЇїҐґ'’ʼ-]+", term):
         return ""
     return '"' + term.replace('"', '""') + '"'
+
+
+def _fts_phrase_query(text: str) -> str:
+    tokens = re.findall(r"[А-Яа-яЄєІіЇїҐґA-Za-z0-9'’ʼ-]+", _normalize_word(text))
+    if not tokens:
+        return ""
+    return '"' + " ".join(token.replace('"', '""') for token in tokens) + '"'
 
 
 def _normalize_quote(text: object) -> str:
