@@ -1,0 +1,25 @@
+- title: "ULP: Ukrainian Cases"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-dative-nouns"
+  url: "https://www.ukrainianlessons.com/intro-cases/"
+  notes: "Learner-facing overview of Ukrainian cases for reviewing dative noun roles."
+- title: "Dobra Forma: Dative Case - Feminine Nouns"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-036"
+  url: "https://opentext.ku.edu/dobraforma/chapter/11-1/"
+  notes: "Practice for feminine dative forms including common -і endings."
+- title: "Dobra Forma: Dative Case - Masculine and Neuter Nouns"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-037"
+  url: "https://opentext.ku.edu/dobraforma/chapter/11-2/"
+  notes: "Practice for masculine and neuter dative endings."
+- title: "Dobra Forma: Dative Case - Animate Masculine Nouns"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-038"
+  url: "https://opentext.ku.edu/dobraforma/chapter/11-3/"
+  notes: "Focused practice for animate masculine nouns such as братові and студентові."
+- title: "Talk Ukrainian: Dative case"
+  role: article
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-017"
+  url: "https://talkukrainian.com/dative-case/"
+  notes: "Concise grammar-guide follow-up for noun and pronoun dative patterns."

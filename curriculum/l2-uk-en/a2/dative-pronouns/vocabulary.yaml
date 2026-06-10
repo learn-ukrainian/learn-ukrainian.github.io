@@ -1,0 +1,62 @@
+- word: давальний відмінок
+  translation: dative case
+  pos: noun
+  gender: m
+  example: "Давальний відмінок відповідає на питання кому?"
+- word: мені
+  translation: to me, for me
+  pos: pron
+  example: "Мені холодно."
+- word: тобі
+  translation: to you, for you
+  pos: pron
+  example: "Я напишу тобі."
+- word: йому
+  translation: to him, to it
+  pos: pron
+  example: "Йому потрібно відпочити."
+- word: їй
+  translation: to her
+  pos: pron
+  example: "Їй цікаво."
+- word: нам
+  translation: to us
+  pos: pron
+  example: "Покажи нам фото."
+- word: вам
+  translation: to you
+  pos: pron
+  example: "Я дякую вам."
+- word: їм
+  translation: to them
+  pos: pron
+  example: "Ми дзвонимо їм."
+- word: холодно
+  translation: cold, it is cold
+  pos: adv
+  example: "Мені холодно."
+- word: потрібно
+  translation: necessary, needed
+  pos: adv
+  example: "Тобі потрібно відпочити."
+- word: цікаво
+  translation: interesting, it is interesting
+  pos: adv
+  example: "Нам цікаво слухати."
+- word: приємно
+  translation: pleasant
+  pos: adv
+  example: "Їй приємно отримати квіти."
+- word: важко
+  translation: difficult, hard
+  pos: adv
+  example: "Йому важко читати без окулярів."
+- word: нудно
+  translation: boring, bored
+  pos: adv
+  example: "Їм нудно чекати."
+- word: одержувач
+  translation: recipient
+  pos: noun
+  gender: m
+  example: "Одержувач стоїть у давальному відмінку."
