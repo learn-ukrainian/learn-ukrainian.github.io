@@ -1,4 +1,4 @@
-# Verbs: Group One
+# Дієслова першої групи
 
 Here is your first full verb pattern. Group One verbs often show **-є-** in
 the middle of the present-tense forms: **читаю, читаєш, читає, читаємо,
@@ -111,7 +111,7 @@ Support after the Ukrainian lines:
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
-### Mini-pattern: знати and розуміти
+### Мінімодель: знати й розуміти
 
 **Знати** works nicely with the Group One endings:
 
@@ -173,7 +173,7 @@ If you hesitate, ask two questions:
 1. Who is doing it: **я, ти, він/вона, ми, ви, вони**?
 2. Which ending fits: **-ю, -єш, -є, -ємо, -єте, -ють**?
 
-### Use працювати and готувати
+### Використовуй працювати й готувати
 
 Some Group One verbs end in **-увати** or **-ювати**. This is **Тип
 «працювати»**. In the present tense, do not keep the full **-ува-** sound.
@@ -224,7 +224,7 @@ read" both fit **Я читаю** in this beginner context. The time word can com
 later: **Я читаю сьогодні**, **Ми працюємо сьогодні**, **Вони гуляють
 сьогодні**. Your main signal is still the verb ending.
 
-### Later: future forms
+### Пізніше: форми майбутнього часу
 
 Ukrainian also has future forms. You may see grammar labels such as
 **форми майбутнього часу**, **складеної** future, **читатиму**, or

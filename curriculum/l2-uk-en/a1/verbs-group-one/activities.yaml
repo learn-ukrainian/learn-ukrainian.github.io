@@ -2,7 +2,7 @@
 inline:
   - id: act-1
     type: quiz
-    title: Hear Group One
+    title: Послухай першу групу
     instruction: Choose the safe present-tense Ukrainian line.
     items:
       - prompt: I read a text.
@@ -34,7 +34,7 @@ inline:
         explanation: Вона uses слухає.
   - id: act-2
     type: match-up
-    title: Читати table
+    title: Таблиця читати
     instruction: Match the person with the Group One form.
     pairs:
       - left: я
@@ -51,7 +51,7 @@ inline:
         right: читають
   - id: act-3
     type: fill-in
-    title: Build with читати
+    title: Будуй речення з читати
     instruction: Choose the present-tense form that fits the person.
     items:
       - sentence: Я ___ текст.
@@ -98,7 +98,7 @@ inline:
         explanation: Вони uses читають.
   - id: act-4
     type: fill-in
-    title: Знати and розуміти
+    title: Знати й розуміти
     instruction: Complete each short sentence.
     items:
       - sentence: Я ___ це слово.
@@ -138,7 +138,7 @@ inline:
         explanation: Ти розумієш.
 workbook:
   - type: group-sort
-    title: Who uses which ending
+    title: Хто яке закінчення використовує?
     instruction: Sort the forms by person.
     groups:
       - name: Я
@@ -162,7 +162,7 @@ workbook:
           - читаєте
           - читають
   - type: fill-in
-    title: Працювати and готувати
+    title: Працювати й готувати
     instruction: Choose the whole present-tense form.
     items:
       - sentence: Я ___ вдома.
@@ -194,7 +194,7 @@ workbook:
           - працюю
         explanation: Вони працюють.
   - type: error-correction
-    title: Repair Group One traps
+    title: Виправ пастки першої групи
     instruction: Choose the standard Ukrainian repair.
     anchor_id: group-one-repairs
     items:
@@ -247,7 +247,7 @@ workbook:
           - Ти читаєш в басейні?
         explanation: Плавати follows Group One here, so use плаваєш.
   - type: quiz
-    title: Mini conversation
+    title: Мінідіалог
     instruction: Choose the best next line.
     items:
       - prompt: Що ти читаєш?

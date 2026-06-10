@@ -73,7 +73,7 @@ By the end, you can:
 
 ## Діалоги
 
-### Hear Group One
+### Послухай першу групу
 
 <Quiz client:only='react' questions={JSON.parse(`[{"question": "I read a text.", "options": [{"text": "Я читаю текст.", "correct": true}, {"text": "Я читати текст.", "correct": false}, {"text": "Я читаєш текст.", "correct": false}], "explanation": "Я uses читаю."}, {"question": "You read a book.", "options": [{"text": "Ти читаєш книгу.", "correct": true}, {"text": "Ти читаю книгу.", "correct": false}, {"text": "Ти читати книгу.", "correct": false}], "explanation": "Ти uses читаєш."}, {"question": "She listens to music.", "options": [{"text": "Вона слухає музику.", "correct": true}, {"text": "Вона слухаю музику.", "correct": false}, {"text": "Вона слухати музику.", "correct": false}], "explanation": "Вона uses слухає."}]`)} />
 
@@ -122,7 +122,7 @@ means "I read / I am reading." You may still say **я читаю**, but do not a
 a separate "am" word.
 :::
 
-### Читати table
+### Таблиця читати
 
 <MatchUp client:only='react' pairs={JSON.parse(`[{"left": "я", "right": "читаю"}, {"left": "ти", "right": "читаєш"}, {"left": "він / вона", "right": "читає"}, {"left": "ми", "right": "читаємо"}, {"left": "ви", "right": "читаєте"}, {"left": "вони", "right": "читають"}]`)} />
 
@@ -169,11 +169,11 @@ Support after the Ukrainian lines:
 | **Ти слухаєш музику?** | Are you listening to music? |
 | **Вона гуляє.** | She is walking. |
 
-### Build with читати
+### Будуй речення з читати
 
 <FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ текст.", "answer": "читаю", "options": ["читаю", "читаєш", "читає"]}, {"sentence": "Ти ___ книгу?", "answer": "читаєш", "options": ["читаєш", "читаю", "читаємо"]}, {"sentence": "Вона ___.", "answer": "читає", "options": ["читає", "читаєте", "читають"]}, {"sentence": "Ми ___ текст.", "answer": "читаємо", "options": ["читаємо", "читаєте", "читають"]}, {"sentence": "Ви ___?", "answer": "читаєте", "options": ["читаєте", "читаємо", "читають"]}, {"sentence": "Вони ___.", "answer": "читають", "options": ["читають", "читає", "читаю"]}]`)} />
 
-### Mini-pattern: знати and розуміти
+### Мінімодель: знати й розуміти
 
 **Знати** works nicely with the Group One endings:
 
@@ -204,7 +204,7 @@ Support after the Ukrainian lines:
 | **Ти розумієш?** | Do you understand? |
 | **Він розуміє мене.** | He understands me. |
 
-### Знати and розуміти
+### Знати й розуміти
 
 <FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ це слово.", "answer": "знаю", "options": ["знаю", "знаєш", "знає"]}, {"sentence": "Ти ___ Київ?", "answer": "знаєш", "options": ["знаєш", "знаю", "знають"]}, {"sentence": "Вона ___ відповідь.", "answer": "знає", "options": ["знає", "знаєте", "знаємо"]}, {"sentence": "Я ___.", "answer": "розумію", "options": ["розумію", "розумієш", "розуміє"]}, {"sentence": "Ти ___?", "answer": "розумієш", "options": ["розумієш", "розумію", "розуміють"]}]`)} />
 
@@ -237,7 +237,7 @@ If you hesitate, ask two questions:
 1. Who is doing it: **я, ти, він/вона, ми, ви, вони**?
 2. Which ending fits: **-ю, -єш, -є, -ємо, -єте, -ють**?
 
-### Use працювати and готувати
+### Використовуй працювати й готувати
 
 Some Group One verbs end in **-увати** or **-ювати**. This is **Тип
 «працювати»**. In the present tense, do not keep the full **-ува-** sound.
@@ -288,7 +288,7 @@ read" both fit **Я читаю** in this beginner context. The time word can com
 later: **Я читаю сьогодні**, **Ми працюємо сьогодні**, **Вони гуляють
 сьогодні**. Your main signal is still the verb ending.
 
-### Later: future forms
+### Пізніше: форми майбутнього часу
 
 Ukrainian also has future forms. You may see grammar labels such as
 **форми майбутнього часу**, **складеної** future, **читатиму**, or
@@ -350,37 +350,37 @@ sentences sound complete.
 </TabItem>
 <TabItem label="Activities">
 
-### Hear Group One
+### Послухай першу групу
 
 *(see lesson, §Діалоги)*
 
-### Читати table
+### Таблиця читати
 
 *(see lesson, §Діалоги)*
 
-### Build with читати
+### Будуй речення з читати
 
 *(see lesson, §Перша дієвідміна)*
 
-### Знати and розуміти
+### Знати й розуміти
 
-*(see lesson, §Mini-pattern: знати and розуміти)*
+*(see lesson, §Мінімодель: знати й розуміти)*
 
-### Who uses which ending
+### Хто яке закінчення використовує?
 
 <GroupSort client:only='react' groups={JSON.parse(`{"Я": ["читаю", "знаю", "працюю"], "Ти": ["читаєш", "знаєш", "працюєш"], "Він / вона": ["читає", "знає", "працює"], "Ми / ви / вони": ["читаємо", "читаєте", "читають"]}`)} />
 
-### Працювати and готувати
+### Працювати й готувати
 
 <FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ вдома.", "answer": "працюю", "options": ["працюю", "працюєш", "працює"]}, {"sentence": "Ти ___ вечерю?", "answer": "готуєш", "options": ["готуєш", "готую", "готує"]}, {"sentence": "Ми ___ каву.", "answer": "готуємо", "options": ["готуємо", "готуєте", "готують"]}, {"sentence": "Вони ___ сьогодні.", "answer": "працюють", "options": ["працюють", "працює", "працюю"]}]`)} />
 
 <span id="group-one-repairs"></span>
 
-### Repair Group One traps
+### Виправ пастки першої групи
 
 <ErrorCorrection client:only='react' instruction="Choose the standard Ukrainian repair." items={JSON.parse(`[{"sentence": "Я є читаю книжку.", "errorWord": "Я є читаю книжку.", "correctForm": "Я читаю книжку.", "options": ["Я читаю книжку.", "Я читаю текст.", "Я знаю книжку."], "explanation": "Ukrainian does not add a separate am word before читаю."}, {"sentence": "Я працюваю в школі.", "errorWord": "Я працюваю в школі.", "correctForm": "Я працюю в школі.", "options": ["Я працюю в школі.", "Я працюю вдома.", "Я читаю в школі."], "explanation": "Працювати gives працюю, not an extra -ва- form."}, {"sentence": "Він розумієть мене.", "errorWord": "Він розумієть мене.", "correctForm": "Він розуміє мене.", "options": ["Він розуміє мене.", "Він знає мене.", "Він читає текст."], "explanation": "Він uses розуміє."}, {"sentence": "Ти відпочиєш вдома?", "errorWord": "Ти відпочиєш вдома?", "correctForm": "Ти відпочиваєш вдома?", "options": ["Ти відпочиваєш вдома?", "Ти гуляєш вдома?", "Ти працюєш вдома?"], "explanation": "Present-tense відпочивати gives відпочиваєш."}, {"sentence": "Ми читаєм текст.", "errorWord": "Ми читаєм текст.", "correctForm": "Ми читаємо текст.", "options": ["Ми читаємо текст.", "Ми знаємо текст.", "Ми слухаємо текст."], "explanation": "Use the full -ємо ending."}, {"sentence": "Ти плавиш в басейні?", "errorWord": "Ти плавиш в басейні?", "correctForm": "Ти плаваєш в басейні?", "options": ["Ти плаваєш в басейні?", "Ти гуляєш в басейні?", "Ти читаєш в басейні?"], "explanation": "Плавати follows Group One here, so use плаваєш."}]`)} />
 
-### Mini conversation
+### Мінідіалог
 
 <Quiz client:only='react' questions={JSON.parse(`[{"question": "Що ти читаєш?", "options": [{"text": "Я читаю текст.", "correct": true}, {"text": "Я читаєш текст.", "correct": false}, {"text": "Я читати текст.", "correct": false}], "explanation": "Я читаю is the safe answer."}, {"question": "Ти знаєш це слово?", "options": [{"text": "Так, я знаю це слово.", "correct": true}, {"text": "Так, я знаєш це слово.", "correct": false}, {"text": "Так, я знати це слово.", "correct": false}], "explanation": "Я знаю."}, {"question": "Ми готуємо вечерю?", "options": [{"text": "Так, ми готуємо вечерю.", "correct": true}, {"text": "Так, ми готуєте вечерю.", "correct": false}, {"text": "Так, ми готують вечерю.", "correct": false}], "explanation": "Ми готуємо."}]`)} />
 

@@ -1,4 +1,4 @@
-# Verbs: Group Two
+# Дієслова другої групи
 
 Group Two is your second present-tense verb pattern. The clearest beginner
 signal is the **вони** form: Group One often ends in **-ють** or **-уть**,
@@ -109,7 +109,7 @@ That source note is for orientation only. Your active verbs are **говорит
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
-### Use говорити, робити, бачити
+### Використовуй говорити, робити, бачити
 
 Use these three verbs first.
 
@@ -190,7 +190,7 @@ Support after the Ukrainian lines:
 | **Вони стоять.** | They are standing. |
 | **Вони сидять.** | They are sitting. |
 
-### More useful Group Two chunks
+### Ще корисні фрази другої групи
 
 Use these in small sentences:
 
@@ -220,7 +220,7 @@ Support after the Ukrainian lines:
 | **Ми вчимо українську.** | We are learning Ukrainian. |
 | **Вони люблять музику.** | They like music. |
 
-### Recognition-only exceptions
+### Винятки лише для впізнавання
 
 Some verbs are common but irregular enough to wait. Recognize these, but do
 not build full tables today:
