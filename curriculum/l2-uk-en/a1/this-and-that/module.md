@@ -1,4 +1,4 @@
-# This and That
+# Це і те
 
 Pointing is useful before you know many sentences. Ukrainian gives you one
 easy word first: **це**. Then it gives you a more precise set: **цей / ця /
@@ -169,7 +169,7 @@ visible things.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-### Та in two jobs
+### «Та» у двох ролях
 
 The word **та** can do two jobs:
 
@@ -221,7 +221,7 @@ You may also see old or emphatic forms:
 Use **цей / ця / це / той / та / те** actively. Treat the other forms as
 recognition items for reading, songs, or later lessons.
 
-### Repair traps
+### Виправ пастки
 
 Keep these repairs close:
 
@@ -241,7 +241,7 @@ After prepositions, Ukrainian pronouns often change in a way English does not:
 **з ним**, **у нього**, **у неї**. That is later material. For today, simply
 recognize **Я розмовляю з ним** as the safe chunk, not **з його**.
 
-### Mini world check
+### Мініперевірка: мій світ
 
 Look around your room and make six tiny sentences:
 

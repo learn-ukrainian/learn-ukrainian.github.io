@@ -1,4 +1,4 @@
-# What I Like
+# Що я люблю
 
 Here are two safe ways to talk about preferences. Use **Я люблю + an action
 word** when you like doing something, and use **Мені подобається + a thing**
@@ -170,7 +170,7 @@ pattern for favorite things.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-### Later words to recognize
+### Пізніші слова для впізнавання
 
 Ukrainian has richer words for interests. Keep these as recognition only:
 
@@ -223,7 +223,7 @@ Build a short personal answer:
 5. **Мені подобається ця книга.**
 6. **А ти?**
 
-### Repair traps
+### Виправ пастки
 
 | Avoid | Use | Why |
 | --- | --- | --- |

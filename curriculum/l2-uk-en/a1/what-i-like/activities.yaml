@@ -2,7 +2,7 @@
 inline:
   - id: act-1
     type: quiz
-    title: Preference warm-up
+    title: Розігрів уподобань
     instruction: Choose the safe Ukrainian line.
     items:
       - prompt: I like to read.
@@ -34,7 +34,7 @@ inline:
         explanation: The question keeps любиш plus an infinitive.
   - id: act-2
     type: match-up
-    title: Infinitive actions
+    title: Дії в інфінітиві
     instruction: Match each Ukrainian action word with its meaning.
     pairs:
       - left: читати
@@ -55,7 +55,7 @@ inline:
         right: to sing
   - id: act-3
     type: fill-in
-    title: Build Я люблю
+    title: Будуй речення «Я люблю»
     instruction: Complete each sentence with the safe action word.
     items:
       - sentence: Я люблю ___.
@@ -102,7 +102,7 @@ inline:
         explanation: Люблять plus infinitive.
   - id: act-4
     type: group-sort
-    title: Action or thing
+    title: Дія чи річ
     instruction: Sort the words by the preference pattern they usually use today.
     groups:
       - name: Я люблю + action
@@ -119,7 +119,7 @@ inline:
           - Київ
 workbook:
   - type: quiz
-    title: Люблю or подобається
+    title: Люблю чи подобається
     instruction: Choose the sentence that matches the meaning.
     items:
       - prompt: I like to walk.
@@ -159,7 +159,7 @@ workbook:
             correct: false
         explanation: Put не before подобається.
   - type: error-correction
-    title: Repair preference traps
+    title: Виправ пастки уподобань
     instruction: Choose the standard Ukrainian repair.
     anchor_id: repair-traps
     items:
@@ -212,7 +212,7 @@ workbook:
           - Я маю участь.
         explanation: Ukrainian uses брати участь.
   - type: fill-in
-    title: Make it negative
+    title: Зроби заперечення
     instruction: Add the missing preference word.
     items:
       - sentence: Я ___ люблю готувати.
@@ -244,7 +244,7 @@ workbook:
           - немає
         explanation: Put не before the preference verb.
   - type: quiz
-    title: Your short answer
+    title: Твоя коротка відповідь
     instruction: Choose the best next sentence.
     items:
       - prompt: Що ти любиш робити?

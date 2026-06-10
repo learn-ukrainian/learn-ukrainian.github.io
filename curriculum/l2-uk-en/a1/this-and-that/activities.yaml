@@ -2,7 +2,7 @@
 inline:
   - id: act-1
     type: quiz
-    title: Це as a whole sentence
+    title: «Це» як ціле речення
     instruction: Choose the natural Ukrainian sentence.
     items:
       - prompt: This is a table.
@@ -43,7 +43,7 @@ inline:
         explanation: Keep Це мій рюкзак as one chunk.
   - id: act-2
     type: match-up
-    title: Noun gender and pointing word
+    title: Рід і вказівне слово
     instruction: Match the noun with the near pointing phrase.
     pairs:
       - left: стіл
@@ -107,7 +107,7 @@ inline:
         explanation: Сумка is feminine.
   - id: act-4
     type: match-up
-    title: Near and far
+    title: Близько й далеко
     instruction: Match each near phrase with the far phrase.
     pairs:
       - left: цей стіл
@@ -124,7 +124,7 @@ inline:
         right: та сумка
 workbook:
   - type: quiz
-    title: Clear choices with чи
+    title: Чіткий вибір із «чи»
     instruction: Choose the clear question or answer.
     items:
       - prompt: Which table, this one or that one?
@@ -164,7 +164,7 @@ workbook:
             correct: false
         explanation: Use і for the list when та already means that.
   - type: fill-in
-    title: Useful chunks
+    title: Корисні фрази
     instruction: Choose the safe A1 chunk.
     items:
       - sentence: Я хочу ___ книгу.
@@ -210,7 +210,7 @@ workbook:
           - Я є
         explanation: Age uses the Мені ... років chunk.
   - type: quiz
-    title: Repair the trap
+    title: Виправ пастку
     instruction: Choose the repaired sentence.
     # wiki err-1: ❌ «Цей є мій стіл» -> ✅ «Це мій стіл»
     # wiki err-2: ❌ «Я маю 20 років » -> ✅ «Мені 20 років»
@@ -275,7 +275,7 @@ workbook:
             correct: false
         explanation: After з, the safe chunk is з ним.
   - type: error-correction
-    title: Manifest repair rows
+    title: Рядки для виправлення
     instruction: Read the learner trap and choose the repaired Ukrainian chunk.
     items:
       - sentence: Цей є мій стіл

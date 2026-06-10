@@ -2,7 +2,7 @@
 inline:
   - id: act-1
     type: quiz
-    title: Group Two warm-up
+    title: Розігрів другої групи
     instruction: Choose the safe Group Two line.
     items:
       - prompt: I speak Ukrainian.
@@ -34,7 +34,7 @@ inline:
         explanation: Вони роблять is the Group Two form.
   - id: act-2
     type: match-up
-    title: Говорити table
+    title: Таблиця говорити
     instruction: Match the person with the present-tense form.
     pairs:
       - left: я
@@ -98,7 +98,7 @@ inline:
         explanation: Вони бачать.
   - id: act-4
     type: group-sort
-    title: Group One or Group Two
+    title: Перша чи друга група
     instruction: Sort the they-forms by group.
     groups:
       - name: І дієвідміна / Group One
@@ -116,7 +116,7 @@ inline:
           - сидять
 workbook:
   - type: fill-in
-    title: Ready я chunks
+    title: Готові фрази з «я»
     instruction: Choose the ready first-person chunk.
     items:
       - sentence: Я ___ вправу.
@@ -148,7 +148,7 @@ workbook:
           - сидить
         explanation: Learn я сиджу as a chunk.
   - type: quiz
-    title: Recognition-only forms
+    title: Форми лише для впізнавання
     instruction: Choose the form you should recognize, not overbuild.
     items:
       - prompt: They sleep.
@@ -179,7 +179,7 @@ workbook:
             correct: false
         explanation: Recognize вони їдять.
   - type: error-correction
-    title: Repair Group Two traps
+    title: Виправ пастки другої групи
     instruction: Choose the standard Ukrainian repair.
     anchor_id: group-two-repairs
     items:
@@ -248,7 +248,7 @@ workbook:
           - Це 20 років
         explanation: Use Мені plus age.
   - type: quiz
-    title: Mini conversation
+    title: Мінідіалог
     instruction: Choose the best next line.
     items:
       - prompt: Ти говориш українською?
