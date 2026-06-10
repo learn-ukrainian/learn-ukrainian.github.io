@@ -1,0 +1,80 @@
+- word: видова пара
+  translation: aspectual pair
+  pos: noun
+  example: "Писати / написати - це видова пара."
+- word: пара
+  translation: pair
+  pos: noun
+  example: "Я записую нове дієслово разом з парою."
+- word: префікс
+  translation: prefix
+  pos: noun
+  example: "Префікс часто допомагає утворити доконаний вид."
+- word: суфікс
+  translation: suffix
+  pos: noun
+  example: "У цій парі змінюється суфікс."
+- word: корінь
+  translation: root
+  pos: noun
+  example: "Іноді в парі змінюється корінь слова."
+- word: утворювати
+  translation: to form
+  pos: verb
+  example: "Так ми утворюємо нову пару."
+- word: записувати
+  translation: to write down
+  pos: verb
+  example: "Я люблю записувати дієслова в зошит."
+- word: словник
+  translation: dictionary
+  pos: noun
+  example: "Перевір цю пару в словнику."
+- word: запам'ятовувати
+  translation: to memorize
+  pos: verb
+  example: "Такі пари треба запам'ятовувати разом."
+- word: модель
+  translation: pattern, model
+  pos: noun
+  example: "Це найчастіша модель для A2."
+- word: базовий
+  translation: basic
+  pos: adjective
+  example: "Це базовий список видових пар."
+- word: читати / прочитати
+  translation: to read
+  pos: verb pair
+  example: "Я читаю статтю, а ввечері прочитаю її."
+- word: писати / написати
+  translation: to write
+  pos: verb pair
+  example: "Вона писала нотатку і швидко написала лист."
+- word: брати / взяти
+  translation: to take
+  pos: verb pair
+  example: "Я брав чашку і потім узяв ложку."
+- word: говорити / сказати
+  translation: to speak / to say
+  pos: verb pair
+  example: "Ми довго говорили, а потім я сказав головне."
+- word: відповідати / відповісти
+  translation: to answer
+  pos: verb pair
+  example: "Він відповідав спокійно і нарешті відповів точно."
+- word: вирішувати / вирішити
+  translation: to decide, to solve
+  pos: verb pair
+  example: "Ми довго вирішували і зрештою вирішили."
+- word: допомагати / допомогти
+  translation: to help
+  pos: verb pair
+  example: "Я допомагав другу і потім допоміг сестрі."
+- word: варити / зварити
+  translation: to cook, to boil
+  pos: verb pair
+  example: "Бабуся варила суп і швидко зварила борщ."
+- word: ліпити / зліпити
+  translation: to shape, to make by hand
+  pos: verb pair
+  example: "Діти ліпили вареники і зліпили останню партію."

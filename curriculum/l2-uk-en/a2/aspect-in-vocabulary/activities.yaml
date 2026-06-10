@@ -1,0 +1,187 @@
+inline:
+  - id: act-1
+    type: match-up
+    title: Знайди партнера
+    instruction: Match each imperfective verb with its perfective partner.
+    pairs:
+      - left: "читати"
+        right: "прочитати"
+      - left: "писати"
+        right: "написати"
+      - left: "робити"
+        right: "зробити"
+      - left: "варити"
+        right: "зварити"
+      - left: "відповідати"
+        right: "відповісти"
+      - left: "брати"
+        right: "взяти"
+  - id: act-2
+    type: group-sort
+    title: Як утворилася пара?
+    instruction: Sort each pair by the main formation pattern you notice.
+    groups:
+      - name: "переважно префікс"
+        items:
+          - "писати / написати"
+          - "читати / прочитати"
+          - "готувати / приготувати"
+          - "варити / зварити"
+      - name: "зміна основи або суфікса"
+        items:
+          - "відповідати / відповісти"
+          - "вирішувати / вирішити"
+          - "запитувати / запитати"
+          - "допомагати / допомогти"
+      - name: "інше слово"
+        items:
+          - "брати / взяти"
+          - "говорити / сказати"
+          - "ловити / піймати"
+          - "класти / покласти"
+  - id: act-3
+    type: fill-in
+    title: Запиши пару правильно
+    instruction: Choose the partner that completes the notebook entry.
+    items:
+      - sentence: "читати / ___"
+        answer: "прочитати"
+        options:
+          - "прочитати"
+          - "сказати"
+        explanation: The common partner uses a prefix here.
+      - sentence: "відповідати / ___"
+        answer: "відповісти"
+        options:
+          - "відповісти"
+          - "написати"
+        explanation: This pair changes the ending and shape.
+      - sentence: "брати / ___"
+        answer: "взяти"
+        options:
+          - "взяти"
+          - "зварити"
+        explanation: This is a high-frequency irregular pair.
+      - sentence: "говорити / ___"
+        answer: "сказати"
+        options:
+          - "сказати"
+          - "прочитати"
+        explanation: These two forms work as an essential pair in speech.
+      - sentence: "варити / ___"
+        answer: "зварити"
+        options:
+          - "зварити"
+          - "відповісти"
+        explanation: The prefix marks the completed result.
+      - sentence: "допомагати / ___"
+        answer: "допомогти"
+        options:
+          - "допомогти"
+          - "сказати"
+        explanation: The root shape changes in this pair.
+  - id: act-4
+    type: quiz
+    title: Яка нотатка краща?
+    instruction: Choose the notebook line that will help the learner more.
+    items:
+      - prompt: "Ти хочеш вивчити дієслово писати."
+        options:
+          - text: "писати / написати"
+            correct: true
+          - text: "писати"
+            correct: false
+          - text: "лист"
+            correct: false
+        explanation: The pair gives both process and result.
+      - prompt: "Ти хочеш мати готову пару для вареників."
+        options:
+          - text: "ліпити / зліпити"
+            correct: true
+          - text: "ліпити / говорити"
+            correct: false
+          - text: "зліпити / суп"
+            correct: false
+        explanation: Store the verb with its aspectual partner, not random words.
+      - prompt: "Ти сумніваєшся в парі для брати."
+        options:
+          - text: "брати / взяти"
+            correct: true
+          - text: "брати / зварити"
+            correct: false
+          - text: "брати / читати"
+            correct: false
+        explanation: This is a high-frequency pair that should be memorized whole.
+      - prompt: "Ти хочеш записати дієслово відповідати."
+        options:
+          - text: "відповідати / відповісти"
+            correct: true
+          - text: "відповідати / писати"
+            correct: false
+          - text: "відповідати / зліпити"
+            correct: false
+        explanation: The pair belongs together even though the forms are not identical.
+workbook:
+  - type: true-false
+    title: Що варто пам'ятати про пари
+    instruction: Decide whether each statement is true.
+    items:
+      - statement: "На A2 корисно вчити дієслово разом із видовим партнером."
+        answer: true
+        explanation: This helps learners speak about both process and result.
+      - statement: "Усі видові пари в українській утворюються однаково."
+        answer: false
+        explanation: Some use prefixes, some change the stem or use another word.
+      - statement: "Брати / взяти краще просто запам'ятати як готову пару."
+        answer: true
+        explanation: It is a frequent pair with different-looking partners.
+      - statement: "Шукати / знайти - це завжди ідеальна видова пара."
+        answer: false
+        explanation: They are related in meaning, but not a straightforward aspectual pair.
+      - statement: "Пара говорити / сказати потрібна і в побуті, і на роботі."
+        answer: true
+        explanation: It is very common in everyday and professional speech.
+  - type: error-correction
+    title: Виправ запис у словнику
+    instruction: Choose the line that keeps the pair together correctly.
+    items:
+      - sentence: "писати / сказати"
+        error: "сказати"
+        correction: "писати / написати"
+        options:
+          - "писати / написати"
+          - "писати / сказати"
+        explanation: The pair should preserve the same core action.
+      - sentence: "брати / прочитати"
+        error: "прочитати"
+        correction: "брати / взяти"
+        options:
+          - "брати / взяти"
+          - "брати / прочитати"
+        explanation: The partner must match the meaning of to take.
+      - sentence: "відповідати / приготувати"
+        error: "приготувати"
+        correction: "відповідати / відповісти"
+        options:
+          - "відповідати / відповісти"
+          - "відповідати / приготувати"
+        explanation: This pair changes shape but keeps the same action.
+      - sentence: "говорити / читати"
+        error: "читати"
+        correction: "говорити / сказати"
+        options:
+          - "говорити / сказати"
+          - "говорити / читати"
+        explanation: The correct partner must keep the speech meaning.
+  - type: match-up
+    title: Де яка пара звучить природно?
+    instruction: Match the situation with the pair that fits it well.
+    pairs:
+      - left: "нотатки до лекції"
+        right: "писати / написати"
+      - left: "кулінарний рецепт"
+        right: "варити / зварити"
+      - left: "телефонна розмова з клієнтом"
+        right: "говорити / сказати"
+      - left: "коротка відповідь на лист"
+        right: "відповідати / відповісти"
