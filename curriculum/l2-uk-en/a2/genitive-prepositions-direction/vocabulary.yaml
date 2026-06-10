@@ -94,3 +94,23 @@
   translation: central
   pos: adjective
   example: "Ми їдемо до центрального вокзалу."
+- word: маршрут
+  translation: route
+  pos: noun
+  gender: m
+  example: "Маршрут починається з вокзалу."
+- word: візит
+  translation: visit, appointment
+  pos: noun
+  gender: m
+  example: "У мене візит до лікаря."
+- word: прийом
+  translation: appointment, reception
+  pos: noun
+  gender: m
+  example: "Я йду до лікаря на прийом."
+- word: термін
+  translation: deadline, term
+  pos: noun
+  gender: m
+  example: "Термін завдання - до п'ятниці."

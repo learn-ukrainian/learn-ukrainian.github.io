@@ -95,3 +95,23 @@
   pos: noun
   gender: m
   example: "Готель далеко від вокзалу."
+- word: університет
+  translation: university
+  pos: noun
+  gender: m
+  example: "Це повідомлення від університету."
+- word: колега
+  translation: colleague
+  pos: noun
+  gender: common
+  example: "Це подарунок від колеги."
+- word: рядок
+  translation: line, row
+  pos: noun
+  gender: m
+  example: "Прочитайте один рядок уголос."
+- word: диктант
+  translation: dictation
+  pos: noun
+  gender: m
+  example: "Малий диктант допомагає повторити форми."
