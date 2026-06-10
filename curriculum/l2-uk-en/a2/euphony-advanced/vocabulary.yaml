@@ -93,3 +93,23 @@
   pos: noun
   gender: m
   example: "Наш маршрут починається у Львові."
+- word: аптека
+  translation: pharmacy
+  pos: noun
+  gender: f
+  example: "Я йду в аптеку після уроку."
+- word: банк
+  translation: bank
+  pos: noun
+  gender: m
+  example: "Банк і аптека поруч."
+- word: офіс
+  translation: office
+  pos: noun
+  gender: m
+  example: "Після уроку я йду в офіс."
+- word: пауза
+  translation: pause
+  pos: noun
+  gender: f
+  example: "Після паузи часто звучить і."

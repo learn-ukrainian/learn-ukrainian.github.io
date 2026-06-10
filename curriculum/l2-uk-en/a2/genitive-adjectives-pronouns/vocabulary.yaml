@@ -90,3 +90,28 @@
   pos: noun
   gender: n
   example: "Ми йдемо до бюро знахідок."
+- word: стрічка
+  translation: ribbon, strip
+  pos: noun
+  gender: f
+  example: "Сумка без цієї білої стрічки."
+- word: обкладинка
+  translation: cover
+  pos: noun
+  gender: f
+  example: "Зошит із синьою обкладинкою."
+- word: бірка
+  translation: tag, label
+  pos: noun
+  gender: f
+  example: "Ключі без маленької бірки."
+- word: кімната
+  translation: room
+  pos: noun
+  gender: f
+  example: "Ми чекаємо біля цієї старої кімнати."
+- word: офіс
+  translation: office
+  pos: noun
+  gender: m
+  example: "Це документи для нашого нового офісу."
