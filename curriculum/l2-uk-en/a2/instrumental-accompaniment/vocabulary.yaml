@@ -1,0 +1,56 @@
+- word: орудний відмінок
+  translation: instrumental case
+  pos: noun
+  example: "Орудний відмінок відповідає на питання ким? чим?"
+- word: з
+  translation: with
+  pos: preposition
+  example: "Я йду з другом."
+- word: із
+  translation: with
+  pos: preposition
+  example: "Вона прийде із сестрою."
+- word: зі
+  translation: with
+  pos: preposition
+  example: "Борщ зі сметаною дуже смачний."
+- word: друг
+  translation: friend
+  pos: noun
+  example: "Я гуляю з другом."
+- word: подруга
+  translation: female friend
+  pos: noun
+  example: "Ірина прийде з подругою."
+- word: сестра
+  translation: sister
+  pos: noun
+  example: "Марко живе із сестрою."
+- word: лимон
+  translation: lemon
+  pos: noun
+  example: "Мені чай з лимоном."
+- word: молоко
+  translation: milk
+  pos: noun
+  example: "Кава з молоком."
+- word: масло
+  translation: butter
+  pos: noun
+  example: "Хліб з маслом."
+- word: мед
+  translation: honey
+  pos: noun
+  example: "Чай з медом."
+- word: сметана
+  translation: sour cream
+  pos: noun
+  example: "Борщ зі сметаною."
+- word: гриби
+  translation: mushrooms
+  pos: noun
+  example: "Піца з грибами."
+- word: разом
+  translation: together
+  pos: adverb
+  example: "Ми йдемо разом з друзями."

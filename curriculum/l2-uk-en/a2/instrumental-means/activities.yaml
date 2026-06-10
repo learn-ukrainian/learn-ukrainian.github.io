@@ -1,0 +1,139 @@
+inline:
+  - id: act-1
+    type: match-up
+    title: Дія і знаряддя
+    instruction: З'єднайте дію з природним знаряддям.
+    pairs:
+      - left: писати
+        right: ручкою
+      - left: малювати
+        right: олівцем
+      - left: різати
+        right: ножем
+      - left: їсти
+        right: ложкою
+  - id: act-2
+    type: fill-in
+    title: Правильна форма
+    instruction: Оберіть орудний відмінок без прийменника.
+    items:
+      - sentence: "Я пишу ___."
+        answer: ручкою
+        options:
+          - ручка
+          - ручкою
+          - з ручкою
+        explanation: Інструмент стоїть без прийменника.
+      - sentence: "Ліна малює ___."
+        answer: олівцем
+        options:
+          - олівець
+          - олівцем
+          - з олівцем
+        explanation: Чим? - олівцем.
+      - sentence: "Він їде на роботу ___."
+        answer: автобусом
+        options:
+          - автобус
+          - автобусом
+          - з автобусом
+        explanation: Транспорт часто стоїть в орудному.
+      - sentence: "Ми їдемо до Львова ___."
+        answer: потягом
+        options:
+          - потяг
+          - потягом
+          - з потягом
+        explanation: Чим їдемо? - потягом.
+  - id: act-3
+    type: quiz
+    title: Однина чи множина
+    instruction: Оберіть форму, яка підходить до речення.
+    items:
+      - question: "Ми малюємо ___."
+        options:
+          - фарбами
+          - фарби
+          - фарбу
+        correct: 0
+        explanation: Фарби у множині мають форму фарбами.
+      - question: "Вона ріже папір ___."
+        options:
+          - ножицями
+          - ножиці
+          - ножиця
+        correct: 0
+        explanation: Ножиці - множина, орудний ножицями.
+      - question: "Я їм суп ___."
+        options:
+          - ложкою
+          - ложка
+          - з ложкою
+        correct: 0
+        explanation: Ложка є знаряддям.
+      - question: "Вони працюють ___."
+        options:
+          - руками
+          - руки
+          - рукам
+        correct: 0
+        explanation: Руки у множині мають форму руками.
+  - id: act-4
+    type: group-sort
+    title: Інструмент чи супровід?
+    instruction: Розсортуйте фрази за значенням.
+    groups:
+      - label: Інструмент або засіб
+        items:
+          - писати ручкою
+          - їхати автобусом
+          - різати ножем
+          - малювати фарбами
+      - label: Супровід
+        items:
+          - гуляти з другом
+          - готувати з мамою
+          - їхати з колегою
+          - малювати з викладачкою
+workbook:
+  - type: true-false
+    title: Без прийменника
+    instruction: Позначте, чи речення правильне.
+    items:
+      - statement: "Я пишу ручкою."
+        correct: true
+        explanation: Інструмент стоїть в орудному без з.
+      - statement: "Я пишу з ручкою."
+        correct: false
+        explanation: Це звучить як супровід; для інструмента краще ручкою.
+      - statement: "Вона їде трамваєм."
+        correct: true
+        explanation: Трамваєм - засіб пересування.
+      - statement: "Ми йдемо пішком."
+        correct: false
+        explanation: Природна форма - пішки.
+  - type: error-correction
+    title: Виправте речення
+    instruction: Оберіть природний варіант.
+    items:
+      - sentence: "Він ріже хліб з ножем."
+        error: з ножем
+        correction: "Він ріже хліб ножем."
+        options:
+          - "Він ріже хліб ножем."
+          - "Він ріже хліб з ножем."
+        explanation: Ніж є знаряддям, тому без прийменника.
+      - sentence: "Ми їдемо з автобусом."
+        error: з автобусом
+        correction: "Ми їдемо автобусом."
+        options:
+          - "Ми їдемо автобусом."
+          - "Ми їдемо з автобусом."
+        explanation: Автобус є транспортом.
+      - sentence: "Ліна малює олівець."
+        error: олівець
+        correction: "Ліна малює олівцем."
+        options:
+          - "Ліна малює олівцем."
+          - "Ліна малює олівець."
+        explanation: Чим малює? - олівцем.

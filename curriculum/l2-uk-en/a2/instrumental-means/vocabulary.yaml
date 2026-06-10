@@ -1,0 +1,56 @@
+- word: знаряддя
+  translation: instrument, tool
+  pos: noun
+  example: "Ручка - це знаряддя для письма."
+- word: засіб
+  translation: means
+  pos: noun
+  example: "Автобус - засіб пересування."
+- word: ручка
+  translation: pen
+  pos: noun
+  example: "Я пишу ручкою."
+- word: олівець
+  translation: pencil
+  pos: noun
+  example: "Ліна малює олівцем."
+- word: фарба
+  translation: paint
+  pos: noun
+  example: "Ми малюємо фарбами."
+- word: лінійка
+  translation: ruler
+  pos: noun
+  example: "Проведіть лінію лінійкою."
+- word: ніж
+  translation: knife
+  pos: noun
+  example: "Він ріже хліб ножем."
+- word: ножиці
+  translation: scissors
+  pos: noun
+  example: "Вона ріже папір ножицями."
+- word: ложка
+  translation: spoon
+  pos: noun
+  example: "Я їм суп ложкою."
+- word: виделка
+  translation: fork
+  pos: noun
+  example: "Ми їмо салат виделкою."
+- word: автобус
+  translation: bus
+  pos: noun
+  example: "Я їду автобусом."
+- word: потяг
+  translation: train
+  pos: noun
+  example: "Ми їдемо потягом."
+- word: літак
+  translation: airplane
+  pos: noun
+  example: "Вона летить літаком."
+- word: пішки
+  translation: on foot
+  pos: adverb
+  example: "Сьогодні я йду пішки."
