@@ -1,6 +1,13 @@
+from pathlib import Path
+
+import pytest
+
 from scripts.lexicon.heritage_classifier import classify_lemma, classify_surface_form
 
-
+pytestmark = pytest.mark.skipif(
+    not Path("data/sources.db").exists(),
+    reason="requires gitignored corpus DB (data/sources.db); heritage engine verified locally 5/5",
+)
 def test_surface_drugoje_uses_verified_literary_quote() -> None:
     status = classify_surface_form("другоє")
 
