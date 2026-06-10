@@ -85,14 +85,14 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 ще рухається повільно, теж добре: А2 саме для того, щоб зробити ці
 речі стабільнішими.
 
-## Діалоги (Dialogues)
+## Діалог 1 — перший день курсу
 
 Уявіть перший день у мовній школі. Викладачка зустрічає групу і
 просить кожного сказати кілька речень.
 
 <DialogueBox
   client:only="react"
-  title="Діалог 1 — перший день курсу"
+  title="Діалог"
   exchanges={JSON.parse('[{"speaker":"Викладачка","text":"Добрий день! Я Оксана. А ви?"},{"speaker":"Студент","text":"Добрий день, Оксано. Я Марко. Я студент."},{"speaker":"Викладачка","text":"Дуже приємно. Що ви вивчаєте?"},{"speaker":"Студент","text":"Я вивчаю українську мову."},{"speaker":"Викладачка","text":"Де ви зараз живете?"},{"speaker":"Студент","text":"Я живу в Києві. Я часто гуляю в центрі."},{"speaker":"Викладачка","text":"Чудово. Сьогодні ми повторюємо А1 і починаємо А2."}]')}
 />
 
@@ -109,7 +109,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 Але нові відмінки будуть легшими, якщо старі не зникнуть з пам'яті.
 Тому починаємо з короткого ремонту основи.
 
-:::tip[A2 boundary]
+:::tip[Межа А2]
 Це перший модуль-перехід. Ви маєте впізнати форми й обрати безпечну
 фразу, а не вивчити всю систему відмінків за один урок.
 :::
@@ -210,7 +210,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Чотири знайомі відмінки
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я студентка.", "options": [{"text": "називний: хто?", "correct": true}, {"text": "місцевий: де?", "correct": false}, {"text": "кличний: звертання", "correct": false}], "explanation": "Студентка names who the person is, so it is nominative."}, {"question": "Я вивчаю українську мову.", "options": [{"text": "знахідний: що?", "correct": true}, {"text": "родовий: чого?", "correct": false}, {"text": "кличний: звертання", "correct": false}], "explanation": "Українську мову is the object of вивчаю."}, {"question": "Ми в школі.", "options": [{"text": "місцевий: де?", "correct": true}, {"text": "називний: хто?", "correct": false}, {"text": "орудний: чим?", "correct": false}], "explanation": "В школі answers where the people are."}, {"question": "Олено, повторіть, будь ласка.", "options": [{"text": "кличний: звертання", "correct": true}, {"text": "знахідний: кого?", "correct": false}, {"text": "давальний: кому?", "correct": false}], "explanation": "Олено is a direct address to the person."}, {"question": "Подруга телефонує.", "options": [{"text": "називний: хто телефонує?", "correct": true}, {"text": "знахідний: що телефонує?", "correct": false}, {"text": "місцевий: де?", "correct": false}], "explanation": "Подруга is the person doing the action."}, {"question": "Я купую квиток.", "options": [{"text": "знахідний: що купую?", "correct": true}, {"text": "кличний: звертання", "correct": false}, {"text": "місцевий: де?", "correct": false}], "explanation": "Квиток is what I am buying."}, {"question": "Пане Андрію, можна запитання?", "options": [{"text": "кличний: ввічливе звертання", "correct": true}, {"text": "називний: хто?", "correct": false}, {"text": "родовий: кого?", "correct": false}], "explanation": "Пане Андрію is the person being addressed."}, {"question": "Кава на столі.", "options": [{"text": "місцевий: де?", "correct": true}, {"text": "знахідний: що?", "correct": false}, {"text": "давальний: кому?", "correct": false}], "explanation": "На столі tells where the coffee is."}]`)} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я студентка.", "options": [{"text": "називний: хто?", "correct": true}, {"text": "місцевий: де?", "correct": false}, {"text": "кличний: звертання", "correct": false}], "explanation": "Студентка називає, хто це, тому це називний."}, {"question": "Я вивчаю українську мову.", "options": [{"text": "знахідний: що?", "correct": true}, {"text": "родовий: чого?", "correct": false}, {"text": "кличний: звертання", "correct": false}], "explanation": "Українську мову - це те, що я вивчаю."}, {"question": "Ми в школі.", "options": [{"text": "місцевий: де?", "correct": true}, {"text": "називний: хто?", "correct": false}, {"text": "орудний: чим?", "correct": false}], "explanation": "В школі відповідає на питання де?"}, {"question": "Олено, повторіть, будь ласка.", "options": [{"text": "кличний: звертання", "correct": true}, {"text": "знахідний: кого?", "correct": false}, {"text": "давальний: кому?", "correct": false}], "explanation": "Олено - це пряме звертання до людини."}, {"question": "Подруга телефонує.", "options": [{"text": "називний: хто телефонує?", "correct": true}, {"text": "знахідний: що телефонує?", "correct": false}, {"text": "місцевий: де?", "correct": false}], "explanation": "Подруга - це людина, яка виконує дію."}, {"question": "Я купую квиток.", "options": [{"text": "знахідний: що купую?", "correct": true}, {"text": "кличний: звертання", "correct": false}, {"text": "місцевий: де?", "correct": false}], "explanation": "Квиток - це те, що я купую."}, {"question": "Пане Андрію, можна запитання?", "options": [{"text": "кличний: ввічливе звертання", "correct": true}, {"text": "називний: хто?", "correct": false}, {"text": "родовий: кого?", "correct": false}], "explanation": "Пане Андрію - це ввічливе звертання."}, {"question": "Кава на столі.", "options": [{"text": "місцевий: де?", "correct": true}, {"text": "знахідний: що?", "correct": false}, {"text": "давальний: кому?", "correct": false}], "explanation": "На столі показує, де кава."}]`)} />
 
 ## Повна карта відмінків
 
@@ -303,6 +303,41 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 Ці терміни потрібні не для теорії. Вони допомагають обирати короткі
 слова поруч: `у` чи `в`, `і` чи `й`, `з`, `із` чи `зі`.
+
+### Наголос і кілька живих звуків
+
+`Наголос` в українській може допомагати розрізняти слова або форми.
+На цьому етапі вам не треба ставити наголос у кожній новій формі без
+помилки. Достатньо помічати: іноді голос сильніше падає на одну
+частину слова, а в іншій формі може рухатися.
+
+| Пара | Що слухаємо |
+| --- | --- |
+| `рука` / `руку` | форма змінюється, і наголос може відчуватися інакше |
+| `вода` / `воду` | у відмінках змінюється не тільки закінчення |
+| `голова` / `голову` | слухайте цілу форму, а не тільки останню літеру |
+
+Є ще одна маленька A2-підказка. Сполуки `дж` і `дз` часто звучать як
+один щільний звук:
+
+- `джерело`;
+- `дзвінок`;
+- `бджола`.
+
+Не розбивайте їх занадто різко на дві окремі літери. Повільно:
+`дже-ре-ло`, `дзві-нок`.
+
+Іноді приголосні поруч теж впливають один на одного:
+
+| Пишемо | Слухаємо як підказку |
+| --- | --- |
+| `просьба` | перед `б` звук стає дзвінкішим |
+| `боротьба` | перед `б` чується м'якший перехід |
+| `вокзал` | перед `з` вимова природно зближується |
+
+Це не новий великий список для заучування. Це тренування слуху: слово
+на письмі знайоме, а в живій вимові сусідні звуки можуть допомагати або
+трохи міняти одне одного.
 
 ### Впізнай змінену основу
 
@@ -540,7 +575,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Впізнай змінену основу
 
-*(see lesson, §Голосні і приголосні)*
+*(see lesson, §Наголос і кілька живих звуків)*
 
 ### У, в, і, й
 
@@ -550,21 +585,33 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 *(see lesson, §Українська як мова навчання)*
 
-### A2 bridge checks
+### Перевірка старту А2
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Називний often names who or what the sentence is about.", "isTrue": true, "explanation": "Називний answers хто? or що? in simple A1 sentences."}, {"statement": "Кличний is only for grammar tables, not real conversation.", "isTrue": false, "explanation": "Кличний is used in direct address: Олено, Марку, пане Андрію."}, {"statement": "У and в have the same basic meaning in place phrases, but the sound context can change the form.", "isTrue": true, "explanation": "Тарас у школі and Олена в школі show sound-based choice."}, {"statement": "A2 requires full B1-level mastery of aspect in module 1.", "isTrue": false, "explanation": "Module 1 only previews the idea of process and result."}, {"statement": "Recognizing Києва as a form of Київ is an A2 skill.", "isTrue": true, "explanation": "Recognition of changed stems helps learners read and listen."}, {"statement": "The late A2 metalanguage modules prepare learners for more Ukrainian-led B1 lessons.", "isTrue": true, "explanation": "Terms like відмінок, дієслово, основа, and закінчення build autonomy."}]`)} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Називний часто називає, хто або що є в реченні.", "isTrue": true, "explanation": "У простих реченнях називний відповідає на хто? або що?"}, {"statement": "Кличний потрібен тільки для таблиць, а не для живої розмови.", "isTrue": false, "explanation": "Кличний працює в прямому звертанні: Олено, Марку, пане Андрію."}, {"statement": "У і в мають близьке значення в місцевих фразах, але звук поруч може змінити вибір.", "isTrue": true, "explanation": "Тарас у школі й Олена в школі показують вибір за звучанням."}, {"statement": "У першому модулі А2 треба повністю володіти видом на рівні B1.", "isTrue": false, "explanation": "Перший модуль тільки готує ідею процесу й результату."}, {"statement": "Впізнати Києва як форму слова Київ - це корисна навичка А2.", "isTrue": true, "explanation": "Впізнавання зміненої основи допомагає читати й слухати."}, {"statement": "Пізніші модулі А2 про граматичні слова готують до більш українськомовного B1.", "isTrue": true, "explanation": "Терміни відмінок, дієслово, основа й закінчення будують автономію."}]`)} />
 
-### Smooth the A2 starter lines
+### Зробіть стартові фрази плавнішими
 
-<ErrorCorrection client:only='react' instruction="Choose the more natural repair." items={JSON.parse(`[{"sentence": "Тарас в школі.", "errorWord": "в школі", "correctForm": "Тарас у школі.", "options": ["Тарас у школі.", "Тарас й школі."], "explanation": "After a consonant before шк, use у."}, {"sentence": "Брат й сестра вдома.", "errorWord": "й сестра", "correctForm": "Брат і сестра вдома.", "options": ["Брат і сестра вдома.", "Брат в сестра вдома."], "explanation": "Between consonants, і is smoother."}, {"sentence": "Олена у школі.", "errorWord": "у школі", "correctForm": "Олена в школі.", "options": ["Олена в школі.", "Олена й школі."], "explanation": "After a vowel before школі, в is natural."}, {"sentence": "Марія й Яна в кафе.", "errorWord": "й Яна", "correctForm": "Марія і Яна в кафе.", "options": ["Марія і Яна в кафе.", "Марія в Яна в кафе."], "explanation": "Before Яна, keep і because я begins with a й-sound."}, {"sentence": "Я не знаю слово Києва.", "errorWord": "не впізнано Київ", "correctForm": "Києва - це форма слова Київ.", "options": ["Києва - це форма слова Київ.", "Києва - це окреме місто."], "explanation": "A2 learners should recognize changed forms of familiar words."}]`)} />
+<ErrorCorrection client:only='react' instruction="Оберіть природніше виправлення." items={JSON.parse(`[{"sentence": "Тарас в школі.", "errorWord": "в школі", "correctForm": "Тарас у школі.", "options": ["Тарас у школі.", "Тарас й школі."], "explanation": "Після приголосного перед шк краще звучить у."}, {"sentence": "Брат й сестра вдома.", "errorWord": "й сестра", "correctForm": "Брат і сестра вдома.", "options": ["Брат і сестра вдома.", "Брат в сестра вдома."], "explanation": "Між приголосними плавніше звучить і."}, {"sentence": "Олена у школі.", "errorWord": "у школі", "correctForm": "Олена в школі.", "options": ["Олена в школі.", "Олена й школі."], "explanation": "Після голосного перед школі природно звучить в."}, {"sentence": "Марія й Яна в кафе.", "errorWord": "й Яна", "correctForm": "Марія і Яна в кафе.", "options": ["Марія і Яна в кафе.", "Марія в Яна в кафе."], "explanation": "Перед Яна залишаємо і, бо я вже має й-подібний початок."}, {"sentence": "Я не знаю слово Києва.", "errorWord": "не впізнано Київ", "correctForm": "Києва - це форма слова Київ.", "options": ["Києва - це форма слова Київ.", "Києва - це окреме місто."], "explanation": "На А2 важливо впізнавати змінені форми знайомих слів."}]`)} />
 
-### Question to case
+### Питання до відмінка
 
 <MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Хто? Що?", "right": "називний"}, {"left": "Кого? Що?", "right": "знахідний"}, {"left": "Де? На кому? На чому?", "right": "місцевий"}, {"left": "звертання", "right": "кличний"}, {"left": "Кого? Чого?", "right": "родовий"}, {"left": "Кому? Чому?", "right": "давальний"}, {"left": "Ким? Чим?", "right": "орудний"}]`)} />
 
-### New grammar words
+### Коротка англійська опора
 
-<Translate client:only='react' questions={JSON.parse(`[{"source": "відмінок", "options": [{"text": "case", "correct": true}, {"text": "stress", "correct": false}, {"text": "vowel", "correct": false}], "explanation": "Відмінок means grammatical case."}, {"source": "чергування", "options": [{"text": "alternation", "correct": true}, {"text": "question", "correct": false}, {"text": "address", "correct": false}], "explanation": "Чергування is a sound or form alternation."}, {"source": "голосний", "options": [{"text": "vowel", "correct": true}, {"text": "consonant", "correct": false}, {"text": "ending", "correct": false}], "explanation": "А, е, и, і, о, у are vowels."}, {"source": "приголосний", "options": [{"text": "consonant", "correct": true}, {"text": "vowel", "correct": false}, {"text": "case", "correct": false}], "explanation": "М, т, к, в, с, ш are examples of consonants."}, {"source": "милозвучність", "options": [{"text": "euphony / smooth sound", "correct": true}, {"text": "future tense", "correct": false}, {"text": "profession", "correct": false}], "explanation": "Милозвучність helps Ukrainian avoid rough sound clusters."}]`)} />
+<Translate client:only='react' questions={JSON.parse(`[{"source": "відмінок", "options": [{"text": "case", "correct": true}, {"text": "stress", "correct": false}, {"text": "vowel", "correct": false}], "explanation": "Відмінок - це граматична роль слова в реченні."}, {"source": "чергування", "options": [{"text": "alternation", "correct": true}, {"text": "question", "correct": false}, {"text": "address", "correct": false}], "explanation": "Чергування - це зміна звука або форми."}, {"source": "голосний", "options": [{"text": "vowel", "correct": true}, {"text": "consonant", "correct": false}, {"text": "ending", "correct": false}], "explanation": "А, е, и, і, о, у - це голосні."}, {"source": "приголосний", "options": [{"text": "consonant", "correct": true}, {"text": "vowel", "correct": false}, {"text": "case", "correct": false}], "explanation": "М, т, к, в, с, ш - це приклади приголосних."}, {"source": "милозвучність", "options": [{"text": "euphony / smooth sound", "correct": true}, {"text": "future tense", "correct": false}, {"text": "profession", "correct": false}], "explanation": "Милозвучність допомагає уникати важких збігів звуків."}]`)} />
+
+### Наголос і живі звуки
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Наголос може допомагати розрізняти слова або форми.", "isTrue": true, "explanation": "На А2 достатньо помічати, що наголос є частиною звучання слова."}, {"statement": "Дж і дз завжди треба читати як дві різко окремі літери.", "isTrue": false, "explanation": "У словах джерело й дзвінок ці сполуки часто звучать як один щільний звук."}, {"statement": "У слові вокзал сусідні приголосні можуть впливати на вимову.", "isTrue": true, "explanation": "Жива вимова часто зближує сусідні звуки."}, {"statement": "На початку А2 треба знати всі правила рухомого наголосу напам'ять.", "isTrue": false, "explanation": "Тут важливіше слухати й упізнавати модель, а не заучувати повну систему."}]`)} />
+
+### Звукова підказка
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "стіл / стола", "right": "і може чергуватися з о"}, {"left": "рука / ручка", "right": "к може перейти в ч"}, {"left": "джерело", "right": "дж звучить як щільний звук"}, {"left": "дзвінок", "right": "дз звучить як щільний звук"}, {"left": "просьба", "right": "перед б звук стає дзвінкішим"}, {"left": "вода / воду", "right": "слухайте форму разом із наголосом"}]`)} />
+
+### Ще трохи плавності
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Ми зустрілися ___ школі.", "answer": "у", "options": ["у", "й"]}, {"sentence": "Анна ___ Марко на занятті.", "answer": "й", "options": ["й", "у"]}, {"sentence": "Я повернувся ___ Львова.", "answer": "зі", "options": ["зі", "й"]}, {"sentence": "Олег ___ Ірина готові.", "answer": "і", "options": ["і", "в"]}, {"sentence": "Вона працює ___ університеті.", "answer": "в", "options": ["в", "й"]}]`)} />
 
 </TabItem>
 <TabItem label="Resources">
