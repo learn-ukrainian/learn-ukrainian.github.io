@@ -3,7 +3,13 @@ from unittest.mock import patch
 
 import pytest
 
-from scripts.audit.check_mdx_source_parity import MDX_DIR, SOURCE_DIR, check_parity, main
+from scripts.audit.check_mdx_source_parity import (
+    GENERATOR_PACKAGE,
+    MDX_DIR,
+    SOURCE_DIR,
+    check_parity,
+    main,
+)
 
 
 @pytest.fixture
@@ -51,6 +57,36 @@ def test_check_parity_mdx_and_source(mock_legacy_levels, mock_subprocess):
 
     violations = check_parity(mdx_files, changed_files)
     assert len(violations) == 0
+
+def test_check_parity_generator_change_allows_existing_source_dir(mock_legacy_levels, mock_subprocess, tmp_path):
+    # Generator changes may legitimately update generated MDX without touching
+    # every module source, but only for pages that still have real source dirs.
+    with patch("scripts.audit.check_mdx_source_parity.SOURCE_DIR", tmp_path):
+        (tmp_path / "a1" / "01-hello").mkdir(parents=True)
+        mdx_files = [MDX_DIR / "a1" / "01-hello.mdx"]
+        changed_files = {
+            MDX_DIR / "a1" / "01-hello.mdx",
+            GENERATOR_PACKAGE / "core.py",
+        }
+        mock_subprocess.return_value = "1 file changed\n"
+
+        violations = check_parity(mdx_files, changed_files)
+
+    assert len(violations) == 0
+
+def test_check_parity_generator_change_rejects_orphan_mdx(mock_legacy_levels, mock_subprocess, tmp_path):
+    with patch("scripts.audit.check_mdx_source_parity.SOURCE_DIR", tmp_path):
+        mdx_files = [MDX_DIR / "a1" / "orphan.mdx"]
+        changed_files = {
+            MDX_DIR / "a1" / "orphan.mdx",
+            GENERATOR_PACKAGE / "core.py",
+        }
+        mock_subprocess.return_value = "1 file changed\n"
+
+        violations = check_parity(mdx_files, changed_files)
+
+    assert len(violations) == 1
+    assert "MDX file changed but no source files changed" in violations[0][1]
 
 def test_check_parity_source_only(mock_legacy_levels, mock_subprocess):
     # source-only diff (pass)

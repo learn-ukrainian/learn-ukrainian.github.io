@@ -326,57 +326,17 @@ def generate_mdx(
     ):
         is_ukrainian_forced = True
 
-    # Component imports
-    imports = """import Quiz from '@site/src/components/Quiz';
-import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
-import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
-import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
-import RitualSequencing from '@site/src/components/RitualSequencing';
-import VariantComparison from '@site/src/components/VariantComparison';
-import MotifFormula from '@site/src/components/MotifFormula';
-import PerformanceActivity from '@site/src/components/PerformanceActivity';
-import EssayResponse from '@site/src/components/EssayResponse';
-import ComparativeStudy from '@site/src/components/ComparativeStudy';
-import ReadingActivity from '@site/src/components/ReadingActivity';
-import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
-import AuthorialIntent from '@site/src/components/AuthorialIntent';
-import MythBuster from '@site/src/components/MythBuster';
-import HighCultureBridge from '@site/src/components/HighCultureBridge';
-import SourceEvaluation from '@site/src/components/SourceEvaluation';
-import Debate from '@site/src/components/Debate';
-import EtymologyTrace from '@site/src/components/EtymologyTrace';
-import GrammarIdentify from '@site/src/components/GrammarIdentify';
-import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
-import DialectComparison from '@site/src/components/DialectComparison';
-import TranslationCritique from '@site/src/components/TranslationCritique';
-import Transcription from '@site/src/components/Transcription';
-import Observe from '@site/src/components/Observe';
-import Order from '@site/src/components/Order';
-import CountSyllables from '@site/src/components/CountSyllables';
-import DivideWords from '@site/src/components/DivideWords';
-import OddOneOut from '@site/src/components/OddOneOut';
-import PickSyllables from '@site/src/components/PickSyllables';
-import LetterGrid from '@site/src/components/LetterGrid';
-import FlashcardDeck from '@site/src/components/FlashcardDeck';
-import VocabCard from '@site/src/components/VocabCard';
-import DialogueBox from '@site/src/components/DialogueBox';
-import HashTabSync from '@site/src/components/HashTabSync';
-import ActivityHelp from '@site/src/components/ActivityHelp';
-import YouTubeVideo from '@site/src/components/YouTubeVideo';
-import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
-import Classify from '@site/src/components/Classify';
-import ImageToLetter from '@site/src/components/ImageToLetter';
-import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
-import { Tabs, TabItem } from '@astrojs/starlight/components';"""
+    # Component imports. Keep the legacy broad preamble stable for existing
+    # generated MDX, but gate newer rare components so ordinary A1/A2
+    # regeneration does not drift just by importing unused seminar widgets.
+    optional_imports = {
+        "RitualSequencing": "import RitualSequencing from '@site/src/components/RitualSequencing';",
+        "VariantComparison": "import VariantComparison from '@site/src/components/VariantComparison';",
+        "MotifFormula": "import MotifFormula from '@site/src/components/MotifFormula';",
+        "PerformanceActivity": "import PerformanceActivity from '@site/src/components/PerformanceActivity';",
+        "MythBuster": "import MythBuster from '@site/src/components/MythBuster';",
+        "HighCultureBridge": "import HighCultureBridge from '@site/src/components/HighCultureBridge';",
+    }
 
     # Frontmatter
     extra_fm_lines = ""
@@ -539,6 +499,64 @@ sidebar:
         for en, uk, content in tabs
     )
     tabbed = f'\n<Tabs syncKey="module-tab">\n{tab_items}\n</Tabs>\n\n<HashTabSync />\n'
+
+    import_lines = [
+        "import Quiz from '@site/src/components/Quiz';",
+        "import MatchUp from '@site/src/components/MatchUp';",
+        "import FillIn from '@site/src/components/FillIn';",
+        "import TrueFalse from '@site/src/components/TrueFalse';",
+        "import Unjumble from '@site/src/components/Unjumble';",
+        "import GroupSort from '@site/src/components/GroupSort';",
+        "import Anagram from '@site/src/components/Anagram';",
+        "import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';",
+        "import Cloze from '@site/src/components/Cloze';",
+        "import Select from '@site/src/components/Select';",
+        "import Translate from '@site/src/components/Translate';",
+        "import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';",
+        "import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';",
+    ]
+    for component in ("RitualSequencing", "VariantComparison", "MotifFormula", "PerformanceActivity"):
+        if re.search(rf"<{component}\b", tabbed):
+            import_lines.append(optional_imports[component])
+    import_lines.extend([
+        "import EssayResponse from '@site/src/components/EssayResponse';",
+        "import ComparativeStudy from '@site/src/components/ComparativeStudy';",
+        "import ReadingActivity from '@site/src/components/ReadingActivity';",
+        "import CriticalAnalysis from '@site/src/components/CriticalAnalysis';",
+        "import AuthorialIntent from '@site/src/components/AuthorialIntent';",
+    ])
+    for component in ("MythBuster", "HighCultureBridge"):
+        if re.search(rf"<{component}\b", tabbed):
+            import_lines.append(optional_imports[component])
+    import_lines.extend([
+        "import SourceEvaluation from '@site/src/components/SourceEvaluation';",
+        "import Debate from '@site/src/components/Debate';",
+        "import EtymologyTrace from '@site/src/components/EtymologyTrace';",
+        "import GrammarIdentify from '@site/src/components/GrammarIdentify';",
+        "import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';",
+        "import DialectComparison from '@site/src/components/DialectComparison';",
+        "import TranslationCritique from '@site/src/components/TranslationCritique';",
+        "import Transcription from '@site/src/components/Transcription';",
+        "import Observe from '@site/src/components/Observe';",
+        "import Order from '@site/src/components/Order';",
+        "import CountSyllables from '@site/src/components/CountSyllables';",
+        "import DivideWords from '@site/src/components/DivideWords';",
+        "import OddOneOut from '@site/src/components/OddOneOut';",
+        "import PickSyllables from '@site/src/components/PickSyllables';",
+        "import LetterGrid from '@site/src/components/LetterGrid';",
+        "import FlashcardDeck from '@site/src/components/FlashcardDeck';",
+        "import VocabCard from '@site/src/components/VocabCard';",
+        "import DialogueBox from '@site/src/components/DialogueBox';",
+        "import HashTabSync from '@site/src/components/HashTabSync';",
+        "import ActivityHelp from '@site/src/components/ActivityHelp';",
+        "import YouTubeVideo from '@site/src/components/YouTubeVideo';",
+        "import WatchAndRepeat from '@site/src/components/WatchAndRepeat';",
+        "import Classify from '@site/src/components/Classify';",
+        "import ImageToLetter from '@site/src/components/ImageToLetter';",
+        "import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';",
+        "import { Tabs, TabItem } from '@astrojs/starlight/components';",
+    ])
+    imports = "\n".join(import_lines)
 
     # Build MDX
     parts = [frontmatter, imports, '', tabbed]

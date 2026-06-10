@@ -16,6 +16,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 MDX_DIR = PROJECT_ROOT / "starlight/src/content/docs"
 SOURCE_DIR = PROJECT_ROOT / "curriculum/l2-uk-en"
 LEGACY_TRACKS_FILE = PROJECT_ROOT / "scripts/audit/mdx_source_parity_legacy_tracks.yaml"
+GENERATOR_ENTRYPOINT = PROJECT_ROOT / "scripts/generate_mdx.py"
+GENERATOR_PACKAGE = PROJECT_ROOT / "scripts/generate_mdx"
 
 def get_legacy_levels() -> set[str]:
     if not LEGACY_TRACKS_FILE.exists():
@@ -87,9 +89,22 @@ def is_whitespace_only(file_path: Path, base: str | None = None, cached: bool = 
     except subprocess.CalledProcessError:
         return False
 
+def has_generator_change(changed_files: set[Path]) -> bool:
+    """Return true when the MDX generator itself is part of the change set."""
+    for changed_file in changed_files:
+        if changed_file == GENERATOR_ENTRYPOINT:
+            return True
+        try:
+            changed_file.relative_to(GENERATOR_PACKAGE)
+            return True
+        except ValueError:
+            continue
+    return False
+
 def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | None = None, cached: bool = False) -> list[tuple[Path, str]]:
     legacy_levels = get_legacy_levels()
     deleted_files = get_deleted_files(base, cached)
+    generator_changed = has_generator_change(changed_files)
     violations = []
 
     # Extract level and slug for each changed MDX file
@@ -122,6 +137,9 @@ def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | No
         expected_source_dir = SOURCE_DIR / level / slug
 
         if mdx_path in deleted_files and not expected_source_dir.exists():
+            continue
+
+        if generator_changed and expected_source_dir.exists():
             continue
 
         # Did any file in expected_source_dir change?
