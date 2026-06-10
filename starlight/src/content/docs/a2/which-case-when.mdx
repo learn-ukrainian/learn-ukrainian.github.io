@@ -1,0 +1,276 @@
+---
+title: "Компас відмінків"
+description: "Як обрати правильний відмінок за дієсловом, прийменником та контекстом"
+sidebar:
+  order: 36
+  label: "36. Компас відмінків"
+prev: dozvillia-i-khobi
+next: all-cases-practice
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: граматичний детектив
+
+На уроці студенти читають коротку новину і пояснюють, чому слова мають
+саме такі форми.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Викладачка","text":"Прочитайте речення: У середу волонтери допомогли школі й передали книжки дітям."},{"speaker":"Андрій","text":"У середу - це час. Тут знахідний."},{"speaker":"Марта","text":"Школі - давальний, бо допомогли кому?"},{"speaker":"Софія","text":"Книжки - знахідний, бо передали що?"},{"speaker":"Викладачка","text":"А дітям?"},{"speaker":"Андрій","text":"Давальний: передали кому?"},{"speaker":"Викладачка","text":"Добре. Тепер друге речення: Після уроку ми говорили про майбутнє з учителями в коридорі."},{"speaker":"Марта","text":"Після уроку - родовий після прийменника після."},{"speaker":"Софія","text":"Про майбутнє - знахідний після прийменника про."},{"speaker":"Андрій","text":"З учителями - орудний, бо з ким?"},{"speaker":"Викладачка","text":"А в коридорі - місцевий, бо де?"}]')}
+/>
+
+Карта діалогу:
+
+| Фраза | Тригер | Відмінок |
+| --- | --- | --- |
+| у середу | час, день | знахідний |
+| допомогли школі | допомагати кому? | давальний |
+| книжки | передали що? | знахідний |
+| дітям | передали кому? | давальний |
+| після уроку | `після` | родовий |
+| про майбутнє | `про` | знахідний |
+| з учителями | з ким? | орудний |
+| в коридорі | де? | місцевий |
+
+Відмінок часто вибирає не переклад, а маленький тригер: дієслово,
+прийменник або ситуація.
+
+### Тригер у реченні
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "У фразі 'після уроку' відмінок визначає...", "options": [{"text": "прийменник після", "correct": true}, {"text": "дієслово", "correct": false}, {"text": "множина", "correct": false}], "explanation": "Після вимагає родового відмінка."}, {"question": "У реченні 'Я допомагаю братові' форму визначає...", "options": [{"text": "прийменник", "correct": false}, {"text": "дієслово допомагати", "correct": true}, {"text": "слово я", "correct": false}], "explanation": "Допомагати кому? - братові."}, {"question": "У фразі 'про майбутнє' відмінок визначає...", "options": [{"text": "прийменник про", "correct": true}, {"text": "дієслово бути", "correct": false}, {"text": "місце", "correct": false}], "explanation": "Про кого? про що? - знахідний."}, {"question": "У фразі 'у 2014 році' відмінок визначає...", "options": [{"text": "контекст року", "correct": true}, {"text": "прямий додаток", "correct": false}, {"text": "звертання", "correct": false}], "explanation": "Роки з у/в часто мають місцевий відмінок."}]`)} />
+
+## Крок 1: знайдіть прийменник
+
+Якщо є прийменник, почніть із нього. Деякі прийменники майже завжди
+ведуть до одного відмінка.
+
+| Прийменник | Питання | Відмінок | Приклад |
+| --- | --- | --- | --- |
+| без | без кого? без чого? | родовий | без квитків |
+| для | для кого? для чого? | родовий | для друзів |
+| біля | біля кого? біля чого? | родовий | біля музею |
+| після | після чого? | родовий | після уроку |
+| про | про кого? про що? | знахідний | про майбутнє |
+
+Інші прийменники мають дві можливості. Тоді допомагає питання.
+
+| Прийменник | Куди? | Де? |
+| --- | --- | --- |
+| у / в | в магазин | в магазині |
+| на | на роботу | на роботі |
+
+Ще один важливий контраст:
+
+| Прийменник | Значення | Відмінок | Приклад |
+| --- | --- | --- | --- |
+| з / із / зі | звідки? | родовий | з Києва, зі школи |
+| з / із / зі | з ким? з чим? | орудний | з другом, з молоком |
+| за | за що? | знахідний | дякую за допомогу |
+| за | де? позаду чого? | орудний | за столом |
+
+### Прийменники і відмінки
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Родовий": ["без квитків", "після уроку", "біля музею"], "Знахідний": ["про майбутнє", "на роботу", "у середу"], "Орудний": ["з другом", "з молоком", "за столом"], "Місцевий": ["на роботі", "у 2014 році", "по парку"]}`)} />
+
+## Крок 2: якщо прийменника немає, слухайте дієслово
+
+Дієслово часто керує відмінком.
+
+| Дієслово | Питання | Відмінок | Приклад |
+| --- | --- | --- | --- |
+| бачити, читати, купити, шукати | кого? що? | знахідний | шукаю ключі |
+| допомагати, телефонувати, дякувати | кому? | давальний | телефоную мамі |
+| користуватися, цікавитися, займатися | ким? чим? | орудний | користуюся комп'ютером |
+| немає, боятися, потребувати | кого? чого? | родовий | немає часу |
+
+Порівняйте:
+
+> Я бачу сестру. - бачу кого? знахідний.
+>
+> Я допомагаю сестрі. - допомагаю кому? давальний.
+>
+> Я говорю з сестрою. - з ким? орудний після `з`.
+>
+> У мене немає сестри. - немає кого? родовий.
+
+Один і той самий іменник може мати різні форми, бо різна ситуація.
+
+### Дієслово керує
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я допомагаю ___.", "answer": "сестрі", "options": ["сестра", "сестру", "сестрі"]}, {"sentence": "Ми користуємося ___.", "answer": "комп'ютером", "options": ["комп'ютер", "комп'ютером", "комп'ютера"]}, {"sentence": "У мене немає ___.", "answer": "часу", "options": ["час", "часу", "часом"]}, {"sentence": "Вона шукає ___.", "answer": "ключі", "options": ["ключі", "ключів", "ключами"]}]`)} />
+
+## Крок 3: особливі контексти
+
+Деякі часті контексти варто впізнавати як готові моделі.
+
+| Контекст | Модель | Приклад |
+| --- | --- | --- |
+| день тижня | у + знахідний | у середу, у четвер |
+| рік | у + місцевий | у 2014 році |
+| одяг / вигляд | у + місцевий | хлопець у червоному светрі |
+| шлях, рух у межах місця | по + місцевий | гуляти по парку |
+| тема думки | про + знахідний | думати про майбутнє |
+
+Тут не треба будувати всю таблицю. Достатньо впізнати модель:
+
+> У п'ятницю я буду в музеї.
+>
+> У 2024 році ми жили в Києві.
+>
+> Дівчина в окулярах читає книгу.
+>
+> Ми гуляємо по місту.
+
+### Швидка перевірка
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Ми говоримо про подорож.", "isTrue": true, "explanation": "Про що? - знахідний."}, {"statement": "Вона дякує друзів.", "isTrue": false, "explanation": "Дякувати кому? - друзям."}, {"statement": "У 2024 році я жив у Львові.", "isTrue": true, "explanation": "У році - місцевий; у Львові - місцевий."}, {"statement": "Після робота ми йдемо додому.", "isTrue": false, "explanation": "Після чого? - після роботи."}]`)} />
+
+## Алгоритм вибору
+
+Коли ви не впевнені, ідіть по кроках:
+
+1. Є прийменник?
+2. Якщо так, яке питання він відкриває: `куди?`, `де?`, `звідки?`,
+   `з ким?`, `про що?`
+3. Якщо прийменника немає, яке дієслово керує словом?
+4. Якщо слово - підмет, це часто називний.
+5. Після вибору відмінка оберіть форму однини або множини.
+
+Міні-карта:
+
+| Сигнал | Приклад | Відмінок |
+| --- | --- | --- |
+| підмет | Студенти читають. | називний |
+| прямий додаток | Читаю книжку. | знахідний |
+| немає | Немає часу. | родовий |
+| допомагати | Допомагаю братові. | давальний |
+| з ким? | Іду з подругою. | орудний |
+| де? | У бібліотеці. | місцевий |
+| звертання | Марку, ходімо! | кличний |
+
+## Робота з помилкою
+
+Коли бачите помилку, не виправляйте навмання.
+
+| Помилка | Питання | Краще |
+| --- | --- | --- |
+| допомагаю сестру | кому? | допомагаю сестрі |
+| думаю про майбутньому | про що? | думаю про майбутнє |
+| після урок | після чого? | після уроку |
+| на роботі йду | куди? | на роботу йду |
+| користуюся телефон | чим? | користуюся телефоном |
+
+## 📋 Підсумок
+
+Компас відмінків має простий порядок: прийменник, дієслово, контекст,
+форма. Якщо є прийменник, починайте з нього. Якщо прийменника немає,
+слухайте дієслово. Якщо це час, рік, одяг або шлях, згадайте готову
+модель.
+
+Самоперевірка: поясніть відмінок у фразах `у середу`, `у 2014 році`,
+`допомагаю друзям`, `користуюся телефоном`, `після роботи`, `про
+подорож`.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"відмінок","translation":"grammatical case","pos":"noun","gender":"m","example":"Який відмінок у цій фразі?","examples":["grammatical case","Який відмінок у цій фразі?"]},{"word":"компас","translation":"compass","pos":"noun","gender":"m","example":"Цей алгоритм - компас відмінків.","examples":["compass","Цей алгоритм - компас відмінків."]},{"word":"прийменник","translation":"preposition","pos":"noun","gender":"m","example":"Прийменник часто визначає відмінок.","examples":["preposition","Прийменник часто визначає відмінок."]},{"word":"дієслово","translation":"verb","pos":"noun","gender":"n","example":"Дієслово допомагати вимагає давального.","examples":["verb","Дієслово допомагати вимагає давального."]},{"word":"напрямок","translation":"direction","pos":"noun","gender":"m","example":"Напрямок відповідає на питання куди?","examples":["direction","Напрямок відповідає на питання куди?"]},{"word":"місце","translation":"place, location","pos":"noun","gender":"n","example":"Місце відповідає на питання де?","examples":["place, location","Місце відповідає на питання де?"]},{"word":"характеристика","translation":"characteristic, description","pos":"noun","gender":"f","example":"У червоному светрі - характеристика людини.","examples":["characteristic, description","У червоному светрі - характеристика людини."]},{"word":"алгоритм","translation":"algorithm","pos":"noun","gender":"m","example":"Алгоритм допомагає вибрати форму.","examples":["algorithm","Алгоритм допомагає вибрати форму."]},{"word":"контекст","translation":"context","pos":"noun","gender":"m","example":"Контекст показує значення прийменника.","examples":["context","Контекст показує значення прийменника."]},{"word":"тригер","translation":"trigger, cue","pos":"noun","gender":"m","example":"Дієслово - тригер для відмінка.","examples":["trigger, cue","Дієслово - тригер для відмінка."]},{"word":"допомагати","translation":"to help","pos":"verb","example":"Я допомагаю братові.","examples":["to help","Я допомагаю братові."]},{"word":"користуватися","translation":"to use","pos":"verb","example":"Ми користуємося комп'ютером.","examples":["to use","Ми користуємося комп'ютером."]},{"word":"боятися","translation":"to be afraid of","pos":"verb","example":"Вона боїться темряви.","examples":["to be afraid of","Вона боїться темряви."]},{"word":"думати","translation":"to think","pos":"verb","example":"Я думаю про майбутнє.","examples":["to think","Я думаю про майбутнє."]},{"word":"майбутнє","translation":"future","pos":"noun","gender":"n","example":"Ми говоримо про майбутнє.","examples":["future","Ми говоримо про майбутнє."]},{"word":"светр","translation":"sweater","pos":"noun","gender":"m","example":"Хлопець у червоному светрі.","examples":["sweater","Хлопець у червоному светрі."]},{"word":"шлях","translation":"path, route","pos":"noun","gender":"m","example":"Ми йдемо по цьому шляху.","examples":["path, route","Ми йдемо по цьому шляху."]},{"word":"правило","translation":"rule","pos":"noun","gender":"n","example":"Це просте правило.","examples":["rule","Це просте правило."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"відмінок","back":"grammatical case"},{"front":"компас","back":"compass"},{"front":"прийменник","back":"preposition"},{"front":"дієслово","back":"verb"},{"front":"напрямок","back":"direction"},{"front":"місце","back":"place, location"},{"front":"характеристика","back":"characteristic, description"},{"front":"алгоритм","back":"algorithm"},{"front":"контекст","back":"context"},{"front":"тригер","back":"trigger, cue"},{"front":"допомагати","back":"to help"},{"front":"користуватися","back":"to use"},{"front":"боятися","back":"to be afraid of"},{"front":"думати","back":"to think"},{"front":"майбутнє","back":"future"},{"front":"светр","back":"sweater"},{"front":"шлях","back":"path, route"},{"front":"правило","back":"rule"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Тригер у реченні
+
+*(див. урок, §Діалог: граматичний детектив)*
+
+### Прийменники і відмінки
+
+*(див. урок, §Крок 1: знайдіть прийменник)*
+
+### Дієслово керує
+
+*(див. урок, §Крок 2: якщо прийменника немає, слухайте дієслово)*
+
+### Швидка перевірка
+
+*(див. урок, §Крок 3: особливі контексти)*
+
+### Оберіть відмінок у контексті
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У четвер ми підемо на ___.", "answer": "концерт", "options": ["концерт", "концерті", "концертом"]}, {"sentence": "Ми були на ___ дві години.", "answer": "концерті", "options": ["концерт", "концерті", "концертом"]}, {"sentence": "Я боюся ___.", "answer": "темряви", "options": ["темрява", "темряву", "темряви"]}, {"sentence": "Він телефонуватиме ___.", "answer": "батькам", "options": ["батьки", "батьків", "батькам"]}]`)} />
+
+### Знайдіть тригер
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильний варіант." items={JSON.parse(`[{"sentence": "Я думаю про майбутньому.", "errorWord": "майбутньому", "correctForm": "Я думаю про майбутнє.", "options": ["Я думаю про майбутнє.", "Я думаю про майбутньому."], "explanation": "Про що? - про майбутнє."}, {"sentence": "Ми гуляємо по парк.", "errorWord": "парк", "correctForm": "Ми гуляємо по парку.", "options": ["Ми гуляємо по парку.", "Ми гуляємо по парк."], "explanation": "По чому? - по парку."}, {"sentence": "Дякую за допомозі.", "errorWord": "допомозі", "correctForm": "Дякую за допомогу.", "options": ["Дякую за допомогу.", "Дякую за допомозі."], "explanation": "За що? - за допомогу."}, {"sentence": "Я сиджу за стіл.", "errorWord": "стіл", "correctForm": "Я сиджу за столом.", "options": ["Я сиджу за столом.", "Я сиджу за стіл."], "explanation": "Де? за чим? - за столом."}]`)} />
+
+### Дієслово плюс відмінок
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "допомагати", "right": "кому?"}, {"left": "користуватися", "right": "чим?"}, {"left": "боятися", "right": "чого?"}, {"left": "бачити", "right": "кого? що?"}, {"left": "дякувати", "right": "кому?"}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Dobra Forma 7-1: Genitive after з, до and в/у](https://opentext.ku.edu/dobraforma/chapter/7-1/) — Practice for genitive after common prepositions such as з and до.
+- 📄 [Dobra Forma 8-2: Accusative after в/у, на and про](https://opentext.ku.edu/dobraforma/chapter/8-2/) — Practice with accusative after destination and topic prepositions.
+- 📄 [ULP: Location vs Destination Prepositions](https://www.ukrainianlessons.com/location-destination-prepositions/) — Support for the куди? / де? distinction with у/в and на.
+- 📄 [ULP: Prepositions and Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Learner-facing overview of which cases follow common Ukrainian prepositions.
+- 📄 [ULP: Ukrainian Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/) — Compact chart for reviewing all case names and core questions.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

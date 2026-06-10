@@ -1,0 +1,25 @@
+- title: "ULP 5 Minute Ukrainian: Hobbies in Ukrainian"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-preferences-and-choices"
+  url: "https://www.ukrainianlessons.com/fmu23/"
+  notes: "Learner-facing hobby vocabulary for speaking about free time."
+- title: "ULP: Location vs Destination Prepositions"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /location-destination-prepositions/"
+  url: "https://www.ukrainianlessons.com/location-destination-prepositions/"
+  notes: "Support for contrasting куди? and де? with leisure places."
+- title: "ULP: Prepositions and Cases"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /prepositions-cases/"
+  url: "https://www.ukrainianlessons.com/prepositions-cases/"
+  notes: "Reference for case choice after common prepositions."
+- title: "Dobra Forma 8-2: Accusative after в/у, на and про"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-028"
+  url: "https://opentext.ku.edu/dobraforma/chapter/8-2/"
+  notes: "Practice with destination uses such as в театр and на концерт."
+- title: "Dobra Forma 9-1: Instrumental Case Intro"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-029"
+  url: "https://opentext.ku.edu/dobraforma/chapter/9-1/"
+  notes: "Support for захоплюватися, займатися and цікавитися plus instrumental forms."

@@ -1,0 +1,85 @@
+- word: дозвілля
+  translation: leisure, free time
+  pos: noun
+  gender: n
+  example: "У мене є час на дозвілля."
+- word: хобі
+  translation: hobby
+  pos: noun
+  gender: n
+  example: "Моє хобі - фотографія."
+- word: захоплюватися
+  translation: to be passionate about
+  pos: verb
+  example: "Я захоплююся плаванням."
+- word: займатися
+  translation: to do, to be engaged in
+  pos: verb
+  example: "Вона займається йогою."
+- word: цікавитися
+  translation: to be interested in
+  pos: verb
+  example: "Ми цікавимося музикою."
+- word: вподобання
+  translation: preferences, interests
+  pos: noun
+  gender: n
+  example: "Розкажіть про свої вподобання."
+- word: вільний
+  translation: free
+  pos: adjective
+  example: "У вільний час я читаю."
+- word: розвага
+  translation: entertainment
+  pos: noun
+  gender: f
+  example: "Концерт - хороша розвага."
+- word: плавання
+  translation: swimming
+  pos: noun
+  gender: n
+  example: "Плавання корисне для здоров'я."
+- word: малювання
+  translation: drawing, painting
+  pos: noun
+  gender: n
+  example: "Вона займається малюванням."
+- word: спорт
+  translation: sport
+  pos: noun
+  gender: m
+  example: "Він займається спортом."
+- word: музика
+  translation: music
+  pos: noun
+  gender: f
+  example: "Мене цікавить музика."
+- word: виставка
+  translation: exhibition
+  pos: noun
+  gender: f
+  example: "Ми підемо на виставку."
+- word: басейн
+  translation: swimming pool
+  pos: noun
+  gender: m
+  example: "У суботу я піду в басейн."
+- word: прогулянка
+  translation: walk, stroll
+  pos: noun
+  gender: f
+  example: "Ходімо на прогулянку."
+- word: змагання
+  translation: competition
+  pos: noun
+  gender: n
+  example: "Вони їдуть на змагання."
+- word: концерт
+  translation: concert
+  pos: noun
+  gender: m
+  example: "Ми зустрінемося на концерті."
+- word: запрошувати
+  translation: to invite
+  pos: verb
+  example: "Я запрошую друга в кіно."

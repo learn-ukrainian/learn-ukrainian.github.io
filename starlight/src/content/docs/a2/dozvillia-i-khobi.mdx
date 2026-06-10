@@ -1,0 +1,276 @@
+---
+title: "Чим ти захоплюєшся? Дозвілля та хобі"
+description: "Вільний час, спорт, розваги та плани на вихідні — з відмінками"
+sidebar:
+  order: 35
+  label: "35. Чим ти захоплюєшся? Дозвілля та хобі"
+prev: plural-other-cases
+next: which-case-when
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: плани на вихідні
+
+Двоє колег обідають разом і говорять про вільний час. У діалозі
+відмінки працюють не як таблиця, а як маленькі рішення в розмові.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Оля","text":"Марку, що ти робитимеш на вихідних?"},{"speaker":"Марко","text":"У суботу піду в басейн. Я захоплююся плаванням."},{"speaker":"Оля","text":"Клас. А в неділю?"},{"speaker":"Марко","text":"У неділю хочу піти на виставку з друзями. А ти?"},{"speaker":"Оля","text":"Я займаюся малюванням і часто ходжу в музей. Але цієї неділі хочу пограти у футбол у парку."},{"speaker":"Марко","text":"Ходімо разом у парк після виставки."},{"speaker":"Оля","text":"Чудова ідея. О котрій зустрінемося?"},{"speaker":"Марко","text":"О четвертій біля входу в парк."}]')}
+/>
+
+Карта діалогу:
+
+| Фраза | Питання | Відмінок |
+| --- | --- | --- |
+| захоплююся плаванням | чим? | орудний |
+| займаюся малюванням | чим? | орудний |
+| піду в басейн | куди? | знахідний після `в` |
+| піти на виставку | куди? | знахідний після `на` |
+| з друзями | з ким? | орудний |
+| у парку | де? | місцевий |
+| біля входу | біля чого? | родовий |
+
+У цьому уроці головне не вивчити нову велику таблицю. Головне -
+розповідати про дозвілля і чути, яке питання стоїть за формою.
+
+### Що керує формою?
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "захоплююся плаванням", "right": "чим?"}, {"left": "іду на виставку", "right": "куди?"}, {"left": "я на виставці", "right": "де?"}, {"left": "з друзями", "right": "з ким?"}, {"left": "біля входу", "right": "біля чого?"}]`)} />
+
+## Хобі: чим?
+
+Коли ми говоримо про зацікавлення, часто потрібен орудний відмінок:
+`чим?`
+
+| Дієслово | Модель | Приклад |
+| --- | --- | --- |
+| захоплюватися | чим? | Я захоплююся фотографією. |
+| займатися | чим? | Вона займається йогою. |
+| цікавитися | чим? | Ми цікавимося музикою. |
+
+Порівняйте:
+
+> Я люблю читати. - після `любити` часто стоїть інфінітив.
+>
+> Я захоплююся читанням. - після `захоплюватися` потрібен орудний.
+>
+> Він займається спортом. - `спортом`, бо чим?
+
+Корисні фрази:
+
+- `У вільний час я...`
+- `Я часто / іноді / рідко...`
+- `Мені подобається...`
+- `Мене цікавить...`
+- `Я захоплююся...`
+- `Я займаюся...`
+
+### Хобі в орудному
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я захоплююся ___.", "answer": "фотографією", "options": ["фотографія", "фотографію", "фотографією"]}, {"sentence": "Вона займається ___.", "answer": "йогою", "options": ["йога", "йогою", "йогу"]}, {"sentence": "Ми цікавимося ___.", "answer": "музикою", "options": ["музика", "музику", "музикою"]}, {"sentence": "Він займається ___.", "answer": "спортом", "options": ["спорт", "спортом", "спорту"]}]`)} />
+
+## Спорт, музика, ігри
+
+Деякі хобі мають свої сталі моделі.
+
+| Модель | Приклад | Питання |
+| --- | --- | --- |
+| грати в / у + знахідний | грати у футбол, у теніс | у що? |
+| грати на + місцевий | грати на гітарі, на піаніно | на чому? |
+| ходити на + знахідний | ходити на концерт, на йогу | куди? |
+| бути на + місцевий | бути на концерті, на занятті | де? |
+
+Коротко:
+
+> Я граю у футбол, але граю на гітарі.
+>
+> Ми йдемо на концерт. Потім ми будемо на концерті.
+>
+> Вона ходить на йогу щосереди.
+
+Не перекладайте слово за словом. Спочатку запитайте: це дія до місця,
+перебування в місці, гра у вид спорту чи гра на інструменті?
+
+### Куди чи де?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Ми йдемо на ___.", "options": [{"text": "виставку", "correct": true}, {"text": "виставці", "correct": false}, {"text": "виставкою", "correct": false}], "explanation": "Йдемо куди? - на виставку."}, {"question": "Ми зустрічаємося на ___.", "options": [{"text": "виставку", "correct": false}, {"text": "виставці", "correct": true}, {"text": "виставкою", "correct": false}], "explanation": "Зустрічаємося де? - на виставці."}, {"question": "Оля піде в ___.", "options": [{"text": "театр", "correct": true}, {"text": "театрі", "correct": false}, {"text": "театром", "correct": false}], "explanation": "Піде куди? - в театр."}, {"question": "Марко плаває в ___.", "options": [{"text": "басейн", "correct": false}, {"text": "басейні", "correct": true}, {"text": "басейном", "correct": false}], "explanation": "Плаває де? - у басейні."}]`)} />
+
+## Куди йдемо? Де ми?
+
+У темі дозвілля часто треба розрізняти рух і місце.
+
+| Куди? | Де? |
+| --- | --- |
+| іду в театр | я в театрі |
+| іду в кіно | я в кіно |
+| іду в басейн | я в басейні |
+| іду на виставку | я на виставці |
+| іду на стадіон | я на стадіоні |
+| іду на прогулянку | я на прогулянці |
+
+Практичний спосіб:
+
+> `йти`, `піти`, `їхати` часто відкривають питання `куди?`
+>
+> `бути`, `зустрічатися`, `сидіти`, `гуляти` часто відкривають питання
+> `де?`
+
+Це не магія прийменника. Один і той самий прийменник може працювати з
+різними відмінками:
+
+> Ми йдемо на виставку. - куди?
+>
+> Ми на виставці. - де?
+
+### Моделі дозвілля
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Орудний після захоплюватися / займатися": ["захоплююся плаванням", "займаюся малюванням", "цікавлюся музикою"], "Знахідний для напрямку": ["іду в басейн", "піду на концерт", "ходімо на прогулянку"], "Місцевий для місця": ["у басейні", "на концерті", "на прогулянці"]}`)} />
+
+## Запрошення
+
+Для дружнього запрошення використовуйте короткі природні форми:
+
+| Фраза | Коли |
+| --- | --- |
+| Ходімо в кіно! | пропозиція піти разом |
+| Пограймо у футбол! | пропозиція зробити щось разом |
+| Може, підемо на концерт? | м'яке запрошення |
+| Хочеш піти на прогулянку? | питання до друга |
+
+Відповідь:
+
+| Згода | Відмова |
+| --- | --- |
+| З радістю! | На жаль, не можу. |
+| Чудова ідея. | Я зайнятий / зайнята. |
+| Я за. | Може, іншим разом? |
+| Так, ходімо. | У мене вже є плани. |
+
+## Міні-роль
+
+Працюйте в парах. Один студент пропонує план, другий уточнює час і
+місце.
+
+| Крок | Модель |
+| --- | --- |
+| Запросіть | Ходімо ___ / Може, підемо ___? |
+| Скажіть хобі | Я захоплююся ___ / займаюся ___. |
+| Уточніть місце | Де зустрінемося? |
+| Уточніть час | О котрій? |
+| Відповідь | З радістю / На жаль, не можу. |
+
+## 📋 Підсумок
+
+Тема дозвілля добре показує, як відмінки працюють у живій розмові.
+`Захоплюватися`, `займатися`, `цікавитися` ведуть до орудного:
+`плаванням`, `йогою`, `музикою`. Рух до місця часто має знахідний:
+`у басейн`, `на виставку`. Перебування в місці часто має місцевий:
+`у басейні`, `на виставці`.
+
+Самоперевірка: скажіть три речення про себе. Одне з `захоплююся`, одне
+з `граю у / на`, одне із запрошенням на вихідні.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"дозвілля","translation":"leisure, free time","pos":"noun","gender":"n","example":"У мене є час на дозвілля.","examples":["leisure, free time","У мене є час на дозвілля."]},{"word":"хобі","translation":"hobby","pos":"noun","gender":"n","example":"Моє хобі - фотографія.","examples":["hobby","Моє хобі - фотографія."]},{"word":"захоплюватися","translation":"to be passionate about","pos":"verb","example":"Я захоплююся плаванням.","examples":["to be passionate about","Я захоплююся плаванням."]},{"word":"займатися","translation":"to do, to be engaged in","pos":"verb","example":"Вона займається йогою.","examples":["to do, to be engaged in","Вона займається йогою."]},{"word":"цікавитися","translation":"to be interested in","pos":"verb","example":"Ми цікавимося музикою.","examples":["to be interested in","Ми цікавимося музикою."]},{"word":"вподобання","translation":"preferences, interests","pos":"noun","gender":"n","example":"Розкажіть про свої вподобання.","examples":["preferences, interests","Розкажіть про свої вподобання."]},{"word":"вільний","translation":"free","pos":"adjective","example":"У вільний час я читаю.","examples":["free","У вільний час я читаю."]},{"word":"розвага","translation":"entertainment","pos":"noun","gender":"f","example":"Концерт - хороша розвага.","examples":["entertainment","Концерт - хороша розвага."]},{"word":"плавання","translation":"swimming","pos":"noun","gender":"n","example":"Плавання корисне для здоров'я.","examples":["swimming","Плавання корисне для здоров'я."]},{"word":"малювання","translation":"drawing, painting","pos":"noun","gender":"n","example":"Вона займається малюванням.","examples":["drawing, painting","Вона займається малюванням."]},{"word":"спорт","translation":"sport","pos":"noun","gender":"m","example":"Він займається спортом.","examples":["sport","Він займається спортом."]},{"word":"музика","translation":"music","pos":"noun","gender":"f","example":"Мене цікавить музика.","examples":["music","Мене цікавить музика."]},{"word":"виставка","translation":"exhibition","pos":"noun","gender":"f","example":"Ми підемо на виставку.","examples":["exhibition","Ми підемо на виставку."]},{"word":"басейн","translation":"swimming pool","pos":"noun","gender":"m","example":"У суботу я піду в басейн.","examples":["swimming pool","У суботу я піду в басейн."]},{"word":"прогулянка","translation":"walk, stroll","pos":"noun","gender":"f","example":"Ходімо на прогулянку.","examples":["walk, stroll","Ходімо на прогулянку."]},{"word":"змагання","translation":"competition","pos":"noun","gender":"n","example":"Вони їдуть на змагання.","examples":["competition","Вони їдуть на змагання."]},{"word":"концерт","translation":"concert","pos":"noun","gender":"m","example":"Ми зустрінемося на концерті.","examples":["concert","Ми зустрінемося на концерті."]},{"word":"запрошувати","translation":"to invite","pos":"verb","example":"Я запрошую друга в кіно.","examples":["to invite","Я запрошую друга в кіно."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"дозвілля","back":"leisure, free time"},{"front":"хобі","back":"hobby"},{"front":"захоплюватися","back":"to be passionate about"},{"front":"займатися","back":"to do, to be engaged in"},{"front":"цікавитися","back":"to be interested in"},{"front":"вподобання","back":"preferences, interests"},{"front":"вільний","back":"free"},{"front":"розвага","back":"entertainment"},{"front":"плавання","back":"swimming"},{"front":"малювання","back":"drawing, painting"},{"front":"спорт","back":"sport"},{"front":"музика","back":"music"},{"front":"виставка","back":"exhibition"},{"front":"басейн","back":"swimming pool"},{"front":"прогулянка","back":"walk, stroll"},{"front":"змагання","back":"competition"},{"front":"концерт","back":"concert"},{"front":"запрошувати","back":"to invite"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Що керує формою?
+
+*(див. урок, §Діалог: плани на вихідні)*
+
+### Хобі в орудному
+
+*(див. урок, §Хобі: чим?)*
+
+### Куди чи де?
+
+*(див. урок, §Спорт, музика, ігри)*
+
+### Моделі дозвілля
+
+*(див. урок, §Куди йдемо? Де ми?)*
+
+### Оберіть форму
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я часто граю у ___.", "answer": "теніс", "options": ["теніс", "тенісі", "тенісом"]}, {"sentence": "Моя подруга грає на ___.", "answer": "гітарі", "options": ["гітара", "гітару", "гітарі"]}, {"sentence": "У суботу ми підемо на ___.", "answer": "концерт", "options": ["концерт", "концерті", "концертом"]}, {"sentence": "Увечері ми будемо на ___.", "answer": "концерті", "options": ["концерт", "концерті", "концертом"]}]`)} />
+
+### Виправте фразу
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильний варіант." items={JSON.parse(`[{"sentence": "Я захоплююся фотографія.", "errorWord": "фотографія", "correctForm": "Я захоплююся фотографією.", "options": ["Я захоплююся фотографією.", "Я захоплююся фотографія."], "explanation": "Захоплюватися чим? - фотографією."}, {"sentence": "Ми йдемо на виставці.", "errorWord": "виставці", "correctForm": "Ми йдемо на виставку.", "options": ["Ми йдемо на виставку.", "Ми йдемо на виставці."], "explanation": "Йдемо куди? - на виставку."}, {"sentence": "Оля грає на гітару.", "errorWord": "гітару", "correctForm": "Оля грає на гітарі.", "options": ["Оля грає на гітарі.", "Оля грає на гітару."], "explanation": "Грати на чому? - на гітарі."}, {"sentence": "Ходімо у парк у четвертій.", "errorWord": "у четвертій", "correctForm": "Ходімо в парк о четвертій.", "options": ["Ходімо в парк о четвертій.", "Ходімо у парк у четвертій."], "explanation": "Для часу зустрічі кажемо о четвертій."}]`)} />
+
+### Чи природно?
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я займаюся спортом.", "isTrue": true, "explanation": "Займатися чим? - спортом."}, {"statement": "Ми будемо на виставку.", "isTrue": false, "explanation": "Будемо де? - на виставці."}, {"statement": "Пограймо у футбол.", "isTrue": true, "explanation": "Грати у що? - у футбол."}, {"statement": "Вона цікавиться музикою.", "isTrue": true, "explanation": "Цікавитися чим? - музикою."}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Dobra Forma 8-2: Accusative after в/у, на and про](https://opentext.ku.edu/dobraforma/chapter/8-2/) — Practice with destination uses such as в театр and на концерт.
+- 📄 [Dobra Forma 9-1: Instrumental Case Intro](https://opentext.ku.edu/dobraforma/chapter/9-1/) — Support for захоплюватися, займатися and цікавитися plus instrumental forms.
+- 📄 [ULP 5 Minute Ukrainian: Hobbies in Ukrainian](https://www.ukrainianlessons.com/fmu23/) — Learner-facing hobby vocabulary for speaking about free time.
+- 📄 [ULP: Location vs Destination Prepositions](https://www.ukrainianlessons.com/location-destination-prepositions/) — Support for contrasting куди? and де? with leisure places.
+- 📄 [ULP: Prepositions and Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Reference for case choice after common prepositions.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

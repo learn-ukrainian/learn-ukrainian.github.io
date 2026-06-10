@@ -1,0 +1,86 @@
+- word: відмінок
+  translation: grammatical case
+  pos: noun
+  gender: m
+  example: "Який відмінок у цій фразі?"
+- word: компас
+  translation: compass
+  pos: noun
+  gender: m
+  example: "Цей алгоритм - компас відмінків."
+- word: прийменник
+  translation: preposition
+  pos: noun
+  gender: m
+  example: "Прийменник часто визначає відмінок."
+- word: дієслово
+  translation: verb
+  pos: noun
+  gender: n
+  example: "Дієслово допомагати вимагає давального."
+- word: напрямок
+  translation: direction
+  pos: noun
+  gender: m
+  example: "Напрямок відповідає на питання куди?"
+- word: місце
+  translation: place, location
+  pos: noun
+  gender: n
+  example: "Місце відповідає на питання де?"
+- word: характеристика
+  translation: characteristic, description
+  pos: noun
+  gender: f
+  example: "У червоному светрі - характеристика людини."
+- word: алгоритм
+  translation: algorithm
+  pos: noun
+  gender: m
+  example: "Алгоритм допомагає вибрати форму."
+- word: контекст
+  translation: context
+  pos: noun
+  gender: m
+  example: "Контекст показує значення прийменника."
+- word: тригер
+  translation: trigger, cue
+  pos: noun
+  gender: m
+  example: "Дієслово - тригер для відмінка."
+- word: допомагати
+  translation: to help
+  pos: verb
+  example: "Я допомагаю братові."
+- word: користуватися
+  translation: to use
+  pos: verb
+  example: "Ми користуємося комп'ютером."
+- word: боятися
+  translation: to be afraid of
+  pos: verb
+  example: "Вона боїться темряви."
+- word: думати
+  translation: to think
+  pos: verb
+  example: "Я думаю про майбутнє."
+- word: майбутнє
+  translation: future
+  pos: noun
+  gender: n
+  example: "Ми говоримо про майбутнє."
+- word: светр
+  translation: sweater
+  pos: noun
+  gender: m
+  example: "Хлопець у червоному светрі."
+- word: шлях
+  translation: path, route
+  pos: noun
+  gender: m
+  example: "Ми йдемо по цьому шляху."
+- word: правило
+  translation: rule
+  pos: noun
+  gender: n
+  example: "Це просте правило."
