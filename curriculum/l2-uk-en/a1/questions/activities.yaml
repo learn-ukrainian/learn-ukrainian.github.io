@@ -2,7 +2,7 @@
 inline:
   - id: act-1
     type: match-up
-    title: Question-word jobs
+    title: Ролі питальних слів
     instruction: Match each Ukrainian question word with the job it does.
     pairs:
       - left: Хто?
@@ -21,7 +21,7 @@ inline:
         right: asks for manner or a fixed social phrase
   - id: act-2
     type: fill-in
-    title: Interview gaps
+    title: Пропуски в інтерв'ю
     instruction: Choose the question word that completes each short exchange.
     items:
       - sentence: ___ ти?
@@ -68,7 +68,7 @@ inline:
         explanation: Як appears in the ready phrase Як справи?
   - id: act-3
     type: true-false
-    title: Yes/no question signals
+    title: Сигнали питань так/ні
     instruction: Decide whether each statement is safe for this lesson.
     items:
       - statement: Ти говориш українською? can be a yes/no question with rising intonation.
@@ -85,7 +85,7 @@ inline:
         explanation: The period makes a statement; the question mark and voice make a question.
   - id: act-4
     type: group-sort
-    title: Question, answer, or negative
+    title: Питання, відповідь чи заперечення
     instruction: Sort each line by what it does in a conversation.
     groups:
       - name: Information question
@@ -106,7 +106,7 @@ inline:
           - Ніхто не говорить.
 workbook:
   - type: unjumble
-    title: Rebuild the negative
+    title: Перебудуй заперечення
     instruction: Put the words in the standard Ukrainian order.
     items:
       - words:
@@ -143,7 +143,7 @@ workbook:
           - знаю
         answer: Я нічого не знаю
   - type: translate
-    title: Build the short question
+    title: Склади коротке питання
     instruction: Choose the Ukrainian line that matches the English prompt.
     items:
       - source: Who are you?
@@ -183,7 +183,7 @@ workbook:
             correct: false
         explanation: Write не separately before знаю.
   - type: order
-    title: Find the book
+    title: Знайди книжку
     instruction: Put the home exchange in a natural order.
     items:
       - Де моя книга?
@@ -200,7 +200,7 @@ workbook:
       - 4
       - 5
   - type: error-correction
-    title: Repair question and negative traps
+    title: Виправ пастки питань і заперечень
     instruction: Choose the standard Ukrainian repair.
     anchor_id: repair-traps
     notes: |-

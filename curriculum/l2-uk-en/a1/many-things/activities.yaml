@@ -2,7 +2,7 @@
 inline:
   - id: act-1
     type: quiz
-    title: One thing, many things
+    title: Одна річ, багато речей
     instruction: Choose the plural chunk.
     items:
       - prompt: стіл
@@ -61,7 +61,7 @@ inline:
         explanation: Ручка becomes ручки.
   - id: act-2
     type: match-up
-    title: Singular and plural pairs
+    title: Пари однини й множини
     instruction: Match one thing with many things.
     pairs:
       - left: стіл
@@ -82,7 +82,7 @@ inline:
         right: дзеркала
   - id: act-3
     type: fill-in
-    title: Plural adjective ending
+    title: Закінчення прикметника в множині
     instruction: Choose the ending that makes the adjective plural.
     items:
       - sentence: нов__ книги
@@ -193,7 +193,7 @@ inline:
         explanation: Use plural ці and plural нові.
 workbook:
   - type: group-sort
-    title: Singular, ordinary plural, special number
+    title: Однина, звичайна множина, форма з числом
     instruction: Sort each chunk by what it shows.
     groups:
       - label: One thing
@@ -215,7 +215,7 @@ workbook:
           - сто гривень
           - двоє дверей
   - type: match-up
-    title: People chunks
+    title: Фрази про людей
     instruction: Match the English prompt with the Ukrainian chunk.
     pairs:
       - left: we
@@ -235,7 +235,7 @@ workbook:
       - left: with you
         right: з вами
   - type: fill-in
-    title: Number chunks
+    title: Фрази з числами
     instruction: Choose the noun chunk after the number.
     items:
       - sentence: два ___
@@ -281,7 +281,7 @@ workbook:
           - гривня
         explanation: Сто гривень is the price chunk from the numbers module.
   - type: error-correction
-    title: Repair plural traps
+    title: Виправ пастки множини
     instruction: Choose the standard Ukrainian repair.
     anchor_id: repair-traps
     items:
