@@ -1,0 +1,117 @@
+- word: місцевий
+  translation: locative
+  pos: adj
+  example: "Місцевий відмінок відповідає на питання де?"
+- word: абстрактний
+  translation: abstract
+  pos: adj
+  example: "Абстрактний контекст може бути у житті або в освіті."
+- word: минулий
+  translation: past, previous
+  pos: adj
+  example: "У минулому місяці я був у Львові."
+- word: життя
+  translation: life
+  pos: noun
+  gender: n
+  example: "У житті бувають зміни."
+- word: освіта
+  translation: education
+  pos: noun
+  gender: f
+  example: "Я працюю в освіті."
+- word: робота
+  translation: work, job
+  pos: noun
+  gender: f
+  example: "На роботі сьогодні тихо."
+- word: політика
+  translation: politics
+  pos: noun
+  gender: f
+  example: "Він не працює в політиці."
+- word: наука
+  translation: science
+  pos: noun
+  gender: f
+  example: "У науці важлива точність."
+- word: культура
+  translation: culture
+  pos: noun
+  gender: f
+  example: "Вона працює в культурі."
+- word: дитинство
+  translation: childhood
+  pos: noun
+  gender: n
+  example: "У дитинстві я жив у селі."
+- word: молодість
+  translation: youth
+  pos: noun
+  gender: f
+  example: "У молодості вона багато читала."
+- word: подорож
+  translation: journey, trip
+  pos: noun
+  gender: f
+  example: "У подорожі я багато слухаю."
+- word: зустріч
+  translation: meeting, encounter
+  pos: noun
+  gender: f
+  example: "На зустрічі ми говорили про курс."
+- word: думка
+  translation: thought, opinion
+  pos: noun
+  gender: f
+  example: "У цій думці є важлива ідея."
+- word: проблема
+  translation: problem
+  pos: noun
+  gender: f
+  example: "У цій проблемі є дві частини."
+- word: місяць
+  translation: month
+  pos: noun
+  gender: m
+  example: "У минулому місяці я був у Львові."
+- word: тиждень
+  translation: week
+  pos: noun
+  gender: m
+  example: "На цьому тижні у нас три заняття."
+- word: телефон
+  translation: phone, telephone
+  pos: noun
+  gender: m
+  example: "Ми говорили по телефону."
+- word: радіо
+  translation: radio
+  pos: noun
+  gender: n
+  example: "Я почув це по радіо."
+- word: пошта
+  translation: mail, post
+  pos: noun
+  gender: f
+  example: "Повідомлення прийшло поштою."
+- word: тема
+  translation: topic, theme
+  pos: noun
+  gender: f
+  example: "Ми говорили про тему уроку."
+- word: новина
+  translation: news, piece of news
+  pos: noun
+  gender: f
+  example: "Я почув новину по радіо."
+- word: сфера
+  translation: sphere, field
+  pos: noun
+  gender: f
+  example: "У цій сфері я працюю давно."
+- word: зв'язок
+  translation: connection, communication
+  pos: noun
+  gender: m
+  example: "По телефону ми зберігаємо зв'язок."

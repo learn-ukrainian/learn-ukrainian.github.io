@@ -1,0 +1,25 @@
+- title: "Dobra Forma: Personal Pronouns - Dative Case for Indirect Object"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-049"
+  url: https://opentext.ku.edu/dobraforma/chapter/15-2/
+  notes: "Practice with dative pronouns in request and recipient patterns."
+- title: "Talk Ukrainian: Dative case"
+  role: article
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-017"
+  url: https://talkukrainian.com/dative-case/
+  notes: "Quick overview of dative patterns that appear in service dialogue."
+- title: "FMU 1-09: How to pick up a parcel at Nova Poshta"
+  role: podcast
+  source_ref: "docs/resources/podcasts/podcast_db.json: FMU-009"
+  url: https://www.ukrainianlessons.com/fmu9/
+  notes: "Directly aligned postal-service scenario with parcel pickup language."
+- title: "ULP 2-52 Buying a phone in Ukraine + Dative case"
+  role: podcast
+  source_ref: "docs/resources/ukrainianlessons/blog_db.json: ulp-ep-052"
+  url: https://www.ukrainianlessons.com/episode52/
+  notes: "Useful service-style exchange with natural dative requests."
+- title: "ULP 2-70 Writing an email in Ukrainian – Review 66-69"
+  role: podcast
+  source_ref: "docs/resources/ukrainianlessons/blog_db.json: ulp-ep-070"
+  url: https://www.ukrainianlessons.com/episode70/
+  notes: "Communication follow-up with address and message language."

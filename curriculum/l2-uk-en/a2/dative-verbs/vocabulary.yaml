@@ -1,0 +1,83 @@
+- word: допомагати
+  translation: to help
+  pos: verb
+  example: "Я допомагаю мамі."
+- word: дякувати
+  translation: to thank
+  pos: verb
+  example: "Він дякує вчителеві."
+- word: дзвонити
+  translation: to call, to phone
+  pos: verb
+  example: "Вона дзвонить подрузі."
+- word: радити
+  translation: to advise
+  pos: verb
+  example: "Ми радимо тобі."
+- word: заважати
+  translation: to bother, to disturb
+  pos: verb
+  example: "Вони заважають нам."
+- word: подобатися
+  translation: to be pleasing to, to like
+  pos: verb
+  example: "Мені подобається ця книжка."
+- word: відповідати
+  translation: to answer, to reply
+  pos: verb
+  example: "Я відповідаю колезі."
+- word: довіряти
+  translation: to trust
+  pos: verb
+  example: "Я довіряю другові."
+- word: вибачати
+  translation: to forgive
+  pos: verb
+  example: "Вона вибачає братові."
+- word: посміхатися
+  translation: to smile
+  pos: verb
+  example: "Він посміхається дитині."
+- word: співчувати
+  translation: to sympathize
+  pos: verb
+  example: "Я співчуваю подрузі."
+- word: заздрити
+  translation: to envy
+  pos: verb
+  example: "Вона не заздрить колезі."
+- word: мама
+  translation: mom, mother
+  pos: noun
+  gender: f
+  example: "Я допомагаю мамі."
+- word: друг
+  translation: friend
+  pos: noun
+  gender: m
+  example: "Я дзвоню другові."
+- word: учитель
+  translation: teacher
+  pos: noun
+  gender: m
+  example: "Я дякую вчителеві."
+- word: рік
+  translation: year
+  pos: noun
+  gender: m
+  example: "Мені двадцять п'ять років."
+- word: роки
+  translation: years
+  pos: noun
+  gender: m
+  example: "Дитині три роки."
+- word: років
+  translation: years
+  pos: noun
+  gender: m
+  example: "Мені двадцять п'ять років."
+- word: книга
+  translation: book
+  pos: noun
+  gender: f
+  example: "Мені подобається ця книжка."
