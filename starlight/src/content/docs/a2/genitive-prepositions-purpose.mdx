@@ -84,7 +84,12 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
   exchanges={JSON.parse('[{"speaker":"Ігор","text":"Марто, для кого ця ковдра?"},{"speaker":"Марта","text":"Для Олени. Вона завжди мерзне ввечері."},{"speaker":"Ігор","text":"Добре. А без ліхтарика ми не поїдемо."},{"speaker":"Марта","text":"Так, без ліхтарика в лісі важко."},{"speaker":"Ігор","text":"Де поставимо намет?"},{"speaker":"Марта","text":"Біля річки, але не навпроти дороги."},{"speaker":"Ігор","text":"Можна коло старої хати?"},{"speaker":"Марта","text":"Краще біля річки. Там тихіше."}]')}
 />
 
-Ключові фрази:
+Спершу прочитайте діалог без таблиці. Потім поверніться до рядків і
+знайдіть слова перед іменниками: `для`, `без`, `біля`, `навпроти`,
+`коло`. Вони ведуть до родового відмінка, але кожне слово робить свою
+роботу.
+
+**Картка діалогу**
 
 | Фраза | Питання | Значення |
 | --- | --- | --- |
@@ -94,9 +99,43 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 | навпроти дороги | навпроти чого? | місце напроти |
 | коло хати | коло чого? | місце поруч |
 
+### Помітьте перед правилом
+
+У діалозі всі форми короткі й практичні. Ніхто не пояснює таблицю
+відмінків під час походу. Люди просто питають:
+
+> Для кого ця ковдра?
+>
+> Без чого не можна їхати?
+>
+> Де буде намет?
+
+Відповіді теж короткі:
+
+> Для Олени.
+>
+> Без ліхтарика.
+>
+> Біля річки.
+
+На А2 це правильний формат тренування. Учитель може дати словникову
+форму `річка`, а ви повторюєте готову фразу `біля річки`. Потім
+переносите модель на нове слово: `школа - біля школи`, `дорога -
+навпроти дороги`, `хата - коло хати`.
+
+Скажіть у парі:
+
+- `Це для ...`
+- `Я не можу без ...`
+- `Ми зустрічаємося біля ...`
+
+Якщо не знаєте форму, зупиніться і попросіть: `Як правильно: біля
+школи чи біля школа?` Така коротка граматична пауза нормальна для
+роботи на А2.
+
 ### Для, без чи біля?
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "___ Олени ця ковдра?", "options": [{"text": "Для", "correct": true}, {"text": "Без", "correct": false}, {"text": "Біля", "correct": false}], "explanation": "Ковдра призначена для Олени."}, {"question": "Ми не поїдемо ___ ліхтарика.", "options": [{"text": "без", "correct": true}, {"text": "для", "correct": false}, {"text": "навпроти", "correct": false}], "explanation": "Без показує відсутність потрібної речі."}, {"question": "Намет стоїть ___ річки.", "options": [{"text": "біля", "correct": true}, {"text": "для", "correct": false}, {"text": "без", "correct": false}], "explanation": "Біля показує місце поруч."}, {"question": "Кафе ___ бібліотеки.", "options": [{"text": "навпроти", "correct": true}, {"text": "без", "correct": false}, {"text": "для", "correct": false}], "explanation": "Навпроти означає on the opposite side."}, {"question": "Чай ___ цукру.", "options": [{"text": "без", "correct": true}, {"text": "для", "correct": false}, {"text": "коло", "correct": false}], "explanation": "Без цукру означає no sugar."}, {"question": "Час ___ відпочинку.", "options": [{"text": "для", "correct": true}, {"text": "без", "correct": false}, {"text": "біля", "correct": false}], "explanation": "Для відпочинку показує мету."}, {"question": "Автобус стоїть ___ дороги.", "options": [{"text": "коло", "correct": true}, {"text": "без", "correct": false}, {"text": "для", "correct": false}], "explanation": "Коло дороги означає біля дороги."}, {"question": "Аптека ___ лікарні.", "options": [{"text": "біля", "correct": true}, {"text": "для", "correct": false}, {"text": "без", "correct": false}], "explanation": "Біля лікарні показує місце."}]`)} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "___ Олени ця ковдра?", "options": [{"text": "Для", "correct": true}, {"text": "Без", "correct": false}, {"text": "Біля", "correct": false}], "explanation": "Ковдра призначена для Олени."}, {"question": "Ми не поїдемо ___ ліхтарика.", "options": [{"text": "без", "correct": true}, {"text": "для", "correct": false}, {"text": "навпроти", "correct": false}], "explanation": "Без показує відсутність потрібної речі."}, {"question": "Намет стоїть ___ річки.", "options": [{"text": "біля", "correct": true}, {"text": "для", "correct": false}, {"text": "без", "correct": false}], "explanation": "Біля показує місце поруч."}, {"question": "Кафе ___ бібліотеки.", "options": [{"text": "навпроти", "correct": true}, {"text": "без", "correct": false}, {"text": "для", "correct": false}], "explanation": "Навпроти означає на іншому боці."}, {"question": "Чай ___ цукру.", "options": [{"text": "без", "correct": true}, {"text": "для", "correct": false}, {"text": "коло", "correct": false}], "explanation": "Без цукру означає, що цукру немає."}, {"question": "Час ___ відпочинку.", "options": [{"text": "для", "correct": true}, {"text": "без", "correct": false}, {"text": "біля", "correct": false}], "explanation": "Для відпочинку показує мету."}, {"question": "Автобус стоїть ___ дороги.", "options": [{"text": "коло", "correct": true}, {"text": "без", "correct": false}, {"text": "для", "correct": false}], "explanation": "Коло дороги означає біля дороги."}, {"question": "Аптека ___ лікарні.", "options": [{"text": "біля", "correct": true}, {"text": "для", "correct": false}, {"text": "без", "correct": false}], "explanation": "Біля лікарні показує місце."}]`)} />
 
 ## Для кого? Для чого?
 
@@ -134,6 +173,30 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 На А2 не треба одразу будувати довгі речення. Почніть з коротких
 відповідей: `Для кого? - Для Олени. Для чого? - Для відпочинку.`
 
+### Маленька вправа вголос
+
+Один студент тримає уявний предмет, інший питає:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"А","text":"Для кого ця книжка?"},{"speaker":"Б","text":"Для брата."},{"speaker":"А","text":"Для чого цей зошит?"},{"speaker":"Б","text":"Для навчання."}]')}
+/>
+
+Поміняйте тільки одне слово: `мама`, `сестра`, `Марія`, `група`,
+`урок`, `відпочинок`. Не змінюйте всю рамку. Так форма родового
+відмінка тренується без зайвої мовної втоми.
+
+Порівняйте два значення `для`:
+
+| Питання | Приклад | Що маємо на увазі |
+| --- | --- | --- |
+| для кого? | подарунок для мами | одержувач |
+| для чого? | час для відпочинку | мета або призначення |
+
+Обидва варіанти використовують той самий прийменник і той самий
+відмінок. Змінюється тільки ситуація.
+
 ## Без кого? Без чого?
 
 `Без` показує відсутність або нестачу.
@@ -168,6 +231,36 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 Вони корисні як готові блоки. Запам'ятайте їх цілими.
 
+### Без: від їжі до плану
+
+`Без` легко тренувати в побутових фразах. Почніть з їжі:
+
+> Кава без цукру.
+>
+> Чай без молока.
+>
+> Салат без солі.
+
+Потім перейдіть до речей у сумці:
+
+> Я без карти.
+>
+> Вона без парасольки.
+>
+> Ми без ліхтарика.
+
+Нарешті скажіть про допомогу або проблему:
+
+> Без допомоги важко.
+>
+> Без сумніву, це правильна адреса.
+>
+> Без проблем, я зачекаю.
+
+Це три рівні, але граматична рамка одна: `без` плюс родовий. Якщо
+речення довше, спочатку знайдіть маленьку частину з `без`, а вже потім
+читайте решту.
+
 ### Родовий після прийменника
 
 <FillIn client:only='react' items={JSON.parse(`[{"sentence": "Це подарунок для ___.", "answer": "мами", "options": ["мами", "мама", "маму"]}, {"sentence": "Кава без ___.", "answer": "цукру", "options": ["цукру", "цукор", "цукром"]}, {"sentence": "Зупинка біля ___.", "answer": "школи", "options": ["школи", "школа", "школу"]}, {"sentence": "Банк навпроти ___.", "answer": "вокзалу", "options": ["вокзалу", "вокзал", "вокзалом"]}, {"sentence": "Ми без ___.", "answer": "карти", "options": ["карти", "карта", "карту"]}, {"sentence": "Місце для ___.", "answer": "намету", "options": ["намету", "намет", "наметом"]}, {"sentence": "Коло ___ росте дерево.", "answer": "хати", "options": ["хати", "хата", "хату"]}, {"sentence": "Аптека біля ___.", "answer": "лікарні", "options": ["лікарні", "лікарня", "лікарню"]}]`)} />
@@ -179,7 +272,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Біля
 
-`Біля` - найпоширеніший безпечний варіант для "near/by".
+`Біля` - найпоширеніший безпечний варіант для місця поруч.
 
 > Аптека біля ринку.
 >
@@ -217,6 +310,33 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 Але `коло` часто трапляється в піснях, літературі і живих регіональних
 контекстах.
 
+### Орієнтир і позиція
+
+Коли описуєте місто або табір, спершу назвіть орієнтир. Орієнтир - це
+місце, відносно якого ви пояснюєте позицію: школа, ринок, річка,
+лікарня, бібліотека.
+
+Потім виберіть прийменник:
+
+| Позиція | Прийменник | Приклад |
+| --- | --- | --- |
+| поруч | біля | біля школи |
+| на іншому боці | навпроти | навпроти бібліотеки |
+| поруч, часто розмовно або образно | коло | коло хати |
+
+У парі зробіть мінікарту без малюнка. Один студент каже орієнтир,
+інший додає місце:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"А","text":"ринок"},{"speaker":"Б","text":"Кафе біля ринку."},{"speaker":"А","text":"бібліотека"},{"speaker":"Б","text":"Аптека навпроти бібліотеки."}]')}
+/>
+
+Після двох-трьох прикладів поміняйте ролі. Не треба описувати все
+місто. Ціль - автоматично сказати родовий після просторового
+прийменника.
+
 ## Міська карта
 
 Прочитайте опис і знайдіть усі форми родового відмінка.
@@ -238,9 +358,35 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 - `для групи`;
 - `навпроти ринку`.
 
+### Запитання для класу
+
+Відповідайте коротко, але повним українським фрагментом:
+
+> Що є біля вашого дому?
+>
+> Що є навпроти вашої роботи або школи?
+>
+> Без чого ви не виходите з дому?
+>
+> Для кого або для чого у вас цей зошит?
+
+Можливі відповіді:
+
+> Біля мого дому є магазин.
+>
+> Навпроти моєї роботи є парк.
+>
+> Я не виходжу без телефона.
+>
+> Цей зошит для української мови.
+
+Якщо форма після прийменника ще не готова, використайте безпечний
+короткий варіант: `біля дому`, `без телефона`, `для мови`. Довгі
+описи прийдуть пізніше.
+
 ### Ситуація і фраза
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "gift for mother", "right": "подарунок для мами"}, {"left": "coffee without sugar", "right": "кава без цукру"}, {"left": "near the school", "right": "біля школи"}, {"left": "opposite the library", "right": "навпроти бібліотеки"}, {"left": "near the house", "right": "коло хати"}, {"left": "time for rest", "right": "час для відпочинку"}, {"left": "without help", "right": "без допомоги"}, {"left": "near the station", "right": "біля станції"}]`)} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "подарунок, одержувач мама", "right": "подарунок для мами"}, {"left": "кава, цукру немає", "right": "кава без цукру"}, {"left": "місце поруч зі школою", "right": "біля школи"}, {"left": "місце на іншому боці від бібліотеки", "right": "навпроти бібліотеки"}, {"left": "місце поруч із хатою", "right": "коло хати"}, {"left": "час, призначення відпочинок", "right": "час для відпочинку"}, {"left": "допомоги немає", "right": "без допомоги"}, {"left": "місце поруч зі станцією", "right": "біля станції"}]`)} />
 
 ## Типові помилки
 
@@ -264,15 +410,126 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Не змішуйте `біля` і `в/у`
 
-`В школі` означає "inside/at school". `Біля школи` означає "near the
-school".
+`В школі` означає, що людина всередині або на занятті. `Біля школи`
+означає місце поруч зі школою.
 
-> Я в школі. - I am at/in school.
+> Я в школі. - я всередині або на занятті.
 >
-> Я біля школи. - I am near the school.
+> Я біля школи. - я поруч зі школою.
 
 Цей контраст практичний: якщо ви пояснюєте, де зустрітися, різниця
 важлива.
+
+## Контрольована продукція
+
+Складіть коротке повідомлення для групового чату. Використайте всі три
+значення: призначення, відсутність і місце.
+
+Рамка:
+
+> Привіт! Це ... для ...
+>
+> Я буду без ...
+>
+> Зустрічаємося біля ... / навпроти ...
+
+Приклад:
+
+> Привіт! Це ковдра для Олени.
+>
+> Я буду без карти, але з телефоном.
+>
+> Зустрічаємося біля станції, навпроти бібліотеки.
+
+Це не вільний твір. Це контрольована продукція: ви берете готові
+частини і змінюєте тільки кілька слів. Перевірте кожну фразу з
+прийменником:
+
+- `для кого?` - для Олени, для групи, для брата;
+- `без чого?` - без карти, без телефона, без ліхтарика;
+- `біля/навпроти чого?` - біля станції, навпроти бібліотеки.
+
+Після цього прочитайте повідомлення вголос. Якщо речення звучить
+занадто довго, розділіть його на два. Добра A2-відповідь може бути
+короткою.
+
+## Форма після прийменника
+
+У цьому модулі багато жіночих іменників: `мама`, `річка`, `дорога`,
+`карта`, `лікарня`, `станція`, `площа`, `бібліотека`. Після прийменника
+вони часто мають закінчення `-и` або `-і`:
+
+| Називний | Після прийменника |
+| --- | --- |
+| мама | для мами |
+| річка | біля річки |
+| дорога | навпроти дороги |
+| карта | без карти |
+| лікарня | біля лікарні |
+| станція | біля станції |
+| площа | біля площі |
+| бібліотека | навпроти бібліотеки |
+
+Не потрібно виводити правило для кожної групи самостійно. На А2
+корисно тренувати пари вголос. Спочатку словникова форма, потім фраза:
+`карта - без карти`, `станція - біля станції`, `бібліотека - навпроти
+бібліотеки`.
+
+Для чоловічих і середніх іменників також використовуйте готові пари:
+
+> ліхтарик - без ліхтарика;
+>
+> намет - для намету;
+>
+> будинок - біля будинку;
+>
+> навчання - для навчання.
+
+Коли в реченні є одразу два прийменники, розбивайте його на частини:
+
+> Я без карти, але біля станції.
+
+Перша частина: `без карти`. Друга частина: `біля станції`. Так довше
+речення залишається зрозумілим.
+
+## Мінідіалог перед зошитом
+
+Працюйте за ролями. Один студент планує зустріч, інший уточнює.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"А","text":"Де зустрічаємося?"},{"speaker":"Б","text":"Біля станції."},{"speaker":"А","text":"Це навпроти бібліотеки?"},{"speaker":"Б","text":"Ні, біля площі."},{"speaker":"А","text":"Що взяти?"},{"speaker":"Б","text":"Ліхтарик для групи. Без ліхтарика буде темно."}]')}
+/>
+
+Тепер замініть тільки кілька місць: `станція`, `бібліотека`, `площа`,
+`ліхтарик`, `група`. Якщо клас працює з учителем, учитель може показати
+форму перед тим, як студент говорить повне речення.
+
+### Швидка самоперевірка
+
+Перед зошитом закрийте таблиці й завершіть фрази усно:
+
+> Для кого ця річ? - Для ...
+>
+> Без чого важко? - Без ...
+>
+> Де зустрічаємося? - Біля ...
+>
+> Що на іншому боці? - Навпроти ...
+
+Після кожної відповіді назвіть тільки форму після прийменника:
+`мами`, `ліхтарика`, `станції`, `бібліотеки`. Якщо ви назвали
+словникову форму, поверніться до пари в таблиці і повторіть її тричі.
+Це коротка, але корисна підготовка до письмових вправ.
+
+Додатково зробіть один власний рядок про клас: `Зошит для ...`,
+`Я без ...`, `Стілець біля ...`. Учитель або партнер перевіряє тільки
+слово після прийменника, не весь стиль речення.
+Якщо рядок правильний, додайте другий із новим прийменником. Так ви
+бачите, що система повторюється в різних ситуаціях: річ, людина, місце,
+відсутність.
+Працюйте повільно й точно.
 
 ## 📋 Підсумок
 
@@ -298,24 +555,24 @@ school".
 </TabItem>
 <TabItem label="Словник">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"призначення","translation":"purpose, intended use","pos":"noun","gender":"n","example":"Для показує призначення.","examples":["purpose, intended use","Для показує призначення."]},{"word":"мета","translation":"goal, purpose","pos":"noun","gender":"f","example":"Для навчання - це мета.","examples":["goal, purpose","Для навчання - це мета."]},{"word":"відпочинок","translation":"rest, relaxation","pos":"noun","gender":"m","example":"У мене є час для відпочинку.","examples":["rest, relaxation","У мене є час для відпочинку."]},{"word":"допомога","translation":"help, assistance","pos":"noun","gender":"f","example":"Без допомоги важко.","examples":["help, assistance","Без допомоги важко."]},{"word":"сумнів","translation":"doubt","pos":"noun","gender":"m","example":"Без сумніву, це правильно.","examples":["doubt","Без сумніву, це правильно."]},{"word":"будинок","translation":"building, house","pos":"noun","gender":"m","example":"Я стою біля будинку.","examples":["building, house","Я стою біля будинку."]},{"word":"зупинка","translation":"stop (bus or tram)","pos":"noun","gender":"f","example":"Зупинка біля школи.","examples":["stop (bus or tram)","Зупинка біля школи."]},{"word":"бібліотека","translation":"library","pos":"noun","gender":"f","example":"Кафе навпроти бібліотеки.","examples":["library","Кафе навпроти бібліотеки."]},{"word":"лікарня","translation":"hospital","pos":"noun","gender":"f","example":"Аптека біля лікарні.","examples":["hospital","Аптека біля лікарні."]},{"word":"площа","translation":"square (city)","pos":"noun","gender":"f","example":"Станція біля площі.","examples":["square (city)","Станція біля площі."]},{"word":"станція","translation":"station","pos":"noun","gender":"f","example":"Я біля станції метро.","examples":["station","Я біля станції метро."]},{"word":"навчання","translation":"studying, education","pos":"noun","gender":"n","example":"Цей зошит для навчання.","examples":["studying, education","Цей зошит для навчання."]},{"word":"церква","translation":"church","pos":"noun","gender":"f","example":"Музей навпроти церкви.","examples":["church","Музей навпроти церкви."]},{"word":"вокзал","translation":"train station","pos":"noun","gender":"m","example":"Банк навпроти вокзалу.","examples":["train station","Банк навпроти вокзалу."]},{"word":"річка","translation":"river","pos":"noun","gender":"f","example":"Намет біля річки.","examples":["river","Намет біля річки."]},{"word":"ліхтарик","translation":"flashlight","pos":"noun","gender":"m","example":"Без ліхтарика темно.","examples":["flashlight","Без ліхтарика темно."]},{"word":"ковдра","translation":"blanket","pos":"noun","gender":"f","example":"Ця ковдра для Олени.","examples":["blanket","Ця ковдра для Олени."]},{"word":"намет","translation":"tent","pos":"noun","gender":"m","example":"Намет стоїть біля річки.","examples":["tent","Намет стоїть біля річки."]},{"word":"дорога","translation":"road","pos":"noun","gender":"f","example":"Не ставте намет навпроти дороги.","examples":["road","Не ставте намет навпроти дороги."]},{"word":"карта","translation":"map","pos":"noun","gender":"f","example":"Я без карти.","examples":["map","Я без карти."]}]`)} title="Словник" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"призначення","translation":"purpose, intended use","pos":"noun","gender":"n","example":"Для показує призначення.","examples":["purpose, intended use","Для показує призначення."]},{"word":"мета","translation":"goal, purpose","pos":"noun","gender":"f","example":"Для навчання - це мета.","examples":["goal, purpose","Для навчання - це мета."]},{"word":"відпочинок","translation":"rest, relaxation","pos":"noun","gender":"m","example":"У мене є час для відпочинку.","examples":["rest, relaxation","У мене є час для відпочинку."]},{"word":"допомога","translation":"help, assistance","pos":"noun","gender":"f","example":"Без допомоги важко.","examples":["help, assistance","Без допомоги важко."]},{"word":"сумнів","translation":"doubt","pos":"noun","gender":"m","example":"Без сумніву, це правильно.","examples":["doubt","Без сумніву, це правильно."]},{"word":"будинок","translation":"building, house","pos":"noun","gender":"m","example":"Я стою біля будинку.","examples":["building, house","Я стою біля будинку."]},{"word":"зупинка","translation":"stop (bus or tram)","pos":"noun","gender":"f","example":"Зупинка біля школи.","examples":["stop (bus or tram)","Зупинка біля школи."]},{"word":"бібліотека","translation":"library","pos":"noun","gender":"f","example":"Кафе навпроти бібліотеки.","examples":["library","Кафе навпроти бібліотеки."]},{"word":"лікарня","translation":"hospital","pos":"noun","gender":"f","example":"Аптека біля лікарні.","examples":["hospital","Аптека біля лікарні."]},{"word":"площа","translation":"square (city)","pos":"noun","gender":"f","example":"Станція біля площі.","examples":["square (city)","Станція біля площі."]},{"word":"станція","translation":"station","pos":"noun","gender":"f","example":"Я біля станції метро.","examples":["station","Я біля станції метро."]},{"word":"навчання","translation":"studying, education","pos":"noun","gender":"n","example":"Цей зошит для навчання.","examples":["studying, education","Цей зошит для навчання."]},{"word":"церква","translation":"church","pos":"noun","gender":"f","example":"Музей навпроти церкви.","examples":["church","Музей навпроти церкви."]},{"word":"вокзал","translation":"train station","pos":"noun","gender":"m","example":"Банк навпроти вокзалу.","examples":["train station","Банк навпроти вокзалу."]},{"word":"річка","translation":"river","pos":"noun","gender":"f","example":"Намет біля річки.","examples":["river","Намет біля річки."]},{"word":"ліхтарик","translation":"flashlight","pos":"noun","gender":"m","example":"Без ліхтарика темно.","examples":["flashlight","Без ліхтарика темно."]},{"word":"ковдра","translation":"blanket","pos":"noun","gender":"f","example":"Ця ковдра для Олени.","examples":["blanket","Ця ковдра для Олени."]},{"word":"намет","translation":"tent","pos":"noun","gender":"m","example":"Намет стоїть біля річки.","examples":["tent","Намет стоїть біля річки."]},{"word":"дорога","translation":"road","pos":"noun","gender":"f","example":"Не ставте намет навпроти дороги.","examples":["road","Не ставте намет навпроти дороги."]},{"word":"карта","translation":"map","pos":"noun","gender":"f","example":"Я без карти.","examples":["map","Я без карти."]},{"word":"орієнтир","translation":"landmark, reference point","pos":"noun","gender":"m","example":"Школа - це орієнтир для зустрічі.","examples":["landmark, reference point","Школа - це орієнтир для зустрічі."]},{"word":"табір","translation":"camp","pos":"noun","gender":"m","example":"Табір буде біля річки.","examples":["camp","Табір буде біля річки."]},{"word":"вогонь","translation":"fire","pos":"noun","gender":"m","example":"Ми сидимо коло вогню.","examples":["fire","Ми сидимо коло вогню."]},{"word":"телефон","translation":"phone","pos":"noun","gender":"m","example":"Я не виходжу без телефона.","examples":["phone","Я не виходжу без телефона."]}]`)} title="Словник" />
 
-<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"призначення","back":"purpose, intended use"},{"front":"мета","back":"goal, purpose"},{"front":"відпочинок","back":"rest, relaxation"},{"front":"допомога","back":"help, assistance"},{"front":"сумнів","back":"doubt"},{"front":"будинок","back":"building, house"},{"front":"зупинка","back":"stop (bus or tram)"},{"front":"бібліотека","back":"library"},{"front":"лікарня","back":"hospital"},{"front":"площа","back":"square (city)"},{"front":"станція","back":"station"},{"front":"навчання","back":"studying, education"},{"front":"церква","back":"church"},{"front":"вокзал","back":"train station"},{"front":"річка","back":"river"},{"front":"ліхтарик","back":"flashlight"},{"front":"ковдра","back":"blanket"},{"front":"намет","back":"tent"},{"front":"дорога","back":"road"},{"front":"карта","back":"map"}]`)} />
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"призначення","back":"purpose, intended use"},{"front":"мета","back":"goal, purpose"},{"front":"відпочинок","back":"rest, relaxation"},{"front":"допомога","back":"help, assistance"},{"front":"сумнів","back":"doubt"},{"front":"будинок","back":"building, house"},{"front":"зупинка","back":"stop (bus or tram)"},{"front":"бібліотека","back":"library"},{"front":"лікарня","back":"hospital"},{"front":"площа","back":"square (city)"},{"front":"станція","back":"station"},{"front":"навчання","back":"studying, education"},{"front":"церква","back":"church"},{"front":"вокзал","back":"train station"},{"front":"річка","back":"river"},{"front":"ліхтарик","back":"flashlight"},{"front":"ковдра","back":"blanket"},{"front":"намет","back":"tent"},{"front":"дорога","back":"road"},{"front":"карта","back":"map"},{"front":"орієнтир","back":"landmark, reference point"},{"front":"табір","back":"camp"},{"front":"вогонь","back":"fire"},{"front":"телефон","back":"phone"}]`)} />
 
 </TabItem>
 <TabItem label="Зошит">
 
 ### Для, без чи біля?
 
-*(див. урок, §Діалог: збираємося в похід)*
+*(див. урок, §Помітьте перед правилом)*
 
 ### Родовий після прийменника
 
-*(див. урок, §Без кого? Без чого?)*
+*(див. урок, §Без: від їжі до плану)*
 
 ### Ситуація і фраза
 
-*(див. урок, §Міська карта)*
+*(див. урок, §Запитання для класу)*
 
 ### Значення прийменників
 
@@ -329,6 +586,14 @@ school".
 
 <FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я живу ___ школи.", "answer": "біля", "options": ["біля", "без", "для"]}, {"sentence": "Це зошит ___ навчання.", "answer": "для", "options": ["для", "без", "навпроти"]}, {"sentence": "Я п'ю чай ___ цукру.", "answer": "без", "options": ["без", "біля", "для"]}, {"sentence": "Кафе ___ ринку.", "answer": "навпроти", "options": ["навпроти", "без", "для"]}, {"sentence": "Ми сидимо ___ вогню.", "answer": "коло", "options": ["коло", "без", "для"]}, {"sentence": "Це важливо ___ мене.", "answer": "для", "options": ["для", "біля", "без"]}, {"sentence": "Я прийшов ___ карти.", "answer": "без", "options": ["без", "навпроти", "коло"]}, {"sentence": "Зупинка ___ лікарні.", "answer": "біля", "options": ["біля", "без", "для"]}]`)} />
 
+### Виправте форму після прийменника
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильний варіант короткої фрази." items={JSON.parse(`[{"sentence": "ковдра для Олена", "errorWord": "Олена", "correctForm": "ковдра для Олени", "options": ["ковдра для Олени", "ковдра для Олена"], "explanation": "Для Олени - родовий відмінок."}, {"sentence": "без ліхтарик темно", "errorWord": "ліхтарик", "correctForm": "без ліхтарика темно", "options": ["без ліхтарика темно", "без ліхтарик темно"], "explanation": "Без ліхтарика - правильна форма."}, {"sentence": "намет біля річка", "errorWord": "річка", "correctForm": "намет біля річки", "options": ["намет біля річки", "намет біля річка"], "explanation": "Біля річки - родовий відмінок."}, {"sentence": "кафе навпроти бібліотека", "errorWord": "бібліотека", "correctForm": "кафе навпроти бібліотеки", "options": ["кафе навпроти бібліотеки", "кафе навпроти бібліотека"], "explanation": "Навпроти бібліотеки - правильна форма."}, {"sentence": "я прийшов без карта", "errorWord": "карта", "correctForm": "я прийшов без карти", "options": ["я прийшов без карти", "я прийшов без карта"], "explanation": "Без карти - родовий відмінок."}, {"sentence": "місце для намет", "errorWord": "намет", "correctForm": "місце для намету", "options": ["місце для намету", "місце для намет"], "explanation": "Для намету - правильна фраза."}]`)} />
+
+### Повідомлення для групи
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Це / ковдра / для / Олени", "answer": "Це ковдра для Олени."}, {"jumbled": "Ми / не / поїдемо / без / ліхтарика", "answer": "Ми не поїдемо без ліхтарика."}, {"jumbled": "Намет / стоїть / біля / річки", "answer": "Намет стоїть біля річки."}, {"jumbled": "Кафе / навпроти / бібліотеки", "answer": "Кафе навпроти бібліотеки."}, {"jumbled": "Я / стою / біля / станції / метро", "answer": "Я стою біля станції метро."}, {"jumbled": "Це / важливо / для / нашої / групи", "answer": "Це важливо для нашої групи."}]`)} />
+
 </TabItem>
 <TabItem label="Ресурси">
 
@@ -337,7 +602,7 @@ school".
 **📝 Статті:**
 - 📄 [Dobra Forma: Genitive Case after Prepositions біля, після, для and без](https://opentext.ku.edu/dobraforma/chapter/7-2/) — Practice page directly aligned to для, без, біля, and після.
 - 📄 [Talk Ukrainian: Ukrainian prepositions](https://talkukrainian.com/prepositions/) — Short learner-facing guide to common Ukrainian prepositions.
-- 📄 [ULP: Genitive Case (Родовий відмінок](https://www.ukrainianlessons.com/genitive-case/) — Reference for genitive forms and common genitive contexts.
+- 📄 [ULP: Genitive Case (Родовий відмінок)](https://www.ukrainianlessons.com/genitive-case/) — Reference for genitive forms and common genitive contexts.
 - 📄 [ULP: Prepositions and Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Learner-facing overview of Ukrainian prepositions and the cases they require.
 :::
 

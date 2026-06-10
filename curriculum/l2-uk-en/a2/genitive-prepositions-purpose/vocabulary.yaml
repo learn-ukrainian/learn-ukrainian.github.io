@@ -98,3 +98,23 @@
   pos: noun
   gender: f
   example: "Я без карти."
+- word: орієнтир
+  translation: landmark, reference point
+  pos: noun
+  gender: m
+  example: "Школа - це орієнтир для зустрічі."
+- word: табір
+  translation: camp
+  pos: noun
+  gender: m
+  example: "Табір буде біля річки."
+- word: вогонь
+  translation: fire
+  pos: noun
+  gender: m
+  example: "Ми сидимо коло вогню."
+- word: телефон
+  translation: phone
+  pos: noun
+  gender: m
+  example: "Я не виходжу без телефона."

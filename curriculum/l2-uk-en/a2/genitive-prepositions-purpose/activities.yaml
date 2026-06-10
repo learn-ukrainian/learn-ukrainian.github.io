@@ -29,14 +29,14 @@ inline:
     - навпроти
     - без
     - для
-    explanation: Навпроти означає on the opposite side.
+    explanation: Навпроти означає на іншому боці.
     question: Кафе ___ бібліотеки.
     correct: 0
   - options:
     - без
     - для
     - коло
-    explanation: Без цукру означає no sugar.
+    explanation: Без цукру означає, що цукру немає.
     question: Чай ___ цукру.
     correct: 0
   - options:
@@ -126,21 +126,21 @@ inline:
   title: Ситуація і фраза
   instruction: Зіставте ситуацію з природною фразою.
   pairs:
-  - left: gift for mother
+  - left: подарунок, одержувач мама
     right: подарунок для мами
-  - left: coffee without sugar
+  - left: кава, цукру немає
     right: кава без цукру
-  - left: near the school
+  - left: місце поруч зі школою
     right: біля школи
-  - left: opposite the library
+  - left: місце на іншому боці від бібліотеки
     right: навпроти бібліотеки
-  - left: near the house
+  - left: місце поруч із хатою
     right: коло хати
-  - left: time for rest
+  - left: час, призначення відпочинок
     right: час для відпочинку
-  - left: without help
+  - left: допомоги немає
     right: без допомоги
-  - left: near the station
+  - left: місце поруч зі станцією
     right: біля станції
 - id: act-4
   type: group-sort
@@ -254,3 +254,91 @@ workbook:
     - без
     - для
     explanation: Біля лікарні показує місце.
+- type: error-correction
+  title: Виправте форму після прийменника
+  instruction: Оберіть правильний варіант короткої фрази.
+  items:
+  - sentence: ковдра для Олена
+    error: Олена
+    correction: ковдра для Олени
+    options:
+    - ковдра для Олени
+    - ковдра для Олена
+    explanation: Для Олени - родовий відмінок.
+  - sentence: без ліхтарик темно
+    error: ліхтарик
+    correction: без ліхтарика темно
+    options:
+    - без ліхтарика темно
+    - без ліхтарик темно
+    explanation: Без ліхтарика - правильна форма.
+  - sentence: намет біля річка
+    error: річка
+    correction: намет біля річки
+    options:
+    - намет біля річки
+    - намет біля річка
+    explanation: Біля річки - родовий відмінок.
+  - sentence: кафе навпроти бібліотека
+    error: бібліотека
+    correction: кафе навпроти бібліотеки
+    options:
+    - кафе навпроти бібліотеки
+    - кафе навпроти бібліотека
+    explanation: Навпроти бібліотеки - правильна форма.
+  - sentence: я прийшов без карта
+    error: карта
+    correction: я прийшов без карти
+    options:
+    - я прийшов без карти
+    - я прийшов без карта
+    explanation: Без карти - родовий відмінок.
+  - sentence: місце для намет
+    error: намет
+    correction: місце для намету
+    options:
+    - місце для намету
+    - місце для намет
+    explanation: Для намету - правильна фраза.
+- type: unjumble
+  title: Повідомлення для групи
+  instruction: Поставте слова в природний порядок.
+  items:
+  - words:
+    - Це
+    - ковдра
+    - для
+    - Олени
+    answer: Це ковдра для Олени.
+  - words:
+    - Ми
+    - не
+    - поїдемо
+    - без
+    - ліхтарика
+    answer: Ми не поїдемо без ліхтарика.
+  - words:
+    - Намет
+    - стоїть
+    - біля
+    - річки
+    answer: Намет стоїть біля річки.
+  - words:
+    - Кафе
+    - навпроти
+    - бібліотеки
+    answer: Кафе навпроти бібліотеки.
+  - words:
+    - Я
+    - стою
+    - біля
+    - станції
+    - метро
+    answer: Я стою біля станції метро.
+  - words:
+    - Це
+    - важливо
+    - для
+    - нашої
+    - групи
+    answer: Це важливо для нашої групи.
