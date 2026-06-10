@@ -97,3 +97,42 @@
   translation: to bother, concern
   pos: verb
   example: "Що вас турбує?"
+- word: горло
+  translation: throat
+  pos: noun
+  gender: n
+  example: "У мене болить горло."
+- word: біль
+  translation: pain
+  pos: noun
+  gender: m
+  example: "Таблетки від головного болю."
+- word: краплі
+  translation: drops
+  pos: noun
+  gender: pl
+  example: "Мені потрібні краплі від нежитю."
+- word: холод
+  translation: cold
+  pos: noun
+  gender: m
+  example: "Горло болить від холоду."
+- word: їжа
+  translation: food, meal
+  pos: noun
+  gender: f
+  example: "Приймайте після їжі."
+- word: вода
+  translation: water
+  pos: noun
+  gender: f
+  example: "Пийте багато води."
+- word: пакет
+  translation: bag, packet
+  pos: noun
+  gender: m
+  example: "Пакета не треба."
+- word: приймати
+  translation: to take
+  pos: verb
+  example: "Приймайте після їжі."
