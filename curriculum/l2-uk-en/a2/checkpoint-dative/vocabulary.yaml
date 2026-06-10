@@ -1,0 +1,110 @@
+- word: давальний відмінок
+  translation: dative case
+  pos: noun
+  gender: m
+  example: "Давальний відмінок відповідає на питання кому? чому?"
+- word: мені
+  translation: to me
+  pos: pron
+  example: "Мені подобається цей чай."
+- word: тобі
+  translation: to you
+  pos: pron
+  example: "Тобі потрібен бланк."
+- word: йому
+  translation: to him
+  pos: pron
+  example: "Йому двадцять сім років."
+- word: їй
+  translation: to her
+  pos: pron
+  example: "Їй подобається книжка."
+- word: нам
+  translation: to us
+  pos: pron
+  example: "Нам допомагають у відділенні."
+- word: вам
+  translation: to you (plural/formal)
+  pos: pron
+  example: "Вам потрібен новий бланк."
+- word: їм
+  translation: to them
+  pos: pron
+  example: "Їм надсилають листа."
+- word: допомагати
+  translation: to help
+  pos: verb
+  example: "Я допомагаю сестрі."
+- word: дякувати
+  translation: to thank
+  pos: verb
+  example: "Я дякую вчительці."
+- word: подобатися
+  translation: to be pleasing to, to like
+  pos: verb
+  example: "Мені подобається ця нова послуга."
+- word: надіслати
+  translation: to send
+  pos: verb
+  example: "Я хочу надіслати посилку подрузі."
+- word: подарувати
+  translation: to give as a gift
+  pos: verb
+  example: "Я хочу подарувати книжку братові."
+- word: потрібно
+  translation: necessary, needed
+  pos: adv
+  example: "Мені потрібно заповнити бланк."
+- word: холодно
+  translation: cold
+  pos: adv
+  example: "Мені холодно біля вікна."
+- word: телефонувати
+  translation: to call
+  pos: verb
+  example: "Я телефоную братові."
+- word: років
+  translation: years
+  pos: noun
+  gender: m
+  example: "Мені двадцять шість років."
+- word: пошта
+  translation: post office
+  pos: noun
+  gender: f
+  example: "На пошті тихо."
+- word: відділення
+  translation: branch, office
+  pos: noun
+  gender: n
+  example: "У відділенні є бланки."
+- word: лист
+  translation: letter
+  pos: noun
+  gender: m
+  example: "Я надсилаю листа сестрі."
+- word: посилка
+  translation: parcel, package
+  pos: noun
+  gender: f
+  example: "Посилка для колеги вже готова."
+- word: працівник
+  translation: worker, staff member
+  pos: noun
+  gender: m
+  example: "Працівникові потрібна допомога."
+- word: вчителька
+  translation: teacher (female)
+  pos: noun
+  gender: f
+  example: "Моїй новій вчительці дякують."
+- word: подруга
+  translation: female friend
+  pos: noun
+  gender: f
+  example: "Я телефоную своїй подрузі."
+- word: колега
+  translation: colleague
+  pos: noun
+  gender: m
+  example: "Новому колезі потрібна адреса."
