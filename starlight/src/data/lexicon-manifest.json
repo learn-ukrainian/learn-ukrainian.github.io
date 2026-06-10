@@ -39,7 +39,22 @@
           "slug": "sounds-letters-and-hello",
           "context": "plan_required"
         }
-      ]
+      ],
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "wiktionary",
+            "ref": "47317",
+            "word": "до побачення",
+            "detail": "до побачення. Значення: вигук під час розставання"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
+      }
     },
     {
       "lemma": "Добрий вечір",
@@ -55,7 +70,15 @@
           "slug": "sounds-letters-and-hello",
           "context": "plan_required"
         }
-      ]
+      ],
+      "heritage_status": {
+        "classification": "unknown",
+        "attestations": [],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
+      }
     },
     {
       "lemma": "Добрий день",
@@ -71,7 +94,15 @@
           "slug": "sounds-letters-and-hello",
           "context": "plan_required"
         }
-      ]
+      ],
+      "heritage_status": {
+        "classification": "unknown",
+        "attestations": [],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
+      }
     },
     {
       "lemma": "Доброго ранку",
@@ -87,7 +118,15 @@
           "slug": "sounds-letters-and-hello",
           "context": "plan_required"
         }
-      ]
+      ],
+      "heritage_status": {
+        "classification": "unknown",
+        "attestations": [],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
+      }
     },
     {
       "lemma": "На все добре",
@@ -103,7 +142,15 @@
           "slug": "sounds-letters-and-hello",
           "context": "plan_recommended"
         }
-      ]
+      ],
+      "heritage_status": {
+        "classification": "unknown",
+        "attestations": [],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
+      }
     },
     {
       "lemma": "Рада тебе бачити",
@@ -119,7 +166,15 @@
           "slug": "sounds-letters-and-hello",
           "context": "plan_recommended"
         }
-      ]
+      ],
+      "heritage_status": {
+        "classification": "unknown",
+        "attestations": [],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
+      }
     },
     {
       "lemma": "Радий тебе бачити",
@@ -135,7 +190,15 @@
           "slug": "sounds-letters-and-hello",
           "context": "plan_recommended"
         }
-      ]
+      ],
+      "heritage_status": {
+        "classification": "unknown",
+        "attestations": [],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
+      }
     },
     {
       "lemma": "вмиватися",
@@ -311,6 +374,20 @@
         "sources": [
           "VESUM"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "вмиватися",
+            "detail": "lemma match (37 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -351,6 +428,20 @@
           "VESUM",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "вранці",
+            "detail": "lemma match (1 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -384,6 +475,25 @@
           "Грінченко (1907)",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "вчителька",
+            "detail": "lemma match (15 forms)"
+          },
+          {
+            "source": "VESUM",
+            "ref": "учителька",
+            "detail": "lemma match (15 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -486,6 +596,20 @@
           "Вікісловник",
           "Грінченко (1907)"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "вікно",
+            "detail": "lemma match (15 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -520,6 +644,30 @@
           "Вікісловник",
           "Грінченко (1907)"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "він",
+            "detail": "lemma match (14 forms)"
+          },
+          {
+            "source": "VESUM",
+            "ref": "вона",
+            "detail": "lemma match (10 forms)"
+          },
+          {
+            "source": "VESUM",
+            "ref": "воно",
+            "detail": "lemma match (8 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -721,6 +869,20 @@
           "Грінченко (1907)",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "голосний",
+            "detail": "lemma match (56 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -823,6 +985,20 @@
           "Вікісловник",
           "Грінченко (1907)"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "дзеркало",
+            "detail": "lemma match (15 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -872,6 +1048,20 @@
           "Грінченко (1907)",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "добре",
+            "detail": "lemma match (1 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -991,6 +1181,20 @@
           "ЕСУМ, т. 2, с. 90",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "дім",
+            "detail": "lemma match (17 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -1175,6 +1379,20 @@
           "VESUM",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "збиратися",
+            "detail": "lemma match (37 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -1289,6 +1507,20 @@
           "Вікісловник",
           "Грінченко (1907)"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "звук",
+            "detail": "lemma match (34 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -1402,6 +1634,20 @@
           "Вікісловник",
           "ЕСУМ, т. 2, с. 278"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "зошит",
+            "detail": "lemma match (18 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -1543,6 +1789,20 @@
           "Грінченко (1907)",
           "ЕСУМ, т. 4, с. 441"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "йти",
+            "detail": "lemma match (24 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -1646,6 +1906,20 @@
           "Грінченко (1907)",
           "ЕСУМ, т. 3, с. 62"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "кава",
+            "detail": "lemma match (14 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -1759,6 +2033,20 @@
           "Грінченко (1907)",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "ключ",
+            "detail": "lemma match (18 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -1859,6 +2147,20 @@
           "Вікісловник",
           "Грінченко (1907)"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "книга",
+            "detail": "lemma match (14 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -1967,6 +2269,20 @@
           "VESUM",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "комп'ютер",
+            "detail": "lemma match (18 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -2073,6 +2389,20 @@
           "ЕСУМ, т. 3, с. 97",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "крісло",
+            "detail": "lemma match (15 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -2175,6 +2505,20 @@
           "Грінченко (1907)",
           "ЕСУМ, т. 2, с. 444"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "кімната",
+            "detail": "lemma match (14 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -2273,6 +2617,20 @@
           "Вікісловник",
           "ЕСУМ, т. 3, с. 187"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "лампа",
+            "detail": "lemma match (14 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -2373,6 +2731,20 @@
           "Вікісловник",
           "Грінченко (1907)"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "ліжко",
+            "detail": "lemma match (14 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -2474,6 +2846,20 @@
           "Грінченко (1907)",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "лікарка",
+            "detail": "lemma match (15 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -2580,6 +2966,20 @@
           "Грінченко (1907)",
           "ЕСУМ, т. 3, с. 268"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "літера",
+            "detail": "lemma match (14 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -2707,6 +3107,20 @@
           "Грінченко (1907)",
           "ЕСУМ, т. 3, с. 374"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "мама",
+            "detail": "lemma match (19 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -2779,6 +3193,20 @@
           "Вікісловник",
           "Грінченко (1907)"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "молоко",
+            "detail": "lemma match (8 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -2972,6 +3400,20 @@
           "Грінченко (1907)",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "навчатися",
+            "detail": "lemma match (37 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -3020,6 +3462,20 @@
           "Вікісловник",
           "Грінченко (1907)"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "нарешті",
+            "detail": "lemma match (1 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -3060,6 +3516,20 @@
           "VESUM",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "нормально",
+            "detail": "lemma match (1 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -3177,6 +3647,20 @@
           "Грінченко (1907)",
           "ЕСУМ, т. 3, с. 169"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "ніс",
+            "detail": "lemma match (18 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -3366,6 +3850,20 @@
           "Грінченко (1907)",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "одягатися",
+            "detail": "lemma match (37 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -3495,6 +3993,20 @@
           "Грінченко (1907)",
           "ЕСУМ, т. 4, с. 176"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "око",
+            "detail": "lemma match (21 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -3684,6 +4196,20 @@
           "Грінченко (1907)",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "повертатися",
+            "detail": "lemma match (37 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -3825,6 +4351,20 @@
           "Грінченко (1907)",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "поспішати",
+            "detail": "lemma match (24 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -3874,6 +4414,20 @@
           "Грінченко (1907)",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "потім",
+            "detail": "lemma match (1 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -3988,6 +4542,20 @@
           "ЕСУМ, т. 4, с. 568",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "привіт",
+            "detail": "lemma match (17 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -4151,6 +4719,20 @@
           "VESUM",
           "Вікісловник"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "приголосний",
+            "detail": "lemma match (47 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -4340,6 +4922,20 @@
           "Грінченко (1907)",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "прокидатися",
+            "detail": "lemma match (37 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -4385,6 +4981,20 @@
           "Грінченко (1907)",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "пізно",
+            "detail": "lemma match (1 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -4401,7 +5011,15 @@
           "slug": "my-morning",
           "context": "built_vocabulary"
         }
-      ]
+      ],
+      "heritage_status": {
+        "classification": "unknown",
+        "attestations": [],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
+      }
     },
     {
       "lemma": "робота",
@@ -4502,6 +5120,20 @@
           "Вікісловник",
           "Грінченко (1907)"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "робота",
+            "detail": "lemma match (14 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -4594,6 +5226,20 @@
           "VESUM",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "рутина",
+            "detail": "lemma match (14 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -4691,6 +5337,20 @@
           "Грінченко (1907)",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "ручка",
+            "detail": "lemma match (14 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -4833,6 +5493,20 @@
           "ЕСУМ, т. 5, с. 333",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "снідати",
+            "detail": "lemma match (24 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -5015,6 +5689,20 @@
           "Грінченко (1907)",
           "ЕСУМ, т. 5, с. 304"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "сон",
+            "detail": "lemma match (51 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -5063,6 +5751,20 @@
           "Вікісловник",
           "Грінченко (1907)"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "спочатку",
+            "detail": "lemma match (1 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -5186,6 +5888,20 @@
           "Грінченко (1907)",
           "ЕСУМ, т. 5, с. 418"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "стіл",
+            "detail": "lemma match (19 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -5301,6 +6017,20 @@
           "Вікісловник",
           "Грінченко (1907)"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "стілець",
+            "detail": "lemma match (18 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -5403,6 +6133,20 @@
           "ЕСУМ, т. 5, с. 418",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "стіна",
+            "detail": "lemma match (14 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -5506,6 +6250,20 @@
           "Грінченко (1907)",
           "ЕСУМ, т. 5, с. 461"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "субота",
+            "detail": "lemma match (14 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -5598,6 +6356,20 @@
           "VESUM",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "сумка",
+            "detail": "lemma match (14 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -5614,7 +6386,21 @@
           "slug": "my-morning",
           "context": "built_vocabulary"
         }
-      ]
+      ],
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "сьомий,сім",
+            "detail": "word_form match for lemma query"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
+      }
     },
     {
       "lemma": "тато",
@@ -5744,6 +6530,20 @@
           "ЕСУМ, т. 5, с. 526",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "тато",
+            "detail": "lemma match (20 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -5857,6 +6657,20 @@
           "VESUM",
           "Вікісловник"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "телефон",
+            "detail": "lemma match (19 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -6008,6 +6822,20 @@
           "ЕСУМ, т. 6, с. 124",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "фото",
+            "detail": "lemma match (29 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -6058,6 +6886,20 @@
           "Грінченко (1907)",
           "СУМ-11"
         ]
+      },
+      "heritage_status": {
+        "classification": "standard",
+        "attestations": [
+          {
+            "source": "VESUM",
+            "ref": "чудово",
+            "detail": "lemma match (1 forms)"
+          }
+        ],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
       }
     },
     {
@@ -6074,7 +6916,15 @@
           "slug": "sounds-letters-and-hello",
           "context": "plan_required"
         }
-      ]
+      ],
+      "heritage_status": {
+        "classification": "unknown",
+        "attestations": [],
+        "is_russianism": false,
+        "russian_shadow": false,
+        "sovietization_risk": 0,
+        "calque_warning": null
+      }
     }
   ],
   "enrichment_generated": true
