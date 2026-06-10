@@ -1,226 +1,309 @@
-# Звуки, літери та привіт
+# Sounds, Letters, and Hello
 
-**Приві́т!** Сьогодні ви почуєте перші українські звуки, побачите
-перші літери й скажете коротке привітання.
+You do not need to read Ukrainian yet. This English-led module uses Ukrainian in small chunks so you can listen, repeat, notice, and use the first phrases safely.
 
-Починаємо повільно: **слухаємо**, **дивимося**, **повторюємо**,
-а потім говоримо одну готову фразу.
+By the end, you can:
 
-| Українська опора | Meaning |
+- say hello, goodbye, and a simple "How are you?";
+- answer with **До́бре**, **Чудо́во**, or **Норма́льно**;
+- ask and answer a name question;
+- explain the difference between a sound and a letter;
+- recognize all 33 Ukrainian letters at first-pass level;
+- know what **склад** means before the workbook asks you to count syllables;
+- avoid the first pronunciation traps: blurred **о**, confusing **и** and **і**, adding a sound after **ь**, and turning final voiced consonants into voiceless ones.
+
+## Sound First, Letter Second
+
+Keep this rule in mind from the first minute:
+
+| You hear and say | You see and write |
 | --- | --- |
-| **звук** | sound |
-| **лі́тера** | letter |
-| **абе́тка** | the alphabet |
+| a **sound** | a **letter** |
+| **звук** - sound | **лі́тера** - letter |
 
-Працюємо в такому порядку:
+A **sound** belongs to your ear and mouth. A **letter** belongs to your eyes and hand.
 
-1. **слу́хай** — listen;
-2. **диви́сь** — look;
-3. **повтори́** — repeat;
-4. **скажи́** — say it.
+Three numbers matter in Ukrainian:
 
-На сьогодні достатньо кількох надійних опор: **звук**, **лі́тера**,
-**ма́ма**, **молоко́**, **Приві́т** і **До́брий день**.
-
-## Звук і лі́тера
-
-**звук** — те, що ми чуємо й вимовляємо.
-
-**лі́тера** — те, що ми бачимо й пишемо.
-
-Не плутайте ці дві опори:
-
-| Я ба́чу | Я чу́ю |
+| Fact | Meaning |
 | --- | --- |
-| **лі́тера А** | **[а]** |
-| **лі́тера М** | **[м]** |
-| **лі́тера О** | **[о]** |
+| **33 letters** | the Ukrainian alphabet, or **абе́тка** |
+| **38 sounds** | what speakers actually hear and say |
+| **6 vowel sounds** | the open sounds you can sing |
 
-Українська абе́тка має **33 лі́тери**. У мовленні звуків більше,
-бо деякі літери можуть позначати більше ніж один звук або змінювати
-сусідній звук.
+The numbers are not the same because some letters do more than one job. For example:
 
-Три перші підказки:
+- **Я, Ю, Є, Ї** can point to more than one sound.
+- **Ь** is the soft sign. It has no sound of its own.
+- Many consonants can be hard or soft.
 
-- **Я, Ю, Є, Ї** іноді позначають **й + голосний**.
-- **Ь** не має власного звука; він пом'якшує попередній приголосний.
-- **Щ** тут читаємо як **[шч]**.
+Say this rule aloud:
+
+**Звук = I hear it. Лі́тера = I see it.**
+
+:::tip
+Start with the six clean vowel sounds: **[а] [о] [у] [е] [и] [і]**. They are the course's **heartbeat** (**серцебиття**) because every Ukrainian **склад** needs a vowel sound. Short **відеоуроки** help you see the mouth shape, especially the narrow smile for **[і]** and rounded lips for **[у]**.
+:::
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
-## Голосні звуки
+## Your First Word
 
-**[а] [о] [у] [е] [и] [і]** — шість простих голосних звуків.
+Your first word is:
 
-**Голосни́й звук** — vowel sound. Голосний відкритий, його легко
-проспівати.
+**Приві́т!** - Hi!
 
-Прості голосні літери:
+Use **Приві́т!** with classmates, friends, family, or someone your age. Treat it as one whole chunk today.
 
-**А О У Е И І**
+Say it slowly:
 
-Перше правило для читання:
+**При-ві́т**
 
-**one vowel sound = one склад** — один голосний звук = один склад
+Now notice the pieces:
 
-| Слово́ | Голосні звуки | Склади́ |
+| Letter | Sound | Type |
 | --- | --- | --- |
-| **ма́ма** | **а + а** | 2 |
-| **молоко́** | **о + о + о** | 3 |
-| **Приві́т** | **и + і** | 2 |
-| **о́ко** | **о + о** | 2 |
+| **П** | [п] | consonant |
+| **р** | [р] | consonant |
+| **и** | [и] | vowel |
+| **в** | [в] | consonant |
+| **і** | [і] | vowel |
+| **т** | [т] | consonant |
 
-Важлива звичка: вимовляйте **о** чітко. У слові **молоко́** кожне
-**о** залишається **о**.
+So **Приві́т** has two vowel sounds and four consonant sounds.
+
+## Six Vowel Sounds, Ten Letters
+
+Ukrainian has six basic vowel sounds:
+
+**[а] [о] [у] [е] [и] [і]**
+
+A vowel sound is open. Your voice passes through without a block. You can hold it and sing it:
+
+- **а-а-а**
+- **о-о-о**
+- **у-у-у**
+- **і-і-і**
+
+There are six vowel sounds, but ten letters that can mark vowel sounds:
+
+| Simple vowel letters | Special vowel letters |
+| --- | --- |
+| **А О У Е И І** | **Я Ю Є Ї** |
+
+Do not worry about mastering **Я, Ю, Є, Ї** yet. For now, know their job:
+
+- **Я** can sound like **[йа]** or soften a previous consonant and mark **[а]**.
+- **Ю** can sound like **[йу]** or soften a previous consonant and mark **[у]**.
+- **Є** can sound like **[йе]** or soften a previous consonant and mark **[е]**.
+- **Ї** is special: it is always **[йі]**.
+
+Three useful words:
+
+| Word | Meaning | What to notice |
+| --- | --- | --- |
+| **ма́ма** | mother | two **а** sounds |
+| **молоко́** | milk | three clean **о** sounds |
+| **Приві́т** | hi | **и** and **і** are different sounds |
+
+Important habit: Ukrainian **о** stays clean. In **молоко́**, each **о** is still **о**. Say **мо-ло-ко́**, not a blurred English-style vowel.
+
+## What Is a Склад?
+
+A **склад** is a syllable. In Ukrainian, every syllable needs a vowel sound. That is why vowels are the "heart" of a syllable.
+
+Use this simple beginner rule:
+
+**Count vowel sounds = count syllables.**
+
+| Word | Vowel sounds | Syllables |
+| --- | --- | --- |
+| **день** | **е** | 1 склад |
+| **ма́ма** | **а + а** | 2 склади |
+| **Приві́т** | **и + і** | 2 склади |
+| **молоко́** | **о + о + о** | 3 склади |
+
+Now the workbook can ask you about **склади** because you know the idea: find the vowel sounds first.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
-## При́голосні звуки
+## Consonant Sounds
 
-**[м] [п] [т] [н]** — чотири прості приголосні звуки.
+A consonant sound uses a small block or contact in the mouth: lips, teeth, tongue, or throat.
 
-**При́голосний звук** — consonant sound. Приголосний має маленьку
-перешкоду в роті: губи, зуби, язик або горло.
+Try four:
 
-Спершу відчуйте звук:
+- **[м]** - close your lips and hum.
+- **[п]** - close your lips and release without humming.
+- **[т]** - touch your tongue behind your teeth.
+- **[н]** - touch your tongue and let sound pass through your nose.
 
-| Звук | Підказка для вимови |
+Ukrainian has 32 consonant sounds and 22 letters that usually mark consonants. Some consonants have hard and soft versions. You do not need the full system today, but you do need three first clues:
+
+Vowels give a syllable its voice. Consonants build the clear **architecture** (**архітектура**) around that voice: lips, teeth, tongue, or throat make the shape.
+
+| Sign or letter | Beginner meaning |
 | --- | --- |
-| **[м]** | закрийте губи й промовте звук через ніс |
-| **[п]** | закрийте губи й коротко відкрийте |
-| **[т]** | торкніться язиком місця за зубами |
-| **[н]** | пустіть звук через ніс |
+| **Ь ь** | **м'який знак**; no sound of its own |
+| **Г г** | Ukrainian h-like sound |
+| **Ґ ґ** | hard **g** sound |
+| **Щ щ** | two sounds together: **[шч]** |
 
-Розберімо слово **Приві́т**:
+Example:
 
-| Лі́тера | Що це? |
-| --- | --- |
-| **П** | приголосний |
-| **Р** | приголосний |
-| **И** | голосний |
-| **В** | приголосний |
-| **І** | голосний |
-| **Т** | приголосний |
+**день** - day
 
-У слові **Приві́т** є **2 голосні звуки** й **4 приголосні звуки**.
+The final **ь** does not add a new vowel. It tells you to make **н** soft.
 
-<!-- INJECT_ACTIVITY: act-3 -->
+The letters **Я, Ю, Є** are graphic **chameleons** (**хамелеони**): at the start of a word they can show **[й] + vowel**, but after a consonant they can point to softness plus one vowel. **Ї** is the strict exception: always **[йі]**.
 
-## Абетка: перше знайомство
+## Full Alphabet Pronunciation Pass
 
-**А, Б, В... Я** — повна українська абетка.
+This is your first full pass through the alphabet. The goal is not to memorize everything today. The goal is to see every letter, hear a model, and repeat once.
 
-Не треба вивчати всі 33 літери за один раз. Спершу впізнавайте
-форму літери, слухайте звук і повторюйте коротке слово.
-
-Повна абетка:
+The alphabet order is:
 
 **А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я**
 
-Перші опори:
+Use the pronunciation practice below for all 33 letters. Listen first, then repeat the letter and the example word.
 
-| Лі́тера | Звук | Слово |
-| --- | --- | --- |
-| А | [а] | анана́с |
-| М | [м] | ма́ма |
-| О | [о] | о́ко |
-| П | [п] | піт |
-| Т | [т] | та́то |
-| І | [і] | ім'я́ |
-| И | [и] | сир |
-| Ь | немає власного звука | день |
+<!-- INJECT_ACTIVITY: act-3 -->
 
-У вправі нижче можна послухати всі літери по черзі. Відео потрібні
-тільки для слухання й повторення; не завантажуйте й не перевикористовуйте
-чужий аудіоматеріал.
+## Stress: Наголос
 
-**Друк і зошит** — впізнавання друкованих і рукописних форм.
+The little mark in **Приві́т** is the stress mark. Ukrainian stress is called **на́голос**.
 
-Спершу впізнавайте форму, а вже потім пишіть самостійно. Використовуйте
-текст цього уроку, власний зошит або живий почерк викладача. Не копіюйте
-чужі рукописні зразки.
+Stress tells you which syllable is strongest:
 
-| Друк | Зошит: підказка | Дія |
-| --- | --- | --- |
-| **П п** | викладач пише **п** від руки | знайдіть **П** |
-| **М м** | викладач пише **м** від руки | знайдіть **М** |
-| **Приві́т** | у зошиті написано **приві́т** | знайдіть слово |
-| **ма́ма** | у зошиті написано **ма́ма** | знайдіть слово |
-
-<!-- INJECT_ACTIVITY: act-4 -->
-
-## Приві́т: перші привітання
-
-**Приві́т!** — Hi!
-
-Спершу вчіть ці привітання як готові фрази. Граматика зачекає.
-
-| Українська | Meaning |
+| Word | How to say it |
 | --- | --- |
-| **Приві́т!** | Hi! |
-| **До́брий день!** | Hello / good day |
-| **До́брого ра́нку!** | Good morning |
-| **До́брий ве́чір!** | Good evening |
-| **До поба́чення!** | Goodbye |
-| **На все до́бре!** | All the best |
+| **Приві́т** | stress on **ві́т** |
+| **ма́ма** | stress on the first **ма́** |
+| **молоко́** | stress on **ко́** |
+| **До́брий день** | stress on **До́-** |
 
-Спершу прочитайте український діалог:
+Sometimes stress changes meaning. You do not need to use these words yet, but notice the pattern:
+
+| Stress | Meaning |
+| --- | --- |
+| **за́мок** | castle |
+| **замо́к** | lock |
+| **бра́ти** | brothers |
+| **брати́** | to take |
+
+For this course, new Ukrainian words usually show stress so you know what to say aloud.
+
+## Euphony: У/В and І/Й
+
+Ukrainian likes smooth sound flow. This is called **милозву́чність**. At A1, you only need to recognize two common pairs:
+
+| Pair | Beginner idea |
+| --- | --- |
+| **у / в** | Ukrainian may choose the smoother one for the sounds around it |
+| **і / й** | Ukrainian may choose the smoother one for the sounds around it |
+
+You do not need to choose them alone yet. Just notice the idea: Ukrainian often avoids heavy sound piles.
+
+## Your First Conversation
+
+Learn these as whole phrases.
+
+| Ukrainian | English | Use |
+| --- | --- | --- |
+| **Приві́т!** | Hi! | informal |
+| **До́брий день!** | Hello! / Good day! | neutral |
+| **До́брого ра́нку!** | Good morning! | morning |
+| **До́брий ве́чір!** | Good evening! | evening |
+| **Як спра́ви?** | How are you? | friendly |
+| **До́бре.** | Fine. | simple answer |
+| **Чудо́во.** | Great. | positive answer |
+| **Норма́льно.** | Okay. | neutral answer |
+| **А у тебе́?** | And you? | after **Як спра́ви?** |
+| **Як тебе́ зва́ти?** | What is your name? | informal |
+| **Ме́не зва́ти Анна.** | My name is Anna. | name answer |
+| **А тебе́?** | And you? | after a name question |
+| **До поба́чення!** | Goodbye! | leaving |
+| **На все до́бре!** | All the best! | friendly goodbye |
+
+Read the dialogue. Then say it aloud twice: once as Anna, once as Marko.
 
 ```text
-О́ля: Приві́т!
-Тара́с: Приві́т!
-О́ля: Як спра́ви?
-Тара́с: До́бре.
-О́ля: А у тебе́?
-Тара́с: Чудо́во!
+А́нна: Приві́т!
+Марко́: Приві́т!
+А́нна: Як спра́ви?
+Марко́: До́бре. А у тебе́?
+А́нна: Чудо́во.
 ```
 
-Підтримка англійською після діалогу:
+Support after the dialogue:
 
-| Українська | Meaning |
+| Ukrainian | English |
 | --- | --- |
-| **Як спра́ви?** | How are you? |
-| **До́бре.** | Fine / good. |
-| **А у тебе́?** | And you? |
-| **Чудо́во!** | Great! |
+| **А́нна: Приві́т!** | Anna: Hi! |
+| **Марко́: Приві́т!** | Marko: Hi! |
+| **А́нна: Як спра́ви?** | Anna: How are you? |
+| **Марко́: До́бре. А у тебе́?** | Marko: Fine. And you? |
+| **А́нна: Чудо́во.** | Anna: Great. |
 
-Після **Як спра́ви?** відповідаємо **А у тебе́?**. Коли питаємо ім'я,
-використовуємо **А тебе́?**
+Now read the name exchange.
 
 ```text
 Марко́: Як тебе́ зва́ти?
-Софі́я: Мене́ зва́ти Софі́я. А тебе́?
-Марко́: Мене́ зва́ти Марко́.
+Софія: Ме́не зва́ти Софія. А тебе́?
+Марко́: Ме́не зва́ти Марко́.
 ```
 
-Підтримка англійською після діалогу:
+Support after the name exchange:
 
-| Українська | Meaning |
+| Ukrainian | English |
 | --- | --- |
-| **Як тебе́ зва́ти?** | What is your name? |
-| **Мене́ зва́ти...** | My name is... |
-| **А тебе́?** | And you? |
+| **Марко́: Як тебе́ зва́ти?** | Marko: What is your name? |
+| **Софія: Ме́не зва́ти Софія. А тебе́?** | Sofia: My name is Sofia. And you? |
+| **Марко́: Ме́не зва́ти Марко́.** | Marko: My name is Marko. |
 
-Дві готові фрази також показують стать мовця:
+Use **А у тебе́?** after **Як спра́ви?** because you are asking about the other person's state. Use **А тебе́?** after **Як тебе́ зва́ти?** because you are asking for the other person's name.
 
-| Хто говорить | Фраза |
-| --- | --- |
-| чоловік | **Радий тебе́ ба́чити.** |
-| жінка | **Рада тебе́ ба́чити.** |
+You may also hear:
+
+| Ukrainian | English | Who says it? |
+| --- | --- | --- |
+| **Радий тебе бачити.** | Glad to see you. | a male speaker |
+| **Рада тебе бачити.** | Glad to see you. | a female speaker |
+
+Do not build grammar from this yet. Just notice that Ukrainian sometimes changes a word depending on who is speaking: use **Радий тебе бачити** if the speaker is male, and **Рада тебе бачити** if the speaker is female.
+
+The word **Привіт** is useful for your first tiny sound analysis down to the details (**на гвинтики**): **П-р-и-в-і-т**, four consonant sounds and two vowel sounds.
 
 <!-- INJECT_ACTIVITY: act-5 -->
 
-## Звички першого місяця
+## First Pronunciation Traps
 
-Тримайте цей урок малим і точним:
+Use these as safety checks:
 
-1. Вимовляйте **о** чітко в слові **молоко́**.
-2. Слухайте різницю між **и** та **і** в слові **Приві́т**.
-3. Пам'ятайте: **Ь** не має власного звука.
-4. Спершу впізнавайте друк і зошит, а вже потім пишіть швидко.
-5. Попросіть носія української або викладача послухати **Приві́т**,
-   **До́брий день** та **Мене́ зва́ти...**
+| Trap | Safer habit |
+| --- | --- |
+| Blurring **о** in **молоко́** | Keep every **о** clean: **мо-ло-ко́** |
+| Mixing **и** and **і** | In **Приві́т**, **и** and **і** are different |
+| Pronouncing **ь** as a separate sound | In **день**, **ь** only softens **н** |
+| Saying final voiced consonants as voiceless | Keep the written voiced sound; do not automatically devoice it |
+| Treating **Ї** like **І** | **Ї** is **[йі]** |
+| Mixing **Г** and **Ґ** | **Г** is h-like; **Ґ** is hard **g** |
 
-Закінчіть одним надійним рядком:
+Keep Ukrainian sound categories independent. Do not use another language as the shortcut for **И**, **Е**, **О**, or **Г**. Use the Ukrainian mouth model here: **И** has its own position, unstressed **О** stays **О**, **Добрий день** is the neutral greeting, **Привіт** is the everyday informal greeting, and **Г** is the Ukrainian h-like sound.
 
-**Приві́т! Як тебе́ зва́ти? Мене́ зва́ти Анна. А тебе́?**
+<!-- INJECT_ACTIVITY: act-6 -->
+
+## Textbook Check
+
+Before you leave the lesson tab, check that you can do these things:
+
+- Point to **Приві́т** and say "Hi."
+- Point to **До поба́чення** and say "Goodbye."
+- Answer **Як спра́ви?** with **До́бре**, **Чудо́во**, or **Норма́льно**.
+- Say whether **звук** means "sound" or "letter."
+- Say whether **лі́тера** means "sound" or "letter."
+- Explain **склад** in English.
+- Count the vowel sounds in **Приві́т**.
+- Recognize **Г**, **Ґ**, **Ї**, and **Ь** when the workbook asks for them.
+
+The workbook repeats the same ideas in different ways. It is practice for eyes, ears, and mouth.
