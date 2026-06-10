@@ -1,0 +1,162 @@
+inline:
+- id: act-1
+  type: match-up
+  title: Називний і давальний
+  instruction: Зіставте займенник із формою давального відмінка.
+  pairs:
+  - left: я
+    right: мені
+  - left: ти
+    right: тобі
+  - left: він
+    right: йому
+  - left: вона
+    right: їй
+  - left: ми
+    right: нам
+  - left: ви
+    right: вам
+  - left: вони
+    right: їм
+  - left: воно
+    right: йому
+- id: act-2
+  type: fill-in
+  title: Кому?
+  instruction: Оберіть правильну форму давального займенника.
+  items:
+  - sentence: "Дай ___, будь ласка, ручку."
+    answer: мені
+    options: [мене, мені, я]
+    explanation: Дати кому? - мені.
+  - sentence: "Я напишу ___ завтра."
+    answer: тобі
+    options: [тебе, тобі, ти]
+    explanation: Написати кому? - тобі.
+  - sentence: "Покажіть ___ карту."
+    answer: нам
+    options: [нас, нам, ми]
+    explanation: Показати кому? - нам.
+  - sentence: "Мама дзвонить ___."
+    answer: їй
+    options: [її, їй, вона]
+    explanation: Дзвонити кому? - їй.
+  - sentence: "Учитель каже ___ правду."
+    answer: вам
+    options: [вас, вам, ви]
+    explanation: Казати кому? - вам.
+  - sentence: "Ми даруємо ___ квіти."
+    answer: їм
+    options: [їх, їм, вони]
+    explanation: Дарувати кому? - їм.
+  - sentence: "Сестра допомагає ___."
+    answer: йому
+    options: [його, йому, він]
+    explanation: Допомагати кому? - йому.
+  - sentence: "Поясни ___ ще раз."
+    answer: мені
+    options: [мене, мені, я]
+    explanation: Пояснити кому? - мені.
+- id: act-3
+  type: quiz
+  title: Стан людини
+  instruction: Оберіть природну фразу з давальним відмінком.
+  items:
+  - question: "I am cold."
+    options:
+    - "Мені холодно."
+    - "Я холодно."
+    - "Мене холодно."
+    correct: 0
+    explanation: Стан часто має модель давальний + прислівник.
+  - question: "She is interested."
+    options:
+    - "Їй цікаво."
+    - "Її цікаво."
+    - "Вона цікаво."
+    correct: 0
+    explanation: Їй відповідає на питання кому?
+  - question: "We need a ticket."
+    options:
+    - "Нам потрібен квиток."
+    - "Нас потрібен квиток."
+    - "Ми потрібен квиток."
+    correct: 0
+    explanation: Кому потрібен? - нам.
+  - question: "They are bored."
+    options:
+    - "Їм нудно."
+    - "Їх нудно."
+    - "Вони нудно."
+    correct: 0
+    explanation: Їм нудно - безособова конструкція.
+- id: act-4
+  type: group-sort
+  title: Тобі чи тебе?
+  instruction: Розсортуйте фрази за відмінком займенника.
+  groups:
+  - label: "давальний: кому?"
+    items:
+    - кажу тобі
+    - пишу тобі
+    - дзвоню їй
+    - допомагаю нам
+  - label: "знахідний: кого?"
+    items:
+    - бачу тебе
+    - знаю її
+    - чекаю вас
+    - зустрічаю їх
+workbook:
+- type: true-false
+  title: Перевірка давального
+  instruction: Визначте, чи правильно побудовано речення.
+  items:
+  - statement: "Мені холодно."
+    correct: true
+    explanation: Це правильна безособова конструкція.
+  - statement: "Я кажу тебе."
+    correct: false
+    explanation: "Потрібно: Я кажу тобі."
+  - statement: "Дай мені воду."
+    correct: true
+    explanation: Мені - одержувач.
+  - statement: "Він дзвонить її."
+    correct: false
+    explanation: "Потрібно: Він дзвонить їй."
+  - statement: "Нам цікаво."
+    correct: true
+    explanation: Нам - давальний займенник.
+  - statement: "Вони бачать нам."
+    correct: false
+    explanation: "Після бачити тут потрібен знахідний: нас."
+  - statement: "Покажіть їм фото."
+    correct: true
+    explanation: Показати кому? - їм.
+  - statement: "Тобі потрібно відпочити."
+    correct: true
+    explanation: Тобі потрібно - природна A2 фраза.
+- type: error-correction
+  title: Виправ форму
+  instruction: Оберіть правильний варіант речення.
+  items:
+  - sentence: "Я пишу тебе повідомлення."
+    error: "тебе"
+    correction: "Я пишу тобі повідомлення."
+    options: ["Я пишу тобі повідомлення.", "Я пишу тебе повідомлення."]
+    explanation: Писати кому? - тобі.
+  - sentence: "Її холодно."
+    error: "Її"
+    correction: "Їй холодно."
+    options: ["Їй холодно.", "Її холодно."]
+    explanation: Для стану потрібен давальний займенник.
+  - sentence: "Покажи нас фото."
+    error: "нас"
+    correction: "Покажи нам фото."
+    options: ["Покажи нам фото.", "Покажи нас фото."]
+    explanation: Показати кому? - нам.
+  - sentence: "Я бачу тобі."
+    error: "тобі"
+    correction: "Я бачу тебе."
+    options: ["Я бачу тебе.", "Я бачу тобі."]
+    explanation: Бачити кого? - тебе.

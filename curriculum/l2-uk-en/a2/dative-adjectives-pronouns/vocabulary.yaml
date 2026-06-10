@@ -1,0 +1,78 @@
+- word: прикметник
+  translation: adjective
+  pos: noun
+  gender: m
+  example: "Прикметник узгоджується з іменником."
+- word: присвійний
+  translation: possessive
+  pos: adj
+  example: "Мій - це присвійний займенник."
+- word: вказівний
+  translation: demonstrative
+  pos: adj
+  example: "Цей - це вказівний займенник."
+- word: узгодження
+  translation: agreement
+  pos: noun
+  gender: n
+  example: "Узгодження потрібне у повній фразі."
+- word: моєму
+  translation: to my
+  pos: pron
+  example: "Я пишу моєму братові."
+- word: моїй
+  translation: to my
+  pos: pron
+  example: "Я дзвоню моїй сестрі."
+- word: твоєму
+  translation: to your
+  pos: pron
+  example: "Дякую твоєму другові."
+- word: твоїй
+  translation: to your
+  pos: pron
+  example: "Допоможи твоїй подрузі."
+- word: нашому
+  translation: to our
+  pos: pron
+  example: "Ми пишемо нашому вчителеві."
+- word: нашій
+  translation: to our
+  pos: pron
+  example: "Ми допомагаємо нашій вчительці."
+- word: цьому
+  translation: to this
+  pos: pron
+  example: "Поясніть цьому студентові."
+- word: цій
+  translation: to this
+  pos: pron
+  example: "Допоможіть цій студентці."
+- word: тому
+  translation: to that
+  pos: pron
+  example: "Я напишу тому колезі завтра."
+- word: тій
+  translation: to that
+  pos: pron
+  example: "Подякуйте тій лікарці."
+- word: новому
+  translation: to the new
+  pos: adj
+  example: "Новому колезі потрібна допомога."
+- word: новій
+  translation: to the new
+  pos: adj
+  example: "Новій студентці цікаво."
+- word: старшому
+  translation: to the older
+  pos: adj
+  example: "Я пишу старшому братові."
+- word: іменникова група
+  translation: noun phrase
+  pos: phrase
+  example: "Моєму старшому братові - це іменникова група."
+- word: їхньому
+  translation: to their
+  pos: pron
+  example: "Ми допомагаємо їхньому братові."
