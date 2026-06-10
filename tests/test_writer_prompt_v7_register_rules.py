@@ -102,7 +102,8 @@ def test_writer_prompt_contains_seminar_folk_qg_hardening() -> None:
         "call `mcp__sources__check_russian_shadow` and `mcp__sources__search_style_guide`",
         "Use `аранжування`, not `<!-- bad -->аранжировку<!-- /bad -->`",
         "Put those fragments in blockquotes or the module's verbatim-quote convention",
-        "bare archaic/dialectal folk forms in exposition fail VESUM",
+        "bare unattested archaic/dialectal folk forms in exposition fail",
+        "authentic regional and archaic variants are ENCOURAGED",
     )
 
     for anchor in required:
