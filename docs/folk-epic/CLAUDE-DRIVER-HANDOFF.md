@@ -29,6 +29,24 @@
 
 ## ▶▶▶ SESSION 9 HANDOFF (2026-06-10 — TEXT LAYER MERGED; VESUM WALL BROKEN via slovnyk.me HERITAGE GATE; NOW EMBEDDING PRIMARY TEXTS) — **RESUME HERE**
 
+> **⏱ LATEST STATE (2026-06-10 PM — session rollover):**
+> - **HOLD on kalendarna module re-fire** — gated on the shared **Heritage Attestation Engine** (spec on main:
+>   `docs/best-practices/heritage-attestation-engine.md`, #2907 merged). Orchestrator OWNS the build + APPROVED the
+>   architecture; it is **building NOW** (their `heritage-classifier` + `word-atlas-pages` codex dispatches are
+>   ACTIVE — verify `curl :8765/api/delegate/active`). **Resume trigger = user signals the engine has landed** →
+>   then: review+apply the classifier to `_vesum_gate` (consume, don't duplicate) + exempt verbatim `>` blockquotes
+>   from the VESUM walk → re-fire kalendarna #5 → promote 04 (with source links) → 01 → dumy → queue.
+> - **WHILE WAITING: driving the folk dossier→wiki queue with codex** (user 2026-06-10: "we have lots of codex to
+>   burn"; bakeoff claude-tools vs codex-tools for the folk MODULE writer is DEFERRED to post-engine).
+>   **IN-FLIGHT (review per the proven loop — Claude corpus-hammer re-runs `verify_quote` on a §4 sample before
+>   SHIP, NO auto-merge):** `folk-dossier-zamovliannia-zaklynannia-prymovky` (#03) + `folk-dossier-vesnianky-hayivky`
+>   (#06), both codex/gpt-5.5. Briefs: `/tmp/folk-dossier-<slug>-brief.md` (template = the proven dossier loop).
+> - **QUEUE STATE:** 6 dossiers exist (narodna-kultura, narodni-viruvannia, kalendarna, koliadky, rodynna,
+>   dumy-nevilnytski); **3 have wikis** (kalendarna, koliadky, dumy) → **narodna-kultura / narodni-viruvannia /
+>   rodynna NEED WIKIS** (compile.py --writer gpt-5.5 from a `data/`-bearing checkout, see Session 5 note). Next
+>   dossiers after the 2 in-flight: #07 kupalski-rusalni-pisni, #08 zhnyvarski-obzhynkovi-pisni, #10 vesilni-pisni,
+>   #11 holosinnya, #13 dumy-sotsialno-pobutovi… (`phase-folk-queue.md`).
+
 > **USER GOAL (2026-06-10, explicit):** get module **04 (kalendarna)** rebuilt to the folk-experiential design + verified as the **REFERENCE**, THEN build **01 (koliadky) + the rest** ("when 04 is ready start building 01 and the rest"). Served folk = quality cliff: 04 kalendarna = `linear-phase-4`; **01 koliadky + 19 dumy-lytsarski = OLD April `v6` drafts** (user spotted). Rebuild order: 04 (verify) → 01 → dumy → queue.
 >
 > **🔑 USER INSIGHT (load-bearing):** VESUM is a morphological dictionary and **lacks many authentic archaisms/historisms AND even common modern words** (e.g. `перекличка` ∈ СУМ-20/ВТС but ∉ VESUM). **slovnyk.me is the authority** — verify a flagged folk term in slovnyk.me before treating it as invalid. And: folk modules MUST **quote AND link the original primary texts** ("how will students read them?") — embed verbatim + link the source.
