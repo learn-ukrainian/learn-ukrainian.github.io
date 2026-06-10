@@ -1,0 +1,106 @@
+inline:
+  - id: act-1
+    type: match-up
+    title: Місяць у даті
+    instruction: З'єднайте місяць із формою для дати.
+    pairs:
+      - left: "січень"
+        right: "січня"
+      - left: "лютий"
+        right: "лютого"
+      - left: "березень"
+        right: "березня"
+      - left: "квітень"
+        right: "квітня"
+      - left: "листопад"
+        right: "листопада"
+  - id: act-2
+    type: fill-in
+    title: 1, 2-4, 5+
+    instruction: Оберіть форму іменника після числа.
+    items:
+      - sentence: "один ___"
+        answer: "номер"
+        options: ["номер", "номери", "номерів"]
+        explanation: Після один стоїть називний однини.
+      - sentence: "два ___"
+        answer: "номери"
+        options: ["номер", "номери", "номерів"]
+        explanation: Після два стоїть називний множини.
+      - sentence: "п'ять ___"
+        answer: "номерів"
+        options: ["номер", "номери", "номерів"]
+        explanation: Після п'ять стоїть родовий множини.
+      - sentence: "три ___"
+        answer: "книги"
+        options: ["книга", "книги", "книг"]
+        explanation: Після три стоїть називний множини.
+      - sentence: "шість ___"
+        answer: "книг"
+        options: ["книга", "книги", "книг"]
+        explanation: Після шість стоїть родовий множини.
+  - id: act-3
+    type: quiz
+    title: Заперечення
+    instruction: Оберіть природне заперечення з родовим.
+    items:
+      - prompt: "Я бачу паспорт -> Я не бачу..."
+        options:
+          - text: "паспорта"
+            correct: true
+          - text: "паспорт"
+            correct: false
+        explanation: Родовий - часта модель у запереченні.
+      - prompt: "Вона читає книгу -> Вона не читає..."
+        options:
+          - text: "книги"
+            correct: true
+          - text: "книга"
+            correct: false
+        explanation: Книга переходить у форму книги.
+      - prompt: "Він купив машину -> Він не купив..."
+        options:
+          - text: "машини"
+            correct: true
+          - text: "машина"
+            correct: false
+        explanation: Машина переходить у форму машини.
+  - id: act-4
+    type: group-sort
+    title: Дата, кількість, заперечення
+    instruction: Розподіліть фрази за тим, що вони тренують.
+    groups:
+      - name: "дата"
+        items: ["п'яте березня", "перше січня"]
+      - name: "кількість"
+        items: ["два номери", "п'ять гостей"]
+      - name: "заперечення"
+        items: ["не бачу паспорта", "не читаю книги"]
+workbook:
+  - type: true-false
+    title: Числа і родовий
+    instruction: Визначте, чи правильне кожне твердження.
+    items:
+      - statement: "П'ять гостей uses genitive plural."
+        answer: true
+        explanation: Гостей - це родовий множини.
+      - statement: "Два номери follows the 2-4 pattern."
+        answer: true
+        explanation: Іменник стоїть у називному множини.
+      - statement: "У даті місяць залишається у називному відмінку."
+        answer: false
+        explanation: Українською кажемо п'яте березня.
+  - type: error-correction
+    title: Виправ форму
+    instruction: Оберіть виправлену фразу.
+    items:
+      - sentence: "п'ять номер"
+        error: "номер"
+        correction: "п'ять номерів"
+        options: ["п'ять номерів", "п'ять номер"]
+        explanation: Після п'ять стоїть родовий множини.
+      - sentence: "перше січень"
+        error: "січень"
+        correction: "перше січня"
+        options: ["перше січня", "перше січень"]
+        explanation: Назва місяця в датах стоїть у родовому.

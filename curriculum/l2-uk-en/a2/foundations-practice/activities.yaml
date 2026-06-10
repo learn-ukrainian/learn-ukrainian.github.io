@@ -1,0 +1,94 @@
+inline:
+  - id: act-1
+    type: fill-in
+    title: На ринку
+    instruction: Оберіть правильну фразу кількості.
+    items:
+      - sentence: "Дайте два кілограми ___."
+        answer: "яблук"
+        options: ["яблука", "яблук"]
+        explanation: Фраза кількості потребує родового множини.
+      - sentence: "У нас немає ___."
+        answer: "лимонів"
+        options: ["лимони", "лимонів"]
+        explanation: Немає вимагає родового відмінка.
+      - sentence: "Купіть п'ять ___."
+        answer: "груш"
+        options: ["груші", "груш"]
+        explanation: Після п'ять стоїть родовий множини.
+  - id: act-2
+    type: quiz
+    title: Робив чи зробив?
+    instruction: Оберіть краще дієслово для запитання.
+    items:
+      - prompt: "Що ти робив увечері?"
+        options:
+          - text: "Я писав листа."
+            correct: true
+          - text: "Я написав листа."
+            correct: false
+        explanation: Запитання просить процес.
+      - prompt: "Що ти зробив?"
+        options:
+          - text: "Я написав список."
+            correct: true
+          - text: "Я писав список."
+            correct: false
+        explanation: Запитання просить результат.
+      - prompt: "Я вже..."
+        options:
+          - text: "купив овочі"
+            correct: true
+          - text: "купував овочі"
+            correct: false
+        explanation: Уже вказує на результат.
+  - id: act-3
+    type: match-up
+    title: Питання і відповідь
+    instruction: З'єднайте запитання з відповіддю.
+    pairs:
+      - left: "Чого немає?"
+        right: "Немає серветок."
+      - left: "Скільки гостей?"
+        right: "Десять гостей."
+      - left: "Що ти будеш робити?"
+        right: "Буду готувати салат."
+      - left: "Що ти вже зробив?"
+        right: "Я купив овочі."
+  - id: act-4
+    type: group-sort
+    title: Граматика в діалозі
+    instruction: Розподіліть фрази за граматичним фокусом.
+    groups:
+      - name: "вид"
+        items: ["писав листа", "написав листа", "буду готувати", "приготувала"]
+      - name: "родовий"
+        items: ["немає серветок", "п'ять гостей", "мало овочів", "кілька груш"]
+workbook:
+  - type: true-false
+    title: Практика A2.1
+    instruction: Визначте, чи підходить кожне твердження.
+    items:
+      - statement: "Що ти робив? usually asks about process."
+        answer: true
+        explanation: Тут природний недоконаний вид.
+      - statement: "Немає лимонів is a genitive phrase."
+        answer: true
+        explanation: Лимонів - це родовий множини.
+      - statement: "П'ять лимони is the target A2 form."
+        answer: false
+        explanation: Цільова форма - п'ять лимонів.
+  - type: error-correction
+    title: Виправ діалог
+    instruction: Оберіть виправлене речення.
+    items:
+      - sentence: "У нас немає серветки."
+        error: "серветки"
+        correction: "У нас немає серветок."
+        options: ["У нас немає серветок.", "У нас немає серветки."]
+        explanation: У цій ситуації потрібна відсутність у множині.
+      - sentence: "Я вже готував салат."
+        error: "готував"
+        correction: "Я вже приготував салат."
+        options: ["Я вже приготував салат.", "Я вже готував салат."]
+        explanation: Уже вказує на завершений результат.

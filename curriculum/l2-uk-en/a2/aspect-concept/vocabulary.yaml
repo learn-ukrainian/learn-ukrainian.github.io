@@ -1,0 +1,80 @@
+- word: вид дієслова
+  translation: verb aspect
+  pos: noun
+  example: "Вид дієслова показує, як ми бачимо дію."
+- word: недоконаний вид
+  translation: imperfective aspect
+  pos: noun
+  example: "Недоконаний вид часто показує процес."
+- word: доконаний вид
+  translation: perfective aspect
+  pos: noun
+  example: "Доконаний вид показує завершений результат."
+- word: процес
+  translation: process
+  pos: noun
+  example: "Мене цікавить процес, а не фінал."
+- word: результат
+  translation: result
+  pos: noun
+  example: "Результат уже є: звіт готовий."
+- word: межа
+  translation: boundary, endpoint
+  pos: noun
+  example: "Доконаний вид показує межу дії."
+- word: повторення
+  translation: repetition
+  pos: noun
+  example: "Слово щодня часто сигналізує повторення."
+- word: звичка
+  translation: habit
+  pos: noun
+  example: "Ранкова кава - це моя звичка."
+- word: ракурс
+  translation: angle, perspective
+  pos: noun
+  example: "Вид змінює ракурс, а не тему."
+- word: завершений
+  translation: completed
+  pos: adjective
+  example: "Це вже завершений крок."
+- word: тривалий
+  translation: ongoing, lasting
+  pos: adjective
+  example: "Ми описуємо тривалий процес."
+- word: одноразовий
+  translation: one-time
+  pos: adjective
+  example: "Раптом часто підкреслює одноразовий момент."
+- word: дія
+  translation: action
+  pos: noun
+  example: "Кожна дія має свій аспект."
+- word: фокус
+  translation: focus
+  pos: noun
+  example: "У цьому реченні фокус на результаті."
+- word: контекст
+  translation: context
+  pos: noun
+  example: "Контекст допомагає вибрати правильний вид."
+- word: читати / прочитати
+  translation: to read
+  pos: verb pair
+  example: "Учора я читав статтю, а ввечері прочитав її."
+- word: писати / написати
+  translation: to write
+  pos: verb pair
+  example: "Вона писала лист і нарешті написала його."
+- word: робити / зробити
+  translation: to do, to make
+  pos: verb pair
+  example: "Я робив вправу і за п'ять хвилин зробив її."
+- word: готувати / приготувати
+  translation: to prepare, to cook
+  pos: verb pair
+  example: "Мама готувала суп і швидко приготувала вечерю."
+- word: бачити / побачити
+  translation: to see
+  pos: verb pair
+  example: "Я не бачив повідомлення, але потім побачив його."

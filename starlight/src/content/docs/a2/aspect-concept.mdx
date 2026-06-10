@@ -1,0 +1,397 @@
+---
+title: "Зроблено чи в процесі? Вступ до виду дієслова"
+description: "Концепція доконаного та недоконаного виду"
+sidebar:
+  order: 2
+  label: "02. Зроблено чи в процесі? Вступ до виду дієслова"
+prev: a2-bridge
+next: aspect-in-vocabulary
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import RitualSequencing from '@site/src/components/RitualSequencing';
+import VariantComparison from '@site/src/components/VariantComparison';
+import MotifFormula from '@site/src/components/MotifFormula';
+import PerformanceActivity from '@site/src/components/PerformanceActivity';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import MythBuster from '@site/src/components/MythBuster';
+import HighCultureBridge from '@site/src/components/HighCultureBridge';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+На А1 ми вже говорили про час: `я читаю`, `я читав`, `я буду читати`.
+На А2 з'являється ще одна важлива ідея. Українська питає не тільки
+`коли?`, а й `як саме бачити дію?`
+
+Коли ми говоримо `читати`, ми часто бачимо процес, повторення або
+звичку. Коли ми говоримо `прочитати`, ми бачимо межу і результат.
+Саме це в українській називається `вид дієслова`.
+
+Не треба лякатися терміна. На цьому уроці ми не вчимо всю систему
+одразу. Ми робимо перший крок: помічаємо різницю між процесом і
+результатом, слухаємо контекст і тренуємо найважливіші сигнали.
+
+## Діалог 1 — матч уже закінчився?
+
+Двоє друзів дивляться футбол і коментують те, що бачать на екрані.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Олег","text":"Дивись, наш нападник знову біжить до воріт."},{"speaker":"Ірина","text":"Так, і вся команда зараз грає дуже сміливо."},{"speaker":"Олег","text":"О, він уже вдарив!"},{"speaker":"Ірина","text":"І забив! Тепер рахунок один нуль."},{"speaker":"Олег","text":"Поки він біг і шукав момент, це був процес."},{"speaker":"Ірина","text":"А коли забив, ми вже бачимо результат."}]')}
+/>
+
+У цьому короткому діалозі є дві камери.
+
+- Перша камера показує дію всередині: `біжить`, `грає`, `шукав`.
+- Друга камера показує межу: `вдарив`, `забив`.
+
+Саме між цими двома камерами ми сьогодні й рухаємося.
+
+:::tip[Коротка опора]
+Якщо ви бачите дію зсередини, дуже часто потрібен недоконаний вид.
+Якщо ви бачите вже готовий підсумок, дуже часто потрібен доконаний вид.
+:::
+
+## Що таке вид дієслова?
+
+`Вид` показує, як ми дивимося на дію. Це не новий час. Це новий ракурс.
+
+Порівняйте:
+
+| Речення | Що ми бачимо |
+| --- | --- |
+| Я читав лист. | Процес читання, без уваги до фіналу. |
+| Я прочитав лист. | Лист дочитаний, результат уже є. |
+| Вона писала повідомлення. | Дія тривала певний час. |
+| Вона написала повідомлення. | Повідомлення вже готове. |
+
+Українська дуже любить цю різницю. Тому дієслово часто приходить у
+парі: одна форма показує процес, інша показує результат.
+
+На цьому етапі достатньо трьох питань:
+
+1. Я дивлюся на дію в процесі чи на завершення?
+2. Дія повторюється чи має одну чітку межу?
+3. Для мене зараз головне `що відбувалося` чи `що вийшло`?
+
+Якщо ви вмієте поставити собі ці три питання, ви вже починаєте думати
+по-українськи, а не просто перекладати слово за словом.
+
+### Недоконаний і доконаний
+
+| Вид | Для чого він потрібен |
+| --- | --- |
+| `недоконаний` | процес, звичка, повторення, факт без межі |
+| `доконаний` | один завершений результат, межа, досягнута дія |
+
+Подивіться, як одна і та сама ситуація міняється від виду:
+
+> У суботу я готував вечерю.
+>
+> У суботу я приготував вечерю.
+
+У першому реченні ми дивимося на сам процес. Можливо, говоримо про те,
+чим я займався ввечері. У другому реченні нас цікавить, що вечеря вже
+готова.
+
+Це не дрібна стилістика. Вид змінює смисловий центр речення.
+
+### Процес чи результат?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я довго читав звіт у поїзді.", "options": [{"text": "недоконаний: процес", "correct": true}, {"text": "доконаний: готовий результат", "correct": false}, {"text": "це не про вид дієслова", "correct": false}], "explanation": "Довго показує дію зсередини, як процес."}, {"question": "Після обіду я прочитав звіт.", "options": [{"text": "доконаний: результат", "correct": true}, {"text": "недоконаний: звичка", "correct": false}, {"text": "кличний відмінок", "correct": false}], "explanation": "Прочитав означає, що звіт уже готовий."}, {"question": "Щосуботи ми готуємо вечерю разом.", "options": [{"text": "недоконаний: повторення", "correct": true}, {"text": "доконаний: один крок", "correct": false}, {"text": "майбутній час", "correct": false}], "explanation": "Щосуботи показує звичку й повторення."}, {"question": "Нарешті вона написала відповідь.", "options": [{"text": "доконаний: готовий підсумок", "correct": true}, {"text": "недоконаний: фон", "correct": false}, {"text": "безособова форма", "correct": false}], "explanation": "Нарешті й готова відповідь показують результат."}, {"question": "Коли я вечеряв, мені подзвонили.", "options": [{"text": "недоконаний: процес у фоні", "correct": true}, {"text": "доконаний: межа", "correct": false}, {"text": "умова", "correct": false}], "explanation": "Дія створює фон для іншої події."}, {"question": "Ми швидко купили квитки.", "options": [{"text": "доконаний: крок завершено", "correct": true}, {"text": "недоконаний: звичка", "correct": false}, {"text": "це прикметник", "correct": false}], "explanation": "Купили показує завершену дію з чітким результатом."}]`)} />
+
+## Недоконаний вид: процес, звичка, повторення
+
+Недоконаний вид часто стоїть там, де дія триває, повторюється або
+описує звичний факт.
+
+Подивіться на ці речення:
+
+- `Щоранку я п'ю каву і читаю новини.`
+- `Учора я довго читав звіт.`
+- `Моя колега часто телефонує клієнтам після обіду.`
+- `Ми щоліта їздили до Чернівців.`
+
+У кожному прикладі ми не рахуємо фінальну точку. Нам важливий сам
+рух, повторюваність або картина зсередини.
+
+Особливо часто недоконаний вид дружить із такими словами:
+
+| Маркери | Типове значення |
+| --- | --- |
+| `часто`, `завжди`, `зазвичай`, `щодня` | звичка або повторення |
+| `довго`, `увесь вечір`, `цілий день` | тривалість |
+| `коли`, `поки` | дія всередині іншої ситуації |
+
+Порівняйте:
+
+> Коли я **читав** лист, мені подзвонила сестра.
+
+Тут лист важливий як фон. Ми бачимо людину всередині дії. Речення не
+каже, чи лист дочитаний.
+
+Ще один важливий випадок: загальні факти.
+
+> У нашому офісі всі **пишуть** українською.
+>
+> У неділю ринок **працює** до третьої.
+
+Тут теж не потрібен фінал. Ми описуємо правило або звичну реальність.
+
+### Діалог 2 — чому ти не відповів?
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Софія","text":"Я тобі телефонувала вчора о восьмій."},{"speaker":"Тарас","text":"Я саме готував вечерю й не чув дзвінка."},{"speaker":"Софія","text":"А потім?"},{"speaker":"Тарас","text":"Потім я побачив пропущений виклик і відразу передзвонив."}]')}
+/>
+
+У відповіді Тараса працюють обидва види:
+
+- `готував` показує фон і процес;
+- `побачив`, `передзвонив` показують окремі завершені кроки.
+
+Саме так вид часто працює в реальному мовленні: не окремо, а разом.
+
+## Доконаний вид: межа і результат
+
+Доконаний вид потрібен тоді, коли ми бачимо не середину дії, а її
+досягнуту межу.
+
+Подивіться:
+
+- `Я купив квиток.`
+- `Вона написала листа.`
+- `Ми знайшли потрібну адресу.`
+- `Лікар пояснив план лікування.`
+
+Тут уже є підсумок. Квиток куплений. Лист написаний. Адресу знайдено.
+Пояснення завершене.
+
+Часто доконаний вид зустрічається з такими словами:
+
+| Маркери | Що вони підкреслюють |
+| --- | --- |
+| `уже`, `нарешті` | результат уже настав |
+| `раптом` | одноразова подія в конкретний момент |
+| `відразу`, `одразу` | швидкий завершений крок |
+
+Порівняйте дві фрази:
+
+> Учора я читав статтю про Львів.
+>
+> Учора я прочитав статтю про Львів.
+
+Перше речення відповідає на питання `чим ти займався?`
+Друге речення відповідає на питання `що ти вже зробив?`
+
+Дуже важлива A2-ідея:
+
+:::tip[Обережно з теперішнім часом]
+Доконаний вид не має справжнього теперішнього значення. Форми типу
+`напишу`, `зроблю`, `скажу` дивляться в майбутнє. У цьому модулі нам
+важливо тільки помітити саму ідею межі й результату.
+:::
+
+Тому зараз найзручніше спостерігати доконаний вид у минулому:
+
+- `прочитав`;
+- `зробила`;
+- `сказали`;
+- `відчинив`.
+
+### Де процес, а де межа?
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Я писав лист.", "right": "бачимо сам процес написання"}, {"left": "Я написав лист.", "right": "лист уже готовий"}, {"left": "Вона готувала вечерю.", "right": "дія тривала певний час"}, {"left": "Вона приготувала вечерю.", "right": "вечеря вже готова"}, {"left": "Ми шукали адресу.", "right": "пошук тривав"}, {"left": "Ми побачили адресу.", "right": "результат настав в один момент"}]`)} />
+
+## Пара в контексті: що змінюється насправді?
+
+Коли ми міняємо вид, ми не завжди міняємо факти. Часто ми міняємо
+фокус.
+
+| Контекст | Недоконаний вид | Доконаний вид |
+| --- | --- | --- |
+| лист | `Я писав лист.` | `Я написав лист.` |
+| вечеря | `Мама готувала вечерю.` | `Мама приготувала вечерю.` |
+| книга | `Він читав книгу в потязі.` | `Він прочитав книгу в потязі.` |
+| квартира | `Ми шукали квартиру.` | `Ми знайшли квартиру.` |
+
+Перші три пари дуже прозорі: та сама дія, але різний ракурс.
+Остання пара цікавіша. `Шукали` і `знайшли` пов'язані за змістом, але
+не є прямою видовою парою. Тому на A2 корисно пам'ятати:
+
+- не кожні два близькі дієслова є видовою парою;
+- справжня пара зазвичай тримає той самий базовий зміст;
+- вид змінює не тему, а погляд на дію.
+
+### Коли обидва види можливі
+
+Слова часу самі по собі не вирішують усе.
+
+Подивіться:
+
+> Учора я писав звіт.
+>
+> Учора я написав звіт.
+
+В обох реченнях є `учора`, але смисл різний. Отже, вид визначає не
+слово-маркер окремо, а вся ситуація.
+
+Ще один корисний контраст:
+
+> У неділю ми дивилися серіал.
+>
+> У неділю ми подивилися серіал.
+
+Перше речення може просто описувати вечір. Друге підкреслює, що серіал
+додивилися або завершили як подію.
+
+### Як слухати вид у живій розмові
+
+Коли ви слухаєте українську, не хапайтеся одразу за правило. Спочатку
+слухайте сюжет.
+
+1. Є фон, тривалість або звичка? Часто це недоконаний вид.
+2. Є готовий крок, результат або межа? Часто це доконаний вид.
+3. Є два дієслова поруч? Можливо, одне дає фон, а друге рухає історію.
+
+Такий спосіб слухання дуже допомагає в діалогах, новинах і коротких
+розповідях про день.
+
+### Вибери вид за ситуацією
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Коли Марта ___ суп, я накривав на стіл.", "answer": "готувала", "options": ["готувала", "приготувала"]}, {"sentence": "За двадцять хвилин Марта ___ суп, і ми сіли їсти.", "answer": "приготувала", "options": ["готувала", "приготувала"]}, {"sentence": "Я часто ___ новини перед роботою.", "answer": "читаю", "options": ["читаю", "прочитаю"]}, {"sentence": "Сьогодні вранці я вже ___ новини.", "answer": "прочитав", "options": ["читав", "прочитав"]}, {"sentence": "Увесь вечір ми ___ про подорож.", "answer": "говорили", "options": ["говорили", "сказали"]}, {"sentence": "На зустрічі директор коротко ___ головне рішення.", "answer": "сказав", "options": ["говорив", "сказав"]}]`)} />
+
+## Як не перевантажити себе на A2
+
+Вид дієслова стане великою темою для всього A2 і далі для B1. Тому
+зараз нам не потрібна повна таблиця винятків.
+
+Натомість корисно зробити три прості звички:
+
+1. Записувати нові дієслова парами: `писати / написати`.
+2. У реченні спершу шукати смисл: процес чи результат.
+3. Не панікувати, якщо обидва варіанти знайомі, але контекст ще
+   неясний.
+
+Якщо ви скажете `Учора я читав статтю`, люди зрозуміють вас.
+Якщо ви скажете `Учора я прочитав статтю`, люди теж зрозуміють вас.
+Різниця не в правильності як такій, а в точності погляду.
+
+Саме точність ми й тренуємо.
+
+## 📋 Підсумок
+
+`Недоконаний вид` показує процес, звичку, повторення або дію без уваги
+до фіналу. `Доконаний вид` показує межу, готовий результат і завершений
+крок.
+
+Коли ви сумніваєтеся, поверніться до двох запитань:
+
+- Що тут важливіше: процес чи підсумок?
+- Я дивлюся на дію зсередини чи вже після межі?
+
+У наступному модулі ми підемо далі й побачимо, як видові пари
+записувати в словнику та як вони часто будуються.
+
+### Маркери виду
+
+<GroupSort client:only='react' groups={JSON.parse(`{"частіше недоконаний": ["щодня", "зазвичай", "довго", "коли"], "частіше доконаний": ["нарешті", "раптом", "уже", "відразу"]}`)} />
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"вид дієслова","translation":"verb aspect","pos":"noun","example":"Вид дієслова показує, як ми бачимо дію.","examples":["verb aspect","Вид дієслова показує, як ми бачимо дію."]},{"word":"недоконаний вид","translation":"imperfective aspect","pos":"noun","example":"Недоконаний вид часто показує процес.","examples":["imperfective aspect","Недоконаний вид часто показує процес."]},{"word":"доконаний вид","translation":"perfective aspect","pos":"noun","example":"Доконаний вид показує завершений результат.","examples":["perfective aspect","Доконаний вид показує завершений результат."]},{"word":"процес","translation":"process","pos":"noun","example":"Мене цікавить процес, а не фінал.","examples":["process","Мене цікавить процес, а не фінал."]},{"word":"результат","translation":"result","pos":"noun","example":"Результат уже є: звіт готовий.","examples":["result","Результат уже є: звіт готовий."]},{"word":"межа","translation":"boundary, endpoint","pos":"noun","example":"Доконаний вид показує межу дії.","examples":["boundary, endpoint","Доконаний вид показує межу дії."]},{"word":"повторення","translation":"repetition","pos":"noun","example":"Слово щодня часто сигналізує повторення.","examples":["repetition","Слово щодня часто сигналізує повторення."]},{"word":"звичка","translation":"habit","pos":"noun","example":"Ранкова кава - це моя звичка.","examples":["habit","Ранкова кава - це моя звичка."]},{"word":"ракурс","translation":"angle, perspective","pos":"noun","example":"Вид змінює ракурс, а не тему.","examples":["angle, perspective","Вид змінює ракурс, а не тему."]},{"word":"завершений","translation":"completed","pos":"adjective","example":"Це вже завершений крок.","examples":["completed","Це вже завершений крок."]},{"word":"тривалий","translation":"ongoing, lasting","pos":"adjective","example":"Ми описуємо тривалий процес.","examples":["ongoing, lasting","Ми описуємо тривалий процес."]},{"word":"одноразовий","translation":"one-time","pos":"adjective","example":"Раптом часто підкреслює одноразовий момент.","examples":["one-time","Раптом часто підкреслює одноразовий момент."]},{"word":"дія","translation":"action","pos":"noun","example":"Кожна дія має свій аспект.","examples":["action","Кожна дія має свій аспект."]},{"word":"фокус","translation":"focus","pos":"noun","example":"У цьому реченні фокус на результаті.","examples":["focus","У цьому реченні фокус на результаті."]},{"word":"контекст","translation":"context","pos":"noun","example":"Контекст допомагає вибрати правильний вид.","examples":["context","Контекст допомагає вибрати правильний вид."]},{"word":"читати / прочитати","translation":"to read","pos":"verb pair","example":"Учора я читав статтю, а ввечері прочитав її.","examples":["to read","Учора я читав статтю, а ввечері прочитав її."]},{"word":"писати / написати","translation":"to write","pos":"verb pair","example":"Вона писала лист і нарешті написала його.","examples":["to write","Вона писала лист і нарешті написала його."]},{"word":"робити / зробити","translation":"to do, to make","pos":"verb pair","example":"Я робив вправу і за п'ять хвилин зробив її.","examples":["to do, to make","Я робив вправу і за п'ять хвилин зробив її."]},{"word":"готувати / приготувати","translation":"to prepare, to cook","pos":"verb pair","example":"Мама готувала суп і швидко приготувала вечерю.","examples":["to prepare, to cook","Мама готувала суп і швидко приготувала вечерю."]},{"word":"бачити / побачити","translation":"to see","pos":"verb pair","example":"Я не бачив повідомлення, але потім побачив його.","examples":["to see","Я не бачив повідомлення, але потім побачив його."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"вид дієслова","back":"verb aspect"},{"front":"недоконаний вид","back":"imperfective aspect"},{"front":"доконаний вид","back":"perfective aspect"},{"front":"процес","back":"process"},{"front":"результат","back":"result"},{"front":"межа","back":"boundary, endpoint"},{"front":"повторення","back":"repetition"},{"front":"звичка","back":"habit"},{"front":"ракурс","back":"angle, perspective"},{"front":"завершений","back":"completed"},{"front":"тривалий","back":"ongoing, lasting"},{"front":"одноразовий","back":"one-time"},{"front":"дія","back":"action"},{"front":"фокус","back":"focus"},{"front":"контекст","back":"context"},{"front":"читати / прочитати","back":"to read"},{"front":"писати / написати","back":"to write"},{"front":"робити / зробити","back":"to do, to make"},{"front":"готувати / приготувати","back":"to prepare, to cook"},{"front":"бачити / побачити","back":"to see"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+### Процес чи результат?
+
+*(see lesson, §Недоконаний і доконаний)*
+
+### Де процес, а де межа?
+
+*(see lesson, §Доконаний вид: межа і результат)*
+
+### Вибери вид за ситуацією
+
+*(see lesson, §Як слухати вид у живій розмові)*
+
+### Маркери виду
+
+*(see lesson, §Підсумок)*
+
+### Що говорить вид?
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Недоконаний вид часто показує процес або звичку.", "isTrue": true, "explanation": "Він часто описує дію зсередини або як повторення."}, {"statement": "Доконаний вид у реченні завжди означає теперішній час.", "isTrue": false, "explanation": "Доконані форми зазвичай показують результат і можуть вказувати на майбутнє, не теперішнє."}, {"statement": "Учора може стояти з обома видами.", "isTrue": true, "explanation": "Учора я читав і Учора я прочитав означають різні речі."}, {"statement": "У парі писати / написати змінюється лише стиль, а не смисл.", "isTrue": false, "explanation": "Фокус змінюється з процесу на результат."}, {"statement": "У реальній історії фон часто стоїть у недоконаному виді, а події-результати - у доконаному.", "isTrue": true, "explanation": "Це типова модель для розповіді."}]`)} />
+
+### Виправ фокус
+
+<ErrorCorrection client:only='react' instruction="Оберіть речення, яке краще підходить до контексту." items={JSON.parse(`[{"sentence": "Щодня я прочитаю пошту перед роботою.", "errorWord": "прочитаю", "correctForm": "Щодня я читаю пошту перед роботою.", "options": ["Щодня я читаю пошту перед роботою.", "Щодня я прочитаю пошту перед роботою."], "explanation": "Для звички потрібна недоконана форма."}, {"sentence": "Нарешті я писав заяву.", "errorWord": "писав", "correctForm": "Нарешті я написав заяву.", "options": ["Нарешті я написав заяву.", "Нарешті я писав заяву."], "explanation": "Нарешті вказує на завершений результат."}, {"sentence": "Коли Олена приготувала вечерю, я різав салат.", "errorWord": "приготувала", "correctForm": "Коли Олена готувала вечерю, я різав салат.", "options": ["Коли Олена готувала вечерю, я різав салат.", "Коли Олена приготувала вечерю, я різав салат."], "explanation": "Перша дія є фоновим процесом."}, {"sentence": "Я вже читав цю коротку інструкцію.", "errorWord": "читав", "correctForm": "Я вже прочитав цю коротку інструкцію.", "options": ["Я вже прочитав цю коротку інструкцію.", "Я вже читав цю коротку інструкцію."], "explanation": "Уже підкреслює завершений результат."}]`)} />
+
+### Запитання до ситуації
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Чим ти займався ввечері?", "right": "недоконаний: процес"}, {"left": "Що ти вже зробив?", "right": "доконаний: результат"}, {"left": "Що ти зазвичай робиш після роботи?", "right": "недоконаний: звичка"}, {"left": "Що сталося раптом?", "right": "доконаний: одна подія"}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**📝 Articles:**
+- 📄 [Dobra Forma: Introduction to Verbal Aspect (Prefixed Perfective Verbs](https://opentext.ku.edu/dobraforma/chapter/27-1/) — Guided practice for the first contrast between imperfective and perfective verbs.
+- 📄 [Perfective Verbs](https://www.ukrainianlessons.com/perfective-verbs/) — Adds simple contrasts and extra examples of completed actions.
+- 📄 [Talk Ukrainian: Verb Aspect](https://talkukrainian.com/verb-aspect/) — Short learner-facing overview of process vs result, useful after the lesson dialogue.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
