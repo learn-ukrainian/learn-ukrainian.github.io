@@ -186,10 +186,10 @@ const frontmatter = {
       </div>
 
       <div class="atlas-empty-state" data-lex-empty hidden>
-        <p class="atlas-empty-code">Немає збігів</p>
-        <h3>Спробуйте коротшу форму слова.</h3>
-        <p>Або відкрийте загальний пошук курсу, якщо потрібна фраза з уроку.</p>
-        <a href="/search/">Пошук курсу</a>
+        <p class="atlas-empty-code">Немає збігів серед швидкого перегляду</p>
+        <h3>Можливо, слово є в повному покажчику.</h3>
+        <p>Швидкий перегляд показує лише добірку статей. Шукайте серед усіх лем у А-Я покажчику.</p>
+        <a data-lex-index-link href="/lexicon/index/">Шукати в А-Я покажчику →</a>
       </div>
 
       <ul class="atlas-entry-grid" data-lex-results>
@@ -266,6 +266,17 @@ const frontmatter = {
       }
 
       if (empty) empty.hidden = visible !== 0;
+
+      // The quick-view grid is a curated subset; carry the query to the А-Я index
+      // (which searches ALL lemmas) so "no featured match" still leads to real results.
+      const rawQuery = (input?.value || '').trim();
+      const indexLink = scope?.querySelector('[data-lex-index-link]');
+      if (indexLink) {
+        indexLink.setAttribute(
+          'href',
+          rawQuery ? `/lexicon/index/?q=${encodeURIComponent(rawQuery)}` : '/lexicon/index/',
+        );
+      }
     };
 
     const params = new URLSearchParams(window.location.search);
@@ -287,8 +298,10 @@ const frontmatter = {
       const sourceValue = source?.value || '';
       if (query) next.set('q', query);
       if (sourceValue) next.set('source', sourceValue);
-      window.history.replaceState(null, '', next.toString() ? `/lexicon/?${next}` : '/lexicon/');
-      applyLexicon();
+      // Submitting searches the FULL lemma set on the А-Я index — not just the 12
+      // curated quick-view cards on this hub (which caused real lemmas like «робота»
+      // to read as "Немає збігів"). Live input still filters the quick-view below.
+      window.location.assign(next.toString() ? `/lexicon/index/?${next}` : '/lexicon/index/');
     });
     applyLexicon();
   </script>
