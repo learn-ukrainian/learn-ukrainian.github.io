@@ -1,67 +1,64 @@
-# Claude session handoff — 2026-06-11 (Word Atlas: design conformance + paradigm table + §8 gates; PR sweep; hygiene)
+# Claude session handoff — 2026-06-11 (Word Atlas: conformance + paradigm + §8 gates; DEPLOY FIX; UA-dict source research)
 
 > Router: `docs/session-state/current.md` → `current.claude.md` → this is the latest detailed Claude handoff.
-> Long autonomous session. Main orchestrator (standalone). Continues the Word Atlas line.
+> Long autonomous session. Main orchestrator (standalone). Word Atlas line.
 
-## ⏳ RESUME HERE — continue Word Atlas backlog (EPIC #2985), easiest-first
-User direction: "continue with atlas." Next item is **#2985 item 3 — derivational-base etymology**
-(filed as **#2971**). Plan: reduce the ~10 derived A1 lemmas to their etymological base, then look the
-BASE up via the existing `_etymology()` precedence (Goroh → ЕСУМ → Wiktionary) in
-`scripts/lexicon/enrich_manifest.py`, labeling results "за основою «X»".
-- Bases present in ЕСУМ (≈7 will resolve): `чудово`→чудо, `пізно`→пізній, `сьома`→сім, `робота`→робити,
-  `збиратися`→брати, `одягатися`→одяг, `повертатися`→вертати.
-- Bases ЕСУМ lacks (≈3 stay blank — do NOT fabricate): `добре`→добрий, `нормально`→норма, `вмиватися`→мити.
-- Reduction types needed (adverb→adj, reflexive→transitive→root, ordinal→cardinal, deverbal-noun→verb)
-  are NOT covered by the existing `scripts/lexicon/derivational_morphology.py` (#2956 = only denominal/
-  deverbal ADJ + secondary imperfectives) → needs new rules (pymorphy3 lemmatize + a reduction table).
-- Dispatch to Codex; the new §8 gates (#2988) + paradigm tables (#2981) will validate the result.
-After #3: reassess #7 (scale to A1+A2+B1 vocab) — the highest-leverage item; makes the decolonization
-moat visible on real data. The 4 noisy corpus sections (#2985 item 4) need a relevance layer first.
+## 🚨 CRITICAL LESSON — GitHub Pages auto-deploy is DISABLED
+`.github/workflows/deploy-pages.yml` is `workflow_dispatch`-only ("Auto-deploy disabled — push to main
+no longer triggers deploy"). **Merging to main does NOT update the live site.** This burned us: all
+Atlas work (#2980/#2981/#2986/#2988) merged 06-11 but the live site was frozen at the 06-10 20:28 deploy,
+so the user correctly saw "the Word Atlas is not following the design" — my fixes weren't deployed. I had
+only verified localhost, never the live site. **ALWAYS, after merging user-facing (starlight/) changes:
+`gh workflow run deploy-pages.yml --ref main`, watch it, and verify the LIVE site (learn-ukrainian.github.io),
+not just localhost.** Deploy triggered this session (run 27368018028 from `4fd56b705`).
 
-## ✅ MERGED to main this session (7 PRs)
-| PR | What |
-|---|---|
-| #2854 | folk `ukrlib /narod/` scraper — **salvaged** from a stale 128-behind PR (cherry-picked scraper, dropped obsolete Session-5 doc) |
-| #2969 | **v7_build primary-checkout commit guard** (#2884 CLOSED) — refuse persist/build when git-toplevel == primary checkout; scoped `git add` (no more `-A`); +bonus `GIT_*` env sanitization |
-| #2970 | Wiktionary etymology fallback (Goroh→ЕСУМ→Wiktionary) **+ quality gate** (rejects garbled/ramble rows; net +1 clean: `комп'ютер`) |
-| #2980 | Word Atlas conformance fixes: omit empty sections (gate §8), POS `numeral`→числівник, provenance no longer leaks course-context, callout stub-only |
-| #2981 | **Morphology paradigm table** — noun case×number + verb conjugation tables (PoC §4 #4); flat-grid fallback for unslottable POS |
-| #2986 | **Hub search full corpus** (#2985 item 1) — was searching only 12 featured cards; now routes to А-Я index `?q=` |
-| #2988 | **§8 deterministic conformance gates** (#2985 item 2) — validator + pytest enforces design quality floors on every PR (lemma_in_vesum, provenance, omit-empty, heritage-evidence, sovietization, cross-link, wiki-attribution) |
+## ⏳ RESUME HERE (in order)
+1. **Verify the deploy landed** (run 27368018028) and the LIVE Atlas now shows the paradigm table +
+   conformance fixes + full-corpus search. `gh run list --workflow=deploy-pages.yml --limit 2`.
+2. **Synthesize the UA-dictionary source research** (IN FLIGHT — 3 agents). User directive: source
+   AUTHENTIC Ukrainian dictionaries (synonyms/antonyms/idioms), **NO Russian content, NO English-auto-
+   translated** (current `ukrajinet` WordNet is auto-translated → antonyms/wrong-sense, unusable). Asks:
+   `ua-dict-research-{codex,agy,hermes}` (bridge). Brief: `docs/dispatch-briefs/2026-06-11-ua-lexicon-source-research.md`.
+   Collect their answers (`ab inbox`/task logs), dedup, produce a ranked sourcing table on #2985, name the
+   best path to a clean UA synonym dataset. Seed names to verify: Караванський; Бурячок «Словник синонімів
+   української мови» 2т (Інститут укр. мови НАН); Полюга антоніми; СФУМ idioms.
+3. Then continue backlog (EPIC #2985), per the research-reprioritized order below.
 
-Issues: **filed #2971** (derivational etymology), **#2985** (Atlas remaining-work EPIC). **Closed #2884**.
+## ✅ MERGED this session (7 PRs) + issues
+#2854 (folk scraper salvage) · #2969 (v7_build primary-checkout guard → **#2884 closed**) · #2970 (Wiktionary
+etymology + quality gate) · #2980 (Atlas conformance: omit-empty, POS, provenance) · #2981 (**paradigm table**) ·
+#2986 (**hub search full corpus**) · #2988 (**§8 conformance gates** enforced in CI). Filed #2971 (derivational
+etymology), **#2985 (Atlas backlog EPIC)**. Git/GitHub hygiene done.
 
-## 🗺 Word Atlas state vs design (`docs/best-practices/word-atlas-design.md`)
-Works end-to-end (hub `/lexicon/` + А-Я index `/lexicon/index/` + detail `/lexicon/{lemma}` — browser-verified,
-no console errors). §4 contract conformant for: header, Значення, Етимологія (41/52 single-word),
-**Морфологія paradigm table**, Походження/decolonization (synthetic-verified — all 63 A1 lemmas are
-`standard`/`unknown`, so русизм/soviet badges don't fire on real data yet), course usage, provenance,
-EN translation (header gloss). Conformance now **enforced in CI** (#2988).
-**Still missing (EPIC #2985):** #3 derivational etymology · #4 corpus sections (idioms/literary/textbooks/
-external — need relevance layer) · #5 synonyms (BLOCKED on #1657 WordNet audit — English leakage+antonyms) ·
-#6 Стилістичні/Wikipedia (0/52 for basic A1 — defer to scale) · #7 scale to v2.
+## 🔬 Research: blocked-parts feasibility (full detail = #2985 comment 2026-06-11)
+- **#5 Synonyms**: GENUINELY blocked — WordNet noisy even strict-filtered (antonyms/wrong-sense/synset
+  pollution); no alt table in sources.db → needs #1657 cleanup OR a real UA synonym source (the research above).
+- **#4 Corpus sections** (idioms/literary/textbooks): need a relevance/selection layer (idioms keyed by
+  phrase → exact-lemma = 0; FTS noisy).
+- **#6 Стилістичні/Wikipedia**: sparse even at scale (Антоненко 0/52 A1, 0/80 A2+B1 — 342 specific headwords).
+- **#7 Scale to v2 (≈4,512 PULS A1-B1 lemmas)**: HIGH value + feasible. At scale: morphology ~complete,
+  **meaning (СУМ-11) 87%**, etymology 26%→~50-60%. **Moat activates: ~5.6% sovietization-flagged → ~200+
+  red-warning pages** (vs 0 now). Risk: ~4.5K-page static build perf (spike S2).
+- **Reprioritized:** #3 derivational etymology → **#7 scale (promote)** → #6 Антоненко cheap add →
+  #4 relevance layer → #5 synonyms (after source research) → Wikipedia.
 
-## 🧠 Key context / gotchas
-- **#M-11 hit THREE times this session — always verify the ARTIFACT, not just green gates.** Wiktionary
-  stripper emitted garbage behind passing tests (caught by reading the table); empty placeholder sections
-  passed but violated the design (caught by rendering); WordNet synonyms are noisy (caught by probing).
-- **CI lacks `data/vesum.db`** (967MB, gitignored). Any test/validator using it must degrade gracefully
-  (see #2988 fix: `vesum=None` skips ONLY lemma_in_vesum; other gates still enforce). Bit us once.
-- **`Secret Scanning (gitleaks)` flakes on ghcr.io 502** (TruffleHog image pull) — NOT a real leak;
-  `gh run rerun <id> --failed` after the run settles. Only required check = `Test (pytest)`.
-- **Other active lanes — DO NOT TOUCH:** A2 beta (`codex/2888-a2-*`, #2888), folk (`codex/folk-*`,
-  `build/folk/*` forensic branches per #M-10), b1 pilot (`codex/b1-v72-*`). Their worktrees/dispatches are theirs.
-- **`start-claude.sh` is locally modified** (npx→native-binary launcher) — pre-existing, NOT mine, leave it.
-  Causes a harmless "Please commit or stash" warning on rebase; pushes still succeed.
-- Codex opens PRs as **draft** sometimes → `gh pr ready N` before merge.
-- Dev server runs from main checkout on :4321. To browser-verify a branch's render: overlay the
-  branch's render files onto the main checkout (HMR), verify, then `git restore --source=HEAD` them.
+## 🧠 Gotchas
+- **#M-11** (verify ARTIFACT not gates) bit 3× + the DEPLOY miss above = 4× this session. Always check the LIVE thing.
+- **CI lacks `data/vesum.db`** — tests using it degrade gracefully (`vesum=None` skips lemma_in_vesum; #2988).
+- **gitleaks 502 flake** = ghcr.io image pull, not a real leak → `gh run rerun <id> --failed`.
+- **main checkout is locally diverged + has folk untracked files + `start-claude.sh` local mod (not mine).**
+  Pushing docs from the main checkout FAILS (folk untracked files block rebase). **Push via a clean worktree
+  off origin/main** (used this all session). Do NOT `reset --hard` the main checkout (would lose folk's work).
+- **DO NOT TOUCH** `codex/2888-a2-*` (A2), `codex/folk-*` + `build/folk/*` (folk), `codex/b1-v72-*` (b1).
+- Codex PRs sometimes open as **draft** → `gh pr ready N` before merge.
+- To browser-verify a branch's render on the running dev server: overlay the branch's render files onto the
+  main checkout (HMR), verify, `git restore --source=HEAD` after.
 
 ## Restart
 ```bash
 cd /Users/krisztiankoos/projects/learn-ukrainian
-git fetch origin -q && git merge --ff-only origin/main
-curl -s --max-time 2 http://localhost:8765/api/orient | python3 -m json.tool | head
-gh issue view 2985   # the Atlas backlog EPIC — next is item 3 (#2971 derivational etymology)
-# dispatch #3 to codex (model on the conformance-gates / paradigm dispatch briefs in docs/dispatch-briefs/)
+git fetch origin -q
+gh run list --workflow=deploy-pages.yml --limit 2   # did the deploy land? live Atlas current?
+gh issue view 2985                                  # Atlas backlog EPIC + research findings
+# collect UA-dict research answers: ab inbox / task logs for ua-dict-research-*
 ```

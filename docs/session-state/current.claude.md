@@ -3,30 +3,39 @@
 > Router: read `docs/session-state/current.md` first.
 > **Latest detailed handoff: `docs/session-state/2026-06-11-claude-word-atlas-conformance-paradigm-gates.md`** — read top-to-bottom.
 
-## ⏳ RESUME HERE — continue Word Atlas backlog (EPIC #2985), easiest-first
-Next item: **#2985 item 3 — derivational-base etymology (#2971)**. Reduce ~10 derived A1 lemmas to
-their ЕСУМ base, then reuse `_etymology()` (Goroh→ЕСУМ→Wiktionary) on the base. ~7 resolve, ~3 stay
-blank (don't fabricate). Dispatch to Codex. Details + reduction table in the detailed handoff.
+## 🚨 CRITICAL — GitHub Pages auto-deploy is DISABLED (workflow_dispatch only)
+Merging to main does NOT update the live site. This is why the user saw "Word Atlas not following the
+design" — all Atlas work (#2980/#2981/#2986/#2988) merged 06-11 but live was frozen at 06-10. **After any
+user-facing (`starlight/`) merge: `gh workflow run deploy-pages.yml --ref main`, watch it, verify the LIVE
+site, not just localhost.** Deploy triggered this session (run 27368018028).
 
-After #3: reassess #7 (scale to A1+A2+B1 vocab — the big lever that makes the decolonization moat
-visible). #5 synonyms BLOCKED on #1657. #4 corpus sections need a relevance layer.
+## ⏳ RESUME HERE
+1. **Verify deploy 27368018028 landed** + live Atlas correct (`gh run list --workflow=deploy-pages.yml`).
+2. **Synthesize UA-dictionary source research** (IN FLIGHT): asks `ua-dict-research-codex` + `-agy` running
+   (hermes/qwen failed — skip; qwen excluded). Goal: AUTHENTIC Ukrainian synonym/antonym/idiom dictionaries,
+   **NO Russian, NO English-auto-translated** (ukrajinet WordNet unusable). Brief:
+   `docs/dispatch-briefs/2026-06-11-ua-lexicon-source-research.md`. Collect answers → ranked sourcing table
+   on #2985 → best path to a clean UA synonym dataset.
+3. Continue backlog EPIC #2985 (reprioritized: #3 derivational etym → **#7 scale (promote)** → #6 Антоненко
+   → #4 relevance layer → #5 synonyms after sourcing).
 
 ## ✅ Done this session
-7 PRs merged (#2854 folk scraper salvage · #2969 v7_build primary-checkout guard [#2884 closed] ·
-#2970 Wiktionary etymology+gate · #2980 Atlas conformance fixes · #2981 paradigm table ·
-#2986 hub search full corpus · #2988 §8 conformance gates enforced in CI). Filed #2971 + EPIC #2985.
-Git/GitHub hygiene done (orphan worktrees/branches cleaned; active A2/folk/b1 lanes preserved).
+7 PRs merged (#2854·#2969[#2884 closed]·#2970·#2980·#2981·#2986·#2988). Filed #2971 + EPIC #2985.
+Researched blocked parts (#2985 comment): synonyms genuinely blocked; scale (#7) high-value+feasible,
+activates the decolonization moat (~200+ sovietization-flagged pages at scale). Git/GitHub hygiene done.
 
 ## ⚠️ Watch-outs
-- **#M-11**: verify the ARTIFACT (render it / read the data), not just green gates — bit us 3× this session.
-- **CI lacks `data/vesum.db`** — tests using it must degrade gracefully (`vesum=None` path).
-- **gitleaks 502 flake** = ghcr.io image-pull, not a real leak → `gh run rerun <id> --failed`.
-- **DO NOT TOUCH** `codex/2888-a2-*` (A2), `codex/folk-*` + `build/folk/*` (folk), `codex/b1-v72-*` (b1) — other lanes.
-- `start-claude.sh` locally modified (pre-existing, not mine) — leave it; Codex PRs sometimes open as draft (`gh pr ready N`).
+- **Verify the LIVE site, not localhost** (deploy is manual). #M-11 + deploy miss bit 4× this session.
+- **CI lacks `data/vesum.db`** → tests degrade gracefully (`vesum=None`).
+- **Push docs via a clean worktree off origin/main** — main checkout has folk untracked files + `start-claude.sh`
+  local mod that block rebase. Do NOT `reset --hard` (loses folk's work).
+- **DO NOT TOUCH** `codex/2888-a2-*`, `codex/folk-*`/`build/folk/*`, `codex/b1-v72-*` (other lanes).
+- gitleaks 502 = ghcr.io flake → rerun. Codex PRs sometimes draft → `gh pr ready N`. qwen excluded.
 
 ## Restart
 ```bash
 cd /Users/krisztiankoos/projects/learn-ukrainian
-git fetch origin -q && git merge --ff-only origin/main
-gh issue view 2985   # Atlas backlog EPIC; next = item 3 (#2971)
+git fetch origin -q
+gh run list --workflow=deploy-pages.yml --limit 2   # deploy landed? live Atlas current?
+gh issue view 2985                                  # backlog EPIC + research
 ```
