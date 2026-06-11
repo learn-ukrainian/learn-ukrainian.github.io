@@ -242,6 +242,161 @@ def test_vesum_gate_verifies_valid_hyphenated_compounds_as_whole_words() -> None
     assert not {"будьякий", "будьщо", "поперше", "купаль", "обжинк", "ськ"} & looked_up
 
 
+def test_vesum_gate_accepts_o_linked_compound_adjectives_from_adjective_bases() -> None:
+    seen: list[list[str]] = []
+    direct_valid = {
+        "економічний",
+        "західна",
+        "західний",
+        "історичний",
+        "радянська",
+        "радянський",
+        "радянській",
+        "радянську",
+    }
+    adjective_bases = {
+        "галицький",
+        "імперський",
+        "культурний",
+        "соціальний",
+    }
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        seen.append(words)
+        return {
+            word: (
+                [{"lemma": word, "pos": "adj", "tags": "adj:m:v_naz"}]
+                if word in direct_valid | adjective_bases
+                else []
+            )
+            for word in words
+        }
+
+    gate = _vesum_gate(
+        module_text=(
+            "імперсько-радянський Імперсько-радянська "
+            "імперсько-радянську імперсько-радянській "
+            "галицько-західний галицько-західна "
+            "соціально-економічний культурно-історичний"
+        ),
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    looked_up = {word for call in seen for word in call}
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert adjective_bases <= looked_up
+
+
+def test_vesum_gate_keeps_hyphenated_compound_missing_without_adjective_base() -> None:
+    seen: list[list[str]] = []
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        seen.append(words)
+        return {
+            word: (
+                [{"lemma": word, "pos": "adj", "tags": "adj:m:v_naz"}]
+                if word == "радянський"
+                else [{"lemma": "абракадабра", "pos": "noun", "tags": "noun:inanim:f:v_kly"}]
+                if word == "абракадабро"
+                else []
+            )
+            for word in words
+        }
+
+    gate = _vesum_gate(
+        module_text="абракадабро-радянський.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    looked_up = {word for call in seen for word in call}
+    assert gate["passed"] is False
+    assert gate["missing"] == ["абракадабро-радянський"]
+    assert {"абракадабрий", "абракадабрій"} <= looked_up
+
+
+def test_vesum_gate_rejects_reconstructed_compound_base_that_is_not_adjective() -> None:
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        return {
+            word: (
+                [{"lemma": word, "pos": "adj", "tags": "adj:m:v_naz"}]
+                if word == "радянський"
+                else [{"lemma": word, "pos": "noun", "tags": "noun:m:v_naz"}]
+                if word == "бздумий"
+                else []
+            )
+            for word in words
+        }
+
+    gate = _vesum_gate(
+        module_text="бздумо-радянський.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert gate["passed"] is False
+    assert gate["missing"] == ["бздумо-радянський"]
+
+
+def test_vesum_gate_requires_final_hyphenated_constituent_to_verify_directly() -> None:
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        return {
+            word: (
+                [{"lemma": word, "pos": "adj", "tags": "adj:m:v_naz"}]
+                if word == "імперський"
+                else []
+            )
+            for word in words
+        }
+
+    gate = _vesum_gate(
+        module_text="імперсько-празднічний.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert gate["passed"] is False
+    assert gate["missing"] == ["імперсько-празднічний"]
+
+
+def test_vesum_gate_still_flags_required_coinage_battery_after_compound_fix() -> None:
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        return {
+            word: (
+                [{"lemma": word, "pos": "adj", "tags": "adj:m:v_naz"}]
+                if word == "радянський"
+                else []
+            )
+            for word in words
+        }
+
+    gate = _vesum_gate(
+        module_text="двохоровий обрядознавчий городалька абракадабро-радянський.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    assert gate["passed"] is False
+    assert set(gate["missing"]) == {
+        "абракадабро-радянський",
+        "городалька",
+        "двохоровий",
+        "обрядознавчий",
+    }
+
+
 def test_vesum_gate_accepts_productive_ist_nouns_from_valid_adjectives() -> None:
     seen: list[list[str]] = []
 
