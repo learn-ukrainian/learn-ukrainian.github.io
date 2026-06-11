@@ -58,6 +58,18 @@ def test_check_parity_mdx_and_source(mock_legacy_levels, mock_subprocess):
     violations = check_parity(mdx_files, changed_files)
     assert len(violations) == 0
 
+def test_check_parity_mdx_and_meta_source(mock_legacy_levels, mock_subprocess):
+    # MDX + module meta diff (pass). Meta frontmatter controls generated MDX.
+    mdx_files = [MDX_DIR / "a2" / "aspect-in-past.mdx"]
+    changed_files = {
+        MDX_DIR / "a2" / "aspect-in-past.mdx",
+        SOURCE_DIR / "a2" / "meta" / "aspect-in-past.yaml",
+    }
+    mock_subprocess.return_value = "1 file changed\n"
+
+    violations = check_parity(mdx_files, changed_files)
+    assert len(violations) == 0
+
 def test_check_parity_generator_change_allows_existing_source_dir(mock_legacy_levels, mock_subprocess, tmp_path):
     # Generator changes may legitimately update generated MDX without touching
     # every module source, but only for pages that still have real source dirs.
