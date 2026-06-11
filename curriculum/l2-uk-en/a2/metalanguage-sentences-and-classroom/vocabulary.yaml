@@ -1,0 +1,100 @@
+- word: речення
+  translation: sentence
+  pos: noun
+  example: "Речення має завершену думку."
+- word: граматична основа
+  translation: grammatical core
+  pos: phrase
+  example: "Граматична основа часто має підмет і присудок."
+- word: підмет
+  translation: subject
+  pos: noun
+  example: "Підмет відповідає на питання хто? що?"
+- word: присудок
+  translation: predicate
+  pos: noun
+  example: "Присудок називає дію або стан."
+- word: додаток
+  translation: object
+  pos: noun
+  example: "У реченні 'Я читаю книгу' слово 'книгу' - додаток."
+- word: означення
+  translation: attribute
+  pos: noun
+  example: "Означення відповідає на питання який? чий?"
+- word: обставина
+  translation: adverbial modifier
+  pos: noun
+  example: "Слово 'ввечері' може бути обставиною часу."
+- word: член речення
+  translation: sentence member
+  pos: phrase
+  example: "Підмет і присудок - це члени речення."
+- word: корінь
+  translation: root
+  pos: noun
+  example: "У слові 'писати' корінь пис-."
+- word: префікс
+  translation: prefix
+  pos: noun
+  example: "Префікс стоїть перед коренем."
+- word: суфікс
+  translation: suffix
+  pos: noun
+  example: "Суфікс стоїть після кореня."
+- word: закінчення
+  translation: ending
+  pos: noun
+  example: "Закінчення показує граматичну форму."
+- word: основа
+  translation: stem
+  pos: noun
+  example: "Основа - це слово без закінчення."
+- word: спільнокореневий
+  translation: sharing the same root
+  pos: adjective
+  example: "Слова 'писати' і 'запис' спільнокореневі."
+- word: прочитайте
+  translation: read
+  pos: verb
+  example: "Прочитайте речення."
+- word: запишіть
+  translation: write down
+  pos: verb
+  example: "Запишіть відповідь."
+- word: виберіть
+  translation: choose
+  pos: verb
+  example: "Виберіть правильну форму."
+- word: підкресліть
+  translation: underline
+  pos: verb
+  example: "Підкресліть підмет."
+- word: вставте
+  translation: insert
+  pos: verb
+  example: "Вставте потрібне слово."
+- word: визначте
+  translation: identify
+  pos: verb
+  example: "Визначте відмінок."
+- word: поясніть
+  translation: explain
+  pos: verb
+  example: "Поясніть правило."
+- word: порівняйте
+  translation: compare
+  pos: verb
+  example: "Порівняйте два речення."
+- word: виправте
+  translation: correct
+  pos: verb
+  example: "Виправте помилку."
+- word: дайте відповідь
+  translation: answer
+  pos: phrase
+  example: "Дайте відповідь на питання."
+- word: інструкція
+  translation: instruction
+  pos: noun
+  example: "Я розумію інструкцію українською."

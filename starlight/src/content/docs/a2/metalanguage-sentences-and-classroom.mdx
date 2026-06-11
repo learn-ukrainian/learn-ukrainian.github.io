@@ -1,0 +1,361 @@
+---
+title: "Речення і клас"
+description: "Синтаксичні терміни, будова слова та мова класу"
+sidebar:
+  order: 63
+  label: "63. Речення і клас"
+prev: metalanguage-verbs-and-time
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: інструкція українською
+
+На уроці викладачка дає вправу без англійського перекладу. Студенти
+вчаться розуміти мову класу.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Викладачка","text":"Прочитайте речення і підкресліть підмет однією лінією."},{"speaker":"Андрій","text":"Підмет - це хто або що виконує дію?"},{"speaker":"Викладачка","text":"Так. А присудок підкресліть двома лініями."},{"speaker":"Марта","text":"Присудок - це дієслово?"},{"speaker":"Викладачка","text":"Найчастіше так. Він показує дію або стан підмета."}]')}
+/>
+> **Андрій:** А слово `ранковий` у фразі `ранковий поїзд`?
+>
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Викладачка","text":"Це означення. Воно відповідає на питання який?"},{"speaker":"Марта","text":"Тепер я розумію інструкцію: прочитати, знайти, підкреслити, пояснити."}]')}
+/>
+
+Цей модуль готує вас до українськомовних інструкцій. Ви вже будуєте
+речення. Тепер ви називаєте їхні частини: підмет, присудок, додаток,
+означення, обставина. Також повторюєте будову слова і мову класу.
+
+## Члени речення: хто що робить?
+
+Речення має граматичну основу. Найчастіше це підмет і присудок.
+
+| Термін | Питання | Приклад |
+| --- | --- | --- |
+| підмет | хто? що? | Студент читає. |
+| присудок | що робить? який він є? | Студент читає. |
+| додаток | питання непрямих відмінків | Студент читає книгу. |
+| означення | який? чий? | Студент читає цікаву книгу. |
+| обставина | як? де? коли? чому? | Студент читає ввечері. |
+
+Подивімося на речення:
+
+> Увечері Марта уважно читає нову статтю.
+
+Розбір:
+
+> `Марта` - підмет: хто читає?
+>
+> `читає` - присудок: що робить Марта?
+>
+> `статтю` - додаток: читає що?
+>
+> `нову` - означення: яку статтю?
+>
+> `увечері` - обставина часу: коли читає?
+>
+> `уважно` - обставина способу дії: як читає?
+
+Такий розбір не потрібен у кожній розмові. Але він допомагає читати
+правила і розуміти, чому форма слова змінюється.
+
+### Члени речення
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "підмет", "right": "хто? що?"}, {"left": "присудок", "right": "що робить?"}, {"left": "додаток", "right": "кого? що? кому? чому?"}, {"left": "означення", "right": "який? чий?"}, {"left": "обставина", "right": "як? де? коли?"}, {"left": "граматична основа", "right": "підмет + присудок"}, {"left": "речення", "right": "слова з завершеною думкою"}, {"left": "член речення", "right": "роль слова в реченні"}]`)} />
+
+## Будова слова: корінь, префікс, суфікс
+
+Слово теж має будову. Для A2 корисна така карта:
+
+| Частина слова | Що робить | Приклад |
+| --- | --- | --- |
+| корінь | головне значення | пис- у словах писати, запис, підпис |
+| префікс | стоїть перед коренем | на-писати, пере-писати |
+| суфікс | стоїть після кореня | пис-а-ти, книж-к-а |
+| закінчення | змінює граматичну форму | книга, книги, книгою |
+| основа | слово без закінчення | книг- у слові книга |
+
+Спільнокореневі слова мають спільний корінь:
+
+> писати, запис, підпис, переписати;
+>
+> школа, шкільний, школяр;
+>
+> друг, дружній, подруга.
+
+На A2 не треба робити складний морфемний аналіз усіх слів. Мета
+простіша: побачити, що префікс або суфікс часто змінює значення, а
+закінчення часто показує відмінок, число або рід.
+
+Приклади:
+
+> писати - написати: префікс `на-` часто допомагає створити доконаний вид.
+>
+> місто - міський: суфікс допомагає створити прикметник.
+>
+> книга - книгою: закінчення показує орудний відмінок.
+
+### Частини слова
+
+<GroupSort client:only='react' groups={JSON.parse(`{"корінь": ["пис-", "школ-", "друг-", "чит-"], "префікс": ["на-", "пере-", "під-", "за-"], "суфікс": ["-к-", "-ар-", "-н-", "-енн-"], "закінчення": ["-а", "-ою", "-і", "-ами"]}`)} />
+
+## Мова класу: що треба зробити?
+
+У B1 уроках буде більше українських інструкцій. Ось базові дієслова класу:
+
+| Інструкція | Що робити |
+| --- | --- |
+| прочитайте | read |
+| запишіть | write down |
+| виберіть | choose |
+| підкресліть | underline |
+| вставте | insert |
+| визначте | identify |
+| поясніть | explain |
+| порівняйте | compare |
+| виправте | correct |
+| дайте відповідь | answer |
+
+Типові інструкції:
+
+> Прочитайте речення і визначте підмет.
+>
+> Підкресліть присудок двома лініями.
+>
+> Вставте правильну форму слова.
+>
+> Порівняйте два речення.
+>
+> Виправте помилку і поясніть правило.
+
+Якщо інструкція довга, розділіть її на дії:
+
+> Прочитайте текст, знайдіть дієслова, визначте їхній час і вид.
+
+Це три кроки:
+
+1. Прочитайте текст.
+2. Знайдіть дієслова.
+3. Визначте час і вид.
+
+### Мова класу
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "прочитайте", "options": [{"text": "read", "correct": true}, {"text": "write down", "correct": false}, {"text": "correct", "correct": false}], "explanation": "\`Прочитайте\` означає read."}, {"question": "запишіть", "options": [{"text": "write down", "correct": true}, {"text": "compare", "correct": false}, {"text": "underline", "correct": false}], "explanation": "\`Запишіть\` означає write down."}, {"question": "виберіть", "options": [{"text": "choose", "correct": true}, {"text": "explain", "correct": false}, {"text": "insert", "correct": false}], "explanation": "\`Виберіть\` означає choose."}, {"question": "підкресліть", "options": [{"text": "underline", "correct": true}, {"text": "read", "correct": false}, {"text": "answer", "correct": false}], "explanation": "\`Підкресліть\` означає underline."}, {"question": "вставте", "options": [{"text": "insert", "correct": true}, {"text": "compare", "correct": false}, {"text": "correct", "correct": false}], "explanation": "\`Вставте\` означає insert."}, {"question": "визначте", "options": [{"text": "identify", "correct": true}, {"text": "write down", "correct": false}, {"text": "read aloud", "correct": false}], "explanation": "\`Визначте\` означає identify."}, {"question": "поясніть", "options": [{"text": "explain", "correct": true}, {"text": "choose", "correct": false}, {"text": "underline", "correct": false}], "explanation": "\`Поясніть\` означає explain."}, {"question": "виправте", "options": [{"text": "correct", "correct": true}, {"text": "compare", "correct": false}, {"text": "read", "correct": false}], "explanation": "\`Виправте\` означає correct."}]`)} />
+
+## Усе разом: аналізуємо текст
+
+Візьмімо короткий текст:
+
+> У суботу Олена готувала вечерю для друзів. Вона купила свіжі овочі на
+> ринку і швидко приготувала салат. Друзі прийшли о сьомій, і всі
+> говорили про подорож до Львова.
+
+Що можна знайти?
+
+| Завдання | Відповідь |
+| --- | --- |
+| Знайдіть підмет у першому реченні. | Олена |
+| Знайдіть присудок у першому реченні. | готувала |
+| Знайдіть додаток. | вечерю, овочі, салат |
+| Знайдіть обставину часу. | у суботу, о сьомій |
+| Знайдіть означення. | свіжі |
+| Знайдіть прийменник із родовим. | для друзів, до Львова |
+
+Це не переклад. Це граматичне читання. Воно допомагає помічати структуру
+тексту і готує до B1, де правила частіше будуть українською.
+
+### Аналіз речення
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У реченні 'Олена читає статтю' слово 'Олена' - це ___.", "answer": "підмет", "options": ["підмет", "обставина", "префікс"]}, {"sentence": "У реченні 'Олена читає статтю' слово 'читає' - це ___.", "answer": "присудок", "options": ["присудок", "означення", "суфікс"]}, {"sentence": "У реченні 'Олена читає статтю' слово 'статтю' - це ___.", "answer": "додаток", "options": ["додаток", "підмет", "закінчення"]}, {"sentence": "У фразі 'нова стаття' слово 'нова' - це ___.", "answer": "означення", "options": ["означення", "присудок", "корінь"]}, {"sentence": "У реченні 'Вона читає ввечері' слово 'ввечері' - це ___.", "answer": "обставина", "options": ["обставина", "додаток", "підмет"]}, {"sentence": "У слові 'написати' частина 'на-' - це ___.", "answer": "префікс", "options": ["префікс", "закінчення", "підмет"]}, {"sentence": "У слові 'книгою' частина '-ою' - це ___.", "answer": "закінчення", "options": ["закінчення", "корінь", "присудок"]}, {"sentence": "У словах 'писати', 'запис', 'підпис' спільний ___.", "answer": "корінь", "options": ["корінь", "сполучник", "обставина"]}]`)} />
+
+## Як працювати з українською інструкцією
+
+Коли ви бачите завдання українською, не перекладайте все слово за словом.
+Спочатку знайдіть дієслова-інструкції. Вони кажуть, що саме треба
+зробити.
+
+> Прочитайте текст. Випишіть дієслова. Визначте їхній час і вид.
+
+Це не одне складне речення, а три прості дії:
+
+| Крок | Дія | Результат |
+| --- | --- | --- |
+| 1 | прочитайте | ви знаєте зміст тексту |
+| 2 | випишіть | у вас є список дієслів |
+| 3 | визначте | біля кожного дієслова є час і вид |
+
+Інший приклад:
+
+> Підкресліть підмет, обведіть присудок і поясніть, чому речення просте.
+
+Тут теж є три кроки. Не поспішайте відповідати одразу. Спочатку
+позначте структуру:
+
+1. Хто або що виконує дію? Це підмет.
+2. Що робить підмет? Це присудок.
+3. Скільки граматичних основ має речення? Якщо одна, речення просте.
+
+Корисна відповідь може бути короткою:
+
+> Підмет - `Олена`, присудок - `читає`. Це просте речення, бо має одну
+> граматичну основу.
+
+На B1 така відповідь важливіша за переклад. Вона показує, що ви можете
+працювати з українським правилом українською мовою.
+
+## Малий формат відповіді
+
+Коли вчитель просить `поясніть`, не треба писати довгий твір. Достатньо
+короткого формату:
+
+> Термін + приклад + причина.
+
+Приклади:
+
+> `Книгу` - додаток, бо відповідає на питання що? після дієслова `читаю`.
+>
+> `Увечері` - обставина часу, бо відповідає на питання коли?
+>
+> `Нова` - означення, бо відповідає на питання яка? і описує слово
+> `стаття`.
+
+Цей формат допомагає говорити впевнено. Він також захищає від випадкових
+відповідей типу `це звучить правильно`. На метамовному уроці важливо
+вміти сказати, чому форма або термін правильні.
+
+## Типові помилки
+
+**Помилка 1:** думати, що підмет завжди перше слово.
+
+> Увечері **Марта** читає статтю.
+
+Перше слово `увечері`, але підмет - `Марта`.
+
+**Помилка 2:** плутати додаток і обставину.
+
+> Читаю **книгу**. - додаток: що?
+>
+> Читаю **вдома**. - обставина: де?
+
+**Помилка 3:** не розділяти довгу інструкцію на кроки.
+
+Якщо ви бачите `прочитайте, знайдіть, підкресліть, поясніть`, це не одне
+велике завдання. Це чотири маленькі дії.
+
+## 📋 Підсумок
+
+Тепер ви можете розуміти базову мову українського класу: прочитайте,
+запишіть, визначте, підкресліть, виправте. Ви знаєте члени речення,
+основні частини слова і можете виконати простий граматичний аналіз
+короткого тексту.
+
+Мінісамоперевірка:
+
+1. Що таке підмет?
+2. Яке питання має означення?
+3. Що означає інструкція `вставте правильну форму`?
+4. Назвіть корінь у словах `писати`, `запис`, `підпис`.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"речення","translation":"sentence","pos":"noun","example":"Речення має завершену думку.","examples":["sentence","Речення має завершену думку."]},{"word":"граматична основа","translation":"grammatical core","pos":"phrase","example":"Граматична основа часто має підмет і присудок.","examples":["grammatical core","Граматична основа часто має підмет і присудок."]},{"word":"підмет","translation":"subject","pos":"noun","example":"Підмет відповідає на питання хто? що?","examples":["subject","Підмет відповідає на питання хто? що?"]},{"word":"присудок","translation":"predicate","pos":"noun","example":"Присудок називає дію або стан.","examples":["predicate","Присудок називає дію або стан."]},{"word":"додаток","translation":"object","pos":"noun","example":"У реченні 'Я читаю книгу' слово 'книгу' - додаток.","examples":["object","У реченні 'Я читаю книгу' слово 'книгу' - додаток."]},{"word":"означення","translation":"attribute","pos":"noun","example":"Означення відповідає на питання який? чий?","examples":["attribute","Означення відповідає на питання який? чий?"]},{"word":"обставина","translation":"adverbial modifier","pos":"noun","example":"Слово 'ввечері' може бути обставиною часу.","examples":["adverbial modifier","Слово 'ввечері' може бути обставиною часу."]},{"word":"член речення","translation":"sentence member","pos":"phrase","example":"Підмет і присудок - це члени речення.","examples":["sentence member","Підмет і присудок - це члени речення."]},{"word":"корінь","translation":"root","pos":"noun","example":"У слові 'писати' корінь пис-.","examples":["root","У слові 'писати' корінь пис-."]},{"word":"префікс","translation":"prefix","pos":"noun","example":"Префікс стоїть перед коренем.","examples":["prefix","Префікс стоїть перед коренем."]},{"word":"суфікс","translation":"suffix","pos":"noun","example":"Суфікс стоїть після кореня.","examples":["suffix","Суфікс стоїть після кореня."]},{"word":"закінчення","translation":"ending","pos":"noun","example":"Закінчення показує граматичну форму.","examples":["ending","Закінчення показує граматичну форму."]},{"word":"основа","translation":"stem","pos":"noun","example":"Основа - це слово без закінчення.","examples":["stem","Основа - це слово без закінчення."]},{"word":"спільнокореневий","translation":"sharing the same root","pos":"adjective","example":"Слова 'писати' і 'запис' спільнокореневі.","examples":["sharing the same root","Слова 'писати' і 'запис' спільнокореневі."]},{"word":"прочитайте","translation":"read","pos":"verb","example":"Прочитайте речення.","examples":["read","Прочитайте речення."]},{"word":"запишіть","translation":"write down","pos":"verb","example":"Запишіть відповідь.","examples":["write down","Запишіть відповідь."]},{"word":"виберіть","translation":"choose","pos":"verb","example":"Виберіть правильну форму.","examples":["choose","Виберіть правильну форму."]},{"word":"підкресліть","translation":"underline","pos":"verb","example":"Підкресліть підмет.","examples":["underline","Підкресліть підмет."]},{"word":"вставте","translation":"insert","pos":"verb","example":"Вставте потрібне слово.","examples":["insert","Вставте потрібне слово."]},{"word":"визначте","translation":"identify","pos":"verb","example":"Визначте відмінок.","examples":["identify","Визначте відмінок."]},{"word":"поясніть","translation":"explain","pos":"verb","example":"Поясніть правило.","examples":["explain","Поясніть правило."]},{"word":"порівняйте","translation":"compare","pos":"verb","example":"Порівняйте два речення.","examples":["compare","Порівняйте два речення."]},{"word":"виправте","translation":"correct","pos":"verb","example":"Виправте помилку.","examples":["correct","Виправте помилку."]},{"word":"дайте відповідь","translation":"answer","pos":"phrase","example":"Дайте відповідь на питання.","examples":["answer","Дайте відповідь на питання."]},{"word":"інструкція","translation":"instruction","pos":"noun","example":"Я розумію інструкцію українською.","examples":["instruction","Я розумію інструкцію українською."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"речення","back":"sentence"},{"front":"граматична основа","back":"grammatical core"},{"front":"підмет","back":"subject"},{"front":"присудок","back":"predicate"},{"front":"додаток","back":"object"},{"front":"означення","back":"attribute"},{"front":"обставина","back":"adverbial modifier"},{"front":"член речення","back":"sentence member"},{"front":"корінь","back":"root"},{"front":"префікс","back":"prefix"},{"front":"суфікс","back":"suffix"},{"front":"закінчення","back":"ending"},{"front":"основа","back":"stem"},{"front":"спільнокореневий","back":"sharing the same root"},{"front":"прочитайте","back":"read"},{"front":"запишіть","back":"write down"},{"front":"виберіть","back":"choose"},{"front":"підкресліть","back":"underline"},{"front":"вставте","back":"insert"},{"front":"визначте","back":"identify"},{"front":"поясніть","back":"explain"},{"front":"порівняйте","back":"compare"},{"front":"виправте","back":"correct"},{"front":"дайте відповідь","back":"answer"},{"front":"інструкція","back":"instruction"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Члени речення
+
+*(див. урок, §Члени речення: хто що робить?)*
+
+### Частини слова
+
+*(див. урок, §Будова слова: корінь, префікс, суфікс)*
+
+### Мова класу
+
+*(див. урок, §Мова класу: що треба зробити?)*
+
+### Аналіз речення
+
+*(див. урок, §Усе разом: аналізуємо текст)*
+
+### Помилка в аналізі
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильний аналіз." items={JSON.parse(`[{"sentence": "У реченні 'Увечері Марта читає' підмет - 'увечері'.", "errorWord": "увечері", "correctForm": "Підмет - 'Марта'.", "options": ["Підмет - 'Марта'.", "Підмет - 'читає'."], "explanation": "Підмет відповідає на питання хто?"}, {"sentence": "У фразі 'цікава книжка' слово 'цікава' - додаток.", "errorWord": "додаток", "correctForm": "Слово 'цікава' - означення.", "options": ["Слово 'цікава' - означення.", "Слово 'цікава' - присудок."], "explanation": "Цікава відповідає на питання яка?"}, {"sentence": "У слові 'переписати' частина 'пере-' - суфікс.", "errorWord": "суфікс", "correctForm": "Частина 'пере-' - префікс.", "options": ["Частина 'пере-' - префікс.", "Частина 'пере-' - закінчення."], "explanation": "Префікс стоїть перед коренем."}, {"sentence": "Інструкція 'виправте' означає 'порівняйте'.", "errorWord": "порівняйте", "correctForm": "Інструкція 'виправте' означає 'correct'.", "options": ["Інструкція 'виправте' означає 'correct'.", "Інструкція 'виправте' означає 'read'."], "explanation": "\`Виправте\` - знайдіть і виправте помилку."}]`)} />
+
+### Знайдіть підмет і присудок
+
+<MarkTheWords client:only='react'>
+  <MarkTheWordsActivity instruction="Позначте підмет і присудок у реченні." text="У суботу Олена готувала вечерю для друзів." correctWords={JSON.parse(`[]`)} />
+</MarkTheWords>
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [ULP: Relative Pronouns](https://www.talkukrainian.com/relative-pronouns-ukrainian/) — Optional review of sentence-linking language already introduced in A2.7.
+- 📄 [ULP: Ukrainian Grammar Overview](https://www.ukrainianlessons.com/grammar/) — Catalog-backed grammar overview for seeing Ukrainian grammar categories together.
+- 📄 [ULP: Ukrainian Registers](https://www.ukrainianlessons.com/registers/) — Optional bridge resource for noticing formal classroom and grammar-register language.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

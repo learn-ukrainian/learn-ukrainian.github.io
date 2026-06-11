@@ -1,0 +1,304 @@
+---
+title: "Дія і час"
+description: "Дієслівні категорії та словникова грамотність"
+sidebar:
+  order: 62
+  label: "62. Дія і час"
+prev: metalanguage-words-and-cases
+next: metalanguage-sentences-and-classroom
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: читаємо словникову статтю
+
+Дмитро відкрив онлайн-словник і бачить багато скорочень. Він просить
+одногрупницю пояснити, як це читати.
+
+> **Дмитро:** Тут написано: `писати, недок.` Що означає `недок.`?
+>
+> **Леся:** Це недоконаний вид. Дія як процес: я пишу лист.
+>
+> **Дмитро:** А `написати, док.`?
+>
+> **Леся:** Доконаний вид. Результат: я написав лист.
+>
+> **Дмитро:** Тут ще є `1 ос. одн.` Це перша особа однини?
+>
+> **Леся:** Так. `Я пишу` - перша особа, однина, теперішній час.
+>
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Дмитро","text":"Тобто словник говорить граматикою?"},{"speaker":"Леся","text":"Так. І якщо ми знаємо українські терміни, словник стає помічником, а не загадкою."}]')}
+/>
+
+Цей урок продовжує метамовний місток. Ви вже знаєте багато дієслівних
+форм. Тепер треба називати їх українською: час, вид, спосіб, особа,
+число, дієвідміна.
+
+## Дієслово: категорії та терміни
+
+Дієслово називає дію, процес або стан:
+
+> читати, писати, працювати, жити, стояти, подобатися.
+
+У граматичному поясненні дієслово часто описують за кількома ознаками.
+
+| Категорія | Питання | Приклад |
+| --- | --- | --- |
+| час | коли? | читаю, читав, читатиму |
+| вид | процес чи результат? | читати - прочитати |
+| спосіб | факт, наказ, умова | читаю, читай, читав би |
+| особа | хто виконує дію? | я читаю, ти читаєш, він читає |
+| число | один чи багато? | читаю, читаємо |
+| дієвідміна | модель закінчень | пишеш / говориш |
+
+Час має три базові назви:
+
+> теперішній час: я читаю, ми працюємо;
+>
+> минулий час: я читав, вона працювала;
+>
+> майбутній час: я прочитаю, я читатиму, я буду читати.
+
+На A2 цього досить, щоб читати прості правила:
+
+> Дієслово в минулому часі змінюється за родом і числом.
+>
+> У теперішньому часі дієслово змінюється за особами і числами.
+
+### Дієслівні категорії
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "теперішній час", "right": "я читаю"}, {"left": "минулий час", "right": "я читав"}, {"left": "майбутній час", "right": "я прочитаю"}, {"left": "доконаний вид", "right": "написати"}, {"left": "недоконаний вид", "right": "писати"}, {"left": "перша особа", "right": "я / ми"}, {"left": "друга особа", "right": "ти / ви"}, {"left": "третя особа", "right": "він / вони"}]`)} />
+
+## Вид: доконаний і недоконаний
+
+Вид дієслова ви вже бачили багато разів. Тепер назвемо його українською.
+
+| Вид | Питання | Значення | Приклади |
+| --- | --- | --- | --- |
+| недоконаний вид | що робити? | процес, повторення, звичка | читати, писати, готувати |
+| доконаний вид | що зробити? | результат, завершена дія | прочитати, написати, приготувати |
+
+Пари:
+
+> читати - прочитати;
+>
+> писати - написати;
+>
+> готувати - приготувати;
+>
+> купувати - купити.
+
+Важливо: не кожна пара будується однаково. На A2 ви не мусите знати всі
+моделі. Але ви повинні розуміти, що означають слова `доконаний` і
+`недоконаний` у словнику або поясненні.
+
+Порівняйте:
+
+> Я читав статтю ввечері. - процес.
+>
+> Я прочитав статтю до кінця. - результат.
+>
+> Ми готували вечерю дві години. - процес.
+>
+> Ми приготували вечерю до сьомої. - результат.
+
+Коли правило каже `доконаний вид`, думайте: дія має межу або результат.
+Коли правило каже `недоконаний вид`, думайте: процес, тривалість,
+повторення або звичка.
+
+### Вид дієслова
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "\`читати\`", "options": [{"text": "недоконаний вид", "correct": true}, {"text": "доконаний вид", "correct": false}, {"text": "числівник", "correct": false}], "explanation": "\`Читати\` відповідає на питання що робити?"}, {"question": "\`прочитати\`", "options": [{"text": "доконаний вид", "correct": true}, {"text": "недоконаний вид", "correct": false}, {"text": "прислівник", "correct": false}], "explanation": "\`Прочитати\` відповідає на питання що зробити?"}, {"question": "\`Я писав лист дві години.\`", "options": [{"text": "процес", "correct": true}, {"text": "результат", "correct": false}, {"text": "звертання", "correct": false}], "explanation": "Дві години підкреслює процес."}, {"question": "\`Я написав лист до вечора.\`", "options": [{"text": "результат", "correct": true}, {"text": "процес без межі", "correct": false}, {"text": "питання відмінка", "correct": false}], "explanation": "Написав показує завершену дію."}, {"question": "\`готувати\`", "options": [{"text": "недоконаний вид", "correct": true}, {"text": "доконаний вид", "correct": false}, {"text": "наказовий спосіб", "correct": false}], "explanation": "Готувати - процес."}, {"question": "\`приготувати\`", "options": [{"text": "доконаний вид", "correct": true}, {"text": "недоконаний вид", "correct": false}, {"text": "теперішній час", "correct": false}], "explanation": "Приготувати - результат."}, {"question": "\`що зробити?\`", "options": [{"text": "питання доконаного виду", "correct": true}, {"text": "питання недоконаного виду", "correct": false}, {"text": "питання місцевого відмінка", "correct": false}], "explanation": "Що зробити? підказує доконаний вид."}, {"question": "\`що робити?\`", "options": [{"text": "питання недоконаного виду", "correct": true}, {"text": "питання доконаного виду", "correct": false}, {"text": "питання кличного відмінка", "correct": false}], "explanation": "Що робити? підказує недоконаний вид."}]`)} />
+
+## Дієвідміна, особа, число
+
+Дієвідміна - це група дієслів за моделлю закінчень. На A2 достатньо
+робочої карти:
+
+| Модель | 2-га особа однини | 3-тя особа однини | Приклад |
+| --- | --- | --- | --- |
+| I дієвідміна | -еш / -єш | -е / -є | пишеш, пише |
+| II дієвідміна | -иш / -їш | -ить / -їть | говориш, говорить |
+
+Особа показує, хто виконує дію:
+
+| Особа | Однина | Множина |
+| --- | --- | --- |
+| перша особа | я пишу | ми пишемо |
+| друга особа | ти пишеш | ви пишете |
+| третя особа | він пише | вони пишуть |
+
+У словниках і граматиці ви можете бачити скорочення:
+
+> 1 ос. - перша особа;
+>
+> 2 ос. - друга особа;
+>
+> 3 ос. - третя особа;
+>
+> одн. - однина;
+>
+> мн. - множина.
+
+Не треба боятися скорочень. Вони економлять місце. Якщо знаєте повний
+термін, скорочення читається легко.
+
+### Особа і число
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "\`я пишу\` - це ___ особа однини.", "answer": "перша", "options": ["перша", "друга", "третя"]}, {"sentence": "\`ти пишеш\` - це ___ особа однини.", "answer": "друга", "options": ["друга", "перша", "третя"]}, {"sentence": "\`він пише\` - це ___ особа однини.", "answer": "третя", "options": ["третя", "перша", "друга"]}, {"sentence": "\`ми пишемо\` - це перша особа ___.", "answer": "множини", "options": ["множини", "однини", "роду"]}, {"sentence": "\`ви пишете\` - це друга особа ___.", "answer": "множини", "options": ["множини", "однини", "знахідного"]}, {"sentence": "\`вони пишуть\` - це ___ особа множини.", "answer": "третя", "options": ["третя", "перша", "друга"]}, {"sentence": "\`пишеш\` має закінчення моделі ___ дієвідміни.", "answer": "I", "options": ["I", "II", "кличної"]}, {"sentence": "\`говориш\` має закінчення моделі ___ дієвідміни.", "answer": "II", "options": ["II", "I", "місцевої"]}]`)} />
+
+## Прислівник: місце, час, спосіб дії
+
+Прислівник відповідає на питання як? де? коли? Він не змінюється за
+родом, числом або відмінком.
+
+| Тип | Питання | Приклади |
+| --- | --- | --- |
+| прислівник місця | де? куди? | тут, там, додому, далеко |
+| прислівник часу | коли? | сьогодні, завтра, вчора, завжди |
+| прислівник способу дії | як? | швидко, повільно, уважно, добре |
+
+Багато прислівників утворюються від прикметників:
+
+> швидкий - швидко;
+>
+> уважний - уважно;
+>
+> гарний - гарно;
+>
+> спокійний - спокійно.
+
+Це корисно для словникової грамотності. Якщо ви бачите слово із
+закінченням `-о` і воно відповідає на питання `як?`, це часто прислівник.
+
+## Типові помилки
+
+**Помилка 1:** думати, що `вид` означає тільки `look` або `type`.
+
+У граматиці `вид` - це категорія дієслова: доконаний або недоконаний.
+
+**Помилка 2:** плутати час і вид.
+
+> `Я писав` - минулий час, недоконаний вид.
+>
+> `Я написав` - минулий час, доконаний вид.
+
+Час однаковий, вид різний.
+
+**Помилка 3:** ігнорувати словникові скорочення.
+
+Якщо в словнику написано `док.`, це не зайва інформація. Це підказка, як
+вживати дієслово.
+
+## 📋 Підсумок
+
+Тепер ви можете назвати основні дієслівні категорії українською:
+теперішній, минулий і майбутній час; доконаний і недоконаний вид; особа,
+число, дієвідміна. Ви також можете читати базові скорочення у словнику і
+класифікувати прислівники.
+
+Мінісамоперевірка:
+
+1. Який вид у дієслова `прочитати`?
+2. Що означає скорочення `недок.`?
+3. Яка особа у формі `пишемо`?
+4. Який тип прислівника слово `завтра`?
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"час","translation":"tense, time","pos":"noun","example":"Дієслово має теперішній, минулий або майбутній час.","examples":["tense, time","Дієслово має теперішній, минулий або майбутній час."]},{"word":"теперішній час","translation":"present tense","pos":"phrase","example":"У фразі 'я читаю' маємо теперішній час.","examples":["present tense","У фразі 'я читаю' маємо теперішній час."]},{"word":"минулий час","translation":"past tense","pos":"phrase","example":"У фразі 'я читав' маємо минулий час.","examples":["past tense","У фразі 'я читав' маємо минулий час."]},{"word":"майбутній час","translation":"future tense","pos":"phrase","example":"У фразі 'я прочитаю' маємо майбутній час.","examples":["future tense","У фразі 'я прочитаю' маємо майбутній час."]},{"word":"вид","translation":"verbal aspect","pos":"noun","example":"Вид показує процес або результат.","examples":["verbal aspect","Вид показує процес або результат."]},{"word":"доконаний вид","translation":"perfective aspect","pos":"phrase","example":"Дієслово 'написати' має доконаний вид.","examples":["perfective aspect","Дієслово 'написати' має доконаний вид."]},{"word":"недоконаний вид","translation":"imperfective aspect","pos":"phrase","example":"Дієслово 'писати' має недоконаний вид.","examples":["imperfective aspect","Дієслово 'писати' має недоконаний вид."]},{"word":"спосіб","translation":"mood","pos":"noun","example":"Наказовий спосіб використовуємо для прохання або наказу.","examples":["mood","Наказовий спосіб використовуємо для прохання або наказу."]},{"word":"дійсний спосіб","translation":"indicative mood","pos":"phrase","example":"Речення 'я читаю' має дійсний спосіб.","examples":["indicative mood","Речення 'я читаю' має дійсний спосіб."]},{"word":"наказовий спосіб","translation":"imperative mood","pos":"phrase","example":"Форма 'читай' має наказовий спосіб.","examples":["imperative mood","Форма 'читай' має наказовий спосіб."]},{"word":"умовний спосіб","translation":"conditional mood","pos":"phrase","example":"Форма 'читав би' має умовний спосіб.","examples":["conditional mood","Форма 'читав би' має умовний спосіб."]},{"word":"дієвідміна","translation":"conjugation class","pos":"noun","example":"Дієвідміна показує модель закінчень.","examples":["conjugation class","Дієвідміна показує модель закінчень."]},{"word":"особа","translation":"grammatical person","pos":"noun","example":"Форма 'пишу' має першу особу.","examples":["grammatical person","Форма 'пишу' має першу особу."]},{"word":"перша особа","translation":"first person","pos":"phrase","example":"Я і ми - це перша особа.","examples":["first person","Я і ми - це перша особа."]},{"word":"друга особа","translation":"second person","pos":"phrase","example":"Ти і ви - це друга особа.","examples":["second person","Ти і ви - це друга особа."]},{"word":"третя особа","translation":"third person","pos":"phrase","example":"Він і вони - це третя особа.","examples":["third person","Він і вони - це третя особа."]},{"word":"словник","translation":"dictionary","pos":"noun","example":"Я перевірив слово в словнику.","examples":["dictionary","Я перевірив слово в словнику."]},{"word":"словникова стаття","translation":"dictionary entry","pos":"phrase","example":"Словникова стаття має граматичну інформацію.","examples":["dictionary entry","Словникова стаття має граматичну інформацію."]},{"word":"скорочення","translation":"abbreviation","pos":"noun","example":"Скорочення 'недок.' означає недоконаний вид.","examples":["abbreviation","Скорочення 'недок.' означає недоконаний вид."]},{"word":"заголовне слово","translation":"headword","pos":"phrase","example":"Заголовне слово стоїть на початку статті.","examples":["headword","Заголовне слово стоїть на початку статті."]},{"word":"прислівник місця","translation":"adverb of place","pos":"phrase","example":"Слово 'тут' - прислівник місця.","examples":["adverb of place","Слово 'тут' - прислівник місця."]},{"word":"прислівник часу","translation":"adverb of time","pos":"phrase","example":"Слово 'завтра' - прислівник часу.","examples":["adverb of time","Слово 'завтра' - прислівник часу."]},{"word":"прислівник способу дії","translation":"adverb of manner","pos":"phrase","example":"Слово 'швидко' - прислівник способу дії.","examples":["adverb of manner","Слово 'швидко' - прислівник способу дії."]},{"word":"процес","translation":"process","pos":"noun","example":"Недоконаний вид часто показує процес.","examples":["process","Недоконаний вид часто показує процес."]},{"word":"результат","translation":"result","pos":"noun","example":"Доконаний вид часто показує результат.","examples":["result","Доконаний вид часто показує результат."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"час","back":"tense, time"},{"front":"теперішній час","back":"present tense"},{"front":"минулий час","back":"past tense"},{"front":"майбутній час","back":"future tense"},{"front":"вид","back":"verbal aspect"},{"front":"доконаний вид","back":"perfective aspect"},{"front":"недоконаний вид","back":"imperfective aspect"},{"front":"спосіб","back":"mood"},{"front":"дійсний спосіб","back":"indicative mood"},{"front":"наказовий спосіб","back":"imperative mood"},{"front":"умовний спосіб","back":"conditional mood"},{"front":"дієвідміна","back":"conjugation class"},{"front":"особа","back":"grammatical person"},{"front":"перша особа","back":"first person"},{"front":"друга особа","back":"second person"},{"front":"третя особа","back":"third person"},{"front":"словник","back":"dictionary"},{"front":"словникова стаття","back":"dictionary entry"},{"front":"скорочення","back":"abbreviation"},{"front":"заголовне слово","back":"headword"},{"front":"прислівник місця","back":"adverb of place"},{"front":"прислівник часу","back":"adverb of time"},{"front":"прислівник способу дії","back":"adverb of manner"},{"front":"процес","back":"process"},{"front":"результат","back":"result"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Дієслівні категорії
+
+*(див. урок, §Дієслово: категорії та терміни)*
+
+### Вид дієслова
+
+*(див. урок, §Вид: доконаний і недоконаний)*
+
+### Особа і число
+
+*(див. урок, §Дієвідміна, особа, число)*
+
+### Словникові скорочення
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "ім.", "right": "іменник"}, {"left": "прикм.", "right": "прикметник"}, {"left": "дієсл.", "right": "дієслово"}, {"left": "присл.", "right": "прислівник"}, {"left": "док.", "right": "доконаний вид"}, {"left": "недок.", "right": "недоконаний вид"}, {"left": "одн.", "right": "однина"}, {"left": "мн.", "right": "множина"}]`)} />
+
+### Тип прислівника
+
+<GroupSort client:only='react' groups={JSON.parse(`{"місця": ["тут", "там", "далеко", "додому"], "часу": ["сьогодні", "завтра", "вчора", "завжди"], "способу дії": ["швидко", "повільно", "уважно", "добре"]}`)} />
+
+### Виправте опис
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильний граматичний опис." items={JSON.parse(`[{"sentence": "\`Я написав лист\` - недоконаний вид.", "errorWord": "недоконаний", "correctForm": "\`Я написав лист\` - доконаний вид.", "options": ["\`Я написав лист\` - доконаний вид.", "\`Я написав лист\` - прислівник."], "explanation": "Написав показує результат."}, {"sentence": "\`Я писав лист\` - доконаний вид.", "errorWord": "доконаний", "correctForm": "\`Я писав лист\` - недоконаний вид.", "options": ["\`Я писав лист\` - недоконаний вид.", "\`Я писав лист\` - кличний відмінок."], "explanation": "Писав описує процес."}, {"sentence": "\`пишемо\` - третя особа.", "errorWord": "третя", "correctForm": "\`пишемо\` - перша особа множини.", "options": ["\`пишемо\` - перша особа множини.", "\`пишемо\` - друга особа однини."], "explanation": "\`Ми пишемо\` - перша особа множини."}, {"sentence": "\`завтра\` - прислівник місця.", "errorWord": "місця", "correctForm": "\`завтра\` - прислівник часу.", "options": ["\`завтра\` - прислівник часу.", "\`завтра\` - іменник."], "explanation": "\`Завтра\` відповідає на питання коли?"}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [ULP: Future Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-future/) — Reference for simple and compound future forms.
+- 📄 [ULP: The Past Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-past-tense/) — Reference for Ukrainian past tense forms and agreement.
+- 📄 [ULP: Ukrainian Verb Aspect](https://www.ukrainianlessons.com/aspect/) — Catalog-backed overview for reviewing доконаний and недоконаний вид.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

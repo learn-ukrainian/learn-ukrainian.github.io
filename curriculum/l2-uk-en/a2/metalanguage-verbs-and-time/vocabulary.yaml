@@ -1,0 +1,100 @@
+- word: час
+  translation: tense, time
+  pos: noun
+  example: "Дієслово має теперішній, минулий або майбутній час."
+- word: теперішній час
+  translation: present tense
+  pos: phrase
+  example: "У фразі 'я читаю' маємо теперішній час."
+- word: минулий час
+  translation: past tense
+  pos: phrase
+  example: "У фразі 'я читав' маємо минулий час."
+- word: майбутній час
+  translation: future tense
+  pos: phrase
+  example: "У фразі 'я прочитаю' маємо майбутній час."
+- word: вид
+  translation: verbal aspect
+  pos: noun
+  example: "Вид показує процес або результат."
+- word: доконаний вид
+  translation: perfective aspect
+  pos: phrase
+  example: "Дієслово 'написати' має доконаний вид."
+- word: недоконаний вид
+  translation: imperfective aspect
+  pos: phrase
+  example: "Дієслово 'писати' має недоконаний вид."
+- word: спосіб
+  translation: mood
+  pos: noun
+  example: "Наказовий спосіб використовуємо для прохання або наказу."
+- word: дійсний спосіб
+  translation: indicative mood
+  pos: phrase
+  example: "Речення 'я читаю' має дійсний спосіб."
+- word: наказовий спосіб
+  translation: imperative mood
+  pos: phrase
+  example: "Форма 'читай' має наказовий спосіб."
+- word: умовний спосіб
+  translation: conditional mood
+  pos: phrase
+  example: "Форма 'читав би' має умовний спосіб."
+- word: дієвідміна
+  translation: conjugation class
+  pos: noun
+  example: "Дієвідміна показує модель закінчень."
+- word: особа
+  translation: grammatical person
+  pos: noun
+  example: "Форма 'пишу' має першу особу."
+- word: перша особа
+  translation: first person
+  pos: phrase
+  example: "Я і ми - це перша особа."
+- word: друга особа
+  translation: second person
+  pos: phrase
+  example: "Ти і ви - це друга особа."
+- word: третя особа
+  translation: third person
+  pos: phrase
+  example: "Він і вони - це третя особа."
+- word: словник
+  translation: dictionary
+  pos: noun
+  example: "Я перевірив слово в словнику."
+- word: словникова стаття
+  translation: dictionary entry
+  pos: phrase
+  example: "Словникова стаття має граматичну інформацію."
+- word: скорочення
+  translation: abbreviation
+  pos: noun
+  example: "Скорочення 'недок.' означає недоконаний вид."
+- word: заголовне слово
+  translation: headword
+  pos: phrase
+  example: "Заголовне слово стоїть на початку статті."
+- word: прислівник місця
+  translation: adverb of place
+  pos: phrase
+  example: "Слово 'тут' - прислівник місця."
+- word: прислівник часу
+  translation: adverb of time
+  pos: phrase
+  example: "Слово 'завтра' - прислівник часу."
+- word: прислівник способу дії
+  translation: adverb of manner
+  pos: phrase
+  example: "Слово 'швидко' - прислівник способу дії."
+- word: процес
+  translation: process
+  pos: noun
+  example: "Недоконаний вид часто показує процес."
+- word: результат
+  translation: result
+  pos: noun
+  example: "Доконаний вид часто показує результат."

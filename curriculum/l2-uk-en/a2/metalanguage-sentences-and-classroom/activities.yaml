@@ -1,0 +1,213 @@
+inline:
+  - id: act-1
+    type: match-up
+    title: Члени речення
+    instruction: З'єднайте термін з питанням або роллю.
+    pairs:
+      - left: "підмет"
+        right: "хто? що?"
+      - left: "присудок"
+        right: "що робить?"
+      - left: "додаток"
+        right: "кого? що? кому? чому?"
+      - left: "означення"
+        right: "який? чий?"
+      - left: "обставина"
+        right: "як? де? коли?"
+      - left: "граматична основа"
+        right: "підмет + присудок"
+      - left: "речення"
+        right: "слова з завершеною думкою"
+      - left: "член речення"
+        right: "роль слова в реченні"
+  - id: act-2
+    type: group-sort
+    title: Частини слова
+    instruction: Розподіліть приклади за термінами.
+    groups:
+      - label: "корінь"
+        items:
+          - "пис-"
+          - "школ-"
+          - "друг-"
+          - "чит-"
+      - label: "префікс"
+        items:
+          - "на-"
+          - "пере-"
+          - "під-"
+          - "за-"
+      - label: "суфікс"
+        items:
+          - "-к-"
+          - "-ар-"
+          - "-н-"
+          - "-енн-"
+      - label: "закінчення"
+        items:
+          - "-а"
+          - "-ою"
+          - "-і"
+          - "-ами"
+  - id: act-3
+    type: quiz
+    title: Мова класу
+    instruction: Оберіть значення інструкції.
+    items:
+      - question: "прочитайте"
+        options:
+          - "read"
+          - "write down"
+          - "correct"
+        correct: 0
+        explanation: "`Прочитайте` означає read."
+      - question: "запишіть"
+        options:
+          - "write down"
+          - "compare"
+          - "underline"
+        correct: 0
+        explanation: "`Запишіть` означає write down."
+      - question: "виберіть"
+        options:
+          - "choose"
+          - "explain"
+          - "insert"
+        correct: 0
+        explanation: "`Виберіть` означає choose."
+      - question: "підкресліть"
+        options:
+          - "underline"
+          - "read"
+          - "answer"
+        correct: 0
+        explanation: "`Підкресліть` означає underline."
+      - question: "вставте"
+        options:
+          - "insert"
+          - "compare"
+          - "correct"
+        correct: 0
+        explanation: "`Вставте` означає insert."
+      - question: "визначте"
+        options:
+          - "identify"
+          - "write down"
+          - "read aloud"
+        correct: 0
+        explanation: "`Визначте` означає identify."
+      - question: "поясніть"
+        options:
+          - "explain"
+          - "choose"
+          - "underline"
+        correct: 0
+        explanation: "`Поясніть` означає explain."
+      - question: "виправте"
+        options:
+          - "correct"
+          - "compare"
+          - "read"
+        correct: 0
+        explanation: "`Виправте` означає correct."
+  - id: act-4
+    type: fill-in
+    title: Аналіз речення
+    instruction: Оберіть правильний термін.
+    items:
+      - sentence: "У реченні 'Олена читає статтю' слово 'Олена' - це ___."
+        answer: "підмет"
+        options:
+          - "підмет"
+          - "обставина"
+          - "префікс"
+        explanation: "Олена виконує дію."
+      - sentence: "У реченні 'Олена читає статтю' слово 'читає' - це ___."
+        answer: "присудок"
+        options:
+          - "присудок"
+          - "означення"
+          - "суфікс"
+        explanation: "Присудок називає дію підмета."
+      - sentence: "У реченні 'Олена читає статтю' слово 'статтю' - це ___."
+        answer: "додаток"
+        options:
+          - "додаток"
+          - "підмет"
+          - "закінчення"
+        explanation: "Читає що? статтю."
+      - sentence: "У фразі 'нова стаття' слово 'нова' - це ___."
+        answer: "означення"
+        options:
+          - "означення"
+          - "присудок"
+          - "корінь"
+        explanation: "Нова відповідає на питання яка?"
+      - sentence: "У реченні 'Вона читає ввечері' слово 'ввечері' - це ___."
+        answer: "обставина"
+        options:
+          - "обставина"
+          - "додаток"
+          - "підмет"
+        explanation: "Ввечері відповідає на питання коли?"
+      - sentence: "У слові 'написати' частина 'на-' - це ___."
+        answer: "префікс"
+        options:
+          - "префікс"
+          - "закінчення"
+          - "підмет"
+        explanation: "Префікс стоїть перед коренем."
+      - sentence: "У слові 'книгою' частина '-ою' - це ___."
+        answer: "закінчення"
+        options:
+          - "закінчення"
+          - "корінь"
+          - "присудок"
+        explanation: "Закінчення показує граматичну форму."
+      - sentence: "У словах 'писати', 'запис', 'підпис' спільний ___."
+        answer: "корінь"
+        options:
+          - "корінь"
+          - "сполучник"
+          - "обставина"
+        explanation: "Спільний корінь пов'язує споріднені слова."
+workbook:
+  - type: error-correction
+    title: Помилка в аналізі
+    instruction: Оберіть правильний аналіз.
+    items:
+      - sentence: "У реченні 'Увечері Марта читає' підмет - 'увечері'."
+        error: "увечері"
+        correction: "Підмет - 'Марта'."
+        options:
+          - "Підмет - 'Марта'."
+          - "Підмет - 'читає'."
+        explanation: "Підмет відповідає на питання хто?"
+      - sentence: "У фразі 'цікава книжка' слово 'цікава' - додаток."
+        error: "додаток"
+        correction: "Слово 'цікава' - означення."
+        options:
+          - "Слово 'цікава' - означення."
+          - "Слово 'цікава' - присудок."
+        explanation: "Цікава відповідає на питання яка?"
+      - sentence: "У слові 'переписати' частина 'пере-' - суфікс."
+        error: "суфікс"
+        correction: "Частина 'пере-' - префікс."
+        options:
+          - "Частина 'пере-' - префікс."
+          - "Частина 'пере-' - закінчення."
+        explanation: "Префікс стоїть перед коренем."
+      - sentence: "Інструкція 'виправте' означає 'порівняйте'."
+        error: "порівняйте"
+        correction: "Інструкція 'виправте' означає 'correct'."
+        options:
+          - "Інструкція 'виправте' означає 'correct'."
+          - "Інструкція 'виправте' означає 'read'."
+        explanation: "`Виправте` - знайдіть і виправте помилку."
+  - type: mark-the-words
+    title: Знайдіть підмет і присудок
+    instruction: Позначте підмет і присудок у реченні.
+    text: "У суботу Олена готувала вечерю для друзів."
+    targets:
+      - "Олена"
+      - "готувала"

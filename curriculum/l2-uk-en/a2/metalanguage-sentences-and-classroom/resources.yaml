@@ -1,0 +1,15 @@
+- title: "ULP: Ukrainian Grammar Overview"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: b1-how-to-talk-about-grammar"
+  url: "https://www.ukrainianlessons.com/grammar/"
+  notes: "Catalog-backed grammar overview for seeing Ukrainian grammar categories together."
+- title: "ULP: Ukrainian Registers"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-checkpoint-syntax"
+  url: "https://www.ukrainianlessons.com/registers/"
+  notes: "Optional bridge resource for noticing formal classroom and grammar-register language."
+- title: "ULP: Relative Pronouns"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-checkpoint-syntax"
+  url: "https://www.talkukrainian.com/relative-pronouns-ukrainian/"
+  notes: "Optional review of sentence-linking language already introduced in A2.7."
