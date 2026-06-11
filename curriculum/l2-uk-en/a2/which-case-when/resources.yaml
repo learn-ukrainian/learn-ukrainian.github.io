@@ -1,0 +1,25 @@
+- title: "ULP: Prepositions and Cases"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /prepositions-cases/"
+  url: "https://www.ukrainianlessons.com/prepositions-cases/"
+  notes: "Learner-facing overview of which cases follow common Ukrainian prepositions."
+- title: "ULP: Location vs Destination Prepositions"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /location-destination-prepositions/"
+  url: "https://www.ukrainianlessons.com/location-destination-prepositions/"
+  notes: "Support for the куди? / де? distinction with у/в and на."
+- title: "ULP: Ukrainian Cases Chart"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /ukrainian-cases-chart/"
+  url: "https://www.ukrainianlessons.com/ukrainian-cases-chart/"
+  notes: "Compact chart for reviewing all case names and core questions."
+- title: "Dobra Forma 8-2: Accusative after в/у, на and про"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-028"
+  url: "https://opentext.ku.edu/dobraforma/chapter/8-2/"
+  notes: "Practice with accusative after destination and topic prepositions."
+- title: "Dobra Forma 7-1: Genitive after з, до and в/у"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-023"
+  url: "https://opentext.ku.edu/dobraforma/chapter/7-1/"
+  notes: "Practice for genitive after common prepositions such as з and до."

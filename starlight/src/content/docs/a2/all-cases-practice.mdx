@@ -1,0 +1,255 @@
+---
+title: "Все разом"
+description: "Розширені діалоги з усіма сімома відмінками в однині та множині"
+sidebar:
+  order: 37
+  label: "37. Все разом"
+prev: which-case-when
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог 1: організовуємо день народження
+
+Друзі планують невелику вечірку. Прочитайте діалог і дивіться, що
+змушує слово змінювати форму.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Андрій","text":"Оксано, у тебе є хвилина?"},{"speaker":"Оксана","text":"Так, Андрію. Що сталося?"},{"speaker":"Андрій","text":"У Марії день народження в суботу. Хочемо запросити друзів у кафе."},{"speaker":"Оксана","text":"Добре. Скільки буде гостей?"},{"speaker":"Андрій","text":"Десять або одинадцять. Але в нас ще немає торта."},{"speaker":"Оксана","text":"Я можу купити торт і квіти. А ти напиши друзям."},{"speaker":"Андрій","text":"Домовилися. Подарунок Марії вже є?"},{"speaker":"Оксана","text":"Так, книжка про подорожі. Прикрасимо стіл квітами і кульками."},{"speaker":"Андрій","text":"Чудово. Зустрінемося в кафе о шостій."}]')}
+/>
+
+Карта:
+
+| Фраза | Відмінок | Чому |
+| --- | --- | --- |
+| Оксано | кличний | звертання |
+| друзі, гості | називний | хто? |
+| друзів, гостей | знахідний або родовий | запросити кого? / скільки кого? |
+| торта | родовий | немає чого? |
+| друзям | давальний | написати кому? |
+| Марії | давальний | подарунок кому? |
+| квітами, кульками | орудний | чим прикрасимо? |
+| в кафе | місцевий у готовій фразі місця | де зустрінемося? |
+
+### День народження
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "У фразі 'Оксано, у тебе є хвилина?' слово Оксано - це...", "options": [{"text": "кличний", "correct": true}, {"text": "називний", "correct": false}, {"text": "родовий", "correct": false}], "explanation": "Оксано - форма звертання."}, {"question": "У фразі 'немає торта' слово торта - це...", "options": [{"text": "знахідний", "correct": false}, {"text": "родовий", "correct": true}, {"text": "орудний", "correct": false}], "explanation": "Немає чого? - торта."}, {"question": "У фразі 'напиши друзям' слово друзям - це...", "options": [{"text": "давальний", "correct": true}, {"text": "родовий", "correct": false}, {"text": "місцевий", "correct": false}], "explanation": "Написати кому? - друзям."}, {"question": "У фразі 'прикрасимо квітами' слово квітами - це...", "options": [{"text": "орудний", "correct": true}, {"text": "давальний", "correct": false}, {"text": "називний", "correct": false}], "explanation": "Прикрасимо чим? - квітами."}]`)} />
+
+## Діалог 2: у лікаря
+
+Тут багато корисних форм із теми здоров'я.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Пацієнт","text":"Лікарю, добрий день."},{"speaker":"Лікар","text":"Добрий день. Що вас турбує?"},{"speaker":"Пацієнт","text":"У мене болить горло і голова. Але температури немає."},{"speaker":"Лікар","text":"Ви приймали ліки?"},{"speaker":"Пацієнт","text":"Так, але мені не краще."},{"speaker":"Лікар","text":"Я дам вам рецепт і пораджу пити більше води."},{"speaker":"Пацієнт","text":"Дякую, лікарю. Коли прийти на огляд?"},{"speaker":"Лікар","text":"У п\'ятницю. Якщо буде гірше, телефонуйте нам."}]')}
+/>
+
+Карта:
+
+| Фраза | Відмінок | Чому |
+| --- | --- | --- |
+| Лікарю | кличний | звертання |
+| горло, голова | називний | що болить? |
+| температури | родовий | немає чого? |
+| ліки | знахідний | приймати що? |
+| мені, вам, нам | давальний | кому? |
+| рецепт | знахідний | дам що? |
+| води | родовий | більше чого? |
+| у п'ятницю | знахідний | день тижня |
+
+### У лікаря
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У мене немає ___.", "answer": "температури", "options": ["температура", "температуру", "температури"]}, {"sentence": "Лікар дає ___ рецепт.", "answer": "пацієнтові", "options": ["пацієнт", "пацієнта", "пацієнтові"]}, {"sentence": "Потрібно пити більше ___.", "answer": "води", "options": ["вода", "воду", "води"]}, {"sentence": "Прийдіть на огляд у ___.", "answer": "п'ятницю", "options": ["п'ятниця", "п'ятницю", "п'ятниці"]}]`)} />
+
+## Діалог 3: подорож Україною
+
+Двоє друзів планують коротку подорож.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Ірина","text":"Тарасе, поїдьмо до Львова на вихідні."},{"speaker":"Тарас","text":"Із задоволенням. Але я хочу також побачити Карпати."},{"speaker":"Ірина","text":"Тоді поїдемо потягом до Львова, а потім автобусом у гори."},{"speaker":"Тарас","text":"Напишемо друзям у Львові?"},{"speaker":"Ірина","text":"Так. Вони можуть показати нам кілька визначних місць."},{"speaker":"Тарас","text":"А в неділю погуляємо по центру і будемо милуватися старими будинками."},{"speaker":"Ірина","text":"Добре. Я вже думаю про квитки."}]')}
+/>
+
+Карта:
+
+| Фраза | Відмінок | Чому |
+| --- | --- | --- |
+| Тарасе | кличний | звертання |
+| до Львова | родовий | до чого? |
+| Карпати | знахідний | побачити що? |
+| потягом, автобусом | орудний | чим їдемо? |
+| друзям | давальний | напишемо кому? |
+| у Львові | місцевий | де? |
+| визначних місць | родовий множини | кілька чого? |
+| по центру | місцевий | шлях |
+| будинками | орудний | милуватися чим? |
+| про квитки | знахідний | думати про що? |
+
+### Подорож
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "до Львова", "right": "до чого? родовий"}, {"left": "потягом", "right": "чим? орудний"}, {"left": "друзям", "right": "кому? давальний"}, {"left": "у Львові", "right": "де? місцевий"}, {"left": "про квитки", "right": "про що? знахідний"}]`)} />
+
+## Шпаргалка з відмінків
+
+| Відмінок | Питання | Часті сигнали |
+| --- | --- | --- |
+| називний | хто? що? | підмет |
+| родовий | кого? чого? | немає, багато, без, для, до, після |
+| давальний | кому? чому? | допомагати, дякувати, телефонувати, писати |
+| знахідний | кого? що? куди? | бачити, купити, запросити, у/в або на для руху |
+| орудний | ким? чим? з ким? | з/із разом, користуватися, їхати чим? |
+| місцевий | де? на чому? | у/в, на, по для місця або шляху |
+| кличний | звертання | Оксано, Андрію, лікарю, Тарасе |
+
+Ця таблиця не замінює діалог. Вона допомагає перевірити, чому форма
+з'явилася саме тут.
+
+### Сім відмінків
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Родовий": ["немає торта", "до Львова", "кілька місць"], "Давальний": ["друзям", "Марії", "пацієнтові"], "Орудний": ["квітами", "потягом", "з друзями"], "Місцевий": ["у Львові", "у кафе", "по центру"]}`)} />
+
+## Знайдіть помилку
+
+Працюйте повільно: знайдіть тригер, поставте питання, оберіть форму.
+
+| Не так | Питання | Краще |
+| --- | --- | --- |
+| запросити друзі | кого? | запросити друзів |
+| немає торт | чого? | немає торта |
+| написати друзі | кому? | написати друзям |
+| милуватися Карпати | чим? | милуватися Карпатами |
+| у Львів живуть | де? | у Львові живуть |
+| думати про подорожі? | про що? | думати про подорож |
+
+## Міні-розмова
+
+Підготуйте 8-10 реплік на одну тему:
+
+- маленька вечірка;
+- візит до лікаря;
+- коротка подорож;
+- план на вихідні.
+
+У розмові використайте щонайменше п'ять різних відмінків. Після цього
+підкресліть форми і поясніть їх одним словом: `немає`, `кому?`,
+`куди?`, `з ким?`, `де?`, `звертання`.
+
+## 📋 Підсумок
+
+На A2 важливо не безпомилково називати кожну форму за одну секунду, а
+мати процес. Спочатку знайдіть ситуацію: хто діє, чого немає, кому
+пишемо, кого бачимо, з ким ідемо, де ми, до кого звертаємося. Потім
+оберіть форму.
+
+Самоперевірка: проаналізуйте речення `Я їду до Львова з друзями`.
+Поясніть `до Львова` і `з друзями`. Потім складіть своє речення з
+трьома різними відмінками.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"вечірка","translation":"party","pos":"noun","gender":"f","example":"Ми організовуємо вечірку.","examples":["party","Ми організовуємо вечірку."]},{"word":"подарунок","translation":"gift","pos":"noun","gender":"m","example":"Подарунок Марії вже є.","examples":["gift","Подарунок Марії вже є."]},{"word":"гість","translation":"guest","pos":"noun","gender":"m","example":"Скільки буде гостей?","examples":["guest","Скільки буде гостей?"]},{"word":"частувати","translation":"to treat with food","pos":"verb","example":"Іменинник частує гостей.","examples":["to treat with food","Іменинник частує гостей."]},{"word":"лікар","translation":"doctor","pos":"noun","gender":"m","example":"Лікар дав рецепт.","examples":["doctor","Лікар дав рецепт."]},{"word":"пацієнт","translation":"patient","pos":"noun","gender":"m","example":"Пацієнт прийшов на огляд.","examples":["patient","Пацієнт прийшов на огляд."]},{"word":"здоров'я","translation":"health","pos":"noun","gender":"n","example":"Здоров'я дуже важливе.","examples":["health","Здоров'я дуже важливе."]},{"word":"ліки","translation":"medicine","pos":"noun","gender":"pl","example":"Ви приймали ліки?","examples":["medicine","Ви приймали ліки?"]},{"word":"рецепт","translation":"prescription, recipe","pos":"noun","gender":"m","example":"Лікар написав рецепт.","examples":["prescription, recipe","Лікар написав рецепт."]},{"word":"температура","translation":"temperature","pos":"noun","gender":"f","example":"Температури немає.","examples":["temperature","Температури немає."]},{"word":"горло","translation":"throat","pos":"noun","gender":"n","example":"У мене болить горло.","examples":["throat","У мене болить горло."]},{"word":"подорож","translation":"trip, journey","pos":"noun","gender":"f","example":"Ми плануємо подорож.","examples":["trip, journey","Ми плануємо подорож."]},{"word":"потяг","translation":"train","pos":"noun","gender":"m","example":"Ми поїдемо потягом.","examples":["train","Ми поїдемо потягом."]},{"word":"визначне місце","translation":"landmark, sight","pos":"noun phrase","example":"У Львові багато визначних місць.","examples":["landmark, sight","У Львові багато визначних місць."]},{"word":"Карпати","translation":"the Carpathians","pos":"proper noun","gender":"pl","example":"Ми хочемо побачити Карпати.","examples":["the Carpathians","Ми хочемо побачити Карпати."]},{"word":"милуватися","translation":"to admire","pos":"verb","example":"Ми милуємося старими будинками.","examples":["to admire","Ми милуємося старими будинками."]},{"word":"запрошувати","translation":"to invite","pos":"verb","example":"Ми запрошуємо друзів.","examples":["to invite","Ми запрошуємо друзів."]},{"word":"кличний відмінок","translation":"vocative case","pos":"phrase","example":"Тарасе - це кличний відмінок.","examples":["vocative case","Тарасе - це кличний відмінок."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"вечірка","back":"party"},{"front":"подарунок","back":"gift"},{"front":"гість","back":"guest"},{"front":"частувати","back":"to treat with food"},{"front":"лікар","back":"doctor"},{"front":"пацієнт","back":"patient"},{"front":"здоров'я","back":"health"},{"front":"ліки","back":"medicine"},{"front":"рецепт","back":"prescription, recipe"},{"front":"температура","back":"temperature"},{"front":"горло","back":"throat"},{"front":"подорож","back":"trip, journey"},{"front":"потяг","back":"train"},{"front":"визначне місце","back":"landmark, sight"},{"front":"Карпати","back":"the Carpathians"},{"front":"милуватися","back":"to admire"},{"front":"запрошувати","back":"to invite"},{"front":"кличний відмінок","back":"vocative case"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### День народження
+
+*(див. урок, §Діалог 1: організовуємо день народження)*
+
+### У лікаря
+
+*(див. урок, §Діалог 2: у лікаря)*
+
+### Подорож
+
+*(див. урок, §Діалог 3: подорож Україною)*
+
+### Сім відмінків
+
+*(див. урок, §Шпаргалка з відмінків)*
+
+### Усі відмінки в реченнях
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Ми запросили ___.", "answer": "гостей", "options": ["гості", "гостей", "гостям"]}, {"sentence": "У нас немає ___.", "answer": "квитків", "options": ["квитки", "квитків", "квитками"]}, {"sentence": "Я телефоную ___.", "answer": "лікарю", "options": ["лікар", "лікаря", "лікарю"]}, {"sentence": "Ми милуємося ___.", "answer": "Карпатами", "options": ["Карпати", "Карпат", "Карпатами"]}, {"sentence": "Вони гуляють по ___.", "answer": "центру", "options": ["центр", "центру", "центром"]}]`)} />
+
+### Виправте помилки
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильне речення." items={JSON.parse(`[{"sentence": "Я допомагаю сестру.", "errorWord": "сестру", "correctForm": "Я допомагаю сестрі.", "options": ["Я допомагаю сестрі.", "Я допомагаю сестру."], "explanation": "Допомагати кому? - сестрі."}, {"sentence": "Ми їдемо до Львів.", "errorWord": "Львів", "correctForm": "Ми їдемо до Львова.", "options": ["Ми їдемо до Львова.", "Ми їдемо до Львів."], "explanation": "До чого? - до Львова."}, {"sentence": "Подарунок для Марія.", "errorWord": "Марія", "correctForm": "Подарунок для Марії.", "options": ["Подарунок для Марії.", "Подарунок для Марія."], "explanation": "Для кого? - для Марії."}, {"sentence": "Я думаю про подорожі завтра.", "errorWord": "подорожі", "correctForm": "Я думаю про подорож завтра.", "options": ["Я думаю про подорож завтра.", "Я думаю про подорожі завтра."], "explanation": "Про що? - про подорож. Фраза завтра уточнює час."}]`)} />
+
+### Чи правильно?
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Тарасе, поїдьмо до Львова.", "isTrue": true, "explanation": "Тарасе - кличний; до Львова - родовий."}, {"statement": "Ми зустрінемося у Львів.", "isTrue": false, "explanation": "Де? - у Львові."}, {"statement": "Лікар дав пацієнтові рецепт.", "isTrue": true, "explanation": "Дав кому? - пацієнтові; дав що? - рецепт."}, {"statement": "Вони прикрасили стіл квітами.", "isTrue": true, "explanation": "Чим прикрасили? - квітами."}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [ULP: Birthday Wishes in Ukrainian](https://www.ukrainianlessons.com/birthday-wishes/) — Learner-facing birthday context that supports the party dialogue.
+- 📄 [ULP: Phrasebook Health](https://www.ukrainianlessons.com/ph-health/) — Useful health phrases for the doctor dialogue.
+- 📄 [ULP: Ukrainian Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/) — Compact chart for all case names, questions and example forms.
+- 📄 [ULP: Ukrainian Cases Introduction](https://www.ukrainianlessons.com/intro-cases/) — Learner-facing overview for reviewing the full case system.
+
+**🎧 Аудіо:**
+- 🎧 [ULP 1-26: Talking about traveling](https://www.ukrainianlessons.com/episode26/) — Audio-supported travel context for the trip-planning dialogue.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

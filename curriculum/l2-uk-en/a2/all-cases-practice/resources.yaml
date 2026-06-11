@@ -1,0 +1,25 @@
+- title: "ULP: Ukrainian Cases Introduction"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-all-cases-practice"
+  url: "https://www.ukrainianlessons.com/intro-cases/"
+  notes: "Learner-facing overview for reviewing the full case system."
+- title: "ULP: Ukrainian Cases Chart"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /ukrainian-cases-chart/"
+  url: "https://www.ukrainianlessons.com/ukrainian-cases-chart/"
+  notes: "Compact chart for all case names, questions and example forms."
+- title: "ULP: Birthday Wishes in Ukrainian"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /birthday-wishes/"
+  url: "https://www.ukrainianlessons.com/birthday-wishes/"
+  notes: "Learner-facing birthday context that supports the party dialogue."
+- title: "ULP: Phrasebook Health"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /ph-health/"
+  url: "https://www.ukrainianlessons.com/ph-health/"
+  notes: "Useful health phrases for the doctor dialogue."
+- title: "ULP 1-26: Talking about traveling"
+  role: podcast
+  source_ref: "docs/resources/external_resources.yaml: a1-travel"
+  url: "https://www.ukrainianlessons.com/episode26/"
+  notes: "Audio-supported travel context for the trip-planning dialogue."
