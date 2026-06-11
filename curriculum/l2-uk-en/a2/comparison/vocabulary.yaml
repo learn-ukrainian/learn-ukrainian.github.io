@@ -1,0 +1,88 @@
+- word: порівняння
+  translation: comparison
+  pos: noun
+  example: "Порівняння допомагає вибрати кращий варіант."
+- word: більший
+  translation: bigger
+  pos: adjective
+  example: "Цей екран більший, ніж мій старий."
+- word: більша
+  translation: bigger, feminine
+  pos: adjective
+  example: "Наша кімната більша за кухню."
+- word: менший
+  translation: smaller
+  pos: adjective
+  example: "Цей ноутбук менший і легший."
+- word: кращий
+  translation: better
+  pos: adjective
+  example: "Цей план кращий для групи."
+- word: гірший
+  translation: worse
+  pos: adjective
+  example: "Старий маршрут гірший уранці."
+- word: найкращий
+  translation: the best
+  pos: adjective
+  example: "Це найкращий варіант для мене."
+- word: найбільший
+  translation: the biggest
+  pos: adjective
+  example: "Це найбільший екран у магазині."
+- word: найменший
+  translation: the smallest
+  pos: adjective
+  example: "Найменший пакет дешевший."
+- word: дешевший
+  translation: cheaper
+  pos: adjective
+  example: "Цей квиток дешевший за той."
+- word: дорожчий
+  translation: more expensive
+  pos: adjective
+  example: "Новий телефон дорожчий, але зручніший."
+- word: зручніший
+  translation: more convenient
+  pos: adjective
+  example: "Ранковий час зручніший для зустрічі."
+- word: цікавіший
+  translation: more interesting
+  pos: adjective
+  example: "Другий музей цікавіший для дітей."
+- word: тихіший
+  translation: quieter
+  pos: adjective
+  example: "Цей район тихіший увечері."
+- word: важчий
+  translation: heavier
+  pos: adjective
+  example: "Рюкзак важчий, ніж сумка."
+- word: легший
+  translation: lighter, easier
+  pos: adjective
+  example: "Це легший спосіб."
+- word: ніж
+  translation: than
+  pos: conjunction
+  example: "Метро швидше, ніж автобус."
+- word: за
+  translation: than, in comparisons
+  pos: preposition
+  example: "Метро швидше за автобус."
+- word: набагато
+  translation: much, significantly
+  pos: adverb
+  example: "Цей варіант набагато кращий."
+- word: трохи
+  translation: a little, slightly
+  pos: adverb
+  example: "Ця кава трохи міцніша."
+- word: значно
+  translation: considerably
+  pos: adverb
+  example: "Нова програма значно зручніша."
+- word: навпаки
+  translation: on the contrary
+  pos: adverb
+  example: "Я думав, що буде дорожче; навпаки, це дешевше."

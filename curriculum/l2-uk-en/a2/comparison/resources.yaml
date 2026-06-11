@@ -1,0 +1,25 @@
+- title: "Dobra Forma: Comparative Degree of Adjectives"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-060"
+  url: "https://opentext.ku.edu/dobraforma/chapter/20-1/"
+  notes: "Catalog-backed practice for forming comparative adjective forms."
+- title: "Dobra Forma: Comparative Degree of Adjectives (Exceptions)"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-061"
+  url: "https://opentext.ku.edu/dobraforma/chapter/20-2/"
+  notes: "Follow-up for common irregular comparatives such as кращий and гірший."
+- title: "Dobra Forma: Superlative Degree of Adjectives"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-062"
+  url: "https://opentext.ku.edu/dobraforma/chapter/20-3/"
+  notes: "Practice with най- and superlative adjective forms."
+- title: "Talk Ukrainian: Degrees of Comparison of Adjectives"
+  role: article
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-023"
+  url: "https://talkukrainian.com/adjectives-degrees-comparison/"
+  notes: "Compact learner-facing reference for comparative and superlative adjectives."
+- title: "Talk Ukrainian: Degrees of Comparison of Adverbs"
+  role: article
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-025"
+  url: "https://talkukrainian.com/adverbs-degrees-comparison/"
+  notes: "Useful for forms such as краще, гірше, більше, менше."

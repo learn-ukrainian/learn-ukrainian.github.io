@@ -1,0 +1,25 @@
+- title: "Dobra Forma 12-1: Possessive Pronouns (мій, твій, чий)"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-sviy-and-sebe"
+  url: "https://opentext.ku.edu/dobraforma/chapter/12-1/"
+  notes: "Catalog-backed review of possessive pronoun agreement before свій."
+- title: "Talk Ukrainian: Possessive Pronouns - мій, твій vs свій"
+  role: article
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-011"
+  url: "https://talkukrainian.com/possessive-pronouns/"
+  notes: "Compact learner-facing reference that explicitly contrasts мій, твій and свій."
+- title: "ULP: Possessive Pronouns Declension"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /possessive-pronouns-declension/"
+  url: "https://www.ukrainianlessons.com/possessive-pronouns-declension/"
+  notes: "Declension table support for forms that pattern with свій."
+- title: "ULP: Reflexive Possessive Pronoun"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a1-my-family"
+  url: "https://www.ukrainianlessons.com/reflexive-possessive-pronoun/"
+  notes: "Existing catalog reference for when to use свій."
+- title: "ULP: Reflexive Verbs in Ukrainian"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /reflexive-verbs/"
+  url: "https://www.ukrainianlessons.com/reflexive-verbs/"
+  notes: "Background support for the relationship between себе and -ся forms."
