@@ -33,6 +33,16 @@ def test_secondary_imperfective_rule_emits_perfective_base_from_lemma() -> None:
     assert _bases("виворожують") == {"виворожити"}
 
 
+def test_noun_diminutive_rules_emit_full_noun_bases() -> None:
+    assert "гаївка" in _bases("гаївочка")
+    assert "гаївка" in _bases("гаївочку")
+    assert "книжка" in _bases("книжечка")
+    assert "слово" in _bases("словечко")
+    assert "сонце" in _bases("сонечко")
+    assert "дитя" in _bases("дитятко")
+    assert "рука" in _bases("рученька")
+
+
 def test_active_participle_suffixes_are_not_rescued() -> None:
     for surface in ("получаючий", "поступаючий", "находячийся"):
         assert _bases(surface) == set()

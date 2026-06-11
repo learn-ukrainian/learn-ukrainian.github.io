@@ -187,6 +187,48 @@ def test_folk_vesum_gate_accepts_productive_derivational_bases() -> None:
 
 
 @requires_sources_db
+def test_folk_vesum_gate_accepts_productive_noun_diminutives() -> None:
+    gate = _gate("гаївочка гаївочку книжечка словечко")
+
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert gate["heritage_attested"] == 4
+
+
+def test_russian_shadow_diminutive_surface_guard_blocks_derivational_rescue(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from scripts.verification.check_ru_morph import is_russian_pattern
+
+    surface = "протирічечка"
+    shadow = is_russian_pattern(surface)
+    assert shadow["matches_russian"] is True
+    assert float(shadow["confidence"]) >= 0.7
+
+    monkeypatch.setattr(
+        linear_pipeline,
+        "_engine_flags_russianism",
+        lambda candidate: candidate == surface,
+    )
+    monkeypatch.setattr(
+        linear_pipeline,
+        "_derivational_base_candidates",
+        lambda word: {"суперечність"} if word == surface else set(),
+    )
+    monkeypatch.setattr(
+        linear_pipeline,
+        "_engine_classifies_authentic",
+        lambda candidate: candidate == "суперечність",
+    )
+
+    gate = _gate(surface)
+
+    assert gate["passed"] is False
+    assert gate["missing"] == [surface]
+    assert gate["heritage_attested"] == 0
+
+
+@requires_sources_db
 def test_folk_vesum_gate_accepts_inflected_denominal_adjectives() -> None:
     gate = _gate("веснянкова веснянкове веснянкові")
 

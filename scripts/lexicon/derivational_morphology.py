@@ -74,8 +74,7 @@ def derivational_bases(surface: str) -> list[dict[str, str]]:
     lemma. If pymorphy3 is unavailable, it returns no candidates so the VESUM
     gate degrades to its existing surface/allowlist behavior.
 
-    TODO(stage-2): extend this table for folk-song affective morphology
-    (diminutives/augmentatives such as ``ніженьки`` and ``горілонька``) and
+    TODO(stage-2): extend this table for folk-song affective augmentatives and
     prefixal iteratives (``по-...-увати`` such as ``почитувати``).
     """
     normalized_surface = _normalize(surface)
@@ -104,6 +103,8 @@ def _bases_for_lemma(lemma: str, tag: str) -> Iterable[tuple[str, str]]:
         yield from _deverbal_adjective_bases(lemma)
     if "VERB" in tag or "INFN" in tag:
         yield from _secondary_imperfective_bases(lemma)
+    if "NOUN" in tag:
+        yield from _diminutive_bases(lemma)
 
 
 def _denominal_adjective_bases(lemma: str) -> Iterable[tuple[str, str]]:
@@ -155,13 +156,66 @@ def _secondary_imperfective_bases(lemma: str) -> Iterable[tuple[str, str]]:
             yield "secondary-imperfective:-ювати->-ити", f"{stem}ити"
 
 
+def _diminutive_bases(lemma: str) -> Iterable[tuple[str, str]]:
+    min_stem_len = 3
+
+    for suffix in ("очка", "ечка"):
+        stem = _stem_before_suffix(lemma, suffix, min_stem_len)
+        if not stem:
+            continue
+        yield f"noun-diminutive:-{suffix}->-ка", f"{stem}ка"
+        yield f"noun-diminutive:-{suffix}->-а", f"{stem}а"
+
+    for suffix in ("онька", "енька"):
+        stem = _stem_before_suffix(lemma, suffix, min_stem_len)
+        if not stem:
+            continue
+        yield f"noun-diminutive:-{suffix}->-ка", f"{stem}ка"
+        yield f"noun-diminutive:-{suffix}->-а", f"{stem}а"
+        for hard_stem in _hushing_to_velar_stems(stem):
+            yield f"noun-diminutive:-{suffix}->velar-а", f"{hard_stem}а"
+
+    for suffix in ("очко", "ечко", "енько"):
+        stem = _stem_before_suffix(lemma, suffix, min_stem_len)
+        if not stem:
+            continue
+        yield f"noun-diminutive:-{suffix}->-о", f"{stem}о"
+        yield f"noun-diminutive:-{suffix}->-е", f"{stem}е"
+        yield f"noun-diminutive:-{suffix}->-це", f"{stem}це"
+
+    stem = _stem_before_suffix(lemma, "ятко", min_stem_len)
+    if stem:
+        yield "noun-diminutive:-ятко->-я", f"{stem}я"
+        yield "noun-diminutive:-ятко->-а", f"{stem}а"
+
+    stem = _stem_before_suffix(lemma, "енятко", min_stem_len)
+    if stem:
+        yield "noun-diminutive:-енятко->-еня", f"{stem}еня"
+        yield "noun-diminutive:-енятко->-ена", f"{stem}ена"
+        yield "noun-diminutive:-енятко->-я", f"{stem}я"
+        yield "noun-diminutive:-енятко->-а", f"{stem}а"
+
+
+def _stem_before_suffix(lemma: str, suffix: str, min_stem_len: int) -> str | None:
+    if not lemma.endswith(suffix) or len(lemma) < len(suffix) + min_stem_len:
+        return None
+    return lemma[: -len(suffix)]
+
+
+def _hushing_to_velar_stems(stem: str) -> Iterable[str]:
+    replacements = {"ж": "г", "ч": "к", "ш": "х"}
+    replacement = replacements.get(stem[-1:])
+    if replacement:
+        yield f"{stem[:-1]}{replacement}"
+
+
 def _lemma_candidates(surface: str) -> list[tuple[str, str]]:
     analyzer = _uk_morph_analyzer()
     if analyzer is None:
         return []
 
     candidates: list[tuple[str, str]] = []
-    seen: set[str] = set()
+    seen: set[tuple[str, str]] = set()
     try:
         parses = analyzer.parse(surface)[:12]
     except Exception:
@@ -169,23 +223,36 @@ def _lemma_candidates(surface: str) -> list[tuple[str, str]]:
 
     has_adjective_parse = False
     for parse in parses:
-        lemma = _normalize(str(parse.normal_form or ""))
-        if not lemma or lemma in seen:
-            continue
         tag = str(parse.tag)
         if "ADJF" in tag:
             has_adjective_parse = True
-        if not any(part in tag for part in ("ADJF", "VERB", "INFN")):
+        lemma = _normalize(str(parse.normal_form or ""))
+        kind = _lemma_candidate_kind(tag)
+        if not lemma or kind is None:
             continue
-        seen.add(lemma)
+        key = (lemma, kind)
+        if key in seen:
+            continue
+        seen.add(key)
         candidates.append((lemma, tag))
     if has_adjective_parse:
         for lemma in _inflected_adjective_lemma_candidates(surface):
-            if lemma in seen:
+            key = (lemma, "ADJF")
+            if key in seen:
                 continue
-            seen.add(lemma)
+            seen.add(key)
             candidates.append((lemma, "ADJF"))
     return candidates
+
+
+def _lemma_candidate_kind(tag: str) -> str | None:
+    if "ADJF" in tag:
+        return "ADJF"
+    if "VERB" in tag or "INFN" in tag:
+        return "VERB"
+    if "NOUN" in tag:
+        return "NOUN"
+    return None
 
 
 def _inflected_adjective_lemma_candidates(surface: str) -> Iterable[str]:
