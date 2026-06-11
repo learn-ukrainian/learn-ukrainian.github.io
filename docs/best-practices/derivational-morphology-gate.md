@@ -36,11 +36,12 @@ derivations off an attested base.
 ## The layer (#2956)
 
 `derivational_morphology.py` exposes a small, deterministic **suffix-rule table** that, given a still-missing
-seminar/folk surface form, emits **full base lemmas only** (never bare stems) for three productive classes:
+seminar/folk surface form, emits **full base lemmas only** (never bare stems) for four productive classes:
 
 - **denominal adjectives** → noun base (`гаївковий` → `гаївка`)
 - **deverbal adjectives** → verb base (`знеособлювальний` → `знеособлювати`)
 - **conservative secondary imperfectives** → perfective base (`виворожувати` → `виворожити`)
+- **productive noun diminutives** → noun base (`гаївочка`, `гаївочку` → `гаївка`; `словечко` → `слово`)
 
 `_resolve_folk_heritage_attested_missing` feeds each proposed base to `classify_surface_form` and accepts the
 surface form **iff** a base is authentic-and-not-russianism **AND** the surface form is not itself
@@ -51,7 +52,8 @@ reported the surface missing.
 ## Regression contract (acceptance battery — `tests/test_derivational_morphology.py` + `tests/test_vesum_heritage_attestation.py`)
 
 - **VALID — must PASS the gate:** `гаївковий`, `знеособлювальними`, `виворожувати`, `виворожують`, plus existing
-  `другоє`, `ягілки`, `гагілку`, `незгладжений`.
+  `другоє`, `ягілки`, `гагілку`, `незгладжений`, and noun diminutives such as `гаївочка`, `гаївочку`,
+  `книжечка`, `словечко`.
 - **RUSSIANISM — must STAY FLAGGED:** `діюча`, `протиріччя`, `получаючий`, `поступаючий`, `находячийся`,
   `глазний`, `вкусний`, `слідувати`, `оказувати`, `заказувати`, `настаювати`, `решати`.
 - **DIRECT-STANDARD calque participles — unchanged (a separate STYLE concern, not blocked here):** `бажаючий`,
@@ -64,8 +66,7 @@ The canonical leak test is `діюча`: any base-derivation rule MUST keep `is_
 
 ## Stage 2 (not yet implemented — TODO in the rule table)
 
-- **affective folk morphology** (`-оньк-/-еньк-/-ечк-/-иц-/-ятк-`, e.g. `ніженьки`, `горілонька`, `доріженька`) —
-  expected to recur heavily in folk modules (diminutives in songs).
+- **affective folk augmentatives** — expected to recur in folk modules.
 - **prefixal iteratives** (`по-…-увати`, e.g. `почитувати`, `походжувати`).
 
 ## Why it matters beyond folk
