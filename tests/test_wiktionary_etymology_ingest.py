@@ -10,6 +10,7 @@ from scripts.ingest.wiktionary_etymology_ingest import (
     content_hash,
     ensure_wiktionary_etymology_schema,
     ingest_wiktionary_etymology,
+    is_clean_etymology,
     lookup_key,
     parse_wiktionary_page,
     upsert_wiktionary_row,
@@ -72,22 +73,22 @@ def test_wiktionary_schema_and_ingest_are_idempotent_with_phrase_skip(tmp_path: 
         tmp_path,
         [
             (
-                "робота",
+                "комп’ютер",
                 "0",
                 """
                 {{=uk=}}
                 ===Морфосинтаксичні ознаки===
                 {{імен uk}}
                 ===Етимологія===
-                {{етимологія:робити|uk}}
+                Від {{етимологія:комп’ютер|uk}}.
                 ===Переклад===
-                {{переклад|дія}}
+                {{переклад|пристрій}}
                 """,
             ),
             (
-                "Шаблон:етимологія:робити",
+                "Шаблон:етимологія:комп’ютер",
                 "10",
-                "Від слова [[раб]] (давньо-руською робъ).<noinclude>[[Категорія:Шаблони етимології|робити]]</noinclude>",
+                '{{lang-en|[[дієслово|дієсл.]] to [[compute]]}} — "обчислити"<noinclude>[[Категорія:Шаблони етимології|комп’ютер]]</noinclude>',
             ),
         ],
     )
@@ -101,7 +102,7 @@ def test_wiktionary_schema_and_ingest_are_idempotent_with_phrase_skip(tmp_path: 
     scanned, loaded, skipped = ingest_wiktionary_etymology(
         db_path,
         dump,
-        ["Добрий день", "робота"],
+        ["Добрий день", "комп'ютер"],
         refresh=False,
         dry_run=False,
         max_text_chars=1200,
@@ -112,23 +113,85 @@ def test_wiktionary_schema_and_ingest_are_idempotent_with_phrase_skip(tmp_path: 
     row = conn.execute(
         "SELECT requested_lemma, headword, etymology_text, section_raw FROM wiktionary_etymology"
     ).fetchone()
-    assert row[0] == "робота"
-    assert row[1] == "робота"
-    assert "раб" in row[2]
+    assert row[0] == "комп'ютер"
+    assert row[1] == "комп’ютер"
+    assert "англ." in row[2]
+    assert "дієсл. to compute" in row[2]
+    assert "обчислити" in row[2]
     assert "Категорія" not in row[2]
-    assert not row[2].endswith("робити")
-    assert "{{етимологія:робити|uk}}" in row[3]
+    assert "{{етимологія:комп’ютер|uk}}" in row[3]
 
     scanned_again, loaded_again, skipped_again = ingest_wiktionary_etymology(
         db_path,
         dump,
-        ["Добрий день", "робота"],
+        ["Добрий день", "комп'ютер"],
         refresh=False,
         dry_run=False,
         max_text_chars=1200,
     )
     assert (scanned_again, loaded_again, skipped_again) == (0, 0, 1)
     assert conn.execute("SELECT count(*) FROM wiktionary_etymology").fetchone()[0] == 1
+    conn.close()
+
+
+def test_quality_gate_accepts_clean_and_rejects_garbage_samples() -> None:
+    rejected = {
+        "звук": "Від звати Від звати Від зов",
+        "йти": "Від ? 3 Дієслова",
+        "ключ": "Від uk Від uk Від uk Від be Від ru",
+        "молоко": "Від Від ? 6 6 Предметні слова Напої",
+        "потім": "Від uk Від uk Від uk",
+        "книга": "Від від праслов’янського *kъnъ Від",
+        "робота": (
+            "Від слова раб. Тобто раб це людина що робить роботу. "
+            "Або робота це те що робить раб."
+        ),
+    }
+    for lemma, text in rejected.items():
+        assert not is_clean_etymology(text, lemma=lemma), lemma
+
+    accepted = {
+        "комп'ютер": 'Від англ. дієсл. to compute — "обчислити"',
+        "кава": "Запозичено з арабської через османську турецьку.",
+        "стіл": "Від psl *stolъ, від якого також походять споріднені слова.",
+        "приголосний": "Похідне утворення від голос, див. голос.",
+        "дім": "Від прасл. *domъ.",
+        "форма": "Від лат. forma.",
+    }
+    for lemma, text in accepted.items():
+        assert is_clean_etymology(text, lemma=lemma), lemma
+
+
+def test_low_quality_wiktionary_work_row_is_not_stored(tmp_path: Path) -> None:
+    dump = _write_dump(
+        tmp_path,
+        [
+            (
+                "робота",
+                "0",
+                """
+                {{=uk=}}
+                ===Етимологія===
+                Від слова [[раб]]. Тобто раб це людина що робить роботу.
+                Або робота це те що робить раб.
+                """,
+            ),
+        ],
+    )
+    db_path = tmp_path / "sources.db"
+
+    scanned, loaded, skipped = ingest_wiktionary_etymology(
+        db_path,
+        dump,
+        ["робота"],
+        refresh=True,
+        dry_run=False,
+        max_text_chars=1200,
+    )
+    assert (scanned, loaded, skipped) == (1, 0, 0)
+
+    conn = sqlite3.connect(db_path)
+    assert conn.execute("SELECT count(*) FROM wiktionary_etymology").fetchone()[0] == 0
     conn.close()
 
 
@@ -186,8 +249,6 @@ def test_etymology_precedence_and_phrase_skip() -> None:
             "content_hash": "goroh",
         },
     )
-    upsert_wiktionary_row(conn, _wiktionary_row("робота", "Вікісловник має бути fallback."))
-
     assert _etymology(conn, "робота") == {
         "text": "Горох має першість.",
         "source": "Горох (за ЕСУМ)",
@@ -205,10 +266,14 @@ def test_etymology_precedence_and_phrase_skip() -> None:
     }
 
     conn.execute("DELETE FROM esum_etymology")
-    assert _etymology(conn, "робота") == {
-        "text": "Вікісловник має бути fallback.",
+    upsert_wiktionary_row(
+        conn,
+        _wiktionary_row("комп'ютер", 'Від англ. дієсл. to compute — "обчислити".'),
+    )
+    assert _etymology(conn, "комп'ютер") == {
+        "text": 'Від англ. дієсл. to compute — "обчислити".',
         "source": "Вікісловник (uk.wiktionary)",
-        "source_url": "https://uk.wiktionary.org/wiki/робота",
+        "source_url": "https://uk.wiktionary.org/wiki/комп'ютер",
     }
 
     upsert_wiktionary_row(conn, _wiktionary_row("Добрий день", "Phrase row should never render."))

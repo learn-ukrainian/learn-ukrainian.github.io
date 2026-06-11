@@ -90,6 +90,27 @@ _WIKI_LINK_RE = re.compile(r"\[\[([^|\]#]+)(?:#[^|\]]*)?(?:\|([^\]]+))?\]\]")
 _EXTERNAL_LINK_RE = re.compile(r"\[(?:https?|ftp)://[^\s\]]+\s+([^\]]+)\]")
 _TAG_RE = re.compile(r"</?[^>]+>")
 _CYRILLIC_OR_LATIN_RE = re.compile(r"[A-Za-zА-Яа-яЄєІіЇїҐґ]")
+_QUALITY_TOKEN_RE = re.compile(r"[*]?[0-9A-Za-zА-Яа-яЄєІіЇїҐґ'’ʼ-]+")
+_CYRILLIC_WORD_RE = re.compile(r"[А-Яа-яЄєІіЇїҐґ][А-Яа-яЄєІіЇїҐґ'’ʼ-]*")
+_CATEGORY_LINK_RE = re.compile(r"\[\[\s*(?:Категорія|Category)\s*:[^\]]+\]\]", re.IGNORECASE)
+_MARKUP_RESIDUE_RE = re.compile(
+    r"\{\{|\}\}|\[\[\s*Категорія|Категорія\s*:|довжина слова|Предметні слова|мова\s*=",
+    re.IGNORECASE,
+)
+_EMPTY_TEMPLATE_RE = re.compile(r"\bВід\s+\?", re.IGNORECASE)
+_LANG_CODE_AFTER_FROM_RE = re.compile(r"\bВід\s+(?:uk|be|ru|pl|cs|sh|bg|chu)\b", re.IGNORECASE)
+_DUPLICATED_FROM_FRAGMENT_RE = re.compile(r"\bвід\s+від\b", re.IGNORECASE)
+_FOREIGN_SOURCE_MARKER_RE = re.compile(
+    r"\b(?:англ|араб|гр|дав.-гр|лат|нім|п|р|тур|фр)\.\s+\*?[A-Za-z][A-Za-z'’ʼ-]{2,}",
+    re.IGNORECASE,
+)
+
+_LANG_CODE_TOKENS = {"uk", "be", "ru", "pl", "cs", "sh", "bg", "chu"}
+_NON_LEXICAL_CYRILLIC_TOKENS = {"від"}
+
+# This Wiktionary page currently expands to an informal circular editor note
+# rather than curriculum-grade etymology prose.
+_LOW_QUALITY_SKIP = {"робота"}
 
 _LANG_LABELS = {
     "ar": "араб.",
@@ -348,7 +369,10 @@ def _render_template(raw: str, template_map: dict[str, str]) -> str:
     if name_key.startswith("етимологія:"):
         return template_map.get(name_key, "")
     if name_key == "етимологія":
-        return " ".join(part for part in parts[1:] if part and "=" not in part)
+        args = [part for part in parts[1:] if part and "=" not in part]
+        if args and args[0].casefold() in _LANG_CODE_TOKENS:
+            args = args[1:]
+        return " ".join(part for part in args if part != "?")
     if name_key.startswith("lang-"):
         lang = name_key.removeprefix("lang-")
         label = _LANG_LABELS.get(lang, lang)
@@ -379,6 +403,7 @@ def clean_wikitext(raw: str, template_map: dict[str, str]) -> str:
     text = expand_templates(raw, template_map)
     text = re.sub(r"(?is)<ref\b.*?</ref>", " ", text)
     text = _TAG_RE.sub(" ", text)
+    text = _CATEGORY_LINK_RE.sub(" ", text)
     text = _EXTERNAL_LINK_RE.sub(r"\1", text)
     text = _WIKI_LINK_RE.sub(lambda match: match.group(2) or match.group(1), text)
     text = text.replace("'''", "").replace("''", "")
@@ -389,16 +414,72 @@ def clean_wikitext(raw: str, template_map: dict[str, str]) -> str:
     text = re.sub(r"\s+([,.;:])", r"\1", text)
     text = re.sub(r"\(\s+", "(", text)
     text = re.sub(r"\s+\)", ")", text)
-    return _SPACE_RE.sub(" ", text).strip(" \t\r\n.,;:—-")
+    text = _SPACE_RE.sub(" ", text).strip(" \t\r\n.,;:—-")
+    text = re.sub(r"(?i)(?:,\s*)?\bВід\s*$", "", text)
+    return text.strip(" \t\r\n.,;:—-")
 
 
-def _informative_etymology(text: str) -> bool:
-    normalized = clean_text(text).strip(" .,:;—-").casefold()
-    if len(normalized) < 12:
+def _quality_tokens(text: str) -> list[str]:
+    return [token.casefold().strip("'’ʼ-") for token in _QUALITY_TOKEN_RE.findall(text) if token.strip("'’ʼ-")]
+
+
+def _has_high_token_repetition(tokens: list[str]) -> bool:
+    if len(tokens) <= 3:
         return False
-    if normalized in {"від", "від слова", "походить від"}:
-        return False
-    return bool(_CYRILLIC_OR_LATIN_RE.search(normalized))
+    return len(set(tokens)) / len(tokens) <= 0.5
+
+
+def _has_etymon_marker(text: str) -> bool:
+    folded = text.casefold()
+    if "*" in text or "псл" in folded or "psl" in folded or "запозич" in folded:
+        return True
+    return "прасл" in folded or bool(_FOREIGN_SOURCE_MARKER_RE.search(text))
+
+
+def _has_real_lexical_content(text: str) -> bool:
+    if _has_etymon_marker(text):
+        return True
+    for word in _CYRILLIC_WORD_RE.findall(text):
+        token = word.casefold().strip("'’ʼ-")
+        if len(token) >= 3 and token not in _NON_LEXICAL_CYRILLIC_TOKENS and token not in _LANG_CODE_TOKENS:
+            return True
+    return False
+
+
+def etymology_rejection_reason(text: str, lemma: str | None = None) -> str | None:
+    """Return why a Wiktionary etymology extract is not safe to cache."""
+    if lemma and lookup_key(lemma) in _LOW_QUALITY_SKIP:
+        return "known low-quality Wiktionary etymology"
+
+    cleaned = clean_text(text).strip(" .,:;—-")
+    if _MARKUP_RESIDUE_RE.search(cleaned):
+        return "markup/template/category residue"
+    if _EMPTY_TEMPLATE_RE.search(cleaned):
+        return "empty etymology template residue"
+    if _LANG_CODE_AFTER_FROM_RE.search(cleaned):
+        return "language-code residue after Від"
+
+    real_chars = re.sub(r"[^0-9A-Za-zА-Яа-яЄєІіЇїҐґ*]", "", cleaned)
+    if len(real_chars) < 15 and not _has_etymon_marker(cleaned):
+        return "too short"
+
+    tokens = _quality_tokens(cleaned)
+    if _has_high_token_repetition(tokens):
+        return "high token repetition"
+    if _DUPLICATED_FROM_FRAGMENT_RE.search(cleaned):
+        return "duplicated or truncated Від fragment"
+    if cleaned.casefold() in {"від", "від слова", "походить від"}:
+        return "uninformative etymology fragment"
+    if not _has_real_lexical_content(cleaned):
+        return "no lexical Ukrainian or etymon content"
+    if not _CYRILLIC_OR_LATIN_RE.search(cleaned):
+        return "no lexical text"
+    return None
+
+
+def is_clean_etymology(text: str, lemma: str | None = None) -> bool:
+    """Return whether a cleaned Wiktionary etymology extract is safe to cache."""
+    return etymology_rejection_reason(text, lemma=lemma) is None
 
 
 def parse_wiktionary_page(
@@ -413,7 +494,9 @@ def parse_wiktionary_page(
     if not raw:
         return None
     text = clean_wikitext(raw, template_map)
-    if not _informative_etymology(text):
+    rejection_reason = etymology_rejection_reason(text, lemma=requested_lemma)
+    if rejection_reason:
+        print(f"{requested_lemma}: rejected Wiktionary etymology ({rejection_reason})")
         return None
     if len(text) > max_text_chars:
         text = text[: max_text_chars - 1].rstrip(" ,.;:") + "…"
@@ -557,10 +640,21 @@ def upsert_wiktionary_row(conn: sqlite3.Connection, row: dict[str, str]) -> None
 
 def _is_cached(conn: sqlite3.Connection, lemma: str) -> bool:
     row = conn.execute(
-        "SELECT 1 FROM wiktionary_etymology WHERE requested_lemma = ? LIMIT 1",
+        "SELECT etymology_text FROM wiktionary_etymology WHERE requested_lemma = ? LIMIT 1",
         (clean_text(lemma),),
     ).fetchone()
-    return row is not None
+    if row is None:
+        return False
+    rejection_reason = etymology_rejection_reason(row[0], lemma=lemma)
+    if rejection_reason:
+        print(f"{lemma}: removed cached Wiktionary etymology ({rejection_reason})")
+        with conn:
+            conn.execute(
+                "DELETE FROM wiktionary_etymology WHERE requested_lemma = ?",
+                (clean_text(lemma),),
+            )
+        return False
+    return True
 
 
 def ingest_wiktionary_etymology(
