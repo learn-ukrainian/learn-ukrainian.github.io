@@ -27,7 +27,68 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 10 HANDOFF (2026-06-10 PM — HERITAGE ENGINE CONSUMED + MORPHOLOGY FALLBACK MERGED; 3 KALENDARNA BUILDS EXPOSED THE PRODUCTIVE-DERIVATION GAP; BUILDING THE DERIVATIONAL-MORPHOLOGY LAYER w/ CODEX+GEMINI) — **RESUME HERE**
+## ▶▶▶ SESSION 11 HANDOFF (2026-06-11 — DERIVATIONAL LAYER MERGED + VESUM WALL BROKEN ON LIVE CONTENT; textbook_quote_fidelity CATEGORY-ERROR FIXED; kalendarna RE-FIRING) — **RESUME HERE**
+
+> **⏱ LATEST STATE (2026-06-11):** The derivational-morphology layer (#2956, codex-impl + Claude-review) +
+> apostrophe-normalize (#2965) merged BEFORE this session. I verified the gate on main (65 tests; `діюча`/
+> `протиріччя` stay flagged, `гаївковий`/`знеособлювальними`/`виворожувати` accepted). Then drove the kalendarna
+> reference rebuild. **VESUM/derivational wall is BROKEN on live content** — build #2 showed `vesum_verified=true`
+> with authentic forms accepted (`Гагілка/Дівоцькую/Кострубонько/Кудлиха/доброє/кутї/неритмований`) and the writer
+> dropped the `двохоровий` coinage (correctly stays blocked — it's NOT a productive derivation).
+>
+> **NEXT wall found + fixed THIS session — `textbook_quote_fidelity` category error (#2973, MERGED `ec063050c8`):**
+> the gate verified EVERY `>` blockquote against the *textbook* corpus, but folk modules are required
+> (`#R-FOLK-PRIMARY-TEXTS`) to embed folk-song/duma primary texts that live in the *literary* corpus and are
+> verified at the *dossier* stage. So it failed every folk module deterministically. Fix (codex-impl, Claude
+> adversarial-review): for `SEMINAR_LEVELS`, non-textbook (`[S#]`-style) blockquotes route to `search_literary`;
+> `Grade N, p.X` textbook quotes still route to `search_textbooks` (teeth preserved — proven by a
+> fabricated-textbook-quote-still-REJECT test). Also auto-handles the writer's embedded-caption placement. Verified:
+> the 4 kalendarna веснянки are verbatim-findable in `search_literary` → re-fire will pass this gate. **This also
+> unblocks lit/hist/oes/ruth primary-text modules.**
+
+### ▶ IN-FLIGHT (verify: `curl -s :8765/api/delegate/active` + Monitor)
+- ⏳ **kalendarna re-fire #3** (`v7_build folk kalendarna-obriadovist-zvychai --worktree --writer claude-tools
+  --effort xhigh`) off origin/main `ec063050c8` (both gate fixes live). Build worktree `…-020241`. Monitor `bjy1kr5ye`.
+  Expected: `vesum_verified` ✅ + `textbook_quote_fidelity` ✅. **WATCH `word_count`** — builds #1/#2 came in at
+  4528/4295, under the 4600 floor (target 5000). The Session-5 build hit 4809, so it's achievable on variance;
+  if it under-produces AGAIN, add a folk writer length nudge (linear-write.md) — needs merge to main before re-fire.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **When build #3 lands `module_done`:** verify the artifact CONTENT (#M-11, not just gates) — 4 UK tabs populated,
+   myth-box, high-culture bridge, folk activities (ritual-sequencing/variant-comparison/motif-formula/performance),
+   ≥4 cited+linked verbatim blockquotes, authentic regional vocab, no stress on headings, P2 cross-refs, UK tab labels.
+2. **Promote module 04** → assemble_mdx → `starlight/src/content/docs/folk/`; add source URLs; serve; verify at
+   `/folk/kalendarna-obriadovist-zvychai/`. Bundle THIS refreshed handoff + the derivational-gate design doc promotion
+   (`/tmp/derivational-morphology-gate-design.md` → `docs/best-practices/derivational-morphology-gate.md`) into the
+   promote PR. **This is the batch PR for this session's deliverables.**
+3. Then **01 koliadky-shchedrivky** → **dumy** (retire old `dumy-lytsarski.mdx` + `[...slug].astro` hero routing).
+4. Resume folk dossier queue: #08 zhnyvarski-obzhynkovi QUEUED, then #10 vesilni, #11 holosinnya, #13 dumy-sotsialno-pobutovi.
+
+### ✅ DONE THIS SESSION
+- **PR #2972 (OPEN, orchestrator to merge)** — `C1-folk` audit-config dead-key bug (USER-FLAGGED): `detect_level`
+  never recognized `/folk/` + `LEVEL_CONFIG['C1-folk']` was unreachable → folk silently audited as **A1**
+  (min_vocab 1). Renamed → `FOLK`, wired `detect_level` (mirrors LIT/OES/RUTH), +regression tests; 481 audit tests
+  + ruff green. TRACK-UPDATE posted to #pipeline (shared audit infra).
+- **PR #2973 (MERGED `ec063050c8`)** — textbook_quote_fidelity seminar-scope (above). Self-merged under folk grant
+  after adversarial review (all CI green incl. pytest).
+- Verified derivational layer #2956 on main (65 tests). Removed dead/failed build worktrees (forensics on
+  `build/folk/…-{002306,010346}` branches per #M-10).
+
+### ⚠ CARRY-FORWARD
+- **word_count under-production** is the live risk for folk builds (claude-tools tic). If build #3 fails it, the fix
+  is a writer length nudge, NOT lowering the gate (#1).
+- **Follow-up on #2973:** audit `FOLK.priority_types` are generic-seminar while the pipeline `folk` ACTIVITY_CONFIG
+  emits folk-experiential types + lacks `reading`; a symmetric literary-side teeth test (fabricated folk quote → no
+  literary match → violation) would close a minor test gap. Both noted on PR #2972/#2973.
+- `git push` folk → `--no-verify`; recheck `git config --local core.bare` after commits (#2842).
+
+### 📊 FLEET — module writer **claude-tools** (C1 cultural); gate fixes = **codex implements + Claude adversarial
+review** (the #2973 loop worked); wiki **gpt-5.5**; reviewers **deepseek-flash** (code) / Claude corpus-hammer
+(culture). Cross-family always.
+
+---
+
+## ▶▶▶ SESSION 10 HANDOFF (2026-06-10 PM — HERITAGE ENGINE CONSUMED + MORPHOLOGY FALLBACK MERGED; 3 KALENDARNA BUILDS EXPOSED THE PRODUCTIVE-DERIVATION GAP; BUILT THE DERIVATIONAL-MORPHOLOGY LAYER w/ CODEX) — (superseded by Session 11)
 
 > **⏱ LATEST STATE (2026-06-10 PM):** The orchestrator's **Heritage Attestation Engine (#2912)** landed →
 > I **consumed** it into `_vesum_gate` (#2931) + added a **morphology fallback** (#2950). Both merged + teeth-validated.
