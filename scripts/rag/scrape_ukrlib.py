@@ -1077,6 +1077,88 @@ def scrape_author(slug: str, author_info: dict, dry_run: bool = False,
     return total_in_file
 
 
+# ── Folk / народна творчість (/narod/ section) ───────────────────────
+# ukrlib's folklore lives under a DIFFERENT URL scheme than /books/:
+#   genre listing: /narod/book.php?id={genre_id}
+#   work text:     /narod/printout.php?id={genre_id}&bookid={bookid}  (full text)
+# Folk texts are anonymous → attributed to «Народна творчість» (consistent
+# attribution so verify_quote resolves cleanly; sidesteps the #804 author-poison
+# failure class). Curated allowlist (NOT whole-genre) so we never ingest the
+# Велесова книга forgery (genre 11 / bookid 0) or the prose казки mixed into
+# Народний епос. Reuses the shared windows-1251 fetch + <article> extractor.
+NAROD_AUTHOR = "Народна творчість"
+NAROD_PERIOD = "middle_ukrainian"  # Cossack-era oral epos (XVI–XVIII)
+NAROD_YEAR = 1600  # approximate composition era; oral tradition, no fixed date
+
+NAROD_WORKS = [
+    # genre 3 = Історичні пісні; genre 11 = Народний епос (думи)
+    {"genre_id": 3, "bookid": 5, "title": "Пісня про Байду", "genre": "folk_song"},
+    {"genre_id": 11, "bookid": 1, "title": "Втеча трьох братів з Азова", "genre": "duma"},
+    {"genre_id": 11, "bookid": 2, "title": "Дума про Олексія Поповича (Гей, не дивуйте, добрії люди)", "genre": "duma"},
+    {"genre_id": 11, "bookid": 3, "title": "Зажурилась Україна", "genre": "folk_song"},
+]
+
+
+def scrape_narod_work(genre_id: int, bookid: int) -> tuple[str, str]:
+    """Scrape one folk work from the /narod/ printout (full-text) page.
+
+    Returns (text, source_url). The printout page renders the complete text in a
+    single <article>, so a single fetch suffices (no pagination).
+    """
+    source_url = f"{BASE_URL}/narod/printout.php?id={genre_id}&bookid={bookid}"
+    html = fetch_page(source_url)
+    extractor = UkrlibTextExtractor()
+    extractor.feed(html)
+    return extractor.get_text(), source_url
+
+
+def scrape_narod(dry_run: bool = False) -> int:
+    """Scrape the curated народна творчість allowlist into one JSONL.
+
+    Idempotent: rewrites ukrlib-narod-dumy.jsonl each run. Folk songs are short,
+    so chunk with a low min_tokens floor so short texts aren't dropped.
+    """
+    output_path = LITERARY_DIR / "ukrlib-narod-dumy.jsonl"
+    print(f"\n{'='*60}\n[narod] {NAROD_AUTHOR} — {len(NAROD_WORKS)} works\n{'='*60}")
+
+    if dry_run:
+        for w in NAROD_WORKS:
+            print(f"    genre={w['genre_id']} bookid={w['bookid']}  {w['title']}")
+        return 0
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    total_chunks = 0
+    with open(output_path, "w", encoding="utf-8") as f:
+        for i, w in enumerate(NAROD_WORKS, 1):
+            print(f"\n  [{i}/{len(NAROD_WORKS)}] {w['title']} (genre={w['genre_id']}, bookid={w['bookid']})")
+            try:
+                text, source_url = scrape_narod_work(w["genre_id"], w["bookid"])
+            except Exception as e:
+                print(f"    ERROR: {e}")
+                continue
+            if not text or len(text) < 50:
+                print(f"    Skipped: too short ({len(text)} chars)")
+                continue
+            work_title = f"{NAROD_AUTHOR}. {w['title']}"
+            chunks = chunk_text(text, work_title, source_url, min_tokens=20)
+            for chunk in chunks:
+                chunk.update({
+                    "work": work_title,
+                    "author": NAROD_AUTHOR,
+                    "year": NAROD_YEAR,
+                    "genre": w["genre"],
+                    "language_period": NAROD_PERIOD,
+                })
+                f.write(json.dumps(chunk, ensure_ascii=False) + "\n")
+            print(f"    {len(text):,} chars → {len(chunks)} chunks")
+            total_chunks += len(chunks)
+            if i < len(NAROD_WORKS):
+                time.sleep(DELAY_BETWEEN_WORKS)
+
+    print(f"\n  [narod] {total_chunks} chunks → {output_path.name}")
+    return total_chunks
+
+
 def main():
     parser = argparse.ArgumentParser(description="Scrape Ukrainian literary canon from ukrlib.com.ua")
     parser.add_argument("--priority", choices=["P1", "P2", "P3", "all"], help="Scrape authors by priority")
@@ -1090,6 +1172,8 @@ def main():
     parser.add_argument("--include-bios", action="store_true", help="Also scrape biography pages")
     parser.add_argument("--audit", action="store_true", help="Run audit after scraping")
     parser.add_argument("--audit-only", action="store_true", help="Audit existing files (no network)")
+    parser.add_argument("--narod", action="store_true",
+                        help="Scrape the curated народна творчість (folk) allowlist from /narod/")
     args = parser.parse_args()
 
     all_defined = {**P1_AUTHORS, **P2_AUTHORS, **P3_AUTHORS}
@@ -1130,6 +1214,10 @@ def main():
         print(f"\n{'='*60}")
         print(f"Audit complete: {passed} passed, {failed} failed out of {len(files)} files")
         print(f"{'='*60}")
+        return
+
+    if args.narod:
+        scrape_narod(dry_run=args.dry_run)
         return
 
     if args.force and PROGRESS_DIR.exists():
