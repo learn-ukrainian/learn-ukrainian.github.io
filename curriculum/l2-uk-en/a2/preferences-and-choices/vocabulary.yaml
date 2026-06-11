@@ -1,0 +1,80 @@
+- word: вважати
+  translation: to think, to consider
+  pos: verb
+  example: "Я вважаю, що цей варіант кращий."
+- word: думка
+  translation: opinion, thought
+  pos: noun
+  example: "На мою думку, зустріч має бути короткою."
+- word: подобатися
+  translation: to be liked
+  pos: verb
+  example: "Мені подобається цей фільм."
+- word: воліти
+  translation: to prefer
+  pos: verb
+  example: "Я волію читати ввечері."
+- word: обирати
+  translation: to choose
+  pos: verb
+  example: "Ми обираємо коротший маршрут."
+- word: вибір
+  translation: choice
+  pos: noun
+  example: "Це складний вибір для групи."
+- word: згоден
+  translation: agree, masculine
+  pos: adjective
+  example: "Я згоден з цією думкою."
+- word: згодна
+  translation: agree, feminine
+  pos: adjective
+  example: "Я згодна, але маю питання."
+- word: погоджуватися
+  translation: to agree
+  pos: verb
+  example: "Я цілком погоджуюся."
+- word: рація
+  translation: rightness, reason in the phrase мати рацію
+  pos: noun
+  example: "Ви маєте рацію."
+- word: незгода
+  translation: disagreement
+  pos: noun
+  example: "Ввічлива незгода має причину."
+- word: навпаки
+  translation: on the contrary
+  pos: adverb
+  example: "Навпаки, я вважаю, що це добрий план."
+- word: переконаний
+  translation: convinced, masculine
+  pos: adjective
+  example: "Я переконаний, що це важливо."
+- word: переконана
+  translation: convinced, feminine
+  pos: adjective
+  example: "Я переконана, що треба почати раніше."
+- word: тому що
+  translation: because
+  pos: conjunction
+  example: "Я обираю потяг, тому що він зручніший."
+- word: адже
+  translation: after all, because
+  pos: conjunction
+  example: "Варто почати раніше, адже зустріч довга."
+- word: по-перше
+  translation: firstly
+  pos: phrase
+  example: "По-перше, це дешевше."
+- word: по-друге
+  translation: secondly
+  pos: phrase
+  example: "По-друге, це ближче до дому."
+- word: крім того
+  translation: besides, moreover
+  pos: phrase
+  example: "Крім того, вокзал ближче до центру."
+- word: на завершення
+  translation: in conclusion, to finish
+  pos: phrase
+  example: "На завершення, це спокійніший варіант."

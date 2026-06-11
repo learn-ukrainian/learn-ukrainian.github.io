@@ -1,0 +1,80 @@
+- word: синонім
+  translation: synonym
+  pos: noun
+  example: "Синонім допомагає уникати повторів."
+- word: антонім
+  translation: antonym
+  pos: noun
+  example: "Тихий і гучний - це антоніми."
+- word: відтінок
+  translation: nuance, shade of meaning
+  pos: noun
+  example: "Кожен синонім має свій відтінок."
+- word: повтор
+  translation: repetition
+  pos: noun
+  example: "Повтор може бути стилістичним прийомом."
+- word: епітет
+  translation: epithet
+  pos: noun
+  example: "Золота осінь - це епітет."
+- word: метафора
+  translation: metaphor
+  pos: noun
+  example: "Море квітів - це метафора."
+- word: образ
+  translation: image, figurative picture
+  pos: noun
+  example: "Метафора створює образ."
+- word: образний
+  translation: figurative, expressive
+  pos: adjective
+  example: "Образний текст звучить живіше."
+- word: пестливий
+  translation: affectionate, diminutive
+  pos: adjective
+  example: "Котик - пестлива форма слова кіт."
+- word: зменшувальний
+  translation: diminutive
+  pos: adjective
+  example: "Зменшувальний суфікс може показувати малий розмір."
+- word: суфікс
+  translation: suffix
+  pos: noun
+  example: "Суфікс -ик утворює слово столик."
+- word: ласкавий
+  translation: tender, affectionate
+  pos: adjective
+  example: "Ласкаве слово звучить тепло."
+- word: еліпсис
+  translation: ellipsis
+  pos: noun
+  example: "У фразі Я - каву є еліпсис."
+- word: стиль
+  translation: style
+  pos: noun
+  example: "Офіційний стиль потребує нейтральних слів."
+- word: стилістика
+  translation: stylistics
+  pos: noun
+  example: "Стилістика вивчає, як працюють мовні засоби."
+- word: виразний
+  translation: expressive
+  pos: adjective
+  example: "Виразний прикметник робить опис сильнішим."
+- word: контраст
+  translation: contrast
+  pos: noun
+  example: "Антоніми створюють контраст."
+- word: просторий
+  translation: spacious
+  pos: adjective
+  example: "Біля будинку є просторий парк."
+- word: гучний
+  translation: loud
+  pos: adjective
+  example: "Увечері вулиця стає гучною."
+- word: точний
+  translation: precise
+  pos: adjective
+  example: "Точний синонім покращує текст."
