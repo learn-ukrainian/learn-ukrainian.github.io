@@ -46,12 +46,25 @@
 > the 4 kalendarna веснянки are verbatim-findable in `search_literary` → re-fire will pass this gate. **This also
 > unblocks lit/hist/oes/ruth primary-text modules.**
 
-### ▶ IN-FLIGHT (verify: `curl -s :8765/api/delegate/active` + Monitor)
-- ⏳ **kalendarna re-fire #3** (`v7_build folk kalendarna-obriadovist-zvychai --worktree --writer claude-tools
-  --effort xhigh`) off origin/main `ec063050c8` (both gate fixes live). Build worktree `…-020241`. Monitor `bjy1kr5ye`.
-  Expected: `vesum_verified` ✅ + `textbook_quote_fidelity` ✅. **WATCH `word_count`** — builds #1/#2 came in at
-  4528/4295, under the 4600 floor (target 5000). The Session-5 build hit 4809, so it's achievable on variance;
-  if it under-produces AGAIN, add a folk writer length nudge (linear-write.md) — needs merge to main before re-fire.
+### ▶ BUILD STATUS — 3 re-fires; ONLY word_count left
+Builds #1/#2/#3 (gate-counted word_count): 4528 / 4295 / 4314 — all under the 4600 floor (target 5000).
+**Build #3 cleared BOTH hard gate walls: `vesum_verified` ✅ AND `textbook_quote_fidelity` ✅** (the #2973 fix
+works on live content). The ONLY remaining blocker is `word_count` — claude-tools consistently yields ~86% of
+target (gate's strict tokenization haircut). **Root cause + fix (THIS PR):** the kalendarna plan's
+`content_outline` sections summed to 5000 (= 1.0× word_target), but the writer prompt's own guidance
+(`linear-write.md`) expects sections to overshoot word_target. `validate_plan_config` SANCTIONS this:
+`WORD_TARGET_OVER_TOLERANCE = 0.15` ("outline budgets intentionally overshoot for writer flexibility"). The
+kalendarna plan had sections at 1.0× (no overshoot) — the bug. Recalibrated sections to sum **5700**
+(650/1400/1650/1050/950 = **1.14×**, within the sanctioned 15%), keeping `word_target: 5000` so the gate floor
+STAYS 4600 (NOT lowered — writer target raised). Both validators clean; version 0.1→0.2. Writer at ~86% × 5700
+≈ 4900 → clears 4600 with margin (even ~81% yield clears). NOTE: first attempt used 1.2× (6000) → CI
+`validate_plan_config` rejected (>1.15×); pulled back to 1.14×.
+
+### ▶ RE-FIRE #4 (pending — fire after THIS PR merges to main)
+`v7_build folk kalendarna-obriadovist-zvychai --worktree --writer claude-tools --effort xhigh`, Monitor JSONL.
+Expected all-green. If word_count STILL short, the next lever is a folk writer-prompt length nudge
+(`linear-write.md`) — NOT lowering the gate (#1). NOTE: the under-budgeting is likely systemic across folk
+plans (authored summing to word_target, not 1.2×); fold a sweep into the queue if other folk builds repeat it.
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
 1. **When build #3 lands `module_done`:** verify the artifact CONTENT (#M-11, not just gates) — 4 UK tabs populated,

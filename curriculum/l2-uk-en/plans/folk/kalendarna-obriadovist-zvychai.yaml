@@ -14,23 +14,23 @@ connects_to:
 - koliadky-shchedrivky
 content_outline:
 - section: Постановка проблеми
-  words: 600
+  words: 650
   points:
   - 'Stub: dossier will supply the opening problem, corpus anchors, and framing constraints.'
 - section: Корпус і контекст
-  words: 1200
+  words: 1400
   points:
   - 'Stub: dossier will supply verified texts, images, recordings, or material-culture evidence.'
 - section: Поетика, символіка і виконання
-  words: 1400
+  words: 1650
   points:
   - 'Stub: dossier will specify motifs, formulas, performance sequence, and regional variation.'
 - section: Деколонізаційна рамка
-  words: 900
+  words: 1050
   points:
   - 'Stub: dossier will identify imperial, Soviet, or romantic-nationalist myths to correct.'
 - section: Підсумок
-  words: 900
+  words: 950
   points:
   - 'Stub: module build will synthesize why this folk form matters now.'
 focus: Calendar-rite system as seasonal performance, belief, song, food, and regional variation
@@ -54,7 +54,7 @@ slug: kalendarna-obriadovist-zvychai
 status: stub
 subtitle: Calendar Rites and Customs
 title: Календарна обрядовість і звичаї
-version: '0.1'
+version: '0.2'
 vocabulary_hints:
 - word: обряд
   pos: ч.
