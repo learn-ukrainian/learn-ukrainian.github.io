@@ -143,6 +143,21 @@ _POS_LABELS: dict[str, str] = {
     "intj": "вигук",
 }
 
+_NOUN_CASE_ORDER = (
+    "називний",
+    "родовий",
+    "давальний",
+    "знахідний",
+    "орудний",
+    "місцевий",
+    "кличний",
+)
+_NOUN_GENDERS = {"чол.", "жін.", "сер."}
+_NUMBERS = ("однина", "множина")
+_PERSONS = ("1", "2", "3")
+_VERB_TENSES = ("теперішній", "майбутній")
+_PAST_KEYS = ("чол.", "жін.", "сер.", "множина")
+
 
 def _decode_tag(tag: str) -> str:
     """Turn a raw VESUM tag into a short human label, dropping noise tokens."""
@@ -152,6 +167,161 @@ def _decode_tag(tag: str) -> str:
     seen: set[str] = set()
     out = [x for x in labels if not (x in seen or seen.add(x))]
     return ", ".join(out)
+
+
+def _split_label(label: str) -> list[str]:
+    return [part.strip() for part in label.split(",") if part.strip()]
+
+
+def _join_variants(forms: list[str]) -> str:
+    seen: set[str] = set()
+    variants = [form for form in forms if form and not (form in seen or seen.add(form))]
+    return " / ".join(variants)
+
+
+def _is_infinitive_form(form: str) -> bool:
+    return form.endswith(("ти", "тися", "тись"))
+
+
+def _parse_noun_label(label: str) -> tuple[str, str] | None:
+    parts = _split_label(label)
+    if len(parts) != 2:
+        return None
+    head, case = parts
+    if case not in _NOUN_CASE_ORDER:
+        return None
+    if head in _NOUN_GENDERS:
+        return case, "singular"
+    if head == "множина":
+        return case, "plural"
+    return None
+
+
+def _build_noun_paradigm(forms: list[dict[str, str]]) -> dict | None:
+    cells: dict[str, dict[str, list[str]]] = {
+        case: {"singular": [], "plural": []} for case in _NOUN_CASE_ORDER
+    }
+    for row in forms:
+        parsed = _parse_noun_label(row.get("label", ""))
+        if not parsed:
+            return None
+        case, number = parsed
+        cells[case][number].append(row.get("form", ""))
+
+    cases: dict[str, dict[str, str]] = {}
+    for case in _NOUN_CASE_ORDER:
+        singular = _join_variants(cells[case]["singular"])
+        plural = _join_variants(cells[case]["plural"])
+        if not singular or not plural:
+            return None
+        cases[case] = {"singular": singular, "plural": plural}
+    return {"kind": "noun", "cases": cases}
+
+
+def _parse_person_slot(parts: list[str]) -> tuple[str, str] | None:
+    if len(parts) != 3 or parts[1] not in _NUMBERS:
+        return None
+    person = parts[2].removesuffix(" ос.").strip()
+    if person not in _PERSONS:
+        return None
+    return parts[1], person
+
+
+def _build_verb_paradigm(forms: list[dict[str, str]]) -> dict | None:
+    infinitive: list[str] = []
+    tenses: dict[str, dict[str, dict[str, list[str]]]] = {
+        tense: {number: {person: [] for person in _PERSONS} for number in _NUMBERS}
+        for tense in _VERB_TENSES
+    }
+    imperative: dict[str, dict[str, list[str]]] = {
+        number: {person: [] for person in _PERSONS} for number in _NUMBERS
+    }
+    past: dict[str, list[str]] = {key: [] for key in _PAST_KEYS}
+
+    for row in forms:
+        form = row.get("form", "")
+        label = row.get("label", "")
+        parts = _split_label(label)
+        if label == "інфінітив":
+            # VESUM also emits short/non-primary raw-tag variants under the same
+            # decoded label; keep the structured infinitive to actual -ти forms.
+            if _is_infinitive_form(form):
+                infinitive.append(form)
+            continue
+        if len(parts) == 2 and parts[0] == "минулий" and parts[1] in past:
+            past[parts[1]].append(form)
+            continue
+        if parts and parts[0] == "наказовий":
+            parsed = _parse_person_slot(parts)
+            if not parsed:
+                return None
+            number, person = parsed
+            imperative[number][person].append(form)
+            continue
+        if parts and parts[0] in tenses:
+            parsed = _parse_person_slot(parts)
+            if not parsed:
+                return None
+            number, person = parsed
+            tenses[parts[0]][number][person].append(form)
+            continue
+        return None
+
+    infinitive_value = _join_variants(infinitive)
+    if not infinitive_value:
+        return None
+
+    collapsed_tenses: dict[str, dict[str, dict[str, str]]] = {}
+    for tense in _VERB_TENSES:
+        has_tense = any(
+            tenses[tense][number][person] for number in _NUMBERS for person in _PERSONS
+        )
+        if not has_tense:
+            continue
+        collapsed_tenses[tense] = {"однина": {}, "множина": {}}
+        for number in _NUMBERS:
+            for person in _PERSONS:
+                value = _join_variants(tenses[tense][number][person])
+                if not value:
+                    return None
+                collapsed_tenses[tense][number][person] = value
+
+    collapsed_imperative: dict[str, dict[str, str]] = {}
+    for number in _NUMBERS:
+        for person in _PERSONS:
+            value = _join_variants(imperative[number][person])
+            if not value:
+                continue
+            collapsed_imperative.setdefault(number, {})[person] = value
+
+    collapsed_past: dict[str, str] = {}
+    has_past = any(past.values())
+    if has_past:
+        for key in _PAST_KEYS:
+            value = _join_variants(past[key])
+            if not value:
+                return None
+            collapsed_past[key] = value
+
+    if not collapsed_tenses and not collapsed_imperative and not collapsed_past:
+        return None
+
+    paradigm: dict[str, object] = {"kind": "verb", "infinitive": infinitive_value}
+    if collapsed_tenses:
+        paradigm["tenses"] = collapsed_tenses
+    if collapsed_imperative:
+        paradigm["imperative"] = collapsed_imperative
+    if collapsed_past:
+        paradigm["past"] = collapsed_past
+    return paradigm
+
+
+def _build_paradigm(pos_raw: str, forms: list[dict[str, str]]) -> dict | None:
+    if pos_raw == "noun":
+        return _build_noun_paradigm(forms)
+    if pos_raw == "verb":
+        return _build_verb_paradigm(forms)
+    return None
 
 
 def get_apostrophe_variants(word: str) -> list[str]:
@@ -228,12 +398,16 @@ def _morphology(lemma: str) -> dict | None:
         decoded.append({"form": form, "label": label})
     if not decoded:
         return None
-    return {
+    morphology = {
         "pos": _POS_LABELS.get(pos_raw, pos_raw),
         "form_count": len(decoded),
         "forms": decoded[:40],
         "source": "VESUM",
     }
+    paradigm = _build_paradigm(pos_raw, decoded)
+    if paradigm:
+        morphology["paradigm"] = paradigm
+    return morphology
 
 
 def _clean_wiki_def(raw: str) -> str:
