@@ -10,13 +10,14 @@ no fabrication):
 - **meaning** — Грінченко 1907 (pre-Soviet, clean) preferred, СУМ-11 fallback
   (flagged, since it is partially Sovietised — issue #1659).
 - **synonyms** — source-attested, A1-sense allowlisted Ukrainian candidates only.
-- **etymology** — Goroh cached extracts first, ЕСУМ fallback
+- **etymology** — Goroh cached extracts first, ЕСУМ fallback, uk.wiktionary
+  dump fallback for remaining single-word gaps
   (``data/sources.db``; deterministic local lookup only).
 
 Every field carries its ``source`` so the UI can attribute it. Lemmas with no
 dictionary hit simply get an empty enrichment and the UI keeps its honest
 "not yet available" note. Multi-word phrases are skipped for single-lemma
-morphology and ЕСУМ fallback etymology.
+morphology and etymology.
 
 Run from the repo root (needs ``data/`` which is excluded from worktrees)::
 
@@ -474,6 +475,14 @@ def _etymology_lookup_variants(lemma: str) -> list[str]:
     return [v for v in variants if v and not (v.casefold() in seen or seen.add(v.casefold()))]
 
 
+def _has_whitespace(value: str) -> bool:
+    return bool(re.search(r"\s", str(value or "").strip()))
+
+
+def _missing_table(exc: sqlite3.OperationalError) -> bool:
+    return "no such table" in str(exc).casefold()
+
+
 def _goroh_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
     """Goroh cached etymology, by requested Atlas lemma then canonical headword."""
     variants = _etymology_lookup_variants(lemma)
@@ -496,8 +505,10 @@ def _goroh_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
                 ).fetchone()
                 if row:
                     break
-    except sqlite3.OperationalError:
-        return None
+    except sqlite3.OperationalError as exc:
+        if _missing_table(exc):
+            return None
+        raise
     if not row or not row[0]:
         return None
     return {
@@ -510,17 +521,22 @@ def _goroh_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
 def _esum_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
     """ЕСУМ etymology (А–Г PoC coverage), by lemma."""
     word = lemma.strip()
-    if " " in word:
+    if _has_whitespace(word):
         return None
     row = None
-    for variant in _split_lemma_variants(word):
-        row = conn.execute(
-            "SELECT etymology_text, vol, page FROM esum_etymology "
-            "WHERE lemma = ? AND etymology_text != '' LIMIT 1",
-            (variant,),
-        ).fetchone()
-        if row:
-            break
+    try:
+        for variant in _split_lemma_variants(word):
+            row = conn.execute(
+                "SELECT etymology_text, vol, page FROM esum_etymology "
+                "WHERE lemma = ? AND etymology_text != '' LIMIT 1",
+                (variant,),
+            ).fetchone()
+            if row:
+                break
+    except sqlite3.OperationalError as exc:
+        if _missing_table(exc):
+            return None
+        raise
     if not row or not row[0]:
         return None
     cite = "ЕСУМ"
@@ -531,9 +547,61 @@ def _esum_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
     return {"text": clean_html_entities(row[0].strip()[:600]), "source": cite}
 
 
+def _wiktionary_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
+    """uk.wiktionary dump fallback, by requested Atlas lemma and variants."""
+    word = lemma.strip()
+    if _has_whitespace(word):
+        return None
+    row = None
+    variants = _etymology_lookup_variants(word)
+    try:
+        for variant in variants:
+            row = conn.execute(
+                "SELECT etymology_text, source_url FROM wiktionary_etymology "
+                "WHERE requested_lemma = ? AND etymology_text != '' LIMIT 1",
+                (variant,),
+            ).fetchone()
+            if row:
+                break
+        if not row:
+            for variant in variants:
+                row = conn.execute(
+                    "SELECT etymology_text, source_url FROM wiktionary_etymology "
+                    "WHERE headword = ? AND etymology_text != '' LIMIT 1",
+                    (variant,),
+                ).fetchone()
+                if row:
+                    break
+    except sqlite3.OperationalError as exc:
+        if _missing_table(exc):
+            return None
+        raise
+    if not row or not row[0]:
+        return None
+    return {
+        "text": clean_html_entities(row[0].strip()[:600]),
+        "source": "Вікісловник (uk.wiktionary)",
+        "source_url": row[1],
+    }
+
+
 def _etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
-    """Cached Goroh etymology first, with ЕСУМ fallback."""
-    return _goroh_etymology(conn, lemma) or _esum_etymology(conn, lemma)
+    """Cached etymology by authority order: Goroh → ЕСУМ → uk.wiktionary."""
+    return (
+        _goroh_etymology(conn, lemma)
+        or _esum_etymology(conn, lemma)
+        or _wiktionary_etymology(conn, lemma)
+    )
+
+
+def _single_word_etymology_coverage(manifest: dict) -> tuple[int, int]:
+    entries = [
+        entry
+        for entry in manifest.get("entries", [])
+        if entry.get("lemma") and not _has_whitespace(entry.get("lemma"))
+    ]
+    covered = sum(1 for entry in entries if (entry.get("enrichment") or {}).get("etymology"))
+    return covered, len(entries)
 
 
 def enrich() -> tuple[int, int]:
@@ -579,7 +647,13 @@ def enrich() -> tuple[int, int]:
 
 def main() -> None:
     enriched, total = enrich()
-    print(f"enriched {enriched}/{total} lexicon entries from VESUM + Грінченко/СУМ + Горох/ЕСУМ")
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    etymology_covered, etymology_total = _single_word_etymology_coverage(manifest)
+    print(
+        f"enriched {enriched}/{total} lexicon entries from "
+        "VESUM + Грінченко/СУМ + Горох/ЕСУМ/Вікісловник"
+    )
+    print(f"single-word etymology {etymology_covered}/{etymology_total}")
 
 
 if __name__ == "__main__":
