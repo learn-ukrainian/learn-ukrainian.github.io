@@ -1,0 +1,80 @@
+- word: якщо
+  translation: if
+  pos: conjunction
+  example: "Якщо буде сонце, ми підемо гуляти."
+- word: то
+  translation: then
+  pos: particle
+  example: "Якщо матиму час, то зателефоную."
+- word: умова
+  translation: condition
+  pos: noun
+  example: "Якщо вводить умову."
+- word: результат
+  translation: result
+  pos: noun
+  example: "Друга частина речення називає результат."
+- word: реальний
+  translation: real
+  pos: adjective
+  example: "Це реальна умова, бо вона можлива."
+- word: можливий
+  translation: possible
+  pos: adjective
+  example: "Можлива ситуація може статися."
+- word: ймовірний
+  translation: likely, probable
+  pos: adjective
+  example: "Ймовірний результат залежить від умови."
+- word: планувати
+  translation: to plan
+  pos: verb
+  example: "Ми плануємо день за умовами."
+- word: домовитися
+  translation: to agree, arrange
+  pos: verb
+  example: "Якщо ти зможеш, домовимося на вечір."
+- word: попереджати
+  translation: to warn
+  pos: verb
+  example: "Мама попереджає: якщо не поспішиш, запізнишся."
+- word: обіцяти
+  translation: to promise
+  pos: verb
+  example: "Якщо допоможеш мені, я обіцяю допомогти тобі."
+- word: порада
+  translation: advice
+  pos: noun
+  example: "Якщо болить голова, це порада: відпочинь."
+- word: насіння
+  translation: seeds
+  pos: noun
+  example: "Якщо купиш насіння, посадимо помідори."
+- word: грядка
+  translation: garden bed
+  pos: noun
+  example: "Я підготую грядку, якщо буде час."
+- word: полити
+  translation: to water
+  pos: verb
+  example: "Якщо не буде дощу, треба полити город."
+- word: дощ
+  translation: rain
+  pos: noun
+  example: "Якщо буде дощ, залишимося вдома."
+- word: сонце
+  translation: sun
+  pos: noun
+  example: "Якщо буде сонце, поїдемо на дачу."
+- word: якби
+  translation: if (hypothetical)
+  pos: conjunction
+  example: "Якби тут тільки для розпізнавання на A2."
+- word: теперішній час
+  translation: present tense
+  pos: phrase
+  example: "Після якщо може стояти теперішній час."
+- word: майбутній час
+  translation: future tense
+  pos: phrase
+  example: "У результаті часто стоїть майбутній час."

@@ -1,0 +1,80 @@
+- word: порядок
+  translation: order
+  pos: noun
+  example: "Порядок слів змінює наголос у реченні."
+- word: речення
+  translation: sentence
+  pos: noun
+  example: "Речення може мати нейтральний порядок слів."
+- word: тема
+  translation: topic, theme
+  pos: noun
+  example: "Тема - це відома інформація."
+- word: рема
+  translation: new information, rheme
+  pos: noun
+  example: "Рема часто стоїть наприкінці речення."
+- word: наголос
+  translation: emphasis, stress
+  pos: noun
+  example: "Наголос падає на нову інформацію."
+- word: інверсія
+  translation: inversion
+  pos: noun
+  example: "Інверсія допомагає створити контраст."
+- word: контраст
+  translation: contrast
+  pos: noun
+  example: "Контраст показує, що важлива саме ця деталь."
+- word: нейтральний
+  translation: neutral
+  pos: adjective
+  example: "Нейтральний порядок звучить спокійно."
+- word: маркований
+  translation: marked, emphasized
+  pos: adjective
+  example: "Маркований порядок має спеціальний наголос."
+- word: підмет
+  translation: subject
+  pos: noun
+  example: "Підмет часто називає виконавця дії."
+- word: присудок
+  translation: predicate
+  pos: noun
+  example: "Присудок називає дію або стан."
+- word: додаток
+  translation: object
+  pos: noun
+  example: "Додаток може стояти на початку для контрасту."
+- word: відомий
+  translation: known
+  pos: adjective
+  example: "Відома інформація стоїть ближче до початку."
+- word: новий
+  translation: new
+  pos: adjective
+  example: "Нова інформація часто звучить наприкінці."
+- word: винести наперед
+  translation: to move to the front
+  pos: phrase
+  example: "Можна винести наперед слово книга."
+- word: підкреслювати
+  translation: to emphasize
+  pos: verb
+  example: "Порядок слів підкреслює відповідь."
+- word: виправляти
+  translation: to correct
+  pos: verb
+  example: "Ми виправляємо помилковий наголос."
+- word: хто саме
+  translation: who exactly
+  pos: phrase
+  example: "Хто саме помив посуд?"
+- word: що саме
+  translation: what exactly
+  pos: phrase
+  example: "Що саме купила Олена?"
+- word: не..., а...
+  translation: not..., but...
+  pos: phrase
+  example: "Не Тарас це зробив, а Олег."
