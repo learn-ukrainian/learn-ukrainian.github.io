@@ -58,7 +58,7 @@ AUDIT_TO_PIPELINE_KEY: dict[str, str] = {
     "C1": "c1-core",
     "C1-academic": "c1-core",
     "C1-stylistics": "c1-core",
-    "C1-folk": "c1-core",
+    "FOLK": "c1-core",
     "C1-literature": "c1-core",
     "C1-checkpoint": "c1-core",
     "C1-capstone": "c1-core",
@@ -238,3 +238,55 @@ def test_audit_forbidden_disjoint_from_pipeline_allowed(audit_key: str, pipeline
         f"pipeline allows: {sorted(overlap)}. The writer will emit them and "
         "the audit will reject — drop one side."
     )
+
+
+# ---------------------------------------------------------------------------
+# 6. FOLK seminar resolution (regression for the C1-folk dead-key bug).
+#    folk plans carry `level: FOLK` / `phase: FOLK.B` and live under /folk/,
+#    so detect_level must yield 'FOLK' and get_level_config must land on the
+#    FOLK seminar thresholds — NOT silently default to A1 as it did while the
+#    block was keyed the unreachable 'C1-folk'.
+# ---------------------------------------------------------------------------
+def test_folk_key_is_track_named_not_level_prefixed() -> None:
+    assert "FOLK" in LEVEL_CONFIG, (
+        "FOLK seminar config missing — folk is a C1-register seminar track and "
+        "must be keyed by its level_code 'FOLK' (like LIT/OES/RUTH)."
+    )
+    assert "C1-folk" not in LEVEL_CONFIG, (
+        "'C1-folk' is the unreachable legacy key: folk plans never carry "
+        "level 'C1', so detect_level can never produce 'C1-folk'."
+    )
+
+
+def test_detect_level_recognizes_folk_track() -> None:
+    from audit.parsing import detect_level
+
+    level_code, _module_num, track_code = detect_level(
+        "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/module.md",
+        "level: FOLK\nphase: FOLK.B\n",
+    )
+    assert level_code == "FOLK", (
+        f"folk module resolved to {level_code!r} (expected 'FOLK'). A non-FOLK "
+        "result means it silently falls back to the A1 default thresholds."
+    )
+    assert track_code == "FOLK"
+
+
+def test_folk_resolves_to_seminar_thresholds_not_a1() -> None:
+    from audit.config import get_level_config
+    from audit.parsing import detect_focus, detect_level
+
+    fm = "level: FOLK\nphase: FOLK.B\n"
+    fp = "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/module.md"
+    level_code, module_num, _ = detect_level(fp, fm)
+    module_focus = detect_focus(fm, level_code, module_num, "", fp)
+
+    cfg = get_level_config(level_code, module_focus)
+    a1 = LEVEL_CONFIG["A1"]
+    assert cfg is not a1, (
+        "folk audited against the A1 default config — the FOLK seminar "
+        "thresholds are not being applied."
+    )
+    assert cfg["min_vocab"] == LEVEL_CONFIG["FOLK"]["min_vocab"] == 24
+    assert cfg["target_words"] == 4000
+    assert cfg["min_types_unique"] == 4

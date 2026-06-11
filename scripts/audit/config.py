@@ -1028,7 +1028,12 @@ LEVEL_CONFIG = {
         'transliteration_allowed': False,
         'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'}  # Seminar
     },
-    'C1-folk': {
+    # FOLK seminar (C1-register folk-culture track). Keyed by its level_code
+    # 'FOLK' — the same track-name-is-the-key pattern as LIT/OES/RUTH — so
+    # detect_level('/folk/...') -> 'FOLK' resolves here directly. Previously
+    # keyed 'C1-folk', which was unreachable (folk plans carry level: FOLK,
+    # never 'C1'), so folk modules silently audited against the A1 defaults.
+    'FOLK': {
         'target_words': 4000,
         'min_activities': 1,
         'min_items_per_activity': 12,

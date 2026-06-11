@@ -104,13 +104,13 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int, str]:
         level_from_path = base_level
         track_from_path = f"{base_level}{track_suffix.upper()}" if track_suffix else base_level
     else:
-        special_match = re.search(r'/(lit|oes|ruth|bio|hist|istorio)/', file_path.lower())
+        special_match = re.search(r'/(lit|oes|ruth|bio|hist|istorio|folk)/', file_path.lower())
         if special_match:
             track_name = special_match.group(1)
             _TRACK_LEVEL_MAP = {
                 'bio': 'C1', 'istorio': 'C1',
                 'hist': 'B2',
-                'lit': 'LIT', 'oes': 'OES', 'ruth': 'RUTH',
+                'lit': 'LIT', 'oes': 'OES', 'ruth': 'RUTH', 'folk': 'FOLK',
             }
             level_from_path = _TRACK_LEVEL_MAP.get(track_name, track_name.upper())
             track_from_path = track_name.upper()

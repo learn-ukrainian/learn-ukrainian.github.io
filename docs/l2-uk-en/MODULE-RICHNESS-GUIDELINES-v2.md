@@ -552,7 +552,7 @@ Each module should include review items from previous module(s) to reinforce ret
 | `C1-academic`     | 01-20                   | 3000+ | 12    | 24+   | Academic Ukrainian, morphology, syntax       |
 | `C1-professional` | 21-35                   | 3000+ | 12    | 35+   | Professional & social register               |
 | `C1-stylistics`   | 36-55                   | 3000+ | 12    | 24+   | 5 functional styles, rhetoric, argumentation |
-| `C1-folk`         | 56-80                   | 3000+ | 12    | 24+   | Folk culture, arts, dialects, Surzhyk        |
+| `FOLK`            | seminar track           | 4000+ | 1+    | 24+   | Folk-culture seminar (de-imperialized, C1 register) |
 | `C1-literature`   | 81-115                  | 3500+ | 12    | 24+   | Literary analysis: classics to contemporary  |
 | `biography`    | 36-100                  | 4000+ | 4-9   | 24+   | Biography seminar style                      |
 | `istorio`      | 101-115                 | 4000+ | 4-9   | 25+   | Historical analysis seminar style            |
