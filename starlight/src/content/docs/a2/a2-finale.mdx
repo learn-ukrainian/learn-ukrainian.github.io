@@ -1,0 +1,293 @@
+---
+title: "Фінал A2"
+description: "Підсумкове завдання — один день в українському місті"
+sidebar:
+  order: 69
+  label: "69. Фінал A2"
+prev: a2-practice-exam
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: один день у Львові
+
+Фінальне завдання рівня А2 - це не ще одна таблиця. Це день у місті, де
+потрібно запитати дорогу, купити квиток, замовити їжу, описати враження
+і домовитися про плани.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Туристка","text":"Добрий ранок! Підкажіть, будь ласка, як доїхати від вокзалу до центру?"},{"speaker":"Працівниця вокзалу","text":"Сідайте на трамвай номер один. Квиток можна купити в застосунку або в кіоску."},{"speaker":"Туристка","text":"Дякую. А скільки часу це займає?"},{"speaker":"Працівниця вокзалу","text":"Приблизно двадцять хвилин, якщо немає заторів."},{"speaker":"Офіціант","text":"Що будете замовляти?"},{"speaker":"Туристка","text":"Я замовлю борщ і каву з молоком. А що ви порадите на десерт?"},{"speaker":"Друг","text":"Увечері зустрінемося біля театру. Якщо матимеш час, підемо на коротку прогулянку."},{"speaker":"Туристка","text":"Чудово. Сьогодні я вже стільки побачила, що хочу все записати українською."}]')}
+/>
+
+У цьому діалозі працюють усі головні навички А2: ввічливе прохання,
+транспорт, їжа, кількість, час, умова, майбутній план, минулий досвід і
+особисте враження.
+
+## Місія фінального завдання
+
+Уявіть, що ви проводите один день в українському місті. Місто може бути
+Львів, Київ, Чернівці, Полтава або інше знайоме вам місце. Ваше завдання
+- пройти три сцени:
+
+| Сцена | Комунікативна мета | Граматика, яка допомагає |
+| --- | --- | --- |
+| ранок | приїхати, зорієнтуватися, поселитися | місцевий, знахідний, родовий, наказовий |
+| день | купити, замовити, попросити пораду | числівники, давальний, орудний, порівняння |
+| вечір | розповісти про день і домовитися про завтра | минулий час, вид, майбутній, якщо, щоб |
+
+Не треба говорити ідеально. Треба виконати завдання українською так, щоб
+співрозмовник зрозумів вас і міг відповісти.
+
+## Ранок: прибуття та орієнтація
+
+Почніть із вокзалу або автостанції. Корисні фрази:
+
+| Намір | Фраза |
+| --- | --- |
+| запитати дорогу | Як пройти до центру? |
+| уточнити транспорт | Який трамвай іде до готелю? |
+| купити квиток | Один квиток до центру, будь ласка. |
+| попросити повторити | Повторіть, будь ласка, повільніше. |
+| зареєструватися | Я забронював / забронювала номер на одну ніч. |
+
+Граматична карта ранку:
+
+> на вокзалі, у Львові, у готелі - місцевий;
+>
+> купити квиток, знайти адресу - знахідний;
+>
+> немає вільних номерів, без паспорта - родовий;
+>
+> покажіть, скажіть, повторіть - наказовий спосіб.
+
+Міні-сцена:
+
+> Я приїхала до Львова вранці. На вокзалі я запитала, як доїхати до
+> центру. Потім купила квиток і поїхала до готелю. У готелі я показала
+> паспорт і запитала, чи можна залишити речі до обіду.
+
+### Ранок у місті
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я приїхала до ___ вранці.", "answer": "Львова", "options": ["Львів", "Львова", "Львовом"]}, {"sentence": "На ___ я запитала про трамвай.", "answer": "вокзалі", "options": ["вокзал", "вокзалі", "вокзалом"]}, {"sentence": "Я купила ___ до центру.", "answer": "квиток", "options": ["квиток", "квитка", "квитком"]}, {"sentence": "У готелі немає вільних ___.", "answer": "номерів", "options": ["номери", "номерів", "номерами"]}, {"sentence": "___, будь ласка, повільніше.", "answer": "Повторіть", "options": ["Повторіть", "Повторили", "Повторю"]}, {"sentence": "Я говорила з ___.", "answer": "адміністраторкою", "options": ["адміністраторка", "адміністраторку", "адміністраторкою"]}, {"sentence": "Покажіть, будь ласка, ___ на карті.", "answer": "адресу", "options": ["адреса", "адресу", "адресою"]}, {"sentence": "Я залишила речі ___ обіду.", "answer": "до", "options": ["до", "з", "на"]}, {"sentence": "У ___ було дуже чисто.", "answer": "номері", "options": ["номер", "номері", "номером"]}, {"sentence": "Я подякувала ___.", "answer": "працівниці", "options": ["працівниця", "працівниці", "працівницю"]}]`)} />
+
+## День: ринок, кав'ярня, прогулянка
+
+Удень ви взаємодієте з містом: купуєте, замовляєте, порівнюєте, просите
+пораду.
+
+На ринку:
+
+> Скільки коштують ці яблука?
+>
+> Дайте, будь ласка, два кілограми помідорів.
+>
+> Ці груші солодші за ті?
+
+У кав'ярні:
+
+> Я замовлю борщ і чай.
+>
+> Що ви порадите на десерт?
+>
+> Вибачте, я замовляла каву без цукру.
+
+Під час прогулянки:
+
+> Що це за будівля?
+>
+> Коли її збудували?
+>
+> Де можна купити листівки?
+
+Тут добре працюють порівняння і ввічливі прохання:
+
+| Просте | Розширене A2 |
+| --- | --- |
+| Це гарна кав'ярня. | Ця кав'ярня затишніша, ніж та біля вокзалу. |
+| Дайте каву. | Дайте, будь ласка, каву з молоком без цукру. |
+| Я хочу десерт. | Що ви порадите на десерт, якщо я люблю шоколад? |
+
+### День у місті
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Ви хочете купити яблука на ринку.", "options": [{"text": "Дайте, будь ласка, два кілограми яблук.", "correct": true}, {"text": "Яблука ходять до ринку.", "correct": false}, {"text": "Я без яблуками.", "correct": false}], "explanation": "Це ввічлива і граматично правильна репліка."}, {"question": "Ви хочете пораду щодо десерту.", "options": [{"text": "Що ви порадите на десерт?", "correct": true}, {"text": "Десерт порадив мене?", "correct": false}, {"text": "Я пораджу офіціанта.", "correct": false}], "explanation": "Порадите що? на десерт - природне питання."}, {"question": "У замовленні помилка.", "options": [{"text": "Вибачте, я замовляла каву без цукру.", "correct": true}, {"text": "Вибачте, я замовляла кава без цукор.", "correct": false}, {"text": "Вибачте, я замовити каву.", "correct": false}], "explanation": "Каву - знахідний, без цукру - родовий."}, {"question": "Ви порівнюєте дві кав'ярні.", "options": [{"text": "Ця кав'ярня затишніша, ніж та.", "correct": true}, {"text": "Ця кав'ярня затишна ніж та.", "correct": false}, {"text": "Ця кав'ярня найзатишніша за та.", "correct": false}], "explanation": "Вищий ступінь + ніж."}, {"question": "Ви питаєте про будівлю.", "options": [{"text": "Що це за будівля?", "correct": true}, {"text": "Ким це за будівля?", "correct": false}, {"text": "Де це за будівлею?", "correct": false}], "explanation": "Що це за...? - природна модель."}, {"question": "Ви хочете купити сувеніри для родини.", "options": [{"text": "Де можна купити сувеніри для родини?", "correct": true}, {"text": "Де можна купити сувенірами для родина?", "correct": false}, {"text": "Де можна куплю сувеніри?", "correct": false}], "explanation": "Сувеніри - знахідний, для родини - родовий."}, {"question": "Ви пояснюєте мету прогулянки.", "options": [{"text": "Я гуляю, щоб побачити місто.", "correct": true}, {"text": "Я гуляю, тому що побачити місто.", "correct": false}, {"text": "Я гуляю, якщо побачити місто.", "correct": false}], "explanation": "Щоб + інфінітив називає мету."}, {"question": "Ви говорите про умову.", "options": [{"text": "Якщо буде час, зайдемо до музею.", "correct": true}, {"text": "Бо буде час, зайдемо до музею.", "correct": false}, {"text": "Хоча буде час, зайдемо до музею.", "correct": false}], "explanation": "Якщо називає реальну умову."}, {"question": "Ви просите повторити.", "options": [{"text": "Повторіть, будь ласка, ще раз.", "correct": true}, {"text": "Повторили, будь ласка, ще раз.", "correct": false}, {"text": "Повторю, будь ласка, ще раз.", "correct": false}], "explanation": "Повторіть - ввічлива форма наказового способу."}, {"question": "Ви висловлюєте думку.", "options": [{"text": "На мою думку, цей маршрут зручніший.", "correct": true}, {"text": "На мене думку, цей маршрут зручніший.", "correct": false}, {"text": "Моєю думку маршрут зручніший.", "correct": false}], "explanation": "На мою думку - стала фраза."}]`)} />
+
+## Вечір: друзі, враження, плани
+
+Увечері потрібно розповісти, що сталося протягом дня. Тут важливий вид
+дієслова:
+
+| Процес | Результат |
+| --- | --- |
+| Я гуляла центром дві години. | Я побачила стару ратушу. |
+| Ми довго шукали книгарню. | Ми знайшли книгарню біля театру. |
+| Я писала нотатки в телефоні. | Я написала короткий пост українською. |
+
+Додайте думку і причину:
+
+> На мою думку, це місто дуже зручне для пішої прогулянки, тому що центр
+> невеликий.
+>
+> Мені сподобалася кав'ярня, хоча там було багато людей.
+
+Потім домовтеся про завтра:
+
+> Якщо буде гарна погода, ми поїдемо в парк.
+>
+> Я хочу встати раніше, щоб побачити місто без натовпу.
+>
+> Завтра я куплю сувеніри для родини.
+
+### Процес чи результат увечері
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Я гуляла центром дві години.", "right": "Я побачила стару ратушу."}, {"left": "Ми довго шукали книгарню.", "right": "Ми знайшли книгарню біля театру."}, {"left": "Я писала нотатки в телефоні.", "right": "Я написала короткий пост."}, {"left": "Ми чекали трамвай десять хвилин.", "right": "Ми дочекалися трамвая."}, {"left": "Я читала меню.", "right": "Я вибрала борщ і чай."}, {"left": "Друг пояснював маршрут.", "right": "Я зрозуміла, куди йти."}, {"left": "Ми фотографували площу.", "right": "Ми зробили десять фото."}, {"left": "Я вчила нові слова.", "right": "Я вивчила п'ять корисних фраз."}]`)} />
+
+## Фінальне комунікативне завдання
+
+Створіть власний сценарій "Один день в українському місті". Мінімум:
+
+1. Назвіть місто і причину поїздки.
+2. Напишіть або скажіть ранковий діалог на вокзалі чи в готелі.
+3. Напишіть або скажіть денний діалог на ринку, у кав'ярні або в музеї.
+4. Розкажіть увечері, що ви зробили і що плануєте на завтра.
+5. Додайте одну проблему і ввічливе розв'язання.
+
+Перевірте, чи у вашому сценарії є:
+
+| Навичка | Приклад |
+| --- | --- |
+| відмінки | без квитка, у готелі, з другом |
+| вид дієслова | гуляв / погуляв, писала / написала |
+| майбутній час | поїду, куплю, буду читати |
+| порівняння | зручніший, найцікавіше місце |
+| складне речення | тому що, хоча, щоб, якщо |
+| думка | на мою думку, мені здається |
+
+### Фінальна корекція
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильний варіант для сценарію." items={JSON.parse(`[{"sentence": "Я приїхала до Львів.", "errorWord": "Львів", "correctForm": "Я приїхала до Львова.", "options": ["Я приїхала до Львова.", "Я приїхала до Львів."], "explanation": "До вимагає родового відмінка."}, {"sentence": "На вокзал я запитала про трамвай.", "errorWord": "На вокзал", "correctForm": "На вокзалі я запитала про трамвай.", "options": ["На вокзалі я запитала про трамвай.", "На вокзал я запитала про трамвай."], "explanation": "Де? на вокзалі."}, {"sentence": "Я замовила кава з молоком.", "errorWord": "кава", "correctForm": "Я замовила каву з молоком.", "options": ["Я замовила каву з молоком.", "Я замовила кава з молоком."], "explanation": "Замовила що? каву."}, {"sentence": "Дайте два кілограм яблука.", "errorWord": "два кілограм яблука", "correctForm": "Дайте два кілограми яблук.", "options": ["Дайте два кілограми яблук.", "Дайте два кілограм яблука."], "explanation": "Два кілограми яблук - природна кількісна модель."}, {"sentence": "Я гуляла і побачила місто весь день.", "errorWord": "побачила місто весь день", "correctForm": "Я гуляла містом весь день і побачила багато цікавого.", "options": ["Я гуляла містом весь день і побачила багато цікавого.", "Я побачила місто весь день."], "explanation": "Весь день - процес; побачила - результат."}, {"sentence": "Ця кав'ярня більш краща.", "errorWord": "більш краща", "correctForm": "Ця кав'ярня краща.", "options": ["Ця кав'ярня краща.", "Ця кав'ярня більш краща."], "explanation": "Краща вже є вищим ступенем."}, {"sentence": "Я хочу піти, тому що побачити театр.", "errorWord": "тому що", "correctForm": "Я хочу піти, щоб побачити театр.", "options": ["Я хочу піти, щоб побачити театр.", "Я хочу піти, тому що побачити театр."], "explanation": "Побачити театр - мета."}, {"sentence": "Якби буде час, ми підемо до музею.", "errorWord": "Якби", "correctForm": "Якщо буде час, ми підемо до музею.", "options": ["Якщо буде час, ми підемо до музею.", "Якби буде час, ми підемо до музею."], "explanation": "Для реальної умови A2 потрібне якщо."}, {"sentence": "Я подякувала офіціантку.", "errorWord": "офіціантку", "correctForm": "Я подякувала офіціантці.", "options": ["Я подякувала офіціантці.", "Я подякувала офіціантку."], "explanation": "Дякувати кому? офіціантці."}, {"sentence": "Ніхто допоміг мені з маршрутом.", "errorWord": "немає не", "correctForm": "Ніхто не допоміг мені з маршрутом.", "options": ["Ніхто не допоміг мені з маршрутом.", "Ніхто допоміг мені з маршрутом."], "explanation": "Ніхто потребує заперечення не."}]`)} />
+
+## 📋 Підсумок: місток до B1
+
+Після А2 ви можете виконувати практичні повсякденні дії українською:
+запитувати, купувати, замовляти, пояснювати проблему, розповідати про
+минуле і домовлятися про майбутнє. На B1 тексти стануть довшими, а
+пояснення частіше будуть українською, тому метамова з попередніх модулів
+залишається важливою.
+
+Остання самооцінка:
+
+> Я можу попросити допомоги українською.
+>
+> Я можу розповісти, що робив / робила вчора.
+>
+> Я можу пояснити план на завтра.
+>
+> Я можу написати короткий текст із причиною, умовою або метою.
+
+Якщо на всі чотири речення ви відповідаєте "так, з невеликими помилками",
+ви готові пробувати матеріал B1 у спокійному темпі.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"фінал","translation":"finale, final task","pos":"noun","example":"Фінал А2 поєднує всі практичні навички.","examples":["finale, final task","Фінал А2 поєднує всі практичні навички."]},{"word":"прибуття","translation":"arrival","pos":"noun","example":"Прибуття до міста було рано-вранці.","examples":["arrival","Прибуття до міста було рано-вранці."]},{"word":"вокзал","translation":"train station","pos":"noun","example":"На вокзалі я купила квиток.","examples":["train station","На вокзалі я купила квиток."]},{"word":"квиток","translation":"ticket","pos":"noun","example":"Квиток можна купити в застосунку.","examples":["ticket","Квиток можна купити в застосунку."]},{"word":"застосунок","translation":"app","pos":"noun","example":"Я купив квиток у застосунку.","examples":["app","Я купив квиток у застосунку."]},{"word":"готель","translation":"hotel","pos":"noun","example":"У готелі я залишив речі.","examples":["hotel","У готелі я залишив речі."]},{"word":"номер","translation":"hotel room, number","pos":"noun","example":"Номер ще не був готовий.","examples":["hotel room, number","Номер ще не був готовий."]},{"word":"ринок","translation":"market","pos":"noun","example":"На ринку я купила яблука.","examples":["market","На ринку я купила яблука."]},{"word":"кав'ярня","translation":"cafe","pos":"noun","example":"Ця кав'ярня затишніша за ту.","examples":["cafe","Ця кав'ярня затишніша за ту."]},{"word":"замовити","translation":"to order","pos":"verb","example":"Я хочу замовити борщ.","examples":["to order","Я хочу замовити борщ."]},{"word":"порадити","translation":"to recommend","pos":"verb","example":"Що ви порадите на десерт?","examples":["to recommend","Що ви порадите на десерт?"]},{"word":"будівля","translation":"building","pos":"noun","example":"Що це за будівля?","examples":["building","Що це за будівля?"]},{"word":"листівка","translation":"postcard","pos":"noun","example":"Де можна купити листівки?","examples":["postcard","Де можна купити листівки?"]},{"word":"сувенір","translation":"souvenir","pos":"noun","example":"Я куплю сувеніри для родини.","examples":["souvenir","Я куплю сувеніри для родини."]},{"word":"враження","translation":"impression","pos":"noun","example":"Увечері я описала свої враження.","examples":["impression","Увечері я описала свої враження."]},{"word":"маршрут","translation":"route","pos":"noun","example":"Цей маршрут зручніший.","examples":["route","Цей маршрут зручніший."]},{"word":"затор","translation":"traffic jam","pos":"noun","example":"Якщо немає заторів, дорога займає двадцять хвилин.","examples":["traffic jam","Якщо немає заторів, дорога займає двадцять хвилин."]},{"word":"розв'язання","translation":"solution","pos":"noun","example":"Ввічливе розв'язання проблеми дуже важливе.","examples":["solution","Ввічливе розв'язання проблеми дуже важливе."]},{"word":"домовитися","translation":"to arrange, agree","pos":"verb","example":"Увечері ми домовилися про завтра.","examples":["to arrange, agree","Увечері ми домовилися про завтра."]},{"word":"готовий","translation":"ready","pos":"adjective","example":"Я готовий пробувати матеріал B1.","examples":["ready","Я готовий пробувати матеріал B1."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"фінал","back":"finale, final task"},{"front":"прибуття","back":"arrival"},{"front":"вокзал","back":"train station"},{"front":"квиток","back":"ticket"},{"front":"застосунок","back":"app"},{"front":"готель","back":"hotel"},{"front":"номер","back":"hotel room, number"},{"front":"ринок","back":"market"},{"front":"кав'ярня","back":"cafe"},{"front":"замовити","back":"to order"},{"front":"порадити","back":"to recommend"},{"front":"будівля","back":"building"},{"front":"листівка","back":"postcard"},{"front":"сувенір","back":"souvenir"},{"front":"враження","back":"impression"},{"front":"маршрут","back":"route"},{"front":"затор","back":"traffic jam"},{"front":"розв'язання","back":"solution"},{"front":"домовитися","back":"to arrange, agree"},{"front":"готовий","back":"ready"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Ранок у місті
+
+*(див. урок, §Ранок: прибуття та орієнтація)*
+
+### День у місті
+
+*(див. урок, §День: ринок, кав'ярня, прогулянка)*
+
+### Процес чи результат увечері
+
+*(див. урок, §Вечір: друзі, враження, плани)*
+
+### Фінальна корекція
+
+*(див. урок, §Фінальне комунікативне завдання)*
+
+### Перевірка сценарію
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "У сценарії має бути хоча б один ввічливий запит.", "isTrue": true, "explanation": "Це перевіряє практичну комунікацію."}, {"statement": "У фінальному завданні треба уникати минулого часу.", "isTrue": false, "explanation": "Навпаки, треба розповісти, що сталося протягом дня."}, {"statement": "Сценарій може містити маленьку проблему і ввічливе розв'язання.", "isTrue": true, "explanation": "Це робить завдання реалістичним."}, {"statement": "Усі речення мають бути простими, без сполучників.", "isTrue": false, "explanation": "A2 включає тому що, хоча, щоб, якщо."}, {"statement": "Порівняння допомагає описати місця або варіанти.", "isTrue": true, "explanation": "Наприклад: цей маршрут зручніший."}, {"statement": "Самооцінка після сценарію не потрібна.", "isTrue": false, "explanation": "Самооцінка показує, що повторити перед B1."}]`)} />
+
+### Сцена і фраза
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "вокзал", "right": "Як доїхати до центру?"}, {"left": "готель", "right": "Я забронювала номер на одну ніч."}, {"left": "ринок", "right": "Дайте два кілограми яблук."}, {"left": "кав'ярня", "right": "Що ви порадите на десерт?"}, {"left": "музей", "right": "О котрій годині починається екскурсія?"}, {"left": "вечір із другом", "right": "Сьогодні я побачила багато цікавого."}]`)} />
+
+### Один день в українському місті
+
+<EssayResponse client:only='react' title="Один день в українському місті" prompt={"Напишіть 100-130 слів українською: один день у місті. Додайте ранок, день, вечір, одну проблему, одну причину або мету і один план на завтра."} modelAnswer={"Уранці я приїхала до Львова потягом. На вокзалі я запитала, як доїхати до центру, і купила квиток на трамвай. У готелі я залишила речі, бо номер ще не був готовий. Потім я пішла на ринок і купила два кілограми яблук для друзів. У кав'ярні я замовила борщ, але офіціант приніс суп, тому я ввічливо пояснила проблему. Увечері я зустрілася з Оксаною біля театру. Ми гуляли центром і говорили про плани. Якщо завтра буде сонячно, ми поїдемо в парк, щоб побачити місто з іншого боку."} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| communication | | |\n| grammar | | |\n| coherence | | |"} isUkrainian={true} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [ULP: Travelling in Ukraine](https://www.ukrainianlessons.com/travel-ukraine/) — Optional travel-language reference for transport, city navigation, and practical situations.
+- 📄 [ULP: Ukrainian Conjunctions Guide](https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/) — Review resource for connecting final-task scenes with cause, contrast, purpose, and condition.
+
+**🔗 Онлайн-ресурси:**
+- 🔗 [CEFR Self-Assessment Grid](https://www.coe.int/en/web/common-european-framework-reference-languages/table-2-cefr-3.3-common-reference-levels-self-assessment-grid) — Reference for checking A2 spoken interaction, spoken production, and writing expectations.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

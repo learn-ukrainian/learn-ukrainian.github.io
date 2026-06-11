@@ -1,0 +1,80 @@
+- word: фінал
+  translation: finale, final task
+  pos: noun
+  example: "Фінал А2 поєднує всі практичні навички."
+- word: прибуття
+  translation: arrival
+  pos: noun
+  example: "Прибуття до міста було рано-вранці."
+- word: вокзал
+  translation: train station
+  pos: noun
+  example: "На вокзалі я купила квиток."
+- word: квиток
+  translation: ticket
+  pos: noun
+  example: "Квиток можна купити в застосунку."
+- word: застосунок
+  translation: app
+  pos: noun
+  example: "Я купив квиток у застосунку."
+- word: готель
+  translation: hotel
+  pos: noun
+  example: "У готелі я залишив речі."
+- word: номер
+  translation: hotel room, number
+  pos: noun
+  example: "Номер ще не був готовий."
+- word: ринок
+  translation: market
+  pos: noun
+  example: "На ринку я купила яблука."
+- word: кав'ярня
+  translation: cafe
+  pos: noun
+  example: "Ця кав'ярня затишніша за ту."
+- word: замовити
+  translation: to order
+  pos: verb
+  example: "Я хочу замовити борщ."
+- word: порадити
+  translation: to recommend
+  pos: verb
+  example: "Що ви порадите на десерт?"
+- word: будівля
+  translation: building
+  pos: noun
+  example: "Що це за будівля?"
+- word: листівка
+  translation: postcard
+  pos: noun
+  example: "Де можна купити листівки?"
+- word: сувенір
+  translation: souvenir
+  pos: noun
+  example: "Я куплю сувеніри для родини."
+- word: враження
+  translation: impression
+  pos: noun
+  example: "Увечері я описала свої враження."
+- word: маршрут
+  translation: route
+  pos: noun
+  example: "Цей маршрут зручніший."
+- word: затор
+  translation: traffic jam
+  pos: noun
+  example: "Якщо немає заторів, дорога займає двадцять хвилин."
+- word: розв'язання
+  translation: solution
+  pos: noun
+  example: "Ввічливе розв'язання проблеми дуже важливе."
+- word: домовитися
+  translation: to arrange, agree
+  pos: verb
+  example: "Увечері ми домовилися про завтра."
+- word: готовий
+  translation: ready
+  pos: adjective
+  example: "Я готовий пробувати матеріал B1."
