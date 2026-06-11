@@ -27,7 +27,7 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 11 HANDOFF (2026-06-11 — DERIVATIONAL LAYER MERGED + VESUM WALL BROKEN ON LIVE CONTENT; textbook_quote_fidelity CATEGORY-ERROR FIXED; kalendarna RE-FIRING) — **RESUME HERE**
+## ▶▶▶ SESSION 11 HANDOFF (2026-06-11 — 4 GATE WALLS BROKEN (derivational #2956 verified, quote-fidelity #2973, plan-budget #2974, compound-adj #2975); 5 kalendarna builds; REMAINING WALL = WRITER VOCABULARY DISCIPLINE → hardening dispatched) — **RESUME HERE**
 
 > **⏱ LATEST STATE (2026-06-11):** The derivational-morphology layer (#2956, codex-impl + Claude-review) +
 > apostrophe-normalize (#2965) merged BEFORE this session. I verified the gate on main (65 tests; `діюча`/
@@ -46,50 +46,72 @@
 > the 4 kalendarna веснянки are verbatim-findable in `search_literary` → re-fire will pass this gate. **This also
 > unblocks lit/hist/oes/ruth primary-text modules.**
 
-### ▶ BUILD STATUS — 3 re-fires; ONLY word_count left
-Builds #1/#2/#3 (gate-counted word_count): 4528 / 4295 / 4314 — all under the 4600 floor (target 5000).
-**Build #3 cleared BOTH hard gate walls: `vesum_verified` ✅ AND `textbook_quote_fidelity` ✅** (the #2973 fix
-works on live content). The ONLY remaining blocker is `word_count` — claude-tools consistently yields ~86% of
-target (gate's strict tokenization haircut). **Root cause + fix (THIS PR):** the kalendarna plan's
-`content_outline` sections summed to 5000 (= 1.0× word_target), but the writer prompt's own guidance
-(`linear-write.md`) expects sections to overshoot word_target. `validate_plan_config` SANCTIONS this:
-`WORD_TARGET_OVER_TOLERANCE = 0.15` ("outline budgets intentionally overshoot for writer flexibility"). The
-kalendarna plan had sections at 1.0× (no overshoot) — the bug. Recalibrated sections to sum **5700**
-(650/1400/1650/1050/950 = **1.14×**, within the sanctioned 15%), keeping `word_target: 5000` so the gate floor
-STAYS 4600 (NOT lowered — writer target raised). Both validators clean; version 0.1→0.2. Writer at ~86% × 5700
-≈ 4900 → clears 4600 with margin (even ~81% yield clears). NOTE: first attempt used 1.2× (6000) → CI
-`validate_plan_config` rejected (>1.15×); pulled back to 1.14×.
+### ▶ BUILD STATUS — 5 re-fires; 4 gate walls BROKEN; remaining wall = WRITER VOCABULARY DISCIPLINE
+| # | vesum | quote_fidelity | word_count (raw→final) | failed on |
+|---|---|---|---|---|
+| 1 | ✗ двохоровий/вчитуємо | — | — | vesum (coinage) |
+| 2 | ✅ | ✗ | ✗ | quote_fidelity + word_count |
+| 3 | ✅ | ✅ | ✗ 4314 | word_count |
+| 4 | ✗ імперсько-радянський | ✅ | ✗ 4862→4266 | vesum compounds → destructive correction |
+| 5 | ✗ вербатимний/п'ятикрокова/подавачки/слово-дія | ✅ | ✗ 4855→4430 | vesum coinages → divergent correction |
 
-### ▶ RE-FIRE #4 (pending — fire after THIS PR merges to main)
-`v7_build folk kalendarna-obriadovist-zvychai --worktree --writer claude-tools --effort xhigh`, Monitor JSONL.
-Expected all-green. If word_count STILL short, the next lever is a folk writer-prompt length nudge
-(`linear-write.md`) — NOT lowering the gate (#1). NOTE: the under-budgeting is likely systemic across folk
-plans (authored summing to word_target, not 1.2×); fold a sweep into the queue if other folk builds repeat it.
+**KEY INSIGHT:** the writer's RAW output is GOOD (4855-4862 tokens, ABOVE the 4600 floor — the plan recalibration
+#2974 worked) and `textbook_quote_fidelity` passes. word_count fails ONLY as a SYMPTOM: the vesum gate flags a
+few writer-introduced non-attested words → the ADR-008 correction loop (literal find/replace, ADR-007 no-regen)
+CAN'T rephrase them → it DELETES content (tanking word_count) and even ADDS new coinages (build #5: 2→4). So the
+single remaining root cause = **WRITER VOCABULARY DISCIPLINE**: claude-tools introduces jargon/coinages each build
+(вербатимний→дослівний; подавачка/п'ятикроковий/слово-дія/двохоровий = coinages with attested alternatives). The
+gate is CORRECT to flag them; the LEGITIMATE productive forms (derivations, -о-compound adjectives) are now ACCEPTED.
+
+**USER DECISION (2026-06-11):** harden the writer prompt (chosen over swap-writer / make-vesum-advisory).
+
+### ▶ IN-FLIGHT — writer-prompt vocabulary-discipline hardening
+⏳ **`codex/folk-writer-vocab-discipline`** (Monitor `bfi8h3vvs`, brief `/tmp/folk-writer-vocab-discipline-brief.md`):
+hardens `scripts/build/phases/linear-write.md` — (1) `#R-VESUM-ALL-WORDS` → EXHAUSTIVE verify (every content word,
+not a ~51-word sample); (2) broaden the no-coinage rule (L270) to ALL coinage classes w/ the 5 recurring offenders
++ contrast with ALLOWED productive forms; (3) add STAKES (correction loop can't rephrase coinages → first-pass
+critical). **NO auto-merge — Claude adversarial-reviews** (does it over-restrict / lose C1 richness? are the
+allowed productive forms still encouraged?) then merge → **re-fire #6**.
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **When build #3 lands `module_done`:** verify the artifact CONTENT (#M-11, not just gates) — 4 UK tabs populated,
-   myth-box, high-culture bridge, folk activities (ritual-sequencing/variant-comparison/motif-formula/performance),
-   ≥4 cited+linked verbatim blockquotes, authentic regional vocab, no stress on headings, P2 cross-refs, UK tab labels.
-2. **Promote module 04** → assemble_mdx → `starlight/src/content/docs/folk/`; add source URLs; serve; verify at
-   `/folk/kalendarna-obriadovist-zvychai/`. Bundle THIS refreshed handoff + the derivational-gate design doc promotion
-   (`/tmp/derivational-morphology-gate-design.md` → `docs/best-practices/derivational-morphology-gate.md`) into the
-   promote PR. **This is the batch PR for this session's deliverables.**
-3. Then **01 koliadky-shchedrivky** → **dumy** (retire old `dumy-lytsarski.mdx` + `[...slug].astro` hero routing).
-4. Resume folk dossier queue: #08 zhnyvarski-obzhynkovi QUEUED, then #10 vesilni, #11 holosinnya, #13 dumy-sotsialno-pobutovi.
+1. **Review + merge `codex/folk-writer-vocab-discipline`** (verify it doesn't over-constrain; allowed productive
+   forms still encouraged). Then **re-fire #6** (`v7_build folk kalendarna-obriadovist-zvychai --worktree --writer
+   claude-tools --effort xhigh`, Monitor JSONL).
+2. **If #6 still coins** (compliance fails despite hardening), escalate to the user's option 2: bakeoff
+   **codex-tools / deepseek-tools** as the folk writer (may be more VESUM-conservative). The writer prompt already
+   had verify-all + no-coining rules and claude-tools ignored them — a writer swap may be the real fix.
+3. **When a build lands `module_done`:** verify CONTENT (#M-11) — 4 UK tabs, myth-box, high-culture bridge, folk
+   activities, ≥4 cited+linked blockquotes, authentic regional vocab, no stress on headings, P2 cross-refs, UK labels.
+4. **Promote module 04** → assemble_mdx → `starlight/src/content/docs/folk/`; add source URLs; serve; verify at
+   `/folk/kalendarna-obriadovist-zvychai/`. Bundle the refreshed handoff into the promote PR.
+5. Then **01 koliadky-shchedrivky** → **dumy** (retire old `dumy-lytsarski.mdx` + `[...slug].astro`).
+6. Resume dossier queue: #08 zhnyvarski-obzhynkovi, then #10 vesilni, #11 holosinnya, #13 dumy-sotsialno-pobutovi.
+
+### 🐛 HARNESS BUG TO FILE (found this session)
+The ADR-008 correction loop can DIVERGE — build #5's correction took vesum violations 2→4 (added new coinages) and
+deleted content (word_count 4855→4430). A correction round that INCREASES violations (or drops word_count below
+floor) should ROLL BACK to the pre-correction artifact, not commit it. File as an infra issue (orchestrator lane).
 
 ### ✅ DONE THIS SESSION
 - **PR #2972 (OPEN, orchestrator to merge)** — `C1-folk` audit-config dead-key bug (USER-FLAGGED): `detect_level`
   never recognized `/folk/` + `LEVEL_CONFIG['C1-folk']` was unreachable → folk silently audited as **A1**
   (min_vocab 1). Renamed → `FOLK`, wired `detect_level` (mirrors LIT/OES/RUTH), +regression tests; 481 audit tests
   + ruff green. TRACK-UPDATE posted to #pipeline (shared audit infra).
-- **PR #2973 (MERGED `ec063050c8`)** — textbook_quote_fidelity seminar-scope (above). Self-merged under folk grant
+- **PR #2973 (MERGED `ec063050c8`)** — textbook_quote_fidelity seminar-scope. Self-merged under folk grant
   after adversarial review (all CI green incl. pytest).
+- **PR #2974 (MERGED `b9a47bcd78`)** — kalendarna plan section-budget recalibration to 1.14× (5700; raw output
+  jumped 4314→4862, above floor) + Session 11 handoff + derivational-gate design doc promotion.
+- **PR #2975 (MERGED `eb3115c4e2`)** — VESUM `-о`-compound adjective acceptance (`імперсько-радянський`):
+  reconstruct combining-form base adjective (імперсько→імперський) + verify as adjective. Adversarial review
+  PASSED (teeth: абракадабро-радянський/бздумо-радянський/coinages still flagged; russianism guard on bases).
+  Generalizes to all C1+ tracks.
 - Verified derivational layer #2956 on main (65 tests). Removed dead/failed build worktrees (forensics on
-  `build/folk/…-{002306,010346}` branches per #M-10).
+  `build/folk/…-{002306,010346,020241,034955}` + the 025216 branches per #M-10).
 
 ### ⚠ CARRY-FORWARD
-- **word_count under-production** is the live risk for folk builds (claude-tools tic). If build #3 fails it, the fix
-  is a writer length nudge, NOT lowering the gate (#1).
+- **word_count is a SYMPTOM, not the disease** — the writer's raw output clears the floor (4855+); word_count only
+  fails because the vesum-coinage correction loop deletes content. Fix the vocabulary discipline (in flight) and
+  word_count resolves. Do NOT lower the gate (#1). The plan is already at the sanctioned 1.14× overshoot.
 - **Follow-up on #2973:** audit `FOLK.priority_types` are generic-seminar while the pipeline `folk` ACTIVITY_CONFIG
   emits folk-experiential types + lacks `reading`; a symmetric literary-side teeth test (fabricated folk quote → no
   literary match → violation) would close a minor test gap. Both noted on PR #2972/#2973.
