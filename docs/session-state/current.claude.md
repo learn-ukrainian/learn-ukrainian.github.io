@@ -1,32 +1,32 @@
-# Current — Claude Session Handoff (2026-06-10)
+# Current — Claude Session Handoff (2026-06-11)
 
 > Router: read `docs/session-state/current.md` first.
-> **Latest detailed handoff: `docs/session-state/2026-06-10-claude-word-atlas-heritage-etymology.md`** — read top-to-bottom.
+> **Latest detailed handoff: `docs/session-state/2026-06-11-claude-word-atlas-conformance-paradigm-gates.md`** — read top-to-bottom.
 
-## ⏳ RESUME HERE — Word Atlas B phase 2 (Wiktionary etymology fallback)
-Cover the ~21 lemmas Goroh doesn't (etymology is 42/63 on main). **Dispatch to Codex**, modeled on the
-just-merged `scripts/ingest/goroh_etymology_ingest.py`. Colleague-vetted approach (in the detailed handoff):
-- Use the **real `ukwiktionary` XML dump** (pinned by date/checksum) — **NOT Kaikki** (Codex: Kaikki "uk"
-  = English Wiktionary's Ukrainian entries).
-- Extract `== Етимологія ==` offline (mwparserfromhell / conservative template stripper), ingest into a
-  `wiktionary_etymology` table, wire `_etymology()` precedence **Goroh → Wiktionary → ЕСУМ**.
+## ⏳ RESUME HERE — continue Word Atlas backlog (EPIC #2985), easiest-first
+Next item: **#2985 item 3 — derivational-base etymology (#2971)**. Reduce ~10 derived A1 lemmas to
+their ЕСУМ base, then reuse `_etymology()` (Goroh→ЕСУМ→Wiktionary) on the base. ~7 resolve, ~3 stay
+blank (don't fabricate). Dispatch to Codex. Details + reduction table in the detailed handoff.
+
+After #3: reassess #7 (scale to A1+A2+B1 vocab — the big lever that makes the decolonization moat
+visible). #5 synonyms BLOCKED on #1657. #4 corpus sections need a relevance layer.
 
 ## ✅ Done this session
-Merged #2923/#2929/#2925/#2933 (resume sweep), #2935/#2936 (deploy fix + worktree auto-reap),
-#2937 (docs), **#2955 (Word Atlas heritage badges)**, **#2957 (security: idna + bad-tag-filter)**,
-**#2958 (Goroh etymology, 19→42/63)**. Worktree disk 11.6 GB → 472 MB. Main clean at `5c08eb4318`.
+7 PRs merged (#2854 folk scraper salvage · #2969 v7_build primary-checkout guard [#2884 closed] ·
+#2970 Wiktionary etymology+gate · #2980 Atlas conformance fixes · #2981 paradigm table ·
+#2986 hub search full corpus · #2988 §8 conformance gates enforced in CI). Filed #2971 + EPIC #2985.
+Git/GitHub hygiene done (orphan worktrees/branches cleaned; active A2/folk/b1 lanes preserved).
 
 ## ⚠️ Watch-outs
-- **GitHub graphql 401'd intermittently** — use REST (`gh api -X POST/PUT .../pulls`) when `gh pr create/merge`
-  fails. Non-required CI (zizmor/submit-pypi/CodeQL Analyze) flaked on API status-report, not real. Only
-  required check = `Test (pytest)`.
-- **A2 beta (#2888) is Codex's active lane** — leave `codex/2888-a2-*` PRs/worktrees alone (#2956 open + 3 worktrees).
-- Word Atlas heritage badges are render-complete but only VISIBLE once vocab broadens past the 63 all-`standard`/`unknown` A1 lemmas (roadmap E).
+- **#M-11**: verify the ARTIFACT (render it / read the data), not just green gates — bit us 3× this session.
+- **CI lacks `data/vesum.db`** — tests using it must degrade gracefully (`vesum=None` path).
+- **gitleaks 502 flake** = ghcr.io image-pull, not a real leak → `gh run rerun <id> --failed`.
+- **DO NOT TOUCH** `codex/2888-a2-*` (A2), `codex/folk-*` + `build/folk/*` (folk), `codex/b1-v72-*` (b1) — other lanes.
+- `start-claude.sh` locally modified (pre-existing, not mine) — leave it; Codex PRs sometimes open as draft (`gh pr ready N`).
 
 ## Restart
 ```bash
 cd /Users/krisztiankoos/projects/learn-ukrainian
 git fetch origin -q && git merge --ff-only origin/main
-gh pr list --state open --json number,title,isDraft   # #2956/#2954/#2854/#2601 = other lanes
-npm run agents:deploy                                  # should stay clean
+gh issue view 2985   # Atlas backlog EPIC; next = item 3 (#2971)
 ```
