@@ -27,7 +27,77 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 11 HANDOFF (2026-06-11 — 4 GATE WALLS BROKEN (derivational #2956 verified, quote-fidelity #2973, plan-budget #2974, compound-adj #2975); 6 kalendarna builds + writer bakeoff; REMAINING WALL = WRITER VOCABULARY DISCIPLINE → USER-APPROVED PLAN = CROSS-MODEL CORRECTION (claude writes + codex fixes coinages via find/replace); DO IT IN A NEW SESSION) — **RESUME HERE**
+## ▶▶▶ SESSION 12 HANDOFF (2026-06-11 PM — WRITER-VOCAB WALL BROKEN (#2977 merged: no more coinages); WIKI GAP CLOSED (6 compiled); DOSSIER #08 MERGED; BUILD #6 FAILED on a NEW harness gap = correction loop is module.md-ONLY → activity-field vesum typo uncorrectable) — **RESUME HERE**
+
+> **⏱ LATEST STATE (2026-06-11 PM):** The writer-vocabulary-discipline wall is **BROKEN**. PR **#2977 merged**
+> (`7e86c61698`): the seminar/FOLK writer rules were rendering in EVERY level's prompt (pushed A1 letter prompt to
+> 134252 B > 133120 ceiling); I scoped them to `SEMINAR_LEVELS` via a `{SEMINAR_FOLK_WRITER_RULES}` token sourced
+> from a new `scripts/build/phases/linear-write-seminar-folk-rules.md` partial (A1 → 127543 B, 5.5KB headroom;
+> seminar prompts byte-identical). Then re-fired **kalendarna build #6** (claude-tools, hardened prompt): the writer
+> verified exhaustively (verify_words ×39 batches), produced **CLEAN prose with ZERO coinages** (вербатимний /
+> двохоровий / п'ятикроковий all GONE — the #4-5 wall is broken) and correct `гаївки` (ї) ×16.
+>
+> **🧱 NEW WALL — build #6 `module_failed` at python_qg on ONE word `гаівки` (і).** ROOT-CAUSED (#M-4, do NOT
+> re-diagnose): a single **ї→і typo** `гаівки` (U+0456) at **`activities.yaml` line 17** (`'Весняний цикл: …,
+> гаівки'`). `гаївки` (ї) is VESUM-FOUND; `гаівки` (і) is NOT. module.md prose is CLEAN (0 і-forms). `python_qg.json`
+> `missing_count: 1`. **The build can't self-heal because the ADR-008 correction loop is module.md-ONLY**
+> (`linear-writer-correction.md` L82 "Return the FULL patched module.md"), but the vesum gate ALSO checks
+> activities.yaml/vocabulary.yaml/resources.yaml → an activity-field vesum violation is STRUCTURALLY uncorrectable.
+> correction r1 ran, `гаівки` survived, module_failed. **This is NOT a coinage/escalation trigger — the hardened
+> prompt worked. The fixes are: (1) HARNESS — extend the correction loop to patch activities/vocab/resources for
+> vesum (codex-impl + Claude review); (2) writer — its #R-VESUM-ALL-WORDS exhaustive-verify covers activities.yaml
+> but it slipped one ї/і — tighten or rely on (1).** Filed as an infra issue; TRACK-UPDATE'd the orchestrator.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **Land the correction-scope harness fix** (extend ADR-008 correction to activities.yaml/vocab/resources for vesum,
+   teeth-preserving: literal find/replace only, no regen, roll back on divergence per the Session-11 carry-forward).
+   Codex implements + Claude adversarial review. Issue filed this session. THEN re-fire **kalendarna #7** → expected
+   fully green (writer output already clean; гаівки→гаївки now correctable). If the orchestrator takes the harness
+   fix, coordinate via the TRACK-UPDATE.
+2. **Promote kalendarna 04** once #7 lands `module_done`: verify CONTENT (#M-11 — 4 UK tabs, myth-box, bridge, folk
+   activities, ≥4 cited+linked blockquotes, authentic regional vocab, no stress on headings, P2 cross-refs, UK labels)
+   → assemble_mdx → `starlight/src/content/docs/folk/` → serve → verify at `/folk/kalendarna-obriadovist-zvychai/`.
+3. **Then 01 koliadky-shchedrivky → dumy** (retire old `dumy-lytsarski.mdx` + `[...slug].astro`).
+4. **Fire dossier #10 vesilni-pisni** (codex slot freed; #08 zhnyvarski done). Then #11 holosinnya, #13 dumy-sotsialno-pobutovi.
+
+### ✅ DONE THIS SESSION (merged to main)
+- **PR #2977 MERGED (`7e86c61698`)** — writer-vocab-discipline hardening + seminar-scoping (the wall-breaker). I
+  implemented the scoping inline (worktree), fixed TWO template-guard tests that read `linear-write.md` directly
+  (`test_folk_text_layer`, `test_writer_prompt_v7_register_rules` — both now read the partial), self-merged on green.
+- **WIKI GAP CLOSED — 6 compiled** (gpt-5.5, dossier-grounded): narodna-kultura, narodni-viruvannia, rodynna,
+  kupalski, vesnianky, zamovliannia. Corpus-hammer reviewed (citations resolve 6/6, decolonization present, word
+  counts 2240-3128). **THIS wiki PR** carries them + this handoff. ⚠ `kupalski` first compile **silently failed**
+  (rc=0 + "3202 words" logged but wrote NO file + not indexed); `--force` re-compile recovered it (FILE A HARNESS BUG).
+- **PR #2989 MERGED** — dossier `zhnyvarski-obzhynkovi-pisni` (#08). Corpus-hammer reviewed: independently re-ran
+  `verify_quote` on 3 §4 fragments (all matched 1.0, exact chunk_ids da46aa92_c0321 / feaa5fa7_c0533 / 5e7696fa_c0316);
+  §9 decolonization exemplary (Волос/Велес reconstruction-caution, споритель do-not-overclaim, Soviet «свято врожаю»
+  separation tied to колективізація/Голодомор). **10 folk dossiers now on main.**
+
+### 🐛 HARNESS BUGS TO FILE (this session)
+1. **Correction loop module.md-only** (the build #6 killer) — vesum gate checks activities/vocab/resources but ADR-008
+   correction only patches module.md → activity-field vesum violations uncorrectable. THE fix to unblock module builds.
+2. **Wiki compile silent write failure** — `compile.py` reported rc=0 + word count + index-update for kupalski but
+   wrote no file and didn't index it; `--force` recovered. Non-deterministic; could silently drop content.
+3. (carry-forward from S11) ADR-008 correction can DIVERGE — should roll back when a round increases violations / drops word_count.
+
+### ⚠ CARRY-FORWARD
+- **LESSON (prompt refactors):** moving content out of a phase `.md` template breaks tests that read the template
+  FILE directly and assert strings. Before such a refactor, grep `tests/` for files that `read_text` the template
+  (not just for the moved phrases) — I missed `test_writer_prompt_v7_register_rules` on the first push (CI caught it).
+- Build forensics: `.worktrees/builds/folk-kalendarna-obriadovist-zvychai-20260611-135300` (clean writer output +
+  the гаівки activities.yaml typo = the fixture for the correction-scope fix). Safe to `git worktree remove --force`
+  after the harness fix references it.
+- `git push` folk → `--no-verify`; recheck `git config --local core.bare` after commits (#2842). Stale `index.lock`
+  appeared once mid-session (killed-pytest residue) — `rm` it if a commit hits "index.lock exists".
+- codex cap: `word-atlas-conformance-gates` (orchestrator lane) was running alongside — kept me at 1 free codex slot.
+
+### 📊 FLEET — module writer **claude-tools** (hardened prompt now stops coinages); gate/correction fixes = **codex
+implements + Claude adversarial review**; wiki **gpt-5.5**; reviewers **deepseek-flash** (code) / Claude corpus-hammer
+(culture). Cross-family always.
+
+---
+
+## ▶▶▶ SESSION 11 HANDOFF (2026-06-11 — 4 GATE WALLS BROKEN (derivational #2956 verified, quote-fidelity #2973, plan-budget #2974, compound-adj #2975); 6 kalendarna builds + writer bakeoff; REMAINING WALL = WRITER VOCABULARY DISCIPLINE → USER-APPROVED PLAN = CROSS-MODEL CORRECTION (claude writes + codex fixes coinages via find/replace); DO IT IN A NEW SESSION) — (superseded by Session 12)
 
 > **⏱ LATEST STATE (2026-06-11):** The derivational-morphology layer (#2956, codex-impl + Claude-review) +
 > apostrophe-normalize (#2965) merged BEFORE this session. I verified the gate on main (65 tests; `діюча`/

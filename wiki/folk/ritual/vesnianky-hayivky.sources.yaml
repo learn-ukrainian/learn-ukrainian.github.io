@@ -1,0 +1,24 @@
+# Source registry for wiki/folk/ritual/vesnianky-hayivky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 6-klas-ukrlit-avramenko-2023_s2707
+  type: textbook
+  title: ПІСЕННІ СКАРБИ РІДНОГО КРАЮ (p. 6)
+  page: 6
+  grade: 6
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c1008
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave7-entsyklopediia-ukrainoznavstva_c0603
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S4
+  file: wave7-istkult-t2-xiii-xvii_c0856
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
