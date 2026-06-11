@@ -1,0 +1,20 @@
+- title: "Dobra Forma 27-3: Verbal Aspect (Aspectual Pairs)"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-aspect-mastery"
+  url: "https://opentext.ku.edu/dobraforma/chapter/27-3/"
+  notes: "Catalogued learner-facing practice with aspectual pair formation."
+- title: "Dobra Forma 27-1: Introduction to Verbal Aspect"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-aspect-mastery"
+  url: "https://opentext.ku.edu/dobraforma/chapter/27-1/"
+  notes: "A concise external review of prefixed perfective verbs."
+- title: "ULP: Perfective Verbs"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /perfective-verbs/"
+  url: "https://www.ukrainianlessons.com/perfective-verbs/"
+  notes: "Learner-facing examples of completed actions and common perfective forms."
+- title: "Talk Ukrainian: Verb Aspect"
+  role: article
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-030"
+  url: "https://talkukrainian.com/verb-aspect/"
+  notes: "Short reinforcement resource for the imperfective/perfective contrast."

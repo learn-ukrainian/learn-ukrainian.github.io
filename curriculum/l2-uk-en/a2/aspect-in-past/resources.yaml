@@ -1,0 +1,20 @@
+- title: "Dobra Forma 27-2: Verbal Aspect (Past Tense)"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-aspect-in-past"
+  url: "https://opentext.ku.edu/dobraforma/chapter/27-2/"
+  notes: "Catalogued learner-facing practice for choosing aspect in the past tense."
+- title: "ULP: Verb Aspect in Ukrainian"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /verb-aspect-in-ukrainian-differences/"
+  url: "https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/"
+  notes: "Learner-facing overview of imperfective and perfective contrast."
+- title: "ULP: Past Tense in Ukrainian"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /grammar-past-tense/"
+  url: "https://www.ukrainianlessons.com/grammar-past-tense/"
+  notes: "Past-tense formation review for learners who need a quick A1 refresh."
+- title: "Talk Ukrainian: Verb Aspect"
+  role: article
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-030"
+  url: "https://talkukrainian.com/verb-aspect/"
+  notes: "Short learner-facing explanation of the process/result contrast."

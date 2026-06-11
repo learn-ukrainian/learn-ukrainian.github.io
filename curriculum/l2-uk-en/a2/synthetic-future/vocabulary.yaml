@@ -1,0 +1,80 @@
+- word: майбутній час
+  translation: future tense
+  pos: noun
+  example: "Майбутній час залежить від виду дієслова."
+- word: простий майбутній
+  translation: simple future
+  pos: noun
+  example: "Простий майбутній доконаного виду показує результат."
+- word: складений майбутній
+  translation: compound future
+  pos: noun
+  example: "Складений майбутній має форму буду + інфінітив."
+- word: інфінітив
+  translation: infinitive
+  pos: noun
+  example: "У фразі буду читати слово читати - інфінітив."
+- word: обіцянка
+  translation: promise
+  pos: noun
+  example: "Я напишу тобі - це конкретна обіцянка."
+- word: план
+  translation: plan
+  pos: noun
+  example: "Мій план на завтра дуже простий."
+- word: намір
+  translation: intention
+  pos: noun
+  example: "Це м'який намір, а не обіцянка."
+- word: процес
+  translation: process
+  pos: noun
+  example: "Буду працювати показує процес."
+- word: результат
+  translation: result
+  pos: noun
+  example: "Напишу листа показує результат."
+- word: завтра
+  translation: tomorrow
+  pos: adv
+  example: "Завтра я подзвоню лікарю."
+- word: увечері
+  translation: in the evening
+  pos: adv
+  example: "Увечері ми будемо готувати."
+- word: наступного тижня
+  translation: next week
+  pos: phrase
+  example: "Наступного тижня вони будуть вчитися онлайн."
+- word: написати / напишу
+  translation: to write, I will write
+  pos: future form
+  example: "Я напишу короткий лист."
+- word: зробити / зроблю
+  translation: to do, I will do
+  pos: future form
+  example: "Я зроблю вправу після перерви."
+- word: сказати / скажу
+  translation: to say, I will say
+  pos: future form
+  example: "Я скажу це українською."
+- word: прочитати / прочитаю
+  translation: to read through, I will read
+  pos: future form
+  example: "Я прочитаю статтю до вечора."
+- word: подзвонити / подзвоню
+  translation: to call, I will call
+  pos: future form
+  example: "Після роботи я подзвоню мамі."
+- word: купити / куплю
+  translation: to buy, I will buy
+  pos: future form
+  example: "Ми купимо квитки сьогодні."
+- word: буду працювати
+  translation: I will be working
+  pos: phrase
+  example: "Завтра я буду працювати вдома."
+- word: будемо говорити
+  translation: we will be talking
+  pos: phrase
+  example: "Ми будемо говорити про подорож."
