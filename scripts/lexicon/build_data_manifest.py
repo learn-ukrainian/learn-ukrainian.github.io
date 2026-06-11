@@ -33,6 +33,9 @@ from __future__ import annotations
 
 import json
 import re
+import sqlite3
+import unicodedata
+from argparse import ArgumentParser, Namespace
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -42,6 +45,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 PLANS_ROOT = CURRICULUM_ROOT / "plans"
 MANIFEST_PATH = PROJECT_ROOT / "starlight" / "src" / "data" / "lexicon-manifest.json"
+V2_SPIKE_MANIFEST_PATH = PROJECT_ROOT / "starlight" / "src" / "data" / "lexicon-manifest.v2-spike.json"
+SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
+
+V2_SPIKE_LEVELS = ("a1", "a2", "b1")
+PULS_CEFR_LEVELS = ("A1", "A2", "B1")
+APOSTROPHE_TRANSLATION = str.maketrans({"’": "'", "ʼ": "'", "`": "'", "′": "'"})
+STRESS_MARKS = {"\u0301", "\u0300", "\u0341"}
+WORD_TOKEN_RE = re.compile(r"[A-Za-zА-Яа-яЄєІіЇїҐґ0-9'’ʼ-]+")
 
 
 # v1 module set — per design §9.
@@ -80,6 +91,23 @@ def _slug_for_url(lemma: str) -> str:
     slug = slug.replace("_", "-")
     slug = re.sub(r"-+", "-", slug).strip("-")
     return slug
+
+
+def _strip_stress(text: str) -> str:
+    decomposed = unicodedata.normalize("NFD", text)
+    stripped = "".join(char for char in decomposed if char not in STRESS_MARKS)
+    return unicodedata.normalize("NFC", stripped)
+
+
+def _normalize_lookup_text(value: object) -> str:
+    cleaned = unicodedata.normalize("NFKC", str(value or "")).translate(APOSTROPHE_TRANSLATION)
+    cleaned = _strip_stress(cleaned).casefold()
+    return re.sub(r"\s+", " ", cleaned).strip()
+
+
+def _is_multi_word_phrase(value: object) -> bool:
+    text = str(value or "").strip()
+    return bool(re.search(r"\s", text)) and len(WORD_TOKEN_RE.findall(text)) >= 2
 
 
 def _parse_plan_hint(raw: str) -> tuple[str, str | None]:
@@ -148,6 +176,69 @@ def _load_plan_hints(module: dict[str, str | int]) -> list[dict]:
                 }
             )
     return out
+
+
+def _load_curriculum_modules(levels: tuple[str, ...] = V2_SPIKE_LEVELS) -> list[dict[str, str | int]]:
+    """Enumerate level modules from curriculum.yaml, falling back to plan globs."""
+    curriculum = yaml.safe_load((CURRICULUM_ROOT / "curriculum.yaml").read_text(encoding="utf-8")) or {}
+    level_data = curriculum.get("levels") if isinstance(curriculum, dict) else {}
+    modules: list[dict[str, str | int]] = []
+
+    for level in levels:
+        raw_modules = []
+        if isinstance(level_data, dict):
+            current = level_data.get(level) or {}
+            if isinstance(current, dict) and isinstance(current.get("modules"), list):
+                raw_modules = current["modules"]
+
+        if raw_modules:
+            for index, item in enumerate(raw_modules, start=1):
+                slug = item if isinstance(item, str) else item.get("slug") if isinstance(item, dict) else None
+                if slug:
+                    modules.append({"track": level, "module_num": index, "slug": str(slug)})
+            continue
+
+        modules.extend(_load_modules_from_plan_glob(level))
+
+    return modules
+
+
+def _load_modules_from_plan_glob(level: str) -> list[dict[str, str | int]]:
+    """Fallback module enumeration when curriculum.yaml omits a level."""
+    modules: list[dict[str, str | int]] = []
+    for index, path in enumerate(sorted((PLANS_ROOT / level).glob("*.yaml")), start=1):
+        plan = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        slug = plan.get("slug") if isinstance(plan, dict) else None
+        sequence = plan.get("sequence") if isinstance(plan, dict) else None
+        modules.append(
+            {
+                "track": level,
+                "module_num": int(sequence) if isinstance(sequence, int) else index,
+                "slug": str(slug or path.stem),
+            }
+        )
+    return sorted(modules, key=lambda module: int(module["module_num"]))
+
+
+def _load_puls_cefr_lemmas(levels: tuple[str, ...] = PULS_CEFR_LEVELS) -> set[str]:
+    """Return normalized single-word PULS CEFR lemmas for the requested levels."""
+    if not SOURCES_DB.exists():
+        raise FileNotFoundError(f"local sources database not found: {SOURCES_DB}")
+
+    placeholders = ",".join("?" for _ in levels)
+    conn = sqlite3.connect(f"file:{SOURCES_DB}?mode=ro", uri=True)
+    try:
+        rows = conn.execute(
+            f"SELECT word FROM puls_cefr WHERE level IN ({placeholders})",
+            levels,
+        )
+        return {
+            normalized
+            for (word,) in rows
+            if (normalized := _normalize_lookup_text(word)) and not _is_multi_word_phrase(word)
+        }
+    finally:
+        conn.close()
 
 
 _SOURCE_PRIORITY = {
@@ -225,11 +316,10 @@ def _merge_lemma_records(
             existing["course_usage"].append(usage_entry)
 
 
-def build_manifest() -> dict:
-    """Build the manifest dict and return it (caller writes to disk)."""
+def _build_entries(modules: list[dict[str, str | int]]) -> list[dict]:
     by_lemma: dict[str, dict] = {}
 
-    for module in V1_MODULES:
+    for module in modules:
         # Built data has higher signal — prefer it when both are available.
         # We still load plan hints first to seed empty modules; built records
         # then upgrade entries that already exist.
@@ -238,35 +328,115 @@ def build_manifest() -> dict:
         _merge_lemma_records(by_lemma, module, plan_records)
         _merge_lemma_records(by_lemma, module, built_records)
 
-    entries = sorted(by_lemma.values(), key=lambda e: e["lemma"])
+    return sorted(by_lemma.values(), key=lambda e: e["lemma"])
+
+
+def _source_stats(entries: list[dict]) -> dict[str, int]:
+    return {
+        "from_built": sum(1 for e in entries if e["primary_source"] == "built_vocabulary"),
+        "from_plan_only": sum(1 for e in entries if e["primary_source"].startswith("plan_")),
+    }
+
+
+def _build_v1_manifest() -> dict:
+    entries = _build_entries(V1_MODULES)
+    source_stats = _source_stats(entries)
     return {
         "version": "0.1",
         "generated_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "stats": {
             "lemmas_total": len(entries),
             "modules_covered": len(V1_MODULES),
-            "from_built": sum(
-                1 for e in entries if e["primary_source"] == "built_vocabulary"
-            ),
-            "from_plan_only": sum(
-                1 for e in entries if e["primary_source"].startswith("plan_")
-            ),
+            "from_built": source_stats["from_built"],
+            "from_plan_only": source_stats["from_plan_only"],
         },
         "modules": V1_MODULES,
         "entries": entries,
     }
 
 
+def _build_v2_spike_manifest() -> dict:
+    modules = _load_curriculum_modules()
+    candidate_entries = _build_entries(modules)
+    puls_lemmas = _load_puls_cefr_lemmas()
+
+    entries: list[dict] = []
+    dropped_multi_word = 0
+    dropped_not_in_puls = 0
+    for entry in candidate_entries:
+        lemma = entry["lemma"]
+        if _is_multi_word_phrase(lemma):
+            dropped_multi_word += 1
+            continue
+        if _normalize_lookup_text(lemma) not in puls_lemmas:
+            dropped_not_in_puls += 1
+            continue
+        entries.append(entry)
+
+    source_stats = _source_stats(entries)
+    return {
+        "version": "0.1-v2-spike",
+        "generated_at": datetime.now(UTC).isoformat(timespec="seconds"),
+        "stats": {
+            "lemmas_total": len(entries),
+            "modules_covered": len(modules),
+            "candidate_lemmas": len(candidate_entries),
+            "from_built": source_stats["from_built"],
+            "from_plan": source_stats["from_plan_only"],
+            "dropped_multi_word": dropped_multi_word,
+            "dropped_not_in_puls": dropped_not_in_puls,
+        },
+        "modules": modules,
+        "entries": entries,
+    }
+
+
+def build_manifest(scope: str = "v1") -> dict:
+    """Build the manifest dict and return it (caller writes to disk)."""
+    if scope == "v1":
+        return _build_v1_manifest()
+    if scope == "v2-spike":
+        return _build_v2_spike_manifest()
+    raise ValueError(f"unknown scope: {scope}")
+
+
+def _manifest_path(scope: str) -> Path:
+    return V2_SPIKE_MANIFEST_PATH if scope == "v2-spike" else MANIFEST_PATH
+
+
+def _parse_args() -> Namespace:
+    parser = ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--scope",
+        choices=("v1", "v2-spike"),
+        default="v1",
+        help="Manifest scope to build. Defaults to the production v1 subset.",
+    )
+    return parser.parse_args()
+
+
 def main() -> None:
-    manifest = build_manifest()
-    MANIFEST_PATH.parent.mkdir(parents=True, exist_ok=True)
-    MANIFEST_PATH.write_text(
+    args = _parse_args()
+    manifest = build_manifest(args.scope)
+    manifest_path = _manifest_path(args.scope)
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
     stats = manifest["stats"]
+    if args.scope == "v2-spike":
+        print(
+            f"Wrote {manifest_path.relative_to(PROJECT_ROOT)}: "
+            f"{stats['lemmas_total']} lemmas across {stats['modules_covered']} modules "
+            f"(from_built={stats['from_built']}, from_plan={stats['from_plan']}, "
+            f"dropped_not_in_puls={stats['dropped_not_in_puls']}, "
+            f"dropped_multi_word={stats['dropped_multi_word']})."
+        )
+        return
+
     print(
-        f"Wrote {MANIFEST_PATH.relative_to(PROJECT_ROOT)}: "
+        f"Wrote {manifest_path.relative_to(PROJECT_ROOT)}: "
         f"{stats['lemmas_total']} lemmas across {stats['modules_covered']} modules "
         f"(built={stats['from_built']}, plan_only={stats['from_plan_only']})."
     )
