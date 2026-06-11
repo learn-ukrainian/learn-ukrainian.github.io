@@ -1,0 +1,80 @@
+- word: синтаксис
+  translation: syntax
+  pos: noun
+  example: "Синтаксис вивчає словосполучення і речення."
+- word: пунктуація
+  translation: punctuation
+  pos: noun
+  example: "Пунктуація пояснює розділові знаки."
+- word: словосполучення
+  translation: word combination
+  pos: noun
+  example: "Словосполучення має головне і залежне слово."
+- word: головне слово
+  translation: main word
+  pos: phrase
+  example: "Головне слово ставить питання."
+- word: залежне слово
+  translation: dependent word
+  pos: phrase
+  example: "Залежне слово відповідає на питання."
+- word: граматична основа
+  translation: grammatical core
+  pos: phrase
+  example: "Граматична основа - підмет і присудок."
+- word: другорядний член
+  translation: secondary sentence member
+  pos: phrase
+  example: "Додаток - другорядний член речення."
+- word: просте речення
+  translation: simple sentence
+  pos: phrase
+  example: "Просте речення має одну граматичну основу."
+- word: складне речення
+  translation: complex or compound sentence
+  pos: phrase
+  example: "Складне речення має дві або більше основ."
+- word: сполучниковий зв'язок
+  translation: conjunctional connection
+  pos: phrase
+  example: "У реченні з 'бо' є сполучниковий зв'язок."
+- word: безсполучниковий зв'язок
+  translation: asyndetic connection
+  pos: phrase
+  example: "Безсполучниковий зв'язок не має сполучника."
+- word: розділовий знак
+  translation: punctuation mark
+  pos: phrase
+  example: "Кома - це розділовий знак."
+- word: кома
+  translation: comma
+  pos: noun
+  example: "Перед 'бо' часто ставимо кому."
+- word: тире
+  translation: dash
+  pos: noun
+  example: "Тире може стояти між підметом і присудком."
+- word: керувати формою
+  translation: to govern a form
+  pos: phrase
+  example: "Дієслово 'допомагати' керує давальним відмінком."
+- word: прямий додаток
+  translation: direct object
+  pos: phrase
+  example: "У фразі 'читаю книжку' слово 'книжку' - прямий додаток."
+- word: адресат
+  translation: addressee, recipient
+  pos: noun
+  example: "Давальний часто називає адресата."
+- word: структура
+  translation: structure
+  pos: noun
+  example: "Синтаксис показує структуру речення."
+- word: поєднуватися
+  translation: to combine
+  pos: verb
+  example: "Слова поєднуються у словосполучення."
+- word: пояснення
+  translation: explanation
+  pos: noun
+  example: "Я розумію граматичне пояснення українською."

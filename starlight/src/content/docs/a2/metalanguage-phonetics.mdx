@@ -1,0 +1,293 @@
+---
+title: "Звуки і букви"
+description: "Фонетика українською — від звуків до транскрипції"
+sidebar:
+  order: 64
+  label: "64. Звуки і букви"
+prev: metalanguage-sentences-and-classroom
+next: metalanguage-morphology
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: як записати звук?
+
+Викладачка просить групу пояснити різницю між буквою і звуком. Назар
+знає абетку, але ще не впевнений у фонетичних термінах.
+
+> **Викладачка:** Назаре, скільки букв у слові `джміль`?
+>
+> **Назар:** П'ять: д, ж, м, і, ль?
+>
+> **Викладачка:** Букв п'ять, але звукосполука `дж` часто звучить як один злитий звук. Тому фонетика дивиться не тільки на букви.
+>
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Назар","text":"Тобто буква - це письмовий знак, а звук - те, що ми вимовляємо?"},{"speaker":"Викладачка","text":"Саме так. А фонема - це звук мови, який розрізняє слова."},{"speaker":"Назар","text":"А наголос теж фонетика?"},{"speaker":"Викладачка","text":"Так. Наголос допомагає вимовляти слово природно: зАмок і замОк - різні слова."}]')}
+/>
+
+Цей модуль не повертає вас до абетки з нуля. Ви вже читаєте українською.
+Тепер ви вчитеся говорити про звуки українською метамовою: голосний,
+приголосний, дзвінкий, глухий, твердий, м'який, наголос, склад,
+транскрипція.
+
+## Що вивчає фонетика?
+
+Фонетика - це розділ мовознавства, який вивчає звуки мовлення. Для
+учня A2 важливо розрізняти три слова:
+
+| Термін | Значення | Приклад |
+| --- | --- | --- |
+| звук | те, що ми вимовляємо і чуємо | [а], [м], [с'] |
+| буква / літера | знак на письмі | а, м, с |
+| фонема | звук мови, який може розрізняти слова | /и/ і /і/ |
+
+Літера і звук не завжди збігаються один до одного. Наприклад, літера `я`
+може позначати два звуки на початку слова:
+
+> `я` -> [йа];
+>
+> `яблуко` -> [йаблуко].
+
+А після приголосного вона часто показує м'якість:
+
+> `ля` -> [л'а].
+
+Це не означає, що треба писати транскрипцію кожного слова. Мета модуля -
+розуміти, що пояснює учитель, коли каже `голосний звук`, `м'який
+приголосний`, `наголошений склад`.
+
+### Фонетичні терміни
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "звук", "right": "те, що ми вимовляємо"}, {"left": "буква", "right": "письмовий знак"}, {"left": "фонема", "right": "звук мови, що розрізняє слова"}, {"left": "голосний", "right": "звук без перешкоди"}, {"left": "приголосний", "right": "звук із перешкодою"}, {"left": "наголос", "right": "сильніший склад"}, {"left": "склад", "right": "частина слова з голосним"}, {"left": "транскрипція", "right": "запис звучання"}]`)} />
+
+## Голосні звуки і склад
+
+Голосний звук утворюється без перешкоди в роті. Українські голосні:
+
+| Голосні | Приклади |
+| --- | --- |
+| [а] | мама, клас |
+| [е] | день, море |
+| [и] | син, писати |
+| [і] | місто, ніч |
+| [о] | вода, слово |
+| [у] | рука, урок |
+
+Кожен склад має голосний звук:
+
+> ма-ма - два склади;
+>
+> стіл - один склад;
+>
+> у-кра-їн-ська - чотири склади.
+
+Наголошений склад вимовляємо сильніше:
+
+> вода - во-дА;
+>
+> місто - мІс-то;
+>
+> писати - пи-сА-ти.
+
+У звичайних текстах наголос не позначають, але в словниках і навчальних
+матеріалах він дуже корисний. Якщо не впевнені, перевіряйте слово в
+словнику або слухайте надійний аудіоприклад.
+
+### Голосні й приголосні
+
+<GroupSort client:only='react' groups={JSON.parse(`{"голосні": ["а", "е", "и", "і", "о", "у"], "приголосні": ["м", "н", "с", "т", "л", "к"]}`)} />
+
+## Приголосні: дзвінкі, глухі, тверді, м'які
+
+Приголосний звук має перешкоду в роті: губи, язик, зуби або піднебіння
+беруть участь у вимові.
+
+Одна важлива пара - дзвінкість і глухість:
+
+| Дзвінкі | Глухі пари | Приклад |
+| --- | --- | --- |
+| б | п | бік - пік |
+| д | т | дім - тим |
+| з | с | зима - сіль |
+| ж | ш | жити - шити |
+| г | х | гора - хор |
+| ґ | к | ґанок - кава |
+
+Інша важлива пара - твердість і м'якість:
+
+> лук - люк;
+>
+> син - сіль;
+>
+> день - дім.
+
+М'якість часто показують літери `ь`, `і`, `я`, `ю`, `є` після
+приголосного. У транскрипції її можна позначити апострофом після звука:
+
+> [л'] - м'який л;
+>
+> [с'] - м'який с;
+>
+> [н'] - м'який н.
+
+На A2 достатньо розпізнавати терміни. Повна фонетична класифікація буде
+потрібна не щодня, але вона допомагає правильно читати підручникові
+пояснення.
+
+### Класифікуємо звук
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "У слові \`день\` останній звук [н']...", "options": [{"text": "м'який приголосний", "correct": true}, {"text": "голосний", "correct": false}, {"text": "наголошений склад", "correct": false}], "explanation": "[н'] - м'який приголосний."}, {"question": "У слові \`мама\` звук [а]...", "options": [{"text": "голосний", "correct": true}, {"text": "глухий приголосний", "correct": false}, {"text": "префікс", "correct": false}], "explanation": "[а] - голосний звук."}, {"question": "У слові \`сіль\` звук [с']...", "options": [{"text": "м'який приголосний", "correct": true}, {"text": "твердий голосний", "correct": false}, {"text": "сполучник", "correct": false}], "explanation": "Літера і показує м'якість попереднього приголосного."}, {"question": "Пара б - п показує...", "options": [{"text": "дзвінкий і глухий приголосний", "correct": true}, {"text": "однину і множину", "correct": false}, {"text": "підмет і присудок", "correct": false}], "explanation": "Б дзвінкий, п глухий."}, {"question": "Наголос - це...", "options": [{"text": "виділення одного складу", "correct": true}, {"text": "закінчення слова", "correct": false}, {"text": "назва відмінка", "correct": false}], "explanation": "Наголос робить один склад сильнішим."}, {"question": "Транскрипція записує...", "options": [{"text": "звучання", "correct": true}, {"text": "переклад", "correct": false}, {"text": "частину мови", "correct": false}], "explanation": "Транскрипція показує, як слово звучить."}, {"question": "Літера \`я\` на початку слова часто позначає...", "options": [{"text": "[йа]", "correct": true}, {"text": "тільки [а]", "correct": false}, {"text": "родовий відмінок", "correct": false}], "explanation": "На початку слова \`я\` часто має два звуки."}, {"question": "\`Щ\` у шкільному описі часто пояснюють як...", "options": [{"text": "[шч]", "correct": true}, {"text": "[йа]", "correct": false}, {"text": "[дз]", "correct": false}], "explanation": "Це зручний опис для читання і транскрипції."}]`)} />
+
+## Фонетична транскрипція
+
+Фонетична транскрипція - це запис звучання слова. Її часто пишуть у
+квадратних дужках:
+
+> `мама` -> [мама];
+>
+> `я` -> [йа];
+>
+> `синє` -> [син'е].
+
+У навчальних матеріалах транскрипція допомагає побачити те, що не завжди
+очевидно з правопису:
+
+| Написання | Що помітити |
+| --- | --- |
+| `день` | м'який [н'] |
+| `люди` | м'який [л'] |
+| `щука` | звукосполука [шч] у шкільному описі |
+| `дзвін` | злитий початок [дз] |
+
+Не перетворюйте транскрипцію на головну мету. Головна мета - чути і
+називати явища: тут голосний, тут м'який приголосний, тут наголос, тут
+літера не дорівнює одному простому звуку.
+
+### Уставте термін
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ - це розділ мовознавства, що вивчає звуки.", "answer": "Фонетика", "options": ["Фонетика", "Морфологія", "Синтаксис"]}, {"sentence": "Кожен склад має ___ звук.", "answer": "голосний", "options": ["голосний", "кличний", "службовий"]}, {"sentence": "У слові \`люди\` перший приголосний звук ___.", "answer": "м'який", "options": ["м'який", "глухий", "наголошений"]}, {"sentence": "Буква - це знак на ___.", "answer": "письмі", "options": ["письмі", "відмінку", "часі"]}, {"sentence": "Звук - це те, що ми ___.", "answer": "вимовляємо", "options": ["вимовляємо", "відмінюємо", "підкреслюємо"]}, {"sentence": "Наголошений склад вимовляємо ___.", "answer": "сильніше", "options": ["сильніше", "у родовому", "як прийменник"]}]`)} />
+
+## Типові помилки
+
+**Помилка 1:** казати `буква` там, де йдеться про звук.
+
+> Краще: У слові `день` останній приголосний звук м'який.
+
+**Помилка 2:** ігнорувати наголос.
+
+> `замок` може звучати як зАмок або замОк. Наголос змінює слово.
+
+**Помилка 3:** думати, що м'якість - це окрема літера.
+
+М'якість - це властивість приголосного звука. На письмі її можуть
+показувати різні літери.
+
+## 📋 Підсумок
+
+Тепер ви можете говорити про фонетику українською: звук, літера, фонема,
+голосний, приголосний, дзвінкий, глухий, твердий, м'який, наголос,
+транскрипція. Це не замінює слухання і вимову, але дає вам мову для
+точного питання: `Цей приголосний твердий чи м'який? Де наголос? Це
+буква чи звук?`
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"фонетика","translation":"phonetics","pos":"noun","example":"Фонетика вивчає звуки мовлення.","examples":["phonetics","Фонетика вивчає звуки мовлення."]},{"word":"звук","translation":"sound","pos":"noun","example":"Звук - це те, що ми вимовляємо.","examples":["sound","Звук - це те, що ми вимовляємо."]},{"word":"літера","translation":"letter","pos":"noun","example":"Літера - це знак на письмі.","examples":["letter","Літера - це знак на письмі."]},{"word":"буква","translation":"letter","pos":"noun","example":"Слово 'буква' означає те саме, що 'літера'.","examples":["letter","Слово 'буква' означає те саме, що 'літера'."]},{"word":"фонема","translation":"phoneme","pos":"noun","example":"Фонема може розрізняти слова.","examples":["phoneme","Фонема може розрізняти слова."]},{"word":"голосний","translation":"vowel","pos":"noun","example":"Кожен склад має голосний звук.","examples":["vowel","Кожен склад має голосний звук."]},{"word":"приголосний","translation":"consonant","pos":"noun","example":"Приголосний звук має перешкоду в роті.","examples":["consonant","Приголосний звук має перешкоду в роті."]},{"word":"дзвінкий","translation":"voiced","pos":"adjective","example":"Звук б - дзвінкий.","examples":["voiced","Звук б - дзвінкий."]},{"word":"глухий","translation":"voiceless","pos":"adjective","example":"Звук п - глухий.","examples":["voiceless","Звук п - глухий."]},{"word":"твердий","translation":"hard","pos":"adjective","example":"У слові 'лук' звук л твердий.","examples":["hard","У слові 'лук' звук л твердий."]},{"word":"м'який","translation":"soft, palatalized","pos":"adjective","example":"У слові 'люк' звук л м'який.","examples":["soft, palatalized","У слові 'люк' звук л м'який."]},{"word":"наголос","translation":"stress","pos":"noun","example":"Наголос може змінювати значення слова.","examples":["stress","Наголос може змінювати значення слова."]},{"word":"наголошений","translation":"stressed","pos":"adjective","example":"Наголошений склад звучить сильніше.","examples":["stressed","Наголошений склад звучить сильніше."]},{"word":"ненаголошений","translation":"unstressed","pos":"adjective","example":"Ненаголошений склад звучить слабше.","examples":["unstressed","Ненаголошений склад звучить слабше."]},{"word":"склад","translation":"syllable","pos":"noun","example":"Слово 'мама' має два склади.","examples":["syllable","Слово 'мама' має два склади."]},{"word":"транскрипція","translation":"transcription","pos":"noun","example":"Транскрипція показує звучання слова.","examples":["transcription","Транскрипція показує звучання слова."]},{"word":"звукосполука","translation":"sound combination","pos":"noun","example":"Звукосполука дж може звучати злитно.","examples":["sound combination","Звукосполука дж може звучати злитно."]},{"word":"вимовляти","translation":"to pronounce","pos":"verb","example":"Вимовляйте наголошений склад сильніше.","examples":["to pronounce","Вимовляйте наголошений склад сильніше."]},{"word":"позначати","translation":"to mark, denote","pos":"verb","example":"Літера я може позначати два звуки.","examples":["to mark, denote","Літера я може позначати два звуки."]},{"word":"мовознавство","translation":"linguistics","pos":"noun","example":"Фонетика - це розділ мовознавства.","examples":["linguistics","Фонетика - це розділ мовознавства."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"фонетика","back":"phonetics"},{"front":"звук","back":"sound"},{"front":"літера","back":"letter"},{"front":"буква","back":"letter"},{"front":"фонема","back":"phoneme"},{"front":"голосний","back":"vowel"},{"front":"приголосний","back":"consonant"},{"front":"дзвінкий","back":"voiced"},{"front":"глухий","back":"voiceless"},{"front":"твердий","back":"hard"},{"front":"м'який","back":"soft, palatalized"},{"front":"наголос","back":"stress"},{"front":"наголошений","back":"stressed"},{"front":"ненаголошений","back":"unstressed"},{"front":"склад","back":"syllable"},{"front":"транскрипція","back":"transcription"},{"front":"звукосполука","back":"sound combination"},{"front":"вимовляти","back":"to pronounce"},{"front":"позначати","back":"to mark, denote"},{"front":"мовознавство","back":"linguistics"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Фонетичні терміни
+
+*(див. урок, §Що вивчає фонетика?)*
+
+### Голосні й приголосні
+
+*(див. урок, §Голосні звуки і склад)*
+
+### Класифікуємо звук
+
+*(див. урок, §Приголосні: дзвінкі, глухі, тверді, м'які)*
+
+### Уставте термін
+
+*(див. урок, §Фонетична транскрипція)*
+
+### Знайдіть слова з м'яким приголосним
+
+<MarkTheWords client:only='react'>
+  <MarkTheWordsActivity instruction="Позначте слова, у яких є м'який приголосний звук." text="день місто люди синє рука мама клас" correctWords={JSON.parse(`[]`)} />
+</MarkTheWords>
+
+### Виправте фонетичний опис
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильний опис." items={JSON.parse(`[{"sentence": "Буква - це те, що ми чуємо.", "errorWord": "чуємо", "correctForm": "Звук - це те, що ми чуємо; буква - знак на письмі.", "options": ["Звук - це те, що ми чуємо; буква - знак на письмі.", "Буква і звук завжди однакові."], "explanation": "Письмо і звучання треба розрізняти."}, {"sentence": "У слові \`день\` немає м'якого приголосного.", "errorWord": "немає", "correctForm": "У слові \`день\` є м'який [н'].", "options": ["У слові \`день\` є м'який [н'].", "У слові \`день\` усі звуки голосні."], "explanation": "М'який знак показує м'якість."}, {"sentence": "Наголос - це назва відмінка.", "errorWord": "назва відмінка", "correctForm": "Наголос - це виділення складу.", "options": ["Наголос - це виділення складу.", "Наголос - це частина слова без закінчення."], "explanation": "Наголос належить до фонетики."}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📺 Відео:**
+- 🎥 [Repainted Fox: Фонетика](https://www.youtube.com/watch?v=OCoEzjyZ2fo) — Optional Ukrainian-language overview for learners ready for faster native explanations.
+
+**📝 Статті:**
+- 📄 [ULP: Ukrainian Cyrillic Alphabet](https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/) — Catalog-backed review of Ukrainian letters and sound-letter relationships.
+- 📄 [ULP: Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/) — Focused pronunciation support for a common Ukrainian consonant contrast.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

@@ -1,0 +1,80 @@
+- word: фонетика
+  translation: phonetics
+  pos: noun
+  example: "Фонетика вивчає звуки мовлення."
+- word: звук
+  translation: sound
+  pos: noun
+  example: "Звук - це те, що ми вимовляємо."
+- word: літера
+  translation: letter
+  pos: noun
+  example: "Літера - це знак на письмі."
+- word: буква
+  translation: letter
+  pos: noun
+  example: "Слово 'буква' означає те саме, що 'літера'."
+- word: фонема
+  translation: phoneme
+  pos: noun
+  example: "Фонема може розрізняти слова."
+- word: голосний
+  translation: vowel
+  pos: noun
+  example: "Кожен склад має голосний звук."
+- word: приголосний
+  translation: consonant
+  pos: noun
+  example: "Приголосний звук має перешкоду в роті."
+- word: дзвінкий
+  translation: voiced
+  pos: adjective
+  example: "Звук б - дзвінкий."
+- word: глухий
+  translation: voiceless
+  pos: adjective
+  example: "Звук п - глухий."
+- word: твердий
+  translation: hard
+  pos: adjective
+  example: "У слові 'лук' звук л твердий."
+- word: м'який
+  translation: soft, palatalized
+  pos: adjective
+  example: "У слові 'люк' звук л м'який."
+- word: наголос
+  translation: stress
+  pos: noun
+  example: "Наголос може змінювати значення слова."
+- word: наголошений
+  translation: stressed
+  pos: adjective
+  example: "Наголошений склад звучить сильніше."
+- word: ненаголошений
+  translation: unstressed
+  pos: adjective
+  example: "Ненаголошений склад звучить слабше."
+- word: склад
+  translation: syllable
+  pos: noun
+  example: "Слово 'мама' має два склади."
+- word: транскрипція
+  translation: transcription
+  pos: noun
+  example: "Транскрипція показує звучання слова."
+- word: звукосполука
+  translation: sound combination
+  pos: noun
+  example: "Звукосполука дж може звучати злитно."
+- word: вимовляти
+  translation: to pronounce
+  pos: verb
+  example: "Вимовляйте наголошений склад сильніше."
+- word: позначати
+  translation: to mark, denote
+  pos: verb
+  example: "Літера я може позначати два звуки."
+- word: мовознавство
+  translation: linguistics
+  pos: noun
+  example: "Фонетика - це розділ мовознавства."

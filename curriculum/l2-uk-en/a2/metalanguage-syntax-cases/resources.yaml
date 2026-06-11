@@ -1,0 +1,15 @@
+- title: "ULP: Ukrainian Grammar Overview"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: b1-how-to-talk-about-grammar"
+  url: "https://www.ukrainianlessons.com/grammar/"
+  notes: "Catalog-backed grammar overview for syntax and case terminology."
+- title: "ULP: Ukrainian Cases Chart"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /ukrainian-cases-chart/"
+  url: "https://www.ukrainianlessons.com/ukrainian-cases-chart/"
+  notes: "Reference chart for matching case names, questions, and examples."
+- title: "ULP: Ukrainian Conjunctions Guide"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: b1-sentence-structure"
+  url: "https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/"
+  notes: "Optional bridge resource for learners who want more sentence-linking examples."

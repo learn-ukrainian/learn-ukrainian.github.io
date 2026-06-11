@@ -1,0 +1,15 @@
+- title: "ULP: Ukrainian Cyrillic Alphabet"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /ukrainian-cyrillic-alphabet/"
+  url: "https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/"
+  notes: "Catalog-backed review of Ukrainian letters and sound-letter relationships."
+- title: "ULP: Ukrainian Г vs Ґ"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /h-g/"
+  url: "https://www.ukrainianlessons.com/h-g/"
+  notes: "Focused pronunciation support for a common Ukrainian consonant contrast."
+- title: "Repainted Fox: Фонетика"
+  role: video
+  source_ref: "docs/resources/external_resources.yaml: b1-phonetics-assimilation"
+  url: "https://www.youtube.com/watch?v=OCoEzjyZ2fo"
+  notes: "Optional Ukrainian-language overview for learners ready for faster native explanations."

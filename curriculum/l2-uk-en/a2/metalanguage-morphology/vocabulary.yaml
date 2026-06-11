@@ -1,0 +1,80 @@
+- word: морфологія
+  translation: morphology
+  pos: noun
+  example: "Морфологія вивчає слово і його форми."
+- word: будова слова
+  translation: word structure
+  pos: phrase
+  example: "Будова слова показує корінь, префікс, суфікс і закінчення."
+- word: корінь
+  translation: root
+  pos: noun
+  example: "Корінь несе основне значення."
+- word: префікс
+  translation: prefix
+  pos: noun
+  example: "Префікс стоїть перед коренем."
+- word: суфікс
+  translation: suffix
+  pos: noun
+  example: "Суфікс стоїть після кореня."
+- word: закінчення
+  translation: ending
+  pos: noun
+  example: "Закінчення показує граматичну форму."
+- word: основа
+  translation: stem
+  pos: noun
+  example: "Основа - це слово без закінчення."
+- word: нульове закінчення
+  translation: zero ending
+  pos: phrase
+  example: "У слові 'стіл' можна говорити про нульове закінчення."
+- word: спільнокореневий
+  translation: sharing the same root
+  pos: adjective
+  example: "Слова 'читати' і 'читач' спільнокореневі."
+- word: споріднений
+  translation: related
+  pos: adjective
+  example: "Споріднені слова мають зв'язок значення."
+- word: самостійна частина мови
+  translation: independent part of speech
+  pos: phrase
+  example: "Іменник - самостійна частина мови."
+- word: службова частина мови
+  translation: function word
+  pos: phrase
+  example: "Прийменник - службова частина мови."
+- word: частка
+  translation: particle
+  pos: noun
+  example: "Слово 'не' - частка."
+- word: вигук
+  translation: interjection
+  pos: noun
+  example: "Слово 'ой' - вигук."
+- word: лексичне значення
+  translation: lexical meaning
+  pos: phrase
+  example: "Корінь часто несе лексичне значення."
+- word: граматичне значення
+  translation: grammatical meaning
+  pos: phrase
+  example: "Закінчення часто показує граматичне значення."
+- word: словотвір
+  translation: word formation
+  pos: noun
+  example: "Словотвір пояснює, як утворюються нові слова."
+- word: розбір слова
+  translation: word analysis
+  pos: phrase
+  example: "Розбір слова починається з кореня."
+- word: утворювати
+  translation: to form
+  pos: verb
+  example: "Суфікс може утворювати нове слово."
+- word: змінюватися
+  translation: to change
+  pos: verb
+  example: "Іменники змінюються за відмінками."
