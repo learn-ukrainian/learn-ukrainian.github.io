@@ -1,0 +1,100 @@
+- word: іменник
+  translation: noun
+  pos: noun
+  example: "Слово 'книга' - це іменник."
+- word: прикметник
+  translation: adjective
+  pos: noun
+  example: "Прикметник описує іменник."
+- word: дієслово
+  translation: verb
+  pos: noun
+  example: "Дієслово називає дію."
+- word: займенник
+  translation: pronoun
+  pos: noun
+  example: "Слово 'він' - це займенник."
+- word: числівник
+  translation: numeral
+  pos: noun
+  example: "Слово 'п'ять' - це числівник."
+- word: прислівник
+  translation: adverb
+  pos: noun
+  example: "Слово 'швидко' - це прислівник."
+- word: прийменник
+  translation: preposition
+  pos: noun
+  example: "Після прийменника 'до' вживаємо родовий."
+- word: сполучник
+  translation: conjunction
+  pos: noun
+  example: "Сполучник 'бо' показує причину."
+- word: частина мови
+  translation: part of speech
+  pos: phrase
+  example: "Яка це частина мови?"
+- word: відмінок
+  translation: grammatical case
+  pos: noun
+  example: "Який це відмінок?"
+- word: називний відмінок
+  translation: nominative case
+  pos: phrase
+  example: "Називний відповідає на питання хто? що?"
+- word: родовий відмінок
+  translation: genitive case
+  pos: phrase
+  example: "Після 'немає' часто стоїть родовий відмінок."
+- word: давальний відмінок
+  translation: dative case
+  pos: phrase
+  example: "У слові 'мені' маємо давальний відмінок."
+- word: знахідний відмінок
+  translation: accusative case
+  pos: phrase
+  example: "У реченні 'Я бачу книгу' слово 'книгу' має знахідний відмінок."
+- word: орудний відмінок
+  translation: instrumental case
+  pos: phrase
+  example: "У фразі 'пишу ручкою' є орудний відмінок."
+- word: місцевий відмінок
+  translation: locative case
+  pos: phrase
+  example: "Місцевий уживаємо з прийменником."
+- word: кличний відмінок
+  translation: vocative case
+  pos: phrase
+  example: "У звертанні 'Олено!' маємо кличний відмінок."
+- word: рід
+  translation: gender
+  pos: noun
+  example: "Іменники мають граматичний рід."
+- word: чоловічий рід
+  translation: masculine gender
+  pos: phrase
+  example: "Слово 'стіл' має чоловічий рід."
+- word: жіночий рід
+  translation: feminine gender
+  pos: phrase
+  example: "Слово 'книга' має жіночий рід."
+- word: середній рід
+  translation: neuter gender
+  pos: phrase
+  example: "Слово 'місто' має середній рід."
+- word: однина
+  translation: singular
+  pos: noun
+  example: "Однина означає один предмет."
+- word: множина
+  translation: plural
+  pos: noun
+  example: "Множина означає багато предметів."
+- word: питання
+  translation: question
+  pos: noun
+  example: "Питання допомагає знайти відмінок."
+- word: узгоджуватися
+  translation: to agree grammatically
+  pos: verb
+  example: "Прикметник узгоджується з іменником."

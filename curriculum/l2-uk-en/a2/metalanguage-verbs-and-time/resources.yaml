@@ -1,0 +1,15 @@
+- title: "ULP: Ukrainian Verb Aspect"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: b1-language-about-verbs"
+  url: "https://www.ukrainianlessons.com/aspect/"
+  notes: "Catalog-backed overview for reviewing доконаний and недоконаний вид."
+- title: "ULP: The Past Tense in Ukrainian"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /grammar-past-tense/"
+  url: "https://www.ukrainianlessons.com/grammar-past-tense/"
+  notes: "Reference for Ukrainian past tense forms and agreement."
+- title: "ULP: Future Tense in Ukrainian"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-checkpoint-verbs"
+  url: "https://www.ukrainianlessons.com/grammar-future/"
+  notes: "Reference for simple and compound future forms."
