@@ -51,8 +51,14 @@ def test_real_lexicon_manifest_conforms_to_atlas_gates():
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     curriculum = yaml.safe_load(CURRICULUM_PATH.read_text(encoding="utf-8"))
 
-    with VesumLemmaLookup(VESUM_PATH) as vesum:
-        violations = validate(manifest, vesum=vesum, curriculum=curriculum)
+    if VESUM_PATH.exists():
+        # Local dev: full enforcement incl. lemma↔VESUM membership.
+        with VesumLemmaLookup(VESUM_PATH) as vesum:
+            violations = validate(manifest, vesum=vesum, curriculum=curriculum)
+    else:
+        # CI lacks the 967MB gitignored data/vesum.db → vesum=None skips ONLY the
+        # lemma_in_vesum gate; every other §8 gate still enforces on the real manifest.
+        violations = validate(manifest, vesum=None, curriculum=curriculum)
 
     assert violations == []
 

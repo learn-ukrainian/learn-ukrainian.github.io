@@ -220,6 +220,13 @@ def _check_lemma_in_vesum(entry: Mapping[str, Any], lemma: str, vesum: Any, viol
             )
         return
 
+    if vesum is None:
+        # VESUM source unavailable (e.g. CI without the 967MB gitignored data/vesum.db).
+        # Skip ONLY the membership lookup — the structural checks above still run and every
+        # other §8 gate still enforces. The lemma↔VESUM check runs wherever the db exists
+        # (local dev + the validator CLI). Treating "no db" as "flag all" would be a
+        # false-positive storm, not enforcement.
+        return
     if not _vesum_has_entry(vesum, lemma):
         violations.append(
             Violation(
