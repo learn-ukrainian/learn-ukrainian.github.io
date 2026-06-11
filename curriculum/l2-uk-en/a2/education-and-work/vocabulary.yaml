@@ -1,0 +1,80 @@
+- word: освіта
+  translation: education
+  pos: noun
+  example: "Моя освіта пов'язана з економікою."
+- word: навчання
+  translation: studies, learning
+  pos: noun
+  example: "Навчання в університеті було цікавим."
+- word: університет
+  translation: university
+  pos: noun
+  example: "Університет, де я навчався, у центрі міста."
+- word: факультет
+  translation: faculty, department
+  pos: noun
+  example: "Я навчався на факультеті права."
+- word: спеціальність
+  translation: specialty, major
+  pos: noun
+  example: "Моя спеціальність - комп'ютерні науки."
+- word: диплом
+  translation: diploma, degree
+  pos: noun
+  example: "Я отримав диплом минулого року."
+- word: іспит
+  translation: exam
+  pos: noun
+  example: "Якщо складу іспит, вступлю до магістратури."
+- word: залік
+  translation: pass/fail exam, credit
+  pos: noun
+  example: "У п'ятницю в нас залік."
+- word: професія
+  translation: profession
+  pos: noun
+  example: "Професія лікаря дуже відповідальна."
+- word: посада
+  translation: position
+  pos: noun
+  example: "Я шукаю нову посаду."
+- word: досвід
+  translation: experience
+  pos: noun
+  example: "У мене є досвід роботи з клієнтами."
+- word: компанія
+  translation: company
+  pos: noun
+  example: "Компанія, де я працюю, розробляє додатки."
+- word: офіс
+  translation: office
+  pos: noun
+  example: "Наш офіс знаходиться біля метро."
+- word: колега
+  translation: colleague
+  pos: noun
+  example: "Колега, який сидить поруч, допомагає мені."
+- word: зарплата
+  translation: salary
+  pos: noun
+  example: "Зарплата важлива, але атмосфера теж важлива."
+- word: графік
+  translation: schedule
+  pos: noun
+  example: "У мене гнучкий графік."
+- word: завдання
+  translation: task
+  pos: noun
+  example: "Якщо завдання складне, я питаю керівника."
+- word: проєкт
+  translation: project
+  pos: noun
+  example: "Ми працюємо над новим проєктом."
+- word: співбесіда
+  translation: job interview
+  pos: noun
+  example: "Завтра в мене співбесіда."
+- word: магістратура
+  translation: master's program
+  pos: noun
+  example: "Я хочу вступити до магістратури."

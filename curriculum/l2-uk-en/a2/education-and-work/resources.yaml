@@ -1,0 +1,10 @@
+- title: "ULP: Jobs and Professions in Ukrainian"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-education-and-work"
+  url: "https://www.ukrainianlessons.com/work-in-ukrainian/"
+  notes: "Learner-facing vocabulary for jobs and work conversations."
+- title: "ULP: Education in Ukrainian"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-education-and-work"
+  url: "https://www.ukrainianlessons.com/education-in-ukrainian/"
+  notes: "Optional support for education vocabulary after the module."
