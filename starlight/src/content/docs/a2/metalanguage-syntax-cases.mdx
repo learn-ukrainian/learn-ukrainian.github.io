@@ -1,0 +1,311 @@
+---
+title: "Синтаксис і відмінки"
+description: "Речення, його члени і словникова грамотність"
+sidebar:
+  order: 66
+  label: "66. Синтаксис і відмінки"
+prev: metalanguage-morphology
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: речення має карту
+
+На останньому метамовному уроці група поєднує синтаксис і відмінки.
+Ірина читає речення і пробує пояснити його українською.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Ірина","text":"У реченні «Студентка дала подрузі книжку» підмет - «студентка»."},{"speaker":"Викладач","text":"Добре. А присудок?"},{"speaker":"Ірина","text":"«Дала» - присудок. Додаток - «книжку», бо дала що?"},{"speaker":"Викладач","text":"Так. А «подрузі»?"},{"speaker":"Ірина","text":"Це теж додаток, але в давальному відмінку: дала кому?"},{"speaker":"Викладач","text":"Чудово. Тепер ви поєднуєте синтаксис і відмінки."}]')}
+/>
+
+Синтаксис вивчає словосполучення і речення: як слова поєднуються, які
+ролі мають і як частини речення зв'язані між собою. Відмінки показують,
+яку граматичну роль має іменник, займенник або прикметник у цій
+структурі.
+
+## Словосполучення
+
+Словосполучення - це поєднання двох або більше слів, пов'язаних за
+змістом і граматично.
+
+| Словосполучення | Головне слово | Залежне слово | Питання |
+| --- | --- | --- | --- |
+| цікава книжка | книжка | цікава | яка? |
+| читати книжку | читати | книжку | що? |
+| дуже швидко | швидко | дуже | як? |
+| лист до друга | лист | до друга | до кого? |
+
+Головне слово ставить питання до залежного:
+
+> книжка яка? цікава;
+>
+> читати що? книжку;
+>
+> лист до кого? до друга.
+
+Це простий спосіб побачити зв'язок між словами. У B1 правила часто
+кажуть: `залежне слово стоїть у родовому відмінку` або `після цього
+дієслова додаток має давальний відмінок`. Тепер ці фрази стають
+зрозумілими.
+
+### Словосполучення
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "цікава книжка", "right": "книжка яка?"}, {"left": "читати книжку", "right": "читати що?"}, {"left": "дуже швидко", "right": "швидко як?"}, {"left": "лист до друга", "right": "лист до кого?"}, {"left": "кава без цукру", "right": "кава без чого?"}, {"left": "розмова про мову", "right": "розмова про що?"}, {"left": "подарунок сестрі", "right": "подарунок кому?"}, {"left": "їхати автобусом", "right": "їхати чим?"}]`)} />
+
+## Граматична основа і другорядні члени
+
+Граматична основа - це підмет і присудок або тільки присудок у
+безособовому реченні.
+
+> Марта читає.
+>
+> Світає.
+>
+> Мені холодно.
+
+Другорядні члени розширюють речення:
+
+| Член речення | Питання | Приклад |
+| --- | --- | --- |
+| додаток | кого? що? кому? чому? ким? чим? | читаю книжку |
+| означення | який? чий? | нова книжка |
+| обставина | де? коли? як? чому? навіщо? | читаю ввечері |
+
+Розбір речення:
+
+> У бібліотеці Марта уважно читала нову книжку.
+
+| Слово | Роль |
+| --- | --- |
+| Марта | підмет |
+| читала | присудок |
+| книжку | додаток |
+| нову | означення |
+| у бібліотеці | обставина місця |
+| уважно | обставина способу дії |
+
+### Член речення
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "\`Марта\` читає книжку.", "options": [{"text": "підмет", "correct": true}, {"text": "додаток", "correct": false}, {"text": "обставина", "correct": false}], "explanation": "Марта виконує дію."}, {"question": "Марта \`читає\` книжку.", "options": [{"text": "присудок", "correct": true}, {"text": "означення", "correct": false}, {"text": "прийменник", "correct": false}], "explanation": "Читає називає дію підмета."}, {"question": "Марта читає \`книжку\`.", "options": [{"text": "додаток", "correct": true}, {"text": "підмет", "correct": false}, {"text": "обставина", "correct": false}], "explanation": "Читає що? книжку."}, {"question": "Марта читає \`нову\` книжку.", "options": [{"text": "означення", "correct": true}, {"text": "присудок", "correct": false}, {"text": "кличний", "correct": false}], "explanation": "Нову відповідає на питання яку?"}, {"question": "Марта читає \`ввечері\`.", "options": [{"text": "обставина", "correct": true}, {"text": "додаток", "correct": false}, {"text": "закінчення", "correct": false}], "explanation": "Ввечері відповідає на питання коли?"}, {"question": "\`У бібліотеці\` Марта читає.", "options": [{"text": "обставина місця", "correct": true}, {"text": "підмет", "correct": false}, {"text": "суфікс", "correct": false}], "explanation": "У бібліотеці відповідає на питання де?"}]`)} />
+
+## Просте і складне речення
+
+Просте речення має одну граматичну основу:
+
+> Марта читає книжку.
+>
+> Увечері було холодно.
+
+Складне речення має дві або більше граматичних основ:
+
+> Марта читає книжку, а Андрій пише лист.
+>
+> Я залишився вдома, бо йшов дощ.
+
+Зв'язок між частинами може бути сполучниковий або безсполучниковий.
+
+| Тип зв'язку | Приклад |
+| --- | --- |
+| сполучниковий | Я прийшов, бо мав час. |
+| безсполучниковий | Настала осінь, листя пожовтіло. |
+
+На A2 ви вже використовували `і`, `але`, `бо`, `тому що`, `щоб`, `якщо`.
+Тепер ви можете назвати їх сполучниками або сполучними словами і
+пояснити, що вони з'єднують частини складного речення.
+
+### Просте чи складне?
+
+<GroupSort client:only='react' groups={JSON.parse(`{"просте речення": ["Марта читає книжку.", "Увечері було холодно.", "Студенти слухали, писали і відповідали.", "На столі лежить зошит."], "складне речення": ["Марта читає, а Андрій пише.", "Я залишився вдома, бо йшов дощ.", "Якщо буде час, ми повторимо правило.", "Вона сказала, що прийде завтра."]}`)} />
+
+## Відмінки в синтаксисі
+
+Відмінок допомагає побачити роль слова:
+
+| Відмінок | Типова синтаксична роль | Приклад |
+| --- | --- | --- |
+| називний | підмет | Студент читає. |
+| родовий | додаток після немає, після прийменників | Немає часу. До школи. |
+| давальний | отримувач, адресат, стан | Допомагаю другові. Мені холодно. |
+| знахідний | прямий додаток | Бачу місто. |
+| орудний | інструмент, супровід, роль | Пишу ручкою. Іду з другом. |
+| місцевий | місце або тема з прийменником | У місті. Про мову. |
+| кличний | звертання | Друже, ходімо! |
+
+Це не означає, що один відмінок має тільки одну роль. Але карта допомагає
+швидко орієнтуватися:
+
+> Якщо слово відповідає на питання хто? що? і виконує дію, найчастіше це
+> підмет у називному.
+>
+> Якщо слово відповідає на питання кого? що? після дієслова дії,
+> найчастіше це прямий додаток у знахідному.
+>
+> Якщо слово відповідає на питання кому? чому?, шукайте давальний.
+
+### Відмінок і роль
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У реченні \`Студент читає\` слово \`студент\` має ___ відмінок.", "answer": "називний", "options": ["називний", "орудний", "кличний"]}, {"sentence": "У фразі \`немає часу\` слово \`часу\` має ___ відмінок.", "answer": "родовий", "options": ["родовий", "давальний", "місцевий"]}, {"sentence": "У фразі \`допомагаю другові\` слово \`другові\` має ___ відмінок.", "answer": "давальний", "options": ["давальний", "знахідний", "називний"]}, {"sentence": "У фразі \`бачу місто\` слово \`місто\` має ___ відмінок.", "answer": "знахідний", "options": ["знахідний", "кличний", "родовий"]}, {"sentence": "У фразі \`пишу ручкою\` слово \`ручкою\` має ___ відмінок.", "answer": "орудний", "options": ["орудний", "називний", "давальний"]}, {"sentence": "У фразі \`у місті\` слово \`місті\` має ___ відмінок.", "answer": "місцевий", "options": ["місцевий", "знахідний", "кличний"]}]`)} />
+
+## Як читати правило українською
+
+Правило:
+
+> Додаток після дієслів `дякувати`, `допомагати`, `телефонувати`
+> уживається в давальному відмінку.
+
+Розбір правила:
+
+| Частина правила | Що означає |
+| --- | --- |
+| додаток | слово, яке залежить від дієслова |
+| після дієслів | ці дієслова керують формою |
+| уживається | треба ставити |
+| давальний відмінок | кому? чому? |
+
+Приклади:
+
+> Я дякую другові.
+>
+> Вона допомагає сестрі.
+>
+> Ми телефонуємо лікарю.
+
+Тепер ви читаєте правило не як переклад, а як систему: дієслово ->
+додаток -> відмінок -> питання -> форма.
+
+## Типові помилки
+
+**Помилка 1:** думати, що додаток завжди знахідний.
+
+> `Книжку` у фразі `читаю книжку` - знахідний.
+>
+> `Другові` у фразі `допомагаю другові` - давальний.
+
+Обидва можуть бути додатками.
+
+**Помилка 2:** рахувати коми замість граматичних основ.
+
+Складне речення визначають не тільки за комою, а за кількістю основ:
+
+> Марта читала, писала і слухала музику. - одна основа, просте речення з однорідними присудками.
+>
+> Марта читала, а Андрій писав. - дві основи, складне речення.
+
+**Помилка 3:** не ставити питання від головного слова.
+
+Питання - це ваш інструмент:
+
+> допомагати кому? другові;
+>
+> читати що? книжку;
+>
+> жити де? у місті.
+
+## 📋 Підсумок
+
+Метамовний місток завершено. Ви можете говорити українською про
+фонетику, морфологію і синтаксис; можете називати частини слова,
+частини мови, члени речення і відмінки. На B1 це дозволить читати
+пояснення українською і ставити точні питання без постійного переходу
+на англійську.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"синтаксис","translation":"syntax","pos":"noun","example":"Синтаксис вивчає словосполучення і речення.","examples":["syntax","Синтаксис вивчає словосполучення і речення."]},{"word":"пунктуація","translation":"punctuation","pos":"noun","example":"Пунктуація пояснює розділові знаки.","examples":["punctuation","Пунктуація пояснює розділові знаки."]},{"word":"словосполучення","translation":"word combination","pos":"noun","example":"Словосполучення має головне і залежне слово.","examples":["word combination","Словосполучення має головне і залежне слово."]},{"word":"головне слово","translation":"main word","pos":"phrase","example":"Головне слово ставить питання.","examples":["main word","Головне слово ставить питання."]},{"word":"залежне слово","translation":"dependent word","pos":"phrase","example":"Залежне слово відповідає на питання.","examples":["dependent word","Залежне слово відповідає на питання."]},{"word":"граматична основа","translation":"grammatical core","pos":"phrase","example":"Граматична основа - підмет і присудок.","examples":["grammatical core","Граматична основа - підмет і присудок."]},{"word":"другорядний член","translation":"secondary sentence member","pos":"phrase","example":"Додаток - другорядний член речення.","examples":["secondary sentence member","Додаток - другорядний член речення."]},{"word":"просте речення","translation":"simple sentence","pos":"phrase","example":"Просте речення має одну граматичну основу.","examples":["simple sentence","Просте речення має одну граматичну основу."]},{"word":"складне речення","translation":"complex or compound sentence","pos":"phrase","example":"Складне речення має дві або більше основ.","examples":["complex or compound sentence","Складне речення має дві або більше основ."]},{"word":"сполучниковий зв'язок","translation":"conjunctional connection","pos":"phrase","example":"У реченні з 'бо' є сполучниковий зв'язок.","examples":["conjunctional connection","У реченні з 'бо' є сполучниковий зв'язок."]},{"word":"безсполучниковий зв'язок","translation":"asyndetic connection","pos":"phrase","example":"Безсполучниковий зв'язок не має сполучника.","examples":["asyndetic connection","Безсполучниковий зв'язок не має сполучника."]},{"word":"розділовий знак","translation":"punctuation mark","pos":"phrase","example":"Кома - це розділовий знак.","examples":["punctuation mark","Кома - це розділовий знак."]},{"word":"кома","translation":"comma","pos":"noun","example":"Перед 'бо' часто ставимо кому.","examples":["comma","Перед 'бо' часто ставимо кому."]},{"word":"тире","translation":"dash","pos":"noun","example":"Тире може стояти між підметом і присудком.","examples":["dash","Тире може стояти між підметом і присудком."]},{"word":"керувати формою","translation":"to govern a form","pos":"phrase","example":"Дієслово 'допомагати' керує давальним відмінком.","examples":["to govern a form","Дієслово 'допомагати' керує давальним відмінком."]},{"word":"прямий додаток","translation":"direct object","pos":"phrase","example":"У фразі 'читаю книжку' слово 'книжку' - прямий додаток.","examples":["direct object","У фразі 'читаю книжку' слово 'книжку' - прямий додаток."]},{"word":"адресат","translation":"addressee, recipient","pos":"noun","example":"Давальний часто називає адресата.","examples":["addressee, recipient","Давальний часто називає адресата."]},{"word":"структура","translation":"structure","pos":"noun","example":"Синтаксис показує структуру речення.","examples":["structure","Синтаксис показує структуру речення."]},{"word":"поєднуватися","translation":"to combine","pos":"verb","example":"Слова поєднуються у словосполучення.","examples":["to combine","Слова поєднуються у словосполучення."]},{"word":"пояснення","translation":"explanation","pos":"noun","example":"Я розумію граматичне пояснення українською.","examples":["explanation","Я розумію граматичне пояснення українською."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"синтаксис","back":"syntax"},{"front":"пунктуація","back":"punctuation"},{"front":"словосполучення","back":"word combination"},{"front":"головне слово","back":"main word"},{"front":"залежне слово","back":"dependent word"},{"front":"граматична основа","back":"grammatical core"},{"front":"другорядний член","back":"secondary sentence member"},{"front":"просте речення","back":"simple sentence"},{"front":"складне речення","back":"complex or compound sentence"},{"front":"сполучниковий зв'язок","back":"conjunctional connection"},{"front":"безсполучниковий зв'язок","back":"asyndetic connection"},{"front":"розділовий знак","back":"punctuation mark"},{"front":"кома","back":"comma"},{"front":"тире","back":"dash"},{"front":"керувати формою","back":"to govern a form"},{"front":"прямий додаток","back":"direct object"},{"front":"адресат","back":"addressee, recipient"},{"front":"структура","back":"structure"},{"front":"поєднуватися","back":"to combine"},{"front":"пояснення","back":"explanation"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Словосполучення
+
+*(див. урок, §Словосполучення)*
+
+### Член речення
+
+*(див. урок, §Граматична основа і другорядні члени)*
+
+### Просте чи складне?
+
+*(див. урок, §Просте і складне речення)*
+
+### Відмінок і роль
+
+*(див. урок, §Відмінки в синтаксисі)*
+
+### Знайдіть граматичні основи
+
+<MarkTheWords client:only='react'>
+  <MarkTheWordsActivity instruction="Позначте підмети і присудки." text="Марта читала книжку, а Андрій писав лист." correctWords={JSON.parse(`[]`)} />
+</MarkTheWords>
+
+### Виправте синтаксичний аналіз
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильний аналіз." items={JSON.parse(`[{"sentence": "\`Другові\` у фразі \`допомагаю другові\` - знахідний відмінок.", "errorWord": "знахідний", "correctForm": "\`Другові\` - давальний відмінок.", "options": ["\`Другові\` - давальний відмінок.", "\`Другові\` - кличний відмінок."], "explanation": "Допомагати кому? другові."}, {"sentence": "\`Марта читала, писала і слухала\` - складне речення.", "errorWord": "складне", "correctForm": "Це просте речення з однією граматичною основою.", "options": ["Це просте речення з однією граматичною основою.", "Це речення без присудка."], "explanation": "Підмет один, присудки однорідні."}, {"sentence": "У словосполученні \`цікава книжка\` головне слово \`цікава\`.", "errorWord": "цікава", "correctForm": "Головне слово - \`книжка\`.", "options": ["Головне слово - \`книжка\`.", "Головне слово - \`і\`."], "explanation": "Книжка яка? цікава."}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [ULP: Ukrainian Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/) — Reference chart for matching case names, questions, and examples.
+- 📄 [ULP: Ukrainian Conjunctions Guide](https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/) — Optional bridge resource for learners who want more sentence-linking examples.
+- 📄 [ULP: Ukrainian Grammar Overview](https://www.ukrainianlessons.com/grammar/) — Catalog-backed grammar overview for syntax and case terminology.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

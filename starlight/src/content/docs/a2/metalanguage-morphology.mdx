@@ -1,0 +1,273 @@
+---
+title: "Морфологія"
+description: "Будова слова і частини мови — від знання до називання"
+sidebar:
+  order: 65
+  label: "65. Морфологія"
+prev: metalanguage-phonetics
+next: metalanguage-syntax-cases
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: з чого складається слово?
+
+Після фонетики група переходить до будови слова. Софія бачить у
+підручнику слово `морфологія` і просить пояснення.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Софія","text":"Морфологія - це про звуки?"},{"speaker":"Викладач","text":"Ні, звуки - це фонетика. Морфологія вивчає слово: його частини і граматичні форми."},{"speaker":"Софія","text":"Тобто корінь, префікс, суфікс, закінчення?"},{"speaker":"Викладач","text":"Так. А ще частини мови: іменник, прикметник, дієслово, прислівник..."},{"speaker":"Софія","text":"У слові «переписати» є префікс «пере-»?"},{"speaker":"Викладач","text":"Так. А корінь пов\'язаний зі словами «писати», «запис», «підпис»."},{"speaker":"Софія","text":"Тепер я бачу, що слово має внутрішню карту."}]')}
+/>
+
+Морфологія допомагає зрозуміти, як слово змінюється і як від одного
+слова утворюються інші. На A2 ми не робимо складний університетський
+аналіз. Ми будуємо практичну карту для читання словників і правил.
+
+## Основа і закінчення
+
+Закінчення - це змінна частина слова, яка часто показує рід, число,
+відмінок або особу.
+
+| Форма | Основа | Закінчення | Що показує закінчення |
+| --- | --- | --- | --- |
+| книга | книг- | -а | називний, однина |
+| книги | книг- | -и | родовий однини або називний множини |
+| книгою | книг- | -ою | орудний, однина |
+| пишу | пиш- | -у | перша особа, однина |
+| пишемо | пиш- | -емо | перша особа, множина |
+
+Основа - це частина слова без закінчення. Вона допомагає бачити, що
+форми належать до одного слова:
+
+> студент, студента, студентові, студентом;
+>
+> новий, нового, новому, новим;
+>
+> пишу, пишеш, пише, пишемо.
+
+Не кожне слово має видиме закінчення. У слові `стіл` можна говорити про
+нульове закінчення: форма називного однини не має окремої літери в кінці,
+але граматична форма все одно є.
+
+### Частини слова
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "основа", "right": "слово без закінчення"}, {"left": "закінчення", "right": "змінна граматична частина"}, {"left": "корінь", "right": "головне лексичне значення"}, {"left": "префікс", "right": "стоїть перед коренем"}, {"left": "суфікс", "right": "стоїть після кореня"}, {"left": "спільнокореневі слова", "right": "слова зі спільним коренем"}, {"left": "самостійна частина мови", "right": "має власне значення"}, {"left": "службова частина мови", "right": "будує зв'язки між словами"}]`)} />
+
+## Корінь і спільнокореневі слова
+
+Корінь несе основне лексичне значення. Спільнокореневі слова мають
+спільний корінь і пов'язані значенням.
+
+| Корінь | Слова |
+| --- | --- |
+| пис- | писати, запис, підпис, переписати |
+| школ- | школа, шкільний, школяр |
+| друг-/друж- | друг, дружба, дружній, подруга |
+| чит- | читати, читач, прочитати |
+
+Іноді корінь трохи змінюється: друг - дружба. Це нормально. На A2
+важливо не ідеально розрізати кожне слово, а бачити сім'ї слів.
+
+Практичне питання:
+
+> Чи допомагає це слово зрозуміти інше слово?
+
+Якщо ви знаєте `писати`, то `запис`, `підпис`, `переписати` вже не
+зовсім нові. Ви можете здогадатися про значення і потім перевірити його
+в словнику.
+
+### Сім'ї слів
+
+<GroupSort client:only='react' groups={JSON.parse(`{"пис-": ["писати", "запис", "підпис", "переписати"], "школ-": ["школа", "шкільний", "школяр", "дошкільний"], "чит-": ["читати", "читач", "прочитати", "читання"]}`)} />
+
+## Префікс і суфікс
+
+Префікс стоїть перед коренем:
+
+> писати - написати - переписати - записати;
+>
+> їхати - приїхати - поїхати - виїхати.
+
+Суфікс стоїть після кореня і часто допомагає утворити нове слово:
+
+> школа - школяр;
+>
+> Київ - київський;
+>
+> книга - книжка;
+>
+> читати - читач.
+
+Префікси часто змінюють напрямок, результат або відтінок дії. Суфікси
+часто допомагають створити іменник, прикметник або зменшену форму.
+
+Але не робіть механічних висновків. Один префікс може мати різні
+значення, а деякі слова історично складні. Якщо слово важливе,
+перевіряйте його в словнику.
+
+### Будова слова
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У слові \`написати\` частина \`на-\` - це ___.", "answer": "префікс", "options": ["префікс", "закінчення", "сполучник"]}, {"sentence": "У слові \`книгою\` частина \`-ою\` - це ___.", "answer": "закінчення", "options": ["закінчення", "підмет", "префікс"]}, {"sentence": "У словах \`писати\`, \`запис\`, \`підпис\` спільний ___.", "answer": "корінь", "options": ["корінь", "суфікс", "присудок"]}, {"sentence": "\`Школяр\` має суфікс ___.", "answer": "-яр", "options": ["-яр", "на-", "-ою"]}, {"sentence": "Основа - це слово без ___.", "answer": "закінчення", "options": ["закінчення", "підмета", "наголосу"]}, {"sentence": "\`Не\` у фразі \`не знаю\` - це ___.", "answer": "частка", "options": ["частка", "іменник", "корінь"]}]`)} />
+
+## Самостійні та службові частини мови
+
+Морфологія також вивчає частини мови. Їх можна поділити на дві великі
+групи.
+
+Самостійні частини мови мають власне лексичне значення:
+
+| Частина мови | Приклади |
+| --- | --- |
+| іменник | місто, людина, радість |
+| прикметник | новий, українська, тепле |
+| дієслово | читати, працювати, приїхати |
+| числівник | два, третій, багато |
+| займенник | я, ти, цей, мій |
+| прислівник | тут, завтра, швидко |
+
+Службові частини мови допомагають будувати зв'язки:
+
+| Частина мови | Приклади |
+| --- | --- |
+| прийменник | у, на, з, до, після |
+| сполучник | і, але, бо, що, щоб |
+| частка | не, би, ж, лише |
+
+Окремо часто називають вигук:
+
+> ой, ах, привіт.
+
+Для A2 найважливіше - упевнено розрізняти самостійні слова і службові
+слова. Це допомагає не шукати відмінок у прийменника або час у
+сполучника.
+
+### Частина мови
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "\`книга\`", "options": [{"text": "іменник", "correct": true}, {"text": "прийменник", "correct": false}, {"text": "частка", "correct": false}], "explanation": "\`Книга\` називає предмет."}, {"question": "\`новий\`", "options": [{"text": "прикметник", "correct": true}, {"text": "сполучник", "correct": false}, {"text": "вигук", "correct": false}], "explanation": "\`Новий\` описує іменник."}, {"question": "\`читати\`", "options": [{"text": "дієслово", "correct": true}, {"text": "прийменник", "correct": false}, {"text": "числівник", "correct": false}], "explanation": "\`Читати\` називає дію."}, {"question": "\`до\`", "options": [{"text": "прийменник", "correct": true}, {"text": "іменник", "correct": false}, {"text": "прислівник", "correct": false}], "explanation": "\`До\` будує зв'язок і керує родовим."}, {"question": "\`але\`", "options": [{"text": "сполучник", "correct": true}, {"text": "корінь", "correct": false}, {"text": "закінчення", "correct": false}], "explanation": "\`Але\` з'єднує частини речення."}, {"question": "\`не\`", "options": [{"text": "частка", "correct": true}, {"text": "прикметник", "correct": false}, {"text": "суфікс", "correct": false}], "explanation": "\`Не\` є службовою частиною мови."}, {"question": "\`швидко\`", "options": [{"text": "прислівник", "correct": true}, {"text": "іменник", "correct": false}, {"text": "префікс", "correct": false}], "explanation": "\`Швидко\` відповідає на питання як?"}, {"question": "\`ой\`", "options": [{"text": "вигук", "correct": true}, {"text": "числівник", "correct": false}, {"text": "закінчення", "correct": false}], "explanation": "\`Ой\` виражає емоцію."}]`)} />
+
+## Типові помилки
+
+**Помилка 1:** плутати закінчення і суфікс.
+
+> У слові `книгою` частина `-ою` - закінчення, бо вона показує форму.
+
+**Помилка 2:** думати, що всі слова з однаковими літерами мають той самий
+корінь.
+
+Спільний корінь має бути пов'язаний значенням, не тільки виглядом.
+
+**Помилка 3:** забувати службові частини мови.
+
+Прийменники і сполучники короткі, але вони керують структурою речення:
+`до школи`, `бо дощ`, `щоб зрозуміти`.
+
+## 📋 Підсумок
+
+Морфологія дає вам карту слова. Ви знаєте терміни корінь, префікс,
+суфікс, закінчення, основа, спільнокореневі слова, самостійні і службові
+частини мови. Тепер, коли українське правило каже `визначте будову
+слова`, ви знаєте, що саме треба шукати.
+У наступному уроці ця карта слова з'єднається з картою речення: підметом,
+присудком, додатками і відмінками.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"морфологія","translation":"morphology","pos":"noun","example":"Морфологія вивчає слово і його форми.","examples":["morphology","Морфологія вивчає слово і його форми."]},{"word":"будова слова","translation":"word structure","pos":"phrase","example":"Будова слова показує корінь, префікс, суфікс і закінчення.","examples":["word structure","Будова слова показує корінь, префікс, суфікс і закінчення."]},{"word":"корінь","translation":"root","pos":"noun","example":"Корінь несе основне значення.","examples":["root","Корінь несе основне значення."]},{"word":"префікс","translation":"prefix","pos":"noun","example":"Префікс стоїть перед коренем.","examples":["prefix","Префікс стоїть перед коренем."]},{"word":"суфікс","translation":"suffix","pos":"noun","example":"Суфікс стоїть після кореня.","examples":["suffix","Суфікс стоїть після кореня."]},{"word":"закінчення","translation":"ending","pos":"noun","example":"Закінчення показує граматичну форму.","examples":["ending","Закінчення показує граматичну форму."]},{"word":"основа","translation":"stem","pos":"noun","example":"Основа - це слово без закінчення.","examples":["stem","Основа - це слово без закінчення."]},{"word":"нульове закінчення","translation":"zero ending","pos":"phrase","example":"У слові 'стіл' можна говорити про нульове закінчення.","examples":["zero ending","У слові 'стіл' можна говорити про нульове закінчення."]},{"word":"спільнокореневий","translation":"sharing the same root","pos":"adjective","example":"Слова 'читати' і 'читач' спільнокореневі.","examples":["sharing the same root","Слова 'читати' і 'читач' спільнокореневі."]},{"word":"споріднений","translation":"related","pos":"adjective","example":"Споріднені слова мають зв'язок значення.","examples":["related","Споріднені слова мають зв'язок значення."]},{"word":"самостійна частина мови","translation":"independent part of speech","pos":"phrase","example":"Іменник - самостійна частина мови.","examples":["independent part of speech","Іменник - самостійна частина мови."]},{"word":"службова частина мови","translation":"function word","pos":"phrase","example":"Прийменник - службова частина мови.","examples":["function word","Прийменник - службова частина мови."]},{"word":"частка","translation":"particle","pos":"noun","example":"Слово 'не' - частка.","examples":["particle","Слово 'не' - частка."]},{"word":"вигук","translation":"interjection","pos":"noun","example":"Слово 'ой' - вигук.","examples":["interjection","Слово 'ой' - вигук."]},{"word":"лексичне значення","translation":"lexical meaning","pos":"phrase","example":"Корінь часто несе лексичне значення.","examples":["lexical meaning","Корінь часто несе лексичне значення."]},{"word":"граматичне значення","translation":"grammatical meaning","pos":"phrase","example":"Закінчення часто показує граматичне значення.","examples":["grammatical meaning","Закінчення часто показує граматичне значення."]},{"word":"словотвір","translation":"word formation","pos":"noun","example":"Словотвір пояснює, як утворюються нові слова.","examples":["word formation","Словотвір пояснює, як утворюються нові слова."]},{"word":"розбір слова","translation":"word analysis","pos":"phrase","example":"Розбір слова починається з кореня.","examples":["word analysis","Розбір слова починається з кореня."]},{"word":"утворювати","translation":"to form","pos":"verb","example":"Суфікс може утворювати нове слово.","examples":["to form","Суфікс може утворювати нове слово."]},{"word":"змінюватися","translation":"to change","pos":"verb","example":"Іменники змінюються за відмінками.","examples":["to change","Іменники змінюються за відмінками."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"морфологія","back":"morphology"},{"front":"будова слова","back":"word structure"},{"front":"корінь","back":"root"},{"front":"префікс","back":"prefix"},{"front":"суфікс","back":"suffix"},{"front":"закінчення","back":"ending"},{"front":"основа","back":"stem"},{"front":"нульове закінчення","back":"zero ending"},{"front":"спільнокореневий","back":"sharing the same root"},{"front":"споріднений","back":"related"},{"front":"самостійна частина мови","back":"independent part of speech"},{"front":"службова частина мови","back":"function word"},{"front":"частка","back":"particle"},{"front":"вигук","back":"interjection"},{"front":"лексичне значення","back":"lexical meaning"},{"front":"граматичне значення","back":"grammatical meaning"},{"front":"словотвір","back":"word formation"},{"front":"розбір слова","back":"word analysis"},{"front":"утворювати","back":"to form"},{"front":"змінюватися","back":"to change"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Частини слова
+
+*(див. урок, §Основа і закінчення)*
+
+### Сім'ї слів
+
+*(див. урок, §Корінь і спільнокореневі слова)*
+
+### Будова слова
+
+*(див. урок, §Префікс і суфікс)*
+
+### Частина мови
+
+*(див. урок, §Самостійні та службові частини мови)*
+
+### Знайдіть службові слова
+
+<MarkTheWords client:only='react'>
+  <MarkTheWordsActivity instruction="Позначте службові частини мови." text="Я йду до школи, бо маю урок, але не маю зошита." correctWords={JSON.parse(`[]`)} />
+</MarkTheWords>
+
+### Виправте морфологічний опис
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильний опис." items={JSON.parse(`[{"sentence": "У слові \`книгою\` частина \`-ою\` - суфікс.", "errorWord": "суфікс", "correctForm": "У слові \`книгою\` частина \`-ою\` - закінчення.", "options": ["У слові \`книгою\` частина \`-ою\` - закінчення.", "У слові \`книгою\` частина \`-ою\` - підмет."], "explanation": "Ця частина показує граматичну форму."}, {"sentence": "\`До\` - самостійна частина мови.", "errorWord": "самостійна", "correctForm": "\`До\` - службова частина мови.", "options": ["\`До\` - службова частина мови.", "\`До\` - корінь слова."], "explanation": "Прийменник будує зв'язок між словами."}, {"sentence": "\`Писати\` і \`підпис\` не мають спільного кореня.", "errorWord": "не мають", "correctForm": "\`Писати\` і \`підпис\` мають спільний корінь.", "options": ["\`Писати\` і \`підпис\` мають спільний корінь.", "\`Писати\` і \`підпис\` - це прийменники."], "explanation": "Обидва слова пов'язані з писанням."}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [ULP: Grammar Reference](https://www.ukrainianlessons.com/grammar/) — General reference for independent review of Ukrainian grammar categories.
+- 📄 [ULP: Ukrainian Grammar Overview](https://www.ukrainianlessons.com/grammar/) — Catalog-backed overview for reviewing parts of speech and morphology terms.
+
+**🎧 Аудіо:**
+- 🎧 [ULP: Sound changes between imperfective and perfective verbs](https://www.ukrainianlessons.com/episode94/) — Optional bridge example of how word form changes appear in a learner-facing grammar note.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

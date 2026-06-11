@@ -1,0 +1,15 @@
+- title: "ULP: Ukrainian Grammar Overview"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: b1-how-to-talk-about-grammar"
+  url: "https://www.ukrainianlessons.com/grammar/"
+  notes: "Catalog-backed overview for reviewing parts of speech and morphology terms."
+- title: "ULP: Sound changes between imperfective and perfective verbs"
+  role: podcast
+  source_ref: "docs/resources/external_resources.yaml: b1-reading-grammar-rules"
+  url: "https://www.ukrainianlessons.com/episode94/"
+  notes: "Optional bridge example of how word form changes appear in a learner-facing grammar note."
+- title: "ULP: Grammar Reference"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: b1-reading-grammar-rules"
+  url: "https://www.ukrainianlessons.com/grammar/"
+  notes: "General reference for independent review of Ukrainian grammar categories."
