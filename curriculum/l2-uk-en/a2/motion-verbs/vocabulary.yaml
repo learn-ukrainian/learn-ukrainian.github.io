@@ -1,0 +1,96 @@
+- word: іти / ходити
+  translation: to go on foot
+  pos: motion pair
+  example: "Зараз я іду до магазину, а щодня ходжу до парку."
+- word: їхати / їздити
+  translation: to go by vehicle
+  pos: motion pair
+  example: "Ми їдемо до Львова і часто їздимо туди влітку."
+- word: летіти / літати
+  translation: to fly
+  pos: motion pair
+  example: "Літак летить до Києва, а вона часто літає до Польщі."
+- word: піти
+  translation: to go, to leave on foot
+  pos: verb
+  example: "Після роботи я піду до аптеки."
+- word: поїхати
+  translation: to go, to leave by vehicle
+  pos: verb
+  example: "У суботу ми поїдемо до Харкова."
+- word: полетіти
+  translation: to fly off, to depart by air
+  pos: verb
+  example: "Літак полетить о сьомій."
+- word: рух
+  translation: movement, motion
+  pos: noun
+  example: "У цьому уроці ми вчимо дієслова руху."
+- word: напрямок
+  translation: direction
+  pos: noun
+  example: "До показує напрямок."
+- word: маршрут
+  translation: route
+  pos: noun
+  example: "Мій маршрут на роботу дуже простий."
+- word: зупинка
+  translation: stop
+  pos: noun
+  example: "Я іду до зупинки."
+- word: вокзал
+  translation: train station
+  pos: noun
+  example: "Ми їдемо з вокзалу."
+- word: аеропорт
+  translation: airport
+  pos: noun
+  example: "Вона їде в аеропорт."
+- word: площа
+  translation: square
+  pos: noun
+  example: "Я вийду на площі."
+- word: пішки
+  translation: on foot
+  pos: adverb
+  example: "Я піду пішки."
+- word: потягом
+  translation: by train
+  pos: instrument
+  example: "Ми поїдемо потягом."
+- word: автобусом
+  translation: by bus
+  pos: instrument
+  example: "Він їде автобусом."
+- word: казати / кажу
+  translation: to say, I say
+  pos: stem-change model
+  example: "Я кажу це спокійно."
+- word: писати / пишу
+  translation: to write, I write
+  pos: stem-change model
+  example: "Я пишу повідомлення."
+- word: пити / п'ю
+  translation: to drink, I drink
+  pos: irregular model
+  example: "Я п'ю чай у потязі."
+- word: боротися / борюся
+  translation: to struggle, I struggle
+  pos: reflexive model
+  example: "Ми боремося за кращий сервіс."
+- word: до + родовий
+  translation: to, toward
+  pos: preposition pattern
+  example: "Я іду до школи."
+- word: на + знахідний
+  translation: to, onto
+  pos: preposition pattern
+  example: "Вона їде на роботу."
+- word: з + родовий
+  translation: from
+  pos: preposition pattern
+  example: "Ми йдемо з магазину."
+- word: через + знахідний
+  translation: through, across
+  pos: preposition pattern
+  example: "Я йду через парк."

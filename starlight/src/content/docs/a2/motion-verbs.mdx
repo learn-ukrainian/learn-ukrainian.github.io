@@ -1,0 +1,299 @@
+---
+title: "Іду, їду, лечу"
+description: "Дієслова руху та моделі дієвідмінювання з чергуванням основи"
+sidebar:
+  order: 43
+  label: "43. Іду, їду, лечу"
+draft: true
+prev: aspect-mastery
+next: imperative-complete
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: біля виходу на вокзалі
+
+Почніть з руху в реальному просторі. Троє людей домовляються, хто куди
+рухається зараз і хто куди ходить або їздить регулярно.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Ірина","text":"Я вже йду до виходу. Ти де?"},{"speaker":"Марко","text":"Я ще їду в трамваї. Зазвичай я їжджу метро, але сьогодні ремонт."},{"speaker":"Ірина","text":"Добре. Олена вже летить до Варшави?"},{"speaker":"Марко","text":"Так, її літак летить зараз. Вона часто літає туди на роботу."},{"speaker":"Ірина","text":"Коли ти приїдеш, підемо до каси і купимо квитки."},{"speaker":"Марко","text":"Домовилися. Я вийду на площі й піду пішки."}]')}
+/>
+
+У діалозі є три пари:
+
+| Один напрямок зараз | Звичка або туди-й-назад |
+| --- | --- |
+| іти | ходити |
+| їхати | їздити |
+| летіти | літати |
+
+Ці пари не про швидкість. Вони про тип руху.
+
+### Тип руху
+
+<GroupSort client:only='react' groups={JSON.parse(`{"один напрямок зараз": ["іду до виходу", "їде в місто", "летить до Варшави", "ідемо через парк", "їдеш на роботу", "лечу до Києва", "йдуть до каси", "їдемо потягом"], "звичка або туди-й-назад": ["ходжу щотижня", "їздимо щоліта", "часто літає", "ходять до школи", "їздиш туди щомісяця", "літаємо на конференції", "ходить у спортзал", "їздять до родини"]}`)} />
+
+## Один напрямок чи звичка
+
+`Іти`, `їхати`, `летіти` показують рух в одному напрямку, часто саме
+зараз.
+
+> Я іду до аптеки.
+>
+> Ми їдемо до Львова.
+>
+> Літак летить до Києва.
+
+`Ходити`, `їздити`, `літати` показують регулярний рух, досвід або рух
+туди й назад.
+
+> Я ходжу до аптеки щотижня.
+>
+> Ми їздимо до Львова щоліта.
+>
+> Вона часто літає до Варшави.
+
+Корисне A2-питання: `це зараз в один бік чи це звичка / маршрут туди й
+назад?`
+
+## Форми теперішнього часу
+
+Вивчіть форми в коротких групах. Не треба одразу будувати довгі
+пояснення; спочатку впізнавайте модель.
+
+| Особа | іти | ходити |
+| --- | --- | --- |
+| я | іду | ходжу |
+| ти | ідеш | ходиш |
+| він/вона | іде | ходить |
+| ми | ідемо | ходимо |
+| ви | ідете | ходите |
+| вони | ідуть | ходять |
+
+| Особа | їхати | їздити |
+| --- | --- | --- |
+| я | їду | їжджу |
+| ти | їдеш | їздиш |
+| він/вона | їде | їздить |
+| ми | їдемо | їздимо |
+| ви | їдете | їздите |
+| вони | їдуть | їздять |
+
+| Особа | летіти | літати |
+| --- | --- | --- |
+| я | лечу | літаю |
+| ти | летиш | літаєш |
+| він/вона | летить | літає |
+| ми | летимо | літаємо |
+| ви | летите | літаєте |
+| вони | летять | літають |
+
+### Оберіть дієслово руху
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я зараз ___ до аптеки.", "answer": "іду", "options": ["іду", "ходжу"]}, {"sentence": "Щосуботи ми ___ до басейну.", "answer": "ходимо", "options": ["ідемо", "ходимо"]}, {"sentence": "Вони ___ до Львова потягом.", "answer": "їдуть", "options": ["їдуть", "їздять"]}, {"sentence": "Ми часто ___ до Львова влітку.", "answer": "їздимо", "options": ["їдемо", "їздимо"]}, {"sentence": "Літак уже ___ до Києва.", "answer": "летить", "options": ["літає", "летить"]}, {"sentence": "Вона ___ до Варшави кілька разів на рік.", "answer": "літає", "options": ["летить", "літає"]}, {"sentence": "Після роботи я ___ до аптеки.", "answer": "піду", "options": ["піду", "ходжу"]}, {"sentence": "У суботу ми ___ до Харкова.", "answer": "поїдемо", "options": ["поїдемо", "їздимо"]}]`)} />
+
+## Один виїзд: піти, поїхати, полетіти
+
+Коли людина вирушила або вирушить один раз, українська часто бере
+доконані форми з `по-`:
+
+> Я пішов додому о шостій.
+>
+> Ми поїхали потягом до Львова.
+>
+> Вони полетіли до Варшави.
+
+У майбутньому:
+
+> Я піду до магазину.
+>
+> Ми поїдемо до Харкова.
+>
+> Літак полетить о сьомій.
+
+Це не вся система префіксів руху. На A2 зараз достатньо бачити базовий
+контраст: `іду зараз`, `ходжу регулярно`, `піду один раз`.
+
+## Три корисні моделі дієвідмінювання
+
+У цьому модулі також є три маленькі моделі, які часто зустрічаються в
+дорозі й розмові.
+
+| Інфінітив | я | ти | він/вона | вони |
+| --- | --- | --- | --- | --- |
+| казати | кажу | кажеш | каже | кажуть |
+| пити | п'ю | п'єш | п'є | п'ють |
+| боротися | борюся | борешся | бореться | борються |
+
+`Казати` допомагає впізнати чергування: `писати -> пишу`, `сказати ->
+скажу`. `Пити` має апостроф у формах `п'ю`, `п'єш`, `п'ють`. У
+`боротися` частка `-ся` залишається в кожній формі.
+
+## Рух і прийменники
+
+Після дієслів руху часто треба назвати напрямок.
+
+| Питання | Модель | Приклад |
+| --- | --- | --- |
+| Куди? | до + родовий | іду до школи |
+| Куди? | на + знахідний | їду на роботу |
+| Куди? | в/у + знахідний | лечу в Україну |
+| Звідки? | з + родовий | іду з магазину |
+| Звідки? | від + родовий | їду від друга |
+| Яким шляхом? | через + знахідний | йду через парк |
+
+Не перекладайте механічно з англійської. Вчіть дієслово разом із
+маленькою моделлю: `їхати до міста`, `їхати на роботу`, `йти через парк`.
+
+### Три моделі
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я ___ правду.", "options": [{"text": "кажу", "correct": true}, {"text": "казу", "correct": false}, {"text": "казаю", "correct": false}], "explanation": "Казати -> кажу."}, {"question": "Вони ___ чай.", "options": [{"text": "п'ють", "correct": true}, {"text": "пють", "correct": false}, {"text": "п'ютьє", "correct": false}], "explanation": "Пити має апостроф: п'ють."}, {"question": "Ми ___ за кращий сервіс.", "options": [{"text": "боремося", "correct": true}, {"text": "боротимося", "correct": false}, {"text": "борюмося", "correct": false}], "explanation": "Боротися -> боремося."}, {"question": "Ти ___ повідомлення?", "options": [{"text": "пишеш", "correct": true}, {"text": "писеш", "correct": false}, {"text": "писаєш", "correct": false}], "explanation": "Писати має чергування с -> ш."}, {"question": "Вона ___ українською дуже чітко.", "options": [{"text": "каже", "correct": true}, {"text": "казе", "correct": false}, {"text": "казає", "correct": false}], "explanation": "Казати -> каже."}, {"question": "Я ___ воду після кави.", "options": [{"text": "п'ю", "correct": true}, {"text": "пю", "correct": false}, {"text": "пію", "correct": false}], "explanation": "Пити -> п'ю."}, {"question": "Він ___ з бюрократією.", "options": [{"text": "бореться", "correct": true}, {"text": "бороться", "correct": false}, {"text": "боретьсяся", "correct": false}], "explanation": "Боротися -> бореться."}, {"question": "Ми ___ короткий лист.", "options": [{"text": "пишемо", "correct": true}, {"text": "писемо", "correct": false}, {"text": "писаємо", "correct": false}], "explanation": "Писати -> пишемо."}]`)} />
+
+## Мінідіалог: куди ти рухаєшся?
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"А","text":"Куди ти зараз ідеш?"},{"speaker":"Б","text":"Іду до банку, а потім піду на пошту."},{"speaker":"А","text":"Ти часто ходиш туди?"},{"speaker":"Б","text":"До банку - ні, але на пошту ходжу щотижня."}]')}
+/>
+
+Спробуйте змінити місця: `до університету`, `на роботу`, `в аеропорт`,
+`з вокзалу`.
+
+### Рух і прийменник
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "іти", "right": "до школи"}, {"left": "їхати", "right": "на роботу"}, {"left": "летіти", "right": "в Україну"}, {"left": "повертатися", "right": "з магазину"}, {"left": "їхати", "right": "від друга"}, {"left": "йти", "right": "через парк"}, {"left": "їхати", "right": "потягом"}, {"left": "іти", "right": "пішки"}]`)} />
+
+## Завдання: мій типовий маршрут
+
+Напишіть 6-8 речень про свій день. Використайте:
+
+- одну форму `іти / їхати / летіти`;
+- одну форму `ходити / їздити / літати`;
+- одну форму `піти / поїхати / полетіти`;
+- два прийменники напрямку.
+
+Каркас:
+
+> Зазвичай я [ходжу/їжджу] до [місце].
+>
+> Сьогодні я [іду/їду] до [місце].
+>
+> Після роботи я [піду/поїду] на [місце].
+
+## Типові помилки
+
+| Не так | Краще | Чому |
+| --- | --- | --- |
+| Я ходжу до аптеки зараз. | Я іду до аптеки зараз. | зараз в один бік |
+| Я іду до спортзалу щотижня. | Я ходжу до спортзалу щотижня. | регулярний маршрут |
+| Я пю воду. | Я п'ю воду. | у формі `п'ю` потрібен апостроф |
+| Ми їдемо з робота. | Ми їдемо з роботи. | `з` вимагає родового |
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"іти / ходити","translation":"to go on foot","pos":"motion pair","example":"Зараз я іду до магазину, а щодня ходжу до парку.","examples":["to go on foot","Зараз я іду до магазину, а щодня ходжу до парку."]},{"word":"їхати / їздити","translation":"to go by vehicle","pos":"motion pair","example":"Ми їдемо до Львова і часто їздимо туди влітку.","examples":["to go by vehicle","Ми їдемо до Львова і часто їздимо туди влітку."]},{"word":"летіти / літати","translation":"to fly","pos":"motion pair","example":"Літак летить до Києва, а вона часто літає до Польщі.","examples":["to fly","Літак летить до Києва, а вона часто літає до Польщі."]},{"word":"піти","translation":"to go, to leave on foot","pos":"verb","example":"Після роботи я піду до аптеки.","examples":["to go, to leave on foot","Після роботи я піду до аптеки."]},{"word":"поїхати","translation":"to go, to leave by vehicle","pos":"verb","example":"У суботу ми поїдемо до Харкова.","examples":["to go, to leave by vehicle","У суботу ми поїдемо до Харкова."]},{"word":"полетіти","translation":"to fly off, to depart by air","pos":"verb","example":"Літак полетить о сьомій.","examples":["to fly off, to depart by air","Літак полетить о сьомій."]},{"word":"рух","translation":"movement, motion","pos":"noun","example":"У цьому уроці ми вчимо дієслова руху.","examples":["movement, motion","У цьому уроці ми вчимо дієслова руху."]},{"word":"напрямок","translation":"direction","pos":"noun","example":"До показує напрямок.","examples":["direction","До показує напрямок."]},{"word":"маршрут","translation":"route","pos":"noun","example":"Мій маршрут на роботу дуже простий.","examples":["route","Мій маршрут на роботу дуже простий."]},{"word":"зупинка","translation":"stop","pos":"noun","example":"Я іду до зупинки.","examples":["stop","Я іду до зупинки."]},{"word":"вокзал","translation":"train station","pos":"noun","example":"Ми їдемо з вокзалу.","examples":["train station","Ми їдемо з вокзалу."]},{"word":"аеропорт","translation":"airport","pos":"noun","example":"Вона їде в аеропорт.","examples":["airport","Вона їде в аеропорт."]},{"word":"площа","translation":"square","pos":"noun","example":"Я вийду на площі.","examples":["square","Я вийду на площі."]},{"word":"пішки","translation":"on foot","pos":"adverb","example":"Я піду пішки.","examples":["on foot","Я піду пішки."]},{"word":"потягом","translation":"by train","pos":"instrument","example":"Ми поїдемо потягом.","examples":["by train","Ми поїдемо потягом."]},{"word":"автобусом","translation":"by bus","pos":"instrument","example":"Він їде автобусом.","examples":["by bus","Він їде автобусом."]},{"word":"казати / кажу","translation":"to say, I say","pos":"stem-change model","example":"Я кажу це спокійно.","examples":["to say, I say","Я кажу це спокійно."]},{"word":"писати / пишу","translation":"to write, I write","pos":"stem-change model","example":"Я пишу повідомлення.","examples":["to write, I write","Я пишу повідомлення."]},{"word":"пити / п'ю","translation":"to drink, I drink","pos":"irregular model","example":"Я п'ю чай у потязі.","examples":["to drink, I drink","Я п'ю чай у потязі."]},{"word":"боротися / борюся","translation":"to struggle, I struggle","pos":"reflexive model","example":"Ми боремося за кращий сервіс.","examples":["to struggle, I struggle","Ми боремося за кращий сервіс."]},{"word":"до + родовий","translation":"to, toward","pos":"preposition pattern","example":"Я іду до школи.","examples":["to, toward","Я іду до школи."]},{"word":"на + знахідний","translation":"to, onto","pos":"preposition pattern","example":"Вона їде на роботу.","examples":["to, onto","Вона їде на роботу."]},{"word":"з + родовий","translation":"from","pos":"preposition pattern","example":"Ми йдемо з магазину.","examples":["from","Ми йдемо з магазину."]},{"word":"через + знахідний","translation":"through, across","pos":"preposition pattern","example":"Я йду через парк.","examples":["through, across","Я йду через парк."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"іти / ходити","back":"to go on foot"},{"front":"їхати / їздити","back":"to go by vehicle"},{"front":"летіти / літати","back":"to fly"},{"front":"піти","back":"to go, to leave on foot"},{"front":"поїхати","back":"to go, to leave by vehicle"},{"front":"полетіти","back":"to fly off, to depart by air"},{"front":"рух","back":"movement, motion"},{"front":"напрямок","back":"direction"},{"front":"маршрут","back":"route"},{"front":"зупинка","back":"stop"},{"front":"вокзал","back":"train station"},{"front":"аеропорт","back":"airport"},{"front":"площа","back":"square"},{"front":"пішки","back":"on foot"},{"front":"потягом","back":"by train"},{"front":"автобусом","back":"by bus"},{"front":"казати / кажу","back":"to say, I say"},{"front":"писати / пишу","back":"to write, I write"},{"front":"пити / п'ю","back":"to drink, I drink"},{"front":"боротися / борюся","back":"to struggle, I struggle"},{"front":"до + родовий","back":"to, toward"},{"front":"на + знахідний","back":"to, onto"},{"front":"з + родовий","back":"from"},{"front":"через + знахідний","back":"through, across"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Тип руху
+
+*(див. урок, §Діалог: біля виходу на вокзалі)*
+
+### Оберіть дієслово руху
+
+*(див. урок, §Форми теперішнього часу)*
+
+### Три моделі
+
+*(див. урок, §Рух і прийменники)*
+
+### Рух і прийменник
+
+*(див. урок, §Мінідіалог: куди ти рухаєшся?)*
+
+### Маршрут дня
+
+<Order client:only='react' items={JSON.parse(`["я / до / іду / зупинки", "ми / на / їдемо / роботу", "вона / до / летить / Києва", "вони / через / ідуть / парк", "я / з / йду / магазину", "ми / потягом / їдемо / до Львова", "він / на / ходить / тренування", "вони / щороку / літають / до Варшави"]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5, 6, 7]`)} instruction={"Поставте слова в правильний порядок."} isUkrainian={true} />
+
+### Виправте рух
+
+<ErrorCorrection client:only='react' instruction="Оберіть кращий варіант." items={JSON.parse(`[{"sentence": "Я ходжу до аптеки зараз.", "errorWord": "ходжу", "correctForm": "Я іду до аптеки зараз.", "options": ["Я іду до аптеки зараз.", "Я ходжу до аптеки зараз."], "explanation": "Зараз в один напрямок: іду."}, {"sentence": "Ми ідемо до басейну щонеділі.", "errorWord": "ідемо", "correctForm": "Ми ходимо до басейну щонеділі.", "options": ["Ми ходимо до басейну щонеділі.", "Ми ідемо до басейну щонеділі."], "explanation": "Щонеділі показує регулярний маршрут."}, {"sentence": "Вона пє воду.", "errorWord": "пє", "correctForm": "Вона п'є воду.", "options": ["Вона п'є воду.", "Вона пє воду."], "explanation": "Потрібен апостроф."}, {"sentence": "Ми їдемо з робота.", "errorWord": "з робота", "correctForm": "Ми їдемо з роботи.", "options": ["Ми їдемо з роботи.", "Ми їдемо з робота."], "explanation": "З + родовий: з роботи."}]`)} />
+
+### Перевірка руху
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Іти часто означає рух зараз в один бік.", "isTrue": true, "explanation": "Так: я іду до виходу."}, {"statement": "Їздити часто означає регулярні поїздки.", "isTrue": true, "explanation": "Так: ми їздимо до Львова щоліта."}, {"statement": "П'ю можна писати без апострофа.", "isTrue": false, "explanation": "Правильно: п'ю, п'єш, п'ють."}, {"statement": "До школи має модель до + родовий.", "isTrue": true, "explanation": "Так: до школи, до міста, до друга."}, {"statement": "Піти, поїхати, полетіти називають один виїзд або вирушення.", "isTrue": true, "explanation": "Це базові доконані форми руху з по-."}]`)} />
+
+### Мій маршрут
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Зазвичай я ___ на роботу метро.", "answer": "їжджу", "options": ["їду", "їжджу"]}, {"sentence": "Сьогодні я ___ на роботу автобусом.", "answer": "їду", "options": ["їду", "їжджу"]}, {"sentence": "Після роботи я ___ до аптеки.", "answer": "піду", "options": ["піду", "ходжу"]}, {"sentence": "Вони часто ___ до Польщі.", "answer": "літають", "options": ["летять", "літають"]}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Dobra Forma 28-1: Verbs of Motion](https://opentext.ku.edu/dobraforma/chapter/28-1/) — Learner-facing introduction to unidirectional and multidirectional motion verbs.
+- 📄 [Dobra Forma 28-2: Verbs of Motion (Past and Future)](https://opentext.ku.edu/dobraforma/chapter/28-2/) — Practice with motion verbs across tense and aspect.
+- 📄 [Dobra Forma 28-3: Verbs of Motion (Prefixed)](https://opentext.ku.edu/dobraforma/chapter/28-3/) — Catalogued extension for learners ready to notice prefixed motion forms.
+- 📄 [ULP: Verbs of Motion in Ukrainian](https://www.ukrainianlessons.com/motion/) — Picture-supported learner overview of basic motion verb contrasts.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
