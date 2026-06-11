@@ -1,0 +1,108 @@
+- word: контрольна точка
+  translation: checkpoint
+  pos: noun
+  example: "Контрольна точка допомагає повторити блок."
+- word: перевірка
+  translation: review, check
+  pos: noun
+  example: "Сьогодні коротка перевірка дієслів."
+- word: самоперевірка
+  translation: self-check
+  pos: noun
+  example: "Самоперевірка показує, що вже зрозуміло."
+- word: завдання
+  translation: task, exercise
+  pos: noun
+  example: "Це завдання має десять речень."
+- word: помилка
+  translation: error, mistake
+  pos: noun
+  example: "Знайдіть дієслівну помилку."
+- word: виправити
+  translation: to correct
+  pos: verb
+  example: "Виправте речення і поясніть вибір."
+- word: обрати
+  translation: to choose
+  pos: verb
+  example: "Оберіть правильну форму дієслова."
+- word: впевнено
+  translation: confidently
+  pos: adverb
+  example: "Я впевнено вибираю вид дієслова."
+- word: вид дієслова
+  translation: verb aspect
+  pos: grammar term
+  example: "Вид дієслова змінює значення речення."
+- word: видова пара
+  translation: aspect pair
+  pos: grammar term
+  example: "Писати / написати - видова пара."
+- word: недоконаний вид
+  translation: imperfective aspect
+  pos: grammar term
+  example: "Недоконаний вид часто показує процес."
+- word: доконаний вид
+  translation: perfective aspect
+  pos: grammar term
+  example: "Доконаний вид часто показує результат."
+- word: процес
+  translation: process
+  pos: noun
+  example: "Довго готувала - це процес."
+- word: результат
+  translation: result
+  pos: noun
+  example: "Приготувала вечерю - це результат."
+- word: звичка
+  translation: habit
+  pos: noun
+  example: "Щодня ходжу до парку - це звичка."
+- word: одноразова подія
+  translation: one-time event
+  pos: noun phrase
+  example: "Учора купив квиток - одноразова подія."
+- word: тло
+  translation: background
+  pos: noun
+  example: "Фонова дія створює тло історії."
+- word: доконаний майбутній
+  translation: perfective future
+  pos: grammar term
+  example: "Напишу - це доконаний майбутній."
+- word: складений майбутній
+  translation: compound future
+  pos: grammar term
+  example: "Буду писати - це складений майбутній."
+- word: дієслова руху
+  translation: motion verbs
+  pos: grammar term
+  example: "Іти і ходити - дієслова руху."
+- word: односпрямований рух
+  translation: one-directional motion
+  pos: grammar term
+  example: "Зараз я іду додому - односпрямований рух."
+- word: різноспрямований рух
+  translation: multidirectional motion
+  pos: grammar term
+  example: "Щодня я ходжу до школи - різноспрямований рух."
+- word: напрямок
+  translation: direction
+  pos: noun
+  example: "До показує напрямок."
+- word: наказовий спосіб
+  translation: imperative mood
+  pos: grammar term
+  example: "Наказовий спосіб потрібен для порад."
+- word: побажання
+  translation: wish, blessing
+  pos: noun
+  example: "Оленко, будь щасливою - це побажання."
+- word: кличний відмінок
+  translation: vocative case
+  pos: grammar term
+  example: "Оленко - це кличний відмінок."
+- word: орудний відмінок
+  translation: instrumental case
+  pos: grammar term
+  example: "Щасливою - це орудний відмінок."

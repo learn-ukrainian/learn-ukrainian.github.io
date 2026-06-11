@@ -1,0 +1,20 @@
+- title: "Dobra Forma 27-4: Verbal Aspect (Future Tense)"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-synthetic-future"
+  url: "https://opentext.ku.edu/dobraforma/chapter/27-4/"
+  notes: "Learner-facing practice for aspect choices in the future tense."
+- title: "Dobra Forma 28-1: Verbs of Motion"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: 28-1"
+  url: "https://opentext.ku.edu/dobraforma/chapter/28-1/"
+  notes: "Learner-facing overview of unidirectional and multidirectional motion verbs."
+- title: "Dobra Forma 29-1: Imperatives (Читай Type)"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-imperative-complete"
+  url: "https://opentext.ku.edu/dobraforma/chapter/29-1/"
+  notes: "Learner-facing practice with common imperative forms."
+- title: "ULP: Future Tense in Ukrainian"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-synthetic-future"
+  url: "https://www.ukrainianlessons.com/grammar-future/"
+  notes: "Learner-facing summary for comparing imperfective and perfective future forms."
