@@ -6,6 +6,7 @@ import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 WRITER_PROMPT = PROJECT_ROOT / "scripts/build/phases/linear-write.md"
+SEMINAR_FOLK_RULES = PROJECT_ROOT / "scripts/build/phases/linear-write-seminar-folk-rules.md"
 
 WRITER_RULE_ANCHORS = (
     (
@@ -71,7 +72,15 @@ WRITER_RULE_ANCHORS = (
 
 
 def _prompt() -> str:
-    return WRITER_PROMPT.read_text(encoding="utf-8")
+    # The seminar/FOLK rules are gated into SEMINAR_LEVELS prompts via the
+    # {SEMINAR_FOLK_WRITER_RULES} token, sourced from the seminar-folk-rules
+    # partial (kept out of core a1-c2 prompts for size). The composed seminar
+    # writer prompt = base template + the injected partial.
+    return (
+        WRITER_PROMPT.read_text(encoding="utf-8")
+        + "\n"
+        + SEMINAR_FOLK_RULES.read_text(encoding="utf-8")
+    )
 
 
 def _normalize(text: str) -> str:

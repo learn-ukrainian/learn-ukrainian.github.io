@@ -3153,6 +3153,28 @@ def _inline_prompt_tokens(text: str, token_map: Mapping[str, Any]) -> str:
     return text
 
 
+SEMINAR_FOLK_WRITER_RULES_PATH = (
+    PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-write-seminar-folk-rules.md"
+)
+
+
+def _seminar_folk_writer_rules(level: str, context: Mapping[str, Any]) -> str:
+    """Seminar/FOLK-only writer rules, gated OUT of core (a1-c2) prompts.
+
+    The folk/seminar source-discipline, word-count floor, primary-text
+    embedding, regional-vocabulary, and experiential-layer rules apply only to
+    ``SEMINAR_LEVELS``. Rendering them into every core level's prompt is pure
+    overhead — an A1 letter module needs no folk-coinage examples — and it
+    pushed the A1 writer prompt over ``WRITER_PROMPT_CEILING_BYTES``. Returns
+    ``""`` for non-seminar levels; the block's inner ``{WORD_TARGET}`` token is
+    resolved here so ``render_phase_prompt``'s single outer pass stays correct.
+    """
+    if str(level).lower() not in SEMINAR_LEVELS:
+        return ""
+    block = SEMINAR_FOLK_WRITER_RULES_PATH.read_text(encoding="utf-8").strip()
+    return _inline_prompt_tokens(block, context)
+
+
 def writer_context(
     plan: Mapping[str, Any],
     plan_content: str,
@@ -3219,6 +3241,10 @@ def writer_context(
         "VOCAB_COUNT_TARGET": activity_config["VOCAB_COUNT_TARGET"],
         "COMPONENT_PROPS_SCHEMA": _render_component_props_schema(activity_config["ALLOWED_ACTIVITY_TYPES"]),
     }
+    # Seminar/FOLK-only writer rules: gated out of core (a1-c2) prompts so the
+    # A1 letter module stays under WRITER_PROMPT_CEILING_BYTES. Resolved after
+    # the dict so its inner {WORD_TARGET} token interpolates against context.
+    context["SEMINAR_FOLK_WRITER_RULES"] = _seminar_folk_writer_rules(level, context)
     if use_generator:
         # V7.2 Step 5: inject the registry-composed writer-rules block + the
         # single-source Obligation Checklist for the generator-fed template
