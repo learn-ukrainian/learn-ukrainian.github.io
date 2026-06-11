@@ -1,0 +1,80 @@
+- word: хтось
+  translation: someone
+  pos: pronoun
+  example: "Хтось телефонував, коли мене не було."
+- word: щось
+  translation: something
+  pos: pronoun
+  example: "Я щось залишив у класі."
+- word: десь
+  translation: somewhere
+  pos: adverb
+  example: "Десь тут були мої ключі."
+- word: колись
+  translation: once, sometime
+  pos: adverb
+  example: "Ми колись уже говорили про це."
+- word: хто-небудь
+  translation: anyone, someone at all
+  pos: pronoun
+  example: "Хто-небудь бачив мої окуляри?"
+- word: що-небудь
+  translation: anything, something at all
+  pos: pronoun
+  example: "Якщо знайдеш що-небудь цікаве, покажи мені."
+- word: будь-хто
+  translation: anyone, whoever
+  pos: pronoun
+  example: "Будь-хто може поставити питання."
+- word: будь-що
+  translation: anything, whatever
+  pos: pronoun
+  example: "Я готовий обговорити будь-що."
+- word: дехто
+  translation: some people
+  pos: pronoun
+  example: "Дехто хоче більше практики."
+- word: деякий
+  translation: some, certain
+  pos: pronoun
+  example: "Деякі студенти прийшли раніше."
+- word: абияк
+  translation: carelessly, anyhow
+  pos: adverb
+  example: "Не можна писати абияк."
+- word: абихто
+  translation: just anyone, any random person
+  pos: pronoun
+  example: "Не довіряй документи абикому."
+- word: ніхто
+  translation: nobody
+  pos: pronoun
+  example: "Ніхто не прийшов."
+- word: ніщо
+  translation: nothing
+  pos: pronoun
+  example: "Ніщо не допомогло."
+- word: нічого
+  translation: nothing, anything in negative sentences
+  pos: pronoun
+  example: "Я нічого не чув."
+- word: ніде
+  translation: nowhere
+  pos: adverb
+  example: "Ми ніде не були."
+- word: ніколи
+  translation: never
+  pos: adverb
+  example: "Вона ніколи не запізнюється."
+- word: нікому
+  translation: to nobody
+  pos: pronoun
+  example: "Я нікому не телефонував."
+- word: ні з ким
+  translation: with nobody
+  pos: phrase
+  example: "Я ні з ким не говорив."
+- word: ні про що
+  translation: about nothing
+  pos: phrase
+  example: "Ми ні про що не домовлялися."
