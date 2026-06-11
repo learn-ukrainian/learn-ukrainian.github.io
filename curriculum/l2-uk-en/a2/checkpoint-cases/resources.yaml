@@ -1,0 +1,25 @@
+- title: "ULP: Ukrainian Cases Introduction"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-checkpoint-cases"
+  url: "https://www.ukrainianlessons.com/intro-cases/"
+  notes: "Learner-facing overview for reviewing the full case system."
+- title: "ULP: Ukrainian Cases Chart"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /ukrainian-cases-chart/"
+  url: "https://www.ukrainianlessons.com/ukrainian-cases-chart/"
+  notes: "Compact chart for checking case names, questions and example forms."
+- title: "ULP: Prepositions and Cases"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /prepositions-cases/"
+  url: "https://www.ukrainianlessons.com/prepositions-cases/"
+  notes: "Reference for preposition-driven case choices in checkpoint review."
+- title: "ULP: Plural of Ukrainian Nouns - Special Forms"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /plural-of-ukrainian-nouns-special-forms/"
+  url: "https://www.ukrainianlessons.com/plural-of-ukrainian-nouns-special-forms/"
+  notes: "Review support for irregular and special plural noun forms."
+- title: "Talk Ukrainian: Grammatical cases"
+  role: practice
+  source_ref: "docs/resources/external_resources.yaml: a2-checkpoint-cases"
+  url: "https://talkukrainian.com/grammatical-cases/"
+  notes: "Public learner-facing case practice page for additional checkpoint review."

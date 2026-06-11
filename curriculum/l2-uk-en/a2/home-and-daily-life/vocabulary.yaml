@@ -1,0 +1,94 @@
+- word: помешкання
+  translation: dwelling, place to live
+  pos: noun
+  gender: n
+  example: "Моє помешкання невелике, але зручне."
+- word: квартира
+  translation: apartment
+  pos: noun
+  gender: f
+  example: "Я показую нову квартиру."
+- word: кімната
+  translation: room
+  pos: noun
+  gender: f
+  example: "У нас дві кімнати."
+- word: кухня
+  translation: kitchen
+  pos: noun
+  gender: f
+  example: "На кухні стоїть стіл."
+- word: вітальня
+  translation: living room
+  pos: noun
+  gender: f
+  example: "У вітальні стоїть диван."
+- word: спальня
+  translation: bedroom
+  pos: noun
+  gender: f
+  example: "Спальня маленька."
+- word: ванна кімната
+  translation: bathroom
+  pos: noun phrase
+  example: "Я йду у ванну кімнату."
+- word: кабінет
+  translation: study, home office
+  pos: noun
+  gender: m
+  example: "Книжки стоять у кабінеті."
+- word: балкон
+  translation: balcony
+  pos: noun
+  gender: m
+  example: "Балкона немає."
+- word: меблі
+  translation: furniture
+  pos: noun
+  gender: pl
+  example: "Частина меблів нова."
+- word: диван
+  translation: sofa
+  pos: noun
+  gender: m
+  example: "Диван стоїть у вітальні."
+- word: крісло
+  translation: armchair
+  pos: noun
+  gender: n
+  example: "Біля вікна є крісло."
+- word: полиця
+  translation: shelf
+  pos: noun
+  gender: f
+  example: "Я поставила книжки на полицю."
+- word: розпорядок дня
+  translation: daily routine
+  pos: noun phrase
+  example: "Мій розпорядок дня простий."
+- word: вставати
+  translation: to get up
+  pos: verb
+  example: "Я встаю о сьомій."
+- word: снідати
+  translation: to have breakfast
+  pos: verb
+  example: "Я снідаю з родиною."
+- word: вечеряти
+  translation: to have dinner
+  pos: verb
+  example: "Ми вечеряємо на кухні."
+- word: гостинці
+  translation: small gifts or treats for hosts
+  pos: noun
+  gender: pl
+  example: "Я принесла гостинці для вас."
+- word: господар
+  translation: host
+  pos: noun
+  gender: m
+  example: "Дякую господарям."
+- word: пригощатися
+  translation: to help oneself to food
+  pos: verb
+  example: "Пригощайтеся чаєм."

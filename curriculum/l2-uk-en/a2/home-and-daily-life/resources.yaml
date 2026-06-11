@@ -1,0 +1,25 @@
+- title: "ULP: Ukrainian Phrasebook - House and Home"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-home-and-daily-life"
+  url: "https://www.ukrainianlessons.com/ph-house/"
+  notes: "Learner-facing house and home phrases for the room-description dialogue."
+- title: "FMU 1-42: Housing and rooms in Ukrainian"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: b1-motion-approaching-departing > Vocabulary booster! Housing and rooms in Ukrainian"
+  url: "https://www.ukrainianlessons.com/fmu42/"
+  notes: "Short housing vocabulary support for кімната, кухня, вітальня and related words."
+- title: "FMU 1-58: Daily routine in Ukrainian"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a1-my-day"
+  url: "https://www.ukrainianlessons.com/fmu58/"
+  notes: "Audio-supported daily routine language for the morning and evening dialogue."
+- title: "ULP: Location vs Destination Prepositions"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /location-destination-prepositions/"
+  url: "https://www.ukrainianlessons.com/location-destination-prepositions/"
+  notes: "Supports the recurring де/куди contrast: на кухні vs на кухню."
+- title: "ULP: Prepositions and Cases"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /prepositions-cases/"
+  url: "https://www.ukrainianlessons.com/prepositions-cases/"
+  notes: "Reference for checking the preposition-driven case choices in home and routine phrases."

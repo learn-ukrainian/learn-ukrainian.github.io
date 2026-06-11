@@ -1,0 +1,97 @@
+- word: контрольна точка
+  translation: checkpoint
+  pos: noun phrase
+  example: "Це контрольна точка з відмінків."
+- word: перевірка
+  translation: check, review
+  pos: noun
+  gender: f
+  example: "Перевірка допомагає побачити слабкі місця."
+- word: завдання
+  translation: task, exercise
+  pos: noun
+  gender: n
+  example: "Прочитайте завдання повільно."
+- word: помилка
+  translation: mistake
+  pos: noun
+  gender: f
+  example: "Знайдіть помилку в реченні."
+- word: виправити
+  translation: to correct
+  pos: verb
+  example: "Потрібно виправити форму."
+- word: відмінок
+  translation: grammatical case
+  pos: noun
+  gender: m
+  example: "Який це відмінок?"
+- word: множина
+  translation: plural
+  pos: noun
+  gender: f
+  example: "Множина має свої закінчення."
+- word: однина
+  translation: singular
+  pos: noun
+  gender: f
+  example: "Спочатку назвіть форму однини."
+- word: сигнал
+  translation: signal, cue
+  pos: noun
+  gender: m
+  example: "Слово немає - це сигнал родового."
+- word: питання
+  translation: question
+  pos: noun
+  gender: n
+  example: "Поставте коротке питання."
+- word: форма
+  translation: form
+  pos: noun
+  gender: f
+  example: "Оберіть правильну форму."
+- word: список
+  translation: list
+  pos: noun
+  gender: m
+  example: "Ми маємо список гостей."
+- word: гість
+  translation: guest
+  pos: noun
+  gender: m
+  example: "Скільки буде гостей?"
+- word: родич
+  translation: relative
+  pos: noun
+  gender: m
+  example: "Список родичів ще не готовий."
+- word: наречена
+  translation: bride
+  pos: noun
+  gender: f
+  example: "Подарунок нареченій уже є."
+- word: молодята
+  translation: newlyweds
+  pos: noun
+  gender: pl
+  example: "Це фотоальбом для молодят."
+- word: весілля
+  translation: wedding
+  pos: noun
+  gender: n
+  example: "На весіллі буде фотограф."
+- word: свічка
+  translation: candle
+  pos: noun
+  gender: f
+  example: "Ми прикрасимо зал свічками."
+- word: впевнено
+  translation: confidently
+  pos: adverb
+  example: "Я впевнено обираю відмінок."
+- word: самоперевірка
+  translation: self-check
+  pos: noun
+  gender: f
+  example: "Самоперевірка завершує урок."
