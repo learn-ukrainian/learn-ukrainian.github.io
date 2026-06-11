@@ -1,0 +1,92 @@
+- word: свій
+  translation: one's own, masculine
+  pos: pronoun
+  example: "Марко взяв свій паспорт."
+- word: своя
+  translation: one's own, feminine
+  pos: pronoun
+  example: "Олена взяла свою сумку."
+- word: своє
+  translation: one's own, neuter
+  pos: pronoun
+  example: "Я люблю своє місто."
+- word: свої
+  translation: one's own, plural
+  pos: pronoun
+  example: "Ми перевірили свої квитки."
+- word: свого
+  translation: one's own, genitive
+  pos: pronoun
+  example: "Він не знайшов свого паспорта."
+- word: своїй
+  translation: one's own, dative feminine
+  pos: pronoun
+  example: "Вона допомагає своїй сестрі."
+- word: своїм
+  translation: one's own, instrumental masculine/neuter
+  pos: pronoun
+  example: "Я пишаюся своїм містом."
+- word: своїми
+  translation: one's own, instrumental plural
+  pos: pronoun
+  example: "Ми зустрілися зі своїми друзями."
+- word: себе
+  translation: oneself, accusative/genitive
+  pos: pronoun
+  example: "Вона бачить себе у дзеркалі."
+- word: собі
+  translation: oneself, dative/locative
+  pos: pronoun
+  example: "Я купив собі каву."
+- word: собою
+  translation: oneself, instrumental
+  pos: pronoun
+  example: "Ми взяли документи з собою."
+- word: з собою
+  translation: with oneself
+  pos: phrase
+  example: "Візьміть паспорт з собою."
+- word: у себе
+  translation: at one's place, in oneself
+  pos: phrase
+  example: "Я залишив ключі у себе."
+- word: почуватися
+  translation: to feel
+  pos: verb
+  example: "Я почуваюся добре."
+- word: почувати себе
+  translation: to feel oneself
+  pos: phrase
+  example: "Вона почуває себе спокійно."
+- word: вести себе
+  translation: to behave
+  pos: phrase
+  example: "Він веде себе спокійно."
+- word: уявити
+  translation: to imagine
+  pos: verb
+  example: "Уявіть собі маленьку подорож."
+- word: дзеркало
+  translation: mirror
+  pos: noun
+  example: "Вона бачить себе у дзеркалі."
+- word: парасолька
+  translation: umbrella
+  pos: noun
+  example: "Я завжди беру з собою парасольку."
+- word: власний
+  translation: own
+  pos: adjective
+  example: "Це мій власний вибір."
+- word: самостійно
+  translation: independently
+  pos: adverb
+  example: "Він працює самостійно."
+- word: звичка
+  translation: habit
+  pos: noun
+  example: "Це моя щоденна звичка."
+- word: щоденний
+  translation: daily
+  pos: adjective
+  example: "Щоденний розклад допомагає."

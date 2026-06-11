@@ -1,0 +1,88 @@
+- word: числівник
+  translation: numeral
+  pos: noun
+  example: "Числівник змінює форму іменника."
+- word: кількісний
+  translation: cardinal
+  pos: adjective
+  example: "Кількісний числівник відповідає на питання скільки."
+- word: порядковий
+  translation: ordinal
+  pos: adjective
+  example: "Порядковий числівник відповідає на питання який за порядком."
+- word: перший
+  translation: first
+  pos: adjective
+  example: "Перший день був короткий."
+- word: друга
+  translation: second, feminine
+  pos: adjective
+  example: "Друга зустріч буде завтра."
+- word: третій
+  translation: third
+  pos: adjective
+  example: "Третій поверх тихіший."
+- word: п'ятий
+  translation: fifth
+  pos: adjective
+  example: "П'ятий квиток лежить на столі."
+- word: один
+  translation: one, masculine
+  pos: numeral
+  example: "Один стіл стоїть біля вікна."
+- word: одна
+  translation: one, feminine
+  pos: numeral
+  example: "Одна чашка залишилася на кухні."
+- word: одне
+  translation: one, neuter
+  pos: numeral
+  example: "Одне місце ще вільне."
+- word: одного
+  translation: one, genitive masculine/neuter
+  pos: numeral
+  example: "Немає одного стільця."
+- word: однієї
+  translation: one, genitive feminine
+  pos: numeral
+  example: "Немає однієї чашки."
+- word: скільки
+  translation: how many, how much
+  pos: adverb
+  example: "Скільки гостей буде?"
+- word: кілограм
+  translation: kilogram
+  pos: noun
+  example: "Дайте два кілограми яблук."
+- word: гривня
+  translation: hryvnia
+  pos: noun
+  example: "Одна гривня лежить на столі."
+- word: коштувати
+  translation: to cost
+  pos: verb
+  example: "Скільки коштує один квиток?"
+- word: вік
+  translation: age
+  pos: noun
+  example: "Вік часто має форми рік, роки, років."
+- word: рік
+  translation: year
+  pos: noun
+  example: "Мені двадцять один рік."
+- word: роки
+  translation: years, paucal form
+  pos: noun
+  example: "Їй двадцять два роки."
+- word: років
+  translation: years, genitive plural
+  pos: noun
+  example: "Йому двадцять п'ять років."
+- word: поверх
+  translation: floor, storey
+  pos: noun
+  example: "Офіс на третьому поверсі."
+- word: адреса
+  translation: address
+  pos: noun
+  example: "Напишіть адресу і номер квартири."

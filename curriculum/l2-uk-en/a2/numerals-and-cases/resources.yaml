@@ -1,0 +1,25 @@
+- title: "ULP: Nouns After Numbers"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /nouns-after-numbers/"
+  url: "https://www.ukrainianlessons.com/nouns-after-numbers/"
+  notes: "Catalog-backed learner reference for noun forms after numerals."
+- title: "FMU: Grammar point - numeral / noun agreement in Ukrainian"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-numerals-and-cases"
+  url: "https://www.ukrainianlessons.com/fmu7/"
+  notes: "Short Ukrainian Lessons follow-up on numeral and noun agreement."
+- title: "Dobra Forma: Ordinal Numerals (Gender and Number in Nominative)"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-052"
+  url: "https://opentext.ku.edu/dobraforma/chapter/16-3/"
+  notes: "Practice for ordinal numerals before case expansion."
+- title: "Dobra Forma 6-1: Genitive with Quantity (Masculine Plural)"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-numerals-and-cases"
+  url: "https://opentext.ku.edu/dobraforma/chapter/6-1/"
+  notes: "Quantity practice for plural genitive after 5+."
+- title: "Dobra Forma 17-4: Genitive Case of Adjectives and Ordinal Numerals"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-056"
+  url: "https://opentext.ku.edu/dobraforma/chapter/17-4/"
+  notes: "Reference for ordinal numerals in date and time expressions."
