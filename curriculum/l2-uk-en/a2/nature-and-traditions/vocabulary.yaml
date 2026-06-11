@@ -1,0 +1,100 @@
+- word: пора року
+  translation: season
+  pos: phrase
+  example: "Моя улюблена пора року - осінь."
+- word: весна
+  translation: spring
+  pos: noun
+  example: "Навесні дерева розквітають."
+- word: літо
+  translation: summer
+  pos: noun
+  example: "Улітку часто спекотно."
+- word: осінь
+  translation: autumn, fall
+  pos: noun
+  example: "Восени листя жовтіє."
+- word: зима
+  translation: winter
+  pos: noun
+  example: "Узимку може бути мороз."
+- word: погода
+  translation: weather
+  pos: noun
+  example: "Яка сьогодні погода?"
+- word: сонячно
+  translation: sunny
+  pos: adverb
+  example: "Сьогодні сонячно."
+- word: хмарно
+  translation: cloudy
+  pos: adverb
+  example: "Хмарно, але тепло."
+- word: дощ
+  translation: rain
+  pos: noun
+  example: "Іде дощ."
+- word: сніг
+  translation: snow
+  pos: noun
+  example: "Сніг падав цілий день."
+- word: мороз
+  translation: frost
+  pos: noun
+  example: "Уночі був сильний мороз."
+- word: розквітати
+  translation: to blossom
+  pos: verb
+  example: "Навесні все розквітає."
+- word: розтанути
+  translation: to melt
+  pos: verb
+  example: "Сніг нарешті розтанув."
+- word: свято
+  translation: holiday, celebration
+  pos: noun
+  example: "Це важливе родинне свято."
+- word: традиція
+  translation: tradition
+  pos: noun
+  example: "У нашій родині є така традиція."
+- word: Різдво
+  translation: Christmas
+  pos: noun
+  example: "На Різдво ми готуємо кутю."
+- word: Великдень
+  translation: Easter
+  pos: noun
+  example: "На Великдень ми печемо паску."
+- word: писанка
+  translation: decorated Easter egg
+  pos: noun
+  example: "Мені подобаються кольорові писанки."
+- word: кутя
+  translation: kutia, Christmas ritual dish
+  pos: noun
+  example: "Кутя - різдвяна страва."
+- word: колядка
+  translation: Christmas carol
+  pos: noun
+  example: "Діти співають колядки."
+- word: паска
+  translation: Easter bread
+  pos: noun
+  example: "Бабуся пече паску."
+- word: вінок
+  translation: wreath
+  pos: noun
+  example: "У купальських традиціях згадують вінки."
+- word: вогнище
+  translation: bonfire
+  pos: noun
+  example: "У піснях згадують вогнище біля води."
+- word: День Незалежності
+  translation: Independence Day
+  pos: phrase
+  example: "День Незалежності - державне свято."
+- word: громада
+  translation: community
+  pos: noun
+  example: "У різних громадах традиції можуть відрізнятися."
