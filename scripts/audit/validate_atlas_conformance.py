@@ -6,10 +6,10 @@ heritage classifier treat a single-token page head as VESUM-covered when it
 exists either as a lemma or as a word form. This preserves current lesson heads
 such as ``сьома`` while still rejecting orphan Atlas pages.
 
-Sovietization note: the current manifest carries sovietization risk only on
-``heritage_status.sovietization_risk``. This validator also understands future
-per-definition risk fields and requires those source-level risks to be mirrored
-onto ``heritage_status`` so the red editorial warning renders.
+Sovietization note: risk on a СУМ-11 definition is a source caveat, not a word
+classification. The manifest must carry that risk on ``enrichment.meaning`` so
+the Atlas can render an amber source warning without labeling standard words
+as Sovietisms.
 """
 
 from __future__ import annotations
@@ -41,6 +41,7 @@ NON_STANDARD_AUTHENTIC_CLASSIFICATIONS = {
     "borrowing",
 }
 STANDARD_OR_UNKNOWN_CLASSIFICATIONS = {"", "standard", "unknown"}
+DECOLONIZATION_WARNING_CLASSIFICATIONS = {"russianism", "sovietism", "surzhyk"}
 FRESHNESS_DATE_KEYS = (
     "freshness_date",
     "retrieved_at",
@@ -203,10 +204,17 @@ def _is_genuine_multi_word(value: str) -> bool:
     return len(WORD_TOKEN_RE.findall(value)) >= 2
 
 
+def _is_proper_noun_entry(entry: Mapping[str, Any]) -> bool:
+    return _normalize_text(entry.get("pos")).replace("_", " ") in {"proper noun", "proper name"}
+
+
 def _check_lemma_in_vesum(entry: Mapping[str, Any], lemma: str, vesum: Any, violations: list[Violation]) -> None:
     raw_lemma = str(entry.get("lemma") or "")
     if not lemma:
         violations.append(Violation("lemma_in_vesum", "", "entry is missing lemma"))
+        return
+
+    if _is_deliberate_warning_entry(entry) or _is_proper_noun_entry(entry):
         return
 
     if _has_whitespace(raw_lemma):
@@ -325,8 +333,19 @@ def _classification(status: Mapping[str, Any]) -> str:
     return _normalize_text(status.get("classification"))
 
 
+def _is_deliberate_warning_entry(entry: Mapping[str, Any]) -> bool:
+    if entry.get("primary_source") == "surzhyk_to_avoid":
+        return True
+    status = entry.get("heritage_status")
+    if not isinstance(status, Mapping):
+        return False
+    return bool(status.get("is_russianism")) or _classification(status) in DECOLONIZATION_WARNING_CLASSIFICATIONS
+
+
 def _requires_heritage_evidence(status: Mapping[str, Any]) -> bool:
     classification = _classification(status)
+    if classification in DECOLONIZATION_WARNING_CLASSIFICATIONS:
+        return False
     if classification in NON_STANDARD_AUTHENTIC_CLASSIFICATIONS:
         return True
     return status.get("is_russianism") is False and classification not in STANDARD_OR_UNKNOWN_CLASSIFICATIONS
@@ -423,14 +442,17 @@ def _check_sovietization(entry: Mapping[str, Any], lemma: str, violations: list[
     if source_risk < 1:
         return
 
-    status = entry.get("heritage_status")
-    rendered_risk = _risk_number(status.get("sovietization_risk")) if isinstance(status, Mapping) else 0
+    rendered_risk = (
+        _risk_number(meaning.get("sovietization_risk"))
+        if isinstance(meaning, Mapping) and _is_sum11_source(meaning.get("source"))
+        else 0
+    )
     if rendered_risk < 1:
         violations.append(
             Violation(
                 "sovietization_must_be_flagged",
                 lemma,
-                "SUM-11 definition carries sovietization risk but heritage_status.sovietization_risk is < 1",
+                "SUM-11 definition carries sovietization risk but enrichment.meaning.sovietization_risk is < 1",
             )
         )
 

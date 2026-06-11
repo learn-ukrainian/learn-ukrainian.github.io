@@ -77,6 +77,30 @@ def test_lemma_in_vesum_exempts_genuine_multi_word_phrase():
     assert _gates_for(entry, vesum=set()) == []
 
 
+def test_lemma_in_vesum_exempts_proper_nouns():
+    entry = _entry(lemma="Ілля", url_slug="ілля", pos="proper noun")
+
+    assert _gates_for(entry, vesum=set()) == []
+
+
+def test_lemma_in_vesum_exempts_deliberate_warning_seed():
+    entry = _entry(
+        lemma="міроприємство",
+        url_slug="міроприємство",
+        primary_source="surzhyk_to_avoid",
+        heritage_status={
+            "classification": "russianism",
+            "attestations": [{"source": "standard_alternative", "ref": "захід"}],
+            "is_russianism": True,
+            "russian_shadow": False,
+            "sovietization_risk": 0,
+            "calque_warning": None,
+        },
+    )
+
+    assert _gates_for(entry, vesum=set()) == []
+
+
 def test_provenance_per_section_flags_missing_source():
     entry = _entry(
         enrichment={
@@ -128,6 +152,20 @@ def test_sovietization_must_be_flagged_for_unmirrored_sum11_risk():
     )
 
     assert _gates_for(entry) == ["sovietization_must_be_flagged"]
+
+
+def test_sovietization_passes_when_meaning_carries_source_risk():
+    entry = _entry(
+        enrichment={
+            "meaning": {
+                "definitions": ["Ідеологічно навантажене тлумачення."],
+                "source": "СУМ-11",
+                "sovietization_risk": 1,
+            }
+        }
+    )
+
+    assert _gates_for(entry) == []
 
 
 def test_cross_link_integrity_flags_unknown_course_slug():

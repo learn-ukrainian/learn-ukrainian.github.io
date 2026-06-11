@@ -574,7 +574,33 @@ def _sense_correct_synonyms(conn: sqlite3.Connection, lemma: str) -> list[str]:
     return out[:6]
 
 
-def _meaning(conn: sqlite3.Connection, lemma: str) -> dict | None:
+def _sum11_has_flag_columns(conn: sqlite3.Connection) -> bool:
+    cols = {row[1] for row in conn.execute("PRAGMA table_info(sum11);").fetchall()}
+    return {"sovietization_risk", "sovietization_keywords"}.issubset(cols)
+
+
+def _split_sum11_keywords(raw: object) -> list[str]:
+    return [part.strip() for part in str(raw or "").split(",") if part.strip()]
+
+
+def _sum11_row_flags(row: tuple, *, has_flag_columns: bool) -> tuple[int, list[str]]:
+    if has_flag_columns:
+        try:
+            return int(row[2] or 0), _split_sum11_keywords(row[3])
+        except (IndexError, TypeError, ValueError):
+            return 0, []
+
+    from scripts.audit.sum11_sovietization_scan import classify_entry
+
+    return classify_entry(str(row[0] or ""), str(row[1] or ""))
+
+
+def _meaning(
+    conn: sqlite3.Connection,
+    lemma: str,
+    *,
+    has_sum11_flags: bool | None = None,
+) -> dict | None:
     """Modern Ukrainian meaning: Вікісловник (clean, + synonyms) → СУМ-11 fallback.
 
     Грінченко is intentionally NOT used here — its 1907 Russian glosses are
@@ -598,19 +624,28 @@ def _meaning(conn: sqlite3.Connection, lemma: str) -> dict | None:
                 block["synonyms"] = syns
             return block
     row = None
+    if has_sum11_flags is None:
+        has_sum11_flags = _sum11_has_flag_columns(conn)
+    sum11_fields = "definition, text"
+    if has_sum11_flags:
+        sum11_fields += ", sovietization_risk, sovietization_keywords"
     for variant in _split_lemma_variants(word):
         row = conn.execute(
-            "SELECT definition FROM sum11 WHERE word = ? AND definition != '' LIMIT 1",
+            f"SELECT {sum11_fields} FROM sum11 WHERE word = ? AND definition != '' LIMIT 1",
             (variant,),
         ).fetchone()
         if row:
             break
     if row and row[0]:
+        risk, keywords = _sum11_row_flags(row, has_flag_columns=has_sum11_flags)
         block = {
             "definitions": [row[0].strip()[:600]],
             "source": "СУМ-11",
+            "sovietization_risk": risk,
             "note": "СУМ-11 — частково засоюзлене видання; перевіряйте ідеологічно навантажені статті.",
         }
+        if keywords:
+            block["sovietization_keywords"] = keywords
         syns = _sense_correct_synonyms(conn, word)
         if syns:
             block["synonyms"] = syns
@@ -783,6 +818,7 @@ def enrich() -> tuple[int, int]:
     conn = sqlite3.connect(f"file:{SOURCES_DB}?mode=ro", uri=True)
     enriched = 0
     try:
+        has_sum11_flags = _sum11_has_flag_columns(conn)
         for entry in manifest["entries"]:
             if entry.get("gloss"):
                 entry["gloss"] = clean_gloss(str(entry["gloss"]))
@@ -792,7 +828,7 @@ def enrich() -> tuple[int, int]:
             morph = _morphology(lemma)
             if morph:
                 block["morphology"] = morph
-            meaning = _meaning(conn, lemma)
+            meaning = _meaning(conn, lemma, has_sum11_flags=has_sum11_flags)
             if meaning:
                 block["meaning"] = meaning
             attestation = _attestation(conn, lemma)

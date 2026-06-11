@@ -23,6 +23,8 @@ interface Meaning {
   source: string;
   synonyms?: string[];
   note?: string;
+  sovietization_risk?: number;
+  sovietization_keywords?: string[];
 }
 
 interface NounParadigm {
@@ -101,6 +103,8 @@ const POS_LABELS_UK: Record<string, string> = {
   conj: "сполучник",
   particle: "частка",
   interjection: "вигук",
+  "proper noun": "власна назва",
+  proper_noun: "власна назва",
   phrase: "фраза",
 };
 
@@ -123,6 +127,7 @@ const CONTEXT_LABELS_UK: Record<string, string> = {
   built_vocabulary: "вивчається",
   plan_required: "обов’язкова",
   plan_recommended: "рекомендована",
+  surzhyk_to_avoid: "остерігайтеся",
 };
 
 const CASE_ROWS = [
@@ -164,6 +169,21 @@ const HERITAGE_CLASSIFICATION_UK: Record<string, { label: string; gloss: string;
   historism: { label: "Історизм", gloss: "Слово на позначення зниклої реалії; питома українська лексика.", tone: "heritage" },
   dialect: { label: "Діалектизм", gloss: "Регіональна українська форма, засвідчена в словниках.", tone: "heritage" },
   borrowing: { label: "Запозичення", gloss: "Засвоєне запозичення в межах української норми.", tone: "heritage" },
+};
+
+const HERITAGE_WARNING_UK: Record<string, { label: string; gloss: string }> = {
+  russianism: {
+    label: "Русизм",
+    gloss: "Ця форма має ознаки русизму. Для нормативної української використовуйте відповідник нижче.",
+  },
+  sovietism: {
+    label: "Радянізм",
+    gloss: "Це радянсько-ідеологічна форма. Для нейтральної української використовуйте відповідник нижче.",
+  },
+  surzhyk: {
+    label: "Суржик",
+    gloss: "Ця форма належить до суржику. Для стандартної української використовуйте відповідник нижче.",
+  },
 };
 
 export async function getStaticPaths() {
@@ -208,29 +228,45 @@ const hasDictionaryData = Boolean(
 
 const heritage = entry.heritage_status ?? null;
 const heritageClass = heritage ? HERITAGE_CLASSIFICATION_UK[heritage.classification] ?? null : null;
-const russianAlternatives = heritage?.is_russianism
+const heritageWarning = heritage
+  ? HERITAGE_WARNING_UK[heritage.classification] ??
+    (heritage.is_russianism ? HERITAGE_WARNING_UK.russianism : null)
+  : null;
+const showHeritageWarning = Boolean(
+  heritage &&
+    heritageWarning &&
+    (heritage.is_russianism ||
+      heritage.classification === "russianism" ||
+      heritage.classification === "sovietism" ||
+      heritage.classification === "surzhyk"),
+);
+const standardAlternatives = showHeritageWarning
   ? Array.from(
       new Set(
-        heritage.attestations
+        (heritage?.attestations ?? [])
           .filter((a) => a.source === "standard_alternative" && a.ref)
           .map((a) => a.ref),
       ),
     )
   : [];
-const sovietRisk = heritage?.sovietization_risk ?? 0;
+const meaningSource = enrichment?.meaning?.source ?? "";
+const isSum11Meaning = meaningSource.replace(/\s/g, "").includes("СУМ-11");
+const meaningSovietRisk = isSum11Meaning
+  ? Number(enrichment?.meaning?.sovietization_risk ?? 0)
+  : 0;
+const showSovietSourceCaveat = meaningSovietRisk > 0;
 // "standard" is the unremarkable default (codified modern norm) — it gets the
 // glanceable header pill but no dedicated section. The section is reserved for
 // the noteworthy cases: a non-standard authentic status (archaism/historism/
-// dialect/borrowing) or any decolonization warning (русизм/shadow/soviet/calque).
+// dialect/borrowing) or any word-level decolonization warning.
 const isNoteworthyClass = Boolean(
   heritage && heritageClass && heritage.classification !== "standard",
 );
 const showHeritage = Boolean(
   heritage &&
     (isNoteworthyClass ||
-      heritage.is_russianism ||
+      showHeritageWarning ||
       heritage.russian_shadow ||
-      sovietRisk > 0 ||
       heritage.calque_warning),
 );
 
@@ -274,10 +310,12 @@ const frontmatter = {
         <span>{CONTEXT_LABELS_UK[entry.primary_source] ?? entry.primary_source}</span>
         <span>{courseUsage.length} {courseUsage.length === 1 ? "модуль" : "модулів"}</span>
         {enrichment?.morphology && <span>{enrichment.morphology.form_count} форм</span>}
-        {heritage?.is_russianism && (
-          <span class="atlas-heritage-pill atlas-heritage-pill--russism">Русизм</span>
+        {showHeritageWarning && heritageWarning && (
+          <span class="atlas-heritage-pill atlas-heritage-pill--russism">
+            {heritageWarning.label}
+          </span>
         )}
-        {!heritage?.is_russianism && heritageClass && (
+        {!showHeritageWarning && heritageClass && (
           <span class={`atlas-heritage-pill atlas-heritage-pill--${heritageClass.tone}`}>
             {heritageClass.label}
           </span>
@@ -305,17 +343,14 @@ const frontmatter = {
           <h2 id="atlas-heritage-title">Походження та статус</h2>
         </div>
 
-        {heritage?.is_russianism ? (
+        {showHeritageWarning && heritageWarning ? (
           <div class="atlas-heritage-card atlas-heritage-card--russism">
-            <p class="atlas-source-label">Русизм</p>
-            <p>
-              Ця форма має ознаки русизму. Українська норма послуговується іншим
-              словом — використовуйте відповідник нижче.
-            </p>
-            {russianAlternatives.length > 0 && (
+            <p class="atlas-source-label">{heritageWarning.label}</p>
+            <p>{heritageWarning.gloss}</p>
+            {standardAlternatives.length > 0 && (
               <p class="atlas-chip-line">
                 <strong>Українська норма:</strong>{" "}
-                {russianAlternatives.map((alt) => (
+                {standardAlternatives.map((alt) => (
                   <span>{alt}</span>
                 ))}
               </p>
@@ -333,18 +368,10 @@ const frontmatter = {
           </div>
         )}
 
-        {heritage?.russian_shadow && !heritage?.is_russianism && (
+        {heritage?.russian_shadow && !showHeritageWarning && (
           <p class="atlas-heritage-warn">
             ⚠ Морфологічна тінь російської форми — перевірте відмінювання за VESUM
             та Правописом 2019.
-          </p>
-        )}
-        {sovietRisk > 0 && (
-          <p class="atlas-heritage-warn">
-            ⚠{" "}
-            {sovietRisk >= 2
-              ? "Радянське ідеологічне трактування у словниковому джерелі — тлумачення подано нейтрально."
-              : "Радянські конотації у словниковому джерелі — тлумачення подано обережно."}
           </p>
         )}
         {heritage?.calque_warning && (
@@ -402,6 +429,13 @@ const frontmatter = {
             </p>
           )}
           {enrichment.meaning.note && <p class="atlas-note">{enrichment.meaning.note}</p>}
+          {showSovietSourceCaveat && (
+            <p class="atlas-source-caveat" role="note">
+              <span aria-hidden="true">⚠</span>{" "}
+              Це тлумачення — з радянського словника (СУМ-11); подається з
+              осторогою. Перевага — Грінченко / СУМ-20.
+            </p>
+          )}
         </div>
       </section>
     )}
@@ -855,6 +889,21 @@ const frontmatter = {
   .atlas-note,
   .atlas-provenance p {
     color: var(--lu-text-muted);
+  }
+
+  .atlas-source-caveat {
+    margin: 0.85rem 0 0;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid color-mix(in srgb, var(--lu-accent) 68%, var(--lu-border));
+    border-left: 4px solid var(--lu-accent);
+    border-radius: 6px;
+    background: var(--lu-state-missed);
+    color: var(--lu-text);
+    font-size: 0.92rem;
+  }
+
+  .atlas-source-caveat span {
+    font-weight: 900;
   }
 
   .atlas-source-card {

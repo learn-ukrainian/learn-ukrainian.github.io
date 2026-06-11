@@ -208,16 +208,15 @@ def scan_and_update(
 
     for row_id, word, definition, text in rows:
         risk, keywords = classify_entry(definition or "", text or "")
-        if risk == 0:
-            continue
         if risk == 1:
             stats.flagged_low += 1
-        else:
+        elif risk >= 2:
             stats.flagged_high += 1
         for k in keywords:
             stats.by_keyword[k] = stats.by_keyword.get(k, 0) + 1
         update_buffer.append((risk, ",".join(keywords), row_id))
-        flagged_for_top.append((word, len(keywords), keywords))
+        if risk > 0:
+            flagged_for_top.append((word, len(keywords), keywords))
 
     # Top-50 most-Sovietized: sort by keyword-match count desc.
     flagged_for_top.sort(key=lambda x: (-x[1], x[0]))
@@ -227,10 +226,13 @@ def scan_and_update(
     ]
 
     if dry_run:
-        print(f"[dry-run] would update {len(update_buffer)} rows")
+        print(
+            f"[dry-run] would update {len(update_buffer)} rows "
+            f"({stats.flagged_total} flagged)"
+        )
         return stats
 
-    print(f"Updating {len(update_buffer)} flagged rows...")
+    print(f"Updating {len(update_buffer)} rows ({stats.flagged_total} flagged)...")
     with conn:
         conn.executemany(
             "UPDATE sum11 SET sovietization_risk = ?, "

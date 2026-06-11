@@ -33,6 +33,7 @@ from __future__ import annotations
 
 import json
 import re
+import unicodedata
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -42,6 +43,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 PLANS_ROOT = CURRICULUM_ROOT / "plans"
 MANIFEST_PATH = PROJECT_ROOT / "starlight" / "src" / "data" / "lexicon-manifest.json"
+_STRESS_MARK_RE = re.compile("[\u0300\u0301]")
 
 
 # v1 module set — per design §9.
@@ -49,6 +51,17 @@ V1_MODULES: list[dict[str, str | int]] = [
     {"track": "a1", "module_num": 1, "slug": "sounds-letters-and-hello"},
     {"track": "a1", "module_num": 8, "slug": "things-have-gender"},
     {"track": "a1", "module_num": 20, "slug": "my-morning"},
+]
+
+SURZHYK_TO_AVOID_SEEDS: list[dict[str, str | None]] = [
+    {"lemma": "агенство", "gloss": "avoid: агенція", "pos": "noun"},
+    {"lemma": "авось", "gloss": "avoid: ану ж / а може", "pos": "adv"},
+    {"lemma": "автозагар", "gloss": "avoid: автозасмага", "pos": "noun"},
+    {"lemma": "всьо", "gloss": "avoid: все", "pos": "pron"},
+    {"lemma": "діюча", "gloss": "avoid: чинна", "pos": "adj"},
+    {"lemma": "міроприємство", "gloss": "avoid: захід", "pos": "noun"},
+    {"lemma": "протиріччя", "gloss": "avoid: суперечність", "pos": "noun"},
+    {"lemma": "слідуючий", "gloss": "avoid: наступний", "pos": "adj"},
 ]
 
 
@@ -80,6 +93,12 @@ def _slug_for_url(lemma: str) -> str:
     slug = slug.replace("_", "-")
     slug = re.sub(r"-+", "-", slug).strip("-")
     return slug
+
+
+def _lemma_key(lemma: str) -> str:
+    normalized = unicodedata.normalize("NFKD", lemma.strip().casefold())
+    normalized = _STRESS_MARK_RE.sub("", normalized)
+    return unicodedata.normalize("NFC", normalized)
 
 
 def _parse_plan_hint(raw: str) -> tuple[str, str | None]:
@@ -154,6 +173,7 @@ _SOURCE_PRIORITY = {
     "built_vocabulary": 0,
     "plan_required": 1,
     "plan_recommended": 2,
+    "surzhyk_to_avoid": 3,
 }
 
 
@@ -176,7 +196,7 @@ def _merge_lemma_records(
 
     for rec in records:
         display_lemma = rec["lemma"]
-        key = display_lemma.casefold()
+        key = _lemma_key(display_lemma)
         usage_entry = {
             "track": track,
             "module_num": module_num,
@@ -202,6 +222,8 @@ def _merge_lemma_records(
             and rec["source"] == "built_vocabulary"
         )
         if is_upgrade:
+            existing["lemma"] = display_lemma
+            existing["url_slug"] = _slug_for_url(display_lemma)
             existing["primary_source"] = rec["source"]
             if rec.get("gloss"):
                 existing["gloss"] = rec["gloss"]
@@ -225,6 +247,25 @@ def _merge_lemma_records(
             existing["course_usage"].append(usage_entry)
 
 
+def _merge_seed_records(by_lemma: dict[str, dict]) -> None:
+    for rec in SURZHYK_TO_AVOID_SEEDS:
+        display_lemma = str(rec["lemma"])
+        key = _lemma_key(display_lemma)
+        if key in by_lemma:
+            by_lemma[key]["seed_group"] = "surzhyk-to-avoid"
+            continue
+        by_lemma[key] = {
+            "lemma": display_lemma,
+            "url_slug": _slug_for_url(display_lemma),
+            "gloss": rec.get("gloss"),
+            "pos": rec.get("pos"),
+            "ipa": None,
+            "primary_source": "surzhyk_to_avoid",
+            "seed_group": "surzhyk-to-avoid",
+            "course_usage": [],
+        }
+
+
 def build_manifest() -> dict:
     """Build the manifest dict and return it (caller writes to disk)."""
     by_lemma: dict[str, dict] = {}
@@ -237,6 +278,8 @@ def build_manifest() -> dict:
         built_records = _load_built_vocab(module)
         _merge_lemma_records(by_lemma, module, plan_records)
         _merge_lemma_records(by_lemma, module, built_records)
+
+    _merge_seed_records(by_lemma)
 
     entries = sorted(by_lemma.values(), key=lambda e: e["lemma"])
     return {
@@ -251,8 +294,19 @@ def build_manifest() -> dict:
             "from_plan_only": sum(
                 1 for e in entries if e["primary_source"].startswith("plan_")
             ),
+            "from_surzhyk_to_avoid": sum(
+                1 for e in entries if e["primary_source"] == "surzhyk_to_avoid"
+            ),
         },
         "modules": V1_MODULES,
+        "seed_groups": [
+            {
+                "id": "surzhyk-to-avoid",
+                "source": "surzhyk_to_avoid",
+                "description": "Classifier-verified Russianism/surzhyk examples for visible Atlas warnings.",
+                "lemmas": [str(seed["lemma"]) for seed in SURZHYK_TO_AVOID_SEEDS],
+            }
+        ],
         "entries": entries,
     }
 
