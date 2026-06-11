@@ -208,6 +208,16 @@ REVIEWER_FIX_GATES = DICTIONARY_CANDIDATE_GATES | frozenset(
         "ai_slop_clean",
     }
 )
+REVIEWER_FIX_ADDITIONAL_ARTIFACTS_BY_GATE: dict[str, tuple[str, ...]] = {
+    "vesum_verified": ("activities.yaml", "vocabulary.yaml", "resources.yaml"),
+    "russianisms_clean": ("activities.yaml", "vocabulary.yaml", "resources.yaml"),
+    "surzhyk_clean": ("activities.yaml", "vocabulary.yaml", "resources.yaml"),
+    "calques_clean": ("activities.yaml", "vocabulary.yaml", "resources.yaml"),
+    "paronym_clean": ("activities.yaml", "vocabulary.yaml", "resources.yaml"),
+    "citations_resolve": ("resources.yaml",),
+    "plan_reference_match": ("resources.yaml",),
+    "ai_slop_clean": ("activities.yaml", "vocabulary.yaml", "resources.yaml"),
+}
 PIPELINE_INSERT_GATES = frozenset({"inject_activity_ids"})
 TERMINAL_ZERO_RETRY_GATES = frozenset(
     {
@@ -6424,30 +6434,60 @@ def _apply_reviewer_correction(
             "rejected_fixes": rejected_fixes,
             "applied": False,
         }
-    result = _apply_reviewer_fixes(
-        module_text,
+    artifact_names = ("module.md", *REVIEWER_FIX_ADDITIONAL_ARTIFACTS_BY_GATE.get(gate, ()))
+    unmatched_by_artifact: list[set[str]] = []
+    artifact_results: list[dict[str, Any]] = []
+    for artifact in artifact_names:
+        artifact_path = module_dir / artifact
+        if artifact != "module.md" and not artifact_path.exists():
+            continue
+        original_text = module_text if artifact == "module.md" else _read_required(artifact_path)
+        result = _apply_reviewer_fixes(
+            original_text,
+            accepted_fixes,
+            gate=gate,
+            module_dir=module_dir,
+            plan_path=plan_path,
+            emit_unmatched_events=False,
+        )
+        unmatched_by_artifact.append(set(result.unmatched_anchors))
+        changed = result.text != original_text
+        artifact_record: dict[str, Any] = {"artifact": artifact, "changed": changed}
+        if changed:
+            artifact_path.write_text(result.text, encoding="utf-8")
+            try:
+                _validate_wiki_coverage_artifact_text(artifact, result.text)
+            except LinearPipelineError as exc:
+                artifact_path.write_text(original_text, encoding="utf-8")
+                artifact_record["changed"] = False
+                artifact_record["yaml_valid"] = False
+                emit_event(
+                    "reviewer_correction_yaml_invalid",
+                    **_correction_event_fields(
+                        gate=gate,
+                        module_dir=module_dir,
+                        plan_path=plan_path,
+                    ),
+                    artifact=artifact,
+                    error_preview=str(exc)[:800],
+                )
+            else:
+                artifact_record["yaml_valid"] = True
+        artifact_results.append(artifact_record)
+
+    unmatched_anchors = (
+        frozenset(set.intersection(*unmatched_by_artifact))
+        if unmatched_by_artifact
+        else frozenset()
+    )
+    _emit_final_reviewer_unmatched_events(
+        unmatched_anchors,
         accepted_fixes,
         gate=gate,
         module_dir=module_dir,
         plan_path=plan_path,
     )
-    if accepted_fixes:
-        module_path.write_text(result.text, encoding="utf-8")
-        try:
-            _validate_wiki_coverage_artifact_text(module_path.name, result.text)
-        except LinearPipelineError as exc:
-            module_path.write_text(module_text, encoding="utf-8")
-            emit_event(
-                "reviewer_correction_yaml_invalid",
-                **_correction_event_fields(
-                    gate=gate,
-                    module_dir=module_dir,
-                    plan_path=plan_path,
-                ),
-                artifact=module_path.name,
-                error_preview=str(exc)[:800],
-            )
-    return result.unmatched_anchors, {
+    return unmatched_anchors, {
         "kind": "reviewer",
         "gate": gate,
         "prompt": prompt,
@@ -6455,7 +6495,8 @@ def _apply_reviewer_correction(
         "fixes": fixes,
         "accepted_fixes": accepted_fixes,
         "rejected_fixes": rejected_fixes,
-        "unmatched_anchors": sorted(result.unmatched_anchors),
+        "unmatched_anchors": sorted(unmatched_anchors),
+        "artifacts": artifact_results,
         "applied": True,
     }
 
@@ -6594,6 +6635,55 @@ def _parse_reviewer_fixes_xml(body: str) -> list[dict[str, str]]:
     return fixes
 
 
+def _emit_reviewer_fix_anchor_unmatched(
+    anchor: str,
+    replacement: str | None,
+    *,
+    gate: str | None,
+    module_dir: Path | None,
+    plan_path: Path | None,
+) -> None:
+    emit_event(
+        "reviewer_fixes_anchor_unmatched",
+        **_correction_event_fields(
+            gate=gate or "",
+            module_dir=module_dir,
+            plan_path=plan_path,
+        )
+        if module_dir is not None and plan_path is not None
+        else {"gate": gate},
+        anchor_preview=_correction_preview(anchor),
+        text_preview=_correction_preview(replacement),
+    )
+
+
+def _emit_final_reviewer_unmatched_events(
+    unmatched_anchors: frozenset[str],
+    fixes: list[dict[str, str]],
+    *,
+    gate: str,
+    module_dir: Path,
+    plan_path: Path,
+) -> None:
+    if not unmatched_anchors:
+        return
+    for fix in fixes:
+        if "insert_after" in fix and "text" in fix:
+            anchor = fix["insert_after"]
+            replacement = fix["text"]
+        else:
+            anchor = fix.get("find") or ""
+            replacement = fix.get("replace")
+        if anchor in unmatched_anchors:
+            _emit_reviewer_fix_anchor_unmatched(
+                anchor,
+                replacement,
+                gate=gate,
+                module_dir=module_dir,
+                plan_path=plan_path,
+            )
+
+
 def _apply_reviewer_fixes(
     text: str,
     fixes: list[dict[str, str]],
@@ -6601,6 +6691,7 @@ def _apply_reviewer_fixes(
     gate: str | None = None,
     module_dir: Path | None = None,
     plan_path: Path | None = None,
+    emit_unmatched_events: bool = True,
 ) -> ReviewerFixApplyResult:
     updated = text
     unmatched_anchors: set[str] = set()
@@ -6611,18 +6702,14 @@ def _apply_reviewer_fixes(
                 updated = updated.replace(anchor, anchor + fix["text"], 1)
             else:
                 unmatched_anchors.add(anchor)
-                emit_event(
-                    "reviewer_fixes_anchor_unmatched",
-                    **_correction_event_fields(
-                        gate=gate or "",
+                if emit_unmatched_events:
+                    _emit_reviewer_fix_anchor_unmatched(
+                        anchor,
+                        fix["text"],
+                        gate=gate,
                         module_dir=module_dir,
                         plan_path=plan_path,
                     )
-                    if module_dir is not None and plan_path is not None
-                    else {"gate": gate},
-                    anchor_preview=_correction_preview(anchor),
-                    text_preview=_correction_preview(fix["text"]),
-                )
             continue
         find = fix.get("find")
         replace = fix.get("replace")
@@ -6630,18 +6717,14 @@ def _apply_reviewer_fixes(
             updated = updated.replace(find, replace, 1)
         elif find:
             unmatched_anchors.add(find)
-            emit_event(
-                "reviewer_fixes_anchor_unmatched",
-                **_correction_event_fields(
-                    gate=gate or "",
+            if emit_unmatched_events:
+                _emit_reviewer_fix_anchor_unmatched(
+                    find,
+                    replace,
+                    gate=gate,
                     module_dir=module_dir,
                     plan_path=plan_path,
                 )
-                if module_dir is not None and plan_path is not None
-                else {"gate": gate},
-                anchor_preview=_correction_preview(find),
-                text_preview=_correction_preview(replace),
-            )
     return ReviewerFixApplyResult(updated, frozenset(unmatched_anchors))
 
 
