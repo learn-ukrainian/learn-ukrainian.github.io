@@ -6812,7 +6812,7 @@ def run_python_qg(
         "published_quote_for_publishable_refs",
         _published_quote_for_publishable_refs_gate(module_text, plan, module_dir),
     )
-    record("textbook_quote_fidelity", _textbook_quote_fidelity_gate(module_text))
+    record("textbook_quote_fidelity", _textbook_quote_fidelity_gate(module_text, level=level))
     record(
         "resources_search_attempted",
         _resources_search_attempted_gate(
@@ -11669,22 +11669,43 @@ def _strip_frontmatter(text: str) -> str:
 def _strip_frontmatter_and_headings(text: str) -> str:
     text = _strip_frontmatter(text)
     return "\n".join(line for line in text.splitlines() if not line.lstrip().startswith("#"))
-def _textbook_quote_fidelity_gate(module_text: str) -> dict[str, Any]:
+def _textbook_quote_fidelity_gate(module_text: str, level: str | None = None) -> dict[str, Any]:
     """Verify textbook quote fidelity against the sources DB."""
     import re
 
-    from rapidfuzz import distance, fuzz
+    from rapidfuzz import distance
 
-    from scripts.wiki.sources_db import search_textbooks
+    from scripts.wiki.sources_db import search_literary, search_textbooks
 
     violations: list[dict[str, Any]] = []
     checked = 0
+    level_key = str(level or "").strip().lower()
 
     lines = module_text.splitlines()
     quotes: list[dict[str, Any]] = []
 
     current_quote: list[str] = []
     no_verify = False
+
+    def _extract_embedded_attribution(quote_lines: list[str]) -> tuple[str, str]:
+        lines_without_attr = list(quote_lines)
+        while lines_without_attr and not lines_without_attr[-1].strip():
+            lines_without_attr.pop()
+        if not lines_without_attr:
+            return "", ""
+
+        possible_attribution = lines_without_attr[-1].strip()
+        if not possible_attribution.startswith(("*", "_", "`", "~")):
+            return "\n".join(quote_lines).strip(), ""
+
+        attribution = _extract_textbook_attribution(possible_attribution)
+        if not attribution:
+            return "\n".join(quote_lines).strip(), ""
+
+        lines_without_attr.pop()
+        while lines_without_attr and not lines_without_attr[-1].strip():
+            lines_without_attr.pop()
+        return "\n".join(lines_without_attr).strip(), attribution
 
     i = 0
     while i < len(lines):
@@ -11715,14 +11736,19 @@ def _textbook_quote_fidelity_gate(module_text: str) -> dict[str, Any]:
             if j < len(lines) and not lines[j].strip():
                 j += 1
 
-            attr_line = ""
+            if level_key in SEMINAR_LEVELS:
+                quote_text, embedded_attr = _extract_embedded_attribution(current_quote)
+            else:
+                quote_text = "\n".join(current_quote).strip()
+                embedded_attr = ""
+            attr_line = embedded_attr
             if j < len(lines):
                 attr = _extract_textbook_attribution(lines[j])
                 if attr:
                     attr_line = attr
 
             quotes.append({
-                "text": "\n".join(current_quote).strip(),
+                "text": quote_text,
                 "attribution": attr_line,
                 "no_verify": no_verify
             })
@@ -11735,6 +11761,12 @@ def _textbook_quote_fidelity_gate(module_text: str) -> dict[str, Any]:
     def _normalize(s: str) -> str:
         s = re.sub(r'[^а-яіїєґА-ЯІЇЄҐ0-9]', '', s.lower())
         return s
+
+    def _is_textbook_attribution(attribution: str) -> bool:
+        return bool(
+            re.search(r"\bGrade\s+\d+\b", attribution, flags=re.IGNORECASE)
+            and re.search(r"\bp\.?\s*\d+", attribution, flags=re.IGNORECASE)
+        )
 
     for q in quotes:
         text = q["text"]
@@ -11763,8 +11795,14 @@ def _textbook_quote_fidelity_gate(module_text: str) -> dict[str, Any]:
         if not keywords:
             continue
 
+        search_fn = search_textbooks
+        corpus_name = "textbook corpus"
+        if level_key in SEMINAR_LEVELS and not _is_textbook_attribution(attr):
+            search_fn = search_literary
+            corpus_name = "literary corpus"
+
         try:
-            hits = search_textbooks(keywords, 20)
+            hits = search_fn(keywords, 20)
         except Exception:
             hits = []
 
@@ -11772,7 +11810,7 @@ def _textbook_quote_fidelity_gate(module_text: str) -> dict[str, Any]:
             violations.append({
                 "quote": text,
                 "attribution": attr,
-                "reason": "No match in textbook corpus"
+                "reason": f"No match in {corpus_name}"
             })
             continue
 
