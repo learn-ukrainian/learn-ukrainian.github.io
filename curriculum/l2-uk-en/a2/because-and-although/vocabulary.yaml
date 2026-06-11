@@ -1,0 +1,80 @@
+- word: тому що
+  translation: because
+  pos: conjunction
+  example: "Ми повторюємо тему, тому що завтра тест."
+- word: бо
+  translation: because
+  pos: conjunction
+  example: "Я залишаюся вдома, бо хворію."
+- word: хоча
+  translation: although, even though
+  pos: conjunction
+  example: "Хоча день довгий, ми впораємося."
+- word: але
+  translation: but
+  pos: conjunction
+  example: "Я втомився, але піду на заняття."
+- word: проте
+  translation: however, yet
+  pos: conjunction
+  example: "Було пізно, проте ми закінчили текст."
+- word: однак
+  translation: however
+  pos: conjunction
+  example: "Завдання коротке, однак не просте."
+- word: причина
+  translation: reason, cause
+  pos: noun
+  example: "Бо вводить причину."
+- word: допуст
+  translation: concession
+  pos: noun
+  example: "Хоча показує допуст."
+- word: сполучник
+  translation: conjunction
+  pos: noun
+  example: "Сполучник з'єднує частини речення."
+- word: складне речення
+  translation: complex sentence
+  pos: noun
+  example: "Складне речення має дві частини."
+- word: протиставлення
+  translation: contrast
+  pos: noun
+  example: "Але показує протиставлення."
+- word: додавання
+  translation: addition
+  pos: noun
+  example: "І показує додавання другої думки."
+- word: головна думка
+  translation: main idea
+  pos: phrase
+  example: "Спочатку скажіть головну думку."
+- word: підрядна частина
+  translation: subordinate clause
+  pos: phrase
+  example: "Підрядна частина може починатися зі слова хоча."
+- word: сурядний
+  translation: coordinating
+  pos: adjective
+  example: "Але створює сурядний зв'язок."
+- word: попри це
+  translation: despite this
+  pos: phrase
+  example: "День був довгий, попри це ми повторили тему."
+- word: незважаючи на це
+  translation: nevertheless, despite that
+  pos: phrase
+  example: "Було холодно, незважаючи на це ми пішли."
+- word: навпаки
+  translation: on the contrary
+  pos: adverb
+  example: "Це не причина, а навпаки контраст."
+- word: контрольна
+  translation: test
+  pos: noun
+  example: "Завтра контрольна, тому ми повторюємо тему."
+- word: лекція
+  translation: lecture
+  pos: noun
+  example: "Я піду на лекцію, хоча втомився."

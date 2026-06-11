@@ -1,0 +1,15 @@
+- title: "ULP 3-118: Using щоб with the past tense"
+  role: podcast
+  source_ref: "docs/resources/external_resources.yaml: a2-purpose-clauses"
+  url: "https://www.ukrainianlessons.com/episode118/"
+  notes: "Listening resource that explicitly highlights щоб with a past-tense form."
+- title: "ULP: Ukrainian Conjunctions Guide"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: a2-because-and-although"
+  url: "https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/"
+  notes: "Reference for conjunction categories including purpose and reported clauses."
+- title: "Talk Ukrainian: Ukrainian conjunctions"
+  role: article
+  source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: conjunctions"
+  url: "https://talkukrainian.com/conjunctions/"
+  notes: "Compact learner reference for common conjunctions such as що, щоб, бо, and але."

@@ -1,0 +1,80 @@
+- word: який
+  translation: which, that
+  pos: pronoun
+  example: "Ось стіл, який стоїть біля вікна."
+- word: яка
+  translation: which, that
+  pos: pronoun
+  example: "Це квартира, яка має балкон."
+- word: яке
+  translation: which, that
+  pos: pronoun
+  example: "Це місто, яке я люблю."
+- word: які
+  translation: which, that
+  pos: pronoun
+  example: "Це друзі, які живуть поруч."
+- word: яку
+  translation: which, that
+  pos: pronoun
+  example: "Книжка, яку я читаю, цікава."
+- word: якого
+  translation: whom, which
+  pos: pronoun
+  example: "Чоловік, якого я бачу, мій сусід."
+- word: де
+  translation: where
+  pos: adverb
+  example: "Це кафе, де ми зустрілися."
+- word: куди
+  translation: where to
+  pos: adverb
+  example: "Ось парк, куди ми йдемо."
+- word: звідки
+  translation: where from
+  pos: adverb
+  example: "Це станція, звідки їде автобус."
+- word: означальний
+  translation: attributive, descriptive
+  pos: adjective
+  example: "Означальне речення описує іменник."
+- word: описувати
+  translation: to describe
+  pos: verb
+  example: "Ми вчимося описувати людей і місця."
+- word: опис
+  translation: description
+  pos: noun
+  example: "Короткий опис допомагає зрозуміти іменник."
+- word: речення
+  translation: sentence, clause
+  pos: noun
+  example: "Складне речення має дві частини."
+- word: підрядна частина
+  translation: subordinate clause
+  pos: phrase
+  example: "Підрядна частина починається після коми."
+- word: узгоджуватися
+  translation: to agree
+  pos: verb
+  example: "Який узгоджується з іменником."
+- word: рід
+  translation: gender
+  pos: noun
+  example: "Форма залежить від роду іменника."
+- word: число
+  translation: number
+  pos: noun
+  example: "Які показує множину."
+- word: затишний
+  translation: cozy
+  pos: adjective
+  example: "Кафе, де ми зустрілися, було затишне."
+- word: знаходитися
+  translation: to be located
+  pos: verb
+  example: "Ресторан знаходиться біля парку."
+- word: стояти
+  translation: to stand, to be situated
+  pos: verb
+  example: "Стіл стоїть біля вікна."
