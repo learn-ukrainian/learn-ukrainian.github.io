@@ -1,0 +1,15 @@
+- title: "CEFR Self-Assessment Grid"
+  role: reference
+  source_ref: "Council of Europe CEFR self-assessment grid"
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages/table-2-cefr-3.3-common-reference-levels-self-assessment-grid"
+  notes: "Reference for interpreting A2 reading, spoken interaction, and writing can-do expectations."
+- title: "ULP: Ukrainian Grammar Overview"
+  role: article
+  source_ref: "docs/resources/external_resources.yaml: b1-how-to-talk-about-grammar"
+  url: "https://www.ukrainianlessons.com/grammar/"
+  notes: "Optional grammar review before attempting the practice exam."
+- title: "ULP: Ukrainian Cases Chart"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /ukrainian-cases-chart/"
+  url: "https://www.ukrainianlessons.com/ukrainian-cases-chart/"
+  notes: "Quick reference for case questions and examples during targeted post-exam review."
