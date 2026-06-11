@@ -8492,6 +8492,7 @@ def _vesum_gate(
         activities,
         vocabulary,
         resources,
+        level=level,
         emit_negative_example_events=True,
     )
 
@@ -9415,9 +9416,12 @@ def _build_vesum_text(
     vocabulary: list[dict[str, Any]],
     resources: list[dict[str, Any]],
     *,
+    level: str | None = None,
     emit_negative_example_events: bool = False,
 ) -> str:
     """Compose the text blob that VESUM verifies, with structural exclusions."""
+    if _vesum_heritage_attestation_enabled(level):
+        module_text = _strip_quote_fidelity_verified_blockquotes(module_text, level=level)
     parts = [_strip_metalinguistic(module_text)]
     for activity in activities:
         parts.append(
@@ -9994,29 +9998,16 @@ def _resource_coverage_gate(
     }
 
 
-def _extract_blockquote_records(text: str) -> list[dict[str, str]]:
-    quotes: list[dict[str, str]] = []
-    current: list[str] = []
+def _extract_blockquote_records(text: str, *, level: str | None = None) -> list[dict[str, Any]]:
+    quotes: list[dict[str, Any]] = []
     current_section = ""
-    quote_section = ""
-    pending_attribution_index: int | None = None
+    level_key = str(level or "").strip().lower()
+    lines = text.splitlines()
+    no_verify = False
+    i = 0
 
-    def flush_quote() -> None:
-        nonlocal current, quote_section, pending_attribution_index
-        if not current:
-            return
-        quotes.append(
-            {
-                "quote": "\n".join(current).strip(),
-                "section_title": quote_section,
-                "attribution": "",
-            }
-        )
-        current = []
-        quote_section = ""
-        pending_attribution_index = len(quotes) - 1
-
-    for line in text.splitlines():
+    while i < len(lines):
+        line = lines[i]
         # Track only H1/H2 as the blockquote's `section_title` — the
         # `_textbook_grounding_gate`'s `_quote_topic_matches` check uses
         # this string as the topic context, and sub-headings (H3+) are
@@ -10032,30 +10023,111 @@ def _extract_blockquote_records(text: str) -> list[dict[str, str]]:
         heading = re.match(r"^\s{0,3}#{1,2}\s+(?P<title>.+?)\s*#*\s*$", line)
         if heading:
             current_section = re.sub(r"[*_`~]+", "", heading.group("title")).strip()
-        match = re.match(r"^\s*>\s?(?P<body>.*)$", line)
-        if match:
-            if not current:
-                quote_section = current_section
-            current.append(match.group("body"))
+
+        if re.match(r"^\s*<!--\s*NO_VERIFY:", line):
+            j = i + 1
+            while j < len(lines) and not lines[j].strip():
+                j += 1
+            if j < len(lines) and lines[j].strip().startswith(">"):
+                no_verify = True
+            i += 1
             continue
-        if current:
-            flush_quote()
-        if pending_attribution_index is not None:
-            if not line.strip():
-                continue
-            attribution = _extract_textbook_attribution(line)
-            if attribution:
-                quotes[pending_attribution_index]["attribution"] = attribution
-                pending_attribution_index = None
-                continue
-            pending_attribution_index = None
-    if current:
-        flush_quote()
-    return [record for record in quotes if record["quote"]]
+
+        match = re.match(r"^\s*>\s?(?P<body>.*)$", line)
+        if match is None:
+            i += 1
+            continue
+
+        content = match.group("body").strip()
+        if content.startswith("[!"):
+            while i < len(lines) and re.match(r"^\s*>\s?(?P<body>.*)$", lines[i]):
+                i += 1
+            continue
+
+        quote_lines: list[str] = []
+        line_numbers: list[int] = []
+        quote_section = current_section
+        while i < len(lines):
+            quote_match = re.match(r"^\s*>\s?(?P<body>.*)$", lines[i])
+            if quote_match is None:
+                break
+            quote_lines.append(quote_match.group("body"))
+            line_numbers.append(i)
+            i += 1
+
+        if level_key in SEMINAR_LEVELS:
+            quote_text, embedded_attr = _extract_embedded_blockquote_attribution(quote_lines)
+        else:
+            quote_text = "\n".join(quote_lines).strip()
+            embedded_attr = ""
+
+        attr_line = embedded_attr
+        j = i
+        if j < len(lines) and not lines[j].strip():
+            j += 1
+        if j < len(lines):
+            attr = _extract_textbook_attribution(lines[j])
+            if attr:
+                attr_line = attr
+
+        if quote_text:
+            quotes.append(
+                {
+                    "quote": quote_text,
+                    "section_title": quote_section,
+                    "attribution": attr_line,
+                    "no_verify": no_verify,
+                    "line_numbers": line_numbers,
+                }
+            )
+        no_verify = False
+
+    return quotes
 
 
 def _extract_blockquotes(text: str) -> list[str]:
     return [record["quote"] for record in _extract_blockquote_records(text)]
+
+
+def _extract_embedded_blockquote_attribution(quote_lines: list[str]) -> tuple[str, str]:
+    lines_without_attr = list(quote_lines)
+    while lines_without_attr and not lines_without_attr[-1].strip():
+        lines_without_attr.pop()
+    if not lines_without_attr:
+        return "", ""
+
+    possible_attribution = lines_without_attr[-1].strip()
+    if not possible_attribution.startswith(("*", "_", "`", "~")):
+        return "\n".join(quote_lines).strip(), ""
+
+    attribution = _extract_textbook_attribution(possible_attribution)
+    if not attribution:
+        return "\n".join(quote_lines).strip(), ""
+
+    lines_without_attr.pop()
+    while lines_without_attr and not lines_without_attr[-1].strip():
+        lines_without_attr.pop()
+    return "\n".join(lines_without_attr).strip(), attribution
+
+
+def _blockquote_record_is_quote_fidelity_verified(record: Mapping[str, Any]) -> bool:
+    return bool(record.get("quote") and record.get("attribution") and not record.get("no_verify"))
+
+
+def _strip_quote_fidelity_verified_blockquotes(text: str, *, level: str | None) -> str:
+    records = _extract_blockquote_records(text, level=level)
+    quote_line_numbers = {
+        line_number
+        for record in records
+        if _blockquote_record_is_quote_fidelity_verified(record)
+        for line_number in record.get("line_numbers", ())
+        if isinstance(line_number, int)
+    }
+    if not quote_line_numbers:
+        return text
+    return "\n".join(
+        line for index, line in enumerate(text.splitlines()) if index not in quote_line_numbers
+    )
 
 
 def _extract_textbook_attribution(line: str) -> str:
@@ -11852,83 +11924,7 @@ def _textbook_quote_fidelity_gate(module_text: str, level: str | None = None) ->
     violations: list[dict[str, Any]] = []
     checked = 0
     level_key = str(level or "").strip().lower()
-
-    lines = module_text.splitlines()
-    quotes: list[dict[str, Any]] = []
-
-    current_quote: list[str] = []
-    no_verify = False
-
-    def _extract_embedded_attribution(quote_lines: list[str]) -> tuple[str, str]:
-        lines_without_attr = list(quote_lines)
-        while lines_without_attr and not lines_without_attr[-1].strip():
-            lines_without_attr.pop()
-        if not lines_without_attr:
-            return "", ""
-
-        possible_attribution = lines_without_attr[-1].strip()
-        if not possible_attribution.startswith(("*", "_", "`", "~")):
-            return "\n".join(quote_lines).strip(), ""
-
-        attribution = _extract_textbook_attribution(possible_attribution)
-        if not attribution:
-            return "\n".join(quote_lines).strip(), ""
-
-        lines_without_attr.pop()
-        while lines_without_attr and not lines_without_attr[-1].strip():
-            lines_without_attr.pop()
-        return "\n".join(lines_without_attr).strip(), attribution
-
-    i = 0
-    while i < len(lines):
-        line = lines[i]
-
-        if re.match(r"^\s*<!--\s*NO_VERIFY:", line):
-            j = i + 1
-            while j < len(lines) and not lines[j].strip():
-                j += 1
-            if j < len(lines) and lines[j].strip().startswith(">"):
-                no_verify = True
-            i += 1
-            continue
-
-        if re.match(r"^\s*>\s?(.*)$", line):
-            match = re.match(r"^\s*>\s?(.*)$", line)
-            content = match.group(1).strip() if match else ""
-            if content.startswith("[!"):
-                while i < len(lines) and re.match(r"^\s*>\s?(.*)$", lines[i]):
-                    i += 1
-                continue
-
-            while i < len(lines) and re.match(r"^\s*>\s?(.*)$", lines[i]):
-                current_quote.append(re.match(r"^\s*>\s?(.*)$", lines[i]).group(1)) # type: ignore
-                i += 1
-
-            j = i
-            if j < len(lines) and not lines[j].strip():
-                j += 1
-
-            if level_key in SEMINAR_LEVELS:
-                quote_text, embedded_attr = _extract_embedded_attribution(current_quote)
-            else:
-                quote_text = "\n".join(current_quote).strip()
-                embedded_attr = ""
-            attr_line = embedded_attr
-            if j < len(lines):
-                attr = _extract_textbook_attribution(lines[j])
-                if attr:
-                    attr_line = attr
-
-            quotes.append({
-                "text": quote_text,
-                "attribution": attr_line,
-                "no_verify": no_verify
-            })
-            current_quote = []
-            no_verify = False
-            continue
-
-        i += 1
+    quotes = _extract_blockquote_records(module_text, level=level)
 
     def _normalize(s: str) -> str:
         s = re.sub(r'[^а-яіїєґА-ЯІЇЄҐ0-9]', '', s.lower())
@@ -11941,7 +11937,7 @@ def _textbook_quote_fidelity_gate(module_text: str, level: str | None = None) ->
         )
 
     for q in quotes:
-        text = q["text"]
+        text = q["quote"]
         attr = q["attribution"]
         nv = q["no_verify"]
 
