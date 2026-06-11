@@ -204,8 +204,7 @@ This outputs JSON with `ukrainian_percent` and `english_percent`. Compare agains
 |-------------|-------------------|
 | A1 | 20-80% (graduated by module) |
 | A2 | 50-90% (graduated by module) |
-| B1 M01-M05 (bridge) | Check plan `immersion` field (70-85%) |
-| B1 M06+ | 95% |
+| B1 | 100% |
 | B2+, all seminar tracks | 98% |
 
 **If `ukrainian_percent` is BELOW the minimum → AUTO-FAIL.** Module has too much English.
@@ -459,9 +458,9 @@ Apply the appropriate tier based on track:
 - Culturally rich examples (not generic "Ivan reads a book")
 - Practice integrated throughout, not just at end
 - Teacher voice: guiding, anticipating confusion
-- B1 bridge modules (M01-M05): English scaffolding at specified immersion %
+- B1 modules: Ukrainian-only learner-facing body prose, explanations, examples, dialogues, recall, and activities
 
-**Immersion targets:** B1: 70-100% (graduated), B2+: 95-100%
+**Immersion targets:** B1: 100%, B2+: 95-100%
 
 **Red flags:**
 - Rules stated before examples

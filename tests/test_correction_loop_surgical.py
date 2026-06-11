@@ -15,6 +15,8 @@ def test_vesum_correction_prompt_uses_token_surgical_instruction() -> None:
 
     assert "tokens FAILED VESUM verification" in prompt
     assert "що́стій" in prompt
+    assert "wrap EVERY occurrence" in prompt
+    assert "instead of inventing a VESUM-looking replacement" in prompt
     assert "Do NOT modify any other word" in prompt
     assert "Do NOT replace any word that is not explicitly listed" in prompt
 
@@ -33,7 +35,26 @@ def test_word_count_correction_prompt_is_append_only() -> None:
 
     assert "Current: 1000 words" in prompt
     assert "Delta to floor: 104 words" in prompt
+    assert "one concise paragraph" in prompt
     assert "ONLY append" in prompt
+
+
+def test_large_word_count_correction_prompt_uses_multi_paragraph_append() -> None:
+    prompt = linear_pipeline.render_writer_correction_prompt(
+        gate="word_count",
+        gate_report={
+            "passed": False,
+            "count": 2847,
+            "target": 4000,
+            "min_with_tolerance": 3680,
+        },
+        module_text="## Підсумок\n\nКороткий текст.\n",
+    )
+
+    assert "Delta to floor: 833 words" in prompt
+    assert "multiple short paragraphs" in prompt
+    assert "within the module's level limit" in prompt
+    assert "2-3 sentences" not in prompt
 
 
 def test_plan_section_gate_matches_stressed_headings() -> None:
@@ -278,3 +299,40 @@ def test_wiki_coverage_yaml_insert_handles_ipa_apostrophe_anchor(tmp_path) -> No
     assert applied == 1
     assert parsed[0]["items"][0]["correction"] == "Вимова: [прокидайес':а]"
     assert parsed[0]["items"][0]["implementation_map"][0]["obligation_id"] == "err-2"
+
+
+def test_wiki_coverage_yaml_replace_quotes_colon_scalar(tmp_path) -> None:
+    module_dir = tmp_path
+    activities_path = module_dir / "activities.yaml"
+    activities_path.write_text(
+        "- type: error-correction\n"
+        "  items:\n"
+        "  - sentence: Дівчина, читаюча роман, сиділа на лавці.\n"
+        "    error: читаюча\n"
+        "    correction: Дівчина, яка читала роман, сиділа на лавці.\n",
+        encoding="utf-8",
+    )
+
+    applied = linear_pipeline._apply_wiki_coverage_fixes(
+        module_dir=module_dir,
+        artifact="activities.yaml",
+        fixes=[
+            {
+                "find": "correction: Дівчина, яка читала роман, сиділа на лавці.",
+                "replace": "correction: Дівчина, яка читала роман, сиділа на лавці. "
+                "(Або: Читаючи роман, дівчина сиділа на лавці).",
+            }
+        ],
+        phase="test",
+        iteration=1,
+        event_sink=None,
+    )
+
+    text = activities_path.read_text(encoding="utf-8")
+    parsed = yaml.safe_load(text)
+    assert applied == 1
+    assert "correction: 'Дівчина, яка читала роман" in text
+    assert parsed[0]["items"][0]["correction"] == (
+        "Дівчина, яка читала роман, сиділа на лавці. "
+        "(Або: Читаючи роман, дівчина сиділа на лавці)."
+    )

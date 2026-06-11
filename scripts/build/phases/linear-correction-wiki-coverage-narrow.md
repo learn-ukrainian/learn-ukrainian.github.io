@@ -82,9 +82,21 @@ artifact. No section rewrite. Strictly follow ADR-007:
 - Every `replace` value must be the corrected text for that same local span.
 - Each fix must identify the `obligation_id` it satisfies, preferably as the
   XML `obligation_id` attribute shown above.
-- Use `manifest_payload` values verbatim. If it contains `incorrect`,
-  `correct`, `written`, `spoken`, `heading`, `required_claim`, `why`, or
-  `rule`, reproduce the relevant value exactly.
+- When patching YAML, quote scalar values that contain colon-like prose
+  (`Або:`, `Вимова:`, `Note:`) so the result remains valid YAML.
+- Use concrete learner-facing `manifest_payload` values verbatim when they are
+  actual language forms (`incorrect`, `correct`, `written`, `spoken`, `rule`,
+  `why`). Do NOT copy writer-facing planning prose from `heading` or
+  `required_claim` into the lesson. For sequence-step fixes, render only the
+  substance as natural learner-facing prose and strip `Крок N:`, `[S#]`, and
+  phrases such as `автор-письменник`.
+- Sequence-step fixes must survive the later wiki-coverage Goodhart sentinel:
+  add an explanatory learner-facing sentence or compact paragraph that teaches
+  the concept in context, with examples embedded in the explanation. Do NOT add
+  bare checklist, task, or meta-discourse fragments such as "Тренуй...",
+  "розпізнавай...", "контролюй...", or "у блоці..." merely to include required
+  keywords. If the only possible local patch is keyword stuffing, return
+  `<fixes></fixes>`.
 - Each `replace` and each `text` body must satisfy both caps: at most 6 lines
   and at most 240 characters. Exceeding either cap is evidence of
   regeneration. If you need a larger patch, abort with `<fixes></fixes>` and

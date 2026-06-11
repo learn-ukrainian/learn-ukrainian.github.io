@@ -51,7 +51,7 @@ DEFAULT_PERSONA: tuple[str, str] = ("Lead Ukrainian Instructor", "The Dedicated 
 # Skill file mapping (which Gemini skill handles which track)
 _SKILL_FILES: dict[str, str] = {
     "a1": "full-rebuild-core-a", "a2": "full-rebuild-core-a",
-    "b1": "full-rebuild-core-a",  # early B1
+    "b1": "full-rebuild-core-b",
     "b2": "full-rebuild-core-b",
     "c1": "full-rebuild-core-b",
     "c2": "full-rebuild-core-b",
@@ -68,8 +68,9 @@ TRACK_SKILLS: dict[str, tuple[str, str, str]] = {
     for k, v in TRACK_PERSONAS.items()
     if k in _SKILL_FILES or k.split("-")[0] in _SKILL_FILES
 }
-# B1 has early/late split for skills
-TRACK_SKILLS["b1-early"] = ("full-rebuild-core-a", *TRACK_PERSONAS["b1"])
+# B1 is Ukrainian-immersive from M01; keep early/late keys for callers, but
+# route both to the B1+ Core B skill.
+TRACK_SKILLS["b1-early"] = ("full-rebuild-core-b", *TRACK_PERSONAS["b1"])
 TRACK_SKILLS["b1-late"] = ("full-rebuild-core-b", *TRACK_PERSONAS["b1"])
 
 IMMERSION_RULES: dict[str, str] = {

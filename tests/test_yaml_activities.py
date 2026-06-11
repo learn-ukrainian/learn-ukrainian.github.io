@@ -219,6 +219,45 @@ class TestParserEdgeCases:
         yaml_file.write_text("")
         assert parser.parse(yaml_file) == []
 
+    def test_group_sort_mapping_groups_parse_and_render(self, parser, tmp_path):
+        """Legacy mapping-shaped group-sort groups normalize for MDX assembly."""
+        yaml_file = tmp_path / "group_sort_mapping.yaml"
+        yaml_file.write_text(
+            "- id: act-3\n"
+            "  type: group-sort\n"
+            "  title: Доконаний чи недоконаний\n"
+            "  groups:\n"
+            "    Доконаний вид:\n"
+            "      - написати\n"
+            "      - прочитати\n"
+            "    Недоконаний вид:\n"
+            "      - писати\n"
+            "      - читати\n",
+            encoding="utf-8",
+        )
+
+        activities = parser.parse(yaml_file)
+        activity = activities[0]
+        mdx = parser.to_mdx(activities)
+
+        assert activity.groups[0].name == "Доконаний вид"
+        assert activity.groups[0].items == ["написати", "прочитати"]
+        assert activity.groups[1].name == "Недоконаний вид"
+        assert '"Доконаний вид": ["написати", "прочитати"]' in mdx
+        assert '<GroupSort' in mdx
+
+    def test_group_sort_mapping_requires_list_values(self, parser, tmp_path):
+        yaml_file = tmp_path / "bad_group_sort_mapping.yaml"
+        yaml_file.write_text(
+            "- type: group-sort\n"
+            "  groups:\n"
+            "    Доконаний вид: написати\n",
+            encoding="utf-8",
+        )
+
+        with pytest.raises(ValueError, match="group-sort groups mapping values must be lists"):
+            parser.parse(yaml_file)
+
     def test_parse_activities_wrapper(self, parser, tmp_path):
         """Parser handles both bare list and activities: wrapper."""
         yaml_file = tmp_path / "wrapped.yaml"

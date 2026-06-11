@@ -291,6 +291,31 @@ def test_vesum_gate_accepts_o_linked_compound_adjectives_from_adjective_bases() 
     assert adjective_bases <= looked_up
 
 
+def test_vesum_gate_accepts_noun_noun_hyphenated_compounds_from_verified_parts() -> None:
+    seen: list[list[str]] = []
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        seen.append(words)
+        valid_nouns = {"дієслово", "зв'язка", "зв'язку"}
+        return {
+            word: ([{"lemma": word, "pos": "noun", "tags": "noun:inanim"}] if word in valid_nouns else [])
+            for word in words
+        }
+
+    gate = _vesum_gate(
+        module_text="Дієсло́во-зв'я́зка і дієсло́во-зв'язку.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
+
+    looked_up = {word for call in seen for word in call}
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert {"дієслово", "зв'язка", "зв'язку"} <= looked_up
+
+
 def test_vesum_gate_keeps_hyphenated_compound_missing_without_adjective_base() -> None:
     seen: list[list[str]] = []
 

@@ -8,6 +8,12 @@ Adult peer voice only. No English meta-narration or teacherly transitions in `mo
 <!-- rule_id: #R-VOICE-META -->
 B1+ body text outside Tab 2 is Ukrainian only: no rescue notes, mirrored translations, parenthetical English grammar glosses, or English activity instructions. Tab 2 may carry English translations and expression notes.
 
+<!-- rule_id: #R-VOICE-META -->
+B1+ uses Anna Ohoiko / Ukrainian Lessons Podcast pedagogy as method, not as the A1/A2 bilingual ratio: teach Ukrainian through Ukrainian with short concrete examples, micro-situations, recall questions, dialogues, and contrast through usage. Prefer Ukrainian paraphrase/definition over English glosses outside Tab 2; never use English grammar lectures, transliteration tables, or "sounds like English" explanations.
+
+<!-- rule_id: #R-VOICE-META -->
+B1+ contrast is Ukrainian-only even when discussing L1 interference: do not quote English phrases, English sentence patterns, or "English construction ..." examples in learner-facing body prose. Show the Ukrainian mistake pattern with `<!-- bad -->...<!-- /bad -->` only when the wiki/plan authorizes it; otherwise teach the canonical Ukrainian pattern through Ukrainian paraphrase and micro-situations.
+
 <!-- rule_id: #R-CITE-HONEST -->
 Use real sources only. Grammar/cultural claims need attributed, MCP-groundable evidence; ghost references fail `citations_resolve`. Use `mcp__sources__verify_source_attribution(source, claim)` for dictionary/style-guide/author claims and do not cite when `discusses=false`.
 
@@ -29,7 +35,7 @@ Bounded composition is allowed only for English scaffold glosses (A1/A2), dialog
 
 Voice rewrite, NOT translation: convert methodological wiki prose to 2nd-person teacher voice (Ukrainian-first with brief English at A1/A2, Ukrainian at B1+). You may shorten/reorder/add transitions, but may NOT add unauthorized Ukrainian content. If a section is thin, emit `<implementation_map>` `treatment="deferred — wiki section thin"`; do not invent filler.
 
-Still load-bearing: voice rewrite quality (`#R-VOICE-META`, `#R-SINGLE-VOICE-A1`, `#R-AUDIENCE-LANGUAGE-A1`), citation honesty (`#R-CITE-HONEST`), VESUM (`#R-VESUM-ALL-WORDS`), russianism/calque/surzhyk/paronym gates, prose floor (`#R-PROSE-FLOOR-A1` remains HARD despite renderer framing), bad-form markers (`#R-BAD-FORM-MARKER`), no-scaffolding-leak (`#R-NO-SCAFFOLDING-LEAKS`), no-children-quotes (`#R-NO-CHILDREN-PRIMARY-QUOTES`), artifact emission, and dialogue count/format.
+Still load-bearing: voice rewrite quality (`#R-VOICE-META`, A1/A2 audience-language rules where applicable), citation honesty (`#R-CITE-HONEST`), VESUM (`#R-VESUM-ALL-WORDS`), russianism/calque/surzhyk/paronym gates, prose floor, bad-form markers (`#R-BAD-FORM-MARKER`), no-scaffolding-leak (`#R-NO-SCAFFOLDING-LEAKS`), no-children-quotes (`#R-NO-CHILDREN-PRIMARY-QUOTES`), artifact emission, and dialogue count/format.
 
 Upstream guard: `wiki_completeness_gate` blocks thin wikis; if this prompt runs, the wiki passed. Render it faithfully.
 
@@ -47,7 +53,7 @@ Hard constraints: every `INJECT_ACTIVITY` id resolves; unknown activity types fa
 
 # Phase 4 Linear Writer Prompt
 
-Write the A1 module using the plan and contract below. Produce exactly four
+Write the {LEVEL} module using the plan and contract below. Produce exactly four
 authoring artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml`, and
 `resources.yaml`.
 
@@ -60,9 +66,9 @@ Emit one `<plan_reasoning section="...">...</plan_reasoning>` block per section 
 Each `<plan_reasoning>` block MUST contain these exact XML sub-nodes (do not write a single blob of prose):
 - `<word_budget>`: section word allocation + running total vs {WORD_TARGET}.
 - `<plan_vocab>`: required plan-vocabulary lemmas used + grounding Ukrainian sentence.
-- `<register>`: immersion ratio from the Immersion Rule + how this section preserves it.
+- `<register>`: the level's audience-language contract + how this section preserves it.
 - `<teaching_sequence>`: Knowledge Packet facts/citations this section uses.
-- `<implementation_map>` (<!-- rule_id: #R-IMPL-MAP-COMPLETE -->): list every `obligation_id` exactly once with artifact, location, treatment. Omission causes `implementation_map_missing`. If a row cannot fit A1 scope, emit artifact/location `<none>` and treatment `deferred — <why>`.
+- `<implementation_map>` (<!-- rule_id: #R-IMPL-MAP-COMPLETE -->): list every `obligation_id` exactly once with artifact, location, treatment. Omission causes `implementation_map_missing`. If a row cannot fit the current level scope, emit artifact/location `<none>` and treatment `deferred — <why>`.
 - `<verification_plan>`: MCP tools to call for this section's claims.
 - `<verification_trace>`: exact tool call signatures; omit speculative examples.
 
@@ -222,7 +228,7 @@ This learner has completed modules 1..{MODULE_NUM}-1 in track `{LEVEL}`. Cumulat
 
 2. **Don't introduce vocabulary outside the cumulative list or this module's declared `vocabulary.yaml`.** From m04 onward this is HARD `unknown_vocab_in_prose`; for m01-m03 it is a WARN. Every Ukrainian content word in `module.md` prose/dialogue/examples must be cumulative, declared, or exempt as a proper noun / Latin borrowing.
 
-3. **Soft scaffolding via foreshadowing.** If a new lemma appears before its `vocabulary.yaml` entry, give a first-mention gloss (`**креслити** *(to draw lines)*`).
+3. **Soft scaffolding via foreshadowing.** If a new lemma appears before its `vocabulary.yaml` entry, introduce it according to the level's audience-language contract. A1/A2 may use a brief English first-mention gloss after the Ukrainian word; B1+ must use a short Ukrainian paraphrase, definition, contrast, or micro-situation in body prose, with English reserved for `vocabulary.yaml` translation/support fields.
 
 4. **Frequency-and-CEFR awareness.** Before any non-plan lemma, run the Corpus Access stack; if none pass for `{LEVEL}`, omit and choose differently.
 
@@ -249,9 +255,9 @@ This learner has completed modules 1..{MODULE_NUM}-1 in track `{LEVEL}`. Cumulat
 ## Tone and immersion (mandatory)
 
 <!-- rule_id: #R-VOICE-META -->
-Write for an adult learner, not for a teacher reading a lesson plan. No English meta-narration; the complete forbidden phrase list is in the Writer Charter. Do not write teacher-plan narration such as "this section teaches", "learners will", or "the activity asks". Open sections directly with the grammar fact, a Ukrainian example/dialogue line, or a one-sentence English scaffold.
+Write for an adult learner, not for a teacher reading a lesson plan. No English meta-narration; the complete forbidden phrase list is in the Writer Charter. Do not write teacher-plan narration such as "this section teaches", "learners will", or "the activity asks". Open sections directly with the grammar fact, a Ukrainian example/dialogue line, or a level-appropriate Ukrainian scaffold.
 
-English is only for translation, gloss, and short scaffolds. Honor the Immersion Rule exactly; B1+ body text outside Tab 2 is 100% Ukrainian.
+English is only for translation, gloss, and short scaffolds where the level contract explicitly allows it. Honor the level audience-language contract exactly; B1+ body text outside Tab 2 is 100% Ukrainian.
 
 <!-- rule_id: #R-VOICE-META -->
 **Engagement floor.** Emit at least 1 content-anchored callout (`:::tip`, `:::note`, `:::caution`, `:::warning`, `[!myth-buster]`, `[!history-bite]`). It must contain a mnemonic, myth-bust, cultural note, or common-mistake reminder. Empty filler does not count. Meta-narration hits fail `engagement_floor` immediately.
@@ -415,7 +421,10 @@ field `items`; do NOT use the React/component prop name `questions`.
 
 For item-bearing types, include non-empty `items`; numeric arrays like `correct_order` use zero-based indices.
 
-**`group-sort` shape (mandatory canonical fields).** Use `groups` shaped like `{"label": "Group name", "items": ["word 1", "word 2"]}`. Do NOT emit top-level `items`, `key`, or `{word, group}` pairs.
+**`group-sort` shape (mandatory canonical fields).** Use `groups` as a list of
+objects shaped like `{"label": "Group name", "items": ["word 1", "word 2"]}`.
+Do NOT emit a mapping object like `{"Group name": ["word 1"]}`, top-level
+`items`, `key`, or `{word, group}` pairs.
 
 **`letter-grid` shape (mandatory canonical fields).** Each `letters` entry MUST use `upper`, `lower`, `emoji`, `key_word`, and optional `sound_type`/`note`; no aliases such as `letter`, `word`, `sound`, or `kind`.
 

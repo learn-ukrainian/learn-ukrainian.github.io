@@ -275,10 +275,10 @@ b1:
   level_lines: [1434, 2450]
 
   immersion:
-    metalanguage_bridge: [1, 2, 3, 4, 5]
-    full_immersion_start: 6
-    target_percentage: 90.0
-    reference: "Curriculum design decision"
+    metalanguage_bridge: []
+    full_immersion_start: 1
+    target_percentage: 100.0
+    reference: "B1+ full Ukrainian immersion policy"
 
   # --- Phonetics (§4.1) ---
   phonetics:

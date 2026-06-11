@@ -15,4 +15,4 @@ depends_on: [R-RENDERER-CHARTER]
 
 **Activity item count vs INLINE/WORKBOOK split.** The `{ACTIVITY_COUNT_TARGET}` placeholder carries the per-level target; the split rule (INLINE 4-6 + WORKBOOK 6-9 at A1, etc.) is enforced by the activity-schema gate. Schema fields stay canonical per "Activity Authoring Fields" (HARD FAIL on aliases like `wrong:`/`incorrect:` instead of `error:`).
 
-**Quiz/translate explanations.** Every `quiz` and `translate` item must include a non-empty one-line `explanation` that teaches why the correct option is right. Use simple English for A1/A2 explanations. Missing, empty, or whitespace-only explanations hard-fail the `quiz_translate_explanations` gate.
+**Quiz/translate explanations.** Every `quiz` and `translate` item must include a non-empty one-line `explanation` that teaches why the correct option is right. Use simple English for A1/A2 explanations; use Ukrainian-only explanations for B1+ unless an explicit metadata contract requires English outside learner-facing body text. Missing, empty, or whitespace-only explanations hard-fail the `quiz_translate_explanations` gate.

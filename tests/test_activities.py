@@ -13,6 +13,8 @@ import pytest
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from yaml_activities import MatchPair, MatchUpActivity
+
 from scripts.audit.checks.activities import (
     check_activity_complexity,
     check_activity_level_restrictions,
@@ -107,8 +109,8 @@ class TestQuizValidation:
         word_count_violations = [v for v in violations if 'prompt length' in v.get('issue', '')]
         assert len(word_count_violations) == 0
 
-    def test_quiz_prompt_b1_bridge_uses_a2_rules(self):
-        """B1 M01-M05 (bridge) should use A2 complexity (8-15 words)."""
+    def test_quiz_prompt_early_b1_uses_b1_rules(self):
+        """Early B1 uses the same complexity contract as the rest of B1."""
         content = """
 ## quiz: Тест
 
@@ -116,7 +118,7 @@ class TestQuizValidation:
    - [x] Дієслово
    - [ ] Іменник
 """
-        # 8 words - should pass for bridge modules
+        # Short factual prompts are valid B1 pedagogy.
         violations = check_activity_complexity(content, 'B1', 3)
         word_count_violations = [v for v in violations if 'prompt length' in v.get('issue', '')]
         assert len(word_count_violations) == 0
@@ -130,7 +132,7 @@ class TestMatchupValidation:
     """Test match-up pair count and content validation."""
 
     def test_matchup_pair_count_valid(self):
-        """B1 bridge match-ups with 10-12 pairs should pass."""
+        """B1 match-ups with 12-16 pairs should pass."""
         content = """
 ## match-up: Терміни
 
@@ -150,6 +152,24 @@ class TestMatchupValidation:
         violations = check_activity_complexity(content, 'B1', 3)
         pair_violations = [v for v in violations if 'pairs' in v.get('issue', '')]
         assert len(pair_violations) == 0
+
+    def test_early_b1_matchup_uses_standard_b1_pair_limit(self):
+        """Early B1 must not use the old M01-M05 relaxation."""
+        activity = MatchUpActivity(
+            title="Терміни",
+            pairs=[
+                MatchPair(left=f"термін {i}", right=f"визначення {i}")
+                for i in range(18)
+            ],
+        )
+
+        violations = check_activity_complexity("", "B1", 3, yaml_activities=[activity])
+
+        assert any(
+            v["type"] == "COMPLEXITY"
+            and "match-up 'Терміни' has 18 pairs (target: 12-16)" in v["issue"]
+            for v in violations
+        )
 
     def test_matchup_too_many_pairs(self):
         """Match-up complexity check runs without error (pair limits now in YAML)."""
@@ -190,8 +210,8 @@ class TestMatchupValidation:
 class TestUnjumbleValidation:
     """Test unjumble word count and answer matching."""
 
-    def test_unjumble_word_count_valid_b1_bridge(self):
-        """B1 bridge unjumbles with 8-10 words should pass."""
+    def test_unjumble_word_count_valid_early_b1(self):
+        """Early B1 unjumbles with 8-10 words run through B1 complexity."""
         content = """
 ## unjumble: Речення
 
@@ -464,8 +484,8 @@ class TestTranslateValidation:
 class TestFillInValidation:
     """Test fill-in sentence length validation."""
 
-    def test_fill_in_sentence_length_b1_bridge(self):
-        """B1 bridge fill-in should use A2 rules (6-8 words)."""
+    def test_fill_in_sentence_length_early_b1(self):
+        """Early B1 fill-in runs through B1 complexity."""
         content = """
 ## fill-in: Заповніть
 
@@ -490,8 +510,8 @@ class TestFillInValidation:
 class TestTrueFalseValidation:
     """Test true-false statement validation."""
 
-    def test_true_false_length_b1_bridge(self):
-        """B1 bridge true-false should use A2 rules (6-12 words)."""
+    def test_true_false_length_early_b1(self):
+        """Early B1 true-false runs through B1 complexity."""
         content = """
 ## true-false: Правда чи неправда
 

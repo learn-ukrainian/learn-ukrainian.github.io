@@ -240,9 +240,7 @@ def _get_track_calibration(level: str, module_num: int) -> str:
     """Read the appropriate calibration file for a track/level + module number."""
     level_lower = level.lower()
 
-    if level_lower == "b1" and module_num <= 5:
-        cal_name = "b1-bridge.md"
-    elif level_lower == "b1":
+    if level_lower == "b1":
         cal_name = "b1-immersed.md"
     elif level_lower.startswith("lit"):
         cal_name = "lit.md"

@@ -460,6 +460,28 @@ def test_yaml_group_sort():
     assert "пишіть" in words
 
 
+def test_yaml_group_sort_mapping_groups():
+    activities = {
+        "inline": [
+            {
+                "type": "group-sort",
+                "groups": {
+                    "Доконаний вид": ["написати", "прочитати"],
+                    "Недоконаний вид": ["писати", "читати"],
+                },
+            }
+        ]
+    }
+    items = extract_exercise_items_from_yaml(activities)
+    words = {i.word for i in items}
+    assert "доконаний" in words
+    assert "вид" in words
+    assert "написати" in words
+    assert "прочитати" in words
+    assert "писати" in words
+    assert "читати" in words
+
+
 def test_yaml_true_false():
     activities = {
         "workbook": [

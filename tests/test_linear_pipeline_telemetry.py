@@ -419,3 +419,29 @@ def test_resources_artifact_accepts_public_wikipedia_urls() -> None:
             }
         ],
     )
+
+
+def test_writer_json_normalizes_group_sort_mapping_groups() -> None:
+    dumped = linear_pipeline._parse_and_dump_writer_json_artifact(
+        "activities.yaml",
+        json.dumps(
+            [
+                {
+                    "type": "group-sort",
+                    "title": "Вид дієслова",
+                    "groups": {
+                        "Доконаний вид": ["написати", "прочитати"],
+                        "Недоконаний вид": ["писати", "читати"],
+                    },
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        content_start_line=1,
+    )
+
+    parsed = linear_pipeline.yaml.safe_load(dumped)
+    assert parsed[0]["groups"] == [
+        {"label": "Доконаний вид", "items": ["написати", "прочитати"]},
+        {"label": "Недоконаний вид", "items": ["писати", "читати"]},
+    ]

@@ -600,14 +600,22 @@ def _structural_immersion_rule(band: dict[str, Any]) -> str:
         language_roles = old_rule.split("\n", 1)[1]
     if _uses_ulp_s1_band(str(band["key"])):
         language_roles = _ulp_s1_language_roles()
+    support_line = (
+        "- No UK-only run longer than K words without inline English support "
+        f"(band: {band['max_unsupported_uk_words']})\n"
+    )
+    if int(band["advisory_pct_min"]) >= 100:
+        support_line = (
+            "- Full-immersion band: do not add L1 support in the module body; "
+            "English belongs only in explicit support metadata such as Tab 2.\n"
+        )
     structural = (
         "STRUCTURAL TARGETS (Phase A placeholders; Phase B calibrates):\n"
         f"- At least N UK dialogue lines (band: {band['min_uk_dialogue_lines']})\n"
         f"- At least N vocab entries (band: {band['min_vocab_entries']})\n"
         "- At least N UK example sentences in bulleted lists "
         f"(band: {band['min_uk_example_sentences']})\n"
-        "- No UK-only run longer than K words without inline English support "
-        f"(band: {band['max_unsupported_uk_words']})\n"
+        f"{support_line}"
     )
     return structural + language_roles
 

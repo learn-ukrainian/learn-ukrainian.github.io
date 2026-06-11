@@ -353,13 +353,22 @@ def _extract_text_from_pairs(pairs: list) -> list[str]:
     return texts
 
 
-def _extract_text_from_groups(groups: list) -> list[str]:
+def _extract_text_from_groups(groups: object) -> list[str]:
     """Extract text from group-sort groups."""
     texts = []
+    if isinstance(groups, dict):
+        for label, group_items in groups.items():
+            texts.append(str(label))
+            if isinstance(group_items, list):
+                texts.extend([str(i) for i in group_items if isinstance(i, str)])
+        return texts
+    if not isinstance(groups, list):
+        return texts
     for group in groups:
         if isinstance(group, dict):
-            if 'name' in group:
-                texts.append(group['name'])
+            label = group.get('name') or group.get('label') or group.get('title')
+            if isinstance(label, str):
+                texts.append(label)
             group_items = group.get('items', [])
             if isinstance(group_items, list):
                 texts.extend([str(i) for i in group_items if isinstance(i, str)])
@@ -381,7 +390,7 @@ def _extract_text_from_activity(activity: dict) -> list[str]:
         texts.extend(_extract_text_from_pairs(pairs))
 
     groups = activity.get('groups')
-    if isinstance(groups, list):
+    if isinstance(groups, (dict, list)):
         texts.extend(_extract_text_from_groups(groups))
 
     answers = activity.get('answers')

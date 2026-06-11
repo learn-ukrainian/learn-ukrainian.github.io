@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
-from scripts.build.linear_pipeline import _build_vesum_text, _vesum_gate
+from scripts.build.linear_pipeline import (
+    _bad_form_heritage_gate,
+    _build_vesum_text,
+    _vesum_gate,
+)
 
 
 def test_mc_distractor_text_not_verified() -> None:
@@ -273,6 +277,46 @@ def test_bad_marker_form_stays_excluded_before_comment_stripping() -> None:
 
     assert "одягатися" in text
     assert "одіватися" not in text
+
+
+def test_bad_form_heritage_ignores_unrelated_authentic_hits() -> None:
+    """A noisy heritage search hit must not block an unrelated bad marker."""
+    result = _bad_form_heritage_gate(
+        module_text="Кажи <!-- bad -->несу́чий<!-- /bad --> лише як помилковий зразок.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        heritage_lookup_fn=lambda _query: [
+            {
+                "word": "фосфор",
+                "is_authentic_ukrainian": True,
+                "source_family": "esum",
+            }
+        ],
+    )
+
+    assert result["passed"] is True
+    assert result["findings"] == []
+
+
+def test_bad_form_heritage_blocks_exact_authentic_headword() -> None:
+    """Authentic exact hits still reject bad-form markers."""
+    result = _bad_form_heritage_gate(
+        module_text="Не маркуй <!-- bad -->кобіта<!-- /bad --> як помилку без підстав.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        heritage_lookup_fn=lambda _query: [
+            {
+                "word": "кобіта",
+                "is_authentic_ukrainian": True,
+                "source_family": "grinchenko",
+            }
+        ],
+    )
+
+    assert result["passed"] is False
+    assert result["findings"][0]["word"] == "кобіта"
 
 
 def test_normal_prose_cyrillic_survives_comment_stripping() -> None:

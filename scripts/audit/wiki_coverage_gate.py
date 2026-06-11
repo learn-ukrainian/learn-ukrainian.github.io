@@ -600,10 +600,7 @@ def _surgical_diff_hint(
             f"Add prose stating written={payload.get('written')!r} -> "
             f"spoken={payload.get('spoken')!r} with at least one example pair"
         ),
-        "sequence_claim_missing": (
-            "Add section heading or step marker matching manifest_payload.heading "
-            f"({payload.get('heading')!r}); required_claim: {payload.get('required_claim')!r}"
-        ),
+        "sequence_claim_missing": _sequence_claim_missing_hint(payload),
         "ban_substance_missing": (
             f"Add prose implementing the lexical substitution substance in manifest_payload.rule "
             f"({payload.get('rule')!r})"
@@ -619,6 +616,20 @@ def _surgical_diff_hint(
     if seeded_entry is None:
         hint += " (no seeded sidecar - hint reduced; PR3 reviewer should run with --seeded-map)"
     return hint
+
+
+def _sequence_claim_missing_hint(payload: Mapping[str, Any]) -> str:
+    return (
+        "Add a natural learner-facing explanatory sentence or compact paragraph "
+        "that teaches the substance of manifest_payload.required_claim with "
+        "examples embedded in the explanation. Do NOT copy manifest_payload.heading "
+        "or manifest_payload.required_claim verbatim; strip writer scaffolding "
+        "such as 'Крок N:', '[S#]', and 'автор-письменник'. Avoid keyword stuffing "
+        "and checklist/meta phrases such as 'Тренуй', 'розпізнавай', 'контролюй', "
+        "or 'у блоці' used only to satisfy coverage. "
+        f"Required substance: {payload.get('required_claim')!r}; "
+        f"heading context: {payload.get('heading')!r}"
+    )
 
 
 def _implementation_map_missing_hint(

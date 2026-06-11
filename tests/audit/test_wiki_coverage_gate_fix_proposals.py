@@ -441,8 +441,12 @@ def test_sequence_claim_missing_quotes_heading_and_required_claim() -> None:
 
     proposal = _single_proposal(report)
     assert proposal["failure_reason"] == "sequence_claim_missing"
-    assert "manifest_payload.heading ('Morning proof')" in proposal["surgical_diff_hint"]
-    assert "required_claim: 'Teach `привіт` and `ранок` together.'" in proposal["surgical_diff_hint"]
+    assert "Do NOT copy manifest_payload.heading" in proposal["surgical_diff_hint"]
+    assert "strip writer scaffolding" in proposal["surgical_diff_hint"]
+    assert "Avoid keyword stuffing" in proposal["surgical_diff_hint"]
+    assert "examples embedded in the explanation" in proposal["surgical_diff_hint"]
+    assert "Required substance: 'Teach `привіт` and `ранок` together.'" in proposal["surgical_diff_hint"]
+    assert "heading context: 'Morning proof'" in proposal["surgical_diff_hint"]
 
 
 def test_ban_substance_missing_quotes_seeded_rule() -> None:

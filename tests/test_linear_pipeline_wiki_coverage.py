@@ -85,6 +85,54 @@ def test_wiki_coverage_review_prompt_receives_manifest_and_gate() -> None:
     assert "QG_DIMS" in prompt
 
 
+def test_wiki_coverage_review_parser_normalizes_bare_verbatim_evidence() -> None:
+    response = json.dumps(
+        {
+            "verdicts": [
+                {
+                    "obligation_id": "step-1",
+                    "verdict": "PASS",
+                    "evidence": "Візьми форму третьої особи множини і відкинь закінчення.",
+                    "rationale": "The generated prose teaches the step.",
+                }
+            ],
+            "overall_verdict": "PASS",
+            "summary": "All obligations pass.",
+        },
+        ensure_ascii=False,
+    )
+
+    parsed = linear_pipeline.parse_wiki_coverage_review_response(
+        response,
+        generated_content="## Урок\n\nВізьми форму третьої особи множини і відкинь закінчення.\n",
+    )
+
+    assert parsed["verdicts"][0]["evidence"] == "«Візьми форму третьої особи множини і відкинь закінчення.»"
+
+
+def test_wiki_coverage_review_parser_rejects_bare_nonverbatim_evidence() -> None:
+    response = json.dumps(
+        {
+            "verdicts": [
+                {
+                    "obligation_id": "step-1",
+                    "verdict": "PASS",
+                    "evidence": "This is only a reviewer paraphrase.",
+                    "rationale": "Not a real quote.",
+                }
+            ],
+            "overall_verdict": "PASS",
+            "summary": "All obligations pass.",
+        }
+    )
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="quoted excerpt"):
+        linear_pipeline.parse_wiki_coverage_review_response(
+            response,
+            generated_content="No matching generated text.",
+        )
+
+
 def test_v7_build_orders_wiki_gate_before_aggregate_qg() -> None:
     source = (ROOT / "scripts/build/v7_build.py").read_text(encoding="utf-8")
     run_body = source[source.index("def _run(") :]
@@ -151,3 +199,5 @@ def test_wiki_coverage_correction_attempt_is_written(
     assert correction["phase"] == "batched"
     assert correction["fixes_applied_total"] == 1
     assert "Wiki-Coverage Correction" in correction["attempts"][0]["prompt"]
+    assert "Goodhart sentinel" in correction["attempts"][0]["prompt"]
+    assert "If the only possible local patch is keyword stuffing" in correction["attempts"][0]["prompt"]

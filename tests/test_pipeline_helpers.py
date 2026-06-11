@@ -314,19 +314,17 @@ class TestGetActivityConfig:
         config = get_activity_config("a1", 10)
         assert isinstance(config, dict)
 
-    def test_b1_early_uses_bridge(self):
+    def test_b1_early_uses_core_config(self):
         from pipeline_lib import get_activity_config
         config = get_activity_config("b1", 3)
-        # b1 module_num <= 5 should use bridge config
-        bridge = get_activity_config("b1", 5)
-        assert config == bridge
+        core = get_activity_config("b1", 6)
+        assert config == core
 
     def test_b1_late_uses_core(self):
         from pipeline_lib import get_activity_config
         config_early = get_activity_config("b1", 5)
         config_late = get_activity_config("b1", 6)
-        # They may differ (bridge vs core)
-        # At minimum, both return valid dicts
+        assert config_early == config_late
         assert isinstance(config_late, dict)
 
     def test_lit_prefix_uses_lit_config(self):
@@ -577,13 +575,22 @@ class TestGetTrackSkill:
         assert isinstance(result, tuple)
         assert len(result) == 3
 
-    def test_b1_early_vs_late(self):
+    def test_b1_early_and_late_use_core_b_skill(self):
         from pipeline_lib import get_track_skill
         early = get_track_skill("b1", 3)
         late = get_track_skill("b1", 10)
-        # They may differ based on bridge vs core
-        assert isinstance(early, tuple)
-        assert isinstance(late, tuple)
+        assert early == late
+        assert early[0] == "full-rebuild-core-b"
+
+    def test_b1_review_calibration_is_immersed_from_m01(self):
+        from pipeline.parsing_review import _get_track_calibration
+
+        early = _get_track_calibration("b1", 1)
+        late = _get_track_calibration("b1", 10)
+
+        assert early == late
+        assert "Modules 1+" in early
+        assert "Metalanguage Bridge" not in early
 
     def test_lit_prefix_uses_lit(self):
         from pipeline_lib import get_track_skill

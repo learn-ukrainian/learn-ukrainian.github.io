@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
+from typing import Any
 
 # Ukrainian word pattern: at least 2 Cyrillic characters (skip single-letter prepositions)
 # Allows combining acute (U+0301) inside words for stress-marked text
@@ -181,16 +182,11 @@ def _extract_words_from_activity(
             items.extend(_words_from_text(str(pair.get("right", "")), ex_type, role="context"))
 
     elif ex_type == "group-sort":
-        groups = activity.get("groups", [])
-        if not isinstance(groups, list):
-            groups = []
-        for group in groups:
-            if not isinstance(group, dict):
-                continue
+        for label, group_items in _iter_group_sort_groups(activity.get("groups", [])):
             # Group label = context (category name)
-            items.extend(_words_from_text(str(group.get("label", "")), ex_type, role="context"))
+            items.extend(_words_from_text(label, ex_type, role="context"))
             # Items being sorted = answer (learner must categorize)
-            for gi in group.get("items", []) or []:
+            for gi in group_items:
                 items.extend(_words_from_text(str(gi), ex_type, role="answer"))
 
     elif ex_type == "true-false":
@@ -216,6 +212,27 @@ def _extract_words_from_activity(
                 items.extend(_words_from_text(str(seg), ex_type, role="answer"))
 
     return items
+
+
+def _iter_group_sort_groups(raw_groups: Any) -> list[tuple[str, list[Any]]]:
+    """Return group-sort labels/items from canonical and legacy group shapes."""
+    groups: list[tuple[str, list[Any]]] = []
+    if isinstance(raw_groups, dict):
+        for label, raw_items in raw_groups.items():
+            if isinstance(raw_items, list):
+                groups.append((str(label), raw_items))
+        return groups
+    if not isinstance(raw_groups, list):
+        return groups
+    for group in raw_groups:
+        if not isinstance(group, dict):
+            continue
+        raw_items = group.get("items", [])
+        if not isinstance(raw_items, list):
+            raw_items = []
+        label = group.get("label") or group.get("name") or group.get("title") or ""
+        groups.append((str(label), raw_items))
+    return groups
 
 
 def _parse_quiz(block: str) -> list[ExerciseItem]:

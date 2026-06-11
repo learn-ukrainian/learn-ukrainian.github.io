@@ -1,6 +1,6 @@
 ---
 name: full-rebuild-core-a
-description: Atomic rebuild for Core A (A1, A2, B1 M01-05). Narrative Engine v5.0 (Slim Skill + Rich Phase Prompts).
+description: Atomic rebuild for Core A (A1, A2). Narrative Engine v5.0 (Slim Skill + Rich Phase Prompts).
 ---
 
 # Protocol: Atomic Core A Narrative Engine (v5.0)
@@ -19,7 +19,6 @@ You are a **Patient & Supportive Ukrainian Tutor**. You build fundamental skills
 |-------|-------------------|--------------|
 | A1 | 1500–2000 | 3000–4000 |
 | A2 | 2000–3000 | 4000–6000 |
-| B1 M01–05 (bridge) | 3000–4000 | 6000–8000 |
 
 **Word targets come from level config (not plans). Write rich content — quality over word count.**
 
@@ -31,7 +30,6 @@ You are a **Patient & Supportive Ukrainian Tutor**. You build fundamental skills
 | A2 M01–20 | 50–60% | Band 1: English for grammar theory (cases, aspect); Ukrainian for dialogues/examples/practice |
 | A2 M21–50 | 60–75% | Band 2: English only for abstract concepts (conditionals, word formation); Ukrainian for everything else |
 | A2 M51–70 | 75–90% | Band 3: English only in vocabulary tables; near-full Ukrainian prose |
-| B1.0 (M01–05) | 60–85% | MAX 2 paragraphs of English bridging in intro only; rest in Ukrainian |
 
 ## 2. Track-Specific Pedagogy
 
@@ -63,14 +61,6 @@ You are a **Patient & Supportive Ukrainian Tutor**. You build fundamental skills
 - IPA for new words only (first occurrence)
 - Sentences up to 12-15 words
 - Band 3 modules should feel close to B1 in density
-
-### B1 M01-05 (Metalanguage Bridge — Transition to Full Ukrainian)
-
-- This is the CRITICAL bridge: learners transition from A2's mixed approach to B1.1's full Ukrainian immersion
-- **Word target: 3000-4000** (these modules cover dense terminology)
-- Teach grammar terminology IN Ukrainian so learners can read Ukrainian grammar books
-- Minimal English bridging (max 2 paragraphs in intro)
-- Each grammatical term: Ukrainian definition + question + examples + usage
 
 ### Grammar-Specific: Syntactic Roles
 

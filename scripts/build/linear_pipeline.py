@@ -3299,6 +3299,11 @@ def _render_component_props_schema(allowed_activity_types: str) -> str:
         lines.append(f"    required authoring fields: {', '.join(required)}")
         lines.append("    contextual authoring fields: id (required for inline activities; omit for workbook)")
         lines.append(f"    optional authoring fields: {', '.join(optional_fields) or '—'}")
+        if activity_type == "group-sort":
+            lines.append(
+                "    shape: groups is a list of objects with label/name + items; "
+                "do not emit a mapping object, top-level items, key, or {word, group} pairs"
+            )
     if not lines:
         return "(no allowed activity types resolved against authoring schema)"
     return "\n".join(lines)
@@ -4638,9 +4643,12 @@ def _render_vesum_surgical_instruction(gate_report: Mapping[str, Any]) -> str:
     token_text = ", ".join(missing_tokens) if missing_tokens else "(none listed)"
     return (
         f"The following tokens FAILED VESUM verification: {token_text}. "
-        "For EACH offending token, find the smallest fix (likely a typo, wrong stress mark, "
-        "or missing/extra character) and replace that EXACT token. Do NOT modify any other "
-        "word in the prose. Do NOT change any prose that does not contain the offending token. "
+        "For EACH offending token, find the smallest fix. If the token is a typo, wrong stress mark, "
+        "or missing/extra character, replace that EXACT token. If the token is intentionally shown as "
+        "a wrong/Russianism/surzhyk/calque teaching contrast, wrap EVERY occurrence of that exact bad "
+        "form in `<!-- bad -->...<!-- /bad -->` instead of inventing a VESUM-looking replacement. "
+        "If the token is a morpheme or ending label, write it as hyphen-prefixed morpheme notation. "
+        "Do NOT modify any other word in the prose. Do NOT change any prose that does not contain the offending token. "
         "If you cannot determine the correct form, leave the token as-is with a `<!-- VERIFY -->` "
         "HTML comment immediately after."
     )
@@ -4651,10 +4659,20 @@ def _render_word_count_surgical_instruction(gate_report: Mapping[str, Any]) -> s
     target_min = _gate_int(gate_report, "min_with_tolerance", "minimum", "target", default=current_count)
     target_max = _gate_int(gate_report, "target_max", "max", "target", default=target_min)
     delta = max(0, target_min - current_count)
+    if delta <= 180:
+        append_shape = (
+            "Append one concise paragraph or extend the existing 'Підсумок' / "
+            f"final section with about {delta}+10 words."
+        )
+    else:
+        append_shape = (
+            "Append a focused final practice section with multiple short paragraphs "
+            f"totaling at least {delta}+10 words. Do not satisfy this with a few "
+            "very long sentences; keep sentence length within the module's level limit."
+        )
     return (
         f"Current: {current_count} words. Target: {target_min}-{target_max}. "
-        f"Delta to floor: {delta} words. Append a NEW short section (2-3 sentences) "
-        f"or extend the existing 'Підсумок' / final section with {delta}+10 words. "
+        f"Delta to floor: {delta} words. {append_shape} "
         "Do NOT modify the existing prose, vocab, or dialogues. ONLY append."
     )
 
@@ -4902,7 +4920,24 @@ def parse_review_response(
     return entry
 
 
-def parse_wiki_coverage_review_response(response: str) -> dict[str, Any]:
+def _normalize_wiki_coverage_evidence(
+    evidence: str,
+    generated_content: str | None,
+) -> str:
+    if len(evidence) < 8:
+        raise LinearPipelineError("Wiki coverage review evidence must be a quoted excerpt of ≥8 chars")
+    if any(marker in evidence for marker in WIKI_COVERAGE_EVIDENCE_QUOTE_MARKERS):
+        return evidence
+    if generated_content and evidence in generated_content:
+        return f"«{evidence}»"
+    raise LinearPipelineError("Wiki coverage review evidence must be a quoted excerpt of ≥8 chars")
+
+
+def parse_wiki_coverage_review_response(
+    response: str,
+    *,
+    generated_content: str | None = None,
+) -> dict[str, Any]:
     payload = _parse_json_or_yaml_mapping(response)
     verdicts = payload.get("verdicts")
     if not isinstance(verdicts, list):
@@ -4920,8 +4955,7 @@ def parse_wiki_coverage_review_response(response: str) -> dict[str, Any]:
         evidence = str(item.get("evidence") or "").strip()
         if not evidence:
             raise LinearPipelineError("Wiki coverage review verdict missing evidence")
-        if len(evidence) < 8 or not any(marker in evidence for marker in WIKI_COVERAGE_EVIDENCE_QUOTE_MARKERS):
-            raise LinearPipelineError("Wiki coverage review evidence must be a quoted excerpt of ≥8 chars")
+        evidence = _normalize_wiki_coverage_evidence(evidence, generated_content)
         if verdict in WIKI_COVERAGE_OVERALL_FAIL_VERDICTS:
             hard_fail_seen = True
         normalized_item = dict(item)
@@ -5825,8 +5859,52 @@ def _normalize_wiki_coverage_yaml_fixes(
             insert_text = item["text"]
             if insert_text and not insert_text.startswith("\n") and not anchor.endswith("\n"):
                 item["text"] = "\n" + insert_text
+            item["text"] = _quote_yaml_patch_plain_scalars(item["text"])
+        if "replace" in item:
+            item["replace"] = _quote_yaml_patch_plain_scalars(item["replace"])
         normalized.append(item)
     return normalized
+
+
+_YAML_PATCH_SCALAR_LINE_RE = re.compile(
+    r"^(?P<prefix>\s*(?:-\s*)?[A-Za-z_][A-Za-z0-9_-]*:\s*)(?P<value>.+?)$"
+)
+
+
+def _quote_yaml_patch_plain_scalars(text: str) -> str:
+    """Quote unsafe one-line YAML scalar values in reviewer patch bodies."""
+    lines: list[str] = []
+    for line in text.splitlines(keepends=True):
+        newline = ""
+        body = line
+        if body.endswith("\n"):
+            body = body[:-1]
+            newline = "\n"
+        match = _YAML_PATCH_SCALAR_LINE_RE.match(body)
+        if not match:
+            lines.append(line)
+            continue
+        value = match.group("value")
+        stripped = value.strip()
+        if not stripped or not _yaml_plain_scalar_needs_quotes(stripped):
+            lines.append(line)
+            continue
+        lines.append(f"{match.group('prefix')}{_yaml_single_quote_scalar(stripped)}{newline}")
+    return "".join(lines)
+
+
+def _yaml_plain_scalar_needs_quotes(value: str) -> bool:
+    if value[0] in {"'", '"', "|", ">", "{", "["}:
+        return False
+    return bool(
+        re.search(r":\s", value)
+        or re.search(r"\s#", value)
+        or value[0] in {"-", "?", ":", "@", "`", "&", "*", "!", "%", "#", ",", "]", "}"}
+    )
+
+
+def _yaml_single_quote_scalar(value: str) -> str:
+    return "'" + value.replace("'", "''") + "'"
 
 
 def _reviewer_fix_body(fix: Mapping[str, str]) -> tuple[str, str] | None:
@@ -7048,15 +7126,31 @@ def _group_sort_item_text(item: Mapping[str, Any]) -> str | None:
 
 
 def _normalize_group_sort_activity(activity: dict[str, Any]) -> None:
-    """Convert keyed top-level group-sort items into nested group items.
+    """Convert legacy group-sort shapes into nested canonical group items.
 
     Writers often use an assessment-style shape:
     ``groups: [{name, key}], items: [{word, group}]``. The authoring format
     consumed by the renderer keeps sortable strings inside each group:
-    ``groups: [{label, items}]``. Convert only when every top-level item can
-    be assigned unambiguously; otherwise leave validation to fail loud.
+    ``groups: [{label, items}]``. Some YAML-shaped JSON outputs also emit
+    ``groups: {"Group": ["item"]}``. Convert only when every item can be
+    assigned unambiguously; otherwise leave validation to fail loud.
     """
     groups = activity.get("groups")
+    if isinstance(groups, Mapping):
+        normalized_groups: list[dict[str, Any]] = []
+        for label, raw_items in groups.items():
+            normalized_label = str(label).strip()
+            if not normalized_label or not isinstance(raw_items, list):
+                return
+            normalized_groups.append(
+                {
+                    "label": normalized_label,
+                    "items": [str(item).strip() for item in raw_items if str(item).strip()],
+                }
+            )
+        activity["groups"] = normalized_groups
+        return
+
     if not isinstance(groups, list) or not groups:
         return
 
@@ -8555,14 +8649,18 @@ def _vesum_gate(
                 # accept conservatively — the compound is a string of
                 # very short tokens we wouldn't gate individually.
                 last_part_index = len(parts) - 1
+                final_matches = (constituent_verified.get(parts[-1]) or []) if parts else []
+                final_part_is_adjective = any(_vesum_match_is_adjective(match) for match in final_matches)
                 if all(
                     _vesum_part_verifies_as_compound_constituent(
                         constituent_verified.get(part) or [],
                         require_modifier=index < last_part_index
+                        and final_part_is_adjective
                         and bool(compound_base_candidates_by_part.get(part)),
                     )
                     or (
                         index < last_part_index
+                        and final_part_is_adjective
                         and any(
                             candidate in verified_compound_base_adjectives
                             for candidate in compound_base_candidates_by_part.get(part, ())
@@ -8668,7 +8766,7 @@ def _bad_form_heritage_gate(
                 "marker_count": len(markers),
             }
         for hit in hits:
-            if not _heritage_hit_blocks_bad_form_marker(hit):
+            if not _heritage_hit_blocks_bad_form_marker(hit, query):
                 continue
             findings.append(_bad_form_heritage_finding(marker, query, hit))
             break
@@ -8720,7 +8818,7 @@ def _normalize_bad_form_query(raw: str) -> str:
     return re.sub(r"\s+", " ", text)
 
 
-def _heritage_hit_blocks_bad_form_marker(hit: Mapping[str, Any]) -> bool:
+def _heritage_hit_blocks_bad_form_marker(hit: Mapping[str, Any], query: str) -> bool:
     authentic = bool(
         hit.get("is_authentic_ukrainian")
         or hit.get("authentic_ukrainian")
@@ -8731,7 +8829,23 @@ def _heritage_hit_blocks_bad_form_marker(hit: Mapping[str, Any]) -> bool:
         or hit.get("russianism_warning")
         or hit.get("Russianism warning")
     )
-    return authentic and not russianism
+    if not authentic or russianism:
+        return False
+
+    query_key = _normalize_bad_form_query(query).casefold()
+    hit_words = (
+        hit.get("word"),
+        hit.get("lemma"),
+        hit.get("headword"),
+        hit.get("title"),
+        hit.get("surface"),
+    )
+    hit_keys = {
+        _normalize_bad_form_query(str(word)).casefold()
+        for word in hit_words
+        if word
+    }
+    return query_key in hit_keys
 
 
 def _bad_form_heritage_finding(
@@ -9169,6 +9283,11 @@ def _walk_artifact_strings(
 
 def _looks_like_textbook_attribution(attribution: str) -> bool:
     return bool(_TEXTBOOK_ATTRIBUTION_HINT_RE.search(attribution))
+
+
+def _looks_like_formatted_attribution_line(line: str) -> bool:
+    stripped = re.sub(r"^\s*>\s?", "", line).strip()
+    return bool(re.match(r"^[*_`~]*\s*[—–-]\s*[*_`~]*\s*\S", stripped))
 
 
 def _strip_textbook_attribution_lines(text: str) -> str:
@@ -9994,7 +10113,14 @@ def _extract_blockquote_records(text: str) -> list[dict[str, str]]:
         if match:
             body = match.group("body")
             attribution = _extract_textbook_attribution(body)
-            if attribution and _looks_like_textbook_attribution(attribution) and current:
+            if (
+                attribution
+                and current
+                and (
+                    _looks_like_textbook_attribution(attribution)
+                    or _looks_like_formatted_attribution_line(body)
+                )
+            ):
                 while current and not current[-1].strip():
                     current.pop()
                 flush_quote()

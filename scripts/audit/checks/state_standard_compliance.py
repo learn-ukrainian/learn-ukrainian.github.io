@@ -101,13 +101,14 @@ def check_immersion_compliance(level: str, module_num: int, immersion_pct: float
     if not immersion_req:
         return violations
 
-    # B1 special case: metalanguage bridge modules (M01-M05)
+    # B1 special case: historical metalanguage bridges are allowed only if
+    # the mapping declares them. Current B1+ policy starts full immersion at M01.
     if level_key == 'b1':
         if module_num in immersion_req.get('metalanguage_bridge', []):
             # Metalanguage modules have lower immersion - skip check
             return violations
 
-        # M06+ should be 98%+
+        # Full-immersion B1 modules must meet the mapping target.
         if module_num >= immersion_req['full_immersion_start']:
             target = immersion_req['target_percentage']
             if immersion_pct < target:
@@ -115,7 +116,7 @@ def check_immersion_compliance(level: str, module_num: int, immersion_pct: float
                     code='STATE_STANDARD_LOW_IMMERSION',
                     message=f"Module {module_num} has {immersion_pct:.1f}% immersion (target: {target}%+)",
                     reference=immersion_req['reference'],
-                    fix="Add more Ukrainian content to reach 90%+ immersion for full immersion modules"
+                    fix=f"Add more Ukrainian content to reach {target}%+ immersion for full immersion modules"
                 ))
 
     # B2, C1, C2: All modules should be 98%+

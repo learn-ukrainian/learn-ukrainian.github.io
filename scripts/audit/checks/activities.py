@@ -66,25 +66,6 @@ def _apply_a1_early_relaxations(rules: dict, act_type: str) -> None:
         rules.update(relaxations[act_type])
 
 
-def _apply_b1_bridge_relaxations(rules: dict, act_type: str) -> None:
-    """Apply relaxed complexity rules for B1 M01-M05 (bridge modules)."""
-    relaxations = {
-        'quiz': {'min_len': 5, 'max_len': 20},
-        'unjumble': {'words_min': 6, 'words_max': 16},
-        'match-up': {'pairs_min': 12, 'pairs_max': 18},
-        'fill-in': {'sent_min': 6, 'sent_max': 14},
-        'true-false': {'min_len': 6, 'max_len': 18},
-        'group-sort': {'groups_min': 2, 'groups_max': 5, 'items_min': 12},
-        'error-correction': {'errors': 1, 'min_len': 6, 'max_len': 10},
-        'cloze': {'sentences': [3, 4, 5], 'blanks': [3, 4]},
-        'mark-the-words': {'min_len': 8, 'max_len': 12, 'marks': [2, 3, 4]},
-        'select': {'min_len': 6, 'max_len': 10, 'options': [4, 5], 'correct': [2, 3]},
-        'translate': {'min_len': 4, 'max_len': 8},
-    }
-    if act_type in relaxations:
-        rules.update(relaxations[act_type])
-
-
 def _check_structural_requirements(act_type: str, title: str, body: str, act_obj) -> list[dict]:
     """Check structural requirements (model-answer, rubric) for advanced activity types."""
     violations = []
@@ -264,7 +245,6 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
 
     violations = []
     is_a1_early = (level_code == 'A1' and module_num <= 3)  # V2: only M01-M03 are phonetics
-    is_b1_bridge = (level_code == 'B1' and module_num <= 5)
 
     for act in yaml_activities:
         rules = _resolve_complexity_rules(act.type, level_code, module_focus)
@@ -273,8 +253,6 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
 
         if is_a1_early:
             _apply_a1_early_relaxations(rules, act.type)
-        if is_b1_bridge:
-            _apply_b1_bridge_relaxations(rules, act.type)
 
         violations.extend(_check_single_activity(
             act.type, getattr(act, 'title', 'Untitled'), act, rules, level_code))

@@ -140,6 +140,46 @@ def test_blockquoted_attribution_is_not_part_of_quote_record() -> None:
     ]
 
 
+def test_formatted_literary_attribution_is_not_part_of_quote_record() -> None:
+    records = linear_pipeline._extract_blockquote_records(
+        """
+> Вже весна воскресла,
+> Що ж сь нам принесла?
+> Дівоцькую красу.
+>
+> *— Грушевський [S1]*
+"""
+    )
+
+    assert records == [
+        {
+            "quote": "Вже весна воскресла,\nЩо ж сь нам принесла?\nДівоцькую красу.",
+            "section_title": "",
+            "attribution": "Грушевський [S1]",
+        }
+    ]
+
+
+def test_dash_prefixed_formatted_literary_attribution_is_not_part_of_quote_record() -> None:
+    records = linear_pipeline._extract_blockquote_records(
+        """
+> Вже весна воскресла,
+> Що ж сь нам принесла?
+> Дівоцькую красу.
+>
+> — *Грушевський [S1]*
+"""
+    )
+
+    assert records == [
+        {
+            "quote": "Вже весна воскресла,\nЩо ж сь нам принесла?\nДівоцькую красу.",
+            "section_title": "",
+            "attribution": "Грушевський [S1]",
+        }
+    ]
+
+
 def test_textbook_grounding_gate_passes_good_fixture(tmp_path: Path) -> None:
     # Step B enforcement (#2294): writer prompt #R-TEXTBOOK-30W (B) requires
     # a get_chunk_context call. Happy-path tests must include it; the

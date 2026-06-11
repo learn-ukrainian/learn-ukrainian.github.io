@@ -38,4 +38,6 @@ def test_b1_uses_single_full_ukrainian_band():
     assert get_immersion_range("b1", 3) == (100, 100)
     assert get_immersion_range("b1", 10) == (100, 100)
     assert "Full Ukrainian immersion. No English in module body." in early
+    assert "without inline English support" not in early
+    assert "English belongs only in explicit support metadata" in early
     assert early == core

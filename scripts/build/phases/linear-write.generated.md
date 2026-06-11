@@ -10,9 +10,9 @@ three sources, kept strictly separate (ADR `2026-05-28-wiki-driven-prompt-genera
   references inlined below. Lesson-specific; never another module's content.
 - **Grounding** — the Knowledge Packet + RAG chunks named in `plan.references`.
 
-You are a RENDERER, not a composer. Translate the wiki content into the four
+You are a RENDERER, not a composer. Render the wiki content into the four
 artifacts (`module.md`, `activities.yaml`, `vocabulary.yaml`, `resources.yaml`)
-using English (A1/A2) or Ukrainian (B1+) teacher voice. Do not invent
+using A1/A2 Ukrainian-first support or B1+ Ukrainian-only teacher voice. Do not invent
 vocabulary, examples, citations, dialogue lines, phonetic rules, decolonization
 stances, or grammar claims that are not derivable from the wiki + plan + cited
 RAG chunks.
@@ -85,8 +85,10 @@ cumulative vocabulary + grammar below as the FLOOR of what this module may
 assume: do not re-explain already-taught grammar (refer back briefly and BUILD
 on it); do not introduce content vocabulary that is neither in the cumulative
 list nor this module's `vocabulary.yaml` (HARD `unknown_vocab_in_prose` failure
-from m04 on) — when you introduce a new lemma before its vocabulary entry,
-gloss it inline at first mention (`**lemma** *(gloss)*`).
+from m04 on). When you introduce a new lemma before its vocabulary entry,
+follow the level audience-language contract. At B1+, use Ukrainian paraphrase,
+definition, contrast, or micro-situation in body text and reserve English for
+`vocabulary.yaml` translation/support fields.
 
 {LEARNER_STATE}
 
@@ -182,6 +184,11 @@ use `items` (NOT `questions`).
 {COMPONENT_PROPS_SCHEMA}
 ```
 
+**`group-sort` shape (mandatory canonical fields).** Use `groups` as a list of
+objects shaped like `{"label": "Group name", "items": ["word 1", "word 2"]}`.
+Do NOT emit a mapping object like `{"Group name": ["word 1"]}`, top-level
+`items`, `key`, or `{word, group}` pairs.
+
 `translate` items: use `source` (text to translate) + `options` (target choices,
 correct one has `correct: true`); NO `prompt:`/`answer:`/bare `target:`.
 `error-correction` items: use EXACTLY `sentence` + `error` + `correction`
@@ -196,7 +203,7 @@ the fix, `correctAnswer:`, `right:`, `fix:`) leak deliberate typos into
 Emit one `<plan_reasoning section="...">...</plan_reasoning>` block per section
 (≤200 words), each containing these exact XML sub-nodes: `<word_budget>`
 (allocation + running total vs {WORD_TARGET}), `<plan_vocab>` (required lemmas +
-grounding sentence), `<register>` (immersion ratio + how preserved),
+grounding sentence), `<register>` (level audience-language contract + how preserved),
 `<teaching_sequence>` (Knowledge Packet facts/citations used),
 `<implementation_map>` (list every `obligation_id` once with artifact, location,
 treatment — omission causes `implementation_map_missing`; see

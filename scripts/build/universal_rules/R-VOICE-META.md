@@ -13,6 +13,10 @@ Adult peer voice only. No English meta-narration or teacherly transitions in `mo
 
 B1+ body text outside Tab 2 is Ukrainian only: no rescue notes, mirrored translations, parenthetical English grammar glosses, or English activity instructions. Tab 2 may carry English translations and expression notes.
 
+B1+ uses Anna Ohoiko / Ukrainian Lessons Podcast pedagogy as method, not as the A1/A2 bilingual ratio: teach Ukrainian through Ukrainian with short concrete examples, micro-situations, recall questions, dialogues, and contrast through usage. Prefer Ukrainian paraphrase/definition over English glosses outside Tab 2; never use English grammar lectures, transliteration tables, or "sounds like English" explanations.
+
+B1+ contrast is Ukrainian-only even when discussing L1 interference: do not quote English phrases, English sentence patterns, or "English construction ..." examples in learner-facing body prose. Show the Ukrainian mistake pattern with `<!-- bad -->...<!-- /bad -->` only when the wiki/plan authorizes it; otherwise teach the canonical Ukrainian pattern through Ukrainian paraphrase and micro-situations.
+
 Activities test Ukrainian, not content recall. Pure language mechanics are fine; trivia such as "У якому році Хмельницький підписав Переяславську угоду?" is not.
 
 **Engagement floor.** Emit at least 1 content-anchored callout (`:::tip`, `:::note`, `:::caution`, `:::warning`, `[!myth-buster]`, `[!history-bite]`). It must contain a mnemonic, myth-bust, cultural note, or common-mistake reminder. Empty filler does not count. Meta-narration hits fail `engagement_floor` immediately.

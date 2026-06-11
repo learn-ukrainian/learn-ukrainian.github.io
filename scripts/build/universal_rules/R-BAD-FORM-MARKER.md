@@ -27,6 +27,7 @@ Apply the same convention in `module.md`, `activities.yaml` statements/items, an
 **CONCRETE FORBIDDEN PATTERNS — HARD REJECT.** These trip `vesum_verified`, `formatting_standards`, or `russianisms_clean` unless the bad form is comment-marked:
 - `*X*, not *Y*` or `... not *Y*` — italic bad-form leak.
 - `say X, not Y`, `X, а не Y`, `instead of Y`, `замість Y` — unmarked contrast.
+- `на кшталт Y`, `типу Y`, `форма Y` where Y is the wrong form — unmarked repeated anti-example.
 - `(not Y)` / `(не Y)` — unmarked parenthetical contrast.
 - true-false `statement: "X, а не Y."` when Y is malformed or Russianism.
 

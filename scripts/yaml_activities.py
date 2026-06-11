@@ -844,8 +844,55 @@ class ActivityParser:
         return MatchUpActivity(title=data.get('title', ''), pairs=pairs)
 
     def _parse_group_sort(self, data: dict) -> GroupSortActivity:
-        groups = [GroupSortGroup(name=g.get('name', g.get('label', '')), items=g.get('items', [])) for g in data.get('groups', [])]
+        groups = self._parse_group_sort_groups(data.get('groups', []))
         return GroupSortActivity(title=data.get('title', ''), groups=groups)
+
+    def _parse_group_sort_groups(self, raw_groups: Any) -> list[GroupSortGroup]:
+        if raw_groups is None:
+            return []
+        if isinstance(raw_groups, dict):
+            groups = []
+            for label, raw_items in raw_groups.items():
+                if not isinstance(raw_items, list):
+                    raise TypeError(
+                        "group-sort groups mapping values must be lists, "
+                        f"got {type(raw_items).__name__} for {label!r}"
+                    )
+                groups.append(
+                    GroupSortGroup(
+                        name=str(label),
+                        items=[str(item) for item in raw_items],
+                    )
+                )
+            return groups
+        if not isinstance(raw_groups, list):
+            raise TypeError(
+                "group-sort groups must be a list of objects or a mapping, "
+                f"got {type(raw_groups).__name__}"
+            )
+
+        groups = []
+        for index, group in enumerate(raw_groups):
+            if not isinstance(group, dict):
+                raise TypeError(
+                    f"group-sort groups[{index}] must be an object, "
+                    f"got {type(group).__name__}"
+                )
+            raw_items = group.get('items', [])
+            if raw_items is None:
+                raw_items = []
+            if not isinstance(raw_items, list):
+                raise TypeError(
+                    f"group-sort groups[{index}].items must be a list, "
+                    f"got {type(raw_items).__name__}"
+                )
+            groups.append(
+                GroupSortGroup(
+                    name=str(group.get('name') or group.get('label') or group.get('title') or ''),
+                    items=[str(item) for item in raw_items],
+                )
+            )
+        return groups
 
     def _parse_unjumble(self, data: dict) -> UnjumbleActivity:
         items = []

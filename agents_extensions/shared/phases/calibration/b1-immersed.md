@@ -1,16 +1,18 @@
-# Track Calibration: B1 (Modules 6+ — Full Immersion)
+# Track Calibration: B1 (Modules 1+ — Full Ukrainian Immersion)
 
 ## Bilingual Scope
-B1 modules 6+ target 85-100% Ukrainian immersion. Grammar is explained IN
-Ukrainian using metalanguage learned in the bridge modules (M01-05).
-The target is not hardcoded to 100% because vocabulary tables and
-occasional transliterations contribute to the non-Ukrainian portion.
-Flag: English prose explanations (should be in Ukrainian at this stage).
-Flag: Modules below 85% immersion.
-Do NOT flag: vocabulary table English glosses, frontmatter.
+B1 modules target 100% Ukrainian immersion in learner-facing body content
+from M01. Grammar is explained in Ukrainian through short concrete
+examples, Ukrainian definitions, micro-situations, recall questions,
+dialogues, and contrast through usage.
+Flag: English prose explanations, mirrored English translations, inline
+English dialogue glosses, transliteration tables, and "sounds like English"
+explanations.
+Do NOT flag: vocabulary table English glosses or explicit support metadata
+outside the lesson body.
 
-## Russicism Lookup (B1 Immersed)
-All B1 Bridge Russicisms plus heightened sensitivity to:
+## Russicism Lookup (B1)
+Heightened sensitivity to:
 - Surzhyk patterns in example sentences
 - Russian word order calques (placing adjective after noun Russian-style)
 - давайте + future perfective → Ukrainian imperative form (-мо)

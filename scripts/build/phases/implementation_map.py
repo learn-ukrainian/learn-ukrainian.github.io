@@ -97,8 +97,10 @@ TREATMENT_TEMPLATES: dict[str, dict[str, Any]] = {
     },
     "sequence_step": {
         "shape": (
-            "module.md section heading or in-prose step marker matching "
-            "manifest_payload.heading at the position implied by manifest_payload.step_num"
+            "module.md learner-facing prose or heading that teaches the substance "
+            "of manifest_payload.required_claim at the position implied by "
+            "manifest_payload.step_num; do not copy writer-side step labels, "
+            "source markers, or author instructions"
         ),
         "required_claim": "<from manifest_payload.required_claim>",
     },

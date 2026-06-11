@@ -3,9 +3,13 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+import yaml
+
+from scripts.build import linear_pipeline
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 WRITER_PROMPT = PROJECT_ROOT / "scripts/build/phases/linear-write.md"
+B1_M01_PLAN = PROJECT_ROOT / "curriculum/l2-uk-en/plans/b1/b1-baseline-past-present.yaml"
 
 WRITER_RULE_ANCHORS = (
     (
@@ -78,6 +82,18 @@ def _normalize(text: str) -> str:
     return " ".join(text.split())
 
 
+def _render_b1_m01_generated_prompt() -> str:
+    plan_content = B1_M01_PLAN.read_text(encoding="utf-8")
+    plan = yaml.safe_load(plan_content)
+    return linear_pipeline.render_writer_prompt(
+        plan=plan,
+        plan_content=plan_content,
+        knowledge_packet="## Knowledge Packet\n\nTest packet for prompt contract rendering.",
+        writer="claude-tools",
+        use_generator=True,
+    )
+
+
 @pytest.mark.parametrize(("rule_id", "anchors"), WRITER_RULE_ANCHORS)
 def test_writer_prompt_contains_v7_register_rule(
     rule_id: str,
@@ -106,5 +122,74 @@ def test_writer_prompt_contains_seminar_folk_qg_hardening() -> None:
         "authentic regional and archaic variants are ENCOURAGED",
     )
 
+    for anchor in required:
+        assert _normalize(anchor) in normalized
+
+
+def test_writer_prompt_carries_b1_full_ukrainian_ulp_method() -> None:
+    prompt = _prompt()
+    normalized = _normalize(prompt)
+
+    required = (
+        "B1+ body text outside Tab 2 is Ukrainian only",
+        "Anna Ohoiko / Ukrainian Lessons Podcast pedagogy as method",
+        "teach Ukrainian through Ukrainian",
+        "micro-situations, recall questions, dialogues",
+        "Prefer Ukrainian paraphrase/definition over English glosses outside Tab 2",
+        "do not quote English phrases, English sentence patterns",
+        "Show the Ukrainian mistake pattern with `<!-- bad -->...<!-- /bad -->` only when",
+    )
+
+    for anchor in required:
+        assert _normalize(anchor) in normalized
+
+    forbidden = (
+        "Write the A1 module",
+        "one-sentence English scaffold",
+        "If a row cannot fit A1 scope",
+        "immersion ratio from the Immersion Rule",
+    )
+    for phrase in forbidden:
+        assert phrase not in prompt
+
+
+def test_generated_b1_writer_prompt_is_ukrainian_immersive() -> None:
+    prompt = _render_b1_m01_generated_prompt()
+    normalized = _normalize(prompt)
+
+    required = (
+        "B1+ body text outside Tab 2 is Ukrainian only",
+        "Anna Ohoiko / Ukrainian Lessons Podcast pedagogy as method",
+        "teach Ukrainian through Ukrainian",
+        "Prefer Ukrainian paraphrase/definition over English glosses outside Tab 2",
+        "At B1+, use Ukrainian paraphrase, definition, contrast, or micro-situation",
+        "do not quote English phrases, English sentence patterns",
+        "`<register>` (level audience-language contract + how preserved)",
+    )
+    for anchor in required:
+        assert _normalize(anchor) in normalized
+
+    forbidden = (
+        "English scaffold glosses",
+        "inline English gloss",
+        "within 8 tokens",
+        "**lemma** *(gloss)*",
+        "immersion ratio + how preserved",
+    )
+    for phrase in forbidden:
+        assert phrase not in prompt
+
+
+def test_generated_writer_prompt_carries_group_sort_shape_contract() -> None:
+    prompt = _render_b1_m01_generated_prompt()
+    normalized = _normalize(prompt)
+
+    required = (
+        "group-sort",
+        "groups is a list of objects with label/name + items",
+        "Use `groups` as a list of objects",
+        "Do NOT emit a mapping object",
+        "top-level `items`, `key`, or `{word, group}` pairs",
+    )
     for anchor in required:
         assert _normalize(anchor) in normalized

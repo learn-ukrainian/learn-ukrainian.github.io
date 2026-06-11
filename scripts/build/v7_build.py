@@ -1054,7 +1054,10 @@ def _run_wiki_coverage_review(
         response,
         encoding="utf-8",
     )
-    return linear_pipeline.parse_wiki_coverage_review_response(response)
+    return linear_pipeline.parse_wiki_coverage_review_response(
+        response,
+        generated_content=generated_content,
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:

@@ -580,6 +580,11 @@ class TestEvaluateImmersion:
             state = AuditState()
             ctx = _make_ctx(level_code='B1', module_num=num, module_focus=None)
             eval_imm(ctx, state)
+        state = AuditState()
+        ctx = _make_ctx(level_code='B1', module_num=3, module_focus=None)
+        eval_imm(ctx, state)
+        assert "B1.1 Foundations" in state.results['immersion'].msg
+        assert "Bridge" not in state.results['immersion'].msg
 
     def test_other_level_immersion(self):
         from audit.parsing import AuditState
@@ -615,6 +620,21 @@ class TestEvaluateImmersion:
         )
         eval_imm(ctx, state)
         assert not state.has_critical_failure
+
+    def test_b1_m01_state_standard_requires_full_ukrainian_immersion(self):
+        import yaml
+        from audit.checks.state_standard_compliance import check_immersion_compliance
+
+        mapping_path = Path("docs/l2-uk-en/state-standard-2024-mapping.yaml")
+        mapping = yaml.safe_load(mapping_path.read_text(encoding="utf-8"))
+
+        violations = check_immersion_compliance("b1", 1, 90.0, mapping)
+
+        assert [violation.code for violation in violations] == [
+            "STATE_STANDARD_LOW_IMMERSION"
+        ]
+        assert "target: 100.0%+" in violations[0].message
+        assert check_immersion_compliance("b1", 1, 100.0, mapping) == []
 
 
 class TestCheckTransliterationPolicy:
@@ -658,6 +678,22 @@ class TestCheckTransliterationPolicy:
             content="Слово (slovo) is a word",
             level_code='B2',
             module_num=10,
+        )
+        check_transliteration_policy(ctx, state)
+        assert state.has_critical_failure
+
+    def test_transliteration_forbidden_in_early_b1_body(self):
+        from audit.parsing import AuditState
+        from audit.phases_gates import check_transliteration_policy
+
+        state = AuditState()
+        ctx = _make_ctx(
+            config={'transliteration_allowed': False, 'min_engagement': 3, 'min_vocab': 25},
+            meta_data={'transliteration': None},
+            frontmatter_str="transliteration: none",
+            content="Українське слово (slovo) не має латинської підказки.",
+            level_code='B1',
+            module_num=3,
         )
         check_transliteration_policy(ctx, state)
         assert state.has_critical_failure

@@ -1,6 +1,6 @@
 ---
 name: full-rebuild-core-b
-description: Atomic rebuild for Core B (B1 M06+, B2, C1, C2, PRO). Narrative Engine v5.0 (Slim Skill + Rich Phase Prompts).
+description: Atomic rebuild for Core B (B1+, B2, C1, C2, PRO). Narrative Engine v5.0 (Slim Skill + Rich Phase Prompts).
 ---
 
 # Protocol: Atomic Core B Narrative Engine (v5.0)
@@ -17,7 +17,7 @@ You are a **Senior Ukrainian Language & Culture Specialist**. You execute high-q
 
 | Level | Word Target Range | Overshoot To |
 |-------|-------------------|--------------|
-| B1 M06+ (grammar) | 4000–5000 | 6000–7500 |
+| B1 grammar (M01+) | 4000–5000 | 6000–7500 |
 | B1 (vocab/cultural) | 4000–5000 | 6000–7500 |
 | B2 | 4000–5000 | 6000–7500 |
 | C1 | 5000–6000 | 7500–9000 |
@@ -29,7 +29,7 @@ You are a **Senior Ukrainian Language & Culture Specialist**. You execute high-q
 
 | Level | Immersion | English Policy |
 |-------|-----------|----------------|
-| B1 M06+ | 100% | Zero English in prose. English ONLY in vocabulary table "Переклад" column. |
+| B1 | 100% | Zero English in prose. English ONLY in vocabulary table "Переклад" column. |
 | B2 | 100% | Zero English in prose. English ONLY in vocabulary table "Переклад" column. |
 | C1/C2 | 100% | Zero English in prose. English ONLY in vocabulary table "Переклад" column. Advanced register expected. |
 
@@ -43,7 +43,7 @@ You are a **Senior Ukrainian Language & Culture Specialist**. You execute high-q
 - **Concept Before Use**: Every term must be DEFINED before it appears in examples.
 - **IPA Rule**: No inline IPA transcriptions in content prose. At B1+ students read Cyrillic fluently. IPA belongs ONLY in the vocabulary YAML file. When phonetics are discussed, MUST use IPA symbols — Latin transliterations are BANNED.
 
-### B1 Grammar (M06-51: Aspect, Motion Verbs, Complex Sentences)
+### B1 Grammar (M01+: foundations, aspect, motion verbs, complex sentences)
 
 - **100% Ukrainian immersion** — no English scaffolding
 - Focus on aspect pairs, motion verbs, subordinate clauses

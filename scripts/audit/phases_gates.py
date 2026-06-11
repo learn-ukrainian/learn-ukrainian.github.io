@@ -260,7 +260,7 @@ def evaluate_immersion(ctx: AuditContext, state: AuditState) -> tuple[float, int
     elif ctx.level_code == 'B1':
         min_imm, max_imm = get_b1_immersion_range(ctx.module_num)
         if ctx.module_num <= 5:
-            phase_label = " (B1.0 Bridge)"
+            phase_label = " (B1.1 Foundations)"
         elif ctx.module_num <= 10:
             phase_label = " (B1.1 Aspect)"
         elif ctx.module_num <= 20:
@@ -414,7 +414,6 @@ def check_transliteration_policy(ctx: AuditContext, state: AuditState) -> None:
             state.has_critical_failure = True
 
         track_for_translit = detect_track_from_path(ctx.file_path)
-        is_bridge_module = (ctx.level_code == 'B1' and ctx.module_num <= 5)
         content_lines = ctx.content.split('\n')
         for line_idx, line in enumerate(content_lines):
             if '___' in line or '[___:' in line:
@@ -431,8 +430,6 @@ def check_transliteration_policy(ctx: AuditContext, state: AuditState) -> None:
                 if latin_part.upper() in ACADEMIC_LATIN_ALLOWLIST:
                     continue
                 if is_academic_latin_context(line, content_lines, line_idx, track_for_translit):
-                    continue
-                if is_bridge_module:
                     continue
                 print(f"\u274c AUDIT FAILED: Transliteration detected: '{translit_pattern.group()}'. Remove Latin in parentheses.")
                 state.has_critical_failure = True
