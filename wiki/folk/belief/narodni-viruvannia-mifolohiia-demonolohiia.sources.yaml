@@ -1,0 +1,19 @@
+# Source registry for wiki/folk/belief/narodni-viruvannia-mifolohiia-demonolohiia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/narodna-mifolohiia_Академічна-C1-Народна-міфологія-Основний-зміст
+  type: ukrainian_wiki
+  title: 'Академічна C1: Народна міфологія'
+  section_path: 'Академічна C1: Народна міфологія > Основний зміст'
+- id: S2
+  file: ukrainian_wiki/narodna-mifolohiia_Академічна-C1-Народна-міфологія-Основний-зміст-Анімізм-метаморфози-та-демонологія
+  type: ukrainian_wiki
+  title: 'Академічна C1: Народна міфологія'
+  section_path: 'Академічна C1: Народна міфологія > Основний зміст > Анімізм, метаморфози
+    та демонологія'
+- id: S3
+  file: wikipedia/Міфологія
+  type: wikipedia
+  title: Міфологія
+  url: https://uk.wikipedia.org/wiki/%D0%9C%D1%96%D1%84%D0%BE%D0%BB%D0%BE%D0%B3%D1%96%D1%8F
