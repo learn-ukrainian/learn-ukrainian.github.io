@@ -80,6 +80,7 @@ const POS_LABELS_UK: Record<string, string> = {
   pronoun: "займенник",
   pron: "займенник",
   num: "числівник",
+  numeral: "числівник",
   prep: "прийменник",
   conj: "сполучник",
   particle: "частка",
@@ -137,9 +138,12 @@ const courseUsage = entry.course_usage.slice().sort((a, b) => {
   if (a.track !== b.track) return a.track.localeCompare(b.track);
   return a.module_num - b.module_num;
 });
+// Provenance lists DATA sources only (VESUM, Вікісловник, …). The course-usage
+// context (plan_required → «обов'язкова») is NOT a data source — never let it
+// leak into the provenance footer. Empty ⇒ the footer is omitted (design §4 #15).
 const sourceList = enrichment?.sources && enrichment.sources.length > 0
   ? enrichment.sources
-  : [CONTEXT_LABELS_UK[entry.primary_source] ?? entry.primary_source];
+  : [];
 const hasDictionaryData = Boolean(
   enrichment?.morphology ||
     enrichment?.meaning ||
@@ -226,24 +230,18 @@ const frontmatter = {
       </div>
     </header>
 
-    <section class="atlas-callout" aria-labelledby="atlas-status-title">
-      <div class="atlas-callout-icon" aria-hidden="true">✓</div>
-      <div>
-        <h2 id="atlas-status-title">Дані статті</h2>
-        {hasDictionaryData ? (
-          <p>
-            Для цієї леми вже під’єднано локальні словникові джерела. Нижче
-            показано значення, засвідчення, етимологію або морфологію,
-            залежно від доступних даних.
-          </p>
-        ) : (
+    {!hasDictionaryData && (
+      <section class="atlas-callout" aria-labelledby="atlas-status-title">
+        <div class="atlas-callout-icon" aria-hidden="true">ℹ</div>
+        <div>
+          <h2 id="atlas-status-title">Стаття-заготовка</h2>
           <p>
             Це курсова лема, але словниковий шар ще готується. Сторінка вже
             фіксує місце слова в курсі, щоб посилання з уроків були стабільні.
           </p>
-        )}
-      </div>
-    </section>
+        </div>
+      </section>
+    )}
 
     {showHeritage && (
       <section class="atlas-section atlas-heritage" aria-labelledby="atlas-heritage-title">
@@ -326,13 +324,13 @@ const frontmatter = {
       )}
     </section>
 
-    <section class="atlas-section" aria-labelledby="atlas-meaning-title">
-      <div class="atlas-section-head">
-        <p class="atlas-kicker">Тлумачення</p>
-        <h2 id="atlas-meaning-title">Значення</h2>
-      </div>
+    {enrichment?.meaning && (
+      <section class="atlas-section" aria-labelledby="atlas-meaning-title">
+        <div class="atlas-section-head">
+          <p class="atlas-kicker">Тлумачення</p>
+          <h2 id="atlas-meaning-title">Значення</h2>
+        </div>
 
-      {enrichment?.meaning ? (
         <div class="atlas-source-card atlas-source-card-primary">
           <p class="atlas-source-label">{enrichment.meaning.source}</p>
           <ol>
@@ -350,15 +348,8 @@ const frontmatter = {
           )}
           {enrichment.meaning.note && <p class="atlas-note">{enrichment.meaning.note}</p>}
         </div>
-      ) : (
-        <div class="atlas-source-card atlas-source-card-empty">
-          <p class="atlas-source-label">Дані готуються</p>
-          <p>
-            Тлумачення з локальних джерел ще не під’єднано для цієї леми.
-          </p>
-        </div>
-      )}
-    </section>
+      </section>
+    )}
 
     {enrichment?.attestation && (
       <section class="atlas-section" aria-labelledby="atlas-attestation-title">
@@ -386,46 +377,41 @@ const frontmatter = {
       </section>
     )}
 
-    <section class="atlas-section" aria-labelledby="atlas-morph-title">
-      <div class="atlas-section-head">
-        <p class="atlas-kicker">Форми</p>
-        <h2 id="atlas-morph-title">Морфологія</h2>
-      </div>
-
-      {enrichment?.morphology ? (
-        <>
-          <p class="atlas-muted">
-            {enrichment.morphology.pos} · {enrichment.morphology.form_count} форм ·{" "}
-            {enrichment.morphology.source}
-          </p>
-          <ul class="atlas-form-grid">
-            {enrichment.morphology.forms.map((form) => (
-              <li>
-                <span>{form.form}</span>
-                {form.label && <small>{form.label}</small>}
-              </li>
-            ))}
-          </ul>
-        </>
-      ) : (
-        <div class="atlas-source-card atlas-source-card-empty">
-          <p class="atlas-source-label">Дані готуються</p>
-          <p>Повна парадигма VESUM ще не доступна для цієї статті.</p>
+    {enrichment?.morphology && (
+      <section class="atlas-section" aria-labelledby="atlas-morph-title">
+        <div class="atlas-section-head">
+          <p class="atlas-kicker">Форми</p>
+          <h2 id="atlas-morph-title">Морфологія</h2>
         </div>
-      )}
-    </section>
 
-    <footer class="atlas-provenance">
-      <h2>Походження даних</h2>
-      <div class="atlas-provenance-list">
-        {sourceList.map((source) => (
-          <span>{source}</span>
-        ))}
-      </div>
-      <p>
-        Версія маніфесту: {manifest.version} · остання генерація: {manifest.generated_at}
-      </p>
-    </footer>
+        <p class="atlas-muted">
+          {enrichment.morphology.pos} · {enrichment.morphology.form_count} форм ·{" "}
+          {enrichment.morphology.source}
+        </p>
+        <ul class="atlas-form-grid">
+          {enrichment.morphology.forms.map((form) => (
+            <li>
+              <span>{form.form}</span>
+              {form.label && <small>{form.label}</small>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {sourceList.length > 0 && (
+      <footer class="atlas-provenance">
+        <h2>Походження даних</h2>
+        <div class="atlas-provenance-list">
+          {sourceList.map((source) => (
+            <span>{source}</span>
+          ))}
+        </div>
+        <p>
+          Версія маніфесту: {manifest.version} · остання генерація: {manifest.generated_at}
+        </p>
+      </footer>
+    )}
 
     <p class="atlas-back-link">
       <a href="/lexicon/index/">← Повернутися до А-Я покажчика</a>
