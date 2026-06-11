@@ -25,11 +25,27 @@ interface Meaning {
   note?: string;
 }
 
+interface NounParadigm {
+  kind: "noun";
+  cases: Record<string, { singular: string; plural: string }>;
+}
+
+interface VerbParadigm {
+  kind: "verb";
+  infinitive?: string;
+  tenses?: Record<string, Record<string, Record<string, string>>>;
+  imperative?: Record<string, Record<string, string>>;
+  past?: Record<string, string>;
+}
+
+type MorphologyParadigm = NounParadigm | VerbParadigm | { kind: "other" };
+
 interface Enrichment {
   morphology?: {
     pos: string;
     form_count: number;
     forms: Array<{ form: string; label: string }>;
+    paradigm?: MorphologyParadigm;
     source: string;
   };
   meaning?: Meaning;
@@ -109,6 +125,34 @@ const CONTEXT_LABELS_UK: Record<string, string> = {
   plan_recommended: "рекомендована",
 };
 
+const CASE_ROWS = [
+  { key: "називний", label: "Називний" },
+  { key: "родовий", label: "Родовий" },
+  { key: "давальний", label: "Давальний" },
+  { key: "знахідний", label: "Знахідний" },
+  { key: "орудний", label: "Орудний" },
+  { key: "місцевий", label: "Місцевий" },
+  { key: "кличний", label: "Кличний" },
+];
+
+const PERSON_ROWS = [
+  { key: "1", label: "1 особа" },
+  { key: "2", label: "2 особа" },
+  { key: "3", label: "3 особа" },
+];
+
+const VERB_TENSE_ROWS = [
+  { key: "теперішній", label: "Теперішній час" },
+  { key: "майбутній", label: "Майбутній час" },
+];
+
+const PAST_ROWS = [
+  { key: "чол.", label: "Чол." },
+  { key: "жін.", label: "Жін." },
+  { key: "сер.", label: "Сер." },
+  { key: "множина", label: "Множина" },
+];
+
 // Heritage classification → UK label + one-line gloss. Authentic Ukrainian
 // statuses (archaism/historism/dialect/borrowing) are the decolonization layer:
 // they prove a word is inherited Ukrainian, not a Russianism. Keyed off the
@@ -132,6 +176,17 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props as { entry: LexiconEntry };
 const enrichment = entry.enrichment;
+const paradigm = enrichment?.morphology?.paradigm;
+const nounParadigm = paradigm?.kind === "noun" ? paradigm : null;
+const verbParadigm = paradigm?.kind === "verb" ? paradigm : null;
+const imperativeRows = verbParadigm?.imperative
+  ? PERSON_ROWS.filter((person) =>
+      Boolean(
+        verbParadigm.imperative?.["однина"]?.[person.key] ||
+          verbParadigm.imperative?.["множина"]?.[person.key],
+      ),
+    )
+  : [];
 const posLabel = entry.pos ? POS_LABELS_UK[entry.pos] ?? entry.pos : null;
 const letter = entry.lemma.charAt(0).toLocaleUpperCase("uk");
 const courseUsage = entry.course_usage.slice().sort((a, b) => {
@@ -388,14 +443,134 @@ const frontmatter = {
           {enrichment.morphology.pos} · {enrichment.morphology.form_count} форм ·{" "}
           {enrichment.morphology.source}
         </p>
-        <ul class="atlas-form-grid">
-          {enrichment.morphology.forms.map((form) => (
-            <li>
-              <span>{form.form}</span>
-              {form.label && <small>{form.label}</small>}
-            </li>
-          ))}
-        </ul>
+        {nounParadigm ? (
+          <div class="atlas-paradigm-scroll">
+            <table class="atlas-paradigm-table">
+              <thead>
+                <tr>
+                  <th scope="col" class="atlas-paradigm-case">Відмінок</th>
+                  <th scope="col">Однина</th>
+                  <th scope="col">Множина</th>
+                </tr>
+              </thead>
+              <tbody>
+                {CASE_ROWS.map((caseRow) => (
+                  <tr>
+                    <th scope="row">{caseRow.label}</th>
+                    <td>{nounParadigm.cases[caseRow.key]?.singular}</td>
+                    <td>{nounParadigm.cases[caseRow.key]?.plural}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : verbParadigm ? (
+          <div class="atlas-paradigm-stack">
+            {verbParadigm.infinitive && (
+              <p class="atlas-infinitive">
+                <span>Інфінітив</span>
+                <strong>{verbParadigm.infinitive}</strong>
+              </p>
+            )}
+
+            {VERB_TENSE_ROWS.filter((tense) => verbParadigm.tenses?.[tense.key]).map((tense) => (
+              <div class="atlas-paradigm-block">
+                <h3>{tense.label}</h3>
+                <div class="atlas-paradigm-scroll">
+                  <table class="atlas-paradigm-table atlas-paradigm-table-verb">
+                    <thead>
+                      <tr>
+                        <th scope="col">Особа</th>
+                        <th scope="col">Однина</th>
+                        <th scope="col">Множина</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {PERSON_ROWS.map((person) => (
+                        <tr>
+                          <th scope="row">{person.label}</th>
+                          <td>{verbParadigm.tenses?.[tense.key]?.["однина"]?.[person.key]}</td>
+                          <td>{verbParadigm.tenses?.[tense.key]?.["множина"]?.[person.key]}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ))}
+
+            {imperativeRows.length > 0 && (
+              <div class="atlas-paradigm-block">
+                <h3>Наказовий спосіб</h3>
+                <div class="atlas-paradigm-scroll">
+                  <table class="atlas-paradigm-table atlas-paradigm-table-verb">
+                    <thead>
+                      <tr>
+                        <th scope="col">Особа</th>
+                        <th scope="col">Однина</th>
+                        <th scope="col">Множина</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {imperativeRows.map((person) => (
+                        <tr>
+                          <th scope="row">{person.label}</th>
+                          <td>
+                            {verbParadigm.imperative?.["однина"]?.[person.key] ?? (
+                              <span class="atlas-empty-cell">—</span>
+                            )}
+                          </td>
+                          <td>
+                            {verbParadigm.imperative?.["множина"]?.[person.key] ?? (
+                              <span class="atlas-empty-cell">—</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {verbParadigm.past && (
+              <div class="atlas-paradigm-block">
+                <h3>Минулий час</h3>
+                <div class="atlas-paradigm-scroll">
+                  <table class="atlas-paradigm-table atlas-paradigm-table-past">
+                    <thead>
+                      <tr>
+                        {PAST_ROWS.map((pastRow) => (
+                          <th scope="col">{pastRow.label}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        {PAST_ROWS.map((pastRow) => (
+                          <td>
+                            {verbParadigm.past?.[pastRow.key] ?? (
+                              <span class="atlas-empty-cell">—</span>
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <ul class="atlas-form-grid">
+            {enrichment.morphology.forms.map((form) => (
+              <li>
+                <span>{form.form}</span>
+                {form.label && <small>{form.label}</small>}
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     )}
 
@@ -742,6 +917,124 @@ const frontmatter = {
     color: var(--lu-primary);
     font-style: normal;
     font-weight: 900;
+  }
+
+  .atlas-section > .atlas-paradigm-scroll {
+    margin-top: 0.75rem;
+  }
+
+  .atlas-paradigm-stack {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: 0.75rem;
+  }
+
+  .atlas-paradigm-block {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .atlas-paradigm-block h3 {
+    margin: 0;
+    color: var(--lu-text);
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+
+  .atlas-infinitive {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.7rem;
+    align-items: start;
+    margin: 0;
+    padding: 0.75rem 0.85rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface);
+    color: var(--lu-text);
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--lu-text) 8%, transparent);
+  }
+
+  .atlas-infinitive span {
+    color: var(--lu-primary);
+    font-size: 0.78rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .atlas-infinitive strong {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .atlas-paradigm-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface);
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--lu-text) 8%, transparent);
+  }
+
+  .atlas-paradigm-table {
+    width: 100%;
+    min-width: 32rem;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .atlas-paradigm-table-verb {
+    min-width: 38rem;
+  }
+
+  .atlas-paradigm-table-past {
+    min-width: 42rem;
+  }
+
+  .atlas-paradigm-table th,
+  .atlas-paradigm-table td {
+    padding: 0.7rem 0.8rem;
+    border-right: 1px solid var(--lu-border);
+    border-bottom: 1px solid var(--lu-border);
+    color: var(--lu-text);
+    overflow-wrap: anywhere;
+    vertical-align: top;
+  }
+
+  .atlas-paradigm-table th:last-child,
+  .atlas-paradigm-table td:last-child {
+    border-right: 0;
+  }
+
+  .atlas-paradigm-table tbody tr:last-child th,
+  .atlas-paradigm-table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .atlas-paradigm-table thead th {
+    background: var(--lu-surface-muted);
+    color: var(--lu-primary);
+    font-size: 0.78rem;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  .atlas-paradigm-table tbody th {
+    background: color-mix(in srgb, var(--lu-surface-muted) 72%, transparent);
+    font-weight: 900;
+    text-align: left;
+  }
+
+  .atlas-paradigm-table td {
+    font-weight: 900;
+  }
+
+  .atlas-paradigm-case {
+    width: 32%;
+  }
+
+  .atlas-empty-cell {
+    color: var(--lu-text-muted);
+    font-weight: 700;
   }
 
   .atlas-form-grid {
