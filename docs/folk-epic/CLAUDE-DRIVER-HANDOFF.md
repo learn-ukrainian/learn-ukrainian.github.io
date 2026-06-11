@@ -27,7 +27,7 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 11 HANDOFF (2026-06-11 — 4 GATE WALLS BROKEN (derivational #2956 verified, quote-fidelity #2973, plan-budget #2974, compound-adj #2975); 5 kalendarna builds; REMAINING WALL = WRITER VOCABULARY DISCIPLINE → hardening = PR #2977, only A1 size-scoping left) — **RESUME HERE**
+## ▶▶▶ SESSION 11 HANDOFF (2026-06-11 — 4 GATE WALLS BROKEN (derivational #2956 verified, quote-fidelity #2973, plan-budget #2974, compound-adj #2975); 6 kalendarna builds + writer bakeoff; REMAINING WALL = WRITER VOCABULARY DISCIPLINE → USER-APPROVED PLAN = CROSS-MODEL CORRECTION (claude writes + codex fixes coinages via find/replace); DO IT IN A NEW SESSION) — **RESUME HERE**
 
 > **⏱ LATEST STATE (2026-06-11):** The derivational-morphology layer (#2956, codex-impl + Claude-review) +
 > apostrophe-normalize (#2965) merged BEFORE this session. I verified the gate on main (65 tests; `діюча`/
@@ -63,39 +63,63 @@ single remaining root cause = **WRITER VOCABULARY DISCIPLINE**: claude-tools int
 (вербатимний→дослівний; подавачка/п'ятикроковий/слово-дія/двохоровий = coinages with attested alternatives). The
 gate is CORRECT to flag them; the LEGITIMATE productive forms (derivations, -о-compound adjectives) are now ACCEPTED.
 
-**USER DECISION (2026-06-11):** harden the writer prompt (chosen over swap-writer / make-vesum-advisory).
+**USER DECISION (2026-06-11):** initially "harden the writer prompt" (#2977) → then a writer bakeoff (claude vs
+codex) → **EVOLVED to CROSS-MODEL CORRECTION** (claude writes + codex fixes coinages via find/replace; see the
+NEXT ACTIONS plan below). To be executed in a NEW session (this one is context-deep).
 
-### ▶ IN-FLIGHT — writer-prompt vocab-discipline hardening = PR #2977 (landed + reviewed; ONE blocker left)
-**`codex/folk-writer-vocab-discipline` → PR #2977.** Substance APPROVED by Claude review (exhaustive verify +
-first-pass-critical stakes + no-coinage-all-classes w/ the 5 offenders + the "keep legitimate productive forms"
-carve-out). Claude FIXED `test_prompt_cot_tier1_scaffolding` in `26170b134e` (restored the canonical Tier-1 bullet
-`Verify every example word in VESUM`; folded the stakes into `#R-VESUM-ALL-WORDS`).
-**REMAINING BLOCKER — `test_writer_prompt_render_size`:** the hardening pushes the **A1** prompt over
-`WRITER_PROMPT_CEILING_BYTES=133120`. Root cause is ARCHITECTURAL: the FOLK vocab rules (the numbered list incl.
-the offender examples `вербатимний`/`двохоровий`/…) **render in EVERY level's prompt** (confirmed they appear in
-the rendered `a1/sounds-letters-and-hello` prompt), and A1 is already at budget. ⚠️ Local size is `data/`-env-
-sensitive (full data → ~148KB; sparse/CI → ~137KB) — **trust CI, not local**. Full diagnosis on the PR #2977 comment.
+### ▶ WRITER BAKEOFF RESULT (2026-06-11) — the basis for the plan below
+6 kalendarna builds, all failed `python_qg`. Two writers tested, OPPOSITE profiles:
+| gate | claude-tools | codex-tools |
+|---|---|---|
+| vesum_verified (coinage) | ❌ coins (вербатимний, двохоровий…) | ✅ **CLEAN — no coinage** |
+| word_count | ✅ raw 4855-4862 (rich) | ❌ raw 4154 (under-produces) |
+| textbook_quote_fidelity | ✅ | ❌ |
+| scaffolding_leak | ✅ | ❌ (`truth_source:[S10]` bled in) |
+| engagement_floor | ✅ | ❌ (drier) |
 
-### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **Finish PR #2977 — scope the FOLK vocab rules to `SEMINAR_LEVELS`** so they don't render in A1/core prompts
-   (fixes the size ceiling AND is correct — an A1 letter module needs no folk-coinage examples). Keep the concise
-   GENERAL principle (exhaustive verify + no-coinage + stakes) in the shared prompt. Get A1 under 133120 **in CI**
-   (the binding measurement), then **merge #2977**. (Alt if scoping is hard: a context-budget decision on the
-   ceiling — but the prompt is already at budget, so scoping is preferred.)
-2. **Re-fire #6** (`v7_build folk kalendarna-obriadovist-zvychai --worktree --writer claude-tools --effort xhigh`,
-   Monitor JSONL). Expected fully green: raw output already clears the floor; the hardened prompt should stop the
-   writer coining (вербатимний→дослівний etc.) so no destructive correction. **If #6 STILL coins** (claude-tools
-   ignores the hardened rules too), escalate to the user's option 2: bakeoff **codex-tools/deepseek-tools** as the
-   folk writer (the prior rules already said verify-all + no-coining and claude-tools ignored them).
-2. **If #6 still coins** (compliance fails despite hardening), escalate to the user's option 2: bakeoff
-   **codex-tools / deepseek-tools** as the folk writer (may be more VESUM-conservative). The writer prompt already
-   had verify-all + no-coining rules and claude-tools ignored them — a writer swap may be the real fix.
-3. **When a build lands `module_done`:** verify CONTENT (#M-11) — 4 UK tabs, myth-box, high-culture bridge, folk
-   activities, ≥4 cited+linked blockquotes, authentic regional vocab, no stress on headings, P2 cross-refs, UK labels.
+**Conclusion:** claude has ONE blocker (coinage); codex has FOUR (incl. under-production + engagement, central to a
+*cultural* module). **Keep claude-tools as the folk WRITER.** Writer ranking: claude > deepseek (fallback, length-
+validated) > codex (vocab-clean but thin/leaky/dry) > gemini/agy (fabrication risk). The 4 gate fixes are
+writer-AGNOSTIC (codex's vesum passed too via the derivational/compound/heritage layers).
+
+### ▶ NEXT ACTIONS (RESUME HERE) — USER-APPROVED PLAN (2026-06-11): CROSS-MODEL CORRECTION
+**The idea (user's):** claude WRITES (richness/length/engagement/quotes — all good), then **codex FIXES the
+coinages** via find/replace. Combines the bakeoff strengths; ADR-007-compliant (reviewer emits `<fixes>`
+find/replace pairs applied deterministically — NOT regeneration; `test_no_rewrite_contract.py` enforces). codex-as-
+FIXER avoids codex's writer weaknesses (it only swaps vocab, doesn't generate → no scaffolding/under-production/
+engagement issues). Root cause it fixes: the `python_qg` vesum-correction is currently WRITER-driven, so claude
+re-corrects its OWN coinages → reproduces the tic / diverges (build #5: 2→4 coinages).
+
+1. **STEP 1 — VALIDATE the concept cheaply (no pipeline change).** Check out a claude build's `module.md` that failed
+   ONLY on coinages: **build #5 forensics branch `build/folk/kalendarna-obriadovist-zvychai-20260611-034955`**
+   (raw 4855 tokens, flagged `вербатимний`/`п'ятикрокова`/`подавачки`/`слово-дія`; vesum the only real content
+   blocker). Have **codex** (`ab discuss`/dispatch) emit find/replace fixes mapping each coinage→attested synonym
+   (вербатимний→дослівний/буквальний; п'ятикрокова→«що має п'ять кроків»; подавачки/слово-дія→rephrase) — codex
+   VERIFIES each replacement in VESUM. Apply deterministically, re-run the vesum gate + word_count on the patched
+   module.md. **If green → concept proven.**
+2. **STEP 2 — IMPLEMENT in the pipeline.** Route the `python_qg` vesum-coinage correction to a CROSS-MODEL fixer
+   (codex) instead of the writer. KEY IMPL Q: is the correction model already configurable? `--reviewer codex-tools`
+   exists, but the correction step looked WRITER-driven in the build events — confirm where the ADR-008 vesum
+   correction is dispatched (`scripts/build/linear_pipeline.py`) and add a cross-model-fixer route. **Codex
+   implements + Claude adversarial-reviews** (teeth: replacements must be VESUM-attested + not regress other gates;
+   ADR-007 find/replace ONLY — no regen). This ALSO addresses the harness bug below (a smarter, non-diverging fixer).
+3. **THEN re-fire kalendarna** with claude-tools (the writer) + the cross-model fixer live → expect fully green
+   (claude's raw 4855 clears the floor; codex strips the coinages). Verify CONTENT (#M-11): 4 UK tabs, myth-box,
+   high-culture bridge, folk activities, ≥4 cited+linked blockquotes, authentic vocab, no stress on headings, P2 xrefs.
 4. **Promote module 04** → assemble_mdx → `starlight/src/content/docs/folk/`; add source URLs; serve; verify at
    `/folk/kalendarna-obriadovist-zvychai/`. Bundle the refreshed handoff into the promote PR.
 5. Then **01 koliadky-shchedrivky** → **dumy** (retire old `dumy-lytsarski.mdx` + `[...slug].astro`).
 6. Resume dossier queue: #08 zhnyvarski-obzhynkovi, then #10 vesilni, #11 holosinnya, #13 dumy-sotsialno-pobutovi.
+
+### ▶ OPEN PRs (state for resume)
+- **#2972 MERGED** (`C1-folk`→`FOLK` audit-key; folk now audited at seminar thresholds not A1). DONE.
+- **#2967 CLOSED** (stale prior-session handoff w/ a FALSE "#5 passing" claim citing the dead `-235657` build).
+- **#2977 OPEN, BLOCKED + now SECONDARY** (`codex/folk-writer-vocab-discipline`, writer-prompt vocab hardening).
+  Substance approved + tier1 test fixed (`26170b134e`); blocked on `test_writer_prompt_render_size` (A1 prompt over
+  `WRITER_PROMPT_CEILING_BYTES=133120` — folk vocab rules render for ALL levels; size is `data/`-env-sensitive,
+  trust CI). **If cross-model correction (above) works, #2977's prompt-hardening becomes OPTIONAL** (claude's
+  coinages get fixed at correction time, so the writer prompt needn't enforce it). To land #2977 anyway as general
+  polish, scope the folk vocab rules to `SEMINAR_LEVELS` first. Decide #2977's fate AFTER Step 1 validates.
 
 ### 🐛 HARNESS BUG TO FILE (found this session)
 The ADR-008 correction loop can DIVERGE — build #5's correction took vesum violations 2→4 (added new coinages) and
