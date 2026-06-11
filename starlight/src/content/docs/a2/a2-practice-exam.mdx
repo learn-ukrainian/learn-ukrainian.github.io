@@ -1,0 +1,293 @@
+---
+title: "Пробний іспит"
+description: "Тренувальний тест рівня A2 з читання, письма та граматики"
+sidebar:
+  order: 68
+  label: "68. Пробний іспит"
+prev: a2-comprehensive-review
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: тренувальний формат
+
+Це не офіційний іспит і не оцінка вашої особистості. Це тренування:
+прочитати, вибрати форму, доповнити діалог, написати короткий текст і
+спокійно побачити, що вже працює.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Екзаменатор","text":"Розкажіть, будь ласка, як ви зазвичай проводите суботу."},{"speaker":"Кандидат","text":"У суботу я пізніше встаю, готую сніданок і часто йду на ринок."},{"speaker":"Екзаменатор","text":"Що ви робили минулої суботи?"},{"speaker":"Кандидат","text":"Я купив овочі, зустрівся з подругою і написав повідомлення братові."},{"speaker":"Екзаменатор","text":"А які плани на наступні вихідні?"},{"speaker":"Кандидат","text":"Якщо буде гарна погода, я поїду до друзів, щоб разом погуляти."},{"speaker":"Екзаменатор","text":"Добре. Порівняйте ваше місто з Києвом або Львовом."},{"speaker":"Кандидат","text":"Моє місто менше за Київ, але спокійніше, тому мені там легко жити."}]')}
+/>
+
+У такій короткій розмові вже є багато А2: часи, вид дієслова, давальний
+відмінок, умова, мета, порівняння і особиста думка. Пробний іспит
+перевіряє саме таке поєднання, а не окремі списки правил.
+
+## Як працювати з пробним іспитом
+
+Поставте таймер, але не поспішайте настільки, щоб втратити зміст.
+Рекомендований формат:
+
+| Частина | Час | Що перевіряє |
+| --- | --- | --- |
+| читання | 20 хвилин | розуміння коротких повсякденних текстів |
+| граматика | 20 хвилин | відмінки, вид, час, займенники, сполучники |
+| діалог | 10 хвилин | природні репліки в ситуації |
+| письмо | 20 хвилин | короткий зв'язний текст 80-100 слів |
+| самооцінка | 10 хвилин | план повторення перед B1 |
+
+Записуйте не тільки правильні відповіді, а й причини помилок. Наприклад:
+
+> Помилка: написав цілий вечір.
+>
+> Причина: цілий вечір показує процес.
+>
+> Правильно: писав цілий вечір.
+
+## Частина 1: читання
+
+### Текст А: оголошення
+
+> У суботу міська бібліотека працює з 10:00 до 16:00. О 12:00 буде
+> зустріч для студентів української мови. Треба зареєструватися онлайн
+> до п'ятниці. Вхід безкоштовний, але кількість місць обмежена.
+
+Що треба зрозуміти:
+
+| Питання | Відповідь |
+| --- | --- |
+| Коли працює бібліотека? | У суботу з десятої до шістнадцятої. |
+| Для кого зустріч? | Для студентів української мови. |
+| Що треба зробити до п'ятниці? | Зареєструватися онлайн. |
+
+### Текст Б: повідомлення
+
+> Привіт, Марко! Я вже купила квитки до Львова. Ми приїдемо вранці,
+> залишимо речі в готелі, а потім підемо на Площу Ринок. Якщо буде час,
+> зайдемо до книгарні, де я бачила гарний словник. Увечері зустрінемося
+> з Оксаною, бо вона хоче показати нам свою улюблену кав'ярню.
+
+Тут перевіряються деталі, послідовність і логіка:
+
+| Сигнал | Що він показує |
+| --- | --- |
+| вже купила | завершений результат |
+| якщо буде час | умова |
+| де я бачила | опис місця |
+| бо вона хоче | причина |
+
+### Текст В: короткий допис
+
+> Минулого літа я вперше був у Карпатах. Ми жили в маленькому селі біля
+> річки. Щоранку я ходив у магазин по хліб, а після сніданку ми йшли в
+> гори. Одного дня ми піднялися вище, ніж планували, і побачили
+> найкрасивіший краєвид. Я зрозумів, що хочу повернутися туди восени,
+> коли буде менше туристів.
+
+Текст В поєднує минулий час, рух, порівняння і складні речення. Читайте
+його двічі: перший раз для головної думки, другий раз для деталей.
+
+### Читання на розуміння
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Коли працює бібліотека в суботу?", "options": [{"text": "з 10:00 до 16:00", "correct": true}, {"text": "з 12:00 до 16:00", "correct": false}, {"text": "до п'ятниці", "correct": false}], "explanation": "У тексті А сказано: з 10:00 до 16:00."}, {"question": "Для кого зустріч у бібліотеці?", "options": [{"text": "для студентів української мови", "correct": true}, {"text": "для працівників бібліотеки", "correct": false}, {"text": "для туристів у Львові", "correct": false}], "explanation": "Це зустріч для студентів української мови."}, {"question": "Що треба зробити до п'ятниці?", "options": [{"text": "зареєструватися онлайн", "correct": true}, {"text": "купити квиток", "correct": false}, {"text": "прийти до бібліотеки", "correct": false}], "explanation": "Реєстрація потрібна до п'ятниці."}, {"question": "Що вже зробила авторка повідомлення в тексті Б?", "options": [{"text": "купила квитки", "correct": true}, {"text": "відвідала книгарню", "correct": false}, {"text": "зустрілася з Оксаною", "correct": false}], "explanation": "Вона пише: я вже купила квитки."}, {"question": "Куди вони підуть після готелю?", "options": [{"text": "на Площу Ринок", "correct": true}, {"text": "до Карпат", "correct": false}, {"text": "у бібліотеку", "correct": false}], "explanation": "Після готелю вони підуть на Площу Ринок."}, {"question": "Чому вони зустрінуться з Оксаною?", "options": [{"text": "бо вона хоче показати кав'ярню", "correct": true}, {"text": "щоб купити квитки", "correct": false}, {"text": "хоча буде мало часу", "correct": false}], "explanation": "Бо називає причину зустрічі."}, {"question": "Де автор тексту В був минулого літа?", "options": [{"text": "у Карпатах", "correct": true}, {"text": "у Києві", "correct": false}, {"text": "на Площі Ринок", "correct": false}], "explanation": "Перше речення тексту В називає Карпати."}, {"question": "Що автор робив щоранку?", "options": [{"text": "ходив у магазин по хліб", "correct": true}, {"text": "писав повідомлення", "correct": false}, {"text": "зустрічався з Оксаною", "correct": false}], "explanation": "Щоранку він ходив у магазин по хліб."}, {"question": "Що вони побачили в горах?", "options": [{"text": "найкрасивіший краєвид", "correct": true}, {"text": "нову бібліотеку", "correct": false}, {"text": "міську кав'ярню", "correct": false}], "explanation": "Вони побачили найкрасивіший краєвид."}, {"question": "Коли автор хоче повернутися?", "options": [{"text": "восени", "correct": true}, {"text": "у суботу", "correct": false}, {"text": "до п'ятниці", "correct": false}], "explanation": "Він хоче повернутися восени."}]`)} />
+
+## Частина 2: граматика
+
+Граматична частина має бути змішаною. Якщо ви знаєте тільки тему
+завдання, відповідь занадто легка. У реальному мовленні сигнали
+змішуються.
+
+| Тип завдання | Приклад сигналу | Що перевірити |
+| --- | --- | --- |
+| відмінок | без, до, з, допомагати | питання і керування |
+| вид | весь день, нарешті, уже | процес чи результат |
+| час | учора, завтра, щодня | минулий, теперішній, майбутній |
+| займенник | свій, себе, ніхто | зв'язок із підметом і заперечення |
+| сполучник | тому що, щоб, якщо, хоча | логіка частин речення |
+| порівняння | кращий, найкращий, більше ніж | форма і модель |
+
+Працюйте в такому порядку:
+
+1. Прочитайте все речення.
+2. Знайдіть граматичний сигнал.
+3. Назвіть тему українською.
+4. Виберіть форму.
+5. Перевірте, чи речення звучить природно.
+
+### Змішана граматика
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У мене немає ___.", "answer": "квитка", "options": ["квиток", "квитка", "квитком"]}, {"sentence": "Я дякую ___.", "answer": "викладачці", "options": ["викладачка", "викладачці", "викладачку"]}, {"sentence": "Учора я ___ текст цілу годину.", "answer": "читав", "options": ["читав", "прочитав", "прочитаю"]}, {"sentence": "Учора я ___ текст і відповів на питання.", "answer": "прочитав", "options": ["читав", "прочитав", "читаю"]}, {"sentence": "Завтра ми ___ до музею.", "answer": "підемо", "options": ["ходили", "підемо", "ходимо"]}, {"sentence": "Олена взяла ___ словник.", "answer": "свій", "options": ["свій", "мій", "себе"]}, {"sentence": "___ не прийшов на зустріч.", "answer": "Ніхто", "options": ["Хтось", "Ніхто", "Щось"]}, {"sentence": "Цей маршрут ___ за той.", "answer": "зручніший", "options": ["зручний", "зручніший", "найзручний"]}, {"sentence": "Я прийшов раніше, ___ купити квитки.", "answer": "щоб", "options": ["щоб", "тому що", "хоча"]}, {"sentence": "___ буде час, ми зайдемо до книгарні.", "answer": "Якщо", "options": ["Якщо", "Бо", "Хоча"]}]`)} />
+
+## Частина 3: діалог і письмо
+
+У діалозі важлива не тільки граматика, а й доречність. Репліка має
+відповідати ситуації:
+
+| Ситуація | Природна репліка |
+| --- | --- |
+| попросити повторити | Повторіть, будь ласка, ще раз. |
+| уточнити час | О котрій годині починається зустріч? |
+| пояснити проблему | Вибачте, я замовляв борщ, а не суп. |
+| запропонувати план | Якщо буде час, можемо зайти до музею. |
+| висловити думку | На мою думку, цей варіант зручніший. |
+
+Для письма виберіть одну тему і напишіть 80-100 слів:
+
+1. Опишіть вашу улюблену пору року і поясніть чому.
+2. Напишіть другові про ваші плани на вихідні.
+3. Опишіть традицію або свято, яке вам подобається.
+
+Мінімальний план:
+
+| Частина тексту | Що написати |
+| --- | --- |
+| початок | тема і загальна думка |
+| середина | дві-три конкретні дії або факти |
+| пояснення | причина, мета або умова |
+| кінець | короткий висновок або питання |
+
+### Іспитова граматика
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я прийшов без квитка.", "isTrue": true, "explanation": "Без + родовий."}, {"statement": "Вона допомагає брат.", "isTrue": false, "explanation": "Треба: допомагає братові."}, {"statement": "Ми писали тест сорок хвилин.", "isTrue": true, "explanation": "Сорок хвилин описує процес."}, {"statement": "Я написав тест сорок хвилин.", "isTrue": false, "explanation": "З тривалістю потрібен недоконаний вид: писав."}, {"statement": "Якщо буде дощ, ми залишимося вдома.", "isTrue": true, "explanation": "Це правильна реальна умова."}, {"statement": "Я прийшов, тому що допомогти.", "isTrue": false, "explanation": "Для мети треба щоб."}, {"statement": "Олена читає свою книжку.", "isTrue": true, "explanation": "Своя книжка належить Олені."}, {"statement": "Ніхто відповів на лист.", "isTrue": false, "explanation": "Треба: ніхто не відповів."}, {"statement": "Це найкращий варіант.", "isTrue": true, "explanation": "Найкращий - нормативна найвища форма."}, {"statement": "Ми говоримо з викладачкою.", "isTrue": true, "explanation": "З ким? з викладачкою."}]`)} />
+
+## Результати та самооцінка
+
+Після вправ порахуйте приблизний результат:
+
+| Результат | Значення |
+| --- | --- |
+| 85-100% | тема працює впевнено |
+| 70-84% | можна рухатися далі, але треба повторити помилки |
+| 50-69% | потрібне цільове повторення кількох модулів |
+| менше 50% | краще повернутися до карти А2 і пройти блоки повільніше |
+
+Не зупиняйтеся на цифрі. Запишіть три речення:
+
+> Я впевнено використовую...
+>
+> Я часто плутаю...
+>
+> Перед фінальним завданням я повторю...
+
+Пробний іспит має привести не до страху, а до ясного плану.
+
+### Виправте іспитові помилки
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильний варіант." items={JSON.parse(`[{"sentence": "Я зареєструвався до зустріч.", "errorWord": "зустріч", "correctForm": "Я зареєструвався до зустрічі.", "options": ["Я зареєструвався до зустрічі.", "Я зареєструвався до зустріч."], "explanation": "До вимагає родового відмінка."}, {"sentence": "Ми зустрінемося з Оксана.", "errorWord": "Оксана", "correctForm": "Ми зустрінемося з Оксаною.", "options": ["Ми зустрінемося з Оксаною.", "Ми зустрінемося з Оксана."], "explanation": "З ким? з Оксаною."}, {"sentence": "Вона купила квитки, щоб поїде до Львова.", "errorWord": "поїде", "correctForm": "Вона купила квитки, щоб поїхати до Львова.", "options": ["Вона купила квитки, щоб поїхати до Львова.", "Вона купила квитки, щоб поїде до Львова."], "explanation": "Після щоб для мети часто вживаємо інфінітив."}, {"sentence": "Я ходжу на вокзал зараз.", "errorWord": "ходжу", "correctForm": "Я йду на вокзал зараз.", "options": ["Я йду на вокзал зараз.", "Я ходжу на вокзал зараз."], "explanation": "Зараз і конкретний напрямок: іду."}, {"sentence": "Учора я буду писати лист.", "errorWord": "буду писати", "correctForm": "Учора я писав лист.", "options": ["Учора я писав лист.", "Учора я буду писати лист."], "explanation": "Учора вимагає минулого часу."}, {"sentence": "Цей текст більш кращий.", "errorWord": "більш кращий", "correctForm": "Цей текст кращий.", "options": ["Цей текст кращий.", "Цей текст більш кращий."], "explanation": "Не поєднуємо більш із кращий."}, {"sentence": "Ніхто прийшов на зустріч.", "errorWord": "немає не", "correctForm": "Ніхто не прийшов на зустріч.", "options": ["Ніхто не прийшов на зустріч.", "Ніхто прийшов на зустріч."], "explanation": "Заперечний займенник потребує не."}, {"sentence": "Якби буде час, ми зайдемо до книгарні.", "errorWord": "Якби", "correctForm": "Якщо буде час, ми зайдемо до книгарні.", "options": ["Якщо буде час, ми зайдемо до книгарні.", "Якби буде час, ми зайдемо до книгарні."], "explanation": "Для реальної умови A2 потрібне якщо."}, {"sentence": "Я хочу повернутися там восени.", "errorWord": "там", "correctForm": "Я хочу повернутися туди восени.", "options": ["Я хочу повернутися туди восени.", "Я хочу повернутися там восени."], "explanation": "Повернутися куди? туди."}, {"sentence": "Ми відповіли на питання, бо отримати результат.", "errorWord": "бо", "correctForm": "Ми відповіли на питання, щоб отримати результат.", "options": ["Ми відповіли на питання, щоб отримати результат.", "Ми відповіли на питання, бо отримати результат."], "explanation": "Отримати результат - мета."}]`)} />
+
+## 📋 Підсумок
+
+На рівні А2 ви маєте розуміти короткі практичні тексти, підтримувати
+розмову про знайомі теми, писати короткі повідомлення і контролювати
+основну граматику: відмінки, вид, час, порівняння, займенники та
+складні речення.
+
+Якщо результат нижчий, ніж ви хотіли, це корисна інформація. Поверніться
+до конкретної теми, зробіть кілька власних речень і спробуйте ще раз.
+Наступний модуль переносить ті самі навички у фінальну комунікативну
+ситуацію: один день в українському місті.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"пробний іспит","translation":"practice exam","pos":"phrase","example":"Пробний іспит допомагає побачити сильні й слабкі теми.","examples":["practice exam","Пробний іспит допомагає побачити сильні й слабкі теми."]},{"word":"завдання","translation":"task, exercise","pos":"noun","example":"У цьому завданні треба вибрати правильну форму.","examples":["task, exercise","У цьому завданні треба вибрати правильну форму."]},{"word":"відповідь","translation":"answer","pos":"noun","example":"Поясніть, чому ця відповідь правильна.","examples":["answer","Поясніть, чому ця відповідь правильна."]},{"word":"питання","translation":"question","pos":"noun","example":"Прочитайте питання перед текстом.","examples":["question","Прочитайте питання перед текстом."]},{"word":"читання","translation":"reading","pos":"noun","example":"Читання перевіряє розуміння деталей.","examples":["reading","Читання перевіряє розуміння деталей."]},{"word":"письмо","translation":"writing","pos":"noun","example":"Письмо має бути коротким і зв'язним.","examples":["writing","Письмо має бути коротким і зв'язним."]},{"word":"граматика","translation":"grammar","pos":"noun","example":"Граматика в іспиті змішана.","examples":["grammar","Граматика в іспиті змішана."]},{"word":"результат","translation":"result","pos":"noun","example":"Результат показує, що треба повторити.","examples":["result","Результат показує, що треба повторити."]},{"word":"самооцінка","translation":"self-assessment","pos":"noun","example":"Самооцінка важливіша за одну цифру.","examples":["self-assessment","Самооцінка важливіша за одну цифру."]},{"word":"таймер","translation":"timer","pos":"noun","example":"Поставте таймер на двадцять хвилин.","examples":["timer","Поставте таймер на двадцять хвилин."]},{"word":"обмежений","translation":"limited","pos":"adjective","example":"Кількість місць обмежена.","examples":["limited","Кількість місць обмежена."]},{"word":"зареєструватися","translation":"to register","pos":"verb","example":"Треба зареєструватися онлайн.","examples":["to register","Треба зареєструватися онлайн."]},{"word":"послідовність","translation":"sequence","pos":"noun","example":"У тексті важлива послідовність дій.","examples":["sequence","У тексті важлива послідовність дій."]},{"word":"деталь","translation":"detail","pos":"noun","example":"Другий раз читайте для деталей.","examples":["detail","Другий раз читайте для деталей."]},{"word":"головна думка","translation":"main idea","pos":"phrase","example":"Спочатку знайдіть головну думку тексту.","examples":["main idea","Спочатку знайдіть головну думку тексту."]},{"word":"критерій","translation":"criterion","pos":"noun","example":"Критерій письма показує, що оцінюється.","examples":["criterion","Критерій письма показує, що оцінюється."]},{"word":"доречний","translation":"appropriate","pos":"adjective","example":"Доречна репліка відповідає ситуації.","examples":["appropriate","Доречна репліка відповідає ситуації."]},{"word":"уточнити","translation":"to clarify","pos":"verb","example":"Уточніть час зустрічі.","examples":["to clarify","Уточніть час зустрічі."]},{"word":"впевнено","translation":"confidently","pos":"adverb","example":"Я впевнено використовую давальний відмінок.","examples":["confidently","Я впевнено використовую давальний відмінок."]},{"word":"цільове повторення","translation":"targeted review","pos":"phrase","example":"Після тесту потрібне цільове повторення.","examples":["targeted review","Після тесту потрібне цільове повторення."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"пробний іспит","back":"practice exam"},{"front":"завдання","back":"task, exercise"},{"front":"відповідь","back":"answer"},{"front":"питання","back":"question"},{"front":"читання","back":"reading"},{"front":"письмо","back":"writing"},{"front":"граматика","back":"grammar"},{"front":"результат","back":"result"},{"front":"самооцінка","back":"self-assessment"},{"front":"таймер","back":"timer"},{"front":"обмежений","back":"limited"},{"front":"зареєструватися","back":"to register"},{"front":"послідовність","back":"sequence"},{"front":"деталь","back":"detail"},{"front":"головна думка","back":"main idea"},{"front":"критерій","back":"criterion"},{"front":"доречний","back":"appropriate"},{"front":"уточнити","back":"to clarify"},{"front":"впевнено","back":"confidently"},{"front":"цільове повторення","back":"targeted review"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Читання на розуміння
+
+*(див. урок, §Текст В: короткий допис)*
+
+### Змішана граматика
+
+*(див. урок, §Частина 2: граматика)*
+
+### Іспитова граматика
+
+*(див. урок, §Частина 3: діалог і письмо)*
+
+### Виправте іспитові помилки
+
+*(див. урок, §Результати та самооцінка)*
+
+### Розділ і стратегія
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "читання", "right": "спочатку знайдіть головну думку, потім деталі"}, {"left": "відмінки", "right": "поставте питання від головного слова"}, {"left": "вид дієслова", "right": "вирішіть: процес, повторення чи результат"}, {"left": "діалог", "right": "оберіть репліку, яка відповідає ситуації"}, {"left": "письмо", "right": "напишіть план із початком, деталями і висновком"}, {"left": "самооцінка", "right": "запишіть три теми: сильна, середня, слабка"}]`)} />
+
+### Коротке письмо A2
+
+<EssayResponse client:only='react' title="Коротке письмо A2" prompt={"Напишіть 80-100 слів українською на одну тему: улюблена пора року, плани на вихідні або традиція, яка вам подобається."} modelAnswer={"Моя улюблена пора року - осінь, тому що тоді прохолодніше і спокійніше. У вересні я часто гуляю в парку після роботи. Минулої осені я багато фотографував листя і написав кілька коротких текстів українською. Якщо у вихідні буде гарна погода, я піду до лісу з друзями. Ми візьмемо чай і бутерброди, щоб відпочити після тижня. Осінь мені подобається більше, ніж літо, бо я краще працюю, коли не спекотно."} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| task | | |\n| grammar | | |\n| coherence | | |"} isUkrainian={true} />
+
+### План після результату
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я впевнено використовую ___.", "answer": "родовий", "options": ["родовий", "родовим", "родового"]}, {"sentence": "Я часто плутаю ___ і результат.", "answer": "процес", "options": ["процес", "процесу", "процесом"]}, {"sentence": "Перед фінальним завданням я повторю ___.", "answer": "займенники", "options": ["займенники", "займенників", "займенниками"]}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [ULP: Ukrainian Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/) — Quick reference for case questions and examples during targeted post-exam review.
+- 📄 [ULP: Ukrainian Grammar Overview](https://www.ukrainianlessons.com/grammar/) — Optional grammar review before attempting the practice exam.
+
+**🔗 Онлайн-ресурси:**
+- 🔗 [CEFR Self-Assessment Grid](https://www.coe.int/en/web/common-european-framework-reference-languages/table-2-cefr-3.3-common-reference-levels-self-assessment-grid) — Reference for interpreting A2 reading, spoken interaction, and writing can-do expectations.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

@@ -1,0 +1,80 @@
+- word: пробний іспит
+  translation: practice exam
+  pos: phrase
+  example: "Пробний іспит допомагає побачити сильні й слабкі теми."
+- word: завдання
+  translation: task, exercise
+  pos: noun
+  example: "У цьому завданні треба вибрати правильну форму."
+- word: відповідь
+  translation: answer
+  pos: noun
+  example: "Поясніть, чому ця відповідь правильна."
+- word: питання
+  translation: question
+  pos: noun
+  example: "Прочитайте питання перед текстом."
+- word: читання
+  translation: reading
+  pos: noun
+  example: "Читання перевіряє розуміння деталей."
+- word: письмо
+  translation: writing
+  pos: noun
+  example: "Письмо має бути коротким і зв'язним."
+- word: граматика
+  translation: grammar
+  pos: noun
+  example: "Граматика в іспиті змішана."
+- word: результат
+  translation: result
+  pos: noun
+  example: "Результат показує, що треба повторити."
+- word: самооцінка
+  translation: self-assessment
+  pos: noun
+  example: "Самооцінка важливіша за одну цифру."
+- word: таймер
+  translation: timer
+  pos: noun
+  example: "Поставте таймер на двадцять хвилин."
+- word: обмежений
+  translation: limited
+  pos: adjective
+  example: "Кількість місць обмежена."
+- word: зареєструватися
+  translation: to register
+  pos: verb
+  example: "Треба зареєструватися онлайн."
+- word: послідовність
+  translation: sequence
+  pos: noun
+  example: "У тексті важлива послідовність дій."
+- word: деталь
+  translation: detail
+  pos: noun
+  example: "Другий раз читайте для деталей."
+- word: головна думка
+  translation: main idea
+  pos: phrase
+  example: "Спочатку знайдіть головну думку тексту."
+- word: критерій
+  translation: criterion
+  pos: noun
+  example: "Критерій письма показує, що оцінюється."
+- word: доречний
+  translation: appropriate
+  pos: adjective
+  example: "Доречна репліка відповідає ситуації."
+- word: уточнити
+  translation: to clarify
+  pos: verb
+  example: "Уточніть час зустрічі."
+- word: впевнено
+  translation: confidently
+  pos: adverb
+  example: "Я впевнено використовую давальний відмінок."
+- word: цільове повторення
+  translation: targeted review
+  pos: phrase
+  example: "Після тесту потрібне цільове повторення."
