@@ -27,7 +27,7 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 11 HANDOFF (2026-06-11 — 4 GATE WALLS BROKEN (derivational #2956 verified, quote-fidelity #2973, plan-budget #2974, compound-adj #2975); 5 kalendarna builds; REMAINING WALL = WRITER VOCABULARY DISCIPLINE → hardening dispatched) — **RESUME HERE**
+## ▶▶▶ SESSION 11 HANDOFF (2026-06-11 — 4 GATE WALLS BROKEN (derivational #2956 verified, quote-fidelity #2973, plan-budget #2974, compound-adj #2975); 5 kalendarna builds; REMAINING WALL = WRITER VOCABULARY DISCIPLINE → hardening = PR #2977, only A1 size-scoping left) — **RESUME HERE**
 
 > **⏱ LATEST STATE (2026-06-11):** The derivational-morphology layer (#2956, codex-impl + Claude-review) +
 > apostrophe-normalize (#2965) merged BEFORE this session. I verified the gate on main (65 tests; `діюча`/
@@ -65,18 +65,28 @@ gate is CORRECT to flag them; the LEGITIMATE productive forms (derivations, -о-
 
 **USER DECISION (2026-06-11):** harden the writer prompt (chosen over swap-writer / make-vesum-advisory).
 
-### ▶ IN-FLIGHT — writer-prompt vocabulary-discipline hardening
-⏳ **`codex/folk-writer-vocab-discipline`** (Monitor `bfi8h3vvs`, brief `/tmp/folk-writer-vocab-discipline-brief.md`):
-hardens `scripts/build/phases/linear-write.md` — (1) `#R-VESUM-ALL-WORDS` → EXHAUSTIVE verify (every content word,
-not a ~51-word sample); (2) broaden the no-coinage rule (L270) to ALL coinage classes w/ the 5 recurring offenders
-+ contrast with ALLOWED productive forms; (3) add STAKES (correction loop can't rephrase coinages → first-pass
-critical). **NO auto-merge — Claude adversarial-reviews** (does it over-restrict / lose C1 richness? are the
-allowed productive forms still encouraged?) then merge → **re-fire #6**.
+### ▶ IN-FLIGHT — writer-prompt vocab-discipline hardening = PR #2977 (landed + reviewed; ONE blocker left)
+**`codex/folk-writer-vocab-discipline` → PR #2977.** Substance APPROVED by Claude review (exhaustive verify +
+first-pass-critical stakes + no-coinage-all-classes w/ the 5 offenders + the "keep legitimate productive forms"
+carve-out). Claude FIXED `test_prompt_cot_tier1_scaffolding` in `26170b134e` (restored the canonical Tier-1 bullet
+`Verify every example word in VESUM`; folded the stakes into `#R-VESUM-ALL-WORDS`).
+**REMAINING BLOCKER — `test_writer_prompt_render_size`:** the hardening pushes the **A1** prompt over
+`WRITER_PROMPT_CEILING_BYTES=133120`. Root cause is ARCHITECTURAL: the FOLK vocab rules (the numbered list incl.
+the offender examples `вербатимний`/`двохоровий`/…) **render in EVERY level's prompt** (confirmed they appear in
+the rendered `a1/sounds-letters-and-hello` prompt), and A1 is already at budget. ⚠️ Local size is `data/`-env-
+sensitive (full data → ~148KB; sparse/CI → ~137KB) — **trust CI, not local**. Full diagnosis on the PR #2977 comment.
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **Review + merge `codex/folk-writer-vocab-discipline`** (verify it doesn't over-constrain; allowed productive
-   forms still encouraged). Then **re-fire #6** (`v7_build folk kalendarna-obriadovist-zvychai --worktree --writer
-   claude-tools --effort xhigh`, Monitor JSONL).
+1. **Finish PR #2977 — scope the FOLK vocab rules to `SEMINAR_LEVELS`** so they don't render in A1/core prompts
+   (fixes the size ceiling AND is correct — an A1 letter module needs no folk-coinage examples). Keep the concise
+   GENERAL principle (exhaustive verify + no-coinage + stakes) in the shared prompt. Get A1 under 133120 **in CI**
+   (the binding measurement), then **merge #2977**. (Alt if scoping is hard: a context-budget decision on the
+   ceiling — but the prompt is already at budget, so scoping is preferred.)
+2. **Re-fire #6** (`v7_build folk kalendarna-obriadovist-zvychai --worktree --writer claude-tools --effort xhigh`,
+   Monitor JSONL). Expected fully green: raw output already clears the floor; the hardened prompt should stop the
+   writer coining (вербатимний→дослівний etc.) so no destructive correction. **If #6 STILL coins** (claude-tools
+   ignores the hardened rules too), escalate to the user's option 2: bakeoff **codex-tools/deepseek-tools** as the
+   folk writer (the prior rules already said verify-all + no-coining and claude-tools ignored them).
 2. **If #6 still coins** (compliance fails despite hardening), escalate to the user's option 2: bakeoff
    **codex-tools / deepseek-tools** as the folk writer (may be more VESUM-conservative). The writer prompt already
    had verify-all + no-coining rules and claude-tools ignored them — a writer swap may be the real fix.
