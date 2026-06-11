@@ -63,7 +63,7 @@ class ReapResult:
     error: str | None = None
 
 
-def _sanitized_git_env() -> dict[str, str]:
+def sanitized_git_env() -> dict[str, str]:
     return {
         key: value
         for key, value in os.environ.items()
@@ -84,7 +84,7 @@ def _run(
         text=True,
         check=False,
         timeout=timeout,
-        env=_sanitized_git_env(),
+        env=sanitized_git_env(),
     )
 
 
@@ -188,7 +188,7 @@ def _worktrees_root(repo_root: Path) -> Path:
     return (repo_root / ".worktrees").resolve()
 
 
-def _is_under_worktrees(repo_root: Path, path: Path) -> bool:
+def is_under_worktrees(repo_root: Path, path: Path) -> bool:
     try:
         path.resolve().relative_to(_worktrees_root(repo_root))
     except ValueError:
@@ -467,7 +467,7 @@ def reap_worktrees(
     for info in list_git_worktrees(repo_root):
         if targets is not None and info.path.resolve() not in targets:
             continue
-        if not _is_under_worktrees(repo_root, info.path):
+        if not is_under_worktrees(repo_root, info.path):
             results.append(
                 ReapResult(
                     path=str(info.path),
@@ -574,7 +574,7 @@ def reap_success_worktree(
         )
 
     info = matching[0]
-    if not _is_under_worktrees(repo_root, info.path):
+    if not is_under_worktrees(repo_root, info.path):
         return ReapResult(
             path=str(info.path),
             branch=info.branch,

@@ -83,6 +83,48 @@ class WorktreeAddFailed(WorktreeSetupError):
     exit_code = 4
 
 
+class PrimaryCheckoutSafetyError(RuntimeError):
+    exit_code = 5
+
+
+class PrimaryCheckoutBuildError(PrimaryCheckoutSafetyError):
+    pass
+
+
+class PrimaryCheckoutPersistError(PrimaryCheckoutSafetyError):
+    pass
+
+
+_MODULE_ARTIFACT_NAMES = (
+    "writer_prompt.md",
+    "writer_output.raw.md",
+    "hermes.write.jsonl",
+    "writer_tool_calls.json",
+    "knowledge_packet.md",
+    "wiki_manifest.json",
+    "implementation_map.json",
+    "module.md",
+    "activities.yaml",
+    "vocabulary.yaml",
+    "resources.yaml",
+    "wiki_completeness_gate.json",
+    "stress_annotation.json",
+    "ulp_fidelity_gate.json",
+    "python_qg.json",
+    "wiki_coverage_gate.json",
+    "wiki_coverage_review.json",
+    "llm_qg.json",
+)
+_MODULE_ARTIFACT_GLOBS = (
+    "python_qg_correction_r*.json",
+    "wiki_coverage_correction_r*.json",
+    "llm-qg-*-prompt.md",
+    "llm-qg-*-response.raw.md",
+    "wiki-coverage-review-prompt.md",
+    "wiki-coverage-review-response.raw.md",
+)
+
+
 def emit_event(event: str, **fields: Any) -> None:
     linear_pipeline.emit_event(event, **fields)
 
@@ -129,7 +171,27 @@ def _run_git(
         text=True,
         check=False,
         timeout=timeout,
+        env=reap_worktrees.sanitized_git_env(),
     )
+
+
+def _format_process_failure(proc: subprocess.CompletedProcess[str]) -> str:
+    detail = (proc.stderr or proc.stdout or "").strip()
+    if detail:
+        return detail.splitlines()[-1]
+    return f"exit {proc.returncode}"
+
+
+def _git_top_level(path: Path) -> Path:
+    try:
+        proc = _run_git(["rev-parse", "--show-toplevel"], cwd=path)
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise WorktreeRepoError(f"cannot resolve git top-level for {path}: {exc}") from exc
+    if proc.returncode != 0:
+        raise WorktreeRepoError(
+            f"cannot resolve git top-level for {path}: {_format_process_failure(proc)}"
+        )
+    return Path((proc.stdout or "").strip()).resolve()
 
 
 def _repo_root_from_cwd() -> Path:
@@ -140,7 +202,7 @@ def _repo_root_from_cwd() -> Path:
             f"cwd must be inside the repository to use --worktree: {exc}"
         ) from exc
     if proc.returncode != 0:
-        detail = (proc.stderr or proc.stdout or "not a git repository").strip()
+        detail = _format_process_failure(proc)
         raise WorktreeRepoError(
             f"cwd must be inside the repository to use --worktree: {detail}"
         )
@@ -255,6 +317,103 @@ def _worktree_mdx_path(
             / f"{slug}.mdx"
         )
     return module_dir / f"{slug}.mdx"
+
+
+def _relative_to_worktree(worktree_path: Path, path: Path) -> str | None:
+    resolved_worktree = worktree_path.resolve()
+    resolved_path = path.resolve()
+    try:
+        return str(resolved_path.relative_to(resolved_worktree))
+    except ValueError:
+        return None
+
+
+def _existing_module_artifacts(module_dir: Path) -> list[Path]:
+    paths = [module_dir / name for name in _MODULE_ARTIFACT_NAMES]
+    for pattern in _MODULE_ARTIFACT_GLOBS:
+        paths.extend(sorted(module_dir.glob(pattern)))
+    return [path for path in paths if path.exists()]
+
+
+def _persist_artifact_paths(
+    worktree: BuildWorktree,
+    *,
+    level: str,
+    slug: str,
+    module_dir: Path | None = None,
+    mdx_path: Path | None = None,
+) -> list[str]:
+    level = level.lower()
+    default_module_dir = (
+        worktree.path / "curriculum" / "l2-uk-en" / level / slug
+    )
+    candidate_paths: list[Path] = []
+    artifact_dirs = [default_module_dir]
+    if module_dir is not None and module_dir != default_module_dir:
+        artifact_dirs.append(module_dir)
+    for artifact_dir in artifact_dirs:
+        candidate_paths.extend(_existing_module_artifacts(artifact_dir))
+
+    # Gemini-routed writes can place the Hermes trace at the repository root.
+    candidate_paths.append(worktree.path / "hermes.write.jsonl")
+
+    default_mdx = (
+        worktree.path
+        / "starlight"
+        / "src"
+        / "content"
+        / "docs"
+        / level
+        / f"{slug}.mdx"
+    )
+    for path in (mdx_path, default_mdx):
+        if path is not None and path.exists():
+            candidate_paths.append(path)
+
+    archive_dir = run_archive.archive_dir_for(
+        worktree.path,
+        level=level,
+        slug=slug,
+        run_id=worktree.run_id,
+    )
+    if archive_dir.exists():
+        candidate_paths.extend(
+            path for path in sorted(archive_dir.rglob("*")) if path.is_file()
+        )
+
+    rel_paths = []
+    seen = set()
+    for path in candidate_paths:
+        if not path.exists():
+            continue
+        relative = _relative_to_worktree(worktree.path, path)
+        if relative is None or relative in seen:
+            continue
+        rel_paths.append(relative)
+        seen.add(relative)
+    return rel_paths
+
+
+def _ensure_persist_target_is_not_primary_checkout(worktree: BuildWorktree) -> None:
+    target_top_level = _git_top_level(worktree.path)
+    primary_checkout = reap_worktrees.primary_checkout_root(worktree.repo_root).resolve()
+    if target_top_level == primary_checkout:
+        raise PrimaryCheckoutPersistError(
+            "Refusing to persist v7_build artifacts in the primary checkout; "
+            "target git top-level is the primary checkout. Pass --worktree so "
+            "artifacts are committed in an isolated worktree. See #2884."
+        )
+
+
+def _ensure_top_level_invocation_is_not_primary_checkout() -> None:
+    cwd_top_level = _git_top_level(Path.cwd())
+    primary_checkout = reap_worktrees.primary_checkout_root(cwd_top_level).resolve()
+    if cwd_top_level == primary_checkout:
+        raise PrimaryCheckoutBuildError(
+            "Refusing to run v7_build in the primary checkout; pass --worktree "
+            "(artifacts are committed and must land in an isolated worktree). "
+            "See #2884."
+        )
 
 
 def _writer_model_effort(writer: str, effort_override: str | None) -> tuple[str, str]:
@@ -431,8 +590,10 @@ def _persist_build_artifacts(
     level: str,
     slug: str,
     result: str,
+    module_dir: Path | None = None,
+    mdx_path: Path | None = None,
 ) -> bool:
-    """Commit ALL build artifacts to the worktree's build branch.
+    """Commit scoped build artifacts to the worktree's build branch.
 
     Build artifacts (writer_prompt.md, writer_output.raw.md, hermes.write.jsonl,
     writer_tool_calls.json, knowledge_packet.md, implementation_map.json, the
@@ -443,8 +604,8 @@ def _persist_build_artifacts(
     the 2026-05-19→20 incident where 7 worktrees were cleaned up and today's
     diagnostic artifacts were lost).
 
-    Strategy: from inside the worktree's working tree, ``git add -A &&
-    git commit --allow-empty -m "build(level/slug): artifacts (<result>)"``.
+    Strategy: from inside the worktree's working tree, explicitly add the
+    known artifact paths and then commit with ``--allow-empty``.
     The build branch is private to this worktree (created from origin/main in
     ``_setup_worktree`` with the unique timestamped suffix) so the commit
     cannot collide with another build of the same module. We deliberately
@@ -452,21 +613,35 @@ def _persist_build_artifacts(
     want shareable provenance for a specific build can push that branch
     manually.
 
-    Errors here are non-fatal: persistence is best-effort. A failure to
-    commit (e.g. git config not set, hooks blocking) prints a warning and
-    returns. Better to leave the worktree dir as-is than to crash the
-    wrapper after the actual build already finished.
+    Ordinary git errors here are non-fatal: persistence is best-effort. The
+    primary-checkout guard is fatal because committing build artifacts on main
+    is worse than crashing this wrapper.
     """
+    _ensure_persist_target_is_not_primary_checkout(worktree)
+    artifact_paths = _persist_artifact_paths(
+        worktree,
+        level=level,
+        slug=slug,
+        module_dir=module_dir,
+        mdx_path=mdx_path,
+    )
     try:
-        # Stage every file in the worktree relative to its working tree.
-        # The worktree was created from origin/main with no local edits,
-        # so any staged change here came from the build run.
-        subprocess.run(
-            ["git", "-C", str(worktree.path), "add", "-A"],
-            check=True,
-            capture_output=True,
-            text=True,
-        )
+        if artifact_paths:
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(worktree.path),
+                    "add",
+                    "--force",
+                    "--",
+                    *artifact_paths,
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+                env=reap_worktrees.sanitized_git_env(),
+            )
         # --allow-empty so empty builds (rare, e.g. dry-run paths or
         # failed-before-writer setups) still leave a commit on the branch
         # marking that the worktree was used. Caller can prune later.
@@ -484,6 +659,7 @@ def _persist_build_artifacts(
             check=True,
             capture_output=True,
             text=True,
+            env=reap_worktrees.sanitized_git_env(),
         )
         return True
     except (subprocess.CalledProcessError, OSError) as exc:
@@ -510,7 +686,7 @@ def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
 
     model, effort = _writer_model_effort(writer, args.effort)
     archive = run_archive.RunArchive.start(
-        project_root=worktree.repo_root,
+        project_root=worktree.path,
         worktree_path=worktree.path,
         level=level,
         slug=slug,
@@ -563,12 +739,18 @@ def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
         # the writer_prompt + partial writer_output remain queryable via
         # the build branch SHA. Without this, `git worktree remove`
         # silently destroys forensic evidence.
-        persisted = _persist_build_artifacts(
-            worktree,
-            level=level,
-            slug=slug,
-            result=result,
-        )
+        try:
+            persisted = _persist_build_artifacts(
+                worktree,
+                level=level,
+                slug=slug,
+                result=result,
+                module_dir=module_dir,
+                mdx_path=mdx_path,
+            )
+        except PrimaryCheckoutSafetyError as exc:
+            print(f"v7_build: error — {exc}", file=sys.stderr)
+            return exc.exit_code
         cleanup_result = None
         if result == "success" and persisted and not args.keep_worktree:
             cleanup_result = reap_worktrees.reap_success_worktree(
@@ -906,6 +1088,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  2 on command-line usage errors from argparse or --worktree outside this repo.\n"
             "  3 when the requested --worktree path already exists.\n"
             "  4 when git worktree add fails.\n\n"
+            "  5 when a primary-checkout safety guard refuses the run.\n\n"
             "  124 when a writer subprocess is killed after --writer-timeout "
             "seconds of stdout silence.\n\n"
             "Related:\n"
@@ -1051,6 +1234,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(raw_argv)
     if args.worktree is not None:
         return _run_in_worktree(args, raw_argv)
+    if run_archive.ENV_KEY not in os.environ:
+        try:
+            _ensure_top_level_invocation_is_not_primary_checkout()
+        except PrimaryCheckoutSafetyError as exc:
+            print(str(exc), file=sys.stderr)
+            return exc.exit_code
     telemetry_out = _resolve_project_path(args.telemetry_out)
     with linear_pipeline.telemetry_event_sink(telemetry_out):
         return _run(args)
