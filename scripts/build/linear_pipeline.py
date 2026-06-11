@@ -8467,6 +8467,8 @@ def _vesum_gate(
         if hyphenated_missing:
             constituent_lookups: set[str] = set()
             constituent_map: dict[str, list[str]] = {}
+            compound_base_candidates_by_part: dict[str, list[str]] = {}
+            compound_base_lookups: set[str] = set()
             for compound in hyphenated_missing:
                 parts = [part for part in compound.split("-") if part]
                 if len(parts) < 2:
@@ -8474,6 +8476,11 @@ def _vesum_gate(
                 eligible_parts = [part for part in parts if len(part) >= VESUM_MIN_WORD_LENGTH]
                 constituent_lookups.update(eligible_parts)
                 constituent_map[compound] = eligible_parts
+                for part in eligible_parts[:-1]:
+                    candidates = _compound_adjective_base_candidates(part)
+                    if candidates:
+                        compound_base_candidates_by_part[part] = candidates
+                        compound_base_lookups.update(candidates)
             if constituent_lookups:
                 try:
                     constituent_verified = verify_words_fn(sorted(constituent_lookups))
@@ -8485,13 +8492,45 @@ def _vesum_gate(
                     }
             else:
                 constituent_verified = {}
+            if compound_base_lookups:
+                try:
+                    compound_base_verified = verify_words_fn(sorted(compound_base_lookups))
+                except Exception as exc:
+                    return {
+                        "passed": False,
+                        "error": str(exc),
+                        "checked": len(unchecked_pairs),
+                    }
+                verified_compound_base_adjectives = {
+                    word
+                    for word, matches in compound_base_verified.items()
+                    if any(_vesum_match_is_adjective(match) for match in matches)
+                    and not _engine_flags_russianism(word)
+                }
+            else:
+                verified_compound_base_adjectives = set()
             resolved_compounds: set[str] = set()
             for compound, parts in constituent_map.items():
                 # All eligible parts must verify. If there are zero
                 # eligible parts (every constituent below threshold),
                 # accept conservatively — the compound is a string of
                 # very short tokens we wouldn't gate individually.
-                if all(constituent_verified.get(part) for part in parts):
+                last_part_index = len(parts) - 1
+                if all(
+                    _vesum_part_verifies_as_compound_constituent(
+                        constituent_verified.get(part) or [],
+                        require_modifier=index < last_part_index
+                        and bool(compound_base_candidates_by_part.get(part)),
+                    )
+                    or (
+                        index < last_part_index
+                        and any(
+                            candidate in verified_compound_base_adjectives
+                            for candidate in compound_base_candidates_by_part.get(part, ())
+                        )
+                    )
+                    for index, part in enumerate(parts)
+                ):
                     resolved_compounds.add(compound)
             missing_lc -= resolved_compounds
     if missing_lc:
@@ -8810,8 +8849,32 @@ def _productive_ist_adjective_candidates(word: str) -> tuple[str, ...]:
     return ()
 
 
+def _compound_adjective_base_candidates(part: str) -> list[str]:
+    if not part.endswith("о"):
+        return []
+    stem = part[:-1]
+    candidates: list[str] = []
+    for ending in ("ий", "ій"):
+        candidate = f"{stem}{ending}"
+        if candidate not in candidates:
+            candidates.append(candidate)
+    return candidates
+
+
 def _vesum_match_is_adjective(match: Mapping[str, Any]) -> bool:
     return str(match.get("pos", "")).lower() in {"adj", "adjective"}
+
+
+def _vesum_part_verifies_as_compound_constituent(
+    matches: Sequence[Mapping[str, Any]],
+    *,
+    require_modifier: bool,
+) -> bool:
+    if not matches:
+        return False
+    if not require_modifier:
+        return True
+    return any(str(match.get("pos", "")).lower() in {"adj", "adjective", "adv", "adverb"} for match in matches)
 
 
 def _iter_vesum_lookup_surface_pairs(
