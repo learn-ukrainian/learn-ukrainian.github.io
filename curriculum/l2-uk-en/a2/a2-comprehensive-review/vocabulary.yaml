@@ -1,0 +1,80 @@
+- word: повторення
+  translation: review, revision
+  pos: noun
+  example: "Перед іспитом нам потрібне спокійне повторення."
+- word: повна картина
+  translation: full picture
+  pos: phrase
+  example: "Повна картина допомагає бачити зв'язки між темами."
+- word: граматична тема
+  translation: grammar topic
+  pos: phrase
+  example: "Відмінки - важлива граматична тема рівня А2."
+- word: сигнал
+  translation: signal, cue
+  pos: noun
+  example: "Прийменник без - це сигнал родового відмінка."
+- word: роль слова
+  translation: role of a word
+  pos: phrase
+  example: "Роль слова допомагає вибрати відмінок."
+- word: відмінкова карта
+  translation: case map
+  pos: phrase
+  example: "Відмінкова карта починається з питань."
+- word: родовий відмінок
+  translation: genitive case
+  pos: phrase
+  example: "Після немає часто стоїть родовий відмінок."
+- word: давальний відмінок
+  translation: dative case
+  pos: phrase
+  example: "Давальний відмінок відповідає на питання кому?"
+- word: орудний відмінок
+  translation: instrumental case
+  pos: phrase
+  example: "Орудний відмінок може називати інструмент."
+- word: місцевий відмінок
+  translation: locative case
+  pos: phrase
+  example: "Місцевий відмінок уживається з прийменником у."
+- word: доконаний вид
+  translation: perfective aspect
+  pos: phrase
+  example: "Доконаний вид показує результат."
+- word: недоконаний вид
+  translation: imperfective aspect
+  pos: phrase
+  example: "Недоконаний вид показує процес або повторення."
+- word: майбутній час
+  translation: future tense
+  pos: phrase
+  example: "У майбутньому часі можна сказати буду писати або напишу."
+- word: наказовий спосіб
+  translation: imperative mood
+  pos: phrase
+  example: "Повторіть - це наказовий спосіб."
+- word: ступінь порівняння
+  translation: degree of comparison
+  pos: phrase
+  example: "Кращий - вищий ступінь порівняння."
+- word: зворотний займенник
+  translation: reflexive pronoun
+  pos: phrase
+  example: "Себе - зворотний займенник."
+- word: неозначений займенник
+  translation: indefinite pronoun
+  pos: phrase
+  example: "Хтось - неозначений займенник."
+- word: заперечний займенник
+  translation: negative pronoun
+  pos: phrase
+  example: "Ніхто - заперечний займенник."
+- word: сполучник
+  translation: conjunction
+  pos: noun
+  example: "Сполучник тому що називає причину."
+- word: самооцінка
+  translation: self-assessment
+  pos: noun
+  example: "Самооцінка показує, що треба повторити."
