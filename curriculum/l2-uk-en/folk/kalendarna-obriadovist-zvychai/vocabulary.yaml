@@ -1,121 +1,145 @@
-- lemma: обря́д
+- lemma: обряд
   translation: rite, ritual
-  pos: ч.
-  usage: Ко́жен обря́д ма́є своє́ мі́сце в річно́му ко́лі.
-- lemma: моти́в
-  translation: motif, recurring image/formula
-  pos: ч.
-  usage: Моти́в воскреса́ння весни́ живе́ в багатьо́х пісня́х.
-- lemma: варіа́нт
-  translation: variant (regional/performance form)
-  pos: ч.
-  usage: Той самий текст ма́є рі́зні регіона́льні варіа́нти.
-- lemma: обрядо́вість
-  translation: ritual tradition, body of rites
-  pos: ж.
-  usage: Календа́рна обрядо́вість поє́днує ві́ру, пра́цю й спів.
+  pos: noun
+  usage: Кожен обряд має своє місце в році.
+  notes: Усталена символічна дія або послідовність дій, прив'язана до певної дати.
+- lemma: обрядовість
+  translation: ritual practice, body of rites
+  pos: noun
+  usage: Календарна обрядовість тримається на чотирьох циклах.
+- lemma: обрядодія
+  translation: ritual act
+  pos: noun
+  usage: Спів супроводжує обрядодію закликання весни.
+- lemma: мотив
+  translation: motif; recurring image or formula
+  pos: noun
+  usage: Мотив достатку повторюється від колядки до обжинкової пісні.
+- lemma: варіант
+  translation: variant; regional or performative version
+  pos: noun
+  usage: Той самий спів існує в багатьох регіональних варіантах.
 - lemma: цикл
-  translation: cycle (seasonal)
-  pos: ч.
-  usage: Зимо́ви́й цикл відкрива́є наро́дний рік.
-- lemma: весня́нка
-  translation: spring song
-  pos: ж.
-  usage: Весня́нка закликала тепло́ й оно́влення приро́ди.
-- lemma: гаї́вки
-  translation: Easter spring songs/games
-  pos: мн.
-  usage: Гаї́вки поє́днують спів із ру́хом і гро́ю.
-- lemma: коля́дка
-  translation: Christmas carol
-  pos: ж.
-  usage: Коля́дка сла́вила госпо́даря та йо́го роди́ну.
-- lemma: щедрі́вка
-  translation: New Year carol (shchedrivka)
-  pos: ж.
-  usage: Щедрі́вка закликала врожа́й і приплі́д на нови́й рік.
-- lemma: кутя́
-  translation: kutia (ritual grain dish)
-  pos: ж.
-  usage: Кутя́ — обрядо́ва стра́ва зимо́во́го ци́клу.
-- lemma: діду́х
-  translation: didukh (ritual sheaf)
-  pos: ч.
-  usage: Діду́х стоя́в у ха́ті як си́мвол ро́ду й врожа́ю.
-- lemma: віно́к
-  translation: wreath
-  pos: ч.
-  usage: Дівчата плели́ вінки́ й пуска́ли їх на воду́.
+  translation: cycle
+  pos: noun
+  usage: Зимовий цикл відкриває обрядовий рік.
+- lemma: кутя
+  translation: kutia (ritual grain dish for Christmas Eve)
+  pos: noun
+  usage: На Святвечір родина куштує кутю.
+- lemma: дідух
+  translation: didukh (ceremonial sheaf)
+  pos: noun
+  usage: Господар вносить дідух і ставить його на покуті.
+- lemma: веснянка
+  translation: vesnianka (spring ritual song)
+  pos: noun
+  usage: Веснянки співають, закликаючи тепло.
+- lemma: гаївка
+  translation: haivka (western spring/Easter song)
+  pos: noun
+  usage: Гаївки тісно пов'язані з великоднім тижнем.
+- lemma: гагілки
+  translation: hahilky (Galician spring songs)
+  pos: noun
+  usage: Гагілки — галицькі варіанти весняного співу.
+  notes: Вживається переважно у формі множини.
+- lemma: колядка
+  translation: koliadka (Christmas carol)
+  pos: noun
+  usage: Колядка величає дім і бажає достатку.
+- lemma: щедрівка
+  translation: shchedrivka (New Year well-wishing song)
+  pos: noun
+  usage: Щедрівку співають під час новорічного обходу.
+- lemma: колядування
+  translation: carolling (the rite of going house to house)
+  pos: noun
+  usage: Колядування — це обхід дворів із піснями.
+- lemma: посівання
+  translation: ritual sowing of grain on New Year
+  pos: noun
+  usage: На Новий рік хлопці ходять із посіванням.
+- lemma: обжинки
+  translation: harvest-end rite
+  pos: noun
+  usage: Обжинки замикають аграрний рік.
+  notes: Вживається у формі множини.
+- lemma: зажинки
+  translation: rite of starting the harvest
+  pos: noun
+  usage: Зажинки відкривають жнива, а обжинки їх завершують.
+  notes: Вживається у формі множини.
 - lemma: сніп
   translation: sheaf
-  pos: ч.
-  usage: З оста́ннього снопа́ роби́ли дідуха́.
-- lemma: обжи́нки
-  translation: harvest-home rite
-  pos: мн.
-  usage: Обжи́нки заве́ршували жнива пісня́ми вдя́чності.
-- lemma: посіва́ння
-  translation: ritual grain-strewing (sowing rite)
-  pos: с.
-  usage: Посіва́ння зе́рно́м віщува́ло доста́ток на рік.
-- lemma: синкрети́зм
-  translation: syncretism (blending of layers)
-  pos: ч.
-  usage: Синкрети́зм поє́днує да́вній і христия́нський ша́ри обря́ду.
-- lemma: си́мвол
-  translation: symbol
-  pos: ч.
-  usage: Вого́нь — си́мвол очи́щення в купа́льську ніч.
-- lemma: фо́рмула
-  translation: verbal formula
-  pos: ж.
-  usage: Обрядо́ва фо́рмула повто́рюється з ро́ку в рік.
-- lemma: грома́да
-  translation: community
-  pos: ж.
-  usage: Обря́д трима́є грома́ду ра́зом.
-- lemma: воскреса́ння
-  translation: resurrection (motif of renewal)
-  pos: с.
-  usage: Моти́в воскреса́ння весни́ поє́днує ві́ру й приро́ду.
-- lemma: виконання
-  translation: performance
-  pos: с.
-  usage: Пі́сня живе́ ті́льки у виконанні.
-- lemma: зви́чай
-  translation: custom
-  pos: ч.
-  usage: Зви́чай передає́ варіа́нти від старших до моло́дших.
-- lemma: врожа́й
-  translation: harvest, crop
-  pos: ч.
-  usage: Обжи́нки дякували ни́ві за врожа́й.
-  notes: Рівнопра́вний варіа́нт «урожа́й»; оби́дві фо́рми засві́дчені в VESUM.
-- lemma: обері́г
-  translation: protective charm, amulet
-  pos: ч.
-  usage: Вінки́ пра́вили за обере́ги для до́му.
+  pos: noun
+  usage: Із останнього снопа плетуть обжинковий вінок.
+- lemma: вінок
+  translation: wreath
+  pos: noun
+  usage: Дівчина несе обжинковий вінок на голові.
 - lemma: жнива
-  translation: harvest, reaping
-  pos: мн.
-  usage: Жнива́ ма́ли зажи́нки на поча́тку й обжи́нки напри́кінці́.
-- lemma: руса́лії
-  translation: Rusalii (Pentecost-tide rites)
-  pos: мн.
-  usage: Руса́лії пов'я́зані з по́лем, водо́ю й духами приро́ди.
-- lemma: верте́п
-  translation: nativity puppet theatre
-  pos: ч.
-  usage: Верте́п розі́грував різдвя́ну ді́ю пе́ред грома́дою.
-- lemma: хорово́д
-  translation: round dance
-  pos: ч.
-  usage: Хорово́д води́ли ко́лом під спів.
-- lemma: ва́тра
-  translation: bonfire
-  pos: ж.
-  usage: Мо́лодь розпа́лювала ва́тру в купа́льську ніч.
-- lemma: ря́джені
-  translation: mummers, costumed performers
-  pos: мн.
-  usage: Ря́джені обходи́ли двори́ зі смі́хом і пі́снею.
+  translation: harvest (reaping)
+  pos: noun
+  usage: Обжинки відбуваються наприкінці жнив.
+  notes: Вживається у формі множини.
+- lemma: хоровод
+  translation: round dance with song
+  pos: noun
+  usage: Стара гра про просо збереглася як хоровод.
+- lemma: гільце
+  translation: giltse (decorated ritual treelet)
+  pos: noun
+  usage: Громада ставить і прикрашає купальське гільце.
+- lemma: сонцестояння
+  translation: solstice
+  pos: noun
+  usage: Купала пов'язане з літнім сонцестоянням.
+- lemma: рівнодення
+  translation: equinox
+  pos: noun
+  usage: Весняні обряди близькі до часу рівнодення.
+- lemma: синкретизм
+  translation: syncretism (coexistence of religious layers)
+  pos: noun
+  usage: Синкретизм поєднує християнський і дохристиянський шари в одній пісні.
+- lemma: синкретичний
+  translation: syncretic
+  pos: adj
+  usage: Купальська пісня має виразно синкретичний характер.
+- lemma: персоніфікація
+  translation: personification
+  pos: noun
+  usage: Персоніфікація природи помітна в образі Купала.
+- lemma: перформативність
+  translation: performativity (text bound to action)
+  pos: noun
+  usage: Перформативність означає, що текст прив'язаний до дії.
+- lemma: величальний
+  translation: glorifying, laudatory
+  pos: adj
+  usage: Обжинкова пісня має величальний характер.
+- lemma: закликальний
+  translation: invocatory, summoning
+  pos: adj
+  usage: Веснянка часто має закликальний зміст.
+- lemma: родючість
+  translation: fertility (of land)
+  pos: noun
+  usage: Купальські обряди мали забезпечити родючість.
+- lemma: опудало
+  translation: effigy, scarecrow
+  pos: noun
+  usage: Опудало Купала наприкінці свята топлять або спалюють.
+- lemma: ряджений
+  translation: costumed (mummer)
+  pos: adj
+  usage: На Маланку ходять ряджені гурти.
+- lemma: обрядовий
+  translation: ritual (adjective)
+  pos: adj
+  usage: Обрядовий рефрен відрізняє пісню від побутової.
+- lemma: деколонізація
+  translation: decolonization
+  pos: noun
+  usage: Деколонізація опису повертає традиції власний центр.
