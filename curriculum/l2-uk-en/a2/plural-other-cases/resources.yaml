@@ -1,0 +1,25 @@
+- title: "Dobra Forma 11-4: Dative Case (Plural Nouns)"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-039"
+  url: "https://opentext.ku.edu/dobraforma/chapter/11-4/"
+  notes: "Open textbook practice for plural dative noun forms."
+- title: "Dobra Forma 9-3: Instrumental Case (Plural Nouns)"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-031"
+  url: "https://opentext.ku.edu/dobraforma/chapter/9-3/"
+  notes: "Focused practice for plural instrumental forms and common patterns."
+- title: "Dobra Forma 4-6: Locative Case (Plural)"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-015"
+  url: "https://opentext.ku.edu/dobraforma/chapter/4-6/"
+  notes: "Practice with у/в, на and plural locative endings."
+- title: "ULP: Ukrainian Cases Chart"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /ukrainian-cases-chart/"
+  url: "https://www.ukrainianlessons.com/ukrainian-cases-chart/"
+  notes: "Broad case chart for reviewing dative, instrumental and locative forms together."
+- title: "ULP: Prepositions and Cases"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /prepositions-cases/"
+  url: "https://www.ukrainianlessons.com/prepositions-cases/"
+  notes: "Reference for choosing cases after common prepositions."

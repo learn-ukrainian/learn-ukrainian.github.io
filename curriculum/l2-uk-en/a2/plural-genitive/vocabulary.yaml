@@ -1,0 +1,81 @@
+- word: родовий відмінок
+  translation: genitive case
+  pos: phrase
+  example: "Після багато часто стоїть родовий відмінок."
+- word: родовий множини
+  translation: genitive plural
+  pos: phrase
+  example: "Книг - це родовий множини."
+- word: кількість
+  translation: quantity, amount
+  pos: noun
+  gender: f
+  example: "Слова кількості вимагають родового множини."
+- word: багато
+  translation: many, a lot
+  pos: adv
+  example: "У класі багато студентів."
+- word: мало
+  translation: few, little
+  pos: adv
+  example: "У мене мало грошей."
+- word: кілька
+  translation: a few, several
+  pos: num
+  example: "У сумці кілька книжок."
+- word: декілька
+  translation: a few, several
+  pos: num
+  example: "Після уроку є декілька питань."
+- word: скільки
+  translation: how many, how much
+  pos: adv
+  example: "Скільки тарілок на столі?"
+- word: нульове закінчення
+  translation: zero ending
+  pos: phrase
+  example: "Книга - книг має нульове закінчення."
+- word: вставний голосний
+  translation: fleeting vowel
+  pos: phrase
+  example: "У формі ложок є вставний голосний."
+- word: виняток
+  translation: exception
+  pos: noun
+  gender: m
+  example: "Це частий виняток."
+- word: тарілка
+  translation: plate
+  pos: noun
+  gender: f
+  example: "На столі немає тарілок."
+- word: виделка
+  translation: fork
+  pos: noun
+  gender: f
+  example: "Потрібно десять виделок."
+- word: ложка
+  translation: spoon
+  pos: noun
+  gender: f
+  example: "У нас багато ложок."
+- word: склянка
+  translation: glass
+  pos: noun
+  gender: f
+  example: "Немає чистих склянок."
+- word: ніж
+  translation: knife
+  pos: noun
+  gender: m
+  example: "Потрібно кілька нових ножів."
+- word: гроші
+  translation: money
+  pos: noun
+  gender: pl
+  example: "У мене мало грошей."
+- word: гривня
+  translation: hryvnia
+  pos: noun
+  gender: f
+  example: "Це коштує п'ять гривень."

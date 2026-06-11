@@ -1,0 +1,336 @@
+---
+title: "Багато людей, багато речей"
+description: "Множина називного та знахідного відмінків для всіх відмін"
+sidebar:
+  order: 32
+  label: "32. Багато людей, багато речей"
+prev: checkpoint-instrumental
+next: plural-genitive
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: у зоопарку
+
+Почніть із короткої сцени. Тут багато множини, але завдання просте:
+помітити, хто виконує дію, а кого або що бачать.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Мама","text":"Дивись, он леви. Вони сплять."},{"speaker":"Дитина","text":"А я бачу жирафів! Вони дуже високі."},{"speaker":"Мама","text":"Так. А біля дерева мавпи."},{"speaker":"Дитина","text":"Де пінгвіни?"},{"speaker":"Мама","text":"Там. Діти фотографують пінгвінів, а тато фотографує квіти."},{"speaker":"Дитина","text":"Я люблю тварин і красиві речі."}]')}
+/>
+
+Карта діалогу:
+
+| Фраза | Роль у реченні | Відмінок |
+| --- | --- | --- |
+| леви сплять | хто? виконує дію | називний множини |
+| бачу жирафів | кого? прямий додаток | знахідний множини |
+| мавпи біля дерева | хто? про кого говоримо | називний множини |
+| фотографують пінгвінів | кого? істоти | знахідний множини |
+| фотографує квіти | що? неістоти | знахідний множини |
+
+Головна ідея модуля:
+
+- `хто? що?` виконує дію - називний множини: `леви`, `мавпи`, `квіти`;
+- `кого? що?` після дієслова - знахідний множини;
+- для неістот знахідний множини часто виглядає як називний:
+  `бачу столи`, `купую книги`;
+- для істот знахідний множини має форму родового множини:
+  `бачу друзів`, `зустрічаю сестер`, `люблю дітей`.
+
+Класна мова для цього уроку:
+
+- `Хто виконує дію?`
+- `Що бачимо або купуємо?`
+- `Це істота чи неістота?`
+- `Форма така сама чи інша?`
+
+### Називний множини
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У класі стоять ___.", "answer": "столи", "options": ["столи", "столів", "столом"]}, {"sentence": "Тут є нові ___.", "answer": "міста", "options": ["місто", "міста", "міст"]}, {"sentence": "У парку грають ___.", "answer": "діти", "options": ["дітей", "діти", "дитиною"]}, {"sentence": "На полиці лежать ___.", "answer": "книги", "options": ["книг", "книгам", "книги"]}]`)} />
+
+## Називний множини: хто або що є?
+
+Називний множини потрібен, коли слово називає групу людей, тварин або
+предметів, які самі виконують дію.
+
+> Студенти читають.
+>
+> Книги лежать на столі.
+>
+> Діти грають у парку.
+>
+> Нові міста ростуть швидко.
+
+Перший робочий крок - упізнати найчастіші закінчення.
+
+| Однина | Множина | Коментар |
+| --- | --- | --- |
+| сестра | сестри | тверда основа, часто `-и` |
+| земля | землі | м'яка основа, часто `-і` |
+| стіл | столи | чоловічий рід, тверда основа |
+| учень | учні | м'яка основа |
+| місто | міста | середній рід на `-о` |
+| поле | поля | середній рід на `-е` |
+| ніч | ночі | жіночий рід на приголосний |
+| курча | курчата | середній рід із `-ат-` |
+
+Не вчіть усі таблиці за один раз. На A2 корисніше бачити групи:
+
+- багато слів мають `-и`: `столи`, `сестри`, `квитки`;
+- багато м'яких слів мають `-і`: `землі`, `учні`, `друзі`;
+- середній рід часто має `-а` або `-я`: `міста`, `поля`;
+- деякі слова треба вивчити як готові форми: `людина - люди`,
+  `дитина - діти`, `око - очі`, `вухо - вуха`.
+
+Міні-тренування усно:
+
+> Один стіл - два столи.
+>
+> Одна книга - дві книги.
+>
+> Одне місто - два міста.
+>
+> Одна дитина - діти.
+
+Після цього змініть тільки слово:
+
+> Тут є столи. Тут є книги. Тут є міста. Тут є діти.
+
+### Істоти чи неістоти?
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Істоти": ["друзі", "студенти", "сестри", "пінгвіни"], "Неістоти": ["книги", "столи", "квіти", "ключі"]}`)} />
+
+## Знахідний множини: кого або що бачимо?
+
+Знахідний множини потрібен після дієслів на кшталт:
+`бачити`, `знати`, `любити`, `зустрічати`, `шукати`, `купувати`,
+`фотографувати`.
+
+Спочатку поставте питання:
+
+> Я бачу кого? - друзів.
+>
+> Я бачу що? - столи.
+
+Потім перевірте, це істота чи неістота.
+
+| Тип | Називний множини | Знахідний множини | Приклад |
+| --- | --- | --- | --- |
+| неістоти | столи | столи | Я бачу столи. |
+| неістоти | книги | книги | Ми купуємо книги. |
+| істоти | друзі | друзів | Я зустрічаю друзів. |
+| істоти | сестри | сестер | Ми зустрічаємо сестер. |
+| істоти | діти | дітей | Учитель бачить дітей. |
+
+Це правило працює для всіх родів у множині. Саме тому форма `книги` не
+змінюється, а форма `сестри` змінюється:
+
+> Книги лежать на столі. - називний.
+>
+> Я купую книги. - знахідний, але форма така сама, бо це неістота.
+>
+> Сестри прийшли. - називний.
+>
+> Я бачу сестер. - знахідний, інша форма, бо це істоти.
+
+Не треба перекладати кожне речення. Достатньо поставити два питання:
+
+1. Це підмет чи прямий додаток?
+2. Якщо прямий додаток, це істота чи неістота?
+
+### Бачу кого? Бачу що?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я бачу ___.", "options": [{"text": "друзів", "correct": true}, {"text": "друзі", "correct": false}, {"text": "друзями", "correct": false}], "explanation": "Друзі - істоти, тому бачу друзів."}, {"question": "Ми купуємо ___.", "options": [{"text": "книжок", "correct": false}, {"text": "книги", "correct": true}, {"text": "книгам", "correct": false}], "explanation": "Книги - неістоти, знахідний множини як називний."}, {"question": "Діти фотографують ___.", "options": [{"text": "пінгвіни", "correct": false}, {"text": "пінгвінів", "correct": true}, {"text": "пінгвінами", "correct": false}], "explanation": "Пінгвіни - істоти, тому пінгвінів."}, {"question": "Тато шукає ___.", "options": [{"text": "ключі", "correct": true}, {"text": "ключів", "correct": false}, {"text": "ключам", "correct": false}], "explanation": "Ключі - неістоти, форма така сама як називний множини."}]`)} />
+
+## Називний чи знахідний за контекстом
+
+Іноді форма однакова, але роль різна. Це нормально.
+
+| Речення | Слово | Роль |
+| --- | --- | --- |
+| Книги лежать на полиці. | книги | називний, підмет |
+| Я купив книги. | книги | знахідний, прямий додаток |
+| Квіти ростуть біля дому. | квіти | називний, підмет |
+| Мама купила квіти. | квіти | знахідний, прямий додаток |
+
+Для неістот форма не допомагає. Допомагає речення:
+
+- `книги лежать` - книги щось роблять, це називний;
+- `купив книги` - хтось купив книги, це знахідний;
+- `квіти ростуть` - квіти щось роблять, це називний;
+- `купила квіти` - квіти є об'єктом дії, це знахідний.
+
+Для істот різниця помітніша:
+
+| Називний | Знахідний |
+| --- | --- |
+| Друзі прийшли. | Я бачу друзів. |
+| Сестри телефонують. | Ми зустрічаємо сестер. |
+| Учні слухають. | Вчитель знає учнів. |
+| Діти грають. | Батьки фотографують дітей. |
+
+Коротка стратегія:
+
+> Підмет? - називний.
+>
+> Прямий додаток? - знахідний.
+>
+> Знахідний + істота? - форма родового множини.
+>
+> Знахідний + неістота? - форма називного множини.
+
+### Виправте форму
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильне речення." items={JSON.parse(`[{"sentence": "Я бачу студенти.", "errorWord": "студенти", "correctForm": "Я бачу студентів.", "options": ["Я бачу студентів.", "Я бачу студенти."], "explanation": "Студенти - істоти, у знахідному множини студентів."}, {"sentence": "Дітей грають у парку.", "errorWord": "Дітей", "correctForm": "Діти грають у парку.", "options": ["Діти грають у парку.", "Дітей грають у парку."], "explanation": "Це підмет, тому називний множини діти."}, {"sentence": "Ми купуємо квітів.", "errorWord": "квітів", "correctForm": "Ми купуємо квіти.", "options": ["Ми купуємо квіти.", "Ми купуємо квітів."], "explanation": "Квіти - неістоти, у знахідному множини форма квіти."}, {"sentence": "Вона зустрічає сестри.", "errorWord": "сестри", "correctForm": "Вона зустрічає сестер.", "options": ["Вона зустрічає сестер.", "Вона зустрічає сестри."], "explanation": "Сестри - істоти, після зустрічати потрібна форма сестер."}]`)} />
+
+## Маленька розмова
+
+Працюйте в парах. Один студент питає, інший відповідає.
+
+| Питання | Можлива відповідь |
+| --- | --- |
+| Кого ти бачиш у парку? | Я бачу дітей і друзів. |
+| Що ти бачиш на столі? | Я бачу книги, ключі і квіти. |
+| Кого ти часто зустрічаєш? | Я часто зустрічаю колег. |
+| Що ти купуєш у магазині? | Я купую яблука, квитки і подарунки. |
+
+Після відповіді партнер ставить уточнення:
+
+> `Це істоти чи неістоти?`
+>
+> `Чому тут форма -ів / -ей / нульова форма?`
+
+Відповідайте коротко. Мета - не велика історія, а правильний вибір
+форми.
+
+## Типові помилки
+
+| Не так | Краще | Чому |
+| --- | --- | --- |
+| людина - людини | людина - люди | особлива часта форма |
+| бачу друзі | бачу друзів | істоти у знахідному множини |
+| діти грають - дітей грають | діти грають | підмет, називний |
+| купую книжок | купую книжки | неістоти у знахідному як називний |
+| фотографую пінгвіни | фотографую пінгвінів | істоти у знахідному |
+
+## 📋 Підсумок
+
+Називний множини називає групу як підмет: `студенти читають`,
+`книги лежать`, `діти грають`. Знахідний множини з'являється після
+дієслів типу `бачити`, `купувати`, `любити`, `зустрічати`.
+
+Найважливіше правило:
+
+- неістоти: `бачу столи`, `купую книги`;
+- істоти: `бачу друзів`, `зустрічаю сестер`, `люблю дітей`.
+
+Самоперевірка: скажіть українською п'ять речень із моделлю `Я бачу...`.
+У трьох реченнях використайте людей або тварин, у двох - предмети.
+Після кожного речення назвіть: `істота` чи `неістота`.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"множина","translation":"plural","pos":"noun","gender":"f","example":"Множина слова друг - друзі.","examples":["plural","Множина слова друг - друзі."]},{"word":"називний відмінок","translation":"nominative case","pos":"phrase","example":"Називний відмінок називає підмет.","examples":["nominative case","Називний відмінок називає підмет."]},{"word":"знахідний відмінок","translation":"accusative case","pos":"phrase","example":"Після бачу часто стоїть знахідний відмінок.","examples":["accusative case","Після бачу часто стоїть знахідний відмінок."]},{"word":"істота","translation":"animate being","pos":"noun","gender":"f","example":"Людина - це істота.","examples":["animate being","Людина - це істота."]},{"word":"неістота","translation":"inanimate thing","pos":"noun","gender":"f","example":"Книга - це неістота.","examples":["inanimate thing","Книга - це неістота."]},{"word":"підмет","translation":"subject","pos":"noun","gender":"m","example":"У реченні Діти грають слово діти - підмет.","examples":["subject","У реченні Діти грають слово діти - підмет."]},{"word":"прямий додаток","translation":"direct object","pos":"phrase","example":"У реченні Я бачу дітей слово дітей - прямий додаток.","examples":["direct object","У реченні Я бачу дітей слово дітей - прямий додаток."]},{"word":"закінчення","translation":"ending","pos":"noun","gender":"n","example":"Закінчення показує число і відмінок.","examples":["ending","Закінчення показує число і відмінок."]},{"word":"лев","translation":"lion","pos":"noun","gender":"m","example":"У зоопарку є леви.","examples":["lion","У зоопарку є леви."]},{"word":"жираф","translation":"giraffe","pos":"noun","gender":"m","example":"Я бачу жирафів.","examples":["giraffe","Я бачу жирафів."]},{"word":"мавпа","translation":"monkey","pos":"noun","gender":"f","example":"Мавпи сидять біля дерева.","examples":["monkey","Мавпи сидять біля дерева."]},{"word":"пінгвін","translation":"penguin","pos":"noun","gender":"m","example":"Діти фотографують пінгвінів.","examples":["penguin","Діти фотографують пінгвінів."]},{"word":"люди","translation":"people","pos":"noun","gender":"pl","example":"У парку багато людей.","examples":["people","У парку багато людей."]},{"word":"діти","translation":"children","pos":"noun","gender":"pl","example":"Діти грають у парку.","examples":["children","Діти грають у парку."]},{"word":"речі","translation":"things","pos":"noun","gender":"pl","example":"На столі лежать мої речі.","examples":["things","На столі лежать мої речі."]},{"word":"очі","translation":"eyes","pos":"noun","gender":"pl","example":"У неї зелені очі.","examples":["eyes","У неї зелені очі."]},{"word":"вуха","translation":"ears","pos":"noun","gender":"pl","example":"У зайця довгі вуха.","examples":["ears","У зайця довгі вуха."]},{"word":"фотографувати","translation":"to photograph","pos":"verb","example":"Ми фотографуємо квіти.","examples":["to photograph","Ми фотографуємо квіти."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"множина","back":"plural"},{"front":"називний відмінок","back":"nominative case"},{"front":"знахідний відмінок","back":"accusative case"},{"front":"істота","back":"animate being"},{"front":"неістота","back":"inanimate thing"},{"front":"підмет","back":"subject"},{"front":"прямий додаток","back":"direct object"},{"front":"закінчення","back":"ending"},{"front":"лев","back":"lion"},{"front":"жираф","back":"giraffe"},{"front":"мавпа","back":"monkey"},{"front":"пінгвін","back":"penguin"},{"front":"люди","back":"people"},{"front":"діти","back":"children"},{"front":"речі","back":"things"},{"front":"очі","back":"eyes"},{"front":"вуха","back":"ears"},{"front":"фотографувати","back":"to photograph"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Називний множини
+
+*(див. урок, §Діалог: у зоопарку)*
+
+### Істоти чи неістоти?
+
+*(див. урок, §Називний множини: хто або що є?)*
+
+### Бачу кого? Бачу що?
+
+*(див. урок, §Знахідний множини: кого або що бачимо?)*
+
+### Виправте форму
+
+*(див. урок, §Називний чи знахідний за контекстом)*
+
+### Однина і множина
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "стіл", "right": "столи"}, {"left": "земля", "right": "землі"}, {"left": "місто", "right": "міста"}, {"left": "людина", "right": "люди"}, {"left": "дитина", "right": "діти"}, {"left": "око", "right": "очі"}]`)} />
+
+### Хто? Що?
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ сидять у кафе.", "answer": "друзі", "options": ["друзі", "друзів", "друзям"]}, {"sentence": "На столі лежать ___.", "answer": "ключі", "options": ["ключі", "ключів", "ключами"]}, {"sentence": "___ сплять біля дерева.", "answer": "леви", "options": ["леви", "левів", "левам"]}, {"sentence": "У кімнаті стоять ___.", "answer": "стільці", "options": ["стільців", "стільці", "стільцям"]}]`)} />
+
+### Чи правильно?
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я бачу друзів.", "isTrue": true, "explanation": "Друзі - істоти, тому друзів."}, {"statement": "Я купую столів.", "isTrue": false, "explanation": "Столи - неістоти, треба купую столи."}, {"statement": "Діти читають.", "isTrue": true, "explanation": "Діти виконують дію, це називний."}, {"statement": "Ми фотографуємо мавпи.", "isTrue": false, "explanation": "Мавпи - істоти, треба мавп."}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Dobra Forma 2-1: Regular Plural Nouns](https://opentext.ku.edu/dobraforma/chapter/2-1/) — Open textbook practice for regular plural noun formation.
+- 📄 [Dobra Forma 2-3: Plural Nouns with Stem Changes](https://opentext.ku.edu/dobraforma/chapter/2-3/) — Reference for common stem-change plural patterns such as друг -> друзі.
+- 📄 [ULP: Plural of Ukrainian Nouns — Special Forms](https://www.ukrainianlessons.com/plural-of-ukrainian-nouns-special-forms/) — Learner-facing review of irregular and special plural forms.
+
+**🎧 Аудіо:**
+- 🎧 [ULP 1-42: My Room — Plural nouns in Ukrainian](https://www.ukrainianlessons.com/episode42/) — Audio-supported practice with everyday plural nouns.
+- 🎧 [ULP 1-44: My pets + Special plural forms](https://www.ukrainianlessons.com/episode44/) — Useful animal/person plural forms for animate accusative practice.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

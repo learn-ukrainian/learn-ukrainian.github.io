@@ -1,0 +1,25 @@
+- title: "ULP: Plural of Ukrainian Nouns — Special Forms"
+  role: article
+  source_ref: "docs/resources/ulp-articles-index.yaml: /plural-of-ukrainian-nouns-special-forms/"
+  url: "https://www.ukrainianlessons.com/plural-of-ukrainian-nouns-special-forms/"
+  notes: "Learner-facing review of irregular and special plural forms."
+- title: "ULP 1-42: My Room — Plural nouns in Ukrainian"
+  role: podcast
+  source_ref: "docs/resources/external_resources.yaml: a2-plural-nominative-accusative"
+  url: "https://www.ukrainianlessons.com/episode42/"
+  notes: "Audio-supported practice with everyday plural nouns."
+- title: "ULP 1-44: My pets + Special plural forms"
+  role: podcast
+  source_ref: "docs/resources/external_resources.yaml: a2-plural-nominative-accusative"
+  url: "https://www.ukrainianlessons.com/episode44/"
+  notes: "Useful animal/person plural forms for animate accusative practice."
+- title: "Dobra Forma 2-1: Regular Plural Nouns"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-003"
+  url: "https://opentext.ku.edu/dobraforma/chapter/2-1/"
+  notes: "Open textbook practice for regular plural noun formation."
+- title: "Dobra Forma 2-3: Plural Nouns with Stem Changes"
+  role: article
+  source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-005"
+  url: "https://opentext.ku.edu/dobraforma/chapter/2-3/"
+  notes: "Reference for common stem-change plural patterns such as друг -> друзі."

@@ -1,0 +1,328 @@
+---
+title: "З друзями, для дітей"
+description: "Давальний, орудний та місцевий відмінки множини"
+sidebar:
+  order: 34
+  label: "34. З друзями, для дітей"
+prev: plural-genitive
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: плануємо шкільну поїздку
+
+Учителька пояснює план короткої поїздки. У діалозі є давальний,
+орудний і місцевий відмінки множини.
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Учителька","text":"Спочатку розкажіть дітям план."},{"speaker":"Староста","text":"Добре. Ми їдемо автобусами чи потягом?"},{"speaker":"Учителька","text":"Автобусами. Зупинимося в готелях біля центру."},{"speaker":"Староста","text":"А подарунки для батьків купимо там?"},{"speaker":"Учителька","text":"Так. Напишіть учителям: зустрічаємося з групами біля школи о восьмій."},{"speaker":"Староста","text":"Зрозуміло: дітям - план, учителям - повідомлення, автобусами - їдемо, у готелях - живемо."}]')}
+/>
+
+Карта діалогу:
+
+| Фраза | Питання | Відмінок |
+| --- | --- | --- |
+| розкажіть дітям | кому? | давальний множини |
+| автобусами | чим? | орудний множини |
+| в готелях | де? | місцевий множини |
+| для батьків | для кого? | родовий множини, повторення |
+| учителям | кому? | давальний множини |
+| з групами | з ким? | орудний множини |
+
+Назва уроку має фразу `для дітей`, але це родовий множини після `для`.
+У цьому модулі головний фокус інший:
+
+- давальний множини: `дітям`, `друзям`, `учителям`;
+- орудний множини: `з друзями`, `автобусами`, `квітами`;
+- місцевий множини: `у містах`, `на полицях`, `на заняттях`.
+
+Добра новина: ці три відмінки множини значно регулярніші, ніж родовий
+множини.
+
+### Кому?
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "студенти", "right": "студентам"}, {"left": "друзі", "right": "друзям"}, {"left": "діти", "right": "дітям"}, {"left": "вчителі", "right": "вчителям"}, {"left": "міста", "right": "містам"}]`)} />
+
+## Давальний множини: кому?
+
+Давальний множини часто відповідає на питання `кому?` і має закінчення
+`-ам` або `-ям`.
+
+| Називний множини | Давальний множини | Приклад |
+| --- | --- | --- |
+| студенти | студентам | Пояснюю студентам. |
+| друзі | друзям | Телефоную друзям. |
+| діти | дітям | Допомагаю дітям. |
+| міста | містам | Допомагаємо містам. |
+| вчителі | вчителям | Дякуємо вчителям. |
+| ночі | ночам | Радіємо тихим ночам. |
+
+Типові дієслова:
+
+- `давати`: Я даю квитки друзям.
+- `допомагати`: Ми допомагаємо дітям.
+- `дякувати`: Студенти дякують учителям.
+- `телефонувати`: Я телефоную батькам.
+- `пояснювати`: Вчитель пояснює правила групам.
+- `радити`: Вона радить друзям цей фільм.
+
+Порівняйте:
+
+> друзі прийшли - називний;
+>
+> бачу друзів - знахідний для істот;
+>
+> телефоную друзям - давальний.
+
+Коротка стратегія: якщо дієслово означає допомогу, подяку, телефонний
+дзвінок, пораду або пояснення, перевірте давальний.
+
+### Давальний у реченні
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я телефоную ___.", "answer": "друзям", "options": ["друзі", "друзям", "друзями"]}, {"sentence": "Ми допомагаємо ___.", "answer": "дітям", "options": ["діти", "дітей", "дітям"]}, {"sentence": "Студенти дякують ___.", "answer": "вчителям", "options": ["вчителі", "вчителів", "вчителям"]}, {"sentence": "Вона пояснює правила ___.", "answer": "групам", "options": ["групи", "групам", "групами"]}]`)} />
+
+## Орудний множини: з ким? чим?
+
+Орудний множини має закінчення `-ами` або `-ями`.
+
+| Називний множини | Орудний множини | Приклад |
+| --- | --- | --- |
+| студенти | студентами | говорю зі студентами |
+| друзі | друзями | гуляю з друзями |
+| групи | групами | працюємо з групами |
+| квіти | квітами | прикрасити квітами |
+| міста | містами | подорожувати містами |
+| олівці | олівцями | писати олівцями |
+
+Орудний множини потрібен у двох дуже частих ситуаціях.
+
+Перша: `з/із/зі + ким?`
+
+> Я йду з друзями.
+>
+> Ми говоримо з учителями.
+>
+> Вона подорожує з дітьми.
+
+Друга: `чим?` - засіб або інструмент.
+
+> Їдемо автобусами.
+>
+> Пишемо олівцями.
+>
+> Прикрашаємо кімнату квітами.
+
+Запам'ятайте часті нерегулярні форми:
+
+| Називний | Орудний множини |
+| --- | --- |
+| діти | дітьми |
+| люди | людьми |
+| коні | кіньми |
+| гості | гостями / гістьми |
+
+У мовленні найважливіші для A2: `з дітьми`, `з людьми`, `з гостями`,
+`з кіньми`.
+
+### З ким? Чим?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я гуляю з ___.", "options": [{"text": "друзями", "correct": true}, {"text": "друзям", "correct": false}, {"text": "друзів", "correct": false}], "explanation": "З ким? - з друзями."}, {"question": "Ми їдемо ___.", "options": [{"text": "автобусам", "correct": false}, {"text": "автобусами", "correct": true}, {"text": "автобусах", "correct": false}], "explanation": "Чим? - автобусами."}, {"question": "Вона прийшла з ___.", "options": [{"text": "дітьми", "correct": true}, {"text": "дітям", "correct": false}, {"text": "дітей", "correct": false}], "explanation": "Слово діти має орудний множини дітьми."}, {"question": "Кімнату прикрасили ___.", "options": [{"text": "квітам", "correct": false}, {"text": "квітами", "correct": true}, {"text": "квітах", "correct": false}], "explanation": "Чим прикрасили? - квітами."}]`)} />
+
+## Місцевий множини: де? на чому?
+
+Місцевий множини вживається після прийменників `у/в`, `на`, `по` і має
+закінчення `-ах` або `-ях`.
+
+| Називний множини | Місцевий множини | Приклад |
+| --- | --- | --- |
+| міста | у містах | Ми живемо в різних містах. |
+| парки | у парках | Діти грають у парках. |
+| полиці | на полицях | Книги на полицях. |
+| заняття | на заняттях | Ми говоримо на заняттях. |
+| вулиці | по вулицях | Люди ходять по вулицях. |
+| готелі | у готелях | Туристи живуть у готелях. |
+
+Порівняйте напрямок і місце:
+
+> Ми їдемо в міста. - куди? знахідний множини.
+>
+> Ми живемо в містах. - де? місцевий множини.
+>
+> Книжки кладуть на полиці. - куди? знахідний множини.
+>
+> Книжки лежать на полицях. - де? місцевий множини.
+
+Питання допомагає швидше, ніж переклад:
+
+- `куди?` - рух до місця;
+- `де?` - місце, де щось є або відбувається.
+
+### Давальний, орудний, місцевий
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Давальний множини": ["друзям", "дітям", "студентам", "батькам"], "Орудний множини": ["друзями", "дітьми", "автобусами", "квітами"], "Місцевий множини": ["у містах", "на полицях", "у готелях", "на заняттях"]}`)} />
+
+## Три відмінки разом
+
+Тепер складіть речення, де є кілька відмінків множини.
+
+> Ми подарували квіти вчителям і сфотографувалися з ними в класах.
+>
+> Я телефоную друзям, потім зустрічаюся з друзями у кав'ярнях.
+>
+> Туристи їдуть автобусами, живуть у готелях і пишуть батькам.
+>
+> Діти малюють олівцями на заняттях і дарують малюнки батькам.
+
+Карта для перевірки:
+
+| Питання | Відмінок | Закінчення |
+| --- | --- | --- |
+| кому? | давальний | `-ам/-ям` |
+| з ким? чим? | орудний | `-ами/-ями` |
+| де? на чому? | місцевий | `-ах/-ях` |
+
+## Міні-діалог
+
+Працюйте в парах.
+
+| Питання | Модель відповіді |
+| --- | --- |
+| Кому ти часто пишеш? | Я пишу друзям / батькам / колегам. |
+| З ким ти любиш подорожувати? | Я люблю подорожувати з друзями. |
+| Чим ви їдете на екскурсію? | Ми їдемо автобусами. |
+| Де ви зупиняєтеся? | Ми зупиняємося в готелях. |
+| На чому лежать книги? | Книги лежать на полицях. |
+
+Говоріть коротко. Після кожної відповіді партнер називає відмінок:
+`давальний`, `орудний`, `місцевий`.
+
+## Типові помилки
+
+| Не так | Краще | Чому |
+| --- | --- | --- |
+| допомагаю друзі | допомагаю друзям | допомагати кому? |
+| говорю з друзі | говорю з друзями | з ким? орудний |
+| живу в міста | живу в містах | де? місцевий |
+| їдемо автобусах | їдемо автобусами | чим? орудний |
+| на заняттями | на заняттях | на чому? де? місцевий |
+
+## 📋 Підсумок
+
+Давальний, орудний і місцевий множини мають регулярну карту:
+
+- давальний: `-ам/-ям` - `друзям`, `студентам`, `дітям`;
+- орудний: `-ами/-ями` - `з друзями`, `автобусами`, `квітами`;
+- місцевий: `-ах/-ях` - `у містах`, `на полицях`, `на заняттях`.
+
+Найважливіші винятки для орудного множини:
+`діти - дітьми`, `люди - людьми`, `коні - кіньми`,
+`гості - гостями / гістьми`.
+
+Самоперевірка: складіть три речення про поїздку. У першому використайте
+давальний множини, у другому - орудний множини, у третьому - місцевий
+множини.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"давальний відмінок","translation":"dative case","pos":"phrase","example":"Давальний відповідає на питання кому?","examples":["dative case","Давальний відповідає на питання кому?"]},{"word":"орудний відмінок","translation":"instrumental case","pos":"phrase","example":"Орудний відповідає на питання ким? чим?","examples":["instrumental case","Орудний відповідає на питання ким? чим?"]},{"word":"місцевий відмінок","translation":"locative case","pos":"phrase","example":"Місцевий часто стоїть після у, в або на.","examples":["locative case","Місцевий часто стоїть після у, в або на."]},{"word":"кому","translation":"to whom","pos":"pron","example":"Кому ти телефонуєш?","examples":["to whom","Кому ти телефонуєш?"]},{"word":"з ким","translation":"with whom","pos":"phrase","example":"З ким ти подорожуєш?","examples":["with whom","З ким ти подорожуєш?"]},{"word":"чим","translation":"with what, by what","pos":"pron","example":"Чим ви їдете?","examples":["with what, by what","Чим ви їдете?"]},{"word":"де","translation":"where","pos":"adv","example":"Де лежать книги?","examples":["where","Де лежать книги?"]},{"word":"допомагати","translation":"to help","pos":"verb","example":"Ми допомагаємо дітям.","examples":["to help","Ми допомагаємо дітям."]},{"word":"дякувати","translation":"to thank","pos":"verb","example":"Студенти дякують учителям.","examples":["to thank","Студенти дякують учителям."]},{"word":"пояснювати","translation":"to explain","pos":"verb","example":"Учитель пояснює правила групам.","examples":["to explain","Учитель пояснює правила групам."]},{"word":"подарунок","translation":"gift","pos":"noun","gender":"m","example":"Ми даємо подарунки друзям.","examples":["gift","Ми даємо подарунки друзям."]},{"word":"квіти","translation":"flowers","pos":"noun","gender":"pl","example":"Кімнату прикрасили квітами.","examples":["flowers","Кімнату прикрасили квітами."]},{"word":"діти","translation":"children","pos":"noun","gender":"pl","example":"Ми подорожуємо з дітьми.","examples":["children","Ми подорожуємо з дітьми."]},{"word":"люди","translation":"people","pos":"noun","gender":"pl","example":"Вона працює з людьми.","examples":["people","Вона працює з людьми."]},{"word":"заняття","translation":"class, lesson","pos":"noun","gender":"n","example":"На заняттях ми багато говоримо.","examples":["class, lesson","На заняттях ми багато говоримо."]},{"word":"полиця","translation":"shelf","pos":"noun","gender":"f","example":"Книги лежать на полицях.","examples":["shelf","Книги лежать на полицях."]},{"word":"автобус","translation":"bus","pos":"noun","gender":"m","example":"Ми їдемо автобусами.","examples":["bus","Ми їдемо автобусами."]},{"word":"готель","translation":"hotel","pos":"noun","gender":"m","example":"Туристи живуть у готелях.","examples":["hotel","Туристи живуть у готелях."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"давальний відмінок","back":"dative case"},{"front":"орудний відмінок","back":"instrumental case"},{"front":"місцевий відмінок","back":"locative case"},{"front":"кому","back":"to whom"},{"front":"з ким","back":"with whom"},{"front":"чим","back":"with what, by what"},{"front":"де","back":"where"},{"front":"допомагати","back":"to help"},{"front":"дякувати","back":"to thank"},{"front":"пояснювати","back":"to explain"},{"front":"подарунок","back":"gift"},{"front":"квіти","back":"flowers"},{"front":"діти","back":"children"},{"front":"люди","back":"people"},{"front":"заняття","back":"class, lesson"},{"front":"полиця","back":"shelf"},{"front":"автобус","back":"bus"},{"front":"готель","back":"hotel"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Кому?
+
+*(див. урок, §Діалог: плануємо шкільну поїздку)*
+
+### Давальний у реченні
+
+*(див. урок, §Давальний множини: кому?)*
+
+### З ким? Чим?
+
+*(див. урок, §Орудний множини: з ким? чим?)*
+
+### Давальний, орудний, місцевий
+
+*(див. урок, §Місцевий множини: де? на чому?)*
+
+### Який відмінок?
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Книжки лежать на ___.", "answer": "полицях", "options": ["полиці", "полицях", "полицями"]}, {"sentence": "Ми пишемо повідомлення ___.", "answer": "батькам", "options": ["батьки", "батьків", "батькам"]}, {"sentence": "Туристи живуть у ___.", "answer": "готелях", "options": ["готелі", "готелях", "готелями"]}, {"sentence": "Малюємо кольоровими ___.", "answer": "олівцями", "options": ["олівці", "олівцям", "олівцями"]}]`)} />
+
+### Виправте відмінок
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильне речення." items={JSON.parse(`[{"sentence": "Я допомагаю друзі.", "errorWord": "друзі", "correctForm": "Я допомагаю друзям.", "options": ["Я допомагаю друзям.", "Я допомагаю друзі."], "explanation": "Допомагати кому? - друзям."}, {"sentence": "Ми їдемо автобусах.", "errorWord": "автобусах", "correctForm": "Ми їдемо автобусами.", "options": ["Ми їдемо автобусами.", "Ми їдемо автобусах."], "explanation": "Чим їдемо? - автобусами."}, {"sentence": "Книги на полицями.", "errorWord": "полицями", "correctForm": "Книги на полицях.", "options": ["Книги на полицях.", "Книги на полицями."], "explanation": "Де? на полицях."}, {"sentence": "Вона говорить з діти.", "errorWord": "діти", "correctForm": "Вона говорить з дітьми.", "options": ["Вона говорить з дітьми.", "Вона говорить з діти."], "explanation": "З ким? - з дітьми."}]`)} />
+
+### Перевірте речення
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я дякую вчителям.", "isTrue": true, "explanation": "Дякувати кому? - вчителям."}, {"statement": "Ми подорожуємо містами.", "isTrue": true, "explanation": "Чим / яким шляхом? - містами."}, {"statement": "Студенти сидять у класами.", "isTrue": false, "explanation": "Де? у класах."}, {"statement": "Вона прийшла з людьми.", "isTrue": true, "explanation": "Слово люди має орудний множини людьми."}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [Dobra Forma 11-4: Dative Case (Plural Nouns)](https://opentext.ku.edu/dobraforma/chapter/11-4/) — Open textbook practice for plural dative noun forms.
+- 📄 [Dobra Forma 4-6: Locative Case (Plural)](https://opentext.ku.edu/dobraforma/chapter/4-6/) — Practice with у/в, на and plural locative endings.
+- 📄 [Dobra Forma 9-3: Instrumental Case (Plural Nouns)](https://opentext.ku.edu/dobraforma/chapter/9-3/) — Focused practice for plural instrumental forms and common patterns.
+- 📄 [ULP: Prepositions and Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Reference for choosing cases after common prepositions.
+- 📄 [ULP: Ukrainian Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/) — Broad case chart for reviewing dative, instrumental and locative forms together.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

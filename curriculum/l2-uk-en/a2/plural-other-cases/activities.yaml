@@ -1,0 +1,186 @@
+inline:
+  - id: act-1
+    type: match-up
+    title: Кому?
+    instruction: З'єднайте називний множини з давальним множини.
+    pairs:
+      - left: студенти
+        right: студентам
+      - left: друзі
+        right: друзям
+      - left: діти
+        right: дітям
+      - left: вчителі
+        right: вчителям
+      - left: міста
+        right: містам
+  - id: act-2
+    type: fill-in
+    title: Давальний у реченні
+    instruction: Оберіть форму давального множини.
+    items:
+      - sentence: "Я телефоную ___."
+        answer: друзям
+        options:
+          - друзі
+          - друзям
+          - друзями
+        explanation: Телефонувати кому? - друзям.
+      - sentence: "Ми допомагаємо ___."
+        answer: дітям
+        options:
+          - діти
+          - дітей
+          - дітям
+        explanation: Допомагати кому? - дітям.
+      - sentence: "Студенти дякують ___."
+        answer: вчителям
+        options:
+          - вчителі
+          - вчителів
+          - вчителям
+        explanation: Дякувати кому? - вчителям.
+      - sentence: "Вона пояснює правила ___."
+        answer: групам
+        options:
+          - групи
+          - групам
+          - групами
+        explanation: Пояснювати кому? - групам.
+  - id: act-3
+    type: quiz
+    title: З ким? Чим?
+    instruction: Оберіть форму орудного множини.
+    items:
+      - question: "Я гуляю з ___."
+        options:
+          - друзями
+          - друзям
+          - друзів
+        correct: 0
+        explanation: З ким? - з друзями.
+      - question: "Ми їдемо ___."
+        options:
+          - автобусам
+          - автобусами
+          - автобусах
+        correct: 1
+        explanation: Чим? - автобусами.
+      - question: "Вона прийшла з ___."
+        options:
+          - дітьми
+          - дітям
+          - дітей
+        correct: 0
+        explanation: Слово діти має орудний множини дітьми.
+      - question: "Кімнату прикрасили ___."
+        options:
+          - квітам
+          - квітами
+          - квітах
+        correct: 1
+        explanation: Чим прикрасили? - квітами.
+  - id: act-4
+    type: group-sort
+    title: Давальний, орудний, місцевий
+    instruction: Розсортуйте форми за відмінком.
+    groups:
+      - label: Давальний множини
+        items:
+          - друзям
+          - дітям
+          - студентам
+          - батькам
+      - label: Орудний множини
+        items:
+          - друзями
+          - дітьми
+          - автобусами
+          - квітами
+      - label: Місцевий множини
+        items:
+          - у містах
+          - на полицях
+          - у готелях
+          - на заняттях
+workbook:
+  - type: fill-in
+    title: Який відмінок?
+    instruction: Оберіть правильну форму за дієсловом або прийменником.
+    items:
+      - sentence: "Книжки лежать на ___."
+        answer: полицях
+        options:
+          - полиці
+          - полицях
+          - полицями
+        explanation: Де? на полицях.
+      - sentence: "Ми пишемо повідомлення ___."
+        answer: батькам
+        options:
+          - батьки
+          - батьків
+          - батькам
+        explanation: Писати кому? - батькам.
+      - sentence: "Туристи живуть у ___."
+        answer: готелях
+        options:
+          - готелі
+          - готелях
+          - готелями
+        explanation: Де? у готелях.
+      - sentence: "Малюємо кольоровими ___."
+        answer: олівцями
+        options:
+          - олівці
+          - олівцям
+          - олівцями
+        explanation: Чим? олівцями.
+  - type: error-correction
+    title: Виправте відмінок
+    instruction: Оберіть правильне речення.
+    items:
+      - sentence: "Я допомагаю друзі."
+        error: друзі
+        correction: "Я допомагаю друзям."
+        options:
+          - "Я допомагаю друзям."
+          - "Я допомагаю друзі."
+        explanation: Допомагати кому? - друзям.
+      - sentence: "Ми їдемо автобусах."
+        error: автобусах
+        correction: "Ми їдемо автобусами."
+        options:
+          - "Ми їдемо автобусами."
+          - "Ми їдемо автобусах."
+        explanation: Чим їдемо? - автобусами.
+      - sentence: "Книги на полицями."
+        error: полицями
+        correction: "Книги на полицях."
+        options:
+          - "Книги на полицях."
+          - "Книги на полицями."
+        explanation: Де? на полицях.
+      - sentence: "Вона говорить з діти."
+        error: діти
+        correction: "Вона говорить з дітьми."
+        options:
+          - "Вона говорить з дітьми."
+          - "Вона говорить з діти."
+        explanation: З ким? - з дітьми.
+  - type: true-false
+    title: Перевірте речення
+    instruction: Визначте, чи правильно вжито форму.
+    items:
+      - statement: "Я дякую вчителям."
+        correct: true
+        explanation: Дякувати кому? - вчителям.
+      - statement: "Ми подорожуємо містами."
+        correct: true
+        explanation: Чим / яким шляхом? - містами.
+      - statement: "Студенти сидять у класами."
+        correct: false
+        explanation: Де? у класах.
+      - statement: "Вона прийшла з людьми."
+        correct: true
+        explanation: Слово люди має орудний множини людьми.
