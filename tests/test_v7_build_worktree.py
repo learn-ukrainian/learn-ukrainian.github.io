@@ -26,9 +26,12 @@ def _install_fake_subprocess_run(
         timeout: int | None = None,
         env: dict[str, str] | None = None,
     ) -> subprocess.CompletedProcess[str]:
-        del cwd, capture_output, text, check, timeout, env
+        del capture_output, text, check, timeout, env
         calls.append(cmd)
         if cmd[:2] == ["git", "rev-parse"] and "--show-toplevel" in cmd:
+            top_level = Path(cwd).resolve() if cwd is not None else repo
+            if str(top_level).startswith(str((repo / ".worktrees").resolve())):
+                return subprocess.CompletedProcess(cmd, 0, f"{top_level}\n", "")
             return subprocess.CompletedProcess(cmd, 0, f"{repo}\n", "")
         if cmd[:2] == ["git", "rev-parse"] and "--git-common-dir" in cmd:
             return subprocess.CompletedProcess(cmd, 0, f"{repo / '.git'}\n", "")
@@ -56,6 +59,7 @@ def _install_fake_subprocess_run(
 def _prepare_repo(monkeypatch: Any, tmp_path: Path) -> Path:
     repo = tmp_path / "repo"
     repo.mkdir()
+    (repo / ".git").mkdir()
     monkeypatch.chdir(repo)
     monkeypatch.setattr(v7_build, "PROJECT_ROOT", repo)
     monkeypatch.setattr(v7_build, "_utc_timestamp", lambda: "20260513-123456")
@@ -197,8 +201,8 @@ def test_worktree_persists_artifacts_on_success(
     them to the worktree filesystem but does NOT commit them — without this
     persist step, ``git worktree remove`` silently destroys forensic
     evidence (2026-05-19→20 incident: 7 worktrees deleted, today's
-    textbook_grounding diagnostic artifacts lost). Both ``git add -A`` and
-    ``git commit --allow-empty`` must fire in the worktree.
+    textbook_grounding diagnostic artifacts lost). Both scoped ``git add``
+    and ``git commit --allow-empty`` must fire in the worktree.
     """
     repo = _prepare_repo(monkeypatch, tmp_path)
     calls = _install_fake_subprocess_run(monkeypatch, repo, child_returncode=0)
@@ -212,7 +216,7 @@ def test_worktree_persists_artifacts_on_success(
         for cmd in calls
         if cmd[:2] == ["git", "-C"]
         and cmd[2] == str(worktree_path)
-        and cmd[3:] == ["add", "-A"]
+        and cmd[3:6] == ["add", "--force", "--"]
     )
     assert add_cmd is not None
     commit_cmd = next(
