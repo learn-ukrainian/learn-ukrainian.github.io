@@ -27,7 +27,65 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 12 HANDOFF (2026-06-11 PM — WRITER-VOCAB WALL BROKEN (#2977 merged: no more coinages); WIKI GAP CLOSED (6 compiled); DOSSIER #08 MERGED; BUILD #6 FAILED on a NEW harness gap = correction loop is module.md-ONLY → activity-field vesum typo uncorrectable) — **RESUME HERE**
+## ▶▶▶ SESSION 13 HANDOFF (2026-06-11 PM #2 — 2 MORE HARNESS GATES FIXED (correction-scope #2995, blockquote-exemption #2998); DOSSIER #10 MERGED; BUILDS #7/#8 each failed on ONE distinct authentic folk form; REMAINING WALL = PRODUCTIVE-DIMINUTIVE ACCEPTANCE — **AWAITING USER DECISION**) — **RESUME HERE**
+
+> **⏱ LATEST STATE (2026-06-11 PM #2):** The writer pipeline now WORKS — builds #7/#8 produced clean C1 prose, ZERO
+> coinages, exhaustive `verify_words`, correct embedded verbatim quotes. Three SINGLE-WORD vesum blockers across three
+> builds, each a DISTINCT structural gap (NOT whack-a-mole — all now root-caused):
+> - **#6 `гаівки`** (real ї→і typo in `activities.yaml`) → correction couldn't reach non-module.md artifacts. **FIXED
+>   #2995** (`0577f559b5`): `_apply_reviewer_correction` now patches activities/vocab/resources, intersection-based
+>   unmatched aggregation, per-artifact YAML rollback. Claude adversarial review PASSED.
+> - **#7 `пір'єчку`** (authentic verbatim Купала-song form, `verify_quote` 0.975 ЕУ/МУЕ XV 72, inside a `>` blockquote;
+>   `check_russian_shadow` homograph-FP 0.978) → vesum walked blockquote content. **FIXED #2998** (`cebd13a64b`): exempt
+>   ONLY attributed/non-NO_VERIFY `>` blockquotes from vesum (seminar/folk-scoped); uncited stay checked + fabricated-
+>   attributed caught by quote_fidelity (no escape hatch). Claude review PASSED (verified 81 tests incl. quote_fidelity
+>   no-regression). NOTE: #7 was ALSO killed by a 1h Monitor timeout mid-correction → **use `persistent=True` Monitor**
+>   for folk builds (writer ~25min + correction → builds run >1h).
+> - **#8 `гаївочка`** (valid productive DIMINUTIVE of attested `гаївка`; russian_shadow 0.51 = NOT a russianism; NOT in
+>   VESUM; in prose+song+activities) → **`module_failed` at python_qg, correction can't resolve a VALID form** (no
+>   "more correct" replacement; "fixing" it would DELETE authentic folk vocab — the decolonization value). THIS is the
+>   recurring derivational wall the Session-10 handoff predicted.
+>
+> **🛑 AWAITING USER DECISION (asked end of session, no reply yet):** the durable fix for the diminutive class.
+> Options put to the user: (A, my recommendation) extend the #2956 derivational layer to accept productive NOUN
+> diminutives (`-очк-/-ечк-/-оньк-/-еньк-/-ятк-` on an attested base noun, non-russianism → accept) — preserves folk
+> vocab + structurally unblocks; (B) a broader "accept any attested-base non-russianism folk form" gate; (C) pause.
+> **DO NOT fire the fix until the user picks A/B/C.** #2956 already accepts productive adjectives + `-ість` nouns;
+> diminutives were just out of its scope. Folk poetics is built on diminutives → this is the high-leverage class.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **Get the user's A/B/C decision** on the diminutive-acceptance approach. Then drive the chosen fix (codex implements
+   + Claude adversarial review; teeth = a genuine russianism still fails, base must be attested + non-russianism).
+2. **Re-fire kalendarna #9** (`v7_build folk kalendarna-obriadovist-zvychai --worktree --writer claude-tools --effort
+   xhigh`, **persistent Monitor**). With #2995+#2998 live + the diminutive fix, expected fully green (writer output is
+   already clean — the only blockers were the 3 single forms). Forensic fixture for #8 = the гаївочка case on
+   `build/folk/kalendarna-obriadovist-zvychai-20260611-163345` (worktree + branch, KEEP it for the fix's regression test).
+3. **Promote + serve kalendarna 04** once #9 lands `module_done`: verify CONTENT (#M-11 — 4 UK tabs, myth-box, bridge,
+   folk activities, ≥4 cited+linked blockquotes, authentic regional vocab incl. the diminutives, no stress on
+   headings). Then **01 koliadky → dumy**.
+4. **Dossier queue:** #08 zhnyvarski + #10 vesilni MERGED. Next: #11 holosinnya, #13 dumy-sotsialno-pobutovi.
+
+### 🧹 MAIN DIVERGENCE — HANDLED, NOTHING LOST (user asked 2026-06-11)
+The orchestrator worked on main during this session. State assessed + preserved:
+- **All 5 of my PRs MERGED to origin/main:** #2989 (zhnyvarski dossier), #2990 (6 wikis + Session 12 handoff), #2995
+  (correction-scope), #2996 (vesilni dossier), #2998 (blockquote-exemption). Nothing of mine is unmerged.
+- **Local main diverged: 1-ahead / 9-behind origin.** The 1 local-ahead commit (`2ca1a57c64`) is the ORCHESTRATOR's
+  Word Atlas handoff (`docs/session-state/*`) — content-IDENTICAL to origin (`current.claude.md` empty-diff; its
+  session-state file IS on origin). **origin/main is a strict superset → reconciling local→origin loses NOTHING.**
+  Backed up to branch `backup/local-main-2ca1a57-orch-handoff` as insurance.
+- **`start-claude.sh`** has a unique uncommitted local launcher fix (npx→native-binary) predating this session →
+  backed up to `/tmp/start-claude.sh.preserved-2026-06-11`. (The orchestrator's ff-sync flow stashes this routinely.)
+- **Build forensics** (incl. the #8 гаївочка fixture `…-163345`) are on local `build/folk/*` branches — untouched by main reconciliation.
+- **I did NOT reset local main** (hard worktree-only rule). **Orchestrator action:** `git stash` (start-claude.sh) →
+  `git reset --hard origin/main` to reconcile its local checkout. Safe — origin is a superset.
+
+### 📊 FLEET — module writer **claude-tools** (proven: clean prose, zero coinages); gate/correction fixes = **codex
+implements + Claude adversarial review** (the #2995/#2998 loop worked twice); wiki **gpt-5.5**; reviewers
+**deepseek-flash** (code) / Claude corpus-hammer (culture). Cross-family always. **Folk builds run >1h → persistent Monitor.**
+
+---
+
+## ▶▶▶ SESSION 12 HANDOFF (2026-06-11 PM — WRITER-VOCAB WALL BROKEN (#2977 merged: no more coinages); WIKI GAP CLOSED (6 compiled); DOSSIER #08 MERGED; BUILD #6 FAILED on a NEW harness gap = correction loop is module.md-ONLY → activity-field vesum typo uncorrectable) — (superseded by Session 13)
 
 > **⏱ LATEST STATE (2026-06-11 PM):** The writer-vocabulary-discipline wall is **BROKEN**. PR **#2977 merged**
 > (`7e86c61698`): the seminar/FOLK writer rules were rendering in EVERY level's prompt (pushed A1 letter prompt to
