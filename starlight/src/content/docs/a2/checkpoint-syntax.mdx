@@ -1,0 +1,300 @@
+---
+title: "Контрольна робота — складне речення"
+description: "Перевірка знань з модулів 47–52: причина, мета, означення, порядок слів, умова"
+sidebar:
+  order: 53
+  label: "53. Контрольна робота — складне речення"
+prev: education-and-work
+next: false
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Діалог: перевіряємо домашнє завдання
+
+Двоє студентів перевіряють тексти одне одного перед заняттям. Вони не
+просто шукають помилки. Вони називають типи складних речень, які вивчали
+в A2.7.
+
+> **Наталя:** У тебе тут речення: `Я вчуся, тому що хочу змінити роботу`. Це причина, так?
+>
+> **Сергій:** Так. А ось твоє: `Я вчуся, щоб змінити роботу`. Це вже мета.
+>
+> **Наталя:** Добре. Тут я написала: `Компанія, де я працюю, невелика`.
+>
+> **Сергій:** Це означальне речення з `де`. Коми правильні.
+>
+> **Наталя:** А якщо я напишу: `Якщо складу іспит, вступлю до магістратури`?
+>
+> **Сергій:** Це умова. Тільки пам'ятай: `якби` - це не наша активна тема на A2.
+>
+> **Наталя:** І ще: `Хоча робота складна, вона цікава`.
+>
+> **Сергій:** Чудово. Не треба додавати `але` після `хоча`.
+
+Цей checkpoint перевіряє весь блок A2.7: M47-M52. Ви маєте впізнати тип
+зв'язку, вибрати правильний сполучник, поставити коми, виправити типові
+помилки і написати короткий зв'язний текст.
+
+## Частина 1: впізнайте тип зв'язку
+
+Почніть із питання. Воно часто підказує сполучник.
+
+| Питання | Тип | Сполучники |
+| --- | --- | --- |
+| Чому? | причина | бо, тому що |
+| Попри що? | допуст | хоча |
+| Для чого? | мета | щоб |
+| Який саме? Де саме? | означення | який, де, куди, звідки |
+| За якої умови? | умова | якщо |
+
+Порівняйте пари:
+
+> Я вчуся, тому що хочу змінити роботу.
+>
+> Я вчуся, щоб змінити роботу.
+
+Перше речення відповідає на питання `чому?` Друге - на питання `для
+чого?` Українська розрізняє ці логіки так само, як розрізняє причину і
+мету в житті.
+
+Ще одна пара:
+
+> Я взяв парасолю, бо йшов дощ.
+>
+> Якщо буде дощ, я візьму парасолю.
+
+У першому реченні дощ уже був причиною. У другому дощ можливий у
+майбутньому і є умовою.
+
+### Тип складного речення
+
+<GroupSort client:only='react' groups={JSON.parse(`{"причина": ["Я залишився вдома, бо захворів.", "Ми почали раніше, тому що дорога довга."], "допуст": ["Хоча було пізно, ми закінчили.", "Я розумію текст, хоча не знаю всіх слів."], "мета": ["Я відкрив словник, щоб перевірити наголос.", "Ми прийшли раніше, щоб підготувати кімнату."], "означення": ["Це колега, який сидить поруч.", "Офіс, де ми працюємо, біля метро."], "умова": ["Якщо буде час, я напишу.", "Я прийду, якщо закінчу роботу."]}`)} />
+
+## Частина 2: виберіть правильну форму
+
+У A2.7 важливий не тільки сполучник, а й форма після нього.
+
+Після `щоб`:
+
+> Я прийшов, щоб допомогти.
+>
+> Я написав, щоб ти знав.
+
+Коли підмет той самий, використовуйте інфінітив: `щоб допомогти`. Коли
+підмет інший, назвіть його і використайте форму на кшталт минулого часу:
+`щоб ти знав`, `щоб вона прийшла`, `щоб ми зрозуміли`.
+
+З `який`:
+
+> Колега, який працює поруч, допомагає мені.
+>
+> Книжка, яку я читаю, цікава.
+
+Форма залежить від іменника і ролі в підрядній частині. На A2 достатньо
+контролювати найчастіші форми: `який`, `яка`, `яке`, `які`, а також
+`яку`, `якого` у простих прикладах.
+
+З `якщо`:
+
+> Якщо буде час, я напишу.
+>
+> Я напишу, якщо матиму час.
+
+Це реальна умова. Не використовуйте `якби` для активного письма на A2.
+
+### Оберіть сполучник
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я вчуся, ___ хочу змінити роботу.", "answer": "тому що", "options": ["тому що", "щоб", "якщо"]}, {"sentence": "Я вчуся, ___ змінити роботу.", "answer": "щоб", "options": ["щоб", "тому що", "хоча"]}, {"sentence": "___ буде дощ, ми залишимося вдома.", "answer": "Якщо", "options": ["Якщо", "Якби", "Бо"]}, {"sentence": "___ робота складна, вона цікава.", "answer": "Хоча", "options": ["Хоча", "Тому що", "Щоб"]}, {"sentence": "Компанія, ___ я працюю, невелика.", "answer": "де", "options": ["де", "якщо", "бо"]}, {"sentence": "Колега, ___ сидить поруч, допомагає мені.", "answer": "який", "options": ["який", "яка", "яке"]}, {"sentence": "Я написав, ___ ти знав час зустрічі.", "answer": "щоб", "options": ["щоб", "бо", "хоча"]}, {"sentence": "Я взяв парасолю, ___ йшов дощ.", "answer": "бо", "options": ["бо", "якщо", "щоб"]}, {"sentence": "Книжка, ___ я читаю, цікава.", "answer": "яку", "options": ["яку", "яка", "яке"]}, {"sentence": "Я напишу, ___ матиму новини.", "answer": "якщо", "options": ["якщо", "тому що", "хоча"]}]`)} />
+
+## Частина 3: редагуйте помилки
+
+Типові помилки в A2.7 повторюються:
+
+| Помилка | Краще |
+| --- | --- |
+| Хоча було пізно, але ми закінчили. | Хоча було пізно, ми закінчили. |
+| Я прийшов, тому що допомогти. | Я прийшов, щоб допомогти. |
+| Якщо буде час я напишу. | Якщо буде час, я напишу. |
+| Компанія, який працює в Києві... | Компанія, яка працює в Києві... |
+| Якби буде дощ, ми залишимося вдома. | Якщо буде дощ, ми залишимося вдома. |
+
+Редагування починається з питання:
+
+1. Що я хочу сказати: причину, мету, опис, умову чи допуст?
+2. Чи є кома перед підрядною частиною або після неї?
+3. Чи узгоджується `який` з іменником?
+4. Чи не змішав я `тому що` і `щоб`?
+5. Чи не використав я `якби`, коли потрібне A2-слово `якщо`?
+
+### Виправте помилку
+
+<ErrorCorrection client:only='react' instruction="Оберіть правильний варіант складного речення." items={JSON.parse(`[{"sentence": "Хоча було пізно, але ми закінчили.", "errorWord": "але", "correctForm": "Хоча було пізно, ми закінчили.", "options": ["Хоча було пізно, ми закінчили.", "Хоча було пізно, але ми закінчили."], "explanation": "У навчальному письмі не додаємо але після хоча."}, {"sentence": "Я прийшов, тому що допомогти.", "errorWord": "тому що", "correctForm": "Я прийшов, щоб допомогти.", "options": ["Я прийшов, щоб допомогти.", "Я прийшов, тому що допомогти."], "explanation": "Допомогти - мета."}, {"sentence": "Якби буде дощ, ми залишимося вдома.", "errorWord": "Якби", "correctForm": "Якщо буде дощ, ми залишимося вдома.", "options": ["Якщо буде дощ, ми залишимося вдома.", "Якби буде дощ, ми залишимося вдома."], "explanation": "Для реальної умови A2 потрібне якщо."}, {"sentence": "Компанія, який працює в Києві, шукає людей.", "errorWord": "який", "correctForm": "Компанія, яка працює в Києві, шукає людей.", "options": ["Компанія, яка працює в Києві, шукає людей.", "Компанія, який працює в Києві, шукає людей."], "explanation": "Компанія - жіночий рід."}, {"sentence": "Якщо буде час я напишу.", "errorWord": "немає коми", "correctForm": "Якщо буде час, я напишу.", "options": ["Якщо буде час, я напишу.", "Якщо буде час я напишу."], "explanation": "Після якщо-частини потрібна кома."}, {"sentence": "Він запитав, що я буду?", "errorWord": "що", "correctForm": "Він запитав, чи я буду.", "options": ["Він запитав, чи я буду.", "Він запитав, що я буду?"], "explanation": "Для питання так/ні використовуємо чи."}, {"sentence": "Я відкрив словник, якщо перевірити слово.", "errorWord": "якщо", "correctForm": "Я відкрив словник, щоб перевірити слово.", "options": ["Я відкрив словник, щоб перевірити слово.", "Я відкрив словник, якщо перевірити слово."], "explanation": "Перевірити слово - мета."}, {"sentence": "Каву купив я. (відповідь на питання: що ти купив?)", "errorWord": "фокус", "correctForm": "Я купив каву.", "options": ["Я купив каву.", "Каву купив я."], "explanation": "Якщо питають що, нова інформація - каву."}]`)} />
+
+## Частина 4: порядок слів і наголос
+
+Порядок слів теж частина A2.7. Він не завжди змінює граматику, але
+змінює фокус.
+
+> Марта купила квитки.
+>
+> Квитки купила Марта.
+
+Перше речення природно відповідає на питання `Що купила Марта?` Друге
+відповідає на питання `Хто купив квитки?`
+
+У короткому тексті порядок слів допомагає зв'язати думки:
+
+> Я підготував резюме. Резюме перевірила моя подруга, яка працює
+> менеджеркою. Якщо все буде добре, я надішлю його завтра.
+
+Тут `резюме` переходить з одного речення в інше і стає темою. Нова
+інформація стоїть далі.
+
+### Питання і модель
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Чому ти обрав цю спеціальність?", "right": "Я обрав її, тому що вона практична."}, {"left": "Для чого ти проходиш курс?", "right": "Я проходжу курс, щоб отримати нові навички."}, {"left": "Який це офіс?", "right": "Це офіс, де працює моя команда."}, {"left": "За якої умови ти подаси резюме?", "right": "Якщо знайду цікаву вакансію, подам резюме."}, {"left": "Попри що ти продовжиш навчання?", "right": "Хоча курс складний, я продовжу."}, {"left": "Хто купив квитки?", "right": "Квитки купила Марта."}, {"left": "Що сказала викладачка?", "right": "Вона сказала, що завтра буде тест."}, {"left": "Чи буде зустріч?", "right": "Він запитав, чи буде зустріч."}]`)} />
+
+## Письмове завдання
+
+Напишіть короткий абзац на одну з тем:
+
+- навчання;
+- робота;
+- плани на вихідні;
+- переїзд або подорож;
+- підготовка до іспиту.
+
+У тексті мають бути:
+
+1. одне речення з причиною (`бо` або `тому що`);
+2. одне речення з метою (`щоб`);
+3. одне означальне речення (`який`, `де`, `куди` або `звідки`);
+4. одне речення з реальною умовою (`якщо`);
+5. одне речення з допустом (`хоча`).
+
+Модель:
+
+> Я готуюся до іспиту, тому що хочу вступити до магістратури. Я повторюю
+> граматику, щоб краще писати українською. Університет, де я хочу
+> навчатися, має сильну програму. Якщо складу іспит, подам документи в
+> липні. Хоча підготовка складна, вона дає мені чітку мету.
+
+Після написання прочитайте текст уголос. Якщо речення занадто довге,
+розділіть його на два коротші.
+
+## Самоперевірка
+
+Перед тим як завершити checkpoint, дайте собі короткі відповіді:
+
+- Чи можу я пояснити різницю між `тому що` і `щоб`?
+- Чи пам'ятаю я, що після `хоча` не треба автоматично ставити `але`?
+- Чи можу я утворити речення з `якщо` без `якби`?
+- Чи можу я описати людину або місце через `який` або `де`?
+- Чи можу я змінити порядок слів, щоб відповісти на питання `хто саме?`
+
+## 📋 Підсумок
+
+A2.7 завершує перший великий блок складних речень. Ви вже можете
+поєднувати думки не тільки словами `і` та `але`, а й точнішими моделями:
+причина, допуст, мета, означення, умова і фокус через порядок слів.
+
+Це не означає, що кожне речення має бути довгим. Навпаки, сильна A2
+відповідь часто складається з кількох коротких речень, де кожне має
+чітку логіку. Спочатку оберіть логіку, потім сполучник, потім форму і
+кому. Так складне речення стане керованим.
+
+</TabItem>
+<TabItem label="Словник">
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"складне речення","translation":"complex sentence","pos":"noun","example":"Складне речення має дві або більше частини.","examples":["complex sentence","Складне речення має дві або більше частини."]},{"word":"сполучник","translation":"conjunction","pos":"noun","example":"Сполучник з'єднує частини речення.","examples":["conjunction","Сполучник з'єднує частини речення."]},{"word":"кома","translation":"comma","pos":"noun","example":"Кома стоїть перед якщо, коли умова друга.","examples":["comma","Кома стоїть перед якщо, коли умова друга."]},{"word":"причина","translation":"reason, cause","pos":"noun","example":"Бо вводить причину.","examples":["reason, cause","Бо вводить причину."]},{"word":"допуст","translation":"concession","pos":"noun","example":"Хоча вводить допуст.","examples":["concession","Хоча вводить допуст."]},{"word":"мета","translation":"purpose, goal","pos":"noun","example":"Щоб називає мету.","examples":["purpose, goal","Щоб називає мету."]},{"word":"означення","translation":"description, attribute","pos":"noun","example":"Який вводить означення.","examples":["description, attribute","Який вводить означення."]},{"word":"умова","translation":"condition","pos":"noun","example":"Якщо вводить умову.","examples":["condition","Якщо вводить умову."]},{"word":"непряма мова","translation":"reported speech","pos":"phrase","example":"Непряма мова передає чужі слова.","examples":["reported speech","Непряма мова передає чужі слова."]},{"word":"прямий порядок","translation":"direct word order","pos":"phrase","example":"Прямий порядок звучить нейтрально.","examples":["direct word order","Прямий порядок звучить нейтрально."]},{"word":"інверсія","translation":"inversion","pos":"noun","example":"Інверсія створює наголос.","examples":["inversion","Інверсія створює наголос."]},{"word":"тема","translation":"topic, theme","pos":"noun","example":"Тема - відома інформація.","examples":["topic, theme","Тема - відома інформація."]},{"word":"рема","translation":"new information","pos":"noun","example":"Рема часто стоїть у кінці.","examples":["new information","Рема часто стоїть у кінці."]},{"word":"тому що","translation":"because","pos":"conjunction","example":"Я прийшов, тому що мав питання.","examples":["because","Я прийшов, тому що мав питання."]},{"word":"хоча","translation":"although","pos":"conjunction","example":"Хоча було пізно, ми закінчили.","examples":["although","Хоча було пізно, ми закінчили."]},{"word":"щоб","translation":"in order to, so that","pos":"conjunction","example":"Я прийшов, щоб допомогти.","examples":["in order to, so that","Я прийшов, щоб допомогти."]},{"word":"який","translation":"which, that","pos":"pronoun","example":"Це колега, який працює поруч.","examples":["which, that","Це колега, який працює поруч."]},{"word":"де","translation":"where","pos":"conjunction","example":"Це офіс, де ми працюємо.","examples":["where","Це офіс, де ми працюємо."]},{"word":"якщо","translation":"if","pos":"conjunction","example":"Якщо буде час, я напишу.","examples":["if","Якщо буде час, я напишу."]},{"word":"редагувати","translation":"to edit","pos":"verb","example":"Перед здачею треба редагувати речення.","examples":["to edit","Перед здачею треба редагувати речення."]}]`)} title="Словник" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"складне речення","back":"complex sentence"},{"front":"сполучник","back":"conjunction"},{"front":"кома","back":"comma"},{"front":"причина","back":"reason, cause"},{"front":"допуст","back":"concession"},{"front":"мета","back":"purpose, goal"},{"front":"означення","back":"description, attribute"},{"front":"умова","back":"condition"},{"front":"непряма мова","back":"reported speech"},{"front":"прямий порядок","back":"direct word order"},{"front":"інверсія","back":"inversion"},{"front":"тема","back":"topic, theme"},{"front":"рема","back":"new information"},{"front":"тому що","back":"because"},{"front":"хоча","back":"although"},{"front":"щоб","back":"in order to, so that"},{"front":"який","back":"which, that"},{"front":"де","back":"where"},{"front":"якщо","back":"if"},{"front":"редагувати","back":"to edit"}]`)} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+### Тип складного речення
+
+*(див. урок, §Частина 1: впізнайте тип зв'язку)*
+
+### Оберіть сполучник
+
+*(див. урок, §Частина 2: виберіть правильну форму)*
+
+### Виправте помилку
+
+*(див. урок, §Частина 3: редагуйте помилки)*
+
+### Питання і модель
+
+*(див. урок, §Частина 4: порядок слів і наголос)*
+
+### Фінальна самоперевірка
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Яке речення називає мету?", "options": [{"text": "Я пишу, щоб уточнити час.", "correct": true}, {"text": "Я пишу, тому що маю питання.", "correct": false}, {"text": "Я пишу, хоча пізно.", "correct": false}], "explanation": "Щоб + інфінітив називає мету."}, {"question": "Яке речення називає причину?", "options": [{"text": "Я залишився вдома, бо захворів.", "correct": true}, {"text": "Я залишився вдома, щоб захворіти.", "correct": false}, {"text": "Якщо залишився вдома, захворів.", "correct": false}], "explanation": "Бо відповідає на питання чому."}, {"question": "Яке речення має реальну умову?", "options": [{"text": "Якщо буде час, я прийду.", "correct": true}, {"text": "Якби буде час, я прийду.", "correct": false}, {"text": "Хоча буде час, я прийду.", "correct": false}], "explanation": "Якщо + майбутній час - A2 real conditional."}, {"question": "Яке речення правильно описує місце?", "options": [{"text": "Це кімната, де можна працювати.", "correct": true}, {"text": "Це кімната, якщо можна працювати.", "correct": false}, {"text": "Це кімната, бо можна працювати.", "correct": false}], "explanation": "Де описує місце."}, {"question": "Яка відповідь природна на питання: хто написав лист?", "options": [{"text": "Лист написала Олена.", "correct": true}, {"text": "Олена написала лист.", "correct": false}, {"text": "Олена лист написала тому що.", "correct": false}], "explanation": "Нова інформація - Олена."}]`)} />
+
+### Змішані речення A2.7
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Я / прийшов, / щоб / допомогти", "answer": "Я прийшов, щоб допомогти."}, {"jumbled": "Якщо / буде / час, / я / напишу", "answer": "Якщо буде час, я напишу."}, {"jumbled": "Хоча / робота / складна, / вона / цікава", "answer": "Хоча робота складна, вона цікава."}, {"jumbled": "Компанія, / де / я / працюю, / невелика", "answer": "Компанія, де я працюю, невелика."}, {"jumbled": "Квитки / купила / Марта", "answer": "Квитки купила Марта."}, {"jumbled": "Я / вчуся, / тому / що / хочу / змінити / роботу", "answer": "Я вчуся, тому що хочу змінити роботу."}]`)} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**📝 Статті:**
+- 📄 [ULP: Ukrainian Conjunctions](https://www.ukrainianlessons.com/ukrainian-conjunctions/) — Review resource for conjunctions used across the A2.7 complex-sentence unit.
+- 📄 [ULP: Ukrainian Word Order](https://www.ukrainianlessons.com/word-order/) — Optional review of word order and emphasis before the checkpoint writing task.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

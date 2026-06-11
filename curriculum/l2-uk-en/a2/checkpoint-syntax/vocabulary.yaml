@@ -1,0 +1,80 @@
+- word: складне речення
+  translation: complex sentence
+  pos: noun
+  example: "Складне речення має дві або більше частини."
+- word: сполучник
+  translation: conjunction
+  pos: noun
+  example: "Сполучник з'єднує частини речення."
+- word: кома
+  translation: comma
+  pos: noun
+  example: "Кома стоїть перед якщо, коли умова друга."
+- word: причина
+  translation: reason, cause
+  pos: noun
+  example: "Бо вводить причину."
+- word: допуст
+  translation: concession
+  pos: noun
+  example: "Хоча вводить допуст."
+- word: мета
+  translation: purpose, goal
+  pos: noun
+  example: "Щоб називає мету."
+- word: означення
+  translation: description, attribute
+  pos: noun
+  example: "Який вводить означення."
+- word: умова
+  translation: condition
+  pos: noun
+  example: "Якщо вводить умову."
+- word: непряма мова
+  translation: reported speech
+  pos: phrase
+  example: "Непряма мова передає чужі слова."
+- word: прямий порядок
+  translation: direct word order
+  pos: phrase
+  example: "Прямий порядок звучить нейтрально."
+- word: інверсія
+  translation: inversion
+  pos: noun
+  example: "Інверсія створює наголос."
+- word: тема
+  translation: topic, theme
+  pos: noun
+  example: "Тема - відома інформація."
+- word: рема
+  translation: new information
+  pos: noun
+  example: "Рема часто стоїть у кінці."
+- word: тому що
+  translation: because
+  pos: conjunction
+  example: "Я прийшов, тому що мав питання."
+- word: хоча
+  translation: although
+  pos: conjunction
+  example: "Хоча було пізно, ми закінчили."
+- word: щоб
+  translation: in order to, so that
+  pos: conjunction
+  example: "Я прийшов, щоб допомогти."
+- word: який
+  translation: which, that
+  pos: pronoun
+  example: "Це колега, який працює поруч."
+- word: де
+  translation: where
+  pos: conjunction
+  example: "Це офіс, де ми працюємо."
+- word: якщо
+  translation: if
+  pos: conjunction
+  example: "Якщо буде час, я напишу."
+- word: редагувати
+  translation: to edit
+  pos: verb
+  example: "Перед здачею треба редагувати речення."
