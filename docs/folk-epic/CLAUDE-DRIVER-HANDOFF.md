@@ -27,37 +27,49 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 10 HANDOFF (2026-06-10 PM — HERITAGE ENGINE CONSUMED + MORPHOLOGY FALLBACK MERGED; 3 KALENDARNA BUILDS EXPOSED THE PRODUCTIVE-DERIVATION GAP; BUILDING THE DERIVATIONAL-MORPHOLOGY LAYER w/ CODEX+GEMINI) — **RESUME HERE**
+## ▶▶▶ SESSION 10 HANDOFF (2026-06-11 — FULL VESUM GATE-FIX STACK MERGED (engine→morphology→derivational→apostrophe); KALENDARNA #5 PASSES python_qg + LLM-QG; PROMOTE 04 NEXT) — **RESUME HERE**
 
-> **⏱ LATEST STATE (2026-06-10 PM):** The orchestrator's **Heritage Attestation Engine (#2912)** landed →
-> I **consumed** it into `_vesum_gate` (#2931) + added a **morphology fallback** (#2950). Both merged + teeth-validated.
-> This broke the *attestation/archaism* wall (`другоє`/`ягілки`/`перекличка` pass; russianisms still blocked).
-> BUT **3 live kalendarna builds** exposed the NEXT, deeper wall: **VESUM under-enumerates productive derivations**,
-> so rich C1 folk prose false-flags **valid** Ukrainian — denominal adj `гаївковий`←`гаївка`, deverbal adj
-> `знеособлювальний`←`знеособлювати`, secondary impf `виворожувати`←`виворожити`. Per-class patches DON'T converge
-> (the writer hits a different valid derivation each build; correction loop trades one for another). pymorphy3
-> confidence does NOT discriminate (compound `двохоровий` 0.75 dict vs valid `гаївковий` 0.17 guess).
-> **USER DECISION (2026-06-10):** build the **derivational-morphology layer (Option 1)** *collaboratively with
-> codex + gemini* — it's the durable fix that **unblocks lit/hist and clears the path to open ruth/oes** (all
-> morphologically-rich seminar tracks). NOT a folk-only patch.
+> **⏱ LATEST STATE (2026-06-11 ~02:10):** The VESUM-gate wall is **BROKEN end-to-end.** Four merged layers, each
+> teeth-validated by a real-verifier adversarial battery, now let rich C1 seminar Ukrainian through while still
+> blocking russianisms/coinages:
+> 1. **#2931** — `_vesum_gate` consumes the orchestrator's heritage classifier (`classify_surface_form`).
+> 2. **#2950** — morphology fallback: pymorphy3 lemma + `не`-strip (oblique inflections + negated participles),
+>    with the `_engine_flags_russianism` guard (`діюча`→`діяти` leak caught in my own first pass).
+> 3. **#2956** — derivational-morphology layer (`scripts/lexicon/derivational_morphology.py`), built w/ codex+gemini:
+>    denominal `-овий`→noun, deverbal `-льн-`→verb, secondary-impf `-увати`→`-ити`; ж/ч/ш/щ + length guards exclude
+>    calques; NO `-ючий`. (gemini found the `слідувати`/`оказувати` leak class; codex found `получаючий`.)
+> 4. **#2965** — apostrophe canonicalization (U+02BC `ʼ`/curly/backtick → U+0027 `'`) in `_normalize_for_vesum`
+>    (writer emitted `ʼ`; VESUM stores `'` → was false-flagging `сімʼя`/`пʼять`/`пам'ять` everywhere) + inflected
+>    denominal (`веснянкова`→`веснянка`).
+>
+> **KALENDARNA #5 (the goal) BUILT CLEAN:** build `folk-kalendarna-…-20260610-235657` — **python_qg PASSED**
+> (no morphology/apostrophe false-flags; the `ё` writer-typo was correction-loop-fixed), **LLM-QG
+> `terminal_verdict=PASS`** (naturalness 10 · decolonization 10 · pedagogical 7.0 · engagement 7.0 · tone 7.5 —
+> the three 7.0s are non-terminal REVISE *warnings*, not rejections). **Build was still finalizing (MDX assembly)
+> at handoff — process may have completed; CHECK FIRST.**
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **Drive the derivational-layer collaboration.** Design brief = `/tmp/derivational-morphology-gate-design.md`
-   (promote to `docs/best-practices/derivational-morphology-gate.md` once agreed). Codex design consult IN FLIGHT
-   (`ask-codex --task-id deriv-morph-design`, watcher `b1pw8ft4b`); **gemini/agy consult next** (#M-9: one local
-   agent at a time). Synthesize their input on: (a) least-brittle base-derivation source (pymorphy3 lemma ≠
-   derivational base — need suffix-strip rules or a reverse-derivation table), (b) russianism-leak guard
-   sufficiency + battery, (c) engine-side vs gate-side home.
-2. **Dispatch codex to IMPLEMENT** the layer against the acceptance battery (VALID must pass: гаївковий,
-   знеособлювальними, виворожувати + existing другоє/ягілки/гагілку/незгладжений; RUSSIANISM must stay flagged:
-   діюча, протиріччя, получаючий + panel set; COINAGE must stay flagged: двохоровий, обрядознавчий, городалька;
-   full vesum suite green). **Claude reviews the leak check** (the діюча-style catch — I found a real leak in my
-   own #2950 first pass, so adversarial leak-testing is MANDATORY before merge).
-3. **Re-fire kalendarna** (`v7_build folk kalendarna-obriadovist-zvychai --worktree --writer claude-tools
-   --effort xhigh`, Monitor JSONL) → verify artifact → promote 04 → serve → then 01 (koliadky) → dumy.
-4. **Unblock lit/hist** (same gate) + **open ruth/oes** once the layer is in.
-5. Resume folk dossier queue: **#07 kupalski-rusalni-pisni MERGED**; **#08 zhnyvarski-obzhynkovi QUEUED**
-   (was codex-cap-blocked; fire when a slot is free), then #10 vesilni, #11 holosinnya, #13 dumy-sotsialno-pobutovi.
+1. **Finish + PROMOTE kalendarna 04** (the user's reference-module goal). Check the build completed:
+   `ls .worktrees/builds/folk-kalendarna-obriadovist-zvychai-20260610-235657/` for the assembled MDX / `module_done`.
+   If complete → assemble/copy → `starlight/src/content/docs/folk/kalendarna-obriadovist-zvychai.mdx` (the served
+   one there is the **OLD Session-5 pilot** — replace it). `./services.sh restart astro`; **VERIFY at
+   `http://127.0.0.1:4321/folk/kalendarna-obriadovist-zvychai/`** vs the folk-experiential POC
+   (`docs/poc/poc-folk-lesson-design.html`): 4 UK tabs, myth-box, high-culture bridge, ≥4 cited+linked verbatim
+   blockquotes, folk activities, authentic vocab — **and read the pedagogical/engagement 7.0 dims for the user**
+   (they want this as the REFERENCE; the 7.0s are worth a content pass). If the build didn't finish, re-fire (the
+   gate stack is on main; it should pass).
+2. **Then 01 (koliadky-shchedrivky)** → **dumy-nevilnytski-lytsarski** (retire old `dumy-lytsarski.mdx` + the
+   `[...slug].astro` hero routing) → continue `phase-folk-queue.md`.
+3. **Unblock lit/hist** (they build on the same gate stack — now morphology-complete) + **open ruth/oes**
+   (philology tracks — gemini flagged they ALSO need a surface-attestation + historical-orthography pass beyond
+   modern derivation; design that next).
+4. **Folk dossier queue:** #07 kupalski-rusalni-pisni MERGED; **#08 zhnyvarski-obzhynkovi QUEUED** (fire when a
+   codex slot is free + local load permits — held during the kalendarna builds), then #10 vesilni, #11 holosinnya.
+5. **FOLLOW-UPS (filed, non-blocking):** (a) unified **dict-attested-calque style-gate** — `-ючий` calques
+   (`діючий`/`оточуючий`) + VESUM-resident calques (`слідувати`/`заказувати`) pass via attestation; the leftover
+   `_HERITAGE_FALLBACK_BLOCKED_SURFACES` denylist in `_vesum_gate` is **dead code** → fold into this gate.
+   (b) **derivational Stage-2:** affective morphology (diminutives `-оньк/-еньк/-ечк`: `ніженьки`/`горілонька`) +
+   prefixal iteratives (`по-…-увати`) — gemini flagged folk WILL hit these (`# TODO(stage-2)` already in the module).
 
 ### ✅ DONE THIS SESSION (merged to main)
 - **3 folk dossiers corpus-hammer-reviewed + merged:** #2914 zamovliannia-zaklynannia-prymovky, #2915
@@ -71,6 +83,14 @@
   participles `незгладжений`→`згладжений`). **TEETH GUARD `_engine_flags_russianism`:** never morphology-rescue a
   form the classifier flags `is_russianism` (else `діюча`→lemma `діяти`-standard LEAKS — I caught this in my own
   first pass). Validated: russianism battery shows **0 new leaks** vs main. 69 vesum-suite tests green.
+- **#2956 — derivational-morphology layer** (codex impl + gemini leak-cases + Claude adversarial leak-review):
+  `scripts/lexicon/derivational_morphology.py` proposes full base lemmas (denominal/deverbal/secondary-impf),
+  `_vesum_gate` verifies each via the classifier. Battery: 8 valid pass / 12 russianism+leak flag / 3 coinage
+  flag, **zero new leaks**. (Caught codex's redundant `_HERITAGE_FALLBACK_BLOCKED_SURFACES` denylist — see follow-up.)
+- **#2965 — apostrophe canonicalization** (`str.maketrans` U+02BC/curly/backtick/acute → U+0027 in
+  `_normalize_for_vesum`) + inflected-denominal (`веснянкова`). Verified all U+02BC apostrophe-words pass; teeth
+  intact on the real verifier. (`слідувати`/`заказувати` pass because VESUM literally contains them — VESUM-data,
+  not a gate leak.)
 - **A1 landing investigation** (user side-task): the 4-tab lesson design (Урок/Словник/Зошит/Ресурси) hides 3/4
   behind a click; recommended hybrid (stacked anchored sections). Orchestrator's `landings-unify` +
   `split-word-atlas-poc` dispatches already cover it — nothing left for folk lane.
