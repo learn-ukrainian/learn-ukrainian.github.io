@@ -1,9 +1,12 @@
 # Current — Claude Session Handoff (2026-06-12)
 
 > Router: read `docs/session-state/current.md` first.
-> **Latest detailed handoff: `docs/session-state/2026-06-12-claude-word-atlas-production-rollout.md`** — read top-to-bottom.
-> **🚨 PRODUCTION: real learners are on A1 now.** Word Atlas was rebuilt to full vocab (~2,045 words) +
-> decolonization fixes; the `atlas-finalize-all` dispatch is finishing — RESUME = verify it, merge,
+> **Latest detailed handoff: `docs/session-state/2026-06-12-claude-atlas-goatcounter-policy-kaikki.md`** — read top-to-bottom.
+> **✅ DONE + LIVE this session:** Atlas full-vocab + decolonization (#3037), kaikki IPA/etymology (#3041),
+> GoatCounter fixed + Plausible removed (#3040), reviewer-seat policy (#3039), kaikki assessment (#3038).
+> Prior rollout handoff (now superseded): `2026-06-12-claude-word-atlas-production-rollout.md`.
+> **🚨 PRODUCTION: real learners are on A1 now.** Word Atlas was rebuilt to full vocab (2,156 lemmas) +
+> decolonization fixes + IPA + etymology — all merged + deployed + live-verified.
 > inject `PUBLIC_GOATCOUNTER_CODE=learn-ukrainian` into `deploy-pages.yml`, deploy, verify LIVE. Folk nav
 > hidden + GoatCounter wired (#3027) and services self-heal (#3026) already on main but NOT deployed.
 > The sections below are from the 2026-06-11 session and are superseded by the 06-12 handoff above.
