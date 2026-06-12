@@ -65,13 +65,13 @@ Sections, in flow (top-to-bottom). Each section is OMITTED if it has no data —
 | 6 | **Стилістичні нотатки** | Антоненко-Давидович (structured + prose) + UA-GEC error pairs | yellow `.rule-box` for calque warnings; example error→correction pairs |
 | 7 | **Синоніми + антоніми** | `mcp__sources__search_synonyms` (WordNet) | chip layout (reused from `.groupsort-chip`); "auto-translated, audit pending #1657" caveat badge |
 | 8 | **Фразеологізми** | `mcp__sources__search_idioms` (Фразеологічний 25K) | idiom cards |
-| 9 | **Літературні засвідчення** | `mcp__sources__search_literary` (125K chunks — chronicles, poetry, legal) | purple `.source-box` pattern (reused from PoC seminar) |
-| 10 | **Підручники** | `mcp__sources__search_text` (textbooks 23K) | resource cards with grade + page + chunk |
-| 11 | **Зовнішні матеріали** | `mcp__sources__search_external` grouped by collection (`ulp_blogs`, `ulp_youtube`, `pohribnyi_pronunciation`, `istoria_movy`, `realna_istoria`, `komik_istoryk`, `imtgsh`, `other_blogs`) | resource cards per collection, with media-type tag |
-| 12 | **Курсові посилання** | scan of `curriculum/l2-uk-en/{level}/{slug}/vocabulary.yaml` | "Used in: A1 M08 (Things Have Gender), HIST M23 (Danylo)" — cross-link back to lessons |
-| 13 | **Переклад** | Балла EN→UK + dmklinger UK→EN | translation pairs |
-| 14 | **Wikipedia** | `mcp__sources__query_wikipedia` | summary card for proper nouns / concepts |
-| 15 | **Метадані** | aggregation of all above | provenance footer: source URLs, freshness timestamp, "report data error" link |
+| 9 | **Літературні засвідчення** | `mcp__sources__search_literary` (125K chunks — chronicles, poetry, legal), exact-form-gated; backed by **uk.wikisource (Вікіджерела)** outbound links where available | purple `.source-box` pattern (reused from PoC seminar) |
+| 10 | **Курсові посилання** | scan of `curriculum/l2-uk-en/{level}/{slug}/vocabulary.yaml` | "Used in: A1 M08 (Things Have Gender), HIST M23 (Danylo)" — cross-link back to lessons |
+| 11 | **Переклад** | Балла EN→UK + dmklinger UK→EN | translation pairs |
+| 12 | **Вікі-довідка (Wikimedia-family)** | **uk.wikipedia** (`query_wikipedia`) for concepts/proper nouns + **uk.wiktionary (Вікісловник)** — the §2 meaning source, surfaced as a clickable outbound link + **uk.wikisource** link (see §9) | summary card + outbound wiki links; OMIT-EMPTY (most basic A1 words have no Wikipedia article) |
+| 13 | **Метадані** | aggregation of all above | provenance footer: source URLs, freshness timestamp, "report data error" link |
+
+> **Design change 2026-06-12 (user decision).** Former sections **10 Підручники** (textbook FTS) and **11 Зовнішні матеріали** (curated blogs/video) are **REMOVED**. Rationale: raw corpus retrieval is too noisy for per-lemma display without an expensive relevance layer, and the per-lemma value is low for basic vocabulary. The external-knowledge layer is now **Wikimedia-family only** — Wikipedia (concepts/proper nouns) + Wiktionary (the meaning source, as an outbound link) + Wikisource (literary attestation). Wikimedia Commons (a word image for concrete nouns) is a possible future add, not core. All Wikimedia sections are OMIT-EMPTY, so they cost nothing on words that have no entry.
 
 ## 5. Decolonization editorial layer (the moat)
 
@@ -148,21 +148,10 @@ sections:
     - author: "Літописець"
       work: "Галицько-Волинський літопис"
       line: "Данило ж, князь добрий, хоробрий і мудрий..."
-      url: null
+      url: "https://uk.wikisource.org/wiki/..."  # uk.wikisource (Вікіджерела) outbound link where available
       source: literary_fts
-  textbooks:
-    - source_file: "kravtsova-history-grade-7"
-      page: 84
-      chunk: "..."
-  external:
-    ulp_blogs: []
-    ulp_youtube: [...]
-    pohribnyi_pronunciation: []
-    istoria_movy: [...]
-    realna_istoria: [...]
-    komik_istoryk: []
-    imtgsh: []
-    other_blogs: []
+  # 2026-06-12: `textbooks` + `external` blocks REMOVED (see §4 design change).
+  # External-knowledge layer is now Wikimedia-family only: wikipedia + wiktionary + wikisource.
   course_usage:
     - track: hist
       module_num: 23
