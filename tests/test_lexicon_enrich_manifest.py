@@ -4,7 +4,11 @@ import sqlite3
 from scripts.lexicon import enrich_manifest as enrich_manifest_module
 from scripts.lexicon.enrich_manifest import (
     _build_paradigm,
+    _cefr,
+    _definition_cards,
     _idioms_slovnyk,
+    _literary_attestation,
+    _literary_excerpt,
     _meaning,
     _merge_slovnyk_warning,
     _sense_correct_synonyms,
@@ -47,6 +51,41 @@ def _conn() -> sqlite3.Connection:
             text TEXT NOT NULL DEFAULT '',
             sovietization_risk INTEGER NOT NULL DEFAULT 0,
             sovietization_keywords TEXT NOT NULL DEFAULT ''
+        );
+        CREATE TABLE grinchenko (
+            word TEXT NOT NULL,
+            definition TEXT NOT NULL DEFAULT '',
+            source TEXT NOT NULL DEFAULT ''
+        );
+        CREATE TABLE puls_cefr (
+            word TEXT NOT NULL,
+            guideword TEXT DEFAULT '',
+            level TEXT DEFAULT '',
+            pos TEXT DEFAULT '',
+            type TEXT DEFAULT '',
+            text TEXT NOT NULL DEFAULT '',
+            source TEXT DEFAULT ''
+        );
+        CREATE TABLE literary_texts (
+            id INTEGER PRIMARY KEY,
+            chunk_id TEXT NOT NULL DEFAULT '',
+            title TEXT NOT NULL DEFAULT '',
+            text TEXT NOT NULL DEFAULT '',
+            source_file TEXT NOT NULL DEFAULT '',
+            author TEXT DEFAULT '',
+            work TEXT DEFAULT '',
+            work_id TEXT DEFAULT '',
+            year INTEGER,
+            genre TEXT DEFAULT '',
+            language_period TEXT DEFAULT '',
+            char_count INTEGER DEFAULT 0
+        );
+        CREATE VIRTUAL TABLE literary_fts USING fts5(
+            title,
+            text,
+            content='literary_texts',
+            content_rowid='id',
+            tokenize='unicode61'
         );
         """
     )
@@ -398,3 +437,98 @@ def test_sum11_meaning_carries_source_sovietization_risk() -> None:
     assert meaning["source"] == "СУМ-11"
     assert meaning["sovietization_risk"] == 2
     assert meaning["sovietization_keywords"] == ["ленін", "маркс"]
+
+
+def test_definition_cards_emit_separate_sources_with_sum11_risk(monkeypatch) -> None:
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO grinchenko (word, definition, source) VALUES (?, ?, ?)",
+        ("прапор", "Прапоръ, -ра, м. Знамя.", "Грінченко"),
+    )
+    conn.execute(
+        """
+        INSERT INTO sum11
+            (word, definition, text, sovietization_risk, sovietization_keywords)
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (
+            "прапор",
+            "ПРАПОР, а, ч. Символ держави. Прапор Леніна.",
+            "",
+            2,
+            "ленін,партійн",
+        ),
+    )
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_sum20_definition_card",
+        lambda lemma: {
+            "id": "sum20",
+            "source": "СУМ-20",
+            "source_pill": "СУМ-20",
+            "note": "сучасний тлумачний словник",
+            "definitions": ["ПРАПОР, а, ч. Офіційний символ."],
+        },
+    )
+
+    cards = _definition_cards(conn, "прапор", has_sum11_flags=True)
+
+    assert [card["id"] for card in cards] == ["grinchenko", "sum20", "sum11-flagged"]
+    assert cards[0]["source"] == "Грінченко 1907"
+    assert cards[1]["source"] == "СУМ-20"
+    assert cards[2]["sovietization_risk"] == 2
+    assert cards[2]["sovietization_keywords"] == ["ленін", "партійн"]
+    assert "Прапор" in cards[0]["definitions"][0]
+
+
+def test_cefr_lookup_uses_exact_puls_row() -> None:
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO puls_cefr (word, level, pos, text) VALUES (?, ?, ?, ?)",
+        ("вікно", "A1", "іменник", "вікно (A1, іменник)"),
+    )
+
+    cefr = _cefr(conn, "вікно")
+
+    assert cefr == {
+        "level": "A1",
+        "source": "PULS CEFR",
+        "pos": "іменник",
+        "text": "вікно (A1, іменник)",
+    }
+
+
+def test_literary_attestation_requires_exact_form_hit() -> None:
+    conn = _conn()
+    conn.execute(
+        """
+        INSERT INTO literary_texts
+            (id, chunk_id, title, text, source_file, author, work, year)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            1,
+            "chunk-1",
+            "",
+            "Крізь вікно видно сад і ранкове світло.",
+            "fixture.jsonl",
+            "Автор",
+            "Твір",
+            1900,
+        ),
+    )
+    conn.execute("INSERT INTO literary_fts(literary_fts) VALUES('rebuild')")
+
+    attestation = _literary_attestation(conn, "вікно")
+
+    assert attestation is not None
+    assert attestation["source"] == "literary_fts"
+    assert attestation["source_label"] == "Автор · Твір · 1900"
+    assert "вікно" in attestation["text"]
+
+
+def test_literary_excerpt_indexes_stripped_text_with_source_stress_marks() -> None:
+    excerpt = _literary_excerpt("Далека доро́га вела до вікно і саду.", "вікно", radius=8)
+
+    assert excerpt.startswith("…вела до")
+    assert "вікно" in excerpt
