@@ -112,6 +112,10 @@ def test_writer_prompt_contains_seminar_folk_qg_hardening() -> None:
         "Use `аранжування`, not `<!-- bad -->аранжировку<!-- /bad -->`",
         "Put those fragments in blockquotes or the module's verbatim-quote convention",
         "bare unattested archaic/dialectal folk forms in exposition fail",
+        "dossier's «ВЕРБАТИМ примірники» (§4) are the ONLY quotable folk-primary fragments",
+        "Do NOT quote folk songs/chants from memory, even famous traps such as `Щедрик-ведрик`",
+        "Do NOT embed literary-authored verse (Шевченко, Франко, Леся Українка, etc.)",
+        "If dossier §4 has fewer than four fragments, embed only the fragments it has",
         "authentic regional and archaic variants are ENCOURAGED",
     )
 
