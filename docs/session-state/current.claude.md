@@ -1,7 +1,12 @@
-# Current — Claude Session Handoff (2026-06-11)
+# Current — Claude Session Handoff (2026-06-12)
 
 > Router: read `docs/session-state/current.md` first.
-> **Latest detailed handoff: `docs/session-state/2026-06-11-claude-word-atlas-conformance-paradigm-gates.md`** — read top-to-bottom.
+> **Latest detailed handoff: `docs/session-state/2026-06-12-claude-word-atlas-production-rollout.md`** — read top-to-bottom.
+> **🚨 PRODUCTION: real learners are on A1 now.** Word Atlas was rebuilt to full vocab (~2,045 words) +
+> decolonization fixes; the `atlas-finalize-all` dispatch is finishing — RESUME = verify it, merge,
+> inject `PUBLIC_GOATCOUNTER_CODE=learn-ukrainian` into `deploy-pages.yml`, deploy, verify LIVE. Folk nav
+> hidden + GoatCounter wired (#3027) and services self-heal (#3026) already on main but NOT deployed.
+> The sections below are from the 2026-06-11 session and are superseded by the 06-12 handoff above.
 
 ## 🚨 CRITICAL — GitHub Pages auto-deploy is DISABLED (workflow_dispatch only)
 Merging to main does NOT update the live site. This is why the user saw "Word Atlas not following the
