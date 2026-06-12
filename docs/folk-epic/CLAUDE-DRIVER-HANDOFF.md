@@ -34,7 +34,7 @@
 > OLD April stub (next rebuild). Do NOT inflate.
 
 ### ✅ DONE THIS SESSION (merged / shipping to main)
-- **KOLIADKY-SHCHEDRIVKY 01 BUILT + SHIPPED — THIS PR.** 2nd properly-built folk-experiential module. module.md
+- **KOLIADKY-SHCHEDRIVKY 01 BUILT + SHIPPED — PR #3021 MERGED (`37bd262d1c`).** 2nd properly-built folk-experiential module. module.md
   4898 gate-words (target 5000, PASS), **ALL python_qg gates green**, vesum-clean, **traps-clean** (rule A working
   — zero memory-chants/Shevchenko-as-folk), 12 dossier-§4 blockquotes ALL independently `verify_quote`-confirmed
   (Коли не било 1.0 `feaa5fa7_c0596`; Що ж місячик 1.0 / Щедрий вечір 0.98 `feaa5fa7_c0598`, ЕУ-1955; Чубинський-
@@ -71,7 +71,11 @@ correction loop's word_count-expansion run (needs the claude binary working).**
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
 1. **(optional) LLM QG pass on koliadky** (Claude/GPT reviewer) to close kalendarna parity, if desired.
-2. **Rebuild dumy (`dumy-nevilnytski-lytsarski`)** — old `dumy-lytsarski.mdx` April stub. Dossier on main. Use the
+2. **Rebuild dumy (`dumy-nevilnytski-lytsarski`) — READY TO FIRE.** PREREQS VERIFIED 2026-06-12: dossier ✓ / wiki ✓
+   (`wiki/folk/genres/dumy-nevilnytski-lytsarski.md`) / plan ✓ on main; not yet built; old `dumy-lytsarski.mdx` stub +
+   its `[...slug].astro` hero route to retire on promotion. **PRE-FIRE binary check (MANDATORY):** run `npx
+   @anthropic-ai/claude-code@latest --version`; if it errors `native binary not installed`, run `node install.cjs` in
+   `~/.npm/_npx/*/node_modules/@anthropic-ai/claude-code` FIRST — else claude-tools builds burn attempts (S15 4-build saga). Use the
    recipe: build (claude-tools, --worktree, persistent Monitor) → on python_qg fail, the correction loop now works
    (binary fixed) and may self-converge → harvest + manual-fix any residual citation → re-gate `run_python_qg` from
    data-bearing root → `verify_quote` every fragment → assemble_mdx → retire old MDX + `[...slug].astro` hero route → ship.
@@ -84,8 +88,10 @@ correction loop's word_count-expansion run (needs the claude binary working).**
 - **claude npx native-binary** recurs on each claude auto-update; fix = `node install.cjs` in the npx caches.
 - **resources_search_attempted false-fails on a fresh checkout** (no writer telemetry) — re-gate in the BUILD
   worktree for the authoritative verdict, not the promote worktree (Session-14 lesson, re-confirmed).
-- Build forensics (#M-10, auto-committed `build/folk/koliadky-shchedrivky-2026...`): -004543/-005731/-012900/-013235.
-  -013235 is the SHIPPED koliadky (KEEP). Safe to `git worktree remove --force` the worktrees.
+- Build forensics: ALL koliadky build worktrees removed; branches kept (`build/folk/koliadky-shchedrivky-2026...`
+  -004543/-005731/-012900/-013235). **kalendarna -151128/-211243 worktrees+branches DELETED 2026-06-12** (forensics
+  spent — fixes #2995/#3016 merged+tested, kalendarna shipped). `.worktrees/builds/` now EMPTY. Remaining ~5G is
+  OTHER-LANE dispatch worktrees (atlas/b1/gemini — NOT folk; don't reap — Session-8 incident).
 - `git push` folk → `--no-verify`; `git config --local core.bare` stayed false all session.
 
 ### 📊 FLEET — module writer **claude-tools** (Claude+GPT only for folk culture; NO deepseek/gemini/agy);
