@@ -341,6 +341,11 @@ _start_service() {
         return 0
     fi
 
+    # Self-heal astro deps before spawning the dev server (node_modules can be wiped).
+    if [[ "$name" == "astro" ]]; then
+        _ensure_astro_deps || return 1
+    fi
+
     # Race-safety: even if state is "stopped", the port may still be bound by
     # another concurrent restarter that hasn't published its health endpoint
     # yet, OR the OS may not have released the port from a just-killed PID.
@@ -478,9 +483,25 @@ _astro_cleanup_build_artifacts() {
     fi
 }
 
+# Self-heal: starlight/node_modules gets wiped intermittently (npm collisions /
+# parallel processes), leaving `astro: command not found`. Reinstall on demand so
+# `services.sh build|rebuild|start astro` never dies on a missing binary.
+_ensure_astro_deps() {
+    if [[ -x "$PROJECT_ROOT/starlight/node_modules/.bin/astro" ]]; then
+        return 0
+    fi
+    echo "  starlight deps missing (no node_modules/.bin/astro) — self-healing with npm ci..."
+    ( cd "$PROJECT_ROOT/starlight" && npm ci && npm rebuild esbuild sharp ) || {
+        echo "  ERROR: npm ci failed in starlight; cannot build/start astro" >&2
+        return 1
+    }
+    echo "  starlight deps restored."
+}
+
 _build_astro() {
     echo "  Building astro..."
     cd "$PROJECT_ROOT"
+    _ensure_astro_deps || return 1
     npm run build --prefix starlight
 }
 
