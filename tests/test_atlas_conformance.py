@@ -6,6 +6,7 @@ from pathlib import Path
 import yaml
 
 from scripts.audit.validate_atlas_conformance import VesumLemmaLookup, validate
+from scripts.lexicon.build_kaikki_lookup import KAIKKI_SOURCE
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = PROJECT_ROOT / "starlight" / "src" / "data" / "lexicon-manifest.json"
@@ -218,3 +219,42 @@ def test_wiki_summary_attributed_flags_missing_freshness_date():
     )
 
     assert _gates_for(entry) == ["wiki_summary_attributed"]
+
+
+def test_pronunciation_ipa_must_be_well_formed_string():
+    entry = _entry(pronunciation={"ipa": ["[slɔˈwɔ]"], "source": KAIKKI_SOURCE})
+
+    assert _gates_for(entry) == ["pronunciation_ipa_well_formed"]
+
+
+def test_pronunciation_requires_kaikki_source_attribution():
+    entry = _entry(pronunciation={"ipa": "[slɔˈwɔ]", "source": "Wiktionary"})
+
+    assert _gates_for(entry) == ["kaikki_attribution_required"]
+
+
+def test_kaikki_pronunciation_and_etymology_pass_with_cc_by_sa_source():
+    entry = _entry(
+        pronunciation={"ipa": "[slɔˈwɔ]", "source": KAIKKI_SOURCE},
+        enrichment={
+            "etymology": {
+                "text": "From Proto-Slavic *slovo.",
+                "source": KAIKKI_SOURCE,
+            }
+        },
+    )
+
+    assert _gates_for(entry) == []
+
+
+def test_kaikki_etymology_source_must_carry_cc_by_sa_attribution():
+    entry = _entry(
+        enrichment={
+            "etymology": {
+                "text": "From Proto-Slavic *slovo.",
+                "source": "kaikki/Wiktionary",
+            }
+        }
+    )
+
+    assert _gates_for(entry) == ["kaikki_attribution_required"]

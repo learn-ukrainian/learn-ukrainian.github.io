@@ -136,6 +136,7 @@ The following dictionaries are ingested as SQLite FTS5 indices for internal ling
 | **Фразеологічний словник** | Copyrighted. Same fair-use boundaries as textbooks. | Idiom verification |
 | **Правопис 2019** | Public (Академія наук України) | Orthography rules |
 | **Ukrajinet WordNet** | 122K synsets; auto-translated from Open English WordNet per upstream README. ⚠️ Quality concern documented (#1657 Tier 3 audit). | Synonym lookup (with caveats) |
+| **English Wiktionary via Kaikki.org / wiktextract** | English Wiktionary extract, **CC BY-SA 3.0**. Preprocessed from the local Kaikki Ukrainian JSONL extract into a compact per-lemma lookup; Atlas pages that use it render the attribution line "Pronunciation / etymology from English Wiktionary, CC BY-SA 3.0." | IPA pronunciation and final-fallback etymology |
 
 ---
 
@@ -163,4 +164,4 @@ For modified derivative works:
 
 Licensing questions go to issues on GitHub or the maintainer directly. The above is a best-effort plain-language summary of the legal position — it is not legal advice. If you need formal permissions or have commercial redistribution questions beyond the standard CC BY-SA 4.0 terms, open an issue and we'll figure it out.
 
-Last updated: 2026-05-05 — added good-faith / non-profit-posture section (user-requested defensive documentation), expanded dictionary inventory (ЕСУМ vol 1, slovnyk.me as СУМ-20 supersession, Гринчишин/Сербенська paronyms, Karavansky r2u, Holovashchuk pending, Ukrajinet caveat), noted СУМ-11 sovietization risk + Грінченко rename. Predecessor: 2026-04-11 (#1092).
+Last updated: 2026-06-12 — added English Wiktionary via Kaikki.org / wiktextract (CC BY-SA 3.0) for Word Atlas IPA pronunciation and final-fallback etymology. Predecessor: 2026-05-05 — added good-faith / non-profit-posture section (user-requested defensive documentation), expanded dictionary inventory (ЕСУМ vol 1, slovnyk.me as СУМ-20 supersession, Гринчишин/Сербенська paronyms, Karavansky r2u, Holovashchuk pending, Ukrajinet caveat), noted СУМ-11 sovietization risk + Грінченко rename. Predecessor: 2026-04-11 (#1092).

@@ -30,6 +30,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = PROJECT_ROOT / "starlight" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_VESUM = PROJECT_ROOT / "data" / "vesum.db"
 DEFAULT_CURRICULUM = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
+KAIKKI_SOURCE = "kaikki/Wiktionary (CC BY-SA 3.0)"
 
 SOURCE_REQUIRED_SECTIONS = (
     "meaning",
@@ -62,6 +63,7 @@ APOSTROPHE_TRANSLATION = str.maketrans({"’": "'", "ʼ": "'", "`": "'", "′": 
 STRESS_MARKS = {"\u0301", "\u0300", "\u0341"}
 WORD_TOKEN_RE = re.compile(r"[A-Za-zА-Яа-яЄєІіЇїҐґ0-9'’ʼ-]+")
 DATE_PREFIX_RE = re.compile(r"^\d{4}-\d{2}-\d{2}(?:$|[T ])")
+IPA_RE = re.compile(r"^(?:\[[^\[\]]+\]|/[^/]+/)$")
 
 
 @dataclass(frozen=True, slots=True)
@@ -146,6 +148,8 @@ def validate(manifest: Any, *, vesum: Any, curriculum: Any) -> list[Violation]:
             _check_empty_sections(entry, lemma, violations)
             _check_heritage_evidence(entry, lemma, violations)
             _check_sovietization(entry, lemma, violations)
+            _check_pronunciation(entry, lemma, violations)
+            _check_kaikki_attribution(entry, lemma, violations)
             _check_cross_links(entry, lemma, curriculum_modules, violations)
             _check_wikipedia(entry, lemma, violations)
     finally:
@@ -507,6 +511,65 @@ def _check_sovietization(entry: Mapping[str, Any], lemma: str, violations: list[
                 "sovietization_must_be_flagged",
                 lemma,
                 "SUM-11 definition card carries sovietization risk but is missing flag_note",
+            )
+        )
+
+
+def _pronunciation(entry: Mapping[str, Any]) -> object:
+    if "pronunciation" in entry:
+        return entry["pronunciation"]
+    return _enrichment(entry).get("pronunciation")
+
+
+def _check_pronunciation(entry: Mapping[str, Any], lemma: str, violations: list[Violation]) -> None:
+    pronunciation = _pronunciation(entry)
+    if pronunciation is None:
+        return
+    if not isinstance(pronunciation, Mapping):
+        violations.append(
+            Violation(
+                "pronunciation_ipa_well_formed",
+                lemma,
+                "pronunciation section must be an object with non-empty IPA",
+            )
+        )
+        return
+    ipa = pronunciation.get("ipa")
+    if not _non_empty_str(ipa) or not IPA_RE.fullmatch(str(ipa).strip()):
+        violations.append(
+            Violation(
+                "pronunciation_ipa_well_formed",
+                lemma,
+                "pronunciation.ipa must be a non-empty bracketed or slashed IPA string",
+            )
+        )
+
+
+def _has_exact_kaikki_source(section: Mapping[str, Any]) -> bool:
+    return str(section.get("source") or "").strip() == KAIKKI_SOURCE
+
+
+def _check_kaikki_attribution(entry: Mapping[str, Any], lemma: str, violations: list[Violation]) -> None:
+    pronunciation = _pronunciation(entry)
+    if isinstance(pronunciation, Mapping) and pronunciation.get("ipa") and not _has_exact_kaikki_source(pronunciation):
+        violations.append(
+            Violation(
+                "kaikki_attribution_required",
+                lemma,
+                f"pronunciation source must be {KAIKKI_SOURCE!r}",
+            )
+        )
+
+    etymology = _enrichment(entry).get("etymology")
+    if not isinstance(etymology, Mapping):
+        return
+    source = str(etymology.get("source") or "").strip()
+    if "kaikki" in source.casefold() and source != KAIKKI_SOURCE:
+        violations.append(
+            Violation(
+                "kaikki_attribution_required",
+                lemma,
+                f"kaikki etymology source must be {KAIKKI_SOURCE!r}",
             )
         )
 
