@@ -27,7 +27,7 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 17 HANDOFF (2026-06-12 — DOSSIER #15 bylyny-kyivskoho-tsyklu WRITTEN + CORPUS-HAMMERED + SHIPPED (15/42 dossiers); the most de-imperialization-sensitive topic, framed honestly) — **RESUME HERE**
+## ▶▶▶ SESSION 17 HANDOFF (2026-06-12 — DOSSIER #15 bylyny-kyivskoho-tsyklu WRITTEN + CORPUS-HAMMERED + SHIPPED (15/42 dossiers); + WIKI-COMPILE grounding/register gap FOUND → wiki backlog BLOCKED on durable fix) — **RESUME HERE**
 
 > **⏱ HONEST SCOPE:** Modules built+shipped (new V7): **3/42** (kalendarna, koliadky, dumy — unchanged this
 > session). Dossiers: **15/42** (bylyny added THIS session). ~27 topics plan-stub only. Folk nav still HIDDEN
@@ -58,13 +58,26 @@ tradition continued in OTHER genres (думи/балади/колядки). The 
 reusable device. Pre-grounding the brief with my own corpus probe (exact chunk_ids + the §4 honesty protocol) is
 what made codex produce a clean first pass — no correction loop needed.
 
+### 🧱 WIKI BACKLOG IS BLOCKED — systemic compile fix needed first (Session-17 finding, THIS PR)
+Wiki gap = **6 un-wikified dossiers** (bylyny, kobzarstvo-lirnytstvo, dumy-sotsialno-pobutovi, holosinnya,
+vesilni-pisni, zhnyvarski-obzhynkovi-pisni). I compiled the FIRST (bylyny) to test the loop → it FAILS the
+`compile --review` gate on **`source_grounding` AND `register`**, both **systemic to `compile.py`** (they'll recur
+×6), so I **parked it, not shipped** (the durable fix is a re-compile that would overwrite any hand-patch). Full
+diagnosis + durable fix-spec: **`docs/folk-epic/folk-wiki-compile-grounding-register-gap.md`** (THIS PR). TL;DR of the
+durable fix (orchestrator/compile lane): (1) **seed the wiki source registry from the dossier's §4/§10 chunk_ids**
+(retrieval under-builds the registry → forces over-citation of one broad source → source_grounding fails); (2) **port
+the folk register discipline (`вербатимний→дослівний` + russianism list) into the WIKI writer prompt** (currently only
+the module writer has it); (3) **exempt attributed verbatim quotes from the wiki `register` gate** (mirror module
+#2998 — it penalizes faithful ЕУ/Білецький quotation). Until (1)–(3) land, folk wikis need per-wiki hand-surgery to
+pass — does not scale. (TRACK-UPDATE'd the orchestrator.)
+
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **Dossier #16 `istorychni-pisni`** (historical SONGS — distinct from dumy & prose perekazy; Колесса). Same proven
-   loop: pre-probe corpus → grounded brief w/ #M-4 preamble + corpus-hammer mandate + NO-auto-merge → codex/gpt-5.5
-   → corpus-hammer review → ship. Then continue queue (16→…, `phase-folk-queue.md`).
-2. **OR compile the WIKI backlog.** 15 dossiers on main but only some have compiled wikis — audit `wiki/folk/` vs
-   `docs/research/folk/` and compile gaps (`compile.py --writer gpt-5.5 --dossier docs/research/folk/<slug>.md` from a
-   data-bearing checkout). Wikis gate the eventual module builds.
+1. **Dossier #16 `istorychni-pisni`** (historical SONGS — distinct from dumy & prose perekazy; Колесса) — the UNBLOCKED
+   queue-advancing path. Same proven loop: pre-probe corpus → grounded brief w/ #M-4 preamble + corpus-hammer mandate +
+   NO-auto-merge → codex/gpt-5.5 → corpus-hammer review → ship. Then continue queue (16→…, `phase-folk-queue.md`).
+2. **WIKI backlog — BLOCKED** on the systemic compile fix above (see the findings doc). Drive the durable compile fix
+   (orchestrator lane / or dispatch) FIRST, then batch-recompile all 6 gap wikis. Do NOT hand-grind individual wikis
+   through the stochastic gate — it's non-durable (a re-compile overwrites it) and the issues recur ×6.
 3. **OR build the next module if directed** — ALWAYS run the pre-fire binary check first (`npx
    @anthropic-ai/claude-code@latest --version`; if "native binary not installed" → `node install.cjs` in
    `~/.npm/_npx/*/node_modules/@anthropic-ai/claude-code`). Recurs on every claude auto-update.
