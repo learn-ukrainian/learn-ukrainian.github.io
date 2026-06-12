@@ -283,6 +283,38 @@ def test_scorer_accepts_core_shape_for_candidate(tmp_path: Path) -> None:
     assert checks["vesum_word_verification_evidence"]["passed"] is True
 
 
+def test_scorer_accepts_schema_text_field_for_cloze(tmp_path: Path) -> None:
+    activities = [
+        *_activities(),
+        {
+            "type": "cloze",
+            "title": "Текст",
+            "instruction": "Заповніть пропуск.",
+            "text": "Я [1] текст.",
+            "blanks": [
+                {
+                    "id": 1,
+                    "answer": "читаю",
+                    "options": ["читаю", "читав"],
+                }
+            ],
+        },
+    ]
+    candidate = _write_candidate(tmp_path, _raw_writer_output(_module(), activities=activities))
+
+    report = score_writer_output(
+        level="b1",
+        slug="b1-baseline-past-present",
+        writer_output_path=candidate / "writer_output.md",
+        candidate_dir=candidate,
+        wiki_manifest_path=candidate / "wiki_manifest.json",
+    )
+
+    checks = _checks_by_name(report)
+    assert checks["parse_writer_output"]["passed"] is True
+    assert checks["activity_parser_schema"]["passed"] is True
+
+
 def test_scorer_reads_sources_mcp_tool_call_names() -> None:
     report = _check_source_tool_evidence(
         "",

@@ -808,7 +808,7 @@ class ActivityParser:
         return FillInActivity(title=data.get('title', ''), items=items)
 
     def _parse_cloze(self, data: dict) -> ClozeActivity:
-        passage = data.get('passage', '')
+        passage = data.get('passage') or data.get('text', '')
         explicit_blanks = data.get('blanks', [])
 
         # If explicit blanks are provided, use them
@@ -1543,27 +1543,27 @@ class ActivityParser:
 
     def _activity_to_mdx(self, activity: Activity, is_ukrainian_forced: bool = False) -> str:
         if isinstance(activity, QuizActivity):
-            return self._quiz_to_mdx(activity)
+            return self._quiz_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, SelectActivity):
-            return self._select_to_mdx(activity)
+            return self._select_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, TrueFalseActivity):
-            return self._true_false_to_mdx(activity)
+            return self._true_false_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, FillInActivity):
-            return self._fill_in_to_mdx(activity)
+            return self._fill_in_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, ClozeActivity):
-            return self._cloze_to_mdx(activity)
+            return self._cloze_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, MatchUpActivity):
-            return self._match_up_to_mdx(activity)
+            return self._match_up_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, GroupSortActivity):
-            return self._group_sort_to_mdx(activity)
+            return self._group_sort_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, UnjumbleActivity):
             return self._unjumble_to_mdx(activity)
         if isinstance(activity, ErrorCorrectionActivity):
-            return self._error_correction_to_mdx(activity)
+            return self._error_correction_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, MarkTheWordsActivity):
-            return self._mark_the_words_to_mdx(activity)
+            return self._mark_the_words_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, TranslateActivity):
-            return self._translate_to_mdx(activity)
+            return self._translate_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, AnagramActivity):
             return self._anagram_to_mdx(activity)
         if isinstance(activity, ReadingActivity):
@@ -1624,27 +1624,27 @@ class ActivityParser:
             return self._pick_syllables_to_mdx(activity)
         activity_type = getattr(activity, 'type', '')
         if activity_type == 'quiz':
-            return self._quiz_to_mdx(activity)
+            return self._quiz_to_mdx(activity, is_ukrainian_forced)
         if activity_type == 'select':
-            return self._select_to_mdx(activity)
+            return self._select_to_mdx(activity, is_ukrainian_forced)
         if activity_type == 'true-false':
-            return self._true_false_to_mdx(activity)
+            return self._true_false_to_mdx(activity, is_ukrainian_forced)
         if activity_type == 'fill-in':
-            return self._fill_in_to_mdx(activity)
+            return self._fill_in_to_mdx(activity, is_ukrainian_forced)
         if activity_type == 'cloze':
-            return self._cloze_to_mdx(activity)
+            return self._cloze_to_mdx(activity, is_ukrainian_forced)
         if activity_type == 'match-up':
-            return self._match_up_to_mdx(activity)
+            return self._match_up_to_mdx(activity, is_ukrainian_forced)
         if activity_type == 'group-sort':
-            return self._group_sort_to_mdx(activity)
+            return self._group_sort_to_mdx(activity, is_ukrainian_forced)
         if activity_type == 'unjumble':
             return self._unjumble_to_mdx(activity)
         if activity_type == 'error-correction':
-            return self._error_correction_to_mdx(activity)
+            return self._error_correction_to_mdx(activity, is_ukrainian_forced)
         if activity_type == 'mark-the-words':
-            return self._mark_the_words_to_mdx(activity)
+            return self._mark_the_words_to_mdx(activity, is_ukrainian_forced)
         if activity_type == 'translate':
-            return self._translate_to_mdx(activity)
+            return self._translate_to_mdx(activity, is_ukrainian_forced)
         if activity_type == 'anagram':
             return self._anagram_to_mdx(activity)
         if activity_type == 'reading':
@@ -1705,23 +1705,23 @@ class ActivityParser:
             return self._pick_syllables_to_mdx(activity)
         return ''
 
-    def _quiz_to_mdx(self, activity: QuizActivity) -> str:
+    def _quiz_to_mdx(self, activity: QuizActivity, is_ukrainian_forced: bool = False) -> str:
         items = [{'question': str(i.question), 'options': [{'text': str(o.text), 'correct': o.correct} for o in i.options], 'explanation': str(i.explanation) if i.explanation else ''} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<Quiz client:only='react' questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<Quiz client:only='react' questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
-    def _select_to_mdx(self, activity: SelectActivity) -> str:
+    def _select_to_mdx(self, activity: SelectActivity, is_ukrainian_forced: bool = False) -> str:
         items = [{'question': str(i.question), 'options': [{'text': str(o.text), 'correct': o.correct} for o in i.options], 'explanation': str(i.explanation) if i.explanation else ''} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<Select client:only='react' questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<Select client:only='react' questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
-    def _true_false_to_mdx(self, activity: TrueFalseActivity) -> str:
+    def _true_false_to_mdx(self, activity: TrueFalseActivity, is_ukrainian_forced: bool = False) -> str:
         items = [{'statement': str(i.statement), 'isTrue': i.correct, 'explanation': str(i.explanation) if i.explanation else ''} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<TrueFalse client:only='react' items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<TrueFalse client:only='react' items={{JSON.parse(`{self._dump_safe_json(items)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
-    def _fill_in_to_mdx(self, activity: FillInActivity) -> str:
+    def _fill_in_to_mdx(self, activity: FillInActivity, is_ukrainian_forced: bool = False) -> str:
         items = [{'sentence': str(i.sentence), 'answer': str(i.answer), 'options': [str(opt) for opt in i.options]} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<FillIn client:only='react' items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<FillIn client:only='react' items={{JSON.parse(`{self._dump_safe_json(items)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
-    def _cloze_to_mdx(self, activity: ClozeActivity) -> str:
+    def _cloze_to_mdx(self, activity: ClozeActivity, is_ukrainian_forced: bool = False) -> str:
         passage = activity.passage
         # Transform {content} placeholders to [___:N] markers if blanks are provided
         if activity.blanks:
@@ -1741,21 +1741,21 @@ class ActivityParser:
                 passage = new_passage
 
         blanks = [{'index': i, 'answer': str(b.answer), 'options': [str(opt) for opt in b.options]} for i, b in enumerate(activity.blanks)]
-        return f"### {self._escape_jsx(activity.title)}\n\n<Cloze client:only='react' passage={{{json.dumps(str(passage), ensure_ascii=False)}}} blanks={{JSON.parse(`{self._dump_safe_json(blanks)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<Cloze client:only='react' passage={{{json.dumps(str(passage), ensure_ascii=False)}}} blanks={{JSON.parse(`{self._dump_safe_json(blanks)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
-    def _match_up_to_mdx(self, activity: MatchUpActivity) -> str:
+    def _match_up_to_mdx(self, activity: MatchUpActivity, is_ukrainian_forced: bool = False) -> str:
         pairs = [{'left': str(p.left), 'right': str(p.right)} for p in activity.pairs]
-        return f"### {self._escape_jsx(activity.title)}\n\n<MatchUp client:only='react' pairs={{JSON.parse(`{self._dump_safe_json(pairs)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<MatchUp client:only='react' pairs={{JSON.parse(`{self._dump_safe_json(pairs)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
-    def _group_sort_to_mdx(self, activity: GroupSortActivity) -> str:
+    def _group_sort_to_mdx(self, activity: GroupSortActivity, is_ukrainian_forced: bool = False) -> str:
         groups = {g.name: g.items for g in activity.groups}
-        return f"### {self._escape_jsx(activity.title)}\n\n<GroupSort client:only='react' groups={{JSON.parse(`{self._dump_safe_json(groups)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<GroupSort client:only='react' groups={{JSON.parse(`{self._dump_safe_json(groups)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _unjumble_to_mdx(self, activity: UnjumbleActivity) -> str:
         items = [{'jumbled': ' / '.join(str(w) for w in i.words), 'answer': str(i.answer)} for i in activity.items]
         return f"### {self._escape_jsx(activity.title)}\n\n<Unjumble client:only='react' items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
-    def _error_correction_to_mdx(self, activity: ErrorCorrectionActivity) -> str:
+    def _error_correction_to_mdx(self, activity: ErrorCorrectionActivity, is_ukrainian_forced: bool = False) -> str:
         items = []
         for i in activity.items:
             items.append({
@@ -1776,13 +1776,13 @@ class ActivityParser:
             if safe_anchor:
                 anchor = f'<span id="{safe_anchor}"></span>\n\n'
         items_json = self._dump_safe_json(items)
-        return f"{anchor}### {self._escape_jsx(activity.title)}\n\n<ErrorCorrection client:only='react'{instruction_prop} items={{JSON.parse(`{items_json}`)}} />"
+        return f"{anchor}### {self._escape_jsx(activity.title)}\n\n<ErrorCorrection client:only='react'{instruction_prop} items={{JSON.parse(`{items_json}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
-    def _mark_the_words_to_mdx(self, activity: MarkTheWordsActivity) -> str:
+    def _mark_the_words_to_mdx(self, activity: MarkTheWordsActivity, is_ukrainian_forced: bool = False) -> str:
         ans = self._dump_safe_json([w for word in activity.answers for w in (str(word).split() if ' ' in str(word) else [str(word)])])
-        return f"### {self._escape_jsx(activity.title)}\n\n<MarkTheWords client:only='react'>\n  <MarkTheWordsActivity instruction=\"{self._escape_jsx(str(activity.instruction))}\" text=\"{self._escape_jsx(str(activity.text))}\" correctWords={{JSON.parse(`{ans}`)}} />\n</MarkTheWords>"
+        return f"### {self._escape_jsx(activity.title)}\n\n<MarkTheWords client:only='react' isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}>\n  <MarkTheWordsActivity instruction=\"{self._escape_jsx(str(activity.instruction))}\" text=\"{self._escape_jsx(str(activity.text))}\" correctWords={{JSON.parse(`{ans}`)}} />\n</MarkTheWords>"
 
-    def _translate_to_mdx(self, activity: TranslateActivity) -> str:
+    def _translate_to_mdx(self, activity: TranslateActivity, is_ukrainian_forced: bool = False) -> str:
         items = []
         for item in activity.items:
             rendered_item = {
@@ -1792,7 +1792,7 @@ class ActivityParser:
             if item.explanation:
                 rendered_item['explanation'] = str(item.explanation)
             items.append(rendered_item)
-        return f"### {self._escape_jsx(activity.title)}\n\n<Translate client:only='react' questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<Translate client:only='react' questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _anagram_to_mdx(self, activity: AnagramActivity) -> str:
         items = [{'scrambled': str(i.scrambled), 'answer': str(i.answer), 'hint': str(i.hint) if i.hint else ''} for i in activity.items]

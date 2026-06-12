@@ -7448,7 +7448,7 @@ _ACTIVITY_AUTHORING_FIELDS: dict[str, frozenset[str]] = {
     "select": _activity("items"),
     "true-false": _activity("items"),
     "fill-in": _activity("items"),
-    "cloze": _activity("passage", "blanks"),
+    "cloze": _activity("passage", "text", "blanks"),
     "match-up": _activity("pairs"),
     "group-sort": _activity("groups"),
     "unjumble": _activity("items"),
