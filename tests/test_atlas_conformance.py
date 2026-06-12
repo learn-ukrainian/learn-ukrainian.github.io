@@ -126,6 +126,31 @@ def test_section_omitted_not_empty_flags_empty_section():
     assert _gates_for(entry) == ["section_omitted_not_empty"]
 
 
+def test_synonyms_section_requires_source_and_items():
+    entry = _entry(
+        sections={
+            "synonyms": {
+                "items": [],
+                "source": "slovnyk.me: Словник синонімів",
+            }
+        }
+    )
+
+    assert _gates_for(entry) == ["section_omitted_not_empty"]
+
+
+def test_idioms_section_requires_source_and_cards():
+    entry = _entry(
+        sections={
+            "idioms": {
+                "items": [{"phrase": "яблуко розбрату", "definition": ""}],
+            }
+        }
+    )
+
+    assert _gates_for(entry) == ["provenance_per_section", "section_omitted_not_empty"]
+
+
 def test_heritage_evidence_required_flags_authentic_without_presoviet_attestation():
     entry = _entry(
         heritage_status={

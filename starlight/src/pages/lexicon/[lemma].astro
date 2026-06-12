@@ -27,6 +27,29 @@ interface Meaning {
   sovietization_keywords?: string[];
 }
 
+interface SynonymSection {
+  items: string[];
+  source: string;
+  source_urls?: string[];
+}
+
+interface IdiomSection {
+  items: Array<{
+    text?: string;
+    phrase: string;
+    definition: string;
+    source: string;
+    source_url?: string;
+  }>;
+  source: string;
+  source_urls?: string[];
+}
+
+interface LexiconSections {
+  synonyms?: SynonymSection;
+  idioms?: IdiomSection;
+}
+
 interface NounParadigm {
   kind: "noun";
   cases: Record<string, { singular: string; plural: string }>;
@@ -79,6 +102,7 @@ interface LexiconEntry {
   ipa: string | null;
   primary_source: string;
   course_usage: CourseUsage[];
+  sections?: LexiconSections;
   enrichment?: Enrichment;
   heritage_status?: HeritageStatus | null;
 }
@@ -195,6 +219,7 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props as { entry: LexiconEntry };
+const sections = entry.sections;
 const enrichment = entry.enrichment;
 const paradigm = enrichment?.morphology?.paradigm;
 const nounParadigm = paradigm?.kind === "noun" ? paradigm : null;
@@ -216,15 +241,16 @@ const courseUsage = entry.course_usage.slice().sort((a, b) => {
 // Provenance lists DATA sources only (VESUM, Вікісловник, …). The course-usage
 // context (plan_required → «обов'язкова») is NOT a data source — never let it
 // leak into the provenance footer. Empty ⇒ the footer is omitted (design §4 #15).
-const sourceList = enrichment?.sources && enrichment.sources.length > 0
-  ? enrichment.sources
-  : [];
-const hasDictionaryData = Boolean(
-  enrichment?.morphology ||
-    enrichment?.meaning ||
-    enrichment?.attestation ||
-    enrichment?.etymology,
-);
+const sectionSources = [
+  sections?.synonyms?.source,
+  sections?.idioms?.source,
+].filter((source): source is string => Boolean(source));
+const sourceList = Array.from(
+  new Set([
+    ...(enrichment?.sources && enrichment.sources.length > 0 ? enrichment.sources : []),
+    ...sectionSources,
+  ]),
+).sort((a, b) => a.localeCompare(b, "uk"));
 
 const heritage = entry.heritage_status ?? null;
 const heritageClass = heritage ? HERITAGE_CLASSIFICATION_UK[heritage.classification] ?? null : null;
@@ -268,6 +294,15 @@ const showHeritage = Boolean(
       showHeritageWarning ||
       heritage.russian_shadow ||
       heritage.calque_warning),
+);
+const hasDictionaryData = Boolean(
+  enrichment?.morphology ||
+    enrichment?.meaning ||
+    enrichment?.attestation ||
+    enrichment?.etymology ||
+    sections?.synonyms ||
+    sections?.idioms ||
+    showHeritage,
 );
 
 const frontmatter = {
@@ -436,6 +471,43 @@ const frontmatter = {
               осторогою. Перевага — Грінченко / СУМ-20.
             </p>
           )}
+        </div>
+      </section>
+    )}
+
+    {sections?.synonyms && sections.synonyms.items.length > 0 && (
+      <section class="atlas-section" aria-labelledby="atlas-synonyms-title">
+        <div class="atlas-section-head">
+          <p class="atlas-kicker">Слововживання</p>
+          <h2 id="atlas-synonyms-title">Синоніми</h2>
+        </div>
+
+        <div class="atlas-source-card atlas-source-card-synonyms">
+          <p class="atlas-source-label">{sections.synonyms.source}</p>
+          <div class="atlas-chip-line atlas-chip-line-large">
+            {sections.synonyms.items.map((synonym) => (
+              <span>{synonym}</span>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    {sections?.idioms && sections.idioms.items.length > 0 && (
+      <section class="atlas-section" aria-labelledby="atlas-idioms-title">
+        <div class="atlas-section-head">
+          <p class="atlas-kicker">Сталі вирази</p>
+          <h2 id="atlas-idioms-title">Фразеологізми</h2>
+        </div>
+
+        <div class="atlas-idiom-grid">
+          {sections.idioms.items.map((idiom) => (
+            <article class="atlas-idiom-card">
+              <h3>{idiom.phrase}</h3>
+              <p>{idiom.definition}</p>
+              <span>{idiom.source}</span>
+            </article>
+          ))}
         </div>
       </section>
     )}
@@ -640,6 +712,7 @@ const frontmatter = {
   .atlas-callout,
   .atlas-course-card,
   .atlas-source-card,
+  .atlas-idiom-card,
   .atlas-quote-card,
   .atlas-form-grid li,
   .atlas-provenance {
@@ -915,6 +988,10 @@ const frontmatter = {
     border-left-color: var(--lu-primary);
   }
 
+  .atlas-source-card-synonyms {
+    border-left-color: var(--lu-accent);
+  }
+
   .atlas-source-card-empty {
     border-left-color: var(--lu-accent);
     background: var(--lu-state-missed);
@@ -947,6 +1024,47 @@ const frontmatter = {
     gap: 0.4rem;
     align-items: center;
     margin-top: 0.9rem;
+  }
+
+  .atlas-chip-line-large {
+    margin-top: 0;
+  }
+
+  .atlas-chip-line-large span {
+    min-height: 2rem;
+    color: var(--lu-text);
+    font-size: 0.86rem;
+  }
+
+  .atlas-idiom-grid {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .atlas-idiom-card {
+    padding: 1rem;
+    border-left: 4px solid var(--lu-accent);
+  }
+
+  .atlas-idiom-card h3 {
+    margin: 0;
+    color: var(--lu-text);
+    font-size: 1.05rem;
+    line-height: 1.25;
+  }
+
+  .atlas-idiom-card p {
+    margin: 0.55rem 0 0;
+    color: var(--lu-text);
+  }
+
+  .atlas-idiom-card span {
+    display: inline-flex;
+    margin-top: 0.7rem;
+    color: var(--lu-primary);
+    font-size: 0.78rem;
+    font-weight: 900;
+    text-transform: uppercase;
   }
 
   .atlas-quote-card {
