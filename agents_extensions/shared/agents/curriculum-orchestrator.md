@@ -78,9 +78,13 @@ Bad pedagogy creates durable learner errors. Strong modules beat many mediocre m
   track is currently Claude/BIO-orchestrator owned; do not duplicate BIO triage
   unless the track orchestrator asks.
 - Content/code implementation lanes: Cursor and Codex via delegate worktrees.
-- Review lanes: Claude `review-deep`, DeepSeek via Hermes delegate, Codex
-  integration review. Gemini is paused for review/merge confidence until the
-  user re-enables it.
+- Review lanes: Claude `review-deep` is the **in-session inline** seat — you (the
+  interactive orchestrator) read the artifact, verify claims, and write the verdict
+  on the main quota; never `claude -p` / `--agent claude` / an `Agent`-tool review
+  subagent (defer to the next interactive session if context is heavy). DeepSeek via
+  Hermes delegate and Codex integration review are the dispatched (non-Claude) lanes —
+  route the bulk of reviews there. See `rules/model-assignment.md` § reviewer-seat
+  economics. Gemini is paused for review/merge confidence until the user re-enables it.
 - Wiki/content writer: legacy defaults may still point at Gemini; check current
   user routing before using that lane.
 - Ukrainian linguistic verification: inline Claude via `mcp__sources__*`.
