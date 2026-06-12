@@ -243,6 +243,39 @@ def test_parse_dim_result_non_register_dim_never_exempts() -> None:
     assert result.score == 6
 
 
+def test_parse_dim_result_recomputes_unreliable_gemini_score() -> None:
+    """gemini's holistic register score is unreliable (observed literal 0 for a
+    multi-finding REVISE). With article_text present, the gate must derive the
+    score deterministically from the surviving findings, never trusting the
+    erratic number — and never lowering it."""
+    article_text = "Авторська проза містить один зворот, що виступає доказом."
+    response = _register_response(
+        findings=[
+            {
+                "location": "Поетика",
+                "quote": "виступає",
+                "issue_type": "CALQUE",
+                "severity": "major",
+                "issue_description": "copula calque in prose",
+            }
+        ],
+        score=0,  # erratic gemini output
+        verdict="REVISE",
+    )
+    result = _parse_dim_result(
+        dim="register",
+        agent="gemini",
+        model="g",
+        response=response,
+        duration_s=1.0,
+        article_text=article_text,
+    )
+    # 1 prose major → table score 8 (PASS), not the erratic 0.
+    assert [f.quote for f in result.findings] == ["виступає"]
+    assert result.score == 8
+    assert result.verdict == "PASS"
+
+
 def test_register_score_from_findings_table() -> None:
     def mk(sev: str) -> Finding:
         return Finding(

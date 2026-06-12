@@ -470,15 +470,20 @@ def _apply_register_quote_exemption(
     if not article_text or not findings:
         return findings, score, verdict
     spans = find_attributed_verbatim_quote_spans(article_text)
-    if not spans:
-        return findings, score, verdict
     kept = [
         f
         for f in findings
-        if not _finding_quote_is_quote_exempt(f.quote, article_text, spans)
+        if not (spans and _finding_quote_is_quote_exempt(f.quote, article_text, spans))
     ]
-    if len(kept) == len(findings):
-        return findings, score, verdict
+    # The register score is a deterministic function of finding severities (the
+    # ``review_register.md`` table); gemini's returned number is unreliable —
+    # observed as a literal 0 for a 10-finding REVISE response on one run and 10
+    # for an equivalent article on another. Derive the score from the surviving
+    # findings, and never lower gemini's value (``max``), so the exemption +
+    # recompute only ever REMOVE penalty, never add it. This both honours the
+    # verbatim-quote exemption and stabilises register against the reviewer's
+    # holistic-score variance — and the never-lower guard keeps it safe for all
+    # tracks (a wiki another dim/track passed can never be failed by this step).
     new_score = max(score, _register_score_from_findings(kept))
     new_verdict = _register_verdict_from_score(new_score, kept)
     return kept, new_score, new_verdict
