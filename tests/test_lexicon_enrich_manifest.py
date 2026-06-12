@@ -3,8 +3,12 @@ import sqlite3
 
 from scripts.lexicon.enrich_manifest import (
     _build_paradigm,
+    _idioms_slovnyk,
     _meaning,
+    _merge_slovnyk_warning,
     _sense_correct_synonyms,
+    _synonyms_slovnyk,
+    _warning_slovnyk,
     clean_gloss,
     clean_html_entities,
 )
@@ -214,6 +218,101 @@ def test_synonyms_filter_polluted_wordnet_rows_to_a1_sense() -> None:
     ]
     assert not any(any("A" <= char <= "Z" or "a" <= char <= "z" for char in synonym) for synonym in all_synonyms)
     assert "жахливо" not in all_synonyms
+
+
+def test_slovnyk_synonyms_extract_known_garnyi_word() -> None:
+    cache = {
+        "lookups": {
+            "synonyms": {
+                "dictionary_slug": "synonyms",
+                "dictionary_label": "Словник синонімів української мови",
+                "source_url": "https://slovnyk.me/dict/synonyms/гарний",
+                "word": "гарний",
+                "text": (
+                    "гарний ГА́РНИЙ (про людину), КРАСИ́ВИЙ, "
+                    "ВРОДЛИ́ВИЙ (УРОДЛИ́ВИЙ), ХОРО́ШИЙ. Джерело: тест"
+                ),
+            },
+            "synonyms_karavansky": {
+                "dictionary_slug": "synonyms_karavansky",
+                "dictionary_label": "Словник синонімів Караванського",
+                "source_url": "https://slovnyk.me/dict/synonyms_karavansky/гарний",
+                "word": "гарний",
+                "text": "гарний Не поганий; (- вроду) вродливий, гожий, хороший. Джерело: тест",
+            },
+        }
+    }
+
+    section = _synonyms_slovnyk("гарний", cache)
+
+    assert section is not None
+    assert "красивий" in section["items"]
+    assert "вродливий" in section["items"]
+    assert "хороший" in section["items"]
+    assert "гарний" not in section["items"]
+    assert section["source"].startswith("slovnyk.me:")
+
+
+def test_slovnyk_idioms_extract_known_phrase_card() -> None:
+    cache = {
+        "lookups": {
+            "phraseology": {
+                "dictionary_slug": "phraseology",
+                "dictionary_label": "Фразеологічний словник української мови",
+                "source_url": "https://slovnyk.me/dict/phraseology/яблуко",
+                "word": "яблуко",
+                "text": (
+                    "яблуко я́блуко ро́збрату (чвар), книжн. "
+                    "Причина ворожнечі, суперечок, незгод між ким-небудь. Джерело: тест"
+                ),
+            }
+        }
+    }
+
+    section = _idioms_slovnyk("яблуко", cache)
+
+    assert section is not None
+    assert section["items"][0]["phrase"] == "яблуко розбрату (чвар), книжн"
+    assert "Причина ворожнечі" in section["items"][0]["definition"]
+
+
+def test_slovnyk_warning_merges_known_russianism_alternative() -> None:
+    cache = {
+        "lookups": {
+            "davydov": {
+                "dictionary_slug": "davydov",
+                "dictionary_label": "«Як ми говоримо» Антоненка-Давидовича",
+                "source_url": "https://slovnyk.me/dict/davydov/міроприємство",
+                "word": "міроприємство",
+                "text": (
+                    "міроприємство Міроприємство — захід, заходи "
+                    "Такого слова не було й нема в українській мові. Джерело: тест"
+                ),
+            }
+        }
+    }
+
+    warning = _warning_slovnyk("міроприємство", cache)
+    status = _merge_slovnyk_warning(
+        {
+            "classification": "unknown",
+            "attestations": [],
+            "is_russianism": False,
+            "russian_shadow": False,
+            "sovietization_risk": 0,
+            "calque_warning": None,
+        },
+        warning,
+    )
+
+    assert warning is not None
+    assert warning["alternatives"] == ["захід", "заходи"]
+    assert status["classification"] == "russianism"
+    assert status["is_russianism"] is True
+    assert any(
+        attestation["source"] == "standard_alternative" and attestation["ref"] == "захід"
+        for attestation in status["attestations"]
+    )
 
 
 def test_sum11_meaning_carries_source_sovietization_risk() -> None:

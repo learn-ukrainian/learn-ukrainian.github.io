@@ -10,6 +10,10 @@ no fabrication):
 - **meaning** — Грінченко 1907 (pre-Soviet, clean) preferred, СУМ-11 fallback
   (flagged, since it is partially Sovietised — issue #1659).
 - **synonyms** — source-attested, A1-sense allowlisted Ukrainian candidates only.
+- **sections.synonyms / sections.idioms** — slovnyk.me per-lemma lookup cache
+  (Караванський + Словник синонімів; Фразеологічний).
+- **heritage warning alternatives** — slovnyk.me correction dictionaries
+  (Антоненко-Давидович, «Неправильно-правильно», Штепа чужослів).
 - **etymology** — Goroh cached extracts first, ЕСУМ fallback, uk.wiktionary
   dump fallback for remaining single-word gaps
   (``data/sources.db``; deterministic local lookup only).
@@ -26,13 +30,20 @@ Run from the repo root (needs ``data/`` which is excluded from worktrees)::
 
 from __future__ import annotations
 
+import datetime as dt
 import html
 import json
 import re
 import sqlite3
 import sys
+import time
 import unicodedata
+from html.parser import HTMLParser
 from pathlib import Path
+from typing import Any
+from urllib.parse import quote
+
+import requests
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
@@ -42,11 +53,82 @@ from scripts.verification.vesum import verify_lemma
 
 MANIFEST = ROOT / "starlight" / "src" / "data" / "lexicon-manifest.json"
 SOURCES_DB = ROOT / "data" / "sources.db"
+SLOVNYK_CACHE = ROOT / "data" / "lexicon" / "slovnyk_cache"
 
 _CYRILLIC_WORD_CHARS = "A-Za-zА-Яа-яЄєІіЇїҐґ0-9'’ʼ-"
 _LATIN_RE = re.compile(r"[A-Za-z]")
 _UKRAINIAN_TEXT_RE = re.compile(r"^[А-Яа-яЄєІіЇїҐґ'’ʼ -]+$")
 _STRESS_MARK_RE = re.compile("[\u0300\u0301]")
+_NON_CACHE_CHARS_RE = re.compile(r"[^0-9A-Za-zА-Яа-яЄєІіЇїҐґ'’ʼ-]+")
+_SOURCE_TAIL_RE = re.compile(r"\s+Джерело:.*$", flags=re.IGNORECASE | re.DOTALL)
+_SLOVNYK_DELAY_SECONDS = 0.12
+_SLOVNYK_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup; issue #2985)"
+
+_SLOVNYK_DICT_LABELS: dict[str, str] = {
+    "synonyms": "Словник синонімів української мови",
+    "synonyms_karavansky": "Словник синонімів Караванського",
+    "phraseology": "Фразеологічний словник української мови",
+    "davydov": "«Як ми говоримо» Антоненка-Давидовича",
+    "voloschak": "Неправильно-правильно",
+    "foreign_shtepa": "Словник чужослів Павла Штепи",
+}
+_SLOVNYK_LOOKUP_SLUGS = tuple(_SLOVNYK_DICT_LABELS)
+_SLOVNYK_SYNONYM_SLUGS = ("synonyms", "synonyms_karavansky")
+_SLOVNYK_WARNING_SLUGS = ("davydov", "voloschak", "foreign_shtepa")
+_SLOVNYK_BASE = "https://slovnyk.me"
+_WARNING_CLASSIFICATIONS = {"russianism", "sovietism", "surzhyk"}
+
+_SYNONYM_LABEL_WORDS = {
+    "ант",
+    "див",
+    "діал",
+    "жм",
+    "з",
+    "заст",
+    "збірн",
+    "зневажл",
+    "ід",
+    "ім",
+    "кн",
+    "книжн",
+    "лайл",
+    "нар",
+    "перен",
+    "пестл",
+    "поет",
+    "пор",
+    "підсил",
+    "рідко",
+    "рідше",
+    "розм",
+    "син",
+    "фольк",
+}
+_WARNING_ALT_STOP_WORDS = {"див"}
+_SYNONYM_STOP_STARTS = {
+    "від",
+    "для",
+    "з",
+    "за",
+    "зі",
+    "із",
+    "коли",
+    "на",
+    "про",
+    "сл",
+    "у",
+    "який",
+    "яка",
+    "яке",
+    "які",
+    "як",
+}
+_SYNONYM_LABEL_RE = re.compile(
+    r"\b(" + "|".join(re.escape(word) for word in sorted(_SYNONYM_LABEL_WORDS, key=len, reverse=True)) + r")\.?\b",
+    flags=re.IGNORECASE,
+)
+
+_last_slovnyk_fetch = 0.0
 
 # Same-sense A1 allowlist. A synonym is emitted only when it is both present in
 # a source row and included here for the lemma's course gloss sense.
@@ -373,6 +455,476 @@ def _clean_html_entities_in_obj(value: object) -> object:
     if isinstance(value, dict):
         return {k: _clean_html_entities_in_obj(v) for k, v in value.items()}
     return value
+
+
+class _SlovnykArticleParser(HTMLParser):
+    """Extract only the dictionary article from a slovnyk.me direct-entry page."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.title_parts: list[str] = []
+        self.h1_parts: list[str] = []
+        self.article_parts: list[str] = []
+        self.canonical_url = ""
+        self._in_title = False
+        self._in_article_section = False
+        self._in_article = False
+        self._in_h1 = False
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attr = {key: value or "" for key, value in attrs}
+        if tag == "title":
+            self._in_title = True
+        if tag == "link" and attr.get("rel") == "canonical":
+            self.canonical_url = attr.get("href", "")
+        if tag == "section" and attr.get("id") in {"dictionary-acticle", "dictionary-article"}:
+            self._in_article_section = True
+        if tag == "article" and self._in_article_section:
+            self._in_article = True
+        if tag == "h1" and self._in_article:
+            self._in_h1 = True
+        if tag in {"p", "li", "br", "div", "h1", "h2", "h3", "small"} and self._in_article:
+            self.article_parts.append("\n")
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "title":
+            self._in_title = False
+        if tag == "h1":
+            self._in_h1 = False
+        if tag == "article" and self._in_article:
+            self._in_article = False
+        if tag == "section" and self._in_article_section:
+            self._in_article_section = False
+        if tag in {"p", "li", "br", "div", "h1", "h2", "h3", "small"} and self._in_article:
+            self.article_parts.append("\n")
+
+    def handle_data(self, data: str) -> None:
+        if self._in_title:
+            self.title_parts.append(data)
+        if self._in_article:
+            self.article_parts.append(data)
+        if self._in_h1:
+            self.h1_parts.append(data)
+
+
+def _strip_stress(text: str) -> str:
+    normalized = unicodedata.normalize("NFKD", clean_html_entities(str(text or "")))
+    normalized = _STRESS_MARK_RE.sub("", normalized)
+    return unicodedata.normalize("NFC", normalized)
+
+
+def _slovnyk_lookup_word(lemma: str) -> str:
+    return _lookup_key(lemma).strip(' .,…?!;:()[]{}«»"“”')
+
+
+def _slovnyk_cache_path(lemma: str) -> Path:
+    stem = _NON_CACHE_CHARS_RE.sub("-", _slovnyk_lookup_word(lemma)).strip("-")
+    return SLOVNYK_CACHE / f"{stem or 'empty'}.json"
+
+
+def _entry_text_without_headword(text: str, lemma: str, headword: str | None = None) -> str:
+    cleaned = clean_html_entities(text)
+    seen_candidates: set[str] = set()
+    for candidate in (headword, lemma, _slovnyk_lookup_word(lemma)):
+        if not candidate:
+            continue
+        normalized_candidate = _strip_stress(candidate).casefold()
+        if normalized_candidate in seen_candidates:
+            continue
+        seen_candidates.add(normalized_candidate)
+        pattern = re.compile(rf"^\s*{re.escape(_strip_stress(candidate))}\b", flags=re.IGNORECASE)
+        if pattern.search(_strip_stress(cleaned)):
+            cleaned = pattern.sub("", _strip_stress(cleaned), count=1).strip()
+    return cleaned
+
+
+def _truncate_text(text: str, limit: int) -> str:
+    cleaned = clean_html_entities(text)
+    if len(cleaned) <= limit:
+        return cleaned
+    return cleaned[: limit - 1].rstrip() + "…"
+
+
+def _parse_slovnyk_entry(
+    page_html: str,
+    *,
+    lemma: str,
+    lookup_word: str,
+    slug: str,
+    url: str,
+) -> dict[str, Any] | None:
+    parser = _SlovnykArticleParser()
+    parser.feed(page_html)
+    article_text = clean_html_entities(" ".join(parser.article_parts))
+    if not article_text:
+        return None
+    headword = clean_html_entities(" ".join(parser.h1_parts)) or lookup_word
+    title = clean_html_entities(" ".join(parser.title_parts)) or headword
+    return {
+        "dictionary_slug": slug,
+        "dictionary_label": _SLOVNYK_DICT_LABELS.get(slug, slug),
+        "word": headword,
+        "source_url": parser.canonical_url or url,
+        "title": title,
+        "text": _truncate_text(article_text, 5000),
+        "query": lemma,
+        "lookup_word": lookup_word,
+    }
+
+
+def _polite_slovnyk_delay() -> None:
+    global _last_slovnyk_fetch
+    if _last_slovnyk_fetch:
+        elapsed = time.monotonic() - _last_slovnyk_fetch
+        if elapsed < _SLOVNYK_DELAY_SECONDS:
+            time.sleep(_SLOVNYK_DELAY_SECONDS - elapsed)
+    _last_slovnyk_fetch = time.monotonic()
+
+
+def _fetch_slovnyk_entry(lemma: str, lookup_word: str, slug: str) -> dict[str, Any] | None:
+    _polite_slovnyk_delay()
+    url = f"{_SLOVNYK_BASE}/dict/{slug}/{quote(lookup_word)}"
+    try:
+        response = requests.get(
+            url,
+            timeout=20,
+            headers={"User-Agent": _SLOVNYK_USER_AGENT},
+        )
+        if response.status_code == 404:
+            return None
+        response.raise_for_status()
+    except requests.RequestException:
+        return None
+    return _parse_slovnyk_entry(
+        response.text,
+        lemma=lemma,
+        lookup_word=lookup_word,
+        slug=slug,
+        url=url,
+    )
+
+
+def _load_slovnyk_cache_file(path: Path) -> dict[str, Any] | None:
+    try:
+        cache = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    return cache if isinstance(cache, dict) else None
+
+
+def _slovnyk_cache(lemma: str) -> dict[str, Any]:
+    """Read or populate the one-file-per-lemma slovnyk.me cache."""
+    lookup_word = _slovnyk_lookup_word(lemma)
+    path = _slovnyk_cache_path(lemma)
+    cache = _load_slovnyk_cache_file(path)
+    if cache and cache.get("schema_version") == 1 and cache.get("lookup_word") == lookup_word:
+        lookups = cache.setdefault("lookups", {})
+    else:
+        cache = {
+            "schema_version": 1,
+            "lemma": lemma,
+            "lookup_word": lookup_word,
+            "fetched_at": dt.datetime.now(dt.UTC).replace(microsecond=0).isoformat(),
+            "lookups": {},
+        }
+        lookups = cache["lookups"]
+
+    changed = False
+    for slug in _SLOVNYK_LOOKUP_SLUGS:
+        if slug in lookups:
+            continue
+        lookups[slug] = _fetch_slovnyk_entry(lemma, lookup_word, slug) if lookup_word else None
+        changed = True
+
+    if changed or not path.exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(cache, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return cache
+
+
+def _cache_lookup(cache: dict[str, Any] | None, slug: str) -> dict[str, Any] | None:
+    if not isinstance(cache, dict):
+        return None
+    lookups = cache.get("lookups")
+    if not isinstance(lookups, dict):
+        return None
+    row = lookups.get(slug)
+    return row if isinstance(row, dict) and row.get("text") else None
+
+
+def _synonym_body(text: str, lemma: str, headword: str | None) -> str:
+    body = _SOURCE_TAIL_RE.sub("", _entry_text_without_headword(text, lemma, headword))
+    body = re.split(r"\)\.\s+", body, maxsplit=1)[0]
+    body = re.split(r"\s+[—–]\s+[А-ЯІЇЄҐA-Z]", body, maxsplit=1)[0]
+    body = re.sub(
+        r"\((?:про|який|яка|яке|які|на|зі сл\.|сл\.|від|для|у|в)\b[^)]*\)",
+        " ",
+        body,
+        flags=re.IGNORECASE,
+    )
+    body = re.sub(r"\([^)]*\)", " ", body)
+    return body
+
+
+def _clean_synonym_candidate(candidate: str, lemma: str) -> str | None:
+    term = _strip_stress(candidate)
+    term = term.replace("�", " ")
+    term = re.sub(r"<[^>]+>", " ", term)
+    term = term.replace("(", ",").replace(")", ",")
+    term = _SYNONYM_LABEL_RE.sub(" ", term)
+    term = re.sub(r"\s+", " ", term).strip()
+    term = term.strip(' \t\r\n.,;:!?/\\[]{}«»"“”<>')
+    term = term.casefold()
+    if not term or term in _BLOCKED_SYNONYMS:
+        return None
+    if _LATIN_RE.search(term) or not _UKRAINIAN_TEXT_RE.fullmatch(term):
+        return None
+    words = term.split()
+    if len(words) > 3 or words[0] in _SYNONYM_STOP_STARTS:
+        return None
+    for label in _SYNONYM_LABEL_WORDS:
+        if term == label or term.startswith(f"{label} "):
+            return None
+    for variant in _split_lemma_variants(_strip_stress(lemma)):
+        normalized_variant = variant.casefold()
+        if term == normalized_variant or _contains_whole_token(term, normalized_variant):
+            return None
+    return term
+
+
+def _synonyms_from_slovnyk_row(row: dict[str, Any], lemma: str) -> list[str]:
+    body = _synonym_body(str(row.get("text") or ""), lemma, str(row.get("word") or ""))
+    chunks = re.split(r"[,;/]", body)
+    out: list[str] = []
+    seen: set[str] = set()
+    for chunk in chunks:
+        for part in re.split(r"[()]", chunk):
+            term = _clean_synonym_candidate(part, lemma)
+            if term and term not in seen:
+                seen.add(term)
+                out.append(term)
+    return out
+
+
+def _synonyms_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[str, Any] | None:
+    """Synonym chips from slovnyk.me synonyms dictionaries, omitted when empty."""
+    cache = cache if cache is not None else _slovnyk_cache(lemma)
+    items: list[str] = []
+    seen: set[str] = set()
+    sources: list[str] = []
+    urls: list[str] = []
+    for slug in _SLOVNYK_SYNONYM_SLUGS:
+        row = _cache_lookup(cache, slug)
+        if not row:
+            continue
+        for synonym in _synonyms_from_slovnyk_row(row, lemma):
+            if synonym not in seen:
+                seen.add(synonym)
+                items.append(synonym)
+        sources.append(str(row.get("dictionary_label") or _SLOVNYK_DICT_LABELS[slug]))
+        if row.get("source_url"):
+            urls.append(str(row["source_url"]))
+    if not items:
+        return None
+    return {
+        "items": items[:24],
+        "source": "slovnyk.me: " + " + ".join(dict.fromkeys(sources)),
+        "source_urls": list(dict.fromkeys(urls)),
+    }
+
+
+def _split_idiom_text(text: str, lemma: str, headword: str | None) -> tuple[str, str] | None:
+    body = _SOURCE_TAIL_RE.sub("", _entry_text_without_headword(text, lemma, headword))
+    body = clean_html_entities(body).strip(" .")
+    if not body:
+        return None
+    match = re.match(r"(.{3,120}?\.)\s+(.+)", body, flags=re.DOTALL)
+    if match:
+        phrase = match.group(1).strip(" .")
+        definition = match.group(2).strip()
+    else:
+        words = body.split()
+        phrase = " ".join(words[: min(len(words), 8)]).strip(" .")
+        definition = " ".join(words[min(len(words), 8) :]).strip() or body
+    if not phrase:
+        return None
+    return phrase, _truncate_text(definition, 650)
+
+
+def _idioms_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[str, Any] | None:
+    """Phraseology card from the slovnyk.me Фразеологічний page."""
+    cache = cache if cache is not None else _slovnyk_cache(lemma)
+    row = _cache_lookup(cache, "phraseology")
+    if not row:
+        return None
+    split = _split_idiom_text(str(row.get("text") or ""), lemma, str(row.get("word") or ""))
+    if not split:
+        return None
+    phrase, definition = split
+    return {
+        "items": [
+            {
+                "phrase": phrase,
+                "definition": definition,
+                "source": str(row.get("dictionary_label") or _SLOVNYK_DICT_LABELS["phraseology"]),
+                "source_url": str(row.get("source_url") or ""),
+            }
+        ],
+        "source": "slovnyk.me: Фразеологічний словник української мови",
+        "source_urls": [str(row["source_url"])] if row.get("source_url") else [],
+    }
+
+
+def _warning_alternatives_from_row(row: dict[str, Any], lemma: str) -> list[str]:
+    text = _SOURCE_TAIL_RE.sub(
+        "", _entry_text_without_headword(str(row.get("text") or ""), lemma, str(row.get("word") or ""))
+    )
+    if not text:
+        return []
+    slug = str(row.get("dictionary_slug") or "")
+    if slug in {"davydov", "voloschak"}:
+        if slug == "davydov" and not re.search(
+            r"неправильно|російськ|кальк|відповідником|не було|не слід|не треба|краще",
+            text,
+            flags=re.IGNORECASE,
+        ):
+            return []
+        match = re.search(r"[—-]\s*([^.;:]+)", text)
+        if match:
+            text = match.group(1)
+        else:
+            match = re.search(r"\b(?:є|буде|кажемо|вживайте)\s+([^.;:]+)", text, flags=re.IGNORECASE)
+            if match:
+                text = match.group(1)
+    else:
+        text = re.split(r"[.;]", text, maxsplit=1)[0]
+    text = re.split(
+        r"\s+(?:Коли|Особовий|Російськ\w*|Українськ\w*|Слово|Такого|Відповідником)\b",
+        text,
+        maxsplit=1,
+    )[0]
+
+    out: list[str] = []
+    seen: set[str] = set()
+    for chunk in re.split(r"[,;/]|\s+або\s+|\s+чи\s+", text, flags=re.IGNORECASE):
+        term = _strip_stress(chunk).strip(' \t\r\n.,;:!?()[]{}«»"“”').casefold()
+        term = re.sub(r"\s+", " ", term)
+        if not term or term in _WARNING_ALT_STOP_WORDS:
+            continue
+        if term.startswith("див ") or _LATIN_RE.search(term) or not _UKRAINIAN_TEXT_RE.fullmatch(term):
+            continue
+        if len(term.split()) > 3:
+            continue
+        if term == _slovnyk_lookup_word(lemma).casefold():
+            continue
+        if term not in seen:
+            seen.add(term)
+            out.append(term)
+    return out[:6]
+
+
+def _warning_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[str, Any] | None:
+    """Wrong/foreign → Ukrainian correction from slovnyk.me warning dictionaries."""
+    cache = cache if cache is not None else _slovnyk_cache(lemma)
+    alternatives: list[str] = []
+    seen: set[str] = set()
+    evidence: list[dict[str, str]] = []
+    for slug in _SLOVNYK_WARNING_SLUGS:
+        row = _cache_lookup(cache, slug)
+        if not row:
+            continue
+        row_alternatives = _warning_alternatives_from_row(row, lemma)
+        if not row_alternatives:
+            continue
+        for alternative in row_alternatives:
+            if alternative not in seen:
+                seen.add(alternative)
+                alternatives.append(alternative)
+        evidence.append(
+            {
+                "source": str(row.get("dictionary_label") or _SLOVNYK_DICT_LABELS[slug]),
+                "url": str(row.get("source_url") or ""),
+                "detail": _truncate_text(str(row.get("text") or ""), 280),
+            }
+        )
+    if not alternatives:
+        return None
+    return {
+        "alternatives": alternatives,
+        "source": "slovnyk.me correction dictionaries",
+        "evidence": evidence,
+    }
+
+
+def _clear_unsourced_warning(status: dict[str, Any]) -> dict[str, Any]:
+    if not (status.get("is_russianism") or str(status.get("classification") or "") in _WARNING_CLASSIFICATIONS):
+        return status
+    clean_status = dict(status)
+    clean_status["classification"] = "unknown"
+    clean_status["is_russianism"] = False
+    clean_status["calque_warning"] = None
+    clean_status["attestations"] = [
+        attestation
+        for attestation in clean_status.get("attestations", [])
+        if not (
+            isinstance(attestation, dict)
+            and attestation.get("source") in {"standard_alternative", "lt_replacements", "heritage_spec"}
+        )
+    ]
+    return clean_status
+
+
+def _merge_slovnyk_warning(status: dict[str, Any], warning: dict[str, Any] | None) -> dict[str, Any]:
+    if not warning:
+        return _clear_unsourced_warning(status)
+    status = dict(status)
+    attestations = list(status.get("attestations") or [])
+    existing_alternatives = {
+        str(attestation.get("ref"))
+        for attestation in attestations
+        if isinstance(attestation, dict) and attestation.get("source") == "standard_alternative"
+    }
+    for alternative in warning.get("alternatives", []):
+        if alternative in existing_alternatives:
+            continue
+        attestations.append(
+            {
+                "source": "standard_alternative",
+                "ref": alternative,
+                "detail": "slovnyk.me correction dictionary alternative",
+            }
+        )
+    for row in warning.get("evidence", []):
+        if not isinstance(row, dict):
+            continue
+        attestations.append(
+            {
+                "source": "slovnyk_me_correction",
+                "ref": row.get("url") or row.get("source") or "slovnyk.me",
+                "detail": row.get("detail") or row.get("source") or "",
+            }
+        )
+    alternatives = list(dict.fromkeys(str(item) for item in warning.get("alternatives", []) if item))
+    classification = status.get("classification")
+    if classification not in _WARNING_CLASSIFICATIONS:
+        classification = "russianism"
+    status.update(
+        {
+            "classification": classification,
+            "attestations": attestations,
+            "is_russianism": True,
+            "calque_warning": {"standard_alternatives": alternatives},
+        }
+    )
+    return status
+
+
+def _is_slovnyk_warning_candidate(entry: dict[str, Any], status: dict[str, Any]) -> bool:
+    return bool(
+        entry.get("primary_source") == "surzhyk_to_avoid"
+        or status.get("is_russianism")
+        or str(status.get("classification") or "") in _WARNING_CLASSIFICATIONS
+    )
 
 
 def _morphology(lemma: str) -> dict | None:
@@ -823,7 +1375,25 @@ def enrich() -> tuple[int, int]:
             if entry.get("gloss"):
                 entry["gloss"] = clean_gloss(str(entry["gloss"]))
             lemma = entry["lemma"]
-            entry["heritage_status"] = classify_lemma(lemma)
+            slovnyk_cache = _slovnyk_cache(lemma)
+            heritage_status = classify_lemma(lemma)
+            warning = (
+                _warning_slovnyk(lemma, slovnyk_cache)
+                if _is_slovnyk_warning_candidate(entry, heritage_status)
+                else None
+            )
+            entry["heritage_status"] = _merge_slovnyk_warning(heritage_status, warning)
+            sections: dict[str, object] = {}
+            synonyms = _synonyms_slovnyk(lemma, slovnyk_cache)
+            if synonyms:
+                sections["synonyms"] = synonyms
+            idioms = _idioms_slovnyk(lemma, slovnyk_cache)
+            if idioms:
+                sections["idioms"] = idioms
+            if sections:
+                entry["sections"] = sections
+            else:
+                entry.pop("sections", None)
             block: dict[str, object] = {}
             morph = _morphology(lemma)
             if morph:
@@ -838,20 +1408,21 @@ def enrich() -> tuple[int, int]:
             if etym:
                 block["etymology"] = etym
             if block:
-                block["sources"] = sorted(
-                    {v["source"] for v in block.values() if isinstance(v, dict) and v.get("source")}
-                )
+                sources = {v["source"] for v in block.values() if isinstance(v, dict) and v.get("source")}
+                for section in sections.values():
+                    if isinstance(section, dict) and section.get("source"):
+                        sources.add(str(section["source"]))
+                block["sources"] = sorted(sources)
                 entry["enrichment"] = block
-                enriched += 1
             else:
                 entry.pop("enrichment", None)
+            if block or sections:
+                enriched += 1
     finally:
         conn.close()
     manifest["enrichment_generated"] = True
     manifest = _clean_html_entities_in_obj(manifest)
-    MANIFEST.write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
+    MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return enriched, len(manifest["entries"])
 
 
@@ -860,8 +1431,7 @@ def main() -> None:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     etymology_covered, etymology_total = _single_word_etymology_coverage(manifest)
     print(
-        f"enriched {enriched}/{total} lexicon entries from "
-        "VESUM + Грінченко/СУМ + Горох/ЕСУМ/Вікісловник"
+        f"enriched {enriched}/{total} lexicon entries from VESUM + Грінченко/СУМ + Горох/ЕСУМ/Вікісловник + slovnyk.me"
     )
     print(f"single-word etymology {etymology_covered}/{etymology_total}")
 

@@ -32,7 +32,14 @@ DEFAULT_MANIFEST = PROJECT_ROOT / "starlight" / "src" / "data" / "lexicon-manife
 DEFAULT_VESUM = PROJECT_ROOT / "data" / "vesum.db"
 DEFAULT_CURRICULUM = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
 
-SOURCE_REQUIRED_SECTIONS = ("meaning", "attestation", "etymology", "morphology")
+SOURCE_REQUIRED_SECTIONS = (
+    "meaning",
+    "attestation",
+    "etymology",
+    "morphology",
+    "synonyms",
+    "idioms",
+)
 NON_STANDARD_AUTHENTIC_CLASSIFICATIONS = {
     "archaism",
     "authentic-archaism",
@@ -250,12 +257,23 @@ def _enrichment(entry: Mapping[str, Any]) -> Mapping[str, Any]:
     return enrichment if isinstance(enrichment, Mapping) else {}
 
 
+def _atlas_sections(entry: Mapping[str, Any]) -> Mapping[str, Any]:
+    sections = entry.get("sections")
+    return sections if isinstance(sections, Mapping) else {}
+
+
+def _section_container(entry: Mapping[str, Any]) -> dict[str, Any]:
+    merged: dict[str, Any] = dict(_enrichment(entry))
+    merged.update(_atlas_sections(entry))
+    return merged
+
+
 def _non_empty_str(value: object) -> bool:
     return isinstance(value, str) and bool(value.strip())
 
 
 def _check_provenance(entry: Mapping[str, Any], lemma: str, violations: list[Violation]) -> None:
-    enrichment = _enrichment(entry)
+    enrichment = _section_container(entry)
     for section_name in SOURCE_REQUIRED_SECTIONS:
         if section_name not in enrichment:
             continue
@@ -310,11 +328,23 @@ def _section_has_content(section_name: str, section: object) -> bool:
         return _list_has_content(section.get("forms")) or _mapping_has_content(section.get("paradigm"))
     if section_name in {"attestation", "etymology"}:
         return _non_empty_str(section.get("text"))
+    if section_name == "synonyms":
+        return _list_has_content(section.get("items"))
+    if section_name == "idioms":
+        items = section.get("items")
+        if not isinstance(items, list):
+            return False
+        return any(
+            isinstance(item, Mapping)
+            and _non_empty_str(item.get("phrase"))
+            and _non_empty_str(item.get("definition"))
+            for item in items
+        )
     return True
 
 
 def _check_empty_sections(entry: Mapping[str, Any], lemma: str, violations: list[Violation]) -> None:
-    enrichment = _enrichment(entry)
+    enrichment = _section_container(entry)
     for section_name in SOURCE_REQUIRED_SECTIONS:
         if section_name not in enrichment:
             continue
