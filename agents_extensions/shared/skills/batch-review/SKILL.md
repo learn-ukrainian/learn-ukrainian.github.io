@@ -41,6 +41,13 @@ List the modules to review and any skipped modules.
 
 ## Dispatch Subagents (Max 4 Parallel)
 
+> **Reviewer-seat economics guard** (`rules/model-assignment.md`): each `Agent`-tool subagent reloads the full
+> project (~2–3M tokens) for its verdict, so it is ~50–150× the cost of an inline review. For a **single
+> module or a small batch (≤3), review INLINE** in this session (or defer to next session if context is heavy) —
+> do NOT spawn subagents. Subagents here are justified ONLY for a **genuinely large batch** where wall-clock +
+> context-overflow outweigh the per-subagent reload. When in doubt, prefer non-Claude dispatched reviewers
+> (DeepSeek/Codex) for the bulk and keep the Claude seat in-session.
+
 Split the reviewable modules into chunks of 2-3 modules each.
 Spawn up to 4 subagents using the Agent tool, each processing its chunk.
 
