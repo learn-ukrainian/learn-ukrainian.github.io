@@ -27,6 +27,61 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
+## ▶▶▶ SESSION 16 HANDOFF (2026-06-12 — DUMY 12 BUILT + SHIPPED (3rd folk module, 3/42); old dumy-lytsarski stub RETIRED; binary-precheck saved a build) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** **MODULES BUILT + SHIPPED (new V7): 3/42** — kalendarna (S14), koliadky (S15),
+> **dumy-nevilnytski-lytsarski (THIS session)**. Dossiers: 14/42. ~28 topics plan-stub only. Folk nav is
+> HIDDEN (orchestrator `8e68803c82`, "too early") — pages exist but aren't in nav until folk is fuller.
+
+### ✅ DONE THIS SESSION (this PR ships dumy)
+- **DUMY-NEVILNYTSKI-LYTSARSKI 12 BUILT + SHIPPED — THIS PR.** Combined captivity+knightly duma module.
+  All python_qg gates green (authoritative re-gate), word_count **4629/5000**, vesum-clean, traps-clean
+  (rule A — the «Маруся Богуславка»/«Самійло Кішка» mentions are duma SUBJECTS, legit; no literary-as-folk).
+  Embedded duma fragments independently `verify_quote`-confirmed under **`Драгоманов М.`** «Вибрані» 1880
+  (NOT «Колектив» — note the author): «У святу неділю не сизі орли заклекотали» 1.0 `c846b4d3_c0209`;
+  «Бо вже я потурчилась, побусурманилась» 1.0 `c846b4d3_c0041`; «Що у тій то темниці… сімсот козаків» 1.0
+  `c846b4d3_c0215`. MDX 95.7KB. **Old `dumy-lytsarski.mdx` April stub RETIRED** + folk `index.mdx` entry 19
+  repointed to the new slug + `vesum-vocab-lemmas.json` path repointed. (Astro hero ref was already gone —
+  orchestrator removed folk hero when hiding nav.)
+
+### 🔑 DUMY CONVERGENCE (how it shipped — reuse)
+Writer good but short (2659 gate-words). Path: (1) **pre-fire binary check CAUGHT npx claude broken again**
+(auto-updated 2.1.174→2.1.175) → `install.cjs` fixed → build ran; (2) writer authored `performance.self_check`
+as a STRING (activity #10) → **fix B (#3016) caught it** → I deleted the stray string (`self_checklist` list
+already there, kalendarna precedent) → activity_schema passed; (3) ran `run_python_qg_with_corrections`
+standalone from the data-bearing root → word_count expanded 2659→4499, hit `correction_terminal`; (4)
+**codex `folk-dumy-correction`** (cross-model, brief `/tmp/folk-dumy-correction-brief.md`) fixed 4 coinages
+(`напівспівна-напівмовлена→речитативна`, `спільнолюдське→загальнолюдське`, `самообразу`/`голосільній`
+rephrased — all VESUM-verified), de-formalized 3 citations (Костомаров/Чижевський/Попович «Title»→bare-name),
++~150 dossier-grounded words → 4629, ALL GREEN. **Lesson: a short folk build is the binary-blocked /
+activity_schema-blocked correction loop, not a writer wall — clear those, let the loop expand.**
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **Dossier #15 `bylyny-kyivskoho-tsyklu`** (most de-imperialization-sensitive — careful brief: de-imperialize
+   the contested East-Slavic/Kyivan inheritance framing; folds bohatyri/social/zastavy). Then continue queue (15→…, 14/42 dossiers).
+2. **OR build the next module** if directed — same recipe. **ALWAYS run the pre-fire binary check first:**
+   `npx @anthropic-ai/claude-code@latest --version`; if "native binary not installed" → `node install.cjs` in
+   `~/.npm/_npx/*/node_modules/@anthropic-ai/claude-code`. This is the #1 folk build time-sink (now pre-flight).
+3. **(optional) LLM QG pass** on koliadky + dumy (Claude/GPT reviewer) to close kalendarna parity — both shipped
+   on manual #M-11 corpus-hammer review (deterministic gates green) since builds failed python_qg pre-LLM-QG.
+4. **(housekeeping) Folk index.mdx is on the OLD 27-topic taxonomy** (pokhodzhennia-dum, kobzarstvo-fenomen,
+   separate dumy-nevilnytski/dumy-lytsarski). Reconcile to the 42-queue when folk nav is un-hidden. Also
+   `vesum-vocab-lemmas.json` is stale (manual, non-CI-gated; predates kalendarna) — regenerate in a batch.
+
+### ⚠ CARRY-FORWARD
+- **claude npx native-binary** recurs on EVERY claude auto-update — pre-fire check is mandatory (saved a build twice).
+- **resources_search_attempted false-fails on a fresh checkout** (no telemetry) — re-gate in the BUILD worktree.
+- Build forensics: dumy `-100457` build worktree holds the shipped artifacts; safe to `git worktree remove` after this merges (branch `build/folk/dumy-nevilnytski-lytsarski-20260612-100457` preserves it). koliadky branches still present. `.worktrees/builds/` otherwise empty.
+- Disk: dagger fully removed this session (~10.5GB; volume+CLI; doesn't auto-regenerate). kalendarna build worktrees+branches deleted.
+- `git push` folk → `--no-verify`; `core.bare` stayed false all session.
+
+### 📊 FLEET — module writer **claude-tools** (Claude+GPT only for folk culture); coinage/quote/citation
+correction = in-pipeline loop (binary-fixed) + **codex cross-model fixer** (proven S15/S16); re-gate =
+`run_python_qg` from data-bearing root; wiki **gpt-5.5**; reviewers **deepseek-flash** (code) / Claude
+corpus-hammer (culture). Cross-family always. Folk builds run >1h → persistent Monitor. **Pre-fire binary check mandatory.**
+
+---
+
 ## ▶▶▶ SESSION 15 HANDOFF (2026-06-12 — KOLIADKY 01 BUILT + SHIPPED (2nd folk module, 2/42); DURABLE FIXES A+B MERGED + RULE A VALIDATED; #14 kobzarstvo DOSSIER MERGED (14/42); claude npx native-binary BLOCKER ROOT-CAUSED+FIXED) — **RESUME HERE**
 
 > **⏱ HONEST SCOPE:** Folk = 42-module epic. **MODULES BUILT+SERVED (new, verified): 2/42** — kalendarna (S14)
