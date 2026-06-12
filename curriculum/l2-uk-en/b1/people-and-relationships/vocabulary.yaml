@@ -1,0 +1,328 @@
+- lemma: зовнішність
+  translation: appearance
+  pos: noun
+  usage: Зовнішність людини описують делікатно й точно.
+- lemma: портрет
+  translation: portrait
+  pos: noun
+  usage: Портрет може показувати не тільки вигляд, а й характер.
+- lemma: портретна лексика
+  translation: portrait vocabulary
+  pos: noun phrase
+  usage: Портретна лексика охоплює зріст, поставу, обличчя, волосся й погляд.
+- lemma: портретна деталь
+  translation: portrait detail
+  pos: noun phrase
+  usage: Старий годинник став портретною деталлю в описі Павла.
+- lemma: зріст
+  translation: height
+  pos: noun
+  usage: Він середнього зросту й має рівну поставу.
+- lemma: постава
+  translation: posture, bearing
+  pos: noun
+  usage: Рівна постава справляє спокійне враження.
+- lemma: статура
+  translation: build, physique
+  pos: noun
+  usage: У портреті можна описати статуру без грубої оцінки.
+- lemma: обличчя
+  translation: face
+  pos: noun
+  usage: У неї відкрите рум'яне обличчя.
+- lemma: погляд
+  translation: gaze, look
+  pos: noun
+  usage: У дідуся лагідний погляд.
+- lemma: міміка
+  translation: facial expression
+  pos: noun
+  usage: Міміка часто показує настрій людини.
+- lemma: жести
+  translation: gestures
+  pos: noun plural
+  usage: Його жести спокійні й стримані.
+- lemma: хода
+  translation: gait
+  pos: noun
+  usage: У Марка швидка впевнена хода.
+- lemma: русявий
+  translation: fair-haired, light brown-haired
+  pos: adjective
+  usage: У хлопця русяве волосся.
+- lemma: каштановий
+  translation: chestnut-colored
+  pos: adjective
+  usage: У Софії коротке каштанове волосся.
+- lemma: кучерявий
+  translation: curly
+  pos: adjective
+  usage: Кучеряве волосся одразу впадає в очі.
+- lemma: хвилястий
+  translation: wavy
+  pos: adjective
+  usage: У неї хвилясте темне волосся.
+- lemma: сивий
+  translation: gray-haired
+  pos: adjective
+  usage: Сиве волосся надає обличчю м'якості.
+- lemma: смаглявий
+  translation: swarthy, dark-complexioned
+  pos: adjective
+  usage: Смагляве обличчя виділялося на світлій фотографії.
+- lemma: рум'яний
+  translation: rosy
+  pos: adjective
+  usage: Рум'яне обличчя робило її молодшою.
+- lemma: блідий
+  translation: pale
+  pos: adjective
+  usage: Після хвороби він був блідий і втомлений.
+- lemma: худорлявий
+  translation: slim, lean
+  pos: adjective
+  usage: Павло високий і худорлявий.
+- lemma: кремезний
+  translation: sturdy, stocky
+  pos: adjective
+  usage: Кремезний чоловік стояв біля дверей.
+- lemma: тендітний
+  translation: delicate, slender
+  pos: adjective
+  usage: Тендітна постава не заважала їй бути сильною.
+- lemma: стрункий
+  translation: slender, upright
+  pos: adjective
+  usage: Вона струнка й рухається дуже легко.
+- lemma: приземкуватий
+  translation: squat, short and stocky
+  pos: adjective
+  usage: Приземкуватий будівельник мав широченні плечі.
+- lemma: широкоплечий
+  translation: broad-shouldered
+  pos: adjective
+  usage: Мій брат широкоплечий і кремезний.
+- lemma: виразний
+  translation: expressive
+  pos: adjective
+  usage: У неї виразні очі й жива міміка.
+- lemma: щирий
+  translation: sincere
+  pos: adjective
+  usage: Щира людина не приховує справжніх почуттів.
+- lemma: лагідний
+  translation: gentle
+  pos: adjective
+  usage: Лагідний голос заспокоїв дитину.
+- lemma: чуйний
+  translation: responsive, empathetic
+  pos: adjective
+  usage: Чуйна подруга помічає, коли тобі важко.
+- lemma: кмітливий
+  translation: quick-witted
+  pos: adjective
+  usage: Кмітливий учень швидко знайшов рішення.
+- lemma: стриманий
+  translation: reserved, restrained
+  pos: adjective
+  usage: Стримана людина не перебиває співрозмовника.
+- lemma: товариський
+  translation: sociable
+  pos: adjective
+  usage: Товариський сусід легко знайомиться з новими людьми.
+- lemma: відповідальний
+  translation: responsible
+  pos: adjective
+  usage: Відповідальний колега виконує обіцянки.
+- lemma: працьовитий
+  translation: hardworking
+  pos: adjective
+  usage: Працьовита родина багато зробила для громади.
+- lemma: наполегливий
+  translation: persistent
+  pos: adjective
+  usage: Наполеглива студентка не кинула складне завдання.
+- lemma: справедливий
+  translation: fair, just
+  pos: adjective
+  usage: Справедливий керівник слухає обидві сторони.
+- lemma: вередливий
+  translation: capricious
+  pos: adjective
+  usage: Вередлива людина часто невдоволена дрібницями.
+- lemma: упертий
+  translation: stubborn
+  pos: adjective
+  usage: Упертий співрозмовник не завжди чує аргументи.
+- lemma: замкнутий
+  translation: withdrawn
+  pos: adjective
+  usage: Замкнутий підліток мало розповідав про себе.
+- lemma: самовпевнений
+  translation: overconfident
+  pos: adjective
+  usage: Самовпевнений учасник не слухав порад команди.
+- lemma: нетерплячий
+  translation: impatient
+  pos: adjective
+  usage: Нетерплячий клієнт говорив різко.
+- lemma: балакучий
+  translation: talkative
+  pos: adjective
+  usage: Балакучий дядько швидко оживив застілля.
+- lemma: заздрісний
+  translation: envious
+  pos: adjective
+  usage: Заздрісна реакція зіпсувала розмову.
+- lemma: родина
+  translation: family
+  pos: noun
+  usage: У нашій родині люблять довгі розмови за столом.
+- lemma: родич
+  translation: relative
+  pos: noun
+  usage: На весілля приїхали близькі й далекі родичі.
+- lemma: близькі родичі
+  translation: close relatives
+  pos: noun phrase
+  usage: Близькі родичі першими привітали молодят.
+- lemma: далекі родичі
+  translation: distant relatives
+  pos: noun phrase
+  usage: Далеких родичів я бачу тільки на великих святах.
+- lemma: подружжя
+  translation: married couple
+  pos: noun
+  usage: Молоде подружжя знайомило гостей між собою.
+- lemma: двоюрідний брат
+  translation: male cousin
+  pos: noun phrase
+  usage: Мій двоюрідний брат живе в Чернівцях.
+- lemma: двоюрідна сестра
+  translation: female cousin
+  pos: noun phrase
+  usage: Двоюрідна сестра допомогла мені з переїздом.
+- lemma: племінник
+  translation: nephew
+  pos: noun
+  usage: Племінник сестри навчається в ліцеї.
+- lemma: племінниця
+  translation: niece
+  pos: noun
+  usage: Племінниця намалювала портрет бабусі.
+- lemma: свекруха
+  translation: husband's mother
+  pos: noun
+  usage: Свекруха запросила всіх на обід.
+- lemma: свекор
+  translation: husband's father
+  pos: noun
+  usage: Свекор розповів історію родини.
+- lemma: теща
+  translation: wife's mother
+  pos: noun
+  usage: Теща зустріла гостей біля воріт.
+- lemma: тесть
+  translation: wife's father
+  pos: noun
+  usage: Тесть допоміг молодому подружжю з ремонтом.
+- lemma: зять
+  translation: son-in-law
+  pos: noun
+  usage: Зять подякував батькам дружини.
+- lemma: невістка
+  translation: daughter-in-law, brother's wife
+  pos: noun
+  usage: Невістка добре знає родинні традиції.
+- lemma: стосунки
+  translation: interpersonal relationships
+  pos: noun plural
+  usage: У мене добрі стосунки з братом.
+- lemma: взаємини
+  translation: mutual relations
+  pos: noun plural
+  usage: У команді здорові взаємини.
+- lemma: ставлення
+  translation: attitude
+  pos: noun
+  usage: Моє ставлення до суперечок змінилося.
+- lemma: відносини
+  translation: formal relations
+  pos: noun plural
+  usage: Міжнародні відносини належать до офіційного стилю.
+- lemma: довіра
+  translation: trust
+  pos: noun
+  usage: Довіра з'являється не відразу.
+- lemma: повага
+  translation: respect
+  pos: noun
+  usage: Повага тримає родинні стосунки.
+- lemma: підтримка
+  translation: support
+  pos: noun
+  usage: У важкі моменти потрібна підтримка близьких.
+- lemma: суперечка
+  translation: argument, dispute
+  pos: noun
+  usage: Суперечка не обов'язково руйнує стосунки.
+- lemma: примирення
+  translation: reconciliation
+  pos: noun
+  usage: Після щирої розмови настало примирення.
+- lemma: дружити
+  translation: to be friends
+  pos: verb
+  usage: Вони дружать ще зі школи.
+- lemma: товаришувати
+  translation: to be companions, to socialize
+  pos: verb
+  usage: Сусіди давно товаришують родинами.
+- lemma: довіряти
+  translation: to trust
+  pos: verb
+  usage: Я довіряю людям, які тримають слово.
+- lemma: підтримувати
+  translation: to support
+  pos: verb
+  usage: Родина підтримує мене в навчанні.
+- lemma: сваритися
+  translation: to quarrel
+  pos: verb
+  usage: Близькі люди іноді сваряться через дрібниці.
+- lemma: миритися
+  translation: to make peace
+  pos: verb
+  usage: Після суперечки треба вміти миритися.
+- lemma: знайомство
+  translation: acquaintance, introduction
+  pos: noun
+  usage: Знайомство почалося з короткого представлення.
+- lemma: відрекомендуватися
+  translation: to introduce oneself formally
+  pos: verb
+  usage: Дозвольте відрекомендуватися, мене звати Олена.
+- lemma: представити
+  translation: to introduce someone
+  pos: verb
+  usage: Дозвольте представити вам мого колегу.
+- lemma: посередник
+  translation: intermediary
+  pos: noun
+  usage: Якщо є посередник, він представляє людей одне одному.
+- lemma: кличний відмінок
+  translation: vocative case
+  pos: noun phrase
+  usage: У звертанні Андрій має форму Андрію.
+- lemma: зачин
+  translation: opening
+  pos: noun
+  usage: У зачині назви, хто ця людина.
+- lemma: основна частина
+  translation: main body
+  pos: noun phrase
+  usage: В основній частині опиши зовнішність і поведінку.
+- lemma: кінцівка
+  translation: ending
+  pos: noun
+  usage: У кінцівці дай загальне враження.
