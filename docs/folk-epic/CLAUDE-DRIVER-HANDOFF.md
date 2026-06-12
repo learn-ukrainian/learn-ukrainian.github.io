@@ -27,7 +27,58 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 17 HANDOFF (2026-06-12 — DOSSIER #15 bylyny-kyivskoho-tsyklu WRITTEN + CORPUS-HAMMERED + SHIPPED (15/42 dossiers); + WIKI-COMPILE grounding/register gap FOUND → wiki backlog BLOCKED on durable fix) — **RESUME HERE**
+## ▶▶▶ SESSION 18 HANDOFF (2026-06-12 — WIKI-COMPILE DURABLE FIX BUILT + VALIDATED (register FIXED + made deterministic, registry-seeding WORKS, quote-exemption wired, citation rule); but source_grounding convergence is STOCHASTIC ~6 → still 0/6 wikis closed) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** Modules 3/42, dossiers 15/42 (unchanged). **Wikis closed THIS session: 0/6.** I built +
+> validated the durable wiki-compile fix (PR #3036) the user asked for ("close the wikis first"), but a single
+> compile run does NOT reliably pass all 4 gates — `register` is now fixed+deterministic, but `source_grounding`
+> sits stochastically at ~6 for dense folk prose. **The infra is materially better; the wikis are not yet shipped.**
+> Don't claim the wikis are closed.
+
+### ✅ DONE THIS SESSION — PR #3036 (durable wiki-compile fix; codex impl + Claude adversarial review + hardening)
+- **`register`: FIXED.** (a) Writer discipline in `compile_article.md` (`вербатимний→дослівний`, `приближення`,
+  copula-calque, russianism list) → a clean run scored **register PASS 10** (was REJECT 5). (b) **Verbatim-quote
+  exemption wired DETERMINISTICALLY** into `review.py::_parse_dim_result` (not just the stochastic gemini prompt —
+  mirrors module #2998): attributed `«…»`/blockquote russianisms are dropped + the score re-derived. (c) **Register
+  score made DETERMINISTIC** from finding-severities (the `review_register.md` table), `max()`-guarded so it never
+  lowers another track's score — kills the gemini holistic-score variance (observed a literal `0` for a 10-finding
+  REVISE). 34 wiki tests + **720 review/compile tests** green; ruff clean. Helper `register_quote_exemption.py`.
+- **Registry under-retrieval: FIXED.** `compiler.py::_seed_sources_from_dossier` parses the dossier's cited
+  `*_cNNNN` chunk_ids and merges those exact chunks into the source set before `[S#]` assignment (no-dossier =
+  no-op; exact-cited-only, never fuzzy-widened). Validated: bylyny registry **6 → 27 sources** (Чижевський c0163,
+  Попович c0176, etc. now reach the writer). `source_grounding` reviewer now says claims are "sourceable from S#".
+- **Citation-completeness rule** added to `compile_article.md` targeting the residual `source_grounding` failure
+  (writer dropping inline `[S#]` on synthesis/interpretation/first-sentence claims).
+
+### 🧱 THE REMAINING HARD GATE — `source_grounding` ~6 (stochastic), the real wiki-closer blocker
+Two full e2e recompiles of bylyny with the fix: run A = register PASS 10 / **sg 6**; run B = register flap (now
+deterministic) / **sg 6**. `source_grounding` (codex reviewer, strict) persistently flags ~6-7 substantive claims
+as **missing an inline `[S#]`** even though they're sourceable from the (now-seeded) registry — the writer
+stochastically under-cites dense prose, and the 2-round fix-loop doesn't fully close it. **Seeding made the sources
+available; the writer still has to USE them, and does so unreliably.** This is the genuine remaining problem.
+
+### ▶ NEXT ACTIONS (RESUME HERE — fresh context recommended; source_grounding needs careful work)
+1. **Converge `source_grounding` for folk wikis.** Pick the durable lever (NOT prompt-only — it didn't converge):
+   (a) **bump review rounds** for SEMINAR_LEVELS (`review.py MAX_ROUNDS`) so the reviewer's citation-adding
+   find/replace fixes fully apply; and/or (b) a **deterministic citation-completeness post-pass** (for each uncited
+   substantive sentence, the reviewer already names the supporting S#; apply those inserts); and/or (c) accept
+   **retry-until-green** (gates guarantee quality — re-fire compile until a run passes all 4). Validate on bylyny
+   (the fixture; data/ symlink trick: `ln -s <root>/data <worktree>/data`, run `compile.py … --force --review` from
+   the worktree).
+2. **Then recompile the 6 wikis sequentially** (#M-9): bylyny, kobzarstvo-lirnytstvo, dumy-sotsialno-pobutovi,
+   holosinnya, vesilni-pisni, zhnyvarski-obzhynkovi-pisni → corpus-hammer each → ship.
+3. **OR dossier #16 `istorychni-pisni`** (unblocked queue-advancing path) if wikis stall.
+
+### ⚠ CARRY-FORWARD
+- **PR #3036 is the durable fix** — correct + tested + never-regresses (register never-lowered, no-dossier no-op).
+  It does NOT by itself make a wiki pass all gates (source_grounding stochastic). Merge it (it's a real improvement
+  + prerequisite); closing wikis is the follow-up.
+- `register` is now deterministic → no more 10↔0 gemini flapping; the gate reflects actual findings.
+- Build forensics: the `codex/folk-wiki-compile-durable-fix` worktree + a `data/` symlink hold the bylyny recompile
+  fixture; remove the symlink before `git worktree remove`.
+- `git push` folk → `--no-verify`; `core.bare` stayed false.
+
+## ▶▶▶ SESSION 17 HANDOFF (2026-06-12 — DOSSIER #15 bylyny-kyivskoho-tsyklu WRITTEN + CORPUS-HAMMERED + SHIPPED (15/42 dossiers); + WIKI-COMPILE grounding/register gap FOUND → wiki backlog BLOCKED on durable fix) — (superseded by Session 18)
 
 > **⏱ HONEST SCOPE:** Modules built+shipped (new V7): **3/42** (kalendarna, koliadky, dumy — unchanged this
 > session). Dossiers: **15/42** (bylyny added THIS session). ~27 topics plan-stub only. Folk nav still HIDDEN
