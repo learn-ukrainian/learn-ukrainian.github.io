@@ -27,7 +27,66 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 16 HANDOFF (2026-06-12 — DUMY 12 BUILT + SHIPPED (3rd folk module, 3/42); old dumy-lytsarski stub RETIRED; binary-precheck saved a build) — **RESUME HERE**
+## ▶▶▶ SESSION 17 HANDOFF (2026-06-12 — DOSSIER #15 bylyny-kyivskoho-tsyklu WRITTEN + CORPUS-HAMMERED + SHIPPED (15/42 dossiers); the most de-imperialization-sensitive topic, framed honestly) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** Modules built+shipped (new V7): **3/42** (kalendarna, koliadky, dumy — unchanged this
+> session). Dossiers: **15/42** (bylyny added THIS session). ~27 topics plan-stub only. Folk nav still HIDDEN
+> (orchestrator `8e68803c82`). This session = ONE dossier (research layer), no new module.
+
+### ✅ DONE THIS SESSION (this PR ships the bylyny dossier)
+- **DOSSIER #15 `bylyny-kyivskoho-tsyklu` WRITTEN (codex/gpt-5.5, ~16min) + CORPUS-HAMMER REVIEWED + SHIPPED.**
+  The most RU-appropriated genre («русский эпос») — got the framing exactly right. 37KB, all 10 schema sections
+  + multimodal block. **De-imperialization is exemplary:** §4 uses a 4-status table (Ukrainian-pedagogical /
+  documentary-attestation / North-Russian-do-not-quote / epistemic-safeguard) that NEVER passes off
+  North-Russian-recorded bylyny as Ukrainian folk verbatim; §2/§7/§9 are honest that the Old-Kyivan Ukrainian
+  variants are LOST (Попович «ці твори безнадійно втрачені») without the mirror-imperial over-claim; surfaces
+  the scholarly DISAGREEMENT (Костомаров's "чисто великоруський" position vs Драгоманов/Петров/Дашкевич, via
+  Антонович). Anti-hagiography + terminology hygiene (Old East Slavic, not "Old Russian") + global-synchronicity
+  (Iliad/Kalevala/Manas) all present.
+- **CORPUS-HAMMER (independent, #M-11 — not self-report):** 4 load-bearing/novel chunk_ids ALL verified genuine +
+  accurately represented — Попович `68ba0555_c0176` (lost-variants anchor), Антонович `2971c499_c0635`
+  (source-disagreement goldmine), Чижевський `fbf8bdff_c0163` (Кміта 1574/Лясота 1594/Сарніцький 1585 documentary
+  chain). `verify_quote(Самчук)` → 1.0 `efaf690e_c0219`. 5 independent `check_russian_shadow` on prose words I
+  picked (not the writer's) all clean. **Zero fabrication.** Minor note: `wikipedia:Іліада:chunk_0` is wiki-sourced
+  (not sources.db) — fine for the illustrative analogy.
+
+### 🔑 BYLYNY FRAMING INSIGHT (reuse for any RU-contested folk topic — historical songs, kobzar, etc.)
+The decolonization win was NOT "prove the texts are purely Ukrainian" (impossible — they don't survive in Ukrainian,
+and claiming so is itself a nationalist over-claim that fails the rubric). It was the HONEST formula: Ukrainian
+content/topographic centre + verbatim survivals are North-Russian recordings + Old-Kyivan variants lost + the
+tradition continued in OTHER genres (думи/балади/колядки). The §4 status-table that separates quote-statuses is the
+reusable device. Pre-grounding the brief with my own corpus probe (exact chunk_ids + the §4 honesty protocol) is
+what made codex produce a clean first pass — no correction loop needed.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **Dossier #16 `istorychni-pisni`** (historical SONGS — distinct from dumy & prose perekazy; Колесса). Same proven
+   loop: pre-probe corpus → grounded brief w/ #M-4 preamble + corpus-hammer mandate + NO-auto-merge → codex/gpt-5.5
+   → corpus-hammer review → ship. Then continue queue (16→…, `phase-folk-queue.md`).
+2. **OR compile the WIKI backlog.** 15 dossiers on main but only some have compiled wikis — audit `wiki/folk/` vs
+   `docs/research/folk/` and compile gaps (`compile.py --writer gpt-5.5 --dossier docs/research/folk/<slug>.md` from a
+   data-bearing checkout). Wikis gate the eventual module builds.
+3. **OR build the next module if directed** — ALWAYS run the pre-fire binary check first (`npx
+   @anthropic-ai/claude-code@latest --version`; if "native binary not installed" → `node install.cjs` in
+   `~/.npm/_npx/*/node_modules/@anthropic-ai/claude-code`). Recurs on every claude auto-update.
+4. **(housekeeping, carry-forward from S16)** Folk `index.mdx` is on the OLD 27-topic taxonomy; `vesum-vocab-lemmas.json`
+   stale. Reconcile to the 42-queue when folk nav is un-hidden.
+
+### ⚠ CARRY-FORWARD / GOTCHAS
+- **`node_modules` symlink** appears untracked in dispatch worktrees — NEVER `git add -A`; add files explicitly
+  (`git add docs/research/folk/<slug>.md docs/folk-epic/CLAUDE-DRIVER-HANDOFF.md`). `git rm --cached node_modules` if it slips in.
+- `git push` folk → `--no-verify`; recheck `git config --local core.bare`=false after commits (#2842).
+- **Codex cap:** the orchestrator's `atlas-finalize-all` (Word Atlas lane) was running alongside this session — kept me
+  at 1 free codex slot. Check `/api/delegate/active` before firing.
+- Dispatch worktree `codex/folk-dossier-bylyny-kyivskoho-tsyklu` holds the artifact; `git worktree remove --force` after this PR merges.
+- **codex committed but did NOT push/open PR** (common) — the driver pushes + opens + self-merges. Brief said "NO auto-merge"; codex correctly stopped after commit.
+
+### 📊 FLEET — folk DOSSIER writer = **codex/gpt-5.5** (clean first pass when brief is corpus-pre-grounded); reviewer =
+**Claude corpus-hammer** (culture; cross-family always; NO deepseek/gemini/agy for folk framing). Module writer
+**claude-tools**; wiki **gpt-5.5**. Pre-fire binary check mandatory for any claude-tools module build.
+
+---
+
+## ▶▶▶ SESSION 16 HANDOFF (2026-06-12 — DUMY 12 BUILT + SHIPPED (3rd folk module, 3/42); old dumy-lytsarski stub RETIRED; binary-precheck saved a build) — (superseded by Session 17)
 
 > **⏱ HONEST SCOPE:** **MODULES BUILT + SHIPPED (new V7): 3/42** — kalendarna (S14), koliadky (S15),
 > **dumy-nevilnytski-lytsarski (THIS session)**. Dossiers: 14/42. ~28 topics plan-stub only. Folk nav is
