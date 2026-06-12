@@ -511,12 +511,15 @@ sidebar:
         "import Unjumble from '@site/src/components/Unjumble';",
         "import GroupSort from '@site/src/components/GroupSort';",
         "import Anagram from '@site/src/components/Anagram';",
-        "import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';",
+        "import ErrorCorrection from '@site/src/components/ErrorCorrection';",
+        "import { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';",
         "import Cloze from '@site/src/components/Cloze';",
         "import Select from '@site/src/components/Select';",
         "import Translate from '@site/src/components/Translate';",
-        "import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';",
-        "import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';",
+        "import MarkTheWords from '@site/src/components/MarkTheWords';",
+        "import { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';",
+        "import HighlightMorphemes from '@site/src/components/HighlightMorphemes';",
+        "import { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';",
     ]
     for component in ("RitualSequencing", "VariantComparison", "MotifFormula", "PerformanceActivity"):
         if re.search(rf"<{component}\b", tabbed):
