@@ -1,68 +1,4 @@
----
-title: "Колядки та щедрівки: Міф про створення світу"
-description: "Carols and Shchedrivky: The Cosmogonic Myth"
-sidebar:
-  order: 5
-  label: "05. Колядки та щедрівки: Міф про створення світу"
-pipeline: linear-phase-4
-build_status: validated
-prev: kalendarna-obriadovist-zvychai
-next: false
----
-
-import Quiz from '@site/src/components/Quiz';
-import MatchUp from '@site/src/components/MatchUp';
-import FillIn from '@site/src/components/FillIn';
-import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
-import GroupSort from '@site/src/components/GroupSort';
-import Anagram from '@site/src/components/Anagram';
-import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
-import Cloze from '@site/src/components/Cloze';
-import Select from '@site/src/components/Select';
-import Translate from '@site/src/components/Translate';
-import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
-import RitualSequencing from '@site/src/components/RitualSequencing';
-import VariantComparison from '@site/src/components/VariantComparison';
-import MotifFormula from '@site/src/components/MotifFormula';
-import PerformanceActivity from '@site/src/components/PerformanceActivity';
-import EssayResponse from '@site/src/components/EssayResponse';
-import ComparativeStudy from '@site/src/components/ComparativeStudy';
-import ReadingActivity from '@site/src/components/ReadingActivity';
-import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
-import AuthorialIntent from '@site/src/components/AuthorialIntent';
-import MythBuster from '@site/src/components/MythBuster';
-import HighCultureBridge from '@site/src/components/HighCultureBridge';
-import SourceEvaluation from '@site/src/components/SourceEvaluation';
-import Debate from '@site/src/components/Debate';
-import EtymologyTrace from '@site/src/components/EtymologyTrace';
-import GrammarIdentify from '@site/src/components/GrammarIdentify';
-import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
-import DialectComparison from '@site/src/components/DialectComparison';
-import TranslationCritique from '@site/src/components/TranslationCritique';
-import Transcription from '@site/src/components/Transcription';
-import Observe from '@site/src/components/Observe';
-import Order from '@site/src/components/Order';
-import CountSyllables from '@site/src/components/CountSyllables';
-import DivideWords from '@site/src/components/DivideWords';
-import OddOneOut from '@site/src/components/OddOneOut';
-import PickSyllables from '@site/src/components/PickSyllables';
-import LetterGrid from '@site/src/components/LetterGrid';
-import FlashcardDeck from '@site/src/components/FlashcardDeck';
-import VocabCard from '@site/src/components/VocabCard';
-import DialogueBox from '@site/src/components/DialogueBox';
-import HashTabSync from '@site/src/components/HashTabSync';
-import ActivityHelp from '@site/src/components/ActivityHelp';
-import YouTubeVideo from '@site/src/components/YouTubeVideo';
-import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
-import Classify from '@site/src/components/Classify';
-import ImageToLetter from '@site/src/components/ImageToLetter';
-import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
-import { Tabs, TabItem } from '@astrojs/starlight/components';
-
-<Tabs syncKey="module-tab">
-<TabItem label="Урок">
+# Колядки та щедрівки: міф про створення світу
 
 ## Розминка
 
@@ -124,15 +60,11 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 Явір тут не випадкове дерево. Це світове дерево — універсальний міфологічний образ, вісь, що з'єднує три рівні всесвіту: підземний, земний і небесний. Дослідники називають його латинським терміном *axis mundi*, вісь світу. Дерево, що росте з первісних вод, — образ, відомий далеко за межами Карпат, від індоєвропейської міфології до сусідніх традицій. Тому коли колядка ставить явір серед моря, вона не описує пейзаж. Вона будує космос: вода внизу, дерево посередині, а вгорі — майбутнє небо.
 
-### Послідовність творення світу
-
-<RitualSequencing client:only='react' title="Послідовність творення світу" instruction={"Розташуй стадії космогонічного міфу за порядком, у якому вони з'являються в колядці."} steps={JSON.parse(`["Немає ні неба, ні землі", "З'являється лише синє море", "Серед моря виростає зелений явір"]`)} correctOrder={JSON.parse(`[1, 2, 0]`)} modelAnswer={"Колядка будує світ із порожнечі: спершу немає ні неба, ні землі, потім постає первісне море, а вже в морі — світове дерево, явір. Це класична космогонічна послідовність: від заперечення до появи першоелемента."} isUkrainian={true} />
+<!-- INJECT_ACTIVITY: act-1 -->
 
 Зверни увагу на саму техніку. Світ постає не через ствердження, а через заперечення: «коли не було… тоді не було…». Це формульний прийом, спільний для багатьох космогоній світу. Спочатку слухач переживає відсутність, порожнечу, а потім — раптову появу першоелемента. Така будова не випадкова: вона змушує уявити творення як подію, як перехід від ніщо до щось.
 
-### Формула «коли не було…»
-
-<MotifFormula client:only='react' title="Формула «коли не було…»" passage={"Коли не било з нащада світа, тогди не било неба, ні землі, а то лем било синєє море, а серед моря зелений явір."} formulas={JSON.parse(`[{"text": "Коли не було X, тоді не було Y — заперечення первісного стану", "label": "", "explanation": ""}, {"text": "А то лем було Z — поява першоелемента (море, дерево)", "label": "", "explanation": ""}]`)} prompt={"Визнач у фрагменті формулу, на якій тримається космогонічний зачин, і поясни її функцію."} modelAnswer={"Зачин будується на запереченні: спершу перелічується, чого ще не було — неба, землі, а потім стверджується перший елемент світу: море й дерево. Це формульний прийом, спільний для багатьох космогоній."} isUkrainian={true} />
+<!-- INJECT_ACTIVITY: act-2 -->
 
 Тепер — інша колядкова та щедрівкова поетика, де космос переноситься в дім. Прочитай святкову формулу й те, що йде за нею:
 
@@ -148,7 +80,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 Це не побутовий опис кімнати. Це ритуальне піднесення родини до космічного порядку. Господар — місяць. Господиня — сонце. Діти — зорі. Дім стає малою моделлю світу, а родина — тріадою небесних світил. Саме так читає колядку Попович: величальна поетика будує господарство як центр благословенного всесвіту. Родина не просто живе в світі — вона дзеркалить його устрій.
 
-І тут важливий деколонізаційний акцент. Імперська етнографічна рамка довго зводила всі східнослов'янські зимові пісні до одного спільного типу й до образу єдиного господаря-володаря, як у великоросійському обряді <del>овсень</del>. Але українська тріада влаштована інакше. Тут не один владика, а родина як модель космосу: місяць, сонце й зорі — батько, мати й діти. Це родинно-космічна, а не одноосібна модель. Відмінність невелика на вигляд, але принципова за змістом: вона показує окрему українську світоглядну логіку, а не варіант чужого.
+І тут важливий деколонізаційний акцент. Імперська етнографічна рамка довго зводила всі східнослов'янські зимові пісні до одного спільного типу й до образу єдиного господаря-володаря, як у великоросійському обряді <!-- bad -->овсень<!-- /bad -->. Але українська тріада влаштована інакше. Тут не один владика, а родина як модель космосу: місяць, сонце й зорі — батько, мати й діти. Це родинно-космічна, а не одноосібна модель. Відмінність невелика на вигляд, але принципова за змістом: вона показує окрему українську світоглядну логіку, а не варіант чужого.
 
 :::caution[Деколонізаційний акцент]
 Не дай звести колядку до «спільної спадщини», у якій український голос — лише провінційний відгомін. Тріада «господар-місяць, господиня-сонце, діти-зорі» — самостійна модель космосу. Порівнюй — так. Розчиняй в «єдиному» — ні.
@@ -168,9 +100,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 І, нарешті, рефрен — повторюваний приспів. Ось тут поетика й магія сходяться найтісніше. Рефрен — не прикраса. Це заклинання. Повтор закріплює бажаний порядок речей: що частіше проспівано «на здоров'я», «на врожай», то міцніше слово прив'язує добро до цього дому. У ритуальному мисленні сказане з належною формою стає дійсним. Тому формула, паралелізм і рефрен — це інструменти, якими колядники намагаються вплинути на майбутній господарський рік.
 
-### Тріада: родина як космос
-
-<MotifFormula client:only='react' title="Тріада: родина як космос" passage={"Що ж місячик — то господарик, що сонечко — то господинька, яснії зірки — то його дітки."} formulas={JSON.parse(`[{"text": "X (світило) — то Y (член родини): ототожнення космічного й родинного", "label": "", "explanation": ""}]`)} prompt={"Зістав небесні світила з членами родини за формулою щедрівки."} modelAnswer={"Щедрівка ототожнює родину з небесними світилами: місяць — господар, сонце — господиня, зорі — діти. Дім стає малою моделлю космосу, а родина підноситься до космічного порядку через паралелізм."} isUkrainian={true} />
+<!-- INJECT_ACTIVITY: act-3 -->
 
 Тепер перейдімо від колядок до щедрівок і ширшого новорічного циклу. Щедрівку співають на Щедрий вечір, напередодні Нового року та дня святого Василя. До неї тісно прилягає Маланка — новорічний обряд із переодяганням у тварин і фольклорних персонажів. Тут зимовий цикл охоплює вже не лише спів, а й масковану дію, гру, драматизований рух. Поряд зі словом працює жест.
 
@@ -178,22 +108,25 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 Не забудь і про засівання. На перший день Нового року посівальники обходять хати й посипають підлогу зерном, промовляючи побажання врожаю та достатку. Це найпрямолінійніша обрядова дія всього циклу: зерно — символ майбутнього посіву, і розкидати його по хаті означає магічно засіяти добробут. Помітні й ґендерні ролі: колядують і засівають здебільшого хлопці та чоловіки, тоді як інші частини обрядовості розподілені по-своєму.
 
-### Зимовий обрядовий цикл
-
-<RitualSequencing client:only='react' title="Зимовий обрядовий цикл" instruction={"Розташуй три обряди зимового циклу за порядком у календарі."} steps={JSON.parse(`["Колядки — Різдво", "Щедрівки — Щедрий вечір", "Засівання — перший день Нового року"]`)} correctOrder={JSON.parse(`[1, 2, 0]`)} modelAnswer={"Цикл рухається від Різдва (колядки) через Щедрий вечір (щедрівки) до першого дня Нового року (засівання). Обрядова дія прив'язана до календарного руху сонця."} isUkrainian={true} />
+<!-- INJECT_ACTIVITY: act-4 -->
 
 А тепер — найгучніший випадок, на якому видно, як народна щедрівка виходить у велику культуру.
 
-<MythBuster
-  claim={`«Щедрик» (англійською «Carol of the Bells») — це американська різдвяна пісня про дзвони.`}
-  claimSource={`Популярна англомовна назва «Carol of the Bells»`}
-  truth={`«Щедрик» — українська щедрівка новорічного циклу, а не різдвяна пісня. Її всесвітньо відому хорову обробку створив Микола Леонтович. Англійський текст 1936 року перетворив наспів на «різдвяний», але першооснова — український новорічний величальний мотив, не Різдво.`}
-  truthSource={`Українська Вікіпедія: «Щедрик» (Леонтович); план модуля`}
-/>
-<HighCultureBridge
-  nodes={JSON.parse(`["народна новорічна щедрівка", "хорова обробка Миколи Леонтовича", "світова циркуляція як «Carol of the Bells»"]`)}
-  note={`Після гастролей хору Олександра Кошиця в Європі (1919) та США (1922) «Щедрик» став знаний у світі, а 1936 року до нього з'явився англійський текст. Так проста обрядова щедрівка пройшла шлях від двору до концертної зали — і саме тому перейменування на «різдвяну пісню дзвонів» варто читати як культурне привласнення, а не як нейтральний переклад.`}
-/>
+:::myth-box
+claim: "«Щедрик» (англійською «Carol of the Bells») — це американська різдвяна пісня про дзвони."
+truth: "«Щедрик» — українська щедрівка новорічного циклу, а не різдвяна пісня. Її всесвітньо відому хорову обробку створив Микола Леонтович. Англійський текст 1936 року перетворив наспів на «різдвяний», але першооснова — український новорічний величальний мотив, не Різдво."
+claim_source: "Популярна англомовна назва «Carol of the Bells»"
+truth_source: "Українська Вікіпедія: «Щедрик» (Леонтович); план модуля"
+:::
+
+:::high-culture-bridge
+nodes:
+  - "народна новорічна щедрівка"
+  - "хорова обробка Миколи Леонтовича"
+  - "світова циркуляція як «Carol of the Bells»"
+note: "Після гастролей хору Олександра Кошиця в Європі (1919) та США (1922) «Щедрик» став знаний у світі, а 1936 року до нього з'явився англійський текст. Так проста обрядова щедрівка пройшла шлях від двору до концертної зали — і саме тому перейменування на «різдвяну пісню дзвонів» варто читати як культурне привласнення, а не як нейтральний переклад."
+:::
+
 Підіб'ємо аналіз. Поетика колядки та щедрівки — не оздоба, а технологія впливу: формула відкриває обряд, паралелізм зшиває космос із домом, рефрен закріплює благословення. А обрядова дія — спів, маска, коза, засівання — переводить слово в жест. Разом вони творять цілісний механізм, що мав забезпечити дому добрий рік. І коли цей механізм потрапляє в руки композитора, він здатен зазвучати на весь світ.
 
 ## Дискусія: Що вижило і чому?
@@ -220,7 +153,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 Тож повернімося до запитання цього розділу. Що вижило? Не музейний предмет, а робочий інструмент: спосіб громади розмітити час, закликати добро й сказати «ми є». А чому вижило? Бо обряд водночас відповідав на постійну календарну потребу, давав форму тихому опору і тримався силою побутової тяглості. Усе разом — і кожне окремо в різні епохи.
 
-## 📋 Підсумок
+## Підсумок
 
 Час повернутися до питання з Розминки. Колядки — це християнські пісні чи язичницький обряд у християнській оболонці?
 
@@ -335,79 +268,3 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 Четверте, найскладніше. Як працювати з темними місцями традиції — з тими образами «чужого», про які йшлося в розділі про виживання? Де проходить межа між чесним поясненням і виправданням? Між критикою спадщини й зневагою до неї?
 
 Тримай ці питання відкритими. Колядка живе понад тисячоліття саме тому, що щоразу відповідає по-новому. Тепер і ти — частина її історії: один із тих, хто читає стару пісню про найдовшу ніч і питає, що вона означає сьогодні.
-
-</TabItem>
-<TabItem label="Словник">
-
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"колядка","translation":"carol (winter ritual song of the Christmas cycle praising the host and family)","pos":"noun","example":"Колядка величає господаря та його родину.","examples":["carol (winter ritual song of the Christmas cycle praising the host and family)","Колядка величає господаря та його родину."]},{"word":"щедрівка","translation":"shchedrivka (New Year ritual song of the Shchedryi vechir / Malanka cycle)","pos":"noun","example":"Щедрівку співають на Щедрий вечір, напередодні Нового року.","examples":["shchedrivka (New Year ritual song of the Shchedryi vechir / Malanka cycle)","Щедрівку співають на Щедрий вечір, напередодні Нового року."]},{"word":"космогонія","translation":"cosmogony (myth or account of the creation of the world)","pos":"noun","example":"Колядка про море й дерево — це стисла космогонія.","examples":["cosmogony (myth or account of the creation of the world)","Колядка про море й дерево — це стисла космогонія."]},{"word":"світове дерево","translation":"world tree (axis mundi, the axis joining the levels of the universe)","pos":"noun","example":"Явір серед моря — це світове дерево, вісь всесвіту.","examples":["world tree (axis mundi, the axis joining the levels of the universe)","Явір серед моря — це світове дерево, вісь всесвіту."]},{"word":"засівання","translation":"ritual sowing (scattering grain on the floor on New Year for prosperity)","pos":"noun","example":"Засівання приурочене до першого дня Нового року.","examples":["ritual sowing (scattering grain on the floor on New Year for prosperity)","Засівання приурочене до першого дня Нового року."]},{"word":"паралелізм","translation":"parallelism (stylistic repetition of similar syntactic structures)","pos":"noun","example":"Паралелізм зв'язує небесний і родинний світи в одну формулу.","examples":["parallelism (stylistic repetition of similar syntactic structures)","Паралелізм зв'язує небесний і родинний світи в одну формулу."]},{"word":"обрядовий","translation":"ritual, pertaining to a rite","pos":"adj","example":"Колядування — частина обрядового сценарію зимового циклу.","examples":["ritual, pertaining to a rite","Колядування — частина обрядового сценарію зимового циклу."]},{"word":"автохтонний","translation":"autochthonous, indigenous, native (opposite of borrowed)","pos":"adj","example":"Етнолінгвісти наголошують на автохтонному солярному субстраті обряду.","examples":["autochthonous, indigenous, native (opposite of borrowed)","Етнолінгвісти наголошують на автохтонному солярному субстраті обряду."]},{"word":"стилізація","translation":"stylization (conscious imitation of an older style or genre)","pos":"noun","example":"Частину архаїчних мотивів могла підсилити пізніша стилізація.","examples":["stylization (conscious imitation of an older style or genre)","Частину архаїчних мотивів могла підсилити пізніша стилізація."]},{"word":"солярний","translation":"solar, connected with the sun cult","pos":"adj","example":"Зимові обряди солярного циклу відзначають повернення сонця.","examples":["solar, connected with the sun cult","Зимові обряди солярного циклу відзначають повернення сонця."]},{"word":"явір","translation":"sycamore / maple (the world-tree image in carols)","pos":"noun","example":"Серед моря росте зелений явір.","examples":["sycamore / maple (the world-tree image in carols)","Серед моря росте зелений явір."]},{"word":"космогонічний","translation":"cosmogonic, relating to the creation of the world","pos":"adj","example":"Космогонічний пласт — найглибший у цій поезії.","examples":["cosmogonic, relating to the creation of the world","Космогонічний пласт — найглибший у цій поезії."]},{"word":"тріада","translation":"triad (here: host = moon, hostess = sun, children = stars)","pos":"noun","example":"Тріада світил уподібнює родину до космосу.","examples":["triad (here: host = moon, hostess = sun, children = stars)","Тріада світил уподібнює родину до космосу."]},{"word":"величання","translation":"laudation, glorification (magnifying the host in song)","pos":"noun","example":"Колядка — це величання дому й господаря.","examples":["laudation, glorification (magnifying the host in song)","Колядка — це величання дому й господаря."]},{"word":"благословення","translation":"blessing","pos":"noun","example":"Формула благословення відкриває обряд.","examples":["blessing","Формула благословення відкриває обряд."]},{"word":"заклинання","translation":"incantation, spell","pos":"noun","example":"Рефрен працює як заклинання на добрий рік.","examples":["incantation, spell","Рефрен працює як заклинання на добрий рік."]},{"word":"рефрен","translation":"refrain (recurring line of a song)","pos":"noun","example":"Повторений рефрен закріплює бажаний порядок речей.","examples":["refrain (recurring line of a song)","Повторений рефрен закріплює бажаний порядок речей."]},{"word":"зачин","translation":"opening formula of a folk song","pos":"noun","example":"Формульний зачин відкриває щедрівку.","examples":["opening formula of a folk song","Формульний зачин відкриває щедрівку."]},{"word":"гурт","translation":"group, band (of carollers)","pos":"noun","example":"Гурт виконавців обходить хати з колядкою.","examples":["group, band (of carollers)","Гурт виконавців обходить хати з колядкою."]},{"word":"адресат","translation":"addressee (the host to whom the song is sung)","pos":"noun","example":"Адресат колядки — господар і його родина.","examples":["addressee (the host to whom the song is sung)","Адресат колядки — господар і його родина."]},{"word":"язичницький","translation":"pagan","pos":"adj","example":"Під християнською оболонкою лежить язичницький пласт.","examples":["pagan","Під християнською оболонкою лежить язичницький пласт."]},{"word":"дохристиянський","translation":"pre-Christian","pos":"adj","example":"Дохристиянський обряд міг існувати задовго до назви.","examples":["pre-Christian","Дохристиянський обряд міг існувати задовго до назви."]},{"word":"християнізація","translation":"Christianization","pos":"noun","example":"Колядка пережила християнізацію й зберегла давній код.","examples":["Christianization","Колядка пережила християнізацію й зберегла давній код."]},{"word":"історіографія","translation":"historiography (the body of scholarly interpretation)","pos":"noun","example":"В історіографії змагаються дві позиції про походження «коляди».","examples":["historiography (the body of scholarly interpretation)","В історіографії змагаються дві позиції про походження «коляди»."]},{"word":"реконструкція","translation":"reconstruction","pos":"noun","example":"Частину образів могла дати романтична реконструкція.","examples":["reconstruction","Частину образів могла дати романтична реконструкція."]},{"word":"індоєвропейський","translation":"Indo-European","pos":"adj","example":"Образ дерева з вод відомий у широкому індоєвропейському колі.","examples":["Indo-European","Образ дерева з вод відомий у широкому індоєвропейському колі."]},{"word":"збіжжя","translation":"grain, cereal crops","pos":"noun","example":"Образ кози поєднується з образом збіжжя.","examples":["grain, cereal crops","Образ кози поєднується з образом збіжжя."]},{"word":"вертеп","translation":"nativity puppet theatre (winter-cycle dramatized form)","pos":"noun","example":"Поряд із колядою у зимовому циклі діяв і вертеп.","examples":["nativity puppet theatre (winter-cycle dramatized form)","Поряд із колядою у зимовому циклі діяв і вертеп."]},{"word":"водіння","translation":"leading (as in водіння кози — the goat-leading rite)","pos":"noun","example":"Водіння кози має господарське спрямування.","examples":["leading (as in водіння кози — the goat-leading rite)","Водіння кози має господарське спрямування."]},{"word":"привласнення","translation":"appropriation (cultural)","pos":"noun","example":"Перейменування щедрівки на «різдвяну пісню» можна читати як культурне привласнення.","examples":["appropriation (cultural)","Перейменування щедрівки на «різдвяну пісню» можна читати як культурне привласнення."]},{"word":"обробка","translation":"arrangement (musical), reworking","pos":"noun","example":"Хорову обробку «Щедрика» створив Микола Леонтович.","examples":["arrangement (musical), reworking","Хорову обробку «Щедрика» створив Микола Леонтович."]},{"word":"посівальник","translation":"sower (one who performs the ritual sowing)","pos":"noun","example":"Посівальники обходять хати й посипають підлогу зерном.","examples":["sower (one who performs the ritual sowing)","Посівальники обходять хати й посипають підлогу зерном."]},{"word":"достаток","translation":"prosperity, abundance","pos":"noun","example":"Засівання несе побажання врожаю й достатку.","examples":["prosperity, abundance","Засівання несе побажання врожаю й достатку."]},{"word":"первісний","translation":"primordial, original","pos":"adj","example":"Світ постає з первісного, ще невпорядкованого стану.","examples":["primordial, original","Світ постає з первісного, ще невпорядкованого стану."]},{"word":"формульний","translation":"formulaic","pos":"adj","example":"Заперечний зачин — це формульний прийом.","examples":["formulaic","Заперечний зачин — це формульний прийом."]}]`)} title="Словник" />
-
-<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"колядка","back":"carol (winter ritual song of the Christmas cycle praising the host and family)"},{"front":"щедрівка","back":"shchedrivka (New Year ritual song of the Shchedryi vechir / Malanka cycle)"},{"front":"космогонія","back":"cosmogony (myth or account of the creation of the world)"},{"front":"світове дерево","back":"world tree (axis mundi, the axis joining the levels of the universe)"},{"front":"засівання","back":"ritual sowing (scattering grain on the floor on New Year for prosperity)"},{"front":"паралелізм","back":"parallelism (stylistic repetition of similar syntactic structures)"},{"front":"обрядовий","back":"ritual, pertaining to a rite"},{"front":"автохтонний","back":"autochthonous, indigenous, native (opposite of borrowed)"},{"front":"стилізація","back":"stylization (conscious imitation of an older style or genre)"},{"front":"солярний","back":"solar, connected with the sun cult"},{"front":"явір","back":"sycamore / maple (the world-tree image in carols)"},{"front":"космогонічний","back":"cosmogonic, relating to the creation of the world"},{"front":"тріада","back":"triad (here: host = moon, hostess = sun, children = stars)"},{"front":"величання","back":"laudation, glorification (magnifying the host in song)"},{"front":"благословення","back":"blessing"},{"front":"заклинання","back":"incantation, spell"},{"front":"рефрен","back":"refrain (recurring line of a song)"},{"front":"зачин","back":"opening formula of a folk song"},{"front":"гурт","back":"group, band (of carollers)"},{"front":"адресат","back":"addressee (the host to whom the song is sung)"},{"front":"язичницький","back":"pagan"},{"front":"дохристиянський","back":"pre-Christian"},{"front":"християнізація","back":"Christianization"},{"front":"історіографія","back":"historiography (the body of scholarly interpretation)"},{"front":"реконструкція","back":"reconstruction"},{"front":"індоєвропейський","back":"Indo-European"},{"front":"збіжжя","back":"grain, cereal crops"},{"front":"вертеп","back":"nativity puppet theatre (winter-cycle dramatized form)"},{"front":"водіння","back":"leading (as in водіння кози — the goat-leading rite)"},{"front":"привласнення","back":"appropriation (cultural)"},{"front":"обробка","back":"arrangement (musical), reworking"},{"front":"посівальник","back":"sower (one who performs the ritual sowing)"},{"front":"достаток","back":"prosperity, abundance"},{"front":"первісний","back":"primordial, original"},{"front":"формульний","back":"formulaic"}]`)} />
-
-</TabItem>
-<TabItem label="Вправи">
-
-### Послідовність творення світу
-
-*(див. урок, §Читання: Космогонічний міф у тексті колядки)*
-
-### Формула «коли не було…»
-
-*(див. урок, §Читання: Космогонічний міф у тексті колядки)*
-
-### Тріада: родина як космос
-
-*(див. урок, §Аналіз: Поетика та ритуальна функція)*
-
-### Зимовий обрядовий цикл
-
-*(див. урок, §Аналіз: Поетика та ритуальна функція)*
-
-### Колядка чи щедрівка?
-
-<VariantComparison client:only='react' title="Колядка чи щедрівка?" variants={JSON.parse(`[{"label": "колядка", "text": "", "region": "", "source": ""}, {"label": "щедрівка", "text": "", "region": "", "source": ""}]`)} features={JSON.parse(`["час виконання (Різдво чи Щедрий вечір)", "цикл (різдвяний чи новорічний)", "адресат і формула благословення", "обрядова дія (колядування, щедрування, засівання)"]`)} prompt={"Порівняй колядку і щедрівку за наведеними ознаками й покажи, чим вони різняться як обрядові жанри."} modelAnswer={"Колядку співають на Різдво, щедрівку — на Щедрий вечір, напередодні Нового року. Обидві величають господаря та його родину й містять формулу благословення, але щедрівка тісніше пов'язана з новорічним циклом, Маланкою та засіванням."} isUkrainian={true} />
-
-### Зимове сонцестояння: глобальна синхронність
-
-<ComparativeStudy client:only='react' title="Зимове сонцестояння: глобальна синхронність" content={"Українська колядка будує родину як модель космосу: місяць — господар, сонце — господиня, зорі — діти."} task={"Визнач, що споріднює ці традиції типологічно, і поясни, чому подібність не означає запозичення."} modelAnswer={"Усі ці традиції припадають на зимове сонцестояння й пов'язані з солярним культом. Це типологічна, а не генетична подібність: автохтонний український обряд належить до широкого індоєвропейського кола, а не виводиться з жодної сусідньої імперської традиції."} itemsToCompare={JSON.parse(`["українські колядки та щедрівки", "скандинавський Yule, римські Saturnalia, перська Yaldā"]`)} criteria={JSON.parse(`["прив'язка до зимового сонцестояння", "солярний культ і повернення сонця", "обрядова дія та формули благословення", "побажання врожаю й достатку"]`)} prompt={"Порівняй український зимовий обряд із паралельними традиціями інших народів."} isUkrainian={true} />
-
-### Хто має рацію про походження «коляди»?
-
-<CriticalAnalysis client:only='react' title="Хто має рацію про походження «коляди»?" context={"В історіографії змагаються дві позиції щодо походження слова й обряду «коляда»."} question={"Чи можна вважати колядки суто християнським або суто язичницьким явищем?"} modelAnswer={"Найточніша відповідь — синкретична: християнська оболонка лягла на давніший обрядовий і космогонічний пласт. Костомаров пояснює назву, Попович — космічну модель, тож позиції радше доповнюють одна одну, ніж виключають."} targetText={"За версією Костомарова, слово «коляда» походить від латинського calendae. Сучасні етнолінгвісти натомість наголошують на автохтонному солярному субстраті, а Чижевський пропонує читати фольклорні жанри як стилістичні епохи."} questions={JSON.parse(`["Де тут джерело, а де інтерпретація?", "Чи латинська етимологія слова заперечує дохристиянський зміст обряду?", "Як епістемна обережність змінює твою оцінку обох гіпотез?"]`)} modelAnswers={JSON.parse(`["Латинська етимологія стосується назви, інтерпретація — змісту обряду; це різні рівні.", "Ні: запозичена назва могла накластися на давніший автохтонний обряд.", "Обережність радить тримати обидві гіпотези як версії, а не як остаточний факт."]`)} isUkrainian={true} />
-
-### Полювання на формули
-
-<MotifFormula client:only='react' title="Полювання на формули" passage={"1) Коли не било з нащада світа, тогди не било неба, ні землі, а то лем било синєє море, а серед моря зелений явір. 2) Щедрий вечір, добрий вечір! Добрим людям на здоров'я! 3) Що ж місячик — то господарик, що сонечко — то господинька, яснії зірки — то його дітки."} formulas={JSON.parse(`[{"text": "Коли не було… тоді не було… — заперечення первісного хаосу", "label": "", "explanation": ""}, {"text": "Щедрий вечір, добрий вечір! — святкова формула-зачин і благословення", "label": "", "explanation": ""}, {"text": "X (світило) — то Y (родич) — космічне ототожнення родини", "label": "", "explanation": ""}]`)} prompt={"Знайди у трьох фрагментах три різні обрядові формули й поясни функцію кожної."} modelAnswer={"Перша формула творить світ через заперечення, друга відкриває обряд і несе благословення, третя підносить родину до рівня небесних світил. Усі три — не прикраси, а магічні засоби: повтор закріплює бажаний порядок речей."} isUkrainian={true} />
-
-### Колядка сьогодні: живий обряд чи музейний експонат?
-
-<EssayResponse client:only='react' title="Колядка сьогодні: живий обряд чи музейний експонат?" prompt={"Напиши есе про сучасне значення колядування. Чи лишається воно живим інструментом ідентичності — зокрема в роки війни 2022–2025?"} modelAnswer={"Сильне есе доводить, що колядка лишається живим обрядом: вона зберігає космогонічний і родинний код, а в роки війни колядування набуло нового значення — як знак тяглості й спротиву. Слабке есе зводить традицію до музейного експоната або романтичного кліше."} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| чітка теза й аргументація | | |\n| опора на матеріал модуля (космогонія, тріада, обряд) | | |\n| розрізнення джерела й інтерпретації | | |\n| зв'язок із сучасним контекстом без романтизації | | |"} isUkrainian={true} />
-
-### Виконай щедрівку-зачин
-
-<PerformanceActivity client:only='react' title="Виконай щедрівку-зачин" prompt={"Прочитай уголос фрагмент щедрівки, зберігаючи ритм і рефрен. Зверни увагу на формулу-зачин і паралелізм рядків."} fragment={"Щедрий вечір, добрий вечір! Добрим людям на здоров'я! Стояла світелка новозроблена."} selfCheck={JSON.parse(`["Чи витримав ти ритм рефрену?", "Чи відчутна формула-зачин?", "Чи звучить величальна інтонація?"]`)} showRecordButton={true} modelAnswer={"Добре виконання тримає ритм рефрену, виділяє формулу-зачин і звучить як величання, а не як побутове читання. Паралелізм рядків має бути чутним на слух."} isUkrainian={true} />
-
-</TabItem>
-<TabItem label="Ресурси">
-
-:::info[🎧 🔗 Зовнішні ресурси]
-
-**📚 Книги:**
-- 📚 **Нарис історії культури України**
-  (type: primary). Тріада господар-господиня-діти, світове дерево, провінційно-римські впливи. Корпусний витяг недоступний у цьому білді; бібліографічне джерело з плану модуля.
-- 📚 **Праці етнографічно-статистичної експедиції в Західно-Руський край**
-  (type: primary). Етнографічні записи колядок і щедрівок з Карпат та Полісся (експедиція П. Чубинського) — джерело вербатим-фрагментів. Корпусний витяг недоступний у цьому білді; бібліографічне джерело з плану модуля.
-- 📚 **Слов'янська міфологія**
-  (type: primary). Латинське походження слова «коляда», класифікація зимових обрядів, порівняння з обрядами інших народів. Корпусний витяг недоступний у цьому білді (corpus_missing); бібліографічне джерело з плану модуля.
-- 📚 **Історія української літератури**
-  (type: primary). Фольклорні жанри як стилістичні епохи. Корпусний витяг недоступний у цьому білді; бібліографічне джерело з плану модуля.
-
-**🔗 Онлайн-ресурси:**
-- 🔗 [Колядки — Українська Вікіпедія](https://uk.wikipedia.org/wiki/Колядки) — Величальні календарно-обрядові пісні зимового циклу; язичницький субстрат, культ новонародженого сонця, переосмислення за християнства. Контекст до Розминки й Аналізу.
-- 🔗 [Маланка — Українська Вікіпедія](https://uk.wikipedia.org/wiki/Маланка) — Новорічний обряд з переодяганням у тварин і фольклорних персонажів, вечір напередодні Нового року та дня святого Василя. Контекст до новорічного циклу в Аналізі.
-- 🔗 [Щедрик (Леонтович) — Українська Вікіпедія](https://uk.wikipedia.org/wiki/Щедрик_(Леонтович)) — Хорова обробка Миколи Леонтовича; гастролі хору Кошиця (Європа 1919, США 1922); англійський текст Петра Вільговського 1936 — «Carol of the Bells». Грунтує high-culture-bridge та myth-box.
-:::
-
-</TabItem>
-</Tabs>
-
-<HashTabSync />
