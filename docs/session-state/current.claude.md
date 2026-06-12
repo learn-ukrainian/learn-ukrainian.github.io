@@ -1,15 +1,15 @@
-# Current — Claude Session Handoff (2026-06-12)
+# Current — Claude Session Handoff (2026-06-13)
 
 > Router: read `docs/session-state/current.md` first.
-> **Latest detailed handoff: `docs/session-state/2026-06-12-claude-atlas-goatcounter-policy-kaikki.md`** — read top-to-bottom.
-> **✅ DONE + LIVE this session:** Atlas full-vocab + decolonization (#3037), kaikki IPA/etymology (#3041),
-> GoatCounter fixed + Plausible removed (#3040), reviewer-seat policy (#3039), kaikki assessment (#3038).
-> Prior rollout handoff (now superseded): `2026-06-12-claude-word-atlas-production-rollout.md`.
-> **🚨 PRODUCTION: real learners are on A1 now.** Word Atlas was rebuilt to full vocab (2,156 lemmas) +
-> decolonization fixes + IPA + etymology — all merged + deployed + live-verified.
-> inject `PUBLIC_GOATCOUNTER_CODE=learn-ukrainian` into `deploy-pages.yml`, deploy, verify LIVE. Folk nav
-> hidden + GoatCounter wired (#3027) and services self-heal (#3026) already on main but NOT deployed.
-> The sections below are from the 2026-06-11 session and are superseded by the 06-12 handoff above.
+> **Latest detailed handoff: `docs/session-state/2026-06-13-claude-translation-shipped-v2-killed.md`** — read top-to-bottom.
+> **✅ DONE + LIVE this session:** Atlas §11 «Переклад» translation shipped+deployed+live (#3052, 67%);
+> 4 Dependabot security alerts resolved (zeroconf #3046 fixed, torch dismissed); deploy-drift root fix
+> (#3044 + autopsy); PR triage (folk #3032 merged, #3028 junk closed, pypdf #3048 merged).
+> **🗑️ v2 Atlas decouple KILLED on cost** — codex builds B1, so the Atlas grows from built-module vocab
+> for free (with real course-links). Don't pay for "vocab before the lesson exists."
+> **🧭 codex owns B1 builds; Claude = orchestrator + reviewer + lexicon-tooling lane.**
+> **⏭️ Next for me:** vocab→Atlas VocabCard "more →" link (design §7/§13, render-time, integrity-gated).
+> Prior handoff (superseded): `2026-06-12-claude-atlas-goatcounter-policy-kaikki.md`. Production: learners on A1.
 
 ## 🚨 CRITICAL — GitHub Pages auto-deploy is DISABLED (workflow_dispatch only)
 Merging to main does NOT update the live site. This is why the user saw "Word Atlas not following the
