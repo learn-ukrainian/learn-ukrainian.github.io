@@ -7831,12 +7831,27 @@ def _activity_schema_gate(activities: list[dict[str, Any]]) -> dict[str, Any]:
         if not isinstance(activity, Mapping):
             continue
         activity_type = str(activity.get("type") or "")
+        activity_id = str(activity.get("id") or f"#{activity_index}")
+        if (
+            activity_type == "performance"
+            and "self_check" in activity
+            and not isinstance(activity.get("self_check"), list)
+        ):
+            violations.append(
+                _activity_schema_activity_field_type_violation(
+                    activity_id=activity_id,
+                    activity_index=activity_index,
+                    activity_type=activity_type,
+                    field="self_check",
+                    expected_type="list",
+                    actual_type=type(activity.get("self_check")).__name__,
+                )
+            )
         allowed_fields = item_fields_by_type.get(activity_type)
         if allowed_fields is None:
             continue
         aliases = _ACTIVITY_ITEM_FORBIDDEN_ALIASES.get(activity_type, {})
         required_fields = _ACTIVITY_ITEM_REQUIRED_FIELDS.get(activity_type, frozenset())
-        activity_id = str(activity.get("id") or f"#{activity_index}")
         items = activity.get("items", [])
         if not isinstance(items, list):
             continue
@@ -7916,6 +7931,30 @@ def _activity_schema_violation(
     }
 
 
+def _activity_schema_activity_field_type_violation(
+    *,
+    activity_id: str,
+    activity_index: int,
+    activity_type: str,
+    field: str,
+    expected_type: str,
+    actual_type: str,
+) -> dict[str, Any]:
+    message = f"{activity_type} activity '{field}' must be a {expected_type}, not a {actual_type}"
+    return {
+        "activity_id": activity_id,
+        "activity_index": activity_index,
+        "item_index": None,
+        "activity_type": activity_type,
+        "offending_field": field,
+        "expected_field": field,
+        "expected_type": expected_type,
+        "actual_type": actual_type,
+        "message": message,
+        "scope": "activity",
+    }
+
+
 def _format_activity_schema_diagnostic(violations: list[dict[str, Any]]) -> str:
     lines = [
         f"ACTIVITY_SCHEMA_GATE FAILED: {len(violations)} violations",
@@ -7925,6 +7964,11 @@ def _format_activity_schema_diagnostic(violations: list[dict[str, Any]]) -> str:
         activity_id = violation["activity_id"]
         activity_index = violation["activity_index"]
         item_index = violation["item_index"]
+        if item_index is None:
+            lines.append(f"  activity #{activity_index} '{activity_id}':")
+            lines.append(f"    {violation['message']}")
+            lines.append("")
+            continue
         lines.append(f"  activity #{activity_index} '{activity_id}' (item {item_index}):")
         offending = violation.get("offending_field")
         expected = violation.get("expected_field")

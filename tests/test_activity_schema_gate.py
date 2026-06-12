@@ -154,6 +154,49 @@ def test_non_error_correction_activities_pass_through() -> None:
     assert result == {"passed": True, "checked": 0, "violations": []}
 
 
+def test_performance_self_check_string_fails_activity_schema() -> None:
+    activities = [
+        {
+            "id": "folk-performance",
+            "type": "performance",
+            "prompt": "Продекламуйте фрагмент.",
+            "fragment": "Добрий вечір.",
+            "self_check": "Чітко вимовлено звертання.",
+        }
+    ]
+
+    result = _activity_schema_gate(activities)
+
+    assert result["passed"] is False
+    assert result["checked"] == 0
+    assert result["violations"][0]["activity_id"] == "folk-performance"
+    assert result["violations"][0]["scope"] == "activity"
+    assert result["violations"][0]["offending_field"] == "self_check"
+    assert result["violations"][0]["expected_type"] == "list"
+    assert result["violations"][0]["actual_type"] == "str"
+    assert (
+        result["violations"][0]["message"]
+        == "performance activity 'self_check' must be a list, not a str"
+    )
+    assert "performance activity 'self_check' must be a list, not a str" in result["message"]
+
+
+def test_performance_self_check_list_passes_activity_schema() -> None:
+    activities = [
+        {
+            "id": "folk-performance",
+            "type": "performance",
+            "prompt": "Продекламуйте фрагмент.",
+            "fragment": "Добрий вечір.",
+            "self_check": ["Чітко вимовлено звертання."],
+        }
+    ]
+
+    result = _activity_schema_gate(activities)
+
+    assert result == {"passed": True, "checked": 0, "violations": []}
+
+
 def test_replays_m20_build8_failure_shape() -> None:
     activities = [
         {
