@@ -27,6 +27,74 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
+## ▶▶▶ SESSION 15 HANDOFF (2026-06-12 — KOLIADKY 01 BUILT + SHIPPED (2nd folk module, 2/42); DURABLE FIXES A+B MERGED + RULE A VALIDATED; #14 kobzarstvo DOSSIER MERGED (14/42); claude npx native-binary BLOCKER ROOT-CAUSED+FIXED) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** Folk = 42-module epic. **MODULES BUILT+SERVED (new, verified): 2/42** — kalendarna (S14)
+> + koliadky (THIS session). **Dossiers: 14/42.** ~28 topics still plan-stub only. dumy-lytsarski.mdx is still an
+> OLD April stub (next rebuild). Do NOT inflate.
+
+### ✅ DONE THIS SESSION (merged / shipping to main)
+- **KOLIADKY-SHCHEDRIVKY 01 BUILT + SHIPPED — THIS PR.** 2nd properly-built folk-experiential module. module.md
+  4898 gate-words (target 5000, PASS), **ALL python_qg gates green**, vesum-clean, **traps-clean** (rule A working
+  — zero memory-chants/Shevchenko-as-folk), 12 dossier-§4 blockquotes ALL independently `verify_quote`-confirmed
+  (Коли не било 1.0 `feaa5fa7_c0596`; Що ж місячик 1.0 / Щедрий вечір 0.98 `feaa5fa7_c0598`, ЕУ-1955; Чубинський-
+  collected per the ЕУ source line). 14 sections (6 plan + 8 correction-added quality deep-dives), MDX assembles
+  97KB / 4 tabs / 12 islands. **CAVEAT:** build failed python_qg pre-LLM-QG, so the formal LLM dimensional review
+  did NOT auto-run — shipped on my manual #M-11 corpus-hammer review instead (sanctioned: folk culture = Claude/GPT
+  review only). A follow-up LLM QG pass (Claude/GPT reviewer) would close parity with kalendarna.
+- **DURABLE FIXES A+B — PR #3016 MERGED (`6c8487a575`).** (A) `#R-FOLK-PRIMARY-TEXTS` forbids memory-chants +
+  literary-as-folk, pins embeds to dossier §4; (B) `_activity_schema_gate` rejects `performance.self_check` as a
+  non-list. **Rule A VALIDATED live** on koliadky (0 traps). Codex-impl + Claude adversarial review.
+- **#14 kobzarstvo-lirnytstvo DOSSIER — PR #3019 MERGED (`fbee6822c8`).** Corpus-hammer SHIP (4 §4 fragments
+  re-verified 1.0; contested «з'їзд кобзарів» 300-execution narrative flagged unconfirmed; §9 four
+  source-disagreements). **14/42 dossiers.**
+
+### 🔧 BLOCKER ROOT-CAUSED + FIXED (load-bearing — recurs on each claude auto-update)
+Every claude-tools build failed `Error: claude native binary not installed` (writer #1/#3, correction #2).
+**Cause:** claude CLI auto-updated 2.1.173→2.1.174 mid-session (03:25 local); the v7 adapter
+(`scripts/agent_runtime/adapters/claude.py:197`) defaults to `npx @anthropic-ai/claude-code@latest`, and npx's
+cache lost its platform-native binary after the bump. **Fix:** `node install.cjs` in both
+`~/.npm/_npx/*/node_modules/@anthropic-ai/claude-code`; npx now returns 2.1.174 cleanly. **If a future build hits
+this after another claude auto-update, rerun that postinstall.** TRACK-UPDATE'd orchestrator (fa8defd129) with a
+durable-fix suggestion (adapter fall back to local native binary on npx failure). **Fixing this ALSO unblocked the
+in-pipeline correction loop** — which is why koliadky finally converged (below).
+
+### 🔑 KOLIADKY CONVERGENCE STORY (reuse the insight)
+Writer produced GOOD but SHORT prose (2487→2741 across builds #2/#4, ~53% of plan budget; raw output 5581-5958 but
+most went to activities YAML). I first read this as systematic under-production. **It was actually the
+binary-blocked correction loop** — with the binary fixed (build #4), the python_qg correction (claude rounds +
+codex escalation) ran the `word_count` prose-EXPANSION path and grew module.md 2741→5117 by appending 8 grounded
+deep-dive sections, AND fixed the vesum coinage + 4/5 unresolved citations. I manually fixed the last citation
+(reformatted the `Чубинський П. «Праці...»` resources.yaml entry to bare-title style matching the 3 passing
+plan-references) → ALL GREEN. **Lesson: a short-prose folk build is NOT necessarily a writer wall — let the
+correction loop's word_count-expansion run (needs the claude binary working).**
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **(optional) LLM QG pass on koliadky** (Claude/GPT reviewer) to close kalendarna parity, if desired.
+2. **Rebuild dumy (`dumy-nevilnytski-lytsarski`)** — old `dumy-lytsarski.mdx` April stub. Dossier on main. Use the
+   recipe: build (claude-tools, --worktree, persistent Monitor) → on python_qg fail, the correction loop now works
+   (binary fixed) and may self-converge → harvest + manual-fix any residual citation → re-gate `run_python_qg` from
+   data-bearing root → `verify_quote` every fragment → assemble_mdx → retire old MDX + `[...slug].astro` hero route → ship.
+3. **Serve-verify koliadky live** once this PR merges + main ff's: `./services.sh restart astro`, HTTP 200 at
+   `/folk/koliadky-shchedrivky/` (the PR's Frontend CI build already validates MDX render).
+4. **Dossier queue 14/42.** Next build-order = #15 `bylyny-kyivskoho-tsyklu` (MOST de-imperialization-sensitive —
+   careful brief: de-imperialize the contested East-Slavic/Kyivan framing; folds bohatyri/social/zastavy).
+
+### ⚠ CARRY-FORWARD / GOTCHAS
+- **claude npx native-binary** recurs on each claude auto-update; fix = `node install.cjs` in the npx caches.
+- **resources_search_attempted false-fails on a fresh checkout** (no writer telemetry) — re-gate in the BUILD
+  worktree for the authoritative verdict, not the promote worktree (Session-14 lesson, re-confirmed).
+- Build forensics (#M-10, auto-committed `build/folk/koliadky-shchedrivky-2026...`): -004543/-005731/-012900/-013235.
+  -013235 is the SHIPPED koliadky (KEEP). Safe to `git worktree remove --force` the worktrees.
+- `git push` folk → `--no-verify`; `git config --local core.bare` stayed false all session.
+
+### 📊 FLEET — module writer **claude-tools** (Claude+GPT only for folk culture; NO deepseek/gemini/agy);
+coinage/quote/citation correction = in-pipeline loop (binary-fixed) + **codex cross-model fixer**; re-gate =
+`run_python_qg` from data-bearing root; wiki **gpt-5.5**; reviewers **deepseek-flash** (code) / Claude corpus-hammer
+(culture). Cross-family always. Folk builds run >1h → persistent Monitor.
+
+---
+
 ## ▶▶▶ SESSION 14 HANDOFF (2026-06-11/12 — KALENDARNA 04 FINALLY BUILT + MERGED via CROSS-MODEL CORRECTION (the recipe that WORKS); 2 dossiers shipped (#11 holosinnya, #13 dumy-sotsialno); diminutive wall #3003 confirmed working) — **RESUME HERE**
 
 > **⏱ HONEST SCOPE (do NOT repeat my mistake — the user caught me framing "1 of 3"):** Folk is a **42-module

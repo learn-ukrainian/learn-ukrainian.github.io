@@ -1,0 +1,142 @@
+- lemma: колядка
+  translation: carol (winter ritual song of the Christmas cycle praising the host
+    and family)
+  pos: noun
+  usage: Колядка величає господаря та його родину.
+- lemma: щедрівка
+  translation: shchedrivka (New Year ritual song of the Shchedryi vechir / Malanka
+    cycle)
+  pos: noun
+  usage: Щедрівку співають на Щедрий вечір, напередодні Нового року.
+- lemma: космогонія
+  translation: cosmogony (myth or account of the creation of the world)
+  pos: noun
+  usage: Колядка про море й дерево — це стисла космогонія.
+- lemma: світове дерево
+  translation: world tree (axis mundi, the axis joining the levels of the universe)
+  pos: noun
+  usage: Явір серед моря — це світове дерево, вісь всесвіту.
+- lemma: засівання
+  translation: ritual sowing (scattering grain on the floor on New Year for prosperity)
+  pos: noun
+  usage: Засівання приурочене до першого дня Нового року.
+- lemma: паралелізм
+  translation: parallelism (stylistic repetition of similar syntactic structures)
+  pos: noun
+  usage: Паралелізм зв'язує небесний і родинний світи в одну формулу.
+- lemma: обрядовий
+  translation: ritual, pertaining to a rite
+  pos: adj
+  usage: Колядування — частина обрядового сценарію зимового циклу.
+- lemma: автохтонний
+  translation: autochthonous, indigenous, native (opposite of borrowed)
+  pos: adj
+  usage: Етнолінгвісти наголошують на автохтонному солярному субстраті обряду.
+- lemma: стилізація
+  translation: stylization (conscious imitation of an older style or genre)
+  pos: noun
+  usage: Частину архаїчних мотивів могла підсилити пізніша стилізація.
+- lemma: солярний
+  translation: solar, connected with the sun cult
+  pos: adj
+  usage: Зимові обряди солярного циклу відзначають повернення сонця.
+- lemma: явір
+  translation: sycamore / maple (the world-tree image in carols)
+  pos: noun
+  usage: Серед моря росте зелений явір.
+- lemma: космогонічний
+  translation: cosmogonic, relating to the creation of the world
+  pos: adj
+  usage: Космогонічний пласт — найглибший у цій поезії.
+- lemma: тріада
+  translation: 'triad (here: host = moon, hostess = sun, children = stars)'
+  pos: noun
+  usage: Тріада світил уподібнює родину до космосу.
+- lemma: величання
+  translation: laudation, glorification (magnifying the host in song)
+  pos: noun
+  usage: Колядка — це величання дому й господаря.
+- lemma: благословення
+  translation: blessing
+  pos: noun
+  usage: Формула благословення відкриває обряд.
+- lemma: заклинання
+  translation: incantation, spell
+  pos: noun
+  usage: Рефрен працює як заклинання на добрий рік.
+- lemma: рефрен
+  translation: refrain (recurring line of a song)
+  pos: noun
+  usage: Повторений рефрен закріплює бажаний порядок речей.
+- lemma: зачин
+  translation: opening formula of a folk song
+  pos: noun
+  usage: Формульний зачин відкриває щедрівку.
+- lemma: гурт
+  translation: group, band (of carollers)
+  pos: noun
+  usage: Гурт виконавців обходить хати з колядкою.
+- lemma: адресат
+  translation: addressee (the host to whom the song is sung)
+  pos: noun
+  usage: Адресат колядки — господар і його родина.
+- lemma: язичницький
+  translation: pagan
+  pos: adj
+  usage: Під християнською оболонкою лежить язичницький пласт.
+- lemma: дохристиянський
+  translation: pre-Christian
+  pos: adj
+  usage: Дохристиянський обряд міг існувати задовго до назви.
+- lemma: християнізація
+  translation: Christianization
+  pos: noun
+  usage: Колядка пережила християнізацію й зберегла давній код.
+- lemma: історіографія
+  translation: historiography (the body of scholarly interpretation)
+  pos: noun
+  usage: В історіографії змагаються дві позиції про походження «коляди».
+- lemma: реконструкція
+  translation: reconstruction
+  pos: noun
+  usage: Частину образів могла дати романтична реконструкція.
+- lemma: індоєвропейський
+  translation: Indo-European
+  pos: adj
+  usage: Образ дерева з вод відомий у широкому індоєвропейському колі.
+- lemma: збіжжя
+  translation: grain, cereal crops
+  pos: noun
+  usage: Образ кози поєднується з образом збіжжя.
+- lemma: вертеп
+  translation: nativity puppet theatre (winter-cycle dramatized form)
+  pos: noun
+  usage: Поряд із колядою у зимовому циклі діяв і вертеп.
+- lemma: водіння
+  translation: leading (as in водіння кози — the goat-leading rite)
+  pos: noun
+  usage: Водіння кози має господарське спрямування.
+- lemma: привласнення
+  translation: appropriation (cultural)
+  pos: noun
+  usage: Перейменування щедрівки на «різдвяну пісню» можна читати як культурне привласнення.
+- lemma: обробка
+  translation: arrangement (musical), reworking
+  pos: noun
+  usage: Хорову обробку «Щедрика» створив Микола Леонтович.
+- lemma: посівальник
+  translation: sower (one who performs the ritual sowing)
+  pos: noun
+  usage: Посівальники обходять хати й посипають підлогу зерном.
+- lemma: достаток
+  translation: prosperity, abundance
+  pos: noun
+  usage: Засівання несе побажання врожаю й достатку.
+- lemma: первісний
+  translation: primordial, original
+  pos: adj
+  usage: Світ постає з первісного, ще невпорядкованого стану.
+- lemma: формульний
+  translation: formulaic
+  pos: adj
+  usage: Заперечний зачин — це формульний прийом.
