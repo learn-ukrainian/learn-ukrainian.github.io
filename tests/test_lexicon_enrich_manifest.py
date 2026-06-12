@@ -7,6 +7,7 @@ from scripts.lexicon.enrich_manifest import (
     _build_paradigm,
     _cefr,
     _definition_cards,
+    _dmklinger_key,
     _etymology,
     _idioms_slovnyk,
     _kaikki_pronunciation,
@@ -16,6 +17,7 @@ from scripts.lexicon.enrich_manifest import (
     _merge_slovnyk_warning,
     _sense_correct_synonyms,
     _synonyms_slovnyk,
+    _translation,
     _warning_slovnyk,
     clean_gloss,
     clean_html_entities,
@@ -604,3 +606,39 @@ def test_kaikki_etymology_does_not_overwrite_goroh() -> None:
         "source": "Горох (за ЕСУМ)",
         "source_url": "https://goroh.pp.ua/Етимологія/книга",
     }
+
+
+def test_dmklinger_key_strips_stress_and_casefolds() -> None:
+    # dmklinger stores STRESSED headwords; manifest lemmas are unstressed.
+    # The key must reduce both sides to the same stress-free, casefolded form,
+    # otherwise exact matching misses ~93% of common words.
+    assert _dmklinger_key("робо́та") == _dmklinger_key("робота") == "робота"
+    assert _dmklinger_key("Украї́на") == "україна"
+    assert _dmklinger_key("  бу́ти ") == "бути"
+
+
+def test_translation_matches_stress_stripped_dmklinger_headword(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    conn.execute(
+        "INSERT INTO dmklinger_uk_en (word, pos, translations) VALUES (?, ?, ?)",
+        ("робо́та", "noun", json.dumps(["work (labour)", "job", "work (labour)"])),
+    )
+    # Reset the module-level dmklinger index cache so it reloads from this DB.
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+
+    block = _translation(conn, "робота")  # unstressed manifest lemma
+
+    assert block == {
+        "en": ["work (labour)", "job"],  # deduped, order preserved
+        "source": "dmklinger",
+        "pos": "noun",
+    }
+
+
+def test_translation_returns_none_when_lemma_absent(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+
+    assert _translation(conn, "неіснуючеслово") is None
