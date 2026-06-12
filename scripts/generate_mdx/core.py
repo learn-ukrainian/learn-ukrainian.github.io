@@ -452,7 +452,7 @@ sidebar:
         text = resolve_slug_links(text)
         text = convert_bad_form_markers(text, strip_only=strip_bad_forms)
         text = fix_html_for_jsx(text)
-        text = re.sub(r'<!--(.*?)-->', r'{/**/}', text, flags=re.DOTALL)
+        text = re.sub(r'<!--.*?-->\n?', '', text, flags=re.DOTALL)
         text = process_story_sections(text)
         text = process_dialogues(text)
         return text
