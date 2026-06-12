@@ -163,8 +163,6 @@ const TRACKS: Record<string, TrackOverview> = {
     family: 'seminar',
     state: 'test',
     heroVariant: 'folk',
-    primaryAction: { href: '/folk/koliadky-shchedrivky/', label: 'Open First Seminar' },
-    secondaryAction: { href: '/folk/dumy-lytsarski/', label: 'Open Active Seminar' },
     points: [
       'Folk proves the source-heavy seminar pattern before the wider seminar family ships.',
       'Lessons emphasize motif, context, performance, source notes, and decolonization framing.',
@@ -277,10 +275,12 @@ const TRACKS: Record<string, TrackOverview> = {
 };
 
 const HIDDEN_DOCS = new Set(['a1/review-clears-needs-human']);
-const PUBLIC_LESSON_PREFIXES = new Set(['a1', 'a2', 'folk']);
+const HIDDEN_LINK_TRACKS = new Set(['folk']);
+const SEARCH_LESSON_PREFIXES = new Set(['a1', 'a2']);
 const normalizeId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
 const hrefFromRoute = (route: string) => `/${route}/`;
 const trackIds = Object.keys(TRACKS);
+const searchTrackIds = trackIds.filter((id) => !HIDDEN_LINK_TRACKS.has(id));
 
 const allDocs = await getCollection('docs');
 const visibleDocs = allDocs.filter((entry) => {
@@ -309,7 +309,7 @@ for (const entries of deployedDocsByTrack.values()) {
 }
 
 const searchItems: SearchItem[] = [
-  ...trackIds.map((id) => {
+  ...searchTrackIds.map((id) => {
     const track = TRACKS[id];
     return {
       title: `${track.label} · ${track.title}`,
@@ -323,7 +323,7 @@ const searchItems: SearchItem[] = [
     .filter((entry) => {
       const id = normalizeId(entry.id);
       const track = id.split('/')[0];
-      return PUBLIC_LESSON_PREFIXES.has(track) && id !== track;
+      return SEARCH_LESSON_PREFIXES.has(track) && id !== track;
     })
     .map((entry) => {
       const id = normalizeId(entry.id);
@@ -415,8 +415,10 @@ if (props.kind === 'doc' || props.kind === 'landingDoc') {
   if (props.kind === 'doc') {
     const prev = props.entry.data.prev;
     const next = props.entry.data.next;
-    if (typeof prev === 'string') previousLink = { href: `/${docTrack}/${prev}/`, label: 'Previous' };
-    if (typeof next === 'string') nextLink = { href: `/${docTrack}/${next}/`, label: 'Next' };
+    if (!HIDDEN_LINK_TRACKS.has(docTrack)) {
+      if (typeof prev === 'string') previousLink = { href: `/${docTrack}/${prev}/`, label: 'Previous' };
+      if (typeof next === 'string') nextLink = { href: `/${docTrack}/${next}/`, label: 'Next' };
+    }
   }
 }
 
@@ -488,7 +490,10 @@ const pageMeta = (() => {
   };
 })();
 
-const navItems = props.kind === 'doc'
+const currentTrackId = props.kind === 'track' ? props.track : docTrack;
+const navItems = HIDDEN_LINK_TRACKS.has(currentTrackId)
+  ? [{ href: '/', label: 'Home' }]
+  : props.kind === 'doc'
   ? [
       { href: '/', label: 'Home' },
       { href: `/${docTrack}/`, label: TRACKS[docTrack]?.label ?? docTrack.toUpperCase() },
@@ -508,6 +513,7 @@ const navItems = props.kind === 'doc'
 // same per-track sorted lesson list the track landing page uses.
 const sidebar = props.kind === 'doc'
   ? (() => {
+      if (HIDDEN_LINK_TRACKS.has(docTrack)) return undefined;
       const lessons = deployedDocsByTrack.get(docTrack) ?? [];
       if (lessons.length === 0) return undefined;
       const links = lessons.map((entry) => {

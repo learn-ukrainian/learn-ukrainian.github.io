@@ -20,7 +20,6 @@ const coreTracks = [
 ];
 
 const seminarTracks = [
-  { id: 'folk', label: 'Folk', title: 'Folk Culture', status: 'Seminar test track' },
   { id: 'bio', label: 'BIO', title: 'Biographies', status: 'Planned seminar' },
   { id: 'hist', label: 'HIST', title: 'History Of Ukraine', status: 'Planned seminar' },
   { id: 'istorio', label: 'ISTORIO', title: 'Historiography', status: 'Planned seminar' },
@@ -219,10 +218,8 @@ const seminarTracks = [
     .track-badge.a1 { background: var(--lu-green); }
     .track-badge.a2 { background: #1565C0; }
     .track-badge.b1 { background: #E65100; }
-    .track-badge.folk { background: #A4133C; }
     .track-badge.atlas { background: var(--lu-teal); }
-    /* In dark mode --lu-green/--lu-teal go pale → white text fails. The folk
-       chip is a fixed dark crimson, so it keeps white text. */
+    /* In dark mode --lu-green/--lu-teal go pale, so white text fails. */
     :global([data-theme='dark']) .track-badge.a1,
     :global([data-theme='dark']) .track-badge.atlas {
       color: var(--lu-on-yellow);
