@@ -106,6 +106,7 @@ _SLOVNYK_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational
 _STRESS_SOURCE = "ukrainian-word-stress"
 _CEFR_SOURCE = "PULS CEFR"
 _LITERARY_SOURCE = "literary_fts"
+_TRANSLATION_SOURCE = "dmklinger"
 _SUM20_COVERED_INITIALS = set("абвгґдеєжзиіїйклмнопр")
 _UKRAINIAN_WORD_RE = re.compile(r"^[А-Яа-яЄєІіЇїҐґ'’ʼ-]+$")
 _UKRAINIAN_VOWELS = set("аеєиіїоуюяАЕЄИІЇОУЮЯ")
@@ -1795,6 +1796,91 @@ def _cefr(conn: sqlite3.Connection, lemma: str) -> dict[str, str] | None:
     return None
 
 
+def _parse_translations(raw: object) -> list[str]:
+    """Parse a dmklinger `translations` cell (JSON array of English gloss strings)."""
+    if not raw:
+        return []
+    try:
+        data = json.loads(raw) if isinstance(raw, str) else raw
+    except (TypeError, ValueError):
+        return []
+    if not isinstance(data, list):
+        return []
+    out: list[str] = []
+    for item in data:
+        text = re.sub(r"\s+", " ", clean_html_entities(str(item)).strip())
+        if text:
+            out.append(text)
+    return out
+
+
+_DMKLINGER_INDEX: dict[str, list[tuple[str, str]]] | None = None
+
+
+def _dmklinger_key(word: str) -> str:
+    """Normalize a word for dmklinger matching: strip stress marks + casefold.
+
+    dmklinger_uk_en stores STRESSED headwords (e.g. `робо́та`, `бу́ти`) while
+    manifest lemmas are unstressed — so an exact match misses ~93%. Both sides
+    are reduced to a stress-free, casefolded key.
+    """
+    return _strip_stress(word).strip().casefold()
+
+
+def _load_dmklinger_index(conn: sqlite3.Connection) -> dict[str, list[tuple[str, str]]]:
+    """Load dmklinger_uk_en once, keyed by stress-stripped/casefolded headword."""
+    global _DMKLINGER_INDEX
+    if _DMKLINGER_INDEX is not None:
+        return _DMKLINGER_INDEX
+    index: dict[str, list[tuple[str, str]]] = {}
+    try:
+        rows = conn.execute("SELECT word, pos, translations FROM dmklinger_uk_en").fetchall()
+    except sqlite3.OperationalError as exc:
+        if _missing_table(exc):
+            _DMKLINGER_INDEX = {}
+            return _DMKLINGER_INDEX
+        raise
+    for word, pos, translations in rows:
+        key = _dmklinger_key(str(word or ""))
+        if key:
+            index.setdefault(key, []).append((pos, translations))
+    _DMKLINGER_INDEX = index
+    return index
+
+
+def _translation(conn: sqlite3.Connection, lemma: str) -> dict[str, object] | None:
+    """English translations for a Ukrainian lemma (Переклад, §11).
+
+    Source is the dmklinger UK→EN dictionary (`dmklinger_uk_en`). Балла is EN→UK
+    only — no clean reverse — so it is intentionally NOT used here; an exact
+    UK→EN match avoids the noise of reverse-lookup. Returns up to six glosses.
+    """
+    index = _load_dmklinger_index(conn)
+    if not index:
+        return None
+    for variant in _split_lemma_variants(lemma):
+        rows = index.get(_dmklinger_key(variant))
+        if not rows:
+            continue
+        english: list[str] = []
+        seen: set[str] = set()
+        pos: str | None = None
+        for row_pos, raw in rows:
+            if pos is None and row_pos:
+                pos = clean_html_entities(str(row_pos).strip())
+            for gloss in _parse_translations(raw):
+                key = gloss.casefold()
+                if key not in seen:
+                    seen.add(key)
+                    english.append(gloss)
+        if english:
+            block: dict[str, object] = {"en": english[:6], "source": _TRANSLATION_SOURCE}
+            if pos:
+                block["pos"] = pos
+            return block
+    return None
+
+
 def _fts_phrase(term: str) -> str:
     cleaned = term.replace('"', " ").strip()
     return f'"{cleaned}"' if cleaned else ""
@@ -1937,6 +2023,9 @@ def enrich() -> tuple[int, int]:
             literary = _literary_attestation(conn, lemma)
             if literary:
                 block["literary_attestation"] = literary
+            translation = _translation(conn, lemma)
+            if translation:
+                block["translation"] = translation
             if block:
                 sources = {v["source"] for v in block.values() if isinstance(v, dict) and v.get("source")}
                 for card in definition_cards:

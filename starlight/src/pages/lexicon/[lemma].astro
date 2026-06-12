@@ -363,6 +363,7 @@ const hasDictionaryData = Boolean(
     definitionCards.length > 0 ||
     enrichment?.etymology ||
     enrichment?.literary_attestation ||
+    enrichment?.translation ||
     sections?.synonyms ||
     sections?.idioms ||
     showHeritage ||
@@ -652,6 +653,24 @@ const frontmatter = {
             {enrichment.literary_attestation.source}
             {enrichment.literary_attestation.chunk_id && ` · ${enrichment.literary_attestation.chunk_id}`}
           </div>
+        </div>
+      </section>
+    )}
+
+    {enrichment?.translation && enrichment.translation.en.length > 0 && (
+      <section class="atlas-section" aria-labelledby="atlas-translation-title">
+        <div class="atlas-section-head">
+          <p class="atlas-kicker">English</p>
+          <h2 id="atlas-translation-title">Переклад</h2>
+        </div>
+
+        <div class="atlas-source-card">
+          <p class="atlas-source-label">{enrichment.translation.source}</p>
+          <ol>
+            {enrichment.translation.en.map((gloss) => (
+              <li>{gloss}</li>
+            ))}
+          </ol>
         </div>
       </section>
     )}

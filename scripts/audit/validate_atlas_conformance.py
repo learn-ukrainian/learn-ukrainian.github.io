@@ -39,6 +39,7 @@ SOURCE_REQUIRED_SECTIONS = (
     "morphology",
     "synonyms",
     "idioms",
+    "translation",
 )
 NON_STANDARD_AUTHENTIC_CLASSIFICATIONS = {
     "archaism",
