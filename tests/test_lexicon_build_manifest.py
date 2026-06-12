@@ -44,6 +44,61 @@ def test_manifest_sources_all_vocabulary_files_and_a2_word_field() -> None:
     assert any(usage["track"] == "a2" and usage["slug"] == "a2-bridge" for usage in entries["відмінок"]["course_usage"])
 
 
+def test_manifest_omits_non_lemma_surface_entries() -> None:
+    manifest = build_manifest()
+    entries = {entry["lemma"]: entry for entry in manifest["entries"]}
+
+    for lemma in (
+        "Давай!",
+        "Смачного!",
+        "Ходімо!",
+        "в/у",
+        "у/в",
+        "і/й",
+        "Богдане",
+        "Соломіє",
+    ):
+        assert lemma not in entries
+
+
+def test_manifest_maps_taught_vocatives_to_nominative_lemmas() -> None:
+    manifest = build_manifest()
+    entries = {entry["lemma"]: entry for entry in manifest["entries"]}
+
+    expected = {
+        "Олена": "Олено",
+        "Марія": "Маріє",
+        "Тарас": "Тарасе",
+    }
+    for lemma, source_lemma in expected.items():
+        normalizations = entries[lemma]["atlas_normalizations"]
+
+        assert any(
+            normalization["kind"] == "vocative_to_nominative"
+            and normalization["source_lemma"] == source_lemma
+            for normalization in normalizations
+        )
+
+
+def test_manifest_canonicalizes_real_words_missing_from_vesum() -> None:
+    manifest = build_manifest()
+    entries = {entry["lemma"]: entry for entry in manifest["entries"]}
+
+    assert "бірка" not in entries
+    assert entries["бирка"]["atlas_normalizations"][0]["source_lemma"] == "бірка"
+    assert any(
+        usage["track"] == "a2" and usage["slug"] == "genitive-adjectives-pronouns"
+        for usage in entries["бирка"]["course_usage"]
+    )
+
+    assert "прийом" not in entries
+    assert entries["приймання"]["atlas_normalizations"][0]["source_lemma"] == "прийом"
+    assert any(
+        usage["track"] == "a2" and usage["slug"] == "genitive-prepositions-direction"
+        for usage in entries["приймання"]["course_usage"]
+    )
+
+
 def test_manifest_url_slugs_are_unique() -> None:
     manifest = build_manifest()
     slugs: dict[str, list[str]] = {}

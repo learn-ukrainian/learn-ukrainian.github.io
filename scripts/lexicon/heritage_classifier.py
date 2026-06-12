@@ -151,52 +151,55 @@ def _classify(term: str, *, surface: bool) -> dict[str, Any]:
 
     vesum = _vesum_attestation(term, surface=surface)
     vesum_archaism = _vesum_archaism_attestation(term, surface=surface)
-    if vesum_archaism and not vesum_archaism["has_modern"]:
-        return _status(
-            "authentic-archaism",
-            [vesum_archaism["attestation"]],
-            is_russianism=False,
-            russian_shadow=russian_shadow,
-            sovietization_risk=sovietization_risk,
-        )
+    has_modern_vesum = bool(vesum) and not (
+        vesum_archaism and not vesum_archaism["has_modern"]
+    )
 
     russianism = _russianism_status(term, russian_shadow=russian_shadow)
 
     attestations: list[dict[str, Any]] = []
     classification = "unknown"
     with _source_conn() as conn:
-        auth_hits = _dictionary_attestations(conn, term, surface=surface)
-        auth_hits.extend(_search_heritage_attestations(term))
+        auth_hits = _strict_heritage_attestations(conn, term, surface=surface)
         has_standard_hit = any(hit["classification"] == "standard" for hit in auth_hits)
         for hit in auth_hits:
-            if vesum and hit["classification"] == "standard":
+            candidate = str(hit["classification"])
+            if (
+                candidate == "standard"
+                and vesum_archaism
+                and not vesum_archaism["has_modern"]
+            ):
+                candidate = "authentic-archaism"
+            if candidate == "standard":
                 continue
             if (
-                hit["classification"] == "authentic-archaism"
+                candidate == "authentic-archaism"
                 and hit.get("weak_when_modern")
-                and (vesum or has_standard_hit or russianism)
+                and (has_modern_vesum or has_standard_hit or russianism)
             ):
                 continue
             if (
-                vesum
-                and hit["classification"] == "authentic-archaism"
-                and "esum" in str(hit.get("attestation", {}).get("source") or "")
+                candidate == "dialect"
+                and hit.get("weak_when_modern")
+                and (has_modern_vesum or has_standard_hit or russianism)
             ):
                 continue
-            if vesum and hit["classification"] == "borrowing":
+            if has_modern_vesum and candidate == "borrowing":
                 continue
             attestations.append(hit["attestation"])
-            classification = _prefer_classification(classification, hit["classification"])
+            classification = _prefer_classification(classification, candidate)
             sovietization_risk = max(sovietization_risk, int(hit.get("sovietization_risk") or 0))
 
         if surface and not attestations and russianism and term in _KNOWN_STANDARD_ALTERNATIVES:
             return russianism
 
-        if surface and (not attestations or term in _SURFACE_QUOTE_HINTS):
-            quote_hits = _literary_surface_attestations(conn, term)
-            for hit in quote_hits:
+        if not attestations and not vesum:
+            for hit in _standard_dictionary_attestations(conn, term):
                 attestations.append(hit["attestation"])
-                classification = _prefer_classification(classification, hit["classification"])
+                classification = _prefer_classification(classification, "standard")
+                sovietization_risk = max(
+                    sovietization_risk, int(hit.get("sovietization_risk") or 0)
+                )
 
     if surface and russianism and term in _KNOWN_STANDARD_ALTERNATIVES:
         return russianism
@@ -390,7 +393,7 @@ def _check_russian_shadow(term: str) -> tuple[bool, dict[str, Any]]:
     return bool(result.get("matches_russian")), {"available": True, **result}
 
 
-def _dictionary_attestations(
+def _strict_heritage_attestations(
     conn: sqlite3.Connection,
     term: str,
     *,
@@ -399,12 +402,20 @@ def _dictionary_attestations(
     hits: list[dict[str, Any]] = []
     hits.extend(_grinchenko_exact_hits(conn, term))
     hits.extend(_esum_exact_hits(conn, term))
-    hits.extend(_sum11_exact_hits(conn, term))
-    hits.extend(_wiktionary_exact_hits(conn, term))
-    hits.extend(_grinchenko_crossref_hits(conn, term))
     hits.extend(_esum_variant_hits(conn, term))
     if surface:
         hits.extend(_grinchenko_surface_usage_hits(conn, term))
+    return hits
+
+
+def _standard_dictionary_attestations(
+    conn: sqlite3.Connection,
+    term: str,
+) -> list[dict[str, Any]]:
+    hits: list[dict[str, Any]] = []
+    for hit in [*_sum11_exact_hits(conn, term), *_wiktionary_exact_hits(conn, term)]:
+        if hit["classification"] == "standard":
+            hits.append(hit)
     return hits
 
 
@@ -542,6 +553,37 @@ def _classification_from_source_text(text: str, *, default: str) -> str:
     return default
 
 
+def _strict_classification_from_source_text(text: str, *, default: str) -> str:
+    lower = _normalize_word(text)
+    if _has_any_marker(lower, ("іст.", "істор.", "(іст.)")):
+        return "historism"
+    if _has_any_marker(lower, ("діал.", " діал ", "діалект")):
+        return "dialect"
+    if _has_any_marker(lower, ("заст.", "застар", "архаї")):
+        return "authentic-archaism"
+    if _has_any_marker(lower, _BORROWING_MARKERS):
+        return "borrowing"
+    return default
+
+
+def _esum_headword_classification(text: str, term: str, *, exact: bool) -> str:
+    if term in _DIALECT_OR_FOLK_TERMS:
+        return "dialect"
+    if not exact:
+        return "standard"
+
+    lower = _normalize_word(text)
+    term_pattern = re.escape(_normalize_word(term))
+    headword_marker_re = re.compile(
+        rf"^\[?{term_pattern}\]?\s*(?:\([^)]*(?:іст\.|істор\.|діал\.|заст\.|застар|архаї)[^)]*\)|"
+        rf"«[^»]{{0,160}}(?:\(іст\.\)|\(діал\.\)|\(заст\.\))"
+        rf")"
+    )
+    if not headword_marker_re.search(lower):
+        return "standard"
+    return _strict_classification_from_source_text(lower, default="standard")
+
+
 def _classification_from_heritage_hit(hit: dict[str, Any], text: str) -> str:
     classification = _classification_from_source_text(text, default="standard")
     if classification != "standard":
@@ -560,7 +602,7 @@ def _grinchenko_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str
         ).fetchall()
         for row in rows:
             text = _clean_text(row["definition"])
-            classification = _classification_from_definition(text, default="authentic-archaism")
+            classification = _strict_classification_from_source_text(text, default="standard")
             hits.append(
                 {
                     "classification": classification,
@@ -865,14 +907,10 @@ def _classification_from_definition(text: str, *, default: str) -> str:
 
 
 def _classification_from_etymology(text: str, term: str, *, exact: bool) -> str:
-    if term in _DIALECT_OR_FOLK_TERMS:
-        return "dialect"
-    classification = _classification_from_source_text(text, default="standard")
-    if classification != "standard":
-        if classification == "borrowing" and exact:
-            return "standard"
-        return classification
-    return "authentic-archaism" if exact else "standard"
+    classification = _esum_headword_classification(text, term, exact=exact)
+    if classification == "borrowing" and exact:
+        return "borrowing"
+    return classification
 
 
 def _sum11_sovietization_risk(definition: str, text: str) -> int:

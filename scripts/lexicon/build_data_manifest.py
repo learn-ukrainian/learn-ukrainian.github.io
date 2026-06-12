@@ -39,6 +39,37 @@ _STRESS_MARK_RE = re.compile("[\u0300\u0301]")
 
 LEMMA_FIELDS = ("lemma", "word", "uk", "term")
 
+_NON_ATLAS_LEMMA_KEYS = {
+    _key
+    for _key in (
+        "Давай!",
+        "Смачного!",
+        "Ходімо!",
+        "в/у",
+        "у/в",
+        "і/й",
+    )
+}
+
+VOCATIVE_TO_NOMINATIVE: dict[str, str] = {
+    "Богдане": "Богдан",
+    "Маріє": "Марія",
+    "Олено": "Олена",
+    "Соломіє": "Соломія",
+    "Тарасе": "Тарас",
+}
+
+VESUM_CANONICAL_HEADS: dict[str, tuple[str, str]] = {
+    "бірка": (
+        "бирка",
+        "VESUM and Grinchenko index the label/tag headword as бирка.",
+    ),
+    "прийом": (
+        "приймання",
+        "СУМ-20/СУМ-11 define прийом as 'те саме, що приймання'; VESUM indexes приймання.",
+    ),
+}
+
 SURZHYK_TO_AVOID_SEEDS: list[dict[str, str | None]] = [
     {"lemma": "агенство", "gloss": "avoid: агенція", "pos": "noun"},
     {"lemma": "авось", "gloss": "avoid: ану ж / а може", "pos": "adv"},
@@ -96,6 +127,16 @@ def _lemma_key(lemma: str) -> str:
     normalized = unicodedata.normalize("NFKD", cleaned.casefold())
     normalized = _STRESS_MARK_RE.sub("", normalized)
     return unicodedata.normalize("NFC", normalized)
+
+
+NON_ATLAS_LEMMA_KEYS = {_lemma_key(lemma) for lemma in _NON_ATLAS_LEMMA_KEYS}
+VOCATIVE_TO_NOMINATIVE_BY_KEY = {
+    _lemma_key(source): target for source, target in VOCATIVE_TO_NOMINATIVE.items()
+}
+VESUM_CANONICAL_HEADS_BY_KEY = {
+    _lemma_key(source): (target, reason)
+    for source, (target, reason) in VESUM_CANONICAL_HEADS.items()
+}
 
 
 def _course_module_numbers() -> dict[tuple[str, str], int]:
@@ -176,9 +217,76 @@ def _load_built_vocab(module: dict[str, str | int]) -> list[dict]:
 
 _SOURCE_PRIORITY = {
     "built_vocabulary": 0,
+    "built_vocabulary_normalized": 1,
+    "built_vocabulary_canonicalized": 1,
     "surzhyk_to_avoid": 1,
     "heritage_status_seed": 2,
 }
+
+
+def _source_priority(source: str) -> int:
+    return _SOURCE_PRIORITY.get(source, 99)
+
+
+def _normalization_record(
+    *,
+    kind: str,
+    source_lemma: str,
+    target_lemma: str,
+    reason: str,
+) -> dict[str, str]:
+    return {
+        "kind": kind,
+        "source_lemma": source_lemma,
+        "target_lemma": target_lemma,
+        "reason": reason,
+    }
+
+
+def _append_normalization(entry: dict, normalization: dict[str, str] | None) -> None:
+    if not normalization:
+        return
+    normalizations = entry.setdefault("atlas_normalizations", [])
+    if normalization not in normalizations:
+        normalizations.append(normalization)
+
+
+def _atlas_record_for_manifest(rec: dict, taught_lemma_keys: set[str]) -> dict | None:
+    """Normalize course surfaces to Atlas lemma heads, or omit non-lemmas."""
+    display_lemma = str(rec["lemma"])
+    key = _lemma_key(display_lemma)
+    if key in NON_ATLAS_LEMMA_KEYS:
+        return None
+
+    if key in VOCATIVE_TO_NOMINATIVE_BY_KEY:
+        target = VOCATIVE_TO_NOMINATIVE_BY_KEY[key]
+        if _lemma_key(target) not in taught_lemma_keys:
+            return None
+        normalized = dict(rec)
+        normalized["lemma"] = target
+        normalized["source"] = "built_vocabulary_normalized"
+        normalized["atlas_normalization"] = _normalization_record(
+            kind="vocative_to_nominative",
+            source_lemma=display_lemma,
+            target_lemma=target,
+            reason="Atlas pages are lemma-keyed; course vocative surface maps to taught nominative.",
+        )
+        return normalized
+
+    if key in VESUM_CANONICAL_HEADS_BY_KEY:
+        target, reason = VESUM_CANONICAL_HEADS_BY_KEY[key]
+        canonicalized = dict(rec)
+        canonicalized["lemma"] = target
+        canonicalized["source"] = "built_vocabulary_canonicalized"
+        canonicalized["atlas_normalization"] = _normalization_record(
+            kind="vesum_canonical_head",
+            source_lemma=display_lemma,
+            target_lemma=target,
+            reason=reason,
+        )
+        return canonicalized
+
+    return rec
 
 
 def _merge_lemma_records(
@@ -218,12 +326,12 @@ def _merge_lemma_records(
                 "primary_source": rec["source"],
                 "course_usage": [usage_entry],
             }
+            _append_normalization(by_lemma[key], rec.get("atlas_normalization"))
             continue
 
         # Upgrade thin plan-hint entries when we later see built data.
-        is_upgrade = (
-            existing["primary_source"].startswith("plan_")
-            and rec["source"] == "built_vocabulary"
+        is_upgrade = _source_priority(rec["source"]) < _source_priority(
+            existing["primary_source"]
         )
         if is_upgrade:
             existing["lemma"] = display_lemma
@@ -235,6 +343,7 @@ def _merge_lemma_records(
                 existing["pos"] = rec["pos"]
             if rec.get("ipa"):
                 existing["ipa"] = rec["ipa"]
+        _append_normalization(existing, rec.get("atlas_normalization"))
 
         # Dedupe course_usage by module identity, keeping the highest-signal
         # context when a source contributes the same lemma more than once.
@@ -292,9 +401,19 @@ def build_manifest() -> dict:
     """Build the manifest dict and return it (caller writes to disk)."""
     by_lemma: dict[str, dict] = {}
     modules = _vocabulary_modules()
+    raw_records_by_module = [(module, _load_built_vocab(module)) for module in modules]
+    taught_lemma_keys = {
+        _lemma_key(rec["lemma"])
+        for _module, records in raw_records_by_module
+        for rec in records
+    }
 
-    for module in modules:
-        built_records = _load_built_vocab(module)
+    for module, raw_records in raw_records_by_module:
+        built_records = [
+            record
+            for rec in raw_records
+            if (record := _atlas_record_for_manifest(rec, taught_lemma_keys)) is not None
+        ]
         _merge_lemma_records(by_lemma, module, built_records)
 
     _merge_seed_records(by_lemma)
@@ -308,7 +427,7 @@ def build_manifest() -> dict:
             "lemmas_total": len(entries),
             "modules_covered": len(modules),
             "from_built": sum(
-                1 for e in entries if e["primary_source"] == "built_vocabulary"
+                1 for e in entries if e["primary_source"].startswith("built_vocabulary")
             ),
             "from_surzhyk_to_avoid": sum(
                 1 for e in entries if e["primary_source"] == "surzhyk_to_avoid"
