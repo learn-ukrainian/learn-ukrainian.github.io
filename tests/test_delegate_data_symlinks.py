@@ -82,3 +82,19 @@ def test_provision_data_symlinks_skips_missing_main_files(tmp_path, capsys):
     assert not (worktree / ".venv").exists()
     assert not (worktree / "node_modules").exists()
     assert not (worktree / "starlight" / "node_modules").exists()
+
+
+def test_provision_data_symlinks_refuses_when_worktree_is_main(tmp_path, capsys):
+    """Guard against the node_modules ELOOP footgun: provisioning the main
+    checkout into itself would create `node_modules -> node_modules` self-loops
+    that break every later npm build with spawn ELOOP."""
+    main_repo = tmp_path / "main"
+    (main_repo / "node_modules").mkdir(parents=True)
+
+    delegate._provision_data_symlinks(main_repo, main_repo)
+
+    captured = capsys.readouterr()
+    assert "refusing to provision symlinks into the main checkout" in captured.err
+    # node_modules stays a real directory — no self-referential symlink created.
+    assert (main_repo / "node_modules").is_dir()
+    assert not (main_repo / "node_modules").is_symlink()

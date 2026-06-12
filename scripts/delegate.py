@@ -889,7 +889,22 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
     gates open them relative to the running checkout. Use symlinks so each
     delegated worktree sees the same local files without copying multi-GB
     directories.
+
+    Self-link guard: if ``worktree_path`` *is* the main checkout, provisioning
+    would create ``node_modules -> node_modules`` (a self-referential loop) that
+    makes every later ``npm`` invocation die with ``spawn ELOOP``. Refuse. The
+    per-link guards below also skip a ``source`` that already loops, so a bad
+    root link is never propagated into worktrees. See the autopsy
+    ``docs/bug-autopsies/node-modules-eloop-symlink.md``.
     """
+    if worktree_path.resolve() == main_repo_root.resolve():
+        print(
+            "⚠️  refusing to provision symlinks into the main checkout "
+            f"({worktree_path}) — would create self-referential loops",
+            file=sys.stderr,
+        )
+        return
+
     for relative_path in (
         "data/vesum.db",
         "data/sources.db",
@@ -898,15 +913,26 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
         "starlight/node_modules",
     ):
         source = main_repo_root / relative_path
+        # ``source.exists()`` follows symlinks and returns False for a looping
+        # source, so a self-referential root ``node_modules`` is skipped here
+        # rather than copied into the worktree.
         if not source.exists():
             print(
-                f"⚠️  skipping worktree link for missing {source}",
+                f"⚠️  skipping worktree link for missing/looping {source}",
                 file=sys.stderr,
             )
             continue
 
         target = worktree_path / relative_path
         if target.exists() or target.is_symlink():
+            continue
+
+        resolved_source = source.resolve()
+        if resolved_source == target.resolve():
+            print(
+                f"⚠️  skipping worktree link {target} — would be self-referential",
+                file=sys.stderr,
+            )
             continue
 
         if target.parent.exists() and not target.parent.is_dir():
@@ -918,7 +944,7 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
             continue
 
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.symlink_to(source.resolve())
+        target.symlink_to(resolved_source)
 
 
 def _ensure_worktree(
