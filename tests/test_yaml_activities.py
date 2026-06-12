@@ -95,6 +95,31 @@ class TestParsing:
         ]
         assert types == expected
 
+    def test_parse_cloze_accepts_schema_text_field(self, parser, tmp_path):
+        """B1 schema-style cloze activities can use text instead of passage."""
+        activity_path = tmp_path / "activities.yaml"
+        activity_path.write_text(
+            """
+- type: cloze
+  title: Текст
+  instruction: Заповніть пропуск.
+  text: Я [1] текст.
+  blanks:
+  - id: 1
+    answer: читаю
+    options:
+    - читаю
+    - читав
+""",
+            encoding="utf-8",
+        )
+
+        activities = parser.parse(activity_path)
+
+        assert len(activities) == 1
+        assert activities[0].passage == "Я [1] текст."
+        assert activities[0].blanks[0].answer == "читаю"
+
 
 # =============================================================================
 # MDX GENERATION TESTS
@@ -123,6 +148,11 @@ class TestMDXGeneration:
         mdx = parser._quiz_to_mdx(valid_quiz)
         assert '<Quiz' in mdx
         assert '### Test Quiz' in mdx # H3 Header check
+
+    def test_core_activity_mdx_receives_ukrainian_flag(self, parser, valid_quiz):
+        """Forced-Ukrainian modules pass localized UI labels to core activities."""
+        mdx = parser._quiz_to_mdx(valid_quiz, is_ukrainian_forced=True)
+        assert "isUkrainian={true}" in mdx
         assert 'questions={JSON.parse' in mdx
 
     def test_error_correction_mdx_keeps_instruction_and_legacy_anchor(self, parser, tmp_path):

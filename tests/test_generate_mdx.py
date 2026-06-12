@@ -323,6 +323,30 @@ subtitle: Test
     assert '<TabItem label="Ресурси">' in a2_2_mdx
 
 
+def test_b1_tabs_force_ukrainian_labels_from_m1(tmp_path):
+    activities_yaml = tmp_path / "activities.yaml"
+    activities_yaml.write_text("[]\n", encoding="utf-8")
+    activities = ActivityParser().parse(activities_yaml)
+    md_content = """---
+title: B1 Labels
+subtitle: Test
+---
+# B1 Labels
+
+## Розділ
+
+Текст.
+"""
+
+    mdx = generate_mdx(md_content, 1, yaml_activities=activities, level="b1")
+
+    assert '<TabItem label="Урок">' in mdx
+    assert '<TabItem label="Словник">' in mdx
+    assert '<TabItem label="Вправи">' in mdx
+    assert '<TabItem label="Ресурси">' in mdx
+    assert '<TabItem label="Lesson">' not in mdx
+
+
 def test_generated_tabs_include_hash_target_sync_script():
     md_content = """---
 title: Hash Tab Test

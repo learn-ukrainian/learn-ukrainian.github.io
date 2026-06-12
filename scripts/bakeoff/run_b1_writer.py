@@ -10,15 +10,16 @@ no audit gates, no fix loop. Output is the raw writer response.
 This is the bakeoff methodology used by the 2026-05-19 multi-agent
 routing audit at audit/2026-05-19-multi-agent-routing-assessment/REPORT.html
 — same shape, but for B1 modules with the production writer-tools
-adapters (claude-tools, codex-tools, gemini-tools, deepseek-tools,
-qwen-tools).
+adapters. For no-Claude B1+ trials, use codex-tools, deepseek-tools,
+cursor-tools, agy-tools, gemini-tools, qwen-tools, or grok-tools.
 
 Usage:
     .venv/bin/python scripts/bakeoff/run_b1_writer.py \
         --level b1 \
         --slug genitive-nuances \
-        --writer claude-tools \
-        --out audit/2026-05-19-b1-writer-bakeoff/claude-tools
+        --writer codex-tools \
+        --use-generator \
+        --out .agent/bakeoff/b1-m01-no-claude-2026-06-12/codex-tools
 
 Output files (under --out):
     writer_prompt.md            — rendered prompt (60K+ tokens) for reproducibility
@@ -78,12 +79,34 @@ def main() -> int:
             "recover at higher reasoning budgets."
         ),
     )
+    parser.add_argument(
+        "--model",
+        default=None,
+        help=(
+            "Override WRITER_DEFAULTS[writer]['model'] for this bakeoff run. "
+            "Useful for adapter comparisons such as agy-tools with a specific "
+            "Gemini model."
+        ),
+    )
+    parser.add_argument(
+        "--use-generator",
+        action="store_true",
+        help=(
+            "Render the generated V7.2 writer prompt and structured wiki "
+            "coverage obligation checklist, matching v7_build.py --use-generator."
+        ),
+    )
     args = parser.parse_args()
 
     level = args.level.lower()
     slug = args.slug
     writer = args.writer
-    out_dir: Path = args.out
+    out_dir: Path = args.out.expanduser()
+    out_dir = (
+        (Path.cwd() / out_dir).resolve()
+        if not out_dir.is_absolute()
+        else out_dir.resolve()
+    )
     out_dir.mkdir(parents=True, exist_ok=True)
 
     started_at = time.monotonic()
@@ -113,6 +136,13 @@ def main() -> int:
     write_implementation_map(impl_map, out_dir / "implementation_map.json")
 
     # 5. Render prompt
+    obligation_checklist = (
+        linear_pipeline.build_wiki_coverage_obligation_checklist(
+            wiki_manifest_data, seeded_map=impl_map
+        )
+        if args.use_generator
+        else None
+    )
     prompt = linear_pipeline.render_writer_prompt(
         plan=plan,
         plan_content=plan_content,
@@ -120,6 +150,8 @@ def main() -> int:
         wiki_manifest=wiki_manifest,
         implementation_map=impl_map,
         writer=writer,
+        use_generator=args.use_generator,
+        obligation_checklist=obligation_checklist,
     )
     (out_dir / "writer_prompt.md").write_text(prompt, encoding="utf-8")
     prompt_chars = len(prompt)
@@ -128,22 +160,30 @@ def main() -> int:
     writer_cwd = PROJECT_ROOT if writer == "gemini-tools" else out_dir
 
     # 7. Resolve effort (CLI override falls back to writer default)
-    resolved_effort = args.effort or linear_pipeline.WRITER_DEFAULTS[writer]["effort"]
+    default_config = linear_pipeline.WRITER_DEFAULTS[writer]
+    resolved_effort = args.effort or default_config["effort"]
+    resolved_model = args.model or default_config["model"]
 
     # 8. Invoke writer
     print(
         f"[bakeoff] invoking writer ({prompt_chars} prompt chars, "
-        f"effort={resolved_effort})..."
+        f"model={resolved_model}, effort={resolved_effort})..."
     )
     invoke_started = time.monotonic()
-    writer_output = linear_pipeline.invoke_writer(
-        prompt,
-        writer,
-        cwd=writer_cwd,
-        tool_trace_path=out_dir / "writer_tool_calls.json",
-        stdout_silence_timeout=args.writer_timeout,
-        effort=args.effort,
-    )
+    if args.model:
+        linear_pipeline.WRITER_DEFAULTS[writer] = {**default_config, "model": args.model}
+    try:
+        writer_output = linear_pipeline.invoke_writer(
+            prompt,
+            writer,
+            cwd=writer_cwd,
+            tool_trace_path=out_dir / "writer_tool_calls.json",
+            stdout_silence_timeout=args.writer_timeout,
+            effort=args.effort,
+        )
+    finally:
+        if args.model:
+            linear_pipeline.WRITER_DEFAULTS[writer] = default_config
     invoke_duration = time.monotonic() - invoke_started
 
     (out_dir / "writer_output.md").write_text(writer_output, encoding="utf-8")
@@ -154,9 +194,11 @@ def main() -> int:
         "level": level,
         "slug": slug,
         "writer": writer,
-        "model": linear_pipeline.WRITER_DEFAULTS[writer]["model"],
+        "model": resolved_model,
+        "model_overridden": args.model is not None,
         "effort": resolved_effort,
         "effort_overridden": args.effort is not None,
+        "use_generator": args.use_generator,
         "prompt_chars": prompt_chars,
         "output_chars": output_chars,
         "invoke_duration_s": round(invoke_duration, 2),

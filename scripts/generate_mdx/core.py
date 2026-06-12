@@ -322,7 +322,7 @@ def generate_mdx(
         lvl in SEMINAR_LEVELS
         or any(lvl.startswith(p) for p in ['b2', 'c1', 'c2', 'lit'])
         or is_a2_2_preview
-        or (lvl.startswith('b1') and module_num > 5)
+        or lvl.startswith('b1')
     ):
         is_ukrainian_forced = True
 
