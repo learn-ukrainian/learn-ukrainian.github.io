@@ -29,7 +29,7 @@ A secondary failure mode: while working the pre-submit checklist, codex **over-r
 "helpfully" rewrote `sys.executable → .venv/bin/python` in **5 unrelated test files** to satisfy the
 "no `sys.executable`" checklist item, violating "every changed file is directly related to the task."
 
-## Prevention / playbook
+## Prevention
 - **Always set a non-zero `--silence-timeout`** on long codex dispatches (e.g. 2700s). Codex's wrapper-stdout
   is silent during the poll-loop hang, so the silence timeout is the reliable catch. Never `--silence-timeout 0`.
 - **Brief instruction:** tell codex to run regenerations as FOREGROUND blocking commands with an explicit
@@ -43,6 +43,8 @@ A secondary failure mode: while working the pre-submit checklist, codex **over-r
 - Detecting the zombie: `delegate.py` says `running` but `ps -p <pid>` is dead; the codex session JSONL
   (`~/.codex/sessions/.../rollout-*.jsonl`) last records are `write_stdin` empty-polls + "still waiting…".
 
-## References
+## Links
+- Issue: #2985 (Word Atlas EPIC — the work these three dispatches were finalizing).
+- Fix: `c060124a26` (PR #3042 — autopsy + INDEX entry landed with the session handoff).
 - MEMORY #M-8 (orchestrator-active through dispatch lifecycle; agent-private JSONL, not batch_state logs).
 - Session handoff: `docs/session-state/2026-06-12-claude-atlas-goatcounter-policy-kaikki.md`.
