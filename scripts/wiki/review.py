@@ -129,6 +129,32 @@ DIM_PROMPT_FILES: dict[str, str] = {
 #: Max review rounds. ADR-001: if score doesn't improve, stop.
 MAX_ROUNDS = 2
 
+#: Max review rounds for SEMINAR tracks (folk/hist/lit/oes/ruth/…).
+#: Seminar articles are dense, source-grounded prose: the reviewer's
+#: citation-adding fixes land in round 2, but with only ``MAX_ROUNDS=2``
+#: the loop ends BEFORE those now-applied ``[S#]`` fixes get a confirming
+#: re-review, so a properly-cited article reports as failing
+#: ``source_grounding``/``register`` (a deterministic off-by-one in
+#: terminate-after-generate, root-caused folk Session-19). Giving seminar
+#: articles extra rounds lets round-2's applied fixes be re-reviewed and
+#: converge to PASS. Core levels (a1–c2) keep ``MAX_ROUNDS``.
+SEMINAR_MAX_ROUNDS = 4
+
+
+def max_rounds_for_domain(domain: str) -> int:
+    """Pick the review-round budget for a wiki ``domain`` (path under ``wiki/``).
+
+    Seminar domains (no a1–c2 level token, e.g. ``folk/genres``) get
+    :data:`SEMINAR_MAX_ROUNDS`; core-level domains keep :data:`MAX_ROUNDS`.
+    Mirrors :func:`_infer_level_from_domain` so the rounds policy and the
+    per-dim level calibration agree on what "seminar" means.
+    """
+    return (
+        SEMINAR_MAX_ROUNDS
+        if _infer_level_from_domain(domain) == "seminar"
+        else MAX_ROUNDS
+    )
+
 #: Per-call timeouts. Review prompts are bounded; 10 min is plenty.
 HARD_TIMEOUT_S = 600
 
@@ -804,16 +830,36 @@ def review_article(
         if not merge_report.applied:
             break
 
-        # ADR-001 guard: if round N+1 scores are lower, stop.
+        # ADR-001 guard: stop only if this round made the aggregate MIN
+        # score worse. An already-passing dim's ±1 wobble must NOT kill a
+        # run where the failing/driving dim is still converging (the loop is
+        # otherwise bounded by max_rounds + the no-fixes-applied break above).
         if round_num > 1:
             prev = rounds[-2].dim_results
-            if _scores_regressed(prev, dim_results):
+            if _min_score_regressed(prev, dim_results):
                 break
 
         current_text = new_text
 
-    # Compute final verdict on the last round's dim_results
-    final_dim_results = rounds[-1].dim_results
+    # Compute the final verdict on the BEST round by aggregate MIN — NOT the
+    # last round. The fix loop can DIVERGE on dense seminar prose: later
+    # rounds' find/replace patches (and noisy gemini reviewers) can drop a
+    # dim below an earlier round, so the tail round is not necessarily the
+    # best (folk Session-20: bylyny scored MIN 5→6→6→5 across 4 rounds —
+    # round 4 was WORSE than rounds 2-3). A PASS always breaks the loop
+    # immediately (``not failing_now``), and an all-pass round is by
+    # definition the highest-MIN round, so for EVERY passing run best==last —
+    # this never changes a PASS outcome or the written-back text. For a
+    # non-passing run it reports the BEST achieved score instead of a
+    # degraded/noisy tail, which also makes a larger ``max_rounds`` budget
+    # strictly safe (extra rounds can only help). Tie-break on the EARLIEST
+    # round (fewest mutations = safest text).
+    best_idx = max(
+        range(len(rounds)),
+        key=lambda i: (aggregate_min(rounds[i].dim_results)[0], -i),
+    )
+    best_round = rounds[best_idx]
+    final_dim_results = best_round.dim_results
     failing = _failing_dims(final_dim_results, thresholds)
     final_verdict = _final_verdict(final_dim_results, failing)
     min_score, failing_dim = aggregate_min(final_dim_results)
@@ -832,7 +878,7 @@ def review_article(
         started_at=started_at,
         finished_at=finished_at,
     )
-    return report, rounds[-1].article_text_after
+    return report, best_round.article_text_after
 
 
 def _failing_dims(
@@ -881,15 +927,29 @@ def aggregate_min(
     return min_score, min_dim
 
 
-def _scores_regressed(
+def _min_score_regressed(
     prev: dict[str, DimResult],
     curr: dict[str, DimResult],
 ) -> bool:
-    """True iff ANY dim's score dropped round-over-round (ADR-001)."""
-    return any(
-        dim in prev and dr.score < prev[dim].score
-        for dim, dr in curr.items()
-    )
+    """True iff the aggregate MIN score dropped round-over-round (ADR-001).
+
+    The review gate is MIN-based (see :func:`aggregate_min`), so "did this
+    round make things worse" must be judged on the MIN, NOT on any single
+    dim. The old per-dim check (``any dim's score dropped``) was too
+    aggressive for multi-round seminar reviews: an already-passing dim
+    wobbling by ±1 within reviewer noise (e.g. ``register`` 7→6 while
+    ``source_grounding`` is still actively converging 5→6→…) would break
+    the loop BEFORE the failing dim's just-applied citation fixes ever got
+    their confirming re-review — so a converging article reported a stale
+    failure. Judging regression on the MIN lets such wobbles pass while
+    still stopping a run whose driving dim genuinely got worse. The loop is
+    bounded by ``max_rounds`` and the no-fixes-applied break, so this never
+    spins. (folk Session-20 — empirically the guard, not the off-by-one
+    alone, was what kept bylyny from converging.)
+    """
+    prev_min, _ = aggregate_min(prev)
+    curr_min, _ = aggregate_min(curr)
+    return curr_min < prev_min
 
 
 def _final_verdict(
