@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import pytest
@@ -68,3 +69,51 @@ def test_specified_russianisms_keep_standard_alternatives() -> None:
             attestation["source"] == "standard_alternative" and attestation["ref"] == alternative
             for attestation in status["attestations"]
         )
+
+
+def test_atlas_heritage_labels_use_source_backed_evidence() -> None:
+    expected = {
+        "вельми": "authentic-archaism",
+        "глагол": "authentic-archaism",
+        "гетьман": "historism",
+        "опришок": "historism",
+        "десятина": "historism",
+    }
+
+    for lemma, classification in expected.items():
+        status = classify_lemma(lemma)
+
+        assert status["classification"] == classification
+        assert status["is_russianism"] is False
+        assert status["attestations"]
+
+
+def test_kobita_uses_cached_sum20_regional_evidence(monkeypatch, tmp_path) -> None:
+    cache_dir = tmp_path / "slovnyk_cache"
+    cache_dir.mkdir()
+    (cache_dir / "кобіта.json").write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "lemma": "кобіта",
+                "lookup_word": "кобіта",
+                "lookups": {
+                    "newsum": {
+                        "dictionary_slug": "newsum",
+                        "dictionary_label": "Словник української мови у 20 томах (СУМ-20)",
+                        "word": "кобіта",
+                        "text": "КОБІТА, и, ж., зах. Те саме, що жінка.",
+                    }
+                },
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("LEXICON_SLOVNYK_CACHE", str(cache_dir))
+
+    status = classify_lemma("кобіта")
+
+    assert status["classification"] == "dialect"
+    assert status["is_russianism"] is False
+    assert any("СУМ-20" in attestation["source"] for attestation in status["attestations"])

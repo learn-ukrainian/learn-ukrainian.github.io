@@ -1,26 +1,17 @@
 """Build the Word Atlas (Лексикон) data manifest for Starlight static rendering.
 
-V1 scope (per docs/best-practices/word-atlas-design.md §9):
-  Render lemmas referenced by a1/my-morning (built) + a1/sounds-letters-and-hello
-  (plan-only) + a1/things-have-gender (plan-only). ~80 lemmas total.
-
-Input sources, in precedence order:
-  1. ``curriculum/l2-uk-en/{level}/{slug}/vocabulary.yaml`` — built modules.
-     Each entry: ``{lemma, translation, pos, ipa, usage}``.
-  2. ``curriculum/l2-uk-en/plans/{level}/{slug}.yaml`` — plans for not-yet-built
-     modules. Reads ``vocabulary_hints.required`` and
-     ``vocabulary_hints.recommended``; each entry is a ``"lemma (gloss)"``
-     string that we split.
+Input source:
+  every ``curriculum/l2-uk-en/{level}/{slug}/vocabulary.yaml`` file. Entries
+  may name the Ukrainian headword as ``lemma``, ``word``, ``uk``, or ``term``;
+  A1 uses ``lemma`` while A2 uses ``word``.
 
 Output: ``starlight/src/data/lexicon-manifest.json`` — versioned JSON the
 Astro dynamic route at ``src/pages/lexicon/[lemma].astro`` reads at build time
 to materialize one static page per lemma.
 
-V1 deliberately ships THIN: lemma + course-usage + (when available) translation
-and POS. Per design §4, additional sections (etymology, definitions,
-sovietization badge, heritage status, paradigm, etc.) are layered on by
-later phases of the build pipeline. Keeping this thin makes the route
-land first; enrichment is purely additive to the manifest.
+The builder stays thin: lemma + course-usage + (when available) translation,
+POS, and IPA. Per design §4, additional sections (etymology, definitions,
+heritage status, paradigm, etc.) are layered on by enrichment.
 
 Reproducer (run from repo root):
 
@@ -41,17 +32,12 @@ import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
-PLANS_ROOT = CURRICULUM_ROOT / "plans"
+CURRICULUM_MANIFEST = CURRICULUM_ROOT / "curriculum.yaml"
 MANIFEST_PATH = PROJECT_ROOT / "starlight" / "src" / "data" / "lexicon-manifest.json"
 _STRESS_MARK_RE = re.compile("[\u0300\u0301]")
 
 
-# v1 module set — per design §9.
-V1_MODULES: list[dict[str, str | int]] = [
-    {"track": "a1", "module_num": 1, "slug": "sounds-letters-and-hello"},
-    {"track": "a1", "module_num": 8, "slug": "things-have-gender"},
-    {"track": "a1", "module_num": 20, "slug": "my-morning"},
-]
+LEMMA_FIELDS = ("lemma", "word", "uk", "term")
 
 SURZHYK_TO_AVOID_SEEDS: list[dict[str, str | None]] = [
     {"lemma": "агенство", "gloss": "avoid: агенція", "pos": "noun"},
@@ -62,6 +48,15 @@ SURZHYK_TO_AVOID_SEEDS: list[dict[str, str | None]] = [
     {"lemma": "міроприємство", "gloss": "avoid: захід", "pos": "noun"},
     {"lemma": "протиріччя", "gloss": "avoid: суперечність", "pos": "noun"},
     {"lemma": "слідуючий", "gloss": "avoid: наступний", "pos": "adj"},
+]
+
+HERITAGE_STATUS_SEEDS: list[dict[str, str | None]] = [
+    {"lemma": "вельми", "gloss": "very, exceedingly", "pos": "adv"},
+    {"lemma": "глагол", "gloss": "archaic: word, speech", "pos": "noun"},
+    {"lemma": "гетьман", "gloss": "hetman", "pos": "noun"},
+    {"lemma": "опришок", "gloss": "opryshok", "pos": "noun"},
+    {"lemma": "десятина", "gloss": "tithe; historical land unit", "pos": "noun"},
+    {"lemma": "кобіта", "gloss": "regional: woman", "pos": "noun"},
 ]
 
 
@@ -96,23 +91,62 @@ def _slug_for_url(lemma: str) -> str:
 
 
 def _lemma_key(lemma: str) -> str:
-    normalized = unicodedata.normalize("NFKD", lemma.strip().casefold())
+    cleaned = re.sub(r"\s+", " ", lemma.strip())
+    cleaned = cleaned.strip(" \t\r\n.,;:!?…")
+    normalized = unicodedata.normalize("NFKD", cleaned.casefold())
     normalized = _STRESS_MARK_RE.sub("", normalized)
     return unicodedata.normalize("NFC", normalized)
 
 
-def _parse_plan_hint(raw: str) -> tuple[str, str | None]:
-    """Plan hints look like ``"звук (sound)"`` or sometimes just ``"звук"``.
+def _course_module_numbers() -> dict[tuple[str, str], int]:
+    """Return curriculum-indexed module numbers keyed by ``(track, slug)``."""
+    manifest = yaml.safe_load(CURRICULUM_MANIFEST.read_text(encoding="utf-8")) or {}
+    levels = manifest.get("levels") or {}
+    module_numbers: dict[tuple[str, str], int] = {}
+    if not isinstance(levels, dict):
+        return module_numbers
 
-    Returns (lemma, gloss_or_None). Gloss is anything inside the FIRST
-    parens; later parenthetical asides are kept inside the lemma string
-    (rare, but defensible — multi-paren entries are usually compound notes).
-    """
-    raw = raw.strip()
-    m = re.match(r"^(.+?)\s*\(([^()]+)\)\s*$", raw)
-    if m:
-        return m.group(1).strip(), m.group(2).strip()
-    return raw, None
+    for track, level_data in levels.items():
+        if not isinstance(level_data, dict):
+            continue
+        raw_modules = level_data.get("modules") or []
+        if not isinstance(raw_modules, list):
+            continue
+        for index, raw_slug in enumerate(raw_modules, start=1):
+            slug = str(raw_slug).split("#", 1)[0].strip()
+            if not slug:
+                continue
+            if (CURRICULUM_ROOT / str(track) / slug / "vocabulary.yaml").exists():
+                module_numbers[(str(track), slug)] = index
+    return module_numbers
+
+
+def _vocabulary_modules() -> list[dict[str, str | int]]:
+    """Return every module that has a built ``vocabulary.yaml`` file."""
+    indexed_numbers = _course_module_numbers()
+    max_index_by_track: dict[str, int] = {}
+    for (track, _slug), module_num in indexed_numbers.items():
+        max_index_by_track[track] = max(max_index_by_track.get(track, 0), module_num)
+
+    extra_counts_by_track: dict[str, int] = {}
+    modules: list[dict[str, str | int]] = []
+    for path in sorted(CURRICULUM_ROOT.glob("*/*/vocabulary.yaml")):
+        track = path.parent.parent.name
+        slug = path.parent.name
+        module_num = indexed_numbers.get((track, slug))
+        if module_num is None:
+            extra_counts_by_track[track] = extra_counts_by_track.get(track, 0) + 1
+            module_num = max_index_by_track.get(track, 0) + extra_counts_by_track[track]
+        modules.append({"track": track, "module_num": module_num, "slug": slug})
+    return modules
+
+
+def _entry_lemma(entry: dict) -> str | None:
+    for field in LEMMA_FIELDS:
+        value = entry.get(field)
+        if value is not None and str(value).strip():
+            return str(value).strip()
+    return None
 
 
 def _load_built_vocab(module: dict[str, str | int]) -> list[dict]:
@@ -125,7 +159,7 @@ def _load_built_vocab(module: dict[str, str | int]) -> list[dict]:
     for entry in raw:
         if not isinstance(entry, dict):
             continue
-        lemma = entry.get("lemma")
+        lemma = _entry_lemma(entry)
         if not lemma:
             continue
         out.append(
@@ -140,40 +174,10 @@ def _load_built_vocab(module: dict[str, str | int]) -> list[dict]:
     return out
 
 
-def _load_plan_hints(module: dict[str, str | int]) -> list[dict]:
-    """Return list of lemma records from a plan's ``vocabulary_hints``."""
-    path = PLANS_ROOT / str(module["track"]) / f"{module['slug']}.yaml"
-    if not path.exists():
-        return []
-    plan = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-    hints = plan.get("vocabulary_hints") or {}
-    if not isinstance(hints, dict):
-        return []
-    out: list[dict] = []
-    for bucket_name in ("required", "recommended"):
-        for entry in hints.get(bucket_name) or []:
-            if not isinstance(entry, str):
-                continue
-            lemma, gloss = _parse_plan_hint(entry)
-            if not lemma:
-                continue
-            out.append(
-                {
-                    "lemma": lemma,
-                    "gloss": gloss,
-                    "pos": None,
-                    "ipa": None,
-                    "source": f"plan_{bucket_name}",
-                }
-            )
-    return out
-
-
 _SOURCE_PRIORITY = {
     "built_vocabulary": 0,
-    "plan_required": 1,
-    "plan_recommended": 2,
-    "surzhyk_to_avoid": 3,
+    "surzhyk_to_avoid": 1,
+    "heritage_status_seed": 2,
 }
 
 
@@ -187,8 +191,8 @@ def _merge_lemma_records(
     Lemmas are merged case-insensitively (key = casefolded form); the
     display ``lemma`` field preserves the first capitalization we see.
     Built-module data wins over plan hints when both are present. Course
-    usage is deduped on (track, module_num) — keeping the highest-signal
-    context (built > plan_required > plan_recommended).
+    usage is deduped on (track, module_num, slug) — keeping the highest-signal
+    context (built > seed/test sources).
     """
     track = str(module["track"])
     module_num = int(module["module_num"])
@@ -232,12 +236,11 @@ def _merge_lemma_records(
             if rec.get("ipa"):
                 existing["ipa"] = rec["ipa"]
 
-        # Dedupe course_usage: collapse same (track, module_num) tuples,
-        # keeping the highest-signal context. This avoids "module appears
-        # twice" when a lemma is in both the plan AND the built vocab.
-        usage_key = (track, module_num)
+        # Dedupe course_usage by module identity, keeping the highest-signal
+        # context when a source contributes the same lemma more than once.
+        usage_key = (track, module_num, slug)
         for u in existing["course_usage"]:
-            if (u["track"], u["module_num"]) == usage_key:
+            if (u["track"], u["module_num"], u["slug"]) == usage_key:
                 if _SOURCE_PRIORITY.get(rec["source"], 99) < _SOURCE_PRIORITY.get(
                     u["context"], 99
                 ):
@@ -266,20 +269,36 @@ def _merge_seed_records(by_lemma: dict[str, dict]) -> None:
         }
 
 
+def _merge_heritage_seed_records(by_lemma: dict[str, dict]) -> None:
+    for rec in HERITAGE_STATUS_SEEDS:
+        display_lemma = str(rec["lemma"])
+        key = _lemma_key(display_lemma)
+        if key in by_lemma:
+            by_lemma[key]["seed_group"] = "heritage-status-samples"
+            continue
+        by_lemma[key] = {
+            "lemma": display_lemma,
+            "url_slug": _slug_for_url(display_lemma),
+            "gloss": rec.get("gloss"),
+            "pos": rec.get("pos"),
+            "ipa": None,
+            "primary_source": "heritage_status_seed",
+            "seed_group": "heritage-status-samples",
+            "course_usage": [],
+        }
+
+
 def build_manifest() -> dict:
     """Build the manifest dict and return it (caller writes to disk)."""
     by_lemma: dict[str, dict] = {}
+    modules = _vocabulary_modules()
 
-    for module in V1_MODULES:
-        # Built data has higher signal — prefer it when both are available.
-        # We still load plan hints first to seed empty modules; built records
-        # then upgrade entries that already exist.
-        plan_records = _load_plan_hints(module)
+    for module in modules:
         built_records = _load_built_vocab(module)
-        _merge_lemma_records(by_lemma, module, plan_records)
         _merge_lemma_records(by_lemma, module, built_records)
 
     _merge_seed_records(by_lemma)
+    _merge_heritage_seed_records(by_lemma)
 
     entries = sorted(by_lemma.values(), key=lambda e: e["lemma"])
     return {
@@ -287,24 +306,30 @@ def build_manifest() -> dict:
         "generated_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "stats": {
             "lemmas_total": len(entries),
-            "modules_covered": len(V1_MODULES),
+            "modules_covered": len(modules),
             "from_built": sum(
                 1 for e in entries if e["primary_source"] == "built_vocabulary"
-            ),
-            "from_plan_only": sum(
-                1 for e in entries if e["primary_source"].startswith("plan_")
             ),
             "from_surzhyk_to_avoid": sum(
                 1 for e in entries if e["primary_source"] == "surzhyk_to_avoid"
             ),
+            "from_heritage_status_seed": sum(
+                1 for e in entries if e["primary_source"] == "heritage_status_seed"
+            ),
         },
-        "modules": V1_MODULES,
+        "modules": modules,
         "seed_groups": [
             {
                 "id": "surzhyk-to-avoid",
                 "source": "surzhyk_to_avoid",
                 "description": "Classifier-verified Russianism/surzhyk examples for visible Atlas warnings.",
                 "lemmas": [str(seed["lemma"]) for seed in SURZHYK_TO_AVOID_SEEDS],
+            },
+            {
+                "id": "heritage-status-samples",
+                "source": "heritage_status_seed",
+                "description": "Source-backed heritage status sample pages for Atlas design conformance QA.",
+                "lemmas": [str(seed["lemma"]) for seed in HERITAGE_STATUS_SEEDS],
             }
         ],
         "entries": entries,
@@ -322,7 +347,7 @@ def main() -> None:
     print(
         f"Wrote {MANIFEST_PATH.relative_to(PROJECT_ROOT)}: "
         f"{stats['lemmas_total']} lemmas across {stats['modules_covered']} modules "
-        f"(built={stats['from_built']}, plan_only={stats['from_plan_only']})."
+        f"(built={stats['from_built']}, seeds={stats['from_surzhyk_to_avoid'] + stats['from_heritage_status_seed']})."
     )
 
 

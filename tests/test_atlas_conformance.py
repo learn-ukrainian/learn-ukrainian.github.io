@@ -166,27 +166,35 @@ def test_heritage_evidence_required_flags_authentic_without_presoviet_attestatio
     assert _gates_for(entry) == ["heritage_evidence_required"]
 
 
-def test_sovietization_must_be_flagged_for_unmirrored_sum11_risk():
+def test_sovietization_must_be_flagged_for_unflagged_sum11_card_risk():
     entry = _entry(
         enrichment={
-            "meaning": {
-                "definitions": [{"text": "Ідеологічно навантажене тлумачення.", "sovietization_risk": 1}],
-                "source": "СУМ-11",
-            }
+            "definition_cards": [
+                {
+                    "id": "sum11-flagged",
+                    "source": "СУМ-11",
+                    "definitions": ["Ідеологічно навантажене тлумачення."],
+                    "sovietization_risk": 1,
+                }
+            ]
         }
     )
 
     assert _gates_for(entry) == ["sovietization_must_be_flagged"]
 
 
-def test_sovietization_passes_when_meaning_carries_source_risk():
+def test_sovietization_passes_when_sum11_card_carries_inline_caveat():
     entry = _entry(
         enrichment={
-            "meaning": {
-                "definitions": ["Ідеологічно навантажене тлумачення."],
-                "source": "СУМ-11",
-                "sovietization_risk": 1,
-            }
+            "definition_cards": [
+                {
+                    "id": "sum11-flagged",
+                    "source": "СУМ-11",
+                    "definitions": ["Ідеологічно навантажене тлумачення."],
+                    "sovietization_risk": 1,
+                    "flag_note": "⚠ СУМ-11 — радянське видання; подаємо обережно.",
+                }
+            ]
         }
     )
 
