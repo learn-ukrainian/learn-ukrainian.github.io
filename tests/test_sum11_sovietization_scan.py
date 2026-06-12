@@ -97,8 +97,8 @@ SEED_ROWS = [
 
 
 @pytest.fixture
-def seeded_db(tmp_path):
-    """Create a small sum11-shaped DB and apply the migration."""
+def seeded_db_without_migration(tmp_path):
+    """Create a small pre-migration sum11-shaped DB."""
     db_path = tmp_path / "sum11_test.db"
     conn = sqlite3.connect(db_path)
     conn.executescript(
@@ -119,18 +119,42 @@ def seeded_db(tmp_path):
         SEED_ROWS,
     )
     conn.commit()
+    conn.close()
+    return db_path
+
+
+@pytest.fixture
+def seeded_db(seeded_db_without_migration):
+    """Create a small sum11-shaped DB and apply the migration."""
+    conn = sqlite3.connect(seeded_db_without_migration)
 
     # Apply the production migration so column shape matches.
     conn.executescript(MIGRATION_SQL.read_text())
     conn.commit()
     conn.close()
-    return db_path
+    return seeded_db_without_migration
 
 
 def test_migration_adds_required_columns(seeded_db):
     conn = sqlite3.connect(seeded_db)
     cols = {row[1] for row in conn.execute("PRAGMA table_info(sum11)").fetchall()}
     conn.close()
+    assert "sovietization_risk" in cols
+    assert "sovietization_keywords" in cols
+
+
+def test_lexicon_migration_script_adds_required_columns(seeded_db_without_migration):
+    from scripts.lexicon.migrate_sum11_sovietization import (
+        ensure_sum11_sovietization_columns,
+    )
+
+    conn = sqlite3.connect(seeded_db_without_migration)
+    actions = ensure_sum11_sovietization_columns(conn)
+    cols = {row[1] for row in conn.execute("PRAGMA table_info(sum11)").fetchall()}
+    conn.close()
+
+    assert "add sovietization_risk" in actions
+    assert "add sovietization_keywords" in actions
     assert "sovietization_risk" in cols
     assert "sovietization_keywords" in cols
 
@@ -293,3 +317,34 @@ def test_scan_is_idempotent(seeded_db, tmp_path):
     conn.close()
 
     assert first == second
+
+
+def test_scan_clears_stale_clean_row_flags(seeded_db, tmp_path):
+    report_path = tmp_path / "report.md"
+    conn = sqlite3.connect(seeded_db)
+    conn.execute(
+        "UPDATE sum11 SET sovietization_risk = 2, sovietization_keywords = 'ленін' "
+        "WHERE word = 'західний'"
+    )
+    conn.commit()
+    conn.close()
+
+    subprocess.run(
+        [
+            str(_venv_python()),
+            str(SCAN_SCRIPT),
+            "--db",
+            str(seeded_db),
+            "--report",
+            str(report_path),
+        ],
+        check=True,
+    )
+
+    conn = sqlite3.connect(seeded_db)
+    row = conn.execute(
+        "SELECT sovietization_risk, sovietization_keywords FROM sum11 WHERE word = 'західний'"
+    ).fetchone()
+    conn.close()
+
+    assert row == (0, "")

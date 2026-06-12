@@ -13,6 +13,7 @@ import html
 import json
 import re
 import sqlite3
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -78,17 +79,22 @@ def _classify(term: str, *, surface: bool) -> dict[str, Any]:
         return _status("unknown", [], is_russianism=False, russian_shadow=False)
 
     russian_shadow, russian_shadow_detail = _check_russian_shadow(term)
+    sovietization_risk = _sum11_sovietization_risk_for_term(term)
 
     vesum = _vesum_attestation(term, surface=surface)
     if vesum:
-        return _status("standard", [vesum], is_russianism=False, russian_shadow=russian_shadow)
+        return _status(
+            "standard",
+            [vesum],
+            is_russianism=False,
+            russian_shadow=russian_shadow,
+            sovietization_risk=sovietization_risk,
+        )
 
     russianism = _russianism_status(term, russian_shadow=russian_shadow)
 
     attestations: list[dict[str, Any]] = []
     classification = "unknown"
-    sovietization_risk = 0
-
     with _source_conn() as conn:
         auth_hits = _dictionary_attestations(conn, term, surface=surface)
         for hit in auth_hits:
@@ -348,14 +354,18 @@ def _grinchenko_surface_usage_hits(conn: sqlite3.Connection, term: str) -> list[
 
 def _sum11_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]]:
     hits = []
+    has_flag_columns = _source_sum11_has_flag_columns()
+    fields = "id, word, definition, text, source"
+    if has_flag_columns:
+        fields += ", sovietization_risk, sovietization_keywords"
     for variant in _apostrophe_variants(term):
         rows = conn.execute(
-            "SELECT id, word, definition, text, source FROM sum11 WHERE lower(word) = ? LIMIT 3",
+            f"SELECT {fields} FROM sum11 WHERE lower(word) = ? LIMIT 3",
             (variant,),
         ).fetchall()
         for row in rows:
             text = _clean_text(row["definition"])
-            risk = _sum11_sovietization_risk(str(row["definition"] or ""), str(row["text"] or ""))
+            risk = _sum11_row_sovietization_risk(row, has_flag_columns=has_flag_columns)
             hits.append(
                 {
                     "classification": _classification_from_definition(text, default="standard"),
@@ -369,6 +379,84 @@ def _sum11_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any
                 }
             )
     return hits
+
+
+def _sum11_has_flag_columns(conn: sqlite3.Connection) -> bool:
+    cols = {row[1] for row in conn.execute("PRAGMA table_info(sum11);").fetchall()}
+    return {"sovietization_risk", "sovietization_keywords"}.issubset(cols)
+
+
+@lru_cache(maxsize=8)
+def _sum11_has_flag_columns_for_db(
+    db_path: str,
+    mtime_ns: int,
+    size: int,
+) -> bool:
+    del mtime_ns, size  # cache-key invalidators; not used in the query itself.
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    try:
+        return _sum11_has_flag_columns(conn)
+    finally:
+        conn.close()
+
+
+def _source_sum11_has_flag_columns() -> bool:
+    try:
+        stat = SOURCES_DB.stat()
+        return _sum11_has_flag_columns_for_db(
+            str(SOURCES_DB.resolve()),
+            stat.st_mtime_ns,
+            stat.st_size,
+        )
+    except (OSError, sqlite3.Error):
+        return False
+
+
+def _sum11_row_sovietization_risk(
+    row: sqlite3.Row,
+    *,
+    has_flag_columns: bool,
+) -> int:
+    if has_flag_columns:
+        try:
+            return int(row["sovietization_risk"] or 0)
+        except (IndexError, KeyError, TypeError, ValueError):
+            return 0
+    return _sum11_sovietization_risk(str(row["definition"] or ""), str(row["text"] or ""))
+
+
+def _sum11_sovietization_risk_for_term(term: str) -> int:
+    try:
+        has_flag_columns = _source_sum11_has_flag_columns()
+        with _source_conn() as conn:
+            if has_flag_columns:
+                risk = 0
+                for variant in _apostrophe_variants(term):
+                    row = conn.execute(
+                        "SELECT MAX(sovietization_risk) FROM sum11 WHERE lower(word) = ?",
+                        (variant,),
+                    ).fetchone()
+                    if row:
+                        risk = max(risk, int(row[0] or 0))
+                return risk
+
+            risk = 0
+            for variant in _apostrophe_variants(term):
+                rows = conn.execute(
+                    "SELECT definition, text FROM sum11 WHERE lower(word) = ? LIMIT 3",
+                    (variant,),
+                ).fetchall()
+                for row in rows:
+                    risk = max(
+                        risk,
+                        _sum11_sovietization_risk(
+                            str(row["definition"] or ""),
+                            str(row["text"] or ""),
+                        ),
+                    )
+            return risk
+    except (FileNotFoundError, sqlite3.Error):
+        return 0
 
 
 def _esum_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]]:

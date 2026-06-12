@@ -3,6 +3,7 @@ import sqlite3
 
 from scripts.lexicon.enrich_manifest import (
     _build_paradigm,
+    _meaning,
     _sense_correct_synonyms,
     clean_gloss,
     clean_html_entities,
@@ -29,7 +30,10 @@ def _conn() -> sqlite3.Connection:
         );
         CREATE TABLE sum11 (
             word TEXT NOT NULL,
-            definition TEXT NOT NULL DEFAULT ''
+            definition TEXT NOT NULL DEFAULT '',
+            text TEXT NOT NULL DEFAULT '',
+            sovietization_risk INTEGER NOT NULL DEFAULT 0,
+            sovietization_keywords TEXT NOT NULL DEFAULT ''
         );
         """
     )
@@ -192,7 +196,10 @@ def test_synonyms_filter_polluted_wordnet_rows_to_a1_sense() -> None:
             ("fine", "прекрасно", "fine: прекрасно"),
         ],
     )
-    conn.execute("INSERT INTO sum11 VALUES (?, ?)", ("чудово", "Уживається як вияв похвали; прекрасно, чудесно."))
+    conn.execute(
+        "INSERT INTO sum11 (word, definition) VALUES (?, ?)",
+        ("чудово", "Уживається як вияв похвали; прекрасно, чудесно."),
+    )
 
     assert _sense_correct_synonyms(conn, "кава") == []
     assert _sense_correct_synonyms(conn, "мама") == ["мати", "матуся"]
@@ -207,3 +214,28 @@ def test_synonyms_filter_polluted_wordnet_rows_to_a1_sense() -> None:
     ]
     assert not any(any("A" <= char <= "Z" or "a" <= char <= "z" for char in synonym) for synonym in all_synonyms)
     assert "жахливо" not in all_synonyms
+
+
+def test_sum11_meaning_carries_source_sovietization_risk() -> None:
+    conn = _conn()
+    conn.execute(
+        """
+        INSERT INTO sum11
+            (word, definition, text, sovietization_risk, sovietization_keywords)
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (
+            "ленінізм",
+            "Учення В. І. Леніна, що являє собою розвиток марксизму.",
+            "",
+            2,
+            "ленін,маркс",
+        ),
+    )
+
+    meaning = _meaning(conn, "ленінізм")
+
+    assert meaning is not None
+    assert meaning["source"] == "СУМ-11"
+    assert meaning["sovietization_risk"] == 2
+    assert meaning["sovietization_keywords"] == ["ленін", "маркс"]
