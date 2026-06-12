@@ -69,6 +69,7 @@ from agent_runtime.runner import invoke
 from agent_runtime.tool_config import build_mcp_tool_config
 from common.thresholds import REVIEW_PASS_FLOOR
 from wiki.config import PROMPTS_DIR, WIKI_DIR
+from wiki.register_quote_exemption import find_attributed_verbatim_quote_spans
 from wiki.review_merger import (
     Fix,
     MergeReport,
@@ -380,6 +381,109 @@ def _infer_level_from_domain(domain: str) -> str:
 # ── Response parsing ───────────────────────────────────────────────
 
 
+def _register_score_from_findings(findings: list[Finding]) -> int:
+    """Re-derive the register score from surviving findings via the
+    ``review_register.md`` severity→score table. Used after the deterministic
+    verbatim-quote exemption removes attributed-quote false positives, so the
+    score counts only findings that genuinely apply to the article's own prose.
+    """
+    crit = sum(1 for f in findings if f.severity.strip().lower() == "critical")
+    major = sum(1 for f in findings if f.severity.strip().lower() == "major")
+    minor = sum(1 for f in findings if f.severity.strip().lower() == "minor")
+    if crit >= 2:
+        return 5
+    if crit == 1 and major >= 2:
+        return 6
+    if major >= 4:
+        return 6
+    if crit == 1:
+        return 7
+    if major >= 2:
+        return 7
+    if major == 1:
+        return 8
+    if minor >= 3:
+        return 8
+    if minor >= 1:
+        return 9
+    return 10
+
+
+def _register_verdict_from_score(score: int, findings: list[Finding]) -> str:
+    """PASS/REVISE/REJECT per ``review_register.md`` given the recomputed score."""
+    has_critical = any(f.severity.strip().lower() == "critical" for f in findings)
+    if score >= 8 and not has_critical:
+        return "PASS"
+    if score >= 6:
+        return "REVISE"
+    return "REJECT"
+
+
+def _finding_quote_is_quote_exempt(
+    quote: str,
+    article_text: str,
+    spans: list,
+) -> bool:
+    """True iff EVERY occurrence of the finding's flagged text in the article
+    lies inside an attributed verbatim-quote span.
+
+    Teeth-preserving: a flagged form that also appears in unquoted prose (or that
+    cannot be located in the article at all) is NOT exempt — the finding survives.
+    """
+    needle = quote.strip()
+    if not needle or not spans:
+        return False
+    occurrences: list[tuple[int, int]] = []
+    start = 0
+    while True:
+        idx = article_text.find(needle, start)
+        if idx == -1:
+            break
+        occurrences.append((idx, idx + len(needle)))
+        start = idx + 1
+    if not occurrences:
+        return False  # paraphrased / not locatable → keep (conservative)
+    for occ_start, occ_end in occurrences:
+        if not any(span.start <= occ_start and occ_end <= span.end for span in spans):
+            return False  # at least one occurrence is in prose → keep
+    return True
+
+
+def _apply_register_quote_exemption(
+    *,
+    findings: list[Finding],
+    score: int,
+    verdict: str,
+    article_text: str,
+) -> tuple[list[Finding], int, str]:
+    """Deterministically drop register findings whose flagged text occurs only
+    inside attributed verbatim quotes, then re-derive score + verdict from the
+    survivors.
+
+    Mirrors the module-side blockquote exemption (#2998) for the LLM register
+    reviewer: gemini judges everything; code removes the attributed-quote false
+    positives so faithful historical quotation (e.g. ЕУ ``акомпаньямент``,
+    Білецький ``в кругу``) does not trip the gate. The score table is the
+    documented gate contract, so the recompute is faithful — and it never lowers
+    the score (exemption only removes penalty, never adds it).
+    """
+    if not article_text or not findings:
+        return findings, score, verdict
+    spans = find_attributed_verbatim_quote_spans(article_text)
+    if not spans:
+        return findings, score, verdict
+    kept = [
+        f
+        for f in findings
+        if not _finding_quote_is_quote_exempt(f.quote, article_text, spans)
+    ]
+    if len(kept) == len(findings):
+        return findings, score, verdict
+    new_score = max(score, _register_score_from_findings(kept))
+    new_verdict = _register_verdict_from_score(new_score, kept)
+    return kept, new_score, new_verdict
+
+
 def _parse_dim_result(
     *,
     dim: str,
@@ -387,6 +491,7 @@ def _parse_dim_result(
     model: str,
     response: str,
     duration_s: float,
+    article_text: str = "",
 ) -> DimResult:
     """Parse a reviewer's JSON response into a DimResult."""
     payload = extract_json_object(response)
@@ -437,6 +542,14 @@ def _parse_dim_result(
             error=f"reviewer emitted invalid verdict: {verdict!r}",
         )
     notes = str(payload.get("notes", ""))
+
+    if dim == "register" and article_text:
+        findings, score, verdict = _apply_register_quote_exemption(
+            findings=findings,
+            score=score,
+            verdict=verdict,
+            article_text=article_text,
+        )
 
     return DimResult(
         dim=dim,
@@ -524,6 +637,7 @@ def _run_single_dim(
                 model=result.model,
                 response=result.response,
                 duration_s=duration,
+                article_text=article_text,
             )
         except (ValueError, json.JSONDecodeError) as exc:
             last_error = f"{agent}: parse error: {exc}"
