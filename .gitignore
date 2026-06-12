@@ -1,5 +1,11 @@
 # Dependencies
-node_modules/
+# No trailing slash: ignore a `node_modules` DIRECTORY *and* a stray
+# `node_modules` symlink. A dir-only `node_modules/` rule let a self-referential
+# `node_modules -> node_modules` symlink slip past gitignore and get committed
+# (#3041), re-materialising an infinite symlink loop on every checkout/reset that
+# broke every npm build with `spawn ELOOP`. See
+# docs/bug-autopsies/node-modules-eloop-symlink.md.
+node_modules
 
 # OS files
 .DS_Store

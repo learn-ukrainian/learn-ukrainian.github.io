@@ -42,6 +42,21 @@ if [ "$(git -C "$_LU_REPO" config --get core.bare 2>/dev/null)" = "true" ]; then
     && echo "⚠️  repo-health: reset core.bare true→false (git work tree was broken; see #2842)" >&2
 fi
 
+# Repo-health canary: a self-referential `node_modules` symlink (X -> X) is an
+# infinite loop. `npm run <script>` builds its child PATH by walking the tree
+# UPWARD and prepending every ancestor node_modules/.bin; resolving the loop
+# makes `spawn` return ELOOP, so EVERY npm build dies instantly with exit 194
+# and no output — looking like "Astro is broken" when it is not. Gitignored, so
+# CI can't catch it; only a local canary can. Auto-heal the exact absolute
+# self-link case here (the general loop case is healed by the API-orient Python
+# canary in scripts/api/main.py). See docs/bug-autopsies/node-modules-eloop-symlink.md.
+for _nm in "$_LU_REPO/node_modules" "$_LU_REPO/starlight/node_modules"; do
+  if [ -L "$_nm" ] && [ "$(readlink "$_nm" 2>/dev/null)" = "$_nm" ]; then
+    rm -f "$_nm" \
+      && echo "⚠️  repo-health: removed self-referential symlink $_nm (was breaking npm with spawn ELOOP)" >&2
+  fi
+done
+
 # Skip in non-interactive (headless) mode
 if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UKRAINIAN_PIPELINE" ] || [ -n "$GEMINI_SESSION" ]; then
   exit 0

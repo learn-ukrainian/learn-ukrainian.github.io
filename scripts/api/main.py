@@ -488,6 +488,33 @@ def _core_bare_canary() -> bool:
     return ok
 
 
+def _self_symlink_canary() -> bool:
+    """Detection canary for the node_modules ELOOP footgun.
+
+    A self-referential ``node_modules`` symlink (``X -> X``) is an infinite
+    loop. ``npm run <script>`` builds its child PATH by walking the directory
+    tree upward and prepending every ancestor ``node_modules/.bin``; resolving
+    the looping ancestor makes ``spawn`` return ``ELOOP``, so every npm build
+    dies instantly with exit 194 and no output — looking like "Astro is broken"
+    when it is not. The loop is gitignored so CI cannot catch it; only a local
+    canary can. On detection it auto-removes the looping link and logs an alert.
+    Never raises: the canary must not break health collection. See the autopsy
+    ``docs/bug-autopsies/node-modules-eloop-symlink.md``.
+    """
+    try:
+        from scripts.audit.check_self_symlinks import check_self_symlinks
+    except ImportError:  # path-flavoured import for test/script contexts
+        from audit.check_self_symlinks import check_self_symlinks
+    try:
+        ok, message = check_self_symlinks(PROJECT_ROOT, fix=True)
+    except Exception:
+        logger.exception("node_modules ELOOP canary failed to run")
+        return True  # fail-open: don't raise a false alarm on canary error
+    if "removed" in message or not ok:
+        logger.warning("node_modules ELOOP canary: %s", message)
+    return ok
+
+
 def _collect_health_orient_data() -> dict:
     return {
         "api": True,
@@ -495,6 +522,7 @@ def _collect_health_orient_data() -> dict:
         "sources_db": _readable_file(SOURCES_DB_PATH),
         "message_broker": _readable_file(MESSAGE_DB),
         "git_core_bare_ok": _core_bare_canary(),
+        "node_modules_symlinks_ok": _self_symlink_canary(),
     }
 
 
