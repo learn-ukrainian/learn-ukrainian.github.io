@@ -27,7 +27,89 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 13 HANDOFF (2026-06-11 PM #2 — 2 MORE HARNESS GATES FIXED (correction-scope #2995, blockquote-exemption #2998); DOSSIER #10 MERGED; BUILDS #7/#8 each failed on ONE distinct authentic folk form; REMAINING WALL = PRODUCTIVE-DIMINUTIVE ACCEPTANCE — **AWAITING USER DECISION**) — **RESUME HERE**
+## ▶▶▶ SESSION 14 HANDOFF (2026-06-11/12 — KALENDARNA 04 FINALLY BUILT + MERGED via CROSS-MODEL CORRECTION (the recipe that WORKS); 2 dossiers shipped (#11 holosinnya, #13 dumy-sotsialno); diminutive wall #3003 confirmed working) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE (do NOT repeat my mistake — the user caught me framing "1 of 3"):** Folk is a **42-module
+> epic**. **MODULES BUILT (new, verified): 1 / 42** — ONLY kalendarna (`curriculum/l2-uk-en/folk/*/module.md`
+> count = 1). **Dossiers: 13 / 42.** Wikis: partial. ~29 topics have only a plan stub. The site serves **3**
+> folk MDXes = 1 NEW (kalendarna `6669f4010b`, today) + **2 OLD April stubs** (koliadky `1d10dc6a0b` 2026-04-05,
+> dumy-lytsarski `5b08685a8f` 2026-04-04 — NOT rebuilt). Do NOT present the 3 served files as "folk progress".
+
+### ✅ DONE THIS SESSION (merged to main)
+- **KALENDARNA 04 REBUILT + MERGED — PR #3010 (`6669f4010b`).** FIRST properly-built folk-experiential module.
+  Gate-green (I ran `run_python_qg` authoritatively, not the fixer's word), 7 embedded folk fragments all
+  `verify_quote` 1.0 + attributed, MDX assembles + renders live HTTP 200 at `/folk/kalendarna-obriadovist-zvychai/`.
+  HONEST pass (no NO_VERIFY, no padding) — the fix REMOVED fake-folk content, it did not silence a gate.
+- **Dossier #11 holosinnya — PR #3005 merged.** Corpus-hammer (§4 3/3 at 1.0 exact chunk_ids; §9 exemplary).
+- **Dossier #13 dumy-sotsialno-pobutovi — PR #3009 merged.** Corpus-hammer (§4 2/2 + do-not-quote honesty; §9
+  kobzar-congress #M-4 handling). **13 folk dossiers on main.**
+- **Diminutive wall #3003 (merged just before session) CONFIRMED WORKING** — гаївочка/гагілка/гагілкою now accepted
+  by the vesum gate (builds #9/#10 `heritage_attested`). The Session-13 A/B/C question = Option A, already shipped.
+
+### 🔑 THE PROVEN RECIPE — CROSS-MODEL CORRECTION (what FINALLY worked; REUSE verbatim for koliadky/dumy)
+The V7 writer (claude-tools) produces good prose but trips a ROTATING set of python_qg gate defects each
+stochastic run → **blind re-firing NEVER converges** (builds #9 AND #10 both failed python_qg on DIFFERENT
+defects; ~10 failed kalendarna builds across sessions 6-14). The recipe that converged:
+1. Build once: `v7_build folk <slug> --worktree --writer claude-tools --effort xhigh` (persistent Monitor; >1h).
+2. On `module_failed` at python_qg, READ the gate report (`<build-worktree>/.../python_qg.json` → `gates`) — it
+   lists EXACTLY which gates failed + the offending words/quotes. Do NOT guess, do NOT re-fire.
+3. **Dispatch CODEX (cross-model fixer — NOT the writer that reproduces its own tics) to correct the artifact**
+   (ADR-007 fix-don't-regenerate): coinages → VESUM-verified words; unverifiable/misattributed folk quotes →
+   the DOSSIER's §4 `verify_quote`'d fragments + attribution; word_count → real dossier content. Brief template:
+   `/tmp/folk-kalendarna-correction-brief.md` (this session).
+4. **Re-gate AUTHORITATIVELY yourself:** copy the corrected artifacts INTO the BUILD worktree (it has the writer
+   telemetry → `resources_search_attempted` evaluates; a fresh copy fails that gate), then from the data-bearing
+   MAIN ROOT run `linear_pipeline.run_python_qg(module_dir, plan_path)`. NOTE: `verify_words_fn=None` IS the
+   production path — the build calls `run_python_qg_with_corrections(module_dir, plan_path, writer=writer)` with no
+   verify-words wiring (local `data/vesum.db`).
+5. **Independently `verify_quote` EVERY embedded fragment** (prove honesty, #M-11 — green gate ≠ good module).
+6. `linear_pipeline.assemble_mdx(module_dir, out_mdx, plan_path)` → `starlight/src/content/docs/folk/<slug>.mdx`
+   (watch for `performance self_check must be a list` — see schema defect below).
+7. Serve: `./services.sh restart astro`; verify HTTP 200 + content at `http://127.0.0.1:4321/folk/<slug>/`.
+8. Bundle corrected artifacts + MDX into ONE PR; self-merge on green (folk grant). Beware a stray `node_modules`
+   symlink getting `git add -A`'d — `git rm --cached node_modules` if so.
+
+### 🧱 BUILD #9/#10 ROOT CAUSES → THE DURABLE-FIX SPEC (so koliadky/dumy build CLEAN, not manual rescue)
+Every kalendarna build failed python_qg on writer-discipline defects (the gates are CORRECT):
+- **Recurring coinage** — one VESUM-absent compound per build (#9 `двохоровий`, #10 `мелодико-ритмічний`; both have
+  attested alternatives двоголосий/антифонний, ритмомелодійний). Writer vocabulary discipline, not a gate gap.
+- **Folk-text attribution (SYSTEMIC)** — writer embeds folk songs (per `#R-FOLK-PRIMARY-TEXTS`) but pulls
+  UNVERIFIABLE chants from memory (Щедрик-ведрик, Коляд-коляд, А ми просо, Зашуміла діброва — all `verify_quote`
+  FALSE 0.0) + MISATTRIBUTES literary as folk (it embedded **Shevchenko «Орися ж ти, моя ниво»** as a folk song!)
+  → `textbook_quote_fidelity` HARD REJECT. The dossier's §4 already has the REAL verified fragments to use.
+- **`performance.self_check` authored as STRING not LIST** → `assemble_mdx` crashes; python_qg's `activity_schema`
+  gate does NOT catch it (fixed kalendarna by deleting the stray string — `self_checklist` list already existed).
+- **word_count near-floor** (#10 4596 vs 4600); the ADR-008 correction loop can't add a few words (divergence bug).
+
+**DURABLE FIXES (codex-impl + Claude adversarial review; SHARED pipeline → TRACK-UPDATE the orchestrator):**
+- **A. Writer-rule** `#R-FOLK-PRIMARY-TEXTS` (partial `scripts/build/phases/linear-write-seminar-folk-rules.md`):
+  embed ONLY dossier-§4 `verify_quote`'d fragments WITH attribution; FORBID memory-chants + literary-as-folk.
+- **B. `activity_schema` gate**: reject `performance.self_check` as a string (must be list) — close the MDX-parser gap.
+- **C. Cross-model coinage correction + rollback** in `scripts/build/linear_pipeline.py` (route the python_qg
+  vesum-coinage correction to a cross-model fixer; roll back any round that increases violations / drops word_count).
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **Land durable fixes A + B first** (highest-leverage; unblock koliadky/dumy from the Shevchenko/chant/schema
+   classes). C (pipeline cross-model correction) is bigger — until it lands, use the MANUAL recipe above per build.
+2. **Rebuild koliadky-shchedrivky (01)** — old April stub. Dossier+wiki on main. Use the recipe; verify + serve + ship.
+3. **Rebuild dumy (`dumy-nevilnytski-lytsarski`)** — retire old `dumy-lytsarski.mdx` + `[...slug].astro` hero routing.
+4. **Continue dossier queue** — 13/42 done; ~29 to go (next per `docs/folk-epic/phase-folk-queue.md`).
+
+### ⚠ CARRY-FORWARD / GOTCHAS
+- **DON'T BLIND RE-FIRE** — root-cause from `python_qg.json` + cross-model correct. 2 re-fires this session ≈ ~2h wasted.
+- Re-gate needs the BUILD worktree (writer telemetry for `resources_search_attempted`); a fresh checkout fails it.
+- Build forensics: **KEEP** `build/folk/kalendarna-obriadovist-zvychai-20260611-211243` (the corrected fixture +
+  the `self_check` schema-gap evidence) for the durable-fix tests. `-204117` = build #9 (двохорова) forensics.
+- `git push` folk → `--no-verify`; recheck `git config --local core.bare`=false after commits.
+- **IN-FLIGHT at handoff: NONE** (holosinnya / dumy-sotsialno / kalendarna-correction all merged; all watchers done).
+
+### 📊 FLEET — module writer **claude-tools**; coinage/quote correction = **codex cross-model fixer** (PROVEN this
+session); re-gate = `run_python_qg` from the data-bearing root; wiki **gpt-5.5**; reviewers **deepseek-flash** (code)
+/ Claude corpus-hammer (culture). Cross-family always. Folk builds run >1h → persistent Monitor.
+
+---
+
+## ▶▶▶ SESSION 13 HANDOFF (2026-06-11 PM #2 — 2 MORE HARNESS GATES FIXED (correction-scope #2995, blockquote-exemption #2998); DOSSIER #10 MERGED; BUILDS #7/#8 each failed on ONE distinct authentic folk form; DIMINUTIVE WALL → Option A merged #3003) — (superseded by Session 14)
 
 > **⏱ LATEST STATE (2026-06-11 PM #2):** The writer pipeline now WORKS — builds #7/#8 produced clean C1 prose, ZERO
 > coinages, exhaustive `verify_words`, correct embedded verbatim quotes. Three SINGLE-WORD vesum blockers across three
