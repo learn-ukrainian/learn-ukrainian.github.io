@@ -1,0 +1,216 @@
+- lemma: вид дієслова
+  translation: verbal aspect
+  pos: noun phrase
+  usage: Вид дієслова показує, чи дія подана як процес або як результат.
+- lemma: доконаний вид
+  translation: perfective aspect
+  pos: noun phrase
+  usage: Доконаний вид називає завершену або результативну дію.
+- lemma: недоконаний вид
+  translation: imperfective aspect
+  pos: noun phrase
+  usage: Недоконаний вид називає процес, повторення або тло.
+- lemma: видова пара
+  translation: aspectual pair
+  pos: noun phrase
+  usage: Писати й написати утворюють видову пару.
+- lemma: двовидовий
+  translation: biaspectual
+  pos: adjective
+  usage: Двовидове дієслово змінює видове значення залежно від контексту.
+- lemma: одновидовий
+  translation: single-aspect
+  pos: adjective
+  usage: Одновидове дієслово має тільки один вид.
+- lemma: майбутній час
+  translation: future tense
+  pos: noun phrase
+  usage: Майбутній час називає дію після моменту мовлення.
+- lemma: проста форма
+  translation: simple form
+  pos: noun phrase
+  usage: Проста форма майбутнього часу належить доконаному виду.
+- lemma: складна форма
+  translation: synthetic future form
+  pos: noun phrase
+  usage: Складна форма має суфікс -м- і особове закінчення.
+- lemma: складена форма
+  translation: analytic future form
+  pos: noun phrase
+  usage: Складена форма має допоміжне дієслово бути й інфінітив.
+- lemma: інфінітив
+  translation: infinitive
+  pos: noun
+  usage: Після буду в складеній формі стоїть інфінітив.
+- lemma: допоміжне дієслово
+  translation: auxiliary verb
+  pos: noun phrase
+  usage: У формі буду писати слово буду є допоміжним дієсловом.
+- lemma: особове закінчення
+  translation: personal ending
+  pos: noun phrase
+  usage: Особове закінчення показує особу й число.
+- lemma: дієвідмінювання
+  translation: conjugation
+  pos: noun
+  usage: Дієвідмінювання майбутнього часу залежить від форми й виду.
+- lemma: особа
+  translation: grammatical person
+  pos: noun
+  usage: Дієслова майбутнього часу змінюються за особами.
+- lemma: число
+  translation: number
+  pos: noun
+  usage: Дієслово узгоджується з підметом за числом.
+- lemma: процес
+  translation: process
+  pos: noun
+  usage: Форма писатиму показує процес у майбутньому.
+- lemma: результат
+  translation: result
+  pos: noun
+  usage: Форма напишу показує результат у майбутньому.
+- lemma: тривала дія
+  translation: ongoing action
+  pos: noun phrase
+  usage: Тривала дія часто потребує недоконаного виду.
+- lemma: завершена дія
+  translation: completed action
+  pos: noun phrase
+  usage: Завершена дія часто потребує доконаного виду.
+- lemma: повторювана дія
+  translation: repeated action
+  pos: noun phrase
+  usage: Повторювана дія підтримує недоконаний вид.
+- lemma: тло
+  translation: background
+  pos: noun
+  usage: Недоконаний вид часто створює тло розповіді.
+- lemma: межа
+  translation: boundary
+  pos: noun
+  usage: Маркер до вечора створює часову межу.
+- lemma: писати
+  translation: to write
+  pos: verb
+  usage: Увечері я писатиму запрошення.
+- lemma: написати
+  translation: to write, complete
+  pos: verb
+  usage: До вечора я напишу запрошення.
+- lemma: читати
+  translation: to read
+  pos: verb
+  usage: Я буду читати український текст.
+- lemma: прочитати
+  translation: to read through
+  pos: verb
+  usage: Я прочитаю правила перед зустріччю.
+- lemma: робити
+  translation: to do
+  pos: verb
+  usage: Що ти робитимеш завтра?
+- lemma: зробити
+  translation: to do, complete
+  pos: verb
+  usage: Я зроблю вправу до вечора.
+- lemma: збирати
+  translation: to collect
+  pos: verb
+  usage: Волонтери збиратимуть кошти два тижні.
+- lemma: зібрати
+  translation: to collect, finish collecting
+  pos: verb
+  usage: Волонтери зберуть потрібну суму.
+- lemma: оголошувати
+  translation: to announce
+  pos: verb
+  usage: Комітет оголошуватиме новини поступово.
+- lemma: оголосити
+  translation: to announce, complete
+  pos: verb
+  usage: Комітет оголосить дату завтра.
+- lemma: домовлятися
+  translation: to arrange, negotiate
+  pos: verb
+  usage: Ми домовлятимемося з партнерами ввечері.
+- lemma: домовитися
+  translation: to reach agreement
+  pos: verb
+  usage: Ми домовимося про час зустрічі.
+- lemma: готуватися
+  translation: to prepare oneself
+  pos: verb
+  usage: Я готуватимуся до виступу.
+- lemma: підготуватися
+  translation: to get prepared
+  pos: verb
+  usage: Я підготуюся до виступу до середи.
+- lemma: перевіряти
+  translation: to check
+  pos: verb
+  usage: Олена буде перевіряти список гостей.
+- lemma: перевірити
+  translation: to check, complete
+  pos: verb
+  usage: Олена перевірить список гостей до обіду.
+- lemma: поширювати
+  translation: to distribute, share
+  pos: verb
+  usage: Студенти поширюватимуть афішу в групах.
+- lemma: поширити
+  translation: to distribute, complete
+  pos: verb
+  usage: Студенти поширять афішу після зустрічі.
+- lemma: планувати
+  translation: to plan
+  pos: verb
+  usage: Ми плануватимемо програму протягом тижня.
+- lemma: запланувати
+  translation: to schedule, plan completely
+  pos: verb
+  usage: Ми заплануємо зустріч на п'ятницю.
+- lemma: зустрічати
+  translation: to meet, welcome
+  pos: verb
+  usage: Волонтери зустрічатимуть гостей біля входу.
+- lemma: зустріти
+  translation: to meet, welcome once
+  pos: verb
+  usage: Волонтери зустрінуть гостей о шостій.
+- lemma: підраховувати
+  translation: to count, tally
+  pos: verb
+  usage: Команда підраховуватиме витрати після події.
+- lemma: підрахувати
+  translation: to count up, tally completely
+  pos: verb
+  usage: Команда підрахує витрати до понеділка.
+- lemma: пояснювати
+  translation: to explain
+  pos: verb
+  usage: Волонтери будуть пояснювати гостям програму.
+- lemma: пояснити
+  translation: to explain, complete
+  pos: verb
+  usage: Я поясню різницю між формами.
+- lemma: надсилати
+  translation: to send
+  pos: verb
+  usage: Я надсилатиму нагадування щоп'ятниці.
+- lemma: надіслати
+  translation: to send, complete
+  pos: verb
+  usage: Я надішлю програму ввечері.
+- lemma: український ритм
+  translation: Ukrainian rhythm
+  pos: noun phrase
+  usage: Форми на -тиму підтримують український ритм речення.
+- lemma: калька
+  translation: calque
+  pos: noun
+  usage: Калька буду прочитати порушує українську граматику.
+- lemma: нормативний
+  translation: standard, normative
+  pos: adjective
+  usage: Нормативний вибір форми залежить від виду дієслова.
