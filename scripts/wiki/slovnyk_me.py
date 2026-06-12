@@ -172,6 +172,11 @@ CREATE INDEX IF NOT EXISTS idx_slovnyk_me_dialect
 """
 
 _BLOCK_TAGS = {"p", "li", "br", "div", "h1", "h2", "h3", "small"}
+_ARTICLE_SECTION_ALIASES = {
+    "dictionary-acticle": "dictionary-acticle",
+    "dictionary-article": "dictionary-acticle",
+    "dictionary-more": "dictionary-more",
+}
 _SPACE_RE = re.compile(r"\s+")
 _ACUTE_RE = re.compile("[\u0301\u0300]")
 
@@ -205,8 +210,10 @@ class _SlovnykHTMLParser(HTMLParser):
             self._in_article = True
         if tag == "h1" and self._active_section == "dictionary-acticle" and self._in_article:
             self._in_h1 = True
-        if tag == "section" and attr.get("id") in self.section_parts:
-            self._active_section = attr["id"]
+        attr_id = attr.get("id", "")
+        section_id = _ARTICLE_SECTION_ALIASES.get(attr_id, attr_id)
+        if tag == "section" and section_id in self.section_parts:
+            self._active_section = section_id
         if tag in _BLOCK_TAGS and self._should_collect():
             self.section_parts[self._active_section].append("\n")
         if tag == "meta" and attr.get("name") == "description":
@@ -279,6 +286,26 @@ def _truncate(value: str, max_chars: int) -> str:
     if len(cleaned) <= max_chars:
         return cleaned
     return cleaned[: max_chars - 1].rstrip() + "…"
+
+
+def primary_synonym_sense_text(text: str, dict_slug: str) -> str:
+    """Return only the first synonym sense group from a slovnyk.me row."""
+    body = _clean_text(text)
+    if resolve_dict_slug(dict_slug) == "synonyms_karavansky":
+        return re.split(r";", body, maxsplit=1)[0].strip()
+    body = re.split(
+        r"\.\s+(?=[А-ЯІЇЄҐ][А-ЯІЇЄҐ'’ʼ\u0300\u0301-]{2,}(?:\s|\(|,))",
+        body,
+        maxsplit=1,
+    )[0]
+    body = re.split(r"\)\.\s+", body, maxsplit=1)[0]
+    body = re.split(
+        r"\b(?:заст|діал|жарт|зах|зневажл|книжн|підсил|рідше|розм|уроч|фам)\.\s+(?=[А-ЯІЇЄҐ])",
+        body,
+        maxsplit=1,
+        flags=re.IGNORECASE,
+    )[0]
+    return re.split(r"\s+\.\s+(?=[А-ЯІЇЄҐ])", body, maxsplit=1)[0].strip()
 
 
 def _source_type(dict_slug: str, is_modern: bool, is_dialect: bool, is_russianism: bool) -> str:

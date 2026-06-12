@@ -38,6 +38,7 @@ import sqlite3
 import sys
 import time
 import unicodedata
+from functools import lru_cache
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
@@ -49,7 +50,8 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from scripts.lexicon.heritage_classifier import classify_lemma
-from scripts.verification.vesum import verify_lemma
+from scripts.verification.vesum import verify_lemma, verify_word
+from scripts.wiki.slovnyk_me import primary_synonym_sense_text
 
 MANIFEST = ROOT / "starlight" / "src" / "data" / "lexicon-manifest.json"
 SOURCES_DB = ROOT / "data" / "sources.db"
@@ -61,6 +63,15 @@ _UKRAINIAN_TEXT_RE = re.compile(r"^[А-Яа-яЄєІіЇїҐґ'’ʼ -]+$")
 _STRESS_MARK_RE = re.compile("[\u0300\u0301]")
 _NON_CACHE_CHARS_RE = re.compile(r"[^0-9A-Za-zА-Яа-яЄєІіЇїҐґ'’ʼ-]+")
 _SOURCE_TAIL_RE = re.compile(r"\s+Джерело:.*$", flags=re.IGNORECASE | re.DOTALL)
+_IDIOM_DOT_PLACEHOLDER = "<DOT>"
+_IDIOM_ABBREVIATIONS_WITH_INTERNAL_DOTS = (
+    "і т. ін.",
+    "і т. д.",
+    "т. ін.",
+    "т. д.",
+    "перев.",
+    "зі сл.",
+)
 _SLOVNYK_DELAY_SECONDS = 0.12
 _SLOVNYK_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup; issue #2985)"
 
@@ -80,29 +91,42 @@ _WARNING_CLASSIFICATIONS = {"russianism", "sovietism", "surzhyk"}
 
 _SYNONYM_LABEL_WORDS = {
     "ант",
+    "г",
     "див",
     "діал",
+    "д",
     "жм",
+    "зах",
     "з",
     "заст",
     "збірн",
     "зневажл",
+    "жарт",
     "ід",
     "ім",
+    "іс",
     "кн",
     "книжн",
     "лайл",
     "нар",
+    "ок",
     "перен",
     "пестл",
     "поет",
     "пор",
+    "предик",
+    "пр",
     "підсил",
+    "р",
     "рідко",
     "рідше",
     "розм",
+    "с",
     "син",
+    "уроч",
+    "фам",
     "фольк",
+    "част",
 }
 _WARNING_ALT_STOP_WORDS = {"див"}
 _SYNONYM_STOP_STARTS = {
@@ -133,7 +157,14 @@ _last_slovnyk_fetch = 0.0
 # Same-sense A1 allowlist. A synonym is emitted only when it is both present in
 # a source row and included here for the lemma's course gloss sense.
 _A1_SENSE_SYNONYMS: dict[str, tuple[str, ...]] = {
-    "добре": ("гаразд", "нормально"),
+    "абетка": ("алфавіт", "азбука"),
+    "актор": ("артист", "лицедій", "комедіант", "виконавець"),
+    "батько": ("тато", "отець", "татусь", "татко"),
+    "вранці": ("зранку", "ранком", "рано"),
+    "вставати": ("зводитися", "підводитися", "підхоплюватися"),
+    "вчитель": ("педагог", "викладач", "вихователь", "навчитель"),
+    "гарний": ("красивий", "вродливий", "хороший", "гожий"),
+    "добре": ("гаразд", "нормально", "непогано", "незле", "славно"),
     "дім": ("будинок", "хата", "домівка"),
     "книга": ("книжка",),
     "ліжко": ("постіль",),
@@ -143,6 +174,7 @@ _A1_SENSE_SYNONYMS: dict[str, tuple[str, ...]] = {
     "нарешті": ("зрештою", "врешті-решт"),
     "поспішати": ("спішити", "квапитися"),
     "потім": ("тоді", "далі"),
+    "привіт": ("вітання", "привітання", "уклін", "поклін"),
     "робота": ("праця",),
     "сон": ("сновидіння",),
     "спочатку": ("спершу",),
@@ -150,6 +182,23 @@ _A1_SENSE_SYNONYMS: dict[str, tuple[str, ...]] = {
     "тато": ("батько", "татусь"),
     "фото": ("фотографія", "світлина", "знімок", "фотознімок"),
     "чудово": ("блискуче", "прекрасно", "чудесно"),
+}
+
+_SYNONYM_HEADWORD_POS_OVERRIDES: dict[str, str] = {
+    "добре": "adv",
+    "голосний": "noun",
+    "привіт": "noun",
+}
+
+_MANIFEST_POS_TO_VESUM_POS: dict[str, str] = {
+    "adjective": "adj",
+    "adj": "adj",
+    "adverb": "adv",
+    "adv": "adv",
+    "infinitive": "verb",
+    "noun": "noun",
+    "proper noun": "noun",
+    "verb": "verb",
 }
 
 _BALLA_LOOKUPS: dict[str, tuple[str, ...]] = {
@@ -652,9 +701,69 @@ def _cache_lookup(cache: dict[str, Any] | None, slug: str) -> dict[str, Any] | N
     return row if isinstance(row, dict) and row.get("text") else None
 
 
-def _synonym_body(text: str, lemma: str, headword: str | None) -> str:
+@lru_cache(maxsize=4096)
+def _vesum_word_analyses(word: str) -> tuple[tuple[str, str], ...]:
+    """Return immutable ``(lemma, pos)`` VESUM analyses for one word form."""
+    try:
+        rows = verify_word(word)
+    except Exception:
+        return ()
+    analyses = {
+        (str(row.get("lemma") or ""), str(row.get("pos") or ""))
+        for row in rows
+        if row.get("lemma") and row.get("pos")
+    }
+    return tuple(sorted(analyses))
+
+
+def _vesum_word_poses(word: str) -> set[str]:
+    return {pos for _lemma, pos in _vesum_word_analyses(word)}
+
+
+def _safe_synonym_set(lemma: str) -> set[str]:
+    return {_lookup_key(item) for item in _A1_SENSE_SYNONYMS.get(_lookup_key(lemma), ())}
+
+
+def _headword_pos_for_synonyms(lemma: str, entry_pos: str | None = None) -> str | None:
+    normalized = _lookup_key(lemma)
+    if normalized in _SYNONYM_HEADWORD_POS_OVERRIDES:
+        return _SYNONYM_HEADWORD_POS_OVERRIDES[normalized]
+
+    mapped_pos = _MANIFEST_POS_TO_VESUM_POS.get(_lookup_key(entry_pos or ""))
+    if mapped_pos:
+        return mapped_pos
+
+    lookup_word = _slovnyk_lookup_word(lemma)
+    if not lookup_word or " " in lookup_word:
+        return None
+    poses = _vesum_word_poses(lookup_word)
+    if len(poses) == 1:
+        return next(iter(poses))
+    return None
+
+
+def _candidate_is_headword_variant(lemma: str, candidate: str, headword_pos: str) -> bool:
+    headword = _slovnyk_lookup_word(lemma)
+    headword_lemmas = {
+        analysis_lemma
+        for analysis_lemma, pos in _vesum_word_analyses(headword)
+        if pos == headword_pos
+    }
+    if not headword_lemmas:
+        headword_lemmas = {_lookup_key(variant) for variant in _split_lemma_variants(_strip_stress(lemma))}
+    return any(
+        pos == headword_pos and analysis_lemma in headword_lemmas
+        for analysis_lemma, pos in _vesum_word_analyses(candidate)
+    )
+
+
+def _candidate_matches_headword_pos(candidate: str, headword_pos: str) -> bool:
+    return any(pos == headword_pos for _lemma, pos in _vesum_word_analyses(candidate))
+
+
+def _synonym_body(text: str, lemma: str, headword: str | None, slug: str | None = None) -> str:
     body = _SOURCE_TAIL_RE.sub("", _entry_text_without_headword(text, lemma, headword))
-    body = re.split(r"\)\.\s+", body, maxsplit=1)[0]
+    body = primary_synonym_sense_text(body, slug or "")
     body = re.split(r"\s+[—–]\s+[А-ЯІЇЄҐA-Z]", body, maxsplit=1)[0]
     body = re.sub(
         r"\((?:про|який|яка|яке|які|на|зі сл\.|сл\.|від|для|у|в)\b[^)]*\)",
@@ -692,22 +801,43 @@ def _clean_synonym_candidate(candidate: str, lemma: str) -> str | None:
     return term
 
 
-def _synonyms_from_slovnyk_row(row: dict[str, Any], lemma: str) -> list[str]:
-    body = _synonym_body(str(row.get("text") or ""), lemma, str(row.get("word") or ""))
+def _is_safe_slovnyk_synonym(lemma: str, candidate: str, headword_pos: str) -> bool:
+    if candidate not in _safe_synonym_set(lemma):
+        return False
+    if not _candidate_matches_headword_pos(candidate, headword_pos):
+        return False
+    return not _candidate_is_headword_variant(lemma, candidate, headword_pos)
+
+
+def _synonyms_from_slovnyk_row(row: dict[str, Any], lemma: str, headword_pos: str) -> list[str]:
+    body = _synonym_body(
+        str(row.get("text") or ""),
+        lemma,
+        str(row.get("word") or ""),
+        str(row.get("dictionary_slug") or ""),
+    )
     chunks = re.split(r"[,;/]", body)
     out: list[str] = []
     seen: set[str] = set()
     for chunk in chunks:
         for part in re.split(r"[()]", chunk):
             term = _clean_synonym_candidate(part, lemma)
-            if term and term not in seen:
+            if term and term not in seen and _is_safe_slovnyk_synonym(lemma, term, headword_pos):
                 seen.add(term)
                 out.append(term)
     return out
 
 
-def _synonyms_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[str, Any] | None:
+def _synonyms_slovnyk(
+    lemma: str,
+    cache: dict[str, Any] | None = None,
+    *,
+    entry_pos: str | None = None,
+) -> dict[str, Any] | None:
     """Synonym chips from slovnyk.me synonyms dictionaries, omitted when empty."""
+    headword_pos = _headword_pos_for_synonyms(lemma, entry_pos)
+    if not headword_pos or not _safe_synonym_set(lemma):
+        return None
     cache = cache if cache is not None else _slovnyk_cache(lemma)
     items: list[str] = []
     seen: set[str] = set()
@@ -717,7 +847,10 @@ def _synonyms_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[s
         row = _cache_lookup(cache, slug)
         if not row:
             continue
-        for synonym in _synonyms_from_slovnyk_row(row, lemma):
+        row_items = _synonyms_from_slovnyk_row(row, lemma, headword_pos)
+        if not row_items:
+            continue
+        for synonym in row_items:
             if synonym not in seen:
                 seen.add(synonym)
                 items.append(synonym)
@@ -733,15 +866,33 @@ def _synonyms_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[s
     }
 
 
+def _protect_idiom_abbreviation_periods(text: str) -> str:
+    protected = text
+    for abbreviation in _IDIOM_ABBREVIATIONS_WITH_INTERNAL_DOTS:
+        pattern = re.escape(abbreviation).replace(r"\ ", r"\s+")
+        protected = re.sub(
+            pattern,
+            lambda match: match.group(0).replace(".", _IDIOM_DOT_PLACEHOLDER),
+            protected,
+            flags=re.IGNORECASE,
+        )
+    return protected
+
+
+def _restore_idiom_abbreviation_periods(text: str) -> str:
+    return text.replace(_IDIOM_DOT_PLACEHOLDER, ".")
+
+
 def _split_idiom_text(text: str, lemma: str, headword: str | None) -> tuple[str, str] | None:
     body = _SOURCE_TAIL_RE.sub("", _entry_text_without_headword(text, lemma, headword))
     body = clean_html_entities(body).strip(" .")
     if not body:
         return None
-    match = re.match(r"(.{3,120}?\.)\s+(.+)", body, flags=re.DOTALL)
+    protected_body = _protect_idiom_abbreviation_periods(body)
+    match = re.match(r"(.{3,220}?\.)\s+(.+)", protected_body, flags=re.DOTALL)
     if match:
-        phrase = match.group(1).strip(" .")
-        definition = match.group(2).strip()
+        phrase = _restore_idiom_abbreviation_periods(match.group(1)).strip(" .")
+        definition = _restore_idiom_abbreviation_periods(match.group(2)).strip()
     else:
         words = body.split()
         phrase = " ".join(words[: min(len(words), 8)]).strip(" .")
@@ -764,6 +915,7 @@ def _idioms_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[str
     return {
         "items": [
             {
+                "text": phrase,
                 "phrase": phrase,
                 "definition": definition,
                 "source": str(row.get("dictionary_label") or _SLOVNYK_DICT_LABELS["phraseology"]),
@@ -1032,8 +1184,7 @@ def _candidate_allowed(lemma: str, candidate: str) -> bool:
     for variant in _split_lemma_variants(lemma):
         if term == variant.casefold() or _contains_whole_token(term, variant.casefold()):
             return False
-    allowed = _A1_SENSE_SYNONYMS.get(lemma.casefold(), ())
-    return term in allowed
+    return _lookup_key(term) in _safe_synonym_set(lemma)
 
 
 def _add_candidate(
@@ -1082,8 +1233,8 @@ def _synonyms_from_ukrajinet(conn: sqlite3.Connection, lemma: str, out: list[str
 
 
 def _synonyms_from_balla(conn: sqlite3.Connection, lemma: str, out: list[str], seen: set[str]) -> None:
-    allowed = _A1_SENSE_SYNONYMS.get(lemma.casefold(), ())
-    lookup_words = _BALLA_LOOKUPS.get(lemma.casefold(), ())
+    allowed = _A1_SENSE_SYNONYMS.get(_lookup_key(lemma), ())
+    lookup_words = _BALLA_LOOKUPS.get(_lookup_key(lemma), ())
     if not allowed or not lookup_words:
         return
     for lookup_word in lookup_words:
@@ -1099,7 +1250,7 @@ def _synonyms_from_balla(conn: sqlite3.Connection, lemma: str, out: list[str], s
 
 
 def _synonyms_from_sum11(conn: sqlite3.Connection, lemma: str, out: list[str], seen: set[str]) -> None:
-    allowed = _A1_SENSE_SYNONYMS.get(lemma.casefold(), ())
+    allowed = _A1_SENSE_SYNONYMS.get(_lookup_key(lemma), ())
     if not allowed:
         return
     for variant in _split_lemma_variants(lemma):
@@ -1384,7 +1535,7 @@ def enrich() -> tuple[int, int]:
             )
             entry["heritage_status"] = _merge_slovnyk_warning(heritage_status, warning)
             sections: dict[str, object] = {}
-            synonyms = _synonyms_slovnyk(lemma, slovnyk_cache)
+            synonyms = _synonyms_slovnyk(lemma, slovnyk_cache, entry_pos=entry.get("pos"))
             if synonyms:
                 sections["synonyms"] = synonyms
             idioms = _idioms_slovnyk(lemma, slovnyk_cache)

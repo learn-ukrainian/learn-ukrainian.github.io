@@ -1,6 +1,7 @@
 import json
 import sqlite3
 
+from scripts.lexicon import enrich_manifest as enrich_manifest_module
 from scripts.lexicon.enrich_manifest import (
     _build_paradigm,
     _idioms_slovnyk,
@@ -12,6 +13,14 @@ from scripts.lexicon.enrich_manifest import (
     clean_gloss,
     clean_html_entities,
 )
+
+
+def _patch_vesum_analyses(monkeypatch, pos_by_word: dict[str, str]) -> None:
+    def fake_analyses(word: str) -> tuple[tuple[str, str], ...]:
+        pos = pos_by_word.get(word)
+        return ((word, pos),) if pos else ()
+
+    monkeypatch.setattr(enrich_manifest_module, "_vesum_word_analyses", fake_analyses)
 
 
 def _conn() -> sqlite3.Connection:
@@ -220,7 +229,17 @@ def test_synonyms_filter_polluted_wordnet_rows_to_a1_sense() -> None:
     assert "жахливо" not in all_synonyms
 
 
-def test_slovnyk_synonyms_extract_known_garnyi_word() -> None:
+def test_slovnyk_synonyms_extract_known_garnyi_word(monkeypatch) -> None:
+    _patch_vesum_analyses(
+        monkeypatch,
+        {
+            "гарний": "adj",
+            "красивий": "adj",
+            "вродливий": "adj",
+            "хороший": "adj",
+            "гожий": "adj",
+        },
+    )
     cache = {
         "lookups": {
             "synonyms": {
@@ -253,6 +272,46 @@ def test_slovnyk_synonyms_extract_known_garnyi_word() -> None:
     assert section["source"].startswith("slovnyk.me:")
 
 
+def test_slovnyk_synonyms_omit_wrong_sense_voda(monkeypatch) -> None:
+    _patch_vesum_analyses(
+        monkeypatch,
+        {
+            "вода": "noun",
+            "багатослів'я": "noun",
+            "велемовність": "noun",
+            "пиття": "noun",
+            "напій": "noun",
+        },
+    )
+    cache = {
+        "lookups": {
+            "synonyms": {
+                "dictionary_slug": "synonyms",
+                "dictionary_label": "Словник синонімів української мови",
+                "source_url": "https://slovnyk.me/dict/synonyms/вода",
+                "word": "вода",
+                "text": (
+                    "вода БАГАТОСЛІВ'Я (уживання без потреби великої кількості слів), "
+                    "ВЕЛЕМОВНІСТЬ; ВОДА розм. Джерело: тест"
+                ),
+            },
+            "synonyms_karavansky": {
+                "dictionary_slug": "synonyms_karavansky",
+                "dictionary_label": "Словник синонімів Караванського",
+                "source_url": "https://slovnyk.me/dict/synonyms_karavansky/вода",
+                "word": "вода",
+                "text": "вода (газована) пиття, напій; П. багатослів'я. Джерело: тест",
+            },
+        }
+    }
+
+    section = _synonyms_slovnyk("вода", cache, entry_pos="noun")
+
+    items = section["items"] if section else []
+    assert "багатослів'я" not in items
+    assert "велемовність" not in items
+
+
 def test_slovnyk_idioms_extract_known_phrase_card() -> None:
     cache = {
         "lookups": {
@@ -272,6 +331,7 @@ def test_slovnyk_idioms_extract_known_phrase_card() -> None:
     section = _idioms_slovnyk("яблуко", cache)
 
     assert section is not None
+    assert section["items"][0]["text"] == "яблуко розбрату (чвар), книжн"
     assert section["items"][0]["phrase"] == "яблуко розбрату (чвар), книжн"
     assert "Причина ворожнечі" in section["items"][0]["definition"]
 

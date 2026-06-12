@@ -265,3 +265,44 @@ def test_search_heritage_demotes_slovnyk_sovietization_risk(slovnyk_sources_db):
 
     assert slovnyk_hit["sovietization_risk"] == 1
     assert slovnyk_hit["score"] == 77.0
+
+
+def test_parse_entry_html_accepts_corrected_dictionary_article_id():
+    from wiki.slovnyk_me import parse_entry_html
+
+    row = parse_entry_html(
+        """
+        <html>
+          <head>
+            <title>вода — тест</title>
+            <link rel="canonical" href="https://slovnyk.me/dict/synonyms/вода">
+          </head>
+          <body>
+            <section id="dictionary-article">
+              <article>
+                <h1>вода</h1>
+                <p>вода (газована) пиття, напій; П. багатослів'я.</p>
+              </article>
+            </section>
+          </body>
+        </html>
+        """,
+        query="вода",
+        word="вода",
+        dict_slug="synonyms",
+        url="https://slovnyk.me/dict/synonyms/вода",
+    )
+
+    assert row is not None
+    assert row["word"] == "вода"
+    assert "пиття" in row["text"]
+
+
+def test_primary_synonym_sense_text_cuts_later_groups():
+    from wiki.slovnyk_me import primary_synonym_sense_text
+
+    text = "місто д. город, ур. град, (головне) столиця, центр; (портове) порт; П. посада."
+
+    assert primary_synonym_sense_text(text, "karavansky") == (
+        "місто д. город, ур. град, (головне) столиця, центр"
+    )
