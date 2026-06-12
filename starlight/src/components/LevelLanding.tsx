@@ -42,7 +42,14 @@ type LevelLandingProps = {
   modules: UnitGroup[] | OldModuleItem[];
 };
 
+const HIDDEN_MODULE_LINK_TRACKS = new Set(['folk']);
+
 function ModuleCard({ mod, level, color }: { mod: ModuleItem; level: string; color: string }) {
+  const levelKey = level.toLowerCase();
+  const shouldHideLink = HIDDEN_MODULE_LINK_TRACKS.has(levelKey);
+  const moduleStatus = shouldHideLink && (mod.status === 'done' || mod.status === 'active')
+    ? 'locked'
+    : mod.status;
   const statusIcons: Record<string, string> = {
     done: '\u2705',
     active: '\u25B6\uFE0F',
@@ -52,19 +59,19 @@ function ModuleCard({ mod, level, color }: { mod: ModuleItem; level: string; col
 
   const numClass = [
     styles.moduleNum,
-    mod.status === 'done' ? styles.numDone : '',
-    mod.status === 'active' ? styles.numActive : '',
-    mod.status === 'todo' || mod.status === 'locked' ? styles.numTodo : '',
+    moduleStatus === 'done' ? styles.numDone : '',
+    moduleStatus === 'active' ? styles.numActive : '',
+    moduleStatus === 'todo' || moduleStatus === 'locked' ? styles.numTodo : '',
   ].filter(Boolean).join(' ');
 
   const itemClass = [
     styles.moduleItem,
-    mod.status === 'locked' ? styles.moduleLocked : '',
+    moduleStatus === 'locked' ? styles.moduleLocked : '',
   ].filter(Boolean).join(' ');
 
-  const numStyle = mod.status === 'active'
+  const numStyle = moduleStatus === 'active'
     ? { borderColor: color, color: color }
-    : mod.status === 'done'
+    : moduleStatus === 'done'
     ? {}
     : {};
 
@@ -82,15 +89,15 @@ function ModuleCard({ mod, level, color }: { mod: ModuleItem; level: string; col
         {mod.subEn && <div className={styles.moduleSubEn}>{mod.subEn}</div>}
       </div>
       <div className={styles.moduleStatus}>
-        {level.toLowerCase() === 'a1' && (mod.status === 'done' || mod.status === 'active')
-          ? <LiveStatus track={level.toLowerCase()} num={mod.num} fallback={mod.status} />
-          : statusIcons[mod.status]}
+        {levelKey === 'a1' && (moduleStatus === 'done' || moduleStatus === 'active')
+          ? <LiveStatus track={levelKey} num={mod.num} fallback={moduleStatus} />
+          : statusIcons[moduleStatus]}
       </div>
     </div>
   );
 
-  if (mod.status === 'done' || mod.status === 'active') {
-    return <a href={`/${level.toLowerCase()}/${mod.slug}/`} style={{ textDecoration: 'none', color: 'inherit' }}>{inner}</a>;
+  if ((moduleStatus === 'done' || moduleStatus === 'active') && !shouldHideLink) {
+    return <a href={`/${levelKey}/${mod.slug}/`} style={{ textDecoration: 'none', color: 'inherit' }}>{inner}</a>;
   }
   return inner;
 }

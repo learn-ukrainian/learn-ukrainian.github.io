@@ -14,6 +14,14 @@ import vocabEtymologyLinker from './plugins/vocab-etymology-link.mjs';
 const remarkPlugins = [remarkDirective, remarkAdmonitions, remarkGfm, vocabEtymologyLinker];
 const starlightRoot = fileURLToPath(new URL('.', import.meta.url));
 const starlightNodeModules = realpathSync(fileURLToPath(new URL('./node_modules', import.meta.url)));
+const hiddenPublicPaths = ['/folk'];
+
+const isHiddenPublicPage = (page) => {
+  const pathname = page.startsWith('http') ? new URL(page).pathname : page;
+  return hiddenPublicPaths.some(
+    (hiddenPath) => pathname === hiddenPath || pathname.startsWith(`${hiddenPath}/`),
+  );
+};
 
 // https://astro.build/config
 export default defineConfig({
@@ -52,6 +60,8 @@ export default defineConfig({
       rehypePlugins: [rehypeMermaid],
     }),
     react(),
-    sitemap(),
+    sitemap({
+      filter: (page) => !isHiddenPublicPage(page),
+    }),
   ],
 });

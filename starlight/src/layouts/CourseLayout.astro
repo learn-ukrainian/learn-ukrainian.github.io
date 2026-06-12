@@ -56,6 +56,8 @@ const sidebarPct =
     : 0;
 
 const canonicalPath = currentPath.endsWith('/') ? currentPath : `${currentPath}/`;
+const goatCounterCode = String(import.meta.env.PUBLIC_GOATCOUNTER_CODE ?? '').trim();
+const goatCounterUrl = goatCounterCode ? `https://${goatCounterCode}.goatcounter.com/count` : null;
 
 const topNav = [
   { href: '/', label: 'Home' },
@@ -123,6 +125,9 @@ const isActive = (href: string) => {
       })();
     </script>
     <script is:inline defer data-domain="learn-ukrainian.github.io" src="https://plausible.io/js/script.js"></script>
+    {goatCounterUrl && (
+      <script data-goatcounter={goatCounterUrl} async src="//gc.zgo.at/count.js"></script>
+    )}
     <style is:global>
       .lu-theme-toggle {
         display: inline-flex;
