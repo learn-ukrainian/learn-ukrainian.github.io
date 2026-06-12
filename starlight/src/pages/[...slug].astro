@@ -52,7 +52,7 @@ const TRACKS: Record<string, TrackOverview> = {
   a1: {
     label: 'A1',
     title: 'Перші кроки · First Steps',
-    eyebrow: 'A1 release',
+    eyebrow: 'A1 course',
     subtitle: 'Beginner Ukrainian for sounds, reading, first conversations, everyday needs, and the A1 finale.',
     status: 'Released beginner course',
     family: 'core',
@@ -88,19 +88,20 @@ const TRACKS: Record<string, TrackOverview> = {
   b1: {
     label: 'B1',
     title: 'B1 · Intermediate Ukrainian',
-    eyebrow: 'Future core track',
-    subtitle: 'Intermediate grammar, texts, register, and argumentation after A2 is regenerated.',
-    status: 'Planned / unavailable',
+    eyebrow: 'B1 preview',
+    subtitle: 'Intermediate Ukrainian is open as a preview, beginning with the baseline past-present module.',
+    status: 'Preview',
     family: 'core',
-    state: 'unavailable',
-    heroVariant: 'unavailable',
-    primaryAction: { href: '/a1/', label: 'Start With A1' },
+    state: 'beta',
+    heroVariant: 'core',
+    primaryAction: { href: '/b1/', label: 'Open B1 Preview' },
+    secondaryAction: { href: '/a1/', label: 'Start With A1' },
     points: [
-      'B1 is intentionally shown as future work, not a current learner promise.',
-      'The unavailable state keeps navigation honest while preserving the long-term course map.',
-      'Existing plan inventory remains source material for later UI slices.',
+      'B1 is available as a preview, not a complete course release.',
+      'The first module shows the Ukrainian-led intermediate style and activity contract.',
+      'The remaining B1 curriculum stays visible as a map while modules are built.',
     ],
-    pattern: ['future track notice', 'module count', 'return path', 'no stale publication claim'],
+    pattern: ['preview module', 'Ukrainian-led B1', 'module map', 'return path'],
   },
   b2: {
     label: 'B2',
@@ -167,7 +168,7 @@ const TRACKS: Record<string, TrackOverview> = {
     points: [
       'Folk proves the source-heavy seminar pattern before the wider seminar family ships.',
       'Lessons emphasize motif, context, performance, source notes, and decolonization framing.',
-      'This track is separate from beginner A1 release readiness.',
+      'This track is separate from beginner A1 course readiness.',
     ],
     pattern: ['source note', 'motif map', 'performance context', 'seminar workbook', 'resource trail'],
   },
@@ -180,7 +181,7 @@ const TRACKS: Record<string, TrackOverview> = {
     family: 'seminar',
     state: 'planned',
     heroVariant: 'seminar',
-    primaryAction: { href: '/folk/', label: 'Preview Seminar Pattern' },
+    primaryAction: { href: '/b1/', label: 'Open B1 Preview' },
     points: [
       'BIO is planned work; the learner UI shows the template without claiming finished modules.',
       'The page pattern reserves space for chronology, source conflict, and decolonization notes.',
@@ -197,7 +198,7 @@ const TRACKS: Record<string, TrackOverview> = {
     family: 'seminar',
     state: 'planned',
     heroVariant: 'history',
-    primaryAction: { href: '/folk/', label: 'Preview Seminar Pattern' },
+    primaryAction: { href: '/b1/', label: 'Open B1 Preview' },
     points: [
       'HIST is planned after the current release focus; it is not a live course lane yet.',
       'The template foregrounds evidence and interpretation rather than timeline trivia.',
@@ -214,7 +215,7 @@ const TRACKS: Record<string, TrackOverview> = {
     family: 'seminar',
     state: 'planned',
     heroVariant: 'history',
-    primaryAction: { href: '/folk/', label: 'Preview Seminar Pattern' },
+    primaryAction: { href: '/b1/', label: 'Open B1 Preview' },
     points: [
       'ISTORIO stays visible as a method-heavy seminar family.',
       'The future lesson template needs source disagreement and interpretive stakes.',
@@ -231,7 +232,7 @@ const TRACKS: Record<string, TrackOverview> = {
     family: 'seminar',
     state: 'planned',
     heroVariant: 'lit',
-    primaryAction: { href: '/folk/', label: 'Preview Seminar Pattern' },
+    primaryAction: { href: '/b1/', label: 'Open B1 Preview' },
     points: [
       'LIT and its variants share one close-reading template family.',
       'The UI supports excerpts and references without copying protected texts.',
@@ -604,7 +605,7 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
       <div class="search-state search-empty" data-search-empty hidden>
         <span class="state-code">No Results</span>
         <h2>No matching pages.</h2>
-        <p>Try a broader term, a Ukrainian lemma, or open A1, Folk, Word Atlas, or Etymology directly.</p>
+        <p>Try a broader term, a Ukrainian lemma, or open A1, B1 Preview, Word Atlas, or Etymology directly.</p>
       </div>
 
       <section class="search-results-section" aria-live="polite">
@@ -692,8 +693,8 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
             : 'Atlas and reference indexes should communicate when a filter or future dataset has no records.'}
       </p>
       <div class="state-actions">
-        <a href="/a1/">A1 Release</a>
-        <a href="/folk/">Folk Seminar</a>
+        <a href="/a1/">A1</a>
+        <a href="/b1/">B1 Preview</a>
         <a href="/search/">Search</a>
         <a href="/lexicon/">Word Atlas</a>
       </div>

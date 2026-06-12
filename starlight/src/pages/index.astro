@@ -11,11 +11,12 @@ const moduleCount = (id: string) => {
 };
 
 const coreTracks = [
-  { id: 'a2', label: 'A2', title: 'Elementary Core', status: 'Released' },
-  { id: 'b1', label: 'B1', title: 'Intermediate Core', status: 'Planned' },
-  { id: 'b2', label: 'B2', title: 'Upper Intermediate Core', status: 'Planned' },
-  { id: 'c1', label: 'C1', title: 'Advanced Core', status: 'Planned' },
-  { id: 'c2', label: 'C2', title: 'Mastery Core', status: 'Long-range' },
+  { id: 'a1', label: 'A1', title: 'Beginner Course', status: 'Released' },
+  { id: 'a2', label: 'A2', title: 'Pre-Intermediate Course', status: 'Released' },
+  { id: 'b1', label: 'B1', title: 'Intermediate Course', status: 'Preview' },
+  { id: 'b2', label: 'B2', title: 'Upper-Intermediate Course', status: 'Planned' },
+  { id: 'c1', label: 'C1', title: 'Advanced Course', status: 'Planned' },
+  { id: 'c2', label: 'C2', title: 'Mastery Course', status: 'Long-range' },
 ];
 
 const seminarTracks = [
@@ -38,37 +39,38 @@ const seminarTracks = [
 
 <CourseLayout
   title="Learn Ukrainian"
-  description="A lightweight Ukrainian course UI for the released A1 and A2 courses, plus the Folk seminar test track."
-  eyebrow="A1 release"
-  subtitle="A practical learner course, not a generic documentation site."
+  description="An English learner interface for released A1 and A2 Ukrainian courses, a B1 preview, and the Word Atlas reference tool."
+  eyebrow="Course ladder and reference tools"
+  subtitle="A practical English interface for learning Ukrainian."
   currentPath="/"
   wide
 >
   <section class="home-intro">
     <div>
-      <p class="home-kicker">Ukrainian for real use</p>
-      <h2>A1 and A2 are released. Folk runs in parallel as the seminar test lane.</h2>
+      <p class="home-kicker">Learn Ukrainian</p>
+      <h2>Start with A1. Continue with A2. Preview B1 when you are ready.</h2>
       <p>
-        Start with A1 if you are learning independently. Use the Folk seminar path for advanced cultural
-        source work. Continue with A2 when you are ready for the full pre-intermediate course; the broader
-        seminar inventory is shown below without promising a distant publication order.
+        The released course path is A1, then A2. B1 is open as an intermediate preview so learners
+        and teachers can see the next direction without treating it as a finished release. Word Atlas
+        supports the course as a reference tool, not as a separate course track. Seminar tracks are
+        listed for context, but they are not public entry points yet.
       </p>
       <div class="home-actions">
         <a class="home-primary" href="/a1/">Start A1</a>
-        <a class="home-secondary" href="/folk/">Open Folk</a>
+        <a class="home-secondary" href="/b1/">Open B1 Preview</a>
       </div>
     </div>
     <aside class="roadmap-panel" aria-label="Roadmap">
       <div><strong>A1</strong><span>Released beginner course</span></div>
-      <div><strong>A2</strong><span>Released pre-intermediate course</span></div>
-      <div><strong>Folk</strong><span>Seminar test track</span></div>
-      <div><strong>BIO</strong><span>Biographies planned</span></div>
-      <div><strong>HIST</strong><span>History planned</span></div>
+      <div><strong>A2</strong><span>Released continuation course</span></div>
+      <div><strong>B1</strong><span>Intermediate preview</span></div>
+      <div><strong>Word Atlas</strong><span>Reference tool</span></div>
+      <div><strong>Seminars</strong><span>Not promoted yet</span></div>
     </aside>
   </section>
 
   <section>
-    <h2>Course Surfaces</h2>
+    <h2>Available Now</h2>
     <div class="lu-card-grid">
       <a class="lu-card" href="/a1/">
         <span class="track-badge a1">A1</span>
@@ -80,31 +82,32 @@ const seminarTracks = [
         <h3>Pre-Intermediate Course</h3>
         <p>69 modules take learners from the A2 bridge through everyday situations, cases, aspect, and the A2 finale.</p>
       </a>
-      <a class="lu-card" href="/folk/">
-        <span class="track-badge folk">Folk</span>
-        <h3>Seminar Test Track</h3>
-        <p>Advanced Ukrainian cultural source work with oral tradition, ritual, and decolonization framing.</p>
+      <a class="lu-card" href="/b1/">
+        <span class="track-badge b1">B1 Preview</span>
+        <h3>Intermediate Preview</h3>
+        <p>The first B1 module is open with Ukrainian-led explanations, activities, vocabulary, and resources.</p>
       </a>
       <a class="lu-card" href="/lexicon/">
-        <span class="track-badge atlas">Atlas</span>
+        <span class="track-badge atlas">Reference</span>
         <h3>Word Atlas</h3>
-        <p>A growing lexicon that links course vocabulary to morphology, etymology, and usage context.</p>
+        <p>A learner reference that goes beyond a lexicon: meanings, morphology, usage, etymology where available, and course links.</p>
       </a>
     </div>
   </section>
 
   <section class="track-inventory" aria-labelledby="upcoming-tracks">
     <div class="section-heading">
-      <h2 id="upcoming-tracks">Upcoming Tracks</h2>
+      <h2 id="upcoming-tracks">Course Map</h2>
       <p>
-        These are the active curriculum tracks in the current inventory. Publication order can change as
-        A1 release work, A2 regeneration, and seminar testing progress.
+        This map separates released courses, preview work, and future inventory. The recommended
+        learner path is A1 first, then A2, with B1 available as a preview. Seminar tracks are shown
+        for context only and are not promoted as learner entry points yet.
       </p>
     </div>
 
     <div class="track-inventory-grid">
       <section class="track-column">
-        <h3>Core Ladder</h3>
+        <h3>Course Ladder</h3>
         <ul>
           {coreTracks.map((track) => (
             <li>
@@ -215,6 +218,7 @@ const seminarTracks = [
     }
     .track-badge.a1 { background: var(--lu-green); }
     .track-badge.a2 { background: #1565C0; }
+    .track-badge.b1 { background: #E65100; }
     .track-badge.folk { background: #A4133C; }
     .track-badge.atlas { background: var(--lu-teal); }
     /* In dark mode --lu-green/--lu-teal go pale → white text fails. The folk
