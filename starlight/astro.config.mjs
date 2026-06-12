@@ -55,6 +55,26 @@ export default defineConfig({
   },
 
   integrations: [
+    // GoatCounter — privacy-friendly analytics (no cookies, no PII). Injected on
+    // every page from astro.config so coverage does not depend on any single layout.
+    // Site code is hardcoded (always active in the production build — no env var that
+    // can silently be unset in CI), and the loader is self-hosted at /count.js
+    // (public/count.js) to avoid a third-party CDN dependency.
+    {
+      name: 'goatcounter-analytics',
+      hooks: {
+        'astro:config:setup': ({ injectScript }) => {
+          injectScript(
+            'page',
+            "if (!document.querySelector('script[data-goatcounter]')) {" +
+              "var s=document.createElement('script');" +
+              "s.async=true;s.src='/count.js';" +
+              "s.setAttribute('data-goatcounter','https://learn-ukrainian.goatcounter.com/count');" +
+              'document.head.appendChild(s);}',
+          );
+        },
+      },
+    },
     mdx({
       remarkPlugins,
       rehypePlugins: [rehypeMermaid],
