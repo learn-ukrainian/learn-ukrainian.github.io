@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import sqlite3
 import sys
 from pathlib import Path
 from unittest.mock import patch
@@ -89,6 +90,201 @@ def test_build_prompt_without_dossier_preserves_existing_prompt(tmp_path):
 
     assert after == before
     assert "AUTHORITATIVE DOSSIER" not in after
+
+
+def test_extract_dossier_cited_chunk_ids_preserves_order_and_dedups():
+    from wiki.compiler import _extract_dossier_cited_chunk_ids
+
+    dossier_text = """
+§4 cites ЕУ `feaa5fa7_c0619`, Чижевський wave4-chyzhevsky-istoriia-lit_c0163,
+and Попович 2971c499_c0635. Duplicate feaa5fa7_c0619 stays single.
+This prose mentions S1 and source_c123, but only exact cNNNN chunk IDs count.
+"""
+
+    assert _extract_dossier_cited_chunk_ids(dossier_text) == [
+        "feaa5fa7_c0619",
+        "wave4-chyzhevsky-istoriia-lit_c0163",
+        "2971c499_c0635",
+    ]
+
+
+def test_seed_sources_from_dossier_no_dossier_is_noop():
+    from wiki.compiler import _seed_sources_from_dossier
+
+    sources = [{"chunk_id": "retrieved_c0001", "text": "Retrieved."}]
+
+    with patch("wiki.compiler._fetch_chunks_by_chunk_id") as fetch:
+        seeded = _seed_sources_from_dossier(sources, None)
+
+    assert seeded is sources
+    fetch.assert_not_called()
+
+
+def test_seed_sources_from_dossier_fetches_only_missing_explicit_chunk_ids():
+    from wiki.compiler import _seed_sources_from_dossier
+
+    retrieved = [{"chunk_id": "feaa5fa7_c0620", "text": "Already retrieved."}]
+    fetched = {
+        "feaa5fa7_c0619": {"chunk_id": "feaa5fa7_c0619", "text": "ЕУ c0619"},
+        "wave4-chyzhevsky-istoriia-lit_c0163": {
+            "chunk_id": "wave4-chyzhevsky-istoriia-lit_c0163",
+            "text": "Чижевський c0163",
+        },
+        "2971c499_c0635": {"chunk_id": "2971c499_c0635", "text": "Попович c0635"},
+    }
+    dossier_text = """
+Retrieved duplicate: feaa5fa7_c0620.
+Missing: feaa5fa7_c0619; wave4-chyzhevsky-istoriia-lit_c0163; 2971c499_c0635.
+Unsupported prose without a chunk ID must not widen the registry.
+"""
+
+    with patch(
+        "wiki.compiler._fetch_chunks_by_chunk_id",
+        side_effect=lambda ids: [fetched[chunk_id] for chunk_id in ids],
+    ) as fetch:
+        seeded = _seed_sources_from_dossier(retrieved, dossier_text)
+
+    fetch.assert_called_once_with([
+        "feaa5fa7_c0619",
+        "wave4-chyzhevsky-istoriia-lit_c0163",
+        "2971c499_c0635",
+    ])
+    assert [source["chunk_id"] for source in seeded] == [
+        "feaa5fa7_c0620",
+        "feaa5fa7_c0619",
+        "wave4-chyzhevsky-istoriia-lit_c0163",
+        "2971c499_c0635",
+    ]
+
+
+def test_fetch_chunks_by_chunk_id_with_conn_reads_literary_rows_in_requested_order():
+    from wiki.compiler import _fetch_chunks_by_chunk_id_with_conn
+
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    conn.execute(
+        """
+        CREATE TABLE literary_texts (
+            id INTEGER PRIMARY KEY,
+            chunk_id TEXT,
+            title TEXT,
+            text TEXT,
+            source_file TEXT,
+            author TEXT,
+            work TEXT,
+            work_id TEXT,
+            year INTEGER,
+            genre TEXT,
+            language_period TEXT
+        )
+        """
+    )
+    conn.executemany(
+        """
+        INSERT INTO literary_texts
+        (chunk_id, title, text, source_file, author, work, work_id, year, genre, language_period)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        [
+            (
+                "feaa5fa7_c0619",
+                "Енциклопедія українознавства",
+                "Дружинний епос не зберігся.",
+                "entsyklopediia-ukrainoznavstva",
+                "ЕУ",
+                "ЕУ",
+                "eu",
+                1955,
+                "encyclopedia",
+                "modern",
+            ),
+            (
+                "wave4-chyzhevsky-istoriia-lit_c0163",
+                "Історія української літератури",
+                "Документальний ланцюг XVI-XVII ст.",
+                "chyzhevsky-istoriia-lit",
+                "Дмитро Чижевський",
+                "Історія української літератури",
+                "chyzhevsky",
+                1956,
+                "monograph",
+                "modern",
+            ),
+        ],
+    )
+
+    chunks = _fetch_chunks_by_chunk_id_with_conn(
+        conn,
+        [
+            "wave4-chyzhevsky-istoriia-lit_c0163",
+            "missing_c0001",
+            "feaa5fa7_c0619",
+        ],
+    )
+
+    assert [chunk["chunk_id"] for chunk in chunks] == [
+        "wave4-chyzhevsky-istoriia-lit_c0163",
+        "feaa5fa7_c0619",
+    ]
+    assert chunks[0]["source_type"] == "literary"
+    assert chunks[0]["author"] == "Дмитро Чижевський"
+
+
+def test_dossier_seeded_chunks_reach_assembled_sources_registry(tmp_path):
+    from wiki.compiler import (
+        _build_sources_registry,
+        _dedup_sources_by_attribution,
+        _seed_sources_from_dossier,
+    )
+
+    retrieved = [{"chunk_id": "retrieved_c0001", "text": "Already retrieved."}]
+    fetched = {
+        "feaa5fa7_c0619": {"chunk_id": "feaa5fa7_c0619", "text": "ЕУ c0619"},
+        "wave4-chyzhevsky-istoriia-lit_c0163": {
+            "chunk_id": "wave4-chyzhevsky-istoriia-lit_c0163",
+            "text": "Чижевський c0163",
+        },
+        "2971c499_c0635": {"chunk_id": "2971c499_c0635", "text": "Попович c0635"},
+    }
+    dossier_text = "feaa5fa7_c0619 wave4-chyzhevsky-istoriia-lit_c0163 2971c499_c0635"
+    article_path = tmp_path / "wiki" / "folk" / "bylyny.md"
+    article_path.parent.mkdir(parents=True)
+    article_text = "# Билини\n\nПерший факт [S1]. Другий [S2]. Третій [S3]. Четвертий [S4].\n"
+
+    def _attr(chunk_id: str, corpus: str) -> dict[str, str]:
+        return {
+            "file": str(chunk_id),
+            "type": "literary",
+            "title": str(chunk_id),
+        }
+
+    with (
+        patch(
+            "wiki.compiler._fetch_chunks_by_chunk_id",
+            side_effect=lambda ids: [fetched[chunk_id] for chunk_id in ids],
+        ),
+        patch("wiki.compiler.resolve_chunk_attribution", side_effect=_attr),
+    ):
+        seeded = _seed_sources_from_dossier(retrieved, dossier_text)
+        deduped = _dedup_sources_by_attribution(seeded)
+        registry = _build_sources_registry(article_path, deduped, article_text, force=True)
+
+    assert registry is not None
+    assert [entry.file for entry in registry.sources] == [
+        "retrieved_c0001",
+        "feaa5fa7_c0619",
+        "wave4-chyzhevsky-istoriia-lit_c0163",
+        "2971c499_c0635",
+    ]
+
+
+def test_source_grounding_prompt_still_flags_unsupported_claims():
+    prompt = (_REPO_ROOT / "scripts" / "wiki" / "prompts" / "review_source_grounding.md").read_text(
+        encoding="utf-8",
+    )
+
+    assert "`UNSUPPORTED_CLAIM`" in prompt
+    assert "Substantive claim with no `[S#]` citation" in prompt
 
 
 def test_cmd_compile_one_passes_dossier_text_to_compile_article():

@@ -78,9 +78,26 @@ An A1 article written in plain direct Ukrainian is CORRECT register; do not faul
 
 NOT a failure mode:
 - A verbatim Russian quote attributed correctly (e.g., quoting a Russian imperial decree as primary source — preserve as-is, that is not translationese)
+- A source-preserved Ukrainian historical quotation attributed correctly. Do NOT flag russianisms, old spellings, or calques that occur inside the quoted text of `«…»` or a markdown `>` blockquote when the quote has adjacent attribution: a named source/author, a `[S#]` citation, or an exact chunk_id such as `feaa5fa7_c0619`. This covers faithful quotations such as older-source `акомпаньямент` or `в кругу`.
 - Ukrainian dialect forms in cultural articles about dialects (domain-appropriate)
 - Simplicity at A1-A2 (simplicity ≠ register failure)
 - Technical terminology that looks Russian because both languages inherited it from the same international root (архітектура, філософія) — unless Антоненко-Давидович specifically flags it
+
+## Verbatim Quote Exemption — Keep the Teeth
+
+Apply this exemption only to the exact quoted span, not to the article's surrounding prose.
+
+Exempt:
+- Text inside `«…»` when the same sentence/paragraph attributes it to a named source, `[S#]`, or chunk_id.
+- Text inside a markdown `>` blockquote when the block or the immediately adjacent attribution line names the source, cites `[S#]`, or cites a chunk_id.
+
+Do NOT exempt:
+- Unquoted article prose. If the article itself says `вербатимний`, `приближення` for non-mathematical "наближення", `виступає` as a copula, `в кругу`, or another russianism/calque, flag it normally.
+- Unattributed quotations.
+- Quotes marked `NO_VERIFY` or source labels that the article itself presents as uncertain.
+- Fabricated attribution if source evidence shows the quote is not actually from the named source. In that case, do not treat the label as a register escape hatch.
+
+If a quoted historical form is exempt, do not include it in `findings` or `fixes`. You may mention in `notes` that source-preserved attributed quotations were ignored for register.
 
 ## Evidence requirement — NON-NEGOTIABLE
 

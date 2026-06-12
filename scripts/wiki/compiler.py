@@ -8,6 +8,7 @@ import contextlib
 import os
 import re
 import shutil
+import sqlite3
 import sys
 import tempfile
 import time
@@ -22,7 +23,7 @@ from validate.check_wiki_verify_markers import (
 )
 
 from .config import GEMINI_MODEL, PROMPTS_DIR, TRACK_DOMAINS, WIKI_DIR
-from .source_attribution import resolve_chunk_attribution
+from .source_attribution import connect_sources_db, resolve_chunk_attribution
 from .sources_schema import (
     WikiSourceEntry,
     WikiSourcesRegistry,
@@ -45,6 +46,9 @@ GEMINI_CLI = shutil.which("gemini") or "gemini"
 _PARENT_ENV = os.environ.copy()
 _PARENT_ENV["GEMINI_SESSION"] = "1"
 WIKI_META_RE = re.compile(r"<!--\s*wiki-meta\b(?P<body>.*?)-->", re.DOTALL)
+DOSSIER_CHUNK_ID_RE = re.compile(
+    r"(?<![0-9A-Za-z_-])(?P<chunk_id>[0-9A-Za-z][0-9A-Za-z_-]*_c\d{4,})(?![0-9A-Za-z_-])"
+)
 _MCP_WARNING_PREFIX_RE = re.compile(
     r"^MCP issues detected\. Run /mcp list for status\."
 )
@@ -81,6 +85,11 @@ def compile_article(
         Path to the written article, or None on failure.
     """
     article_key = f"{domain}/{slug}"
+
+    # Folk/seminar dossiers cite exact source chunks after the retrieval step.
+    # Carry those citations into the prompt/registry source set before the
+    # positional [S#] labels are assigned.
+    sources = _seed_sources_from_dossier(sources, dossier_text)
 
     # Deduplicate by file attribution before the prompt is built (#1591).
     # Writer and registry-builder must see the same source set or body
@@ -284,6 +293,277 @@ def _format_dossier_section(dossier_text: str | None) -> str:
         "than on a numbered [S#] source chunk — the dossier is itself verified. "
         "Reserve <!-- VERIFY --> for genuinely uncertain or unsourced claims.\n\n"
     )
+
+
+def _extract_dossier_cited_chunk_ids(dossier_text: str) -> list[str]:
+    """Return exact ``*_cNNNN`` chunk IDs cited in dossier prose, in first-seen order."""
+    seen: set[str] = set()
+    chunk_ids: list[str] = []
+    for match in DOSSIER_CHUNK_ID_RE.finditer(dossier_text):
+        chunk_id = match.group("chunk_id")
+        if chunk_id in seen:
+            continue
+        seen.add(chunk_id)
+        chunk_ids.append(chunk_id)
+    return chunk_ids
+
+
+def _seed_sources_from_dossier(sources: list[dict], dossier_text: str | None) -> list[dict]:
+    """Append dossier-cited chunks that dense retrieval missed.
+
+    No dossier means no-op. With a dossier, only exact cited ``*_cNNNN`` chunk
+    IDs are eligible; the registry is not widened by keyword or fuzzy search.
+    """
+    if not dossier_text:
+        return sources
+
+    cited_chunk_ids = _extract_dossier_cited_chunk_ids(dossier_text)
+    if not cited_chunk_ids:
+        return sources
+
+    seen_chunk_ids = {
+        str(source.get("chunk_id") or "").strip()
+        for source in sources
+        if str(source.get("chunk_id") or "").strip()
+    }
+    missing_chunk_ids = [
+        chunk_id for chunk_id in cited_chunk_ids if chunk_id not in seen_chunk_ids
+    ]
+    if not missing_chunk_ids:
+        return sources
+
+    fetched_chunks = _fetch_chunks_by_chunk_id(missing_chunk_ids)
+    if not fetched_chunks:
+        return sources
+
+    fetched_by_id = {
+        str(chunk.get("chunk_id") or "").strip(): chunk
+        for chunk in fetched_chunks
+        if str(chunk.get("chunk_id") or "").strip()
+    }
+    additions: list[dict] = []
+    for chunk_id in missing_chunk_ids:
+        chunk = fetched_by_id.get(chunk_id)
+        if chunk is None or chunk_id in seen_chunk_ids:
+            continue
+        additions.append(chunk)
+        seen_chunk_ids.add(chunk_id)
+
+    if not additions:
+        return sources
+    return [*sources, *additions]
+
+
+def _fetch_chunks_by_chunk_id(chunk_ids: list[str]) -> list[dict]:
+    """Fetch exact chunks from ``sources.db`` by chunk/passage ID."""
+    if not chunk_ids:
+        return []
+
+    try:
+        with connect_sources_db() as conn:
+            return _fetch_chunks_by_chunk_id_with_conn(conn, chunk_ids)
+    except (OSError, sqlite3.Error):
+        return []
+
+
+def _fetch_chunks_by_chunk_id_with_conn(
+    conn: sqlite3.Connection,
+    chunk_ids: list[str],
+) -> list[dict]:
+    """Fetch exact chunks on an existing DB connection, preserving request order."""
+    seen: set[str] = set()
+    chunks: list[dict] = []
+    for raw_chunk_id in chunk_ids:
+        chunk_id = str(raw_chunk_id or "").strip()
+        if not chunk_id or chunk_id in seen:
+            continue
+        seen.add(chunk_id)
+        chunk = _fetch_chunk_by_chunk_id_with_conn(conn, chunk_id)
+        if chunk is not None:
+            chunks.append(chunk)
+    return chunks
+
+
+def _fetch_chunk_by_chunk_id_with_conn(
+    conn: sqlite3.Connection,
+    chunk_id: str,
+) -> dict | None:
+    for fetcher in (
+        _fetch_textbook_chunk_with_conn,
+        _fetch_literary_chunk_with_conn,
+        _fetch_external_chunk_with_conn,
+        _fetch_wikipedia_chunk_with_conn,
+        _fetch_ukrainian_wiki_chunk_with_conn,
+    ):
+        chunk = fetcher(conn, chunk_id)
+        if chunk is not None:
+            return chunk
+    return None
+
+
+def _fetch_textbook_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+    row = _fetchone_dict(
+        conn,
+        """
+        SELECT id, chunk_id, title, text, source_file, grade, author
+        FROM textbooks
+        WHERE chunk_id = ?
+        LIMIT 1
+        """,
+        (chunk_id,),
+    )
+    if row is None:
+        return None
+    return {
+        "unit_key": f"textbooks:{row['chunk_id']}",
+        "corpus": "textbooks",
+        "source_type": "textbook",
+        "chunk_id": str(row["chunk_id"] or ""),
+        "title": str(row["title"] or ""),
+        "section_title": str(row["title"] or ""),
+        "text": str(row["text"] or ""),
+        "full_text": str(row["text"] or ""),
+        "source_file": str(row["source_file"] or ""),
+        "grade": row.get("grade"),
+        "author": str(row.get("author") or ""),
+        "row_id": _optional_int(row.get("id")),
+    }
+
+
+def _fetch_literary_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+    row = _fetchone_dict(
+        conn,
+        """
+        SELECT id, chunk_id, title, text, source_file, author, work, work_id, year, genre, language_period
+        FROM literary_texts
+        WHERE chunk_id = ?
+        LIMIT 1
+        """,
+        (chunk_id,),
+    )
+    if row is None:
+        return None
+    return {
+        "unit_key": f"literary_texts:{row['chunk_id']}",
+        "corpus": "literary_texts",
+        "source_type": "literary",
+        "chunk_id": str(row["chunk_id"] or ""),
+        "title": str(row["title"] or row.get("work") or ""),
+        "text": str(row["text"] or ""),
+        "full_text": str(row["text"] or ""),
+        "source_file": str(row["source_file"] or ""),
+        "parent_key": str(row.get("work_id") or row.get("source_file") or ""),
+        "author": str(row.get("author") or ""),
+        "work": str(row.get("work") or ""),
+        "year": row.get("year"),
+        "genre": str(row.get("genre") or ""),
+        "language_period": str(row.get("language_period") or ""),
+        "row_id": _optional_int(row.get("id")),
+    }
+
+
+def _fetch_external_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+    row = _fetchone_dict(
+        conn,
+        """
+        SELECT id, chunk_id, url, title, text, source_file, domain, video_id, chunk_start_ts, chunk_end_ts
+        FROM external_articles
+        WHERE chunk_id = ?
+        LIMIT 1
+        """,
+        (chunk_id,),
+    )
+    if row is None:
+        return None
+    return {
+        "unit_key": f"external_articles:{row['chunk_id']}",
+        "corpus": "external_articles",
+        "source_type": "external",
+        "chunk_id": str(row["chunk_id"] or ""),
+        "title": str(row["title"] or ""),
+        "text": str(row["text"] or ""),
+        "full_text": str(row["text"] or ""),
+        "source_file": str(row["source_file"] or ""),
+        "source_name": str(row.get("domain") or row.get("source_file") or ""),
+        "url": str(row.get("url") or ""),
+        "domain": str(row.get("domain") or ""),
+        "video_id": str(row.get("video_id") or ""),
+        "ts_start": _optional_int(row.get("chunk_start_ts")),
+        "ts_end": _optional_int(row.get("chunk_end_ts")),
+        "row_id": _optional_int(row.get("id")),
+    }
+
+
+def _fetch_wikipedia_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+    row = _fetchone_dict(
+        conn,
+        """
+        SELECT title, text, url
+        FROM wikipedia
+        WHERE title = ?
+        LIMIT 1
+        """,
+        (chunk_id,),
+    )
+    if row is None:
+        return None
+    return {
+        "unit_key": f"wikipedia:{row['title']}",
+        "corpus": "wikipedia",
+        "source_type": "wikipedia",
+        "chunk_id": str(row["title"] or ""),
+        "title": str(row["title"] or ""),
+        "text": str(row["text"] or ""),
+        "full_text": str(row["text"] or ""),
+        "source_name": "Wikipedia",
+        "url": str(row.get("url") or ""),
+    }
+
+
+def _fetch_ukrainian_wiki_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+    row = _fetchone_dict(
+        conn,
+        """
+        SELECT passage_id, article_slug, article_title, section_path, text
+        FROM ukrainian_wiki
+        WHERE passage_id = ?
+        LIMIT 1
+        """,
+        (chunk_id,),
+    )
+    if row is None:
+        return None
+    return {
+        "unit_key": f"ukrainian_wiki:{row['passage_id']}",
+        "corpus": "ukrainian_wiki",
+        "source_type": "ukrainian_wiki",
+        "chunk_id": str(row["passage_id"] or ""),
+        "title": str(row["article_title"] or ""),
+        "section_title": str(row.get("section_path") or ""),
+        "text": str(row["text"] or ""),
+        "full_text": str(row["text"] or ""),
+        "source_file": str(row.get("article_slug") or ""),
+    }
+
+
+def _fetchone_dict(
+    conn: sqlite3.Connection,
+    sql: str,
+    params: tuple[object, ...],
+) -> dict[str, object] | None:
+    try:
+        cursor = conn.execute(sql, params)
+        row = cursor.fetchone()
+    except sqlite3.Error:
+        return None
+    if row is None:
+        return None
+    if isinstance(row, sqlite3.Row):
+        return dict(row)
+    return {
+        str(column[0]): value
+        for column, value in zip(cursor.description or (), row, strict=False)
+    }
 
 
 def _normalize_generated_by_model(model_used: str | None) -> str:
