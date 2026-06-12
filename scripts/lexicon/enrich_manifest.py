@@ -9,8 +9,8 @@ no fabrication):
   human-readable Ukrainian grammatical labels, with optional stress display
   forms from ``ukrainian-word-stress``.
 - **meaning** — legacy single-source meaning kept for compatibility.
-- **definition_cards** — separate Грінченко 1907, live СУМ-20, and СУМ-11
-  definition cards with source caveats.
+- **definition_cards** — separate СУМ-20 and СУМ-11 definition cards with
+  source caveats.
 - **cefr** — PULS CEFR lookup when available.
 - **literary_attestation** — exact-form literary corpus hit when available.
 - **synonyms** — source-attested, A1-sense allowlisted Ukrainian candidates only.
@@ -37,6 +37,7 @@ from __future__ import annotations
 import datetime as dt
 import html
 import json
+import os
 import re
 import sqlite3
 import sys
@@ -59,7 +60,28 @@ from scripts.wiki.slovnyk_me import primary_synonym_sense_text
 
 MANIFEST = ROOT / "starlight" / "src" / "data" / "lexicon-manifest.json"
 SOURCES_DB = ROOT / "data" / "sources.db"
-SLOVNYK_CACHE = ROOT / "data" / "lexicon" / "slovnyk_cache"
+
+
+def _default_slovnyk_cache() -> Path:
+    override = os.environ.get("LEXICON_SLOVNYK_CACHE")
+    if override:
+        return Path(override).expanduser()
+
+    local = ROOT / "data" / "lexicon" / "slovnyk_cache"
+    if local.exists():
+        return local
+
+    parts = ROOT.parts
+    if ".worktrees" in parts:
+        main_root = Path(*parts[: parts.index(".worktrees")])
+        main_cache = main_root / "data" / "lexicon" / "slovnyk_cache"
+        if main_cache.exists():
+            return main_cache
+
+    return local
+
+
+SLOVNYK_CACHE = _default_slovnyk_cache()
 
 _CYRILLIC_WORD_CHARS = "A-Za-zА-Яа-яЄєІіЇїҐґ0-9'’ʼ-"
 _LATIN_RE = re.compile(r"[A-Za-z]")
@@ -86,6 +108,7 @@ _UKRAINIAN_WORD_RE = re.compile(r"^[А-Яа-яЄєІіЇїҐґ'’ʼ-]+$")
 _UKRAINIAN_VOWELS = set("аеєиіїоуюяАЕЄИІЇОУЮЯ")
 
 _SLOVNYK_DICT_LABELS: dict[str, str] = {
+    "newsum": "Словник української мови у 20 томах (СУМ-20)",
     "synonyms": "Словник синонімів української мови",
     "synonyms_karavansky": "Словник синонімів Караванського",
     "phraseology": "Фразеологічний словник української мови",
@@ -775,6 +798,16 @@ def _cache_lookup(cache: dict[str, Any] | None, slug: str) -> dict[str, Any] | N
     return row if isinstance(row, dict) and row.get("text") else None
 
 
+def _cache_store_lookup(lemma: str, cache: dict[str, Any], slug: str, row: dict[str, Any] | None) -> None:
+    lookups = cache.setdefault("lookups", {})
+    if not isinstance(lookups, dict):
+        return
+    lookups[slug] = row
+    path = _slovnyk_cache_path(lemma)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(cache, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
 @lru_cache(maxsize=4096)
 def _vesum_word_analyses(word: str) -> tuple[tuple[str, str], ...]:
     """Return immutable ``(lemma, pos)`` VESUM analyses for one word form."""
@@ -1145,6 +1178,12 @@ def _merge_slovnyk_warning(status: dict[str, Any], warning: dict[str, Any] | Non
     return status
 
 
+def _entry_scoped_heritage_status(status: dict[str, Any]) -> dict[str, Any]:
+    clean_status = dict(status)
+    clean_status.pop("sovietization_risk", None)
+    return clean_status
+
+
 def _is_slovnyk_warning_candidate(entry: dict[str, Any], status: dict[str, Any]) -> bool:
     return bool(
         entry.get("primary_source") == "surzhyk_to_avoid"
@@ -1396,8 +1435,8 @@ def _meaning(
 ) -> dict | None:
     """Modern Ukrainian meaning: Вікісловник (clean, + synonyms) → СУМ-11 fallback.
 
-    Грінченко is intentionally NOT used here — its 1907 Russian glosses are
-    surfaced separately as historical *attestation*, not as the primary meaning.
+    Грінченко is intentionally NOT used here — its 1907 glosses are Russian
+    and must not surface in rendered Atlas pages.
     """
     word = lemma.strip()
     row = None
@@ -1435,7 +1474,7 @@ def _meaning(
             "definitions": [row[0].strip()[:600]],
             "source": "СУМ-11",
             "sovietization_risk": risk,
-            "note": "СУМ-11 — частково засоюзлене видання; перевіряйте ідеологічно навантажені статті.",
+            "note": "СУМ-11 — радянське видання; перевіряйте ідеологічно навантажені статті.",
         }
         if keywords:
             block["sovietization_keywords"] = keywords
@@ -1460,27 +1499,6 @@ def _definition_body(
     body = re.sub(r"\s+", " ", clean_html_entities(body)).strip()
     return _truncate_text(body, limit) if body else ""
 
-
-def _grinchenko_definition_card(conn: sqlite3.Connection, lemma: str) -> dict[str, Any] | None:
-    for variant in _split_lemma_variants(lemma):
-        row = conn.execute(
-            "SELECT definition FROM grinchenko WHERE word = ? AND definition != '' LIMIT 1",
-            (variant,),
-        ).fetchone()
-        if row and row[0]:
-            text = _definition_body(row[0])
-            if not text:
-                return None
-            return {
-                "id": "grinchenko",
-                "source": "Грінченко 1907",
-                "source_pill": "Грінченко 1907",
-                "note": "дорадянське засвідчення",
-                "definitions": [text],
-            }
-    return None
-
-
 def _sum20_in_coverage(lemma: str) -> bool:
     lookup = _slovnyk_lookup_word(lemma)
     if not lookup or _has_whitespace(lookup):
@@ -1488,11 +1506,18 @@ def _sum20_in_coverage(lemma: str) -> bool:
     return lookup[0].casefold() in _SUM20_COVERED_INITIALS
 
 
-def _sum20_definition_card(lemma: str) -> dict[str, Any] | None:
+def _sum20_definition_card(
+    lemma: str,
+    cache: dict[str, Any] | None = None,
+) -> dict[str, Any] | None:
     if not _sum20_in_coverage(lemma):
         return None
     lookup_word = _slovnyk_lookup_word(lemma)
-    row = _fetch_slovnyk_entry(lemma, lookup_word, "newsum")
+    row = _cache_lookup(cache, "newsum") if cache is not None else None
+    if not row:
+        row = _fetch_slovnyk_entry(lemma, lookup_word, "newsum")
+        if cache is not None:
+            _cache_store_lookup(lemma, cache, "newsum", row)
     if not row:
         return None
     text = _definition_body(
@@ -1535,20 +1560,16 @@ def _sum11_definition_card(
         card: dict[str, Any] = {
             "id": "sum11-flagged" if risk > 0 else "sum11",
             "source": "СУМ-11",
-            "source_pill": "СУМ-11 · ⚠ позначено" if risk > 0 else "СУМ-11",
+            "source_pill": "СУМ-11",
             "note": f"радянське видання · risk={risk}" if risk > 0 else "радянське видання · перевірено: чисто",
             "definitions": [text],
             "sovietization_risk": risk,
         }
         if keywords:
             card["sovietization_keywords"] = keywords
-            card["flag_note"] = (
-                "Дефініція або ілюстрації містять радянсько-ідеологічні маркери: "
-                + ", ".join(keywords)
-                + ". Для нейтрального тлумачення звіряйте з СУМ-20 або Грінченком."
-            )
+            card["flag_note"] = "⚠ СУМ-11 — радянське видання; подаємо обережно, перевага СУМ-20/Вікісловнику"
         elif risk > 0:
-            card["flag_note"] = "Дефініція або ілюстрації мають радянсько-ідеологічний ризик."
+            card["flag_note"] = "⚠ СУМ-11 — радянське видання; подаємо обережно, перевага СУМ-20/Вікісловнику"
         return card
     return None
 
@@ -1558,28 +1579,13 @@ def _definition_cards(
     lemma: str,
     *,
     has_sum11_flags: bool,
+    cache: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     cards = [
-        _grinchenko_definition_card(conn, lemma),
-        _sum20_definition_card(lemma),
+        _sum20_definition_card(lemma, cache),
         _sum11_definition_card(conn, lemma, has_sum11_flags=has_sum11_flags),
     ]
     return [card for card in cards if card]
-
-
-def _attestation(conn: sqlite3.Connection, lemma: str) -> dict | None:
-    """Грінченко 1907 — historical attestation with Ukrainian usage quotations."""
-    row = None
-    for variant in _split_lemma_variants(lemma):
-        row = conn.execute(
-            "SELECT definition FROM grinchenko WHERE word = ? AND definition != '' LIMIT 1",
-            (variant,),
-        ).fetchone()
-        if row:
-            break
-    if row and row[0]:
-        return {"text": clean_html_entities(row[0].strip()[:600]), "source": "Грінченко (1907)"}
-    return None
 
 
 def _lookup_key(value: str) -> str:
@@ -1828,13 +1834,21 @@ def enrich() -> tuple[int, int]:
                 entry["gloss"] = clean_gloss(str(entry["gloss"]))
             lemma = entry["lemma"]
             slovnyk_cache = _slovnyk_cache(lemma)
+            definition_cards = _definition_cards(
+                conn,
+                lemma,
+                has_sum11_flags=has_sum11_flags,
+                cache=slovnyk_cache,
+            )
             heritage_status = classify_lemma(lemma)
             warning = (
                 _warning_slovnyk(lemma, slovnyk_cache)
                 if _is_slovnyk_warning_candidate(entry, heritage_status)
                 else None
             )
-            entry["heritage_status"] = _merge_slovnyk_warning(heritage_status, warning)
+            entry["heritage_status"] = _entry_scoped_heritage_status(
+                _merge_slovnyk_warning(heritage_status, warning)
+            )
             sections: dict[str, object] = {}
             synonyms = _synonyms_slovnyk(lemma, slovnyk_cache, entry_pos=entry.get("pos"))
             if synonyms:
@@ -1859,12 +1873,8 @@ def enrich() -> tuple[int, int]:
             meaning = _meaning(conn, lemma, has_sum11_flags=has_sum11_flags)
             if meaning:
                 block["meaning"] = meaning
-            definition_cards = _definition_cards(conn, lemma, has_sum11_flags=has_sum11_flags)
             if definition_cards:
                 block["definition_cards"] = definition_cards
-            attestation = _attestation(conn, lemma)
-            if attestation:
-                block["attestation"] = attestation
             etym = _etymology(conn, lemma)
             if etym:
                 block["etymology"] = etym
@@ -1898,7 +1908,7 @@ def main() -> None:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     etymology_covered, etymology_total = _single_word_etymology_coverage(manifest)
     print(
-        f"enriched {enriched}/{total} lexicon entries from VESUM + Грінченко/СУМ + Горох/ЕСУМ/Вікісловник + slovnyk.me"
+        f"enriched {enriched}/{total} lexicon entries from VESUM + СУМ + Горох/ЕСУМ/Вікісловник + slovnyk.me"
     )
     print(f"single-word etymology {etymology_covered}/{etymology_total}")
 

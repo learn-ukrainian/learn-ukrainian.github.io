@@ -11,13 +11,19 @@ from __future__ import annotations
 
 import html
 import json
+import os
 import re
 import sqlite3
+import sys
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
+SCRIPTS_DIR = ROOT / "scripts"
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
 SOURCES_DB = ROOT / "data" / "sources.db"
 LT_REPLACEMENTS = ROOT / "data" / "lt_replacements.json"
 
@@ -59,6 +65,68 @@ _DIALECT_OR_FOLK_TERMS = {
     "ягілки",
 }
 
+_SLOVNYK_HERITAGE_SLUGS = {
+    "newsum",
+    "vts",
+    "holoskevych",
+    "obsolete_words",
+    "bukovina",
+    "franko",
+    "slang_lviv",
+    "slang",
+    "slang_modern",
+}
+
+_ARCHAIC_MARKERS = (
+    "заст.",
+    "застар",
+    "архаї",
+    "ц.-с.",
+    "церк.-слов",
+    "церковнослов",
+)
+_DIALECT_MARKERS = (
+    "діал.",
+    " діал ",
+    "діалект",
+    "зах.",
+    " зах ",
+    "говір",
+    "гуц",
+    "бойк",
+    "лемк",
+    "буковин",
+    "львів",
+)
+_HISTORISM_MARKERS = (
+    "іст.",
+    "істор.",
+    "(іст.)",
+    "у xvi",
+    "у xvii",
+    "у xviii",
+    "у xix",
+    "в xvi",
+    "в xvii",
+    "в xviii",
+    "в xix",
+    "до 1764",
+    "епоху феодалізму",
+    "феодально",
+    "козацького війська",
+    "запорізької січі",
+    "запорозької січі",
+    "стара російська одиниця",
+    "десята частина доходів",
+)
+_BORROWING_MARKERS = (
+    "запозич",
+    "з польської",
+    "з німецької",
+    "з французької",
+    "з латинської",
+)
+
 
 def classify_lemma(lemma: str) -> dict[str, Any]:
     """Classify a lemma for Word Atlas ``heritage_status`` badges."""
@@ -82,34 +150,59 @@ def _classify(term: str, *, surface: bool) -> dict[str, Any]:
     sovietization_risk = _sum11_sovietization_risk_for_term(term)
 
     vesum = _vesum_attestation(term, surface=surface)
-    if vesum:
-        return _status(
-            "standard",
-            [vesum],
-            is_russianism=False,
-            russian_shadow=russian_shadow,
-            sovietization_risk=sovietization_risk,
-        )
+    vesum_archaism = _vesum_archaism_attestation(term, surface=surface)
+    has_modern_vesum = bool(vesum) and not (
+        vesum_archaism and not vesum_archaism["has_modern"]
+    )
 
     russianism = _russianism_status(term, russian_shadow=russian_shadow)
 
     attestations: list[dict[str, Any]] = []
     classification = "unknown"
     with _source_conn() as conn:
-        auth_hits = _dictionary_attestations(conn, term, surface=surface)
+        auth_hits = _strict_heritage_attestations(conn, term, surface=surface)
+        has_standard_hit = any(hit["classification"] == "standard" for hit in auth_hits)
         for hit in auth_hits:
+            candidate = str(hit["classification"])
+            if (
+                candidate == "standard"
+                and vesum_archaism
+                and not vesum_archaism["has_modern"]
+            ):
+                candidate = "authentic-archaism"
+            if candidate == "standard":
+                continue
+            if (
+                candidate == "authentic-archaism"
+                and hit.get("weak_when_modern")
+                and (has_modern_vesum or has_standard_hit or russianism)
+            ):
+                continue
+            if (
+                candidate == "dialect"
+                and hit.get("weak_when_modern")
+                and (has_modern_vesum or has_standard_hit or russianism)
+            ):
+                continue
+            if has_modern_vesum and candidate == "borrowing":
+                continue
             attestations.append(hit["attestation"])
-            classification = _prefer_classification(classification, hit["classification"])
+            classification = _prefer_classification(classification, candidate)
             sovietization_risk = max(sovietization_risk, int(hit.get("sovietization_risk") or 0))
 
         if surface and not attestations and russianism and term in _KNOWN_STANDARD_ALTERNATIVES:
             return russianism
 
-        if surface and (not attestations or term in _SURFACE_QUOTE_HINTS):
-            quote_hits = _literary_surface_attestations(conn, term)
-            for hit in quote_hits:
+        if not attestations and not vesum:
+            for hit in _standard_dictionary_attestations(conn, term):
                 attestations.append(hit["attestation"])
-                classification = _prefer_classification(classification, hit["classification"])
+                classification = _prefer_classification(classification, "standard")
+                sovietization_risk = max(
+                    sovietization_risk, int(hit.get("sovietization_risk") or 0)
+                )
+
+    if surface and russianism and term in _KNOWN_STANDARD_ALTERNATIVES:
+        return russianism
 
     if attestations and classification in _AUTHENTIC_CLASSIFICATIONS:
         return _status(
@@ -122,6 +215,15 @@ def _classify(term: str, *, surface: bool) -> dict[str, Any]:
 
     if russianism:
         return russianism
+
+    if vesum:
+        return _status(
+            "standard",
+            [vesum],
+            is_russianism=False,
+            russian_shadow=russian_shadow,
+            sovietization_risk=sovietization_risk,
+        )
 
     calque_warning = _calque_warning(term, russian_shadow_detail)
     return _status(
@@ -246,6 +348,39 @@ def _vesum_attestation(term: str, *, surface: bool) -> dict[str, Any] | None:
     return None
 
 
+def _is_archaic_tags(tags: str | None) -> bool:
+    return "arch" in str(tags or "").split(":")
+
+
+def _vesum_archaism_attestation(term: str, *, surface: bool) -> dict[str, Any] | None:
+    try:
+        from scripts.verification.vesum import verify_lemma, verify_word
+
+        rows = verify_word(term) if surface else verify_lemma(term)
+        if not rows and not surface:
+            rows = verify_word(term)
+    except Exception:
+        return None
+    if not rows:
+        return None
+
+    archaic_rows = [row for row in rows if _is_archaic_tags(row.get("tags"))]
+    if not archaic_rows:
+        return None
+    sample = archaic_rows[0]
+    return {
+        "has_modern": len(archaic_rows) < len(rows),
+        "attestation": {
+            "source": "VESUM",
+            "ref": term,
+            "detail": (
+                "archaic tag in VESUM"
+                f" ({len(archaic_rows)}/{len(rows)} forms; sample tags={sample.get('tags')})"
+            ),
+        },
+    }
+
+
 def _check_russian_shadow(term: str) -> tuple[bool, dict[str, Any]]:
     if not _is_single_token(term):
         return False, {"available": False, "reason": "not_single_token"}
@@ -258,7 +393,7 @@ def _check_russian_shadow(term: str) -> tuple[bool, dict[str, Any]]:
     return bool(result.get("matches_russian")), {"available": True, **result}
 
 
-def _dictionary_attestations(
+def _strict_heritage_attestations(
     conn: sqlite3.Connection,
     term: str,
     *,
@@ -267,13 +402,195 @@ def _dictionary_attestations(
     hits: list[dict[str, Any]] = []
     hits.extend(_grinchenko_exact_hits(conn, term))
     hits.extend(_esum_exact_hits(conn, term))
-    hits.extend(_sum11_exact_hits(conn, term))
-    hits.extend(_wiktionary_exact_hits(conn, term))
-    hits.extend(_grinchenko_crossref_hits(conn, term))
     hits.extend(_esum_variant_hits(conn, term))
     if surface:
         hits.extend(_grinchenko_surface_usage_hits(conn, term))
     return hits
+
+
+def _standard_dictionary_attestations(
+    conn: sqlite3.Connection,
+    term: str,
+) -> list[dict[str, Any]]:
+    hits: list[dict[str, Any]] = []
+    for hit in [*_sum11_exact_hits(conn, term), *_wiktionary_exact_hits(conn, term)]:
+        if hit["classification"] == "standard":
+            hits.append(hit)
+    return hits
+
+
+def _default_slovnyk_cache_dir() -> Path:
+    override = os.environ.get("LEXICON_SLOVNYK_CACHE")
+    if override:
+        return Path(override).expanduser()
+    local = ROOT / "data" / "lexicon" / "slovnyk_cache"
+    if local.exists():
+        return local
+    parts = ROOT.parts
+    if ".worktrees" in parts:
+        main_root = Path(*parts[: parts.index(".worktrees")])
+        main_cache = main_root / "data" / "lexicon" / "slovnyk_cache"
+        if main_cache.exists():
+            return main_cache
+    return local
+
+
+def _slovnyk_cache_path(term: str) -> Path:
+    stem = re.sub(r"[^0-9A-Za-zА-Яа-яЄєІіЇїҐґ'’ʼ-]+", "-", term).strip("-")
+    return _default_slovnyk_cache_dir() / f"{stem or 'empty'}.json"
+
+
+def _cached_slovnyk_hits(term: str) -> list[dict[str, Any]]:
+    path = _slovnyk_cache_path(term)
+    try:
+        cache = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return []
+    lookups = cache.get("lookups")
+    if not isinstance(lookups, dict):
+        return []
+
+    hits: list[dict[str, Any]] = []
+    for slug, row in lookups.items():
+        if slug not in _SLOVNYK_HERITAGE_SLUGS or not isinstance(row, dict):
+            continue
+        text = _clean_text(row.get("text"), limit=500)
+        if not text:
+            continue
+        hits.append(
+            {
+                "query": term,
+                "source_family": "slovnyk_me",
+                "source": row.get("dictionary_label") or "slovnyk.me",
+                "word": row.get("word") or term,
+                "text": text,
+                "classification": "cached_slovnyk_attestation",
+                "is_authentic_ukrainian": True,
+                "is_russianism": False,
+                "is_modern": slug in {"newsum", "vts"},
+                "is_dialect": _classification_from_source_text(text, default="standard") == "dialect",
+                "sovietization_risk": 0,
+                "evidence_tags": ["slovnyk_me_cache", slug],
+            }
+        )
+    return hits
+
+
+def _search_heritage_attestations(term: str) -> list[dict[str, Any]]:
+    try:
+        from wiki.sources_db import search_heritage
+
+        hits = search_heritage(term, limit=10, include_live_slovnyk=False)
+    except Exception:
+        hits = []
+    hits.extend(_cached_slovnyk_hits(term))
+
+    out: list[dict[str, Any]] = []
+    for hit in hits:
+        if hit.get("is_russianism"):
+            continue
+        hit_word = _normalize_word(str(hit.get("word") or ""))
+        if hit_word and hit_word != term:
+            continue
+        text = _clean_text(_heritage_hit_text(hit), limit=500)
+        classification = _classification_from_heritage_hit(hit, text)
+        if classification == "standard":
+            continue
+        out.append(
+            {
+                "classification": classification,
+                "attestation": {
+                    "source": _heritage_source_id(hit),
+                    "ref": str(hit.get("word") or hit.get("source") or term),
+                    "detail": text,
+                },
+                "sovietization_risk": int(hit.get("sovietization_risk") or 0),
+            }
+        )
+    return out
+
+
+def _heritage_hit_text(hit: dict[str, Any]) -> str:
+    return str(
+        hit.get("text")
+        or hit.get("definition")
+        or hit.get("etymology_text")
+        or hit.get("snippet")
+        or ""
+    )
+
+
+def _heritage_source_id(hit: dict[str, Any]) -> str:
+    family = str(hit.get("source_family") or "heritage")
+    source = str(hit.get("source") or "")
+    if family == "slovnyk_me":
+        return f"search_heritage:slovnyk_me:{source}".rstrip(":")
+    if family == "esum":
+        return "search_heritage:esum"
+    if family == "grinchenko":
+        return "search_heritage:grinchenko_1907"
+    if family == "style_guide":
+        return "search_heritage:style_guide"
+    return f"search_heritage:{family}"
+
+
+def _has_any_marker(text: str, markers: tuple[str, ...]) -> bool:
+    return any(marker in text for marker in markers)
+
+
+def _classification_from_source_text(text: str, *, default: str) -> str:
+    lower = _normalize_word(text)
+    if _has_any_marker(lower, _HISTORISM_MARKERS):
+        return "historism"
+    if _has_any_marker(lower, _DIALECT_MARKERS):
+        return "dialect"
+    if _has_any_marker(lower, _ARCHAIC_MARKERS):
+        return "authentic-archaism"
+    if "рідко" in lower and not re.search(r"\b[12]\.", lower):
+        return "authentic-archaism"
+    if _has_any_marker(lower, _BORROWING_MARKERS):
+        return "borrowing"
+    return default
+
+
+def _strict_classification_from_source_text(text: str, *, default: str) -> str:
+    lower = _normalize_word(text)
+    if _has_any_marker(lower, ("іст.", "істор.", "(іст.)")):
+        return "historism"
+    if _has_any_marker(lower, ("діал.", " діал ", "діалект")):
+        return "dialect"
+    if _has_any_marker(lower, ("заст.", "застар", "архаї")):
+        return "authentic-archaism"
+    if _has_any_marker(lower, _BORROWING_MARKERS):
+        return "borrowing"
+    return default
+
+
+def _esum_headword_classification(text: str, term: str, *, exact: bool) -> str:
+    if term in _DIALECT_OR_FOLK_TERMS:
+        return "dialect"
+    if not exact:
+        return "standard"
+
+    lower = _normalize_word(text)
+    term_pattern = re.escape(_normalize_word(term))
+    headword_marker_re = re.compile(
+        rf"^\[?{term_pattern}\]?\s*(?:\([^)]*(?:іст\.|істор\.|діал\.|заст\.|застар|архаї)[^)]*\)|"
+        rf"«[^»]{{0,160}}(?:\(іст\.\)|\(діал\.\)|\(заст\.\))"
+        rf")"
+    )
+    if not headword_marker_re.search(lower):
+        return "standard"
+    return _strict_classification_from_source_text(lower, default="standard")
+
+
+def _classification_from_heritage_hit(hit: dict[str, Any], text: str) -> str:
+    classification = _classification_from_source_text(text, default="standard")
+    if classification != "standard":
+        return classification
+    if bool(hit.get("is_dialect")) and _has_any_marker(_normalize_word(text), _DIALECT_MARKERS):
+        return "dialect"
+    return "standard"
 
 
 def _grinchenko_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]]:
@@ -285,9 +602,10 @@ def _grinchenko_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str
         ).fetchall()
         for row in rows:
             text = _clean_text(row["definition"])
+            classification = _strict_classification_from_source_text(text, default="standard")
             hits.append(
                 {
-                    "classification": _classification_from_definition(text, default="authentic-archaism"),
+                    "classification": classification,
                     "attestation": {
                         "source": "grinchenko_1907",
                         "ref": str(row["id"]),
@@ -295,6 +613,8 @@ def _grinchenko_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str
                         "detail": text,
                     },
                     "sovietization_risk": 0,
+                    "weak_when_modern": classification == "authentic-archaism"
+                    and _classification_from_source_text(text, default="standard") == "standard",
                 }
             )
     return hits
@@ -312,9 +632,10 @@ def _grinchenko_crossref_hits(conn: sqlite3.Connection, term: str) -> list[dict[
         if not crossref_re.search(definition):
             continue
         text = _clean_text(row["definition"])
+        classification = _classification_from_definition(text, default="dialect")
         hits.append(
             {
-                "classification": _classification_from_definition(text, default="dialect"),
+                "classification": classification,
                 "attestation": {
                     "source": "grinchenko_1907",
                     "ref": str(row["id"]),
@@ -322,6 +643,8 @@ def _grinchenko_crossref_hits(conn: sqlite3.Connection, term: str) -> list[dict[
                     "detail": text,
                 },
                 "sovietization_risk": 0,
+                "weak_when_modern": classification == "dialect"
+                and _classification_from_source_text(text, default="standard") == "standard",
             }
         )
     return hits
@@ -528,8 +851,9 @@ def _esum_variant_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, An
 
 def _esum_hit(term: str, row: sqlite3.Row, *, exact: bool) -> dict[str, Any]:
     text = _clean_text(row["etymology_text"])
+    classification = _classification_from_etymology(text, term, exact=exact)
     return {
-        "classification": _classification_from_etymology(text, term, exact=exact),
+        "classification": classification,
         "attestation": {
             "source": "esum",
             "ref": f"{row['lemma']}:{row['vol']}:{row['page']}",
@@ -537,6 +861,9 @@ def _esum_hit(term: str, row: sqlite3.Row, *, exact: bool) -> dict[str, Any]:
             "detail": text,
         },
         "sovietization_risk": 0,
+        "weak_when_modern": exact
+        and classification == "authentic-archaism"
+        and _classification_from_source_text(text, default="standard") == "standard",
     }
 
 
@@ -573,29 +900,17 @@ def _wiktionary_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str
 
 
 def _classification_from_definition(text: str, *, default: str) -> str:
-    lower = _normalize_word(text)
-    if "діал." in lower or " діал " in lower or "діалект" in lower:
-        return "dialect"
-    if "іст." in lower or "істор." in lower:
-        return "historism"
-    if "заст." in lower or "застар" in lower:
-        return "authentic-archaism"
-    return default
+    classification = _classification_from_source_text(text, default=default)
+    if classification == "borrowing" and default == "standard":
+        return default
+    return classification
 
 
 def _classification_from_etymology(text: str, term: str, *, exact: bool) -> str:
-    lower = _normalize_word(text)
-    if term in _DIALECT_OR_FOLK_TERMS:
-        return "dialect"
-    if any(marker in lower for marker in (" діал", "діал.", "говір", "гуц", "бойк", "лемк", "поділ")):
-        return "dialect"
-    if "іст." in lower or "істор." in lower:
-        return "historism"
-    if "заст." in lower or "застар" in lower:
-        return "authentic-archaism"
-    if "запозич" in lower:
+    classification = _esum_headword_classification(text, term, exact=exact)
+    if classification == "borrowing" and exact:
         return "borrowing"
-    return "authentic-archaism" if exact else "standard"
+    return classification
 
 
 def _sum11_sovietization_risk(definition: str, text: str) -> int:
@@ -748,7 +1063,7 @@ def _literary_ref_detail(row: sqlite3.Row) -> str:
 
 def _literary_classification(term: str, row: sqlite3.Row) -> str:
     period = str(row["language_period"] or "")
-    if period in {"middle_ukrainian", "old_east_slavic"} or _looks_archaic_form(term):
+    if period in {"middle_ukrainian", "old_east_slavic"}:
         return "authentic-archaism"
     if term in _DIALECT_OR_FOLK_TERMS:
         return "dialect"
@@ -756,15 +1071,9 @@ def _literary_classification(term: str, row: sqlite3.Row) -> str:
 
 
 def _form_default_classification(term: str) -> str:
-    if _looks_archaic_form(term):
-        return "authentic-archaism"
     if term in _DIALECT_OR_FOLK_TERMS:
         return "dialect"
     return "standard"
-
-
-def _looks_archaic_form(term: str) -> bool:
-    return term.endswith(("ая", "еє", "єє", "оє", "ую"))
 
 
 def _russianism_status(term: str, *, russian_shadow: bool) -> dict[str, Any] | None:

@@ -7,9 +7,8 @@ exists either as a lemma or as a word form. This preserves current lesson heads
 such as ``сьома`` while still rejecting orphan Atlas pages.
 
 Sovietization note: risk on a СУМ-11 definition is a source caveat, not a word
-classification. The manifest must carry that risk on ``enrichment.meaning`` so
-the Atlas can render an amber source warning without labeling standard words
-as Sovietisms.
+classification. The manifest must carry and render that risk on the individual
+СУМ-11 ``definition_cards[]`` entry, never as a word-level warning.
 """
 
 from __future__ import annotations
@@ -34,7 +33,7 @@ DEFAULT_CURRICULUM = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml
 
 SOURCE_REQUIRED_SECTIONS = (
     "meaning",
-    "attestation",
+    "definition_cards",
     "etymology",
     "morphology",
     "synonyms",
@@ -278,6 +277,26 @@ def _check_provenance(entry: Mapping[str, Any], lemma: str, violations: list[Vio
         if section_name not in enrichment:
             continue
         section = enrichment[section_name]
+        if section_name == "definition_cards":
+            if not isinstance(section, list):
+                violations.append(
+                    Violation(
+                        "provenance_per_section",
+                        lemma,
+                        "definition_cards section must be a list of sourced cards",
+                    )
+                )
+                continue
+            for card in section:
+                if not isinstance(card, Mapping) or not _non_empty_str(card.get("source")):
+                    violations.append(
+                        Violation(
+                            "provenance_per_section",
+                            lemma,
+                            "definition_cards card is missing non-empty source",
+                        )
+                    )
+            continue
         if not isinstance(section, Mapping):
             violations.append(
                 Violation(
@@ -326,7 +345,9 @@ def _section_has_content(section_name: str, section: object) -> bool:
         return _definitions_have_content(section.get("definitions"))
     if section_name == "morphology":
         return _list_has_content(section.get("forms")) or _mapping_has_content(section.get("paradigm"))
-    if section_name in {"attestation", "etymology"}:
+    if section_name == "definition_cards":
+        return False
+    if section_name == "etymology":
         return _non_empty_str(section.get("text"))
     if section_name == "synonyms":
         return _list_has_content(section.get("items"))
@@ -349,6 +370,19 @@ def _check_empty_sections(entry: Mapping[str, Any], lemma: str, violations: list
         if section_name not in enrichment:
             continue
         section = enrichment[section_name]
+        if section_name == "definition_cards":
+            if not isinstance(section, list) or not any(
+                isinstance(card, Mapping) and _definitions_have_content(card.get("definitions"))
+                for card in section
+            ):
+                violations.append(
+                    Violation(
+                        "section_omitted_not_empty",
+                        lemma,
+                        "definition_cards section is present without renderable data",
+                    )
+                )
+            continue
         if not _section_has_content(section_name, section):
             violations.append(
                 Violation(
@@ -448,41 +482,31 @@ def _max_sovietization_risk(value: object) -> int:
     return 0
 
 
-def _sum11_definition_risk(meaning: object) -> int:
-    if not isinstance(meaning, Mapping):
+def _sum11_definition_card_risk(card: object) -> int:
+    if not isinstance(card, Mapping):
         return 0
 
-    section_source_is_sum11 = _is_sum11_source(meaning.get("source"))
-    meaning_level_risk = _max_sovietization_risk(meaning)
-    risk = meaning_level_risk if section_source_is_sum11 else 0
-    definitions = meaning.get("definitions")
-    if isinstance(definitions, list):
-        for definition in definitions:
-            if not isinstance(definition, Mapping):
-                continue
-            source_is_sum11 = section_source_is_sum11 or _is_sum11_source(definition.get("source"))
-            if source_is_sum11:
-                risk = max(risk, meaning_level_risk, _max_sovietization_risk(definition))
-    return risk
+    if _is_sum11_source(card.get("source")) or _is_sum11_source(card.get("id")):
+        return _max_sovietization_risk(card)
+    return 0
 
 
 def _check_sovietization(entry: Mapping[str, Any], lemma: str, violations: list[Violation]) -> None:
-    meaning = _enrichment(entry).get("meaning")
-    source_risk = _sum11_definition_risk(meaning)
-    if source_risk < 1:
+    cards = _enrichment(entry).get("definition_cards")
+    if not isinstance(cards, list):
         return
 
-    rendered_risk = (
-        _risk_number(meaning.get("sovietization_risk"))
-        if isinstance(meaning, Mapping) and _is_sum11_source(meaning.get("source"))
-        else 0
-    )
-    if rendered_risk < 1:
+    for card in cards:
+        source_risk = _sum11_definition_card_risk(card)
+        if source_risk < 1:
+            continue
+        if isinstance(card, Mapping) and _non_empty_str(card.get("flag_note")):
+            continue
         violations.append(
             Violation(
                 "sovietization_must_be_flagged",
                 lemma,
-                "SUM-11 definition carries sovietization risk but enrichment.meaning.sovietization_risk is < 1",
+                "SUM-11 definition card carries sovietization risk but is missing flag_note",
             )
         )
 

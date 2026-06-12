@@ -439,7 +439,7 @@ def test_sum11_meaning_carries_source_sovietization_risk() -> None:
     assert meaning["sovietization_keywords"] == ["ленін", "маркс"]
 
 
-def test_definition_cards_emit_separate_sources_with_sum11_risk(monkeypatch) -> None:
+def test_definition_cards_emit_separate_visible_sources_with_sum11_risk(monkeypatch) -> None:
     conn = _conn()
     conn.execute(
         "INSERT INTO grinchenko (word, definition, source) VALUES (?, ?, ?)",
@@ -462,7 +462,7 @@ def test_definition_cards_emit_separate_sources_with_sum11_risk(monkeypatch) -> 
     monkeypatch.setattr(
         enrich_manifest_module,
         "_sum20_definition_card",
-        lambda lemma: {
+        lambda lemma, cache=None: {
             "id": "sum20",
             "source": "СУМ-20",
             "source_pill": "СУМ-20",
@@ -473,12 +473,12 @@ def test_definition_cards_emit_separate_sources_with_sum11_risk(monkeypatch) -> 
 
     cards = _definition_cards(conn, "прапор", has_sum11_flags=True)
 
-    assert [card["id"] for card in cards] == ["grinchenko", "sum20", "sum11-flagged"]
-    assert cards[0]["source"] == "Грінченко 1907"
-    assert cards[1]["source"] == "СУМ-20"
-    assert cards[2]["sovietization_risk"] == 2
-    assert cards[2]["sovietization_keywords"] == ["ленін", "партійн"]
-    assert "Прапор" in cards[0]["definitions"][0]
+    assert [card["id"] for card in cards] == ["sum20", "sum11-flagged"]
+    assert cards[0]["source"] == "СУМ-20"
+    assert cards[1]["sovietization_risk"] == 2
+    assert cards[1]["sovietization_keywords"] == ["ленін", "партійн"]
+    assert cards[1]["flag_note"] == "⚠ СУМ-11 — радянське видання; подаємо обережно, перевага СУМ-20/Вікісловнику"
+    assert all(card["source"] != "Грінченко 1907" for card in cards)
 
 
 def test_cefr_lookup_uses_exact_puls_row() -> None:

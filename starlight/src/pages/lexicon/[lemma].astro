@@ -101,7 +101,6 @@ interface Enrichment {
   };
   meaning?: Meaning;
   definition_cards?: DefinitionCard[];
-  attestation?: SourcedText;
   etymology?: SourcedText;
   literary_attestation?: {
     text: string;
@@ -123,7 +122,6 @@ interface HeritageStatus {
   attestations: HeritageAttestation[];
   is_russianism: boolean;
   russian_shadow: boolean;
-  sovietization_risk: number;
   calque_warning?: { detail?: string } | null;
 }
 
@@ -314,36 +312,17 @@ const standardAlternatives = showHeritageWarning
       ),
     )
   : [];
-const meaningSource = enrichment?.meaning?.source ?? "";
-const isSum11Meaning = meaningSource.replace(/\s/g, "").includes("СУМ-11");
-const meaningSovietRisk = isSum11Meaning
-  ? Number(enrichment?.meaning?.sovietization_risk ?? 0)
-  : 0;
-const definitionSovietRisk = Math.max(
-  0,
-  ...definitionCards.map((card) => Number(card.sovietization_risk ?? 0)),
-);
-const definitionSovietKeywords = Array.from(
-  new Set(
-    definitionCards.flatMap((card) =>
-      (card.sovietization_keywords ?? []).map((keyword) => keyword.trim()).filter(Boolean),
+const hasPreSovietAttestation = Boolean(
+  (heritage?.attestations ?? []).some((attestation) =>
+    /grinchenko_1907|1907|Голоскевич|1929|ЕСУМ|esum/.test(
+      `${attestation.source} ${attestation.ref} ${attestation.detail ?? ""}`,
     ),
   ),
-);
-const showSovietSourceCaveat = meaningSovietRisk > 0 || definitionSovietRisk > 0;
-const hasPreSovietAttestation = Boolean(
-  definitionCards.some((card) => card.id === "grinchenko" || /Грінченко|1907/.test(card.source)) ||
-    enrichment?.attestation?.source?.includes("Грінченко") ||
-    (heritage?.attestations ?? []).some((attestation) =>
-      /Грінченко|1907|Голоскевич|1929|ЕСУМ/.test(
-        `${attestation.source} ${attestation.ref} ${attestation.detail ?? ""}`,
-      ),
-    ),
 );
 const showEditorialSuccess = Boolean(
   heritage && !heritage.is_russianism && !showHeritageWarning && hasPreSovietAttestation,
 );
-const showEditorialWarning = Boolean(showHeritageWarning || definitionSovietRisk > 0);
+const showEditorialWarning = Boolean(showHeritageWarning);
 // "standard" is the unremarkable default (codified modern norm) — it gets the
 // glanceable header pill but no dedicated section. The section is reserved for
 // the noteworthy cases: a non-standard authentic status (archaism/historism/
@@ -359,10 +338,9 @@ const showHeritage = Boolean(
       heritage.calque_warning),
 );
 const hasDictionaryData = Boolean(
-  enrichment?.morphology ||
+    enrichment?.morphology ||
     enrichment?.meaning ||
     definitionCards.length > 0 ||
-    enrichment?.attestation ||
     enrichment?.etymology ||
     enrichment?.literary_attestation ||
     sections?.synonyms ||
@@ -453,26 +431,6 @@ const frontmatter = {
           {standardAlternatives.length > 0 && (
             <p class="editorial-meta">Українська норма: {standardAlternatives.join(", ")}</p>
           )}
-        </div>
-      </section>
-    )}
-
-    {definitionSovietRisk > 0 && (
-      <section class="atlas-section" aria-label="Попередження джерела">
-        <div class={`editorial-warn ${definitionSovietRisk === 1 ? "editorial-warn--amber" : ""}`}>
-          <div class="editorial-warn-header">
-            <div class="editorial-warn-icon" aria-hidden="true">⚠</div>
-            Радянські ідеологічні формулювання у СУМ-11
-          </div>
-          <p>
-            У показаній нижче картці СУМ-11 є радянсько-ідеологічні маркери.
-            Це попередження стосується редакторської політики словника, а не
-            автоматично самого слова.
-          </p>
-          <p class="editorial-meta">
-            Тригер: sovietization_risk={definitionSovietRisk}
-            {definitionSovietKeywords.length > 0 && ` · keywords: ${definitionSovietKeywords.join(", ")}`}
-          </p>
         </div>
       </section>
     )}
@@ -604,13 +562,6 @@ const frontmatter = {
               </p>
             )}
             {enrichment.meaning.note && <p class="atlas-note">{enrichment.meaning.note}</p>}
-            {showSovietSourceCaveat && (
-              <p class="atlas-source-caveat" role="note">
-                <span aria-hidden="true">⚠</span>{" "}
-                Це тлумачення — з радянського словника (СУМ-11); подається з
-                осторогою. Перевага — Грінченко / СУМ-20.
-              </p>
-            )}
           </div>
         ) : null}
       </section>
@@ -650,19 +601,6 @@ const frontmatter = {
             </article>
           ))}
         </div>
-      </section>
-    )}
-
-    {enrichment?.attestation && (
-      <section class="atlas-section" aria-labelledby="atlas-attestation-title">
-        <div class="atlas-section-head">
-          <p class="atlas-kicker">Джерела</p>
-          <h2 id="atlas-attestation-title">Історичне засвідчення</h2>
-        </div>
-        <blockquote class="atlas-quote-card">
-          <p>{enrichment.attestation.text}</p>
-          <cite>{enrichment.attestation.source}</cite>
-        </blockquote>
       </section>
     )}
 
@@ -1215,21 +1153,6 @@ const frontmatter = {
     color: var(--lu-text-muted);
   }
 
-  .atlas-source-caveat {
-    margin: 0.85rem 0 0;
-    padding: 0.65rem 0.8rem;
-    border: 1px solid color-mix(in srgb, var(--lu-accent) 68%, var(--lu-border));
-    border-left: 4px solid var(--lu-accent);
-    border-radius: 6px;
-    background: var(--lu-state-missed);
-    color: var(--lu-text);
-    font-size: 0.92rem;
-  }
-
-  .atlas-source-caveat span {
-    font-weight: 900;
-  }
-
   .def-card-list {
     display: grid;
     gap: 0.75rem;
@@ -1246,10 +1169,6 @@ const frontmatter = {
 
   .def-card.sum20 {
     border-left-color: #00695c;
-  }
-
-  .def-card.grinchenko {
-    border-left-color: #795548;
   }
 
   .def-card.sum11 {
@@ -1287,11 +1206,6 @@ const frontmatter = {
   .def-card.sum20 .src-pill {
     background: color-mix(in srgb, #00695c 14%, var(--lu-surface));
     color: #00695c;
-  }
-
-  .def-card.grinchenko .src-pill {
-    background: color-mix(in srgb, #795548 14%, var(--lu-surface));
-    color: #795548;
   }
 
   .def-card.sum11-flagged .src-pill {
