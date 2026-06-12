@@ -6,9 +6,13 @@ For each lemma in ``starlight/src/data/lexicon-manifest.json`` this adds an
 no fabrication):
 
 - **morphology** — full VESUM paradigm (``data/vesum.db``), forms decoded into
-  human-readable Ukrainian grammatical labels.
-- **meaning** — Грінченко 1907 (pre-Soviet, clean) preferred, СУМ-11 fallback
-  (flagged, since it is partially Sovietised — issue #1659).
+  human-readable Ukrainian grammatical labels, with optional stress display
+  forms from ``ukrainian-word-stress``.
+- **meaning** — legacy single-source meaning kept for compatibility.
+- **definition_cards** — separate Грінченко 1907, live СУМ-20, and СУМ-11
+  definition cards with source caveats.
+- **cefr** — PULS CEFR lookup when available.
+- **literary_attestation** — exact-form literary corpus hit when available.
 - **synonyms** — source-attested, A1-sense allowlisted Ukrainian candidates only.
 - **sections.synonyms / sections.idioms** — slovnyk.me per-lemma lookup cache
   (Караванський + Словник синонімів; Фразеологічний).
@@ -74,6 +78,12 @@ _IDIOM_ABBREVIATIONS_WITH_INTERNAL_DOTS = (
 )
 _SLOVNYK_DELAY_SECONDS = 0.12
 _SLOVNYK_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup; issue #2985)"
+_STRESS_SOURCE = "ukrainian-word-stress"
+_CEFR_SOURCE = "PULS CEFR"
+_LITERARY_SOURCE = "literary_fts"
+_SUM20_COVERED_INITIALS = set("абвгґдеєжзиіїйклмнопр")
+_UKRAINIAN_WORD_RE = re.compile(r"^[А-Яа-яЄєІіЇїҐґ'’ʼ-]+$")
+_UKRAINIAN_VOWELS = set("аеєиіїоуюяАЕЄИІЇОУЮЯ")
 
 _SLOVNYK_DICT_LABELS: dict[str, str] = {
     "synonyms": "Словник синонімів української мови",
@@ -153,6 +163,7 @@ _SYNONYM_LABEL_RE = re.compile(
 )
 
 _last_slovnyk_fetch = 0.0
+_stressifier: Any | None = None
 
 # Same-sense A1 allowlist. A synonym is emitted only when it is both present in
 # a source row and included here for the lemma's course gloss sense.
@@ -560,6 +571,69 @@ def _strip_stress(text: str) -> str:
     normalized = unicodedata.normalize("NFKD", clean_html_entities(str(text or "")))
     normalized = _STRESS_MARK_RE.sub("", normalized)
     return unicodedata.normalize("NFC", normalized)
+
+
+def _count_vowels(text: str) -> int:
+    return sum(1 for char in text if char in _UKRAINIAN_VOWELS)
+
+
+def _get_stressifier() -> Any:
+    global _stressifier
+    if _stressifier is None:
+        from ukrainian_word_stress import Stressifier, StressSymbol
+
+        _stressifier = Stressifier(stress_symbol=StressSymbol.CombiningAcuteAccent)
+    return _stressifier
+
+
+@lru_cache(maxsize=32768)
+def _stress_word(word: str) -> str:
+    clean = _strip_stress(word).strip()
+    if (
+        not clean
+        or _has_whitespace(clean)
+        or not _UKRAINIAN_WORD_RE.fullmatch(clean)
+        or _count_vowels(clean) < 2
+    ):
+        return ""
+    try:
+        stressed = str(_get_stressifier()(clean))
+    except Exception:
+        return ""
+    if not _STRESS_MARK_RE.search(stressed):
+        return ""
+    if _strip_stress(stressed).casefold() != clean.casefold():
+        return ""
+    return stressed
+
+
+def _stress_display_form(form: str) -> str:
+    text = str(form or "").strip()
+    if not text:
+        return ""
+    variants = [part.strip() for part in text.split(" / ")]
+    if len(variants) > 1:
+        stressed_variants = [_stress_display_form(part) or part for part in variants]
+        if stressed_variants == variants:
+            return ""
+        return " / ".join(stressed_variants)
+    return _stress_word(text)
+
+
+def _collect_string_values(value: object) -> list[str]:
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, dict):
+        out: list[str] = []
+        for item in value.values():
+            out.extend(_collect_string_values(item))
+        return out
+    if isinstance(value, list):
+        out: list[str] = []
+        for item in value:
+            out.extend(_collect_string_values(item))
+        return out
+    return []
 
 
 def _slovnyk_lookup_word(lemma: str) -> str:
@@ -1099,7 +1173,11 @@ def _morphology(lemma: str) -> dict | None:
         if not form or key in seen:
             continue
         seen.add(key)
-        decoded.append({"form": form, "label": label})
+        decoded_row = {"form": form, "label": label}
+        stressed_form = _stress_display_form(form)
+        if stressed_form:
+            decoded_row["stress"] = stressed_form
+        decoded.append(decoded_row)
     if not decoded:
         return None
     morphology = {
@@ -1111,6 +1189,18 @@ def _morphology(lemma: str) -> dict | None:
     paradigm = _build_paradigm(pos_raw, decoded)
     if paradigm:
         morphology["paradigm"] = paradigm
+    stressed_forms = {
+        row["form"]: row["stress"]
+        for row in decoded
+        if row.get("stress") and row.get("form") != row.get("stress")
+    }
+    if paradigm:
+        for form in _collect_string_values(paradigm):
+            stressed_form = _stress_display_form(form)
+            if stressed_form and stressed_form != form:
+                stressed_forms[form] = stressed_form
+    if stressed_forms:
+        morphology["stress"] = {"source": _STRESS_SOURCE, "forms": stressed_forms}
     return morphology
 
 
@@ -1356,6 +1446,127 @@ def _meaning(
     return None
 
 
+def _definition_body(
+    text: object,
+    *,
+    headword: str | None = None,
+    strip_leading_headword: bool = False,
+    limit: int = 900,
+) -> str:
+    body = _SOURCE_TAIL_RE.sub("", clean_html_entities(str(text or "")))
+    if strip_leading_headword and headword:
+        pattern = re.compile(rf"^\s*{re.escape(headword)}\b\s*", flags=re.IGNORECASE)
+        body = pattern.sub("", body, count=1)
+    body = re.sub(r"\s+", " ", clean_html_entities(body)).strip()
+    return _truncate_text(body, limit) if body else ""
+
+
+def _grinchenko_definition_card(conn: sqlite3.Connection, lemma: str) -> dict[str, Any] | None:
+    for variant in _split_lemma_variants(lemma):
+        row = conn.execute(
+            "SELECT definition FROM grinchenko WHERE word = ? AND definition != '' LIMIT 1",
+            (variant,),
+        ).fetchone()
+        if row and row[0]:
+            text = _definition_body(row[0])
+            if not text:
+                return None
+            return {
+                "id": "grinchenko",
+                "source": "Грінченко 1907",
+                "source_pill": "Грінченко 1907",
+                "note": "дорадянське засвідчення",
+                "definitions": [text],
+            }
+    return None
+
+
+def _sum20_in_coverage(lemma: str) -> bool:
+    lookup = _slovnyk_lookup_word(lemma)
+    if not lookup or _has_whitespace(lookup):
+        return False
+    return lookup[0].casefold() in _SUM20_COVERED_INITIALS
+
+
+def _sum20_definition_card(lemma: str) -> dict[str, Any] | None:
+    if not _sum20_in_coverage(lemma):
+        return None
+    lookup_word = _slovnyk_lookup_word(lemma)
+    row = _fetch_slovnyk_entry(lemma, lookup_word, "newsum")
+    if not row:
+        return None
+    text = _definition_body(
+        row.get("text"),
+        headword=str(row.get("word") or lookup_word),
+        strip_leading_headword=True,
+    )
+    if not text:
+        return None
+    return {
+        "id": "sum20",
+        "source": "СУМ-20",
+        "source_pill": "СУМ-20",
+        "note": "сучасний тлумачний словник",
+        "definitions": [text],
+        "source_url": str(row.get("source_url") or ""),
+    }
+
+
+def _sum11_definition_card(
+    conn: sqlite3.Connection,
+    lemma: str,
+    *,
+    has_sum11_flags: bool,
+) -> dict[str, Any] | None:
+    sum11_fields = "definition, text"
+    if has_sum11_flags:
+        sum11_fields += ", sovietization_risk, sovietization_keywords"
+    for variant in _split_lemma_variants(lemma):
+        row = conn.execute(
+            f"SELECT {sum11_fields} FROM sum11 WHERE word = ? AND definition != '' LIMIT 1",
+            (variant,),
+        ).fetchone()
+        if not row or not row[0]:
+            continue
+        risk, keywords = _sum11_row_flags(row, has_flag_columns=has_sum11_flags)
+        text = _definition_body(row[0])
+        if not text:
+            return None
+        card: dict[str, Any] = {
+            "id": "sum11-flagged" if risk > 0 else "sum11",
+            "source": "СУМ-11",
+            "source_pill": "СУМ-11 · ⚠ позначено" if risk > 0 else "СУМ-11",
+            "note": f"радянське видання · risk={risk}" if risk > 0 else "радянське видання · перевірено: чисто",
+            "definitions": [text],
+            "sovietization_risk": risk,
+        }
+        if keywords:
+            card["sovietization_keywords"] = keywords
+            card["flag_note"] = (
+                "Дефініція або ілюстрації містять радянсько-ідеологічні маркери: "
+                + ", ".join(keywords)
+                + ". Для нейтрального тлумачення звіряйте з СУМ-20 або Грінченком."
+            )
+        elif risk > 0:
+            card["flag_note"] = "Дефініція або ілюстрації мають радянсько-ідеологічний ризик."
+        return card
+    return None
+
+
+def _definition_cards(
+    conn: sqlite3.Connection,
+    lemma: str,
+    *,
+    has_sum11_flags: bool,
+) -> list[dict[str, Any]]:
+    cards = [
+        _grinchenko_definition_card(conn, lemma),
+        _sum20_definition_card(lemma),
+        _sum11_definition_card(conn, lemma, has_sum11_flags=has_sum11_flags),
+    ]
+    return [card for card in cards if card]
+
+
 def _attestation(conn: sqlite3.Connection, lemma: str) -> dict | None:
     """Грінченко 1907 — historical attestation with Ukrainian usage quotations."""
     row = None
@@ -1506,6 +1717,96 @@ def _etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
     )
 
 
+def _cefr(conn: sqlite3.Connection, lemma: str) -> dict[str, str] | None:
+    for variant in _split_lemma_variants(lemma):
+        try:
+            row = conn.execute(
+                "SELECT level, pos, text FROM puls_cefr "
+                "WHERE word = ? COLLATE NOCASE AND level != '' LIMIT 1",
+                (variant,),
+            ).fetchone()
+        except sqlite3.OperationalError as exc:
+            if _missing_table(exc):
+                return None
+            raise
+        if row and row[0]:
+            block = {"level": str(row[0]).strip().upper(), "source": _CEFR_SOURCE}
+            if row[1]:
+                block["pos"] = clean_html_entities(str(row[1]).strip())
+            if row[2]:
+                block["text"] = clean_html_entities(str(row[2]).strip())
+            return block
+    return None
+
+
+def _fts_phrase(term: str) -> str:
+    cleaned = term.replace('"', " ").strip()
+    return f'"{cleaned}"' if cleaned else ""
+
+
+def _literary_excerpt(text: str, lemma: str, *, radius: int = 180) -> str:
+    cleaned = re.sub(r"\s+", " ", clean_html_entities(text)).strip()
+    term = _strip_stress(lemma).casefold()
+    cleaned_stripped = _strip_stress(cleaned)
+    match = _whole_token_pattern(term).search(cleaned_stripped.casefold())
+    if not match:
+        return ""
+    start = max(0, match.start() - radius)
+    end = min(len(cleaned_stripped), match.end() + radius)
+    excerpt = cleaned_stripped[start:end].strip()
+    if start > 0:
+        excerpt = "…" + excerpt
+    if end < len(cleaned_stripped):
+        excerpt += "…"
+    return excerpt
+
+
+def _literary_attestation(conn: sqlite3.Connection, lemma: str) -> dict[str, Any] | None:
+    if _has_whitespace(lemma):
+        return None
+    term = _strip_stress(_slovnyk_lookup_word(lemma)).casefold()
+    query = _fts_phrase(term)
+    if not query:
+        return None
+    try:
+        rows = conn.execute(
+            """
+            SELECT
+                l.chunk_id,
+                l.author,
+                l.work,
+                l.title,
+                l.year,
+                l.text
+            FROM literary_fts
+            JOIN literary_texts l ON literary_fts.rowid = l.id
+            WHERE literary_fts MATCH ?
+            LIMIT 20
+            """,
+            (query,),
+        ).fetchall()
+    except sqlite3.OperationalError as exc:
+        if _missing_table(exc):
+            return None
+        raise
+    for chunk_id, author, work, title, year, text in rows:
+        if not _contains_whole_token(_strip_stress(str(text or "")).casefold(), term):
+            continue
+        excerpt = _literary_excerpt(str(text or ""), term)
+        if not excerpt:
+            continue
+        label_parts = [str(part).strip() for part in (author, work or title) if str(part or "").strip()]
+        if year:
+            label_parts.append(str(year))
+        return {
+            "text": excerpt,
+            "source": _LITERARY_SOURCE,
+            "source_label": " · ".join(label_parts) if label_parts else _LITERARY_SOURCE,
+            "chunk_id": str(chunk_id or ""),
+        }
+    return None
+
+
 def _single_word_etymology_coverage(manifest: dict) -> tuple[int, int]:
     entries = [
         entry
@@ -1546,20 +1847,35 @@ def enrich() -> tuple[int, int]:
             else:
                 entry.pop("sections", None)
             block: dict[str, object] = {}
+            stressed_lemma = _stress_display_form(lemma)
+            if stressed_lemma:
+                block["stress"] = {"form": stressed_lemma, "source": _STRESS_SOURCE}
+            cefr = _cefr(conn, lemma)
+            if cefr:
+                block["cefr"] = cefr
             morph = _morphology(lemma)
             if morph:
                 block["morphology"] = morph
             meaning = _meaning(conn, lemma, has_sum11_flags=has_sum11_flags)
             if meaning:
                 block["meaning"] = meaning
+            definition_cards = _definition_cards(conn, lemma, has_sum11_flags=has_sum11_flags)
+            if definition_cards:
+                block["definition_cards"] = definition_cards
             attestation = _attestation(conn, lemma)
             if attestation:
                 block["attestation"] = attestation
             etym = _etymology(conn, lemma)
             if etym:
                 block["etymology"] = etym
+            literary = _literary_attestation(conn, lemma)
+            if literary:
+                block["literary_attestation"] = literary
             if block:
                 sources = {v["source"] for v in block.values() if isinstance(v, dict) and v.get("source")}
+                for card in definition_cards:
+                    if card.get("source"):
+                        sources.add(str(card["source"]))
                 for section in sections.values():
                     if isinstance(section, dict) and section.get("source"):
                         sources.add(str(section["source"]))

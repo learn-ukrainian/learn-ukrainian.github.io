@@ -27,6 +27,18 @@ interface Meaning {
   sovietization_keywords?: string[];
 }
 
+interface DefinitionCard {
+  id: string;
+  source: string;
+  source_pill?: string;
+  note?: string;
+  definitions: string[];
+  source_url?: string;
+  sovietization_risk?: number;
+  sovietization_keywords?: string[];
+  flag_note?: string;
+}
+
 interface SynonymSection {
   items: string[];
   source: string;
@@ -69,13 +81,34 @@ interface Enrichment {
   morphology?: {
     pos: string;
     form_count: number;
-    forms: Array<{ form: string; label: string }>;
+    forms: Array<{ form: string; label: string; stress?: string }>;
     paradigm?: MorphologyParadigm;
+    stress?: {
+      source: string;
+      forms: Record<string, string>;
+    };
     source: string;
   };
+  stress?: {
+    form: string;
+    source: string;
+  };
+  cefr?: {
+    level: string;
+    source: string;
+    pos?: string;
+    text?: string;
+  };
   meaning?: Meaning;
+  definition_cards?: DefinitionCard[];
   attestation?: SourcedText;
   etymology?: SourcedText;
+  literary_attestation?: {
+    text: string;
+    source: string;
+    source_label?: string;
+    chunk_id?: string;
+  };
   sources?: string[];
 }
 
@@ -224,6 +257,12 @@ const enrichment = entry.enrichment;
 const paradigm = enrichment?.morphology?.paradigm;
 const nounParadigm = paradigm?.kind === "noun" ? paradigm : null;
 const verbParadigm = paradigm?.kind === "verb" ? paradigm : null;
+const headerStress = enrichment?.stress?.form ?? null;
+const cefrLevel = enrichment?.cefr?.level ?? null;
+const definitionCards = enrichment?.definition_cards ?? [];
+const morphologyStressForms = enrichment?.morphology?.stress?.forms ?? {};
+const stressDisplay = (form: string | undefined | null) =>
+  form ? morphologyStressForms[form] ?? form : "";
 const imperativeRows = verbParadigm?.imperative
   ? PERSON_ROWS.filter((person) =>
       Boolean(
@@ -280,7 +319,31 @@ const isSum11Meaning = meaningSource.replace(/\s/g, "").includes("СУМ-11");
 const meaningSovietRisk = isSum11Meaning
   ? Number(enrichment?.meaning?.sovietization_risk ?? 0)
   : 0;
-const showSovietSourceCaveat = meaningSovietRisk > 0;
+const definitionSovietRisk = Math.max(
+  0,
+  ...definitionCards.map((card) => Number(card.sovietization_risk ?? 0)),
+);
+const definitionSovietKeywords = Array.from(
+  new Set(
+    definitionCards.flatMap((card) =>
+      (card.sovietization_keywords ?? []).map((keyword) => keyword.trim()).filter(Boolean),
+    ),
+  ),
+);
+const showSovietSourceCaveat = meaningSovietRisk > 0 || definitionSovietRisk > 0;
+const hasPreSovietAttestation = Boolean(
+  definitionCards.some((card) => card.id === "grinchenko" || /Грінченко|1907/.test(card.source)) ||
+    enrichment?.attestation?.source?.includes("Грінченко") ||
+    (heritage?.attestations ?? []).some((attestation) =>
+      /Грінченко|1907|Голоскевич|1929|ЕСУМ/.test(
+        `${attestation.source} ${attestation.ref} ${attestation.detail ?? ""}`,
+      ),
+    ),
+);
+const showEditorialSuccess = Boolean(
+  heritage && !heritage.is_russianism && !showHeritageWarning && hasPreSovietAttestation,
+);
+const showEditorialWarning = Boolean(showHeritageWarning || definitionSovietRisk > 0);
 // "standard" is the unremarkable default (codified modern norm) — it gets the
 // glanceable header pill but no dedicated section. The section is reserved for
 // the noteworthy cases: a non-standard authentic status (archaism/historism/
@@ -298,11 +361,15 @@ const showHeritage = Boolean(
 const hasDictionaryData = Boolean(
   enrichment?.morphology ||
     enrichment?.meaning ||
+    definitionCards.length > 0 ||
     enrichment?.attestation ||
     enrichment?.etymology ||
+    enrichment?.literary_attestation ||
     sections?.synonyms ||
     sections?.idioms ||
-    showHeritage,
+    showHeritage ||
+    showEditorialSuccess ||
+    showEditorialWarning,
 );
 
 const frontmatter = {
@@ -333,7 +400,10 @@ const frontmatter = {
     <header class="atlas-word-card">
       <div>
         <p class="atlas-kicker">Лексикон · літера {letter}</p>
-        <h2>{entry.lemma}</h2>
+        <h2>
+          {entry.lemma}
+          {headerStress && <span class="word-stress">[{headerStress}]</span>}
+        </h2>
         <p class="atlas-word-line">
           {posLabel && <span>{posLabel}</span>}
           {entry.gloss && <span>«{entry.gloss}»</span>}
@@ -344,6 +414,7 @@ const frontmatter = {
       <div class="atlas-status-badges" aria-label="Статус статті">
         <span>{CONTEXT_LABELS_UK[entry.primary_source] ?? entry.primary_source}</span>
         <span>{courseUsage.length} {courseUsage.length === 1 ? "модуль" : "модулів"}</span>
+        {cefrLevel && <span class="status-badge cefr">CEFR {cefrLevel}</span>}
         {enrichment?.morphology && <span>{enrichment.morphology.form_count} форм</span>}
         {showHeritageWarning && heritageWarning && (
           <span class="atlas-heritage-pill atlas-heritage-pill--russism">
@@ -366,6 +437,57 @@ const frontmatter = {
           <p>
             Це курсова лема, але словниковий шар ще готується. Сторінка вже
             фіксує місце слова в курсі, щоб посилання з уроків були стабільні.
+          </p>
+        </div>
+      </section>
+    )}
+
+    {showHeritageWarning && heritageWarning && (
+      <section class="atlas-section" aria-label="Редакційне попередження">
+        <div class="editorial-warn">
+          <div class="editorial-warn-header">
+            <div class="editorial-warn-icon" aria-hidden="true">⚠</div>
+            {heritageWarning.label ?? "Редакційне попередження"}
+          </div>
+          <p>{heritageWarning.gloss}</p>
+          {standardAlternatives.length > 0 && (
+            <p class="editorial-meta">Українська норма: {standardAlternatives.join(", ")}</p>
+          )}
+        </div>
+      </section>
+    )}
+
+    {definitionSovietRisk > 0 && (
+      <section class="atlas-section" aria-label="Попередження джерела">
+        <div class={`editorial-warn ${definitionSovietRisk === 1 ? "editorial-warn--amber" : ""}`}>
+          <div class="editorial-warn-header">
+            <div class="editorial-warn-icon" aria-hidden="true">⚠</div>
+            Радянські ідеологічні формулювання у СУМ-11
+          </div>
+          <p>
+            У показаній нижче картці СУМ-11 є радянсько-ідеологічні маркери.
+            Це попередження стосується редакторської політики словника, а не
+            автоматично самого слова.
+          </p>
+          <p class="editorial-meta">
+            Тригер: sovietization_risk={definitionSovietRisk}
+            {definitionSovietKeywords.length > 0 && ` · keywords: ${definitionSovietKeywords.join(", ")}`}
+          </p>
+        </div>
+      </section>
+    )}
+
+    {showEditorialSuccess && (
+      <section class="atlas-section" aria-label="Редакційне підтвердження">
+        <div class="editorial-success">
+          <div class="editorial-success-header">
+            <div class="editorial-success-icon" aria-hidden="true">✓</div>
+            Питома українська лексика — засвідчена до радянської доби, не русизм
+          </div>
+          <p>
+            Лема має дорадянське словникове засвідчення і не позначена
+            класифікатором як русизм. Радянські словникові ілюстрації, якщо
+            вони показані нижче, оцінюються окремо як ризик джерела.
           </p>
         </div>
       </section>
@@ -441,37 +563,56 @@ const frontmatter = {
       )}
     </section>
 
-    {enrichment?.meaning && (
+    {(definitionCards.length > 0 || enrichment?.meaning) && (
       <section class="atlas-section" aria-labelledby="atlas-meaning-title">
         <div class="atlas-section-head">
           <p class="atlas-kicker">Тлумачення</p>
           <h2 id="atlas-meaning-title">Значення</h2>
         </div>
 
-        <div class="atlas-source-card atlas-source-card-primary">
-          <p class="atlas-source-label">{enrichment.meaning.source}</p>
-          <ol>
-            {enrichment.meaning.definitions.map((definition) => (
-              <li>{definition}</li>
+        {definitionCards.length > 0 ? (
+          <div class="def-card-list">
+            {definitionCards.map((card) => (
+              <article class={`def-card ${card.id}`}>
+                <div class="def-source">
+                  <span class="src-pill">{card.source_pill ?? card.source}</span>
+                  {card.note && <span>{card.note}</span>}
+                </div>
+                <div class="def-text">
+                  {card.definitions.map((definition) => (
+                    <p>{definition}</p>
+                  ))}
+                </div>
+                {card.flag_note && <div class="def-flag-inline">{card.flag_note}</div>}
+              </article>
             ))}
-          </ol>
-          {enrichment.meaning.synonyms && enrichment.meaning.synonyms.length > 0 && (
-            <p class="atlas-chip-line">
-              <strong>Синоніми:</strong>{" "}
-              {enrichment.meaning.synonyms.map((synonym) => (
-                <span>{synonym}</span>
+          </div>
+        ) : enrichment?.meaning ? (
+          <div class="atlas-source-card atlas-source-card-primary">
+            <p class="atlas-source-label">{enrichment.meaning.source}</p>
+            <ol>
+              {enrichment.meaning.definitions.map((definition) => (
+                <li>{definition}</li>
               ))}
-            </p>
-          )}
-          {enrichment.meaning.note && <p class="atlas-note">{enrichment.meaning.note}</p>}
-          {showSovietSourceCaveat && (
-            <p class="atlas-source-caveat" role="note">
-              <span aria-hidden="true">⚠</span>{" "}
-              Це тлумачення — з радянського словника (СУМ-11); подається з
-              осторогою. Перевага — Грінченко / СУМ-20.
-            </p>
-          )}
-        </div>
+            </ol>
+            {enrichment.meaning.synonyms && enrichment.meaning.synonyms.length > 0 && (
+              <p class="atlas-chip-line">
+                <strong>Синоніми:</strong>{" "}
+                {enrichment.meaning.synonyms.map((synonym) => (
+                  <span>{synonym}</span>
+                ))}
+              </p>
+            )}
+            {enrichment.meaning.note && <p class="atlas-note">{enrichment.meaning.note}</p>}
+            {showSovietSourceCaveat && (
+              <p class="atlas-source-caveat" role="note">
+                <span aria-hidden="true">⚠</span>{" "}
+                Це тлумачення — з радянського словника (СУМ-11); подається з
+                осторогою. Перевага — Грінченко / СУМ-20.
+              </p>
+            )}
+          </div>
+        ) : null}
       </section>
     )}
 
@@ -538,6 +679,25 @@ const frontmatter = {
       </section>
     )}
 
+    {enrichment?.literary_attestation && (
+      <section class="atlas-section" aria-labelledby="atlas-literary-title">
+        <div class="atlas-section-head">
+          <p class="atlas-kicker">Джерела</p>
+          <h2 id="atlas-literary-title">Літературні засвідчення</h2>
+        </div>
+        <div class="source-box">
+          <div class="source-box-header">
+            {enrichment.literary_attestation.source_label ?? "Літературний корпус"}
+          </div>
+          <blockquote>{enrichment.literary_attestation.text}</blockquote>
+          <div class="source-cite">
+            {enrichment.literary_attestation.source}
+            {enrichment.literary_attestation.chunk_id && ` · ${enrichment.literary_attestation.chunk_id}`}
+          </div>
+        </div>
+      </section>
+    )}
+
     {enrichment?.morphology && (
       <section class="atlas-section" aria-labelledby="atlas-morph-title">
         <div class="atlas-section-head">
@@ -563,8 +723,8 @@ const frontmatter = {
                 {CASE_ROWS.map((caseRow) => (
                   <tr>
                     <th scope="row">{caseRow.label}</th>
-                    <td>{nounParadigm.cases[caseRow.key]?.singular}</td>
-                    <td>{nounParadigm.cases[caseRow.key]?.plural}</td>
+                    <td>{stressDisplay(nounParadigm.cases[caseRow.key]?.singular)}</td>
+                    <td>{stressDisplay(nounParadigm.cases[caseRow.key]?.plural)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -575,7 +735,7 @@ const frontmatter = {
             {verbParadigm.infinitive && (
               <p class="atlas-infinitive">
                 <span>Інфінітив</span>
-                <strong>{verbParadigm.infinitive}</strong>
+                <strong>{stressDisplay(verbParadigm.infinitive)}</strong>
               </p>
             )}
 
@@ -595,8 +755,8 @@ const frontmatter = {
                       {PERSON_ROWS.map((person) => (
                         <tr>
                           <th scope="row">{person.label}</th>
-                          <td>{verbParadigm.tenses?.[tense.key]?.["однина"]?.[person.key]}</td>
-                          <td>{verbParadigm.tenses?.[tense.key]?.["множина"]?.[person.key]}</td>
+                          <td>{stressDisplay(verbParadigm.tenses?.[tense.key]?.["однина"]?.[person.key])}</td>
+                          <td>{stressDisplay(verbParadigm.tenses?.[tense.key]?.["множина"]?.[person.key])}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -622,12 +782,16 @@ const frontmatter = {
                         <tr>
                           <th scope="row">{person.label}</th>
                           <td>
-                            {verbParadigm.imperative?.["однина"]?.[person.key] ?? (
+                            {verbParadigm.imperative?.["однина"]?.[person.key] ? (
+                              stressDisplay(verbParadigm.imperative["однина"][person.key])
+                            ) : (
                               <span class="atlas-empty-cell">—</span>
                             )}
                           </td>
                           <td>
-                            {verbParadigm.imperative?.["множина"]?.[person.key] ?? (
+                            {verbParadigm.imperative?.["множина"]?.[person.key] ? (
+                              stressDisplay(verbParadigm.imperative["множина"][person.key])
+                            ) : (
                               <span class="atlas-empty-cell">—</span>
                             )}
                           </td>
@@ -655,7 +819,9 @@ const frontmatter = {
                       <tr>
                         {PAST_ROWS.map((pastRow) => (
                           <td>
-                            {verbParadigm.past?.[pastRow.key] ?? (
+                            {verbParadigm.past?.[pastRow.key] ? (
+                              stressDisplay(verbParadigm.past[pastRow.key])
+                            ) : (
                               <span class="atlas-empty-cell">—</span>
                             )}
                           </td>
@@ -671,7 +837,7 @@ const frontmatter = {
           <ul class="atlas-form-grid">
             {enrichment.morphology.forms.map((form) => (
               <li>
-                <span>{form.form}</span>
+                <span>{form.stress ?? stressDisplay(form.form)}</span>
                 {form.label && <small>{form.label}</small>}
               </li>
             ))}
@@ -785,8 +951,19 @@ const frontmatter = {
   }
 
   .atlas-word-card h2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    align-items: baseline;
     font-size: clamp(2rem, 7vw, 3.5rem);
     line-height: 1;
+  }
+
+  .word-stress {
+    color: var(--lu-text-muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: clamp(1.15rem, 3vw, 1.65rem);
+    font-weight: 500;
   }
 
   .atlas-word-line {
@@ -831,6 +1008,12 @@ const frontmatter = {
     border-color: var(--lu-accent);
   }
 
+  .atlas-status-badges span.status-badge.cefr {
+    background: var(--lu-accent);
+    color: var(--lu-on-accent);
+    border-color: var(--lu-accent);
+  }
+
   /* Heritage pills. Scoped under `.atlas-status-badges span` so they beat the
      generic badge rule (element+class) on specificity. Colours pair a state
      colour as TEXT/BORDER on a neutral surface — never fg-on-its-own-bg, which
@@ -856,6 +1039,74 @@ const frontmatter = {
     background: var(--lu-surface-muted);
     color: var(--lu-text-muted);
     border-color: var(--lu-border);
+  }
+
+  .editorial-warn,
+  .editorial-success {
+    margin: 0;
+    padding: 1rem 1.25rem;
+    border: 2px solid;
+    border-radius: 8px;
+  }
+
+  .editorial-warn {
+    border-color: var(--lu-state-wrong-fg);
+    background: var(--lu-state-wrong-bg);
+  }
+
+  .editorial-warn--amber {
+    border-color: #b77900;
+    background: var(--lu-state-missed);
+  }
+
+  .editorial-success {
+    border-color: var(--lu-state-correct-fg);
+    background: var(--lu-state-correct-bg);
+  }
+
+  .editorial-warn-header,
+  .editorial-success-header {
+    display: flex;
+    gap: 0.65rem;
+    align-items: center;
+    margin-bottom: 0.55rem;
+    color: var(--lu-text);
+    font-size: 0.95rem;
+    font-weight: 900;
+  }
+
+  .editorial-warn-icon,
+  .editorial-success-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid currentColor;
+    border-radius: 8px;
+    background: var(--lu-surface);
+    font-weight: 900;
+  }
+
+  .editorial-warn-icon {
+    color: var(--lu-state-wrong-fg);
+  }
+
+  .editorial-success-icon {
+    color: var(--lu-state-correct-fg);
+  }
+
+  .editorial-warn p,
+  .editorial-success p {
+    margin: 0.45rem 0 0;
+    color: var(--lu-text);
+  }
+
+  .editorial-meta {
+    color: var(--lu-text-muted);
+    font-size: 0.86rem;
+    font-weight: 800;
   }
 
   /* Cards/warnings follow the page's border-left-as-signal pattern: neutral
@@ -979,6 +1230,94 @@ const frontmatter = {
     font-weight: 900;
   }
 
+  .def-card-list {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .def-card {
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--lu-border);
+    border-left: 4px solid var(--lu-primary);
+    border-radius: 8px;
+    background: var(--lu-surface);
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--lu-text) 8%, transparent);
+  }
+
+  .def-card.sum20 {
+    border-left-color: #00695c;
+  }
+
+  .def-card.grinchenko {
+    border-left-color: #795548;
+  }
+
+  .def-card.sum11 {
+    border-left-color: var(--lu-text-muted);
+  }
+
+  .def-card.sum11-flagged {
+    border-color: color-mix(in srgb, var(--lu-state-wrong-fg) 60%, var(--lu-border));
+    border-left-color: var(--lu-state-wrong-fg);
+    background: var(--lu-state-wrong-bg);
+  }
+
+  .def-source {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    align-items: center;
+    margin-bottom: 0.55rem;
+    color: var(--lu-text-muted);
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .def-source .src-pill {
+    min-height: 1.35rem;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.05rem 0.45rem;
+    border-radius: 4px;
+    background: var(--lu-surface-muted);
+    color: var(--lu-text);
+  }
+
+  .def-card.sum20 .src-pill {
+    background: color-mix(in srgb, #00695c 14%, var(--lu-surface));
+    color: #00695c;
+  }
+
+  .def-card.grinchenko .src-pill {
+    background: color-mix(in srgb, #795548 14%, var(--lu-surface));
+    color: #795548;
+  }
+
+  .def-card.sum11-flagged .src-pill {
+    border: 1px solid var(--lu-state-wrong-fg);
+    background: var(--lu-surface);
+    color: var(--lu-state-wrong-fg);
+  }
+
+  .def-text {
+    color: var(--lu-text);
+    line-height: 1.65;
+  }
+
+  .def-text p {
+    margin: 0;
+  }
+
+  .def-flag-inline {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--lu-state-wrong-fg);
+    color: var(--lu-state-wrong-fg);
+    font-size: 0.86rem;
+    font-weight: 800;
+  }
+
   .atlas-source-card {
     padding: 1rem;
     border-left: 4px solid var(--lu-primary);
@@ -1086,7 +1425,38 @@ const frontmatter = {
     font-weight: 900;
   }
 
+  .source-box {
+    margin: 0;
+    padding: 1rem 1.25rem;
+    border: 2px solid #6a1b9a;
+    border-radius: 8px;
+    background: var(--lu-state-drag);
+  }
+
+  .source-box-header {
+    margin-bottom: 0.55rem;
+    color: #6a1b9a;
+    font-size: 0.9rem;
+    font-weight: 900;
+  }
+
+  .source-box blockquote {
+    margin: 0.5rem 0;
+    padding-left: 0.9rem;
+    border-left: 3px solid #6a1b9a;
+    background: transparent;
+    color: var(--lu-text);
+    font-style: italic;
+  }
+
+  .source-box .source-cite {
+    color: var(--lu-text-muted);
+    font-size: 0.8rem;
+    text-align: right;
+  }
+
   .atlas-section > .atlas-paradigm-scroll {
+    width: min(100%, 44rem);
     margin-top: 0.75rem;
   }
 
@@ -1099,6 +1469,10 @@ const frontmatter = {
   .atlas-paradigm-block {
     display: grid;
     gap: 0.45rem;
+  }
+
+  .atlas-paradigm-block .atlas-paradigm-scroll {
+    width: min(100%, 48rem);
   }
 
   .atlas-paradigm-block h3 {
