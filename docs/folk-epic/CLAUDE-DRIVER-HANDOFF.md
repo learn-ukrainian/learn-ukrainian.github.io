@@ -27,7 +27,52 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 18 HANDOFF (2026-06-12 — WIKI-COMPILE DURABLE FIX BUILT + VALIDATED (register FIXED + made deterministic, registry-seeding WORKS, quote-exemption wired, citation rule); but source_grounding convergence is STOCHASTIC ~6 → still 0/6 wikis closed) — **RESUME HERE**
+## ▶▶▶ SESSION 19 HANDOFF (2026-06-12 — source_grounding NON-CONVERGENCE ROOT-CAUSED with EVIDENCE (it's MAX_ROUNDS=2, not stochasticity); LEVER CHOSEN = bump seminar review rounds. + an interrupt: node_modules-ELOOP Astro-build breakage fully root-caused + fixed + MERGED #3047) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** Modules 3/42, dossiers 15/42 (unchanged). **Wikis closed: still 0/6.** This session did
+> NOT ship a wiki — it (a) handled a user interrupt (Astro build broken) end-to-end, and (b) turned Session-18's
+> open question ("pick the durable source_grounding lever") into an EVIDENCE-BACKED decision + implementation spec.
+> The lever is chosen and validated-by-diagnosis; implementation + the convergence recompile is the next session's job.
+
+### ✅ source_grounding NON-CONVERGENCE — ROOT-CAUSED (Session-18 NEXT-ACTION 1 RESOLVED; NOT stochastic)
+Ran the bylyny `compile --review` fixture (gpt-5.5, dossier-seeded **31 sources** — #3036 seeding works). Result:
+MIN **6.0** → `register:7 | ukrainian_perspective:10 | factual_accuracy:8 | source_grounding:6`; failing = {register, source_grounding}.
+Read the review JSON (`wiki/.reviews/folk/genres/bylyny-kyivskoho-tsyklu.json`, 129KB — KEEP as fixture). **Decisive evidence, round 2 source_grounding:**
+- 8 findings (6 major + 2 minor), 5 `UNSUPPORTED_CLAIM`. **ALL 8 carry a `source_content_quote` that NAMES the supporting `[S#]`** ("S29 says: …", "S19 says: …", "S12 says: …") → deterministically mappable.
+- 8 fixes emitted; **5 ADD a real new `[S#]` citation**, 1 adds `<!-- VERIFY -->` (a genuinely uncertain XV-c. «старина» claim), 2 reword. So the reviewer is PROPERLY citing, not VERIFY-spamming.
+- **merge: `applied=19, skipped_missing=0`** — the fixes ANCHOR-MATCH and APPLY cleanly. Anchoring is NOT the problem.
+- **THE ROOT CAUSE:** `MAX_ROUNDS=2` (`scripts/wiki/review.py:130`). The loop reviews → generates findings (score 6) → applies the citation-fixes to disk → **then the range is exhausted and the loop ENDS.** The final verdict uses round-2's dim_results (the PRE-fix score 6); round-2's now-applied `[S#]` fixes are **never re-reviewed**. There is no round 3 to confirm the claims are now grounded. So a properly-cited article is reported as a failing one. **This is a deterministic off-by-one in terminate-after-generate, NOT writer stochasticity.** Session-18's "stochastic ~6" read was the symptom; this is the mechanism.
+
+### ▶ NEXT ACTIONS (RESUME HERE — the lever is chosen; implement + validate)
+1. **Implement the lever (durable, evidence-backed): bump review rounds for SEMINAR_LEVELS.** In `scripts/wiki/compile.py::_review_article`, pass `max_rounds=SEMINAR_MAX_ROUNDS` (start 4) to `review_article(...)` when the article is seminar (`_infer_level_from_domain(domain) == "seminar"`, i.e. folk/hist/lit/etc.); keep a1–c2 at `MAX_ROUNDS=2`. This gives round-2's applied citation-fixes a confirming round-3 re-review → expected `source_grounding ≥8 PASS`. Tiny change; codex-impl + Claude adversarial review (or inline in a worktree).
+   - **WATCH the ADR-001 regression guard** (`review.py::_scores_regressed` breaks the loop if ANY dim's score dips round-over-round). With more rounds a dim could transiently dip and prematurely break before source_grounding converges — verify on the recompile; if it bites, scope the guard so a citation-add round isn't killed by an unrelated dim's ±1.
+   - **OPTIONAL insurance (lever b):** a deterministic citation post-pass — for any residual `UNSUPPORTED_CLAIM` whose `source_content_quote` names an `S#` (parse `S\d+ says:`), insert that `[S#]` after the claim. Mirrors `_register_score_from_findings` (#3036). Only add if rounds-bump alone doesn't fully converge.
+2. **Validate (the convergence recompile, #M-11 — do NOT ship on the constant alone):** recompile bylyny `--review` from a data-bearing checkout (main root has `data/`, or symlink `data/` into the worktree). Confirm `source_grounding ≥8 PASS` AND read the article — the added `[S#]` must be correct (not mis-attributed). **register=7 also fails** — investigate its round-2 findings in the same JSON (the #3036 deterministic register fix is live; 7 = ~2 major or 1 critical-ish; confirm it's not the quote-exemption under-catching).
+3. **Then batch the 6 gap wikis sequentially (#M-9):** bylyny, kobzarstvo-lirnytstvo, dumy-sotsialno-pobutovi, holosinnya, vesilni-pisni, zhnyvarski-obzhynkovi-pisni → corpus-hammer each → ship. **OR dossier #16 `istorychni-pisni`** if wikis stall.
+
+### 🔧 INTERRUPT HANDLED (not folk, but it was breaking every Astro build) — node_modules ELOOP, MERGED #3047 (`1875ba906e`)
+User: "i cannot build astro again, why do we have this problem all the time." ROOT CAUSE: a self-referential
+`node_modules -> node_modules` symlink was **committed** (#3041) because `.gitignore` had dir-only `node_modules/`
+(a symlink is a file, not a dir, so it slipped past). Every `git checkout`/`worktree add`/`reset --hard origin/main`
+re-materialised it; npm builds its child PATH from ancestor `node_modules/.bin` and the loop makes `spawn` return
+**ELOOP** → every `npm run build`/`npm ci` dies instantly (exit 194, NO output). Astro itself is fine (2353 pages/15s
+direct). **Fix (merged):** `git rm` the symlink + `.gitignore` `node_modules/`→`node_modules` + `check_self_symlinks.py`
+canary (auto-heal on SessionStart hook + API `/api/orient`) + delegate self-link guard + autopsy
+`docs/bug-autopsies/node-modules-eloop-symlink.md`. **RELEVANCE TO FOLK:** folk builds/compiles do lots of
+`git worktree` ops — this fix + canary make those stable. **Carry-forward:** if a fresh checkout's `npm` dies exit-194
+no-output, run `python scripts/audit/check_self_symlinks.py --fix` (or it self-heals next session/orient).
+
+### ⚠ CARRY-FORWARD
+- Forensic fixture: `wiki/.reviews/folk/genres/bylyny-kyivskoho-tsyklu.json` (the source_grounding diagnosis) + the
+  bylyny article the diagnostic compile wrote to `wiki/folk/genres/bylyny-kyivskoho-tsyklu.md` on the MAIN working tree
+  (untracked working file, NOT committed — the parked pre-rounds-fix article; recompile overwrites it).
+- `register=7` is the SECOND failing dim on bylyny — don't forget it when validating; source_grounding alone won't make MIN≥8.
+- PR #3036 (the seeding/register/quote-exemption durable fix) is merged + live; this builds ON it.
+- `git push` folk → `--no-verify`; `core.bare` stayed false this session.
+
+---
+
+## ▶▶▶ SESSION 18 HANDOFF (2026-06-12 — WIKI-COMPILE DURABLE FIX BUILT + VALIDATED (register FIXED + made deterministic, registry-seeding WORKS, quote-exemption wired, citation rule); but source_grounding convergence is STOCHASTIC ~6 → still 0/6 wikis closed) — (superseded by Session 19)
 
 > **⏱ HONEST SCOPE:** Modules 3/42, dossiers 15/42 (unchanged). **Wikis closed THIS session: 0/6.** I built +
 > validated the durable wiki-compile fix (PR #3036) the user asked for ("close the wikis first"), but a single
