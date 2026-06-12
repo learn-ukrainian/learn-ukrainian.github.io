@@ -353,7 +353,7 @@ const searchItems: SearchItem[] = [
 
 export async function getStaticPaths() {
   const normalizeDocId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
-  const publicLessonPrefixes = new Set(['a1', 'a2', 'folk']);
+  const publicLessonPrefixes = new Set(['a1', 'a2', 'b1', 'folk']);
   const hiddenDocs = new Set(['a1/review-clears-needs-human']);
   const configuredTracks = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'folk', 'bio', 'hist', 'istorio', 'lit', 'oes', 'ruth'];
   const pathDocs = await getCollection('docs');
@@ -521,12 +521,15 @@ const sidebar = props.kind === 'doc'
       });
       const currentIndex = links.findIndex((link) => link.active);
       const position = currentIndex >= 0 ? currentIndex + 1 : 0;
+      const isB1 = docTrack === 'b1';
       return {
         backHref: `/${docTrack}/`,
         backLabel: TRACKS[docTrack]?.label ?? docTrack.toUpperCase(),
         positionLabel: position > 0
-          ? `Lesson ${position} of ${links.length}`
-          : `${links.length} lessons`,
+          ? isB1 ? `Урок ${position} з ${links.length}` : `Lesson ${position} of ${links.length}`
+          : isB1 ? `${links.length} уроки` : `${links.length} lessons`,
+        titleLabel: isB1 ? 'Уроки' : undefined,
+        navLabel: isB1 ? 'Уроки цього рівня' : undefined,
         progressDone: position,
         progressTotal: links.length,
         links,

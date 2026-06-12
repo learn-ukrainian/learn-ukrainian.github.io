@@ -6,7 +6,8 @@ export const collections = {
 		loader: glob({
 			pattern: [
 				'{a1,a2,folk}/**/*.{md,mdx}',
-				'{b1,b2-pro,bio,c1-pro,hist,istorio,lit,lit-drama,lit-essay,lit-fantastika,lit-hist-fic,lit-humor,lit-war,lit-youth,oes,ruth}/index.{md,mdx}',
+				'b1/**/*.{md,mdx}',
+				'{b2-pro,bio,c1-pro,hist,istorio,lit,lit-drama,lit-essay,lit-fantastika,lit-hist-fic,lit-humor,lit-war,lit-youth,oes,ruth}/index.{md,mdx}',
 			],
 			base: './src/content/docs',
 		}),

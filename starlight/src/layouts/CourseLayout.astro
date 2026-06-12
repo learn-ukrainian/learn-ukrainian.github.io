@@ -17,6 +17,8 @@ type Sidebar = {
   backHref: string;
   backLabel: string;
   positionLabel: string;
+  titleLabel?: string;
+  navLabel?: string;
   progressDone: number;
   progressTotal: number;
   links: SidebarLink[];
@@ -218,7 +220,7 @@ const isActive = (href: string) => {
           {sidebar && (
             <details class="lu-sidebar" open>
               <summary class="lu-sidebar-toggle">
-                Lessons · {sidebar.positionLabel}
+                {sidebar.titleLabel ?? 'Lessons'} · {sidebar.positionLabel}
               </summary>
               <div class="lu-sidebar-body">
                 <a class="lu-sidebar-back" href={sidebar.backHref}>← {sidebar.backLabel}</a>
@@ -228,7 +230,7 @@ const isActive = (href: string) => {
                     <div class="lu-mini-fill" style={`width:${sidebarPct}%`} />
                   </div>
                 </div>
-                <nav class="lu-sidebar-nav" aria-label="Lessons in this track">
+                <nav class="lu-sidebar-nav" aria-label={sidebar.navLabel ?? 'Lessons in this track'}>
                   {sidebar.links.map((link) => (
                     <a
                       class:list={['lu-sidebar-link', link.active && 'active']}

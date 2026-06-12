@@ -1,0 +1,176 @@
+- lemma: теперішній час
+  translation: present tense
+  pos: noun phrase
+  usage: Теперішній час описує дію, що відбувається тепер або регулярно.
+- lemma: минулий час
+  translation: past tense
+  pos: noun phrase
+  usage: Минулий час позначає дію до моменту мовлення.
+- lemma: дієвідміна
+  translation: conjugation class
+  pos: noun
+  usage: Дієвідміна допомагає вибрати особове закінчення.
+- lemma: особа
+  translation: grammatical person
+  pos: noun
+  usage: Особа показує, хто виконує дію.
+- lemma: число
+  translation: number
+  pos: noun
+  usage: Число буває однина або множина.
+- lemma: рід
+  translation: gender
+  pos: noun
+  usage: У минулому часі форма однини узгоджується з родом.
+- lemma: інфінітив
+  translation: infinitive
+  pos: noun
+  usage: Інфінітив дає основу для форм минулого часу.
+- lemma: основа інфінітива
+  translation: infinitive stem
+  pos: noun phrase
+  usage: Основа інфінітива лишається після відкидання -ти.
+- lemma: основа теперішнього часу
+  translation: present-tense stem
+  pos: noun phrase
+  usage: Основу теперішнього часу зручно бачити у формі вони.
+- lemma: особове закінчення
+  translation: personal ending
+  pos: noun phrase
+  usage: Особове закінчення показує особу й число.
+- lemma: суфікс минулого часу
+  translation: past-tense suffix
+  pos: noun phrase
+  usage: Суфікс минулого часу може бути -в або -л-.
+- lemma: нульовий суфікс
+  translation: zero suffix
+  pos: noun phrase
+  usage: У формі переміг видно нульовий суфікс.
+- lemma: чергування
+  translation: alternation
+  pos: noun
+  usage: Чергування пояснює форми ніс і несла.
+- lemma: доконаний вид
+  translation: perfective aspect
+  pos: noun phrase
+  usage: Доконаний вид показує завершену або результативну дію.
+- lemma: недоконаний вид
+  translation: imperfective aspect
+  pos: noun phrase
+  usage: Недоконаний вид показує процес, тло або повторення.
+- lemma: видова пара
+  translation: aspectual pair
+  pos: noun phrase
+  usage: Писати й написати утворюють видову пару.
+- lemma: послідовність дій
+  translation: sequence of actions
+  pos: noun phrase
+  usage: Послідовність дій часто передає доконаний вид.
+- lemma: тло розповіді
+  translation: narrative background
+  pos: noun phrase
+  usage: Тло розповіді часто передає недоконаний вид.
+- lemma: зворотне дієслово
+  translation: reflexive verb
+  pos: noun phrase
+  usage: Зворотне дієслово має постфікс -ся або -сь.
+- lemma: постфікс
+  translation: postfix
+  pos: noun
+  usage: Постфікс стоїть після особового закінчення.
+- lemma: безособовий
+  translation: impersonal
+  pos: adjective
+  usage: Безособовий вислів не має звичайного підмета.
+- lemma: узгодження
+  translation: agreement
+  pos: noun
+  usage: Узгодження в минулому часі залежить від роду й числа.
+- lemma: дієприслівник
+  translation: adverbial participle
+  pos: noun
+  usage: Дієприслівник називає додаткову дію.
+- lemma: дієприслівниковий зворот
+  translation: adverbial-participle phrase
+  pos: noun phrase
+  usage: Дієприслівниковий зворот відокремлюється комами.
+- lemma: дієприкметник
+  translation: participle
+  pos: noun
+  usage: Дієприкметник називає ознаку за дією.
+- lemma: писати
+  translation: to write
+  pos: verb
+  usage: Я пишу короткий план.
+- lemma: написати
+  translation: to write, complete
+  pos: verb
+  usage: Я написав лист і надіслав його.
+- lemma: читати
+  translation: to read
+  pos: verb
+  usage: Учора я читав статтю.
+- lemma: прочитати
+  translation: to read through, finish reading
+  pos: verb
+  usage: Учора я прочитав статтю.
+- lemma: робити
+  translation: to do
+  pos: verb
+  usage: Що ти зараз робиш?
+- lemma: зробити
+  translation: to do, complete
+  pos: verb
+  usage: Я зробив нотатки.
+- lemma: бачити
+  translation: to see
+  pos: verb
+  usage: Я бачу різницю між формами.
+- lemma: побачити
+  translation: to see, catch sight of
+  pos: verb
+  usage: Вона побачила Олексія біля вікна.
+- lemma: домовлятися
+  translation: to arrange, be arranging
+  pos: verb
+  usage: Ми домовляємося про зустріч.
+- lemma: домовитися
+  translation: to arrange, reach agreement
+  pos: verb
+  usage: Ми домовилися про зустріч.
+- lemma: вчитися
+  translation: to study, learn
+  pos: verb
+  usage: Я вчуся щодня.
+- lemma: готуватися
+  translation: to prepare oneself
+  pos: verb
+  usage: Вона готується до презентації.
+- lemma: хвилюватися
+  translation: to worry, be nervous
+  pos: verb
+  usage: Я хвилююся перед виступом.
+- lemma: почуватися
+  translation: to feel
+  pos: verb
+  usage: Як ти почуваєшся після подорожі?
+- lemma: читаючи
+  translation: while reading
+  pos: adverbial participle
+  usage: Читаючи текст, я виписую цитати.
+- lemma: прочитавши
+  translation: after reading
+  pos: adverbial participle
+  usage: Прочитавши текст, я зробив висновок.
+- lemma: сказавши
+  translation: after saying
+  pos: adverbial participle
+  usage: Сказавши головне, вона замовкла.
+- lemma: посинілий
+  translation: turned blue
+  pos: adjective
+  usage: Посинілий від холоду палець треба зігріти.
+- lemma: посивілий
+  translation: turned gray
+  pos: adjective
+  usage: Посивілий чоловік усміхнувся.
