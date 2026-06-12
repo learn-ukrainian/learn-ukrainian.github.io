@@ -37,6 +37,12 @@ interface VocabEntry {
    * @ukrainianText true
    */
   question?: string;
+  /**
+   * @schemaDescription Integrity-gated href to this lemma's Word Atlas page,
+   * derived at MDX-generation time. Empty/absent when the lemma has no Atlas page.
+   * @ukrainianText false
+   */
+  atlas_href?: string | null;
 }
 
 interface VocabCardProps {
@@ -128,6 +134,16 @@ function SingleVocabCard({
               <li key={i}>{ex}</li>
             ))}
           </ul>
+        )}
+
+        {entry.atlas_href && (
+          <a
+            className={directStyles.vocabCardAtlasLink}
+            href={entry.atlas_href}
+            data-atlas-link="true"
+          >
+            {isUkrainian ? 'Докладніше →' : 'More →'}
+          </a>
         )}
       </div>
     </div>
