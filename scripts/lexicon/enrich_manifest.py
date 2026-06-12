@@ -54,12 +54,15 @@ import requests
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
+from scripts.lexicon.build_kaikki_lookup import KAIKKI_SOURCE
+from scripts.lexicon.build_kaikki_lookup import lookup_key as kaikki_lookup_key
 from scripts.lexicon.heritage_classifier import classify_lemma
 from scripts.verification.vesum import verify_lemma, verify_word
 from scripts.wiki.slovnyk_me import primary_synonym_sense_text
 
 MANIFEST = ROOT / "starlight" / "src" / "data" / "lexicon-manifest.json"
 SOURCES_DB = ROOT / "data" / "sources.db"
+KAIKKI_LOOKUP = ROOT / "data" / "lexicon" / "kaikki_uk_lookup.json"
 
 
 def _default_slovnyk_cache() -> Path:
@@ -106,6 +109,7 @@ _LITERARY_SOURCE = "literary_fts"
 _SUM20_COVERED_INITIALS = set("абвгґдеєжзиіїйклмнопр")
 _UKRAINIAN_WORD_RE = re.compile(r"^[А-Яа-яЄєІіЇїҐґ'’ʼ-]+$")
 _UKRAINIAN_VOWELS = set("аеєиіїоуюяАЕЄИІЇОУЮЯ")
+_RUSSIAN_LABELED_CYRILLIC_RE = re.compile(r"Russian[^.;:]*[А-Яа-яЁёЫыЭэЪъ]", flags=re.IGNORECASE)
 
 _SLOVNYK_DICT_LABELS: dict[str, str] = {
     "newsum": "Словник української мови у 20 томах (СУМ-20)",
@@ -1714,12 +1718,58 @@ def _wiktionary_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
     }
 
 
-def _etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
-    """Cached etymology by authority order: Goroh → ЕСУМ → uk.wiktionary."""
+def _load_kaikki_lookup(path: Path = KAIKKI_LOOKUP) -> dict[str, dict[str, Any]]:
+    """Load the compact Kaikki lookup if it has been preprocessed."""
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _kaikki_row(lookup: dict[str, dict[str, Any]], lemma: str) -> dict[str, Any] | None:
+    if not lookup or _has_whitespace(lemma):
+        return None
+    for variant in _etymology_lookup_variants(lemma):
+        row = lookup.get(kaikki_lookup_key(variant))
+        if isinstance(row, dict):
+            return row
+    return None
+
+
+def _kaikki_pronunciation(lookup: dict[str, dict[str, Any]], lemma: str) -> dict[str, str] | None:
+    row = _kaikki_row(lookup, lemma)
+    if not row:
+        return None
+    ipa_values = row.get("ipa")
+    if not isinstance(ipa_values, list):
+        return None
+    for value in ipa_values:
+        ipa = clean_html_entities(str(value or "")).strip()
+        if ipa:
+            return {"ipa": ipa, "source": KAIKKI_SOURCE}
+    return None
+
+
+def _kaikki_etymology(lookup: dict[str, dict[str, Any]], lemma: str) -> dict | None:
+    row = _kaikki_row(lookup, lemma)
+    if not row:
+        return None
+    text = clean_html_entities(str(row.get("etymology_text") or "").strip()[:600])
+    if not text:
+        return None
+    if _RUSSIAN_LABELED_CYRILLIC_RE.search(text):
+        return None
+    return {"text": text, "source": KAIKKI_SOURCE}
+
+
+def _etymology(conn: sqlite3.Connection, lemma: str, kaikki_lookup: dict[str, dict[str, Any]] | None = None) -> dict | None:
+    """Cached etymology by authority order: Goroh → ЕСУМ → uk.wiktionary → Kaikki."""
     return (
         _goroh_etymology(conn, lemma)
         or _esum_etymology(conn, lemma)
         or _wiktionary_etymology(conn, lemma)
+        or _kaikki_etymology(kaikki_lookup or {}, lemma)
     )
 
 
@@ -1825,6 +1875,7 @@ def _single_word_etymology_coverage(manifest: dict) -> tuple[int, int]:
 
 def enrich() -> tuple[int, int]:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    kaikki_lookup = _load_kaikki_lookup()
     conn = sqlite3.connect(f"file:{SOURCES_DB}?mode=ro", uri=True)
     enriched = 0
     try:
@@ -1849,6 +1900,11 @@ def enrich() -> tuple[int, int]:
             entry["heritage_status"] = _entry_scoped_heritage_status(
                 _merge_slovnyk_warning(heritage_status, warning)
             )
+            pronunciation = _kaikki_pronunciation(kaikki_lookup, lemma)
+            if pronunciation:
+                entry["pronunciation"] = pronunciation
+            else:
+                entry.pop("pronunciation", None)
             sections: dict[str, object] = {}
             synonyms = _synonyms_slovnyk(lemma, slovnyk_cache, entry_pos=entry.get("pos"))
             if synonyms:
@@ -1875,7 +1931,7 @@ def enrich() -> tuple[int, int]:
                 block["meaning"] = meaning
             if definition_cards:
                 block["definition_cards"] = definition_cards
-            etym = _etymology(conn, lemma)
+            etym = _etymology(conn, lemma, kaikki_lookup)
             if etym:
                 block["etymology"] = etym
             literary = _literary_attestation(conn, lemma)
@@ -1893,7 +1949,7 @@ def enrich() -> tuple[int, int]:
                 entry["enrichment"] = block
             else:
                 entry.pop("enrichment", None)
-            if block or sections:
+            if block or sections or pronunciation:
                 enriched += 1
     finally:
         conn.close()
@@ -1907,9 +1963,17 @@ def main() -> None:
     enriched, total = enrich()
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     etymology_covered, etymology_total = _single_word_etymology_coverage(manifest)
-    print(
-        f"enriched {enriched}/{total} lexicon entries from VESUM + СУМ + Горох/ЕСУМ/Вікісловник + slovnyk.me"
+    pronunciation_covered = sum(
+        1
+        for entry in manifest.get("entries", [])
+        if isinstance(entry.get("pronunciation"), dict) and entry["pronunciation"].get("ipa")
     )
+    print(
+        "enriched "
+        f"{enriched}/{total} lexicon entries from "
+        "VESUM + СУМ + Горох/ЕСУМ/Вікісловник/kaikki + slovnyk.me"
+    )
+    print(f"pronunciation {pronunciation_covered}/{total}")
     print(f"single-word etymology {etymology_covered}/{etymology_total}")
 
 

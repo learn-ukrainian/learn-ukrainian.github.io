@@ -3,10 +3,13 @@ import sqlite3
 
 from scripts.lexicon import enrich_manifest as enrich_manifest_module
 from scripts.lexicon.enrich_manifest import (
+    KAIKKI_SOURCE,
     _build_paradigm,
     _cefr,
     _definition_cards,
+    _etymology,
     _idioms_slovnyk,
+    _kaikki_pronunciation,
     _literary_attestation,
     _literary_excerpt,
     _meaning,
@@ -532,3 +535,72 @@ def test_literary_excerpt_indexes_stripped_text_with_source_stress_marks() -> No
 
     assert excerpt.startswith("…вела до")
     assert "вікно" in excerpt
+
+
+def test_kaikki_pronunciation_uses_stress_stripped_lookup() -> None:
+    lookup = {"автобус": {"ipa": ["[ɐu̯ˈtɔbʊs]"], "etymology_text": "", "pos": ["noun"]}}
+
+    pronunciation = _kaikki_pronunciation(lookup, "авто́бус")
+
+    assert pronunciation == {"ipa": "[ɐu̯ˈtɔbʊs]", "source": KAIKKI_SOURCE}
+
+
+def test_kaikki_etymology_is_final_fallback() -> None:
+    conn = _conn()
+    lookup = {
+        "місто": {
+            "ipa": [],
+            "etymology_text": "From Old East Slavic мѣсто.",
+            "pos": ["noun"],
+        }
+    }
+
+    etymology = _etymology(conn, "місто", lookup)
+
+    assert etymology == {"text": "From Old East Slavic мѣсто.", "source": KAIKKI_SOURCE}
+
+
+def test_kaikki_etymology_skips_russian_labeled_cyrillic() -> None:
+    conn = _conn()
+    lookup = {
+        "базовий": {
+            "ipa": [],
+            "etymology_text": "From ба́за. Compare Russian ба́зовый (bázovyj), Belarusian ба́завы.",
+            "pos": ["adjective"],
+        }
+    }
+
+    assert _etymology(conn, "базовий", lookup) is None
+
+
+def test_kaikki_etymology_does_not_overwrite_goroh() -> None:
+    conn = _conn()
+    conn.execute(
+        """
+        CREATE TABLE goroh_etymology (
+            requested_lemma TEXT NOT NULL,
+            headword TEXT NOT NULL,
+            etymology_text TEXT NOT NULL,
+            source_url TEXT
+        )
+        """
+    )
+    conn.execute(
+        "INSERT INTO goroh_etymology VALUES (?, ?, ?, ?)",
+        ("книга", "книга", "Goroh etymology text.", "https://goroh.pp.ua/Етимологія/книга"),
+    )
+    lookup = {
+        "книга": {
+            "ipa": [],
+            "etymology_text": "Kaikki etymology text that must not win.",
+            "pos": ["noun"],
+        }
+    }
+
+    etymology = _etymology(conn, "книга", lookup)
+
+    assert etymology == {
+        "text": "Goroh etymology text.",
+        "source": "Горох (за ЕСУМ)",
+        "source_url": "https://goroh.pp.ua/Етимологія/книга",
+    }

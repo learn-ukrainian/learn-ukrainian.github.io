@@ -18,6 +18,11 @@ interface SourcedText {
   note?: string;
 }
 
+interface Pronunciation {
+  ipa: string;
+  source: string;
+}
+
 interface Meaning {
   definitions: string[];
   source: string;
@@ -131,6 +136,7 @@ interface LexiconEntry {
   gloss: string | null;
   pos: string | null;
   ipa: string | null;
+  pronunciation?: Pronunciation | null;
   primary_source: string;
   course_usage: CourseUsage[];
   sections?: LexiconSections;
@@ -212,6 +218,8 @@ const PAST_ROWS = [
   { key: "сер.", label: "Сер." },
   { key: "множина", label: "Множина" },
 ];
+const KAIKKI_SOURCE = "kaikki/Wiktionary (CC BY-SA 3.0)";
+const KAIKKI_ATTRIBUTION = "Pronunciation / etymology from English Wiktionary, CC BY-SA 3.0.";
 
 // Heritage classification → UK label + one-line gloss. Authentic Ukrainian
 // statuses (archaism/historism/dialect/borrowing) are the decolonization layer:
@@ -258,6 +266,13 @@ const verbParadigm = paradigm?.kind === "verb" ? paradigm : null;
 const headerStress = enrichment?.stress?.form ?? null;
 const cefrLevel = enrichment?.cefr?.level ?? null;
 const definitionCards = enrichment?.definition_cards ?? [];
+const pronunciation = entry.pronunciation ?? null;
+const formatIpa = (ipa: string | null | undefined) => {
+  const value = ipa?.trim();
+  if (!value) return null;
+  return value.startsWith("[") || value.startsWith("/") ? value : `[${value}]`;
+};
+const headwordIpa = formatIpa(pronunciation?.ipa ?? entry.ipa);
 const morphologyStressForms = enrichment?.morphology?.stress?.forms ?? {};
 const stressDisplay = (form: string | undefined | null) =>
   form ? morphologyStressForms[form] ?? form : "";
@@ -279,6 +294,7 @@ const courseUsage = entry.course_usage.slice().sort((a, b) => {
 // context (plan_required → «обов'язкова») is NOT a data source — never let it
 // leak into the provenance footer. Empty ⇒ the footer is omitted (design §4 #15).
 const sectionSources = [
+  pronunciation?.source,
   sections?.synonyms?.source,
   sections?.idioms?.source,
 ].filter((source): source is string => Boolean(source));
@@ -323,6 +339,9 @@ const showEditorialSuccess = Boolean(
   heritage && !heritage.is_russianism && !showHeritageWarning && hasPreSovietAttestation,
 );
 const showEditorialWarning = Boolean(showHeritageWarning);
+const usesKaikki = Boolean(
+  pronunciation?.source === KAIKKI_SOURCE || enrichment?.etymology?.source === KAIKKI_SOURCE,
+);
 // "standard" is the unremarkable default (codified modern norm) — it gets the
 // glanceable header pill but no dedicated section. The section is reserved for
 // the noteworthy cases: a non-standard authentic status (archaism/historism/
@@ -338,6 +357,7 @@ const showHeritage = Boolean(
       heritage.calque_warning),
 );
 const hasDictionaryData = Boolean(
+    pronunciation ||
     enrichment?.morphology ||
     enrichment?.meaning ||
     definitionCards.length > 0 ||
@@ -385,7 +405,7 @@ const frontmatter = {
         <p class="atlas-word-line">
           {posLabel && <span>{posLabel}</span>}
           {entry.gloss && <span>«{entry.gloss}»</span>}
-          {entry.ipa && <span>[{entry.ipa}]</span>}
+          {headwordIpa && <span class="atlas-ipa">{headwordIpa}</span>}
         </p>
       </div>
 
@@ -795,6 +815,7 @@ const frontmatter = {
         <p>
           Версія маніфесту: {manifest.version} · остання генерація: {manifest.generated_at}
         </p>
+        {usesKaikki && <p class="atlas-license-note">{KAIKKI_ATTRIBUTION}</p>}
       </footer>
     )}
 
@@ -915,6 +936,11 @@ const frontmatter = {
   .atlas-word-line span {
     display: inline-flex;
     align-items: center;
+  }
+
+  .atlas-word-line .atlas-ipa {
+    color: var(--lu-text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   }
 
   .atlas-status-badges {
@@ -1151,6 +1177,11 @@ const frontmatter = {
   .atlas-note,
   .atlas-provenance p {
     color: var(--lu-text-muted);
+  }
+
+  .atlas-provenance .atlas-license-note {
+    color: var(--lu-text);
+    font-weight: 800;
   }
 
   .def-card-list {
