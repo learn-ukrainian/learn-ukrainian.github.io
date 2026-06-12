@@ -593,7 +593,7 @@ def _review_article(article_path: Path, track: str, slug: str) -> None:
     """
     import traceback as _tb
 
-    from wiki.review import review_article, write_report
+    from wiki.review import max_rounds_for_domain, review_article, write_report
 
     print(f"  🔍 Reviewing: {track}/{slug}")
 
@@ -601,8 +601,17 @@ def _review_article(article_path: Path, track: str, slug: str) -> None:
         print("  ⚠️  Article missing or too short to review")
         return
 
+    # Seminar tracks (folk/hist/lit/…) get extra review rounds so the
+    # reviewer's round-2 citation-adding fixes get a confirming re-review
+    # before the final verdict (folk Session-19 root cause); core levels
+    # keep the default MAX_ROUNDS.
+    domain = _get_domain(track, slug)
+    review_max_rounds = max_rounds_for_domain(domain)
+
     try:
-        report, final_text = review_article(article_path, shadow_mode=False)
+        report, final_text = review_article(
+            article_path, shadow_mode=False, max_rounds=review_max_rounds
+        )
     except Exception as exc:
         print(f"  ⚠️  Review orchestrator failed: {type(exc).__name__}: {exc}")
         log_event(

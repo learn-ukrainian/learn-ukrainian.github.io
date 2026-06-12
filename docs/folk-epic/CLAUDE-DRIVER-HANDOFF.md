@@ -27,7 +27,87 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 19 HANDOFF (2026-06-12 — source_grounding NON-CONVERGENCE ROOT-CAUSED with EVIDENCE (it's MAX_ROUNDS=2, not stochasticity); LEVER CHOSEN = bump seminar review rounds. + an interrupt: node_modules-ELOOP Astro-build breakage fully root-caused + fixed + MERGED #3047) — **RESUME HERE**
+## ▶▶▶ SESSION 20 HANDOFF (2026-06-13 — Session-19 rounds-bump lever TESTED ON REAL DATA → found INSUFFICIENT + harmful; root cause re-framed: the review loop DIVERGES on dense folk prose + register/factual are gemini-reviewed (policy violation); shipped the CORRECT divergence-safe loop fix; wikis STILL 0/6, real blocker = WRITER quality + gemini seminar reviewers) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** Modules 3/42, dossiers 15/42 (unchanged). **Wikis closed: still 0/6.** This session did NOT
+> ship a wiki. It did the #M-11 thing Session-19 skipped: it actually RAN the rounds-bump on real bylyny data
+> (two full `--review-only` recompiles, ~19 min each) and found the Session-19 lever is **wrong** — it gives a
+> DIVERGING/NOISY loop more rope to degrade the article. I caught a regression before shipping it. What I DID ship
+> is the genuinely-correct fix the evidence pointed to (best-round selection), plus the re-framed root cause.
+
+### ❌ SESSION-19's "VALIDATED-BY-DIAGNOSIS" LEVER WAS WRONG (the #M-11 catch)
+Session-19 called the rounds-bump "validated-by-diagnosis" off ONE round-2 review JSON. I ran it for real (bylyny
+`--review-only`, gpt-5.5/codex/claude/gemini reviewers, MCP up). **Measured trajectory (both runs): MIN 5→6→6→5
+across 4 rounds — round 4 was WORSE than rounds 2-3.** Per-dim it's a treadmill, NOT a convergence:
+- **source_grounding** (codex): findings 12→7→6, score 5→6→6→6. Each round the writer's broad under-citation
+  surfaces ~6 fresh real `UNSUPPORTED_CLAIM`s (all sourceable, the reviewer IS right); fixes apply cleanly
+  (`skipped_missing=0`) but there are too many to close in 4 rounds. Asymptotic, never reaches ≥8.
+- **register** (GEMINI): score 7→6→6→5, with DIFFERENT calques flagged each round («доказова умова»/«продукт» →
+  «документальний ряд»/«зустрічає матеріал»). A calque-treadmill on dense C1 prose.
+- **factual_accuracy** (GEMINI): swung 9→9→10→**5** — that 10→5 is reviewer NOISE, not the article degrading.
+**Two compounding bugs the run exposed:** (1) the ADR-001 regression guard (`any dim's score dropped → break`) fired
+on register's ±1 wobble and killed the loop at round 3 (the Session-19 WATCH note — it BIT); (2) the final verdict
+read the LAST round, so a noisy/degraded tail round (MIN5) is reported instead of the best achieved (MIN6).
+
+### ✅ SHIPPED THIS PR — the divergence-safe review loop (the fix the evidence actually supports)
+`scripts/wiki/review.py` + `scripts/wiki/compile.py` (+ 5 unit tests; **123 review/compile tests green**, ruff clean):
+1. **best-round selection (KEYSTONE):** `review_article` now reports/returns the round with the highest aggregate
+   MIN, NOT the last round. **Provably PASS-safe:** a PASS always breaks the loop immediately and an all-pass round
+   is by definition the highest-MIN round → best==last for EVERY passing run, so this never changes a PASS outcome
+   or the written-back text. It only stops a non-passing run from reporting a degraded/noisy tail. **Validated
+   deterministically on the real bylyny JSON: reports MIN 6.0 (round 2), not the degraded 5.0 (round 4).**
+2. **rounds-bump (now SAFE because of #1):** `SEMINAR_MAX_ROUNDS=4` + public `max_rounds_for_domain(domain)` helper;
+   seminar domains (folk/hist/lit/…) get 4 rounds, core a1–c2 stay at `MAX_ROUNDS=2`. Extra rounds can now only help.
+3. **MIN-based regression guard:** `_min_score_regressed` replaces `_scores_regressed` — break only when the aggregate
+   MIN regressed, so an already-passing dim's ±1 noise doesn't kill a still-converging run. (No effect on core a1–c2:
+   the guard only matters at ≥3 rounds = seminars.)
+Tests: `test_max_rounds_for_domain_seminar_vs_core`, `test_seminar_rounds_converge_to_pass`,
+`test_best_round_selected_over_degraded_tail` (replays bylyny's 6→5 shape → asserts best-round reports 6),
+`test_regression_guard_tolerates_passing_dim_wobble` (fails under the old per-dim guard).
+
+### 🧱 THE REAL WIKI-CLOSER BLOCKER (re-framed — NOT the review loop)
+The loop is now correct + safe, but **no loop change ships bylyny** — best achievable is MIN6 < 8. The blockers are:
+- **(A) WIKI WRITER QUALITY.** gpt-5.5 produces dense translationese (25+ calques) + broadly under-cites (12+
+  sourceable claims with no inline `[S#]`). A find/replace polish loop can't rewrite that in a few rounds. Fix =
+  harden the WIKI writer prompt for register-discipline + citation-completeness, OR bake-off gpt-5.5 vs claude-tools
+  for the folk WIKI (claude is the MODULE writer precisely for clean C1 Ukrainian). (Session-17/18 flagged this; the
+  discipline added so far is insufficient.)
+- **(B) GEMINI SEMINAR REVIEWERS (policy violation + noise).** `DEFAULT_PRIMARY` (review.py:93) reviews `register`
+  + `factual_accuracy` with **gemini** for ALL tracks. Fleet policy (#M0 / Session-1 decision #4): folk CULTURE
+  review = Claude/GPT ONLY, NO gemini/deepseek. gemini's ±5 round-to-round noise on dense folk prose makes
+  convergence undetectable. Fix = route seminar/culture `register`+`factual` to claude/gpt. **SHARED INFRA (all
+  tracks) → coordinate with orchestrator, do NOT unilaterally flip the global default.** TRACK-UPDATE posted.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **Fix the gemini seminar-reviewer policy violation (B)** — highest leverage, likely unblocks register. Make
+   `DEFAULT_PRIMARY`/per-dim agent selection seminar-aware (register+factual → claude/gpt for SEMINAR_LEVELS).
+   Shared infra → orchestrator lane or codex-impl + Claude adversarial review (teeth: a real calque still flagged).
+2. **Harden the folk WIKI writer (A)** — port the module writer's register discipline + a citation-completeness
+   rule into `compile_article.md`, OR bake-off claude-tools vs gpt-5.5 for the folk wiki writer. Then a clean
+   first-pass article + the now-correct review loop should converge.
+3. **THEN re-attempt the 6 gap wikis** (#M-9, sequential): bylyny, kobzarstvo-lirnytstvo, dumy-sotsialno-pobutovi,
+   holosinnya, vesilni-pisni, zhnyvarski-obzhynkovi-pisni. Use `--review-only` on the parked fixture first to
+   confirm convergence cheaply before a full `--force` recompile.
+4. **OR dossier #16 `istorychni-pisni`** if wikis stay blocked (unblocked queue-advancing path).
+5. **(tuning, low-pri)** `SEMINAR_MAX_ROUNDS=4` costs ~2× model calls per seminar review (~25 vs ~13 min) and bylyny
+   gained nothing from rounds 3-4 (it diverges). best-round makes 4 safe, but the orchestrator may tune it to 3 once
+   (A)+(B) land and real convergence behavior is known.
+
+### ⚠ CARRY-FORWARD
+- Forensic fixtures KEPT (untracked on main working tree): `wiki/folk/genres/bylyny-kyivskoho-tsyklu.{md,sources.yaml}`
+  + `wiki/.reviews/folk/genres/bylyny-kyivskoho-tsyklu.json` (the round-2 diagnosis). The two Session-20 validation
+  logs: `/tmp/bylyny-review-rounds-validation.log` (run 1) + `/tmp/bylyny-revalidation-bothfixes.log` (run 2, the
+  5→6→6→5 trajectory). The worktree's `.reviews/.../bylyny...json` holds run-2's full per-round findings.
+- The review needs only the sibling `.sources.yaml` + MCP `sources` (:8766) — NO `data/` symlink (chunks aren't
+  inlined; verify_quote-style checks hit the live MCP). `--review-only` on the parked fixture isolates the review
+  loop from the stochastic writer — the cheap way to test a wiki-review fix.
+- `git push` folk → `--no-verify`; `core.bare` stayed false this session.
+- This PR changes SHARED review infra (`review_article`, used by all tracks) — flagged in the PR body for
+  orchestrator scrutiny, but it's provably PASS-preserving + 123 tests green.
+
+---
+
+## ▶▶▶ SESSION 19 HANDOFF (2026-06-12 — source_grounding NON-CONVERGENCE ROOT-CAUSED with EVIDENCE (it's MAX_ROUNDS=2, not stochasticity); LEVER CHOSEN = bump seminar review rounds. + an interrupt: node_modules-ELOOP Astro-build breakage fully root-caused + fixed + MERGED #3047) — (superseded by Session 20; the lever was tested + found insufficient)
 
 > **⏱ HONEST SCOPE:** Modules 3/42, dossiers 15/42 (unchanged). **Wikis closed: still 0/6.** This session did
 > NOT ship a wiki — it (a) handled a user interrupt (Astro build broken) end-to-end, and (b) turned Session-18's
