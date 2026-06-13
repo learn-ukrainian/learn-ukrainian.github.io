@@ -1,0 +1,113 @@
+# Source registry for wiki/folk/ritual/vesilni-pisni.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c1006
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave7-entsyklopediia-ukrainoznavstva_c0542
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S4
+  file: wave12-hrushevsky-iu-odnotom_c0379
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S5
+  file: wave4-hrushevsky-istlit_c0374
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S6
+  file: wave4-chyzhevsky-istoriia-lit_c0027
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S7
+  file: wave7-popovych-narys-kultury_c0085
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S8
+  file: wave7-popovych-narys-kultury_c0086
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S9
+  file: wave7-entsyklopediia-ukrainoznavstva_c0616
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S10
+  file: wave7-istkult-t2-xiii-xvii_c0861
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S11
+  file: wave7-entsyklopediia-ukrainoznavstva_c0617
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S12
+  file: wave7-entsyklopediia-ukrainoznavstva_c0618
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S13
+  file: wave7-entsyklopediia-ukrainoznavstva_c0544
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S14
+  file: wave7-entsyklopediia-ukrainoznavstva_c0615
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S15
+  file: wave12-hrushevsky-iu-odnotom_c0380
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S16
+  file: wave4-hrushevsky-istlit_c0375
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S17
+  file: ukrlib-samchuk_c0094
+  type: literary
+  title: Улас Самчук. На коні вороному
+  author: Самчук У.
+- id: S18
+  file: wave6-deflise-etnohrafichnyi_c0024
+  type: literary
+  title: Де ля Фліз — Етнографічний опис (1854)
+  author: Де ля Фліз Д.
+- id: S19
+  file: wave7-entsyklopediia-ukrainoznavstva_c0729
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S20
+  file: wave7-antonovych-kultura_c0721
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S21
+  file: wave7-entsyklopediia-ukrainoznavstva_c2244
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S22
+  file: ukrlib-nechuy_c0096
+  type: literary
+  title: Іван Нечуй-Левицький. Старосвітські батюшки та матушки
+  author: Нечуй-Левицький І.
+- id: S23
+  file: wave7-krypyakevych-istkult_c0818
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
