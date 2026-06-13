@@ -17,6 +17,7 @@ from wiki.review import (
     _run_round,
     max_rounds_for_domain,
     review_article,
+    seminar_reviewer_overrides,
 )
 from wiki.review_merger import Fix
 
@@ -85,6 +86,28 @@ def test_max_rounds_for_domain_seminar_vs_core() -> None:
     # Core levels a1–c2 stay at the default budget.
     for core_domain in ("a1/letters", "a2/genitive-intro", "b1/x", "c1/stylistics"):
         assert max_rounds_for_domain(core_domain) == MAX_ROUNDS
+
+
+def test_seminar_reviewer_overrides_routes_culture_dims_to_claude() -> None:
+    """Seminar domains route register+factual+source_grounding to claude;
+    core levels untouched."""
+    # These are NOT claude by default — the override is what changes them
+    # (register/factual default to gemini, source_grounding to codex).
+    assert DEFAULT_PRIMARY["register"] == "gemini"
+    assert DEFAULT_PRIMARY["factual_accuracy"] == "gemini"
+    assert DEFAULT_PRIMARY["source_grounding"] == "codex"
+    expected = {
+        "register": "claude",
+        "factual_accuracy": "claude",
+        "source_grounding": "claude",
+    }
+    for seminar_domain in ("folk/genres", "folk/ritual", "hist/topics", "lit/drama"):
+        assert seminar_reviewer_overrides(seminar_domain) == expected
+    # ukrainian_perspective is already claude by default — not in the override.
+    assert "ukrainian_perspective" not in expected
+    # Core levels keep the global default (empty override).
+    for core_domain in ("a1/letters", "a2/genitive-intro", "c1/stylistics"):
+        assert seminar_reviewer_overrides(core_domain) == {}
 
 
 # ── Seminar review-loop fixes (folk Session-19/20) ─────────────────────

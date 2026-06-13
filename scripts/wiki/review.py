@@ -155,6 +155,41 @@ def max_rounds_for_domain(domain: str) -> int:
         else MAX_ROUNDS
     )
 
+
+#: Dims routed to ``claude`` for SEMINAR (culture) domains. Fleet policy bars
+#: gemini from folk/seminar culture review, and folk Session-20 measured WHY,
+#: per dim on the bylyny article:
+#:   • ``register`` — gemini 5-7 / REJECT with ±5 round-to-round noise vs
+#:     claude 9 / PASS on the SAME article (gemini over-flags dense literary
+#:     Ukrainian register it lacks the competence to judge).
+#:   • ``factual_accuracy`` — gemini swung 9→10→5 (noise) vs claude 9 / PASS.
+#:   • ``source_grounding`` — codex flapped 6→5 / REJECT (unstable: scored a
+#:     freshly-cited article LOWER) vs claude a stable 7 / REVISE that
+#:     consolidates the real under-citation into actionable named-[S#] fixes.
+#: ``ukrainian_perspective`` is already claude by default. All routed dims are
+#: Claude/GPT-family (policy-compliant); claude is the measured-best for each.
+_SEMINAR_CULTURE_DIMS: tuple[str, ...] = (
+    "register",
+    "factual_accuracy",
+    "source_grounding",
+)
+
+
+def seminar_reviewer_overrides(domain: str) -> dict[str, str]:
+    """Primary-reviewer overrides for a SEMINAR (culture) wiki ``domain``.
+
+    Routes :data:`_SEMINAR_CULTURE_DIMS` to ``claude`` for seminar domains
+    (folk/hist/lit/…); core a1–c2 domains return ``{}`` so the global
+    :data:`DEFAULT_PRIMARY` stands. The result is passed straight to
+    ``review_article(agent_overrides=...)``. This keeps the global default
+    untouched (no blast radius on core-level or standalone-CLI reviews) while
+    the compile production path applies the policy where it matters.
+    """
+    if _infer_level_from_domain(domain) != "seminar":
+        return {}
+    return dict.fromkeys(_SEMINAR_CULTURE_DIMS, "claude")
+
+
 #: Per-call timeouts. Review prompts are bounded; 10 min is plenty.
 HARD_TIMEOUT_S = 600
 

@@ -1,0 +1,109 @@
+# Source registry for wiki/folk/genres/bylyny-kyivskoho-tsyklu.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S4
+  file: ukrainian_wiki/bylyny-kyivskoho-tsyklu_Український-фольклор-Билини-київського-циклу-Епос-княжої-доби-Основний-зміст-Географія-та-циклова-структура-епосу
+  type: ukrainian_wiki
+  title: 'Український фольклор: Билини київського циклу: Епос княжої доби'
+  section_path: 'Український фольклор: Билини київського циклу: Епос княжої доби >
+    Основний зміст > Географія та циклова структура епосу'
+- id: S8
+  file: wave7-antonovych-kultura_c0635
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S9
+  file: wave7-entsyklopediia-ukrainoznavstva_c0620
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S11
+  file: wave7-istkult-t1-kyivska-rus_c0154
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S12
+  file: wave4-chyzhevsky-istoriia-lit_c0167
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S13
+  file: wave7-istkult-t2-xiii-xvii_c0618
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S14
+  file: wave8-ukr-lit-entsyklopediia_c0544
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S15
+  file: wave7-popovych-narys-kultury_c0176
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S16
+  file: wave4-chyzhevsky-istoriia-lit_c0163
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S19
+  file: wave7-dzyuba-pavlenko-litopys-kultury_c0011
+  type: literary
+  title: Дзюба, Павленко — Літопис культурного життя X-XVII ст.
+  author: Дзюба О.
+- id: S20
+  file: ukrlib-samchuk_c0028
+  type: literary
+  title: Улас Самчук. На коні вороному
+  author: Самчук У.
+- id: S21
+  file: wave4-chyzhevsky-istoriia-lit_c0789
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S22
+  file: wave4-chyzhevsky-istoriia-lit_c0793
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S23
+  file: wave7-dzyuba-pavlenko-litopys-kultury_c0012
+  type: literary
+  title: Дзюба, Павленко — Літопис культурного життя X-XVII ст.
+  author: Дзюба О.
+- id: S24
+  file: wave7-ivakin-kyiv-xiii-xvi_c0014
+  type: literary
+  title: Івакін — Історичний розвиток Києва XIII-XVI ст.
+  author: Івакін Г.
+- id: S25
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0076
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S26
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0080
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S27
+  file: ukrlib-samchuk_c0219
+  type: literary
+  title: Улас Самчук. Волинь
+  author: Самчук У.
+- id: S28
+  file: ukrlib-samchuk_c0217
+  type: literary
+  title: Улас Самчук. Куди тече та річка
+  author: Самчук У.
+- id: S29
+  file: wave7-krypyakevych-istkult_c0407
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S30
+  file: wave7-entsyklopediia-ukrainoznavstva_c0619
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив

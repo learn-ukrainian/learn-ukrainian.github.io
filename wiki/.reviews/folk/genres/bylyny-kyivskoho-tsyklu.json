@@ -1,0 +1,442 @@
+{
+  "article_path": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/folk-seminar-reviewer-routing/wiki/folk/genres/bylyny-kyivskoho-tsyklu.md",
+  "rounds": [
+    {
+      "round": 1,
+      "dims": {
+        "ukrainian_perspective": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 10,
+          "verdict": "PASS",
+          "findings_count": 0,
+          "findings": [],
+          "fixes": [],
+          "notes": "",
+          "duration_s": 86.79,
+          "error": ""
+        },
+        "register": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 1,
+          "findings": [
+            {
+              "location": "## Історичний контекст і доказовий парадокс — table, 1594 row",
+              "quote": "Топографічна атестація київської пам'яті",
+              "issue_type": "UNNATURAL_COLLOCATION",
+              "severity": "minor",
+              "description": "«Атестація» carries a bureaucratic sense (certification/appraisal of personnel or facilities) and reads as non-native when applied metaphorically to historical memory in a poetic-historical seminar register; a native writer would use «свідчення» or «підтвердження».",
+              "raw": {
+                "location": "## Історичний контекст і доказовий парадокс — table, 1594 row",
+                "quote": "Топографічна атестація київської пам'яті",
+                "tool_evidence": [
+                  {
+                    "tool": "search_style_guide",
+                    "args": "атестація",
+                    "result_summary": "No results in Антоненко-Давидович — not a flagged calque/Russianism; the issue is collocation, not the lexeme."
+                  }
+                ],
+                "natural_alternative": "Топографічне свідчення київської пам'яті",
+                "issue_type": "UNNATURAL_COLLOCATION",
+                "issue_description": "«Атестація» carries a bureaucratic sense (certification/appraisal of personnel or facilities) and reads as non-native when applied metaphorically to historical memory in a poetic-historical seminar register; a native writer would use «свідчення» or «підтвердження».",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "register",
+              "find": "Топографічна атестація київської пам'яті",
+              "replace": "Топографічне свідчення київської пам'яті"
+            }
+          ],
+          "notes": "Native-sounding seminar-register academic Ukrainian; author avoids the standard calque traps (співпадати, заключатися, на протязі). One minor unnatural collocation («атестація» + пам'ять). Source-preserved attributed quotations («Стих старина за пивом», «Из славнаго Волынца», Кміта/Лясота name-forms) were ignored for register per the verbatim-quote exemption; «віщість» is absent from VESUM but is a lexical-existence matter outside the register lane.",
+          "duration_s": 131.87,
+          "error": ""
+        },
+        "factual_accuracy": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 1,
+          "findings": [
+            {
+              "location": "## Основний зміст → Визначення, назва й жанрова межа",
+              "quote": "тоді як термін «билини» ввів І. П. Сахаров у 1840-х роках [S9]",
+              "issue_type": "FACTUAL_ERROR",
+              "severity": "minor",
+              "description": "The article restricts Sakharov's introduction of the term «билини» to the 1840s, but the authoritative source dates it to the 1830s–1840s, with the term first appearing in print in the late 1830s — a minor date imprecision, not a wrong name or invented fact.",
+              "raw": {
+                "location": "## Основний зміст → Визначення, назва й жанрова межа",
+                "claim_quote": "тоді як термін «билини» ввів І. П. Сахаров у 1840-х роках [S9]",
+                "tool_evidence": [
+                  {
+                    "tool": "query_wikipedia",
+                    "args": "Билини (mode=extract)",
+                    "result_summary": "'Термін билина у 30-40-х роках XIX століття запровадив російський фольклорист Іван Сахаров. Він запозичив його зі «Слова о полку Ігоревім».' — authoritative source dates the coinage to the 1830s–1840s; Sakharov's «Сказания русского народа» first used the term in the late 1830s (1839), so narrowing it to '1840-х роках' drops the decade in which the term actually appeared."
+                  }
+                ],
+                "issue_type": "FACTUAL_ERROR",
+                "issue_description": "The article restricts Sakharov's introduction of the term «билини» to the 1840s, but the authoritative source dates it to the 1830s–1840s, with the term first appearing in print in the late 1830s — a minor date imprecision, not a wrong name or invented fact.",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "factual_accuracy",
+              "find": "ввів І. П. Сахаров у 1840-х роках",
+              "replace": "ввів І. П. Сахаров у 1830–1840-х роках"
+            }
+          ],
+          "notes": "Factually sound and well-grounded; all proper nouns, dates, and the Самчук quote verify against authoritative sources — only one minor date-narrowing imprecision on Sakharov's coinage of «билини».",
+          "duration_s": 225.37,
+          "error": ""
+        },
+        "source_grounding": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 7,
+          "verdict": "REVISE",
+          "findings_count": 4,
+          "findings": [
+            {
+              "location": "### Історичний контекст і доказовий парадокс (¶ Чижевський, documentary row)",
+              "quote": "Він наводить згадку Сарніцького 1585 року про похованих у київських печерах богатирів, лист Кміти 1574 року з іменами Іллі Муравленина й Соловія Будимировича, свідчення Еріха Лясоти 1594 року про могилу Іллі Муравлина в Софії та мощі Чоботка в Лаврі .",
+              "issue_type": "UNSUPPORTED_CLAIM",
+              "severity": "major",
+              "description": "The article's densest cluster of dated/named factual claims (1574/1585/1594; Сарніцький, Кміта, Лясота, Чоботок) carries no inline [S#], although the supporting source S16 (Чижевський c0163) is registered and corpus-confirmed.",
+              "raw": {
+                "location": "### Історичний контекст і доказовий парадокс (¶ Чижевський, documentary row)",
+                "claim_quote": "Він наводить згадку Сарніцького 1585 року про похованих у київських печерах богатирів, лист Кміти 1574 року з іменами Іллі Муравленина й Соловія Будимировича, свідчення Еріха Лясоти 1594 року про могилу Іллі Муравлина в Софії та мощі Чоботка в Лаврі .",
+                "citation_refs": [],
+                "source_content_quote": "Tool-verified, chunk fbf8bdff_c0163 (= registry S16, Чижевський): «Польський письменник Сарніцький згадує в „Описі Польщі“ (1585) похованих у київських печерах багатирів (bohatiros)… 1574 р. киянин Кміта Чорнобильській в листі до білоруса Воловича… пише: „Прийде час, коли буде треба Ілії Муравленина і Соловія Будимировича“. 1594 р. відвідав Київ австрійський посол Еріх Лясота, в св. Софії… бачив могилу „Ілії Муравлина“… В Печерській лаврі Лясота бачив мощі… Чоботка.» — source confirmed, content matches.",
+                "issue_type": "UNSUPPORTED_CLAIM",
+                "issue_description": "The article's densest cluster of dated/named factual claims (1574/1585/1594; Сарніцький, Кміта, Лясота, Чоботок) carries no inline [S#], although the supporting source S16 (Чижевський c0163) is registered and corpus-confirmed.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "### Історичний контекст і доказовий парадокс (¶ Попович)",
+              "quote": "Попович пояснює, що після падіння єрів порушилася давня ритмічна система, а епічні тексти київського часу дійшли до нас у північноросійських варіантах, тоді як в Україні подальший результат ритмічного розпаду видно в думах XVI-XVII століть . З цього він робить стриманий, але вирішальний висновок: билини мали старокиївських попередників, проте «ці твори безнадійно втрачені» .",
+              "issue_type": "UNSUPPORTED_CLAIM",
+              "severity": "major",
+              "description": "The load-bearing interpretive claim and the verbatim quote «ці твори безнадійно втрачені» have no inline [S#], even though source S15 (Попович c0176) is registered and is mapped in the article's own Мовні зразки table.",
+              "raw": {
+                "location": "### Історичний контекст і доказовий парадокс (¶ Попович)",
+                "claim_quote": "Попович пояснює, що після падіння єрів порушилася давня ритмічна система, а епічні тексти київського часу дійшли до нас у північноросійських варіантах, тоді як в Україні подальший результат ритмічного розпаду видно в думах XVI-XVII століть . З цього він робить стриманий, але вирішальний висновок: билини мали старокиївських попередників, проте «ці твори безнадійно втрачені» .",
+                "citation_refs": [],
+                "source_content_quote": "Tool-verified, chunk 68ba0555_c0176 (= registry S15, Попович): «Внаслідок „падіння єрів“ порушилась ритмічна система… До нас дійшли билини київського циклу, збережені на російській Півночі… На Україні ми зустрічаємо вже подальші результати цього ритмічного розвалу в думах XVI — XVII сторіч… билини… мали попередників у старокиївському варіанті, проте ці твори безнадійно втрачені.» — source confirmed, content matches verbatim.",
+                "issue_type": "UNSUPPORTED_CLAIM",
+                "issue_description": "The load-bearing interpretive claim and the verbatim quote «ці твори безнадійно втрачені» have no inline [S#], even though source S15 (Попович c0176) is registered and is mapped in the article's own Мовні зразки table.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "### Збереження, трансформація й міжнародний обіг (¶ Наливайко)",
+              "quote": "Наливайко показує, що у «Тідрек-сазі» поруч із князем Володимиром з'являється «страшний у битвах Іліас», тобто Ілля Муромець, і трактує це як прояв міжнародного обміну фольклорними образами та мотивами . В іншому фрагменті Наливайко описує південнонімецьку поему «Ортніт», де активну роль має Ілля з Русі, дядько й помічник головного героя .",
+              "issue_type": "UNSUPPORTED_CLAIM",
+              "severity": "major",
+              "description": "Named-work claims (Тідрек-сага, Ортніт) and the corpus-confirmed quote «страшний у битвах Іліас» carry no inline [S#], although sources S25/S26 (Наливайко c0076/c0080) are registered.",
+              "raw": {
+                "location": "### Збереження, трансформація й міжнародний обіг (¶ Наливайко)",
+                "claim_quote": "Наливайко показує, що у «Тідрек-сазі» поруч із князем Володимиром з'являється «страшний у битвах Іліас», тобто Ілля Муромець, і трактує це як прояв міжнародного обміну фольклорними образами та мотивами . В іншому фрагменті Наливайко описує південнонімецьку поему «Ортніт», де активну роль має Ілля з Русі, дядько й помічник головного героя .",
+                "citation_refs": [],
+                "source_content_quote": "Tool-verified (verify_quote, author Наливайко, confidence 1.0, wave7-nalyvaiko-ochyma-zakhodu 2008): «…один з яскравих проявів тогочасного міжнародного обміну фольклорними образами і мотивами. Свідченням билинного походження образу князя Володимира в „Тідрек-сазі“ є також те, що поряд з ним виступає „страшний у битвах Іліас“ (Ілля Муромець)…» — source confirmed. (S25/S26 registered.)",
+                "issue_type": "UNSUPPORTED_CLAIM",
+                "issue_description": "Named-work claims (Тідрек-сага, Ортніт) and the corpus-confirmed quote «страшний у битвах Іліас» carry no inline [S#], although sources S25/S26 (Наливайко c0076/c0080) are registered.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "Multiple ¶¶ (Крип'якевич / Дзюба-Павленко / Івакін / composition triad)",
+              "quote": "Крип'якевич називає думи дальшим ступенем української лицарської творчості, серед попередників якої стояли билини, літописні перекази й «Слово о полку Ігоревім» .",
+              "issue_type": "UNSUPPORTED_CLAIM",
+              "severity": "minor",
+              "description": "A tail of named-scholar attributions lacks inline [S#] although the sources are registered; consolidated as one systemic citation-hygiene gap rather than enumerated per-sentence.",
+              "raw": {
+                "location": "Multiple ¶¶ (Крип'якевич / Дзюба-Павленко / Івакін / composition triad)",
+                "claim_quote": "Крип'якевич називає думи дальшим ступенем української лицарської творчості, серед попередників якої стояли билини, літописні перекази й «Слово о полку Ігоревім» .",
+                "citation_refs": [],
+                "source_content_quote": "Sibling sources.yaml registers S11–S30 — incl. S29 (Крип'якевич c0407), S19/S23 (Дзюба-Павленко), S24 (Івакін c0014), S11 (Іст.укр.культури c0154) — but only S4/S8/S9 appear inline in the body. Chunks for this tail are NOT inlined in this build, so grounding is asserted from the registry attribution only (not independently verified here); the three spot-checked clusters above all resolved correctly, indicating the registry mapping is reliable.",
+                "issue_type": "UNSUPPORTED_CLAIM",
+                "issue_description": "A tail of named-scholar attributions lacks inline [S#] although the sources are registered; consolidated as one systemic citation-hygiene gap rather than enumerated per-sentence.",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "source_grounding",
+              "find": "свідчення Еріха Лясоти 1594 року про могилу Іллі Муравлина в Софії та мощі Чоботка в Лаврі .",
+              "replace": "свідчення Еріха Лясоти 1594 року про могилу Іллі Муравлина в Софії та мощі Чоботка в Лаврі [S16]."
+            },
+            {
+              "dim": "source_grounding",
+              "find": "проте «ці твори безнадійно втрачені» .",
+              "replace": "проте «ці твори безнадійно втрачені» [S15]."
+            },
+            {
+              "dim": "source_grounding",
+              "find": "і трактує це як прояв міжнародного обміну фольклорними образами та мотивами .",
+              "replace": "і трактує це як прояв міжнародного обміну фольклорними образами та мотивами [S25]."
+            },
+            {
+              "dim": "source_grounding",
+              "find": "де активну роль має Ілля з Русі, дядько й помічник головного героя .",
+              "replace": "де активну роль має Ілля з Русі, дядько й помічник головного героя [S26]."
+            },
+            {
+              "dim": "source_grounding",
+              "find": "серед попередників якої стояли билини, літописні перекази й «Слово о полку Ігоревім» .",
+              "replace": "серед попередників якої стояли билини, літописні перекази й «Слово о полку Ігоревім» [S29]."
+            },
+            {
+              "dim": "source_grounding",
+              "find": "є збірним образом кількох князів: Володимира Святославича, Володимира Мономаха та Володимира Васильковича .",
+              "replace": "є збірним образом кількох князів: Володимира Святославича, Володимира Мономаха та Володимира Васильковича [S19]."
+            },
+            {
+              "dim": "source_grounding",
+              "find": "пов'язаного з походами Олега та Святослава й діяльністю Володимира .",
+              "replace": "пов'язаного з походами Олега та Святослава й діяльністю Володимира [S24]."
+            }
+          ],
+          "notes": "Every spot-checked claim is corpus-grounded (S15/S16/S25 verified verbatim); the sole defect is systemic under-citation — registered sources S11–S30 are never marked inline (only S4/S8/S9 are), fixable by inserting the named [S#].",
+          "duration_s": 547.39,
+          "error": ""
+        }
+      },
+      "merge": {
+        "applied_count": 9,
+        "conflicts_count": 0,
+        "applied": [
+          {
+            "dim": "register",
+            "find": "Топографічна атестація київської пам'яті",
+            "replace": "Топографічне свідчення київської пам'яті"
+          },
+          {
+            "dim": "factual_accuracy",
+            "find": "ввів І. П. Сахаров у 1840-х роках",
+            "replace": "ввів І. П. Сахаров у 1830–1840-х роках"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "свідчення Еріха Лясоти 1594 року про могилу Іллі Муравлина в Софії та мощі Чоботка в Лаврі .",
+            "replace": "свідчення Еріха Лясоти 1594 року про могилу Іллі Муравлина в Софії та мощі Чоботка в Лаврі [S16]."
+          },
+          {
+            "dim": "source_grounding",
+            "find": "проте «ці твори безнадійно втрачені» .",
+            "replace": "проте «ці твори безнадійно втрачені» [S15]."
+          },
+          {
+            "dim": "source_grounding",
+            "find": "і трактує це як прояв міжнародного обміну фольклорними образами та мотивами .",
+            "replace": "і трактує це як прояв міжнародного обміну фольклорними образами та мотивами [S25]."
+          },
+          {
+            "dim": "source_grounding",
+            "find": "де активну роль має Ілля з Русі, дядько й помічник головного героя .",
+            "replace": "де активну роль має Ілля з Русі, дядько й помічник головного героя [S26]."
+          },
+          {
+            "dim": "source_grounding",
+            "find": "серед попередників якої стояли билини, літописні перекази й «Слово о полку Ігоревім» .",
+            "replace": "серед попередників якої стояли билини, літописні перекази й «Слово о полку Ігоревім» [S29]."
+          },
+          {
+            "dim": "source_grounding",
+            "find": "є збірним образом кількох князів: Володимира Святославича, Володимира Мономаха та Володимира Васильковича .",
+            "replace": "є збірним образом кількох князів: Володимира Святославича, Володимира Мономаха та Володимира Васильковича [S19]."
+          },
+          {
+            "dim": "source_grounding",
+            "find": "пов'язаного з походами Олега та Святослава й діяльністю Володимира .",
+            "replace": "пов'язаного з походами Олега та Святослава й діяльністю Володимира [S24]."
+          }
+        ],
+        "conflicts": [],
+        "skipped_missing": []
+      }
+    },
+    {
+      "round": 2,
+      "dims": {
+        "ukrainian_perspective": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 10,
+          "verdict": "PASS",
+          "findings_count": 0,
+          "findings": [],
+          "fixes": [],
+          "notes": "",
+          "duration_s": 75.16,
+          "error": ""
+        },
+        "register": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 10,
+          "verdict": "PASS",
+          "findings_count": 0,
+          "findings": [],
+          "fixes": [],
+          "notes": "Native-composed academic Ukrainian at appropriate seminar register; spot-checks of довкола, обертається довкола, у звичайній формі, виконувати функцію (Антоненко-Давидович — no calque entries) and виконавство/віщість/перерозподіл (no Russian shadow) all clean; source-preserved attributed quotations (e.g. «Из славнаго Волынца, красна Галичья», «ці твори безнадійно втрачені») excluded under the verbatim-quote exemption.",
+          "duration_s": 125.22,
+          "error": ""
+        },
+        "factual_accuracy": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 10,
+          "verdict": "PASS",
+          "findings_count": 0,
+          "findings": [],
+          "fixes": [],
+          "notes": "",
+          "duration_s": 160.27,
+          "error": ""
+        },
+        "source_grounding": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 8,
+          "verdict": "REVISE",
+          "findings_count": 3,
+          "findings": [
+            {
+              "location": "## Основний зміст > Історичний контекст і доказовий парадокс (Енциклопедія українознавства paragraph)",
+              "quote": "Енциклопедія українознавства формулює подібний баланс: дружинний епос княжої доби не зберігся в Україні у звичайній формі, але його сліди помітні в інших жанрах українського фольклору [S9]. Там названо лірницьку пісню про Іллю Муромця з Волині, думу про Олексія Поповича, образ Джурили-Чурила в коломийках і весільних піснях, паралелі з весільними піснями, колядками та легендою про Михайлика й Золоті ворота [S9].",
+              "issue_type": "WEAK_SUPPORT",
+              "severity": "minor",
+              "description": "The enumerated trace-list and the 'не зберігся / сліди в інших жанрах' claim are attested in the same encyclopedia but in chunk c0619 (= registered [S30]), not in [S9]'s chunk c0620, which addresses cycles and poetics instead.",
+              "raw": {
+                "location": "## Основний зміст > Історичний контекст і доказовий парадокс (Енциклопедія українознавства paragraph)",
+                "claim_quote": "Енциклопедія українознавства формулює подібний баланс: дружинний епос княжої доби не зберігся в Україні у звичайній формі, але його сліди помітні в інших жанрах українського фольклору [S9]. Там названо лірницьку пісню про Іллю Муромця з Волині, думу про Олексія Поповича, образ Джурили-Чурила в коломийках і весільних піснях, паралелі з весільними піснями, колядками та легендою про Михайлика й Золоті ворота [S9].",
+                "citation_refs": [
+                  "S9"
+                ],
+                "source_content_quote": "The 'not-survived / traces-in-other-genres' material and the exact enumerated list are in chunk feaa5fa7_c0619 (registered as [S30], unused inline): «Дружинний епос княжої доби, т. зв. билини, не зберігся до наших днів на Україні… виразні сліди билинного епосу в інших жанрах укр. фольклору (запис лірницької пісні про Іллю Муромця з Волині, дума про Олексія Поповича, образ Джурили-Чурила в коломийках і весільних піснях… паралелі билини про Михайла й Золоті Ворота…)». The cited [S9] chunk feaa5fa7_c0620 instead covers cycle structure and performers: «Найстаріший цикл билин… В осередку другого циклу… образу Володимира Великого…».",
+                "issue_type": "WEAK_SUPPORT",
+                "issue_description": "The enumerated trace-list and the 'не зберігся / сліди в інших жанрах' claim are attested in the same encyclopedia but in chunk c0619 (= registered [S30]), not in [S9]'s chunk c0620, which addresses cycles and poetics instead.",
+                "severity": "minor"
+              }
+            },
+            {
+              "location": "## Основний зміст > Визначення, назва й жанрова межа",
+              "quote": "тоді як термін «билини» ввів І. П. Сахаров у 1830–1840-х роках [S9]",
+              "issue_type": "MISATTRIBUTION",
+              "severity": "minor",
+              "description": "The Sakharov term-coinage fact (correct) is cited to [S9], whose chunk does not contain it; the supporting source in the registry is [S14], which dates it to the 1840s (not '1830–1840-х').",
+              "raw": {
+                "location": "## Основний зміст > Визначення, назва й жанрова межа",
+                "claim_quote": "тоді як термін «билини» ввів І. П. Сахаров у 1830–1840-х роках [S9]",
+                "citation_refs": [
+                  "S9"
+                ],
+                "source_content_quote": "[S9]'s chunk feaa5fa7_c0620 does not mention Сахаров. The attribution is attested in the Українська літературна енциклопедія (S14, chunk fc2291b5_c0544): «Термін «билини» увів у 40-х pp. 19 ст. І. П. Сахаров».",
+                "issue_type": "MISATTRIBUTION",
+                "issue_description": "The Sakharov term-coinage fact (correct) is cited to [S9], whose chunk does not contain it; the supporting source in the registry is [S14], which dates it to the 1840s (not '1830–1840-х').",
+                "severity": "minor"
+              }
+            },
+            {
+              "location": "## Ключові терміни (Старина row)",
+              "quote": "Народна назва билинної пісні, зафіксована в традиції виконання й у давньому записі «Стих старина за пивом» [S4][S9].",
+              "issue_type": "WEAK_SUPPORT",
+              "severity": "minor",
+              "description": "The «Стих старина за пивом» record is real and corpus-attested (chunk c0617) but that chunk is unregistered; the [S9] tag here adds an unsupported pointer since [S9]'s chunk does not mention the record.",
+              "raw": {
+                "location": "## Ключові терміни (Старина row)",
+                "claim_quote": "Народна назва билинної пісні, зафіксована в традиції виконання й у давньому записі «Стих старина за пивом» [S4][S9].",
+                "citation_refs": [
+                  "S4",
+                  "S9"
+                ],
+                "source_content_quote": "[S9]'s chunk feaa5fa7_c0620 does not contain «Стих старина за пивом». The record is attested in Історія української культури Т.2 (chunk 484d0ffb_c0617, not present in the article's registry): «найдавніший її текстовий запис під самоназвою старина — \"Стих старина за пивом\" у збірці XV ст., переписаній монахом Єфросином у Кирило-Білозерському монастирі».",
+                "issue_type": "WEAK_SUPPORT",
+                "issue_description": "The «Стих старина за пивом» record is real and corpus-attested (chunk c0617) but that chunk is unregistered; the [S9] tag here adds an unsupported pointer since [S9]'s chunk does not mention the record.",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "source_grounding",
+              "find": "але його сліди помітні в інших жанрах українського фольклору [S9]",
+              "replace": "але його сліди помітні в інших жанрах українського фольклору [S30]"
+            },
+            {
+              "dim": "source_grounding",
+              "find": "колядками та легендою про Михайлика й Золоті ворота [S9]",
+              "replace": "колядками та легендою про Михайлика й Золоті ворота [S30]"
+            },
+            {
+              "dim": "source_grounding",
+              "find": "термін «билини» ввів І. П. Сахаров у 1830–1840-х роках [S9]",
+              "replace": "термін «билини» ввів І. П. Сахаров у 1840-х роках [S14]"
+            },
+            {
+              "dim": "source_grounding",
+              "find": "у давньому записі «Стих старина за пивом» [S4][S9]",
+              "replace": "у давньому записі «Стих старина за пивом» [S4]"
+            }
+          ],
+          "notes": "All substantive quotes and attributions verify verbatim against the corpus; the only issues are three minor over-attributions to [S9] where the supporting text actually sits in adjacent registered chunks ([S30], [S14]) or an unregistered one — correctable via the provided citation-pointer fixes.",
+          "duration_s": 415.65,
+          "error": ""
+        }
+      },
+      "merge": {
+        "applied_count": 4,
+        "conflicts_count": 0,
+        "applied": [
+          {
+            "dim": "source_grounding",
+            "find": "але його сліди помітні в інших жанрах українського фольклору [S9]",
+            "replace": "але його сліди помітні в інших жанрах українського фольклору [S30]"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "колядками та легендою про Михайлика й Золоті ворота [S9]",
+            "replace": "колядками та легендою про Михайлика й Золоті ворота [S30]"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "термін «билини» ввів І. П. Сахаров у 1830–1840-х роках [S9]",
+            "replace": "термін «билини» ввів І. П. Сахаров у 1840-х роках [S14]"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "у давньому записі «Стих старина за пивом» [S4][S9]",
+            "replace": "у давньому записі «Стих старина за пивом» [S4]"
+          }
+        ],
+        "conflicts": [],
+        "skipped_missing": []
+      }
+    }
+  ],
+  "final_verdict": "PASS",
+  "failing_dims": [],
+  "min_score": 8.0,
+  "failing_dim": "source_grounding",
+  "thresholds": {
+    "source_grounding": 8.0,
+    "factual_accuracy": 8.0,
+    "ukrainian_perspective": 8.0,
+    "register": 8.0
+  },
+  "thresholds_calibrated": true,
+  "shadow_mode": false,
+  "started_at": 1781309217.8233228,
+  "finished_at": 1781310180.87456,
+  "duration_s": 963.05
+}
