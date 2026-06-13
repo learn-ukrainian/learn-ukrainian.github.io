@@ -18,7 +18,14 @@
 | #3102 | #2971 derivational-base etymology + #3092 §7 synonyms via Karavansky/sense-filtered slovnyk (WordNet/ukrajinet dropped). **deepseek-pro reviewed PASS 5/5, no must-fix**; варити→фальсифікувати/бариги hazard test-asserted gone. |
 
 ## 🔄 In-flight (VERIFY/LAND these first)
-1. **grok-swarm Atlas §6 calque extension** — background `bhmf66dbs` → `/tmp/grok-atlas-calque.log`. Mines NEW calques from Антоненко + UA-GEC F/Calque, heritage-gated, ends with a ```json``` array of dataset entries. **DON'T trust self-report — spot-check entries via mcp__sources__ (search_heritage + verify_word) then integrate verified ones into `calque_corrections.py` as a PR.**
+1. **grok-swarm Atlas §6 calque extension — DONE (exit 0).** 20 valid candidates saved + triaged:
+   `docs/research/atlas/grok-swarm-calque-candidates-2026-06-14.{json,md}`. Output was strong
+   (canonical purist corrections, not hallucinated). **The triage .md buckets them: ✅ 8 solid
+   (integrate as-is), ⚠️ 6 sense-qualifier polysemes (вірний/дійсний/відношення/рахувати/виглядає
+   — calque only in one sense; must NOT blanket-flag), ❓ 4 verify-or-drop (ніяк→здається artifact).**
+   NEXT: heritage-gate the ⚠️/❓, add ✅+qualified-⚠️ to `calque_corrections.py` (new
+   `SENSE_RESTRICTED_CALQUES` bucket), PR ref #3098. Workflow validated: swarm generates grounded
+   candidates → Claude curates (the polysemy gate is the irreplaceable Claude-seat step).
 2. **#3105 grok-build full bridge support** (codex, 16 files: `_grok_build.py` + adapter/registry/telemetry/_cli/_model/_env + 2 tests, telemetry "unknown model/effort" gap fixed). In deepseek review (`review-3105-grok-bridge`); CI green so far. **Land when review + pytest green.**
 3. **#3106 grok-build literary source_url** (#2901) — **PR OPEN**, dispatch done. Restores source_url through literary ingest (needs full DB rebuild to backfill — orchestrator-run). Review + merge. This is grok-build's tech-debt lane-validation proof.
 4. **Track PRs (awareness-only / codex-owned):** #3103 + #3107 folk dossiers, #3108 B1 m07 daily-life. Not Claude's to merge unless the track orchestrator asks.

@@ -1,0 +1,231 @@
+[
+  {
+    "calque": "вірний",
+    "corrections": [
+      "правильний",
+      "слушний",
+      "правдивий",
+      "певний"
+    ],
+    "note": "misused for 'correct/true' (верный influence); traditional narrower 'loyal/devoted'; prefer alternatives per classic examples",
+    "source": [
+      "antonenko"
+    ],
+    "type": "lexical"
+  },
+  {
+    "calque": "дійсний",
+    "corrections": [
+      "справжній"
+    ],
+    "note": "for 'действительный' = real/current (covers related senses)",
+    "source": [
+      "antonenko"
+    ],
+    "type": "lexical"
+  },
+  {
+    "calque": "дійсно",
+    "corrections": [
+      "справді"
+    ],
+    "note": "for 'действительно'",
+    "source": [
+      "antonenko"
+    ],
+    "type": "lexical"
+  },
+  {
+    "calque": "в дійсності",
+    "corrections": [
+      "насправді"
+    ],
+    "note": "for 'в действительности' (drop 'на ділі' per VESUM)",
+    "source": [
+      "antonenko"
+    ],
+    "type": "phrasal"
+  },
+  {
+    "calque": "відношення",
+    "corrections": [
+      "стосунок",
+      "стосунки",
+      "взаємини",
+      "ставлення"
+    ],
+    "note": "non-technical 'отношение' (math/logic ok)",
+    "source": [
+      "antonenko"
+    ],
+    "type": "lexical"
+  },
+  {
+    "calque": "відносно",
+    "corrections": [
+      "стосовно",
+      "щодо"
+    ],
+    "note": "for 'относительно'",
+    "source": [
+      "antonenko"
+    ],
+    "type": "lexical"
+  },
+  {
+    "calque": "по відношенню",
+    "corrections": [
+      "стосовно",
+      "щодо"
+    ],
+    "note": "for 'по отношению' (to)",
+    "source": [
+      "antonenko"
+    ],
+    "type": "phrasal"
+  },
+  {
+    "calque": "рахувати",
+    "corrections": [
+      "вважати"
+    ],
+    "note": "'я рахую' = I consider (math only); 'на доброму рахунку' -> has good reputation/sлава",
+    "source": [
+      "antonenko"
+    ],
+    "type": "lexical"
+  },
+  {
+    "calque": "По-моєму",
+    "corrections": [
+      "здається"
+    ],
+    "note": "parenthetical 'по-моему' = it seems to me",
+    "source": [
+      "ua-gec"
+    ],
+    "type": "phrasal"
+  },
+  {
+    "calque": "виглядає",
+    "corrections": [
+      "здається",
+      "видається"
+    ],
+    "note": "'выглядит' used for 'it seems'",
+    "source": [
+      "ua-gec"
+    ],
+    "type": "lexical"
+  },
+  {
+    "calque": "вроде",
+    "corrections": [
+      "здається"
+    ],
+    "note": "direct Russian 'вроде' for 'it seems/like'",
+    "source": [
+      "ua-gec"
+    ],
+    "type": "lexical"
+  },
+  {
+    "calque": "кажись",
+    "corrections": [
+      "здається"
+    ],
+    "note": "'кажись' (кажется influence)",
+    "source": [
+      "ua-gec"
+    ],
+    "type": "lexical"
+  },
+  {
+    "calque": "ніяк",
+    "corrections": [
+      "здається"
+    ],
+    "note": "in parenthetical 'seems' context",
+    "source": [
+      "ua-gec"
+    ],
+    "type": "lexical"
+  },
+  {
+    "calque": "Ні в якому разі",
+    "corrections": [
+      "аж ніяк"
+    ],
+    "note": "'ни в коем случае' calque for 'by no means/not at all'",
+    "source": [
+      "ua-gec"
+    ],
+    "type": "phrasal"
+  },
+  {
+    "calque": "з моєї точки зору",
+    "corrections": [
+      "на мою думку"
+    ],
+    "note": "'с моей точки зрения' (alt. з мого погляду per related)",
+    "source": [
+      "ua-gec"
+    ],
+    "type": "phrasal"
+  },
+  {
+    "calque": "точка зору",
+    "corrections": [
+      "погляд"
+    ],
+    "note": "'точка зрения' (e.g. цієї/чоловічої точки зору -> цього/чоловічого погляду)",
+    "source": [
+      "ua-gec"
+    ],
+    "type": "lexical"
+  },
+  {
+    "calque": "прийшла в голову",
+    "corrections": [
+      "спала на думку"
+    ],
+    "note": "collocation calque (variants incl. думка прийшла в голову)",
+    "source": [
+      "ua-gec"
+    ],
+    "type": "phrasal"
+  },
+  {
+    "calque": "в голову прийшли",
+    "corrections": [
+      "спали на гадку"
+    ],
+    "note": "",
+    "source": [
+      "ua-gec"
+    ],
+    "type": "phrasal"
+  },
+  {
+    "calque": "з приводу",
+    "corrections": [
+      "стосовно"
+    ],
+    "note": "'по поводу'",
+    "source": [
+      "ua-gec"
+    ],
+    "type": "phrasal"
+  },
+  {
+    "calque": "з цього приводу",
+    "corrections": [
+      "стосовно цього"
+    ],
+    "note": "",
+    "source": [
+      "ua-gec"
+    ],
+    "type": "phrasal"
+  }
+]
