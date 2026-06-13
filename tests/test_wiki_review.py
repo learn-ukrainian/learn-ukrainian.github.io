@@ -92,9 +92,9 @@ def test_seminar_reviewer_overrides_routes_culture_dims_to_claude() -> None:
     """Seminar domains route register+factual+source_grounding to claude;
     core levels untouched."""
     # These are NOT claude by default — the override is what changes them
-    # (register/factual default to gemini, source_grounding to codex).
-    assert DEFAULT_PRIMARY["register"] == "gemini"
-    assert DEFAULT_PRIMARY["factual_accuracy"] == "gemini"
+    # (register/factual default to agy, source_grounding to codex).
+    assert DEFAULT_PRIMARY["register"] == "agy"
+    assert DEFAULT_PRIMARY["factual_accuracy"] == "agy"
     assert DEFAULT_PRIMARY["source_grounding"] == "codex"
     expected = {
         "register": "claude",

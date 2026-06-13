@@ -319,7 +319,7 @@ def cmd_list(track: str) -> None:
 
 def cmd_compile_one(track: str, slug: str, *, force: bool = False,
                     dry_run: bool = False, review: bool = False,
-                    writer: str = "gemini",
+                    writer: str = "agy",
                     allow_verify_markers: bool = False) -> bool:
     """Compile a single wiki article from a discovery file.
 
@@ -728,7 +728,7 @@ def cmd_review_existing(track: str, *, slug: str | None = None,
 
 def cmd_compile_all(track: str, *, limit: int | None = None,
                     force: bool = False, dry_run: bool = False,
-                    review: bool = False, writer: str = "gemini",
+                    review: bool = False, writer: str = "agy",
                     allow_verify_markers: bool = False) -> None:
     """Compile all articles for a track."""
     slugs = list_discovery_slugs(track)
@@ -993,10 +993,10 @@ def main() -> None:
     parser.add_argument(
         "--writer",
         choices=WRITER_CHOICES,
-        default="gemini",
+        default="agy",
         help=(
-            "Writer agent to use for compilation. Default: gemini (subscription, "
-            "unlimited budget). Use 'claude' for cultural/decolonization-sensitive "
+            "Writer agent to use for compilation. Default: agy (unmetered "
+            "Gemini-family, MCP-enabled). Use 'claude' for cultural/decolonization-sensitive "
             "tracks (literature, figures, periods, historiography, folk). Use "
             "'gpt-5.5' for mechanical/structural content (grammar, academic, "
             "pedagogy)."

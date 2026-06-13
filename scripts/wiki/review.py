@@ -92,18 +92,18 @@ DIMS: tuple[str, ...] = (
 #: Default primary agent per dim (§3b). Pending seeded benchmark (§7b).
 DEFAULT_PRIMARY: dict[str, str] = {
     "source_grounding": "codex",
-    "factual_accuracy": "gemini",
+    "factual_accuracy": "agy",
     "ukrainian_perspective": "claude",
-    "register": "gemini",
+    "register": "agy",
 }
 
 #: Fallback chain per dim. On primary failure (RateLimited, Timeout,
 #: invalid JSON), orchestrator tries fallbacks in order. Resilience
 #: requirement per user direction 2026-04-18 (§3b).
 DEFAULT_FALLBACKS: dict[str, tuple[str, ...]] = {
-    "source_grounding": ("claude", "gemini"),
+    "source_grounding": ("claude", "agy"),
     "factual_accuracy": ("claude", "codex"),
-    "ukrainian_perspective": ("gemini",),
+    "ukrainian_perspective": ("agy",),
     "register": ("claude", "codex"),
 }
 

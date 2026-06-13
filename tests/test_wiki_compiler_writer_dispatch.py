@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 import pytest
@@ -29,6 +30,25 @@ def test_call_writer_routes_gemini_to_call_gemini():
         result = _call_writer("prompt", writer="gemini")
 
     assert result.response_text == "ok"
+    call.assert_called_once()
+
+
+def test_call_writer_routes_agy_to_runtime():
+    with patch(
+        "wiki.compiler._run_agy_via_runtime",
+        return_value=SimpleNamespace(
+            status="success",
+            elapsed_s=1.0,
+            response_text="ok",
+            stderr_excerpt=None,
+            returncode=0,
+            note=None,
+        ),
+    ) as call:
+        result = _call_writer("prompt", writer="agy")
+
+    assert result.response_text == "ok"
+    assert result.cli_used == "agy-cli"
     call.assert_called_once()
 
 

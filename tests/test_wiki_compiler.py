@@ -805,7 +805,7 @@ class TestCompileCommand:
             force=False,
             dry_run=False,
             review=False,
-            writer="gemini",
+            writer="agy",
             allow_verify_markers=False,
         )
 
