@@ -1,14 +1,14 @@
-# Current — Claude Session Handoff (2026-06-13, evening)
+# Current — Claude Session Handoff (2026-06-14)
 
 > Router: read `docs/session-state/current.md` first.
-> **Latest detailed handoff: `docs/session-state/2026-06-13-claude-agy-retire-atlas-pairfix-quality-queue.md`** — read top-to-bottom.
+> **Latest detailed handoff: `docs/session-state/2026-06-14-claude-grok-build-validation-atlas-quality-queue.md`** — read top-to-bottom.
 >
-> **✅ Shipped (merged + on main):** gemini-cli retirement (#3060 agy↔MCP + §7-fabrication re-verify PASS + #3061 wiki routing→agy); Atlas pipeline fixes #3091 (slovnyk cache-miss heal) + #3095 (pair-lemma base-form → варити now has etymology+morphology); CLAUDE.md best-practice directive; `.codex/`+`docs/outreach/` gitignored.
+> **✅ Shipped (merged to main):** Atlas quality-grind queue — #3100 (ЕСУМ all-6-vols desc), #3101 (UA-GEC tag_filter ambiguous-column bug + test), #3104 (§6 calque authority dataset), #3099 (§12 Вікі + CC-BY-SA 4.0 fix + query_wikipedia cache), #3102 (#2971 etymology derivational-base + #3092 Karavansky/sense-filtered synonyms, deepseek-pro PASS 5/5).
 >
-> **🎯 NEXT SESSION (user directive): prioritize the Atlas/content QUALITY-GRIND queue and FAN OUT to the idle fleet.** Queue + per-agent fan-out plan are in the detailed handoff. Top: **#3098** (§6 decolonization/participle-calque moat), **#3092** (§7 synonyms Karavansky), **#2971** (etymology coverage), **#3096** (§12 Вікі), **#3097** (slovnyk local mirror).
+> **🤖 grok-build lane VALIDATED** (kubedojo peer + my own corroborated test — heritage gate works, MCP-grounded, 0 fabrication). Full bridge support = #3105 (in review). Routing: codex-swarm → B1 QG/review (user-driven); **grok-swarm → Word Atlas building**; grok-build single → tech debt (#2901 live). $99/16 upgrade deferred.
 >
-> **📨 User-owned:** Лепетун (ukr-mova.in.ua) outreach draft at `docs/outreach/lepetun-collaboration-draft.md` (gitignored) — review/send; ULP-pattern + permission, never verbatim.
+> **🔄 VERIFY/LAND FIRST:** grok-swarm §6 calque output (`/tmp/grok-atlas-calque.log`, bg `bhmf66dbs`) → spot-check + integrate into `calque_corrections.py`; land #3105 + #2901; then the **controlled Atlas re-enrich** (spot-check варити/хата/шлях/мрія before committing the manifest — #M-11).
 >
-> **⚠️ Lesson:** git-verify the deployed artifact before claiming a visible change (non-pairs were already rich; #3091 was robustness). Pair-string bug recurs — always use `_base_lemma`, never the raw `"X / Y"`.
+> **📨 User-owned:** #3097 slovnyk mirror (permission); SuperGrok $99 upgrade decision.
 >
-> Prior handoff (superseded): `2026-06-13-claude-atlas-pairfix-site-rename-git-cleanup.md`.
+> Prior handoff (superseded): `2026-06-13-claude-agy-retire-atlas-pairfix-quality-queue.md`.
