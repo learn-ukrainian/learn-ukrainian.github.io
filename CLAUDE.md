@@ -2,6 +2,8 @@
 
 > **Mission**: We are building something that doesn't exist — a full Ukrainian language curriculum with decolonized pedagogy, real textbook grounding, RAG-verified vocabulary, and adversarial review. This is a one-of-a-kind project for a great hero nation. Every shortcut degrades what makes it special. Quality is non-negotiable.
 
+> **ALWAYS aim for and research best-practice solutions and practices.** Before implementing or deciding, actively seek the established best practice — web-research current standards, read `docs/best-practices/`, check prior art and idiomatic patterns, consult authoritative sources. Never settle for the first thing that works; choose the well-supported, proven, state-of-the-art approach. This applies to code, pedagogy, linguistics, architecture, and process alike.
+
 > **Project policy — non-commercial, permanent**: This project will not be commercialized. It is and will remain a free, open-source educational resource. Decision recorded 2026-04-19. Implication: dependencies under non-commercial licenses (CC BY-NC, RAIL-NC, etc.) are acceptable as long as the project's non-commercial posture is maintained. No "we might monetize someday" hedging.
 
 > **ALWAYS look for the source of the problem first.** Don't fix symptoms — trace the root cause, understand why it happens, then fix that.
