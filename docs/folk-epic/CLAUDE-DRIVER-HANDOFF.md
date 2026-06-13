@@ -9,7 +9,7 @@
 >
 > **🚧 GIT DISCIPLINE:** scope git to folk paths (`curriculum/l2-uk-en/plans/folk`,
 > `curriculum/l2-uk-en/folk`, `docs/research/folk`, `docs/folk-epic`, `docs/poc`,
-> `starlight/src/content/docs/folk`, `wiki/folk`). Never a tree-wide `git status`/main op. If a non-folk
+> `site/src/content/docs/folk`, `wiki/folk`). Never a tree-wide `git status`/main op. If a non-folk
 > file surfaces (esp. `docs/session-state/*`), SKIP SILENTLY.
 >
 > **🌲 WORKTREE-ONLY (HARD, user 2026-06-06 — "you do this every fucking time"):** the main project
@@ -120,6 +120,12 @@ this is a folk-lane tuning call, not infra. (The agy→gemini retirement is infr
 - Reviewer routing is folk/compile-scoped (agent_overrides), global `DEFAULT_PRIMARY` untouched (boundary-respecting).
 - **CONTEXT NOTE:** this session ran very long (5+ model validation runs, deep context). A careless `rm -rf data`
   in the worktree near the end (restored, no damage) was a rot signal — the 5-wiki batch is best run fresh.
+- **`starlight/` → `site/` RENAME LANDED (#3062/#3065).** Folk module MDX now promotes to
+  `site/src/content/docs/folk/<slug>.mdx` (assemble_mdx output path — pass `site/...`, NOT the dead `starlight/...`);
+  hero route is `site/src/pages/[...slug].astro`; folk components live in `site/src/components/` (imported as
+  `@site/src/components/...` — the generate_mdx code is already compliant). This PR updated all stale `starlight/src`
+  path refs in this handoff + `folk-text-layer-spec.md` → `site/src`. (Bare-word "starlight" in old blocks =
+  framework-migration prose, intentionally left.) Wikis (`wiki/folk/*.md`) are unaffected — not under site/.
 - `git push` folk → `--no-verify`; `core.bare` stayed false.
 
 ---
@@ -537,7 +543,7 @@ defects; ~10 failed kalendarna builds across sessions 6-14). The recipe that con
    production path — the build calls `run_python_qg_with_corrections(module_dir, plan_path, writer=writer)` with no
    verify-words wiring (local `data/vesum.db`).
 5. **Independently `verify_quote` EVERY embedded fragment** (prove honesty, #M-11 — green gate ≠ good module).
-6. `linear_pipeline.assemble_mdx(module_dir, out_mdx, plan_path)` → `starlight/src/content/docs/folk/<slug>.mdx`
+6. `linear_pipeline.assemble_mdx(module_dir, out_mdx, plan_path)` → `site/src/content/docs/folk/<slug>.mdx`
    (watch for `performance self_check must be a list` — see schema defect below).
 7. Serve: `./services.sh restart astro`; verify HTTP 200 + content at `http://127.0.0.1:4321/folk/<slug>/`.
 8. Bundle corrected artifacts + MDX into ONE PR; self-merge on green (folk grant). Beware a stray `node_modules`
@@ -670,7 +676,7 @@ implements + Claude adversarial review** (the #2995/#2998 loop worked twice); wi
    fix, coordinate via the TRACK-UPDATE.
 2. **Promote kalendarna 04** once #7 lands `module_done`: verify CONTENT (#M-11 — 4 UK tabs, myth-box, bridge, folk
    activities, ≥4 cited+linked blockquotes, authentic regional vocab, no stress on headings, P2 cross-refs, UK labels)
-   → assemble_mdx → `starlight/src/content/docs/folk/` → serve → verify at `/folk/kalendarna-obriadovist-zvychai/`.
+   → assemble_mdx → `site/src/content/docs/folk/` → serve → verify at `/folk/kalendarna-obriadovist-zvychai/`.
 3. **Then 01 koliadky-shchedrivky → dumy** (retire old `dumy-lytsarski.mdx` + `[...slug].astro`).
 4. **Fire dossier #10 vesilni-pisni** (codex slot freed; #08 zhnyvarski done). Then #11 holosinnya, #13 dumy-sotsialno-pobutovi.
 
@@ -790,7 +796,7 @@ re-corrects its OWN coinages → reproduces the tic / diverges (build #5: 2→4 
 3. **THEN re-fire kalendarna** with claude-tools (the writer) + the cross-model fixer live → expect fully green
    (claude's raw 4855 clears the floor; codex strips the coinages). Verify CONTENT (#M-11): 4 UK tabs, myth-box,
    high-culture bridge, folk activities, ≥4 cited+linked blockquotes, authentic vocab, no stress on headings, P2 xrefs.
-4. **Promote module 04** → assemble_mdx → `starlight/src/content/docs/folk/`; add source URLs; serve; verify at
+4. **Promote module 04** → assemble_mdx → `site/src/content/docs/folk/`; add source URLs; serve; verify at
    `/folk/kalendarna-obriadovist-zvychai/`. Bundle the refreshed handoff into the promote PR.
 5. Then **01 koliadky-shchedrivky** → **dumy** (retire old `dumy-lytsarski.mdx` + `[...slug].astro`).
 6. Resume dossier queue: #08 zhnyvarski-obzhynkovi, then #10 vesilni, #11 holosinnya, #13 dumy-sotsialno-pobutovi.
@@ -976,7 +982,7 @@ THIS PR: `docs/best-practices/heritage-attestation-engine.md`** (+ wired into `v
    `vesum_verified` walk (seminar/folk-scoped) — fixes `другоє` + all archaic QUOTED forms without per-word
    seeding. The prose russianisms (протиріччя/діюча) keep failing (correct) + the correction loop fixes them.
    This + the heritage engine = the clean path; THEN re-fire kalendarna.
-3. **Then promote + serve 04** — assemble_mdx → `starlight/src/content/docs/folk/`; add source URLs (JSONL
+3. **Then promote + serve 04** — assemble_mdx → `site/src/content/docs/folk/`; add source URLs (JSONL
    `source_url` / verified work-URLs: Грушевський→litopys.org.ua/hrushukr, ЕУ→izbornyk.org.ua/encycl) into the
    registry + Ресурси (the LINK half; EMBED half = `#R-FOLK-PRIMARY-TEXTS`, working). Verify vs POC: 4 UK tabs,
    myth-box, bridge, folk activities, ≥4 cited+linked verbatim blockquotes, authentic regional vocab.
@@ -1038,7 +1044,7 @@ DEFER audio-block + symbolic-decode + aural-genre-ID (#40)** until folk audio is
    A TIME #M-9): kalendarna-obriadovist-zvychai, dumy-nevilnytski-lytsarski, koliadky-shchedrivky. Both gate
    fixes on main → `python_qg` should pass. **VERIFY each build emits myth-box + bridge + folk-family
    activities (NOT generic)** — else the writer enforcement isn't biting; fix before promoting (#M-11).
-3. **Promote + serve each** (`assemble_mdx` → `starlight/src/content/docs/folk/<slug>.mdx`; PR; merge; ff;
+3. **Promote + serve each** (`assemble_mdx` → `site/src/content/docs/folk/<slug>.mdx`; PR; merge; ff;
    `./services.sh restart astro`). VERIFY at `http://127.0.0.1:4321/folk/<slug>/` against the POC +
    `folk-text-layer-spec.md` verify-list: myth-box, bridge, folk activities, 4 UK tabs, no stress, P2
    cross-refs. audio-block/symbolic-decode **EXPECTED-ABSENT** (note explicitly; don't claim full-POC-done).
@@ -1106,11 +1112,11 @@ LEGITIMATE gate violations the writer keeps producing — the gates are CORRECT,
    per #M-9): kalendarna-obriadovist-zvychai, dumy-nevilnytski-lytsarski, koliadky-shchedrivky. All have
    dossier+wiki+plan + VESUM-fix on main; with the writer-hardening they should clear QG. Monitor JSONL.
 3. **Promote + serve each:** copy build artifacts → `curriculum/l2-uk-en/folk/<slug>/` + assemble MDX via
-   `linear_pipeline.assemble_mdx(module_dir, out, plan_path)` → `starlight/src/content/docs/folk/<slug>.mdx`
+   `linear_pipeline.assemble_mdx(module_dir, out, plan_path)` → `site/src/content/docs/folk/<slug>.mdx`
    (worktree off origin/main; commit; PR; merge; ff). Then `./services.sh restart astro`. VERIFY at
    `http://127.0.0.1:4321/folk/<slug>/`: 4 tabs, NO stress (`grep -P '\x{0301}'` empty), UK labels, P2 cross-refs.
-4. **RETIRE old MDX + routing:** delete `starlight/src/content/docs/folk/dumy-lytsarski.mdx` (kept in #2874
-   for parity) and update `starlight/src/pages/[...slug].astro` hero config (it references
+4. **RETIRE old MDX + routing:** delete `site/src/content/docs/folk/dumy-lytsarski.mdx` (kept in #2874
+   for parity) and update `site/src/pages/[...slug].astro` hero config (it references
    `/folk/dumy-lytsarski/` + `/folk/koliadky-shchedrivky/`) to point at the rebuilt slugs. The MDX-parity
    check needs the deletion paired with a source change — do it WITH the dumy rebuild promotion.
 5. These 3 = the new pilot; tell the user when live.
@@ -1176,7 +1182,7 @@ it's achievable / variance); a writer-prompt length nudge is the proper fix, NOT
    render-fixes + the VESUM fix now apply. If word_count fails (variance), re-fire (original proves ≥4600
    achievable) or nudge writer length — do NOT lower the gate.
 3. **Promote + serve each:** copy build artifacts → `curriculum/l2-uk-en/folk/<slug>/` + assemble MDX via
-   `linear_pipeline.assemble_mdx(module_dir, out, plan_path)` → `starlight/src/content/docs/folk/<slug>.mdx`
+   `linear_pipeline.assemble_mdx(module_dir, out, plan_path)` → `site/src/content/docs/folk/<slug>.mdx`
    (worktree off origin/main; copy build dir's artifacts in; commit; PR; merge; ff main). Then
    `./services.sh restart astro` (clears Astro cache → re-indexes; content.config globs `{a1,folk}`).
    VERIFY at `http://127.0.0.1:4321/folk/<slug>/`: 4 tabs render, NO stress marks (`grep -P '\x{0301}'`
@@ -1230,7 +1236,7 @@ it's achievable / variance); a writer-prompt length nudge is the proper fix, NOT
 ### ⭐ PILOT MODULE BUILT — `folk/kalendarna-obriadovist-zvychai` (THIS PR, DO NOT MERGE — user reviews)
 Built via `v7_build folk … --worktree --writer claude-tools`; gate now passes; MDX re-assembled
 (73KB, 16 activities, 4 tabs) from the build artifacts (no writer re-run) at
-`starlight/src/content/docs/folk/kalendarna-obriadovist-zvychai.mdx`. Build worktree (full forensics):
+`site/src/content/docs/folk/kalendarna-obriadovist-zvychai.mdx`. Build worktree (full forensics):
 `.worktrees/builds/folk-kalendarna-obriadovist-zvychai-20260608-220114/` (#M-10 auto-committed to a
 `build/folk/…` branch). **Claude review (content, not just metrics):**
 - ✅ 4 tabs all populated; Activities tab non-empty (19 components — no m20 empty-tab repeat); 30-lemma

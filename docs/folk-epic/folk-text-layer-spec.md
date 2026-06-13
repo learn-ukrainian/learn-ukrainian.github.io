@@ -31,7 +31,7 @@ Clone templates that already span all 4 layers: **`comparative-study`** and **`h
 3. **MDX converter** — `scripts/generate_mdx/converters.py`: add `<type>_to_jsx` (model on
    `comparative_study_to_jsx` L179 / `highlight_morphemes_to_jsx` L136). Register in
    `scripts/generate_mdx/__init__.py`.
-4. **Component** — `starlight/src/components/<Name>.tsx` (model on `ComparativeStudy.tsx`,
+4. **Component** — `site/src/components/<Name>.tsx` (model on `ComparativeStudy.tsx`,
    `HighlightMorphemes.tsx`). Visual design per the POC badges/blocks above.
 
 ## CONTENT components (myth-box, high-culture-bridge) — emitted by the writer in module.md
