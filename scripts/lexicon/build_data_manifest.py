@@ -1,11 +1,11 @@
-"""Build the Word Atlas (Лексикон) data manifest for Starlight static rendering.
+"""Build the Word Atlas (Лексикон) data manifest for Site static rendering.
 
 Input source:
   every ``curriculum/l2-uk-en/{level}/{slug}/vocabulary.yaml`` file. Entries
   may name the Ukrainian headword as ``lemma``, ``word``, ``uk``, or ``term``;
   A1 uses ``lemma`` while A2 uses ``word``.
 
-Output: ``starlight/src/data/lexicon-manifest.json`` — versioned JSON the
+Output: ``site/src/data/lexicon-manifest.json`` — versioned JSON the
 Astro dynamic route at ``src/pages/lexicon/[lemma].astro`` reads at build time
 to materialize one static page per lemma.
 
@@ -17,7 +17,7 @@ Reproducer (run from repo root):
 
     .venv/bin/python -m scripts.lexicon.build_data_manifest
 
-Writes ``starlight/src/data/lexicon-manifest.json`` and prints stats.
+Writes ``site/src/data/lexicon-manifest.json`` and prints stats.
 """
 
 from __future__ import annotations
@@ -33,7 +33,7 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 CURRICULUM_MANIFEST = CURRICULUM_ROOT / "curriculum.yaml"
-MANIFEST_PATH = PROJECT_ROOT / "starlight" / "src" / "data" / "lexicon-manifest.json"
+MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 _STRESS_MARK_RE = re.compile("[\u0300\u0301]")
 
 

@@ -4,7 +4,7 @@ Build landing pages for all curriculum levels.
 
 Shows ALL planned modules (existing + planned) based on level-status.yaml.
 Status indicators:
-  ✅ Ready - MDX file exists in starlight/src/content/docs/{level}/
+  ✅ Ready - MDX file exists in site/src/content/docs/{level}/
   🚧 In Progress - Meta file exists but no MDX
   📋 Planned - No files yet (up to planned count)
 """
@@ -22,7 +22,7 @@ from manifest_utils import get_modules_for_level
 # Paths
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-en"
-DOCS_DIR = PROJECT_ROOT / "starlight" / "src" / "content" / "docs"
+DOCS_DIR = PROJECT_ROOT / "site" / "src" / "content" / "docs"
 LEVEL_STATUS_FILE = PROJECT_ROOT / "docs" / "l2-uk-en" / "level-status.yaml"
 
 # Core levels and specialized tracks

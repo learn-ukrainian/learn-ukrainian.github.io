@@ -8,7 +8,7 @@ Uses Playwright to check for JavaScript errors, missing components, etc.
 Usage:
     python scripts/validate_html.py [lang_pair] [level] [module_num]
 
-Requires Starlight dev server running on port 3000.
+Requires Site dev server running on port 3000.
 If server is not available, skips gracefully with info message.
 """
 
@@ -30,7 +30,7 @@ sys.path.insert(0, str(SCRIPT_DIR))
 from audit.report import append_html_errors_to_report
 
 PROJECT_ROOT = SCRIPT_DIR.parent
-STARLIGHT_DIR = PROJECT_ROOT / "starlight"
+STARLIGHT_DIR = PROJECT_ROOT / "site"
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum"
 
 BASE_URL = "http://localhost:3000"
@@ -91,7 +91,7 @@ class ValidationResult:
     activities_found: int = 0
 
 class DevServer:
-    """Manage Starlight dev server lifecycle."""
+    """Manage Site dev server lifecycle."""
 
     def __init__(self):
         self.process = None
@@ -103,7 +103,7 @@ class DevServer:
             print("  Dev server already running on port 3000")
             return True
 
-        print("  Starting Starlight dev server...")
+        print("  Starting Site dev server...")
         self.process = subprocess.Popen(
             ["pnpm", "start"],
             cwd=STARLIGHT_DIR,
@@ -268,7 +268,7 @@ async def validate_level(level: str, lang_pair: str, target_module: int | None =
     results = []
 
     # Determine module range
-    mdx_dir = PROJECT_ROOT / "starlight" / "src" / "content" / "docs" / level
+    mdx_dir = PROJECT_ROOT / "site" / "src" / "content" / "docs" / level
     if not mdx_dir.exists():
         print(f"  Level {level} not found")
         return results
@@ -338,8 +338,8 @@ async def main_async():
         urllib.request.urlopen(BASE_URL, timeout=5)  # nosec B310 — hardcoded localhost URL
         print(f"  Server running at {BASE_URL}\n")
     except Exception:
-        print("ℹ️  Starlight dev server not running - skipping HTML validation")
-        print("   To enable: cd starlight && pnpm dev")
+        print("ℹ️  Site dev server not running - skipping HTML validation")
+        print("   To enable: cd site && pnpm dev")
         sys.exit(0)  # Exit cleanly to not block pipeline
 
     levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
@@ -349,7 +349,7 @@ async def main_async():
         if target_level and level != target_level:
             continue
 
-        level_dir = PROJECT_ROOT / "starlight" / "src" / "content" / "docs" / level
+        level_dir = PROJECT_ROOT / "site" / "src" / "content" / "docs" / level
         if not level_dir.exists() or not list(level_dir.glob("module-*.mdx")):
             continue
 

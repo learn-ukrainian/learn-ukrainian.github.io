@@ -1,4 +1,4 @@
-"""Site API router — public-facing Starlight site health + deploys.
+"""Site API router — public-facing site health + deploys.
 
 Mounted at /api/site in main.py.
 
@@ -49,8 +49,8 @@ CANARY_PATHS: tuple[str, ...] = (
     "/a1/",
 )
 
-STARLIGHT_DIR = PROJECT_ROOT / "starlight"
-ASTRO_OUTPUT_DIR = STARLIGHT_DIR / "dist"
+SITE_DIR = PROJECT_ROOT / "site"
+ASTRO_OUTPUT_DIR = SITE_DIR / "dist"
 
 
 # ---------------------------------------------------------------------
@@ -133,9 +133,9 @@ def _run(cmd: list[str], timeout_s: float = 3.0) -> subprocess.CompletedProcess[
 
 
 def _last_astro_build() -> dict[str, Any]:
-    """Introspect ``starlight/dist`` to see when the site was last built."""
+    """Introspect ``site/dist`` to see when the site was last built."""
     if not ASTRO_OUTPUT_DIR.is_dir():
-        return {"built": False, "reason": "starlight/dist missing — site never built locally"}
+        return {"built": False, "reason": "site/dist missing — site never built locally"}
     try:
         latest = max(
             (p.stat().st_mtime for p in ASTRO_OUTPUT_DIR.rglob("*") if p.is_file()),
@@ -144,7 +144,7 @@ def _last_astro_build() -> dict[str, Any]:
     except OSError as exc:
         return {"built": False, "error": str(exc)}
     if latest is None:
-        return {"built": False, "reason": "starlight/dist empty"}
+        return {"built": False, "reason": "site/dist empty"}
     return {
         "built": True,
         "last_build_at": datetime.fromtimestamp(latest, tz=UTC).isoformat().replace("+00:00", "Z"),

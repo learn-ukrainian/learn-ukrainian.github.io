@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Generate curriculum-stats.json from curriculum.yaml for the Starlight site.
+"""Generate curriculum-stats.json from curriculum.yaml for the site.
 
 Run this whenever curriculum.yaml changes to keep module counts in sync.
-Output: starlight/src/data/curriculum-stats.json
+Output: site/src/data/curriculum-stats.json
 
 Usage:
     .venv/bin/python scripts/generate_curriculum_stats.py
@@ -15,7 +15,7 @@ import yaml
 
 ROOT = Path(__file__).parent.parent
 CURRICULUM = ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
-OUTPUT = ROOT / "starlight" / "src" / "data" / "curriculum-stats.json"
+OUTPUT = ROOT / "site" / "src" / "data" / "curriculum-stats.json"
 
 
 def main():

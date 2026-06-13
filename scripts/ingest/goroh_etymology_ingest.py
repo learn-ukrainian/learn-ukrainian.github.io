@@ -21,7 +21,7 @@ from bs4 import BeautifulSoup
 
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_DB = REPO / "data" / "sources.db"
-DEFAULT_MANIFEST = REPO / "starlight" / "src" / "data" / "lexicon-manifest.json"
+DEFAULT_MANIFEST = REPO / "site" / "src" / "data" / "lexicon-manifest.json"
 GOROH_BASE = "https://goroh.pp.ua/Етимологія"
 DEFAULT_USER_AGENT = (
     "learn-ukrainian-goroh-etymology/1.0 "

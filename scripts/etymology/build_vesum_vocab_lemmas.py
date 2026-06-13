@@ -1,7 +1,7 @@
-"""Build a small VESUM lemma subset for Starlight vocabulary-table links.
+"""Build a small VESUM lemma subset for Site vocabulary-table links.
 
 The full VESUM database has millions of forms. The Astro remark plugin should
-not query it during the site build, so this script scans committed Starlight
+not query it during the site build, so this script scans committed Site
 MDX vocabulary tables and writes only the form→lemma pairs that the plugin can
 use safely.
 """
@@ -16,9 +16,9 @@ import sqlite3
 import unicodedata
 from pathlib import Path
 
-DEFAULT_CONTENT_ROOT = Path("starlight/src/content/docs")
-DEFAULT_MANIFEST = Path("starlight/src/data/etymology-manifest.json")
-DEFAULT_OUTPUT = Path("starlight/src/data/vesum-vocab-lemmas.json")
+DEFAULT_CONTENT_ROOT = Path("site/src/content/docs")
+DEFAULT_MANIFEST = Path("site/src/data/etymology-manifest.json")
+DEFAULT_OUTPUT = Path("site/src/data/vesum-vocab-lemmas.json")
 DEFAULT_VESUM_DB = Path("data/vesum.db")
 VERSION = "2026-05-21-v1"
 STRESS_MARKS = {"\u0300", "\u0301", "\u0341"}

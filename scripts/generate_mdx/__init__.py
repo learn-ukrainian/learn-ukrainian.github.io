@@ -1,4 +1,4 @@
-"""MDX Generator package for Starlight.
+"""MDX Generator package for Site.
 
 Converts curriculum markdown modules to MDX format with React components.
 This package replaces the monolithic generate_mdx.py with a modular structure.

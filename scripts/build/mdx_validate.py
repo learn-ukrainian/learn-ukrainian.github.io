@@ -9,7 +9,7 @@ Runs after publish step. Checks:
 
 Returns list of errors. Empty = valid.
 
-Issue: runtime rendering errors in Starlight dev mode
+Issue: runtime rendering errors in Site dev mode
 """
 
 from __future__ import annotations

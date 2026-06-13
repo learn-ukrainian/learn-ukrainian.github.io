@@ -17,6 +17,6 @@ PROJECT_ROOT = SCRIPTS_DIR.parent
 # Common paths
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum"
 CURRICULUM_L2 = CURRICULUM_DIR / "l2-uk-en"
-STARLIGHT_DOCS_DIR = PROJECT_ROOT / "starlight" / "src" / "content" / "docs"
+STARLIGHT_DOCS_DIR = PROJECT_ROOT / "site" / "src" / "content" / "docs"
 SCHEMAS_DIR = PROJECT_ROOT / "schemas"
 DOCS_DIR = PROJECT_ROOT / "docs"

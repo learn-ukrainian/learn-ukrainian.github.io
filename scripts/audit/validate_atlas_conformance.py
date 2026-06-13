@@ -27,7 +27,7 @@ from typing import Any
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_MANIFEST = PROJECT_ROOT / "starlight" / "src" / "data" / "lexicon-manifest.json"
+DEFAULT_MANIFEST = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_VESUM = PROJECT_ROOT / "data" / "vesum.db"
 DEFAULT_CURRICULUM = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
 KAIKKI_SOURCE = "kaikki/Wiktionary (CC BY-SA 3.0)"

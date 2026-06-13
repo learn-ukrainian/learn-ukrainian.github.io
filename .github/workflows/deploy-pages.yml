@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./starlight
+        working-directory: ./site
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -37,12 +37,12 @@ jobs:
           # deploy build ("Node.js v20.x is not supported by Astro").
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: starlight/package-lock.json
+          cache-dependency-path: site/package-lock.json
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Starlight
+      - name: Build Site
         run: npm run build:full
 
       - name: Setup Pages
@@ -51,7 +51,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
-          path: './starlight/dist'
+          path: './site/dist'
 
       - name: Deploy to GitHub Pages
         id: deployment

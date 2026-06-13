@@ -4,9 +4,9 @@ from pathlib import Path
 import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DOCS_ROOT = PROJECT_ROOT / "starlight" / "src" / "content" / "docs"
-CONTENT_CONFIG_PATH = PROJECT_ROOT / "starlight" / "src" / "content.config.ts"
-ROUTER_PATH = PROJECT_ROOT / "starlight" / "src" / "pages" / "[...slug].astro"
+DOCS_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "docs"
+CONTENT_CONFIG_PATH = PROJECT_ROOT / "site" / "src" / "content.config.ts"
+ROUTER_PATH = PROJECT_ROOT / "site" / "src" / "pages" / "[...slug].astro"
 
 REQUIRED_PROPS = (
     "level",

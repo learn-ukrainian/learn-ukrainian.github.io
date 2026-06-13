@@ -22,7 +22,7 @@ def _make_self_loop(path: Path) -> None:
 
 
 def test_clean_repo_is_ok(tmp_path: Path) -> None:
-    (tmp_path / "starlight").mkdir()
+    (tmp_path / "site").mkdir()
     ok, message = check_self_symlinks(tmp_path, fix=False)
     assert ok is True
     assert "no looping" in message
@@ -73,9 +73,9 @@ def test_fix_removes_self_referential_loop(tmp_path: Path) -> None:
     assert ok2 is True and "no looping" in message2
 
 
-def test_fix_removes_starlight_loop(tmp_path: Path) -> None:
-    (tmp_path / "starlight").mkdir()
-    loop = tmp_path / "starlight" / "node_modules"
+def test_fix_removes_site_loop(tmp_path: Path) -> None:
+    (tmp_path / "site").mkdir()
+    loop = tmp_path / "site" / "node_modules"
     _make_self_loop(loop)
     ok, _ = check_self_symlinks(tmp_path, fix=True)
     assert ok is True

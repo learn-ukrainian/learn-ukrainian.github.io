@@ -26,12 +26,12 @@ def test_upsert_task_records_parallel_agent_metadata(tmp_path: Path):
         thread_id="thread-1",
         branch="codex/2823-lightweight-ui",
         worktree=".worktrees/dispatch/codex/2823-lightweight-ui",
-        owned_paths=["starlight/src/pages", "starlight/src/styles/course.css"],
+        owned_paths=["site/src/pages", "site/src/styles/course.css"],
     )
 
     assert task["issue"] == 2823
     assert task["task_family"] == "design"
-    assert task["owned_paths"] == ["starlight/src/pages", "starlight/src/styles/course.css"]
+    assert task["owned_paths"] == ["site/src/pages", "site/src/styles/course.css"]
     assert task["events"][0]["type"] == "created"
 
     path = agent_ledger.task_path(tmp_path, "2823-ui-worker")
@@ -70,7 +70,7 @@ def test_terminal_task_does_not_block_new_owner(tmp_path: Path):
         task_id="old-worker",
         agent="codex",
         status="done",
-        owned_paths=["starlight/src/pages"],
+        owned_paths=["site/src/pages"],
     )
 
     task = agent_ledger.upsert_task(
@@ -78,7 +78,7 @@ def test_terminal_task_does_not_block_new_owner(tmp_path: Path):
         task_id="new-worker",
         agent="codex",
         status="running",
-        owned_paths=["starlight/src/pages/index.astro"],
+        owned_paths=["site/src/pages/index.astro"],
     )
 
     assert task["task_id"] == "new-worker"
@@ -123,7 +123,7 @@ def test_upsert_task_preserves_fields_on_partial_update(tmp_path: Path):
         task_family="design",
         model="gpt-5.4",
         branch="codex/2823-lightweight-ui",
-        owned_paths=["starlight/src/pages"],
+        owned_paths=["site/src/pages"],
         metadata={"phase": "foundation"},
     )
 
@@ -140,7 +140,7 @@ def test_upsert_task_preserves_fields_on_partial_update(tmp_path: Path):
     assert task["task_family"] == "design"
     assert task["model"] == "gpt-5.4"
     assert task["branch"] == "codex/2823-lightweight-ui"
-    assert task["owned_paths"] == ["starlight/src/pages"]
+    assert task["owned_paths"] == ["site/src/pages"]
     assert task["metadata"] == {"phase": "foundation", "review": "agy"}
     assert task["events"][-1]["message"] == "running -> reviewing"
 
@@ -174,7 +174,7 @@ def test_parallel_conflicting_claims_are_serialized(tmp_path: Path):
                 task_id=task_id,
                 agent="codex",
                 status="running",
-                owned_paths=["starlight/src"],
+                owned_paths=["site/src"],
             )
         except agent_ledger.OwnershipConflictError:
             outcomes.append("conflict")
@@ -208,7 +208,7 @@ def test_absolute_owned_path_is_rejected(tmp_path: Path):
             tmp_path,
             task_id="absolute-owner",
             agent="codex",
-            owned_paths=[str(tmp_path / "starlight/src")],
+            owned_paths=[str(tmp_path / "site/src")],
         )
 
 
@@ -252,7 +252,7 @@ def test_cli_reports_conflict(tmp_path: Path, capsys):
             "--status",
             "running",
             "--owned-path",
-            "starlight/src",
+            "site/src",
         ]
     ) == 0
     capsys.readouterr()
@@ -269,7 +269,7 @@ def test_cli_reports_conflict(tmp_path: Path, capsys):
             "--status",
             "running",
             "--owned-path",
-            "starlight/src/styles/course.css",
+            "site/src/styles/course.css",
         ]
     )
     payload = json.loads(capsys.readouterr().out)

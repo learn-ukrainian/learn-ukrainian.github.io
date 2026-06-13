@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate docs/lesson-schema.yaml from Starlight component prop interfaces."""
+"""Generate docs/lesson-schema.yaml from Site component prop interfaces."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
-COMPONENTS_DIR = PROJECT_ROOT / "starlight" / "src" / "components"
+COMPONENTS_DIR = PROJECT_ROOT / "site" / "src" / "components"
 OUTPUT_PATH = PROJECT_ROOT / "docs" / "lesson-schema.yaml"
 CONFIG_TABLES_PATH = PROJECT_ROOT / "scripts" / "pipeline" / "config_tables.py"
 LESSON_CONTRACT_PATH = PROJECT_ROOT / "docs" / "lesson-contract.md"
@@ -352,7 +352,7 @@ def build_schema(components_dir: Path) -> dict[str, Any]:
         "schema_version": "1.0",
         "generator_version": GENERATOR_VERSION,
         "generated_from": {
-            "components_dir": "starlight/src/components/{*.tsx, *.astro}",
+            "components_dir": "site/src/components/{*.tsx, *.astro}",
             "components_sha256": _hash_files(paths),
             "config_tables_sha256": _hash_file(CONFIG_TABLES_PATH),
             "lesson_contract_sha256": _hash_file(LESSON_CONTRACT_PATH),
@@ -390,7 +390,7 @@ def build_parser() -> argparse.ArgumentParser:
         """
     )
     parser = argparse.ArgumentParser(
-        description="Generate the lesson component schema YAML from Starlight prop interfaces.",
+        description="Generate the lesson component schema YAML from Site prop interfaces.",
         epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -398,7 +398,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--components-dir",
         type=Path,
         default=COMPONENTS_DIR,
-        help="Directory containing Starlight .tsx/.astro component files (default: starlight/src/components).",
+        help="Directory containing Site .tsx/.astro component files (default: site/src/components).",
     )
     parser.add_argument(
         "--output",

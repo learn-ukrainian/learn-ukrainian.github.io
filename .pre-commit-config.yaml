@@ -63,7 +63,7 @@ repos:
             \.venv/ |
             node_modules/ |
             scripts/_archived/ |
-            starlight/node_modules/ |
+            site/node_modules/ |
             curriculum/l2-uk-en/plans/.*\.yaml\.bak$
           )
       - id: check-added-large-files
@@ -71,9 +71,9 @@ repos:
         args: [--maxkb=2000]
       - id: check-merge-conflict
       - id: end-of-file-fixer
-        exclude: ^(curriculum/|wiki/|docs/references/|docs/token-usage/|batch_state/|starlight/node_modules/|\.venv/)
+        exclude: ^(curriculum/|wiki/|docs/references/|docs/token-usage/|batch_state/|site/node_modules/|\.venv/)
       - id: trailing-whitespace
-        exclude: ^(curriculum/|wiki/|docs/references/|batch_state/|starlight/node_modules/|\.venv/)
+        exclude: ^(curriculum/|wiki/|docs/references/|batch_state/|site/node_modules/|\.venv/)
 
   # --- Local hooks (project-specific) ---
   - repo: local
@@ -123,7 +123,7 @@ repos:
         name: check MDX source parity
         entry: bash scripts/pre_commit/project_python.sh scripts/audit/check_mdx_source_parity.py --files
         language: system
-        files: ^starlight/src/content/docs/.*\.mdx$
+        files: ^site/src/content/docs/.*\.mdx$
         stages: [pre-commit]
 
       - id: lesson-schema-drift
@@ -134,7 +134,7 @@ repos:
           docs/lesson-schema.yaml'
         language: system
         pass_filenames: false
-        files: ^(starlight/src/components/.*\.(tsx|astro)|scripts/pipeline/config_tables\.py|docs/lesson-contract\.md)$
+        files: ^(site/src/components/.*\.(tsx|astro)|scripts/pipeline/config_tables\.py|docs/lesson-contract\.md)$
         stages: [pre-commit]
 
       - id: lint-dispatch-brief-venv

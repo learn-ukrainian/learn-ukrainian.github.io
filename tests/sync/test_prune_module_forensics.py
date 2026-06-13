@@ -44,7 +44,7 @@ def _module_dir(repo: Path, level: str, slug: str) -> Path:
 
 
 def _mdx_path(repo: Path, level: str, slug: str) -> Path:
-    return repo / "starlight" / "src" / "content" / "docs" / level / f"{slug}.mdx"
+    return repo / "site" / "src" / "content" / "docs" / level / f"{slug}.mdx"
 
 
 def _seed_module(repo: Path, level: str, slug: str, *, status: str = "locked", forensics: bool = True) -> None:

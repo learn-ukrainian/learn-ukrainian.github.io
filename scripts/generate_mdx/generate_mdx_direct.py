@@ -39,7 +39,7 @@ from generate_mdx_direct_renderers import (
 # ──────────────────────────────────────────────
 
 CURRICULUM_ROOT = Path("curriculum/l2-uk-direct")
-OUTPUT_ROOT = Path("starlight/src/content/docs/direct")
+OUTPUT_ROOT = Path("site/src/content/docs/direct")
 
 # Activity type -> React component name
 ACTIVITY_COMPONENT_MAP: dict[str, str] = {

@@ -49,10 +49,10 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: starlight/package-lock.json
+          cache-dependency-path: site/package-lock.json
 
       - name: npm audit (report-only)
-        working-directory: starlight
+        working-directory: site
         continue-on-error: true
         run: |
           echo "::group::npm audit (production deps)"

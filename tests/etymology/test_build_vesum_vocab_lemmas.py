@@ -1,4 +1,4 @@
-"""Tests for the Starlight vocab-table VESUM subset builder."""
+"""Tests for the Site vocab-table VESUM subset builder."""
 
 import json
 import sqlite3

@@ -1,7 +1,7 @@
 """Convert Exercise DSL blocks to MDX/React components.
 
 Parses exercise blocks in markdown and converts them to
-the corresponding React components for Starlight rendering.
+the corresponding React components for Site rendering.
 
 Supports two DSL formats:
   - Legacy: :::exercise[type]  (markdown-style content)

@@ -309,7 +309,7 @@ def _worktree_mdx_path(
     if raw_out is None:
         return (
             worktree_path
-            / "starlight"
+            / "site"
             / "src"
             / "content"
             / "docs"
@@ -359,7 +359,7 @@ def _persist_artifact_paths(
 
     default_mdx = (
         worktree.path
-        / "starlight"
+        / "site"
         / "src"
         / "content"
         / "docs"
@@ -574,7 +574,7 @@ def _print_worktree_summary(
     print(
         "  git add "
         f"curriculum/l2-uk-en/{level}/{slug}/*.yaml "
-        f"starlight/src/content/docs/{level}/{slug}.mdx"
+        f"site/src/content/docs/{level}/{slug}.mdx"
     )
     print('  git commit -m "feat(content): build module"')
     print(f"  git push -u origin {worktree.branch}")
@@ -1868,21 +1868,21 @@ def _run(args: argparse.Namespace) -> int:
         phase = "mdx"
         _phase_started(archive, phase)
         started_at = time.monotonic()
-        # MDX is the BUILT artifact and goes where Starlight reads it. Source
+        # MDX is the BUILT artifact and goes where Site reads it. Source
         # artifacts (.md, *.yaml) stay in curriculum/ as authoring source. When
         # --out is set (test/sandbox builds), MDX colocates with the artifact
         # dump so the test stays self-contained.
         if args.out is None:
-            starlight_dir = (
+            site_dir = (
                 PROJECT_ROOT
-                / "starlight"
+                / "site"
                 / "src"
                 / "content"
                 / "docs"
                 / level.lower()
             )
-            starlight_dir.mkdir(parents=True, exist_ok=True)
-            mdx_path = starlight_dir / f"{slug}.mdx"
+            site_dir.mkdir(parents=True, exist_ok=True)
+            mdx_path = site_dir / f"{slug}.mdx"
         else:
             mdx_path = module_dir / f"{slug}.mdx"
         linear_pipeline.assemble_mdx(module_dir, mdx_path, plan_path)

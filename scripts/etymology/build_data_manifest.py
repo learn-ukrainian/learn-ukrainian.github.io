@@ -1,8 +1,8 @@
 """Emit a JSON manifest of ESUM etymology entries for Astro build consumption.
 
-Astro's dynamic route at `starlight/src/pages/etymology/[slug].astro` reads this
+Astro's dynamic route at `site/src/pages/etymology/[slug].astro` reads this
 manifest in its `getStaticPaths()` callback. The manifest is checked into the
-build pipeline at `starlight/src/data/etymology-manifest.json` (gitignored —
+build pipeline at `site/src/data/etymology-manifest.json` (gitignored —
 regenerated from `data/sources.db` on every build).
 
 Schema (one entry per row):
@@ -53,7 +53,7 @@ except ModuleNotFoundError:  # pragma: no cover - direct-script support
     from transliterate import transliterate
 
 DEFAULT_DB = Path("data/sources.db")
-DEFAULT_OUTPUT = Path("starlight/src/data/etymology-manifest.json")
+DEFAULT_OUTPUT = Path("site/src/data/etymology-manifest.json")
 MANIFEST_VERSION = "2026-05-15-v1"
 
 

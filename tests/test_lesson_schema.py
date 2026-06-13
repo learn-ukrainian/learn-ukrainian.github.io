@@ -12,7 +12,7 @@ from scripts.pipeline.config_tables import ACTIVITY_CONFIGS
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = PROJECT_ROOT / "docs" / "lesson-schema.yaml"
-COMPONENTS_DIR = PROJECT_ROOT / "starlight" / "src" / "components"
+COMPONENTS_DIR = PROJECT_ROOT / "site" / "src" / "components"
 PEDAGOGY_PATH = PROJECT_ROOT / "docs" / "best-practices" / "activity-pedagogy.md"
 
 EXCLUSIONS = {

@@ -22,7 +22,7 @@ from audit.report import append_mdx_errors_to_report
 
 PROJECT_ROOT = SCRIPT_DIR.parent
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum"
-STARLIGHT_DOCS_DIR = PROJECT_ROOT / "starlight" / "src" / "content" / "docs"
+STARLIGHT_DOCS_DIR = PROJECT_ROOT / "site" / "src" / "content" / "docs"
 
 @dataclass
 class ValidationResult:

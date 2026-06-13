@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -19,11 +20,13 @@ from ai_agent_bridge._orphan_recovery import (
 
 
 def _git(repo: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
+    merged_env = {k: v for k, v in os.environ.items() if not k.startswith(("GIT_", "PRE_COMMIT"))}
     return subprocess.run(
         ["git", "-C", str(repo), *args],
         check=check,
         capture_output=True,
         text=True,
+        env=merged_env,
     )
 
 
@@ -90,11 +93,11 @@ def test_recover_orphan_commit_is_idempotent_on_clean_tree(tmp_path: Path):
 
 def test_recover_orphan_commit_rejects_files_outside_allowed_roots(tmp_path: Path):
     repo = _init_repo(tmp_path)
-    (repo / "starlight").mkdir()
-    (repo / "starlight" / "page.mdx").write_text("nope\n", encoding="utf-8")
+    (repo / "site").mkdir()
+    (repo / "site" / "page.mdx").write_text("nope\n", encoding="utf-8")
 
     result = recover_orphan_commit(
-        _candidate("Touch starlight/page.mdx"),
+        _candidate("Touch site/page.mdx"),
         repo_root=repo,
     )
 

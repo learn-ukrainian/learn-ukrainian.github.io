@@ -53,20 +53,20 @@ SVC_HEALTH[api]="http://127.0.0.1:8765/api/health"
 SVC_HEALTH_ALT[api]="http://localhost:8765/api/health"
 SVC_MATCH[api]="scripts.api.main:app --host 0.0.0.0 --port 8765"
 
-SVC_CMD[astro]="npm run dev --prefix starlight -- --host 127.0.0.1 --port 4321 --force"
+SVC_CMD[astro]="npm run dev --prefix site -- --host 127.0.0.1 --port 4321 --force"
 SVC_PORT[astro]=4321
 SVC_HOST[astro]=127.0.0.1
 SVC_LOG[astro]="$LOGS_DIR/astro.log"
 SVC_DESC[astro]="Astro Course UI Dev Server"
 SVC_HEALTH[astro]="http://127.0.0.1:4321/"
 SVC_HEALTH_ALT[astro]="http://localhost:4321/"
-SVC_MATCH[astro]="starlight/node_modules/.bin/astro dev --host 127.0.0.1"
+SVC_MATCH[astro]="site/node_modules/.bin/astro dev --host 127.0.0.1"
 
 ALL_SERVICES="sources api astro"
 
 # Legacy aliases: rewrite old service names when passed as CLI args.
 # Accept shell history + scripts that still say `./services.sh start rag`
-# or `./services.sh restart starlight`.
+# or `./services.sh restart site`.
 _rewrite_legacy_alias() {
     local out=()
     for svc in "$@"; do
@@ -74,7 +74,7 @@ _rewrite_legacy_alias() {
             rag)
                 out+=("sources")
                 ;;
-            starlight)
+            site)
                 out+=("astro")
                 ;;
             *)
@@ -453,8 +453,8 @@ _stop_service() {
 }
 
 _astro_cleanup_cache() {
-    local cache_file="$PROJECT_ROOT/starlight/.astro/data-store.json"
-    local vite_cache_dir="$PROJECT_ROOT/starlight/node_modules/.vite"
+    local cache_file="$PROJECT_ROOT/site/.astro/data-store.json"
+    local vite_cache_dir="$PROJECT_ROOT/site/node_modules/.vite"
 
     # Astro 6 doesn't reliably pick up new MDX files added while the dev
     # server is running (content-layer deferred modules). Clearing the
@@ -470,8 +470,8 @@ _astro_cleanup_cache() {
 }
 
 _astro_cleanup_build_artifacts() {
-    local dist_dir="$PROJECT_ROOT/starlight/dist"
-    local astro_dir="$PROJECT_ROOT/starlight/.astro"
+    local dist_dir="$PROJECT_ROOT/site/dist"
+    local astro_dir="$PROJECT_ROOT/site/.astro"
 
     if [[ -d "$dist_dir" ]]; then
         rm -rf "$dist_dir"
@@ -483,26 +483,26 @@ _astro_cleanup_build_artifacts() {
     fi
 }
 
-# Self-heal: starlight/node_modules gets wiped intermittently (npm collisions /
+# Self-heal: site/node_modules gets wiped intermittently (npm collisions /
 # parallel processes), leaving `astro: command not found`. Reinstall on demand so
 # `services.sh build|rebuild|start astro` never dies on a missing binary.
 _ensure_astro_deps() {
-    if [[ -x "$PROJECT_ROOT/starlight/node_modules/.bin/astro" ]]; then
+    if [[ -x "$PROJECT_ROOT/site/node_modules/.bin/astro" ]]; then
         return 0
     fi
-    echo "  starlight deps missing (no node_modules/.bin/astro) — self-healing with npm ci..."
-    ( cd "$PROJECT_ROOT/starlight" && npm ci && npm rebuild esbuild sharp ) || {
-        echo "  ERROR: npm ci failed in starlight; cannot build/start astro" >&2
+    echo "  site deps missing (no node_modules/.bin/astro) — self-healing with npm ci..."
+    ( cd "$PROJECT_ROOT/site" && npm ci && npm rebuild esbuild sharp ) || {
+        echo "  ERROR: npm ci failed in site; cannot build/start astro" >&2
         return 1
     }
-    echo "  starlight deps restored."
+    echo "  site deps restored."
 }
 
 _build_astro() {
     echo "  Building astro..."
     cd "$PROJECT_ROOT"
     _ensure_astro_deps || return 1
-    npm run build --prefix starlight
+    npm run build --prefix site
 }
 
 _clean_astro() {
@@ -514,7 +514,7 @@ _clean_astro() {
     fi
 
     local had_outputs=0
-    if [[ -d "$PROJECT_ROOT/starlight/dist" || -f "$PROJECT_ROOT/starlight/.astro/data-store.json" || -d "$PROJECT_ROOT/starlight/.astro" || -d "$PROJECT_ROOT/starlight/node_modules/.vite" ]]; then
+    if [[ -d "$PROJECT_ROOT/site/dist" || -f "$PROJECT_ROOT/site/.astro/data-store.json" || -d "$PROJECT_ROOT/site/.astro" || -d "$PROJECT_ROOT/site/node_modules/.vite" ]]; then
         had_outputs=1
     fi
 
@@ -688,6 +688,6 @@ case "$action" in
         echo "  $0 rebuild astro          # Clean then build Astro"
         echo "  $0 status                 # Show status"
         echo ""
-        echo "Note: 'rag' is accepted as a legacy alias for 'sources'; 'starlight' is accepted as a legacy alias for 'astro'."
+        echo "Note: 'rag' is accepted as a legacy alias for 'sources'; 'site' is accepted as a legacy alias for 'astro'."
         ;;
 esac

@@ -269,7 +269,7 @@ def _lay_out_module(tmp_path: Path):
     (orch_dir / "dispatch" / "write.md").write_text("x", encoding="utf-8")
 
     # Published MDX.
-    mdx_dir = proj / "starlight" / "src" / "content" / "docs" / "a1"
+    mdx_dir = proj / "site" / "src" / "content" / "docs" / "a1"
     mdx_dir.mkdir(parents=True)
     (mdx_dir / "hello.mdx").write_text("<p>", encoding="utf-8")
 

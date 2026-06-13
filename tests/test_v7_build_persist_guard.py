@@ -85,7 +85,7 @@ def seed_artifacts(root: Path, *, level: str = "a1", slug: str = "foo") -> None:
     }.items():
         (module_dir / name).write_text(content, encoding="utf-8")
 
-    mdx_path = root / "starlight" / "src" / "content" / "docs" / level / f"{slug}.mdx"
+    mdx_path = root / "site" / "src" / "content" / "docs" / level / f"{slug}.mdx"
     mdx_path.parent.mkdir(parents=True, exist_ok=True)
     mdx_path.write_text("---\ntitle: Foo\n---\n", encoding="utf-8")
 
@@ -142,7 +142,7 @@ def test_persist_allows_real_worktree_child(
     committed = git(child, "show", "--name-only", "--format=", "HEAD")
     assert "curriculum/l2-uk-en/a1/foo/writer_prompt.md" in committed
     assert "curriculum/l2-uk-en/_orchestration/a1/foo/runs/" in committed
-    assert "starlight/src/content/docs/a1/foo.mdx" in committed
+    assert "site/src/content/docs/a1/foo.mdx" in committed
 
 
 def test_persist_scoped_add_leaves_unrelated_untracked_file_out(tmp_path: Path) -> None:

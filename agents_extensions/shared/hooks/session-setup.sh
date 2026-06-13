@@ -50,7 +50,7 @@ fi
 # CI can't catch it; only a local canary can. Auto-heal the exact absolute
 # self-link case here (the general loop case is healed by the API-orient Python
 # canary in scripts/api/main.py). See docs/bug-autopsies/node-modules-eloop-symlink.md.
-for _nm in "$_LU_REPO/node_modules" "$_LU_REPO/starlight/node_modules"; do
+for _nm in "$_LU_REPO/node_modules" "$_LU_REPO/site/node_modules"; do
   if [ -L "$_nm" ] && [ "$(readlink "$_nm" 2>/dev/null)" = "$_nm" ]; then
     rm -f "$_nm" \
       && echo "⚠️  repo-health: removed self-referential symlink $_nm (was breaking npm with spawn ELOOP)" >&2

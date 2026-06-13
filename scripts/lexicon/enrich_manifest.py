@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Enrich the Word Atlas lexicon manifest with source-verified dictionary data.
 
-For each lemma in ``starlight/src/data/lexicon-manifest.json`` this adds an
+For each lemma in ``site/src/data/lexicon-manifest.json`` this adds an
 ``enrichment`` block built from DETERMINISTIC local-dictionary lookups (no LLM,
 no fabrication):
 
@@ -60,7 +60,7 @@ from scripts.lexicon.heritage_classifier import classify_lemma
 from scripts.verification.vesum import verify_lemma, verify_word
 from scripts.wiki.slovnyk_me import primary_synonym_sense_text
 
-MANIFEST = ROOT / "starlight" / "src" / "data" / "lexicon-manifest.json"
+MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 SOURCES_DB = ROOT / "data" / "sources.db"
 KAIKKI_LOOKUP = ROOT / "data" / "lexicon" / "kaikki_uk_lookup.json"
 

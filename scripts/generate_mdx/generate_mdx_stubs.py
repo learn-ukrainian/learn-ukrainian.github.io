@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate placeholder MDX stubs for all planned modules without existing MDX files.
 
-Ensures the Starlight sidebar shows all planned modules. Modules with existing
+Ensures the Site sidebar shows all planned modules. Modules with existing
 content are untouched. Missing modules get a "coming soon" placeholder.
 
 Usage:
@@ -19,7 +19,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from manifest_utils import CURRICULUM_PATH, load_manifest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-STARLIGHT_DOCS = PROJECT_ROOT / "starlight" / "src" / "content" / "docs"
+STARLIGHT_DOCS = PROJECT_ROOT / "site" / "src" / "content" / "docs"
 PLANS_DIR = CURRICULUM_PATH / "plans"
 
 ALL_LEVELS = [

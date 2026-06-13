@@ -3,7 +3,7 @@
 Converts structured activity YAML (intermediate format from activity-v2.schema)
 into React component JSX strings for MDX rendering.
 
-Each activity type maps to a specific React component in starlight/src/components/.
+Each activity type maps to a specific React component in site/src/components/.
 The YAML uses an intermediate format — this module transforms it to match the
 exact React component prop interfaces.
 

@@ -9,7 +9,7 @@ from scripts.audit.validate_atlas_conformance import VesumLemmaLookup, validate
 from scripts.lexicon.build_kaikki_lookup import KAIKKI_SOURCE
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-MANIFEST_PATH = PROJECT_ROOT / "starlight" / "src" / "data" / "lexicon-manifest.json"
+MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 VESUM_PATH = PROJECT_ROOT / "data" / "vesum.db"
 CURRICULUM_PATH = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
 

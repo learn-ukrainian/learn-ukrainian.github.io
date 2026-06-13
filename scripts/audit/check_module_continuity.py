@@ -74,7 +74,7 @@ class Finding:
 
 
 def module_order(level: str, root: Path = ROOT) -> list[tuple[int, str]]:
-    data_path = root / "starlight" / "src" / "data" / f"{level}-modules.ts"
+    data_path = root / "site" / "src" / "data" / f"{level}-modules.ts"
     data = data_path.read_text(encoding="utf-8")
     modules = [(int(m.group("num")), m.group("slug")) for m in MODULE_RE.finditer(data)]
     return sorted(modules, key=lambda item: item[0])
