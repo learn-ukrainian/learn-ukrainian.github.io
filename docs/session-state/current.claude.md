@@ -1,49 +1,16 @@
 # Current — Claude Session Handoff (2026-06-13)
 
 > Router: read `docs/session-state/current.md` first.
-> **Latest detailed handoff: `docs/session-state/2026-06-13-claude-translation-shipped-v2-killed.md`** — read top-to-bottom.
-> **✅ DONE + LIVE this session:** Atlas §11 «Переклад» translation shipped+deployed+live (#3052, 67%);
-> 4 Dependabot security alerts resolved (zeroconf #3046 fixed, torch dismissed); deploy-drift root fix
-> (#3044 + autopsy); PR triage (folk #3032 merged, #3028 junk closed, pypdf #3048 merged).
-> **🗑️ v2 Atlas decouple KILLED on cost** — codex builds B1, so the Atlas grows from built-module vocab
-> for free (with real course-links). Don't pay for "vocab before the lesson exists."
-> **🧭 codex owns B1 builds; Claude = orchestrator + reviewer + lexicon-tooling lane.**
-> **⏭️ Next for me:** vocab→Atlas VocabCard "more →" link (design §7/§13, render-time, integrity-gated).
-> Prior handoff (superseded): `2026-06-12-claude-atlas-goatcounter-policy-kaikki.md`. Production: learners on A1.
-
-## 🚨 CRITICAL — GitHub Pages auto-deploy is DISABLED (workflow_dispatch only)
-Merging to main does NOT update the live site. This is why the user saw "Word Atlas not following the
-design" — all Atlas work (#2980/#2981/#2986/#2988) merged 06-11 but live was frozen at 06-10. **After any
-user-facing (`starlight/`) merge: `gh workflow run deploy-pages.yml --ref main`, watch it, verify the LIVE
-site, not just localhost.** Deploy triggered this session (run 27368018028).
-
-## ⏳ RESUME HERE
-1. **Verify deploy 27368018028 landed** + live Atlas correct (`gh run list --workflow=deploy-pages.yml`).
-2. **Synthesize UA-dictionary source research** (IN FLIGHT): asks `ua-dict-research-codex` + `-agy` running
-   (hermes/qwen failed — skip; qwen excluded). Goal: AUTHENTIC Ukrainian synonym/antonym/idiom dictionaries,
-   **NO Russian, NO English-auto-translated** (ukrajinet WordNet unusable). Brief:
-   `docs/dispatch-briefs/2026-06-11-ua-lexicon-source-research.md`. Collect answers → ranked sourcing table
-   on #2985 → best path to a clean UA synonym dataset.
-3. Continue backlog EPIC #2985 (reprioritized: #3 derivational etym → **#7 scale (promote)** → #6 Антоненко
-   → #4 relevance layer → #5 synonyms after sourcing).
-
-## ✅ Done this session
-7 PRs merged (#2854·#2969[#2884 closed]·#2970·#2980·#2981·#2986·#2988). Filed #2971 + EPIC #2985.
-Researched blocked parts (#2985 comment): synonyms genuinely blocked; scale (#7) high-value+feasible,
-activates the decolonization moat (~200+ sovietization-flagged pages at scale). Git/GitHub hygiene done.
-
-## ⚠️ Watch-outs
-- **Verify the LIVE site, not localhost** (deploy is manual). #M-11 + deploy miss bit 4× this session.
-- **CI lacks `data/vesum.db`** → tests degrade gracefully (`vesum=None`).
-- **Push docs via a clean worktree off origin/main** — main checkout has folk untracked files + `start-claude.sh`
-  local mod that block rebase. Do NOT `reset --hard` (loses folk's work).
-- **DO NOT TOUCH** `codex/2888-a2-*`, `codex/folk-*`/`build/folk/*`, `codex/b1-v72-*` (other lanes).
-- gitleaks 502 = ghcr.io flake → rerun. Codex PRs sometimes draft → `gh pr ready N`. qwen excluded.
-
-## Restart
-```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
-git fetch origin -q
-gh run list --workflow=deploy-pages.yml --limit 2   # deploy landed? live Atlas current?
-gh issue view 2985                                  # backlog EPIC + research
-```
+> **Latest detailed handoff: `docs/session-state/2026-06-13-claude-atlas-pairfix-site-rename-git-cleanup.md`** — read top-to-bottom.
+>
+> **✅ DONE this session (all on `origin/main` `19c89e6aa4`, deploy-verified live):**
+> - `starlight/` → `site/` rename (#3062/#3065) — symlink removed, all refs updated, live 200.
+> - Word Atlas **pair-slug enrichment bug fixed** (`19c89e6aa4`, #2985): 67 core verb pairs were thin; варити now shows СУМ-20 + idioms. The data was always fetchable live — the pipeline queried the joined pair string and cached the miss.
+> - Vocab→Atlas "more →" link (#3056).
+> - **Git fully cleaned** (user order): 1 branch (main), 1 worktree, 0 stashes; remote = main + dependabot. **Recovery SHAs in the detailed handoff** — esp. 🔴 `codex/agy-mcp-fix c880dab111` (likely the #3060 solution — check before redoing #3060).
+>
+> **⏭️ Next:** (1) #3060 wire sources MCP into agy — CHECK `codex/agy-mcp-fix` first; (2) Atlas synonym gate (`_A1_SENSE_SYNONYMS`) + cached-miss refetch; (3) #3061/#3063 gemini→agy; grok-build validation.
+>
+> **⚠️ Lessons:** `core.bare` flips→true mid-session (#2842; heal `git config core.bare false`); never `mv` node_modules across a rename (reinstall); `enrich_manifest.py` ignores argv + is silent + must run as ONE `run_in_background` process (never concurrent — they race the manifest).
+>
+> Prior handoff (superseded): `2026-06-13-claude-translation-shipped-v2-killed.md`. Production: learners on A1.
