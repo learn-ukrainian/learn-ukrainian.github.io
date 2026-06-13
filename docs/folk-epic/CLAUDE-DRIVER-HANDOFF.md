@@ -55,22 +55,42 @@ The loop added 6 new cites + corrected misattributions (33→39 inline `[S#]`); 
 (documentary chain ✓), S19=Дзюба/Павленко ✓, S24=Івакін ✓, S25/26=Наливайко (Western reception ✓). All resolve;
 claude sg actively caught + fixed the S9→S15/S30 misattributions. Shipped: `wiki/folk/genres/bylyny-kyivskoho-tsyklu.{md,sources.yaml}` + review JSON (existing `wiki/index.md` line 330 already links it — this fixes a dead link).
 
-### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **Batch the other 5 gap wikis** through the proven path (#M-9, sequential): kobzarstvo-lirnytstvo,
-   dumy-sotsialno-pobutovi, holosinnya, vesilni-pisni, zhnyvarski-obzhynkovi-pisni. Each: they have dossiers but
-   likely NO compiled `.md` yet → `compile.py --track folk --slug <slug> --writer gpt-5.5 --review` from a
-   `data/`-bearing checkout (writer produces article → claude-routed review adds citations → converges → ship).
-   Corpus-hammer each (#M-11) before ship. ~15-20 min review each.
-2. **(durable follow-up, low-pri)** Harden the wiki writer's inline-`[S#]` citation discipline in
-   `compile_article.md` so future articles cite completely first-pass (saves the review-loop the citation work).
-   NOT blocking — the loop closes it surgically. And consider proposing the seminar reviewer routing to the
-   orchestrator for the GLOBAL `DEFAULT_PRIMARY` (it benefits hist/lit/oes/ruth too) — TRACK-UPDATE'd.
-3. **(cleanup)** `wiki/index.md` has ~17 stale dead entries from the Session-7 old-taxonomy purge + stale word
-   counts; `compile.py --update-index` regenerates cleanly (deferred — tangential to content PRs).
+### 🔧 SECOND BLOCKER FOUND + FIXED THIS SESSION — deep-worktree DB corpus-blindness (PR #3059)
+The first fresh `compile --review` (kobzarstvo) FAILED differently from bylyny: `⚠️ No source material found`,
+sg 3→2, **0-source registry** despite the dossier citing 26 chunk_ids. ROOT CAUSE (not the routing, not the
+writer): `source_attribution.py::_effective_db_path` worktree-DB fallback only matched the SHALLOW `.worktrees/
+<name>` layout, but delegate.py worktrees are `.worktrees/dispatch/<agent>/<name>` (3 deep) → fallback never
+fired → sqlite **auto-created an empty 0-byte data/sources.db** → compile ran corpus-blind. **FIX (PR #3059):**
+walk `PROJECT_ROOT.parents` up to the `.worktrees` ancestor. Validated: kobzarstvo 0→**26** chunk_ids resolved,
+bylyny 0→23 (effective path = real 1.6GB DB, 137,696 literary rows). +2 tests, 13 green. **This unblocked ALL
+deep-worktree wiki compiles (every track), not just folk.** ⚠ GOTCHA: a dispatch worktree needs NO `data/`
+symlink now — the fallback handles it; do NOT `ln -s data` (and NEVER `rm -rf data` — it deletes sparse-tracked
+yaml/jsonl; `git checkout -- data/` restores).
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order) — both blockers fixed; the 5 are now PURE EXECUTION
+0. **Merge PR #3059 (DB-fix) first** if not already — every fresh wiki compile depends on it.
+1. **Batch the other 5 gap wikis** (#M-9, sequential), now FULLY UNBLOCKED. From a dispatch worktree off main
+   (with #3059 merged) — NO data symlink needed — run per slug:
+   `compile.py --track folk --slug <slug> --writer gpt-5.5 --review --force`
+   slugs: kobzarstvo-lirnytstvo (re-compile IN FLIGHT at handoff — check `/tmp/wiki-batch-kobzarstvo2.log`),
+   dumy-sotsialno-pobutovi, holosinnya, vesilni-pisni, zhnyvarski-obzhynkovi-pisni. Writer (gpt-5.5) builds the
+   article + registry (DB-fix resolves the dossier chunk_ids) → claude-routed review (#3057) adds citations +
+   best-round (#3054) → converges to MIN≥8 (bylyny proof: 7→8 in 2 rounds). **Corpus-hammer each (#M-11) before
+   ship** — read the article + spot-check the added `[S#]`→author mapping in the registry (like bylyny's
+   S15=Попович/S16=Чижевський verification). Ship each: `.md` + `.sources.yaml` + `.reviews` json. ~20 min each.
+2. **(durable follow-up, low-pri)** Harden the wiki writer's inline-`[S#]` discipline in `compile_article.md` so
+   articles cite completely first-pass (the review-loop currently adds the citations — works, but costs rounds).
+   AND the GLOBAL `DEFAULT_PRIMARY` seminar-routing (benefits hist/lit/oes/ruth) — orchestrator's call, TRACK-UPDATE'd twice.
+3. **(cleanup)** `wiki/index.md` has ~17 stale dead entries (Session-7 purge) + stale word counts;
+   `compile.py --update-index` regenerates cleanly (deferred — tangential to content PRs).
 
 ### ⚠ CARRY-FORWARD (Session-20b)
-- bylyny's passing cited article + review JSON are in this PR. The other 5 need compiling (writer run + review).
+- **Both wiki blockers are now fixed + shipping:** #3057 (reviewer routing, MERGED) + #3059 (deep-worktree DB,
+  PR). The 5 remaining wikis are mechanical repeats of a PROVEN recipe — no more unknowns.
+- **Session-20b PRs:** #3054 (loop, merged), #3057 (routing + bylyny wiki #10, merged), #3059 (DB-fix, open).
 - Reviewer routing is folk/compile-scoped (agent_overrides), global `DEFAULT_PRIMARY` untouched (boundary-respecting).
+- **CONTEXT NOTE:** this session ran very long (5+ model validation runs, deep context). A careless `rm -rf data`
+  in the worktree near the end (restored, no damage) was a rot signal — the 5-wiki batch is best run fresh.
 - `git push` folk → `--no-verify`; `core.bare` stayed false.
 
 ---
