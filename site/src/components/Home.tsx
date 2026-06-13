@@ -96,12 +96,13 @@ function Feature({ title, emoji, description }: FeatureItem) {
   );
 }
 
-function LevelCard({ level, name, description, modules, color }: {
+function LevelCard({ level, name, description, modules, color, preview }: {
   level: string;
   name: string;
   description: string;
   modules: number;
   color: string;
+  preview?: boolean;
 }) {
   return (
     <div style={{flex: '1 1 300px', marginBottom: '1.5rem'}}>
@@ -110,6 +111,15 @@ function LevelCard({ level, name, description, modules, color }: {
           <span className={styles.levelBadge} style={{ background: color }}>
             {level}
           </span>
+          {preview && (
+            <span style={{
+              marginLeft: '8px', fontSize: '0.65rem', fontWeight: 700,
+              letterSpacing: '0.06em', padding: '2px 8px', borderRadius: '999px',
+              border: `1px solid ${color}`, color, verticalAlign: 'middle',
+            }}>
+              PREVIEW
+            </span>
+          )}
           <h3 style={{marginTop: '10px'}}>{name}</h3>
           <p style={{margin: '0 0 1rem 0'}}>{description}</p>
           <span className={styles.moduleCount}>{modules} modules</span>
@@ -229,6 +239,14 @@ export default function Home(): ReactNode {
                 description="Ukrainian classics and literary analysis"
                 modules={mc('lit')}
                 color="#5D4037"
+              />
+              <LevelCard
+                level="FOLK"
+                name="Folklore"
+                description="Decolonized survey of Ukrainian folk culture — song, ritual, epic, prose, material culture"
+                modules={mc('folk')}
+                color="#A4133C"
+                preview
               />
             </div>
 

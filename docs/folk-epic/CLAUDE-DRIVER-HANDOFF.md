@@ -58,7 +58,45 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 25 HANDOFF (2026-06-14 — LANDED the two waiting dossier PRs (#3103 #17 + #3107 #18) after independent #M-11 re-verification; BUILT + corpus-hammered + shipped dossier #19 kolomyiky; dossiers 18→19/42) — **RESUME HERE**
+## ▶▶▶ SESSION 26 HANDOFF (2026-06-14 — FOLK SURFACED as PREVIEW among the seminar tracks (user-directed, reverses orchestrator #3027); proper 42-topic landing rebuilt; bio count fixed 180→310 via stats regen) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** This is a FRONTEND/surfacing change — no new content. Folk content unchanged (19 dossiers,
+> 15 wikis, 3 modules). Folk track is now PUBLIC as a clearly-labeled PREVIEW/seminar-test. **Only the 3 built
+> modules are clickable** (kalendarna #04, koliadky #05, dumy-nevilnytski-lytsarski #12); the other 39 are locked.
+
+### ✅ DONE THIS SESSION (this PR — user 2026-06-14: "build proper folk landing page... link it in now as preview/seminar test... amongst the seminar tracks... bio is 310 modules")
+- **FOLK SURFACED (reverses orchestrator #3027 "hide folk nav — too early").** Removed the two hide-gates:
+  `HIDDEN_MODULE_LINK_TRACKS` (LevelLanding.tsx) now empty → built folk module links clickable;
+  `hiddenPublicPaths` (astro.config.mjs) now empty → `/folk` routes public. **The earlier LLM-QG gate the user
+  set (Sessions 22–25: "don't un-hide until koliadky+dumy clear LLM QG") was EXPLICITLY LIFTED by the user this
+  session** in favour of a labeled preview launch.
+- **PROPER 42-topic folk landing** (`site/src/content/docs/folk/index.mdx`): rebuilt from the STALE 27-topic
+  taxonomy to the full `phase-folk-queue.md` 42-topic queue, grouped into 9 blocks (A Worldview → I Synthesis),
+  3 active (built) + 39 locked, PREVIEW/seminar-test labeling in title/subtitle/progress. Active slugs verified
+  to match the 3 built MDX files (no dead links).
+- **FOLK card added to Home.tsx Specialization Tracks** (alongside HIST/ISTORIO/BIO/LIT) with a PREVIEW pill.
+- **bio count fixed 180→310 + folk 27→42**: ROOT CAUSE was a STALE `curriculum-stats.json` — curriculum.yaml
+  already had bio=310 / folk=42, but the generated stats hadn't been regenerated. Ran
+  `scripts/generate_curriculum_stats.py` (the sanctioned regen) → synced all drifted counts (_total 1737→1833).
+- **LANE NOTE:** this is shared `site/` (infra-orchestrator territory) done under DIRECT USER ORDER (#M-1),
+  via worktree→PR. Flag the orchestrator: it reverses #3027 + touches Home/LevelLanding/astro.config.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **After merge: serve-verify live** — `./services.sh restart astro`, confirm HTTP 200 + content at
+   `/folk/` (the 42-topic landing) and the 3 preview module pages; confirm FOLK card shows on the home page.
+2. **Resume the dossier queue: #20 `suspilno-pobutovi-pisni`** (козацькі/чумацькі/бурлацькі/рекрутські/кріпацькі/
+   наймитські/заробітчанські) → #21 `narodni-balady`. Proven loop (corpus-pre-ground → codex/gpt-5.5 →
+   corpus-hammer → PR). Dossiers 19/42.
+3. **To make MORE folk modules clickable**, build them (claude-tools) + flip their status `locked`→`active` in
+   index.mdx. Module e2e self-converge is still GATED on #3079 (infra lane).
+4. **Carry-forward:** clean `wiki/index.md` regen (#3094, infra lane).
+
+### 📊 FLEET (unchanged) — dossier writer codex/gpt-5.5; reviewer Claude corpus-hammer (#M-11); module writer
+claude-tools; wiki gpt-5.5 + claude-routed reviewers (#3057). Frontend changes verified via Frontend CI build.
+
+---
+
+## ▶▶▶ SESSION 25 HANDOFF (2026-06-14 — LANDED the two waiting dossier PRs (#3103 #17 + #3107 #18) after independent #M-11 re-verification; BUILT + corpus-hammered + shipped dossier #19 kolomyiky; dossiers 18→19/42) — (superseded by Session 26)
 
 > **⏱ HONEST SCOPE:** Dossiers **18 → 19/42** (kolomyiky added THIS PR). Wikis 15/42, modules 3/42 UNCHANGED.
 > Folk nav still HIDDEN; surfacing still GATED on koliadky+dumy LLM QG (#3079, infra lane). This session = cleared
