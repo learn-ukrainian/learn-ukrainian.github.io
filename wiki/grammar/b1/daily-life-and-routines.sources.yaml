@@ -37,3 +37,33 @@ sources:
   title: Ігорович. Про цього давньоруського
   page: 97
   grade: 11
+- id: S7
+  file: 2-klas-ukrmova-vashulenko-2019-1_s0081
+  type: textbook
+  title: Планування дня
+  page: 83
+  grade: 2
+- id: S8
+  file: 5-klas-ukrmova-golub-2022_s0100
+  type: textbook
+  title: Мої плани на зиму
+  page: 101
+  grade: 5
+- id: S9
+  file: 6-klas-ukrmova-golub-2023_s0200
+  type: textbook
+  title: § 76. Упорядковуй своє життя
+  page: 197
+  grade: 6
+- id: S10
+  file: 7-klas-ukrmova-avramenko-2024_s0093
+  type: textbook
+  title: Наказовий спосіб дієслова
+  page: 82
+  grade: 7
+- id: S11
+  file: 7-klas-ukrmova-avramenko-2024_s0094
+  type: textbook
+  title: § 37. Творення дієслів наказового й умовного способів
+  page: 83
+  grade: 7
