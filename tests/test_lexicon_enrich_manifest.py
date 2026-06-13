@@ -719,6 +719,67 @@ def test_kaikki_etymology_is_final_fallback() -> None:
     assert etymology == {"text": "From Old East Slavic мѣсто.", "source": KAIKKI_SOURCE}
 
 
+@pytest.mark.parametrize(
+    ("derived", "base"),
+    [
+        ("добре", "добрий"),
+        ("чудово", "чудо"),
+        ("пізно", "пізній"),
+        ("нормально", "нормальний"),
+        ("сьома", "сім"),
+        ("навчатися", "вчити"),
+        ("вмиватися", "мити"),
+        ("збиратися", "брати"),
+        ("одягатися", "одяг"),
+        ("повертатися", "вертати"),
+    ],
+)
+def test_derivational_etymology_falls_back_to_base_forms(derived: str, base: str) -> None:
+    conn = _conn()
+    conn.execute(
+        """
+        CREATE TABLE goroh_etymology (
+            requested_lemma TEXT NOT NULL,
+            headword TEXT NOT NULL,
+            etymology_text TEXT NOT NULL,
+            source_url TEXT
+        )
+        """
+    )
+    conn.execute(
+        "INSERT INTO goroh_etymology VALUES (?, ?, ?, ?)",
+        (base, base, f"Fixture etymology for {base}.", f"https://goroh.example/{base}"),
+    )
+
+    etymology = _etymology(conn, derived, {})
+
+    assert etymology == {
+        "text": f"Fixture etymology for {base}.",
+        "source": f"Горох (за ЕСУМ) (etymology of base form {base})",
+        "source_url": f"https://goroh.example/{base}",
+    }
+
+
+def test_compositional_greeting_phrases_have_no_etymology_fallback() -> None:
+    conn = _conn()
+    conn.execute(
+        """
+        CREATE TABLE goroh_etymology (
+            requested_lemma TEXT NOT NULL,
+            headword TEXT NOT NULL,
+            etymology_text TEXT NOT NULL,
+            source_url TEXT
+        )
+        """
+    )
+    conn.execute(
+        "INSERT INTO goroh_etymology VALUES (?, ?, ?, ?)",
+        ("До побачення!", "до побачення", "Fixture phrase etymology.", "https://goroh.example/phrase"),
+    )
+
+    assert _etymology(conn, "До побачення!", {}) is None
+
+
 def test_kaikki_etymology_skips_russian_labeled_cyrillic() -> None:
     conn = _conn()
     lookup = {

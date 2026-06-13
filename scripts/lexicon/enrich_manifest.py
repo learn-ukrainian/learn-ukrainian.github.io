@@ -276,6 +276,67 @@ _BLOCKED_SYNONYMS = {
     "флористська хризантема",
 }
 
+_COMPOSITIONAL_ETYMOLOGY_EXCLUSIONS = {
+    "а тебе?",
+    "а у тебе?",
+    "до побачення!",
+    "добрий вечір",
+    "доброго ранку",
+    "добрий день",
+    "дуже приємно",
+    "на все добре",
+    "як справи?",
+}
+
+_DERIVATIONAL_ETYMLOGY_BASES: dict[str, tuple[str, ...]] = {
+    "добре": ("добрий", "добро"),
+    "чудово": ("чудо", "чудовий"),
+    "пізно": ("пізній",),
+    "нормально": ("нормальний", "норма"),
+    "сьома": ("сьомий", "сім"),
+    "сьомий": ("сім",),
+    "навчатися": ("навчати", "вчити", "учити"),
+    "навчати": ("вчити", "учити"),
+    "вмиватися": ("вмивати", "мити"),
+    "вмивати": ("мити",),
+    "збиратися": ("збирати", "брати"),
+    "збирати": ("брати",),
+    "одягатися": ("одягати", "одяг"),
+    "одягати": ("одяг",),
+    "повертатися": ("повертати", "вертати"),
+    "повертати": ("вертати",),
+}
+
+_ORDINAL_ETYMLOGY_BASES: dict[str, tuple[str, ...]] = {
+    "перша": ("перший", "один"),
+    "перше": ("перший", "один"),
+    "перший": ("один",),
+    "друга": ("другий", "два"),
+    "друге": ("другий", "два"),
+    "другий": ("два",),
+    "третя": ("третій", "три"),
+    "третє": ("третій", "три"),
+    "третій": ("три",),
+    "четверта": ("четвертий", "чотири"),
+    "четверте": ("четвертий", "чотири"),
+    "четвертий": ("чотири",),
+    "п'ята": ("п'ятий", "п'ять"),
+    "п'яте": ("п'ятий", "п'ять"),
+    "п'ятий": ("п'ять",),
+    "шоста": ("шостий", "шість"),
+    "шосте": ("шостий", "шість"),
+    "шостий": ("шість",),
+    "сьома": ("сьомий", "сім"),
+    "сьоме": ("сьомий", "сім"),
+    "сьомий": ("сім",),
+    "восьма": ("восьмий", "вісім"),
+    "восьме": ("восьмий", "вісім"),
+    "восьмий": ("вісім",),
+    "дев'ята": ("дев'ятий", "дев'ять"),
+    "дев'яте": ("дев'ятий", "дев'ять"),
+    "дев'ятий": ("дев'ять",),
+}
+
 # VESUM tag token → human-readable Ukrainian grammatical label.
 _TAG_LABELS: dict[str, str] = {
     "v_naz": "називний",
@@ -1663,6 +1724,61 @@ def _etymology_lookup_variants(lemma: str) -> list[str]:
     return [v for v in variants if v and not (v.casefold() in seen or seen.add(v.casefold()))]
 
 
+def _append_unique_candidate(out: list[str], seen: set[str], candidate: str, original: str) -> None:
+    key = _lookup_key(candidate)
+    if not key or key == original or key in seen or _has_whitespace(key):
+        return
+    seen.add(key)
+    out.append(key)
+
+
+def _direct_etymology_base_candidates(word: str) -> list[str]:
+    candidates: list[str] = []
+    key = _lookup_key(word)
+    if not key:
+        return candidates
+    candidates.extend(_DERIVATIONAL_ETYMLOGY_BASES.get(key, ()))
+    candidates.extend(_ORDINAL_ETYMLOGY_BASES.get(key, ()))
+
+    if key.endswith(("ся", "сь")) and len(key) > 4:
+        candidates.append(key[:-2])
+    if key.endswith("е") and len(key) > 3:
+        candidates.append(f"{key[:-1]}ий")
+    if key.endswith("о") and len(key) > 3:
+        stem = key[:-1]
+        candidates.append(f"{stem}ий")
+        if stem.endswith("н"):
+            candidates.append(f"{stem}ій")
+    for prefix in ("пере", "від", "над", "під", "при", "роз", "без", "по", "за", "до", "ви", "з", "в", "у"):
+        if key.startswith(prefix) and len(key) > len(prefix) + 3:
+            candidates.append(key[len(prefix) :])
+            break
+    if key.endswith("ати") and len(key) > 5:
+        candidates.append(key[:-3])
+    if key.endswith("ити") and len(key) > 5:
+        candidates.append(key[:-3])
+    return candidates
+
+
+def _derivational_etymology_candidates(lemma: str) -> list[str]:
+    word = _lookup_key(_base_lemma(lemma))
+    if not word or _has_whitespace(word) or word in _COMPOSITIONAL_ETYMOLOGY_EXCLUSIONS:
+        return []
+    out: list[str] = []
+    seen: set[str] = {word}
+    queue: list[tuple[str, int]] = [(word, 0)]
+    while queue:
+        current, depth = queue.pop(0)
+        if depth >= 2:
+            continue
+        for candidate in _direct_etymology_base_candidates(current):
+            before = len(out)
+            _append_unique_candidate(out, seen, candidate, word)
+            if len(out) > before:
+                queue.append((_lookup_key(candidate), depth + 1))
+    return out
+
+
 def _has_whitespace(value: str) -> bool:
     return bool(re.search(r"\s", str(value or "").strip()))
 
@@ -1818,14 +1934,40 @@ def _kaikki_etymology(lookup: dict[str, dict[str, Any]], lemma: str) -> dict | N
     return {"text": text, "source": KAIKKI_SOURCE}
 
 
-def _etymology(conn: sqlite3.Connection, lemma: str, kaikki_lookup: dict[str, dict[str, Any]] | None = None) -> dict | None:
-    """Cached etymology by authority order: Goroh → ЕСУМ → uk.wiktionary → Kaikki."""
+def _source_etymology(
+    conn: sqlite3.Connection,
+    lemma: str,
+    kaikki_lookup: dict[str, dict[str, Any]] | None = None,
+) -> dict | None:
     return (
         _goroh_etymology(conn, lemma)
         or _esum_etymology(conn, lemma)
         or _wiktionary_etymology(conn, lemma)
         or _kaikki_etymology(kaikki_lookup or {}, lemma)
     )
+
+
+def _with_base_etymology_label(etymology: dict, base_form: str) -> dict:
+    labeled = dict(etymology)
+    source = str(labeled.get("source") or "").strip()
+    label = f"etymology of base form {base_form}"
+    labeled["source"] = f"{source} ({label})" if source else label
+    return labeled
+
+
+def _etymology(conn: sqlite3.Connection, lemma: str, kaikki_lookup: dict[str, dict[str, Any]] | None = None) -> dict | None:
+    """Cached etymology by authority order, with derived-lemma base fallback."""
+    lookup_word = _lookup_key(_base_lemma(lemma))
+    if lookup_word in _COMPOSITIONAL_ETYMOLOGY_EXCLUSIONS:
+        return None
+    exact = _source_etymology(conn, lemma, kaikki_lookup)
+    if exact:
+        return exact
+    for base_form in _derivational_etymology_candidates(lemma):
+        etymology = _source_etymology(conn, base_form, kaikki_lookup)
+        if etymology:
+            return _with_base_etymology_label(etymology, base_form)
+    return None
 
 
 def _cefr(conn: sqlite3.Connection, lemma: str) -> dict[str, str] | None:
