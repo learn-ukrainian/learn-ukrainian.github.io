@@ -1510,28 +1510,29 @@ def search_ua_gec_errors(
     except FileNotFoundError:
         return []
 
-    where_clauses = ["ua_gec_errors_fts MATCH ?"]
+    # error_type exists in BOTH the FTS table (f) and the data table (m), so
+    # every non-FTS predicate must carry its table alias — an unqualified
+    # `error_type IN (...)` raises "ambiguous column name". Build each clause
+    # already-qualified instead of prefixing the whole WHERE with `f.` (which
+    # only attached to the first clause and left the rest ambiguous).
+    where_clauses = ["f.ua_gec_errors_fts MATCH ?"]
     params = [query]
 
     if tag_filter:
         placeholders = ",".join("?" for _ in tag_filter)
-        where_clauses.append(f"error_type IN ({placeholders})")
+        where_clauses.append(f"m.error_type IN ({placeholders})")
         params.extend(tag_filter)
 
     if require_native_author:
-        where_clauses.append("is_native = 1")
+        where_clauses.append("m.is_native = 1")
 
     where_stmt = " AND ".join(where_clauses)
-
-    # We join with main table using rowid if needed, but FTS5 content table
-    # queries can be done directly on the FTS table if it has all columns?
-    # Wait, fts table only has error, correct, error_type. We should join with ua_gec_errors.
 
     sql = f"""
         SELECT m.error, m.correct, m.error_type, m.doc_id, m.is_native, m.source_lang
         FROM ua_gec_errors_fts f
         JOIN ua_gec_errors m ON f.rowid = m.id
-        WHERE f.{where_stmt}
+        WHERE {where_stmt}
         ORDER BY f.rank
         LIMIT ?
     """

@@ -77,3 +77,19 @@ def test_search_ua_gec_errors_execution(server_module):
     assert "коментарій" in result[0].text
     assert "### Result 1" in result[0].text
     assert "Correction" in result[0].text
+
+
+@requires_ua_gec_data
+def test_search_ua_gec_errors_tag_filter_does_not_raise(server_module):
+    # Regression: tag_filter previously raised "ambiguous column name:
+    # error_type" because the column exists in both the FTS table (f) and the
+    # data table (m) and the predicate was unqualified. The tag_filter path
+    # had NO test, so the bug shipped. This asserts the filtered query
+    # executes and returns a well-formed payload (zero matches is acceptable).
+    arguments = {"query": "участь", "tag_filter": ["F/Calque", "F/Collocation"], "limit": 5}
+    result = _run(server_module.call_tool("search_ua_gec_errors", arguments))
+
+    assert len(result) == 1
+    assert result[0].type == "text"
+    # No OperationalError surfaced: either a Found-block or a graceful no-results line.
+    assert ("Found" in result[0].text) or ("No UA-GEC results" in result[0].text)
