@@ -29,7 +29,7 @@
     "remark-directive": "^4.0.0",
     "remark-gfm": "^4.0.1",
     "sharp": "^0.34.2",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
