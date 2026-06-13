@@ -893,3 +893,44 @@ def test_translation_returns_none_when_lemma_absent(monkeypatch) -> None:
     monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
 
     assert _translation(conn, "неіснуючеслово") is None
+
+
+def test_wiki_reference_success(monkeypatch) -> None:
+    fake_wiki_data = {
+        "title": "Україна",
+        "description": "держава в Східній Європі",
+        "extract": "Україна — держава в Східній Європі.",
+        "url": "https://uk.wikipedia.org/wiki/Україна",
+    }
+
+    def mock_query(title: str) -> dict | None:
+        if title == "Україна":
+            return fake_wiki_data
+        return None
+
+    monkeypatch.setattr(enrich_manifest_module, "query_wikipedia", mock_query)
+
+    # test without literary attestation
+    ref = enrich_manifest_module._wiki_reference("Україна")
+    assert ref is not None
+    assert ref["wikipedia"]["title"] == "Україна"
+    assert ref["wikipedia"]["summary"] == "Україна — держава в Східній Європі."
+    assert ref["wikipedia"]["url"] == "https://uk.wikipedia.org/wiki/Україна"
+    assert "uk.wiktionary.org" in ref["wiktionary_url"]
+    assert ref["wikisource_url"] is None
+
+    # test with literary attestation
+    ref_with_lit = enrich_manifest_module._wiki_reference("Україна", {"text": "some excerpt"})
+    assert ref_with_lit is not None
+    assert ref_with_lit["wikisource_url"] is not None
+    assert "uk.wikisource.org" in ref_with_lit["wikisource_url"]
+
+
+def test_wiki_reference_missing(monkeypatch) -> None:
+    def mock_query(title: str) -> dict | None:
+        return None
+
+    monkeypatch.setattr(enrich_manifest_module, "query_wikipedia", mock_query)
+
+    ref = enrich_manifest_module._wiki_reference("варити")
+    assert ref is None

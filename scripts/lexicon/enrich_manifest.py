@@ -2003,6 +2003,37 @@ def _literary_attestation(conn: sqlite3.Connection, lemma: str) -> dict[str, Any
     return None
 
 
+def query_wikipedia(title: str) -> dict[str, Any] | None:
+    """Wrapper around rag.source_query.wikipedia_summary to support unit test mocking."""
+    try:
+        from scripts.rag.source_query import wikipedia_summary
+        return wikipedia_summary(title)
+    except Exception:
+        return None
+
+
+def _wiki_reference(lemma: str, literary_attestation: dict | None = None) -> dict[str, Any] | None:
+    """Fetch uk.wikipedia summary and generate uk.wiktionary and uk.wikisource links."""
+    clean_lemma = _strip_stress(_base_lemma(lemma)).strip()
+    wiki_data = query_wikipedia(clean_lemma)
+    if not wiki_data:
+        return None
+
+    wiktionary_url = f"https://uk.wiktionary.org/wiki/{quote(clean_lemma)}"
+    wikisource_url = f"https://uk.wikisource.org/wiki/{quote(clean_lemma)}" if literary_attestation else None
+
+    return {
+        "wikipedia": {
+            "title": wiki_data.get("title", ""),
+            "summary": wiki_data.get("extract", ""),
+            "url": wiki_data.get("url", ""),
+        },
+        "wiktionary_url": wiktionary_url,
+        "wikisource_url": wikisource_url,
+        "attribution": "Матеріали з Вікіпедії та Вікісловника, надані на умовах ліцензії CC-BY-SA 3.0.",
+    }
+
+
 def _single_word_etymology_coverage(manifest: dict) -> tuple[int, int]:
     entries = [
         entry
@@ -2093,7 +2124,14 @@ def enrich() -> tuple[int, int]:
                 entry["enrichment"] = block
             else:
                 entry.pop("enrichment", None)
-            if block or sections or pronunciation:
+
+            wiki_ref = _wiki_reference(lemma, block.get("literary_attestation"))
+            if wiki_ref:
+                entry["wiki_reference"] = wiki_ref
+            else:
+                entry.pop("wiki_reference", None)
+
+            if block or sections or pronunciation or wiki_ref:
                 enriched += 1
     finally:
         conn.close()
