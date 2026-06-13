@@ -33,6 +33,68 @@ def _span_texts(article_text: str) -> list[str]:
     return [span.quote_text for span in find_attributed_verbatim_quote_spans(article_text)]
 
 
+def _sg_response(score: int, verdict: str, notes: str = "") -> str:
+    return json.dumps(
+        {
+            "dimension": "source_grounding",
+            "findings": [],
+            "fixes": [],
+            "score": score,
+            "verdict": verdict,
+            "notes": notes,
+        },
+        ensure_ascii=False,
+    )
+
+
+def test_source_grounding_floor_rejects_uncited_long_article() -> None:
+    """#3083/m20: a substantial article the LLM scored 10/PASS but which carries
+    near-zero inline [S#] must be deterministically REJECTED (fail-closed)."""
+    article = ("Достатньо довга наукова стаття про жанр. " * 200) + " Виноска [S1]."
+    res = _parse_dim_result(
+        dim="source_grounding",
+        agent="claude",
+        model="m",
+        response=_sg_response(10, "PASS"),
+        duration_s=1.0,
+        article_text=article,
+    )
+    assert res.score <= 3
+    assert res.verdict == "REJECT"
+    assert "3083" in res.notes
+
+
+def test_source_grounding_floor_leaves_well_cited_article() -> None:
+    """A genuinely-cited article (many distinct [S#]) is never touched by the
+    floor — teeth without false positives."""
+    cites = " ".join(f"твердження [S{n}]." for n in range(1, 21))  # 20 distinct
+    article = ("Достатньо довга наукова стаття. " * 100) + cites
+    res = _parse_dim_result(
+        dim="source_grounding",
+        agent="claude",
+        model="m",
+        response=_sg_response(9, "PASS"),
+        duration_s=1.0,
+        article_text=article,
+    )
+    assert res.score == 9
+    assert res.verdict == "PASS"
+
+
+def test_source_grounding_floor_skips_short_article() -> None:
+    """Below the body-length gate the floor does not apply (can't judge density)."""
+    res = _parse_dim_result(
+        dim="source_grounding",
+        agent="claude",
+        model="m",
+        response=_sg_response(9, "PASS"),
+        duration_s=1.0,
+        article_text="Короткий текст [S1].",
+    )
+    assert res.score == 9
+    assert res.verdict == "PASS"
+
+
 def test_attributed_guillemet_quote_is_register_exempt() -> None:
     article_text = (
         "Енциклопедія українознавства фіксує старіший правопис: "
