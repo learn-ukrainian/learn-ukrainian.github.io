@@ -142,6 +142,16 @@ interface LexiconEntry {
   sections?: LexiconSections;
   enrichment?: Enrichment;
   heritage_status?: HeritageStatus | null;
+  wiki_reference?: {
+    wikipedia?: {
+      title: string;
+      summary: string;
+      url: string;
+    };
+    wiktionary_url: string;
+    wikisource_url?: string | null;
+    attribution: string;
+  } | null;
 }
 
 interface LexiconManifest {
@@ -218,8 +228,8 @@ const PAST_ROWS = [
   { key: "сер.", label: "Сер." },
   { key: "множина", label: "Множина" },
 ];
-const KAIKKI_SOURCE = "kaikki/Wiktionary (CC BY-SA 3.0)";
-const KAIKKI_ATTRIBUTION = "Pronunciation / etymology from English Wiktionary, CC BY-SA 3.0.";
+const KAIKKI_SOURCE = "kaikki/Wiktionary (CC BY-SA 4.0)";
+const KAIKKI_ATTRIBUTION = "Pronunciation / etymology from English Wiktionary, CC BY-SA 4.0.";
 
 // Heritage classification → UK label + one-line gloss. Authentic Ukrainian
 // statuses (archaism/historism/dialect/borrowing) are the decolonization layer:
@@ -267,6 +277,7 @@ const headerStress = enrichment?.stress?.form ?? null;
 const cefrLevel = enrichment?.cefr?.level ?? null;
 const definitionCards = enrichment?.definition_cards ?? [];
 const pronunciation = entry.pronunciation ?? null;
+const wikiRef = entry.wiki_reference ?? null;
 const formatIpa = (ipa: string | null | undefined) => {
   const value = ipa?.trim();
   if (!value) return null;
@@ -298,10 +309,23 @@ const sectionSources = [
   sections?.synonyms?.source,
   sections?.idioms?.source,
 ].filter((source): source is string => Boolean(source));
+const wikiSources: string[] = [];
+if (wikiRef) {
+  if (wikiRef.wikipedia) {
+    wikiSources.push("Вікіпедія");
+  }
+  if (wikiRef.wiktionary_url) {
+    wikiSources.push("Вікісловник");
+  }
+  if (wikiRef.wikisource_url) {
+    wikiSources.push("Вікіджерела");
+  }
+}
 const sourceList = Array.from(
   new Set([
     ...(enrichment?.sources && enrichment.sources.length > 0 ? enrichment.sources : []),
     ...sectionSources,
+    ...wikiSources,
   ]),
 ).sort((a, b) => a.localeCompare(b, "uk"));
 
@@ -368,7 +392,8 @@ const hasDictionaryData = Boolean(
     sections?.idioms ||
     showHeritage ||
     showEditorialSuccess ||
-    showEditorialWarning,
+    showEditorialWarning ||
+    wikiRef,
 );
 
 const frontmatter = {
@@ -823,6 +848,44 @@ const frontmatter = {
       </section>
     )}
 
+    {wikiRef && (
+      <section class="atlas-section" aria-labelledby="atlas-wiki-title">
+        <div class="atlas-section-head">
+          <p class="atlas-kicker">Wikimedia</p>
+          <h2 id="atlas-wiki-title">Вікі-довідка</h2>
+        </div>
+
+        <div class="atlas-source-card">
+          {wikiRef.wikipedia && (
+            <div class="wiki-section">
+              <p class="atlas-source-label">Wikipedia</p>
+              <h3 class="wiki-title">
+                <a href={wikiRef.wikipedia.url} target="_blank" rel="noopener noreferrer">
+                  {wikiRef.wikipedia.title}
+                </a>
+              </h3>
+              <p class="wiki-summary">
+                {wikiRef.wikipedia.summary}
+              </p>
+            </div>
+          )}
+
+          <div class="wiki-links">
+            {wikiRef.wiktionary_url && (
+              <a href={wikiRef.wiktionary_url} target="_blank" rel="noopener noreferrer">
+                Вікісловник (uk.wiktionary) →
+              </a>
+            )}
+            {wikiRef.wikisource_url && (
+              <a href={wikiRef.wikisource_url} target="_blank" rel="noopener noreferrer">
+                Вікіджерела (uk.wikisource) →
+              </a>
+            )}
+          </div>
+        </div>
+      </section>
+    )}
+
     {sourceList.length > 0 && (
       <footer class="atlas-provenance">
         <h2>Походження даних</h2>
@@ -835,6 +898,11 @@ const frontmatter = {
           Версія маніфесту: {manifest.version} · остання генерація: {manifest.generated_at}
         </p>
         {usesKaikki && <p class="atlas-license-note">{KAIKKI_ATTRIBUTION}</p>}
+        {wikiRef && (
+          <p class="atlas-license-note">
+            Матеріали з проектів Фонду Вікімедіа (Вікіпедія, Вікісловник, Вікіджерела) використовуються на умовах ліцензії CC BY-SA 4.0.
+          </p>
+        )}
       </footer>
     )}
 
@@ -849,6 +917,48 @@ const frontmatter = {
     display: flex;
     flex-direction: column;
     gap: 1.3rem;
+  }
+
+  .wiki-section {
+    margin-bottom: 0.8rem;
+  }
+
+  .wiki-title {
+    font-size: 1.15rem;
+    margin: 0 0 0.5rem;
+    font-weight: bold;
+  }
+
+  .wiki-title a {
+    color: var(--lu-primary);
+    text-decoration: underline;
+  }
+
+  .wiki-title a:hover {
+    color: var(--lu-accent);
+  }
+
+  .wiki-summary {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .wiki-links {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 0.8rem;
+    font-size: 0.88rem;
+    font-weight: bold;
+  }
+
+  .wiki-links a {
+    color: var(--lu-accent);
+    text-decoration: underline;
+  }
+
+  .wiki-links a:hover {
+    color: var(--lu-primary);
   }
 
   .atlas-view-nav,
