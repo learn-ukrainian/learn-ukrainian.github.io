@@ -148,6 +148,12 @@ def _default_model_for(agent_name: str) -> str | None:
     return str(raw).strip() if isinstance(raw, str) and str(raw).strip() else None
 
 
+def _default_effort_for(agent_name: str) -> str | None:
+    entry = AGENTS.get(agent_name, {})
+    raw = entry.get("default_effort")
+    return str(raw).strip() if isinstance(raw, str) and str(raw).strip() else None
+
+
 def _resolve_model_from_plan(agent_name: str, plan: InvocationPlan) -> str | None:
     del agent_name
     return _arg_after(plan.cmd, "-m", "--model")
@@ -156,7 +162,7 @@ def _resolve_model_from_plan(agent_name: str, plan: InvocationPlan) -> str | Non
 def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | None:
     if agent_name == "codex":
         return _config_override(plan.cmd, "model_reasoning_effort")
-    if agent_name == "claude":
+    if agent_name in {"claude", "grok-build"}:
         return _arg_after(plan.cmd, "--effort")
     if agent_name == "gemini":
         return None
@@ -201,6 +207,9 @@ def _resolve_effort_from_defaults(agent_name: str, requested_effort: str | None)
             _gemini_settings(),
             ("effort", "effortLevel", "reasoningEffort", "reasoning_effort"),
         )
+    default_effort = _default_effort_for(agent_name)
+    if default_effort:
+        return default_effort
     return None
 
 

@@ -20,7 +20,7 @@ Issue: #1184
 """
 from __future__ import annotations
 
-from typing import TypedDict
+from typing import NotRequired, TypedDict
 
 
 class AgentEntry(TypedDict):
@@ -28,6 +28,7 @@ class AgentEntry(TypedDict):
 
     adapter: str               # fully-qualified "module:ClassName" import path
     default_model: str | None
+    default_effort: NotRequired[str | None]
     cost_tier: str             # "low" | "medium" | "high" | "unknown"
     capabilities: frozenset[str]
     cli_available: bool
@@ -117,9 +118,10 @@ AGENTS: dict[str, AgentEntry] = {
         # Native `grok` CLI ("Grok Build") in headless single-turn mode — a
         # Claude-Code-shaped agentic coding CLI. Separate from the Hermes
         # `grok` entry above (different transport, different use: coding vs
-        # content). Uses ~/.grok OAuth; model defaults to the CLI's own.
+        # content). Uses ~/.grok OAuth.
         "adapter": "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter",
-        "default_model": None,
+        "default_model": "grok-4.20",
+        "default_effort": "high",
         "cost_tier": "medium",
         "capabilities": frozenset({
             "code_writing",

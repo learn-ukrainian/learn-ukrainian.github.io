@@ -75,6 +75,7 @@ VALID_AGENTS = (
     "gemini",
     "codex",
     "grok",
+    "grok-build",
     "deepseek",
     "qwen",
     "cursor",

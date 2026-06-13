@@ -202,6 +202,16 @@ def test_agy_entry_is_well_formed():
     assert {"content_writing", "content_review"} <= entry["capabilities"]
 
 
+def test_grok_build_entry_is_well_formed():
+    entry = get_agent_entry("grok-build")
+    assert entry["adapter"] == "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter"
+    assert entry["default_model"] == "grok-4.20"
+    assert entry["default_effort"] == "high"
+    assert entry["cli_available"] is True
+    assert entry["resume_policy"] == "never"
+    assert {"code_writing", "code_review", "debugging"} <= entry["capabilities"]
+
+
 def test_codex_entry_has_bridge_only_resume_policy():
     assert get_agent_entry("codex")["resume_policy"] == "bridge_only"
 

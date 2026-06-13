@@ -69,7 +69,16 @@ def _cli_available_agent(agent: str) -> bool:
     try:
         from agent_runtime.registry import get_agent_entry
     except ImportError:
-        return agent in {"claude", "codex", "gemini", "grok", "deepseek", "qwen", "cursor"}
+        return agent in {
+            "claude",
+            "codex",
+            "gemini",
+            "grok",
+            "grok-build",
+            "deepseek",
+            "qwen",
+            "cursor",
+        }
 
     try:
         return bool(get_agent_entry(agent)["cli_available"])

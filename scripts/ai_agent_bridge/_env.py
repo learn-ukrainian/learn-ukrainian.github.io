@@ -36,6 +36,7 @@ _SAFE_ENV_PREFIXES = (
     "CODEX_",
     "CLAUDE_",
     "GEMINI_",
+    "GROK_",
     "LEARN_UKRAINIAN_",
     "PYTHON",
 )
