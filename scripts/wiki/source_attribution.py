@@ -366,10 +366,19 @@ def _effective_db_path() -> Path:
     if db_path.exists() and db_path.stat().st_size > 0:
         return db_path
 
-    if PROJECT_ROOT.parent.name == ".worktrees":
-        fallback = PROJECT_ROOT.parent.parent / "data" / db_path.name
-        if fallback.exists() and fallback.stat().st_size > 0:
-            return fallback
+    # In a dispatch worktree, data/ is sparse-excluded (or an empty 0-byte
+    # placeholder that sqlite auto-creates) — fall back to the main checkout's
+    # populated DB. Worktrees nest arbitrarily deep: delegate.py uses
+    # `.worktrees/dispatch/<agent>/<name>`, so the old `PROJECT_ROOT.parent.name
+    # == ".worktrees"` check (which only matched the shallow `.worktrees/<name>`
+    # layout) silently failed and the compile got an EMPTY DB. Walk UP to the
+    # `.worktrees` ancestor and use the repo root (its parent) as the DB home.
+    for ancestor in PROJECT_ROOT.parents:
+        if ancestor.name == ".worktrees":
+            fallback = ancestor.parent / "data" / db_path.name
+            if fallback.exists() and fallback.stat().st_size > 0:
+                return fallback
+            break
 
     return db_path
 
