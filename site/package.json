@@ -37,7 +37,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@vitest/coverage-v8": "^4.1.7",
     "happy-dom": "^20.10.1",
-    "vitest": "^4.1.7"
+    "vitest": "^4.1.8"
   },
   "overrides": {
     "yaml-language-server": "1.23.0"
