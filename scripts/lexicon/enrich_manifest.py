@@ -665,15 +665,24 @@ def _collect_string_values(value: object) -> list[str]:
     return []
 
 
+_LEMMA_EDGE_PUNCTUATION = ' .,…?!;:()[]{}«»"“”'
+
+
+def _base_lemma(lemma: str) -> str:
+    if "/" not in lemma:
+        return lemma
+    return lemma.split("/", 1)[0].strip(_LEMMA_EDGE_PUNCTUATION)
+
+
 def _slovnyk_lookup_word(lemma: str) -> str:
-    base = _lookup_key(lemma).strip(' .,…?!;:()[]{}«»"“”')
+    base = _lookup_key(lemma).strip(_LEMMA_EDGE_PUNCTUATION)
     # Pair/aspectual & inflection-paired lemmas ("варити / зварити",
     # "березень / березня") have NO combined slovnyk.me entry, so the joined
     # string misses every dictionary (and the miss gets cached). Look up the
     # first (imperfective / base) form, which carries the canonical article.
     # This also re-keys the cache file, bypassing the previously cached miss.
     if "/" in base:
-        base = base.split("/", 1)[0].strip(' .,…?!;:()[]{}«»"“”')
+        base = base.split("/", 1)[0].strip(_LEMMA_EDGE_PUNCTUATION)
     return base
 
 
@@ -2015,6 +2024,7 @@ def enrich() -> tuple[int, int]:
             if entry.get("gloss"):
                 entry["gloss"] = clean_gloss(str(entry["gloss"]))
             lemma = entry["lemma"]
+            base = _base_lemma(lemma)
             slovnyk_cache = _slovnyk_cache(lemma)
             definition_cards = _definition_cards(
                 conn,
@@ -2037,7 +2047,7 @@ def enrich() -> tuple[int, int]:
             else:
                 entry.pop("pronunciation", None)
             sections: dict[str, object] = {}
-            synonyms = _synonyms_slovnyk(lemma, slovnyk_cache, entry_pos=entry.get("pos"))
+            synonyms = _synonyms_slovnyk(base, slovnyk_cache, entry_pos=entry.get("pos"))
             if synonyms:
                 sections["synonyms"] = synonyms
             idioms = _idioms_slovnyk(lemma, slovnyk_cache)
@@ -2054,7 +2064,7 @@ def enrich() -> tuple[int, int]:
             cefr = _cefr(conn, lemma)
             if cefr:
                 block["cefr"] = cefr
-            morph = _morphology(lemma)
+            morph = _morphology(base)
             if morph:
                 block["morphology"] = morph
             meaning = _meaning(conn, lemma, has_sum11_flags=has_sum11_flags)
@@ -2062,7 +2072,7 @@ def enrich() -> tuple[int, int]:
                 block["meaning"] = meaning
             if definition_cards:
                 block["definition_cards"] = definition_cards
-            etym = _etymology(conn, lemma, kaikki_lookup)
+            etym = _etymology(conn, base, kaikki_lookup)
             if etym:
                 block["etymology"] = etym
             literary = _literary_attestation(conn, lemma)
