@@ -405,6 +405,7 @@ jobs:
       - name: Run tests
         if: needs.changes.outputs.python == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && (github.event_name != 'push' || github.ref != 'refs/heads/main')
         run: |
+          playground_perf_test="tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast"
           common_args=(
             tests/
             -n auto
@@ -428,6 +429,7 @@ jobs:
             --ignore=tests/wiki/test_t1_t2_pipeline.py
             --deselect=tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix
             --deselect=tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all
+            --deselect="$playground_perf_test"
           )
           # These tests assert exact invalidation counts for a module-global cache.
           # Run them in a fresh process so earlier orient API tests cannot leak keys.
@@ -435,6 +437,9 @@ jobs:
             tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix \
             tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all \
             -v --tb=short
+          # This wall-clock smoke test is intentionally serial: xdist worker
+          # contention turns its endpoint latency budget into a runner-load probe.
+          .venv/bin/python -m pytest "$playground_perf_test" -v --tb=short
           .venv/bin/python -m pytest "${common_args[@]}"
 
       - name: Run tests with coverage
@@ -449,6 +454,7 @@ jobs:
           # Keep the required PR gate hermetic: these ignored files depend on
           # local corpora, generated review/orchestration artifacts, or sidecar
           # binaries/CLIs that are not provisioned on GitHub-hosted runners.
+          playground_perf_test="tests/test_playground_api_stability.py::test_playground_primary_endpoints_keep_health_fast"
           common_args=(
             tests/
             -n auto
@@ -472,6 +478,7 @@ jobs:
             --ignore=tests/wiki/test_t1_t2_pipeline.py
             --deselect=tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix
             --deselect=tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all
+            --deselect="$playground_perf_test"
           )
           coverage_args=(
             --cov=scripts
@@ -483,6 +490,10 @@ jobs:
           .venv/bin/python -m pytest \
             tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix \
             tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all \
+            -v --tb=short --cov=scripts --cov-append --cov-report=
+          # This wall-clock smoke test is intentionally serial: xdist worker
+          # contention turns its endpoint latency budget into a runner-load probe.
+          .venv/bin/python -m pytest "$playground_perf_test" \
             -v --tb=short --cov=scripts --cov-append --cov-report=
           .venv/bin/python -m pytest "${common_args[@]}" "${coverage_args[@]}"
 
