@@ -16,7 +16,14 @@ from pathlib import Path
 
 from ai_llm.claude_call import call_claude_with_fallback
 from ai_llm.codex_call import call_codex_with_fallback
-from ai_llm.fallback import CallResult, call_gemini_with_fallback, visible_sleep
+from ai_llm.fallback import (
+    AGY_GEMINI_MODEL,
+    AttemptRecord,
+    CallResult,
+    _run_agy_via_runtime,
+    call_gemini_with_fallback,
+    visible_sleep,
+)
 from validate.check_wiki_verify_markers import (
     assert_no_verify_markers,
     find_verify_markers_text,
@@ -52,7 +59,7 @@ DOSSIER_CHUNK_ID_RE = re.compile(
 _MCP_WARNING_PREFIX_RE = re.compile(
     r"^MCP issues detected\. Run /mcp list for status\."
 )
-WRITER_CHOICES = ("gemini", "claude", "gpt-5.5")
+WRITER_CHOICES = ("agy", "gemini", "claude", "gpt-5.5")
 
 
 def compile_article(
@@ -64,7 +71,7 @@ def compile_article(
     track: str = "",
     force: bool = False,
     dry_run: bool = False,
-    writer: str = "gemini",
+    writer: str = "agy",
     allow_verify_markers: bool = False,
     dossier_text: str | None = None,
 ) -> Path | None:
@@ -78,7 +85,7 @@ def compile_article(
         track: Track name (e.g., "a1", "folk") — selects the prompt template.
         force: Recompile even if already compiled.
         dry_run: Print prompt but don't call the writer.
-        writer: Writer agent key: "gemini", "claude", or "gpt-5.5".
+        writer: Writer agent key: "agy", "gemini", "claude", or "gpt-5.5".
         dossier_text: Verified research dossier text for authoritative grounding.
 
     Returns:
@@ -1017,6 +1024,46 @@ def _visible_sleep(seconds: int, reason: str) -> None:
 
 def _call_writer(prompt: str, *, writer: str, max_retries: int = 3) -> CallResult:
     """Dispatch wiki-compiler prompt to the chosen writer."""
+    if writer == "agy":
+        outcome = _run_agy_via_runtime(
+            prompt,
+            task_name="wiki compiler",
+            timeout_s=None,
+            cwd=Path(__file__).resolve().parents[2],
+        )
+        record = AttemptRecord(
+            rung_index=1,
+            rung_total=1,
+            model=AGY_GEMINI_MODEL,
+            auth_mode=None,
+            attempt_index=1,
+            max_retries=1,
+            status=outcome.status,
+            elapsed_s=outcome.elapsed_s,
+            returncode=outcome.returncode,
+            stderr_excerpt=outcome.stderr_excerpt,
+            note=outcome.note,
+            response_chars=len(outcome.response_text or ""),
+            cli="agy-cli",
+        )
+        if outcome.status == "success":
+            return CallResult(
+                response_text=outcome.response_text,
+                model_used=AGY_GEMINI_MODEL,
+                auth_mode_used=None,
+                elapsed_s=outcome.elapsed_s,
+                cli_used="agy-cli",
+                attempts=[record],
+            )
+        return CallResult(
+            response_text=None,
+            model_used=None,
+            auth_mode_used=None,
+            elapsed_s=outcome.elapsed_s,
+            cli_used="agy-cli",
+            attempts=[record],
+            error_message=outcome.stderr_excerpt or "agy returned no response",
+        )
     if writer == "gemini":
         return call_gemini_with_fallback(
             prompt,
