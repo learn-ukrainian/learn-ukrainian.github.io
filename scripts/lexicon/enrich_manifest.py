@@ -13,7 +13,8 @@ no fabrication):
   source caveats.
 - **cefr** — PULS CEFR lookup when available.
 - **literary_attestation** — exact-form literary corpus hit when available.
-- **synonyms** — source-attested, A1-sense allowlisted Ukrainian candidates only.
+- **synonyms** — source-attested Ukrainian candidates from clean slovnyk.me
+  synonym dictionaries, with noisy legacy sources kept A1-sense allowlisted.
 - **sections.synonyms / sections.idioms** — slovnyk.me per-lemma lookup cache
   (Караванський + Словник синонімів; Фразеологічний).
 - **heritage warning alternatives** — slovnyk.me correction dictionaries
@@ -123,7 +124,7 @@ _SLOVNYK_DICT_LABELS: dict[str, str] = {
     "foreign_shtepa": "Словник чужослів Павла Штепи",
 }
 _SLOVNYK_LOOKUP_SLUGS = tuple(_SLOVNYK_DICT_LABELS)
-_SLOVNYK_SYNONYM_SLUGS = ("synonyms", "synonyms_karavansky")
+_SLOVNYK_SYNONYM_SLUGS = ("synonyms_karavansky", "synonyms")
 _SLOVNYK_WARNING_SLUGS = ("davydov", "voloschak", "foreign_shtepa")
 _SLOVNYK_BASE = "https://slovnyk.me"
 _SLOVNYK_CACHE_SCHEMA_VERSION = 2
@@ -275,6 +276,67 @@ _BLOCKED_SYNONYMS = {
     "шоколад",
     "хризантема флористів",
     "флористська хризантема",
+}
+
+_COMPOSITIONAL_ETYMOLOGY_EXCLUSIONS = {
+    "а тебе?",
+    "а у тебе?",
+    "до побачення!",
+    "добрий вечір",
+    "доброго ранку",
+    "добрий день",
+    "дуже приємно",
+    "на все добре",
+    "як справи?",
+}
+
+_DERIVATIONAL_ETYMLOGY_BASES: dict[str, tuple[str, ...]] = {
+    "добре": ("добрий", "добро"),
+    "чудово": ("чудо", "чудовий"),
+    "пізно": ("пізній",),
+    "нормально": ("нормальний", "норма"),
+    "сьома": ("сьомий", "сім"),
+    "сьомий": ("сім",),
+    "навчатися": ("навчати", "вчити", "учити"),
+    "навчати": ("вчити", "учити"),
+    "вмиватися": ("вмивати", "мити"),
+    "вмивати": ("мити",),
+    "збиратися": ("збирати", "брати"),
+    "збирати": ("брати",),
+    "одягатися": ("одягати", "одяг"),
+    "одягати": ("одяг",),
+    "повертатися": ("повертати", "вертати"),
+    "повертати": ("вертати",),
+}
+
+_ORDINAL_ETYMLOGY_BASES: dict[str, tuple[str, ...]] = {
+    "перша": ("перший", "один"),
+    "перше": ("перший", "один"),
+    "перший": ("один",),
+    "друга": ("другий", "два"),
+    "друге": ("другий", "два"),
+    "другий": ("два",),
+    "третя": ("третій", "три"),
+    "третє": ("третій", "три"),
+    "третій": ("три",),
+    "четверта": ("четвертий", "чотири"),
+    "четверте": ("четвертий", "чотири"),
+    "четвертий": ("чотири",),
+    "п'ята": ("п'ятий", "п'ять"),
+    "п'яте": ("п'ятий", "п'ять"),
+    "п'ятий": ("п'ять",),
+    "шоста": ("шостий", "шість"),
+    "шосте": ("шостий", "шість"),
+    "шостий": ("шість",),
+    "сьома": ("сьомий", "сім"),
+    "сьоме": ("сьомий", "сім"),
+    "сьомий": ("сім",),
+    "восьма": ("восьмий", "вісім"),
+    "восьме": ("восьмий", "вісім"),
+    "восьмий": ("вісім",),
+    "дев'ята": ("дев'ятий", "дев'ять"),
+    "дев'яте": ("дев'ятий", "дев'ять"),
+    "дев'ятий": ("дев'ять",),
 }
 
 # VESUM tag token → human-readable Ukrainian grammatical label.
@@ -963,15 +1025,40 @@ def _clean_synonym_candidate(candidate: str, lemma: str) -> str | None:
     return term
 
 
-def _is_safe_slovnyk_synonym(lemma: str, candidate: str, headword_pos: str) -> bool:
-    if candidate not in _safe_synonym_set(lemma):
+def _slovnyk_synonym_group_head(row: dict[str, Any], lemma: str) -> str:
+    body = _synonym_body(
+        str(row.get("text") or ""),
+        lemma,
+        str(row.get("word") or ""),
+        str(row.get("dictionary_slug") or ""),
+    )
+    first = re.split(r"[,;(]", body, maxsplit=1)[0]
+    first = _SYNONYM_LABEL_RE.sub(" ", _strip_stress(first))
+    first = re.sub(r"\s+", " ", first).strip(' \t\r\n.,;:!?/\\[]{}«»"“”<>').casefold()
+    return first
+
+
+def _is_safe_slovnyk_synonym(
+    lemma: str,
+    candidate: str,
+    headword_pos: str,
+    *,
+    require_allowlist: bool = False,
+) -> bool:
+    if require_allowlist and candidate not in _safe_synonym_set(lemma):
         return False
     if not _candidate_matches_headword_pos(candidate, headword_pos):
         return False
     return not _candidate_is_headword_variant(lemma, candidate, headword_pos)
 
 
-def _synonyms_from_slovnyk_row(row: dict[str, Any], lemma: str, headword_pos: str) -> list[str]:
+def _synonyms_from_slovnyk_row(
+    row: dict[str, Any],
+    lemma: str,
+    headword_pos: str,
+    *,
+    require_allowlist: bool = False,
+) -> list[str]:
     body = _synonym_body(
         str(row.get("text") or ""),
         lemma,
@@ -984,7 +1071,16 @@ def _synonyms_from_slovnyk_row(row: dict[str, Any], lemma: str, headword_pos: st
     for chunk in chunks:
         for part in re.split(r"[()]", chunk):
             term = _clean_synonym_candidate(part, lemma)
-            if term and term not in seen and _is_safe_slovnyk_synonym(lemma, term, headword_pos):
+            if (
+                term
+                and term not in seen
+                and _is_safe_slovnyk_synonym(
+                    lemma,
+                    term,
+                    headword_pos,
+                    require_allowlist=require_allowlist,
+                )
+            ):
                 seen.add(term)
                 out.append(term)
     return out
@@ -997,10 +1093,13 @@ def _synonyms_slovnyk(
     entry_pos: str | None = None,
 ) -> dict[str, Any] | None:
     """Synonym chips from slovnyk.me synonyms dictionaries, omitted when empty."""
-    headword_pos = _headword_pos_for_synonyms(lemma, entry_pos)
-    if not headword_pos or not _safe_synonym_set(lemma):
+    lookup_lemma = _slovnyk_lookup_word(_base_lemma(lemma))
+    if not lookup_lemma or _has_whitespace(lookup_lemma):
         return None
-    cache = cache if cache is not None else _slovnyk_cache(lemma)
+    headword_pos = _headword_pos_for_synonyms(lookup_lemma, entry_pos)
+    if not headword_pos:
+        return None
+    cache = cache if cache is not None else _slovnyk_cache(lookup_lemma)
     items: list[str] = []
     seen: set[str] = set()
     sources: list[str] = []
@@ -1009,7 +1108,16 @@ def _synonyms_slovnyk(
         row = _cache_lookup(cache, slug)
         if not row:
             continue
-        row_items = _synonyms_from_slovnyk_row(row, lemma, headword_pos)
+        row_items = _synonyms_from_slovnyk_row(row, lookup_lemma, headword_pos)
+        if slug == "synonyms" and row_items:
+            group_head = _slovnyk_synonym_group_head(row, lookup_lemma)
+            allowlisted = _safe_synonym_set(lookup_lemma)
+            if (
+                group_head != lookup_lemma.casefold()
+                and not seen.intersection(row_items)
+                and not allowlisted.intersection(row_items)
+            ):
+                continue
         if not row_items:
             continue
         for synonym in row_items:
@@ -1454,10 +1562,8 @@ def _sense_correct_synonyms(conn: sqlite3.Connection, lemma: str) -> list[str]:
     """Return source-attested synonyms for the lemma's A1 sense, capped at six."""
     out: list[str] = []
     seen: set[str] = set()
-    _synonyms_from_wiktionary(conn, lemma, out, seen)
     _synonyms_from_balla(conn, lemma, out, seen)
     _synonyms_from_sum11(conn, lemma, out, seen)
-    _synonyms_from_ukrajinet(conn, lemma, out, seen)
     return out[:6]
 
 
@@ -1664,6 +1770,61 @@ def _etymology_lookup_variants(lemma: str) -> list[str]:
     return [v for v in variants if v and not (v.casefold() in seen or seen.add(v.casefold()))]
 
 
+def _append_unique_candidate(out: list[str], seen: set[str], candidate: str, original: str) -> None:
+    key = _lookup_key(candidate)
+    if not key or key == original or key in seen or _has_whitespace(key):
+        return
+    seen.add(key)
+    out.append(key)
+
+
+def _direct_etymology_base_candidates(word: str) -> list[str]:
+    candidates: list[str] = []
+    key = _lookup_key(word)
+    if not key:
+        return candidates
+    candidates.extend(_DERIVATIONAL_ETYMLOGY_BASES.get(key, ()))
+    candidates.extend(_ORDINAL_ETYMLOGY_BASES.get(key, ()))
+
+    if key.endswith(("ся", "сь")) and len(key) > 4:
+        candidates.append(key[:-2])
+    if key.endswith("е") and len(key) > 3:
+        candidates.append(f"{key[:-1]}ий")
+    if key.endswith("о") and len(key) > 3:
+        stem = key[:-1]
+        candidates.append(f"{stem}ий")
+        if stem.endswith("н"):
+            candidates.append(f"{stem}ій")
+    for prefix in ("пере", "від", "над", "під", "при", "роз", "без", "по", "за", "до", "ви", "з", "в", "у"):
+        if key.startswith(prefix) and len(key) > len(prefix) + 3:
+            candidates.append(key[len(prefix) :])
+            break
+    if key.endswith("ати") and len(key) > 5:
+        candidates.append(key[:-3])
+    if key.endswith("ити") and len(key) > 5:
+        candidates.append(key[:-3])
+    return candidates
+
+
+def _derivational_etymology_candidates(lemma: str) -> list[str]:
+    word = _lookup_key(_base_lemma(lemma))
+    if not word or _has_whitespace(word) or word in _COMPOSITIONAL_ETYMOLOGY_EXCLUSIONS:
+        return []
+    out: list[str] = []
+    seen: set[str] = {word}
+    queue: list[tuple[str, int]] = [(word, 0)]
+    while queue:
+        current, depth = queue.pop(0)
+        if depth >= 2:
+            continue
+        for candidate in _direct_etymology_base_candidates(current):
+            before = len(out)
+            _append_unique_candidate(out, seen, candidate, word)
+            if len(out) > before:
+                queue.append((_lookup_key(candidate), depth + 1))
+    return out
+
+
 def _has_whitespace(value: str) -> bool:
     return bool(re.search(r"\s", str(value or "").strip()))
 
@@ -1819,14 +1980,40 @@ def _kaikki_etymology(lookup: dict[str, dict[str, Any]], lemma: str) -> dict | N
     return {"text": text, "source": KAIKKI_SOURCE}
 
 
-def _etymology(conn: sqlite3.Connection, lemma: str, kaikki_lookup: dict[str, dict[str, Any]] | None = None) -> dict | None:
-    """Cached etymology by authority order: Goroh → ЕСУМ → uk.wiktionary → Kaikki."""
+def _source_etymology(
+    conn: sqlite3.Connection,
+    lemma: str,
+    kaikki_lookup: dict[str, dict[str, Any]] | None = None,
+) -> dict | None:
     return (
         _goroh_etymology(conn, lemma)
         or _esum_etymology(conn, lemma)
         or _wiktionary_etymology(conn, lemma)
         or _kaikki_etymology(kaikki_lookup or {}, lemma)
     )
+
+
+def _with_base_etymology_label(etymology: dict, base_form: str) -> dict:
+    labeled = dict(etymology)
+    source = str(labeled.get("source") or "").strip()
+    label = f"etymology of base form {base_form}"
+    labeled["source"] = f"{source} ({label})" if source else label
+    return labeled
+
+
+def _etymology(conn: sqlite3.Connection, lemma: str, kaikki_lookup: dict[str, dict[str, Any]] | None = None) -> dict | None:
+    """Cached etymology by authority order, with derived-lemma base fallback."""
+    lookup_word = _lookup_key(_base_lemma(lemma))
+    if lookup_word in _COMPOSITIONAL_ETYMOLOGY_EXCLUSIONS:
+        return None
+    exact = _source_etymology(conn, lemma, kaikki_lookup)
+    if exact:
+        return exact
+    for base_form in _derivational_etymology_candidates(lemma):
+        etymology = _source_etymology(conn, base_form, kaikki_lookup)
+        if etymology:
+            return _with_base_etymology_label(etymology, base_form)
+    return None
 
 
 def _cefr(conn: sqlite3.Connection, lemma: str) -> dict[str, str] | None:

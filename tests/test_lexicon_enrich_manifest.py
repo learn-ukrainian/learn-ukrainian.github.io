@@ -249,7 +249,7 @@ def test_morphology_can_use_base_form_from_pair_lemma(monkeypatch) -> None:
     assert morphology["forms"][0] == {"form": "варити", "label": "інфінітив"}
 
 
-def test_synonyms_filter_polluted_wordnet_rows_to_a1_sense() -> None:
+def test_legacy_synonym_sources_drop_wordnet_and_ukrajinet_noise() -> None:
     conn = _conn()
     conn.execute(
         "INSERT INTO wiktionary VALUES (?, ?, ?)",
@@ -299,7 +299,7 @@ def test_synonyms_filter_polluted_wordnet_rows_to_a1_sense() -> None:
     assert _sense_correct_synonyms(conn, "мама") == ["мати", "матуся"]
     assert _sense_correct_synonyms(conn, "стілець") == ["крісло"]
     assert _sense_correct_synonyms(conn, "дім") == ["будинок", "хата", "домівка"]
-    assert _sense_correct_synonyms(conn, "чудово") == ["прекрасно", "чудесно", "блискуче"]
+    assert _sense_correct_synonyms(conn, "чудово") == ["прекрасно", "чудесно"]
 
     all_synonyms = [
         synonym
@@ -308,6 +308,7 @@ def test_synonyms_filter_polluted_wordnet_rows_to_a1_sense() -> None:
     ]
     assert not any(any("A" <= char <= "Z" or "a" <= char <= "z" for char in synonym) for synonym in all_synonyms)
     assert "жахливо" not in all_synonyms
+    assert "блискуче" not in all_synonyms
 
 
 def test_slovnyk_synonyms_extract_known_garnyi_word(monkeypatch) -> None:
@@ -391,6 +392,128 @@ def test_slovnyk_synonyms_omit_wrong_sense_voda(monkeypatch) -> None:
     items = section["items"] if section else []
     assert "багатослів'я" not in items
     assert "велемовність" not in items
+
+
+def test_slovnyk_synonyms_promote_clean_sources_for_sample(monkeypatch) -> None:
+    _patch_vesum_analyses(
+        monkeypatch,
+        {
+            "варити": "verb",
+            "готувати": "verb",
+            "куховарити": "verb",
+            "фальсифікувати": "verb",
+            "хата": "noun",
+            "домівка": "noun",
+            "господа": "noun",
+            "притулок": "noun",
+            "житло": "noun",
+            "оселя": "noun",
+            "помешкання": "noun",
+            "дім": "noun",
+            "бариги": "noun",
+            "шлях": "noun",
+            "дорога": "noun",
+            "маршрут": "noun",
+            "курс": "noun",
+            "путь": "noun",
+            "тракт": "noun",
+            "мрія": "noun",
+            "марення": "noun",
+            "бажання": "noun",
+            "прагнення": "noun",
+            "надія": "noun",
+        },
+    )
+    samples = {
+        "варити / зварити": (
+            "verb",
+            {
+                "lookups": {
+                    "synonyms": {
+                        "dictionary_slug": "synonyms",
+                        "dictionary_label": "Словник синонімів української мови",
+                        "source_url": "https://slovnyk.me/dict/synonyms/варити",
+                        "word": "варити",
+                        "text": "варити ВАРИТИ (про їжу), ГОТУВАТИ, КУХОВАРИТИ. — Док.: зварити. Джерело: тест",
+                    }
+                }
+            },
+            ["готувати", "куховарити"],
+        ),
+        "хата": (
+            "noun",
+            {
+                "lookups": {
+                    "synonyms_karavansky": {
+                        "dictionary_slug": "synonyms_karavansky",
+                        "dictionary_label": "Словник синонімів Караванського",
+                        "source_url": "https://slovnyk.me/dict/synonyms_karavansky/хата",
+                        "word": "хата",
+                        "text": "хата домівка, господа, притулок; П. бариги. Джерело: тест",
+                    },
+                    "synonyms": {
+                        "dictionary_slug": "synonyms",
+                        "dictionary_label": "Словник синонімів української мови",
+                        "source_url": "https://slovnyk.me/dict/synonyms/хата",
+                        "word": "хата",
+                        "text": "хата ЖИТЛО, ОСЕЛЯ, ПОМЕШКАННЯ, ДІМ, ДОМІВКА, ХАТА. Джерело: тест",
+                    },
+                }
+            },
+            ["домівка", "господа", "притулок", "житло", "оселя", "помешкання", "дім"],
+        ),
+        "шлях": (
+            "noun",
+            {
+                "lookups": {
+                    "synonyms_karavansky": {
+                        "dictionary_slug": "synonyms_karavansky",
+                        "dictionary_label": "Словник синонімів Караванського",
+                        "source_url": "https://slovnyk.me/dict/synonyms_karavansky/шлях",
+                        "word": "шлях",
+                        "text": "шлях ДОРОГА, маршрут, курс; П. спосіб. Джерело: тест",
+                    },
+                    "synonyms": {
+                        "dictionary_slug": "synonyms",
+                        "dictionary_label": "Словник синонімів української мови",
+                        "source_url": "https://slovnyk.me/dict/synonyms/шлях",
+                        "word": "шлях",
+                        "text": "шлях ДОРОГА (смуга землі), ШЛЯХ, ПУТЬ, ТРАКТ. Джерело: тест",
+                    },
+                }
+            },
+            ["дорога", "маршрут", "курс", "путь", "тракт"],
+        ),
+        "мрія": (
+            "noun",
+            {
+                "lookups": {
+                    "synonyms_karavansky": {
+                        "dictionary_slug": "synonyms_karavansky",
+                        "dictionary_label": "Словник синонімів Караванського",
+                        "source_url": "https://slovnyk.me/dict/synonyms_karavansky/мрія",
+                        "word": "мрія",
+                        "text": "мрія МАРЕННЯ, бажання, прагнення; П. ілюзія. Джерело: тест",
+                    },
+                    "synonyms": {
+                        "dictionary_slug": "synonyms",
+                        "dictionary_label": "Словник синонімів української мови",
+                        "source_url": "https://slovnyk.me/dict/synonyms/мрія",
+                        "word": "мрія",
+                        "text": "мрія БАЖАННЯ (те, чого хочеться), МРІЯ, ПРАГНЕННЯ, НАДІЯ. Джерело: тест",
+                    },
+                }
+            },
+            ["марення", "бажання", "прагнення", "надія"],
+        ),
+    }
+
+    for lemma, (entry_pos, cache, expected) in samples.items():
+        section = _synonyms_slovnyk(lemma, cache, entry_pos=entry_pos)
+
+        assert section is not None
+        assert section["items"] == expected
+        assert not {"фальсифікувати", "бариги", "java", "hot seat"}.intersection(section["items"])
 
 
 def test_slovnyk_idioms_extract_known_phrase_card() -> None:
@@ -717,6 +840,67 @@ def test_kaikki_etymology_is_final_fallback() -> None:
     etymology = _etymology(conn, "місто", lookup)
 
     assert etymology == {"text": "From Old East Slavic мѣсто.", "source": KAIKKI_SOURCE}
+
+
+@pytest.mark.parametrize(
+    ("derived", "base"),
+    [
+        ("добре", "добрий"),
+        ("чудово", "чудо"),
+        ("пізно", "пізній"),
+        ("нормально", "нормальний"),
+        ("сьома", "сім"),
+        ("навчатися", "вчити"),
+        ("вмиватися", "мити"),
+        ("збиратися", "брати"),
+        ("одягатися", "одяг"),
+        ("повертатися", "вертати"),
+    ],
+)
+def test_derivational_etymology_falls_back_to_base_forms(derived: str, base: str) -> None:
+    conn = _conn()
+    conn.execute(
+        """
+        CREATE TABLE goroh_etymology (
+            requested_lemma TEXT NOT NULL,
+            headword TEXT NOT NULL,
+            etymology_text TEXT NOT NULL,
+            source_url TEXT
+        )
+        """
+    )
+    conn.execute(
+        "INSERT INTO goroh_etymology VALUES (?, ?, ?, ?)",
+        (base, base, f"Fixture etymology for {base}.", f"https://goroh.example/{base}"),
+    )
+
+    etymology = _etymology(conn, derived, {})
+
+    assert etymology == {
+        "text": f"Fixture etymology for {base}.",
+        "source": f"Горох (за ЕСУМ) (etymology of base form {base})",
+        "source_url": f"https://goroh.example/{base}",
+    }
+
+
+def test_compositional_greeting_phrases_have_no_etymology_fallback() -> None:
+    conn = _conn()
+    conn.execute(
+        """
+        CREATE TABLE goroh_etymology (
+            requested_lemma TEXT NOT NULL,
+            headword TEXT NOT NULL,
+            etymology_text TEXT NOT NULL,
+            source_url TEXT
+        )
+        """
+    )
+    conn.execute(
+        "INSERT INTO goroh_etymology VALUES (?, ?, ?, ?)",
+        ("До побачення!", "до побачення", "Fixture phrase etymology.", "https://goroh.example/phrase"),
+    )
+
+    assert _etymology(conn, "До побачення!", {}) is None
 
 
 def test_kaikki_etymology_skips_russian_labeled_cyrillic() -> None:
