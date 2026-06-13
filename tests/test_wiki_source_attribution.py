@@ -294,3 +294,39 @@ def test_effective_db_path_falls_back_to_main_checkout_from_worktree(tmp_path, m
     monkeypatch.setattr(source_attribution, "DEFAULT_DB_PATH", local_db)
 
     assert source_attribution._effective_db_path() == shared_db
+
+
+def test_effective_db_path_falls_back_from_deep_dispatch_worktree(tmp_path, monkeypatch) -> None:
+    """delegate.py nests worktrees as .worktrees/dispatch/<agent>/<name> — the
+    fallback must walk UP to the `.worktrees` ancestor, not only match a direct
+    parent (folk Session-20b: deep worktrees silently got an EMPTY DB → wiki
+    compiles produced 0-source registries → source_grounding always failed)."""
+    from wiki import source_attribution
+
+    repo_root = tmp_path
+    worktree_root = repo_root / ".worktrees" / "dispatch" / "claude" / "folk-wiki-batch"
+    local_db = worktree_root / "data" / "sources.db"
+    shared_db = repo_root / "data" / "sources.db"
+    local_db.parent.mkdir(parents=True)
+    shared_db.parent.mkdir(parents=True)
+    local_db.write_bytes(b"")          # 0-byte placeholder sqlite auto-creates
+    shared_db.write_bytes(b"sqlite")   # populated main-checkout DB
+
+    monkeypatch.setattr(source_attribution, "PROJECT_ROOT", worktree_root)
+    monkeypatch.setattr(source_attribution, "DEFAULT_DB_PATH", local_db)
+
+    assert source_attribution._effective_db_path() == shared_db
+
+
+def test_effective_db_path_prefers_local_populated_db(tmp_path, monkeypatch) -> None:
+    """A populated local DB (main checkout, size>0) is used directly — no fallback."""
+    from wiki import source_attribution
+
+    local_db = tmp_path / "data" / "sources.db"
+    local_db.parent.mkdir(parents=True)
+    local_db.write_bytes(b"sqlite")
+
+    monkeypatch.setattr(source_attribution, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(source_attribution, "DEFAULT_DB_PATH", local_db)
+
+    assert source_attribution._effective_db_path() == local_db
