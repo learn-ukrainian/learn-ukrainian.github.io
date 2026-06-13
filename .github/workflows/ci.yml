@@ -491,10 +491,10 @@ jobs:
             tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_by_prefix \
             tests/test_api_helpers.py::TestCacheFunctions::test_cache_invalidate_default_clears_all \
             -v --tb=short --cov=scripts --cov-append --cov-report=
-          # This wall-clock smoke test is intentionally serial: xdist worker
-          # contention turns its endpoint latency budget into a runner-load probe.
+          # This wall-clock smoke test is intentionally outside coverage:
+          # coverage instrumentation skews the endpoint latency budget.
           .venv/bin/python -m pytest "$playground_perf_test" \
-            -v --tb=short --cov=scripts --cov-append --cov-report=
+            -v --tb=short
           .venv/bin/python -m pytest "${common_args[@]}" "${coverage_args[@]}"
 
       - name: Upload coverage
