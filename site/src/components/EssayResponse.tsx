@@ -31,12 +31,12 @@ interface EssayResponseProps {
   isUkrainian?: boolean;
 }
 
-export default function EssayResponse({ 
-  title, 
-  prompt, 
-  modelAnswer, 
-  rubric, 
-  isUkrainian 
+export default function EssayResponse({
+  title,
+  prompt,
+  modelAnswer,
+  rubric,
+  isUkrainian
 }: EssayResponseProps) {
   const [response, setResponse] = useState('');
   const [showModel, setShowModel] = useState(false);
@@ -47,11 +47,11 @@ export default function EssayResponse({
   const headerLabel = isUkrainian ? 'Есе-відповідь' : 'Essay Response';
   const yourResponseLabel = isUkrainian ? 'Ваша відповідь:' : 'Your Response:';
   const wordCountLabel = isUkrainian ? 'Слів:' : 'Word count:';
-  const modelAnswerBtnLabel = isUkrainian ? 
-    (showModel ? 'Приховати зразок' : 'Показати зразок') : 
+  const modelAnswerBtnLabel = isUkrainian ?
+    (showModel ? 'Приховати зразок' : 'Показати зразок') :
     (showModel ? 'Hide Model Answer' : 'Show Model Answer');
-  const rubricBtnLabel = isUkrainian ? 
-    (showRubric ? 'Приховати критерії' : 'Показати критерії') : 
+  const rubricBtnLabel = isUkrainian ?
+    (showRubric ? 'Приховати критерії' : 'Показати критерії') :
     (showRubric ? 'Hide Rubric' : 'Show Rubric');
   const placeholderText = isUkrainian ? 'Пишіть тут...' : 'Type your essay here...';
 
@@ -83,7 +83,7 @@ export default function EssayResponse({
 
         <div className={styles.buttonRow}>
           {rubric && (
-            <button 
+            <button
               className={styles.secondaryButton}
               onClick={() => setShowRubric(!showRubric)}
             >
@@ -91,7 +91,7 @@ export default function EssayResponse({
             </button>
           )}
           {modelAnswer && (
-            <button 
+            <button
               className={styles.submitButton}
               onClick={() => setShowModel(!showModel)}
             >

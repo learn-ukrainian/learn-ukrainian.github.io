@@ -62,8 +62,8 @@ export default function ComparativeStudy({
 
   const headerLabel = isUkrainian ? 'Порівняльний аналіз' : 'Comparative Study';
   const analysisLabel = isUkrainian ? 'Ваш аналіз:' : 'Your Analysis:';
-  const modelAnswerBtnLabel = isUkrainian ? 
-    (showModel ? 'Приховати зразок' : 'Показати зразок') : 
+  const modelAnswerBtnLabel = isUkrainian ?
+    (showModel ? 'Приховати зразок' : 'Показати зразок') :
     (showModel ? 'Hide Model Answer' : 'Show Model Answer');
   const placeholderText = isUkrainian ? 'Напишіть свій аналіз тут...' : 'Type your analysis here...';
 
@@ -120,7 +120,7 @@ export default function ComparativeStudy({
 
         <div className={styles.buttonRow}>
           {modelAnswer && (
-            <button 
+            <button
               className={styles.submitButton}
               onClick={() => setShowModel(!showModel)}
             >

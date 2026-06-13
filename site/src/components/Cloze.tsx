@@ -124,7 +124,7 @@ export function ClozePassage({ text, blanks, isUkrainian }: ClozePassageProps) {
   };
 
   const allFilled = blanks.every(b => selections.has(b.index) && selections.get(b.index) !== '');
-  
+
   const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Answers';
   const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
   const successLabel = isUkrainian ? '✓ Всі відповіді правильні!' : '✓ All answers are correct!';

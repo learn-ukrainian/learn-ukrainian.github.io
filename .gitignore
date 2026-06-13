@@ -212,10 +212,10 @@ data/zno/
 data/embeddings/
 embed-venv/
 
-# Starlight
-starlight/dist
-starlight/node_modules
-starlight/.astro
+# Site (Astro build dir; renamed from `starlight/` — `starlight` kept as a compat symlink → site/)
+site/dist
+site/node_modules
+site/.astro
 /testbed/*
 !/testbed/reference/
 data/sum11/

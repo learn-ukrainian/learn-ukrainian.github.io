@@ -56,7 +56,7 @@ export default function AuthorialIntent({
         <div className={styles.readingContext}>
            {parseMarkdown(excerpt)}
         </div>
-        
+
         <div className={styles.readingTasks}>
            <strong>{isUkrainian ? 'Питання:' : 'Questions:'}</strong>
            <ul className={styles.taskList}>

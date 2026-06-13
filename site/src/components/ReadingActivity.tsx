@@ -65,8 +65,8 @@ export default function ReadingActivity({
   const [showTasks, setShowTasks] = useState(false);
 
   const headerLabel = isUkrainian ? 'Читання' : 'Reading';
-  const showTasksLabel = isUkrainian ? 
-    (showTasks ? 'Приховати завдання' : 'Показати завдання') : 
+  const showTasksLabel = isUkrainian ?
+    (showTasks ? 'Приховати завдання' : 'Показати завдання') :
     (showTasks ? 'Hide Tasks' : 'Show Tasks');
 
   // If no title provided, use default

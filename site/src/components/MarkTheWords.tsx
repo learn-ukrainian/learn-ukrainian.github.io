@@ -87,7 +87,7 @@ export function MarkTheWordsActivity({ text, correctWords, instruction, isUkrain
   const markedArray = Array.from(markedIndices);
   const correctMarks = markedArray.filter(idx => isWordCorrect(tokens[idx])).length;
   const wrongMarks = markedArray.filter(idx => !isWordCorrect(tokens[idx])).length;
-  
+
   // Total instances of correct words available in the text
   const totalCorrectInstances = tokens.filter(t => {
     const clean = t.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '');
@@ -97,7 +97,7 @@ export function MarkTheWordsActivity({ text, correctWords, instruction, isUkrain
   const missedMarks = totalCorrectInstances - correctMarks;
 
   const isFullyCorrect = correctMarks === totalCorrectInstances && wrongMarks === 0;
-  
+
   const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Answer';
   const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
   const successLabel = isUkrainian ? '✓ Чудово! Ви знайшли всі правильні слова.' : '✓ Perfect! You found all the correct words.';
