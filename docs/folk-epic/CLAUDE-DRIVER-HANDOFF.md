@@ -58,7 +58,60 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 22 HANDOFF (2026-06-13 PM — #3083 ROOT-CAUSED + BEST-PRACTICE FIX IMPLEMENTED INLINE + MERGED; all 5 gap wikis REBUILT on the fixed pipeline + corpus-hammered + shipped → wikis 10→15/42) — **RESUME HERE**
+## ▶▶▶ SESSION 23–24 HANDOFF (2026-06-13/14 — TWO DOSSIERS shipped to PRs in one driver session: #17 striletski-povstanski (PR #3103) + #18 rodynno-pobutovi (PR #NEW); dossiers 16→18/42) — **RESUME HERE**
+
+> **⚠ PARALLEL-PR HANDOFF NOTE (for the orchestrator reconciling main):** this session opened TWO docs PRs that
+> BOTH edit this handoff at the top of the session log. **PR #3103** (dossier #17) adds a full "SESSION 23"
+> block; **this PR** (dossier #18) adds this "SESSION 23–24" block. They were branched off different
+> origin/main SHAs (#3103 off `74fdea09`, #18 off `d2ed564b`), so a trivial handoff conflict on these top lines
+> is EXPECTED — keep this (newer) block as RESUME HERE; #3103's "SESSION 23" content is fully summarized below.
+> Neither dossier FILE conflicts (separate new files). No information is lost either merge order.
+
+> **⏱ HONEST SCOPE:** Dossiers **16 → 18/42** (striletski-povstanski-pisni + rodynno-pobutovi-pisni added THIS
+> session, each its own PR). Wikis 15/42, modules 3/42 UNCHANGED. Folk nav still HIDDEN; surfacing still GATED
+> on koliadky+dumy LLM QG (#3079, infra lane). Both PRs opened, **neither self-merged** (agent-type contract).
+
+### ✅ DONE THIS SESSION
+- **DOSSIER #17 `striletski-povstanski-pisni` → PR #3103** (codex/gpt-5.5, corpus-pre-grounded brief, ~25min).
+  20th-c. resistance songs: стрілецький (УСС 1914–1920) + повстанський (УПА 1942–1950s) layers, kept
+  historically distinct. **Literary-origin framing** (authored songs that folklorized; Антонович `2971c499_c0630`
+  + Крип'якевич `48346587_c0629`). §4 = verified-verbatim (only «Ой видно село… січовії стрільці до бою!» via
+  Багряний `31d74ca7_c0022`, labeled literary witness) + title/authorship roster + HEAVY do-not-quote ledger
+  (UPA verbatim ABSENT from corpus; «Червона калина» verify_quote 0.0 → title-only). Corpus-hammered #M-11:
+  §4 quote 1.0/0.881 confirmed; «Зродились ми» (Бабій) matched:false confirmed; NEW chunks `b042c22b_c0005`
+  (Soviet «бандити» gloss — named-not-adopted, exemplary §9 NPOV), `fc2291b5_c4111` (УЛЕ Купчинський),
+  `fc2291b5_c4434` all genuine. Session-23 handoff bundled in #3103. TRACK-UPDATE'd #pipeline.
+- **DOSSIER #18 `rodynno-pobutovi-pisni` → THIS PR** (codex/gpt-5.5, corpus-pre-grounded brief, ~20min).
+  Family/everyday lyric: пісні про кохання + про сімейне життя (колискові/дитячі/жартівливі/сирітські/вдовині).
+  **§4 verbatim model = textbook-provenance** (the love songs «Цвіте терен» `avramenko_s0009`, «Ой не ходи
+  Грицю» `zabolotnyi_s0024`, «Сонце низенько» `avramenko_s0010` are printed in textbooks but FAIL
+  `verify_quote(Народна творчість)` — provenance is the textbook chunk + the failed verify_quote line printed
+  honestly) + ONE literary-corpus verify_quote:true (Крип'якевич «Доле проклятая!…» `48346587_c0420` = 1.0).
+  **Маруся Чурай legendary-attribution discipline is exemplary** (always "традиція приписує / напівлегендарна",
+  never biography; `a5f3ae7f_c0340` "не є встановленим історичним фактом"); «Засвіт встали козаченьки»
+  correctly EXCLUDED as козацька (not родинно-побутова). 6 source-disagreements; russianism+CEFR ledger.
+  Corpus-hammered #M-11: Крип'якевич §4 1.0 confirmed; «Сонце низенько» literally in `s0010` (not memory)
+  confirmed; Огієнко collector chunk `0988b006_c0348` (Чубинський/Грінченко editions) genuine.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **Orchestrator: review + merge BOTH dossier PRs** (#3103 + this one). Agent-type contract = opened, not
+   self-merged. Reconcile the trivial handoff-top conflict (keep this block as RESUME HERE).
+2. **Dossier #19 `kolomyiky`** (E · Song — kolomyika as song/dance/short-form performance, split out from the
+   family-lyric block). Then continue the queue (#20 suspilno-pobutovi, #21 narodni-balady …). Same proven
+   loop: corpus-pre-ground the brief (my own probes → exact chunk_ids + §4 honesty protocol) → codex/gpt-5.5 →
+   corpus-hammer → PR. Dossiers now 18/42 (`phase-folk-queue.md`).
+3. **Folk dossier-only wiki gap = CLOSED.** Carry-forward (Session 22): clean `wiki/index.md` regen (#3094 —
+   lossy `--update-index`; the 5 Session-22 wikis render but aren't index-listed). Cross-track/infra lane.
+4. **Surfacing folk: still GATED** on koliadky + dumy LLM QG (modules e2e). #3079 (top priority, infra lane).
+
+### 📊 FLEET (unchanged) — dossier writer **codex/gpt-5.5** (clean first pass when the brief is corpus-pre-
+grounded); reviewer **Claude corpus-hammer** (#M-11, independent re-verify; culture; cross-family always; NO
+deepseek/gemini/agy for folk framing). Module writer claude-tools; wiki gpt-5.5 + claude-routed reviewers (#3057).
+Driver opens PRs + does NOT self-merge (agent-type contract supersedes the old self-merge grant).
+
+---
+
+## ▶▶▶ SESSION 22 HANDOFF (2026-06-13 PM — #3083 ROOT-CAUSED + BEST-PRACTICE FIX IMPLEMENTED INLINE + MERGED; all 5 gap wikis REBUILT on the fixed pipeline + corpus-hammered + shipped → wikis 10→15/42) — (superseded by Session 23–24)
 
 > **⏱ HONEST SCOPE:** Wikis **10 → 15/42** (kobzarstvo-lirnytstvo, dumy-sotsialno-pobutovi, holosinnya, vesilni-pisni,
 > zhnyvarski-obzhynkovi-pisni — all shipped THIS session on the #3083-fixed pipeline). Dossiers 16/42, modules 3/42
