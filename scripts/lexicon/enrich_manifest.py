@@ -125,6 +125,7 @@ _SLOVNYK_LOOKUP_SLUGS = tuple(_SLOVNYK_DICT_LABELS)
 _SLOVNYK_SYNONYM_SLUGS = ("synonyms", "synonyms_karavansky")
 _SLOVNYK_WARNING_SLUGS = ("davydov", "voloschak", "foreign_shtepa")
 _SLOVNYK_BASE = "https://slovnyk.me"
+_SLOVNYK_CACHE_SCHEMA_VERSION = 2
 _WARNING_CLASSIFICATIONS = {"russianism", "sovietism", "surzhyk"}
 
 _SYNONYM_LABEL_WORDS = {
@@ -731,6 +732,10 @@ def _parse_slovnyk_entry(
     }
 
 
+class _SlovnykTransientError(Exception):
+    """Retryable slovnyk.me lookup failure that must not be cached as a miss."""
+
+
 def _polite_slovnyk_delay() -> None:
     global _last_slovnyk_fetch
     if _last_slovnyk_fetch:
@@ -751,9 +756,12 @@ def _fetch_slovnyk_entry(lemma: str, lookup_word: str, slug: str) -> dict[str, A
         )
         if response.status_code == 404:
             return None
+        if response.status_code >= 500:
+            msg = f"transient slovnyk.me status {response.status_code} for {url}"
+            raise _SlovnykTransientError(msg)
         response.raise_for_status()
-    except requests.RequestException:
-        return None
+    except requests.RequestException as exc:
+        raise _SlovnykTransientError(f"transient slovnyk.me request failure for {url}") from exc
     return _parse_slovnyk_entry(
         response.text,
         lemma=lemma,
@@ -771,31 +779,55 @@ def _load_slovnyk_cache_file(path: Path) -> dict[str, Any] | None:
     return cache if isinstance(cache, dict) else None
 
 
+def _new_slovnyk_cache(lemma: str, lookup_word: str) -> dict[str, Any]:
+    return {
+        "schema_version": _SLOVNYK_CACHE_SCHEMA_VERSION,
+        "lemma": lemma,
+        "lookup_word": lookup_word,
+        "fetched_at": dt.datetime.now(dt.UTC).replace(microsecond=0).isoformat(),
+        "lookups": {},
+    }
+
+
 def _slovnyk_cache(lemma: str) -> dict[str, Any]:
     """Read or populate the one-file-per-lemma slovnyk.me cache."""
     lookup_word = _slovnyk_lookup_word(lemma)
     path = _slovnyk_cache_path(lemma)
     cache = _load_slovnyk_cache_file(path)
-    if cache and cache.get("schema_version") == 1 and cache.get("lookup_word") == lookup_word:
+    changed = False
+    if cache and cache.get("lookup_word") == lookup_word:
+        if cache.get("schema_version") == 1:
+            raw_lookups = cache.get("lookups")
+            if isinstance(raw_lookups, dict):
+                cache["lookups"] = {
+                    slug: row for slug, row in raw_lookups.items() if row is not None
+                }
+            else:
+                cache["lookups"] = {}
+            cache["schema_version"] = _SLOVNYK_CACHE_SCHEMA_VERSION
+            changed = True
+        elif cache.get("schema_version") != _SLOVNYK_CACHE_SCHEMA_VERSION:
+            cache = _new_slovnyk_cache(lemma, lookup_word)
+            changed = True
         lookups = cache.setdefault("lookups", {})
+        if not isinstance(lookups, dict):
+            lookups = {}
+            cache["lookups"] = lookups
+            changed = True
     else:
-        cache = {
-            "schema_version": 1,
-            "lemma": lemma,
-            "lookup_word": lookup_word,
-            "fetched_at": dt.datetime.now(dt.UTC).replace(microsecond=0).isoformat(),
-            "lookups": {},
-        }
+        cache = _new_slovnyk_cache(lemma, lookup_word)
         lookups = cache["lookups"]
 
-    changed = False
     for slug in _SLOVNYK_LOOKUP_SLUGS:
         if slug in lookups:
             continue
-        lookups[slug] = _fetch_slovnyk_entry(lemma, lookup_word, slug) if lookup_word else None
+        try:
+            lookups[slug] = _fetch_slovnyk_entry(lemma, lookup_word, slug) if lookup_word else None
+        except _SlovnykTransientError:
+            continue
         changed = True
 
-    if changed or not path.exists():
+    if changed:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(cache, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return cache
@@ -1528,8 +1560,13 @@ def _sum20_definition_card(
     lookup_word = _slovnyk_lookup_word(lemma)
     row = _cache_lookup(cache, "newsum") if cache is not None else None
     if not row:
-        row = _fetch_slovnyk_entry(lemma, lookup_word, "newsum")
-        if cache is not None:
+        transient = False
+        try:
+            row = _fetch_slovnyk_entry(lemma, lookup_word, "newsum") if lookup_word else None
+        except _SlovnykTransientError:
+            transient = True
+            row = None
+        if cache is not None and not transient:
             _cache_store_lookup(lemma, cache, "newsum", row)
     if not row:
         return None

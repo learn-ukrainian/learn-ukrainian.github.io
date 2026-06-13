@@ -1,6 +1,8 @@
 import json
 import sqlite3
 
+import pytest
+
 from scripts.lexicon import enrich_manifest as enrich_manifest_module
 from scripts.lexicon.enrich_manifest import (
     KAIKKI_SOURCE,
@@ -16,6 +18,8 @@ from scripts.lexicon.enrich_manifest import (
     _meaning,
     _merge_slovnyk_warning,
     _sense_correct_synonyms,
+    _slovnyk_cache,
+    _SlovnykTransientError,
     _synonyms_slovnyk,
     _translation,
     _warning_slovnyk,
@@ -417,6 +421,126 @@ def test_slovnyk_warning_merges_known_russianism_alternative() -> None:
         attestation["source"] == "standard_alternative" and attestation["ref"] == "захід"
         for attestation in status["attestations"]
     )
+
+
+def test_fetch_slovnyk_entry_raises_transient_for_5xx(monkeypatch) -> None:
+    class FakeResponse:
+        status_code = 503
+        text = ""
+
+        def raise_for_status(self) -> None:
+            raise AssertionError("5xx should be classified before raise_for_status")
+
+    monkeypatch.setattr(enrich_manifest_module, "_polite_slovnyk_delay", lambda: None)
+    monkeypatch.setattr(enrich_manifest_module.requests, "get", lambda *args, **kwargs: FakeResponse())
+
+    with pytest.raises(_SlovnykTransientError):
+        enrich_manifest_module._fetch_slovnyk_entry("тест", "тест", "newsum")
+
+
+def test_fetch_slovnyk_entry_raises_transient_for_connection_error(monkeypatch) -> None:
+    def fake_get(*args, **kwargs):
+        raise enrich_manifest_module.requests.ConnectionError("connection timed out")
+
+    monkeypatch.setattr(enrich_manifest_module, "_polite_slovnyk_delay", lambda: None)
+    monkeypatch.setattr(enrich_manifest_module.requests, "get", fake_get)
+
+    with pytest.raises(_SlovnykTransientError):
+        enrich_manifest_module._fetch_slovnyk_entry("тест", "тест", "newsum")
+
+
+def test_slovnyk_cache_keeps_transient_slug_absent_and_refetches(monkeypatch, tmp_path) -> None:
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
+    monkeypatch.setattr(enrich_manifest_module, "_SLOVNYK_LOOKUP_SLUGS", ("newsum", "synonyms"))
+
+    calls: list[str] = []
+
+    def fake_fetch(lemma: str, lookup_word: str, slug: str) -> dict[str, str]:
+        calls.append(slug)
+        if slug == "synonyms" and calls.count("synonyms") == 1:
+            raise _SlovnykTransientError("timeout")
+        return {"dictionary_slug": slug, "text": f"{lookup_word}:{slug}"}
+
+    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", fake_fetch)
+
+    first = _slovnyk_cache("тест")
+    cache_path = enrich_manifest_module._slovnyk_cache_path("тест")
+    persisted = json.loads(cache_path.read_text(encoding="utf-8"))
+
+    assert first["lookups"]["newsum"]["text"] == "тест:newsum"
+    assert "synonyms" not in first["lookups"]
+    assert "synonyms" not in persisted["lookups"]
+
+    second = _slovnyk_cache("тест")
+
+    assert calls == ["newsum", "synonyms", "synonyms"]
+    assert second["lookups"]["synonyms"]["text"] == "тест:synonyms"
+
+
+def test_slovnyk_cache_persists_genuine_none_miss_without_refetch(monkeypatch, tmp_path) -> None:
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
+    monkeypatch.setattr(enrich_manifest_module, "_SLOVNYK_LOOKUP_SLUGS", ("newsum",))
+
+    calls: list[str] = []
+
+    def fake_fetch(lemma: str, lookup_word: str, slug: str) -> None:
+        calls.append(slug)
+        return None
+
+    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", fake_fetch)
+
+    first = _slovnyk_cache("немає")
+    persisted = json.loads(enrich_manifest_module._slovnyk_cache_path("немає").read_text(encoding="utf-8"))
+
+    assert first["lookups"]["newsum"] is None
+    assert persisted["lookups"]["newsum"] is None
+
+    _slovnyk_cache("немає")
+
+    assert calls == ["newsum"]
+
+
+def test_slovnyk_cache_migrates_v1_none_misses_to_retryable_absences(monkeypatch, tmp_path) -> None:
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
+    monkeypatch.setattr(enrich_manifest_module, "_SLOVNYK_LOOKUP_SLUGS", ("newsum", "synonyms", "phraseology"))
+
+    cache_path = enrich_manifest_module._slovnyk_cache_path("слово")
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "lemma": "слово",
+                "lookup_word": "слово",
+                "fetched_at": "2026-01-01T00:00:00+00:00",
+                "lookups": {
+                    "newsum": {"dictionary_slug": "newsum", "text": "kept hit"},
+                    "synonyms": None,
+                    "phraseology": None,
+                },
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    calls: list[str] = []
+
+    def fake_fetch(lemma: str, lookup_word: str, slug: str) -> dict[str, str]:
+        calls.append(slug)
+        return {"dictionary_slug": slug, "text": f"refetched {slug}"}
+
+    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", fake_fetch)
+
+    cache = _slovnyk_cache("слово")
+    persisted = json.loads(cache_path.read_text(encoding="utf-8"))
+
+    assert calls == ["synonyms", "phraseology"]
+    assert cache["schema_version"] == 2
+    assert cache["lookups"]["newsum"]["text"] == "kept hit"
+    assert cache["lookups"]["synonyms"]["text"] == "refetched synonyms"
+    assert persisted["schema_version"] == 2
+    assert persisted["lookups"]["phraseology"]["text"] == "refetched phraseology"
 
 
 def test_sum11_meaning_carries_source_sovietization_risk() -> None:
