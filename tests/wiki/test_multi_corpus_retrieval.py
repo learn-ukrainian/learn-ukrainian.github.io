@@ -92,6 +92,7 @@ def _conn(tmp_path: Path) -> sqlite3.Connection:
             title TEXT NOT NULL,
             text TEXT NOT NULL,
             source_file TEXT NOT NULL,
+            source_url TEXT DEFAULT '',
             author TEXT DEFAULT '',
             author_uk TEXT DEFAULT '',
             work TEXT DEFAULT '',
@@ -196,19 +197,19 @@ def _seed_multi_corpus(conn: sqlite3.Connection, manifest_path: Path) -> None:
         conn.executemany(
             """
             INSERT INTO literary_texts (
-                id, chunk_id, title, text, source_file, author, work, work_id,
+                id, chunk_id, title, text, source_file, source_url, author, work, work_id,
                 year, genre, language_period, char_count
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
-                (101, "mod-1", "Modern top", "апостроф тема modern top", "modern-a", "auth", "work a", "work_a", 2001, "poetry", "modern", 24),
-                (102, "mod-2", "Modern 2", "апостроф тема modern 2", "modern-b", "auth", "work b", "work_b", 2001, "poetry", "modern", 20),
-                (103, "mod-3", "Modern 3", "апостроф тема modern 3", "modern-c", "auth", "work c", "work_c", 2001, "poetry", "modern", 20),
-                (104, "mod-4", "Modern 4", "апостроф тема modern 4", "modern-d", "auth", "work d", "work_d", 2001, "poetry", "modern", 20),
-                (201, "arc-1", "Archaic top", "апостроф тема archaic top", "archaic-a", "auth", "work e", "work_e", 1700, "chronicle", "middle_ukrainian", 24),
-                (202, "arc-2", "Archaic 2", "апостроф тема archaic 2", "archaic-b", "auth", "work f", "work_f", 1700, "chronicle", "old_east_slavic", 20),
-                (203, "arc-3", "Archaic 3", "апостроф тема archaic 3", "archaic-c", "auth", "work g", "work_g", 1700, "chronicle", "middle_ukrainian", 20),
-                (204, "arc-4", "Archaic 4", "апостроф тема archaic 4", "archaic-d", "auth", "work h", "work_h", 1700, "chronicle", "old_east_slavic", 20),
+                (101, "mod-1", "Modern top", "апостроф тема modern top", "modern-a", "", "auth", "work a", "work_a", 2001, "poetry", "modern", 24),
+                (102, "mod-2", "Modern 2", "апостроф тема modern 2", "modern-b", "", "auth", "work b", "work_b", 2001, "poetry", "modern", 20),
+                (103, "mod-3", "Modern 3", "апостроф тема modern 3", "modern-c", "", "auth", "work c", "work_c", 2001, "poetry", "modern", 20),
+                (104, "mod-4", "Modern 4", "апостроф тема modern 4", "modern-d", "", "auth", "work d", "work_d", 2001, "poetry", "modern", 20),
+                (201, "arc-1", "Archaic top", "апостроф тема archaic top", "archaic-a", "", "auth", "work e", "work_e", 1700, "chronicle", "middle_ukrainian", 24),
+                (202, "arc-2", "Archaic 2", "апостроф тема archaic 2", "archaic-b", "", "auth", "work f", "work_f", 1700, "chronicle", "old_east_slavic", 20),
+                (203, "arc-3", "Archaic 3", "апостроф тема archaic 3", "archaic-c", "", "auth", "work g", "work_g", 1700, "chronicle", "middle_ukrainian", 20),
+                (204, "arc-4", "Archaic 4", "апостроф тема archaic 4", "archaic-d", "", "auth", "work h", "work_h", 1700, "chronicle", "old_east_slavic", 20),
             ],
         )
 
@@ -343,14 +344,14 @@ def test_neighbor_expansion_groups_adjacent_literary_chunks(tmp_path: Path, monk
         conn.executemany(
             """
             INSERT INTO literary_texts (
-                id, chunk_id, title, text, source_file, author, work, work_id,
+                id, chunk_id, title, text, source_file, source_url, author, work, work_id,
                 year, genre, language_period, char_count
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
-                (1, "n-1", "Before", "before chunk marker", "src", "a", "w", "neighbor_work", 2000, "genre", "modern", 20),
-                (2, "n-2", "Middle", "middle chunk marker", "src", "a", "w", "neighbor_work", 2000, "genre", "modern", 20),
-                (3, "n-3", "After", "after chunk marker", "src", "a", "w", "neighbor_work", 2000, "genre", "modern", 20),
+                (1, "n-1", "Before", "before chunk marker", "src", "", "a", "w", "neighbor_work", 2000, "genre", "modern", 20),
+                (2, "n-2", "Middle", "middle chunk marker", "src", "", "a", "w", "neighbor_work", 2000, "genre", "modern", 20),
+                (3, "n-3", "After", "after chunk marker", "src", "", "a", "w", "neighbor_work", 2000, "genre", "modern", 20),
             ],
         )
         conn.commit()
@@ -443,14 +444,14 @@ def test_archaic_metadata_strategy_filters_to_archaic_periods(tmp_path: Path, mo
     conn.executemany(
         """
         INSERT INTO literary_texts (
-            id, chunk_id, title, text, source_file, author, work, work_id,
+            id, chunk_id, title, text, source_file, source_url, author, work, work_id,
             year, genre, language_period, char_count
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         [
-            (1, "m-1", "Modern", "апостроф modern", "src-m", "a", "w", "modern_work", 2000, "genre", "modern", 20),
-            (2, "a-1", "Archaic", "апостроф archaic", "src-a", "a", "w", "archaic_work", 1700, "genre", "middle_ukrainian", 20),
-            (3, "a-2", "Archaic 2", "апостроф archaic 2", "src-b", "a", "w", "archaic_work_2", 1600, "genre", "old_east_slavic", 20),
+            (1, "m-1", "Modern", "апостроф modern", "src-m", "", "a", "w", "modern_work", 2000, "genre", "modern", 20),
+            (2, "a-1", "Archaic", "апостроф archaic", "src-a", "", "a", "w", "archaic_work", 1700, "genre", "middle_ukrainian", 20),
+            (3, "a-2", "Archaic 2", "апостроф archaic 2", "src-b", "", "a", "w", "archaic_work_2", 1600, "genre", "old_east_slavic", 20),
         ],
     )
     conn.commit()

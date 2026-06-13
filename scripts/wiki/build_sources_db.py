@@ -129,6 +129,7 @@ CREATE TABLE IF NOT EXISTS literary_texts (
     title TEXT NOT NULL DEFAULT '',
     text TEXT NOT NULL DEFAULT '',
     source_file TEXT NOT NULL DEFAULT '',
+    source_url TEXT DEFAULT '',
     author TEXT DEFAULT '',
     work TEXT DEFAULT '',
     work_id TEXT DEFAULT '',
@@ -654,9 +655,9 @@ def build(db_path: Path | None = None,
     print("\n📚 Literary texts")
     lit_dir = gd / "literary_texts"
     lit_sql = """INSERT INTO literary_texts
-                 (chunk_id, title, text, source_file, author, work, work_id,
+                 (chunk_id, title, text, source_file, source_url, author, work, work_id,
                   year, genre, language_period, char_count)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
     if lit_dir.exists():
         for jsonl_path in sorted(lit_dir.glob("*.jsonl")):
             source_file = jsonl_path.stem

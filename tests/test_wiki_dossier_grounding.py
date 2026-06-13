@@ -170,6 +170,7 @@ def test_fetch_chunks_by_chunk_id_with_conn_reads_literary_rows_in_requested_ord
             title TEXT,
             text TEXT,
             source_file TEXT,
+            source_url TEXT,
             author TEXT,
             work TEXT,
             work_id TEXT,
@@ -182,8 +183,8 @@ def test_fetch_chunks_by_chunk_id_with_conn_reads_literary_rows_in_requested_ord
     conn.executemany(
         """
         INSERT INTO literary_texts
-        (chunk_id, title, text, source_file, author, work, work_id, year, genre, language_period)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (chunk_id, title, text, source_file, source_url, author, work, work_id, year, genre, language_period)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         [
             (
@@ -191,6 +192,7 @@ def test_fetch_chunks_by_chunk_id_with_conn_reads_literary_rows_in_requested_ord
                 "Енциклопедія українознавства",
                 "Дружинний епос не зберігся.",
                 "entsyklopediia-ukrainoznavstva",
+                "https://example.com/entsyklopediia-ukrainoznavstva",
                 "ЕУ",
                 "ЕУ",
                 "eu",
@@ -203,6 +205,7 @@ def test_fetch_chunks_by_chunk_id_with_conn_reads_literary_rows_in_requested_ord
                 "Історія української літератури",
                 "Документальний ланцюг XVI-XVII ст.",
                 "chyzhevsky-istoriia-lit",
+                "https://example.com/chyzhevsky-istoriia-lit",
                 "Дмитро Чижевський",
                 "Історія української літератури",
                 "chyzhevsky",

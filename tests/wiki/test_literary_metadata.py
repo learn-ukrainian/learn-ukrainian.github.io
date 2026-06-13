@@ -107,11 +107,11 @@ def test_build_literary_row_computes_work_id_and_fallbacks():
         warn=warnings.append,
     )
 
-    assert row[5] == "fallback-source"
-    assert row[6] == "fallback_source"
-    assert row[7] is None
-    assert row[8] == ""
-    assert row[9] == "modern"
+    assert row[6] == "fallback-source"
+    assert row[7] == "fallback_source"
+    assert row[8] is None
+    assert row[9] == ""
+    assert row[10] == "modern"
     assert warnings
 
 
@@ -130,6 +130,7 @@ def test_restore_literary_metadata_is_idempotent_and_preserves_text(tmp_path, mo
                 title TEXT NOT NULL DEFAULT '',
                 text TEXT NOT NULL DEFAULT '',
                 source_file TEXT NOT NULL DEFAULT '',
+                source_url TEXT DEFAULT '',
                 author TEXT DEFAULT '',
                 genre TEXT DEFAULT '',
                 char_count INTEGER DEFAULT 0
@@ -217,6 +218,7 @@ def test_restore_literary_metadata_uses_source_file_for_duplicate_chunk_ids(tmp_
                 title TEXT NOT NULL DEFAULT '',
                 text TEXT NOT NULL DEFAULT '',
                 source_file TEXT NOT NULL DEFAULT '',
+                source_url TEXT DEFAULT '',
                 author TEXT DEFAULT '',
                 genre TEXT DEFAULT '',
                 char_count INTEGER DEFAULT 0
@@ -292,3 +294,81 @@ def test_restore_literary_metadata_uses_source_file_for_duplicate_chunk_ids(tmp_
         ("work-a", "Твір A", "tvir_a", 1901, "poetry", "modern"),
         ("work-b", "Твір B", "tvir_b", 1902, "prose", "modern"),
     ]
+
+
+def test_source_url_roundtrips_through_literary_ingest_in_memory(tmp_path):
+    """Round-trip source_url from JSONL entry through build_literary_row + CREATE + INSERT + SELECT using temp sqlite (no full DB rebuild)."""
+    from wiki.sources import build_literary_row
+
+    # Entry WITH source_url (as surfaced by load_literary_jsonl)
+    entry_with = {
+        "chunk_id": "lit-src-001",
+        "text": "Зразок тексту з джерелом.",
+        "work": "Тестовий твір",
+        "author": "Тест Автор",
+        "year": 2020,
+        "genre": "test",
+        "language_period": "modern",
+        "source_url": "https://litopys.org.ua/test/source.htm",
+    }
+    row_with = build_literary_row(
+        entry_with, source_file="test-work.jsonl", chunk_index=0, warn=None
+    )
+    # source_url is at index 4 after source_file (0-based: chunk, title, text, source_file, source_url, ...)
+    assert row_with[4] == "https://litopys.org.ua/test/source.htm"
+    assert len(row_with) == 12
+
+    # Entry WITHOUT source_url -> defaults to ""
+    entry_no = {
+        "chunk_id": "lit-no-002",
+        "text": "Без джерела.",
+        "work": "Без URL",
+        "language_period": "modern",
+    }
+    row_no = build_literary_row(entry_no, source_file="no-url.jsonl", chunk_index=0, warn=None)
+    assert row_no[4] == ""
+
+    # In-memory/temp sqlite fixture: CREATE (matching schema), INSERT the row(s), SELECT asserts non-empty roundtrip
+    db_path = tmp_path / "roundtrip_sources.db"
+    conn = sqlite3.connect(str(db_path))
+    try:
+        conn.executescript(
+            """
+            CREATE TABLE IF NOT EXISTS literary_texts (
+                id INTEGER PRIMARY KEY,
+                chunk_id TEXT NOT NULL DEFAULT '',
+                title TEXT NOT NULL DEFAULT '',
+                text TEXT NOT NULL DEFAULT '',
+                source_file TEXT NOT NULL DEFAULT '',
+                source_url TEXT DEFAULT '',
+                author TEXT DEFAULT '',
+                work TEXT DEFAULT '',
+                work_id TEXT DEFAULT '',
+                year INTEGER,
+                genre TEXT DEFAULT '',
+                language_period TEXT DEFAULT '',
+                char_count INTEGER DEFAULT 0
+            );
+            """
+        )
+        lit_sql = """INSERT INTO literary_texts
+                     (chunk_id, title, text, source_file, source_url, author, work, work_id,
+                      year, genre, language_period, char_count)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+        conn.execute(lit_sql, row_with)
+        conn.execute(lit_sql, row_no)
+        conn.commit()
+
+        # Assert round-trip for the one with URL (non-empty)
+        got_with = conn.execute(
+            "SELECT chunk_id, source_url FROM literary_texts WHERE chunk_id = 'lit-src-001'"
+        ).fetchone()
+        assert got_with == ("lit-src-001", "https://litopys.org.ua/test/source.htm")
+
+        # Assert default "" for absent
+        got_no = conn.execute(
+            "SELECT chunk_id, source_url FROM literary_texts WHERE chunk_id = 'lit-no-002'"
+        ).fetchone()
+        assert got_no == ("lit-no-002", "")
+    finally:
+        conn.close()
