@@ -24,7 +24,7 @@
     "astro": "^6.4.2",
     "playwright": "^1.60.0",
     "react": "^19.2.5",
-    "react-dom": "^19.2.6",
+    "react-dom": "^19.2.7",
     "rehype-mermaid": "^3.0.0",
     "remark-directive": "^4.0.0",
     "remark-gfm": "^4.0.1",
