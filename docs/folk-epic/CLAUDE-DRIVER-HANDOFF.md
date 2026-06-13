@@ -67,6 +67,30 @@ deep-worktree wiki compiles (every track), not just folk.** ⚠ GOTCHA: a dispat
 symlink now — the fallback handles it; do NOT `ln -s data` (and NEVER `rm -rf data` — it deletes sparse-tracked
 yaml/jsonl; `git checkout -- data/` restores).
 
+### 📊 REVIEW FLEET — quality + cost (Session-20b assessment; an OPEN DECISION for the batch)
+**Mechanism clarified (user asked):** when `seminar_reviewer_overrides` sets a dim to `claude`, the wiki review
+calls `agent_runtime.runner.invoke("claude", …)` → `claude.py` adapter → **`subprocess.run` = a headless `claude`
+CLI process** (claude-opus-4-8), per-dim per-round. It is **NOT the inline/interactive seat** — but it draws on
+the **same Claude Code quota** (#M0: dispatched claude competes with the interactive seat). So #3057 routing ALL
+four folk dims to claude is **quality-good but quota-heavy + single-model** (4 claude subprocesses × ~2 rounds × wiki).
+
+**Per-dim quality, measured on the SAME bylyny article this session:**
+| reviewer | folk-culture review quality | cost |
+|---|---|---|
+| **claude** (opus 4.8) | BEST — stable + competent: register 9, factual 9, sg 7→8; names exact `[S#]`; catches misattributions | HIGH (Claude quota) |
+| **codex** (gpt-5.5) | NOISY for folk sg — flapped 6→5, scored a freshly-cited article LOWER | metered |
+| **gemini / agy** | BAD for folk culture — over-flags dense UA prose, ±5 noise (reg 5-7 REJECT; fact 9→10→5) | unmetered, unusable for folk |
+| **deepseek** | policy-barred for folk culture (Session-1 #4 — lacks UA-culture depth); good for CODE review only | cheap off-seat |
+
+**Honest gap:** there is **no cheap, competent folk-culture reviewer** in the fleet — claude is the only proven one,
+so folk review is claude-only (correlated blind spots + quota cost). Core a1–c2 + code review have cheaper options.
+
+**▶ OPEN DECISION (make before/early in the batch):** keep all-claude folk review (max quality, expensive) **vs.**
+split for diversity + to halve Claude quota — e.g. claude for sg+register (the two that most need UA competence),
+codex/gpt for factual_accuracy + ukrainian_perspective. **Validate any split** (codex's sg noise must be re-checked
+per-dim before trusting it). Until decided, the proven path is all-claude (it converged bylyny). Filed nothing —
+this is a folk-lane tuning call, not infra. (The agy→gemini retirement is infra: issues **#3060** blocker / **#3061** flip.)
+
 ### ▶ NEXT ACTIONS (RESUME HERE, in order) — both blockers fixed; the 5 are now PURE EXECUTION
 0. **Merge PR #3059 (DB-fix) first** if not already — every fresh wiki compile depends on it.
 1. **Batch the other 5 gap wikis** (#M-9, sequential), now FULLY UNBLOCKED. From a dispatch worktree off main
