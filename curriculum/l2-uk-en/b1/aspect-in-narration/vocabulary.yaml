@@ -1,0 +1,124 @@
+- lemma: тло
+  translation: background (narrative layer)
+  pos: noun:n
+  usage: Тло створює атмосферу розповіді.
+- lemma: передній план
+  translation: foreground
+  pos: noun phrase
+  usage: Передній план рухає сюжет уперед.
+- lemma: розповідь
+  translation: narrative, story
+  pos: noun:f
+  usage: Розповідь відповідає на питання «що сталося?».
+- lemma: оповідання
+  translation: short story, narration
+  pos: noun:n
+  usage: Оповідання має тло й події.
+- lemma: оповідач
+  translation: narrator
+  pos: noun:m
+  usage: Оповідач керує темпом історії.
+- lemma: подія
+  translation: event
+  pos: noun:f
+  usage: Подія змінює ситуацію.
+- lemma: опис
+  translation: description
+  pos: noun:m
+  usage: Опис відповідає на питання «який?».
+- lemma: сюжет
+  translation: plot
+  pos: noun:m
+  usage: Сюжет рухається через події.
+- lemma: сцена
+  translation: scene
+  pos: noun:f
+  usage: Сцена має обстановку й дію.
+- lemma: атмосфера
+  translation: atmosphere
+  pos: noun:f
+  usage: Недоконаний вид створює атмосферу.
+- lemma: обстановка
+  translation: setting
+  pos: noun:f
+  usage: Обстановка належить до тла.
+- lemma: стан
+  translation: state
+  pos: noun:m
+  usage: Стан часто передає недоконаний вид.
+- lemma: дія
+  translation: action
+  pos: noun:f
+  usage: Дія може бути тлом або подією.
+- lemma: процес
+  translation: process
+  pos: noun:m
+  usage: Процес лишає час відкритим.
+- lemma: результат
+  translation: result
+  pos: noun:m
+  usage: Доконаний вид показує результат.
+- lemma: поворотний момент
+  translation: turning point
+  pos: noun phrase
+  usage: Поворотний момент прискорює сюжет.
+- lemma: послідовність
+  translation: sequence
+  pos: noun:f
+  usage: Послідовність подій часто має доконаний вид.
+- lemma: послідовно
+  translation: sequentially
+  pos: adv
+  usage: Події розгортаються послідовно.
+- lemma: одночасно
+  translation: simultaneously
+  pos: adv
+  usage: Дві дії відбуваються одночасно.
+- lemma: спочатку
+  translation: at first
+  pos: adv
+  usage: Спочатку Максим зайшов.
+- lemma: потім
+  translation: then
+  pos: adv
+  usage: Потім він сказав новину.
+- lemma: після цього
+  translation: after that
+  pos: adv phrase
+  usage: Після цього розмова змінилася.
+- lemma: тоді
+  translation: then, at that time
+  pos: adv
+  usage: Тоді Юлія відповіла.
+- lemma: раптом
+  translation: suddenly
+  pos: adv
+  usage: Раптом задзвонив телефон.
+- lemma: нарешті
+  translation: finally
+  pos: adv
+  usage: Нарешті всі відповіли.
+- lemma: тим часом
+  translation: meanwhile
+  pos: adv phrase
+  usage: Тим часом Катерина хвилювалася.
+- lemma: поки
+  translation: while
+  pos: conj
+  usage: Поки ми чекали, сонце сідало.
+- lemma: спогад
+  translation: memory, recollection
+  pos: noun:m
+  usage: Спогад часто має повільне тло.
+- lemma: фокус
+  translation: focus
+  pos: noun:m
+  usage: Вид змінює фокус розповіді.
+- lemma: темп
+  translation: pace
+  pos: noun:m
+  usage: Більше подій дає швидший темп.
+- lemma: ритм
+  translation: rhythm
+  pos: noun:m
+  usage: Чергування видів створює ритм.
