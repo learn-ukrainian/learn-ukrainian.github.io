@@ -693,8 +693,8 @@ async def list_tools() -> list[Tool]:
                 "~67K entries (~100% indexed). **NOT etymology** — this is "
                 "lexicographic (definitions + usage citations), not diachronic "
                 "word-origin analysis. True "
-                "etymology lives in `search_esum` (ЕСУМ, vol 1 А–Г live; vols 2-6 "
-                "pending #1662). **Systematic exclusion: proper nouns** — toponyms "
+                "etymology lives in `search_esum` (ЕСУМ, all 6 volumes А–Я live, "
+                "~36K entries). **Systematic exclusion: proper nouns** — toponyms "
                 "(Київ, Львів, Дніпро, Сибір) and personal names (Шевченко) are NOT "
                 "covered. Use for pre-Soviet Ukrainian usage attestation: helps "
                 "verify a word is genuinely Ukrainian, not a Soviet-era import."
@@ -712,7 +712,7 @@ async def list_tools() -> list[Tool]:
             name="search_esum",
             description=(
                 "Search ЕСУМ (Етимологічний словник української мови) etymology entries. "
-                "PoC scope: volume 1 only (А–Г); volumes 2–6 are follow-up work. "
+                "Coverage: all 6 volumes (А–Я), ~36K entries (vols 1–6 fully ingested). "
                 "Use for Ukrainian word-origin checks and cognate evidence."
             ),
             inputSchema={
@@ -721,7 +721,7 @@ async def list_tools() -> list[Tool]:
                     "query": {"type": "string", "description": "Ukrainian word or etymology term to search"},
                     "volume": {
                         "type": "integer",
-                        "description": "Optional ЕСУМ volume filter. This PoC currently supports volume 1.",
+                        "description": "Optional ЕСУМ volume filter (1–6). Omit to search all volumes.",
                     },
                     "limit": {"type": "integer", "description": "Max results (default 5)", "default": 5},
                 },

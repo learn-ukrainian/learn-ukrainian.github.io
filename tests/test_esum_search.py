@@ -88,12 +88,20 @@ def test_search_esum_nonexistent_word_returns_empty_list() -> None:
 
 
 def test_search_esum_sibir_is_outside_volume_one_scope() -> None:
-    """ЕСУМ vol. 1 covers А-Г only; ``сибір`` (vol. 5) must not match."""
+    """The volume=1 filter excludes ``сибір`` (a vol. 5 entry).
+
+    The DB holds all 6 volumes (А–Я); this asserts the volume filter works, not
+    that vols 2–6 are absent.
+    """
     assert search_esum("сибір", volume=1, limit=3) == []
 
 
 def test_search_esum_maty_is_outside_volume_one_scope() -> None:
-    """ЕСУМ vol. 1 covers А-Г only; ``мати`` (vol. 3) must not match."""
+    """The volume=1 filter excludes ``мати`` (a vol. 3 entry).
+
+    The DB holds all 6 volumes (А–Я); this asserts the volume filter works, not
+    that vols 2–6 are absent.
+    """
     assert search_esum("мати", volume=1, limit=3) == []
 
 
