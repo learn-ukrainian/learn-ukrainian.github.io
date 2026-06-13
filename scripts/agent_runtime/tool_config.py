@@ -2,12 +2,15 @@
 from __future__ import annotations
 
 import json
+import os
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _DEFAULT_MCP_CONFIG_PATH = _REPO_ROOT / ".mcp.json"
+_AGY_APP_DATA_ENV = "AGY_APP_DATA_DIR"
+_DEFAULT_AGY_APP_DATA_DIR = "~/.gemini/antigravity-cli"
 _RESOLUTION_STATUSES = {"ok", "config_missing", "config_empty", "servers_not_found"}
 _CODEX_MCP_SERVER_FIELDS = frozenset(
     {
@@ -44,6 +47,12 @@ def _canonical_agent_name(agent: str) -> str | None:
 def _resolved_mcp_config_path(mcp_config_path: Path | None) -> Path:
     """Return the configured `.mcp.json` path, defaulting to repo root."""
     return (mcp_config_path or _DEFAULT_MCP_CONFIG_PATH).resolve()
+
+
+def _resolved_agy_mcp_config_path() -> Path:
+    """Return agy's global Antigravity MCP config path."""
+    app_data_dir = os.environ.get(_AGY_APP_DATA_ENV, _DEFAULT_AGY_APP_DATA_DIR)
+    return (Path(app_data_dir).expanduser() / "mcp_config.json").resolve()
 
 
 def _codex_sanitize_server_config(server_config: dict) -> dict:
@@ -152,6 +161,75 @@ def _codex_server_is_usable(server_config: Any) -> bool:
     return bool(url)
 
 
+def _agy_server_is_usable(server_config: Any) -> bool:
+    """Return true for Antigravity streamable-HTTP MCP server entries."""
+    if not isinstance(server_config, dict):
+        return False
+    http_url = str(server_config.get("httpUrl") or "").strip()
+    url = str(server_config.get("url") or "").strip()
+    return bool(http_url or url)
+
+
+def _agy_mcp_servers(
+    mcp_config_path: Path,
+    requested_servers: list[str] | None,
+) -> tuple[dict[str, list[str]] | None, dict[str, Any]]:
+    """Return agy's requested MCP server names plus resolution diagnostics."""
+    requested = list(requested_servers or [])
+
+    data = _load_mcp_config(mcp_config_path)
+    if not data:
+        return None, _basic_diagnostics(
+            mcp_config_path=mcp_config_path,
+            requested_servers=requested,
+            resolved_servers=None,
+            resolution_status="config_empty",
+        )
+
+    servers = data.get("mcpServers")
+    if not isinstance(servers, dict) or not servers:
+        return None, _basic_diagnostics(
+            mcp_config_path=mcp_config_path,
+            requested_servers=requested,
+            resolved_servers=None,
+            resolution_status="config_empty",
+        )
+
+    usable_server_names = [
+        server_name
+        for server_name, server_config in servers.items()
+        if _agy_server_is_usable(server_config)
+    ]
+    if not requested or not usable_server_names:
+        return None, _basic_diagnostics(
+            mcp_config_path=mcp_config_path,
+            requested_servers=requested,
+            resolved_servers=None,
+            resolution_status="config_empty",
+            missing_server_names=requested,
+        )
+
+    usable_servers = set(usable_server_names)
+    selected = [server_name for server_name in requested if server_name in usable_servers]
+    missing = [server_name for server_name in requested if server_name not in usable_servers]
+    if not selected:
+        return None, _basic_diagnostics(
+            mcp_config_path=mcp_config_path,
+            requested_servers=requested,
+            resolved_servers=None,
+            resolution_status="servers_not_found",
+            missing_server_names=missing,
+        )
+
+    return {"mcp_server_names": selected}, _basic_diagnostics(
+        mcp_config_path=mcp_config_path,
+        requested_servers=requested,
+        resolved_servers=selected,
+        resolution_status="ok",
+        missing_server_names=missing,
+    )
+
+
 def _basic_diagnostics(
     *,
     mcp_config_path: Path,
@@ -238,29 +316,13 @@ def build_mcp_tool_config(
         )
 
     if canonical_agent == "agy":
-        # agy 1.0.0 has no per-invocation MCP flag (Phase 2 follow-up).
-        # We mirror the Gemini path's diagnostics shape so the upstream
-        # `_runtime_tool_config` validator does not fail-fast at dispatch
-        # time; the lack of MCP wiring then surfaces at runtime as
-        # MCP_TOOLS_NEVER_INVOKED, which is the precise + intended signal
-        # for the seminar-writer bakeoff. The adapter itself ignores
-        # `mcp_server_names`; we pass it through for parity / debuggability.
-        if not mcp_servers:
-            return None, _basic_diagnostics(
-                mcp_config_path=resolved_config_path,
-                requested_servers=mcp_servers,
-                resolved_servers=None,
-                resolution_status="config_empty",
-            )
-        return (
-            {"mcp_server_names": mcp_servers},
-            _basic_diagnostics(
-                mcp_config_path=resolved_config_path,
-                requested_servers=mcp_servers,
-                resolved_servers=mcp_servers,
-                resolution_status="ok",
-            ),
-        )
+        # agy enables MCP through the global Antigravity config, not a
+        # per-invocation CLI flag. Antigravity's streamable-HTTP shape uses
+        # `httpUrl`; the adapter still receives resolved names for parity and
+        # observability. Runtime telemetry remains load-bearing:
+        # MCP_TOOLS_NEVER_INVOKED catches a configured server that is never
+        # actually called.
+        return _agy_mcp_servers(_resolved_agy_mcp_config_path(), mcp_servers)
 
     if canonical_agent in ("grok", "deepseek", "qwen"):
         # Grok, DeepSeek, and Qwen route through Hermes; tool_config translation

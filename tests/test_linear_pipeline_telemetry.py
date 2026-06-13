@@ -379,7 +379,7 @@ def test_writer_rule_fired_event_emitted_on_known_failure_class(tmp_path: Path) 
     )
 
 
-def test_tools_writer_runtime_gate_still_fires_for_empty_tool_calls() -> None:
+def test_mcp_tools_writer_runtime_gate_still_fires_for_empty_tool_calls() -> None:
     with pytest.raises(
         linear_pipeline.LinearPipelineError,
         match="MCP_TOOLS_NEVER_INVOKED",
