@@ -26,9 +26,9 @@
    NEXT: heritage-gate the ⚠️/❓, add ✅+qualified-⚠️ to `calque_corrections.py` (new
    `SENSE_RESTRICTED_CALQUES` bucket), PR ref #3098. Workflow validated: swarm generates grounded
    candidates → Claude curates (the polysemy gate is the irreplaceable Claude-seat step).
-2. **#3105 grok-build full bridge support** (codex, 16 files: `_grok_build.py` + adapter/registry/telemetry/_cli/_model/_env + 2 tests, telemetry "unknown model/effort" gap fixed). In deepseek review (`review-3105-grok-bridge`); CI green so far. **Land when review + pytest green.**
-3. **#3106 grok-build literary source_url** (#2901) — **PR OPEN**, dispatch done. Restores source_url through literary ingest (needs full DB rebuild to backfill — orchestrator-run). Review + merge. This is grok-build's tech-debt lane-validation proof.
-4. **Track PRs (awareness-only / codex-owned):** #3103 + #3107 folk dossiers, #3108 B1 m07 daily-life. Not Claude's to merge unless the track orchestrator asks.
+2. **#3105 grok-build full bridge support — MERGED** (`f3e79dcf2c`). deepseek 6/6 PASS. `ask-grok-build`/`process-grok-build` + telemetry default grok-4.20/high. grok-build now first-class in the bridge.
+3. **#3106 grok-build literary source_url (#2901) — MERGED** (`07a8c235fa`). Comprehensive: threaded source_url through schema/INSERT/SELECT/row-builder/backfill + all 6 test fixtures; graceful-degrades (try/except OperationalError → "") so it's backward-safe pre-rebuild. **Still needs a controlled full sources.db rebuild to backfill existing rows** (orchestrator-run, like the Atlas re-enrich). grok-build's lane-validation proof — clean.
+4. **Track PRs (awareness-only / codex-owned, do NOT merge):** #3103 + #3107 folk dossiers (still open). #3108 B1 m07 closed/merged by codex.
 
 ## 🎯 Next (priority order)
 1. **Verify + integrate the grok-swarm §6 calque output** (`/tmp/grok-atlas-calque.log`) → PR extending `calque_corrections.py`.
