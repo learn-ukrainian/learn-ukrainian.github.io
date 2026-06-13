@@ -1,0 +1,418 @@
+{
+  "article_path": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/folk-gap-wikis/wiki/folk/ritual/zhnyvarski-obzhynkovi-pisni.md",
+  "rounds": [
+    {
+      "round": 1,
+      "dims": {
+        "ukrainian_perspective": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 10,
+          "verdict": "PASS",
+          "findings_count": 0,
+          "findings": [],
+          "fixes": [],
+          "notes": "",
+          "duration_s": 61.74,
+          "error": ""
+        },
+        "register": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 1,
+          "findings": [
+            {
+              "location": "## Основний зміст → Класифікація циклу (paragraph on власне жнива)",
+              "quote": "Власне жнива в джерелах постають як робочий період, що відбувається при співі окремих обжинкових або обжиночних пісень",
+              "issue_type": "UNNATURAL_COLLOCATION",
+              "severity": "minor",
+              "description": "Circumstantial «при співі ... пісень» reads slightly bookish/translated for accompaniment; the idiomatic folk-context phrasing is «під спів» or «супроводжується співом».",
+              "raw": {
+                "location": "## Основний зміст → Класифікація циклу (paragraph on власне жнива)",
+                "quote": "Власне жнива в джерелах постають як робочий період, що відбувається при співі окремих обжинкових або обжиночних пісень",
+                "tool_evidence": [
+                  {
+                    "tool": "search_style_guide",
+                    "args": "при",
+                    "result_summary": "no match — circumstantial «при» not flagged as calque"
+                  },
+                  {
+                    "tool": "search_style_guide",
+                    "args": "під спів",
+                    "result_summary": "no match"
+                  }
+                ],
+                "natural_alternative": "що відбувається під спів / що супроводжується співом окремих обжинкових або обжиночних пісень",
+                "issue_type": "UNNATURAL_COLLOCATION",
+                "issue_description": "Circumstantial «при співі ... пісень» reads slightly bookish/translated for accompaniment; the idiomatic folk-context phrasing is «під спів» or «супроводжується співом».",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "register",
+              "find": "що відбувається при співі окремих обжинкових або обжиночних пісень",
+              "replace": "що супроводжується співом окремих обжинкових або обжиночних пісень"
+            }
+          ],
+          "notes": "Genuinely composed scholarly Ukrainian; сконстатований/носійство confirmed in VESUM, no calques or Russianisms flagged by the style guide; one minor circumstantial-«при» collocation. Source-preserved attributed quotations («…» + [S#]) were not assessed for register.",
+          "duration_s": 96.88,
+          "error": ""
+        },
+        "factual_accuracy": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 7,
+          "verdict": "REVISE",
+          "findings_count": 2,
+          "findings": [
+            {
+              "location": "## Поетика, дослідники й містки до високої культури (Іван Колесса paragraph) + Ключові терміни / Мовні зразки cross-refs",
+              "quote": "Іван Колесса важливий як галицький фольклорист і етнограф, який зібрав і впорядкував «Галицько-руські народні пісні з мелодіями» 1901 року",
+              "issue_type": "FACTUAL_ERROR",
+              "severity": "major",
+              "description": "The collection's publication year is given as 1901, but the authoritative source consistently dates it to 1902 (Етнографічний збірник НТШ, т. XI, Львів 1902).",
+              "raw": {
+                "location": "## Поетика, дослідники й містки до високої культури (Іван Колесса paragraph) + Ключові терміни / Мовні зразки cross-refs",
+                "claim_quote": "Іван Колесса важливий як галицький фольклорист і етнограф, який зібрав і впорядкував «Галицько-руські народні пісні з мелодіями» 1901 року",
+                "tool_evidence": [
+                  {
+                    "tool": "query_wikipedia",
+                    "args": "Колесса Іван Михайлович (extract)",
+                    "result_summary": "«Галицько-руські народні пісні з мелодіями. Зібрав в селі Ходовичах др. Іван Колесса» Львів, 1902 (Етнографічний збірник НТШ, т. ХІ.) — gives 1902, not 1901"
+                  },
+                  {
+                    "tool": "query_wikipedia",
+                    "args": "Галицько-руські народні пісні з мелодіями (search)",
+                    "result_summary": "Two independent hits both date it 1902: 'Львів, 1902' and 'Етноґрафічний збірник. Т. 11 ... Др Іван Колесса' — consistently 1902"
+                  }
+                ],
+                "issue_type": "FACTUAL_ERROR",
+                "issue_description": "The collection's publication year is given as 1901, but the authoritative source consistently dates it to 1902 (Етнографічний збірник НТШ, т. XI, Львів 1902).",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Поетика, дослідники й містки до високої культури (Климент Квітка sentence)",
+              "quote": "його праці про українські епічні, русальні, купальські й обжинкові пісні були вперше опубліковані 1985 року під назвою «Нариси української народної музики»",
+              "issue_type": "FACTUAL_ERROR",
+              "severity": "major",
+              "description": "The 1985 posthumous publication of Kvitka's нариси was titled «Вибрані статті» (Ч.1 1985, Ч.2 1986, ed. A. Ivanytsky); the title «Нариси української народної музики» is not attested in any authoritative source.",
+              "raw": {
+                "location": "## Поетика, дослідники й містки до високої культури (Климент Квітка sentence)",
+                "claim_quote": "його праці про українські епічні, русальні, купальські й обжинкові пісні були вперше опубліковані 1985 року під назвою «Нариси української народної музики»",
+                "tool_evidence": [
+                  {
+                    "tool": "query_wikipedia",
+                    "args": "Квітка Климент Васильович (extract)",
+                    "result_summary": "Lists his посмертні нариси (Епічні пісні, колядки, купальські, русальні, жнивні...) issued by Гошовський/Іваницький; the 1985 publication is «Вибрані статті. Ч. 1, 1985. Ч. 2, 1986». No work titled «Нариси української народної музики» appears."
+                  },
+                  {
+                    "tool": "query_wikipedia",
+                    "args": "Нариси української народної музики Квітка (search)",
+                    "result_summary": "No match for that title; top hit only repeats his нариси list under 'Вибрані статті' — title «Нариси української народної музики» unattested"
+                  },
+                  {
+                    "tool": "query_wikipedia",
+                    "args": "Квітка Климент Вибрані статті 1985 (search)",
+                    "result_summary": "Іваницький А.І. entry: 'Видав наукові праці Климента Квітки — «Вибрані статті» (1985, 1986)' — confirms the 1985 publication's actual title is «Вибрані статті», not «Нариси...»"
+                  }
+                ],
+                "issue_type": "FACTUAL_ERROR",
+                "issue_description": "The 1985 posthumous publication of Kvitka's нариси was titled «Вибрані статті» (Ч.1 1985, Ч.2 1986, ed. A. Ivanytsky); the title «Нариси української народної музики» is not attested in any authoritative source.",
+                "severity": "major"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "factual_accuracy",
+              "find": "«Галицько-руські народні пісні з мелодіями» 1901 року",
+              "replace": "«Галицько-руські народні пісні з мелодіями» 1902 року"
+            },
+            {
+              "dim": "factual_accuracy",
+              "find": "були вперше опубліковані 1985 року під назвою «Нариси української народної музики»",
+              "replace": "були вперше опубліковані 1985–1986 років у виданні «Вибрані статті» (Ч. 1–2), упорядкованому А. Іваницьким"
+            }
+          ],
+          "notes": "Two surgical factual errors — Колесса collection dated 1901 (should be 1902) and Квітка's 1985 publication mistitled «Нариси української народної музики» (actually «Вибрані статті»); Shevchenko «Заповіт» quote, Fata Morgana 1905 dating, and Pymonenko all verified correct.",
+          "duration_s": 151.82,
+          "error": ""
+        },
+        "source_grounding": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 2,
+          "findings": [
+            {
+              "location": "## Мовні зразки (зразок 10) / Основний зміст → Поетика, дослідники й містки (Місток до Шевченка)",
+              "quote": "«Щоб лани широкополі, / І Дніпро, і кручі» — шевченківський образ українського простору, доречний як місток до високої культури, але не як жниварська пісня [S27][S28].",
+              "issue_type": "STALE_CITATION",
+              "severity": "minor",
+              "description": "S27's chunk is the text of «Сон», not «Заповіт», so it does not contain the quoted Заповіт lines; the quotation is grounded only by S28.",
+              "raw": {
+                "location": "## Мовні зразки (зразок 10) / Основний зміст → Поетика, дослідники й містки (Місток до Шевченка)",
+                "claim_quote": "«Щоб лани широкополі, / І Дніпро, і кручі» — шевченківський образ українського простору, доречний як місток до високої культури, але не як жниварська пісня [S27][S28].",
+                "citation_refs": [
+                  "S27",
+                  "S28"
+                ],
+                "source_content_quote": "S27 (ukrlib-shevchenko_c0000) actually resolves to the poem «Сон» — «У всякого своя доля / І свій шлях широкий, / Той мурує, той руйнує...» — and does NOT contain the quoted lines. The lines are found only in S28 (wave10-shevchenko-tvory-t1_c0538): «Щоб лани широкополі, / І Дніпро, і кручі / Було видно, було чути, / Як реве ревучий».",
+                "issue_type": "STALE_CITATION",
+                "issue_description": "S27's chunk is the text of «Сон», not «Заповіт», so it does not contain the quoted Заповіт lines; the quotation is grounded only by S28.",
+                "severity": "minor"
+              }
+            },
+            {
+              "location": "## Основний зміст → Поетика, дослідники й містки до високої культури",
+              "quote": "Для роботи з аудіо або мелодіями майбутній модуль має спиратися на названі видання й архівні записи з локальністю, виконавцями та збирачами, а не на випадкові передруки [S18][S20][S21].",
+              "issue_type": "WEAK_SUPPORT",
+              "severity": "minor",
+              "description": "S21 addresses веснянкові/русальні ритуальні ігри rather than the cited recommendation about audio editions and archival recordings, which is supported by S18 and S20.",
+              "raw": {
+                "location": "## Основний зміст → Поетика, дослідники й містки до високої культури",
+                "claim_quote": "Для роботи з аудіо або мелодіями майбутній модуль має спиратися на названі видання й архівні записи з локальністю, виконавцями та збирачами, а не на випадкові передруки [S18][S20][S21].",
+                "citation_refs": [
+                  "S18",
+                  "S20",
+                  "S21"
+                ],
+                "source_content_quote": "S21 (wave7-istkult-t2-xiii-xvii_c0857) discusses ritual games, not audio/melody editions or archival recordings: «Веснянкові та гаївкові ігри поділяються на два типи — хороводні ігри... і власне драматичні ігри». The bibliographic/recordings recommendation is carried by S18 (Kolessa, «Галицько-руські народні пісні з мелодіями», 1901) and S20 (Kvitka, «Нариси української народної музики», 1985); S21 is tangential to this specific claim.",
+                "issue_type": "WEAK_SUPPORT",
+                "issue_description": "S21 addresses веснянкові/русальні ритуальні ігри rather than the cited recommendation about audio editions and archival recordings, which is supported by S18 and S20.",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "source_grounding",
+              "find": "доречний як місток до високої культури, але не як жниварська пісня [S27][S28].",
+              "replace": "доречний як місток до високої культури, але не як жниварська пісня [S28]."
+            },
+            {
+              "dim": "source_grounding",
+              "find": "а не на випадкові передруки [S18][S20][S21].",
+              "replace": "а не на випадкові передруки [S18][S20]."
+            }
+          ],
+          "notes": "Densely and accurately grounded — all 10 language-sample quotes verified verbatim against their chunks and all major attributions align; only two minor off-target/tangential citations (S27 resolves to «Сон» not «Заповіт»; S21 is about ritual games, not archival recordings), each carried by a co-cited source.",
+          "duration_s": 452.06,
+          "error": ""
+        }
+      },
+      "merge": {
+        "applied_count": 5,
+        "conflicts_count": 0,
+        "applied": [
+          {
+            "dim": "register",
+            "find": "що відбувається при співі окремих обжинкових або обжиночних пісень",
+            "replace": "що супроводжується співом окремих обжинкових або обжиночних пісень"
+          },
+          {
+            "dim": "factual_accuracy",
+            "find": "«Галицько-руські народні пісні з мелодіями» 1901 року",
+            "replace": "«Галицько-руські народні пісні з мелодіями» 1902 року"
+          },
+          {
+            "dim": "factual_accuracy",
+            "find": "були вперше опубліковані 1985 року під назвою «Нариси української народної музики»",
+            "replace": "були вперше опубліковані 1985–1986 років у виданні «Вибрані статті» (Ч. 1–2), упорядкованому А. Іваницьким"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "доречний як місток до високої культури, але не як жниварська пісня [S27][S28].",
+            "replace": "доречний як місток до високої культури, але не як жниварська пісня [S28]."
+          },
+          {
+            "dim": "source_grounding",
+            "find": "а не на випадкові передруки [S18][S20][S21].",
+            "replace": "а не на випадкові передруки [S18][S20]."
+          }
+        ],
+        "conflicts": [],
+        "skipped_missing": []
+      }
+    },
+    {
+      "round": 2,
+      "dims": {
+        "ukrainian_perspective": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 10,
+          "verdict": "PASS",
+          "findings_count": 0,
+          "findings": [],
+          "fixes": [],
+          "notes": "",
+          "duration_s": 70.21,
+          "error": ""
+        },
+        "register": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 1,
+          "findings": [
+            {
+              "location": "## Календар, історичні шари й межа зі стодолою",
+              "quote": "Межа між обжинками й стодольними піснями проходить не по темі зерна, а по місцю й фазі роботи",
+              "issue_type": "TRANSLATIONESE",
+              "severity": "minor",
+              "description": "The «по темі / по місцю» pattern marking a basis-of-distinction echoes Russian «по теме / по месту»; idiomatic Ukrainian draws such distinctions with «за + instrumental» (за темою, за місцем).",
+              "raw": {
+                "location": "## Календар, історичні шари й межа зі стодолою",
+                "quote": "Межа між обжинками й стодольними піснями проходить не по темі зерна, а по місцю й фазі роботи",
+                "tool_evidence": [
+                  {
+                    "tool": "search_style_guide",
+                    "args": "по місцю по темі",
+                    "result_summary": "no match (guide ~46% indexed; absence not conclusive)"
+                  },
+                  {
+                    "tool": "search_style_guide",
+                    "args": "прийменник по",
+                    "result_summary": "no match"
+                  }
+                ],
+                "natural_alternative": "Межа між обжинками й стодольними піснями проходить не за темою зерна, а за місцем і фазою роботи",
+                "issue_type": "TRANSLATIONESE",
+                "issue_description": "The «по темі / по місцю» pattern marking a basis-of-distinction echoes Russian «по теме / по месту»; idiomatic Ukrainian draws such distinctions with «за + instrumental» (за темою, за місцем).",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "register",
+              "find": "проходить не по темі зерна, а по місцю й фазі роботи",
+              "replace": "проходить не за темою зерна, а за місцем і фазою роботи"
+            }
+          ],
+          "notes": "Native-sounding seminar-register Ukrainian; only one minor «по»-criterion construction worth tightening to «за». Source-preserved attributed quotations (e.g. «Кілько… Тілько», «по межі») were ignored for register per the exemption.",
+          "duration_s": 100.24,
+          "error": ""
+        },
+        "factual_accuracy": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 10,
+          "verdict": "PASS",
+          "findings_count": 0,
+          "findings": [],
+          "fixes": [],
+          "notes": "",
+          "duration_s": 135.25,
+          "error": ""
+        },
+        "source_grounding": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 8,
+          "verdict": "REVISE",
+          "findings_count": 2,
+          "findings": [
+            {
+              "location": "## Основний зміст — ### Поетика, дослідники й містки до високої культури (Колесса)",
+              "quote": "Іван Колесса важливий як галицький фольклорист і етнограф, який зібрав і впорядкував «Галицько-руські народні пісні з мелодіями» 1902 року, де були українські колядки, щедрівки, обжинкові, ліричні, козацькі, жовнірські пісні, балади й коломийки [S18]",
+              "issue_type": "MISATTRIBUTION",
+              "severity": "minor",
+              "description": "The article gives the publication year as 1902, but the cited source S18 explicitly states (1901); the name, genres and editorship are otherwise correctly reproduced.",
+              "raw": {
+                "location": "## Основний зміст — ### Поетика, дослідники й містки до високої культури (Колесса)",
+                "claim_quote": "Іван Колесса важливий як галицький фольклорист і етнограф, який зібрав і впорядкував «Галицько-руські народні пісні з мелодіями» 1902 року, де були українські колядки, щедрівки, обжинкові, ліричні, козацькі, жовнірські пісні, балади й коломийки [S18]",
+                "citation_refs": [
+                  "S18"
+                ],
+                "source_content_quote": "S18 (УЛЕ, chunk c3585): «КОЛЕССА Іван Михайлович (1864 … — 8.II 1898, Львів) … Зібрав і впорядкував зб. «Галицько-руські народні пісні з мелодіями» (1901), де подав укр. колядки, щедрівки, обжинкові, ліричні, козацькі, жовнірські пісні, балади, коломийки тощо.» — the cited source dates the collection to 1901, not 1902.",
+                "issue_type": "MISATTRIBUTION",
+                "issue_description": "The article gives the publication year as 1902, but the cited source S18 explicitly states (1901); the name, genres and editorship are otherwise correctly reproduced.",
+                "severity": "minor"
+              }
+            },
+            {
+              "location": "## Основний зміст — ### Поетика, дослідники й містки до високої культури (Квітка)",
+              "quote": "Климент Квітка важливий як музикознавчий місток, бо його праці про українські епічні, русальні, купальські й обжинкові пісні були вперше опубліковані 1985–1986 років у виданні «Вибрані статті» (Ч. 1–2), упорядкованому А. Іваницьким [S20]",
+              "issue_type": "MISATTRIBUTION",
+              "severity": "major",
+              "description": "The source attributes the first publication of Kvitka's articles on those song genres to «Нариси української народної музики» (1985); the article instead names «Вибрані статті» (Ч. 1–2) edited by Іваницький, conflating a separate works listing and a memorial збірник that the source does not link to that first publication.",
+              "raw": {
+                "location": "## Основний зміст — ### Поетика, дослідники й містки до високої культури (Квітка)",
+                "claim_quote": "Климент Квітка важливий як музикознавчий місток, бо його праці про українські епічні, русальні, купальські й обжинкові пісні були вперше опубліковані 1985–1986 років у виданні «Вибрані статті» (Ч. 1–2), упорядкованому А. Іваницьким [S20]",
+                "citation_refs": [
+                  "S20"
+                ],
+                "source_content_quote": "S20 (УЛЕ, chunk c3275): «У 1985 під назвою «Нариси української народної музики» вперше опубл. статті К. про укр. епічні, русальнї, купальські, обжинкові пісні тощо.» The same chunk lists «Вибрані статті, ч. 1 — 2. К., 1985 — 86» only under «Тв.» (a separate works listing, not described as the vehicle for those song-articles), and names «Іваницький А. І.» only as author of a «Науковий збірник пам'яті К. В. Квітки» in «Літ.», not as упорядник of «Вибрані статті».",
+                "issue_type": "MISATTRIBUTION",
+                "issue_description": "The source attributes the first publication of Kvitka's articles on those song genres to «Нариси української народної музики» (1985); the article instead names «Вибрані статті» (Ч. 1–2) edited by Іваницький, conflating a separate works listing and a memorial збірник that the source does not link to that first publication.",
+                "severity": "major"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "source_grounding",
+              "find": "«Галицько-руські народні пісні з мелодіями» 1902 року",
+              "replace": "«Галицько-руські народні пісні з мелодіями» 1901 року"
+            },
+            {
+              "dim": "source_grounding",
+              "find": "були вперше опубліковані 1985–1986 років у виданні «Вибрані статті» (Ч. 1–2), упорядкованому А. Іваницьким [S20]",
+              "replace": "були вперше опубліковані 1985 року під назвою «Нариси української народної музики» [S20]"
+            }
+          ],
+          "notes": "All song quotes (S12, S13, S16), ritual/ethnographic claims (S2, S3, S6, S7, S9), social-history attributions (S22, S23, S24), and high-culture bridges (S28, S30, S31, S32, S33) verify verbatim against the corpus; only two bibliographic misattributions in the Колесса/Квітка paragraph need surface fixes (Колесса 1902→1901; Квітка's first publication is «Нариси української народної музики» 1985, not «Вибрані статті» ed. Іваницький).",
+          "duration_s": 490.02,
+          "error": ""
+        }
+      },
+      "merge": {
+        "applied_count": 3,
+        "conflicts_count": 0,
+        "applied": [
+          {
+            "dim": "register",
+            "find": "проходить не по темі зерна, а по місцю й фазі роботи",
+            "replace": "проходить не за темою зерна, а за місцем і фазою роботи"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "«Галицько-руські народні пісні з мелодіями» 1902 року",
+            "replace": "«Галицько-руські народні пісні з мелодіями» 1901 року"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "були вперше опубліковані 1985–1986 років у виданні «Вибрані статті» (Ч. 1–2), упорядкованому А. Іваницьким [S20]",
+            "replace": "були вперше опубліковані 1985 року під назвою «Нариси української народної музики» [S20]"
+          }
+        ],
+        "conflicts": [],
+        "skipped_missing": []
+      }
+    }
+  ],
+  "final_verdict": "PASS",
+  "failing_dims": [],
+  "min_score": 8.0,
+  "failing_dim": "source_grounding",
+  "thresholds": {
+    "source_grounding": 8.0,
+    "factual_accuracy": 8.0,
+    "ukrainian_perspective": 8.0,
+    "register": 8.0
+  },
+  "thresholds_calibrated": true,
+  "shadow_mode": false,
+  "started_at": 1781382685.237938,
+  "finished_at": 1781383627.324357,
+  "duration_s": 942.09
+}
