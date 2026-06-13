@@ -1,5 +1,32 @@
 # Folk Track — Claude Driver Handoff (MY OWN — not the orchestrator's)
 
+## ▶▶▶ ROLE + PRIORITIES (updated 2026-06-13 — READ FIRST)
+> **MY ROLE (user 2026-06-13):** I am the orchestrator of **FOLK + ALL SEMINARS** (folk · hist · bio · istorio ·
+> lit · oes · ruth). The **OTHER orchestrator owns INFRA + Word Atlas**; **Codex owns CORE tracks (a1–c2)**. So I
+> drive seminar CONTENT and **FILE infra needs as issues** (I do NOT implement infra myself — that's the other
+> orchestrator's lane). Folk is the active seminar; the rest rest (bio handoff `docs/bio-epic/`).
+>
+> **🔝 TOP PRIORITY (user 2026-06-13): issue #3079 — seminar module builds must SELF-CONVERGE** (python_qg + LLM
+> QG) **without manual correction-loop driving.** This is the ROOT CAUSE of "manually made" modules and the gate to
+> scaling all seminars. Infra orchestrator implements; I track. Sub-walls: #2991, #2997 + coinage/citation/ADR-008
+> divergence (Sessions 11–16). The folk WIKI loop already got the divergence-safety pattern (#3054 best-round) — the
+> MODULE loop (linear_pipeline ADR-008) needs the same + a cross-model fixer route.
+>
+> **🧱 FOLK MODULE e2e TRUTH (do NOT surface folk nav until fixed):** 3/42 modules built, but **only kalendarna is
+> PROPERLY e2e** (`llm_qg.json` PASS 7.0). **koliadky + dumy have NO `llm_qg.json`** → shipped on manual #M-11
+> corpus-hammer only (builds tripped python_qg pre-LLM-QG). To finish them: run the LLM QG (interim/manual) OR — better
+> — land #3079 then rebuild clean.
+>
+> **🙈 SURFACING FOLK (DEFERRED until all 3 modules are e2e-proper):** the user wants folk visible "among the
+> seminars." Mechanism = remove `'folk'` from `HIDDEN_MODULE_LINK_TRACKS` (`site/src/components/LevelLanding.tsx:45`)
+> + `hiddenPublicPaths` (`site/astro.config.mjs:17`). This REVERSES orchestrator #3027 ("hide folk nav — too early")
+> → coordinate. GATE: don't un-hide until koliadky + dumy clear LLM QG (user 2026-06-13: "deliver the other 2 e2e first").
+> Recommended posture = clearly-labeled PREVIEW/BETA (matches a2).
+>
+> **📮 ISSUES FILED THIS SESSION (for the infra/other orchestrator):** #3060 (agy MCP wiring) + #3061 (gemini→agy
+> routing flip) under epic **#3063**; **#3079** (seminar module self-converge — the priority).
+
+
 > **Scope/boundaries (user 2026-06-06):** User redirected Claude from the bio epic to **re-research +
 > rebuild the FOLK track first** ("leave bio resting, test the system with folk"). Codex/GPT is the
 > orchestrator. Claude does NOT touch `docs/session-state/current.md`. This is Claude's OWN git-tracked
