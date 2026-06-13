@@ -1,0 +1,267 @@
+{
+  "article_path": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/folk-gap-wikis/wiki/folk/ritual/holosinnya.md",
+  "rounds": [
+    {
+      "round": 1,
+      "dims": {
+        "ukrainian_perspective": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 10,
+          "verdict": "PASS",
+          "findings_count": 0,
+          "findings": [],
+          "fixes": [],
+          "notes": "",
+          "duration_s": 56.04,
+          "error": ""
+        },
+        "register": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 10,
+          "verdict": "PASS",
+          "findings_count": 0,
+          "findings": [],
+          "fixes": [],
+          "notes": "Native, sophisticated seminar-register Ukrainian; spot-checks via search_style_guide (доцільно, наявний, переадресовувати, виступати, личити, загалом) and VESUM (приказують, домальовувати) all clean; archaic/dialect forms (темної-невидної, одщіпнулася, дружино моя, паску-дари) are inside source-attributed «…» quotations from Грушевський with [S#]/chunk_id and were exempted for register.",
+          "duration_s": 106.84,
+          "error": ""
+        },
+        "factual_accuracy": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 7,
+          "verdict": "REVISE",
+          "findings_count": 1,
+          "findings": [
+            {
+              "location": "### Збирачі, наукові позиції й містки до високої культури",
+              "quote": "Українська літературна енциклопедія називає праці Івана Свєнціцького «Похоронні голосіння» і Володимира Гнатюка «Похоронні звичаї й обряди» в томах 31–32 «Етнографічного збірника», виданих у Львові 1912 року.",
+              "issue_type": "FACTUAL_ERROR",
+              "severity": "critical",
+              "description": "The folklorist who wrote «Похоронні голосіння» is Іларіон Свєнціцький; the article expands the initial 'І.' wrongly to «Іван», naming a real scholar incorrectly (surname, work title, volume, and year are all correct).",
+              "raw": {
+                "location": "### Збирачі, наукові позиції й містки до високої культури",
+                "claim_quote": "Українська літературна енциклопедія називає праці Івана Свєнціцького «Похоронні голосіння» і Володимира Гнатюка «Похоронні звичаї й обряди» в томах 31–32 «Етнографічного збірника», виданих у Львові 1912 року.",
+                "tool_evidence": [
+                  {
+                    "tool": "query_wikipedia",
+                    "args": "Свєнціцький Іларіон (summary)",
+                    "result_summary": "'Іларіо́н Семе́нович Свєнці́цький — український філолог, етнограф, музеєзнавець... дійсний член НТШ' — the scholar's first name is Іларіон, not Іван"
+                  },
+                  {
+                    "tool": "query_wikipedia",
+                    "args": "Свєнціцький Іван Похоронні голосіння (search)",
+                    "result_summary": "single result returned is 'Свєнціцький Іларіон Семенович — ...та похоронні голосіння'; no 'Іван Свєнціцький' associated with 'Похоронні голосіння' exists"
+                  },
+                  {
+                    "tool": "query_wikipedia",
+                    "args": "Гнатюк Володимир Михайлович (summary)",
+                    "result_summary": "confirms Володимир Михайлович Гнатюк as the ethnographer — the Гнатюк attribution and the vol. 31–32 / 1912 Етнографічний збірник data are correct; only the Свєнціцький forename is wrong"
+                  }
+                ],
+                "issue_type": "FACTUAL_ERROR",
+                "issue_description": "The folklorist who wrote «Похоронні голосіння» is Іларіон Свєнціцький; the article expands the initial 'І.' wrongly to «Іван», naming a real scholar incorrectly (surname, work title, volume, and year are all correct).",
+                "severity": "critical"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "factual_accuracy",
+              "find": "праці Івана Свєнціцького «Похоронні голосіння»",
+              "replace": "праці Іларіона Свєнціцького «Похоронні голосіння»"
+            }
+          ],
+          "notes": "One factual error — folklorist «Іван Свєнціцький» should be Іларіон Свєнціцький; all other verified claims (Hnatyuk, vol. 31–32/1912, Lysenko's «Плач Ярославни», Shevchenko's translation, Володимир Василькович) check out.",
+          "duration_s": 186.99,
+          "error": ""
+        },
+        "source_grounding": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 1,
+          "findings": [
+            {
+              "location": "## Деколонізаційна перспектива (paragraph 2)",
+              "quote": "Імперські й радянські рамки часто знецінювали такі практики через мову «відсталості», «марновірства» або безособового фольклорного матеріалу. [S8][S21]",
+              "issue_type": "WEAK_SUPPORT",
+              "severity": "minor",
+              "description": "The cited chunks support Soviet repression of обрядовість (S21) but do not attest the specific claim that imperial/Soviet frames devalued laments through a 'language of backwardness/superstition'; «марновірство» in S8 carries the opposite, descriptive sense.",
+              "raw": {
+                "location": "## Деколонізаційна перспектива (paragraph 2)",
+                "claim_quote": "Імперські й радянські рамки часто знецінювали такі практики через мову «відсталості», «марновірства» або безособового фольклорного матеріалу. [S8][S21]",
+                "citation_refs": [
+                  "S8",
+                  "S21"
+                ],
+                "source_content_quote": "S21 (feaa5fa7_c0729) documents Soviet policy only: «адміністративно-поліційного втручання в церковні справи. Церкви примусово зачиняються... підкосила традиційну обрядовість укр. села» — no characterization of a discourse of «відсталість/марновірство». S8 (da46aa92_c0536) uses «марновірство» in the OPPOSITE sense — describing real fear-induced folk superstition that limited recording: «Страх людини перед смертю, марновірство, викликане цим страхом... не дозволяли відтворювати похоронні плачі без померлого» — not as imperial framing.",
+                "issue_type": "WEAK_SUPPORT",
+                "issue_description": "The cited chunks support Soviet repression of обрядовість (S21) but do not attest the specific claim that imperial/Soviet frames devalued laments through a 'language of backwardness/superstition'; «марновірство» in S8 carries the opposite, descriptive sense.",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "source_grounding",
+              "find": "Імперські й радянські рамки часто знецінювали такі практики через мову «відсталості», «марновірства» або безособového фольклорного матеріалу. [S8][S21]",
+              "replace": "Радянські рамки знецінювали традиційну обрядовість насамперед через адміністративне втручання в церковне й родинне життя. [S21] Ширше імперське знецінення через мову «відсталості» чи «марновірства» тут подано як інтерпретаційну рамку, а не як пряме свідчення джерел. <!-- VERIFY: «мова відсталості/марновірства» як імперський дискурс прямо не засвідчена в S8/S21; S8 вживає «марновірство» в описовому значенні -->"
+            }
+          ],
+          "notes": "Exceptionally well-grounded — all ~15 verbatim lament quotes and every scholarly attribution verify exactly against the corpus; one minor weak-support gap in the decolonization section's imperial/Soviet 'backwardness/superstition' framing.",
+          "duration_s": 357.21,
+          "error": ""
+        }
+      },
+      "merge": {
+        "applied_count": 1,
+        "conflicts_count": 1,
+        "applied": [
+          {
+            "dim": "factual_accuracy",
+            "find": "праці Івана Свєнціцького «Похоронні голосіння»",
+            "replace": "праці Іларіона Свєнціцького «Похоронні голосіння»"
+          }
+        ],
+        "conflicts": [
+          {
+            "kind": "MISSING",
+            "find": "Імперські й радянські рамки часто знецінювали такі практики через мову «відсталості», «марновірства» або безособového фольклорного матеріалу. [S8][S21]",
+            "dims": [
+              "source_grounding"
+            ],
+            "proposals": [
+              [
+                "source_grounding",
+                "Радянські рамки знецінювали традиційну обрядовість насамперед через адміністративне втручання в церковне й родинне життя. [S21] Ширше імперське знецінення через мову «відсталості» чи «марновірства» тут подано як інтерпретаційну рамку, а не як пряме свідчення джерел. <!-- VERIFY: «мова відсталості/марновірства» як імперський дискурс прямо не засвідчена в S8/S21; S8 вживає «марновірство» в описовому значенні -->"
+              ]
+            ],
+            "chosen": null,
+            "reason": "find-string not present in article text"
+          }
+        ],
+        "skipped_missing": [
+          {
+            "dim": "source_grounding",
+            "find": "Імперські й радянські рамки часто знецінювали такі практики через мову «відсталості», «марновірства» або безособového фольклорного матеріалу. [S8][S21]",
+            "replace": "Радянські рамки знецінювали традиційну обрядовість насамперед через адміністративне втручання в церковне й родинне життя. [S21] Ширше імперське знецінення через мову «відсталості» чи «марновірства» тут подано як інтерпретаційну рамку, а не як пряме свідчення джерел. <!-- VERIFY: «мова відсталості/марновірства» як імперський дискурс прямо не засвідчена в S8/S21; S8 вживає «марновірство» в описовому значенні -->"
+          }
+        ]
+      }
+    },
+    {
+      "round": 2,
+      "dims": {
+        "ukrainian_perspective": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 10,
+          "verdict": "PASS",
+          "findings_count": 0,
+          "findings": [],
+          "fixes": [],
+          "notes": "",
+          "duration_s": 55.09,
+          "error": ""
+        },
+        "register": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 1,
+          "findings": [
+            {
+              "location": "## Деколонізаційна перспектива (paragraph on Soviet anti-religious policy)",
+              "quote": "репресувала духовенство й назовні підкошувала традиційну обрядовість села, зокрема похорон",
+              "issue_type": "UNNATURAL_COLLOCATION",
+              "severity": "minor",
+              "description": "«назовні підкошувала» mixes a directional adverb ('outward') with a figurative verb; a native writer would say «ззовні підривала/руйнувала» — «назовні» here reads as a misfit, slightly machine-assembled.",
+              "raw": {
+                "location": "## Деколонізаційна перспектива (paragraph on Soviet anti-religious policy)",
+                "quote": "репресувала духовенство й назовні підкошувала традиційну обрядовість села, зокрема похорон",
+                "tool_evidence": [
+                  {
+                    "tool": "verify_word",
+                    "args": "назовні",
+                    "result_summary": "valid adverb meaning 'outward/to the outside' — but it denotes direction outward, not 'externally/on the surface', so it does not fit the intended 'outwardly undermined' sense"
+                  }
+                ],
+                "natural_alternative": "репресувала духовенство й ззовні підривала традиційну обрядовість села",
+                "issue_type": "UNNATURAL_COLLOCATION",
+                "issue_description": "«назовні підкошувала» mixes a directional adverb ('outward') with a figurative verb; a native writer would say «ззовні підривала/руйнувала» — «назовні» here reads as a misfit, slightly machine-assembled.",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "register",
+              "find": "назовні підкошувала традиційну обрядовість села",
+              "replace": "ззовні підривала традиційну обрядовість села"
+            }
+          ],
+          "notes": "Near-clean seminar-register Ukrainian that reads as composed, not translated; one minor unnatural collocation («назовні підкошувала»). Source-preserved attributed Грушевський/Снятинщина/Лубенщина quotations inside «…» were ignored for register per the exemption.",
+          "duration_s": 90.12,
+          "error": ""
+        },
+        "factual_accuracy": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 10,
+          "verdict": "PASS",
+          "findings_count": 0,
+          "findings": [],
+          "fixes": [],
+          "notes": "",
+          "duration_s": 160.17,
+          "error": ""
+        },
+        "source_grounding": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 10,
+          "verdict": "PASS",
+          "findings_count": 0,
+          "findings": [],
+          "fixes": [],
+          "notes": "",
+          "duration_s": 300.29,
+          "error": ""
+        }
+      },
+      "merge": {
+        "applied_count": 1,
+        "conflicts_count": 0,
+        "applied": [
+          {
+            "dim": "register",
+            "find": "назовні підкошувала традиційну обрядовість села",
+            "replace": "ззовні підривала традиційну обрядовість села"
+          }
+        ],
+        "conflicts": [],
+        "skipped_missing": []
+      }
+    }
+  ],
+  "final_verdict": "PASS",
+  "failing_dims": [],
+  "min_score": 9.0,
+  "failing_dim": "register",
+  "thresholds": {
+    "source_grounding": 8.0,
+    "factual_accuracy": 8.0,
+    "ukrainian_perspective": 8.0,
+    "register": 8.0
+  },
+  "thresholds_calibrated": true,
+  "shadow_mode": false,
+  "started_at": 1781381032.257788,
+  "finished_at": 1781381689.7731378,
+  "duration_s": 657.52
+}
