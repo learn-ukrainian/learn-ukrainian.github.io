@@ -1,8 +1,16 @@
 # grok-swarm §6 calque candidates — Claude triage (2026-06-14)
 
 Source: grok 4-agent purist swarm (verify-shaped, Антоненко + UA-GEC F/Calque, heritage-gated).
-Raw: `grok-swarm-calque-candidates-2026-06-14.json` (20 entries). **NOT yet integrated** —
-needs the per-entry curation below before extending `scripts/lexicon/calque_corrections.py`.
+Raw: `grok-swarm-calque-candidates-2026-06-14.json` (20 entries).
+
+> **✅ INTEGRATED (2026-06-14, Claude-curated):** the curation below was
+> heritage-/UA-GEC-/VESUM-verified live and landed in
+> `scripts/lexicon/calque_corrections.py`: ✅ phrasals → `PHRASAL_CALQUES`;
+> ⚠️ polysemes → new `SENSE_RESTRICTED_CALQUES` bucket. **Two ✅ items were
+> demoted on verification:** `дійсно` (authentic adverb — Antonenko p053 "є в
+> українській мові") and `відносно` (authentic "порівняно"; UA-GEC offers it
+> AS a correction) were DROPPED, not flagged. ❓ suspects all dropped. Test:
+> `tests/test_calque_corrections.py` pins the drops against re-introduction.
 
 The swarm did well (canonical purist corrections, not hallucinated). But 6 entries are
 **polysemes — authentic Ukrainian words that are calques ONLY in one sense** — and would

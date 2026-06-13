@@ -27,6 +27,11 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 WORD_FLOOR = 1200
 
+# Subdirs under docs/research/ that hold tooling / research notes rather than
+# curriculum dossiers. Files here are exempt from the dossier word-count floor.
+# Real dossiers live under a track-named subdir (docs/research/{track}/{slug}.md).
+_NON_DOSSIER_RESEARCH_SUBDIRS = frozenset({"atlas", "lexicon"})
+
 
 @dataclass(frozen=True)
 class DossierCount:
@@ -62,7 +67,13 @@ def _is_research_dossier(path: Path) -> bool:
     relative = _repo_relative(path)
     if relative is None or path.suffix != ".md":
         return False
-    return len(relative.parts) >= 3 and relative.parts[:2] == ("docs", "research")
+    if len(relative.parts) < 3 or relative.parts[:2] != ("docs", "research"):
+        return False
+    # Curriculum dossiers live under a track-named subdir (docs/research/{track}/).
+    # Other docs/research/ subdirs hold tooling / research notes that are NOT
+    # subject to the 1200-word dossier floor — exclude them so editing e.g. an
+    # Atlas calque-triage note doesn't trip the dossier gate.
+    return relative.parts[2] not in _NON_DOSSIER_RESEARCH_SUBDIRS
 
 
 def _resolve_path(path: Path) -> Path:
