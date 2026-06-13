@@ -13,7 +13,8 @@ no fabrication):
   source caveats.
 - **cefr** — PULS CEFR lookup when available.
 - **literary_attestation** — exact-form literary corpus hit when available.
-- **synonyms** — source-attested, A1-sense allowlisted Ukrainian candidates only.
+- **synonyms** — source-attested Ukrainian candidates from clean slovnyk.me
+  synonym dictionaries, with noisy legacy sources kept A1-sense allowlisted.
 - **sections.synonyms / sections.idioms** — slovnyk.me per-lemma lookup cache
   (Караванський + Словник синонімів; Фразеологічний).
 - **heritage warning alternatives** — slovnyk.me correction dictionaries
@@ -122,7 +123,7 @@ _SLOVNYK_DICT_LABELS: dict[str, str] = {
     "foreign_shtepa": "Словник чужослів Павла Штепи",
 }
 _SLOVNYK_LOOKUP_SLUGS = tuple(_SLOVNYK_DICT_LABELS)
-_SLOVNYK_SYNONYM_SLUGS = ("synonyms", "synonyms_karavansky")
+_SLOVNYK_SYNONYM_SLUGS = ("synonyms_karavansky", "synonyms")
 _SLOVNYK_WARNING_SLUGS = ("davydov", "voloschak", "foreign_shtepa")
 _SLOVNYK_BASE = "https://slovnyk.me"
 _SLOVNYK_CACHE_SCHEMA_VERSION = 2
@@ -1023,15 +1024,40 @@ def _clean_synonym_candidate(candidate: str, lemma: str) -> str | None:
     return term
 
 
-def _is_safe_slovnyk_synonym(lemma: str, candidate: str, headword_pos: str) -> bool:
-    if candidate not in _safe_synonym_set(lemma):
+def _slovnyk_synonym_group_head(row: dict[str, Any], lemma: str) -> str:
+    body = _synonym_body(
+        str(row.get("text") or ""),
+        lemma,
+        str(row.get("word") or ""),
+        str(row.get("dictionary_slug") or ""),
+    )
+    first = re.split(r"[,;(]", body, maxsplit=1)[0]
+    first = _SYNONYM_LABEL_RE.sub(" ", _strip_stress(first))
+    first = re.sub(r"\s+", " ", first).strip(' \t\r\n.,;:!?/\\[]{}«»"“”<>').casefold()
+    return first
+
+
+def _is_safe_slovnyk_synonym(
+    lemma: str,
+    candidate: str,
+    headword_pos: str,
+    *,
+    require_allowlist: bool = False,
+) -> bool:
+    if require_allowlist and candidate not in _safe_synonym_set(lemma):
         return False
     if not _candidate_matches_headword_pos(candidate, headword_pos):
         return False
     return not _candidate_is_headword_variant(lemma, candidate, headword_pos)
 
 
-def _synonyms_from_slovnyk_row(row: dict[str, Any], lemma: str, headword_pos: str) -> list[str]:
+def _synonyms_from_slovnyk_row(
+    row: dict[str, Any],
+    lemma: str,
+    headword_pos: str,
+    *,
+    require_allowlist: bool = False,
+) -> list[str]:
     body = _synonym_body(
         str(row.get("text") or ""),
         lemma,
@@ -1044,7 +1070,16 @@ def _synonyms_from_slovnyk_row(row: dict[str, Any], lemma: str, headword_pos: st
     for chunk in chunks:
         for part in re.split(r"[()]", chunk):
             term = _clean_synonym_candidate(part, lemma)
-            if term and term not in seen and _is_safe_slovnyk_synonym(lemma, term, headword_pos):
+            if (
+                term
+                and term not in seen
+                and _is_safe_slovnyk_synonym(
+                    lemma,
+                    term,
+                    headword_pos,
+                    require_allowlist=require_allowlist,
+                )
+            ):
                 seen.add(term)
                 out.append(term)
     return out
@@ -1057,10 +1092,13 @@ def _synonyms_slovnyk(
     entry_pos: str | None = None,
 ) -> dict[str, Any] | None:
     """Synonym chips from slovnyk.me synonyms dictionaries, omitted when empty."""
-    headword_pos = _headword_pos_for_synonyms(lemma, entry_pos)
-    if not headword_pos or not _safe_synonym_set(lemma):
+    lookup_lemma = _slovnyk_lookup_word(_base_lemma(lemma))
+    if not lookup_lemma or _has_whitespace(lookup_lemma):
         return None
-    cache = cache if cache is not None else _slovnyk_cache(lemma)
+    headword_pos = _headword_pos_for_synonyms(lookup_lemma, entry_pos)
+    if not headword_pos:
+        return None
+    cache = cache if cache is not None else _slovnyk_cache(lookup_lemma)
     items: list[str] = []
     seen: set[str] = set()
     sources: list[str] = []
@@ -1069,7 +1107,16 @@ def _synonyms_slovnyk(
         row = _cache_lookup(cache, slug)
         if not row:
             continue
-        row_items = _synonyms_from_slovnyk_row(row, lemma, headword_pos)
+        row_items = _synonyms_from_slovnyk_row(row, lookup_lemma, headword_pos)
+        if slug == "synonyms" and row_items:
+            group_head = _slovnyk_synonym_group_head(row, lookup_lemma)
+            allowlisted = _safe_synonym_set(lookup_lemma)
+            if (
+                group_head != lookup_lemma.casefold()
+                and not seen.intersection(row_items)
+                and not allowlisted.intersection(row_items)
+            ):
+                continue
         if not row_items:
             continue
         for synonym in row_items:
@@ -1514,10 +1561,8 @@ def _sense_correct_synonyms(conn: sqlite3.Connection, lemma: str) -> list[str]:
     """Return source-attested synonyms for the lemma's A1 sense, capped at six."""
     out: list[str] = []
     seen: set[str] = set()
-    _synonyms_from_wiktionary(conn, lemma, out, seen)
     _synonyms_from_balla(conn, lemma, out, seen)
     _synonyms_from_sum11(conn, lemma, out, seen)
-    _synonyms_from_ukrajinet(conn, lemma, out, seen)
     return out[:6]
 
 
