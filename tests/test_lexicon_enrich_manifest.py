@@ -6,6 +6,7 @@ import pytest
 from scripts.lexicon import enrich_manifest as enrich_manifest_module
 from scripts.lexicon.enrich_manifest import (
     KAIKKI_SOURCE,
+    _base_lemma,
     _build_paradigm,
     _cefr,
     _definition_cards,
@@ -17,6 +18,7 @@ from scripts.lexicon.enrich_manifest import (
     _literary_excerpt,
     _meaning,
     _merge_slovnyk_warning,
+    _morphology,
     _sense_correct_synonyms,
     _slovnyk_cache,
     _SlovnykTransientError,
@@ -104,6 +106,14 @@ def _conn() -> sqlite3.Connection:
 def test_cleanup_helpers_strip_chunk_and_decode_entities() -> None:
     assert clean_gloss("Good morning — chunk, unstressed `[о]` stays clean") == "Good morning"
     assert clean_html_entities("20&amp;nbsp;Гц &amp;lt;br&amp;gt;") == "20 Гц <br>"
+
+
+def test_base_lemma_splits_pairs_without_lowercasing_non_pairs() -> None:
+    non_pair = " Київ "
+
+    assert _base_lemma("варити / зварити") == "варити"
+    assert _base_lemma("Київ") == "Київ"
+    assert _base_lemma(non_pair) == non_pair
 
 
 def test_build_noun_paradigm_groups_cases_by_number() -> None:
@@ -214,6 +224,29 @@ def test_build_verb_paradigm_collapses_variants() -> None:
 
 def test_build_paradigm_omits_unstructured_pos() -> None:
     assert _build_paradigm("adv", [{"form": "добре", "label": ""}]) is None
+
+
+def test_morphology_can_use_base_form_from_pair_lemma(monkeypatch) -> None:
+    calls: list[str] = []
+
+    def fake_verify_lemma(lemma: str) -> list[dict[str, str]]:
+        calls.append(lemma)
+        if lemma != "варити":
+            return []
+        return [
+            {"word_form": "варити", "tags": "verb:inf", "pos": "verb"},
+            {"word_form": "варю", "tags": "verb:pres:s:1", "pos": "verb"},
+        ]
+
+    monkeypatch.setattr(enrich_manifest_module, "verify_lemma", fake_verify_lemma)
+    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+
+    morphology = _morphology(_base_lemma("варити / зварити"))
+
+    assert calls == ["варити"]
+    assert morphology is not None
+    assert morphology["pos"] == "дієслово"
+    assert morphology["forms"][0] == {"form": "варити", "label": "інфінітив"}
 
 
 def test_synonyms_filter_polluted_wordnet_rows_to_a1_sense() -> None:
@@ -730,6 +763,100 @@ def test_kaikki_etymology_does_not_overwrite_goroh() -> None:
         "source": "Горох (за ЕСУМ)",
         "source_url": "https://goroh.pp.ua/Етимологія/книга",
     }
+
+
+def test_enrich_uses_base_form_for_pair_single_form_sections(monkeypatch, tmp_path) -> None:
+    manifest_path = tmp_path / "manifest.json"
+    db_path = tmp_path / "sources.sqlite"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "entries": [
+                    {
+                        "lemma": "робота / працювати",
+                        "gloss": "work",
+                        "pos": "noun",
+                    }
+                ]
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    conn = sqlite3.connect(db_path)
+    conn.execute(
+        """
+        CREATE TABLE goroh_etymology (
+            requested_lemma TEXT NOT NULL,
+            headword TEXT NOT NULL,
+            etymology_text TEXT NOT NULL,
+            source_url TEXT
+        )
+        """
+    )
+    conn.execute(
+        "INSERT INTO goroh_etymology VALUES (?, ?, ?, ?)",
+        ("робота", "робота", "Goroh etymology for робота.", "https://goroh.pp.ua/Етимологія/робота"),
+    )
+    conn.commit()
+    conn.close()
+
+    cache = {
+        "lookups": {
+            "synonyms": {
+                "dictionary_slug": "synonyms",
+                "dictionary_label": "Словник синонімів української мови",
+                "source_url": "https://slovnyk.me/dict/synonyms/робота",
+                "word": "робота",
+                "text": "робота ПРАЦЯ. Джерело: тест",
+            }
+        }
+    }
+    verify_calls: list[str] = []
+
+    def fake_verify_lemma(lemma: str) -> list[dict[str, str]]:
+        verify_calls.append(lemma)
+        if lemma != "робота":
+            return []
+        return [{"word_form": "робота", "tags": "noun:s:f:v_naz", "pos": "noun"}]
+
+    _patch_vesum_analyses(monkeypatch, {"робота": "noun", "праця": "noun"})
+    monkeypatch.setattr(enrich_manifest_module, "MANIFEST", manifest_path)
+    monkeypatch.setattr(enrich_manifest_module, "SOURCES_DB", db_path)
+    monkeypatch.setattr(enrich_manifest_module, "_load_kaikki_lookup", lambda: {})
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache", lambda lemma: cache)
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "classify_lemma",
+        lambda lemma: {
+            "classification": "unknown",
+            "attestations": [],
+            "is_russianism": False,
+            "russian_shadow": False,
+            "sovietization_risk": 0,
+            "calque_warning": None,
+        },
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_sum11_has_flag_columns", lambda conn: True)
+    monkeypatch.setattr(enrich_manifest_module, "_definition_cards", lambda *args, **kwargs: [])
+    monkeypatch.setattr(enrich_manifest_module, "_kaikki_pronunciation", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_idioms_slovnyk", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    monkeypatch.setattr(enrich_manifest_module, "_cefr", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_meaning", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_literary_attestation", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_translation", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "verify_lemma", fake_verify_lemma)
+
+    assert enrich_manifest_module.enrich() == (1, 1)
+
+    enriched = json.loads(manifest_path.read_text(encoding="utf-8"))["entries"][0]
+    assert enriched["lemma"] == "робота / працювати"
+    assert enriched["sections"]["synonyms"]["items"] == ["праця"]
+    assert enriched["enrichment"]["etymology"]["text"] == "Goroh etymology for робота."
+    assert enriched["enrichment"]["morphology"]["forms"] == [{"form": "робота", "label": "однина, жін., називний"}]
+    assert verify_calls == ["робота"]
 
 
 def test_dmklinger_key_strips_stress_and_casefolds() -> None:
