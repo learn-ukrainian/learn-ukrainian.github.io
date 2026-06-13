@@ -550,6 +550,19 @@
   margin-bottom: 0.25rem;
 }
 
+.vocabCardAtlasLink {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+
+.vocabCardAtlasLink:hover {
+  text-decoration: underline;
+}
+
 /* ─── PhraseTable ─── */
 
 .phraseTableContainer {

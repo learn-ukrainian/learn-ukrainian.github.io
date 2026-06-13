@@ -6,6 +6,7 @@ vocabulary, grammar, checkpoint) into MDX markup. Used by generate_mdx_direct.
 
 from __future__ import annotations
 
+from atlas_links import atlas_href_for
 from generate_mdx_direct_renderers import dump_json_for_jsx, escape_jsx_string
 
 # Session grouping for abetka: letter groups by pedagogical sequence
@@ -304,6 +305,8 @@ def _render_syllable_vocab(data: dict) -> list[str]:
                     "examples": examples,
                     "category": "",
                     "question": "",
+                    # Integrity-gated Word Atlas link ("" when no Atlas page).
+                    "atlas_href": atlas_href_for(v.get("word", "")) or "",
                 }
             )
         lines.append("\n## Слова по складах\n")
@@ -397,6 +400,8 @@ def render_vocabulary_module(data: dict) -> str:
                 "examples": w.get("examples", []),
                 "category": w.get("category", ""),
                 "question": w.get("question", ""),
+                # Integrity-gated Word Atlas link ("" when no Atlas page).
+                "atlas_href": atlas_href_for(w.get("word", "")) or "",
             }
             for w in vocab
         ]
