@@ -1,0 +1,128 @@
+# Source registry for wiki/folk/genres/kobzarstvo-lirnytstvo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S2
+  file: wave7-popovych-narys-kultury_c0316
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c4435
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c0980
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave8-ukr-lit-entsyklopediia_c3879
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c1535
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c2257
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave7-entsyklopediia-ukrainoznavstva_c0623
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S9
+  file: wave7-antonovych-kultura_c0634
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S10
+  file: wave7-antonovych-kultura_c0655
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S11
+  file: wave7-popovych-narys-kultury_c0438
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S12
+  file: wave7-antonovych-kultura_c0660
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S13
+  file: ukrlib-kulish_c0006
+  type: literary
+  title: Пантелеймон Куліш. Чорна рада
+  author: Куліш П.
+- id: S14
+  file: ukrlib-khotkevych_c0089
+  type: literary
+  title: Гнат Хоткевич. Тарасик
+  author: Хоткевич Г.
+- id: S15
+  file: wave7-drahomanov-vybrani_c0210
+  type: literary
+  title: Драгоманов — Вибрані праці
+  author: Драгоманов М.
+- id: S16
+  file: wave7-drahomanov-vybrani_c0224
+  type: literary
+  title: Драгоманов — Вибрані праці
+  author: Драгоманов М.
+- id: S17
+  file: wave4-ukrainska-mova-encyclopedia_c0057
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S18
+  file: wave8-ukr-lit-entsyklopediia_c0271
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S19
+  file: wave8-ukr-lit-entsyklopediia_c2186
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S20
+  file: wave8-ukr-lit-entsyklopediia_c4374
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S21
+  file: wave8-ukr-lit-entsyklopediia_c4148
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S22
+  file: wave8-ukr-lit-entsyklopediia_c3588
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S23
+  file: wave8-ukr-lit-entsyklopediia_c3274
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S24
+  file: ukrlib-khotkevych_c0000
+  type: literary
+  title: Гнат Хоткевич. Життєпис Гната Хоткевича
+  author: Хоткевич Г.
+- id: S25
+  file: ukrlib-khotkevych_c0002
+  type: literary
+  title: Гнат Хоткевич. Життєпис Гната Хоткевича
+  author: Хоткевич Г.
+- id: S27
+  file: wave8-ukr-lit-entsyklopediia_c3492
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

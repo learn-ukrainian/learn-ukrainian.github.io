@@ -1,0 +1,280 @@
+{
+  "article_path": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/folk-gap-wikis/wiki/folk/genres/kobzarstvo-lirnytstvo.md",
+  "rounds": [
+    {
+      "round": 1,
+      "dims": {
+        "ukrainian_perspective": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 10,
+          "verdict": "PASS",
+          "findings_count": 0,
+          "findings": [],
+          "fixes": [],
+          "notes": "",
+          "duration_s": 66.68,
+          "error": ""
+        },
+        "register": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 1,
+          "findings": [
+            {
+              "location": "## Основний зміст → Професійне середовище, а не «фольклорний колорит» (regional paragraph)",
+              "quote": "Така географія підтримує обережне твердження",
+              "issue_type": "UNNATURAL_COLLOCATION",
+              "severity": "minor",
+              "description": "«підтримує твердження» reads as a calque of English/Russian 'support a claim'; native Ukrainian uses «підтверджує», «свідчить на користь» or «дає підстави для».",
+              "raw": {
+                "location": "## Основний зміст → Професійне середовище, а не «фольклорний колорит» (regional paragraph)",
+                "quote": "Така географія підтримує обережне твердження",
+                "tool_evidence": [
+                  {
+                    "tool": "search_style_guide",
+                    "args": "підтримувати твердження",
+                    "result_summary": "no match (guide ~46% indexed; absence not dispositive)"
+                  }
+                ],
+                "natural_alternative": "Така географія дає підстави для обережного твердження",
+                "issue_type": "UNNATURAL_COLLOCATION",
+                "issue_description": "«підтримує твердження» reads as a calque of English/Russian 'support a claim'; native Ukrainian uses «підтверджує», «свідчить на користь» or «дає підстави для».",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "register",
+              "find": "Така географія підтримує обережне твердження",
+              "replace": "Така географія дає підстави для обережного твердження"
+            }
+          ],
+          "notes": "Clean native-quality seminar register; one minor unnatural collocation («підтримує твердження»); source-preserved attributed quotations ignored for register per exemption.",
+          "duration_s": 81.71,
+          "error": ""
+        },
+        "factual_accuracy": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 8,
+          "verdict": "PASS",
+          "findings_count": 2,
+          "findings": [
+            {
+              "location": "### Збирачі, записи й перехід до науки (Вересай paragraph) — also appears in ### Репертуар, форма й виконавська техніка",
+              "quote": "У Вересая джерело називає дев'ять дум",
+              "issue_type": "FACTUAL_ERROR",
+              "severity": "major",
+              "description": "The article states (twice) that Вересай's repertoire included nine dumas, but Wikipedia/ЕІУ enumerate exactly six dumas by name as his (small) repertoire; the figure 'дев'ять' is attributed to an unnamed 'джерело' but contradicts the canonical enumerated count.",
+              "raw": {
+                "location": "### Збирачі, записи й перехід до науки (Вересай paragraph) — also appears in ### Репертуар, форма й виконавська техніка",
+                "claim_quote": "У Вересая джерело називає дев'ять дум",
+                "tool_evidence": [
+                  {
+                    "tool": "query_wikipedia",
+                    "args": "Вересай Остап Микитович (mode=extract)",
+                    "result_summary": "'Його репертуар... невеликий: шість дум: «Як три брати з Азова втікали», «Отчим», «Невольницька», «Про бурю на Чорному морі», «Про вдову і трьох синів», «Дума про Хведора Безрідного»' — enumerates SIX dumas, not nine; cites Киевская старина 1874 / ЕІУ"
+                  }
+                ],
+                "issue_type": "FACTUAL_ERROR",
+                "issue_description": "The article states (twice) that Вересай's repertoire included nine dumas, but Wikipedia/ЕІУ enumerate exactly six dumas by name as his (small) repertoire; the figure 'дев'ять' is attributed to an unnamed 'джерело' but contradicts the canonical enumerated count.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "### Збирачі, записи й перехід до науки (Остап Вересай є канонічним випадком...)",
+              "quote": "осліп у трирічному віці",
+              "issue_type": "FACTUAL_ERROR",
+              "severity": "minor",
+              "description": "Article says Вересай lost his sight at age three; the authoritative биографія (Wikipedia, citing ЕІУ) states age four ('У чотирирічному віці'). A small biographical spread, but the article asserts three without acknowledging it.",
+              "raw": {
+                "location": "### Збирачі, записи й перехід до науки (Остап Вересай є канонічним випадком...)",
+                "claim_quote": "осліп у трирічному віці",
+                "tool_evidence": [
+                  {
+                    "tool": "query_wikipedia",
+                    "args": "Вересай Остап Микитович (mode=extract)",
+                    "result_summary": "'У чотирирічному віці Остап втратив зір' — Wikipedia (and ЕІУ Т.1, с.480) give age FOUR, not three"
+                  }
+                ],
+                "issue_type": "FACTUAL_ERROR",
+                "issue_description": "Article says Вересай lost his sight at age three; the authoritative биографія (Wikipedia, citing ЕІУ) states age four ('У чотирирічному віці'). A small biographical spread, but the article asserts three without acknowledging it.",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "factual_accuracy",
+              "find": "У Вересая джерело називає дев'ять дум",
+              "replace": "У Вересая джерело називає дев'ять дум <!-- VERIFY: Вікіпедія та ЕІУ (Т.1, с.480) подають шість дум у репертуарі Вересая, перелічені поіменно; число «дев'ять» слід звірити з S4 -->"
+            },
+            {
+              "dim": "factual_accuracy",
+              "find": "мав у репертуарі дев'ять дум, соціальні, сатиричні, побутові твори, псалми й жебранки",
+              "replace": "мав у репертуарі дев'ять дум (Вікіпедія та ЕІУ подають шість), соціальні, сатиричні, побутові твори, псалми й жебранки"
+            },
+            {
+              "dim": "factual_accuracy",
+              "find": "осліп у трирічному віці",
+              "replace": "осліп у трирічному віці <!-- VERIFY: Вікіпедія/ЕІУ подають «у чотирирічному віці» -->"
+            }
+          ],
+          "notes": "Two factual discrepancies about Остап Вересай (repertoire count nine vs canonical six dumas; blindness age three vs four); all other dates, names, repression facts, and the Куліш quote verify against authoritative sources.",
+          "duration_s": 317.15,
+          "error": ""
+        },
+        "source_grounding": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 2,
+          "findings": [
+            {
+              "location": "## Репресії, інституціоналізація й культурна пам'ять",
+              "quote": "тоді як докладніший архівний виклад у досьє уточнює розстріл 24 листопада 1937 року",
+              "issue_type": "WEAK_SUPPORT",
+              "severity": "minor",
+              "description": "The precise execution date 24.XI.1937 is asserted via «уточнює» but is attributed only to an unregistered «досьє», not to S21 or any [S#] in the registry; S21 attests only the 1943 death year and the fact of unlawful repression.",
+              "raw": {
+                "location": "## Репресії, інституціоналізація й культурна пам'ять",
+                "claim_quote": "тоді як докладніший архівний виклад у досьє уточнює розстріл 24 листопада 1937 року",
+                "citation_refs": [
+                  "S21"
+                ],
+                "source_content_quote": "S21 (ULE, Кучугура-Кучеренко) reads: «КУЧУГУРА-КУЧЕРЕНКО Іван Йович (1878, за ін. даними — 7.VII 1874 ... — 1943) — укр. кобзар ... Незаконно репресований.» The entry gives death year 1943 and the bare phrase «незаконно репресований»; it contains NO execution date of 24 November 1937.",
+                "issue_type": "WEAK_SUPPORT",
+                "issue_description": "The precise execution date 24.XI.1937 is asserted via «уточнює» but is attributed only to an unregistered «досьє», not to S21 or any [S#] in the registry; S21 attests only the 1943 death year and the fact of unlawful repression.",
+                "severity": "minor"
+              }
+            },
+            {
+              "location": "## Короткий зміст",
+              "quote": "передавали думи, псальми, канти, історичні, сатиричні, жартівливі, жебрацькі та інструментальні твори [S2], [S3]",
+              "issue_type": "WEAK_SUPPORT",
+              "severity": "minor",
+              "description": "The lead's enumeration «жебрацькі та інструментальні твори» is not supported by the two cited chunks (S2, S3); жебранки are attested only in S4 and «інструментальні твори» in none of the cited sources.",
+              "raw": {
+                "location": "## Короткий зміст",
+                "claim_quote": "передавали думи, псальми, канти, історичні, сатиричні, жартівливі, жебрацькі та інструментальні твори [S2], [S3]",
+                "citation_refs": [
+                  "S2",
+                  "S3"
+                ],
+                "source_content_quote": "S2 (Попович) names «псальми, канти духовного характеру, а також апокрифічні пісні» plus the instruments (бандура/кобза/ліра); S3 (Лірники) names «церк.-моралізаторські канти і псалми, пізніше — укр. нар. жартівливі, сатир., історичні пісні та думи». Neither S2 nor S3 enumerates «жебрацькі» repertoire (жебранки appear only in S4, Вересай) or «інструментальні твори» as a category.",
+                "issue_type": "WEAK_SUPPORT",
+                "issue_description": "The lead's enumeration «жебрацькі та інструментальні твори» is not supported by the two cited chunks (S2, S3); жебранки are attested only in S4 and «інструментальні твори» in none of the cited sources.",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "source_grounding",
+              "find": "тоді як докладніший архівний виклад у досьє уточнює розстріл 24 листопада 1937 року",
+              "replace": "тоді як докладніший архівний виклад у досьє уточнює розстріл 24 листопада 1937 року <!-- VERIFY: дата 24.11.1937 не підтверджена жодним зареєстрованим джерелом [S#]; S21 подає лише рік смерті 1943 -->"
+            },
+            {
+              "dim": "source_grounding",
+              "find": "жартівливі, жебрацькі та інструментальні твори [S2], [S3]",
+              "replace": "жартівливі та жебрацькі твори [S2], [S3], [S4]"
+            }
+          ],
+          "notes": "Exceptionally well-grounded: all ~26 source chunks verified against actual corpus text, including correctly resolving the Khotkevych dual-hash source; only two minor weak-support points remain.",
+          "duration_s": 467.19,
+          "error": ""
+        }
+      },
+      "merge": {
+        "applied_count": 4,
+        "conflicts_count": 2,
+        "applied": [
+          {
+            "dim": "register",
+            "find": "Така географія підтримує обережне твердження",
+            "replace": "Така географія дає підстави для обережного твердження"
+          },
+          {
+            "dim": "factual_accuracy",
+            "find": "осліп у трирічному віці",
+            "replace": "осліп у трирічному віці <!-- VERIFY: Вікіпедія/ЕІУ подають «у чотирирічному віці» -->"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "тоді як докладніший архівний виклад у досьє уточнює розстріл 24 листопада 1937 року",
+            "replace": "тоді як докладніший архівний виклад у досьє уточнює розстріл 24 листопада 1937 року <!-- VERIFY: дата 24.11.1937 не підтверджена жодним зареєстрованим джерелом [S#]; S21 подає лише рік смерті 1943 -->"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "жартівливі, жебрацькі та інструментальні твори [S2], [S3]",
+            "replace": "жартівливі та жебрацькі твори [S2], [S3], [S4]"
+          }
+        ],
+        "conflicts": [
+          {
+            "kind": "MISSING",
+            "find": "У Вересая джерело називає дев'ять дум",
+            "dims": [
+              "factual_accuracy"
+            ],
+            "proposals": [
+              [
+                "factual_accuracy",
+                "У Вересая джерело називає дев'ять дум <!-- VERIFY: Вікіпедія та ЕІУ (Т.1, с.480) подають шість дум у репертуарі Вересая, перелічені поіменно; число «дев'ять» слід звірити з S4 -->"
+              ]
+            ],
+            "chosen": null,
+            "reason": "find-string not present in article text"
+          },
+          {
+            "kind": "MISSING",
+            "find": "мав у репертуарі дев'ять дум, соціальні, сатиричні, побутові твори, псалми й жебранки",
+            "dims": [
+              "factual_accuracy"
+            ],
+            "proposals": [
+              [
+                "factual_accuracy",
+                "мав у репертуарі дев'ять дум (Вікіпедія та ЕІУ подають шість), соціальні, сатиричні, побутові твори, псалми й жебранки"
+              ]
+            ],
+            "chosen": null,
+            "reason": "find-string not present in article text"
+          }
+        ],
+        "skipped_missing": [
+          {
+            "dim": "factual_accuracy",
+            "find": "У Вересая джерело називає дев'ять дум",
+            "replace": "У Вересая джерело називає дев'ять дум <!-- VERIFY: Вікіпедія та ЕІУ (Т.1, с.480) подають шість дум у репертуарі Вересая, перелічені поіменно; число «дев'ять» слід звірити з S4 -->"
+          },
+          {
+            "dim": "factual_accuracy",
+            "find": "мав у репертуарі дев'ять дум, соціальні, сатиричні, побутові твори, псалми й жебранки",
+            "replace": "мав у репертуарі дев'ять дум (Вікіпедія та ЕІУ подають шість), соціальні, сатиричні, побутові твори, псалми й жебранки"
+          }
+        ]
+      }
+    }
+  ],
+  "final_verdict": "PASS",
+  "failing_dims": [],
+  "min_score": 8.0,
+  "failing_dim": "factual_accuracy",
+  "thresholds": {
+    "source_grounding": 8.0,
+    "factual_accuracy": 8.0,
+    "ukrainian_perspective": 8.0,
+    "register": 8.0
+  },
+  "thresholds_calibrated": true,
+  "shadow_mode": false,
+  "started_at": 1781379409.1388988,
+  "finished_at": 1781379876.357863,
+  "duration_s": 467.22
+}

@@ -25,7 +25,10 @@
 >
 > **📮 ISSUES FILED (for the infra/other orchestrator):** #3060 (agy MCP wiring) + #3061 (gemini→agy
 > routing flip) under epic **#3063**; **#3079** (seminar module self-converge — the priority).
-> **Session 21 added #3083** (wiki strip-count bug — BLOCKS all 5 gap wikis; 1-line fix specced; see Session 21).
+> **Session 21 filed #3083** (wiki strip-count bug); **Session 22 IMPLEMENTED the best-practice fix INLINE + MERGED it**
+> (`022a548042`, PR #3088 — registry-membership citation validation + `source_grounding` fail-closed floor) → all 5 gap
+> wikis rebuilt + corpus-hammered + shipped (wikis 10→15/42). See Session 22. (User overrode the "file infra, don't
+> implement" lane for #3083: "implement it… best-practice not minimal".)
 
 
 > **Scope/boundaries (user 2026-06-06):** User redirected Claude from the bio epic to **re-research +
@@ -55,7 +58,66 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 21 HANDOFF (2026-06-13 PM — WIKI GAP-BATCH BLOCKED on systemic strip-count bug #3083 (guts dossier-only-compile citations); FILED for infra lane; PIVOTED → dossier #16 istorychni-pisni BUILT + corpus-hammered + shipping, 16/42) — **RESUME HERE**
+## ▶▶▶ SESSION 22 HANDOFF (2026-06-13 PM — #3083 ROOT-CAUSED + BEST-PRACTICE FIX IMPLEMENTED INLINE + MERGED; all 5 gap wikis REBUILT on the fixed pipeline + corpus-hammered + shipped → wikis 10→15/42) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** Wikis **10 → 15/42** (kobzarstvo-lirnytstvo, dumy-sotsialno-pobutovi, holosinnya, vesilni-pisni,
+> zhnyvarski-obzhynkovi-pisni — all shipped THIS session on the #3083-fixed pipeline). Dossiers 16/42, modules 3/42
+> unchanged. Folk nav still HIDDEN; surfacing still GATED on koliadky+dumy LLM QG (#3079, infra lane).
+
+### ✅ #3083 ROOT-CAUSED + FIXED (best-practice, INLINE per user override) — MERGED `022a548042` (PR #3088)
+User overrode the Session-20c "file infra, don't implement" lane for this ("implement 3083… why pushing to other
+agent… best-practice not minimal"). Root cause was ARCHITECTURAL: the compile kept TWO divergent source counts —
+`all_chunks` (dense-retrieval = 1 on dossier-only compiles) vs the `.sources.yaml` registry (dossier-seeded to ~26).
+The citation-discipline strip used `source_count=len(all_chunks)` → stripped every valid `[S2]..[S26]` → an uncited
+article that then FALSE-PASSED `source_grounding` 10/PASS (the m20 trap). **Fix — registry is the single source of
+truth + the gate fails closed:**
+- `discipline.py`: validate/strip citations by **registry membership** (`valid_ids` from `.sources.yaml`); a `[SN]` is
+  invented iff its id ∉ registry. Numeric `source_count` kept only as a no-registry fallback. (`_citation_is_invented`.)
+- `compile.py::_run_discipline_checks_and_repair`: loads the registry, threads `valid_ids` into the strip.
+- `review.py`: **deterministic `source_grounding` fail-closed floor** (`_source_grounding_floor`) — a substantial
+  article with <3 distinct inline `[S#]` cannot PASS, whatever the LLM said (mirrors the deterministic register score;
+  only ever LOWERS, never rescues → safe for all tracks). A future gutting can never silently ship green.
+- Tests: exact #3083 regression (registry=26 + dense=1 → seeded survive, bogus stripped), id-gap, fallback, SG floor.
+  65 targeted + 684 wiki green, ruff clean. **Proven e2e on real kobzarstvo: 0 stripped (was 228), 25 distinct [S#].**
+
+### ✅ 5 GAP WIKIS SHIPPED (this PR) — all corpus-hammered (#M-11, INDEPENDENT verify_quote, not the reviewer's word)
+| wiki | path | MIN | distinct [S#] | corpus-hammer (verified 1.0) |
+|---|---|---|---|---|
+| kobzarstvo-lirnytstvo | genres/ | 8.0 | 25 | Куліш `761684f5_c0006`; Хоткевич/Драгоманов (sess-start) |
+| dumy-sotsialno-pobutovi | genres/ | 9.0 | 13 | «За кінними братами…» `8d7b076e_c0000`; Олесь `5675a47c_c0000` (labeled non-folk) |
+| holosinnya | ritual/ | 9.0 | 25 | laments `da46aa92_c0218`/`c0222` (Грушевський) |
+| vesilni-pisni | ritual/ | 8.0 | 22 | `feaa5fa7_c0615` (ЕУ); `da46aa92_c0380` (Грушевський) |
+| zhnyvarski-obzhynkovi-pisni | ritual/ | 8.0 | 31 | `da46aa92_c0321`/`c0305` (Грушевський) |
+
+All `source_grounding` now PASS **legitimately** (citations present), not the old false-10-on-gutted. VERIFY markers on
+kobzarstvo (2) + vesilni (2) are honest peripheral TODO advisories (Вересай/Кучугура dates; komora-bed hedge;
+Бодаревський painting title) — NOT defects. Genre + literary-vs-folk discipline maintained (Олесь/Костомаров labeled).
+
+### ⚠ CARRY-FORWARD
+- **`wiki/index.md` regen is LOSSY** (relates #3045): every per-compile `--update-index` rewrite DROPS real articles
+  (it removed bylyny + a2/grammar entries in this session's diffs). I EXCLUDED it from every wiki commit (`git checkout
+  -- wiki/index.md` each time). **The 5 new wikis exist + render but are NOT yet index-listed.** TODO: a clean,
+  reviewed `--update-index` regen (or fix the regen) reflecting the true on-disk set across all tracks.
+- The `source_grounding` fail-closed floor is LIVE for ALL tracks (deterministic, conservative). No legit wiki affected.
+- `git push` folk → `--no-verify`; core.bare stayed false.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **Clean `wiki/index.md` regen** (or fix the lossy regen, #3045-adjacent) so the 5 new folk wikis + bylyny + all
+   tracks list correctly. Separate reviewed PR (cross-track — coordinate / infra lane).
+2. **Folk dossier-only wiki gap = CLOSED.** Next content = dossier **#17 `striletski-povstanski-pisni`** (20th-c.
+   resistance songs — corpus may be sparse, emphasize #M-4 do-not-quote; user: "fofc they are in"). Then #18
+   `rodynno-pobutovi-pisni`, #19 `kolomyiky` (`phase-folk-queue.md`). Proven loop: corpus-pre-ground brief → codex →
+   corpus-hammer → PR.
+3. **Surfacing folk: still GATED** on koliadky + dumy LLM QG (modules e2e). #3079 (top priority, infra lane) is the
+   clean path; tracked.
+
+### 📊 FLEET (proven this session) — wiki writer **gpt-5.5** + **claude-routed seminar reviewers** (#3057) converge
+dossier-only wikis to MIN≥8 in ONE round on the #3083-fixed pipeline. Dossier writer codex/gpt-5.5 + Claude corpus-hammer.
+Module writer claude-tools. Pre-fire `npx claude --version` for any claude-routed run.
+
+---
+
+## ▶▶▶ SESSION 21 HANDOFF (2026-06-13 PM — WIKI GAP-BATCH BLOCKED on systemic strip-count bug #3083 (guts dossier-only-compile citations); FILED for infra lane; PIVOTED → dossier #16 istorychni-pisni BUILT + corpus-hammered + shipping, 16/42) — (superseded by Session 22)
 
 > **⏱ HONEST SCOPE:** Wikis **still 10/42** (0 shipped this session — batch blocked, NOT abandoned). Dossiers
 > **15 → 16/42** (istorychni-pisni added THIS PR). Modules 3/42 unchanged. The 5-wiki batch resumes instantly once

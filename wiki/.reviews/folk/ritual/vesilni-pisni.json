@@ -1,0 +1,189 @@
+{
+  "article_path": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/folk-gap-wikis/wiki/folk/ritual/vesilni-pisni.md",
+  "rounds": [
+    {
+      "round": 1,
+      "dims": {
+        "ukrainian_perspective": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 10,
+          "verdict": "PASS",
+          "findings_count": 0,
+          "findings": [],
+          "fixes": [],
+          "notes": "",
+          "duration_s": 61.65,
+          "error": ""
+        },
+        "register": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 8,
+          "verdict": "PASS",
+          "findings_count": 1,
+          "findings": [
+            {
+              "location": "### Ритуальні предмети: коровай, гільце, вінок, піч",
+              "quote": "Коровай (korovai) є головним обрядовим весільним хлібом, який має родове значення, бо робиться з муки, принесеної всіма членами роду [S13].",
+              "issue_type": "RUSSIANISM",
+              "severity": "major",
+              "description": "«мука» for 'flour' is the Russian lexeme (UA standard: борошно, attested only as a Western regionalism); it jars in a formal seminar article that itself uses «борошном» one sentence later.",
+              "raw": {
+                "location": "### Ритуальні предмети: коровай, гільце, вінок, піч",
+                "quote": "Коровай (korovai) є головним обрядовим весільним хлібом, який має родове значення, бо робиться з муки, принесеної всіма членами роду [S13].",
+                "tool_evidence": [
+                  {
+                    "tool": "search_definitions",
+                    "args": "мука",
+                    "result_summary": "СУМ-11 has only one entry — МУ́КА = 'страждання, зумовлені фізичними болями' (torment/suffering). The 'flour' sense is not present as the standard literary headword."
+                  },
+                  {
+                    "tool": "query_r2u",
+                    "args": "мука",
+                    "result_summary": "Russian Мука́ (flour) → Ukrainian 'бо́рошно'; 'мука́' listed only as a Western regional variant ('(особ. зап.) мука́'). Standard Ukrainian for flour is борошно."
+                  }
+                ],
+                "natural_alternative": "бо робиться з борошна, принесеного всіма членами роду",
+                "issue_type": "RUSSIANISM",
+                "issue_description": "«мука» for 'flour' is the Russian lexeme (UA standard: борошно, attested only as a Western regionalism); it jars in a formal seminar article that itself uses «борошном» one sentence later.",
+                "severity": "major"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "register",
+              "find": "робиться з муки, принесеної всіма членами роду",
+              "replace": "робиться з борошна, принесеного всіма членами роду"
+            }
+          ],
+          "notes": "One major Russianism (мука→борошно), inconsistent with the article's own «борошном»; otherwise idiomatic, native-sounding seminar-register Ukrainian. Source-attributed «…»/[S#] quotations were exempted from register flagging.",
+          "duration_s": 131.7,
+          "error": ""
+        },
+        "factual_accuracy": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 1,
+          "findings": [
+            {
+              "location": "## Основний зміст → Побутування, пам'ять і містки до високої культури",
+              "quote": "Крип'якевич називає Бодаревського «Весілля в Україні» серед українських побутових тем",
+              "issue_type": "FACTUAL_ERROR",
+              "severity": "minor",
+              "description": "The painter is real, but the canonical title of his wedding genre painting is «Весілля в Малоросії» (per the National Art Museum of Ukraine catalogue), not «Весілля в Україні» as stated; minor since it is framed as Крип'якевич's wording (an alternate/decolonized rendering is possible) and the painting itself genuinely exists.",
+              "raw": {
+                "location": "## Основний зміст → Побутування, пам'ять і містки до високої культури",
+                "claim_quote": "Крип'якевич називає Бодаревського «Весілля в Україні» серед українських побутових тем",
+                "tool_evidence": [
+                  {
+                    "tool": "query_wikipedia",
+                    "args": "Бодаревський (mode=extract)",
+                    "result_summary": "Бодаревський Микола Корнилович (1850–1921), real Ukrainian painter; his catalogue lists «Ескізи до картин «Весілля в Малоросії» та «Перший Спас у Малоросії»... знаходяться у Національному художньому музеї України» — the canonical title is «Весілля в Малоросії», not «Весілля в Україні»"
+                  },
+                  {
+                    "tool": "query_wikipedia",
+                    "args": "Бодаревський Микола Корнилович (mode=summary)",
+                    "result_summary": "confirms painter is real ('український живописець'); no painting titled «Весілля в Україні» attested"
+                  }
+                ],
+                "issue_type": "FACTUAL_ERROR",
+                "issue_description": "The painter is real, but the canonical title of his wedding genre painting is «Весілля в Малоросії» (per the National Art Museum of Ukraine catalogue), not «Весілля в Україні» as stated; minor since it is framed as Крип'якевич's wording (an alternate/decolonized rendering is possible) and the painting itself genuinely exists.",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "factual_accuracy",
+              "find": "Бодаревського «Весілля в Україні» серед українських побутових тем",
+              "replace": "Бодаревського «Весілля в Україні» <!-- VERIFY: канонічна назва картини М. Бодаревського — «Весілля в Малоросії» (ескізи у Нац. художньому музеї України); звірити точне формулювання Крип'якевича --> серед українських побутових тем"
+            }
+          ],
+          "notes": "Factually solid — all named figures real, theatrical works correctly dated, Hrushevsky quotes verified verbatim (0.98–1.0), ethnographic terms attested in VESUM; only the painting title «Весілля в Україні» vs canonical «Весілля в Малоросії» is a minor discrepancy.",
+          "duration_s": 176.74,
+          "error": ""
+        },
+        "source_grounding": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 1,
+          "findings": [
+            {
+              "location": "## Основний зміст → Перехід, опір і комора",
+              "quote": "Комора (komora) є одним із найскладніших вузлів для сучасного викладу, бо джерела пов’язують її і з вибором бояр, і з шлюбною постелею, і з моментом переходу молодої [S13][S11].",
+              "issue_type": "WEAK_SUPPORT",
+              "severity": "minor",
+              "description": "The cited chunks address комора in the wedding context (choosing boyars; молода hiding) but do not support the specific claim that the sources tie it to the marriage bed / control of sexual transition.",
+              "raw": {
+                "location": "## Основний зміст → Перехід, опір і комора",
+                "claim_quote": "Комора (komora) є одним із найскладніших вузлів для сучасного викладу, бо джерела пов’язують її і з вибором бояр, і з шлюбною постелею, і з моментом переходу молодої [S13][S11].",
+                "citation_refs": [
+                  "S13",
+                  "S11"
+                ],
+                "source_content_quote": "S13 (feaa5fa7_c0544): «молодий, що тим часом вибрав собі в коморі „боярів“» — комора as room where boyars are chosen. S11 (feaa5fa7_c0617): «Молода чинить опір, просить матір, брата, батька: „Сховай мене, нене, в коморі!“ „Не поможе, моя доня, комора, обступили боярчики докола!“» — комора as place молода asks to hide. Neither chunk attests комора as „шлюбна постіль“ / marriage bed or as a site of sexual-transition control; that aspect (and the [S18] citation for „контроль сексуального переходу“, which describes door-blocking and the очіпок, not комора) is unattested in the cited sources.",
+                "issue_type": "WEAK_SUPPORT",
+                "issue_description": "The cited chunks address комора in the wedding context (choosing boyars; молода hiding) but do not support the specific claim that the sources tie it to the marriage bed / control of sexual transition.",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "source_grounding",
+              "find": "Комора (komora) є одним із найскладніших вузлів для сучасного викладу, бо джерела пов’язують її і з вибором бояр, і з шлюбною постелею, і з моментом переходу молодої [S13][S11].",
+              "replace": "Комора (komora) є одним із найскладніших вузлів для сучасного викладу, бо джерела пов’язують її і з вибором бояр [S13], і з мотивом опору та переходу молодої [S11]; ширший зв’язок комори зі шлюбною постіллю належить до загальної етнографічної традиції <!-- VERIFY -->."
+            }
+          ],
+          "notes": "Exceptionally well-grounded: all direct quotes and substantive claims verified exactly against corpus chunks; one minor weak-support gap where the комора→marriage-bed claim exceeds what cited S11/S13 actually attest.",
+          "duration_s": 386.93,
+          "error": ""
+        }
+      },
+      "merge": {
+        "applied_count": 3,
+        "conflicts_count": 0,
+        "applied": [
+          {
+            "dim": "register",
+            "find": "робиться з муки, принесеної всіма членами роду",
+            "replace": "робиться з борошна, принесеного всіма членами роду"
+          },
+          {
+            "dim": "factual_accuracy",
+            "find": "Бодаревського «Весілля в Україні» серед українських побутових тем",
+            "replace": "Бодаревського «Весілля в Україні» <!-- VERIFY: канонічна назва картини М. Бодаревського — «Весілля в Малоросії» (ескізи у Нац. художньому музеї України); звірити точне формулювання Крип'якевича --> серед українських побутових тем"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "Комора (komora) є одним із найскладніших вузлів для сучасного викладу, бо джерела пов’язують її і з вибором бояр, і з шлюбною постелею, і з моментом переходу молодої [S13][S11].",
+            "replace": "Комора (komora) є одним із найскладніших вузлів для сучасного викладу, бо джерела пов’язують її і з вибором бояр [S13], і з мотивом опору та переходу молодої [S11]; ширший зв’язок комори зі шлюбною постіллю належить до загальної етнографічної традиції <!-- VERIFY -->."
+          }
+        ],
+        "conflicts": [],
+        "skipped_missing": []
+      }
+    }
+  ],
+  "final_verdict": "PASS",
+  "failing_dims": [],
+  "min_score": 8.0,
+  "failing_dim": "register",
+  "thresholds": {
+    "source_grounding": 8.0,
+    "factual_accuracy": 8.0,
+    "ukrainian_perspective": 8.0,
+    "register": 8.0
+  },
+  "thresholds_calibrated": true,
+  "shadow_mode": false,
+  "started_at": 1781381961.59175,
+  "finished_at": 1781382348.5271769,
+  "duration_s": 386.94
+}

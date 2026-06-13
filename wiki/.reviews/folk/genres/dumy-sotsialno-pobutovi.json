@@ -1,0 +1,294 @@
+{
+  "article_path": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/folk-gap-wikis/wiki/folk/genres/dumy-sotsialno-pobutovi.md",
+  "rounds": [
+    {
+      "round": 1,
+      "dims": {
+        "ukrainian_perspective": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 1,
+          "findings": [
+            {
+              "location": "## Поетика: речитатив, нерівний вірш і моральна повільність",
+              "quote": "Формальні ознаки соціально-побутових дум збігаються з ознаками дум загалом: вони виконуються речитативом у супроводі бандури, кобзи або ліри, не мають сталої строфічної будови, розпадаються на нерівні періоди й тримаються на синтаксично завершених відтинках оповіді [S9].",
+              "issue_type": "SOFT_PROVINCIAL",
+              "severity": "minor",
+              "description": "The article describes the duma form, performance and poetics entirely from within Ukrainian boundaries and never lets the Ukrainian tradition look outward at the wider field of oral epic where its voice would be authoritative, despite citing Kolessa whose work was comparatively international.",
+              "raw": {
+                "location": "## Поетика: речитатив, нерівний вірш і моральна повільність",
+                "framing_quote": "Формальні ознаки соціально-побутових дум збігаються з ознаками дум загалом: вони виконуються речитативом у супроводі бандури, кобзи або ліри, не мають сталої строфічної будови, розпадаються на нерівні періоди й тримаються на синтаксично завершених відтинках оповіді [S9].",
+                "implied_premise": "That the duma form needs only internal self-description and need not be placed on the comparative plane of world oral epic — a plane on which a Ukrainian vantage (e.g. Kolessa's own comparative folkloristics) would speak with authority.",
+                "tool_evidence": [],
+                "issue_type": "SOFT_PROVINCIAL",
+                "issue_description": "The article describes the duma form, performance and poetics entirely from within Ukrainian boundaries and never lets the Ukrainian tradition look outward at the wider field of oral epic where its voice would be authoritative, despite citing Kolessa whose work was comparatively international.",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [],
+          "notes": "Strongly decolonized and confidently self-defined with concretely named state repression and no Russian-centering or contested-figure issues; only a minor inward-only framing gap (no outward/comparative placement of the duma form) keeps it from a 10.",
+          "duration_s": 96.78,
+          "error": ""
+        },
+        "register": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 2,
+          "findings": [
+            {
+              "location": "## Історичний контекст / ## Корпус, дослівні фрагменти",
+              "quote": "Прикордонний приклад «Втечі трьох братів з Азова» належить передусім до невільницького корпусу",
+              "issue_type": "UNNATURAL_COLLOCATION",
+              "severity": "minor",
+              "description": "прикордонний is the geographic state-frontier term; reusing it metaphorically for a 'borderline/transitional' classificatory case (twice — 'прикордонний приклад', 'прикордонним доказом') is a combination no native writer produces, where межовий is idiomatic.",
+              "raw": {
+                "location": "## Історичний контекст / ## Корпус, дослівні фрагменти",
+                "quote": "Прикордонний приклад «Втечі трьох братів з Азова» належить передусім до невільницького корпусу",
+                "tool_evidence": [
+                  {
+                    "tool": "search_definitions",
+                    "args": "прикордонний",
+                    "result_summary": "СУМ-11: 'Розташований біля кордону, вздовж кордону' — strictly geographic/state-border sense (прикордонний стовп, прикордонна лікарня). No metaphorical 'borderline case' sense."
+                  },
+                  {
+                    "tool": "verify_word",
+                    "args": "межовий",
+                    "result_summary": "межовий — adj, non-archaic, valid in VESUM (the idiomatic word for a borderline/transitional case)."
+                  },
+                  {
+                    "tool": "verify_word",
+                    "args": "пограничний",
+                    "result_summary": "пограничний — valid but marked archaic in VESUM."
+                  }
+                ],
+                "natural_alternative": "межовий приклад / межовий доказ («Втеча трьох братів з Азова» є межовим доказом)",
+                "issue_type": "UNNATURAL_COLLOCATION",
+                "issue_description": "прикордонний is the geographic state-frontier term; reusing it metaphorically for a 'borderline/transitional' classificatory case (twice — 'прикордонний приклад', 'прикордонним доказом') is a combination no native writer produces, where межовий is idiomatic.",
+                "severity": "minor"
+              }
+            },
+            {
+              "location": "## Виконавство, записи й культурна пам'ять",
+              "quote": "Гнат Гончаренко дає особливо точний записовий вузол для соціально-побутового підциклу",
+              "issue_type": "UNNATURAL_COLLOCATION",
+              "severity": "minor",
+              "description": "'записовий вузол' combines a non-standard coined adjective with a metaphorical 'вузол'; the pairing reads as an invented phrase rather than composed Ukrainian.",
+              "raw": {
+                "location": "## Виконавство, записи й культурна пам'ять",
+                "quote": "Гнат Гончаренко дає особливо точний записовий вузол для соціально-побутового підциклу",
+                "tool_evidence": [
+                  {
+                    "tool": "verify_word",
+                    "args": "записовий",
+                    "result_summary": "'записовий' — NOT FOUND in VESUM; not a standard Ukrainian adjective."
+                  }
+                ],
+                "natural_alternative": "Гнат Гончаренко дає особливо надійну фіксацію записів для соціально-побутового підциклу",
+                "issue_type": "UNNATURAL_COLLOCATION",
+                "issue_description": "'записовий вузол' combines a non-standard coined adjective with a metaphorical 'вузол'; the pairing reads as an invented phrase rather than composed Ukrainian.",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "register",
+              "find": "Прикордонний приклад «Втечі трьох братів з Азова» належить передусім",
+              "replace": "Межовий приклад «Втечі трьох братів з Азова» належить передусім"
+            },
+            {
+              "dim": "register",
+              "find": "«Втеча трьох братів з Азова» є прикордонним доказом",
+              "replace": "«Втеча трьох братів з Азова» є межовим доказом"
+            },
+            {
+              "dim": "register",
+              "find": "Гнат Гончаренко дає особливо точний записовий вузол для соціально-побутового підциклу",
+              "replace": "Гнат Гончаренко дає особливо надійну фіксацію записів для соціально-побутового підциклу"
+            }
+          ],
+          "notes": "Strong, natively-composed seminar-register Ukrainian; two minor unnatural collocations only (metaphorical прикордонний→межовий, coined записовий). Source-attributed «…» quotations were not assessed for register.",
+          "duration_s": 121.69,
+          "error": ""
+        },
+        "factual_accuracy": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 1,
+          "findings": [
+            {
+              "location": "### Виконавство, записи й культурна пам'ять (Остап Вересай paragraph)",
+              "quote": "У його репертуарі джерело називає дев'ять дум, серед них «Проводи козака», «Бідна вдова і три сини» та «Сестра і брат», тобто саме ті тексти, які потрібні для соціально-побутового блоку [S4].",
+              "issue_type": "FACTUAL_ERROR",
+              "severity": "minor",
+              "description": "The article states Вересай's repertoire numbered nine dumas, but the authoritative source (uk.wikipedia) gives six and a divergent title list; the article picks the figure from S4 without acknowledging the spread between scholarly catalogues.",
+              "raw": {
+                "location": "### Виконавство, записи й культурна пам'ять (Остап Вересай paragraph)",
+                "claim_quote": "У його репертуарі джерело називає дев'ять дум, серед них «Проводи козака», «Бідна вдова і три сини» та «Сестра і брат», тобто саме ті тексти, які потрібні для соціально-побутового блоку [S4].",
+                "tool_evidence": [
+                  {
+                    "tool": "query_wikipedia",
+                    "args": "Вересай Остап (mode=extract)",
+                    "result_summary": "Творчість section: «Його репертуар, порівняно з репертуаром інших кобзарів, невеликий: шість дум: „Як три брати з Азова втікали“, „Отчим“, „Невольницька“, „Про бурю на Чорному морі“, „Про вдову і трьох синів“, „Дума про Хведора Безрідного“» — gives SIX dumas, and none of the three titles the article lists («Проводи козака», «Сестра і брат») appear verbatim (only «Про вдову і трьох синів» ≈ «Бідна вдова і три сини»)."
+                  }
+                ],
+                "issue_type": "FACTUAL_ERROR",
+                "issue_description": "The article states Вересай's repertoire numbered nine dumas, but the authoritative source (uk.wikipedia) gives six and a divergent title list; the article picks the figure from S4 without acknowledging the spread between scholarly catalogues.",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "factual_accuracy",
+              "find": "У його репертуарі джерело називає дев'ять дум, серед них «Проводи козака», «Бідна вдова і три сини» та «Сестра і брат»",
+              "replace": "У його репертуарі джерело називає дев'ять дум, серед них «Проводи козака», «Бідна вдова і три сини» та «Сестра і брат» <!-- VERIFY: Вікіпедія (УМЕ) подає канонічний репертуар Вересая як шість дум з іншим переліком назв; узгодити кількість і назви з джерелом S4 -->"
+            }
+          ],
+          "notes": "Biographical, chronological and corpus claims (Гончаренко 1908 records, Кучугура-Кучеренко repression, Грушевська's duma corpus, Втеча трьох братів з Азова, Шевченків Буквар) all verify against authoritative sources; only the Вересай nine-vs-six duma repertoire count diverges from Wikipedia.",
+          "duration_s": 206.74,
+          "error": ""
+        },
+        "source_grounding": {
+          "agent": "claude",
+          "model": "claude-opus-4-8",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 2,
+          "findings": [
+            {
+              "location": "## Основний зміст → ### Поетика: речитатив, нерівний вірш і моральна повільність (2nd paragraph)",
+              "quote": "Коли вдова названа «бідною», джерельна формула вказує не лише на матеріальну нужду, а й на її становище як особи, чий голос мусить бути почутий у кобзарському виконанні [S9], [S13].",
+              "issue_type": "OVERCLAIM",
+              "severity": "minor",
+              "description": "The phrase «джерельна формула вказує» attributes to the source an interpretation (the widow as a person whose voice must be heard) that the source does not make — S9 only registers «бідна вдова» as a fixed epithet.",
+              "raw": {
+                "location": "## Основний зміст → ### Поетика: речитатив, нерівний вірш і моральна повільність (2nd paragraph)",
+                "claim_quote": "Коли вдова названа «бідною», джерельна формула вказує не лише на матеріальну нужду, а й на її становище як особи, чий голос мусить бути почутий у кобзарському виконанні [S9], [S13].",
+                "citation_refs": [
+                  "S9",
+                  "S13"
+                ],
+                "source_content_quote": "S9 (feaa5fa7_c0625) lists «бідна вдова» ONLY as one of several standing epithets: «Думи широко використовують постійні епітети (бідна вдова, буйний вітер, сизий орел, сива зозуля, свята церква)». It says nothing about material need vs. a 'voice that must be heard.' S13 (fc2291b5_c2185) does not discuss the «бідна вдова» formula at all.",
+                "issue_type": "OVERCLAIM",
+                "issue_description": "The phrase «джерельна формула вказує» attributes to the source an interpretation (the widow as a person whose voice must be heard) that the source does not make — S9 only registers «бідна вдова» as a fixed epithet.",
+                "severity": "minor"
+              }
+            },
+            {
+              "location": "## Деколонізаційна перспектива (3rd paragraph)",
+              "quote": "Радянська рамка також потребує обережного читання, бо вона могла визнавати «народну творчість», але водночас підміняти живу кобзарську традицію контрольованою сценою й безпечним репертуаром [S13], [S8].",
+              "issue_type": "WEAK_SUPPORT",
+              "severity": "minor",
+              "description": "The specific assertion of «контрольована сцена» replacing the living tradition exceeds the cited chunks (which support only a Soviet-themed repertoire and one performer's repression); mitigated by the article's own hedge «могла» and the immediately following caveat, so kept minor.",
+              "raw": {
+                "location": "## Деколонізаційна перспектива (3rd paragraph)",
+                "claim_quote": "Радянська рамка також потребує обережного читання, бо вона могла визнавати «народну творчість», але водночас підміняти живу кобзарську традицію контрольованою сценою й безпечним репертуаром [S13], [S8].",
+                "citation_refs": [
+                  "S13",
+                  "S8"
+                ],
+                "source_content_quote": "S13 (fc2291b5_c2185) supports only a 'safe repertoire' inference: «За рад. часу різні автори склали Д. про В. І. Леніна, Т. Г. Шевченка, про громадян. війну...». S8 (fc2291b5_c4148) states only «Незаконно репресований» (and «нар. артист Республіки з 1925»). Neither source states that Soviet power 'substituted a controlled stage' for the living kobzar tradition.",
+                "issue_type": "WEAK_SUPPORT",
+                "issue_description": "The specific assertion of «контрольована сцена» replacing the living tradition exceeds the cited chunks (which support only a Soviet-themed repertoire and one performer's repression); mitigated by the article's own hedge «могла» and the immediately following caveat, so kept minor.",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "source_grounding",
+              "find": "Коли вдова названа «бідною», джерельна формула вказує не лише на матеріальну нужду, а й на її становище як особи, чий голос мусить бути почутий у кобзарському виконанні [S9], [S13].",
+              "replace": "Сталий епітет «бідна вдова» джерело фіксує серед формул дум [S9]; у соціально-побутовому читанні його можна тлумачити не лише як вказівку на матеріальну нужду, а й на вразливе становище вдови в родинно-моралістичному сюжеті [S13]."
+            },
+            {
+              "dim": "source_grounding",
+              "find": "Радянська рамка також потребує обережного читання, бо вона могла визнавати «народну творчість», але водночас підміняти живу кобзарську традицію контрольованою сценою й безпечним репертуаром [S13], [S8].",
+              "replace": "Радянська рамка також потребує обережного читання, бо вона могла визнавати «народну творчість» і навіть заохочувати «безпечний» репертуар (за рад. часу складали думи про В. Леніна та ін.) [S13], але водночас тиснути на живу кобзарську традицію, що видно з долі репресованих виконавців [S8]. <!-- VERIFY: теза про «контрольовану сцену» прямо не зафіксована в наданих джерелах -->"
+            }
+          ],
+          "notes": "Exceptionally well-grounded; only two minor interpretive over-reaches where the article ascribes its own reading («бідна вдова» voice, Soviet «контрольована сцена») to sources that support only the narrower facts.",
+          "duration_s": 321.84,
+          "error": ""
+        }
+      },
+      "merge": {
+        "applied_count": 5,
+        "conflicts_count": 1,
+        "applied": [
+          {
+            "dim": "register",
+            "find": "Прикордонний приклад «Втечі трьох братів з Азова» належить передусім",
+            "replace": "Межовий приклад «Втечі трьох братів з Азова» належить передусім"
+          },
+          {
+            "dim": "register",
+            "find": "«Втеча трьох братів з Азова» є прикордонним доказом",
+            "replace": "«Втеча трьох братів з Азова» є межовим доказом"
+          },
+          {
+            "dim": "register",
+            "find": "Гнат Гончаренко дає особливо точний записовий вузол для соціально-побутового підциклу",
+            "replace": "Гнат Гончаренко дає особливо надійну фіксацію записів для соціально-побутового підциклу"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "Коли вдова названа «бідною», джерельна формула вказує не лише на матеріальну нужду, а й на її становище як особи, чий голос мусить бути почутий у кобзарському виконанні [S9], [S13].",
+            "replace": "Сталий епітет «бідна вдова» джерело фіксує серед формул дум [S9]; у соціально-побутовому читанні його можна тлумачити не лише як вказівку на матеріальну нужду, а й на вразливе становище вдови в родинно-моралістичному сюжеті [S13]."
+          },
+          {
+            "dim": "source_grounding",
+            "find": "Радянська рамка також потребує обережного читання, бо вона могла визнавати «народну творчість», але водночас підміняти живу кобзарську традицію контрольованою сценою й безпечним репертуаром [S13], [S8].",
+            "replace": "Радянська рамка також потребує обережного читання, бо вона могла визнавати «народну творчість» і навіть заохочувати «безпечний» репертуар (за рад. часу складали думи про В. Леніна та ін.) [S13], але водночас тиснути на живу кобзарську традицію, що видно з долі репресованих виконавців [S8]. <!-- VERIFY: теза про «контрольовану сцену» прямо не зафіксована в наданих джерелах -->"
+          }
+        ],
+        "conflicts": [
+          {
+            "kind": "MISSING",
+            "find": "У його репертуарі джерело називає дев'ять дум, серед них «Проводи козака», «Бідна вдова і три сини» та «Сестра і брат»",
+            "dims": [
+              "factual_accuracy"
+            ],
+            "proposals": [
+              [
+                "factual_accuracy",
+                "У його репертуарі джерело називає дев'ять дум, серед них «Проводи козака», «Бідна вдова і три сини» та «Сестра і брат» <!-- VERIFY: Вікіпедія (УМЕ) подає канонічний репертуар Вересая як шість дум з іншим переліком назв; узгодити кількість і назви з джерелом S4 -->"
+              ]
+            ],
+            "chosen": null,
+            "reason": "find-string not present in article text"
+          }
+        ],
+        "skipped_missing": [
+          {
+            "dim": "factual_accuracy",
+            "find": "У його репертуарі джерело називає дев'ять дум, серед них «Проводи козака», «Бідна вдова і три сини» та «Сестра і брат»",
+            "replace": "У його репертуарі джерело називає дев'ять дум, серед них «Проводи козака», «Бідна вдова і три сини» та «Сестра і брат» <!-- VERIFY: Вікіпедія (УМЕ) подає канонічний репертуар Вересая як шість дум з іншим переліком назв; узгодити кількість і назви з джерелом S4 -->"
+          }
+        ]
+      }
+    }
+  ],
+  "final_verdict": "PASS",
+  "failing_dims": [],
+  "min_score": 9.0,
+  "failing_dim": "ukrainian_perspective",
+  "thresholds": {
+    "source_grounding": 8.0,
+    "factual_accuracy": 8.0,
+    "ukrainian_perspective": 8.0,
+    "register": 8.0
+  },
+  "thresholds_calibrated": true,
+  "shadow_mode": false,
+  "started_at": 1781380337.389802,
+  "finished_at": 1781380659.2358,
+  "duration_s": 321.85
+}
