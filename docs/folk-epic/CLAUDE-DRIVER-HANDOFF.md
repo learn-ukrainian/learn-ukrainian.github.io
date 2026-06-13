@@ -23,8 +23,9 @@
 > → coordinate. GATE: don't un-hide until koliadky + dumy clear LLM QG (user 2026-06-13: "deliver the other 2 e2e first").
 > Recommended posture = clearly-labeled PREVIEW/BETA (matches a2).
 >
-> **📮 ISSUES FILED THIS SESSION (for the infra/other orchestrator):** #3060 (agy MCP wiring) + #3061 (gemini→agy
+> **📮 ISSUES FILED (for the infra/other orchestrator):** #3060 (agy MCP wiring) + #3061 (gemini→agy
 > routing flip) under epic **#3063**; **#3079** (seminar module self-converge — the priority).
+> **Session 21 added #3083** (wiki strip-count bug — BLOCKS all 5 gap wikis; 1-line fix specced; see Session 21).
 
 
 > **Scope/boundaries (user 2026-06-06):** User redirected Claude from the bio epic to **re-research +
@@ -54,7 +55,73 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 20b HANDOFF (2026-06-13 — THE UNLOCK FOUND + PROVEN: route seminar register/factual/source_grounding OFF gemini/codex → claude; bylyny PASSES MIN 8.0 (was stuck ~6); **wiki #10 shipping**, 5 to batch) — **RESUME HERE**
+## ▶▶▶ SESSION 21 HANDOFF (2026-06-13 PM — WIKI GAP-BATCH BLOCKED on systemic strip-count bug #3083 (guts dossier-only-compile citations); FILED for infra lane; PIVOTED → dossier #16 istorychni-pisni BUILT + corpus-hammered + shipping, 16/42) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** Wikis **still 10/42** (0 shipped this session — batch blocked, NOT abandoned). Dossiers
+> **15 → 16/42** (istorychni-pisni added THIS PR). Modules 3/42 unchanged. The 5-wiki batch resumes instantly once
+> #3083 lands (writer prose is good; only citations were stripped).
+
+### 🔴 WIKI GAP-BATCH BLOCKED on #3083 (systemic; FILED for infra orchestrator, NOT self-implemented)
+Ran kobzarstvo-lirnytstvo (`--review --force --allow-verify-markers`) → converged MIN 9.0 BUT produced a **gutted,
+effectively-uncited** article (only 2 `[S1]`-no-source citations). ROOT CAUSE (#M-4, diagnosed + filed): the
+mechanical discipline strip `strip_invented_citations(text, source_count)` keys on `source_count=len(all_chunks)`
+(`compile.py:401`) = the **dense-retrieval count**. Folk gap wikis are **dossier-only compiles** → dense retrieval
+returns ~1 chunk ("No source material found"); dossier-seeding (#3036) recovers the registry to 26 on a SEPARATE
+path; so the writer correctly cites `[S2]–[S26]` but `2..26 > 1` → **all 224-228 valid citations stripped** →
+uncited article. Then `source_grounding` **false-passes** the gutted article 10/PASS, 0 findings (the #M-11 m20
+trap — the gate that should catch under-citation didn't). **CONFIRMED systemic:** holosinnya (mainstream genre)
+reproduces identically (224 stripped). bylyny (#10) shipped last session only because it had a discovery file
+feeding dense retrieval enough chunks. **FIX (infra lane, ~1-line):** pass the seeded registry count (count
+`- id: S\d+` in `.sources.yaml`), not `len(all_chunks)`; + harden `source_grounding` so it can't PASS a
+~0-citation article. **#3083** filed w/ full spec + repro; TRACK-UPDATE'd orchestrator on pipeline channel.
+Per Session-20c role (file infra, don't implement) I did NOT write the fix.
+
+### ✅ DONE THIS SESSION (this PR ships dossier #16)
+- **DOSSIER #16 `istorychni-pisni` BUILT (codex/gpt-5.5, corpus-pre-grounded brief) + CORPUS-HAMMERED + SHIPPING.**
+  Historical SONGS as a distinct genre (Колесса/Березовський), rigorously separated from думи (астрофічні,
+  речитатив — Самійло Кішка/Маруся Богуславка stay думи) + prose перекази. 530 lines, all 10 sections + multimodal.
+  **Corpus-hammer (#M-11, INDEPENDENT re-verify, not codex's word): 7/7 §4 fragments re-confirmed at claimed
+  confidence + chunk_ids** — Байда 1.0/`40beaaff_c0000`; Зажурилась 1.0/`1f7ae6ee_c0000`; Гей-не-дивуйте
+  1.0/`8028b13a_c0000`; Хмельницький-за-Грушевським 0.99/`5794da94_c2949`; Морозенко-Грінченко 1.0/`69b7d2f1_c0032`;
+  татари-полон-Нечуй 1.0/`9b25b2cc_c0015`; Залізняк-Нечуй 1.0/`d20168e4_c0008`. §4 honestly LABELS provenance
+  (Грушевський/Грінченко/Нечуй marked scholarly/dramatic attestation, NOT passed off as field-recordings —
+  #R-FOLK-PRIMARY-TEXTS satisfied). §9 decolonization exemplary (6 source-disagreements: Soviet «возз'єднання»
+  lexicon flagged as ideological; «Запорожская Старина» romantic-fabrication caution; scholarly-doubt-vs-Soviet-
+  censorship nuance; гайдамаччина neither imperial-«розбій» nor uncritical-cult). Do-not-quote ledger honest
+  (rejects famous-but-unverified Кармелюк «За Сибіром»/Сірко/Сава-Чалий/«Ой на горі женці жнуть» incipits).
+  «ясир» heritage-confirmed authentic (Грінченко pre-Soviet + Голоскевич + Franko). Brief: `/tmp/folk-dossier-
+  istorychni-pisni-brief.md`. Codex committed + STOPPED (no push/PR per brief) → driver pushes + PRs.
+- **Issue #3083 filed** (wiki strip-count bug). Forensic gutted articles (kobzarstvo + holosinnya) live in worktree
+  `claude/folk-gap-wikis-batch` (NOT shipped; that worktree's `wiki/index.md` was also dirtied — discard the worktree).
+
+### ⚖ MERGE NOTE (discrepancy — resolved for this session)
+The **agent-type system prompt** (curriculum-track-orchestrator) says **OPEN PRs but NEVER merge — the main
+orchestrator promotes.** This SUPERSEDES the older 2026-06-06 self-merge grant (lines ~50-55 above) for THIS
+session. I opened the dossier PR and did **not** self-merge (orchestrator is active → no deadlock risk). Next
+session: follow the agent-type contract (open PR + ping orchestrator) unless the user explicitly re-grants self-merge.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **When #3083 lands → re-run the 5 gap wikis** (proven recipe, fully specced): from a dispatch worktree off
+   origin/main (no `data/` symlink — #3059 handles it), per slug `compile.py --track folk --slug <slug> --writer
+   gpt-5.5 --review --force` (+ `--allow-verify-markers` for kobzarstvo's peripheral Кучугура-Кучеренко date).
+   Slugs: kobzarstvo-lirnytstvo, dumy-sotsialno-pobutovi, holosinnya, vesilni-pisni, zhnyvarski-obzhynkovi-pisni.
+   **Corpus-hammer each** (#M-11 — read article + spot-check added `[S#]`→author). Ship `.md`+`.sources.yaml`+
+   `.reviews`. ~10 min each. → wikis 10→15/42. (PRE-FIRE: `npx @anthropic-ai/claude-code@latest --version`; if
+   "native binary not installed" → `node install.cjs` in `~/.npm/_npx/*/.../@anthropic-ai/claude-code` — claude-routed reviewers need it.)
+2. **OR (if #3083 not yet landed) advance the dossier queue** — the unblocked content path: #17
+   `striletski-povstanski-pisni` (20th-c. resistance song tradition — user: "fofc they are in, fuck the occupiers").
+   Same proven loop: corpus-pre-ground the brief → codex/gpt-5.5 → corpus-hammer → PR. Then #18
+   `rodynno-pobutovi-pisni`, #19 `kolomyiky` (`phase-folk-queue.md`). Dossiers now 16/42.
+3. **Surfacing folk: still GATED** on koliadky + dumy LLM QG (modules e2e). #3079 (top priority, infra lane) is the
+   clean path (rebuild self-converging vs manual LLM QG grind); tracked, no movement yet.
+
+### 📊 FLEET (unchanged) — dossier writer **codex/gpt-5.5** (clean first pass when brief is corpus-pre-grounded);
+reviewer **Claude corpus-hammer** (culture; cross-family always; NO deepseek/gemini/agy for folk framing). Wiki
+writer gpt-5.5 + claude-routed seminar reviewers (#3057). Module writer claude-tools. Pre-fire binary check for any claude-routed run.
+
+---
+
+## ▶▶▶ SESSION 20b HANDOFF (2026-06-13 — THE UNLOCK FOUND + PROVEN: route seminar register/factual/source_grounding OFF gemini/codex → claude; bylyny PASSES MIN 8.0 (was stuck ~6); **wiki #10 shipping**, 5 to batch) — (superseded by Session 21)
 
 > **⏱ HONEST SCOPE:** Wikis **9 → 10/42** (bylyny shipping THIS PR). Dossiers 15/42, modules 3/42 (unchanged).
 > The 6-wiki gap → **5** after this. The blocker is SOLVED, not just diagnosed: a real `--review-only` run of
