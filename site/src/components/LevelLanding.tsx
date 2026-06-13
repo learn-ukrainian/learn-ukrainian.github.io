@@ -42,7 +42,10 @@ type LevelLandingProps = {
   modules: UnitGroup[] | OldModuleItem[];
 };
 
-const HIDDEN_MODULE_LINK_TRACKS = new Set(['folk']);
+// Tracks whose module links are suppressed on the landing page (built modules
+// render as locked). Folk was un-hidden 2026-06-14 for the preview/seminar-test
+// launch (reverses orchestrator #3027); its 3 built modules are now clickable.
+const HIDDEN_MODULE_LINK_TRACKS = new Set<string>();
 
 function ModuleCard({ mod, level, color }: { mod: ModuleItem; level: string; color: string }) {
   const levelKey = level.toLowerCase();

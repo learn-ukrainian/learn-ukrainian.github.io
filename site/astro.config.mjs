@@ -14,7 +14,9 @@ import vocabEtymologyLinker from './plugins/vocab-etymology-link.mjs';
 const remarkPlugins = [remarkDirective, remarkAdmonitions, remarkGfm, vocabEtymologyLinker];
 const starlightRoot = fileURLToPath(new URL('.', import.meta.url));
 const starlightNodeModules = realpathSync(fileURLToPath(new URL('./node_modules', import.meta.url)));
-const hiddenPublicPaths = ['/folk'];
+// Folk un-hidden 2026-06-14 for the preview/seminar-test launch (reverses
+// orchestrator #3027). Empty = nothing suppressed from public routing.
+const hiddenPublicPaths = [];
 
 const isHiddenPublicPage = (page) => {
   const pathname = page.startsWith('http') ? new URL(page).pathname : page;

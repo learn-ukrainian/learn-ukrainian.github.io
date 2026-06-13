@@ -3,22 +3,22 @@
     "modules": 55
   },
   "a2": {
-    "modules": 60
+    "modules": 69
   },
   "b1": {
-    "modules": 91
+    "modules": 94
   },
   "b2": {
-    "modules": 89
+    "modules": 93
   },
   "c1": {
-    "modules": 111
+    "modules": 132
   },
   "hist": {
     "modules": 140
   },
   "bio": {
-    "modules": 180
+    "modules": 310
   },
   "lit": {
     "modules": 232
@@ -26,14 +26,8 @@
   "istorio": {
     "modules": 136
   },
-  "b2-pro": {
-    "modules": 40
-  },
-  "c1-pro": {
-    "modules": 50
-  },
   "c2": {
-    "modules": 106
+    "modules": 110
   },
   "oes": {
     "modules": 102
@@ -63,7 +57,7 @@
     "modules": 17
   },
   "folk": {
-    "modules": 27
+    "modules": 42
   },
-  "_total": 1737
+  "_total": 1833
 }
