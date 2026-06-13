@@ -3,12 +3,12 @@
 sync_landing_pages.py - Sync website landing pages with curriculum state.
 
 Updates:
-- starlight/src/content/docs/index.mdx (main curriculum overview)
-- starlight/src/content/docs/{level}/index.mdx (level landing pages)
+- site/src/content/docs/index.mdx (main curriculum overview)
+- site/src/content/docs/{level}/index.mdx (level landing pages)
 
 Data sources:
 - Configuration: docs/l2-uk-en/level-status.yaml (planned counts, status overrides)
-- Ready modules: starlight/src/content/docs/{level}/*.mdx files
+- Ready modules: site/src/content/docs/{level}/*.mdx files
 
 Usage:
     python scripts/sync_landing_pages.py           # Apply changes
@@ -65,7 +65,7 @@ LEVELS = load_config()
 
 def count_ready_modules(level: str) -> int:
     """Count MDX files for a level."""
-    mdx_dir = ROOT / 'starlight' / 'src' / 'content' / 'docs' / level
+    mdx_dir = ROOT / 'site' / 'src' / 'content' / 'docs' / level
     if not mdx_dir.exists():
         return 0
     return len(list(mdx_dir.glob('module-*.mdx')))
@@ -116,7 +116,7 @@ def collect_stats() -> dict:
 
 def update_intro_mdx(stats: dict, dry_run: bool) -> bool:
     """Update the main index.mdx curriculum table."""
-    intro_path = ROOT / 'starlight' / 'src' / 'content' / 'docs' / 'index.mdx'
+    intro_path = ROOT / 'site' / 'src' / 'content' / 'docs' / 'index.mdx'
     if not intro_path.exists():
         print(f"  ! {intro_path} not found")
         return False
@@ -167,7 +167,7 @@ def update_intro_mdx(stats: dict, dry_run: bool) -> bool:
 
 def update_level_index(level: str, stats: dict, dry_run: bool) -> bool:
     """Update a level's index.mdx with current stats."""
-    index_path = ROOT / 'starlight' / 'src' / 'content' / 'docs' / level / 'index.mdx'
+    index_path = ROOT / 'site' / 'src' / 'content' / 'docs' / level / 'index.mdx'
     if not index_path.exists():
         print(f"  - {level}/index.mdx not found")
         return False

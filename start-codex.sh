@@ -134,10 +134,10 @@ if [ "$CODEX_TARGET" = "worktree" ]; then
     fi
 
     # Symlink node_modules so npm/vitest work
-    if [ -d "$PROJECT_DIR/starlight/node_modules" ] && [ ! -e "$WORKTREE_DIR/starlight/node_modules" ]; then
-        mkdir -p "$WORKTREE_DIR/starlight"
-        ln -s "$PROJECT_DIR/starlight/node_modules" "$WORKTREE_DIR/starlight/node_modules"
-        echo "Symlinked starlight/node_modules into worktree"
+    if [ -d "$PROJECT_DIR/site/node_modules" ] && [ ! -e "$WORKTREE_DIR/site/node_modules" ]; then
+        mkdir -p "$WORKTREE_DIR/site"
+        ln -s "$PROJECT_DIR/site/node_modules" "$WORKTREE_DIR/site/node_modules"
+        echo "Symlinked site/node_modules into worktree"
     fi
 
     # Symlink data/ (sources.db, vesum.db) so MCP tools work

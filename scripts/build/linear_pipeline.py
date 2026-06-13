@@ -7002,7 +7002,7 @@ def _archetype_fit_gate(
 
 
 def assemble_mdx(module_dir: Path, output_path: Path, plan_path: Path) -> str:
-    """Assemble the 4-tab Starlight MDX file from authoring artifacts."""
+    """Assemble the 4-tab Site MDX file from authoring artifacts."""
     plan = plan_check(plan_path)
     activities_path = module_dir / "activities.yaml"
     vocabulary_path = module_dir / "vocabulary.yaml"
@@ -11627,7 +11627,7 @@ def _ai_slop_gate(text: str) -> dict[str, Any]:
 # direct addresses, 0 META_NARRATION violations — but the reviewer had no
 # rubric, so it scored 6.5 without a concrete shortfall to name.
 
-#: Markdown callout patterns we accept as engagement signal. Covers Starlight
+#: Markdown callout patterns we accept as engagement signal. Covers Site
 #: directive blocks (``:::tip``) and GitHub-style admonitions
 #: (``[!myth-buster]``). Both render to highlighted blocks in the MDX output.
 _CALLOUT_PATTERN = re.compile(
@@ -11676,7 +11676,7 @@ def _engagement_floor_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]
     counting is deferred because the content-anchored vs generic distinction
     requires judgment that this gate can't make):
 
-    1. **Callouts** (Starlight ``:::tip``-style or GitHub ``[!myth-buster]``).
+    1. **Callouts** (Site ``:::tip``-style or GitHub ``[!myth-buster]``).
        Minimum 2 per module (``docs/best-practices/module-content-quality.md``
        line 97; V6 ``v6-write.md`` line 537 said 3, we relax to 2 to match
        the documented standard). Callouts are unambiguous engagement signal

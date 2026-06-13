@@ -11,7 +11,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
-MDX_ROOT = PROJECT_ROOT / "starlight" / "src" / "content" / "docs"
+MDX_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "docs"
 VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
 
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))

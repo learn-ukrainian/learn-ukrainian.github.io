@@ -127,7 +127,7 @@ def _classification_fixture(tmp_path: Path, monkeypatch):
         os.utime(p, (base_mtime + 100, base_mtime + 100))
 
     # Published
-    mdx_dir = proj / "starlight" / "src" / "content" / "docs" / "a1"
+    mdx_dir = proj / "site" / "src" / "content" / "docs" / "a1"
     mdx_dir.mkdir(parents=True, exist_ok=True)
     (mdx_dir / "hello.mdx").write_text("<p>", encoding="utf-8")
 
@@ -295,7 +295,7 @@ def _drift_fixture(tmp_path: Path, monkeypatch):
     base = proj / "curriculum" / "l2-uk-en" / "a1"
     (base / "orchestration" / "hello").mkdir(parents=True, exist_ok=True)
     (base / "status").mkdir(exist_ok=True)
-    mdx_dir = proj / "starlight" / "src" / "content" / "docs" / "a1"
+    mdx_dir = proj / "site" / "src" / "content" / "docs" / "a1"
     mdx_dir.mkdir(parents=True, exist_ok=True)
 
     monkeypatch.setattr(

@@ -13,7 +13,7 @@ from pathlib import Path
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-MDX_DIR = PROJECT_ROOT / "starlight/src/content/docs"
+MDX_DIR = PROJECT_ROOT / "site/src/content/docs"
 SOURCE_DIR = PROJECT_ROOT / "curriculum/l2-uk-en"
 LEGACY_TRACKS_FILE = PROJECT_ROOT / "scripts/audit/mdx_source_parity_legacy_tracks.yaml"
 GENERATOR_ENTRYPOINT = PROJECT_ROOT / "scripts/generate_mdx.py"

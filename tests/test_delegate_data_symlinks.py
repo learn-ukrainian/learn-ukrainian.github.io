@@ -31,10 +31,10 @@ def test_provision_data_symlinks_links_heavy_dbs_and_is_idempotent(tmp_path):
     sources_db.touch()
     venv_dir = main_repo / ".venv"
     node_modules_dir = main_repo / "node_modules"
-    starlight_node_modules_dir = main_repo / "starlight" / "node_modules"
+    site_node_modules_dir = main_repo / "site" / "node_modules"
     venv_dir.mkdir()
     node_modules_dir.mkdir()
-    starlight_node_modules_dir.mkdir(parents=True)
+    site_node_modules_dir.mkdir(parents=True)
 
     delegate._provision_data_symlinks(worktree, main_repo)
 
@@ -42,17 +42,17 @@ def test_provision_data_symlinks_links_heavy_dbs_and_is_idempotent(tmp_path):
     sources_link = worktree / "data" / "sources.db"
     venv_link = worktree / ".venv"
     node_modules_link = worktree / "node_modules"
-    starlight_node_modules_link = worktree / "starlight" / "node_modules"
+    site_node_modules_link = worktree / "site" / "node_modules"
     assert vesum_link.is_symlink()
     assert sources_link.is_symlink()
     assert venv_link.is_symlink()
     assert node_modules_link.is_symlink()
-    assert starlight_node_modules_link.is_symlink()
+    assert site_node_modules_link.is_symlink()
     assert vesum_link.readlink() == vesum_db.resolve()
     assert sources_link.readlink() == sources_db.resolve()
     assert venv_link.readlink() == venv_dir.resolve()
     assert node_modules_link.readlink() == node_modules_dir.resolve()
-    assert starlight_node_modules_link.readlink() == starlight_node_modules_dir.resolve()
+    assert site_node_modules_link.readlink() == site_node_modules_dir.resolve()
 
     delegate._provision_data_symlinks(worktree, main_repo)
 
@@ -60,12 +60,12 @@ def test_provision_data_symlinks_links_heavy_dbs_and_is_idempotent(tmp_path):
     assert sources_link.is_symlink()
     assert venv_link.is_symlink()
     assert node_modules_link.is_symlink()
-    assert starlight_node_modules_link.is_symlink()
+    assert site_node_modules_link.is_symlink()
     assert vesum_link.readlink() == vesum_db.resolve()
     assert sources_link.readlink() == sources_db.resolve()
     assert venv_link.readlink() == venv_dir.resolve()
     assert node_modules_link.readlink() == node_modules_dir.resolve()
-    assert starlight_node_modules_link.readlink() == starlight_node_modules_dir.resolve()
+    assert site_node_modules_link.readlink() == site_node_modules_dir.resolve()
 
 
 def test_provision_data_symlinks_skips_missing_main_files(tmp_path, capsys):
@@ -81,7 +81,7 @@ def test_provision_data_symlinks_skips_missing_main_files(tmp_path, capsys):
     assert not (worktree / "data" / "sources.db").exists()
     assert not (worktree / ".venv").exists()
     assert not (worktree / "node_modules").exists()
-    assert not (worktree / "starlight" / "node_modules").exists()
+    assert not (worktree / "site" / "node_modules").exists()
 
 
 def test_provision_data_symlinks_refuses_when_worktree_is_main(tmp_path, capsys):

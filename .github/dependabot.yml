@@ -24,9 +24,9 @@ updates:
         patterns:
           - "*"
 
-  # npm (Starlight site)
+  # npm (site)
   - package-ecosystem: "npm"
-    directory: "/starlight"
+    directory: "/site"
     schedule:
       interval: "weekly"
       day: "monday"

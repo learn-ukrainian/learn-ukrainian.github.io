@@ -24,7 +24,7 @@ on:
       - 'scripts/build/contracts/**/*.md'
       - 'docs/lesson-contract.md'
       - 'docs/lesson-schema.yaml'
-      - 'starlight/**'
+      - 'site/**'
       - 'curriculum/l2-uk-en/**'
   # CI/docs-only required-check note:
   # Keep PRs unfiltered so the required `Test (pytest)` check is always emitted.
@@ -43,7 +43,7 @@ jobs:
       # code = python OR frontend changed (union). Used by the broad secret scan.
       code: ${{ steps.filter.outputs.code }}
       # python = Python/test paths only. Gates pytest + ruff/radon/prompt/root/schema.
-      # Deliberately EXCLUDES starlight/** so content/MDX PRs do NOT run pytest.
+      # Deliberately EXCLUDES site/** so content/MDX PRs do NOT run pytest.
       python: ${{ steps.filter.outputs.python }}
       # frontend = generated site inputs/outputs. Gates the build/vitest job plus
       # MDX source/drift checks, so curriculum source edits cannot leave stale
@@ -71,7 +71,7 @@ jobs:
               - 'scripts/build/contracts/**/*.md'
               - 'docs/lesson-contract.md'
               - 'docs/lesson-schema.yaml'
-              - 'starlight/**'
+              - 'site/**'
               - 'curriculum/l2-uk-en/**'
             python:
               - '.github/workflows/ci.yml'
@@ -88,7 +88,7 @@ jobs:
               - 'docs/lesson-schema.yaml'
             frontend:
               - '.github/workflows/ci.yml'
-              - 'starlight/**'
+              - 'site/**'
               - 'curriculum/l2-uk-en/**'
 
   lint:
@@ -510,14 +510,14 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: starlight/package-lock.json
+          cache-dependency-path: site/package-lock.json
 
       - name: Install dependencies
-        working-directory: starlight
+        working-directory: site
         run: npm ci
 
       - name: Run vitest (unit + build quality gate)
-        working-directory: starlight
+        working-directory: site
         run: npm test
 
   secret-scan:

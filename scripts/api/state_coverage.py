@@ -94,7 +94,7 @@ def compute_summary() -> dict:
             "module_catalog": "curriculum.yaml with plans/{track}/*.yaml fallback",
             "build_state": "curriculum/l2-uk-en/{track}/orchestration/{slug}/state.json",
             "generated_md": "curriculum/l2-uk-en/{track}/{slug}.md",
-            "published_mdx": "starlight/src/content/docs/{track}/{slug}.mdx",
+            "published_mdx": "site/src/content/docs/{track}/{slug}.mdx",
             "audit": "curriculum/l2-uk-en/{track}/status/{slug}.json",
             "review": "curriculum/l2-uk-en/{track}/review/{slug}-review.md",
             "dossier": [
@@ -182,7 +182,7 @@ def _count_summary_for_track(track_dir, track_id, plan_slugs):
 
 
 def _published_mdx_path(track_id: str, slug: str) -> Path:
-    return PROJECT_ROOT / "starlight" / "src" / "content" / "docs" / track_id / f"{slug}.mdx"
+    return PROJECT_ROOT / "site" / "src" / "content" / "docs" / track_id / f"{slug}.mdx"
 
 
 def compute_pipeline_track(track_id: str, level_cfg: dict) -> dict:

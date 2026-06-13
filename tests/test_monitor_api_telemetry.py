@@ -48,6 +48,7 @@ def _write_transcript(path: Path) -> None:
 def test_rules_markdown_appends_footer_when_enabled(tmp_path, monkeypatch) -> None:
     transcript = tmp_path / "session.jsonl"
     _write_transcript(transcript)
+    monkeypatch.delenv("AGENT_NO_TELEMETRY_FOOTER", raising=False)
     monkeypatch.setenv("LEARN_UKRAINIAN_TELEMETRY_FOOTER", "1")
     monkeypatch.setenv("LEARN_UKRAINIAN_TRANSCRIPT_PATH", str(transcript))
 
@@ -64,6 +65,7 @@ def test_rules_markdown_appends_footer_when_enabled(tmp_path, monkeypatch) -> No
 def test_manifest_json_adds_structured_telemetry_when_enabled(tmp_path, monkeypatch) -> None:
     transcript = tmp_path / "session.jsonl"
     _write_transcript(transcript)
+    monkeypatch.delenv("AGENT_NO_TELEMETRY_FOOTER", raising=False)
     monkeypatch.setenv("LEARN_UKRAINIAN_TELEMETRY_FOOTER", "1")
     monkeypatch.setenv("LEARN_UKRAINIAN_TRANSCRIPT_PATH", str(transcript))
 

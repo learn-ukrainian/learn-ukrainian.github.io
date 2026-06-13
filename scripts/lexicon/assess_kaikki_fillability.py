@@ -488,7 +488,7 @@ This report presents a formal assessment of the Ukrainian Wiktionary extract (su
     # Add Recommendations
     report_content += """
 ## Recommendation
-Based on the high coverage rate of Kaikki over the taught curriculum (presenting over 90% coverage for lemmas, IPA, and glosses), it is **highly recommended** to integrate the Kaikki dataset into the Starlight Atlas pipeline. Specifically, it should be used to seed **IPA pronunciations** (where current manifest coverage is lacking), **etymology text** (which has high coverage in Kaikki but is sparse in our current manifest), and **usage examples** (as our current manifest has no usage examples). The English-mediated glosses are also extremely useful as a fallback or starting point for validation, though manual review remains necessary for high-quality semantic definitions.
+Based on the high coverage rate of Kaikki over the taught curriculum (presenting over 90% coverage for lemmas, IPA, and glosses), it is **highly recommended** to integrate the Kaikki dataset into the Site Atlas pipeline. Specifically, it should be used to seed **IPA pronunciations** (where current manifest coverage is lacking), **etymology text** (which has high coverage in Kaikki but is sparse in our current manifest), and **usage examples** (as our current manifest has no usage examples). The English-mediated glosses are also extremely useful as a fallback or starting point for validation, though manual review remains necessary for high-quality semantic definitions.
 """
 
     # Write out report

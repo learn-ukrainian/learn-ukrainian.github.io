@@ -1,15 +1,15 @@
 """
-Tests for Starlight website integrity.
+Tests for site website integrity.
 
-Validates that the generated Starlight site is internally consistent:
+Validates that the generated site is internally consistent:
 1. Every track has a landing page (index.mdx) with valid frontmatter
 2. Every module link in landing pages resolves to an existing .mdx file
 3. MDX files have valid frontmatter (title required)
 4. No stale files from old naming conventions (module-NN.mdx, numbered slugs)
-5. Curriculum manifest (curriculum.yaml) is in sync with Starlight content
+5. Curriculum manifest (curriculum.yaml) is in sync with site content
 6. No broken internal links between modules
 
-Run: pytest tests/test_starlight_links.py -v
+Run: pytest tests/test_site_links.py -v
 Run only website tests: pytest -m website
 """
 
@@ -26,8 +26,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Mark all tests in this module
 pytestmark = pytest.mark.website
 
-STARLIGHT_DIR = Path(__file__).parent.parent / "starlight"
-DOCS_DIR = STARLIGHT_DIR / "src" / "content" / "docs"
+SITE_DIR = Path(__file__).parent.parent / "site"
+DOCS_DIR = SITE_DIR / "src" / "content" / "docs"
 MANIFEST_PATH = Path(__file__).parent.parent / "curriculum" / "l2-uk-en" / "curriculum.yaml"
 
 # All tracks that should exist in the docs directory
@@ -104,10 +104,10 @@ def _load_manifest() -> dict:
         return yaml.safe_load(f)
 
 
-def _skip_if_no_starlight():
-    """Skip test if Starlight directory doesn't exist."""
+def _skip_if_no_site():
+    """Skip test if site directory doesn't exist."""
     if not DOCS_DIR.is_dir():
-        pytest.skip("Starlight docs directory not found")
+        pytest.skip("site docs directory not found")
 
 
 # =============================================================================
@@ -118,8 +118,8 @@ class TestLandingPages:
     """Every track directory must have a landing page."""
 
     @pytest.fixture(autouse=True)
-    def check_starlight(self):
-        _skip_if_no_starlight()
+    def check_site(self):
+        _skip_if_no_site()
 
     @pytest.mark.parametrize("track", ALL_TRACKS)
     def test_track_directory_exists(self, track):
@@ -131,7 +131,7 @@ class TestLandingPages:
 
     @pytest.mark.parametrize("track", ALL_TRACKS)
     def test_landing_page_exists(self, track):
-        # Starlight uses index.mdx for landing pages
+        # Site uses index.mdx for landing pages
         index = DOCS_DIR / track / "index.mdx"
         if not index.is_file():
             # Also check for index.md
@@ -161,8 +161,8 @@ class TestModuleLinks:
     """Every module link in landing pages must resolve to an existing MDX file."""
 
     @pytest.fixture(autouse=True)
-    def check_starlight(self):
-        _skip_if_no_starlight()
+    def check_site(self):
+        _skip_if_no_site()
 
     @pytest.mark.parametrize("track", TRACKS_WITH_MODULES)
     def test_all_links_resolve(self, track):
@@ -177,7 +177,7 @@ class TestModuleLinks:
 
         missing = []
         for s in slugs:
-            # Starlight can use .mdx or .md
+            # Site can use .mdx or .md
             if not (DOCS_DIR / track / f"{s}.mdx").is_file() and \
                not (DOCS_DIR / track / f"{s}.md").is_file():
                 missing.append(s)
@@ -223,12 +223,12 @@ class TestMdxFiles:
     """MDX module files must have valid frontmatter."""
 
     @pytest.fixture(autouse=True)
-    def check_starlight(self):
-        _skip_if_no_starlight()
+    def check_site(self):
+        _skip_if_no_site()
 
     @pytest.mark.parametrize("track", TRACKS_WITH_MODULES)
     def test_all_mdx_have_title(self, track):
-        """Every module .mdx file has title in frontmatter (required by Starlight)."""
+        """Every module .mdx file has title in frontmatter (required by Site)."""
         track_dir = DOCS_DIR / track
         module_files = [f for f in sorted(track_dir.glob("*.mdx")) if f.name != "index.mdx"]
 
@@ -269,8 +269,8 @@ class TestModuleCounts:
     """Tracks must have the expected minimum number of modules."""
 
     @pytest.fixture(autouse=True)
-    def check_starlight(self):
-        _skip_if_no_starlight()
+    def check_site(self):
+        _skip_if_no_site()
 
     @pytest.mark.parametrize("track,min_count", MIN_MODULE_COUNTS.items())
     def test_minimum_module_count(self, track, min_count):
@@ -292,8 +292,8 @@ class TestInternalLinks:
     """MDX files must not contain broken internal links."""
 
     @pytest.fixture(autouse=True)
-    def check_starlight(self):
-        _skip_if_no_starlight()
+    def check_site(self):
+        _skip_if_no_site()
 
     @pytest.mark.parametrize("track", TRACKS_WITH_MODULES)
     def test_no_broken_cross_references(self, track):
@@ -326,11 +326,11 @@ class TestInternalLinks:
 # =============================================================================
 
 class TestCurriculumSync:
-    """Curriculum manifest (curriculum.yaml) must be in sync with Starlight content."""
+    """Curriculum manifest (curriculum.yaml) must be in sync with site content."""
 
     @pytest.fixture(autouse=True)
-    def check_starlight(self):
-        _skip_if_no_starlight()
+    def check_site(self):
+        _skip_if_no_site()
 
     @pytest.fixture(scope="class")
     def manifest(self):
@@ -395,15 +395,15 @@ class TestCurriculumSync:
 # 7. STARLIGHT-SPECIFIC CHECKS
 # =============================================================================
 
-class TestStarlightConfig:
-    """Starlight configuration integrity."""
+class TestSiteConfig:
+    """Site configuration integrity."""
 
     def test_astro_config_exists(self):
-        config = STARLIGHT_DIR / "astro.config.mjs"
+        config = SITE_DIR / "astro.config.mjs"
         assert config.is_file(), "Missing astro.config.mjs"
 
     def test_package_json_exists(self):
-        pkg = STARLIGHT_DIR / "package.json"
+        pkg = SITE_DIR / "package.json"
         assert pkg.is_file(), "Missing package.json"
 
     def test_homepage_exists(self):

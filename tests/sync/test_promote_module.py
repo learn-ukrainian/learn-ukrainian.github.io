@@ -49,8 +49,8 @@ def _rel_mdx_build(level: str, slug: str) -> Path:
 
 
 def _rel_mdx(level: str, slug: str) -> Path:
-    """Deploy target Starlight reads from."""
-    return Path("starlight") / "src" / "content" / "docs" / level / f"{slug}.mdx"
+    """Deploy target Site reads from."""
+    return Path("site") / "src" / "content" / "docs" / level / f"{slug}.mdx"
 
 
 def _seed_build_branch(
@@ -87,8 +87,8 @@ def _seed_build_branch(
         path.write_text(content, encoding="utf-8")
     if "mdx" not in omit:
         # The build's assemble_mdx step writes here (curriculum tree), not into
-        # starlight/. Promote reads from this path and writes the deploy copy
-        # into starlight/src/content/docs/.
+        # site/. Promote reads from this path and writes the deploy copy
+        # into site/src/content/docs/.
         mdx = repo / _rel_mdx_build(level, slug)
         mdx.parent.mkdir(parents=True, exist_ok=True)
         mdx.write_text("mdx content\n", encoding="utf-8")
@@ -162,7 +162,7 @@ def test_promote_dry_run_writes_nothing(tmp_path: Path) -> None:
     assert _git(repo, "status", "--short").stdout == ""
 
 
-def test_promote_reads_mdx_from_build_curriculum_tree_not_stale_starlight(tmp_path: Path) -> None:
+def test_promote_reads_mdx_from_build_curriculum_tree_not_stale_site(tmp_path: Path) -> None:
     """Regression: promote must read MDX from the build's curriculum/ tree
     (where assemble_mdx writes), not from the build branch's DOCS_ROOT.
 
@@ -170,10 +170,10 @@ def test_promote_reads_mdx_from_build_curriculum_tree_not_stale_starlight(tmp_pa
     because promote_module read DOCS_ROOT, found a stale Phase 4 exemplar
     that happened to be there, and the diff against main was empty (since
     main also had the same stale file). The freshly-built MDX written by
-    assemble_mdx to `curriculum/.../{slug}.mdx` never reached Starlight.
+    assemble_mdx to `curriculum/.../{slug}.mdx` never reached Site.
 
     This test seeds a build branch with a FRESH curriculum-tree MDX AND a
-    STALE starlight-tree MDX, then asserts the FRESH content lands on main.
+    STALE site-tree MDX, then asserts the FRESH content lands on main.
     """
     repo = _init_repo(tmp_path)
     branch = "build/a1/foo-20260520-010101"
@@ -190,7 +190,7 @@ def test_promote_reads_mdx_from_build_curriculum_tree_not_stale_starlight(tmp_pa
         "GIT_AUTHOR_DATE": "2026-05-20T01:01:02 +0000",
         "GIT_COMMITTER_DATE": "2026-05-20T01:01:02 +0000",
     }
-    _git(repo, "commit", "-m", "seed stale starlight mdx", env=env)
+    _git(repo, "commit", "-m", "seed stale site mdx", env=env)
     _git(repo, "switch", "main")
 
     rc = promote_module.main(["--build-branch", branch, "--no-commit"], repo_root=repo)
@@ -198,7 +198,7 @@ def test_promote_reads_mdx_from_build_curriculum_tree_not_stale_starlight(tmp_pa
     assert rc == 0
     promoted = (repo / _rel_mdx("a1", "foo")).read_text(encoding="utf-8")
     assert promoted == "mdx content\n", (
-        f"Expected fresh build-tree MDX content on main; got stale starlight content: {promoted!r}"
+        f"Expected fresh build-tree MDX content on main; got stale site content: {promoted!r}"
     )
 
 

@@ -910,7 +910,7 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
         "data/sources.db",
         ".venv",
         "node_modules",
-        "starlight/node_modules",
+        "site/node_modules",
     ):
         source = main_repo_root / relative_path
         # ``source.exists()`` follows symlinks and returns False for a looping

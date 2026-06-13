@@ -94,7 +94,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Canonical project, track, module, research, review, build, routing, and cold-start state.",
         "curriculum.yaml, plans, orchestration state, research/dossier docs, audit/review files, artifacts, and cost records.",
         "State router TTLs by endpoint; major endpoints expose meta.source, meta.cache, meta.stale_after_s; selected endpoints support ?fresh=true.",
-        ("progress.html", "track-health.html", "quality.html", "index.html", "Starlight LiveStatus", "agents"),
+        ("progress.html", "track-health.html", "quality.html", "index.html", "Site LiveStatus", "agents"),
         "Overlaps /api/dashboard projections, /api/blue/live-status, and legacy team views.",
         "low after #2790 for summary/progress; medium for state endpoints that do not expose meta yet",
         "keep canonical",
@@ -153,7 +153,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
     RouteContract(
         "/api/artifacts", "prefix", "http",
         "Artifact classification, ship-ready checks, report listing, drift, and force-preview evidence.",
-        "Plans, generated curriculum files, Starlight MDX, review/audit docs, docs/audit reports.",
+        "Plans, generated curriculum files, site MDX, review/audit docs, docs/audit reports.",
         "No route cache; live filesystem reads.",
         ("artifacts.html", "agents", "docs"),
         "Complements /api/state published/stale signals.",

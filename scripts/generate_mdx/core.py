@@ -640,7 +640,7 @@ def main():
         process_modules = get_modules_from_manifest()
 
     print(f'Source: curriculum/{lang_pair}/', flush=True)
-    print('Output: starlight/src/content/docs/\n', flush=True)
+    print('Output: site/src/content/docs/\n', flush=True)
 
     # Load EXTERNAL RESOURCES
     external_resources_file = PROJECT_ROOT / 'docs' / 'resources' / 'external_resources.yaml'

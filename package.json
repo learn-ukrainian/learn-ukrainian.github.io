@@ -35,7 +35,7 @@
     "claude:deploy": "scripts/deploy_prompts.sh",
     "lint:md": "markdownlint-cli2 \"curriculum/**/*.md\" \"docs/**/*.md\" \"*.md\"",
     "lint:md:fix": "markdownlint-cli2 --fix \"curriculum/**/*.md\" \"docs/**/*.md\" \"*.md\"",
-    "lint:mdx": "markdownlint-cli2 \"starlight/src/content/docs/**/*.mdx\"",
+    "lint:mdx": "markdownlint-cli2 \"site/src/content/docs/**/*.mdx\"",
     "lint:yaml": ".venv/bin/yamllint .",
     "audit": ".venv/bin/python scripts/audit_level.py",
     "audit:rehash": ".venv/bin/python scripts/rehash_module.py",
@@ -70,9 +70,9 @@
     "api:reload": "npm run api",
     "api:bg": ".venv/bin/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port 8765 --reload --log-config scripts/api/logging.json >> logs/api.log 2>&1 & echo \"PID: $!\" | tee -a logs/api.log",
     "api:logs": "tail -f logs/api.log",
-    "build:starlight": "npm run build --prefix starlight",
-    "build:starlight:full": "npm run build:full --prefix starlight",
-    "dev:starlight": "npm run dev --prefix starlight"
+    "build:\u0073tarlight": "npm run build --prefix site",
+    "build:\u0073tarlight:full": "npm run build:full --prefix site",
+    "dev:\u0073tarlight": "npm run dev --prefix site"
   },
   "repository": {
     "type": "git",

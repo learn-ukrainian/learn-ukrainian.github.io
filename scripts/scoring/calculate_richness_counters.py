@@ -314,7 +314,7 @@ def count_tables(content: str) -> int:
 
 
 def count_video_embeds(content: str) -> int:
-    """Count YouTube video links and Starlight youtubeVideo embeds."""
+    """Count YouTube video links and Site youtubeVideo embeds."""
     youtube_links = len(re.findall(r'youtube\.com/watch', content))
     youtube_components = len(re.findall(r'\{%\s*youtubeVideo\s', content))
     mdx_youtube = len(re.findall(r'<YouTubeVideo\b', content, re.IGNORECASE))

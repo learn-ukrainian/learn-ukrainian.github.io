@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 from dataclasses import dataclass
@@ -11,6 +12,10 @@ from ._config import REPO_ROOT
 
 _ALLOWED_ROOTS = ("scripts/", "tests/", "docs/", "plans/")
 _PATH_HINT_RE = re.compile(r"(?:[A-Za-z0-9_.-]+/)+(?:[A-Za-z0-9_.-]+)?")
+
+
+def _sanitized_git_env() -> dict[str, str]:
+    return {k: v for k, v in os.environ.items() if not k.startswith(("GIT_", "PRE_COMMIT"))}
 
 
 @dataclass(frozen=True)
@@ -38,6 +43,7 @@ def _run(
         check=check,
         capture_output=True,
         text=True,
+        env=_sanitized_git_env(),
     )
 
 
@@ -146,6 +152,7 @@ def recover_orphan_commit(
         check=True,
         capture_output=True,
         text=True,
+        env=_sanitized_git_env(),
     )
     commit = subprocess.run(
         [
@@ -162,6 +169,7 @@ def recover_orphan_commit(
         check=False,
         capture_output=True,
         text=True,
+        env=_sanitized_git_env(),
     )
     if commit.returncode != 0:
         subprocess.run(
@@ -169,6 +177,7 @@ def recover_orphan_commit(
             check=False,
             capture_output=True,
             text=True,
+            env=_sanitized_git_env(),
         )
         return RecoveryResult(
             commit_sha=None,

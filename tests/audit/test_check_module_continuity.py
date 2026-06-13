@@ -72,7 +72,7 @@ def test_any_bridged_occurrence_suppresses_finding() -> None:
 
 
 def test_module_order_sorts_by_num_and_supports_single_quotes(tmp_path: Path) -> None:
-    data_path = tmp_path / "starlight" / "src" / "data"
+    data_path = tmp_path / "site" / "src" / "data"
     data_path.mkdir(parents=True)
     (data_path / "demo-modules.ts").write_text(
         """

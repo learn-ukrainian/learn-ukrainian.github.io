@@ -59,14 +59,14 @@ def _is_looping_symlink(path: Path) -> bool:
 def _candidate_symlinks(repo: Path) -> list[Path]:
     """Known ``node_modules`` locations that an upward npm PATH walk traverses.
 
-    The repo-root and ``starlight`` links are the lethal pair for the main
+    The repo-root and ``site`` links are the lethal pair for the main
     site build. ``.worktrees`` is swept (without following symlinks, so loops
     are never traversed) because delegate-provisioned worktrees mirror the root
     link.
     """
     candidates: list[Path] = [
         repo / "node_modules",
-        repo / "starlight" / "node_modules",
+        repo / "site" / "node_modules",
     ]
     worktrees = repo / ".worktrees"
     if worktrees.is_dir():

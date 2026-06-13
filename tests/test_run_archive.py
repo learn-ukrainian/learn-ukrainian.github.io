@@ -148,7 +148,7 @@ def test_run_archive_writes_failed_mdx_frontmatter(
 
 def test_parse_git_diff_stat_extracts_summary_and_paths() -> None:
     raw = """
- starlight/src/content/docs/a1/my-morning.mdx | 8 +++++---
+ site/src/content/docs/a1/my-morning.mdx | 8 +++++---
  curriculum/l2-uk-en/a1/my-morning/module.md | 2 ++
  2 files changed, 7 insertions(+), 3 deletions(-)
 """
@@ -170,7 +170,7 @@ def test_parse_git_diff_stat_extracts_summary_and_paths() -> None:
     assert summary["deletions"] == 3
     assert summary["paths"] == [
         {
-            "path": "starlight/src/content/docs/a1/my-morning.mdx",
+            "path": "site/src/content/docs/a1/my-morning.mdx",
             "status": "modified",
             "insertions": 5,
             "deletions": 3,

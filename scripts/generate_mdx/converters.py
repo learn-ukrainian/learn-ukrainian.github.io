@@ -396,7 +396,7 @@ def convert_bad_form_markers(content: str, strip_only: bool = False) -> str:
 
 
 def convert_callouts(content: str, is_ukrainian_forced: bool = False) -> str:
-    """Convert GitHub-style callouts to Starlight admonitions.
+    """Convert GitHub-style callouts to Site admonitions.
 
     Robustly handles:
     1. Standard: > [!type]
@@ -495,7 +495,7 @@ def convert_callouts(content: str, is_ukrainian_forced: bool = False) -> str:
                 result.append('</details>')
                 result.append('')
             else:
-                # Output Starlight admonition
+                # Output Site admonition
                 result.append(f':::{admon_type}[{title}]')
                 result.extend(callout_lines)
                 result.append(':::')

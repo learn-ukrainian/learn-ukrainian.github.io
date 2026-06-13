@@ -44,7 +44,7 @@ def test_ignores_unrelated_files() -> None:
 def test_check_targets_fails_when_generation_changes_mdx(
     tmp_path: Path, monkeypatch
 ) -> None:
-    mdx_root = tmp_path / "starlight" / "src" / "content" / "docs"
+    mdx_root = tmp_path / "site" / "src" / "content" / "docs"
     mdx_path = mdx_root / "a1" / "things-have-gender.mdx"
     mdx_path.parent.mkdir(parents=True)
     mdx_path.write_text("old mdx\n", encoding="utf-8")

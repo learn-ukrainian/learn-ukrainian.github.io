@@ -3,7 +3,7 @@
 Lesson Tab 2 ``<VocabCard>`` entries gain a "more →" link to the per-lemma
 Word Atlas page (``/lexicon/{url_slug}/``) when — and only when — that lemma
 actually has an Atlas page. The check is performed at MDX-generation time
-against ``starlight/src/data/lexicon-manifest.json`` (the same file the Astro
+against ``site/src/data/lexicon-manifest.json`` (the same file the Astro
 ``lexicon/[lemma].astro`` route enumerates), so a link is *never* emitted for a
 lemma the Atlas does not publish. This makes the lesson→Atlas direction
 integrity-safe by construction (design §7/§8 ``cross_link_integrity``; warn at
@@ -33,7 +33,7 @@ from pathlib import Path
 
 # scripts/generate_mdx/atlas_links.py -> parents[2] == repo root (worktree-aware).
 _DEFAULT_MANIFEST = (
-    Path(__file__).resolve().parents[2] / "starlight" / "src" / "data" / "lexicon-manifest.json"
+    Path(__file__).resolve().parents[2] / "site" / "src" / "data" / "lexicon-manifest.json"
 )
 
 # Stress accents to strip. Deliberately NOT the full "Mn" category — that would
@@ -91,7 +91,7 @@ def atlas_href_for(word: str, manifest_path: str | Path | None = None) -> str | 
     Args:
         word: the vocab surface form / lemma (may carry stress marks).
         manifest_path: override the lexicon manifest (tests). Defaults to the
-            committed ``starlight/src/data/lexicon-manifest.json``.
+            committed ``site/src/data/lexicon-manifest.json``.
     """
     key = normalize_lemma(word)
     if not key:

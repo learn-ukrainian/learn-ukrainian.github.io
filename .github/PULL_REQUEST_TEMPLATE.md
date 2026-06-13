@@ -9,7 +9,7 @@
 ## Testing
 
 - [ ] Modules pass audit (`scripts/audit_module.py`)
-- [ ] Website builds without errors (`npm run build:starlight`)
+- [ ] Website builds without errors (`cd site && npm run build`)
 - [ ] Ukrainian text reviewed for naturalness
 
 ## Related Issues

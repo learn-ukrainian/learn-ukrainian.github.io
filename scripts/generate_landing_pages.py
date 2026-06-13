@@ -1,4 +1,4 @@
-"""Generate Starlight landing pages for all tracks from curriculum.yaml.
+"""Generate Site landing pages for all tracks from curriculum.yaml.
 
 Reads curriculum.yaml + plan files + status files to produce
 accurate landing pages with correct slugs, titles, and build statuses.
@@ -19,7 +19,7 @@ import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
-STARLIGHT_DOCS = PROJECT_ROOT / "starlight" / "src" / "content" / "docs"
+STARLIGHT_DOCS = PROJECT_ROOT / "site" / "src" / "content" / "docs"
 
 # Track display config
 TRACK_CONFIG = {
@@ -213,7 +213,7 @@ import LevelLanding from '@site/src/components/LevelLanding';
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate Starlight landing pages")
+    parser = argparse.ArgumentParser(description="Generate Site landing pages")
     parser.add_argument("--track", help="Generate for specific track (e.g., a1)")
     parser.add_argument("--all", action="store_true", help="Generate for all tracks")
     args = parser.parse_args()

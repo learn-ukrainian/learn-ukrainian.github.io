@@ -134,7 +134,7 @@ def test_main_bulk_regen_env_var(mock_env, mock_subprocess, mock_legacy_levels):
     # bulk-regen MDX-only with env var (pass)
     os.environ["MDX_PARITY_BULK_REGEN"] = "1"
 
-    mdx_paths = [f"starlight/src/content/docs/a1/{i}.mdx" for i in range(51)]
+    mdx_paths = [f"site/src/content/docs/a1/{i}.mdx" for i in range(51)]
     mock_subprocess.return_value = "\n".join(mdx_paths)
 
     # We pass --changed-vs-base origin/main
@@ -145,7 +145,7 @@ def test_main_single_file_regen_env_var(mock_env, mock_subprocess, mock_legacy_l
     # single-file regen without env var (fail) or with env var but only 1 file (fail)
     os.environ["MDX_PARITY_BULK_REGEN"] = "1"
 
-    mdx_paths = ["starlight/src/content/docs/a1/01-hello.mdx"]
+    mdx_paths = ["site/src/content/docs/a1/01-hello.mdx"]
 
     def side_effect(cmd, **kwargs):
         if "merge-base" in cmd:

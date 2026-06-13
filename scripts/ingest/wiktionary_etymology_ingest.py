@@ -21,7 +21,7 @@ from urllib.request import Request, urlopen
 
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_DB = REPO / "data" / "sources.db"
-DEFAULT_MANIFEST = REPO / "starlight" / "src" / "data" / "lexicon-manifest.json"
+DEFAULT_MANIFEST = REPO / "site" / "src" / "data" / "lexicon-manifest.json"
 
 WIKTIONARY_DUMP_DATE = "20260601"
 WIKTIONARY_DUMP_FILENAME = f"ukwiktionary-{WIKTIONARY_DUMP_DATE}-pages-articles.xml.bz2"

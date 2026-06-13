@@ -1,6 +1,6 @@
-"""Regenerate a level's starlight landing-page MDX to match A1's shape.
+"""Regenerate a level's site landing-page MDX to match A1's shape.
 
-A1's `starlight/src/content/docs/a1/index.mdx` is the canonical shape:
+A1's `site/src/content/docs/a1/index.mdx` is the canonical shape:
 - Frontmatter: `title`, `description`, `template: splash` (no `sidebar:` block).
 - Component props: `title` (Ukrainian level title for the hero), `subtitle`
   (English "X/N modules complete"), `moduleCount`, `wordTarget`, `color`.
@@ -44,7 +44,7 @@ sys.path.insert(0, str(ROOT))
 
 from scripts.common.thresholds import LEVEL_THRESHOLDS
 
-DOCS_DIR = ROOT / "starlight" / "src" / "content" / "docs"
+DOCS_DIR = ROOT / "site" / "src" / "content" / "docs"
 CURRICULUM_YAML = ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
 PLANS_DIR = ROOT / "curriculum" / "l2-uk-en" / "plans"
 

@@ -17,7 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM_ROOT = Path("curriculum") / "l2-uk-en"
-DOCS_ROOT = Path("starlight") / "src" / "content" / "docs"
+DOCS_ROOT = Path("site") / "src" / "content" / "docs"
 
 LESSON_SOURCE_FILES = frozenset(
     {
@@ -123,7 +123,7 @@ def _build_rel_for_mdx(level: str, slug: str) -> Path:
 
     The build is the SOURCE of truth for the rendered MDX content. Reading from
     DOCS_ROOT in the build branch instead would silently pick up whatever stale
-    Starlight-tree MDX happened to be there from a prior PR, which is exactly
+    Site-tree MDX happened to be there from a prior PR, which is exactly
     how the m20 (a1/my-morning) revert (2026-05-23) shipped a broken module —
     the build wrote a fresh MDX to `curriculum/.../{slug}.mdx`, but the promote
     read DOCS_ROOT, found an unchanged stale exemplar, and the diff was empty.
@@ -132,7 +132,7 @@ def _build_rel_for_mdx(level: str, slug: str) -> Path:
 
 
 def _dest_rel_for_mdx(level: str, slug: str) -> Path:
-    """Path Starlight reads to render the lesson page (deploy target)."""
+    """Path Site reads to render the lesson page (deploy target)."""
     return DOCS_ROOT / level / f"{slug}.mdx"
 
 
