@@ -72,7 +72,12 @@ yaml/jsonl; `git checkout -- data/` restores).
 1. **Batch the other 5 gap wikis** (#M-9, sequential), now FULLY UNBLOCKED. From a dispatch worktree off main
    (with #3059 merged) — NO data symlink needed — run per slug:
    `compile.py --track folk --slug <slug> --writer gpt-5.5 --review --force`
-   slugs: kobzarstvo-lirnytstvo (re-compile IN FLIGHT at handoff — check `/tmp/wiki-batch-kobzarstvo2.log`),
+   slugs: **kobzarstvo-lirnytstvo** (DB-fix CONFIRMED working — writer got 27 sources + wrote a full article;
+   but it tripped a DIFFERENT gate: a surviving `<!-- VERIFY -->` marker the writer honestly emitted on ONE
+   uncertain peripheral claim — the exact execution date of kobzar Кучугура-Кучеренко, "in the control dossier
+   but no dedicated [S#] fragment". This is GOOD writer honesty (#M-4), not corpus-blindness. Resolve per-wiki:
+   re-run with `--allow-verify-markers` IF the flagged claim is genuinely peripheral+uncertain (logs it as a TODO),
+   OR have the writer cite/rephrase it. Then it reviews+converges like bylyny.),
    dumy-sotsialno-pobutovi, holosinnya, vesilni-pisni, zhnyvarski-obzhynkovi-pisni. Writer (gpt-5.5) builds the
    article + registry (DB-fix resolves the dossier chunk_ids) → claude-routed review (#3057) adds citations +
    best-round (#3054) → converges to MIN≥8 (bylyny proof: 7→8 in 2 rounds). **Corpus-hammer each (#M-11) before
