@@ -27,14 +27,15 @@ Known behavioral facts as of agy 1.0.0 (verified locally 2026-05-20):
   slug→label is the whole fix.
 - ``agy plugin`` only exposes ``import gemini|claude``, ``install``,
   ``enable``, ``disable``. There is no plugin-marketplace browse surface,
-  and ``import gemini`` is a no-op in a default install. The adapter
-  accepts ``tool_config["mcp_server_names"]`` for API parity with
-  ``GeminiAdapter`` but does not act on it today; wire ``agy plugin
-  enable <name>`` once concrete MCP servers are available.
+  and ``import gemini`` is a no-op in a default install.
 
-MCP plugin enablement is managed by agy's local configuration rather than a
-per-invocation CLI flag. The adapter accepts tool_config for API parity but
-does not mutate agy's MCP setup.
+MCP enablement is managed by agy's global Antigravity configuration at
+``~/.gemini/antigravity-cli/mcp_config.json`` using ``httpUrl``
+streamable-HTTP server entries. Verified locally on 2026-06-13:
+``agy -p`` invoked ``mcp__sources__verify_word`` through that global config.
+The adapter still does not pass a per-invocation MCP flag because agy has
+none; ``tool_config["mcp_server_names"]`` is accepted for API parity and
+observability, while the global config is the source of truth.
 
 Differences from the kubedojo source:
 
@@ -200,9 +201,9 @@ class AgyAdapter:
         if session_id:
             cmd.append(f"--conversation={session_id}")
 
-        # Phase-2 follow-up: agy uses `agy plugin` for MCP configuration,
-        # not a per-invocation CLI flag like gemini-cli. tool_config is
-        # accepted for parity but not acted on yet.
+        # agy reads MCP servers from its global Antigravity config. There is
+        # no per-invocation MCP CLI flag to pass here; tool_config is retained
+        # for adapter API parity and resolver diagnostics.
         _ = tool_config
 
         return InvocationPlan(

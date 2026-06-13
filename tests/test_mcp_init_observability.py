@@ -562,11 +562,17 @@ def test_runtime_tool_config_agy_tools_emits_resolution_event_success(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """agy-tools mirrors gemini-tools diagnostics so the dispatch gate passes;
-    actual MCP wiring is a Phase-2 follow-up and the runtime MCP_TOOLS_NEVER_INVOKED
-    gate then surfaces the gap."""
-    config_path = _valid_sources_config(tmp_path / ".mcp.json")
-    monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", config_path)
+    """agy-tools resolves the ``sources`` MCP from agy's global Antigravity
+    config (``AGY_APP_DATA_DIR/mcp_config.json``, ``httpUrl`` streamable-HTTP).
+    The runtime MCP_TOOLS_NEVER_INVOKED gate remains the load-bearing check
+    that a configured server is actually invoked."""
+    app_data_dir = tmp_path / "antigravity-cli"
+    app_data_dir.mkdir()
+    _write_mcp_config(
+        app_data_dir / "mcp_config.json",
+        {"mcpServers": {"sources": {"httpUrl": "http://127.0.0.1:8766/mcp"}}},
+    )
+    monkeypatch.setenv("AGY_APP_DATA_DIR", str(app_data_dir))
     events: list[tuple[str, dict[str, Any]]] = []
 
     config = linear_pipeline._runtime_tool_config(
