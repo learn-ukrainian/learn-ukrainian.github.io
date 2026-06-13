@@ -1,0 +1,208 @@
+- lemma: вид
+  translation: aspect
+  pos: noun
+  usage: "Вид показує, як мовець бачить дію: як процес або як завершений результат."
+- lemma: доконаний вид
+  translation: perfective aspect
+  pos: noun phrase
+  usage: Доконаний вид у минулому часто називає одну завершену дію.
+- lemma: недоконаний вид
+  translation: imperfective aspect
+  pos: noun phrase
+  usage: Недоконаний вид у минулому часто називає процес або звичку.
+- lemma: видова пара
+  translation: aspectual pair
+  pos: noun phrase
+  usage: Писати і написати утворюють видову пару.
+- lemma: результат
+  translation: result
+  pos: noun
+  usage: "Форма написав підкреслює результат: лист уже готовий."
+- lemma: процес
+  translation: process
+  pos: noun
+  usage: Форма писав підкреслює процес, а не готовий текст.
+- lemma: тривалість
+  translation: duration
+  pos: noun
+  usage: Слова довго і цілий день часто вказують на тривалість.
+- lemma: завершеність
+  translation: completedness
+  pos: noun
+  usage: Завершеність важлива, коли треба показати готовий результат.
+- lemma: незавершеність
+  translation: incompleteness
+  pos: noun
+  usage: Незавершеність не завжди означає невдачу; іноді важливий сам процес.
+- lemma: повторюваність
+  translation: recurrence, habituality
+  pos: noun
+  usage: Повторюваність у минулому часто виражає недоконаний вид.
+- lemma: однократність
+  translation: single occurrence
+  pos: noun
+  usage: Однократність події часто веде до доконаного виду.
+- lemma: звичне минуле
+  translation: habitual past
+  pos: noun phrase
+  usage: У звичному минулому ми описуємо те, що відбувалося регулярно.
+- lemma: тло
+  translation: background
+  pos: noun
+  usage: Недоконаний вид часто створює тло для головної події.
+- lemma: подія
+  translation: event
+  pos: noun
+  usage: Доконаний вид часто просуває подію вперед.
+- lemma: намір мовця
+  translation: speaker's intention
+  pos: noun phrase
+  usage: Намір мовця визначає, чи важливий процес, чи результат.
+- lemma: часовий маркер
+  translation: time marker
+  pos: noun phrase
+  usage: Часовий маркер допомагає обрати вид, але не замінює контекст.
+- lemma: одного разу
+  translation: once, one time
+  pos: adverbial phrase
+  usage: Одного разу я забув ключі вдома.
+- lemma: щодня
+  translation: every day
+  pos: adverb
+  usage: Щодня вона читала новини українською.
+- lemma: щоразу
+  translation: every time
+  pos: adverb
+  usage: Щоразу він уважно перевіряв адресу.
+- lemma: завжди
+  translation: always
+  pos: adverb
+  usage: У дитинстві ми завжди вечеряли разом.
+- lemma: часто
+  translation: often
+  pos: adverb
+  usage: В університеті я часто писав конспекти від руки.
+- lemma: іноді
+  translation: sometimes
+  pos: adverb
+  usage: Іноді вона телефонувала бабусі після роботи.
+- lemma: зазвичай
+  translation: usually
+  pos: adverb
+  usage: Зазвичай ми зустрічалися біля бібліотеки.
+- lemma: довго
+  translation: for a long time
+  pos: adverb
+  usage: Учора я довго готувався до розмови.
+- lemma: цілий день
+  translation: all day
+  pos: adverbial phrase
+  usage: Він цілий день писав звіт, але не закінчив.
+- lemma: три години
+  translation: for three hours
+  pos: adverbial phrase
+  usage: Ми три години обговорювали план.
+- lemma: нарешті
+  translation: finally, at last
+  pos: adverb
+  usage: Нарешті вона відповіла на важливий лист.
+- lemma: раптом
+  translation: suddenly
+  pos: adverb
+  usage: Раптом задзвонив телефон.
+- lemma: писати
+  translation: to write
+  pos: verb imperfective
+  usage: Учора я писав лист і слухав дощ.
+- lemma: написати
+  translation: to write, complete
+  pos: verb perfective
+  usage: Учора я написав лист і відправив його.
+- lemma: читати
+  translation: to read
+  pos: verb imperfective
+  usage: Увечері я читав роман.
+- lemma: прочитати
+  translation: to read through, finish reading
+  pos: verb perfective
+  usage: За вихідні я прочитав роман.
+- lemma: робити
+  translation: to do, to make
+  pos: verb imperfective
+  usage: Ми робили вправу разом.
+- lemma: зробити
+  translation: to do, to make, complete
+  pos: verb perfective
+  usage: Ми зробили вправу без помилок.
+- lemma: говорити
+  translation: to speak, to talk
+  pos: verb imperfective
+  usage: Ми довго говорили про подорож.
+- lemma: сказати
+  translation: to say
+  pos: verb perfective
+  usage: Вона сказала головну думку дуже коротко.
+- lemma: брати
+  translation: to take
+  pos: verb imperfective
+  usage: Він завжди брав із собою блокнот.
+- lemma: взяти
+  translation: to take once
+  pos: verb perfective
+  usage: Учора він узяв із собою паспорт.
+- lemma: вчити
+  translation: to study, to learn
+  pos: verb imperfective
+  usage: Вона вчила нові слова щовечора.
+- lemma: вивчити
+  translation: to learn thoroughly
+  pos: verb perfective
+  usage: Вона вивчила всі слова до диктанту.
+- lemma: готувати
+  translation: to prepare, to cook
+  pos: verb imperfective
+  usage: У неділю мама готувала борщ.
+- lemma: приготувати
+  translation: to prepare, to cook, finish
+  pos: verb perfective
+  usage: Мама приготувала борщ до обіду.
+- lemma: відповідати
+  translation: to answer
+  pos: verb imperfective
+  usage: Студент відповідав повільно, але впевнено.
+- lemma: відповісти
+  translation: to answer once, to respond
+  pos: verb perfective
+  usage: Студент відповів на всі запитання.
+- lemma: телефонувати
+  translation: to call by phone
+  pos: verb imperfective
+  usage: Вона часто телефонувала мамі.
+- lemma: зателефонувати
+  translation: to make a phone call
+  pos: verb perfective
+  usage: Учора вона зателефонувала мамі о п'ятій.
+- lemma: запрошувати
+  translation: to invite
+  pos: verb imperfective
+  usage: Він часто запрошував друзів на вечерю.
+- lemma: запросити
+  translation: to invite once
+  pos: verb perfective
+  usage: Він запросив колегу на каву.
+- lemma: закінчувати
+  translation: to finish, be finishing
+  pos: verb imperfective
+  usage: Ми закінчували проєкт пізно ввечері.
+- lemma: закінчити
+  translation: to finish, complete
+  pos: verb perfective
+  usage: Ми закінчили проєкт у п'ятницю.
+- lemma: обговорювати
+  translation: to discuss
+  pos: verb imperfective
+  usage: Команда довго обговорювала рішення.
+- lemma: обговорити
+  translation: to discuss through
+  pos: verb perfective
+  usage: Команда обговорила рішення і погодила план.
