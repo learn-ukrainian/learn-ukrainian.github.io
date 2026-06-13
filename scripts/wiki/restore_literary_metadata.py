@@ -72,6 +72,7 @@ def _ensure_columns_and_indexes(conn: sqlite3.Connection) -> list[str]:
         "work_id": "TEXT",
         "year": "INTEGER",
         "language_period": "TEXT",
+        "source_url": "TEXT",
     }
     for column, column_type in required_columns.items():
         if column in existing:
@@ -146,7 +147,7 @@ def restore_literary_metadata(
                 cursor = conn.execute(
                     """
                     UPDATE literary_texts
-                    SET work = ?, work_id = ?, year = ?, genre = ?, language_period = ?
+                    SET work = ?, work_id = ?, year = ?, genre = ?, language_period = ?, source_url = ?
                     WHERE id = ?
                       AND (
                           work IS NOT ?
@@ -154,20 +155,23 @@ def restore_literary_metadata(
                           OR year IS NOT ?
                           OR genre IS NOT ?
                           OR language_period IS NOT ?
+                          OR source_url IS NOT ?
                       )
                     """,
                     (
-                        row[5],
                         row[6],
                         row[7],
                         row[8],
                         row[9],
+                        row[10],
+                        row[4],
                         row_id,
-                        row[5],
                         row[6],
                         row[7],
                         row[8],
                         row[9],
+                        row[10],
+                        row[4],
                     ),
                 )
                 updated_rows += cursor.rowcount

@@ -83,6 +83,7 @@ def _conn() -> sqlite3.Connection:
             title TEXT NOT NULL DEFAULT '',
             text TEXT NOT NULL DEFAULT '',
             source_file TEXT NOT NULL DEFAULT '',
+            source_url TEXT DEFAULT '',
             author TEXT DEFAULT '',
             work TEXT DEFAULT '',
             work_id TEXT DEFAULT '',

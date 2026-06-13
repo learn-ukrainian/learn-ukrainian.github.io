@@ -96,7 +96,11 @@ def build_literary_row(
     chunk_index: int,
     warn: Callable[[str], None] | None = None,
 ) -> tuple:
-    """Normalize a literary JSONL chunk into the DB insert tuple."""
+    """Normalize a literary JSONL chunk into the DB insert tuple.
+
+    Includes source_url (from upstream JSONL; defaults to "" when absent)
+    for primary source linking in modules and literary_attestation.
+    """
     work = str(entry.get("work", "") or "").strip()
     if not work:
         work = source_file
@@ -113,11 +117,14 @@ def build_literary_row(
             f"{entry.get('chunk_id', f'lit-{source_file}-{chunk_index}')}; defaulting to modern"
         )
 
+    source_url = str(entry.get("source_url", "") or "").strip()
+
     return (
         str(entry.get("chunk_id", f"lit-{source_file}-{chunk_index}") or f"lit-{source_file}-{chunk_index}"),
         str(entry.get("section_title", entry.get("title", "")) or ""),
         str(entry.get("text", "") or ""),
         source_file,
+        source_url,
         str(entry.get("author", "") or ""),
         work,
         work_to_id(work),

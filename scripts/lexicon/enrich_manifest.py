@@ -1995,11 +1995,22 @@ def _literary_attestation(conn: sqlite3.Connection, lemma: str) -> dict[str, Any
         label_parts = [str(part).strip() for part in (author, work or title) if str(part or "").strip()]
         if year:
             label_parts.append(str(year))
+        source_url = ""
+        try:
+            su_row = conn.execute(
+                "SELECT source_url FROM literary_texts WHERE chunk_id = ? LIMIT 1",
+                (str(chunk_id or ""),),
+            ).fetchone()
+            if su_row:
+                source_url = str(su_row[0] or "")
+        except sqlite3.OperationalError:
+            source_url = ""
         return {
             "text": excerpt,
             "source": _LITERARY_SOURCE,
             "source_label": " · ".join(label_parts) if label_parts else _LITERARY_SOURCE,
             "chunk_id": str(chunk_id or ""),
+            "source_url": source_url,
         }
     return None
 

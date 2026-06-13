@@ -43,6 +43,7 @@ def attribution_db(tmp_path, monkeypatch):
             chunk_id TEXT NOT NULL DEFAULT '',
             title TEXT NOT NULL DEFAULT '',
             source_file TEXT NOT NULL DEFAULT '',
+            source_url TEXT DEFAULT '',
             author TEXT DEFAULT '',
             author_uk TEXT DEFAULT '',
             work TEXT DEFAULT ''
