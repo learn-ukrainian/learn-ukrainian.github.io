@@ -5,6 +5,9 @@ from pathlib import Path
 
 from ._config import _MODEL_CACHE, _MODEL_CACHE_TTL, _PARENT_ENV, GEMINI_CLI
 
+GROK_BUILD_DEFAULT_MODEL = "grok-4.20"
+GROK_BUILD_DEFAULT_EFFORT = "high"
+
 
 def check_model(model: str, timeout: int = 15, force: bool = False) -> bool:
     """Check if a Gemini model is available by sending a trivial prompt.

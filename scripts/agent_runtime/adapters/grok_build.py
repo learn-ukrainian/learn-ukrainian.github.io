@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import re
 import shutil
 import tempfile
@@ -46,14 +47,16 @@ _MODE_PERMISSION: dict[str, str] = {
     "workspace-write": "acceptEdits",
     "danger": "bypassPermissions",
 }
+GROK_BUILD_DEFAULT_MODEL = os.environ.get("LEARN_UK_GROK_BUILD_MODEL", "grok-4.20")
+GROK_BUILD_DEFAULT_EFFORT = os.environ.get("LEARN_UK_GROK_BUILD_EFFORT", "high")
 
 
 class GrokBuildAdapter:
     """Adapter for the native ``grok`` CLI in single-turn headless mode."""
 
     name: str = "grok-build"
-    # None → let the grok CLI pick its own default model; override via `model`.
-    default_model: str | None = None
+    default_model: str = GROK_BUILD_DEFAULT_MODEL
+    default_effort: str = GROK_BUILD_DEFAULT_EFFORT
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     def build_invocation(
@@ -99,11 +102,12 @@ class GrokBuildAdapter:
         cmd.extend(["--permission-mode", _MODE_PERMISSION[mode]])
         cmd.extend(["--cwd", str(cwd)])
 
+        effective_effort = effort or self.default_effort
         if model:
             cmd.extend(["-m", model])
-        if effort:
+        if effective_effort:
             # grok accepts the same levels as the runtime: low|medium|high|xhigh|max
-            cmd.extend(["--effort", effort])
+            cmd.extend(["--effort", effective_effort])
 
         disallowed = tc.get("disallowed_tools")
         if disallowed:
@@ -123,7 +127,7 @@ class GrokBuildAdapter:
             mode,
             _MODE_PERMISSION[mode],
             model,
-            effort,
+            effective_effort,
         )
 
         return InvocationPlan(

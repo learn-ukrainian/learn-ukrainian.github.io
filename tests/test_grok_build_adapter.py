@@ -17,7 +17,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime import registry
 from agent_runtime.adapters.base import AgentAdapter, InvocationPlan
-from agent_runtime.adapters.grok_build import GrokBuildAdapter, _parse_json_object
+from agent_runtime.adapters.grok_build import (
+    GROK_BUILD_DEFAULT_EFFORT,
+    GROK_BUILD_DEFAULT_MODEL,
+    GrokBuildAdapter,
+    _parse_json_object,
+)
 
 FAKE_GROK = "/usr/local/bin/grok"
 
@@ -74,10 +79,10 @@ def test_model_and_effort_flags(tmp_path):
     assert _val(plan.cmd, "--effort") == "high"
 
 
-def test_no_model_no_effort_by_default(tmp_path):
+def test_default_effort_is_applied(tmp_path):
     plan = _build("x", tmp_path)
     assert "-m" not in plan.cmd
-    assert "--effort" not in plan.cmd
+    assert _val(plan.cmd, "--effort") == GROK_BUILD_DEFAULT_EFFORT
 
 
 def test_hyphen_leading_prompt_uses_prompt_file(tmp_path):
@@ -152,6 +157,8 @@ def test_registry_grok_build_distinct_from_hermes_grok():
     assert "grok_build:GrokBuildAdapter" in gb["adapter"]
     assert "hermes_grok:HermesGrokAdapter" in g["adapter"]
     assert gb["adapter"] != g["adapter"]
+    assert gb["default_model"] == GROK_BUILD_DEFAULT_MODEL
+    assert gb["default_effort"] == GROK_BUILD_DEFAULT_EFFORT
     assert "code_writing" in gb["capabilities"]
     assert "grok-build" in registry.available_agents()
 

@@ -1,4 +1,14 @@
-"""Allow running as script or package: python scripts/ai_agent_bridge/__main__.py"""
+"""AI Agent Bridge command runner.
+
+Common commands:
+  ask-codex, process-codex
+  ask-grok-build, process-grok-build
+  ask-claude, process-claude
+  ask-gemini, process
+
+Run as script or package:
+  python scripts/ai_agent_bridge/__main__.py <command>
+"""
 
 import sys
 from pathlib import Path

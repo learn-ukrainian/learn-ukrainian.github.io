@@ -58,6 +58,7 @@ from ._github import (
     _post_review_to_github,
     _split_content,
 )
+from ._grok_build import ask_grok_build, process_for_grok_build
 from ._messaging import (
     _extract_issue_number,
     acknowledge,
@@ -76,7 +77,6 @@ from ._prompts import build_claude_prompt, build_codex_prompt, build_gemini_prom
 __all__ = [
     "CLAUDE_CMD",
     "CODEX_CLI",
-    # Config
     "DB_PATH",
     "GEMINI_CLI",
     "GEMINI_DEFAULT_MODEL",
@@ -88,10 +88,8 @@ __all__ = [
     "_PARENT_ENV",
     "_detect_model_error",
     "_extract_issue_number",
-    # GitHub
     "_format_review_chunk",
     "_gh_comment",
-    # Broker
     "_git_status_snapshot",
     "_is_task_locked",
     "_post_review_to_github",
@@ -101,28 +99,22 @@ __all__ = [
     "_write_pid_file",
     "acknowledge",
     "acknowledge_all",
-    # Claude
     "ask_claude",
     "ask_codex",
-    # Gemini
     "ask_gemini",
+    "ask_grok_build",
     "bridge_status",
     "broker_cleanup",
     "build_claude_prompt",
     "build_codex_prompt",
-    # Prompts
     "build_gemini_prompt",
-    # Messaging
     "check_inbox",
-    # Model
     "check_model",
     "detect_sender",
     "get_conversation",
     "get_db",
     "get_session",
-    # DB
     "init_db",
-    # CLI
     "interactive_mode",
     "main",
     "process_all_claude",
@@ -131,6 +123,7 @@ __all__ = [
     "process_and_respond",
     "process_for_claude",
     "process_for_codex",
+    "process_for_grok_build",
     "read_message",
     "send_message",
     "send_to_codex",

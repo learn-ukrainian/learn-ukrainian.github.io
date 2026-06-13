@@ -29,6 +29,11 @@ from ._dispatch_wrappers import (
     handle_review_deep,
 )
 from ._gemini import ask_gemini, converse_gemini, process_and_respond
+from ._grok_build import (
+    GROK_BUILD_DEFAULT_MODEL,
+    ask_grok_build,
+    process_for_grok_build,
+)
 from ._hermes import HERMES_DEFAULT_MODEL, ask_hermes
 from ._messaging import (
     acknowledge,
@@ -462,6 +467,19 @@ def _build_parser() -> argparse.ArgumentParser:
     proc_codex_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
                                    help="Run sync without timeout")
 
+    # process-grok-build
+    proc_grok_build_parser = subparsers.add_parser(
+        "process-grok-build",
+        help="Process message with native Grok Build CLI (headless)",
+    )
+    proc_grok_build_parser.add_argument("message_id", type=int, help="Message ID for Grok Build to process")
+    proc_grok_build_parser.add_argument("--new-session", dest="new_session", action="store_true",
+                                        help="Accepted for parity; grok-build always starts fresh")
+    proc_grok_build_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
+                                        help="Run sync without timeout")
+    proc_grok_build_parser.add_argument("--review", action="store_true",
+                                        help="Prepend docs/review-protocol.md")
+
     # ask-claude
     ask_claude_parser = subparsers.add_parser("ask-claude", help="Send message AND invoke Claude (one-step)")
     ask_claude_parser.add_argument("content", help="Message content")
@@ -621,6 +639,29 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_cursor_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
     ask_cursor_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
     ask_cursor_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
+
+    # ask-grok-build
+    ask_grok_build_parser = subparsers.add_parser(
+        "ask-grok-build",
+        help="Send message AND invoke native Grok Build one-shot (use '-' to read from stdin)",
+    )
+    ask_grok_build_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
+    ask_grok_build_parser.add_argument("--task-id", required=True, help="Task ID")
+    ask_grok_build_parser.add_argument("--type", default="query", help="Message type")
+    ask_grok_build_parser.add_argument("--data", help="Path to data file to attach")
+    ask_grok_build_parser.add_argument("--new-session", dest="new_session", action="store_true",
+                                       help="Accepted for parity; grok-build always starts fresh")
+    ask_grok_build_parser.add_argument(
+        "--model",
+        default=GROK_BUILD_DEFAULT_MODEL,
+        help=f"Grok Build model (default {GROK_BUILD_DEFAULT_MODEL})",
+    )
+    ask_grok_build_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
+    ask_grok_build_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
+    ask_grok_build_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_grok_build_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
+    ask_grok_build_parser.add_argument("--review", action="store_true",
+                                       help="Prepend docs/review-protocol.md")
 
     # converse — multi-turn conversation with Gemini
     converse_parser = subparsers.add_parser("converse", help="Multi-turn conversation with Gemini (includes history)")
@@ -914,6 +955,8 @@ def _dispatch_command(args):
         process_for_claude(args.message_id, args.new_session, args.fire_and_forget, args.no_timeout)
     elif args.command == "process-codex":
         process_for_codex(args.message_id, args.new_session, args.no_timeout)
+    elif args.command == "process-grok-build":
+        process_for_grok_build(args.message_id, args.new_session, args.no_timeout, args.review)
     elif args.command == "ask-claude":
         _handle_ask_claude(args)
     elif args.command == "ask-codex":
@@ -928,6 +971,8 @@ def _dispatch_command(args):
         _handle_ask_opencode(args)
     elif args.command == "ask-cursor":
         _handle_ask_cursor(args)
+    elif args.command == "ask-grok-build":
+        _handle_ask_grok_build(args)
     elif args.command == "converse":
         content = sys.stdin.read() if args.content == "-" else args.content
         converse_gemini(content, args.task_id, args.model,
@@ -1107,6 +1152,28 @@ def _handle_ask_cursor(args):
         from_model=args.from_model,
         to_model=args.to_model,
         no_timeout=args.no_timeout,
+    )
+
+
+def _handle_ask_grok_build(args):
+    """Handle ask-grok-build subcommand."""
+    data = None
+    if args.data:
+        data = Path(args.data).read_text()
+    content = sys.stdin.read() if args.content == "-" else args.content
+    from_llm = _resolve_from_llm(args)
+    ask_grok_build(
+        content,
+        args.task_id,
+        msg_type=args.type,
+        data=data,
+        new_session=args.new_session,
+        from_llm=from_llm,
+        from_model=args.from_model,
+        to_model=args.to_model,
+        no_timeout=args.no_timeout,
+        review=args.review,
+        model=args.model,
     )
 
 
