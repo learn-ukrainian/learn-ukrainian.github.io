@@ -1,0 +1,216 @@
+- lemma: вид
+  translation: aspect
+  pos: noun:m
+  usage: Вид визнача́є ви́бір фо́рми майбу́тнього ча́су.
+- lemma: майбу́тній час
+  translation: future tense
+  pos: noun phrase
+  usage: Майбу́тній час пока́зує ді́ю пі́сля моме́нту мо́влення.
+- lemma: доко́наний вид
+  translation: perfective aspect
+  pos: noun phrase
+  usage: Доко́наний вид у майбу́тньому ча́сі пока́зує результа́т.
+- lemma: недоко́наний вид
+  translation: imperfective aspect
+  pos: noun phrase
+  usage: Недоко́наний вид у майбу́тньому ча́сі пока́зує проце́с.
+- lemma: про́ста́ фо́рма
+  translation: simple form
+  pos: noun phrase
+  usage: 'Про́ста́ фо́рма доко́наного ви́ду: я напишу́.'
+- lemma: складна фо́рма
+  translation: synthetic one-word future form
+  pos: noun phrase
+  usage: 'Складна фо́рма недоко́наного ви́ду: я писа́тиму.'
+- lemma: скла́дена фо́рма
+  translation: compound analytic future form
+  pos: noun phrase
+  usage: 'Скла́дена фо́рма ма́є допомі́жне́ дієсло́во: я бу́ду писа́ти.'
+- lemma: синтети́чна фо́рма
+  translation: synthetic form
+  pos: noun phrase
+  usage: 'Синтети́чна фо́рма пи́шеться одни́м сло́вом: чита́тиму.'
+- lemma: аналіти́чна фо́рма
+  translation: analytic form
+  pos: noun phrase
+  usage: 'Аналіти́чна фо́рма ма́є два слова́: бу́ду чита́ти.'
+- lemma: інфініти́в
+  translation: infinitive
+  pos: noun:m
+  usage: Пі́сля бу́ду стої́ть інфініти́в.
+- lemma: допомі́жне́ дієсло́во
+  translation: auxiliary verb
+  pos: noun phrase
+  usage: Бути є допомі́жни́м дієсло́вом у скла́деній фо́рмі.
+- lemma: особо́ве закі́нчення
+  translation: personal ending
+  pos: noun phrase
+  usage: Особо́ве закі́нчення пока́зує осо́бу й число́.
+- lemma: су́фікс -м
+  translation: suffix -m in synthetic future
+  pos: noun phrase
+  usage: Су́фікс -м вхо́дить у фо́рму писа́тиму.
+- lemma: паради́гма
+  translation: paradigm
+  pos: noun:f
+  usage: Паради́гма пока́зує всі особо́ві фо́рми.
+- lemma: дієвідмі́на
+  translation: conjugation class
+  pos: noun:f
+  usage: Дієвідмі́на допомага́є переві́рити закі́нчення.
+- lemma: осо́ба
+  translation: person
+  pos: noun:f
+  usage: 'Пе́рша осо́ба однини́: я напишу́.'
+- lemma: число́
+  translation: number
+  pos: noun:n
+  usage: Число́ бува́є однина́ або́ множина́.
+- lemma: фо́рма бу́ти
+  translation: form of бу́ти
+  pos: noun phrase
+  usage: 'Фо́рма бу́ти змі́нюється: бу́ду, бу́деш, бу́де.'
+- lemma: видова́ па́ра
+  translation: aspectual pair
+  pos: noun phrase
+  usage: Видова́ па́ра чита́ти — прочита́ти пока́зує проце́с і результа́т.
+- lemma: проце́с
+  translation: process
+  pos: noun:m
+  usage: Писа́тиму пока́зує проце́с.
+- lemma: результа́т
+  translation: result
+  pos: noun:m
+  usage: Напишу́ пока́зує результа́т.
+- lemma: трива́лість
+  translation: duration
+  pos: noun:f
+  usage: До шо́стої пока́зує трива́лість.
+- lemma: повто́рюваність
+  translation: repetition
+  pos: noun:f
+  usage: Щодня́ пока́зує повто́рюваність.
+- lemma: заве́ршеність
+  translation: completion
+  pos: noun:f
+  usage: Доко́наний вид ма́є зна́чення заве́ршеності.
+- lemma: обіця́нка
+  translation: promise
+  pos: noun:f
+  usage: 'Обіця́нка ча́сто потребу́є результа́ту: я напишу́.'
+- lemma: план
+  translation: plan
+  pos: noun:m
+  usage: План на за́втра поє́днує проце́с і результа́т.
+- lemma: прогно́з
+  translation: prediction
+  pos: noun:m
+  usage: 'Прогно́з мо́же опи́сувати проце́с: вони́ працюва́тимуть.'
+- lemma: зобов'я́зання
+  translation: obligation, commitment
+  pos: noun:n
+  usage: Зобов'я́зання мо́же стосува́тися результа́ту або́ проце́су.
+- lemma: комунікати́вний на́мір
+  translation: communicative intention
+  pos: noun phrase
+  usage: Комунікати́вний на́мір керу́є ви́бором ви́ду.
+- lemma: часови́й маркер
+  translation: time marker
+  pos: noun phrase
+  usage: Про́тягом ти́жня є часови́м маркером трива́лості.
+- lemma: писа́ти
+  translation: to write, imperfective
+  pos: verb:impf
+  usage: Я бу́ду писа́ти лист.
+- lemma: написа́ти
+  translation: to write, perfective
+  pos: verb:pf
+  usage: Я напишу́ лист.
+- lemma: чита́ти
+  translation: to read, imperfective
+  pos: verb:impf
+  usage: Я чита́тиму статтю́.
+- lemma: прочита́ти
+  translation: to read through, perfective
+  pos: verb:pf
+  usage: Я прочита́ю статтю́.
+- lemma: роби́ти
+  translation: to do, imperfective
+  pos: verb:impf
+  usage: Ми роби́тимемо завда́ння.
+- lemma: зроби́ти
+  translation: to do, perfective
+  pos: verb:pf
+  usage: Ми зро́бимо завда́ння.
+- lemma: працюва́ти
+  translation: to work, imperfective
+  pos: verb:impf
+  usage: Вони́ працюва́тимуть в о́фісі.
+- lemma: попрацюва́ти
+  translation: to work for a limited time, perfective
+  pos: verb:pf
+  usage: Я попрацю́ю годи́ну.
+- lemma: чека́ти
+  translation: to wait, imperfective
+  pos: verb:impf
+  usage: Ми бу́демо чека́ти на тебе́.
+- lemma: дочека́тися
+  translation: to wait until something arrives, perfective
+  pos: verb:pf
+  usage: Ми дочека́ємося ві́дповіді.
+- lemma: обіця́ти
+  translation: to promise, imperfective
+  pos: verb:impf
+  usage: Я бу́ду обіця́ти ті́льки реа́льний результа́т.
+- lemma: пообіця́ти
+  translation: to make a promise, perfective
+  pos: verb:pf
+  usage: Я пообіця́ю допомо́гу.
+- lemma: планува́ти
+  translation: to plan, imperfective
+  pos: verb:impf
+  usage: Ми бу́демо планува́ти пої́здку.
+- lemma: запланува́ти
+  translation: to schedule, perfective
+  pos: verb:pf
+  usage: Ми заплану́ємо пої́здку.
+- lemma: забронюва́ти
+  translation: to book, to reserve
+  pos: verb:pf
+  usage: Я заброню́ю готе́ль.
+- lemma: насоло́джуватися
+  translation: to enjoy, imperfective
+  pos: verb:impf
+  usage: Ми насоло́джуватимемося приро́дою.
+- lemma: стара́тися
+  translation: to try, imperfective
+  pos: verb:impf
+  usage: Я стара́тимуся щодня́.
+- lemma: постара́тися
+  translation: to make an effort, perfective
+  pos: verb:pf
+  usage: Я постара́юся закі́нчи́ти проє́кт.
+- lemma: закі́нчувати
+  translation: to be finishing, imperfective
+  pos: verb:impf
+  usage: Я закі́нчуватиму робо́ту вве́чері.
+- lemma: закі́нчи́ти
+  translation: to finish, perfective
+  pos: verb:pf
+  usage: Я закі́нчу́ робо́ту до ве́чора.
+- lemma: розмо́вний стиль
+  translation: conversational style
+  pos: noun phrase
+  usage: У розмо́вному сти́лі ча́сто звучи́ть бу́ду писа́ти.
+- lemma: писе́мний стиль
+  translation: written style
+  pos: noun phrase
+  usage: У писе́мному сти́лі приро́дна фо́рма писа́тиму.
+- lemma: констру́кція
+  translation: construction
+  pos: noun:f
+  usage: Ко́жна констру́кція ма́є своє́ мі́сце.
+- lemma: ви́бір
+  translation: choice
+  pos: noun:m
+  usage: Ви́бір фо́рми зале́жить від ви́ду.
