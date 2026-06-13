@@ -665,7 +665,15 @@ def _collect_string_values(value: object) -> list[str]:
 
 
 def _slovnyk_lookup_word(lemma: str) -> str:
-    return _lookup_key(lemma).strip(' .,…?!;:()[]{}«»"“”')
+    base = _lookup_key(lemma).strip(' .,…?!;:()[]{}«»"“”')
+    # Pair/aspectual & inflection-paired lemmas ("варити / зварити",
+    # "березень / березня") have NO combined slovnyk.me entry, so the joined
+    # string misses every dictionary (and the miss gets cached). Look up the
+    # first (imperfective / base) form, which carries the canonical article.
+    # This also re-keys the cache file, bypassing the previously cached miss.
+    if "/" in base:
+        base = base.split("/", 1)[0].strip(' .,…?!;:()[]{}«»"“”')
+    return base
 
 
 def _slovnyk_cache_path(lemma: str) -> Path:
