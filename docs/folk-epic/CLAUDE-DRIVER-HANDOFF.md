@@ -58,7 +58,56 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 23–24 HANDOFF (2026-06-13/14 — TWO DOSSIERS shipped to PRs in one driver session: #17 striletski-povstanski (PR #3103) + #18 rodynno-pobutovi (PR #NEW); dossiers 16→18/42) — **RESUME HERE**
+## ▶▶▶ SESSION 25 HANDOFF (2026-06-14 — LANDED the two waiting dossier PRs (#3103 #17 + #3107 #18) after independent #M-11 re-verification; BUILT + corpus-hammered + shipped dossier #19 kolomyiky; dossiers 18→19/42) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** Dossiers **18 → 19/42** (kolomyiky added THIS PR). Wikis 15/42, modules 3/42 UNCHANGED.
+> Folk nav still HIDDEN; surfacing still GATED on koliadky+dumy LLM QG (#3079, infra lane). This session = cleared
+> the two waiting PRs + one new dossier. **Merge posture this session: SELF-MERGED** (user 2026-06-14: "we have
+> prs waiting" + standing folk merge-grant "every track has merge grant otherwise we will have a deadlock" → read
+> as the explicit re-grant; all three were CLEAN/all-CI-green/independently corpus-hammered). If the orchestrator
+> prefers ping-only promotion again, the user can revert it — offered explicitly.
+
+### ✅ DONE THIS SESSION
+- **LANDED PR #3107 (#18 rodynno-pobutovi) + PR #3103 (#17 striletski-povstanski).** Both independently
+  #M-11 corpus-hammered before merge (I re-ran `verify_quote` myself, not the writer's printed lines):
+  Крип'якевич «Доле проклятая!…» 1.0 `48346587_c0420`; Багряний «Ой видно село…» 1.0 `31d74ca7_c0022`
+  (literary witness); do-not-quote honesty confirmed («Цвіте терен» / «Зродились ми» both matched:false).
+  Merged #3107 first (authoritative handoff), then reduced #3103 to a **dossier-only** branch (force-push) to
+  resolve the known parallel-PR handoff-top conflict cleanly. PR comments record the verification.
+- **DOSSIER #19 `kolomyiky` BUILT (codex/gpt-5.5, corpus-pre-grounded brief `/tmp/folk-dossier-kolomyiky-brief.md`)
+  + CORPUS-HAMMERED + SHIPPED (THIS PR).** Short-form song/dance genre (коломийковий вірш 14-складник, цезура,
+  двопланова будова). 4041 words, all 10 sections + multimodal. §4 three-register pattern: TWO verified verbatims
+  (Попович «Посіяла огірочки…» scholarly-witness `68ba0555_c0318` 1.0; Коцюбинський співанка «Ізгадай мні…»
+  literary-witness `25ea8a3b_c0041` 1.0 — both INDEPENDENTLY re-verified by me) + attestation roster (no texts) +
+  honest do-not-quote ledger (textbook/Wikipedia/political-UPA incipits, failed verify_quote lines printed).
+  **§9 = 7 chunk-grounded source-disagreements** (etymology pan-Slavic-vs-Коломия; "not-only-Carpathian"/Грица
+  `68ba0555_c0318`; song-vs-dance; вірш-vs-genre w/ Shevchenko-14-складник caveat `d77902e2_c0916`; Антонович
+  `f4f6fb3d_c0136` labeled-not-adopted; provenance honesty; political-kolomyika corpus-absence). Codex-introduced
+  chunk `fc2291b5_c3606` (УЛЕ КОЛОМИЙКОВИЙ ВІРШ, Чамата) verified REAL + accurately represented.
+
+### ⚠ CARRY-FORWARD / GOTCHAS
+- **DISPATCH SIGKILL GOTCHA:** the #19 codex dispatch reported `status=done returncode=-9` (SIGKILL) but the
+  artifact was COMPLETE — codex finished writing + committed (`43cc952188`, clean worktree, markdownlint pass)
+  ~12.5 min in, then the process was killed post-completion. **Don't auto-discard a -9 dispatch — check the
+  worktree commit first** (#M-10: artifacts are load-bearing). Result file confirmed the clean commit.
+- `git push` folk → `--no-verify`; core.bare stayed false.
+- `wiki/index.md` regen still LOSSY (#3094) — the 5 Session-22 wikis render but aren't index-listed (infra lane).
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **Dossier #20 `suspilno-pobutovi-pisni`** (E · Song — renamed from chumatski-burlatski; козацькі/кріпацькі/
+   рекрутські-солдатські/наймитські/заробітчанські-еміграційні/чумацькі/бурлацькі). Then **#21 `narodni-balady`**
+   (`phase-folk-queue.md`). Same proven loop: corpus-pre-ground the brief (own probes → exact chunk_ids + §4
+   honesty protocol) → codex/gpt-5.5 → corpus-hammer → PR. Dossiers now 19/42.
+2. **Folk dossier-only wiki gap = CLOSED.** Carry-forward: clean `wiki/index.md` regen (#3094, infra lane).
+3. **Surfacing folk: still GATED** on koliadky + dumy LLM QG (modules e2e). #3079 (top priority, infra lane).
+
+### 📊 FLEET (unchanged) — dossier writer **codex/gpt-5.5** (clean first pass when the brief is corpus-pre-
+grounded); reviewer **Claude corpus-hammer** (#M-11, independent re-verify; culture; cross-family always; NO
+deepseek/gemini/agy for folk framing). Module writer claude-tools; wiki gpt-5.5 + claude-routed reviewers (#3057).
+
+---
+
+## ▶▶▶ SESSION 23–24 HANDOFF (2026-06-13/14 — TWO DOSSIERS shipped to PRs in one driver session: #17 striletski-povstanski (PR #3103) + #18 rodynno-pobutovi (PR #NEW); dossiers 16→18/42) — (superseded by Session 25)
 
 > **⚠ PARALLEL-PR HANDOFF NOTE (for the orchestrator reconciling main):** this session opened TWO docs PRs that
 > BOTH edit this handoff at the top of the session log. **PR #3103** (dossier #17) adds a full "SESSION 23"
