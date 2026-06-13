@@ -263,6 +263,65 @@ class TestStripInventedCitations:
         assert stripped2 == []
 
 
+class TestRegistryMembershipCitations:
+    """#3083: citation validity is REGISTRY MEMBERSHIP, not a numeric bound.
+
+    Root-cause regression: dossier-only compiles passed source_count=1 (the
+    dense-retrieval chunk count) while the dossier-seeded registry held ~26 ids,
+    so the numeric bound stripped every valid [S2]..[S26]. With valid_ids
+    supplied, the strip keys off membership and the seeded citations survive.
+    """
+
+    def test_seeded_citations_survive_low_source_count_regression(self):
+        valid_ids = {f"S{n}" for n in range(1, 27)}  # S1..S26 (kobzarstvo shape)
+        text = "Lead [S1]. Body [S2] and [S26]. Bogus [S99]."
+        out, stripped = strip_invented_citations(
+            text, source_count=1, valid_ids=valid_ids
+        )
+        assert "[S1]" in out
+        assert "[S2]" in out
+        assert "[S26]" in out
+        assert "[S99]" not in out
+        assert stripped == ["S99"]
+
+    def test_validate_uses_membership_not_count(self):
+        valid_ids = {f"S{n}" for n in range(1, 27)}
+        violations = validate_citation_bound(
+            "a [S2] b [S26] c [S99]", source_count=1, valid_ids=valid_ids
+        )
+        assert [v.cited_id for v in violations] == ["S99"]
+
+    def test_id_gap_in_registry_strips_missing_id(self):
+        # Registry with a gap: S1, S3 present; S2 absent → [S2] is invented even
+        # though 2 ≤ max ordinal 3. Membership catches what a threshold can't.
+        valid_ids = {"S1", "S3"}
+        out, stripped = strip_invented_citations(
+            "x [S1] y [S2] z [S3]", source_count=3, valid_ids=valid_ids
+        )
+        assert "[S1]" in out
+        assert "[S3]" in out
+        assert "[S2]" not in out
+        assert stripped == ["S2"]
+
+    def test_falls_back_to_numeric_bound_when_no_registry(self):
+        # valid_ids=None preserves the legacy numeric behaviour exactly.
+        out, stripped = strip_invented_citations(
+            "a [S1] b [S6]", source_count=5, valid_ids=None
+        )
+        assert "[S6]" not in out
+        assert "[S1]" in out
+        assert stripped == ["S6"]
+
+    def test_run_discipline_checks_threads_valid_ids(self):
+        valid_ids = {"S1", "S2"}
+        report = run_discipline_checks(
+            "ok [S2] bad [S5]", source_count=99, valid_ids=valid_ids
+        )
+        # source_count=99 would PASS [S5] under the numeric bound; membership
+        # correctly flags it because S5 is not in the registry.
+        assert [v.cited_id for v in report.citations] == ["S5"]
+
+
 class TestFlagAnchorViolations:
     def test_noop_when_no_violations(self):
         text = "clean article"

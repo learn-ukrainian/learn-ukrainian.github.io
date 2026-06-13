@@ -477,8 +477,20 @@ def _run_discipline_checks_and_repair(
         print(f"    ⚠️  Could not read {article_path} for discipline check: {exc}")
         return
 
+    # The authoritative set of valid [S#] is the article's registry
+    # (.sources.yaml) — what the writer cited against and the reader resolves
+    # against — NOT the dense-retrieval chunk count. On dossier-only compiles
+    # those diverge (dense≈1 chunk, dossier-seeded registry≫1); keying the strip
+    # off the chunk count gutted every valid seeded citation (#3083). Validate by
+    # registry membership; ``source_count`` survives only as a no-registry fallback.
     try:
-        report = run_discipline_checks(original, source_count)
+        registry = load_sources_registry(registry_path_for(article_path))
+        valid_ids: set[str] | None = {e.id for e in registry.sources} or None
+    except Exception:
+        valid_ids = None
+
+    try:
+        report = run_discipline_checks(original, source_count, valid_ids=valid_ids)
     except Exception as exc:
         print(f"    ⚠️  Discipline check failed (non-fatal): {exc}")
         log_event(
@@ -496,7 +508,9 @@ def _run_discipline_checks_and_repair(
     repaired = original
     stripped_ids: list[str] = []
     if report.citations:
-        repaired, stripped_ids = strip_invented_citations(repaired, source_count)
+        repaired, stripped_ids = strip_invented_citations(
+            repaired, source_count, valid_ids=valid_ids
+        )
         unique_stripped = sorted(set(stripped_ids))
         print(
             f"    🧹 Stripped {len(stripped_ids)} invented citation(s): "

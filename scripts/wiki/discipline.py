@@ -156,27 +156,53 @@ def _iter_anchors(path: Path | None = None) -> list[dict[str, Any]]:
 # ─────────────────────────────────────────────────────────────────────
 
 
+def _citation_is_invented(
+    cited_num: int, source_count: int, valid_ids: set[str] | None
+) -> bool:
+    """True iff an inline ``[SN]`` does not resolve to a real source.
+
+    The authoritative criterion is **registry membership**: when ``valid_ids``
+    (the ids in the article's sibling ``.sources.yaml`` — the set the writer
+    cited against and the reader resolves against) is supplied, ``[SN]`` is
+    invented iff ``"SN"`` is not in that set. This is robust to dossier-seeding
+    (#3036), id gaps, and dense-retrieval variance.
+
+    The legacy numeric bound (``N > source_count``) is used ONLY as a fallback
+    when no registry is available (e.g. registry-less migration reruns). Keying
+    the strip off ``len(all_chunks)`` was the root cause of #3083: on dossier-
+    only compiles dense retrieval returns ~1 chunk while seeding builds a 20-30
+    source registry, so every valid seeded ``[S#]`` was wrongly stripped.
+    """
+    if valid_ids is not None:
+        return f"S{cited_num}" not in valid_ids
+    return cited_num > source_count
+
+
 def validate_citation_bound(
-    article_text: str, source_count: int
+    article_text: str,
+    source_count: int,
+    *,
+    valid_ids: set[str] | None = None,
 ) -> list[CitationViolation]:
-    """Flag every [SN] in article where N > source_count.
+    """Flag every inline [SN] that does not resolve to a real source.
 
-    These are the invented citations — writer cited a chunk that was
-    never retrieved. Post-compile the resolver marks them as
-    `type: unknown` with a bare chunk ID; catching them here, before
-    the resolver runs, means we can strip-or-flag before the reader
-    ever sees a broken citation.
+    Authoritative criterion is registry membership (``valid_ids`` = the ids in
+    the sibling ``.sources.yaml``); ``source_count`` is a legacy numeric fallback
+    used only when no registry is supplied. Catching invented citations here,
+    before the resolver runs, means we strip-or-flag before the reader ever sees
+    a broken citation.
 
-    Returns a list of CitationViolation, one per offending ID (even if
+    Returns a list of CitationViolation, one per offending occurrence (even if
     the same invented ID appears many times — callers can dedupe).
     """
     if source_count < 0:
         raise ValueError(f"source_count must be ≥0, got {source_count}")
 
+    max_legal = len(valid_ids) if valid_ids is not None else source_count
     violations: list[CitationViolation] = []
     for match in _CITATION_RE.finditer(article_text):
         cited_num = int(match.group(1))
-        if cited_num > source_count:
+        if _citation_is_invented(cited_num, source_count, valid_ids):
             start = max(0, match.start() - 40)
             end = min(len(article_text), match.end() + 40)
             context = article_text[start:end].replace("\n", " ")
@@ -184,7 +210,7 @@ def validate_citation_bound(
                 CitationViolation(
                     cited_id=f"S{cited_num}",
                     cited_number=cited_num,
-                    max_legal=source_count,
+                    max_legal=max_legal,
                     context=context,
                 )
             )
@@ -256,10 +282,18 @@ def run_discipline_checks(
     article_text: str,
     source_count: int,
     anchors_path: Path | None = None,
+    *,
+    valid_ids: set[str] | None = None,
 ) -> DisciplineReport:
-    """Run both mechanical validators and return a combined report."""
+    """Run both mechanical validators and return a combined report.
+
+    ``valid_ids`` (the registry id set) makes citation validation authoritative
+    by membership; ``source_count`` is the legacy numeric fallback. See #3083.
+    """
     return DisciplineReport(
-        citations=validate_citation_bound(article_text, source_count),
+        citations=validate_citation_bound(
+            article_text, source_count, valid_ids=valid_ids
+        ),
         anchors=validate_canonical_anchors(article_text, anchors_path),
     )
 
@@ -270,25 +304,29 @@ def run_discipline_checks(
 
 
 def strip_invented_citations(
-    article_text: str, source_count: int
+    article_text: str,
+    source_count: int,
+    *,
+    valid_ids: set[str] | None = None,
 ) -> tuple[str, list[str]]:
-    """Remove every [SN] where N > source_count from article text.
+    """Remove every inline [SN] that does not resolve to a real source.
 
-    Returns (repaired_text, stripped_ids). The stripped citations are
-    replaced with an empty string; surrounding punctuation and spaces
-    are preserved as-is — we don't try to re-flow the sentence. If a
-    paragraph ends up with nothing after `something.  .` the downstream
-    enrich/verify phases will catch it; we stay conservative.
+    Authoritative criterion is registry membership (``valid_ids``); the numeric
+    ``source_count`` bound is a fallback used only when no registry is supplied
+    (#3083). Returns (repaired_text, stripped_ids). The stripped citations are
+    replaced with an empty string; surrounding punctuation and spaces are
+    preserved as-is — we don't try to re-flow the sentence. If a paragraph ends
+    up with nothing after `something.  .` the downstream enrich/verify phases
+    will catch it; we stay conservative.
 
-    stripped_ids preserves order + duplicates, so the caller can log
-    exactly how many invented citations were removed and which chunks
-    they claimed to cite.
+    stripped_ids preserves order + duplicates, so the caller can log exactly how
+    many invented citations were removed and which chunks they claimed to cite.
     """
     stripped: list[str] = []
 
     def _repl(match: re.Match[str]) -> str:
         cited_num = int(match.group(1))
-        if cited_num > source_count:
+        if _citation_is_invented(cited_num, source_count, valid_ids):
             stripped.append(f"S{cited_num}")
             return ""
         return match.group(0)

@@ -442,6 +442,44 @@ def _infer_level_from_domain(domain: str) -> str:
 # ── Response parsing ───────────────────────────────────────────────
 
 
+# ── source_grounding deterministic fail-closed floor (#3083) ─────────
+_INLINE_CITATION_RE = re.compile(r"\[S(\d+)\]")
+
+#: A substantial article carrying fewer than this many DISTINCT inline [S#]
+#: citations is treated as effectively ungrounded — no legitimate C1 wiki cites
+#: so few sources (real articles carry 15-40+). Tuned far below any real article
+#: so the floor is teeth-without-false-positives.
+_SG_MIN_DISTINCT_CITATIONS = 3
+_SG_MIN_BODY_CHARS = 1500
+_SG_UNGROUNDED_SCORE = 3
+
+
+def _source_grounding_floor(article_text: str, score: int) -> int:
+    """Deterministic fail-closed floor for the ``source_grounding`` dimension.
+
+    The LLM reviewer can be fooled into PASSing an effectively-uncited article —
+    it judged claims "sourceable from the registry" without noticing the inline
+    ``[S#]`` were absent (the #3083 / m20 failure: a 311s review returned
+    10/PASS, 0 findings on an article carrying 2 citations). Source-grounding is
+    by definition about inline attribution, so this is checkable deterministically:
+    a substantial article with near-zero DISTINCT inline ``[S#]`` cannot be
+    well-grounded, whatever the model said — cap it at a failing score so it can
+    never silently ship.
+
+    Mirrors the deterministic ``register`` score (``_register_score_from_findings``):
+    code overrides the LLM's unreliable holistic number. Conservative — the
+    threshold sits far below any legitimate wiki (15-40+ distinct ``[S#]``), so a
+    genuinely-cited article is never affected. Only ever LOWERS a score (never
+    rescues a fail), so it is safe for every track.
+    """
+    if len(article_text) < _SG_MIN_BODY_CHARS:
+        return score  # too short to judge grounding density meaningfully
+    distinct = len({m.group(1) for m in _INLINE_CITATION_RE.finditer(article_text)})
+    if distinct < _SG_MIN_DISTINCT_CITATIONS:
+        return min(score, _SG_UNGROUNDED_SCORE)
+    return score
+
+
 def _register_score_from_findings(findings: list[Finding]) -> int:
     """Re-derive the register score from surviving findings via the
     ``review_register.md`` severity→score table. Used after the deterministic
@@ -616,6 +654,16 @@ def _parse_dim_result(
             verdict=verdict,
             article_text=article_text,
         )
+
+    if dim == "source_grounding" and article_text:
+        floored = _source_grounding_floor(article_text, score)
+        if floored != score:
+            score = floored
+            verdict = "REJECT"
+            notes = notes or (
+                "Deterministic source_grounding floor (#3083): article carries "
+                "near-zero distinct inline [S#] citations — ungrounded, cannot PASS."
+            )
 
     return DimResult(
         dim=dim,
