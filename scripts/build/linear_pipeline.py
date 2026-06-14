@@ -7101,7 +7101,14 @@ def run_python_qg(
     for gate_name, gate_report in _quality_fields(text_for_quality).items():
         record(gate_name, gate_report)
     gates["previously_passed_regression"] = {"passed": True, "regressions": []}
-    gates["mdx_render"] = {"passed": None, "message": "Run after publish stage"}
+    gates["mdx_render"] = {
+        "passed": None,
+        "message": (
+            "deferred — no assembled MDX at python_qg time; run the standalone "
+            "render gate after assemble_mdx (run_mdx_render_gate / "
+            "scripts.build.mdx_render_gate / verify_shippable.py). #3137"
+        ),
+    }
     gates["passed"] = all(
         gate.get("passed") is True for key, gate in gates.items() if isinstance(gate, dict) and key != "mdx_render"
     )
@@ -7172,6 +7179,25 @@ def assemble_mdx(module_dir: Path, output_path: Path, plan_path: Path) -> str:
     output_path.write_text(mdx, encoding="utf-8")  # codeql[py/clear-text-storage-sensitive-data] - .mdx curriculum content, never sensitive data
     # fmt: on
     return mdx
+
+
+def run_mdx_render_gate(mdx: str | Path) -> dict[str, Any]:
+    """Standalone ``mdx_render`` gate over assembled MDX (text or path).
+
+    The ``mdx_render`` gate is deferred inside ``run_python_qg`` (no assembled
+    MDX exists yet at that stage) and must run as its own post-assemble step so
+    it is never silently skipped — including when ``python_qg`` failed, so a
+    broken render is still surfaced rather than masked by an earlier gate (#3137).
+    """
+    from scripts.build.mdx_render_gate import check_mdx_render, check_mdx_render_path
+
+    if isinstance(mdx, Path):
+        return check_mdx_render_path(mdx)
+    text = str(mdx)
+    # Treat a short, single-line value that points at an existing file as a path.
+    if "\n" not in text and len(text) < 4096 and Path(text).exists():
+        return check_mdx_render_path(text)
+    return check_mdx_render(text)
 
 
 def write_json(path: Path, payload: Mapping[str, Any]) -> None:

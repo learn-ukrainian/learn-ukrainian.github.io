@@ -17,10 +17,26 @@ CURRICULUM_DIR = PROJECT_ROOT / "curriculum"
 STARLIGHT_DOCS_DIR = PROJECT_ROOT / "site" / "src" / "content" / "docs"
 
 
-def dump_json_for_jsx(data):
-    """Dump JSON string escaped for use inside a JSX template literal."""
-    s = json.dumps(data, ensure_ascii=False)
-    # Escape backslashes first to avoid double escaping other chars
+def dump_json_for_jsx(data, *, compact: bool = False):
+    """Dump JSON string escaped for use inside a JSX template literal.
+
+    The result is embedded as ``JSON.parse(`<result>`)``. A JS template literal
+    *consumes* backslash escapes, so the JSON's own ``\\"`` / ``\\\\`` / ``\\n``
+    sequences must be backslash-doubled (together with `` ` `` and ``${``) — and
+    backslashes MUST be doubled FIRST — or ``JSON.parse`` receives corrupted
+    input at render time. Concretely, any value containing a literal ``"`` is
+    JSON-encoded as ``\\"``; without doubling, the template literal collapses it
+    back to ``"`` and the page fails to render. This is the canonical, single
+    escaper for every JSON-in-template-literal embed — see issue #3137.
+
+    Pass ``compact=True`` for whitespace-free separators (smaller MDX payloads,
+    e.g. VocabCard/FlashcardDeck word lists).
+    """
+    separators = (',', ':') if compact else None
+    # allow_nan=False: NaN/Infinity are NOT valid JSON and would throw in JSON.parse
+    # at render time — fail fast at assembly rather than emit unparseable output.
+    s = json.dumps(data, ensure_ascii=False, separators=separators, allow_nan=False)
+    # Escape backslashes FIRST to avoid double-escaping the chars below.
     s = s.replace('\\', '\\\\')
     # Escape backticks for template literals
     s = s.replace('`', '\\`')
