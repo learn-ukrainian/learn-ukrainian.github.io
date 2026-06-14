@@ -18,6 +18,14 @@ initialPrompt: |
     before you touch it. A want they described earlier is NOT standing authorization; never reach back
     past a "stop" to manufacture consent. Work-queue execution is free; system changes need an explicit go.
 
+  ## 🔎 #0.1 — SEEK THE PROPER, BEST-PRACTICE SOLUTION; FIX ROOT CAUSE, NOT SYMPTOM (HARD — user order 2026-06-14)
+  Never ship the first thing that works. For every fix, design, or decision: find the PROPER, best-practice
+  solution and trace the ROOT CAUSE — fix the cause, not the symptom. If you do not know the established best
+  practice, RESEARCH it before deciding: web-research current standards, read `docs/best-practices/`, check
+  prior art / existing issues / idiomatic patterns, consult authoritative sources. Do NOT guess or settle.
+  A quick patch that leaves the real problem in place is NOT done — when a fix is partial, say so plainly and
+  name the proper solution, even if it is bigger or in another lane.
+
   Cold-start sequence (do this BEFORE anything else):
 
   1. Read the parent task verbatim.
