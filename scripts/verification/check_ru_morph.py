@@ -11,6 +11,8 @@ We determine a 'Russian pattern' if:
 A default threshold of 0.7 correctly separates Russian shadows from clean Ukrainian words.
 """
 
+from pathlib import Path
+
 from pymorphy3 import MorphAnalyzer
 
 # Global analyzers
@@ -43,7 +45,11 @@ def get_ru_confidence(word: str) -> tuple[float, str | None]:
     best = ru_parses[0]
     return best.score, best.normal_form
 
-def is_russian_pattern(word: str, threshold: float = 0.7) -> dict:
+def is_russian_pattern(
+    word: str,
+    threshold: float = 0.7,
+    vesum_db_path: str | Path | None = None,
+) -> dict:
     """
     Analyzes if a word follows Russian morphology. Returns dict with results.
     """
@@ -60,7 +66,11 @@ def is_russian_pattern(word: str, threshold: float = 0.7) -> dict:
     # We use the existing verify_word from mcp sources/rag logic.
     from scripts.verification.vesum import verify_word
     try:
-        vesum_results = verify_word(word)
+        vesum_results = (
+            verify_word(word)
+            if vesum_db_path is None
+            else verify_word(word, db_path=vesum_db_path)
+        )
         if vesum_results:
             # Word exists in VESUM as a valid Ukrainian form
             return {

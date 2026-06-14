@@ -129,20 +129,41 @@ _BORROWING_MARKERS = (
 )
 
 
-def classify_lemma(lemma: str, db_path: str | Path | None = None) -> dict[str, Any]:
+def classify_lemma(
+    lemma: str,
+    db_path: str | Path | None = None,
+    vesum_db_path: str | Path | None = None,
+) -> dict[str, Any]:
     """Classify a lemma for Word Atlas ``heritage_status`` badges."""
     variants = _lemma_variants(lemma)
     if len(variants) <= 1:
-        return _classify(variants[0] if variants else "", surface=False, db_path=db_path)
+        return _classify(
+            variants[0] if variants else "",
+            surface=False,
+            db_path=db_path,
+            vesum_db_path=vesum_db_path,
+        )
     return _merge_variant_statuses(
-        [_classify(variant, surface=False, db_path=db_path) for variant in variants]
+        [
+            _classify(
+                variant,
+                surface=False,
+                db_path=db_path,
+                vesum_db_path=vesum_db_path,
+            )
+            for variant in variants
+        ]
     )
 
 
-def classify_surface_form(form: str, db_path: str | Path | None = None) -> dict[str, Any]:
+def classify_surface_form(
+    form: str,
+    db_path: str | Path | None = None,
+    vesum_db_path: str | Path | None = None,
+) -> dict[str, Any]:
     """Classify an inflected/surface form for VESUM-gate importers."""
     term = _normalize_word(form)
-    return _classify(term, surface=True, db_path=db_path)
+    return _classify(term, surface=True, db_path=db_path, vesum_db_path=vesum_db_path)
 
 
 def _classify(
@@ -150,15 +171,23 @@ def _classify(
     *,
     surface: bool,
     db_path: str | Path | None = None,
+    vesum_db_path: str | Path | None = None,
 ) -> dict[str, Any]:
     if not term:
         return _status("unknown", [], is_russianism=False, russian_shadow=False)
 
-    russian_shadow, russian_shadow_detail = _check_russian_shadow(term)
+    russian_shadow, russian_shadow_detail = _check_russian_shadow(
+        term,
+        vesum_db_path=vesum_db_path,
+    )
     sovietization_risk = _sum11_sovietization_risk_for_term(term, db_path=db_path)
 
-    vesum = _vesum_attestation(term, surface=surface)
-    vesum_archaism = _vesum_archaism_attestation(term, surface=surface)
+    vesum = _vesum_attestation(term, surface=surface, vesum_db_path=vesum_db_path)
+    vesum_archaism = _vesum_archaism_attestation(
+        term,
+        surface=surface,
+        vesum_db_path=vesum_db_path,
+    )
     has_modern_vesum = bool(vesum) and not (
         vesum_archaism and not vesum_archaism["has_modern"]
     )
@@ -324,12 +353,17 @@ def _apostrophe_variants(term: str) -> tuple[str, ...]:
     return tuple(sorted(variants))
 
 
-def _vesum_attestation(term: str, *, surface: bool) -> dict[str, Any] | None:
+def _vesum_attestation(
+    term: str,
+    *,
+    surface: bool,
+    vesum_db_path: str | Path | None = None,
+) -> dict[str, Any] | None:
     try:
         if surface:
             from scripts.verification.vesum import verify_word
 
-            matches = verify_word(term)
+            matches = verify_word(term, db_path=vesum_db_path)
             if not matches:
                 return None
             lemmas = sorted({str(match.get("lemma") or "") for match in matches if match.get("lemma")})
@@ -341,14 +375,14 @@ def _vesum_attestation(term: str, *, surface: bool) -> dict[str, Any] | None:
 
         from scripts.verification.vesum import verify_lemma, verify_word
 
-        forms = verify_lemma(term)
+        forms = verify_lemma(term, db_path=vesum_db_path)
         if forms:
             return {
                 "source": "VESUM",
                 "ref": term,
                 "detail": f"lemma match ({len(forms)} forms)",
             }
-        matches = verify_word(term)
+        matches = verify_word(term, db_path=vesum_db_path)
         if matches:
             lemmas = sorted({str(match.get("lemma") or "") for match in matches if match.get("lemma")})
             return {
@@ -365,13 +399,22 @@ def _is_archaic_tags(tags: str | None) -> bool:
     return "arch" in str(tags or "").split(":")
 
 
-def _vesum_archaism_attestation(term: str, *, surface: bool) -> dict[str, Any] | None:
+def _vesum_archaism_attestation(
+    term: str,
+    *,
+    surface: bool,
+    vesum_db_path: str | Path | None = None,
+) -> dict[str, Any] | None:
     try:
         from scripts.verification.vesum import verify_lemma, verify_word
 
-        rows = verify_word(term) if surface else verify_lemma(term)
+        rows = (
+            verify_word(term, db_path=vesum_db_path)
+            if surface
+            else verify_lemma(term, db_path=vesum_db_path)
+        )
         if not rows and not surface:
-            rows = verify_word(term)
+            rows = verify_word(term, db_path=vesum_db_path)
     except Exception:
         return None
     if not rows:
@@ -394,13 +437,17 @@ def _vesum_archaism_attestation(term: str, *, surface: bool) -> dict[str, Any] |
     }
 
 
-def _check_russian_shadow(term: str) -> tuple[bool, dict[str, Any]]:
+def _check_russian_shadow(
+    term: str,
+    *,
+    vesum_db_path: str | Path | None = None,
+) -> tuple[bool, dict[str, Any]]:
     if not _is_single_token(term):
         return False, {"available": False, "reason": "not_single_token"}
     try:
         from scripts.verification.check_ru_morph import is_russian_pattern
 
-        result = is_russian_pattern(term)
+        result = is_russian_pattern(term, vesum_db_path=vesum_db_path)
     except Exception as exc:
         return False, {"available": False, "error": str(exc)}
     return bool(result.get("matches_russian")), {"available": True, **result}

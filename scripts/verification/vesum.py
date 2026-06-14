@@ -21,30 +21,44 @@ if str(SCRIPTS_DIR) not in sys.path:
 from scripts.rag.config import VESUM_DB_PATH
 
 _vesum_conn = None
+_vesum_conn_path: Path | None = None
 
 
-def get_vesum_conn():
+def _resolve_vesum_db_path(db_path: str | Path | None = None) -> Path:
+    return Path(db_path) if db_path is not None else VESUM_DB_PATH
+
+
+def get_vesum_conn(db_path: str | Path | None = None):
     """Lazy-load SQLite connection to VESUM dictionary."""
-    global _vesum_conn
-    if _vesum_conn is None:
+    global _vesum_conn, _vesum_conn_path
+    resolved_path = _resolve_vesum_db_path(db_path)
+    if _vesum_conn is None or _vesum_conn_path != resolved_path:
         import sqlite3
 
-        if not VESUM_DB_PATH.exists():
+        if _vesum_conn is not None:
+            _vesum_conn.close()
+            _vesum_conn = None
+        if not resolved_path.exists():
             raise FileNotFoundError(
-                f"VESUM database not found at {VESUM_DB_PATH}. "
+                f"VESUM database not found at {resolved_path}. "
                 "Run: .venv/bin/python scripts/rag/import_vesum.py"
             )
-        _vesum_conn = sqlite3.connect(str(VESUM_DB_PATH), check_same_thread=False)
+        _vesum_conn = sqlite3.connect(str(resolved_path), check_same_thread=False)
         _vesum_conn.row_factory = sqlite3.Row
+        _vesum_conn_path = resolved_path
     return _vesum_conn
 
 
-def verify_word(word: str, pos_filter: str | None = None) -> list[dict]:
+def verify_word(
+    word: str,
+    pos_filter: str | None = None,
+    db_path: str | Path | None = None,
+) -> list[dict]:
     """Check if a word form exists in VESUM.
 
     Returns list of {lemma, pos, tags} matches. Empty list = not found.
     """
-    conn = get_vesum_conn()
+    conn = get_vesum_conn(db_path)
     if pos_filter:
         rows = conn.execute(
             "SELECT lemma, pos, tags FROM forms WHERE word_form = ? AND pos = ?",
@@ -58,7 +72,11 @@ def verify_word(word: str, pos_filter: str | None = None) -> list[dict]:
     return [{"lemma": r["lemma"], "pos": r["pos"], "tags": r["tags"]} for r in rows]
 
 
-def verify_words(words: list[str], pos_filter: str | None = None) -> dict[str, list[dict]]:
+def verify_words(
+    words: list[str],
+    pos_filter: str | None = None,
+    db_path: str | Path | None = None,
+) -> dict[str, list[dict]]:
     """Batch-verify multiple word forms against VESUM in a single query.
 
     Returns dict mapping each word to its list of matches.
@@ -66,7 +84,7 @@ def verify_words(words: list[str], pos_filter: str | None = None) -> dict[str, l
     """
     if not words:
         return {}
-    conn = get_vesum_conn()
+    conn = get_vesum_conn(db_path)
     placeholders = ",".join("?" * len(words))
     if pos_filter:
         rows = conn.execute(
@@ -84,12 +102,12 @@ def verify_words(words: list[str], pos_filter: str | None = None) -> dict[str, l
     return result
 
 
-def verify_lemma(lemma: str) -> list[dict]:
+def verify_lemma(lemma: str, db_path: str | Path | None = None) -> list[dict]:
     """Get all inflected forms of a lemma.
 
     Returns list of {word_form, pos, tags} for every form.
     """
-    conn = get_vesum_conn()
+    conn = get_vesum_conn(db_path)
     rows = conn.execute(
         "SELECT word_form, pos, tags FROM forms WHERE lemma = ? ORDER BY pos, tags",
         (lemma,),
