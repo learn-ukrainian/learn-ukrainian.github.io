@@ -58,7 +58,47 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 32 HANDOFF (2026-06-14 — llm_qg PARITY BATCH run on all 5 pending folk modules (codex reviewer) → all now have llm_qg.json; reveals UNIFORM pedagogical weakness 5.8–6.8 = concrete #3079 evidence; NO module cleanly clears the surfacing gate; no-options rule pinned to both agent defs, #3156 MERGED) — **RESUME HERE**
+## ▶▶▶ SESSION 33 HANDOFF (2026-06-14 — primary-text ROOT CAUSE found + proper-solution spec FILED #3162; pedagogical weakness CONFIRMED real (not artifact) via MDX re-review; TWO behavioral rules pinned to both agent defs #3156+#3161) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** No new module content. Diagnosed WHY folk modules don't include the primary literature they
+> teach (the pedagogical-6.7 driver), filed the proper-solution spec, and pinned two behavioral rules to the agent
+> defs (user orders). Folk modules 6/42 unchanged; surfacing STILL gated.
+
+### ✅ DONE THIS SESSION
+- **#3156 MERGED** — `#0` rule (execute the named action; never offer options when determinable; + mirror clause:
+  system changes need an explicit present-tense go) pinned to the TOP of BOTH agent defs. **#3161 MERGED** — `#0.1`
+  rule (seek the PROPER best-practice solution; fix root cause not symptom; research if unknown). Both load every session.
+- **MDX re-review test (codex):** koliadky pedagogical = **6.7 on the assembled MDX = 6.7 on module.md (delta 0)** →
+  the pedagogical weakness is **REAL, not a presentation artifact**. (naturalness +0.4, engagement −0.7; floor unchanged.)
+- **ROOT CAUSE of the missing primary texts → FILED #3162.** `_build_textbook_excerpt_context` (~L1775) resolves
+  primary-source extracts by searching ONLY the textbook corpus; folk/seminar primaries live in `literary_texts`
+  (Костомаров 1056 hits; ukrlib /narod/ #2854) → always `corpus_missing` → the literature is never embedded. Same
+  blind spot #2973 fixed for the quote GATE, never applied to the excerpt builder.
+
+### 🧱 #3162 — proper solution (infra/corpus lane; FILED, not implemented per file-don't-implement boundary)
+3 parts: (1) route seminar/folk excerpt lookup to the literary corpus (mirror #2973); (2) a **non-word-counted**
+primary-text reading panel (today `_word_count_gate` strips only comments → long texts would distort the budget —
+user: "the prose might be very long… not counting toward the word limit"); (3) extend `scripts/rag/scrape_ukrlib.py`
+(#2854) ingest to колядки/щедрівки/веснянки. Prior art: #2854, `folk-text-layer-spec.md` (its 6 surfaces; this is a
+7th), `_seminar_folk_writer_rules` primary-text-embedding. Ties #3120/#3079.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **#3162 is the real unlock for folk pedagogy** — coordinate with the infra orchestrator (their lane). Once primary
+   texts embed, re-run `run_llm_qg_parity.py` on the folk modules; pedagogical should lift off 6.7.
+2. **Surfacing folk: STILL GATED** — no module cleanly clears LLM QG (koliadky REVISE 6.7; pedagogical confirmed real).
+   Do NOT un-hide until #3162 lands + a re-grounded re-review passes.
+3. **Reading-links → 3 live modules' resources.yaml** (deterministic, unblocked; `RESOURCE_ROLES` has no "reading"
+   role — use "article" or add one). Verified URLs in `docs/best-practices/seminar-reading-links.md`.
+4. **Remaining folk modules 6→42**; gate each with `verify_shippable --astro-build` + corpus-hammer before status→active.
+
+### ⚠ CARRY-FORWARD
+- Two behavioral rules now enforced in the agent defs (#0 / #0.1) — load every session via deploy.
+- `run_llm_qg_parity.py` (shipped #3157) re-runs LLM QG on a built module with a reviewer override (single-pass, advisory).
+- `git push` folk → `--no-verify`; never reset/commit on main.
+
+---
+
+## ▶▶▶ SESSION 32 HANDOFF (2026-06-14 — llm_qg PARITY BATCH run on all 5 pending folk modules (codex reviewer) → all now have llm_qg.json; reveals UNIFORM pedagogical weakness 5.8–6.8 = concrete #3079 evidence; NO module cleanly clears the surfacing gate; no-options rule pinned to both agent defs, #3156 MERGED) — (superseded by Session 33)
 
 > **⏱ HONEST SCOPE:** No new module content. Ran the standalone llm_qg parity batch (NEW tool
 > `scripts/build/run_llm_qg_parity.py`, replicates `_run_llm_qg`, reviewer=codex-tools — gemini folk-barred)
