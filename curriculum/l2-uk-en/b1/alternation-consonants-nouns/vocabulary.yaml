@@ -1,0 +1,112 @@
+- lemma: чергування
+  translation: alternation
+  pos: noun:n
+  usage: Чергування приголосних видно в парі друг - друже.
+- lemma: приголосний
+  translation: consonant
+  pos: noun:m
+  usage: Приголосний у кінці основи може змінюватися перед закінченням.
+- lemma: палаталізація
+  translation: palatalization
+  pos: noun:f
+  usage: Палаталізація пояснює форми на зразок нога - нозі.
+- lemma: кличний відмінок
+  translation: vocative case
+  pos: phrase
+  usage: Кличний відмінок потрібен у звертанні Олеже.
+- lemma: давальний відмінок
+  translation: dative case
+  pos: phrase
+  usage: У давальному відмінку ім'я Ольга має форму Ользі.
+- lemma: місцевий відмінок
+  translation: locative case
+  pos: phrase
+  usage: У місцевому відмінку кажемо на дорозі.
+- lemma: задньоязиковий
+  translation: velar
+  pos: adjective
+  usage: Г, к, х є задньоязиковими приголосними.
+- lemma: відміна
+  translation: declension class
+  pos: noun:f
+  usage: Відміна допомагає передбачити форму іменника.
+- lemma: тверда група
+  translation: hard group
+  pos: phrase
+  usage: У твердій групі кличний часто має закінчення -е.
+- lemma: м'яка група
+  translation: soft group
+  pos: phrase
+  usage: М'яка група може мати кличний на -ю.
+- lemma: мішана група
+  translation: mixed group
+  pos: phrase
+  usage: Мішана група важлива для іменників із шиплячими.
+- lemma: закінчення
+  translation: ending
+  pos: noun:n
+  usage: Закінчення -і часто викликає чергування г - з, к - ц, х - с.
+- lemma: звертання
+  translation: form of address
+  pos: noun:n
+  usage: Звертання друже звучить природніше за форму друг.
+- lemma: корінь
+  translation: root
+  pos: noun:m
+  usage: Корінь слова може мати інший приголосний у новій формі.
+- lemma: шиплячий
+  translation: hushing consonant
+  pos: adjective
+  usage: Шиплячий приголосний важливий для мішаної групи.
+- lemma: свистячий
+  translation: sibilant
+  pos: adjective
+  usage: У формі нозі з'являється свистячий з.
+- lemma: словотворення
+  translation: word formation
+  pos: noun:n
+  usage: Словотворення показує пару книга - книжка.
+- lemma: орфограма
+  translation: spelling pattern
+  pos: noun:f
+  usage: Чергування приголосних є орфограмою в письмі.
+- lemma: спільнокореневий
+  translation: sharing the same root
+  pos: adjective
+  usage: Спільнокореневі слова рука і ручка мають чергування.
+- lemma: однина
+  translation: singular
+  pos: noun:f
+  usage: У формі на книжці йдеться про однину.
+- lemma: множина
+  translation: plural
+  pos: noun:f
+  usage: У множині кажемо у сумках без чергування перед -і.
+- lemma: продуктивний
+  translation: productive
+  pos: adjective
+  usage: Продуктивний тип допомагає утворювати нові форми.
+- lemma: непродуктивний
+  translation: unproductive
+  pos: adjective
+  usage: Непродуктивний тип краще вивчати як готову форму.
+- lemma: основа
+  translation: stem
+  pos: noun:f
+  usage: Основа слова сумка змінюється у формі сумці.
+- lemma: клична форма
+  translation: vocative form
+  pos: phrase
+  usage: Клична форма слова друг - друже.
+- lemma: місце
+  translation: place
+  pos: noun:n
+  usage: Контекст місця часто вимагає місцевого відмінка.
+- lemma: адресат
+  translation: addressee, recipient
+  pos: noun:m
+  usage: Адресат дії часто стоїть у давальному відмінку.
+- lemma: саморедагування
+  translation: self-editing
+  pos: noun:n
+  usage: Саморедагування допомагає знайти форми на зразок Ольгі.

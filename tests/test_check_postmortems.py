@@ -178,3 +178,80 @@ def test_index_regeneration_preserves_sort_order(tmp_path: Path) -> None:
 
     regenerated = (tmp_path / "docs" / "bug-autopsies" / "INDEX.md").read_text("utf-8")
     assert regenerated.index("| alpha-cache |") < regenerated.index("| zulu-cache |")
+
+
+# --- #3045: non-lossy regen (slug-mismatch dups + multi-incident + --check) ---
+
+
+_INDEX_HEADER = (
+    "# Bug Autopsy Index\n\n<!-- INDEX-START -->\n"
+    "| Date | Issue | Category | Summary |\n"
+    "|------|-------|----------|---------|\n"
+)
+
+
+def test_no_duplicate_row_for_slug_mismatched_curated_row(tmp_path: Path) -> None:
+    # A curated row whose Category ("ocr-pivot") differs from the filename slug
+    # ("esum-ocr-pivot") but links the file in its Summary must NOT get a
+    # duplicate generated row appended. The file's issue also differs from the
+    # row's, so only the `<slug>.md` summary link can match it.
+    index = (
+        _INDEX_HEADER
+        + "| 2026-05-21 | #2001 | ocr-pivot | ESUM re-OCR pivot. Detail in `esum-ocr-pivot.md`. |\n"
+        + "<!-- INDEX-END -->\n"
+    )
+    file_entry = VALID_ENTRY.replace("Issue: #1522", "Issue: #9999")
+    _write_tree(tmp_path, {"esum-ocr-pivot.md": file_entry}, index=index)
+
+    check_postmortems.main([], project_root=tmp_path)
+
+    regenerated = (tmp_path / "docs" / "bug-autopsies" / "INDEX.md").read_text("utf-8")
+    assert "| ocr-pivot |" in regenerated  # curated row preserved
+    assert "| esum-ocr-pivot |" not in regenerated  # no slug-keyed duplicate
+    assert regenerated.count("esum-ocr-pivot.md") == 1
+
+
+def test_multi_incident_rows_preserved(tmp_path: Path) -> None:
+    # A file with multiple curated rows (multi-incident autopsy) keeps all rows;
+    # regen must not collapse to one or append a duplicate.
+    index = (
+        _INDEX_HEADER
+        + "| 2026-05-10 | — | secret-leakage | Incident A. Detail in `secret-leakage.md`. |\n"
+        + "| 2026-05-19 | — | secret-leakage | Incident B. Detail in `secret-leakage.md`. |\n"
+        + "<!-- INDEX-END -->\n"
+    )
+    _write_tree(tmp_path, {"secret-leakage.md": VALID_ENTRY}, index=index)
+
+    check_postmortems.main([], project_root=tmp_path)
+
+    regenerated = (tmp_path / "docs" / "bug-autopsies" / "INDEX.md").read_text("utf-8")
+    assert regenerated.count("| secret-leakage |") == 2  # both incidents kept
+    assert "Incident A" in regenerated
+    assert "Incident B" in regenerated
+
+
+def test_check_mode_flags_stale_index_without_writing(tmp_path: Path, capsys) -> None:
+    _write_tree(tmp_path, {"cache-invalidation.md": VALID_ENTRY})
+    index_path = tmp_path / "docs" / "bug-autopsies" / "INDEX.md"
+    before = index_path.read_text("utf-8")
+
+    exit_code = check_postmortems.main(["--check"], project_root=tmp_path)
+
+    captured = capsys.readouterr()
+    assert exit_code == 1
+    assert "INDEX.md is stale" in captured.out
+    assert index_path.read_text("utf-8") == before  # dry-run: not written
+
+
+def test_check_mode_passes_when_index_current(tmp_path: Path, capsys) -> None:
+    _write_tree(tmp_path, {"cache-invalidation.md": VALID_ENTRY})
+    check_postmortems.main([], project_root=tmp_path)  # make it current
+    index_path = tmp_path / "docs" / "bug-autopsies" / "INDEX.md"
+    current = index_path.read_text("utf-8")
+
+    exit_code = check_postmortems.main(["--check"], project_root=tmp_path)
+
+    captured = capsys.readouterr()
+    assert exit_code == 0
+    assert "INDEX.md is stale" not in captured.out
+    assert index_path.read_text("utf-8") == current  # unchanged

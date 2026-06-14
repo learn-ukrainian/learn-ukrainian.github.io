@@ -731,15 +731,28 @@ _TF_NEGATIVE_EXAMPLE_RE = re.compile(
 # CORRECT form (the structural emphasis: "**л**" is the epenthetic
 # consonant being taught). Matching bold here would strip the very tokens
 # we want VESUM to verify.
+#
+# Citation/example frame (#3132): a foreign/Russian term CITED as an example in
+# decolonization prose — `як «лєший»`, `such as «X»`, `like «X»` — is a mention,
+# not a use, and лєший is correctly absent from VESUM (the Ukrainian is лісовик).
+# Unlike the negator frame this arm is restricted to «» guillemets (the Ukrainian
+# citation mark): the negator `не/not` already explicitly marks the form wrong, so
+# it is allowed to strip any quote style; `як/as/like` is a weaker "such as"
+# signal, so it requires the strong «»-citation mark and will NOT exempt a
+# straight-quoted or italicised span. A bare (un-cited) invalid form still fails.
 _WARNING_QUOTE_RE = re.compile(
-    # Four alternations: quotes, guillemets, closed italics, unclosed italics.
-    # The unclosed-italic arm requires the inner span to be Cyrillic-only
-    # (no asterisk, no whitespace, no punctuation) so it stops cleanly at
-    # the next boundary instead of swallowing the rest of the sentence.
-    r"\b(?:not|не)\s+(?:"
+    r"\b(?:"
+    # Negator frame ("say X, not Y") — Y is marked wrong; all three quote styles.
+    # The unclosed-italic arm requires the inner span to be Cyrillic-only (no
+    # asterisk, whitespace, or punctuation) so it stops cleanly at the next
+    # boundary instead of swallowing the rest of the sentence.
+    r"(?:not|не)\s+(?:"
     r'["«][^"»]+["»]'
     r"|\*[^*\n]+?\*"
     r"|\*[A-Za-zА-ЯІЇЄҐа-яіїєґ\'ʼ-]+"
+    r")"
+    # Citation/example frame ("як «X»", "such as «X»") — «»-guillemets only.
+    r"|(?:як|such\s+as|as|like)\s+«[^»]+»"
     r")",
     re.IGNORECASE,
 )
@@ -4807,6 +4820,7 @@ def render_reviewer_correction_prompt(
     gate_report: Mapping[str, Any],
     module_text: str,
     candidates: tuple[CorrectionCandidate, ...] = (),
+    artifact_texts: Mapping[str, str] | None = None,
 ) -> str:
     """Build a reviewer-as-fixer prompt for one failed Python QG gate."""
     candidate_rows = [
@@ -4833,6 +4847,30 @@ def render_reviewer_correction_prompt(
         allow_unicode=True,
         sort_keys=False,
     ).strip()
+    artifact_sections = [
+        "## Current module.md",
+        "```markdown",
+        module_text,
+        "```",
+    ]
+    if artifact_texts:
+        artifact_sections.extend(
+            [
+                "",
+                "## Additional patchable artifacts",
+                "The pipeline applies each literal fix to any listed artifact where the anchor occurs.",
+            ]
+        )
+        for artifact_name, artifact_text in artifact_texts.items():
+            artifact_sections.extend(
+                [
+                    "",
+                    f"### {artifact_name}",
+                    f"```yaml file={artifact_name}",
+                    artifact_text,
+                    "```",
+                ]
+            )
     return "\n".join(
         [
             "# Python QG correction",
@@ -4858,10 +4896,7 @@ def render_reviewer_correction_prompt(
             candidate_section,
             "```",
             "",
-            "## Current module.md",
-            "```markdown",
-            module_text,
-            "```",
+            *artifact_sections,
         ]
     )
 
@@ -5119,7 +5154,6 @@ def run_python_qg_with_corrections(
     FAIL triggers the ``previously_passed_regression`` terminal meta-gate.
     """
     attempts: set[str] = set()
-    vesum_missing_exclusions: set[str] = set()
     correction_round = 0
 
     def _run_qg() -> dict[str, Any]:
@@ -5131,7 +5165,6 @@ def run_python_qg_with_corrections(
                 plan_path,
                 verify_words_fn=verify_words_fn,
                 heritage_lookup_fn=heritage_lookup_fn,
-                ignored_vesum_missing_surfaces=vesum_missing_exclusions,
                 event_sink=event_sink,
             )
         _attach_vocab_count_gate(report, module_dir=module_dir, plan_path=plan_path)
@@ -5153,6 +5186,11 @@ def run_python_qg_with_corrections(
         correction_round += 1
 
         before = report
+        artifact_snapshot = (
+            _snapshot_correction_artifacts(module_dir)
+            if failed_gate in REVIEWER_FIX_GATES
+            else None
+        )
         handled, unmatched_anchors, correction_payload = _apply_python_qg_correction(
             failed_gate,
             report,
@@ -5182,10 +5220,7 @@ def run_python_qg_with_corrections(
             )
             return report
 
-        if failed_gate == "vesum_verified":
-            vesum_missing_exclusions.update(unmatched_anchors)
         report = _run_qg()
-        vesum_missing_exclusions.clear()
         regressions = _previously_passing_regressions(before, report)
         correction_artifact: dict[str, Any] = {
             "round": correction_round,
@@ -5197,7 +5232,61 @@ def run_python_qg_with_corrections(
             "after": report,
             "regressions": regressions,
         }
+        if artifact_snapshot is not None and correction_payload.get("yaml_invalid"):
+            _restore_correction_artifacts(module_dir, artifact_snapshot)
+            restored_report = _run_qg()
+            _annotate_correction_terminal(
+                restored_report,
+                failed_gate,
+                f"{failed_gate} correction produced invalid YAML and was rolled back",
+            )
+            correction_artifact["rolled_back"] = True
+            correction_artifact["rollback_reason"] = "yaml_invalid"
+            correction_artifact["restored_after"] = restored_report
+            _write_correction_artifact(
+                module_dir / f"python_qg_correction_r{correction_round}.json",
+                correction_artifact,
+            )
+            return restored_report
+        if (
+            failed_gate == "vesum_verified"
+            and artifact_snapshot is not None
+            and not _vesum_correction_improved(before, report)
+        ):
+            _restore_correction_artifacts(module_dir, artifact_snapshot)
+            restored_report = _run_qg()
+            _annotate_correction_terminal(
+                restored_report,
+                failed_gate,
+                "vesum_verified correction did not clear any previous missing surface and was rolled back",
+            )
+            correction_artifact["rolled_back"] = True
+            correction_artifact["rollback_reason"] = "vesum_no_improvement"
+            correction_artifact["restored_after"] = restored_report
+            _write_correction_artifact(
+                module_dir / f"python_qg_correction_r{correction_round}.json",
+                correction_artifact,
+            )
+            return restored_report
         if regressions:
+            if artifact_snapshot is not None:
+                _restore_correction_artifacts(module_dir, artifact_snapshot)
+                restored_report = _run_qg()
+                gates = restored_report.setdefault("gates", {})
+                if isinstance(gates, dict):
+                    gates["previously_passed_regression"] = {
+                        "passed": False,
+                        "regressions": regressions,
+                    }
+                    gates["passed"] = False
+                correction_artifact["rolled_back"] = True
+                correction_artifact["rollback_reason"] = "previously_passed_regression"
+                correction_artifact["restored_after"] = restored_report
+                _write_correction_artifact(
+                    module_dir / f"python_qg_correction_r{correction_round}.json",
+                    correction_artifact,
+                )
+                return restored_report
             gates = report.setdefault("gates", {})
             if isinstance(gates, dict):
                 gates["previously_passed_regression"] = {
@@ -6004,6 +6093,49 @@ def _annotate_correction_terminal(
         gates["passed"] = False
 
 
+def _snapshot_correction_artifacts(module_dir: Path) -> dict[str, str | None]:
+    snapshot: dict[str, str | None] = {}
+    for artifact in WRITER_ARTIFACTS:
+        path = module_dir / artifact
+        snapshot[artifact] = path.read_text(encoding="utf-8") if path.exists() else None
+    return snapshot
+
+
+def _restore_correction_artifacts(module_dir: Path, snapshot: Mapping[str, str | None]) -> None:
+    for artifact, text in snapshot.items():
+        path = module_dir / artifact
+        if text is None:
+            path.unlink(missing_ok=True)
+            continue
+        path.write_text(text, encoding="utf-8")
+
+
+def _normalized_vesum_missing(report: Mapping[str, Any]) -> frozenset[str]:
+    gates = report.get("gates")
+    if not isinstance(gates, Mapping):
+        return frozenset()
+    gate_report = gates.get("vesum_verified")
+    if not isinstance(gate_report, Mapping):
+        return frozenset()
+    missing = gate_report.get("missing")
+    if not isinstance(missing, Sequence) or isinstance(missing, (str, bytes)):
+        return frozenset()
+    return frozenset(
+        _normalize_for_vesum(str(surface)).lower()
+        for surface in missing
+        if str(surface).strip()
+    )
+
+
+def _vesum_correction_improved(
+    before: Mapping[str, Any],
+    after: Mapping[str, Any],
+) -> bool:
+    before_missing = _normalized_vesum_missing(before)
+    after_missing = _normalized_vesum_missing(after)
+    return bool(before_missing) and after_missing < before_missing
+
+
 def _attach_vocab_count_gate(report: dict[str, Any], *, module_dir: Path, plan_path: Path) -> None:
     gates = report.get("gates")
     if not isinstance(gates, dict) or "vocab_count" in gates:
@@ -6354,11 +6486,18 @@ def _apply_reviewer_correction(
 ) -> tuple[frozenset[str], dict[str, Any]]:
     module_path = module_dir / "module.md"
     module_text = _read_required(module_path)
+    additional_artifact_names = REVIEWER_FIX_ADDITIONAL_ARTIFACTS_BY_GATE.get(gate, ())
+    additional_artifact_texts = {
+        artifact: _read_required(module_dir / artifact)
+        for artifact in additional_artifact_names
+        if (module_dir / artifact).exists()
+    }
     prompt = render_reviewer_correction_prompt(
         gate=gate,
         gate_report=gate_report,
         module_text=module_text,
         candidates=candidates,
+        artifact_texts=additional_artifact_texts,
     )
     context = CorrectionContext(
         gate=gate,
@@ -6434,7 +6573,7 @@ def _apply_reviewer_correction(
             "rejected_fixes": rejected_fixes,
             "applied": False,
         }
-    artifact_names = ("module.md", *REVIEWER_FIX_ADDITIONAL_ARTIFACTS_BY_GATE.get(gate, ()))
+    artifact_names = ("module.md", *additional_artifact_names)
     unmatched_by_artifact: list[set[str]] = []
     artifact_results: list[dict[str, Any]] = []
     for artifact in artifact_names:
@@ -6474,6 +6613,7 @@ def _apply_reviewer_correction(
             else:
                 artifact_record["yaml_valid"] = True
         artifact_results.append(artifact_record)
+    yaml_invalid = any(record.get("yaml_valid") is False for record in artifact_results)
 
     unmatched_anchors = (
         frozenset(set.intersection(*unmatched_by_artifact))
@@ -6497,6 +6637,7 @@ def _apply_reviewer_correction(
         "rejected_fixes": rejected_fixes,
         "unmatched_anchors": sorted(unmatched_anchors),
         "artifacts": artifact_results,
+        "yaml_invalid": yaml_invalid,
         "applied": True,
     }
 
@@ -6960,7 +7101,14 @@ def run_python_qg(
     for gate_name, gate_report in _quality_fields(text_for_quality).items():
         record(gate_name, gate_report)
     gates["previously_passed_regression"] = {"passed": True, "regressions": []}
-    gates["mdx_render"] = {"passed": None, "message": "Run after publish stage"}
+    gates["mdx_render"] = {
+        "passed": None,
+        "message": (
+            "deferred — no assembled MDX at python_qg time; run the standalone "
+            "render gate after assemble_mdx (run_mdx_render_gate / "
+            "scripts.build.mdx_render_gate / verify_shippable.py). #3137"
+        ),
+    }
     gates["passed"] = all(
         gate.get("passed") is True for key, gate in gates.items() if isinstance(gate, dict) and key != "mdx_render"
     )
@@ -7031,6 +7179,25 @@ def assemble_mdx(module_dir: Path, output_path: Path, plan_path: Path) -> str:
     output_path.write_text(mdx, encoding="utf-8")  # codeql[py/clear-text-storage-sensitive-data] - .mdx curriculum content, never sensitive data
     # fmt: on
     return mdx
+
+
+def run_mdx_render_gate(mdx: str | Path) -> dict[str, Any]:
+    """Standalone ``mdx_render`` gate over assembled MDX (text or path).
+
+    The ``mdx_render`` gate is deferred inside ``run_python_qg`` (no assembled
+    MDX exists yet at that stage) and must run as its own post-assemble step so
+    it is never silently skipped — including when ``python_qg`` failed, so a
+    broken render is still surfaced rather than masked by an earlier gate (#3137).
+    """
+    from scripts.build.mdx_render_gate import check_mdx_render, check_mdx_render_path
+
+    if isinstance(mdx, Path):
+        return check_mdx_render_path(mdx)
+    text = str(mdx)
+    # Treat a short, single-line value that points at an existing file as a path.
+    if "\n" not in text and len(text) < 4096 and Path(text).exists():
+        return check_mdx_render_path(text)
+    return check_mdx_render(text)
 
 
 def write_json(path: Path, payload: Mapping[str, Any]) -> None:
@@ -9306,6 +9473,8 @@ def _strip_metalinguistic(text: str) -> str:
       after bad-form marker spans have already been removed.
     - `not "форма"` / `not «форма»` — prose-quoted warning examples where the
       quoted form is explicitly marked as wrong.
+    - `як «лєший»` / `such as «X»` — a foreign/Russian term cited as an example
+      in decolonization prose (a mention, not a use). «»-guillemets only (#3132).
 
     Used by the VESUM gate to avoid false positives on fragments that aren't
     VESUM-checkable lemmas.

@@ -58,7 +58,58 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 29 HANDOFF (2026-06-14 — BUILT #01 + #02 + #03 ALL to python_qg-GREEN + corpus-hammer #M-11 verified + committed to PR #3131; SUPERSEDES Session 28's partial #01) — **RESUME HERE**
+## ▶▶▶ SESSION 30 HANDOFF (2026-06-14 — INFRA A–E shipped + independently reviewed: render-landmine #3137 + DoD/cold-start #3138 (PR #3143, MERGED); both driver agent-defs onboarded) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** Infra/process only — no new folk content. Built + independently reviewed (Claude
+> `/code-review` multi-angle + **Codex cross-model** — 9 findings, all fixed + tested) + shipped the 5
+> "shipped-but-doesn't-render" fixes. PR **#3143 MERGED** to main. Folk modules: **#01–03 shipped via #3131**
+> (merged alongside this — see Session 29 below). Folk modules 3→6/42.
+
+### ✅ DONE — the 5 fixes (A–E), proven deterministically (#M-4) + cross-model reviewed
+- **D (render landmine, #3137):** the `JSON.parse(`…`)` template-literal escape — JSON's own `\"`/`\\`/`\n`
+  get consumed by the JS template literal → a literal `"` breaks render; `python_qg` is blind. **This is the
+  EXACT #01 break** (Session 29 below recorded the народність-gloss literal `"`). Fixed the canonical
+  `utils.dump_json_for_jsx` (backslash-FIRST) + routed `resources.py` through it + fixed the flat renderer
+  copy + `allow_nan=False`. Verified 0/139 existing modules change bytes.
+- **E (mdx_render gate, #3137):** `scripts/build/mdx_render_gate.py` Node-evaluates every island; wired
+  standalone post-assemble so it runs even when python_qg fails (was a dead `passed:None` placeholder).
+- **A (DoD, #3138):** `scripts/build/verify_shippable.py` — python_qg→assemble→mdx_render→ONE green/red
+  (`--astro-build` = full catch-all). Render must be POSITIVELY validated (skip/None ≠ shippable).
+- **B (#3138):** `scripts/orchestration/handoff_ready.py` — tree-clean · 0-inflight · pushed ·
+  all-blocking-green · mergeStateStatus-clean · handoff-bundled → READY/NOT. Run it; never assert ready.
+- **C (#3138):** cold-start-freshness + Definition-of-Done baked into BOTH agent defs
+  (`curriculum-orchestrator` + `curriculum-track-orchestrator`). The `auto-deploy-agent-extensions.sh`
+  SessionStart hook deploys them on next restart — no manual `deploy_prompts.sh` needed.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **llm_qg PARITY BATCH for all 5 folk modules** (kalendarna done; #01/#02/koliadky/dumy pending) —
+   CODEX/GPT reviewer override, NOT gemini (folk-culture-barred). [Session 29 #3]
+2. **Reading-links → 3 original live modules' resources.yaml** (kalendarna/koliadky/dumy) + reassemble. [S27]
+3. **Reading-links epic #3120** (registry + gate; lit/lit-* first).
+4. **Remaining folk modules 6→42** per `phase-folk-queue.md`. **Gate each before status→active:**
+   `verify_shippable <level> <slug> --astro-build` + corpus-hammer; `handoff_ready --pr N` before declaring
+   ready. Never python_qg alone (that is the #01 lesson, now tooled).
+5. **Deploy** — auto-deploy DISABLED; user deploys via `gh workflow run deploy-pages.yml`.
+
+### 🧱 HANDOFF-STRUCTURE FOLLOW-UP (user-flagged: "this kind of session handoff is bad")
+This very merge is the failure: two parallel sessions both prepended a "Session 29" block to the SAME
+handoff top → conflict + #01 re-collision. C (cold-start-freshness) MITIGATES (read freshest origin/main
++ `gh pr list --head 'claude/folk-*'` before starting) but the FILE STRUCTURE is still conflict-prone.
+Durable fix to design: append-only per-session entries OR a tiny separate `RESUME-HERE.md` pointer that is
+the only mutable top, with session logs append-only below. File as a follow-up before the next parallel run.
+
+### ⚠ CARRY-FORWARD
+- D = CONFIRMED the #01 fix (Session 29 recorded the народність-gloss literal-`"` trigger; the earlier
+  "not confirmed" hedge is RESOLVED). It is also a latent class across ALL tracks — sweep existing modules
+  with `mdx_render_gate` opportunistically.
+- Independent-review fixes folded in: python_qg-CRASH no longer skips render; astro build output de-tainted
+  to a log file (#M-5); handoff_ready enforces mergeStateStatus; Node success-sentinel; unterminated-island
+  guard; `allow_nan=False`.
+- `git push` folk → `--no-verify`; never reset/commit on main.
+
+---
+
+## ▶▶▶ SESSION 29 HANDOFF (2026-06-14 — BUILT #01 + #02 + #03 ALL to python_qg-GREEN + corpus-hammer #M-11 verified + committed to PR #3131; SUPERSEDES Session 28's partial #01) — (modules; RESUME-HERE moved to Session 30 infra)
 
 > **⏱ HONEST SCOPE:** Modules built+green+committed THIS session: **#01 narodna-kultura-yak-systema + #02
 > narodni-viruvannia-mifolohiia-demonolohiia** — both python_qg ALL-GREEN, corpus-hammer #M-11 verified, MDX
@@ -98,7 +149,7 @@
   foreign/reject markers (російське/імперське/чуже «X»). Workaround used this session: reframe to `… а не «X»`.
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-0. **🔝 BUILD IN A FRESH SESSION (user directive 2026-06-14): handoff-practice improvements — #3138 + #3137 — then ONBOARD the other orchestrator + Codex.**
+0. **✅ DONE (Session 30 / PR #3143 MERGED): #3137 + #3138 built (A–E), independently reviewed (Claude /code-review + Codex), agent-defs onboarded.** Original brief retained for provenance:
    - **#3138 [process, ALL drivers]:** Definition-of-Done must include the astro **render-build** (not just python_qg) + a machine-checked handoff-readiness predicate (gate on `gh pr checks` all-blocking-green, never assert) + cold-start freshness (read freshest `origin/main` handoff + `gh pr list --head` for open driver PRs). Build `verify_shippable` + bake DoD into the driver handoffs.
    - **#3137 [HIGH, infra]:** `assemble_mdx` doesn't escape `\"` for the `JSON.parse(\`…\`)` template-literal layer → any literal `"` in vocab/activity breaks astro render; `mdx_render` is a DEFERRED gate that never runs on a python_qg-failed build. **LATENT across ALL tracks** — audit existing modules.
    - **Onboarding:** channel ONBOARD/ALERT already posted to #pipeline; when A–E are built, propagate via shared driver rules + confirm the other orchestrator + Codex audited their tracks for the `"` landmine and adopted render-verify-before-ship.
@@ -125,7 +176,7 @@ false-fails `resources_search_attempted`/`vesum`/`textbook_quote_fidelity` — N
 
 ---
 
-## ▶▶▶ SESSION 28 HANDOFF (2026-06-14 — #01 module build FIRED + diagnosed: activity_schema FIXED, vesum_verified is next blocker; build preserved on a branch — RESUME #01 from there, don't re-fire) — (superseded by Session 29)
+## ▶▶▶ SESSION 28 HANDOFF (2026-06-14 — #01 module build FIRED + diagnosed: activity_schema FIXED, vesum_verified is next blocker; build preserved on a branch — RESUME #01 from there, don't re-fire) — (superseded by Session 29 modules + Session 30 infra; #01 shipped via #3131)
 
 > **⏱ HONEST SCOPE:** Thin delta on Session 27 (read it next — full release queue + recipe). User said "kick
 > them off" → I fired the **#01 narodna-kultura-yak-systema** build; it hit the known rotating gate walls.

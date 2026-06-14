@@ -306,6 +306,29 @@ def _generated_row(record: PostmortemRecord) -> IndexRow:
     )
 
 
+def _row_matches_record(row: IndexRow, record: PostmortemRecord) -> bool:
+    """True if an existing INDEX row already represents this autopsy file.
+
+    Match by FILENAME SLUG, not free-text category (#3045): a curated row whose
+    Category describes the failure class (e.g. ``ocr-pivot`` for
+    ``esum-ocr-pivot.md``) must still be recognised — otherwise a duplicate
+    generated row gets appended. Any one of three signals counts:
+
+      1. the Category cell equals the slug (generated-style rows);
+      2. the row links the file as ``<slug>.md`` (curated rows put the link in
+         the Summary, e.g. "Detail in `esum-ocr-pivot.md`.");
+      3. the Issue cell contains the record's issue (preserves prior behaviour;
+         the ``—`` placeholder never matches).
+    """
+    slug = record.slug
+    if row.category == slug:
+        return True
+    needle = f"{slug}.md"
+    if needle in row.summary or needle in row.category:
+        return True
+    return bool(record.issue and record.issue != "—" and record.issue in row.issue)
+
+
 def _index_rows(records: list[PostmortemRecord], index_text: str) -> list[IndexRow]:
     existing_rows = _parse_existing_rows(index_text)
     if not existing_rows:
@@ -314,15 +337,14 @@ def _index_rows(records: list[PostmortemRecord], index_text: str) -> list[IndexR
             key=lambda row: (row.category.lower(), row.date, row.summary.lower()),
         )
 
-    # Preserve historical rows exactly. Existing index categories sometimes
-    # describe the failure class rather than the filename slug, and multi-bug
-    # files intentionally have multiple rows. Use the table as curated data,
-    # then append generated rows only for genuinely new files.
+    # Preserve historical rows EXACTLY — curated categories often describe the
+    # failure class rather than the filename slug, and multi-incident files
+    # intentionally carry several rows. Treat the table as curated data and
+    # append a generated row only for a file that NO existing row represents
+    # (matched by slug, not free-text category — #3045).
     rows = list(existing_rows)
-    covered_categories = {row.category for row in rows}
-    covered_issues = {row.issue for row in rows if row.issue != "—"}
     for record in records:
-        if record.slug not in covered_categories and record.issue not in covered_issues:
+        if not any(_row_matches_record(row, record) for row in rows):
             rows.append(_generated_row(record))
 
     return rows
@@ -354,8 +376,13 @@ def _legacy_table_bounds(index_text: str) -> tuple[int, int] | None:
         end = next_line_start
 
 
-def regenerate_index(project_root: Path = PROJECT_ROOT) -> bool:
-    """Regenerate INDEX.md in place. Returns True if the file changed."""
+def regenerate_index(project_root: Path = PROJECT_ROOT, *, write: bool = True) -> bool:
+    """Regenerate INDEX.md in place. Returns True if the file changed.
+
+    With ``write=False`` it computes the regenerated text but does NOT write —
+    a dry-run staleness probe (returns True iff the file WOULD change). Used by
+    ``--check`` so CI can assert the index is current without mutating it.
+    """
     index_path = _index_path(project_root)
     if not index_path.exists():
         return False
@@ -379,7 +406,8 @@ def regenerate_index(project_root: Path = PROJECT_ROOT) -> bool:
 
     if new_text == index_text:
         return False
-    index_path.write_text(new_text, "utf-8")
+    if write:
+        index_path.write_text(new_text, "utf-8")
     return True
 
 
@@ -388,8 +416,9 @@ def run_check(
     project_root: Path = PROJECT_ROOT,
     regenerate: bool = True,
     regenerate_on_failure: bool = False,
+    check_index: bool = False,
 ) -> CheckResult:
-    """Validate postmortems and optionally regenerate the index."""
+    """Validate postmortems and optionally regenerate (or dry-run check) the index."""
     result = CheckResult(records=_load_postmortems(project_root))
     postmortem_dir = _postmortem_dir(project_root)
 
@@ -400,7 +429,15 @@ def run_check(
     for record in result.records:
         result.errors.extend(_check_required_fields(record, project_root))
 
-    if regenerate and (regenerate_on_failure or not result.errors):
+    if check_index:
+        # Dry-run: never write. A stale index is a failure so CI can gate on it.
+        if regenerate_index(project_root, write=False):
+            result.index_changed = True
+            result.errors.append(
+                f"{_relative(_index_path(project_root), project_root)} — "
+                "INDEX.md is stale; run `--regenerate-index`"
+            )
+    elif regenerate and (regenerate_on_failure or not result.errors):
         result.index_changed = regenerate_index(project_root)
 
     return result
@@ -420,6 +457,7 @@ def main(argv: list[str] | None = None, *, project_root: Path = PROJECT_ROOT) ->
             "  default              validate + regenerate INDEX.md when validation passes\n"
             "  --quiet              print only errors; stdout is empty on success\n"
             "  --regenerate-index   regenerate INDEX.md even if validation fails\n"
+            "  --check              verify INDEX.md is current WITHOUT writing; non-zero if stale\n"
         ),
     )
     parser.add_argument(
@@ -432,12 +470,18 @@ def main(argv: list[str] | None = None, *, project_root: Path = PROJECT_ROOT) ->
         action="store_true",
         help="Regenerate INDEX.md even if validation fails",
     )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Verify INDEX.md is up to date WITHOUT writing; non-zero exit if stale (for CI)",
+    )
     args = parser.parse_args(argv)
 
     result = run_check(
         project_root=project_root,
         regenerate=(not args.quiet or args.regenerate_index),
         regenerate_on_failure=args.regenerate_index,
+        check_index=args.check,
     )
 
     if args.quiet:
@@ -445,7 +489,7 @@ def main(argv: list[str] | None = None, *, project_root: Path = PROJECT_ROOT) ->
         return result.exit_code
 
     _print_errors(result.errors)
-    if result.index_changed:
+    if result.index_changed and not args.check:
         print(f"✅ regenerated {_relative(_index_path(project_root), project_root)}")
     print(f"✅ {len(result.records)} postmortems validated")
     return result.exit_code
