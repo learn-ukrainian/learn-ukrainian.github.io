@@ -1,0 +1,28 @@
+- title: Глазова Grade 10, p.107
+  role: textbook
+  notes: Планове джерело для таблиці чергувань приголосних у дієсловах, зокрема д - дж, т - ч, з - ж, с - ш, зд - ждж, ст - щ.
+  source_ref: Глазова Grade 10, p.107
+- title: Заболотний Grade 7, p.52
+  role: textbook
+  notes: Планове джерело для історичного пояснення чергування перед давнім j та для групи губний + л.
+  source_ref: Заболотний Grade 7, p.52
+- title: Авраменко Grade 5, p.114-115
+  role: textbook
+  notes: Планове джерело для базових вправ із чергування приголосних у формах дієслів.
+  source_ref: Авраменко Grade 5, p.114-115
+- title: Заболотний Grade 5, p.116-119
+  role: textbook
+  notes: Планове джерело для шкільного подання чергувань приголосних і зв'язку з попередніми морфонологічними темами.
+  source_ref: Заболотний Grade 5, p.116-119
+- title: Local B1 alternation-vowels module
+  role: curriculum
+  notes: Попередній модуль B1.1, який вводить морфонологічну логіку через чергування голосних.
+  source_ref: curriculum/l2-uk-en/b1/alternation-vowels/module.md
+- title: Local B1 alternation-consonants-nouns module
+  role: curriculum
+  notes: Безпосередній попередник, який пояснює чергування приголосних в іменниках і готує контраст із дієсловами.
+  source_ref: curriculum/l2-uk-en/b1/alternation-consonants-nouns/module.md
+- title: Goroh словозміна and Slovnyk.ua verb-form checks
+  role: dictionary
+  notes: Використано для перевірки форм воджу, кручу, вожу, ношу, їжджу, прощу, чищу, можу, печу, роблю, куплю, ловлю і наказових контрастів.
+  source_ref: goroh.pp.ua; slovnyk.ua
