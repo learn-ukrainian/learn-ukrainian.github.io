@@ -9,6 +9,7 @@ from unittest.mock import MagicMock, patch
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.adapters.base import InvocationPlan
+from agent_runtime.result import ParseResult
 from agent_runtime.runner import invoke
 from agent_runtime.telemetry import (
     _reset_version_cache_for_tests,
@@ -122,6 +123,85 @@ def test_runner_invoke_returns_resolved_telemetry(tmp_path):
     assert result.model == "gpt-5.5"
     assert result.effort == "high"
     assert result.cli_version == "0.123.0"
+
+
+def test_runner_usage_record_includes_correlation_ids_without_prompt_change(
+    tmp_path,
+    monkeypatch,
+):
+    from agent_runtime import runner as runner_mod
+
+    monkeypatch.setenv("LU_RUN_ID", "run-123")
+    monkeypatch.setenv("LU_SESSION_ID", "session-456")
+    monkeypatch.setenv("LU_TELEMETRY_LEVEL", "b1")
+    monkeypatch.setenv("LU_TELEMETRY_SLUG", "telemetry-module")
+    monkeypatch.setenv("LU_TELEMETRY_TRACK", "core")
+    monkeypatch.setenv("LU_TELEMETRY_SOURCE", "pytest")
+
+    spy_adapter = MagicMock()
+    spy_adapter.supported_modes = frozenset({"read-only", "workspace-write", "danger"})
+    spy_adapter.default_model = "gpt-5.4"
+    fake_plan = InvocationPlan(cmd=["codex", "exec", "-m", "gpt-5.5", "-"], cwd=tmp_path)
+    spy_adapter.build_invocation.return_value = fake_plan
+    spy_adapter.liveness_signal_paths.return_value = ()
+    spy_adapter.parse_response.return_value = ParseResult(
+        ok=True,
+        response="ok",
+        stderr_excerpt=None,
+        rate_limited=False,
+        session_id=None,
+        tokens=321,
+    )
+
+    fake_proc = MagicMock()
+    fake_proc.poll.return_value = 0
+    fake_proc.returncode = 0
+    fake_proc.stdin = None
+    captured_records: list[dict] = []
+    captured_env: dict[str, str] = {}
+
+    def fake_popen(*_args, **kwargs):
+        captured_env.update(kwargs.get("env") or {})
+        return fake_proc
+
+    with patch("agent_runtime.runner._load_adapter", return_value=spy_adapter), patch(
+        "agent_runtime.runner.has_headroom",
+        return_value=(True, ""),
+    ), patch("agent_runtime.runner.write_record", side_effect=captured_records.append), patch(
+        "agent_runtime.runner.subprocess.Popen",
+        side_effect=fake_popen,
+    ), patch(
+        "agent_runtime.runner.start_watchdog",
+        return_value=(MagicMock(stdout_lines=[], stderr_lines=[]), []),
+    ), patch("agent_runtime.runner.stop_watchdog"), patch(
+        "agent_runtime.runner.resolve_invocation_telemetry",
+        return_value=runner_mod.InvocationTelemetry(
+            model="gpt-5.5",
+            effort="high",
+            cli_version="0.123.0",
+        ),
+    ):
+        result = invoke(
+            "codex",
+            "hi",
+            mode="read-only",
+            cwd=tmp_path,
+            model="gpt-5.4",
+            entrypoint="delegate",
+        )
+
+    assert result.ok is True
+    assert spy_adapter.build_invocation.call_args.kwargs["prompt"] == "hi"
+    assert captured_records == [result.usage_record]
+    record = captured_records[0]
+    assert record["run_id"] == "run-123"
+    assert record["session_id"] == "session-456"
+    assert record["level"] == "b1"
+    assert record["slug"] == "telemetry-module"
+    assert record["track"] == "core"
+    assert record["source"] == "pytest"
+    assert captured_env["LU_RUN_ID"] == "run-123"
+    assert captured_env["LU_SESSION_ID"] == "session-456"
 
 
 def setup_function() -> None:
