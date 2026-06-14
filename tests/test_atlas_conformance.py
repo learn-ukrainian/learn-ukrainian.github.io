@@ -258,3 +258,32 @@ def test_kaikki_etymology_source_must_carry_cc_by_sa_attribution():
     )
 
     assert _gates_for(entry) == ["kaikki_attribution_required"]
+
+
+def test_kaikki_etymology_tolerates_base_form_suffix():
+    # #2971 appends " (etymology of base form X)" to derived-lemma etymologies;
+    # the attribution prefix is intact, so this must PASS (regression: a real
+    # re-enrich produced these and turned the conformance gate RED on main).
+    entry = _entry(
+        enrichment={
+            "etymology": {
+                "text": "From Proto-Slavic *vyględati.",
+                "source": f"{KAIKKI_SOURCE} (etymology of base form вигляд)",
+            }
+        }
+    )
+
+    assert _gates_for(entry) == []
+
+
+def test_kaikki_etymology_base_form_suffix_without_attribution_still_fails():
+    entry = _entry(
+        enrichment={
+            "etymology": {
+                "text": "From Proto-Slavic *vyględati.",
+                "source": "kaikki/Wiktionary (etymology of base form вигляд)",
+            }
+        }
+    )
+
+    assert _gates_for(entry) == ["kaikki_attribution_required"]
