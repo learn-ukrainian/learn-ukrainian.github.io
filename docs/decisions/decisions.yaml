@@ -32,7 +32,7 @@ decisions:
     depends_on: []
 
   - id: dec-002
-    status: active
+    status: superseded
     date: "2026-03-26"
     expires: "2026-06-26"
     scope: content
@@ -48,7 +48,7 @@ decisions:
         rejected_because: "Gemini A1 content was weaker on pedagogy (tested M01-M06)"
       - option: "Same agent writes and reviews"
         rejected_because: "Self-review bias — agents praise their own work (Anthropic documented)"
-    superseded_by: null
+    superseded_by: dec-008
     depends_on: []
 
   - id: dec-003
@@ -147,3 +147,23 @@ decisions:
     superseded_by: null
     depends_on:
       - dec-001
+
+  - id: dec-008
+    status: active
+    date: "2026-06-14"
+    expires: "2026-09-12"
+    scope: content
+    title: "A1/A2 live maintenance favors workbook enrichment over rebuilds"
+    reasoning: >
+      A1 and A2 initial builds are shipped and live. Future A1/A2 work should
+      preserve live stability: add workbook-tab practice and targeted fixes in
+      small module-scoped PRs, avoid whole-level rebuilds unless explicitly
+      requested, and validate activity schema/rendering before shipping.
+    evidence: "User direction 2026-06-14; docs/decisions/2026-06-14-a1-a2-live-maintenance-and-workbook-enrichment.md"
+    alternatives:
+      - option: "Keep old A1/A2 build-blocking decision cards pending"
+        rejected_because: "They describe the initial-build phase, which is now live and no longer the current operating model"
+      - option: "Rebuild A1/A2 wholesale before adding more exercises"
+        rejected_because: "Live users need stable lessons; workbook enrichment can ship incrementally"
+    superseded_by: null
+    depends_on: []

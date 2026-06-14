@@ -1,6 +1,8 @@
-# DECISION REQUIRED — Etymology feature design (public static feature for github.io)
+# RESOLVED — Etymology feature design (public static feature for github.io)
 
-**Status:** PROPOSED 2026-05-15
+**Status:** RESOLVED — moved out of the pending queue on 2026-06-14.
+**Disposition:** The design choices in this card are no longer waiting for user input. Treat remaining etymology/Atlas work as normal feature backlog. Any future implementation must use the current `site/` tree, not the stale `starlight/` paths named in the original scope below.
+**Original status:** PROPOSED 2026-05-15
 **Surfaced:** Continuation of `docs/session-state/2026-05-14-etymology-feature-handoff-brief.md` (user direction at 2026-05-14 session close).
 **Scope:**
 - IN: `scripts/etymology/` (page generator, search index builder, explorer dataset builder), `starlight/src/content/docs/etymology/` (29k MDX pages output), `starlight/src/pages/etymology/explore.{astro,client.js}` (interactive explorer), Decision Card itself.
@@ -190,4 +192,4 @@ The user can REVISE any of these after-the-fact; implementation proceeds on the 
 
 ---
 
-*Decision Card per `docs/decisions/pending/README.md`. PROPOSED 2026-05-15 by orchestrator. Awaiting user signoff for ACCEPTED; implementation proceeds on proposed defaults per #M-6 (drive don't defer).*
+*Historical note: this was surfaced as a PROPOSED 2026-05-15 decision card by the orchestrator. It was moved out of the pending queue on 2026-06-14; remaining work is normal feature backlog.*

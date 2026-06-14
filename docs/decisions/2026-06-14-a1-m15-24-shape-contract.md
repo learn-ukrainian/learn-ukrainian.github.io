@@ -1,6 +1,8 @@
-# DECISION REQUIRED — a1-m15-24 module shape contract: dialogue format, citation discipline, source-blockquote exemption
+# SUPERSEDED — a1-m15-24 module shape contract: dialogue format, citation discipline, source-blockquote exemption
 
-**Status:** PROPOSED — multi-agent converged via `ab discuss a1-m15-24-shape-contract` (thread `767f107789e2`, codex+gemini, 2 rounds — round-2 [AGREE] from Gemini on Codex's refinements).
+**Status:** SUPERSEDED — resolved 2026-06-14 after A1/A2 initial builds shipped live.
+**Disposition:** This card captured a live A1 build-gate design problem. A1/A2 are now live and future A1/A2 work is maintenance/workbook enrichment. Treat any remaining dialogue/citation/gate issues as targeted bugs with local tests, not as a pending build-blocking decision.
+**Original status:** PROPOSED — multi-agent converged via `ab discuss a1-m15-24-shape-contract` (thread `767f107789e2`, codex+gemini, 2 rounds — round-2 [AGREE] from Gemini on Codex's refinements).
 **Surfaced:** 2026-05-13, m20 build #3 python_qg revealed 4 gate failures (#1962). Gate 1 dispatched separately (PR #1963 codex/vesum-gate-scope-2026-05-13). Gates 2-4 (citations_resolve, l2_exposure_floor, long_uk_ceiling) **interact** and need joint design.
 **Source:** Empirical evidence from `.worktrees/builds/a1-my-morning-20260513-164953/curriculum/l2-uk-en/a1/my-morning/python_qg.json` + the multi-agent discussion. Discussion transcript: `ab channel tail a1-m15-24-shape-contract --thread 767f107789e241919a36f573be37d4ca`.
 **Scope:** Writer prompt template `scripts/build/phases/linear-write.md`, gate counter logic in `scripts/build/linear_pipeline.py` (`_count_uk_dialogue_lines` + `_unsupported_run_segments`), and the existing citation matcher `scripts/build/citation_matcher.py`. **Does NOT touch:** Phase B band thresholds (kept at `uk_dialogue_lines=14`), gate framework, MDX assembler.

@@ -1,6 +1,8 @@
-# DECISION REQUIRED - Multi-UI content-producing participants in `ab discuss` / channels.html
+# DEFERRED - Multi-UI content-producing participants in `ab discuss` / channels.html
 
-**Status:** PROPOSED (awaiting reviewer cross-review and user signoff)
+**Status:** DEFERRED — moved out of the pending queue on 2026-06-14.
+**Disposition:** This is broad bridge/channel architecture backlog. It does not block B1 or A1/A2 live maintenance. Re-open only as a scoped implementation issue with current channel/automation evidence.
+**Original status:** PROPOSED (awaiting reviewer cross-review and user signoff)
 **Surfaced:** 2026-05-06 morning, while running the writer-lock 3-way discussion
 **Source:** GH issue #1731 Part B; revised after Codex REJECT review on PR #1732
 **Scope:** Agent bridge channel participation, round claims, multimodal channel messages, and pilot bakeoff dispatch

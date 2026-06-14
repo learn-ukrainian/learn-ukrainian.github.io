@@ -1,6 +1,8 @@
-# DECISION REQUIRED — Should we move V7 writer phase to per-tab /goal-driven write-fix-loop, with Gemini reduced to deterministic-tool role?
+# DEFERRED — Should we move V7 writer phase to per-tab /goal-driven write-fix-loop, with Gemini reduced to deterministic-tool role?
 
-**Status:** PROPOSED — REVISED 2026-05-13 (orchestrator-rewritten in same conversation after user clarifications)
+**Status:** DEFERRED — resolved 2026-06-14 as not adopted for the A1/A2 live build.
+**Disposition:** Keep as research history only. Do not treat this as blocking B1 or A1/A2 workbook enrichment. Re-open only with fresh empirical evidence that per-tab write-fix loops outperform the current small-batch orchestration path.
+**Original status:** PROPOSED — REVISED 2026-05-13 (orchestrator-rewritten in same conversation after user clarifications)
 **Surfaced:** 2026-05-13 evening, user-proposed: *"or we could give diff tabs to diff agents whichever is stronger in that?"* — then refined later same day: *"i wonder if /goal we should use for claude and codex agents? ... after 6 months of struggling i would like to try to goal driven write-fix-loop"*
 **Source:** User-stated direction; consistent with existing project patterns (cross-agent split, no self-review, 3:3:3 dispatch by fit); cross-references the empirically-shipped /goal rule (`claude_extensions/rules/goal-driven-runs.md`, codified per #1884, design origin 2026-05-07 OpenAI Codex consult, deployed via Claude Code v2.1.139 native UX 2026-05-11)
 **Scope:** V7 pipeline writer phase (`scripts/build/v7_build.py` + `linear_pipeline.py` writer dispatch shape) + reviewer phase becomes LIGHT verification + Tab 4 builder becomes deterministic Python with Gemini-as-lookup-tool. **Does NOT touch:** gate logic (separate accepted card `2026-05-13-immersion-gate-tab-aware-structural.md`), plan schema, MDX assembler. **DOES challenge:** dec-001 / ADR-007 — see §"ADR-007 collision and how this experiment respects it" below.
