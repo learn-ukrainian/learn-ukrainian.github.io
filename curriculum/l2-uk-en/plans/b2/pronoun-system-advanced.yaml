@@ -2,7 +2,7 @@ module: b2-052
 level: B2
 sequence: 52
 slug: pronoun-system-advanced
-version: 1.0.2
+version: 1.0.3
 title: Складна система займенників
 subtitle: 'Складна система займенників: зворотні, взаємні, означальні'
 focus: grammar
@@ -34,6 +34,10 @@ writing_tasks:
   - мінімум 200 слів
   - вживання 'себе' у різних відмінках
   - вживання 'сам/самий'
+  model_answer: 'Есе має поєднувати особисту рефлексію з точним уживанням
+    займенників. Очікується текст на зразок: ''Щоб краще розуміти самих
+    себе, ми маємо чесно ставити собі запитання. Люди підтримують одне
+    одного тоді, коли кожний бере на себе відповідальність за власні слова''.'
   motivation: Practice using advanced pronouns to express abstract, 
     introspective thoughts.
 listening_situations:
