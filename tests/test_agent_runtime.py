@@ -205,7 +205,7 @@ def test_agy_entry_is_well_formed():
 def test_grok_build_entry_is_well_formed():
     entry = get_agent_entry("grok-build")
     assert entry["adapter"] == "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter"
-    assert entry["default_model"] == "grok-4.20"
+    assert entry["default_model"] == "grok-build"
     assert entry["default_effort"] == "high"
     assert entry["cli_available"] is True
     assert entry["resume_policy"] == "never"

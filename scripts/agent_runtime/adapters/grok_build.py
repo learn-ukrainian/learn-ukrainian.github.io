@@ -47,7 +47,27 @@ _MODE_PERMISSION: dict[str, str] = {
     "workspace-write": "acceptEdits",
     "danger": "bypassPermissions",
 }
-GROK_BUILD_DEFAULT_MODEL = os.environ.get("LEARN_UK_GROK_BUILD_MODEL", "grok-4.20")
+
+# MCP servers that are safe to run under an execution-capable permission mode
+# (read-only data lookups, no mutations). ONLY these may trigger the plan→exec
+# override below; any other / future write-capable server falls back to the
+# normal (safer) mode mapping rather than silently gaining execution rights.
+_READ_ONLY_MCP_SERVERS: frozenset[str] = frozenset({"sources"})
+
+# Defense-in-depth for MCP reviews: even though `bypassPermissions` auto-approves
+# tool calls so the MCP read tools execute, explicit `--deny` rules still win
+# (per grok's permission model: deny > bypass). Denying file-write + shell tools
+# means a prompt-injected review article cannot make grok mutate the filesystem
+# or run shell — it can only call the read-only MCP tools the review needs.
+_MCP_REVIEW_DENY_RULES: tuple[str, ...] = (
+    "Write",
+    "Edit",
+    "MultiEdit",
+    "NotebookEdit",
+    "search_replace",
+    "Bash",
+)
+GROK_BUILD_DEFAULT_MODEL = os.environ.get("LEARN_UK_GROK_BUILD_MODEL", "grok-build")
 GROK_BUILD_DEFAULT_EFFORT = os.environ.get("LEARN_UK_GROK_BUILD_EFFORT", "high")
 
 
@@ -83,6 +103,8 @@ class GrokBuildAdapter:
                 "CLI (provides `grok`) to dispatch the grok-build agent."
             )
         tc = tool_config or {}
+        if "sources" in (tc.get("mcp_server_names") or []):
+            prompt = _adapt_prompt_for_grok_build_mcp(prompt)
 
         cmd: list[str] = [grok_bin]
         # Prompt: inline via -p for the common case; a hyphen-leading prompt
@@ -99,8 +121,25 @@ class GrokBuildAdapter:
             cmd.extend(["-p", prompt])
 
         cmd.extend(["--output-format", "json", "--no-alt-screen"])
-        cmd.extend(["--permission-mode", _MODE_PERMISSION[mode]])
+        # read-only maps to grok `plan` mode, which is analysis-only and BLOCKS
+        # tool execution. MCP-grounded reviews MUST execute tool calls (e.g.
+        # sources__verify_word), so when ONLY known read-only MCP servers are
+        # requested we override to an execution-capable mode. Defense-in-depth:
+        # the `--deny` rules below block file writes + shell even under bypass
+        # (deny wins over bypassPermissions), so a prompt-injected review article
+        # cannot make grok mutate the filesystem or run shell. Any non-read-only
+        # or non-MCP call keeps its normal (safer) mode mapping.
+        mcp_servers_requested = set(tc.get("mcp_server_names") or [])
+        mcp_read_only = bool(mcp_servers_requested) and mcp_servers_requested <= _READ_ONLY_MCP_SERVERS
+        permission_mode = "bypassPermissions" if mcp_read_only else _MODE_PERMISSION[mode]
+        cmd.extend(["--permission-mode", permission_mode])
         cmd.extend(["--cwd", str(cwd)])
+        if mcp_read_only:
+            cmd.append("--always-approve")
+            cmd.append("--no-plan")
+            cmd.append("--disable-web-search")
+            for rule in _MCP_REVIEW_DENY_RULES:
+                cmd.extend(["--deny", rule])
 
         effective_effort = effort or self.default_effort
         if model:
@@ -192,6 +231,25 @@ class GrokBuildAdapter:
         # a liveness signal when stdout is quiet.
         grok_home = Path.home() / ".grok"
         return (grok_home,) if grok_home.exists() else ()
+
+
+def _translate_mcp_prefix_for_grok_build(prompt: str) -> str:
+    """Rewrite canonical MCP names to native grok-build tool names."""
+    return prompt.replace("mcp__sources__", "sources__")
+
+
+def _adapt_prompt_for_grok_build_mcp(prompt: str) -> str:
+    """Adapt canonical MCP review prompts for native grok-build headless."""
+    translated = _translate_mcp_prefix_for_grok_build(prompt)
+    return (
+        translated
+        + "\n\n## Native grok-build headless compatibility\n\n"
+        "You are running in native grok-build single-turn headless mode. "
+        "Do not call abstract `search_tool` or `use_tool` protocols, do not "
+        "call `read_file`, and do not describe a plan. The article text and "
+        "instructions above are sufficient for this review. Return the final "
+        "JSON object now, starting with `{` and ending with `}`.\n"
+    )
 
 
 def _parse_json_object(stdout: str) -> dict | None:
