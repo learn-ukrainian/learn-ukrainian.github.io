@@ -190,6 +190,27 @@ def seminar_reviewer_overrides(domain: str) -> dict[str, str]:
     return dict.fromkeys(_SEMINAR_CULTURE_DIMS, "claude")
 
 
+#: Dims routed off the Gemini-family default for CORE domains. #3087 bakeoff
+#: measured deepseek as the most reliable reviewer for these noisy CORE dims
+#: (factual_accuracy σ 0.47, register σ 0.0, 0 errors), and this also removes
+#: agy same-family self-review when agy writes the wiki article.
+_CORE_OFF_GEMINI_DIMS: tuple[str, ...] = ("factual_accuracy", "register")
+_CORE_REVIEWER = "deepseek"
+
+
+def core_reviewer_overrides(domain: str) -> dict[str, str]:
+    """Primary-reviewer overrides for a CORE a1-c2 wiki ``domain``.
+
+    Routes #3087 bakeoff winners ``factual_accuracy`` and ``register`` to
+    ``deepseek`` for CORE domains (deepseek σ 0.47/0.0, 0 err), removing agy
+    same-family self-review from the compile production path. Seminar domains
+    return ``{}`` so :func:`seminar_reviewer_overrides` keeps its claude policy.
+    """
+    if _infer_level_from_domain(domain) == "seminar":
+        return {}
+    return dict.fromkeys(_CORE_OFF_GEMINI_DIMS, _CORE_REVIEWER)
+
+
 #: Per-call timeouts. Review prompts are bounded; 10 min is plenty.
 HARD_TIMEOUT_S = 600
 

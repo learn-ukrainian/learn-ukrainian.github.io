@@ -15,6 +15,7 @@ from wiki.review import (
     SEMINAR_MAX_ROUNDS,
     DimResult,
     _run_round,
+    core_reviewer_overrides,
     max_rounds_for_domain,
     review_article,
     seminar_reviewer_overrides,
@@ -108,6 +109,19 @@ def test_seminar_reviewer_overrides_routes_culture_dims_to_claude() -> None:
     # Core levels keep the global default (empty override).
     for core_domain in ("a1/letters", "a2/genitive-intro", "c1/stylistics"):
         assert seminar_reviewer_overrides(core_domain) == {}
+
+
+def test_core_reviewer_overrides_routes_noisy_core_dims_to_deepseek() -> None:
+    """Core review routes factual/register off agy; seminar remains untouched."""
+    assert core_reviewer_overrides("grammar/b1/aspect") == {
+        "factual_accuracy": "deepseek",
+        "register": "deepseek",
+    }
+    assert core_reviewer_overrides("folk/genres") == {}
+
+    # Keep unrelated CORE dimensions on their global defaults.
+    assert "source_grounding" not in core_reviewer_overrides("grammar/b1/aspect")
+    assert "ukrainian_perspective" not in core_reviewer_overrides("grammar/b1/aspect")
 
 
 # ── Seminar review-loop fixes (folk Session-19/20) ─────────────────────
