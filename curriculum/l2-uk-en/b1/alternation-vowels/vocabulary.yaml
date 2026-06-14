@@ -1,0 +1,112 @@
+- lemma: чергування
+  translation: alternation
+  pos: noun:n
+  usage: Чергування голосних видно в парі рік - року.
+- lemma: голосний
+  translation: vowel
+  pos: noun:m
+  usage: Голосний у корені може змінюватися в іншій формі слова.
+- lemma: відкритий склад
+  translation: open syllable
+  pos: phrase
+  usage: Відкритий склад закінчується на голосний звук.
+- lemma: закритий склад
+  translation: closed syllable
+  pos: phrase
+  usage: Закритий склад закінчується на приголосний звук.
+- lemma: корінь
+  translation: root
+  pos: noun:m
+  usage: У слові допомагати корінь має голосний а.
+- lemma: наголос
+  translation: stress
+  pos: noun:m
+  usage: Наголос допомагає чути форму, але не замінює перевірку.
+- lemma: біглий голосний
+  translation: fleeting vowel
+  pos: phrase
+  usage: У парі день - дня е є біглим голосним.
+- lemma: нуль звука
+  translation: zero sound
+  pos: phrase
+  usage: Форма дня показує чергування е з нулем звука.
+- lemma: суфікс
+  translation: suffix
+  pos: noun:m
+  usage: У словах на -ок голосний суфікса часто зникає.
+- lemma: закінчення
+  translation: ending
+  pos: noun:n
+  usage: Закінчення може відкрити склад і змінити голосний.
+- lemma: шиплячий
+  translation: hushing consonant
+  pos: adjective
+  usage: Після шиплячого в словах вечеря і бджола пишемо різні голосні.
+- lemma: орфограма
+  translation: orthographic pattern
+  pos: noun:f
+  usage: Чергування голосних часто є орфограмою, яку треба перевірити.
+- lemma: відмінок
+  translation: grammatical case
+  pos: noun:m
+  usage: Відмінок змінює форму слова і може показати чергування.
+- lemma: форма слова
+  translation: word form
+  pos: phrase
+  usage: Форма слова Києва належить до родини Київ.
+- lemma: милозвучність
+  translation: euphony
+  pos: noun:f
+  usage: Милозвучність пов'язана зі звучанням, але не пояснює всі чергування.
+- lemma: ненаголошений
+  translation: unstressed
+  pos: adjective
+  usage: Ненаголошений голосний іноді треба перевірити іншою формою.
+- lemma: відкритий
+  translation: open
+  pos: adjective
+  usage: Відкритий склад має голосний наприкінці.
+- lemma: закритий
+  translation: closed
+  pos: adjective
+  usage: Закритий склад має приголосний наприкінці.
+- lemma: морфонологія
+  translation: morphophonology
+  pos: noun:f
+  usage: Морфонологія пояснює, як форма слова впливає на звуки.
+- lemma: твердий
+  translation: hard
+  pos: adjective
+  usage: Твердий приголосний може впливати на вибір о або е.
+- lemma: м'який
+  translation: soft
+  pos: adjective
+  usage: М'який приголосний важливий у правилах після шиплячих.
+- lemma: спільнокореневий
+  translation: sharing the same root
+  pos: adjective
+  usage: Спільнокореневе слово допомагає перевірити голосний.
+- lemma: правопис
+  translation: orthography, spelling
+  pos: noun:m
+  usage: Правопис вимагає форми Києва, а не «Київа».
+- lemma: перевірне слово
+  translation: checking word
+  pos: phrase
+  usage: Перевірне слово показує голосний у родині форм.
+- lemma: родина форм
+  translation: family of forms
+  pos: phrase
+  usage: Родина форм стіл - стола - на столі показує чергування.
+- lemma: нормативна форма
+  translation: standard form
+  pos: phrase
+  usage: Нормативна форма родового відмінка - з Києва.
+- lemma: випадіння
+  translation: dropping, disappearance
+  pos: noun:n
+  usage: Випадіння голосного видно у формі садка.
+- lemma: саморедагування
+  translation: self-editing
+  pos: noun:n
+  usage: Саморедагування допомагає знайти помилки на зразок «садока».
