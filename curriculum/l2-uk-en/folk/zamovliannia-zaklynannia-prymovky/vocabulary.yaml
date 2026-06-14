@@ -1,0 +1,140 @@
+- lemma: замовляння
+  translation: charm, incantation (verbal magic formula)
+  pos: с.
+  usage: Замовляння — словесна формула, якій приписували магічну силу.
+- lemma: заклинання
+  translation: incantation, spell
+  pos: с.
+  usage: Заклинання діє наказом до сили, а не описом.
+- lemma: примовка
+  translation: formulaic saying accompanying a minor action
+  pos: ж.
+  usage: Примовка супроводжує дрібну буденну обрядову дію.
+- lemma: примівка
+  translation: short charm; regional variant of примовка
+  pos: ж.
+  usage: Примівка — стисліший варіант примовки.
+- lemma: проклін
+  translation: curse
+  pos: ч.
+  usage: Проклін відсилає шкоду на адресата словом.
+- lemma: формула
+  translation: formula
+  pos: ж.
+  usage: Формула має адресата, наказ і місце перенесення.
+- lemma: обряд
+  translation: rite, ritual
+  pos: ч.
+  usage: Обряд і слово в замовлянні діють як один акт.
+- lemma: мотив
+  translation: motif (recurring image or formula)
+  pos: ч.
+  usage: Мотив вигнання повторюється в багатьох замовляннях.
+- lemma: варіант
+  translation: variant
+  pos: ч.
+  usage: Кожен регіон має свій варіант тієї самої формули.
+- lemma: адресат
+  translation: addressee (whom the formula speaks to)
+  pos: ч.
+  usage: Адресат формули — хвороба, названа як окрема сила.
+- lemma: наказ
+  translation: command, imperative
+  pos: ч.
+  usage: Наказ «вийди» змушує шкоду відійти.
+- lemma: градація
+  translation: gradation (rising intensity)
+  pos: ж.
+  usage: Градація дієслів нарощує силу наказу.
+- lemma: жанр
+  translation: genre
+  pos: ч.
+  usage: Замовляння — самостійний жанр української усної творчості.
+- lemma: корпус
+  translation: corpus (body of recorded texts)
+  pos: ч.
+  usage: Корпус замовлянь дійшов до нас із польових записів.
+- lemma: виконання
+  translation: performance (oral enactment)
+  pos: с.
+  usage: У виконанні слово й обрядова дія нероздільні.
+- lemma: знахар
+  translation: folk healer
+  pos: ч.
+  usage: Знахар вимовляє формулу, щоб відвернути хворобу.
+- lemma: шептуха
+  translation: whisperer-healer (utters charms in a whisper)
+  pos: ж.
+  usage: Шептуха шепотіла замовляння над хворим.
+- lemma: зілля
+  translation: healing herbs, potion
+  pos: с.
+  usage: Лікувальне замовляння йшло поряд із зіллям знахаря.
+- lemma: голосіння
+  translation: ritual lament
+  pos: с.
+  usage: Голосіння — споріднений архаїчний жанр обрядового плачу.
+- lemma: віншування
+  translation: ritual well-wishing, blessing
+  pos: с.
+  usage: Віншування належить до поля календарної обрядовості.
+- lemma: посівання
+  translation: ritual sowing (New Year custom)
+  pos: с.
+  usage: Посівання поєднує слово й дію зерна.
+- lemma: благословення
+  translation: blessing
+  pos: с.
+  usage: Благословення, як і замовляння, творить бажаний стан словом.
+- lemma: збирач
+  translation: collector (of folklore)
+  pos: ч.
+  usage: Збирач записував формулу так, як її чув.
+- lemma: дослідник
+  translation: researcher, scholar
+  pos: ч.
+  usage: Дослідник отримує текст, але втрачає виконання.
+- lemma: етнонім
+  translation: ethnonym (name of a people)
+  pos: ч.
+  usage: Імперський етнонім у назві збірника — історичний слід доби.
+- lemma: деколонізація
+  translation: decolonization
+  pos: ж.
+  usage: Деколонізація опису повертає жанрові українську термінологію.
+- lemma: тотожність
+  translation: identity, sameness
+  pos: ж.
+  usage: Тотожність слова й обрядової дії — осердя поетики замовляння.
+- lemma: поетика
+  translation: poetics
+  pos: ж.
+  usage: Поетика замовляння — це поетика дієвої формули.
+- lemma: вигнання
+  translation: expulsion (of harm or illness)
+  pos: с.
+  usage: Формула вигнання відсилає хворобу в безлюдний простір.
+- lemma: перенесення
+  translation: transfer (of harm to another place)
+  pos: с.
+  usage: Мотив перенесення відсилає шкоду подалі від людини.
+- lemma: символіка
+  translation: symbolism
+  pos: ж.
+  usage: Символіка простору в замовлянні має завдання, а не оздобу.
+- lemma: словесний
+  translation: verbal (of words)
+  pos: прикм.
+  usage: Словесний текст і обряд у замовлянні тотожні.
+- lemma: обрядовий
+  translation: ritual (adjective)
+  pos: прикм.
+  usage: Обрядова дія супроводжує кожну формулу.
+- lemma: магічний
+  translation: magical
+  pos: прикм.
+  usage: Замовлянню приписували магічну силу впливу.
+- lemma: замовний
+  translation: incantatory (of a charm)
+  pos: прикм.
+  usage: Замовна формула переходить і у високу культуру.
