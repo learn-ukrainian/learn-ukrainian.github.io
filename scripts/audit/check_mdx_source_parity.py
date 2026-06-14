@@ -18,6 +18,7 @@ SOURCE_DIR = PROJECT_ROOT / "curriculum/l2-uk-en"
 LEGACY_TRACKS_FILE = PROJECT_ROOT / "scripts/audit/mdx_source_parity_legacy_tracks.yaml"
 GENERATOR_ENTRYPOINT = PROJECT_ROOT / "scripts/generate_mdx.py"
 GENERATOR_PACKAGE = PROJECT_ROOT / "scripts/generate_mdx"
+NAV_FRONTMATTER_RE = re.compile(r"^(prev|next):(?:\s|$)")
 
 def get_legacy_levels() -> set[str]:
     if not LEGACY_TRACKS_FILE.exists():
@@ -101,6 +102,52 @@ def has_generator_change(changed_files: set[Path]) -> bool:
             continue
     return False
 
+def is_nav_only_mdx_change(file_path: Path, base: str | None = None, cached: bool = False) -> bool:
+    """Return true if the MDX diff only changes generated prev/next frontmatter."""
+    cmd = ["git", "diff", "-U0"]
+    if cached:
+        cmd.append("--cached")
+    elif base:
+        try:
+            merge_base = subprocess.check_output(["git", "merge-base", base, "HEAD"], text=True).strip()
+            cmd.append(f"{merge_base}...HEAD")
+        except subprocess.CalledProcessError:
+            cmd.append(f"{base}...HEAD")
+    cmd.extend(["--", str(file_path)])
+
+    try:
+        output = subprocess.check_output(cmd, text=True)
+    except subprocess.CalledProcessError:
+        return False
+
+    changed_lines = []
+    for line in output.splitlines():
+        if line.startswith(("diff --git ", "index ", "--- ", "+++ ", "@@")):
+            continue
+        if not line or line[0] not in "+-":
+            continue
+        changed_lines.append(line[1:].strip())
+
+    return bool(changed_lines) and all(NAV_FRONTMATTER_RE.match(line) for line in changed_lines)
+
+def has_same_level_source_change(level: str, changed_files: set[Path]) -> bool:
+    """Generated prev/next links may change when an adjacent module is added."""
+    level_source_dir = SOURCE_DIR / level
+    source_suffixes = {".md", ".yaml", ".yml"}
+
+    for changed_file in changed_files:
+        if changed_file.suffix not in source_suffixes:
+            continue
+        try:
+            rel_path = changed_file.relative_to(level_source_dir)
+        except ValueError:
+            continue
+        if any(part in {"status", "audit", "review"} for part in rel_path.parts):
+            continue
+        return True
+
+    return False
+
 def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | None = None, cached: bool = False) -> list[tuple[Path, str]]:
     legacy_levels = get_legacy_levels()
     deleted_files = get_deleted_files(base, cached)
@@ -141,6 +188,9 @@ def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | No
             continue
 
         if generator_changed and (expected_source_dir.exists() or expected_meta_file.exists()):
+            continue
+
+        if is_nav_only_mdx_change(mdx_path, base, cached) and has_same_level_source_change(level, changed_files):
             continue
 
         # Did any file in expected_source_dir or module meta change?

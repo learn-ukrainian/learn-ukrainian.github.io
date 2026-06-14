@@ -1,0 +1,150 @@
+- lemma: робота
+  translation: work, job
+  pos: noun:f
+  usage: Я шукаю роботу з гнучким графіком.
+- lemma: професія
+  translation: profession
+  pos: noun:f
+  usage: Професія лікаря вимагає довгого навчання.
+- lemma: фах
+  translation: field, professional specialty
+  pos: noun:m
+  usage: За фахом Марко інженер.
+- lemma: спеціальність
+  translation: specialty, major
+  pos: noun:f
+  usage: Моя спеціальність пов'язана з фінансами.
+- lemma: посада
+  translation: position, role
+  pos: noun:f
+  usage: Вона обіймає посаду координаторки проєктів.
+- lemma: вакансія
+  translation: vacancy, open position
+  pos: noun:f
+  usage: Мене зацікавила вакансія аналітика.
+- lemma: резюме
+  translation: resume, CV
+  pos: noun:n
+  usage: Учора я подала резюме в три компанії.
+  notes: Невідмінюване слово.
+- lemma: співбесіда
+  translation: job interview
+  pos: noun:f
+  usage: Співбесіда тривала пів години.
+- lemma: працевлаштування
+  translation: employment, hiring process
+  pos: noun:n
+  usage: Після співбесіди почався процес працевлаштування.
+- lemma: стажування
+  translation: internship, traineeship
+  pos: noun:n
+  usage: Стажування допомогло здобути практичний досвід.
+- lemma: випробувальний термін
+  translation: probation period
+  pos: phrase
+  usage: Випробувальний термін триває два місяці.
+- lemma: обов'язки
+  translation: duties, responsibilities
+  pos: plural noun
+  usage: Мої обов'язки включали роботу з клієнтами.
+- lemma: досвід
+  translation: experience
+  pos: noun:m
+  usage: Маю досвід роботи у сфері освіти.
+- lemma: підвищення
+  translation: promotion, raise
+  pos: noun:n
+  usage: Після року роботи вона отримала підвищення.
+- lemma: зарплата
+  translation: salary, pay
+  pos: noun:f
+  usage: Я шукаю роботу з вищою зарплатою.
+  notes: Розмовно-ділове коротке слово; у формальніших документах уживай заробітна плата.
+- lemma: заробітна плата
+  translation: salary, wages
+  pos: phrase
+  usage: Чи могли б ви уточнити рівень заробітної плати?
+- lemma: керівник
+  translation: manager, supervisor
+  pos: noun:m
+  usage: Керівник попросив оновити звіт до п'ятниці.
+- lemma: керівниця
+  translation: manager, supervisor
+  pos: noun:f
+  usage: Керівниця відділу провела коротку нараду.
+- lemma: колега
+  translation: colleague
+  pos: common-gender noun
+  usage: Мій колега Олег і моя колега Наталя працюють у цьому відділі.
+- lemma: працівник
+  translation: employee, worker
+  pos: noun:m
+  usage: Новий працівник проходить стажування.
+- lemma: працівниця
+  translation: employee, worker
+  pos: noun:f
+  usage: Працівниця відділу кадрів відповіла на лист.
+- lemma: роботодавець
+  translation: employer
+  pos: noun:m
+  usage: Роботодавець запросив кандидата на співбесіду.
+- lemma: кандидат
+  translation: candidate
+  pos: noun:m
+  usage: Кандидат має три роки досвіду.
+- lemma: кандидатка
+  translation: candidate
+  pos: noun:f
+  usage: Кандидатка подала резюме в понеділок.
+- lemma: відділ
+  translation: department
+  pos: noun:m
+  usage: Вона працює у відділі продажу.
+- lemma: компанія
+  translation: company
+  pos: noun:f
+  usage: Компанія шукає менеджера з досвідом.
+- lemma: відповідати за
+  translation: to be responsible for
+  pos: verb phrase
+  usage: На попередній посаді я відповідала за бюджет.
+  notes: Відповідати за + знахідний відмінок.
+- lemma: займатися
+  translation: to engage in, to handle
+  pos: verb
+  usage: Олег займався логістикою.
+  notes: Займатися + орудний відмінок.
+- lemma: працювати з
+  translation: to work with
+  pos: verb phrase
+  usage: Я працювала з корпоративними клієнтами.
+  notes: Працювати з + орудний відмінок.
+- lemma: керувати
+  translation: to manage, to lead
+  pos: verb
+  usage: Керівниця керує командою з восьми людей.
+  notes: Керувати + орудний відмінок.
+- lemma: влаштуватися
+  translation: to get hired, to get a job
+  pos: verb:pf
+  usage: Через тиждень Марія влаштувалася на роботу.
+- lemma: влаштовуватися
+  translation: to be getting hired, to apply for a job
+  pos: verb:impf
+  usage: Вона влаштовувалася на роботу кілька тижнів.
+- lemma: звільнитися
+  translation: to resign, to leave a job
+  pos: verb:pf
+  usage: Після переїзду він звільнився зі старої посади.
+- lemma: звільнятися
+  translation: to be resigning, to leave jobs repeatedly
+  pos: verb:impf
+  usage: Вона звільнялася тільки тоді, коли вже мала нову пропозицію.
+- lemma: подати резюме
+  translation: to submit a resume
+  pos: phrase
+  usage: Учора я подала резюме на нову вакансію.
+- lemma: пройти співбесіду
+  translation: to complete an interview
+  pos: phrase
+  usage: У п'ятницю вона пройшла співбесіду.

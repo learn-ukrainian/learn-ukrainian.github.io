@@ -70,6 +70,51 @@ def test_check_parity_mdx_and_meta_source(mock_legacy_levels, mock_subprocess):
     violations = check_parity(mdx_files, changed_files)
     assert len(violations) == 0
 
+def test_check_parity_adjacent_module_nav_only_change(mock_legacy_levels, mock_subprocess):
+    # Adding a later source module can legitimately regenerate prev/next
+    # frontmatter for the previous generated MDX page.
+    mdx_files = [MDX_DIR / "b1" / "aspect-in-negation.mdx"]
+    changed_files = {
+        MDX_DIR / "b1" / "aspect-in-negation.mdx",
+        SOURCE_DIR / "b1" / "work-and-career" / "module.md",
+    }
+
+    def side_effect(cmd, **kwargs):
+        if "--shortstat" in cmd:
+            return "1 file changed\n"
+        return """diff --git a/site/src/content/docs/b1/aspect-in-negation.mdx b/site/src/content/docs/b1/aspect-in-negation.mdx
+@@ -8 +8 @@
+-next: false
++next: work-and-career
+"""
+
+    mock_subprocess.side_effect = side_effect
+
+    violations = check_parity(mdx_files, changed_files, base="origin/main")
+    assert len(violations) == 0
+
+def test_check_parity_same_level_source_does_not_allow_body_mdx_only(mock_legacy_levels, mock_subprocess):
+    mdx_files = [MDX_DIR / "b1" / "aspect-in-negation.mdx"]
+    changed_files = {
+        MDX_DIR / "b1" / "aspect-in-negation.mdx",
+        SOURCE_DIR / "b1" / "work-and-career" / "module.md",
+    }
+
+    def side_effect(cmd, **kwargs):
+        if "--shortstat" in cmd:
+            return "1 file changed\n"
+        return """diff --git a/site/src/content/docs/b1/aspect-in-negation.mdx b/site/src/content/docs/b1/aspect-in-negation.mdx
+@@ -20 +20 @@
+-Old learner text.
++New learner text.
+"""
+
+    mock_subprocess.side_effect = side_effect
+
+    violations = check_parity(mdx_files, changed_files, base="origin/main")
+    assert len(violations) == 1
+    assert "MDX file changed but no source files changed" in violations[0][1]
+
 def test_check_parity_generator_change_allows_existing_source_dir(mock_legacy_levels, mock_subprocess, tmp_path):
     # Generator changes may legitimately update generated MDX without touching
     # every module source, but only for pages that still have real source dirs.
