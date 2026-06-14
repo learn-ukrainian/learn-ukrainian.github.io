@@ -12,36 +12,133 @@ from __future__ import annotations
 
 import argparse
 import json
-from collections import OrderedDict
+from collections import Counter, OrderedDict
 from pathlib import Path
 
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
-STARLIGHT_DOCS = PROJECT_ROOT / "site" / "src" / "content" / "docs"
+SITE_DOCS = PROJECT_ROOT / "site" / "src" / "content" / "docs"
 
 # Track display config
 TRACK_CONFIG = {
-    "a1": {"title": "A1 — Beginner", "uk_title": "Перші кроки", "uk_sub": "First Steps", "color": "#2E7D32", "word_target": 1200},
-    "a2": {"title": "A2 — Elementary", "uk_title": "Мій світ", "uk_sub": "My World", "color": "#1565C0", "word_target": 2000},
-    "b1": {"title": "B1 — Intermediate", "uk_title": "Крок вперед", "uk_sub": "A Step Forward", "color": "#6A1B9A", "word_target": 4000},
-    "b2": {"title": "B2 — Upper Intermediate", "uk_title": "Впевнено", "uk_sub": "With Confidence", "color": "#BF360C", "word_target": 4000},
-    "c1": {"title": "C1 — Advanced", "uk_title": "Вільно", "uk_sub": "Freely", "color": "#37474F", "word_target": 4000},
-    "c2": {"title": "C2 — Mastery", "uk_title": "Досконало", "uk_sub": "Mastery", "color": "#212121", "word_target": 5000},
+    "a1": {
+        "title": "A1 — Beginner · Перші кроки",
+        "uk_title": "Перші кроки · First Steps",
+        "uk_sub": "Ukrainian for absolute beginners",
+        "word_target": 1200,
+    },
+    "a2": {
+        "title": "A2 — Pre-Intermediate Course",
+        "uk_title": "Перші кроки далі",
+        "uk_sub": "Pre-Intermediate Ukrainian course",
+        "word_target": 2000,
+    },
+    "b1": {
+        "title": "B1 — Intermediate",
+        "uk_title": "Крок вперед",
+        "uk_sub": "Intermediate Ukrainian course",
+        "word_target": 4000,
+    },
+    "b2": {
+        "title": "B2 — Upper Intermediate",
+        "uk_title": "Впевнено",
+        "uk_sub": "Upper-intermediate Ukrainian course",
+        "word_target": 4000,
+    },
+    "c1": {"title": "C1 — Advanced", "uk_title": "Вільно", "uk_sub": "Advanced Ukrainian course", "word_target": 4000},
+    "c2": {
+        "title": "C2 — Mastery",
+        "uk_title": "Досконало",
+        "uk_sub": "Mastery-level Ukrainian course",
+        "word_target": 5000,
+    },
+    "hist": {
+        "title": "HIST - Історія України",
+        "uk_title": "HIST - Історія України",
+        "uk_sub": "History Track",
+        "word_target": 4000,
+    },
+    "bio": {
+        "title": "BIO - Біографії",
+        "uk_title": "BIO - Біографії",
+        "uk_sub": "Biography Track",
+        "word_target": 4000,
+    },
+    "lit": {
+        "title": "LIT - Українська література",
+        "uk_title": "LIT - Українська література",
+        "uk_sub": "Literature Track",
+        "word_target": 4000,
+    },
+    "istorio": {
+        "title": "ISTORIO - Історіографія",
+        "uk_title": "ISTORIO - Історіографія",
+        "uk_sub": "Historiography Track",
+        "word_target": 4000,
+    },
+    "oes": {
+        "title": "OES - Old East Slavic",
+        "uk_title": "OES - Давньоруські тексти",
+        "uk_sub": "Old East Slavic Text Track",
+        "word_target": 4000,
+    },
+    "ruth": {
+        "title": "RUTH - Ruthenian",
+        "uk_title": "RUTH - Руська канцелярська мова",
+        "uk_sub": "Ruthenian Text Track",
+        "word_target": 4000,
+    },
+    "folk": {
+        "title": "FOLK",
+        "uk_title": "FOLK · Фольклор та усна традиція",
+        "uk_sub": "Folklore & Oral Tradition",
+        "word_target": 5000,
+    },
+    "lit-essay": {
+        "title": "LIT-ESSAY - Есеїстика",
+        "uk_title": "LIT-ESSAY - Есеїстика",
+        "uk_sub": "Essay Track",
+        "word_target": 4000,
+    },
+    "lit-hist-fic": {
+        "title": "LIT-HIST-FIC - Історична проза",
+        "uk_title": "LIT-HIST-FIC - Історична проза",
+        "uk_sub": "Historical Fiction Track",
+        "word_target": 4000,
+    },
+    "lit-fantastika": {
+        "title": "LIT-FANTASTIKA - Фантастика",
+        "uk_title": "LIT-FANTASTIKA - Фантастика",
+        "uk_sub": "Speculative Literature Track",
+        "word_target": 4000,
+    },
+    "lit-war": {
+        "title": "LIT-WAR - Література війни",
+        "uk_title": "LIT-WAR - Література війни",
+        "uk_sub": "War Literature Track",
+        "word_target": 4000,
+    },
+    "lit-humor": {
+        "title": "LIT-HUMOR - Гумор і сатира",
+        "uk_title": "LIT-HUMOR - Гумор і сатира",
+        "uk_sub": "Humor and Satire Track",
+        "word_target": 4000,
+    },
+    "lit-youth": {
+        "title": "LIT-YOUTH - Дитяча та юнацька література",
+        "uk_title": "LIT-YOUTH - Дитяча та юнацька література",
+        "uk_sub": "Youth Literature Track",
+        "word_target": 4000,
+    },
+    "lit-drama": {
+        "title": "LIT-DRAMA - Драма і театр",
+        "uk_title": "LIT-DRAMA - Драма і театр",
+        "uk_sub": "Drama Track",
+        "word_target": 4000,
+    },
 }
-
-B1_UNIT_RANGES = [
-    (1, 10, "M01-M10 · Aspect foundations"),
-    (11, 21, "M11-M21 · Sound changes and noun patterns"),
-    (22, 33, "M22-M33 · Verb systems"),
-    (34, 43, "M34-M43 · Motion and spatial language"),
-    (44, 51, "M44-M51 · Comparison and word formation"),
-    (52, 64, "M52-M64 · Cases, prepositions, and sentence parts"),
-    (65, 74, "M65-M74 · Participles, gerunds, and media"),
-    (75, 84, "M75-M84 · Complex syntax"),
-    (85, 94, "M85-M94 · Register, narrative, and B1 review"),
-]
 
 
 def truncate_card_subtitle(text: str, limit: int = 96) -> str:
@@ -61,7 +158,7 @@ def get_module_status(level: str, slug: str) -> str:
     content_paths = [
         CURRICULUM_ROOT / level / f"{slug}.md",
         CURRICULUM_ROOT / level / slug / "module.md",
-        STARLIGHT_DOCS / level / f"{slug}.mdx",
+        SITE_DOCS / level / f"{slug}.mdx",
     ]
 
     if not any(path.exists() for path in content_paths):
@@ -77,17 +174,6 @@ def get_module_status(level: str, slug: str) -> str:
             pass
 
     return "active"  # Content exists but not passing
-
-
-def get_unit_name(level: str, module_num: int, plan: dict) -> str:
-    """Return the learner-facing unit label for a module."""
-    if level == "b1":
-        for start, end, label in B1_UNIT_RANGES:
-            if start <= module_num <= end:
-                return label
-
-    phase = plan.get("phase", "")
-    return phase if phase else f"{level.upper()} Modules"
 
 
 def get_plan_data(level: str, slug: str) -> dict:
@@ -107,25 +193,104 @@ def escape_js_string(s: str | int | float) -> str:
     return s.replace("\\", "\\\\").replace('"', '\\"').replace("\n", " ")
 
 
-def generate_landing_page(level: str) -> str:
+def validate_module_groups(level: str, modules: list[str], groups: list[dict]) -> list[dict]:
+    """Validate manifest group anchors and return ordered group ranges."""
+    if not groups:
+        raise ValueError(f"{level}: missing groups metadata")
+
+    module_counts = Counter(modules)
+    duplicate_modules = sorted(slug for slug, count in module_counts.items() if count > 1)
+    if duplicate_modules:
+        raise ValueError(f"{level}: duplicate module slugs in modules list: {', '.join(duplicate_modules)}")
+
+    module_index = {slug: i for i, slug in enumerate(modules)}
+    covered: dict[str, str] = {}
+    labels: set[str] = set()
+    anchor_uses: dict[str, list[str]] = {}
+    validated: list[dict] = []
+    previous_end = -1
+
+    for idx, group in enumerate(groups, 1):
+        label = str(group.get("label", "")).strip()
+        start = group.get("start")
+        end = group.get("end")
+
+        if not label or not start or not end:
+            raise ValueError(f"{level}: group #{idx} must define label, start, and end")
+        if label in labels:
+            raise ValueError(f"{level}: duplicate group label {label!r}")
+        labels.add(label)
+
+        for field, slug in (("start", start), ("end", end)):
+            if slug not in module_index:
+                raise ValueError(f"{level}: group {label!r} has missing {field} anchor {slug!r}")
+            anchor_uses.setdefault(slug, []).append(f"{label}.{field}")
+
+        start_index = module_index[start]
+        end_index = module_index[end]
+        if start_index > end_index:
+            raise ValueError(f"{level}: group {label!r} start anchor comes after end anchor")
+        if start_index <= previous_end:
+            raise ValueError(f"{level}: group {label!r} overlaps or is out of order")
+        previous_end = end_index
+
+        for slug in modules[start_index : end_index + 1]:
+            if slug in covered:
+                raise ValueError(f"{level}: module {slug!r} appears in both {covered[slug]!r} and {label!r}")
+            covered[slug] = label
+
+        validated.append(
+            {
+                "label": label,
+                "start_index": start_index,
+                "end_index": end_index,
+            }
+        )
+
+    duplicate_anchors = {
+        slug: uses
+        for slug, uses in anchor_uses.items()
+        if len(uses) > 1 and not (len(uses) == 2 and uses[0].rsplit(".", 1)[0] == uses[1].rsplit(".", 1)[0])
+    }
+    if duplicate_anchors:
+        details = "; ".join(f"{slug}: {', '.join(uses)}" for slug, uses in sorted(duplicate_anchors.items()))
+        raise ValueError(f"{level}: duplicated group anchors: {details}")
+
+    ungrouped = [slug for slug in modules if slug not in covered]
+    if ungrouped:
+        raise ValueError(f"{level}: modules left ungrouped: {', '.join(ungrouped)}")
+
+    return validated
+
+
+def generate_landing_page(level: str, curriculum: dict) -> str:
     """Generate landing page MDX for a track."""
-    curriculum = yaml.safe_load((CURRICULUM_ROOT / "curriculum.yaml").read_text("utf-8"))
     level_data = curriculum.get("levels", {}).get(level, {})
     modules = level_data.get("modules", [])
+    groups = level_data.get("groups", [])
 
     if not modules:
         print(f"  ⚠️  No modules found for {level}")
         return ""
 
-    config = TRACK_CONFIG.get(level, {
-        "title": f"{level.upper()}",
-        "uk_title": level.upper(),
-        "uk_sub": "",
-        "color": "#546E7A",
-        "word_target": 4000,
-    })
+    validated_groups = validate_module_groups(level, modules, groups)
 
-    # Group modules by learner-facing unit while preserving curriculum.yaml order.
+    config = TRACK_CONFIG.get(
+        level,
+        {
+            "title": f"{level.upper()}",
+            "uk_title": level.upper(),
+            "uk_sub": f"{level.upper()} Track",
+            "word_target": 4000,
+        },
+    )
+
+    module_to_group = {}
+    for group in validated_groups:
+        label = group["label"]
+        for slug in modules[group["start_index"] : group["end_index"] + 1]:
+            module_to_group[slug] = label
+
     phase_items: OrderedDict[str, list[str]] = OrderedDict()
     done_count = 0
     active_count = 0
@@ -134,7 +299,7 @@ def generate_landing_page(level: str) -> str:
         plan = get_plan_data(level, slug)
         title = plan.get("title", slug.replace("-", " ").title())
         subtitle = plan.get("subtitle", "")
-        unit_name = get_unit_name(level, i, plan)
+        unit_name = module_to_group[slug]
 
         if unit_name not in phase_items:
             phase_items[unit_name] = []
@@ -169,27 +334,19 @@ def generate_landing_page(level: str) -> str:
     modules_js = "\n".join(modules_js_lines)
 
     planned_count = len(modules) - done_count - active_count
-    if level == "b1":
+    if active_count:
         page_label = "page" if active_count == 1 else "pages"
-        subtitle = f"{active_count} learner {page_label} available · {done_count} reviewed · {len(modules)}-module plan"
-        progress_title = "Build status"
-        progress_description = f"{active_count} available · {done_count} reviewed · {planned_count} planned"
-        description = f"B1 landing — {len(modules)} modules in curriculum order"
-    else:
-        subtitle = f"{config.get('uk_sub', '')} — {done_count}/{len(modules)} modules complete"
-        progress_title = ""
-        progress_description = ""
-        description = f"{config.get('uk_sub', '')} — {len(modules)} modules"
-
-    progress_props = ""
-    if progress_title:
-        progress_props = (
-            f'\n  progressTitle="{escape_js_string(progress_title)}"'
-            f'\n  progressDescription="{escape_js_string(progress_description)}"'
+        subtitle = (
+            f"{config.get('uk_sub', '')} — {active_count} learner {page_label} available · {len(modules)} modules"
         )
+    else:
+        subtitle = f"{config.get('uk_sub', '')} — {len(modules)} modules"
+    progress_title = f"{level.upper()} Build Status"
+    progress_description = f"{active_count} available · {done_count} reviewed · {planned_count} planned"
+    description = f"{config.get('uk_sub', '')} — {len(modules)} modules in curriculum order"
 
     mdx = f"""---
-title: "{config['title']}"
+title: "{config["title"]}"
 description: "{escape_js_string(description)}"
 template: splash
 ---
@@ -199,11 +356,13 @@ import LevelLanding from '@site/src/components/LevelLanding';
 <LevelLanding
   client:load
   level="{level.upper()}"
-  title="{config['uk_title']}"
-  subtitle="{escape_js_string(subtitle)}"{progress_props}
+  title="{config["uk_title"]}"
+  subtitle="{escape_js_string(subtitle)}"
+  progressTitle="{escape_js_string(progress_title)}"
+  progressDescription="{escape_js_string(progress_description)}"
   moduleCount={{{len(modules)}}}
-  wordTarget={{{config['word_target']}}}
-  color="{config['color']}"
+  wordTarget={{{config["word_target"]}}}
+  color="var(--lu-id-{level})"
   modules={{[
 {modules_js}
   ]}}
@@ -235,11 +394,11 @@ def main():
             continue
 
         print(f"Generating {level.upper()} landing page...")
-        mdx = generate_landing_page(level)
+        mdx = generate_landing_page(level, curriculum)
         if not mdx:
             continue
 
-        out_dir = STARLIGHT_DOCS / level
+        out_dir = SITE_DOCS / level
         out_dir.mkdir(parents=True, exist_ok=True)
         out_path = out_dir / "index.mdx"
         out_path.write_text(mdx, "utf-8")
