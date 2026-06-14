@@ -731,15 +731,28 @@ _TF_NEGATIVE_EXAMPLE_RE = re.compile(
 # CORRECT form (the structural emphasis: "**л**" is the epenthetic
 # consonant being taught). Matching bold here would strip the very tokens
 # we want VESUM to verify.
+#
+# Citation/example frame (#3132): a foreign/Russian term CITED as an example in
+# decolonization prose — `як «лєший»`, `such as «X»`, `like «X»` — is a mention,
+# not a use, and лєший is correctly absent from VESUM (the Ukrainian is лісовик).
+# Unlike the negator frame this arm is restricted to «» guillemets (the Ukrainian
+# citation mark): the negator `не/not` already explicitly marks the form wrong, so
+# it is allowed to strip any quote style; `як/as/like` is a weaker "such as"
+# signal, so it requires the strong «»-citation mark and will NOT exempt a
+# straight-quoted or italicised span. A bare (un-cited) invalid form still fails.
 _WARNING_QUOTE_RE = re.compile(
-    # Four alternations: quotes, guillemets, closed italics, unclosed italics.
-    # The unclosed-italic arm requires the inner span to be Cyrillic-only
-    # (no asterisk, no whitespace, no punctuation) so it stops cleanly at
-    # the next boundary instead of swallowing the rest of the sentence.
-    r"\b(?:not|не)\s+(?:"
+    r"\b(?:"
+    # Negator frame ("say X, not Y") — Y is marked wrong; all three quote styles.
+    # The unclosed-italic arm requires the inner span to be Cyrillic-only (no
+    # asterisk, whitespace, or punctuation) so it stops cleanly at the next
+    # boundary instead of swallowing the rest of the sentence.
+    r"(?:not|не)\s+(?:"
     r'["«][^"»]+["»]'
     r"|\*[^*\n]+?\*"
     r"|\*[A-Za-zА-ЯІЇЄҐа-яіїєґ\'ʼ-]+"
+    r")"
+    # Citation/example frame ("як «X»", "such as «X»") — «»-guillemets only.
+    r"|(?:як|such\s+as|as|like)\s+«[^»]+»"
     r")",
     re.IGNORECASE,
 )
@@ -9306,6 +9319,8 @@ def _strip_metalinguistic(text: str) -> str:
       after bad-form marker spans have already been removed.
     - `not "форма"` / `not «форма»` — prose-quoted warning examples where the
       quoted form is explicitly marked as wrong.
+    - `як «лєший»` / `such as «X»` — a foreign/Russian term cited as an example
+      in decolonization prose (a mention, not a use). «»-guillemets only (#3132).
 
     Used by the VESUM gate to avoid false positives on fragments that aren't
     VESUM-checkable lemmas.
