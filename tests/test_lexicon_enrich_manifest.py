@@ -616,7 +616,7 @@ def test_curated_calque_matches_participle_entry() -> None:
         "kind": "participle",
         "corrections": ["чинний"],
         "note": "діючий закон → чинний закон (рос. действующий)",
-        "source": ["glazova-11", "avramenko-11"],
+        "source": ["glazova-11", "avramenko-11", "antonenko-p145"],
     }
 
 

@@ -46,7 +46,8 @@ Sources (sources.db chunk ids / corpus refs):
     avramenko-11  = 11-klas-ukrajinska-mova-avramenko-2019_s0075
     avramenko-7   = 7-klas-ukrmova-avramenko-2024_s0108
     litvinova-7   = 7-klas-ukrmova-litvinova-2024_s0096
-    antonenko     = antonenko-davydovych-yak-my-hovorymo_p145
+    davydov       = Антоненко-Давидович «Як ми говоримо» (structured via query_slovnyk_me dict=davydov)
+    antonenko-p145 = antonenko-davydovych-yak-my-hovorymo_p145 (prose on active participles -учий/-ячий not in Ukrainian; only lexicalised adjs of permanent quality; verified via get_chunk_context + search_heritage guard)
     antonenko-p53 = antonenko-davydovych-yak-my-hovorymo_p053 (дійсний/дійсно/
                     в дійсності/справжній cluster — "є в українській мові, але
                     не треба забувати й інших слів")
@@ -55,14 +56,11 @@ Sources (sources.db chunk ids / corpus refs):
                     after the #3101 tag_filter fix)
     grinchenko    = Грінченко 1907 (pre-Soviet authentic-sense attestation)
     sum-20        = СУМ-20 via slovnyk.me (modern attestation of authentic sense)
-    grok-3098     = grok-swarm §6 candidates (2026-06-14), Claude-curated:
-                    docs/research/atlas/grok-swarm-calque-candidates-2026-06-14
-    issue-3098    = GitHub issue #3098 (participle slice spec)
+    search_heritage = MCP sources__search_heritage (false-positive guard before flagging; confirms no blanket russianism on lexicalised forms)
 
-This is reference data only; the enrich-manifest wiring (`_calque_warning`) and
-the §6 template card are the remaining #3098 follow-up that edits
-enrich_manifest.py (the earlier 3-way conflict with #3102/#3099 is resolved now
-that both have merged). When wiring SENSE_RESTRICTED_CALQUES, honour rule 3 — a
+PR1 (#3098) active-participle calques verified via: search_heritage (before any flag) + query_slovnyk_me(davydov) for Antonenko entries + get_chunk_context for p145 prose + search_ua_gec_errors (F/Calque). Non-grounded or sense-restricted moved/ excluded. Collocation calques deferred to PR2. Atlas lemmas (0 direct -учий in vocabulary yamls) + related forms gate the seed set; no hand-waved expansion.
+
+This is reference data only; the enrich-manifest wiring (heritage_status + §6_note in _curated_calque path) emits the note with native replacements + source citation for Atlas §6. When wiring SENSE_RESTRICTED_CALQUES, honour rule 3 — a
 sense-scoped soft note, never a blanket warn or auto-replace.
 """
 
@@ -73,27 +71,27 @@ from __future__ import annotations
 # provenance tag(s). Corrections that are full phrases (relative clauses) are
 # kept as-is because the participle has no single-word agent-noun equivalent.
 CURATED_CALQUES: dict[str, dict[str, object]] = {
-    "бажаючий": {"corrections": ["охочий"], "note": "усі бажаючі → усі охочі", "source": ["glazova-11", "avramenko-7"]},
-    "працюючий": {"corrections": ["працівник", "той, що працює"], "note": "agent noun or relative clause", "source": ["glazova-11", "issue-3098"]},
-    "завідуючий": {"corrections": ["завідувач"], "note": "agent noun -ач", "source": ["glazova-11"]},
+    "бажаючий": {"corrections": ["охочий"], "note": "усі бажаючі → усі охочі", "source": ["davydov", "antonenko-p145"]},
+    "працюючий": {"corrections": ["працівник", "той, що працює"], "note": "agent noun or relative clause", "source": ["davydov", "antonenko-p145"]},
+    "завідуючий": {"corrections": ["завідувач"], "note": "agent noun -ач", "source": ["glazova-11", "antonenko-p145"]},
     "мандруючий": {"corrections": ["мандрівний"], "note": "мандруючий сюжет → мандрівний сюжет", "source": ["glazova-11"]},
     "початкуючий": {"corrections": ["початківець"], "note": "початкуючий художник → художник-початківець", "source": ["glazova-11"]},
     "узагальнюючий": {"corrections": ["узагальнювальний"], "note": "суфікс -альн-", "source": ["glazova-11"]},
     "зволожуючий": {"corrections": ["зволожувальний"], "note": "суфікс -альн- (зволожувальний крем)", "source": ["glazova-11"]},
     "знеболюючий": {"corrections": ["знеболювальний"], "note": "суфікс -альн- (знеболювальні ліки)", "source": ["glazova-11"]},
     "хвилюючий": {"corrections": ["зворушливий"], "note": "хвилюючий спогад → зворушливий спогад", "source": ["glazova-11"]},
-    "діючий": {"corrections": ["чинний"], "note": "діючий закон → чинний закон (рос. действующий)", "source": ["glazova-11", "avramenko-11"]},
+    "діючий": {"corrections": ["чинний"], "note": "діючий закон → чинний закон (рос. действующий)", "source": ["glazova-11", "avramenko-11", "antonenko-p145"]},
     "підростаючий": {"corrections": ["молодий"], "note": "підростаюче покоління → молоде покоління", "source": ["glazova-11"]},
     "потопаючий": {"corrections": ["той, що потопає"], "note": "relative clause", "source": ["glazova-11"]},
     "головуючий": {"corrections": ["голова"], "note": "головуючий на зборах → голова зборів", "source": ["avramenko-11"]},
     "домінуючий": {"corrections": ["основний", "панівний"], "note": "рос. доминирующий", "source": ["avramenko-11"]},
-    "оточуючий": {"corrections": ["довколишній", "навколишній"], "note": "оточуюче середовище → довкілля / навколишнє середовище", "source": ["issue-3098"]},
-    "відпочиваючий": {"corrections": ["відпочивальник", "той, хто відпочиває"], "note": "agent noun or relative clause", "source": ["issue-3098"]},
-    "завмираючий": {"corrections": ["завмерлий", "той, що завмирає"], "note": "завмираючі звуки", "source": ["avramenko-7"]},
-    "розквітаючий": {"corrections": ["розквітлий", "той, що розквітає"], "note": "розквітаючі дерева", "source": ["avramenko-7"]},
-    "опадаючий": {"corrections": ["опалий"], "note": "present-participle calque → past form -лий", "source": ["avramenko-7"]},
-    "в’янучий": {"corrections": ["зів’ялий"], "note": "present-participle calque → past form -лий", "source": ["avramenko-7"]},
-    "жовтіючий": {"corrections": ["пожовклий"], "note": "present-participle calque → past form -лий", "source": ["avramenko-7"]},
+    "оточуючий": {"corrections": ["довколишній", "навколишній"], "note": "оточуюче середовище → довкілля / навколишнє середовище", "source": ["antonenko-p145", "search_heritage"]},
+    "відпочиваючий": {"corrections": ["відпочивальник", "той, хто відпочиває"], "note": "agent noun or relative clause", "source": ["davydov", "antonenko-p145"]},
+    "завмираючий": {"corrections": ["завмерлий", "той, що завмирає"], "note": "завмираючі звуки", "source": ["avramenko-7", "antonenko-p145"]},
+    "розквітаючий": {"corrections": ["розквітлий", "той, що розквітає"], "note": "розквітаючі дерева", "source": ["avramenko-7", "antonenko-p145"]},
+    "опадаючий": {"corrections": ["опалий"], "note": "present-participle calque → past form -лий", "source": ["avramenko-7", "antonenko-p145"]},
+    "в’янучий": {"corrections": ["зів’ялий"], "note": "present-participle calque → past form -лий", "source": ["avramenko-7", "antonenko-p145"]},
+    "жовтіючий": {"corrections": ["пожовклий"], "note": "present-participle calque → past form -лий", "source": ["avramenko-7", "antonenko-p145"]},
     "бувший": {"corrections": ["колишній"], "note": "-вш- participle does not exist in Ukrainian (рос. бывший)", "source": ["avramenko-11"]},
 }
 
