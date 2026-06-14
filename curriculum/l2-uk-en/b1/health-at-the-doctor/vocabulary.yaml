@@ -1,0 +1,204 @@
+- lemma: здоров'я
+  translation: health
+  pos: noun:n
+  usage: Здоров'я потребує уваги, навіть коли нічого не болить.
+- lemma: самопочуття
+  translation: state of health, how one feels
+  pos: noun:n
+  usage: Лікар питає про загальне самопочуття.
+- lemma: лікар
+  translation: doctor, physician
+  pos: noun:m
+  usage: Мені треба записатися до сімейного лікаря.
+- lemma: пацієнт
+  translation: patient
+  pos: noun:m
+  usage: Пацієнт скаржиться на кашель і температуру.
+- lemma: поліклініка
+  translation: clinic, outpatient clinic
+  pos: noun:f
+  usage: Поліклініка працює з восьмої.
+- lemma: лікарня
+  translation: hospital
+  pos: noun:f
+  usage: Після огляду він поїхав до лікарні.
+- lemma: терапевт
+  translation: general physician, internist
+  pos: noun:m
+  usage: Терапевт призначив аналіз крові.
+- lemma: хірург
+  translation: surgeon
+  pos: noun:m
+  usage: Мене направили до хірурга.
+- lemma: стоматолог
+  translation: dentist
+  pos: noun:m
+  usage: Стоматолог оглянув зуб і ясна.
+- lemma: окуліст
+  translation: eye doctor
+  pos: noun:m
+  usage: Окуліст перевірив зір.
+- lemma: аптека
+  translation: pharmacy
+  pos: noun:f
+  usage: В аптеці можна уточнити дозування.
+- lemma: аптекар
+  translation: pharmacist, pharmacy worker
+  pos: noun:m
+  usage: Аптекар пояснив, як приймати ліки.
+- lemma: рецепт
+  translation: prescription
+  pos: noun:m
+  usage: У мене рецепт від лікаря.
+- lemma: ліки
+  translation: medicine, medication
+  pos: noun:pl
+  usage: Ці ліки треба приймати після їжі.
+- lemma: таблетка
+  translation: pill, tablet
+  pos: noun:f
+  usage: Приймайте по одній таблетці двічі на день.
+- lemma: краплі
+  translation: drops
+  pos: noun:pl
+  usage: Краплі для носа використовуйте не довше п'яти днів.
+- lemma: мазь
+  translation: ointment
+  pos: noun:f
+  usage: Мазь наносять на шкіру тонким шаром.
+- lemma: спрей
+  translation: spray
+  pos: noun:m
+  usage: Спрей для горла використовують після їжі.
+- lemma: дозування
+  translation: dosage
+  pos: noun:n
+  usage: Я хочу правильно зрозуміти дозування.
+- lemma: інструкція
+  translation: instructions, leaflet
+  pos: noun:f
+  usage: Інструкція до ліків лежить у коробці.
+- lemma: діагноз
+  translation: diagnosis
+  pos: noun:m
+  usage: Діагноз формулює лікар після огляду.
+- lemma: симптом
+  translation: symptom
+  pos: noun:m
+  usage: Кашель може бути симптомом застуди.
+- lemma: скарга
+  translation: complaint, symptom report
+  pos: noun:f
+  usage: Основна скарга пацієнта - біль у горлі.
+- lemma: скаржитися
+  translation: to complain of
+  pos: verb
+  usage: Пацієнт скаржиться на головний біль.
+- lemma: хворіти
+  translation: to be ill with
+  pos: verb
+  usage: Вона хворіє на грип.
+- lemma: хвороба
+  translation: disease, illness
+  pos: noun:f
+  usage: Лікар пояснив перебіг хвороби.
+- lemma: лікувати
+  translation: to treat
+  pos: verb
+  usage: Лікар лікує пацієнтів і призначає ліки.
+- lemma: лікуватися
+  translation: to receive treatment, to treat oneself
+  pos: verb
+  usage: Він лікується від застуди.
+- lemma: одужати
+  translation: to recover
+  pos: verb
+  usage: Після відпочинку пацієнт швидко одужав.
+- lemma: призначити
+  translation: to prescribe
+  pos: verb
+  usage: Лікар призначив краплі й спрей.
+- lemma: звернутися
+  translation: to consult, to seek help
+  pos: verb
+  usage: Якщо стане гірше, зверніться до лікаря повторно.
+- lemma: приймати
+  translation: to take
+  pos: verb
+  usage: Як приймати ці ліки?
+- lemma: біль
+  translation: pain
+  pos: noun:m
+  usage: У мене гострий біль у животі.
+- lemma: боліти
+  translation: to hurt, to ache
+  pos: verb
+  usage: У мене болить спина.
+- lemma: безболісний
+  translation: painless
+  pos: adjective
+  usage: Процедура майже безболісна.
+- lemma: температура
+  translation: temperature, fever
+  pos: noun:f
+  usage: Учора була температура 38,2.
+- lemma: кашель
+  translation: cough
+  pos: noun:m
+  usage: У мене сухий кашель.
+- lemma: нежить
+  translation: runny nose
+  pos: noun:m
+  usage: Сильний нежить триває третій день.
+- lemma: застуда
+  translation: cold
+  pos: noun:f
+  usage: Лікар сказав, що це схоже на застуду.
+- lemma: грип
+  translation: flu
+  pos: noun:m
+  usage: Вона хворіє на грип.
+- lemma: алергія
+  translation: allergy
+  pos: noun:f
+  usage: У мене алергія на один препарат.
+- lemma: висип
+  translation: rash
+  pos: noun:m
+  usage: Після крему з'явився висип.
+- lemma: щеплення
+  translation: vaccination
+  pos: noun:n
+  usage: Лікар радить зробити щеплення.
+- lemma: обстеження
+  translation: examination, checkup
+  pos: noun:n
+  usage: Мені потрібне додаткове обстеження.
+- lemma: аналіз крові
+  translation: blood test
+  pos: phrase
+  usage: Результати аналізу крові будуть завтра.
+- lemma: тиск
+  translation: blood pressure
+  pos: noun:m
+  usage: Медсестра виміряла тиск.
+- lemma: рентген
+  translation: X-ray
+  pos: noun:m
+  usage: Лікар призначив рентген.
+- lemma: УЗД
+  translation: ultrasound
+  pos: noun:n
+  usage: Потрібно зробити УЗД.
+- lemma: медичний висновок
+  translation: medical conclusion, report
+  pos: phrase
+  usage: У медичному висновку коротко описано діагноз і призначення.
+- lemma: запис
+  translation: appointment, booking
+  pos: noun:m
+  usage: Мені треба скасувати запис до лікаря.
+- lemma: аналіз сечі
+  translation: urine test
+  pos: phrase
+  usage: Аналіз сечі треба здати вранці.
