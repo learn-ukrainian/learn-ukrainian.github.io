@@ -48,3 +48,10 @@ gh pr list --state open --json number,title,headRefName --limit 20   # did codex
 cat /tmp/2991-brief.md                                       # the dispatch brief (regen from #2991 if gone)
 # Next P1 after #2991 merges: #3045 (postmortem-index lossy), #2928 (heritage tests skip CI)
 ```
+
+## §Addendum — post-handoff continuation (same session, 2026-06-14)
+The session continued after the handoff above. Status now:
+- **#2991 DONE** — Codex PR **#3136 reviewed (APPROVE) + merged** (`6ae73596d5`); #2991 closed. The impl exceeded the brief: shows YAML artifacts in the reviewer prompt, patches them via literal find/replace, 3 rollback paths (invalid-YAML / vesum-no-improvement / regression), and **removed the old `vesum_missing_exclusions` masking anti-pattern** (was silently suppressing violations). Teeth-test (unmatched anchor not exempted) present. The `_..._BY_GATE['vesum_verified']` → 3 YAML artifacts mapping was pre-existing; the gap was the prompt not showing them + the masking. New file `tests/build/test_vesum_artifact_correction.py`.
+- **#3045 DONE** — PR **#3139 merged** (`bebc9dc6ec`): `_row_matches_record` matches rows to files by slug (Category==slug OR `<slug>.md` in Summary OR issue match) → kills the duplicate-append; preserves multi-incident rows; `regenerate_index(write=False)` + `--check` no-write CI mode. `--check` on the real INDEX → exit 0.
+- **#2928 DISPATCHED** — Codex `2928-heritage-fixture-ci` (brief `/tmp/2928-brief.md`): commit a small `tests/fixtures/heritage_sample.db` + builder, parametrize `db_path` through both the direct SQL and `wiki.sources_db.search_heritage`, drop the size-gate skip so the 5 cases run on CI. **REVIEW its PR on land** — verify the 5 cases PASS (not skip) and assertions unchanged; watch it doesn't weaken an assertion to make a case pass.
+- **Worktree-hygiene incident:** a concurrent Codex Computer Use session was editing ~7 b1 files in the MAIN checkout (cwd=main, not a worktree) — left untouched; user said the other agent would fix it. Main tree confirmed clean afterward. (This is exactly what open issue #2279 would prevent.)
