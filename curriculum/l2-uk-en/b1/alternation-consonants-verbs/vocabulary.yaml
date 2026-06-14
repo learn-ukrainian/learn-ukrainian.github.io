@@ -1,0 +1,108 @@
+- lemma: чергування
+  translation: alternation
+  pos: noun:n
+  usage: Чергування приголосних видно в парі водити - воджу.
+- lemma: дієслово
+  translation: verb
+  pos: noun:n
+  usage: Дієслово змінюється за особами й часами.
+- lemma: дієвідміна
+  translation: conjugation class
+  pos: noun:f
+  usage: Дієвідміна допомагає передбачити частину форм дієслова.
+- lemma: особа
+  translation: grammatical person
+  pos: noun:f
+  usage: Перша особа однини відповідає займеннику я.
+- lemma: перша особа однини
+  translation: first person singular
+  pos: phrase
+  usage: Перша особа однини часто показує чергування приголосного.
+- lemma: теперішній час
+  translation: present tense
+  pos: phrase
+  usage: У теперішньому часі маємо я воджу, ти водиш.
+- lemma: простий майбутній час
+  translation: simple future tense
+  pos: phrase
+  usage: Доконане дієслово купити має простий майбутній я куплю.
+- lemma: інфінітив
+  translation: infinitive
+  pos: noun:m
+  usage: Інфінітив водити має форму я воджу.
+- lemma: основа
+  translation: stem
+  pos: noun:f
+  usage: Основа дієслова може змінювати останній приголосний.
+- lemma: парадигма
+  translation: paradigm
+  pos: noun:f
+  usage: У парадигмі водити форма я відрізняється від інших осіб.
+- lemma: зубний приголосний
+  translation: dental consonant
+  pos: phrase
+  usage: Д і т є зубними приголосними.
+- lemma: свистячий приголосний
+  translation: sibilant consonant
+  pos: phrase
+  usage: З і с належать до свистячих приголосних.
+- lemma: задньоязиковий приголосний
+  translation: velar consonant
+  pos: phrase
+  usage: Г, к, х є задньоязиковими приголосними.
+- lemma: губний приголосний
+  translation: labial consonant
+  pos: phrase
+  usage: Б, п, в, м, ф є губними приголосними.
+- lemma: африката
+  translation: affricate
+  pos: noun:f
+  usage: У формі воджу сполучення дж позначає африкату.
+- lemma: наказовий спосіб
+  translation: imperative mood
+  pos: phrase
+  usage: Наказовий спосіб треба перевіряти окремо від форми я.
+- lemma: доконаний вид
+  translation: perfective aspect
+  pos: phrase
+  usage: Купити є доконаний вид, тому я куплю має майбутнє значення.
+- lemma: недоконаний вид
+  translation: imperfective aspect
+  pos: phrase
+  usage: Заряджати є недоконаний вид у парі зарядити - заряджати.
+- lemma: видова пара
+  translation: aspectual pair
+  pos: phrase
+  usage: Простити - прощати є видова пара з чергуванням.
+- lemma: словотворення
+  translation: word formation
+  pos: noun:n
+  usage: У словотворенні зарядити дає заряджати.
+- lemma: суфікс
+  translation: suffix
+  pos: noun:m
+  usage: Суфікс -ати може супроводжуватися чергуванням приголосного.
+- lemma: закономірність
+  translation: regular pattern
+  pos: noun:f
+  usage: Чергування не є хаосом, а закономірністю в певних формах.
+- lemma: вимова
+  translation: pronunciation
+  pos: noun:f
+  usage: Вимова дж у слові воджу потребує уваги.
+- lemma: вставний звук
+  translation: inserted sound
+  pos: phrase
+  usage: У формі роблю з'являється вставний звук л.
+- lemma: нормативний
+  translation: standard, normative
+  pos: adjective
+  usage: Нормативний варіант написання - їжджу.
+- lemma: варіант
+  translation: variant
+  pos: noun:m
+  usage: Машу можна впізнавати як варіант поруч із частим махаю.
+- lemma: саморедагування
+  translation: self-editing
+  pos: noun:n
+  usage: Саморедагування допомагає виправити форми на зразок ти воджиш.
