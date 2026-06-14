@@ -47,6 +47,26 @@ _MODE_PERMISSION: dict[str, str] = {
     "workspace-write": "acceptEdits",
     "danger": "bypassPermissions",
 }
+
+# MCP servers that are safe to run under an execution-capable permission mode
+# (read-only data lookups, no mutations). ONLY these may trigger the plan→exec
+# override below; any other / future write-capable server falls back to the
+# normal (safer) mode mapping rather than silently gaining execution rights.
+_READ_ONLY_MCP_SERVERS: frozenset[str] = frozenset({"sources"})
+
+# Defense-in-depth for MCP reviews: even though `bypassPermissions` auto-approves
+# tool calls so the MCP read tools execute, explicit `--deny` rules still win
+# (per grok's permission model: deny > bypass). Denying file-write + shell tools
+# means a prompt-injected review article cannot make grok mutate the filesystem
+# or run shell — it can only call the read-only MCP tools the review needs.
+_MCP_REVIEW_DENY_RULES: tuple[str, ...] = (
+    "Write",
+    "Edit",
+    "MultiEdit",
+    "NotebookEdit",
+    "search_replace",
+    "Bash",
+)
 GROK_BUILD_DEFAULT_MODEL = os.environ.get("LEARN_UK_GROK_BUILD_MODEL", "grok-build")
 GROK_BUILD_DEFAULT_EFFORT = os.environ.get("LEARN_UK_GROK_BUILD_EFFORT", "high")
 
@@ -103,18 +123,23 @@ class GrokBuildAdapter:
         cmd.extend(["--output-format", "json", "--no-alt-screen"])
         # read-only maps to grok `plan` mode, which is analysis-only and BLOCKS
         # tool execution. MCP-grounded reviews MUST execute tool calls (e.g.
-        # sources__verify_word), so when MCP servers are requested we override
-        # to an execution-capable mode. Reviews are read-only by construction
-        # (the prompt asks for no file mutations); paired with --always-approve
-        # this lets grok actually run the MCP read tools instead of cancelling
-        # with empty output. Non-MCP calls keep their normal mode mapping.
-        mcp_needed = bool(tc.get("always_approve") or tc.get("mcp_server_names"))
-        permission_mode = "bypassPermissions" if mcp_needed else _MODE_PERMISSION[mode]
+        # sources__verify_word), so when ONLY known read-only MCP servers are
+        # requested we override to an execution-capable mode. Defense-in-depth:
+        # the `--deny` rules below block file writes + shell even under bypass
+        # (deny wins over bypassPermissions), so a prompt-injected review article
+        # cannot make grok mutate the filesystem or run shell. Any non-read-only
+        # or non-MCP call keeps its normal (safer) mode mapping.
+        mcp_servers_requested = set(tc.get("mcp_server_names") or [])
+        mcp_read_only = bool(mcp_servers_requested) and mcp_servers_requested <= _READ_ONLY_MCP_SERVERS
+        permission_mode = "bypassPermissions" if mcp_read_only else _MODE_PERMISSION[mode]
         cmd.extend(["--permission-mode", permission_mode])
         cmd.extend(["--cwd", str(cwd)])
-        if mcp_needed:
+        if mcp_read_only:
             cmd.append("--always-approve")
             cmd.append("--no-plan")
+            cmd.append("--disable-web-search")
+            for rule in _MCP_REVIEW_DENY_RULES:
+                cmd.extend(["--deny", rule])
 
         effective_effort = effort or self.default_effort
         if model:
