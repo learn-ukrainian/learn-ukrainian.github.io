@@ -2366,6 +2366,15 @@ def enrich() -> tuple[int, int]:
             curated_calque = _curated_calque(lemma, base)
             if curated_calque:
                 entry["heritage_status"]["curated_calque"] = curated_calque
+                # §6 decolonization moat note (PR1: active-present-participle calques only)
+                # Emits native replacement(s) + source citation (Antonenko davydov/p145 + heritage guard)
+                # for Atlas page §6 stylistic warning layer. See calque_corrections + issue #3098.
+                entry["heritage_status"]["§6_note"] = {
+                    "corrections": list(curated_calque.get("corrections", [])),
+                    "note": str(curated_calque.get("note", "")),
+                    "source": list(curated_calque.get("source", [])),
+                    "citation": "Антоненко-Давидович «Як ми говоримо» (davydov via MCP query_slovnyk_me + p145 prose via get_chunk_context; search_heritage guard applied)",
+                }
             pronunciation = _kaikki_pronunciation(kaikki_lookup, lemma)
             if pronunciation:
                 entry["pronunciation"] = pronunciation

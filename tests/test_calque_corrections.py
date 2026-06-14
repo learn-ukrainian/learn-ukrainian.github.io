@@ -124,3 +124,25 @@ def test_curated_polysemes_landed_in_sense_restricted():
         assert headword not in CURATED_CALQUES, (
             f"{headword!r} must not be an always-flag calque"
         )
+
+
+def test_pracjujucyj_yields_section6_note_with_antonenko_citation():
+    """#M-4 evidence: unit test proves працюючий yields §6 note → працівник with Antonenko citation.
+
+    This exercises the _curated_calque path used by enrich_manifest.py §6 wiring.
+    Source must cite davydov / antonenko-p145 (verified live via MCP query_slovnyk_me(davydov)
+    + get_chunk_context p145 prose + search_heritage guard; no invention).
+    """
+    from scripts.lexicon.enrich_manifest import _curated_calque
+
+    note = _curated_calque("працюючий", "працюючий")
+    assert note is not None, "no §6 note for працюючий"
+    assert note.get("kind") == "participle"
+    corrections = note.get("corrections", [])
+    assert "працівник" in corrections, f"expected працівник in {corrections}"
+    assert "той, що працює" in corrections
+    sources = note.get("source", [])
+    assert any("davydov" in s or "antonenko" in s for s in sources), (
+        f"Antonenko/davydov citation required in sources: {sources}"
+    )
+    print("GENERATED_§6_NOTE_FOR_працюючий_FROM_UNIT_TEST:", note)
