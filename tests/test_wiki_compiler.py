@@ -4,6 +4,7 @@ import os
 import sqlite3
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 import pytest
@@ -831,6 +832,61 @@ class TestCompileCommand:
 
         assert ok is True
         review.assert_called_once_with(article_path, "a1", "demo")
+
+    @pytest.mark.parametrize(
+        ("domain", "expected_overrides"),
+        (
+            (
+                "grammar/b1/aspect",
+                {"factual_accuracy": "deepseek", "register": "deepseek"},
+            ),
+            (
+                "folk/genres",
+                {
+                    "register": "claude",
+                    "factual_accuracy": "claude",
+                    "source_grounding": "claude",
+                },
+            ),
+        ),
+    )
+    def test_review_article_combines_core_and_seminar_overrides(
+        self, tmp_path, domain, expected_overrides
+    ):
+        """Compile review applies domain overrides before calling review_article."""
+        from wiki.compile import _review_article
+
+        article_path = tmp_path / "demo.md"
+        article_text = "# Demo\n\n" + ("Body text. " * 20)
+        article_path.write_text(article_text, encoding="utf-8")
+
+        captured_overrides = []
+
+        def fake_review_article(*args, **kwargs):
+            dim_results = {
+                "source_grounding": SimpleNamespace(score=9),
+                "factual_accuracy": SimpleNamespace(score=9),
+                "ukrainian_perspective": SimpleNamespace(score=9),
+                "register": SimpleNamespace(score=9),
+            }
+            report = SimpleNamespace(
+                min_score=9,
+                failing_dim=None,
+                failing_dims=[],
+                final_verdict="PASS",
+                rounds=[SimpleNamespace(round_num=1, dim_results=dim_results)],
+                shadow_mode=True,
+            )
+            captured_overrides.append(kwargs["agent_overrides"])
+            return report, article_text
+
+        with patch("wiki.compile._get_domain", return_value=domain), \
+             patch("wiki.review.review_article", side_effect=fake_review_article), \
+             patch("wiki.review.write_report", return_value=tmp_path / "review.md"), \
+             patch("wiki.compile.log_event"):
+            _review_article(article_path, "b1", "demo")
+
+        assert captured_overrides == [expected_overrides]
 
     def test_cmd_compile_one_force_recompile_strips_mcp_warning_for_academic_writing(
         self, tmp_path, capsys

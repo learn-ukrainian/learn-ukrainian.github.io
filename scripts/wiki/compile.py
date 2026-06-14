@@ -608,6 +608,7 @@ def _review_article(article_path: Path, track: str, slug: str) -> None:
     import traceback as _tb
 
     from wiki.review import (
+        core_reviewer_overrides,
         max_rounds_for_domain,
         review_article,
         seminar_reviewer_overrides,
@@ -626,12 +627,12 @@ def _review_article(article_path: Path, track: str, slug: str) -> None:
     # keep the default MAX_ROUNDS.
     domain = _get_domain(track, slug)
     review_max_rounds = max_rounds_for_domain(domain)
-    # Seminar/CULTURE review must NOT use gemini for register/factual
-    # (fleet policy + folk Session-20: gemini scored bylyny register 5-7 with
-    # ±5 round-to-round noise while claude scored the SAME article 9/PASS).
-    # Route those two dims to claude for seminar domains; core a1–c2 keep the
-    # global DEFAULT_PRIMARY untouched.
-    review_overrides = seminar_reviewer_overrides(domain)
+    # Production compile applies domain-level reviewer routing without changing
+    # the global DEFAULT_PRIMARY used by standalone review CLI calls.
+    review_overrides = {
+        **core_reviewer_overrides(domain),
+        **seminar_reviewer_overrides(domain),
+    }
 
     try:
         report, final_text = review_article(
