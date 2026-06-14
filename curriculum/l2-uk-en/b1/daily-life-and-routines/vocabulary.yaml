@@ -1,187 +1,187 @@
-- lemma: розпоря́док дня
+- lemma: розпорядок дня
   translation: daily routine, daily schedule
   pos: phrase
-  usage: Мій розпоря́док дня почина́ється о сьо́мій.
-- lemma: буди́льник
+  usage: Мій розпорядок дня починається о сьомій.
+- lemma: будильник
   translation: alarm clock
   pos: noun
-  usage: Буди́льник дзво́нить о пів на сьому.
+  usage: Будильник дзвонить о пів на сьому.
 - lemma: прокидатися
   translation: to wake up
   pos: verb
-  usage: Я прокида́юся ра́но.
-- lemma: підво́дитися
+  usage: Я прокидаюся рано.
+- lemma: підводитися
   translation: to get up, rise
   pos: verb
-  usage: Пі́сля буди́льника я підво́джуся.
-- lemma: вмива́тися
+  usage: Після будильника я підводжуся.
+- lemma: вмиватися
   translation: to wash one's face
   pos: verb
-  usage: Вра́нці я вмива́юся холо́дною водо́ю.
-- lemma: одяга́тися
+  usage: Вранці я вмиваюся холодною водою.
+- lemma: одягатися
   translation: to get dressed
   pos: verb
-  usage: Я одяга́юся пі́сля сніда́нку.
-- lemma: збира́тися
+  usage: Я одягаюся після сніданку.
+- lemma: збиратися
   translation: to get ready
   pos: verb
-  usage: Я збира́юся до́вше, коли́ поспіша́ю.
-- lemma: виходити з до́му
+  usage: Я збираюся довше, коли поспішаю.
+- lemma: виходити з дому
   translation: to leave home
   pos: phrase
-  usage: Я виходжу з до́му о во́сьмій.
-- lemma: поспіша́ти
+  usage: Я виходжу з дому о восьмій.
+- lemma: поспішати
   translation: to hurry
   pos: verb
-  usage: Якщо́ я не плану́ю ра́нок, почина́ю поспіша́ти.
-- lemma: сні́дати
+  usage: Якщо я не планую ранок, починаю поспішати.
+- lemma: снідати
   translation: to have breakfast
   pos: verb
-  usage: Я сні́даю ка́шею.
-- lemma: обі́дати
+  usage: Я снідаю кашею.
+- lemma: обідати
   translation: to have lunch
   pos: verb
-  usage: Я обі́даю пі́сля зу́стрічі.
-- lemma: вече́ряти
+  usage: Я обідаю після зустрічі.
+- lemma: вечеряти
   translation: to have dinner
   pos: verb
-  usage: Ми вече́ряємо вдо́ма.
-- lemma: робо́чий день
+  usage: Ми вечеряємо вдома.
+- lemma: робочий день
   translation: workday
   pos: phrase
-  usage: Робо́чий день почина́ється о дев'я́тій.
-- lemma: навча́ння
+  usage: Робочий день починається о дев'ятій.
+- lemma: навчання
   translation: study, learning
   pos: noun
-  usage: Навча́ння почина́ється з пла́ну.
+  usage: Навчання починається з плану.
 - lemma: виконання
   translation: completion, performance
   pos: noun
-  usage: Виконання завда́ння займа́є дві годи́ни.
-- lemma: електро́нна по́шта
+  usage: Виконання завдання займає дві години.
+- lemma: електронна пошта
   translation: email
   pos: phrase
-  usage: Я перевіря́ю електро́нну по́шту.
+  usage: Я перевіряю електронну пошту.
 - lemma: звіт
   translation: report
   pos: noun
-  usage: Пі́сля обі́ду я допрацьо́вую звіт.
-- lemma: коле́га
+  usage: Після обіду я допрацьовую звіт.
+- lemma: колега
   translation: colleague
   pos: noun
-  usage: Коле́га допомі́г обговори́ти план.
-- lemma: робо́че мі́сце
+  usage: Колега допоміг обговорити план.
+- lemma: робоче місце
   translation: workplace
   pos: phrase
-  usage: Моє́ робо́че мі́сце бі́ля вікна́.
-- lemma: обо́в'язки
+  usage: Моє робоче місце біля вікна.
+- lemma: обов'язки
   translation: duties
   pos: noun
-  usage: Ми розподіля́ємо обо́в'язки.
-- lemma: по́шук робо́ти
+  usage: Ми розподіляємо обов'язки.
+- lemma: пошук роботи
   translation: job search
   pos: phrase
-  usage: По́шук робо́ти потребу́є пла́ну.
-- lemma: співбе́сіда
+  usage: Пошук роботи потребує плану.
+- lemma: співбесіда
   translation: interview
   pos: noun
-  usage: Співбе́сіда почина́ється о деся́тій.
-- lemma: ха́тні спра́ви
+  usage: Співбесіда починається о десятій.
+- lemma: хатні справи
   translation: household chores
   pos: phrase
-  usage: Ха́тні спра́ви кра́ще записа́ти в ро́зклад.
-- lemma: прибира́ти
+  usage: Хатні справи краще записати в розклад.
+- lemma: прибирати
   translation: to clean up, tidy
   pos: verb
-  usage: Я прибира́ю щосубо́ти.
-- lemma: поми́ти по́суд
+  usage: Я прибираю щосуботи.
+- lemma: помити посуд
   translation: to wash dishes
   pos: phrase
-  usage: Тре́ба поми́ти по́суд.
-- lemma: пра́ти білизну
+  usage: Треба помити посуд.
+- lemma: прати білизну
   translation: to do laundry
   pos: phrase
-  usage: Я перу білизну у вихідні́.
-  notes: 'Нормати́вно: пра́ти білизну; су́ржикове <!-- bad -->стира́ти білизну<!-- /bad --> не використо́вуй.'
+  usage: Я перу білизну у вихідні.
+  notes: 'Нормативно: прати білизну; суржикове <!-- bad -->стирати білизну<!-- /bad --> не використовуй.'
 - lemma: пилососити
   translation: to vacuum
   pos: verb
-  usage: Марко́ пилососить кімна́ту.
-  notes: 'Нормати́вна фо́рма: пилосо́с; фо́рма <!-- bad -->пилесос<!-- /bad --> є навча́льним контра́стом.'
-- lemma: виносити смі́ття́
+  usage: Марко пилососить кімнату.
+  notes: 'Нормативна форма: пилосос; форма <!-- bad -->пилесос<!-- /bad --> є навчальним контрастом.'
+- lemma: виносити сміття
   translation: to take out the trash
   pos: phrase
-  usage: Я виношу смі́ття́ вве́чері.
-- lemma: вихідні́
+  usage: Я виношу сміття ввечері.
+- lemma: вихідні
   translation: weekend
   pos: plural noun
-  usage: На вихідні́ я плану́ю відпочи́нок.
-- lemma: відпочива́ти
+  usage: На вихідні я планую відпочинок.
+- lemma: відпочивати
   translation: to rest
   pos: verb
-  usage: Уве́чері я відпочива́ю.
-  notes: Для звича́йного пла́ну вжива́й відпочива́ти; фо́рма <!-- bad -->відпочива́тися<!-- /bad --> тут не потрі́бна.
-- lemma: займа́тися спо́ртом
+  usage: Увечері я відпочиваю.
+  notes: Для звичайного плану вживай відпочивати; форма <!-- bad -->відпочиватися<!-- /bad --> тут не потрібна.
+- lemma: займатися спортом
   translation: to do sports
   pos: phrase
-  usage: Я займа́юся спо́ртом у субо́ту.
-- lemma: розважа́тися
+  usage: Я займаюся спортом у суботу.
+- lemma: розважатися
   translation: to have fun
   pos: verb
-  usage: У вихідні́ дру́зі розважа́ються.
-- lemma: встига́ти
+  usage: У вихідні друзі розважаються.
+- lemma: встигати
   translation: to manage in time
   pos: verb
-  usage: Я встига́ю все, коли́ плану́ю заздалегі́дь.
-- lemma: запі́знюватися
+  usage: Я встигаю все, коли планую заздалегідь.
+- lemma: запізнюватися
   translation: to be late
   pos: verb
-  usage: Я не хо́чу запі́знюватися.
-- lemma: відклада́ти
+  usage: Я не хочу запізнюватися.
+- lemma: відкладати
   translation: to postpone
   pos: verb
-  usage: Не ва́рто відклада́ти важли́ві спра́ви.
-- lemma: заздалегі́дь
+  usage: Не варто відкладати важливі справи.
+- lemma: заздалегідь
   translation: in advance
   pos: adverb
-  usage: Я готу́ю су́мку заздалегі́дь.
-- lemma: прасува́ти
+  usage: Я готую сумку заздалегідь.
+- lemma: прасувати
   translation: to iron
   pos: verb
-  usage: Уве́чері тре́ба прасува́ти соро́чку.
-- lemma: готува́ти ї́жу
+  usage: Увечері треба прасувати сорочку.
+- lemma: готувати їжу
   translation: to cook food
   pos: phrase
-  usage: У субо́ту ми готу́ємо ї́жу ра́зом.
-- lemma: займа́тися
+  usage: У суботу ми готуємо їжу разом.
+- lemma: займатися
   translation: to engage in, to do
   pos: verb
-  usage: Я займа́юся спо́ртом пі́сля робо́ти.
-- lemma: витира́ти пил
+  usage: Я займаюся спортом після роботи.
+- lemma: витирати пил
   translation: to dust
   pos: phrase
-  usage: Пе́ред прихо́дом госте́й тре́ба витира́ти пил.
-- lemma: мандрува́ти
+  usage: Перед приходом гостей треба витирати пил.
+- lemma: мандрувати
   translation: to travel, to wander
   pos: verb
-  usage: Улі́тку ми хо́чемо мандрува́ти Украї́ною.
-- lemma: виро́щувати
+  usage: Улітку ми хочемо мандрувати Україною.
+- lemma: вирощувати
   translation: to grow
   pos: verb
-  usage: Бабу́ся лю́бить виро́щувати кві́ти.
-- lemma: бутербро́д
+  usage: Бабуся любить вирощувати квіти.
+- lemma: бутерброд
   translation: open sandwich
   pos: noun
-  usage: На сніда́нок я беру́ бутербро́д і ка́ву.
-- lemma: ка́ша
+  usage: На сніданок я беру бутерброд і каву.
+- lemma: каша
   translation: porridge
   pos: noun
-  usage: Вра́нці дити́на їсть ка́шу.
-- lemma: серіа́л
+  usage: Вранці дитина їсть кашу.
+- lemma: серіал
   translation: TV series
   pos: noun
-  usage: Уве́чері ми ди́вимося нови́й серіа́л.
-- lemma: велосипе́д
+  usage: Увечері ми дивимося новий серіал.
+- lemma: велосипед
   translation: bicycle
   pos: noun
-  usage: У вихідні́ я ката́юся на велосипе́ді.
+  usage: У вихідні я катаюся на велосипеді.
