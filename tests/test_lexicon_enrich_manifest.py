@@ -412,6 +412,80 @@ def test_wrong_sense_synonym_excluded_per_lemma_not_globally() -> None:
     assert _clean_synonym_candidate("кам'яниця", "будинок") == "кам'яниця"
 
 
+def test_synonym_qualifiers_and_sense_guard_for_shliakh(monkeypatch) -> None:
+    _patch_vesum_analyses(
+        monkeypatch,
+        {
+            "шлях": "noun",
+            "дорога": "noun",
+            "тракт": "noun",
+            "гостинець": "noun",
+            "кам'янка": "noun",
+            "кам'яниця": "noun",
+        },
+    )
+    cache = {
+        "lookups": {
+            "synonyms": {
+                "dictionary_slug": "synonyms",
+                "dictionary_label": "Словник синонімів української мови",
+                "word": "шлях",
+                "source_url": "https://slovnyk.me/dict/synonyms/шлях",
+                "text": "шлях ДОРО́ГА, ТРАКТ заст., ГОСТИ́НЕЦЬ розм., КА́М'ЯНКА діал. (брукована). Джерело: тест",
+            },
+            "synonyms_karavansky": {
+                "dictionary_slug": "synonyms_karavansky",
+                "dictionary_label": "Словник синонімів Караванського",
+                "word": "шлях",
+                "source_url": "https://slovnyk.me/dict/synonyms_karavansky/шлях",
+                "text": "шлях ДОРОГА, д. кам'яниця. Джерело: тест",
+            },
+        }
+    }
+
+    section = _synonyms_slovnyk("шлях", cache, entry_pos="noun")
+    assert section is not None
+    items = section["items"]
+
+    # Verify wrong-sense synonym 'кам'яниця' is dropped
+    assert "кам'яниця" not in items
+    assert "кам'яниця (діал.)" not in items
+
+    # Verify other synonyms are kept with their qualifiers preserved
+    assert "дорога" in items
+    assert "тракт (заст.)" in items
+    assert "гостинець (розм.)" in items
+    assert "кам'янка (діал.)" in items
+
+
+def test_synonym_sense_guard_for_richka(monkeypatch) -> None:
+    _patch_vesum_analyses(
+        monkeypatch,
+        {
+            "річка": "noun",
+            "струмок": "noun",
+            "звір": "noun",
+        },
+    )
+    cache = {
+        "lookups": {
+            "synonyms_karavansky": {
+                "dictionary_slug": "synonyms_karavansky",
+                "dictionary_label": "Словник синонімів Караванського",
+                "word": "річка",
+                "source_url": "https://slovnyk.me/dict/synonyms_karavansky/річка",
+                "text": "річка струмок, звір. Джерело: тест",
+            },
+        }
+    }
+
+    section = _synonyms_slovnyk("річка", cache, entry_pos="noun")
+    assert section is not None
+    items = section["items"]
+    assert "звір" not in items
+    assert "струмок" in items
+
+
 def test_wrong_sense_synonyms_are_authentic_not_russianisms() -> None:
     # Contract guard: every excluded term is per-lemma sense-scoped, never a
     # blanket entry. Keys are base lemmas; the excluded words must NOT leak into
