@@ -1,12 +1,14 @@
 # Current — Claude Session Handoff (2026-06-14)
 
-> Router: read `docs/session-state/current.md` first.
-> **Latest detailed handoff: `docs/session-state/2026-06-14-claude-s6-calque-integrated-stale-server-fix-reenrich.md`** — read top-to-bottom.
->
-> **✅ Shipped (merged to main):** #3110 — §6 grok-swarm calque integration (`PHRASAL_CALQUES` +6, new `SENSE_RESTRICTED_CALQUES` polyseme bucket +5, regression test) + a Content-Gate dossier-wordcount scope fix. Plus an operational fix: restarted the stale `sources` MCP server so the #3101 `tag_filter` fix is live.
->
-> **🔄 RESOLVE FIRST:** the controlled **Atlas re-enrich** is in flight (bg `enrich_manifest.py`, was PID 94346 — silent, writes manifest at end). On completion run `/tmp/atlas-spotcheck.py` and **commit `site/src/data/lexicon-manifest.json` ONLY if `VERDICT: CLEAN`** (#M-11; auto-deploys). Baseline: synonyms 21 / wiki 0 / etymology 1165 → expect synonyms ≫21 + wiki >0.
->
-> **🎯 Then:** §6 enrich wiring (#3098) — brief ready at `/tmp/s6-calque-wiring-brief.md`; **de-risked to ~1 card today** (only `виглядати` of 37 dataset keys is in the A1 manifest), so LOW urgency. Then #3102 nice-to-haves (fold into that dispatch) + #3106 sources.db backfill.
->
-> Prior handoff (superseded): `2026-06-14-claude-grok-build-validation-atlas-quality-queue.md`.
+> Router: read `docs/session-state/current.md` first (if present).
+> **Latest detailed handoff: `docs/session-state/2026-06-14-claude-infra-rescope-vesum-gate-plus-fixes.md`** — read top-to-bottom.
+
+> **ROLE (user-corrected mid-session 2026-06-14):** main orchestrator = **infra / tooling / tech-debt / general features / integration / merge** — NOT tracks. Drive the infra backlog; treat track issues (folk/bio/lit/seminar) as track-orchestrator-owned.
+
+> **🔄 IN-FLIGHT — REVIEW FIRST:** Codex dispatch `2991-vesum-correction-yaml` (HIGH) — extend the V7 correction loop to patch `activities/vocabulary/resources.yaml`, not just `module.md`. When it opens a PR (no auto-merge), review the attribution + rollback/teeth guarantees + ADR-007 invariant, then merge if clean. Monitor: `/api/delegate/active` until `total=0`.
+
+> **🎯 Then (P1, both bounded):** #3045 (`check_postmortems --regenerate-index` lossy), #2928 (`heritage_classifier` tests skip on CI). Full stack + watch-items in the dated handoff.
+
+> **✅ Shipped this session:** #3126 (conformance gate), #3128 (synonym wrong-sense + typo), #3133 (vesum `як «X»` citation-frame fix — unblocks folk). Closed #2997, #2368. Resolved #3094/#3098/#3116.
+
+Prior handoff (superseded): `2026-06-14-claude-s6-calque-integrated-stale-server-fix-reenrich.md`.
