@@ -27,4 +27,5 @@ One-liner per bug. Grep for symptoms or categories to find relevant detail files
 | 2026-05-21 | #2177 (Follow-up to killed #2001 OCR handoff) | gemini-ocr-hallucinations | Gemini Vision-LLM OCR Hallucinations |
 | — | — | node-modules-eloop-symlink | self-referential `node_modules` symlink breaks every Astro/npm build with `spawn ELOOP` |
 | 2026-06-04 | #2613 | stanza-model-md5-flake | Stanza model md5 flake wedged required CI |
+| 2026-06-14 | #3124 | fixture-only-feature-latent-gate-break | Atlas re-enrich turned `test_atlas_conformance` RED on main: #2971 appends `(etymology of base form X)` to the kaikki etymology source, the gate required exact `KAIKKI_SOURCE` match. #2971's dispatch brief forbade a real re-enrich → fixture-only tests never hit the regenerated artifact through the gate; latent until the orchestrator's first real regen (on main). Fix #3124 tolerates the suffix. Lesson: fixture-only feature + strict gate on a generated artifact = latent break on regen; wire the conformance suite into `verify_manifest.py`. Detail in `fixture-only-feature-latent-gate-break.md`. |
 <!-- INDEX-END -->

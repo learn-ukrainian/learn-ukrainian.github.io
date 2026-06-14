@@ -122,12 +122,22 @@ interface HeritageAttestation {
   detail?: string;
 }
 
+interface CuratedCalque {
+  kind: "participle" | "phrasal" | "sense_restricted";
+  corrections: string[];
+  note: string;
+  source: string[];
+  calque_sense?: string;
+  authentic_sense?: string;
+}
+
 interface HeritageStatus {
   classification: string;
   attestations: HeritageAttestation[];
   is_russianism: boolean;
   russian_shadow: boolean;
   calque_warning?: { detail?: string } | null;
+  curated_calque?: CuratedCalque | null;
 }
 
 interface LexiconEntry {
@@ -363,6 +373,7 @@ const showEditorialSuccess = Boolean(
   heritage && !heritage.is_russianism && !showHeritageWarning && hasPreSovietAttestation,
 );
 const showEditorialWarning = Boolean(showHeritageWarning);
+const curatedCalque = heritage?.curated_calque ?? null;
 const usesKaikki = Boolean(
   pronunciation?.source === KAIKKI_SOURCE || enrichment?.etymology?.source === KAIKKI_SOURCE,
 );
@@ -378,7 +389,8 @@ const showHeritage = Boolean(
     (isNoteworthyClass ||
       showHeritageWarning ||
       heritage.russian_shadow ||
-      heritage.calque_warning),
+      heritage.calque_warning ||
+      curatedCalque),
 );
 const hasDictionaryData = Boolean(
     pronunciation ||
@@ -538,6 +550,18 @@ const frontmatter = {
         {heritage?.calque_warning && (
           <p class="atlas-heritage-warn">
             ⚠ Калька{heritage.calque_warning.detail ? `: ${heritage.calque_warning.detail}` : ""}.
+          </p>
+        )}
+        {curatedCalque && curatedCalque.kind !== "sense_restricted" && (
+          <p class="atlas-heritage-warn">
+            ⚠ Калька: {curatedCalque.note}. Українською: {curatedCalque.corrections.join(", ")}.
+          </p>
+        )}
+        {curatedCalque?.kind === "sense_restricted" && (
+          <p class="atlas-heritage-note">
+            ℹ Питоме українське слово у значенні «{curatedCalque.authentic_sense}».
+            {" "}Калькою стає лише у значенні «{curatedCalque.calque_sense}» — тоді краще:{" "}
+            {curatedCalque.corrections.join(", ")}.
           </p>
         )}
       </section>
@@ -1235,7 +1259,16 @@ const frontmatter = {
   .atlas-heritage-warn {
     margin: 0.6rem 0 0;
     padding: 0.55rem 0.8rem;
-    border-left: 3px solid var(--lu-accent);
+    border-left: 3px solid var(--lu-state-wrong-fg);
+    background: var(--lu-surface-muted);
+    color: var(--lu-text);
+    font-size: 0.9rem;
+  }
+
+  .atlas-heritage-note {
+    margin: 0.6rem 0 0;
+    padding: 0.55rem 0.8rem;
+    border-left: 3px solid var(--lu-primary);
     background: var(--lu-surface-muted);
     color: var(--lu-text);
     font-size: 0.9rem;

@@ -58,6 +58,11 @@ sys.path.insert(0, str(ROOT))
 
 from scripts.lexicon.build_kaikki_lookup import KAIKKI_SOURCE
 from scripts.lexicon.build_kaikki_lookup import lookup_key as kaikki_lookup_key
+from scripts.lexicon.calque_corrections import (
+    CURATED_CALQUES,
+    PHRASAL_CALQUES,
+    SENSE_RESTRICTED_CALQUES,
+)
 from scripts.lexicon.heritage_classifier import classify_lemma
 from scripts.verification.vesum import verify_lemma, verify_word
 from scripts.wiki.slovnyk_me import primary_synonym_sense_text
@@ -1341,6 +1346,42 @@ def _merge_slovnyk_warning(status: dict[str, Any], warning: dict[str, Any] | Non
     return status
 
 
+def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
+    """Curated §6 calque card from exact dataset lookups only."""
+    for key in (lemma, base):
+        if key in CURATED_CALQUES:
+            row = CURATED_CALQUES[key]
+            return {
+                "kind": "participle",
+                "corrections": list(row["corrections"]),
+                "note": str(row["note"]),
+                "source": list(row["source"]),
+            }
+
+    for key in (lemma, base):
+        if key in SENSE_RESTRICTED_CALQUES:
+            row = SENSE_RESTRICTED_CALQUES[key]
+            return {
+                "kind": "sense_restricted",
+                "corrections": list(row["corrections"]),
+                "calque_sense": str(row["calque_sense"]),
+                "authentic_sense": str(row["authentic_sense"]),
+                "note": str(row["note"]),
+                "source": list(row["source"]),
+            }
+
+    if lemma in PHRASAL_CALQUES:
+        row = PHRASAL_CALQUES[lemma]
+        return {
+            "kind": "phrasal",
+            "corrections": list(row["corrections"]),
+            "note": str(row["note"]),
+            "source": list(row["source"]),
+        }
+
+    return None
+
+
 def _entry_scoped_heritage_status(status: dict[str, Any]) -> dict[str, Any]:
     clean_status = dict(status)
     clean_status.pop("sovietization_risk", None)
@@ -2280,6 +2321,9 @@ def enrich() -> tuple[int, int]:
             entry["heritage_status"] = _entry_scoped_heritage_status(
                 _merge_slovnyk_warning(heritage_status, warning)
             )
+            curated_calque = _curated_calque(lemma, base)
+            if curated_calque:
+                entry["heritage_status"]["curated_calque"] = curated_calque
             pronunciation = _kaikki_pronunciation(kaikki_lookup, lemma)
             if pronunciation:
                 entry["pronunciation"] = pronunciation
