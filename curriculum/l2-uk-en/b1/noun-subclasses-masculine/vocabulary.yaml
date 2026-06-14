@@ -1,0 +1,180 @@
+- lemma: суфікс
+  translation: suffix
+  pos: noun:m
+  usage: Суфікс допомагає побачити, як утворене слово пекар або киянин.
+- lemma: словотворення
+  translation: word formation
+  pos: noun:n
+  usage: Словотворення пояснює зв'язок між Києвом і словом киянин.
+- lemma: основа
+  translation: stem, base
+  pos: noun:f
+  usage: У слові школяр основа пов'язана зі словом школа.
+- lemma: відмінювання
+  translation: declension
+  pos: noun:n
+  usage: Відмінювання іменника киянин змінюється в множині.
+- lemma: відміна
+  translation: declension class
+  pos: noun:f
+  usage: Більшість слів у цьому модулі належить до другої відміни.
+- lemma: однина
+  translation: singular
+  pos: noun:f
+  usage: В однині суфікс -ин зберігається.
+- lemma: множина
+  translation: plural
+  pos: noun:f
+  usage: У множині киянин дає кияни.
+- lemma: кличний відмінок
+  translation: vocative case
+  pos: phrase
+  usage: Кличний відмінок потрібен у звертанні лікарю.
+- lemma: родовий відмінок
+  translation: genitive case
+  pos: phrase
+  usage: Родовий відмінок множини слова кияни має форму киян.
+- lemma: нульове закінчення
+  translation: zero ending
+  pos: phrase
+  usage: У формі киян маємо нульове закінчення.
+- lemma: професія
+  translation: profession
+  pos: noun:f
+  usage: Слова лікар і пекар називають професію.
+- lemma: ремесло
+  translation: craft
+  pos: noun:n
+  usage: Гончарство і бондарство є традиційними ремеслами.
+- lemma: походження
+  translation: origin
+  pos: noun:n
+  usage: Слово львів'янин називає людину за походженням або місцем проживання.
+- lemma: належність
+  translation: belonging, membership
+  pos: noun:f
+  usage: Слово громадянин показує належність до державної спільноти.
+- lemma: пекар
+  translation: baker
+  pos: noun:m
+  usage: Пекар пече хліб у пекарні.
+- lemma: лікар
+  translation: doctor
+  pos: noun:m
+  usage: Лікар оглянув пацієнта і дав пораду.
+- lemma: школяр
+  translation: school student
+  pos: noun:m
+  usage: Школяр читає завдання перед уроком.
+- lemma: кобзар
+  translation: kobza player
+  pos: noun:m
+  usage: Кобзар виконував думи й пісні.
+- lemma: каменяр
+  translation: stonecutter
+  pos: noun:m
+  usage: Каменяр працює з каменем.
+- lemma: бондар
+  translation: cooper, barrel maker
+  pos: noun:m
+  usage: Бондар робить діжки й дерев'яні відра.
+- lemma: гончар
+  translation: potter
+  pos: noun:m
+  usage: Гончар ліпить посуд із глини.
+- lemma: токар
+  translation: lathe operator
+  pos: noun:m
+  usage: Токар працює за верстатом.
+- lemma: слюсар
+  translation: mechanic, fitter
+  pos: noun:m
+  usage: Слюсар ремонтує механізм.
+- lemma: столяр
+  translation: carpenter
+  pos: noun:m
+  usage: Столяр зробив дерев'яний стіл.
+- lemma: киянин
+  translation: Kyivan, resident of Kyiv
+  pos: noun:m
+  usage: Киянин добре знає свій район.
+- lemma: кияни
+  translation: Kyivans
+  pos: noun:pl
+  usage: Кияни часто користуються метро.
+- lemma: громадянин
+  translation: citizen
+  pos: noun:m
+  usage: Громадянин має права й обов'язки.
+- lemma: громадяни
+  translation: citizens
+  pos: noun:pl
+  usage: Громадяни подали заяву онлайн.
+- lemma: селянин
+  translation: villager; peasant in historical contexts
+  pos: noun:m
+  usage: Селянин у цьому тексті означає жителя села.
+- lemma: селяни
+  translation: villagers; peasants in historical contexts
+  pos: noun:pl
+  usage: Селяни обговорювали роботу громади.
+- lemma: львів'янин
+  translation: Lviv resident
+  pos: noun:m
+  usage: Львів'янин запросив гостей на каву.
+- lemma: львів'яни
+  translation: Lviv residents
+  pos: noun:pl
+  usage: Львів'яни показали туристам центр міста.
+- lemma: міщанин
+  translation: townsperson; burgher in historical contexts
+  pos: noun:m
+  usage: Міщанин у старому тексті означає жителя міста.
+- lemma: міщани
+  translation: townspeople
+  pos: noun:pl
+  usage: Міщани підтримали нову школу.
+- lemma: грузин
+  translation: Georgian man
+  pos: noun:m
+  usage: Грузин розповів про свою родину.
+- lemma: грузини
+  translation: Georgians
+  pos: noun:pl
+  usage: Грузини зберігають суфікс -ин у множині.
+- lemma: осетин
+  translation: Ossetian man
+  pos: noun:m
+  usage: Осетин має форму родового множини осетинів.
+- lemma: осетини
+  translation: Ossetians
+  pos: noun:pl
+  usage: Осетини не втрачають -ин у множині.
+- lemma: випадати
+  translation: to drop out
+  pos: verb
+  usage: Суфікс -ин випадає у словах кияни й громадяни.
+- lemma: зберігатися
+  translation: to be preserved
+  pos: verb
+  usage: В однині суфікс -ин зберігається.
+- lemma: звертання
+  translation: address, form of address
+  pos: noun:n
+  usage: У звертанні кажемо лікарю або школяре.
+- lemma: форма
+  translation: form
+  pos: noun:f
+  usage: Форма громадян є родовим відмінком множини.
+- lemma: виняток
+  translation: exception
+  pos: noun:m
+  usage: Грузинів і осетинів варто запам'ятати як винятки.
+- lemma: громадський
+  translation: civic, public
+  pos: adjective
+  usage: Громадський транспорт пов'язаний зі словом громада, але не є формою слова громадянин.
+- lemma: культурний контекст
+  translation: cultural context
+  pos: phrase
+  usage: Кобзар і Каменяр мають важливий культурний контекст.
