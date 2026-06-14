@@ -15,10 +15,13 @@
 | **#3110 (+commit)** | `fix(audit)`: `check_dossier_wordcount._is_research_dossier()` matched any `docs/research/*/*.md`; exempted `_NON_DOSSIER_RESEARCH_SUBDIRS={atlas,lexicon}` + test. |
 | **stale-server fix** | Restarted `sources` MCP (8432→46274); `search_ua_gec_errors(tag_filter=["F/Calque"])` now returns rows (was erroring). No PR — operational. |
 
-## 🔄 In-flight — Atlas re-enrich (RESOLVE FIRST)
-- Process: `.venv/bin/python -u scripts/lexicon/enrich_manifest.py` (launched bg; was PID 94346). Silent (final summary only); writes `site/src/data/lexicon-manifest.json` ONCE at end. Warm caches (`data/lexicon/slovnyk_cache` 3789, `data/wiki_cache.db`).
-- **Baseline (pre-enrich):** entries 2190 · synonyms 21 · wiki_reference 0 · etymology 1165 · pronunciation 1604 (top-level). Expect synonyms ≫21 + wiki >0 after.
-- **On completion:** run `.venv/bin/python3 /tmp/atlas-spotcheck.py` → it prints coverage deltas + samples present lemmas (шлях/робота/гарний/дім…; NB **варити/хата/мрія are NOT in the A1 manifest** — only шлях is) + deterministic hazard scans (WordNet-junk фальсифікувати/бариги, HTML-entity, gloss-chunk). **Commit `site/src/data/lexicon-manifest.json` ONLY if it prints `VERDICT: CLEAN`** (#M-11; auto-deploys). If not clean → `git checkout site/src/data/lexicon-manifest.json` and investigate.
+## ✅ Atlas re-enrich — DONE + DEPLOYED (`4fabcecfc5`)
+- Ran `enrich_manifest.py` on main (warm caches). **Coverage: synonyms 21→794 · wiki_reference 0→183 · etymology 1165→1250** (enriched 1933/2190). Spot-check (`/tmp/atlas-spotcheck.py`) hazard scans CLEAN; synonym sources 100% Караванський + СУМ синонімів (zero WordNet). Committed direct-to-main (auto-deploys).
+- **#3116 filed then CORRECTED to an enhancement:** I flagged шлях→кам'яниця / річка→звір as wrong, but the raw Караванський synsets mark them `д.`/`г.` = **dialectal** (кам'яниця = dialectal paved-road; звір = dialectal mountain-stream) — VALID, faithfully reproduced. A stoplist would've dropped valid heritage data (блискучий error). Real (low-prio) refinement: chips strip register qualifiers (д./розм./заст.) → preserve them as chip labels. Retitled #3116.
+
+## 🔄 In-flight — §6 calque wiring dispatch (#3098)
+- Codex dispatch `s6-calque-wiring-3098` fired (worktree `.worktrees/dispatch/codex/s6-calque-wiring-3098`, branch `codex/s6-calque-wiring-3098`, base `4fabcecfc5`). Brief: `/tmp/s6-calque-wiring-brief.md`. Bg poller `byj20ofe2` notifies on completion.
+- **On completion:** review the PR (generator `_curated_calque` + renderer sense-restricted SOFT card + tests). Verify the sense-restricted contract (rule 3: soft sense-scoped note, never blanket/auto-replace). Merge if green. Then a re-enrich populates `curated_calque` (1 card: виглядати). DO NOT touch `enrich_manifest.py` until this lands (conflict).
 
 ## 🎯 Next (priority order)
 1. **Resolve the re-enrich** (spot-check → commit-if-clean). #M-11.
