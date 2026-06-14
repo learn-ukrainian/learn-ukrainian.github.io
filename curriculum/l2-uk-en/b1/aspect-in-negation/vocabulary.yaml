@@ -1,0 +1,196 @@
+- lemma: запере́чення
+  translation: negation; denial of an action or state
+  pos: noun:n
+  usage: Запере́чення змі́нює прагма́тику речення.
+- lemma: зага́льне запере́чення
+  translation: general negation; factual denial
+  pos: noun phrase
+  usage: Зага́льне запере́чення подає́ ді́ю як факт.
+- lemma: очі́куване заве́ршення
+  translation: expected completion; pending result
+  pos: noun phrase
+  usage: Очі́куване заве́ршення потребу́є сло́ва «ще».
+- lemma: ще
+  translation: yet; still
+  pos: adv/part
+  usage: Я ще не прочита́в кни́жку.
+- lemma: факт
+  translation: fact
+  pos: noun:m
+  usage: Факт не ма́є додатко́вого очі́кування.
+- lemma: очі́кування
+  translation: expectation
+  pos: noun:n
+  usage: Очі́кування змі́нює ви́бір ви́ду.
+- lemma: прагма́тика
+  translation: pragmatics; context-shaped meaning
+  pos: noun:f
+  usage: Прагма́тика зале́жить від на́міру мо́вця.
+- lemma: на́мір
+  translation: intention
+  pos: noun:m
+  usage: На́мір мо́вця керу́є ви́дом.
+- lemma: конте́кст
+  translation: context
+  pos: noun:m
+  usage: Конте́кст пока́зує, чи є результа́т.
+- lemma: ді́я
+  translation: action
+  pos: noun:f
+  usage: Ді́я мо́же бу́ти проце́сом або́ результа́том.
+- lemma: проце́с
+  translation: process
+  pos: noun:m
+  usage: Недоко́наний вид ба́чить ді́ю як проце́с.
+- lemma: результа́т
+  translation: result
+  pos: noun:m
+  usage: Доко́наний вид ба́чить результа́т.
+- lemma: констата́ція
+  translation: statement of fact
+  pos: noun:f
+  usage: Це нейтра́льна констата́ція.
+- lemma: прогре́с
+  translation: progress
+  pos: noun:m
+  usage: Прогре́с є, але́ результа́ту ще нема́є.
+- lemma: нейтра́льний
+  translation: neutral
+  pos: adj
+  usage: Нейтра́льний факт потребу́є недоко́наного ви́ду.
+- lemma: незаве́ршений
+  translation: unfinished; incomplete
+  pos: adj
+  usage: Незаве́ршений результа́т стої́ть пі́сля «ще не».
+- lemma: недоко́наний вид
+  translation: imperfective aspect
+  pos: noun phrase
+  usage: Не чита́в — недоко́наний вид.
+- lemma: доко́наний вид
+  translation: perfective aspect
+  pos: noun phrase
+  usage: Ще не прочита́в — доко́наний вид.
+- lemma: видова́ па́ра
+  translation: aspectual pair
+  pos: noun phrase
+  usage: Чита́ти і прочита́ти — видова́ па́ра.
+- lemma: обгово́рювати
+  translation: to discuss; imperfective
+  pos: verb:impf
+  usage: Ми не обгово́рювали це пита́ння.
+- lemma: обговори́ти
+  translation: to discuss; perfective
+  pos: verb:pf
+  usage: Ми ще не обговори́ли це пита́ння.
+- lemma: вирі́шувати
+  translation: to decide; imperfective
+  pos: verb:impf
+  usage: Ми не вирі́шували пита́ння.
+- lemma: ви́рішити
+  translation: to decide; perfective
+  pos: verb:pf
+  usage: Ми ще не ви́рішили пита́ння.
+- lemma: відповіда́ти
+  translation: to answer/respond; imperfective
+  pos: verb:impf
+  usage: Вона́ не відповіда́ла на лист.
+- lemma: відпові́сти́
+  translation: to answer/respond; perfective
+  pos: verb:pf
+  usage: Вона́ ще не відповіла́ на лист.
+- lemma: телефонува́ти
+  translation: to phone; imperfective
+  pos: verb:impf
+  usage: Вона́ не телефонува́ла.
+- lemma: зателефонува́ти
+  translation: to phone; perfective
+  pos: verb:pf
+  usage: Вона́ ще не зателефонува́ла.
+- lemma: доми́ти
+  translation: to finish washing
+  pos: verb:pf
+  usage: По́суд я мив, але́ ще не доми́в.
+- lemma: дочита́ти
+  translation: to finish reading
+  pos: verb:pf
+  usage: Статтю́ чита́в, але́ ще не дочита́в.
+- lemma: дороби́ти
+  translation: to finish doing
+  pos: verb:pf
+  usage: Завда́ння роби́в, але́ ще не дороби́в.
+- lemma: завда́ння
+  translation: task; assignment
+  pos: noun:n
+  usage: Завда́ння ще не зроби́в.
+- lemma: те́рмін
+  translation: deadline; term
+  pos: noun:m
+  usage: Те́рмін змі́нює очі́кування результа́ту.
+- lemma: проє́кт
+  translation: project
+  pos: noun:m
+  usage: Я не працюва́в над проє́ктом.
+- lemma: лист
+  translation: letter; email
+  pos: noun:m
+  usage: Він ще не написа́в лист.
+- lemma: звіт
+  translation: report
+  pos: noun:m
+  usage: Я ще не переві́рив звіт.
+- lemma: матеріа́л
+  translation: material
+  pos: noun:m
+  usage: Я ще не ви́вчила цей матеріа́л.
+- lemma: пита́ння
+  translation: question; issue
+  pos: noun:n
+  usage: Ми не обгово́рювали це пита́ння.
+- lemma: кни́жка
+  translation: book
+  pos: noun:f
+  usage: Я не чита́в цю кни́жку.
+- lemma: по́суд
+  translation: dishes
+  pos: noun:m
+  usage: По́суд я мив, але́ ще не доми́в.
+- lemma: ча́стка
+  translation: particle
+  pos: noun:f
+  usage: Ча́стка «не» стої́ть пе́ред дієсло́вом.
+- lemma: предикати́вне сло́во
+  translation: predicative word
+  pos: noun phrase
+  usage: Нема́є — предикати́вне сло́во.
+- lemma: родо́ви́й відмі́нок
+  translation: genitive case
+  pos: noun phrase
+  usage: Нема́є олівця́ — родо́ви́й відмі́нок.
+- lemma: діало́г
+  translation: dialogue
+  pos: noun:m
+  usage: Діало́г пока́зує прагма́тику ви́ду.
+- lemma: керівни́к
+  translation: manager; supervisor
+  pos: noun:m
+  usage: Керівни́к пита́є про звіт.
+- lemma: виклада́ч
+  translation: teacher; instructor
+  pos: noun:m
+  usage: Виклада́ч пита́є про матеріа́л.
+- lemma: сусі́д
+  translation: neighbor; roommate
+  pos: noun:m
+  usage: Сусі́д пита́є про по́суд.
+- lemma: по́ми́лка
+  translation: mistake
+  pos: noun:f
+  usage: По́ми́лка змі́шує факт і результа́т.
+- lemma: варіа́нт
+  translation: variant; option
+  pos: noun:m
+  usage: Обері́ть приро́дний варіа́нт.
+- lemma: мнемо́ніка
+  translation: mnemonic
+  pos: noun:f
+  usage: Мнемо́ніка допомага́є обра́ти вид.
