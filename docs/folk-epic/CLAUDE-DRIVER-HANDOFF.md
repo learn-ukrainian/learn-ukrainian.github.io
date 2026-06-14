@@ -58,7 +58,55 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 30 HANDOFF (2026-06-14 — INFRA A–E shipped + independently reviewed: render-landmine #3137 + DoD/cold-start #3138 (PR #3143, MERGED); both driver agent-defs onboarded) — **RESUME HERE**
+## ▶▶▶ SESSION 31 HANDOFF (2026-06-14 — both PRs MERGED + verified on main (folk 6/42); local site verified-not-broken; orchestrator auto-onboards; handoff-structure fix still OPEN) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** Closeout of the Session-30 infra work — no new content. Both PRs now MERGED +
+> verified on `origin/main`: **#3143** (infra A–E: render-landmine #3137 + DoD/cold-start #3138) and
+> **#3131** (folk modules #01–03). Folk built modules **3→6/42** (kalendarna/koliadky/dumy + #01/#02/#03).
+> Infra tooling live on main: `verify_shippable.py`, `mdx_render_gate.py`, `handoff_ready.py`.
+
+### ✅ DONE THIS SESSION (beyond Session 30)
+- **Merged #3143 + #3131** (squash). Resolved the parallel-session handoff conflict (kept Session 30 infra
+  + Session 29 modules). Verified on main: 6 folk `module.md`, 3 new module MDX, infra tooling present.
+- **Independent review BEFORE merge** (user-required): Claude `/code-review` (multi-angle) + **Codex
+  cross-model** → **9 findings, all fixed + tested** — incl. python_qg-crash no longer skips render; astro
+  build output de-tainted to a log file (#M-5); handoff_ready enforces mergeStateStatus; Node success
+  sentinel; `allow_nan=False`. The 3 CodeQL clear-text-logging FPs fixed at-source (subprocess output → log
+  file) then dismissed with justification.
+- **Local-site "broken" = NOT a code bug.** Browser-verified: homepage ✅, folk landing ✅ (6 available),
+  folk #01 ✅ (4 tabs hydrate; Словник `VocabCard` `JSON.parse` island renders), 0 console errors, astro
+  build green (2364 pages). The "locally broken" view was STALE (tab/dev-server lag through the merges +
+  local-main ff). Fix for a stale view: hard-refresh (Cmd+Shift+R) or `./services.sh restart astro`.
+- **Orchestrator onboarding is AUTOMATIC** — `.claude/hooks/auto-deploy-agent-extensions.sh` (SessionStart)
+  runs `deploy_prompts.sh`, deploying the updated `curriculum-orchestrator` + `curriculum-track-orchestrator`
+  agent defs on next restart. No manual `deploy_prompts.sh` needed.
+
+### 🧱 OPEN — HANDOFF-STRUCTURE FIX (user-flagged twice: "this kind of session handoff is bad")
+The Session-29/30 conflict + the #01 re-collision share ONE root: every session **prepends** a block to the
+SAME handoff top → conflicts + stale-resume. C (cold-start-freshness) MITIGATES but doesn't remove it.
+**Proposed durable fix (offered; awaiting user go):** a tiny separate `RESUME-HERE.md` as the only mutable
+pointer + an **append-only** session log (new entries at BOTTOM, never prepended) + a lint that rejects
+prepends. Build it as the next small PR before the next parallel run. (This very Session-31 block is itself
+prepended — the pattern persists until the fix lands.)
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **(user's call) Build the handoff-structure fix** above — removes the recurring conflict class.
+2. **llm_qg PARITY BATCH for all 5 folk modules** (kalendarna done; #01/#02/koliadky/dumy pending) —
+   CODEX/GPT reviewer override, NOT gemini (folk-culture-barred).
+3. **Reading-links → 3 original live modules' `resources.yaml`** (kalendarna/koliadky/dumy) + reassemble.
+4. **Reading-links epic #3120** (registry + gate; lit/lit-* first).
+5. **Remaining folk modules 6→42** per `phase-folk-queue.md`. Gate EACH with
+   `verify_shippable <level> <slug> --astro-build` + corpus-hammer before status→active; `handoff_ready
+   --pr N` before declaring ready. Never python_qg alone.
+6. **Deploy** — auto-deploy DISABLED; user deploys via `gh workflow run deploy-pages.yml`.
+
+### ⚠ CARRY-FORWARD
+- Build branches preserved for forensics (#M-10); the #01 duplicate worktrees (-003403/-011819) reaped.
+- `git push` folk → `--no-verify`; never reset/commit on main (a local-main ff to origin is safe).
+
+---
+
+## ▶▶▶ SESSION 30 HANDOFF (2026-06-14 — INFRA A–E shipped + independently reviewed: render-landmine #3137 + DoD/cold-start #3138 (PR #3143, MERGED); both driver agent-defs onboarded) — (superseded by Session 31)
 
 > **⏱ HONEST SCOPE:** Infra/process only — no new folk content. Built + independently reviewed (Claude
 > `/code-review` multi-angle + **Codex cross-model** — 9 findings, all fixed + tested) + shipped the 5
