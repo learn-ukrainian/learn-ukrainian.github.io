@@ -1,0 +1,120 @@
+- lemma: доконаний вид
+  translation: perfective aspect
+  pos: phrase
+  usage: Доконаний вид показує результат або завершену подію.
+- lemma: недоконаний вид
+  translation: imperfective aspect
+  pos: phrase
+  usage: Недоконаний вид показує процес, тривалість або повторюваність.
+- lemma: видова пара
+  translation: aspectual pair
+  pos: phrase
+  usage: Писати і написати утворюють видову пару.
+- lemma: тло розповіді
+  translation: narrative background
+  pos: phrase
+  usage: У реченні «Ми вечеряли, коли він прийшов» форма вечеряли створює тло розповіді.
+- lemma: послідовність подій
+  translation: sequence of events
+  pos: phrase
+  usage: У біографії доконані форми часто створюють послідовність подій.
+- lemma: подієвий ланцюг
+  translation: event chain
+  pos: phrase
+  usage: Він встав, одягнувся і вийшов - це подієвий ланцюг.
+- lemma: наказовий спосіб
+  translation: imperative mood
+  pos: phrase
+  usage: У наказовому способі вид залежить від того, чи це порада, чи конкретне завдання.
+- lemma: заперечення
+  translation: negation
+  pos: noun:n
+  usage: Заперечення з видом показує, чи не було дії, чи ще немає результату.
+- lemma: умовний спосіб
+  translation: conditional mood
+  pos: phrase
+  usage: В умовному способі вид також може показувати процес або результат.
+- lemma: результативність
+  translation: resultativity
+  pos: noun:f
+  usage: Результативність часто підтримує доконаний вид.
+- lemma: тривалість
+  translation: duration
+  pos: noun:f
+  usage: Тривалість часто підтримує недоконаний вид.
+- lemma: діагностика
+  translation: diagnostics, assessment
+  pos: noun:f
+  usage: Діагностика виду починається з питання про функцію дії.
+- lemma: повторення
+  translation: review, repetition
+  pos: noun:n
+  usage: Повторення допомагає побачити один принцип у різних контекстах.
+- lemma: контрольна робота
+  translation: test, checkpoint assessment
+  pos: phrase
+  usage: Контрольна робота перевіряє вибір виду в реальних реченнях.
+- lemma: минулий час
+  translation: past tense
+  pos: phrase
+  usage: У минулому часі вид часто розрізняє тло і подію.
+- lemma: майбутній час
+  translation: future tense
+  pos: phrase
+  usage: У майбутньому часі доконаний вид називає результат, а недоконаний - процес або звичку.
+- lemma: загальне заперечення
+  translation: general negation
+  pos: phrase
+  usage: Загальне заперечення часто має форму не + недоконаний вид.
+- lemma: нереалізований результат
+  translation: unrealized result
+  pos: phrase
+  usage: Ще не прочитав показує нереалізований результат.
+- lemma: заборона
+  translation: prohibition
+  pos: noun:f
+  usage: Для звичайної заборони природний недоконаний наказ.
+- lemma: попередження
+  translation: warning
+  pos: noun:n
+  usage: Не забудьте ключі звучить як конкретне попередження.
+- lemma: синтетичний майбутній
+  translation: synthetic future
+  pos: phrase
+  usage: Форма писатиму є синтетичним майбутнім недоконаного виду.
+- lemma: аналітичний майбутній
+  translation: analytic future
+  pos: phrase
+  usage: Форма буду писати є аналітичним майбутнім недоконаного виду.
+- lemma: процес
+  translation: process
+  pos: noun:m
+  usage: Якщо важливий процес, часто потрібен недоконаний вид.
+- lemma: результат
+  translation: result
+  pos: noun:m
+  usage: Якщо важливий результат, часто потрібен доконаний вид.
+- lemma: дедлайн
+  translation: deadline
+  pos: noun:m
+  usage: Дедлайн часто підсилює вибір доконаного виду.
+- lemma: звичка
+  translation: habit
+  pos: noun:f
+  usage: Майбутня звичка часто передається недоконаним видом.
+- lemma: пояснювати
+  translation: to explain
+  pos: verb:impf
+  usage: На контрольній важливо пояснювати вибір виду.
+- lemma: пояснити
+  translation: to explain, to give an explanation
+  pos: verb:pf
+  usage: Учень має пояснити, чому форма природна.
+- lemma: перевіряти
+  translation: to check
+  pos: verb:impf
+  usage: Перед відповіддю корисно перевіряти контекст.
+- lemma: перевірити
+  translation: to check, to verify
+  pos: verb:pf
+  usage: Перевірити контекст - це один завершений крок.
