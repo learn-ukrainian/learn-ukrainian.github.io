@@ -3,10 +3,13 @@
 > Router: `current.md` → `current.claude.md` → this. Read top-to-bottom.
 > **Next session's first job (if re-enrich unresolved): check PID/`/tmp/atlas-reenrich.log`, run `/tmp/atlas-spotcheck.py`, commit manifest IF CLEAN.** See §In-flight.
 
-## TL;DR
-- **#3110 MERGED** — §6 grok-swarm calque integration (`PHRASAL_CALQUES` +6, new `SENSE_RESTRICTED_CALQUES` bucket +5 polysemes, regression test) **+ a Content-Gate scope fix** (the dossier word-count gate falsely flagged `docs/research/atlas/` notes). All CI green.
-- **Stale sources MCP server root-caused + fixed** — `tag_filter` still threw the `ambiguous column name` error #3101 had fixed; the running server (PID 8432) predated the merge. Restarted (PID 46274) → fix verified live. Recurring "fix merged but server not restarted" failure mode.
-- **Controlled Atlas re-enrich IN FLIGHT** (queue #3 — handoff payoff). Confirmed the gap deterministically: deployed manifest has **synonyms 21 (old hardcoded allowlist) / wiki 0** despite #3092/#3099 merged.
+## TL;DR (session was LONG + dense — read all sections)
+- **#3110 MERGED** — §6 calque integration (`PHRASAL_CALQUES` +6, new `SENSE_RESTRICTED_CALQUES` +5, test) + Content-Gate scope fix.
+- **Stale sources MCP server fixed** — restarted (8432→46274); #3101 `tag_filter` fix now live.
+- **Atlas re-enrich DONE + DEPLOYED + VERIFIED LIVE** (`4fabcecfc5`; deploy run 27483805505): synonyms 21→794, wiki 0→183, etym →1250. User cleared the held-back manual deploy; гарний/шлях confirmed live. **Deploy is MANUAL (`workflow_dispatch`), NOT auto — prior "auto-deploys" was wrong.**
+- **#3124 MERGED — RED-main hotfix** the re-enrich caused: #2971's `(etymology of base form X)` suffix tripped the exact-match kaikki attribution gate → `test_atlas_conformance` RED, blocked code PRs. Fixed + autopsy (`docs/bug-autopsies/fixture-only-feature-latent-gate-break.md`). Main GREEN.
+- **#3121 (§6 wiring) + #3122 (verify_manifest tool) — MERGING via autonomous poller `bhixilxok`** (sequential, after #3124 unblocked main). Both Claude-reviewed; check they landed.
+- **#3116** reclassified to a low-prio ENHANCEMENT (synonym register qualifiers; the flagged шлях→кам'яниця etc. are valid dialectal terms).
 
 ## ✅ Merged this session
 | PR/action | What |
@@ -28,11 +31,13 @@
 - Codex dispatch `s6-calque-wiring-3098` fired (worktree `.worktrees/dispatch/codex/s6-calque-wiring-3098`, branch `codex/s6-calque-wiring-3098`, base `4fabcecfc5`). Brief: `/tmp/s6-calque-wiring-brief.md`. Bg poller `byj20ofe2` notifies on completion.
 - **On completion:** review the PR (generator `_curated_calque` + renderer sense-restricted SOFT card + tests). Verify the sense-restricted contract (rule 3: soft sense-scoped note, never blanket/auto-replace). Merge if green. Then a re-enrich populates `curated_calque` (1 card: виглядати). DO NOT touch `enrich_manifest.py` until this lands (conflict).
 
-## 🎯 Next (priority order)
-1. **Resolve the re-enrich** (spot-check → commit-if-clean). #M-11.
-2. **§6 enrich wiring (#3098)** — brief READY at `/tmp/s6-calque-wiring-brief.md` (Codex dispatch). **De-risked: ~1 card today** — only `виглядати` of 37 dataset keys is in the A1 manifest (calque dataset targets B1+ vocab). Still worth shipping (dataset's only consumer + future-proof) but LOW urgency. `виглядати` validated additive: today classification=standard/is_russianism=False, card adds sense-note without false-flagging. Sequence after a higher-payoff manifest item.
-3. **#3102 nice-to-haves** — fold into the §6 wiring dispatch (same file): typo'd const `_DERIVATIONAL_ETYMLOGY_BASES` (missing M); negative test for group-head rejection.
-4. **#3106 sources.db rebuild backfill** — orchestrator-run, like the re-enrich, to backfill existing literary rows' `source_url`.
+## 🎯 Next (priority order) — all LOW urgency; the urgent work (deploy + RED-main) is DONE
+1. **Confirm the merge train landed** — poller `bhixilxok` merging #3121 then #3122. If it timed out (fast-moving main from codex content train + "require up-to-date"), finish manually: `gh pr update-branch N` → wait CLEAN → `gh pr merge N --squash --delete-branch`. Then `git worktree remove .worktrees/atlas-verify-tool`.
+2. **After #3121 merges → re-enrich for `curated_calque`** (1 card: виглядати) → run `scripts/lexicon/verify_manifest.py` (the #3122 tool) **AND `pytest tests/test_atlas_conformance.py`** before committing (the autopsy lesson — verify didn't catch the kaikki gate). Then commit + (manual) deploy.
+3. **Autopsy follow-up (HIGH-leverage):** wire `validate_atlas_conformance.py` (or the `test_atlas_conformance` checks) INTO `scripts/lexicon/verify_manifest.py`, so the #M-11 post-re-enrich gate runs conformance, not just structural hazards. This is what would have caught #3124 pre-deploy.
+4. **#3102 nice-to-haves** — fold into a future `enrich_manifest.py` change: typo'd const `_DERIVATIONAL_ETYMLOGY_BASES` (missing M); negative test for group-head rejection.
+5. **#3106 sources.db literary `source_url` backfill** — orchestrator-run `scripts/wiki/restore_literary_metadata.py` (targeted ALTER+UPDATE, not a full rebuild). NB: coordinate with the live `sources` MCP server (SQLite write-lock) — stop it or run off-hours.
+6. **#3116** synonym register-qualifier enhancement (low prio).
 
 ## ⚠️ Lessons / notes
 - **Verify the running process, not just `ps|grep`** — my first `ps|grep python` missed the live enrich; `pgrep -fl enrich_manifest` found PID 94346. Nearly mis-diagnosed a healthy run as dead (#M-11 class).
