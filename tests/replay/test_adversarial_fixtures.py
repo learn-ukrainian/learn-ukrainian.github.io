@@ -1,86 +1,84 @@
+from __future__ import annotations
+
 import json
 from pathlib import Path
+from typing import Any
 
-import pytest
+import yaml
 
-from scripts.agent_runtime.adapters.codex import CodexAdapter, InvocationPlan
+from scripts.agent_runtime.adapters.base import InvocationPlan
+from scripts.agent_runtime.adapters.codex import CodexAdapter
 from scripts.build.linear_pipeline import (
-    _build_vesum_text,
     _result_items_from_call,
-    _summarize_tool_result,
+    _summarize_generic_tool_result,
+    _vesum_gate,
 )
 from scripts.wiki.sources_db import _prepare_query
 
-FIXTURES_DIR = Path(__file__).parent.parent / "fixtures"
+FIXTURES_DIR = Path(__file__).parent / "fixtures"
 
 
-def test_long_cyrillic_query():
+def test_prepare_query_handles_replayed_long_cyrillic_query() -> None:
     fixture_path = FIXTURES_DIR / "queries" / "long_cyrillic_query.txt"
     content = fixture_path.read_text(encoding="utf-8")
     assert len(content.encode("utf-8")) > 255
 
-    # Should return a tuple and not raise OSError
-    result = _prepare_query(content, "fast")
-    assert isinstance(result, tuple)
-    assert len(result) == 3
+    bucket_a, bucket_b, dense = _prepare_query(content, "fast")
+
+    assert isinstance(bucket_a, list)
+    assert isinstance(bucket_b, set)
+    assert dense
 
 
-@pytest.mark.xfail(reason="Issue #1905 Part 2")
-def test_rollout_matches_plan():
-    fixture_path = FIXTURES_DIR / "rollouts" / "agents_md_envelope.jsonl"
+def test_vesum_gate_skips_replayed_correct_false_distractors() -> None:
+    activity = yaml.safe_load(
+        (FIXTURES_DIR / "activities" / "mc_with_correct_false.yaml").read_text(
+            encoding="utf-8",
+        )
+    )
+    sent_for_verification: set[str] = set()
 
-    # The real prompt is the last part of the content array
-    plan = InvocationPlan(cmd=["dummy"], cwd=Path("."), stdin_payload="real prompt")
-    adapter = CodexAdapter()
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        sent_for_verification.update(words)
+        return {word: [{"lemma": word}] for word in words}
 
-    assert adapter._rollout_matches_plan(fixture_path, plan) is True
+    result = _vesum_gate(
+        module_text="",
+        activities=[activity],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+    )
 
-
-def test_mc_with_correct_false_distractors():
-    """Pin the documented `_activity_vesum_text` MC contract.
-
-    By design (see `_activity_vesum_text` docstring), the `text` leaf of an
-    `options` entry with falsy `correct` is treated as a potentially
-    intentional wrong answer and is EXCLUDED from VESUM scope, while the
-    correct option and surrounding prompt stay in scope. This is intentional —
-    not a bug — so distractors that are fabricated wrong forms don't trip
-    VESUM. The fixture uses non-overlapping tokens (книга / олівець) so the
-    membership assertions can't be satisfied by substring coincidence.
-    """
-    import yaml
-
-    fixture_path = FIXTURES_DIR / "activities" / "mc_with_correct_false.yaml"
-    activity = yaml.safe_load(fixture_path.read_text(encoding="utf-8"))
-
-    vesum_text = _build_vesum_text(module_text="", activities=[activity], vocabulary=[], resources=[])
-
-    # Correct option text is verified; distractor (correct: false) is excluded.
-    assert "книга" in vesum_text
-    assert "олівець" not in vesum_text
+    assert result["passed"] is True
+    assert "книга" in sent_for_verification
+    assert "олівець" not in sent_for_verification
 
 
-def test_search_text_telemetry_recovers_items_after_clear():
-    """search_text telemetry must survive the raw result being cleared.
+def test_generic_tool_summary_preserves_replayed_search_text_items() -> None:
+    result_data = json.loads(
+        (FIXTURES_DIR / "telemetry" / "search_text_result.json").read_text(
+            encoding="utf-8",
+        )
+    )
 
-    Production summarizes a search_text tool result via
-    `_summarize_tool_result("search_text", ...)` -> `_summarize_search_text_result`,
-    which PRESERVES per-item `text` so `_result_items_from_call` can recover the
-    grounded hits even after the raw `result` is dropped from the call record.
-    (The generic summarizer collapses to `{"count": N}` and loses items, but the
-    production search_text path does not use it — so the earlier xfail against
-    `_summarize_generic_tool_result` documented a non-production code path.)
-    """
-    fixture_path = FIXTURES_DIR / "telemetry" / "search_text_result.json"
-    result_data = json.loads(fixture_path.read_text(encoding="utf-8"))
-
-    summary = _summarize_tool_result("search_text", result_data)
-    call = {
+    summary = _summarize_generic_tool_result(result_data)
+    call: dict[str, Any] = {
         "tool": "search_text",
         "result_summary": summary,
-        "result": None,  # raw result cleared from telemetry, summary retained
+        "result": None,
     }
 
     items = _result_items_from_call(call)
 
-    assert len(items) > 0
+    assert summary["count"] == 1
+    assert items
+    assert items[0]["source_type"] == "textbook"
     assert items[0]["text"] == "some text"
+
+
+def test_codex_rollout_matches_replayed_agents_md_envelope() -> None:
+    rollout_path = FIXTURES_DIR / "rollouts" / "agents_md_envelope.jsonl"
+    plan = InvocationPlan(cmd=["codex"], cwd=Path("."), stdin_payload="real prompt")
+
+    assert CodexAdapter()._rollout_matches_plan(rollout_path, plan) is True

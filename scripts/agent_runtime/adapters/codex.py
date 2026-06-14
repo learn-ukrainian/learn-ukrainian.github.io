@@ -850,10 +850,10 @@ class CodexAdapter:
                                     text = item.get("text")
                                     if isinstance(text, str):
                                         parts.append(text)
-                            if (
-                                parts
-                                and _normalize_payload_for_rollout_match("\n".join(parts))
-                                == expected
+                            candidates = [*parts, "\n".join(parts)]
+                            if any(
+                                _normalize_payload_for_rollout_match(candidate) == expected
+                                for candidate in candidates
                             ):
                                 return True
             return False
