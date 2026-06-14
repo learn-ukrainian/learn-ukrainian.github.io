@@ -1,0 +1,143 @@
+- lemma: обряд
+  translation: rite, ritual
+  pos: ч.
+  usage: Поминальний обряд вимагав обрядового годування душі предка.
+- lemma: мотив
+  translation: motif, recurring image
+  pos: ч.
+  usage: Мотив зустрічі з лісовиком повторюється в багатьох переказах.
+- lemma: варіант
+  translation: variant, regional version
+  pos: ч.
+  usage: Нявка — гуцульський варіант тієї самої назви, що й мавка.
+- lemma: вірування
+  translation: belief, folk belief
+  pos: с.
+  usage: Народні вірування — це впорядкована частина культури, а не хаос забобону.
+- lemma: демонологія
+  translation: demonology (the system of beliefs about spirits)
+  pos: ж.
+  usage: Українська демонологія описує духів дому, води, лісу й поля.
+- lemma: міфологія
+  translation: mythology
+  pos: ж.
+  usage: Вища міфологія говорить про богів, нижча — про домовиків і водяників.
+- lemma: нечисть
+  translation: evil spirits, the unclean force (collectively)
+  pos: ж.
+  usage: Нечисть найчастіше з'являється на межі — на порозі чи березі ріки.
+- lemma: дух
+  translation: spirit
+  pos: ч.
+  usage: Лісовик — це дух, що стереже лісових звірів.
+- lemma: домовик
+  translation: house spirit, domovyk
+  pos: ч.
+  usage: Домовик береже господарство, але, ображений, може шкодити.
+  notes: Питома українська назва; не плутати з імперським «домовим».
+- lemma: хованець
+  translation: house spirit (synonym of домовик)
+  pos: ч.
+  usage: Хованець і годованець — інші назви домовика.
+- lemma: водяник
+  translation: water spirit
+  pos: ч.
+  usage: Водяник сидить у криниці й опікується рибою.
+- lemma: лісовик
+  translation: forest spirit
+  pos: ч.
+  usage: Лісовик заводить подорожнього в глибину лісу.
+  notes: Питома назва; імперський відповідник «лєший» стирає регіон і функцію.
+- lemma: польовик
+  translation: field spirit
+  pos: ч.
+  usage: Польовик мешкає в полі й показується як птах або звір.
+- lemma: мавка
+  translation: mavka, forest nymph
+  pos: ж.
+  usage: Мавка пов'язана з мотивом передчасної смерті дівчини.
+- lemma: нявка
+  translation: niavka (Hutsul variant of мавка)
+  pos: ж.
+  usage: Чугайстер у переказах полює на нявок.
+- lemma: русалка
+  translation: rusalka, water-and-field nymph
+  pos: ж.
+  usage: Русалкою стає дівчина, що померла передчасною смертю.
+- lemma: упир
+  translation: upyr, undead vampire
+  pos: ч.
+  usage: Упир — небезпечний нечистий мрець.
+- lemma: відьма
+  translation: witch
+  pos: ж.
+  usage: Відьма поєднує знання, шкоду й нечисту силу.
+- lemma: чугайстер
+  translation: chuhaister, Carpathian forest giant
+  pos: ч.
+  usage: Чугайстер страшний на вигляд, але людині не шкодить.
+  notes: Діалектне, гуцульське; засвідчене у словниках як автентична регіональна назва.
+- lemma: перелесник
+  translation: perelesnyk, seductive flying spirit
+  pos: ч.
+  usage: Перелесник належить до лісової нечистої сили.
+- lemma: перевертень
+  translation: shapeshifter
+  pos: ч.
+  usage: Перевертень міняє подобу, як і блуд у лісі.
+- lemma: оберіг
+  translation: protective amulet, charm
+  pos: ч.
+  usage: Освячений мак на порозі править за оберіг проти нечисті.
+- lemma: замовляння
+  translation: incantation, spell-formula
+  pos: с.
+  usage: Замовлянням знахар відганяє хворобу або біду.
+- lemma: евфемізм
+  translation: euphemism
+  pos: ч.
+  usage: Замість імені нечистого вживають евфемізм «той» або «лихий».
+- lemma: заборона
+  translation: prohibition, taboo
+  pos: ж.
+  usage: Заборона свистіти в хаті — коротка формула захисту.
+- lemma: предок
+  translation: ancestor
+  pos: ч.
+  usage: У домовикові ще чути культ предків і домашнього вогнища.
+- lemma: нашарування
+  translation: layering, historical accretion
+  pos: с.
+  usage: Демонологія містить нашарування різних епох.
+- lemma: пантеон
+  translation: pantheon
+  pos: ч.
+  usage: Джерела не дають права реконструювати впорядкований пантеон.
+- lemma: божество
+  translation: deity
+  pos: с.
+  usage: Імен головних божеств ми майже не знаємо.
+- lemma: мрець
+  translation: the dead one, corpse-revenant
+  pos: ч.
+  usage: Русалками звуть нечистих мерців.
+- lemma: потерча
+  translation: potercha, spirit of a dead unbaptized child
+  pos: с.
+  usage: Потерчата належать до нехрещених нечистих мерців.
+- lemma: знахар
+  translation: folk healer
+  pos: ч.
+  usage: Знахар вимовляє замовляння у певний час і в певному місці.
+- lemma: ворожіння
+  translation: divination, fortune-telling
+  pos: с.
+  usage: Ворожіння й замовляння належать до тієї самої обрядової мови.
+- lemma: світогляд
+  translation: worldview
+  pos: ч.
+  usage: Демонологія описує цілий світогляд, а не перелік страхів.
+- lemma: пограниччя
+  translation: borderland, liminal zone
+  pos: с.
+  usage: Поріг і берег ріки — це пограниччя, де з'являється нечиста сила.
