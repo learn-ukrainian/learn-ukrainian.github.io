@@ -5,7 +5,7 @@ from pathlib import Path
 
 from ._config import _MODEL_CACHE, _MODEL_CACHE_TTL, _PARENT_ENV, GEMINI_CLI
 
-GROK_BUILD_DEFAULT_MODEL = "grok-4.20"
+GROK_BUILD_DEFAULT_MODEL = "grok-build"
 GROK_BUILD_DEFAULT_EFFORT = "high"
 
 

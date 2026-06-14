@@ -31,6 +31,8 @@ def _canonical_agent_name(agent: str) -> str | None:
         return "gemini"
     if agent.startswith("codex"):
         return "codex"
+    if agent.startswith("grok-build"):
+        return "grok-build"
     if agent.startswith("grok"):
         return "grok"
     if agent.startswith("deepseek"):
@@ -345,6 +347,30 @@ def build_mcp_tool_config(
             ),
         )
 
+    if canonical_agent == "grok-build":
+        # Native grok-build reads MCP servers from its own local config
+        # (`grok mcp list`), not Hermes. The adapter only needs the requested
+        # names for observability and to opt into non-interactive approval.
+        if not mcp_servers:
+            return None, _basic_diagnostics(
+                mcp_config_path=Path.home() / ".grok" / "mcp.json",
+                requested_servers=mcp_servers,
+                resolved_servers=None,
+                resolution_status="config_empty",
+            )
+        return (
+            {
+                "always_approve": True,
+                "mcp_server_names": mcp_servers,
+            },
+            _basic_diagnostics(
+                mcp_config_path=Path.home() / ".grok" / "mcp.json",
+                requested_servers=mcp_servers,
+                resolved_servers=mcp_servers,
+                resolution_status="ok",
+            ),
+        )
+
     if canonical_agent == "cursor":
         # For Phase 2, the workspace value defaults to cwd of the subprocess.
         # Diagnostic config_path should point at {cwd}/.cursor/mcp.json
@@ -354,6 +380,7 @@ def build_mcp_tool_config(
             {
                 "output_format": "stream-json",
                 "approve_mcps": True,
+                "mcp_config_path": str(resolved_config_path),
                 "mcp_server_names": mcp_servers,
             },
             _basic_diagnostics(

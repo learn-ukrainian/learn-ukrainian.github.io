@@ -92,7 +92,7 @@ def test_cursor_adapter_resume_explicit_session(adapter, tmp_path, monkeypatch):
     assert plan.cmd[idx + 1] == "session-explicit-123"
 
 
-def test_cursor_adapter_resume_from_disk(adapter, tmp_path, monkeypatch):
+def test_cursor_adapter_does_not_resume_from_disk(adapter, tmp_path, monkeypatch):
     monkeypatch.setattr("shutil.which", lambda _: "/usr/local/bin/cursor-agent")
 
     # Mock Path.home() so we can construct a fake .cursor directory
@@ -115,11 +115,10 @@ def test_cursor_adapter_resume_from_disk(adapter, tmp_path, monkeypatch):
         tool_config=None,
     )
 
-    idx = plan.cmd.index("--resume")
-    assert plan.cmd[idx + 1] == "session-disk-789"
+    assert "--resume" not in plan.cmd
 
 
-def test_cursor_adapter_resume_from_api_usage(adapter, tmp_path, monkeypatch):
+def test_cursor_adapter_does_not_resume_from_api_usage(adapter, tmp_path, monkeypatch):
     monkeypatch.setattr("shutil.which", lambda _: "/usr/local/bin/cursor-agent")
 
     # Create fake api_usage directory and write log
@@ -151,8 +150,7 @@ def test_cursor_adapter_resume_from_api_usage(adapter, tmp_path, monkeypatch):
             tool_config=None,
         )
 
-        idx = plan.cmd.index("--resume")
-        assert plan.cmd[idx + 1] == "session-api-usage-456"
+        assert "--resume" not in plan.cmd
     finally:
         # Clean up the test log
         if log_file.exists():
@@ -196,3 +194,74 @@ def test_cursor_adapter_parse_response_session_id_disk(adapter, tmp_path, monkey
 
     assert res.ok is True
     assert res.session_id == "session-new-999"
+
+
+def test_cursor_adapter_recovers_response_from_session_transcript(
+    adapter,
+    tmp_path,
+    monkeypatch,
+):
+    fake_home = tmp_path / "fake-home"
+    fake_home.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr("pathlib.Path.home", lambda: fake_home)
+
+    workspace = str(tmp_path)
+    adapter._workspace = workspace
+    adapter._transcripts_snapshot = adapter._snapshot_preexisting_transcripts(workspace)
+    session_id = "session-transcript-123"
+    encoded = adapter._encode_workspace_path(workspace)
+    transcript = (
+        fake_home
+        / ".cursor"
+        / "projects"
+        / encoded
+        / "agent-transcripts"
+        / session_id
+        / f"{session_id}.jsonl"
+    )
+    transcript.parent.mkdir(parents=True)
+    transcript.write_text(
+        "\n".join(
+            [
+                json.dumps(
+                    {
+                        "role": "assistant",
+                        "message": {
+                            "content": [
+                                {
+                                    "type": "text",
+                                    "text": '{"score": 8, "verdict": "PASS", "findings": []}',
+                                },
+                                {
+                                    "type": "tool_use",
+                                    "name": "mcp_sources_search_style_guide",
+                                    "input": {"query": "фокусування"},
+                                },
+                            ]
+                        },
+                    }
+                ),
+                json.dumps({"type": "turn_ended", "status": "success"}),
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    stdout = "\n".join(
+        [
+            json.dumps({"type": "system", "session_id": session_id}),
+            json.dumps({"type": "user", "message": {"content": "prompt"}}),
+        ]
+    )
+
+    res = adapter.parse_response(
+        stdout=stdout,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert res.ok is True
+    assert res.response == '{"score": 8, "verdict": "PASS", "findings": []}'
+    assert res.session_id == session_id
+    assert res.tool_calls[0]["name"] == "mcp_sources_search_style_guide"

@@ -7,6 +7,9 @@ to be installed — `shutil.which` is mocked.
 from __future__ import annotations
 
 import json
+import os
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 from unittest.mock import patch
@@ -21,7 +24,9 @@ from agent_runtime.adapters.grok_build import (
     GROK_BUILD_DEFAULT_EFFORT,
     GROK_BUILD_DEFAULT_MODEL,
     GrokBuildAdapter,
+    _adapt_prompt_for_grok_build_mcp,
     _parse_json_object,
+    _translate_mcp_prefix_for_grok_build,
 )
 
 FAKE_GROK = "/usr/local/bin/grok"
@@ -74,8 +79,8 @@ def test_unsupported_mode_raises(tmp_path):
 
 
 def test_model_and_effort_flags(tmp_path):
-    plan = _build("x", tmp_path, model="grok-4.20", effort="high")
-    assert _val(plan.cmd, "-m") == "grok-4.20"
+    plan = _build("x", tmp_path, model="grok-build", effort="high")
+    assert _val(plan.cmd, "-m") == "grok-build"
     assert _val(plan.cmd, "--effort") == "high"
 
 
@@ -98,6 +103,41 @@ def test_tool_config_allow_deny(tmp_path):
     )
     assert _val(plan.cmd, "--tools") == "Read,Grep"
     assert _val(plan.cmd, "--disallowed-tools") == "Bash"
+
+
+def test_tool_config_mcp_servers_enables_always_approve(tmp_path):
+    plan = _build("x", tmp_path, tool_config={"mcp_server_names": ["sources"]})
+
+    assert "--always-approve" in plan.cmd
+    assert "--no-plan" in plan.cmd
+
+
+def test_mcp_sources_prompt_prefix_translates_to_native_grok_tool_names(tmp_path):
+    prompt = "Use mcp__sources__search_style_guide and mcp__sources__verify_words."
+    plan = _build(prompt, tmp_path, tool_config={"mcp_server_names": ["sources"]})
+
+    assert "mcp__sources__" not in _val(plan.cmd, "-p")
+    assert "sources__search_style_guide" in _val(plan.cmd, "-p")
+    assert "sources__verify_words" in _val(plan.cmd, "-p")
+
+
+def test_translate_mcp_prefix_for_grok_build_is_scoped():
+    prompt = "mcp__sources__search_text mcp__rag__legacy"
+
+    assert _translate_mcp_prefix_for_grok_build(prompt) == (
+        "sources__search_text mcp__rag__legacy"
+    )
+
+
+def test_adapt_prompt_for_grok_build_mcp_adds_headless_suffix():
+    prompt = "Use mcp__sources__search_text."
+
+    adapted = _adapt_prompt_for_grok_build_mcp(prompt)
+
+    assert "sources__search_text" in adapted
+    assert "mcp__sources__" not in adapted
+    assert "native grok-build single-turn headless mode" in adapted
+    assert "Return the final JSON object now" in adapted
 
 
 def test_missing_grok_binary_raises(tmp_path):
@@ -161,6 +201,30 @@ def test_registry_grok_build_distinct_from_hermes_grok():
     assert gb["default_effort"] == GROK_BUILD_DEFAULT_EFFORT
     assert "code_writing" in gb["capabilities"]
     assert "grok-build" in registry.available_agents()
+
+
+def test_grok_build_default_model_is_native_cli_model_id():
+    assert registry.get_agent_entry("grok-build")["default_model"] == "grok-build"
+    assert GROK_BUILD_DEFAULT_MODEL == "grok-build"
+
+
+def test_grok_build_default_model_is_listed_by_cli():
+    if os.environ.get("CI"):
+        pytest.skip("real grok CLI smoke test is skipped in CI")
+    grok_bin = shutil.which("grok")
+    if not grok_bin:
+        pytest.skip("grok CLI not installed")
+
+    result = subprocess.run(
+        [grok_bin, "models"],
+        capture_output=True,
+        text=True,
+        timeout=20,
+        cwd=Path.cwd(),
+    )
+
+    assert result.returncode == 0, result.stderr or result.stdout
+    assert GROK_BUILD_DEFAULT_MODEL in result.stdout.split()
 
 
 def test_conforms_to_agent_adapter_protocol():

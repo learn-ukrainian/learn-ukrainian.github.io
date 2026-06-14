@@ -73,10 +73,14 @@ class CursorAdapter:
             cwd: Working directory for the subprocess.
             model: Model override (e.g. "composer-2.5").
             task_id: Optional task identifier.
-            session_id: Session ID to resume (passed by runner or derived).
+            session_id: Explicit session ID to resume. Fresh invocations do
+                not auto-resume from on-disk Cursor transcripts.
             tool_config: Config overrides. Supported keys:
                 - ``cursor_workspace``: overrides the ``--workspace`` path.
                 - ``approve_mcps``: bool, toggles ``--approve-mcps``.
+                - ``mcp_config_path``: source `.mcp.json` to mirror into
+                  ``{cursor_workspace}/.cursor/mcp.json``.
+                - ``mcp_server_names``: MCP servers to mirror/approve.
                 - ``cursor_mode``: "plan" | "ask", toggles ``--mode``.
                 - ``sandbox``: "enabled" | "disabled", toggles ``--sandbox``.
             effort: Logged and ignored (no cursor equivalent today).
@@ -99,17 +103,16 @@ class CursorAdapter:
 
         # Workspace resolution
         workspace = config.get("cursor_workspace") or str(cwd)
+        self._ensure_workspace_mcp_config(workspace, config)
 
         # Snapshot pre-existing transcripts to detect a new one generated during this run
         self._workspace = workspace
         self._transcripts_snapshot = self._snapshot_preexisting_transcripts(workspace)
 
-        # Resolve session ID to resume
+        # Resume only when the runner explicitly passes a session_id. Auto-
+        # selecting the newest transcript on disk bypasses runner resume-policy
+        # enforcement and can attach a fresh review to an unrelated chat.
         resolved_session_id = session_id
-        if not resolved_session_id and task_id:
-            resolved_session_id = self._find_session_id_by_task_id(task_id)
-            if not resolved_session_id:
-                resolved_session_id = self._find_session_id_on_disk(workspace)
 
         # Base argv common to all paths.
         #
@@ -140,11 +143,13 @@ class CursorAdapter:
         if mode == "read-only":
             cursor_mode = config.get("cursor_mode", "ask")
             cmd.extend(["--mode", cursor_mode])
+            if self._should_approve_mcps(config, default=False):
+                cmd.append("--approve-mcps")
         elif mode == "workspace-write":
             cursor_mode = config.get("cursor_mode", "plan")
             cmd.extend(["--mode", cursor_mode])
             # Security boundaries from Phase 2 spec
-            if config.get("approve_mcps") is not False:
+            if self._should_approve_mcps(config, default=True):
                 cmd.append("--approve-mcps")
             sandbox = config.get("sandbox", "enabled")
             cmd.extend(["--sandbox", sandbox])
@@ -158,7 +163,7 @@ class CursorAdapter:
             #
             # Use sparingly — most delegate calls should use workspace-write
             # (which blocks edits via --mode plan).
-            if config.get("approve_mcps") is not False:
+            if self._should_approve_mcps(config, default=True):
                 cmd.append("--approve-mcps")
             sandbox = config.get("sandbox", "enabled")
             cmd.extend(["--sandbox", sandbox])
@@ -170,6 +175,78 @@ class CursorAdapter:
             output_file=None,  # Cursor writes to stdout
             liveness_paths=(),  # rely on stdout streaming
         )
+
+    def _should_approve_mcps(self, config: dict, *, default: bool) -> bool:
+        if config.get("approve_mcps") is False:
+            return False
+        return bool(default or config.get("approve_mcps") is True or config.get("mcp_server_names"))
+
+    def _ensure_workspace_mcp_config(self, workspace: str, config: dict) -> None:
+        """Mirror requested MCP servers into Cursor's workspace config."""
+        requested = config.get("mcp_server_names") or []
+        if not requested:
+            return
+        if not isinstance(requested, list):
+            requested = [str(requested)]
+
+        source_path = Path(str(config.get("mcp_config_path") or ".mcp.json"))
+        source_servers = self._read_mcp_servers(source_path)
+
+        selected: dict[str, dict] = {}
+        missing: list[str] = []
+        for name in requested:
+            raw = source_servers.get(name)
+            if raw is None and name == "sources":
+                raw = {"url": "http://127.0.0.1:8766/mcp"}
+            sanitized = self._cursor_server_config(raw)
+            if sanitized is None:
+                missing.append(name)
+            else:
+                selected[name] = sanitized
+
+        if missing:
+            raise RuntimeError(
+                "CursorAdapter could not resolve MCP server config for: "
+                + ", ".join(sorted(missing))
+            )
+
+        target = Path(workspace) / ".cursor" / "mcp.json"
+        existing = self._read_mcp_file(target)
+        servers = existing.setdefault("mcpServers", {})
+        if not isinstance(servers, dict):
+            servers = {}
+            existing["mcpServers"] = servers
+        servers.update(selected)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(existing, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    def _read_mcp_servers(self, path: Path) -> dict[str, object]:
+        data = self._read_mcp_file(path)
+        servers = data.get("mcpServers")
+        return servers if isinstance(servers, dict) else {}
+
+    def _read_mcp_file(self, path: Path) -> dict:
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return {}
+        return data if isinstance(data, dict) else {}
+
+    def _cursor_server_config(self, raw: object) -> dict | None:
+        if not isinstance(raw, dict):
+            return None
+        url = str(raw.get("url") or raw.get("httpUrl") or "").strip()
+        if url:
+            return {"url": url}
+        command = str(raw.get("command") or "").strip()
+        if command:
+            out = {"command": command}
+            if isinstance(raw.get("args"), list):
+                out["args"] = raw["args"]
+            if isinstance(raw.get("env"), dict):
+                out["env"] = raw["env"]
+            return out
+        return None
 
     def _encode_workspace_path(self, workspace_path: str) -> str:
         """Encode workspace path into the encoded folder name used by Cursor."""
@@ -189,37 +266,6 @@ class CursorAdapter:
             except OSError:
                 pass
         return preexisting
-
-    def _find_session_id_by_task_id(self, task_id: str) -> str | None:
-        """Scan api_usage files for a session_id matching the given task_id."""
-        repo_root = Path(__file__).resolve().parents[3]
-        usage_dir = repo_root / "batch_state" / "api_usage"
-        if not usage_dir.exists():
-            return None
-
-        last_session_id = None
-        try:
-            # Sort files so we check the most recent ones first
-            for file_path in sorted(usage_dir.glob("usage_cursor-*.jsonl"), reverse=True):
-                try:
-                    with open(file_path, encoding="utf-8") as f:
-                        for line in f:
-                            line = line.strip()
-                            if not line:
-                                continue
-                            try:
-                                record = json.loads(line)
-                            except json.JSONDecodeError:
-                                continue
-                            if record.get("task_id") == task_id:
-                                sid = record.get("session_id")
-                                if sid:
-                                    last_session_id = sid
-                except OSError:
-                    continue
-        except Exception:
-            pass
-        return last_session_id
 
     def _find_session_id_on_disk(self, workspace_path: str) -> str | None:
         """Find the newest session directory on disk for this workspace."""
@@ -292,35 +338,16 @@ class CursorAdapter:
         # The final response is usually the last 'content' or 'text' event
         # in the stream. parse_json_events + normalize_tool_calls handles
         # most of this, but we need to extract the assistant's final prose.
-        response_parts: list[str] = []
-        stream_chunks: list[str] = []
-
-        def flush_stream_chunks() -> None:
-            if stream_chunks:
-                response_parts.append("".join(stream_chunks))
-                stream_chunks.clear()
-
-        def append_message_content(content: object) -> None:
-            text = _extract_text_content(content)
-            if not text:
-                return
-            flush_stream_chunks()
-            response_parts.append(text)
-
-        for event in events:
-            # Typical cursor event shape: {"type": "text", "content": "..."}
-            # or {"type": "message", "role": "assistant", "content": "..."}
-            if event.get("type") == "text":
-                stream_chunks.append(str(event.get("content", "")))
-            elif event.get("type") == "message" and event.get("role") == "assistant":
-                append_message_content(event.get("content", ""))
-            elif event.get("role") == "assistant" and isinstance(event.get("message"), dict):
-                # Cursor Agent v2026.05.27+ transcript shape:
-                # {"role": "assistant", "message": {"content": [{"type": "text", ...}]}}
-                append_message_content(event["message"].get("content", ""))
-
-        flush_stream_chunks()
-        response = "\n\n".join(part.strip() for part in response_parts if part.strip())
+        response = _extract_response_from_events(events)
+        if not response and session_id and getattr(self, "_workspace", None):
+            transcript_events = self._read_session_transcript_events(
+                self._workspace,
+                session_id,
+            )
+            transcript_response = _extract_response_from_events(transcript_events)
+            if transcript_response:
+                response = transcript_response
+                tool_calls = normalize_tool_calls(transcript_events)
 
         ok = returncode == 0 and bool(response) and not rate_limited
 
@@ -337,10 +364,65 @@ class CursorAdapter:
             tool_calls=tool_calls,
         )
 
+    def _read_session_transcript_events(
+        self,
+        workspace_path: str,
+        session_id: str,
+    ) -> list[dict]:
+        encoded = self._encode_workspace_path(workspace_path)
+        transcript = (
+            Path.home()
+            / ".cursor"
+            / "projects"
+            / encoded
+            / "agent-transcripts"
+            / session_id
+            / f"{session_id}.jsonl"
+        )
+        try:
+            text = transcript.read_text(encoding="utf-8")
+        except OSError:
+            return []
+        return parse_json_events(text, source="cursor-transcript", logger=_logger)
+
     def liveness_signal_paths(self, plan: InvocationPlan) -> tuple[Path, ...]:
         """Cursor writes to stdout; no separate liveness files."""
         _ = plan
         return ()
+
+
+def _extract_response_from_events(events: list[dict]) -> str:
+    """Extract assistant prose from cursor stream/transcript events."""
+    response_parts: list[str] = []
+    stream_chunks: list[str] = []
+
+    def flush_stream_chunks() -> None:
+        if stream_chunks:
+            response_parts.append("".join(stream_chunks))
+            stream_chunks.clear()
+
+    def append_message_content(content: object) -> None:
+        text = _extract_text_content(content)
+        if not text:
+            return
+        flush_stream_chunks()
+        response_parts.append(text)
+
+    for event in events:
+        # Typical cursor event shape: {"type": "text", "content": "..."}
+        # or {"type": "message", "role": "assistant", "content": "..."}
+        if event.get("type") == "text":
+            stream_chunks.append(str(event.get("content", "")))
+        elif event.get("type") == "message" and event.get("role") == "assistant":
+            append_message_content(event.get("content", ""))
+        elif event.get("role") == "assistant" and isinstance(event.get("message"), dict):
+            # Cursor Agent v2026.05.27+ transcript shape:
+            # {"role": "assistant", "message": {"content": [{"type": "text", ...}]}}
+            append_message_content(event["message"].get("content", ""))
+
+    flush_stream_chunks()
+
+    return "\n\n".join(part.strip() for part in response_parts if part.strip())
 
 
 def _extract_text_content(content: object) -> str:

@@ -120,7 +120,7 @@ AGENTS: dict[str, AgentEntry] = {
         # `grok` entry above (different transport, different use: coding vs
         # content). Uses ~/.grok OAuth.
         "adapter": "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter",
-        "default_model": "grok-4.20",
+        "default_model": "grok-build",
         "default_effort": "high",
         "cost_tier": "medium",
         "capabilities": frozenset({

@@ -47,7 +47,7 @@ _MODE_PERMISSION: dict[str, str] = {
     "workspace-write": "acceptEdits",
     "danger": "bypassPermissions",
 }
-GROK_BUILD_DEFAULT_MODEL = os.environ.get("LEARN_UK_GROK_BUILD_MODEL", "grok-4.20")
+GROK_BUILD_DEFAULT_MODEL = os.environ.get("LEARN_UK_GROK_BUILD_MODEL", "grok-build")
 GROK_BUILD_DEFAULT_EFFORT = os.environ.get("LEARN_UK_GROK_BUILD_EFFORT", "high")
 
 
@@ -83,6 +83,8 @@ class GrokBuildAdapter:
                 "CLI (provides `grok`) to dispatch the grok-build agent."
             )
         tc = tool_config or {}
+        if "sources" in (tc.get("mcp_server_names") or []):
+            prompt = _adapt_prompt_for_grok_build_mcp(prompt)
 
         cmd: list[str] = [grok_bin]
         # Prompt: inline via -p for the common case; a hyphen-leading prompt
@@ -101,6 +103,9 @@ class GrokBuildAdapter:
         cmd.extend(["--output-format", "json", "--no-alt-screen"])
         cmd.extend(["--permission-mode", _MODE_PERMISSION[mode]])
         cmd.extend(["--cwd", str(cwd)])
+        if tc.get("always_approve") or tc.get("mcp_server_names"):
+            cmd.append("--always-approve")
+            cmd.append("--no-plan")
 
         effective_effort = effort or self.default_effort
         if model:
@@ -192,6 +197,25 @@ class GrokBuildAdapter:
         # a liveness signal when stdout is quiet.
         grok_home = Path.home() / ".grok"
         return (grok_home,) if grok_home.exists() else ()
+
+
+def _translate_mcp_prefix_for_grok_build(prompt: str) -> str:
+    """Rewrite canonical MCP names to native grok-build tool names."""
+    return prompt.replace("mcp__sources__", "sources__")
+
+
+def _adapt_prompt_for_grok_build_mcp(prompt: str) -> str:
+    """Adapt canonical MCP review prompts for native grok-build headless."""
+    translated = _translate_mcp_prefix_for_grok_build(prompt)
+    return (
+        translated
+        + "\n\n## Native grok-build headless compatibility\n\n"
+        "You are running in native grok-build single-turn headless mode. "
+        "Do not call abstract `search_tool` or `use_tool` protocols, do not "
+        "call `read_file`, and do not describe a plan. The article text and "
+        "instructions above are sufficient for this review. Return the final "
+        "JSON object now, starting with `{` and ending with `}`.\n"
+    )
 
 
 def _parse_json_object(stdout: str) -> dict | None:

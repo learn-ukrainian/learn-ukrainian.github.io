@@ -67,6 +67,20 @@ def test_build_mcp_tool_config_gemini_without_servers_returns_none() -> None:
     assert diagnostics["resolution_status"] == "config_empty"
 
 
+def test_build_mcp_tool_config_grok_build_uses_native_config() -> None:
+    tool_config, diagnostics = build_mcp_tool_config(
+        "grok-build",
+        mcp_servers=["sources"],
+    )
+
+    assert tool_config == {
+        "always_approve": True,
+        "mcp_server_names": ["sources"],
+    }
+    assert diagnostics["config_path"] == str(Path.home() / ".grok" / "mcp.json")
+    assert diagnostics["resolution_status"] == "ok"
+
+
 def test_codex_tool_config_strips_claude_format_type_field(
     tmp_path: Path,
 ) -> None:

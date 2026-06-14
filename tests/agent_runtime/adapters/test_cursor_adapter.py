@@ -2,6 +2,9 @@
 from __future__ import annotations
 
 import json
+import os
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -50,6 +53,48 @@ def test_cursor_adapter_build_invocation_read_only(adapter, tmp_path, monkeypatc
     assert plan.stdin_payload == "Hello"
     assert "--yolo" not in plan.cmd
     assert "--force" not in plan.cmd
+
+
+def test_cursor_adapter_read_only_mcp_config_writes_workspace_file(
+    adapter,
+    tmp_path,
+    monkeypatch,
+):
+    monkeypatch.setattr("shutil.which", lambda x: "/usr/local/bin/agent" if x == "agent" else None)
+    source_config = tmp_path / ".mcp.json"
+    source_config.write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "sources": {
+                        "type": "streamable-http",
+                        "url": "http://127.0.0.1:8766/mcp",
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    plan = adapter.build_invocation(
+        prompt="Review this",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="task-123",
+        session_id=None,
+        tool_config={
+            "approve_mcps": True,
+            "mcp_config_path": str(source_config),
+            "mcp_server_names": ["sources"],
+        },
+    )
+
+    assert "--approve-mcps" in plan.cmd
+    workspace_config = tmp_path / ".cursor" / "mcp.json"
+    assert json.loads(workspace_config.read_text(encoding="utf-8")) == {
+        "mcpServers": {"sources": {"url": "http://127.0.0.1:8766/mcp"}}
+    }
 
 
 def test_cursor_adapter_build_invocation_workspace_write(adapter, tmp_path, monkeypatch):
@@ -158,6 +203,34 @@ def test_cursor_adapter_parse_response_success(adapter):
     assert result.response == "I have fixed the bug. Done."
     assert len(result.tool_calls) == 1
     assert result.tool_calls[0]["name"] == "mcp__sources__search_text"
+
+
+def test_cursor_agent_trivial_invoke_smoke():
+    if os.environ.get("CI"):
+        pytest.skip("real cursor-agent smoke test is skipped in CI")
+    cursor_bin = shutil.which("cursor-agent") or shutil.which("agent")
+    if not cursor_bin:
+        pytest.skip("cursor-agent CLI not installed")
+
+    result = subprocess.run(
+        [
+            cursor_bin,
+            "-p",
+            "--model",
+            "auto",
+            "--output-format",
+            "stream-json",
+            "--trust",
+        ],
+        input="Reply with exactly: PONG",
+        capture_output=True,
+        text=True,
+        timeout=60,
+        cwd=Path.cwd(),
+    )
+
+    assert result.returncode == 0, result.stderr or result.stdout
+    assert "PONG" in result.stdout
 
 
 def test_cursor_adapter_parse_response_rate_limited(adapter):
