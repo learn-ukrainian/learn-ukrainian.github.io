@@ -104,6 +104,26 @@ def test_empty_rollup_is_unknown(monkeypatch):
     assert hr.check_pr_checks(5)[0] == hr.UNKNOWN
 
 
+def test_merge_state_blocked_is_red(monkeypatch):
+    # all checks green but mergeStateStatus BLOCKED/DIRTY/BEHIND ⇒ not mergeable ⇒ RED
+    for state in ("BLOCKED", "DIRTY", "BEHIND"):
+        monkeypatch.setattr(
+            hr,
+            "_gh_json",
+            lambda *a, _s=state: (0, {"statusCheckRollup": [{"conclusion": "SUCCESS", "name": "ci"}], "state": "OPEN", "mergeStateStatus": _s}),
+        )
+        assert hr.check_pr_checks(5)[0] == hr.RED, state
+
+
+def test_merge_state_clean_is_ok(monkeypatch):
+    monkeypatch.setattr(
+        hr,
+        "_gh_json",
+        lambda *a: (0, {"statusCheckRollup": [{"conclusion": "SUCCESS", "name": "ci"}], "state": "OPEN", "mergeStateStatus": "CLEAN"}),
+    )
+    assert hr.check_pr_checks(5)[0] == hr.OK
+
+
 def test_api_down_is_unknown(monkeypatch):
     def boom(*a, **k):
         raise OSError("connection refused")

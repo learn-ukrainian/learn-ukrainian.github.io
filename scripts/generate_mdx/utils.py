@@ -33,7 +33,9 @@ def dump_json_for_jsx(data, *, compact: bool = False):
     e.g. VocabCard/FlashcardDeck word lists).
     """
     separators = (',', ':') if compact else None
-    s = json.dumps(data, ensure_ascii=False, separators=separators)
+    # allow_nan=False: NaN/Infinity are NOT valid JSON and would throw in JSON.parse
+    # at render time — fail fast at assembly rather than emit unparseable output.
+    s = json.dumps(data, ensure_ascii=False, separators=separators, allow_nan=False)
     # Escape backslashes FIRST to avoid double-escaping the chars below.
     s = s.replace('\\', '\\\\')
     # Escape backticks for template literals

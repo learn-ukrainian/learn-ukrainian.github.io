@@ -20,7 +20,7 @@ def dump_json_for_jsx(obj: Any) -> str:
     doubling and corrupted any island prop containing a newline or quote at
     render time — removed (#3137).
     """
-    s = json.dumps(obj, ensure_ascii=False, indent=2)
+    s = json.dumps(obj, ensure_ascii=False, indent=2, allow_nan=False)
     s = s.replace("\\", "\\\\").replace("`", "\\`").replace("${", "\\${")
     return s
 

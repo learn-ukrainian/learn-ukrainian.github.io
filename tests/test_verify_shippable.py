@@ -105,6 +105,21 @@ def test_assemble_crash_blocks_ship(tmp_path, monkeypatch):
     assert any(s["step"] == "assemble_mdx" and s["passed"] is False for s in rep["steps"])
 
 
+def test_skipped_render_not_shippable(tmp_path, monkeypatch):
+    """Node-absent (mdx_render=None) must NOT certify shippable — no render evidence."""
+    md, plan = _mk(tmp_path)
+    monkeypatch.setattr(lp, "run_python_qg", lambda m, p: {"gates": {"passed": True}})
+    monkeypatch.setattr(lp, "assemble_mdx", lambda m, o, p: "MDXBODY")
+    monkeypatch.setattr(
+        lp,
+        "run_mdx_render_gate",
+        lambda t: {"passed": None, "skipped": True, "message": "node unavailable", "failures": []},
+    )
+    rep = vs.verify("folk", "x", module_dir=md, plan_path=plan)
+    assert rep["shippable"] is False
+    assert rep["render_fully_validated"] is False
+
+
 def test_missing_inputs_not_shippable(tmp_path):
     rep = vs.verify("folk", "x", module_dir=tmp_path / "nope", plan_path=tmp_path / "nope.yaml")
     assert rep["shippable"] is False

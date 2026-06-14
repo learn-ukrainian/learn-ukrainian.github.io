@@ -53,8 +53,15 @@ def _site_mdx_path(level: str, slug: str) -> Path:
     return SITE_DOCS / level / f"{slug}.mdx"
 
 
-def _astro_build() -> tuple[bool, str]:
-    """Run the full astro build (what CI does). Returns (passed, last_output)."""
+def _astro_build(log_path: Path) -> bool:
+    """Run the full astro build (what CI does); write its raw output to ``log_path``.
+
+    The subprocess stdout/stderr is written to a FILE, never returned into the
+    printed report: npm/build logs can echo environment values, so keeping raw
+    build output out of stdout/JSON is the #M-5-safe path (and removes the
+    clear-text-logging taint CodeQL flagged). The caller prints only a fixed
+    pointer to the log, not the build output.
+    """
     site = PROJECT_ROOT / "site"
     try:
         proc = subprocess.run(
@@ -65,11 +72,13 @@ def _astro_build() -> tuple[bool, str]:
             timeout=900,
         )
     except FileNotFoundError:
-        return False, "npm not found — cannot run astro build"
+        log_path.write_text("npm not found — cannot run astro build\n", encoding="utf-8")
+        return False
     except subprocess.TimeoutExpired:
-        return False, "astro build timed out (>900s)"
-    tail = "\n".join((proc.stdout + proc.stderr).strip().splitlines()[-12:])
-    return proc.returncode == 0, tail
+        log_path.write_text("astro build timed out (>900s)\n", encoding="utf-8")
+        return False
+    log_path.write_text(proc.stdout + proc.stderr, encoding="utf-8")
+    return proc.returncode == 0
 
 
 def verify(
@@ -123,7 +132,7 @@ def verify(
         # Do NOT short-circuit on a python_qg CRASH: a render break must still be
         # surfaced even when python_qg fails (the #3137 design intent). Record the
         # failure and continue to assemble + render.
-        add("python_qg", False, f"run_python_qg raised: {exc!r}")
+        add("python_qg", False, f"run_python_qg raised: {type(exc).__name__}: {str(exc)[:200]}")
 
     # --- 2. assemble MDX (to a temp file; do not touch site/) ---
     with tempfile.TemporaryDirectory() as td:
@@ -132,7 +141,7 @@ def verify(
             mdx_text = assemble_mdx(module_dir, tmp_mdx, plan_path)
             add("assemble_mdx", True, f"assembled {len(mdx_text)} chars")
         except Exception as exc:
-            add("assemble_mdx", False, f"assemble_mdx raised: {exc!r}")
+            add("assemble_mdx", False, f"assemble_mdx raised: {type(exc).__name__}: {str(exc)[:200]}")
             return _finalize(level, slug, steps)
 
         # --- 3. render gate (Node island eval — the #3137 guard) ---
@@ -145,13 +154,15 @@ def verify(
     if astro_build:
         site_mdx = _site_mdx_path(level, slug)
         prior = site_mdx.read_text(encoding="utf-8") if site_mdx.exists() else None
+        log_path = PROJECT_ROOT / "batch_state" / "verify_shippable" / f"{level}-{slug}.astro-build.log"
         try:
             # Write inside the try so the finally always restores, even if the
             # write/mkdir itself raises (never leave site/ corrupted).
+            log_path.parent.mkdir(parents=True, exist_ok=True)
             site_mdx.parent.mkdir(parents=True, exist_ok=True)
             site_mdx.write_text(mdx_text, encoding="utf-8")
-            ok, tail = _astro_build()
-            add("astro_build", ok, "astro build green" if ok else f"astro build FAILED:\n{tail}")
+            ok = _astro_build(log_path)
+            add("astro_build", ok, "astro build green" if ok else f"astro build FAILED — full log: {log_path}")
         finally:
             if prior is None:
                 site_mdx.unlink(missing_ok=True)
@@ -162,14 +173,21 @@ def verify(
 
 
 def _finalize(level: str, slug: str, steps: list[dict]) -> dict:
-    # GREEN requires every non-skipped step to have passed (None == skipped == OK).
-    shippable = all(s["passed"] in (True, None) for s in steps) and any(
-        s["passed"] is True for s in steps
-    )
+    by_step = {s["step"]: s["passed"] for s in steps}
+    no_failures = all(s["passed"] in (True, None) for s in steps)
+    any_pass = any(s["passed"] is True for s in steps)
+    # Render must be POSITIVELY validated, never merely skipped: a None render gate
+    # (Node unavailable) does not certify render, so it must not count as shippable.
+    island_render_ok = by_step.get("mdx_render") is True
+    full_render_ok = by_step.get("astro_build") is True
+    shippable = no_failures and any_pass and (island_render_ok or full_render_ok)
     return {
         "level": level,
         "slug": slug,
         "shippable": shippable,
+        # The island gate is necessary-not-sufficient: it catches the #3137 class
+        # but not non-island JSX/render breaks. Only --astro-build is the full check.
+        "render_fully_validated": full_render_ok,
         "steps": steps,
         "corpus_hammer_required": True,
     }
@@ -177,12 +195,15 @@ def _finalize(level: str, slug: str, steps: list[dict]) -> dict:
 
 def _print_human(report: dict) -> None:
     icon = {True: "✅", False: "❌", None: "⚠️ "}
-    print(f"\n  verify_shippable: {report['level']}/{report['slug']}\n")  # codeql[py/clear-text-logging-sensitive-data] - module level/slug only; no secrets (#M-5 verified)
+    print(f"\n  verify_shippable: {report['level']}/{report['slug']}\n")
     for s in report["steps"]:
-        print(f"   {icon[s['passed']]} {s['step']:<22} {s['detail']}")  # codeql[py/clear-text-logging-sensitive-data] - gate name + deterministic result; no secrets
+        print(f"   {icon[s['passed']]} {s['step']:<22} {s['detail']}")
     print()
     if report["shippable"]:
         print("  ✅ SHIPPABLE (machine checks green)")
+        if not report.get("render_fully_validated"):
+            print("  ⚠️  island-render only — re-run with --astro-build for full render")
+            print("     validation (the island gate does not catch non-island JSX breaks).")
         print("  ⚠️  STILL REQUIRED before ship: corpus-hammer (#M-11) — read the")
         print("     content + independently verify_quote every embedded fragment.")
     else:
@@ -208,7 +229,7 @@ def main(argv: list[str] | None = None) -> int:
         astro_build=args.astro_build,
     )
     if args.json:
-        print(json.dumps(report, ensure_ascii=False, indent=2))  # codeql[py/clear-text-logging-sensitive-data] - report = gate/step results; no secrets
+        print(json.dumps(report, ensure_ascii=False, indent=2))
     else:
         _print_human(report)
     return 0 if report["shippable"] else 1

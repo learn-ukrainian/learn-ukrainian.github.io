@@ -98,6 +98,14 @@ def test_clean_payload_passes():
 
 # --- graceful degradation -----------------------------------------------------
 
+def test_escaper_rejects_nonfinite():
+    # NaN/Infinity are invalid JSON — must fail fast at assembly, not emit bad JSON
+    with pytest.raises(ValueError):
+        dump_json_for_jsx([{"v": float("nan")}])
+    with pytest.raises(ValueError):
+        dump_json_for_jsx([{"v": float("inf")}], compact=True)
+
+
 def test_node_absent_skips_not_fails(monkeypatch):
     import scripts.build.mdx_render_gate as g
 

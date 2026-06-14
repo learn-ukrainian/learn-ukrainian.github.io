@@ -121,7 +121,13 @@ def _blocking_state(pr: int) -> tuple[str, str]:
         return RED, f"failing checks: {', '.join(failing[:6])}"
     if pending:
         return RED, f"checks still pending: {', '.join(pending[:6])}"
-    return OK, f"all {len(rollup)} checks green ({data.get('mergeStateStatus', '?')})"
+    # Checks green is necessary but not sufficient — enforce the merge state too:
+    # a PR can be all-green yet BLOCKED (required review), DIRTY (conflict), or
+    # BEHIND (needs update from base) and is NOT ready to hand off.
+    merge_state = (data.get("mergeStateStatus") or "").upper()
+    if merge_state in ("BLOCKED", "DIRTY", "BEHIND"):
+        return RED, f"checks green but mergeStateStatus={merge_state} (not mergeable)"
+    return OK, f"all {len(rollup)} checks green ({merge_state or '?'})"
 
 
 def check_pr_checks(pr: int | None) -> tuple[str, str]:
