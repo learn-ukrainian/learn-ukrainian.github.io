@@ -98,7 +98,12 @@
   foreign/reject markers (російське/імперське/чуже «X»). Workaround used this session: reframe to `… а не «X»`.
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **#03 zamovliannia-zaklynannia-prymovky — DONE this session (python_qg GREEN, committed to PR #3131).** Recipe:
+0. **🔝 BUILD IN A FRESH SESSION (user directive 2026-06-14): handoff-practice improvements — #3138 + #3137 — then ONBOARD the other orchestrator + Codex.**
+   - **#3138 [process, ALL drivers]:** Definition-of-Done must include the astro **render-build** (not just python_qg) + a machine-checked handoff-readiness predicate (gate on `gh pr checks` all-blocking-green, never assert) + cold-start freshness (read freshest `origin/main` handoff + `gh pr list --head` for open driver PRs). Build `verify_shippable` + bake DoD into the driver handoffs.
+   - **#3137 [HIGH, infra]:** `assemble_mdx` doesn't escape `\"` for the `JSON.parse(\`…\`)` template-literal layer → any literal `"` in vocab/activity breaks astro render; `mdx_render` is a DEFERRED gate that never runs on a python_qg-failed build. **LATENT across ALL tracks** — audit existing modules.
+   - **Onboarding:** channel ONBOARD/ALERT already posted to #pipeline; when A–E are built, propagate via shared driver rules + confirm the other orchestrator + Codex audited their tracks for the `"` landmine and adopted render-verify-before-ship.
+   - **⚠ THE LESSON (why this is #0):** I declared "ready for handoff" while PR #3131 was **RED** — `python_qg`-green ≠ renders. #01 MDX broke astro render (народність gloss had a literal `"` → JSON.parse-in-template-literal break; the deferred `mdx_render` never ran). Fixed via typographic quotes (`ab8286cc1e`); **#3131 now CI-GREEN**. ALWAYS run the astro render-build before declaring a module OR a handoff ready.
+1. **#03 zamovliannia-zaklynannia-prymovky — DONE this session (python_qg GREEN + render-GREEN, committed to PR #3131).** Recipe:
    self_check fix → reframed заговор/заговоров decolonization citations to the `не «X»` frame → converted the line-57
    thesis to inline prose + attributed the Волос-charm repeat → loop word_count→4641 → fixed 3 loop coinages
    (побутовіша→буденніша, слово-вчинок→«слово як вчинок», слово-дію→«дієве слово»). Corpus-hammer #M-11: both ЕУ
