@@ -38,12 +38,27 @@ orchestrator regenerates it once after merge). That unlocked safe Atlas parallel
 - **#3167 CLOSED** — agy deps dispatch STALLED (narrated "I will wait..." then timed out) + did a dangerous
   unrequested pillow 12→10 downgrade. Caught at review, not merged. (#M-8 verify-self-reports paid off.)
 
-## IN FLIGHT (3 dispatches, Monitor `bvwp5jsuh` watching terminal state)
-| task | lane | issue | review-on-land notes |
+## LANDED — review status (2nd wave all done; 3 PRs open)
+| PR | issue | status | next action |
 |---|---|---|---|
-| `atlas-populate-2882` | codex | #2882 | Atlas POC populate (etymology variant-match, phraseology, antonyms). Brief told it to RE-MEASURE first (issue's "syn 5/52" is STALE — now 794+). **code-only/no-manifest-commit** — regen manifest after merge. |
-| `replay-suite-1905` | codex | #1905 | LLM-free `tests/replay/` regression suite (4 bug-class fixtures). Verify it runs with NO db/network. |
-| `literary-srcurl-2901` | grok-build | #2901 | add `source_url` col to `literary_texts` + ingest propagate + backfill. Verify NO `.db` committed; backfill counts reported. |
+| **#3177** | #2901 | ✅ **REVIEWED-APPROVE** (me). Merge-watch armed; merge on pytest green. | **POST-MERGE (orchestrator-local):** run `.venv/bin/python scripts/rag/migrate_add_literary_source_url.py` against live `data/sources.db` to populate source_url (live db is stale — column absent). |
+| **#3179** | #2882 | ⏳ **DEFER deep review** (context heavy). +556/-5; `enrich_manifest.py` + `[lemma].astro` page + test. No manifest-data committed ✓. BLOCKED=pytest pending. | Inline-review lexicon enrich correctness + verify any new dict data via MCP. **code-only — regen manifest after merge.** |
+| **#3178** | #1905 | 🔴 **NEEDS FIX — do NOT merge.** Touched PRODUCTION code (`codex.py`, `linear_pipeline.py`) not just `tests/replay/`, AND **pytest FAILS**. Scope crept beyond "regression suite." | Review: did it FIX the 4 bugs (good) or break something (bad)? Fix the failing pytest. Possibly split test-suite from any production change. |
+
+### #2901 correction (verified, important)
+The issue text is STALE: `build_sources_db.py` (the real sqlite `literary_texts` writer) **already has `source_url`**
+(CREATE TABLE + INSERT) on main. The actual problem = the **live `data/sources.db` is stale** (built before the
+column existed → column absent). #3177's migration (ALTER + backfill from JSONL) is the correct targeted fix
+(avoids a full 1.6 GB rebuild). #3177's `ingest.py`/`ingest_literary.py` edits target the **Qdrant** collection
+(harmless bonus, not the sqlite concern). I initially mis-flagged a builder gap; verification corrected it.
+
+### Original brief notes (kept for review context)
+- `atlas-populate-2882` (#2882): brief told it to RE-MEASURE first (issue's "syn 5/52" is STALE — now 794+).
+- `replay-suite-1905` (#1905): was meant to be LLM-free `tests/replay/` — verify it runs with NO db/network;
+  scrutinize the production-code changes it made.
+- `literary-srcurl-2901` (#2901): see correction above.
+
+Monitor `bvwp5jsuh` ended (all 3 terminal).
 
 ### Review-on-land protocol (worked well this session)
 1. `gh pr view <N> --json mergeable,statusCheckRollup,isDraft` — finalize PRs come as **draft**; `gh pr ready`.
