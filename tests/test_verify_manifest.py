@@ -23,7 +23,7 @@ def test_clean_manifest_passes(tmp_path, capsys):
     rc = verify_manifest.run(_write(tmp_path, entries), sample=0, baseline_path=None)
     out = capsys.readouterr().out
     assert rc == 0
-    assert "no structural hazards" in out
+    assert "clean (eyeball the sample" in out
     # dialectal synonym must NOT be flagged (the кам'яниця lesson)
     assert "кам'яниця" not in out or "HAZARD" not in out
 
@@ -77,3 +77,45 @@ def test_dialectal_synonym_not_in_junk_list():
     # terms must never be hardcoded as junk.
     for term in ("кам'яниця", "звір", "гостинець", "путівець", "вуйко"):
         assert term not in verify_manifest.JUNK_SYNONYMS
+
+
+# --- §8 conformance wiring (autopsy follow-up to #3124) ---------------------
+# The structural hazard scan alone is necessary but NOT sufficient: it gave a
+# false-clean on the re-enrich whose kaikki suffix turned test_atlas_conformance
+# RED on main. verify_manifest now runs the SAME validate() the required CI test
+# runs. These tests use nonexistent curriculum/vesum paths so the suite stays
+# hermetic (no 967MB vesum.db, no curriculum.yaml dependency).
+
+_NO_DEPS = {"curriculum_path": Path("/nonexistent/none.yaml"), "vesum_path": Path("/nonexistent/none.db")}
+
+
+def test_conformance_off_by_default_is_structural_only(tmp_path, capsys):
+    # Synonyms-with-items-but-no-source passes the structural scan but WOULD trip
+    # the §8 provenance gate. Default run_conformance=False keeps the old contract.
+    entries = [{"lemma": "слово", "sections": {"synonyms": {"items": ["мова"]}}}]
+    rc = verify_manifest.run(_write(tmp_path, entries), sample=0, baseline_path=None)
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert "CONFORMANCE" not in out
+
+
+def test_conformance_flags_provenance_violation_structural_misses(tmp_path, capsys):
+    entries = [{"lemma": "слово", "sections": {"synonyms": {"items": ["мова"]}}}]
+    rc = verify_manifest.run(
+        _write(tmp_path, entries), sample=0, baseline_path=None, run_conformance=True, **_NO_DEPS
+    )
+    out = capsys.readouterr().out
+    assert rc == 2
+    assert "CONFORMANCE" in out
+    assert "do NOT commit" in out
+    assert "conformance violation" in out
+
+
+def test_conformance_clean_entry_passes(tmp_path, capsys):
+    rc = verify_manifest.run(
+        _write(tmp_path, [{"lemma": "слово"}]), sample=0, baseline_path=None, run_conformance=True, **_NO_DEPS
+    )
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert "CLEAN — 0 violations" in out
+    assert "lemma_in_vesum skipped" in out

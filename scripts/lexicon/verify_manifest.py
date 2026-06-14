@@ -6,7 +6,13 @@ and BEFORE committing it (the commit auto-deploys). Deterministic gates alone ar
 NECESSARY BUT NOT SUFFICIENT (memory #M-11): this script runs the reproducible
 structural hazard scans + a coverage report + a sample dump for human/LLM eyeball.
 
-Exit code 0 = no hazards (still eyeball the sample); 2 = a hazard fired (do NOT commit).
+Exit code 0 = clean (still eyeball the sample); 2 = a structural hazard OR a §8
+conformance gate fired (do NOT commit). The §8 conformance pass was added after
+#3124: the structural hazard scan alone is NECESSARY BUT NOT SUFFICIENT — it gave
+a false-clean on the re-enrich whose ``(etymology of base form X)`` suffix turned
+the real ``test_atlas_conformance`` gate RED on main. This gate now runs the same
+``validate_atlas_conformance.validate()`` the required CI test runs, so the
+verify-before-promote step catches what previously only detonated post-merge.
 
 Hazard philosophy — STRUCTURAL over semantic:
   The reliable, false-positive-free hazards are STRUCTURAL: HTML-entity leaks,
@@ -28,8 +34,12 @@ import re
 import sys
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
+DEFAULT_VESUM = ROOT / "data" / "vesum.db"
+DEFAULT_CURRICULUM = ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
 
 # DEFINITIVELY cross-domain auto-translation junk that must never be a synonym.
 # Keep MINIMAL (see module docstring) — only tokens with zero defensible sense
@@ -102,7 +112,48 @@ def hazards(manifest: dict, entries: list[dict]) -> dict[str, list]:
     }
 
 
-def run(manifest_path: Path, sample: int, baseline_path: Path | None) -> int:
+def conformance(
+    manifest: dict,
+    *,
+    curriculum_path: Path = DEFAULT_CURRICULUM,
+    vesum_path: Path = DEFAULT_VESUM,
+) -> list:
+    """Run the deterministic §8 Atlas conformance gates on the manifest.
+
+    Autopsy follow-up to #3124 (``fixture-only-feature-latent-gate-break``): the
+    structural hazard scan is necessary but NOT sufficient. This runs the SAME
+    ``validate()`` the required ``test_atlas_conformance`` CI check runs, so the
+    verify-before-promote gate would have caught the kaikki-attribution RED before
+    it ever reached main.
+
+    Mirrors ``tests/test_atlas_conformance.py``: lemma↔VESUM membership is enforced
+    only when ``data/vesum.db`` exists (967MB, gitignored). When it is absent ONLY
+    the ``lemma_in_vesum`` gate is skipped; every other §8 gate still enforces.
+    """
+    if str(ROOT) not in sys.path:  # allow `python scripts/lexicon/verify_manifest.py`
+        sys.path.insert(0, str(ROOT))
+    from scripts.audit.validate_atlas_conformance import VesumLemmaLookup, validate
+
+    curriculum = (
+        yaml.safe_load(curriculum_path.read_text(encoding="utf-8"))
+        if curriculum_path.exists()
+        else {}
+    )
+    if vesum_path.exists():
+        with VesumLemmaLookup(vesum_path) as vesum:
+            return validate(manifest, vesum=vesum, curriculum=curriculum)
+    return validate(manifest, vesum=None, curriculum=curriculum)
+
+
+def run(
+    manifest_path: Path,
+    sample: int,
+    baseline_path: Path | None,
+    *,
+    run_conformance: bool = False,
+    curriculum_path: Path = DEFAULT_CURRICULUM,
+    vesum_path: Path = DEFAULT_VESUM,
+) -> int:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     entries = manifest.get("entries", [])
     cov = coverage(entries)
@@ -134,9 +185,35 @@ def run(manifest_path: Path, sample: int, baseline_path: Path | None) -> int:
             )
             print(f"  {e.get('lemma', '?'):16} [{flags:2}] syn={syn[:8]}")
 
+    conf: list = []
+    if run_conformance:
+        conf = conformance(manifest, curriculum_path=curriculum_path, vesum_path=vesum_path)
+        vesum_note = "" if vesum_path.exists() else " (lemma_in_vesum skipped — no data/vesum.db)"
+        print(f"\n=== CONFORMANCE (§8 atlas gates){vesum_note} ===")
+        if not conf:
+            print("  CLEAN — 0 violations")
+        else:
+            by_gate: dict[str, int] = {}
+            for v in conf:
+                by_gate[v.gate] = by_gate.get(v.gate, 0) + 1
+            for gate, n in sorted(by_gate.items()):
+                examples = [f"{v.lemma}: {v.detail}" for v in conf if v.gate == gate][:5]
+                print(f"  {gate:28} {n} — {examples}")
+
     has_hazard = any(haz.values())
-    print("\n=== VERDICT:", "HAZARD — do NOT commit" if has_hazard else "no structural hazards (eyeball the sample before commit)", "===")
-    return 2 if has_hazard else 0
+    has_conformance_fail = bool(conf)
+    failed = has_hazard or has_conformance_fail
+    if failed:
+        reasons = []
+        if has_hazard:
+            reasons.append("structural hazard")
+        if has_conformance_fail:
+            reasons.append(f"{len(conf)} conformance violation(s)")
+        verdict = f"{' + '.join(reasons)} — do NOT commit"
+    else:
+        verdict = "clean (eyeball the sample before commit)"
+    print("\n=== VERDICT:", verdict, "===")
+    return 2 if failed else 0
 
 
 def main() -> int:
@@ -144,8 +221,22 @@ def main() -> int:
     p.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST, help="Manifest JSON to verify.")
     p.add_argument("--baseline", type=Path, default=None, help="Optional prior manifest for coverage deltas.")
     p.add_argument("--sample", type=int, default=12, help="How many spread-sampled entries to print (0 = none).")
+    p.add_argument(
+        "--skip-conformance",
+        action="store_true",
+        help="Skip the §8 conformance gates and run structural hazards only.",
+    )
+    p.add_argument("--curriculum", type=Path, default=DEFAULT_CURRICULUM, help="curriculum.yaml for cross-link gate.")
+    p.add_argument("--vesum", type=Path, default=DEFAULT_VESUM, help="VESUM db for the lemma_in_vesum gate.")
     args = p.parse_args()
-    return run(args.manifest, args.sample, args.baseline)
+    return run(
+        args.manifest,
+        args.sample,
+        args.baseline,
+        run_conformance=not args.skip_conformance,
+        curriculum_path=args.curriculum,
+        vesum_path=args.vesum,
+    )
 
 
 if __name__ == "__main__":

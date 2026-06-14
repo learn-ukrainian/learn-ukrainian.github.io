@@ -10,7 +10,7 @@ controlled Atlas re-enrich (`4fabcecfc5`) regenerated `site/src/data/lexicon-man
 PR merges** (content-only PRs path-skip pytest, so the codex b1 train kept flowing
 — which masked the breakage; it looked like only *my* PRs were stuck).
 
-## Why (root cause)
+## Root cause
 - **#2971** (derivational-base etymology) appends an informative
   `" (etymology of base form X)"` suffix to the etymology `source` when a lemma's
   etymology resolves via its base form, e.g.
