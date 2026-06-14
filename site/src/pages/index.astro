@@ -20,6 +20,7 @@ const coreTracks = [
 ];
 
 const seminarTracks = [
+  { id: 'folk', label: 'FOLK', title: 'Folklore & Oral Tradition', status: 'Preview · 3 of 42 live', href: '/folk/' },
   { id: 'bio', label: 'BIO', title: 'Biographies', status: 'Planned seminar' },
   { id: 'hist', label: 'HIST', title: 'History Of Ukraine', status: 'Planned seminar' },
   { id: 'istorio', label: 'ISTORIO', title: 'Historiography', status: 'Planned seminar' },
@@ -122,9 +123,19 @@ const seminarTracks = [
         <ul>
           {seminarTracks.map((track) => (
             <li>
-              <span class="track-code">{track.label}</span>
-              <span class="track-title">{track.title}</span>
-              <span class="track-meta">{moduleCount(track.id)} modules · {track.status}</span>
+              {track.href ? (
+                <a class="track-link" href={track.href}>
+                  <span class="track-code">{track.label}</span>
+                  <span class="track-title">{track.title}</span>
+                  <span class="track-meta">{moduleCount(track.id)} modules · {track.status}</span>
+                </a>
+              ) : (
+                <Fragment>
+                  <span class="track-code">{track.label}</span>
+                  <span class="track-title">{track.title}</span>
+                  <span class="track-meta">{moduleCount(track.id)} modules · {track.status}</span>
+                </Fragment>
+              )}
             </li>
           ))}
         </ul>
@@ -287,6 +298,16 @@ const seminarTracks = [
       color: var(--lu-gray-600);
       font-size: 0.8rem;
       text-align: right;
+    }
+    /* Clickable seminar rows (e.g. the Folklore preview) keep the parent
+       grid layout via display:contents so the three columns still align. */
+    .track-link {
+      display: contents;
+      cursor: pointer;
+    }
+    .track-link:hover .track-title {
+      color: var(--lu-blue);
+      text-decoration: underline;
     }
     @media (max-width: 820px) {
       .home-intro {
