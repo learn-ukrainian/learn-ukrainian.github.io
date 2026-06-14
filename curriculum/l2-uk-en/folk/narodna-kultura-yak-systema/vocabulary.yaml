@@ -1,0 +1,144 @@
+- lemma: обряд
+  translation: rite, ritual
+  pos: noun
+  usage: Весільний обряд поєднує слово, рух і предмет в одну символічну дію.
+- lemma: мотив
+  translation: motif
+  pos: noun
+  usage: Той самий мотив мандрує від колядки до весільної пісні.
+- lemma: варіант
+  translation: variant
+  pos: noun
+  usage: Кожне село зберігає свій варіант щедрівки.
+- lemma: фольклор
+  translation: folklore
+  pos: noun
+  usage: Фольклор живе в багатьох варіантах, а не в одному записі.
+- lemma: фольклористика
+  translation: folkloristics, folklore studies
+  pos: noun
+  usage: Фольклористика розглядає народну культуру як систему.
+- lemma: синкретизм
+  translation: syncretism
+  pos: noun
+  usage: Синкретизм поєднує аграрну працю, церковне свято й родинний перехід в одному
+    обряді.
+- lemma: обрядовість
+  translation: ritual practice, ceremonialism
+  pos: noun
+  usage: Календарна обрядовість має свій час і свій простір.
+- lemma: громада
+  translation: community
+  pos: noun
+  usage: Громада виконує обряд разом, у спільному просторі.
+- lemma: виконавець
+  translation: performer
+  pos: noun
+  usage: Виконавець відтворює традицію по-своєму, у своєму часі.
+- lemma: виконання
+  translation: performance
+  pos: noun
+  usage: Запис виймає текст із живого виконання.
+- lemma: речитатив
+  translation: recitative
+  pos: noun
+  usage: Думу виконують речитативом, а не співом.
+- lemma: паралелізм
+  translation: parallelism
+  pos: noun
+  usage: Паралелізм зіставляє два образи в одному рядку.
+- lemma: епітет
+  translation: epithet
+  pos: noun
+  usage: Постійний епітет — це сталий образ, що мандрує з пісні в пісню.
+  notes: У фольклорі ключовий термін — «постійний епітет».
+- lemma: формула
+  translation: (verbal) formula
+  pos: noun
+  usage: Зачин — це словесна формула на початку тексту.
+- lemma: повтор
+  translation: repetition
+  pos: noun
+  usage: Повтор тримає структуру тексту й полегшує усне відтворення.
+- lemma: рушник
+  translation: embroidered ritual cloth
+  pos: noun
+  usage: Рушник супроводжує перехід — весілля, проводи й зустріч.
+- lemma: писанка
+  translation: painted Easter egg
+  pos: noun
+  usage: Писанка — матеріальний знак, що несе власний зміст.
+- lemma: коровай
+  translation: ritual wedding bread
+  pos: noun
+  usage: Коровай — обрядовий хліб весілля, знак єднання двох родів.
+- lemma: сніп
+  translation: sheaf
+  pos: noun
+  usage: Сніп — знак завершення жнив і родючості.
+- lemma: вінок
+  translation: wreath
+  pos: noun
+  usage: Вінок — образ дівочості й цілості в купальській обрядовості.
+- lemma: кобза
+  translation: kobza (folk lute)
+  pos: noun
+  usage: Кобзар виконує думу під кобзу.
+- lemma: бандура
+  translation: bandura
+  pos: noun
+  usage: Бандура несе статус виконавця епічної пам'яті.
+- lemma: ліра
+  translation: lira (Ukrainian hurdy-gurdy)
+  pos: noun
+  usage: Лірник інтонує речитатив під ліру.
+- lemma: колядка
+  translation: Christmas carol
+  pos: noun
+  usage: Узимку лунають колядки та щедрівки.
+- lemma: щедрівка
+  translation: New Year well-wishing song
+  pos: noun
+  usage: Щедрівка змінюється від села до села.
+- lemma: веснянка
+  translation: spring song
+  pos: noun
+  usage: Навесні гурт веде веснянки та гаївки.
+- lemma: гаївка
+  translation: spring round-dance song
+  pos: noun
+  usage: Гаївку ведуть навесні з рухом і грою.
+- lemma: дума
+  translation: duma (epic recitative song)
+  pos: noun
+  usage: Дума — це речитативний твір про історичну пам'ять.
+- lemma: кобзарство
+  translation: kobzar tradition
+  pos: noun
+  usage: Кобзарство — ціле виконавське середовище зі своїм навчанням.
+- lemma: голосіння
+  translation: funeral lament
+  pos: noun
+  usage: Над померлим лунає голосіння.
+- lemma: обхід
+  translation: ritual procession, the round
+  pos: noun
+  usage: Колядку співає гурт в обході дворів.
+- lemma: нашарування
+  translation: layering, stratification
+  pos: noun
+  usage: Народна культура формується через довге нашарування практик і вірувань.
+- lemma: передання
+  translation: transmission
+  pos: noun
+  usage: Важлива межа між усним і писемним переданням.
+- lemma: народність
+  translation: '"folksiness" (loaded ethnographic term)'
+  pos: noun
+  usage: Імперські наративи зводили культуру до «народності».
+  notes: 'Колоніальний термін-пастка: хвалить «простоту» народу, щоб відмовити йому
+    в інтелектуальній зрілості. У сучасному аналізі вживається критично.'
+- lemma: меншовартість
+  translation: sense of inferiority
+  pos: noun
+  usage: Меншовартість, нав'язана імперією, спростовується точним аналізом.
