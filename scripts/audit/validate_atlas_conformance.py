@@ -550,6 +550,17 @@ def _has_exact_kaikki_source(section: Mapping[str, Any]) -> bool:
     return str(section.get("source") or "").strip() == KAIKKI_SOURCE
 
 
+# #2971 (derivational-base etymology) appends an informative
+# " (etymology of base form X)" suffix to the etymology source when the lemma's
+# etymology is resolved via its base form. The kaikki attribution prefix stays
+# intact ahead of the suffix, so it remains CC BY-SA-compliant — tolerate it.
+_BASE_FORM_ETYMOLOGY_SUFFIX_RE = re.compile(r"\s*\(etymology of base form .+\)$")
+
+
+def _kaikki_etymology_attribution_ok(source: str) -> bool:
+    return _BASE_FORM_ETYMOLOGY_SUFFIX_RE.sub("", source.strip()) == KAIKKI_SOURCE
+
+
 def _check_kaikki_attribution(entry: Mapping[str, Any], lemma: str, violations: list[Violation]) -> None:
     pronunciation = _pronunciation(entry)
     if isinstance(pronunciation, Mapping) and pronunciation.get("ipa") and not _has_exact_kaikki_source(pronunciation):
@@ -565,12 +576,13 @@ def _check_kaikki_attribution(entry: Mapping[str, Any], lemma: str, violations: 
     if not isinstance(etymology, Mapping):
         return
     source = str(etymology.get("source") or "").strip()
-    if "kaikki" in source.casefold() and source != KAIKKI_SOURCE:
+    if "kaikki" in source.casefold() and not _kaikki_etymology_attribution_ok(source):
         violations.append(
             Violation(
                 "kaikki_attribution_required",
                 lemma,
-                f"kaikki etymology source must be {KAIKKI_SOURCE!r}",
+                f"kaikki etymology source must be {KAIKKI_SOURCE!r} "
+                "(optionally with an ' (etymology of base form …)' suffix)",
             )
         )
 
