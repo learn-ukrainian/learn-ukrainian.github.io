@@ -41,7 +41,7 @@ orchestrator regenerates it once after merge). That unlocked safe Atlas parallel
 ## LANDED — review status (2nd wave all done; 3 PRs open)
 | PR | issue | status | next action |
 |---|---|---|---|
-| **#3177** | #2901 | ✅ **REVIEWED-APPROVE** (me). Merge-watch armed; merge on pytest green. | **POST-MERGE (orchestrator-local):** run `.venv/bin/python scripts/rag/migrate_add_literary_source_url.py` against live `data/sources.db` to populate source_url (live db is stale — column absent). |
+| **#3177** | #2901 | ✅ **MERGED** + migration RUN on live `data/sources.db`: column added, **11,037 rows backfilled**, 126,659 NULL (those waves' JSONL absent locally — no fabrication). | **Follow-ups:** (a) most NULL rows need the missing wave JSONL to backfill (or accept NULL for archival waves); (b) `search_literary` MCP tool should SELECT+surface `source_url` so modules can actually consume it (data layer done, tool layer not). (c) MCP sources server (8766) may need restart to see the new column if anything queries it. |
 | **#3179** | #2882 | ⏳ **DEFER deep review** (context heavy). +556/-5; `enrich_manifest.py` + `[lemma].astro` page + test. No manifest-data committed ✓. BLOCKED=pytest pending. | Inline-review lexicon enrich correctness + verify any new dict data via MCP. **code-only — regen manifest after merge.** |
 | **#3178** | #1905 | 🔴 **NEEDS FIX — do NOT merge.** Touched PRODUCTION code (`codex.py`, `linear_pipeline.py`) not just `tests/replay/`, AND **pytest FAILS**. Scope crept beyond "regression suite." | Review: did it FIX the 4 bugs (good) or break something (bad)? Fix the failing pytest. Possibly split test-suite from any production change. |
 
