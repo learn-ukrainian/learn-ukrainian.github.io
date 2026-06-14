@@ -358,3 +358,83 @@ def test_m20_style_true_false_negative_example_smoke(
         and event["forms"] == ["дивюся"]
         for event in _events(telemetry)
     )
+
+
+# --- #3132: citation/example frame ("як «X»") for cited foreign mentions ------
+
+
+def test_citation_frame_yak_guillemets_strips_cited_foreign_term() -> None:
+    # A Russian term cited as an example ("як «лєший»") is a mention, not a use —
+    # лєший is correctly absent from VESUM (the Ukrainian is лісовик). The gate
+    # must not false-flag it (was blocking folk decolonization prose).
+    seen: list[list[str]] = []
+    result = linear_pipeline._vesum_gate(
+        module_text="Довколишні духи, як «лєший», у народній демонології.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=_verify_except({"лєший"}, seen),
+    )
+
+    assert result["passed"] is True
+    assert "лєший" not in seen[0]
+    assert "духи" in seen[0]  # surrounding valid Ukrainian still verified
+
+
+def test_citation_frame_english_such_as_guillemets_strips_term() -> None:
+    seen: list[list[str]] = []
+    result = linear_pipeline._vesum_gate(
+        module_text="Spirits such as «лєший» recur in folk demonology.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=_verify_except({"лєший"}, seen),
+    )
+
+    assert result["passed"] is True
+    assert "лєший" not in seen[0]
+
+
+def test_uncited_invalid_form_still_fails_the_gate() -> None:
+    # Narrowness guard: a bare invalid form NOT in a citation frame still fails.
+    # The exemption must never become a blanket VESUM bypass.
+    result = linear_pipeline._vesum_gate(
+        module_text="Духи лєший живуть у темному лісі.",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=_verify_except({"лєший"}),
+    )
+
+    assert result["passed"] is False
+    assert "лєший" in result["missing"]
+
+
+def test_citation_frame_requires_guillemets_not_straight_quotes() -> None:
+    # The "як/as/like" arm is restricted to «» (the Ukrainian citation mark);
+    # straight quotes must NOT trigger it, so the invalid form still fails.
+    result = linear_pipeline._vesum_gate(
+        module_text='Духи, як "лєший", тут живуть.',
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=_verify_except({"лєший"}),
+    )
+
+    assert result["passed"] is False
+    assert "лєший" in result["missing"]
+
+
+def test_negator_frame_unchanged_by_citation_arm() -> None:
+    # Regression: the existing "не «X»" negator behavior is preserved.
+    seen: list[list[str]] = []
+    result = linear_pipeline._vesum_gate(
+        module_text="Кажемо сніданок, не «завтрак».",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=_verify_except({"завтрак"}, seen),
+    )
+
+    assert result["passed"] is True
+    assert "завтрак" not in seen[0]
