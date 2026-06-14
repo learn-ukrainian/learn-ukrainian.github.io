@@ -39,7 +39,8 @@ Routers are mounted by domain from `scripts/api/main.py`:
 - Agent communication: `comms_router.py`, with legacy broker routes marked
   deprecated and channel routes as the current surface.
 - Operational dashboards: `admin_router.py`, `runtime_router.py`,
-  `build_events_router.py`, `delegate_router.py`, `cost_router.py`.
+  `build_events_router.py`, `delegate_router.py`, `cost_router.py`,
+  `telemetry_router.py`.
 - Content tooling: `wiki_router.py`, `images_router.py`, `rag_router.py`,
   `consultation_router.py`, `artifacts_router.py`.
 - Agent bootstrap: `rules_router.py`, `session_router.py`, `/api/orient`, and
