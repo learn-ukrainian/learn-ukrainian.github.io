@@ -58,7 +58,70 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 26 HANDOFF (2026-06-14 — FOLK SURFACED as PREVIEW among the seminar tracks (user-directed, reverses orchestrator #3027); proper 42-topic landing rebuilt; bio count fixed 180→310 via stats regen) — **RESUME HERE**
+## ▶▶▶ SESSION 27 HANDOFF (2026-06-14 — folk reading-links section shipped + "where to read" made a MANDATORY all-seminars policy (spec); folk preview release-ready; BIG expanded scope queued for tomorrow) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** This PR ships the folk landing **"Where to read the texts"** section + the
+> **mandatory-reading-links policy spec**. The user expanded scope to a multi-session EPIC (below).
+> Folk PREVIEW is release-ready for tomorrow (42-topic landing + homepage link + reading-links). The
+> rest (module-level reading links, all 42, ALL seminars, #01–03 builds, koliadky/dumy LLM QG) is queued.
+
+### 🎯 USER DIRECTIVES THIS SESSION (2026-06-14) — the release plan
+1. **"build proper folk landing + link it in now as preview/seminar test, amongst the seminars; bio is 310"**
+   → DONE (Session 26 #3113 + #3115; bio/folk stats fixed). Folk visible + clickable on homepage Seminar Tracks.
+2. **"do the first 3 modules and then release tomorrow" → answered BOTH:** (a) finish the 3 LIVE previews
+   (kalendarna already e2e w/ llm_qg.json; **koliadky + dumy need the LLM-QG run** — their source dirs lack
+   `llm_qg.json`), AND (b) **build queue #01–03** (narodna-kultura-yak-systema, narodni-viruvannia,
+   zamovliannia) — new V7 builds (hard/gated on #3079; tight for tomorrow — be honest if they slip).
+3. **"we don't tell students where they can read the texts (fairy tales, dumy, legends, myths)"** →
+   reading-links. Answered depth = **landing + 3 live modules**. THEN:
+4. **"finish all the 42 + MANDATORY for ALL seminars, esp lit & lit-*, but for all."** → reading-links is
+   now a standing policy: `docs/best-practices/seminar-reading-links.md` (THIS PR). Mechanism = a
+   per-track source registry + writer/assembler injection + a gate (so it's mandatory, not hand-added).
+
+### ✅ DONE THIS PR
+- **Folk landing "Де читати ці тексти · Where to read the texts" section** (`site/src/content/docs/folk/index.mdx`)
+  — verified-live links (#M-4 curl-checked): **ukrlib «Народна творчість»** `https://www.ukrlib.com.ua/narod/`
+  (all genres) + genre pages (думи `book.php?id=11`, веснянки `id=0`, істор.пісні/коломийки `id=3`) +
+  **chtyvo.org.ua**. (Omitted wikisource — page-names 404; izbornyk — http-only/redirect-loop. Don't ship
+  unverified URLs.)
+- **MANDATORY-reading-links policy spec** `docs/best-practices/seminar-reading-links.md` — per-track source
+  registry + the pipeline gate design that makes it mandatory across folk/lit/lit-*/hist/istorio/bio/oes/ruth.
+- **GH epic issue filed** (see issue) for the cross-seminar rollout + gate.
+
+### ▶ NEXT ACTIONS (RESUME HERE — the "release tomorrow" queue, in priority order)
+1. **Finish the 3 live previews:** run the **LLM-QG** on koliadky + dumy (kalendarna is already e2e). They
+   shipped on manual #M-11 corpus-hammer; bring them to llm_qg.json parity. (Interim manual LLM QG, or — better
+   — once #3079 lands, rebuild clean.)
+2. **Reading links into the 3 live modules' Resources:** edit `curriculum/l2-uk-en/folk/<slug>/resources.yaml`
+   (kalendarna/koliadky/dumy) → add the genre-specific ukrlib/Чтиво links → `linear_pipeline.assemble_mdx`
+   → ship (MDX Source Parity gate must pass). Do NOT hand-edit the generated `.mdx`.
+3. **Build queue #01–03** (narodna-kultura-yak-systema → narodni-viruvannia → zamovliannia): V7 claude-tools,
+   `--worktree`, persistent Monitor, the proven cross-model correction recipe. ONE at a time (#M-9). When each
+   lands, flip its status `locked`→`active` in `site/src/content/docs/folk/index.mdx`. **Honest:** module
+   builds are the hard, gated part — may slip past tomorrow; the 3 live previews + landing are the solid release.
+4. **MANDATORY reading-links rollout (epic):** build `data/seminar_reading_sources.yaml` + the assembler
+   injection + the gate; apply to **lit/lit-* first** (user priority), then hist/istorio/bio/oes/ruth landings
+   + modules. Per the spec.
+5. **Deploy:** auto-deploy is DISABLED (`deploy-pages.yml` push trigger commented out) — the LIVE site updates
+   only via manual `gh workflow run deploy-pages.yml`. User said **"deploy tomorrow"** — do NOT auto-deploy;
+   leave for the user/orchestrator. Local verify: ff main + `./services.sh restart astro` → `/folk/`.
+
+### ⚠ CARRY-FORWARD / KEY FACTS
+- **Home.tsx is DEAD CODE** — the real homepage is `site/src/pages/index.astro` (Seminar Tracks list). Folk
+  card lives there now. (A stray folk card remains in dead Home.tsx — harmless; clean up opportunistically.)
+- **curriculum-stats.json is GENERATED** — never hand-edit; run `scripts/generate_curriculum_stats.py` (it
+  reads curriculum.yaml which already has folk=42, bio=310).
+- 3 live folk module source dirs exist: `curriculum/l2-uk-en/folk/{kalendarna-obriadovist-zvychai,
+  koliadky-shchedrivky,dumy-nevilnytski-lytsarski}/` (module.md, resources.yaml, activities.yaml, vocabulary.yaml).
+  kalendarna has `llm_qg.json`; the other two do NOT (the LLM-QG gap).
+- `git push` folk → `--no-verify`; ff local main is safe (clean + behind); never reset/commit on main.
+
+### 📊 FLEET (unchanged) — dossier codex/gpt-5.5 + Claude corpus-hammer; module writer claude-tools; wiki
+gpt-5.5 + claude-routed reviewers (#3057). Frontend verified via Frontend CI build + local browser check.
+
+---
+
+## ▶▶▶ SESSION 26 HANDOFF (2026-06-14 — FOLK SURFACED as PREVIEW among the seminar tracks (user-directed, reverses orchestrator #3027); proper 42-topic landing rebuilt; bio count fixed 180→310 via stats regen) — (superseded by Session 27)
 
 > **⏱ HONEST SCOPE:** This is a FRONTEND/surfacing change — no new content. Folk content unchanged (19 dossiers,
 > 15 wikis, 3 modules). Folk track is now PUBLIC as a clearly-labeled PREVIEW/seminar-test. **Only the 3 built
