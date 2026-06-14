@@ -1,6 +1,6 @@
 ---
-title: "LIT-FANTASTIKA"
-description: " — 25 modules"
+title: "LIT-FANTASTIKA - Фантастика"
+description: "Speculative Literature Track — 25 modules in curriculum order"
 template: splash
 ---
 
@@ -9,46 +9,61 @@ import LevelLanding from '@site/src/components/LevelLanding';
 <LevelLanding
   client:load
   level="LIT-FANTASTIKA"
-  title="LIT-FANTASTIKA"
-  subtitle=" — 0/25 modules complete"
+  title="LIT-FANTASTIKA - Фантастика"
+  subtitle="Speculative Literature Track — 25 modules"
+  progressTitle="LIT-FANTASTIKA Build Status"
+  progressDescription="0 available · 0 reviewed · 25 planned"
   moduleCount={25}
   wordTarget={4000}
   color="var(--lu-id-lit-fantastika)"
-  progressTitle="LIT-FANTASTIKA Build Status"
-  progressDescription="0 available · 25 locked"
   modules={[
     {
-      unit: "LIT Expansion",
+      unit: "Gothic and early fantasy",
       items: [
-        { num: 1, slug: "kvitka-dead-mans-easter", title: "Kvitka Dead Mans Easter", sub: "Kvitka Dead Mans Easter", status: "locked" },
-        { num: 2, slug: "storozhenko-devil", title: "Storozhenko Devil", sub: "Storozhenko Devil", status: "locked" },
-        { num: 3, slug: "kotsiubynsky-shadows-revisit", title: "Kotsiubynsky Shadows Revisit", sub: "Kotsiubynsky Shadows Revisit", status: "locked" },
-        { num: 4, slug: "vynnychenko-solar-machine-revisit", title: "Vynnychenko Solar Machine Revisit", sub: "Vynnychenko Solar Machine Revisit", status: "locked" },
-        { num: 5, slug: "smolych-beautiful-catastrophes", title: "Smolych Beautiful Catastrophes", sub: "Smolych Beautiful Catastrophes", status: "locked" },
-        { num: 6, slug: "berdnyk-star-corsair-1", title: "Berdnyk Star Corsair 1", sub: "Berdnyk Star Corsair 1", status: "locked" },
-        { num: 7, slug: "berdnyk-star-corsair-2", title: "Berdnyk Star Corsair 2", sub: "Berdnyk Star Corsair 2", status: "locked" },
-        { num: 8, slug: "berdnyk-prometheus", title: "Berdnyk Prometheus", sub: "Berdnyk Prometheus", status: "locked" },
-        { num: 9, slug: "rosokhovatsky-cyborgs", title: "Rosokhovatsky Cyborgs", sub: "Rosokhovatsky Cyborgs", status: "locked" },
-        { num: 10, slug: "vynnychuk-tango-death", title: "Vynnychuk Tango Death", sub: "Vynnychuk Tango Death", status: "locked" },
-        { num: 11, slug: "vynnychuk-night-maiden", title: "Vynnychuk Night Maiden", sub: "Vynnychuk Night Maiden", status: "locked" },
-        { num: 12, slug: "pavliuk-flesh", title: "Pavliuk Flesh", sub: "Pavliuk Flesh", status: "locked" },
-        { num: 13, slug: "arenev-powder", title: "Arenev Powder", sub: "Arenev Powder", status: "locked" },
-        { num: 14, slug: "arenev-soul-traps", title: "Arenev Soul Traps", sub: "Arenev Soul Traps", status: "locked" },
-        { num: 15, slug: "korniy-chimaeras", title: "Korniy Chimaeras", sub: "Korniy Chimaeras", status: "locked" },
-        { num: 16, slug: "korniy-forest", title: "Korniy Forest", sub: "Korniy Forest", status: "locked" },
-        { num: 17, slug: "kidruk-bots", title: "Kidruk Bots", sub: "Kidruk Bots", status: "locked" },
-        { num: 18, slug: "kidruk-colony", title: "Kidruk Colony", sub: "Kidruk Colony", status: "locked" },
-        { num: 19, slug: "babenko-witch", title: "Babenko Witch", sub: "Babenko Witch", status: "locked" },
-        { num: 20, slug: "fantastika-anthology", title: "Fantastika Anthology", sub: "Fantastika Anthology", status: "locked" },
-        { num: 21, slug: "kidruk-bot-thriller", title: "Kidruk Bot Thriller", sub: "Kidruk Bot Thriller", status: "locked" },
-        { num: 22, slug: "kidruk-colony-hard-scifi", title: "Kidruk Colony Hard Scifi", sub: "Kidruk Colony Hard Scifi", status: "locked" },
-        { num: 23, slug: "deresh-cult-psychotropic", title: "Deresh Cult Psychotropic", sub: "Deresh Cult Psychotropic", status: "locked" },
-        { num: 24, slug: "deresh-arche", title: "Deresh Arche", sub: "Deresh Arche", status: "locked" },
+        { num: 1, slug: "kvitka-dead-mans-easter", title: "Фантастика як богослов'я: \"Мертвецький Великдень\" Квітки-Основ'яненка", sub: "Gothic Theology: Kvitka-Osnovianenko's \"Dead Man's Easter\"", status: "locked" },
+        { num: 2, slug: "storozhenko-devil", title: "Диявол у дзеркалі: Готика та іронія в прозі Олекси Стороженка", sub: "The Devil in the Mirror: Gothic and Irony in Oleksa Storozhenko's Prose", status: "locked" },
+        { num: 3, slug: "kotsiubynsky-shadows-revisit", title: "Тіні Коцюбинського: Фантастичне перепрочитання", sub: "Revisiting Kotsiubynsky's Shadows: A Fantasy Reinterpretation", status: "locked" },
+        { num: 4, slug: "vynnychenko-solar-machine-revisit", title: "Сонячна машина: Утопія чи попередження?", sub: "Volodymyr Vynnychenko's \"The Solar Machine\": Utopia or Warning?", status: "locked" },
+        { num: 5, slug: "smolych-beautiful-catastrophes", title: "\"Прекрасні катастрофи\" Юрія Смолича", sub: "Ukrainian Futurism, Utopia, and the Price of Progress", status: "locked" },
       ]
     },
     {
-      unit: "LIT-FANTASTIKA Synthesis",
+      unit: "Cosmic philosophy",
       items: [
+        { num: 6, slug: "berdnyk-star-corsair-1", title: "Олесь Бердник: Зоряний Корсар", sub: "Oles Berdnyk: The Star Corsair", status: "locked" },
+        { num: 7, slug: "berdnyk-star-corsair-2", title: "Олесь Бердник, \"Зоряний корсар\": Космічна опера як національний міф", sub: "Oles Berdnyk, \"Star Corsair\": Space Opera as a National Myth", status: "locked" },
+        { num: 8, slug: "berdnyk-prometheus", title: "Прометей української фантастики: Олесь Бердник", sub: "Oles Berdnyk: The Prometheus of Ukrainian Sci-Fi", status: "locked" },
+        { num: 9, slug: "rosokhovatsky-cyborgs", title: "Кіборги Росоховатського: Радянський кіберпанк чи пророцтво?", sub: "Rosokhovatsky's Cyborgs: Between Soviet Cyberpunk and Prophetic Visions", status: "locked" },
+      ]
+    },
+    {
+      unit: "Urban fantasy and magical realism",
+      items: [
+        { num: 10, slug: "vynnychuk-tango-death", title: "Юрій Винничук, \"Танґо смерті\": Львів як текст", sub: "Yuriy Vynnychuk, \"Tango of Death\": Lviv as Text", status: "locked" },
+        { num: 11, slug: "vynnychuk-night-maiden", title: "Юрій Винничук, 'Нічний продавець': Містичний Львів та межі реальності", sub: "Yuri Vynnychuk, 'The Night Seller': Mystical Lviv and the Boundaries of Reality", status: "locked" },
+        { num: 12, slug: "pavliuk-flesh", title: "Павлик Флеш: Спекулятивні світи", sub: "Аналіз творчості як соціальної алегорії", status: "locked" },
+        { num: 13, slug: "arenev-powder", title: "Володимир Арєнєв (Arenev Powder): Порох для імперії", sub: "Worldbuilding as a Tool of Decolonization in Ukrainian Sci-Fi", status: "locked" },
+        { num: 14, slug: "arenev-soul-traps", title: "Володимир Арєнєв: Пастки для душ", sub: "Volodymyr Arenev: Soul Traps", status: "locked" },
+        { num: 15, slug: "korniy-chimaeras", title: "Корній Химери (Korniy Chimaeras)", sub: "Сучасна українська фантастика як соціальний коментар", status: "locked" },
+        { num: 16, slug: "korniy-forest", title: "Korniy Forest: Лісова Пісня 2.0?", sub: "Speculative Fiction as a New National Mythology", status: "locked" },
+      ]
+    },
+    {
+      unit: "Techno-thrillers and anthology",
+      items: [
+        { num: 17, slug: "kidruk-bots", title: "\"Боти\": Технотрилер Макса Кідрука як дзеркало війни", sub: "\"Bots\": Max Kidruk's Technothriller as a Mirror of War", status: "locked" },
+        { num: 18, slug: "kidruk-colony", title: "Макс Кідрук, \"Колонія\": Марсіанський маніфест", sub: "Max Kidruk's \"Colony\": A Martian Manifesto", status: "locked" },
+        { num: 19, slug: "babenko-witch", title: "Babenko Witch: Відьомська естетика та постколоніальний наратив", sub: "Babenko Witch: Witchy Aesthetics and Postcolonial Narrative", status: "locked" },
+        { num: 20, slug: "fantastika-anthology", title: "Антологія української фантастики: Критика та уява", sub: "Ukrainian Fantastika Anthology: Critique and Imagination", status: "locked" },
+      ]
+    },
+    {
+      unit: "Hard SF and synthesis",
+      items: [
+        { num: 21, slug: "kidruk-bot-thriller", title: "Технотрилер як дзеркало: Світи Макса Кідрука", sub: "The Technothriller as a Mirror: The Worlds of Max Kidruk", status: "locked" },
+        { num: 22, slug: "kidruk-colony-hard-scifi", title: "Макс Кідрук, «Колонія»: український Hard Sci-Fi", sub: "Max Kidruk, \"Colony\": Ukrainian Hard Sci-Fi", status: "locked" },
+        { num: 23, slug: "deresh-cult-psychotropic", title: "Любко Дереш: Культ, Психотропіки та Покоління Нульових", sub: "Lyubko Deresh: Cult, Psychotropics, and the Noughties Generation", status: "locked" },
+        { num: 24, slug: "deresh-arche", title: "Любко Дереш: Архе та нові міфології", sub: "Lyubko Deresh: Arche and New Mythologies", status: "locked" },
         { num: 25, slug: "fantastika-synthesis", title: "Синтез: Простір уяви", sub: "Intellectual Synthesis: Space of Imagination", status: "locked" },
       ]
     },

@@ -5,6 +5,31 @@ levels:
     type: core
     # V3 — 55 modules, State Standard 2024 compliant
     # A1.1: Sounds, Letters, and First Contact
+    groups:
+      - label: A1.1 [Звуки, літери та перший контакт · Sounds, Letters, and First Contact]
+        start: sounds-letters-and-hello
+        end: checkpoint-first-contact
+      - label: A1.2 [Мій світ · My World]
+        start: things-have-gender
+        end: checkpoint-my-world
+      - label: A1.3 [Дії · Actions]
+        start: what-i-like
+        end: checkpoint-actions
+      - label: A1.4 [Час і природа · Time & Nature]
+        start: what-time
+        end: checkpoint-time-nature
+      - label: A1.5 [Місця · Places]
+        start: euphony
+        end: checkpoint-places
+      - label: A1.6 [Їжа та покупки · Food & Shopping]
+        start: food-and-drink
+        end: checkpoint-food-shopping
+      - label: A1.7 [Спілкування · Communication]
+        start: hey-friend
+        end: checkpoint-communication
+      - label: A1.8 [Минуле, майбутнє, випускний · Past, Future, Graduation]
+        start: what-happened
+        end: a1-finale
     modules:
       # A1.1 [Sounds, Letters, and First Contact]
       - sounds-letters-and-hello
@@ -73,6 +98,37 @@ levels:
     type: core
     # V5 — 69 modules, State Standard 2024 fully compliant (#1147)
     # Redesigned 2026-04-04: grammar wall fix, 2 missing themes, 4 SS gaps filled
+    groups:
+      - label: A2.1 [Основи та вступ до виду дієслова]
+        start: a2-bridge
+        end: checkpoint-foundations
+      - label: 'A2.2 [Родовий відмінок: завершення]'
+        start: genitive-prepositions-source
+        end: checkpoint-genitive
+      - label: A2.3 [Давальний відмінок]
+        start: dative-pronouns
+        end: checkpoint-dative
+      - label: A2.4 [Орудний відмінок і звертання]
+        start: instrumental-accompaniment
+        end: checkpoint-instrumental
+      - label: A2.5 [Синтез відмінків та множина]
+        start: plural-nominative-accusative
+        end: checkpoint-cases
+      - label: A2.6 [Вид, часи та рух]
+        start: aspect-in-past
+        end: checkpoint-verbs
+      - label: A2.7 [Складні речення та умови]
+        start: because-and-although
+        end: checkpoint-syntax
+      - label: A2.8 [Удосконалення та випуск]
+        start: comparison
+        end: nature-and-traditions
+      - label: 'A2.9 [Метамова: місток та основи]'
+        start: metalanguage-words-and-cases
+        end: metalanguage-syntax-cases
+      - label: A2.10 [Вдосконалення та випуск]
+        start: a2-comprehensive-review
+        end: a2-finale
     modules:
       # A2.1 [Foundation and Aspect Introduction]
       - a2-bridge
@@ -158,6 +214,37 @@ levels:
     # V5.1 — 95 modules, State Standard 2024 fully compliant (#1143)
     # V5.1 fixes: moved aspect-in-imperatives/conditionals after base modules,
     # restored gerund-phrases as separate module, added homogeneous-members earlier
+    groups:
+      - label: B1.0 [Baselines & Aspect Mastery]
+        start: b1-baseline-past-present
+        end: checkpoint-aspect
+      - label: B1.1 [Morphophonemics]
+        start: alternation-vowels
+        end: checkpoint-morphophonemics
+      - label: B1.2 [Verb System]
+        start: conditionals-real
+        end: checkpoint-verbs
+      - label: B1.3 [Motion Verbs]
+        start: prepositions-spatial-review
+        end: checkpoint-motion
+      - label: B1.4 [Comparison & Word Formation]
+        start: adjectives-comparative
+        end: checkpoint-comparison
+      - label: B1.5 [Case Nuances & Prepositions]
+        start: homogeneous-members
+        end: checkpoint-cases
+      - label: B1.6 [Participles & Gerunds]
+        start: participles-active
+        end: checkpoint-participles
+      - label: B1.7 [Complex Syntax]
+        start: complex-compound
+        end: checkpoint-syntax
+      - label: B1.8 [Text & Register]
+        start: text-register-formal
+        end: checkpoint-text-register
+      - label: B1.9 [Synthesis & Graduation]
+        start: narrative-mastery
+        end: practice-exam
     modules:
       # B1.0 [Baselines & Aspect Mastery]
       - b1-baseline-past-present
@@ -267,6 +354,34 @@ levels:
     type: core
     # V5 — 93 modules, State Standard 2024 fully compliant (#1144)
     # Redesigned 2026-04-04: grammar wall fix, 9 missing themes, 4 SS gaps filled
+    groups:
+      - label: B2.0 [Passive Voice System]
+        start: passive-voice-system
+        end: checkpoint-passive-voice
+      - label: B2.1 [Participles & Sentence Structure]
+        start: active-participles-past
+        end: checkpoint-syntax-i
+      - label: B2.2 [Advanced Syntax & Stylistics]
+        start: parenthetical-expressions
+        end: checkpoint-syntax-ii
+      - label: B2.3 [Stylistic Devices & Register]
+        start: phonetic-stylistic-devices
+        end: checkpoint-register-domain
+      - label: B2.4 [Domain Vocabulary & Advanced Cases]
+        start: register-practice-cross-register-rewriting
+        end: checkpoint-cases-morphology
+      - label: B2.5 [Verb Nuances & Word Formation]
+        start: aspect-nuances-secondary-imperfectivization
+        end: word-formation-adjective-adverbs
+      - label: B2.6 [Connectors, Synonymy & Phraseology]
+        start: advanced-conjunctions-i
+        end: checkpoint-lexicology-i
+      - label: B2.7 [Idioms, Neologisms & Professional Communication]
+        start: idioms-somatic
+        end: news-analysis
+      - label: B2.8 [Communication Skills & Capstone]
+        start: presentation-skills
+        end: b2-final-exam
     modules:
       # B2.0 [Passive Voice System]
       - passive-voice-system
@@ -374,6 +489,43 @@ levels:
     type: core
     # V5 — 115 modules, State Standard 2024 fully compliant (#1145)
     # Redesigned 2026-04-04: 7 SS gaps filled, 10 missing themes added, grammar walls broken
+    groups:
+      - label: C1.0 [Bridge & Academic Foundation]
+        start: b2-review-bridge
+        end: c1-0-checkpoint
+      - label: C1.1 [Academic Writing & Grammar Mastery]
+        start: counterarguments
+        end: c1-1-checkpoint
+      - label: C1.2 [Professional & Social Context]
+        start: cv-resume-writing
+        end: c1-2-checkpoint
+      - label: C1.3 [Language Studies & Morphology]
+        start: zahalne-movoznavstvo
+        end: checkpoint-movoznavstvo
+      - label: C1.4 [Complex Sentences]
+        start: skladnosuriadne-rechennia
+        end: checkpoint-complex-sentences
+      - label: C1.5 [Stylistics & Rhetoric]
+        start: metaphor-simile
+        end: checkpoint-c1-5
+      - label: C1.6 [Literature]
+        start: istoriia-ukrainskoi-literatury
+        end: review-c1-6
+      - label: C1.7 [Folk Music & Crafts]
+        start: kobzari-bandura
+        end: checkpoint-folk-music
+      - label: C1.8 [Folk Culture & Traditions]
+        start: narodna-mifolohiia
+        end: checkpoint-folk-traditions
+      - label: C1.9 [Regional Culture & Daily Life]
+        start: traditional-clothing
+        end: checkpoint-folk-culture
+      - label: C1.10 [Fine Arts & Performance]
+        start: ukrainian-avant-garde
+        end: checkpoint-fine-arts
+      - label: C1.11 [Theatre, Architecture & Cinema]
+        start: teatralne-mystetstvo-1
+        end: c1-final-checkpoint
     modules:
       # C1.0 [Bridge & Academic Foundation]
       - b2-review-bridge
@@ -521,6 +673,43 @@ levels:
       - c1-final-checkpoint
   hist:
     type: track
+    groups:
+      - label: Origins before Rus
+        start: trypillian-civilization
+        end: syntez-vytoky-1
+      - label: Kyivan Rus foundations
+        start: oleh-ihor
+        end: syntez-kyivska-rus
+      - label: Mongol shock, Galicia-Volhynia, and Crimea
+        start: mongolska-navala
+        end: syntez-dvokniazivstvo
+      - label: Lithuanian-Polish era and confessional conflict
+        start: velyke-kniazivstvo-lytovske
+        end: syntez-lytva-polska
+      - label: Cossack rise and the Sich
+        start: kozatstvo-vytoky
+        end: syntez-kozatstvo-vytoky
+      - label: Khmelnytsky uprising and the Ruin
+        start: khmelnychchyna-prychyny
+        end: syntez-khmelnychchyna
+      - label: Hetmanate, Mazepa, and imperial liquidation
+        start: ivan-mazepa-derzhavnyk
+        end: krypatsvo-selo
+      - label: National awakening under empire
+        start: kyrylo-mefodiivtsi
+        end: sichovi-striltsi
+      - label: Revolution and statehood
+        start: tsentralna-rada
+        end: syntez-revoliutsiia
+      - label: Interwar terror and World War II
+        start: rozstriliane-vidrodzennia
+        end: syntez-trahedii
+      - label: Soviet rule, dissent, and independence
+        start: povoienne-vidbudova
+        end: syntez-nezalezhnist
+      - label: War for survival
+        start: viyna-donbas
+        end: syntez-viyna
     modules:
       - trypillian-civilization
       - scythians-sarmatians
@@ -664,6 +853,40 @@ levels:
       - syntez-viyna
   bio:
     type: track
+    groups:
+      - label: Rus founders and dynasties
+        start: knyahynia-olha
+        end: yuriy-lvovych
+      - label: Borderland power, church reform, and early Cossacks
+        start: kostiantyn-ostrozky-elder
+        end: dmytro-bortnyanskyy
+      - label: Cultural nation-builders
+        start: ivan-kotliarevskyi
+        end: yulian-bachynskyi
+      - label: National movement and state builders
+        start: ahatanhel-krymskyi
+        end: josyf-slipyj
+      - label: Interwar modernism and the destroyed generation
+        start: milena-rudnytska
+        end: mykhailo-yangel
+      - label: Late Soviet institutions and public authority
+        start: petro-vesklyarov
+        end: liubomyr-huzar
+      - label: Dissent and the post-Soviet public sphere
+        start: vasyl-symonenko
+        end: vitaly-portnikov
+      - label: Civic resistance and wartime figures
+        start: taras-prokhasko
+        end: andrii-chaikovskyi
+      - label: Literary modernism, exile, and diaspora
+        start: iryna-vilde
+        end: vira-vovk
+      - label: Scholarship, samvydav, and human rights
+        start: omelian-pritsak
+        end: veniamin-kushnir
+      - label: War, occupation, churches, and Crimea
+        start: vasyl-slipak
+        end: nariman-dzhelial
     modules:
       - knyahynia-olha
       - kniaz-sviatoslav
@@ -977,6 +1200,31 @@ levels:
       - nariman-dzhelial
   lit:
     type: track
+    groups:
+      - label: Birth of the canon
+        start: introduction-to-kotliarevsky
+        end: cult-of-shevchenko
+      - label: Realism and national prose
+        start: kulish-literary-legacy
+        end: synthesis-1
+      - label: Modernist breakthrough
+        start: franko-biography
+        end: semenko-kobzar-burning
+      - label: Executed Renaissance and wartime survival
+        start: yanovsky-master-of-the-ship
+        end: synthesis-3
+      - label: Resistance, samvydav, and diaspora bridges
+        start: lukash-translation-as-resistance
+        end: synthesis-4
+      - label: Postmodernism and 1990s-2010s renewal
+        start: bu-ba-bu-carnival
+        end: kateryna-kalytko-prose
+      - label: War, decolonization, and contemporary witness
+        start: sofia-andrukhovych-amados
+        end: synthesis-5
+      - label: Roots revisited
+        start: skovoroda-baroque-philosophy
+        end: kyiv-school-of-poetry
     modules:
       - introduction-to-kotliarevsky
       - eneida-part-1
@@ -1212,6 +1460,70 @@ levels:
       - kyiv-school-of-poetry
   istorio:
     type: track
+    groups:
+      - label: Historiography & Methodology
+        start: shcho-take-istorio
+        end: istorychna-pamiat-i-polityka
+      - label: Primary Sources - Medieval
+        start: povist-mynulykh-lit-i
+        end: syntez-serednovichni-dzherela
+      - label: Primary Sources - Cossack Era
+        start: kozatski-litopysy-ohliad
+        end: syntez-kozatski-dzherela
+      - label: Modern Primary Sources - 19th-20th Century
+        start: knyhy-butiia-shevchenko
+        end: syntez-moderni-dzherela
+      - label: Primary Sources - Dissidents & Independence
+        start: samvydav-shcho-tse
+        end: syntez-dysydentski-dzherela
+      - label: Thematic Deep Dive - Holodomor Studies
+        start: holodomor-istorio
+        end: syntez-holodomor-studiyi
+      - label: Thematic Deep Dive - Executed Renaissance
+        start: rozstriliane-kontekst
+        end: syntez-rozstriliane
+      - label: Thematic Deep Dive - Religious Identity
+        start: khreshchennia-spadshchyna
+        end: syntez-relihiina-identychnist
+      - label: Thematic Deep Dive - Diaspora Studies
+        start: persha-khvylia-emihratsiyi
+        end: syntez-diaspora
+      - label: Regional Perspectives I - Western Lands
+        start: halychyna-pid-avstriieyu
+        end: syntez-zakhidni-rehiony
+      - label: Regional Perspectives II - East & South
+        start: slobozhanshchyna-identychnist
+        end: syntez-rehionalna-riznomanitnist
+      - label: Imperial Mechanisms - The Co-optation Cycle
+        start: mekhanizm-kooptatsii
+        end: syntez-tsykl-zrady
+      - label: Crossroads - Pivotal Turning Points
+        start: pereiaslav-alternatyvy
+        end: syntez-rozdorizhzhia
+      - label: The West and Ukraine - Pattern of Abandonment
+        start: zakhid-1918
+        end: syntez-zakhid-2022
+      - label: Economic Exploitation - Material Basis of Colonialism
+        start: ekonomika-imperii
+        end: syntez-ekonomichna-kolonizatsiia
+      - label: Information Warfare - Narrative as Weapon
+        start: malorosiia-konstrukt
+        end: syntez-informatsiina-viina
+      - label: Polish-Ukrainian Relations - 600 Years of Complexity
+        start: polska-i-ukraina-symbioz
+        end: syntez-polska-ukraina-2022
+      - label: Jewish-Ukrainian Relations - Shared Land, Contested Memory
+        start: yevrei-v-ukraini-do-1917
+        end: syntez-yevrei-ukraina
+      - label: Cultural Revival Cycles - Persecution and Renaissance
+        start: tsykl-kulturnykh-vidrodzhen
+        end: syntez-pislya-2014
+      - label: Ukrainian Agency - Not Just Victims
+        start: kulturna-rezystentsiia
+        end: syntez-ahentsnist
+      - label: Final Synthesis - The Ukrainian Question
+        start: ukrainske-pytannia-xxi
+        end: finalnyi-syntez
     modules:
       - shcho-take-istorio
       - ukrainska-istoriohrafichna-tradytsiia
@@ -1353,6 +1665,22 @@ levels:
     type: core
     # V5 — 110 modules, State Standard 2024 fully compliant (#1146)
     # Redesigned 2026-04-04: 4 missing themes added, thematic block restructured
+    groups:
+      - label: C2.1 [Stylistic Perfection]
+        start: c1-bridge-assessment
+        end: c2-1-checkpoint
+      - label: C2.2 [Literary Mastery]
+        start: literary-theory
+        end: c2-2-checkpoint
+      - label: C2.3 [Professional Specialization]
+        start: professional-language-overview
+        end: c2-3-checkpoint
+      - label: C2.4 [Thematic Mastery]
+        start: liudyna-i-suspilna-rol
+        end: c2-4-checkpoint
+      - label: C2.5 [Meta-Skills & Capstone]
+        start: complete-grammar-review
+        end: c2-riven-zaversheno
     modules:
       # C2.1 [Stylistic Perfection]
       - c1-bridge-assessment
@@ -1471,6 +1799,19 @@ levels:
       - c2-riven-zaversheno
   oes:
     type: track
+    groups:
+      - label: Vernacular Foundations
+        start: walls-speak-intro
+        end: daily-life-vocabulary
+      - label: Chronicle and Princely Narrative
+        start: pvl-intro-geography
+        end: review-princely-cycle
+      - label: Legal Tradition
+        start: law-intro
+        end: review-social-pyramid
+      - label: Treaties, Poetry, and Sacred Narrative
+        start: treaty-911-oleg
+        end: oes-capstone
     modules:
       - walls-speak-intro
       - alphabet-glagolitic-cyrillic
@@ -1576,6 +1917,22 @@ levels:
       - oes-capstone
   ruth:
     type: track
+    groups:
+      - label: Chancery - Legal & Administrative
+        start: intro-to-ruth
+        end: paleography-lab-skoropys
+      - label: Sacred Word - Vernacular Scripture
+        start: translators-dedication
+        end: need-for-norms
+      - label: Baroque Fight - Polemics & Grammar
+        start: orthography-letters
+        end: dialogue-with-latins
+      - label: Cossack Word - Chronicles & Philosophy
+        start: social-critique
+        end: philosophical-lab
+      - label: Linguistic Identity - Vernacular Traditions & Grammars
+        start: fedorovych-bukvar
+        end: ruth-capstone
     modules:
       - intro-to-ruth
       - sovereign-state
@@ -1694,6 +2051,25 @@ levels:
       - ruth-capstone
   lit-essay:
     type: track
+    groups:
+      - label: Baroque roots and first polemics
+        start: essay-origins-polemics
+        end: kulish-panteleimon-essayist
+      - label: National awakening essays
+        start: kostomarov-two-rus-nationalities
+        end: hrushevsky-essayist
+      - label: Ideological explosion
+        start: mikhnovsky-independent-ukraine
+        end: zerov-ad-fontes
+      - label: Canon-building and criticism
+        start: yefremov-literary-criticism
+        end: grabowicz-poet-prophet
+      - label: Decolonization and intellectual history
+        start: zabuzhko-fortinbras
+        end: snyder-dialogues
+      - label: Resistance, testimony, and memory
+        start: mariia-berlinska-dignity
+        end: shumuk-memoirs
     modules:
       - essay-origins-polemics
       - prokopovych-baroque-oratory
@@ -1760,6 +2136,19 @@ levels:
       - shumuk-memoirs
   lit-hist-fic:
     type: track
+    groups:
+      - label: Classical foundations
+        start: kulish-black-council-revisit
+        end: lepkyi-mazepa
+      - label: Zahrebelny and the epic novel
+        start: zahrebelny-roksolana-1
+        end: ivanychuk-scar
+      - label: Rewriting the national past
+        start: bilyk-sword-ares
+        end: kokotyukha-chervonyi
+      - label: Borderland legends and synthesis
+        start: rafeyenko-long-times
+        end: shevchuk-three-leaves
     modules:
       - kulish-black-council-revisit
       - starytsky-bohdan
@@ -1786,6 +2175,22 @@ levels:
       - shevchuk-three-leaves
   lit-fantastika:
     type: track
+    groups:
+      - label: Gothic and early fantasy
+        start: kvitka-dead-mans-easter
+        end: smolych-beautiful-catastrophes
+      - label: Cosmic philosophy
+        start: berdnyk-star-corsair-1
+        end: rosokhovatsky-cyborgs
+      - label: Urban fantasy and magical realism
+        start: vynnychuk-tango-death
+        end: korniy-forest
+      - label: Techno-thrillers and anthology
+        start: kidruk-bots
+        end: fantastika-anthology
+      - label: Hard SF and synthesis
+        start: kidruk-bot-thriller
+        end: fantastika-synthesis
     modules:
       - kvitka-dead-mans-easter
       - storozhenko-devil
@@ -1814,6 +2219,22 @@ levels:
       - fantastika-synthesis
   lit-war:
     type: track
+    groups:
+      - label: Historical war memory
+        start: sich-riflemen-poetry
+        end: wwii-malaniuk-war-poetry
+      - label: 2014 beginnings and Maidan
+        start: war-lit-origins-2014
+        end: zhadan-life-maria
+      - label: Frontline prose and testimony
+        start: markus-traces-on-road
+        end: babich-poetry
+      - label: Volunteer canon and synthesis
+        start: kotsyubailo-legacy-lit
+        end: war-lit-synthesis
+      - label: Full-scale war, underground, and legacy
+        start: maksym-kryvtsov-poetry
+        end: bohdan-zholdak-ukry
     modules:
       - sich-riflemen-poetry
       - unr-war-literature
@@ -1846,6 +2267,16 @@ levels:
       - bohdan-zholdak-ukry
   lit-humor:
     type: track
+    groups:
+      - label: Classical satire
+        start: kotliarevsky-laughter
+        end: ostap-vyshnia-smiles-2
+      - label: Humor under pressure
+        start: ostap-vyshnia-prison
+        end: andrukhovych-postmodern-irony
+      - label: Postmodern and meme culture
+        start: poderviansky-hamlet-critique
+        end: humor-synthesis
     modules:
       - kotliarevsky-laughter
       - rudansky-spivomovky
@@ -1863,6 +2294,25 @@ levels:
       - humor-synthesis
   lit-youth:
     type: track
+    groups:
+      - label: Classics
+        start: franko-fox-mykyta
+        end: zavadovych-adventures
+      - label: Nestayko
+        start: nestayko-toreadors-1
+        end: nestayko-fantasy
+      - label: Soviet-era Ukrainian children's lit
+        start: blyznets-zemlyanyk
+        end: rutkivsky-dzhury-2
+      - label: Publishing revolution and 1990s boom
+        start: malkovych-poems
+        end: bachynsky-140-decibels
+      - label: Contemporary YA and children's canon
+        start: pavliuk-rytm
+        end: rutkivsky-dzhury-3
+      - label: New experiments and synthesis
+        start: voronyna-agent-000
+        end: juvenile-synthesis
     modules:
       - franko-fox-mykyta
       - pchilka-fables
@@ -1898,6 +2348,19 @@ levels:
       - juvenile-synthesis
   lit-drama:
     type: track
+    groups:
+      - label: Origins and stage theory
+        start: kotliarevsky-drama-tradition
+        end: kurbas-legacy
+      - label: Kulish and Berezil
+        start: kulish-pathetique
+        end: kulish-myna-mazailo
+      - label: Documentary and cinematic stage
+        start: vorozhbyt-bad-roads
+        end: tsilyk-cinematic-script
+      - label: Roots revisited and contemporary stage
+        start: karpenko-karyi-theatre
+        end: vynnychenko-european-stage
     modules:
       - kotliarevsky-drama-tradition
       - lesia-ukrainka-dramatic-legacy
@@ -1918,6 +2381,34 @@ levels:
       - vynnychenko-european-stage
   folk:
     type: track
+    groups:
+      - label: Блок A · Світогляд і основа · Worldview & Foundation
+        start: narodna-kultura-yak-systema
+        end: zamovliannia-zaklynannia-prymovky
+      - label: Блок B · Календарна обрядовість · Calendar Ritual
+        start: kalendarna-obriadovist-zvychai
+        end: zhnyvarski-obzhynkovi-pisni
+      - label: Блок C · Родинна обрядовість · Family Rites
+        start: rodynna-obriadovist-zvychai
+        end: holosinnya
+      - label: Блок D · Епос і кобзарство · Epic & Kobzar Tradition
+        start: dumy-nevilnytski-lytsarski
+        end: bylyny-kyivskoho-tsyklu
+      - label: Блок E · Пісенні жанри · Song Genres
+        start: istorychni-pisni
+        end: pisni-literaturnoho-pokhodzhennia
+      - label: Блок F · Проза, паремії, дитячий фольклор · Prose, Paremia, Children's Lore
+        start: charivni-kazky
+        end: dytiachyi-folklor-kolyskovi
+      - label: Блок G · Драма, музика, танець · Drama, Music, Dance
+        start: vertep-narodna-drama
+        end: narodni-tantsi
+      - label: Блок H · Матеріальна культура · Material Culture
+        start: pysankarstvo
+        end: narodna-kukhnia-obriadova-yizha
+      - label: Блок I · Синтез · Synthesis
+        start: rehionalni-etnokulturni-tradytsii
+        end: narodna-kultura-ta-vysoka-kultura-mistky
     modules:
       # Folk track expanded 27 -> 42 (broad folk CULTURE, C1+), de-imperialized.
       # Build order + slug renames/folds per docs/folk-epic/phase-folk-queue.md +
