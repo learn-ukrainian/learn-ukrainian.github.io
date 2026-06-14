@@ -1,0 +1,204 @@
+- lemma: спрощення
+  translation: simplification
+  pos: noun:n
+  usage: Спрощення приголосних допомагає уникати важких збігів.
+- lemma: приголосний
+  translation: consonant
+  pos: noun:m
+  usage: У слові радісний приголосний т не пишеться.
+- lemma: група приголосних
+  translation: consonant cluster
+  pos: phrase
+  usage: Група приголосних може бути важкою для вимови.
+- lemma: збіг приголосних
+  translation: consonant cluster
+  pos: phrase
+  usage: Збіг приголосних стн часто спрощується до сн.
+- lemma: милозвучність
+  translation: euphony
+  pos: noun:f
+  usage: Милозвучність пояснює, чому деякі звуки випадають.
+- lemma: випадати
+  translation: to drop out
+  pos: verb
+  usage: У слові щасливий т випадає.
+- lemma: зникати
+  translation: to disappear
+  pos: verb
+  usage: Приголосний зникає тільки в певних словотвірних моделях.
+- lemma: вимова
+  translation: pronunciation
+  pos: noun:f
+  usage: Вимова слова може бути простішою за його написання.
+- lemma: правопис
+  translation: orthography, spelling
+  pos: noun:m
+  usage: Правопис фіксує нормативну форму слова.
+- lemma: письмо
+  translation: writing
+  pos: noun:n
+  usage: У слові шістнадцять письмо зберігає т.
+- lemma: виняток
+  translation: exception
+  pos: noun:m
+  usage: Пестливий є винятком із правила спрощення.
+- lemma: словотворення
+  translation: word formation
+  pos: noun:n
+  usage: Спрощення часто з'являється під час словотворення.
+- lemma: похідний
+  translation: derived
+  pos: adjective
+  usage: Похідний прикметник може мати менше приголосних, ніж основа.
+- lemma: основа
+  translation: stem, base
+  pos: noun:f
+  usage: Основа слова якість містить ст.
+- lemma: корінь
+  translation: root
+  pos: noun:m
+  usage: Корінь допомагає побачити споріднені слова.
+- lemma: суфікс
+  translation: suffix
+  pos: noun:m
+  usage: Суфікс -н- часто створює важкий збіг приголосних.
+- lemma: орфограма
+  translation: spelling rule pattern
+  pos: noun:f
+  usage: Спрощення в групах приголосних є важливою орфограмою.
+- lemma: морфонологія
+  translation: morphophonology
+  pos: noun:f
+  usage: Морфонологія пояснює звукові зміни в будові слова.
+- lemma: чергування
+  translation: alternation
+  pos: noun:n
+  usage: Чергування відрізняється від спрощення.
+- lemma: тиждень
+  translation: week
+  pos: noun:m
+  usage: Слово тиждень допомагає зрозуміти форму тижневий.
+- lemma: тижневий
+  translation: weekly
+  pos: adjective
+  usage: Тижневий план пишеться без д.
+- lemma: проїзд
+  translation: travel, fare
+  pos: noun:m
+  usage: Проїзд є базою для слова проїзний.
+- lemma: проїзний
+  translation: travel pass; for travel
+  pos: adjective
+  usage: Проїзний квиток пишеться без д.
+- lemma: щастя
+  translation: happiness
+  pos: noun:n
+  usage: Від слова щастя утворюємо щасливий.
+- lemma: щасливий
+  translation: happy
+  pos: adjective
+  usage: Щасливий пишеться без т.
+- lemma: радість
+  translation: joy
+  pos: noun:f
+  usage: Радість дає прикметник радісний.
+- lemma: радісний
+  translation: joyful
+  pos: adjective
+  usage: Радісний має спрощення стн до сн.
+- lemma: якість
+  translation: quality
+  pos: noun:f
+  usage: Якість дає прикметник якісний.
+- lemma: якісний
+  translation: high-quality
+  pos: adjective
+  usage: Якісний текст пишеться без т.
+- lemma: честь
+  translation: honor
+  pos: noun:f
+  usage: Честь пов'язана зі словом чесний.
+- lemma: чесний
+  translation: honest
+  pos: adjective
+  usage: Чесний пишеться без т.
+- lemma: користь
+  translation: benefit
+  pos: noun:f
+  usage: Користь дає прикметник корисний.
+- lemma: корисний
+  translation: useful
+  pos: adjective
+  usage: Корисний приклад допомагає запам'ятати правило.
+- lemma: область
+  translation: region, oblast
+  pos: noun:f
+  usage: Область дає прикметник обласний.
+- lemma: обласний
+  translation: regional, oblast-level
+  pos: adjective
+  usage: Обласний центр пишеться без т.
+- lemma: тиск
+  translation: pressure
+  pos: noun:m
+  usage: Тиск пов'язаний із дієсловом тиснути.
+- lemma: тиснути
+  translation: to press
+  pos: verb
+  usage: Тиснути пишеться без к перед н.
+- lemma: бризки
+  translation: splashes
+  pos: noun:pl
+  usage: Бризки пов'язані з дієсловом бризнути.
+- lemma: бризнути
+  translation: to splash once
+  pos: verb
+  usage: Бризнути пишеться без к перед н.
+- lemma: масло
+  translation: butter; oil
+  pos: noun:n
+  usage: Масло дає прикметник масний.
+- lemma: масний
+  translation: greasy, oily
+  pos: adjective
+  usage: Масний пишеться без л.
+- lemma: пестливий
+  translation: affectionate, endearing
+  pos: adjective
+  usage: Пестливий є винятком і пишеться з т.
+- lemma: хвастливий
+  translation: boastful
+  pos: adjective
+  usage: Хвастливий не спрощується на письмі.
+- lemma: кістлявий
+  translation: bony
+  pos: adjective
+  usage: Кістлявий пишеться з т.
+- lemma: шістнадцять
+  translation: sixteen
+  pos: numeral
+  usage: Шістнадцять зберігає т на письмі.
+- lemma: зап'ястний
+  translation: wrist-related
+  pos: adjective
+  usage: Зап'ястний зберігає т на письмі.
+- lemma: контрастний
+  translation: contrasting, high-contrast
+  pos: adjective
+  usage: Контрастний пишеться з т.
+- lemma: серце
+  translation: heart
+  pos: noun:n
+  usage: Серце пов'язане зі словом сердечний.
+- lemma: сердечний
+  translation: heartfelt, cordial; cardiac in some contexts
+  pos: adjective
+  usage: Сердечний показує споріднену українську форму.
+- lemma: сонце
+  translation: sun
+  pos: noun:n
+  usage: Сонце пов'язане зі словом сонячний.
+- lemma: сонячний
+  translation: sunny, solar
+  pos: adjective
+  usage: Сонячний допомагає побачити українську родину слова.

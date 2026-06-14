@@ -1,0 +1,32 @@
+- title: Заболотний Grade 5, p.109-112
+  role: textbook
+  notes: Планове джерело для таблиці спрощення в групах приголосних, прикладів і винятків.
+  source_ref: Заболотний Grade 5, p.109-112
+- title: Литвінова Grade 5, p.180-183
+  role: textbook
+  notes: Планове джерело для пояснення спрощення як засобу милозвучності та демонстрації проїзд - проїзний.
+  source_ref: Литвінова Grade 5, p.180-183
+- title: Авраменко Grade 5, p.109
+  role: textbook
+  notes: Планове джерело для орфограми спрощення в групах приголосних і випадків, коли літера зберігається на письмі.
+  source_ref: Авраменко Grade 5, p.109
+- title: Голуб Grade 5, p.93
+  role: textbook
+  notes: Планове джерело для зв'язку спрощення з милозвучністю української мови.
+  source_ref: Голуб Grade 5, p.93
+- title: Local B1 alternation-vowels module
+  role: curriculum
+  notes: Попередній B1.1 модуль для контрасту між спрощенням приголосних і іншими морфонологічними процесами.
+  source_ref: curriculum/l2-uk-en/b1/alternation-vowels/module.md
+- title: Local B1 alternation-consonants-nouns module
+  role: curriculum
+  notes: Попередній B1.1 модуль для контрасту між чергуванням і випадінням приголосного.
+  source_ref: curriculum/l2-uk-en/b1/alternation-consonants-nouns/module.md
+- title: Local B1 alternation-consonants-verbs module
+  role: curriculum
+  notes: Безпосередній попередник для пояснення, що спрощення не є чергуванням.
+  source_ref: curriculum/l2-uk-en/b1/alternation-consonants-verbs/module.md
+- title: Goroh and Slovnyk.ua form checks
+  role: dictionary
+  notes: Використано для перевірки нормативних форм тижневий, проїзний, щасливий, радісний, якісний, чесний, корисний, обласний, тиснути, бризнути, масний, пестливий, хвастливий, кістлявий, шістнадцять, контрастний.
+  source_ref: goroh.pp.ua; slovnyk.ua
