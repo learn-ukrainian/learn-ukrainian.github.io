@@ -58,7 +58,59 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 31 HANDOFF (2026-06-14 — both PRs MERGED + verified on main (folk 6/42); local site verified-not-broken; orchestrator auto-onboards; handoff-structure fix still OPEN) — **RESUME HERE**
+## ▶▶▶ SESSION 32 HANDOFF (2026-06-14 — llm_qg PARITY BATCH run on all 5 pending folk modules (codex reviewer) → all now have llm_qg.json; reveals UNIFORM pedagogical weakness 5.8–6.8 = concrete #3079 evidence; NO module cleanly clears the surfacing gate; no-options rule pinned to both agent defs, #3156 MERGED) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** No new module content. Ran the standalone llm_qg parity batch (NEW tool
+> `scripts/build/run_llm_qg_parity.py`, replicates `_run_llm_qg`, reviewer=codex-tools — gemini folk-barred)
+> on the 5 pending modules → each now has `llm_qg.json` (parity with kalendarna). Verdicts are SINGLE-PASS
+> advisory (V7 llm_qg is non-blocking, no correction loop). Folk modules 6/42 unchanged.
+
+### ✅ DONE THIS SESSION
+- **#3156 MERGED** — pinned a hard `#0` rule ("execute the named action; never offer options when
+  determinable" + mirror clause: system-self changes need an explicit present-tense go) to the TOP of BOTH
+  `curriculum-orchestrator` + `curriculum-track-orchestrator` defs → loads every session. (Direct user order.)
+- **llm_qg PARITY BATCH (this PR):** 5 `llm_qg.json` + the reusable runner. Verdicts (codex reviewer):
+
+  | module | terminal | min | min_dim |
+  |---|---|---|---|
+  | koliadky | REVISE | 6.7 | pedagogical |
+  | dumy | PASS\* | 5.8 | pedagogical (REJECT) |
+  | narodna-kultura #01 | REVISE | 6.8 | pedagogical |
+  | narodni-viruvannia #02 | PASS\* | 5.8 | pedagogical (REJECT) |
+  | zamovliannia #03 | REVISE | 6.8 | engagement |
+  | kalendarna (ref, on main) | PASS | 7.0 | pedagogical |
+
+  \*PASS only because pedagogical is a WARNING/advisory dim in V7 (terminal_verdict ignores it) — both "PASS"
+  modules actually REJECT pedagogical at 5.8. So **NO module cleanly clears LLM QG; ALL are weak on pedagogical
+  (5.8–6.8)** — the #M-11 trap (terminal-PASS ≠ good artifact).
+
+### 🧱 KEY FINDING (concrete #3079 evidence — for infra orchestrator)
+Uniform `pedagogical` weakness across ALL folk modules. Reviewer evidence keys on `<!-- INJECT_ACTIVITY: act-N -->`
+placeholders — the per-dim review sees module.md with raw injection markers + activities as a separate YAML
+section, NOT the assembled inline activity flow. So part of the low score may be a REVIEW-PRESENTATION artifact
+(reviewer judges the un-assembled module), part genuine pedagogical thinness. Either way folk modules do NOT
+self-converge on LLM QG → #3079 (top priority, infra lane). Raw per-dim prompts/responses kept in the parity
+worktree (forensics #M-10) — NOT committed.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **Decide fix-vs-rebuild for the pedagogical gap** (orchestrator/user). Cheap first test of the
+   presentation-artifact hypothesis: re-run the parity review against the ASSEMBLED MDX (not raw module.md);
+   if pedagogical lifts, the gate was judging the un-assembled module. If it stays low → real content thinness:
+   read each module's `llm_qg.json` `evidence`/`evidence_quotes`, apply a pedagogical-correction pass (activity
+   integration, self-check scaffolding), re-run `run_llm_qg_parity.py`. OR land #3079 and rebuild clean.
+2. **Surfacing folk: STILL GATED** — koliadky+dumy do NOT cleanly clear LLM QG (REVISE 6.7 / pedag-REJECT 5.8).
+   Do NOT un-hide until the pedagogical gap is addressed.
+3. **Reading-links → 3 live modules' resources.yaml** (kalendarna/koliadky/dumy) + reassemble. [deterministic, unblocked]
+4. **Remaining folk modules 6→42**; gate each with `verify_shippable --astro-build` + corpus-hammer before status→active.
+
+### ⚠ CARRY-FORWARD
+- `run_llm_qg_parity.py` is the reusable e2e-parity tool (single-pass; V7 llm_qg is advisory/non-looping).
+- Committed parity `llm_qg.json` are SINGLE-PASS advisory reviews (not full rebuilds) — labeled as such in this PR.
+- `git push` folk → `--no-verify`; never reset/commit on main.
+
+---
+
+## ▶▶▶ SESSION 31 HANDOFF (2026-06-14 — both PRs MERGED + verified on main (folk 6/42); local site verified-not-broken; orchestrator auto-onboards; handoff-structure fix still OPEN) — (superseded by Session 32)
 
 > **⏱ HONEST SCOPE:** Closeout of the Session-30 infra work — no new content. Both PRs now MERGED +
 > verified on `origin/main`: **#3143** (infra A–E: render-landmine #3137 + DoD/cold-start #3138) and
