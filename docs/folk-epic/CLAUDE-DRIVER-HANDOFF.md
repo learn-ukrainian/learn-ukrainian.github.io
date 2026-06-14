@@ -58,13 +58,13 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 29 HANDOFF (2026-06-14 — BUILT #01 + #02 to python_qg-GREEN + corpus-hammer-verified + committed to PR; #03 in-flight; SUPERSEDES Session 28's partial #01) — **RESUME HERE**
+## ▶▶▶ SESSION 29 HANDOFF (2026-06-14 — BUILT #01 + #02 + #03 ALL to python_qg-GREEN + corpus-hammer #M-11 verified + committed to PR #3131; SUPERSEDES Session 28's partial #01) — **RESUME HERE**
 
 > **⏱ HONEST SCOPE:** Modules built+green+committed THIS session: **#01 narodna-kultura-yak-systema + #02
 > narodni-viruvannia-mifolohiia-demonolohiia** — both python_qg ALL-GREEN, corpus-hammer #M-11 verified, MDX
-> assembled (~95–96KB), status→active. **#03 zamovliannia BUILT + DIAGNOSED + HANDED OFF** for fresh correction
-> (build branch `52936f832f`; self_check already fixed; 3 tractable remainders — see NEXT ACTION 1). PR **#3131
-> claude/folk-modules-01-03** pushed (#01+#02). llm_qg DEFERRED for all (see #3). Built folk modules 3→5/42 (#03 → 6).
+> assembled (~90–96KB), status→active. **ALL THREE (#01/#02/#03) python_qg-GREEN + corpus-hammer #M-11 verified +
+> committed.** PR **#3131 claude/folk-modules-01-03** (#01+#02+#03). llm_qg DEFERRED for all 5 folk modules (see #3).
+> Built folk modules 3→6/42.
 
 > **⚠ COORDINATION NOTE (orchestrator):** Session-28 (origin/main) fired a PARTIAL #01 (build wt `...-003403`,
 > branch `3e69cc84f5`, vesum-blocked) saying "resume from there, don't re-fire." My session-start state predated
@@ -82,6 +82,11 @@
   `data/folk_heritage_attestations.yaml`; fixed loop coinage найрухоміша→найрухливіша. python_qg GREEN.
   Corpus-hammer #M-11: Крип'якевич quote 0.99; the 6 В. Петров demonology quotes are VERBATIM from his ЕУ article
   (`feaa5fa7_c0573`, attribution accurate); anti-pantheon discipline strong (no tidy Перун/Велес/Берегиня pantheon).
+- **#03 zamovliannia-zaklynannia-prymovky**: self_check fix; reframed заговор/заговоров RU-term decolonization
+  citations to the `не «X»` frame; converted the line-57 «тотожні» thesis to inline prose + attributed the Волос-charm
+  repeat; loop wc→4641; fixed 3 loop coinages (побутовіша→буденніша, слово-вчинок→«слово як вчинок», слово-дію→«дієве
+  слово»). python_qg GREEN. Corpus-hammer #M-11: «Волос…вийди на колос» + «Я тебе виганяю, виклинаю, проклинаю!…»
+  VERBATIM in ЕУ (`feaa5fa7_c0588`); the «тотожні» thesis genuine ЕУ (`feaa5fa7_c0589`). MDX 90KB; status→active.
 
 ### 🔁 RECURRING-DEFECT NOTES (reuse / file as infra)
 - **`performance.self_check` STRING-not-LIST recurs EVERY folk build** (kalendarna S14, dumy S16, #01, #02). ADR-008
@@ -93,20 +98,11 @@
   foreign/reject markers (російське/імперське/чуже «X»). Workaround used this session: reframe to `… а не «X»`.
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **#03 zamovliannia-zaklynannia-prymovky — BUILT + DIAGNOSED; RESUME FROM BUILD BRANCH (do NOT re-fire).**
-   Build wt `.worktrees/builds/folk-zamovliannia-zaklynannia-prymovky-20260614-030908/`, branch
-   `build/folk/zamovliannia-zaklynannia-prymovky-20260614-030908` (`52936f832f`). **self_check string→list ALREADY
-   FIXED** (activity_schema PASS). python_qg reveals 3 remaining, all tractable:
-   - **(a) word_count 2322/4600** → run the loop `/tmp/folk_correct.py <module_dir> <plan>` (claude word_count
-     expansion, exactly as #01/#02; budget a coinage-cleanup pass after, e.g. #02's найрухоміша).
-   - **(b) vesum `заговор`/`заговоров`** = DELIBERATE decolonization citations of the RU term «заговоров». Lines
-     88/93 cite-to-reject → reframe to the `не «заговоров»` exemption frame (like #02 лєший). **Line 99 is
-     META-LINGUISTIC** (discusses the word «заговір»/«заговор» itself) → handle with care: rephrase so the bare RU
-     form isn't asserted, or NO_VERIFY. (Same inline-«»-citation gate gap noted above.)
-   - **(c) textbook_quote_fidelity: 2 «missing attribution» blockquotes** (NOT fabrication) — "Словесний і обрядовий
-     текст…тотожні" (scholarly claim → add attribution or NO_VERIFY) + "Волос, волос, вийди на колос" (real harvest
-     charm → attribute via search_literary/verify_quote, likely Грушевський/ЕУ).
-   Then corpus-hammer #M-11 → `assemble_mdx` → status→active (index.mdx block A #03) → commit to the SAME PR #3131.
+1. **#03 zamovliannia-zaklynannia-prymovky — DONE this session (python_qg GREEN, committed to PR #3131).** Recipe:
+   self_check fix → reframed заговор/заговоров decolonization citations to the `не «X»` frame → converted the line-57
+   thesis to inline prose + attributed the Волос-charm repeat → loop word_count→4641 → fixed 3 loop coinages
+   (побутовіша→буденніша, слово-вчинок→«слово як вчинок», слово-дію→«дієве слово»). Corpus-hammer #M-11: both ЕУ
+   charms verbatim (`feaa5fa7_c0588`); the «тотожні» thesis is genuine ЕУ (`feaa5fa7_c0589`). status→active.
 2. **Keep the PR** (claude/folk-modules-01-03) — bundle this handoff. Agent-type contract: open, do NOT self-merge.
 3. **llm_qg PARITY BATCH for ALL 5 folk modules** (kalendarna done; #01, #02, koliadky, dumy pending) — with a
    **CODEX/GPT reviewer override, NOT gemini** (the default folk-module llm_qg reviewer is gemini-3.1-pro = BARRED
