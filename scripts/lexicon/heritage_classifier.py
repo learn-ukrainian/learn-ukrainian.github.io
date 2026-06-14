@@ -15,6 +15,7 @@ import os
 import re
 import sqlite3
 import sys
+from contextlib import closing
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -128,29 +129,65 @@ _BORROWING_MARKERS = (
 )
 
 
-def classify_lemma(lemma: str) -> dict[str, Any]:
+def classify_lemma(
+    lemma: str,
+    db_path: str | Path | None = None,
+    vesum_db_path: str | Path | None = None,
+) -> dict[str, Any]:
     """Classify a lemma for Word Atlas ``heritage_status`` badges."""
     variants = _lemma_variants(lemma)
     if len(variants) <= 1:
-        return _classify(variants[0] if variants else "", surface=False)
-    return _merge_variant_statuses([_classify(variant, surface=False) for variant in variants])
+        return _classify(
+            variants[0] if variants else "",
+            surface=False,
+            db_path=db_path,
+            vesum_db_path=vesum_db_path,
+        )
+    return _merge_variant_statuses(
+        [
+            _classify(
+                variant,
+                surface=False,
+                db_path=db_path,
+                vesum_db_path=vesum_db_path,
+            )
+            for variant in variants
+        ]
+    )
 
 
-def classify_surface_form(form: str) -> dict[str, Any]:
+def classify_surface_form(
+    form: str,
+    db_path: str | Path | None = None,
+    vesum_db_path: str | Path | None = None,
+) -> dict[str, Any]:
     """Classify an inflected/surface form for VESUM-gate importers."""
     term = _normalize_word(form)
-    return _classify(term, surface=True)
+    return _classify(term, surface=True, db_path=db_path, vesum_db_path=vesum_db_path)
 
 
-def _classify(term: str, *, surface: bool) -> dict[str, Any]:
+def _classify(
+    term: str,
+    *,
+    surface: bool,
+    db_path: str | Path | None = None,
+    vesum_db_path: str | Path | None = None,
+) -> dict[str, Any]:
     if not term:
         return _status("unknown", [], is_russianism=False, russian_shadow=False)
 
-    russian_shadow, russian_shadow_detail = _check_russian_shadow(term)
-    sovietization_risk = _sum11_sovietization_risk_for_term(term)
+    russian_shadow, russian_shadow_detail = _check_russian_shadow(
+        term,
+        vesum_db_path=vesum_db_path,
+    )
+    sovietization_risk = _sum11_sovietization_risk_for_term(term, db_path=db_path)
 
-    vesum = _vesum_attestation(term, surface=surface)
-    vesum_archaism = _vesum_archaism_attestation(term, surface=surface)
+    vesum = _vesum_attestation(term, surface=surface, vesum_db_path=vesum_db_path)
+    vesum_archaism = _vesum_archaism_attestation(
+        term,
+        surface=surface,
+        vesum_db_path=vesum_db_path,
+    )
     has_modern_vesum = bool(vesum) and not (
         vesum_archaism and not vesum_archaism["has_modern"]
     )
@@ -159,7 +196,7 @@ def _classify(term: str, *, surface: bool) -> dict[str, Any]:
 
     attestations: list[dict[str, Any]] = []
     classification = "unknown"
-    with _source_conn() as conn:
+    with closing(_source_conn(db_path)) as conn:
         auth_hits = _strict_heritage_attestations(conn, term, surface=surface)
         has_standard_hit = any(hit["classification"] == "standard" for hit in auth_hits)
         for hit in auth_hits:
@@ -254,10 +291,15 @@ def _status(
     }
 
 
-def _source_conn() -> sqlite3.Connection:
-    if not SOURCES_DB.exists():
-        raise FileNotFoundError(f"local sources database not found: {SOURCES_DB}")
-    conn = sqlite3.connect(f"file:{SOURCES_DB}?mode=ro", uri=True)
+def _source_db_path(db_path: str | Path | None = None) -> Path:
+    return Path(db_path) if db_path is not None else SOURCES_DB
+
+
+def _source_conn(db_path: str | Path | None = None) -> sqlite3.Connection:
+    source_db = _source_db_path(db_path)
+    if not source_db.exists():
+        raise FileNotFoundError(f"local sources database not found: {source_db}")
+    conn = sqlite3.connect(f"file:{source_db}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -311,12 +353,17 @@ def _apostrophe_variants(term: str) -> tuple[str, ...]:
     return tuple(sorted(variants))
 
 
-def _vesum_attestation(term: str, *, surface: bool) -> dict[str, Any] | None:
+def _vesum_attestation(
+    term: str,
+    *,
+    surface: bool,
+    vesum_db_path: str | Path | None = None,
+) -> dict[str, Any] | None:
     try:
         if surface:
             from scripts.verification.vesum import verify_word
 
-            matches = verify_word(term)
+            matches = verify_word(term, db_path=vesum_db_path)
             if not matches:
                 return None
             lemmas = sorted({str(match.get("lemma") or "") for match in matches if match.get("lemma")})
@@ -328,14 +375,14 @@ def _vesum_attestation(term: str, *, surface: bool) -> dict[str, Any] | None:
 
         from scripts.verification.vesum import verify_lemma, verify_word
 
-        forms = verify_lemma(term)
+        forms = verify_lemma(term, db_path=vesum_db_path)
         if forms:
             return {
                 "source": "VESUM",
                 "ref": term,
                 "detail": f"lemma match ({len(forms)} forms)",
             }
-        matches = verify_word(term)
+        matches = verify_word(term, db_path=vesum_db_path)
         if matches:
             lemmas = sorted({str(match.get("lemma") or "") for match in matches if match.get("lemma")})
             return {
@@ -352,13 +399,22 @@ def _is_archaic_tags(tags: str | None) -> bool:
     return "arch" in str(tags or "").split(":")
 
 
-def _vesum_archaism_attestation(term: str, *, surface: bool) -> dict[str, Any] | None:
+def _vesum_archaism_attestation(
+    term: str,
+    *,
+    surface: bool,
+    vesum_db_path: str | Path | None = None,
+) -> dict[str, Any] | None:
     try:
         from scripts.verification.vesum import verify_lemma, verify_word
 
-        rows = verify_word(term) if surface else verify_lemma(term)
+        rows = (
+            verify_word(term, db_path=vesum_db_path)
+            if surface
+            else verify_lemma(term, db_path=vesum_db_path)
+        )
         if not rows and not surface:
-            rows = verify_word(term)
+            rows = verify_word(term, db_path=vesum_db_path)
     except Exception:
         return None
     if not rows:
@@ -381,13 +437,17 @@ def _vesum_archaism_attestation(term: str, *, surface: bool) -> dict[str, Any] |
     }
 
 
-def _check_russian_shadow(term: str) -> tuple[bool, dict[str, Any]]:
+def _check_russian_shadow(
+    term: str,
+    *,
+    vesum_db_path: str | Path | None = None,
+) -> tuple[bool, dict[str, Any]]:
     if not _is_single_token(term):
         return False, {"available": False, "reason": "not_single_token"}
     try:
         from scripts.verification.check_ru_morph import is_russian_pattern
 
-        result = is_russian_pattern(term)
+        result = is_russian_pattern(term, vesum_db_path=vesum_db_path)
     except Exception as exc:
         return False, {"available": False, "error": str(exc)}
     return bool(result.get("matches_russian")), {"available": True, **result}
@@ -476,11 +536,14 @@ def _cached_slovnyk_hits(term: str) -> list[dict[str, Any]]:
     return hits
 
 
-def _search_heritage_attestations(term: str) -> list[dict[str, Any]]:
+def _search_heritage_attestations(
+    term: str,
+    db_path: str | Path | None = None,
+) -> list[dict[str, Any]]:
     try:
         from wiki.sources_db import search_heritage
 
-        hits = search_heritage(term, limit=10, include_live_slovnyk=False)
+        hits = search_heritage(term, limit=10, include_live_slovnyk=False, db_path=db_path)
     except Exception:
         hits = []
     hits.extend(_cached_slovnyk_hits(term))
@@ -677,7 +740,7 @@ def _grinchenko_surface_usage_hits(conn: sqlite3.Connection, term: str) -> list[
 
 def _sum11_exact_hits(conn: sqlite3.Connection, term: str) -> list[dict[str, Any]]:
     hits = []
-    has_flag_columns = _source_sum11_has_flag_columns()
+    has_flag_columns = _sum11_has_flag_columns(conn)
     fields = "id, word, definition, text, source"
     if has_flag_columns:
         fields += ", sovietization_risk, sovietization_keywords"
@@ -723,11 +786,12 @@ def _sum11_has_flag_columns_for_db(
         conn.close()
 
 
-def _source_sum11_has_flag_columns() -> bool:
+def _source_sum11_has_flag_columns(db_path: str | Path | None = None) -> bool:
     try:
-        stat = SOURCES_DB.stat()
+        source_db = _source_db_path(db_path)
+        stat = source_db.stat()
         return _sum11_has_flag_columns_for_db(
-            str(SOURCES_DB.resolve()),
+            str(source_db.resolve()),
             stat.st_mtime_ns,
             stat.st_size,
         )
@@ -748,10 +812,13 @@ def _sum11_row_sovietization_risk(
     return _sum11_sovietization_risk(str(row["definition"] or ""), str(row["text"] or ""))
 
 
-def _sum11_sovietization_risk_for_term(term: str) -> int:
+def _sum11_sovietization_risk_for_term(
+    term: str,
+    db_path: str | Path | None = None,
+) -> int:
     try:
-        has_flag_columns = _source_sum11_has_flag_columns()
-        with _source_conn() as conn:
+        has_flag_columns = _source_sum11_has_flag_columns(db_path)
+        with closing(_source_conn(db_path)) as conn:
             if has_flag_columns:
                 risk = 0
                 for variant in _apostrophe_variants(term):

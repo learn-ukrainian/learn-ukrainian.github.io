@@ -87,6 +87,16 @@ def _load_track_priors() -> dict[str, dict[str, float]]:
 _TRACK_PRIORS = _load_track_priors()
 
 
+def _open_conn(db_path: Path) -> sqlite3.Connection:
+    conn = sqlite3.connect(str(db_path), check_same_thread=False)
+    conn.row_factory = sqlite3.Row
+    # Concurrent readers must wait for a concurrent writer rather
+    # than silently returning empty rowsets — see §race-condition
+    # comment on `_SQLITE_BUSY_TIMEOUT_MS` above.
+    conn.execute(f"PRAGMA busy_timeout = {_SQLITE_BUSY_TIMEOUT_MS}")
+    return conn
+
+
 def _get_conn() -> sqlite3.Connection:
     """Get or create a cached database connection."""
     global _conn
@@ -96,13 +106,25 @@ def _get_conn() -> sqlite3.Connection:
                 f"Sources database not found at {SOURCES_DB_PATH}. "
                 "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
             )
-        _conn = sqlite3.connect(str(SOURCES_DB_PATH), check_same_thread=False)
-        _conn.row_factory = sqlite3.Row
-        # Concurrent readers must wait for a concurrent writer rather
-        # than silently returning empty rowsets — see §race-condition
-        # comment on `_SQLITE_BUSY_TIMEOUT_MS` above.
-        _conn.execute(f"PRAGMA busy_timeout = {_SQLITE_BUSY_TIMEOUT_MS}")
+        _conn = _open_conn(SOURCES_DB_PATH)
     return _conn
+
+
+def _get_conn_for(db_path: str | Path | None = None) -> sqlite3.Connection:
+    if db_path is None:
+        return _get_conn()
+    source_db = Path(db_path)
+    if not source_db.exists():
+        raise FileNotFoundError(
+            f"Sources database not found at {source_db}. "
+            "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
+        )
+    return _open_conn(source_db)
+
+
+def _close_if_temporary(conn: sqlite3.Connection, db_path: str | Path | None) -> None:
+    if db_path is not None:
+        conn.close()
 
 
 def _build_fts_query(keywords: set[str], min_len: int = 3) -> str | None:
@@ -144,16 +166,20 @@ def _kw_score(text: str, title: str, keywords: set[str]) -> int:
     return sum(1 for w in keywords if f" {w} " in searchable)
 
 
-def _table_columns(table: str) -> set[str]:
+def _table_columns(table: str, db_path: str | Path | None = None) -> set[str]:
     """Return the column names for a SQLite table."""
+    conn = None
     try:
-        conn = _get_conn()
+        conn = _get_conn_for(db_path)
     except FileNotFoundError:
         return set()
-    return {
-        row["name"]
-        for row in conn.execute(f"PRAGMA table_info({table})").fetchall()
-    }
+    try:
+        return {
+            row["name"]
+            for row in conn.execute(f"PRAGMA table_info({table})").fetchall()
+        }
+    finally:
+        _close_if_temporary(conn, db_path)
 
 
 def _build_preserving_fts_query(terms: list[str] | tuple[str, ...]) -> str | None:
@@ -1335,26 +1361,36 @@ def search_wikipedia(ukr_keywords: set[str], max_total: int = 10) -> list[dict]:
 # ── Dictionary lookup functions (indexed tables) ────────────────
 
 
-def _dict_lookup(table: str, word: str, limit: int = 10) -> list[dict]:
+def _dict_lookup(
+    table: str,
+    word: str,
+    limit: int = 10,
+    *,
+    db_path: str | Path | None = None,
+) -> list[dict]:
     """Generic headword lookup on an indexed dictionary table."""
+    conn = None
     try:
-        conn = _get_conn()
+        conn = _get_conn_for(db_path)
     except FileNotFoundError:
         return []
 
-    # Exact match first, then prefix match
-    rows = conn.execute(
-        f"SELECT * FROM {table} WHERE word = ? COLLATE NOCASE LIMIT ?",
-        (word, limit),
-    ).fetchall()
-
-    if not rows:
+    try:
+        # Exact match first, then prefix match
         rows = conn.execute(
-            f"SELECT * FROM {table} WHERE word LIKE ? COLLATE NOCASE LIMIT ?",
-            (f"{word}%", limit),
+            f"SELECT * FROM {table} WHERE word = ? COLLATE NOCASE LIMIT ?",
+            (word, limit),
         ).fetchall()
 
-    return [dict(r) for r in rows]
+        if not rows:
+            rows = conn.execute(
+                f"SELECT * FROM {table} WHERE word LIKE ? COLLATE NOCASE LIMIT ?",
+                (f"{word}%", limit),
+            ).fetchall()
+
+        return [dict(r) for r in rows]
+    finally:
+        _close_if_temporary(conn, db_path)
 
 
 def search_definitions(word: str, limit: int = 10) -> list[dict]:
@@ -1362,9 +1398,14 @@ def search_definitions(word: str, limit: int = 10) -> list[dict]:
     return _dict_lookup("sum11", word, limit)
 
 
-def search_grinchenko_1907(word: str, limit: int = 10) -> list[dict]:
+def search_grinchenko_1907(
+    word: str,
+    limit: int = 10,
+    *,
+    db_path: str | Path | None = None,
+) -> list[dict]:
     """Look up word in Грінченко (historical dictionary)."""
-    return _dict_lookup("grinchenko", word, limit)
+    return _dict_lookup("grinchenko", word, limit, db_path=db_path)
 
 
 def _escape_fts5_phrase(term: str) -> str:
@@ -1394,74 +1435,86 @@ def _single_loaded_esum_volume(conn: sqlite3.Connection) -> int | None:
     return None
 
 
-def search_esum(query: str, volume: int | None = None, limit: int = 5) -> list[dict]:
+def search_esum(
+    query: str,
+    volume: int | None = None,
+    limit: int = 5,
+    *,
+    db_path: str | Path | None = None,
+) -> list[dict]:
     """Search ЕСУМ etymology entries.
 
     Exact lemma matches are returned first, followed by FTS5 body matches.
     Volume can be restricted for staged ingestion; #1662 loads volume 1 only.
     """
+    conn = None
     try:
-        conn = _get_conn()
+        conn = _get_conn_for(db_path)
     except FileNotFoundError:
         return []
 
-    if not _table_columns("esum_etymology") or not _table_columns("esum_etymology_meta"):
-        return []
-    loaded_volume = volume if volume is not None else _single_loaded_esum_volume(conn)
-    if _outside_loaded_esum_volume(query, loaded_volume):
-        return []
+    try:
+        if not _table_columns("esum_etymology", db_path) or not _table_columns(
+            "esum_etymology_meta", db_path
+        ):
+            return []
+        loaded_volume = volume if volume is not None else _single_loaded_esum_volume(conn)
+        if _outside_loaded_esum_volume(query, loaded_volume):
+            return []
 
-    limit = max(1, min(limit, 20))
-    params: list[object] = [query]
-    vol_filter = ""
-    if volume is not None:
-        vol_filter = " AND vol = ?"
-        params.append(volume)
+        limit = max(1, min(limit, 20))
+        params: list[object] = [query]
+        vol_filter = ""
+        if volume is not None:
+            vol_filter = " AND vol = ?"
+            params.append(volume)
 
-    exact_rows = conn.execute(
-        f"""
-        SELECT id AS rowid, lemma, etymology_text, cognates, vol, page, source
-        FROM esum_etymology_meta
-        WHERE lemma = ? COLLATE NOCASE{vol_filter}
-        ORDER BY vol, page, lemma
-        LIMIT ?
-        """,
-        (*params, limit),
-    ).fetchall()
+        exact_rows = conn.execute(
+            f"""
+            SELECT id AS rowid, lemma, etymology_text, cognates, vol, page, source
+            FROM esum_etymology_meta
+            WHERE lemma = ? COLLATE NOCASE{vol_filter}
+            ORDER BY vol, page, lemma
+            LIMIT ?
+            """,
+            (*params, limit),
+        ).fetchall()
 
-    results = [dict(row) for row in exact_rows]
-    seen = {row["rowid"] for row in results}
-    remaining = limit - len(results)
-    fts_query = _escape_fts5_phrase(query)
-    if remaining <= 0 or not fts_query:
+        results = [dict(row) for row in exact_rows]
+        seen = {row["rowid"] for row in results}
+        remaining = limit - len(results)
+        fts_query = _escape_fts5_phrase(query)
+        if remaining <= 0 or not fts_query:
+            return results
+
+        fts_params: list[object] = [fts_query]
+        fts_vol_filter = ""
+        if volume is not None:
+            fts_vol_filter = " AND vol = ?"
+            fts_params.append(volume)
+        fts_params.append(remaining + len(seen))
+
+        fts_rows = conn.execute(
+            f"""
+            SELECT rowid, lemma, etymology_text, cognates, vol, page
+            FROM esum_etymology
+            WHERE esum_etymology MATCH ?{fts_vol_filter}
+            ORDER BY rank
+            LIMIT ?
+            """,
+            tuple(fts_params),
+        ).fetchall()
+        for row in fts_rows:
+            item = dict(row)
+            if item["rowid"] in seen:
+                continue
+            item["source"] = "ЕСУМ"
+            results.append(item)
+            if len(results) >= limit:
+                break
         return results
-
-    fts_params: list[object] = [fts_query]
-    fts_vol_filter = ""
-    if volume is not None:
-        fts_vol_filter = " AND vol = ?"
-        fts_params.append(volume)
-    fts_params.append(remaining + len(seen))
-
-    fts_rows = conn.execute(
-        f"""
-        SELECT rowid, lemma, etymology_text, cognates, vol, page
-        FROM esum_etymology
-        WHERE esum_etymology MATCH ?{fts_vol_filter}
-        ORDER BY rank
-        LIMIT ?
-        """,
-        tuple(fts_params),
-    ).fetchall()
-    for row in fts_rows:
-        item = dict(row)
-        if item["rowid"] in seen:
-            continue
-        item["source"] = "ЕСУМ"
-        results.append(item)
-        if len(results) >= limit:
-            break
-    return results
+    finally:
+        _close_if_temporary(conn, db_path)
 
 
 def translate_en_uk(word: str, limit: int = 10) -> list[dict]:
@@ -1494,9 +1547,14 @@ def query_cefr_level(word: str, limit: int = 5) -> list[dict]:
     return _dict_lookup("puls_cefr", word, limit=limit)
 
 
-def search_style_guide(word: str, limit: int = 5) -> list[dict]:
+def search_style_guide(
+    word: str,
+    limit: int = 5,
+    *,
+    db_path: str | Path | None = None,
+) -> list[dict]:
     """Look up calques/Russianisms in Антоненко-Давидович style guide."""
-    return _dict_lookup("style_guide", word, limit)
+    return _dict_lookup("style_guide", word, limit, db_path=db_path)
 
 
 def search_ua_gec_errors(
@@ -1573,89 +1631,94 @@ def _search_slovnyk_me_db(
     *,
     limit: int,
     dictionaries: list[str] | tuple[str, ...] | None,
+    db_path: str | Path | None = None,
 ) -> list[dict]:
+    conn = None
     try:
-        conn = _get_conn()
+        conn = _get_conn_for(db_path)
     except FileNotFoundError:
         return []
-    if not _table_columns("slovnyk_me_entries"):
-        return []
+    try:
+        if not _table_columns("slovnyk_me_entries", db_path):
+            return []
 
-    variants = slovnyk_me.query_variants(query)
-    normalized_variants = [slovnyk_me.normalize_word(variant) for variant in variants]
-    dicts = _resolved_slovnyk_dicts(dictionaries)
+        variants = slovnyk_me.query_variants(query)
+        normalized_variants = [slovnyk_me.normalize_word(variant) for variant in variants]
+        dicts = _resolved_slovnyk_dicts(dictionaries)
 
-    dict_filter = ""
-    dict_params: list[object] = []
-    if dicts:
-        dict_filter = f" AND dictionary_slug IN ({','.join('?' for _ in dicts)})"
-        dict_params = [*dicts]
-    elif dictionaries:
-        return []
-    else:
-        blocked = tuple(slovnyk_me.OVERLAP_BLOCKED_DICTS)
-        dict_filter = f" AND dictionary_slug NOT IN ({','.join('?' for _ in blocked)})"
-        dict_params = [*blocked]
+        dict_filter = ""
+        dict_params: list[object] = []
+        if dicts:
+            dict_filter = f" AND dictionary_slug IN ({','.join('?' for _ in dicts)})"
+            dict_params = [*dicts]
+        elif dictionaries:
+            return []
+        else:
+            blocked = tuple(slovnyk_me.OVERLAP_BLOCKED_DICTS)
+            dict_filter = f" AND dictionary_slug NOT IN ({','.join('?' for _ in blocked)})"
+            dict_params = [*blocked]
 
-    seen_ids: set[int] = set()
-    rows: list[dict] = []
+        seen_ids: set[int] = set()
+        rows: list[dict] = []
 
-    def add_fetched(fetched: list[sqlite3.Row]) -> None:
-        for fetched_row in fetched:
-            item = dict(fetched_row)
-            row_id = int(item["id"])
-            if row_id in seen_ids:
-                continue
-            seen_ids.add(row_id)
-            rows.append(_normalize_slovnyk_row(item, query))
+        def add_fetched(fetched: list[sqlite3.Row]) -> None:
+            for fetched_row in fetched:
+                item = dict(fetched_row)
+                row_id = int(item["id"])
+                if row_id in seen_ids:
+                    continue
+                seen_ids.add(row_id)
+                rows.append(_normalize_slovnyk_row(item, query))
 
-    placeholders = ",".join("?" for _ in normalized_variants)
-    exact = conn.execute(
-        f"""
-        SELECT *
-        FROM slovnyk_me_entries
-        WHERE normalized_word IN ({placeholders}){dict_filter}
-        LIMIT ?
-        """,
-        (*normalized_variants, *dict_params, limit),
-    ).fetchall()
-    add_fetched(exact)
-
-    if len(rows) < limit:
-        prefix_where = " OR ".join("normalized_word LIKE ?" for _ in normalized_variants)
-        prefix_params = [f"{variant}%" for variant in normalized_variants]
-        prefix = conn.execute(
+        placeholders = ",".join("?" for _ in normalized_variants)
+        exact = conn.execute(
             f"""
             SELECT *
             FROM slovnyk_me_entries
-            WHERE ({prefix_where}){dict_filter}
+            WHERE normalized_word IN ({placeholders}){dict_filter}
             LIMIT ?
             """,
-            (*prefix_params, *dict_params, limit),
+            (*normalized_variants, *dict_params, limit),
         ).fetchall()
-        add_fetched(prefix)
+        add_fetched(exact)
 
-    if len(rows) < limit and _table_columns("slovnyk_me_entries_fts"):
-        fts_query = _escape_fts5_phrase(query)
-        if fts_query:
-            try:
-                fts = conn.execute(
-                    f"""
-                    SELECT e.*, bm25(slovnyk_me_entries_fts) AS fts_rank
-                    FROM slovnyk_me_entries_fts
-                    JOIN slovnyk_me_entries e ON e.id = slovnyk_me_entries_fts.rowid
-                    WHERE slovnyk_me_entries_fts MATCH ?{dict_filter}
-                    ORDER BY fts_rank
-                    LIMIT ?
-                    """,
-                    (fts_query, *dict_params, limit),
-                ).fetchall()
-                add_fetched(fts)
-            except sqlite3.OperationalError:
-                pass
+        if len(rows) < limit:
+            prefix_where = " OR ".join("normalized_word LIKE ?" for _ in normalized_variants)
+            prefix_params = [f"{variant}%" for variant in normalized_variants]
+            prefix = conn.execute(
+                f"""
+                SELECT *
+                FROM slovnyk_me_entries
+                WHERE ({prefix_where}){dict_filter}
+                LIMIT ?
+                """,
+                (*prefix_params, *dict_params, limit),
+            ).fetchall()
+            add_fetched(prefix)
 
-    rows.sort(key=lambda row: row["score"], reverse=True)
-    return rows[:limit]
+        if len(rows) < limit and _table_columns("slovnyk_me_entries_fts", db_path):
+            fts_query = _escape_fts5_phrase(query)
+            if fts_query:
+                try:
+                    fts = conn.execute(
+                        f"""
+                        SELECT e.*, bm25(slovnyk_me_entries_fts) AS fts_rank
+                        FROM slovnyk_me_entries_fts
+                        JOIN slovnyk_me_entries e ON e.id = slovnyk_me_entries_fts.rowid
+                        WHERE slovnyk_me_entries_fts MATCH ?{dict_filter}
+                        ORDER BY fts_rank
+                        LIMIT ?
+                        """,
+                        (fts_query, *dict_params, limit),
+                    ).fetchall()
+                    add_fetched(fts)
+                except sqlite3.OperationalError:
+                    pass
+
+        rows.sort(key=lambda row: row["score"], reverse=True)
+        return rows[:limit]
+    finally:
+        _close_if_temporary(conn, db_path)
 
 
 def search_slovnyk_me(
@@ -1664,6 +1727,7 @@ def search_slovnyk_me(
     dictionaries: list[str] | tuple[str, ...] | None = None,
     *,
     live: bool = False,
+    db_path: str | Path | None = None,
 ) -> list[dict]:
     """Search curated slovnyk.me rows, optionally falling back to live direct pages.
 
@@ -1672,7 +1736,12 @@ def search_slovnyk_me(
     sitemaps.
     """
     limit = max(1, min(limit, 20))
-    rows = _search_slovnyk_me_db(query, limit=limit, dictionaries=dictionaries)
+    rows = _search_slovnyk_me_db(
+        query,
+        limit=limit,
+        dictionaries=dictionaries,
+        db_path=db_path,
+    )
     if len(rows) >= limit or not live:
         return rows[:limit]
 
@@ -1712,6 +1781,7 @@ def search_heritage(
     limit: int = 10,
     *,
     include_live_slovnyk: bool = False,
+    db_path: str | Path | None = None,
 ) -> list[dict]:
     """Merge heritage-defense evidence for a Ukrainian headword.
 
@@ -1722,7 +1792,7 @@ def search_heritage(
     limit = max(1, min(limit, 20))
     rows: list[dict] = []
 
-    for hit in search_grinchenko_1907(query, limit=5):
+    for hit in search_grinchenko_1907(query, limit=5, db_path=db_path):
         text = _heritage_text(hit)
         rows.append({
             "query": query,
@@ -1740,7 +1810,7 @@ def search_heritage(
             "score": 96.0,
         })
 
-    for hit in search_esum(query, limit=5):
+    for hit in search_esum(query, limit=5, db_path=db_path):
         text = _heritage_text(hit)
         cognates = str(hit.get("cognates", ""))
         tags = ["etymology"]
@@ -1769,6 +1839,7 @@ def search_heritage(
         limit=limit,
         dictionaries=slovnyk_me.HERITAGE_SLOVNYK_ME_DICTS,
         live=include_live_slovnyk,
+        db_path=db_path,
     ):
         is_russianism = bool(hit.get("is_russianism"))
         is_dialect = bool(hit.get("is_dialect"))
@@ -1809,7 +1880,7 @@ def search_heritage(
             "score": score,
         })
 
-    for hit in search_style_guide(query, limit=3):
+    for hit in search_style_guide(query, limit=3, db_path=db_path):
         rows.append({
             "query": query,
             "source_family": "style_guide",
