@@ -1,0 +1,28 @@
+- title: Авраменко Grade 5, p.111-113
+  role: textbook
+  notes: Планове джерело для визначення чергування звуків і базових прикладів із сіль, корінь, соляний.
+  source_ref: Авраменко Grade 5, p.111-113
+- title: Заболотний Grade 5, p.113-115
+  role: textbook
+  packet_chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s2520
+  notes: Планове джерело для відкритих і закритих складів, практики з парами форм та чергування в дієсловах.
+  source_ref: Заболотний Grade 5, p.113-115
+- title: Литвінова Grade 5, p.118
+  role: textbook
+  notes: Планове джерело для стратегії перевірки правопису через іншу форму слова.
+  source_ref: Литвінова Grade 5, p.118
+- title: Глазова Grade 10, p.103
+  role: textbook
+  notes: Планове джерело для старшого системного опису чергування о/е з і як характерної української риси.
+  source_ref: Глазова Grade 10, p.103
+- title: Заболотний Grade 7, p.55-56
+  role: textbook
+  notes: Планове джерело для правила е/о після шиплячих і й та частотних слів на зразок вечеря, бджола, пшоно.
+  source_ref: Заболотний Grade 7, p.55-56
+- title: Wiki grammar article for B1 alternation-vowels
+  role: wiki
+  notes: Використано як внутрішню карту типів чергування, типових L2 помилок і рекомендованої прогресії вправ.
+  source_ref: wiki/grammar/b1/alternation-vowels.md
+- title: Local B1 aspect modules M01-M10
+  role: curriculum
+  notes: Модуль продовжує B1 після контрольної з виду й переносить навичку роботи з родинами форм у морфонологічний блок.
