@@ -56,6 +56,29 @@ def test_render_runs_even_when_python_qg_red(tmp_path, monkeypatch):
     assert steps["python_qg"] is False and steps["mdx_render"] is True
 
 
+def test_render_runs_when_python_qg_raises(tmp_path, monkeypatch):
+    """A python_qg CRASH (not just a red gate) must still reach the render check."""
+    md, plan = _mk(tmp_path)
+
+    def boom(m, p):
+        raise RuntimeError("vesum db missing")
+
+    monkeypatch.setattr(lp, "run_python_qg", boom)
+    monkeypatch.setattr(lp, "assemble_mdx", lambda m, o, p: "MDXBODY")
+    seen = {}
+
+    def render(t):
+        seen["ran"] = True
+        return {"passed": True, "message": "ok", "failures": []}
+
+    monkeypatch.setattr(lp, "run_mdx_render_gate", render)
+    rep = vs.verify("folk", "x", module_dir=md, plan_path=plan)
+    assert seen.get("ran") is True  # render ran despite python_qg crash
+    assert rep["shippable"] is False  # but the crash still blocks ship
+    steps = {s["step"]: s["passed"] for s in rep["steps"]}
+    assert steps["python_qg"] is False and steps["mdx_render"] is True
+
+
 def test_render_failure_blocks_ship(tmp_path, monkeypatch):
     md, plan = _mk(tmp_path)
     monkeypatch.setattr(lp, "run_python_qg", lambda m, p: {"gates": {"passed": True}})

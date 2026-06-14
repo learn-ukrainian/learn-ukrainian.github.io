@@ -120,8 +120,10 @@ def verify(
             "all gates green" if qg_pass else f"failed gates: {', '.join(failed) or 'unknown'}",
         )
     except Exception as exc:
+        # Do NOT short-circuit on a python_qg CRASH: a render break must still be
+        # surfaced even when python_qg fails (the #3137 design intent). Record the
+        # failure and continue to assemble + render.
         add("python_qg", False, f"run_python_qg raised: {exc!r}")
-        return _finalize(level, slug, steps)
 
     # --- 2. assemble MDX (to a temp file; do not touch site/) ---
     with tempfile.TemporaryDirectory() as td:
@@ -143,9 +145,11 @@ def verify(
     if astro_build:
         site_mdx = _site_mdx_path(level, slug)
         prior = site_mdx.read_text(encoding="utf-8") if site_mdx.exists() else None
-        site_mdx.parent.mkdir(parents=True, exist_ok=True)
-        site_mdx.write_text(mdx_text, encoding="utf-8")
         try:
+            # Write inside the try so the finally always restores, even if the
+            # write/mkdir itself raises (never leave site/ corrupted).
+            site_mdx.parent.mkdir(parents=True, exist_ok=True)
+            site_mdx.write_text(mdx_text, encoding="utf-8")
             ok, tail = _astro_build()
             add("astro_build", ok, "astro build green" if ok else f"astro build FAILED:\n{tail}")
         finally:

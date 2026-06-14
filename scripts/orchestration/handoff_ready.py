@@ -101,6 +101,10 @@ def _blocking_state(pr: int) -> tuple[str, str]:
     if data.get("state") == "MERGED":
         return OK, "PR already merged"
     rollup = data.get("statusCheckRollup") or []
+    if not rollup:
+        # No checks at all ⇒ cannot confirm green. UNKNOWN ⇒ not ready (never
+        # report "all 0 checks green" as READY — anti-fabrication, #M-4).
+        return UNKNOWN, "no status checks found on the PR"
     failing = []
     pending = []
     for c in rollup:

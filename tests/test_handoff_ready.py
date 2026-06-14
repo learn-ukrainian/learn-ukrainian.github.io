@@ -96,6 +96,14 @@ def test_no_inflight_logic(monkeypatch):
     assert hr.check_no_inflight()[0] == hr.RED
 
 
+def test_empty_rollup_is_unknown(monkeypatch):
+    # a PR with zero status checks must NOT report green/ready (anti-fabrication)
+    monkeypatch.setattr(
+        hr, "_gh_json", lambda *a: (0, {"statusCheckRollup": [], "state": "OPEN", "mergeStateStatus": "UNKNOWN"})
+    )
+    assert hr.check_pr_checks(5)[0] == hr.UNKNOWN
+
+
 def test_api_down_is_unknown(monkeypatch):
     def boom(*a, **k):
         raise OSError("connection refused")

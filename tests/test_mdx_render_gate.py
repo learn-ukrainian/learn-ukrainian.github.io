@@ -36,6 +36,13 @@ def test_iter_template_literals_none_when_absent():
     assert iter_template_literals("plain text, no islands") == []
 
 
+def test_iter_template_literals_skips_unterminated():
+    # truncated JSON.parse(` with no closing backtick → no phantom rest-of-file island
+    assert iter_template_literals("x <X p={JSON.parse(`[1,2,3]") == []
+    # a terminated island before an unterminated one is still captured
+    assert iter_template_literals("<A p={JSON.parse(`[1]`)} /> <B q={JSON.parse(`[2") == ["[1]"]
+
+
 # --- the #3137 escape bug: caught by the gate --------------------------------
 
 @node_required
@@ -73,6 +80,13 @@ def test_renderers_duplicate_escaper_round_trips():
     payload = [{"w": 'він "сказав"', "m": "рядок1\nрядок2", "p": "a`b"}]
     mdx = f"<X items={{JSON.parse(`{flat_dump(payload)}`)}} />"
     assert check_mdx_render(mdx)["passed"] is True
+
+
+@node_required
+def test_sentinel_catches_template_interpolation():
+    # an unescaped ${...} that would run code (escaper bypass) must FAIL, not pass
+    mdx = "<X p={JSON.parse(`${process.exit(0)}`)} />"
+    assert check_mdx_render(mdx)["passed"] is False
 
 
 @node_required

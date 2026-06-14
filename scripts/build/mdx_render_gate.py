@@ -47,14 +47,22 @@ def iter_template_literals(mdx_text: str) -> list[str]:
             break
         start = idx + len(_MARKER)
         j = start
+        terminated = False
         while j < n:
             c = mdx_text[j]
             if c == "\\":
                 j += 2  # skip the escaped char (covers \` , \\ , \$ …)
                 continue
             if c == "`":
+                terminated = True
                 break
             j += 1
+        if not terminated:
+            # Unterminated JSON.parse(` … = truncated/malformed MDX. Do NOT emit a
+            # phantom rest-of-file island (it could falsely pass if that suffix is
+            # valid JSON, or mis-point the error). A working assembler never emits
+            # this; astro build catches genuinely truncated MDX. Stop scanning.
+            break
         inners.append(mdx_text[start:j])
         i = j + 1
     return inners
@@ -70,14 +78,21 @@ def _node_eval_one(inner: str, *, timeout: int = 30) -> str | None:
         "w", suffix=".mjs", delete=False, encoding="utf-8"
     ) as fh:
         # Reproduce the MDX expression byte-for-byte: backtick + inner + backtick.
-        fh.write("const c = `" + inner + "`;\nJSON.parse(c);\n")
+        # The sentinel prints only AFTER JSON.parse returns: an unescaped ``${…}``
+        # in the inner would interpolate (run code / process.exit) and short-circuit
+        # before JSON.parse, so requiring the sentinel stops that from passing silently.
+        fh.write(
+            "const c = `" + inner + "`;\nJSON.parse(c);\nprocess.stdout.write('__RENDER_OK__');\n"
+        )
         path = fh.name
     try:
         proc = subprocess.run(
             ["node", path], capture_output=True, text=True, timeout=timeout
         )
-        if proc.returncode == 0:
+        if proc.returncode == 0 and "__RENDER_OK__" in proc.stdout:
             return None
+        if proc.returncode == 0:
+            return "island did not reach JSON.parse (template-literal interpolation / early exit?)"
         stderr_lines = [ln for ln in proc.stderr.strip().splitlines() if ln.strip()]
         # Prefer the most specific error line (SyntaxError / JSON.parse message).
         for ln in stderr_lines:
