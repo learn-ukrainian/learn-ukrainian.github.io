@@ -101,9 +101,18 @@ class GrokBuildAdapter:
             cmd.extend(["-p", prompt])
 
         cmd.extend(["--output-format", "json", "--no-alt-screen"])
-        cmd.extend(["--permission-mode", _MODE_PERMISSION[mode]])
+        # read-only maps to grok `plan` mode, which is analysis-only and BLOCKS
+        # tool execution. MCP-grounded reviews MUST execute tool calls (e.g.
+        # sources__verify_word), so when MCP servers are requested we override
+        # to an execution-capable mode. Reviews are read-only by construction
+        # (the prompt asks for no file mutations); paired with --always-approve
+        # this lets grok actually run the MCP read tools instead of cancelling
+        # with empty output. Non-MCP calls keep their normal mode mapping.
+        mcp_needed = bool(tc.get("always_approve") or tc.get("mcp_server_names"))
+        permission_mode = "bypassPermissions" if mcp_needed else _MODE_PERMISSION[mode]
+        cmd.extend(["--permission-mode", permission_mode])
         cmd.extend(["--cwd", str(cwd)])
-        if tc.get("always_approve") or tc.get("mcp_server_names"):
+        if mcp_needed:
             cmd.append("--always-approve")
             cmd.append("--no-plan")
 
