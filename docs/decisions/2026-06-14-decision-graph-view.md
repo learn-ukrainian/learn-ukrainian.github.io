@@ -1,6 +1,8 @@
-# DECISION REQUIRED - Decision Graph View Paradigm and Layout
+# DEFERRED - Decision Graph View Paradigm and Layout
 
-**Status:** PROPOSED (awaiting user signoff to ACCEPTED)
+**Status:** DEFERRED — moved out of the pending queue on 2026-06-14.
+**Disposition:** This is a UI backlog idea for channel/decision visualization. It is not a pending decision and does not block content, B1, or A1/A2 workbook work.
+**Original status:** PROPOSED (awaiting user signoff to ACCEPTED)
 **Date:** 2026-05-09
 **Authors:** Gemini (drafting), Codex (data collection), Claude (orchestration context)
 **Supersedes:** None

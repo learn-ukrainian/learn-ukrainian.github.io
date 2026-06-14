@@ -1,6 +1,8 @@
-# PENDING — Wiki-driven prompt generator (V7.1 evolution, NOT V8 greenfield)
+# SUPERSEDED — Wiki-driven prompt generator (V7.1 evolution, NOT V8 greenfield)
 
-**Status:** PENDING — awaiting user approval. Synthesizes the 2026-05-28 codex + cursor + gemini consultation on channel `wiki-driven-prompt-generation-2026-05-28`, thread `1241c73bf87c4e29bea394fd5998506a`. **Unanimous Vote A** (3-for-A, 0-for-B/C/D) with convergent refinements on (Q1) clean universal/wiki/RAG split + composition rules, (Q2) hybrid reviewer rubric, (Q3) pure Python implementation, (Q4) ~1 week A1/A2 pilot.
+**Status:** SUPERSEDED — resolved 2026-06-14 after A1/A2 initial builds shipped live.
+**Disposition:** This card's blocking scope was A1/A2 module builds. That initial-build phase is complete, so this is no longer a pending decision. Any future prompt-generator work should be re-scoped as nonblocking pipeline cleanup or a fresh B1+/seminar proposal with current evidence.
+**Original status:** PENDING — awaiting user approval. Synthesizes the 2026-05-28 codex + cursor + gemini consultation on channel `wiki-driven-prompt-generation-2026-05-28`, thread `1241c73bf87c4e29bea394fd5998506a`. **Unanimous Vote A** (3-for-A, 0-for-B/C/D) with convergent refinements on (Q1) clean universal/wiki/RAG split + composition rules, (Q2) hybrid reviewer rubric, (Q3) pure Python implementation, (Q4) ~1 week A1/A2 pilot.
 
 **Surfaced:** 2026-05-28 (Pt 14) — user audit caught m20-specific lesson content baked into the static writer prompt template (5 `прокидаюся` mentions, 3 `Захарійчук` mentions, an entire paragraph citing "m20 round #12, codex-tools, a1-my-morning-20260526-204640, PR #2358, decolonization 8.7 score" as build-history-as-prompt-content, m20's chunk_id `1-klas-bukvar-zaharijchuk-2025-1_s0024` as the canonical citation example). User framing: *"we should use the wiki to generate the writer and review prompt. for both the prose and the practices."* Refined after my over-engineered 3-layer proposal: *"we have universal rules plus the wiki of the module, plus the related rag content and we could use those to generate the writer and reviewer prompt."*
 

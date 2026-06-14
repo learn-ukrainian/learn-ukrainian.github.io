@@ -1,6 +1,8 @@
-# DECISION REQUIRED — Should we adopt Symphony-style autonomous dispatch for a narrow class of work?
+# SUPERSEDED — Should we adopt Symphony-style autonomous dispatch for a narrow class of work?
 
-**Status:** PROPOSED (orchestrator-surfaced, awaiting user signoff)
+**Status:** SUPERSEDED — resolved 2026-06-14 by the current AGENTS.md economical multi-agent delegation policy.
+**Disposition:** The repo now has a narrower active delegation policy: deterministic local tools first, one to three bounded subagents when useful, and no broad autonomous dispatch. This card is historical context only.
+**Original status:** PROPOSED (orchestrator-surfaced, awaiting user signoff)
 **Surfaced:** 2026-05-12 night, after digesting [`docs/best-practices/harness-engineering.md`](../../best-practices/harness-engineering.md)
 **Source:** OpenAI's Symphony post + spec; user-pointed reading 2026-05-12
 **Scope:** GH issue triage flow + a new dispatch path. **Does NOT touch:** module content production, V7 pipeline, writer-selection. Decision is independent of and does not invalidate any in-flight orchestration work.

@@ -1,6 +1,8 @@
-# PENDING — V7.1 wiki-driven writer (LLM-as-renderer via structural refactor + wiki quality phase)
+# SUPERSEDED — V7.1 wiki-driven writer (LLM-as-renderer via structural refactor + wiki quality phase)
 
-**Status:** PENDING — awaiting user approval. Synthesizes the 2026-05-27 codex + gemini + cursor consultation on channel `wiki-driven-writer-pivot`. All three agents agree on the renderer end-state; user redirected from "V8 = new phase" framing to **V7.1 = structural refactor of existing pipeline**; cursor explicitly endorsed V7.1 with concrete defenses + flagged the wiki itself as a limiting factor.
+**Status:** SUPERSEDED — resolved 2026-06-14 after A1/A2 initial builds shipped live.
+**Disposition:** This card no longer blocks A1/A2 or B1 work. A1/A2 are live-course maintenance tracks now; future A1/A2 work should focus on workbook/activity enrichment and targeted bug fixes, not whole-level rebuilds. The wiki-quality ideas remain useful background for future B1+/seminar pipeline work, but they are not a pending user decision.
+**Original status:** PENDING — awaiting user approval. Synthesizes the 2026-05-27 codex + gemini + cursor consultation on channel `wiki-driven-writer-pivot`. All three agents agree on the renderer end-state; user redirected from "V8 = new phase" framing to **V7.1 = structural refactor of existing pipeline**; cursor explicitly endorsed V7.1 with concrete defenses + flagged the wiki itself as a limiting factor.
 **Predecessor draft:** Originally written as `2026-05-27-v8-wiki-driven-writer.md` recommending V8. Renamed + rewritten 2026-05-28 per user direction *"i would go for v7.1 after cursor take. ... we might need to review and improve the wikis. that is an option"*.
 **Surfaced:** 2026-05-27 (Pt 11) — user directive after Pt 10's nearly-shippable m20 still tripped `word_count` (1058 < 1104) and PR #2372 ceiling-test failure exposed the writer prompt growing past 130KB despite the 4 hardening PRs.
 **Scope (BLOCKING):** A1/A2 module builds (immediate); B1+/seminar tracks (phased). Does NOT block tech-debt PRs that don't touch the writer phase or the wiki-coverage gate.
@@ -245,9 +247,9 @@ User 2026-05-28: *"we might need to review and improve the wikis. that is an opt
 
 ## Decision
 
-**Status: PENDING — awaiting user sign-off.**
+**Historical status at surfacing:** PENDING — awaiting user sign-off.
 
-Decision options:
+Historical decision options:
 
 1. **Accept V7.1 + wiki quality pass** (recommended): refactor `linear-write.md` + new gate + manifest extension + m20 pilot, paired with wiki audit + improvement of thin wikis starting with m20. ETA 1-2 days writer-side + per-module wiki work (parallelizable, unmetered Gemini).
 2. **Stage incrementally**: ship the wiki-vocab-bound gate first (Day 1) + wiki audit (Day 1-2 in background), then the prompt refactor (Day 2-3). Same end-state, earlier surface area for the gate.

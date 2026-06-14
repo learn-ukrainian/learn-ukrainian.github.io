@@ -1,6 +1,8 @@
-# DECISION REQUIRED — Claude Agent SDK adoption for V7 pipeline (parallel-shim with CLI subprocess)
+# DEFERRED — Claude Agent SDK adoption for V7 pipeline (parallel-shim with CLI subprocess)
 
-**Status:** RECONSIDER — surfaced 2026-05-13, demoted same day after user routing direction shifted the cost premise. Adoption is not cancelled; the sequencing and the "wins" framing both need a rethink before re-PROPOSED.
+**Status:** DEFERRED — resolved 2026-06-14 as nonblocking infrastructure backlog.
+**Disposition:** Adoption is not a pending content-build decision. Do not block B1 or A1/A2 workbook work on this card. Re-propose only with current SDK economics, concrete repo integration points, and a bounded validation plan.
+**Original status:** RECONSIDER — surfaced 2026-05-13, demoted same day after user routing direction shifted the cost premise. Adoption is not cancelled; the sequencing and the "wins" framing both need a rethink before re-PROPOSED.
 **Surfaced:** 2026-05-13, user direction "we will have to plan this claude sdk route" after Anthropic announced the agentic credit pool launch effective 2026-06-15.
 
 ## Status update — 2026-05-13 late evening (RECONSIDER rationale)
@@ -220,13 +222,13 @@ No coordination dependency — SDK adoption can ship independent of routing-budg
 - It does NOT propose retiring `delegate.py --agent claude` or the CLI subprocess path. Both stay. Forever (or until Anthropic deprecates the CLI).
 - It does NOT solve the "$200/mo agentic pool isn't enough" problem on its own. The efficiency win helps stretch the pool; doesn't make it infinite. Routing discipline, lower default model/effort, and potentially metered overage remain part of the toolkit.
 - It does NOT introduce a new build pipeline. V7 stays. Only the writer phase's invocation surface changes.
-- It does NOT require user action before 2026-06-15 beyond "review and APPROVE this Decision Card." Implementation can proceed under PROPOSED status if you flag green to start.
+- Historical note: the original card asked for user approval before 2026-06-15. As of 2026-06-14, this is deferred infrastructure backlog, not an active approval request.
 
 ---
 
 ## Recommendation
 
-**APPROVE** as PROPOSED with this sequencing:
+Original recommendation was to approve with this sequencing:
 1. Verify the 5 open questions (above) — 30-60 min of API docs reading; can be inline by orchestrator.
 2. After open questions resolved: dispatch **Axis 1 (adapter) to Claude headless** (`delegate.py --agent claude --model claude-opus-4-7 --effort xhigh --mode danger --worktree`). Rationale: Axis 1 integrates **Anthropic's own SDK** — Claude has firsthand knowledge of its SDK's API, hook semantics, MCP transport, and edge cases; Codex would re-derive these from external docs and get edge cases subtly wrong. This is exactly the per-task-model-assignment fit Codex would lose on.
 3. After Axis 1 lands: dispatch Axis 2 (writer-phase wiring) to Codex high-effort. Axis 2 is mechanical glue between the adapter and v7_build.py — Codex fits.
