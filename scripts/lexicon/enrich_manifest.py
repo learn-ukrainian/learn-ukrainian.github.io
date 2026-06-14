@@ -1011,6 +1011,7 @@ def _synonym_body(text: str, lemma: str, headword: str | None, slug: str | None 
     body = _SOURCE_TAIL_RE.sub("", _entry_text_without_headword(text, lemma, headword))
     body = primary_synonym_sense_text(body, slug or "")
     body = re.split(r"\s+[—–]\s+[А-ЯІЇЄҐA-Z]", body, maxsplit=1)[0]
+    body = re.sub(r"\((діал|розм|заст|д|з)\.?\)", r" \1. ", body, flags=re.IGNORECASE)
     body = re.sub(
         r"\((?:про|який|яка|яке|які|на|зі сл\.|сл\.|від|для|у|в)\b[^)]*\)",
         " ",
@@ -1079,6 +1080,17 @@ def _is_safe_slovnyk_synonym(
     return not _candidate_is_headword_variant(lemma, candidate, headword_pos)
 
 
+def _extract_qualifier(text: str) -> str | None:
+    lower_text = text.lower()
+    if re.search(r'\bдіал\b\.?|\bд\.', lower_text):
+        return "діал."
+    if re.search(r'\bрозм\b\.?', lower_text):
+        return "розм."
+    if re.search(r'\bзаст\b\.?|\bз\.', lower_text):
+        return "заст."
+    return None
+
+
 def _synonyms_from_slovnyk_row(
     row: dict[str, Any],
     lemma: str,
@@ -1097,6 +1109,7 @@ def _synonyms_from_slovnyk_row(
     seen: set[str] = set()
     for chunk in chunks:
         for part in re.split(r"[()]", chunk):
+            qualifier = _extract_qualifier(part)
             term = _clean_synonym_candidate(part, lemma)
             if (
                 term
@@ -1109,8 +1122,13 @@ def _synonyms_from_slovnyk_row(
                 )
             ):
                 seen.add(term)
-                out.append(term)
+                term_with_tag = f"{term} ({qualifier})" if qualifier else term
+                out.append(term_with_tag)
     return out
+
+
+def _base_word(term: str) -> str:
+    return term.split(" (")[0]
 
 
 def _synonyms_slovnyk(
@@ -1136,20 +1154,22 @@ def _synonyms_slovnyk(
         if not row:
             continue
         row_items = _synonyms_from_slovnyk_row(row, lookup_lemma, headword_pos)
+        row_bases = [_base_word(item) for item in row_items]
         if slug == "synonyms" and row_items:
             group_head = _slovnyk_synonym_group_head(row, lookup_lemma)
             allowlisted = _safe_synonym_set(lookup_lemma)
             if (
                 group_head != lookup_lemma.casefold()
-                and not seen.intersection(row_items)
-                and not allowlisted.intersection(row_items)
+                and not seen.intersection(row_bases)
+                and not allowlisted.intersection(row_bases)
             ):
                 continue
         if not row_items:
             continue
         for synonym in row_items:
-            if synonym not in seen:
-                seen.add(synonym)
+            base = _base_word(synonym)
+            if base not in seen:
+                seen.add(base)
                 items.append(synonym)
         sources.append(str(row.get("dictionary_label") or _SLOVNYK_DICT_LABELS[slug]))
         if row.get("source_url"):
