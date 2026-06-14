@@ -1,0 +1,28 @@
+- title: Авраменко Grade 10, p.167
+  role: textbook
+  notes: Планове джерело для правила випадання суфікса -ин у множині, нульового закінчення в родовому множини та винятків грузинів, осетинів.
+  source_ref: Авраменко Grade 10, p.167
+- title: Литвінова Grade 6, p.159-160
+  role: textbook
+  notes: Планове джерело для кличного відмінка іменників II відміни та родового множини в іменниках, що втрачають -ин.
+  source_ref: Литвінова Grade 6, p.159-160
+- title: Заболотний Grade 5, p.145-148
+  role: textbook
+  notes: Планове джерело для загальної таблиці відмінювання іменників чоловічого роду II відміни.
+  source_ref: Заболотний Grade 5, p.145-148
+- title: Goroh словозміна and Slovnyk.ua form checks
+  role: dictionary
+  notes: Перевірено форми пекар, лікар, школяр, кобзар, каменяр, бондар, гончар, токар, слюсар, киянин, громадянин, селянин, львів'янин, грузин, осетин.
+  source_ref: goroh.pp.ua; slovnyk.ua
+- title: Kyiv Dictionary declension checks
+  role: dictionary
+  notes: Додаткова перевірка парадигм киянин, громадянин, львів'янин, столяр, слюсар, гончар.
+  source_ref: kyivdictionary.com
+- title: Local B1 simplification-consonants module
+  role: curriculum
+  notes: Безпосередній попередній модуль для переходу від морфонологічних змін до підкласів іменників.
+  source_ref: curriculum/l2-uk-en/b1/simplification-consonants/module.md
+- title: Local B1 alternation-consonants-nouns module
+  role: curriculum
+  notes: Попередній модуль для порівняння з кличним відмінком і для застереження, що тут немає чергування г/к/х.
+  source_ref: curriculum/l2-uk-en/b1/alternation-consonants-nouns/module.md
