@@ -69,6 +69,11 @@ from .watchdog import (
     tail_liveness_file_for_debug,
 )
 
+try:
+    from telemetry.emit import current_run_id, current_session_id
+except ImportError:  # pragma: no cover - package import path
+    from scripts.telemetry.emit import current_run_id, current_session_id
+
 # Poll interval while waiting on subprocess + watchdog. 1s is a good balance:
 # fast enough that stall detection fires within 1s of the threshold, slow
 # enough that we don't burn CPU in the wait loop.
@@ -609,7 +614,8 @@ def _build_usage_record(
     # to maintain atomic append guarantees in usage.py.
     safe_cwd = str(cwd)[-250:] if cwd else ""
     safe_task_id = task_id[:100] if task_id else None
-    safe_session_id = session_id[:100] if session_id else None
+    safe_provider_session_id = session_id[:100] if session_id else None
+    telemetry_source = os.environ.get("LU_TELEMETRY_SOURCE")
 
     return {
         "ts": datetime.now(UTC).isoformat(),
@@ -619,7 +625,13 @@ def _build_usage_record(
         "cwd": safe_cwd,
         "model": model,
         "mode": mode,
-        "session_id": safe_session_id,
+        "run_id": current_run_id()[:100],
+        "session_id": current_session_id()[:100],
+        "provider_session_id": safe_provider_session_id,
+        "level": os.environ.get("LU_TELEMETRY_LEVEL"),
+        "slug": os.environ.get("LU_TELEMETRY_SLUG"),
+        "track": os.environ.get("LU_TELEMETRY_TRACK"),
+        "source": telemetry_source[:100] if telemetry_source else None,
         "duration_s": round(duration_s, 2),
         "input_chars": input_chars,
         "output_chars": output_chars,
@@ -978,7 +990,7 @@ def _execute_invocation_plan(
                 stderr_excerpt=(
                     f"Popen failed: {type(exc).__name__}: {exc}"
                 )[:500],
-                tokens=None,
+                tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
             )
             write_record(record)
             raise AgentUnavailableError(
@@ -1214,7 +1226,7 @@ def _raise_for_kill_reason(
             rate_limited=False,
             stalled=True,
             stderr_excerpt=parse.stderr_excerpt or execution.stderr_text[:500],
-            tokens=None,
+            tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
         )
         write_record(record)
         raise AgentStalledError(
@@ -1249,7 +1261,7 @@ def _raise_for_kill_reason(
                     f"{initial_response_timeout}s"
                 )
             ),
-            tokens=None,
+            tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
         )
         write_record(record)
         raise AgentStalledError(
@@ -1280,7 +1292,7 @@ def _raise_for_kill_reason(
                 or execution.stderr_text[:500]
                 or tail_liveness_file_for_debug(execution.liveness_paths)[:500]
             ),
-            tokens=None,
+            tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
         )
         write_record(record)
         raise AgentTimeoutError(agent_name, hard_timeout)
@@ -1484,7 +1496,7 @@ def _invoke_gemini_with_fallback(
             rate_limited=False,
             stalled=False,
             stderr_excerpt=stderr_excerpt,
-            tokens=None,
+            tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
         )
         write_record(record)
         return Result(
@@ -1525,7 +1537,7 @@ def _invoke_gemini_with_fallback(
             rate_limited=True,
             stalled=False,
             stderr_excerpt=stderr_excerpt,
-            tokens=None,
+            tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
         )
         write_record(record)
         raise RateLimitedError(agent_name, record_model, reason=(stderr_excerpt or "")[:200])
@@ -1550,7 +1562,7 @@ def _invoke_gemini_with_fallback(
             rate_limited=False,
             stalled=False,
             stderr_excerpt=stderr_excerpt,
-            tokens=None,
+            tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
         )
         write_record(record)
         raise AgentTimeoutError(agent_name, hard_timeout)
@@ -1571,7 +1583,7 @@ def _invoke_gemini_with_fallback(
         rate_limited=False,
         stalled=False,
         stderr_excerpt=stderr_excerpt,
-        tokens=None,
+        tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
     )
     write_record(record)
     return Result(
@@ -1694,6 +1706,8 @@ def invoke(
             f"contamination."
         )
     effective_cwd = cwd or Path.cwd()
+    current_run_id()
+    current_session_id()
 
     # ---------- 4. Resume policy ----------
     _enforce_resume_policy(agent_name, session_id, entrypoint)
@@ -1720,7 +1734,7 @@ def invoke(
             rate_limited=True,
             stalled=False,
             stderr_excerpt=f"pre-call headroom check: {reason}",
-            tokens=None,
+            tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
         )
         write_record(record)
         raise RateLimitedError(agent_name, effective_model, reason)

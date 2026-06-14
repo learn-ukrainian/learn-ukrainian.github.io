@@ -85,6 +85,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import os
 import re
 import shlex
@@ -106,6 +107,7 @@ _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
 _GH_TOKEN_AGENTS = {"codex", "claude", "bridge"}
 _MONITOR_API_BASE_URL = "http://localhost:8765"
+_logger = logging.getLogger(__name__)
 
 
 def _read_github_token_from_bash_secrets(path: Path | None = None) -> str | None:
@@ -1078,6 +1080,59 @@ def _classify_final_status(
     return "failed"
 
 
+def _emit_terminal_dispatch_event(
+    *,
+    task_id: str,
+    agent: str,
+    final_state: dict[str, Any],
+    result: Any,
+    fallback_prompt_chars: int,
+) -> None:
+    """Emit the central terminal dispatch event without affecting worker exit."""
+    try:
+        try:
+            from telemetry.emit import emit_event
+            from telemetry.pricing import compute_cost
+        except ImportError:  # pragma: no cover - package import path
+            from scripts.telemetry.emit import emit_event
+            from scripts.telemetry.pricing import compute_cost
+
+        usage_record = getattr(result, "usage_record", None)
+        tokens = usage_record.get("tokens") if isinstance(usage_record, dict) else None
+        model = final_state.get("model")
+        cost = compute_cost(
+            str(model).strip() if model else None,
+            tokens,
+            agent=agent,
+        )
+        emit_event(
+            "dispatch",
+            {
+                "task_id": task_id,
+                "agent": agent,
+                "model": model,
+                "effort": final_state.get("effort"),
+                "branch": final_state.get("worktree_branch"),
+                "worktree": final_state.get("worktree_path"),
+                "status": final_state.get("status"),
+                "duration_s": final_state.get("duration_s"),
+                "result_file": final_state.get("result_file"),
+                "prompt_chars": final_state.get("prompt_chars", fallback_prompt_chars),
+                "response_chars": final_state.get("response_chars"),
+                "tokens": tokens,
+                "cost_usd": cost.cost_usd,
+                "billing_model": cost.billing_model,
+                "cost_provenance": cost.provenance,
+            },
+        )
+    except Exception as exc:  # pragma: no cover - degraded mode only
+        _logger.debug(
+            "failed to emit terminal dispatch telemetry: %s: %s",
+            type(exc).__name__,
+            exc,
+        )
+
+
 def _run_worker(
     task_id: str,
     agent: str,
@@ -1305,6 +1360,13 @@ def _run_worker(
         ),
     })
     _write_state_atomic(state_path, final_state)
+    _emit_terminal_dispatch_event(
+        task_id=task_id,
+        agent=agent,
+        final_state=final_state,
+        result=result,
+        fallback_prompt_chars=len(prompt),
+    )
 
     if timed_out:
         _append_dispatch_event(

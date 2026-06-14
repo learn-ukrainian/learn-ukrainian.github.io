@@ -1,0 +1,40 @@
+# Strict runtime pricing table for scripts/telemetry/pricing.py.
+#
+# Only use `usd_per_1m_tokens` when the runtime's total token count can be
+# multiplied by one published per-token price without inventing an
+# input/output blend.
+
+models:
+  # Source: OpenAI model page, text-embedding-3-small "Embeddings / Per 1M tokens / Cost $0.02"
+  # https://developers.openai.com/api/docs/models/text-embedding-3-small
+  text-embedding-3-small:
+    billing_model: per_token
+    usd_per_1m_tokens: 0.02
+
+  # Source: OpenAI API pricing publishes split input/cached/output prices for
+  # gpt-5.5 and gpt-5.3-codex. This PR records only total tokens, so there is
+  # no honest single multiplier for those API models yet.
+  # https://developers.openai.com/api/docs/pricing
+  #
+  # Source: DeepSeek publishes split cache-hit/cache-miss/output prices.
+  # Total-only runtime tokens cannot be priced without a split.
+  # https://api-docs.deepseek.com/quick_start/pricing-details-usd
+
+subscription_agents:
+  # Source: OpenAI Codex pricing says Codex is included in ChatGPT plans.
+  # https://developers.openai.com/codex/pricing
+  codex:
+    billing_model: subscription
+
+  # Local subscription/unmetered CLI lanes. No per-call token price is applied.
+  # See scripts/config/agent_budgets.yaml for the repo's soft-cap accounting.
+  claude:
+    billing_model: subscription
+  gemini:
+    billing_model: subscription
+  agy:
+    billing_model: subscription
+  cursor:
+    billing_model: subscription
+  grok-build:
+    billing_model: subscription

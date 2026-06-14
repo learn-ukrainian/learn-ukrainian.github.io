@@ -935,6 +935,84 @@ def test_run_worker_persists_runtime_telemetry(tmp_tasks_dir, tmp_path):
     assert state["cli_version"] == "2.1.89"
 
 
+def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    from telemetry import emit as emit_mod
+
+    event_dir = tmp_path / "telemetry-events"
+
+    def event_dir_fn() -> Path:
+        event_dir.mkdir(parents=True, exist_ok=True)
+        return event_dir
+
+    monkeypatch.setattr(emit_mod, "_event_dir", event_dir_fn)
+    monkeypatch.setenv("LU_RUN_ID", "run-dispatch")
+    monkeypatch.setenv("LU_SESSION_ID", "session-dispatch")
+
+    state_path = delegate._state_path("worker-dispatch-event")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "worker-dispatch-event",
+        "model": "unknown",
+        "effort": "unknown",
+        "cli_version": "unknown",
+        "prompt_chars": 2,
+        "worktree_branch": "deepseek/worker-dispatch-event",
+        "worktree_path": str(tmp_path),
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "text-embedding-3-small",
+            "effort": "unknown",
+            "cli_version": "test",
+            "usage_record": {"tokens": 1_000},
+        },
+    )()
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result):
+        rc = delegate._run_worker(
+            task_id="worker-dispatch-event",
+            agent="deepseek",
+            prompt="hi",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            effort=None,
+        )
+
+    assert rc == 0
+    event_files = sorted(event_dir.glob("*.jsonl"))
+    assert len(event_files) == 1
+    events = [
+        json.loads(line)
+        for line in event_files[0].read_text(encoding="utf-8").splitlines()
+    ]
+    dispatch_events = [event for event in events if event["event_type"] == "dispatch"]
+    assert len(dispatch_events) == 1
+    event = dispatch_events[0]
+    assert event["task_id"] == "worker-dispatch-event"
+    assert event["agent"] == "deepseek"
+    assert event["status"] == "done"
+    assert event["duration_s"] >= 0
+    assert event["prompt_chars"] == 2
+    assert event["response_chars"] == 4
+    assert event["tokens"] == 1_000
+    assert event["cost_usd"] == pytest.approx(0.00002)
+    assert event["billing_model"] == "per_token"
+    assert event["cost_provenance"] == "priced"
+
+
 def test_run_worker_marks_needs_finalize_for_dirty_danger_worktree(
     tmp_tasks_dir,
     tmp_path,
