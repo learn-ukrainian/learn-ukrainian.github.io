@@ -283,6 +283,23 @@ _BLOCKED_SYNONYMS = {
     "флористська хризантема",
 }
 
+# #3116 — curated PER-LEMMA wrong-sense synonym exclusions. Each listed word is
+# authentic Ukrainian (Грінченко/ЕСУМ-attested, NOT a Russianism) that the
+# Karavansky synset over-includes under a sense the lemma does NOT carry. It is
+# excluded only for that specific lemma — NEVER globally (cf. _BLOCKED_SYNONYMS) —
+# so the word stays valid for the lemmas where it IS correct. This is the
+# блискучий/кам'янка heritage lesson: fix the wrong (lemma, sense) pair, never
+# stoplist a valid word.
+#   шлях → кам'яниця: Грінченко = "Каменное строеніе" (stone building) / sparrow
+#          trap; ЕСУМ adds the stone-bramble berry — no road sense. The road term
+#          is кам'янка (Грінченко sense 4: "Шосе. Кам'янкою їхати").
+#   річка → звір: Грінченко звір I = "Овраг, лощина" (ravine), звір II = "зверь"
+#          (beast) — neither is a river.
+_WRONG_SENSE_SYNONYMS: dict[str, frozenset[str]] = {
+    "шлях": frozenset({"кам'яниця"}),
+    "річка": frozenset({"звір"}),
+}
+
 _COMPOSITIONAL_ETYMOLOGY_EXCLUSIONS = {
     "а тебе?",
     "а у тебе?",
@@ -295,7 +312,7 @@ _COMPOSITIONAL_ETYMOLOGY_EXCLUSIONS = {
     "як справи?",
 }
 
-_DERIVATIONAL_ETYMLOGY_BASES: dict[str, tuple[str, ...]] = {
+_DERIVATIONAL_ETYMOLOGY_BASES: dict[str, tuple[str, ...]] = {
     "добре": ("добрий", "добро"),
     "чудово": ("чудо", "чудовий"),
     "пізно": ("пізній",),
@@ -314,7 +331,7 @@ _DERIVATIONAL_ETYMLOGY_BASES: dict[str, tuple[str, ...]] = {
     "повертати": ("вертати",),
 }
 
-_ORDINAL_ETYMLOGY_BASES: dict[str, tuple[str, ...]] = {
+_ORDINAL_ETYMOLOGY_BASES: dict[str, tuple[str, ...]] = {
     "перша": ("перший", "один"),
     "перше": ("перший", "один"),
     "перший": ("один",),
@@ -1026,6 +1043,11 @@ def _clean_synonym_candidate(candidate: str, lemma: str) -> str | None:
     for variant in _split_lemma_variants(_strip_stress(lemma)):
         normalized_variant = variant.casefold()
         if term == normalized_variant or _contains_whole_token(term, normalized_variant):
+            return None
+    excluded = _WRONG_SENSE_SYNONYMS.get(_base_lemma(lemma).casefold())
+    if excluded:
+        normalized = term.replace("’", "'").replace("ʼ", "'").replace("`", "'")
+        if normalized in excluded:
             return None
     return term
 
@@ -1824,8 +1846,8 @@ def _direct_etymology_base_candidates(word: str) -> list[str]:
     key = _lookup_key(word)
     if not key:
         return candidates
-    candidates.extend(_DERIVATIONAL_ETYMLOGY_BASES.get(key, ()))
-    candidates.extend(_ORDINAL_ETYMLOGY_BASES.get(key, ()))
+    candidates.extend(_DERIVATIONAL_ETYMOLOGY_BASES.get(key, ()))
+    candidates.extend(_ORDINAL_ETYMOLOGY_BASES.get(key, ()))
 
     if key.endswith(("ся", "сь")) and len(key) > 4:
         candidates.append(key[:-2])

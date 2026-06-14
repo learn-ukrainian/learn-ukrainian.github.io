@@ -5,10 +5,12 @@ import pytest
 
 from scripts.lexicon import enrich_manifest as enrich_manifest_module
 from scripts.lexicon.enrich_manifest import (
+    _WRONG_SENSE_SYNONYMS,
     KAIKKI_SOURCE,
     _base_lemma,
     _build_paradigm,
     _cefr,
+    _clean_synonym_candidate,
     _curated_calque,
     _definition_cards,
     _dmklinger_key,
@@ -394,6 +396,32 @@ def test_slovnyk_synonyms_omit_wrong_sense_voda(monkeypatch) -> None:
     items = section["items"] if section else []
     assert "багатослів'я" not in items
     assert "велемовність" not in items
+
+
+def test_wrong_sense_synonym_excluded_per_lemma_not_globally() -> None:
+    # #3116: кам'яниця (stone building, Грінченко) and звір (ravine/beast) are
+    # authentic words the Karavansky synset over-includes for шлях/річка. They are
+    # dropped for THAT lemma only — never globally — so a stoplist that would
+    # repeat the блискучий heritage error is avoided.
+    assert _clean_synonym_candidate("кам'яниця", "шлях") is None
+    assert _clean_synonym_candidate("звір", "річка") is None
+    # valid same-sense synonyms survive
+    assert _clean_synonym_candidate("дорога", "шлях") == "дорога"
+    assert _clean_synonym_candidate("струмок", "річка") == "струмок"
+    # NOT a global block: кам'яниця stays valid as a synonym of a different lemma
+    assert _clean_synonym_candidate("кам'яниця", "будинок") == "кам'яниця"
+
+
+def test_wrong_sense_synonyms_are_authentic_not_russianisms() -> None:
+    # Contract guard: every excluded term is per-lemma sense-scoped, never a
+    # blanket entry. Keys are base lemmas; the excluded words must NOT leak into
+    # the global _BLOCKED_SYNONYMS stoplist (they are valid Ukrainian).
+    blocked = enrich_manifest_module._BLOCKED_SYNONYMS
+    for lemma, excluded in _WRONG_SENSE_SYNONYMS.items():
+        assert lemma == lemma.casefold(), f"key {lemma!r} must be casefolded"
+        assert excluded, f"{lemma} must list at least one excluded term"
+        for term in excluded:
+            assert term not in blocked, f"{term} is valid Ukrainian — must not be globally blocked"
 
 
 def test_slovnyk_synonyms_promote_clean_sources_for_sample(monkeypatch) -> None:
