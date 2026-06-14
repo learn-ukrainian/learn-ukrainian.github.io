@@ -1,14 +1,12 @@
 # Current — Claude Session Handoff (2026-06-14)
 
 > Router: read `docs/session-state/current.md` first.
-> **Latest detailed handoff: `docs/session-state/2026-06-14-claude-grok-build-validation-atlas-quality-queue.md`** — read top-to-bottom.
+> **Latest detailed handoff: `docs/session-state/2026-06-14-claude-s6-calque-integrated-stale-server-fix-reenrich.md`** — read top-to-bottom.
 >
-> **✅ Shipped (merged to main):** Atlas quality-grind queue — #3100 (ЕСУМ all-6-vols desc), #3101 (UA-GEC tag_filter ambiguous-column bug + test), #3104 (§6 calque authority dataset), #3099 (§12 Вікі + CC-BY-SA 4.0 fix + query_wikipedia cache), #3102 (#2971 etymology derivational-base + #3092 Karavansky/sense-filtered synonyms, deepseek-pro PASS 5/5).
+> **✅ Shipped (merged to main):** #3110 — §6 grok-swarm calque integration (`PHRASAL_CALQUES` +6, new `SENSE_RESTRICTED_CALQUES` polyseme bucket +5, regression test) + a Content-Gate dossier-wordcount scope fix. Plus an operational fix: restarted the stale `sources` MCP server so the #3101 `tag_filter` fix is live.
 >
-> **🤖 grok-build lane VALIDATED** (kubedojo peer + my own corroborated test — heritage gate works, MCP-grounded, 0 fabrication). Full bridge support = #3105 (in review). Routing: codex-swarm → B1 QG/review (user-driven); **grok-swarm → Word Atlas building**; grok-build single → tech debt (#2901 live). $99/16 upgrade deferred.
+> **🔄 RESOLVE FIRST:** the controlled **Atlas re-enrich** is in flight (bg `enrich_manifest.py`, was PID 94346 — silent, writes manifest at end). On completion run `/tmp/atlas-spotcheck.py` and **commit `site/src/data/lexicon-manifest.json` ONLY if `VERDICT: CLEAN`** (#M-11; auto-deploys). Baseline: synonyms 21 / wiki 0 / etymology 1165 → expect synonyms ≫21 + wiki >0.
 >
-> **🔄 VERIFY/LAND FIRST:** grok-swarm §6 calque output (`/tmp/grok-atlas-calque.log`, bg `bhmf66dbs`) → spot-check + integrate into `calque_corrections.py`; land #3105 + #2901; then the **controlled Atlas re-enrich** (spot-check варити/хата/шлях/мрія before committing the manifest — #M-11).
+> **🎯 Then:** §6 enrich wiring (#3098) — brief ready at `/tmp/s6-calque-wiring-brief.md`; **de-risked to ~1 card today** (only `виглядати` of 37 dataset keys is in the A1 manifest), so LOW urgency. Then #3102 nice-to-haves (fold into that dispatch) + #3106 sources.db backfill.
 >
-> **📨 User-owned:** #3097 slovnyk mirror (permission); SuperGrok $99 upgrade decision.
->
-> Prior handoff (superseded): `2026-06-13-claude-agy-retire-atlas-pairfix-quality-queue.md`.
+> Prior handoff (superseded): `2026-06-14-claude-grok-build-validation-atlas-quality-queue.md`.
