@@ -1162,6 +1162,111 @@ Response:
 ]
 ```
 
+## Module Build Token Telemetry — `/api/telemetry/module-builds`
+
+Persists module-build token telemetry as local runtime state. This is the
+canonical place to record whether a build used a swarm or ran solo. The data
+is stored in `data/telemetry/module_builds.db`; the database is ignored by git
+and must not be included in content/code PRs.
+
+### `POST /api/telemetry/module-builds`
+
+Upserts one build-run telemetry record. `swarm_used`, `swarm_note`, `level`,
+`slug`, and `source` are required. Re-posting the same `run_id` updates the
+run and replaces its participant rows.
+
+```bash
+curl -s -X POST http://localhost:8765/api/telemetry/module-builds \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "run_id": "b1-m13-pr3148",
+    "level": "b1",
+    "slug": "alternation-consonants-verbs",
+    "branch": "codex/b1-m13-alternation-verbs",
+    "commit_sha": "7066d5f506",
+    "pr_number": 3148,
+    "status": "merged",
+    "swarm_used": true,
+    "swarm_label": "thin",
+    "swarm_note": "Used bounded reviewers and validation runner.",
+    "wall_clock_minutes": 30.5,
+    "source": "codex-final",
+    "participants": [
+      {
+        "role": "main",
+        "agent": "codex",
+        "model": "gpt-5.5",
+        "effort": "xhigh",
+        "prompt_tokens": 120000,
+        "response_tokens": 18000,
+        "token_source": "estimated"
+      }
+    ]
+  }'
+```
+
+Response:
+```json
+{"ok": true, "run_id": "b1-m13-pr3148"}
+```
+
+### `GET /api/telemetry/module-builds`
+
+Returns recent build-run telemetry. Supported filters: `level`, `slug`,
+`swarm_used`, and `limit`.
+
+```bash
+curl -s 'http://localhost:8765/api/telemetry/module-builds?level=b1&swarm_used=true'
+```
+
+Response:
+```json
+{
+  "generated_at": "2026-06-14T12:34:56Z",
+  "records_total": 1,
+  "totals": {
+    "runs": 1,
+    "swarm_runs": 1,
+    "solo_runs": 0,
+    "participants": 1,
+    "prompt_tokens": 120000,
+    "response_tokens": 18000,
+    "total_tokens": 138000,
+    "cost_usd_est": 0.0
+  },
+  "runs": [
+    {
+      "run_id": "b1-m13-pr3148",
+      "level": "b1",
+      "slug": "alternation-consonants-verbs",
+      "swarm_used": true,
+      "swarm_note": "Used bounded reviewers and validation runner.",
+      "participants": [
+        {
+          "role": "main",
+          "agent": "codex",
+          "model": "gpt-5.5",
+          "effort": "xhigh",
+          "prompt_tokens": 120000,
+          "response_tokens": 18000,
+          "total_tokens": 138000,
+          "token_source": "estimated"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### `GET /api/telemetry/module-builds/{level}/{slug}`
+
+Returns telemetry for one module, with `latest` set to the newest matching
+run or `null` when no record exists.
+
+```bash
+curl -s 'http://localhost:8765/api/telemetry/module-builds/b1/alternation-consonants-verbs'
+```
+
 ## Delegation — `/api/delegate/`
 
 ### `GET /api/delegate/tasks?status=&limit=50`

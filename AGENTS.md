@@ -255,6 +255,14 @@ Cost controls:
 - Do not let subagents read secrets, source `.envrc`, call `gh`, request reviews, or merge PRs.
 - Do not delegate the independent-family review requirement. Gemini review is still mandatory before merge.
 
+Module-build PRs must persist token telemetry through
+`POST /api/telemetry/module-builds` and include the same summary in the PR body
+or final orchestration note. Every record must explicitly say whether a swarm
+was used (`swarm_used: true/false`) and include a `swarm_note`; solo runs still
+need a note such as "solo run; no swarm used". See
+`docs/runbooks/module-build-token-telemetry.md`. The SQLite database under
+`data/telemetry/` is local runtime state and must not be committed.
+
 ---
 
 ## Project Architecture
