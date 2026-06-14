@@ -62,8 +62,9 @@
 
 > **⏱ HONEST SCOPE:** Modules built+green+committed THIS session: **#01 narodna-kultura-yak-systema + #02
 > narodni-viruvannia-mifolohiia-demonolohiia** — both python_qg ALL-GREEN, corpus-hammer #M-11 verified, MDX
-> assembled (~95–96KB), status→active. **#03 zamovliannia IN-FLIGHT** at handoff (see NEXT ACTIONS). PR
-> **claude/folk-modules-01-03** pushed (#01+#02). llm_qg DEFERRED for all (see #3). Built folk modules 3→5/42.
+> assembled (~95–96KB), status→active. **#03 zamovliannia BUILT + DIAGNOSED + HANDED OFF** for fresh correction
+> (build branch `52936f832f`; self_check already fixed; 3 tractable remainders — see NEXT ACTION 1). PR **#3131
+> claude/folk-modules-01-03** pushed (#01+#02). llm_qg DEFERRED for all (see #3). Built folk modules 3→5/42 (#03 → 6).
 
 > **⚠ COORDINATION NOTE (orchestrator):** Session-28 (origin/main) fired a PARTIAL #01 (build wt `...-003403`,
 > branch `3e69cc84f5`, vesum-blocked) saying "resume from there, don't re-fire." My session-start state predated
@@ -92,11 +93,20 @@
   foreign/reject markers (російське/імперське/чуже «X»). Workaround used this session: reframe to `… а не «X»`.
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **#03 zamovliannia-zaklynannia-prymovky** — IN-FLIGHT at handoff (Monitor `bwt2p6cpa`; build wt
-   `ls -1dt .worktrees/builds/folk-zamovliannia-* | head -1`). If it failed at python_qg: self_check fix →
-   `run_python_qg_with_corrections` loop (`/tmp/folk_correct.py <module_dir> <plan>`) → expect vesum surprises
-   (incantations = archaic/dialectal vocab → heritage-allowlist via `add_folk_attestation.py` or `не «X»` reframe) →
-   corpus-hammer → `assemble_mdx` → status→active in index.mdx (block A #03) → commit to the SAME PR branch.
+1. **#03 zamovliannia-zaklynannia-prymovky — BUILT + DIAGNOSED; RESUME FROM BUILD BRANCH (do NOT re-fire).**
+   Build wt `.worktrees/builds/folk-zamovliannia-zaklynannia-prymovky-20260614-030908/`, branch
+   `build/folk/zamovliannia-zaklynannia-prymovky-20260614-030908` (`52936f832f`). **self_check string→list ALREADY
+   FIXED** (activity_schema PASS). python_qg reveals 3 remaining, all tractable:
+   - **(a) word_count 2322/4600** → run the loop `/tmp/folk_correct.py <module_dir> <plan>` (claude word_count
+     expansion, exactly as #01/#02; budget a coinage-cleanup pass after, e.g. #02's найрухоміша).
+   - **(b) vesum `заговор`/`заговоров`** = DELIBERATE decolonization citations of the RU term «заговоров». Lines
+     88/93 cite-to-reject → reframe to the `не «заговоров»` exemption frame (like #02 лєший). **Line 99 is
+     META-LINGUISTIC** (discusses the word «заговір»/«заговор» itself) → handle with care: rephrase so the bare RU
+     form isn't asserted, or NO_VERIFY. (Same inline-«»-citation gate gap noted above.)
+   - **(c) textbook_quote_fidelity: 2 «missing attribution» blockquotes** (NOT fabrication) — "Словесний і обрядовий
+     текст…тотожні" (scholarly claim → add attribution or NO_VERIFY) + "Волос, волос, вийди на колос" (real harvest
+     charm → attribute via search_literary/verify_quote, likely Грушевський/ЕУ).
+   Then corpus-hammer #M-11 → `assemble_mdx` → status→active (index.mdx block A #03) → commit to the SAME PR #3131.
 2. **Keep the PR** (claude/folk-modules-01-03) — bundle this handoff. Agent-type contract: open, do NOT self-merge.
 3. **llm_qg PARITY BATCH for ALL 5 folk modules** (kalendarna done; #01, #02, koliadky, dumy pending) — with a
    **CODEX/GPT reviewer override, NOT gemini** (the default folk-module llm_qg reviewer is gemini-3.1-pro = BARRED
