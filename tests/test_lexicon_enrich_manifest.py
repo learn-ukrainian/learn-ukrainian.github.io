@@ -9,6 +9,7 @@ from scripts.lexicon.enrich_manifest import (
     _base_lemma,
     _build_paradigm,
     _cefr,
+    _curated_calque,
     _definition_cards,
     _dmklinger_key,
     _etymology,
@@ -578,6 +579,48 @@ def test_slovnyk_warning_merges_known_russianism_alternative() -> None:
         attestation["source"] == "standard_alternative" and attestation["ref"] == "захід"
         for attestation in status["attestations"]
     )
+
+
+def test_curated_calque_matches_participle_entry() -> None:
+    card = _curated_calque("діючий", "діючий")
+
+    assert card == {
+        "kind": "participle",
+        "corrections": ["чинний"],
+        "note": "діючий закон → чинний закон (рос. действующий)",
+        "source": ["glazova-11", "avramenko-11"],
+    }
+
+
+def test_curated_calque_matches_sense_restricted_entry_with_both_senses() -> None:
+    card = _curated_calque("виглядати", "виглядати")
+
+    assert card is not None
+    assert card["kind"] == "sense_restricted"
+    assert card["corrections"] == ["здаватися", "видаватися"]
+    assert card["calque_sense"] == "to seem / appear that (рос. выглядит = 'it seems')"
+    assert card["authentic_sense"] == "to look (well/ill); to peer out (гарно виглядати; виглядати у вікно)"
+    assert "calque only when" in card["note"]
+    assert card["source"] == ["grinchenko", "sum-20", "grok-3098"]
+
+
+def test_curated_calque_matches_phrasal_entry() -> None:
+    card = _curated_calque("точка зору", "точка")
+
+    assert card == {
+        "kind": "phrasal",
+        "corrections": ["погляд"],
+        "note": "рос. точка зрения; цієї точки зору → цього погляду",
+        "source": ["ua-gec", "grok-3098"],
+    }
+
+
+def test_curated_calque_unknown_lemma_returns_none() -> None:
+    assert _curated_calque("яблуко", "яблуко") is None
+
+
+def test_curated_calque_lexicalised_safe_lemma_returns_none() -> None:
+    assert _curated_calque("блискучий", "блискучий") is None
 
 
 def test_fetch_slovnyk_entry_raises_transient_for_5xx(monkeypatch) -> None:
