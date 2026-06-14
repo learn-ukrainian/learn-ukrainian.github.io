@@ -58,7 +58,48 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 27 HANDOFF (2026-06-14 — folk reading-links section shipped + "where to read" made a MANDATORY all-seminars policy (spec); folk preview release-ready; BIG expanded scope queued for tomorrow) — **RESUME HERE**
+## ▶▶▶ SESSION 28 HANDOFF (2026-06-14 — #01 module build FIRED + diagnosed: activity_schema FIXED, vesum_verified is next blocker; build preserved on a branch — RESUME #01 from there, don't re-fire) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** Thin delta on Session 27 (read it next — full release queue + recipe). User said "kick
+> them off" → I fired the **#01 narodna-kultura-yak-systema** build; it hit the known rotating gate walls.
+> #02/#03 NOT started; koliadky/dumy LLM-QG NOT started. Folk PREVIEW (landing + homepage link + reading-links
+> + 3 live modules) remains release-ready for tomorrow regardless.
+
+### 🔧 #01 narodna-kultura-yak-systema BUILD STATE — RESUME FROM THE BUILD BRANCH (do NOT re-fire from scratch)
+- Build branch **`build/folk/narodna-kultura-yak-systema-20260614-003403`**, fix commit **`3e69cc84f5`**,
+  worktree `.worktrees/builds/folk-narodna-kultura-yak-systema-20260614-003403/`.
+- Writer (claude-tools) = clean per-section CoT + exhaustive verify_words. module.md ~3000 words (THIN for a
+  flagship #01 — watch quality even once gates pass; #M-11).
+- **GATE 1 FIXED:** `activity_schema` — activity #7 (performance) had a stray `self_check` STRING beside the
+  real `self_checklist` LIST → dropped the string (kalendarna precedent S14/16). Re-gate CONFIRMS PASS.
+  (ADR-008 couldn't auto-fix — activities.yaml is outside the module.md-only correction scope, S12 gap.)
+- **GATE 2 NEXT BLOCKER:** `vesum_verified` FAIL on the authoritative re-gate. Failing word(s) were NOT
+  persisted to python_qg.json (in-memory only) → **re-run `lp.run_python_qg(module_dir, plan_path)` and dump
+  `res['gates']['vesum_verified']`** to get the word(s); then proven recipe: authentic archaism/derivation →
+  heritage layer should accept (`search_heritage`/`check_russian_shadow`); genuine coinage → cross-model
+  **codex** fixer → VESUM-attested synonym (find/replace, ADR-007). All other ~25 gates PASS.
+- Re-gate (data-bearing main root): `from scripts.build import linear_pipeline as lp;
+  lp.run_python_qg(Path('<build-wt>/curriculum/l2-uk-en/folk/narodna-kultura-yak-systema'),
+  Path('curriculum/l2-uk-en/plans/folk/narodna-kultura-yak-systema.yaml'))`. ~225s/run.
+- After GREEN: verify_quote every fragment (#M-11) → `lp.assemble_mdx` → `site/src/content/docs/folk/
+  narodna-kultura-yak-systema.mdx` → flip status `locked`→`active` in `site/src/content/docs/folk/index.mdx`
+  (block A #01) → add genre reading-links to its resources.yaml → PR.
+
+### ▶ NEXT ACTIONS (RESUME HERE) — Session-27 queue, with #01 now mid-flight
+1. **Finish #01** from build branch `3e69cc84f5` (vesum correction → green → assemble → activate). One-at-a-time #M-9.
+2. **#02 narodni-viruvannia → #03 zamovliannia** (plans+dossiers+wikis present). Pre-fire `npx claude --version`.
+3. **koliadky + dumy LLM-QG** (finish 3 live previews; kalendarna already e2e).
+4. **Reading links → 3 live modules' resources.yaml** + reassemble (landing section shipped S27).
+5. **MANDATORY reading-links epic #3120** — registry + gate; lit/lit-* first.
+6. **Deploy** (auto-deploy DISABLED): user deploys tomorrow via `gh workflow run deploy-pages.yml`.
+
+### ⚠ CONFIRMED AGAIN: folk module builds DO NOT one-shot — rotating gate walls (activity_schema → vesum → …).
+This is the #3079 self-converge gap (top priority, infra lane). Until it lands, each module = manual recipe
+(fix gate → re-gate → next wall). Budget accordingly: #01-03 will NOT all land in one sitting.
+
+---
+
+## ▶▶▶ SESSION 27 HANDOFF (2026-06-14 — folk reading-links section shipped + "where to read" made a MANDATORY all-seminars policy (spec); folk preview release-ready; BIG expanded scope queued for tomorrow) — (superseded by Session 28)
 
 > **⏱ HONEST SCOPE:** This PR ships the folk landing **"Where to read the texts"** section + the
 > **mandatory-reading-links policy spec**. The user expanded scope to a multi-session EPIC (below).
