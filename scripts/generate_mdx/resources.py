@@ -13,7 +13,7 @@ from pathlib import Path
 import yaml
 
 from .atlas_links import atlas_href_for
-from .utils import escape_jsx
+from .utils import dump_json_for_jsx, escape_jsx
 
 
 def validate_and_clean_url(url: str, title: str = '') -> str:
@@ -500,8 +500,11 @@ def vocab_items_to_components(items: list[dict], header_text: str = "Vocabulary"
         }
         words.append({key: value for key, value in entry.items() if value not in (None, "", [])})
 
-    card_json = json.dumps(cards, ensure_ascii=False, separators=(',', ':')).replace('`', '\\`').replace('${', '\\${')
-    word_json = json.dumps(words, ensure_ascii=False, separators=(',', ':')).replace('`', '\\`').replace('${', '\\${')
+    # Backslash-doubling escaper (utils.dump_json_for_jsx) — NOT a hand-rolled
+    # backtick/${-only strip, which drops the backslash-doubling and corrupts any
+    # vocab value containing a literal " at render time (#3137).
+    card_json = dump_json_for_jsx(cards, compact=True)
+    word_json = dump_json_for_jsx(words, compact=True)
     return (
         f"## {header_text}\n\n"
         f"<VocabCard client:only=\"react\" words={{JSON.parse(`{word_json}`)}} title=\"{escape_jsx(header_text)}\" />\n\n"

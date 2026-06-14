@@ -1,0 +1,214 @@
+"""verify_shippable — one-command Definition-of-Done for a built module (#3138).
+
+A module is *not* shippable just because ``python_qg`` is green. The 2026-06-14
+incident: three modules shipped python_qg-green but #01 did not render — the
+``mdx_render`` gate is deferred and never ran, so a template-literal escape bug
+(#3137) reached ``main`` and only CI's astro build caught it. "Ready" was
+*asserted*, not *verified*.
+
+This script makes the Definition-of-Done a single deterministic predicate:
+
+    python_qg green  AND  assembled MDX renders  [AND astro build green]
+
+and prints ONE green/red verdict. Corpus-hammer (#M-11, a human reading of the
+content) remains a required ship step and is reported as an explicit TODO — this
+tool gates the machine-checkable half so a driver never declares "done" on the
+build-time gates alone.
+
+Usage:
+    python -m scripts.build.verify_shippable <level> <slug>
+    python -m scripts.build.verify_shippable folk narodna-kultura-yak-systema
+    python -m scripts.build.verify_shippable folk dumy --module-dir DIR --plan PLAN
+    python -m scripts.build.verify_shippable folk kalendarna-obriadovist-zvychai --astro-build
+
+Default render check is the fast, always-on Node island gate
+(``scripts.build.mdx_render_gate``) which catches the #3137 class deterministically
+without touching ``site/``. ``--astro-build`` additionally runs the full astro
+build (what CI does) as the catch-all for non-island render breaks.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+CURRICULUM = PROJECT_ROOT / "curriculum" / "l2-uk-en"
+SITE_DOCS = PROJECT_ROOT / "site" / "src" / "content" / "docs"
+
+
+def _default_module_dir(level: str, slug: str) -> Path:
+    return CURRICULUM / level / slug
+
+
+def _default_plan_path(level: str, slug: str) -> Path:
+    return CURRICULUM / "plans" / level / f"{slug}.yaml"
+
+
+def _site_mdx_path(level: str, slug: str) -> Path:
+    return SITE_DOCS / level / f"{slug}.mdx"
+
+
+def _astro_build() -> tuple[bool, str]:
+    """Run the full astro build (what CI does). Returns (passed, last_output)."""
+    site = PROJECT_ROOT / "site"
+    try:
+        proc = subprocess.run(
+            ["npm", "run", "build"],
+            cwd=site,
+            capture_output=True,
+            text=True,
+            timeout=900,
+        )
+    except FileNotFoundError:
+        return False, "npm not found — cannot run astro build"
+    except subprocess.TimeoutExpired:
+        return False, "astro build timed out (>900s)"
+    tail = "\n".join((proc.stdout + proc.stderr).strip().splitlines()[-12:])
+    return proc.returncode == 0, tail
+
+
+def verify(
+    level: str,
+    slug: str,
+    *,
+    module_dir: Path | None = None,
+    plan_path: Path | None = None,
+    astro_build: bool = False,
+) -> dict:
+    """Run the shippability predicate. Returns a structured report dict."""
+    # Import lazily — linear_pipeline pulls in a heavy graph.
+    from scripts.build.linear_pipeline import (
+        assemble_mdx,
+        run_mdx_render_gate,
+        run_python_qg,
+    )
+
+    module_dir = module_dir or _default_module_dir(level, slug)
+    plan_path = plan_path or _default_plan_path(level, slug)
+
+    steps: list[dict] = []
+
+    def add(name: str, passed: bool | None, detail: str) -> None:
+        steps.append({"step": name, "passed": passed, "detail": detail})
+
+    # --- preconditions ---
+    if not module_dir.exists():
+        add("inputs", False, f"module dir not found: {module_dir}")
+        return _finalize(level, slug, steps)
+    if not plan_path.exists():
+        add("inputs", False, f"plan not found: {plan_path}")
+        return _finalize(level, slug, steps)
+
+    # --- 1. python_qg (deterministic build gates) ---
+    try:
+        qg = run_python_qg(module_dir, plan_path)
+        qg_gates = qg.get("gates", {})
+        qg_pass = bool(qg_gates.get("passed"))
+        failed = [
+            k
+            for k, g in qg_gates.items()
+            if isinstance(g, dict) and g.get("passed") is False
+        ]
+        add(
+            "python_qg",
+            qg_pass,
+            "all gates green" if qg_pass else f"failed gates: {', '.join(failed) or 'unknown'}",
+        )
+    except Exception as exc:
+        add("python_qg", False, f"run_python_qg raised: {exc!r}")
+        return _finalize(level, slug, steps)
+
+    # --- 2. assemble MDX (to a temp file; do not touch site/) ---
+    with tempfile.TemporaryDirectory() as td:
+        tmp_mdx = Path(td) / f"{slug}.mdx"
+        try:
+            mdx_text = assemble_mdx(module_dir, tmp_mdx, plan_path)
+            add("assemble_mdx", True, f"assembled {len(mdx_text)} chars")
+        except Exception as exc:
+            add("assemble_mdx", False, f"assemble_mdx raised: {exc!r}")
+            return _finalize(level, slug, steps)
+
+        # --- 3. render gate (Node island eval — the #3137 guard) ---
+        render = run_mdx_render_gate(mdx_text)
+        add("mdx_render", render.get("passed"), render.get("message", ""))
+        for f in render.get("failures", []):
+            steps.append({"step": "mdx_render.failure", "passed": False, "detail": f"{f['snippet']} → {f['error']}"})
+
+    # --- 4. optional full astro build (catch-all) ---
+    if astro_build:
+        site_mdx = _site_mdx_path(level, slug)
+        prior = site_mdx.read_text(encoding="utf-8") if site_mdx.exists() else None
+        site_mdx.parent.mkdir(parents=True, exist_ok=True)
+        site_mdx.write_text(mdx_text, encoding="utf-8")
+        try:
+            ok, tail = _astro_build()
+            add("astro_build", ok, "astro build green" if ok else f"astro build FAILED:\n{tail}")
+        finally:
+            if prior is None:
+                site_mdx.unlink(missing_ok=True)
+            else:
+                site_mdx.write_text(prior, encoding="utf-8")
+
+    return _finalize(level, slug, steps)
+
+
+def _finalize(level: str, slug: str, steps: list[dict]) -> dict:
+    # GREEN requires every non-skipped step to have passed (None == skipped == OK).
+    shippable = all(s["passed"] in (True, None) for s in steps) and any(
+        s["passed"] is True for s in steps
+    )
+    return {
+        "level": level,
+        "slug": slug,
+        "shippable": shippable,
+        "steps": steps,
+        "corpus_hammer_required": True,
+    }
+
+
+def _print_human(report: dict) -> None:
+    icon = {True: "✅", False: "❌", None: "⚠️ "}
+    print(f"\n  verify_shippable: {report['level']}/{report['slug']}\n")  # codeql[py/clear-text-logging-sensitive-data] - module level/slug only; no secrets (#M-5 verified)
+    for s in report["steps"]:
+        print(f"   {icon[s['passed']]} {s['step']:<22} {s['detail']}")  # codeql[py/clear-text-logging-sensitive-data] - gate name + deterministic result; no secrets
+    print()
+    if report["shippable"]:
+        print("  ✅ SHIPPABLE (machine checks green)")
+        print("  ⚠️  STILL REQUIRED before ship: corpus-hammer (#M-11) — read the")
+        print("     content + independently verify_quote every embedded fragment.")
+    else:
+        print("  ❌ NOT SHIPPABLE — fix the red step(s) above. Do NOT declare ready.")
+    print()
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description="Definition-of-Done predicate for a built module (#3138)")
+    ap.add_argument("level", help="track/level token, e.g. folk, a1, b1")
+    ap.add_argument("slug", help="module slug")
+    ap.add_argument("--module-dir", type=Path, default=None)
+    ap.add_argument("--plan", type=Path, default=None, dest="plan_path")
+    ap.add_argument("--astro-build", action="store_true", help="also run the full astro build (catch-all)")
+    ap.add_argument("--json", action="store_true", help="emit the raw report as JSON")
+    args = ap.parse_args(argv)
+
+    report = verify(
+        args.level,
+        args.slug,
+        module_dir=args.module_dir,
+        plan_path=args.plan_path,
+        astro_build=args.astro_build,
+    )
+    if args.json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))  # codeql[py/clear-text-logging-sensitive-data] - report = gate/step results; no secrets
+    else:
+        _print_human(report)
+    return 0 if report["shippable"] else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -27,7 +27,13 @@ initialPrompt: |
      prompt redirects you there.)
   2. Resume from its "IN-FLIGHT" and "NEXT ACTION" sections. Verify in-flight dispatches via
      `curl -sS http://127.0.0.1:8765/api/delegate/active` before assuming anything.
-  3. `git fetch origin` (read-only) to observe where the orchestrator's `main` is. Never reset/commit onto it.
+  3. `git fetch origin` (read-only), then **resume from the FRESHEST handoff, not stale local state.**
+     The orchestrator merges your PRs into `main`, so `origin/main`'s handoff is often AHEAD of your
+     local file and a prior session's work may already be merged. Read the handoff from `origin/main`
+     (`git show origin/main:docs/<track>-epic/CLAUDE-DRIVER-HANDOFF.md`) AND list open driver PRs
+     (`gh pr list --head 'claude/<track>-' --state open`, or `gh pr list --search 'author:@me' --state open`)
+     BEFORE starting any build — this prevents re-firing a module a newer session already advanced (the
+     #01 re-collision, 2026-06-14). Never reset/commit onto `main`.
 
   ## HOW YOU DRIVE (the proven loop)
   - Fire work: `.venv/bin/python scripts/delegate.py dispatch --agent codex --task-id <id>
@@ -43,6 +49,22 @@ initialPrompt: |
     with a `-retry` task id.
   - After each batch, REFRESH your handoff and include it in that batch's PR (see KEEP YOUR STATE) —
     that is how the next track-driver session resumes cleanly.
+
+  ## DEFINITION OF DONE — verify, never assert (#3137/#3138)
+  A module is NOT shippable on `python_qg`-green alone: `python_qg` is blind to whether the *assembled
+  MDX renders* (the `mdx_render` gate is deferred and historically never ran). On 2026-06-14 three
+  modules shipped python_qg-green and #01 did not render — only CI's astro build caught it, after
+  "ready" had been asserted. So readiness is a PREDICATE you run, not prose you write:
+  - **Per module, before flipping status `locked`→`active` or opening the ship PR:** run
+    `.venv/bin/python -m scripts.build.verify_shippable <level> <slug>` from the data-bearing root —
+    it runs python_qg → assemble_mdx → the Node `mdx_render` gate and prints ONE green/red. Add
+    `--astro-build` for the full catch-all (what CI does). Then corpus-hammer (#M-11): a human read +
+    independent `verify_quote` of every embedded fragment. Done = GREEN(verify_shippable) AND
+    corpus-hammer — not before.
+  - **Before declaring "ready for handoff":** run
+    `.venv/bin/python -m scripts.orchestration.handoff_ready --pr <N>` — it checks tree-clean · 0
+    in-flight · branch pushed (local==origin) · all blocking PR checks green · handoff bundled in the
+    PR. Any RED/UNKNOWN ⇒ NOT ready (you cannot assert readiness on a check you did not run, #M-4).
 
   ## KEEP YOUR STATE — git-tracked, promoted via your PR
   Your handoff (`docs/folk-epic/CLAUDE-DRIVER-HANDOFF.md`) is the git-tracked cross-session SSOT on

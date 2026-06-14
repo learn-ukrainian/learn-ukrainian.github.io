@@ -11,10 +11,17 @@ from typing import Any
 
 
 def dump_json_for_jsx(obj: Any) -> str:
-    """Serialize to JSON suitable for embedding in JSX template literals."""
+    """Serialize to JSON suitable for embedding in JSX template literals.
+
+    Embedded as ``JSON.parse(`<here>`)``; a JS template literal consumes
+    backslash escapes, so the JSON's own ``\\"`` / ``\\\\`` / ``\\n`` must be
+    backslash-doubled (with `` ` `` and ``${``), backslash FIRST. The previous
+    trailing ``.replace("\\\\n", "\\n").replace('\\\\"', '\\"')`` un-did that
+    doubling and corrupted any island prop containing a newline or quote at
+    render time — removed (#3137).
+    """
     s = json.dumps(obj, ensure_ascii=False, indent=2)
     s = s.replace("\\", "\\\\").replace("`", "\\`").replace("${", "\\${")
-    s = s.replace("\\\\n", "\\n").replace('\\\\"', '\\"')
     return s
 
 

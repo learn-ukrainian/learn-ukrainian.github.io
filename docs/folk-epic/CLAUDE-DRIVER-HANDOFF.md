@@ -58,7 +58,58 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 28 HANDOFF (2026-06-14 — #01 module build FIRED + diagnosed: activity_schema FIXED, vesum_verified is next blocker; build preserved on a branch — RESUME #01 from there, don't re-fire) — **RESUME HERE**
+## ▶▶▶ SESSION 29 HANDOFF (2026-06-14 — BUILT the 5 "shipped-but-doesn't-render" fixes A–E (#3137 render landmine + #3138 DoD/cold-start); module work parked — RESUME #01 per Session 28) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** This session shipped INFRA/PROCESS only — no folk content. Modules 3/42, dossiers
+> 19/42, wikis 15/42 UNCHANGED. The user directed "build all 5 since you are in context" (the post-mortem
+> of why #01 shipped python_qg-green but didn't render). All 5 built + proven INLINE in worktree
+> `claude/folk-shippable-render` → ONE PR closing #3137 + #3138. #01 module build is STILL PARKED — resume
+> per the Session 28 block below (build branch `3e69cc84f5`, vesum_verified next blocker).
+
+### ✅ DONE THIS PR — the 5 fixes (A–E), all proven deterministically (#M-4)
+- **D (render landmine, #3137) — the urgent one.** `JSON.parse(`…`)` island props embed JSON in a JS
+  **template literal**, which *consumes* backslash escapes → JSON's own `\"`/`\\`/`\n` get eaten → any
+  value with a literal `"` (etc.) corrupts the JSON → page doesn't render; `python_qg` is blind to it.
+  Fixed the escaper to double backslashes FIRST: `resources.py` (the seminar/folk VocabCard+FlashcardDeck
+  path — was backtick/`${`-only) now routes through the canonical `utils.dump_json_for_jsx` (+`compact`
+  flag); fixed the divergent flat copy in `generate_mdx_direct_renderers.py` (dropped a line that
+  *un-escaped* `\\n`/`\\"`). PROVEN: Node round-trip — old escaping throws, new round-trips; shipped folk
+  MDX (17 islands) pass; crafted under-escaped quote fails with a precise SyntaxError.
+- **E (mdx_render gate runs, #3137).** New `scripts/build/mdx_render_gate.py` Node-evaluates every
+  `JSON.parse(`…`)` in assembled MDX (the exact JS engine — no re-implementing escaping). Wired
+  `run_mdx_render_gate()` into `linear_pipeline.py` as a **standalone** post-assemble step so it runs even
+  when python_qg fails (was a permanent `passed:None` placeholder). Degrades to skip if Node absent.
+- **A (Definition-of-Done, #3138).** New `scripts/build/verify_shippable.py`:
+  `python -m scripts.build.verify_shippable <level> <slug>` → python_qg → assemble → mdx_render → ONE
+  green/red (+`--astro-build` catch-all). PROVEN: on kalendarna it showed python_qg ❌ but mdx_render ✅
+  — i.e. **render is checked even when python_qg is red** (E's whole point).
+- **B (readiness predicate, #3138).** New `scripts/orchestration/handoff_ready.py`: tree-clean · 0
+  in-flight · branch pushed (local==origin) · all-blocking PR checks green · handoff bundled → READY/NOT.
+  Run it; never assert "ready" in prose.
+- **C (cold-start freshness, #3138).** Baked into the shared agent def
+  `agents_extensions/shared/agents/curriculum-track-orchestrator.md` (ALL drivers): fetch → read handoff
+  from `origin/main` + `gh pr list --head 'claude/<track>-'` BEFORE any build (prevents the #01
+  re-collision) + a Definition-of-Done block pointing at verify_shippable/handoff_ready.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **Orchestrator: review + merge this PR (#3137+#3138).** D touches SHARED `scripts/generate_mdx/` (every
+   track) — that's the cross-track blast radius worth scrutiny; it's strictly-more-correct + test-locked.
+   Self-merge held (cross-track infra; pinged orchestrator).
+2. **Resume #01 narodna-kultura-yak-systema** per the Session 28 block (build branch `3e69cc84f5`,
+   vesum_verified blocker). NOTE found this session: its `-003403` activities.yaml trips an unrelated
+   `variant-comparison requires label` assemble error — fix that too before assemble. After green, gate it
+   with `verify_shippable folk narodna-kultura-yak-systema --astro-build` (now available).
+3. **#02/#03 + koliadky/dumy LLM-QG + reading-links** — unchanged from Session 28/27.
+
+### ⚠ CARRY-FORWARD
+- D is the latent class the user diagnosed for #01; proven at the unit level + on real shipped MDX. The
+  exact reverted-#01 trigger was NOT re-confirmed (the `-003403` artifacts have no `"`/`` ` ``/`${`) — do
+  not over-claim D as *the* #01 fix without the reverted-MDX repro; it IS a real landmine across all tracks.
+- `git push` folk → `--no-verify`; never reset/commit on main. Worktree: `claude/folk-shippable-render`.
+
+---
+
+## ▶▶▶ SESSION 28 HANDOFF (2026-06-14 — #01 module build FIRED + diagnosed: activity_schema FIXED, vesum_verified is next blocker; build preserved on a branch — RESUME #01 from there, don't re-fire) — (superseded by Session 29 for infra; #01 resume recipe still lives here)
 
 > **⏱ HONEST SCOPE:** Thin delta on Session 27 (read it next — full release queue + recipe). User said "kick
 > them off" → I fired the **#01 narodna-kultura-yak-systema** build; it hit the known rotating gate walls.

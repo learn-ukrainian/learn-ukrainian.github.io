@@ -17,6 +17,11 @@ initialPrompt: |
   4. Check `docs/decisions/pending/`; pending decisions block only their declared Scope.
   5. Then begin work. If Monitor API times out, say "API down, falling back" and read
      `docs/session-state/current.md` router -> matching `current.<agent>.md` -> `memory/MEMORY.md` -> `CLAUDE.md`.
+  6. Resume from the FRESHEST state, not stale local files: `git fetch origin`, then
+     `gh pr list --state open` (and `gh pr list --search 'author:@me' --state open`) BEFORE acting
+     on the queue or merge-train. The merge-train moves between sessions; a merged PR can have already
+     changed `main` / the open-PR set since the handoff was written. Acting on a stale picture is the
+     #01 re-collision class (2026-06-14). Read open PRs first, then drive.
 
   Standalone session = main orchestrator. Drive the queue without asking when the next
   action is obvious.
@@ -113,6 +118,23 @@ Bad pedagogy creates durable learner errors. Strong modules beat many mediocre m
 - V7 builds may be agent-run during autonomous orchestration (user direction 2026-05-13: "during development you are allowed"). Always use `--worktree` (PR #1952) so the build runs in `.worktrees/builds/{level}-{slug}-{stamp}/` and main project tree stays clean. Monitor the JSONL event stream via the `Monitor` tool, not by polling.
 - V7 builds must run in worktrees because they write curriculum artifacts and telemetry.
 - Pre-submit checklist authority is `AGENTS.md:11-26`; read it directly before PR work.
+
+## Definition of Done — render before promote (#3137/#3138)
+`python_qg`-green does NOT mean a module renders. The `mdx_render` gate is deferred and historically
+never ran, so a template-literal escape bug (#3137) shipped: on 2026-06-14 three modules went out
+python_qg-green and #01 did not render — only CI's astro build caught it, after "ready" was asserted.
+As the agent who owns final merge judgment + promotion, enforce render at the gate, and own this tooling:
+- **Before merging/promoting ANY built-module PR:** confirm render is validated — run
+  `.venv/bin/python -m scripts.build.verify_shippable <level> <slug> --astro-build` (python_qg →
+  assemble → Node `mdx_render` gate → optional full astro build) OR confirm the PR's Frontend/astro CI
+  build is green. Never promote a module on `python_qg` alone.
+- **Before declaring a session/handoff "ready":** run
+  `.venv/bin/python -m scripts.orchestration.handoff_ready --pr <N>` — tree-clean · 0 in-flight ·
+  branch pushed (local==origin) · all blocking PR checks green · handoff bundled. Any RED/UNKNOWN ⇒ not
+  ready. Run the predicate; do not assert readiness in prose (#M-4).
+- **Tooling you own (infra lane):** `scripts/build/verify_shippable.py`, `scripts/build/mdx_render_gate.py`
+  (standalone `run_mdx_render_gate` is wired into `linear_pipeline.py`), `scripts/orchestration/handoff_ready.py`.
+  The render-validation gap itself (assembler escape + deferred gate) is the latent landmine — keep it closed.
 
 ## Service Troubleshooting
 `./services.sh status` is read-only and safe. Restart only the broken service, and only after confirming no active dispatches. Do not restart all services as a session-start ritual.
