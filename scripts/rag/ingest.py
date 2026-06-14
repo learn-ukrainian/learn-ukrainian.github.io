@@ -546,7 +546,8 @@ def ingest_literary_chunks(
             "year": chunk.get("year", 0),
             "genre": chunk.get("genre", ""),
             "language_period": chunk.get("language_period", ""),
-            "source_url": chunk.get("source_url", ""),
+            # read source_url from JSONL record (NULL when absent; matches sqlite literary_texts column)
+            "source_url": chunk.get("source_url"),
             "token_count": chunk.get("token_count", 0),
         }
         if "original_text" in chunk:

@@ -566,7 +566,8 @@ def ingest_wave(client, wave_num: int, batch_size: int = 32):
                 "year": chunk.get("year", 0),
                 "genre": chunk.get("genre", ""),
                 "language_period": chunk.get("language_period", ""),
-                "source_url": chunk.get("source_url", ""),
+                # read source_url from each JSONL record; write NULL (absent key or falsy) when the record lacks it (do not invent)
+                "source_url": chunk.get("source_url"),
                 "token_count": chunk.get("token_count", 0),
             }
             if "original_text" in chunk:
