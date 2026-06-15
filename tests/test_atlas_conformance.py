@@ -126,6 +126,17 @@ def test_lemma_in_vesum_heritage_fallback_exempts_attested_word():
     assert _gates_for(entry, vesum=set(), heritage={"кобіта"}) == []
 
 
+def test_lemma_in_vesum_exempts_modern_technical_term_in_both_modes():
+    # #3270: морфонеміка / контрфактичний are standard MODERN terms absent from VESUM AND
+    # from the HISTORICAL heritage corpus. The live heritage lookup cannot self-heal them,
+    # so the curated modern-technical allowlist must exempt them in BOTH modes — including
+    # the live-heritage mode (heritage present but NOT attesting), which was the failing case.
+    for lemma, pos in (("морфонеміка", "noun"), ("контрфактичний", "adjective")):
+        entry = _entry(lemma=lemma, url_slug=lemma, pos=pos)
+        assert _gates_for(entry, vesum=set()) == []  # offline mode (no heritage source)
+        assert _gates_for(entry, vesum=set(), heritage=set()) == []  # live mode, not attested
+
+
 def test_lemma_in_vesum_flags_when_absent_from_both_vesum_and_heritage():
     # #3211: the gate still catches genuinely-unattested single words — absent from VESUM
     # AND not in the heritage corpus (heritage present but empty) → violation. The allowlist
