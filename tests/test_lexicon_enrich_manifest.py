@@ -28,6 +28,7 @@ from scripts.lexicon.enrich_manifest import (
     _meaning,
     _merge_slovnyk_warning,
     _morphology,
+    _parse_balla_uk_lemmas,
     _sense_correct_synonyms,
     _slovnyk_cache,
     _SlovnykTransientError,
@@ -1561,9 +1562,84 @@ def test_translation_matches_stress_stripped_dmklinger_headword(monkeypatch) -> 
 def test_translation_returns_none_when_lemma_absent(monkeypatch) -> None:
     conn = sqlite3.connect(":memory:")
     conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    conn.execute("CREATE TABLE balla_en_uk (word TEXT, definition TEXT)")
     monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", None)
 
     assert _translation(conn, "неіснуючеслово") is None
+
+
+def test_parse_balla_uk_lemmas_splits_synonyms_and_strips_parentheticals() -> None:
+    lemmas = _parse_balla_uk_lemmas("n (pl agenda) 1) пам'ятна книга 2) ритуал")
+    assert lemmas == ["пам'ятна", "книга", "ритуал"]
+
+    simple = _parse_balla_uk_lemmas("мати, мама, матуся")
+    assert simple == ["мати", "мама", "матуся"]
+
+
+def test_translation_balla_reverse_hit_when_dmklinger_misses(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    conn.execute("CREATE TABLE balla_en_uk (word TEXT, definition TEXT)")
+    conn.execute(
+        "INSERT INTO balla_en_uk (word, definition) VALUES (?, ?)",
+        ("mother", "[m1]1. n 1) мати, мама, матуся"),
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", None)
+
+    block = _translation(conn, "матуся")
+
+    assert block == {
+        "en": ["mother"],
+        "source": "balla (EN→UK, reverse-indexed)",
+    }
+
+
+def test_translation_balla_reverse_dedupes_english_glosses(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    conn.execute("CREATE TABLE balla_en_uk (word TEXT, definition TEXT)")
+    conn.executemany(
+        "INSERT INTO balla_en_uk (word, definition) VALUES (?, ?)",
+        [
+            ("house", "[m1]I n 1) будинок, дім; хата"),
+            ("home", "[m1]I n 1) дім, житло"),
+            ("House", "[m1]I n 1) дім"),
+        ],
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", None)
+
+    block = _translation(conn, "дім")
+
+    assert block is not None
+    assert block["source"] == "balla (EN→UK, reverse-indexed)"
+    assert block["en"] == ["house", "home"]
+
+
+def test_translation_prefers_dmklinger_over_balla_reverse(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    conn.execute("CREATE TABLE balla_en_uk (word TEXT, definition TEXT)")
+    conn.execute(
+        "INSERT INTO dmklinger_uk_en (word, pos, translations) VALUES (?, ?, ?)",
+        ("дім", "noun", json.dumps(["home", "household"])),
+    )
+    conn.execute(
+        "INSERT INTO balla_en_uk (word, definition) VALUES (?, ?)",
+        ("house", "[m1]I n 1) будинок, дім; хата"),
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", None)
+
+    block = _translation(conn, "дім")
+
+    assert block == {
+        "en": ["home", "household"],
+        "source": "dmklinger",
+        "pos": "noun",
+    }
 
 
 def test_wiki_reference_success(monkeypatch) -> None:

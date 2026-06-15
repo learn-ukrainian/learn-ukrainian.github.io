@@ -116,6 +116,17 @@ _STRESS_SOURCE = "ukrainian-word-stress"
 _CEFR_SOURCE = "PULS CEFR"
 _LITERARY_SOURCE = "literary_fts"
 _TRANSLATION_SOURCE = "dmklinger"
+_BALLA_REVERSE_TRANSLATION_SOURCE = "balla (EN→UK, reverse-indexed)"
+_BALLA_MARKUP_RE = re.compile(r"\[m\d+\][IV]*|\<<[^>]+\>>")
+_BALLA_PAREN_RE = re.compile(r"\([^)]*\)")
+_BALLA_POS_PREFIX_RE = re.compile(
+    r"(?:^|\s)(?:n|v|vi|vt|a|adj|adv|prep|conj|interj|part|pron|int)\.?\s+",
+    re.IGNORECASE,
+)
+_BALLA_NUMBERED_SENSE_RE = re.compile(
+    r"\d+\)\s*([А-Яа-яЄєІіЇїҐґ''ʼ\s,;-]+?)(?=\s+[a-zA-Z~«]|\d+\)|\[m|$)",
+)
+_BALLA_UK_LEMMA_TOKEN_RE = re.compile(r"[А-Яа-яЄєІіЇїҐґ][А-Яа-яЄєІіЇїҐґ''ʼ-]*")
 _SUM20_COVERED_INITIALS = set("абвгґдеєжзиіїйклмнопр")
 _UKRAINIAN_WORD_RE = re.compile(r"^[А-Яа-яЄєІіЇїҐґ'’ʼ-]+$")
 _UKRAINIAN_VOWELS = set("аеєиіїоуюяАЕЄИІЇОУЮЯ")
@@ -2456,6 +2467,96 @@ def _parse_translations(raw: object) -> list[str]:
 
 
 _DMKLINGER_INDEX: dict[str, list[tuple[str, str]]] | None = None
+_BALLA_REVERSE_INDEX: dict[str, list[str]] | None = None
+
+
+def _parse_balla_uk_lemmas(definition: str) -> list[str]:
+    """Extract Ukrainian lemma tokens from a Балла EN→UK definition cell."""
+    text = clean_html_entities(definition)
+    if not text:
+        return []
+    text = _BALLA_MARKUP_RE.sub(" ", text)
+    text = _BALLA_PAREN_RE.sub(" ", text)
+
+    tokens: list[str] = []
+    seen: set[str] = set()
+
+    def _add_token(raw: str) -> None:
+        token = raw.strip(" ,;.-")
+        if len(token) < 2 or not _UKRAINIAN_WORD_RE.match(token):
+            return
+        key = _lookup_key(token)
+        if key and key not in seen:
+            seen.add(key)
+            tokens.append(token)
+
+    for match in _BALLA_NUMBERED_SENSE_RE.finditer(text):
+        for piece in re.split(r"[,;]", match.group(1)):
+            for token_match in _BALLA_UK_LEMMA_TOKEN_RE.finditer(piece):
+                _add_token(token_match.group(0))
+
+    if not tokens:
+        pos_match = _BALLA_POS_PREFIX_RE.search(text)
+        if pos_match:
+            after_pos = text[pos_match.end() :]
+            uk_chunk = re.split(r"\s+(?=[a-zA-Z~«])|\d+\)", after_pos)[0]
+            for piece in re.split(r"[,;]", uk_chunk):
+                for token_match in _BALLA_UK_LEMMA_TOKEN_RE.finditer(piece):
+                    _add_token(token_match.group(0))
+
+    if not tokens and re.match(r"^[А-Яа-яЄєІіЇїҐґ]", text.strip()):
+        for piece in re.split(r"[,;]", text):
+            for token_match in _BALLA_UK_LEMMA_TOKEN_RE.finditer(piece):
+                _add_token(token_match.group(0))
+
+    return tokens
+
+
+def _clean_balla_en_headword(word: str) -> str | None:
+    cleaned = clean_html_entities(word).strip()
+    if not cleaned or cleaned.startswith("_"):
+        return None
+    if len(re.sub(r"[^A-Za-z]", "", cleaned)) < 2:
+        return None
+    if not re.search(r"[A-Za-z]", cleaned):
+        return None
+    return cleaned
+
+
+def _load_balla_reverse_index(conn: sqlite3.Connection) -> dict[str, list[str]]:
+    """Build a UK→EN reverse map from balla_en_uk once per process."""
+    global _BALLA_REVERSE_INDEX
+    if _BALLA_REVERSE_INDEX is not None:
+        return _BALLA_REVERSE_INDEX
+
+    index: dict[str, list[str]] = {}
+    seen_by_key: dict[str, set[str]] = {}
+    try:
+        rows = conn.execute("SELECT word, definition FROM balla_en_uk").fetchall()
+    except sqlite3.OperationalError as exc:
+        if _missing_table(exc):
+            _BALLA_REVERSE_INDEX = {}
+            return _BALLA_REVERSE_INDEX
+        raise
+
+    for en_word, definition in rows:
+        english = _clean_balla_en_headword(str(en_word or ""))
+        if not english:
+            continue
+        for uk_lemma in _parse_balla_uk_lemmas(str(definition or "")):
+            key = _lookup_key(uk_lemma)
+            if not key:
+                continue
+            bucket = index.setdefault(key, [])
+            seen = seen_by_key.setdefault(key, set())
+            dedupe_key = english.casefold()
+            if dedupe_key in seen:
+                continue
+            seen.add(dedupe_key)
+            bucket.append(english)
+
+    _BALLA_REVERSE_INDEX = index
+    return index
 
 
 def _dmklinger_key(word: str) -> str:
@@ -2492,33 +2593,52 @@ def _load_dmklinger_index(conn: sqlite3.Connection) -> dict[str, list[tuple[str,
 def _translation(conn: sqlite3.Connection, lemma: str) -> dict[str, object] | None:
     """English translations for a Ukrainian lemma (Переклад, §11).
 
-    Source is the dmklinger UK→EN dictionary (`dmklinger_uk_en`). Балла is EN→UK
-    only — no clean reverse — so it is intentionally NOT used here; an exact
-    UK→EN match avoids the noise of reverse-lookup. Returns up to six glosses.
+    Primary source is dmklinger UK→EN (`dmklinger_uk_en`). On miss, consult an
+    in-memory reverse index built from Балла EN→UK (`balla_en_uk`). Returns up
+    to six glosses.
     """
-    index = _load_dmklinger_index(conn)
-    if not index:
+    dmklinger = _load_dmklinger_index(conn)
+    if dmklinger:
+        for variant in _split_lemma_variants(lemma):
+            rows = dmklinger.get(_dmklinger_key(variant))
+            if not rows:
+                continue
+            english: list[str] = []
+            seen: set[str] = set()
+            pos: str | None = None
+            for row_pos, raw in rows:
+                if pos is None and row_pos:
+                    pos = clean_html_entities(str(row_pos).strip())
+                for gloss in _parse_translations(raw):
+                    key = gloss.casefold()
+                    if key not in seen:
+                        seen.add(key)
+                        english.append(gloss)
+            if english:
+                block: dict[str, object] = {"en": english[:6], "source": _TRANSLATION_SOURCE}
+                if pos:
+                    block["pos"] = pos
+                return block
+
+    balla = _load_balla_reverse_index(conn)
+    if not balla:
         return None
     for variant in _split_lemma_variants(lemma):
-        rows = index.get(_dmklinger_key(variant))
-        if not rows:
+        english_words = balla.get(_lookup_key(variant))
+        if not english_words:
             continue
-        english: list[str] = []
-        seen: set[str] = set()
-        pos: str | None = None
-        for row_pos, raw in rows:
-            if pos is None and row_pos:
-                pos = clean_html_entities(str(row_pos).strip())
-            for gloss in _parse_translations(raw):
-                key = gloss.casefold()
-                if key not in seen:
-                    seen.add(key)
-                    english.append(gloss)
+        english = []
+        seen = set()
+        for gloss in english_words:
+            cleaned = clean_html_entities(gloss).strip()
+            if not cleaned:
+                continue
+            key = cleaned.casefold()
+            if key not in seen:
+                seen.add(key)
+                english.append(cleaned)
         if english:
-            block: dict[str, object] = {"en": english[:6], "source": _TRANSLATION_SOURCE}
-            if pos:
-                block["pos"] = pos
-            return block
+            return {"en": english[:6], "source": _BALLA_REVERSE_TRANSLATION_SOURCE}
     return None
 
 
