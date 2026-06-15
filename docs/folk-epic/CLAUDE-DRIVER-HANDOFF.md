@@ -58,17 +58,23 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 36 HANDOFF (2026-06-15 — SIX-DOSSIER batch #20–#25 ALL BUILT (codex/gpt-5.5) + independently CORPUS-HAMMERED + accumulated into PR #3221: #20 suspilno-pobutovi · #21 narodni-balady · #22 pisni-literaturnoho-pokhodzhennia · #23 charivni-kazky · #24 kazky-pro-tvaryn · #25 sotsialno-pobutovi-kazky; dossiers 19→25/42) — **RESUME HERE**
+## ▶▶▶ SESSION 36 HANDOFF (2026-06-15 — THREE BIG WINS: (1) 6 folk dossiers #20–#25 (PR #3221); (2) **#3162 IMPLEMENTED + MERGED (#3237)** — module excerpt builder now embeds folk/seminar literary primaries; (3) **koliadky REBUILT → pedagogy 6.7→9.2** (first folk module to clear LLM-QG ≥8 with embedded primaries; PR #3250)) — **RESUME HERE**
 
-> **⏱ HONEST SCOPE:** Research layer only — a sustained dossier batch (user: "keep working until ~700k context").
-> Dossiers **19 → 25/42** committed to PR #3221 (suspilno-pobutovi + narodni-balady + pisni-literaturnoho-
-> pokhodzhennia + charivni-kazky + kazky-pro-tvaryn + sotsialno-pobutovi-kazky — E-block tail + F-block prose
-> #23–#25). Wikis 15/42,
-> modules 6/42 UNCHANGED. Folk nav still HIDDEN; surfacing STILL GATED (no module cleanly clears LLM QG; both
-> infra blockers #3079 + #3162 still OPEN → not mine to implement). Chose the dossier queue as the determinable,
-> unblocked, in-lane content path (building module #7 now = a gated, pedagogically-weak artifact while #3162
-> infra-side is unlanded — anti-#M-11). All dossiers accumulate LINEARLY on the #3221 branch (no parallel-PR
-> handoff conflict).
+> **⏱ HONEST SCOPE:** Started as a research-layer dossier batch, became the folk-pedagogy UNLOCK. Three workstreams:
+> - **Dossiers 19 → 25/42** (PR #3221, CI-green): suspilno-pobutovi · narodni-balady · pisni-literaturnoho ·
+>   charivni-kazky · kazky-pro-tvaryn · sotsialno-pobutovi-kazky. All corpus-hammered, accumulated linearly.
+> - **#3162 infra DONE + MERGED (PR #3237, 2026-06-15):** `_build_textbook_excerpt_context` now routes seminar
+>   PRIMARY refs to `literary_texts` (seminar-gated; core a1–c2 byte-identical). User authorized "do infra if it
+>   makes sense" → I implemented + reviewed + merged it. **This is the folk-pedagogy root-cause fix.**
+> - **koliadky PROOF-REBUILD (PR #3250):** rebuilt on #3162 → embeds the cosmogonic колядка it teaches («Як ще не
+>   було початку світа» `61bfde21_c0000`; «Ой сивая» `70435c0b_c0000` — corpus-hammered verbatim). After a
+>   correction pass (python_qg green + pedagogical deepening + register polish): **pedagogical 9.2 · naturalness
+>   8.6 · decolonization 9.5 · engagement 9.0 · tone 8.5 — PASS, min 8.5** (claude reviewer; honest caveat: 6.7→7.4
+>   were codex-reviewed, 9.2 claude-reviewed — no-self-review forced the swap; gains verified, not inflation).
+>   verify_shippable GREEN (assemble + 18 islands render). **PROVES the ≥8 bar is achievable** — #3162 alone got
+>   6.7→7.4; the correction pass closed 7.4→9.2. That correction recipe is what #3079 must AUTOMATE.
+> Folk nav still HIDDEN (un-hide only after #3250 merges + the surfacing posture is set). Built modules still 6/42
+> on main (koliadky UPGRADED in #3250, not a new slug).
 
 ### ✅ DONE THIS SESSION (PR `codex/folk-dossier-suspilno-pobutovi`, NOT self-merged — agent-type contract)
 - **DOSSIER #20 `suspilno-pobutovi-pisni`** (E · Song — козацькі/чумацькі/бурлацькі/кріпацькі/рекрутські-
@@ -138,54 +144,26 @@
   so §4 leaned scholarly-witness + the honest title-only roster. Corpus still THIN for this genre.
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **Continue the F-block prose queue: #26 `narodni-lehendy`** (legends), then #27 `istorychni-perekazy`,
-   #28 `narodni-opovidannia-buvalshchyny-memoraty`, #29 `prykazky-ta-pryslivia`, #30 zahadky, #31 narodni-
-   anekdoty, #32 dytiachyi-folklor-kolyskovi (`phase-folk-queue.md` — dossiers now 25/42). Proven loop:
-   driver corpus-pre-grounds (own verify_quote → exact chunk_ids + §4 honesty protocol; for PROSE genres the
-   §4 model = scholarly-excerpt + textbook/literary-witness + honest title-only roster, since we hold no full
-   narod prose verbatim) → codex/gpt-5.5 `--worktree --base codex/folk-dossier-suspilno-pobutovi` (the batch
-   branch, OR a fresh branch off main once #3221 merges) → independent corpus-hammer (#M-11, re-run
-   verify_quote myself) → accumulate (ff/cherry-pick) → push.
-2. **#3162 INFRA SIDE — DONE (user authorized "do infra if it makes sense"). PR #3237, CI-GREEN, awaiting
-   orchestrator promotion.** `_build_textbook_excerpt_context` now routes seminar/folk PRIMARY refs (textbook-
-   miss + `level∈SEMINAR_LEVELS` + ref `type:primary`) to `literary_texts` via `_search_literary_hits` (mirrors
-   the existing `search_sources` filter pattern); emits a labeled "Primary text (literary corpus)" block +
-   chunk_id; clears `corpus_missing`. Part B: `<!-- PRIMARY-READING -->` fences excluded from `_word_count_gate`.
-   Driver-verified (#M-11, NOT codex's word): folk koliadky now resolves `61bfde21_c0000` (Народна творчість);
-   `folk`∈SEMINAR_LEVELS confirmed; **core a1–c2 byte-identical BY CONSTRUCTION** (new branch unreachable for
-   non-seminar) + codex's 6-core-plan empty-diff proof; ruff CI ✓; **pytest CI ✓ (5m50s)**; mergeState CLEAN.
-   SHARED pipeline infra → NOT self-merged (agent contract). **NEXT on promote:** (a) `/code-review` pass
-   before merge (gate-logic change; best done at fresh context); (b) ensure folk plans mark primary refs with
-   `type: primary` (koliadky has it — sweep the rest so the fallback fires); (c) Part-B per-section counter is a
-   fast-follow (main gate fixed). Then re-run `run_llm_qg_parity.py` on a folk module — pedagogical should lift
-   off 6.7. **#3079** (module self-converge EPIC) = bigger architectural piece, still OPEN/unassigned — scope
-   separately (route to infra orchestrator or a dedicated dispatch).
-3. **🎯 USER-AGREED PEDAGOGY PLAN (2026-06-15) — the priority sequence. HARD GOAL: pedagogy ≥8 (aim 9).**
-   a. **MERGE #3237 first** (gates everything — v7_build has NO `--base`, builds off `origin/main`, so #3162
-      can't reach the build child until merged). Orchestrator promotes (re-pinged `needs=merge`) or user OKs.
-      Recommend a `/code-review` pass on the shared-pipeline diff at/before merge.
-   b. **#3079 = NEXT PRIORITY (user). Scope it to CONVERGE ON PEDAGOGY, not just pass gates.** ⚠ Critical design
-      risk: ADR-007 / `test_no_rewrite_contract.py` makes the reviewer a find/replace fixer (no regen) — that
-      CANNOT add a self-check / integrate an activity / weave in an embedded primary, which is what moves
-      pedagogy 6.7→8. So a naive "self-converge the gates" loop converges right back to 6.7. #3079 MUST: route
-      the LLM-QG **pedagogical** dim to a folk-competent reviewer (Claude/GPT — gemini BARRED for folk culture,
-      cf. wiki #3057); use best-round + MIN-regression-guard (cf. wiki #3054); and include a correction
-      mechanism that can do STRUCTURAL pedagogical work (likely a scoped pedagogical re-write pass — needs a
-      deliberate ADR-007 decision). Design it (Plan/design doc) before dispatching; it's a big shared-infra epic.
-   c. **PROOF-REBUILD koliadky** (precondition VERIFIED 2026-06-15: plan has 4 `type:primary` refs →
-      Слов'янська міфологія / Нарис історії культури / Історія укр. літератури / Чубинський; #3162 fallback WILL
-      fire — earlier positive proof resolved `61bfde21_c0000`). Recipe: `v7_build.py folk koliadky-shchedrivky
-      --worktree --writer claude-tools --reviewer codex-tools --effort xhigh` (folk reviewer = Claude/GPT, NOT
-      gemini), persistent Monitor on JSONL; on python_qg fail use the proven cross-model correction recipe
-      (Session 14). Then **measure pedagogy with `run_llm_qg_parity.py` (reviewer codex/claude)** + confirm the
-      дума/колядка primary actually EMBEDS in module.md. Corpus-hammer #M-11.
-   d. **REASSESS:** pedagogy ≥8? → sweep `type:primary` on the other folk plans + scale the rebuilds (cheap once
-      #3079 self-converges) + open the surfacing gate. <8 → read the llm_qg evidence, diagnose what pedagogy
-      still needs (activity integration? more primaries? writer/archetype prompt?), iterate before scaling.
-   **⏱ ROT NOTE:** the proof-rebuild is intelligence-sensitive + ~1h + (pre-#3079) a manual grind — run it at
-   FRESH context (Session 36 ended at ~700k+, past the #2 handoff line). Do NOT push it through rot.
-4. **Folk dossier queue continues in parallel** (unblocked content): #26 `narodni-lehendy` → #27 `istorychni-
-   perekazy` → … (`phase-folk-queue.md`, now 25/42). Same proven loop. Surfacing stays HIDDEN until 3(d) passes.
+1. **MERGE this session's PRs (CI-gated, #M-0.5 no admin-bypass):** **#3221** (6 dossiers) + **#3250** (koliadky
+   9.2). **#3237 (#3162 infra) ALREADY MERGED.** Review diff+CI → `gh pr merge N --squash --delete-branch`; hold
+   any red. (User explicitly authorized merging this session.)
+2. **HYGIENE (after merge):** reap the 7 folk worktrees (`builds/folk-koliadky-shchedrivky-20260615-154532` + 6
+   `dispatch/codex/folk-dossier-*`) + their local branches — content is on main via #3221/#3250, build forensics
+   preserved in the build-branch history (#M-10). Check the GitHub dependabot/security alerts flagged on push.
+3. **#3079 = NEXT PRIORITY — DESIGN FIRST, do NOT blind-dispatch.** The koliadky correction THIS session IS the
+   concrete recipe to automate: python_qg fix + pedagogical deepening + register polish lifted **7.4 → 9.2**.
+   Scope #3079 to CONVERGE ON PEDAGOGY: route the LLM-QG **pedagogical** dim to a folk-competent reviewer
+   (Claude/GPT — gemini BARRED, cf. wiki #3057); best-round + MIN-regression-guard (cf. wiki #3054); a correction
+   mechanism that can do STRUCTURAL pedagogical work (scoped pedagogical re-write pass) — ⚠ needs a deliberate
+   **ADR-007 decision** (find/replace alone CANNOT add a self-check/activity/embedded-primary, which is what
+   moves the score; that's why a naive gate-passing loop would converge back to ~7.4, not 9.2). Write a Plan/
+   design doc BEFORE dispatching; big shared-infra epic → best at fresh context.
+4. **SCALE folk to ≥8 + surface:** sweep `type:primary` on the other 5 built folk plans (koliadky already has it);
+   rebuild each on #3162 + the correction recipe (cheap once #3079 lands) → ≥8 each → THEN un-hide folk nav
+   (remove `'folk'` from `HIDDEN_MODULE_LINK_TRACKS` `site/src/components/LevelLanding.tsx` + `hiddenPublicPaths`
+   `site/astro.config.mjs`) as a labeled PREVIEW. Built modules 6/42 (koliadky upgraded 6.7→9.2 via #3250).
+5. **Dossier queue (parallel, unblocked):** #26 `narodni-lehendy` → #27 `istorychni-perekazy` → …
+   (`phase-folk-queue.md`, now 25/42). Same proven loop (corpus-pre-ground → codex → corpus-hammer → accumulate).
 
 ### ⚠ CARRY-FORWARD
 - PR opened, NOT self-merged (agent-type contract; orchestrator promotes). Handoff bundled in the PR.
