@@ -7,6 +7,7 @@ from scripts.lexicon import enrich_manifest as enrich_manifest_module
 from scripts.lexicon.enrich_manifest import (
     _WRONG_SENSE_SYNONYMS,
     KAIKKI_SOURCE,
+    _antonyms_wiktionary,
     _base_lemma,
     _build_paradigm,
     _cefr,
@@ -15,6 +16,9 @@ from scripts.lexicon.enrich_manifest import (
     _definition_cards,
     _dmklinger_key,
     _etymology,
+    _etymology_lookup_variants,
+    _idioms,
+    _idioms_frazeolohichnyi,
     _idioms_slovnyk,
     _kaikki_pronunciation,
     _literary_attestation,
@@ -644,6 +648,140 @@ def test_slovnyk_idioms_extract_known_phrase_card() -> None:
     assert "Причина ворожнечі" in section["items"][0]["definition"]
 
 
+def test_wiktionary_antonyms_use_explicit_antonym_column(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute(
+        """
+        CREATE TABLE wiktionary (
+            word TEXT NOT NULL,
+            definitions TEXT DEFAULT '',
+            synonyms TEXT DEFAULT '',
+            antonyms TEXT DEFAULT '',
+            text TEXT NOT NULL DEFAULT '',
+            source TEXT DEFAULT ''
+        )
+        """
+    )
+    conn.executemany(
+        "INSERT INTO wiktionary (word, antonyms) VALUES (?, ?)",
+        [
+            ("ніч", json.dumps(["день", "night"], ensure_ascii=False)),
+            ("день", json.dumps(["ніч"], ensure_ascii=False)),
+        ],
+    )
+    _patch_vesum_analyses(monkeypatch, {"ніч": "noun", "день": "noun"})
+
+    section = _antonyms_wiktionary(conn, "ніч", entry_pos="noun")
+
+    assert section == {
+        "items": ["день"],
+        "source": "Вікісловник: explicit antonym list",
+        "source_urls": ["https://uk.wiktionary.org/wiki/%D0%BD%D1%96%D1%87"],
+    }
+
+
+def test_frazeolohichnyi_idioms_keep_phrase_hits_and_drop_definition_noise(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute(
+        """
+        CREATE TABLE frazeolohichnyi (
+            id INTEGER PRIMARY KEY,
+            word TEXT NOT NULL,
+            definition TEXT NOT NULL DEFAULT '',
+            text TEXT NOT NULL DEFAULT '',
+            source TEXT DEFAULT ''
+        )
+        """
+    )
+    conn.executemany(
+        "INSERT INTO frazeolohichnyi (word, definition, text, source) VALUES (?, ?, ?, ?)",
+        [
+            (
+                "яблуко розбрату {{</fras>}}",
+                "[']я[/']блуко р[']о[/']збрату (чвар), книжн. Причина ворожнечі, суперечок.",
+                "яблуко розбрату: Причина ворожнечі.",
+                "Фразеологічний словник",
+            ),
+            (
+                "брати верх {{</fras>}}",
+                "бр[']а[/']ти верх над ким--чим. Вода була така сильна, що брала верх.",
+                "брати верх: Вода була така сильна.",
+                "Фразеологічний словник",
+            ),
+            (
+                "яблукові ніде впасти {{</fras>}}",
+                "г[']о[/']лці ([']я[/']блуку, [']я[/']блукові) н[']і[/']де вп[']а[/']сти. Дуже людно.",
+                "яблукові ніде впасти: Дуже людно.",
+                "Фразеологічний словник",
+            ),
+        ],
+    )
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_vesum_word_analyses",
+        lambda word: (("яблуко", "noun"),) if word in {"яблуку", "яблукові"} else (),
+    )
+
+    apple = _idioms_frazeolohichnyi(conn, "яблуко")
+    water = _idioms_frazeolohichnyi(conn, "вода")
+
+    assert apple is not None
+    assert [item["phrase"] for item in apple["items"]] == [
+        "яблуко розбрату (чвар), книжн",
+        "голці (яблуку, яблукові) ніде впасти",
+    ]
+    assert "Причина ворожнечі" in apple["items"][0]["definition"]
+    assert water is None
+
+
+def test_idioms_merge_slovnyk_cache_and_frazeolohichnyi_fallback(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute(
+        """
+        CREATE TABLE frazeolohichnyi (
+            id INTEGER PRIMARY KEY,
+            word TEXT NOT NULL,
+            definition TEXT NOT NULL DEFAULT '',
+            text TEXT NOT NULL DEFAULT '',
+            source TEXT DEFAULT ''
+        )
+        """
+    )
+    conn.execute(
+        "INSERT INTO frazeolohichnyi (word, definition, text, source) VALUES (?, ?, ?, ?)",
+        (
+            "яблукові ніде впасти {{</fras>}}",
+            "г[']о[/']лці ([']я[/']блуку, [']я[/']блукові) н[']і[/']де вп[']а[/']сти. Дуже людно.",
+            "яблукові ніде впасти: Дуже людно.",
+            "Фразеологічний словник",
+        ),
+    )
+    cache = {
+        "lookups": {
+            "phraseology": {
+                "dictionary_slug": "phraseology",
+                "dictionary_label": "Фразеологічний словник української мови",
+                "source_url": "https://slovnyk.me/dict/phraseology/яблуко",
+                "word": "яблуко",
+                "text": "яблуко я́блуко ро́збрату (чвар), книжн. Причина ворожнечі. Джерело: тест",
+            }
+        }
+    }
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_vesum_word_analyses",
+        lambda word: (("яблуко", "noun"),) if word in {"яблуку", "яблукові"} else (),
+    )
+
+    section = _idioms(conn, "яблуко", cache)
+
+    assert section is not None
+    assert [item["phrase"] for item in section["items"]] == [
+        "яблуко розбрату (чвар), книжн",
+        "голці (яблуку, яблукові) ніде впасти",
+    ]
+
+
 def test_slovnyk_warning_merges_known_russianism_alternative() -> None:
     cache = {
         "lookups": {
@@ -1029,6 +1167,39 @@ def test_derivational_etymology_falls_back_to_base_forms(derived: str, base: str
     }
 
 
+def test_etymology_lookup_variants_include_normalised_apostrophe_and_v_u_alternates() -> None:
+    variants = _etymology_lookup_variants("Ув’язнення")
+
+    assert "ув'язнення" in variants
+    assert "вв'язнення" in variants
+
+
+def test_esum_etymology_uses_normalised_variant_match() -> None:
+    conn = _conn()
+    conn.execute(
+        """
+        CREATE TABLE esum_etymology (
+            lemma TEXT NOT NULL,
+            etymology_text TEXT NOT NULL,
+            cognates TEXT DEFAULT '',
+            vol TEXT DEFAULT '',
+            page TEXT DEFAULT ''
+        )
+        """
+    )
+    conn.execute(
+        "INSERT INTO esum_etymology VALUES (?, ?, ?, ?, ?)",
+        ("ув'язнення", "Fixture ЕСУМ etymology for ув'язнення.", "[]", "1", "42"),
+    )
+
+    etymology = _etymology(conn, "Ув’язнення", {})
+
+    assert etymology == {
+        "text": "Fixture ЕСУМ etymology for ув'язнення.",
+        "source": "ЕСУМ, т. 1, с. 42",
+    }
+
+
 def test_compositional_greeting_phrases_have_no_etymology_fallback() -> None:
     conn = _conn()
     conn.execute(
@@ -1187,6 +1358,113 @@ def test_enrich_uses_base_form_for_pair_single_form_sections(monkeypatch, tmp_pa
     assert enriched["enrichment"]["etymology"]["text"] == "Goroh etymology for робота."
     assert enriched["enrichment"]["morphology"]["forms"] == [{"form": "робота", "label": "однина, жін., називний"}]
     assert verify_calls == ["робота"]
+
+
+def test_enrich_populates_antonyms_phraseology_and_variant_etymology(monkeypatch, tmp_path) -> None:
+    manifest_path = tmp_path / "manifest.json"
+    db_path = tmp_path / "sources.sqlite"
+    before = {
+        "entries": [
+            {
+                "lemma": "Ув’язнення",
+                "gloss": "imprisonment",
+                "pos": "noun",
+            }
+        ]
+    }
+    manifest_path.write_text(json.dumps(before, ensure_ascii=False) + "\n", encoding="utf-8")
+    conn = sqlite3.connect(db_path)
+    conn.executescript(
+        """
+        CREATE TABLE esum_etymology (
+            lemma TEXT NOT NULL,
+            etymology_text TEXT NOT NULL,
+            cognates TEXT DEFAULT '',
+            vol TEXT DEFAULT '',
+            page TEXT DEFAULT ''
+        );
+        CREATE TABLE wiktionary (
+            word TEXT NOT NULL,
+            definitions TEXT DEFAULT '',
+            synonyms TEXT DEFAULT '',
+            antonyms TEXT DEFAULT '',
+            text TEXT NOT NULL DEFAULT '',
+            source TEXT DEFAULT ''
+        );
+        CREATE TABLE frazeolohichnyi (
+            id INTEGER PRIMARY KEY,
+            word TEXT NOT NULL,
+            definition TEXT NOT NULL DEFAULT '',
+            text TEXT NOT NULL DEFAULT '',
+            source TEXT DEFAULT ''
+        );
+        """
+    )
+    conn.execute(
+        "INSERT INTO esum_etymology VALUES (?, ?, ?, ?, ?)",
+        ("ув'язнення", "Fixture ЕСУМ etymology for ув'язнення.", "[]", "1", "42"),
+    )
+    conn.execute(
+        "INSERT INTO wiktionary (word, antonyms) VALUES (?, ?)",
+        ("Ув’язнення", json.dumps(["воля", "detention"], ensure_ascii=False)),
+    )
+    conn.execute(
+        "INSERT INTO frazeolohichnyi (word, definition, text, source) VALUES (?, ?, ?, ?)",
+        (
+            "ув'язнення духу {{</fras>}}",
+            "ув'язнення духу. Обмеження внутрішньої свободи.",
+            "ув'язнення духу: Обмеження внутрішньої свободи.",
+            "Фразеологічний словник",
+        ),
+    )
+    conn.commit()
+    conn.close()
+
+    monkeypatch.setattr(enrich_manifest_module, "MANIFEST", manifest_path)
+    monkeypatch.setattr(enrich_manifest_module, "SOURCES_DB", db_path)
+    monkeypatch.setattr(enrich_manifest_module, "_load_kaikki_lookup", lambda: {})
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache", lambda lemma: {"lookups": {}})
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "classify_lemma",
+        lambda lemma: {
+            "classification": "unknown",
+            "attestations": [],
+            "is_russianism": False,
+            "russian_shadow": False,
+            "sovietization_risk": 0,
+            "calque_warning": None,
+        },
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_sum11_has_flag_columns", lambda conn: True)
+    monkeypatch.setattr(enrich_manifest_module, "_definition_cards", lambda *args, **kwargs: [])
+    monkeypatch.setattr(enrich_manifest_module, "_kaikki_pronunciation", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_idioms_slovnyk", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    monkeypatch.setattr(enrich_manifest_module, "_cefr", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_morphology", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_meaning", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_literary_attestation", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_translation", lambda *args, **kwargs: None)
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_vesum_word_analyses",
+        lambda word: ((word, "noun"),) if word in {"воля", "ув'язнення"} else (),
+    )
+
+    assert enrich_manifest_module.enrich() == (1, 1)
+
+    enriched = json.loads(manifest_path.read_text(encoding="utf-8"))["entries"][0]
+    print("UNIT SAMPLE before sections:", before["entries"][0].get("sections"))
+    print("UNIT SAMPLE after sections:", json.dumps(enriched.get("sections"), ensure_ascii=False, sort_keys=True))
+    print("UNIT SAMPLE after etymology:", json.dumps(enriched["enrichment"]["etymology"], ensure_ascii=False))
+
+    assert enriched["sections"]["antonyms"]["items"] == ["воля"]
+    assert enriched["sections"]["idioms"]["items"][0]["phrase"] == "ув'язнення духу"
+    assert enriched["enrichment"]["etymology"] == {
+        "text": "Fixture ЕСУМ etymology for ув'язнення.",
+        "source": "ЕСУМ, т. 1, с. 42",
+    }
 
 
 def test_dmklinger_key_strips_stress_and_casefolds() -> None:

@@ -15,8 +15,9 @@ no fabrication):
 - **literary_attestation** — exact-form literary corpus hit when available.
 - **synonyms** — source-attested Ukrainian candidates from clean slovnyk.me
   synonym dictionaries, with noisy legacy sources kept A1-sense allowlisted.
-- **sections.synonyms / sections.idioms** — slovnyk.me per-lemma lookup cache
-  (Караванський + Словник синонімів; Фразеологічний).
+- **sections.synonyms / sections.antonyms / sections.idioms** — slovnyk.me
+  per-lemma lookup cache and local dictionary rows (Караванський + Словник
+  синонімів; Вікісловник antonyms; Фразеологічний).
 - **heritage warning alternatives** — slovnyk.me correction dictionaries
   (Антоненко-Давидович, «Неправильно-правильно», Штепа чужослів).
 - **etymology** — Goroh cached extracts first, ЕСУМ fallback, uk.wiktionary
@@ -1183,6 +1184,88 @@ def _synonyms_slovnyk(
     }
 
 
+def _clean_atlas_chip_candidate(candidate: str, lemma: str) -> str | None:
+    term = _strip_stress(candidate)
+    term = re.sub(r"<[^>]+>", " ", term)
+    term = re.sub(r"\s+", " ", term).strip()
+    term = term.strip(' \t\r\n.,;:!?/\\[]{}«»"“”<>')
+    term = term.casefold()
+    if not term or term in _BLOCKED_SYNONYMS:
+        return None
+    if _LATIN_RE.search(term) or not _UKRAINIAN_TEXT_RE.fullmatch(term):
+        return None
+    words = term.split()
+    if len(words) > 4:
+        return None
+    for variant in _split_lemma_variants(_strip_stress(lemma)):
+        if term == variant.casefold():
+            return None
+    return term
+
+
+def _wiktionary_has_antonyms_column(conn: sqlite3.Connection) -> bool:
+    try:
+        return any(row[1] == "antonyms" for row in conn.execute("PRAGMA table_info(wiktionary)"))
+    except sqlite3.OperationalError as exc:
+        if _missing_table(exc):
+            return False
+        raise
+
+
+def _candidate_matches_entry_pos(candidate: str, entry_pos: str | None) -> bool:
+    mapped_pos = _MANIFEST_POS_TO_VESUM_POS.get(_lookup_key(entry_pos or ""))
+    if not mapped_pos or _has_whitespace(candidate):
+        return True
+    return _candidate_matches_headword_pos(candidate, mapped_pos)
+
+
+def _antonyms_wiktionary(
+    conn: sqlite3.Connection,
+    lemma: str,
+    *,
+    entry_pos: str | None = None,
+) -> dict[str, Any] | None:
+    """Antonym chips from explicit Wiktionary antonym rows, omitted when empty."""
+    if not _wiktionary_has_antonyms_column(conn):
+        return None
+
+    items: list[str] = []
+    seen: set[str] = set()
+    try:
+        for variant in _etymology_lookup_variants(_base_lemma(lemma)):
+            row = conn.execute(
+                "SELECT antonyms FROM wiktionary WHERE word = ? COLLATE NOCASE AND antonyms != '' LIMIT 1",
+                (variant,),
+            ).fetchone()
+            if not row:
+                continue
+            try:
+                candidates = json.loads(row[0] or "[]")
+            except (TypeError, ValueError):
+                candidates = []
+            if not isinstance(candidates, list):
+                continue
+            for candidate in candidates:
+                term = _clean_atlas_chip_candidate(str(candidate), lemma)
+                if term and term not in seen and _candidate_matches_entry_pos(term, entry_pos):
+                    seen.add(term)
+                    items.append(term)
+            if items:
+                break
+    except sqlite3.OperationalError as exc:
+        if _missing_table(exc):
+            return None
+        raise
+
+    if not items:
+        return None
+    return {
+        "items": items[:12],
+        "source": "Вікісловник: explicit antonym list",
+        "source_urls": [f"https://uk.wiktionary.org/wiki/{quote(_base_lemma(lemma))}"],
+    }
+
+
 def _protect_idiom_abbreviation_periods(text: str) -> str:
     protected = text
     for abbreviation in _IDIOM_ABBREVIATIONS_WITH_INTERNAL_DOTS:
@@ -1242,6 +1325,157 @@ def _idioms_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dict[str
         "source": "slovnyk.me: Фразеологічний словник української мови",
         "source_urls": [str(row["source_url"])] if row.get("source_url") else [],
     }
+
+
+_PHRASEOLOGY_MARKUP_REPLACEMENTS = (
+    ("[']", ""),
+    ("[/']", ""),
+    ("≤", ""),
+    ("≥", ""),
+    ("{{</fras>}}", ""),
+    ("{{", ""),
+    ("}}", ""),
+)
+
+
+def _clean_phraseology_text(text: str) -> str:
+    cleaned = clean_html_entities(str(text or ""))
+    cleaned = re.sub(r"<[^>]+>", " ", cleaned)
+    for old, new in _PHRASEOLOGY_MARKUP_REPLACEMENTS:
+        cleaned = cleaned.replace(old, new)
+    cleaned = re.sub(r"\s+", " ", cleaned)
+    return cleaned.strip()
+
+
+def _leading_phraseology_phrase(definition: str, headword: str) -> str:
+    cleaned_definition = _clean_phraseology_text(definition)
+    protected = _protect_idiom_abbreviation_periods(cleaned_definition)
+    match = re.match(r"(.{3,220}?\.)\s+", protected)
+    if match:
+        return _restore_idiom_abbreviation_periods(match.group(1)).strip(" .")
+    return _clean_phraseology_text(headword).strip(" .")
+
+
+def _phrase_contains_lemma(phrase: str, lemma: str) -> bool:
+    clean_phrase = _lookup_key(_clean_phraseology_text(phrase))
+    variants = [_lookup_key(variant) for variant in _split_lemma_variants(_base_lemma(lemma))]
+    variants = [variant for variant in variants if variant]
+    if any(_contains_whole_token(clean_phrase, variant) for variant in variants):
+        return True
+    if _has_whitespace(clean_phrase):
+        tokens = re.findall(rf"[{_CYRILLIC_WORD_CHARS}]+", clean_phrase)
+        expected = set(variants)
+        for token in tokens:
+            if any(analysis_lemma in expected for analysis_lemma, _pos in _vesum_word_analyses(token)):
+                return True
+    return False
+
+
+def _phraseology_definition_body(definition: str, phrase: str) -> str:
+    body = _clean_phraseology_text(definition)
+    if phrase:
+        pattern = re.compile(rf"^\s*{re.escape(_clean_phraseology_text(phrase))}\.?\s*", flags=re.IGNORECASE)
+        body = pattern.sub("", body, count=1).strip()
+    body = re.sub(r"^\d+\.\s*", "", body)
+    return _truncate_text(body, 650)
+
+
+def _idioms_frazeolohichnyi(conn: sqlite3.Connection, lemma: str, *, limit: int = 3) -> dict[str, Any] | None:
+    """Phraseology rows from local DB, matched on the idiom phrase not loose definition mentions."""
+    variants = [_lookup_key(variant) for variant in _split_lemma_variants(_base_lemma(lemma))]
+    variants = [variant for variant in variants if variant]
+    if not variants:
+        return None
+
+    rows: list[tuple[str, str, str]] = []
+    seen_ids: set[int] = set()
+    try:
+        for variant in variants:
+            for row in conn.execute(
+                "SELECT id, word, definition, source FROM frazeolohichnyi "
+                "WHERE lower(word) LIKE ? OR lower(definition) LIKE ? LIMIT 80",
+                (f"%{variant}%", f"%{variant}%"),
+            ):
+                row_id = int(row[0])
+                if row_id in seen_ids:
+                    continue
+                seen_ids.add(row_id)
+                rows.append((str(row[1] or ""), str(row[2] or ""), str(row[3] or "")))
+    except sqlite3.OperationalError as exc:
+        if _missing_table(exc):
+            return None
+        raise
+
+    items: list[dict[str, str]] = []
+    seen_phrases: set[str] = set()
+    for headword, definition, source in rows:
+        phrase = _leading_phraseology_phrase(definition, headword)
+        if not phrase or not _phrase_contains_lemma(phrase, lemma):
+            continue
+        phrase = _truncate_text(phrase, 160)
+        key = _lookup_key(phrase)
+        if key in seen_phrases:
+            continue
+        seen_phrases.add(key)
+        items.append(
+            {
+                "text": phrase,
+                "phrase": phrase,
+                "definition": _phraseology_definition_body(definition, phrase),
+                "source": source or "Фразеологічний словник української мови",
+                "source_url": "",
+            }
+        )
+        if len(items) >= limit:
+            break
+
+    if not items:
+        return None
+    return {
+        "items": items,
+        "source": "Фразеологічний словник української мови",
+        "source_urls": [],
+    }
+
+
+def _merge_idiom_sections(*sections: dict[str, Any] | None) -> dict[str, Any] | None:
+    items: list[dict[str, str]] = []
+    sources: list[str] = []
+    urls: list[str] = []
+    seen: set[str] = set()
+    for section in sections:
+        if not section:
+            continue
+        for item in section.get("items", []):
+            if not isinstance(item, dict):
+                continue
+            phrase = str(item.get("phrase") or item.get("text") or "").strip()
+            key = _lookup_key(phrase)
+            if not phrase or key in seen:
+                continue
+            seen.add(key)
+            items.append(item)
+        if section.get("source"):
+            sources.append(str(section["source"]))
+        urls.extend(str(url) for url in section.get("source_urls", []) if url)
+    if not items:
+        return None
+    return {
+        "items": items[:4],
+        "source": " + ".join(dict.fromkeys(sources)),
+        "source_urls": list(dict.fromkeys(urls)),
+    }
+
+
+def _idioms(
+    conn: sqlite3.Connection,
+    lemma: str,
+    cache: dict[str, Any] | None = None,
+) -> dict[str, Any] | None:
+    return _merge_idiom_sections(
+        _idioms_slovnyk(lemma, cache),
+        _idioms_frazeolohichnyi(conn, lemma),
+    )
 
 
 def _warning_alternatives_from_row(row: dict[str, Any], lemma: str) -> list[str]:
@@ -1847,8 +2081,17 @@ def _lookup_key(value: str) -> str:
 
 
 def _etymology_lookup_variants(lemma: str) -> list[str]:
-    variants = [lemma.strip()]
+    variants = [lemma.strip(), _lookup_key(lemma)]
     variants.extend(_split_lemma_variants(lemma))
+    for variant in list(variants):
+        key = _lookup_key(variant)
+        if not key or _has_whitespace(key):
+            continue
+        variants.extend(get_apostrophe_variants(key))
+        if key.startswith("в") and len(key) > 2:
+            variants.append("у" + key[1:])
+        if key.startswith("у") and len(key) > 2:
+            variants.append("в" + key[1:])
     seen: set[str] = set()
     return [v for v in variants if v and not (v.casefold() in seen or seen.add(v.casefold()))]
 
@@ -1958,7 +2201,7 @@ def _esum_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
         return None
     row = None
     try:
-        for variant in _split_lemma_variants(word):
+        for variant in _etymology_lookup_variants(word):
             row = conn.execute(
                 "SELECT etymology_text, vol, page FROM esum_etymology "
                 "WHERE lemma = ? AND etymology_text != '' LIMIT 1",
@@ -2384,7 +2627,10 @@ def enrich() -> tuple[int, int]:
             synonyms = _synonyms_slovnyk(base, slovnyk_cache, entry_pos=entry.get("pos"))
             if synonyms:
                 sections["synonyms"] = synonyms
-            idioms = _idioms_slovnyk(lemma, slovnyk_cache)
+            antonyms = _antonyms_wiktionary(conn, base, entry_pos=entry.get("pos"))
+            if antonyms:
+                sections["antonyms"] = antonyms
+            idioms = _idioms(conn, lemma, slovnyk_cache)
             if idioms:
                 sections["idioms"] = idioms
             if sections:
