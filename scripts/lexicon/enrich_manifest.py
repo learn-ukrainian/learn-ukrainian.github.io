@@ -41,6 +41,7 @@ import functools
 import html
 import json
 import os
+import random
 import re
 import sqlite3
 import sys
@@ -110,7 +111,14 @@ _IDIOM_ABBREVIATIONS_WITH_INTERNAL_DOTS = (
     "перев.",
     "зі сл.",
 )
-_SLOVNYK_DELAY_SECONDS = 0.12
+# slovnyk.me is Cloudflare-fronted and rate-limits bursts (429). 0.12s (~8 req/s) tripped
+# it: 429 -> _SlovnykTransientError -> never cached -> re-fetched every run (#3097). 0.34s
+# (~3 req/s) is Cloudflare-friendly for sustained scraping; the mirror builder can override
+# via LEXICON_SLOVNYK_DELAY. Paired with Retry-After + exponential backoff in _fetch_slovnyk_entry.
+_SLOVNYK_DELAY_SECONDS = float(os.environ.get("LEXICON_SLOVNYK_DELAY", "0.34"))
+_SLOVNYK_MAX_RETRIES = int(os.environ.get("LEXICON_SLOVNYK_MAX_RETRIES", "5"))
+_SLOVNYK_BACKOFF_BASE_SECONDS = 1.5
+_SLOVNYK_BACKOFF_CAP_SECONDS = 90.0
 _SLOVNYK_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup; issue #2985)"
 _STRESS_SOURCE = "ukrainian-word-stress"
 _CEFR_SOURCE = "PULS CEFR"
@@ -901,30 +909,64 @@ def _polite_slovnyk_delay() -> None:
     _last_slovnyk_fetch = time.monotonic()
 
 
-def _fetch_slovnyk_entry(lemma: str, lookup_word: str, slug: str) -> dict[str, Any] | None:
-    _polite_slovnyk_delay()
-    url = f"{_SLOVNYK_BASE}/dict/{slug}/{quote(lookup_word)}"
+def _parse_retry_after(value: str | None) -> float | None:
+    """Parse a ``Retry-After`` header (delta-seconds form; Cloudflare uses integers)."""
+    if not value:
+        return None
     try:
-        response = requests.get(
-            url,
-            timeout=20,
-            headers={"User-Agent": _SLOVNYK_USER_AGENT},
-        )
+        return max(0.0, float(value))
+    except (TypeError, ValueError):
+        return None
+
+
+def _slovnyk_backoff_sleep(attempt: int, retry_after: float | None) -> None:
+    """Sleep before a retry: honor Retry-After, else exponential backoff + jitter."""
+    if retry_after is not None:
+        delay = retry_after
+    else:
+        delay = min(_SLOVNYK_BACKOFF_CAP_SECONDS, _SLOVNYK_BACKOFF_BASE_SECONDS * (2**attempt))
+    time.sleep(delay + random.uniform(0.0, 0.5))
+
+
+def _fetch_slovnyk_entry(lemma: str, lookup_word: str, slug: str) -> dict[str, Any] | None:
+    """Fetch one slovnyk.me dictionary entry, 429-friendly.
+
+    Retries 429/5xx/network errors with Retry-After + exponential backoff (so a rate-limit
+    resolves into a real result instead of a transient miss that is never cached, #3097).
+    Returns the parsed entry, ``None`` for a genuine 404 (cached as a known miss), or raises
+    ``_SlovnykTransientError`` only after exhausting retries (caller leaves the slug uncached
+    so a later run retries it).
+    """
+    url = f"{_SLOVNYK_BASE}/dict/{slug}/{quote(lookup_word)}"
+    for attempt in range(_SLOVNYK_MAX_RETRIES + 1):
+        _polite_slovnyk_delay()
+        try:
+            response = requests.get(url, timeout=20, headers={"User-Agent": _SLOVNYK_USER_AGENT})
+        except requests.RequestException as exc:
+            if attempt < _SLOVNYK_MAX_RETRIES:
+                _slovnyk_backoff_sleep(attempt, None)
+                continue
+            raise _SlovnykTransientError(f"transient slovnyk.me request failure for {url}") from exc
+
         if response.status_code == 404:
             return None
-        if response.status_code >= 500:
-            msg = f"transient slovnyk.me status {response.status_code} for {url}"
-            raise _SlovnykTransientError(msg)
-        response.raise_for_status()
-    except requests.RequestException as exc:
-        raise _SlovnykTransientError(f"transient slovnyk.me request failure for {url}") from exc
-    return _parse_slovnyk_entry(
-        response.text,
-        lemma=lemma,
-        lookup_word=lookup_word,
-        slug=slug,
-        url=url,
-    )
+        if response.status_code == 429 or response.status_code >= 500:
+            if attempt < _SLOVNYK_MAX_RETRIES:
+                _slovnyk_backoff_sleep(attempt, _parse_retry_after(response.headers.get("Retry-After")))
+                continue
+            raise _SlovnykTransientError(f"transient slovnyk.me status {response.status_code} for {url}")
+        try:
+            response.raise_for_status()
+        except requests.HTTPError as exc:
+            raise _SlovnykTransientError(f"transient slovnyk.me request failure for {url}") from exc
+        return _parse_slovnyk_entry(
+            response.text,
+            lemma=lemma,
+            lookup_word=lookup_word,
+            slug=slug,
+            url=url,
+        )
+    raise _SlovnykTransientError(f"transient slovnyk.me exhausted retries for {url}")
 
 
 def _load_slovnyk_cache_file(path: Path) -> dict[str, Any] | None:
