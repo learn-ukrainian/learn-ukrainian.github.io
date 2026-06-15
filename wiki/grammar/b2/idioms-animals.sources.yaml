@@ -2,51 +2,62 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 10-klas-ukrmova-karaman-2018_s0703
+  file: 10-klas-ukrmova-karaman-2018_s0421
   type: textbook
-  title: Мовленнєве спілкування. Стилістика і культура мовлення
-  page: 216
+  title: Наукова метафора. Біологічна метафора і кольорова конотація
+  page: 238
   grade: 10
 - id: S2
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1225
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0219
   type: textbook
-  title: § 33. Тире у складному реченні
-  page: 141
+  title: Метафора і тропи. Звіром / змієм у художньому рядку
+  page: 156
   grade: 11
 - id: S3
-  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1766
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s0132
   type: textbook
-  title: Навчаюся розрізняти іменники — назви істот і неістот
-  page: 104
+  title: Спостереження за роллю прикметників у мовленні
+  page: 134
   grade: 3
 - id: S4
-  file: 10-klas-ukrmova-karaman-2018_s0566
+  file: 10-klas-ukrmova-karaman-2018_s0018
   type: textbook
-  title: Мова як суспільне явище. Українська мова в Україні
-  page: 6
+  title: Лексична норма. Свійський — домашній
+  page: 12
   grade: 10
 - id: S5
-  file: 7-klas-ukrmova-avramenko-2024_s3897
+  file: 8-klas-ukrmova-avramenko-2025_s0171
   type: textbook
-  title: ГРУПИ ЛЕКСИКИ (ЛЕКСИКОЛОГІЯ)
-  page: 220
-  grade: 7
+  title: Свійські тварини як тварини, що живуть при людях
+  page: 128
+  grade: 8
 - id: S6
-  file: 11-klas-ukrmova-zabolotnyi-2019_s1452
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0265
   type: textbook
-  title: Проɱитаɣте текст. Які зорові та слухові оɛрази постаɸть у ваɲіɣ
-  page: 175
+  title: Неологізми й образні речення. Хто сіяв зло...
+  page: 176
   grade: 11
 - id: S7
-  file: 10-klas-ukrmova-karaman-2018_s0633
+  file: 10-klas-ukrmova-karaman-2018_s0184
   type: textbook
-  title: § 38. Розмовна, просторічна, емоційно забарвлена лексика. Сленг. Екзотизми.
-    Пуризми
+  title: § 38. Розмовна, просторічна, емоційно забарвлена лексика. Сленг. Екзотизми. Пуризми
   page: 103
   grade: 10
 - id: S8
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3378
+  file: 6-klas-ukrmova-zabolotnyi-2020_s0030
   type: textbook
   title: § 8. ЗАГАЛЬНОВЖИВАНІ Й СТИЛІСТИЧНО
   page: 31
   grade: 6
+- id: S9
+  file: 2-klas-ukrmova-bolshakova-2019-1_s0007
+  type: textbook
+  title: Етикетні формули для друзів і дорослих
+  page: 6
+  grade: 2
+- id: S10
+  file: 2-klas-ukrmova-bolshakova-2019-2_s0023
+  type: textbook
+  title: Велика буква в прізвищах, іменах, по батькові
+  page: 22
+  grade: 2
