@@ -1,0 +1,755 @@
+version: '1.0'
+module: pluralia-tantum
+level: b1
+inline:
+  - id: act-1
+    type: quiz
+    title: Чи має слово однину
+    instruction: Оберіть точне пояснення для кожного слова або словосполучення.
+    items:
+      - question: Чому "двері" є pluralia tantum?
+        options:
+          - Слово не має нейтральної форми однини в цьому значенні.
+          - Слово називає тільки багато різних дверей.
+          - Слово завжди означає будинок.
+        correct: 0
+        explanation: Можна сказати "одні двері", але не нейтрально "*одна двері".
+      - question: Яке слово НЕ є pluralia tantum?
+        options:
+          - шкарпетки
+          - окуляри
+          - ножиці
+        correct: 0
+        explanation: Є форма однини "шкарпетка", тому це звичайний іменник.
+      - question: Як правильно назвати один комплект окулярів?
+        options:
+          - одні окуляри
+          - один окуляри
+          - одна окуляра
+        correct: 0
+        explanation: З pluralia tantum для одного комплекту вживаємо "одні".
+      - question: Яке речення має правильне узгодження?
+        options:
+          - Нові двері відчинилися.
+          - Новий двері відчинився.
+          - Нова двері відчинилася.
+        correct: 0
+        explanation: '"Двері" вимагає множинного прикметника і дієслова.'
+      - question: Чому "гроші" у значенні money поводяться як pluralia tantum?
+        options:
+          - У звичайному значенні вони мають тільки множинну граматичну форму.
+          - Бо це завжди рівно дві монети.
+          - Бо це слово не відмінюється.
+        correct: 0
+        explanation: Кажемо "ці гроші", "немає грошей", "грошима/грішми".
+      - question: Яка географічна назва має множинну граматичну форму?
+        options:
+          - Суми
+          - Одеса
+          - Київ
+        correct: 0
+        explanation: '"Суми" узгоджується у множині: Суми розташовані.'
+      - question: Яка форма родового відмінка правильна?
+        options:
+          - немає дверей
+          - немає дверів
+          - немає дверям
+        correct: 0
+        explanation: Родовий відмінок слова "двері" - "дверей".
+      - question: Яка фраза правильно рахує pluralia tantum?
+        options:
+          - дві пари окулярів
+          - два окуляри у значенні дві пари
+          - дві окуляра
+        correct: 0
+        explanation: Для комплектів зручно вживати "пара" або збірні числівники.
+  - id: act-2
+    type: group-sort
+    title: Три полички числа
+    instruction: Розподіліть слова за граматичною поведінкою.
+    groups:
+      - label: Pluralia tantum
+        items:
+          - двері
+          - окуляри
+          - ножиці
+          - гроші
+          - меблі
+          - канікули
+          - Карпати
+          - Черкаси
+      - label: Звичайні іменники з одниною і множиною
+        items:
+          - шкарпетки
+          - рукавиці
+          - книжки
+          - ключі
+          - міста
+          - черевики
+      - label: Singularia tantum
+        items:
+          - молоко
+          - дружба
+          - молодь
+          - залізо
+          - студентство
+          - добро
+      - label: Потрібна одиниця міри або комплект
+        items:
+          - пара окулярів
+          - комплект меблів
+          - упаковка ліків
+          - сума грошей
+  - id: act-3
+    type: match-up
+    title: Називний, родовий, орудний
+    instruction: Поєднайте словникову форму з потрібним набором відмінкових форм.
+    pairs:
+      - left: двері
+        right: дверей; дверима/дверми
+      - left: окуляри
+        right: окулярів; окулярами
+      - left: гроші
+        right: грошей; грошима/грішми
+      - left: ворота
+        right: воріт; воротами/ворітьми
+      - left: ножиці
+        right: ножиць; ножицями
+      - left: канікули
+        right: канікул; канікулами
+      - left: сани
+        right: саней; саньми/санями
+      - left: Карпати
+        right: Карпат; Карпатами
+  - id: act-4
+    type: fill-in
+    title: Форма в реченні
+    instruction: Вставте правильну форму pluralia tantum.
+    items:
+      - sentence: "Після ____ ми повернулися до Києва."
+        answer: канікул
+        options:
+          - канікул
+          - канікули
+          - канікулам
+        explanation: "Після + родовий відмінок: після канікул."
+      - sentence: "У коридорі не було ____."
+        answer: дверей
+        options:
+          - дверей
+          - дверів
+          - дверям
+        explanation: Немає чого? дверей.
+      - sentence: "Вона розплатилася ____."
+        answer: грошима
+        options:
+          - грошима
+          - грошей
+          - гроші
+        explanation: Розплатитися чим? грошима; також можлива форма грішми.
+      - sentence: "Ми повернулися з ____ у неділю ввечері."
+        answer: Карпат
+        options:
+          - Карпат
+          - Карпатів
+          - Карпатам
+        explanation: Звідки? з Карпат.
+      - sentence: "На столі лежали гострі ____."
+        answer: ножиці
+        options:
+          - ножиці
+          - ножиця
+          - ножицями
+        explanation: У називному відмінку потрібна форма "ножиці".
+      - sentence: "Біля входу стояли високі ____."
+        answer: ворота
+        options:
+          - ворота
+          - ворото
+          - воріт
+        explanation: "Підмет у називному відмінку: ворота стояли."
+      - sentence: "Я не можу читати без ____."
+        answer: окулярів
+        options:
+          - окулярів
+          - окулярей
+          - окулярами
+        explanation: "Без + родовий відмінок: без окулярів."
+      - sentence: "У кімнаті стояли нові ____."
+        answer: меблі
+        options:
+          - меблі
+          - мебля
+          - меблів
+        explanation: "Підмет у називному відмінку: меблі стояли."
+  - id: act-5
+    type: error-correction
+    title: Узгодження і рахунок
+    instruction: Знайдіть помилку й подайте нормативний варіант.
+    items:
+      - sentence: "Цей двері зачинений."
+        error: Цей двері зачинений
+        correction: Ці двері зачинені
+        error_type: phrase
+        explanation: '"Двері" вимагає множини: ці, зачинені.'
+      - sentence: "Мої окуляри зламався."
+        error: зламався
+        correction: зламалися
+        error_type: word
+        explanation: Присудок із "окуляри" стоїть у множині.
+      - sentence: "Я купив один ножиці."
+        error: один ножиці
+        correction: одні ножиці
+        error_type: phrase
+        explanation: Для одного комплекту кажемо "одні ножиці".
+      - sentence: "У нас немає дверів."
+        error: дверів
+        correction: дверей
+        error_type: word
+        explanation: Родовий відмінок слова "двері" - "дверей".
+      - sentence: "Новий меблі стояв біля стіни."
+        error: Новий меблі стояв
+        correction: Нові меблі стояли
+        error_type: phrase
+        explanation: '"Меблі" мають множинне узгодження.'
+      - sentence: "Ці гроші закінчився дуже швидко."
+        error: закінчився
+        correction: закінчилися
+        error_type: word
+        explanation: '"Гроші" вимагають дієслова у множині.'
+      - sentence: "Після канікули ми поїхали до Черкас."
+        error: канікули
+        correction: канікул
+        error_type: word
+        explanation: Родовий відмінок - "канікул".
+      - sentence: "Суми розташоване на північному сході України."
+        error: розташоване
+        correction: розташовані
+        error_type: word
+        explanation: Назва "Суми" має множинну форму.
+workbook:
+  - id: wb-1
+    type: quiz
+    title: Основи pluralia tantum
+    instruction: Оберіть правильне твердження або форму.
+    items:
+      - question: Що означає pluralia tantum?
+        options:
+          - Іменник уживається тільки у множинній формі.
+          - Іменник завжди називає багато однакових речей.
+          - Іменник не має відмінкових форм.
+        correct: 0
+        explanation: "Це граматична властивість: форма множини без звичайної однини."
+      - question: Чому такі іменники не належать до I-IV відмін?
+        options:
+          - Відміна визначається за формою однини, якої тут немає.
+          - Вони всі незмінювані.
+          - Вони всі іншомовні.
+        correct: 0
+        explanation: Вони відмінюються, але не класифікуються через однину.
+      - question: Яка пара є правильним прикладом pluralia tantum?
+        options:
+          - двері, ножиці
+          - книжки, міста
+          - шкарпетки, рукавиці
+        correct: 0
+        explanation: '"Книжка", "місто", "шкарпетка", "рукавиця" мають однину.'
+      - question: Яке слово належить до singularia tantum?
+        options:
+          - молоко
+          - окуляри
+          - двері
+        correct: 0
+        explanation: '"Молоко" звичайно має тільки однину.'
+      - question: Яка форма правильна для одного комплекту?
+        options:
+          - одні ворота
+          - один ворота
+          - одна ворота
+        correct: 0
+        explanation: З pluralia tantum уживаємо "одні".
+      - question: Яке речення правильне?
+        options:
+          - Канікули були короткі.
+          - Канікули була коротка.
+          - Канікули було коротке.
+        correct: 0
+        explanation: '"Канікули" узгоджується у множині.'
+      - question: Яка форма орудного відмінка нормативна?
+        options:
+          - грішми
+          - грошам
+          - грошей
+        correct: 0
+        explanation: '"Грішми" є нормативним варіантом орудного поряд із "грошима".'
+      - question: Яке слово не слід рахувати як "двоє ..."?
+        options:
+          - гроші
+          - двері
+          - ножиці
+        correct: 0
+        explanation: Гроші рахують через суму, купюри або монети, а не "двоє грошей".
+  - id: wb-2
+    type: fill-in
+    title: Родовий відмінок
+    instruction: Вставте правильну форму родового відмінка.
+    items:
+      - sentence: "У квартирі немає ____."
+        answer: меблів
+        options:
+          - меблів
+          - меблей
+          - меблі
+        explanation: "Родовий відмінок: немає меблів."
+      - sentence: "Після ____ ми почали новий семестр."
+        answer: канікул
+        options:
+          - канікул
+          - канікули
+          - канікулам
+        explanation: "Після + родовий: після канікул."
+      - sentence: "Не вистачає ____ на ремонт."
+        answer: грошей
+        options:
+          - грошей
+          - грошів
+          - грошам
+        explanation: Родовий відмінок слова "гроші" - "грошей".
+      - sentence: "Без ____ я погано бачу."
+        answer: окулярів
+        options:
+          - окулярів
+          - окулярей
+          - окулярам
+        explanation: "Без + родовий: без окулярів."
+      - sentence: "Біля будинку не було ____."
+        answer: воріт
+        options:
+          - воріт
+          - воротів
+          - воротам
+        explanation: Родовий відмінок слова "ворота" - "воріт".
+      - sentence: "У коробці не знайшли ____."
+        answer: ножиць
+        options:
+          - ножиць
+          - ножиців
+          - ножицям
+        explanation: Родовий відмінок слова "ножиці" - "ножиць".
+      - sentence: "Ми повернулися з ____."
+        answer: Черкас
+        options:
+          - Черкас
+          - Черкасів
+          - Черкасам
+        explanation: Звідки? з Черкас.
+      - sentence: "Туристи приїхали з ____."
+        answer: Карпат
+        options:
+          - Карпат
+          - Карпатів
+          - Карпатам
+        explanation: "Родовий відмінок: з Карпат."
+      - sentence: "Для тіста треба трохи ____."
+        answer: дріжджів
+        options:
+          - дріжджів
+          - дріжджей
+          - дріжджі
+        explanation: "Родовий відмінок: трохи дріжджів."
+      - sentence: "У магазині немає цих ____."
+        answer: парфумів
+        options:
+          - парфумів
+          - парфум
+          - парфумам
+        explanation: "Родовий відмінок: немає парфумів."
+  - id: wb-3
+    type: match-up
+    title: Відмінкові міні-парадигми
+    instruction: Поєднайте форму з правильною функцією.
+    pairs:
+      - left: дверей
+        right: родовий відмінок від двері
+      - left: дверима
+        right: орудний відмінок від двері
+      - left: грішми
+        right: варіант орудного від гроші
+      - left: воріт
+        right: родовий відмінок від ворота
+      - left: ворітьми
+        right: варіант орудного від ворота
+      - left: ножиць
+        right: родовий відмінок від ножиці
+      - left: канікул
+        right: родовий відмінок від канікули
+      - left: Карпатами
+        right: орудний відмінок від Карпати
+  - id: wb-4
+    type: group-sort
+    title: Моделі родового
+    instruction: Розподіліть pluralia tantum за типовою формою родового відмінка.
+    groups:
+      - label: Закінчення -ів/-їв
+        items:
+          - окулярів
+          - ліків
+          - меблів
+          - парфумів
+          - дріжджів
+          - штанів
+          - хитрощів
+          - радощів
+      - label: Закінчення -ей
+        items:
+          - дверей
+          - грошей
+          - саней
+      - label: Нульове закінчення
+        items:
+          - воріт
+          - канікул
+          - Карпат
+          - Черкас
+          - Сум
+          - жнив
+          - заручин
+          - іменин
+  - id: wb-5
+    type: true-false
+    title: Так чи ні
+    instruction: Визначте, чи правильне твердження.
+    items:
+      - statement: "Pluralia tantum мають тільки множинну форму."
+        correct: true
+        explanation: Це основне визначення групи.
+      - statement: "Слово шкарпетки є pluralia tantum."
+        correct: false
+        explanation: Є форма однини "шкарпетка".
+      - statement: "Двері вимагають множинного узгодження."
+        correct: true
+        explanation: "Правильно: двері відчинені."
+      - statement: "Родовий відмінок слова ворота - воріт."
+        correct: true
+        explanation: Це нульове закінчення з чергуванням о - і.
+      - statement: "Гроші у значенні money нормально рахувати як один гроші."
+        correct: false
+        explanation: Кажемо "одні гроші" у вузьких контекстах або називаємо суму.
+      - statement: "Меблі можна замінити конкретними словами: стіл, шафа, крісло."
+        correct: true
+        explanation: Для рахунку часто називають конкретні предмети меблів.
+      - statement: "Київ є pluralia tantum."
+        correct: false
+        explanation: '"Київ" має форму однини.'
+      - statement: "Суми узгоджуються у множині."
+        correct: true
+        explanation: "Правильно: Суми розташовані."
+      - statement: "Молодь граматично поводиться як однина."
+        correct: true
+        explanation: "Це singularia tantum: молодь прийшла."
+      - statement: "Форма грішми є помилковою."
+        correct: false
+        explanation: '"Грішми" - нормативний варіант орудного.'
+      - statement: "Після канікул - правильна форма."
+        correct: true
+        explanation: Родовий відмінок слова "канікули" - "канікул".
+      - statement: "Окуляр - звичайна однина до окуляри у значенні glasses."
+        correct: false
+        explanation: '"Окуляр" має інше спеціальне значення.'
+  - id: wb-6
+    type: error-correction
+    title: Редагування узгодження
+    instruction: Виправте граматичну помилку.
+    items:
+      - sentence: "Великі ворота був зачинений."
+        error: був зачинений
+        correction: були зачинені
+        error_type: phrase
+        explanation: '"Ворота" вимагають множини.'
+      - sentence: "Ця меблі коштує дорого."
+        error: Ця меблі коштує
+        correction: Ці меблі коштують
+        error_type: phrase
+        explanation: '"Меблі" мають множинну граматичну форму.'
+      - sentence: "Новий ліки допоміг швидко."
+        error: Новий ліки допоміг
+        correction: Нові ліки допомогли
+        error_type: phrase
+        explanation: '"Ліки" узгоджуються у множині.'
+      - sentence: "Одеса красиві навесні."
+        error: красиві
+        correction: красива
+        error_type: word
+        explanation: '"Одеса" має форму однини, на відміну від Сум чи Черкас.'
+      - sentence: "Черкаси розташоване на Дніпрі."
+        error: розташоване
+        correction: розташовані
+        error_type: word
+        explanation: '"Черкаси" мають множинну граматичну форму.'
+      - sentence: "На столі лежала гостра ножиці."
+        error: лежала гостра
+        correction: лежали гострі
+        error_type: phrase
+        explanation: '"Ножиці" вимагають множини.'
+      - sentence: "Мої штани була довга."
+        error: була довга
+        correction: були довгі
+        error_type: phrase
+        explanation: '"Штани" вимагають множинного узгодження.'
+      - sentence: "Я не бачу окулярей."
+        error: окулярей
+        correction: окулярів
+        error_type: word
+        explanation: Родовий відмінок - "окулярів".
+      - sentence: "Після жнивів село відпочиває."
+        error: жнивів
+        correction: жнив
+        error_type: word
+        explanation: Родовий відмінок слова "жнива" - "жнив".
+      - sentence: "Вона купила одна пара окулярів."
+        error: одна пара
+        correction: одну пару
+        error_type: phrase
+        explanation: "Після 'купила' потрібен знахідний відмінок: одну пару."
+  - id: wb-7
+    type: cloze
+    title: Правило в одному абзаці
+    instruction: Вставте слова, які правильно підсумовують тему.
+    blanks:
+      - id: 1
+        answer: множині
+        options:
+          - множині
+          - однині
+          - кличному
+      - id: 2
+        answer: однини
+        options:
+          - однини
+          - роду
+          - наголосу
+      - id: 3
+        answer: двері
+        options:
+          - двері
+          - шкарпетки
+          - книжки
+      - id: 4
+        answer: родовий
+        options:
+          - родовий
+          - називний
+          - кличний
+      - id: 5
+        answer: грошей
+        options:
+          - грошей
+          - грошів
+          - грошам
+      - id: 6
+        answer: множині
+        options:
+          - множині
+          - однині
+          - чоловічому роді
+      - id: 7
+        answer: одні
+        options:
+          - одні
+          - один
+          - одна
+      - id: 8
+        answer: singularia tantum
+        options:
+          - singularia tantum
+          - орудний відмінок
+          - чергування приголосних
+    text: "Pluralia tantum - це іменники, що вживаються тільки у {1} і не мають нейтральної форми {2}. Наприклад, {3}, окуляри, ножиці. Особливо важливо знати {4} відмінок: дверей, {5}, воріт. Узгодження завжди стоїть у {6}: ці двері відчинені. Для одного комплекту кажемо {7} окуляри. Протилежна група - {8}, наприклад молоко або молодь."
+  - id: wb-8
+    type: translate
+    title: Перекладаємо граматично
+    instruction: Оберіть український варіант із правильною формою.
+    items:
+      - source: one pair of glasses
+        options:
+          - text: одні окуляри
+            correct: true
+          - text: один окуляри
+            correct: false
+        explanation: Для одного комплекту вживаємо "одні".
+      - source: I do not have money.
+        options:
+          - text: У мене немає грошей.
+            correct: true
+          - text: У мене немає грошів.
+            correct: false
+        explanation: Родовий відмінок - "грошей".
+      - source: The doors opened.
+        options:
+          - text: Двері відчинилися.
+            correct: true
+          - text: Двері відчинилася.
+            correct: false
+        explanation: Дієслово стоїть у множині.
+      - source: after the vacation
+        options:
+          - text: після канікул
+            correct: true
+          - text: після канікули
+            correct: false
+        explanation: Родовий відмінок - "канікул".
+      - source: with money
+        options:
+          - text: грошима
+            correct: true
+          - text: грошей
+            correct: false
+        explanation: Орудний відмінок - "грошима"; також "грішми".
+      - source: in the Carpathians
+        options:
+          - text: у Карпатах
+            correct: true
+          - text: у Карпаті
+            correct: false
+        explanation: '"Карпати" мають множинну форму.'
+      - source: new furniture
+        options:
+          - text: нові меблі
+            correct: true
+          - text: нова мебля
+            correct: false
+        explanation: '"Меблі" вимагають множини.'
+      - source: two pairs of scissors
+        options:
+          - text: дві пари ножиць
+            correct: true
+          - text: два ножиці
+            correct: false
+        explanation: Для точного рахунку використовуємо "пара".
+  - id: wb-9
+    type: fill-in
+    title: Орудний відмінок і варіанти
+    instruction: Вставте нормативну форму орудного відмінка.
+    items:
+      - sentence: "Не грюкай ____."
+        answer: дверима
+        options:
+          - дверима
+          - дверей
+          - дверям
+        explanation: "Орудний відмінок: дверима; рідше також дверми."
+      - sentence: "Вона розпорядилася ____ дуже обережно."
+        answer: грошима
+        options:
+          - грошима
+          - грошей
+          - грошам
+        explanation: "Орудний відмінок: грошима; також грішми."
+      - sentence: "Не все вимірюється ____."
+        answer: грішми
+        options:
+          - грішми
+          - грошей
+          - грошам
+        explanation: '"Грішми" - нормативний варіант орудного.'
+      - sentence: "Старий двір був закритий ____."
+        answer: воротами
+        options:
+          - воротами
+          - воріт
+          - воротам
+        explanation: "Орудний відмінок: воротами; також ворітьми."
+      - sentence: "У казці місто стояло за високими ____."
+        answer: ворітьми
+        options:
+          - ворітьми
+          - воріт
+          - ворота
+        explanation: '"Ворітьми" - нормативний варіант орудного.'
+      - sentence: "Він користувався новими ____."
+        answer: окулярами
+        options:
+          - окулярами
+          - окулярів
+          - окуляри
+        explanation: "Орудний відмінок: окулярами."
+      - sentence: "Обережно працюйте гострими ____."
+        answer: ножицями
+        options:
+          - ножицями
+          - ножиць
+          - ножиці
+        explanation: "Орудний відмінок: ножицями."
+      - sentence: "Пацієнт користується новими ____."
+        answer: ліками
+        options:
+          - ліками
+          - ліків
+          - ліки
+        explanation: "Орудний відмінок: ліками."
+  - id: wb-10
+    type: match-up
+    title: Як рахувати без помилки
+    instruction: Поєднайте ситуацію з природною українською фразою.
+    pairs:
+      - left: one pair of glasses
+        right: одні окуляри
+      - left: two pairs of glasses
+        right: дві пари окулярів
+      - left: one set of furniture
+        right: один комплект меблів
+      - left: two packages of medicine
+        right: дві упаковки ліків
+      - left: one pair of scissors
+        right: одні ножиці
+      - left: three pairs of scissors
+        right: три пари ножиць
+      - left: one gate
+        right: одні ворота
+      - left: two door units
+        right: двоє дверей
+  - id: wb-11
+    type: error-correction
+    title: Не плутати групи
+    instruction: Виправте речення й коротко подумайте, яка група іменника перед вами.
+    items:
+      - sentence: "Шкарпетки не має однини."
+        error: не має однини
+        correction: "мають однину: шкарпетка"
+        error_type: phrase
+        explanation: '"Шкарпетки" не є pluralia tantum, бо є "шкарпетка".'
+      - sentence: "Молодь прийшли на зустріч."
+        error: прийшли
+        correction: прийшла
+        error_type: word
+        explanation: '"Молодь" - singularia tantum, граматична однина.'
+      - sentence: "Дружби дуже важливі для людини."
+        error: Дружби дуже важливі
+        correction: Дружба дуже важлива
+        error_type: phrase
+        explanation: У нейтральному значенні "дружба" є singularia tantum.
+      - sentence: "Рукавиці є pluralia tantum."
+        error: є pluralia tantum
+        correction: не є pluralia tantum
+        error_type: phrase
+        explanation: Є однина "рукавиця".
+      - sentence: "Один гроші лежав у конверті."
+        error: Один гроші лежав
+        correction: Гроші лежали
+        error_type: phrase
+        explanation: '"Гроші" вимагають множини; кількість краще назвати сумою.'
+      - sentence: "Один комплект мебля стояв у кімнаті."
+        error: мебля
+        correction: меблів
+        error_type: word
+        explanation: "Після 'комплект' потрібен родовий множини: меблів."
+      - sentence: "Київ розташовані на Дніпрі."
+        error: розташовані
+        correction: розташований
+        error_type: word
+        explanation: '"Київ" має форму однини.'
+      - sentence: "Карпати красивий узимку."
+        error: красивий
+        correction: красиві
+        error_type: word
+        explanation: '"Карпати" мають множинну форму.'
