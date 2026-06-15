@@ -60,6 +60,14 @@
 
 ## ▶▶▶ SESSION 36 HANDOFF (2026-06-15 — THREE BIG WINS: (1) 6 folk dossiers #20–#25 (PR #3221); (2) **#3162 IMPLEMENTED + MERGED (#3237)** — module excerpt builder now embeds folk/seminar literary primaries; (3) **koliadky REBUILT → pedagogy 6.7→9.2** (first folk module to clear LLM-QG ≥8 with embedded primaries; PR #3250)) — **RESUME HERE**
 
+> **✅ SESSION 36 CLOSED OUT (2026-06-15) — all PRs MERGED to main, hygiene done:** #3237 (#3162 infra) ·
+> #3221 (6 dossiers + handoff) · #3250 (koliadky 9.2) · **#3265** (removed the CANCELLED Claude-lane sunset from
+> rules/docs/ADRs + untracked 69 `.claude/phases` deploy artifacts → `.claude/` now properly gitignored; MEMORY
+> #M0/#0 updated). All session worktrees reaped, branches cleaned; main clean, HEAD on main, 0 dispatches in
+> flight, **0 `.claude` files tracked**. **Claude dispatch lane is AVAILABLE again** (post-2026-06-15 sunset
+> CANCELLED; better quota construct TBD → claude-tools/claude reviewers unrestricted for folk culture).
+> **The ONE open epic = #3079** (pedagogy-converging loop, design-first — see NEXT ACTIONS). Everything else landed.
+>
 > **⏱ HONEST SCOPE:** Started as a research-layer dossier batch, became the folk-pedagogy UNLOCK. Three workstreams:
 > - **Dossiers 19 → 25/42** (PR #3221, CI-green): suspilno-pobutovi · narodni-balady · pisni-literaturnoho ·
 >   charivni-kazky · kazky-pro-tvaryn · sotsialno-pobutovi-kazky. All corpus-hammered, accumulated linearly.
