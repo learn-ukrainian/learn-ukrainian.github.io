@@ -32,3 +32,26 @@ sources:
   title: Мовний РОЗБІР. СИНТАКСИЧНИЙ РОЗБІР СКЛАДНОПІДРЯДНОГО
   page: 99
   grade: 9
+- id: S6
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1150
+  type: textbook
+  title: § 18. АКТИВНІ Й ПАСИВНІ ДІЄПРИКМЕТНИКИ
+  page: 58
+  grade: 11
+- id: S7
+  file: 7-klas-ukrmova-litvinova-2024_s3921
+  type: textbook
+  title: § 17. Активні й пасивні дієприкметники
+  page: 90
+  grade: 7
+- id: S8
+  file: >-
+    ukrainian_wiki/active-participles-past_Граматика-B2-Активні-дієприкметники-минулого-часу-Повна-парадигма-та-правила-творення
+  type: ukrainian_wiki
+  title: 'Граматика B2: Активні дієприкметники минулого часу'
+  section_path: 'Граматика B2: Активні дієприкметники минулого часу > Повна парадигма та правила творення'
+- id: S9
+  file: ukrainian_wiki/active-participles-present_Граматика-B2-Активні-дієприкметники-теперішнього-часу-Повна-парадигма
+  type: ukrainian_wiki
+  title: 'Граматика B2: Активні дієприкметники теперішнього часу'
+  section_path: 'Граматика B2: Активні дієприкметники теперішнього часу > Повна парадигма'
