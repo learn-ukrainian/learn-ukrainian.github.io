@@ -108,3 +108,46 @@ def test_admin_unknown_pr_fails_closed(monkeypatch):
 
 def test_admin_undeterminable_checks_fails_closed(monkeypatch):
     assert _run(monkeypatch, "gh pr merge 5 --admin", failing=None) == 2
+
+
+# --- _failing_blocking_checks: gh-output handling (fail-open regression) -----
+
+
+def _fake_gh(monkeypatch, *, returncode: int, stdout: str):
+    import types
+
+    def fake_run(*_a, **_k):
+        return types.SimpleNamespace(returncode=returncode, stdout=stdout, stderr="")
+
+    monkeypatch.setattr(guard.subprocess, "run", fake_run)
+
+
+def test_failing_checks_empty_output_with_error_rc_is_failclosed(monkeypatch):
+    # Regression: bogus/non-existent PR → gh errors with EMPTY stdout. Must be None
+    # (fail-closed), NOT [] — `json.loads("[]")` once silently read this as "no failing
+    # checks" and let the --admin bypass through.
+    _fake_gh(monkeypatch, returncode=1, stdout="")
+    assert guard._failing_blocking_checks("99999") is None
+
+
+def test_failing_checks_empty_output_with_ok_rc_is_no_checks(monkeypatch):
+    # PR genuinely has zero checks → rc 0, empty output → [] (nothing to bypass → allow).
+    _fake_gh(monkeypatch, returncode=0, stdout="")
+    assert guard._failing_blocking_checks("5") == []
+
+
+def test_failing_checks_reports_failing_non_advisory(monkeypatch):
+    rows = '[{"name":"Test (pytest)","bucket":"fail"},{"name":"pip-audit (advisory)","bucket":"fail"}]'
+    _fake_gh(monkeypatch, returncode=8, stdout=rows)
+    assert guard._failing_blocking_checks("5") == ["Test (pytest)"]
+
+
+def test_failing_checks_advisory_only_is_empty(monkeypatch):
+    rows = '[{"name":"pip-audit (advisory)","bucket":"fail"},{"name":"Test (pytest)","bucket":"pass"}]'
+    _fake_gh(monkeypatch, returncode=8, stdout=rows)
+    assert guard._failing_blocking_checks("5") == []
+
+
+def test_failing_checks_garbage_output_is_failclosed(monkeypatch):
+    _fake_gh(monkeypatch, returncode=0, stdout="not json")
+    assert guard._failing_blocking_checks("5") is None
