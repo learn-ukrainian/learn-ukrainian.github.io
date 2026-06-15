@@ -1,0 +1,33 @@
+- title: Заболотний Grade 6, p.47-55
+  role: textbook
+  notes: Планове джерело для родового відмінка чоловічих іменників, розподілу -а/-я та -у/-ю і харчових прикладів на зразок борщу, меду, хліба.
+  source_ref: Заболотний Grade 6, p.47-55
+- title: Заболотний Grade 8, p.22
+  role: textbook
+  notes: Планове джерело для функцій родового відмінка, зокрема часткового і кількісного значення.
+  source_ref: Заболотний Grade 8, p.22
+- title: Литвінова Grade 7, p.205
+  role: textbook
+  notes: Планове джерело для ситуативного мовлення, формул ввічливого прохання, замовлення і подяки.
+  source_ref: Литвінова Grade 7, p.205
+- title: Авраменко Grade 6, p.137
+  role: textbook
+  notes: "Планове джерело для словотвору прикметників від іменників у темі їжі: картопляний, м'ясний, грибний, молочний."
+  source_ref: Авраменко Grade 6, p.137
+- title: UNESCO Intangible Cultural Heritage - Culture of Ukrainian borscht cooking
+  role: website
+  url: https://ich.unesco.org/en/USL/culture-of-ukrainian-borscht-cooking-01852
+  notes: "Офіційне джерело для точної культурної довідки: Ukrainian borshch cooking culture is inscribed on the List of Intangible Cultural Heritage in Need of Urgent Safeguarding."
+  source_ref: UNESCO ICH USL 01852
+- title: Local B1 noun-subclasses-masculine module
+  role: curriculum
+  notes: Попередній B1.1 модуль для зв'язку з розподілом родового відмінка чоловічих іменників і моделлю -а/-у.
+  source_ref: curriculum/l2-uk-en/b1/noun-subclasses-masculine/module.md
+- title: Local B1 simplification-consonants module
+  role: curriculum
+  notes: Безпосередній сусідній модуль для стилю B1, VERIFY-коментарів, V2 activities і вкладок MDX.
+  source_ref: curriculum/l2-uk-en/b1/simplification-consonants/module.md
+- title: Goroh and Slovnyk.ua form checks
+  role: dictionary
+  notes: Використано для перевірки нормативних форм борщу, узвару, вареників, деруна, сметаною, пампушками, чайові, меню, кафе.
+  source_ref: goroh.pp.ua; slovnyk.ua
