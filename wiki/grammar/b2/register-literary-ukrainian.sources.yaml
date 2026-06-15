@@ -43,3 +43,21 @@ sources:
   title: ВСТУП ВСТУП
   page: 6
   grade: 7
+- id: S8
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1150
+  type: textbook
+  title: § 18. Активні й пасивні дієприкметники
+  page: 58
+  grade: 11
+- id: S9
+  file: 7-klas-ukrmova-avramenko-2024_s0128
+  type: textbook
+  title: Дієслівні форми на -но, -то
+  page: 115
+  grade: 7
+- id: S10
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1157
+  type: textbook
+  title: § 25. ПАСИВНІ КОНСТРУКЦІЇ
+  page: 81
+  grade: 11
