@@ -30,7 +30,6 @@ SEPARATORS = {"&&", "||", ";"}
 DISPLAY_FILE_COMMANDS = {"cat", "bat", "less", "head", "tail"}
 ENV_DUMP_COMMANDS = {"env", "printenv", "set"}
 GREP_COMMANDS = {"grep", "rg", "ugrep"}
-SECRET_FILE_EXTS = {"", ".conf", ".config", ".env", ".ini", ".json", ".key", ".rc", ".txt", ".yaml", ".yml"}
 SAFE_DOTENV_SUFFIXES = (".example", ".sample", ".template", ".dist")
 KNOWN_SECRET_VARS = {
     "ANTHROPIC_API_KEY",
@@ -60,7 +59,7 @@ def _command(payload: dict) -> str:
 
 def _tokenize(command: str) -> list[str]:
     try:
-        return shlex.split(command, posix=False)
+        return shlex.split(_strip_heredoc_bodies(command), posix=False)
     except ValueError:
         return []
 
@@ -77,6 +76,52 @@ def _is_single_quoted(token: str) -> bool:
 
 def _is_assignment(token: str) -> bool:
     return bool(_ASSIGNMENT_RE.match(_strip_quotes(token)))
+
+
+def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
+    try:
+        lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
+        lexer.whitespace_split = True
+        lexer.commenters = ""
+        tokens = list(lexer)
+    except ValueError:
+        return []
+
+    delimiters: list[tuple[str, bool]] = []
+    i = 0
+    while i < len(tokens):
+        if tokens[i] != "<<":
+            i += 1
+            continue
+        strip_tabs = False
+        j = i + 1
+        if j < len(tokens) and tokens[j] == "-":
+            strip_tabs = True
+            j += 1
+        if j < len(tokens):
+            delimiter = _strip_quotes(tokens[j])
+            if delimiter:
+                delimiters.append((delimiter, strip_tabs))
+        i = j + 1
+    return delimiters
+
+
+def _strip_heredoc_bodies(command: str) -> str:
+    if "<<" not in command:
+        return command
+
+    kept: list[str] = []
+    pending: list[tuple[str, bool]] = []
+    for line in command.splitlines():
+        if pending:
+            delimiter, strip_tabs = pending[0]
+            candidate = line.lstrip("\t") if strip_tabs else line
+            if candidate == delimiter:
+                pending.pop(0)
+            continue
+        kept.append(line)
+        pending.extend(_heredoc_delimiters(line))
+    return "\n".join(kept)
 
 
 def _pipelines(command: str) -> list[list[list[str]]]:
@@ -196,12 +241,6 @@ def _path_name(path: str) -> str:
     return clean.rsplit("/", 1)[-1].lower()
 
 
-def _path_ext(name: str) -> str:
-    if "." not in name or (name.startswith(".") and name.count(".") == 1):
-        return ""
-    return "." + name.rsplit(".", 1)[-1]
-
-
 def _is_dotenv_secret_file(path: str) -> bool:
     clean = _strip_quotes(path).lower()
     name = _path_name(clean)
@@ -226,11 +265,7 @@ def _is_known_secret_file(path: str) -> bool:
         return True
     if name.endswith(".env") or name.endswith(".pem"):
         return True
-    if name.startswith(".env.") and not name.endswith(SAFE_DOTENV_SUFFIXES):
-        return True
-    if "token" in name or "secret" in name:
-        return _path_ext(name) in SECRET_FILE_EXTS
-    return False
+    return name.startswith(".env.") and not name.endswith(SAFE_DOTENV_SUFFIXES)
 
 
 def _cut_is_key_only(args: list[str]) -> bool:
@@ -346,6 +381,10 @@ def _file_args(cmd: str, args: list[str]) -> list[str]:
     i = 0
     while i < len(args):
         token = _strip_quotes(args[i])
+        redirection_skip = _redirection_skip_count(token)
+        if redirection_skip:
+            i += redirection_skip
+            continue
         if token == "--":
             files.extend(args[i + 1 :])
             break
@@ -361,6 +400,21 @@ def _file_args(cmd: str, args: list[str]) -> list[str]:
         files.append(args[i])
         i += 1
     return files
+
+
+def _redirection_skip_count(token: str) -> int:
+    if token in {"<<", "<<-", "<", ">", ">>", "<>", ">|", "&>", "&>>", "<<<"}:
+        return 2
+    if token.startswith("<<"):
+        return 1
+    fd_trimmed = token.lstrip("0123456789")
+    if fd_trimmed in {"<", ">", ">>", "<>", ">|"}:
+        return 2
+    if fd_trimmed.startswith(("<", ">")):
+        return 1
+    if fd_trimmed.startswith("&>"):
+        return 1
+    return 0
 
 
 def _grep_has_safe_flag(cmd: str, args: list[str]) -> bool:
