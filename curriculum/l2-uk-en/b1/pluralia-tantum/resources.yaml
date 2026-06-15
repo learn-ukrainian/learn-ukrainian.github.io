@@ -1,0 +1,40 @@
+- title: Заболотний Grade 6, pp.90, 96, 112
+  role: textbook
+  notes: Планове джерело для категорії числа іменника, пояснення, чому множинні іменники не належать до I-IV відмін, і таблиць відмінювання типу окуляри, гроші, ворота.
+  source_ref: Заболотний Grade 6, pp.90, 96, 112
+- title: Авраменко Grade 6, p.108
+  role: textbook
+  notes: Планове джерело для розпізнавання іменників, що мають тільки форму множини, і для практики родового та орудного відмінків.
+  source_ref: Авраменко Grade 6, p.108
+- title: Литвінова Grade 6, p.134
+  role: textbook
+  notes: Планове джерело для контрасту між іменниками тільки в однині та тільки в множині.
+  source_ref: Литвінова Grade 6, p.134
+- title: Глазова Grade 10, p.185
+  role: textbook
+  notes: Планове джерело для семантичних груп singularia tantum і pluralia tantum.
+  source_ref: Глазова Grade 10, p.185
+- title: Авраменко Grade 10, p.164
+  role: textbook
+  notes: Планове джерело для тестових прикладів на розпізнавання pluralia tantum на зразок дріжджі, парфуми.
+  source_ref: Авраменко Grade 10, p.164
+- title: Вашуленко Grade 3, p.116
+  role: textbook
+  notes: Планове джерело для початкового пояснення множинних іменників через сани, окуляри, двері.
+  source_ref: Вашуленко Grade 3, p.116
+- title: Local B1 health-at-the-doctor module
+  role: curriculum
+  notes: Попередній B1 модуль для зв'язку з лексемою ліки і медичним контекстом.
+  source_ref: curriculum/l2-uk-en/b1/health-at-the-doctor/module.md
+- title: Local B1 simplification-consonants module
+  role: curriculum
+  notes: Сусідній завершений B1 модуль для структури clean Markdown, VERIFY comments, activity injection pattern, vocabulary and resources sidecars.
+  source_ref: curriculum/l2-uk-en/b1/simplification-consonants/module.md
+- title: Local B1 alternation-vowels module
+  role: curriculum
+  notes: Попередній морфонологічний модуль для зв'язку ворота - воріт із чергуванням голосних.
+  source_ref: curriculum/l2-uk-en/b1/alternation-vowels/module.md
+- title: Goroh and Slovnyk.ua form checks
+  role: dictionary
+  notes: Використано для перевірки нормативних форм дверей, дверима, дверми, грошей, грошима, грішми, воріт, воротами, ворітьми, ножиць, саней, саньми, санями, канікул, радощів.
+  source_ref: goroh.pp.ua; slovnyk.ua
