@@ -160,12 +160,32 @@
    fast-follow (main gate fixed). Then re-run `run_llm_qg_parity.py` on a folk module — pedagogical should lift
    off 6.7. **#3079** (module self-converge EPIC) = bigger architectural piece, still OPEN/unassigned — scope
    separately (route to infra orchestrator or a dedicated dispatch).
-3. **Surfacing folk: STILL GATED** — do NOT un-hide until a module cleanly clears LLM QG. Path is now CLEARER:
-   once #3237 promotes + a folk module is rebuilt with embedded primaries + re-reviewed PASS, the gate opens.
-   #3162 infra is DONE (item 2); #3079 (self-converge) still OPEN.
-4. **Remaining folk modules 6→42** — after #3237 promotes, rebuild a folk module (e.g. koliadky) to confirm the
-   literary primaries embed + lift pedagogical off 6.7 (the #3162 payoff). Gate EACH with
-   `verify_shippable --astro-build` + corpus-hammer; never python_qg alone.
+3. **🎯 USER-AGREED PEDAGOGY PLAN (2026-06-15) — the priority sequence. HARD GOAL: pedagogy ≥8 (aim 9).**
+   a. **MERGE #3237 first** (gates everything — v7_build has NO `--base`, builds off `origin/main`, so #3162
+      can't reach the build child until merged). Orchestrator promotes (re-pinged `needs=merge`) or user OKs.
+      Recommend a `/code-review` pass on the shared-pipeline diff at/before merge.
+   b. **#3079 = NEXT PRIORITY (user). Scope it to CONVERGE ON PEDAGOGY, not just pass gates.** ⚠ Critical design
+      risk: ADR-007 / `test_no_rewrite_contract.py` makes the reviewer a find/replace fixer (no regen) — that
+      CANNOT add a self-check / integrate an activity / weave in an embedded primary, which is what moves
+      pedagogy 6.7→8. So a naive "self-converge the gates" loop converges right back to 6.7. #3079 MUST: route
+      the LLM-QG **pedagogical** dim to a folk-competent reviewer (Claude/GPT — gemini BARRED for folk culture,
+      cf. wiki #3057); use best-round + MIN-regression-guard (cf. wiki #3054); and include a correction
+      mechanism that can do STRUCTURAL pedagogical work (likely a scoped pedagogical re-write pass — needs a
+      deliberate ADR-007 decision). Design it (Plan/design doc) before dispatching; it's a big shared-infra epic.
+   c. **PROOF-REBUILD koliadky** (precondition VERIFIED 2026-06-15: plan has 4 `type:primary` refs →
+      Слов'янська міфологія / Нарис історії культури / Історія укр. літератури / Чубинський; #3162 fallback WILL
+      fire — earlier positive proof resolved `61bfde21_c0000`). Recipe: `v7_build.py folk koliadky-shchedrivky
+      --worktree --writer claude-tools --reviewer codex-tools --effort xhigh` (folk reviewer = Claude/GPT, NOT
+      gemini), persistent Monitor on JSONL; on python_qg fail use the proven cross-model correction recipe
+      (Session 14). Then **measure pedagogy with `run_llm_qg_parity.py` (reviewer codex/claude)** + confirm the
+      дума/колядка primary actually EMBEDS in module.md. Corpus-hammer #M-11.
+   d. **REASSESS:** pedagogy ≥8? → sweep `type:primary` on the other folk plans + scale the rebuilds (cheap once
+      #3079 self-converges) + open the surfacing gate. <8 → read the llm_qg evidence, diagnose what pedagogy
+      still needs (activity integration? more primaries? writer/archetype prompt?), iterate before scaling.
+   **⏱ ROT NOTE:** the proof-rebuild is intelligence-sensitive + ~1h + (pre-#3079) a manual grind — run it at
+   FRESH context (Session 36 ended at ~700k+, past the #2 handoff line). Do NOT push it through rot.
+4. **Folk dossier queue continues in parallel** (unblocked content): #26 `narodni-lehendy` → #27 `istorychni-
+   perekazy` → … (`phase-folk-queue.md`, now 25/42). Same proven loop. Surfacing stays HIDDEN until 3(d) passes.
 
 ### ⚠ CARRY-FORWARD
 - PR opened, NOT self-merged (agent-type contract; orchestrator promotes). Handoff bundled in the PR.
