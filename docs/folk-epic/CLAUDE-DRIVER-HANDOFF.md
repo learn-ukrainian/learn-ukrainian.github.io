@@ -146,17 +146,26 @@
    narod prose verbatim) → codex/gpt-5.5 `--worktree --base codex/folk-dossier-suspilno-pobutovi` (the batch
    branch, OR a fresh branch off main once #3221 merges) → independent corpus-hammer (#M-11, re-run
    verify_quote myself) → accumulate (ff/cherry-pick) → push.
-2. **INFRA (user decision pending):** I recommended to the user that I implement **#3162's infra side**
-   (route `_build_textbook_excerpt_context` ~L1775 to the literary corpus, mirror #2973; + non-word-counted
-   reading panel) — the concrete folk-pedagogy unlock now the corpus side is done (precedent: #3083 Session 22
-   override). Awaiting their explicit go (crosses the file-don't-implement boundary). **#3079** (module
-   self-converge EPIC) = bigger, route to infra orchestrator. Both still OPEN/unassigned/zero-movement.
-2. **Surfacing folk: STILL GATED** — do NOT un-hide until a module cleanly clears LLM QG (needs #3162 infra-side
-   + a re-grounded re-review). Both #3079 + #3162 OPEN, infra lane — I track, do not implement.
-3. **#3162 corpus side DONE** (S35); INFRA side (route `_build_textbook_excerpt_context` to the literary corpus
-   + non-word-counted reading panel) is infra-lane. Coordinate with the infra orchestrator; once it lands, folk
-   modules can embed the primaries → re-run `run_llm_qg_parity.py`; pedagogical should lift off 6.7.
-4. **Remaining folk modules 6→42** — gate EACH with `verify_shippable --astro-build` + corpus-hammer; never python_qg alone.
+2. **#3162 INFRA SIDE — DONE (user authorized "do infra if it makes sense"). PR #3237, CI-GREEN, awaiting
+   orchestrator promotion.** `_build_textbook_excerpt_context` now routes seminar/folk PRIMARY refs (textbook-
+   miss + `level∈SEMINAR_LEVELS` + ref `type:primary`) to `literary_texts` via `_search_literary_hits` (mirrors
+   the existing `search_sources` filter pattern); emits a labeled "Primary text (literary corpus)" block +
+   chunk_id; clears `corpus_missing`. Part B: `<!-- PRIMARY-READING -->` fences excluded from `_word_count_gate`.
+   Driver-verified (#M-11, NOT codex's word): folk koliadky now resolves `61bfde21_c0000` (Народна творчість);
+   `folk`∈SEMINAR_LEVELS confirmed; **core a1–c2 byte-identical BY CONSTRUCTION** (new branch unreachable for
+   non-seminar) + codex's 6-core-plan empty-diff proof; ruff CI ✓; **pytest CI ✓ (5m50s)**; mergeState CLEAN.
+   SHARED pipeline infra → NOT self-merged (agent contract). **NEXT on promote:** (a) `/code-review` pass
+   before merge (gate-logic change; best done at fresh context); (b) ensure folk plans mark primary refs with
+   `type: primary` (koliadky has it — sweep the rest so the fallback fires); (c) Part-B per-section counter is a
+   fast-follow (main gate fixed). Then re-run `run_llm_qg_parity.py` on a folk module — pedagogical should lift
+   off 6.7. **#3079** (module self-converge EPIC) = bigger architectural piece, still OPEN/unassigned — scope
+   separately (route to infra orchestrator or a dedicated dispatch).
+3. **Surfacing folk: STILL GATED** — do NOT un-hide until a module cleanly clears LLM QG. Path is now CLEARER:
+   once #3237 promotes + a folk module is rebuilt with embedded primaries + re-reviewed PASS, the gate opens.
+   #3162 infra is DONE (item 2); #3079 (self-converge) still OPEN.
+4. **Remaining folk modules 6→42** — after #3237 promotes, rebuild a folk module (e.g. koliadky) to confirm the
+   literary primaries embed + lift pedagogical off 6.7 (the #3162 payoff). Gate EACH with
+   `verify_shippable --astro-build` + corpus-hammer; never python_qg alone.
 
 ### ⚠ CARRY-FORWARD
 - PR opened, NOT self-merged (agent-type contract; orchestrator promotes). Handoff bundled in the PR.
