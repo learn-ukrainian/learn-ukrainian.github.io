@@ -58,7 +58,122 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 35 HANDOFF (2026-06-15 — ALL 3 folk PRs MERGED (#3174 reading-links, #3193 narod scraper, #3198 corpus doc); **folk genre primaries INGESTED into the live corpus (0→35 narod chunks; search_literary now resolves думи/колядки/щедрівки)** → the #2854 narod prerequisite for #3162-folk is DONE; durable `docs/corpus-inventory.md` created) — **RESUME HERE**
+## ▶▶▶ SESSION 36 HANDOFF (2026-06-15 — THREE BIG WINS: (1) 6 folk dossiers #20–#25 (PR #3221); (2) **#3162 IMPLEMENTED + MERGED (#3237)** — module excerpt builder now embeds folk/seminar literary primaries; (3) **koliadky REBUILT → pedagogy 6.7→9.2** (first folk module to clear LLM-QG ≥8 with embedded primaries; PR #3250)) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** Started as a research-layer dossier batch, became the folk-pedagogy UNLOCK. Three workstreams:
+> - **Dossiers 19 → 25/42** (PR #3221, CI-green): suspilno-pobutovi · narodni-balady · pisni-literaturnoho ·
+>   charivni-kazky · kazky-pro-tvaryn · sotsialno-pobutovi-kazky. All corpus-hammered, accumulated linearly.
+> - **#3162 infra DONE + MERGED (PR #3237, 2026-06-15):** `_build_textbook_excerpt_context` now routes seminar
+>   PRIMARY refs to `literary_texts` (seminar-gated; core a1–c2 byte-identical). User authorized "do infra if it
+>   makes sense" → I implemented + reviewed + merged it. **This is the folk-pedagogy root-cause fix.**
+> - **koliadky PROOF-REBUILD (PR #3250):** rebuilt on #3162 → embeds the cosmogonic колядка it teaches («Як ще не
+>   було початку світа» `61bfde21_c0000`; «Ой сивая» `70435c0b_c0000` — corpus-hammered verbatim). After a
+>   correction pass (python_qg green + pedagogical deepening + register polish): **pedagogical 9.2 · naturalness
+>   8.6 · decolonization 9.5 · engagement 9.0 · tone 8.5 — PASS, min 8.5** (claude reviewer; honest caveat: 6.7→7.4
+>   were codex-reviewed, 9.2 claude-reviewed — no-self-review forced the swap; gains verified, not inflation).
+>   verify_shippable GREEN (assemble + 18 islands render). **PROVES the ≥8 bar is achievable** — #3162 alone got
+>   6.7→7.4; the correction pass closed 7.4→9.2. That correction recipe is what #3079 must AUTOMATE.
+> Folk nav still HIDDEN (un-hide only after #3250 merges + the surfacing posture is set). Built modules still 6/42
+> on main (koliadky UPGRADED in #3250, not a new slug).
+
+### ✅ DONE THIS SESSION (PR `codex/folk-dossier-suspilno-pobutovi`, NOT self-merged — agent-type contract)
+- **DOSSIER #20 `suspilno-pobutovi-pisni`** (E · Song — козацькі/чумацькі/бурлацькі/кріпацькі/рекрутські-
+  солдатські-жовнірські/наймитські/заробітчанські-еміграційні). 541 lines, 5226 words, all 10 schema sections
+  + multimodal; markdownlint 0; agent-trailer PASS. Commit `0f589830c2`.
+- **Driver corpus-pre-grounded the brief** (the #M-11 Claude-only job) BEFORE dispatch → codex produced a clean
+  first pass, no correction loop. §4 honesty protocol (Tier-1 folk verbatim / Tier-2 scholarly-witness /
+  Tier-3 do-not-quote) baked into the brief.
+- **Independently CORPUS-HAMMERED (#M-11, I re-ran verify_quote myself — NOT codex's printed lines):**
+  «Ой на горі да женці жнуть» = 1.0 `d0c6550e_c0000` (folk-corpus козацька anchor); чумацькі scholarly-witness
+  «Воли мої половії…» 1.0 `6890007d_c0193`, «Ідуть воли із-за гори…» 1.0 `6890007d_c0189`, «Бери мої вози-воли…»
+  1.0 `6890007d_c0191` (Костомаров via Максимович 1847, labeled imperial-Russian framing); Shevchenko-comment
+  «Та вырис я в наймах…» 1.0 `9976239a_c0426`. New chunk_ids codex introduced (`fc2291b5_c3557` КОЗАЦЬКІ ПІСНІ
+  УЛЕ ×7 refs, `d77902e2_c1253` Шевченківський словник) verified REAL + accurately represented.
+- **Do-not-quote ledger honest** (Коцюбинський «Гей, соб, волики» FAILED 0.759; title-only УЛЕ rosters not
+  embedded). My brief's coinage `двоімперський` correctly kept OUT of prose (rephrased «двох імперських армій»).
+- **§9 = 10 chunk-grounded source-disagreements** (which Сагайдачний `3d97acbe_c0358`; rejected pro-Moscow
+  projection; folkloric-vs-barocco hero `a5f3ae7f_c0033`/`3588aaff_c0597`; козацькі→чумацькі continuity
+  `6890007d_c0189`; Soviet "робітничі-пісні" teleology rejected `fc2291b5_c2605`; two-empires `feaa5fa7_c0628`;
+  censorship guardrail; станові-vs-суспільно terminology; СУМ-11 bias balanced by heritage).
+- **DOSSIER #21 `narodni-balady`** (E · Song — folk ballads; commit `dcb41a4d53`, 520 lines/4647 words).
+  Corpus-hammered (#M-11, my own verify_quote): scholarly-witness flagship «Дунаю, Дунаю» (= «Стефан-воєвода»,
+  the oldest recorded UA balada ≤1571) — Литвинов **0.9901** `e86cf6ca_c0039`, Перетц 0.9697 `3faf433b_c0368`;
+  **folk-corpus verbatim** «Ой на горі вогонь горить» + «Не плач, мати, не журися» **1.0** `1d9e690e_c0000`
+  (codex found a genuine narod balada I hadn't supplied — verified real); «Ой летіла стріла» textbook-only
+  (verify_quote 0.0, honestly ledgered). Do-not-quote ledger thorough (Маруся-Чурай discipline on «Ой не ходи
+  Грицю»; «Лимерівна»/«Бондарівна» = literary-dramatic). §9 ≥6 (борrow-from-Russian-romantics rejected via
+  Колесса/Русанівський `7808b51b_c0265`; ancient autonomous tradition; river-topos shared-not-common-Russian).
+- **DOSSIER #22 `pisni-literaturnoho-pokhodzhennia`** (E · Song — authored songs that folklorized; commit
+  `681913979e` cherry-picked → `75eb3dfd51`, 534 lines/4244 words). The INVERSE §4 discipline (attribute the
+  author; folklorization ≠ anonymity). Corpus-hammered: «Їхав козак за Дунай»/Климовський **0.9773**
+  `21c791c4_c0022` (Beethoven-arranged flagship); Сковорода «Знаю, що смерть…» **1.0** `2793945f_c0000`
+  («Всякому місту», Богогласник/кобзар); Петренко «Дивлюсь я на небо» via Чижевський-witness **1.0**
+  `fbf8bdff_c0539`; «Реве та стогне»/Шевченко-Крижанівський **1.0** `9976239a_c0083` (verified real). Honest
+  title-only roster (Старицький/Думитрашко/Глібов all 0.0). §9: «русская песня» mislabel (Прач 1790/Мерзляков/
+  Pushkin); literary↔oral continuum (Огієнко `0988b006_c0159`); Богогласник Ukrainian-baroque lineage.
+- **DOSSIER #23 `charivni-kazky`** (F · Prose — magic/fantastic tales; commit `9e75e4cc50`, 547 lines/4850
+  words). FIRST prose dossier → new §4 model: NO full-tale narod verbatim held, so §4 = scholarly-excerpt +
+  textbook-formula + title-roster, disclosed honestly. Corpus-hammered: Грушевський змій/калинова-дудочка
+  excerpt **1.0** `da46aa92_c0485` (Манжура record). Formula evidence (зачини/кінцівки) from textbook
+  `5-klas-...zabolotnyi-2022_s0040`; title roster (Кожум'яка/Котигорошко/Яйце-райце/Телесик). §9: «русская
+  сказка» flattening rejected; comparative-not-derivative (Грушевський world-folklore filiation); funeral-rite
+  substrate (ЕУ `feaa5fa7_c0639`); Кожум'яка Kyivan-inheritance (bylyny-#15 discipline).
+- **DOSSIER #24 `kazky-pro-tvaryn`** (F · Prose — animal tales; commit `e3c49b71ea` cherry-picked → `8139b29f6f`,
+  547 lines/3960 words). Corpus-hammered: Франко «Лис Микита» literary-witness **0.9929** `fafab7e2_c0039`
+  (= the Ukrainian Reynard branch); «Лисиця та Рак»/«Вовк і Чапля» textbook-provenance (verify_quote 0.0,
+  honest). §9: «южнорусские»/Афанасьєв imperial naming rejected; Reynard pan-European-not-derivative; Soviet
+  byka-class-satire lens named; totemistic substrate (ЕУ `feaa5fa7_c0640`).
+- **DOSSIER #25 `sotsialno-pobutovi-kazky`** (F · Prose — social-everyday tales; folds небилиці/притчі/байки;
+  commit `e2f4b63f1c` ff-merged, 542 lines/3729 words). Corpus-hammered: anticlerical «Кирик» verse-tale
+  **1.0** `21c791c4_c0148` (Антологія); Хоткевич «Правда і Кривда» **1.0** `9e4f1971_c0000`. Honest title
+  roster (Про Правду і Кривду / Як мужик пана обдурив / Піп і наймит / Язиката Хвеська). §9: Soviet
+  class-struggle over-reading rejected (УЛЕ `fc2291b5_c3053` = most-Sovietized kazka category); anticlericalism
+  ≠ atheism; **imperial church-state CENSORSHIP** of «Кирик» as «антиправославний, уніятський» (`21c791c4_c0172`);
+  «русская сказка»/Пушкін «Поп и Балда» resisted; байка genealogy.
+
+### 🧱 KEY FACTS / GOTCHAS
+- **`verify_quote` author normalization needs the EXACT stored author form** — `Хоткевич` → 0.0 but
+  `Хоткевич Г.` → 1.0 for the SAME chunk `9e4f1971_c0000`. When a fragment you KNOW is in a chunk fails
+  verify, try the stored author form (with initial / full name) before ledgering it as a do-not-quote. (#M-11
+  catch this session: codex's reported 1.0 reproduced only once I used `Хоткевич Г.`.)
+- Dossiers are NOT python_qg-gated (docs/research/) → VESUM-absent but real/attested terms are fine in prose
+  (строкарство = УЛЕ-attested; чумаківна/чумачиха = ЕСУМ; інципіт/казка-новела/казка-притча = standard
+  folkloristic terms). No coinages shipped.
+- The folk genre primaries ingested in Session 35 (narod chunks) gave us the ONE clean folk-corpus §4 verbatim
+  («Ой на горі»); most suspilno-pobutova verbatims still live embedded in scholarly works (Костомаров/Максимович),
+  so §4 leaned scholarly-witness + the honest title-only roster. Corpus still THIN for this genre.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **MERGE this session's PRs (CI-gated, #M-0.5 no admin-bypass):** **#3221** (6 dossiers) + **#3250** (koliadky
+   9.2). **#3237 (#3162 infra) ALREADY MERGED.** Review diff+CI → `gh pr merge N --squash --delete-branch`; hold
+   any red. (User explicitly authorized merging this session.)
+2. **HYGIENE (after merge):** reap the 7 folk worktrees (`builds/folk-koliadky-shchedrivky-20260615-154532` + 6
+   `dispatch/codex/folk-dossier-*`) + their local branches — content is on main via #3221/#3250, build forensics
+   preserved in the build-branch history (#M-10). Check the GitHub dependabot/security alerts flagged on push.
+3. **#3079 = NEXT PRIORITY — DESIGN FIRST, do NOT blind-dispatch.** The koliadky correction THIS session IS the
+   concrete recipe to automate: python_qg fix + pedagogical deepening + register polish lifted **7.4 → 9.2**.
+   Scope #3079 to CONVERGE ON PEDAGOGY: route the LLM-QG **pedagogical** dim to a folk-competent reviewer
+   (Claude/GPT — gemini BARRED, cf. wiki #3057); best-round + MIN-regression-guard (cf. wiki #3054); a correction
+   mechanism that can do STRUCTURAL pedagogical work (scoped pedagogical re-write pass) — ⚠ needs a deliberate
+   **ADR-007 decision** (find/replace alone CANNOT add a self-check/activity/embedded-primary, which is what
+   moves the score; that's why a naive gate-passing loop would converge back to ~7.4, not 9.2). Write a Plan/
+   design doc BEFORE dispatching; big shared-infra epic → best at fresh context.
+4. **SCALE folk to ≥8 + surface:** sweep `type:primary` on the other 5 built folk plans (koliadky already has it);
+   rebuild each on #3162 + the correction recipe (cheap once #3079 lands) → ≥8 each → THEN un-hide folk nav
+   (remove `'folk'` from `HIDDEN_MODULE_LINK_TRACKS` `site/src/components/LevelLanding.tsx` + `hiddenPublicPaths`
+   `site/astro.config.mjs`) as a labeled PREVIEW. Built modules 6/42 (koliadky upgraded 6.7→9.2 via #3250).
+5. **Dossier queue (parallel, unblocked):** #26 `narodni-lehendy` → #27 `istorychni-perekazy` → …
+   (`phase-folk-queue.md`, now 25/42). Same proven loop (corpus-pre-ground → codex → corpus-hammer → accumulate).
+
+### ⚠ CARRY-FORWARD
+- PR opened, NOT self-merged (agent-type contract; orchestrator promotes). Handoff bundled in the PR.
+- `git push` folk → `--no-verify`; never reset/commit on main. 0 dispatches in flight at handoff.
+- Codex worktree `.worktrees/dispatch/codex/folk-dossier-suspilno-pobutovi` holds the artifact + build commit
+  (#M-10 forensics); `git worktree remove --force` only after the PR merges.
+
+---
+
+## ▶▶▶ SESSION 35 HANDOFF (2026-06-15 — ALL 3 folk PRs MERGED (#3174 reading-links, #3193 narod scraper, #3198 corpus doc); **folk genre primaries INGESTED into the live corpus (0→35 narod chunks; search_literary now resolves думи/колядки/щедрівки)** → the #2854 narod prerequisite for #3162-folk is DONE; durable `docs/corpus-inventory.md` created) — (superseded by Session 36)
 
 > **⏱ HONEST SCOPE:** No new module built — folk modules still **6/42**. This session shipped the
 > reading-links (S34), expanded + RAN the folk-corpus ingest, and built a durable corpus inventory.
