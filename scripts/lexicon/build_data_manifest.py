@@ -311,12 +311,13 @@ def _atlas_record_for_manifest(rec: dict, taught_lemma_keys: set[str]) -> dict |
         )
         return canonicalized
 
-    # Auto-generated VESUM aliasing: fold an unambiguous inflected form into its lemma, but
-    # ONLY when that lemma is already taught (no new pages) — same non-destructive contract
-    # as the vocative mapping above. The map is pre-gated (single VESUM lemma; form != lemma;
-    # lemma taught); the taught re-check keeps it safe if the map drifts from the vocab.
+    # Auto-generated VESUM aliasing: fold an inflected form into its lemma. The committed map
+    # is the authority — it is pre-gated by generate_vesum_aliases (unambiguous single VESUM
+    # lemma, OR homograph resolved to its sole taught candidate; form != lemma; functional
+    # interjections excluded). Folding to a lemma NOT yet taught CREATES that lemma page via
+    # _merge_lemma_records (tranche 2 "create-page" cases, e.g. вареники→вареник).
     alias_target = VESUM_INFLECTION_ALIASES_BY_KEY.get(key)
-    if alias_target and _lemma_key(alias_target) in taught_lemma_keys:
+    if alias_target:
         aliased = dict(rec)
         aliased["lemma"] = alias_target
         aliased["source"] = "built_vocabulary_normalized"
@@ -324,7 +325,7 @@ def _atlas_record_for_manifest(rec: dict, taught_lemma_keys: set[str]) -> dict |
             kind="vesum_inflection_to_lemma",
             source_lemma=display_lemma,
             target_lemma=alias_target,
-            reason="VESUM: unambiguous inflected form folded into already-taught lemma.",
+            reason="VESUM: inflected form folded into its lemma (lemma page created if new).",
         )
         return aliased
 
