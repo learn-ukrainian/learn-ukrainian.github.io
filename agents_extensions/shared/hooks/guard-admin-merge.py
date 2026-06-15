@@ -117,8 +117,18 @@ def _failing_blocking_checks(pr: str) -> list[str] | None:
             text=True,
             timeout=20,
         )
-        rows = json.loads(out.stdout or "[]")
     except Exception:
+        return None
+    text = (out.stdout or "").strip()
+    if not text:
+        # Empty output is ambiguous: a PR with zero checks (rc 0 → allow, nothing to
+        # bypass) vs a gh error / non-existent PR (rc != 0 → fail-CLOSED block). Without
+        # the returncode check, `json.loads("[]")` silently reads an *error* as "no
+        # failing checks" and lets the bypass through — the fail-open bug this closes.
+        return [] if out.returncode == 0 else None
+    try:
+        rows = json.loads(text)
+    except json.JSONDecodeError:
         return None
     if not isinstance(rows, list):
         return None
