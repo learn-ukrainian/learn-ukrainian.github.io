@@ -2,37 +2,37 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1234
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0271
   type: textbook
   title: § 43. Стилістичні особливості засобів словотвору
   page: 189
   grade: 11
 - id: S2
-  file: 10-klas-ukrmova-karaman-2018_s0664
+  file: 10-klas-ukrmova-karaman-2018_s0243
   type: textbook
-  title: МОРФЕМІКА І СЛОВОТВІР (p. 136)
+  title: Морфеміка і словотвір. Книжні словотвірні суфікси
   page: 136
   grade: 10
 - id: S3
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1183
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0250
   type: textbook
-  title: § 50. СТИЛІСТИЧНІ ЗАСОБИ СЛОВОТВОРУ
+  title: § 50. Стилістичні засоби словотвору
   page: 177
   grade: 11
 - id: S4
-  file: 6-klas-ukrmova-golub-2023_s3258
+  file: 6-klas-ukrmova-golub-2023_s0016
   type: textbook
-  title: § 35. Як розумно витрачати,
-  page: 91
+  title: Суфікси -инн-, -ив-, -ев-, -єв-, -ов-
+  page: 17
   grade: 6
 - id: S5
-  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1799
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0034
   type: textbook
-  title: РОЛЬ СУФІКСА
-  page: 31
+  title: Конкретні й абстрактні іменники
+  page: 36
   grade: 4
 - id: S7
-  file: 6-klas-ukrmova-litvinova-2023_s3319
+  file: 6-klas-ukrmova-litvinova-2023_s0087
   type: textbook
   title: § 15. Основні способи словотворення
   page: 80

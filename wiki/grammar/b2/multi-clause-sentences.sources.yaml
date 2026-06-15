@@ -2,44 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5162
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0232
   type: textbook
-  title: Синтаксис. Пунктуацiя
-  page: 25
+  title: Складне речення з різними видами сполучникового й безсполучникового зв'язку
+  page: 165
   grade: 9
 - id: S2
-  file: 9-klas-ukrmova-zabolotnyi-2017_s5223
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0233
   type: textbook
-  title: Синтаксис. Пунктуацiя
-  page: 25
+  title: § 29. Складне речення із сурядним і підрядним зв'язком
+  page: 166
   grade: 9
 - id: S3
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5173
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0094
   type: textbook
-  title: § 13. УЗАГАЛЬНЕННЯ ВИВЧЕНОГО З ТЕМИ
+  title: § 13. Узагальнення вивченого з теми «Складносурядне речення»
   page: 68
   grade: 9
 - id: S5
-  file: 9-klas-ukrajinska-mova-voron-2017_s5119
+  file: 9-klas-ukrajinska-mova-voron-2017_s0172
   type: textbook
-  title: ЗРАЗОК УСНОГО РОЗБОРУ (p. 143)
-  page: 143
+  title: Складні речення із сурядним і підрядним зв'язком
+  page: 131
   grade: 9
 - id: S6
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5194
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0246
   type: textbook
-  title: Рiзнi види зв’язку (p. 174)
+  title: Складне речення із сполучниковим і безсполучниковим зв'язком
   page: 174
   grade: 9
 - id: S8
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5187
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0232
   type: textbook
-  title: § 24. БЕЗСПОЛУЧНИКОВЕ СКЛАДНЕ РЕЧЕННЯ
-  page: 136
+  title: Складне речення з різними видами зв'язку
+  page: 165
   grade: 9
-- id: S9
-  file: ext-article-0
-  type: external
-  title: Синтаксис української мови — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
-  domain: uk.wikipedia.org
+- id: S10
+  file: 9-klas-ukrajinska-mova-voron-2017_s0173
+  type: textbook
+  title: Кома при спільній підрядній частині
+  page: 132
+  grade: 9
+- id: S11
+  file: 10-klas-ukrmova-karaman-2018_s0339
+  type: textbook
+  title: Невластивість активних дієприкметників українській мові
+  page: 191
+  grade: 10
+- id: S12
+  file: 7-klas-ukrmova-zabolotnyi-2024_s0096
+  type: textbook
+  title: Активні дієприкметники теперішнього часу
+  page: 97
+  grade: 7

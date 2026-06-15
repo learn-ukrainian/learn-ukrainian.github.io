@@ -2,38 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3397
+  file: 6-klas-ukrmova-zabolotnyi-2020_s0182
   type: textbook
-  title: § 55. ВІДМІНЮВАННЯ ТА НАПИСАННЯ
+  title: § 55. Відмінювання та написання порядкових числівників
   page: 179
   grade: 6
 - id: S2
-  file: 6-klas-ukrmova-golub-2023_s3269
+  file: 6-klas-ukrmova-golub-2023_s0169
   type: textbook
   title: § 61. Математика і мистецтво поруч
   page: 166
   grade: 6
 - id: S3
-  file: 6-klas-ukrmova-golub-2023_s3268
+  file: 6-klas-ukrmova-golub-2023_s0158
   type: textbook
   title: § 59. Як не стати марнотратами
   page: 155
   grade: 6
 - id: S4
-  file: 10-klas-ukrmova-karaman-2018_s0682
+  file: 10-klas-ukrmova-karaman-2018_s0306
   type: textbook
   title: § 68. Відмінювання числівників
   page: 171
   grade: 10
 - id: S6
-  file: 6-klas-ukrmova-litvinova-2023_s3364
+  file: 6-klas-ukrmova-litvinova-2023_s0237
   type: textbook
   title: § 50. Відмінювання числівників
   page: 230
   grade: 6
 - id: S8
-  file: 6-klas-ukrmova-avramenko-2023_s3093
+  file: 6-klas-ukrmova-avramenko-2023_s0164
   type: textbook
-  title: § 79. Розряди кількісних числівників
-  page: 155
+  title: § 80-81. Відмінювання числівників на позначення цілих чисел
+  page: 156
   grade: 6
+- id: S9
+  file: 6-klas-ukrlit-kovalenko-2023_s0172
+  type: textbook
+  title: Мені 176 ваших земних років
+  page: 171
+  grade: 6
+- id: S10
+  file: 2-klas-ukrmova-bolshakova-2019-1_s0007
+  type: textbook
+  title: Етикетні формули для друзів і дорослих
+  page: 6
+  grade: 2
+- id: S11
+  file: 2-klas-ukrmova-bolshakova-2019-2_s0023
+  type: textbook
+  title: Велика буква в прізвищах, іменах, по батькові
+  page: 22
+  grade: 2
