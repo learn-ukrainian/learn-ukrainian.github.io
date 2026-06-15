@@ -1,5 +1,6 @@
 import json
 import sqlite3
+import typing
 
 import pytest
 
@@ -930,13 +931,16 @@ def test_fetch_slovnyk_entry_raises_transient_for_5xx(monkeypatch) -> None:
     class FakeResponse:
         status_code = 503
         text = ""
+        headers: typing.ClassVar[dict] = {}
 
         def raise_for_status(self) -> None:
             raise AssertionError("5xx should be classified before raise_for_status")
 
     monkeypatch.setattr(enrich_manifest_module, "_polite_slovnyk_delay", lambda: None)
+    monkeypatch.setattr(enrich_manifest_module.time, "sleep", lambda *_: None)
     monkeypatch.setattr(enrich_manifest_module.requests, "get", lambda *args, **kwargs: FakeResponse())
 
+    # 5xx now retries with backoff, then raises transient after exhausting retries (#3097).
     with pytest.raises(_SlovnykTransientError):
         enrich_manifest_module._fetch_slovnyk_entry("тест", "тест", "newsum")
 
@@ -946,6 +950,7 @@ def test_fetch_slovnyk_entry_raises_transient_for_connection_error(monkeypatch) 
         raise enrich_manifest_module.requests.ConnectionError("connection timed out")
 
     monkeypatch.setattr(enrich_manifest_module, "_polite_slovnyk_delay", lambda: None)
+    monkeypatch.setattr(enrich_manifest_module.time, "sleep", lambda *_: None)
     monkeypatch.setattr(enrich_manifest_module.requests, "get", fake_get)
 
     with pytest.raises(_SlovnykTransientError):

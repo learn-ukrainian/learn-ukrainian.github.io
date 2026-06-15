@@ -1,5 +1,5 @@
 {
-  "fingerprint": "e872901ea85965bc10974da75c52308d2647c5b1e2339482a19f1b5cf6840ab9",
+  "fingerprint": "2e7082d706555ff9b53467456cda2659de50f3ffaca884d0e47717e8c8d4aa0b",
   "inputs": {
     "lexicon_code": [
       {
@@ -19,6 +19,10 @@
         "sha256": "239667a7428d1d899443063169d4128cb13a034e4ba9af006edfb6ebd6da253f"
       },
       {
+        "path": "scripts/lexicon/build_slovnyk_mirror.py",
+        "sha256": "065227dcaf26e86bc839ddb75a83a511459c410734adecd8beb3820bd5741231"
+      },
+      {
         "path": "scripts/lexicon/calque_corrections.py",
         "sha256": "4c900cb2dfcd64412c8c9a225f1e75393c30bef780306b0da926985698e747fb"
       },
@@ -32,7 +36,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "79fc8a23afca4fcae91d29dcb4609793e8daf9046d4825b3c0513fa137733cb5"
+        "sha256": "d08a0227aa4118f967b6d863d21ed66aa5043dea623027cfaf6814fd19a660af"
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
@@ -55,6 +59,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 12
+    "lexicon_code_files": 13
   }
 }
