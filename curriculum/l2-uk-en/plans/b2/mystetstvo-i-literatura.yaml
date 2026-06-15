@@ -2,7 +2,15 @@ module: b2-090
 level: B2
 sequence: 90
 slug: mystetstvo-i-literatura
-version: 1.1.2
+version: 1.1.3
+lifecycle: locked
+reviewed_at: '2026-06-15T09:44:19Z'
+reviewed_by: codex/b2-wiki-readiness-batch-4
+review_notes: >-
+  Batch 4 B2 wiki-readiness lock. Removed only source-backed VERIFY debt,
+  refreshed source registry chunk IDs, corrected the passive-participle aspect
+  claim, and corrected the -но/-то instrumental-agent example. See
+  wiki/.reviews/grammar/b2/mystetstvo-i-literatura-review-LOCKED.md.
 title: 'Мистецтво і література: Дзеркало душі'
 subtitle: 'Мистецтво та література: дзеркало душі'
 focus: literature
@@ -11,11 +19,11 @@ word_target: 4000
 objectives:
 - Ознайомитися з основними напрямами українського мистецтва та літератури XX-XXI
   століть.
-- Навчитися аналізувати художні твори, використовуючи літературознавчу та 
+- Навчитися аналізувати художні твори, використовуючи літературознавчу та
   мистецтвознавчу термінологію.
-- Відпрацювати навички написання критичних відгуків та есе на культурну 
+- Відпрацювати навички написання критичних відгуків та есе на культурну
   тематику.
-- Обговорити роль мистецтва у формуванні національної ідентичності та під час 
+- Обговорити роль мистецтва у формуванні національної ідентичності та під час
   війни.
 reading_situations:
 - source_type: художній уривок
@@ -25,11 +33,11 @@ reading_situations:
   - авангард
   - екзистенціалізм
   - трагедія
-  motivation: Розуміння історичного контексту та художніх засобів українського 
+  motivation: Розуміння історичного контексту та художніх засобів українського
     модернізму.
 writing_tasks:
 - task_type: відгук
-  prompt: Напишіть критичний відгук на сучасний український фільм або книгу 
+  prompt: Напишіть критичний відгук на сучасний український фільм або книгу
     (обсягом 250-300 слів).
   requirements:
   - Оцінити сюжет, гру акторів (або стиль автора) та основну ідею.
@@ -131,7 +139,7 @@ activity_hints:
   focus: 'Прочитайте текст про літературний калейдоскоп: від класики до постмодерну
     і дайте відповіді на запитання щодо ключових понять.'
 - type: essay-response
-  focus: Напишіть короткий текст (100-150 слів) про візуальне мистецтво та 
+  focus: Напишіть короткий текст (100-150 слів) про візуальне мистецтво та
     архітектура, використовуючи нову лексику модуля.
 - type: critical-analysis
   focus: 'Проаналізуйте взаємозв''язок між поняттями у розділі «Літературний калейдоскоп:
@@ -144,6 +152,8 @@ references:
   суспільство'
 - Глазова О. П. Українська мова. 11 клас (2019) — Тематична лексика
 - 'State Standard 2024: B2 SS 3 — Thematic areas: мистецтво, культура'
+- 'Wiki grammar source registry: wiki/grammar/b2/mystetstvo-i-literatura.sources.yaml
+  — source-backed B2 readiness lock for art/literature grammar claims'
 connects_to:
   previous: nauka-i-doslidzhennia
   next: modern-diaspora
