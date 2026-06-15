@@ -242,12 +242,11 @@ describe('WatchAndRepeat edge cases', () => {
     expect(root.textContent).toContain('мама');
   });
 
-  test('prefers letter over word when both are present', () => {
-    const items = [{ video: 'https://www.youtube.com/watch?v=aaaaaaaaaaa', letter: 'А', word: 'ignore' }];
+  test('shows letter and word when both are present', () => {
+    const items = [{ video: 'https://www.youtube.com/watch?v=aaaaaaaaaaa', letter: 'А', word: 'мама' }];
     const { container: root } = render(<WatchAndRepeat items={items} />);
-    // Word is hidden by the `!item.letter` guard
     expect(root.querySelector('[class*="warLetterDisplay"]')).toBeInTheDocument();
-    expect(root.querySelector('[class*="warWordDisplay"]')).toBeNull();
+    expect(root.querySelector('[class*="warWordDisplay"]')).toHaveTextContent('мама');
   });
 
   test('parses the /embed/ URL format correctly', async () => {

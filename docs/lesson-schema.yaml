@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 909b982810470a112e6b57407b561b8d8985e3a2abfef81067da6d692a5b81a2
+  components_sha256: fe30e8c4628bdd686bfe2aed193d57dcb67625b632993027abd6aee3c4a80050
   config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -1285,7 +1285,7 @@ components:
     props:
       required:
       - name: items
-        type: '{ /** * @schemaDescription Words shown to the learner. * @ukrainianText true */ words: string[]; /** * @schemaDescription Correct value consumed by this component. * @ukrainianText false */ correct: number; /** * @schemaDescription Feedback explanation shown after the learner answers. * @ukrainianText true */ explanation: string; }[]'
+        type: '{ /** * @schemaDescription Words shown to the learner. * @ukrainianText true */ words: string[]; /** * @schemaDescription Correct value consumed by this component. * @ukrainianText false */ correct: number; /** * @schemaDescription Optional context label for this item. * @ukrainianText true */ prompt?: string; /** * @schemaDescription Feedback explanation shown after the learner answers. * @ukrainianText true */ explanation: string; }[]'
         description: items prop.
         ukrainian_text: 'false'
       optional:
@@ -2266,6 +2266,10 @@ components:
         type: string
         description: Ukrainian word shown to the learner.
         ukrainian_text: 'true'
+      - name: sound
+        type: string
+        description: Sound cue shown to the learner.
+        ukrainian_text: 'false'
       - name: note
         type: string
         description: Note value consumed by this component.

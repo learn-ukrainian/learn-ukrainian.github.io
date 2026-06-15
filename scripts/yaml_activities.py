@@ -507,6 +507,7 @@ class WatchAndRepeatItem:
     video: str
     letter: str = ""
     word: str = ""
+    sound: str = ""
     note: str = ""
 
 
@@ -534,6 +535,7 @@ class OrderActivity:
     instruction: str = ""
     items: list[str] = field(default_factory=list)
     correct_order: list[int] = field(default_factory=list)
+    is_ukrainian: bool = False
 
 
 @dataclass
@@ -596,6 +598,7 @@ class OddOneOutItem:
     words: list[str]
     correct: int
     explanation: str
+    prompt: str = ""
 
 
 @dataclass
@@ -1290,6 +1293,7 @@ class ActivityParser:
                 video=i.get('video', ''),
                 letter=i.get('letter', ''),
                 word=i.get('word', ''),
+                sound=i.get('sound', ''),
                 note=i.get('note', ''),
             ))
         return WatchAndRepeatActivity(
@@ -1321,10 +1325,13 @@ class ActivityParser:
     def _parse_order(self, data: dict) -> OrderActivity:
         items = data.get('items')
         correct_order = data.get('correct_order')
+        is_ukrainian = data.get('is_ukrainian', False)
         if not isinstance(items, list) or not items:
             raise ValueError("order requires non-empty items list")
         if not isinstance(correct_order, list) or not correct_order:
             raise ValueError("order requires non-empty correct_order list")
+        if not isinstance(is_ukrainian, bool):
+            raise TypeError("order is_ukrainian must be a boolean")
         # Writers (e.g. codex on m20 a1/my-morning act-3) commonly express the
         # answer as the ordered ITEM STRINGS rather than integer indices into
         # `items`. When correct_order is an exact permutation of UNIQUE items,
@@ -1345,6 +1352,7 @@ class ActivityParser:
             instruction=data.get('instruction', ''),
             items=[str(item) for item in items],
             correct_order=correct_order,
+            is_ukrainian=is_ukrainian,
         )
 
     def _parse_count_syllables(self, data: dict) -> CountSyllablesActivity:
@@ -1362,6 +1370,11 @@ class ActivityParser:
         if not items:
             raise ValueError("count-syllables requires non-empty items list")
         max_count = data.get('maxCount')
+        snake_max_count = data.get('max_count')
+        if max_count is not None and snake_max_count is not None and max_count != snake_max_count:
+            raise ValueError("count-syllables maxCount and max_count must match when both are present")
+        if max_count is None:
+            max_count = snake_max_count
         if max_count is not None and not isinstance(max_count, int):
             raise TypeError("count-syllables maxCount must be an integer")
         return CountSyllablesActivity(
@@ -1473,6 +1486,7 @@ class ActivityParser:
                 words=[str(word) for word in words],
                 correct=correct,
                 explanation=explanation,
+                prompt=str(item.get('prompt', '')) if item.get('prompt') is not None else '',
             ))
         if not items:
             raise ValueError("odd-one-out requires non-empty items list")
@@ -2013,6 +2027,8 @@ class ActivityParser:
                 entry['letter'] = i.letter
             if i.word:
                 entry['word'] = i.word
+            if i.sound:
+                entry['sound'] = i.sound
             if i.note:
                 entry['note'] = i.note
             items.append(entry)
@@ -2034,11 +2050,12 @@ class ActivityParser:
     def _order_to_mdx(self, activity: OrderActivity, is_ukrainian_forced: bool = False) -> str:
         heading = activity.title or activity.instruction or 'Order'
         instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
+        is_ukrainian = is_ukrainian_forced or activity.is_ukrainian
         return (
             f"### {self._escape_jsx(heading)}\n\n"
             f"<Order client:only='react' items={{JSON.parse(`{self._dump_safe_json(activity.items)}`)}} "
             f"correct_order={{JSON.parse(`{self._dump_safe_json(activity.correct_order)}`)}}"
-            f"{instruction_prop} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+            f"{instruction_prop} isUkrainian={{{'true' if is_ukrainian else 'false'}}} />"
         )
 
     def _count_syllables_to_mdx(self, activity: CountSyllablesActivity) -> str:
@@ -2087,7 +2104,12 @@ class ActivityParser:
     def _odd_one_out_to_mdx(self, activity: OddOneOutActivity) -> str:
         heading = activity.title or activity.instruction or 'Odd One Out'
         items = [
-            {'words': item.words, 'correct': item.correct, 'explanation': item.explanation}
+            {
+                'words': item.words,
+                'correct': item.correct,
+                'explanation': item.explanation,
+                **({'prompt': item.prompt} if item.prompt else {}),
+            }
             for item in activity.items
         ]
         instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''

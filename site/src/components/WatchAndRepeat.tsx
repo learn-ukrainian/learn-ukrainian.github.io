@@ -19,6 +19,11 @@ interface WatchAndRepeatItem {
    */
   word?: string;
   /**
+   * @schemaDescription Sound cue shown to the learner.
+   * @ukrainianText false
+   */
+  sound?: string;
+  /**
    * @schemaDescription Note value consumed by this component.
    * @ukrainianText false
    */
@@ -102,7 +107,10 @@ export default function WatchAndRepeat({
         {item.letter && (
           <div className={directStyles.warLetterDisplay}>{item.letter}</div>
         )}
-        {item.word && !item.letter && (
+        {item.sound && (
+          <div className={directStyles.warSoundDisplay}>{item.sound}</div>
+        )}
+        {item.word && (
           <div className={directStyles.warWordDisplay}>{item.word}</div>
         )}
 

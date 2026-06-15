@@ -205,6 +205,11 @@
           "minimum": 3,
           "maximum": 10
         },
+        "max_count": {
+          "type": "integer",
+          "minimum": 3,
+          "maximum": 10
+        },
         "items": {
           "type": "array",
           "minItems": 1,
@@ -299,6 +304,9 @@
         "id": {
           "type": "string"
         },
+        "anchor_id": {
+          "type": "string"
+        },
         "instruction": {
           "type": "string",
           "minLength": 1
@@ -313,8 +321,19 @@
             "type": "object",
             "required": [
               "sentence",
-              "error",
-              "correction"
+              "error"
+            ],
+            "anyOf": [
+              {
+                "required": [
+                  "correction"
+                ]
+              },
+              {
+                "required": [
+                  "answer"
+                ]
+              }
             ],
             "properties": {
               "sentence": {
@@ -328,7 +347,10 @@
               },
               "correction": {
                 "type": "string",
-                "minLength": 1,
+                "description": "The correct replacement"
+              },
+              "answer": {
+                "type": "string",
                 "description": "The correct replacement"
               },
               "error_type": {
@@ -453,11 +475,26 @@
           "items": {
             "type": "object",
             "required": [
-              "label",
               "items"
+            ],
+            "anyOf": [
+              {
+                "required": [
+                  "label"
+                ]
+              },
+              {
+                "required": [
+                  "name"
+                ]
+              }
             ],
             "properties": {
               "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "name": {
                 "type": "string",
                 "minLength": 1
               },
@@ -717,14 +754,24 @@
             "type": "object",
             "required": [
               "words",
-              "correct",
               "explanation"
+            ],
+            "anyOf": [
+              {
+                "required": [
+                  "correct"
+                ]
+              },
+              {
+                "required": [
+                  "answer"
+                ]
+              }
             ],
             "properties": {
               "words": {
                 "type": "array",
                 "minItems": 3,
-                "maxItems": 6,
                 "items": {
                   "type": "string",
                   "minLength": 1
@@ -733,6 +780,13 @@
               "correct": {
                 "type": "integer",
                 "minimum": 0
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "prompt": {
+                "type": "string"
               },
               "explanation": {
                 "type": "string",
@@ -771,6 +825,9 @@
         "notes": {
           "type": "string"
         },
+        "is_ukrainian": {
+          "type": "boolean"
+        },
         "items": {
           "type": "array",
           "minItems": 2,
@@ -784,8 +841,16 @@
           "type": "array",
           "minItems": 2,
           "items": {
-            "type": "integer",
-            "minimum": 0
+            "oneOf": [
+              {
+                "type": "integer",
+                "minimum": 0
+              },
+              {
+                "type": "string",
+                "minLength": 1
+              }
+            ]
           },
           "description": "Zero-based indices of items in correct order"
         },
@@ -940,6 +1005,9 @@
         "notes": {
           "type": "string"
         },
+        "anchor_id": {
+          "type": "string"
+        },
         "vesum_exempt": {
           "type": "boolean"
         },
@@ -949,12 +1017,64 @@
           "items": {
             "type": "object",
             "required": [
-              "question",
-              "options",
-              "correct"
+              "options"
+            ],
+            "allOf": [
+              {
+                "anyOf": [
+                  {
+                    "required": [
+                      "question"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "prompt"
+                    ]
+                  }
+                ]
+              },
+              {
+                "anyOf": [
+                  {
+                    "required": [
+                      "correct"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "answer"
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "options": {
+                        "items": {
+                          "type": "object"
+                        },
+                        "contains": {
+                          "type": "object",
+                          "required": [
+                            "correct"
+                          ],
+                          "properties": {
+                            "correct": {
+                              "const": true
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
             ],
             "properties": {
               "question": {
+                "type": "string",
+                "minLength": 1
+              },
+              "prompt": {
                 "type": "string",
                 "minLength": 1
               },
@@ -963,14 +1083,40 @@
                 "minItems": 2,
                 "maxItems": 6,
                 "items": {
-                  "type": "string",
-                  "minLength": 1
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "text",
+                        "correct"
+                      ],
+                      "properties": {
+                        "text": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "correct": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ]
                 }
               },
               "correct": {
                 "type": "integer",
                 "minimum": 0,
                 "description": "0-based index of the correct option"
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Correct option text"
               },
               "explanation": {
                 "type": "string"
@@ -1091,8 +1237,19 @@
           "items": {
             "type": "object",
             "required": [
-              "statement",
-              "correct"
+              "statement"
+            ],
+            "anyOf": [
+              {
+                "required": [
+                  "correct"
+                ]
+              },
+              {
+                "required": [
+                  "answer"
+                ]
+              }
             ],
             "properties": {
               "statement": {
@@ -1100,6 +1257,9 @@
                 "minLength": 1
               },
               "correct": {
+                "type": "boolean"
+              },
+              "answer": {
                 "type": "boolean"
               },
               "explanation": {
@@ -1143,27 +1303,102 @@
           "items": {
             "type": "object",
             "required": [
-              "words",
-              "correct_order"
+              "answer"
+            ],
+            "anyOf": [
+              {
+                "required": [
+                  "words"
+                ]
+              },
+              {
+                "required": [
+                  "jumbled"
+                ]
+              },
+              {
+                "required": [
+                  "prompt"
+                ]
+              },
+              {
+                "required": [
+                  "scrambled"
+                ]
+              }
             ],
             "properties": {
               "words": {
-                "type": "array",
-                "minItems": 2,
-                "items": {
-                  "type": "string",
-                  "minLength": 1
-                },
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                ],
                 "description": "Jumbled words"
               },
-              "correct_order": {
-                "type": "array",
-                "minItems": 2,
-                "items": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "description": "Words in correct order"
+              "jumbled": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                ],
+                "description": "Jumbled words"
+              },
+              "prompt": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                ],
+                "description": "Jumbled words"
+              },
+              "scrambled": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                ],
+                "description": "Jumbled words"
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
               },
               "hint": {
                 "type": "string"
@@ -1219,6 +1454,10 @@
               "word": {
                 "type": "string",
                 "description": "Word being demonstrated"
+              },
+              "sound": {
+                "type": "string",
+                "description": "Sound being demonstrated"
               },
               "note": {
                 "type": "string",

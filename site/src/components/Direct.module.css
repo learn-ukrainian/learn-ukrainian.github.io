@@ -55,6 +55,14 @@
   text-align: center;
 }
 
+.warSoundDisplay {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ifm-color-emphasis-700);
+  text-align: center;
+}
+
 .warVideoWrapper {
   width: 100%;
   max-width: 480px;

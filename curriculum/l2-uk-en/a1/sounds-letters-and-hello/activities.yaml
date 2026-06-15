@@ -61,7 +61,7 @@
   type: count-syllables
   title: Count склади
   instruction: Count vowel sounds. Each vowel sound makes one склад.
-  max_count: 3
+  maxCount: 3
   items:
   - word: день
     correct: 1

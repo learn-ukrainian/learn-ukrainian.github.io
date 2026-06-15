@@ -19,6 +19,15 @@ from pathlib import Path
 
 import yaml
 
+SCRIPTS_DIR = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = SCRIPTS_DIR.parent
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+from audit.checks.yaml_schema_validation import validate_activity_yaml_file
+from manifest_utils import get_module_by_number, get_modules_for_level
+from yaml_activities import ActivityParser
+
 # Activity type validation rules
 ACTIVITY_TYPES = {
     'quiz', 'match-up', 'fill-in', 'true-false', 'group-sort', 'unjumble',
@@ -59,117 +68,26 @@ class ActivityValidator:
         self.warnings = []
 
     def validate_yaml(self, yaml_path: Path) -> dict:
-        """Validate YAML activity file structure."""
+        """Validate YAML against schema and the renderer parser."""
         results = {'pass': True, 'errors': [], 'warnings': []}
 
+        schema_ok, schema_errors = validate_activity_yaml_file(yaml_path)
+        if not schema_ok:
+            results['pass'] = False
+            results['errors'].extend(schema_errors)
+
         try:
-            with open(yaml_path, encoding='utf-8') as f:
-                data = yaml.safe_load(f)
-        except yaml.YAMLError as e:
+            parsed = ActivityParser().parse(yaml_path)
+        except (KeyError, TypeError, ValueError, yaml.YAMLError) as e:
             results['pass'] = False
-            results['errors'].append(f"YAML parse error: {e}")
+            results['errors'].append(f"Parser error: {type(e).__name__}: {e}")
             return results
 
-        # Handle both formats: direct list or dict with 'activities' key
-        if isinstance(data, dict) and 'activities' in data:
-            activities = data['activities']
-        elif isinstance(data, list):
-            activities = data
-        else:
+        if not parsed:
             results['pass'] = False
-            results['errors'].append("Not a valid activity list")
-            return results
-
-        if not activities:
-            results['pass'] = False
-            results['errors'].append("Empty activity list")
-            return results
-
-        for idx, activity in enumerate(activities, 1):
-            if not isinstance(activity, dict):
-                results['errors'].append(f"Activity {idx}: Not a dict")
-                results['pass'] = False
-                continue
-
-            activity_type = activity.get('type')
-            if not activity_type:
-                results['errors'].append(f"Activity {idx}: Missing 'type' field")
-                results['pass'] = False
-                continue
-
-            if activity_type not in ACTIVITY_TYPES:
-                results['errors'].append(f"Activity {idx}: Unknown type '{activity_type}'")
-                results['pass'] = False
-                continue
-
-            # Check required fields
-            required = REQUIRED_FIELDS.get(activity_type, [])
-            for field in required:
-                if field not in activity:
-                    results['errors'].append(
-                        f"Activity {idx} ({activity_type}): Missing required field '{field}'"
-                    )
-                    results['pass'] = False
-
-            # Type-specific validation
-            if activity_type == 'unjumble' or activity_type == 'anagram':
-                self._validate_unjumble(activity, idx, results)
-
-            elif activity_type == 'mark-the-words':
-                self._validate_mark_the_words(activity, idx, results)
+            results['errors'].append("No renderable activities found")
 
         return results
-
-    def _validate_unjumble(self, activity: dict, idx: int, results: dict):
-        """Validate unjumble/anagram activity."""
-        items = activity.get('items', [])
-
-        for item_idx, item in enumerate(items, 1):
-            has_words = 'words' in item
-            has_jumbled = 'jumbled' in item
-            has_prompt = 'prompt' in item
-            has_scrambled = 'scrambled' in item
-            has_answer = 'answer' in item
-
-            if not has_answer:
-                results['errors'].append(
-                    f"Activity {idx} item {item_idx}: Missing 'answer' field"
-                )
-                results['pass'] = False
-
-            if not (has_words or has_jumbled or has_prompt or has_scrambled):
-                results['errors'].append(
-                    f"Activity {idx} item {item_idx}: Missing 'words', 'jumbled', 'prompt', or 'scrambled' field"
-                )
-                results['pass'] = False
-
-            # Check words format
-            if has_words and not isinstance(item['words'], list):
-                results['errors'].append(
-                    f"Activity {idx} item {item_idx}: 'words' must be array"
-                )
-                results['pass'] = False
-
-    def _validate_mark_the_words(self, activity: dict, idx: int, results: dict):
-        """Validate mark-the-words activity."""
-        # Support both 'text' and 'passage' fields (backwards compatibility)
-        text = activity.get('text') or activity.get('passage', '')
-
-        # Check that at least one field exists
-        if not text:
-            results['errors'].append(
-                f"Activity {idx}: Missing required field 'text' or 'passage'"
-            )
-            results['pass'] = False
-            return
-
-        # Check for malformed markdown annotations
-        if '(correct)' in text or '(wrong)' in text:
-            results['errors'].append(
-                f"Activity {idx}: Contains (correct)/(wrong) annotations - "
-                f"use *word* only (see Issue #361)"
-            )
-            results['pass'] = False
 
     def validate_mdx(self, mdx_path: Path) -> dict:
         """Validate MDX generation correctness."""
@@ -208,49 +126,48 @@ class ActivityValidator:
 
         return results
 
+    def _modules(self):
+        """Return manifest modules for this run."""
+        if self.module_num:
+            module = get_module_by_number(self.level, self.module_num)
+            return [module] if module else []
+        return get_modules_for_level(self.level)
+
+    def _activity_yaml_path(self, module) -> Path | None:
+        """Find the activity YAML for current per-module layout, with legacy fallback."""
+        level_dir = PROJECT_ROOT / 'curriculum' / self.curriculum / self.level
+        candidates = [
+            level_dir / module.slug / 'activities.yaml',
+            level_dir / 'activities' / f'{module.slug}.yaml',
+            level_dir / 'activities' / f'{module.numbered_slug}.yaml',
+        ]
+        for candidate in candidates:
+            if candidate.exists():
+                return candidate
+        return None
+
     def run(self) -> dict:
         """Run validation pipeline."""
-        if self.module_num:
-            modules = [self.module_num]
-        else:
-            # Find all modules in level
-            level_dir = Path(f'curriculum/{self.curriculum}/{self.level}')
-            modules = sorted([
-                int(f.stem.split('-')[0])
-                for f in level_dir.glob('*.md')
-                if f.stem[0].isdigit()
-            ])
+        modules = self._modules()
+        if not modules:
+            print(f"No manifest modules found for level {self.level!r}")
+            return {'pass': False, 'errors': 1, 'warnings': 0}
 
         total_errors = 0
         total_warnings = 0
+        scanned = 0
 
-        for module_num in modules:
-            # Find YAML activity file
-            yaml_path = Path(
-                f'curriculum/{self.curriculum}/{self.level}/activities/'
-            )
-            # Try manifest lookup first, then fallback to glob
-            try:
-                sys.path.insert(0, str(Path(__file__).parent.parent))
-                from manifest_utils import get_module_by_number
-                mod = get_module_by_number(self.level, module_num)
-                if mod:
-                    yaml_files = [yaml_path / f"{mod.slug}.yaml"]
-                    if not yaml_files[0].exists():
-                        yaml_files = []
-                else:
-                    yaml_files = []
-            except Exception:
-                yaml_files = list(yaml_path.glob(f'{module_num:02d}-*.yaml'))
-                if not yaml_files:
-                    yaml_files = list(yaml_path.glob(f'{module_num}-*.yaml'))
-
-            if not yaml_files:
+        for module in modules:
+            yaml_file = self._activity_yaml_path(module)
+            if not yaml_file:
+                total_warnings += 1
+                print(f"\n=== Module {module.local_num}: {module.slug} ===")
+                print("  ⚠️  YAML: no activity file found")
                 continue
 
-            yaml_file = yaml_files[0]
+            scanned += 1
 
-            print(f"\n=== Module {module_num} ===")
+            print(f"\n=== Module {module.local_num}: {module.slug} ===")
 
             # 1. YAML validation
             yaml_results = self.validate_yaml(yaml_file)
@@ -267,9 +184,8 @@ class ActivityValidator:
                 for warn in yaml_results['warnings']:
                     print(f"     ⚠️  {warn}")
 
-            # 2. MDX validation (use slug from yaml filename)
-            slug = yaml_file.stem
-            mdx_path = Path(f'site/src/content/docs/{self.level}/{slug}.mdx')
+            # 2. MDX validation
+            mdx_path = PROJECT_ROOT / 'site' / 'src' / 'content' / 'docs' / self.level / f'{module.slug}.mdx'
             mdx_results = self.validate_mdx(mdx_path)
             if not mdx_results['pass']:
                 print(f"  ❌ MDX: {len(mdx_results['errors'])} errors")
@@ -285,6 +201,10 @@ class ActivityValidator:
                     print(f"     ⚠️  {warn}")
 
         print(f"\n{'='*50}")
+        if scanned == 0:
+            print("❌ FAILED: no activity files scanned")
+            return {'pass': False, 'errors': 1, 'warnings': total_warnings}
+
         if total_errors > 0:
             print(f"❌ FAILED: {total_errors} errors, {total_warnings} warnings")
             return {'pass': False, 'errors': total_errors, 'warnings': total_warnings}
