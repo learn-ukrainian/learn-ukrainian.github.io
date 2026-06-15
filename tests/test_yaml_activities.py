@@ -4,9 +4,11 @@ Tests for YAML activity parsing, validation, and conversion.
 
 
 # Add scripts to path
+import json
 import sys
 from pathlib import Path
 
+import jsonschema
 import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent / 'scripts'))
@@ -33,6 +35,12 @@ def parser():
 @pytest.fixture
 def sample_yaml_path():
     return Path(__file__).parent / 'fixtures' / 'sample.activities.yaml'
+
+
+@pytest.fixture
+def a2_activity_validator():
+    schema_path = Path(__file__).parent.parent / "schemas" / "activities-a2.schema.json"
+    return jsonschema.Draft7Validator(json.loads(schema_path.read_text(encoding="utf-8")))
 
 
 @pytest.fixture
@@ -143,6 +151,162 @@ class TestParsing:
         assert len(activities) == 1
         assert activities[0].answers == ["Сторож", "ключ", "плащ"]
         assert 'correctWords={JSON.parse(`["Сторож", "ключ", "плащ"]`)}' in mdx
+
+    def test_parse_mark_the_words_accepts_targets_alias(self, parser, tmp_path):
+        """A2 mark-the-words activities can use the existing targets alias."""
+        activity_path = tmp_path / "activities.yaml"
+        activity_path.write_text(
+            """
+- type: mark-the-words
+  title: Фонетика
+  instruction: Позначте слова.
+  text: день місто люди синє рука
+  targets:
+  - день
+  - місто
+  - люди
+  - синє
+""",
+            encoding="utf-8",
+        )
+
+        activities = parser.parse(activity_path)
+        mdx = parser.to_mdx(activities)
+
+        assert len(activities) == 1
+        assert activities[0].answers == ["день", "місто", "люди", "синє"]
+        assert 'correctWords={JSON.parse(`["день", "місто", "люди", "синє"]`)}' in mdx
+
+    def test_parse_unjumble_accepts_correct_order(self, parser, tmp_path):
+        """Schema-style unjumble activities can use correct_order for the answer."""
+        activity_path = tmp_path / "activities.yaml"
+        activity_path.write_text(
+            """
+- type: unjumble
+  title: Речення
+  instruction: Поставте слова в порядок.
+  items:
+  - words: ["буде", "Якщо", "дощ"]
+    correct_order: ["Якщо", "буде", "дощ"]
+""",
+            encoding="utf-8",
+        )
+
+        activities = parser.parse(activity_path)
+        mdx = parser.to_mdx(activities)
+
+        assert activities[0].items[0].answer == "Якщо буде дощ"
+        assert '"answer": "Якщо буде дощ"' in mdx
+
+    def test_parse_error_correction_empty_error_as_no_error(self, parser, tmp_path):
+        """Empty error fields render as the component's no-error sentinel."""
+        activity_path = tmp_path / "activities.yaml"
+        activity_path.write_text(
+            """
+- type: error-correction
+  title: Перевірка
+  instruction: Оберіть виправлене речення.
+  items:
+  - sentence: "Мій район тихіший за центр."
+    error: ""
+    correction: "Мій район тихіший за центр."
+    options:
+    - "Мій район тихіший за центр."
+    - "Мій район тихіший ніж за центр."
+""",
+            encoding="utf-8",
+        )
+
+        activities = parser.parse(activity_path)
+        mdx = parser.to_mdx(activities)
+
+        assert activities[0].items[0].error is None
+        assert '"errorWord": null' in mdx
+
+    def test_parse_essay_response_preserves_object_rubric_and_peer_guidelines(self, parser, tmp_path):
+        """A2 essay-response object rubrics and peer guidelines survive rendering."""
+        activity_path = tmp_path / "activities.yaml"
+        activity_path.write_text(
+            """
+- type: essay-response
+  title: Міні-письмо
+  instruction: Напишіть короткий текст.
+  source_reading: "Модель показує процес і результат."
+  prompt: "Напишіть 5-7 речень."
+  model_answer: "У суботу я читав і написав листа."
+  peer_review_guidelines:
+  - "Позначте процес."
+  - "Позначте результат."
+  rubric:
+    grammar: "Форми правильні."
+    aspect: "Процес і результат розрізнено."
+""",
+            encoding="utf-8",
+        )
+
+        activities = parser.parse(activity_path)
+        mdx = parser.to_mdx(activities, is_ukrainian_forced=True)
+
+        assert activities[0].instruction == "Напишіть короткий текст."
+        assert activities[0].peer_review_guidelines == ["Позначте процес.", "Позначте результат."]
+        assert "Модель показує процес і результат." in mdx
+        assert "| grammar | Форми правильні. |  |" in mdx
+        assert "#### Взаємоперевірка" in mdx
+        assert "- Позначте результат." in mdx
+
+
+class TestA2ActivitySchema:
+    """Contract checks for A2 schema forms consumed by ActivityParser."""
+
+    def test_quiz_string_options_require_correct_answer_signal(self, a2_activity_validator):
+        activity = {
+            "type": "quiz",
+            "instruction": "Оберіть.",
+            "items": [{
+                "prompt": "Питання?",
+                "options": ["а", "б", "в"],
+            }],
+        }
+
+        assert not a2_activity_validator.is_valid([activity])
+
+    def test_quiz_answer_and_object_options_are_valid(self, a2_activity_validator):
+        string_answer_activity = {
+            "type": "quiz",
+            "instruction": "Оберіть.",
+            "items": [{
+                "prompt": "Питання?",
+                "options": ["а", "б", "в"],
+                "answer": "б",
+            }],
+        }
+        object_options_activity = {
+            "type": "quiz",
+            "instruction": "Оберіть.",
+            "items": [{
+                "prompt": "Питання?",
+                "options": [
+                    {"text": "а", "correct": False},
+                    {"text": "б", "correct": True},
+                ],
+            }],
+        }
+
+        assert a2_activity_validator.is_valid([string_answer_activity])
+        assert a2_activity_validator.is_valid([object_options_activity])
+
+    def test_essay_response_object_rubric_is_valid(self, a2_activity_validator):
+        activity = {
+            "type": "essay-response",
+            "prompt": "Напишіть короткий текст.",
+            "peer_review_guidelines": ["Позначте процес."],
+            "rubric": {
+                "grammar": "Форми правильні.",
+                "aspect": "Процес і результат розрізнено.",
+            },
+        }
+
+        assert a2_activity_validator.is_valid([activity])
 
 
 # =============================================================================

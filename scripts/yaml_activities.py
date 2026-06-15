@@ -330,11 +330,14 @@ class ReadingActivity:
 class EssayResponseActivity:
     type: str = "essay-response"
     title: str = ""
+    instruction: str = ""
+    notes: str = ""
     source_reading: str = ""  # Links to reading activity id (Issue #425)
     prompt: str = ""
     min_words: int = 0
     model_answer: str = ""
-    rubric: list = field(default_factory=list)
+    peer_review_guidelines: list[str] = field(default_factory=list)
+    rubric: list | dict = field(default_factory=list)
 
 
 @dataclass
@@ -869,7 +872,16 @@ class ActivityParser:
         items = []
         for item_index, item_data in enumerate(data.get('items', [])):
             words = self._unjumble_words(item_data, item_index)
-            items.append(UnjumbleItem(words=words, answer=item_data['answer']))
+            answer = item_data.get('answer')
+            if answer is None and 'correct_order' in item_data:
+                correct_order = item_data['correct_order']
+                if isinstance(correct_order, list):
+                    answer = ' '.join(str(token) for token in correct_order)
+                else:
+                    answer = str(correct_order)
+            if answer is None:
+                raise KeyError(f"unjumble item {item_index} missing one of: answer, correct_order")
+            items.append(UnjumbleItem(words=words, answer=answer))
         return UnjumbleActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
 
     def _unjumble_words(self, item_data: dict, item_index: int) -> list[str]:
@@ -890,13 +902,18 @@ class ActivityParser:
         )
 
     def _parse_error_correction(self, data: dict) -> ErrorCorrectionActivity:
-        items = [ErrorCorrectionItem(
-            sentence=i['sentence'],
-            error=i['error'],
-            answer=i.get('answer') or i.get('correction', ''),
-            options=i.get('options', []),
-            explanation=i.get('explanation', ''),
-        ) for i in data.get('items', [])]
+        items = []
+        for i in data.get('items', []):
+            error = i['error']
+            if error == "":
+                error = None
+            items.append(ErrorCorrectionItem(
+                sentence=i['sentence'],
+                error=error,
+                answer=i.get('answer') or i.get('correction', ''),
+                options=i.get('options', []),
+                explanation=i.get('explanation', ''),
+            ))
         return ErrorCorrectionActivity(
             title=data.get('title', ''),
             instruction=data.get('instruction', ''),
@@ -907,7 +924,12 @@ class ActivityParser:
     def _parse_mark_the_words(self, data: dict) -> MarkTheWordsActivity:
         # Support both old and new field names for backwards compatibility
         raw_text = data.get('passage') or data.get('text', '')
-        correct_words = data.get('correct_words') or data.get('target_words') or data.get('answers', [])
+        correct_words = (
+            data.get('correct_words')
+            or data.get('target_words')
+            or data.get('targets')
+            or data.get('answers', [])
+        )
 
         # Robust extraction from various markdown formats
         extracted_answers = []
@@ -977,10 +999,13 @@ class ActivityParser:
     def _parse_essay_response(self, data: dict) -> EssayResponseActivity:
         return EssayResponseActivity(
             title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            notes=data.get('notes', ''),
             source_reading=data.get('source_reading', ''),  # Issue #425: Link to reading
             prompt=data.get('prompt', ''),
             min_words=data.get('min_words', 0),
             model_answer=data.get('model_answer', ''),
+            peer_review_guidelines=data.get('peer_review_guidelines', []),
             rubric=data.get('rubric', [])
         )
 
@@ -1849,17 +1874,42 @@ class ActivityParser:
         rubric_md = ""
         rows = []
         if activity.rubric:
-            for r in activity.rubric:
+            rubric_items = (
+                [
+                    {"criteria": key, "description": value}
+                    for key, value in activity.rubric.items()
+                ]
+                if isinstance(activity.rubric, dict)
+                else activity.rubric
+            )
+            for r in rubric_items:
                 if isinstance(r, dict):
-                    rows.append(f"| {r.get('criteria', '')} | {r.get('description', '')} | {r.get('points', 0)} |")
+                    rows.append(f"| {r.get('criteria', '')} | {r.get('description', '')} | {r.get('points', '')} |")
                 elif isinstance(r, str):
                     rows.append(f"| {r} | | |")
         if is_ukrainian_forced:
             if rows:
                 rubric_md = "\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n" + "\n".join(rows)
+            if activity.peer_review_guidelines:
+                peer_items = "\n".join(f"- {item}" for item in activity.peer_review_guidelines)
+                rubric_md += f"\n\n#### Взаємоперевірка\n\n{peer_items}"
         else:
             if rows:
                 rubric_md = "\n\n#### Rubric\n\n| Criteria | Description | Points |\n|---|---|---|\n" + "\n".join(rows)
+            if activity.peer_review_guidelines:
+                peer_items = "\n".join(f"- {item}" for item in activity.peer_review_guidelines)
+                rubric_md += f"\n\n#### Peer Review\n\n{peer_items}"
+        prompt_parts = [
+            part
+            for part in (
+                activity.instruction,
+                activity.source_reading,
+                activity.prompt,
+                activity.notes,
+            )
+            if part
+        ]
+        prompt = "\n\n".join(str(part) for part in prompt_parts)
         # Using self._dump_safe_json for complex props might be safer than json.dumps inside {}
         # But here we are passing strings directly, not parsing JSON inside
         # Wait, the original code used json.dumps inside {}
@@ -1867,7 +1917,7 @@ class ActivityParser:
         # This puts "string" inside {}, resulting in prompt={"string"} which is valid JSX
         # So we don't need _dump_safe_json here, but we DO need to NOT escape quotes inside content
         # json.dumps does escaping correctly for a JS string literal.
-        return f"### {self._escape_jsx(activity.title)}\n\n<EssayResponse client:only='react' title=\"{self._escape_jsx(activity.title)}\" prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}} rubric={{{json.dumps(rubric_md, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<EssayResponse client:only='react' title=\"{self._escape_jsx(activity.title)}\" prompt={{{json.dumps(prompt, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}} rubric={{{json.dumps(rubric_md, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _reading_to_mdx(self, activity: ReadingActivity, is_ukrainian_forced: bool = False) -> str:
         tasks = self._dump_safe_json(activity.tasks)

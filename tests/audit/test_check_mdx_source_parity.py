@@ -4,6 +4,7 @@ from unittest.mock import patch
 import pytest
 
 from scripts.audit.check_mdx_source_parity import (
+    GENERATOR_DEPENDENCIES,
     GENERATOR_PACKAGE,
     MDX_DIR,
     SOURCE_DIR,
@@ -124,6 +125,22 @@ def test_check_parity_generator_change_allows_existing_source_dir(mock_legacy_le
         changed_files = {
             MDX_DIR / "a1" / "01-hello.mdx",
             GENERATOR_PACKAGE / "core.py",
+        }
+        mock_subprocess.return_value = "1 file changed\n"
+
+        violations = check_parity(mdx_files, changed_files)
+
+    assert len(violations) == 0
+
+def test_check_parity_generator_dependency_allows_existing_source_dir(mock_legacy_levels, mock_subprocess, tmp_path):
+    # Shared parser code feeds the generator even though it lives outside
+    # scripts/generate_mdx/.
+    with patch("scripts.audit.check_mdx_source_parity.SOURCE_DIR", tmp_path):
+        (tmp_path / "a1" / "01-hello").mkdir(parents=True)
+        mdx_files = [MDX_DIR / "a1" / "01-hello.mdx"]
+        changed_files = {
+            MDX_DIR / "a1" / "01-hello.mdx",
+            next(iter(GENERATOR_DEPENDENCIES)),
         }
         mock_subprocess.return_value = "1 file changed\n"
 

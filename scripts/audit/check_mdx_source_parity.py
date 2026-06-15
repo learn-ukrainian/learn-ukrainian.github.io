@@ -18,7 +18,9 @@ SOURCE_DIR = PROJECT_ROOT / "curriculum/l2-uk-en"
 LEGACY_TRACKS_FILE = PROJECT_ROOT / "scripts/audit/mdx_source_parity_legacy_tracks.yaml"
 GENERATOR_ENTRYPOINT = PROJECT_ROOT / "scripts/generate_mdx.py"
 GENERATOR_PACKAGE = PROJECT_ROOT / "scripts/generate_mdx"
-YAML_ACTIVITY_RENDERER = PROJECT_ROOT / "scripts/yaml_activities.py"
+GENERATOR_DEPENDENCIES = {
+    PROJECT_ROOT / "scripts/yaml_activities.py",
+}
 NAV_FRONTMATTER_RE = re.compile(r"^(prev|next):(?:\s|$)")
 
 def get_legacy_levels() -> set[str]:
@@ -94,7 +96,7 @@ def is_whitespace_only(file_path: Path, base: str | None = None, cached: bool = 
 def has_generator_change(changed_files: set[Path]) -> bool:
     """Return true when the MDX generator itself is part of the change set."""
     for changed_file in changed_files:
-        if changed_file in {GENERATOR_ENTRYPOINT, YAML_ACTIVITY_RENDERER}:
+        if changed_file == GENERATOR_ENTRYPOINT or changed_file in GENERATOR_DEPENDENCIES:
             return True
         try:
             changed_file.relative_to(GENERATOR_PACKAGE)

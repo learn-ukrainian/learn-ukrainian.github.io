@@ -19,6 +19,9 @@
         "$ref": "#/definitions/error-correction-a2"
       },
       {
+        "$ref": "#/definitions/essay-response-a2"
+      },
+      {
         "$ref": "#/definitions/fill-in-a2"
       },
       {
@@ -285,8 +288,7 @@
               },
               "error": {
                 "type": "string",
-                "minLength": 1,
-                "description": "The incorrect word or phrase"
+                "description": "The incorrect word or phrase; empty string means the sentence is already correct"
               },
               "correction": {
                 "type": "string",
@@ -317,6 +319,102 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "essay-response-a2": {
+      "type": "object",
+      "required": [
+        "type",
+        "prompt"
+      ],
+      "properties": {
+        "type": {
+          "const": "essay-response"
+        },
+        "id": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "min_words": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "model_answer": {
+          "type": "string"
+        },
+        "source_reading": {
+          "type": "string"
+        },
+        "peer_review_guidelines": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "rubric": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "criteria",
+                      "description"
+                    ],
+                    "properties": {
+                      "criteria": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "points": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            }
+          ]
         },
         "title": {
           "type": "string",
@@ -415,11 +513,14 @@
           "items": {
             "type": "object",
             "required": [
-              "label",
               "items"
             ],
             "properties": {
               "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "name": {
                 "type": "string",
                 "minLength": 1
               },
@@ -432,6 +533,18 @@
                 }
               }
             },
+            "anyOf": [
+              {
+                "required": [
+                  "label"
+                ]
+              },
+              {
+                "required": [
+                  "name"
+                ]
+              }
+            ],
             "additionalProperties": false
           }
         },
@@ -447,8 +560,7 @@
       "required": [
         "type",
         "instruction",
-        "text",
-        "target_words"
+        "text"
       ],
       "properties": {
         "type": {
@@ -476,6 +588,30 @@
             "minLength": 1
           }
         },
+        "targets": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "correct_words": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "answers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
         "criteria": {
           "type": "string"
         },
@@ -484,6 +620,28 @@
           "description": "Optional display title for the activity"
         }
       },
+      "anyOf": [
+        {
+          "required": [
+            "target_words"
+          ]
+        },
+        {
+          "required": [
+            "targets"
+          ]
+        },
+        {
+          "required": [
+            "correct_words"
+          ]
+        },
+        {
+          "required": [
+            "answers"
+          ]
+        }
+      ],
       "additionalProperties": false
     },
     "match-up-a2": {
@@ -783,12 +941,14 @@
           "items": {
             "type": "object",
             "required": [
-              "question",
-              "options",
-              "correct"
+              "options"
             ],
             "properties": {
               "question": {
+                "type": "string",
+                "minLength": 1
+              },
+              "prompt": {
                 "type": "string",
                 "minLength": 1
               },
@@ -797,8 +957,29 @@
                 "minItems": 2,
                 "maxItems": 6,
                 "items": {
-                  "type": "string",
-                  "minLength": 1
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "text",
+                        "correct"
+                      ],
+                      "properties": {
+                        "text": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "correct": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ]
                 }
               },
               "correct": {
@@ -806,10 +987,71 @@
                 "minimum": 0,
                 "description": "0-based index of the correct option"
               },
+              "answer": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Correct option text for string-option quiz items"
+              },
               "explanation": {
                 "type": "string"
               }
             },
+            "allOf": [
+              {
+                "anyOf": [
+                  {
+                    "required": [
+                      "question"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "prompt"
+                    ]
+                  }
+                ]
+              },
+              {
+                "anyOf": [
+                  {
+                    "required": [
+                      "correct"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "answer"
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "options": {
+                        "type": "array",
+                        "minItems": 2,
+                        "maxItems": 6,
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "text",
+                            "correct"
+                          ],
+                          "properties": {
+                            "text": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "correct": {
+                              "type": "boolean"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            ],
             "additionalProperties": false
           }
         },
@@ -999,8 +1241,7 @@
           "items": {
             "type": "object",
             "required": [
-              "statement",
-              "correct"
+              "statement"
             ],
             "properties": {
               "statement": {
@@ -1010,10 +1251,25 @@
               "correct": {
                 "type": "boolean"
               },
+              "answer": {
+                "type": "boolean"
+              },
               "explanation": {
                 "type": "string"
               }
             },
+            "anyOf": [
+              {
+                "required": [
+                  "correct"
+                ]
+              },
+              {
+                "required": [
+                  "answer"
+                ]
+              }
+            ],
             "additionalProperties": false
           }
         },
@@ -1051,8 +1307,7 @@
           "items": {
             "type": "object",
             "required": [
-              "words",
-              "correct_order"
+              "words"
             ],
             "properties": {
               "words": {
@@ -1073,10 +1328,26 @@
                 },
                 "description": "Words in correct order"
               },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              },
               "hint": {
                 "type": "string"
               }
             },
+            "anyOf": [
+              {
+                "required": [
+                  "correct_order"
+                ]
+              },
+              {
+                "required": [
+                  "answer"
+                ]
+              }
+            ],
             "additionalProperties": false
           }
         },
