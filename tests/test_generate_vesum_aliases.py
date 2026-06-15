@@ -29,6 +29,17 @@ def test_build_alias_map_applies_all_safety_gates(monkeypatch, tmp_path: Path) -
     assert aliases == {"брата": {"lemma": "брат"}}
 
 
+def test_keep_standalone_forms_are_not_folded(monkeypatch, tmp_path: Path) -> None:
+    # може would otherwise fold (single VESUM lemma могти, могти taught) but is kept standalone
+    monkeypatch.setattr(gen, "verify_word", lambda w: [{"lemma": "могти"}])
+    manifest = tmp_path / "m.json"
+    manifest.write_text(json.dumps({"entries": [{"lemma": "може"}, {"lemma": "могти"}]}), encoding="utf-8")
+
+    aliases = gen.build_alias_map(manifest)
+    assert "може" not in aliases
+    assert "може" in gen._KEEP_STANDALONE_FORMS
+
+
 def test_build_alias_map_strips_stress_before_lookup(monkeypatch, tmp_path: Path) -> None:
     seen: list[str] = []
 

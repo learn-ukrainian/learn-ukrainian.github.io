@@ -32,6 +32,13 @@ from scripts.verification.vesum import verify_word
 
 ALIAS_MAP_PATH = Path(__file__).resolve().parents[2] / "data" / "lexicon" / "vesum_inflection_aliases.json"
 
+# Lexicalized functional forms KEPT as standalone Atlas pages — their high-frequency use is a
+# fixed expression / interjection / particle whose meaning is NOT reducible to "inflection of
+# lemma X", so folding them into the verb lemma would mislead. `може` is the strongest case: as
+# "maybe" it is a particle, semantically distinct from могти "to be able". (Ordinary conjugations
+# like люблю→любити / їмо→їсти are NOT here — those fold correctly.) Per user call 2026-06-15.
+_KEEP_STANDALONE_FORMS = {"дякую", "прошу", "може", "будь", "будьте", "вітаю"}
+
 
 def _strip_stress(text: str) -> str:
     return text.replace("́", "").replace("̀", "")
@@ -53,14 +60,17 @@ def _manifest_lemmas(manifest_path: Path) -> list[str]:
 def build_alias_map(manifest_path: Path = MANIFEST_PATH) -> dict[str, dict[str, str]]:
     lemmas = _manifest_lemmas(manifest_path)
     taught = {_lemma_key(lemma) for lemma in lemmas}
+    keep_standalone = {_lemma_key(form) for form in _KEEP_STANDALONE_FORMS}
     aliases: dict[str, dict[str, str]] = {}
     for form in lemmas:
+        form_key = _lemma_key(form)
+        if form_key in keep_standalone:
+            continue  # lexicalized functional form → keep its own Atlas page
         vlemmas = _vesum_lemmas(form)
         if len(vlemmas) != 1:
             continue  # ambiguous (>1) or absent from VESUM (0) → leave alone
         target = vlemmas[0]
         target_key = _lemma_key(target)
-        form_key = _lemma_key(form)
         if target_key == form_key:
             continue  # form is its own lemma
         if target_key not in taught:
