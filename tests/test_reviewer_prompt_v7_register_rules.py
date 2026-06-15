@@ -80,3 +80,17 @@ def test_reviewer_prompt_mirrors_v7_register_rule(
     assert f"Mirrors `{rule_id}`" in prompt
     for anchor in anchors:
         assert _normalize(anchor) in normalized
+
+
+def test_reviewer_prompt_flags_unsupported_grammar_taxonomies() -> None:
+    normalized = _normalize(_prompt())
+
+    anchors = (
+        "Source-pedagogy audit",
+        "promotes a metaphor, discourse heuristic, activity label, or writer-created grouping into a grammar taxonomy",
+        "unsupported_taxonomy_frame",
+        "`тло`/`подія`",
+        "impersonal_subject_intrusion",
+    )
+    for anchor in anchors:
+        assert _normalize(anchor) in normalized

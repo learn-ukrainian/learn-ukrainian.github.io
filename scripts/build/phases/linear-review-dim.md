@@ -38,6 +38,20 @@ For `{DIM}` specifically:
 - `pedagogical`: does the sequencing actually teach? Are examples
   illuminating? Does each concept earn the next? The gate confirmed word
   budgets and section presence; you assess whether the pedagogy *works*.
+  Source-pedagogy failures are in scope even when the plan/wiki asked for
+  them: REVISE or REJECT any grammar module that promotes a metaphor,
+  discourse heuristic, activity label, or writer-created grouping into a
+  grammar taxonomy unless Ukrainian textbook/corpus evidence explicitly
+  supports that framing. Do not reward plan adherence when the upstream
+  plan/wiki itself appears pedagogically unsupported. For example, a lesson
+  may use "background/foreground" as an optional writing heuristic after
+  aspect is taught, but if it asks learners to classify every verb as
+  `тло`/`подія` as though those are textbook grammar categories, flag
+  `unsupported_taxonomy_frame` and score the pedagogical dim below PASS.
+  Likewise, if a module teaches impersonal/no-subject forms, examples and
+  activities must preserve the no-subject property; adding an ordinary subject
+  noun to the target pattern is a pedagogical grammar error, not harmless
+  context.
   REJECT-level failures mirroring writer rules:
   - Mirrors `#R-NO-SCAFFOLDING-LEAKS`: REJECT writer-side scaffolding leaks.
     Writer-side scaffolding never appears in module body. Forbidden in
@@ -237,7 +251,20 @@ E. **Reinforce rule #6.** Every claim pairs (i) a verbatim quote from the
    absence-of-verification flag. A `PASS` with no grounded evidence is a
    reviewer-protocol failure.
 
-F. **Activity split audit (pedagogical, engagement).** The writer is
+F. **Source-pedagogy audit (pedagogical dim; grammar modules).** Verify that
+   the lesson's named teaching frame is a source-backed way to teach the
+   grammar, not just an attractive model-generated metaphor. Search the
+   textbook/corpus layer for the key Ukrainian terms in the module's grammar
+   frame and compare the results to the generated task labels. If sources
+   support the underlying grammar but not the module's taxonomy, flag
+   `unsupported_taxonomy_frame`. If the plan/wiki introduced the unsupported
+   frame, still flag it; do not treat "the writer followed the plan" as
+   evidence for pedagogy. Heuristics are allowed only when clearly labeled as
+   heuristics and not drilled as grammar categories. For impersonal/no-subject
+   material, verify that target examples remain subjectless; a subject noun in
+   the target pattern is `impersonal_subject_intrusion`.
+
+G. **Activity split audit (pedagogical, engagement).** The writer is
 contracted to emit two complementary activity sets per `ACTIVITY_CONFIGS[{LEVEL}]`:
 INLINE (light, theory-time checks anchored via `<!-- INJECT_ACTIVITY: act-N -->`)
 and WORKBOOK (substantive, after-lesson drill, no INJECT marker). For A1:
@@ -267,7 +294,7 @@ theory check" purpose; WORKBOOK activities that are too trivial (single-item
 quizzes, no discrimination depth) break their drill purpose. Score the
 BALANCE-vs-PURPOSE not just the count.
 
-G. **Corpus-access audit (all dims).** The writer is gated to a level-specific
+H. **Corpus-access audit (all dims).** The writer is gated to a level-specific
 corpus surface per the Corpus Access (level-gated) table in `linear-write.md`.
 Verify the writer did not cite out-of-level sources:
 
@@ -291,7 +318,7 @@ For ANY out-of-level citation, the quote may STILL be factually correct but the
 register/source choice is wrong for the learner level. Score this as
 PEDAGOGICAL evidence-against, not as a fabrication.
 
-H. **Student-aware audit (pedagogical, engagement, naturalness).** The writer
+I. **Student-aware audit (pedagogical, engagement, naturalness).** The writer
 is given a `{LEARNER_STATE}` block listing cumulative_vocabulary +
 known_grammar from prior modules. Verify the writer:
 
@@ -327,7 +354,7 @@ module BUILD instead of REPEAT. Naturalness score: scaffolded vocabulary
 introduction reads as a real teacher's voice; un-introduced vocab feels like a
 textbook dump.
 
-I. **Pre-emit audit-line integrity (all dims).** The writer is required to
+J. **Pre-emit audit-line integrity (all dims).** The writer is required to
 emit three machine-readable audit lines BEFORE the artifact fences, in order:
 
 1. `<implementation_map_audit>manifest_obligations=N covered_in_map=M missing=[...]</implementation_map_audit>`
@@ -353,7 +380,7 @@ Return only JSON:
 {"score": 0.0, "evidence_quotes": ["verbatim quote 1", "verbatim quote 2", "verbatim quote 3"], "rubric_mapping": "Quote 1: ...; Quote 2: ...; Quote 3: ...", "evidence": "\"verbatim quote from evidence_quotes\"", "flags": ["activity_split_audit_missing", "out_of_level_literary", "..."], "verdict": "REVISE"}
 ```
 
-The `flags` array MUST contain any FLAG strings raised during audits A-I that
+The `flags` array MUST contain any FLAG strings raised during audits A-J that
 apply to your assigned dim per the per-dim labeling in §"Scope". An empty array
 is fine when no flags fired. The pipeline aggregates flags across dims and
 surfaces them in the build telemetry; the writer's self-correction loop reads

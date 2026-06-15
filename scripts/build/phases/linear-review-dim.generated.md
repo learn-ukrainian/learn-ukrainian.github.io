@@ -34,7 +34,20 @@ judgment regex cannot make. For `{DIM}`:
   *quality* of engagement, not its presence.
 - `pedagogical`: does the sequencing actually teach? Are examples illuminating?
   Does each concept earn the next? Respect the learner's prior knowledge
-  (BUILD, don't REPEAT).
+  (BUILD, don't REPEAT). Source-pedagogy failures are in scope even when the
+  plan/wiki asked for them: REVISE or REJECT any grammar module that promotes a
+  metaphor, discourse heuristic, activity label, or writer-created grouping into
+  a grammar taxonomy unless Ukrainian textbook/corpus evidence explicitly
+  supports that framing. Do not reward plan adherence when the upstream
+  plan/wiki itself appears pedagogically unsupported. For example, a lesson may
+  use "background/foreground" as an optional writing heuristic after aspect is
+  taught, but if it asks learners to classify every verb as `тло`/`подія` as
+  though those are textbook grammar categories, flag
+  `unsupported_taxonomy_frame` and score the pedagogical dim below PASS.
+  Likewise, if a module teaches impersonal/no-subject forms, examples and
+  activities must preserve the no-subject property; adding an ordinary subject
+  noun to the target pattern is a pedagogical grammar error, not harmless
+  context.
 - `naturalness`: does the Ukrainian read as native? Assess flow, register, idiom
   beyond the VESUM + russianism-shadow the gate already confirmed.
 - `decolonization`: is the lesson teaching Ukrainian **on its own terms**?
@@ -128,24 +141,36 @@ Unverified items become FLAG strings in your evidence and weigh the score down.
 - **E. Rule #6.** Every claim pairs a verbatim quote with an MCP-grounded
   verification or an explicit absence-of-verification flag. A PASS with no
   grounded evidence is a reviewer-protocol failure.
-- **F. Activity split (pedagogical, engagement).** Locate
+- **F. Source-pedagogy audit (pedagogical dim; grammar modules).** Verify that
+  the lesson's named teaching frame is a source-backed way to teach the grammar,
+  not just an attractive model-generated metaphor. Search the textbook/corpus
+  layer for the key Ukrainian terms in the module's grammar frame and compare
+  the results to the generated task labels. If sources support the underlying
+  grammar but not the module's taxonomy, flag `unsupported_taxonomy_frame`. If
+  the plan/wiki introduced the unsupported frame, still flag it; do not treat
+  "the writer followed the plan" as evidence for pedagogy. Heuristics are
+  allowed only when clearly labeled as heuristics and not drilled as grammar
+  categories. For impersonal/no-subject material, verify that target examples
+  remain subjectless; a subject noun in the target pattern is
+  `impersonal_subject_intrusion`.
+- **G. Activity split (pedagogical, engagement).** Locate
   `<activity_split_audit>`; verify it is present, `inline_n` matches the
   `<!-- INJECT_ACTIVITY: act-N -->` count, `workbook_n` matches
   `len(activities.yaml) - inline_n`, and both fall in the level's ranges. A
   green audit line on broken counts (`split_valid=true` but out of range) is the
   worse failure — FLAG `activity_split_audit_lied`.
-- **G. Corpus-access (all dims).** Verify no out-of-level citations
+- **H. Corpus-access (all dims).** Verify no out-of-level citations
   (a1/a2: Grades 1-4/1-5 only; no adult literary; external limited to ULP /
   Pohribnyi). FLAG `out_of_level_textbook` / `out_of_level_literary` /
   `out_of_level_external`. Score as PEDAGOGICAL evidence-against.
-- **H. Student-aware (pedagogical, engagement, naturalness).** Verify the writer
+- **I. Student-aware (pedagogical, engagement, naturalness).** Verify the writer
   did not re-explain already-taught grammar (`re_explained_known_grammar`) and
   did not introduce unknown vocab without inline gloss
   (`unknown_vocab_unscaffolded` / `missing_foreshadowing_gloss`). Repeated
   learner-facing concepts, skills, or activity families must be explicitly
   framed as review, reuse, or deeper practice; otherwise FLAG
   `unsignposted_repetition`.
-- **I. Audit-line integrity (all dims).** Verify the three pre-emit audit lines
+- **J. Audit-line integrity (all dims).** Verify the three pre-emit audit lines
   (`implementation_map_audit`, `bad_form_audit`, `activity_split_audit`) are
   present, parseable, and consistent with the artifacts. Missing → FLAG
   `audit_line_missing`; inconsistent → FLAG `audit_line_inconsistent`.
@@ -168,7 +193,7 @@ Return only JSON:
 {"score": 0.0, "evidence_quotes": ["verbatim quote 1", "verbatim quote 2", "verbatim quote 3"], "rubric_mapping": "Quote 1: ...; Quote 2: ...; Quote 3: ...", "evidence": "\"verbatim quote from evidence_quotes\"", "flags": ["out_of_level_literary", "..."], "verdict": "REVISE"}
 ```
 
-The `flags` array MUST contain any FLAG strings (audits A-I) and any `#R-*` ids
+The `flags` array MUST contain any FLAG strings (audits A-J) and any `#R-*` ids
 (universal-rules section) that apply to your assigned dim. An empty array is fine
 when nothing fired. The `evidence` field MUST be one of the `evidence_quotes`,
 wrapped in escaped quotes; a paraphrase in any evidence field is a

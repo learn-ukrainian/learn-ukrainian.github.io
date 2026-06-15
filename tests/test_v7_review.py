@@ -92,6 +92,43 @@ def _events_from_stdout(stdout: str) -> list[dict[str, Any]]:
     return [json.loads(line) for line in stdout.splitlines() if line.strip()]
 
 
+def test_parse_review_response_preserves_reviewer_flags_and_mapping() -> None:
+    response = json.dumps(
+        {
+            "score": 6.4,
+            "evidence": '"classify every verb as тло or подія"',
+            "evidence_quotes": ["classify every verb as тло or подія"],
+            "rubric_mapping": "Promotes a discourse heuristic into a grammar taxonomy.",
+            "flags": ["unsupported_taxonomy_frame", "activity_split_audit_missing"],
+            "verdict": "REVISE",
+        }
+    )
+
+    parsed = linear_pipeline.parse_review_response(response, "pedagogical")
+
+    assert parsed["rubric_mapping"] == "Promotes a discourse heuristic into a grammar taxonomy."
+    assert parsed["flags"] == ["unsupported_taxonomy_frame", "activity_split_audit_missing"]
+
+
+def test_parse_review_response_preserves_wrapped_flags_raised_string() -> None:
+    response = json.dumps(
+        {
+            "pedagogical": {
+                "score": 6.4,
+                "evidence": '"classify every verb as тло or подія"',
+                "evidence_quotes": ["classify every verb as тло or подія"],
+                "rubric_mapping": "Promotes a discourse heuristic into a grammar taxonomy.",
+                "flags_raised": "unsupported_taxonomy_frame",
+                "verdict": "REVISE",
+            }
+        }
+    )
+
+    parsed = linear_pipeline.parse_review_response(response, "pedagogical")
+
+    assert parsed["flags"] == ["unsupported_taxonomy_frame"]
+
+
 def test_v7_review_refuses_self_review(
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
