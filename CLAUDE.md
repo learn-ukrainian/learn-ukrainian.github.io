@@ -47,6 +47,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 
 ## Reference Docs
 
+- **Corpus inventory (what source material we have)**: [`docs/corpus-inventory.md`](docs/corpus-inventory.md) — `data/sources.db` tables + live counts, literary breakdown, the local-vs-GoogleDrive build architecture, and the safe recipe to add content. READ before asking the user for material or deciding to scrape.
 - **Commands & scripts**: [`docs/SCRIPTS.md`](docs/SCRIPTS.md)
 - **Agent runtime**: [`docs/agent-runtime-guide.md`](docs/agent-runtime-guide.md) — universal adapter layer for all agent CLI invocations. READ BEFORE touching `scripts/agent_runtime/`.
 - **Project structure & tracks**: [`docs/best-practices/track-architecture.md`](docs/best-practices/track-architecture.md)
