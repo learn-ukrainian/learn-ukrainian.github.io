@@ -58,7 +58,86 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 33 HANDOFF (2026-06-14 — primary-text ROOT CAUSE found + proper-solution spec FILED #3162; pedagogical weakness CONFIRMED real (not artifact) via MDX re-review; TWO behavioral rules pinned to both agent defs #3156+#3161) — **RESUME HERE**
+## ▶▶▶ SESSION 34 HANDOFF (2026-06-15 — folk reading-links SHIPPED to all 3 live modules (ukrlib genre pages + Освіта.ua + Diasporiana) + landing "Де читати" RESTORED (regressed by 228f9ca180); **Чтиво found DEAD → dropped, Diasporiana+Освіта.ua adopted**; litopys.org.ua confirmed live + corpus audited (folk-primary gap found); gate-neutral + astro-build green) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** No new module built — folk modules still **6/42**. This PR ships the long-deferred
+> (Sessions 27–33) reading-links: the 3 LIVE preview modules (kalendarna, koliadky-shchedrivky,
+> dumy-nevilnytski-lytsarski) now carry genre-specific "where to read" links in their Resources tab, and
+> the folk landing's "Де читати ці тексти" section is restored. Surfacing folk is STILL GATED (unchanged).
+
+### ✅ DONE THIS SESSION (PR claude/folk-reading-links)
+- **Reading-links → 3 live modules' `resources.yaml`** (role: `article` — the S27 action-3 deferred 7
+  sessions): verified-live ukrlib «Народна творчість» genre pages + **Освіта.ua** (school-canon lit, user
+  request) + Diasporiana «Фольклор». kalendarna → narod overview + веснянки(id0)/жниварські(id2)/колядки-
+  щедрівки(id6); koliadky → колядки(id5)/колядки-щедрівки(id6) + overview; dumy → народний епос/думи(id11) +
+  overview. Each reassembled (`assemble_mdx`). All added Ukrainian note-words `verify_words`-confirmed.
+- **Освіта.ua researched (user direction):** `osvita.ua/school/literature/` is live — full-text Ukrainian
+  literary canon, **author-indexed A–Я** ("читати онлайн"). EXCELLENT for LIT/LIT-* + the general landing
+  link; it has NO clean anonymous-folk-genre browse, so ukrlib «Народна творчість» stays the FOLK primary
+  ("all we need in ukrlib" — confirmed). Added to all 3 modules + landing + spec as the school-canon source.
+- **Corpus audit (user asked "what's in our corpus / did we scrape litopys?"):** YES — `scrape_litopys.py` +
+  `batch_scrape_izbornyk.py` → `literary_texts` (137,696 chunks): litopys/izbornyk chronicles ~11K
+  (Іпатіївський/Лаврентіївський/Новгородський/Київський, Величко, Самовидець, ПВЛ), Грушевський, encyclopedias
+  (УЛЕ/ЕУ), ukrlib authored works (Франко/Нечуй/Гончар/Шевченко…), Костомаров мифологія 958, diasporiana. Plus
+  textbooks 25.7K, ukrainian_wiki 22.4K, СУМ-11 127K, Грінченко 67K, ЕСУМ, Балла, ukrajinet WordNet 122K. **GAP:
+  folk genre primaries (думи/колядки/щедрівки verbatim) are ABSENT — only ~8 narod chunks; "Щедрик щедрик
+  щедрівочка" → 0 hits.** The #2854 ukrlib-narod folk ingest never landed → **this is the #3162 FOLK blocker**
+  (can't embed folk primaries we don't hold; HIST/OES/LIT primaries ARE in-corpus, so #3162 there is unblocked).
+- **litopys.org.ua confirmed LIVE 2026-06-15** (= izbornyk.org.ua; HTTP only). The live
+  `docs/resources/external_resources.yaml` (CORE v4.0) is already chtyvo-clean (0 refs) + has litopys/diaspora;
+  only stale `.backup`/`.truncated` mention chtyvo. Spec archives table + per-track registry updated accordingly.
+- **🔴 Чтиво (chtyvo.org.ua) is DEAD** — found while #M-4 live-verifying links BEFORE shipping (the spec
+  listed it #M-4-checked 2026-06-14; it posted a closure notice + serves no content on 2026-06-15). Dropped
+  from spec + landing; **Diasporiana** (`diasporiana.org.ua/category/folklor/`, 252 items, verified live)
+  adopted as the scholarly-archive replacement. The verify-before-ship discipline (#0.1/#M-4) in action.
+- **Folk landing "Де читати" section RESTORED** — shipped via #3119, then **dropped on main by `228f9ca180`
+  "group curriculum track landings"** (infra-lane regression). Restored minus Чтиво, plus Diasporiana +
+  expanded genre links (колядки/жниварські added). FLAG for the infra orchestrator.
+- **Spec `docs/best-practices/seminar-reading-links.md` updated** — Чтиво DEFUNCT, Diasporiana added,
+  verified ukrlib genre-ID table (веснянки0/драм1/жнив2/істор3/колядки5/колядки-щедрівки6/епос11), per-track
+  registry swapped off Чтиво, rollout status, cross-seminar defunct-archive sweep noted.
+- **VERIFIED not asserted (gate-neutral):** re-gated all 3 from the data-bearing root via
+  `verify_shippable --module-dir <wt>` → assemble + mdx_render GREEN, NO new vesum/plan-match/coverage
+  failures (added words all VESUM-found; differential vs baseline = identical pre-existing misses only).
+  **Full `npm run build` GREEN (2368 pages)** with the updated landing + 3 MDX (incl. Освіта.ua) staged →
+  landing JSX + modules render. mdx_render confirmed committed-MDX == current-pipeline regen (drift-safe).
+
+### 🧱 KEY FACTS / GOTCHAS
+- resources.yaml IS subject to python_qg (vesum / russianism / plan_reference_match / citations_resolve /
+  resource_coverage). Adding `role: article` reading-links is gate-neutral IF the added Ukrainian text is
+  VESUM-clean (`verify_words` it first) — extras beyond the plan are allowed (existing wiki links already are).
+- Re-gating a SHIPPED folk module from main shows pre-existing `vesum_verified` + `resources_search_attempted`
+  RED — build-context artifacts (telemetry-absent + plan-sourced words like лакомства/нащада/дебат that are
+  NOT in the module files). NOT caused by edits; render (mdx_render + astro) is the shippable-relevant check.
+- Re-`assemble_mdx` also normalizes imports (`import X, {Y}` → 2 separate lines) — current pipeline output;
+  benign, renders. Expect it in the MDX diff alongside the resources delta.
+- `data/seminar_reading_sources.yaml` registry deliberately NOT created — co-design it with the #3120 gate
+  (infra lane). The spec doc is the interim SSOT for verified URLs.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order) — priorities UNCHANGED from S33
+1. **#3162 primary-text embedding = the real folk-pedagogy unlock** (infra/corpus lane; filed, not mine to
+   implement). Coordinate with the infra orchestrator. Once primaries embed → re-run `run_llm_qg_parity.py`.
+   **NEW (corpus audit this session): the concrete folk prerequisite is finishing the #2854 ukrlib-narod folk
+   ingest into `literary_texts`** — folk genre primaries (думи/колядки/щедрівки) are NOT in our corpus today
+   (~8 narod chunks; "Щедрик…" → 0 hits), so #3162 for FOLK cannot embed what we don't hold. HIST/OES/LIT
+   primaries ARE in-corpus (litopys/izbornyk + ukrlib authored), so #3162 there is unblocked first.
+2. **Surfacing folk: STILL GATED** — no module cleanly clears LLM QG (koliadky 6.7 pedagogical, confirmed
+   real S33). Do NOT un-hide until #3162 lands + a re-grounded re-review passes.
+3. **Chtyvo cross-seminar sweep** — FILED this session (issue). bio plans + research dossiers +
+   `docs/resources/external_resources.yaml*` still cite the dead chtyvo.org.ua (infra/bio lane).
+4. **Remaining folk modules 6→42** — gate each with `verify_shippable --astro-build` + corpus-hammer.
+   New modules get reading-links via the writer/assembler (or the #3120 registry+gate when it lands).
+
+### ⚠ CARRY-FORWARD
+- PR opened, NOT self-merged (agent-type contract; orchestrator promotes). Handoff bundled in the PR.
+- `git push` folk → `--no-verify`; never reset/commit on main (main HEAD moved to `5aa34ea2aa` mid-session —
+  orchestrator reconciliation, not mine).
+- Verified-live folk archives (2026-06-15): ukrlib narod genre pages + diasporiana.org.ua/category/folklor/.
+  Чтиво DEAD — never ship a chtyvo.org.ua link again.
+
+---
+
+## ▶▶▶ SESSION 33 HANDOFF (2026-06-14 — primary-text ROOT CAUSE found + proper-solution spec FILED #3162; pedagogical weakness CONFIRMED real (not artifact) via MDX re-review; TWO behavioral rules pinned to both agent defs #3156+#3161)
 
 > **⏱ HONEST SCOPE:** No new module content. Diagnosed WHY folk modules don't include the primary literature they
 > teach (the pedagogical-6.7 driver), filed the proper-solution spec, and pinned two behavioral rules to the agent
