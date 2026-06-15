@@ -1,20 +1,19 @@
-# Current — Claude Session Handoff (2026-06-15, late)
+# Current — Claude Session Handoff (2026-06-15, late — Atlas completion + #1908 hooks)
 
-> Router: read `docs/session-state/current.md` first (if present).
-> **Latest detailed handoff: `docs/session-state/2026-06-15-claude-atlas-antonym-live-conformance-gate-fix.md`** — read it in full.
+> **Latest detailed handoff: `docs/session-state/2026-06-15-claude-atlas-completion-hooks-handoff.md`** — READ IT IN FULL. It has the precise resume steps.
 
-> **ROLE:** main orchestrator = **infra / tooling / tech-debt / general features / integration / merge** — NOT tracks. Track issues (folk/bio/lit/seminar/B2-wiki) are track-orchestrator-owned.
+> **ROLE:** main orchestrator. **Atlas completion is the active user priority.** User is frustrated — wants RESULTS + blunt NEED/HAVE/BLOCKING reporting + the fleet used (dispatch + VERIFY, not hand-coding). Deliver, don't theorize.
 
-> **✅ Shipped this session (merged):** **Dependabot 9/9** (#3180–#3188). **Atlas correctness chain:** #3195 (#3150 freshness rescoped to lexicon-CODE-only), #3206 (#3197 antonym noise filter), #3210 (§8 `lemma_in_vesum` root-fix), #3213 (full regen — **antonym cleanup LIVE + ~120K vocab refresh**, astro-render-validated), #3218 (#3211 §8 heritage fallback — Грінченко/ЕСУМ `sources.db` supersedes the manual allowlist, gate **self-heals**). **Freshness gate GREEN on main.** **#1908 (layered-harness) STARTED:** #3224 + #3226 = **#M-0.5 admin-merge guard hook** (PreToolUse(Bash) blocks `gh pr merge --admin` over failing required CI, denylist-safe, **fail-CLOSED**; #3226 fixed a fail-open on gh-error/bogus-PR caught by smoke-testing the *deployed* artifact). **Deployed live** to `.claude/` (verified exit 2 on bogus-PR --admin). 20 unit tests. Autopsy: `atlas-conformance-vesum-false-positives.md`.
+> **State:** main @ `baba4608bc`, clean, core.bare=false. Live hooks: #M-0.5 admin-guard + #M-7 pytest-push. **#M-5 secret-guard DEACTIVATED** (false-positive) — fix is PR #3240. 0 active dispatches.
 
-> **⚠️ OPEN ITEMS (next session):**
-> - **#1908 remaining hooks (continue):** #M-7 pytest-before-push (needs a pytest-freshness marker + PreToolUse(Bash) on `git push`), #M-5 secret-scan (PreToolUse(Bash) on env/printenv/set/grep-of-dotenv-files/cat-of-credential-files — rewrite-or-block; HIGH false-positive risk, design carefully), V7-build-guard (`LEARN_UK_HUMAN_AUTHORIZED=1` env gate). Pattern proven by the admin-guard: source in `agents_extensions/shared/hooks/` + register in `agents_extensions/shared/settings.json` PreToolUse[Bash] + `bash scripts/deploy_prompts.sh` to activate. Full inventory in issue #1908. **Note:** Claude hooks only fire for Claude Code; dispatched codex/gemini run their own CLIs (codex has `.codex/hooks.json`).
-> - **ATLAS COMPLETION (user priority — after #1908):** strategy in **`docs/atlas-data-coverage-strategy.md`** (+ #2882 comment). Design ✓ / code ✓ (every section has a filler) / **data is the gap**. Core-vocab true gaps: translation ~535 (🟢 invert Балла→LOCAL UK→EN index, do FIRST), etymology ~740 (🟢 ЕСУМ root-fallback, LOCAL), meaning ~420 (🟡 СУМ-20 slovnyk.me online), cefr ~925 (🔴 largely UNCOVERED beyond PULS 5.9K — estimate-and-label or accept ceiling; **user's call**). Design refinement: inflected-form entries (Андрію=voc.) inflate the gap → dedupe-to-lemma decision. Each step = normal lexicon PR + `make atlas` regen, guarded by §8 + freshness gates.
-> - **#3098 (§6 epic):** §6 calque note near-dormant; enhancement = surface it on the *replacement* word's Atlas page.
-> - **#3150 fingerprint scope:** REJECTED narrowing it (under-gate risk > harmless friction). Verifier edits need a manual fingerprint bump — that's correct-and-safe; don't "fix."
+> **⏭️ RESUME (in order):**
+> 1. **PR #3240** — codex's #M-5 false-positive fix. **Smoke-test the deployed hook** (must ALLOW reading the hook's own file + `|tail -N`; must still BLOCK real credential-file reads + bare env-dumps + secret-var echoes) → merge → re-register #M-5 in `agents_extensions/shared/settings.json` → `bash scripts/deploy_prompts.sh` → live-verify.
+> 2. **kaikki translation fill** — branch `claude/atlas-kaikki-translation-2882` (WIP committed: gloss helpers added, NOT wired). Finish wiring `build_kaikki_lookup` + add `_translation` kaikki fallback + rebuild lookup + VERIFY output + PR. Fills **315/548 (57%)** of translation gap, clean, from Wiktionary (CC-BY-SA).
+> 3. **Dedup-to-lemma** (USER-APPROVED): ~233 "gap" words are inflected forms/misspellings → in `build_data_manifest.py`, VESUM→lemma, alias forms to lemma page, drop misspellings. Biggest lever.
+> 4. **CEFR**: State Standard 2024 (mova.gov.ua №279) IS the A1–C2 framework but likely descriptors-only. Fetch the standard .docx + the Synchak eLex2025 corpus-profile paper (links in detailed handoff) for a per-word dataset. Decision pending: estimate-from-frequency-and-label vs leave blank.
 
-> **🎯 Next (carried):** #2732 (isolate marker-pdf + resolver-lock — needs a DECISION, don't auto-fire), #3079 (seminar self-converge EPIC), #3162 (primary-text routing, folk-adjacent).
+> **Atlas plan (SSOT: `docs/atlas-data-coverage-strategy.md`):** translation/meaning/stress/grammar → reachable ~100%; **etymology ~80% max, CEFR can't hit 100%** (no source per word). **License correction: slovnyk.me СУМ-20 is fine to use attributed (non-commercial ed project) — I was wrong to treat #1667 as a wall.** kaikki = CC-BY-SA, fully open.
 
-> ⚠️ Watch: **SHIP LIVE not just code-merged (#M-11)** — antonym fix needed the manifest regen, which surfaced the gate bug; chased to #3213. **Heritage-defense before "fixing" vocab** — `search_heritage` proved `хвастливий` authentic before I nearly replaced it. **VERIFY dispatch self-reports (#M-8)** — read codex #3195's diff inline. Atlas/lexicon dispatches = code-only / never commit `lexicon-manifest.json` (orchestrator regenerates after merge).
+> **⚠️ HARD LESSON:** VERIFY OUTPUT ON REAL DATA before merge/deploy — passing tests ≠ correct. This caught 3 broken deliverables this session (2 garbage Atlas fills + 1 false-positive hook), none caught by the agents' green tests. Cheap heuristic fills (inversion/suffix-strip) DON'T WORK — use direct per-lemma sources.
 
-Prior handoff (superseded): `2026-06-15-claude-parallel-fanout-atlas-infra.md`.
+> **Other:** #2842 core.bare flip recurred + fixed; wire `check_core_bare.py --fix` into a hook (proper fix). #2882 Atlas umbrella. CLOSED garbage: #3229, #3231.
