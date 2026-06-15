@@ -93,21 +93,28 @@ def test_hook_errors_fail_open(monkeypatch):
 
 
 def test_stamp_pytest_bash_smoke(tmp_path):
-    branch = subprocess.run(
-        ["git", "branch", "--show-current"],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=True,
-    ).stdout.strip()
+    branch = "testbranch"
+    git_env = os.environ.copy()
+    for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX"):
+        git_env.pop(key, None)
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    subprocess.run(["git", "init", "-b", branch], cwd=repo, env=git_env, check=True)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, env=git_env, check=True)
+    subprocess.run(["git", "config", "user.name", "Test User"], cwd=repo, env=git_env, check=True)
+    (repo / "README.md").write_text("test repo\n", encoding="utf-8")
+    subprocess.run(["git", "add", "README.md"], cwd=repo, env=git_env, check=True)
+    subprocess.run(["git", "commit", "-m", "initial"], cwd=repo, env=git_env, check=True)
+
     marker = tmp_path / f"learn-uk-pytest.{branch}.stamp"
     payload = json.dumps({"tool_input": {"command": ".venv/bin/python -m pytest tests/test_guard_push_pytest.py -q"}})
-    env = os.environ.copy()
+    env = git_env.copy()
     env["TMPDIR"] = str(tmp_path)
 
     result = subprocess.run(
         [str(STAMP_PATH)],
-        cwd=REPO_ROOT,
+        cwd=repo,
         input=payload,
         capture_output=True,
         text=True,
@@ -117,3 +124,19 @@ def test_stamp_pytest_bash_smoke(tmp_path):
 
     assert result.returncode == 0
     assert marker.exists()
+
+    marker.unlink()
+    subprocess.run(["git", "checkout", "--detach", "HEAD"], cwd=repo, env=git_env, check=True, capture_output=True, text=True)
+
+    detached_result = subprocess.run(
+        [str(STAMP_PATH)],
+        cwd=repo,
+        input=payload,
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
+    )
+
+    assert detached_result.returncode == 0
+    assert not list(tmp_path.glob("learn-uk-pytest*.stamp"))
