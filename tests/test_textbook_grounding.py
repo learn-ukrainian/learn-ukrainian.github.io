@@ -433,3 +433,76 @@ def test_textbook_excerpt_context_uses_reference_title_for_direct_lookup(
 
     assert "10-klas-ukrmova-karaman-2018" in context
     assert "corpus_missing: true" not in context
+
+
+def test_seminar_textbook_miss_uses_literary_primary(monkeypatch) -> None:
+    from wiki import sources_db
+
+    search_sources_calls: list[tuple[str, str, int]] = []
+    search_literary_calls: list[set[str]] = []
+
+    def fake_search_sources(query: str, *, track: str, limit: int) -> list[dict]:
+        search_sources_calls.append((query, track, limit))
+        return [{"chunk_id": "external-hit", "source_type": "external", "text": "Not a primary."}]
+
+    def fake_search_literary(keywords: set[str], max_total: int = 20) -> list[dict]:
+        search_literary_calls.append(keywords)
+        return [
+            {
+                "chunk_id": "chubynsky-koliadka_c0001",
+                "corpus": "literary_texts",
+                "source_type": "literary",
+                "title": "Колядка",
+                "text": "Коли не було з нащада світа, тоді не було неба ні землі.",
+                "source_file": "chubynsky-koliadky",
+            }
+        ]
+
+    monkeypatch.setattr(sources_db, "search_sources", fake_search_sources)
+    monkeypatch.setattr(sources_db, "search_literary", fake_search_literary)
+    plan = {
+        "references": [{"title": "Чубинський колядки", "type": "primary"}],
+        "title": "Колядки та щедрівки",
+        "subtitle": "Міф про створення світу",
+        "content_outline": [{"section": "Читання", "points": ["архаїчна колядка"]}],
+    }
+
+    context = linear_pipeline._build_textbook_excerpt_context(plan, "folk")
+
+    assert search_sources_calls == [
+        (
+            "Чубинський колядки Колядки та щедрівки Міф про створення світу Читання архаїчна колядка",
+            "folk",
+            4,
+        )
+    ]
+    assert search_literary_calls
+    assert "Primary text (literary corpus)" in context
+    assert "chunk_id: chubynsky-koliadka_c0001" in context
+    assert "> Коли не було з нащада світа" in context
+    assert "corpus_missing: true" not in context
+    assert "corpus_missing" not in plan["references"][0]
+
+
+def test_core_textbook_miss_does_not_call_literary(monkeypatch) -> None:
+    from wiki import sources_db
+
+    def fake_search_sources(query: str, *, track: str, limit: int) -> list[dict]:
+        return []
+
+    def fail_search_literary(keywords: set[str], max_total: int = 20) -> list[dict]:
+        raise AssertionError("core levels must not query the literary corpus")
+
+    monkeypatch.setattr(sources_db, "search_sources", fake_search_sources)
+    monkeypatch.setattr(sources_db, "search_literary", fail_search_literary)
+    plan = {
+        "references": [{"title": "Чубинський колядки"}],
+        "title": "Morning routine",
+        "subtitle": "core sample",
+        "content_outline": [{"section": "Practice", "points": ["verbs"]}],
+    }
+
+    context = linear_pipeline._build_textbook_excerpt_context(plan, "a1")
+
+    assert "corpus_missing: true" in context
+    assert plan["references"][0]["corpus_missing"] is True

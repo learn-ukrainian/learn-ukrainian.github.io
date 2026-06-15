@@ -65,6 +65,19 @@ def test_word_count_reports_tolerance_metadata() -> None:
     assert report["target"] == 1200
 
 
+def test_word_count_excludes_primary_reading_fence() -> None:
+    text = (
+        ("counted " * 10)
+        + "<!-- PRIMARY-READING -->\n"
+        + ("primary " * 100)
+        + "\n<!-- /PRIMARY-READING -->"
+    )
+
+    report = _word_count_gate(text, 20)
+
+    assert report["count"] == 10
+
+
 # ----- callout_min ------------------------------------------------------------
 
 
