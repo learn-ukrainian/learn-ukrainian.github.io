@@ -29,7 +29,8 @@ def test_manifest_fingerprint_is_stable_across_runs(tmp_path: Path) -> None:
     second = build_fingerprint(root)
 
     assert first == second
-    assert first["stats"] == {"lexicon_code_files": 2, "vocabulary_lemmas": 2}
+    assert first["stats"] == {"lexicon_code_files": 2}
+    assert set(first["inputs"]) == {"lexicon_code"}
 
 
 def test_manifest_fingerprint_changes_when_lexicon_source_byte_changes(tmp_path: Path) -> None:
@@ -42,7 +43,7 @@ def test_manifest_fingerprint_changes_when_lexicon_source_byte_changes(tmp_path:
     assert after != before
 
 
-def test_manifest_fingerprint_changes_when_vocab_lemma_is_added(tmp_path: Path) -> None:
+def test_manifest_fingerprint_ignores_vocab_lemma_churn(tmp_path: Path) -> None:
     root = _fixture_repo(tmp_path)
     before = build_fingerprint(root)["fingerprint"]
 
@@ -50,7 +51,7 @@ def test_manifest_fingerprint_changes_when_vocab_lemma_is_added(tmp_path: Path) 
     vocabulary.write_text(vocabulary.read_text(encoding="utf-8") + "- uk: школа\n", encoding="utf-8")
     after = build_fingerprint(root)["fingerprint"]
 
-    assert after != before
+    assert after == before
 
 
 def test_manifest_freshness_check_passes_on_matching_sidecar(tmp_path: Path, capsys) -> None:
@@ -72,5 +73,5 @@ def test_manifest_freshness_check_fails_on_mismatched_sidecar(tmp_path: Path, ca
 
     assert check_freshness(root=root, fingerprint_path=sidecar) == 2
     output = capsys.readouterr().out
-    assert "Atlas manifest stale vs lexicon code / vocab" in output
+    assert "Atlas manifest stale vs lexicon code" in output
     assert "dictionary DB/cache version drift is out of scope" in output

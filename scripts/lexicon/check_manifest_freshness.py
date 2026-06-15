@@ -36,7 +36,7 @@ def check_freshness(
     committed = _load_json(fingerprint_path)
     if committed.get("fingerprint") != current["fingerprint"]:
         print(
-            "::error::Atlas manifest stale vs lexicon code / vocab; "
+            "::error::Atlas manifest stale vs lexicon code; "
             "run `make atlas` locally and commit the updated manifest + fingerprint."
         )
         print(f"committed: {committed.get('fingerprint', '<missing>')}")
@@ -47,8 +47,7 @@ def check_freshness(
     stats = current["stats"]
     print(
         "Atlas manifest freshness OK: "
-        f"{stats['lexicon_code_files']} lexicon code files, "
-        f"{stats['vocabulary_lemmas']} vocabulary lemmas."
+        f"{stats['lexicon_code_files']} lexicon code files."
     )
     print("# TODO(#3150): dictionary DB/cache version drift is out of scope until CI can access #2928 data.")
     return 0

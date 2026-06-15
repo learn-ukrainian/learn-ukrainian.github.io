@@ -98,7 +98,6 @@ jobs:
               - 'scripts/lexicon/*.py'
               - 'site/src/data/lexicon-manifest.json'
               - 'site/src/data/lexicon-manifest.fingerprint.json'
-              - 'curriculum/l2-uk-en/*/*/vocabulary.yaml'
 
   atlas-freshness:
     name: Atlas Manifest Freshness
