@@ -65,6 +65,7 @@ from scripts.lexicon.calque_corrections import (
     SENSE_RESTRICTED_CALQUES,
 )
 from scripts.lexicon.heritage_classifier import classify_lemma
+from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, write_fingerprint
 from scripts.verification.vesum import verify_lemma, verify_word
 from scripts.wiki.slovnyk_me import primary_synonym_sense_text
 
@@ -2687,6 +2688,7 @@ def enrich() -> tuple[int, int]:
     manifest["enrichment_generated"] = True
     manifest = _clean_html_entities_in_obj(manifest)
     MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    write_fingerprint(DEFAULT_FINGERPRINT, root=ROOT)
     return enriched, len(manifest["entries"])
 
 
