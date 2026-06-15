@@ -2,37 +2,61 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-istorija-ukrajini-gisem-2017_s4921
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0504
   type: textbook
   title: Розділ VIII. Наш край на початку XX ст
   page: 278
   grade: 9
 - id: S2
-  file: 11-klas-istoriya-ukr-gisem-2024_s0945
+  file: 11-klas-istoriya-ukr-gisem-2024_s0313
   type: textbook
   title: § 21. державотворчі процеси в перші роки незалежності
   page: 175
   grade: 11
 - id: S3
-  file: 11-klas-ukrajinska-mova-voron-2019_s1261
+  file: 11-klas-ukrajinska-mova-voron-2019_s0143
   type: textbook
   title: Ігорович. Про цього давньоруського
   page: 97
   grade: 11
 - id: S4
-  file: 10-klas-ukrmova-karaman-2018_s0703
+  file: 10-klas-ukrmova-karaman-2018_s0379
   type: textbook
   title: Мовленнєве спілкування. Стилістика і культура мовлення
   page: 216
   grade: 10
 - id: S5
-  file: 11-klas-istoriya-ukr-gisem-2024_s0892
+  file: 11-klas-istoriya-ukr-gisem-2024_s0007
   type: textbook
   title: § 1. Повторення. Вступ
   page: 6
   grade: 11
 - id: S6
-  file: wave9-rusanivsky-ist-lit-movy_c0339
+  file: 7808b51b_c0339
   type: literary
   title: Русанівський — Історія укр. літ. мови
   author: Русанівський В.
+- id: S7
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0139
+  type: textbook
+  title: Зміни приголосних перед суфіксами -ськ-, -ств-
+  page: 100
+  grade: 10
+- id: S8
+  file: 6-klas-ukrmova-zabolotnyi-2020_s0096
+  type: textbook
+  title: Відміни і групи іменників
+  page: 95
+  grade: 6
+- id: S9
+  file: 10-klas-ukrmova-karaman-2018_s0331
+  type: textbook
+  title: Перехідні й неперехідні дієслова
+  page: 187
+  grade: 10
+- id: S10
+  file: 6-klas-ukrmova-zabolotnyi-2020_s0031
+  type: textbook
+  title: Офіційно-ділові словосполучення
+  page: 32
+  grade: 6
