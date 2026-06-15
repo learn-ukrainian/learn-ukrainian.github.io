@@ -2,7 +2,16 @@ module: b2-073
 level: B2
 sequence: 73
 slug: checkpoint-lexicology-i
-version: 1.0.2
+version: 1.0.3
+lifecycle: locked
+reviewed_at: '2026-06-15T09:08:00Z'
+reviewed_by: codex/b2-wiki-readiness-batch-2
+review_notes: >-
+  Batch 2 B2 wiki-readiness lock. Removed only evidence-backed VERIFY markers
+  from wiki/grammar/b2/checkpoint-lexicology-i.md, refreshed its source registry
+  to current local textbook chunks, corrected overstrong phraseology guidance,
+  and recorded the lock in
+  wiki/.reviews/grammar/b2/checkpoint-lexicology-i-review-LOCKED.md.
 title: 'Контрольний модуль: Лексикологія I (синонімія та пареміологія)'
 subtitle: 'Підсумковий контроль: синонімія, прислів''я та сталі вирази'
 focus: checkpoint
@@ -33,7 +42,7 @@ listening_situations:
   motivation: Перевірка розуміння фразеології в живому мовленні.
 writing_tasks:
 - task_type: есе
-  prompt: Напишіть текст на тему 'Мудрість поколінь у прислів'ях'. Використайте 
+  prompt: Напишіть текст на тему 'Мудрість поколінь у прислів'ях'. Використайте
     щонайменше 5 прислів'їв та 5 точних синонімів.
   requirements:
   - мінімум 300 слів
@@ -163,7 +172,7 @@ activity_hints:
   focus: 'Прочитайте текст про синонімія: типи та точність добору і дайте відповіді
     на запитання щодо ключових понять.'
 - type: essay-response
-  focus: Напишіть короткий текст (100-150 слів) про прислів'я, приказки та їхня 
+  focus: Напишіть короткий текст (100-150 слів) про прислів'я, приказки та їхня
     функція, використовуючи нову лексику модуля.
 - type: critical-analysis
   focus: 'Проаналізуйте взаємозв''язок між поняттями у розділі «Синонімія: типи та
@@ -172,6 +181,9 @@ activity_hints:
   focus: 'Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему синонімія:
     типи та точність добору.'
 references:
+- source: wiki/grammar/b2/checkpoint-lexicology-i.md
+  pages: locked review 2026-06-15
+  topic: Locked B2 wiki grammar brief aligned with this checkpoint plan
 - source: Караман, 10 клас (2018)
   pages: §35–45
   topic: 'Лексикологія: синоніми, фразеологія'
@@ -184,6 +196,12 @@ references:
 - source: Державний стандарт 2024
   pages: SS 4.4
   topic: Лексикологія (B2)
+changelog:
+- version: 1.0.3
+  date: '2026-06-15'
+  changes:
+  - Додано lifecycle lock для Batch 2 B2 wiki readiness.
+  - Зафіксовано зв'язок плану з locked wiki review для checkpoint-lexicology-i.
 connects_to:
   previous: set-expressions-combined
   next: idioms-somatic

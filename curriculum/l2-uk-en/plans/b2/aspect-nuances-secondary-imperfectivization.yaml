@@ -2,7 +2,15 @@ module: b2-054
 level: B2
 sequence: 54
 slug: aspect-nuances-secondary-imperfectivization
-version: 1.2.2
+version: 1.2.3
+lifecycle: locked
+reviewed_at: '2026-06-15T09:08:00Z'
+reviewed_by: codex/b2-wiki-readiness-batch-2
+review_notes: >-
+  Batch 2 B2 wiki-readiness lock. Removed only evidence-backed VERIFY markers
+  from wiki/grammar/b2/aspect-nuances-secondary-imperfectivization.md, refreshed
+  its source registry to current local textbook chunks, and recorded the lock in
+  wiki/.reviews/grammar/b2/aspect-nuances-secondary-imperfectivization-review-LOCKED.md.
 title: 'Нюанси виду: Вторинна імперфективація'
 subtitle: 'Нюанси виду: вторинна недоконаність'
 focus: grammar
@@ -10,33 +18,33 @@ pedagogy: PPP
 phase: B2.2 [Phraseology & Synonymy]
 word_target: 4000
 objectives:
-- Зрозуміти механізм вторинної імперфективації як спосіб утворення недоконаного 
+- Зрозуміти механізм вторинної імперфективації як спосіб утворення недоконаного
   виду від доконаного.
 - 'Засвоїти основні суфікси імперфективації: -ува-, -юва-, -ва-, -а-.'
 - Вивчити чергування голосних у корені при імперфективації (о/а, е/і).
-- Навчитися розрізняти відтінки значень дієслівних пар, утворених за допомогою 
+- Навчитися розрізняти відтінки значень дієслівних пар, утворених за допомогою
   вторинної імперфективації.
-- Правильно використовувати новоутворені форми недоконаного виду в контексті 
+- Правильно використовувати новоутворені форми недоконаного виду в контексті
   тривалих або повторюваних дій.
 reading_situations:
 - source_type: фрагмент художнього тексту
-  topic: Аналіз дієслівних форм недоконаного виду, утворених від префіксальних 
+  topic: Аналіз дієслівних форм недоконаного виду, утворених від префіксальних
     дієслів доконаного виду, у творі сучасної української прози.
   key_elements:
   - суфіксальні маркери
   - кореневі чергування
   - контекст тривалості
-  motivation: Розуміння того, як мова адаптує дієслова для передачі різних 
+  motivation: Розуміння того, як мова адаптує дієслова для передачі різних
     часових нюансів.
 listening_situations:
 - media_type: аудіо
-  setting: Інструкція з виконання складного технологічного процесу, де оратор 
+  setting: Інструкція з виконання складного технологічного процесу, де оратор
     використовує багато дієслів недоконаного виду на позначення повторюваності.
   focus_points:
   - Виявлення дієслів на -увати / -ати.
   - Сприйняття ритміки мовлення.
   - Розуміння послідовності дій.
-  motivation: Тренування здатності розрізняти вид дієслова за морфологічними 
+  motivation: Тренування здатності розрізняти вид дієслова за морфологічними
     ознаками на слух.
 writing_tasks:
 - task_type: власне висловлення
@@ -55,11 +63,11 @@ writing_tasks:
     [е] -> [і]. Модельний варіант демонструє впевнене використання префіксально-суфіксальних
     форм для створення динамічного опису досвіду.'
 discussion_topics:
-- context: Чи може мова бути занадто складною? Вторинна імперфективація як 
+- context: Чи може мова бути занадто складною? Вторинна імперфективація як
     приклад граматичної витонченості української мови.
   questions:
   - Навіщо мові так багато способів вираження тривалості дії?
-  - Як би змінилося наше сприйняття часу, якби в мові був лише один вид 
+  - Як би змінилося наше сприйняття часу, якби в мові був лише один вид
     дієслова?
   - Які труднощі виникають у вас найчастіше при утворенні видових пар?
   motivation: Філософське осмислення граматичних категорій мови.
@@ -119,8 +127,8 @@ content_outline:
 - section: Підсумок — Summary
   words: 300
   points:
-  - Secondary imperfectivation creates imperfective verbs to express prolonged 
-    or repeated actions using suffixes like -ува-/-юва- (записати → записувати) 
+  - Secondary imperfectivation creates imperfective verbs to express prolonged
+    or repeated actions using suffixes like -ува-/-юва- (записати → записувати)
     and -ва- (дати → давати).
   - 'Root vowel alternations frequently accompany this process: о/а (допомогти → допомагати)
     and е/і (вимести → вимітати).'
@@ -156,21 +164,30 @@ activities:
   total_min_items: 40
 activity_hints:
 - type: fill-in
-  description: Form secondary imperfective from perfective (e.g., 
+  description: Form secondary imperfective from perfective (e.g.,
     переписати→переписувати, опрацювати→опрацьовувати)
 - type: group-sort
   description: Sort verb pairs into primary vs secondary imperfective categories
 - type: error-correction
-  description: Fix incorrect imperfective forms (e.g., 'вирішати'→'вирішувати', 
+  description: Fix incorrect imperfective forms (e.g., 'вирішати'→'вирішувати',
     wrong vowel alternation)
 - type: select
-  description: Choose the correct aspect form in context (тривала дія vs 
+  description: Choose the correct aspect form in context (тривала дія vs
     одноразова)
 references:
+- source: wiki/grammar/b2/aspect-nuances-secondary-imperfectivization.md
+  pages: locked review 2026-06-15
+  topic: Locked B2 wiki grammar brief aligned with this module plan
 - 'Караман, 10 клас (2018): §71-74 — Дієслово: вид, час, спосіб'
 - 'Глазова, 11 клас (2019): §1-10 — Морфологічна норма'
 - 'Авраменко, 11 клас (2019): §15-20 — Морфологічна норма'
 - 'State Standard 2024: B2 SS 4.1.3 (verb forms)'
+changelog:
+- version: 1.2.3
+  date: '2026-06-15'
+  changes:
+  - Додано lifecycle lock для Batch 2 B2 wiki readiness.
+  - Зафіксовано зв'язок плану з locked wiki review для aspect-nuances-secondary-imperfectivization.
 connects_to:
   previous: checkpoint-cases-morphology
   next: aspect-nuances-imperative-infinitive

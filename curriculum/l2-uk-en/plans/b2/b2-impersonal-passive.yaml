@@ -2,7 +2,15 @@ module: b2-003
 level: B2
 sequence: 3
 slug: b2-impersonal-passive
-version: 1.4.2
+version: 1.4.3
+lifecycle: locked
+reviewed_at: '2026-06-15T09:08:00Z'
+reviewed_by: codex/b2-wiki-readiness-batch-2
+review_notes: >-
+  Batch 2 B2 wiki-readiness lock. Removed only evidence-backed VERIFY markers
+  from wiki/grammar/b2/b2-impersonal-passive.md, refreshed its source registry
+  to current local textbook chunks, and recorded the lock in
+  wiki/.reviews/grammar/b2/b2-impersonal-passive-review-LOCKED.md.
 title: Безособові пасивні конструкції на -но, -то
 subtitle: Безособові пасивні форми на -но, -то
 focus: grammar
@@ -12,7 +20,7 @@ objectives:
 - Усвідомлювати переваги безособових форм на -но, -то над дієприкметниковими для
   акцентування результату.
 - Правильно утворювати безособові форми від дієслів доконаного виду.
-- Суворо дотримуватися норми щодо невживання орудного відмінка діяча при цих 
+- Суворо дотримуватися норми щодо невживання орудного відмінка діяча при цих
   формах.
 - Використовувати конструкції на -но, -то в офіційно-діловому та публіцистичному
   стилях для надання об'єктивності.
@@ -24,7 +32,7 @@ reading_situations:
   - впроваджено
   - обладнано
   - підготовлено до експлуатації
-  motivation: Аналіз безособових форм у повідомленні про досягнення та 
+  motivation: Аналіз безособових форм у повідомленні про досягнення та
     інфраструктурні результати.
 listening_situations:
 - media_type: інтерв'ю
@@ -36,7 +44,7 @@ listening_situations:
   motivation: Розпізнавання специфіки офіційно-ділового стилю в усному мовленні.
 writing_tasks:
 - task_type: репортаж
-  prompt: Напишіть звітний репортаж про проведення благодійного марафону у 
+  prompt: Напишіть звітний репортаж про проведення благодійного марафону у
     вашому місті.
   requirements:
   - мінімум 180 слів
@@ -49,7 +57,7 @@ writing_tasks:
 discussion_topics:
 - context: 'Правоохоронна система та прозорість: чи достатньо інформації ми отримуємо?'
   questions:
-  - Чому в новинах часто вживаються форми 'затримано', 'відкрито провадження' 
+  - Чому в новинах часто вживаються форми 'затримано', 'відкрито провадження'
     без імен?
   - Чи сприяє такий стиль мовлення об'єктивності?
   motivation: Обговорення ролі граматики у формуванні суспільної думки.
@@ -57,7 +65,7 @@ content_outline:
 - section: Безособовість як маркер результативності дії
   words: 1000
   subsections:
-  - Відмінність між ознакою (книга прочитана) та дією-результатом (книгу 
+  - Відмінність між ознакою (книга прочитана) та дією-результатом (книгу
     прочитано).
   - 'Специфіка керування: Знахідний відмінок об''єкта (прочитано статтю).'
   - Творення форм від основи минулого часу дієслів.
@@ -122,9 +130,12 @@ activity_hints:
 - type: select
   focus: Визначити, коли доречна форма на -но/-то, а коли активна конструкція
 - type: fill-in
-  focus: Трансформувати активне речення в безособове на -но/-то зі збереженням 
+  focus: Трансформувати активне речення в безособове на -но/-то зі збереженням
     змісту
 references:
+- source: wiki/grammar/b2/b2-impersonal-passive.md
+  pages: locked review 2026-06-15
+  topic: Locked B2 wiki grammar brief aligned with this module plan
 - source: Караман, 10 клас (2018)
   pages: §77, с. 191–193
   topic: Безособові форми на -но, -то
@@ -134,6 +145,12 @@ references:
 - source: Авраменко, 11 клас (2019)
   pages: §25, с. 81–82
   topic: Безособові форми на -но/-то vs дієприкметники-присудки
+changelog:
+- version: 1.4.3
+  date: '2026-06-15'
+  changes:
+  - Додано lifecycle lock для Batch 2 B2 wiki readiness.
+  - Зафіксовано зв'язок плану з locked wiki review для b2-impersonal-passive.
 connects_to:
   previous: past-passive-participles
   next: dim-zhytlo
