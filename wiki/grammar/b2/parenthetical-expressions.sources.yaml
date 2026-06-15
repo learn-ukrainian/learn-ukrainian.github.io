@@ -1,45 +1,51 @@
-# Source registry for b2/parenthetical-expressions.md
+# Source registry for wiki/grammar/b2/parenthetical-expressions.md
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1221
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0175
   type: textbook
   title: § 28. Розділові знаки у простих реченнях,
   page: 124
   grade: 11
 - id: S2
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4715
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0208
   type: textbook
   title: РЕЧЕННЯ ІЗ ЗВЕРТАННЯМИ,
   page: 176
   grade: 8
 - id: S3
-  file: 11-klas-ukrajinska-mova-voron-2019_s1266
+  file: 11-klas-ukrajinska-mova-voron-2019_s0194
   type: textbook
   title: § 25. Що спільного між звертаннями і вставними словами? 154
   page: 131
   grade: 11
 - id: S4
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1166
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0149
   type: textbook
   title: § 34. ВСТАВНІ КОНСТРУКЦІЇ
   page: 109
   grade: 11
 - id: S5
-  file: 5-klas-ukrmova-litvinova-2022_s2412
+  file: 5-klas-ukrmova-litvinova-2022_s0275
   type: textbook
   title: Словник термінів
   page: 270
   grade: 5
 - id: S6
-  file: 8-klas-ukrmova-avramenko-2025_s4647
+  file: 8-klas-ukrmova-avramenko-2025_s0187
   type: textbook
   title: § 65. –66
   page: 139
   grade: 8
 - id: S8
-  file: ext-article-0
+  file: ext-other_blogs-45
   type: external
   title: Вставне слово — Вікіпедія
   url: https://uk.wikipedia.org/wiki/Вставні_слова
   domain: uk.wikipedia.org
+- id: S9
+  file: 5-klas-ukrmova-avramenko-2022_s0180
+  type: textbook
+  title: Вставні слова
+  page: 174
+  grade: 5

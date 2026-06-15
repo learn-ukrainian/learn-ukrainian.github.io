@@ -2,44 +2,50 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 5-klas-istoriya-schupak-2022_s1940
+  file: 5-klas-istoriya-schupak-2022_s0171
   type: textbook
   title: § 30. Як ви розумієте значення поняття «правила поведінки»? Чи дово
   page: 170
   grade: 5
 - id: S2
-  file: 11-klas-istoriya-ukr-galimov-2024_s0889
+  file: 11-klas-istoriya-ukr-galimov-2024_s0454
   type: textbook
   title: § 33. Широкомасштабне вторгнення Російської Федерації в Україну
   page: 251
   grade: 11
 - id: S3
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1055
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0456
   type: textbook
   title: СОЦІАЛЬНА СТРУКТУРА УКРАЇНСЬКОГО СУСПІЛЬСТВА. ПОВСЯКДЕННЯ
   page: 249
   grade: 11
 - id: S4
-  file: 11-klas-ukrajinska-mova-voron-2019_s1244
+  file: 11-klas-ukrajinska-mova-voron-2019_s0021
   type: textbook
   title: ІІ «Уява охоплює весь світ». Складіть усний роздум за другим
   page: 17
   grade: 11
 - id: S5
-  file: 11-klas-istoriya-ukr-gisem-2024_s0986
+  file: 11-klas-istoriya-ukr-gisem-2024_s0491
   type: textbook
   title: § 33. Широкомасштабне вторгнення російської Федерації в україну
   page: 283
   grade: 11
 - id: S6
-  file: 11-klas-istoriya-ukr-gisem-2024_s0892
+  file: 11-klas-istoriya-ukr-gisem-2024_s0007
   type: textbook
   title: § 1. Повторення. Вступ
   page: 6
   grade: 11
 - id: S7
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1067
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0561
   type: textbook
   title: Дуже вдячний вам за це». Імпровізований концерт
   page: 308
+  grade: 11
+- id: S8
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0072
+  type: textbook
+  title: Пасивні дієприкметники минулого часу
+  page: 52
   grade: 11
