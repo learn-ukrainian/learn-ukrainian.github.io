@@ -2,7 +2,16 @@ module: b2-042
 level: B2
 sequence: 42
 slug: checkpoint-register-domain
-version: 1.0.2
+version: 1.0.3
+lifecycle: locked
+reviewed_at: '2026-06-15T13:48:00Z'
+reviewed_by: codex/b2-wiki-readiness-batch-18
+review_notes: >-
+  Batch 18 wiki readiness lock. Cleared the remaining checkpoint-register-domain
+  VERIFY markers by replacing an ambiguous medical-document example, checking
+  canonical register anchors, and labeling generated register examples as
+  author-created drills grounded in the existing sources. See
+  wiki/.reviews/grammar/b2/checkpoint-register-domain-review-LOCKED.md.
 title: 'Контрольний модуль: Регістри та предметні сфери'
 subtitle: 'Підсумковий контроль: стилістика, регістри та галузева лексика'
 focus: checkpoint
@@ -11,14 +20,14 @@ word_target: 4000
 phase: B2.3 [Stylistic Devices & Register]
 objectives:
 - Узагальнити знання про функціональні стилі та їхні ключові ознаки.
-- Перевірити вміння вільно перемикатися між офіційним, науковим, художнім та 
+- Перевірити вміння вільно перемикатися між офіційним, науковим, художнім та
   розмовним регістрами.
 - 'Оцінити рівень володіння термінологією: політика, право, економіка.'
-- Продемонструвати навички редагування текстів на стилістичну однорідність та 
+- Продемонструвати навички редагування текстів на стилістичну однорідність та
   доречність.
 reading_situations:
 - source_type: фрагменти текстів різних стилів
-  topic: Визначення стилю уривка та обґрунтування вибору за допомогою мовних 
+  topic: Визначення стилю уривка та обґрунтування вибору за допомогою мовних
     маркерів.
   key_elements:
   - стилістичні маркери
@@ -37,16 +46,16 @@ listening_situations:
   motivation: Оцінка здатності швидко орієнтуватися в мовному просторі.
 writing_tasks:
 - task_type: есе
-  prompt: Напишіть порівняльний аналіз двох текстів на одну тему, написаних у 
-    різних стилях. Визначте основні відмінності у виборі лексики та побудові 
+  prompt: Напишіть порівняльний аналіз двох текстів на одну тему, написаних у
+    різних стилях. Визначте основні відмінності у виборі лексики та побудові
     речень.
   requirements:
   - мінімум 300 слів
   - 'використання метамовних термінів: конотація, термінологія, емоційне забарвлення'
   - конкретні приклади з обох текстів
-  motivation: Оцінка аналітичних навичок та вміння оперувати стилістичними 
+  motivation: Оцінка аналітичних навичок та вміння оперувати стилістичними
     категоріями.
-  model_answer: Аналіз має чітко розмежовувати об'єктивність наукового стилю та 
+  model_answer: Аналіз має чітко розмежовувати об'єктивність наукового стилю та
     суб'єктивність публіцистики з конкретними прикладами.
 discussion_topics:
 - context: Стилістична грамотність як ознака професіоналізму.
@@ -102,8 +111,8 @@ content_outline:
 - section: Підсумок — Summary
   words: 300
   points:
-  - Functional styles dictate the appropriate register (official, scientific, 
-    artistic, conversational) and the correct use of specialized terminology 
+  - Functional styles dictate the appropriate register (official, scientific,
+    artistic, conversational) and the correct use of specialized terminology
     across politics, law, and economics.
   - 'Self-check: What is the difference between a pleonasm and a tautology? Name 3
     Ukrainian terms related to the economy or business. Transform a casual sentence
