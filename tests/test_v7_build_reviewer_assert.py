@@ -14,6 +14,41 @@ def test_reviewer_override_normalizes_alias():
     assert v7_build._reviewer_for_writer(args.writer, args.reviewer) == "cursor-tools"
 
 
+def test_seminar_llm_qg_routes_away_from_gemini_reviewer():
+    assert (
+        v7_build._llm_qg_reviewer_override_for_level(
+            level="folk",
+            writer="codex-tools",
+            reviewer_override=None,
+        )
+        == "claude-tools"
+    )
+    assert (
+        v7_build._llm_qg_reviewer_override_for_level(
+            level="folk",
+            writer="claude-tools",
+            reviewer_override=None,
+        )
+        == "codex-tools"
+    )
+    assert (
+        v7_build._llm_qg_reviewer_override_for_level(
+            level="folk",
+            writer="codex-tools",
+            reviewer_override="gemini",
+        )
+        == "claude-tools"
+    )
+    assert (
+        v7_build._llm_qg_reviewer_override_for_level(
+            level="b1",
+            writer="codex-tools",
+            reviewer_override="gemini",
+        )
+        == "gemini-tools"
+    )
+
+
 def test_generated_content_includes_writer_preemit_audit_lines(tmp_path: Path):
     module_dir = tmp_path / "module"
     module_dir.mkdir()

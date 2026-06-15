@@ -113,6 +113,7 @@ _MODULE_ARTIFACT_NAMES = (
     "python_qg.json",
     "wiki_coverage_gate.json",
     "wiki_coverage_review.json",
+    "llm_qg_correction_loop.json",
     "llm_qg.json",
 )
 _MODULE_ARTIFACT_GLOBS = (
@@ -926,6 +927,44 @@ def _reviewer_for_writer(writer: str, reviewer_override: str | None = None) -> s
     if writer == "cursor-tools":
         return "cursor-tools"
     return "claude-tools"
+
+
+def _reviewer_uses_gemini(reviewer: str) -> bool:
+    defaults = linear_pipeline.REVIEWER_DEFAULTS.get(reviewer)
+    model = str(defaults.get("model") if defaults else "")
+    return "gemini" in reviewer.lower() or "gemini" in model.lower()
+
+
+def _reviewer_model_differs(writer: str, reviewer: str) -> bool:
+    writer_defaults = linear_pipeline.WRITER_DEFAULTS.get(writer)
+    reviewer_defaults = linear_pipeline.REVIEWER_DEFAULTS.get(reviewer)
+    if not writer_defaults or not reviewer_defaults:
+        return True
+    return writer_defaults["model"] != reviewer_defaults["model"]
+
+
+def _llm_qg_reviewer_override_for_level(
+    *,
+    level: str,
+    writer: str,
+    reviewer_override: str | None,
+) -> str | None:
+    """Route seminar LLM-QG to Claude/GPT-family reviewers, never Gemini."""
+    normalized = _normalize_writer(reviewer_override) if reviewer_override else None
+    if level.lower() not in SEMINAR_LEVELS:
+        return normalized
+    if (
+        normalized
+        and not _reviewer_uses_gemini(normalized)
+        and _reviewer_model_differs(writer, normalized)
+    ):
+        return normalized
+    for candidate in ("claude-tools", "codex-tools"):
+        if not _reviewer_uses_gemini(candidate) and _reviewer_model_differs(writer, candidate):
+            return candidate
+    raise linear_pipeline.LinearPipelineError(
+        "No non-Gemini LLM-QG reviewer is available without same-model self-review"
+    )
 
 
 def _normalize_writer(writer: str) -> str:
@@ -1790,7 +1829,12 @@ def _run(args: argparse.Namespace) -> int:
 
         phase = "llm_qg"
         _phase_started(archive, phase)
-        timeout_agent = _reviewer_for_writer(writer, reviewer_override)
+        llm_qg_reviewer_override = _llm_qg_reviewer_override_for_level(
+            level=level,
+            writer=writer,
+            reviewer_override=reviewer_override,
+        )
+        timeout_agent = _reviewer_for_writer(writer, llm_qg_reviewer_override)
         started_at = time.monotonic()
         if (
             resume_enabled
@@ -1802,19 +1846,38 @@ def _run(args: argparse.Namespace) -> int:
         else:
             if resume_enabled:
                 force_rerun = True
-            llm_qg = _run_llm_qg(
-                plan=plan,
-                plan_content=plan_content,
-                module_dir=module_dir,
-                writer=writer,
-                reviewer_override=reviewer_override,
-                profile=profile,
-                wiki_manifest=wiki_manifest,
-                implementation_map=impl_map,
-                stdout_silence_timeout=args.writer_timeout,
-                use_generator=use_generator,
-                obligation_checklist=obligation_checklist,
-            )
+            if level in SEMINAR_LEVELS:
+                llm_qg = linear_pipeline.run_llm_qg_with_corrections(
+                    plan=plan,
+                    plan_path=plan_path,
+                    plan_content=plan_content,
+                    module_dir=module_dir,
+                    writer=writer,
+                    llm_qg_runner=_run_llm_qg,
+                    reviewer_override=llm_qg_reviewer_override,
+                    profile=profile,
+                    wiki_manifest=wiki_manifest,
+                    implementation_map=impl_map,
+                    stdout_silence_timeout=args.writer_timeout,
+                    use_generator=use_generator,
+                    obligation_checklist=obligation_checklist,
+                    max_rounds=linear_pipeline.llm_qg_max_rounds_for_level(level),
+                    event_sink=tracker.emit,
+                )
+            else:
+                llm_qg = _run_llm_qg(
+                    plan=plan,
+                    plan_content=plan_content,
+                    module_dir=module_dir,
+                    writer=writer,
+                    reviewer_override=reviewer_override,
+                    profile=profile,
+                    wiki_manifest=wiki_manifest,
+                    implementation_map=impl_map,
+                    stdout_silence_timeout=args.writer_timeout,
+                    use_generator=use_generator,
+                    obligation_checklist=obligation_checklist,
+                )
             linear_pipeline.write_json(module_dir / "llm_qg.json", llm_qg)
         aggregate = llm_qg["aggregate"]
         tracker.emit(
