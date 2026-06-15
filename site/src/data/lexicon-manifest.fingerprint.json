@@ -1,0 +1,60 @@
+{
+  "fingerprint": "5a498df1e04103dc76296a447e6ee3b81baa1d4f6e14840a9e0ac4e78bd69d25",
+  "inputs": {
+    "lexicon_code": [
+      {
+        "path": "scripts/lexicon/__init__.py",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "scripts/lexicon/assess_kaikki_fillability.py",
+        "sha256": "8f020e3e7826907ce11ecd84570126b85d4374d994dda67314c0c1843c211590"
+      },
+      {
+        "path": "scripts/lexicon/build_data_manifest.py",
+        "sha256": "bc2be308b52c526f6d41a471c500fc7215ca2730f68cde542a185a4144370c00"
+      },
+      {
+        "path": "scripts/lexicon/build_kaikki_lookup.py",
+        "sha256": "62375e956af7601202a6c29d22316dc30fbe3434b4af4c798527b82f292bfde3"
+      },
+      {
+        "path": "scripts/lexicon/calque_corrections.py",
+        "sha256": "4c900cb2dfcd64412c8c9a225f1e75393c30bef780306b0da926985698e747fb"
+      },
+      {
+        "path": "scripts/lexicon/check_manifest_freshness.py",
+        "sha256": "eaafd2f61e199ff9f56cfe114a683533aad908d92f97cb2791eadb9560e9d0a9"
+      },
+      {
+        "path": "scripts/lexicon/derivational_morphology.py",
+        "sha256": "f1bdaf5d37130e54532e8dc7fb5ac7c33b53dac3814409a99454ce23e8677a26"
+      },
+      {
+        "path": "scripts/lexicon/enrich_manifest.py",
+        "sha256": "8ba64107499cc6895f3141c8bc831af8fa72a9780c39a05b5feb8b58f26c560f"
+      },
+      {
+        "path": "scripts/lexicon/heritage_classifier.py",
+        "sha256": "ddb4f8e7bd52f17267e2c7e6bcdf57a64878e4e3ae0eca64ce42f8d2a43f16e5"
+      },
+      {
+        "path": "scripts/lexicon/manifest_fingerprint.py",
+        "sha256": "6a406d00131e74cff8f56852e7d68d2e3a9ca507314df14191872b2c1e01ca55"
+      },
+      {
+        "path": "scripts/lexicon/migrate_sum11_sovietization.py",
+        "sha256": "4919c84c88b8cf0bc1508250e6da4c80860e8a33a4a4df49402c8aedef3e9e68"
+      },
+      {
+        "path": "scripts/lexicon/verify_manifest.py",
+        "sha256": "5d8c9d05f71972c78695568658609c6554a5f27126e6d1650aefe5047dad5505"
+      }
+    ]
+  },
+  "schema_version": 1,
+  "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
+  "stats": {
+    "lexicon_code_files": 12
+  }
+}

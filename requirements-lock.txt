@@ -35,7 +35,7 @@ dill==0.4.1
 distlib==0.4.0
 distro==1.9.0
 docopt==0.6.2
-docstring_parser==0.17.0
+docstring_parser==0.18.0
 ecdsa==0.19.2
 einops==0.8.2
 emoji==2.15.0
@@ -51,8 +51,8 @@ fsspec==2026.1.0
 ftfy==6.3.1
 google-auth==2.49.2
 google-genai==1.65.0
-greenlet==3.3.1
-grpcio==1.78.0
+greenlet==3.5.1
+grpcio==1.81.0
 h11==0.16.0
 h2==4.3.0
 hf-xet==1.5.0
@@ -154,7 +154,7 @@ python-discovery==1.1.0
 python-docx==1.2.0
 python-dotenv==1.2.2
 python-jose==3.5.0
-python-multipart==0.0.27
+python-multipart==0.0.32
 PyYAML==6.0.3
 qdrant-client==1.17.0
 radon==6.0.1
@@ -202,7 +202,7 @@ ukrainian_word_stress==1.1.1
 unlzw3==0.2.3
 urllib3==2.7.0
 uvicorn==0.48.0
-virtualenv==21.3.3
+virtualenv==21.4.2
 vulture==2.16
 warc3-wet-clueweb09==0.2.5
 warc3-wet==0.2.5

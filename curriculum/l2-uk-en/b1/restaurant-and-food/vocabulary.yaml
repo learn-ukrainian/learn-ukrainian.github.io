@@ -1,0 +1,244 @@
+- lemma: страва
+  translation: dish, course
+  pos: noun:f
+  usage: Ця страва подається гарячою і добре пасує до сметани.
+- lemma: перша страва
+  translation: first course, soup course
+  pos: phrase
+  usage: На першу страву ми замовили тарілку борщу.
+- lemma: друга страва
+  translation: main course
+  pos: phrase
+  usage: На другу страву офіціант порадив вареники з картоплею.
+- lemma: борщ
+  translation: borshch, beet soup
+  pos: noun:m
+  usage: Я замовлю борщ із пампушками, будь ласка.
+- lemma: пампушки
+  translation: garlic bread rolls
+  pos: noun:pl
+  usage: Борщ часто подають із пампушками та часником.
+- lemma: вареники
+  translation: varenyky, filled dumplings
+  pos: noun:pl
+  usage: Мені, будь ласка, вареники з картоплею та сметаною.
+- lemma: деруни
+  translation: potato pancakes
+  pos: noun:pl
+  usage: Деруни смачніші, коли їх подають зі сметаною.
+- lemma: галушки
+  translation: halushky, dumplings
+  pos: noun:pl
+  usage: Галушки можуть подаватися в бульйоні або з соусом.
+- lemma: голубці
+  translation: cabbage rolls
+  pos: noun:pl
+  usage: Голубці принесли з томатним соусом.
+- lemma: млинці
+  translation: thin pancakes, crepes
+  pos: noun:pl
+  usage: На десерт я візьму млинці з вишнями.
+- lemma: бануш
+  translation: banush, Hutsul cornmeal dish
+  pos: noun:m
+  usage: У колибі нам порадили бануш із бринзою.
+- lemma: юшка
+  translation: fish soup, light broth
+  pos: noun:f
+  usage: У меню була рибна юшка з зеленню.
+- lemma: узвар
+  translation: dried fruit compote
+  pos: noun:m
+  usage: Принесіть, будь ласка, склянку узвару.
+- lemma: компот
+  translation: fruit drink, compote
+  pos: noun:m
+  usage: Дітям замовили компот, а дорослим каву.
+- lemma: сало
+  translation: cured pork fat
+  pos: noun:n
+  usage: На закуску подали шматок сала з чорним хлібом.
+- lemma: сметана
+  translation: sour cream
+  pos: noun:f
+  usage: Покладіть трохи сметани до борщу.
+- lemma: буряк
+  translation: beetroot
+  pos: noun:m
+  usage: Буряк дає борщу насичений колір.
+- lemma: капуста
+  translation: cabbage
+  pos: noun:f
+  usage: У голубцях капуста тримає начинку.
+- lemma: картопля
+  translation: potato
+  pos: noun:f
+  usage: Вареники з картоплею були гарячі й ніжні.
+- lemma: часник
+  translation: garlic
+  pos: noun:m
+  usage: Пампушки з часником подали окремо.
+- lemma: цибуля
+  translation: onion
+  pos: noun:f
+  usage: У салаті було забагато цибулі.
+- lemma: м'ясо
+  translation: meat
+  pos: noun:n
+  usage: Млинці з м'ясом подають як ситну закуску.
+- lemma: риба
+  translation: fish
+  pos: noun:f
+  usage: Чи є сьогодні свіжа риба?
+- lemma: овочі
+  translation: vegetables
+  pos: noun:pl
+  usage: До страви подали запечені овочі.
+- lemma: крупа
+  translation: grain, groats
+  pos: noun:f
+  usage: Гречана крупа часто стає гарніром.
+- lemma: молочне
+  translation: dairy foods
+  pos: noun:n
+  usage: Мені не можна молочне, тому прошу без сметани.
+- lemma: гарнір
+  translation: side dish
+  pos: noun:m
+  usage: Який гарнір ви порадите до риби?
+- lemma: закуска
+  translation: appetizer, starter
+  pos: noun:f
+  usage: На закуску ми взяли салат і шматок сала.
+- lemma: десерт
+  translation: dessert
+  pos: noun:m
+  usage: На десерт у них є сирники з варенням.
+- lemma: меню
+  translation: menu
+  pos: noun:n
+  usage: Принесіть, будь ласка, меню.
+- lemma: кафе
+  translation: cafe
+  pos: noun:n
+  usage: Це невелике кафе біля вокзалу має домашню кухню.
+- lemma: ресторан
+  translation: restaurant
+  pos: noun:m
+  usage: Ми забронювали столик у ресторані на сьому.
+- lemma: їдальня
+  translation: cafeteria, canteen
+  pos: noun:f
+  usage: У їдальні просте меню і швидке обслуговування.
+- lemma: офіціант
+  translation: waiter
+  pos: noun:m
+  usage: Офіціант порадив зеленого борщу.
+- lemma: офіціантка
+  translation: waitress
+  pos: noun:f
+  usage: Офіціантка уточнила, чи потрібна нам сметана.
+- lemma: замовлення
+  translation: order
+  pos: noun:n
+  usage: Наше замовлення принесли швидко.
+- lemma: рахунок
+  translation: bill, check
+  pos: noun:m
+  usage: Можна рахунок, будь ласка?
+- lemma: чайові
+  translation: tip, gratuity
+  pos: noun:pl
+  usage: Ми залишили чайові за уважне обслуговування.
+- lemma: порція
+  translation: portion, serving
+  pos: noun:f
+  usage: Порція вареників була велика.
+- lemma: тарілка
+  translation: plate, bowl
+  pos: noun:f
+  usage: Тарілка борщу коштує сто гривень.
+- lemma: склянка
+  translation: glass
+  pos: noun:f
+  usage: Замовлю склянку узвару.
+- lemma: шматок
+  translation: piece, slice
+  pos: noun:m
+  usage: Дайте, будь ласка, шматок хліба.
+- lemma: ложка
+  translation: spoonful, spoon
+  pos: noun:f
+  usage: Додайте ложку меду до чаю.
+- lemma: смачний
+  translation: tasty, delicious
+  pos: adjective
+  usage: Борщ був смачний, але трохи гострий.
+- lemma: гострий
+  translation: spicy, sharp
+  pos: adjective
+  usage: Цей соус гострий, тому я візьму менше.
+- lemma: солоний
+  translation: salty
+  pos: adjective
+  usage: Салат занадто солоний.
+- lemma: кислий
+  translation: sour
+  pos: adjective
+  usage: Узвар не кислий, а м'яко солодкий.
+- lemma: солодкий
+  translation: sweet
+  pos: adjective
+  usage: На десерт хочу щось солодке.
+- lemma: гіркий
+  translation: bitter
+  pos: adjective
+  usage: Кава була гірка без цукру.
+- lemma: свіжий
+  translation: fresh
+  pos: adjective
+  usage: Свіжий хліб принесли теплим.
+- lemma: ніжний
+  translation: tender, delicate
+  pos: adjective
+  usage: Начинка у варениках була ніжна.
+- lemma: варений
+  translation: boiled, cooked
+  pos: adjective
+  usage: Варена картопля пасує до риби.
+- lemma: смажений
+  translation: fried
+  pos: adjective
+  usage: Смажені деруни були хрусткі.
+- lemma: запечений
+  translation: baked, roasted
+  pos: adjective
+  usage: Запечені овочі подали з часниковим соусом.
+- lemma: тушкований
+  translation: stewed
+  pos: adjective
+  usage: Тушкована капуста була гарніром.
+- lemma: копчений
+  translation: smoked
+  pos: adjective
+  usage: Копчена риба має сильний смак.
+- lemma: замовити
+  translation: to order
+  pos: verb
+  usage: Я хочу замовити борщ і вареники.
+- lemma: порадити
+  translation: to recommend, advise
+  pos: verb
+  usage: Що ви порадите на друге?
+- lemma: спробувати
+  translation: to try once
+  pos: verb
+  usage: Треба спробувати бануш, якщо він є в меню.
+- lemma: куштувати
+  translation: to taste, to eat and experience
+  pos: verb
+  usage: Ви вже куштували деруни в цьому ресторані?
+- lemma: подаватися
+  translation: to be served
+  pos: verb
+  usage: Ця страва подається з грибним соусом.

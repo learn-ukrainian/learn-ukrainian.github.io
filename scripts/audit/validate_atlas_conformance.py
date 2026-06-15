@@ -180,12 +180,24 @@ def _normalize_text(value: object) -> str:
     return re.sub(r"\s+", " ", cleaned).strip()
 
 
+def _normalize_preserve_case(value: object) -> str:
+    """Same normalization as ``_normalize_text`` but WITHOUT casefolding.
+
+    VESUM stores proper nouns and abbreviations in their canonical capitalized form
+    (``Афіни``, ``Чернівці``, ``УЗД``). Casefolding the query before the exact-match
+    SELECT misses them — SQLite's NOCASE collation folds only ASCII, not Cyrillic —
+    so the lookup must also probe the case-preserved form (#3197 follow-up).
+    """
+    cleaned = unicodedata.normalize("NFKC", str(value or "")).translate(APOSTROPHE_TRANSLATION)
+    cleaned = _strip_stress(cleaned)
+    return re.sub(r"\s+", " ", cleaned).strip()
+
+
 def _lookup_variants(lemma: str) -> list[str]:
-    normalized = _normalize_text(lemma)
-    variants = {normalized}
-    if "'" in normalized:
+    variants = {_normalize_text(lemma), _normalize_preserve_case(lemma)}
+    for base in {variant for variant in variants if "'" in variant}:
         for replacement in ("'", "’", "ʼ"):
-            variants.add(normalized.replace("'", replacement))
+            variants.add(base.replace("'", replacement))
     return sorted(variant for variant in variants if variant)
 
 
@@ -215,8 +227,27 @@ def _is_genuine_multi_word(value: str) -> bool:
     return len(WORD_TOKEN_RE.findall(value)) >= 2
 
 
+# VESUM (409K lemmas) is necessary-but-not-sufficient proof of validity: it has
+# gaps where authentic Ukrainian words attested in Грінченко / ЕСУМ / СУМ-20 are
+# absent from its lemma+word-form tables. The §8 lemma_in_vesum gate must NOT flag
+# these as violations — absence from VESUM ≠ Russianism (the кобета / блискучий
+# heritage-defense lesson). Keep this allowlist TINY and per-entry cited; a
+# sources.db heritage-fallback (live Грінченко/ЕСУМ query) is the future robust fix.
+_VESUM_GAP_HERITAGE_LEMMAS: frozenset[str] = frozenset(
+    {
+        # Грінченко 1907: «Хвастливий, -а, -е. = хвастовитий» (Фр. Пр. 92); ЕСУМ:
+        # псл. *хвастати (Proto-Slavic); СУМ-20: «те саме, що хвалькуватий». Not in
+        # VESUM, but pre-Soviet + etymologically attested → authentic, keep.
+        "хвастливий",
+    }
+)
+
+
 def _is_proper_noun_entry(entry: Mapping[str, Any]) -> bool:
-    return _normalize_text(entry.get("pos")).replace("_", " ") in {"proper noun", "proper name"}
+    # Real pos tags carry a morphology suffix (e.g. ``proper noun:pl`` for Афіни /
+    # Чернівці); match on the base pos so the exemption is not defeated by it.
+    base_pos = _normalize_text(entry.get("pos")).replace("_", " ").split(":", 1)[0].strip()
+    return base_pos in {"proper noun", "proper name"}
 
 
 def _check_lemma_in_vesum(entry: Mapping[str, Any], lemma: str, vesum: Any, violations: list[Violation]) -> None:
@@ -225,7 +256,11 @@ def _check_lemma_in_vesum(entry: Mapping[str, Any], lemma: str, vesum: Any, viol
         violations.append(Violation("lemma_in_vesum", "", "entry is missing lemma"))
         return
 
-    if _is_deliberate_warning_entry(entry) or _is_proper_noun_entry(entry):
+    if (
+        _is_deliberate_warning_entry(entry)
+        or _is_proper_noun_entry(entry)
+        or _normalize_text(raw_lemma) in _VESUM_GAP_HERITAGE_LEMMAS
+    ):
         return
 
     if _has_whitespace(raw_lemma):
