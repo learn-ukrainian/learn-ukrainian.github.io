@@ -9,7 +9,7 @@
 - lemma: недоконаний вид
   translation: imperfective aspect
   pos: noun phrase
-  usage: Недоконаний вид називає процес, повторення або тло.
+  usage: Недоконаний вид називає процес, повторення або відкриту дію.
 - lemma: видова пара
   translation: aspectual pair
   pos: noun phrase
@@ -82,10 +82,6 @@
   translation: repeated action
   pos: noun phrase
   usage: Повторювана дія підтримує недоконаний вид.
-- lemma: тло
-  translation: background
-  pos: noun
-  usage: Недоконаний вид часто створює тло розповіді.
 - lemma: межа
   translation: boundary
   pos: noun
