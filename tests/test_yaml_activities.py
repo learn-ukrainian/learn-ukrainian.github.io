@@ -120,6 +120,30 @@ class TestParsing:
         assert activities[0].passage == "Я [1] текст."
         assert activities[0].blanks[0].answer == "читаю"
 
+    def test_parse_mark_the_words_accepts_schema_target_words(self, parser, tmp_path):
+        """Schema-valid mark-the-words activities render correctWords in MDX."""
+        activity_path = tmp_path / "activities.yaml"
+        activity_path.write_text(
+            """
+- type: mark-the-words
+  title: Мішана група
+  instruction: Позначте слова.
+  text: Сторож узяв ключ і плащ.
+  target_words:
+  - Сторож
+  - ключ
+  - плащ
+""",
+            encoding="utf-8",
+        )
+
+        activities = parser.parse(activity_path)
+        mdx = parser.to_mdx(activities)
+
+        assert len(activities) == 1
+        assert activities[0].answers == ["Сторож", "ключ", "плащ"]
+        assert 'correctWords={JSON.parse(`["Сторож", "ключ", "плащ"]`)}' in mdx
+
 
 # =============================================================================
 # MDX GENERATION TESTS
