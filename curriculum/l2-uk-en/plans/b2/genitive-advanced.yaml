@@ -2,7 +2,15 @@ module: b2-047
 level: B2
 sequence: 47
 slug: genitive-advanced
-version: 1.0.2
+version: 1.0.3
+lifecycle: locked
+reviewed_at: '2026-06-15T00:00:00Z'
+reviewed_by: codex/b2-wiki-readiness-batch-35
+review_notes: >-
+  Batch 35 B2 wiki-readiness lock. Verified the companion wiki page has no
+  unresolved VERIFY markers, passes the B2 wiki quality gate with its source
+  registry, updated wiki lifecycle metadata, and recorded the LOCKED review in
+  wiki/.reviews/grammar/b2/genitive-advanced-review-LOCKED.md.
 title: 'Родовий відмінок: поглиблений рівень'
 subtitle: 'Родовий відмінок: поглиблений рівень'
 focus: grammar
@@ -225,3 +233,10 @@ grammar:
 - 18+ prepositions governing genitive
 - -а/-я vs -у/-ю endings
 register: науковий, офіційно-діловий
+
+changelog:
+- version: '1.0.3'
+  date: '2026-06-15'
+  changes:
+  - Locked companion B2 wiki readiness lifecycle metadata and review evidence
+    for Batch 35.
