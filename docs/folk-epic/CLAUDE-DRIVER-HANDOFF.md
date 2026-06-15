@@ -97,10 +97,21 @@
 1. **Orchestrator: review the #3079 design PR.** The quick win (P0→P2→P3 = the insert-only loop) needs **NO ADR
    sign-off** — it reuses the ADR-007-sanctioned `insert_after`. Only the CONDITIONAL B2 (deepen carve-out, P5)
    needs sign-off, and only if P3-validate shows insert-only can't reach ≥8. Build B1 + validate first.
-2. **SCALE folk to ≥8 + surface (still gated on the recipe being cheap):** sweep `type:primary` on the other 5
-   built folk plans, rebuild each on #3162 + the correction recipe → ≥8 each → un-hide folk nav (remove `'folk'`
-   from `HIDDEN_MODULE_LINK_TRACKS` `site/src/components/LevelLanding.tsx` + `hiddenPublicPaths`
-   `site/astro.config.mjs`) as a labeled PREVIEW. koliadky already 9.2; the other 5 at 5.8–7.0.
+2. **SCALE folk to ≥8 + surface — sequencing SURVEYED this session (verified, not guessed):** the `type:primary`
+   sweep on the 6 built plans found: **koliadky (4 refs → 9.2 ✅), dumy (3 refs → rebuild-ready)** vs **zamovliannia
+   #03 / narodni-viruvannia #02 / kalendarna — plans are STUBS** (`status: stub`, `references: [type: pending]`,
+   "corpus-grounded sources pending the dossier") vs **narodna-kultura #01 likely legitimately primary-free**
+   (analytical overview). ROOT CAUSE of their 5.8–6.8 pedagogical: #3162 routes `type:primary` refs →
+   `literary_texts` (`_build_textbook_excerpt_context`, linear_pipeline.py:1903/1913 — seminar + is_primary →
+   `_literary_fallback_queries` searches by the ref's author/work **AND quoted primary lines in the plan's
+   `content_outline`**), so a stub plan with no primary refs embeds NOTHING → the #3162 lift never applied to them.
+   **ALL 6 modules already HAVE corpus-hammered dossiers** (`docs/research/folk/<slug>.md`). So the unlock (in-lane,
+   NON-gated, my #M-11 job): **promote each stub plan's dossier §4/§6 sources into `type:primary` refs + put the
+   quoted primary lines into `content_outline`** → then #3162 embeds (≈+0.7, the koliadky 6.7→7.4 step) and B1
+   closes 7.4→≥8. Sequence: zamovliannia (charms in-corpus, clearest) → narodni-viruvannia (В. Петров/ЕУ demonology)
+   → kalendarna (веснянки/щедрівки/жниварські); decide whether #01 needs a primary at all. THEN un-hide folk nav
+   (remove `'folk'` from `HIDDEN_MODULE_LINK_TRACKS` `site/src/components/LevelLanding.tsx` + `hiddenPublicPaths`
+   `site/astro.config.mjs`) as a labeled PREVIEW once all are ≥8.
 3. **Dossier queue (parallel, unblocked, pure content lane):** #26 `narodni-lehendy` → #27 `istorychni-perekazy`
    (`phase-folk-queue.md`, 25/42). Proven loop: corpus-pre-ground → codex → corpus-hammer → accumulate.
 
