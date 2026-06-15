@@ -2,37 +2,37 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5163
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0033
   type: textbook
   title: § 4. ПРЯМА МОВА
   page: 26
   grade: 9
 - id: S3
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5166
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0049
   type: textbook
   title: Пряма й непряма мова (p. 37)
   page: 37
   grade: 9
 - id: S5
-  file: 11-klas-ukrajinska-mova-voron-2019_s1282
+  file: 11-klas-ukrajinska-mova-voron-2019_s0342
   type: textbook
   title: ІІ Напишіть реферат на тему «Історія українського правопису». У про
   page: 221
   grade: 11
 - id: S6
-  file: 11-klas-ukrajinska-mova-voron-2019_s1283
+  file: 11-klas-ukrajinska-mova-voron-2019_s0345
   type: textbook
   title: Стельмах). Ваш конспект
   page: 223
   grade: 11
 - id: S7
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5164
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0040
   type: textbook
-  title: Пряма й непряма мова (p. 27)
-  page: 27
+  title: Непряма мова. Способи заміни прямої мови непрямою
+  page: 31
   grade: 9
 - id: S9
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1225
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0199
   type: textbook
   title: § 33. Тире у складному реченні
   page: 141

@@ -2,7 +2,15 @@ module: b2-024
 level: B2
 sequence: 24
 slug: kharchuvannia-i-kukhnia
-version: 1.0.2
+version: 1.0.3
+lifecycle: locked
+reviewed_at: '2026-06-15T09:56:14Z'
+reviewed_by: codex/b2-wiki-readiness-batch-5
+review_notes: >-
+  Batch 5 B2 wiki-readiness lock. Removed the remaining source-backed VERIFY
+  markers for дієприслівник definition and culinary usage guidance, refreshed
+  source registry chunk IDs, and recorded the LOCKED review. See
+  wiki/.reviews/grammar/b2/kharchuvannia-i-kukhnia-review-LOCKED.md.
 title: Харчування і кухня
 subtitle: Харчування і кухня
 focus: thematic
@@ -13,7 +21,7 @@ objectives:
 - Описувати страви, рецепти та кулінарні процеси розгорнуто.
 - Обговорювати культуру харчування, дієти та здорове харчування.
 - Аналізувати українську кухню як частину національної ідентичності.
-- Інтегрувати складнопідрядні речення та вставні конструкції в кулінарних 
+- Інтегрувати складнопідрядні речення та вставні конструкції в кулінарних
   описах.
 reading_situations:
 - source_type: кулінарний блог
@@ -35,7 +43,7 @@ listening_situations:
   motivation: Розвиток навичок розуміння кулінарних інструкцій.
 writing_tasks:
 - task_type: рецепт та відгук
-  prompt: Напишіть рецепт вашої улюбленої страви та відгук від уявного гостя, 
+  prompt: Напишіть рецепт вашої улюбленої страви та відгук від уявного гостя,
     який її спробував.
   requirements:
   - мінімум 250 слів загалом
@@ -47,7 +55,7 @@ writing_tasks:
 discussion_topics:
 - context: 'Борщ як символ: UNESCO, культурна ідентичність та війна.'
   questions:
-  - Чому визнання борщу українською нематеріальною спадщиною UNESCO таке 
+  - Чому визнання борщу українською нематеріальною спадщиною UNESCO таке
     важливе?
   - Як кухня формує національну ідентичність?
   motivation: Обговорення культурного значення їжі.
@@ -116,8 +124,8 @@ content_outline:
 - section: Підсумок — Summary
   words: 300
   points:
-  - Fixed expressions (сталі словосполучення) vary in semantic unity, from 
-    opaque idioms (фразеологічні зрощення) to predictable collocations 
+  - Fixed expressions (сталі словосполучення) vary in semantic unity, from
+    opaque idioms (фразеологічні зрощення) to predictable collocations
     (колокації) and stylistic cliches (кліше).
   - "Self-check: What is the difference between an idiom and a regular collocation?
     Why is 'міцний кава' incorrect in terms of lexical compatibility (лексична сполучуваність)?"
@@ -188,16 +196,16 @@ activities:
   total_min_items: 25
 activity_hints:
 - type: reading
-  focus: Прочитайте текст про продукти та інгредієнти і дайте відповіді на 
+  focus: Прочитайте текст про продукти та інгредієнти і дайте відповіді на
     запитання щодо ключових понять.
 - type: essay-response
-  focus: Напишіть короткий текст (100-150 слів) про кулінарні процеси та 
+  focus: Напишіть короткий текст (100-150 слів) про кулінарні процеси та
     рецепти, використовуючи нову лексику модуля.
 - type: critical-analysis
-  focus: Проаналізуйте взаємозв'язок між поняттями у розділі «Продукти та 
+  focus: Проаналізуйте взаємозв'язок між поняттями у розділі «Продукти та
     інгредієнти». Обґрунтуйте свою позицію прикладами з тексту.
 - type: error-correction
-  focus: Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему 
+  focus: Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему
     продукти та інгредієнти.
 references:
 - source: Заболотний, 7 клас (2015)
@@ -209,6 +217,9 @@ references:
 - source: Державний стандарт 2024
   pages: 'SS 3 (B2 thematic areas: харчування)'
   topic: 'Тематична сфера: харчування'
+- source: Wiki grammar source registry
+  pages: wiki/grammar/b2/kharchuvannia-i-kukhnia.sources.yaml
+  topic: Source-backed B2 readiness lock for cooking discourse grammar and usage
 connects_to:
   previous: multi-clause-sentences
   next: correlative-constructions

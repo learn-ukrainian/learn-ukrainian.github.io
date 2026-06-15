@@ -2,44 +2,50 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-istorija-ukrajini-gisem-2017_s4918
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0487
   type: textbook
   title: § 33. українське образотворче мистецтво та архітектура
   page: 269
   grade: 9
 - id: S2
-  file: 6-klas-ukrmova-golub-2023_s3247
+  file: 6-klas-ukrmova-golub-2023_s0031
   type: textbook
   title: § 13. Упорядковуємо своє життя
   page: 32
   grade: 6
 - id: S3
-  file: 9-klas-ukrajinska-mova-avramenko-2017_s5025
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0031
   type: textbook
   title: Синтаксис. Пунктуація
   page: 22
   grade: 9
 - id: S4
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1211
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0063
   type: textbook
   title: § 9. Паралельні форми вираження наказового
   page: 46
   grade: 11
 - id: S5
-  file: 7-klas-ukrmova-litvinova-2024_s3912
+  file: 7-klas-ukrmova-litvinova-2024_s0045
   type: textbook
   title: § 9. Часи діє слова
   page: 41
   grade: 7
 - id: S6
-  file: 7-klas-ukrmova-litvinova-2024_s3923
+  file: 7-klas-ukrmova-litvinova-2024_s0114
   type: textbook
   title: Розділ 3. ДІЄПРИСЛІВНИК
   page: 110
   grade: 7
 - id: S7
-  file: 2-klas-ukrmova-bolshakova-2019-2_s1492
+  file: 2-klas-ukrmova-bolshakova-2019-2_s0053
   type: textbook
   title: Настала весна. Наближався день на
   page: 52
   grade: 2
+- id: S8
+  file: 7-klas-ukrmova-litvinova-2024_s0125
+  type: textbook
+  title: Вид і час дієприслівників
+  page: 121
+  grade: 7

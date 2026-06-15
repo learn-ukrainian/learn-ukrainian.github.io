@@ -2,7 +2,15 @@ module: b2-008
 level: B2
 sequence: 8
 slug: pobut-shchodenne
-version: 1.0.2
+version: 1.0.3
+lifecycle: locked
+reviewed_at: '2026-06-15T09:56:14Z'
+reviewed_by: codex/b2-wiki-readiness-batch-5
+review_notes: >-
+  Batch 5 B2 wiki-readiness lock. Removed the remaining source-backed VERIFY
+  markers for imperative and adverbial-participle constraints, refreshed source
+  registry chunk IDs, and recorded the LOCKED review. See
+  wiki/.reviews/grammar/b2/pobut-shchodenne-review-LOCKED.md.
 title: Побут і щоденне життя
 subtitle: Побут і щоденне життя
 focus: thematic
@@ -12,9 +20,9 @@ phase: B2.0 [Passive Voice System]
 objectives:
 - Описувати повсякденні справи, розпорядок дня та побутові обов'язки розгорнуто.
 - Обговорювати розподіл домашніх обов'язків та ґендерні стереотипи у побуті.
-- Вживати зворотні дієслова на -ся в контексті побутових дій (прибирається, 
+- Вживати зворотні дієслова на -ся в контексті побутових дій (прибирається,
   готується).
-- Порівнювати побут в Україні та інших країнах із використанням відповідної 
+- Порівнювати побут в Україні та інших країнах із використанням відповідної
   лексики.
 reading_situations:
 - source_type: блог-стаття
@@ -52,7 +60,7 @@ discussion_topics:
   - Як технології змінюють наш побут?
   motivation: Обговорення ґендерних ролей та побутових звичок.
 dialogue_situations:
-- setting: Подружжя планує генеральне прибирання на вихідних і розподіляє 
+- setting: Подружжя планує генеральне прибирання на вихідних і розподіляє
     обов'язки.
   roles:
   - чоловік
@@ -196,10 +204,10 @@ activity_hints:
   focus: Напишіть короткий текст (100-150 слів) про домашні обов'язки та ведення
     господарства, використовуючи нову лексику модуля.
 - type: critical-analysis
-  focus: Проаналізуйте взаємозв'язок між поняттями у розділі «Розпорядок дня та 
+  focus: Проаналізуйте взаємозв'язок між поняттями у розділі «Розпорядок дня та
     рутинні дії». Обґрунтуйте свою позицію прикладами з тексту.
 - type: error-correction
-  focus: Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему 
+  focus: Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему
     розпорядок дня та рутинні дії.
 references:
 - source: Заболотний, 7 клас (2015)
@@ -211,6 +219,9 @@ references:
 - source: Державний стандарт 2024
   pages: 'SS 3 (B2 thematic areas: побут)'
   topic: 'Тематична сфера: побут і щоденне життя'
+- source: Wiki grammar source registry
+  pages: wiki/grammar/b2/pobut-shchodenne.sources.yaml
+  topic: Source-backed B2 readiness lock for household discourse grammar claims
 connects_to:
   previous: passive-in-context
   next: active-participles-present

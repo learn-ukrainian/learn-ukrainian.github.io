@@ -2,7 +2,15 @@ module: b2-084
 level: B2
 sequence: 84
 slug: news-analysis
-version: 1.0.2
+version: 1.0.3
+lifecycle: locked
+reviewed_at: '2026-06-15T09:56:14Z'
+reviewed_by: codex/b2-wiki-readiness-batch-5
+review_notes: >-
+  Batch 5 B2 wiki-readiness lock. Corrected the remaining verbal-noun
+  VERIFY claim to the source-attested suffix/style scope, refreshed source
+  registry chunk IDs, and recorded the LOCKED review. See
+  wiki/.reviews/grammar/b2/news-analysis-review-LOCKED.md.
 title: 'Аналіз новин: від структури до критичного мислення'
 subtitle: 'Аналіз новин: від структури до критичного мислення'
 focus: professional
@@ -39,14 +47,14 @@ listening_situations:
   motivation: Тренування сприйняття медійного мовлення.
 writing_tasks:
 - task_type: аналітична записка
-  prompt: Порівняйте висвітлення однієї події двома різними українськими медіа. 
+  prompt: Порівняйте висвітлення однієї події двома різними українськими медіа.
     Визначте маніпулятивні прийоми та упередженість кожного.
   requirements:
   - мінімум 300 слів
   - конкретні приклади з обох текстів
   - визначення фреймінгу та евфемізмів
   motivation: Перевірка навичок критичного аналізу медіа.
-  model_answer: Записка має містити порівняльний аналіз із цитатами з обох 
+  model_answer: Записка має містити порівняльний аналіз із цитатами з обох
     джерел та висновком про об'єктивність кожного.
 discussion_topics:
 - context: Фейкові новини та відповідальність споживача контенту.
@@ -182,16 +190,16 @@ activities:
   total_min_items: 25
 activity_hints:
 - type: reading
-  focus: Прочитайте текст про анатомія новини та інформаційні жанри і дайте 
+  focus: Прочитайте текст про анатомія новини та інформаційні жанри і дайте
     відповіді на запитання щодо ключових понять.
 - type: essay-response
-  focus: Напишіть короткий текст (100-150 слів) про механізми медіа-впливу, 
+  focus: Напишіть короткий текст (100-150 слів) про механізми медіа-впливу,
     використовуючи нову лексику модуля.
 - type: critical-analysis
   focus: Проаналізуйте взаємозв'язок між поняттями у розділі «Анатомія новини та
     інформаційні жанри». Обґрунтуйте свою позицію прикладами з тексту.
 - type: error-correction
-  focus: Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему 
+  focus: Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему
     анатомія новини та інформаційні жанри.
 references:
 - source: Авраменко, 11 клас (2019)
@@ -203,6 +211,9 @@ references:
 - source: Державний стандарт 2024
   pages: SS 3
   topic: Professional communication, media literacy
+- source: Wiki grammar source registry
+  pages: wiki/grammar/b2/news-analysis.sources.yaml
+  topic: Source-backed B2 readiness lock for media-analysis grammar claims
 connects_to:
   previous: text-analysis
   next: presentation-skills
