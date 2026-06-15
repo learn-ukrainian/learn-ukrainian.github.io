@@ -2,15 +2,24 @@ module: b2-031
 level: B2
 sequence: 31
 slug: checkpoint-syntax-ii
-version: 1.0.2
+version: 1.0.3
 title: 'Контрольний модуль: Синтаксис II (складне речення)'
 subtitle: 'Підсумковий контроль: складне речення та експресивний синтаксис'
 focus: checkpoint
 pedagogy: review
 word_target: 4000
+lifecycle: locked
+reviewed_at: '2026-06-15T15:35:00Z'
+reviewed_by: codex/b2-wiki-readiness-batch-26
+review_notes:
+- Cleared B2 wiki verification markers by grounding syntax models, L2-error
+  examples, passive/participle guidance, and communication formulas in local
+  source evidence.
+- Corrected the possessive-relative example so the page no longer marks
+  grammatical "чию сумку" usage as an error.
 phase: B2.2 [Advanced Syntax & Stylistics]
 objectives:
-- Систематизувати знання про складносурядні, складнопідрядні та безсполучникові 
+- Систематизувати знання про складносурядні, складнопідрядні та безсполучникові
   речення.
 - Перевірити вміння використовувати стилістичні конектори, емфазу та інверсію.
 - Оцінити навички роботи з прямою та непрямою мовою.
@@ -43,7 +52,7 @@ writing_tasks:
   - пряма та непряма мова
   - бездоганна пунктуація
   motivation: Фінальна перевірка продуктивних навичок складного синтаксису.
-  model_answer: Текст має бути зразком інтелектуальної прози з багатим 
+  model_answer: Текст має бути зразком інтелектуальної прози з багатим
     синтаксисом та чіткою аргументацією.
 discussion_topics:
 - context: 'Підбиття підсумків: як синтаксичне багатство змінило ваше письмо.'
@@ -166,7 +175,7 @@ activity_hints:
   focus: 'Прочитайте текст про складне речення: систематизація типів зв''язку і дайте
     відповіді на запитання щодо ключових понять.'
 - type: essay-response
-  focus: Напишіть короткий текст (100-150 слів) про стилістичні конектори та 
+  focus: Напишіть короткий текст (100-150 слів) про стилістичні конектори та
     когезія, використовуючи нову лексику модуля.
 - type: critical-analysis
   focus: 'Проаналізуйте взаємозв''язок між поняттями у розділі «Складне речення: систематизація
