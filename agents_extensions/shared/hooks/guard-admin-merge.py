@@ -1,0 +1,174 @@
+#!/usr/bin/env python3
+"""PreToolUse guard — block `gh pr merge --admin` when a BLOCKING CI check is red (#M-0.5 / #1908).
+
+Reads the Claude Code hook payload on stdin (JSON with `tool_input.command`) and exits
+2 (block) when the command is a `gh pr merge ... --admin` whose target PR has any
+*blocking* (required) check in a failing state. Exit 0 (allow) otherwise — including
+`--admin` merges where ONLY *advisory* checks fail, which is the one legitimate use of
+`--admin` per #M-0.5.
+
+Why a hook (#1908): "#M-0.5 don't admin-bypass blocking CI" is advisory text in
+MEMORY.md that has been violated despite being canonical. A PreToolUse guard pushes it
+to the enforcement layer — the bypass is refused before the merge runs, not "the model
+tries to remember."
+
+FAIL-CLOSED: if the target PR or its check states can't be determined (gh error/timeout,
+no PR number), BLOCK. An anti-bypass guard must not let an *unverifiable* bypass through;
+the human can always run the merge directly if it is genuinely intended.
+
+Blocking (required) checks per #M-0.5: pytest, ruff, frontend/vitest, schema/MDX drift,
+gitleaks/secret-scan, radon/quality-gates, prompt-lint, CodeQL/Analyze. Matched by name
+substring (case-insensitive); erring toward "treat as blocking" is the safe direction here.
+"""
+from __future__ import annotations
+
+import json
+import shlex
+import subprocess
+import sys
+
+# A check is treated as BLOCKING unless its name marks it explicitly advisory.
+# Rationale (anti-bypass safe direction): an allowlist of "known required" names would
+# UNDER-block — a new required check absent from the list would let an admin-bypass slip
+# through. So we invert: any FAILING check blocks --admin *unless* it is explicitly
+# advisory. Advisory-only failures don't even need --admin (a normal `gh pr merge` passes
+# non-required checks), so a Claude --admin over a failure implies bypassing something
+# required — exactly what #M-0.5 forbids. The human can still run a genuine handoff-
+# authorized advisory bypass directly.
+ADVISORY_NAME_MARKERS = ("advisory",)
+
+_FAIL_BUCKETS = {"fail", "failure", "error", "cancel", "canceled", "cancelled", "timed_out", "action_required"}
+
+
+def _is_advisory(name: str) -> bool:
+    low = name.lower()
+    return any(m in low for m in ADVISORY_NAME_MARKERS)
+
+
+def _read_payload() -> dict:
+    try:
+        return json.loads(sys.stdin.read() or "{}")
+    except json.JSONDecodeError:
+        return {}
+
+
+def _command(payload: dict) -> str:
+    return ((payload.get("tool_input") or {}).get("command") or "").strip()
+
+
+def _segments(command: str) -> list[list[str]]:
+    """Quote-aware tokenization split on shell separators (mirrors guard-branch-switch).
+
+    Ensures a `--admin` inside a quoted commit body (`git commit -m "... --admin ..."`)
+    is one argv element, not a separate command — no false block.
+    """
+    try:
+        tokens = shlex.split(command, posix=True)
+    except ValueError:
+        return []
+    segs: list[list[str]] = []
+    cur: list[str] = []
+    for tok in tokens:
+        if tok in ("&&", "||", ";", "|"):
+            if cur:
+                segs.append(cur)
+                cur = []
+        else:
+            cur.append(tok)
+    if cur:
+        segs.append(cur)
+    return segs
+
+
+def _admin_merge_args(seg: list[str]) -> list[str] | None:
+    """Return the args of a `gh pr merge ... --admin` segment, else None."""
+    i = 0
+    while i < len(seg) and seg[i] in {"sudo", "time", "env", "nohup"}:
+        i += 1
+    if seg[i : i + 3] != ["gh", "pr", "merge"]:
+        return None
+    args = seg[i + 3 :]
+    return args if "--admin" in args else None
+
+
+def _pr_number(args: list[str]) -> str | None:
+    """First numeric positional after `merge`, else the current branch's PR number."""
+    for a in args:
+        if not a.startswith("-") and a.isdigit():
+            return a
+    try:
+        out = subprocess.run(
+            ["gh", "pr", "view", "--json", "number", "-q", ".number"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        return out.stdout.strip() or None
+    except Exception:
+        return None
+
+
+def _failing_blocking_checks(pr: str) -> list[str] | None:
+    """Failing non-advisory check names for the PR, or None if undeterminable (→ fail-closed)."""
+    try:
+        out = subprocess.run(
+            ["gh", "pr", "checks", pr, "--json", "name,bucket,state"],
+            capture_output=True,
+            text=True,
+            timeout=20,
+        )
+        rows = json.loads(out.stdout or "[]")
+    except Exception:
+        return None
+    if not isinstance(rows, list):
+        return None
+    failing: list[str] = []
+    for r in rows:
+        bucket = str(r.get("bucket") or r.get("state") or "").lower()
+        if bucket in _FAIL_BUCKETS:
+            name = str(r.get("name") or "")
+            if not _is_advisory(name):
+                failing.append(name)
+    return failing
+
+
+def _block_msg(reason: str) -> str:
+    return (
+        f"BLOCKED by guard-admin-merge (#M-0.5): {reason}.\n\n"
+        "`gh pr merge --admin` bypasses branch protection INCLUDING required CI "
+        "(pytest, ruff, frontend, schema/MDX drift, gitleaks, radon, prompt-lint, CodeQL).\n"
+        "Per #M-0.5, --admin is ONLY for explicitly-advisory failures. If a blocking check is\n"
+        "red: STOP, report, and ask — do NOT bypass. If this is a genuine advisory-only case,\n"
+        "fix the failing checks first, or the human runs the merge directly.\n\n"
+        "Hook source: .claude/hooks/guard-admin-merge.py\n"
+    )
+
+
+def main() -> int:
+    payload = _read_payload()
+    command = _command(payload)
+    # Fast path: only engage on `gh ... --admin` (leave every other command untouched).
+    if not command or "--admin" not in command or "gh" not in command:
+        return 0
+    for seg in _segments(command):
+        args = _admin_merge_args(seg)
+        if args is None:
+            continue
+        pr = _pr_number(args)
+        if not pr:
+            sys.stderr.write(_block_msg("could not determine the target PR number"))
+            return 2
+        failing = _failing_blocking_checks(pr)
+        if failing is None:
+            sys.stderr.write(_block_msg(f"could not verify PR #{pr} check states (gh error/timeout)"))
+            return 2
+        if failing:
+            sys.stderr.write(_block_msg(f"PR #{pr} has FAILING blocking checks: {', '.join(failing)}"))
+            return 2
+        # All blocking checks green (only advisory failures, if any) → allow the
+        # legitimate --admin use.
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
