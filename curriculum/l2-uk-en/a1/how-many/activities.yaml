@@ -5,7 +5,7 @@ inline:
     title: Лічи від 0 до 10
     instruction: Choose the correct Ukrainian number or chunk.
     items:
-      - prompt: 0
+      - prompt: '0'
         options:
           - text: нуль
             correct: true
@@ -132,7 +132,7 @@ inline:
     title: Групи номера телефону
     instruction: Choose the line that reads the number naturally.
     items:
-      - prompt: 097
+      - prompt: '097'
         options:
           - text: нуль дев'яносто сім
             correct: true
@@ -141,7 +141,7 @@ inline:
           - text: нуль дев'ятдесят сім
             correct: false
         explanation: Say нуль; 90 is дев'яносто.
-      - prompt: 45
+      - prompt: '45'
         options:
           - text: сорок п'ять
             correct: true
@@ -150,7 +150,7 @@ inline:
           - text: сорок пять
             correct: false
         explanation: 45 is сорок п'ять.
-      - prompt: 67
+      - prompt: '67'
         options:
           - text: шістдесят сім
             correct: true
@@ -159,7 +159,7 @@ inline:
           - text: шістдесят семь
             correct: false
         explanation: Use шістдесят сім.
-      - prompt: 321
+      - prompt: '321'
         options:
           - text: три два один
             correct: true
@@ -168,7 +168,7 @@ inline:
           - text: три дві один
             correct: false
         explanation: Phone numbers may be read digit by digit in a group.
-      - prompt: 050
+      - prompt: '050'
         options:
           - text: нуль п'ятдесят
             correct: true
@@ -256,7 +256,7 @@ workbook:
     title: Фрази 1 / 2-4 / 5+
     instruction: Sort each noun chunk by the number pattern.
     groups:
-      - label: 1
+      - label: '1'
         items:
           - одна гривня
           - один рік

@@ -19,6 +19,11 @@ interface WatchAndRepeatItem {
    */
   word?: string;
   /**
+   * @schemaDescription Sound cue shown to the learner.
+   * @ukrainianText false
+   */
+  sound?: string;
+  /**
    * @schemaDescription Note value consumed by this component.
    * @ukrainianText false
    */
@@ -37,6 +42,11 @@ interface WatchAndRepeatProps {
    */
   title?: string;
   /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
+  instruction?: string;
+  /**
    * @schemaDescription UI language flag for Ukrainian labels and feedback.
    * @ukrainianText false
    */
@@ -51,6 +61,7 @@ function extractVideoId(url: string): string | null {
 export default function WatchAndRepeat({
   items,
   title,
+  instruction,
   isUkrainian = true,
 }: WatchAndRepeatProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -85,6 +96,9 @@ export default function WatchAndRepeat({
         <span className={styles.activityIcon}>🔊</span>
         <span>{headerLabel}</span>
       </div>
+      {instruction && (
+        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      )}
 
       <div className={directStyles.warProgress} data-activity="war-progress">
         <span>
@@ -102,7 +116,10 @@ export default function WatchAndRepeat({
         {item.letter && (
           <div className={directStyles.warLetterDisplay}>{item.letter}</div>
         )}
-        {item.word && !item.letter && (
+        {item.sound && (
+          <div className={directStyles.warSoundDisplay}>{item.sound}</div>
+        )}
+        {item.word && (
           <div className={directStyles.warWordDisplay}>{item.word}</div>
         )}
 

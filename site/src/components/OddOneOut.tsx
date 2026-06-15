@@ -19,6 +19,11 @@ interface OddOneOutProps {
      */
     correct: number;
     /**
+     * @schemaDescription Optional context label for this item.
+     * @ukrainianText true
+     */
+    prompt?: string;
+    /**
      * @schemaDescription Feedback explanation shown after the learner answers.
      * @ukrainianText true
      */
@@ -107,6 +112,12 @@ export default function OddOneOut({ instruction, items }: OddOneOutProps) {
       <p style={{ margin: '0.5rem 0 1rem', fontSize: '0.875rem', color: 'var(--co-gray-600, #5F6368)' }}>
         {currentIndex + 1} / {items.length}
       </p>
+
+      {current.prompt && (
+        <p style={{ margin: '0 0 1rem', fontWeight: 600 }}>
+          {current.prompt}
+        </p>
+      )}
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '1rem' }}>
         {current.words.map((word, idx) => {

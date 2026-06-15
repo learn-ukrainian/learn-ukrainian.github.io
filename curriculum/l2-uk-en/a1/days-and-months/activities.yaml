@@ -17,7 +17,8 @@ inline:
   - id: act-2
     type: quiz
     title: Clinic appointment day
-    questions:
+    instruction: Choose the best meaning for each clinic calendar line.
+    items:
       - question: "У понеділок о дев'ятій можна?"
         options:
           - text: The receptionist offers Monday at nine.
@@ -57,6 +58,7 @@ inline:
   - id: act-3
     type: fill-in
     title: Day planning chunks
+    instruction: Complete each sentence with the safe weekday chunk.
     items:
       - sentence: 'Я працюю ___.'
         answer: 'у понеділок'
@@ -111,6 +113,7 @@ inline:
 workbook:
   - type: match-up
     title: Month, season, memory hook
+    instruction: Match each Ukrainian month with its season or memory hook.
     pairs:
       - left: січень
         right: зима
@@ -130,28 +133,30 @@ workbook:
         right: birch
   - type: true-false
     title: Calendar safety checks
+    instruction: Decide whether each calendar statement is safe Ukrainian.
     items:
       - statement: 'Ukrainian writes понеділок and січень with lowercase letters in normal sentences.'
-        isTrue: true
+        correct: true
         explanation: 'Days and months are common nouns in Ukrainian.'
       - statement: 'Сьогодні є вівторок is the safest A1 sentence.'
-        isTrue: false
+        correct: false
         explanation: 'Use Сьогодні вівторок without є.'
       - statement: 'Взимку, навесні, влітку, восени are useful season chunks.'
-        isTrue: true
+        correct: true
         explanation: 'These adverbs are the safe A1 forms.'
       - statement: 'Я народився першого січня uses no preposition before the date.'
-        isTrue: true
+        correct: true
         explanation: 'Dates use the date chunk directly.'
       - statement: 'В літо is the safe chunk for in summer.'
-        isTrue: false
+        correct: false
         explanation: 'Use влітку.'
       - statement: 'У березні answers in which month.'
-        isTrue: true
+        correct: true
         explanation: 'У березні is the month chunk.'
   - type: translate
     title: Build calendar lines
-    questions:
+    instruction: Choose the safe Ukrainian version of each calendar line.
+    items:
       - source: Today is Tuesday.
         options:
           - text: 'Сьогодні вівторок.'

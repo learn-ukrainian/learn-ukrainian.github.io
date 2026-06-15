@@ -156,7 +156,7 @@ workbook:
   - type: translate
     title: Build weather notes
     instruction: Choose the safe Ukrainian weather note.
-    questions:
+    items:
       - source: Today it is cold.
         options:
           - text: 'Сьогодні холодно.'
