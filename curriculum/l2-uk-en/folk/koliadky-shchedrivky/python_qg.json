@@ -1,0 +1,402 @@
+{
+  "module": "folk-005",
+  "level": "FOLK",
+  "slug": "koliadky-shchedrivky",
+  "pipeline": "linear-phase-4",
+  "plan_references": [
+    {
+      "title": "Koliadky Shchedrivky",
+      "note": "Compiled from Костомаров, Чижевський, Попович — космогонічні мотиви, тріада, походження",
+      "path": "wiki/folk/ritual/koliadky-shchedrivky.md",
+      "type": "wiki"
+    },
+    {
+      "title": "Слов'янська міфологія",
+      "author": "Костомаров М.",
+      "note": "Латинське походження слова «коляда», класифікація зимових обрядів, порівняння з великоросійськими",
+      "type": "primary",
+      "work": "Слов'янська міфологія"
+    },
+    {
+      "title": "Нарис історії культури України",
+      "author": "Попович М.",
+      "note": "Тріада господар-господиня-діти, Світове дерево, провінційно-римські впливи",
+      "type": "primary",
+      "work": "Нарис історії культури України"
+    },
+    {
+      "title": "Історія української літератури",
+      "author": "Чижевський Д.",
+      "note": "Фольклорні жанри як стилістичні епохи",
+      "type": "primary",
+      "work": "Історія української літератури"
+    },
+    {
+      "title": "Праці етнографічно-статистичної експедиції в Західно-Руський край",
+      "author": "Чубинський П.",
+      "note": "Первинні записи колядок і щедрівок з Карпат та Полісся",
+      "type": "primary",
+      "work": "Праці етнографічно-статистичної експедиції в Західно-Руський край"
+    }
+  ],
+  "gates": {
+    "activity_schema": {
+      "passed": true,
+      "checked": 0,
+      "violations": []
+    },
+    "quiz_translate_explanations": {
+      "passed": true,
+      "checked": 0,
+      "violations": []
+    },
+    "word_count": {
+      "passed": false,
+      "count": 4519,
+      "target": 5000,
+      "min_with_tolerance": 4600,
+      "tolerance_below_pct": 8.0
+    },
+    "plan_sections": {
+      "passed": true,
+      "missing_headings": [],
+      "duplicate_headings": [],
+      "archetype": "folk-experiential",
+      "word_budgets": [
+        {
+          "section": "Розминка",
+          "count": 331,
+          "min": 360,
+          "max": 440,
+          "passed": false,
+          "under_min": true,
+          "over_max": false
+        },
+        {
+          "section": "Конфліктна карта: Хто «винайшов» колядку?",
+          "count": 489,
+          "min": 855,
+          "max": 1045,
+          "passed": false,
+          "under_min": true,
+          "over_max": false
+        },
+        {
+          "section": "Читання: Космогонічний міф у тексті колядки",
+          "count": 562,
+          "min": 1035,
+          "max": 1265,
+          "passed": false,
+          "under_min": true,
+          "over_max": false
+        },
+        {
+          "section": "Аналіз: Поетика та ритуальна функція",
+          "count": 511,
+          "min": 1035,
+          "max": 1265,
+          "passed": false,
+          "under_min": true,
+          "over_max": false
+        },
+        {
+          "section": "Дискусія: Що вижило і чому?",
+          "count": 416,
+          "min": 1035,
+          "max": 1265,
+          "passed": false,
+          "under_min": true,
+          "over_max": false
+        },
+        {
+          "section": "Підсумок",
+          "count": 225,
+          "min": 360,
+          "max": 440,
+          "passed": false,
+          "under_min": true,
+          "over_max": false
+        }
+      ]
+    },
+    "formatting_standards": {
+      "passed": true,
+      "malformed_callouts": [],
+      "missing_mandatory_callouts": []
+    },
+    "scaffolding_leak": {
+      "passed": true,
+      "offending": []
+    },
+    "vesum_verified": {
+      "passed": false,
+      "checked": 2425,
+      "whitelisted": 5,
+      "heritage_attested": 6,
+      "heritage_attested_words": [
+        "звіздочки",
+        "конкуруючі",
+        "овсеня",
+        "переддня",
+        "посієме",
+        "романтизмів"
+      ],
+      "missing": [
+        "Вільговського",
+        "Віфлеємської",
+        "Йоль",
+        "Ялда",
+        "дебат",
+        "діючий",
+        "нащада",
+        "сновати",
+        "сонінько",
+        "чотиризвучний",
+        "щедрувальницькі"
+      ],
+      "missing_count": 11,
+      "rule_ids": [
+        "#R-VESUM-ALL-WORDS",
+        "#R-BAD-FORM-MARKER"
+      ]
+    },
+    "bad_form_heritage": {
+      "passed": true,
+      "checked": 0,
+      "marker_count": 0,
+      "skipped_empty": 0,
+      "findings": [],
+      "finding_count": 0
+    },
+    "citations_resolve": {
+      "passed": false,
+      "unknown": [
+        "Народна творчість, «Як ще не було початку світа» (космогонічна колядка)",
+        "Народна творчість, «Ой сивая та і зозулечка» (щедрівка з тріадою світил)",
+        "Костомаров М., «Слов'янська міфологія»",
+        "Попович М., «Нарис історії культури України»",
+        "Чижевський Д., «Історія української літератури»",
+        "Чубинський П., «Праці етнографічно-статистичної експедиції в Західно-Руський край»"
+      ],
+      "rule_ids": [
+        "#R-CITE-HONEST"
+      ]
+    },
+    "plan_reference_match": {
+      "passed": true,
+      "warnings": [
+        "plan_has_no_chunk_ids_skipping_membership_check"
+      ]
+    },
+    "resource_coverage": {
+      "passed": true,
+      "skipped": "not_a1_m1_m7_archetype"
+    },
+    "chunk_context_for_all_refs": {
+      "passed": true,
+      "verdict": "PASS"
+    },
+    "published_quote_for_publishable_refs": {
+      "passed": true,
+      "verdict": "PASS",
+      "matched": [],
+      "blockquotes_checked": 0
+    },
+    "textbook_quote_fidelity": {
+      "passed": false,
+      "checked": 3,
+      "violations": [
+        {
+          "quote": "Коли не било з нащада світа,\nтогди не било неба, ні землі,\nа то лем було синєє море,\nа серед моря зелений явір.",
+          "attribution": "",
+          "reason": "Missing attribution without NO_VERIFY"
+        },
+        {
+          "quote": "Як ще не було початку світа,\nТогди не було неба, ні землі,\nА но лем було синєє море,\nА серед моря зелений явір.\nНа явороньку три голубоньки,\nТри голубоньки радоньку радять,\nРадоньку радять, як світ сновати:\n— Та спустимося на дно до моря\nТа дістанемо дрібного піску,\nДрібний пісочок посієме ми:\nТа нам ся стане чорна землиця.\nТа дістанемо золотий камінь,\nЗолотий камінь посієме ми:\nТа нам ся стане ясне небонько,\nЯсне небонько, світле сонінько,\nСвітле сонінько, ясен місячик,\nЯсен місячик, ясна зірниця,\nЯсна зірниця, дрібні звіздочки.",
+          "attribution": "",
+          "reason": "Missing attribution without NO_VERIFY"
+        },
+        {
+          "quote": "Щедрий вечір, добрий вечір,\nДобрим людям на здоров'я!\nЯсен місяць — пан господар,\nКрасне сонце — жона його,\nДрібні зірки — його дітки.",
+          "attribution": "",
+          "reason": "Missing attribution without NO_VERIFY"
+        }
+      ],
+      "message": "verify_quote: 3 checked, 3 violations",
+      "verdict": "REJECT",
+      "severity": "HARD"
+    },
+    "resources_search_attempted": {
+      "passed": true,
+      "severity": "HARD",
+      "search_attempt_count": 3,
+      "search_tools_used": [
+        "query_wikipedia"
+      ],
+      "manual_coverage_verified": false
+    },
+    "immersion_advisory": {
+      "passed": true,
+      "pct": 99.06,
+      "min_pct": 100,
+      "max_pct": 100,
+      "policy": "b2+"
+    },
+    "l2_exposure_floor": {
+      "passed": true,
+      "required": {
+        "uk_dialogue_lines": 0,
+        "vocab_entries": 0,
+        "uk_example_sentences": 0,
+        "uk_tab3_activities": 0
+      },
+      "observed": {
+        "uk_dialogue_lines": 27,
+        "vocab_entries": 0,
+        "uk_example_sentences": 2,
+        "uk_tab3_activities": 3
+      },
+      "reason": null,
+      "policy": "b2+"
+    },
+    "long_uk_ceiling": {
+      "passed": true,
+      "required": {
+        "max_unsupported_uk_words": 10000,
+        "support_proximity": 8
+      },
+      "observed": {
+        "offending_runs": 0
+      },
+      "reason": null,
+      "offending_runs": [],
+      "policy": "b2+"
+    },
+    "component_density": {
+      "passed": true,
+      "required": {},
+      "observed": [],
+      "reason": null,
+      "mismatches": [],
+      "ignored_components": [],
+      "policy": "b2+"
+    },
+    "archetype_fit": {
+      "passed": true,
+      "archetype": "folk-experiential",
+      "label": "Folk experiential",
+      "checks": [
+        {
+          "name": "no_internal_wiki_links",
+          "passed": true,
+          "severity": "ERROR",
+          "message": "Student-facing artifacts must not expose internal wiki paths.",
+          "links": []
+        }
+      ],
+      "violations": []
+    },
+    "inject_activity_ids": {
+      "passed": true,
+      "injected": [
+        "act-1",
+        "act-2",
+        "act-3"
+      ],
+      "missing": [],
+      "unused": [],
+      "workbook_only": [],
+      "reason": null
+    },
+    "activity_types": {
+      "passed": true,
+      "types": [
+        "ritual-sequencing",
+        "motif-formula",
+        "ritual-sequencing",
+        "variant-comparison",
+        "motif-formula",
+        "comparative-study",
+        "critical-analysis",
+        "essay-response",
+        "performance",
+        "ritual-sequencing"
+      ],
+      "disallowed": [],
+      "forbidden": []
+    },
+    "ai_slop_clean": {
+      "passed": true,
+      "hits": []
+    },
+    "russianisms_strict": {
+      "passed": true,
+      "critical_findings": [],
+      "warning_findings": [],
+      "critical_count": 0,
+      "warning_count": 0
+    },
+    "register_consistency": {
+      "passed": true,
+      "verdict": "PASS",
+      "severity": "WARN",
+      "violations": [],
+      "violation_count": 0,
+      "scope_level": "folk"
+    },
+    "engagement_floor": {
+      "passed": true,
+      "callout_count": 2,
+      "callout_min": 1,
+      "meta_narration_hits": [],
+      "issues": [],
+      "_plan_word_target": 5000
+    },
+    "component_props": {
+      "passed": true,
+      "errors": []
+    },
+    "russianisms_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "surzhyk_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "calques_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "paronym_clean": {
+      "passed": true,
+      "hits": [],
+      "detections": []
+    },
+    "previously_passed_regression": {
+      "passed": true,
+      "regressions": []
+    },
+    "mdx_render": {
+      "passed": null,
+      "message": "deferred — no assembled MDX at python_qg time; run the standalone render gate after assemble_mdx (run_mdx_render_gate / scripts.build.mdx_render_gate / verify_shippable.py). #3137"
+    },
+    "passed": false,
+    "vocab_count": {
+      "passed": true,
+      "count": 35,
+      "floor": 35,
+      "candidate_source": "plan.vocabulary_hints.recommended",
+      "unused_recommended_count": 0,
+      "unused_recommended_lemmas": []
+    },
+    "correction_terminal": {
+      "passed": false,
+      "gate": "word_count",
+      "message": "word_count failed after its single ADR-008 correction attempt"
+    }
+  }
+}

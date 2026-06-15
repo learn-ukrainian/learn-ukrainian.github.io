@@ -1,0 +1,1023 @@
+# Writer Charter (write-time subset)
+
+This is the actionable subset of `docs/north-star.md` for the writer phase.
+
+<!-- rule_id: #R-VOICE-META -->
+Adult peer voice only. No English meta-narration or teacherly transitions in `module.md`. Forbidden patterns include "Welcome to...", "In this section...", "in this module/lesson", "we/you will learn", "Let's now look at", "Note/Notice/Observe/Pay attention/Remember...", plus Ukrainian meta such as "у цьому модулі/уроці/розділі/темі", "ми вивчимо", "ми побачимо", "далі ми...". Speak TO the learner about the LANGUAGE; never narrate ABOUT the module. Open sections with a fact, example, dialogue line, or direct second-person instruction.
+
+<!-- rule_id: #R-VOICE-META -->
+B1+ body text outside Tab 2 is Ukrainian only: no rescue notes, mirrored translations, parenthetical English grammar glosses, or English activity instructions. Tab 2 may carry English translations and expression notes.
+
+<!-- rule_id: #R-CITE-HONEST -->
+Use real sources only. Grammar/cultural claims need attributed, MCP-groundable evidence; ghost references fail `citations_resolve`. Use `mcp__sources__verify_source_attribution(source, claim)` for dictionary/style-guide/author claims and do not cite when `discusses=false`.
+
+<!-- rule_id: #R-BAD-FORM-MARKER -->
+Decolonized framing is default: Ukraine has its own canon/history; Russian-imperial writers stay Russian; Holodomor is genocide; the war is a war; reject Soviet euphemisms ("reunification", "brotherly peoples").
+
+<!-- rule_id: #R-VOICE-META -->
+Activities test Ukrainian, not content recall. Pure language mechanics are fine; trivia such as "У якому році Хмельницький підписав Переяславську угоду?" is not.
+
+# Writer Lesson Contract (write-time subset)
+
+Produce exactly four artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml`, `resources.yaml`. Plans are immutable; wiki packet and implementation map are source obligations, not optional background.
+
+## V7.1 Renderer Charter — read this FIRST (#R-RENDERER-CHARTER)
+
+You are a RENDERER, not a composer. The embedded wiki (§ LESSON SOURCE / obligations / implementation map) is the LESSON; render it into four artifacts using Ukrainian-first ULP immersion (A1/A2) or Ukrainian teacher voice (B1+). Do NOT invent vocabulary, examples, citations, dialogue lines, phonetic rules, decolonization stances, or grammar claims beyond the wiki + plan + cited RAG chunks.
+
+Bounded composition is allowed only for English scaffold glosses (A1/A2), dialogue boxes from wiki examples, short teacher-voice transitions/summaries, and concrete activity items in wiki-named formats. Every Ukrainian content token must stay inside the layered allowlist: wiki vocabulary_minimum ∪ plan targets/hints ∪ cumulative learner state ∪ closed-class words ∪ proper nouns from wiki examples ∪ bad-form marker spans ∪ quoted evidence from cited RAG chunks.
+
+Voice rewrite, NOT translation: convert methodological wiki prose to 2nd-person teacher voice (Ukrainian-first with brief English at A1/A2, Ukrainian at B1+). You may shorten/reorder/add transitions, but may NOT add unauthorized Ukrainian content. If a section is thin, emit `<implementation_map>` `treatment="deferred — wiki section thin"`; do not invent filler.
+
+Still load-bearing: voice rewrite quality (`#R-VOICE-META`, `#R-SINGLE-VOICE-A1`, `#R-AUDIENCE-LANGUAGE-A1`), citation honesty (`#R-CITE-HONEST`), VESUM (`#R-VESUM-ALL-WORDS`), russianism/calque/surzhyk/paronym gates, prose floor (`#R-PROSE-FLOOR-A1` remains HARD despite renderer framing), bad-form markers (`#R-BAD-FORM-MARKER`), no-scaffolding-leak (`#R-NO-SCAFFOLDING-LEAKS`), no-children-quotes (`#R-NO-CHILDREN-PRIMARY-QUOTES`), artifact emission, and dialogue count/format.
+
+Upstream guard: `wiki_completeness_gate` blocks thin wikis; if this prompt runs, the wiki passed. Render it faithfully.
+
+## Citation authority (applies to every artifact)
+
+`plan.references` is the SOLE source of `resources.yaml` citations. Knowledge Packet anchors (S1, S2, ...) are research material — NOT citation candidates. If a Knowledge Packet anchor points to a chunk OUTSIDE `plan.references`, you MUST NOT cite that chunk.
+
+Example: if `plan.references` lists `<Plan Author> Grade <N>, p.<P>` and Knowledge Packet S1 points elsewhere, cite ONLY the plan reference. This overrides later "enrich plan_references" wording.
+
+Published tabs are fixed: Tab 1 `Урок` from `module.md`; Tab 2 `Словник` from `vocabulary.yaml`; Tab 3 `Вправи` from `activities.yaml` plus inline cross-references; Tab 4 `Ресурси` from `resources.yaml`.
+
+Writer-facing activity authority is inline below: `ritual-sequencing, variant-comparison, motif-formula, performance, essay-response, critical-analysis, comparative-study`, `ritual-sequencing, motif-formula`, `ritual-sequencing, variant-comparison, motif-formula, performance, essay-response, critical-analysis, comparative-study`, `- comparative-study:
+    required authoring fields: id, type, criteria, items_to_compare, model_answer, prompt, source_a, source_b, source_reading, task
+    optional authoring fields: instruction, notes, title
+- critical-analysis:
+    required authoring fields: id, type, context, focus_points, model_answer, model_answers, question, questions, source_reading, target_text
+    optional authoring fields: instruction, notes, title
+- essay-response:
+    required authoring fields: id, type, min_words, model_answer, peer_review_guidelines, prompt, rubric, source_reading
+    optional authoring fields: instruction, notes, title
+- motif-formula:
+    required authoring fields: id, type, answers, formulas, model_answer, passage, prompt, text
+    optional authoring fields: instruction, notes, title
+- performance:
+    required authoring fields: id, type, fragment, model_answer, prompt, self_check, self_checklist, show_record_button
+    optional authoring fields: instruction, notes, title
+- ritual-sequencing:
+    required authoring fields: id, type, correct_order, items, model_answer, steps
+    optional authoring fields: instruction, notes, title
+- variant-comparison:
+    required authoring fields: id, type, features, model_answer, prompt, variants
+    optional authoring fields: instruction, notes, title`.
+
+Hard constraints: every `INJECT_ACTIVITY` id resolves; unknown activity types fail; every Tab 4 source is plan/wiki grounded; vocabulary is VESUM-verified or whitelisted; A1/A2 follow the Immersion Rule; B1+ Tab 1/3/4 body is 100% Ukrainian; decolonized framing applies across all tabs.
+
+# Phase 4 Linear Writer Prompt
+
+Write the A1 module using the plan and contract below. Produce exactly four
+authoring artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml`, and
+`resources.yaml`.
+
+
+
+## Mandatory visible verification block (emit BEFORE drafting — #1673/#1661)
+
+Emit one `<plan_reasoning section="...">...</plan_reasoning>` block per section (<=200 words).
+
+Each `<plan_reasoning>` block MUST contain these exact XML sub-nodes (do not write a single blob of prose):
+- `<word_budget>`: section word allocation + running total vs 5000.
+- `<plan_vocab>`: required plan-vocabulary lemmas used + grounding Ukrainian sentence.
+- `<register>`: immersion ratio from the Immersion Rule + how this section preserves it.
+- `<teaching_sequence>`: Knowledge Packet facts/citations this section uses.
+- `<implementation_map>` (<!-- rule_id: #R-IMPL-MAP-COMPLETE -->): list every `obligation_id` exactly once with artifact, location, treatment. Omission causes `implementation_map_missing`. If a row cannot fit A1 scope, emit artifact/location `<none>` and treatment `deferred — <why>`.
+- `<verification_plan>`: MCP tools to call for this section's claims.
+- `<verification_trace>`: exact tool call signatures; omit speculative examples.
+
+Prefer single-call verification: `verify_quote`, `verify_source_attribution`, `check_modern_form`, `check_russian_shadow`. Search for quote evidence.
+
+Emit audit lines in order:
+
+1. `<implementation_map_audit>manifest_obligations=N covered_in_map=M missing=[<deferred IDs>]</implementation_map_audit>`
+2. `<bad_form_audit>italic_bad_form_patterns_found=N converted_to_marker=N remaining=0</bad_form_audit>`
+3. `<activity_split_audit>level=FOLK inline_n=N workbook_n=N inline_range=[lo,hi] workbook_range=[lo,hi] split_valid=true|false</activity_split_audit>`
+
+If `M < N`, fix the map before artifacts. If `bad_form_audit.remaining != 0`,
+convert remaining italic/bare bad forms to `<!-- bad -->...<!-- /bad -->`.
+If `activity_split_audit.split_valid=false`, rebalance inline/workbook first.
+
+## Tier-1 verification discipline (do this WHILE drafting — #1661)
+
+<!-- rule_id: #R-CITE-HONEST -->
+Сибір case study (May 2026): a prior answer fabricated a Грінченко citation, an Антоненко-Давидович claim, and a fused Shevchenko line. Verify before citing; do not ship authority theatre.
+
+<!-- rule_id: #R-VESUM-ALL-WORDS -->
+**1. Verify every example word in VESUM** — exhaustively, not a sample. Batch-verify every distinct Cyrillic word form in `module.md`, `activities.yaml`, `vocabulary.yaml`, and `resources.yaml` via `mcp__sources__verify_words`, except bad-form-marker spans and `error:`/`errorWord:` fields — including derived adjectives (`-ний/-овий/-альний/-увальний`), `-ість` nouns, agent nouns, and every hyphenated compound. Replace any miss not heritage-attested (`search_slovnyk_me`/`search_heritage`, `is_russianism==false`) with an attested synonym or rephrase before emitting; an unverified content word fails the build. **First-pass-critical:** the `python_qg` correction loop does LITERAL find/replace only — it CANNOT rephrase a coinage/jargon into a synonym, and a failed correction deletes content (also failing `word_count`); do not rely on it. Before any reflexive `-ся` form, verify it; traps `пити → *п'юся`, `читати → *читаюся`, `писати → *пишуся` fail unless VESUM says otherwise.
+
+<!-- rule_id: #R-BAD-FORM-MARKER -->
+**Bad-form marker convention (MANDATORY everywhere).** Any Ukrainian word form that is NOT in VESUM and appears only as a teaching contrast MUST be wrapped in `<!-- bad -->...<!-- /bad -->` markers in every artifact. Do not use italics or bare prose for bad forms.
+
+Learner-facing bad-form contrast is optional, level-sensitive, and must be wiki/plan-authorized; early M1-M4 usually teach canonical forms only. When contrast is authorized, use marker syntax in every artifact; otherwise omit the bad form. Hard-reject unless marker-protected: italic bad-form leaks, unmarked `X, а не Y` / `instead of Y` / `замість Y`, parenthetical `(not Y)` / `(не Y)`, and true-false statements where Y is malformed or Russianism.
+
+**Morpheme-bold notation.** Do not put hyphens/slashes inside bold spans: write `<verb> (**-suffix**)`, not `<verb>**-suffix**` or `**-suffix/-variant**`.
+
+**Textbook syllable-break notation.** Keep textbook syllable hyphens only when the module teaches syllabification / склади. Otherwise strip display hyphens before learner-facing prose.
+
+**2. Modern Ukrainian + heritage-defense discipline.** Default to post-2019 Pravopys forms. Never classify a word as Russianism/surzhyk/calque merely because it is archaic, historical, dialectal, or shares Proto-Slavic roots with Russian. Route uncertain forms through `mcp__sources__search_heritage` first. If authentic but non-standard, tag `[Archaism]` / `[Historism]` / `[Dialectism]` and give the modern equivalent. Unverified → omit or emit `<!-- VERIFY: heritage status for "X" unresolved -->`.
+
+Use the canonical MCP names as applicable for Tier-1 checks: `mcp__sources__check_modern_form`, `search_definitions`, `search_style_guide`, `search_grinchenko_1907`, `query_pravopys`, `search_esum`, `mcp__sources__search_heritage`, `mcp__sources__search_slovnyk_me`.
+
+<!-- rule_id: #R-CITE-HONEST -->
+**3. Source-citation discipline.** Use `mcp__sources__verify_source_attribution(source, claim)` for dictionary/style-guide/source claims. If `discusses=false`, do not cite. Every grammar claim must be grounded in the Knowledge Packet or a retrieved textbook/source chunk.
+
+**Grammar claim grounding.** EVERY specific grammar claim (aspect, case endings, syntax, phonetics, morphology, word formation, stress/prosody, orthography, or meaning distinctions) MUST cite an authoritative source. Name it in text or as `<!-- VERIFY: source="..." grade="..." author="..." -->`. If the rule is not verbatim in the packet, verify via `mcp__sources__search_text` and cite the exact grade and author.
+
+<!-- rule_id: #R-TEXTBOOK-30W -->
+**Textbook grounding.** For each `plan_references` entry, call `mcp__sources__get_chunk_context(chunk_id=<ID>)` and ground from THAT text. Do NOT use `search_text` or topic-keyword search for plan references. The `chunk_context_for_all_refs` gate hard-rejects missing calls. Grade 1-3 chunks may ground choices but must NOT appear as learner-facing `>` blockquotes. Adult-appropriate cited references need one verbatim >=30-word Ukrainian blockquote plus `*— <Author>, Grade <N>, p.<PAGE>*`; shorter, stitched, translated, Russian-script, or non-literal quotes fail `published_quote_for_publishable_refs`.
+
+<!-- rule_id: #R-CITE-HONEST -->
+Resources must be plan/wiki/telemetry-grounded. `resources.yaml role: textbook` entries come ONLY from `plan.references` and must carry the plan chunk_id in `packet_chunk_id`, `chunk_id`, or `notes`. Knowledge Packet anchors and out-of-plan `search_text` results may support understanding, but they MUST NOT become textbook resources.
+
+<!-- rule_id: #R-CITE-HONEST -->
+**4. Quote attribution discipline.** Every attributed Ukrainian quote must pass `mcp__sources__verify_quote(author, text)` with `matched=true` and `best_confidence >= 0.85`. Never fuse snippets from separate sources.
+
+**5. End-of-output gate.** Before artifacts, rescan: all Ukrainian forms verified or marker-protected, every source grounded, every quote literal. Omit or rewrite anything unverifiable.
+
+After the four artifact fences, emit a visible `<end_gate>...</end_gate>` block. Fill each node with concrete items, not placeholders:
+
+<end_gate>
+  <rescanned_words>[word forms re-verified during rescan]</rescanned_words>
+  <rescanned_sources>[sources re-grounded]</rescanned_sources>
+  <grammar_claims_grounded>[grammar claims + cite source]</grammar_claims_grounded>
+  <removed_unverified>[forms/claims removed as unverifiable]</removed_unverified>
+  <chunk_context_calls>N</chunk_context_calls>
+  <chunk_context_chunk_ids>[exact chunk_ids passed to get_chunk_context]</chunk_context_chunk_ids>
+  <resources_search_calls>N</resources_search_calls>
+  <resources_search_tools>[exact multimedia tool names called]</resources_search_tools>
+</end_gate>
+
+`<chunk_context_calls>` MUST equal the count of fetchable `plan_references`; if it is `0` while references exist, call `mcp__sources__get_chunk_context` for each plan chunk. `<resources_search_calls>` MUST be ≥1 and counts ONLY `mcp__sources__query_wikipedia`, `mcp__sources__search_external`, or `mcp__sources__search_images`. Missing or false counts become `gate_present=false` / `tool_theatre`.
+
+**Tool-citation honesty (mandatory).** Every tool name you cite inside `<plan_reasoning verification="...">` or block body MUST correspond to an actual tool call you made on this turn. If not, STOP: make the call or remove the citation. Unmatched citations are a hard fail (`tool_theatre`). Canonical names only: exact `mcp__sources__...` names, no family aliases.
+
+## LESSON SOURCE — render this wiki content into the 4-tab format
+
+The wiki content below is the LESSON SOURCE per the V7.1 Renderer Charter above. Render it; do not compose around it.
+
+## Wiki Obligations Manifest
+
+{
+  "slug": "koliadky-shchedrivky",
+  "wiki_path": "/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/builds/folk-koliadky-shchedrivky-20260615-154532/wiki/folk/ritual/koliadky-shchedrivky.md",
+  "phonetic_format_reference": [
+    "Spoken target in `[...]` single-character square brackets, not Unicode look-alikes",
+    "Pair written and spoken form in close lexical proximity (same sentence or adjacent bullet)",
+    "Copy >=1 textbook example verbatim when the wiki provides one"
+  ],
+  "sequence_steps": [],
+  "l2_errors": [],
+  "phonetic_rules": [],
+  "decolonization_bans": [],
+  "external_resources": []
+}
+
+## Wiki Coverage Required Items (per-obligation breakdown)
+
+Integrate each item into natural lesson flow (a model sentence, usage example, conjugation row, phonetic transcription). Do NOT echo `Крок N:` labels or `[S\d+]` source markers — writer-side scaffolding, forbidden per `#R-NO-SCAFFOLDING-LEAKS`.
+
+**Coverage rule**: every listed item MUST appear at least once in `module.md` PROSE (model sentence, definition, or paragraph). A vocab table entry alone is NOT coverage. Structural elements (tables, dialogue boxes) count for vocabulary but NOT for wiki_coverage obligations.
+
+## Implementation Map Contract
+
+Pre-resolved tuples: `(obligation_id, artifact, location_hint, treatment_template)`. Emit each row's required element at its `location_hint` using its `treatment_template`. Do NOT invent obligations beyond the manifest; do NOT skip rows. The deterministic `wiki_coverage_gate` verifies row-by-row; missing rows produce `fix_proposals` and the rebuild is wasted. Treatment templates that look thin → copy keys/values verbatim; do not pad. Gate diagnostics, not your prose, drive seeder fixes.
+
+Manifest obligations: 0.
+Each row below is a pre-resolved slot the writer MUST fill at the artifact indicated by `artifact`, located by `location_hint`, populated using `treatment_template` as the structural blueprint.
+
+
+
+
+### External Resources — multimedia search obligation
+
+Every module MUST attempt at least one multimedia lookup (YouTube/video, blog/article, podcast/audio, image/gallery). Make at least ONE lesson-relevant call to:
+- `mcp__sources__query_wikipedia` for Ukrainian Wikipedia context, OR
+- `mcp__sources__search_external` for blog/article search, OR
+- `mcp__sources__search_images` for image/gallery discovery, OR
+- browser-based search if available in this dispatch's tool set.
+
+If `external_resources` in the Wiki Obligations Manifest is non-empty, those URLs are AUTHORITATIVE; include them in `resources.yaml` with supplied roles.
+
+Empty search results are acceptable, but the search attempt MUST be recorded in the writer telemetry. If you cannot find usable resources, you MUST still record the search attempt in writer telemetry. Skipping the search fails the `resources_search_attempted` gate.
+
+In `resources.yaml`, every entry MUST have a `role` field: `textbook`, `youtube`, `video`, `blog`, `podcast`, `audio`, `article`, or `wiki`.
+
+**Schema rule for non-textbook roles: `url:` is REQUIRED.** `role: textbook`
+does NOT require `url:`; all other roles (`youtube`, `video`, `blog`, `podcast`,
+`audio`, `article`, `wiki`) require a non-empty `url:` or schema validation
+halts. If a non-textbook entry lacks a verified URL, **OMIT THE ENTRY ENTIRELY**. Never emit `url: null`, `url: ""`, `url: TBD`, or an entry without `url:`; all fail. Honest omission does NOT regress `resources_search_attempted` because the gate counts telemetry.
+
+### Phonetic rules — MUST emit IPA notation
+
+Use the Phonetic format reference embedded at the top of the Wiki Obligations
+Manifest. Every `phonetic_rules` pair still requires the written form and the
+spoken target in `[...]`; `spoken_present=false` is a hard wiki-coverage fail.
+
+## Knowledge Packet
+
+# Knowledge Packet: Колядки та щедрівки: Міф про створення світу
+
+**Module:** folk-005 | **Level:** FOLK | **Slug:** koliadky-shchedrivky
+**Retrieval:** compiled wiki + MCP sources, no Qdrant
+
+## Targeted Wiki Excerpts by Plan Section
+
+### Розминка
+
+- **folk/ritual/koliadky-shchedrivky.md :: Космогонічний шар: море, дерево і початок світу**
+  Найважливіший для цієї статті пласт — космогонічний, тобто пов'язаний із творенням світу з первісного невпорядкованого стану. У перевіреному корпусному фрагменті колядка починає світ із відсутності неба й землі, після чого з'являються море та дерево: «Коли не било з нащада світа, тогди не било неба, ні землі, / а то лем било синєє море, а серед моря зелений явір» [S9]. Ця цитата дає рідкісну для навчального матеріалу можливість показати, що колядка може бути не лише побажанням господареві, а й моделлю народного...
+
+- **folk/ritual/koliadky-shchedrivky.md :: Жанр, час виконання й обрядова дія**
+  Колядки й щедрівки не зводяться до «пісень на зимові свята»: у традиційному середовищі вони діють як частина обрядового сценарію, де є гурт виконавців, адресат, формула благословення, дар або частування й очікувана зміна майбутнього господарського року [S9]. У шкільному корпусі різницю подають просто: колядки пов'язують із Різдвом, щедрівки — зі Щедрим вечором, а засівання — з першим днем Нового року та зерном, яким обходять хати сусідів і родичів [S11]. Таке пояснення корисне як початкове, але для семінарського...
+
+### Конфліктна карта: Хто «винайшов» колядку?
+
+- **folk/ritual/koliadky-shchedrivky.md :: Маски, Маланка, коза і межові форми зимового циклу**
+  Маланка (Malanka), водіння кози й посівання показують, що зимовий цикл охоплює не лише спів, а й масковану дію, гру, драматизований рух і матеріальні жести. Джерело описує «козу» як частину колядської обрядовості, де маскована гра має практично-господарське спрямування: забезпечити врожай і поєднати тваринний образ із образом збіжжя [S9]. Центральна логіка проста й сильна: де коза ходить і рухається, там має родити жито [S9]. У цьому місці міфологічне, аграрне й театральне не розділені [S9]. Образ смерті й...
+
+- **folk/ritual/koliadky-shchedrivky.md :: Господарський космос: дім, родина і врожай**
+  Величальна поетика зимових пісень будує дім як малу модель світу. У перевіреному фрагменті щедрівки спершу з'являється святкова формула: «Щедрий вечір, добрий вечір! Добрим людям на здоров'я! / Стояла світелка новозроблена» [S9]. Далі родина співвіднесена з небесними світилами: «Що ж місячик — то господарик, що сонечко — то господинька, / яснії зірки — то його дітки» [S9]. Це не побутовий опис кімнати, а ритуальне піднесення родини до космічного порядку: господар, господиня й діти стають центром благословенного...
+
+### Читання: Космогонічний міф у тексті колядки
+
+- **folk/ritual/koliadky-shchedrivky.md :: Космогонічний шар: море, дерево і початок світу**
+  Найважливіший для цієї статті пласт — космогонічний, тобто пов'язаний із творенням світу з первісного невпорядкованого стану. У перевіреному корпусному фрагменті колядка починає світ із відсутності неба й землі, після чого з'являються море та дерево: «Коли не било з нащада світа, тогди не било неба, ні землі, / а то лем било синєє море, а серед моря зелений явір» [S9]. Ця цитата дає рідкісну для навчального матеріалу можливість показати, що колядка може бути не лише побажанням господареві, а й моделлю народного...
+
+- **folk/ritual/koliadky-shchedrivky.md :: Господарський космос: дім, родина і врожай**
+  Величальна поетика зимових пісень будує дім як малу модель світу. У перевіреному фрагменті щедрівки спершу з'являється святкова формула: «Щедрий вечір, добрий вечір! Добрим людям на здоров'я! / Стояла світелка новозроблена» [S9]. Далі родина співвіднесена з небесними світилами: «Що ж місячик — то господарик, що сонечко — то господинька, / яснії зірки — то його дітки» [S9]. Це не побутовий опис кімнати, а ритуальне піднесення родини до космічного порядку: господар, господиня й діти стають центром благословенного...
+
+### Аналіз: Поетика та ритуальна функція
+
+- **folk/ritual/koliadky-shchedrivky.md :: Жанр, час виконання й обрядова дія**
+  Колядки й щедрівки не зводяться до «пісень на зимові свята»: у традиційному середовищі вони діють як частина обрядового сценарію, де є гурт виконавців, адресат, формула благословення, дар або частування й очікувана зміна майбутнього господарського року [S9]. У шкільному корпусі різницю подають просто: колядки пов'язують із Різдвом, щедрівки — зі Щедрим вечором, а засівання — з першим днем Нового року та зерном, яким обходять хати сусідів і родичів [S11]. Таке пояснення корисне як початкове, але для семінарського...
+
+- **folk/ritual/koliadky-shchedrivky.md :: Маски, Маланка, коза і межові форми зимового циклу**
+  Маланка (Malanka), водіння кози й посівання показують, що зимовий цикл охоплює не лише спів, а й масковану дію, гру, драматизований рух і матеріальні жести. Джерело описує «козу» як частину колядської обрядовості, де маскована гра має практично-господарське спрямування: забезпечити врожай і поєднати тваринний образ із образом збіжжя [S9]. Центральна логіка проста й сильна: де коза ходить і рухається, там має родити жито [S9]. У цьому місці міфологічне, аграрне й театральне не розділені [S9]. Образ смерті й...
+
+### Дискусія: Що вижило і чому?
+
+- **folk/ritual/koliadky-shchedrivky.md :: Жанр, час виконання й обрядова дія**
+  Колядки й щедрівки не зводяться до «пісень на зимові свята»: у традиційному середовищі вони діють як частина обрядового сценарію, де є гурт виконавців, адресат, формула благословення, дар або частування й очікувана зміна майбутнього господарського року [S9]. У шкільному корпусі різницю подають просто: колядки пов'язують із Різдвом, щедрівки — зі Щедрим вечором, а засівання — з першим днем Нового року та зерном, яким обходять хати сусідів і родичів [S11]. Таке пояснення корисне як початкове, але для семінарського...
+
+- **folk/ritual/koliadky-shchedrivky.md :: Господарський космос: дім, родина і врожай**
+  Величальна поетика зимових пісень будує дім як малу модель світу. У перевіреному фрагменті щедрівки спершу з'являється святкова формула: «Щедрий вечір, добрий вечір! Добрим людям на здоров'я! / Стояла світелка новозроблена» [S9]. Далі родина співвіднесена з небесними світилами: «Що ж місячик — то господарик, що сонечко — то господинька, / яснії зірки — то його дітки» [S9]. Це не побутовий опис кімнати, а ритуальне піднесення родини до космічного порядку: господар, господиня й діти стають центром благословенного...
+
+### Підсумок
+
+- **folk/ritual/koliadky-shchedrivky.md :: Жанр, час виконання й обрядова дія**
+  Колядки й щедрівки не зводяться до «пісень на зимові свята»: у традиційному середовищі вони діють як частина обрядового сценарію, де є гурт виконавців, адресат, формула благословення, дар або частування й очікувана зміна майбутнього господарського року [S9]. У шкільному корпусі різницю подають просто: колядки пов'язують із Різдвом, щедрівки — зі Щедрим вечором, а засівання — з першим днем Нового року та зерном, яким обходять хати сусідів і родичів [S11]. Таке пояснення корисне як початкове, але для семінарського...
+
+- **folk/ritual/koliadky-shchedrivky.md :: Маски, Маланка, коза і межові форми зимового циклу**
+  Маланка (Malanka), водіння кози й посівання показують, що зимовий цикл охоплює не лише спів, а й масковану дію, гру, драматизований рух і матеріальні жести. Джерело описує «козу» як частину колядської обрядовості, де маскована гра має практично-господарське спрямування: забезпечити врожай і поєднати тваринний образ із образом збіжжя [S9]. Центральна логіка проста й сильна: де коза ходить і рухається, там має родити жито [S9]. У цьому місці міфологічне, аграрне й театральне не розділені [S9]. Образ смерті й...
+
+## Factual Anchors
+
+- **Розминка** — Найважливіший для цієї статті пласт — космогонічний, тобто пов'язаний із творенням світу з первісного невпорядкованого стану. (folk/ritual/koliadky-shchedrivky.md :: Космогонічний шар: море, дерево і початок світу)
+- **Розминка** — Колядки й щедрівки не зводяться до «пісень на зимові свята»: у традиційному середовищі вони діють як частина обрядового сценарію, де є гурт виконавців, адресат, формула благословення, дар або частування й очікувана зміна майбутнього господарського року [S9]. (folk/ritual/koliadky-shchedrivky.md :: Жанр, час виконання й обрядова дія)
+- **Конфліктна карта: Хто «винайшов» колядку?** — Маланка (Malanka), водіння кози й посівання показують, що зимовий цикл охоплює не лише спів, а й масковану дію, гру, драматизований рух і матеріальні жести. (folk/ritual/koliadky-shchedrivky.md :: Маски, Маланка, коза і межові форми зимового циклу)
+- **Конфліктна карта: Хто «винайшов» колядку?** — Величальна поетика зимових пісень будує дім як малу модель світу. (folk/ritual/koliadky-shchedrivky.md :: Господарський космос: дім, родина і врожай)
+- **Читання: Космогонічний міф у тексті колядки** — Найважливіший для цієї статті пласт — космогонічний, тобто пов'язаний із творенням світу з первісного невпорядкованого стану. (folk/ritual/koliadky-shchedrivky.md :: Космогонічний шар: море, дерево і початок світу)
+- **Читання: Космогонічний міф у тексті колядки** — Величальна поетика зимових пісень будує дім як малу модель світу. (folk/ritual/koliadky-shchedrivky.md :: Господарський космос: дім, родина і врожай)
+- **Аналіз: Поетика та ритуальна функція** — Колядки й щедрівки не зводяться до «пісень на зимові свята»: у традиційному середовищі вони діють як частина обрядового сценарію, де є гурт виконавців, адресат, формула благословення, дар або частування й очікувана зміна майбутнього господарського року [S9]. (folk/ritual/koliadky-shchedrivky.md :: Жанр, час виконання й обрядова дія)
+- **Аналіз: Поетика та ритуальна функція** — Маланка (Malanka), водіння кози й посівання показують, що зимовий цикл охоплює не лише спів, а й масковану дію, гру, драматизований рух і матеріальні жести. (folk/ritual/koliadky-shchedrivky.md :: Маски, Маланка, коза і межові форми зимового циклу)
+- **Дискусія: Що вижило і чому?** — Колядки й щедрівки не зводяться до «пісень на зимові свята»: у традиційному середовищі вони діють як частина обрядового сценарію, де є гурт виконавців, адресат, формула благословення, дар або частування й очікувана зміна майбутнього господарського року [S9]. (folk/ritual/koliadky-shchedrivky.md :: Жанр, час виконання й обрядова дія)
+- **Дискусія: Що вижило і чому?** — Величальна поетика зимових пісень будує дім як малу модель світу. (folk/ritual/koliadky-shchedrivky.md :: Господарський космос: дім, родина і врожай)
+- **Підсумок** — Колядки й щедрівки не зводяться до «пісень на зимові свята»: у традиційному середовищі вони діють як частина обрядового сценарію, де є гурт виконавців, адресат, формула благословення, дар або частування й очікувана зміна майбутнього господарського року [S9]. (folk/ritual/koliadky-shchedrivky.md :: Жанр, час виконання й обрядова дія)
+- **Підсумок** — Маланка (Malanka), водіння кози й посівання показують, що зимовий цикл охоплює не лише спів, а й масковану дію, гру, драматизований рух і матеріальні жести. (folk/ritual/koliadky-shchedrivky.md :: Маски, Маланка, коза і межові форми зимового циклу)
+
+## Dictionary context
+
+- **колядка** [noun]
+  - VESUM: колядка (`noun:inanim:f:v_naz`)
+  - Definition: КОЛЯ́ДКА, и́, ж. 1. Старовинна обрядова різдвяна пісня. Любий дядьку.. Хочу тільки де про що вас запитати: чи співають у Болгарії колядки і чи похожі вони на українські? (Л. Укр., V, 1956, 24); Його...
+- **щедрівка** [noun]
+  - VESUM: щедрівка (`noun:inanim:f:v_naz`)
+  - Definition: ЩЕДРІ́ВКА, и, ж. Старовинна українська обрядова новорічна пісня, що виконується 31 грудня та 1 січня. [Т а н я:] Оце наслухалась щедрівок, то й здається мені, немов у селі стало диво: цвітуть сади...
+- **космогонія** [noun]
+  - VESUM: космогонія (`noun:inanim:f:v_naz`)
+  - Definition: КОСМОГО́НІЯ, ї, ж. Розділ астрономії, що вивчає походження й розвиток небесних тіл та їх систем. Теорія Канта була першим боязким кроком народження нової галузі знання — космогонії (Бесіди про...
+- **світове дерево** [unknown]
+  - VESUM: Not found in VESUM.
+  - Definition: Not found in SUM-11.
+- **засівання** [noun]
+  - VESUM: засівання (`noun:inanim:n:v_naz`)
+  - Definition: ЗАСІВА́ННЯ, я, с. Дія за знач. засіва́ти.
+- **паралелізм** [noun]
+  - VESUM: паралелізм (`noun:inanim:m:v_naz`)
+  - Definition: ПАРАЛЕЛІ́ЗМ, у, ч. 1. мат. Рівна на всьому просторі відстань між лініями або площинами. Паралелізм осей. 2. Незмінне співвідношення, супровід двох явищ, дій. При вивченні перебігу відновних процесів...
+- **обрядовий** [adj]
+  - VESUM: обрядовий (`adj:m:v_naz`)
+  - Definition: ОБРЯДО́ВИЙ, а, е. Стос. до обряду, встановлений обрядом. Замість куті був якийсь особливий пудинг (либонь теж обрядовий), обложений букетами фіалок (Л. Укр.. V, 1956, 385); Кожне народне свято, окрім...
+- **автохтонний** [adj]
+  - VESUM: автохтонний (`adj:m:v_naz`)
+  - Definition: АВТОХТО́ННИЙ, а, е, книжн. Корінний, місцевого походження; аборигенний, тубільний.
+- **стилізація** [noun]
+  - VESUM: стилізація (`noun:inanim:f:v_naz`)
+  - Definition: СТИЛІЗА́ЦІЯ, ї, ж. 1. Надання творові мистецтва характерних рис якого-небудь стилю, особливостей чиєїсь творчої манери і т. ін. Вірші Тичини зовсім не були простою стилізацією під фольклор — це майже...
+- **солярний** [adj]
+  - VESUM: солярний (`adj:m:v_naz`)
+  - Definition: СОЛЯ́РНИЙ, а, е, спец. Пов’язаний із сонцем. До найстаріших фігурних орнаментів кролевецького декоративного ткацтва належать солярні орнаменти, пов’язані з культом сонця та небесних світил (Нар. тв....
+
+## Textbook Excerpts (verbatim, must be cited)
+
+### Koliadky Shchedrivky
+
+*No textbook excerpt found for this reference.*
+corpus_missing: true
+
+### Слов'янська міфологія
+
+Primary text (literary corpus)
+chunk_id: 61bfde21_c0000
+Source: Народна творчість. Як ще не було початку світа (ukrlib-narod-dumy)
+
+> ЯК ЩЕ НЕ БУЛО ПОЧАТКУ СВІТА Як ще не було початку світа, Тогди не було неба, ні землі, А но лем було синєє море, А серед моря зелений явір. На явороньку три голубоньки, Три голубоньки радоньку радять, Радоньку радять, як світ сновати: — Та спустимося на дно до моря Та дістанемо дрібного піску, Дрібний пісочок посієме ми: Та нам ся стане чорна землиця. Та дістанемо золотий камінь, Золотий камінь посієме ми: Та нам ся стане ясне небонько, Ясне небонько, світле сонінько, Світле сонінько, ясен місячик, Ясен місячик, ясна зірниця, Ясна зірниця, дрібні звіздочки.
+
+### Нарис історії культури України
+
+Primary text (literary corpus)
+chunk_id: 61bfde21_c0000
+Source: Народна творчість. Як ще не було початку світа (ukrlib-narod-dumy)
+
+> ЯК ЩЕ НЕ БУЛО ПОЧАТКУ СВІТА Як ще не було початку світа, Тогди не було неба, ні землі, А но лем було синєє море, А серед моря зелений явір. На явороньку три голубоньки, Три голубоньки радоньку радять, Радоньку радять, як світ сновати: — Та спустимося на дно до моря Та дістанемо дрібного піску, Дрібний пісочок посієме ми: Та нам ся стане чорна землиця. Та дістанемо золотий камінь, Золотий камінь посієме ми: Та нам ся стане ясне небонько, Ясне небонько, світле сонінько, Світле сонінько, ясен місячик, Ясен місячик, ясна зірниця, Ясна зірниця, дрібні звіздочки.
+
+### Історія української літератури
+
+Primary text (literary corpus)
+chunk_id: 61bfde21_c0000
+Source: Народна творчість. Як ще не було початку світа (ukrlib-narod-dumy)
+
+> ЯК ЩЕ НЕ БУЛО ПОЧАТКУ СВІТА Як ще не було початку світа, Тогди не було неба, ні землі, А но лем було синєє море, А серед моря зелений явір. На явороньку три голубоньки, Три голубоньки радоньку радять, Радоньку радять, як світ сновати: — Та спустимося на дно до моря Та дістанемо дрібного піску, Дрібний пісочок посієме ми: Та нам ся стане чорна землиця. Та дістанемо золотий камінь, Золотий камінь посієме ми: Та нам ся стане ясне небонько, Ясне небонько, світле сонінько, Світле сонінько, ясен місячик, Ясен місячик, ясна зірниця, Ясна зірниця, дрібні звіздочки.
+
+### Праці етнографічно-статистичної експедиції в Західно-Руський край
+
+Primary text (literary corpus)
+chunk_id: 61bfde21_c0000
+Source: Народна творчість. Як ще не було початку світа (ukrlib-narod-dumy)
+
+> ЯК ЩЕ НЕ БУЛО ПОЧАТКУ СВІТА Як ще не було початку світа, Тогди не було неба, ні землі, А но лем було синєє море, А серед моря зелений явір. На явороньку три голубоньки, Три голубоньки радоньку радять, Радоньку радять, як світ сновати: — Та спустимося на дно до моря Та дістанемо дрібного піску, Дрібний пісочок посієме ми: Та нам ся стане чорна землиця. Та дістанемо золотий камінь, Золотий камінь посієме ми: Та нам ся стане ясне небонько, Ясне небонько, світле сонінько, Світле сонінько, ясен місячик, Ясен місячик, ясна зірниця, Ясна зірниця, дрібні звіздочки.
+
+## MCP Dictionary Verification
+
+Use the canonical `sources` MCP tools for live dictionary checks:
+- `mcp__sources__verify_lemma` for VESUM morphology and inflections.
+- `mcp__sources__search_style_guide` for russianisms, surzhyk, calques, and paronym-risk phrases.
+- `mcp__sources__search_definitions` for СУМ-11 definitions and usage disambiguation.
+
+Verify suspicious forms before using them in prose, vocabulary, activities, or resources. Do not call legacy `scripts.rag` or Qdrant retrieval for this packet.
+
+## Compiled Wiki Context
+
+Raw compiled wiki prose is compressed into the targeted excerpts, factual anchors, Wiki Obligations Manifest, and Implementation Map above. Do not duplicate the full article text in the writer prompt.
+
+## Plan References
+
+- **Koliadky Shchedrivky**
+- **Слов'янська міфологія**
+- **Нарис історії культури України**
+- **Історія української літератури**
+- **Праці етнографічно-статистичної експедиції в Західно-Руський край**
+
+
+## Corpus Access (level-gated)
+
+Use only tools appropriate for `FOLK`; do not cite out-of-level material even if verified.
+
+- A1: `search_text` Grades 1-4 (prefer G1-2), children's/folk/simple literary excerpts only, ULP/Pohribnyi external resources, `query_cefr_level` A1/top-1000/ULP S1-S2.
+- A2: textbooks Grades 1-5, widened children's/simple literary scope, ULP+Pohribnyi, A1-A2/top-2000/ULP S1-S4.
+- B1+: full school textbooks, full literary corpus, all external collections, PULS through level/top-5000/ULP S1-S6.
+- B2/C1/C2: inherit B1 and may use literary/cultural/historical analysis with factual claims tool-backed.
+- Seminars: full corpus; HIST/OES/RUTH/ISTORIO use strict two-source citation for historical claims.
+
+Always-on verification tools: VESUM, `verify_quote`, `verify_source_attribution`, `check_modern_form`, `check_russian_shadow`, `search_style_guide`, `search_ua_gec_errors`, `query_pravopys`, `search_heritage`.
+
+Non-plan vocabulary must pass `query_cefr_level`, frequency, or ULP coverage for `FOLK`; otherwise omit it.
+
+## Module Context
+
+- Level: FOLK
+- Module: 5
+- Slug: koliadky-shchedrivky
+- Topic: Колядки та щедрівки: Міф про створення світу
+- Phase: FOLK.1
+- Word **minimum**: 5000 — this is a FLOOR. The gate hard-rejects below 92% of this number. Plan section budgets around **~1.20× the minimum** because the strict gate tokenization excludes markdown comments, JSX tag/attribute syntax, punctuation tokens, numbers, and page refs; self-counted `wc -w` usually runs 15-16% high.
+
+## Learner State
+
+This learner has completed modules 1..5-1 in track `FOLK`. Cumulative vocabulary and grammar below are the FLOOR this module may assume.
+
+1. **Don't re-explain already-taught grammar.** Refer back briefly (`як ти бачив у модулі N` / `as in module N`) and build on it.
+
+2. **Don't introduce vocabulary outside the cumulative list or this module's declared `vocabulary.yaml`.** From m04 onward this is HARD `unknown_vocab_in_prose`; for m01-m03 it is a WARN. Every Ukrainian content word in `module.md` prose/dialogue/examples must be cumulative, declared, or exempt as a proper noun / Latin borrowing.
+
+3. **Soft scaffolding via foreshadowing.** If a new lemma appears before its `vocabulary.yaml` entry, give a first-mention gloss (`**креслити** *(to draw lines)*`).
+
+4. **Frequency-and-CEFR awareness.** Before any non-plan lemma, run the Corpus Access stack; if none pass for `FOLK`, omit and choose differently.
+
+5. **Build on cumulative grammar where natural.** Use prior grammar in context without re-deriving it.
+
+6. **Signpost intentional repetition.** Frame repeated concepts/skills/activity families as review, reuse, or deeper practice before asking for them again.
+
+**Modules completed before this one:** 4
+**Previous module:** Календарна обрядовість і звичаї
+
+**Cumulative vocabulary (114 words):**
+обряд, мотив, варіант, фольклор, фольклористика, синкретизм, обрядовість, громада, виконавець, виконання
+речитатив, паралелізм, епітет, формула, повтор, рушник, писанка, коровай, сніп, вінок
+кобза, бандура, ліра, колядка, щедрівка, веснянка, гаївка, дума, кобзарство, голосіння
+обхід, нашарування, передання, народність, меншовартість, вірування, демонологія, міфологія, нечисть, дух
+домовик, хованець, водяник, лісовик, польовик, мавка, нявка, русалка, упир, відьма
+чугайстер, перелесник, перевертень, оберіг, замовляння, евфемізм, заборона, предок, пантеон, божество
+мрець, потерча, знахар, ворожіння, світогляд, пограниччя, заклинання, примовка, примівка, проклін
+адресат, наказ, градація, жанр, корпус, шептуха, зілля, віншування, посівання, благословення
+збирач, дослідник, етнонім, деколонізація, тотожність, поетика, вигнання, перенесення, символіка, словесний
+обрядовий, магічний, замовний, обрядодія, цикл, кутя, дідух, гагілки, колядування, обжинки
+зажинки, жнива, хоровод, гільце, сонцестояння, рівнодення, синкретичний, персоніфікація, перформативність, величальний
+закликальний, родючість, опудало, ряджений
+
+**Rule:** Do not re-explain grammar already taught. Do not use vocabulary words the learner hasn't seen unless you introduce them explicitly.
+
+## Module Archetype Contract
+
+MODULE ARCHETYPE: folk-experiential — Folk experiential
+Scope: FOLK track modules
+Teaching language: Ukrainian C1+ cultural prose with corpus-grounded explanation.
+
+Learner assumptions:
+- Learner can read extended Ukrainian academic prose.
+- Folk culture is performative and ritualized; this pipeline currently implements the TEXT layer only.
+- Lesson prose must be rich enough to stand on its own before activities.
+- Activities use ritual sequences, regional/textual variants, formulas or motifs, and text-only performance tasks.
+
+Required tab surface:
+- Product tabs: Lesson, Workbook, Vocabulary, Resources
+- Current Starlight tabs: Lesson, Vocabulary, Activities, Resources
+- Resource policy: Required resources appear at the point of use and are also listed canonically in Resources. Internal AI-facing wiki pages are not student-facing resources.
+
+Required lesson blocks:
+- high-culture bridge: connect the folk form to opera, literature, art, or modern cultural circulation
+- myth-box: correct imperial, Soviet, or romantic-nationalist myths with dossier-grounded evidence
+- deferred surfaces: do not emit audio-block, symbolic-decode, or aural genre-ID until corpus/audio support exists
+
+Allowed activity families:
+- #42 Ritual Sequencing (`ritual-sequencing`)
+- #43 Variant Comparison (`variant-comparison`)
+- #44 Motif / Formula (`motif-formula`)
+- #45 Performance (`performance`)
+
+Review gates:
+- 4-tab shell intact and no tab empty
+- at least one myth-box when dossier/wiki evidence supports a decolonization correction
+- at least one high-culture bridge when dossier/wiki evidence supports a folk-to-opera/literature/art/circulation connection
+- rich corpus-grounded Ukrainian lesson prose
+- folk activity families #42-#45 used where wiki/dossier evidence supports them instead of generic true-false/group-sort/match-up tasks
+- audio-block, symbolic-decode, and aural genre-ID absent because those surfaces are deferred
+- Resources are dossier-derived; no YouTube resources
+
+## Immersion Rule
+
+STRUCTURAL TARGETS (Phase A placeholders; Phase B calibrates):
+- At least N UK dialogue lines (band: 0)
+- At least N vocab entries (band: 0)
+- At least N UK example sentences in bulleted lists (band: 0)
+- No UK-only run longer than K words without inline English support (band: 10000)
+Full Ukrainian immersion. No English in module body. Tab 2 (Словник) keeps L1 translations and idiom/expression explanations as the only English. Sentences max 35 words.
+
+## Contract YAML
+
+```yaml
+sections:
+- title: Розминка
+  word_budget:
+    target: 400
+    min: 360
+    max: 440
+- title: 'Конфліктна карта: Хто «винайшов» колядку?'
+  word_budget:
+    target: 950
+    min: 855
+    max: 1045
+- title: 'Читання: Космогонічний міф у тексті колядки'
+  word_budget:
+    target: 1150
+    min: 1035
+    max: 1265
+- title: 'Аналіз: Поетика та ритуальна функція'
+  word_budget:
+    target: 1150
+    min: 1035
+    max: 1265
+- title: 'Дискусія: Що вижило і чому?'
+  word_budget:
+    target: 1150
+    min: 1035
+    max: 1265
+- title: Підсумок
+  word_budget:
+    target: 400
+    min: 360
+    max: 440
+vocabulary_required:
+- definition: обрядова пісня різдвяного циклу, що величає господаря та його родину
+  pos: ж.
+  word: колядка
+- definition: обрядова пісня новорічного циклу, пов'язана зі святом Маланки/Василя
+  pos: ж.
+  word: щедрівка
+- definition: міф або вчення про походження та створення Всесвіту
+  pos: ж.
+  word: космогонія
+- definition: універсальний міфологічний образ — вісь, що з'єднує три рівні Всесвіту
+    (axis mundi)
+  pos: с.
+  word: світове дерево
+- definition: новорічний обряд посипання зерном підлоги на добробут і врожай
+  pos: с.
+  word: засівання
+- definition: стилістичний прийом повторення подібних синтаксичних конструкцій
+  pos: ч.
+  word: паралелізм
+- definition: пов'язаний із виконанням ритуалу, традиційного обряду
+  pos: прикм.
+  word: обрядовий
+- definition: місцевого, корінного походження — протилежність запозиченому
+  pos: прикм.
+  word: автохтонний
+- definition: свідоме наслідування стилю іншої епохи або жанру
+  pos: ж.
+  word: стилізація
+- definition: пов'язаний із сонцем, сонячним культом
+  pos: прикм.
+  word: солярний
+vocabulary_optional: []
+source_note: Full plan below is authoritative for points, activity hints, vocabulary,
+  and references.
+```
+
+## Tone and immersion (mandatory)
+
+<!-- rule_id: #R-VOICE-META -->
+Write for an adult learner, not for a teacher reading a lesson plan. No English meta-narration; the complete forbidden phrase list is in the Writer Charter. Do not write teacher-plan narration such as "Welcome to", "In this section we will learn", "this section teaches", "learners will", or "the activity asks". Open sections directly with the grammar fact, a Ukrainian example/dialogue line, or a one-sentence English scaffold.
+
+English is only for translation, gloss, and short scaffolds. Honor the Immersion Rule exactly; B1+ body text outside Tab 2 is 100% Ukrainian.
+
+<!-- rule_id: #R-VOICE-META -->
+**Engagement floor.** Emit at least 1 content-anchored callout (`:::tip`, `:::note`, `:::caution`, `:::warning`, `[!myth-buster]`, `[!history-bite]`). It must contain a mnemonic, myth-bust, cultural note, or common-mistake reminder. Empty filler does not count. Meta-narration hits fail `engagement_floor` immediately.
+
+<!-- rule_id: #R-BAD-FORM-MARKER -->
+**Russianism floor.** `russianisms_strict` fails on any critical Russicism/calque/surzhyk finding. Check suspicious forms with `check_russian_shadow`, `search_style_guide`, `search_ua_gec_errors`, `search_heritage`, and `query_pravopys`. Never paste raw Russian forms into prose/dialogue; use a `<!-- VERIFY -->` placeholder or omit.
+
+<!-- rule_id: #R-CITE-HONEST -->
+**Seminar/FOLK source, length, and form hard stop.** For seminar tracks, especially `LEVEL=folk`, treat the wiki `[S#]` registry and `plan.references` as a CLOSED citation universe. Cite ONLY sources provided in this build. Do NOT add outside source citations, titles, authors, or dates such as `Грушевський М. «Історія української літератури»` or `Леся Українка. «Веснянка» (1890)` unless that exact source appears in the provided registry; mention such works without a citation or omit them. This preserves the earlier `resources.yaml` rule: textbook resources still come only from `plan.references`. `citations_resolve` hard-rejects unresolved citations.
+
+For seminar/FOLK word count, `5000` is a true floor. When `5000=5000`, the 92% tolerance still requires about 4600 accepted words; self-counted markdown words run high. Budget and write at least ~1.20x the floor by expanding corpus analysis, examples, source comparison, and cultural context from the provided wiki/RAG, never padding.
+
+Before emitting any uncertain Ukrainian term in seminar/FOLK prose, call `mcp__sources__check_russian_shadow` and `mcp__sources__search_style_guide`; if a style-guide or shadow check flags the form, do NOT use it. Use `аранжування`, not `<!-- bad -->аранжировку<!-- /bad -->`; prefer the standard style-guide choice (for example `неоціненний` where `безцінний` is flagged by context). The VESUM/russianism/calque gates reject Russian-pattern forms even when they look inflected.
+
+For FOLK, verbatim song, duma, or ritual fragments may contain authentic archaic/dialectal forms such as `Дівоцькую`, `гаїлки`, `дівочок`, or `рубочки`. Put those fragments in blockquotes or the module's verbatim-quote convention so the quote is visibly evidence, not exposition. Teacher prose around the quote must use modern Ukrainian or explicitly verified VESUM/slovnyk.me heritage terms; bare unattested archaic/dialectal folk forms in exposition fail.
+
+<!-- rule_id: #R-FOLK-PRIMARY-TEXTS -->
+**FOLK: embed the primary texts.** The dossier's «ВЕРБАТИМ примірники» (§4) are the ONLY quotable folk-primary fragments: they already `verify_quote`'d against this build's corpus/wiki and carry `[S#]` sources. Surface **≥4** of them in the Урок body as **cited blockquotes** (`>` + the exact dossier §4 fragment + its `[S#]`); quote verbatim, never normalize archaic forms. Anchor «Корпус і контекст» and «Поетика» on these quoted lines instead of paraphrasing — that also fills their word budget. Do NOT quote folk songs/chants from memory, even famous traps such as `Щедрик-ведрик`, `Коляд-коляд`, `А ми просо сіяли`, or `Зашуміла діброва`, unless that exact fragment appears in this build's dossier §4 with `[S#]`. Do NOT embed literary-authored verse (Шевченко, Франко, Леся Українка, etc.) as a folk primary text; literary verse is not a folk song and fails `textbook_quote_fidelity`. If dossier §4 has fewer than four fragments, embed only the fragments it has and fill the word budget with grounded exposition, never by backfilling quotes from memory.
+
+<!-- rule_id: #R-FOLK-GROUNDED-VOCAB -->
+**FOLK regional/ethnographic vocabulary — grounded in VESUM or cited slovnyk.me/heritage.** Naming regional genre-variants is a decolonization goal: authentic regional and archaic variants are ENCOURAGED, not flattened away. A folk term used in EXPOSITION is acceptable when it is attested in VESUM OR in slovnyk.me/heritage (`mcp__sources__search_slovnyk_me` / `mcp__sources__search_heritage`) with `is_russianism == false`; `vesum_verified` accepts the committed slovnyk.me/heritage fallback for FOLK/seminar terms. Get it right in the first pass:
+
+1. **Lead with a clear headword** such as `гаївки` or `веснянки`, then name verified regional variants beside it. Regional/archaic forms such as `ягілки`, `гагілки`, and `риндзівки` are welcome when this build's wiki/dossier warrants them and slovnyk.me/heritage verifies them.
+2. **Verify every regional variant before emitting it.** Query the singular lemma when slovnyk.me is keyed by headword, check the exact surface you will write, and use only rows where `is_russianism == false`. If neither VESUM nor slovnyk.me/heritage has the term, do not use it.
+3. **Never invent a regional genre-name that is absent from the provided wiki/dossier.** If the source does not name a regional variant, do not supply one from memory; unattested names such as `городалька` cannot be verified and will fail the gate.
+4. **Do not coin unattested vocabulary in any class.** This applies beyond fused-compound or relational adjectives: reject jargon-borrowing adjectives, invented agent nouns, numeric compounds, hyphenated noun labels, and folk-performance compounds that VESUM and slovnyk.me/heritage lack. Use attested synonyms or rephrase: `дослівний` / `буквальний`, not `вербатимний`; rephrase `подавачка`; `п'ять кроків` / `що має п'ять кроків`, not `п'ятикроковий`; rephrase `слово-дія`; `гра двох гуртів` / `антифонний спів`, not `двохоровий`. Keep legitimate productive and heritage-grounded forms: denominal/deverbal adjectives such as `гаївковий` and `знеособлювальний`, `-ість` nouns, and `-о`-linked compound adjectives whose bases are attested adjectives, such as `імперсько-радянський` and `галицько-західний`, remain allowed when VESUM or the heritage fallback verifies them. Split or rephrase unsupported compounds into attested words: `імперська етнографічна рамка`, not `імперсько-етнографічна`; `пісня з побажаннями` / `з побажаннями`, not `побажальна`.
+5. **Keep the verbatim-quote convention for non-expository dialectal fragments.** Song, duma, or ritual fragments may contain authentic archaic/dialectal forms inside cited blockquotes or the module's verbatim-quote convention; do not turn unattested fragments into bare teacher prose.
+
+**FOLK experiential TEXT layer.** For `LEVEL=folk` modules, emit the implemented text-achievable folk layer, not the generic seminar activity mix. In `module.md`, include at least one `:::myth-box` and at least one `:::high-culture-bridge` where wiki/dossier evidence supports them. In `activities.yaml`, use folk activity families `ritual-sequencing` (#42), `variant-comparison` (#43), `motif-formula` (#44), and `performance` (#45) where the wiki/dossier supports the surface, in place of generic `true-false`, `group-sort`, or `match-up` tasks. Do NOT emit `audio-block`, `symbolic-decode`, or `aural-genre-id`; audio and symbolic-decode surfaces are deferred.
+
+Canonical `module.md` source shapes:
+
+```md
+:::myth-box
+claim: "..."
+truth: "..."
+claim_source: "..."
+truth_source: "..."
+:::
+
+:::high-culture-bridge
+nodes:
+  - "народна форма"
+  - "опера / література / мистецтво / культурна циркуляція"
+note: "..."
+:::
+```
+
+<!-- rule_id: #R-SINGLE-VOICE-A1 -->
+**Single teacher voice at A1.** One teacher voice across the whole module: warm, clear, direct ("you" / "your"). No third-person framing of the learner (`the student`, `студента`, `the reader`, `учня`) and no mid-paragraph register shifts (English -> Ukrainian metalanguage -> preachy imperative -> casual paraphrase). Good: "You use **я креслю** when you describe your own action." Bad: "the student enters an authentic space."
+
+<!-- rule_id: #R-AUDIENCE-LANGUAGE-A1 -->
+**A1/A2 audience language — ULP immersion (Anna Ohoiko S1 pattern).** Teach Ukrainian *through* Ukrainian with English as a **receding scaffold**, not through English grammar lectures. Target about 50:50 UK:EN at A1/A2 S1, per the immersion band.
+
+1. **Ukrainian-first, em-dash gloss.** Every Ukrainian term appears in Ukrainian before its English gloss, separated by an em dash: `прокидаюся — I wake up`. Never write "the word for wake up is ...".
+2. **Stress marks are deterministic.** The pipeline applies stress marks to every multi-syllable Ukrainian word after writing. Write plain Ukrainian; do not hand-stress.
+3. **Dialogues are Ukrainian-first.** Use `<DialogueBox uk="..." en="..." />` for side-by-side translation. The `uk` turn is Ukrainian-only; do not interleave English grammar inside turns.
+4. **Dialogue inline gloss discipline.** Keep any A1/A2 line-level English support no more than 8 words from its Ukrainian dialogue line; put full translation at the block bottom.
+5. **Comprehension/recall is Ukrainian-only.** Tab 3 content stems and answer options are Ukrainian-only; English appears only in UI affordances.
+6. **Use a named first-person teacher persona or named characters.** Anchor examples in real Ukrainian places/foods/routines; never write abstractly about "the student must learn...".
+7. **English is scaffold, not lecture.** Short Ukrainian first, brief English support second.
+8. **Forbidden foreigner-textbook anti-patterns:** "X sounds like Y in English", transliteration tables, English grammar paragraphs with Ukrainian bolted on, "the student must learn", and English topic-sentence openers.
+
+<!-- rule_id: #R-NO-CHILDREN-PRIMARY-QUOTES -->
+**No children-primary blockquotes in adult A1.** No `>` blockquotes from textbooks at Grade 1, 2, or 3 levels in the published module body. Grade 1-3 RAG hits can still ground lexical choices, but do not surface as quoted material. Default: NO blockquote unless it pedagogically advances the lesson AND comes from an adult-appropriate source (Grade 7+, adult literature, Антоненко-Давидович, style guides). Adult A1 learners are not reading children's primers; do not print `<Author>, Grade 1, p.<P>` as lesson prose.
+
+<!-- rule_id: #R-NO-SCAFFOLDING-LEAKS -->
+**No writer-side scaffolding leaks.** Writer-side scaffolding never appears in module body. Forbidden in published markdown: panel IDs (`P1`, `P2`, ...), Krok-N labels (`Крок 5:`, `Step 5:`), obligation names from the wiki_coverage manifest (`ban-4`, `step-5`, ...), reviewer-fix anchors, phase names, gate names. The module is a finished lesson, not a writer's worksheet.
+
+<!-- rule_id: #R-GRAMMAR-TERMS-A1 -->
+**Use grammar terms at A1.** Use proper grammatical terminology in English explanations: **noun**, **verb**, **adjective**, **adverb**, **pronoun**, **reflexive**, **conjugation**. Do NOT paraphrase (`a thing`, `an action`, `a word for`, `a doing-word`, `the X-form of Y`). Adult learners benefit from real grammar terms because they transfer to future modules and outside references.
+
+<!-- rule_id: #R-PROSE-FLOOR-A1 -->
+**Prose words only — section budget.** Per-section word budgets (270-330 for A1) count PROSE only. Callouts, dialogue boxes, table cells, bullets, comments do NOT count. Structural elements are *bonus density*, not budget — still emit ≥270 words of prose AROUND tables/callouts. Reach the prose floor BEFORE you optimize for clean structure.
+
+<!-- rule_id: #R-CLEAN-TABLES -->
+**Clean table formatting.** Tables: bold ONLY the target Ukrainian forms. Pronoun columns (`я`, `ти`, ...), English headers, and English glosses remain in regular weight. Conjugation tables teaching a present-tense paradigm must include the FULL set of person/number rows: **я / ти / він,вона,воно / ми / ви / вони** (six rows). Vocabulary tables stay two-column unless a third column adds essential teaching value (e.g., stress mark, IPA).
+
+**Dialogue format (gate-counted).** Ukrainian dialogue lines must be `<DialogueBox uk="..." en="..." />` or lines that begin with the `>` blockquote marker followed by a space. Em-dash-only dialogue under `## Діалоги` is invisible to `l2_exposure_floor` and fails the module. **The `<DialogueBox>` tag MUST be self-closing — it must end with `/>`.** A bare `<DialogueBox uk="..." en="...">` (no closing `/>`, no `</DialogueBox>`) is invalid MDX AND the `l2_exposure_floor` regex counts it as ZERO, so every such line silently fails the gate.
+
+**Minimum UK dialogue lines (A1-A2).** For A1 and A2 modules, emit at least **15 distinct gate-countable Ukrainian dialogue surfaces** (`<DialogueBox uk="..." en="..." />` entries and lines that begin with the `>` blockquote marker plus a space, summed). The `l2_exposure_floor` gate's floor is 14; overshoot by ≥1 for safety. Prior builds have failed at exactly 13 gate-countable lines via `too_few_uk_dialogue_lines`. Count BEFORE emitting: if you have <15, add another exchange to the dialogue section or split a long turn into two shorter ones.
+
+`шо` is acceptable inside dialogue blocks (`<DialogueBox>` or `>` blockquotes) when the register is colloquial; never in teacher-voice narration. When you use it, add a `notes:` field to the `що` entry in `vocabulary.yaml` flagging the literary↔colloquial pair so learners know when each is appropriate (the per-item schema accepts `notes`, NOT `note` — singular fails schema validation). Do NOT add a separate top-level entry for `шо` — VESUM does not codify it and the vocab gate will reject a standalone lemma.
+
+**UK example-sentence density.** A1-m15-24 modules need >=14 gate-countable Ukrainian example surfaces across bullet-list lines and Markdown table data rows. Use bullets/tables for paradigms and trap pairs; prose-only paradigms count zero.
+
+<!-- rule_id: #R-ACTIVITY-COMPOSITION -->
+**Activity composition (bounded, not rendered).** Wiki names the activity formats; you compose concrete items. Every Ukrainian token in `sentence:`, `prompt:`, `options:`, `items:` fields and distractors must come from the V7.1 layered vocab allowlist. The `learner_state` vocab gate scans `activities.yaml` token-by-token; unsupported content lemmas fail like prose lemmas.
+
+**Distractor supply (critical at A1).** Wrong-form distractors for MCQ/select/error-correction come ONLY from the wiki's L2 errors, wiki bad-form pairs, or cumulative learner state. **Never invent Russianisms or fabricate wrong forms.** If inventory is insufficient, emit `<implementation_map>` `treatment="deferred — wiki distractor inventory thin"`; do not paper over by inventing.
+
+**Activity item count vs INLINE/WORKBOOK split.** `10` carries the per-level target; the split rule is enforced by the activity-schema gate. Schema fields stay canonical per "Activity Authoring Fields".
+
+## Activity Types and the INLINE / WORKBOOK split (mandatory)
+
+Every module ships TWO complementary activity sets: sparse INLINE checks woven
+into prose, and majority WORKBOOK practice in Tab 3 (`Вправи`).
+
+### Inline activities — LIGHT, theory-time
+
+Inline activities are LIGHT theory-time checks: fast (≤30 seconds), simple, tied to one section, and never bigger than the explanation. ONLY inline activities require `id` fields and matching `<!-- INJECT_ACTIVITY: ... -->` markers.
+
+Allowed inline types for `FOLK`: ritual-sequencing, motif-formula
+
+### Workbook activities — SUBSTANTIVE, after-lesson practice
+
+Workbook activities are SUBSTANTIVE after-lesson practice with NO marker. They stay workbook-only in Tab 3, are longer (1-3 minutes), multi-item, and designed for review/self-assessment. Omit `id` on workbook activity objects.
+
+Allowed workbook types for `FOLK`: ritual-sequencing, variant-comparison, motif-formula, performance, essay-response, critical-analysis, comparative-study
+
+### Split targets and overall budget
+
+Activity count target for `FOLK`: 10
+Vocabulary count target for `FOLK`: 35
+
+ACTIVITY_CONFIGS intent: A1 10 total = 4-6 INLINE + 6-9 WORKBOOK; A1 checkpoint 8 = 3-5 + 5-8; A2 12 = 4-6 + 8-11; A2 checkpoint 10 = 3-5 + 7-10; B1/B2/C1 16 = 5-7 + 11-15; C2 12 = 4-5 + 8-10; seminars 10 = 3-4 + 7-9.
+
+### Design principle (read before drafting)
+
+When designing each activity, decide its CONTEXT first:
+- Is this a quick "did the concept land?" check that belongs INSIDE the teaching prose? → INLINE (use an INJECT marker, keep the activity simple).
+- Is this a comprehensive drill, integration, or extension? → WORKBOOK (no INJECT marker, longer item count, harder discrimination).
+
+The same item TYPE can appear in both sets, but inline and workbook instances must be distinct. Do NOT duplicate inline activities into workbook or shove everything into one set.
+
+### Allowed types (global)
+
+Allowed (any context): ritual-sequencing, variant-comparison, motif-formula, performance, essay-response, critical-analysis, comparative-study
+Forbidden at this level: image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, anagram, unjumble, order, odd-one-out, observe, phrase-table, classify, match-up, group-sort, quiz, true-false, fill-in, mark-the-words, error-correction, cloze, translate, grammar-identify, highlight-morphemes, reading, translation-critique, source-evaluation, authorial-intent, debate, etymology-trace, paleography-analysis, dialect-comparison, transcription, select
+
+## Inline activity cross-references in module.md (mandatory for inline activities)
+
+**ONLY inline activities are injected. Every INLINE activity emitted in `activities.yaml` MUST be inline-referenced
+in `module.md`** via an exact-format HTML comment marker:
+
+```
+<!-- INJECT_ACTIVITY: act-1 -->
+```
+
+Workbook activities MUST NOT have matching markers; omit `id` on workbook objects. Do not add markers for all activities.
+
+The pipeline hard-fails both directions: inline id without matching marker (`unused_activities_not_injected`) or marker pointing to a missing id (`missing_activity_ids`).
+
+**Placement rule:** put the marker in the matching section, alone with blank lines around it:
+
+`<!-- INJECT_ACTIVITY: act-2 -->`
+
+The marker is an invisible HTML comment for the gate only; do not wrap it in backticks, JSX props, or another fence.
+
+## Activity Authoring Fields (mandatory)
+
+Each `activities.yaml` object MUST use the authoring field names listed below for its declared `type`; these are parser fields, not React component prop names.
+
+Do not invent prop names. Do not borrow a prop name from a different activity
+type. In particular, for `quiz`, `select`, and `translate`, use the authoring
+field `items`; do NOT use the React/component prop name `questions`.
+
+```
+- comparative-study:
+    required authoring fields: id, type, criteria, items_to_compare, model_answer, prompt, source_a, source_b, source_reading, task
+    optional authoring fields: instruction, notes, title
+- critical-analysis:
+    required authoring fields: id, type, context, focus_points, model_answer, model_answers, question, questions, source_reading, target_text
+    optional authoring fields: instruction, notes, title
+- essay-response:
+    required authoring fields: id, type, min_words, model_answer, peer_review_guidelines, prompt, rubric, source_reading
+    optional authoring fields: instruction, notes, title
+- motif-formula:
+    required authoring fields: id, type, answers, formulas, model_answer, passage, prompt, text
+    optional authoring fields: instruction, notes, title
+- performance:
+    required authoring fields: id, type, fragment, model_answer, prompt, self_check, self_checklist, show_record_button
+    optional authoring fields: instruction, notes, title
+- ritual-sequencing:
+    required authoring fields: id, type, correct_order, items, model_answer, steps
+    optional authoring fields: instruction, notes, title
+- variant-comparison:
+    required authoring fields: id, type, features, model_answer, prompt, variants
+    optional authoring fields: instruction, notes, title
+```
+
+For item-bearing types, include non-empty `items`; numeric arrays like `correct_order` use zero-based indices.
+
+**`group-sort` shape (mandatory canonical fields).** Use `groups` shaped like `{"label": "Group name", "items": ["word 1", "word 2"]}`. Do NOT emit top-level `items`, `key`, or `{word, group}` pairs.
+
+**`letter-grid` shape (mandatory canonical fields).** Each `letters` entry MUST use `upper`, `lower`, `emoji`, `key_word`, and optional `sound_type`/`note`; no aliases such as `letter`, `word`, `sound`, or `kind`.
+
+**`count-syllables` item shape (mandatory canonical fields).** Each item MUST use `word` and integer `correct`. Do NOT use `answer`.
+
+**`watch-and-repeat` item shape (mandatory canonical fields).** Each item MUST use `video` for the YouTube/video URL. Do NOT use `url`.
+
+**`translate` activity items (mandatory canonical fields — HARD FAIL on alias).** Each item inside a `translate` activity's `items:` list MUST use `source` for the text to translate and `options` for target choices; the correct target answer is the option with `correct: true`. For UK→EN translation, `source` is the Ukrainian text and the target English answer lives in `options[].text`. Do NOT use `prompt:`/`answer:` aliases, and do NOT emit a bare `target:` field that the parser cannot consume.
+
+**`quiz` and `translate` item explanations (mandatory teaching feedback — HARD FAIL if missing/empty).** Every item inside a `quiz` or `translate` activity's `items:` list MUST include `explanation: "..."`. Keep it one concise line explaining why the correct option is right; for A1/A2, write this explanation in simple English. Empty strings, whitespace-only strings, or omitted `explanation` fields fail the `quiz_translate_explanations` gate.
+
+**`error-correction` activity items (mandatory canonical fields — HARD FAIL on alias).** Each item inside an `error-correction` activity's `items:` list MUST use these EXACT inner field names — they are the schema consumed by `scripts/yaml_activities.py: _parse_error_correction` AND the only fields the `vesum_verified` gate treats as containing intentional misspellings:
+
+```yaml
+- type: error-correction
+  title: ...
+  instruction: ...
+  items:
+    - sentence: "Вона дивюся в дзеркало."  # the sentence with the deliberate error
+      error: дивюся                        # the malformed token (excluded from VESUM)
+      correction: дивиться                 # the corrected token
+      explanation: "Reflexive 3rd person singular is дивиться."   # optional
+```
+
+The complete VESUM-exclusion list is exactly:
+`{sentence, error, errors, errorWord, error_word, explanation}`.
+
+**FORBIDDEN inner field-name aliases** — these leak deliberate typos into `vesum_verified` and fail the strict parser: `wrong:`, `incorrect:`, `mistake:`, `bad:`, `original:`, `wrong_form:`, `incorrect_form:`, `correct:` (use `correction:`), `correctAnswer:`, `right:`, `fix:`, `fixed:`.
+
+Rule: if a field name is not in `{sentence, error, errors, errorWord, error_word, explanation, correction, answer, options}` for an error-correction item, you are inventing an alias. Stop, use `sentence` + `error` + `correction` exactly as above.
+
+## Plan
+
+```yaml
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння дебатів — чия це позиція?
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння первинного фольклорного тексту
+  placement: inline
+  type: reading
+- focus: Аналіз первинного джерела (запис етнографа, текст пісні)
+  placement: workbook
+  type: source-evaluation
+- focus: 'Порівняння з паралельними традиціями інших народів (глобальна синхронність) (Колядки та щедрівки:
+    Міф про створення світу)'
+  placement: workbook
+  type: comparative-study
+- focus: Критичний аналіз наукової інтерпретації жанру
+  placement: workbook
+  type: critical-analysis
+- focus: 'Есе на тему сучасного значення традиції (Колядки та щедрівки: Міф про створення світу)'
+  placement: workbook
+  type: essay-response
+cefr_min: C1
+connects_to:
+- vesnianky-hayivky
+- kupalski-rusalni-pisni
+- zhnyvarski-obzhynkovi-pisni
+content_outline:
+- points:
+  - 'Провокаційне питання: Чи є колядки християнськими піснями — чи язичницькими обрядами в християнській
+    оболонці?'
+  - Цитата з архаїчної колядки — «Коли не було знащада світа...» — без пояснень, лише текст
+  - Студент має сформулювати першу гіпотезу до кінця модуля
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: Латинське походження (calendae) vs автохтонне слов''янське — Костомаров vs сучасні етнолінгвісти'
+  - 'Дебат 2: Дохристиянський обряд vs пізня стилізація — чи архаїчні мотиви справді давні, чи реконструйовані
+    романтиками?'
+  - '[!epistemic-humility] «За версією Костомарова... Попович натомість вказує...» — подавати як дискусію,
+    не як факт'
+  - Глобальна синхронність — зимові обряди солярного циклу в Скандинавії (Yule), Римі (Saturnalia), Ірані
+    (Yaldā)
+  section: 'Конфліктна карта: Хто «винайшов» колядку?'
+  words: 950
+- points:
+  - Повний текст архаїчної колядки з Карпат (мотив пірнання птахів у первісне море)
+  - Світове дерево (явір) як axis mundi — зв'язок із індоєвропейською міфологією
+  - 'Тріада у колядках: господар = місяць, господиня = сонце, діти = зорі (Попович)'
+  - '[!decolonization] Українська тріада vs великоросійський «овсень» — не один «домовладика», а родина
+    як модель Космосу'
+  - Первинне джерело — фрагмент із записів Чубинського або Потебні
+  section: 'Читання: Космогонічний міф у тексті колядки'
+  words: 1150
+- points:
+  - Формульні зачини, паралелізм, рефрени («Даж Бог!», «Ой рано-рано!»)
+  - 'Не просто «красиво» — кожен прийом має магічну функцію: повтор = закріплення заклинання'
+  - Щедрівки та Маланка — новорічний цикл, засівання, ґендерні ролі у виконанні
+  - '[!myth-buster] Щедрик Леонтовича — не «різдвяна пісня», а щедрівка новорічного циклу. Американська
+    назва «Carol of the Bells» — культурне привласнення?'
+  section: 'Аналіз: Поетика та ритуальна функція'
+  words: 1150
+- points:
+  - Колядки пережили християнізацію, татарські навали, радянський атеїзм — чому?
+  - 'Гіпотези: ритуальна необхідність (календарний цикл не зупиниш) vs прихована резистентність vs простий
+    консерватизм побуту'
+  - '[!anti-hagiography] Не романтизувати — колядки також містили антисемітські та ксенофобські мотиви.
+    Як з цим працювати?'
+  - 'Сучасність: колядування в зоні бойових дій 2022-2025 — нове значення старого обряду'
+  section: 'Дискусія: Що вижило і чому?'
+  words: 1150
+- points:
+  - Повернення до початкового питання — студент формулює відповідь
+  - 'Ключова теза модуля: колядки — не музейний експонат, а живий інструмент культурної ідентичності'
+  section: Підсумок
+  words: 400
+focus: Cosmogonic myths in winter ritual songs, world tree symbolism, pre-Christian layers, historiographical
+  debate on origins
+level: FOLK
+module: folk-005
+objectives:
+- Критично аналізувати конкурентні гіпотези про походження колядок, розрізняючи первинні джерела та інтерпретації
+- Читати повний текст архаїчної колядки з лінгвістичним та міфологічним коментарем
+- Формулювати власну аргументовану позицію щодо дохристиянських шарів в обрядовій поезії
+- Порівнювати українську ритуальну традицію з іншими індоєвропейськими обрядами зимового сонцестояння
+pedagogy: CBI
+persona:
+  role: Не «оповідач», а модератор семінару — ставить запитання, проблематизує, змушує студента самостійно
+    шукати відповідь
+  voice: Ethnomusicologist-Skeptic
+phase: FOLK.1
+references:
+- title: Koliadky Shchedrivky
+  note: Compiled from Костомаров, Чижевський, Попович — космогонічні мотиви, тріада, походження
+  path: wiki/folk/ritual/koliadky-shchedrivky.md
+  type: wiki
+- title: Слов'янська міфологія
+  author: Костомаров М.
+  note: Латинське походження слова «коляда», класифікація зимових обрядів, порівняння з великоросійськими
+  type: primary
+  work: Слов'янська міфологія
+- title: Нарис історії культури України
+  author: Попович М.
+  note: Тріада господар-господиня-діти, Світове дерево, провінційно-римські впливи
+  type: primary
+  work: Нарис історії культури України
+- title: Історія української літератури
+  author: Чижевський Д.
+  note: Фольклорні жанри як стилістичні епохи
+  type: primary
+  work: Історія української літератури
+- title: Праці етнографічно-статистичної експедиції в Західно-Руський край
+  author: Чубинський П.
+  note: Первинні записи колядок і щедрівок з Карпат та Полісся
+  type: primary
+  work: Праці етнографічно-статистичної експедиції в Західно-Руський край
+sequence: 5
+slug: koliadky-shchedrivky
+subtitle: 'Carols and Shchedrivky: The Cosmogonic Myth'
+title: 'Колядки та щедрівки: Міф про створення світу'
+version: '4.0'
+vocabulary_hints:
+- definition: обрядова пісня різдвяного циклу, що величає господаря та його родину
+  pos: ж.
+  word: колядка
+- definition: обрядова пісня новорічного циклу, пов'язана зі святом Маланки/Василя
+  pos: ж.
+  word: щедрівка
+- definition: міф або вчення про походження та створення Всесвіту
+  pos: ж.
+  word: космогонія
+- definition: універсальний міфологічний образ — вісь, що з'єднує три рівні Всесвіту (axis mundi)
+  pos: с.
+  word: світове дерево
+- definition: новорічний обряд посипання зерном підлоги на добробут і врожай
+  pos: с.
+  word: засівання
+- definition: стилістичний прийом повторення подібних синтаксичних конструкцій
+  pos: ч.
+  word: паралелізм
+- definition: пов'язаний із виконанням ритуалу, традиційного обряду
+  pos: прикм.
+  word: обрядовий
+- definition: місцевого, корінного походження — протилежність запозиченому
+  pos: прикм.
+  word: автохтонний
+- definition: свідоме наслідування стилю іншої епохи або жанру
+  pos: ж.
+  word: стилізація
+- definition: пов'язаний із сонцем, сонячним культом
+  pos: прикм.
+  word: солярний
+word_target: 5000
+
+```
+
+## Full Wiki Context (source of truth for citations)
+
+See `## Knowledge Packet` above. This is the same wiki-obligation content; the prior render duplicated it as a token tax. Textbook citations in `resources.yaml` remain governed by the earlier Citation authority rule: plan references only, never Knowledge Packet anchors as citation candidates.
+
+## Pre-emit verification (run BEFORE you write any artifact)
+
+Before artifacts, make the in-scope MCP calls your draft depends on:
+1. Textbook grounding (mandatory chunk_id-first protocol):
+   For each entry in `plan_references`, parse the `notes` field for the literal substring `chunk_id: <ID>` (always present — example: `chunk_id: <textbook-slug>_s<NNNN>`).
+   Call `mcp__sources__get_chunk_context(chunk_id=<ID>)` to fetch the chunk text.
+   DO NOT call `mcp__sources__search_text` for plan references — the chunk_id in notes is authoritative.
+   Concrete example: plan says `chunk_id: <textbook-slug>_s<NNNN>` → call `get_chunk_context(chunk_id="<textbook-slug>_s<NNNN>")`, paste from THAT returned text. Do NOT search by page number — FTS5 can return the wrong author or page.
+2. Multimedia obligation: at least one `mcp__sources__query_wikipedia`, `mcp__sources__search_external`, or `mcp__sources__search_images`; `resources_search_attempted` rejects zero attempts.
+3. VESUM: `mcp__sources__verify_words` over every Ukrainian form you will emit.
+4. Russianism/style: `mcp__sources__search_style_guide`, `mcp__sources__search_ua_gec_errors`, `mcp__sources__check_russian_shadow`, or `mcp__sources__search_heritage` for contrast pairs or suspicious forms.
+5. Literary/cultural quote: `mcp__sources__verify_quote` or `mcp__sources__search_literary` as level-appropriate.
+6. CEFR check: `mcp__sources__query_cefr_level` before adding non-plan lemmas.
+7. Source attribution: `mcp__sources__verify_source_attribution` for every named source claim.
+
+If a required call is missing for your level, make it now. Do not emit artifacts first and hope the gate catches it.
+
+## PRE-EMIT HARD STOP — read this NOW, before any artifact fence
+
+Re-check these three hard-stop items BEFORE emitting:
+
+1. **`get_chunk_context` for every plan reference.** `search_text` does NOT count toward `textbook_grounding`; call `mcp__sources__get_chunk_context(chunk_id=<ID from notes>)` for EACH `plan.references` entry.
+
+2. **At least ONE multimedia search call.** `resources_search_attempted` counts ONLY `mcp__sources__query_wikipedia`, `mcp__sources__search_external`, and `mcp__sources__search_images`; empty results are acceptable, zero attempts are not.
+
+3. **INJECT_ACTIVITY parity.** Every `INJECT_ACTIVITY id=<X>` in `module.md` MUST have a matching activity id in `activities.yaml`; count both before emitting.
+
+If tool history lacks items 1 or 2, STOP and make the calls. `<end_gate>` counts are cross-checked against telemetry; lying fails via `tool_theatre`.
+
+## Artifact emission format (STRICT — restored 2026-05-23 after PR-C strip)
+
+Return the visible `<plan_reasoning>` blocks first, then exactly these four fenced blocks in the order below, then the `<end_gate>` block. Do not add any other prose anywhere.
+
+**Three structured artifacts (`activities.yaml`, `vocabulary.yaml`, `resources.yaml`) MUST be emitted as 3-backtick fenced blocks labelled with language `json` and an info-string `file=<name>`.** The pipeline parses them with `json.loads`. Do NOT use `yaml`, `activities.yaml`, or bare `\`\`\`` as the fence info — those fail at writer-output parse with `must be fenced as json, got <X>`.
+
+```json file=activities.yaml
+[
+  {
+    "id": "act-1",
+    "type": "fill-in",
+    "instruction": "...",
+    "items": [{"sentence": "Я ____ схему.", "answer": "креслю", "options": ["креслю", "питаю"]}]
+  }
+]
+```
+
+```json file=vocabulary.yaml
+[
+  {"lemma": "креслити", "translation": "to draw lines", "pos": "verb", "usage": "Я креслю схему."}
+]
+```
+
+Vocabulary entries MUST use only these fields: `lemma`, `translation`, `pos`, `usage`, and optional `notes`, `examples`, `tags`. CEFR/frequency lookups are selection evidence only; do NOT emit metadata fields such as `cefr`, `level`, `frequency`, `register`, `gender`, or `example`.
+
+```json file=resources.yaml
+[
+  {"title": "Караман Grade 10, p.176", "role": "textbook", "notes": "..."}
+]
+```
+
+Each activity object MUST carry the props for its declared `type` per the `COMPONENT_PROPS_SCHEMA` table. Do not strip an `items` array down to `id/type/title` just because the example above looks short.
+
+**Wrap the `module.md` artifact in a 4-backtick OUTER fence.** The OPEN fence MUST be exactly one line: four backticks, then a single space, then the info string `markdown file=module.md`, then newline. Like this (one line, no mid-line break):
+
+````markdown file=module.md
+...module body here, may contain inner 3-backtick fences for examples...
+````
+
+DO NOT split the info string across two lines (i.e. NEVER emit ` ```` ` then a newline then `markdown file=module.md`) — the parser scans the fence-open line for `file=`; a separate line gets tagged "unnamed fenced block" and the build hard-fails at writer-output parse.
+
+The CLOSE fence is four bare backticks on their own line.
+
+## HARD STOP RULE
+
+After emitting all required `<plan_reasoning>` blocks, the 4 artifact fences
+(`module.md`, `activities.yaml`, `vocabulary.yaml`, `resources.yaml`), and the
+`<end_gate>` block, STOP. Do not write a summary, status report, completion
+confirmation, or any meta-commentary about what you did. The 4 fences are the
+deliverable. Anything after the `<end_gate>` block will be discarded by the
+parser. If you feel the urge to write "Module drafted under..." or "All forms
+verified...", DON'T. The verification is in the `<end_gate>` block, not in prose.

@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "phase": "stress_annotation",
+  "skipped": true,
+  "reason": "seminar level - no stress",
+  "files": {
+    "module.md": 1,
+    "vocabulary.yaml": 0,
+    "activities.yaml": 0
+  },
+  "total_removed": 1
+}

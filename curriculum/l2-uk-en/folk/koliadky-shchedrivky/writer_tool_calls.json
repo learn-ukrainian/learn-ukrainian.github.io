@@ -1,0 +1,751 @@
+[
+  {
+    "name": "ToolSearch",
+    "arguments": {
+      "query": "select:mcp__sources__get_chunk_context,mcp__sources__verify_words,mcp__sources__verify_quote,mcp__sources__query_wikipedia,mcp__sources__check_russian_shadow,mcp__sources__search_style_guide,mcp__sources__query_cefr_level,mcp__sources__verify_source_attribution,mcp__sources__search_heritage,mcp__sources__search_slovnyk_me",
+      "max_results": 10
+    },
+    "output_summary": "[{\"tool_name\": \"mcp__sources__get_chunk_context\", \"type\": \"tool_reference\"}, {\"tool_name\": \"mcp__sources__verify_words\", \"type\": \"tool_reference\"}, {\"tool_name\": \"mcp__sources__verify_quote\", \"type\": \"tool_reference\"}, {\"tool_name\": \"mcp__sources__query_wikipedia\", \"type\": \"tool_reference\"}, {\"tool_name\": \"mcp__sources__check_russian_shadow\", \"type\": \"tool_reference\"}, {\"tool_name\": \"mcp__sources__search_style_guide\", \"type\": \"tool_reference\"}, {\"tool_name\": \"mcp__sources__query_ce[...truncated]",
+    "timestamp": "2026-06-15T16:08:41.752728+00:00",
+    "result": [
+      {
+        "type": "tool_reference",
+        "tool_name": "mcp__sources__get_chunk_context"
+      },
+      {
+        "type": "tool_reference",
+        "tool_name": "mcp__sources__verify_words"
+      },
+      {
+        "type": "tool_reference",
+        "tool_name": "mcp__sources__verify_quote"
+      },
+      {
+        "type": "tool_reference",
+        "tool_name": "mcp__sources__query_wikipedia"
+      },
+      {
+        "type": "tool_reference",
+        "tool_name": "mcp__sources__check_russian_shadow"
+      },
+      {
+        "type": "tool_reference",
+        "tool_name": "mcp__sources__search_style_guide"
+      },
+      {
+        "type": "tool_reference",
+        "tool_name": "mcp__sources__query_cefr_level"
+      },
+      {
+        "type": "tool_reference",
+        "tool_name": "mcp__sources__verify_source_attribution"
+      },
+      {
+        "type": "tool_reference",
+        "tool_name": "mcp__sources__search_heritage"
+      },
+      {
+        "type": "tool_reference",
+        "tool_name": "mcp__sources__search_slovnyk_me"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__get_chunk_context",
+    "arguments": {
+      "chunk_id": "61bfde21_c0000",
+      "window": 2
+    },
+    "output_summary": "[{\"text\": \"**[61bfde21_c0000]** — \\n\\nЯК ЩЕ НЕ БУЛО ПОЧАТКУ СВІТА\\n\\nЯк ще не було початку світа,\\n\\nТогди не було неба, ні землі,\\n\\nА но лем було синєє море,\\n\\nА серед моря зелений явір.\\n\\nНа явороньку три голубоньки,\\n\\nТри голубоньки радоньку радять,\\n\\nРадоньку радять, як світ сновати:\\n\\n— Та спустимося на дно до моря\\n\\nТа дістанемо дрібного піску,\\n\\nДрібний пісочок посієме ми:\\n\\nТа нам ся стане чорна землиця.\\n\\nТа дістанемо золотий камінь,\\n\\nЗолотий камінь посієме ми:[...truncated]",
+    "timestamp": "2026-06-15T16:08:41.754396+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "**[61bfde21_c0000]** — \n\nЯК ЩЕ НЕ БУЛО ПОЧАТКУ СВІТА\n\nЯк ще не було початку світа,\n\nТогди не було неба, ні землі,\n\nА но лем було синєє море,\n\nА серед моря зелений явір.\n\nНа явороньку три голубоньки,\n\nТри голубоньки радоньку радять,\n\nРадоньку радять, як світ сновати:\n\n— Та спустимося на дно до моря\n\nТа дістанемо дрібного піску,\n\nДрібний пісочок посієме ми:\n\nТа нам ся стане чорна землиця.\n\nТа дістанемо золотий камінь,\n\nЗолотий камінь посієме ми:\n\nТа нам ся стане ясне небонько,\n\nЯсне небонько, світле сонінько,\n\nСвітле сонінько, ясен місячик,\n\nЯсен місячик, ясна зірниця,\n\nЯсна зірниця, дрібні звіздочки."
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__query_wikipedia",
+    "arguments": {
+      "query": "Колядки",
+      "mode": "summary"
+    },
+    "output_summary": "[{\"text\": \"# Колядки\\n**Description**: календарно-обрядові пісні слов'ян\\n**URL**: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BB%D1%8F%D0%B4%D0%BA%D0%B8\\n\\nКоля́дки — величальні календарно-обрядові пісні зимового циклу свят, переважно у слов'янських народів. Первісно колядки супроводжували язичницькі обряди, дуже стійкими виявились обряди Коляди, пов'язані з ушануванням новонародженого сонця, культом предків. За християнства колядки асоціюються передусім із Різдвом, у своїх текс[...truncated]",
+    "timestamp": "2026-06-15T16:08:41.754422+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "# Колядки\n**Description**: календарно-обрядові пісні слов'ян\n**URL**: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BB%D1%8F%D0%B4%D0%BA%D0%B8\n\nКоля́дки — величальні календарно-обрядові пісні зимового циклу свят, переважно у слов'янських народів. Первісно колядки супроводжували язичницькі обряди, дуже стійкими виявились обряди Коляди, пов'язані з ушануванням новонародженого сонця, культом предків. За християнства колядки асоціюються передусім із Різдвом, у своїх текстах відображають «народне християнство», переосмислення язичницького світогляду й ритуалів. Виконавці колядок традиційно називаються колядниками, а виконання колядок — колядуванням."
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__query_wikipedia",
+    "arguments": {
+      "query": "Щедрик (пісня)",
+      "mode": "summary"
+    },
+    "output_summary": "[{\"text\": \"Wikipedia article not found: 'Щедрик (пісня)' (cached)\", \"type\": \"text\"}]",
+    "timestamp": "2026-06-15T16:08:41.754443+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "Wikipedia article not found: 'Щедрик (пісня)' (cached)"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__verify_quote",
+    "arguments": {
+      "author": "Народна творчість",
+      "text": "Як ще не було початку світа, Тогди не було неба, ні землі, А но лем було синєє море, А серед моря зелений явір"
+    },
+    "output_summary": "[{\"text\": \"{\\n \\\"matched\\\": true,\\n \\\"best_confidence\\\": 1.0,\\n \\\"matched_lines\\\": [\\n {\\n \\\"line\\\": \\\"ЯК ЩЕ НЕ БУЛО ПОЧАТКУ СВІТА\\\",\\n \\\"work\\\": \\\"ukrlib-narod-dumy\\\",\\n \\\"year\\\": 1600,\\n \\\"confidence\\\": 1.0,\\n \\\"context_chunk_id\\\": \\\"61bfde21_c0000\\\"\\n }\\n ],\\n \\\"search_normalized\\\": {\\n \\\"author_query\\\": \\\"творчість\\\",\\n \\\"text_query\\\": \\\"як ще не було початку світа, тогди не було неба, ні землі, а но лем було синєє море, а серед моря зелении явір\\\"\\n }\\n}\", \"type\": \"text\"}]",
+    "timestamp": "2026-06-15T16:08:41.754464+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "{\n  \"matched\": true,\n  \"best_confidence\": 1.0,\n  \"matched_lines\": [\n    {\n      \"line\": \"ЯК ЩЕ НЕ БУЛО ПОЧАТКУ СВІТА\",\n      \"work\": \"ukrlib-narod-dumy\",\n      \"year\": 1600,\n      \"confidence\": 1.0,\n      \"context_chunk_id\": \"61bfde21_c0000\"\n    }\n  ],\n  \"search_normalized\": {\n    \"author_query\": \"творчість\",\n    \"text_query\": \"як ще не було початку світа, тогди не було неба, ні землі, а но лем було синєє море, а серед моря зелении явір\"\n  }\n}"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__verify_words",
+    "arguments": {
+      "words": [
+        "космогонія",
+        "космогонічний",
+        "колядка",
+        "щедрівка",
+        "світове",
+        "дерево",
+        "засівання",
+        "паралелізм",
+        "обрядовий",
+        "автохтонний",
+        "стилізація",
+        "солярний",
+        "язичницький",
+        "християнський",
+        "християнізація",
+        "дохристиянський",
+        "явір",
+        "первісний",
+        "рефрен",
+        "зачин",
+        "тріада",
+        "реконструкція",
+        "збіжжя",
+        "жито",
+        "врожай",
+        "господар",
+        "господиня",
+        "водіння",
+        "консерватизм",
+        "ідентичність",
+        "величати",
+        "величання"
+      ]
+    },
+    "output_summary": "[{\"text\": \"Batch verification: 32 words\\n\\nFound: 32/32\\n\\n- **космогонія** — FOUND (1 match): космогонія(noun)\\n- **космогонічний** — FOUND (3 match): космогонічний(adj), космогонічний(adj), космогонічний(adj)\\n- **колядка** — FOUND (1 match): колядка(noun)\\n- **щедрівка** — FOUND (1 match): щедрівка(noun)\\n- **світове** — FOUND (3 match): світовий(adj), світовий(adj), світовий(adj)\\n- **дерево** — FOUND (3 match): дерево(noun), дерево(noun), дерево(noun)\\n- **засівання** — FOUND [...truncated]",
+    "timestamp": "2026-06-15T16:08:41.791080+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "Batch verification: 32 words\n\nFound: 32/32\n\n- **космогонія** — FOUND (1 match): космогонія(noun)\n- **космогонічний** — FOUND (3 match): космогонічний(adj), космогонічний(adj), космогонічний(adj)\n- **колядка** — FOUND (1 match): колядка(noun)\n- **щедрівка** — FOUND (1 match): щедрівка(noun)\n- **світове** — FOUND (3 match): світовий(adj), світовий(adj), світовий(adj)\n- **дерево** — FOUND (3 match): дерево(noun), дерево(noun), дерево(noun)\n- **засівання** — FOUND (7 match): засівання(noun), засівання(noun), засівання(noun)\n- **паралелізм** — FOUND (2 match): паралелізм(noun), паралелізм(noun)\n- **обрядовий** — FOUND (3 match): обрядовий(adj), обрядовий(adj), обрядовий(adj)\n- **автохтонний** — FOUND (3 match): автохтонний(adj), автохтонний(adj), автохтонний(adj)\n- **стилізація** — FOUND (1 match): стилізація(noun)\n- **солярний** — FOUND (3 match): солярний(adj), солярний(adj), солярний(adj)\n- **язичницький** — FOUND (3 match): язичницький(adj), язичницький(adj), язичницький(adj)\n- **християнський** — FOUND (3 match): християнський(adj), християнський(adj), християнський(adj)\n- **християнізація** — FOUND (1 match): християнізація(noun)\n- **дохристиянський** — FOUND (3 match): дохристиянський(adj), дохристиянський(adj), дохристиянський(adj)\n- **явір** — FOUND (2 match): явір(noun), явір(noun)\n- **первісний** — FOUND (3 match): первісний(adj), первісний(adj), первісний(adj)\n- **рефрен** — FOUND (2 match): рефрен(noun), рефрен(noun)\n- **зачин** — FOUND (2 match): зачин(noun), зачин(noun)\n- **тріада** — FOUND (1 match): тріада(noun)\n- **реконструкція** — FOUND (1 match): реконструкція(noun)\n- **збіжжя** — FOUND (4 match): збіжжя(noun), збіжжя(noun), збіжжя(noun)\n- **жито** — FOUND (3 match): жито(noun), жито(noun), жито(noun)\n- **врожай** — FOUND (2 match): врожай(noun), врожай(noun)\n- **господар** — FOUND (1 match): господар(noun)\n- **господиня** — FOUND (1 match): господиня(noun)\n- **водіння** — FOUND (7 match): водіння(noun), водіння(noun), водіння(noun)\n- **консерватизм** — FOUND (2 match): консерватизм(noun), консерватизм(noun)\n- **ідентичність** — FOUND (2 match): ідентичність(noun), ідентичність(noun)\n- **величати** — FOUND (1 match): величати(verb)\n- **величання** — FOUND (7 match): величання(noun), величання(noun), величання(noun)"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__verify_words",
+    "arguments": {
+      "words": [
+        "зерно",
+        "небо",
+        "земля",
+        "море",
+        "сонце",
+        "місяць",
+        "зоря",
+        "птах",
+        "пісок",
+        "камінь",
+        "голуб",
+        "свято",
+        "романтик",
+        "романтизм",
+        "етнолінгвіст",
+        "походження",
+        "латинський",
+        "слов'янський",
+        "індоєвропейський",
+        "міф",
+        "Всесвіт",
+        "вісь",
+        "рівень",
+        "гурт",
+        "частування",
+        "дар",
+        "побажання",
+        "зимовий",
+        "новорічний",
+        "різдвяний",
+        "культ",
+        "сонячний"
+      ]
+    },
+    "output_summary": "[{\"text\": \"Batch verification: 32 words\\n\\nFound: 31/32\\n\\n- **зерно** — FOUND (3 match): зерно(noun), зерно(noun), зерно(noun)\\n- **небо** — FOUND (3 match): небо(noun), небо(noun), небо(noun)\\n- **земля** — FOUND (1 match): земля(noun)\\n- **море** — FOUND (4 match): мор(noun), море(noun), море(noun)\\n- **сонце** — FOUND (3 match): сонце(noun), сонце(noun), сонце(noun)\\n- **місяць** — FOUND (2 match): місяць(noun), місяць(noun)\\n- **зоря** — FOUND (1 match): зоря(noun)\\n- **птах**[...truncated]",
+    "timestamp": "2026-06-15T16:08:41.791187+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "Batch verification: 32 words\n\nFound: 31/32\n\n- **зерно** — FOUND (3 match): зерно(noun), зерно(noun), зерно(noun)\n- **небо** — FOUND (3 match): небо(noun), небо(noun), небо(noun)\n- **земля** — FOUND (1 match): земля(noun)\n- **море** — FOUND (4 match): мор(noun), море(noun), море(noun)\n- **сонце** — FOUND (3 match): сонце(noun), сонце(noun), сонце(noun)\n- **місяць** — FOUND (2 match): місяць(noun), місяць(noun)\n- **зоря** — FOUND (1 match): зоря(noun)\n- **птах** — FOUND (1 match): птах(noun)\n- **пісок** — FOUND (2 match): пісок(noun), пісок(noun)\n- **камінь** — FOUND (5 match): каміння(noun), камінь(noun), камінь(noun)\n- **голуб** — FOUND (4 match): голуб(noun), голуб(noun), голуб(noun)\n- **свято** — FOUND (4 match): свято(adv), свято(noun), свято(noun)\n- **романтик** — FOUND (2 match): романтик(noun), романтика(noun)\n- **романтизм** — FOUND (2 match): романтизм(noun), романтизм(noun)\n- **етнолінгвіст** — FOUND (1 match): етнолінгвіст(noun)\n- **походження** — FOUND (7 match): походження(noun), походження(noun), походження(noun)\n- **латинський** — FOUND (3 match): латинський(adj), латинський(adj), латинський(adj)\n- **слов'янський** — FOUND (3 match): слов'янський(adj), слов'янський(adj), слов'янський(adj)\n- **індоєвропейський** — FOUND (3 match): індоєвропейський(adj), індоєвропейський(adj), індоєвропейський(adj)\n- **міф** — FOUND (2 match): міф(noun), міф(noun)\n- **Всесвіт** — NOT FOUND\n- **вісь** — FOUND (2 match): вісь(noun), вісь(noun)\n- **рівень** — FOUND (2 match): рівень(noun), рівень(noun)\n- **гурт** — FOUND (4 match): гурт(noun), гурт(noun), гурт(noun)\n- **частування** — FOUND (7 match): частування(noun), частування(noun), частування(noun)\n- **дар** — FOUND (2 match): дар(noun), дар(noun)\n- **побажання** — FOUND (7 match): побажання(noun), побажання(noun), побажання(noun)\n- **зимовий** — FOUND (3 match): зимовий(adj), зимовий(adj), зимовий(adj)\n- **новорічний** — FOUND (3 match): новорічний(adj), новорічний(adj), новорічний(adj)\n- **різдвяний** — FOUND (3 match): різдвяний(adj), різдвяний(adj), різдвяний(adj)\n- **культ** — FOUND (2 match): культ(noun), культ(noun)\n- **сонячний** — FOUND (3 match): сонячний(adj), сонячний(adj), сонячний(adj)"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__verify_words",
+    "arguments": {
+      "words": [
+        "аграрний",
+        "маска",
+        "драматизований",
+        "театральний",
+        "антисемітський",
+        "ксенофобський",
+        "війна",
+        "бойовий",
+        "музейний",
+        "експонат",
+        "живий",
+        "інструмент",
+        "культурний",
+        "привласнення",
+        "циркуляція",
+        "ушанування",
+        "переосмислення",
+        "новонароджений",
+        "ритуальний",
+        "сценарій",
+        "наслідування",
+        "функція",
+        "спротив",
+        "резистентність",
+        "консервативний",
+        "виконавчий",
+        "величальність",
+        "обрядодійство",
+        "космос",
+        "космічний",
+        "архаїчний",
+        "дохристиянство"
+      ]
+    },
+    "output_summary": "[{\"text\": \"Batch verification: 32 words\\n\\nFound: 32/32\\n\\n- **аграрний** — FOUND (3 match): аграрний(adj), аграрний(adj), аграрний(adj)\\n- **маска** — FOUND (1 match): маска(noun)\\n- **драматизований** — FOUND (6 match): драматизований(adj), драматизований(adj), драматизований(adj)\\n- **театральний** — FOUND (3 match): театральний(adj), театральний(adj), театральний(adj)\\n- **антисемітський** — FOUND (3 match): антисемітський(adj), антисемітський(adj), антисемітський(adj)\\n- **ксе[...truncated]",
+    "timestamp": "2026-06-15T16:08:41.792077+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "Batch verification: 32 words\n\nFound: 32/32\n\n- **аграрний** — FOUND (3 match): аграрний(adj), аграрний(adj), аграрний(adj)\n- **маска** — FOUND (1 match): маска(noun)\n- **драматизований** — FOUND (6 match): драматизований(adj), драматизований(adj), драматизований(adj)\n- **театральний** — FOUND (3 match): театральний(adj), театральний(adj), театральний(adj)\n- **антисемітський** — FOUND (3 match): антисемітський(adj), антисемітський(adj), антисемітський(adj)\n- **ксенофобський** — FOUND (3 match): ксенофобський(adj), ксенофобський(adj), ксенофобський(adj)\n- **війна** — FOUND (1 match): війна(noun)\n- **бойовий** — FOUND (3 match): бойовий(adj), бойовий(adj), бойовий(adj)\n- **музейний** — FOUND (3 match): музейний(adj), музейний(adj), музейний(adj)\n- **експонат** — FOUND (2 match): експонат(noun), експонат(noun)\n- **живий** — FOUND (3 match): живий(adj), живий(adj), живий(adj)\n- **інструмент** — FOUND (2 match): інструмент(noun), інструмент(noun)\n- **культурний** — FOUND (3 match): культурний(adj), культурний(adj), культурний(adj)\n- **привласнення** — FOUND (7 match): привласнення(noun), привласнення(noun), привласнення(noun)\n- **циркуляція** — FOUND (1 match): циркуляція(noun)\n- **ушанування** — FOUND (7 match): ушанування(noun), ушанування(noun), ушанування(noun)\n- **переосмислення** — FOUND (7 match): переосмислення(noun), переосмислення(noun), переосмислення(noun)\n- **новонароджений** — FOUND (5 match): новонароджений(adj), новонароджений(adj), новонароджений(adj)\n- **ритуальний** — FOUND (3 match): ритуальний(adj), ритуальний(adj), ритуальний(adj)\n- **сценарій** — FOUND (2 match): сценарій(noun), сценарій(noun)\n- **наслідування** — FOUND (7 match): наслідування(noun), наслідування(noun), наслідування(noun)\n- **функція** — FOUND (1 match): функція(noun)\n- **спротив** — FOUND (2 match): спротив(noun), спротив(noun)\n- **резистентність** — FOUND (2 match): резистентність(noun), резистентність(noun)\n- **консервативний** — FOUND (3 match): консервативний(adj), консервативний(adj), консервативний(adj)\n- **виконавчий** — FOUND (3 match): виконавчий(adj), виконавчий(adj), виконавчий(adj)\n- **величальність** — FOUND (2 match): величальність(noun), величальність(noun)\n- **обрядодійство** — FOUND (3 match): обрядодійство(noun), обрядодійство(noun), обрядодійство(noun)\n- **космос** — FOUND (2 match): космос(noun), космос(noun)\n- **космічний** — FOUND (3 match): космічний(adj), космічний(adj), космічний(adj)\n- **архаїчний** — FOUND (3 match): архаїчний(adj), архаїчний(adj), архаїчний(adj)\n- **дохристиянство** — FOUND (3 match): дохристиянство(noun), дохристиянство(noun), дохристиянство(noun)"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__check_russian_shadow",
+    "arguments": {
+      "word": "привласнення"
+    },
+    "output_summary": "[{\"text\": \"{\\n \\\"matches_russian\\\": false,\\n \\\"russian_lemma\\\": null,\\n \\\"ukrainian_alternative\\\": null,\\n \\\"confidence\\\": 0.0\\n}\", \"type\": \"text\"}]",
+    "timestamp": "2026-06-15T16:08:41.792389+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "{\n  \"matches_russian\": false,\n  \"russian_lemma\": null,\n  \"ukrainian_alternative\": null,\n  \"confidence\": 0.0\n}"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__check_russian_shadow",
+    "arguments": {
+      "word": "резистентність"
+    },
+    "output_summary": "[{\"text\": \"{\\n \\\"matches_russian\\\": false,\\n \\\"russian_lemma\\\": null,\\n \\\"ukrainian_alternative\\\": null,\\n \\\"confidence\\\": 0.0\\n}\", \"type\": \"text\"}]",
+    "timestamp": "2026-06-15T16:08:41.792703+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "{\n  \"matches_russian\": false,\n  \"russian_lemma\": null,\n  \"ukrainian_alternative\": null,\n  \"confidence\": 0.0\n}"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__verify_words",
+    "arguments": {
+      "words": [
+        "всесвіт",
+        "побутування",
+        "поширення",
+        "колядник",
+        "етнограф",
+        "запис",
+        "фрагмент",
+        "версія",
+        "гіпотеза",
+        "дискусія",
+        "дебати",
+        "інтерпретація",
+        "сценічний",
+        "родина",
+        "дитина",
+        "зірка",
+        "небесний",
+        "світило",
+        "творення",
+        "створення",
+        "хаос",
+        "впорядкований",
+        "невпорядкований",
+        "пласт",
+        "шар",
+        "християнство",
+        "святий",
+        "релігійний",
+        "господарський",
+        "добробут",
+        "величальний",
+        "колядування"
+      ]
+    },
+    "output_summary": "[{\"text\": \"Batch verification: 32 words\\n\\nFound: 32/32\\n\\n- **всесвіт** — FOUND (2 match): всесвіт(noun), всесвіт(noun)\\n- **побутування** — FOUND (4 match): побутування(noun), побутування(noun), побутування(noun)\\n- **поширення** — FOUND (7 match): поширення(noun), поширення(noun), поширення(noun)\\n- **колядник** — FOUND (1 match): колядник(noun)\\n- **етнограф** — FOUND (1 match): етнограф(noun)\\n- **запис** — FOUND (2 match): запис(noun), запис(noun)\\n- **фрагмент** — FOUND (2 m[...truncated]",
+    "timestamp": "2026-06-15T16:08:41.792861+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "Batch verification: 32 words\n\nFound: 32/32\n\n- **всесвіт** — FOUND (2 match): всесвіт(noun), всесвіт(noun)\n- **побутування** — FOUND (4 match): побутування(noun), побутування(noun), побутування(noun)\n- **поширення** — FOUND (7 match): поширення(noun), поширення(noun), поширення(noun)\n- **колядник** — FOUND (1 match): колядник(noun)\n- **етнограф** — FOUND (1 match): етнограф(noun)\n- **запис** — FOUND (2 match): запис(noun), запис(noun)\n- **фрагмент** — FOUND (2 match): фрагмент(noun), фрагмент(noun)\n- **версія** — FOUND (1 match): версія(noun)\n- **гіпотеза** — FOUND (1 match): гіпотеза(noun)\n- **дискусія** — FOUND (1 match): дискусія(noun)\n- **дебати** — FOUND (3 match): дебати(noun), дебати(noun), дебати(noun)\n- **інтерпретація** — FOUND (1 match): інтерпретація(noun)\n- **сценічний** — FOUND (3 match): сценічний(adj), сценічний(adj), сценічний(adj)\n- **родина** — FOUND (1 match): родина(noun)\n- **дитина** — FOUND (1 match): дитина(noun)\n- **зірка** — FOUND (5 match): зірка(noun), зірка(noun), зірка(noun)\n- **небесний** — FOUND (3 match): небесний(adj), небесний(adj), небесний(adj)\n- **світило** — FOUND (7 match): світило(noun), світило(noun), світило(noun)\n- **творення** — FOUND (7 match): творення(noun), творення(noun), творення(noun)\n- **створення** — FOUND (7 match): створення(noun), створення(noun), створення(noun)\n- **хаос** — FOUND (2 match): хаос(noun), хаос(noun)\n- **впорядкований** — FOUND (3 match): впорядкований(adj), впорядкований(adj), впорядкований(adj)\n- **невпорядкований** — FOUND (3 match): невпорядкований(adj), невпорядкований(adj), невпорядкований(adj)\n- **пласт** — FOUND (2 match): пласт(noun), пласт(noun)\n- **шар** — FOUND (3 match): шар(noun), шар(noun), шарити(verb)\n- **християнство** — FOUND (3 match): християнство(noun), християнство(noun), християнство(noun)\n- **святий** — FOUND (5 match): святий(adj), святий(adj), святий(adj)\n- **релігійний** — FOUND (3 match): релігійний(adj), релігійний(adj), релігійний(adj)\n- **господарський** — FOUND (3 match): господарський(adj), господарський(adj), господарський(adj)\n- **добробут** — FOUND (2 match): добробут(noun), добробут(noun)\n- **величальний** — FOUND (3 match): величальний(adj), величальний(adj), величальний(adj)\n- **колядування** — FOUND (7 match): колядування(noun), колядування(noun), колядування(noun)"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__search_style_guide",
+    "arguments": {
+      "query": "відігравати роль грати роль"
+    },
+    "output_summary": "[{\"text\": \"No results in Антоненко-Давидович for: \\\"відігравати роль грати роль\\\"\", \"type\": \"text\"}]",
+    "timestamp": "2026-06-15T16:08:41.793201+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "No results in Антоненко-Давидович for: \"відігравати роль грати роль\""
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__query_wikipedia",
+    "arguments": {
+      "query": "Щедрик",
+      "mode": "summary"
+    },
+    "output_summary": "[{\"text\": \"# Щедрик\\n**Description**: сторінка значень у проєкті Вікімедіа\\n**URL**: https://uk.wikipedia.org/wiki/%D0%A9%D0%B5%D0%B4%D1%80%D0%B8%D0%BA\\n\\n\", \"type\": \"text\"}]",
+    "timestamp": "2026-06-15T16:08:41.793244+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "# Щедрик\n**Description**: сторінка значень у проєкті Вікімедіа\n**URL**: https://uk.wikipedia.org/wiki/%D0%A9%D0%B5%D0%B4%D1%80%D0%B8%D0%BA\n\n"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__verify_quote",
+    "arguments": {
+      "author": "Народна творчість",
+      "text": "Коли не било з нащада світа, тогди не било неба, ні землі, а то лем било синєє море, а серед моря зелений явір"
+    },
+    "output_summary": "[{\"text\": \"{\\n \\\"matched\\\": true,\\n \\\"best_confidence\\\": 0.8727,\\n \\\"matched_lines\\\": [\\n {\\n \\\"line\\\": \\\"А серед моря зелений явір.\\\",\\n \\\"work\\\": \\\"ukrlib-narod-dumy\\\",\\n \\\"year\\\": 1600,\\n \\\"confidence\\\": 0.8727,\\n \\\"context_chunk_id\\\": \\\"61bfde21_c0000\\\"\\n }\\n ],\\n \\\"search_normalized\\\": {\\n \\\"author_query\\\": \\\"творчість\\\",\\n \\\"text_query\\\": \\\"коли не било з нащада світа, тогди не било неба, ні землі, а то лем било синєє море, а серед моря зелении явір\\\"\\n }\\n}\", \"type\": \"text\"}]",
+    "timestamp": "2026-06-15T16:08:41.793764+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "{\n  \"matched\": true,\n  \"best_confidence\": 0.8727,\n  \"matched_lines\": [\n    {\n      \"line\": \"А серед моря зелений явір.\",\n      \"work\": \"ukrlib-narod-dumy\",\n      \"year\": 1600,\n      \"confidence\": 0.8727,\n      \"context_chunk_id\": \"61bfde21_c0000\"\n    }\n  ],\n  \"search_normalized\": {\n    \"author_query\": \"творчість\",\n    \"text_query\": \"коли не било з нащада світа, тогди не било неба, ні землі, а то лем било синєє море, а серед моря зелении явір\"\n  }\n}"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__verify_quote",
+    "arguments": {
+      "author": "Народна творчість",
+      "text": "Щедрий вечір, добрий вечір! Добрим людям на здоров'я! Стояла світелка новозроблена"
+    },
+    "output_summary": "[{\"text\": \"{\\n \\\"matched\\\": false,\\n \\\"best_confidence\\\": 0.7683,\\n \\\"matched_lines\\\": [\\n {\\n \\\"line\\\": \\\"Добрим людям на здоров'я!\\\",\\n \\\"work\\\": \\\"ukrlib-narod-dumy\\\",\\n \\\"year\\\": 1600,\\n \\\"confidence\\\": 0.7683,\\n \\\"context_chunk_id\\\": \\\"70435c0b_c0000\\\"\\n }\\n ],\\n \\\"search_normalized\\\": {\\n \\\"author_query\\\": \\\"творчість\\\",\\n \\\"text_query\\\": \\\"щедрии вечір, добрии вечір! добрим людям на здоров я! стояла світелка новозроблена\\\"\\n }\\n}\", \"type\": \"text\"}]",
+    "timestamp": "2026-06-15T16:08:41.793783+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "{\n  \"matched\": false,\n  \"best_confidence\": 0.7683,\n  \"matched_lines\": [\n    {\n      \"line\": \"Добрим людям на здоров'я!\",\n      \"work\": \"ukrlib-narod-dumy\",\n      \"year\": 1600,\n      \"confidence\": 0.7683,\n      \"context_chunk_id\": \"70435c0b_c0000\"\n    }\n  ],\n  \"search_normalized\": {\n    \"author_query\": \"творчість\",\n    \"text_query\": \"щедрии вечір, добрии вечір! добрим людям на здоров я! стояла світелка новозроблена\"\n  }\n}"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__verify_quote",
+    "arguments": {
+      "author": "Народна творчість",
+      "text": "Що ж місячик — то господарик, що сонечко — то господинька, яснії зірки — то його дітки"
+    },
+    "output_summary": "[{\"text\": \"{\\n \\\"matched\\\": false,\\n \\\"best_confidence\\\": 0.6395,\\n \\\"matched_lines\\\": [\\n {\\n \\\"line\\\": \\\"Дрібні зірки — його дітки.\\\",\\n \\\"work\\\": \\\"ukrlib-narod-dumy\\\",\\n \\\"year\\\": 1600,\\n \\\"confidence\\\": 0.6395,\\n \\\"context_chunk_id\\\": \\\"70435c0b_c0000\\\"\\n },\\n {\\n \\\"line\\\": \\\"Ясен місячик, ясна зірниця,\\\",\\n \\\"work\\\": \\\"ukrlib-narod-dumy\\\",\\n \\\"year\\\": 1600,\\n \\\"confidence\\\": 0.4444,\\n \\\"context_chunk_id\\\": \\\"61bfde21_c0000\\\"\\n }\\n ],\\n \\\"search_normalized\\\": {\\n \\\"author_quer[...truncated]",
+    "timestamp": "2026-06-15T16:08:41.794276+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "{\n  \"matched\": false,\n  \"best_confidence\": 0.6395,\n  \"matched_lines\": [\n    {\n      \"line\": \"Дрібні зірки — його дітки.\",\n      \"work\": \"ukrlib-narod-dumy\",\n      \"year\": 1600,\n      \"confidence\": 0.6395,\n      \"context_chunk_id\": \"70435c0b_c0000\"\n    },\n    {\n      \"line\": \"Ясен місячик, ясна зірниця,\",\n      \"work\": \"ukrlib-narod-dumy\",\n      \"year\": 1600,\n      \"confidence\": 0.4444,\n      \"context_chunk_id\": \"61bfde21_c0000\"\n    }\n  ],\n  \"search_normalized\": {\n    \"author_query\": \"творчість\",\n    \"text_query\": \"що ж місячик — то господарик, що сонечко — то господинька, ясніі зірки — то иого дітки\"\n  }\n}"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__get_chunk_context",
+    "arguments": {
+      "chunk_id": "70435c0b_c0000",
+      "window": 1
+    },
+    "output_summary": "[{\"text\": \"**[70435c0b_c0000]** — \\n\\nОЙ СИВАЯ ТА І ЗОЗУЛЕЧКА\\n\\nОй сивая та і зозулечка.\\n\\nПриспів:\\n\\nЩедрий вечір, добрий вечір, 1\\n\\nДобрим людям на здоров'я!\\n\\nУсі сади та і облітала,\\n\\nА в одному та і не бувала.\\n\\nА в тім саду три тереми:\\n\\nУ першому — красне сонце,\\n\\nУ другому — ясен місяць,\\n\\nА в третьому — дрібні зірки.\\n\\nЯсен місяць — пан господар,\\n\\nКрасне сонце — жона його,\\n\\nДрібні зірки — його дітки.\\n\\n1 Повторюється після кожного рядка.\", \"type\": \"text\"}]",
+    "timestamp": "2026-06-15T16:08:41.794420+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "**[70435c0b_c0000]** — \n\nОЙ СИВАЯ ТА І ЗОЗУЛЕЧКА\n\nОй сивая та і зозулечка.\n\nПриспів:\n\nЩедрий вечір, добрий вечір, 1\n\nДобрим людям на здоров'я!\n\nУсі сади та і облітала,\n\nА в одному та і не бувала.\n\nА в тім саду три тереми:\n\nУ першому — красне сонце,\n\nУ другому — ясен місяць,\n\nА в третьому — дрібні зірки.\n\nЯсен місяць — пан господар,\n\nКрасне сонце — жона його,\n\nДрібні зірки — його дітки.\n\n1 Повторюється після кожного рядка."
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__verify_quote",
+    "arguments": {
+      "author": "Народна творчість",
+      "text": "Ясен місяць — пан господар, Красне сонце — жона його, Дрібні зірки — його дітки"
+    },
+    "output_summary": "[{\"text\": \"{\\n \\\"matched\\\": true,\\n \\\"best_confidence\\\": 1.0,\\n \\\"matched_lines\\\": [\\n {\\n \\\"line\\\": \\\"А в третьому — дрібні зірки. Ясен місяць — пан господар, Красне сонце — жона його, Дрібні зірки — його дітки.\\\",\\n \\\"work\\\": \\\"ukrlib-narod-dumy\\\",\\n \\\"year\\\": 1600,\\n \\\"confidence\\\": 1.0,\\n \\\"context_chunk_id\\\": \\\"70435c0b_c0000\\\"\\n }\\n ],\\n \\\"search_normalized\\\": {\\n \\\"author_query\\\": \\\"творчість\\\",\\n \\\"text_query\\\": \\\"ясен місяць — пан господар, красне сонце — жона иого, дрібні[...truncated]",
+    "timestamp": "2026-06-15T16:08:41.794525+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "{\n  \"matched\": true,\n  \"best_confidence\": 1.0,\n  \"matched_lines\": [\n    {\n      \"line\": \"А в третьому — дрібні зірки. Ясен місяць — пан господар, Красне сонце — жона його, Дрібні зірки — його дітки.\",\n      \"work\": \"ukrlib-narod-dumy\",\n      \"year\": 1600,\n      \"confidence\": 1.0,\n      \"context_chunk_id\": \"70435c0b_c0000\"\n    }\n  ],\n  \"search_normalized\": {\n    \"author_query\": \"творчість\",\n    \"text_query\": \"ясен місяць — пан господар, красне сонце — жона иого, дрібні зірки — иого дітки\"\n  }\n}"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__verify_quote",
+    "arguments": {
+      "author": "Народна творчість",
+      "text": "Щедрий вечір, добрий вечір, Добрим людям на здоров'я"
+    },
+    "output_summary": "[{\"text\": \"{\\n \\\"matched\\\": true,\\n \\\"best_confidence\\\": 0.9615,\\n \\\"matched_lines\\\": [\\n {\\n \\\"line\\\": \\\"Щедрий вечір, добрий вечір, 1\\\",\\n \\\"work\\\": \\\"ukrlib-narod-dumy\\\",\\n \\\"year\\\": 1600,\\n \\\"confidence\\\": 0.9615,\\n \\\"context_chunk_id\\\": \\\"70435c0b_c0000\\\"\\n }\\n ],\\n \\\"search_normalized\\\": {\\n \\\"author_query\\\": \\\"творчість\\\",\\n \\\"text_query\\\": \\\"щедрии вечір, добрии вечір, добрим людям на здоров я\\\"\\n }\\n}\", \"type\": \"text\"}]",
+    "timestamp": "2026-06-15T16:08:41.794544+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "{\n  \"matched\": true,\n  \"best_confidence\": 0.9615,\n  \"matched_lines\": [\n    {\n      \"line\": \"Щедрий вечір, добрий вечір, 1\",\n      \"work\": \"ukrlib-narod-dumy\",\n      \"year\": 1600,\n      \"confidence\": 0.9615,\n      \"context_chunk_id\": \"70435c0b_c0000\"\n    }\n  ],\n  \"search_normalized\": {\n    \"author_query\": \"творчість\",\n    \"text_query\": \"щедрии вечір, добрии вечір, добрим людям на здоров я\"\n  }\n}"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__verify_words",
+    "arguments": {
+      "words": [
+        "співати",
+        "звучати",
+        "описувати",
+        "плутати",
+        "обходити",
+        "посипати",
+        "формулювати",
+        "сформулювати",
+        "оспівувати",
+        "закликати",
+        "забезпечувати",
+        "успадкувати",
+        "реконструювати",
+        "романтизувати",
+        "наслідувати",
+        "пірнати",
+        "творити",
+        "припускати",
+        "доводити",
+        "заперечувати",
+        "стверджувати",
+        "порівнювати",
+        "розрізняти",
+        "зберігати",
+        "пережити",
+        "християнізувати",
+        "оболонка",
+        "хата",
+        "підлога",
+        "вікно",
+        "храм",
+        "аргумент"
+      ]
+    },
+    "output_summary": "[{\"text\": \"Batch verification: 32 words\\n\\nFound: 32/32\\n\\n- **співати** — FOUND (1 match): співати(verb)\\n- **звучати** — FOUND (1 match): звучати(verb)\\n- **описувати** — FOUND (1 match): описувати(verb)\\n- **плутати** — FOUND (1 match): плутати(verb)\\n- **обходити** — FOUND (2 match): обходити(verb), обходити(verb)\\n- **посипати** — FOUND (2 match): посипати(verb), посипати(verb)\\n- **формулювати** — FOUND (1 match): формулювати(verb)\\n- **сформулювати** — FOUND (1 match): сформ[...truncated]",
+    "timestamp": "2026-06-15T16:08:41.795236+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "Batch verification: 32 words\n\nFound: 32/32\n\n- **співати** — FOUND (1 match): співати(verb)\n- **звучати** — FOUND (1 match): звучати(verb)\n- **описувати** — FOUND (1 match): описувати(verb)\n- **плутати** — FOUND (1 match): плутати(verb)\n- **обходити** — FOUND (2 match): обходити(verb), обходити(verb)\n- **посипати** — FOUND (2 match): посипати(verb), посипати(verb)\n- **формулювати** — FOUND (1 match): формулювати(verb)\n- **сформулювати** — FOUND (1 match): сформулювати(verb)\n- **оспівувати** — FOUND (1 match): оспівувати(verb)\n- **закликати** — FOUND (2 match): закликати(verb), закликати(verb)\n- **забезпечувати** — FOUND (1 match): забезпечувати(verb)\n- **успадкувати** — FOUND (1 match): успадкувати(verb)\n- **реконструювати** — FOUND (2 match): реконструювати(verb), реконструювати(verb)\n- **романтизувати** — FOUND (2 match): романтизувати(verb), романтизувати(verb)\n- **наслідувати** — FOUND (1 match): наслідувати(verb)\n- **пірнати** — FOUND (1 match): пірнати(verb)\n- **творити** — FOUND (1 match): творити(verb)\n- **припускати** — FOUND (1 match): припускати(verb)\n- **доводити** — FOUND (1 match): доводити(verb)\n- **заперечувати** — FOUND (1 match): заперечувати(verb)\n- **стверджувати** — FOUND (1 match): стверджувати(verb)\n- **порівнювати** — FOUND (1 match): порівнювати(verb)\n- **розрізняти** — FOUND (1 match): розрізняти(verb)\n- **зберігати** — FOUND (1 match): зберігати(verb)\n- **пережити** — FOUND (1 match): пережити(verb)\n- **християнізувати** — FOUND (2 match): християнізувати(verb), християнізувати(verb)\n- **оболонка** — FOUND (1 match): оболонка(noun)\n- **хата** — FOUND (1 match): хата(noun)\n- **підлога** — FOUND (1 match): підлога(noun)\n- **вікно** — FOUND (3 match): вікно(noun), вікно(noun), вікно(noun)\n- **храм** — FOUND (2 match): храм(noun), храм(noun)\n- **аргумент** — FOUND (2 match): аргумент(noun), аргумент(noun)"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__verify_words",
+    "arguments": {
+      "words": [
+        "прикраса",
+        "ластівка",
+        "приліт",
+        "сцена",
+        "ніч",
+        "провокативний",
+        "модератор",
+        "семінар",
+        "версія",
+        "запозичений",
+        "запозичення",
+        "реформація",
+        "вірування",
+        "світогляд",
+        "тотожність",
+        "синкретизм",
+        "поліський",
+        "карпатський",
+        "атеїзм",
+        "навала",
+        "консервативність",
+        "провінційний",
+        "римський",
+        "оболонка",
+        "підлога",
+        "селянський",
+        "гіпотетичний",
+        "захований",
+        "обрядовість",
+        "синкретичний",
+        "народність",
+        "величальний"
+      ]
+    },
+    "output_summary": "[{\"text\": \"Batch verification: 32 words\\n\\nFound: 32/32\\n\\n- **прикраса** — FOUND (1 match): прикраса(noun)\\n- **ластівка** — FOUND (2 match): ластівка(noun), ластівка(noun)\\n- **приліт** — FOUND (2 match): приліт(noun), приліт(noun)\\n- **сцена** — FOUND (1 match): сцена(noun)\\n- **ніч** — FOUND (2 match): ніч(noun), ніч(noun)\\n- **провокативний** — FOUND (3 match): провокативний(adj), провокативний(adj), провокативний(adj)\\n- **модератор** — FOUND (1 match): модератор(noun)\\n- **с[...truncated]",
+    "timestamp": "2026-06-15T16:08:41.795364+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "Batch verification: 32 words\n\nFound: 32/32\n\n- **прикраса** — FOUND (1 match): прикраса(noun)\n- **ластівка** — FOUND (2 match): ластівка(noun), ластівка(noun)\n- **приліт** — FOUND (2 match): приліт(noun), приліт(noun)\n- **сцена** — FOUND (1 match): сцена(noun)\n- **ніч** — FOUND (2 match): ніч(noun), ніч(noun)\n- **провокативний** — FOUND (3 match): провокативний(adj), провокативний(adj), провокативний(adj)\n- **модератор** — FOUND (1 match): модератор(noun)\n- **семінар** — FOUND (2 match): семінар(noun), семінар(noun)\n- **версія** — FOUND (1 match): версія(noun)\n- **запозичений** — FOUND (3 match): запозичений(adj), запозичений(adj), запозичений(adj)\n- **запозичення** — FOUND (7 match): запозичення(noun), запозичення(noun), запозичення(noun)\n- **реформація** — FOUND (1 match): реформація(noun)\n- **вірування** — FOUND (7 match): вірування(noun), вірування(noun), вірування(noun)\n- **світогляд** — FOUND (2 match): світогляд(noun), світогляд(noun)\n- **тотожність** — FOUND (2 match): тотожність(noun), тотожність(noun)\n- **синкретизм** — FOUND (2 match): синкретизм(noun), синкретизм(noun)\n- **поліський** — FOUND (3 match): поліський(adj), поліський(adj), поліський(adj)\n- **карпатський** — FOUND (3 match): карпатський(adj), карпатський(adj), карпатський(adj)\n- **атеїзм** — FOUND (2 match): атеїзм(noun), атеїзм(noun)\n- **навала** — FOUND (1 match): навала(noun)\n- **консервативність** — FOUND (2 match): консервативність(noun), консервативність(noun)\n- **провінційний** — FOUND (3 match): провінційний(adj), провінційний(adj), провінційний(adj)\n- **римський** — FOUND (3 match): римський(adj), римський(adj), римський(adj)\n- **оболонка** — FOUND (1 match): оболонка(noun)\n- **підлога** — FOUND (1 match): підлога(noun)\n- **селянський** — FOUND (3 match): селянський(adj), селянський(adj), селянський(adj)\n- **гіпотетичний** — FOUND (3 match): гіпотетичний(adj), гіпотетичний(adj), гіпотетичний(adj)\n- **захований** — FOUND (3 match): захований(adj), захований(adj), захований(adj)\n- **обрядовість** — FOUND (2 match): обрядовість(noun), обрядовість(noun)\n- **синкретичний** — FOUND (3 match): синкретичний(adj), синкретичний(adj), синкретичний(adj)\n- **народність** — FOUND (2 match): народність(noun), народність(noun)\n- **величальний** — FOUND (3 match): величальний(adj), величальний(adj), величальний(adj)"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__verify_words",
+    "arguments": {
+      "words": [
+        "дно",
+        "золотий",
+        "чорний",
+        "нарада",
+        "радитися",
+        "послідовність",
+        "оспівати",
+        "припущення",
+        "твердження",
+        "спадщина",
+        "тривкий",
+        "стійкий",
+        "приспів",
+        "образність",
+        "член",
+        "перемога",
+        "темрява",
+        "світло",
+        "адвокат",
+        "прибічник",
+        "моноліт",
+        "етикетка",
+        "календар",
+        "століття",
+        "астрономічний",
+        "сонцестояння",
+        "перевертання",
+        "соціальний",
+        "ідеологічний",
+        "каркас",
+        "власник",
+        "домовладика"
+      ]
+    },
+    "output_summary": "[{\"text\": \"Batch verification: 32 words\\n\\nFound: 32/32\\n\\n- **дно** — FOUND (3 match): дно(noun), дно(noun), дно(noun)\\n- **золотий** — FOUND (6 match): золотий(adj), золотий(adj), золотий(adj)\\n- **чорний** — FOUND (5 match): чорний(adj), чорний(adj), чорний(adj)\\n- **нарада** — FOUND (1 match): нарада(noun)\\n- **радитися** — FOUND (1 match): радитися(verb)\\n- **послідовність** — FOUND (2 match): послідовність(noun), послідовність(noun)\\n- **оспівати** — FOUND (1 match): оспівати[...truncated]",
+    "timestamp": "2026-06-15T16:08:41.795877+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "Batch verification: 32 words\n\nFound: 32/32\n\n- **дно** — FOUND (3 match): дно(noun), дно(noun), дно(noun)\n- **золотий** — FOUND (6 match): золотий(adj), золотий(adj), золотий(adj)\n- **чорний** — FOUND (5 match): чорний(adj), чорний(adj), чорний(adj)\n- **нарада** — FOUND (1 match): нарада(noun)\n- **радитися** — FOUND (1 match): радитися(verb)\n- **послідовність** — FOUND (2 match): послідовність(noun), послідовність(noun)\n- **оспівати** — FOUND (1 match): оспівати(verb)\n- **припущення** — FOUND (7 match): припущення(noun), припущення(noun), припущення(noun)\n- **твердження** — FOUND (7 match): твердження(noun), твердження(noun), твердження(noun)\n- **спадщина** — FOUND (1 match): спадщина(noun)\n- **тривкий** — FOUND (3 match): тривкий(adj), тривкий(adj), тривкий(adj)\n- **стійкий** — FOUND (3 match): стійкий(adj), стійкий(adj), стійкий(adj)\n- **приспів** — FOUND (3 match): приспів(noun), приспів(noun), приспіти(verb)\n- **образність** — FOUND (2 match): образність(noun), образність(noun)\n- **член** — FOUND (3 match): член(noun), член(noun), член(noun)\n- **перемога** — FOUND (1 match): перемога(noun)\n- **темрява** — FOUND (3 match): темрява(noun), темрявий(adj), темрявий(adj)\n- **світло** — FOUND (4 match): світло(adv), світло(noun), світло(noun)\n- **адвокат** — FOUND (1 match): адвокат(noun)\n- **прибічник** — FOUND (1 match): прибічник(noun)\n- **моноліт** — FOUND (2 match): моноліт(noun), моноліт(noun)\n- **етикетка** — FOUND (1 match): етикетка(noun)\n- **календар** — FOUND (2 match): календар(noun), календар(noun)\n- **століття** — FOUND (7 match): століття(noun), століття(noun), століття(noun)\n- **астрономічний** — FOUND (3 match): астрономічний(adj), астрономічний(adj), астрономічний(adj)\n- **сонцестояння** — FOUND (7 match): сонцестояння(noun), сонцестояння(noun), сонцестояння(noun)\n- **перевертання** — FOUND (4 match): перевертання(noun), перевертання(noun), перевертання(noun)\n- **соціальний** — FOUND (3 match): соціальний(adj), соціальний(adj), соціальний(adj)\n- **ідеологічний** — FOUND (3 match): ідеологічний(adj), ідеологічний(adj), ідеологічний(adj)\n- **каркас** — FOUND (2 match): каркас(noun), каркас(noun)\n- **власник** — FOUND (1 match): власник(noun)\n- **домовладика** — FOUND (1 match): домовладика(noun)"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__verify_words",
+    "arguments": {
+      "words": [
+        "колядувати",
+        "дозвіл",
+        "тяглість",
+        "побутувати",
+        "переробка",
+        "аранжування",
+        "оголосити",
+        "розчинити",
+        "незмінний",
+        "спадкоємність",
+        "циклічний",
+        "повторюваний",
+        "висловлювати",
+        "промовляти",
+        "з'являтися",
+        "виникати",
+        "утворюватися",
+        "переплетіння",
+        "обрядовий",
+        "антифонний",
+        "прибічницький",
+        "ворожий",
+        "межовий",
+        "коза",
+        "маскований",
+        "ряджений",
+        "резистентність",
+        "унікальний",
+        "антисемітизм",
+        "ксенофобія",
+        "співаний",
+        "віршований"
+      ]
+    },
+    "output_summary": "[{\"text\": \"Batch verification: 32 words\\n\\nFound: 31/32\\n\\n- **колядувати** — FOUND (1 match): колядувати(verb)\\n- **дозвіл** — FOUND (2 match): дозвіл(noun), дозвіл(noun)\\n- **тяглість** — FOUND (2 match): тяглість(noun), тяглість(noun)\\n- **побутувати** — FOUND (1 match): побутувати(verb)\\n- **переробка** — FOUND (1 match): переробка(noun)\\n- **аранжування** — FOUND (7 match): аранжування(noun), аранжування(noun), аранжування(noun)\\n- **оголосити** — FOUND (1 match): оголосити(ve[...truncated]",
+    "timestamp": "2026-06-15T16:08:41.796361+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "Batch verification: 32 words\n\nFound: 31/32\n\n- **колядувати** — FOUND (1 match): колядувати(verb)\n- **дозвіл** — FOUND (2 match): дозвіл(noun), дозвіл(noun)\n- **тяглість** — FOUND (2 match): тяглість(noun), тяглість(noun)\n- **побутувати** — FOUND (1 match): побутувати(verb)\n- **переробка** — FOUND (1 match): переробка(noun)\n- **аранжування** — FOUND (7 match): аранжування(noun), аранжування(noun), аранжування(noun)\n- **оголосити** — FOUND (1 match): оголосити(verb)\n- **розчинити** — FOUND (1 match): розчинити(verb)\n- **незмінний** — FOUND (3 match): незмінний(adj), незмінний(adj), незмінний(adj)\n- **спадкоємність** — FOUND (2 match): спадкоємність(noun), спадкоємність(noun)\n- **циклічний** — FOUND (3 match): циклічний(adj), циклічний(adj), циклічний(adj)\n- **повторюваний** — FOUND (3 match): повторюваний(adj), повторюваний(adj), повторюваний(adj)\n- **висловлювати** — FOUND (1 match): висловлювати(verb)\n- **промовляти** — FOUND (1 match): промовляти(verb)\n- **з'являтися** — FOUND (1 match): з'являтися(verb)\n- **виникати** — FOUND (2 match): виникати(verb), виникати(verb)\n- **утворюватися** — FOUND (1 match): утворюватися(verb)\n- **переплетіння** — FOUND (7 match): переплетіння(noun), переплетіння(noun), переплетіння(noun)\n- **обрядовий** — FOUND (3 match): обрядовий(adj), обрядовий(adj), обрядовий(adj)\n- **антифонний** — FOUND (3 match): антифонний(adj), антифонний(adj), антифонний(adj)\n- **прибічницький** — NOT FOUND\n- **ворожий** — FOUND (3 match): ворожий(adj), ворожий(adj), ворожий(adj)\n- **межовий** — FOUND (3 match): межовий(adj), межовий(adj), межовий(adj)\n- **коза** — FOUND (1 match): коза(noun)\n- **маскований** — FOUND (3 match): маскований(adj), маскований(adj), маскований(adj)\n- **ряджений** — FOUND (5 match): ряджений(adj), ряджений(adj), ряджений(adj)\n- **резистентність** — FOUND (2 match): резистентність(noun), резистентність(noun)\n- **унікальний** — FOUND (3 match): унікальний(adj), унікальний(adj), унікальний(adj)\n- **антисемітизм** — FOUND (2 match): антисемітизм(noun), антисемітизм(noun)\n- **ксенофобія** — FOUND (1 match): ксенофобія(noun)\n- **співаний** — FOUND (3 match): співаний(adj), співаний(adj), співаний(adj)\n- **віршований** — FOUND (3 match): віршований(adj), віршований(adj), віршований(adj)"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__verify_words",
+    "arguments": {
+      "words": [
+        "великоруський",
+        "східнослов'янський",
+        "відголос",
+        "хоровий",
+        "прив'язка",
+        "обробка",
+        "відлуння",
+        "російський",
+        "християнський",
+        "дзвін",
+        "перетворюватися",
+        "зміст",
+        "твір",
+        "уявлення",
+        "народження",
+        "слов'яни",
+        "зводитися",
+        "відомий"
+      ]
+    },
+    "output_summary": "[{\"text\": \"Batch verification: 18 words\\n\\nFound: 18/18\\n\\n- **великоруський** — FOUND (3 match): великоруський(adj), великоруський(adj), великоруський(adj)\\n- **східнослов'янський** — FOUND (3 match): східнослов'янський(adj), східнослов'янський(adj), східнослов'янський(adj)\\n- **відголос** — FOUND (2 match): відголос(noun), відголос(noun)\\n- **хоровий** — FOUND (3 match): хоровий(adj), хоровий(adj), хоровий(adj)\\n- **прив'язка** — FOUND (1 match): прив'язка(noun)\\n- **обробка** — [...truncated]",
+    "timestamp": "2026-06-15T16:08:41.796979+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "Batch verification: 18 words\n\nFound: 18/18\n\n- **великоруський** — FOUND (3 match): великоруський(adj), великоруський(adj), великоруський(adj)\n- **східнослов'янський** — FOUND (3 match): східнослов'янський(adj), східнослов'янський(adj), східнослов'янський(adj)\n- **відголос** — FOUND (2 match): відголос(noun), відголос(noun)\n- **хоровий** — FOUND (3 match): хоровий(adj), хоровий(adj), хоровий(adj)\n- **прив'язка** — FOUND (1 match): прив'язка(noun)\n- **обробка** — FOUND (1 match): обробка(noun)\n- **відлуння** — FOUND (7 match): відлуння(noun), відлуння(noun), відлуння(noun)\n- **російський** — FOUND (3 match): російський(adj), російський(adj), російський(adj)\n- **християнський** — FOUND (3 match): християнський(adj), християнський(adj), християнський(adj)\n- **дзвін** — FOUND (4 match): дзвін(noun), дзвін(noun), дзвін(noun)\n- **перетворюватися** — FOUND (1 match): перетворюватися(verb)\n- **зміст** — FOUND (2 match): зміст(noun), зміст(noun)\n- **твір** — FOUND (2 match): твір(noun), твір(noun)\n- **уявлення** — FOUND (7 match): уявлення(noun), уявлення(noun), уявлення(noun)\n- **народження** — FOUND (7 match): народження(noun), народження(noun), народження(noun)\n- **слов'яни** — FOUND (3 match): слов'янин(noun), слов'янин(noun), слов'янин(noun)\n- **зводитися** — FOUND (1 match): зводитися(verb)\n- **відомий** — FOUND (3 match): відомий(adj), відомий(adj), відомий(adj)"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__verify_words",
+    "arguments": {
+      "words": [
+        "щедрий",
+        "сталий",
+        "звертання",
+        "оповідь",
+        "формульний",
+        "провідний",
+        "ознака",
+        "незаміжній",
+        "старовинний",
+        "давній",
+        "спадок",
+        "краса",
+        "перемагати",
+        "темний",
+        "дім",
+        "дія",
+        "добро",
+        "рядок",
+        "здоров'я",
+        "вечір",
+        "людина",
+        "молодий",
+        "дівчина",
+        "обряд",
+        "поле",
+        "землиця",
+        "дрібний",
+        "ясний",
+        "пан",
+        "жона",
+        "красний",
+        "дітки"
+      ]
+    },
+    "output_summary": "[{\"text\": \"Batch verification: 32 words\\n\\nFound: 32/32\\n\\n- **щедрий** — FOUND (3 match): щедрий(adj), щедрий(adj), щедрий(adj)\\n- **сталий** — FOUND (3 match): сталий(adj), сталий(adj), сталий(adj)\\n- **звертання** — FOUND (7 match): звертання(noun), звертання(noun), звертання(noun)\\n- **оповідь** — FOUND (2 match): оповідь(noun), оповідь(noun)\\n- **формульний** — FOUND (3 match): формульний(adj), формульний(adj), формульний(adj)\\n- **провідний** — FOUND (3 match): провідний(adj)[...truncated]",
+    "timestamp": "2026-06-15T16:08:41.797195+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "Batch verification: 32 words\n\nFound: 32/32\n\n- **щедрий** — FOUND (3 match): щедрий(adj), щедрий(adj), щедрий(adj)\n- **сталий** — FOUND (3 match): сталий(adj), сталий(adj), сталий(adj)\n- **звертання** — FOUND (7 match): звертання(noun), звертання(noun), звертання(noun)\n- **оповідь** — FOUND (2 match): оповідь(noun), оповідь(noun)\n- **формульний** — FOUND (3 match): формульний(adj), формульний(adj), формульний(adj)\n- **провідний** — FOUND (3 match): провідний(adj), провідний(adj), провідний(adj)\n- **ознака** — FOUND (1 match): ознака(noun)\n- **незаміжній** — FOUND (2 match): незаміжня(adj), незаміжня(adj)\n- **старовинний** — FOUND (3 match): старовинний(adj), старовинний(adj), старовинний(adj)\n- **давній** — FOUND (5 match): давній(adj), давній(adj), давній(adj)\n- **спадок** — FOUND (2 match): спадок(noun), спадок(noun)\n- **краса** — FOUND (3 match): краса(noun), красий(adj), красий(adj)\n- **перемагати** — FOUND (1 match): перемагати(verb)\n- **темний** — FOUND (3 match): темний(adj), темний(adj), темний(adj)\n- **дім** — FOUND (2 match): дім(noun), дім(noun)\n- **дія** — FOUND (1 match): дія(noun)\n- **добро** — FOUND (3 match): добро(noun), добро(noun), добро(noun)\n- **рядок** — FOUND (2 match): рядок(noun), рядок(noun)\n- **здоров'я** — FOUND (4 match): здоров'я(noun), здоров'я(noun), здоров'я(noun)\n- **вечір** — FOUND (2 match): вечір(noun), вечір(noun)\n- **людина** — FOUND (1 match): людина(noun)\n- **молодий** — FOUND (5 match): молодий(adj), молодий(adj), молодий(adj)\n- **дівчина** — FOUND (1 match): дівчина(noun)\n- **обряд** — FOUND (2 match): обряд(noun), обряд(noun)\n- **поле** — FOUND (5 match): піл(noun), поле(noun), поле(noun)\n- **землиця** — FOUND (1 match): землиця(noun)\n- **дрібний** — FOUND (3 match): дрібний(adj), дрібний(adj), дрібний(adj)\n- **ясний** — FOUND (3 match): ясний(adj), ясний(adj), ясний(adj)\n- **пан** — FOUND (1 match): пан(noun)\n- **жона** — FOUND (1 match): жона(noun)\n- **красний** — FOUND (3 match): красний(adj), красний(adj), красний(adj)\n- **дітки** — FOUND (3 match): дітки(noun), дітки(noun), дітки(noun)"
+      }
+    ]
+  },
+  {
+    "name": "mcp__sources__verify_words",
+    "arguments": {
+      "words": [
+        "критерій",
+        "скандинавський",
+        "перський",
+        "святкування",
+        "національний",
+        "спільний",
+        "відмінний",
+        "висновок",
+        "своєрідність",
+        "окремішність",
+        "повернення",
+        "наповнювати",
+        "визначити",
+        "своєрідний",
+        "герой",
+        "народ",
+        "чужий",
+        "власний",
+        "зв'язок",
+        "сучасний"
+      ]
+    },
+    "output_summary": "[{\"text\": \"Batch verification: 20 words\\n\\nFound: 20/20\\n\\n- **критерій** — FOUND (2 match): критерій(noun), критерій(noun)\\n- **скандинавський** — FOUND (3 match): скандинавський(adj), скандинавський(adj), скандинавський(adj)\\n- **перський** — FOUND (3 match): перський(adj), перський(adj), перський(adj)\\n- **святкування** — FOUND (7 match): святкування(noun), святкування(noun), святкування(noun)\\n- **національний** — FOUND (3 match): національний(adj), національний(adj), національ[...truncated]",
+    "timestamp": "2026-06-15T16:08:41.797391+00:00",
+    "result": [
+      {
+        "type": "text",
+        "text": "Batch verification: 20 words\n\nFound: 20/20\n\n- **критерій** — FOUND (2 match): критерій(noun), критерій(noun)\n- **скандинавський** — FOUND (3 match): скандинавський(adj), скандинавський(adj), скандинавський(adj)\n- **перський** — FOUND (3 match): перський(adj), перський(adj), перський(adj)\n- **святкування** — FOUND (7 match): святкування(noun), святкування(noun), святкування(noun)\n- **національний** — FOUND (3 match): національний(adj), національний(adj), національний(adj)\n- **спільний** — FOUND (3 match): спільний(adj), спільний(adj), спільний(adj)\n- **відмінний** — FOUND (3 match): відмінний(adj), відмінний(adj), відмінний(adj)\n- **висновок** — FOUND (2 match): висновок(noun), висновок(noun)\n- **своєрідність** — FOUND (2 match): своєрідність(noun), своєрідність(noun)\n- **окремішність** — FOUND (2 match): окремішність(noun), окремішність(noun)\n- **повернення** — FOUND (7 match): повернення(noun), повернення(noun), повернення(noun)\n- **наповнювати** — FOUND (1 match): наповнювати(verb)\n- **визначити** — FOUND (1 match): визначити(verb)\n- **своєрідний** — FOUND (3 match): своєрідний(adj), своєрідний(adj), своєрідний(adj)\n- **герой** — FOUND (1 match): герой(noun)\n- **народ** — FOUND (2 match): народ(noun), народ(noun)\n- **чужий** — FOUND (3 match): чужий(adj), чужий(adj), чужий(adj)\n- **власний** — FOUND (3 match): власний(adj), власний(adj), власний(adj)\n- **зв'язок** — FOUND (3 match): зв'язка(noun), зв'язок(noun), зв'язок(noun)\n- **сучасний** — FOUND (3 match): сучасний(adj), сучасний(adj), сучасний(adj)"
+      }
+    ]
+  }
+]
