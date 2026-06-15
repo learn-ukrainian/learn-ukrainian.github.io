@@ -1,0 +1,188 @@
+- lemma: контрольна робота
+  translation: test, checkpoint
+  pos: phrase
+  usage: "Ця контрольна робота перевіряє морфонеміку в реченнях."
+- lemma: діагностика
+  translation: diagnosis, diagnostic check
+  pos: noun:f
+  usage: "Діагностика показує, яку тему треба повторити."
+- lemma: морфонеміка
+  translation: morphophonemics
+  pos: noun:f
+  usage: "Морфонеміка пояснює зміни звуків у формах слова."
+- lemma: чергування
+  translation: alternation
+  pos: noun:n
+  usage: "Чергування видно в парі рука - на руці."
+- lemma: спрощення
+  translation: consonant simplification
+  pos: noun:n
+  usage: "У слові тижня відбулося спрощення."
+- lemma: мішана група
+  translation: mixed declension group
+  pos: phrase
+  usage: "Сторож належить до мішаної групи."
+- lemma: третя відміна
+  translation: third declension
+  pos: phrase
+  usage: "Ніч є іменником третьої відміни."
+- lemma: pluralia tantum
+  translation: plural-only nouns
+  pos: grammar term
+  usage: "Двері й гроші є pluralia tantum."
+- lemma: вид дієслова
+  translation: verbal aspect
+  pos: phrase
+  usage: "Вид дієслова змінює значення речення."
+- lemma: доконаний вид
+  translation: perfective aspect
+  pos: phrase
+  usage: "Доконаний вид показує завершену дію."
+- lemma: недоконаний вид
+  translation: imperfective aspect
+  pos: phrase
+  usage: "Недоконаний вид описує процес або повторення."
+- lemma: основа
+  translation: stem
+  pos: noun:f
+  usage: "Основа слова може змінювати приголосний."
+- lemma: закінчення
+  translation: ending
+  pos: noun:n
+  usage: "Закінчення допомагає визначити відмінок."
+- lemma: орудний відмінок
+  translation: instrumental case
+  pos: phrase
+  usage: "В орудному відмінку кажемо сторожем."
+- lemma: родовий відмінок
+  translation: genitive case
+  pos: phrase
+  usage: "Після немає потрібен родовий відмінок."
+- lemma: місцевий відмінок
+  translation: locative case
+  pos: phrase
+  usage: "У місцевому відмінку кажемо на руці."
+- lemma: кличний відмінок
+  translation: vocative case
+  pos: phrase
+  usage: "Кличний відмінок слова друг - друже."
+- lemma: керування
+  translation: grammatical government
+  pos: noun:n
+  usage: "Керування дієслова визначає відмінок іменника."
+- lemma: скаржитися на
+  translation: to complain of
+  pos: verb phrase
+  usage: "Пацієнт скаржиться на біль."
+- lemma: лікуватися від
+  translation: to be treated for
+  pos: verb phrase
+  usage: "Вона лікується від застуди."
+- lemma: хворіти на
+  translation: to be ill with
+  pos: verb phrase
+  usage: "Він хворіє на грип."
+- lemma: одужати
+  translation: to recover
+  pos: verb:pf
+  usage: "Після відпочинку пацієнт швидко одужав."
+- lemma: біль
+  translation: pain
+  pos: noun:m
+  usage: "Біль у вусі минув увечері."
+- lemma: вухо
+  translation: ear
+  pos: noun:n
+  usage: "У вусі відбулося чергування х - с."
+- lemma: ліки
+  translation: medicine, medication
+  pos: noun:pl
+  usage: "Ці ліки треба приймати після їжі."
+- lemma: рецепт
+  translation: prescription
+  pos: noun:m
+  usage: "Лікар виписав рецепт."
+- lemma: інструкція
+  translation: instruction leaflet
+  pos: noun:f
+  usage: "Інструкція до ліків була коротка."
+- lemma: двері
+  translation: door, doors
+  pos: noun:pl
+  usage: "Біля дверей стояли люди."
+- lemma: гроші
+  translation: money
+  pos: noun:pl
+  usage: "У мене немає грошей на дорогу."
+- lemma: окуляри
+  translation: glasses
+  pos: noun:pl
+  usage: "Окуляри лежали на столі."
+- lemma: ножиці
+  translation: scissors
+  pos: noun:pl
+  usage: "Ножиці лежали біля паперу."
+- lemma: Карпати
+  translation: the Carpathians
+  pos: proper noun:pl
+  usage: "До Карпат ми поїхали після канікул."
+- lemma: канікули
+  translation: vacation, school break
+  pos: noun:pl
+  usage: "Після канікул група повторила матеріал."
+- lemma: сторож
+  translation: guard
+  pos: noun:m
+  usage: "Ми говорили зі сторожем."
+- lemma: товариш
+  translation: friend, companion
+  pos: noun:m
+  usage: "Я зустрів товариша біля ресторану."
+- lemma: ніж
+  translation: knife
+  pos: noun:m
+  usage: "Офіціант різав хліб ножем."
+- lemma: ніч
+  translation: night
+  pos: noun:f
+  usage: "Вона працювала вночі."
+- lemma: радість
+  translation: joy
+  pos: noun:f
+  usage: "Він говорив із радістю."
+- lemma: кров
+  translation: blood
+  pos: noun:f
+  usage: "Кров'ю пишеться без подвоєння."
+- lemma: сіль
+  translation: salt
+  pos: noun:f
+  usage: "Орудний відмінок слова сіль - сіллю."
+- lemma: подорож
+  translation: journey
+  pos: noun:f
+  usage: "Подорожжю пишеться з подвоєнням."
+- lemma: водити
+  translation: to drive, to take regularly
+  pos: verb:impf
+  usage: "Я воджу бабусю до лікаря."
+- lemma: сидіти
+  translation: to sit
+  pos: verb:impf
+  usage: "Я сиджу біля вікна."
+- lemma: носити
+  translation: to carry, to wear
+  pos: verb:impf
+  usage: "Я ношу окуляри щодня."
+- lemma: купити
+  translation: to buy
+  pos: verb:pf
+  usage: "Я куплю ліки після роботи."
+- lemma: заплатити
+  translation: to pay
+  pos: verb:pf
+  usage: "Він заплатив карткою."
+- lemma: редакторська перевірка
+  translation: editing check
+  pos: phrase
+  usage: "Редакторська перевірка допомагає знайти помилку."
