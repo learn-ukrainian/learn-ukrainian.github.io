@@ -91,10 +91,15 @@ User direction 2026-05-23: *"we have a huge ukrainian corpus plus we gathered ex
 
 ### 2.1 `data/sources.db` (SQLite + FTS5) — primary store
 
+> **➡ Full, current, query-verified inventory: [`docs/corpus-inventory.md`](../corpus-inventory.md)**
+> — all tables with live counts, the literary breakdown, the local-vs-GoogleDrive build
+> architecture (the #1 gotcha), and the safe recipe to add content. The table below is a
+> quick reference; keep it in sync with that doc (counts as of 2026-06-15).
+
 | Table | Volume | MCP tool | Use for |
 |---|---|---|---|
-| `textbooks` / `textbooks_fts` / `textbook_sections` | 23K chunks Gr 1-11 | `mcp__sources__search_text`, `search_sources` | Textbook grounding citations — Караман, Захарійчук, Кравцова, Большакова, Заболотний, etc. |
-| `literary_fts` / `literary_texts` | 125K chunks | `mcp__sources__search_literary` | Primary literary sources, chronicles, poetry, legal — Shevchenko, Franko, Lesya Ukrainka, Stus, Zabuzhko, etc. |
+| `textbooks` / `textbooks_fts` / `textbook_sections` | 25.7K chunks Gr 1-11 | `mcp__sources__search_text`, `search_sources` | Textbook grounding citations — Караман, Захарійчук, Кравцова, Большакова, Заболотний, etc. |
+| `literary_fts` / `literary_texts` | 137.7K chunks | `mcp__sources__search_literary` | Primary literary sources, chronicles, poetry, legal — Shevchenko, Franko, Lesya Ukrainka, Stus, Zabuzhko, etc. + folk primaries (35, `ukrlib-narod-dumy`). |
 | `external_articles` / `external_fts` | (8 collections) | `mcp__sources__search_external` | Blogs, articles, podcasts, YouTube subtitles |
 | `grinchenko` | 67K entries | `mcp__sources__search_grinchenko_1907` | Historical Ukrainian (1907) pre-Soviet attestation |
 | `sum11` | 127K entries (7,152 Sovietized — #1659) | `mcp__sources__search_definitions` | Modern explanatory dictionary; check `sovietization_risk` flag |

@@ -32,7 +32,14 @@ AGENT_NAME_RE = re.compile(r"^[a-z][a-z0-9-]*$")
 DEFAULT_ROUTER_PATH = Path("docs/session-state/current.md")
 ORCHESTRATOR_HANDOFF_PATH = Path("docs/session-state/codex-orchestrator-handoff.md")
 DEFAULT_STALE_HOURS = 12
-DEFAULT_CONTEXT_THRESHOLD = 82.0
+# Rollover warn point as a percent of the context window. Raised 82.0 → 88.0
+# (user direction 2026-06-15): Opus 4.8 has NO >200K long-context premium and no
+# brain-rot cliff, so staying high is cheap (cache-read tax ≈ $0.50 per 1M-of-context
+# per turn) — warn later to avoid early-nag and waste less of the window. 88% on a 1M
+# window ≈ 880K, leaving ~120K margin below the hard wall for the handoff write (~35K)
+# + clean-execution headroom. Measure context deterministically, not by gut estimate
+# (self-estimate runs ~1.8× high; see memory/MEMORY.md #2).
+DEFAULT_CONTEXT_THRESHOLD = 88.0
 
 
 @dataclass(frozen=True)

@@ -50,6 +50,12 @@ interface SynonymSection {
   source_urls?: string[];
 }
 
+interface AntonymSection {
+  items: string[];
+  source: string;
+  source_urls?: string[];
+}
+
 interface IdiomSection {
   items: Array<{
     text?: string;
@@ -64,6 +70,7 @@ interface IdiomSection {
 
 interface LexiconSections {
   synonyms?: SynonymSection;
+  antonyms?: AntonymSection;
   idioms?: IdiomSection;
 }
 
@@ -317,6 +324,7 @@ const courseUsage = entry.course_usage.slice().sort((a, b) => {
 const sectionSources = [
   pronunciation?.source,
   sections?.synonyms?.source,
+  sections?.antonyms?.source,
   sections?.idioms?.source,
 ].filter((source): source is string => Boolean(source));
 const wikiSources: string[] = [];
@@ -401,6 +409,7 @@ const hasDictionaryData = Boolean(
     enrichment?.literary_attestation ||
     enrichment?.translation ||
     sections?.synonyms ||
+    sections?.antonyms ||
     sections?.idioms ||
     showHeritage ||
     showEditorialSuccess ||
@@ -649,6 +658,24 @@ const frontmatter = {
           <div class="atlas-chip-line atlas-chip-line-large">
             {sections.synonyms.items.map((synonym) => (
               <span>{synonym}</span>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    {sections?.antonyms && sections.antonyms.items.length > 0 && (
+      <section class="atlas-section" aria-labelledby="atlas-antonyms-title">
+        <div class="atlas-section-head">
+          <p class="atlas-kicker">Протиставлення</p>
+          <h2 id="atlas-antonyms-title">Антоніми</h2>
+        </div>
+
+        <div class="atlas-source-card atlas-source-card-synonyms">
+          <p class="atlas-source-label">{sections.antonyms.source}</p>
+          <div class="atlas-chip-line atlas-chip-line-large">
+            {sections.antonyms.items.map((antonym) => (
+              <span>{antonym}</span>
             ))}
           </div>
         </div>

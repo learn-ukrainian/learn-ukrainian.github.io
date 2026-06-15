@@ -1,0 +1,184 @@
+- lemma: мішана група
+  translation: mixed group
+  pos: phrase
+  usage: Мішана група має основу на шиплячий приголосний.
+- lemma: шиплячий
+  translation: hissing consonant
+  pos: adjective
+  usage: Ж, ч, ш і щ є шиплячими приголосними.
+- lemma: основа
+  translation: stem
+  pos: noun:f
+  usage: Основа слова товариш закінчується на ш.
+- lemma: відміна
+  translation: declension
+  pos: noun:f
+  usage: Товариш належить до другої відміни.
+- lemma: відмінок
+  translation: grammatical case
+  pos: noun:m
+  usage: Відмінок допомагає зрозуміти роль слова в реченні.
+- lemma: називний відмінок
+  translation: nominative case
+  pos: phrase
+  usage: Називний відмінок називає предмет або особу.
+- lemma: родовий відмінок
+  translation: genitive case
+  pos: phrase
+  usage: У формі товариша бачимо родовий відмінок.
+- lemma: давальний відмінок
+  translation: dative case
+  pos: phrase
+  usage: У давальному можливі форми товаришеві й товаришу.
+- lemma: знахідний відмінок
+  translation: accusative case
+  pos: phrase
+  usage: Знахідний відмінок залежить від істотності.
+- lemma: орудний відмінок
+  translation: instrumental case
+  pos: phrase
+  usage: В орудному відмінку пишемо товаришем і ножем.
+- lemma: місцевий відмінок
+  translation: locative case
+  pos: phrase
+  usage: У місцевому відмінку кажемо у прізвищі.
+- lemma: кличний відмінок
+  translation: vocative case
+  pos: phrase
+  usage: Кличний відмінок потрібен у звертанні слухачу.
+- lemma: істота
+  translation: animate being
+  pos: noun:f
+  usage: Слухач є істотою, тому кажемо бачу слухача.
+- lemma: неістота
+  translation: inanimate thing
+  pos: noun:f
+  usage: Ключ є неістотою, тому кажемо бачу ключ.
+- lemma: однина
+  translation: singular
+  pos: noun:f
+  usage: В однині орудний відмінок має форму товаришем.
+- lemma: множина
+  translation: plural
+  pos: noun:f
+  usage: У множині правильно товаришами й ножами.
+- lemma: паралельні закінчення
+  translation: parallel endings
+  pos: phrase
+  usage: Давальний має паралельні закінчення товаришеві й товаришу.
+- lemma: товариш
+  translation: companion, friend
+  pos: noun:m
+  usage: Я говорив із товаришем після лекції.
+- lemma: сторож
+  translation: guard, watchman
+  pos: noun:m
+  usage: Сторож відчинив двері музею.
+- lemma: слухач
+  translation: listener, course participant
+  pos: noun:m
+  usage: Викладач відповів слухачеві на запитання.
+- lemma: читач
+  translation: reader
+  pos: noun:m
+  usage: Читач звернув увагу на форму слова.
+- lemma: доповідач
+  translation: presenter, speaker
+  pos: noun:m
+  usage: Доповідачу, починайте виступ.
+- lemma: ніж
+  translation: knife
+  pos: noun:m
+  usage: Хліб треба різати гострим ножем.
+- lemma: ключ
+  translation: key
+  pos: noun:m
+  usage: Я бачу ключ на столі.
+- lemma: плащ
+  translation: raincoat
+  pos: noun:m
+  usage: Він накрився плащем від дощу.
+- lemma: борщ
+  translation: borshch
+  pos: noun:m
+  usage: У тарілці не залишилося борщу.
+- lemma: м'яч
+  translation: ball
+  pos: noun:m
+  usage: Діти грали м'ячем у дворі.
+- lemma: пейзаж
+  translation: landscape
+  pos: noun:m
+  usage: Художник милувався осіннім пейзажем.
+- lemma: монтаж
+  translation: editing, installation
+  pos: noun:m
+  usage: Після монтажу фільм став коротшим.
+- lemma: масаж
+  translation: massage
+  pos: noun:m
+  usage: Після масажу плече боліло менше.
+- lemma: гараж
+  translation: garage
+  pos: noun:m
+  usage: Біля гаража стояв велосипед.
+- lemma: плече
+  translation: shoulder
+  pos: noun:n
+  usage: Лікар обережно торкнувся плеча.
+- lemma: прізвище
+  translation: surname
+  pos: noun:n
+  usage: У прізвищі є літера щ.
+- lemma: видовище
+  translation: spectacle
+  pos: noun:n
+  usage: Це видовище надовго запам'яталося глядачам.
+- lemma: вогнище
+  translation: campfire, hearth
+  pos: noun:n
+  usage: Туристи сиділи біля вогнища.
+- lemma: кладовище
+  translation: cemetery
+  pos: noun:n
+  usage: Старе кладовище стоїть за селом.
+- lemma: становище
+  translation: situation, position
+  pos: noun:n
+  usage: У складному становищі важлива точність.
+- lemma: серце
+  translation: heart
+  pos: noun:n
+  usage: Серце належить до м'якої групи другої відміни.
+- lemma: свистячий
+  translation: sibilant
+  pos: adjective
+  usage: Ц у слові серце є свистячим, а не шиплячим.
+- lemma: персоніфікація
+  translation: personification
+  pos: noun:f
+  usage: Кличний для предметів можливий у персоніфікації.
+- lemma: нормативний
+  translation: standard, normative
+  pos: adjective
+  usage: Нормативний орудний від ніж - ножем.
+- lemma: русизм
+  translation: Russian-influenced form
+  pos: noun:m
+  usage: Форма сторожом є русизмом у цьому контексті.
+- lemma: виправлення
+  translation: correction
+  pos: noun:n
+  usage: Виправлення має пояснювати форму, а не тільки замінювати слово.
+- lemma: класифікація
+  translation: classification
+  pos: noun:f
+  usage: Класифікація починається з основи слова.
+- lemma: чергування
+  translation: alternation
+  pos: noun:n
+  usage: У слові ніж є чергування і - о в інших формах.
+- lemma: ківш
+  translation: ladle, dipper
+  pos: noun:m
+  usage: Форма ковшем показує і мішану групу, і чергування голосного.

@@ -1,0 +1,36 @@
+- title: Авраменко Grade 6, pp.102-108
+  role: textbook
+  notes: Планове джерело для парадигм III відміни в однині й множині та вправ на розрізнення іменників III відміни від схожих іменників чоловічого роду.
+  source_ref: Авраменко Grade 6, pp.102-108
+- title: Литвінова Grade 6, pp.144, 162-163
+  role: textbook
+  notes: Планове джерело для визначення III відміни як іменників жіночого роду з нульовим закінченням та окремого іменника мати.
+  source_ref: Литвінова Grade 6, pp.144, 162-163
+- title: Заболотний Grade 6, pp.96, 109
+  role: textbook
+  notes: Планове джерело для системи чотирьох відмін, паралельних форм родового однини та повної парадигми іменника мати.
+  source_ref: Заболотний Grade 6, pp.96, 109
+- title: Авраменко Grade 10, p.168
+  role: textbook
+  notes: Планове джерело для правила подвоєння в орудному відмінку однини та винятків після збігу приголосних, губних і р.
+  source_ref: Авраменко Grade 10, p.168
+- title: Голуб Grade 6, p.82
+  role: textbook
+  notes: Планове джерело для практики форм річчю, миттю, радістю, матір'ю та словотворення іменників III відміни від прикметників.
+  source_ref: Голуб Grade 6, p.82
+- title: Український правопис 2019
+  role: reference
+  notes: Використано для перевірки нормативної варіантності родового однини на -і/-и у словах типу радості/радости, любові/любови, крові/крови.
+  source_ref: Український правопис 2019
+- title: Local B1 alternation-vowels module
+  role: curriculum
+  notes: Попередній B1.1 модуль для зв'язку з чергуванням і/о/е у формах ніч - ночі, піч - печі, річ - речі.
+  source_ref: curriculum/l2-uk-en/b1/alternation-vowels/module.md
+- title: Local B1 simplification-consonants module
+  role: curriculum
+  notes: Сусідній модуль для стилю пояснення морфонологічних правил і V2 активностей у B1.1.
+  source_ref: curriculum/l2-uk-en/b1/simplification-consonants/module.md
+- title: Local B1 health-at-the-doctor module
+  role: curriculum
+  notes: Попередній тематичний модуль із формами крові та кров'ю у медичному контексті.
+  source_ref: curriculum/l2-uk-en/b1/health-at-the-doctor/module.md

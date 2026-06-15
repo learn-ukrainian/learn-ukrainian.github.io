@@ -1,0 +1,164 @@
+- lemma: pluralia tantum
+  translation: plural-only nouns
+  pos: grammar term
+  usage: "Pluralia tantum - це іменники, що мають тільки множинну форму."
+- lemma: множинний іменник
+  translation: plural-only noun
+  pos: phrase
+  usage: "Множинний іменник не має звичайної форми однини."
+- lemma: singularia tantum
+  translation: singular-only nouns
+  pos: grammar term
+  usage: "Singularia tantum допомагають побачити протилежну групу."
+- lemma: однина
+  translation: singular number
+  pos: noun:f
+  usage: "Слово двері не має нейтральної форми однини."
+- lemma: множина
+  translation: plural number
+  pos: noun:f
+  usage: "Узгодження з pluralia tantum завжди стоїть у множині."
+- lemma: родовий відмінок
+  translation: genitive case
+  pos: phrase
+  usage: "Родовий відмінок слова гроші - грошей."
+- lemma: орудний відмінок
+  translation: instrumental case
+  pos: phrase
+  usage: "В орудному відмінку можливі форми грошима і грішми."
+- lemma: узгодження
+  translation: grammatical agreement
+  pos: noun:n
+  usage: "Узгодження показує, що треба сказати нові двері."
+- lemma: збірний числівник
+  translation: collective numeral
+  pos: phrase
+  usage: "Збірний числівник допомагає рахувати одні двері, двоє дверей."
+- lemma: комплект
+  translation: set
+  pos: noun:m
+  usage: "Для точного рахунку можна сказати один комплект меблів."
+- lemma: пара
+  translation: pair
+  pos: noun:f
+  usage: "Одна пара окулярів лежить на столі."
+- lemma: двері
+  translation: door, doors
+  pos: noun:pl
+  usage: "Двері відчинилися тихо."
+- lemma: окуляри
+  translation: glasses, spectacles
+  pos: noun:pl
+  usage: "Без окулярів я погано бачу текст."
+- lemma: гроші
+  translation: money
+  pos: noun:pl
+  usage: "У конверті лежали гроші на дорогу."
+- lemma: ворота
+  translation: gate
+  pos: noun:pl
+  usage: "Великі ворота були зачинені."
+- lemma: ножиці
+  translation: scissors
+  pos: noun:pl
+  usage: "Гострі ножиці лежали біля паперу."
+- lemma: Карпати
+  translation: the Carpathians
+  pos: proper noun:pl
+  usage: "У Карпатах було багато снігу."
+- lemma: Черкаси
+  translation: Cherkasy
+  pos: proper noun:pl
+  usage: "Черкаси розташовані на Дніпрі."
+- lemma: Суми
+  translation: Sumy
+  pos: proper noun:pl
+  usage: "Суми мають множинну граматичну форму."
+- lemma: Чернівці
+  translation: Chernivtsi
+  pos: proper noun:pl
+  usage: "До Чернівців їде нічний потяг."
+- lemma: Афіни
+  translation: Athens
+  pos: proper noun:pl
+  usage: "Афіни відомі давньою історією."
+- lemma: канікули
+  translation: vacation, school break
+  pos: noun:pl
+  usage: "Після канікул група повернулася до навчання."
+- lemma: ліки
+  translation: medicine, medication
+  pos: noun:pl
+  usage: "Лікар призначив нові ліки."
+- lemma: меблі
+  translation: furniture
+  pos: noun:pl
+  usage: "Нові меблі стояли біля вікна."
+- lemma: сани
+  translation: sleigh, sled
+  pos: noun:pl
+  usage: "Сани стояли біля старої хати."
+- lemma: дріжджі
+  translation: yeast
+  pos: noun:pl
+  usage: "Для тіста треба трохи дріжджів."
+- lemma: парфуми
+  translation: perfume
+  pos: noun:pl
+  usage: "Ці парфуми мають легкий запах."
+- lemma: вершки
+  translation: cream
+  pos: noun:pl
+  usage: "До кави додали вершки."
+- lemma: харчі
+  translation: provisions, food supplies
+  pos: noun:pl
+  usage: "У дорогу взяли харчі й воду."
+- lemma: штани
+  translation: trousers, pants
+  pos: noun:pl
+  usage: "Нові штани були трохи довгі."
+- lemma: граблі
+  translation: rake
+  pos: noun:pl
+  usage: "Граблі стояли в кутку сараю."
+- lemma: шахи
+  translation: chess
+  pos: noun:pl
+  usage: "Шахи розвивають уважність."
+- lemma: радощі
+  translation: joys
+  pos: noun:pl
+  usage: "Радощі були щирі й тихі."
+- lemma: хитрощі
+  translation: tricks, cunning devices
+  pos: noun:pl
+  usage: "Його хитрощі швидко помітили."
+- lemma: жнива
+  translation: harvest
+  pos: noun:pl
+  usage: "Після жнив село відпочиває."
+- lemma: вибори
+  translation: elections
+  pos: noun:pl
+  usage: "Вибори відбулися у неділю."
+- lemma: заручини
+  translation: engagement
+  pos: noun:pl
+  usage: "Заручини відбулися в родинному колі."
+- lemma: іменини
+  translation: name day
+  pos: noun:pl
+  usage: "Іменини святкували вдома."
+- lemma: молоко
+  translation: milk
+  pos: noun:n
+  usage: "Молоко звичайно має форму однини."
+- lemma: дружба
+  translation: friendship
+  pos: noun:f
+  usage: "Дружба є прикладом singularia tantum у нейтральному значенні."
+- lemma: молодь
+  translation: youth, young people
+  pos: noun:f
+  usage: "Молодь прийшла на зустріч рано."
