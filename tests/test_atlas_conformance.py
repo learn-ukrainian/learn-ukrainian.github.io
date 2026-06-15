@@ -84,6 +84,32 @@ def test_lemma_in_vesum_exempts_proper_nouns():
     assert _gates_for(entry, vesum=set()) == []
 
 
+def test_lemma_in_vesum_resolves_capitalized_vesum_entries():
+    # #3197 follow-up: VESUM stores proper nouns / abbreviations capitalized
+    # (Афіни, УЗД). The old casefold-only lookup queried "афіни"/"узд" and missed
+    # them; probing the case-preserved form must resolve them. pos is a common noun
+    # here so the proper-noun exemption does NOT mask the lookup path under test.
+    assert _gates_for(_entry(lemma="Афіни", url_slug="афіни", pos="noun"), vesum={"Афіни"}) == []
+    assert _gates_for(_entry(lemma="УЗД", url_slug="узд", pos="noun:n"), vesum={"УЗД"}) == []
+
+
+def test_lemma_in_vesum_exempts_proper_noun_with_morphology_suffix():
+    # #3197 follow-up: real proper-noun pos tags carry a :pl/:m suffix
+    # ("proper noun:pl" for Афіни/Чернівці); the exemption must match the base pos.
+    entry = _entry(lemma="Чернівці", url_slug="чернівці", pos="proper noun:pl")
+
+    assert _gates_for(entry, vesum=set()) == []
+
+
+def test_lemma_in_vesum_exempts_heritage_word_absent_from_vesum():
+    # #3197 follow-up: хвастливий is authentic Ukrainian (Грінченко 1907 «=
+    # хвастовитий» + ЕСУМ Proto-Slavic + СУМ-20) but absent from VESUM. VESUM
+    # membership is necessary-but-not-sufficient; the heritage allowlist exempts it.
+    entry = _entry(lemma="хвастливий", url_slug="хвастливий", pos="adjective")
+
+    assert _gates_for(entry, vesum=set()) == []
+
+
 def test_lemma_in_vesum_exempts_deliberate_warning_seed():
     entry = _entry(
         lemma="міроприємство",
