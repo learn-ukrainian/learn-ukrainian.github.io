@@ -57,7 +57,7 @@
 - lemma: недоконаний вид
   translation: imperfective aspect
   pos: noun phrase
-  usage: Недоконаний вид показує процес, тло або повторення.
+  usage: Недоконаний вид показує процес, стан або повторення.
 - lemma: видова пара
   translation: aspectual pair
   pos: noun phrase
@@ -66,10 +66,10 @@
   translation: sequence of actions
   pos: noun phrase
   usage: Послідовність дій часто передає доконаний вид.
-- lemma: тло розповіді
-  translation: narrative background
+- lemma: обставини ситуації
+  translation: circumstances of the situation
   pos: noun phrase
-  usage: Тло розповіді часто передає недоконаний вид.
+  usage: Недоконаний вид часто передає обставини ситуації.
 - lemma: зворотне дієслово
   translation: reflexive verb
   pos: noun phrase
