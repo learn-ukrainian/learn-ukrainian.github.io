@@ -31,3 +31,57 @@ sources:
   title: Ігорович. Про цього давньоруського
   page: 97
   grade: 11
+- id: S6
+  file: 6-klas-ukrmova-avramenko-2023_s3102
+  type: textbook
+  title: § 89. Займенник як частина мови
+  page: 175
+  grade: 6
+- id: S7
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5164
+  type: textbook
+  title: Пряма й непряма мова
+  page: 27
+  grade: 9
+- id: S8
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1150
+  type: textbook
+  title: § 18. Активні й пасивні дієприкметники
+  page: 58
+  grade: 11
+- id: S9
+  file: 7-klas-ukrmova-avramenko-2024_s0128
+  type: textbook
+  title: Дієслівні форми на -но, -то
+  page: 115
+  grade: 7
+- id: S10
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1157
+  type: textbook
+  title: § 25. ПАСИВНІ КОНСТРУКЦІЇ
+  page: 81
+  grade: 11
+- id: S11
+  file: 5-klas-ukrmova-zabolotnyi-2023_s0219
+  type: textbook
+  title: Формули ввічливості
+  page: 221
+  grade: 5
+- id: S12
+  file: 3-klas-ukrainska-mova-savchuk-2020-2_s0059
+  type: textbook
+  title: Самопредставлення. Мене звати
+  page: 61
+  grade: 3
+- id: S13
+  file: 5-klas-ukrlit-avramenko-2022_s0285
+  type: textbook
+  title: Як твоє прізвище?
+  page: 262
+  grade: 5
+- id: S14
+  file: 9-klas-ukrmova-zabolotnyi-2017_s0230
+  type: textbook
+  title: Антисуржик. Порушити питання, наступний, як
+  page: 163
+  grade: 9
