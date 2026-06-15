@@ -1,142 +1,141 @@
 - lemma: колядка
-  translation: carol (winter ritual song of the Christmas cycle praising the host
-    and family)
+  translation: Christmas-cycle ritual carol that glorifies the host and family
   pos: noun
-  usage: Колядка величає господаря та його родину.
+  usage: Колядка величає господаря та його родину на Різдво.
 - lemma: щедрівка
-  translation: shchedrivka (New Year ritual song of the Shchedryi vechir / Malanka
-    cycle)
+  translation: New Year-cycle ritual song linked to Malanka and the feast of Vasyl
   pos: noun
-  usage: Щедрівку співають на Щедрий вечір, напередодні Нового року.
+  usage: Щедрівка належить новорічному циклу і часто несе образ майбутнього врожаю.
 - lemma: космогонія
-  translation: cosmogony (myth or account of the creation of the world)
+  translation: cosmogony; myth or account of the origin of the universe
   pos: noun
-  usage: Колядка про море й дерево — це стисла космогонія.
+  usage: Космогонія — це оповідь про творення світу з первісного хаосу.
 - lemma: світове дерево
-  translation: world tree (axis mundi, the axis joining the levels of the universe)
+  translation: world tree; cosmic axis joining the three levels of the universe (axis
+    mundi)
   pos: noun
-  usage: Явір серед моря — це світове дерево, вісь всесвіту.
+  usage: Зелений явір серед моря — це світове дерево, вісь усесвіту.
 - lemma: засівання
-  translation: ritual sowing (scattering grain on the floor on New Year for prosperity)
+  translation: New Year rite of sprinkling grain on the floor for prosperity and harvest
   pos: noun
-  usage: Засівання приурочене до першого дня Нового року.
+  usage: Засівання виконують хлопці вранці на Новий рік.
 - lemma: паралелізм
-  translation: parallelism (stylistic repetition of similar syntactic structures)
+  translation: parallelism; repetition of similar syntactic constructions
   pos: noun
-  usage: Паралелізм зв'язує небесний і родинний світи в одну формулу.
+  usage: Паралелізм зв'язує бажане з дійсним у тексті колядки.
 - lemma: обрядовий
-  translation: ritual, pertaining to a rite
+  translation: ritual; related to a traditional rite
   pos: adj
-  usage: Колядування — частина обрядового сценарію зимового циклу.
+  usage: Колядка — частина обрядового сценарію зимового циклу.
 - lemma: автохтонний
-  translation: autochthonous, indigenous, native (opposite of borrowed)
+  translation: autochthonous; of local, native origin (opposite of borrowed)
   pos: adj
-  usage: Етнолінгвісти наголошують на автохтонному солярному субстраті обряду.
+  usage: Етнолінгвісти вказують на автохтонне коріння обряду.
 - lemma: стилізація
-  translation: stylization (conscious imitation of an older style or genre)
+  translation: stylization; conscious imitation of another era's or genre's style
   pos: noun
-  usage: Частину архаїчних мотивів могла підсилити пізніша стилізація.
+  usage: Частина архаїки може бути пізньою стилізацією романтиків.
 - lemma: солярний
-  translation: solar, connected with the sun cult
+  translation: solar; connected with the sun and the solar cult
   pos: adj
-  usage: Зимові обряди солярного циклу відзначають повернення сонця.
-- lemma: явір
-  translation: sycamore / maple (the world-tree image in carols)
-  pos: noun
-  usage: Серед моря росте зелений явір.
+  usage: Колядки належать до солярного циклу зимового сонцестояння.
 - lemma: космогонічний
-  translation: cosmogonic, relating to the creation of the world
+  translation: cosmogonic; relating to the creation of the world
   pos: adj
-  usage: Космогонічний пласт — найглибший у цій поезії.
-- lemma: тріада
-  translation: 'triad (here: host = moon, hostess = sun, children = stars)'
-  pos: noun
-  usage: Тріада світил уподібнює родину до космосу.
-- lemma: величання
-  translation: laudation, glorification (magnifying the host in song)
-  pos: noun
-  usage: Колядка — це величання дому й господаря.
-- lemma: благословення
-  translation: blessing
-  pos: noun
-  usage: Формула благословення відкриває обряд.
-- lemma: заклинання
-  translation: incantation, spell
-  pos: noun
-  usage: Рефрен працює як заклинання на добрий рік.
-- lemma: рефрен
-  translation: refrain (recurring line of a song)
-  pos: noun
-  usage: Повторений рефрен закріплює бажаний порядок речей.
-- lemma: зачин
-  translation: opening formula of a folk song
-  pos: noun
-  usage: Формульний зачин відкриває щедрівку.
-- lemma: гурт
-  translation: group, band (of carollers)
-  pos: noun
-  usage: Гурт виконавців обходить хати з колядкою.
-- lemma: адресат
-  translation: addressee (the host to whom the song is sung)
-  pos: noun
-  usage: Адресат колядки — господар і його родина.
+  usage: Космогонічний пласт колядки — найдавніший.
 - lemma: язичницький
-  translation: pagan
+  translation: pagan; pre-Christian
   pos: adj
-  usage: Під християнською оболонкою лежить язичницький пласт.
+  usage: Під різдвяною оболонкою лежить язичницький пласт.
 - lemma: дохристиянський
   translation: pre-Christian
   pos: adj
-  usage: Дохристиянський обряд міг існувати задовго до назви.
+  usage: Щедрик оспівує дохристиянський аграрний цикл.
 - lemma: християнізація
   translation: Christianization
   pos: noun
-  usage: Колядка пережила християнізацію й зберегла давній код.
-- lemma: історіографія
-  translation: historiography (the body of scholarly interpretation)
+  usage: Колядки пережили християнізацію, не втративши давнього змісту.
+- lemma: явір
+  translation: 'sycamore maple (here: the world-tree image)'
   pos: noun
-  usage: В історіографії змагаються дві позиції про походження «коляди».
-- lemma: реконструкція
-  translation: reconstruction
-  pos: noun
-  usage: Частину образів могла дати романтична реконструкція.
-- lemma: індоєвропейський
-  translation: Indo-European
+  usage: Серед моря стоїть зелений явір.
+- lemma: первісний
+  translation: primordial; original, primeval
   pos: adj
-  usage: Образ дерева з вод відомий у широкому індоєвропейському колі.
+  usage: Світ виникає з первісного хаосу води.
+- lemma: рефрен
+  translation: refrain; a repeated line returning after each verse
+  pos: noun
+  usage: Рефрен «Щедрий вечір» повторюється після кожного рядка.
+- lemma: зачин
+  translation: formulaic opening of a folk text
+  pos: noun
+  usage: Сталий зачин виводить слухача в час початку світу.
+- lemma: тріада
+  translation: 'triad; here: host–hostess–children as a cosmic model'
+  pos: noun
+  usage: Тріада місяць-сонце-зорі підносить родину до рівня космосу.
+- lemma: реконструкція
+  translation: reconstruction (e.g. of an archaic layer by later scholars)
+  pos: noun
+  usage: Дехто бачить тут пізню реконструкцію романтиків.
 - lemma: збіжжя
   translation: grain, cereal crops
   pos: noun
-  usage: Образ кози поєднується з образом збіжжя.
-- lemma: вертеп
-  translation: nativity puppet theatre (winter-cycle dramatized form)
+  usage: Образ кози поєднано з образом збіжжя.
+- lemma: жито
+  translation: rye (often standing for crops/harvest)
   pos: noun
-  usage: Поряд із колядою у зимовому циклі діяв і вертеп.
+  usage: Де коза ходить, там має вродити жито.
+- lemma: величати
+  translation: to glorify, extol (a host in song)
+  pos: verb
+  usage: Колядники величають господаря та родину.
+- lemma: величання
+  translation: glorification; the praising of the host in ritual song
+  pos: noun
+  usage: Величання дому — центральна дія колядки.
+- lemma: господиня
+  translation: hostess; mistress of the house
+  pos: noun
+  usage: У тріаді господиня співвіднесена з сонцем.
 - lemma: водіння
-  translation: leading (as in водіння кози — the goat-leading rite)
+  translation: the leading/parading (e.g. of the goat in winter rites)
   pos: noun
-  usage: Водіння кози має господарське спрямування.
+  usage: Водіння кози — частина новорічної обрядовості.
+- lemma: ушанування
+  translation: veneration, honouring
+  pos: noun
+  usage: Обряди Коляди пов'язані з ушануванням сонця й предків.
+- lemma: переосмислення
+  translation: rethinking, reinterpretation
+  pos: noun
+  usage: Колядки відображають переосмислення язичницького світогляду.
 - lemma: привласнення
-  translation: appropriation (cultural)
+  translation: 'appropriation (here: cultural appropriation)'
   pos: noun
-  usage: Перейменування щедрівки на «різдвяну пісню» можна читати як культурне привласнення.
-- lemma: обробка
-  translation: arrangement (musical), reworking
+  usage: Англомовна переробка «Щедрика» ставить питання про культурне привласнення.
+- lemma: спротив
+  translation: resistance
   pos: noun
-  usage: Хорову обробку «Щедрика» створив Микола Леонтович.
-- lemma: посівальник
-  translation: sower (one who performs the ritual sowing)
+  usage: Колядування було формою тихого спротиву за радянського атеїзму.
+- lemma: побутування
+  translation: existence in everyday use; how a form lives among people
   pos: noun
-  usage: Посівальники обходять хати й посипають підлогу зерном.
-- lemma: достаток
-  translation: prosperity, abundance
+  usage: Побутування колядки залежить від її обрядової функції.
+- lemma: світило
+  translation: celestial body, luminary (sun, moon, star)
   pos: noun
-  usage: Засівання несе побажання врожаю й достатку.
-- lemma: первісний
-  translation: primordial, original
+  usage: Родину співвіднесено з небесними світилами.
+- lemma: небесний
+  translation: celestial, heavenly
   pos: adj
-  usage: Світ постає з первісного, ще невпорядкованого стану.
-- lemma: формульний
-  translation: formulaic
+  usage: Зорі — це небесні діти у тріаді щедрівки.
+- lemma: ідентичність
+  translation: identity (cultural)
+  pos: noun
+  usage: Колядка — живий інструмент культурної ідентичності.
+- lemma: космічний
+  translation: cosmic
   pos: adj
-  usage: Заперечний зачин — це формульний прийом.
+  usage: Дім підносять до космічного порядку.
