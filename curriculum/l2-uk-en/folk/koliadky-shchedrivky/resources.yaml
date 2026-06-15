@@ -1,28 +1,41 @@
 - title: Народна творчість, «Як ще не було початку світа» (космогонічна колядка)
   role: textbook
-  notes: Первинний фольклорний текст, що грунтує читання космогонічного міфу; корпус
-    ukrlib-narod-dumy, chunk_id 61bfde21_c0000; verify_quote matched=true, confidence
-    1.0.
+  source_ref: Народна творчість, «Як ще не було початку світа» (космогонічна колядка)
+  packet_chunk_id: 61bfde21_c0000
+  notes: Первинний фольклорний текст, що ґрунтує читання космогонічного міфу; корпус
+    ukrlib-narod-dumy; verify_quote matched=true, confidence 1.0.
 - title: Народна творчість, «Ой сивая та і зозулечка» (щедрівка з тріадою світил)
   role: textbook
+  source_ref: Народна творчість, «Ой сивая та і зозулечка» (щедрівка з тріадою світил)
+  packet_chunk_id: 70435c0b_c0000
   notes: Первинний фольклорний текст для формули «місяць-сонце-зорі = родина»; корпус
-    ukrlib-narod-dumy, chunk_id 70435c0b_c0000; verify_quote matched=true, confidence
-    1.0.
-- title: Костомаров М., «Слов'янська міфологія»
+    ukrlib-narod-dumy; verify_quote matched=true, confidence 1.0.
+- title: Слов'янська міфологія
   role: textbook
+  author: Костомаров М.
+  source_ref: Слов'янська міфологія
+  packet_chunk_id: 61bfde21_c0000
   notes: Латинське походження слова «коляда» (calendae), класифікація зимових обрядів,
-    порівняння зі східнослов'янськими; plan reference; packet_chunk_id 61bfde21_c0000.
-- title: Попович М., «Нарис історії культури України»
+    порівняння зі східнослов'янськими; plan reference.
+- title: Нарис історії культури України
   role: textbook
+  author: Попович М.
+  source_ref: Нарис історії культури України
+  packet_chunk_id: 61bfde21_c0000
   notes: Тріада господар-господиня-діти, світове дерево, провінційно-римські впливи;
-    plan reference; packet_chunk_id 61bfde21_c0000.
-- title: Чижевський Д., «Історія української літератури»
+    plan reference.
+- title: Історія української літератури
   role: textbook
+  author: Чижевський Д.
+  source_ref: Історія української літератури
+  packet_chunk_id: 61bfde21_c0000
   notes: Фольклорні жанри як стилістичні епохи; нашарування стилів проти моноліту
-    «прадавнього»; plan reference; packet_chunk_id 61bfde21_c0000.
-- title: Чубинський П., «Праці етнографічно-статистичної експедиції в Західно-Руський
-    край»
+    «прадавнього»; plan reference.
+- title: Праці етнографічно-статистичної експедиції в Західно-Руський край
   role: textbook
+  author: Чубинський П.
+  source_ref: Праці етнографічно-статистичної експедиції в Західно-Руський край
+  packet_chunk_id: 61bfde21_c0000
   notes: Первинні записи колядок і щедрівок з Карпат і Полісся; plan reference; packet_chunk_id
     61bfde21_c0000 / 70435c0b_c0000.
 - title: Колядки — Вікіпедія
