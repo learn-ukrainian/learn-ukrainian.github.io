@@ -45,10 +45,13 @@ conformance logic itself being wrong on real data.
   words attested in Грінченко/ЕСУМ/СУМ-20 (`хвастливий`).
 - 3 regression tests in `test_atlas_conformance.py`; the real regenerated manifest
   goes 4 → 0 violations under the fixed gate.
-- **Class-level fix still open:** the heritage allowlist is a stopgap. The robust
-  fix is a `sources.db` heritage fallback (live Грінченко/ЕСУМ query) when VESUM
-  misses, so the gate self-heals on future VESUM-gap words instead of needing a
-  human to allowlist each one. Filed as follow-up.
+- **Class-level fix DONE (#3211 / PR #3218):** the heritage allowlist was a stopgap;
+  the robust fix shipped — a `sources.db` heritage fallback (`HeritageLemmaLookup`:
+  Грінченко headword / ЕСУМ lemma) is consulted on every VESUM miss before flagging,
+  so the gate **self-heals** on any heritage-attested VESUM gap. Proven: with the
+  allowlist emptied the real manifest still passes 0 violations (`хвастливий` resolved
+  by Грінченко alone). `_VESUM_GAP_HERITAGE_LEMMAS` retained ONLY as the offline
+  fallback (no sources.db, e.g. CI — which already skips the gate without VESUM).
 
 ## Lesson
 A deterministic "is this a real word?" gate that consults ONE dictionary inherits
