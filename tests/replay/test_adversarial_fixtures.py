@@ -10,7 +10,7 @@ from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.adapters.codex import CodexAdapter
 from scripts.build.linear_pipeline import (
     _result_items_from_call,
-    _summarize_generic_tool_result,
+    _summarize_tool_result,
     _vesum_gate,
 )
 from scripts.wiki.sources_db import _prepare_query
@@ -55,14 +55,14 @@ def test_vesum_gate_skips_replayed_correct_false_distractors() -> None:
     assert "олівець" not in sent_for_verification
 
 
-def test_generic_tool_summary_preserves_replayed_search_text_items() -> None:
+def test_search_text_summary_preserves_replayed_result_items() -> None:
     result_data = json.loads(
         (FIXTURES_DIR / "telemetry" / "search_text_result.json").read_text(
             encoding="utf-8",
         )
     )
 
-    summary = _summarize_generic_tool_result(result_data)
+    summary = _summarize_tool_result("search_text", result_data)
     call: dict[str, Any] = {
         "tool": "search_text",
         "result_summary": summary,

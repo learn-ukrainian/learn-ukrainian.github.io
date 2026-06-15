@@ -2823,39 +2823,7 @@ def _summarize_generic_tool_result(result: Any) -> dict[str, Any]:
             return summary
         return {"keys": sorted(str(key) for key in result)[:5]}
     if isinstance(result, list | tuple | set):
-        items = [
-            item
-            for item in result
-            if isinstance(item, Mapping) and _textbook_hit_text(item, max_chars=SEARCH_TEXT_RESULT_TEXT_LIMIT)
-        ]
-        summary: dict[str, Any] = {"count": len(result)}
-        if items:
-            summary["items"] = [
-                {
-                    key: _clean_telemetry_text(str(value), SEARCH_TEXT_RESULT_TEXT_LIMIT)
-                    for key, value in item.items()
-                    if key
-                    in {
-                        "source_type",
-                        "corpus",
-                        "type",
-                        "source",
-                        "author",
-                        "grade",
-                        "page",
-                        "title",
-                        "section_title",
-                        "chunk_id",
-                        "text",
-                        "excerpt",
-                        "snippet",
-                        "body",
-                    }
-                    and value not in (None, "")
-                }
-                for item in items[:SEARCH_TEXT_RESULT_ITEM_LIMIT]
-            ]
-        return summary
+        return {"count": len(result)}
     if result is None:
         return {}
     return {"text_chars": len(str(result))}
