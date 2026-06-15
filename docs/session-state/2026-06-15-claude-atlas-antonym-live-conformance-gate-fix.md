@@ -37,11 +37,14 @@ Fix: probe case-preserved form + base-pos match + tiny cited `_VESUM_GAP_HERITAG
 Same family as #3124, one layer down (the conformance logic itself was wrong on real data).
 
 ## Open / next session
-- **Dependabot stragglers #3186 (react patch), #3187 (happy-dom patch), #3188 (@astrojs/mdx 5→6 MAJOR):**
-  this repo has **auto-merge DISABLED and dependabot not responding to `@dependabot merge`** — each needs
-  `gh pr update-branch <N>` → wait for CI → `gh pr merge --squash --delete-branch` (NO `--admin`, #M-0.5).
-  They serialize on `site/package-lock.json` (do one npm at a time; re-update the next after each merge).
-  **#3184 greenlet** was in-flight at handoff (watcher `b43c7wm53` updating+merging when CI green — check it landed).
+- **Dependabot: 8/9 cleared this session.** Merged: #3180–#3183, #3185, #3184 (greenlet), #3187
+  (happy-dom), #3188 (@astrojs/mdx **5→6 MAJOR** — its post-rebase astro build passed against the new
+  120K-line manifest, so the major bump is render-validated). **Only #3186 (@astrojs/react 5.0.6→5.0.7
+  patch) remains OPEN** — `package-lock.json` conflict after #3188's major bump moved lock entries.
+  `@dependabot recreate` requested. Repo has **auto-merge OFF + dependabot ignores `@dependabot merge`**
+  (recreate may also no-op). To finish manually: `gh pr checkout 3186 && git merge origin/main && npm
+  install`, commit the regenerated lockfile, push, then `gh pr update-branch 3186` → wait CI →
+  `gh pr merge 3186 --squash --delete-branch` (NEVER `--admin`, #M-0.5). Trivial patch — low priority.
 - **#3211 (filed):** replace the manual `_VESUM_GAP_HERITAGE_LEMMAS` allowlist with a `sources.db`
   heritage-fallback (live Грінченко/ЕСУМ query) so the gate self-heals on VESUM gaps. The proper class fix.
 - **#3098 (§6 epic):** commented — §6 calque note is near-dormant; enhancement = surface it on the
