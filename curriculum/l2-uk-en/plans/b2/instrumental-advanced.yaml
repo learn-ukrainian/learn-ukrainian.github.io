@@ -2,7 +2,11 @@ module: b2-049
 level: B2
 sequence: 49
 slug: instrumental-advanced
-version: 1.0.2
+version: 1.0.3
+lifecycle: locked
+reviewed_at: 2026-06-15
+reviewed_by: codex/b2-wiki-readiness-batch-34
+review_notes: Source-backed wiki marker cleanup for B2 readiness batch 34.
 title: 'Орудний відмінок: поглиблений рівень'
 subtitle: 'Орудний відмінок: поглиблений рівень'
 focus: grammar
@@ -13,7 +17,7 @@ objectives:
 - 'Опанувати складні семантичні функції орудного відмінка: порівняння, супровід, допустовість.'
 - 'Засвоїти всі прийменники з орудним: з/із, за, між, над, під, перед, поза, поряд
   з.'
-- Розрізняти орудний знаряддя дії та орудний діяча (і чому орудний діяча — не 
+- Розрізняти орудний знаряддя дії та орудний діяча (і чому орудний діяча — не
   норма в безособових на -но/-то).
 - Вживати орудний у складеному іменному присудку (стати лікарем, бути другом).
 reading_situations:
@@ -42,7 +46,7 @@ writing_tasks:
   - орудний у присудку (бути, стати, працювати)
   - орудний порівняння (літати орлом, бігти вітром)
   - орудний засобу та супроводу
-  motivation: Практика різноманітних функцій орудного в автобіографічному 
+  motivation: Практика різноманітних функцій орудного в автобіографічному
     тексті.
   model_answer: 'Есе має демонструвати різноманіття: ''У дитинстві я мріяв стати космонавтом.
     Літав уявою серед зірок. А став програмістом — працюю комп''ютером, але мрію залишається
@@ -122,7 +126,7 @@ content_outline:
   - 'The Instrumental case expresses complex semantic roles: instrument (писати ручкою),
     comparison (летіти стрілою), time/place (вечорами), and is required in compound
     nominal predicates (стати лікарем, бути другом).'
-  - Prepositions like з/із, за, між, над, під, перед, and поза govern the 
+  - Prepositions like з/із, за, між, над, під, перед, and поза govern the
     Instrumental case for spatial, abstract, and accompaniment meanings.
   - 'Self-check: What is the difference between the Instrumental of instrument and
     the Instrumental of agent? Why is the agentive Instrumental incorrect in -но/-то
@@ -193,12 +197,12 @@ activities:
   total_min_items: 25
 activity_hints:
 - type: fill-in
-  focus: Вставити правильну форму орудного відмінка в різних контекстах 
+  focus: Вставити правильну форму орудного відмінка в різних контекстах
     (знаряддя, присудок, порівняння)
 - type: error-correction
   focus: 'Виправити помилки: орудний діяча в -но/-то конструкціях, неправильні закінчення'
 - type: select
-  focus: Визначити функцію орудного відмінка в реченні (знаряддя, порівняння, 
+  focus: Визначити функцію орудного відмінка в реченні (знаряддя, порівняння,
     присудок, супровід)
 - type: group-sort
   focus: 'Класифікувати речення за типом орудного: знаряддя / порівняння / присудок
