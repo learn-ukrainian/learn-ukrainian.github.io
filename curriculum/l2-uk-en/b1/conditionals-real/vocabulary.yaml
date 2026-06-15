@@ -1,0 +1,124 @@
+- lemma: якщо
+  translation: if
+  pos: conjunction
+  usage: "Якщо буде час, я зателефоную після роботи."
+- lemma: умова
+  translation: condition
+  pos: noun:f
+  usage: "Умова показує, що має статися перед основною дією."
+- lemma: реальна умова
+  translation: real condition
+  pos: phrase
+  usage: "Реальна умова можлива в майбутньому або теперішньому."
+- lemma: наслідок
+  translation: result, consequence
+  pos: noun:m
+  usage: "У головній частині речення стоїть наслідок умови."
+- lemma: головна частина
+  translation: main clause
+  pos: phrase
+  usage: "Головна частина може стояти перед або після якщо-частини."
+- lemma: підрядна частина
+  translation: subordinate clause
+  pos: phrase
+  usage: "Підрядна частина починається словом якщо."
+- lemma: дійсний спосіб
+  translation: indicative mood
+  pos: phrase
+  usage: "У реальній умові вживаємо дійсний спосіб."
+- lemma: майбутній час
+  translation: future tense
+  pos: phrase
+  usage: "У багатьох якщо-реченнях потрібен майбутній час."
+- lemma: теперішній час
+  translation: present tense
+  pos: phrase
+  usage: "Теперішній час уживаємо для стану або загальної умови."
+- lemma: доконаний вид
+  translation: perfective aspect
+  pos: phrase
+  usage: "Доконаний вид показує завершений результат: якщо закінчимо."
+- lemma: недоконаний вид
+  translation: imperfective aspect
+  pos: phrase
+  usage: "Недоконаний вид показує процес або повторення: якщо робитимеш."
+- lemma: то
+  translation: then
+  pos: particle
+  usage: "Слово то в головній частині допомагає зробити зв'язок явним."
+- lemma: коли
+  translation: when, if
+  pos: conjunction
+  usage: "Коли будеш у Львові, зайди до нас."
+- lemma: якби
+  translation: if, if only
+  pos: conjunction
+  usage: "Якби належить до нереальних умов і активніше вивчатиметься далі."
+- lemma: встигнути
+  translation: to manage in time
+  pos: verb:pf
+  usage: "Якщо встигну до обіду, надішлю звіт."
+- lemma: завершити
+  translation: to finish, complete
+  pos: verb:pf
+  usage: "Якщо завершимо зустріч раніше, поїдемо на вокзал."
+- lemma: закінчити
+  translation: to finish
+  pos: verb:pf
+  usage: "Якщо закінчиш вправу, перевір відповіді."
+- lemma: домовитися
+  translation: to arrange, agree
+  pos: verb:pf
+  usage: "Якщо домовимося сьогодні, завтра підпишемо договір."
+- lemma: перенести
+  translation: to postpone, reschedule
+  pos: verb:pf
+  usage: "Якщо зустріч перенесуть, я попереджу команду."
+- lemma: попередити
+  translation: to warn, notify
+  pos: verb:pf
+  usage: "Якщо план зміниться, попередьте мене заздалегідь."
+- lemma: надіслати
+  translation: to send
+  pos: verb:pf
+  usage: "Якщо отримаю адресу, надішлю документи."
+- lemma: отримати
+  translation: to receive, get
+  pos: verb:pf
+  usage: "Якщо отримаємо відповідь сьогодні, почнемо підготовку."
+- lemma: підготувати
+  translation: to prepare
+  pos: verb:pf
+  usage: "Якщо клієнт підтвердить час, підготуємо договір."
+- lemma: підтвердити
+  translation: to confirm
+  pos: verb:pf
+  usage: "Якщо підтвердите замовлення, кур'єр приїде завтра."
+- lemma: звернутися
+  translation: to contact, seek help
+  pos: verb:pf
+  usage: "Якщо температура підніметься, зверніться до лікаря."
+- lemma: допомогти
+  translation: to help
+  pos: verb:pf
+  usage: "Якщо ліки не допоможуть, запишіться на повторний прийом."
+- lemma: запізнитися
+  translation: to be late
+  pos: verb:pf
+  usage: "Якщо автобус запізниться, візьмемо таксі."
+- lemma: відчинений
+  translation: open
+  pos: adjective
+  usage: "Якщо магазин буде відчинений, куплю хліб дорогою."
+- lemma: готівка
+  translation: cash
+  pos: noun:f
+  usage: "Якщо картка не спрацює, заплатимо готівкою."
+- lemma: заздалегідь
+  translation: in advance
+  pos: adverb
+  usage: "Якщо план зміниться, повідомте нас заздалегідь."
+- lemma: щодня
+  translation: every day
+  pos: adverb
+  usage: "Якщо тренуватимешся щодня, прогрес буде стабільний."
