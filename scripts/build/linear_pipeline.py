@@ -6801,6 +6801,61 @@ def _apply_vocab_floor_correction(
     }
 
 
+def _normalize_performance_self_check_duplicates(
+    activities: Sequence[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    normalized: list[dict[str, Any]] = []
+    removed: list[dict[str, Any]] = []
+    for activity_index, activity in enumerate(activities, start=1):
+        if (
+            str(activity.get("type") or "") == "performance"
+            and "self_check" in activity
+            and not isinstance(activity.get("self_check"), list)
+            and "self_checklist" in activity
+            and isinstance(activity.get("self_checklist"), list)
+        ):
+            updated = dict(activity)
+            removed_value = updated.pop("self_check")
+            normalized.append(updated)
+            removed.append(
+                {
+                    "activity_index": activity_index,
+                    "activity_id": str(activity.get("id") or f"#{activity_index}"),
+                    "removed_type": type(removed_value).__name__,
+                    "self_checklist_count": len(activity["self_checklist"]),
+                }
+            )
+            continue
+        normalized.append(activity)
+    return normalized, {
+        "kind": "performance_self_check_duplicate",
+        "normalized_count": len(removed),
+        "normalized": removed,
+    }
+
+
+def _apply_activity_schema_correction(
+    *,
+    module_dir: Path,
+    gate_report: Mapping[str, Any],
+) -> dict[str, Any]:
+    activities_path = module_dir / "activities.yaml"
+    activities = _load_bare_activity_list(activities_path)
+    normalized, diagnostic = _normalize_performance_self_check_duplicates(activities)
+    if diagnostic["normalized_count"] > 0:
+        activities_path.write_text(
+            yaml.safe_dump(normalized, allow_unicode=True, sort_keys=False),
+            encoding="utf-8",
+        )
+    return {
+        "kind": "pipeline_activity_schema_self_check_normalization",
+        "gate": "activity_schema",
+        "gate_report": dict(gate_report),
+        "applied": bool(diagnostic["normalized_count"]),
+        "diagnostic": diagnostic,
+    }
+
+
 def _apply_python_qg_correction(
     gate: str,
     qg_report: Mapping[str, Any],
@@ -6835,6 +6890,10 @@ def _apply_python_qg_correction(
     if gate in DETERMINISTIC_VOCAB_FLOOR_GATES:
         payload = _apply_vocab_floor_correction(module_dir=module_dir, plan_path=plan_path, gate_report=gate_report)
         return True, frozenset(), payload
+    if gate == "activity_schema":
+        payload = _apply_activity_schema_correction(module_dir=module_dir, gate_report=gate_report)
+        if payload.get("applied") is True:
+            return True, frozenset(), payload
     if gate in WRITER_CORRECTION_GATES:
         payload = _apply_writer_correction(
             gate,
