@@ -2,38 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1157
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0109
   type: textbook
-  title: § 25. ПАСИВНІ КОНСТРУКЦІЇ
+  title: Сторінка 81
   page: 81
   grade: 11
 - id: S2
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1216
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0136
   type: textbook
-  title: Для позначення часу дії прийменники по — в (у) так само відрізняються
-  page: 84
+  title: Сторінка 95
+  page: 95
   grade: 11
 - id: S3
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1217
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0139
   type: textbook
-  title: § 22. Синтаксичні конструкції
+  title: Сторінка 97
   page: 97
   grade: 11
 - id: S4
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1238
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0314
   type: textbook
-  title: Пунктогра5ма (лінгв.) — оформлення речення або його частини за допомо
+  title: Сторінка 216
   page: 216
   grade: 11
 - id: S6
-  file: 11-klas-ukrmova-zabolotnyi-2019_s1429
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0108
   type: textbook
-  title: Синтаксична норма (p. 80)
+  title: Сторінка 80
   page: 80
   grade: 11
 - id: S7
-  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
+  file: 7-klas-ukrmova-zabolotnyi-2024_s0048
   type: textbook
-  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  title: Сторінка 49
   page: 49
   grade: 7
+- id: S8
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0072
+  type: textbook
+  title: Сторінка 52
+  page: 52
+  grade: 11
