@@ -1,16 +1,21 @@
 # Folk Track — Claude Driver Handoff (MY OWN — not the orchestrator's)
 
 ## ▶▶▶ ROLE + PRIORITIES (updated 2026-06-13 — READ FIRST)
-> **MY ROLE (user 2026-06-13):** I am the orchestrator of **FOLK + ALL SEMINARS** (folk · hist · bio · istorio ·
-> lit · oes · ruth). The **OTHER orchestrator owns INFRA + Word Atlas**; **Codex owns CORE tracks (a1–c2)**. So I
-> drive seminar CONTENT and **FILE infra needs as issues** (I do NOT implement infra myself — that's the other
-> orchestrator's lane). Folk is the active seminar; the rest rest (bio handoff `docs/bio-epic/`).
+> **MY ROLE (user 2026-06-13; infra-ownership added 2026-06-16):** I am the orchestrator of **FOLK + ALL
+> SEMINARS** (folk · hist · bio · istorio · lit · oes · ruth). **Codex owns CORE tracks (a1–c2)**. I drive
+> seminar CONTENT **and I IMPLEMENT/DRIVE INFRA myself** — see agent-def rule #0.2 (user order 2026-06-16):
+> when I find infra debt (pipeline/gate/tooling/schema/build/harness) I FIX or DRIVE it to completion (inline
+> if small, dispatch + PR if large). Filing an issue SUPPLEMENTS the fix, never replaces it. **The earlier
+> "file infra needs, don't implement — that's the other orchestrator's lane" boundary is RETIRED.** I still
+> coordinate with the other orchestrator on shared infra and never commit/merge to `main` (PR only). Folk is
+> the active seminar; the rest rest (bio handoff `docs/bio-epic/`).
 >
 > **🔝 TOP PRIORITY (user 2026-06-13): issue #3079 — seminar module builds must SELF-CONVERGE** (python_qg + LLM
 > QG) **without manual correction-loop driving.** This is the ROOT CAUSE of "manually made" modules and the gate to
-> scaling all seminars. Infra orchestrator implements; I track. Sub-walls: #2991, #2997 + coinage/citation/ADR-008
-> divergence (Sessions 11–16). The folk WIKI loop already got the divergence-safety pattern (#3054 best-round) — the
-> MODULE loop (linear_pipeline ADR-008) needs the same + a cross-model fixer route.
+> scaling all seminars. **I OWN + IMPLEMENT this** (per #0.2; designed in PR #3271, B1 = the quick win below).
+> Sub-walls: #2991, #2997 + coinage/citation/ADR-008 divergence (Sessions 11–16). The folk WIKI loop already got
+> the divergence-safety pattern (#3054 best-round) — the MODULE loop (linear_pipeline ADR-008) needs the same +
+> the insert-only pedagogical corrector (B1) + a cross-model fixer route.
 >
 > **🧱 FOLK MODULE e2e TRUTH (do NOT surface folk nav until fixed):** 3/42 modules built, but **only kalendarna is
 > PROPERLY e2e** (`llm_qg.json` PASS 7.0). **koliadky + dumy have NO `llm_qg.json`** → shipped on manual #M-11
@@ -58,7 +63,81 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 36 HANDOFF (2026-06-15 — THREE BIG WINS: (1) 6 folk dossiers #20–#25 (PR #3221); (2) **#3162 IMPLEMENTED + MERGED (#3237)** — module excerpt builder now embeds folk/seminar literary primaries; (3) **koliadky REBUILT → pedagogy 6.7→9.2** (first folk module to clear LLM-QG ≥8 with embedded primaries; PR #3250)) — **RESUME HERE**
+## ▶▶▶ SESSION 37 HANDOFF (2026-06-15 — #3079 (the ONE open epic, TOP PRIORITY) DESIGNED: root-caused the seminar self-converge failure to 3 separable gaps + wrote the implementable design doc the Session-36 RESUME-HERE #3 called for) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** DESIGN ONLY — no new content (modules 6/42, dossiers 25/42, wikis 15/42 ALL unchanged),
+> no pipeline code (that's the infra orchestrator's lane to IMPLEMENT). I executed the named next action (#3):
+> wrote the **#3079 design doc** at `docs/folk-epic/seminar-module-self-converge-3079-design.md` (PR below).
+> Clean slate at session start — local == origin/main, 0 folk PRs open, 0 dispatches in flight.
+
+### ✅ DONE THIS SESSION (PR `claude/folk-3079-self-converge-design`, NOT self-merged — agent-type contract)
+- **#3079 ROOT-CAUSED into 3 separable gaps** (traced the V7 module pipeline e2e, file:line):
+  - **Gap A — LLM QG has NO correction loop.** `v7_build._run_llm_qg` (L935) runs each of the 5 §7 dims ONCE
+    and returns; there is no round loop/fixer/re-review (unlike python_qg + wiki_coverage, which loop). And
+    `pedagogical` (the dim stuck 5.8–7.0 across ALL folk modules) is a **WARNING/advisory dim** (only
+    `decolonization` is terminal for seminar — `thresholds.py:58`, demoted 2026-05-23 as stochastic) → the
+    pipeline NEVER acts on the pedagogical score. That is why koliadky/dumy shipped with no `llm_qg.json`.
+  - **Gap B — what raises pedagogy splits in two; ADR-007 draws the line BETWEEN them** (REFRAMED after the
+    user asked about an ADR-007 edit; doc updated). koliadky proof (PR #3250): #3162 embed-primary got 6.7→7.4;
+    the correction pass closed 7.4→9.2. The ADDITIVE moves (embed primary, add self-check/activity/note) are
+    **inserts** — and the V7 pipeline ALREADY supports them: `<fix><insert_after>…</insert_after><text>…</text>`
+    is a first-class fix type (applier `linear_pipeline.py:6048–6980`, used by wiki_coverage), and ADR-007
+    **explicitly sanctions** `insert_after` (lines 35/82/102); the invariant test bans only the REGENERATION
+    symbols. **So inserting external text needs NO ADR change.** Only the DEEPEN-existing-prose subset is the
+    ADR-007 wall (the `full_rewrite` class, 9.6→8.4 degradation evidence). **The real blocker is Gap A (no loop
+    to invoke the already-compliant insert_after on pedagogical findings) — NOT ADR-007.**
+  - **Gap C — python_qg doesn't self-converge for seminar** (rotating gate walls: #2991 module.md-only scope,
+    #2997 blockquote vesum, coinage churn, citation resolution). The loop is single-shot PER GATE (L5317).
+- **Design = port the PROVEN wiki #3054 divergence-safety to the module loop** (best-round `review.py:948`,
+  MIN-guard `:1034`, seminar round budget `:144`, claude reviewer routing `:178`) + **B1 = insert-only
+  pedagogical corrector** (`linear-correction-pedagogical.md` emitting `insert_after`; reuses the built applier;
+  **NO ADR change, NO test change** — the quick win) + **B2 = deepen carve-out (CONDITIONAL** on B1 validation
+  failing) + re-promote `pedagogical` warning→terminal once stable.
+- **Plan (owner = infra orchestrator)** P0 extract shared `review_loop.py` → P1 #2991/#2997 → P2 LLM-QG loop →
+  **P3 B1 insert-only corrector (no ADR change)** → **P3-validate on koliadky/dumy (if ≥8, STOP — B2 unneeded)**
+  → P4 python_qg multi-gate loop → **P5 B2 ADR-009 carve-out (CONDITIONAL, needs sign-off)** → P6 re-promotion.
+- Markdownlint 0. Posted a design-summary comment on **issue #3079**.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **#3079 B1 — BUILT ✅ → PR #3275 (CI-CLEAN, ready-to-merge).** I implemented it per #0.2 (designed → briefed →
+   dispatched codex → reviewed code + verified locally). Delivered: `scripts/common/review_loop.py` (shared
+   best-round/MIN-guard, wiki review.py refactored onto it — 44 wiki tests green), `run_llm_qg_with_corrections`
+   (bounded loop: seminar 3 rounds / core 1 = strict no-op; best-round restore; re-gate via python_qg with
+   revert-on-fail), `linear-correction-pedagogical.md` (insert_after-ONLY corrector), v7_build wiring
+   (seminar→loop, core→single-pass). Guardrails verified: NO ADR change, `test_no_rewrite_contract` untouched +
+   passing, no forbidden symbols, no new vocab. 81 tests green locally; CI 18/18 + 6 skip, mergeStateStatus CLEAN.
+   **Merge held for orchestrator reconciliation (shared pipeline infra; per the "never merge to main" boundary
+   #0.2 keeps) — TRACK-UPDATE'd `needs=merge`.** NEXT after merge: **P3-validate** — run the loop e2e on
+   koliadky/dumy, confirm pedagogical reaches ≥8 unaided; open the CONDITIONAL B2 deepen carve-out (P5, needs
+   user sign-off) ONLY if insert-only can't reach ≥8. Full spec: the #3079 design doc + PR #3271.
+2. **SCALE folk to ≥8 + surface — sequencing SURVEYED this session (verified, not guessed):** the `type:primary`
+   sweep on the 6 built plans found: **koliadky (4 refs → 9.2 ✅), dumy (3 refs → rebuild-ready)** vs **zamovliannia
+   #03 / narodni-viruvannia #02 / kalendarna — plans are STUBS** (`status: stub`, `references: [type: pending]`,
+   "corpus-grounded sources pending the dossier") vs **narodna-kultura #01 likely legitimately primary-free**
+   (analytical overview). ROOT CAUSE of their 5.8–6.8 pedagogical: #3162 routes `type:primary` refs →
+   `literary_texts` (`_build_textbook_excerpt_context`, linear_pipeline.py:1903/1913 — seminar + is_primary →
+   `_literary_fallback_queries` searches by the ref's author/work **AND quoted primary lines in the plan's
+   `content_outline`**), so a stub plan with no primary refs embeds NOTHING → the #3162 lift never applied to them.
+   **ALL 6 modules already HAVE corpus-hammered dossiers** (`docs/research/folk/<slug>.md`). So the unlock (in-lane,
+   NON-gated, my #M-11 job): **promote each stub plan's dossier §4/§6 sources into `type:primary` refs + put the
+   quoted primary lines into `content_outline`** → then #3162 embeds (≈+0.7, the koliadky 6.7→7.4 step) and B1
+   closes 7.4→≥8. Sequence: zamovliannia (charms in-corpus, clearest) → narodni-viruvannia (В. Петров/ЕУ demonology)
+   → kalendarna (веснянки/щедрівки/жниварські); decide whether #01 needs a primary at all. THEN un-hide folk nav
+   (remove `'folk'` from `HIDDEN_MODULE_LINK_TRACKS` `site/src/components/LevelLanding.tsx` + `hiddenPublicPaths`
+   `site/astro.config.mjs`) as a labeled PREVIEW once all are ≥8.
+3. **Dossier queue (parallel, unblocked, pure content lane):** #26 `narodni-lehendy` → #27 `istorychni-perekazy`
+   (`phase-folk-queue.md`, 25/42). Proven loop: corpus-pre-ground → codex → corpus-hammer → accumulate.
+
+### ⚠ CARRY-FORWARD
+- PR opened, NOT self-merged (agent-type contract; orchestrator promotes). Handoff bundled in the PR.
+- Monitor API (localhost:8765) was DOWN this session — used `gh`/CLI + git directly. If firing dispatches next
+  session, confirm monitoring works (start the API or tail agent-private session JSONL per #M-8).
+- `git push` folk → `--no-verify`; never reset/commit on main. Worktree
+  `.worktrees/dispatch/claude/folk-3079-design` holds the doc; `git worktree remove` after the PR merges.
+
+---
+
+## ▶▶▶ SESSION 36 HANDOFF (2026-06-15 — THREE BIG WINS: (1) 6 folk dossiers #20–#25 (PR #3221); (2) **#3162 IMPLEMENTED + MERGED (#3237)** — module excerpt builder now embeds folk/seminar literary primaries; (3) **koliadky REBUILT → pedagogy 6.7→9.2** (first folk module to clear LLM-QG ≥8 with embedded primaries; PR #3250))
 
 > **✅ SESSION 36 CLOSED OUT (2026-06-15) — all PRs MERGED to main, hygiene done:** #3237 (#3162 infra) ·
 > #3221 (6 dossiers + handoff) · #3250 (koliadky 9.2) · **#3265** (removed the CANCELLED Claude-lane sunset from
