@@ -288,7 +288,7 @@
               },
               "error": {
                 "type": "string",
-                "description": "The incorrect word or phrase"
+                "description": "The incorrect word or phrase; empty string means the sentence is already correct"
               },
               "correction": {
                 "type": "string",
@@ -368,10 +368,53 @@
           }
         },
         "rubric": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "criteria",
+                      "description"
+                    ],
+                    "properties": {
+                      "criteria": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "points": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            }
+          ]
         },
         "title": {
           "type": "string",
@@ -944,19 +987,68 @@
                 "minimum": 0,
                 "description": "0-based index of the correct option"
               },
+              "answer": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Correct option text for string-option quiz items"
+              },
               "explanation": {
                 "type": "string"
               }
             },
-            "anyOf": [
+            "allOf": [
               {
-                "required": [
-                  "question"
+                "anyOf": [
+                  {
+                    "required": [
+                      "question"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "prompt"
+                    ]
+                  }
                 ]
               },
               {
-                "required": [
-                  "prompt"
+                "anyOf": [
+                  {
+                    "required": [
+                      "correct"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "answer"
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "options": {
+                        "type": "array",
+                        "minItems": 2,
+                        "maxItems": 6,
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "text",
+                            "correct"
+                          ],
+                          "properties": {
+                            "text": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "correct": {
+                              "type": "boolean"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      }
+                    }
+                  }
                 ]
               }
             ],
