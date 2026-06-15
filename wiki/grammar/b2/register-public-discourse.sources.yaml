@@ -45,3 +45,15 @@ sources:
   title: § 84. Плекай у собі допитливість
   page: 232
   grade: 5
+- id: S8
+  file: 10-klas-ukrmova-karaman-2018_s0685
+  type: textbook
+  title: § 72. Види дієслів
+  page: 181
+  grade: 10
+- id: S9
+  file: 11-klas-istoriya-ukr-galimov-2024_s0849
+  type: textbook
+  title: § 21. Державотворчий процес у перші роки незалежності
+  page: 163
+  grade: 11
