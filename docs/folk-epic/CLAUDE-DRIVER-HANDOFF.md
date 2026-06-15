@@ -58,11 +58,12 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 36 HANDOFF (2026-06-15 — FIVE-DOSSIER batch #20–#24 ALL BUILT (codex/gpt-5.5) + independently CORPUS-HAMMERED + accumulated into PR #3221: #20 suspilno-pobutovi · #21 narodni-balady · #22 pisni-literaturnoho-pokhodzhennia · #23 charivni-kazky · #24 kazky-pro-tvaryn; dossiers 19→24/42) — **RESUME HERE**
+## ▶▶▶ SESSION 36 HANDOFF (2026-06-15 — SIX-DOSSIER batch #20–#25 ALL BUILT (codex/gpt-5.5) + independently CORPUS-HAMMERED + accumulated into PR #3221: #20 suspilno-pobutovi · #21 narodni-balady · #22 pisni-literaturnoho-pokhodzhennia · #23 charivni-kazky · #24 kazky-pro-tvaryn · #25 sotsialno-pobutovi-kazky; dossiers 19→25/42) — **RESUME HERE**
 
 > **⏱ HONEST SCOPE:** Research layer only — a sustained dossier batch (user: "keep working until ~700k context").
-> Dossiers **19 → 24/42** committed to PR #3221 (suspilno-pobutovi + narodni-balady + pisni-literaturnoho-
-> pokhodzhennia + charivni-kazky + kazky-pro-tvaryn — E-block tail + F-block prose start). Wikis 15/42,
+> Dossiers **19 → 25/42** committed to PR #3221 (suspilno-pobutovi + narodni-balady + pisni-literaturnoho-
+> pokhodzhennia + charivni-kazky + kazky-pro-tvaryn + sotsialno-pobutovi-kazky — E-block tail + F-block prose
+> #23–#25). Wikis 15/42,
 > modules 6/42 UNCHANGED. Folk nav still HIDDEN; surfacing STILL GATED (no module cleanly clears LLM QG; both
 > infra blockers #3079 + #3162 still OPEN → not mine to implement). Chose the dossier queue as the determinable,
 > unblocked, in-lane content path (building module #7 now = a gated, pedagogically-weak artifact while #3162
@@ -116,24 +117,40 @@
   (= the Ukrainian Reynard branch); «Лисиця та Рак»/«Вовк і Чапля» textbook-provenance (verify_quote 0.0,
   honest). §9: «южнорусские»/Афанасьєв imperial naming rejected; Reynard pan-European-not-derivative; Soviet
   byka-class-satire lens named; totemistic substrate (ЕУ `feaa5fa7_c0640`).
+- **DOSSIER #25 `sotsialno-pobutovi-kazky`** (F · Prose — social-everyday tales; folds небилиці/притчі/байки;
+  commit `e2f4b63f1c` ff-merged, 542 lines/3729 words). Corpus-hammered: anticlerical «Кирик» verse-tale
+  **1.0** `21c791c4_c0148` (Антологія); Хоткевич «Правда і Кривда» **1.0** `9e4f1971_c0000`. Honest title
+  roster (Про Правду і Кривду / Як мужик пана обдурив / Піп і наймит / Язиката Хвеська). §9: Soviet
+  class-struggle over-reading rejected (УЛЕ `fc2291b5_c3053` = most-Sovietized kazka category); anticlericalism
+  ≠ atheism; **imperial church-state CENSORSHIP** of «Кирик» as «антиправославний, уніятський» (`21c791c4_c0172`);
+  «русская сказка»/Пушкін «Поп и Балда» resisted; байка genealogy.
 
 ### 🧱 KEY FACTS / GOTCHAS
+- **`verify_quote` author normalization needs the EXACT stored author form** — `Хоткевич` → 0.0 but
+  `Хоткевич Г.` → 1.0 for the SAME chunk `9e4f1971_c0000`. When a fragment you KNOW is in a chunk fails
+  verify, try the stored author form (with initial / full name) before ledgering it as a do-not-quote. (#M-11
+  catch this session: codex's reported 1.0 reproduced only once I used `Хоткевич Г.`.)
 - Dossiers are NOT python_qg-gated (docs/research/) → VESUM-absent but real/attested terms are fine in prose
-  (строкарство = УЛЕ-attested; чумаківна/чумачиха = ЕСУМ; інципіт = standard folkloristic term). No coinages shipped.
+  (строкарство = УЛЕ-attested; чумаківна/чумачиха = ЕСУМ; інципіт/казка-новела/казка-притча = standard
+  folkloristic terms). No coinages shipped.
 - The folk genre primaries ingested in Session 35 (narod chunks) gave us the ONE clean folk-corpus §4 verbatim
   («Ой на горі»); most suspilno-pobutova verbatims still live embedded in scholarly works (Костомаров/Максимович),
   so §4 leaned scholarly-witness + the honest title-only roster. Corpus still THIN for this genre.
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **#25 `sotsialno-pobutovi-kazky` — BRIEF ALREADY WRITTEN + corpus-pre-grounded** at
-   `/tmp/folk-dossier-sotsialno-pobutovi-kazky-brief.md` (anchor: anticlerical «Кирик» verse-tale
-   `verify_quote(Антологія) 1.0` `21c791c4_c0148` + its imperial-censorship §9 angle; УЛЕ `fc2291b5_c3053`/
-   Бріцина `fc2291b5_c3055`; Хоткевич «Правда і Кривда» `9e4f1971_c0000` — re-verify apostrophe-free). Fire it
-   `--base codex/folk-dossier-suspilno-pobutovi` (the #3221 branch), then corpus-hammer + accumulate (ff/
-   cherry-pick) + push, same as #20–#24. Then continue F-block: **#26 `narodni-lehendy`**, #27 `istorychni-
-   perekazy`, #28 narodni-opovidannia, #29 prykazky-ta-pryslivia … (`phase-folk-queue.md`). Same proven loop:
-   driver corpus-pre-grounds (own verify_quote → exact chunk_ids + §4 honesty protocol) → codex/gpt-5.5
-   `--worktree` → independent corpus-hammer (#M-11, re-run verify_quote myself) → accumulate into the batch PR → push.
+1. **Continue the F-block prose queue: #26 `narodni-lehendy`** (legends), then #27 `istorychni-perekazy`,
+   #28 `narodni-opovidannia-buvalshchyny-memoraty`, #29 `prykazky-ta-pryslivia`, #30 zahadky, #31 narodni-
+   anekdoty, #32 dytiachyi-folklor-kolyskovi (`phase-folk-queue.md` — dossiers now 25/42). Proven loop:
+   driver corpus-pre-grounds (own verify_quote → exact chunk_ids + §4 honesty protocol; for PROSE genres the
+   §4 model = scholarly-excerpt + textbook/literary-witness + honest title-only roster, since we hold no full
+   narod prose verbatim) → codex/gpt-5.5 `--worktree --base codex/folk-dossier-suspilno-pobutovi` (the batch
+   branch, OR a fresh branch off main once #3221 merges) → independent corpus-hammer (#M-11, re-run
+   verify_quote myself) → accumulate (ff/cherry-pick) → push.
+2. **INFRA (user decision pending):** I recommended to the user that I implement **#3162's infra side**
+   (route `_build_textbook_excerpt_context` ~L1775 to the literary corpus, mirror #2973; + non-word-counted
+   reading panel) — the concrete folk-pedagogy unlock now the corpus side is done (precedent: #3083 Session 22
+   override). Awaiting their explicit go (crosses the file-don't-implement boundary). **#3079** (module
+   self-converge EPIC) = bigger, route to infra orchestrator. Both still OPEN/unassigned/zero-movement.
 2. **Surfacing folk: STILL GATED** — do NOT un-hide until a module cleanly clears LLM QG (needs #3162 infra-side
    + a re-grounded re-review). Both #3079 + #3162 OPEN, infra lane — I track, do not implement.
 3. **#3162 corpus side DONE** (S35); INFRA side (route `_build_textbook_excerpt_context` to the literary corpus
