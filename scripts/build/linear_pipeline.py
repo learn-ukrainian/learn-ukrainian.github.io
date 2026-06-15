@@ -5067,6 +5067,16 @@ def parse_review_response(
     # raises "missing quoted excerpt" even when 3 valid quotes are present.
     if isinstance(evidence_quotes, list) and evidence_quotes:
         entry["evidence_quotes"] = evidence_quotes
+    rubric_mapping = _rubric_mapping_from_payload(payload)
+    if rubric_mapping:
+        entry["rubric_mapping"] = rubric_mapping
+    raw_flags = payload.get("flags")
+    if raw_flags is None:
+        raw_flags = payload.get("flags_raised")
+    if isinstance(raw_flags, str):
+        raw_flags = [raw_flags]
+    if isinstance(raw_flags, list) and raw_flags:
+        entry["flags"] = [_clean_telemetry_text(flag, 120) for flag in raw_flags if str(flag).strip()]
     validate_llm_review_report({**_placeholder_review_report(), dim: entry})
     if verdict not in {"PASS", "REVISE", "REJECT"}:
         raise LinearPipelineError(f"LLM QG response for {dim} has invalid verdict")
