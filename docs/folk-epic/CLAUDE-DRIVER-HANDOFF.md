@@ -99,11 +99,17 @@
 - Markdownlint 0. Posted a design-summary comment on **issue #3079**.
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **I BUILD #3079 B1 (the quick win) — IN FLIGHT (dispatched this session per #0.2 infra-ownership).** The
-   insert-only LLM-QG pedagogical correction loop (reuses ADR-007-sanctioned `insert_after`; NO ADR change, NO
-   `test_no_rewrite_contract` change; core a1–c2 no-op). After it lands: P3-validate on koliadky/dumy; open the
-   CONDITIONAL B2 deepen carve-out (P5, needs user sign-off) ONLY if insert-only can't reach ≥8. Full spec: the
-   #3079 design doc + PR #3271.
+1. **#3079 B1 — BUILT ✅ → PR #3275 (CI-CLEAN, ready-to-merge).** I implemented it per #0.2 (designed → briefed →
+   dispatched codex → reviewed code + verified locally). Delivered: `scripts/common/review_loop.py` (shared
+   best-round/MIN-guard, wiki review.py refactored onto it — 44 wiki tests green), `run_llm_qg_with_corrections`
+   (bounded loop: seminar 3 rounds / core 1 = strict no-op; best-round restore; re-gate via python_qg with
+   revert-on-fail), `linear-correction-pedagogical.md` (insert_after-ONLY corrector), v7_build wiring
+   (seminar→loop, core→single-pass). Guardrails verified: NO ADR change, `test_no_rewrite_contract` untouched +
+   passing, no forbidden symbols, no new vocab. 81 tests green locally; CI 18/18 + 6 skip, mergeStateStatus CLEAN.
+   **Merge held for orchestrator reconciliation (shared pipeline infra; per the "never merge to main" boundary
+   #0.2 keeps) — TRACK-UPDATE'd `needs=merge`.** NEXT after merge: **P3-validate** — run the loop e2e on
+   koliadky/dumy, confirm pedagogical reaches ≥8 unaided; open the CONDITIONAL B2 deepen carve-out (P5, needs
+   user sign-off) ONLY if insert-only can't reach ≥8. Full spec: the #3079 design doc + PR #3271.
 2. **SCALE folk to ≥8 + surface — sequencing SURVEYED this session (verified, not guessed):** the `type:primary`
    sweep on the 6 built plans found: **koliadky (4 refs → 9.2 ✅), dumy (3 refs → rebuild-ready)** vs **zamovliannia
    #03 / narodni-viruvannia #02 / kalendarna — plans are STUBS** (`status: stub`, `references: [type: pending]`,
