@@ -2,20 +2,29 @@ module: b2-052
 level: B2
 sequence: 52
 slug: pronoun-system-advanced
-version: 1.0.3
+version: 1.0.4
+lifecycle: locked
+reviewed_at: '2026-06-15T12:51:30Z'
+reviewed_by: codex/b2-wiki-readiness-batch-14
+review_notes: >-
+  Batch 14 wiki readiness lock. Cleared the remaining pronoun-system-advanced
+  VERIFY markers by checking the весь/всі accusative table and negative-pronoun
+  split rule against registered textbook sources, and removed unrelated
+  unsourced greeting/name-introduction claims from the pronoun page. See
+  wiki/.reviews/grammar/b2/pronoun-system-advanced-review-LOCKED.md.
 title: Складна система займенників
 subtitle: 'Складна система займенників: зворотні, взаємні, означальні'
 focus: grammar
 pedagogy: PPP
 word_target: 4000
 objectives:
-- Learner can correctly use the reflexive pronoun 'себе' in all cases and 
+- Learner can correctly use the reflexive pronoun 'себе' in all cases and
   distinguish it from reflexive verbs (-ся).
 - Learner can apply the reciprocal pronoun construction 'один одного' to express
   mutual actions.
 - 'Learner can distinguish and use definitive pronouns (означальні займенники): сам,
   самий, весь, кожний, всякий, інший.'
-- Learner can understand semantic nuances created by different pronoun choices 
+- Learner can understand semantic nuances created by different pronoun choices
   in complex texts.
 reading_situations:
 - source_type: стаття з психології
@@ -24,11 +33,11 @@ reading_situations:
   - взаємні дії
   - рефлексія
   - означальні займенники
-  motivation: Reading about self-reflection provides natural, dense usage of 
+  motivation: Reading about self-reflection provides natural, dense usage of
     'себе' and 'один одного'.
 writing_tasks:
 - task_type: есе-рефлексія
-  prompt: Напишіть коротке есе на тему 'Як важливо розуміти самого себе та 
+  prompt: Напишіть коротке есе на тему 'Як важливо розуміти самого себе та
     підтримувати одне одного', використовуючи зворотні та взаємні займенники.
   requirements:
   - мінімум 200 слів
@@ -38,7 +47,7 @@ writing_tasks:
     займенників. Очікується текст на зразок: ''Щоб краще розуміти самих
     себе, ми маємо чесно ставити собі запитання. Люди підтримують одне
     одного тоді, коли кожний бере на себе відповідальність за власні слова''.'
-  motivation: Practice using advanced pronouns to express abstract, 
+  motivation: Practice using advanced pronouns to express abstract,
     introspective thoughts.
 listening_situations:
 - media_type: подкаст
@@ -46,7 +55,7 @@ listening_situations:
   focus_points:
   - ідентифікація займенників
   - розуміння контексту
-  motivation: Listening for semantic nuances introduced by definitive pronouns 
+  motivation: Listening for semantic nuances introduced by definitive pronouns
     (кожний vs всякий).
 discussion_topics:
 - context: Обговорення лідерства та відповідальності.
@@ -70,7 +79,7 @@ content_outline:
   - 'Usage with prepositions: ''один з одним'', ''один на одного''.'
   - 'Gender and number variations: ''одна одну'', ''одні одних'' (though ''один одного''
     is often used universally).'
-  - Comparison with reflexive verbs for reciprocal actions (зустрічатися vs 
+  - Comparison with reflexive verbs for reciprocal actions (зустрічатися vs
     бачити один одного).
 - section: 'Означальні займенники: сам, самий, весь, кожний'
   words: 1000

@@ -37,9 +37,3 @@ sources:
   title: БУДОВА СЛОВА. ОРФОГРАФІЯ
   page: 60
   grade: 5
-- id: S8
-  file: ext-article-0
-  type: external
-  title: Словотвір — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Словотвір
-  domain: uk.wikipedia.org
