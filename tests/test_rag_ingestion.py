@@ -378,3 +378,48 @@ class TestParseFmuItunes:
         assert len(result) == 1
         assert result[0]["episode"] == 15
         assert result[0]["series"] == "FMU"
+
+
+# ── scrape_ukrlib: narod folk worklist (forgery/prose exclusion) ──
+
+class TestNarodWorklist:
+    """The /narod/ folk worklist crawls song genres wholesale but must NEVER
+    surface the «Велесова книга» forgery or the prose казки misfiled under
+    Народний епос (genre 11)."""
+
+    def test_build_excludes_forgery_and_prose_includes_curated(self, monkeypatch):
+        import scrape_ukrlib as su
+
+        # Stub the live crawl so the test is network-free. Song genres only.
+        fake = {
+            2: [(0, "Жали женчики жали")],
+            3: [(5, "Пісня про Байду")],
+            5: [(2, "Як ще не було початку світа")],
+            6: [(3, "Щедрик щедрик щедрівочка")],
+        }
+        monkeypatch.setattr(su, "_discover_narod_bookids", lambda gid: fake.get(gid, []))
+        works = su._build_narod_worklist()
+        pairs = {(w["genre_id"], w["bookid"]) for w in works}
+
+        # Song genres crawled wholesale
+        assert (2, 0) in pairs and (6, 3) in pairs
+        # Curated genres (веснянки id=0 non-enumerable + epos думи) included
+        assert (0, 0) in pairs        # Ой весна, весна (веснянка)
+        assert (11, 1) in pairs       # Втеча трьох братів — authentic duma
+        # Forgery + prose казки are NEVER included (not in the curated epos list)
+        assert (11, 0) not in pairs   # «Велесова книга» forgery
+        assert (11, 14) not in pairs  # «Летючий корабель» prose казка
+        # Per-genre tags assigned
+        tags = {w["genre"] for w in works}
+        assert {"carol", "duma", "spring_song", "harvest_song", "historical_song"} <= tags
+
+    def test_exclude_set_blocks_a_song_genre_listing(self, monkeypatch):
+        import scrape_ukrlib as su
+
+        # If a bad bookid ever appears in a song-genre listing, NAROD_EXCLUDE blocks it.
+        monkeypatch.setattr(su, "_discover_narod_bookids",
+                            lambda gid: [(0, "good"), (99, "bad")] if gid == 2 else [])
+        monkeypatch.setattr(su, "NAROD_EXCLUDE", {(2, 99)})
+        pairs = {(w["genre_id"], w["bookid"]) for w in su._build_narod_worklist()}
+        assert (2, 0) in pairs
+        assert (2, 99) not in pairs

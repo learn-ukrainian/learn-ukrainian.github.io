@@ -1090,13 +1090,70 @@ NAROD_AUTHOR = "Народна творчість"
 NAROD_PERIOD = "middle_ukrainian"  # Cossack-era oral epos (XVI–XVIII)
 NAROD_YEAR = 1600  # approximate composition era; oral tradition, no fixed date
 
-NAROD_WORKS = [
-    # genre 3 = Історичні пісні; genre 11 = Народний епос (думи)
-    {"genre_id": 3, "bookid": 5, "title": "Пісня про Байду", "genre": "folk_song"},
-    {"genre_id": 11, "bookid": 1, "title": "Втеча трьох братів з Азова", "genre": "duma"},
-    {"genre_id": 11, "bookid": 2, "title": "Дума про Олексія Поповича (Гей, не дивуйте, добрії люди)", "genre": "duma"},
-    {"genre_id": 11, "bookid": 3, "title": "Зажурилась Україна", "genre": "folk_song"},
+# Authentic-folk genre coverage on ukrlib /narod/.
+# Song genres are crawled WHOLESALE (every work listed under them is an authentic
+# folk song). Two genres need curation and are NOT crawled wholesale:
+#   • genre 11 (Народний епос) mixes in the «Велесова книга» FORGERY (bookid 0)
+#     and prose казки (bookids 11–14) → INCLUDE-list the authentic думи/пісні only.
+#   • Веснянки live under id=0, which `book.php?id=0` does NOT enumerate (id=0 is
+#     falsy server-side) → explicit allowlist (bookids verified from the /narod/ index).
+# genre_id → (label, genre_tag) for the wholesale-crawled song genres:
+NAROD_SONG_GENRES = {
+    2: ("Жниварські пісні", "harvest_song"),
+    3: ("Історичні пісні та коломийки", "historical_song"),
+    5: ("Колядки", "carol"),
+    6: ("Колядки й щедрівки", "carol"),
+}
+# Curated / non-enumerable genres: explicit (bookid, title) allowlists.
+NAROD_CURATED = [
+    {"genre_id": 0, "label": "Веснянки", "genre_tag": "spring_song", "works": [
+        (0, "Ой весна, весна, ти красна"),
+        (1, "Веснянки"),
+        (2, "Ой виорю я нивку широкую"),
+    ]},
+    {"genre_id": 11, "label": "Народний епос", "genre_tag": "duma", "works": [
+        (1, "Втеча трьох братів з Азова"),
+        (2, "Дума про Олексія Поповича (Гей, не дивуйте, добрії люди)"),
+        (3, "Зажурилась Україна"),
+        (4, "Максим козак Залізняк"),
+        (5, "Ой на горі да женці жнуть"),
+    ]},
 ]
+# Per-work hard exclusions (genre_id, bookid) — belt-and-braces against any
+# forgery/prose that a future listing change could surface in a song genre.
+NAROD_EXCLUDE = {(11, 0), (11, 11), (11, 12), (11, 13), (11, 14)}
+
+
+def _discover_narod_bookids(genre_id: int) -> list[tuple[int, str]]:
+    """Crawl `/narod/book.php?id=N` → sorted [(bookid, title), …] for every work.
+
+    Handles both single- and double-quoted `href` (ukrlib mixes the two).
+    """
+    html = fetch_page(f"{BASE_URL}/narod/book.php?id={genre_id}")
+    rx = re.compile(rf"printout\.php\?id={genre_id}&bookid=(\d+)['\"]>([^<]+)<")
+    seen: dict[int, str] = {}
+    for bid_s, title in rx.findall(html):
+        bid = int(bid_s)
+        seen.setdefault(bid, title.strip())
+    return sorted(seen.items())
+
+
+def _build_narod_worklist() -> list[dict]:
+    """Assemble the full folk worklist: song genres crawled + curated allowlists."""
+    works: list[dict] = []
+    for gid, (label, tag) in NAROD_SONG_GENRES.items():
+        for bid, title in _discover_narod_bookids(gid):
+            if (gid, bid) in NAROD_EXCLUDE:
+                continue
+            works.append({"genre_id": gid, "bookid": bid, "title": title,
+                          "genre": tag, "genre_label": label})
+    for cfg in NAROD_CURATED:
+        for bid, title in cfg["works"]:
+            if (cfg["genre_id"], bid) in NAROD_EXCLUDE:
+                continue
+            works.append({"genre_id": cfg["genre_id"], "bookid": bid, "title": title,
+                          "genre": cfg["genre_tag"], "genre_label": cfg["label"]})
+    return works
 
 
 def scrape_narod_work(genre_id: int, bookid: int) -> tuple[str, str]:
@@ -1113,24 +1170,29 @@ def scrape_narod_work(genre_id: int, bookid: int) -> tuple[str, str]:
 
 
 def scrape_narod(dry_run: bool = False) -> int:
-    """Scrape the curated народна творчість allowlist into one JSONL.
+    """Scrape the full ukrlib /narod/ folk worklist into one JSONL.
 
-    Idempotent: rewrites ukrlib-narod-dumy.jsonl each run. Folk songs are short,
-    so chunk with a low min_tokens floor so short texts aren't dropped.
+    Song genres are crawled wholesale; Народний епос and веснянки use curated
+    allowlists (forgery/prose-safe). Idempotent: rewrites ukrlib-narod-dumy.jsonl
+    each run. Folk songs are short, so chunk with a low min_tokens floor so short
+    texts aren't dropped; any work whose printout page is empty (<50 chars) is
+    skipped so a stale curated bookid silently drops out.
     """
     output_path = LITERARY_DIR / "ukrlib-narod-dumy.jsonl"
-    print(f"\n{'='*60}\n[narod] {NAROD_AUTHOR} — {len(NAROD_WORKS)} works\n{'='*60}")
+    worklist = _build_narod_worklist()
+    n = len(worklist)
+    print(f"\n{'='*60}\n[narod] {NAROD_AUTHOR} — {n} works\n{'='*60}")
 
     if dry_run:
-        for w in NAROD_WORKS:
-            print(f"    genre={w['genre_id']} bookid={w['bookid']}  {w['title']}")
+        for w in worklist:
+            print(f"    genre={w['genre_id']:>2} bookid={w['bookid']:>3}  [{w['genre']:<15}]  {w['title']}")
         return 0
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     total_chunks = 0
     with open(output_path, "w", encoding="utf-8") as f:
-        for i, w in enumerate(NAROD_WORKS, 1):
-            print(f"\n  [{i}/{len(NAROD_WORKS)}] {w['title']} (genre={w['genre_id']}, bookid={w['bookid']})")
+        for i, w in enumerate(worklist, 1):
+            print(f"\n  [{i}/{n}] {w['title']} (genre={w['genre_id']}, bookid={w['bookid']})")
             try:
                 text, source_url = scrape_narod_work(w["genre_id"], w["bookid"])
             except Exception as e:
@@ -1150,12 +1212,12 @@ def scrape_narod(dry_run: bool = False) -> int:
                     "language_period": NAROD_PERIOD,
                 })
                 f.write(json.dumps(chunk, ensure_ascii=False) + "\n")
-            print(f"    {len(text):,} chars → {len(chunks)} chunks")
+            print(f"    {len(text):,} chars → {len(chunks)} chunks  [{w['genre']}]")
             total_chunks += len(chunks)
-            if i < len(NAROD_WORKS):
+            if i < n:
                 time.sleep(DELAY_BETWEEN_WORKS)
 
-    print(f"\n  [narod] {total_chunks} chunks → {output_path.name}")
+    print(f"\n  [narod] {total_chunks} chunks from {n} works → {output_path.name}")
     return total_chunks
 
 
