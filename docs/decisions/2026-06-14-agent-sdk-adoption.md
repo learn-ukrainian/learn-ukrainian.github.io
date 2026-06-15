@@ -1,5 +1,8 @@
 # DEFERRED — Claude Agent SDK adoption for V7 pipeline (parallel-shim with CLI subprocess)
 
+> **⚠ UPDATE 2026-06-15: the `claude -p` / $200-pool construct described below was CANCELLED.** The headless Claude dispatch lane is not being sunset/quota-gated as planned; Anthropic indicated they want a better construct (TBD). Treat the 2026-06-15 quota-pool specifics here as superseded.
+
+
 **Status:** DEFERRED — resolved 2026-06-14 as nonblocking infrastructure backlog.
 **Disposition:** Adoption is not a pending content-build decision. Do not block B1 or A1/A2 workbook work on this card. Re-propose only with current SDK economics, concrete repo integration points, and a bounded validation plan.
 **Original status:** RECONSIDER — surfaced 2026-05-13, demoted same day after user routing direction shifted the cost premise. Adoption is not cancelled; the sequencing and the "wins" framing both need a rethink before re-PROPOSED.

@@ -23,7 +23,7 @@ methodology. A result table answers "what happened in that run." A methodology
 answers "what conditions make a result fair enough to update routing policy."
 
 The V7 writer choice is now a high-leverage routing decision because the current
-A1 writer lane sunsets on 2026-06-15. The cost difference between writers is
+(The 2026-06-15 A1-writer-lane sunset was CANCELLED — the Claude lane stays available.) The cost difference between writers is
 large enough to matter, but quality remains first. This methodology keeps those
 two pressures in the right order: measure quality deterministically first, then
 normalize cost per passing module.

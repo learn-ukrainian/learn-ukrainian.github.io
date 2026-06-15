@@ -18,7 +18,7 @@ Each cell carries:
 - **Known weakness** — failure mode we've observed.
 - **Known strength** — what they do uniquely well.
 
-**Best ≠ primary.** Best = highest eval score. Primary = best after factoring quota, cost, latency, and parallel-load. Example: Opus 4.7 might be the *best* adversarial reviewer, but Codex is *primary* for routine reviews because the $200/mo Claude programmatic pool (post-2026-06-15) is reserved for the user's own cold-start sessions, not orchestrator dispatch.
+**Best ≠ primary.** Best = highest eval score. Primary = best after factoring quota, cost, latency, and parallel-load. Example: Opus 4.7 might be the *best* adversarial reviewer, but Codex is *primary* for routine reviews because of routine-work quota/cost economics (NOTE 2026-06-15: the post-2026-06-15 Claude-dispatch sunset was CANCELLED — the lane is available again; route by fit/cost; a better quota construct is TBD).
 
 ---
 
@@ -409,7 +409,7 @@ The user said: *"quality foremost, but if Chinese models bring quality we use th
 the writer choice has a wide cost spread across the curriculum:
 
 - All-Claude-Opus pre-June-15: ~$5-15K total writer cost
-- All-Codex post-June-15: ~$3-8K (Codex's lane after sunset)
+- All-Codex (cost-ceiling scenario): ~$3-8K (the post-June-15 Claude sunset that drove this was CANCELLED; kept as a cost-bound reference only)
 - All-DeepSeek-pro: ~$1-3K (cheapest validated quality)
 - All-Gemini-3.1-pro: 0$ (unmetered, but writer quality unproven for B1+ modules — only validated for wikis)
 
