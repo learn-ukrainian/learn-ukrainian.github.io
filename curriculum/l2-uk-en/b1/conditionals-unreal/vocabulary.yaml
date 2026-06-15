@@ -1,0 +1,148 @@
+- lemma: умовний спосіб
+  translation: conditional mood
+  pos: phrase
+  usage: Умовний спосіб допомагає говорити про уявні ситуації.
+- lemma: нереальна умова
+  translation: unreal condition
+  pos: phrase
+  usage: Нереальна умова починається словом якби.
+- lemma: реальна умова
+  translation: real condition
+  pos: phrase
+  usage: Реальна умова описує можливість, яка ще може статися.
+- lemma: якби
+  translation: if, if only
+  pos: conjunction
+  usage: Якби я мав більше часу, я б читав щовечора.
+- lemma: якщо
+  translation: if
+  pos: conjunction
+  usage: Якщо матиму час, поїду на зустріч.
+- lemma: коли б
+  translation: if, were it that
+  pos: conjunction phrase
+  usage: Коли б я мав нагоду, написав би довший лист.
+- lemma: як би
+  translation: how would
+  pos: phrase
+  usage: Як би ти це пояснив простіше?
+- lemma: б
+  translation: conditional particle
+  pos: particle
+  usage: Вона б сказала, якби знала адресу.
+- lemma: би
+  translation: conditional particle
+  pos: particle
+  usage: Він би допоміг, якби мав інструменти.
+- lemma: частка
+  translation: particle
+  pos: noun:f
+  usage: Частка б або би стоїть у частині наслідку.
+- lemma: умова
+  translation: condition
+  pos: noun:f
+  usage: Умова пояснює, за яких обставин дія можлива.
+- lemma: наслідок
+  translation: result, consequence
+  pos: noun:m
+  usage: У другій частині речення названо наслідок.
+- lemma: уявний
+  translation: imagined, hypothetical
+  pos: adjective
+  usage: Уявний сценарій не збігається з реальністю.
+- lemma: контрфактичний
+  translation: counterfactual
+  pos: adjective
+  usage: Контрфактичне речення суперечить реальному факту.
+- lemma: жаль
+  translation: regret, pity
+  pos: noun:m
+  usage: Жаль часто виражаємо реченням якби я знав.
+- lemma: шкода
+  translation: it is a pity
+  pos: adverbial noun
+  usage: Шкода, що ми не поїхали на фестиваль.
+- lemma: мрія
+  translation: dream
+  pos: noun:f
+  usage: Мрія може починатися з якби я міг.
+- lemma: перешкода
+  translation: obstacle
+  pos: noun:f
+  usage: Якби не перешкода, ми б завершили роботу.
+- lemma: нагода
+  translation: opportunity
+  pos: noun:f
+  usage: Якби була нагода, я б поговорив із викладачем.
+- lemma: адреса
+  translation: address
+  pos: noun:f
+  usage: Якби вона знала адресу, приїхала б швидше.
+- lemma: квиток
+  translation: ticket
+  pos: noun:m
+  usage: Якби я купив квиток учора, поїхав би сьогодні.
+- lemma: фестиваль
+  translation: festival
+  pos: noun:m
+  usage: Якби не робота, я б поїхала на фестиваль.
+- lemma: впоратися
+  translation: to manage, to cope
+  pos: verb
+  usage: Якби не ти, я б не впорався.
+- lemma: встигнути
+  translation: to be in time
+  pos: verb
+  usage: Якби ми вийшли раніше, встигли б на потяг.
+- lemma: спізнитися
+  translation: to be late
+  pos: verb
+  usage: Якби не затор, ми б не спізнилися.
+- lemma: знати
+  translation: to know
+  pos: verb
+  usage: Якби я знав, я б допоміг.
+- lemma: мати
+  translation: to have
+  pos: verb
+  usage: Якби я мав більше часу, тренувався б щодня.
+- lemma: могти
+  translation: to be able to
+  pos: verb
+  usage: Якби я міг, поїхав би завтра.
+- lemma: жити
+  translation: to live
+  pos: verb
+  usage: Якби ми жили ближче, бачилися б частіше.
+- lemma: допомогти
+  translation: to help
+  pos: verb
+  usage: Він би допоміг, якби знав про проблему.
+- lemma: інакше
+  translation: differently, otherwise
+  pos: adverb
+  usage: Якби я знав раніше, вчинив би інакше.
+- lemma: тоді
+  translation: then
+  pos: adverb
+  usage: Якби я тоді послухав пораду, все було б простіше.
+- lemma: раніше
+  translation: earlier
+  pos: adverb
+  usage: Якби ми вийшли раніше, не запізнилися б.
+- lemma: обов'язково
+  translation: definitely
+  pos: adverb
+  usage: Якби я знав про фестиваль, обов'язково купив би квитки.
+- lemma: соломка
+  translation: straw
+  pos: noun:f
+  usage: Якби знав, де впадеш, соломки б підстелив.
+- lemma: підстелити
+  translation: to spread underneath
+  pos: verb
+  usage: У прислів'ї людина підстелила б соломку.
+- lemma: прислів'я
+  translation: proverb
+  pos: noun:n
+  usage: Прислів'я часто зберігає старі граматичні формули.
