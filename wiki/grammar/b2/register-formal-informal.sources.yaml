@@ -49,3 +49,64 @@ sources:
   title: § 96. Зміст моїх емоцій
   page: 240
   grade: 6
+- id: S9
+  file: 7-klas-ukrmova-avramenko-2024_s3822
+  type: textbook
+  title: § 33. Відмінювання дієслів бути, їсти, дати та дієслів з основою на -вісти
+  page: 76
+  grade: 7
+- id: S10
+  file: anna-ohoiko-500-verbs_s7013
+  type: textbook
+  title: "Verb 497: читати | почитати, прочитати"
+  author: Anna Ohoiko
+- id: S11
+  file: anna-ohoiko-500-verbs_s6731
+  type: textbook
+  title: "Verb 215: казати | сказати"
+  author: Anna Ohoiko
+- id: S12
+  file: 7-klas-ukrmova-avramenko-2024_s3825
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ
+  page: 83
+  grade: 7
+- id: S13
+  file: 7-klas-ukrmova-avramenko-2024_s3826
+  type: textbook
+  title: § 37. Творення дієслів наказового й умовного способів
+  page: 86
+  grade: 7
+- id: S14
+  file: 6-klas-ukrmova-litvinova-2023_s3336
+  type: textbook
+  title: § 28. Кличний відмінок
+  page: 140
+  grade: 6
+- id: S15
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1190
+  type: textbook
+  title: § 59. –60. ЕТИКЕТНІ ЖАНРИ
+  page: 201
+  grade: 11
+- id: S16
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1234
+  type: textbook
+  title: § 43. Стилістичні особливості засобів словотвору
+  page: 189
+  grade: 11
+- id: S17
+  file: ulp-1-00-lesson-notes_s6278
+  type: textbook
+  title: "Lesson 2: Formal Greetings and Saying Goodbye in Ukrainian + Pronouns"
+  author: Ukrainian Lessons Podcast
+- id: S18
+  file: how-many:p12-12
+  type: ukrainian_wiki
+  title: "Педагогіка A1: How Many"
+  section_path: "Педагогіка A1: How Many > Послідовність введення"
+- id: S19
+  file: society-and-media:p14-14-s2
+  type: ukrainian_wiki
+  title: "Граматика B1: Суспільство і медіа"
+  section_path: "Граматика B1: Суспільство і медіа > Деколонізаційні застереження"
