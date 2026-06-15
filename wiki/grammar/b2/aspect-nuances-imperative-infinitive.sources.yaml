@@ -14,10 +14,10 @@ sources:
   page: 54
   grade: 11
 - id: S3
-  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
+  file: 7-klas-ukrmova-litvinova-2024_s3926
   type: textbook
-  title: МЕРЕЖЕВИЙ ЕТИКЕТ
-  page: 49
+  title: § 21. Вид і час дієприслівників
+  page: 121
   grade: 7
 - id: S4
   file: 7-klas-ukrmova-litvinova-2024_s3910
@@ -32,9 +32,15 @@ sources:
   page: 83
   grade: 7
 - id: S6
-  file: ext-article-0
+  file: https://www.ukrainianlessons.com/episode94/
   type: external
   title: ULP 3-94 | У піцерії – At the Pizzeria + Sound Changes between Imperfective
     and Perfective Verbs in Ukrainian
   url: https://www.ukrainianlessons.com/episode94/
   domain: ukrainianlessons.com
+- id: S7
+  file: 8-klas-ukrmova-avramenko-2025_s4601
+  type: textbook
+  title: § 36. УСНИЙ ДІАЛОГ
+  page: 81
+  grade: 8
