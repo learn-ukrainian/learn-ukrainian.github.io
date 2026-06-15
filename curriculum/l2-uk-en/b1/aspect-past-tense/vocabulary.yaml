@@ -13,7 +13,7 @@
 - lemma: видова пара
   translation: aspectual pair
   pos: noun phrase
-  usage: Писати і написати утворюють видову пару.
+  usage: Писати і написати утворюють видову пару; інші контрасти треба перевіряти за значенням.
 - lemma: результат
   translation: result
   pos: noun
@@ -46,14 +46,14 @@
   translation: habitual past
   pos: noun phrase
   usage: У звичному минулому ми описуємо те, що відбувалося регулярно.
-- lemma: тло
-  translation: background
+- lemma: фон
+  translation: background, writing frame
   pos: noun
-  usage: Недоконаний вид часто створює тло для головної події.
+  usage: У розповіді слово фон допомагає назвати обставини, на яких виділяється подія.
 - lemma: подія
-  translation: event
+  translation: event, episode
   pos: noun
-  usage: Доконаний вид часто просуває подію вперед.
+  usage: Подія в цьому уроці означає окремий епізод у розповіді, а не новий вид дієслова.
 - lemma: намір мовця
   translation: speaker's intention
   pos: noun phrase
@@ -141,7 +141,7 @@
 - lemma: сказати
   translation: to say
   pos: verb perfective
-  usage: Вона сказала головну думку дуже коротко.
+  usage: Вона сказала головну думку дуже коротко; це доконаний відповідник для конкретного повідомлення.
 - lemma: брати
   translation: to take
   pos: verb imperfective
