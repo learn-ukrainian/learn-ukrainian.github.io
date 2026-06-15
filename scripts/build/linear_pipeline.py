@@ -1080,8 +1080,9 @@ def run_wiki_completeness_gate(
         raise LinearPipelineError(f"No wiki article found for level={level_key!r}, slug={slug_key!r}")
     from scripts.audit.wiki_completeness_gate import check_wiki_completeness
 
-    # TODO(folk-seminar-gate): wire corpus verify_quote for seminar levels once
-    # there is an in-process function that accepts (source_id,
+    # TODO(folk-seminar-gate): the module excerpt builder now retrieves
+    # seminar primaries from literary_texts, but this completeness gate still
+    # needs an in-process verify_quote adapter that accepts (source_id,
     # citation_context, source_mapping). The current implementation lives at
     # .mcp/servers/sources/server.py::handle_verify_quote and only accepts
     # author/text search arguments, so it cannot verify registry `file` chunk
@@ -1772,6 +1773,114 @@ def _search_textbook_hits(query: str, *, level: str, limit: int = 1) -> list[dic
     return textbook_hits[:limit]
 
 
+_SOURCE_SEARCH_TERM_RE = re.compile(r"[A-Za-zА-Яа-яІіЇїЄєҐґ0-9]{3,}")
+_PRIMARY_TEXT_QUOTE_RES = (
+    re.compile(r"«(.{8,160}?)»"),
+    re.compile(r"“(.{8,160}?)”"),
+    re.compile(r'"(.{8,160}?)"'),
+)
+
+
+def _source_search_terms(query: str) -> set[str]:
+    return {term.casefold() for term in _SOURCE_SEARCH_TERM_RE.findall(query)}
+
+
+def _literary_fallback_queries(
+    plan: Mapping[str, Any],
+    reference: Mapping[str, Any],
+    fallback_query: str,
+) -> list[str]:
+    queries: list[str] = []
+    for section in plan.get("content_outline") or []:
+        if not isinstance(section, Mapping):
+            continue
+        for point in section.get("points") or []:
+            point_text = str(point or "")
+            for quote_re in _PRIMARY_TEXT_QUOTE_RES:
+                for match in quote_re.finditer(point_text):
+                    quote = match.group(1).replace("...", " ").replace("…", " ").strip(" .,:;!?")
+                    if len(_source_search_terms(quote)) >= 2:
+                        queries.append(quote)
+
+    reference_query = " ".join(
+        str(reference.get(key) or "").strip()
+        for key in ("title", "author", "work", "note")
+        if str(reference.get(key) or "").strip()
+    )
+    if reference_query:
+        queries.append(reference_query)
+    queries.append(fallback_query)
+    return list(dict.fromkeys(queries))
+
+
+def _is_literary_source_hit(hit: Mapping[str, Any]) -> bool:
+    source_type = str(hit.get("source_type") or "").casefold()
+    source_marker = " ".join(
+        str(hit.get(key) or "").casefold()
+        for key in ("source_type", "corpus", "source", "unit_key")
+    )
+    return (
+        "textbook" not in source_marker
+        and (
+            "literary" in source_marker
+            or "literary_texts" in source_marker
+            or source_type == "primary"
+        )
+    )
+
+
+def _normalize_literary_hit(hit: Mapping[str, Any]) -> dict[str, Any]:
+    normalized = dict(hit)
+    normalized.setdefault("source_type", "literary")
+    normalized.setdefault("corpus", "literary_texts")
+    if not normalized.get("title") and normalized.get("work"):
+        normalized["title"] = normalized["work"]
+    return normalized
+
+
+def _search_literary_hits(query: str, *, level: str, limit: int = 1) -> list[dict]:
+    try:
+        from wiki import sources_db
+    except Exception:
+        return []
+
+    candidate_limit = max(limit * 4, limit)
+    search_literary = getattr(sources_db, "search_literary", None)
+    if callable(search_literary):
+        terms = _source_search_terms(query)
+        if terms:
+            try:
+                hits = search_literary(terms, max_total=candidate_limit)
+            except TypeError:
+                try:
+                    hits = search_literary(terms, limit=candidate_limit)
+                except Exception:
+                    hits = []
+            except Exception:
+                hits = []
+            literary_hits = [
+                _normalize_literary_hit(hit)
+                for hit in hits or []
+                if isinstance(hit, Mapping) and _is_literary_source_hit(hit)
+            ]
+            if literary_hits:
+                return literary_hits[:limit]
+
+    search_sources = getattr(sources_db, "search_sources", None)
+    if not callable(search_sources):
+        return []
+    try:
+        hits = search_sources(query, track=level, limit=candidate_limit)
+    except Exception:
+        return []
+    literary_hits = [
+        _normalize_literary_hit(hit)
+        for hit in hits or []
+        if isinstance(hit, Mapping) and _is_literary_source_hit(hit)
+    ]
+    return literary_hits[:limit]
+
+
 def _build_textbook_excerpt_context(
     plan: Mapping[str, Any],
     level: str,
@@ -1782,8 +1891,16 @@ def _build_textbook_excerpt_context(
 
     topic_query = _plan_topic_query(plan)
     lines = ["## Textbook Excerpts (verbatim, must be cited)", ""]
+    level_key = str(level).lower()
+    references_by_title = {
+        str(ref.get("title") or "").strip(): ref
+        for ref in plan.get("references") or []
+        if isinstance(ref, Mapping)
+    }
     found_any = False
     for title in references:
+        reference = references_by_title.get(title, {})
+        is_primary_reference = str(reference.get("type") or "").casefold() == "primary"
         query = f"{title} {topic_query}".strip()
         missing_reasons: list[str] = []
         direct_hits = _lookup_textbook_reference_chunk(
@@ -1792,6 +1909,13 @@ def _build_textbook_excerpt_context(
             missing_reason=missing_reasons,
         )
         hits = direct_hits if direct_hits is not None else _search_textbook_hits(query, level=level, limit=1)
+        hit_source = "textbook"
+        if not hits and level_key in SEMINAR_LEVELS and is_primary_reference:
+            for literary_query in _literary_fallback_queries(plan, reference, query):
+                hits = _search_literary_hits(literary_query, level=level_key, limit=1)
+                if hits:
+                    hit_source = "literary"
+                    break
         lines.append(f"### {title}")
         lines.append("")
         if not hits:
@@ -1814,6 +1938,11 @@ def _build_textbook_excerpt_context(
             lines.append("")
             continue
         found_any = True
+        if hit_source == "literary":
+            lines.append("Primary text (literary corpus)")
+            chunk_id = str(hit.get("chunk_id") or "").strip()
+            if chunk_id:
+                lines.append(f"chunk_id: {chunk_id}")
         lines.append(f"Source: {_textbook_hit_label(hit)}")
         lines.append("")
         for quote_line in text.splitlines():
@@ -8250,10 +8379,18 @@ def _word_count(text: str) -> int:
 # rejections like deepseek-pro 1197/1200. Empirically the 8% band still
 # rejects gemini-tools 1031/1200 (14% short).
 _WORD_COUNT_TOLERANCE_BELOW = 0.08
+_PRIMARY_READING_BLOCK_RE = re.compile(
+    r"<!--\s*PRIMARY-READING\s*-->.*?<!--\s*/PRIMARY-READING\s*-->",
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def _strip_primary_reading_blocks(text: str) -> str:
+    return _PRIMARY_READING_BLOCK_RE.sub("", text)
 
 
 def _word_count_gate(text: str, target: int) -> dict[str, Any]:
-    count = _word_count(_strip_comments(text))
+    count = _word_count(_strip_comments(_strip_primary_reading_blocks(text)))
     min_with_tolerance = int(target * (1 - _WORD_COUNT_TOLERANCE_BELOW))
     return {
         "passed": count >= min_with_tolerance,
