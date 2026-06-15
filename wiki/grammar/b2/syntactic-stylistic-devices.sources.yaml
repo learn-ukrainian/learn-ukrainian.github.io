@@ -2,38 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1140
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0027
   type: textbook
   title: § 6. –7. РИТОРИЧНІ ФІГУРИ
   page: 19
   grade: 11
 - id: S2
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1213
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0091
   type: textbook
   title: Риторичні фігури. Риторичне запитання, риторичне звертання
   page: 67
   grade: 11
 - id: S3
-  file: 11-klas-ukrajinska-mova-voron-2019_s1249
+  file: 11-klas-ukrajinska-mova-voron-2019_s0056
   type: textbook
   title: Відкрийте в нім академіка. Ще одчайдуха-зуха…» — закли­кав Драч
   page: 40
   grade: 11
 - id: S4
-  file: 11-klas-ukrmova-zabolotnyi-2019_s1436
+  file: 7-klas-ukrmova-avramenko-2024_s0128
   type: textbook
-  title: Синтаксична норма (p. 108)
-  page: 108
-  grade: 11
+  title: Дієслівні форми на -но, -то без виконавця в орудному відмінку
+  page: 115
+  grade: 7
 - id: S5
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1137
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0013
   type: textbook
   title: § 2. –3. ЗАСОБИ МОВНОГО ВИРАЖЕННЯ ПРОМОВИ
   page: 10
   grade: 11
 - id: S7
-  file: 11-klas-ukrmova-zabolotnyi-2019_s1416
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0010
   type: textbook
-  title: Практична риторика (p. 6)
-  page: 6
+  title: Практична риторика (p. 10)
+  page: 10
+  grade: 11
+- id: S8
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0162
+  type: textbook
+  title: Тире між підметом і присудком у простому реченні
+  page: 115
   grade: 11
