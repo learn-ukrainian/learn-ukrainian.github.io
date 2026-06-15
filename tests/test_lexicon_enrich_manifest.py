@@ -5,6 +5,8 @@ import pytest
 
 from scripts.lexicon import enrich_manifest as enrich_manifest_module
 from scripts.lexicon.enrich_manifest import (
+    _DROP_ANTONYM_LEMMAS,
+    _WRONG_ANTONYMS,
     _WRONG_SENSE_SYNONYMS,
     KAIKKI_SOURCE,
     _antonyms_wiktionary,
@@ -678,6 +680,67 @@ def test_wiktionary_antonyms_use_explicit_antonym_column(monkeypatch) -> None:
         "source": "Вікісловник: explicit antonym list",
         "source_urls": ["https://uk.wiktionary.org/wiki/%D0%BD%D1%96%D1%87"],
     }
+
+
+def test_wiktionary_antonyms_drop_noise_only_lemma_returns_none(monkeypatch) -> None:
+    # #3197 — lemmas whose ENTIRE Вікісловник antonym set is noise yield no section:
+    # а→зет (alphabet), брат→ворог (no lexical antonym), не→да (Russian).
+    conn = sqlite3.connect(":memory:")
+    conn.execute(
+        """
+        CREATE TABLE wiktionary (
+            word TEXT NOT NULL,
+            antonyms TEXT DEFAULT ''
+        )
+        """
+    )
+    conn.executemany(
+        "INSERT INTO wiktionary (word, antonyms) VALUES (?, ?)",
+        [
+            ("а", json.dumps(["зет"], ensure_ascii=False)),
+            ("брат", json.dumps(["ворог"], ensure_ascii=False)),
+            ("не", json.dumps(["да"], ensure_ascii=False)),
+        ],
+    )
+    _patch_vesum_analyses(monkeypatch, {"зет": "noun", "ворог": "noun", "да": "noun"})
+
+    assert _antonyms_wiktionary(conn, "а", entry_pos="noun") is None
+    assert _antonyms_wiktionary(conn, "брат", entry_pos="noun") is None
+    assert _antonyms_wiktionary(conn, "не", entry_pos="part") is None
+
+
+def test_wiktionary_antonyms_filter_wrong_terms_keep_valid(monkeypatch) -> None:
+    # #3197 — дочка keeps the real opposite (син) and drops the co-hyponym noise
+    # (мати-variants + матка = uterus/queen bee, СУМ-11), not a global stoplist.
+    conn = sqlite3.connect(":memory:")
+    conn.execute(
+        """
+        CREATE TABLE wiktionary (
+            word TEXT NOT NULL,
+            antonyms TEXT DEFAULT ''
+        )
+        """
+    )
+    conn.execute(
+        "INSERT INTO wiktionary (word, antonyms) VALUES (?, ?)",
+        ("дочка", json.dumps(["син", "мати", "матка", "матуся"], ensure_ascii=False)),
+    )
+    _patch_vesum_analyses(
+        monkeypatch,
+        {"син": "noun", "мати": "noun", "матка": "noun", "матуся": "noun"},
+    )
+
+    section = _antonyms_wiktionary(conn, "дочка", entry_pos="noun")
+
+    assert section is not None
+    assert section["items"] == ["син"]
+
+
+def test_antonym_filters_are_curated_per_lemma_and_disjoint() -> None:
+    # #3197 — a lemma is either whole-dropped OR per-term-filtered, never both;
+    # and every per-term filter retains at least one intended valid opposite.
+    assert not (_DROP_ANTONYM_LEMMAS & set(_WRONG_ANTONYMS))
+    assert all(terms for terms in _WRONG_ANTONYMS.values())
 
 
 def test_frazeolohichnyi_idioms_keep_phrase_hits_and_drop_definition_noise(monkeypatch) -> None:

@@ -301,6 +301,66 @@ _WRONG_SENSE_SYNONYMS: dict[str, frozenset[str]] = {
     "річка": frozenset({"звір"}),
 }
 
+# #3197 — Вікісловник's explicit antonym column carries pedagogical noise the POS
+# gate alone can't catch: alphabet meta-pairs (а→зет), co-hyponyms / paradigm
+# members dressed as opposites (дочка→матка, він→ми), wrong-sense opposites
+# (газ→гальмо, ім'я→неслава) and Russian contamination (не→да). Mirror the #3168
+# _WRONG_SENSE_SYNONYMS lesson: curated per-lemma filter, NEVER a global stoplist.
+# Two layers, both verified via the sources MCP (СУМ-11 / VESUM / russian_shadow):
+#   _DROP_ANTONYM_LEMMAS — lemmas whose ENTIRE antonym set is noise:
+#     а→зет (letter-name sequence); брат (no lexical antonym — сестра is the
+#     gendered pair, not an opposite); він→ми (pronoun paradigm, not opposition —
+#     the contrast is вона); газ→гальмо (holds only for the accelerator-pedal
+#     sense, misleading for газ="gas"); мавпа (no opposite — оригінал/красуня are
+#     folk-insult noise); не→да (да: check_russian_shadow matches_russian=1.0 and
+#     absent from VESUM → Russian); так ("не так" are negations, the real opposite
+#     ні is absent); четвер (a weekday has no opposite — "день тижня" is a
+#     hypernym); ім'я→неслава (wrong-sense: ім'я="name", not "good repute"); шлях
+#     (same family as #3168 — стежка is a co-hyponym; obstacle terms aren't
+#     opposites of a path).
+#   _WRONG_ANTONYMS — per-lemma term drops where SOME opposites survive:
+#     дочка: keep син; drop the мати-variants + матка (СУМ-11 "плідна самиця" /
+#       uterus / queen bee, not a daughter-opposite) + батько/падчірка (relatives);
+#     друг: keep ворог/недруг; drop екс (slang) + нелюб (archaic, off-sense);
+#     село: keep місто; drop міщанство/град + город (СУМ-11 modern sense =
+#       kitchen-garden, NOT city — false friend with Russian город);
+#     тло: keep фігура (figure↔ground); drop сильвета/сильветка (silhouette).
+_DROP_ANTONYM_LEMMAS: frozenset[str] = frozenset(
+    {
+        "а",
+        "брат",
+        "він",
+        "газ",
+        "мавпа",
+        "не",
+        "так",
+        "четвер",
+        "ім'я",
+        "шлях",
+    }
+)
+
+_WRONG_ANTONYMS: dict[str, frozenset[str]] = {
+    "дочка": frozenset(
+        {
+            "мати",
+            "батько",
+            "падчірка",
+            "матка",
+            "матінка",
+            "мама",
+            "матір",
+            "матірка",
+            "матуся",
+            "матіночка",
+            "матусенька",
+        }
+    ),
+    "друг": frozenset({"екс", "нелюб"}),
+    "село": frozenset({"міщанство", "град", "город"}),
+    "тло": frozenset({"сильвета", "сильветка"}),
+}
+
 _COMPOSITIONAL_ETYMOLOGY_EXCLUSIONS = {
     "а тебе?",
     "а у тебе?",
@@ -1229,6 +1289,12 @@ def _antonyms_wiktionary(
     if not _wiktionary_has_antonyms_column(conn):
         return None
 
+    # #3197 — per-lemma pedagogy filter over the raw Вікісловник antonym column.
+    base_key = _base_lemma(lemma).casefold().replace("’", "'").replace("ʼ", "'").replace("`", "'")
+    if base_key in _DROP_ANTONYM_LEMMAS:
+        return None
+    wrong_terms = _WRONG_ANTONYMS.get(base_key)
+
     items: list[str] = []
     seen: set[str] = set()
     try:
@@ -1247,7 +1313,13 @@ def _antonyms_wiktionary(
                 continue
             for candidate in candidates:
                 term = _clean_atlas_chip_candidate(str(candidate), lemma)
-                if term and term not in seen and _candidate_matches_entry_pos(term, entry_pos):
+                if not term or term in seen:
+                    continue
+                if wrong_terms:
+                    normalized = term.replace("’", "'").replace("ʼ", "'").replace("`", "'")
+                    if normalized in wrong_terms:
+                        continue
+                if _candidate_matches_entry_pos(term, entry_pos):
                     seen.add(term)
                     items.append(term)
             if items:
