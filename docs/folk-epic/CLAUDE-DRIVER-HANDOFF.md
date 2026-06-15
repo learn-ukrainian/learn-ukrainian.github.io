@@ -72,27 +72,31 @@
     `pedagogical` (the dim stuck 5.8–7.0 across ALL folk modules) is a **WARNING/advisory dim** (only
     `decolonization` is terminal for seminar — `thresholds.py:58`, demoted 2026-05-23 as stochastic) → the
     pipeline NEVER acts on the pedagogical score. That is why koliadky/dumy shipped with no `llm_qg.json`.
-  - **Gap B — what raises pedagogy is STRUCTURAL, which find/replace can't do (the ADR-007 wall).** koliadky
-    proof (PR #3250): #3162 embed-primary got 6.7→7.4; the structural correction pass (deepen/self-check/
-    activity/embed) closed 7.4→9.2. None of those moves is a find→replace pair, but ADR-007 +
-    `tests/test_no_rewrite_contract.py` forbid LLM regen in review → a naive find/replace loop converges back
-    to ~7.4, NOT 9.2. **Keystone decision: a scoped pedagogical RE-WRITE pass = a deliberate ADR-007 carve-out.**
+  - **Gap B — what raises pedagogy splits in two; ADR-007 draws the line BETWEEN them** (REFRAMED after the
+    user asked about an ADR-007 edit; doc updated). koliadky proof (PR #3250): #3162 embed-primary got 6.7→7.4;
+    the correction pass closed 7.4→9.2. The ADDITIVE moves (embed primary, add self-check/activity/note) are
+    **inserts** — and the V7 pipeline ALREADY supports them: `<fix><insert_after>…</insert_after><text>…</text>`
+    is a first-class fix type (applier `linear_pipeline.py:6048–6980`, used by wiki_coverage), and ADR-007
+    **explicitly sanctions** `insert_after` (lines 35/82/102); the invariant test bans only the REGENERATION
+    symbols. **So inserting external text needs NO ADR change.** Only the DEEPEN-existing-prose subset is the
+    ADR-007 wall (the `full_rewrite` class, 9.6→8.4 degradation evidence). **The real blocker is Gap A (no loop
+    to invoke the already-compliant insert_after on pedagogical findings) — NOT ADR-007.**
   - **Gap C — python_qg doesn't self-converge for seminar** (rotating gate walls: #2991 module.md-only scope,
     #2997 blockquote vesum, coinage churn, citation resolution). The loop is single-shot PER GATE (L5317).
-- **Design = port the PROVEN wiki #3054 divergence-safety to the module loop** (best-round selection
-  `review.py:948`, MIN-regression guard `_min_score_regressed:1034`, seminar round budget
-  `max_rounds_for_domain:144`, claude reviewer routing `seminar_reviewer_overrides:178`) + the ADR-009 carve-out
-  for the scoped pedagogical re-write (guardrails: scope-bound, diff-capped, re-gated, best-round-discarded if
-  it lowers aggregate, corpus-grounded) + re-promote `pedagogical` warning→terminal once stable (Part D).
-- **6-phase plan (owner = infra orchestrator)** P0 extract shared `review_loop.py` → P1 #2991/#2997 → P2 LLM-QG
-  loop → **P3 ADR-009 (needs user/orch sign-off)** → P4 python_qg multi-gate loop → P5 re-promotion. Acceptance
-  tied to #3079's deterministic criteria; validation on koliadky (reproduce 9.2 unaided) + dumy + 1 hist/lit.
+- **Design = port the PROVEN wiki #3054 divergence-safety to the module loop** (best-round `review.py:948`,
+  MIN-guard `:1034`, seminar round budget `:144`, claude reviewer routing `:178`) + **B1 = insert-only
+  pedagogical corrector** (`linear-correction-pedagogical.md` emitting `insert_after`; reuses the built applier;
+  **NO ADR change, NO test change** — the quick win) + **B2 = deepen carve-out (CONDITIONAL** on B1 validation
+  failing) + re-promote `pedagogical` warning→terminal once stable.
+- **Plan (owner = infra orchestrator)** P0 extract shared `review_loop.py` → P1 #2991/#2997 → P2 LLM-QG loop →
+  **P3 B1 insert-only corrector (no ADR change)** → **P3-validate on koliadky/dumy (if ≥8, STOP — B2 unneeded)**
+  → P4 python_qg multi-gate loop → **P5 B2 ADR-009 carve-out (CONDITIONAL, needs sign-off)** → P6 re-promotion.
 - Markdownlint 0. Posted a design-summary comment on **issue #3079**.
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **Orchestrator: review the #3079 design PR + decide P3 (the ADR-007 carve-out sign-off)** — the one gate that
-   needs explicit user/orch approval (Part B; §7 Open Decision 1, recommendation = YES with the §3-B guardrails).
-   P0–P2 + P1/P4 are mechanical ports + deterministic gate fixes the infra lane can start without sign-off.
+1. **Orchestrator: review the #3079 design PR.** The quick win (P0→P2→P3 = the insert-only loop) needs **NO ADR
+   sign-off** — it reuses the ADR-007-sanctioned `insert_after`. Only the CONDITIONAL B2 (deepen carve-out, P5)
+   needs sign-off, and only if P3-validate shows insert-only can't reach ≥8. Build B1 + validate first.
 2. **SCALE folk to ≥8 + surface (still gated on the recipe being cheap):** sweep `type:primary` on the other 5
    built folk plans, rebuild each on #3162 + the correction recipe → ≥8 each → un-hide folk nav (remove `'folk'`
    from `HIDDEN_MODULE_LINK_TRACKS` `site/src/components/LevelLanding.tsx` + `hiddenPublicPaths`

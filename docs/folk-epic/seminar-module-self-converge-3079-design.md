@@ -8,9 +8,10 @@
 >
 > **Companion docs:** issue **#3079** (the epic); `docs/folk-epic/folk-wiki-compile-grounding-register-gap.md`
 > (the sibling wiki-side diagnosis, now LANDED via #3036/#3054/#3057/#3059/#3083); the koliadky proof-rebuild
-> (PR **#3250**, 6.7→9.2); `docs/decisions/2026-04-23-rewrite-strategies-kill-or-revert.md` (ADR-007, the
-> no-LLM-regeneration-during-review invariant this design must amend); `scripts/common/thresholds.py` (the
-> LLM-QG dim taxonomy); `scripts/wiki/review.py` (the PROVEN divergence-safe loop to port).
+> (PR **#3250**, 6.7→9.2); `docs/decisions/2026-04-23-rewrite-strategies-kill-or-revert.md` (ADR-007 — bans
+> LLM *regeneration*, but explicitly **sanctions `<fixes>` `insert_after:`**, the mechanism this design
+> reuses; an amendment is needed only for the conditional B2 deepen path); `scripts/common/thresholds.py`
+> (the LLM-QG dim taxonomy); `scripts/wiki/review.py` (the PROVEN divergence-safe loop to port).
 
 ---
 
@@ -57,17 +58,29 @@ The koliadky proof-rebuild (PR #3250) is the load-bearing evidence for the whole
 - A **correction pass** (python_qg green + **pedagogical deepening** + register polish) closed **7.4 → 9.2**
   (pedagogical 9.2 · naturalness 8.6 · decolonization 9.5 · engagement 9.0 · tone 8.5 — claude reviewer).
 
-The moves that closed 7.4→9.2 were **structural**: deepen an explanation, add a self-check, integrate an
-activity inline, surface an embedded primary. **None of these is a `find`→`replace` pair.** But the V7
-correction architecture is, by ADR-007 (`2026-04-23-rewrite-strategies-kill-or-revert.md`) and its
-structural-invariant test `tests/test_no_rewrite_contract.py`, **reviewer-as-fixer = deterministic
-find/replace only, NO LLM regeneration during review.** A naive "loop until the gate passes" built on
-find/replace would therefore converge back to ~7.4 (cosmetic register/citation polish), **not** 9.2 —
-because the score-moving work is exactly the work find/replace is forbidden from doing.
+The moves that closed 7.4→9.2 split into TWO classes, and ADR-007
+(`2026-04-23-rewrite-strategies-kill-or-revert.md`) draws the line **between** them — not, as an earlier
+draft of this doc claimed, around "anything that isn't find/replace":
 
-**This is the keystone architectural decision of #3079:** automating pedagogy requires a **scoped
-pedagogical re-write pass** (a bounded writer re-invocation), which is a deliberate, guard-railed
-**carve-out from the ADR-007 find/replace-only invariant** — see §3 Part B.
+- **ADDITIVE moves** — surface an embedded primary, add a self-check, add a worked example / activity
+  scaffold, add a clarifying note. These are **inserts at an anchor**, and the V7 pipeline **already supports
+  them**: `<fix><insert_after>ANCHOR</insert_after><text>…</text></fix>` is a first-class fix type with a full
+  applier (`linear_pipeline.py:6048–6980`), used in production today by the wiki_coverage correction loop
+  (`scripts/build/phases/linear-correction-wiki-coverage.md`). ADR-007 **explicitly sanctions** it —
+  `<fixes>` `insert_after:` is the *named* repair for word-budget shortfalls (ADR-007 lines 35/82/102), and
+  the invariant test `tests/test_no_rewrite_contract.py` bans only the **regeneration** symbols
+  (`section_rewrite`/`full_rewrite`/`writer_swap`/`<rewrite-block>`), never insertion.
+- **DEEPEN-EXISTING-PROSE moves** — rewrite a shallow paragraph into a rich one. This IS what ADR-007 KILLs
+  (the `full_rewrite`/`<rewrite-block>` class), and it has hard empirical evidence behind the ban: FROM-
+  SCRATCH rewrites degraded content 9.6→9.2→8.4, re-validated on a1/colors (ADR-007 §Context).
+
+**So the keystone is NOT "we must amend ADR-007."** The keystone is **Gap A**: there is no LLM-QG correction
+loop to invoke the *already-compliant* `insert_after` fixer on pedagogical findings (the per-dim reviewer
+`linear-review-dim.md` emits only `{score, evidence, verdict}` today — a pure scorer, no `<fixes>`). Build
+that loop (§3 Part B1) and the **additive** half of the koliadky lift is automated with **no ADR change, no
+test change, no new risk class**. The ADR-007 carve-out (§3 Part B2) is needed ONLY for the deepen subset,
+and ONLY if validation shows insert-only can't clear ≥8 — do not reopen a twice-validated failure mode for a
+win we may not need.
 
 ### Gap C — python_qg does not self-converge for seminar content (the rotating gate walls)
 
@@ -115,8 +128,9 @@ The folk **wiki** loop solved the exact same class of problem and is in producti
 ## 3. Design
 
 Four parts. **A + C are the bounded-loop + divergence-safety port** (mechanical, low-risk, mirror wiki).
-**B is the one genuine architectural decision** (ADR carve-out). **D is the payoff** (re-promote pedagogy
-so the gate actually holds). A and C can ship independently of B; B is what gets pedagogy from ~7.4 to ≥8.
+**B1 is the quick win** (insert-only corrector reusing the ADR-007-clean `insert_after` — no ADR change);
+**B2 is a conditional architectural decision** (the deepen carve-out, only if B1 can't reach ≥8). **D is the
+payoff** (re-promote pedagogy so the gate holds). A+C+B1 is the shippable quick win; B2 is contingent.
 
 ### Part A — add a bounded, divergence-safe correction loop to LLM QG
 
@@ -131,7 +145,7 @@ run_llm_qg_with_corrections(module_dir, plan, ..., writer, reviewer_override,
         report = _run_llm_qg(...)                     # existing single-pass review
         rounds.append(report)
         if all warning+terminal dims >= floor: break  # PASS → stop (best==last)
-        fixes = corrector(report)                     # Part B: scoped pedagogical re-write
+        fixes = corrector(report)                     # Part B1 insert_after fixes (B2 deepen if needed)
         if not fixes.changed: break                   # nothing applied → more rounds won't help
         if _min_score_regressed(prev, report): break  # divergence guard (port from review.py)
     best = argmax_round(aggregate_min)                # best-round selection (port)
@@ -148,33 +162,50 @@ run_llm_qg_with_corrections(module_dir, plan, ..., writer, reviewer_override,
 - **Best-round + MIN-guard:** import/port from `review.py` (consider extracting the wiki helpers to a shared
   `scripts/common/review_loop.py` so module + wiki share ONE tested implementation — see §5).
 
-### Part B — structural pedagogical correction (the ADR carve-out)
+### Part B — the pedagogical corrector (B1 insert-only = quick win; B2 deepen = conditional carve-out)
 
-The corrector in Part A **cannot be find/replace** (Gap B). It must be a **bounded, scoped writer
-re-invocation** — call it the **pedagogical re-write pass**:
+Part A's loop needs a corrector. Split it in two by ADR-007's actual line (Gap B):
 
-- **Input:** the reviewer's pedagogical findings (already structured: `evidence` / `evidence_quotes` in
-  `llm_qg.json`), the current module.md + activities.yaml, and the **corpus-embedded primaries** now
-  available via #3162's `literary_texts` excerpt route.
-- **Action:** re-invoke the **writer** (claude-tools) with a tightly-scoped prompt: "raise pedagogical by
-  doing ONLY these structural moves the reviewer named — deepen X, add a self-check for Y, integrate
-  activity Z inline, surface the embedded primary — change nothing else; do not introduce new vocabulary or
-  coinages; keep every existing citation." Output is a full re-written module section set, re-gated through
-  python_qg (Part C) before the next LLM-QG round.
-- **The ADR decision (REQUIRED — do not ship Part B without it):** this is LLM regeneration in the review
-  path, which ADR-007 forbids and `tests/test_no_rewrite_contract.py` enforces. Author **ADR-009 (or an
-  ADR-007 amendment)** that carves out *exactly* this case with hard guardrails, and update the invariant
-  test to permit the scoped path while still rejecting unscoped regen:
-  - **Scope-bounded:** only the pedagogical dimension; only the reviewer-named locations; a diff-size cap
-    (reject a re-write that rewrites >N% of the module — that's a regeneration, not a correction).
-  - **Divergence-safe:** wrapped by Part A's best-round + MIN-guard → a re-write that *lowers* the aggregate
-    is discarded (the prior round's artifacts are kept). This is the safety ADR-007 was protecting; we
-    restore it via best-round instead of via "no regen at all."
-  - **No-self-review:** writer ≠ reviewer model (existing assertion).
-  - **Re-gated:** every re-write re-runs python_qg (Part C) — a pedagogical re-write that breaks vesum or
-    drops word_count is rejected by the deterministic gate before it can reach the next LLM-QG round.
-  - **Corpus-grounded, not invented:** the re-write may only add primaries that #3162 actually embedded
-    (verify_quote-resolvable) — never invented text. Corpus-hammer (#M-11) remains a human gate before ship.
+#### B1 — insert-only pedagogical corrector (NO ADR change — the quick win)
+
+A new corrector prompt `linear-correction-pedagogical.md` that, given the reviewer's pedagogical findings
+(already structured: `evidence` / `evidence_quotes` in `llm_qg.json`) + the **corpus-embedded primaries**
+now available via #3162's `literary_texts` excerpt route, emits **`<fix><insert_after>…</insert_after>
+<text>…</text></fix>`** entries that ADD the missing pedagogy at an anchor:
+
+- surface the embedded primary the module teaches (the literal "external text"),
+- insert a self-check / reflection block,
+- insert a worked example or an activity scaffold,
+- insert a clarifying "why this matters" note.
+
+This **reuses already-built, already-ADR-007-compliant machinery**: the `insert_after` applier
+(`linear_pipeline.py:6048–6980`) and the corrector-prompt pattern (mirror `linear-correction-wiki-coverage
+-narrow.md`). **No `tests/test_no_rewrite_contract.py` change, no ADR change** — `insert_after` is the
+sanctioned repair, not a forbidden one. Guardrails (all already available): re-gate every insert through
+python_qg (Part C) so an insert that breaks vesum/word_count is rejected; wrap in Part A's best-round so an
+insert that lowers the aggregate is discarded; **corpus-grounded only** — embedded primaries must be
+`verify_quote`-resolvable, never invented; no new vocabulary/coinages (python_qg vesum catches them).
+
+**Validate B1 first (on koliadky/dumy).** Much of koliadky's 7.4→9.2 lift was additive (embed the колядка,
+self-checks, activity integration) — B1 alone may reach ≥8. If it does, B2 is **not needed**.
+
+#### B2 — deepen-existing-prose corrector (CONDITIONAL — needs the ADR-007 carve-out)
+
+Only if B1 validation shows insert-only cannot clear ≥8 (because the gap is *shallow existing prose*, not
+*missing pedagogy*) do we need to modify existing paragraphs — which IS the `full_rewrite` class ADR-007
+KILLs on hard evidence. Then, and only then, author **ADR-009 (supersede-in-part ADR-007)** for a
+**bounded, scoped** pedagogical re-write with guardrails that restore the safety ADR-007 protected:
+
+- **Scope-bounded:** pedagogical dim only; only the reviewer-named locations; a **diff-size cap** (reject a
+  re-write touching >N% of the module — that's regeneration, not correction). Update the invariant test to
+  permit the scoped path by its new symbol while still banning the KILLed `full_rewrite`/`<rewrite-block>`.
+- **Divergence-safe:** Part A best-round + MIN-guard discards any re-write that lowers the aggregate — this
+  is exactly the safety the 9.6→8.4 evidence demanded, restored mechanically instead of by a blanket ban.
+- **No-self-review** (writer ≠ reviewer model, existing assertion); **re-gated** through python_qg every
+  round; **corpus-grounded, not invented**. Corpus-hammer (#M-11) remains the human gate before ship.
+
+**Recommendation: build B1, validate, and only open B2 if the data demands it** — root-cause fix first, do
+not reopen a twice-validated failure mode pre-emptively.
 
 ### Part C — make python_qg self-converge for seminar (close the rotating walls)
 
@@ -214,12 +245,15 @@ loop is producing stable pedagogical scores:
 | **P0** | Extract wiki best-round + MIN-guard helpers to shared `scripts/common/review_loop.py` (refactor, no behaviour change; wiki tests stay green) | — | Low |
 | **P1** | Part C.1 (#2991 yaml-scope) + C.2 (#2997 exemption) — deterministic, no LLM | — | Low–med |
 | **P2** | Part A — LLM-QG bounded loop (best-round, MIN-guard, seminar round budget, claude routing); core stays single-pass (strict no-op) | P0 | Med |
-| **P3** | Part B — ADR-009 carve-out + scoped pedagogical re-write corrector + invariant-test update | P2, ADR sign-off | **High** (architectural) |
+| **P3** | **Part B1 — insert-only pedagogical corrector** (`linear-correction-pedagogical.md` emitting `insert_after`; reuses the existing applier). **NO ADR change, NO test change** — the quick win | P2 | **Low–med** |
+| **P3-validate** | Run B1 e2e on koliadky/dumy. **If pedagogical ≥8 → STOP (B2 not needed).** Else scope B2 | P3 | — |
 | **P4** | Part C.3 — bounded multi-gate python_qg loop + cross-model fixer route | P0, P1 | Med |
-| **P5** | Part D — re-promotion data capture → flip `pedagogical` terminal for seminar | P2–P4 + ~20 ships | Low (data-gated) |
+| **P5** | **Part B2 — deepen-prose carve-out** (ADR-009 + scoped re-write + invariant-test update) — **CONDITIONAL** on P3-validate failing | P3-validate, ADR sign-off | **High** (architectural) |
+| **P6** | Part D — re-promotion data capture → flip `pedagogical` terminal for seminar | P2–P4 + ~20 ships | Low (data-gated) |
 
-**P3 is the one phase the user/orchestrator must explicitly sign off** (it changes a core invariant). P0–P2
-and P1/P4 are mechanical ports + deterministic gate fixes and can proceed in parallel.
+**The quick win is P0→P2→P3 (the insert-only loop) — no ADR change, reuses built machinery.** Only **P5
+(B2)** needs explicit user/orch sign-off, and only if P3-validate shows insert-only can't clear ≥8. P0–P2 +
+P1/P4 are mechanical ports + deterministic gate fixes and can proceed in parallel.
 
 ## 5. Acceptance criteria (deterministic — tied to #3079)
 
@@ -228,8 +262,9 @@ and P1/P4 are mechanical ports + deterministic gate fixes and can proceed in par
 - [ ] **koliadky + dumy rebuild to produce `llm_qg.json` with pedagogical ≥8 automatically** (koliadky's
       manual 9.2 is the target the loop must reach unaided; dumy is the unproven case).
 - [ ] The pattern holds for **≥1 other seminar track** (hist or lit — not folk-only).
-- [ ] `tests/test_no_rewrite_contract.py` still **rejects unscoped regeneration**; the new scoped
-      pedagogical path is permitted only under the ADR-009 guardrails (diff-cap, scope-bound, re-gated).
+- [ ] B1 (insert-only) ships with `tests/test_no_rewrite_contract.py` **unchanged** (insert_after is already
+      compliant). If B2 is opened, the test still **rejects unscoped regeneration** and permits the scoped
+      deepen path only under the ADR-009 guardrails (diff-cap, scope-bound, re-gated).
 - [ ] Core a1–c2 builds are **byte-identical** (Parts A/C are seminar-gated; the LLM-QG loop is a strict
       no-op at `max_rounds=1`).
 
@@ -245,9 +280,11 @@ Corpus-hammer (#M-11) every embedded primary in the loop's output before any shi
 
 ## 7. Open decisions (for the orchestrator / user)
 
-1. **P3 sign-off** — approve the ADR-007 carve-out for a scoped pedagogical re-write? (Without it, pedagogy
-   stays manual; with it, folk + all seminars scale.) **Recommendation: yes, with the §3-B guardrails** —
-   best-round restores the safety ADR-007 protected, so the carve-out is bounded, not a return to free regen.
+1. **B2 sign-off — DEFERRED, conditional.** The ADR-007 carve-out (deepen-existing-prose) is needed ONLY if
+   P3-validate shows the insert-only loop (B1) can't reach ≥8. **No decision needed now** — build B1 first
+   (no ADR change). If B2 becomes necessary, the recommendation is yes with the §3-B2 guardrails (best-round
+   restores the safety ADR-007 protected). The earlier "P3 needs sign-off" framing was based on the wrong
+   premise that all pedagogical correction needs regen; insert_after handles the additive majority.
 2. **Reviewer cost** — claude-routed seminar LLM-QG over N rounds is Claude-quota-heavy (same finding as the
    wiki review fleet, Session-20b). Acceptable for the bounded seminar set; revisit if it dominates quota.
 3. **Shared helper extraction (P0)** — port wiki helpers into `scripts/common/review_loop.py` so module +
