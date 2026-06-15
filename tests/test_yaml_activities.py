@@ -144,6 +144,31 @@ class TestParsing:
         assert activities[0].answers == ["Сторож", "ключ", "плащ"]
         assert 'correctWords={JSON.parse(`["Сторож", "ключ", "плащ"]`)}' in mdx
 
+    def test_parse_mark_the_words_accepts_targets_alias(self, parser, tmp_path):
+        """A2 mark-the-words activities can use the existing targets alias."""
+        activity_path = tmp_path / "activities.yaml"
+        activity_path.write_text(
+            """
+- type: mark-the-words
+  title: Фонетика
+  instruction: Позначте слова.
+  text: день місто люди синє рука
+  targets:
+  - день
+  - місто
+  - люди
+  - синє
+""",
+            encoding="utf-8",
+        )
+
+        activities = parser.parse(activity_path)
+        mdx = parser.to_mdx(activities)
+
+        assert len(activities) == 1
+        assert activities[0].answers == ["день", "місто", "люди", "синє"]
+        assert 'correctWords={JSON.parse(`["день", "місто", "люди", "синє"]`)}' in mdx
+
 
 # =============================================================================
 # MDX GENERATION TESTS

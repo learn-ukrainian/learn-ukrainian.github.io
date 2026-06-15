@@ -907,7 +907,12 @@ class ActivityParser:
     def _parse_mark_the_words(self, data: dict) -> MarkTheWordsActivity:
         # Support both old and new field names for backwards compatibility
         raw_text = data.get('passage') or data.get('text', '')
-        correct_words = data.get('correct_words') or data.get('target_words') or data.get('answers', [])
+        correct_words = (
+            data.get('correct_words')
+            or data.get('target_words')
+            or data.get('targets')
+            or data.get('answers', [])
+        )
 
         # Robust extraction from various markdown formats
         extracted_answers = []

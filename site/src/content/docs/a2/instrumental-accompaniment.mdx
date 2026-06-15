@@ -15,12 +15,15 @@ import TrueFalse from '@site/src/components/TrueFalse';
 import Unjumble from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
 import Anagram from '@site/src/components/Anagram';
-import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
 import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import MarkTheWords from '@site/src/components/MarkTheWords';
+import { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes from '@site/src/components/HighlightMorphemes';
+import { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 import EssayResponse from '@site/src/components/EssayResponse';
 import ComparativeStudy from '@site/src/components/ComparativeStudy';
 import ReadingActivity from '@site/src/components/ReadingActivity';
@@ -93,7 +96,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### З ким? З чим?
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "З ким ти йдеш?", "right": "з Олегом"}, {"left": "З ким вона живе?", "right": "із сестрою"}, {"left": "Чай з чим?", "right": "з лимоном"}, {"left": "Борщ з чим?", "right": "зі сметаною"}]`)} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "З ким ти йдеш?", "right": "з Олегом"}, {"left": "З ким вона живе?", "right": "із сестрою"}, {"left": "Чай з чим?", "right": "з лимоном"}, {"left": "Борщ з чим?", "right": "зі сметаною"}]`)} isUkrainian={true} />
 
 ## Закінчення іменників
 
@@ -141,7 +144,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### З, із чи зі
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "___ другом", "options": [{"text": "з", "correct": true}, {"text": "із", "correct": false}, {"text": "зі", "correct": false}], "explanation": "З другом - проста вимова."}, {"question": "___ сестрою", "options": [{"text": "з", "correct": false}, {"text": "із", "correct": true}, {"text": "зі", "correct": false}], "explanation": "Із сестрою допомагає уникнути важкого збігу."}, {"question": "___ сметаною", "options": [{"text": "з", "correct": false}, {"text": "із", "correct": false}, {"text": "зі", "correct": true}], "explanation": "Зі часто з'являється перед с-."}, {"question": "___ молоком", "options": [{"text": "з", "correct": true}, {"text": "із", "correct": false}, {"text": "зі", "correct": false}], "explanation": "З молоком - природна базова форма."}]`)} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "___ другом", "options": [{"text": "з", "correct": true}, {"text": "із", "correct": false}, {"text": "зі", "correct": false}], "explanation": "З другом - проста вимова."}, {"question": "___ сестрою", "options": [{"text": "з", "correct": false}, {"text": "із", "correct": true}, {"text": "зі", "correct": false}], "explanation": "Із сестрою допомагає уникнути важкого збігу."}, {"question": "___ сметаною", "options": [{"text": "з", "correct": false}, {"text": "із", "correct": false}, {"text": "зі", "correct": true}], "explanation": "Зі часто з'являється перед с-."}, {"question": "___ молоком", "options": [{"text": "з", "correct": true}, {"text": "із", "correct": false}, {"text": "зі", "correct": false}], "explanation": "З молоком - природна базова форма."}]`)} isUkrainian={true} />
 
 ## Їжа: ознака або інгредієнт
 
@@ -166,7 +169,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Форма після з
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я гуляю з ___.", "answer": "другом", "options": ["друг", "другом", "друга"]}, {"sentence": "Вона прийде із ___.", "answer": "сестрою", "options": ["сестра", "сестру", "сестрою"]}, {"sentence": "Мені чай з ___.", "answer": "лимоном", "options": ["лимон", "лимоном", "лимона"]}, {"sentence": "Борщ зі ___.", "answer": "сметаною", "options": ["сметана", "сметану", "сметаною"]}]`)} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я гуляю з ___.", "answer": "другом", "options": ["друг", "другом", "друга"]}, {"sentence": "Вона прийде із ___.", "answer": "сестрою", "options": ["сестра", "сестру", "сестрою"]}, {"sentence": "Мені чай з ___.", "answer": "лимоном", "options": ["лимон", "лимоном", "лимона"]}, {"sentence": "Борщ зі ___.", "answer": "сметаною", "options": ["сметана", "сметану", "сметаною"]}]`)} isUkrainian={true} />
 
 ## Малий діалог у кафе
 
@@ -200,7 +203,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Супровід чи інгредієнт?
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Супровід": ["з другом", "із сестрою", "з Олегом", "з мамою"], "Інгредієнт": ["з лимоном", "з молоком", "з маслом", "зі сметаною"]}`)} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Супровід": ["з другом", "із сестрою", "з Олегом", "з мамою"], "Інгредієнт": ["з лимоном", "з молоком", "з маслом", "зі сметаною"]}`)} isUkrainian={true} />
 
 ## 📋 Підсумок
 
@@ -220,7 +223,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 </TabItem>
 <TabItem label="Словник">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"орудний відмінок","translation":"instrumental case","pos":"noun","example":"Орудний відмінок відповідає на питання ким? чим?","examples":["instrumental case","Орудний відмінок відповідає на питання ким? чим?"]},{"word":"з","translation":"with","pos":"preposition","example":"Я йду з другом.","examples":["with","Я йду з другом."]},{"word":"із","translation":"with","pos":"preposition","example":"Вона прийде із сестрою.","examples":["with","Вона прийде із сестрою."]},{"word":"зі","translation":"with","pos":"preposition","example":"Борщ зі сметаною дуже смачний.","examples":["with","Борщ зі сметаною дуже смачний."]},{"word":"друг","translation":"friend","pos":"noun","example":"Я гуляю з другом.","examples":["friend","Я гуляю з другом."]},{"word":"подруга","translation":"female friend","pos":"noun","example":"Ірина прийде з подругою.","examples":["female friend","Ірина прийде з подругою."]},{"word":"сестра","translation":"sister","pos":"noun","example":"Марко живе із сестрою.","examples":["sister","Марко живе із сестрою."]},{"word":"лимон","translation":"lemon","pos":"noun","example":"Мені чай з лимоном.","examples":["lemon","Мені чай з лимоном."]},{"word":"молоко","translation":"milk","pos":"noun","example":"Кава з молоком.","examples":["milk","Кава з молоком."]},{"word":"масло","translation":"butter","pos":"noun","example":"Хліб з маслом.","examples":["butter","Хліб з маслом."]},{"word":"мед","translation":"honey","pos":"noun","example":"Чай з медом.","examples":["honey","Чай з медом."]},{"word":"сметана","translation":"sour cream","pos":"noun","example":"Борщ зі сметаною.","examples":["sour cream","Борщ зі сметаною."]},{"word":"гриби","translation":"mushrooms","pos":"noun","example":"Піца з грибами.","examples":["mushrooms","Піца з грибами."]},{"word":"разом","translation":"together","pos":"adverb","example":"Ми йдемо разом з друзями.","examples":["together","Ми йдемо разом з друзями."]}]`)} title="Словник" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"орудний відмінок","translation":"instrumental case","pos":"noun","example":"Орудний відмінок відповідає на питання ким? чим?","examples":["instrumental case","Орудний відмінок відповідає на питання ким? чим?"],"atlas_href":"/lexicon/орудний-відмінок/"},{"word":"з","translation":"with","pos":"preposition","example":"Я йду з другом.","examples":["with","Я йду з другом."],"atlas_href":"/lexicon/з/"},{"word":"із","translation":"with","pos":"preposition","example":"Вона прийде із сестрою.","examples":["with","Вона прийде із сестрою."],"atlas_href":"/lexicon/із/"},{"word":"зі","translation":"with","pos":"preposition","example":"Борщ зі сметаною дуже смачний.","examples":["with","Борщ зі сметаною дуже смачний."],"atlas_href":"/lexicon/зі/"},{"word":"друг","translation":"friend","pos":"noun","example":"Я гуляю з другом.","examples":["friend","Я гуляю з другом."],"atlas_href":"/lexicon/друг/"},{"word":"подруга","translation":"female friend","pos":"noun","example":"Ірина прийде з подругою.","examples":["female friend","Ірина прийде з подругою."],"atlas_href":"/lexicon/подруга/"},{"word":"сестра","translation":"sister","pos":"noun","example":"Марко живе із сестрою.","examples":["sister","Марко живе із сестрою."],"atlas_href":"/lexicon/сестра/"},{"word":"лимон","translation":"lemon","pos":"noun","example":"Мені чай з лимоном.","examples":["lemon","Мені чай з лимоном."],"atlas_href":"/lexicon/лимон/"},{"word":"молоко","translation":"milk","pos":"noun","example":"Кава з молоком.","examples":["milk","Кава з молоком."],"atlas_href":"/lexicon/молоко/"},{"word":"масло","translation":"butter","pos":"noun","example":"Хліб з маслом.","examples":["butter","Хліб з маслом."],"atlas_href":"/lexicon/масло/"},{"word":"мед","translation":"honey","pos":"noun","example":"Чай з медом.","examples":["honey","Чай з медом."],"atlas_href":"/lexicon/мед/"},{"word":"сметана","translation":"sour cream","pos":"noun","example":"Борщ зі сметаною.","examples":["sour cream","Борщ зі сметаною."],"atlas_href":"/lexicon/сметана/"},{"word":"гриби","translation":"mushrooms","pos":"noun","example":"Піца з грибами.","examples":["mushrooms","Піца з грибами."],"atlas_href":"/lexicon/гриби/"},{"word":"разом","translation":"together","pos":"adverb","example":"Ми йдемо разом з друзями.","examples":["together","Ми йдемо разом з друзями."],"atlas_href":"/lexicon/разом/"}]`)} title="Словник" />
 
 <FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"орудний відмінок","back":"instrumental case"},{"front":"з","back":"with"},{"front":"із","back":"with"},{"front":"зі","back":"with"},{"front":"друг","back":"friend"},{"front":"подруга","back":"female friend"},{"front":"сестра","back":"sister"},{"front":"лимон","back":"lemon"},{"front":"молоко","back":"milk"},{"front":"масло","back":"butter"},{"front":"мед","back":"honey"},{"front":"сметана","back":"sour cream"},{"front":"гриби","back":"mushrooms"},{"front":"разом","back":"together"}]`)} />
 
@@ -245,11 +248,11 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Швидка перевірка
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я йду з другом.", "isTrue": true, "explanation": "Друг стоїть в орудному відмінку."}, {"statement": "Кава з молоко.", "isTrue": false, "explanation": "Потрібно кава з молоком."}, {"statement": "Борщ зі сметаною.", "isTrue": true, "explanation": "Зі сметаною звучить природно."}, {"statement": "Вона прийде з сестра.", "isTrue": false, "explanation": "Потрібно із сестрою або з сестрою."}]`)} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я йду з другом.", "isTrue": true, "explanation": "Друг стоїть в орудному відмінку."}, {"statement": "Кава з молоко.", "isTrue": false, "explanation": "Потрібно кава з молоком."}, {"statement": "Борщ зі сметаною.", "isTrue": true, "explanation": "Зі сметаною звучить природно."}, {"statement": "Вона прийде з сестра.", "isTrue": false, "explanation": "Потрібно із сестрою або з сестрою."}]`)} isUkrainian={true} />
 
 ### Виправте форму
 
-<ErrorCorrection client:only='react' instruction="Оберіть правильне речення." items={JSON.parse(`[{"sentence": "Я говорю з Олег.", "errorWord": "Олег", "correctForm": "Я говорю з Олегом.", "options": ["Я говорю з Олегом.", "Я говорю з Олег."], "explanation": "Ім'я Олег отримує форму Олегом."}, {"sentence": "Мені чай з лимон.", "errorWord": "лимон", "correctForm": "Мені чай з лимоном.", "options": ["Мені чай з лимоном.", "Мені чай з лимон."], "explanation": "З чим? - з лимоном."}, {"sentence": "Вона живе із сестра.", "errorWord": "сестра", "correctForm": "Вона живе із сестрою.", "options": ["Вона живе із сестрою.", "Вона живе із сестра."], "explanation": "Із ким? - із сестрою."}]`)} />
+<ErrorCorrection client:only='react' instruction="Оберіть правильне речення." items={JSON.parse(`[{"sentence": "Я говорю з Олег.", "errorWord": "Олег", "correctForm": "Я говорю з Олегом.", "options": ["Я говорю з Олегом.", "Я говорю з Олег."], "explanation": "Ім'я Олег отримує форму Олегом."}, {"sentence": "Мені чай з лимон.", "errorWord": "лимон", "correctForm": "Мені чай з лимоном.", "options": ["Мені чай з лимоном.", "Мені чай з лимон."], "explanation": "З чим? - з лимоном."}, {"sentence": "Вона живе із сестра.", "errorWord": "сестра", "correctForm": "Вона живе із сестрою.", "options": ["Вона живе із сестрою.", "Вона живе із сестра."], "explanation": "Із ким? - із сестрою."}]`)} isUkrainian={true} />
 
 </TabItem>
 <TabItem label="Ресурси">
