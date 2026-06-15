@@ -2,32 +2,38 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
+  file: 7-klas-ukrmova-zabolotnyi-2024_s0048
   type: textbook
-  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  title: Сторінка 49
   page: 49
   grade: 7
 - id: S2
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1157
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0109
   type: textbook
-  title: § 25. ПАСИВНІ КОНСТРУКЦІЇ
+  title: Сторінка 81
   page: 81
   grade: 11
 - id: S3
-  file: 7-klas-ukrmova-avramenko-2024_s3842
+  file: 7-klas-ukrmova-avramenko-2024_s0128
   type: textbook
-  title: § 50. Написання не з дієприкметниками
-  page: 114
+  title: Сторінка 115
+  page: 115
   grade: 7
 - id: S4
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1217
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0139
   type: textbook
-  title: § 22. Синтаксичні конструкції
+  title: Сторінка 97
   page: 97
   grade: 11
 - id: S5
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1147
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0061
   type: textbook
-  title: § 15. ДІЄСЛОВО ТА ЙОГО ФОРМИ
+  title: Сторінка 45
   page: 45
   grade: 11
+- id: S6
+  file: 10-klas-ukrmova-karaman-2018_s0331
+  type: textbook
+  title: Сторінка 187
+  page: 187
+  grade: 10

@@ -2,45 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-golub-2023_s3258
+  file: 6-klas-ukrmova-golub-2023_s0102
   type: textbook
-  title: § 35. Як розумно витрачати,
-  page: 91
+  title: Сторінка 101
+  page: 101
   grade: 6
 - id: S2
-  file: 10-klas-ukrmova-glazova-2018_s0550
+  file: 10-klas-ukrmova-glazova-2018_s0263
   type: textbook
-  title: § 45. Закінчення іменників чоловічого роду
+  title: Сторінка 190
   page: 190
   grade: 10
 - id: S3
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3387
+  file: 6-klas-ukrmova-zabolotnyi-2020_s0096
   type: textbook
-  title: § 27. ВІДМІНИ Й ГРУПИ
+  title: Сторінка 95
   page: 95
   grade: 6
 - id: S4
-  file: 4-klas-ukrmova-zaharijchuk_s1915
+  file: 4-klas-ukrmova-zaharijchuk_s0073
   type: textbook
-  title: Г ; . М ; М М «
-  page: 71
+  title: Сторінка 74
+  page: 74
   grade: 4
 - id: S5
-  file: 10-klas-ukrmova-glazova-2018_s0562
+  file: 10-klas-ukrmova-glazova-2018_s0264
   type: textbook
-  title: § 37. Розрізнення прислівників і співзвучних сполук (збоку — з боку, зрештою
-    — з рештою,
-  page: 222
+  title: Сторінка 191
+  page: 191
   grade: 10
 - id: S6
-  file: 4-klas-ukrmova-zaharijchuk_s1914
+  file: 4-klas-ukrmova-zaharijchuk_s0071
   type: textbook
-  title: ІМЕННИК
-  page: 48
+  title: Сторінка 72
+  page: 72
   grade: 4
 - id: S7
-  file: 10-klas-ukrmova-karaman-2018_s0672
+  file: 10-klas-ukrmova-karaman-2018_s0268
   type: textbook
-  title: § 59. Відмінювання іменників
-  page: 147
+  title: Сторінка 149
+  page: 149
   grade: 10
+- id: S8
+  file: 10-klas-ukrmova-karaman-2018_s0267
+  type: textbook
+  title: Сторінка 148
+  page: 148
+  grade: 10
+- id: S9
+  file: 6-klas-ukrmova-zabolotnyi-2020_s0116
+  type: textbook
+  title: Сторінка 114
+  page: 114
+  grade: 6
