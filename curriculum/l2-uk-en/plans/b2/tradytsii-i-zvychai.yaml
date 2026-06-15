@@ -2,7 +2,15 @@ module: b2-039
 level: B2
 sequence: 39
 slug: tradytsii-i-zvychai
-version: 1.0.2
+version: 1.0.3
+lifecycle: locked
+reviewed_at: '2026-06-15T11:57:12Z'
+reviewed_by: codex/b2-wiki-readiness-batch-11
+review_notes: >-
+  Batch 11 B2 wiki-readiness lock. Removed remaining VERIFY markers by
+  narrowing verbal-noun and pluralia-tantum guidance and correcting register
+  claims for прізвище and greetings. See
+  wiki/.reviews/grammar/b2/tradytsii-i-zvychai-review-LOCKED.md.
 title: Традиції і звичаї
 subtitle: Традиції і звичаї
 focus: thematic
@@ -50,7 +58,7 @@ discussion_topics:
   - Як війна вплинула на святкування в Україні?
   motivation: Дискусія про роль традицій у формуванні ідентичності.
 dialogue_situations:
-- setting: Іноземець запитує українського друга про те, як святкують Різдво в 
+- setting: Іноземець запитує українського друга про те, як святкують Різдво в
     Україні.
   roles:
   - іноземець
@@ -188,16 +196,16 @@ activities:
   total_min_items: 25
 activity_hints:
 - type: reading
-  focus: Прочитайте текст про річний цикл українських свят і дайте відповіді на 
+  focus: Прочитайте текст про річний цикл українських свят і дайте відповіді на
     запитання щодо ключових понять.
 - type: essay-response
-  focus: Напишіть короткий текст (100-150 слів) про обряди та їхня символіка, 
+  focus: Напишіть короткий текст (100-150 слів) про обряди та їхня символіка,
     використовуючи нову лексику модуля.
 - type: critical-analysis
-  focus: Проаналізуйте взаємозв'язок між поняттями у розділі «Річний цикл 
+  focus: Проаналізуйте взаємозв'язок між поняттями у розділі «Річний цикл
     українських свят». Обґрунтуйте свою позицію прикладами з тексту.
 - type: error-correction
-  focus: Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему 
+  focus: Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему
     річний цикл українських свят.
 references:
 - source: Авраменко, 11 клас (2019)
