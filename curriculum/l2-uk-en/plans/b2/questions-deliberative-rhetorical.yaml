@@ -2,7 +2,15 @@ module: b2-050
 level: B2
 sequence: 50
 slug: questions-deliberative-rhetorical
-version: 1.0.2
+version: 1.0.3
+lifecycle: locked
+reviewed_at: '2026-06-15T11:38:02Z'
+reviewed_by: codex/b2-wiki-readiness-batch-10
+review_notes: >-
+  Batch 10 B2 wiki-readiness lock. Removed remaining VERIFY markers by
+  dropping unsupported syntax claims and narrowing punctuation/intonation
+  guidance to repo-local textbook evidence. See
+  wiki/.reviews/grammar/b2/questions-deliberative-rhetorical-review-LOCKED.md.
 title: 'Питальні речення: делібератив, риторика, вкладені'
 subtitle: 'Питальні речення: делібератив, риторика, вкладені'
 focus: grammar
@@ -34,7 +42,7 @@ listening_situations:
   motivation: Розвиток навичок розпізнавання типів запитань на слух.
 writing_tasks:
 - task_type: есе
-  prompt: Напишіть переконувальне есе на тему 'Чи варто вводити обов'язкову 
+  prompt: Напишіть переконувальне есе на тему 'Чи варто вводити обов'язкову
     воєнну підготовку в школах?' Використайте всі три типи запитань.
   requirements:
   - мінімум 300 слів
@@ -49,7 +57,7 @@ discussion_topics:
 - context: 'Мовна політика в Україні: чи повинна держава регулювати мову?'
   questions:
   - Хто має право вирішувати, якою мовою говорити? (риторичне)
-  - А якщо людина не знає української — чи це привід для покарання? 
+  - А якщо людина не знає української — чи це привід для покарання?
     (деліберативне)
   motivation: Дискусія з усвідомленим вживанням різних типів запитань.
 dialogue_situations:
@@ -62,7 +70,7 @@ dialogue_situations:
   - а що, якщо це не спрацює?
   - хіба це не очевидно?
   - мене цікавить, чи врахували ви ризики
-- setting: Журналіст бере інтерв'ю у політика, ставлячи непрямі та провокативні 
+- setting: Журналіст бере інтерв'ю у політика, ставлячи непрямі та провокативні
     запитання.
   roles:
   - журналіст
