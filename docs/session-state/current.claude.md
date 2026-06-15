@@ -1,20 +1,19 @@
-# Current — Claude Session Handoff (2026-06-15)
+# Current — Claude Session Handoff (2026-06-15, late)
 
 > Router: read `docs/session-state/current.md` first (if present).
-> **Latest detailed handoff: `docs/session-state/2026-06-15-claude-parallel-fanout-atlas-infra.md`** — read it in full.
+> **Latest detailed handoff: `docs/session-state/2026-06-15-claude-atlas-antonym-live-conformance-gate-fix.md`** — read it in full.
 
-> **ROLE:** main orchestrator = **infra / tooling / tech-debt / general features / integration / merge** — NOT tracks. Track issues (folk/bio/lit/seminar) are track-orchestrator-owned.
+> **ROLE:** main orchestrator = **infra / tooling / tech-debt / general features / integration / merge** — NOT tracks. Track issues (folk/bio/lit/seminar/B2-wiki) are track-orchestrator-owned.
 
-> **✅ Shipped (merged):** **#3164** (telemetry PR1, honest cost layer), **#3166** (lit-slug CI gate #2526), **#3168** (Atlas §7 wrong-sense synonyms #3116), **#3170** (Atlas §6 calque layer #3098), `3752cc3df2` (manifest regen — §7 live). Closed **#2261** (torchvision moot), **#3167** (bad agy deps). Documented **#2732** (real fix = isolate marker-pdf + resolver-lock; needs decision).
-
-> **🔄 2nd+3rd wave ALL LANDED:** **#3177** (#2901) MERGED + source_url migration run (11,037 backfilled). **#3179** (#2882 Atlas populate) MERGED + manifest regenerated/committed (`e845b9834f`) → **antonyms(52)+phraseology(698)+etymology variant-match LIVE**, verify_manifest CLEAN. **#3178** (#1905) was already merged by another session; verified main green. Handoff threshold raised **82→88%** (`5ab70666f6`, user 2026-06-15, cost-math).
+> **✅ Shipped this session (merged):** Dependabot ×5 (#3180–#3183, #3185). **#3195** (#3150 Atlas freshness **rescoped to lexicon-CODE-only** — codex re-dispatch, reviewed+verified). **#3206** (#3197 Вікісловник **antonym noise filter**, did inline). **#3210** (**§8 `lemma_in_vesum` conformance gate root-fix** — casefold-vs-capitalized + suffix-blind exemption + VESUM-gap heritage allowlist). **#3213** (full `make atlas` regen — **antonym cleanup LIVE + ~120K-line vocab refresh**; Frontend astro render-validated). **Freshness gate GREEN on main.** Autopsy: `docs/bug-autopsies/atlas-conformance-vesum-false-positives.md`.
 
 > **⚠️ OPEN ITEMS (next session):**
-> - **#3197 (filed):** Atlas antonyms have a Wiktionary noise tail (`дочка→матка`, `він→ми`, `а→зет`) — needs a §7-style per-lemma sense/pedagogy filter in `_antonyms_wiktionary`, then regen. ~10/52 affected; shipped because ~80% correct + real-source, but flagged.
-> - **#3195 (#3150 Atlas freshness) — HELD, do NOT merge as-is.** Faithful to my brief but the brief over-gated: fingerprint hashes vocab lemmas + `atlas` CI filter includes `vocabulary.yaml` → red-X on every content PR (advisory, non-blocking, but noisy). **Fix:** make the hard gate **lexicon-CODE-only** (drop vocab from the gating fingerprint + the CI trigger); vocab drift = orchestrator's periodic `make atlas`. Re-dispatch to codex with corrected brief (Makefile + check-script structure are good, keep them). Full refinement in PR #3195 comment.
+> - **Dependabot stragglers #3186 (react patch), #3187 (happy-dom patch), #3188 (@astrojs/mdx 5→6 MAJOR)** + **#3184 greenlet** (in-flight, watcher `b43c7wm53` — confirm it merged). Repo has **auto-merge OFF + dependabot ignores `@dependabot merge`** → each needs `gh pr update-branch <N>` → wait CI → `gh pr merge --squash --delete-branch` (NO `--admin`, #M-0.5). npm trio serializes on `package-lock.json` (one at a time, re-update next after each merge).
+> - **#3211 (filed):** replace manual `_VESUM_GAP_HERITAGE_LEMMAS` allowlist with a `sources.db` heritage-fallback (Грінченко/ЕСУМ) so the §8 gate self-heals on VESUM gaps. Proper class fix.
+> - **#3098 (§6 epic):** commented — §6 calque note near-dormant; enhancement = surface it on the *replacement* word's Atlas page.
 
-> **🎯 Next:** #3150 (Atlas auto-freshness — HOLD until #2882 lands, shared lexicon pipeline), #2732 proper fix (needs decision), #1908, #3079, #3162. Consider filing: §6 calque note should also surface on the replacement-word page (else dormant — only `виглядати` fires today).
+> **🎯 Next (carried):** #2732 (isolate marker-pdf + resolver-lock — needs a DECISION, don't auto-fire), #1908 (layered-harness audit), #3079 (seminar self-converge EPIC), #3162 (primary-text routing, folk-adjacent).
 
-> ⚠️ Watch: VERIFY dispatch self-reports (agy stalled on #3167; grok #3170 citations passed MCP check). Atlas dispatches = **code-only / never commit `lexicon-manifest.json`** (orchestrator regenerates after merge). agy unreliable for fiddly resolution — route hard work to codex.
+> ⚠️ Watch: **SHIP LIVE not just code-merged (#M-11)** — antonym fix needed the manifest regen, which surfaced the gate bug; chased to #3213. **Heritage-defense before "fixing" vocab** — `search_heritage` proved `хвастливий` authentic before I nearly replaced it. **VERIFY dispatch self-reports (#M-8)** — read codex #3195's diff inline. Atlas/lexicon dispatches = code-only / never commit `lexicon-manifest.json` (orchestrator regenerates after merge).
 
-Prior handoff (superseded): `2026-06-14-claude-cursor-grok-reviewer-fixes-bakeoff.md`.
+Prior handoff (superseded): `2026-06-15-claude-parallel-fanout-atlas-infra.md`.
