@@ -1,5 +1,5 @@
 {
-  "fingerprint": "2e7082d706555ff9b53467456cda2659de50f3ffaca884d0e47717e8c8d4aa0b",
+  "fingerprint": "8a3b2dd88fab85a4a6b40dc197af003c76a38f9e0cb1dae0342970917820ae2c",
   "inputs": {
     "lexicon_code": [
       {
@@ -12,7 +12,7 @@
       },
       {
         "path": "scripts/lexicon/build_data_manifest.py",
-        "sha256": "bc2be308b52c526f6d41a471c500fc7215ca2730f68cde542a185a4144370c00"
+        "sha256": "6a515312494aac2dbfd9f0e038323f54a5659193fe28d4573a39e47729165584"
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",
@@ -39,6 +39,10 @@
         "sha256": "d08a0227aa4118f967b6d863d21ed66aa5043dea623027cfaf6814fd19a660af"
       },
       {
+        "path": "scripts/lexicon/generate_vesum_aliases.py",
+        "sha256": "779e54b378f8f4aeff45101d8b5dc5cff55fba9916459ecb5dfcf89cbcc876f1"
+      },
+      {
         "path": "scripts/lexicon/heritage_classifier.py",
         "sha256": "ddb4f8e7bd52f17267e2c7e6bcdf57a64878e4e3ae0eca64ce42f8d2a43f16e5"
       },
@@ -59,6 +63,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 13
+    "lexicon_code_files": 14
   }
 }

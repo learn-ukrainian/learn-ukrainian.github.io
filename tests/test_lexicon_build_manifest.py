@@ -1,8 +1,37 @@
+import scripts.lexicon.build_data_manifest as build_data_manifest
 from scripts.lexicon.build_data_manifest import (
     HERITAGE_STATUS_SEEDS,
     SURZHYK_TO_AVOID_SEEDS,
+    _atlas_record_for_manifest,
+    _lemma_key,
     build_manifest,
 )
+
+
+def test_vesum_alias_folds_inflection_into_taught_lemma(monkeypatch) -> None:
+    monkeypatch.setattr(
+        build_data_manifest,
+        "VESUM_INFLECTION_ALIASES_BY_KEY",
+        {_lemma_key("брата"): "брат"},
+    )
+    rec = {"lemma": "брата", "source": "built_vocabulary"}
+    out = _atlas_record_for_manifest(rec, {_lemma_key("брат")})
+    assert out["lemma"] == "брат"
+    assert out["atlas_normalization"]["kind"] == "vesum_inflection_to_lemma"
+    assert out["atlas_normalization"]["source_lemma"] == "брата"
+
+
+def test_vesum_alias_skips_when_target_lemma_not_taught(monkeypatch) -> None:
+    # never create a new lemma page: if the target isn't already taught, leave the form alone
+    monkeypatch.setattr(
+        build_data_manifest,
+        "VESUM_INFLECTION_ALIASES_BY_KEY",
+        {_lemma_key("вареники"): "вареник"},
+    )
+    rec = {"lemma": "вареники", "source": "built_vocabulary"}
+    out = _atlas_record_for_manifest(rec, set())
+    assert out["lemma"] == "вареники"
+    assert "atlas_normalization" not in out
 
 
 def test_surzhyk_to_avoid_seed_group_is_in_manifest() -> None:
