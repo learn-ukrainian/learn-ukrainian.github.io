@@ -2,7 +2,15 @@ module: b2-038
 level: B2
 sequence: 38
 slug: register-formal-written
-version: 1.0.2
+version: 1.0.3
+lifecycle: locked
+reviewed_at: '2026-06-15T14:22:00Z'
+reviewed_by: codex/b2-wiki-readiness-batch-19
+review_notes: >-
+  Batch 19 wiki readiness lock. Cleared the remaining register-formal-written
+  VERIFY markers by bounding morphology rules, using existing passive/active
+  participle evidence, and preserving source-backed formal-register guidance.
+  See wiki/.reviews/grammar/b2/register-formal-written-review-LOCKED.md.
 title: 'Офіційний писемний стиль: науковий та юридичний'
 subtitle: 'Офіційний писемний стиль: науковий та юридичний'
 focus: grammar
@@ -10,27 +18,27 @@ pedagogy: TTT
 word_target: 4000
 phase: B2.3 [Stylistic Devices & Register]
 objectives:
-- Порівняти науковий та офіційно-діловий стилі як два полюси формального 
+- Порівняти науковий та офіційно-діловий стилі як два полюси формального
   писемного мовлення.
 - 'Опанувати спільні риси: об''єктивність, безособовість, термінологічна точність,
   складний синтаксис.'
 - 'Розрізняти специфіку кожного: науковий — доказовість та логіка; офіційний — стандартизація
   та однозначність.'
-- Навчитися складати академічні анотації та офіційні документи (заяви, 
+- Навчитися складати академічні анотації та офіційні документи (заяви,
   претензії).
 reading_situations:
 - source_type: наукова стаття / анотація
-  topic: Аналіз академічної анотації до сучасного дослідження в галузі штучного 
+  topic: Аналіз академічної анотації до сучасного дослідження в галузі штучного
     інтелекту або екології.
   key_elements:
   - структура IMRaD
   - термінологічна насиченість
   - лаконічність
   - об'єктивність викладу
-  motivation: Розуміння стандартів міжнародної та української академічної 
+  motivation: Розуміння стандартів міжнародної та української академічної
     комунікації.
 - source_type: законодавчий акт
-  topic: Аналіз вибраних статей із Цивільного кодексу щодо прав та обов'язків 
+  topic: Аналіз вибраних статей із Цивільного кодексу щодо прав та обов'язків
     сторін.
   key_elements:
   - безособові конструкції
@@ -39,7 +47,7 @@ reading_situations:
   motivation: Розуміння юридичного мовлення та його мовних засобів.
 listening_situations:
 - media_type: лекція
-  setting: Уривок із лекції про методологію наукових досліджень та етику 
+  setting: Уривок із лекції про методологію наукових досліджень та етику
     академічного письма.
   focus_points:
   - логічна послідовність
@@ -48,7 +56,7 @@ listening_situations:
   motivation: Розвиток сприйняття складного наукового мовлення.
 writing_tasks:
 - task_type: анотація + заява
-  prompt: 1) Напишіть анотацію (150 слів) до уявного дослідження. 2) Напишіть 
+  prompt: 1) Напишіть анотацію (150 слів) до уявного дослідження. 2) Напишіть
     офіційну заяву до установи (150 слів). Порівняйте стилістичні засоби.
   requirements:
   - загалом мінімум 300 слів
@@ -129,9 +137,9 @@ content_outline:
 - section: Підсумок — Summary
   words: 300
   points:
-  - Scientific and Official-Business styles share objectivity, complex syntax, 
-    and impersonal constructions (e.g., -но/-то). Scientific style focuses on 
-    logical evidence and IMRaD structure, while official style relies on strict 
+  - Scientific and Official-Business styles share objectivity, complex syntax,
+    and impersonal constructions (e.g., -но/-то). Scientific style focuses on
+    logical evidence and IMRaD structure, while official style relies on strict
     standardization and fixed formulas (згідно з, відповідно до).
   - "Self-check: What is the main difference between scientific and official-business
     styles? Transform the active phrase 'Ми вирішили проблему' into an impersonal
@@ -201,7 +209,7 @@ activities:
   total_min_items: 25
 activity_hints:
 - type: fill-in
-  focus: Доповнити науковий текст конекторами, юридичний — формулами (згідно з, 
+  focus: Доповнити науковий текст конекторами, юридичний — формулами (згідно з,
     на підставі)
 - type: error-correction
   focus: 'Знайти стилістичний дисонанс: розмовну лексику в науковому або емоційність
