@@ -25,9 +25,10 @@
 |---|---|---|
 | **ukrlib «Народна творчість»** | `https://www.ukrlib.com.ua/narod/` | FOLK — full texts of every oral genre (казки, думи, легенди, пісні, колядки, веснянки, прислів'я, вертеп). Genre pages `book.php?id=N` — verified live 2026-06-15: веснянки=0, драматургія/вертеп=1, жниварські=2, історичні пісні/коломийки=3, колядки=5, колядки-й-щедрівки=6, народний епос/думи=11. |
 | **ukrlib бібліотека** | `https://www.ukrlib.com.ua/books/` | LIT / LIT-* — full texts of Ukrainian literary works by author. |
-| **Diasporiana** | `https://diasporiana.org.ua/` | All seminars — digitized diaspora/émigré editions preserved outside Soviet censorship. Category pages, incl. **Фольклор** `https://diasporiana.org.ua/category/folklor/` (252 items, verified live 2026-06-15). The verified replacement for the now-defunct Чтиво. |
+| **Освіта.ua — українська література** | `https://osvita.ua/school/literature/` | LIT / LIT-* (primary) + all seminars — full texts of the Ukrainian **school-program** literary canon, read online, indexed A–Я **by author** (verified live 2026-06-15). Authored works only (no anonymous-folk-genre browse — use ukrlib «Народна творчість» for folk). |
+| **Diasporiana** | `https://diasporiana.org.ua/` | All seminars — digitized diaspora/émigré editions preserved outside Soviet censorship. Category pages, incl. **Фольклор** `https://diasporiana.org.ua/category/folklor/` (252 items, verified live 2026-06-15). The verified replacement for the now-defunct Чтиво. (Also in our own corpus — `scrape_diasporiana.py`.) |
 | ~~**Чтиво**~~ **(DEFUNCT)** | ~~`https://chtyvo.org.ua/`~~ | ⛔ **CLOSED 2026-06-15** — the site published a closure notice ("після більш ніж 20 років… завершити роботу… сайт більше не буде активно підтримуватися") and no longer serves content. **Do NOT ship chtyvo.org.ua links anywhere.** Use Diasporiana / ukrlib / Вікіджерела instead. Repo-wide cleanup tracked — see "Defunct-archive sweep" below. |
-| **Ізборник / Літопис** | `http://izbornyk.org.ua/` | HIST · ISTORIO · OES · RUTH — chronicles, Грушевський, medieval/early-modern sources. (HTTP only — verify per-link before shipping; HTTPS currently redirect-loops.) |
+| **Ізборник / Літопис** | `http://litopys.org.ua/` (= `izbornyk.org.ua`) | HIST · ISTORIO · OES · RUTH — chronicles, Грушевський, medieval/early-modern sources. **Verified live 2026-06-15** (HTTP only — HTTPS redirect-loops; ship the `http://` form). **Already in our corpus** (`scrape_litopys.py` / `batch_scrape_izbornyk.py` → `literary_texts`: Іпатіївський/Лаврентіївський/Новгородський/Київський літописи, Величко, Самовидець, ПВЛ, Грушевський — ~11K chunks). |
 | **Вікіджерела (uk.wikisource)** | `https://uk.wikisource.org/` | LIT / FOLK — public-domain works. Verify exact page titles before shipping (category/page names vary; do NOT guess URLs). |
 
 **Rule:** ship ONLY links you have verified live (HTTP 200, https preferred — browser-checked, not assumed).
@@ -37,11 +38,11 @@ case in point: an archive listed + #M-4-checked on 2026-06-14 was dead the next 
 
 ## Per-track source registry (which archives each track points to)
 
-- **folk** → ukrlib «Народна творчість» (primary; genre pages per the ID table above) + Diasporiana «Фольклор».
-- **lit, lit-\*** → ukrlib бібліотека (the work) + Вікіджерела (public-domain) + Diasporiana.
-- **hist, istorio** → Ізборник/Літопис + ukrlib козацькі літописи + Diasporiana.
-- **oes, ruth** → Ізборник (chronicles, OES/Middle-Ukrainian texts) + Diasporiana.
-- **bio** → Вікіпедія (subject) + ukrlib бібліотека (subject's own writings) + Diasporiana.
+- **folk** → ukrlib «Народна творчість» (primary; genre pages per the ID table above) + Освіта.ua (school-canon literary reworkings) + Diasporiana «Фольклор».
+- **lit, lit-\*** → Освіта.ua (school-program canon, read online) + ukrlib бібліотека (the work) + Вікіджерела (public-domain) + Diasporiana.
+- **hist, istorio** → Ізборник/Літопис (litopys.org.ua) + ukrlib козацькі літописи + Diasporiana.
+- **oes, ruth** → Ізборник/Літопис (litopys.org.ua — chronicles, OES/Middle-Ukrainian texts) + Diasporiana.
+- **bio** → Вікіпедія (subject) + ukrlib бібліотека (subject's own writings) + Освіта.ua + Diasporiana.
 
 (Codify as `data/seminar_reading_sources.yaml` when the gate lands — one block per track + per genre/author.
 That YAML is intentionally NOT created yet: it should be co-designed with the gate/assembler (#3120, infra
@@ -50,11 +51,24 @@ lane) so its schema matches the consumer. Until then THIS doc is the source of t
 ### Defunct-archive sweep (Чтиво closure, 2026-06-15)
 
 Чтиво (chtyvo.org.ua) closed 2026-06-15. It was referenced repo-wide (~26 files: this spec, bio plans,
-research dossiers, session-state, resource backups). The folk lane is fixed in this PR (spec above + folk
-landing + 3 module `resources.yaml` never used it / now use Diasporiana). The remaining cross-seminar
-references (esp. `curriculum/l2-uk-en/plans/bio/*.yaml`, `docs/research/bio/*`, `docs/resources/external_resources.yaml*`)
-are OTHER lanes — filed as a tracked follow-up for the infra/bio orchestrators. Do not ship any new
+research dossiers, session-state, stale resource backups). The folk lane is fixed in this PR (spec above +
+folk landing + 3 module `resources.yaml` never used it / now use Diasporiana). The **live**
+`docs/resources/external_resources.yaml` (v4.0, CORE a1–c2) is **already chtyvo-clean** (0 refs) and already
+carries litopys (5) + diasporiana (8); only the stale `external_resources.yaml.backup` / `.truncated` still
+mention chtyvo. The remaining cross-seminar references (esp. `curriculum/l2-uk-en/plans/bio/*.yaml`,
+`docs/research/bio/*`) are OTHER lanes — filed as #3175 for the infra/bio orchestrators. Do not ship any new
 chtyvo.org.ua link.
+
+### Our corpus already holds many of these primaries (but NOT folk genres) — relevant to #3162
+
+`literary_texts` (137,696 chunks) already contains the **chronicle / authored-literary / scholarly** primaries
+we link out to: litopys/izbornyk chronicles (~11K), Грушевський, encyclopedias (УЛЕ, ЕУ), and ukrlib-scraped
+authored works (Франко, Нечуй, Гончар, Шевченко, Самчук…). **Gap:** actual **folk genre** texts (думи, колядки,
+щедрівки, веснянки as verbatim folk works) are **essentially absent** — only ~8 `narod` chunks; a search for
+"Щедрик щедрик щедрівочка" returns 0 corpus hits. The `scrape_ukrlib.py` narod folk ingest (#2854) never landed.
+**Implication:** (a) folk reading-links MUST point out to ukrlib «Народна творчість» (we don't hold the folk
+primaries) — this is correct; (b) **#3162** (embed primary texts in folk modules) is blocked for folk until the
+narod folk ingest lands. For HIST/OES/LIT the primaries ARE in-corpus, so #3162 there is unblocked.
 
 ## Making it mandatory (pipeline, not hand-edits)
 
