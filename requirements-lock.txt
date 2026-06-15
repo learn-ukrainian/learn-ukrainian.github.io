@@ -154,7 +154,7 @@ python-discovery==1.1.0
 python-docx==1.2.0
 python-dotenv==1.2.2
 python-jose==3.5.0
-python-multipart==0.0.27
+python-multipart==0.0.32
 PyYAML==6.0.3
 qdrant-client==1.17.0
 radon==6.0.1
