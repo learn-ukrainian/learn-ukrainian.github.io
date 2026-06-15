@@ -314,6 +314,23 @@ _VESUM_GAP_HERITAGE_LEMMAS: frozenset[str] = frozenset(
     }
 )
 
+# MODERN technical/terminological VESUM gaps (#3270). A DIFFERENT class from the heritage
+# allowlist above: standard CONTEMPORARY terms (linguistics / grammar metalanguage) correctly
+# absent from VESUM AND from the HISTORICAL heritage corpus (Грінченко/ЕСУМ). The live heritage
+# lookup structurally CANNOT self-heal these (they postdate it), so — unlike the heritage
+# allowlist — this list is authoritative in BOTH modes (live + offline). Per-entry cited; small.
+_MODERN_TECHNICAL_LEMMAS: frozenset[str] = frozenset(
+    {
+        # морфонеміка — morphophonemics; standard linguistics subfield. Attested in
+        # Українська мова — Енциклопедія + Енциклопедія українознавства (Чижевський,
+        # «Морфонологія»). Taught in b1/checkpoint-morphophonemics; not in СУМ-11 (1970s).
+        "морфонеміка",
+        # контрфактичний — counterfactual; standard grammar metalanguage for unreal
+        # conditionals. Taught in b1/conditionals-unreal; modern term, not in СУМ-11.
+        "контрфактичний",
+    }
+)
+
 
 def _is_proper_noun_entry(entry: Mapping[str, Any]) -> bool:
     # Real pos tags carry a morphology suffix (e.g. ``proper noun:pl`` for Афіни /
@@ -379,6 +396,10 @@ def _check_lemma_in_vesum(
     # pre-Soviet headword or etymological lemma means the word is authentic Ukrainian, not
     # a Russianism (#3211). The curated allowlist is the offline fallback (no sources.db).
     if _heritage_attests(heritage, lemma):
+        return
+    # Curated modern technical terms: authoritative in BOTH modes (the live heritage lookup
+    # cannot attest contemporary terminology). #3270.
+    if _normalize_text(raw_lemma) in _MODERN_TECHNICAL_LEMMAS:
         return
     if heritage is None and _normalize_text(raw_lemma) in _VESUM_GAP_HERITAGE_LEMMAS:
         return
