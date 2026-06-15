@@ -4,6 +4,29 @@
 > 2,667 entries / 150 modules). This is the plan for **completing** the Atlas — i.e.
 > closing the population gaps, after the correctness work (#3197/#3210/#3218) landed.
 
+## ⚠️ VERIFIED FINDINGS (2026-06-15) — the "easy local wins" are NOT clean
+
+Both local fills below were built (dispatched) and **verified on real data — both produce
+garbage and were CLOSED, not merged** (#3229, #3231). The "🟢 LOCAL / no quality risk"
+claim in the original plan was WRONG:
+
+- **reverse-Балла translation (PR #3229, closed):** naive inversion maps a UK word to
+  *every* EN headword whose gloss mentions it → homograph + gloss-pollution noise.
+  `біла`→[abele, aigrette, blaze…] (no "white"), `воду`→[bail, bale, bay…] (no "water"),
+  `буду`→[kennel] (homograph with буда). Unshippable without primary-sense confidence
+  gating + homograph handling (which guts the fill rate).
+- **ЕСУМ suffix-strip etymology (PR #3231, closed):** ~40% wrong roots — `річка`→«річ»
+  (thing, not ріка), `список`→«спис» (spear), `варений`→«уаре» (parse garbage). A wrong
+  etymology is factual harm; honest labels don't rescue a false derivation.
+
+**Revised approach:** the translation + etymology gaps need a source that gives **per-lemma
+DIRECT data** (no inversion/inference): **kaikki/Wiktionary** (already partially wired for
+etymology) provides a UK lemma's EN glosses + etymology directly. Wire those, OR accept the
+gaps. Do NOT retry the inversion/suffix-strip heuristics. A real derivational lexicon
+(`scripts/lexicon/derivational_morphology.py`) gated so a root is accepted ONLY when a
+known rule reproduces the exact lemma is the other etymology option. Lesson: "deterministic
+local" ≠ "no quality risk" — verify the OUTPUT on real data before trusting a fill.
+
 ## TL;DR — it's a DATA problem, not a code problem
 
 - **Design:** ✅ have it (POC 4-tab + section model: meaning / pronunciation+stress /
