@@ -1,33 +1,45 @@
 # Source registry for wiki/grammar/b2/tekhnolohii-ta-shi.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S1
-  file: 7-klas-ukrmova-litvinova-2024_s3905
-  type: textbook
-  title: § 2. Повторення вивченого в 6 класі
-  page: 17
-  grade: 7
 - id: S2
-  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
+  file: 7-klas-ukrmova-zabolotnyi-2024_s0119
   type: textbook
-  title: МЕРЕЖЕВИЙ ЕТИКЕТ
-  page: 49
+  title: Штучний інтелект і форми на -но, -то
+  page: 120
   grade: 7
 - id: S3
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4703
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0094
   type: textbook
-  title: ЗРАЗОК. Відремонтували автобусну зупинку. → Відремонтували
-  page: 81
+  title: Прикладки в тексті про штучний інтелект
+  page: 87
   grade: 8
 - id: S4
-  file: 5-klas-ukrmova-golub-2022_s2322
+  file: 5-klas-ukrmova-golub-2022_s0218
   type: textbook
-  title: § 77. Слово будує мости
-  page: 214
+  title: Мережеві спільноти
+  page: 219
   grade: 5
 - id: S5
-  file: 5-klas-istoriya-schupak-2022_s1938
+  file: 5-klas-istoriya-schupak-2022_s0148
   type: textbook
-  title: РОЗДІЛ 4
-  page: 122
+  title: Винайдення інтернету
+  page: 147
   grade: 5
+- id: S6
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0072
+  type: textbook
+  title: Пасивні дієприкметники минулого часу
+  page: 52
+  grade: 11
+- id: S7
+  file: 7-klas-ukrmova-litvinova-2024_s0072
+  type: textbook
+  title: Безособові дієслова. Дієслівні форми на -но, -то
+  page: 68
+  grade: 7
+- id: S8
+  file: 7-klas-ukrmova-avramenko-2024_s0128
+  type: textbook
+  title: Безособові форми на -но, -то без орудного виконавця
+  page: 115
+  grade: 7
