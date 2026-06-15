@@ -1,5 +1,8 @@
 # DEFERRED — Which writer for SEMINAR tracks (hist / bio / lit family / oes / ruth / folk / istorio)?
 
+> **⚠ UPDATE 2026-06-15: the premise of this ADR — the post-2026-06-15 sunset of `delegate.py --agent claude` — was CANCELLED.** The Claude dispatch lane stays available; a better quota construct is TBD. The writer-assignment recommendation below may still hold on its own merits, but the 2026-06-15 date-urgency that drove it is VOID. Read accordingly.
+
+
 **Status:** DEFERRED — moved out of the pending queue on 2026-06-14.
 **Disposition:** This is a seminar-track writer-selection backlog item. It does not block CORE B1 work or A1/A2 workbook enrichment. Re-open when seminar writer assignment is the active workstream and current agy/gemini/codex smoke data exists.
 **Original status:** DEFERRED 2026-05-20 — user direction (pre-handoff): *"wait for the agy tests pls, integrate it in the next session and test it before making decision."* The seminar-writer choice is held pending Gemini Flash 3.5 (via the agy CLI) becoming testable in the learn-ukrainian repo. Next-session action: pull `scripts/agent_runtime/adapters/agy.py` (or whatever surface lands) from the kubedojo project, run at least one Ukrainian-content smoke build (HIST or LIT seminar module) under agy/flash-3.5, then re-open this card with empirical data alongside gemini-cli and the other candidates.
