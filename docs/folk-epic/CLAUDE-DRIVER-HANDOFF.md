@@ -58,13 +58,16 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 36 HANDOFF (2026-06-15 — DOSSIER #20 `suspilno-pobutovi-pisni` BUILT (codex/gpt-5.5) + independently CORPUS-HAMMERED + shipped to a no-merge PR; dossiers 19→20/42) — **RESUME HERE**
+## ▶▶▶ SESSION 36 HANDOFF (2026-06-15 — DOSSIERS #20–#24 batch: #20 suspilno-pobutovi · #21 narodni-balady · #22 pisni-literaturnoho-pokhodzhennia BUILT (codex/gpt-5.5) + independently CORPUS-HAMMERED + accumulated into PR #3221; #23 charivni-kazky + #24 kazky-pro-tvaryn in flight; dossiers 19→22/42 (→24 pending)) — **RESUME HERE**
 
-> **⏱ HONEST SCOPE:** Research layer only. Dossiers **19 → 20/42** (suspilno-pobutovi-pisni added THIS PR).
-> Wikis 15/42, modules 6/42 UNCHANGED. Folk nav still HIDDEN; surfacing STILL GATED (no module cleanly clears
-> LLM QG; both infra blockers #3079 + #3162 still OPEN → not mine to implement). Chose the dossier queue as
-> the determinable, unblocked, in-lane content path (building module #7 now = a gated, pedagogically-weak
-> artifact while #3162 infra-side is unlanded — anti-#M-11).
+> **⏱ HONEST SCOPE:** Research layer only — a sustained dossier batch (user: "keep working until ~700k context").
+> Dossiers **19 → 22/42** committed to PR #3221 (suspilno-pobutovi + narodni-balady + pisni-literaturnoho-
+> pokhodzhennia), with **#23 charivni-kazky + #24 kazky-pro-tvaryn dispatched** (F-block prose). Wikis 15/42,
+> modules 6/42 UNCHANGED. Folk nav still HIDDEN; surfacing STILL GATED (no module cleanly clears LLM QG; both
+> infra blockers #3079 + #3162 still OPEN → not mine to implement). Chose the dossier queue as the determinable,
+> unblocked, in-lane content path (building module #7 now = a gated, pedagogically-weak artifact while #3162
+> infra-side is unlanded — anti-#M-11). All dossiers accumulate LINEARLY on the #3221 branch (no parallel-PR
+> handoff conflict).
 
 ### ✅ DONE THIS SESSION (PR `codex/folk-dossier-suspilno-pobutovi`, NOT self-merged — agent-type contract)
 - **DOSSIER #20 `suspilno-pobutovi-pisni`** (E · Song — козацькі/чумацькі/бурлацькі/кріпацькі/рекрутські-
@@ -85,6 +88,22 @@
   projection; folkloric-vs-barocco hero `a5f3ae7f_c0033`/`3588aaff_c0597`; козацькі→чумацькі continuity
   `6890007d_c0189`; Soviet "робітничі-пісні" teleology rejected `fc2291b5_c2605`; two-empires `feaa5fa7_c0628`;
   censorship guardrail; станові-vs-суспільно terminology; СУМ-11 bias balanced by heritage).
+- **DOSSIER #21 `narodni-balady`** (E · Song — folk ballads; commit `dcb41a4d53`, 520 lines/4647 words).
+  Corpus-hammered (#M-11, my own verify_quote): scholarly-witness flagship «Дунаю, Дунаю» (= «Стефан-воєвода»,
+  the oldest recorded UA balada ≤1571) — Литвинов **0.9901** `e86cf6ca_c0039`, Перетц 0.9697 `3faf433b_c0368`;
+  **folk-corpus verbatim** «Ой на горі вогонь горить» + «Не плач, мати, не журися» **1.0** `1d9e690e_c0000`
+  (codex found a genuine narod balada I hadn't supplied — verified real); «Ой летіла стріла» textbook-only
+  (verify_quote 0.0, honestly ledgered). Do-not-quote ledger thorough (Маруся-Чурай discipline on «Ой не ходи
+  Грицю»; «Лимерівна»/«Бондарівна» = literary-dramatic). §9 ≥6 (борrow-from-Russian-romantics rejected via
+  Колесса/Русанівський `7808b51b_c0265`; ancient autonomous tradition; river-topos shared-not-common-Russian).
+- **DOSSIER #22 `pisni-literaturnoho-pokhodzhennia`** (E · Song — authored songs that folklorized; commit
+  `681913979e` cherry-picked → `75eb3dfd51`, 534 lines/4244 words). The INVERSE §4 discipline (attribute the
+  author; folklorization ≠ anonymity). Corpus-hammered: «Їхав козак за Дунай»/Климовський **0.9773**
+  `21c791c4_c0022` (Beethoven-arranged flagship); Сковорода «Знаю, що смерть…» **1.0** `2793945f_c0000`
+  («Всякому місту», Богогласник/кобзар); Петренко «Дивлюсь я на небо» via Чижевський-witness **1.0**
+  `fbf8bdff_c0539`; «Реве та стогне»/Шевченко-Крижанівський **1.0** `9976239a_c0083` (verified real). Honest
+  title-only roster (Старицький/Думитрашко/Глібов all 0.0). §9: «русская песня» mislabel (Прач 1790/Мерзляков/
+  Pushkin); literary↔oral continuum (Огієнко `0988b006_c0159`); Богогласник Ukrainian-baroque lineage.
 
 ### 🧱 KEY FACTS / GOTCHAS
 - Dossiers are NOT python_qg-gated (docs/research/) → VESUM-absent but real/attested terms are fine in prose
@@ -94,10 +113,12 @@
   so §4 leaned scholarly-witness + the honest title-only roster. Corpus still THIN for this genre.
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **Dossier #21 `narodni-balady`** (E · Song — folk ballads) — same proven loop: driver corpus-pre-grounds the
-   brief (own probes → exact chunk_ids + §4 honesty protocol) → codex/gpt-5.5 `--worktree` → independent
-   corpus-hammer → no-merge PR + bundled handoff. Then E-block tail (#22 `pisni-literaturnoho-pokhodzhennia`),
-   then F-block prose (#23 charivni-kazky…). Dossiers now 20/42 (`phase-folk-queue.md`).
+1. **#23 charivni-kazky + #24 kazky-pro-tvaryn IN FLIGHT** (codex/gpt-5.5, off the #3221 branch) — when they
+   land, corpus-hammer (prose §4 model: Грушевський змій-excerpt `da46aa92_c0485` 1.0; Франко «Лис Микита»
+   `d9e73e1e_c0004` 0.98; textbook-formula + title roster; honest no-full-tale-verbatim disclosure), accumulate
+   into #3221 (ff/cherry-pick), update this handoff. Then continue F-block: **#25 `sotsialno-pobutovi-kazky`**
+   (folds небилиці/притчі/байки), #26 narodni-lehendy, #27 istorychni-perekazy (`phase-folk-queue.md`). Same
+   proven loop: driver corpus-pre-grounds → codex → independent corpus-hammer → accumulate → push.
 2. **Surfacing folk: STILL GATED** — do NOT un-hide until a module cleanly clears LLM QG (needs #3162 infra-side
    + a re-grounded re-review). Both #3079 + #3162 OPEN, infra lane — I track, do not implement.
 3. **#3162 corpus side DONE** (S35); INFRA side (route `_build_textbook_excerpt_context` to the literary corpus
