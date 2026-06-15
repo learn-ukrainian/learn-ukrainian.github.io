@@ -1,0 +1,160 @@
+- lemma: любов
+  translation: love
+  pos: noun:f
+  usage: Без любові до мови важко довго тримати мотивацію.
+- lemma: осінь
+  translation: autumn
+  pos: noun:f
+  usage: Кольори осені допомагають запам'ятати слово осінь.
+- lemma: радість
+  translation: joy
+  pos: noun:f
+  usage: Вона говорила з радістю, але форма радістю не має подвоєння.
+- lemma: подорож
+  translation: journey, trip
+  pos: noun:f
+  usage: Після подорожі ми записали нові слова до словника.
+- lemma: ніч
+  translation: night
+  pos: noun:f
+  usage: Ми їхали ніччю, тому вранці довго відпочивали.
+- lemma: піч
+  translation: stove, oven
+  pos: noun:f
+  usage: Біля печі було тепло навіть у холодну ніч.
+- lemma: сіль
+  translation: salt
+  pos: noun:f
+  usage: Страву посипали сіллю перед подачею.
+- lemma: кров
+  translation: blood
+  pos: noun:f
+  usage: Аналіз крові показав нормальний результат.
+- lemma: мати
+  translation: mother
+  pos: noun:f
+  usage: Син пишався своєю матір'ю.
+- lemma: подвоєння
+  translation: consonant doubling
+  pos: noun:n
+  usage: Подвоєння з'являється у формах ніччю, сіллю, міддю.
+- lemma: нульове закінчення
+  translation: zero ending
+  pos: phrase
+  usage: Ніч має нульове закінчення в називному відмінку.
+- lemma: відміна
+  translation: declension type
+  pos: noun:f
+  usage: III відміна об'єднує жіночі іменники з нульовим закінченням.
+- lemma: гордість
+  translation: pride
+  pos: noun:f
+  usage: Він говорив про перемогу з гордістю.
+- lemma: мудрість
+  translation: wisdom
+  pos: noun:f
+  usage: Мудрість часто приходить через досвід.
+- lemma: тінь
+  translation: shadow
+  pos: noun:f
+  usage: Під деревом лежала довга тінь.
+- lemma: річ
+  translation: thing
+  pos: noun:f
+  usage: Без цієї речі важко вирушати в подорож.
+- lemma: мідь
+  translation: copper
+  pos: noun:f
+  usage: Майстер працював із міддю дуже обережно.
+- lemma: молодь
+  translation: youth
+  pos: noun:f
+  usage: Молодь активно долучилася до мовного клубу.
+- lemma: суміш
+  translation: mixture
+  pos: noun:f
+  usage: Суміш треба перемішати перед використанням.
+- lemma: розкіш
+  translation: luxury
+  pos: noun:f
+  usage: Розкіш палацу здивувала гостей.
+- lemma: відповідь
+  translation: answer, response
+  pos: noun:f
+  usage: Учитель був задоволений відповіддю студента.
+- lemma: лють
+  translation: fury
+  pos: noun:f
+  usage: Лють у тексті змінює тон розповіді.
+- lemma: мить
+  translation: instant, moment
+  pos: noun:f
+  usage: За одну мить настрій змінився.
+- lemma: гідність
+  translation: dignity
+  pos: noun:f
+  usage: Вона трималася з гідністю.
+- lemma: ніжність
+  translation: tenderness
+  pos: noun:f
+  usage: У голосі матері була ніжність.
+- lemma: щедрість
+  translation: generosity
+  pos: noun:f
+  usage: Щедрість громади допомогла зібрати книжки.
+- lemma: збіг приголосних
+  translation: consonant cluster
+  pos: phrase
+  usage: Збіг приголосних блокує подвоєння у формі радістю.
+- lemma: губний приголосний
+  translation: labial consonant
+  pos: phrase
+  usage: Після губного приголосного в орудному немає подвоєння.
+- lemma: орудний відмінок
+  translation: instrumental case
+  pos: phrase
+  usage: Орудний відмінок однини найчастіше дає помилки в цій темі.
+- lemma: родовий відмінок
+  translation: genitive case
+  pos: phrase
+  usage: У родовому відмінку можливі форми радості й радости.
+- lemma: давальний відмінок
+  translation: dative case
+  pos: phrase
+  usage: Давальний відмінок у базовій моделі має закінчення -і.
+- lemma: місцевий відмінок
+  translation: locative case
+  pos: phrase
+  usage: У місцевому відмінку кажемо у радості, у любові, на матері.
+- lemma: називний відмінок
+  translation: nominative case
+  pos: phrase
+  usage: У називному відмінку слово сіль має нульове закінчення.
+- lemma: знахідний відмінок
+  translation: accusative case
+  pos: phrase
+  usage: У знахідному однини часто бачимо ту саму форму, що й у називному.
+- lemma: кличний відмінок
+  translation: vocative case
+  pos: phrase
+  usage: Кличний відмінок має форми ноче, любове, радосте.
+- lemma: паралельні форми
+  translation: parallel forms
+  pos: phrase
+  usage: Паралельні форми любові й любови треба впізнавати в родовому відмінку.
+- lemma: шиплячий приголосний
+  translation: hissing consonant
+  pos: phrase
+  usage: Подорож закінчується на шиплячий приголосний ж.
+- lemma: словотворення
+  translation: word formation
+  pos: noun:n
+  usage: Словотворення з -ість дає багато іменників III відміни.
+- lemma: суфікс
+  translation: suffix
+  pos: noun:m
+  usage: Суфікс -ість утворює слова гордість, мудрість, гідність.
+- lemma: основа
+  translation: stem
+  pos: noun:f
+  usage: Перед орудним закінченням треба перевірити кінець основи.
