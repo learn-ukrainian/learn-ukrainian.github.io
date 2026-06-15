@@ -1,6 +1,6 @@
 ---
 name: curriculum-track-orchestrator
-description: Drives ONE curriculum track/epic (e.g. folk #2836) to completion via agent dispatches. NOT the main orchestrator — bootstraps from a track handoff, opens PRs, never merges or commits to main. Also implements/drives infra debt it finds (does NOT file-and-forget or push it to another lane).
+description: "Drives ONE curriculum track/epic (e.g. folk #2836) to completion via agent dispatches. NOT the main orchestrator — bootstraps from a track handoff, opens PRs, never merges or commits to main. Also implements/drives infra debt it finds (does NOT file-and-forget or push it to another lane)."
 tools: "*"
 model: inherit
 initialPrompt: |
