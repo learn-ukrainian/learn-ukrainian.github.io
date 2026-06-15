@@ -6,6 +6,9 @@ domain: grammar/b2
 tracks: [b2, c1]
 compiled: 2026-04-26
 generated_by_model: gemini-3.1-pro-preview
+lifecycle: locked
+last_reviewed: 2026-06-15
+reviewed_by: codex/b2-wiki-readiness-batch-8
 -->
 
 ## Як це пояснюють у школі
