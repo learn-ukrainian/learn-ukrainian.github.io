@@ -58,7 +58,62 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 35 HANDOFF (2026-06-15 — ALL 3 folk PRs MERGED (#3174 reading-links, #3193 narod scraper, #3198 corpus doc); **folk genre primaries INGESTED into the live corpus (0→35 narod chunks; search_literary now resolves думи/колядки/щедрівки)** → the #2854 narod prerequisite for #3162-folk is DONE; durable `docs/corpus-inventory.md` created) — **RESUME HERE**
+## ▶▶▶ SESSION 36 HANDOFF (2026-06-15 — DOSSIER #20 `suspilno-pobutovi-pisni` BUILT (codex/gpt-5.5) + independently CORPUS-HAMMERED + shipped to a no-merge PR; dossiers 19→20/42) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** Research layer only. Dossiers **19 → 20/42** (suspilno-pobutovi-pisni added THIS PR).
+> Wikis 15/42, modules 6/42 UNCHANGED. Folk nav still HIDDEN; surfacing STILL GATED (no module cleanly clears
+> LLM QG; both infra blockers #3079 + #3162 still OPEN → not mine to implement). Chose the dossier queue as
+> the determinable, unblocked, in-lane content path (building module #7 now = a gated, pedagogically-weak
+> artifact while #3162 infra-side is unlanded — anti-#M-11).
+
+### ✅ DONE THIS SESSION (PR `codex/folk-dossier-suspilno-pobutovi`, NOT self-merged — agent-type contract)
+- **DOSSIER #20 `suspilno-pobutovi-pisni`** (E · Song — козацькі/чумацькі/бурлацькі/кріпацькі/рекрутські-
+  солдатські-жовнірські/наймитські/заробітчанські-еміграційні). 541 lines, 5226 words, all 10 schema sections
+  + multimodal; markdownlint 0; agent-trailer PASS. Commit `0f589830c2`.
+- **Driver corpus-pre-grounded the brief** (the #M-11 Claude-only job) BEFORE dispatch → codex produced a clean
+  first pass, no correction loop. §4 honesty protocol (Tier-1 folk verbatim / Tier-2 scholarly-witness /
+  Tier-3 do-not-quote) baked into the brief.
+- **Independently CORPUS-HAMMERED (#M-11, I re-ran verify_quote myself — NOT codex's printed lines):**
+  «Ой на горі да женці жнуть» = 1.0 `d0c6550e_c0000` (folk-corpus козацька anchor); чумацькі scholarly-witness
+  «Воли мої половії…» 1.0 `6890007d_c0193`, «Ідуть воли із-за гори…» 1.0 `6890007d_c0189`, «Бери мої вози-воли…»
+  1.0 `6890007d_c0191` (Костомаров via Максимович 1847, labeled imperial-Russian framing); Shevchenko-comment
+  «Та вырис я в наймах…» 1.0 `9976239a_c0426`. New chunk_ids codex introduced (`fc2291b5_c3557` КОЗАЦЬКІ ПІСНІ
+  УЛЕ ×7 refs, `d77902e2_c1253` Шевченківський словник) verified REAL + accurately represented.
+- **Do-not-quote ledger honest** (Коцюбинський «Гей, соб, волики» FAILED 0.759; title-only УЛЕ rosters not
+  embedded). My brief's coinage `двоімперський` correctly kept OUT of prose (rephrased «двох імперських армій»).
+- **§9 = 10 chunk-grounded source-disagreements** (which Сагайдачний `3d97acbe_c0358`; rejected pro-Moscow
+  projection; folkloric-vs-barocco hero `a5f3ae7f_c0033`/`3588aaff_c0597`; козацькі→чумацькі continuity
+  `6890007d_c0189`; Soviet "робітничі-пісні" teleology rejected `fc2291b5_c2605`; two-empires `feaa5fa7_c0628`;
+  censorship guardrail; станові-vs-суспільно terminology; СУМ-11 bias balanced by heritage).
+
+### 🧱 KEY FACTS / GOTCHAS
+- Dossiers are NOT python_qg-gated (docs/research/) → VESUM-absent but real/attested terms are fine in prose
+  (строкарство = УЛЕ-attested; чумаківна/чумачиха = ЕСУМ; інципіт = standard folkloristic term). No coinages shipped.
+- The folk genre primaries ingested in Session 35 (narod chunks) gave us the ONE clean folk-corpus §4 verbatim
+  («Ой на горі»); most suspilno-pobutova verbatims still live embedded in scholarly works (Костомаров/Максимович),
+  so §4 leaned scholarly-witness + the honest title-only roster. Corpus still THIN for this genre.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **Dossier #21 `narodni-balady`** (E · Song — folk ballads) — same proven loop: driver corpus-pre-grounds the
+   brief (own probes → exact chunk_ids + §4 honesty protocol) → codex/gpt-5.5 `--worktree` → independent
+   corpus-hammer → no-merge PR + bundled handoff. Then E-block tail (#22 `pisni-literaturnoho-pokhodzhennia`),
+   then F-block prose (#23 charivni-kazky…). Dossiers now 20/42 (`phase-folk-queue.md`).
+2. **Surfacing folk: STILL GATED** — do NOT un-hide until a module cleanly clears LLM QG (needs #3162 infra-side
+   + a re-grounded re-review). Both #3079 + #3162 OPEN, infra lane — I track, do not implement.
+3. **#3162 corpus side DONE** (S35); INFRA side (route `_build_textbook_excerpt_context` to the literary corpus
+   + non-word-counted reading panel) is infra-lane. Coordinate with the infra orchestrator; once it lands, folk
+   modules can embed the primaries → re-run `run_llm_qg_parity.py`; pedagogical should lift off 6.7.
+4. **Remaining folk modules 6→42** — gate EACH with `verify_shippable --astro-build` + corpus-hammer; never python_qg alone.
+
+### ⚠ CARRY-FORWARD
+- PR opened, NOT self-merged (agent-type contract; orchestrator promotes). Handoff bundled in the PR.
+- `git push` folk → `--no-verify`; never reset/commit on main. 0 dispatches in flight at handoff.
+- Codex worktree `.worktrees/dispatch/codex/folk-dossier-suspilno-pobutovi` holds the artifact + build commit
+  (#M-10 forensics); `git worktree remove --force` only after the PR merges.
+
+---
+
+## ▶▶▶ SESSION 35 HANDOFF (2026-06-15 — ALL 3 folk PRs MERGED (#3174 reading-links, #3193 narod scraper, #3198 corpus doc); **folk genre primaries INGESTED into the live corpus (0→35 narod chunks; search_literary now resolves думи/колядки/щедрівки)** → the #2854 narod prerequisite for #3162-folk is DONE; durable `docs/corpus-inventory.md` created) — (superseded by Session 36)
 
 > **⏱ HONEST SCOPE:** No new module built — folk modules still **6/42**. This session shipped the
 > reading-links (S34), expanded + RAN the folk-corpus ingest, and built a durable corpus inventory.
