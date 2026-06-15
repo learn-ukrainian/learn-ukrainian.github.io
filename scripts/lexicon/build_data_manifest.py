@@ -34,6 +34,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 CURRICULUM_MANIFEST = CURRICULUM_ROOT / "curriculum.yaml"
 MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
+VESUM_ALIAS_MAP_PATH = PROJECT_ROOT / "data" / "lexicon" / "vesum_inflection_aliases.json"
 _STRESS_MARK_RE = re.compile("[\u0300\u0301]")
 
 
@@ -137,6 +138,30 @@ VESUM_CANONICAL_HEADS_BY_KEY = {
     _lemma_key(source): (target, reason)
     for source, (target, reason) in VESUM_CANONICAL_HEADS.items()
 }
+
+
+def _load_vesum_inflection_aliases() -> dict[str, str]:
+    """Load the committed VESUM inflection→lemma alias map: ``form_key -> target lemma``.
+
+    Generated offline by ``scripts.lexicon.generate_vesum_aliases`` and committed, so the
+    build stays deterministic and needs no ``vesum.db`` (CI-safe). A missing/garbled file
+    yields no aliases — the build degrades to curated-only normalization.
+    """
+    try:
+        payload = json.loads(VESUM_ALIAS_MAP_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    aliases = payload.get("aliases") if isinstance(payload, dict) else None
+    if not isinstance(aliases, dict):
+        return {}
+    return {
+        _lemma_key(form): str(info["lemma"])
+        for form, info in aliases.items()
+        if isinstance(info, dict) and info.get("lemma")
+    }
+
+
+VESUM_INFLECTION_ALIASES_BY_KEY = _load_vesum_inflection_aliases()
 
 
 def _course_module_numbers() -> dict[tuple[str, str], int]:
@@ -285,6 +310,23 @@ def _atlas_record_for_manifest(rec: dict, taught_lemma_keys: set[str]) -> dict |
             reason=reason,
         )
         return canonicalized
+
+    # Auto-generated VESUM aliasing: fold an unambiguous inflected form into its lemma, but
+    # ONLY when that lemma is already taught (no new pages) — same non-destructive contract
+    # as the vocative mapping above. The map is pre-gated (single VESUM lemma; form != lemma;
+    # lemma taught); the taught re-check keeps it safe if the map drifts from the vocab.
+    alias_target = VESUM_INFLECTION_ALIASES_BY_KEY.get(key)
+    if alias_target and _lemma_key(alias_target) in taught_lemma_keys:
+        aliased = dict(rec)
+        aliased["lemma"] = alias_target
+        aliased["source"] = "built_vocabulary_normalized"
+        aliased["atlas_normalization"] = _normalization_record(
+            kind="vesum_inflection_to_lemma",
+            source_lemma=display_lemma,
+            target_lemma=alias_target,
+            reason="VESUM: unambiguous inflected form folded into already-taught lemma.",
+        )
+        return aliased
 
     return rec
 
