@@ -2,7 +2,15 @@ module: b2-063
 level: B2
 sequence: 63
 slug: word-formation-adjective-adverbs
-version: 1.0.2
+version: 1.0.3
+lifecycle: locked
+reviewed_at: '2026-06-15T09:30:00Z'
+reviewed_by: codex/b2-wiki-readiness-batch-3
+review_notes: >-
+  Batch 3 B2 wiki-readiness lock. Removed only evidence-backed VERIFY markers
+  from wiki/grammar/b2/word-formation-adjective-adverbs.md, refreshed its source
+  registry to current local textbook chunks, and recorded the lock in
+  wiki/.reviews/grammar/b2/word-formation-adjective-adverbs-review-LOCKED.md.
 title: 'Словотвір: прикметники та прислівники'
 subtitle: 'Словотвір: прикметники та прислівники'
 focus: vocabulary
@@ -10,9 +18,9 @@ pedagogy: TTT
 word_target: 4000
 phase: B2.5 [Verb Nuances & Word Formation]
 objectives:
-- Засвоїти продуктивні суфікси для творення прикметників (-н-, -ов-, -ев-, 
+- Засвоїти продуктивні суфікси для творення прикметників (-н-, -ов-, -ев-,
   -ськ-, -лив-, -ист-, -ат-).
-- Опанувати фонетичні зміни при творенні прикметників від географічних назв 
+- Опанувати фонетичні зміни при творенні прикметників від географічних назв
   (-ськ-/-цьк-/-зьк-).
 - 'Вивчити способи творення прислівників: суфіксальний (-о, -е), префіксально-суфіксальний
   (по-..-ому), адвербіалізація.'
@@ -27,7 +35,7 @@ reading_situations:
   - стилістичні епітети
   motivation: Розуміння словотвірного багатства описового тексту.
 - source_type: художній опис
-  topic: Уривок із сучасної прози з динамічними прислівниками (тихо-тихо, 
+  topic: Уривок із сучасної прози з динамічними прислівниками (тихо-тихо,
     навпомацки, зненацька).
   key_elements:
   - прислівники способу дії
@@ -44,7 +52,7 @@ listening_situations:
   motivation: Розпізнавання словотвірних моделей в усному мовленні.
 writing_tasks:
 - task_type: відгук + інструкція
-  prompt: 1) Напишіть відгук про подорож з 15+ прикметниками. 2) Напишіть 
+  prompt: 1) Напишіть відгук про подорож з 15+ прикметниками. 2) Напишіть
     інструкцію-пораду з 15+ прислівниками.
   requirements:
   - загалом мінімум 300 слів
@@ -204,6 +212,9 @@ activity_hints:
   focus: 'Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему творення
     прикметників: суфікси та моделі.'
 references:
+- source: wiki/grammar/b2/word-formation-adjective-adverbs.md
+  pages: locked review 2026-06-15
+  topic: B2 wiki readiness lock
 - source: Караман, 10 клас (2018)
   pages: §55–60
   topic: Словотвір
@@ -216,6 +227,12 @@ references:
 - source: Державний стандарт 2024
   pages: SS 4.2.9, 4.2.10
   topic: 'Словотвір: прикметники та прислівники'
+changelog:
+- version: 1.0.3
+  date: '2026-06-15'
+  changes:
+  - Додано lifecycle lock для Batch 3 B2 wiki readiness.
+  - Зафіксовано зв'язок плану з locked wiki review для word-formation-adjective-adverbs.
 connects_to:
   previous: word-formation-place-object-names
   next: advanced-conjunctions-i
