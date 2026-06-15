@@ -37,3 +37,21 @@ sources:
   title: Пунктуаційна норма. КУЛЬТУРА СЛОВА
   page: 148
   grade: 11
+- id: S9
+  file: 2-klas-ukrmova-bolshakova-2019-1_s0007
+  type: textbook
+  title: Сторінка 6
+  page: 6
+  grade: 2
+- id: S10
+  file: 2-klas-ukrmova-bolshakova-2019-2_s0023
+  type: textbook
+  title: Сторінка 22
+  page: 22
+  grade: 2
+- id: S11
+  file: 11-klas-istoriya-ukr-gisem-2024_s0361
+  type: textbook
+  title: Сторінка 203
+  page: 203
+  grade: 11

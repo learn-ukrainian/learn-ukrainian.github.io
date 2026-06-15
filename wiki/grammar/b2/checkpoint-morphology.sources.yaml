@@ -38,8 +38,14 @@ sources:
   page: 110
   grade: 6
 - id: S8
-  file: 7-klas-ukrmova-zabolotnyi-2024_s3968
+  file: 7-klas-ukrmova-avramenko-2024_s3810
   type: textbook
-  title: ТЕМА 17. АУДІЮВАННЯ
-  page: 269
+  title: '§ 22. Дієслово: загальне значення, морфологічні ознаки, синтаксична роль'
+  page: 52
+  grade: 7
+- id: S9
+  file: 7-klas-ukrmova-litvinova-2024_s3921
+  type: textbook
+  title: § 17. Активні й пасивні дієприкметники
+  page: 90
   grade: 7
