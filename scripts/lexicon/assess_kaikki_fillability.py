@@ -41,12 +41,16 @@ def is_clean_lemma(word: str) -> bool:
     - multi-token phrases (contain whitespace)
     - entries ending in ! or ?
     - slash-notations (contain /)
+    - bound morphemes / affixes (leading or trailing hyphen, e.g. ``-ам``, ``пра-``);
+      internal hyphens (``будь-який``, ``жовто-блакитний``) remain valid lemmas.
     """
     if not word:
         return False
     if any(c.isspace() for c in word):
         return False
     if word.endswith("!") or word.endswith("?"):
+        return False
+    if word.startswith("-") or word.endswith("-"):
         return False
     return "/" not in word
 

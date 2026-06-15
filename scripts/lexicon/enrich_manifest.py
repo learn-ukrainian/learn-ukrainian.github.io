@@ -2379,6 +2379,33 @@ def _kaikki_etymology(lookup: dict[str, dict[str, Any]], lemma: str) -> dict | N
     return {"text": text, "source": KAIKKI_SOURCE}
 
 
+def _kaikki_translation(lookup: dict[str, dict[str, Any]], lemma: str) -> dict[str, object] | None:
+    """English translation glosses from Wiktionary/kaikki (§11 fallback after dmklinger).
+
+    Form-of / misspelling / spelling-variant meta-glosses are already dropped at
+    build time (`build_kaikki_lookup.extract_glosses`), so these are real translations.
+    """
+    row = _kaikki_row(lookup, lemma)
+    if not row:
+        return None
+    glosses = row.get("glosses")
+    if not isinstance(glosses, list):
+        return None
+    english: list[str] = []
+    seen: set[str] = set()
+    for gloss in glosses:
+        text = clean_html_entities(str(gloss or "")).strip()
+        if not text:
+            continue
+        key = text.casefold()
+        if key not in seen:
+            seen.add(key)
+            english.append(text)
+    if not english:
+        return None
+    return {"en": english[:6], "source": KAIKKI_SOURCE}
+
+
 def _source_etymology(
     conn: sqlite3.Connection,
     lemma: str,
@@ -2489,37 +2516,42 @@ def _load_dmklinger_index(conn: sqlite3.Connection) -> dict[str, list[tuple[str,
     return index
 
 
-def _translation(conn: sqlite3.Connection, lemma: str) -> dict[str, object] | None:
+def _translation(
+    conn: sqlite3.Connection,
+    lemma: str,
+    kaikki_lookup: dict[str, dict[str, Any]] | None = None,
+) -> dict[str, object] | None:
     """English translations for a Ukrainian lemma (Переклад, §11).
 
-    Source is the dmklinger UK→EN dictionary (`dmklinger_uk_en`). Балла is EN→UK
-    only — no clean reverse — so it is intentionally NOT used here; an exact
-    UK→EN match avoids the noise of reverse-lookup. Returns up to six glosses.
+    Primary source is the dmklinger UK→EN dictionary (`dmklinger_uk_en`) — a curated
+    bilingual dictionary, preferred for precision. Балла is EN→UK only — no clean
+    reverse — so it is intentionally NOT used here. When dmklinger has no entry, fall
+    back to Wiktionary/kaikki translation glosses (form-of/misspelling meta-glosses are
+    stripped at build time). Returns up to six glosses.
     """
     index = _load_dmklinger_index(conn)
-    if not index:
-        return None
-    for variant in _split_lemma_variants(lemma):
-        rows = index.get(_dmklinger_key(variant))
-        if not rows:
-            continue
-        english: list[str] = []
-        seen: set[str] = set()
-        pos: str | None = None
-        for row_pos, raw in rows:
-            if pos is None and row_pos:
-                pos = clean_html_entities(str(row_pos).strip())
-            for gloss in _parse_translations(raw):
-                key = gloss.casefold()
-                if key not in seen:
-                    seen.add(key)
-                    english.append(gloss)
-        if english:
-            block: dict[str, object] = {"en": english[:6], "source": _TRANSLATION_SOURCE}
-            if pos:
-                block["pos"] = pos
-            return block
-    return None
+    if index:
+        for variant in _split_lemma_variants(lemma):
+            rows = index.get(_dmklinger_key(variant))
+            if not rows:
+                continue
+            english: list[str] = []
+            seen: set[str] = set()
+            pos: str | None = None
+            for row_pos, raw in rows:
+                if pos is None and row_pos:
+                    pos = clean_html_entities(str(row_pos).strip())
+                for gloss in _parse_translations(raw):
+                    key = gloss.casefold()
+                    if key not in seen:
+                        seen.add(key)
+                        english.append(gloss)
+            if english:
+                block: dict[str, object] = {"en": english[:6], "source": _TRANSLATION_SOURCE}
+                if pos:
+                    block["pos"] = pos
+                return block
+    return _kaikki_translation(kaikki_lookup or {}, lemma)
 
 
 def _fts_phrase(term: str) -> str:
@@ -2731,7 +2763,7 @@ def enrich() -> tuple[int, int]:
             literary = _literary_attestation(conn, lemma)
             if literary:
                 block["literary_attestation"] = literary
-            translation = _translation(conn, lemma)
+            translation = _translation(conn, lemma, kaikki_lookup)
             if translation:
                 block["translation"] = translation
             if block:

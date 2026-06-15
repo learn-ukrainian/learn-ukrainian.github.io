@@ -89,33 +89,71 @@ def entry_has_gloss(entry: dict[str, Any]) -> bool:
     return False
 
 
-# A gloss is a real English TRANSLATION only if it is not a morphological "form of",
-# spelling-variant, or misspelling meta-gloss (those are useful as a form→lemma signal,
-# not as a learner-facing translation). #2882.
-_META_GLOSS_RE = re.compile(
-    r"^(inflection|misspelling|alternative (form|spelling)|obsolete (form|spelling)|"
+# A gloss CLAUSE is a morphological "form of" / spelling-variant / misspelling meta-note —
+# useful as a form→lemma signal, NOT a learner-facing translation. Wiktionary often appends
+# such a note to a real translation in the same gloss string ("what, alternative form of що")
+# or behind a leading qualifier ("common misspelling of X"), so the match must (a) tolerate a
+# leading qualifier word and (b) be applied per comma/semicolon clause, not just at string
+# start. #2882.
+_META_CLAUSE_RE = re.compile(
+    r"^(?:(?:a|an|the|common|informal|colloquial|dialectal|regional|rare|dated|slang|"
+    r"chiefly|mainly|eye|endearing)\s+)*"
+    r"(inflection|misspelling|alternative (form|spelling)|obsolete (form|spelling)|"
     r"superseded spelling|romani[sz]ation|abbreviation|initialism|clipping|contraction|"
-    r"synonym|antonym|eye dialect|pronunciation spelling|archaic (form|spelling)|"
+    r"eye dialect|pronunciation spelling|archaic (form|spelling)|"
     r"dated (form|spelling)|rare (form|spelling)|nonstandard (form|spelling)|"
-    r"(a )?diminutive) of\b",
+    r"diminutive) of\b",
     re.IGNORECASE,
 )
 _FORM_OF_RE = re.compile(
     r"\b(nominative|genitive|dative|accusative|instrumental|vocative|locative|prepositional|"
     r"singular|plural|dual|first-person|second-person|third-person|imperfective|perfective|"
     r"comparative|superlative|participle|imperative|infinitive|gerund|present|past|future|"
-    r"indicative|subjunctive|conditional)\b.*\bof\b\s*[Ѐ-ӿ]",
+    r"indicative|subjunctive|conditional|passive|active|verbal noun)\b.*\bof\b\s*[Ѐ-ӿ]",
     re.IGNORECASE,
 )
+# A clause made up ENTIRELY of grammatical-form descriptors ("accusative singular",
+# "nominative/vocative plural") is an inflected-form gloss, NOT a translation. Wiktionary
+# emits these bare (no "of <lemma>" tail) on non-lemma form entries. Requires >= 2 tokens so a
+# real one-word gloss that happens to be a grammatical term ("present", "plural") survives. #2882.
+_GRAMMATICAL_TOKEN = (
+    r"nominative|genitive|dative|accusative|instrumental|vocative|locative|prepositional|"
+    r"singular|plural|dual|animate|inanimate|masculine|feminine|neuter|"
+    r"first-person|second-person|third-person|present|past|future|imperfective|perfective|"
+    r"indicative|subjunctive|imperative|conditional|comparative|superlative"
+)
+_GRAMMATICAL_FORM_RE = re.compile(rf"^(?:(?:{_GRAMMATICAL_TOKEN})[\s/]*)+$", re.IGNORECASE)
+_TOKEN_SPLIT_RE = re.compile(r"[\s/]+")
+_CLAUSE_SPLIT_RE = re.compile(r"\s*[;,]\s*")
 
 
-def _is_translation_gloss(gloss: str) -> bool:
+def _is_grammatical_form(clause: str) -> bool:
+    c = clause.strip()
+    return bool(_GRAMMATICAL_FORM_RE.match(c)) and len(_TOKEN_SPLIT_RE.split(c)) >= 2
+
+
+def _is_meta_clause(clause: str) -> bool:
+    return bool(
+        _META_CLAUSE_RE.match(clause)
+        or _FORM_OF_RE.search(clause)
+        or _is_grammatical_form(clause)
+    )
+
+
+def _clean_gloss(gloss: str) -> str:
+    """Drop meta clauses (form-of / misspelling / spelling-variant), keep real translations.
+
+    Non-destructive when no meta clause is present — the original gloss is returned
+    unchanged so good glosses keep their exact formatting.
+    """
     g = gloss.strip()
-    if len(g) < 2:
-        return False
-    if _META_GLOSS_RE.match(g):
-        return False
-    return not _FORM_OF_RE.search(g)
+    clauses = _CLAUSE_SPLIT_RE.split(g)
+    if len(clauses) == 1:
+        return "" if _is_meta_clause(g) else g
+    kept = [c for c in clauses if c and not _is_meta_clause(c)]
+    if len(kept) == len(clauses):
+        return g  # nothing dropped — preserve original
+    return ", ".join(kept).strip()
 
 
 def extract_glosses(entry: dict[str, Any]) -> list[str]:
@@ -127,9 +165,9 @@ def extract_glosses(entry: dict[str, Any]) -> list[str]:
         for gloss in sense.get("glosses") or []:
             if not isinstance(gloss, str):
                 continue
-            g = clean_text(gloss)
-            if g and _is_translation_gloss(g) and g not in out:
-                out.append(g)
+            cleaned = _clean_gloss(clean_text(gloss))
+            if len(cleaned) >= 2 and cleaned not in out:
+                out.append(cleaned)
     return out[:6]
 
 
@@ -167,9 +205,10 @@ def build_lookup(path: Path) -> dict[str, dict[str, Any]]:
             ipa = extract_ipa(obj)
             etymology = clean_text(obj.get("etymology_text"))
             pos = clean_text(obj.get("pos"))
+            glosses = extract_glosses(obj)
             if entry_has_gloss(obj):
                 gloss_entries += 1
-            if not ipa and not etymology and not pos:
+            if not ipa and not etymology and not pos and not glosses:
                 continue
 
             kept_entries += 1
@@ -179,6 +218,7 @@ def build_lookup(path: Path) -> dict[str, dict[str, Any]]:
                     "ipa": [],
                     "etymology_texts": [],
                     "pos": [],
+                    "glosses": [],
                 },
             )
             for item in ipa:
@@ -188,6 +228,9 @@ def build_lookup(path: Path) -> dict[str, dict[str, Any]]:
                 row["etymology_texts"].append(etymology)
             if pos and pos not in row["pos"]:
                 row["pos"].append(pos)
+            for gloss in glosses:
+                if gloss not in row["glosses"]:
+                    row["glosses"].append(gloss)
 
     lookup: dict[str, dict[str, Any]] = {}
     for key in sorted(raw):
@@ -196,6 +239,7 @@ def build_lookup(path: Path) -> dict[str, dict[str, Any]]:
             "ipa": row["ipa"],
             "etymology_text": "\n\n".join(row["etymology_texts"]),
             "pos": sorted(row["pos"]),
+            "glosses": row["glosses"][:6],
         }
 
     print(
