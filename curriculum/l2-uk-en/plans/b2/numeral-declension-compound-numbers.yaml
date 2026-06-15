@@ -2,7 +2,15 @@ module: b2-059
 level: B2
 sequence: 59
 slug: numeral-declension-compound-numbers
-version: 1.2.2
+version: 1.2.3
+lifecycle: locked
+reviewed_at: '2026-06-15T00:00:00Z'
+reviewed_by: codex/b2-wiki-readiness-batch-36
+review_notes: >-
+  Batch 36 B2 wiki-readiness lock. Verified the companion wiki page has no
+  unresolved VERIFY markers, passes the B2 wiki quality gate with its source
+  registry, updated wiki lifecycle metadata, and recorded the LOCKED review in
+  wiki/.reviews/grammar/b2/numeral-declension-compound-numbers-review-LOCKED.md.
 title: 'Відмінювання числівників: Складні, складені, збірні та дробові'
 subtitle: 'Відмінювання числівників: складені, збірні та дробові'
 focus: grammar
@@ -182,3 +190,10 @@ connects_to:
   previous: numeral-declension-time-dates
   next: word-formation-person-suffixes
 phase: B2.1c [Register System & Domain Vocabulary]
+
+changelog:
+- version: '1.2.3'
+  date: '2026-06-15'
+  changes:
+  - Locked companion B2 wiki readiness lifecycle metadata and review evidence
+    for Batch 36.

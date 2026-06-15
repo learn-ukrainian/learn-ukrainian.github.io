@@ -2,7 +2,15 @@ module: b2-028
 level: B2
 sequence: 28
 slug: kupivlia-i-servisy
-version: 1.0.2
+version: 1.0.3
+lifecycle: locked
+reviewed_at: '2026-06-15T00:00:00Z'
+reviewed_by: codex/b2-wiki-readiness-batch-36
+review_notes: >-
+  Batch 36 B2 wiki-readiness lock. Verified the companion wiki page has no
+  unresolved VERIFY markers, passes the B2 wiki quality gate with its source
+  registry, updated wiki lifecycle metadata, and recorded the LOCKED review in
+  wiki/.reviews/grammar/b2/kupivlia-i-servisy-review-LOCKED.md.
 title: Купівля і послуги
 subtitle: Купівля і послуги
 focus: thematic
@@ -217,3 +225,10 @@ grammar:
 - Ellipsis and parcelling in advertisements and reviews
 - Formal register for complaints (згідно з, відповідно до)
 register: розмовний, офіційно-діловий
+
+changelog:
+- version: '1.0.3'
+  date: '2026-06-15'
+  changes:
+  - Locked companion B2 wiki readiness lifecycle metadata and review evidence
+    for Batch 36.
