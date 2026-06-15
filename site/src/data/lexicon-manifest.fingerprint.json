@@ -1,5 +1,5 @@
 {
-  "fingerprint": "7fc344bfa480553cda9d9427de97117faee49ad3e57edfad3b947394678d91a0",
+  "fingerprint": "e872901ea85965bc10974da75c52308d2647c5b1e2339482a19f1b5cf6840ab9",
   "inputs": {
     "lexicon_code": [
       {
@@ -8,7 +8,7 @@
       },
       {
         "path": "scripts/lexicon/assess_kaikki_fillability.py",
-        "sha256": "8f020e3e7826907ce11ecd84570126b85d4374d994dda67314c0c1843c211590"
+        "sha256": "406e7ad427f0b7ecfb60bd0de0ff5cc00899025bf75c5af2fc045d80426028b9"
       },
       {
         "path": "scripts/lexicon/build_data_manifest.py",
@@ -16,7 +16,7 @@
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",
-        "sha256": "62375e956af7601202a6c29d22316dc30fbe3434b4af4c798527b82f292bfde3"
+        "sha256": "239667a7428d1d899443063169d4128cb13a034e4ba9af006edfb6ebd6da253f"
       },
       {
         "path": "scripts/lexicon/calque_corrections.py",
@@ -32,7 +32,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "8ba64107499cc6895f3141c8bc831af8fa72a9780c39a05b5feb8b58f26c560f"
+        "sha256": "79fc8a23afca4fcae91d29dcb4609793e8daf9046d4825b3c0513fa137733cb5"
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",

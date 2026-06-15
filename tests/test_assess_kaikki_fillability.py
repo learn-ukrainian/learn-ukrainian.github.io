@@ -24,6 +24,10 @@ def test_is_clean_lemma():
     assert is_clean_lemma("добрий день") is False  # whitespace
     assert is_clean_lemma("як справи?") is False  # ends in ?
     assert is_clean_lemma("він/вона") is False  # contains /
+    assert is_clean_lemma("-ам") is False  # suffix affix (leading hyphen)
+    assert is_clean_lemma("пра-") is False  # prefix affix (trailing hyphen)
+    assert is_clean_lemma("будь-який") is True  # internal hyphen is a real lemma
+    assert is_clean_lemma("жовто-блакитний") is True  # internal hyphen is a real lemma
 
 
 def test_assess_kaikki_fillability_cli(tmp_path: Path):
