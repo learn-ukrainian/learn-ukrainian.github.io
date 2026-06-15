@@ -2,7 +2,15 @@ module: b2-026
 level: B2
 sequence: 26
 slug: emphasis-and-inversion
-version: 1.2.2
+version: 1.2.3
+lifecycle: locked
+reviewed_at: '2026-06-15T00:00:00Z'
+reviewed_by: codex/b2-wiki-readiness-batch-35
+review_notes: >-
+  Batch 35 B2 wiki-readiness lock. Verified the companion wiki page has no
+  unresolved VERIFY markers, passes the B2 wiki quality gate with its source
+  registry, updated wiki lifecycle metadata, and recorded the LOCKED review in
+  wiki/.reviews/grammar/b2/emphasis-and-inversion-review-LOCKED.md.
 title: Логічне наголошування та інверсія
 subtitle: Логічний наголос та інверсія
 focus: grammar
@@ -161,3 +169,10 @@ references:
 connects_to:
   previous: correlative-constructions
   next: stylistic-connectors
+
+changelog:
+- version: '1.2.3'
+  date: '2026-06-15'
+  changes:
+  - Locked companion B2 wiki readiness lifecycle metadata and review evidence
+    for Batch 35.
