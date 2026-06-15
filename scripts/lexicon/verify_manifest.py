@@ -39,6 +39,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_VESUM = ROOT / "data" / "vesum.db"
+DEFAULT_SOURCES_DB = ROOT / "data" / "sources.db"
 DEFAULT_CURRICULUM = ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
 
 # DEFINITIVELY cross-domain auto-translation junk that must never be a synonym.
@@ -117,6 +118,7 @@ def conformance(
     *,
     curriculum_path: Path = DEFAULT_CURRICULUM,
     vesum_path: Path = DEFAULT_VESUM,
+    sources_path: Path = DEFAULT_SOURCES_DB,
 ) -> list:
     """Run the deterministic §8 Atlas conformance gates on the manifest.
 
@@ -129,20 +131,27 @@ def conformance(
     Mirrors ``tests/test_atlas_conformance.py``: lemma↔VESUM membership is enforced
     only when ``data/vesum.db`` exists (967MB, gitignored). When it is absent ONLY
     the ``lemma_in_vesum`` gate is skipped; every other §8 gate still enforces.
+    A VESUM miss is cross-checked against the heritage corpus (Грінченко/ЕСУМ via
+    ``data/sources.db``) before flagging, so authentic VESUM-gap words are not
+    false-flagged (#3211); absent sources.db → the curated allowlist fallback.
     """
     if str(ROOT) not in sys.path:  # allow `python scripts/lexicon/verify_manifest.py`
         sys.path.insert(0, str(ROOT))
-    from scripts.audit.validate_atlas_conformance import VesumLemmaLookup, validate
+    from scripts.audit.validate_atlas_conformance import validate
 
     curriculum = (
         yaml.safe_load(curriculum_path.read_text(encoding="utf-8"))
         if curriculum_path.exists()
         else {}
     )
-    if vesum_path.exists():
-        with VesumLemmaLookup(vesum_path) as vesum:
-            return validate(manifest, vesum=vesum, curriculum=curriculum)
-    return validate(manifest, vesum=None, curriculum=curriculum)
+    # Pass paths, not opened lookups: validate() opens read-only VESUM/heritage
+    # lookups and closes them in its finally block.
+    return validate(
+        manifest,
+        vesum=vesum_path if vesum_path.exists() else None,
+        curriculum=curriculum,
+        heritage=sources_path if sources_path.exists() else None,
+    )
 
 
 def run(
@@ -153,6 +162,7 @@ def run(
     run_conformance: bool = False,
     curriculum_path: Path = DEFAULT_CURRICULUM,
     vesum_path: Path = DEFAULT_VESUM,
+    sources_path: Path = DEFAULT_SOURCES_DB,
 ) -> int:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     entries = manifest.get("entries", [])
@@ -187,7 +197,9 @@ def run(
 
     conf: list = []
     if run_conformance:
-        conf = conformance(manifest, curriculum_path=curriculum_path, vesum_path=vesum_path)
+        conf = conformance(
+            manifest, curriculum_path=curriculum_path, vesum_path=vesum_path, sources_path=sources_path
+        )
         vesum_note = "" if vesum_path.exists() else " (lemma_in_vesum skipped — no data/vesum.db)"
         print(f"\n=== CONFORMANCE (§8 atlas gates){vesum_note} ===")
         if not conf:
@@ -228,6 +240,12 @@ def main() -> int:
     )
     p.add_argument("--curriculum", type=Path, default=DEFAULT_CURRICULUM, help="curriculum.yaml for cross-link gate.")
     p.add_argument("--vesum", type=Path, default=DEFAULT_VESUM, help="VESUM db for the lemma_in_vesum gate.")
+    p.add_argument(
+        "--sources",
+        type=Path,
+        default=DEFAULT_SOURCES_DB,
+        help="sources.db for the Грінченко/ЕСУМ heritage fallback on VESUM-gap lemmas (#3211).",
+    )
     args = p.parse_args()
     return run(
         args.manifest,
@@ -236,6 +254,7 @@ def main() -> int:
         run_conformance=not args.skip_conformance,
         curriculum_path=args.curriculum,
         vesum_path=args.vesum,
+        sources_path=args.sources,
     )
 
 
