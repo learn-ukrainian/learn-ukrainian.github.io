@@ -1,16 +1,21 @@
 # Folk Track — Claude Driver Handoff (MY OWN — not the orchestrator's)
 
 ## ▶▶▶ ROLE + PRIORITIES (updated 2026-06-13 — READ FIRST)
-> **MY ROLE (user 2026-06-13):** I am the orchestrator of **FOLK + ALL SEMINARS** (folk · hist · bio · istorio ·
-> lit · oes · ruth). The **OTHER orchestrator owns INFRA + Word Atlas**; **Codex owns CORE tracks (a1–c2)**. So I
-> drive seminar CONTENT and **FILE infra needs as issues** (I do NOT implement infra myself — that's the other
-> orchestrator's lane). Folk is the active seminar; the rest rest (bio handoff `docs/bio-epic/`).
+> **MY ROLE (user 2026-06-13; infra-ownership added 2026-06-16):** I am the orchestrator of **FOLK + ALL
+> SEMINARS** (folk · hist · bio · istorio · lit · oes · ruth). **Codex owns CORE tracks (a1–c2)**. I drive
+> seminar CONTENT **and I IMPLEMENT/DRIVE INFRA myself** — see agent-def rule #0.2 (user order 2026-06-16):
+> when I find infra debt (pipeline/gate/tooling/schema/build/harness) I FIX or DRIVE it to completion (inline
+> if small, dispatch + PR if large). Filing an issue SUPPLEMENTS the fix, never replaces it. **The earlier
+> "file infra needs, don't implement — that's the other orchestrator's lane" boundary is RETIRED.** I still
+> coordinate with the other orchestrator on shared infra and never commit/merge to `main` (PR only). Folk is
+> the active seminar; the rest rest (bio handoff `docs/bio-epic/`).
 >
 > **🔝 TOP PRIORITY (user 2026-06-13): issue #3079 — seminar module builds must SELF-CONVERGE** (python_qg + LLM
 > QG) **without manual correction-loop driving.** This is the ROOT CAUSE of "manually made" modules and the gate to
-> scaling all seminars. Infra orchestrator implements; I track. Sub-walls: #2991, #2997 + coinage/citation/ADR-008
-> divergence (Sessions 11–16). The folk WIKI loop already got the divergence-safety pattern (#3054 best-round) — the
-> MODULE loop (linear_pipeline ADR-008) needs the same + a cross-model fixer route.
+> scaling all seminars. **I OWN + IMPLEMENT this** (per #0.2; designed in PR #3271, B1 = the quick win below).
+> Sub-walls: #2991, #2997 + coinage/citation/ADR-008 divergence (Sessions 11–16). The folk WIKI loop already got
+> the divergence-safety pattern (#3054 best-round) — the MODULE loop (linear_pipeline ADR-008) needs the same +
+> the insert-only pedagogical corrector (B1) + a cross-model fixer route.
 >
 > **🧱 FOLK MODULE e2e TRUTH (do NOT surface folk nav until fixed):** 3/42 modules built, but **only kalendarna is
 > PROPERLY e2e** (`llm_qg.json` PASS 7.0). **koliadky + dumy have NO `llm_qg.json`** → shipped on manual #M-11
@@ -94,9 +99,11 @@
 - Markdownlint 0. Posted a design-summary comment on **issue #3079**.
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **Orchestrator: review the #3079 design PR.** The quick win (P0→P2→P3 = the insert-only loop) needs **NO ADR
-   sign-off** — it reuses the ADR-007-sanctioned `insert_after`. Only the CONDITIONAL B2 (deepen carve-out, P5)
-   needs sign-off, and only if P3-validate shows insert-only can't reach ≥8. Build B1 + validate first.
+1. **I BUILD #3079 B1 (the quick win) — IN FLIGHT (dispatched this session per #0.2 infra-ownership).** The
+   insert-only LLM-QG pedagogical correction loop (reuses ADR-007-sanctioned `insert_after`; NO ADR change, NO
+   `test_no_rewrite_contract` change; core a1–c2 no-op). After it lands: P3-validate on koliadky/dumy; open the
+   CONDITIONAL B2 deepen carve-out (P5, needs user sign-off) ONLY if insert-only can't reach ≥8. Full spec: the
+   #3079 design doc + PR #3271.
 2. **SCALE folk to ≥8 + surface — sequencing SURVEYED this session (verified, not guessed):** the `type:primary`
    sweep on the 6 built plans found: **koliadky (4 refs → 9.2 ✅), dumy (3 refs → rebuild-ready)** vs **zamovliannia
    #03 / narodni-viruvannia #02 / kalendarna — plans are STUBS** (`status: stub`, `references: [type: pending]`,
