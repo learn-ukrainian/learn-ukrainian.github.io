@@ -1,5 +1,5 @@
 {
-  "fingerprint": "b0d88346ffa75171305fc9fd8350b3063d2d98180cf9bfb5f4fabb699297ccda",
+  "fingerprint": "5a498df1e04103dc76296a447e6ee3b81baa1d4f6e14840a9e0ac4e78bd69d25",
   "inputs": {
     "lexicon_code": [
       {
@@ -32,7 +32,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "c1b9fb749d05c6ca038505b2862bd2fcbec433cc5c70f7e59c04640afb71fab6"
+        "sha256": "8ba64107499cc6895f3141c8bc831af8fa72a9780c39a05b5feb8b58f26c560f"
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
