@@ -58,7 +58,57 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 34 HANDOFF (2026-06-15 — folk reading-links SHIPPED to all 3 live modules (ukrlib genre pages + Освіта.ua + Diasporiana) + landing "Де читати" RESTORED (regressed by 228f9ca180); **Чтиво found DEAD → dropped, Diasporiana+Освіта.ua adopted**; litopys.org.ua confirmed live + corpus audited (folk-primary gap found); gate-neutral + astro-build green) — **RESUME HERE**
+## ▶▶▶ SESSION 35 HANDOFF (2026-06-15 — ALL 3 folk PRs MERGED (#3174 reading-links, #3193 narod scraper, #3198 corpus doc); **folk genre primaries INGESTED into the live corpus (0→35 narod chunks; search_literary now resolves думи/колядки/щедрівки)** → the #2854 narod prerequisite for #3162-folk is DONE; durable `docs/corpus-inventory.md` created) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** No new module built — folk modules still **6/42**. This session shipped the
+> reading-links (S34), expanded + RAN the folk-corpus ingest, and built a durable corpus inventory.
+> Surfacing folk is STILL GATED (no module cleanly clears LLM QG; pedagogical 6.7).
+
+### ✅ DONE THIS SESSION (all merged to main)
+- **#3174 reading-links MERGED** — 3 live modules + landing carry ukrlib «Народна творчість» genre
+  pages + **Освіта.ua** + **Diasporiana** (`role: article`); Чтиво (dead 2026-06-15) dropped; landing
+  "Де читати" restored (was regressed by `228f9ca180`).
+- **#3193 narod scraper MERGED** — `scrape_ukrlib.py --narod` expanded 4→**29 works** (song genres
+  crawled wholesale + curated думи/веснянки; excludes «Велесова книга» forgery + prose казки). +2 tests.
+- **FOLK PRIMARIES INGESTED into the live `data/sources.db`** (the #2854 prerequisite for #3162-folk):
+  scraped 29 works → 35 chunks → incremental-inserted into `literary_texts` + FTS (0→35; atomic, backed
+  up, FTS 'rebuild', integrity ok). **`mcp__sources__search_literary` / `verify_quote` now resolve
+  ЩЕДРИК ЩЕДРІВОЧКА, ПРИЛЕТІЛА ЗОЗУЛЕНЬКА, the думи, etc.** Copied the jsonl to GDrive so a future
+  `build_sources_db --force` keeps it.
+- **#3198 corpus-inventory.md MERGED** — durable SSOT for "what's in our corpus" (all `data/sources.db`
+  tables + live counts, literary breakdown, MCP-tool map, **the local-vs-GoogleDrive build architecture
+  + dir-mismatch gotcha**, safe add-content recipe). Wired into CLAUDE.md Reference Docs + MEMORY #M-11.
+
+### 🧱 KEY FACTS / GOTCHAS (now in `docs/corpus-inventory.md`)
+- **`build_sources_db.py` reads literary/textbooks from `GDRIVE_DATA` (Google Drive mount), NOT local
+  `data/`.** Scrapers write to local `data/literary_texts/` → a fresh scrape is invisible to a `--force`
+  rebuild until copied to GDrive. `--force` = FULL destroy+rebuild (destructive); `--dry-run` does NOT
+  preview on a populated DB. **Safe add-content recipe = scrape → copy jsonl to GDrive → incremental-insert
+  into the live DB** (delete old `source_file` rows + insert via `wiki/sources.py::build_literary_row` +
+  FTS 'rebuild'). External-content FTS5 has only an AFTER-INSERT trigger → always 'rebuild' after deletes.
+- chunk_ids are deterministic content-hashes → re-scraping the same works keeps their ids (dossier refs survive).
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **#3162-folk: the CORPUS side is now DONE** (primaries are in `literary_texts`). Remaining = the
+   **INFRA side** (infra/corpus lane, not mine to implement): route `_build_textbook_excerpt_context`
+   (~L1775) to ALSO search the literary corpus for folk/seminar primaries (mirror the #2973 quote-gate
+   fix) + the non-word-counted primary-text reading panel. Then folk modules can EMBED the думи/колядки
+   we now hold → re-run `run_llm_qg_parity.py`; pedagogical should lift off 6.7. Coordinate w/ infra orch.
+2. **Surfacing folk: STILL GATED** — do NOT un-hide until a module cleanly clears LLM QG (#3162 + re-review).
+3. **Remaining folk modules 6→42** — gate each with `verify_shippable --astro-build` + corpus-hammer.
+4. **(infra follow-up, documented not filed)** Reconcile the scraper-local vs builder-GDrive **dir mismatch**
+   so future scrapes don't need the manual GDrive copy. Deepen folk primaries (more narod genres byliny/
+   байки/вертеп; or ingest Грушевський/Драгоманов folk anthologies as tagged primaries).
+
+### ⚠ CARRY-FORWARD
+- All session PRs merged; main clean. `git push` folk → `--no-verify`; never reset/commit on main (ff-ing
+  local main to origin is safe). Worktrees reaped.
+- Folk corpus is now searchable but still THIN (35 standalone narod chunks) — most folk verbatims live
+  embedded in scholarly works (Грушевський/Драгоманов/Костомаров/ЕУ). See `docs/corpus-inventory.md`.
+
+---
+
+## ▶▶▶ SESSION 34 HANDOFF (2026-06-15 — folk reading-links SHIPPED to all 3 live modules (ukrlib genre pages + Освіта.ua + Diasporiana) + landing "Де читати" RESTORED (regressed by 228f9ca180); **Чтиво found DEAD → dropped, Diasporiana+Освіта.ua adopted**; litopys.org.ua confirmed live + corpus audited (folk-primary gap found); gate-neutral + astro-build green)
 
 > **⏱ HONEST SCOPE:** No new module built — folk modules still **6/42**. This PR ships the long-deferred
 > (Sessions 27–33) reading-links: the 3 LIVE preview modules (kalendarna, koliadky-shchedrivky,

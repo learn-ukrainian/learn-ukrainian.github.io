@@ -49,6 +49,9 @@ jobs:
       # MDX source/drift checks, so curriculum source edits cannot leave stale
       # committed MDX.
       frontend: ${{ steps.filter.outputs.frontend }}
+      # atlas = inputs that can stale the committed DB-enriched Word Atlas
+      # manifest but are available on CI.
+      atlas: ${{ steps.filter.outputs.atlas }}
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
@@ -90,6 +93,31 @@ jobs:
               - '.github/workflows/ci.yml'
               - 'site/**'
               - 'curriculum/l2-uk-en/**'
+            atlas:
+              - '.github/workflows/ci.yml'
+              - 'scripts/lexicon/*.py'
+              - 'site/src/data/lexicon-manifest.json'
+              - 'site/src/data/lexicon-manifest.fingerprint.json'
+
+  atlas-freshness:
+    name: Atlas Manifest Freshness
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.atlas == 'true'
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.12'
+
+      - name: Install YAML parser
+        run: pip install PyYAML
+
+      - name: Check DB-free Atlas manifest freshness
+        run: python scripts/lexicon/check_manifest_freshness.py
 
   lint:
     name: Lint (ruff)
