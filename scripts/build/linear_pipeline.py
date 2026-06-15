@@ -54,6 +54,13 @@ from scripts.build.citation_matcher import (
     normalize_citation_ref,
 )
 from scripts.build.prompt_builder import DOWNSTREAM_TOKENS, TOKEN_RE, render_prompt
+from scripts.common.review_loop import (
+    aggregate_min as review_loop_aggregate_min,
+)
+from scripts.common.review_loop import (
+    best_round_index,
+    min_score_regressed,
+)
 from scripts.common.thresholds import QG_DIMS, aggregate_review
 from scripts.config import get_immersion_policy, get_immersion_range, get_immersion_rule
 from scripts.generate_mdx.core import generate_mdx
@@ -439,6 +446,8 @@ ALLOWED_WIKI_COVERAGE_VERDICTS = {"PASS", "KEYWORD_STUFFING", "PARTIAL", "FAIL"}
 WIKI_COVERAGE_OVERALL_FAIL_VERDICTS = {"FAIL", "KEYWORD_STUFFING"}
 WIKI_COVERAGE_OVERALL_VERDICTS = {"PASS", "PARTIAL", "FAIL"}
 WIKI_COVERAGE_EVIDENCE_QUOTE_MARKERS = ('"', "“", "«")
+LLM_QG_CORE_MAX_ROUNDS = 1
+LLM_QG_SEMINAR_MAX_ROUNDS = 3
 _TELEMETRY_EVENT_SINK: Callable[..., None] | None = None
 
 
@@ -4564,6 +4573,74 @@ def render_wiki_coverage_narrow_correction_prompt(
     )
 
 
+def llm_qg_max_rounds_for_level(level: str | None) -> int:
+    """Return the LLM-QG review-round budget for a curriculum level."""
+    return (
+        LLM_QG_SEMINAR_MAX_ROUNDS
+        if str(level or "").strip().lower() in SEMINAR_LEVELS
+        else LLM_QG_CORE_MAX_ROUNDS
+    )
+
+
+def _prompt_yaml_or_text(value: str | Mapping[str, Any] | None) -> str:
+    if value is None:
+        return "{}"
+    if isinstance(value, str):
+        return value
+    return _yaml_inline(value)
+
+
+def pedagogical_correction_context(
+    *,
+    plan: Mapping[str, Any],
+    llm_qg: Mapping[str, Any],
+    module_text: str,
+    plan_content: str,
+    wiki_manifest: str | Mapping[str, Any] | None = None,
+    obligation_checklist: Mapping[str, Any] | None = None,
+) -> dict[str, str]:
+    """Build prompt context for one insert-only pedagogical correction."""
+    dimensions = llm_qg.get("dimensions")
+    pedagogical = dimensions.get("pedagogical") if isinstance(dimensions, Mapping) else {}
+    aggregate = llm_qg.get("aggregate")
+    findings = {
+        "pedagogical": dict(pedagogical) if isinstance(pedagogical, Mapping) else {},
+        "aggregate": dict(aggregate) if isinstance(aggregate, Mapping) else {},
+    }
+    return {
+        "LEVEL": str(plan.get("level") or ""),
+        "MODULE_NUM": str(plan.get("sequence") or ""),
+        "MODULE_SLUG": str(plan.get("slug") or ""),
+        "PEDAGOGICAL_FINDINGS": _yaml_inline(findings),
+        "PLAN_CONTENT": plan_content,
+        "WIKI_MANIFEST": _prompt_yaml_or_text(wiki_manifest),
+        "OBLIGATION_CHECKLIST": _prompt_yaml_or_text(obligation_checklist),
+        "MODULE_CONTENT": module_text,
+    }
+
+
+def render_pedagogical_correction_prompt(
+    *,
+    plan: Mapping[str, Any],
+    llm_qg: Mapping[str, Any],
+    module_text: str,
+    plan_content: str,
+    wiki_manifest: str | Mapping[str, Any] | None = None,
+    obligation_checklist: Mapping[str, Any] | None = None,
+) -> str:
+    return render_phase_prompt(
+        PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-correction-pedagogical.md",
+        pedagogical_correction_context(
+            plan=plan,
+            llm_qg=llm_qg,
+            module_text=module_text,
+            plan_content=plan_content,
+            wiki_manifest=wiki_manifest,
+            obligation_checklist=obligation_checklist,
+        ),
+    )
+
+
 def _quote_items_from_text(text: str) -> list[str]:
     quotes: list[str] = []
     quote_re = re.compile(r'"(?P<double>[^"\n]{1,500})"|“(?P<curly>[^”\n]{1,500})”|«(?P<guillemets>[^»\n]{1,500})»')
@@ -5269,6 +5346,274 @@ def aggregate_llm_review(
         "dimensions": {dim: dict(report[dim]) for dim in QG_DIMS},
         "aggregate": asdict(verdict),
     }
+
+
+def _llm_qg_dimensions(llm_qg: Mapping[str, Any]) -> Mapping[str, Any]:
+    dimensions = llm_qg.get("dimensions")
+    return dimensions if isinstance(dimensions, Mapping) else {}
+
+
+def _llm_qg_aggregate(llm_qg: Mapping[str, Any]) -> Mapping[str, Any]:
+    aggregate = llm_qg.get("aggregate")
+    return aggregate if isinstance(aggregate, Mapping) else {}
+
+
+def _llm_qg_needs_pedagogical_fix(llm_qg: Mapping[str, Any]) -> bool:
+    failing = _llm_qg_aggregate(llm_qg).get("failing_dims") or ()
+    return "pedagogical" in {str(dim) for dim in failing}
+
+
+def _llm_qg_round_summary(round_record: Mapping[str, Any]) -> dict[str, Any]:
+    llm_qg = round_record.get("llm_qg")
+    aggregate = _llm_qg_aggregate(llm_qg) if isinstance(llm_qg, Mapping) else {}
+    min_score, min_dim = (
+        review_loop_aggregate_min(_llm_qg_dimensions(llm_qg))
+        if isinstance(llm_qg, Mapping)
+        else (0.0, None)
+    )
+    return {
+        "round": round_record.get("round"),
+        "verdict": aggregate.get("verdict"),
+        "terminal_verdict": aggregate.get("terminal_verdict"),
+        "min_score": min_score,
+        "min_dim": min_dim,
+        "failing_dims": list(aggregate.get("failing_dims") or ()),
+    }
+
+
+def _invoke_pedagogical_corrector(
+    *,
+    prompt: str,
+    module_dir: Path,
+    plan: Mapping[str, Any],
+    round_num: int,
+    invoker: Callable[..., Any] | None = None,
+    stdout_silence_timeout: int | None = None,
+) -> str:
+    if invoker is None:
+        from scripts.agent_runtime.runner import invoke as runtime_invoke
+    else:
+        runtime_invoke = invoker
+
+    result = runtime_invoke(
+        "codex",
+        prompt,
+        mode="read-only",
+        cwd=module_dir,
+        model=REVIEWER_DEFAULTS["codex-tools"]["model"],
+        task_id=f"linear-llm-qg-pedagogical-fix-{plan.get('slug', 'module')}-r{round_num}",
+        entrypoint="runtime",
+        effort=REVIEWER_DEFAULTS["codex-tools"]["effort"],
+        tool_config=_runtime_tool_config("codex-tools", workspace_dir=module_dir),
+        stdout_silence_timeout=stdout_silence_timeout,
+    )
+    return str(getattr(result, "response", "") or "")
+
+
+def _apply_pedagogical_insert_fixes(
+    *,
+    response: str,
+    module_dir: Path,
+    plan_path: Path,
+) -> dict[str, Any]:
+    fixes = _parse_reviewer_fixes(response)
+    insert_fixes = [
+        fix for fix in fixes
+        if "insert_after" in fix and "text" in fix
+    ]
+    rejected_shape_fixes = [
+        fix for fix in fixes
+        if not ("insert_after" in fix and "text" in fix)
+    ]
+    accepted_fixes, rejected_oversize = _validate_reviewer_fix_shapes(
+        insert_fixes,
+        max_lines=8,
+        max_chars=800,
+    )
+    module_path = module_dir / "module.md"
+    original_text = _read_required(module_path)
+    apply_result = _apply_reviewer_fixes(
+        original_text,
+        accepted_fixes,
+        gate="llm_qg_pedagogical",
+        module_dir=module_dir,
+        plan_path=plan_path,
+    )
+    changed = apply_result.text != original_text
+    if changed:
+        module_path.write_text(apply_result.text, encoding="utf-8")
+    return {
+        "kind": "llm_qg_pedagogical",
+        "response": response,
+        "fixes": fixes,
+        "accepted_fixes": accepted_fixes,
+        "rejected_fixes": [*rejected_shape_fixes, *rejected_oversize],
+        "unmatched_anchors": sorted(apply_result.unmatched_anchors),
+        "applied": changed,
+    }
+
+
+def _python_qg_passed(report: Mapping[str, Any]) -> bool:
+    gates = report.get("gates")
+    return isinstance(gates, Mapping) and gates.get("passed") is True
+
+
+def run_llm_qg_with_corrections(
+    *,
+    plan: Mapping[str, Any],
+    plan_path: Path,
+    plan_content: str,
+    module_dir: Path,
+    writer: str,
+    llm_qg_runner: Callable[..., dict[str, Any]],
+    profile: str | None = None,
+    reviewer_override: str | None = None,
+    wiki_manifest: str | Mapping[str, Any] | None = None,
+    implementation_map: Mapping[str, Any] | None = None,
+    stdout_silence_timeout: int | None = None,
+    use_generator: bool = False,
+    obligation_checklist: Mapping[str, Any] | None = None,
+    max_rounds: int | None = None,
+    corrector: Callable[[CorrectionContext], str | None] | None = None,
+    python_qg_runner: Callable[[], dict[str, Any]] | None = None,
+    invoker: Callable[..., Any] | None = None,
+    event_sink: Callable[..., None] | None = None,
+) -> dict[str, Any]:
+    """Run LLM-QG with a bounded insert-only pedagogical correction loop."""
+    review_rounds = max(1, int(max_rounds or llm_qg_max_rounds_for_level(plan.get("level"))))
+    rounds: list[dict[str, Any]] = []
+    corrections: list[dict[str, Any]] = []
+    pending_python_qg: dict[str, Any] | None = None
+    stopped_reason = "max_rounds"
+
+    for round_num in range(1, review_rounds + 1):
+        review_snapshot = _snapshot_correction_artifacts(module_dir)
+        llm_qg = llm_qg_runner(
+            plan=plan,
+            plan_content=plan_content,
+            module_dir=module_dir,
+            writer=writer,
+            reviewer_override=reviewer_override,
+            profile=profile,
+            wiki_manifest=wiki_manifest,
+            implementation_map=implementation_map,
+            stdout_silence_timeout=stdout_silence_timeout,
+            use_generator=use_generator,
+            obligation_checklist=obligation_checklist,
+        )
+        round_record = {
+            "round": round_num,
+            "llm_qg": llm_qg,
+            "artifacts": review_snapshot,
+            "python_qg": pending_python_qg,
+        }
+        rounds.append(round_record)
+        round_summary = _llm_qg_round_summary(round_record)
+        _emit(
+            event_sink,
+            "llm_qg_correction_round",
+            max_rounds=review_rounds,
+            **round_summary,
+        )
+
+        aggregate = _llm_qg_aggregate(llm_qg)
+        if aggregate.get("verdict") == "PASS":
+            stopped_reason = "pass"
+            break
+        if round_num > 1 and min_score_regressed(
+            _llm_qg_dimensions(rounds[-2]["llm_qg"]),
+            _llm_qg_dimensions(llm_qg),
+        ):
+            stopped_reason = "min_score_regressed"
+            break
+        if round_num >= review_rounds:
+            stopped_reason = "max_rounds"
+            break
+        if not _llm_qg_needs_pedagogical_fix(llm_qg):
+            stopped_reason = "no_pedagogical_failure"
+            break
+
+        module_text = _read_required(module_dir / "module.md")
+        prompt = render_pedagogical_correction_prompt(
+            plan=plan,
+            llm_qg=llm_qg,
+            module_text=module_text,
+            plan_content=plan_content,
+            wiki_manifest=wiki_manifest,
+            obligation_checklist=obligation_checklist,
+        )
+        (module_dir / f"llm-qg-pedagogical-correction-r{round_num}-prompt.md").write_text(
+            prompt,
+            encoding="utf-8",
+        )
+        context = CorrectionContext(
+            gate="llm_qg_pedagogical",
+            gate_report=_llm_qg_dimensions(llm_qg).get("pedagogical", {}),
+            module_dir=module_dir,
+            plan_path=plan_path,
+            qg_report=llm_qg,
+            prompt=prompt,
+        )
+        response = (
+            corrector(context)
+            if corrector is not None
+            else _invoke_pedagogical_corrector(
+                prompt=prompt,
+                module_dir=module_dir,
+                plan=plan,
+                round_num=round_num,
+                invoker=invoker,
+                stdout_silence_timeout=stdout_silence_timeout,
+            )
+        ) or ""
+        (module_dir / f"llm-qg-pedagogical-correction-r{round_num}-response.raw.md").write_text(
+            response,
+            encoding="utf-8",
+        )
+        correction = _apply_pedagogical_insert_fixes(
+            response=response,
+            module_dir=module_dir,
+            plan_path=plan_path,
+        )
+        correction["round"] = round_num
+        corrections.append(correction)
+        if not correction.get("applied"):
+            stopped_reason = "no_fixes_applied"
+            break
+
+        if python_qg_runner is None:
+            python_qg = run_python_qg_with_corrections(
+                module_dir,
+                plan_path,
+                writer=writer,
+                event_sink=event_sink,
+            )
+        else:
+            python_qg = python_qg_runner()
+        correction["python_qg"] = python_qg
+        if not _python_qg_passed(python_qg):
+            _restore_correction_artifacts(module_dir, review_snapshot)
+            correction["rolled_back"] = True
+            correction["rollback_reason"] = "python_qg_failed"
+            stopped_reason = "python_qg_failed"
+            break
+        pending_python_qg = python_qg
+
+    best_idx = best_round_index(rounds, lambda item: _llm_qg_dimensions(item["llm_qg"]))
+    best_round = rounds[best_idx]
+    _restore_correction_artifacts(module_dir, best_round["artifacts"])
+    if best_round.get("python_qg") is not None:
+        write_json(module_dir / "python_qg.json", best_round["python_qg"])
+    best_report = dict(best_round["llm_qg"])
+    correction_loop = {
+        "max_rounds": review_rounds,
+        "rounds": [_llm_qg_round_summary(item) for item in rounds],
+        "best_round": best_round["round"],
+        "stopped_reason": stopped_reason,
+        "corrections": corrections,
+    }
+    write_json(module_dir / "llm_qg_correction_loop.json", correction_loop)
+    return best_report
 
 
 def run_python_qg_with_corrections(

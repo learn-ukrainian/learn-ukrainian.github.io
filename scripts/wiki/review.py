@@ -67,6 +67,7 @@ from agent_runtime.errors import (
 from agent_runtime.json_parse import extract_json_object
 from agent_runtime.runner import invoke
 from agent_runtime.tool_config import build_mcp_tool_config
+from common.review_loop import aggregate_min, best_round_index, min_score_regressed
 from common.thresholds import REVIEW_PASS_FLOOR
 from wiki.config import PROMPTS_DIR, WIKI_DIR
 from wiki.register_quote_exemption import find_attributed_verbatim_quote_spans
@@ -940,7 +941,7 @@ def review_article(
         # otherwise bounded by max_rounds + the no-fixes-applied break above).
         if round_num > 1:
             prev = rounds[-2].dim_results
-            if _min_score_regressed(prev, dim_results):
+            if min_score_regressed(prev, dim_results):
                 break
 
         current_text = new_text
@@ -958,10 +959,7 @@ def review_article(
     # degraded/noisy tail, which also makes a larger ``max_rounds`` budget
     # strictly safe (extra rounds can only help). Tie-break on the EARLIEST
     # round (fewest mutations = safest text).
-    best_idx = max(
-        range(len(rounds)),
-        key=lambda i: (aggregate_min(rounds[i].dim_results)[0], -i),
-    )
+    best_idx = best_round_index(rounds, lambda round_result: round_result.dim_results)
     best_round = rounds[best_idx]
     final_dim_results = best_round.dim_results
     failing = _failing_dims(final_dim_results, thresholds)
@@ -1001,59 +999,6 @@ def _failing_dims(
         if dr.score < thresholds.get(dim, WIKI_REVIEW_THRESHOLD):
             failing.append(dim)
     return failing
-
-
-def aggregate_min(
-    dim_results: dict[str, DimResult],
-) -> tuple[float, str | None]:
-    """Return ``(min_score, failing_dim)`` across a round's dim results.
-
-    The MIN aggregator is the authoritative gate (same semantics as the
-    module pipeline's ``verdict_score`` in
-    ``scripts.build.v6_build._build_review_aggregate_text``). A wiki that
-    scores 9 / 9 / 9 / 6 fails at 6 with the 6-scoring dim named as the
-    driver. Dims with verdict ``ERROR`` dominate — their score is
-    treated as ``0.0`` so a crashed reviewer never masks as high.
-
-    If ``dim_results`` is empty, returns ``(0.0, None)``.
-    """
-    if not dim_results:
-        return 0.0, None
-    min_score = float("inf")
-    min_dim: str | None = None
-    for dim, dr in dim_results.items():
-        score = 0.0 if dr.verdict == "ERROR" else float(dr.score)
-        if score < min_score:
-            min_score = score
-            min_dim = dim
-    if min_score == float("inf"):
-        return 0.0, None
-    return min_score, min_dim
-
-
-def _min_score_regressed(
-    prev: dict[str, DimResult],
-    curr: dict[str, DimResult],
-) -> bool:
-    """True iff the aggregate MIN score dropped round-over-round (ADR-001).
-
-    The review gate is MIN-based (see :func:`aggregate_min`), so "did this
-    round make things worse" must be judged on the MIN, NOT on any single
-    dim. The old per-dim check (``any dim's score dropped``) was too
-    aggressive for multi-round seminar reviews: an already-passing dim
-    wobbling by ±1 within reviewer noise (e.g. ``register`` 7→6 while
-    ``source_grounding`` is still actively converging 5→6→…) would break
-    the loop BEFORE the failing dim's just-applied citation fixes ever got
-    their confirming re-review — so a converging article reported a stale
-    failure. Judging regression on the MIN lets such wobbles pass while
-    still stopping a run whose driving dim genuinely got worse. The loop is
-    bounded by ``max_rounds`` and the no-fixes-applied break, so this never
-    spins. (folk Session-20 — empirically the guard, not the off-by-one
-    alone, was what kept bylyny from converging.)
-    """
-    prev_min, _ = aggregate_min(prev)
-    curr_min, _ = aggregate_min(curr)
-    return curr_min < prev_min
 
 
 def _final_verdict(
