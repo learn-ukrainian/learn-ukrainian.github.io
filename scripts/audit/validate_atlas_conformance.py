@@ -29,6 +29,7 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_VESUM = PROJECT_ROOT / "data" / "vesum.db"
+DEFAULT_SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_CURRICULUM = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
 KAIKKI_SOURCE = "kaikki/Wiktionary (CC BY-SA 3.0)"
 
@@ -123,11 +124,71 @@ class VesumLemmaLookup:
         )
 
 
-def validate(manifest: Any, *, vesum: Any, curriculum: Any) -> list[Violation]:
+class HeritageLemmaLookup:
+    """Грінченко + ЕСУМ attestation check for words absent from VESUM (#3211).
+
+    VESUM has coverage gaps; a single-dictionary miss is necessary-but-not-sufficient
+    proof of invalidity. A pre-Soviet Грінченко headword (exact word match) or an ЕСУМ
+    etymological lemma is strong evidence the word is authentic Ukrainian — absence from
+    VESUM ≠ Russianism (the кобета / блискучий / хвастливий heritage-defense lesson).
+    This supersedes the manual ``_VESUM_GAP_HERITAGE_LEMMAS`` allowlist where the
+    1.6 GB gitignored ``data/sources.db`` is present; the allowlist remains the offline
+    fallback (e.g. CI, which already skips the membership gate entirely without VESUM).
+    """
+
+    def __init__(self, db_path: Path = DEFAULT_SOURCES_DB):
+        self.db_path = Path(db_path)
+        self._conn: sqlite3.Connection | None = None
+        self._cache: dict[str, bool] = {}
+
+    def __enter__(self) -> HeritageLemmaLookup:
+        self.open()
+        return self
+
+    def __exit__(self, *_exc_info: object) -> None:
+        self.close()
+
+    def open(self) -> None:
+        if self._conn is None:
+            if not self.db_path.exists():
+                raise FileNotFoundError(f"sources database not found: {self.db_path}")
+            self._conn = sqlite3.connect(f"file:{self.db_path}?mode=ro", uri=True)
+
+    def close(self) -> None:
+        if self._conn is not None:
+            self._conn.close()
+            self._conn = None
+
+    def has_attestation(self, lemma: str) -> bool:
+        for variant in _lookup_variants(lemma):
+            if variant not in self._cache:
+                self._cache[variant] = self._query_variant(variant)
+            if self._cache[variant]:
+                return True
+        return False
+
+    def _query_variant(self, value: str) -> bool:
+        self.open()
+        assert self._conn is not None
+        # Грінченко: pre-Soviet headword (exact, lowercase-stored) — primary signal.
+        if self._conn.execute("SELECT 1 FROM grinchenko WHERE word = ? LIMIT 1", (value,)).fetchone():
+            return True
+        # ЕСУМ: etymological lemma (root-based, narrower) — secondary signal.
+        return bool(
+            self._conn.execute(
+                "SELECT 1 FROM esum_etymology WHERE lemma = ? LIMIT 1",
+                (value,),
+            ).fetchone()
+        )
+
+
+def validate(manifest: Any, *, vesum: Any, curriculum: Any, heritage: Any = None) -> list[Violation]:
     """Validate a Word Atlas manifest against deterministic section 8 gates."""
 
     lookup = _coerce_vesum_lookup(vesum)
     should_close_lookup = isinstance(lookup, VesumLemmaLookup) and lookup is not vesum
+    heritage_lookup = _coerce_heritage_lookup(heritage)
+    should_close_heritage = isinstance(heritage_lookup, HeritageLemmaLookup) and heritage_lookup is not heritage
     curriculum_modules = _curriculum_modules(curriculum)
     violations: list[Violation] = []
 
@@ -144,7 +205,7 @@ def validate(manifest: Any, *, vesum: Any, curriculum: Any) -> list[Violation]:
                 continue
 
             lemma = str(entry.get("lemma") or "").strip()
-            _check_lemma_in_vesum(entry, lemma, lookup, violations)
+            _check_lemma_in_vesum(entry, lemma, lookup, violations, heritage=heritage_lookup)
             _check_provenance(entry, lemma, violations)
             _check_empty_sections(entry, lemma, violations)
             _check_heritage_evidence(entry, lemma, violations)
@@ -156,6 +217,8 @@ def validate(manifest: Any, *, vesum: Any, curriculum: Any) -> list[Violation]:
     finally:
         if should_close_lookup:
             lookup.close()
+        if should_close_heritage:
+            heritage_lookup.close()
 
     return violations
 
@@ -166,6 +229,14 @@ def _coerce_vesum_lookup(vesum: Any) -> Any:
         lookup.open()
         return lookup
     return vesum
+
+
+def _coerce_heritage_lookup(heritage: Any) -> Any:
+    if isinstance(heritage, str | Path):
+        lookup = HeritageLemmaLookup(Path(heritage))
+        lookup.open()
+        return lookup
+    return heritage
 
 
 def _strip_stress(text: str) -> str:
@@ -227,12 +298,13 @@ def _is_genuine_multi_word(value: str) -> bool:
     return len(WORD_TOKEN_RE.findall(value)) >= 2
 
 
-# VESUM (409K lemmas) is necessary-but-not-sufficient proof of validity: it has
-# gaps where authentic Ukrainian words attested in Грінченко / ЕСУМ / СУМ-20 are
-# absent from its lemma+word-form tables. The §8 lemma_in_vesum gate must NOT flag
-# these as violations — absence from VESUM ≠ Russianism (the кобета / блискучий
-# heritage-defense lesson). Keep this allowlist TINY and per-entry cited; a
-# sources.db heritage-fallback (live Грінченко/ЕСУМ query) is the future robust fix.
+# OFFLINE FALLBACK for the VESUM-gap class (#3211): the primary mechanism is now the
+# live ``HeritageLemmaLookup`` (Грінченко/ЕСУМ via sources.db), which self-heals on any
+# VESUM-gap-but-attested word. This curated allowlist is consulted ONLY when the heritage
+# corpus is unavailable (no sources.db). VESUM membership is necessary-but-not-sufficient
+# proof of validity — absence ≠ Russianism (кобета / блискучий / хвастливий heritage-
+# defense). Keep TINY and per-entry cited; it should shrink toward empty as the heritage
+# lookup covers these cases wherever sources.db is present (local dev + the validator CLI).
 _VESUM_GAP_HERITAGE_LEMMAS: frozenset[str] = frozenset(
     {
         # Грінченко 1907: «Хвастливий, -а, -е. = хвастовитий» (Фр. Пр. 92); ЕСУМ:
@@ -250,17 +322,35 @@ def _is_proper_noun_entry(entry: Mapping[str, Any]) -> bool:
     return base_pos in {"proper noun", "proper name"}
 
 
-def _check_lemma_in_vesum(entry: Mapping[str, Any], lemma: str, vesum: Any, violations: list[Violation]) -> None:
+def _heritage_attests(heritage: Any, lemma: str) -> bool:
+    """True if ``lemma`` is attested in the heritage corpus (Грінченко/ЕСУМ).
+
+    Accepts a ``HeritageLemmaLookup``, a callable, or a set/collection of attested
+    forms (the last for tests). Returns False when no heritage source is wired.
+    """
+    if heritage is None:
+        return False
+    if hasattr(heritage, "has_attestation"):
+        return bool(heritage.has_attestation(lemma))
+    if callable(heritage):
+        return bool(heritage(lemma))
+    return any(variant in heritage for variant in _lookup_variants(lemma))
+
+
+def _check_lemma_in_vesum(
+    entry: Mapping[str, Any],
+    lemma: str,
+    vesum: Any,
+    violations: list[Violation],
+    *,
+    heritage: Any = None,
+) -> None:
     raw_lemma = str(entry.get("lemma") or "")
     if not lemma:
         violations.append(Violation("lemma_in_vesum", "", "entry is missing lemma"))
         return
 
-    if (
-        _is_deliberate_warning_entry(entry)
-        or _is_proper_noun_entry(entry)
-        or _normalize_text(raw_lemma) in _VESUM_GAP_HERITAGE_LEMMAS
-    ):
+    if _is_deliberate_warning_entry(entry) or _is_proper_noun_entry(entry):
         return
 
     if _has_whitespace(raw_lemma):
@@ -281,14 +371,25 @@ def _check_lemma_in_vesum(entry: Mapping[str, Any], lemma: str, vesum: Any, viol
         # (local dev + the validator CLI). Treating "no db" as "flag all" would be a
         # false-positive storm, not enforcement.
         return
-    if not _vesum_has_entry(vesum, lemma):
-        violations.append(
-            Violation(
-                "lemma_in_vesum",
-                lemma,
-                "single-word entry is absent from VESUM lemma and word-form tables",
-            )
+    if _vesum_has_entry(vesum, lemma):
+        return
+
+    # VESUM missed. A miss is necessary-but-not-sufficient evidence of invalidity — VESUM
+    # has coverage gaps. Consult the heritage corpus (Грінченко/ЕСУМ) before flagging: a
+    # pre-Soviet headword or etymological lemma means the word is authentic Ukrainian, not
+    # a Russianism (#3211). The curated allowlist is the offline fallback (no sources.db).
+    if _heritage_attests(heritage, lemma):
+        return
+    if heritage is None and _normalize_text(raw_lemma) in _VESUM_GAP_HERITAGE_LEMMAS:
+        return
+
+    violations.append(
+        Violation(
+            "lemma_in_vesum",
+            lemma,
+            "single-word entry is absent from VESUM and unattested in the heritage corpus (Грінченко/ЕСУМ)",
         )
+    )
 
 
 def _enrichment(entry: Mapping[str, Any]) -> Mapping[str, Any]:

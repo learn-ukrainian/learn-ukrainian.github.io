@@ -3,14 +3,16 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 import yaml
 
-from scripts.audit.validate_atlas_conformance import VesumLemmaLookup, validate
+from scripts.audit.validate_atlas_conformance import HeritageLemmaLookup, VesumLemmaLookup, validate
 from scripts.lexicon.build_kaikki_lookup import KAIKKI_SOURCE
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 VESUM_PATH = PROJECT_ROOT / "data" / "vesum.db"
+SOURCES_PATH = PROJECT_ROOT / "data" / "sources.db"
 CURRICULUM_PATH = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
 
 FAKE_CURRICULUM = {"levels": {"a1": {"modules": ["known-module"]}}}
@@ -42,9 +44,13 @@ def _entry(**overrides: object) -> dict:
     return entry
 
 
-def _gates_for(entry: dict, vesum: set[str] | None = None) -> list[str]:
+def _gates_for(
+    entry: dict, vesum: set[str] | None = None, heritage: set[str] | None = None
+) -> list[str]:
     fake_vesum = vesum if vesum is not None else {"слово"}
-    violations = validate(_manifest(entry), vesum=fake_vesum, curriculum=FAKE_CURRICULUM)
+    violations = validate(
+        _manifest(entry), vesum=fake_vesum, curriculum=FAKE_CURRICULUM, heritage=heritage
+    )
     return [violation.gate for violation in violations]
 
 
@@ -108,6 +114,42 @@ def test_lemma_in_vesum_exempts_heritage_word_absent_from_vesum():
     entry = _entry(lemma="хвастливий", url_slug="хвастливий", pos="adjective")
 
     assert _gates_for(entry, vesum=set()) == []
+
+
+def test_lemma_in_vesum_heritage_fallback_exempts_attested_word():
+    # #3211: a VESUM-miss is cross-checked against the heritage corpus before flagging.
+    # A word absent from VESUM but attested in Грінченко/ЕСУМ (fake heritage set, NOT in
+    # the manual allowlist) is exempted — the gate self-heals on ANY heritage-attested
+    # VESUM gap, not only the curated ones. (кобіта = the canonical heritage-defense word.)
+    entry = _entry(lemma="кобіта", url_slug="кобіта", pos="noun")
+
+    assert _gates_for(entry, vesum=set(), heritage={"кобіта"}) == []
+
+
+def test_lemma_in_vesum_flags_when_absent_from_both_vesum_and_heritage():
+    # #3211: the gate still catches genuinely-unattested single words — absent from VESUM
+    # AND not in the heritage corpus (heritage present but empty) → violation. The allowlist
+    # is bypassed when a heritage corpus is wired.
+    entry = _entry(lemma="зызыжщ", url_slug="зызыжщ", pos="noun")
+
+    assert _gates_for(entry, vesum=set(), heritage=set()) == ["lemma_in_vesum"]
+
+
+def test_lemma_in_vesum_allowlist_is_offline_fallback_when_no_heritage():
+    # #3211: when the heritage corpus is unavailable (heritage=None, e.g. no sources.db),
+    # the curated allowlist still exempts known VESUM-gap words.
+    entry = _entry(lemma="хвастливий", url_slug="хвастливий", pos="adjective")
+
+    assert _gates_for(entry, vesum=set(), heritage=None) == []
+
+
+@pytest.mark.skipif(not SOURCES_PATH.exists(), reason="needs gitignored data/sources.db")
+def test_heritage_lemma_lookup_attests_grinchenko_word_real_db():
+    # #3211: real Грінченко/ЕСУМ lookup — хвастливий is attested (Грінченко headword),
+    # nonsense is not. Proves the live fallback resolves the VESUM gap without an allowlist.
+    with HeritageLemmaLookup(SOURCES_PATH) as heritage:
+        assert heritage.has_attestation("хвастливий") is True
+        assert heritage.has_attestation("зызыжщ") is False
 
 
 def test_lemma_in_vesum_exempts_deliberate_warning_seed():
