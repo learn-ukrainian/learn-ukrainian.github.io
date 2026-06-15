@@ -2,7 +2,15 @@ module: b2-081
 level: B2
 sequence: 81
 slug: professional-reports
-version: 1.0.2
+version: 1.0.3
+lifecycle: locked
+reviewed_at: '2026-06-15T09:44:19Z'
+reviewed_by: codex/b2-wiki-readiness-batch-4
+review_notes: >-
+  Batch 4 B2 wiki-readiness lock. Removed the remaining source-backed VERIFY
+  marker, refreshed the source registry chunk IDs, and verified the Ukrainian
+  self-introduction model Мене звати... for professional-report L2 transfer
+  guidance. See wiki/.reviews/grammar/b2/professional-reports-review-LOCKED.md.
 title: 'Професійні звіти: від основ до стратегії'
 subtitle: 'Професійні звіти: від основ до стратегії'
 focus: professional
@@ -13,7 +21,7 @@ objectives:
 - 'Вивчити класифікацію ділових звітів: інформаційний, аналітичний, стратегічний.'
 - Опанувати структуру звітного документа та правила оформлення.
 - Навчитися описувати та інтерпретувати графічні дані (таблиці, діаграми).
-- Опанувати стратегічне моделювання (SWOT, PESTEL) та адаптацію звіту під 
+- Опанувати стратегічне моделювання (SWOT, PESTEL) та адаптацію звіту під
   аудиторію.
 reading_situations:
 - source_type: річний звіт
@@ -181,16 +189,16 @@ activities:
   total_min_items: 25
 activity_hints:
 - type: reading
-  focus: Прочитайте текст про класифікація та структура ділових звітів і дайте 
+  focus: Прочитайте текст про класифікація та структура ділових звітів і дайте
     відповіді на запитання щодо ключових понять.
 - type: essay-response
-  focus: Напишіть короткий текст (100-150 слів) про опис та інтерпретація 
+  focus: Напишіть короткий текст (100-150 слів) про опис та інтерпретація
     графічних даних, використовуючи нову лексику модуля.
 - type: critical-analysis
-  focus: Проаналізуйте взаємозв'язок між поняттями у розділі «Класифікація та 
+  focus: Проаналізуйте взаємозв'язок між поняттями у розділі «Класифікація та
     структура ділових звітів». Обґрунтуйте свою позицію прикладами з тексту.
 - type: error-correction
-  focus: Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему 
+  focus: Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему
     класифікація та структура ділових звітів.
 references:
 - source: Глазова, 11 клас (2019)
@@ -202,6 +210,9 @@ references:
 - source: Державний стандарт 2024
   pages: SS 3
   topic: Professional communication themes
+- source: Wiki grammar source registry
+  pages: wiki/grammar/b2/professional-reports.sources.yaml
+  topic: Source-backed B2 readiness lock for professional-report L2 transfer guidance
 connects_to:
   previous: professional-email-advanced
   next: academic-writing

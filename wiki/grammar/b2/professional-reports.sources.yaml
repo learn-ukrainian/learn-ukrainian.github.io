@@ -2,33 +2,39 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0345
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0086
   type: textbook
   title: Практична риторика (p. 62)
   page: 62
   grade: 10
 - id: S3
-  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0352
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0139
   type: textbook
   title: Орфографічна норма (p. 100)
   page: 100
   grade: 10
 - id: S6
-  file: 8-klas-ukrmova-avramenko-2025_s4634
+  file: 8-klas-ukrmova-avramenko-2025_s0166
   type: textbook
   title: § 58. ПИСЬМОВЕ
   page: 125
   grade: 8
 - id: S7
-  file: 10-klas-ukrmova-glazova-2018_s0534
+  file: 10-klas-ukrmova-glazova-2018_s0141
   type: textbook
   title: Степовичка). Чи належить до загальнолюдських цінностей людська гідність?
     Чому ви так ду
   page: 100
   grade: 10
 - id: S8
-  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0342
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0060
   type: textbook
   title: Практична риторика (p. 45)
   page: 45
   grade: 10
+- id: S9
+  file: 6-klas-ukrmova-golub-2023_s0102
+  type: textbook
+  title: Жанри мовлення. Знайомство
+  page: 101
+  grade: 6

@@ -2,46 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-litvinova-2023_s3303
+  file: 6-klas-ukrmova-litvinova-2023_s0016
   type: textbook
   title: § 1. Краса звучання української мови
   page: 9
   grade: 6
 - id: S2
-  file: 10-klas-ukrmova-karaman-2018_s0711
+  file: 10-klas-ukrmova-karaman-2018_s0407
   type: textbook
   title: Тема 7. Поняття про стилістичну систему української мови
   page: 231
   grade: 10
 - id: S3
-  file: 10-klas-ukrmova-karaman-2018_s0599
+  file: 10-klas-ukrmova-karaman-2018_s0102
   type: textbook
   title: § 19. Основні випадки чергування у–в, і–й, з–із–зі (зо). Милозвучність української
     мови
   page: 57
   grade: 10
 - id: S4
-  file: 10-klas-ukrmova-karaman-2018_s0663
+  file: 10-klas-ukrmova-karaman-2018_s0241
   type: textbook
   title: § 53. Стилістичне використання засобів словотвору
   page: 135
   grade: 10
 - id: S5
-  file: 10-klas-ukrmova-karaman-2018_s0606
+  file: 10-klas-ukrmova-karaman-2018_s0121
   type: textbook
   title: § 23. ІНТОНАЦІЙНІ ОСОБЛИВОСТІ УКРАЇНСЬКОГО МОВЛЕННЯ. НАГОЛОС В УКРАЇНСЬКІЙ
     МОВІ
   page: 68
   grade: 10
 - id: S6
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1183
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0250
   type: textbook
   title: § 50. СТИЛІСТИЧНІ ЗАСОБИ СЛОВОТВОРУ
   page: 177
   grade: 11
 - id: S7
-  file: 11-klas-ukrmova-zabolotnyi-2019_s1451
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0246
   type: textbook
   title: Пунктуаційна норма (p. 164)
   page: 164
   grade: 11
+- id: S8
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0154
+  type: textbook
+  title: § 47. Спрощення в групах приголосних
+  page: 102
+  grade: 10

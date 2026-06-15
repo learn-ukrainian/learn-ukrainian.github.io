@@ -2,7 +2,15 @@ module: b2-013
 level: B2
 sequence: 13
 slug: zdorovya-i-medytsyna
-version: 1.0.2
+version: 1.0.3
+lifecycle: locked
+reviewed_at: '2026-06-15T09:44:19Z'
+reviewed_by: codex/b2-wiki-readiness-batch-4
+review_notes: >-
+  Batch 4 B2 wiki-readiness lock. Removed the remaining source-backed VERIFY
+  marker, refreshed the source registry chunk IDs, and verified the Ukrainian
+  self-introduction model Мене звати... for medical-context L2 transfer
+  guidance. See wiki/.reviews/grammar/b2/zdorovya-i-medytsyna-review-LOCKED.md.
 title: Здоров'я і медицина
 subtitle: Здоров'я і медицина
 focus: thematic
@@ -13,7 +21,7 @@ objectives:
 - Описувати симптоми, скарги та стан здоров'я на прийомі у лікаря.
 - 'Розуміти медичні тексти: інструкції до ліків, рецепти, виписки.'
 - Обговорювати систему охорони здоров'я в Україні та актуальні медичні теми.
-- Інтегрувати дієприкметникові конструкції (діючий лікар, призначене лікування) 
+- Інтегрувати дієприкметникові конструкції (діючий лікар, призначене лікування)
   у медичному контексті.
 reading_situations:
 - source_type: інструкція до лікарського засобу
@@ -192,7 +200,7 @@ activity_hints:
   focus: 'Прочитайте текст про на прийомі у лікаря: діалог та лексика і дайте відповіді
     на запитання щодо ключових понять.'
 - type: essay-response
-  focus: Напишіть короткий текст (100-150 слів) про діагностика та лікування, 
+  focus: Напишіть короткий текст (100-150 слів) про діагностика та лікування,
     використовуючи нову лексику модуля.
 - type: critical-analysis
   focus: 'Проаналізуйте взаємозв''язок між поняттями у розділі «На прийомі у лікаря:
@@ -210,6 +218,9 @@ references:
 - source: Державний стандарт 2024
   pages: 'SS 3 (B2 thematic areas: здоров''я)'
   topic: 'Тематична сфера: здоров''я і медицина'
+- source: Wiki grammar source registry
+  pages: wiki/grammar/b2/zdorovya-i-medytsyna.sources.yaml
+  topic: Source-backed B2 readiness lock for medical-context L2 transfer guidance
 connects_to:
   previous: participles-vs-relative-clauses
   next: phrases-word-combinations
