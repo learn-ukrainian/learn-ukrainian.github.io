@@ -1263,6 +1263,89 @@ def test_esum_etymology_uses_normalised_variant_match() -> None:
     }
 
 
+def test_esum_etymology_root_fallback_derived_word_gets_honest_root_label() -> None:
+    """Derived absent from ЕСУМ but root present gets root-labelled etymology.
+
+    Mirrors _conn() + explicit esum_etymology table creation (like existing tests).
+    Uses canonical хвастливий (exact miss) -> хвастати (via strip + verb form).
+    """
+    conn = _conn()
+    conn.execute(
+        """
+        CREATE TABLE esum_etymology (
+            lemma TEXT NOT NULL,
+            etymology_text TEXT NOT NULL,
+            cognates TEXT DEFAULT '',
+            vol TEXT DEFAULT '',
+            page TEXT DEFAULT ''
+        )
+        """
+    )
+    # Insert ONLY the root (as would be in real 36k-entry root-based table)
+    conn.execute(
+        "INSERT INTO esum_etymology VALUES (?, ?, ?, ?, ?)",
+        ("хвастати", "хвастати «хвалити себе...» (fixture root etym).", "[]", "6", "162"),
+    )
+
+    etymology = _etymology(conn, "хвастливий", {})
+
+    # Honest indirection label, text from the root's entry; no vol/page in label for root case
+    assert etymology == {
+        "text": "хвастати «хвалити себе...» (fixture root etym).",
+        "source": "ЕСУМ (etymology of root «хвастати»)",
+    }
+
+
+def test_esum_etymology_root_fallback_unrelated_word_yields_none() -> None:
+    """Unrelated word with no direct and no root match must stay None (no fabrication)."""
+    conn = _conn()
+    conn.execute(
+        """
+        CREATE TABLE esum_etymology (
+            lemma TEXT NOT NULL,
+            etymology_text TEXT NOT NULL,
+            cognates TEXT DEFAULT '',
+            vol TEXT DEFAULT '',
+            page TEXT DEFAULT ''
+        )
+        """
+    )
+    conn.execute(
+        "INSERT INTO esum_etymology VALUES (?, ?, ?, ?, ?)",
+        ("хвастати", "хвастати fixture.", "[]", "6", "162"),
+    )
+
+    assert _etymology(conn, "яблуко", {}) is None
+    assert _etymology(conn, "несуществуюче", {}) is None
+
+
+def test_esum_etymology_exact_still_direct_no_regression() -> None:
+    """Exact-lemma ЕСУМ hit must still return direct entry (root-fallback does not interfere)."""
+    conn = _conn()
+    conn.execute(
+        """
+        CREATE TABLE esum_etymology (
+            lemma TEXT NOT NULL,
+            etymology_text TEXT NOT NULL,
+            cognates TEXT DEFAULT '',
+            vol TEXT DEFAULT '',
+            page TEXT DEFAULT ''
+        )
+        """
+    )
+    conn.execute(
+        "INSERT INTO esum_etymology VALUES (?, ?, ?, ?, ?)",
+        ("хвастати", "Direct root entry.", "[]", "6", "162"),
+    )
+
+    etymology = _etymology(conn, "хвастати", {})
+
+    assert etymology == {
+        "text": "Direct root entry.",
+        "source": "ЕСУМ, т. 6, с. 162",
+    }
+
+
 def test_compositional_greeting_phrases_have_no_etymology_fallback() -> None:
     conn = _conn()
     conn.execute(

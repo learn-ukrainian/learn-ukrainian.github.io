@@ -64,6 +64,7 @@ from scripts.lexicon.calque_corrections import (
     PHRASAL_CALQUES,
     SENSE_RESTRICTED_CALQUES,
 )
+from scripts.lexicon.derivational_morphology import _stem_before_suffix
 from scripts.lexicon.heritage_classifier import classify_lemma
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, write_fingerprint
 from scripts.verification.vesum import verify_lemma, verify_word
@@ -422,6 +423,26 @@ _ORDINAL_ETYMOLOGY_BASES: dict[str, tuple[str, ...]] = {
     "дев'яте": ("дев'ятий", "дев'ять"),
     "дев'ятий": ("дев'ять",),
 }
+
+# Small conservative set of derivational suffixes for ЕСУМ root fallback.
+# Only one-level strip; used to propose candidate roots for root-based ЕСУМ table.
+# Keep SMALL: adjectival, deverbal/nominal, diminutive. Conservatism > coverage.
+_ESUM_ETYMOLOGY_ROOT_SUFFIXES: tuple[str, ...] = (
+    "ливий",
+    "льний",
+    "ський",
+    "овий",
+    "ний",
+    "ння",
+    "ість",
+    "ець",
+    "ник",
+    "ач",
+    "ар",
+    "ок",
+    "ик",
+    "ка",
+)
 
 # VESUM tag token → human-readable Ukrainian grammatical label.
 _TAG_LABELS: dict[str, str] = {
@@ -2224,6 +2245,44 @@ def _derivational_etymology_candidates(lemma: str) -> list[str]:
     return out
 
 
+def _esum_root_candidates(lemma: str) -> list[str]:
+    """Conservative candidate roots for ЕСУМ root-based etymology lookup.
+
+    Derives by stripping a SMALL list of common derivational suffixes from
+    variants produced by _etymology_lookup_variants. One-level only (no chaining).
+    Also proposes common verb forms (e.g. stem+"ати") from the stripped stem
+    to reach canonical infinitive roots present in ЕСУМ (e.g. хвастливий -> хвастати).
+    Returns unique normalized candidates; caller selects best (longest) hit.
+    Reuses _stem_before_suffix from derivational_morphology.
+    """
+    word = _lookup_key(_base_lemma(lemma))
+    if not word or _has_whitespace(word) or len(word) < 4:
+        return []
+    cands: list[str] = []
+    seen: set[str] = set()
+    # Derive from lookup variants of the lemma (reuses existing helper)
+    for variant in _etymology_lookup_variants(lemma):
+        k = _lookup_key(variant)
+        if not k or _has_whitespace(k) or k in seen:
+            continue
+        seen.add(k)
+        # Try stripping suffixes; prefer longer suffix matches first (more specific strip)
+        suffixes_sorted = sorted(_ESUM_ETYMOLOGY_ROOT_SUFFIXES, key=len, reverse=True)
+        for suffix in suffixes_sorted:
+            stem = _stem_before_suffix(k, suffix, min_stem_len=3)
+            if stem and len(stem) >= 3 and stem not in seen:
+                seen.add(stem)
+                cands.append(stem)
+                # Conservatively propose verb lemmata from stem (common for etym roots)
+                for vsuf in ("ати", "ити"):
+                    vroot = stem + vsuf
+                    if len(vroot) > len(stem) + 2 and vroot not in seen:
+                        seen.add(vroot)
+                        cands.append(vroot)
+                break  # only one suffix strip per variant (conservative)
+    return cands
+
+
 def _has_whitespace(value: str) -> bool:
     return bool(re.search(r"\s", str(value or "").strip()))
 
@@ -2401,7 +2460,13 @@ def _with_base_etymology_label(etymology: dict, base_form: str) -> dict:
 
 
 def _etymology(conn: sqlite3.Connection, lemma: str, kaikki_lookup: dict[str, dict[str, Any]] | None = None) -> dict | None:
-    """Cached etymology by authority order, with derived-lemma base fallback."""
+    """Cached etymology by authority order, with derived-lemma base fallback.
+
+    Additionally performs conservative ЕСУМ root-fallback (when exact-lemma
+    ЕСУМ lookup yields nothing) by stripping a small set of derivational
+    suffixes to reach root lemmata in the root-based esum_etymology table.
+    Uses longest-matching root on hit; honest "root" label; None if no confident.
+    """
     lookup_word = _lookup_key(_base_lemma(lemma))
     if lookup_word in _COMPOSITIONAL_ETYMOLOGY_EXCLUSIONS:
         return None
@@ -2412,6 +2477,22 @@ def _etymology(conn: sqlite3.Connection, lemma: str, kaikki_lookup: dict[str, di
         etymology = _source_etymology(conn, base_form, kaikki_lookup)
         if etymology:
             return _with_base_etymology_label(etymology, base_form)
+    # #2882 ЕСУМ root-fallback (exact-lemma ЕСУМ yielded nothing above via source)
+    # Only probes esum_etymology (root-based); other sources already exhausted.
+    # Collect hits then pick ONE best = longest root (most specific / conservative)
+    root_hits: list[tuple[int, str, dict]] = []
+    for root in _esum_root_candidates(lemma):
+        et = _esum_etymology(conn, root)
+        if et:
+            root_hits.append((len(root), root, et))
+    if root_hits:
+        root_hits.sort(reverse=True)  # longest root first
+        _, best_root, best_et = root_hits[0]
+        # Honest label about indirection; NEVER claim direct ЕСУМ for the derived
+        return {
+            "text": best_et["text"],
+            "source": f"ЕСУМ (etymology of root «{best_root}»)",
+        }
     return None
 
 
