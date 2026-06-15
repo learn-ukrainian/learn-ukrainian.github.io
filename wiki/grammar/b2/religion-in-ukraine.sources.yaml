@@ -37,3 +37,27 @@ sources:
   title: § 9. Церковне життя
   page: 58
   grade: 8
+- id: S7
+  file: 7-klas-ukrmova-litvinova-2024_s0094
+  type: textbook
+  title: Сторінка 90
+  page: 90
+  grade: 7
+- id: S8
+  file: 5-klas-ukrmova-zabolotnyi-2023_s0048
+  type: textbook
+  title: Сторінка 50
+  page: 50
+  grade: 5
+- id: S9
+  file: 7-klas-ukrmova-avramenko-2024_s0128
+  type: textbook
+  title: Сторінка 115
+  page: 115
+  grade: 7
+- id: S10
+  file: 5-klas-istoriya-schupak-2022_s0187
+  type: textbook
+  title: Сторінка 186
+  page: 186
+  grade: 5
