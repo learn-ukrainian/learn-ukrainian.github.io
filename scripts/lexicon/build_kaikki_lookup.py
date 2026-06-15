@@ -89,6 +89,50 @@ def entry_has_gloss(entry: dict[str, Any]) -> bool:
     return False
 
 
+# A gloss is a real English TRANSLATION only if it is not a morphological "form of",
+# spelling-variant, or misspelling meta-gloss (those are useful as a form→lemma signal,
+# not as a learner-facing translation). #2882.
+_META_GLOSS_RE = re.compile(
+    r"^(inflection|misspelling|alternative (form|spelling)|obsolete (form|spelling)|"
+    r"superseded spelling|romani[sz]ation|abbreviation|initialism|clipping|contraction|"
+    r"synonym|antonym|eye dialect|pronunciation spelling|archaic (form|spelling)|"
+    r"dated (form|spelling)|rare (form|spelling)|nonstandard (form|spelling)|"
+    r"(a )?diminutive) of\b",
+    re.IGNORECASE,
+)
+_FORM_OF_RE = re.compile(
+    r"\b(nominative|genitive|dative|accusative|instrumental|vocative|locative|prepositional|"
+    r"singular|plural|dual|first-person|second-person|third-person|imperfective|perfective|"
+    r"comparative|superlative|participle|imperative|infinitive|gerund|present|past|future|"
+    r"indicative|subjunctive|conditional)\b.*\bof\b\s*[Ѐ-ӿ]",
+    re.IGNORECASE,
+)
+
+
+def _is_translation_gloss(gloss: str) -> bool:
+    g = gloss.strip()
+    if len(g) < 2:
+        return False
+    if _META_GLOSS_RE.match(g):
+        return False
+    return not _FORM_OF_RE.search(g)
+
+
+def extract_glosses(entry: dict[str, Any]) -> list[str]:
+    """Real English translation glosses (form-of / misspelling / spelling-variant dropped)."""
+    out: list[str] = []
+    for sense in entry.get("senses") or []:
+        if not isinstance(sense, dict):
+            continue
+        for gloss in sense.get("glosses") or []:
+            if not isinstance(gloss, str):
+                continue
+            g = clean_text(gloss)
+            if g and _is_translation_gloss(g) and g not in out:
+                out.append(g)
+    return out[:6]
+
+
 def build_lookup(path: Path) -> dict[str, dict[str, Any]]:
     """Stream a Kaikki JSONL file and return the compact Atlas lookup."""
     raw: dict[str, dict[str, Any]] = {}
