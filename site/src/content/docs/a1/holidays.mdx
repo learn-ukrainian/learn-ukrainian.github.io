@@ -87,7 +87,7 @@ Use **на + свято** when you mean time:
 
 ### Match the holiday and date
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Новий рік", "right": "1 січня"}, {"left": "Різдво Христове", "right": "25 грудня"}, {"left": "День Незалежності України", "right": "24 серпня"}, {"left": "День Соборності України", "right": "22 січня"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Новий рік", "right": "1 січня"}, {"left": "Різдво Христове", "right": "25 грудня"}, {"left": "День Незалежності України", "right": "24 серпня"}, {"left": "День Соборності України", "right": "22 січня"}]`)} instruction={"Connect each Ukrainian holiday with its date."} isUkrainian={false} />
 
 ### Листівка до зимових свят
 
@@ -189,7 +189,7 @@ event. The goal is usable Ukrainian, not a speech.
 
 ### Holiday greetings
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Вітаю з ___!", "answer": "Новим роком", "options": ["Новим роком", "Новий рік", "Новому році"]}, {"sentence": "З ___ Христовим!", "answer": "Різдвом", "options": ["Різдвом", "Різдво", "Різдві"]}, {"sentence": "З ___!", "answer": "Великоднем", "options": ["Великоднем", "Великдень", "Великодні"]}, {"sentence": "З Днем ___ України!", "answer": "Незалежності", "options": ["Незалежності", "Незалежність", "Незалежністю"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Вітаю з ___!", "answer": "Новим роком", "options": ["Новим роком", "Новий рік", "Новому році"]}, {"sentence": "З ___ Христовим!", "answer": "Різдвом", "options": ["Різдвом", "Різдво", "Різдві"]}, {"sentence": "З ___!", "answer": "Великоднем", "options": ["Великоднем", "Великдень", "Великодні"]}, {"sentence": "З Днем ___ України!", "answer": "Незалежності", "options": ["Незалежності", "Незалежність", "Незалежністю"]}]`)} instruction={"Choose the fixed holiday greeting form."} isUkrainian={false} />
 
 ## Формули привітання
 
@@ -232,7 +232,7 @@ direct, and personal.
 
 ### Святкувати or на?
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Ми ___ Різдво вдома.", "answer": "святкуємо", "options": ["святкуємо", "на", "з"]}, {"sentence": "___ Різдво ми співаємо колядки.", "answer": "На", "options": ["На", "З", "Святкуємо"]}, {"sentence": "Ми ___ Великдень з родиною.", "answer": "святкуємо", "options": ["святкуємо", "на", "у"]}, {"sentence": "___ Великдень ми печемо паски.", "answer": "На", "options": ["На", "З", "Святкуємо"]}, {"sentence": "Я ___ День Незалежності України.", "answer": "святкую", "options": ["святкую", "на", "вітаю"]}, {"sentence": "___ Новий рік ми даруємо подарунки.", "answer": "На", "options": ["На", "З", "Святкуємо"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Ми ___ Різдво вдома.", "answer": "святкуємо", "options": ["святкуємо", "на", "з"]}, {"sentence": "___ Різдво ми співаємо колядки.", "answer": "На", "options": ["На", "З", "Святкуємо"]}, {"sentence": "Ми ___ Великдень з родиною.", "answer": "святкуємо", "options": ["святкуємо", "на", "у"]}, {"sentence": "___ Великдень ми печемо паски.", "answer": "На", "options": ["На", "З", "Святкуємо"]}, {"sentence": "Я ___ День Незалежності України.", "answer": "святкую", "options": ["святкую", "на", "вітаю"]}, {"sentence": "___ Новий рік ми даруємо подарунки.", "answer": "На", "options": ["На", "З", "Святкуємо"]}]`)} instruction={"Choose the Ukrainian pattern."} isUkrainian={false} />
 
 ## Родинні свята
 
@@ -282,7 +282,7 @@ simple: **З Великоднем!**
 
 ### What belongs to which holiday?
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що співають на Різдво?", "options": [{"text": "колядки", "correct": true}, {"text": "щедрівки", "correct": false}, {"text": "писанки", "correct": false}], "explanation": "Колядки belong to Christmas."}, {"question": "Що звучить на Щедрий вечір?", "options": [{"text": "щедрівки", "correct": true}, {"text": "колядки", "correct": false}, {"text": "паски", "correct": false}], "explanation": "Щедрівки belong to Щедрий вечір."}, {"question": "Що печуть на Великдень?", "options": [{"text": "паски", "correct": true}, {"text": "листівки", "correct": false}, {"text": "прапори", "correct": false}], "explanation": "Паска is Easter bread."}, {"question": "Що часто бачать на День Незалежності України?", "options": [{"text": "синьо-жовті прапори", "correct": true}, {"text": "писанки", "correct": false}, {"text": "колядки", "correct": false}], "explanation": "The flag is a state symbol."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що співають на Різдво?", "options": [{"text": "колядки", "correct": true}, {"text": "щедрівки", "correct": false}, {"text": "писанки", "correct": false}], "explanation": "Колядки belong to Christmas."}, {"question": "Що звучить на Щедрий вечір?", "options": [{"text": "щедрівки", "correct": true}, {"text": "колядки", "correct": false}, {"text": "паски", "correct": false}], "explanation": "Щедрівки belong to Щедрий вечір."}, {"question": "Що печуть на Великдень?", "options": [{"text": "паски", "correct": true}, {"text": "листівки", "correct": false}, {"text": "прапори", "correct": false}], "explanation": "Паска is Easter bread."}, {"question": "Що часто бачать на День Незалежності України?", "options": [{"text": "синьо-жовті прапори", "correct": true}, {"text": "писанки", "correct": false}, {"text": "колядки", "correct": false}], "explanation": "The flag is a state symbol."}]`)} instruction={"Choose the Ukrainian cultural item."} isUkrainian={false} />
 
 ## Державні свята і підсумок
 
@@ -361,15 +361,15 @@ You can now do four practical things:
 
 ### Short holiday card
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Вітаю тебе з ___! Бажаю веселих свят.", "answer": "Новим роком", "options": ["Новим роком", "Новий рік", "Новому році"]}, {"sentence": "З ___ Христовим! Бажаю здоров'я.", "answer": "Різдвом", "options": ["Різдвом", "Різдво", "Різдві"]}, {"sentence": "З ___! Бажаю добра.", "answer": "Великоднем", "options": ["Великоднем", "Великдень", "Великодні"]}, {"sentence": "Двадцять четвертого серпня - День ___ України.", "answer": "Незалежності", "options": ["Незалежності", "Незалежність", "Незалежністю"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Вітаю тебе з ___! Бажаю веселих свят.", "answer": "Новим роком", "options": ["Новим роком", "Новий рік", "Новому році"]}, {"sentence": "З ___ Христовим! Бажаю здоров'я.", "answer": "Різдвом", "options": ["Різдвом", "Різдво", "Різдві"]}, {"sentence": "З ___! Бажаю добра.", "answer": "Великоднем", "options": ["Великоднем", "Великдень", "Великодні"]}, {"sentence": "Двадцять четвертого серпня - День ___ України.", "answer": "Незалежності", "options": ["Незалежності", "Незалежність", "Незалежністю"]}]`)} instruction={"Complete the short card or greeting."} isUkrainian={false} />
 
 ### Holiday shelves
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Новий рік": ["1 січня", "З Новим роком!", "подарунок"], "Різдво": ["25 грудня", "колядка", "З Різдвом Христовим!"], "Великдень": ["паска", "писанка", "З Великоднем!"], "Державні дати": ["24 серпня", "22 січня", "синьо-жовтий прапор"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Новий рік": ["1 січня", "З Новим роком!", "подарунок"], "Різдво": ["25 грудня", "колядка", "З Різдвом Христовим!"], "Великдень": ["паска", "писанка", "З Великоднем!"], "Державні дати": ["24 серпня", "22 січня", "синьо-жовтий прапор"]}`)} instruction={"Sort words and phrases by holiday context."} isUkrainian={false} />
 
 ### Holiday checks
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "З Новим роком is a fixed greeting chunk.", "isTrue": true, "explanation": "At A1, learn the whole phrase."}, {"statement": "Святкувати Різдво is a good Ukrainian pattern.", "isTrue": true, "explanation": "Святкувати takes the holiday name directly."}, {"statement": "На Різдво ми співаємо колядки is a time phrase.", "isTrue": true, "explanation": "На + holiday tells when something happens."}, {"statement": "Колядки and щедрівки are the same word.", "isTrue": false, "explanation": "They belong to different parts of the winter cycle."}, {"statement": "25 грудня is the date used here for Різдво Христове.", "isTrue": true, "explanation": "This module uses the current Ukrainian date."}, {"statement": "Паска and писанка belong to the Easter block.", "isTrue": true, "explanation": "They are Великдень words."}, {"statement": "День Незалежності України is on 24 серпня.", "isTrue": true, "explanation": "That is the active state-holiday date."}, {"statement": "Пасха is the preferred active A1 word in this module.", "isTrue": false, "explanation": "Use Великдень as the active word."}]`)} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "З Новим роком is a fixed greeting chunk.", "isTrue": true, "explanation": "At A1, learn the whole phrase."}, {"statement": "Святкувати Різдво is a good Ukrainian pattern.", "isTrue": true, "explanation": "Святкувати takes the holiday name directly."}, {"statement": "На Різдво ми співаємо колядки is a time phrase.", "isTrue": true, "explanation": "На + holiday tells when something happens."}, {"statement": "Колядки and щедрівки are the same word.", "isTrue": false, "explanation": "They belong to different parts of the winter cycle."}, {"statement": "25 грудня is the date used here for Різдво Христове.", "isTrue": true, "explanation": "This module uses the current Ukrainian date."}, {"statement": "Паска and писанка belong to the Easter block.", "isTrue": true, "explanation": "They are Великдень words."}, {"statement": "День Незалежності України is on 24 серпня.", "isTrue": true, "explanation": "That is the active state-holiday date."}, {"statement": "Пасха is the preferred active A1 word in this module.", "isTrue": false, "explanation": "Use Великдень as the active word."}]`)} instruction={"Decide whether the statement fits this module."} isUkrainian={false} />
 
 ### Repair holiday interference
 

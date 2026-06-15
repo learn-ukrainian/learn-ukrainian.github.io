@@ -229,6 +229,125 @@ def test_translate_renderer_preserves_explanations(tmp_path):
     assert "Привіт is informal." in mdx
 
 
+def test_core_a1_renderers_preserve_instruction_and_quiz_anchor(tmp_path):
+    fixture = tmp_path / "core.yaml"
+    fixture.write_text(
+        """
+- id: quiz-1
+  type: quiz
+  title: Quiz title
+  anchor_id: repair-quiz
+  instruction: Choose the best reply.
+  items:
+    - question: Привіт!
+      options:
+        - text: Hi!
+          correct: true
+        - text: Bye!
+          correct: false
+- id: true-false-1
+  type: true-false
+  title: Check
+  instruction: Decide if the sentence is natural.
+  items:
+    - statement: Це місто.
+      correct: true
+- id: fill-in-1
+  type: fill-in
+  title: Complete
+  instruction: Choose the missing word.
+  items:
+    - sentence: Я ____ каву.
+      answer: п'ю
+      options: [п'ю, їм]
+- id: match-1
+  type: match-up
+  title: Match
+  instruction: Match each situation with a phrase.
+  pairs:
+    - left: greeting
+      right: Привіт
+    - left: thanks
+      right: Дякую
+- id: sort-1
+  type: group-sort
+  title: Sort
+  instruction: Sort the phrases.
+  groups:
+    - name: food
+      items: [хліб]
+    - name: drink
+      items: [вода]
+- id: translate-1
+  type: translate
+  title: Translate
+  instruction: Choose the Ukrainian phrase.
+  items:
+    - source: Thank you.
+      options:
+        - text: Дякую.
+          correct: true
+        - text: Бувай.
+          correct: false
+- id: unjumble-1
+  type: unjumble
+  title: Build
+  instruction: Put the words in order.
+  items:
+    - jumbled: Я / п'ю / воду
+      answer: Я п'ю воду
+- id: anagram-1
+  type: anagram
+  title: Letters
+  instruction: Unscramble the word.
+  items:
+    - letters: [к, а, в, а]
+      answer: кава
+""",
+        encoding="utf-8",
+    )
+
+    parser = ActivityParser()
+    mdx = parser.to_mdx(parser.parse(fixture))
+
+    assert '<span id="repair-quiz"></span>' in mdx
+    for instruction in (
+        'instruction={"Choose the best reply."}',
+        'instruction={"Decide if the sentence is natural."}',
+        'instruction={"Choose the missing word."}',
+        'instruction={"Match each situation with a phrase."}',
+        'instruction={"Sort the phrases."}',
+        'instruction={"Choose the Ukrainian phrase."}',
+        'instruction={"Put the words in order."}',
+        'instruction={"Unscramble the word."}',
+    ):
+        assert instruction in mdx
+
+
+def test_watch_and_repeat_renderer_preserves_instruction(tmp_path):
+    fixture = tmp_path / "watch.yaml"
+    fixture.write_text(
+        """
+- id: watch-1
+  type: watch-and-repeat
+  title: Repeat
+  instruction: Watch once, then repeat aloud.
+  items:
+    - video: https://youtu.be/dQw4w9WgXcQ
+      letter: А
+      word: мама
+      sound: /a/
+""",
+        encoding="utf-8",
+    )
+
+    parser = ActivityParser()
+    mdx = parser.to_mdx(parser.parse(fixture))
+
+    assert "<WatchAndRepeat" in mdx
+    assert 'instruction={"Watch once, then repeat aloud."}' in mdx
+
+
 def test_a1_schema_accepts_unjumble_parser_aliases():
     data = [
         {

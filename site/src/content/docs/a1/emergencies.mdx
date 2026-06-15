@@ -97,7 +97,7 @@ phrases.
 
 ### Complete the emergency line
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___! Тут аварія.", "answer": "Допоможіть", "options": ["Допоможіть", "Дякую", "Вітаю"]}, {"sentence": "Подзвоніть за номером ___.", "answer": "112", "options": ["112", "55", "800"]}, {"sentence": "Мене ___ Анна.", "answer": "звати", "options": ["звати", "болить", "адреса"]}, {"sentence": "Я ___ вулиці Шевченка.", "answer": "на", "options": ["на", "о", "до"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___! Тут аварія.", "answer": "Допоможіть", "options": ["Допоможіть", "Дякую", "Вітаю"]}, {"sentence": "Подзвоніть за номером ___.", "answer": "112", "options": ["112", "55", "800"]}, {"sentence": "Мене ___ Анна.", "answer": "звати", "options": ["звати", "болить", "адреса"]}, {"sentence": "Я ___ вулиці Шевченка.", "answer": "на", "options": ["на", "о", "до"]}]`)} instruction={"Choose the word or number that completes the phrase."} isUkrainian={false} />
 
 ### Дзвінок на 112
 
@@ -172,7 +172,7 @@ phone. Keep the number clear:
 
 ### Numbers and services
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "112", "right": "екстрена допомога"}, {"left": "101", "right": "служба порятунку"}, {"left": "102", "right": "поліція"}, {"left": "103", "right": "швидка"}, {"left": "104", "right": "газова служба"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "112", "right": "екстрена допомога"}, {"left": "101", "right": "служба порятунку"}, {"left": "102", "right": "поліція"}, {"left": "103", "right": "швидка"}, {"left": "104", "right": "газова служба"}]`)} instruction={"Match each number with the service word."} isUkrainian={false} />
 
 ## Номери і служби
 
@@ -203,11 +203,11 @@ Useful words:
 
 ### Sort emergency words
 
-<GroupSort client:only='react' groups={JSON.parse(`{"numbers": ["112", "101", "102", "103", "104"], "problems": ["Тут аварія", "Тут пожежа", "Мені погано", "Я загубив паспорт"], "place and identity": ["Я на вулиці", "Я біля метро", "Мене звати", "Мій номер телефону"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"numbers": ["112", "101", "102", "103", "104"], "problems": ["Тут аварія", "Тут пожежа", "Мені погано", "Я загубив паспорт"], "place and identity": ["Я на вулиці", "Я біля метро", "Мене звати", "Мій номер телефону"]}`)} instruction={"Put each phrase into the right group."} isUkrainian={false} />
 
 ### Choose the emergency phrase
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "You need to say: There is a fire here.", "options": [{"text": "Тут пожежа.", "correct": true}, {"text": "Тут паспорт.", "correct": false}, {"text": "Мене пожежа.", "correct": false}], "explanation": "Тут пожежа is the short problem sentence."}, {"question": "You need police.", "options": [{"text": "Потрібна поліція.", "correct": true}, {"text": "Потрібна аптека.", "correct": false}, {"text": "Поліція болить.", "correct": false}], "explanation": "Потрібна поліція asks for police help."}, {"question": "You want someone to call 103.", "options": [{"text": "Подзвоніть за номером 103, будь ласка.", "correct": true}, {"text": "Я номер сто три.", "correct": false}, {"text": "Сто три звати.", "correct": false}], "explanation": "Use Подзвоніть за номером..."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "You need to say: There is a fire here.", "options": [{"text": "Тут пожежа.", "correct": true}, {"text": "Тут паспорт.", "correct": false}, {"text": "Мене пожежа.", "correct": false}], "explanation": "Тут пожежа is the short problem sentence."}, {"question": "You need police.", "options": [{"text": "Потрібна поліція.", "correct": true}, {"text": "Потрібна аптека.", "correct": false}, {"text": "Поліція болить.", "correct": false}], "explanation": "Потрібна поліція asks for police help."}, {"question": "You want someone to call 103.", "options": [{"text": "Подзвоніть за номером 103, будь ласка.", "correct": true}, {"text": "Я номер сто три.", "correct": false}, {"text": "Сто три звати.", "correct": false}], "explanation": "Use Подзвоніть за номером..."}]`)} instruction={"Pick the clearest A1 phrase."} isUkrainian={false} />
 
 ## Що сталося?
 
@@ -334,23 +334,23 @@ That is the goal: a clear problem, a clear place, and clear identity words.
 
 ### Emergency language check
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Допоможіть! Тут аварія.", "isTrue": true, "explanation": "This gives a help call and a problem."}, {"statement": "Я на вулиці Франка.", "isTrue": true, "explanation": "This gives a location."}, {"statement": "Мене номер Анна.", "isTrue": false, "explanation": "Use Мене звати Анна."}, {"statement": "Потрібна швидка.", "isTrue": true, "explanation": "This asks for an ambulance."}, {"statement": "Подзвоніть за номером голова.", "isTrue": false, "explanation": "A phone phrase needs a number."}]`)} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Допоможіть! Тут аварія.", "isTrue": true, "explanation": "This gives a help call and a problem."}, {"statement": "Я на вулиці Франка.", "isTrue": true, "explanation": "This gives a location."}, {"statement": "Мене номер Анна.", "isTrue": false, "explanation": "Use Мене звати Анна."}, {"statement": "Потрібна швидка.", "isTrue": true, "explanation": "This asks for an ambulance."}, {"statement": "Подзвоніть за номером голова.", "isTrue": false, "explanation": "A phone phrase needs a number."}]`)} instruction={"Decide whether the phrase is clear emergency language."} isUkrainian={false} />
 
 ### Build emergency lines
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Допоможіть! / Тут / аварія.", "answer": "Допоможіть! Тут аварія."}, {"jumbled": "Я / на / вулиці / Шевченка.", "answer": "Я на вулиці Шевченка."}, {"jumbled": "Мене / звати / Анна.", "answer": "Мене звати Анна."}, {"jumbled": "Подзвоніть / за / номером / 112.", "answer": "Подзвоніть за номером 112."}]`)} />
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Допоможіть! / Тут / аварія.", "answer": "Допоможіть! Тут аварія."}, {"jumbled": "Я / на / вулиці / Шевченка.", "answer": "Я на вулиці Шевченка."}, {"jumbled": "Мене / звати / Анна.", "answer": "Мене звати Анна."}, {"jumbled": "Подзвоніть / за / номером / 112.", "answer": "Подзвоніть за номером 112."}]`)} instruction={"Put the words in a natural order."} />
 
 ### Location details
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ метро.", "answer": "біля", "options": ["біля", "звати", "номер"]}, {"sentence": "Будинок ___.", "answer": "п'ять", "options": ["п'ять", "поліція", "швидка"]}, {"sentence": "Я ___ готелі.", "answer": "в", "options": ["в", "о", "за"]}, {"sentence": "Я ___ аптеки.", "answer": "навпроти", "options": ["навпроти", "повторіть", "аварія"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ метро.", "answer": "біля", "options": ["біля", "звати", "номер"]}, {"sentence": "Будинок ___.", "answer": "п'ять", "options": ["п'ять", "поліція", "швидка"]}, {"sentence": "Я ___ готелі.", "answer": "в", "options": ["в", "о", "за"]}, {"sentence": "Я ___ аптеки.", "answer": "навпроти", "options": ["навпроти", "повторіть", "аварія"]}]`)} instruction={"Choose the location word that fits."} isUkrainian={false} />
 
 ### Personal information
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Як вас звати?", "options": [{"text": "Мене звати Сара.", "correct": true}, {"text": "Я на вулиці Сара.", "correct": false}, {"text": "Потрібна Сара.", "correct": false}], "explanation": "Мене звати... answers the name question."}, {"question": "Ваш номер телефону?", "options": [{"text": "Мій номер телефону: нуль дев'яносто сім...", "correct": true}, {"text": "Мене звати телефон.", "correct": false}, {"text": "Тут телефон пожежа.", "correct": false}], "explanation": "Мій номер телефону... gives the number."}, {"question": "Ви розумієте?", "options": [{"text": "Я трохи розумію. Повторіть, будь ласка.", "correct": true}, {"text": "Я вулиці розумію.", "correct": false}, {"text": "Паспорт повторіть номер.", "correct": false}], "explanation": "Use a repair phrase when understanding is limited."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Як вас звати?", "options": [{"text": "Мене звати Сара.", "correct": true}, {"text": "Я на вулиці Сара.", "correct": false}, {"text": "Потрібна Сара.", "correct": false}], "explanation": "Мене звати... answers the name question."}, {"question": "Ваш номер телефону?", "options": [{"text": "Мій номер телефону: нуль дев'яносто сім...", "correct": true}, {"text": "Мене звати телефон.", "correct": false}, {"text": "Тут телефон пожежа.", "correct": false}], "explanation": "Мій номер телефону... gives the number."}, {"question": "Ви розумієте?", "options": [{"text": "Я трохи розумію. Повторіть, будь ласка.", "correct": true}, {"text": "Я вулиці розумію.", "correct": false}, {"text": "Паспорт повторіть номер.", "correct": false}], "explanation": "Use a repair phrase when understanding is limited."}]`)} instruction={"Choose the answer that matches the question."} isUkrainian={false} />
 
 ### Emergency message
 
-<Translate client:only='react' questions={JSON.parse(`[{"source": "Help! There is an accident here.", "options": [{"text": "Допоможіть! Тут аварія.", "correct": true}, {"text": "Дякую! Тут аптека.", "correct": false}, {"text": "Мене звати аварія.", "correct": false}], "explanation": "Use Допоможіть and Тут аварія."}, {"source": "I am on Shevchenka Street.", "options": [{"text": "Я на вулиці Шевченка.", "correct": true}, {"text": "Я о вулиці Шевченка.", "correct": false}, {"text": "Я номер Шевченка.", "correct": false}], "explanation": "Use на вулиці for on a street."}, {"source": "Please call 102.", "options": [{"text": "Подзвоніть за номером 102, будь ласка.", "correct": true}, {"text": "Повторіть номер 102 звати.", "correct": false}, {"text": "Сто два на вулиці.", "correct": false}], "explanation": "Use Подзвоніть за номером..."}]`)} isUkrainian={false} />
+<Translate client:only='react' questions={JSON.parse(`[{"source": "Help! There is an accident here.", "options": [{"text": "Допоможіть! Тут аварія.", "correct": true}, {"text": "Дякую! Тут аптека.", "correct": false}, {"text": "Мене звати аварія.", "correct": false}], "explanation": "Use Допоможіть and Тут аварія."}, {"source": "I am on Shevchenka Street.", "options": [{"text": "Я на вулиці Шевченка.", "correct": true}, {"text": "Я о вулиці Шевченка.", "correct": false}, {"text": "Я номер Шевченка.", "correct": false}], "explanation": "Use на вулиці for on a street."}, {"source": "Please call 102.", "options": [{"text": "Подзвоніть за номером 102, будь ласка.", "correct": true}, {"text": "Повторіть номер 102 звати.", "correct": false}, {"text": "Сто два на вулиці.", "correct": false}], "explanation": "Use Подзвоніть за номером..."}]`)} instruction={"Choose the Ukrainian phrase that matches the English prompt."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">

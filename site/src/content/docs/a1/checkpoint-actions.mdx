@@ -78,7 +78,7 @@ By the end, you can:
 
 ### Reading line to skill
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Я прокидаюся о сьомій.", "right": "reflexive routine"}, {"left": "Я люблю читати.", "right": "like + infinitive"}, {"left": "Вона працює в школі.", "right": "Group One -ува-"}, {"left": "Ти пишеш гарно.", "right": "писати change"}, {"left": "Вони роблять швидко.", "right": "Group Two plural"}, {"left": "Я можу готувати.", "right": "modal + infinitive"}, {"left": "Коли ти можеш?", "right": "question word"}, {"left": "Ніхто не читає.", "right": "negative"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Я прокидаюся о сьомій.", "right": "reflexive routine"}, {"left": "Я люблю читати.", "right": "like + infinitive"}, {"left": "Вона працює в школі.", "right": "Group One -ува-"}, {"left": "Ти пишеш гарно.", "right": "писати change"}, {"left": "Вони роблять швидко.", "right": "Group Two plural"}, {"left": "Я можу готувати.", "right": "modal + infinitive"}, {"left": "Коли ти можеш?", "right": "question word"}, {"left": "Ніхто не читає.", "right": "negative"}]`)} instruction={"Match each checkpoint line with the skill it proves."} isUkrainian={false} />
 
 Think of A1.3 as a set of action cards. The dictionary card is the infinitive,
 
@@ -156,7 +156,7 @@ ending in **-ти**, a person form like **працюю**, a modal helper like
 
 ### Action diagnostics
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я працюю кожного дня.", "isTrue": true, "explanation": "Працюю is the я form of працювати."}, {"statement": "Вона працює в школі.", "isTrue": true, "explanation": "Працювати changes to працює with вона."}, {"statement": "Ви пишите дуже гарно.", "isTrue": false, "explanation": "Use Ви пишете дуже гарно."}, {"statement": "Вони роботь швидко.", "isTrue": false, "explanation": "Use Вони роблять швидко."}, {"statement": "Він хоче кави.", "isTrue": true, "explanation": "Хоче is the safe він form."}, {"statement": "Я є читаю книгу.", "isTrue": false, "explanation": "Use Я читаю книгу."}, {"statement": "Я прокидаюся о сьомій.", "isTrue": true, "explanation": "Прокидаюся is a safe -ся routine form."}, {"statement": "Ніхто не читає.", "isTrue": true, "explanation": "Keep не before the verb."}]`)} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я працюю кожного дня.", "isTrue": true, "explanation": "Працюю is the я form of працювати."}, {"statement": "Вона працює в школі.", "isTrue": true, "explanation": "Працювати changes to працює with вона."}, {"statement": "Ви пишите дуже гарно.", "isTrue": false, "explanation": "Use Ви пишете дуже гарно."}, {"statement": "Вони роботь швидко.", "isTrue": false, "explanation": "Use Вони роблять швидко."}, {"statement": "Він хоче кави.", "isTrue": true, "explanation": "Хоче is the safe він form."}, {"statement": "Я є читаю книгу.", "isTrue": false, "explanation": "Use Я читаю книгу."}, {"statement": "Я прокидаюся о сьомій.", "isTrue": true, "explanation": "Прокидаюся is a safe -ся routine form."}, {"statement": "Ніхто не читає.", "isTrue": true, "explanation": "Keep не before the verb."}]`)} instruction={"Decide whether each line uses the checkpoint pattern safely."} isUkrainian={false} />
 
 ## Читання
 
@@ -213,7 +213,7 @@ For this checkpoint, short answers are enough: **о сьомій**, **вдома
 
 ### Skill stations
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Group One": ["я читаю", "ти пишеш", "вони працюють", "ми малюємо"], "Group Two": ["я говорю", "ти говориш", "вони роблять", "ви бачите"], "Modal + infinitive": ["хочу читати", "можу готувати", "мушу працювати", "може допомагати"], "Question words": ["де ти працюєш?", "коли ти можеш?", "що ти читаєш?", "як ми говоримо?"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Group One": ["я читаю", "ти пишеш", "вони працюють", "ми малюємо"], "Group Two": ["я говорю", "ти говориш", "вони роблять", "ви бачите"], "Modal + infinitive": ["хочу читати", "можу готувати", "мушу працювати", "може допомагати"], "Question words": ["де ти працюєш?", "коли ти можеш?", "що ти читаєш?", "як ми говоримо?"]}`)} instruction={"Sort each chunk by the skill it checks."} isUkrainian={false} />
 
 ## Граматика
 
@@ -250,7 +250,7 @@ Keep the common repairs close:
 
 ### Roommate dialogue gaps
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Олег: Коли ти ___?", "answer": "прокидаєшся", "options": ["прокидаєшся", "працюєш", "пишеш"]}, {"sentence": "Марина: Я ___ о сьомій.", "answer": "прокидаюся", "options": ["прокидаюся", "читаю", "роблю"]}, {"sentence": "Олег: Де ти ___?", "answer": "працюєш", "options": ["працюєш", "можеш", "хочеш"]}, {"sentence": "Марина: Я ___ в школі.", "answer": "працюю", "options": ["працюю", "працює", "працюємо"]}, {"sentence": "Олег: Ти ___ читати ввечері?", "answer": "любиш", "options": ["любиш", "читаєш", "робиш"]}, {"sentence": "Марина: Не можу зараз, ___ працювати.", "answer": "мушу", "options": ["мушу", "читаю", "говорю"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Олег: Коли ти ___?", "answer": "прокидаєшся", "options": ["прокидаєшся", "працюєш", "пишеш"]}, {"sentence": "Марина: Я ___ о сьомій.", "answer": "прокидаюся", "options": ["прокидаюся", "читаю", "роблю"]}, {"sentence": "Олег: Де ти ___?", "answer": "працюєш", "options": ["працюєш", "можеш", "хочеш"]}, {"sentence": "Марина: Я ___ в школі.", "answer": "працюю", "options": ["працюю", "працює", "працюємо"]}, {"sentence": "Олег: Ти ___ читати ввечері?", "answer": "любиш", "options": ["любиш", "читаєш", "робиш"]}, {"sentence": "Марина: Не можу зараз, ___ працювати.", "answer": "мушу", "options": ["мушу", "читаю", "говорю"]}]`)} instruction={"Complete the dialogue with the checkpoint form."} isUkrainian={false} />
 
 ## Діалог
 
@@ -375,15 +375,15 @@ and Ukrainian context clearly.
 
 ### Rebuild checkpoint lines
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Я / люблю / читати", "answer": "Я люблю читати"}, {"jumbled": "Вона / працює / в школі", "answer": "Вона працює в школі"}, {"jumbled": "Ми / говоримо / українською", "answer": "Ми говоримо українською"}, {"jumbled": "Коли / ти / можеш", "answer": "Коли ти можеш"}, {"jumbled": "Я / мушу / працювати", "answer": "Я мушу працювати"}, {"jumbled": "Вони / роблять / швидко", "answer": "Вони роблять швидко"}]`)} />
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Я / люблю / читати", "answer": "Я люблю читати"}, {"jumbled": "Вона / працює / в школі", "answer": "Вона працює в школі"}, {"jumbled": "Ми / говоримо / українською", "answer": "Ми говоримо українською"}, {"jumbled": "Коли / ти / можеш", "answer": "Коли ти можеш"}, {"jumbled": "Я / мушу / працювати", "answer": "Я мушу працювати"}, {"jumbled": "Вони / роблять / швидко", "answer": "Вони роблять швидко"}]`)} instruction={"Put the words in a safe A1.3 order."} />
 
 ### Choose the answer job
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Коли ти прокидаєшся?", "options": [{"text": "О сьомій.", "correct": true}, {"text": "У школі.", "correct": false}, {"text": "Українською.", "correct": false}], "explanation": "Коли asks about time."}, {"question": "Де ти працюєш?", "options": [{"text": "В офісі.", "correct": true}, {"text": "О восьмій.", "correct": false}, {"text": "Тому що мушу.", "correct": false}], "explanation": "Де asks about place."}, {"question": "Що ти любиш?", "options": [{"text": "Читати.", "correct": true}, {"text": "Удома.", "correct": false}, {"text": "Завтра.", "correct": false}], "explanation": "Що asks for the action or thing."}, {"question": "Як ми говоримо?", "options": [{"text": "Українською.", "correct": true}, {"text": "Увечері.", "correct": false}, {"text": "У школі.", "correct": false}], "explanation": "Як asks how."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Коли ти прокидаєшся?", "options": [{"text": "О сьомій.", "correct": true}, {"text": "У школі.", "correct": false}, {"text": "Українською.", "correct": false}], "explanation": "Коли asks about time."}, {"question": "Де ти працюєш?", "options": [{"text": "В офісі.", "correct": true}, {"text": "О восьмій.", "correct": false}, {"text": "Тому що мушу.", "correct": false}], "explanation": "Де asks about place."}, {"question": "Що ти любиш?", "options": [{"text": "Читати.", "correct": true}, {"text": "Удома.", "correct": false}, {"text": "Завтра.", "correct": false}], "explanation": "Що asks for the action or thing."}, {"question": "Як ми говоримо?", "options": [{"text": "Українською.", "correct": true}, {"text": "Увечері.", "correct": false}, {"text": "У школі.", "correct": false}], "explanation": "Як asks how."}]`)} instruction={"Choose the line that answers the question."} isUkrainian={false} />
 
 ### Repair by building the safe line
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "I work every day: Я ___ кожного дня.", "answer": "працюю", "options": ["працюю", "читаю", "пишу"]}, {"sentence": "She works at school: Вона ___ в школі.", "answer": "працює", "options": ["працює", "читає", "готує"]}, {"sentence": "I read a book: Я ___ книгу.", "answer": "читаю", "options": ["читаю", "пишу", "бачу"]}, {"sentence": "You write very nicely: Ви ___ дуже гарно.", "answer": "пишете", "options": ["пишете", "читаєте", "говорите"]}, {"sentence": "They work fast: Вони ___ швидко.", "answer": "роблять", "options": ["роблять", "говорять", "читають"]}, {"sentence": "He wants coffee: Він ___ кави.", "answer": "хоче", "options": ["хоче", "любить", "п'є"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "I work every day: Я ___ кожного дня.", "answer": "працюю", "options": ["працюю", "читаю", "пишу"]}, {"sentence": "She works at school: Вона ___ в школі.", "answer": "працює", "options": ["працює", "читає", "готує"]}, {"sentence": "I read a book: Я ___ книгу.", "answer": "читаю", "options": ["читаю", "пишу", "бачу"]}, {"sentence": "You write very nicely: Ви ___ дуже гарно.", "answer": "пишете", "options": ["пишете", "читаєте", "говорите"]}, {"sentence": "They work fast: Вони ___ швидко.", "answer": "роблять", "options": ["роблять", "говорять", "читають"]}, {"sentence": "He wants coffee: Він ___ кави.", "answer": "хоче", "options": ["хоче", "любить", "п'є"]}]`)} instruction={"Build the corrected line from the checkpoint prompt."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">

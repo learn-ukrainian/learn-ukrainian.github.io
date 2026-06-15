@@ -78,7 +78,7 @@ By the end, you can:
 
 ### Розігрів уподобань
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "I like to read.", "options": [{"text": "Я люблю читати.", "correct": true}, {"text": "Я люблю читаю.", "correct": false}, {"text": "Я подобається читати.", "correct": false}], "explanation": "Use Я люблю plus the -ти action word."}, {"question": "I like music.", "options": [{"text": "Мені подобається музика.", "correct": true}, {"text": "Я подобається музика.", "correct": false}, {"text": "Мені подобається музику.", "correct": false}], "explanation": "Мені подобається is the safe chunk for liking a thing."}, {"question": "Do you like to cook?", "options": [{"text": "Ти любиш готувати?", "correct": true}, {"text": "Ти любиш готуєш?", "correct": false}, {"text": "Тобі любиш готувати?", "correct": false}], "explanation": "The question keeps любиш plus an infinitive."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "I like to read.", "options": [{"text": "Я люблю читати.", "correct": true}, {"text": "Я люблю читаю.", "correct": false}, {"text": "Я подобається читати.", "correct": false}], "explanation": "Use Я люблю plus the -ти action word."}, {"question": "I like music.", "options": [{"text": "Мені подобається музика.", "correct": true}, {"text": "Я подобається музика.", "correct": false}, {"text": "Мені подобається музику.", "correct": false}], "explanation": "Мені подобається is the safe chunk for liking a thing."}, {"question": "Do you like to cook?", "options": [{"text": "Ти любиш готувати?", "correct": true}, {"text": "Ти любиш готуєш?", "correct": false}, {"text": "Тобі любиш готувати?", "correct": false}], "explanation": "The question keeps любиш plus an infinitive."}]`)} instruction={"Choose the safe Ukrainian line."} isUkrainian={false} />
 
 At a language exchange, Anna and Viktor are having tea. The sentences stay
 small, but they already sound like a real first conversation about interests.
@@ -142,7 +142,7 @@ conversation.
 
 ### Дії в інфінітиві
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "читати", "right": "to read"}, {"left": "гуляти", "right": "to walk"}, {"left": "готувати", "right": "to cook"}, {"left": "слухати", "right": "to listen"}, {"left": "дивитися", "right": "to watch"}, {"left": "грати", "right": "to play"}, {"left": "малювати", "right": "to draw"}, {"left": "співати", "right": "to sing"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "читати", "right": "to read"}, {"left": "гуляти", "right": "to walk"}, {"left": "готувати", "right": "to cook"}, {"left": "слухати", "right": "to listen"}, {"left": "дивитися", "right": "to watch"}, {"left": "грати", "right": "to play"}, {"left": "малювати", "right": "to draw"}, {"left": "співати", "right": "to sing"}]`)} instruction={"Match each Ukrainian action word with its meaning."} isUkrainian={false} />
 
 ## Я люблю...
 
@@ -184,7 +184,7 @@ for things.
 
 ### Будуй речення «Я люблю»
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я люблю ___.", "answer": "читати", "options": ["читати", "читаю", "читаєш"]}, {"sentence": "Я люблю ___ музику.", "answer": "слухати", "options": ["слухати", "слухаю", "слухає"]}, {"sentence": "Ти любиш ___?", "answer": "готувати", "options": ["готувати", "готуєш", "готую"]}, {"sentence": "Вона любить ___.", "answer": "малювати", "options": ["малювати", "малює", "малюю"]}, {"sentence": "Ми любимо ___.", "answer": "гуляти", "options": ["гуляти", "гуляємо", "гуляє"]}, {"sentence": "Вони люблять ___.", "answer": "співати", "options": ["співати", "співають", "співає"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я люблю ___.", "answer": "читати", "options": ["читати", "читаю", "читаєш"]}, {"sentence": "Я люблю ___ музику.", "answer": "слухати", "options": ["слухати", "слухаю", "слухає"]}, {"sentence": "Ти любиш ___?", "answer": "готувати", "options": ["готувати", "готуєш", "готую"]}, {"sentence": "Вона любить ___.", "answer": "малювати", "options": ["малювати", "малює", "малюю"]}, {"sentence": "Ми любимо ___.", "answer": "гуляти", "options": ["гуляти", "гуляємо", "гуляє"]}, {"sentence": "Вони люблять ___.", "answer": "співати", "options": ["співати", "співають", "співає"]}]`)} instruction={"Complete each sentence with the safe action word."} isUkrainian={false} />
 
 ## Мені подобається...
 
@@ -235,7 +235,7 @@ pattern for favorite things.
 
 ### Дія чи річ
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Я люблю + action": ["читати", "гуляти", "готувати", "малювати"], "Мені подобається + thing": ["музика", "книга", "фільм", "Київ"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Я люблю + action": ["читати", "гуляти", "готувати", "малювати"], "Мені подобається + thing": ["музика", "книга", "фільм", "Київ"]}`)} instruction={"Sort the words by the preference pattern they usually use today."} isUkrainian={false} />
 
 ### Пізніші слова для впізнавання
 
@@ -329,7 +329,7 @@ Build a short personal answer:
 
 ### Люблю чи подобається
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "I like to walk.", "options": [{"text": "Я люблю гуляти.", "correct": true}, {"text": "Мені подобається гуляю.", "correct": false}, {"text": "Я люблю гуляю.", "correct": false}], "explanation": "Use Я люблю plus гуляти for an action."}, {"question": "I like this film.", "options": [{"text": "Мені подобається цей фільм.", "correct": true}, {"text": "Я подобається цей фільм.", "correct": false}, {"text": "Мені люблю цей фільм.", "correct": false}], "explanation": "Use Мені подобається for a thing."}, {"question": "I do not like to cook.", "options": [{"text": "Я не люблю готувати.", "correct": true}, {"text": "Я люблю не готувати.", "correct": false}, {"text": "Я не люблю готую.", "correct": false}], "explanation": "Put не before люблю, then use the -ти action."}, {"question": "I do not like this book.", "options": [{"text": "Мені не подобається ця книга.", "correct": true}, {"text": "Мені подобається не ця книга.", "correct": false}, {"text": "Я не подобається ця книга.", "correct": false}], "explanation": "Put не before подобається."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "I like to walk.", "options": [{"text": "Я люблю гуляти.", "correct": true}, {"text": "Мені подобається гуляю.", "correct": false}, {"text": "Я люблю гуляю.", "correct": false}], "explanation": "Use Я люблю plus гуляти for an action."}, {"question": "I like this film.", "options": [{"text": "Мені подобається цей фільм.", "correct": true}, {"text": "Я подобається цей фільм.", "correct": false}, {"text": "Мені люблю цей фільм.", "correct": false}], "explanation": "Use Мені подобається for a thing."}, {"question": "I do not like to cook.", "options": [{"text": "Я не люблю готувати.", "correct": true}, {"text": "Я люблю не готувати.", "correct": false}, {"text": "Я не люблю готую.", "correct": false}], "explanation": "Put не before люблю, then use the -ти action."}, {"question": "I do not like this book.", "options": [{"text": "Мені не подобається ця книга.", "correct": true}, {"text": "Мені подобається не ця книга.", "correct": false}, {"text": "Я не подобається ця книга.", "correct": false}], "explanation": "Put не before подобається."}]`)} instruction={"Choose the sentence that matches the meaning."} isUkrainian={false} />
 
 <span id="repair-traps"></span>
 
@@ -339,11 +339,11 @@ Build a short personal answer:
 
 ### Зроби заперечення
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ люблю готувати.", "answer": "не", "options": ["не", "ні", "немає"]}, {"sentence": "Мені ___ подобається цей фільм.", "answer": "не", "options": ["не", "ні", "немає"]}, {"sentence": "Тобі ___ подобається кава?", "answer": "не", "options": ["не", "ні", "немає"]}, {"sentence": "Вони ___ люблять співати.", "answer": "не", "options": ["не", "ні", "немає"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ люблю готувати.", "answer": "не", "options": ["не", "ні", "немає"]}, {"sentence": "Мені ___ подобається цей фільм.", "answer": "не", "options": ["не", "ні", "немає"]}, {"sentence": "Тобі ___ подобається кава?", "answer": "не", "options": ["не", "ні", "немає"]}, {"sentence": "Вони ___ люблять співати.", "answer": "не", "options": ["не", "ні", "немає"]}]`)} instruction={"Add the missing preference word."} isUkrainian={false} />
 
 ### Твоя коротка відповідь
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що ти любиш робити?", "options": [{"text": "Я люблю читати.", "correct": true}, {"text": "Мені подобається читати.", "correct": false}, {"text": "Я читаєш.", "correct": false}], "explanation": "Answer with Я люблю plus an action."}, {"question": "Тобі подобається ця книга?", "options": [{"text": "Так, мені подобається.", "correct": true}, {"text": "Так, я подобається.", "correct": false}, {"text": "Так, мені люблю.", "correct": false}], "explanation": "The short answer keeps мені подобається."}, {"question": "А ти?", "options": [{"text": "Я люблю гуляти.", "correct": true}, {"text": "Ти люблю гуляти.", "correct": false}, {"text": "Я любиш гуляти.", "correct": false}], "explanation": "For yourself, use Я люблю."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що ти любиш робити?", "options": [{"text": "Я люблю читати.", "correct": true}, {"text": "Мені подобається читати.", "correct": false}, {"text": "Я читаєш.", "correct": false}], "explanation": "Answer with Я люблю plus an action."}, {"question": "Тобі подобається ця книга?", "options": [{"text": "Так, мені подобається.", "correct": true}, {"text": "Так, я подобається.", "correct": false}, {"text": "Так, мені люблю.", "correct": false}], "explanation": "The short answer keeps мені подобається."}, {"question": "А ти?", "options": [{"text": "Я люблю гуляти.", "correct": true}, {"text": "Ти люблю гуляти.", "correct": false}, {"text": "Я любиш гуляти.", "correct": false}], "explanation": "For yourself, use Я люблю."}]`)} instruction={"Choose the best next sentence."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">

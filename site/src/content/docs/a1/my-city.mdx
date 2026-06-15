@@ -75,7 +75,7 @@ By the end, you can:
 
 ### Place to action
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "аптека", "right": "купувати ліки"}, {"left": "бібліотека", "right": "читати книжку"}, {"left": "магазин", "right": "купувати хліб"}, {"left": "ресторан", "right": "вечеряти"}, {"left": "готель", "right": "спати"}, {"left": "вокзал", "right": "чекати поїзд"}, {"left": "музей", "right": "дивитися картини"}, {"left": "стадіон", "right": "дивитися матч"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "аптека", "right": "купувати ліки"}, {"left": "бібліотека", "right": "читати книжку"}, {"left": "магазин", "right": "купувати хліб"}, {"left": "ресторан", "right": "вечеряти"}, {"left": "готель", "right": "спати"}, {"left": "вокзал", "right": "чекати поїзд"}, {"left": "музей", "right": "дивитися картини"}, {"left": "стадіон", "right": "дивитися матч"}]`)} instruction={"Match each city place with a natural A1 action."} isUkrainian={false} />
 
 Start with a map for a friend. A city sentence often has three pieces: a place,
 a location word, and one practical action.
@@ -138,7 +138,7 @@ Do not translate "has" word for word.
 
 ### В or на in the city
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Where do you buy medicine?", "options": [{"text": "в аптеці", "correct": true}, {"text": "на аптеці", "correct": false}, {"text": "в аптека", "correct": false}], "explanation": "Аптека is a contained place: в аптеці."}, {"question": "Where are you at the post office?", "options": [{"text": "на пошті", "correct": true}, {"text": "у пошті", "correct": false}, {"text": "на пошта", "correct": false}], "explanation": "The common chunk is на пошті."}, {"question": "Where is the train station sentence?", "options": [{"text": "Вона на вокзалі.", "correct": true}, {"text": "Вона у вокзалі.", "correct": false}, {"text": "Вона вокзал.", "correct": false}], "explanation": "Learn вокзал with на вокзалі."}, {"question": "Where do students read?", "options": [{"text": "у бібліотеці", "correct": true}, {"text": "на бібліотеці", "correct": false}, {"text": "у бібліотека", "correct": false}], "explanation": "Бібліотека changes to бібліотеці."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Where do you buy medicine?", "options": [{"text": "в аптеці", "correct": true}, {"text": "на аптеці", "correct": false}, {"text": "в аптека", "correct": false}], "explanation": "Аптека is a contained place: в аптеці."}, {"question": "Where are you at the post office?", "options": [{"text": "на пошті", "correct": true}, {"text": "у пошті", "correct": false}, {"text": "на пошта", "correct": false}], "explanation": "The common chunk is на пошті."}, {"question": "Where is the train station sentence?", "options": [{"text": "Вона на вокзалі.", "correct": true}, {"text": "Вона у вокзалі.", "correct": false}, {"text": "Вона вокзал.", "correct": false}], "explanation": "Learn вокзал with на вокзалі."}, {"question": "Where do students read?", "options": [{"text": "у бібліотеці", "correct": true}, {"text": "на бібліотеці", "correct": false}, {"text": "у бібліотека", "correct": false}], "explanation": "Бібліотека changes to бібліотеці."}]`)} instruction={"Choose the correct city chunk."} isUkrainian={false} />
 
 ## Місця в місті
 
@@ -182,7 +182,7 @@ real city place.
 
 ### У моєму місті є
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У моєму місті є великий ___.", "answer": "парк", "options": ["парк", "парку", "парком"]}, {"sentence": "Бібліотека ___ університету.", "answer": "біля", "options": ["біля", "далеко", "там"]}, {"sentence": "Аптека ___ розі.", "answer": "на", "options": ["на", "в", "до"]}, {"sentence": "Магазин тут, ___ дому.", "answer": "біля", "options": ["біля", "на", "до"]}, {"sentence": "Школа далеко, ___ центрі міста.", "answer": "у", "options": ["у", "на", "до"]}, {"sentence": "У місті ___ багато парків.", "answer": "є", "options": ["є", "має", "йде"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У моєму місті є великий ___.", "answer": "парк", "options": ["парк", "парку", "парком"]}, {"sentence": "Бібліотека ___ університету.", "answer": "біля", "options": ["біля", "далеко", "там"]}, {"sentence": "Аптека ___ розі.", "answer": "на", "options": ["на", "в", "до"]}, {"sentence": "Магазин тут, ___ дому.", "answer": "біля", "options": ["біля", "на", "до"]}, {"sentence": "Школа далеко, ___ центрі міста.", "answer": "у", "options": ["у", "на", "до"]}, {"sentence": "У місті ___ багато парків.", "answer": "є", "options": ["є", "має", "йде"]}]`)} instruction={"Complete each city sentence."} isUkrainian={false} />
 
 ### Find the odd city chunk
 
@@ -290,7 +290,7 @@ imagined map.
 
 ### City shelves
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Places": ["аптека", "бібліотека", "музей", "готель"], "Location words": ["тут", "там", "далеко", "близько"], "People in the city": ["лікар", "офіціант", "продавець", "банкір"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Places": ["аптека", "бібліотека", "музей", "готель"], "Location words": ["тут", "там", "далеко", "близько"], "People in the city": ["лікар", "офіціант", "продавець", "банкір"]}`)} instruction={"Sort the city words by use."} isUkrainian={false} />
 
 ### Mini-map note
 
@@ -298,7 +298,7 @@ imagined map.
 
 ### City language guardrails
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Use Київ and Kyiv for Ukraine's capital.", "isTrue": true, "explanation": "Kyiv is the Ukrainian English form."}, {"statement": "Площа is the Ukrainian word for square.", "isTrue": true, "explanation": "Use площа, not a Russian street word."}, {"statement": "У місті має багато парків is the best A1 model.", "isTrue": false, "explanation": "Say У місті є багато парків."}, {"statement": "Біля парку is a useful near-place chunk.", "isTrue": true, "explanation": "Біля takes a changed place form."}, {"statement": "На вулиці Шевченка is a correct street-location chunk.", "isTrue": true, "explanation": "Streets use на вулиці."}]`)} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Use Київ and Kyiv for Ukraine's capital.", "isTrue": true, "explanation": "Kyiv is the Ukrainian English form."}, {"statement": "Площа is the Ukrainian word for square.", "isTrue": true, "explanation": "Use площа, not a Russian street word."}, {"statement": "У місті має багато парків is the best A1 model.", "isTrue": false, "explanation": "Say У місті є багато парків."}, {"statement": "Біля парку is a useful near-place chunk.", "isTrue": true, "explanation": "Біля takes a changed place form."}, {"statement": "На вулиці Шевченка is a correct street-location chunk.", "isTrue": true, "explanation": "Streets use на вулиці."}]`)} instruction={"Decide whether the statement fits the lesson."} isUkrainian={false} />
 
 ### Repair city interference
 

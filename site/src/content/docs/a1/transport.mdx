@@ -77,7 +77,7 @@ By the end, you can:
 
 ### Transport to situation
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "airport to hotel, faster but expensive", "right": "таксі"}, {"left": "city route number seven", "right": "автобус"}, {"left": "underground city travel", "right": "метро"}, {"left": "rail trip to Lviv", "right": "потяг"}, {"left": "city rails on the street", "right": "трамвай"}, {"left": "electric city bus with wires", "right": "тролейбус"}, {"left": "flight to another country", "right": "літак"}, {"left": "small route minibus", "right": "маршрутка"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "airport to hotel, faster but expensive", "right": "таксі"}, {"left": "city route number seven", "right": "автобус"}, {"left": "underground city travel", "right": "метро"}, {"left": "rail trip to Lviv", "right": "потяг"}, {"left": "city rails on the street", "right": "трамвай"}, {"left": "electric city bus with wires", "right": "тролейбус"}, {"left": "flight to another country", "right": "літак"}, {"left": "small route minibus", "right": "маршрутка"}]`)} instruction={"Match each situation with the natural transport word."} isUkrainian={false} />
 
 The first dialogue begins at the airport. You need a hotel route, so the useful
 question is **Як дістатися до готелю?**
@@ -136,7 +136,7 @@ from zero.
 
 ### Ticket window
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Один ___ до Львова, будь ласка.", "answer": "квиток", "options": ["квиток", "зупинка", "водій"]}, {"sentence": "___ коштує квиток?", "answer": "Скільки", "options": ["Скільки", "Куди", "Де"]}, {"sentence": "В один бік чи ___ й назад?", "answer": "туди", "options": ["туди", "там", "тут"]}, {"sentence": "Потяг відбуває ___ дев'ятій.", "answer": "о", "options": ["о", "в", "на"]}, {"sentence": "Колія ___.", "answer": "третя", "options": ["третя", "три", "третє"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Один ___ до Львова, будь ласка.", "answer": "квиток", "options": ["квиток", "зупинка", "водій"]}, {"sentence": "___ коштує квиток?", "answer": "Скільки", "options": ["Скільки", "Куди", "Де"]}, {"sentence": "В один бік чи ___ й назад?", "answer": "туди", "options": ["туди", "там", "тут"]}, {"sentence": "Потяг відбуває ___ дев'ятій.", "answer": "о", "options": ["о", "в", "на"]}, {"sentence": "Колія ___.", "answer": "третя", "options": ["третя", "три", "третє"]}]`)} instruction={"Complete the ticket-buying lines."} isUkrainian={false} />
 
 ## Види транспорту
 
@@ -169,11 +169,11 @@ This separation keeps **чим їхати?** different from **де сидіти?
 
 ### Автобусом чи на метро?
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "How do you say by bus?", "options": [{"text": "автобусом", "correct": true}, {"text": "за автобусом", "correct": false}, {"text": "на автобусі", "correct": false}], "explanation": "Use the instrumental: автобусом."}, {"question": "How do you say by metro?", "options": [{"text": "на метро", "correct": true}, {"text": "метром", "correct": false}, {"text": "на метрі", "correct": false}], "explanation": "Метро does not change: на метро."}, {"question": "How do you say by taxi?", "options": [{"text": "на таксі", "correct": true}, {"text": "таксієм", "correct": false}, {"text": "в таксію", "correct": false}], "explanation": "Таксі does not change: на таксі."}, {"question": "How do you say by train?", "options": [{"text": "потягом", "correct": true}, {"text": "за потягом", "correct": false}, {"text": "до потяга", "correct": false}], "explanation": "Use potiahom: потягом."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "How do you say by bus?", "options": [{"text": "автобусом", "correct": true}, {"text": "за автобусом", "correct": false}, {"text": "на автобусі", "correct": false}], "explanation": "Use the instrumental: автобусом."}, {"question": "How do you say by metro?", "options": [{"text": "на метро", "correct": true}, {"text": "метром", "correct": false}, {"text": "на метрі", "correct": false}], "explanation": "Метро does not change: на метро."}, {"question": "How do you say by taxi?", "options": [{"text": "на таксі", "correct": true}, {"text": "таксієм", "correct": false}, {"text": "в таксію", "correct": false}], "explanation": "Таксі does not change: на таксі."}, {"question": "How do you say by train?", "options": [{"text": "потягом", "correct": true}, {"text": "за потягом", "correct": false}, {"text": "до потяга", "correct": false}], "explanation": "Use potiahom: потягом."}]`)} instruction={"Choose the natural travel model."} isUkrainian={false} />
 
 ### Passenger shelves
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Vehicles": ["автобус", "метро", "таксі", "трамвай"], "Passenger words": ["квиток", "зупинка", "вокзал", "пасажир"], "Direction words": ["прямо", "направо", "наліво", "до центру"], "Public phrases": ["Обережно, двері зачиняються!", "Сплачуйте за проїзд.", "Поступайтесь місцем старшому."]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Vehicles": ["автобус", "метро", "таксі", "трамвай"], "Passenger words": ["квиток", "зупинка", "вокзал", "пасажир"], "Direction words": ["прямо", "направо", "наліво", "до центру"], "Public phrases": ["Обережно, двері зачиняються!", "Сплачуйте за проїзд.", "Поступайтесь місцем старшому."]}`)} instruction={"Sort the words and phrases by role."} isUkrainian={false} />
 
 ## Корисні фрази
 
@@ -301,7 +301,7 @@ module has done its job.
 
 ### Transport culture
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Добрий день is a natural polite opening.", "isTrue": true, "explanation": "Use Добрий день in transport dialogues."}, {"statement": "Квиток is the lesson word for ticket.", "isTrue": true, "explanation": "Use квиток."}, {"statement": "Зупинка is the lesson word for stop.", "isTrue": true, "explanation": "Use зупинка."}, {"statement": "Потяг рушає is a natural transport sentence.", "isTrue": true, "explanation": "Рушає works for a vehicle starting to move."}, {"statement": "Я в автобусі means I am inside the bus.", "isTrue": true, "explanation": "That is static location."}]`)} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Добрий день is a natural polite opening.", "isTrue": true, "explanation": "Use Добрий день in transport dialogues."}, {"statement": "Квиток is the lesson word for ticket.", "isTrue": true, "explanation": "Use квиток."}, {"statement": "Зупинка is the lesson word for stop.", "isTrue": true, "explanation": "Use зупинка."}, {"statement": "Потяг рушає is a natural transport sentence.", "isTrue": true, "explanation": "Рушає works for a vehicle starting to move."}, {"statement": "Я в автобусі means I am inside the bus.", "isTrue": true, "explanation": "That is static location."}]`)} instruction={"Decide whether the statement fits the lesson."} isUkrainian={false} />
 
 ### Find the odd transport chunk
 

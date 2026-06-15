@@ -140,7 +140,7 @@ and check a dictionary such as goroh.pp.ua when you are unsure.
 
 ### Де на́голос
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Слухай, потім читай: ка́ва. Де на́голос?", "options": [{"text": "перший склад", "correct": true}, {"text": "останній склад", "correct": false}, {"text": "немає наголосу", "correct": false}], "explanation": "У слові ка́ва на́голос на ка́."}, {"question": "Слухай, потім читай: вода́. Де на́голос?", "options": [{"text": "останній склад", "correct": true}, {"text": "перший склад", "correct": false}, {"text": "усі склади однакові", "correct": false}], "explanation": "У слові вода́ на́голос на да́."}, {"question": "Слухай, потім читай: столи́ця. Де на́голос?", "options": [{"text": "середній склад", "correct": true}, {"text": "перший склад", "correct": false}, {"text": "останній склад", "correct": false}], "explanation": "У слові столи́ця на́голос на ли́."}, {"question": "Молоко́: що робимо з ненаголошеними голосними?", "options": [{"text": "тримаємо кожен голосни́й чистим", "correct": true}, {"text": "пропускаємо перший голосни́й", "correct": false}, {"text": "читаємо кожне о як а", "correct": false}], "explanation": "Українські ненаголошені голосні залишаються чистими."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Слухай, потім читай: ка́ва. Де на́голос?", "options": [{"text": "перший склад", "correct": true}, {"text": "останній склад", "correct": false}, {"text": "немає наголосу", "correct": false}], "explanation": "У слові ка́ва на́голос на ка́."}, {"question": "Слухай, потім читай: вода́. Де на́голос?", "options": [{"text": "останній склад", "correct": true}, {"text": "перший склад", "correct": false}, {"text": "усі склади однакові", "correct": false}], "explanation": "У слові вода́ на́голос на да́."}, {"question": "Слухай, потім читай: столи́ця. Де на́голос?", "options": [{"text": "середній склад", "correct": true}, {"text": "перший склад", "correct": false}, {"text": "останній склад", "correct": false}], "explanation": "У слові столи́ця на́голос на ли́."}, {"question": "Молоко́: що робимо з ненаголошеними голосними?", "options": [{"text": "тримаємо кожен голосни́й чистим", "correct": true}, {"text": "пропускаємо перший голосни́й", "correct": false}, {"text": "читаємо кожне о як а", "correct": false}], "explanation": "Українські ненаголошені голосні залишаються чистими."}]`)} instruction={"Спочатку слухай, потім обери склад із позначеним на́голосом."} isUkrainian={false} />
 
 ## Мелодика
 
@@ -160,7 +160,7 @@ work.
 
 ### Пунктуація і мелодика
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Це ка́ва_", "answer": ".", "options": [".", "?", "!"]}, {"sentence": "Це метро́_", "answer": "?", "options": ["?", ".", "!"]}, {"sentence": "Де апте́ка_", "answer": "?", "options": ["?", ".", "!"]}, {"sentence": "Як га́рно_", "answer": "!", "options": ["!", "?", "."]}, {"sentence": "Так, це вода́_", "answer": ".", "options": [".", "?", "!"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Це ка́ва_", "answer": ".", "options": [".", "?", "!"]}, {"sentence": "Це метро́_", "answer": "?", "options": ["?", ".", "!"]}, {"sentence": "Де апте́ка_", "answer": "?", "options": ["?", ".", "!"]}, {"sentence": "Як га́рно_", "answer": "!", "options": ["!", "?", "."]}, {"sentence": "Так, це вода́_", "answer": ".", "options": [".", "?", "!"]}]`)} instruction={"Обери розділовий знак, який відповідає реченню."} isUkrainian={false} />
 
 Now add the most important beginner exception. A question with a question word
 usually falls, not rises:
@@ -190,7 +190,7 @@ the stress, and copy the contour.
 
 ### Вибір мелодики
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Це ка́ва.", "options": [{"text": "спадна ↘", "correct": true}, {"text": "висхідна ↗", "correct": false}], "explanation": "Твердження має спадну мелодику."}, {"question": "Це ка́ва?", "options": [{"text": "висхідна ↗", "correct": true}, {"text": "спадна ↘", "correct": false}], "explanation": "Так/ні питання має висхідну мелодику."}, {"question": "Де метро́?", "options": [{"text": "спадна ↘", "correct": true}, {"text": "висхідна ↗", "correct": false}], "explanation": "Питання з де на A1 має спадну мелодику."}, {"question": "Як га́рно!", "options": [{"text": "сильніша спадна ↘↘", "correct": true}, {"text": "висхідна ↗", "correct": false}], "explanation": "Оклик має сильнішу спадну мелодику."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Це ка́ва.", "options": [{"text": "спадна ↘", "correct": true}, {"text": "висхідна ↗", "correct": false}], "explanation": "Твердження має спадну мелодику."}, {"question": "Це ка́ва?", "options": [{"text": "висхідна ↗", "correct": true}, {"text": "спадна ↘", "correct": false}], "explanation": "Так/ні питання має висхідну мелодику."}, {"question": "Де метро́?", "options": [{"text": "спадна ↘", "correct": true}, {"text": "висхідна ↗", "correct": false}], "explanation": "Питання з де на A1 має спадну мелодику."}, {"question": "Як га́рно!", "options": [{"text": "сильніша спадна ↘↘", "correct": true}, {"text": "висхідна ↗", "correct": false}], "explanation": "Оклик має сильнішу спадну мелодику."}]`)} instruction={"Обери першу модель мелодики речення."} isUkrainian={false} />
 
 ## Читаємо вголос
 
@@ -268,7 +268,7 @@ English support after the Ukrainian dialogue:
 
 ### На́голос змінює значення
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "за́мок", "right": "castle"}, {"left": "замо́к", "right": "lock"}, {"left": "а́тлас", "right": "atlas"}, {"left": "атла́с", "right": "satin"}, {"left": "о́рган", "right": "body organ"}, {"left": "орга́н", "right": "musical instrument"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "за́мок", "right": "castle"}, {"left": "замо́к", "right": "lock"}, {"left": "а́тлас", "right": "atlas"}, {"left": "атла́с", "right": "satin"}, {"left": "о́рган", "right": "body organ"}, {"left": "орга́н", "right": "musical instrument"}]`)} instruction={"З'єднай наголошене слово з короткою англійською підказкою."} isUkrainian={false} />
 
 Common traps now become workbook habits:
 
@@ -357,19 +357,19 @@ stress sorting, quick facts, and word recognition.
 
 ### Сортуй за наголосом
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Перший склад": ["ма́ма", "та́то", "ра́нок", "ка́ва"], "Середній склад": ["столи́ця", "люди́на", "одина́дцять", "чотирна́дцять"], "Останній склад": ["вода́", "зима́", "рука́", "метро́"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Перший склад": ["ма́ма", "та́то", "ра́нок", "ка́ва"], "Середній склад": ["столи́ця", "люди́на", "одина́дцять", "чотирна́дцять"], "Останній склад": ["вода́", "зима́", "рука́", "метро́"]}`)} instruction={"Розподіли кожне слово за позначеним наголошеним складом."} isUkrainian={false} />
 
 ### Друк і зошит
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "друк: ка́ва", "right": "зошит: на́голос на першому складі"}, {"left": "друк: вода́", "right": "зошит: на́голос на останньому складі"}, {"left": "друк: молоко́", "right": "зошит: три чисті звуки о"}, {"left": "друк: метро́", "right": "зошит: останній наголошений голосни́й"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "друк: ка́ва", "right": "зошит: на́голос на першому складі"}, {"left": "друк: вода́", "right": "зошит: на́голос на останньому складі"}, {"left": "друк: молоко́", "right": "зошит: три чисті звуки о"}, {"left": "друк: метро́", "right": "зошит: останній наголошений голосни́й"}]`)} instruction={"З'єднай друковане слово з підказкою в зо́шиті."} isUkrainian={false} />
 
 ### Факти про наголос і мелодику
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Український на́голос може бути на різних складах.", "isTrue": true, "explanation": "На́голос вільний, тому вчи його разом із кожним словом."}, {"statement": "Звичайні українські тексти завжди мають позначки наголосу.", "isTrue": false, "explanation": "Позначки наголосу є в навчальних матеріалах і словниках, а не в більшості звичайних текстів."}, {"statement": "Так/ні питання Це вода́? має висхідну мелодику на A1.", "isTrue": true, "explanation": "Так/ні питання має висхідну мелодику."}, {"statement": "Питання з де завжди потребує висхідної мелодики на A1.", "isTrue": false, "explanation": "Питання з питальним словом як де має спадну мелодику."}]`)} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Український на́голос може бути на різних складах.", "isTrue": true, "explanation": "На́голос вільний, тому вчи його разом із кожним словом."}, {"statement": "Звичайні українські тексти завжди мають позначки наголосу.", "isTrue": false, "explanation": "Позначки наголосу є в навчальних матеріалах і словниках, а не в більшості звичайних текстів."}, {"statement": "Так/ні питання Це вода́? має висхідну мелодику на A1.", "isTrue": true, "explanation": "Так/ні питання має висхідну мелодику."}, {"statement": "Питання з де завжди потребує висхідної мелодики на A1.", "isTrue": false, "explanation": "Питання з питальним словом як де має спадну мелодику."}]`)} instruction={"Обери правда чи неправда."} isUkrainian={false} />
 
 ### Слова з наголосом
 
-<Translate client:only='react' questions={JSON.parse(`[{"source": "на́голос", "options": [{"text": "stress / accent", "correct": true}, {"text": "lock", "correct": false}, {"text": "water", "correct": false}], "explanation": "На́голос — stress / accent."}, {"source": "ка́ва", "options": [{"text": "coffee", "correct": true}, {"text": "capital", "correct": false}, {"text": "morning", "correct": false}], "explanation": "Ка́ва — coffee."}, {"source": "вода́", "options": [{"text": "water", "correct": true}, {"text": "photograph", "correct": false}, {"text": "atlas", "correct": false}], "explanation": "Вода́ — water."}, {"source": "столи́ця", "options": [{"text": "capital", "correct": true}, {"text": "metro", "correct": false}, {"text": "family", "correct": false}], "explanation": "Столи́ця — capital."}]`)} isUkrainian={false} />
+<Translate client:only='react' questions={JSON.parse(`[{"source": "на́голос", "options": [{"text": "stress / accent", "correct": true}, {"text": "lock", "correct": false}, {"text": "water", "correct": false}], "explanation": "На́голос — stress / accent."}, {"source": "ка́ва", "options": [{"text": "coffee", "correct": true}, {"text": "capital", "correct": false}, {"text": "morning", "correct": false}], "explanation": "Ка́ва — coffee."}, {"source": "вода́", "options": [{"text": "water", "correct": true}, {"text": "photograph", "correct": false}, {"text": "atlas", "correct": false}], "explanation": "Вода́ — water."}, {"source": "столи́ця", "options": [{"text": "capital", "correct": true}, {"text": "metro", "correct": false}, {"text": "family", "correct": false}], "explanation": "Столи́ця — capital."}]`)} instruction={"Спочатку прочитай українське слово, потім обери англійську підказку."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">

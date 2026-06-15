@@ -76,7 +76,7 @@ By the end, you can:
 
 ### Static place signals
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Which line answers Де?", "options": [{"text": "Олена в школі.", "correct": true}, {"text": "Тарас іде в школу.", "correct": false}, {"text": "Ми їдемо в місто.", "correct": false}], "explanation": "В школі describes static location."}, {"question": "Choose the static location line.", "options": [{"text": "Мама на роботі.", "correct": true}, {"text": "Ми їдемо в місто.", "correct": false}, {"text": "Я йду на роботу.", "correct": false}], "explanation": "На роботі answers Де?"}, {"question": "Which line answers where the book is?", "options": [{"text": "Книга на столі.", "correct": true}, {"text": "Я йду на пошту.", "correct": false}, {"text": "Книга до столу.", "correct": false}], "explanation": "На столі answers Де?"}, {"question": "Choose the static place sentence.", "options": [{"text": "Банк у центрі.", "correct": true}, {"text": "Він їде до лікарні.", "correct": false}, {"text": "Я йду в банк.", "correct": false}], "explanation": "У центрі describes where the bank is."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Which line answers Де?", "options": [{"text": "Олена в школі.", "correct": true}, {"text": "Тарас іде в школу.", "correct": false}, {"text": "Ми їдемо в місто.", "correct": false}], "explanation": "В школі describes static location."}, {"question": "Choose the static location line.", "options": [{"text": "Мама на роботі.", "correct": true}, {"text": "Ми їдемо в місто.", "correct": false}, {"text": "Я йду на роботу.", "correct": false}], "explanation": "На роботі answers Де?"}, {"question": "Which line answers where the book is?", "options": [{"text": "Книга на столі.", "correct": true}, {"text": "Я йду на пошту.", "correct": false}, {"text": "Книга до столу.", "correct": false}], "explanation": "На столі answers Де?"}, {"question": "Choose the static place sentence.", "options": [{"text": "Банк у центрі.", "correct": true}, {"text": "Він їде до лікарні.", "correct": false}, {"text": "Я йду в банк.", "correct": false}], "explanation": "У центрі describes where the bank is."}]`)} instruction={"Choose the line that answers the question Де?"} isUkrainian={false} />
 
 Start with a simple scene in a new city. The grammar appears because the
 neighbor is answering one useful question again and again: **Де?**
@@ -139,7 +139,7 @@ Here **живу**, **працюю**, and **є** describe a static place. They an
 
 ### Base word to place chunk
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "школа", "right": "в школі"}, {"left": "робота", "right": "на роботі"}, {"left": "банк", "right": "у банку"}, {"left": "магазин", "right": "у магазині"}, {"left": "вулиця", "right": "на вулиці"}, {"left": "місто", "right": "у місті"}, {"left": "пошта", "right": "на пошті"}, {"left": "Київ", "right": "у Києві"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "школа", "right": "в школі"}, {"left": "робота", "right": "на роботі"}, {"left": "банк", "right": "у банку"}, {"left": "магазин", "right": "у магазині"}, {"left": "вулиця", "right": "на вулиці"}, {"left": "місто", "right": "у місті"}, {"left": "пошта", "right": "на пошті"}, {"left": "Київ", "right": "у Києві"}]`)} instruction={"Match each dictionary form with the A1 place phrase."} isUkrainian={false} />
 
 ## Місцевий відмінок
 
@@ -175,11 +175,11 @@ generate every form yet; just notice the change when you see it.
 
 ### Answer Де?
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Олена ___ (школа).", "answer": "в школі", "options": ["в школі", "в школа", "на школа"]}, {"sentence": "Тарас ___ (робота).", "answer": "на роботі", "options": ["на роботі", "в робота", "на робота"]}, {"sentence": "Максим ___ (банк).", "answer": "у банку", "options": ["у банку", "у банк", "на банку"]}, {"sentence": "Ми ___ (місто).", "answer": "у місті", "options": ["у місті", "на місті", "у місто"]}, {"sentence": "Аптека ___ (вулиця).", "answer": "на вулиці", "options": ["на вулиці", "в вулиці", "на вулиця"]}, {"sentence": "Я живу ___ (Київ).", "answer": "у Києві", "options": ["у Києві", "в Київ", "на Києві"]}, {"sentence": "Софія ___ (лікарня).", "answer": "у лікарні", "options": ["у лікарні", "на лікарні", "у лікарня"]}, {"sentence": "Я ___ (пошта).", "answer": "на пошті", "options": ["на пошті", "у пошті", "на пошта"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Олена ___ (школа).", "answer": "в школі", "options": ["в школі", "в школа", "на школа"]}, {"sentence": "Тарас ___ (робота).", "answer": "на роботі", "options": ["на роботі", "в робота", "на робота"]}, {"sentence": "Максим ___ (банк).", "answer": "у банку", "options": ["у банку", "у банк", "на банку"]}, {"sentence": "Ми ___ (місто).", "answer": "у місті", "options": ["у місті", "на місті", "у місто"]}, {"sentence": "Аптека ___ (вулиця).", "answer": "на вулиці", "options": ["на вулиці", "в вулиці", "на вулиця"]}, {"sentence": "Я живу ___ (Київ).", "answer": "у Києві", "options": ["у Києві", "в Київ", "на Києві"]}, {"sentence": "Софія ___ (лікарня).", "answer": "у лікарні", "options": ["у лікарні", "на лікарні", "у лікарня"]}, {"sentence": "Я ___ (пошта).", "answer": "на пошті", "options": ["на пошті", "у пошті", "на пошта"]}]`)} instruction={"Choose the correct place phrase for each sentence."} isUkrainian={false} />
 
 ### В/у or на shelves
 
-<GroupSort client:only='react' groups={JSON.parse(`{"В/у: contained place or city": ["в школі", "у банку", "в магазині", "у лікарні", "в Одесі"], "На: open place, event, or traditional chunk": ["на роботі", "на вулиці", "на площі", "на уроці", "на пошті"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"В/у: contained place or city": ["в школі", "у банку", "в магазині", "у лікарні", "в Одесі"], "На: open place, event, or traditional chunk": ["на роботі", "на вулиці", "на площі", "на уроці", "на пошті"]}`)} instruction={"Sort each chunk by the preposition pattern it uses."} isUkrainian={false} />
 
 ## В чи на?
 
@@ -333,7 +333,7 @@ the next module, **Моє місто**.
 
 ### Locative guardrails
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Місцевий відмінок usually answers Де?", "isTrue": true, "explanation": "This module uses locative for static place."}, {"statement": "The helper questions are на/у кому? на/у чому?", "isTrue": true, "explanation": "These are the A1 helper questions for the locative case."}, {"statement": "Cities use на: на Києві, на Львові.", "isTrue": false, "explanation": "Use в/у with cities: у Києві, у Львові."}, {"statement": "The respectful country phrase is в Україні.", "isTrue": true, "explanation": "Use в Україні for Ukraine."}, {"statement": "Я живу в Київ is a finished A1 locative sentence.", "isTrue": false, "explanation": "The place form is Києві: Я живу в Києві."}, {"statement": "На пошті is a common traditional chunk.", "isTrue": true, "explanation": "Learn пошта together with на пошті."}]`)} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Місцевий відмінок usually answers Де?", "isTrue": true, "explanation": "This module uses locative for static place."}, {"statement": "The helper questions are на/у кому? на/у чому?", "isTrue": true, "explanation": "These are the A1 helper questions for the locative case."}, {"statement": "Cities use на: на Києві, на Львові.", "isTrue": false, "explanation": "Use в/у with cities: у Києві, у Львові."}, {"statement": "The respectful country phrase is в Україні.", "isTrue": true, "explanation": "Use в Україні for Ukraine."}, {"statement": "Я живу в Київ is a finished A1 locative sentence.", "isTrue": false, "explanation": "The place form is Києві: Я живу в Києві."}, {"statement": "На пошті is a common traditional chunk.", "isTrue": true, "explanation": "Learn пошта together with на пошті."}]`)} instruction={"Decide whether the statement matches this lesson."} isUkrainian={false} />
 
 ### Repair locative interference
 

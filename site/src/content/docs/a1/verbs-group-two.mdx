@@ -78,7 +78,7 @@ By the end, you can:
 
 ### Розігрів другої групи
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "I speak Ukrainian.", "options": [{"text": "Я говорю українською.", "correct": true}, {"text": "Я говориш українською.", "correct": false}, {"text": "Я говорити українською.", "correct": false}], "explanation": "Я uses говорю."}, {"question": "You see the word.", "options": [{"text": "Ти бачиш слово.", "correct": true}, {"text": "Ти бачу слово.", "correct": false}, {"text": "Ти бачити слово.", "correct": false}], "explanation": "Ти uses бачиш."}, {"question": "They are doing an exercise.", "options": [{"text": "Вони роблять вправу.", "correct": true}, {"text": "Вони роблять вправа.", "correct": false}, {"text": "Вони робити вправу.", "correct": false}], "explanation": "Вони роблять is the Group Two form."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "I speak Ukrainian.", "options": [{"text": "Я говорю українською.", "correct": true}, {"text": "Я говориш українською.", "correct": false}, {"text": "Я говорити українською.", "correct": false}], "explanation": "Я uses говорю."}, {"question": "You see the word.", "options": [{"text": "Ти бачиш слово.", "correct": true}, {"text": "Ти бачу слово.", "correct": false}, {"text": "Ти бачити слово.", "correct": false}], "explanation": "Ти uses бачиш."}, {"question": "They are doing an exercise.", "options": [{"text": "Вони роблять вправу.", "correct": true}, {"text": "Вони роблять вправа.", "correct": false}, {"text": "Вони робити вправу.", "correct": false}], "explanation": "Вони роблять is the Group Two form."}]`)} instruction={"Choose the safe Group Two line."} isUkrainian={false} />
 
 Marta and Oleh are still studying. This time they talk about speaking,
 seeing, doing, asking, and walking.
@@ -122,7 +122,7 @@ while **говорять** points to Group Two.
 
 ### Таблиця говорити
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "я", "right": "говорю"}, {"left": "ти", "right": "говориш"}, {"left": "він / вона", "right": "говорить"}, {"left": "ми", "right": "говоримо"}, {"left": "ви", "right": "говорите"}, {"left": "вони", "right": "говорять"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "я", "right": "говорю"}, {"left": "ти", "right": "говориш"}, {"left": "він / вона", "right": "говорить"}, {"left": "ми", "right": "говоримо"}, {"left": "ви", "right": "говорите"}, {"left": "вони", "right": "говорять"}]`)} instruction={"Match the person with the present-tense form."} isUkrainian={false} />
 
 ## Друга дієвідміна
 
@@ -171,7 +171,7 @@ That source note is for orientation only. Your active verbs are **говорит
 
 ### Говорити, робити, бачити
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ українською.", "answer": "говорю", "options": ["говорю", "говориш", "говорить"]}, {"sentence": "Ти ___ українською?", "answer": "говориш", "options": ["говориш", "говорю", "говоримо"]}, {"sentence": "Він ___.", "answer": "говорить", "options": ["говорить", "говорите", "говорять"]}, {"sentence": "Я ___ вправу.", "answer": "роблю", "options": ["роблю", "робиш", "робить"]}, {"sentence": "Ти ___ слово?", "answer": "бачиш", "options": ["бачиш", "бачу", "бачить"]}, {"sentence": "Вони ___ слово.", "answer": "бачать", "options": ["бачать", "бачиш", "бачу"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ українською.", "answer": "говорю", "options": ["говорю", "говориш", "говорить"]}, {"sentence": "Ти ___ українською?", "answer": "говориш", "options": ["говориш", "говорю", "говоримо"]}, {"sentence": "Він ___.", "answer": "говорить", "options": ["говорить", "говорите", "говорять"]}, {"sentence": "Я ___ вправу.", "answer": "роблю", "options": ["роблю", "робиш", "робить"]}, {"sentence": "Ти ___ слово?", "answer": "бачиш", "options": ["бачиш", "бачу", "бачить"]}, {"sentence": "Вони ___ слово.", "answer": "бачать", "options": ["бачать", "бачиш", "бачу"]}]`)} instruction={"Choose the form that fits the person."} isUkrainian={false} />
 
 ### Використовуй говорити, робити, бачити
 
@@ -220,7 +220,7 @@ gives **роблю** before you can use **Я роблю вправу**.
 
 ### Перша чи друга група
 
-<GroupSort client:only='react' groups={JSON.parse(`{"І дієвідміна / Group One": ["читають", "слухають", "гуляють"], "ІІ дієвідміна / Group Two": ["говорять", "роблять", "бачать", "ходять", "стоять", "сидять"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"І дієвідміна / Group One": ["читають", "слухають", "гуляють"], "ІІ дієвідміна / Group Two": ["говорять", "роблять", "бачать", "ходять", "стоять", "сидять"]}`)} instruction={"Sort the they-forms by group."} isUkrainian={false} />
 
 ## Група I чи II?
 
@@ -366,11 +366,11 @@ Repair the common traps by choosing the ready Ukrainian form:
 
 ### Готові фрази з «я»
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ вправу.", "answer": "роблю", "options": ["роблю", "робиш", "робить"]}, {"sentence": "Я ___ до школи.", "answer": "ходжу", "options": ["ходжу", "ходиш", "ходить"]}, {"sentence": "Я ___ каву.", "answer": "прошу", "options": ["прошу", "просиш", "просить"]}, {"sentence": "Я ___ тут.", "answer": "сиджу", "options": ["сиджу", "сидиш", "сидить"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ вправу.", "answer": "роблю", "options": ["роблю", "робиш", "робить"]}, {"sentence": "Я ___ до школи.", "answer": "ходжу", "options": ["ходжу", "ходиш", "ходить"]}, {"sentence": "Я ___ каву.", "answer": "прошу", "options": ["прошу", "просиш", "просить"]}, {"sentence": "Я ___ тут.", "answer": "сиджу", "options": ["сиджу", "сидиш", "сидить"]}]`)} instruction={"Choose the ready first-person chunk."} isUkrainian={false} />
 
 ### Форми лише для впізнавання
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "They sleep.", "options": [{"text": "Вони сплять.", "correct": true}, {"text": "Вони спати.", "correct": false}, {"text": "Вони спить.", "correct": false}], "explanation": "Recognize вони сплять."}, {"question": "You eat.", "options": [{"text": "Ти їси.", "correct": true}, {"text": "Ти їсть.", "correct": false}, {"text": "Ти їдять.", "correct": false}], "explanation": "Recognize ти їси."}, {"question": "They eat.", "options": [{"text": "Вони їдять.", "correct": true}, {"text": "Вони їси.", "correct": false}, {"text": "Вони їсть.", "correct": false}], "explanation": "Recognize вони їдять."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "They sleep.", "options": [{"text": "Вони сплять.", "correct": true}, {"text": "Вони спати.", "correct": false}, {"text": "Вони спить.", "correct": false}], "explanation": "Recognize вони сплять."}, {"question": "You eat.", "options": [{"text": "Ти їси.", "correct": true}, {"text": "Ти їсть.", "correct": false}, {"text": "Ти їдять.", "correct": false}], "explanation": "Recognize ти їси."}, {"question": "They eat.", "options": [{"text": "Вони їдять.", "correct": true}, {"text": "Вони їси.", "correct": false}, {"text": "Вони їсть.", "correct": false}], "explanation": "Recognize вони їдять."}]`)} instruction={"Choose the form you should recognize, not overbuild."} isUkrainian={false} />
 
 <span id="group-two-repairs"></span>
 
@@ -380,7 +380,7 @@ Repair the common traps by choosing the ready Ukrainian form:
 
 ### Мінідіалог
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Ти говориш українською?", "options": [{"text": "Так, я говорю українською.", "correct": true}, {"text": "Так, я говориш українською.", "correct": false}, {"text": "Так, я говорити українською.", "correct": false}], "explanation": "Я говорю."}, {"question": "Що ти робиш?", "options": [{"text": "Я роблю вправу.", "correct": true}, {"text": "Я робиш вправу.", "correct": false}, {"text": "Я робити вправу.", "correct": false}], "explanation": "Я роблю is the safe answer."}, {"question": "Ти бачиш це слово?", "options": [{"text": "Так, я бачу це слово.", "correct": true}, {"text": "Так, я бачиш це слово.", "correct": false}, {"text": "Так, я бачити це слово.", "correct": false}], "explanation": "Я бачу."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Ти говориш українською?", "options": [{"text": "Так, я говорю українською.", "correct": true}, {"text": "Так, я говориш українською.", "correct": false}, {"text": "Так, я говорити українською.", "correct": false}], "explanation": "Я говорю."}, {"question": "Що ти робиш?", "options": [{"text": "Я роблю вправу.", "correct": true}, {"text": "Я робиш вправу.", "correct": false}, {"text": "Я робити вправу.", "correct": false}], "explanation": "Я роблю is the safe answer."}, {"question": "Ти бачиш це слово?", "options": [{"text": "Так, я бачу це слово.", "correct": true}, {"text": "Так, я бачиш це слово.", "correct": false}, {"text": "Так, я бачити це слово.", "correct": false}], "explanation": "Я бачу."}]`)} instruction={"Choose the best next line."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">

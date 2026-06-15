@@ -90,7 +90,7 @@ explanation.
 
 ### Food, drink, and meal words
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Їжа": ["хліб", "риба", "м'ясо", "каша", "сир"], "Напої": ["кава", "чай", "вода", "сік", "молоко"], "Прийоми їжі": ["сніданок", "обід", "вечеря"], "Українські страви": ["борщ", "вареники", "сало"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Їжа": ["хліб", "риба", "м'ясо", "каша", "сир"], "Напої": ["кава", "чай", "вода", "сік", "молоко"], "Прийоми їжі": ["сніданок", "обід", "вечеря"], "Українські страви": ["борщ", "вареники", "сало"]}`)} instruction={"Sort each word by the shelf it belongs on."} isUkrainian={false} />
 
 ### Вранці вдома
 
@@ -197,7 +197,7 @@ itself, keep the three compact verbs:
 
 ### Breakfast table pairs
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "кава з молоком", "right": "coffee with milk"}, {"left": "чай без цукру", "right": "tea without sugar"}, {"left": "хліб з маслом", "right": "bread with butter"}, {"left": "каша", "right": "porridge"}, {"left": "яблуко", "right": "apple"}, {"left": "Смачного!", "right": "Enjoy your meal!"}, {"left": "я снідаю", "right": "I have breakfast"}, {"left": "вода з газом", "right": "sparkling water"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "кава з молоком", "right": "coffee with milk"}, {"left": "чай без цукру", "right": "tea without sugar"}, {"left": "хліб з маслом", "right": "bread with butter"}, {"left": "каша", "right": "porridge"}, {"left": "яблуко", "right": "apple"}, {"left": "Смачного!", "right": "Enjoy your meal!"}, {"left": "я снідаю", "right": "I have breakfast"}, {"left": "вода з газом", "right": "sparkling water"}]`)} instruction={"Match each Ukrainian food or drink phrase with its meaning."} isUkrainian={false} />
 
 ## Їжа
 
@@ -259,7 +259,7 @@ become familiar.
 
 ### Cafe chunks, not case tables
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Мені каву ___, будь ласка.", "answer": "з молоком", "options": ["з молоком", "з молоко", "без молоко"]}, {"sentence": "Чай ___, будь ласка.", "answer": "без цукру", "options": ["без цукру", "без цукор", "з цукор"]}, {"sentence": "Я їм хліб ___.", "answer": "з маслом", "options": ["з маслом", "без масло", "з масло"]}, {"sentence": "Дайте, будь ласка, воду ___.", "answer": "з газом", "options": ["з газом", "з газ", "без газ"]}, {"sentence": "Я люблю каву ___.", "answer": "без молока", "options": ["без молока", "без молоко", "з молока"]}, {"sentence": "Вона п'є чай ___.", "answer": "з лимоном", "options": ["з лимоном", "з лимон", "без лимон"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Мені каву ___, будь ласка.", "answer": "з молоком", "options": ["з молоком", "з молоко", "без молоко"]}, {"sentence": "Чай ___, будь ласка.", "answer": "без цукру", "options": ["без цукру", "без цукор", "з цукор"]}, {"sentence": "Я їм хліб ___.", "answer": "з маслом", "options": ["з маслом", "без масло", "з масло"]}, {"sentence": "Дайте, будь ласка, воду ___.", "answer": "з газом", "options": ["з газом", "з газ", "без газ"]}, {"sentence": "Я люблю каву ___.", "answer": "без молока", "options": ["без молока", "без молоко", "з молока"]}, {"sentence": "Вона п'є чай ___.", "answer": "з лимоном", "options": ["з лимоном", "з лимон", "без лимон"]}]`)} instruction={"Choose the whole chunk that completes the service line."} isUkrainian={false} />
 
 ## Напої
 
@@ -306,7 +306,7 @@ the natural Ukrainian etiquette formula is **Смачного!**
 
 ### Food guardrails
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Борщ is taught here as a Ukrainian cultural dish.", "isTrue": true, "explanation": "Borscht is framed as Ukrainian, not as generic regional soup."}, {"statement": "At A1, без цукру is taught as a full chunk.", "isTrue": true, "explanation": "The module does not teach a formal genitive lesson."}, {"statement": "Творог is the standard course word for cheese.", "isTrue": false, "explanation": "Use сир, or кисломолочний сир when needed."}, {"statement": "Смажена картопля is the clean Ukrainian form.", "isTrue": true, "explanation": "Do not use жарена картопля as course language."}, {"statement": "Я п'ю борщ is the natural line for soup.", "isTrue": false, "explanation": "Ukrainian says я їм борщ."}, {"statement": "Смачного! is the natural meal formula.", "isTrue": true, "explanation": "Use Смачного! when people begin eating."}, {"statement": "Я снідаю means I have breakfast.", "isTrue": true, "explanation": "Use the compact meal verb."}, {"statement": "Борщ дуже смачно is the best sentence.", "isTrue": false, "explanation": "Say Борщ дуже смачний for the noun борщ."}]`)} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Борщ is taught here as a Ukrainian cultural dish.", "isTrue": true, "explanation": "Borscht is framed as Ukrainian, not as generic regional soup."}, {"statement": "At A1, без цукру is taught as a full chunk.", "isTrue": true, "explanation": "The module does not teach a formal genitive lesson."}, {"statement": "Творог is the standard course word for cheese.", "isTrue": false, "explanation": "Use сир, or кисломолочний сир when needed."}, {"statement": "Смажена картопля is the clean Ukrainian form.", "isTrue": true, "explanation": "Do not use жарена картопля as course language."}, {"statement": "Я п'ю борщ is the natural line for soup.", "isTrue": false, "explanation": "Ukrainian says я їм борщ."}, {"statement": "Смачного! is the natural meal formula.", "isTrue": true, "explanation": "Use Смачного! when people begin eating."}, {"statement": "Я снідаю means I have breakfast.", "isTrue": true, "explanation": "Use the compact meal verb."}, {"statement": "Борщ дуже смачно is the best sentence.", "isTrue": false, "explanation": "Say Борщ дуже смачний for the noun борщ."}]`)} instruction={"Decide whether each statement fits this module."} isUkrainian={false} />
 
 ## Меню вдома і в кафе
 
@@ -496,7 +496,7 @@ Ukrainian cultural dish.
 
 ### Daily meal choices
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що ти робиш вранці?", "options": [{"text": "Я снідаю.", "correct": true}, {"text": "Я обідаю.", "correct": false}, {"text": "Я вечеряю.", "correct": false}], "explanation": "Breakfast uses снідати."}, {"question": "Що ти їси на обід?", "options": [{"text": "Я їм борщ і салат.", "correct": true}, {"text": "Я п'ю борщ і салат.", "correct": false}, {"text": "Я їм чай без цукру.", "correct": false}], "explanation": "Soup is eaten; tea is drunk."}, {"question": "Що ти п'єш?", "options": [{"text": "Воду або компот.", "correct": true}, {"text": "Картоплю або рибу.", "correct": false}, {"text": "Сало або сир.", "correct": false}], "explanation": "Вода and компот are drinks."}, {"question": "Which line names a Ukrainian cultural food?", "options": [{"text": "Борщ зі сметаною.", "correct": true}, {"text": "Лимонад з газом.", "correct": false}, {"text": "Кава з молоком.", "correct": false}], "explanation": "Borscht is a Ukrainian cultural dish."}, {"question": "How do you politely ask for tea without sugar?", "options": [{"text": "Чай без цукру, будь ласка.", "correct": true}, {"text": "Чай без цукор, будь ласка.", "correct": false}, {"text": "Чай з цукру, будь ласка.", "correct": false}], "explanation": "Use the memorized chunk без цукру."}, {"question": "What do you say as people start eating?", "options": [{"text": "Смачного!", "correct": true}, {"text": "Добрий вечір!", "correct": false}, {"text": "До побачення!", "correct": false}], "explanation": "Смачного! is the meal formula."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що ти робиш вранці?", "options": [{"text": "Я снідаю.", "correct": true}, {"text": "Я обідаю.", "correct": false}, {"text": "Я вечеряю.", "correct": false}], "explanation": "Breakfast uses снідати."}, {"question": "Що ти їси на обід?", "options": [{"text": "Я їм борщ і салат.", "correct": true}, {"text": "Я п'ю борщ і салат.", "correct": false}, {"text": "Я їм чай без цукру.", "correct": false}], "explanation": "Soup is eaten; tea is drunk."}, {"question": "Що ти п'єш?", "options": [{"text": "Воду або компот.", "correct": true}, {"text": "Картоплю або рибу.", "correct": false}, {"text": "Сало або сир.", "correct": false}], "explanation": "Вода and компот are drinks."}, {"question": "Which line names a Ukrainian cultural food?", "options": [{"text": "Борщ зі сметаною.", "correct": true}, {"text": "Лимонад з газом.", "correct": false}, {"text": "Кава з молоком.", "correct": false}], "explanation": "Borscht is a Ukrainian cultural dish."}, {"question": "How do you politely ask for tea without sugar?", "options": [{"text": "Чай без цукру, будь ласка.", "correct": true}, {"text": "Чай без цукор, будь ласка.", "correct": false}, {"text": "Чай з цукру, будь ласка.", "correct": false}], "explanation": "Use the memorized chunk без цукру."}, {"question": "What do you say as people start eating?", "options": [{"text": "Смачного!", "correct": true}, {"text": "Добрий вечір!", "correct": false}, {"text": "До побачення!", "correct": false}], "explanation": "Смачного! is the meal formula."}]`)} instruction={"Choose the line that answers the prompt naturally."} isUkrainian={false} />
 
 ### One food day
 
@@ -504,7 +504,7 @@ Ukrainian cultural dish.
 
 ### Build safe food lines
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Я / снідаю / вдома", "answer": "Я снідаю вдома"}, {"jumbled": "Мені / каву / з / молоком / будь ласка", "answer": "Мені каву з молоком, будь ласка"}, {"jumbled": "Борщ / дуже / смачний", "answer": "Борщ дуже смачний"}, {"jumbled": "Я / їм / борщ", "answer": "Я їм борщ"}, {"jumbled": "Чай / без / цукру / будь ласка", "answer": "Чай без цукру, будь ласка"}, {"jumbled": "Смачного", "answer": "Смачного"}]`)} />
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Я / снідаю / вдома", "answer": "Я снідаю вдома"}, {"jumbled": "Мені / каву / з / молоком / будь ласка", "answer": "Мені каву з молоком, будь ласка"}, {"jumbled": "Борщ / дуже / смачний", "answer": "Борщ дуже смачний"}, {"jumbled": "Я / їм / борщ", "answer": "Я їм борщ"}, {"jumbled": "Чай / без / цукру / будь ласка", "answer": "Чай без цукру, будь ласка"}, {"jumbled": "Смачного", "answer": "Смачного"}]`)} instruction={"Put the words in a natural A1 order."} />
 
 <span id="repair-food-and-drink-interference"></span>
 

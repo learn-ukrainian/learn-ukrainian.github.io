@@ -85,7 +85,7 @@ In this A1 pattern, change only **бути**: **буду**, **будеш**, **б
 
 ### Match the future form
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "я", "right": "буду"}, {"left": "ти", "right": "будеш"}, {"left": "він / вона", "right": "буде"}, {"left": "ми", "right": "будемо"}, {"left": "ви", "right": "будете"}, {"left": "вони", "right": "будуть"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "я", "right": "буду"}, {"left": "ти", "right": "будеш"}, {"left": "він / вона", "right": "буде"}, {"left": "ми", "right": "будемо"}, {"left": "ви", "right": "будете"}, {"left": "вони", "right": "будуть"}]`)} instruction={"Match each person with the future form of бути."} isUkrainian={false} />
 
 ### Плани на завтра
 
@@ -157,7 +157,7 @@ This dialogue adds planning words:
 
 ### Build the compound future
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Завтра я ___ працювати.", "answer": "буду", "options": ["буду", "буде", "будемо"]}, {"sentence": "Що ти ___ робити ввечері?", "answer": "будеш", "options": ["будеш", "буду", "будете"]}, {"sentence": "Вона ___ читати книжку.", "answer": "буде", "options": ["буде", "будуть", "будемо"]}, {"sentence": "Ми ___ дивитися футбол.", "answer": "будемо", "options": ["будемо", "буде", "буду"]}, {"sentence": "Ви ___ гуляти в парку?", "answer": "будете", "options": ["будете", "будеш", "будуть"]}, {"sentence": "Вони ___ відпочивати.", "answer": "будуть", "options": ["будуть", "будемо", "буде"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Завтра я ___ працювати.", "answer": "буду", "options": ["буду", "буде", "будемо"]}, {"sentence": "Що ти ___ робити ввечері?", "answer": "будеш", "options": ["будеш", "буду", "будете"]}, {"sentence": "Вона ___ читати книжку.", "answer": "буде", "options": ["буде", "будуть", "будемо"]}, {"sentence": "Ми ___ дивитися футбол.", "answer": "будемо", "options": ["будемо", "буде", "буду"]}, {"sentence": "Ви ___ гуляти в парку?", "answer": "будете", "options": ["будете", "будеш", "будуть"]}, {"sentence": "Вони ___ відпочивати.", "answer": "будуть", "options": ["будуть", "будемо", "буде"]}]`)} instruction={"Choose the correct form of бути."} isUkrainian={false} />
 
 ## Майбутній час
 
@@ -204,11 +204,11 @@ future pattern, **бути** changes by person and the infinitive stays fixed.
 
 ### Future pattern check
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Which sentence means I will read?", "options": [{"text": "Я буду читати.", "correct": true}, {"text": "Я буду читаю.", "correct": false}, {"text": "Я читаю завтра.", "correct": false}], "explanation": "Use буду + infinitive: буду читати."}, {"question": "What stays unchanged after будемо?", "options": [{"text": "The infinitive.", "correct": true}, {"text": "A present-tense ending.", "correct": false}, {"text": "A past-tense ending.", "correct": false}], "explanation": "The second verb stays in the infinitive."}, {"question": "Which form fits ми?", "options": [{"text": "Ми будемо робити.", "correct": true}, {"text": "Ми буде робити.", "correct": false}, {"text": "Ми будеш робити.", "correct": false}], "explanation": "Ми takes будемо."}, {"question": "Which question asks about tomorrow?", "options": [{"text": "Що ти будеш робити завтра?", "correct": true}, {"text": "Що ти робиш учора?", "correct": false}, {"text": "Що ти робив зараз?", "correct": false}], "explanation": "Будеш робити завтра is the future question."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Which sentence means I will read?", "options": [{"text": "Я буду читати.", "correct": true}, {"text": "Я буду читаю.", "correct": false}, {"text": "Я читаю завтра.", "correct": false}], "explanation": "Use буду + infinitive: буду читати."}, {"question": "What stays unchanged after будемо?", "options": [{"text": "The infinitive.", "correct": true}, {"text": "A present-tense ending.", "correct": false}, {"text": "A past-tense ending.", "correct": false}], "explanation": "The second verb stays in the infinitive."}, {"question": "Which form fits ми?", "options": [{"text": "Ми будемо робити.", "correct": true}, {"text": "Ми буде робити.", "correct": false}, {"text": "Ми будеш робити.", "correct": false}], "explanation": "Ми takes будемо."}, {"question": "Which question asks about tomorrow?", "options": [{"text": "Що ти будеш робити завтра?", "correct": true}, {"text": "Що ти робиш учора?", "correct": false}, {"text": "Що ти робив зараз?", "correct": false}], "explanation": "Будеш робити завтра is the future question."}]`)} instruction={"Choose the answer that keeps the A1 compound future."} isUkrainian={false} />
 
 ### Sort the time frames
 
-<GroupSort client:only='react' groups={JSON.parse(`{"past": ["Учора я читав.", "Учора вона працювала."], "present": ["Зараз я читаю.", "Зараз ми працюємо."], "future": ["Завтра я буду читати.", "Наступного тижня ми будемо працювати."]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"past": ["Учора я читав.", "Учора вона працювала."], "present": ["Зараз я читаю.", "Зараз ми працюємо."], "future": ["Завтра я буду читати.", "Наступного тижня ми будемо працювати."]}`)} instruction={"Sort each sentence by time."} isUkrainian={false} />
 
 ## Практика
 
@@ -365,11 +365,11 @@ plans and invitations with days and times.
 
 ### Check the compound future
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я буду читати завтра.", "isTrue": true, "explanation": "Буду + читати is correct."}, {"statement": "Ти будеш робити ввечері?", "isTrue": true, "explanation": "Будеш + робити is correct."}, {"statement": "Вона буде читає книжку.", "isTrue": false, "explanation": "After буде, use читати."}, {"statement": "Ми будемо дивитися футбол.", "isTrue": true, "explanation": "Будемо + дивитися is correct."}, {"statement": "Вони будуть працюють.", "isTrue": false, "explanation": "After будуть, use працювати."}, {"statement": "Ви будете гуляти в парку?", "isTrue": true, "explanation": "Будете + гуляти is correct."}]`)} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я буду читати завтра.", "isTrue": true, "explanation": "Буду + читати is correct."}, {"statement": "Ти будеш робити ввечері?", "isTrue": true, "explanation": "Будеш + робити is correct."}, {"statement": "Вона буде читає книжку.", "isTrue": false, "explanation": "After буде, use читати."}, {"statement": "Ми будемо дивитися футбол.", "isTrue": true, "explanation": "Будемо + дивитися is correct."}, {"statement": "Вони будуть працюють.", "isTrue": false, "explanation": "After будуть, use працювати."}, {"statement": "Ви будете гуляти в парку?", "isTrue": true, "explanation": "Будете + гуляти is correct."}]`)} instruction={"Decide whether each sentence uses буду + infinitive correctly."} isUkrainian={false} />
 
 ### Build future sentences
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Завтра / я / буду / працювати", "answer": "Завтра я буду працювати."}, {"jumbled": "Що / ти / будеш / робити / ввечері", "answer": "Що ти будеш робити ввечері?"}, {"jumbled": "Вона / буде / читати / книжку", "answer": "Вона буде читати книжку."}, {"jumbled": "Ми / будемо / дивитися / футбол", "answer": "Ми будемо дивитися футбол."}, {"jumbled": "Вони / будуть / відпочивати", "answer": "Вони будуть відпочивати."}]`)} />
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Завтра / я / буду / працювати", "answer": "Завтра я буду працювати."}, {"jumbled": "Що / ти / будеш / робити / ввечері", "answer": "Що ти будеш робити ввечері?"}, {"jumbled": "Вона / буде / читати / книжку", "answer": "Вона буде читати книжку."}, {"jumbled": "Ми / будемо / дивитися / футбол", "answer": "Ми будемо дивитися футбол."}, {"jumbled": "Вони / будуть / відпочивати", "answer": "Вони будуть відпочивати."}]`)} instruction={"Put the words in a natural order."} />
 
 ### From now to tomorrow
 
@@ -377,11 +377,11 @@ plans and invitations with days and times.
 
 ### Keep the infinitive
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я буду ___ завтра.", "answer": "читати", "options": ["читати", "читаю", "читав"]}, {"sentence": "Ти будеш ___ ввечері?", "answer": "робити", "options": ["робити", "робиш", "робив"]}, {"sentence": "Вона буде ___ вечерю.", "answer": "готувати", "options": ["готувати", "готує", "готувала"]}, {"sentence": "Ми будемо ___ футбол.", "answer": "дивитися", "options": ["дивитися", "дивимося", "дивилися"]}, {"sentence": "Вони будуть ___.", "answer": "відпочивати", "options": ["відпочивати", "відпочивають", "відпочивали"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я буду ___ завтра.", "answer": "читати", "options": ["читати", "читаю", "читав"]}, {"sentence": "Ти будеш ___ ввечері?", "answer": "робити", "options": ["робити", "робиш", "робив"]}, {"sentence": "Вона буде ___ вечерю.", "answer": "готувати", "options": ["готувати", "готує", "готувала"]}, {"sentence": "Ми будемо ___ футбол.", "answer": "дивитися", "options": ["дивитися", "дивимося", "дивилися"]}, {"sentence": "Вони будуть ___.", "answer": "відпочивати", "options": ["відпочивати", "відпочивають", "відпочивали"]}]`)} instruction={"Choose the infinitive after the future form of бути."} isUkrainian={false} />
 
 ### Say future plans
 
-<Translate client:only='react' questions={JSON.parse(`[{"source": "Tomorrow I will work.", "options": [{"text": "Завтра я буду працювати.", "correct": true}, {"text": "Учора я працював.", "correct": false}, {"text": "Зараз я працюю.", "correct": false}], "explanation": "Tomorrow needs буду працювати."}, {"source": "What will you do in the evening?", "options": [{"text": "Що ти будеш робити ввечері?", "correct": true}, {"text": "Що ти робив учора?", "correct": false}, {"text": "Що ти робиш зараз?", "correct": false}], "explanation": "Use будеш робити for you will do."}, {"source": "We will watch football.", "options": [{"text": "Ми будемо дивитися футбол.", "correct": true}, {"text": "Ми дивимося футбол.", "correct": false}, {"text": "Ми дивилися футбол.", "correct": false}], "explanation": "Use будемо дивитися."}, {"source": "They will rest.", "options": [{"text": "Вони будуть відпочивати.", "correct": true}, {"text": "Вони відпочивають.", "correct": false}, {"text": "Вони відпочивали.", "correct": false}], "explanation": "Use будуть відпочивати."}]`)} isUkrainian={false} />
+<Translate client:only='react' questions={JSON.parse(`[{"source": "Tomorrow I will work.", "options": [{"text": "Завтра я буду працювати.", "correct": true}, {"text": "Учора я працював.", "correct": false}, {"text": "Зараз я працюю.", "correct": false}], "explanation": "Tomorrow needs буду працювати."}, {"source": "What will you do in the evening?", "options": [{"text": "Що ти будеш робити ввечері?", "correct": true}, {"text": "Що ти робив учора?", "correct": false}, {"text": "Що ти робиш зараз?", "correct": false}], "explanation": "Use будеш робити for you will do."}, {"source": "We will watch football.", "options": [{"text": "Ми будемо дивитися футбол.", "correct": true}, {"text": "Ми дивимося футбол.", "correct": false}, {"text": "Ми дивилися футбол.", "correct": false}], "explanation": "Use будемо дивитися."}, {"source": "They will rest.", "options": [{"text": "Вони будуть відпочивати.", "correct": true}, {"text": "Вони відпочивають.", "correct": false}, {"text": "Вони відпочивали.", "correct": false}], "explanation": "Use будуть відпочивати."}]`)} instruction={"Choose the Ukrainian sentence that matches the English prompt."} isUkrainian={false} />
 
 ### Repair future forms
 

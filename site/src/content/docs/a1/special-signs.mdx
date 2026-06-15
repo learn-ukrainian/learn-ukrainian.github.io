@@ -120,7 +120,7 @@ simply be softening the previous consonant.
 
 ### М'яко чи розді́льно
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Буря́к — що стається перед я?", "options": [{"text": "Р м'якшиться перед я.", "correct": true}, {"text": "Є апо́строф.", "correct": false}, {"text": "Ї завжди [йі].", "correct": false}], "explanation": "У слові буря́к немає апо́строфа; р м'якшиться перед я."}, {"question": "Бур'я́н — що робить апо́строф?", "options": [{"text": "Р лишається твердим, потім чути [йа].", "correct": true}, {"text": "Р зникає.", "correct": false}, {"text": "Додає звук [і].", "correct": false}], "explanation": "Апо́строф відділяє р від я."}, {"question": "Ї — що завжди правильно?", "options": [{"text": "Завжди [йі].", "correct": true}, {"text": "Мовчить.", "correct": false}, {"text": "Це м'яки́й знак.", "correct": false}], "explanation": "Ї завжди позначає [йі]."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Буря́к — що стається перед я?", "options": [{"text": "Р м'якшиться перед я.", "correct": true}, {"text": "Є апо́строф.", "correct": false}, {"text": "Ї завжди [йі].", "correct": false}], "explanation": "У слові буря́к немає апо́строфа; р м'якшиться перед я."}, {"question": "Бур'я́н — що робить апо́строф?", "options": [{"text": "Р лишається твердим, потім чути [йа].", "correct": true}, {"text": "Р зникає.", "correct": false}, {"text": "Додає звук [і].", "correct": false}], "explanation": "Апо́строф відділяє р від я."}, {"question": "Ї — що завжди правильно?", "options": [{"text": "Завжди [йі].", "correct": true}, {"text": "Мовчить.", "correct": false}, {"text": "Це м'яки́й знак.", "correct": false}], "explanation": "Ї завжди позначає [йі]."}]`)} instruction={"Обери перше читацьке пояснення."} isUkrainian={false} />
 
 ## М'яки́й знак
 
@@ -155,7 +155,7 @@ conversation today.
 
 ### Що робить ь
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "день", "right": "м'який фінальний н"}, {"left": "кінь", "right": "м'який фінальний н"}, {"left": "сіль", "right": "м'який фінальний л"}, {"left": "вчи́тель", "right": "м'який фінальний л"}, {"left": "м'яки́й знак", "right": "не має власного звука"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "день", "right": "м'який фінальний н"}, {"left": "кінь", "right": "м'який фінальний н"}, {"left": "сіль", "right": "м'який фінальний л"}, {"left": "вчи́тель", "right": "м'який фінальний л"}, {"left": "м'яки́й знак", "right": "не має власного звука"}]`)} instruction={"З'єднай кожне слово з підказкою про м'яки́й знак."} isUkrainian={false} />
 
 ## Апостроф
 
@@ -188,7 +188,7 @@ itself.
 
 ### Додай знак
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "сім_я", "answer": "'", "options": ["'", "ь", "без знака"]}, {"sentence": "ден_", "answer": "ь", "options": ["ь", "'", "без знака"]}, {"sentence": "п_ять", "answer": "'", "options": ["'", "ь", "без знака"]}, {"sentence": "свя́то потребує ____.", "answer": "без знака", "options": ["без знака", "'", "ь"]}, {"sentence": "бур_ян", "answer": "'", "options": ["'", "ь", "без знака"]}, {"sentence": "мале́нький needs ____.", "answer": "ь", "options": ["ь", "'", "без знака"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "сім_я", "answer": "'", "options": ["'", "ь", "без знака"]}, {"sentence": "ден_", "answer": "ь", "options": ["ь", "'", "без знака"]}, {"sentence": "п_ять", "answer": "'", "options": ["'", "ь", "без знака"]}, {"sentence": "свя́то потребує ____.", "answer": "без знака", "options": ["без знака", "'", "ь"]}, {"sentence": "бур_ян", "answer": "'", "options": ["'", "ь", "без знака"]}, {"sentence": "мале́нький needs ____.", "answer": "ь", "options": ["ь", "'", "без знака"]}]`)} instruction={"Обери ь, апо́строф або без знака."} isUkrainian={false} />
 
 ## Контраст і пастки
 
@@ -319,19 +319,19 @@ the sign, say what it does, then read the word.
 
 ### Сортуй за знаком
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Є ь": ["день", "кінь", "сіль", "вчи́тель", "мале́нький"], "Є апо́строф": ["сім'я́", "м'я́со", "п'ять", "комп'ю́тер", "бур'я́н"], "Немає знака": ["буря́к", "свя́то", "цвях", "ло́жка"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Є ь": ["день", "кінь", "сіль", "вчи́тель", "мале́нький"], "Є апо́строф": ["сім'я́", "м'я́со", "п'ять", "комп'ю́тер", "бур'я́н"], "Немає знака": ["буря́к", "свя́то", "цвях", "ло́жка"]}`)} instruction={"Розподіли кожне слово в правильну групу."} isUkrainian={false} />
 
 ### Факти про знаки
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Ь не має власного звука.", "isTrue": true, "explanation": "Він м'якшить попередній при́голосний."}, {"statement": "Апо́строф тримає попередній при́голосний твердим.", "isTrue": true, "explanation": "Він відділяє при́голосний від йотованої голосної."}, {"statement": "Ї іноді мовчить.", "isTrue": false, "explanation": "Ї завжди читаємо як [йі]."}, {"statement": "Свя́то має апо́строф.", "isTrue": false, "explanation": "Свя́то — модельне слово без апо́строфа."}]`)} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Ь не має власного звука.", "isTrue": true, "explanation": "Він м'якшить попередній при́голосний."}, {"statement": "Апо́строф тримає попередній при́голосний твердим.", "isTrue": true, "explanation": "Він відділяє при́голосний від йотованої голосної."}, {"statement": "Ї іноді мовчить.", "isTrue": false, "explanation": "Ї завжди читаємо як [йі]."}, {"statement": "Свя́то має апо́строф.", "isTrue": false, "explanation": "Свя́то — модельне слово без апо́строфа."}]`)} instruction={"Обери правда чи неправда."} isUkrainian={false} />
 
 ### Друк і зошит
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "друк: день", "right": "зошит: слово з кінцевим ь"}, {"left": "друк: сім'я́", "right": "зошит: apostrophe before я"}, {"left": "друк: п'ять", "right": "зошит: апо́строф і кінцевий ь"}, {"left": "друк: свя́то", "right": "зошит: no apostrophe"}, {"left": "друк: бур'я́н", "right": "зошит: apostrophe after р"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "друк: день", "right": "зошит: слово з кінцевим ь"}, {"left": "друк: сім'я́", "right": "зошит: apostrophe before я"}, {"left": "друк: п'ять", "right": "зошит: апо́строф і кінцевий ь"}, {"left": "друк: свя́то", "right": "зошит: no apostrophe"}, {"left": "друк: бур'я́н", "right": "зошит: apostrophe after р"}]`)} instruction={"З'єднай друковане слово з підказкою в зо́шиті."} isUkrainian={false} />
 
 ### Правильна форма
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Сім'я́ — яка форма правильна?", "options": [{"text": "сім'я́", "correct": true}, {"text": "сімя без апо́строфа", "correct": false}], "explanation": "Сім'я́ потребує апо́строфа."}, {"question": "День — яка форма правильна?", "options": [{"text": "день", "correct": true}, {"text": "ден", "correct": false}], "explanation": "День потребує м'якого знака."}, {"question": "Слово без апо́строфа?", "options": [{"text": "свя́то", "correct": true}, {"text": "apostrophe spelling", "correct": false}], "explanation": "Свя́то — підготовлене слово без апо́строфа."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Сім'я́ — яка форма правильна?", "options": [{"text": "сім'я́", "correct": true}, {"text": "сімя без апо́строфа", "correct": false}], "explanation": "Сім'я́ потребує апо́строфа."}, {"question": "День — яка форма правильна?", "options": [{"text": "день", "correct": true}, {"text": "ден", "correct": false}], "explanation": "День потребує м'якого знака."}, {"question": "Слово без апо́строфа?", "options": [{"text": "свя́то", "correct": true}, {"text": "apostrophe spelling", "correct": false}], "explanation": "Свя́то — підготовлене слово без апо́строфа."}]`)} instruction={"Обери правильно написане слово."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">

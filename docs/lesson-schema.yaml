@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: fe30e8c4628bdd686bfe2aed193d57dcb67625b632993027abd6aee3c4a80050
+  components_sha256: 9fd833083f0499cd54556995490d9e4998f7a24fe8d836b9fa3c45a06565fa95
   config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -2247,6 +2247,10 @@ components:
         type: string
         description: Display title shown above the component.
         ukrainian_text: 'true'
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
       - name: isUkrainian
         type: boolean
         description: UI language flag for Ukrainian labels and feedback.
@@ -2278,6 +2282,7 @@ components:
       items:
       - <WatchAndRepeatItem>
       title: Приклад
+      instruction: Приклад
     deprecated: false
     deprecation_reason: null
   YouTubeVideo:

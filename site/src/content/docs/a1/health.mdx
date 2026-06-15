@@ -87,7 +87,7 @@ guess what the problem is or tell anyone what to do.
 
 ### Complete the health phrase
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У мене болить ___.", "answer": "голова", "options": ["голова", "лікар", "аптека"]}, {"sentence": "Мені потрібен ___.", "answer": "лікар", "options": ["лікар", "голова", "кашель"]}, {"sentence": "У мене ___.", "answer": "температура", "options": ["температура", "праворуч", "квиток"]}, {"sentence": "___, будь ласка.", "answer": "Повторіть", "options": ["Повторіть", "Болить", "Нежить"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У мене болить ___.", "answer": "голова", "options": ["голова", "лікар", "аптека"]}, {"sentence": "Мені потрібен ___.", "answer": "лікар", "options": ["лікар", "голова", "кашель"]}, {"sentence": "У мене ___.", "answer": "температура", "options": ["температура", "праворуч", "квиток"]}, {"sentence": "___, будь ласка.", "answer": "Повторіть", "options": ["Повторіть", "Болить", "Нежить"]}]`)} instruction={"Choose the word that completes the A1 phrase."} isUkrainian={false} />
 
 ### Що у вас болить?
 
@@ -160,7 +160,7 @@ message to a clear first report. The useful phrases are:
 
 ### Body words
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "голова", "right": "head"}, {"left": "горло", "right": "throat"}, {"left": "живіт", "right": "stomach"}, {"left": "спина", "right": "back"}, {"left": "рука", "right": "hand / arm"}, {"left": "нога", "right": "leg / foot"}, {"left": "зуб", "right": "tooth"}, {"left": "вухо", "right": "ear"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "голова", "right": "head"}, {"left": "горло", "right": "throat"}, {"left": "живіт", "right": "stomach"}, {"left": "спина", "right": "back"}, {"left": "рука", "right": "hand / arm"}, {"left": "нога", "right": "leg / foot"}, {"left": "зуб", "right": "tooth"}, {"left": "вухо", "right": "ear"}]`)} instruction={"Match each Ukrainian body word with English."} isUkrainian={false} />
 
 ## Тіло
 
@@ -211,11 +211,11 @@ Clear short speech is better than a long sentence with many mistakes.
 
 ### Sort health words
 
-<GroupSort client:only='react' groups={JSON.parse(`{"body parts": ["голова", "горло", "живіт", "спина", "зуб"], "symptom phrases": ["У мене температура", "У мене кашель", "У мене нежить", "Мені погано"], "help phrases": ["Мені потрібен лікар", "Де тут аптека?", "Повторіть, будь ласка"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"body parts": ["голова", "горло", "живіт", "спина", "зуб"], "symptom phrases": ["У мене температура", "У мене кашель", "У мене нежить", "Мені погано"], "help phrases": ["Мені потрібен лікар", "Де тут аптека?", "Повторіть, будь ласка"]}`)} instruction={"Put each phrase into the right group."} isUkrainian={false} />
 
 ### Choose the clear A1 phrase
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "You want to say: My stomach hurts.", "options": [{"text": "У мене болить живіт.", "correct": true}, {"text": "Я живіт болить.", "correct": false}, {"text": "Мій живіт є болить.", "correct": false}], "explanation": "Use У мене болить + body part."}, {"question": "You need a doctor.", "options": [{"text": "Мені потрібен лікар.", "correct": true}, {"text": "Я потрібно лікар.", "correct": false}, {"text": "Лікар болить.", "correct": false}], "explanation": "Мені потрібен лікар is the fixed help phrase."}, {"question": "You do not understand.", "options": [{"text": "Я не розумію.", "correct": true}, {"text": "Я не аптека.", "correct": false}, {"text": "У мене розумію.", "correct": false}], "explanation": "Я не розумію is the repair phrase."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "You want to say: My stomach hurts.", "options": [{"text": "У мене болить живіт.", "correct": true}, {"text": "Я живіт болить.", "correct": false}, {"text": "Мій живіт є болить.", "correct": false}], "explanation": "Use У мене болить + body part."}, {"question": "You need a doctor.", "options": [{"text": "Мені потрібен лікар.", "correct": true}, {"text": "Я потрібно лікар.", "correct": false}, {"text": "Лікар болить.", "correct": false}], "explanation": "Мені потрібен лікар is the fixed help phrase."}, {"question": "You do not understand.", "options": [{"text": "Я не розумію.", "correct": true}, {"text": "Я не аптека.", "correct": false}, {"text": "У мене розумію.", "correct": false}], "explanation": "Я не розумію is the repair phrase."}]`)} instruction={"Choose the phrase that communicates the problem clearly."} isUkrainian={false} />
 
 ## У мене болить...
 
@@ -386,23 +386,23 @@ phrases when you need them.
 
 ### Phrase-level health check
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "У мене болить горло.", "isTrue": true, "explanation": "This follows У мене болить + body part."}, {"statement": "Моя голова болить.", "isTrue": false, "explanation": "Use the more natural A1 phrase: У мене болить голова."}, {"statement": "У мене кашель.", "isTrue": true, "explanation": "This is a fixed symptom phrase."}, {"statement": "Я є хворий.", "isTrue": false, "explanation": "Drop є: Я хворий."}, {"statement": "Мені потрібен лікар.", "isTrue": true, "explanation": "This is the help phrase."}]`)} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "У мене болить горло.", "isTrue": true, "explanation": "This follows У мене болить + body part."}, {"statement": "Моя голова болить.", "isTrue": false, "explanation": "Use the more natural A1 phrase: У мене болить голова."}, {"statement": "У мене кашель.", "isTrue": true, "explanation": "This is a fixed symptom phrase."}, {"statement": "Я є хворий.", "isTrue": false, "explanation": "Drop є: Я хворий."}, {"statement": "Мені потрібен лікар.", "isTrue": true, "explanation": "This is the help phrase."}]`)} instruction={"Decide whether the sentence is a clear A1 health phrase."} isUkrainian={false} />
 
 ### Build health lines
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "У / мене / болить / голова", "answer": "У мене болить голова."}, {"jumbled": "Мені / потрібен / лікар", "answer": "Мені потрібен лікар."}, {"jumbled": "Я / не / розумію", "answer": "Я не розумію."}, {"jumbled": "Повторіть / будь / ласка", "answer": "Повторіть, будь ласка."}]`)} />
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "У / мене / болить / голова", "answer": "У мене болить голова."}, {"jumbled": "Мені / потрібен / лікар", "answer": "Мені потрібен лікар."}, {"jumbled": "Я / не / розумію", "answer": "Я не розумію."}, {"jumbled": "Повторіть / будь / ласка", "answer": "Повторіть, будь ласка."}]`)} instruction={"Put the words in a natural order."} />
 
 ### Doctor or pharmacy phrases
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Добрий день. У мене болить ___.", "answer": "спина", "options": ["спина", "лікар", "аптека"]}, {"sentence": "Вибачте. Де тут ___?", "answer": "аптека", "options": ["аптека", "болить", "нога"]}, {"sentence": "Мені ___.", "answer": "погано", "options": ["погано", "голова", "кашель"]}, {"sentence": "___, будь ласка. Я не розумію.", "answer": "Повільніше", "options": ["Повільніше", "Голова", "Температура"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Добрий день. У мене болить ___.", "answer": "спина", "options": ["спина", "лікар", "аптека"]}, {"sentence": "Вибачте. Де тут ___?", "answer": "аптека", "options": ["аптека", "болить", "нога"]}, {"sentence": "Мені ___.", "answer": "погано", "options": ["погано", "голова", "кашель"]}, {"sentence": "___, будь ласка. Я не розумію.", "answer": "Повільніше", "options": ["Повільніше", "Голова", "Температура"]}]`)} instruction={"Choose the phrase that fits the short situation."} isUkrainian={false} />
 
 ### Repair health phrases
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Repair: Моя рука болить.", "options": [{"text": "У мене болить рука.", "correct": true}, {"text": "У мене рука лікар.", "correct": false}, {"text": "Рука потрібен мене.", "correct": false}], "explanation": "Use У мене болить + body part."}, {"question": "Repair: Я потрібно лікар.", "options": [{"text": "Мені потрібен лікар.", "correct": true}, {"text": "Я потрібен лікар.", "correct": false}, {"text": "Лікар потрібно я.", "correct": false}], "explanation": "Use the fixed phrase Мені потрібен лікар."}, {"question": "Repair: У мене є нежить.", "options": [{"text": "У мене нежить.", "correct": true}, {"text": "Я нежить болить.", "correct": false}, {"text": "Нежить потрібен.", "correct": false}], "explanation": "Use the simple phrase У мене нежить."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Repair: Моя рука болить.", "options": [{"text": "У мене болить рука.", "correct": true}, {"text": "У мене рука лікар.", "correct": false}, {"text": "Рука потрібен мене.", "correct": false}], "explanation": "Use У мене болить + body part."}, {"question": "Repair: Я потрібно лікар.", "options": [{"text": "Мені потрібен лікар.", "correct": true}, {"text": "Я потрібен лікар.", "correct": false}, {"text": "Лікар потрібно я.", "correct": false}], "explanation": "Use the fixed phrase Мені потрібен лікар."}, {"question": "Repair: У мене є нежить.", "options": [{"text": "У мене нежить.", "correct": true}, {"text": "Я нежить болить.", "correct": false}, {"text": "Нежить потрібен.", "correct": false}], "explanation": "Use the simple phrase У мене нежить."}]`)} instruction={"Choose the natural Ukrainian repair."} isUkrainian={false} />
 
 ### Say what hurts
 
-<Translate client:only='react' questions={JSON.parse(`[{"source": "My throat hurts.", "options": [{"text": "У мене болить горло.", "correct": true}, {"text": "Мені потрібен лікар.", "correct": false}, {"text": "У мене нежить.", "correct": false}], "explanation": "Use У мене болить + горло."}, {"source": "I need a doctor.", "options": [{"text": "Мені потрібен лікар.", "correct": true}, {"text": "У мене болить зуб.", "correct": false}, {"text": "Де тут аптека?", "correct": false}], "explanation": "Мені потрібен лікар is the help phrase."}, {"source": "Please repeat.", "options": [{"text": "Повторіть, будь ласка.", "correct": true}, {"text": "Мені погано.", "correct": false}, {"text": "У мене кашель.", "correct": false}], "explanation": "Use Повторіть, будь ласка."}]`)} isUkrainian={false} />
+<Translate client:only='react' questions={JSON.parse(`[{"source": "My throat hurts.", "options": [{"text": "У мене болить горло.", "correct": true}, {"text": "Мені потрібен лікар.", "correct": false}, {"text": "У мене нежить.", "correct": false}], "explanation": "Use У мене болить + горло."}, {"source": "I need a doctor.", "options": [{"text": "Мені потрібен лікар.", "correct": true}, {"text": "У мене болить зуб.", "correct": false}, {"text": "Де тут аптека?", "correct": false}], "explanation": "Мені потрібен лікар is the help phrase."}, {"source": "Please repeat.", "options": [{"text": "Повторіть, будь ласка.", "correct": true}, {"text": "Мені погано.", "correct": false}, {"text": "У мене кашель.", "correct": false}], "explanation": "Use Повторіть, будь ласка."}]`)} instruction={"Choose the Ukrainian phrase that matches the English prompt."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">

@@ -78,7 +78,7 @@ By the end, you can:
 
 ### Послухай першу групу
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "I read a text.", "options": [{"text": "Я читаю текст.", "correct": true}, {"text": "Я читати текст.", "correct": false}, {"text": "Я читаєш текст.", "correct": false}], "explanation": "Я uses читаю."}, {"question": "You read a book.", "options": [{"text": "Ти читаєш книгу.", "correct": true}, {"text": "Ти читаю книгу.", "correct": false}, {"text": "Ти читати книгу.", "correct": false}], "explanation": "Ти uses читаєш."}, {"question": "She listens to music.", "options": [{"text": "Вона слухає музику.", "correct": true}, {"text": "Вона слухаю музику.", "correct": false}, {"text": "Вона слухати музику.", "correct": false}], "explanation": "Вона uses слухає."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "I read a text.", "options": [{"text": "Я читаю текст.", "correct": true}, {"text": "Я читати текст.", "correct": false}, {"text": "Я читаєш текст.", "correct": false}], "explanation": "Я uses читаю."}, {"question": "You read a book.", "options": [{"text": "Ти читаєш книгу.", "correct": true}, {"text": "Ти читаю книгу.", "correct": false}, {"text": "Ти читати книгу.", "correct": false}], "explanation": "Ти uses читаєш."}, {"question": "She listens to music.", "options": [{"text": "Вона слухає музику.", "correct": true}, {"text": "Вона слухаю музику.", "correct": false}, {"text": "Вона слухати музику.", "correct": false}], "explanation": "Вона uses слухає."}]`)} instruction={"Choose the safe present-tense Ukrainian line."} isUkrainian={false} />
 
 At a study table, Marta and Oleh talk about ordinary things: reading, work,
 music, and dinner. The Ukrainian lines are short enough to reuse.
@@ -127,7 +127,7 @@ a separate "am" word.
 
 ### Таблиця читати
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "я", "right": "читаю"}, {"left": "ти", "right": "читаєш"}, {"left": "він / вона", "right": "читає"}, {"left": "ми", "right": "читаємо"}, {"left": "ви", "right": "читаєте"}, {"left": "вони", "right": "читають"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "я", "right": "читаю"}, {"left": "ти", "right": "читаєш"}, {"left": "він / вона", "right": "читає"}, {"left": "ми", "right": "читаємо"}, {"left": "ви", "right": "читаєте"}, {"left": "вони", "right": "читають"}]`)} instruction={"Match the person with the Group One form."} isUkrainian={false} />
 
 ## Перша дієвідміна
 
@@ -174,7 +174,7 @@ Support after the Ukrainian lines:
 
 ### Будуй речення з читати
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ текст.", "answer": "читаю", "options": ["читаю", "читаєш", "читає"]}, {"sentence": "Ти ___ книгу?", "answer": "читаєш", "options": ["читаєш", "читаю", "читаємо"]}, {"sentence": "Вона ___.", "answer": "читає", "options": ["читає", "читаєте", "читають"]}, {"sentence": "Ми ___ текст.", "answer": "читаємо", "options": ["читаємо", "читаєте", "читають"]}, {"sentence": "Ви ___?", "answer": "читаєте", "options": ["читаєте", "читаємо", "читають"]}, {"sentence": "Вони ___.", "answer": "читають", "options": ["читають", "читає", "читаю"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ текст.", "answer": "читаю", "options": ["читаю", "читаєш", "читає"]}, {"sentence": "Ти ___ книгу?", "answer": "читаєш", "options": ["читаєш", "читаю", "читаємо"]}, {"sentence": "Вона ___.", "answer": "читає", "options": ["читає", "читаєте", "читають"]}, {"sentence": "Ми ___ текст.", "answer": "читаємо", "options": ["читаємо", "читаєте", "читають"]}, {"sentence": "Ви ___?", "answer": "читаєте", "options": ["читаєте", "читаємо", "читають"]}, {"sentence": "Вони ___.", "answer": "читають", "options": ["читають", "читає", "читаю"]}]`)} instruction={"Choose the present-tense form that fits the person."} isUkrainian={false} />
 
 ### Мінімодель: знати й розуміти
 
@@ -209,7 +209,7 @@ Support after the Ukrainian lines:
 
 ### Знати й розуміти
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ це слово.", "answer": "знаю", "options": ["знаю", "знаєш", "знає"]}, {"sentence": "Ти ___ Київ?", "answer": "знаєш", "options": ["знаєш", "знаю", "знають"]}, {"sentence": "Вона ___ відповідь.", "answer": "знає", "options": ["знає", "знаєте", "знаємо"]}, {"sentence": "Я ___.", "answer": "розумію", "options": ["розумію", "розумієш", "розуміє"]}, {"sentence": "Ти ___?", "answer": "розумієш", "options": ["розумієш", "розумію", "розуміють"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ це слово.", "answer": "знаю", "options": ["знаю", "знаєш", "знає"]}, {"sentence": "Ти ___ Київ?", "answer": "знаєш", "options": ["знаєш", "знаю", "знають"]}, {"sentence": "Вона ___ відповідь.", "answer": "знає", "options": ["знає", "знаєте", "знаємо"]}, {"sentence": "Я ___.", "answer": "розумію", "options": ["розумію", "розумієш", "розуміє"]}, {"sentence": "Ти ___?", "answer": "розумієш", "options": ["розумієш", "розумію", "розуміють"]}]`)} instruction={"Complete each short sentence."} isUkrainian={false} />
 
 ## Я, ти, він/вона
 
@@ -371,11 +371,11 @@ sentences sound complete.
 
 ### Хто яке закінчення використовує?
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Я": ["читаю", "знаю", "працюю"], "Ти": ["читаєш", "знаєш", "працюєш"], "Він / вона": ["читає", "знає", "працює"], "Ми / ви / вони": ["читаємо", "читаєте", "читають"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Я": ["читаю", "знаю", "працюю"], "Ти": ["читаєш", "знаєш", "працюєш"], "Він / вона": ["читає", "знає", "працює"], "Ми / ви / вони": ["читаємо", "читаєте", "читають"]}`)} instruction={"Sort the forms by person."} isUkrainian={false} />
 
 ### Працювати й готувати
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ вдома.", "answer": "працюю", "options": ["працюю", "працюєш", "працює"]}, {"sentence": "Ти ___ вечерю?", "answer": "готуєш", "options": ["готуєш", "готую", "готує"]}, {"sentence": "Ми ___ каву.", "answer": "готуємо", "options": ["готуємо", "готуєте", "готують"]}, {"sentence": "Вони ___ сьогодні.", "answer": "працюють", "options": ["працюють", "працює", "працюю"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ вдома.", "answer": "працюю", "options": ["працюю", "працюєш", "працює"]}, {"sentence": "Ти ___ вечерю?", "answer": "готуєш", "options": ["готуєш", "готую", "готує"]}, {"sentence": "Ми ___ каву.", "answer": "готуємо", "options": ["готуємо", "готуєте", "готують"]}, {"sentence": "Вони ___ сьогодні.", "answer": "працюють", "options": ["працюють", "працює", "працюю"]}]`)} instruction={"Choose the whole present-tense form."} isUkrainian={false} />
 
 <span id="group-one-repairs"></span>
 
@@ -385,7 +385,7 @@ sentences sound complete.
 
 ### Мінідіалог
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що ти читаєш?", "options": [{"text": "Я читаю текст.", "correct": true}, {"text": "Я читаєш текст.", "correct": false}, {"text": "Я читати текст.", "correct": false}], "explanation": "Я читаю is the safe answer."}, {"question": "Ти знаєш це слово?", "options": [{"text": "Так, я знаю це слово.", "correct": true}, {"text": "Так, я знаєш це слово.", "correct": false}, {"text": "Так, я знати це слово.", "correct": false}], "explanation": "Я знаю."}, {"question": "Ми готуємо вечерю?", "options": [{"text": "Так, ми готуємо вечерю.", "correct": true}, {"text": "Так, ми готуєте вечерю.", "correct": false}, {"text": "Так, ми готують вечерю.", "correct": false}], "explanation": "Ми готуємо."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що ти читаєш?", "options": [{"text": "Я читаю текст.", "correct": true}, {"text": "Я читаєш текст.", "correct": false}, {"text": "Я читати текст.", "correct": false}], "explanation": "Я читаю is the safe answer."}, {"question": "Ти знаєш це слово?", "options": [{"text": "Так, я знаю це слово.", "correct": true}, {"text": "Так, я знаєш це слово.", "correct": false}, {"text": "Так, я знати це слово.", "correct": false}], "explanation": "Я знаю."}, {"question": "Ми готуємо вечерю?", "options": [{"text": "Так, ми готуємо вечерю.", "correct": true}, {"text": "Так, ми готуєте вечерю.", "correct": false}, {"text": "Так, ми готують вечерю.", "correct": false}], "explanation": "Ми готуємо."}]`)} instruction={"Choose the best next line."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">

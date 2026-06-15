@@ -78,7 +78,7 @@ By the end, you can:
 
 ### Де or куди?
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я йду в банк.", "options": [{"text": "Куди?", "correct": true}, {"text": "Де?", "correct": false}, {"text": "Хто?", "correct": false}], "explanation": "Йду shows movement, so ask куди?"}, {"question": "Оксана на пошті.", "options": [{"text": "Де?", "correct": true}, {"text": "Куди?", "correct": false}, {"text": "Коли?", "correct": false}], "explanation": "На пошті is a static location."}, {"question": "Ми їдемо у Львів.", "options": [{"text": "Куди?", "correct": true}, {"text": "Де?", "correct": false}, {"text": "Що?", "correct": false}], "explanation": "Їдемо is movement by transport."}, {"question": "Книжка на столі.", "options": [{"text": "Де?", "correct": true}, {"text": "Куди?", "correct": false}, {"text": "Звідки?", "correct": false}], "explanation": "На столі answers where the book is."}, {"question": "Марко йде до лікаря.", "options": [{"text": "Куди?", "correct": true}, {"text": "Де?", "correct": false}, {"text": "Який?", "correct": false}], "explanation": "До лікаря is a person destination."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я йду в банк.", "options": [{"text": "Куди?", "correct": true}, {"text": "Де?", "correct": false}, {"text": "Хто?", "correct": false}], "explanation": "Йду shows movement, so ask куди?"}, {"question": "Оксана на пошті.", "options": [{"text": "Де?", "correct": true}, {"text": "Куди?", "correct": false}, {"text": "Коли?", "correct": false}], "explanation": "На пошті is a static location."}, {"question": "Ми їдемо у Львів.", "options": [{"text": "Куди?", "correct": true}, {"text": "Де?", "correct": false}, {"text": "Що?", "correct": false}], "explanation": "Їдемо is movement by transport."}, {"question": "Книжка на столі.", "options": [{"text": "Де?", "correct": true}, {"text": "Куди?", "correct": false}, {"text": "Звідки?", "correct": false}], "explanation": "На столі answers where the book is."}, {"question": "Марко йде до лікаря.", "options": [{"text": "Куди?", "correct": true}, {"text": "Де?", "correct": false}, {"text": "Який?", "correct": false}], "explanation": "До лікаря is a person destination."}]`)} instruction={"Choose the question that matches the sentence."} isUkrainian={false} />
 
 First listen for the movement verb. **Іти** usually means going on foot.
 **Їхати** means going by transport. Both can answer **куди?**
@@ -138,7 +138,7 @@ Ukrainian direction: **Київ / Kyiv**, **Львів / Lviv**, **Одеса / 
 
 ### Direction chunks
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я йду ___ банк.", "answer": "у", "options": ["у", "на", "до"]}, {"sentence": "Олена йде ___ роботу.", "answer": "на", "options": ["на", "в", "біля"]}, {"sentence": "Ми йдемо в ___.", "answer": "аптеку", "options": ["аптеку", "аптеці", "аптека"]}, {"sentence": "Степан іде у ___.", "answer": "бібліотеку", "options": ["бібліотеку", "бібліотеці", "бібліотека"]}, {"sentence": "Я їду ___ вокзал.", "answer": "на", "options": ["на", "в", "у"]}, {"sentence": "Марко йде ___ лікаря.", "answer": "до", "options": ["до", "в", "на"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я йду ___ банк.", "answer": "у", "options": ["у", "на", "до"]}, {"sentence": "Олена йде ___ роботу.", "answer": "на", "options": ["на", "в", "біля"]}, {"sentence": "Ми йдемо в ___.", "answer": "аптеку", "options": ["аптеку", "аптеці", "аптека"]}, {"sentence": "Степан іде у ___.", "answer": "бібліотеку", "options": ["бібліотеку", "бібліотеці", "бібліотека"]}, {"sentence": "Я їду ___ вокзал.", "answer": "на", "options": ["на", "в", "у"]}, {"sentence": "Марко йде ___ лікаря.", "answer": "до", "options": ["до", "в", "на"]}]`)} instruction={"Complete each movement sentence."} isUkrainian={false} />
 
 ## Куди? Знахідний відмінок
 
@@ -192,11 +192,11 @@ Ukrainian **чергування приголосних**, not as a **незру
 
 ### Four route shelves
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Static де?": ["у школі", "на роботі", "у банку", "на столі"], "Direction куди?": ["у школу", "на роботу", "у банк", "на вокзал"], "To a person": ["до лікаря", "до мами", "до бабусі", "до Оксани"], "No case ending": ["тут", "там", "вдома", "далеко"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Static де?": ["у школі", "на роботі", "у банку", "на столі"], "Direction куди?": ["у школу", "на роботу", "у банк", "на вокзал"], "To a person": ["до лікаря", "до мами", "до бабусі", "до Оксани"], "No case ending": ["тут", "там", "вдома", "далеко"]}`)} instruction={"Sort each chunk by what it does."} isUkrainian={false} />
 
 ### Static to direction
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "у школі", "right": "у школу"}, {"left": "на роботі", "right": "на роботу"}, {"left": "в аптеці", "right": "в аптеку"}, {"left": "у бібліотеці", "right": "у бібліотеку"}, {"left": "у банку", "right": "у банк"}, {"left": "у парку", "right": "у парк"}, {"left": "в Одесі", "right": "в Одесу"}, {"left": "в Україні", "right": "в Україну"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "у школі", "right": "у школу"}, {"left": "на роботі", "right": "на роботу"}, {"left": "в аптеці", "right": "в аптеку"}, {"left": "у бібліотеці", "right": "у бібліотеку"}, {"left": "у банку", "right": "у банк"}, {"left": "у парку", "right": "у парк"}, {"left": "в Одесі", "right": "в Одесу"}, {"left": "в Україні", "right": "в Україну"}]`)} instruction={"Match each static place chunk to the movement chunk."} isUkrainian={false} />
 
 ## Де чи куди?
 
@@ -294,7 +294,7 @@ navigation tool.
 
 ### Movement guardrails
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Іти usually means going on foot.", "isTrue": true, "explanation": "Use іти for walking or general movement."}, {"statement": "Їхати usually means going by transport.", "isTrue": true, "explanation": "Use їхати when a vehicle is part of the idea."}, {"statement": "Я йду в школу answers куди?", "isTrue": true, "explanation": "It is movement toward school."}, {"statement": "Я в школі answers куди?", "isTrue": false, "explanation": "Я в школі answers де?"}, {"statement": "Use до for a person destination.", "isTrue": true, "explanation": "Say до лікаря, до мами, до бабусі."}, {"statement": "Kyiv is the Ukrainian English form for Київ.", "isTrue": true, "explanation": "Use Київ / Kyiv."}]`)} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Іти usually means going on foot.", "isTrue": true, "explanation": "Use іти for walking or general movement."}, {"statement": "Їхати usually means going by transport.", "isTrue": true, "explanation": "Use їхати when a vehicle is part of the idea."}, {"statement": "Я йду в школу answers куди?", "isTrue": true, "explanation": "It is movement toward school."}, {"statement": "Я в школі answers куди?", "isTrue": false, "explanation": "Я в школі answers де?"}, {"statement": "Use до for a person destination.", "isTrue": true, "explanation": "Say до лікаря, до мами, до бабусі."}, {"statement": "Kyiv is the Ukrainian English form for Київ.", "isTrue": true, "explanation": "Use Київ / Kyiv."}]`)} instruction={"Decide whether the statement fits the lesson."} isUkrainian={false} />
 
 ### Saturday errands
 

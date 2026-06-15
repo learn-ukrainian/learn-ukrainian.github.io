@@ -82,7 +82,7 @@ written or careful-speech option.
 
 ### Ролі питальних слів
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Хто?", "right": "asks for a person"}, {"left": "Що?", "right": "asks for a thing, topic, or action"}, {"left": "Де?", "right": "asks for a place"}, {"left": "Куди?", "right": "asks for a direction"}, {"left": "Коли?", "right": "asks for time"}, {"left": "Чому?", "right": "asks for a reason"}, {"left": "Як?", "right": "asks for manner or a fixed social phrase"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Хто?", "right": "asks for a person"}, {"left": "Що?", "right": "asks for a thing, topic, or action"}, {"left": "Де?", "right": "asks for a place"}, {"left": "Куди?", "right": "asks for a direction"}, {"left": "Коли?", "right": "asks for time"}, {"left": "Чому?", "right": "asks for a reason"}, {"left": "Як?", "right": "asks for manner or a fixed social phrase"}]`)} instruction={"Match each Ukrainian question word with the job it does."} isUkrainian={false} />
 
 Start with questions that identify a person, a thing, a place, and a time.
 Read the first dialogue as a small interview. The answers are short on purpose:
@@ -146,7 +146,7 @@ attach it to the verb.
 
 ### Пропуски в інтерв'ю
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ ти?", "answer": "Хто", "options": ["Хто", "Що", "Де"]}, {"sentence": "___ ти вивчаєш?", "answer": "Що", "options": ["Що", "Де", "Коли"]}, {"sentence": "___ ти живеш?", "answer": "Де", "options": ["Де", "Хто", "Чому"]}, {"sentence": "___ ти працюєш?", "answer": "Коли", "options": ["Коли", "Куди", "Як"]}, {"sentence": "___ ти не працюєш?", "answer": "Чому", "options": ["Чому", "Що", "Хто"]}, {"sentence": "___ справи?", "answer": "Як", "options": ["Як", "Де", "Коли"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ ти?", "answer": "Хто", "options": ["Хто", "Що", "Де"]}, {"sentence": "___ ти вивчаєш?", "answer": "Що", "options": ["Що", "Де", "Коли"]}, {"sentence": "___ ти живеш?", "answer": "Де", "options": ["Де", "Хто", "Чому"]}, {"sentence": "___ ти працюєш?", "answer": "Коли", "options": ["Коли", "Куди", "Як"]}, {"sentence": "___ ти не працюєш?", "answer": "Чому", "options": ["Чому", "Що", "Хто"]}, {"sentence": "___ справи?", "answer": "Як", "options": ["Як", "Де", "Коли"]}]`)} instruction={"Choose the question word that completes each short exchange."} isUkrainian={false} />
 
 ## Питальні слова
 
@@ -190,7 +190,7 @@ and belongs with the same family of unchanged place questions.
 
 ### Сигнали питань так/ні
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Ти говориш українською? can be a yes/no question with rising intonation.", "isTrue": true, "explanation": "Ukrainian can use the same word order plus rising intonation."}, {"statement": "Чи ти читаєш? is a clear written or careful-speech question marker.", "isTrue": true, "explanation": "Чи is useful to recognize, but optional in active A1 speech."}, {"statement": "Every Ukrainian yes/no question must begin with чи.", "isTrue": false, "explanation": "Intonation is enough for many everyday yes/no questions."}, {"statement": "Ти читаєш. and Ти читаєш? have the same words but different sentence force.", "isTrue": true, "explanation": "The period makes a statement; the question mark and voice make a question."}]`)} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Ти говориш українською? can be a yes/no question with rising intonation.", "isTrue": true, "explanation": "Ukrainian can use the same word order plus rising intonation."}, {"statement": "Чи ти читаєш? is a clear written or careful-speech question marker.", "isTrue": true, "explanation": "Чи is useful to recognize, but optional in active A1 speech."}, {"statement": "Every Ukrainian yes/no question must begin with чи.", "isTrue": false, "explanation": "Intonation is enough for many everyday yes/no questions."}, {"statement": "Ти читаєш. and Ти читаєш? have the same words but different sentence force.", "isTrue": true, "explanation": "The period makes a statement; the question mark and voice make a question."}]`)} instruction={"Decide whether each statement is safe for this lesson."} isUkrainian={false} />
 
 ## Заперечення
 
@@ -237,7 +237,7 @@ after a preposition.
 
 ### Питання, відповідь чи заперечення
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Information question": ["Хто ти?", "Що ти робиш?", "Де книга?", "Коли ти працюєш?"], "Short answer": ["Я студент.", "У Києві.", "Вранці."], "Negative sentence": ["Я не знаю.", "Він не працює.", "Ніхто не говорить."]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Information question": ["Хто ти?", "Що ти робиш?", "Де книга?", "Коли ти працюєш?"], "Short answer": ["Я студент.", "У Києві.", "Вранці."], "Negative sentence": ["Я не знаю.", "Він не працює.", "Ніхто не говорить."]}`)} instruction={"Sort each line by what it does in a conversation."} isUkrainian={false} />
 
 ## 📋 Підсумок
 
@@ -309,11 +309,11 @@ shape **ні в що**, but do not make them your main production task today.
 
 ### Перебудуй заперечення
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "не / Я / знаю", "answer": "Я не знаю"}, {"jumbled": "не / Ти / розумієш", "answer": "Ти не розумієш"}, {"jumbled": "не / хочу / Я / читати", "answer": "Я не хочу читати"}, {"jumbled": "не / можу / Я / піти", "answer": "Я не можу піти"}, {"jumbled": "не / Ніхто / говорить", "answer": "Ніхто не говорить"}, {"jumbled": "нічого / не / Я / знаю", "answer": "Я нічого не знаю"}]`)} />
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "не / Я / знаю", "answer": "Я не знаю"}, {"jumbled": "не / Ти / розумієш", "answer": "Ти не розумієш"}, {"jumbled": "не / хочу / Я / читати", "answer": "Я не хочу читати"}, {"jumbled": "не / можу / Я / піти", "answer": "Я не можу піти"}, {"jumbled": "не / Ніхто / говорить", "answer": "Ніхто не говорить"}, {"jumbled": "нічого / не / Я / знаю", "answer": "Я нічого не знаю"}]`)} instruction={"Put the words in the standard Ukrainian order."} />
 
 ### Склади коротке питання
 
-<Translate client:only='react' questions={JSON.parse(`[{"source": "Who are you?", "options": [{"text": "Хто ти?", "correct": true}, {"text": "Що ти?", "correct": false}, {"text": "Де ти?", "correct": false}], "explanation": "Хто asks for a person."}, {"source": "What are you studying?", "options": [{"text": "Що ти вивчаєш?", "correct": true}, {"text": "Хто ти вивчаєш?", "correct": false}, {"text": "Коли ти вивчаєш?", "correct": false}], "explanation": "Що asks for the topic."}, {"source": "Where do you live?", "options": [{"text": "Де ти живеш?", "correct": true}, {"text": "Куди ти живеш?", "correct": false}, {"text": "Чому ти живеш?", "correct": false}], "explanation": "Де asks for location."}, {"source": "I do not know.", "options": [{"text": "Я не знаю.", "correct": true}, {"text": "Я незнаю.", "correct": false}, {"text": "Я знаю не.", "correct": false}], "explanation": "Write не separately before знаю."}]`)} isUkrainian={false} />
+<Translate client:only='react' questions={JSON.parse(`[{"source": "Who are you?", "options": [{"text": "Хто ти?", "correct": true}, {"text": "Що ти?", "correct": false}, {"text": "Де ти?", "correct": false}], "explanation": "Хто asks for a person."}, {"source": "What are you studying?", "options": [{"text": "Що ти вивчаєш?", "correct": true}, {"text": "Хто ти вивчаєш?", "correct": false}, {"text": "Коли ти вивчаєш?", "correct": false}], "explanation": "Що asks for the topic."}, {"source": "Where do you live?", "options": [{"text": "Де ти живеш?", "correct": true}, {"text": "Куди ти живеш?", "correct": false}, {"text": "Чому ти живеш?", "correct": false}], "explanation": "Де asks for location."}, {"source": "I do not know.", "options": [{"text": "Я не знаю.", "correct": true}, {"text": "Я незнаю.", "correct": false}, {"text": "Я знаю не.", "correct": false}], "explanation": "Write не separately before знаю."}]`)} instruction={"Choose the Ukrainian line that matches the English prompt."} isUkrainian={false} />
 
 ### Знайди книжку
 

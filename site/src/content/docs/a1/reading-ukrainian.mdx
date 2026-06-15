@@ -177,7 +177,7 @@ You do not need every phonetic detail yet. Look at the position of
 
 ### Робота голосних лі́тер
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "А", "right": "чистий [а]"}, {"left": "О", "right": "чистий [о]"}, {"left": "И", "right": "чистий [и]"}, {"left": "І", "right": "чистий [і]"}, {"left": "Я на початку слова", "right": "[йа]"}, {"left": "Ї", "right": "завжди [йі]"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "А", "right": "чистий [а]"}, {"left": "О", "right": "чистий [о]"}, {"left": "И", "right": "чистий [и]"}, {"left": "І", "right": "чистий [і]"}, {"left": "Я на початку слова", "right": "[йа]"}, {"left": "Ї", "right": "завжди [йі]"}]`)} instruction={"З'єднай лі́теру з її першою читацькою роботою."} isUkrainian={false} />
 
 ## Читаємо слова́
 
@@ -303,7 +303,7 @@ is how the alphabet becomes automatic.
 
 ### Мініпереві́рка читання
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Склад — що це?", "options": [{"text": "склад", "correct": true}, {"text": "лі́тера", "correct": false}, {"text": "вітання", "correct": false}], "explanation": "Склад — це один голосовий удар у слові."}, {"question": "Молоко́ — скільки складів?", "options": [{"text": "3", "correct": true}, {"text": "2", "correct": false}, {"text": "1", "correct": false}], "explanation": "Молоко́ має три голосні звуки й три склади́."}, {"question": "Яка літера завжди [йі]?", "options": [{"text": "Ї", "correct": true}, {"text": "І", "correct": false}, {"text": "И", "correct": false}], "explanation": "Ї завжди читаємо як [йі]."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Склад — що це?", "options": [{"text": "склад", "correct": true}, {"text": "лі́тера", "correct": false}, {"text": "вітання", "correct": false}], "explanation": "Склад — це один голосовий удар у слові."}, {"question": "Молоко́ — скільки складів?", "options": [{"text": "3", "correct": true}, {"text": "2", "correct": false}, {"text": "1", "correct": false}], "explanation": "Молоко́ має три голосні звуки й три склади́."}, {"question": "Яка літера завжди [йі]?", "options": [{"text": "Ї", "correct": true}, {"text": "І", "correct": false}, {"text": "И", "correct": false}], "explanation": "Ї завжди читаємо як [йі]."}]`)} instruction={"Обери правильну відповідь."} isUkrainian={false} />
 
 ## Далі
 
@@ -342,19 +342,19 @@ vowel sounds first, then read the whole word.
 
 ### Один, два чи три склади́
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Один склад": ["день", "Львів"], "Два склади́": ["ма́ма", "та́то", "Ки́їв"], "Три склади́": ["молоко́", "ву́лиця", "столи́ця"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Один склад": ["день", "Львів"], "Два склади́": ["ма́ма", "та́то", "Ки́їв"], "Три склади́": ["молоко́", "ву́лиця", "столи́ця"]}`)} instruction={"Розподіли слова за кількістю складів."} isUkrainian={false} />
 
 ### Факти про читання
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Кожен український склад має голосни́й звук.", "isTrue": true, "explanation": "Голосни́й звук — центр складу."}, {"statement": "Ї іноді м'якшить попередній при́голосний.", "isTrue": false, "explanation": "Ї завжди читаємо як [йі]."}, {"statement": "У молоко́ звук о залишається чистим.", "isTrue": true, "explanation": "Не перетворюй о на нечіткий голосни́й."}, {"statement": "ДЖ and ДЗ should be read as joined units.", "isTrue": true, "explanation": "ДЖ і ДЗ читаємо як злиті одиниці."}]`)} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Кожен український склад має голосни́й звук.", "isTrue": true, "explanation": "Голосни́й звук — центр складу."}, {"statement": "Ї іноді м'якшить попередній при́голосний.", "isTrue": false, "explanation": "Ї завжди читаємо як [йі]."}, {"statement": "У молоко́ звук о залишається чистим.", "isTrue": true, "explanation": "Не перетворюй о на нечіткий голосни́й."}, {"statement": "ДЖ and ДЗ should be read as joined units.", "isTrue": true, "explanation": "ДЖ і ДЗ читаємо як злиті одиниці."}]`)} instruction={"Обери правда чи неправда."} isUkrainian={false} />
 
 ### Друк і зошит
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "друк: ма́ма", "right": "зошит: ма́ма"}, {"left": "друк: молоко́", "right": "зошит: молоко́"}, {"left": "друк: день", "right": "зошит: слово з кінцевим ь"}, {"left": "друк: Ки́їв", "right": "зошит: слово з ї"}, {"left": "друк: ву́лиця", "right": "зошит: трискладове слово про місто"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "друк: ма́ма", "right": "зошит: ма́ма"}, {"left": "друк: молоко́", "right": "зошит: молоко́"}, {"left": "друк: день", "right": "зошит: слово з кінцевим ь"}, {"left": "друк: Ки́їв", "right": "зошит: слово з ї"}, {"left": "друк: ву́лиця", "right": "зошит: трискладове слово про місто"}]`)} instruction={"З'єднай друковане слово з підказкою в зо́шиті."} isUkrainian={false} />
 
 ### Повтор голосних
 
-<WatchAndRepeat client:only='react' items={JSON.parse(`[{"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "А", "word": "ма́ма", "sound": "[а]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "О", "word": "молоко́", "sound": "[о]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "У", "word": "ву́лиця", "sound": "[у]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "И", "word": "ми", "sound": "[и]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "І", "word": "ді́ти", "sound": "[і]"}]`)} title="Повтор голосних" />
+<WatchAndRepeat client:only='react' items={JSON.parse(`[{"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "А", "word": "ма́ма", "sound": "[а]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "О", "word": "молоко́", "sound": "[о]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "У", "word": "ву́лиця", "sound": "[у]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "И", "word": "ми", "sound": "[и]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "І", "word": "ді́ти", "sound": "[і]"}]`)} title="Повтор голосних" instruction={"Подивися огляд абетки ще раз, потім повтори прості голосні."} />
 
 </TabItem>
 <TabItem label="Resources">

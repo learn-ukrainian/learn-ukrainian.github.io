@@ -80,7 +80,7 @@ By the end, you can:
 
 ### Choose the clock answer
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "1:00", "options": [{"text": "Перша.", "correct": true}, {"text": "Один година.", "correct": false}, {"text": "О першій.", "correct": false}], "explanation": "Котра година? asks for the clock label: перша."}, {"question": "5:00", "options": [{"text": "П'ята.", "correct": true}, {"text": "П'ять годин.", "correct": false}, {"text": "О п'ятій.", "correct": false}], "explanation": "П'ята is the point on the clock; п'ять годин is duration."}, {"question": "8:00", "options": [{"text": "Восьма.", "correct": true}, {"text": "Вісім годин.", "correct": false}, {"text": "У восьмій.", "correct": false}], "explanation": "Use the feminine ordinal form for the hour."}, {"question": "11:00", "options": [{"text": "Одинадцята.", "correct": true}, {"text": "Об одинадцятій.", "correct": false}, {"text": "Одинадцять годин.", "correct": false}], "explanation": "Одинадцята answers what time it is now."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "1:00", "options": [{"text": "Перша.", "correct": true}, {"text": "Один година.", "correct": false}, {"text": "О першій.", "correct": false}], "explanation": "Котра година? asks for the clock label: перша."}, {"question": "5:00", "options": [{"text": "П'ята.", "correct": true}, {"text": "П'ять годин.", "correct": false}, {"text": "О п'ятій.", "correct": false}], "explanation": "П'ята is the point on the clock; п'ять годин is duration."}, {"question": "8:00", "options": [{"text": "Восьма.", "correct": true}, {"text": "Вісім годин.", "correct": false}, {"text": "У восьмій.", "correct": false}], "explanation": "Use the feminine ordinal form for the hour."}, {"question": "11:00", "options": [{"text": "Одинадцята.", "correct": true}, {"text": "Об одинадцятій.", "correct": false}, {"text": "Одинадцять годин.", "correct": false}], "explanation": "Одинадцята answers what time it is now."}]`)} instruction={"Choose the safe answer to \"Котра година?\""} isUkrainian={false} />
 
 Read these two short phone scenes aloud. They show the two questions you need:
 one question asks what time it is now, and the other asks what time an action
@@ -150,7 +150,7 @@ For noon and midnight, learn the fixed words **опівдні** and **опівн
 
 ### Digital time to Ukrainian chunk
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "2:00", "right": "друга"}, {"left": "4:00", "right": "четверта"}, {"left": "7:00", "right": "сьома"}, {"left": "10:00", "right": "десята"}, {"left": "1:30", "right": "пів на другу"}, {"left": "6:30", "right": "пів на сьому"}, {"left": "7:15", "right": "чверть на восьму"}, {"left": "7:45", "right": "за чверть восьма"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "2:00", "right": "друга"}, {"left": "4:00", "right": "четверта"}, {"left": "7:00", "right": "сьома"}, {"left": "10:00", "right": "десята"}, {"left": "1:30", "right": "пів на другу"}, {"left": "6:30", "right": "пів на сьому"}, {"left": "7:15", "right": "чверть на восьму"}, {"left": "7:45", "right": "за чверть восьма"}]`)} instruction={"Match the digital time with the Ukrainian phrase."} isUkrainian={false} />
 
 ## Котра година?
 
@@ -212,11 +212,11 @@ as a chunk. For your active A1 answer, it is fine to use the simpler
 
 ### Schedule time gaps
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я прокидаюся ___.", "answer": "о сьомій", "options": ["о сьомій", "сьома", "у сім годин"]}, {"sentence": "Ми снідаємо ___.", "answer": "о восьмій", "options": ["о восьмій", "восьма", "у восьму"]}, {"sentence": "Зустріч ___.", "answer": "о другій", "options": ["о другій", "друга", "у два"]}, {"sentence": "Фільм починається ___.", "answer": "об одинадцятій", "options": ["об одинадцятій", "о одинадцятій", "одинадцята"]}, {"sentence": "Обід ___.", "answer": "о першій дня", "options": ["о першій дня", "перша дня", "у один день"]}, {"sentence": "Вечеря ___.", "answer": "о сьомій вечора", "options": ["о сьомій вечора", "сьома вечора", "у сьому вечора"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я прокидаюся ___.", "answer": "о сьомій", "options": ["о сьомій", "сьома", "у сім годин"]}, {"sentence": "Ми снідаємо ___.", "answer": "о восьмій", "options": ["о восьмій", "восьма", "у восьму"]}, {"sentence": "Зустріч ___.", "answer": "о другій", "options": ["о другій", "друга", "у два"]}, {"sentence": "Фільм починається ___.", "answer": "об одинадцятій", "options": ["об одинадцятій", "о одинадцятій", "одинадцята"]}, {"sentence": "Обід ___.", "answer": "о першій дня", "options": ["о першій дня", "перша дня", "у один день"]}, {"sentence": "Вечеря ___.", "answer": "о сьомій вечора", "options": ["о сьомій вечора", "сьома вечора", "у сьому вечора"]}]`)} instruction={"Choose the schedule chunk that completes the sentence."} isUkrainian={false} />
 
 ### Full hour or duration
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Зараз п'ята means it is five o'clock.", "isTrue": true, "explanation": "П'ята is the clock-hour label."}, {"statement": "П'ять годин means five o'clock.", "isTrue": false, "explanation": "П'ять годин means a duration of five hours."}, {"statement": "Котра година? asks for the current time.", "isTrue": true, "explanation": "Answer with перша, друга, третя, and so on."}, {"statement": "О котрій годині? asks when an action happens.", "isTrue": true, "explanation": "Answer with о першій, о другій, о третій."}, {"statement": "Пів на восьму means 7:30.", "isTrue": true, "explanation": "The half-hour chunk looks toward the next hour."}, {"statement": "Пів восьмої is the safe A1 chunk.", "isTrue": false, "explanation": "Use пів на восьму."}]`)} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Зараз п'ята means it is five o'clock.", "isTrue": true, "explanation": "П'ята is the clock-hour label."}, {"statement": "П'ять годин means five o'clock.", "isTrue": false, "explanation": "П'ять годин means a duration of five hours."}, {"statement": "Котра година? asks for the current time.", "isTrue": true, "explanation": "Answer with перша, друга, третя, and so on."}, {"statement": "О котрій годині? asks when an action happens.", "isTrue": true, "explanation": "Answer with о першій, о другій, о третій."}, {"statement": "Пів на восьму means 7:30.", "isTrue": true, "explanation": "The half-hour chunk looks toward the next hour."}, {"statement": "Пів восьмої is the safe A1 chunk.", "isTrue": false, "explanation": "Use пів на восьму."}]`)} instruction={"Decide whether each note is safe for this lesson."} isUkrainian={false} />
 
 ## О котрій?
 
@@ -371,7 +371,7 @@ schedule.
 
 ### What job does the phrase do?
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Clock answer": ["перша", "п'ята", "десята", "дванадцята"], "Schedule answer": ["о першій", "о п'ятій", "об одинадцятій", "о дванадцятій"], "Time of day": ["ранку", "дня", "вечора", "ночі"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Clock answer": ["перша", "п'ята", "десята", "дванадцята"], "Schedule answer": ["о першій", "о п'ятій", "об одинадцятій", "о дванадцятій"], "Time of day": ["ранку", "дня", "вечора", "ночі"]}`)} instruction={"Sort each phrase by its time job."} isUkrainian={false} />
 
 ### Set the meeting time
 
@@ -379,7 +379,7 @@ schedule.
 
 ### Build a safe time line
 
-<Translate client:only='react' questions={JSON.parse(`[{"source": "It is seven now.", "options": [{"text": "Зараз сьома.", "correct": true}, {"text": "Зараз сім годин.", "correct": false}, {"text": "Зараз є сім.", "correct": false}], "explanation": "Clock time uses the ordinal hour word."}, {"source": "I wake up at seven in the morning.", "options": [{"text": "Я прокидаюся о сьомій ранку.", "correct": true}, {"text": "Я прокидаюся у сім годин.", "correct": false}, {"text": "Я прокидаюся сьома ранку.", "correct": false}], "explanation": "A schedule uses о сьомій."}, {"source": "The meeting is at two.", "options": [{"text": "Зустріч о другій.", "correct": true}, {"text": "Зустріч у дві години.", "correct": false}, {"text": "Зустріч друга.", "correct": false}], "explanation": "Use о другій for the planned time."}, {"source": "It is half past six.", "options": [{"text": "Пів на сьому.", "correct": true}, {"text": "Пів сьомої.", "correct": false}, {"text": "Половина після шостої.", "correct": false}], "explanation": "The safe chunk is пів на + next hour."}]`)} isUkrainian={false} />
+<Translate client:only='react' questions={JSON.parse(`[{"source": "It is seven now.", "options": [{"text": "Зараз сьома.", "correct": true}, {"text": "Зараз сім годин.", "correct": false}, {"text": "Зараз є сім.", "correct": false}], "explanation": "Clock time uses the ordinal hour word."}, {"source": "I wake up at seven in the morning.", "options": [{"text": "Я прокидаюся о сьомій ранку.", "correct": true}, {"text": "Я прокидаюся у сім годин.", "correct": false}, {"text": "Я прокидаюся сьома ранку.", "correct": false}], "explanation": "A schedule uses о сьомій."}, {"source": "The meeting is at two.", "options": [{"text": "Зустріч о другій.", "correct": true}, {"text": "Зустріч у дві години.", "correct": false}, {"text": "Зустріч друга.", "correct": false}], "explanation": "Use о другій for the planned time."}, {"source": "It is half past six.", "options": [{"text": "Пів на сьому.", "correct": true}, {"text": "Пів сьомої.", "correct": false}, {"text": "Половина після шостої.", "correct": false}], "explanation": "The safe chunk is пів на + next hour."}]`)} instruction={"Choose the Ukrainian line that matches the English prompt."} isUkrainian={false} />
 
 ### Repair time traps
 

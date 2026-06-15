@@ -78,7 +78,7 @@ By the end, you can:
 
 ### Одна річ, багато речей
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "стіл", "options": [{"text": "столи", "correct": true}, {"text": "стіла", "correct": false}, {"text": "стілів", "correct": false}], "explanation": "Learn the pair стіл - столи."}, {"question": "книга", "options": [{"text": "книги", "correct": true}, {"text": "книгі", "correct": false}, {"text": "книга", "correct": false}], "explanation": "Книга becomes книги."}, {"question": "вікно", "options": [{"text": "вікна", "correct": true}, {"text": "вікни", "correct": false}, {"text": "вікні", "correct": false}], "explanation": "Many neuter nouns ending in -о use -а."}, {"question": "стілець", "options": [{"text": "стільці", "correct": true}, {"text": "стілеці", "correct": false}, {"text": "стільця", "correct": false}], "explanation": "Learn стілець - стільці as its own pair."}, {"question": "крісло", "options": [{"text": "крісла", "correct": true}, {"text": "крісли", "correct": false}, {"text": "кріслі", "correct": false}], "explanation": "Крісло becomes крісла."}, {"question": "ручка", "options": [{"text": "ручки", "correct": true}, {"text": "ручкі", "correct": false}, {"text": "ручка", "correct": false}], "explanation": "Ручка becomes ручки."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "стіл", "options": [{"text": "столи", "correct": true}, {"text": "стіла", "correct": false}, {"text": "стілів", "correct": false}], "explanation": "Learn the pair стіл - столи."}, {"question": "книга", "options": [{"text": "книги", "correct": true}, {"text": "книгі", "correct": false}, {"text": "книга", "correct": false}], "explanation": "Книга becomes книги."}, {"question": "вікно", "options": [{"text": "вікна", "correct": true}, {"text": "вікни", "correct": false}, {"text": "вікні", "correct": false}], "explanation": "Many neuter nouns ending in -о use -а."}, {"question": "стілець", "options": [{"text": "стільці", "correct": true}, {"text": "стілеці", "correct": false}, {"text": "стільця", "correct": false}], "explanation": "Learn стілець - стільці as its own pair."}, {"question": "крісло", "options": [{"text": "крісла", "correct": true}, {"text": "крісли", "correct": false}, {"text": "кріслі", "correct": false}], "explanation": "Крісло becomes крісла."}, {"question": "ручка", "options": [{"text": "ручки", "correct": true}, {"text": "ручкі", "correct": false}, {"text": "ручка", "correct": false}], "explanation": "Ручка becomes ручки."}]`)} instruction={"Choose the plural chunk."} isUkrainian={false} />
 
 The classroom is getting ready for a Ukrainian lesson. Several things are on
 the tables, so the first job is simple: name one thing, then name many.
@@ -160,7 +160,7 @@ need **мій / моя / моє** or **який / яка / яке**. Use the plu
 
 ### Пари однини й множини
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "стіл", "right": "столи"}, {"left": "книга", "right": "книги"}, {"left": "вікно", "right": "вікна"}, {"left": "стілець", "right": "стільці"}, {"left": "телефон", "right": "телефони"}, {"left": "зошит", "right": "зошити"}, {"left": "лампа", "right": "лампи"}, {"left": "дзеркало", "right": "дзеркала"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "стіл", "right": "столи"}, {"left": "книга", "right": "книги"}, {"left": "вікно", "right": "вікна"}, {"left": "стілець", "right": "стільці"}, {"left": "телефон", "right": "телефони"}, {"left": "зошит", "right": "зошити"}, {"left": "лампа", "right": "лампи"}, {"left": "дзеркало", "right": "дзеркала"}]`)} instruction={"Match one thing with many things."} isUkrainian={false} />
 
 ## Один → багато
 
@@ -208,7 +208,7 @@ behaving like singular words. Do not force a plural ending onto them.
 
 ### Закінчення прикметника в множині
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "нов__ книги", "answer": "і", "options": ["і", "а", "ий"]}, {"sentence": "велик__ столи", "answer": "і", "options": ["і", "ий", "е"]}, {"sentence": "чист__ вікна", "answer": "і", "options": ["і", "е", "а"]}, {"sentence": "син__ зошити", "answer": "і", "options": ["і", "я", "є"]}, {"sentence": "літн__ дні", "answer": "і", "options": ["і", "ій", "я"]}, {"sentence": "осінн__ ранки", "answer": "і", "options": ["і", "я", "є"]}, {"sentence": "червон__ ручки", "answer": "і", "options": ["і", "а", "ий"]}, {"sentence": "жовт__ лампи", "answer": "і", "options": ["і", "а", "е"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "нов__ книги", "answer": "і", "options": ["і", "а", "ий"]}, {"sentence": "велик__ столи", "answer": "і", "options": ["і", "ий", "е"]}, {"sentence": "чист__ вікна", "answer": "і", "options": ["і", "е", "а"]}, {"sentence": "син__ зошити", "answer": "і", "options": ["і", "я", "є"]}, {"sentence": "літн__ дні", "answer": "і", "options": ["і", "ій", "я"]}, {"sentence": "осінн__ ранки", "answer": "і", "options": ["і", "я", "є"]}, {"sentence": "червон__ ручки", "answer": "і", "options": ["і", "а", "ий"]}, {"sentence": "жовт__ лампи", "answer": "і", "options": ["і", "а", "е"]}]`)} instruction={"Choose the ending that makes the adjective plural."} isUkrainian={false} />
 
 ## Прикметники у множині
 
@@ -295,7 +295,7 @@ grammar table.
 
 ### Ці, ті, мої, які
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "These tables are big.", "options": [{"text": "Ці столи великі.", "correct": true}, {"text": "Цей столи великі.", "correct": false}, {"text": "Ця столи великі.", "correct": false}], "explanation": "Use ці with plural nouns near you."}, {"question": "Those chairs are old.", "options": [{"text": "Ті стільці старі.", "correct": true}, {"text": "Той стільці старі.", "correct": false}, {"text": "Та стільці старі.", "correct": false}], "explanation": "Use ті for plural nouns farther away."}, {"question": "My notebooks are blue.", "options": [{"text": "Мої зошити сині.", "correct": true}, {"text": "Мій зошити сині.", "correct": false}, {"text": "Моя зошити сині.", "correct": false}], "explanation": "The plural form of my is мої."}, {"question": "Which pens?", "options": [{"text": "Які ручки?", "correct": true}, {"text": "Яка ручки?", "correct": false}, {"text": "Який ручки?", "correct": false}], "explanation": "The plural question word is які."}, {"question": "These books are new.", "options": [{"text": "Ці книги нові.", "correct": true}, {"text": "Це книги нове.", "correct": false}, {"text": "Ця книги нова.", "correct": false}], "explanation": "Use plural ці and plural нові."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "These tables are big.", "options": [{"text": "Ці столи великі.", "correct": true}, {"text": "Цей столи великі.", "correct": false}, {"text": "Ця столи великі.", "correct": false}], "explanation": "Use ці with plural nouns near you."}, {"question": "Those chairs are old.", "options": [{"text": "Ті стільці старі.", "correct": true}, {"text": "Той стільці старі.", "correct": false}, {"text": "Та стільці старі.", "correct": false}], "explanation": "Use ті for plural nouns farther away."}, {"question": "My notebooks are blue.", "options": [{"text": "Мої зошити сині.", "correct": true}, {"text": "Мій зошити сині.", "correct": false}, {"text": "Моя зошити сині.", "correct": false}], "explanation": "The plural form of my is мої."}, {"question": "Which pens?", "options": [{"text": "Які ручки?", "correct": true}, {"text": "Яка ручки?", "correct": false}, {"text": "Який ручки?", "correct": false}], "explanation": "The plural question word is які."}, {"question": "These books are new.", "options": [{"text": "Ці книги нові.", "correct": true}, {"text": "Це книги нове.", "correct": false}, {"text": "Ця книги нова.", "correct": false}], "explanation": "Use plural ці and plural нові."}]`)} instruction={"Choose the plural helper."} isUkrainian={false} />
 
 ## 📋 Підсумок
 
@@ -393,15 +393,15 @@ and asking.
 
 ### Однина, звичайна множина, форма з числом
 
-<GroupSort client:only='react' groups={JSON.parse(`{"One thing": ["стіл", "книга", "вікно", "стілець"], "Ordinary plural": ["столи", "книги", "вікна", "стільці"], "Special number chunk": ["п'ять зошитів", "десять учнів", "сто гривень", "двоє дверей"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"One thing": ["стіл", "книга", "вікно", "стілець"], "Ordinary plural": ["столи", "книги", "вікна", "стільці"], "Special number chunk": ["п'ять зошитів", "десять учнів", "сто гривень", "двоє дверей"]}`)} instruction={"Sort each chunk by what it shows."} isUkrainian={false} />
 
 ### Фрази про людей
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "we", "right": "ми"}, {"left": "you, plural or formal", "right": "ви"}, {"left": "for us", "right": "для нас"}, {"left": "for you", "right": "для вас"}, {"left": "we need", "right": "нам треба"}, {"left": "you need", "right": "вам треба"}, {"left": "with us", "right": "з нами"}, {"left": "with you", "right": "з вами"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "we", "right": "ми"}, {"left": "you, plural or formal", "right": "ви"}, {"left": "for us", "right": "для нас"}, {"left": "for you", "right": "для вас"}, {"left": "we need", "right": "нам треба"}, {"left": "you need", "right": "вам треба"}, {"left": "with us", "right": "з нами"}, {"left": "with you", "right": "з вами"}]`)} instruction={"Match the English prompt with the Ukrainian chunk."} isUkrainian={false} />
 
 ### Фрази з числами
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "два ___", "answer": "зошити", "options": ["зошити", "зошитів", "зошит"]}, {"sentence": "три ___", "answer": "книги", "options": ["книги", "книг", "книга"]}, {"sentence": "чотири ___", "answer": "смартфони", "options": ["смартфони", "смартфонів", "смартфон"]}, {"sentence": "п'ять ___", "answer": "зошитів", "options": ["зошитів", "зошити", "зошит"]}, {"sentence": "десять ___", "answer": "учнів", "options": ["учнів", "учні", "учень"]}, {"sentence": "сто ___", "answer": "гривень", "options": ["гривень", "гривні", "гривня"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "два ___", "answer": "зошити", "options": ["зошити", "зошитів", "зошит"]}, {"sentence": "три ___", "answer": "книги", "options": ["книги", "книг", "книга"]}, {"sentence": "чотири ___", "answer": "смартфони", "options": ["смартфони", "смартфонів", "смартфон"]}, {"sentence": "п'ять ___", "answer": "зошитів", "options": ["зошитів", "зошити", "зошит"]}, {"sentence": "десять ___", "answer": "учнів", "options": ["учнів", "учні", "учень"]}, {"sentence": "сто ___", "answer": "гривень", "options": ["гривень", "гривні", "гривня"]}]`)} instruction={"Choose the noun chunk after the number."} isUkrainian={false} />
 
 <span id="repair-traps"></span>
 

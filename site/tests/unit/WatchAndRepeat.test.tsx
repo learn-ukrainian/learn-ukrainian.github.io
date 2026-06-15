@@ -105,6 +105,11 @@ describe('WatchAndRepeat initial render', () => {
     render(<WatchAndRepeat items={items} title="My Custom Title" />);
     expect(screen.getByText('My Custom Title')).toBeInTheDocument();
   });
+
+  test('renders instruction text when provided', () => {
+    render(<WatchAndRepeat items={items} instruction="Watch once, then repeat aloud." />);
+    expect(screen.getByText('Watch once, then repeat aloud.')).toBeInTheDocument();
+  });
 });
 
 describe('WatchAndRepeat play button interaction', () => {

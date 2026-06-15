@@ -42,6 +42,11 @@ interface WatchAndRepeatProps {
    */
   title?: string;
   /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
+  instruction?: string;
+  /**
    * @schemaDescription UI language flag for Ukrainian labels and feedback.
    * @ukrainianText false
    */
@@ -56,6 +61,7 @@ function extractVideoId(url: string): string | null {
 export default function WatchAndRepeat({
   items,
   title,
+  instruction,
   isUkrainian = true,
 }: WatchAndRepeatProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -90,6 +96,9 @@ export default function WatchAndRepeat({
         <span className={styles.activityIcon}>🔊</span>
         <span>{headerLabel}</span>
       </div>
+      {instruction && (
+        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      )}
 
       <div className={directStyles.warProgress} data-activity="war-progress">
         <span>
