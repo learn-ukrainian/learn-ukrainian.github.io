@@ -7971,7 +7971,7 @@ def _find_exact_reviewer_fix_span(
     offset = text.find(anchor)
     if offset < 0:
         return None
-    return _trim_reviewer_fix_boundary_span(text, (offset, offset + len(anchor)))
+    return offset, offset + len(anchor)
 
 
 def _find_unique_reviewer_fix_normalized_span(

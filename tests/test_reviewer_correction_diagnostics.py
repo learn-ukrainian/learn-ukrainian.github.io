@@ -110,6 +110,26 @@ def test_reviewer_fix_trailing_boundary_whitespace_is_not_replaced() -> None:
     assert result.unmatched_anchors == frozenset()
 
 
+def test_reviewer_fix_exact_match_replaces_full_trailing_space_span() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "foo  bar",
+        [{"find": "foo  ", "replace": "foo "}],
+    )
+
+    assert result.text == "foo bar"
+    assert result.unmatched_anchors == frozenset()
+
+
+def test_reviewer_fix_exact_delete_replaces_full_trailing_space_span() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "foo bar",
+        [{"find": "foo ", "replace": ""}],
+    )
+
+    assert result.text == "bar"
+    assert result.unmatched_anchors == frozenset()
+
+
 def test_reviewer_fix_leading_boundary_whitespace_is_not_replaced() -> None:
     result = linear_pipeline._apply_reviewer_fixes(
         "Intro\n\ntarget",
@@ -143,7 +163,7 @@ def test_reviewer_insert_after_trailing_boundary_does_not_match_inside_larger_wo
 def test_reviewer_fix_literal_trailing_boundary_space_preserves_space() -> None:
     result = linear_pipeline._apply_reviewer_fixes(
         "Intro: target retail\n",
-        [{"find": "target ", "replace": "FIXED"}],
+        [{"find": "target ", "replace": "FIXED "}],
     )
 
     assert result.text == "Intro: FIXED retail\n"
