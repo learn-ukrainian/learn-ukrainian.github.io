@@ -19,6 +19,11 @@ By the end, you can:
 Keep the goal small. You are not learning a full adjective or case system.
 You are learning to store a noun with its gender cue.
 
+:::tip
+Treat gender as part of the noun card. Do not ask, "Who owns it?" Ask, "What
+chunk travels with this noun: **мій**, **моя**, or **моє**?"
+:::
+
 <!--
 Крок 1. Концепція «Хто?» і «Що?» та базові займенники. Спочатку вводиться концепція іменника як слова, що називає предмет. Учні вчаться розрізняти питання «Хто?» (істоти: людина, тварина) і «Що?» (неістоти: предмети, явища) [S5]. На цьому ж етапі вводяться особові займенники «він», «вона», «воно». Завдання автора-письменника — створити достатню кількість вправ, де учні просто тренуються ставити правильне питання до зображення чи слова [S5].
 Крок 2. Рід істот (біологічна стать дорівнює граматичному роду). Наступний крок — пояснити рід на прикладі людей. Тут англомовному учневі найлегше, адже граматичний рід збігається з біологічною статтю. Використовуються слова-маркери «мій/він» для чоловіків (тато, брат, син, співак) та «моя/вона» для жінок (мати, сестра, дочка, співачка) [S2]. Важливо показати, як утворюються парні назви істот, наприклад: малюк — маля, соліст — солістка [S2]. На цьому етапі учні вчаться конструкціям на кшталт «Це мій брат Назар. Він архітектор» або «Це моя сестра Оксана. Вона студентка» [S8]. Обов'язково вказується правильна форма: тато, а не російський відповідник [S8].
@@ -59,6 +64,8 @@ But things also have gender:
 | **книга** | book | **вона** | **моя книга** |
 | **вікно** | window | **воно** | **моє вікно** |
 
+<!-- INJECT_ACTIVITY: act-2 -->
+
 Do not ask whether the speaker is a man or a woman. Ask what gender the
 Ukrainian noun has. **Мій стіл** is the same if the owner is Olena, Marko, or
 you.
@@ -83,6 +90,13 @@ from the ending. You have already seen one important pattern: **тато** and
 **батько** are masculine because they name a male person. Later you will learn
 more exceptions. Today you only need a safe beginner reaction: if a word does
 not fit the easy pattern, learn it as a chunk.
+
+<!-- INJECT_ACTIVITY: act-5 -->
+
+:::tip
+The ending rule is a first guess, not a debate. If this lesson gives you a safe
+chunk such as **мій тато** or **мій собака**, store the whole chunk.
+:::
 
 One high-value exception is **собака**. In Ukrainian, use **він** and
 **мій собака**. For father, keep the course words **тато** and **батько**.
