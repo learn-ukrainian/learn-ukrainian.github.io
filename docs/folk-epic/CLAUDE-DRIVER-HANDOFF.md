@@ -91,20 +91,24 @@ Fired a fresh koliadky `--no-resume` build on main-with-all-4-fixes. **Result: A
    `citations unknown`: only the anonymous народна-творчість primary (no plan `[S#]` ref / no author → can't containment-resolve).
    `word_count`: **4469/4600 — nearly solved** (writer wrote more this build; ~131 short).
 
-### ▶ THE REMAINING WORK = C.3, now EMPIRICALLY SCOPED (the next session's primary epic-piece)
-The build converts "we think C.3 is needed" into "here is exactly the churn/divergence + long-tail that proves it." C.3 has 3 parts:
-1. **Best-round + MIN-guard on the python_qg correction loop** (port `scripts/common/review_loop.py` — ALREADY built for wiki+B1 — into
-   `run_python_qg_with_corrections`, `linear_pipeline.py:5619`; the single-shot wall is L5662). This STOPS the divergence (keep the 4-miss
-   round, never commit the churned 8-miss tail). Highest-leverage, reuses tested machinery.
-2. **Cross-model fixer route** for genuine coinages/calques (`дерево-явір`/`дерево-вісь`/`спільнолюдський`, `непринята`/`хранительками`) —
-   rephrase, not find/replace (find/replace is what churns). The manual recipe used codex; wire it as the automated fixer (design §3 Part C.3).
-3. **A few clean deterministic long-tail exemptions** that ARE legit (not whack-a-mole — these are objective metalinguistic non-word classes):
-   **Roman numerals** (`ХІХ`/`XVIII`…), **anonymous folk-tradition primary citations** (`«…» (народна творчість)` — recognize as a known
-   anonymous-primary category OR auto-register the #3162-embedded primary as a plan ref), and **cited UA author surnames** (extend
-   `PROPER_NAME_WHITELIST`/attestation to surnames in citation context). `непринята`/`хранительками` calques → route to #3098.
-**Each gate-loosening change MUST go through `ab ask-codex` adversarial review before self-merge (5/5 caught real over-exemption bugs).**
+### ▶ C.3 STATUS — part 1 (loop) MERGED; parts 2+3 remain (RESUME HERE)
+C.3 has 3 parts. **Part 1 is DONE:**
+1. ✅ **Bounded multi-gate loop + best-round/MIN-guard MERGED (#3307, main `aba50e8e5e`).** `run_python_qg_with_corrections` now
+   iterates across rotating gates within a round budget, snapshots the FULL writer-artifact set per round, and restores the
+   fewest-violation (best) round instead of the churned last round. codex review APPROVED first-pass (core no-op verified;
+   full-artifact snapshot/restore — no mixed rounds; PASS-wins; bounds + regression guard; ADR-007 clean). This STOPS the
+   divergence the verification build exposed (vesum misses had grown 4→8).
+2. ⏳ **Cross-model fixer route** for genuine coinages/calques (`дерево-явір`/`дерево-вісь`/`спільнолюдський`, `непринята`/`хранительками`)
+   — REPHRASE, not find/replace (find/replace is what churns). Wire a cross-model agent (codex) as the automated fixer the best-round
+   loop invokes for coinage/calque gates (design §3 Part C.3). **Biggest remaining piece.** Calques `непринята`/`хранительками` also → #3098.
+3. ⏳ **Clean deterministic long-tail exemptions** (legit finite metalinguistic non-word classes, NOT whack-a-mole) — **DISPATCHED this
+   session** (`folk-3079-c3-longtail`): **Roman numerals** (`ХІХ`/`XVIII`…) + **anonymous folk-tradition primary citations**
+   (`«…» (народна творчість)` — recognize anonymous-primary OR auto-register the #3162-embedded primary as a plan ref). **Cited UA author
+   surnames** (`Вільговського`) deferred (open class — extend `PROPER_NAME_WHITELIST`/attestation, or let the cross-model fixer handle).
+   `сновати` — check if it's a C.2a gap (it's in the col) or heritage.
+**Each gate-loosening change MUST go through `ab ask-codex` adversarial review before self-merge (6/6 caught real over-exemption bugs so far).**
 **THEN re-run** `v7_build.py folk koliadky-shchedrivky --no-resume --worktree` — confirm it CLEARS python_qg + reaches B1 at pedagogical ≥8.
-Only then is B1 validated e2e. (word_count is nearly there; the writer may clear it once the loop stops churning.)
+Only then is B1 validated e2e. (word_count was 4469/4600 — nearly there; the writer may clear it once the loop stops churning.)
 
 ### 🔑 THE KEY FINDING — Session-38's "P3-validate" never validated anything (resume no-op), and the REAL P3-validate proves Gap C is gate FALSE-POSITIVES
 - **Session-38's in-flight build silently NO-OP'd.** `v7_build.py` **resumes by default** (`v7_build.py:1289`); the build
