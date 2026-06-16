@@ -749,7 +749,9 @@ _TF_NEGATIVE_EXAMPLE_RE = re.compile(
 # citation mark): the negator `не/not` already explicitly marks the form wrong, so
 # it is allowed to strip any quote style; `як/as/like` is a weaker "such as"
 # signal, so it requires the strong «»-citation mark and will NOT exempt a
-# straight-quoted or italicised span. A bare (un-cited) invalid form still fails.
+# straight-quoted or italicised span. A bare (un-cited) invalid form still fails
+# unless the seminar-only verified-primary citation guard below can resolve the
+# exact normalized token back to the module's quote-fidelity-verified primary.
 _WARNING_QUOTE_RE = re.compile(
     r"\b(?:"
     # Negator frame ("say X, not Y") — Y is marked wrong; all three quote styles.
@@ -766,6 +768,14 @@ _WARNING_QUOTE_RE = re.compile(
     r")",
     re.IGNORECASE,
 )
+_BARE_PRIMARY_CITATION_WORD_BOUNDARY = r"0-9A-Za-zА-Яа-яҐґЄєІіЇї_ʼ’'-"
+_BARE_PRIMARY_CITATION_RE = re.compile(
+    r"«(?P<guillemet>[^»\n]+)»"
+    r"|(?<![" + _BARE_PRIMARY_CITATION_WORD_BOUNDARY + r"])'"
+    r"(?P<single>(?:[^'\n]|'(?=[" + _BARE_PRIMARY_CITATION_WORD_BOUNDARY + r"]))+)'"
+    r"(?![" + _BARE_PRIMARY_CITATION_WORD_BOUNDARY + r"])"
+)
+_BARE_PRIMARY_CITATION_GROUPS = ("guillemet", "single")
 
 _STANDALONE_POSTFIX_FRAGMENTS = frozenset({"ся", "сь", "тся", "тсь", "ться", "шся", "шсь", "чся", "чсь"})
 
@@ -10193,15 +10203,25 @@ def _build_vesum_text(
             level=level,
         )
         module_text = _strip_quote_fidelity_verified_blockquotes(module_text, level=level)
+    verified_primary_token_keys = _verified_primary_token_keys(verified_primary_texts)
+    if strip_verbatim_primaries:
+        module_text = _strip_verified_primary_bare_citations(
+            module_text,
+            verified_primary_token_keys=verified_primary_token_keys,
+        )
     parts = [_strip_metalinguistic(module_text)]
     strip_activity_field: Callable[[str], str] | None = None
     if strip_verbatim_primaries:
 
         def strip_activity_field(value: str) -> str:
-            return _strip_vesum_verbatim_primary_spans(
+            value = _strip_vesum_verbatim_primary_spans(
                 value,
                 level=level,
                 verified_primary_texts=verified_primary_texts,
+            )
+            return _strip_verified_primary_bare_citations(
+                value,
+                verified_primary_token_keys=verified_primary_token_keys,
             )
 
     for activity in activities:
@@ -10220,6 +10240,10 @@ def _build_vesum_text(
                     usage,
                     level=level,
                     verified_primary_texts=verified_primary_texts,
+                )
+                usage = _strip_verified_primary_bare_citations(
+                    usage,
+                    verified_primary_token_keys=verified_primary_token_keys,
                 )
             parts.append(_strip_metalinguistic(usage))
     for entry in resources:
@@ -11006,6 +11030,37 @@ def _textbook_match_token_spans(text: str) -> list[_MatchToken]:
         if token:
             tokens.append(_MatchToken(token, match.start(), match.end()))
     return tokens
+
+
+def _verified_primary_token_keys(verified_primary_texts: Sequence[str]) -> frozenset[str]:
+    return frozenset(
+        token.text
+        for source_text in verified_primary_texts
+        for token in _textbook_match_token_spans(source_text)
+    )
+
+
+def _strip_verified_primary_bare_citations(
+    text: str,
+    *,
+    verified_primary_token_keys: Collection[str],
+) -> str:
+    """Blank quote-delimited tokens only when they occur in verified primaries."""
+    if not text or not verified_primary_token_keys:
+        return text
+
+    spans: list[tuple[int, int]] = []
+    for match in _BARE_PRIMARY_CITATION_RE.finditer(text):
+        group_name = next(
+            name
+            for name in _BARE_PRIMARY_CITATION_GROUPS
+            if match.group(name) is not None
+        )
+        inner_start = match.start(group_name)
+        for token in _textbook_match_token_spans(match.group(group_name)):
+            if token.text in verified_primary_token_keys:
+                spans.append((inner_start + token.start, inner_start + token.end))
+    return _blank_text_spans(text, spans)
 
 
 def _merge_text_spans(spans: Sequence[tuple[int, int]]) -> list[tuple[int, int]]:

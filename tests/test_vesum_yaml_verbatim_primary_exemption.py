@@ -90,6 +90,142 @@ def test_module_primary_cross_reference_does_not_need_corpus(monkeypatch) -> Non
     assert "било" not in text
 
 
+def test_bare_dialect_citations_from_verified_primary_are_exempted(monkeypatch) -> None:
+    monkeypatch.setattr(linear_pipeline, "_search_literary_hits", lambda *args, **kwargs: [])
+    monkeypatch.setattr(
+        linear_pipeline,
+        "_resolve_folk_heritage_attested_missing",
+        lambda *args, **kwargs: set(),
+    )
+    sent_for_verification: set[str] = set()
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        sent_for_verification.update(words)
+        dialect_forms = {"било", "лем", "нащада"}
+        return {
+            word: ([] if word in dialect_forms else [{"lemma": word}])
+            for word in words
+        }
+
+    module_text = """
+## Primary
+
+> Коли не било з нащада світа, лем синє море.
+>
+> *— Грушевський [S1]*
+"""
+    result = linear_pipeline._vesum_gate(
+        module_text=module_text,
+        activities=[
+            {
+                "type": "analysis",
+                "prompt": (
+                    "Діалектні форми («било» / «було», «лем», «з нащада») "
+                    "працюють як цитати первинного тексту."
+                ),
+            }
+        ],
+        vocabulary=[],
+        resources=[],
+        level="folk",
+        verify_words_fn=verify_words,
+    )
+
+    assert result["passed"] is True
+    assert not {"било", "лем", "нащада"} & sent_for_verification
+
+
+def test_italic_emphasis_does_not_bypass_vesum_check(monkeypatch) -> None:
+    monkeypatch.setattr(linear_pipeline, "_search_literary_hits", lambda *args, **kwargs: [])
+    monkeypatch.setattr(
+        linear_pipeline,
+        "_resolve_folk_heritage_attested_missing",
+        lambda *args, **kwargs: set(),
+    )
+    sent_for_verification: set[str] = set()
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        sent_for_verification.update(words)
+        return {word: ([] if word == "било" else [{"lemma": word}]) for word in words}
+
+    result = linear_pipeline._vesum_gate(
+        module_text=KOLIADKY_MODULE,
+        activities=[
+            {
+                "type": "analysis",
+                "prompt": "Поясніть, чому свято *било* важливим для громади.",
+            }
+        ],
+        vocabulary=[],
+        resources=[],
+        level="folk",
+        verify_words_fn=verify_words,
+    )
+
+    missing_keys = {
+        linear_pipeline._normalize_for_vesum(surface).lower()
+        for surface in result["missing"]
+    }
+    assert result["passed"] is False
+    assert "било" in missing_keys
+    assert "било" in sent_for_verification
+
+
+def test_bare_citations_not_in_verified_primary_still_checked(monkeypatch) -> None:
+    monkeypatch.setattr(linear_pipeline, "_search_literary_hits", lambda *args, **kwargs: [])
+    monkeypatch.setattr(
+        linear_pipeline,
+        "_resolve_folk_heritage_attested_missing",
+        lambda *args, **kwargs: set(),
+    )
+    sent_for_verification: set[str] = set()
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        sent_for_verification.update(words)
+        return {
+            word: ([] if word == "привітаннячкоз" else [{"lemma": word}])
+            for word in words
+        }
+
+    result = linear_pipeline._vesum_gate(
+        module_text=KOLIADKY_MODULE,
+        activities=[
+            {
+                "type": "analysis",
+                "prompt": (
+                    "Термін «вживають» не є цитатою з первинного тексту, "
+                    "а «привітаннячкоз» має лишитися VESUM-помилкою."
+                ),
+            }
+        ],
+        vocabulary=[],
+        resources=[],
+        level="folk",
+        verify_words_fn=verify_words,
+    )
+
+    assert result["passed"] is False
+    assert result["missing"] == ["привітаннячкоз"]
+    assert {"вживають", "привітаннячкоз"} <= sent_for_verification
+
+
+def test_core_level_bare_primary_citation_is_not_exempted(monkeypatch) -> None:
+    def fail_literary_search(*args: object, **kwargs: object) -> list[dict[str, str]]:
+        raise AssertionError("core levels must not use literary primary stripping")
+
+    monkeypatch.setattr(linear_pipeline, "_search_literary_hits", fail_literary_search)
+
+    text = linear_pipeline._build_vesum_text(
+        KOLIADKY_MODULE,
+        [{"type": "analysis", "prompt": "Форма «било» згадана як приклад."}],
+        [],
+        [],
+        level="a1",
+    )
+
+    assert text.count("било") == KOLIADKY_MODULE.count("било") + 1
+
+
 def test_vocabulary_usage_primary_span_is_stripped(monkeypatch) -> None:
     monkeypatch.setattr(
         linear_pipeline,
