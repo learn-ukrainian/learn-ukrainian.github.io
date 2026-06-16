@@ -147,6 +147,10 @@ def _clean_gloss(gloss: str) -> str:
     unchanged so good glosses keep their exact formatting.
     """
     g = gloss.strip()
+    if ":" in g:
+        prefix, suffix = g.split(":", 1)
+        if _is_meta_clause(prefix):
+            return _clean_gloss(suffix) if suffix.strip() else ""
     clauses = _CLAUSE_SPLIT_RE.split(g)
     if len(clauses) == 1:
         return "" if _is_meta_clause(g) else g

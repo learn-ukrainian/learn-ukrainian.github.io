@@ -29,6 +29,7 @@ from scripts.lexicon.enrich_manifest import (
     _meaning,
     _merge_slovnyk_warning,
     _morphology,
+    _parse_translations,
     _sense_correct_synonyms,
     _slovnyk_cache,
     _SlovnykTransientError,
@@ -1561,6 +1562,18 @@ def test_translation_matches_stress_stripped_dmklinger_headword(monkeypatch) -> 
         "source": "dmklinger",
         "pos": "noun",
     }
+
+
+def test_parse_translations_cleans_dmklinger_meta_glosses() -> None:
+    raw = json.dumps(
+        [
+            "Alternative form of кабачо́к: zucchini",
+            "plain translation",
+            "common misspelling of Строго́нівка (Strohónivka)",
+        ]
+    )
+
+    assert _parse_translations(raw) == ["zucchini", "plain translation"]
 
 
 def test_translation_returns_none_when_lemma_absent(monkeypatch) -> None:

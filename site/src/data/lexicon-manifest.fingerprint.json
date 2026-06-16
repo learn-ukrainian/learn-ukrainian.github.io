@@ -1,5 +1,5 @@
 {
-  "fingerprint": "eeba55287678ee0bef787ec29ad6b13f9b99d3de3f74f3c8aff285918447b8c0",
+  "fingerprint": "77b6e9aff2c648984ab2ec685e29b57cda3e3dfed6c67b3e188f2182914e570c",
   "inputs": {
     "lexicon_code": [
       {
@@ -16,7 +16,7 @@
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",
-        "sha256": "239667a7428d1d899443063169d4128cb13a034e4ba9af006edfb6ebd6da253f"
+        "sha256": "b817d96950978748ace7fa556c6ff91dd583de092aa665205df1c2a42f622039"
       },
       {
         "path": "scripts/lexicon/build_slovnyk_mirror.py",
@@ -36,7 +36,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "d08a0227aa4118f967b6d863d21ed66aa5043dea623027cfaf6814fd19a660af"
+        "sha256": "16498bb8eca0292bbb78d0b9132098eb4c5837e25e5b6f7e215ee6d0b5ccd948"
       },
       {
         "path": "scripts/lexicon/generate_vesum_aliases.py",
