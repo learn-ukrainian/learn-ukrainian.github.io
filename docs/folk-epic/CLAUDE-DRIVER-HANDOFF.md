@@ -95,18 +95,22 @@
 ### ✅ DONE THIS SESSION
 - **Real P3-validate executed** (`--no-resume`) → outcome (c) above. Reaped the 2 stale build worktrees (232024 failed-run, 000802 resume-no-op); forensics retained on their `build/folk/koliadky-shchedrivky-*` branches (#M-10).
 - **Design doc §8 written** — the P3-validate findings + 4-class taxonomy + corrected Part C sequencing (C.2a→C.2b→C.2c→C.3→citations) with signal-design options. In THIS PR.
-- **C.2a DISPATCHED** — codex `folk-3079-c2a` (branch `codex/folk-3079-c2a`, base 404a4b7810): extend the verbatim-primary VESUM
-  exemption to embedded primaries in `activities.yaml`/`vocabulary.yaml` via corpus-resolution + cross-reference fast-path. Brief:
-  `/tmp/folk-3079-c2a-vesum-primary-yaml-brief.md` (scoped to Class A only; B/C/D explicitly out of scope). NO auto-merge.
+- **C.2a DISPATCHED → LANDED as PR #3286, REVIEWED+APPROVED (awaiting orchestrator reconcile).** codex `folk-3079-c2a`
+  implemented it cleanly (177 LOC + 5 tests, `linear_pipeline.py`): `_strip_vesum_verbatim_primary_spans` blanks verbatim
+  primary SPANS (≥8-word window) in `activities.yaml`/`vocabulary.yaml` matched against (a) verified `module.md` blockquotes
+  [fast-path] + (b) literary-corpus hits (`_search_literary_hits`). Span-scoped, seminar-gated, fail-safe. **My review (tool-backed):**
+  Class-A `нащада`/`било`/`сонінько` exempted; out-of-scope `Йоль`/`дерево-явір`/`першопочаток` still checked; over-exemption guard
+  holds (planted `привітаннячкоз` still fails); the 3 `test_vesum_heritage_attestation` failures are VERIFIED PRE-EXISTING (fail
+  identically on base `404a4b7810`, local-DB-vs-CI discrepancy). CI green except `Test (pytest)` (was pending at handoff).
+  **Merge deferred to orchestrator — shared pipeline infra (driver opens, doesn't self-merge).** Brief: `/tmp/folk-3079-c2a-vesum-primary-yaml-brief.md`.
 
 ### ⚠ IN-FLIGHT AT HANDOFF
-- **Dispatch `folk-3079-c2a`** (codex, C.2a). Watcher: Monitor `bbdqn6r0e` (session-scoped, poll `/api/delegate/active`). **First thing
-  next session:** `curl -sS http://127.0.0.1:8765/api/delegate/active`; if gone, `gh pr list --head codex/folk-3079-c2a --state open`
-  + read `batch_state/tasks/folk-3079-c2a*` → review the PR (verify the §8-style tool-backed claims: Class-A words drop, B/C/D still
-  checked, no over-exemption regression), then it's an orchestrator-reconcile (shared pipeline infra — driver opens, never self-merges this).
+- **PR #3286 (C.2a)** — reviewed+approved by me; **awaiting orchestrator reconcile** + `Test (pytest)` CI (other checks green).
+  **First thing next session:** `gh pr checks 3286` → if pytest green and not yet merged, ping orchestrator `needs=merge` (do NOT
+  self-merge — shared pipeline infra). If pytest RED, read the failing job; the only local reds were the 3 pre-existing heritage tests.
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **Land C.2a** — review/iterate the `folk-3079-c2a` PR; confirm tool-backed acceptance (Class-A exempted, B/C/D still flagged, modern-prose typo still fails).
+1. **C.2a (PR #3286)** — DONE pending CI/reconcile (reviewed+approved). Confirm pytest green, ping orchestrator to merge.
 2. **C.2b (Class B)** — guarded dialectal-citation exemption (do NOT over-widen bare «X»). **C.2c (Class C)** — foreign-proper-noun handling (allowlist/marker; fix Сатурналії-vs-Йоль). Both deterministic, my lane (#0.2).
 3. **C.3 (Class D + word_count + the loop)** — bounded multi-gate python_qg loop + cross-model fixer (rephrase `дерево-явір`/`першопочаток`; iterate across gates). The durable structural fix.
 4. **citations_resolve** — GATE-SIDE fix: resolve the writer's prose `Author «Title»` citations against the plan `references` (the 5 sources are ALREADY in the koliadky plan, lines 93-117; `_citation_candidates` already loads `plan_references` at L7490). NOT plan promotion.
