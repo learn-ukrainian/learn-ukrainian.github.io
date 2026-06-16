@@ -26,6 +26,50 @@
   translation: indicative mood
   pos: phrase
   usage: "У реальній умові вживаємо дійсний спосіб."
+- lemma: умовний спосіб
+  translation: conditional mood
+  pos: phrase
+  usage: "Умовний спосіб утворюємо за допомогою минулого часу й частки б/би."
+- lemma: наказовий спосіб
+  translation: imperative mood
+  pos: phrase
+  usage: "У головній частині реальної умови може стояти наказовий спосіб: якщо буде важко, напиши."
+- lemma: частка
+  translation: particle
+  pos: noun:f
+  usage: "Частка б/би пишеться окремо від дієслова."
+- lemma: б/би
+  translation: conditional particle
+  pos: particle
+  usage: "Після голосного частіше вживаємо б, а після приголосного - би."
+- lemma: милозвучність
+  translation: euphony
+  pos: noun:f
+  usage: "Милозвучність допомагає вибрати між б і би."
+- lemma: повнозначне слово
+  translation: content word
+  pos: phrase
+  usage: "Частка б/би може стояти після повнозначного слова в реченні."
+- lemma: сполучник
+  translation: conjunction
+  pos: noun:m
+  usage: "Сполучник якщо вводить реальну умову."
+- lemma: ввічливість
+  translation: politeness
+  pos: noun:f
+  usage: "Умовний спосіб часто додає ввічливість до прохання."
+- lemma: бажання
+  translation: wish, desire
+  pos: noun:n
+  usage: "Форма я хотів би може виражати бажання або ввічливий намір."
+- lemma: хотів би / хотіла б
+  translation: would like
+  pos: phrase
+  usage: "Я хотів би запитати про розклад курсу."
+- lemma: могли б
+  translation: could, would be able to
+  pos: phrase
+  usage: "Чи не могли б ви повторити адресу?"
 - lemma: майбутній час
   translation: future tense
   pos: phrase
