@@ -891,10 +891,15 @@ def test_curated_calque_matches_participle_entry() -> None:
 
     assert card is not None
     assert card["kind"] == "participle"
-    assert card["corrections"] == ["чинний"]
-    assert card["note"] == "діючий закон → чинний закон (рос. действующий)"
+    # sense-split (#3098 review): діючий закон → чинний; діючий вулкан → активний (Avramenko Grade-7)
+    assert card["corrections"] == ["чинний", "активний"]
+    assert card["note"] == (
+        "sense-split: діючий закон → чинний закон; "
+        "діючий вулкан → активний вулкан (рос. действующий)"
+    )
     assert "glazova-11" in card["source"]
     assert any("чинний" in item for item in card["evidence"])
+    assert any("активний" in item for item in card["evidence"])
     assert "search_heritage" in card["heritage_guard"]
 
 
