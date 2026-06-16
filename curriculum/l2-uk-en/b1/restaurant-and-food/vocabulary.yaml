@@ -110,6 +110,10 @@
   translation: appetizer, starter
   pos: noun:f
   usage: На закуску ми взяли салат і шматок сала.
+- lemma: кухня
+  translation: cuisine, kitchen
+  pos: noun:f
+  usage: Українська кухня має багато регіональних страв.
 - lemma: десерт
   translation: dessert
   pos: noun:m
@@ -133,7 +137,7 @@
 - lemma: офіціант
   translation: waiter
   pos: noun:m
-  usage: Офіціант порадив зеленого борщу.
+  usage: Офіціант порадив зелений борщ.
 - lemma: офіціантка
   translation: waitress
   pos: noun:f
