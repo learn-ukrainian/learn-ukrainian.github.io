@@ -95,7 +95,7 @@
 ### ✅ DONE THIS SESSION
 - **Real P3-validate executed** (`--no-resume`) → outcome (c) above. Reaped the 2 stale build worktrees (232024 failed-run, 000802 resume-no-op); forensics retained on their `build/folk/koliadky-shchedrivky-*` branches (#M-10).
 - **Design doc §8 written** — the P3-validate findings + 4-class taxonomy + corrected Part C sequencing (C.2a→C.2b→C.2c→C.3→citations) with signal-design options. In THIS PR.
-- **C.2a DISPATCHED → PR #3286; codex adversarial review caught a real over-exemption bug → FIX DISPATCHED (see IN-FLIGHT).** codex `folk-3079-c2a`
+- **C.2a DISPATCHED → PR #3286 → MERGED (see "✅ C.2a MERGED" below).** codex `folk-3079-c2a`
   implemented it (177 LOC + 5 tests, `linear_pipeline.py`): `_strip_vesum_verbatim_primary_spans` blanks verbatim
   primary SPANS (≥8-word window) in `activities.yaml`/`vocabulary.yaml` matched against (a) verified `module.md` blockquotes
   [fast-path] + (b) literary-corpus hits (`_search_literary_hits`). Span-scoped, seminar-gated, fail-safe. **My review (tool-backed):**
@@ -104,16 +104,20 @@
   identically on base `404a4b7810`, local-DB-vs-CI discrepancy). CI green except `Test (pytest)` (was pending at handoff).
   **Merge deferred to orchestrator — shared pipeline infra (driver opens, doesn't self-merge).** Brief: `/tmp/folk-3079-c2a-vesum-primary-yaml-brief.md`.
 
+### ✅ C.2a MERGED (PR #3286 → main `3955402947`)
+Full fleet loop, no orchestrator: codex built it → codex adversarial review caught a real cross-field-boundary over-exemption
+bug → fix dispatched (`_activity_vesum_text` now applies the primary-span strip per string LEAF, before flatten, so matches
+can't cross yaml fields) + a cross-boundary regression test → CI green → **self-merged per #M-12**. The verbatim-primary VESUM
+exemption now reaches `activities.yaml`/`vocabulary.yaml` — folk's dominant Gap-C wall is closed.
+
 ### ⚠ IN-FLIGHT AT HANDOFF
-- **PR #3286 (C.2a) — codex review = REQUEST-CHANGES (real over-exemption bug); FIX DISPATCHED `folk-3079-c2a-fix`** (Monitor
-  `bxfwet8m8`). The bug: `_strip_vesum_verbatim_primary_spans` ran on the FLATTENED activity text, so 8-token windows could cross
-  yaml field boundaries → a bare dialectal citation + adjacent field text could match a corpus hit and get blanked (the test
-  stubbed `_search_literary_hits=[]` so it missed this). Fix = confine the exemption to per-field spans + a cross-boundary
-  regression test, pushed onto the PR branch. **First thing next session:** check `folk-3079-c2a-fix` outcome → `gh pr checks 3286`
-  → verify the over-exemption regression → if green, **SELF-MERGE per the merge grant** (#M-12; don't wait on the orchestrator).
+- **C.2b DISPATCHED** — codex `folk-3079-c2b` (Monitor `b6z52t4zz`), off main (has C.2a). Class B: exempt bare «X» dialectal
+  citations whose token resolves to a verified module primary (reuses C.2a's `verified_primary_texts` — can't over-exempt
+  arbitrary forms). Brief: `/tmp/folk-3079-c2b-dialectal-citation-brief.md`. **First thing next session:** check the C.2b PR →
+  fleet-review (`ab ask-codex`) → CI-green → SELF-MERGE (#M-12).
 
 ### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **C.2a (PR #3286)** — land the boundary fix (`folk-3079-c2a-fix`), confirm CI + the cross-boundary regression, then SELF-MERGE (fleet-reviewed, #M-12).
+1. **C.2b** — land it (review → CI → self-merge). Then **C.2c** (Class C foreign proper nouns: `Йоль`/`Ялда` allowlist or marker; fix the Сатурналії-vs-Йоль inconsistency).
 2. **C.2b (Class B)** — guarded dialectal-citation exemption (do NOT over-widen bare «X»). **C.2c (Class C)** — foreign-proper-noun handling (allowlist/marker; fix Сатурналії-vs-Йоль). Both deterministic, my lane (#0.2).
 3. **C.3 (Class D + word_count + the loop)** — bounded multi-gate python_qg loop + cross-model fixer (rephrase `дерево-явір`/`першопочаток`; iterate across gates). The durable structural fix.
 4. **citations_resolve** — GATE-SIDE fix: resolve the writer's prose `Author «Title»` citations against the plan `references` (the 5 sources are ALREADY in the koliadky plan, lines 93-117; `_citation_candidates` already loads `plan_references` at L7490). NOT plan promotion.
