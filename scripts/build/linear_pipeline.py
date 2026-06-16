@@ -40,6 +40,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 TEXTBOOK_SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 FOLK_HERITAGE_ATTESTATIONS_PATH = PROJECT_ROOT / "data" / "folk_heritage_attestations.yaml"
+FOREIGN_PROPER_NOUN_ATTESTATIONS_PATH = PROJECT_ROOT / "data" / "foreign_proper_noun_attestations.yaml"
 CLAUDE_WRITER_AGENT_SOURCE = PROJECT_ROOT / "agents_extensions/shared" / "agents" / "curriculum-writer.md"
 CLAUDE_WRITER_AGENT_TARGET = PROJECT_ROOT / ".claude" / "agents" / "curriculum-writer.md"
 
@@ -9053,6 +9054,186 @@ def _folk_heritage_attestation_index(
     return index
 
 
+def _foreign_proper_noun_attestation_urls(row: Mapping[str, Any]) -> list[str]:
+    urls = row.get("wikipedia_urls")
+    if isinstance(urls, list):
+        return [str(url).strip() for url in urls if str(url or "").strip()]
+
+    url = row.get("wikipedia_url") or row.get("url")
+    if isinstance(url, str) and url.strip():
+        return [url.strip()]
+    return []
+
+
+def _foreign_proper_noun_attestation_is_valid(row: Mapping[str, Any]) -> bool:
+    return any(
+        url.startswith("https://uk.wikipedia.org/wiki/")
+        for url in _foreign_proper_noun_attestation_urls(row)
+    )
+
+
+def _foreign_proper_noun_attestation_index(
+    path: Path | None = None,
+) -> dict[str, Mapping[str, Any]]:
+    source_path = path or FOREIGN_PROPER_NOUN_ATTESTATIONS_PATH
+    if not source_path.exists():
+        return {}
+
+    data = yaml.safe_load(source_path.read_text(encoding="utf-8")) or {}
+    if not isinstance(data, Mapping):
+        raise ValueError(f"{source_path} must contain a YAML mapping")
+    rows = data.get("attestations", [])
+    if not isinstance(rows, list):
+        raise ValueError(f"{source_path} field 'attestations' must be a list")
+
+    index: dict[str, Mapping[str, Any]] = {}
+    for row in rows:
+        if not isinstance(row, Mapping) or not _foreign_proper_noun_attestation_is_valid(row):
+            continue
+        lemma = _normalize_for_vesum(str(row.get("lemma") or "")).lower()
+        if not lemma:
+            continue
+        surfaces = {lemma}
+        accepted_surfaces = row.get("accepted_surfaces", [])
+        if accepted_surfaces is None:
+            accepted_surfaces = []
+        if not isinstance(accepted_surfaces, list):
+            raise ValueError(
+                f"{source_path} lemma {lemma!r} field 'accepted_surfaces' must be a list"
+            )
+        for surface in accepted_surfaces:
+            normalized = _normalize_for_vesum(str(surface or "")).lower()
+            if normalized:
+                surfaces.add(normalized)
+        for surface in surfaces:
+            index[surface] = row
+    return index
+
+
+def _is_titlecase_ukrainian_proper_noun_surface(surface: str) -> bool:
+    token = surface.strip(_VESUM_WORD_EDGE_CHARS)
+    if not token or not _CYRILLIC_LETTER_RE.search(token):
+        return False
+
+    parts = [part for part in re.split(r"[-‐-―]", token) if part]
+    if not parts:
+        return False
+    for part in parts:
+        first_letter = next((char for char in part if char.isalpha()), "")
+        if not first_letter or not first_letter.isupper():
+            return False
+        if part == part.upper():
+            return False
+    return True
+
+
+def _foreign_proper_noun_lemma_candidates(surface: str) -> set[str]:
+    word = _normalize_for_vesum(surface).strip(_VESUM_WORD_EDGE_CHARS)
+    if not word:
+        return set()
+
+    lower = word.lower()
+    candidates = {lower}
+
+    def add(candidate: str) -> None:
+        if len(candidate) >= 3:
+            candidates.add(candidate)
+
+    if lower.endswith("ією"):
+        add(f"{lower[:-3]}ія")
+    if lower.endswith("єю"):
+        add(f"{lower[:-2]}я")
+    if lower.endswith("ею"):
+        add(f"{lower[:-2]}я")
+        add(f"{lower[:-2]}ь")
+    if lower.endswith("ою"):
+        add(f"{lower[:-2]}а")
+    if lower.endswith("ями"):
+        add(f"{lower[:-3]}ї")
+        add(f"{lower[:-3]}я")
+    if lower.endswith("ами") and not lower.endswith("ями"):
+        add(f"{lower[:-3]}и")
+        add(f"{lower[:-3]}а")
+    if lower.endswith("ях"):
+        add(f"{lower[:-2]}ї")
+        add(f"{lower[:-2]}я")
+    if lower.endswith("ах") and not lower.endswith("ях"):
+        add(f"{lower[:-2]}и")
+        add(f"{lower[:-2]}а")
+    if lower.endswith("ям"):
+        add(f"{lower[:-2]}ї")
+        add(f"{lower[:-2]}я")
+    if lower.endswith("ам") and not lower.endswith("ям"):
+        add(f"{lower[:-2]}и")
+        add(f"{lower[:-2]}а")
+    if lower.endswith("ів"):
+        add(f"{lower[:-2]}и")
+    if lower.endswith("ій"):
+        add(f"{lower[:-2]}ії")
+    if lower.endswith("ї"):
+        add(f"{lower[:-1]}я")
+    if lower.endswith("и") and not lower.endswith(("ами", "ями")):
+        add(f"{lower[:-1]}а")
+    if lower.endswith("а"):
+        add(lower[:-1])
+    if lower.endswith("я"):
+        add(f"{lower[:-1]}ь")
+        if lower[:-1].endswith("і"):
+            add(f"{lower[:-1]}й")
+    if lower.endswith("у"):
+        add(f"{lower[:-1]}а")
+        add(lower[:-1])
+        add(f"{lower[:-1]}ь")
+    if lower.endswith("ю"):
+        add(f"{lower[:-1]}я")
+        add(f"{lower[:-1]}ь")
+        if lower[:-1].endswith("і"):
+            add(f"{lower[:-1]}й")
+    if lower.endswith("ом"):
+        add(lower[:-2])
+    if lower.endswith("ем"):
+        add(lower[:-2])
+        add(f"{lower[:-2]}ь")
+    if lower.endswith(("ові", "еві", "єві")):
+        add(lower[:-3])
+    if lower.endswith("і"):
+        add(lower[:-1])
+        add(f"{lower[:-1]}а")
+        add(f"{lower[:-1]}ь")
+
+    return candidates
+
+
+def _resolve_foreign_proper_noun_attested_missing(
+    missing_lc: set[str],
+    unchecked_pairs: Sequence[tuple[str, str, str]],
+) -> set[str]:
+    if not missing_lc:
+        return set()
+
+    attestation_index = _foreign_proper_noun_attestation_index()
+    if not attestation_index:
+        return set()
+
+    candidates_by_missing: dict[str, set[str]] = {word: set() for word in missing_lc}
+    for surface, lower, original_case_lookup in unchecked_pairs:
+        if lower not in missing_lc:
+            continue
+        for raw in (surface, original_case_lookup):
+            normalized = _normalize_for_vesum(raw).strip()
+            if not _is_titlecase_ukrainian_proper_noun_surface(normalized):
+                continue
+            candidates_by_missing[lower].update(
+                _foreign_proper_noun_lemma_candidates(normalized)
+            )
+
+    return {
+        word
+        for word, candidates in candidates_by_missing.items()
+        if candidates and any(candidate in attestation_index for candidate in candidates)
+    }
+
+
 _HERITAGE_AUTHENTIC_CLASSIFICATIONS = frozenset(
     {"authentic-archaism", "dialect", "historism", "borrowing", "standard"}
 )
@@ -9448,6 +9629,20 @@ def _vesum_gate(
             }
     if missing_lc:
         missing_lc = {word for word in missing_lc if not _is_sung_vowel_practice_lookup(word)}
+    foreign_proper_attested_lc: set[str] = set()
+    if missing_lc and _vesum_heritage_attestation_enabled(level):
+        try:
+            foreign_proper_attested_lc = _resolve_foreign_proper_noun_attested_missing(
+                missing_lc,
+                unchecked_pairs,
+            )
+        except Exception as exc:
+            return {
+                "passed": False,
+                "error": str(exc),
+                "checked": len(unchecked_pairs),
+            }
+        missing_lc -= foreign_proper_attested_lc
     heritage_attested_lc: set[str] = set()
     if missing_lc and _vesum_heritage_attestation_enabled(level):
         try:
@@ -9463,6 +9658,9 @@ def _vesum_gate(
     heritage_attested_words = sorted(
         {surface for surface, lower, _original in unchecked_pairs if lower in heritage_attested_lc}
     )
+    foreign_proper_attested_words = sorted(
+        {surface for surface, lower, _original in unchecked_pairs if lower in foreign_proper_attested_lc}
+    )
     ignored_missing_lc = _vesum_missing_exclusion_keys(
         ignored_missing_surfaces,
         min_word_length=VESUM_MIN_WORD_LENGTH,
@@ -9475,6 +9673,8 @@ def _vesum_gate(
         "whitelisted": len(surface_pairs) - len(unchecked_pairs),
         "heritage_attested": len(heritage_attested_words),
         "heritage_attested_words": heritage_attested_words[:100],
+        "foreign_proper_noun_attested": len(foreign_proper_attested_words),
+        "foreign_proper_noun_attested_words": foreign_proper_attested_words[:100],
         "missing": missing[:100],
         "missing_count": len(missing),
     }
