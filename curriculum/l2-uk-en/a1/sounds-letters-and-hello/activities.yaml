@@ -58,23 +58,38 @@
       correct: false
     explanation: Приві́т is the informal word for Hi.
 - id: act-2
-  type: count-syllables
-  title: Count склади
-  instruction: Count vowel sounds. Each vowel sound makes one склад.
-  maxCount: 3
+  type: quiz
+  title: Meet склади
+  instruction: Choose the safer beginner idea.
   items:
-  - word: день
+  - question: What does склад mean?
+    options:
+    - syllable
+    - letter
+    - greeting
+    correct: 0
+    explanation: Склад means syllable. M02 will teach the counting rule.
+  - question: What gives a склад its voice?
+    options:
+    - a capital letter
+    - a vowel sound
+    - an English translation
     correct: 1
-  - word: ма́ма
+    explanation: Every Ukrainian склад needs a vowel sound.
+  - question: What should you do with ма́ма today?
+    options:
+    - Memorize every syllable rule.
+    - Notice the two clear а sounds.
+    - Ignore the vowel sounds.
+    correct: 1
+    explanation: Today is a sound-first preview. M02 practices syllable counting.
+  - question: What should you listen for in молоко́?
+    options:
+    - a blurred English vowel
+    - a silent letter
+    - three clean о sounds
     correct: 2
-  - word: Приві́т
-    correct: 2
-  - word: молоко́
-    correct: 3
-  - word: та́то
-    correct: 2
-  - word: о́ко
-    correct: 2
+    explanation: Ukrainian о stays clean in молоко́.
 - id: act-3
   type: watch-and-repeat
   title: Full alphabet pronunciation pass
@@ -212,7 +227,7 @@
     - У
     correct: 0
     explanation: Ukrainian О stays clean in молоко́.
-  - question: In Приві́т, which two vowel letters are different?
+  - question: In Приві́т, which two letters mark different vowel sounds?
     options:
     - И and І
     - О and У
