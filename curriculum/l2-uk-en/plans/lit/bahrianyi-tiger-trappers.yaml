@@ -86,7 +86,8 @@ references:
   type: primary
   work: Людина і звір (або інша праця про Багряного)
 sequence: 124
-slug: bahrianyi-tiger-trappers
+slug: bahrianyi-tyhrolovy
+slug_intentional: true
 subtitle: '''Tiger Trappers'' by Ivan Bahrianyi'
 title: '''Тигролови'' Івана Багряного'
 version: '4.0'

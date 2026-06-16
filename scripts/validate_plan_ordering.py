@@ -11,3 +11,6 @@ _spec = _ilu.spec_from_file_location(
 _mod = _ilu.module_from_spec(_spec)
 _sys.modules[__name__] = _mod
 _spec.loader.exec_module(_mod)
+
+if __name__ == "__main__":
+    _sys.exit(_mod.main())

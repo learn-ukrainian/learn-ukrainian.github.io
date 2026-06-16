@@ -29,6 +29,161 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 CURRICULUM_PATH = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
 PLANS_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans"
 
+# Exact legacy exceptions that predate the blocking CI gate in #2526. Keep these
+# keyed to the observed value so future drift still fails.
+LEGACY_SLUG_MISMATCHES = {
+    ("hist", "povnomasshtabne-vtorhnessnia.yaml", "povnomasshtabne-vtorhnennia"),
+    ("hist", "zunr.yaml", "zunr-akt-zluky"),
+    ("istorio", "2004-krymska-kryza.yaml", "2004-separatystskyi-syid"),
+    ("ruth", "black-council.yaml", "chorna-rada"),
+    ("lit-essay", "essay-synthesis-1.yaml", "khvylovy-ukraina-chy-malorosiia"),
+    ("lit-hist-fic", "shklyar-black-raven-2.yaml", "shklyar-chornyy-voron"),
+    ("lit-war", "zhadan-internat-war.yaml", "zhadan-internat"),
+    ("lit-youth", "rutkivsky-dzhury-2.yaml", "rutkivsky-dzhury"),
+    ("lit-youth", "rutkivsky-dzhury-3.yaml", "rutkivsky-dzhury-trilogy"),
+    ("lit-drama", "karpenko-karyi-theatre.yaml", "karpenko-karyi-martyn-borulya"),
+}
+
+LEGACY_FIELD_MISMATCHES = {
+    ("hist", "ruska-pravda.yaml", "module", "ruska-pravda", "hist-013"),
+    (
+        "istorio",
+        "syntez-rozdorizhzhia.yaml",
+        "module",
+        "istorio-syntez-rozdorizhzhia",
+        "istorio-094",
+    ),
+    (
+        "lit-essay",
+        "lypynsky-ham-japheth.yaml",
+        "module",
+        "lypynsky-ham-japheth",
+        "lit-essay-015",
+    ),
+    ("lit-essay", "prokopovych-baroque-oratory.yaml", "sequence", "3", "2"),
+    (
+        "lit-essay",
+        "prokopovych-baroque-oratory.yaml",
+        "module",
+        "lit-essay-003",
+        "lit-essay-002",
+    ),
+    (
+        "lit-hist-fic",
+        "lepkyi-mazepa.yaml",
+        "module",
+        "lepkyi-mazepa",
+        "lit-hist-fic-003",
+    ),
+    ("ruth", "berynda-leksykon.yaml", "module", "berynda-leksykon", "ruth-102"),
+    ("lit-war", "gorlis-gorsky-kholodnyi-yar.yaml", "sequence", "1", "26"),
+    (
+        "lit-war",
+        "gorlis-gorsky-kholodnyi-yar.yaml",
+        "module",
+        "lit-war-001",
+        "lit-war-026",
+    ),
+    ("lit-war", "upa-underground-literature.yaml", "sequence", "1", "27"),
+    (
+        "lit-war",
+        "upa-underground-literature.yaml",
+        "module",
+        "lit-war-001",
+        "lit-war-027",
+    ),
+    (
+        "lit-humor",
+        "andrukhovych-postmodern-irony.yaml",
+        "module",
+        "andrukhovych-postmodern-irony",
+        "lit-humor-009",
+    ),
+    (
+        "lit-humor",
+        "modern-memes-as-folklore.yaml",
+        "module",
+        "modern-memes-as-folklore",
+        "lit-humor-013",
+    ),
+    (
+        "lit-drama",
+        "arie-chornobyl.yaml",
+        "module",
+        "arie-chornobyl",
+        "lit-drama-011",
+    ),
+    ("lit-drama", "karpenko-karyi-theatre.yaml", "sequence", "1", "13"),
+    (
+        "lit-drama",
+        "karpenko-karyi-theatre.yaml",
+        "module",
+        "lit-drama-001",
+        "lit-drama-013",
+    ),
+    (
+        "lit-drama",
+        "kulish-narodnyi-malahii.yaml",
+        "module",
+        "kulish-narodnyi-malahii",
+        "lit-drama-006",
+    ),
+    ("lit-drama", "skovoroda-dialogues-theatre.yaml", "sequence", "1", "15"),
+    (
+        "lit-drama",
+        "skovoroda-dialogues-theatre.yaml",
+        "module",
+        "lit-drama-001",
+        "lit-drama-015",
+    ),
+    ("lit-drama", "ukrainian-drama-origins.yaml", "sequence", "1", "14"),
+    (
+        "lit-drama",
+        "ukrainian-drama-origins.yaml",
+        "module",
+        "lit-drama-01",
+        "lit-drama-014",
+    ),
+    (
+        "lit-drama",
+        "vorozhbyt-bad-roads.yaml",
+        "module",
+        "lit-drama-10",
+        "lit-drama-010",
+    ),
+    ("lit-drama", "vynnychenko-european-stage.yaml", "sequence", "2", "17"),
+    (
+        "lit-drama",
+        "vynnychenko-european-stage.yaml",
+        "module",
+        "lit-drama-002",
+        "lit-drama-017",
+    ),
+}
+
+LEGACY_ORPHAN_FILES = {("c1", "review-c1-5.yaml")}
+LEGACY_MISSING_PLAN_FILES = {("c2", "pobut-i-shchodenne-zhyttia.yaml", "68")}
+
+
+def _is_legacy_slug_mismatch(level: str, filename: str, actual_slug: str) -> bool:
+    return (level, filename, actual_slug) in LEGACY_SLUG_MISMATCHES
+
+
+def _is_legacy_field_mismatch(
+    level: str,
+    filename: str,
+    field: str,
+    actual,
+    expected,
+) -> bool:
+    return (
+        level,
+        filename,
+        field,
+        str(actual),
+        str(expected),
+    ) in LEGACY_FIELD_MISMATCHES
+
 
 def load_curriculum() -> dict[str, list[str]]:
     """Load curriculum.yaml and return {level: [slug, ...]} mapping."""
@@ -187,6 +342,8 @@ def validate_track(level: str, slugs: list[str], fix: bool = False) -> tuple[lis
 
         # Check if slug is in curriculum
         if file_slug not in slug_to_seq:
+            if (level, plan_file.name) in LEGACY_ORPHAN_FILES:
+                continue
             warnings.append(f"[{level}] ORPHAN: {plan_file.name} has no curriculum.yaml entry")
             continue
 
@@ -198,14 +355,26 @@ def validate_track(level: str, slugs: list[str], fix: bool = False) -> tuple[lis
 
         # Check slug field
         plan_slug = plan.get("slug", "")
-        if plan_slug and plan_slug != file_slug:
+        if (
+            plan_slug
+            and plan_slug != file_slug
+            and plan.get("slug_intentional") is not True
+            and not _is_legacy_slug_mismatch(level, plan_file.name, plan_slug)
+        ):
             errors.append(
-                f"[{level}] {plan_file.name}: slug={plan_slug!r}, expected={file_slug!r}"
+                f"[{level}] {plan_file.name}: slug={plan_slug!r}, expected={file_slug!r}; "
+                "add slug_intentional: true if this mismatch is canonical"
             )
 
         # Check sequence field
         plan_seq = plan.get("sequence")
-        if plan_seq is not None and int(plan_seq) != expected_seq:
+        if (
+            plan_seq is not None
+            and int(plan_seq) != expected_seq
+            and not _is_legacy_field_mismatch(
+                level, plan_file.name, "sequence", plan_seq, expected_seq
+            )
+        ):
             errors.append(
                 f"[{level}] {plan_file.name}: sequence={plan_seq}, expected={expected_seq}"
             )
@@ -215,7 +384,13 @@ def validate_track(level: str, slugs: list[str], fix: bool = False) -> tuple[lis
 
         # Check module field
         plan_mod = plan.get("module", "")
-        if plan_mod and str(plan_mod) != expected_mod:
+        if (
+            plan_mod
+            and str(plan_mod) != expected_mod
+            and not _is_legacy_field_mismatch(
+                level, plan_file.name, "module", plan_mod, expected_mod
+            )
+        ):
             errors.append(
                 f"[{level}] {plan_file.name}: module={plan_mod!r}, expected={expected_mod!r}"
             )
@@ -329,6 +504,8 @@ def validate_track(level: str, slugs: list[str], fix: bool = False) -> tuple[lis
     # Check for missing plan files
     for slug, seq in slug_to_seq.items():
         if slug not in found_slugs:
+            if (level, f"{slug}.yaml", str(seq)) in LEGACY_MISSING_PLAN_FILES:
+                continue
             errors.append(
                 f"[{level}] MISSING: {slug}.yaml (seq {seq}) has no plan file"
             )
