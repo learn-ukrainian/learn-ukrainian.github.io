@@ -146,10 +146,10 @@ MODULE_ARCHETYPES: dict[str, dict[str, Any]] = {
     "a1-a2-expansion-ramp": {
         "label": "A1/A2 expansion ramp",
         "scope": "late A1 and A2",
-        "teaching_language": "ULP-style ramp: Ukrainian-first artifacts with English scaffold receding.",
+        "teaching_language": "Late A1 uses receding English; A2 uses easy Ukrainian with a natural complexity ramp.",
         "learner_assumptions": [
             "Learner can read controlled Ukrainian.",
-            "English support recedes as cumulative vocabulary grows.",
+            "A2 support comes from short Ukrainian frames, examples, tables, and brief glosses.",
             "Narrative and dialogue length can increase only with learner state.",
         ],
         "must_introduce_before_use": True,

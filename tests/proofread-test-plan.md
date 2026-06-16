@@ -7,7 +7,7 @@ All tracks, from A1 through seminar. Run when capacity is available.
 | Track | Content Files | Index Total | Immersion | Status |
 |-------|--------------|-------------|-----------|--------|
 | a1 | 41 | 44 | 0-30% (bilingual) | Ready to test |
-| a2 | 65 | 71 | 30-55% (bilingual) | Ready to test |
+| a2 | 65 | 71 | 85-100% easy Ukrainian | Ready to test |
 | b1 | 45 | 94 | 75-100% (1-5 bridge, 6+ immersed) | Ready to test |
 | b2 | 34 | 95 | 100% | Ready to test |
 | hist | 27 | 140 | 100% Ukrainian | Ready to test |
@@ -32,7 +32,7 @@ done
 
 Modules: 2 (cyrillic-code-ii), 10 (checkpoint-first-contact), 17 (numbers-and-money), 30 (prepositions), 42 (emergencies)
 
-### A2 (bilingual, 30-55% Ukrainian)
+### A2 (easy Ukrainian, 85-100% Ukrainian)
 
 ```bash
 for n in 5 15 25 40 55; do
@@ -161,7 +161,8 @@ After quality metrics are validated (precision >80%, rewrite quality >70%, safet
 
 | Track Type | Expected Issues/Module | Top Issue Types |
 |------------|----------------------|-----------------|
-| A1/A2 (bilingual) | 5-15 | RUSSIANISM, LLM_FILLER, WORD_SALAD |
+| A1 bilingual | 5-15 | RUSSIANISM, LLM_FILLER, WORD_SALAD |
+| A2 easy Ukrainian | 3-10 | RUSSIANISM, LLM_FILLER, WORD_SALAD, LANGUAGE_BLENDER (if English leaks) |
 | B1 bridge (1-5) | 5-10 | LLM_FILLER, WORD_SALAD |
 | B1 immersed (6+) | 3-8 | LLM_FILLER, LANGUAGE_BLENDER (if English leaks) |
 | B2 core | 3-8 | LLM_FILLER, WORD_SALAD |

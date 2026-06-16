@@ -142,7 +142,7 @@ TRACK_CONFIG: dict[str, dict[str, Any]] = {
 # IMMERSION POLICY
 # =============================================================================
 
-USE_ULP_IMMERSION_DERIVATION: bool = True  # Calibrated 2026-05-13 from ULP S1-S6 replay.
+USE_ULP_IMMERSION_DERIVATION: bool = True  # A1 calibrated 2026-05-13 from ULP S1-S6 replay; A2 uses module bands.
 
 # One authoritative source for live immersion policy across prompt generation
 # and audit gates. A band defines:
@@ -283,63 +283,63 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
         {
             "key": "a2-bridge",
             "max_module": 3,
-            "min_pct": 20,
-            "max_pct": 48,
+            "min_pct": 75,
+            "max_pct": 100,
             "rule": (
-                "TARGET: 20-48% Ukrainian. Bridge modules continue from late A1.\n"
+                "TARGET: 75-100% Ukrainian. A2 uses easy Ukrainian as the default teaching voice.\n"
                 "LANGUAGE ROLES:\n"
-                "- THEORY: Ukrainian-first review with brief English support for metalanguage.\n"
+                "- THEORY: simple Ukrainian explanations. English only for vocabulary glosses or one-line clarification when truly necessary.\n"
                 "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, pattern boxes.\n"
-                "- HEADERS: Ukrainian with English in parentheses.\n"
+                "- HEADERS: Ukrainian only.\n"
                 "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix.\n"
-                "These are review/bridge modules. English theory is expected. Ukrainian content comes from dialogues, example sentences, paradigm tables, and pattern boxes.\n"
+                "These are review/bridge modules, but do not add English body scaffolding. Use very easy Ukrainian, repeated frames, tables, and examples instead.\n"
                 "A2 register only. Concrete everyday vocabulary. No literary/poetic language. "
-                "Ukrainian sentences max 15 words. Max 2 clauses. "
+                "Ukrainian sentences max 12 words. Prefer one clause. "
                 "All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles."
             ),
         },
         {
             "key": "a2-ramp",
             "max_module": 7,
-            "min_pct": 30,
-            "max_pct": 55,
+            "min_pct": 85,
+            "max_pct": 100,
             "rule": (
-                "TARGET: 30-55% Ukrainian. HARD GATE — the audit rejects modules outside this range.\n"
+                "TARGET: 85-100% Ukrainian. HARD GATE — the audit rejects modules outside this range.\n"
                 "LANGUAGE ROLES:\n"
-                "- THEORY: Ukrainian-first examples with brief English support for grammar.\n"
+                "- THEORY: easy Ukrainian explanations with concrete examples. Do not add English support paragraphs.\n"
                 "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.\n"
-                "- HEADERS: Ukrainian with English in parentheses.\n"
+                "- HEADERS: Ukrainian only.\n"
                 "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix.\n"
                 "HOW TO REACH THE TARGET:\n"
                 "1. Include 2-3 multi-turn dialogues (8+ lines each) spread through the module.\n"
-                "2. After every grammar explanation, immediately show 5+ Ukrainian example sentences with translations.\n"
+                "2. After every grammar explanation, immediately show 5+ short Ukrainian example sentences without mirrored translations.\n"
                 "3. Add a `### Читаємо українською` block in each section — 5-8 connected Ukrainian sentences.\n"
                 "4. Use `:::tip` callouts with Ukrainian mnemonic phrases and cultural notes.\n"
                 "5. Use paradigm tables with Ukrainian content, not just endings.\n"
-                "A2 register only. Concrete everyday vocabulary. No literary/poetic language. "
-                "Ukrainian sentences max 15 words. Max 2 clauses. "
+                "A2 early register only. Concrete everyday vocabulary. No literary/poetic language. "
+                "Ukrainian sentences max 14 words. Max 2 clauses. "
                 "All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles."
             ),
         },
         {
             "key": "a2-m01-20",
             "max_module": 20,
-            "min_pct": 40,
-            "max_pct": 70,
+            "min_pct": 85,
+            "max_pct": 100,
             "rule": (
-                "TARGET: 40-70% Ukrainian. HARD GATE — the audit rejects modules outside this range.\n"
+                "TARGET: 85-100% Ukrainian. HARD GATE — the audit rejects modules outside this range.\n"
                 "LANGUAGE ROLES:\n"
-                "- THEORY: Ukrainian-first examples with brief English support for grammar.\n"
+                "- THEORY: easy Ukrainian explanations with brief repeated frames. English is not the default body voice.\n"
                 "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.\n"
-                "- HEADERS: Ukrainian with English in parentheses.\n"
+                "- HEADERS: Ukrainian only.\n"
                 "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix languages within a sentence.\n"
                 "HOW TO REACH THE TARGET:\n"
                 "1. After every grammar explanation, add a `Читаємо українською` block: 4-6 full Ukrainian sentences demonstrating the concept.\n"
                 "2. Include 3-4 multi-turn dialogues (6+ lines each) spread through the module.\n"
                 "3. Use pattern boxes showing Ukrainian transformations: `стіл → стола → на столі`.\n"
-                "4. Section introductions can be 1-2 Ukrainian sentences before the English theory.\n"
+                "4. Section introductions are simple Ukrainian, not English theory.\n"
                 "5. `:::tip` and `:::note` callouts should contain Ukrainian mnemonic phrases.\n"
-                "A2 register only. Concrete everyday vocabulary. No literary/poetic language. No abstract nouns. "
+                "A2 core register. Concrete everyday vocabulary, with controlled grammar metalanguage when the module needs it. No literary/poetic language. "
                 "Ukrainian sentences max 15 words. Max 2 clauses. "
                 "All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles."
             ),
@@ -347,26 +347,27 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
         {
             "key": "a2-m21-50",
             "max_module": 50,
-            "min_pct": 50,
-            "max_pct": 80,
+            "min_pct": 90,
+            "max_pct": 100,
             "rule": (
-                "TARGET: 50-80% Ukrainian.\n"
+                "TARGET: 90-100% Ukrainian.\n"
                 "LANGUAGE ROLES:\n"
                 "- PRIMARY: Ukrainian for all content — dialogues, examples, section intros, cultural context.\n"
-                "- ENGLISH: Only for abstract grammar concepts that need explicit explanation.\n"
+                "- ENGLISH: Only vocabulary glosses or a one-line clarification when a concept would otherwise be opaque.\n"
                 "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English. Dialogues, examples, and section intros stay Ukrainian-only.\n"
-                "A2 register. Concrete everyday vocabulary. No literary language, no metaphors. "
-                "Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. "
-                "Simple subordinate clauses only. Aspect pairs introduced. No participles."
+                "A2 mid-course register. Ukrainian should become naturally richer: more connectors, fuller descriptions, and controlled subordinate clauses. "
+                "Concrete vocabulary stays dominant; avoid literary language and decorative metaphors. "
+                "Ukrainian sentences max 17 words. Max 2 clauses, with common connectors (бо, тому що, коли, який/яка/яке/які, щоб). "
+                "All cases allowed. Aspect pairs active. No participles except fixed high-frequency forms already taught."
             ),
         },
         {
             "key": "a2-m51-70",
             "max_module": 10_000,
-            "min_pct": 65,
-            "max_pct": 90,
+            "min_pct": 95,
+            "max_pct": 100,
             "rule": (
-                "TARGET: 65-90% Ukrainian. This is the final A2 immersion ramp into B1.\n"
+                "TARGET: 95-100% Ukrainian. This is the final A2 immersion ramp into B1.\n"
                 "LANGUAGE ROLES:\n"
                 "- PRIMARY: Ukrainian for narrative, dialogues, examples, section intros, cultural notes, reading practice blocks, and learning callouts.\n"
                 "- METALANGUAGE: For abstract grammar terms, you may provide ONE parenthetical English translation on first use only, "
@@ -378,8 +379,8 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
                 "put it in a `:::info` or `:::tip` callout, not the main prose.\n"
                 "- FORBIDDEN: mirrored English translations after Ukrainian paragraphs or dialogues.\n"
                 "- REQUIRED: learner is being prepared for B1, so grammar explanation should increasingly happen in simple Ukrainian.\n"
-                "A2-late register only. Clear, natural, high-comprehension Ukrainian. "
-                "Ukrainian sentences max 18 words. Max 2 clauses."
+                "A2-late register. Clear, natural Ukrainian should approach B1 readiness: richer linking, short explanations in Ukrainian, and more independent reading practice. "
+                "Ukrainian sentences max 18 words. Max 2-3 clauses only when the structure is transparent."
             ),
         },
     ),
@@ -572,9 +573,6 @@ _ULP_S1_IMMERSION_BAND_KEYS = frozenset(
         "a1-m25-34",
         "a1-m35-54",
         "a1-m55+",
-        "a2-bridge",
-        "a2-ramp",
-        "a2-m01-20",
     }
 )
 
@@ -600,14 +598,21 @@ def _structural_immersion_rule(band: dict[str, Any]) -> str:
         language_roles = old_rule.split("\n", 1)[1]
     if _uses_ulp_s1_band(str(band["key"])):
         language_roles = _ulp_s1_language_roles()
+    if str(band["key"]).startswith("a2-"):
+        unsupported_run = (
+            "- Keep long Ukrainian runs readable with simple frames, nearby examples, "
+            "tables, or short glosses; max unsupported Ukrainian words "
+        )
+    else:
+        unsupported_run = "- No UK-only run longer than K words without inline English support "
+
     structural = (
         "STRUCTURAL TARGETS (Phase A placeholders; Phase B calibrates):\n"
         f"- At least N UK dialogue lines (band: {band['min_uk_dialogue_lines']})\n"
         f"- At least N vocab entries (band: {band['min_vocab_entries']})\n"
         "- At least N UK example sentences in bulleted lists "
         f"(band: {band['min_uk_example_sentences']})\n"
-        "- No UK-only run longer than K words without inline English support "
-        f"(band: {band['max_unsupported_uk_words']})\n"
+        f"{unsupported_run}(band: {band['max_unsupported_uk_words']})\n"
     )
     return structural + language_roles
 
@@ -666,14 +671,8 @@ _ULP_VOCAB_KNEE_PER_BAND: dict[str, tuple[tuple[int, str], ...]] = {
         (621, "a1-m35-54"),
         (647, "a1-m55+"),
     ),
-    # Calibrated 2026-05-13 from ULP S1-S6 replay. Audit: audit/ulp-calibration-2026-05-13/REPORT.html
-    "a2": (
-        (0, "a2-bridge"),
-        (1153, "a2-ramp"),
-        (1292, "a2-m01-20"),
-        (3622, "a2-m21-50"),
-        (4470, "a2-m51-70"),
-    ),
+    # A2 intentionally uses module-number bands after the 2026-06-16 easy-Ukrainian
+    # policy reset; old vocab knees kept early A2 in the bridge band too long.
     # Calibrated 2026-05-13 from ULP S1-S6 replay. Audit: audit/ulp-calibration-2026-05-13/REPORT.html
     "b1": ((0, "b1-core"),),
     "default": ((0, "b2+"),),
@@ -776,16 +775,21 @@ def compute_immersion_band(
     module_num: int,
     learner_state: dict | None = None,
 ) -> dict[str, Any]:
-    """Compute the immersion band for module N derived from cumulative-vocab state.
+    """Compute the immersion band for module N.
 
     When USE_ULP_IMMERSION_DERIVATION is False, this is a thin shim around the
-    static IMMERSION_POLICIES fallback. When True, it derives the band from
+    static IMMERSION_POLICIES fallback. When True, A1 derives the band from
     learner_state's cumulative_vocabulary count using calibration constants.
+    A2 always follows module-number bands so Ukrainian complexity grows across
+    the course instead of staying in the bridge band.
     """
     if not USE_ULP_IMMERSION_DERIVATION or not _has_learner_vocab_signal(learner_state):
         return dict(_find_immersion_band(track, module_num))
 
     family = _immersion_track_key(track)
+    if family == "a2":
+        return dict(_find_immersion_band(track, module_num))
+
     knees = _ULP_VOCAB_KNEE_PER_BAND.get(family, _ULP_VOCAB_KNEE_PER_BAND["default"])
     vocab_count = _learner_vocab_count(learner_state)
     selected_key = knees[0][1]

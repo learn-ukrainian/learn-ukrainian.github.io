@@ -36,7 +36,7 @@ module_type: string           # One of: grammar, vocabulary, culture, history, b
 word_target: integer          # Target word count (e.g., 2500 for A1, 3500 for B2+)
 immersion: string             # Percentage Ukrainian content
                               # A1: "25-50% Ukrainian (with full English support)"
-                              # A2: "50-75% Ukrainian"
+                              # A2: "85-100% easy Ukrainian, ramping to near-B1"
                               # B1: "75% Ukrainian"
                               # B2+: "100% Ukrainian"
 

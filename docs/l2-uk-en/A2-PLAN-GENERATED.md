@@ -4,7 +4,7 @@
 **Modules:** 70 module meta files found
 **Prerequisite:** N/A
 **Vocabulary Target:** 1200
-**Immersion:** 30-55%
+**Immersion:** 85-100% easy Ukrainian, ramping to near-B1
 
 ---
 

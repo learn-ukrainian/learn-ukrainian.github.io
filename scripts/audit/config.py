@@ -725,7 +725,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 2,  # Mar 2026: dropped with min_activities
         'min_vocab': 1,  # Relaxed: focus on unique lemma introduction
         'min_engagement': 3,  # Mar 2026: lowered from 4→3 — callouts hard for grammar-heavy modules
-        'immersion_graduated': True,  # Phase-based: A2.1 45-65%, A2.2 55-75%, A2.3 70-90%
+        'immersion_graduated': True,  # Easy Ukrainian ramp: early A2 75-85%+, mid/late A2 90-95%+
         'transliteration_allowed': False,
         # Mar 2026: expanded from 3 types → 15 — was causing narrow activity generation
         # #1550 U4: dropped 'select' and 'reading' (pipeline forbids them at A2)

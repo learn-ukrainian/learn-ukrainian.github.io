@@ -347,7 +347,7 @@ def parse_preflight_response(text: str, source: str = "preflight") -> PreflightR
 
 _FIX_PATTERNS: list[tuple[list[str], str, str]] = [
     (
-        ["45-65%", "45–65%", "immersion target"],
+        ["immersion target"],
         r"(?i)this high volume is REQUIRED to hit the \d+-\d+% immersion target",
         "this high volume is REQUIRED to hit the immersion target specified above",
     ),
