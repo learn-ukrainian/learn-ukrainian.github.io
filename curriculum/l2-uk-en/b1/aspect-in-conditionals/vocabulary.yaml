@@ -1,0 +1,196 @@
+- lemma: вид
+  translation: aspect
+  pos: noun:m
+  usage: "Вид показує, як мовець бачить дію: як процес або результат."
+- lemma: доконаний вид
+  translation: perfective aspect
+  pos: phrase
+  usage: "Доконаний вид потрібен, коли дія подана як завершений результат."
+- lemma: недоконаний вид
+  translation: imperfective aspect
+  pos: phrase
+  usage: "Недоконаний вид потрібен для процесу, звички або повторення."
+- lemma: умовне речення
+  translation: conditional sentence
+  pos: phrase
+  usage: "Умовне речення має умову і наслідок."
+- lemma: реальна умова
+  translation: real condition
+  pos: phrase
+  usage: "Реальна умова може здійснитися."
+- lemma: нереальна умова
+  translation: unreal condition
+  pos: phrase
+  usage: "Нереальна умова описує уявний або контрфактичний сценарій."
+- lemma: якщо
+  translation: if
+  pos: conjunction
+  usage: "Якщо напишеш мені ввечері, я відповім."
+- lemma: якби
+  translation: if, if only
+  pos: conjunction
+  usage: "Якби я знав адресу, приїхав би."
+- lemma: умова
+  translation: condition
+  pos: noun:f
+  usage: "Умова пояснює, за яких обставин дія можлива."
+- lemma: наслідок
+  translation: consequence, result
+  pos: noun:m
+  usage: "Наслідок показує, що станеться або сталося б."
+- lemma: припущення
+  translation: assumption, hypothesis
+  pos: noun:n
+  usage: "Припущення вводить ситуацію, яку мовець лише уявляє."
+- lemma: можливість
+  translation: possibility
+  pos: noun:f
+  usage: "Реальна умова показує справжню можливість у майбутньому."
+- lemma: неможливість
+  translation: impossibility
+  pos: noun:f
+  usage: "Нереальна умова часто підкреслює неможливість у теперішній ситуації."
+- lemma: результат
+  translation: result
+  pos: noun:m
+  usage: "Результат часто передаємо доконаним видом."
+- lemma: процес
+  translation: process
+  pos: noun:m
+  usage: "Процес часто передаємо недоконаним видом."
+- lemma: звичка
+  translation: habit
+  pos: noun:f
+  usage: "Звичка потребує недоконаного виду: якщо писатимеш щодня."
+- lemma: стан
+  translation: state
+  pos: noun:m
+  usage: "Стан може бути умовою: якби я знав адресу."
+- lemma: гіпотетичний
+  translation: hypothetical
+  pos: adjective
+  usage: "Гіпотетичний сценарій починається словом якби."
+- lemma: контрфактичний
+  translation: counterfactual
+  pos: adjective
+  usage: "Контрфактичний зміст суперечить реальності."
+- lemma: протилежний
+  translation: opposite, contrary
+  pos: adjective
+  usage: "Якби може описувати протилежний до реальності сценарій."
+- lemma: дійсний спосіб
+  translation: indicative mood
+  pos: phrase
+  usage: "У реальній умові вживаємо дійсний спосіб."
+- lemma: умовний спосіб
+  translation: conditional mood
+  pos: phrase
+  usage: "Умовний спосіб має минулу форму і частку б або би."
+- lemma: частка
+  translation: particle
+  pos: noun:f
+  usage: "Частка б стоїть у наслідку нереальної умови."
+- lemma: вміти
+  translation: to know how to, to be able
+  pos: verb:impf
+  usage: "Якби я вмів краще пояснювати вид, учні швидше розуміли б правило."
+- lemma: змогти
+  translation: to manage to, to be able
+  pos: verb:pf
+  usage: "Якщо зможеш пояснити вибір виду, речення стане переконливим."
+- lemma: вибір
+  translation: choice
+  pos: noun:m
+  usage: "Вибір виду залежить від змісту дії."
+- lemma: завершений
+  translation: completed
+  pos: adjective
+  usage: "Завершений результат часто має доконаний вид."
+- lemma: повторюваний
+  translation: repeated
+  pos: adjective
+  usage: "Повторювана дія потребує недоконаного виду."
+- lemma: поступово
+  translation: gradually
+  pos: adverb
+  usage: "Якщо тренуватимешся щодня, поступово говоритимеш упевненіше."
+- lemma: щодня
+  translation: every day
+  pos: adverb
+  usage: "Щодня часто підказує недоконаний вид."
+- lemma: до кінця
+  translation: to the end
+  pos: phrase
+  usage: "Якщо прочитаєш інструкцію до кінця, налаштуєш застосунок."
+- lemma: напишеш
+  translation: you will write, you will have written
+  pos: verb:pf
+  usage: "Якщо напишеш лист, я відповім."
+- lemma: писатимеш
+  translation: you will be writing, you will write habitually
+  pos: verb:impf
+  usage: "Якщо писатимеш щодня, швидше звикнеш."
+- lemma: прочитати
+  translation: to read through, to finish reading
+  pos: verb:pf
+  usage: "Якби я прочитав інструкцію до кінця, налаштував би застосунок."
+- lemma: читати
+  translation: to read
+  pos: verb:impf
+  usage: "Якби я читав уважніше, не зробив би помилки."
+- lemma: знати
+  translation: to know
+  pos: verb:impf
+  usage: "Якби я знав адресу, приїхав би."
+- lemma: дізнатися
+  translation: to find out
+  pos: verb:pf
+  usage: "Якби я дізнався раніше, змінив би план."
+- lemma: знайти
+  translation: to find
+  pos: verb:pf
+  usage: "Якщо знайдемо квитки, поїдемо в суботу."
+- lemma: шукати
+  translation: to search
+  pos: verb:impf
+  usage: "Якщо шукатимемо без плану, витратимо забагато часу."
+- lemma: закінчити
+  translation: to finish
+  pos: verb:pf
+  usage: "Якщо закінчимо проєкт сьогодні, завтра відпочинемо."
+- lemma: працювати
+  translation: to work
+  pos: verb:impf
+  usage: "Якщо працюватимемо без перерви, швидко втомимося."
+- lemma: виграти
+  translation: to win
+  pos: verb:pf
+  usage: "Якби я виграв у лотерею, купив би квиток."
+- lemma: вигравати
+  translation: to win
+  pos: verb:impf
+  usage: "Якби команда частіше вигравала, уболівальники раділи б після кожної гри."
+- lemma: подорожувати
+  translation: to travel
+  pos: verb:impf
+  usage: "Якби я міг подорожувати без обмежень, відвідував би нове місто щомісяця."
+- lemma: народитися
+  translation: to be born
+  pos: verb:pf
+  usage: "Якби я народився біля моря, плавав би щодня."
+- lemma: уявляти
+  translation: to imagine
+  pos: verb:impf
+  usage: "Коли ми уявляємо процес, недоконаний вид звучить природно."
+- lemma: уявити
+  translation: to imagine
+  pos: verb:pf
+  usage: "Якщо уявиш один конкретний результат, легше вибереш доконаний вид."
+- lemma: перевірити
+  translation: to check, verify
+  pos: verb:pf
+  usage: "Якщо перевіриш вид у кожній частині, речення стане точнішим."
+- lemma: пояснити
+  translation: to explain
+  pos: verb:pf
+  usage: "Поясніть, чому вибрали доконаний або недоконаний вид."
