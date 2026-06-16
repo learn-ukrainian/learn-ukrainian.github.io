@@ -7,12 +7,12 @@
 - Author: Анатолій Мойсієнко та ін.
 - Title: Сучасна українська літературна мова: Лексикологія. Фонетика
 - Publisher / edition: Знання; підручник; 2010
-- Provenance: Chtyvo preservation page with full bibliographic description and downloadable PDF.
+- Provenance: Archived Chtyvo preservation page with full bibliographic description and downloadable PDF.
 - License / access: preservation copy / educational PDF
 
 ## Acquisition method
-- Source URL: https://chtyvo.org.ua/authors/Mosenkis_Yurii/Suchasna_ukrainska_literaturna_mova_Leksykolohiia_Fonetyka/
-- Method: Download the PDF from Chtyvo; ingest directly if the text layer is intact.
+- Source URL: https://web.archive.org/web/20241012132925/https://chtyvo.org.ua/authors/Mosenkis_Yurii/Suchasna_ukrainska_literaturna_mova_Leksykolohiia_Fonetyka/
+- Method: Use the archived Chtyvo snapshot; ingest directly if the text layer is intact.
 
 ## Estimated ingestion size
 - Estimated chunk count: ~378 (≈ 270 page(s) × 1.4 chunks/page)
