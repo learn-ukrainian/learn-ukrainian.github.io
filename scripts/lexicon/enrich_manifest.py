@@ -59,6 +59,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from scripts.lexicon.build_kaikki_lookup import KAIKKI_SOURCE
+from scripts.lexicon.build_kaikki_lookup import _clean_gloss as _clean_translation_gloss
 from scripts.lexicon.build_kaikki_lookup import lookup_key as kaikki_lookup_key
 from scripts.lexicon.calque_corrections import (
     CURATED_CALQUES,
@@ -2519,6 +2520,7 @@ def _parse_translations(raw: object) -> list[str]:
     out: list[str] = []
     for item in data:
         text = re.sub(r"\s+", " ", clean_html_entities(str(item)).strip())
+        text = _clean_translation_gloss(text)
         if text:
             out.append(text)
     return out

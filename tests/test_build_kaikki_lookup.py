@@ -46,6 +46,7 @@ def test_clean_gloss_strips_meta_clause_keeps_translation() -> None:
     assert _clean_gloss("one can, one may, alternative form of мо́жна (móžna)") == (
         "one can, one may"
     )
+    assert _clean_gloss("Alternative form of кабачо́к: zucchini") == "zucchini"
     assert _clean_gloss("what, alternative form of що (ščo)") == "what"
     assert _clean_gloss("a male patronymic; obsolete form of І́горьович") == (
         "a male patronymic"
