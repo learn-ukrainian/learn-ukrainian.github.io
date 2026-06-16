@@ -49,6 +49,24 @@ _KEEP_STANDALONE_FORMS = {
     "вибачте", "пробачте", "перепрошую",
 }
 
+# Curated homograph resolutions (#2882, 2026-06-16). Forms VESUM maps to >1 lemma are NEVER
+# auto-resolved — the "sole taught candidate" heuristic mis-merges true homographs (сьома→сім
+# not сьомий; друга→друг not другий, both caught 2026-06-16). Each entry below is a PER-WORD
+# human decision, disambiguated by the curriculum's taught GLOSS and cross-model-reviewed
+# (codex, task homograph-resolve-2882). The chosen lemma MUST be one of VESUM's candidates for
+# the form (guarded in build_alias_map — a safety net against typos/drift). Forms left OUT stay
+# standalone: `цьому` (це vs цей — genuinely ambiguous demonstrative, codex-flagged).
+_CURATED_HOMOGRAPHS = {
+    "буду": "бути", "біле": "білий", "говори": "говорити", "голубці": "голубець",
+    "гори": "гора", "гривні": "гривня", "друга": "друг", "другові": "друг",
+    "друзі": "друг", "жести": "жест", "жив": "жити", "зустрінемося": "зустрітися",
+    "йому": "він", "кому": "хто", "молочне": "молочний", "новому": "новий",
+    "нікому": "ніхто", "пане": "пан", "поясніть": "пояснити", "ранку": "ранок",
+    "сині": "синій", "сьома": "сьомий", "ходжу": "ходити", "хоче": "хотіти",
+    "хочемо": "хотіти", "хочете": "хотіти", "хочеш": "хотіти", "хочу": "хотіти",
+    "хочуть": "хотіти", "яка": "який", "яку": "який", "їм": "їсти",
+}
+
 
 def _strip_stress(text: str) -> str:
     return text.replace("́", "").replace("̀", "")
@@ -88,10 +106,14 @@ def build_alias_map(forms: list[str] | None = None) -> dict[str, dict[str, str]]
         vlemmas = _vesum_lemmas(form)
         if len(vlemmas) != 1:
             # 0 lemmas = absent from VESUM (phrases / proper names) → never touch.
-            # >1 = HOMOGRAPH → never auto-resolve. "Sole taught candidate" mis-merges true
-            # homographs (сьома→сім not сьомий; друга→друг not другий — caught 2026-06-16), so
-            # these stay standalone, deferred to a curated per-word pass. Mis-merging distinct
-            # words is the project's #1 fear; conservative is correct here.
+            # >1 = HOMOGRAPH → never AUTO-resolve ("sole taught candidate" mis-merges true
+            # homographs: сьома→сім not сьомий; друга→друг not другий — caught 2026-06-16). A
+            # CURATED per-word decision (gloss-based, cross-model-reviewed) may resolve it, but
+            # ONLY to a lemma VESUM actually lists for the form (guard against typos/drift).
+            # Everything else stays standalone — mis-merging distinct words is the #1 fear.
+            curated = _CURATED_HOMOGRAPHS.get(form)
+            if curated and curated in vlemmas and _lemma_key(curated) != form_key:
+                aliases[form] = {"lemma": curated}
             continue
         target = vlemmas[0]  # unambiguous: fold (incl. create-cases where the lemma isn't taught)
         target_key = _lemma_key(target)
