@@ -1762,6 +1762,8 @@ def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
                 "authentic_sense": str(row["authentic_sense"]),
                 "note": str(row["note"]),
                 "source": list(row["source"]),
+                "evidence": list(row.get("evidence", [])),
+                "heritage_guard": str(row.get("heritage_guard", "")),
             }
 
     if lemma in PHRASAL_CALQUES:

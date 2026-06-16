@@ -101,6 +101,20 @@ def test_pryiniaty_uchast_has_corpus_evidence_and_alias():
         assert "search_heritage" in entry["heritage_guard"]
 
 
+def test_collocation_slice2_phrasal_entries_have_evidence():
+    """New always-flag phrase entries are direct correction pairs, not guesses."""
+    expected = {
+        "при допомозі": "за допомогою",
+        "співпадати": "збігатися",
+        "в кінці кінців": "врешті-решт",
+    }
+    for phrase, correction in expected.items():
+        entry = PHRASAL_CALQUES[phrase]
+        assert correction in entry["corrections"]
+        assert entry["evidence"]
+        assert "search_heritage" in entry["heritage_guard"]
+
+
 def test_sense_restricted_schema():
     """Polysemes carry an explicit calque_sense / authentic_sense split."""
     assert SENSE_RESTRICTED_CALQUES, "SENSE_RESTRICTED_CALQUES is empty"
@@ -115,6 +129,25 @@ def test_sense_restricted_schema():
         assert entry["calque_sense"] != entry["authentic_sense"], (
             f"SENSE_RESTRICTED_CALQUES[{headword!r}]: calque_sense == authentic_sense"
         )
+
+
+def test_collocation_slice2_sense_restricted_entries_have_guarded_senses():
+    """Polysemous phrase calques stay sense-scoped to avoid false positives."""
+    expected = {
+        "на протязі": ("протягом", "draft"),
+        "являтися": ("бути", "appear"),
+        "дякуючи": ("завдяки", "thanking"),
+        "так як": ("оскільки", "так, як"),
+        "біля": ("близько", "near"),
+        "на рахунок": ("щодо", "account"),
+    }
+    for headword, (correction, authentic_marker) in expected.items():
+        entry = SENSE_RESTRICTED_CALQUES[headword]
+        assert correction in entry["corrections"]
+        assert authentic_marker in entry["authentic_sense"]
+        assert entry["evidence"]
+        assert "search_heritage" in entry["heritage_guard"]
+        assert headword not in PHRASAL_CALQUES
 
 
 def test_buckets_are_disjoint():
