@@ -670,6 +670,7 @@ _VESUM_APOSTROPHE_TRANSLATION = str.maketrans(
     }
 )
 _VESUM_WORD_EDGE_CHARS = "-'ʼ’‘`´"
+_ROMAN_NUMERAL_CHARS = frozenset("xivlcdmхі")
 # O-grade plural obliques (`-остей`, `-остями`, `-остях`, `-остям`) overlap
 # Russian `-ость` forms such as `новостей`; keep that fallback to longer
 # stems so it does not pass merely because short bases like `новий` verify.
@@ -7981,7 +7982,10 @@ def run_python_qg(
             heritage_lookup_fn=heritage_lookup_fn,
         ),
     )
-    record("citations_resolve", _citation_gate(resources, plan))
+    record(
+        "citations_resolve",
+        _citation_gate(resources, plan, module_text=module_text, level=level),
+    )
     record("plan_reference_match", _plan_reference_match_gate(resources, plan))
     wiki_manifest: dict[str, Any] | None = None
     with contextlib.suppress(LinearPipelineError, ValueError):
@@ -9925,6 +9929,8 @@ def _vesum_gate(
             }
     if missing_lc:
         missing_lc = {word for word in missing_lc if not _is_sung_vowel_practice_lookup(word)}
+    if missing_lc:
+        missing_lc = {word for word in missing_lc if not _is_roman_numeral_lookup(word)}
     foreign_proper_attested_lc: set[str] = set()
     if missing_lc and _vesum_heritage_attestation_enabled(level):
         try:
@@ -10096,6 +10102,11 @@ def _bad_form_heritage_finding(
 def _is_sung_vowel_practice_lookup(word: str) -> bool:
     compact = re.sub(r"[-‐-―\s]+", "", _normalize_for_vesum(word).casefold())
     return len(compact) >= 3 and len(set(compact)) == 1 and compact[0] in "аоуеиі"
+
+
+def _is_roman_numeral_lookup(word: str) -> bool:
+    token = _normalize_for_vesum(word).casefold()
+    return len(token) >= 2 and all(char in _ROMAN_NUMERAL_CHARS for char in token)
 
 
 def _normalize_for_vesum(lemma: str) -> str:
@@ -11230,11 +11241,98 @@ def _citation_ref_resolves_by_containment(
     return False
 
 
-def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> dict[str, Any]:
+_ANONYMOUS_FOLK_PRIMARY_MARKERS = (
+    "народна творчість",
+    "фольклорний запис",
+    "народна пісня",
+    "усна народна творчість",
+)
+_QUOTED_CITATION_TITLE_RE = re.compile(
+    r"«(?P<guillemet>[^»\n]{3,240})»"
+    r'|"(?P<double>[^"\n]{3,240})"'
+    r"|“(?P<curly>[^”\n]{3,240})”"
+)
+_ANONYMOUS_PRIMARY_MIN_TITLE_TOKENS = 3
+
+
+def _quoted_citation_titles(text: str) -> list[str]:
+    titles: list[str] = []
+    for match in _QUOTED_CITATION_TITLE_RE.finditer(text):
+        for group_name in ("guillemet", "double", "curly"):
+            title = match.group(group_name)
+            if title:
+                titles.append(title.strip())
+                break
+    return titles
+
+
+def _primary_excerpt_resolves_against_source(excerpt: str, source_text: str) -> bool:
+    excerpt_tokens = _textbook_match_token_spans(excerpt)
+    if len(excerpt_tokens) < _ANONYMOUS_PRIMARY_MIN_TITLE_TOKENS:
+        return False
+    return bool(
+        _matching_token_spans(
+            excerpt,
+            source_text,
+            min_words=len(excerpt_tokens),
+        )
+    )
+
+
+def _anonymous_folk_primary_citation_resolves(
+    resource: Mapping[str, Any],
+    source_ref: str,
+    *,
+    module_text: str,
+    level: str | None,
+) -> bool:
+    level_key = str(level or "").strip().casefold()
+    if level_key not in SEMINAR_LEVELS:
+        return False
+
+    marker_text = " ".join(
+        str(resource.get(field) or "")
+        for field in ("source_ref", "title")
+    )
+    marker_text = f"{marker_text} {source_ref}".casefold()
+    if not any(marker in marker_text for marker in _ANONYMOUS_FOLK_PRIMARY_MARKERS):
+        return False
+
+    quoted_titles = _quoted_citation_titles(source_ref) or _quoted_citation_titles(marker_text)
+    if not quoted_titles:
+        return False
+
+    verified_primary_texts = (
+        _quote_fidelity_verified_blockquote_texts(module_text, level=level_key)
+        if module_text
+        else []
+    )
+    for title in quoted_titles:
+        if any(
+            _primary_excerpt_resolves_against_source(title, primary_text)
+            for primary_text in verified_primary_texts
+        ):
+            return True
+        for hit in _search_literary_hits(title, level=level_key, limit=20):
+            hit_text = _result_text_for_match(hit)
+            if hit_text and _primary_excerpt_resolves_against_source(title, hit_text):
+                return True
+
+    return False
+
+
+def _citation_gate(
+    resources: list[dict[str, Any]],
+    plan: Mapping[str, Any],
+    *,
+    module_text: str = "",
+    level: str | None = None,
+) -> dict[str, Any]:
     plan_reference_records = _citation_plan_reference_records(plan)
     plan_reference_titles = [str(ref.get("title") or ref.get("work") or "") for ref in plan_reference_records]
     plan_titles = {_normalize_citation_ref(title) for title in plan_reference_titles}
     plan_keys = {key for title in plan_reference_titles if (key := extract_citation_key(title)) is not None}
+    level_key = str(level or plan.get("level") or "").strip().casefold()
     unknown = []
     for resource in resources:
         role = str(resource.get("role") or "textbook").strip()
@@ -11251,6 +11349,12 @@ def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> 
                 for reference in plan_reference_records
             )
             and resource.get("packet_chunk_id") is None
+            and not _anonymous_folk_primary_citation_resolves(
+                resource,
+                source_ref,
+                module_text=module_text,
+                level=level_key,
+            )
         ):
             unknown.append(source_ref)
     return {"passed": not unknown, "unknown": unknown}
