@@ -7968,6 +7968,8 @@ def _find_exact_reviewer_fix_span(
     text: str,
     anchor: str,
 ) -> tuple[int, int] | None:
+    if not anchor or all(char.isspace() for char in anchor):
+        return None
     offset = text.find(anchor)
     if offset < 0:
         return None

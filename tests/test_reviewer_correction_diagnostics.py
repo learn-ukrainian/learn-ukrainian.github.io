@@ -130,6 +130,26 @@ def test_reviewer_fix_exact_delete_replaces_full_trailing_space_span() -> None:
     assert result.unmatched_anchors == frozenset()
 
 
+def test_reviewer_fix_all_whitespace_anchor_fails_closed() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "a   b",
+        [{"find": "   ", "replace": "X"}],
+    )
+
+    assert result.text == "a   b"
+    assert result.unmatched_anchors == frozenset({"   "})
+
+
+def test_reviewer_fix_empty_anchor_is_noop() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "a   b",
+        [{"find": "", "replace": "X"}],
+    )
+
+    assert result.text == "a   b"
+    assert result.unmatched_anchors == frozenset()
+
+
 def test_reviewer_fix_leading_boundary_whitespace_is_not_replaced() -> None:
     result = linear_pipeline._apply_reviewer_fixes(
         "Intro\n\ntarget",
@@ -178,6 +198,26 @@ def test_reviewer_insert_after_trailing_boundary_whitespace_inserts_before_run()
 
     assert result.text == "targetINSERTED\n\n- item"
     assert result.unmatched_anchors == frozenset()
+
+
+def test_reviewer_insert_after_all_whitespace_anchor_fails_closed() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "a   b",
+        [{"insert_after": "   ", "text": "X"}],
+    )
+
+    assert result.text == "a   b"
+    assert result.unmatched_anchors == frozenset({"   "})
+
+
+def test_reviewer_insert_after_empty_anchor_fails_closed() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "a   b",
+        [{"insert_after": "", "text": "X"}],
+    )
+
+    assert result.text == "a   b"
+    assert result.unmatched_anchors == frozenset({""})
 
 
 def test_reviewer_fix_ambiguous_normalized_anchor_fails_closed(
