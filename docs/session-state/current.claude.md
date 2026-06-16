@@ -1,38 +1,26 @@
-# Current — Claude Session Handoff (2026-06-16 — Atlas: translations + dedup T1+T2 + CEFR + slovnyk + §8)
+# Current — Claude Session Handoff (2026-06-16 overnight — #3277 atlas dedup-T2 SHIPPED · #M-5 reactivated · #2732 part1 done)
 
-> **ROLE:** main orchestrator (infra/tooling/integration/merge). **Atlas completion is the active user priority — specifically lemma-keying ("I would like lemmas… i want atlas fully done").** Huge multi-PR session; user steered closely (PULS trust → cross-check, functional-form carve-outs, "stop asking, finish it").
+> **ROLE:** main orchestrator. User asleep, autonomous: "atlas top prio then infra, buried alive in issues, don't ask, finish it." Quality non-negotiable (#M-11).
 
-> **State:** main moving (merge-train active — Codex B1/B2/folk content PRs auto-merge; track-owned, awareness-only). core.bare=false. Live hooks: #M-0.5 admin-guard + #M-7 pytest-push. **#M-5 secret-guard FIXED+merged but DEACTIVATED** — pending go below.
+> **State:** main = `590df3d782`+ (merge-train auto-merges Codex content/dependabot — awareness-only). Live hooks: **#M-5 secret-guard (reactivated this session)** + #M-0.5 admin + #M-7 pytest-push.
 
-## ✅ Shipped this session (MERGED)
-- **#3240** secret-guard false-positive fix (verified on deployed hook 28/28).
-- **#3254** kaikki/Wiktionary translation fill — **+58 clean translations** (gloss-quality layer `_clean_gloss`/`extract_glosses`/`_is_meta_clause`/`_is_grammatical_form` + `is_clean_lemma` affix guard, all in `build_kaikki_lookup.py`).
-- **#3256** slovnyk.me **429-friendly fetch + resumable mirror builder** — RESOLVED #3097. Finding: cache ~full; cache-hit=0.2ms/lemma; residual enrich cost is ~32-min **deterministic CPU**, not slovnyk.
-- **#3266** dedup **TRANCHE 1** — 273 inflection→lemma folds, committed static map `data/lexicon/vesum_inflection_aliases.json`, applied surgically (2667→2394, §8-clean). 6 functional forms standalone (дякую/прошу/може/будь/будьте/вітаю).
-- **#3276** §8 gate accepts modern technical VESUM-gaps (контрфактичний/морфонеміка) in both modes — RESOLVED #3270. Unblocks full `make atlas`.
+## ✅ SHIPPED this session (MERGED to main)
+- **#3277 — Atlas dedup TRANCHE 2 (create-page folds).** T1(273)+T2(324, +51 create-cases) lemma-keying; manifest refreshed to **2436 entries**, §8 0 violations, all hazard scans CLEAN, freshness gate GREEN, Frontend build green.
+  - **#M-11 REAL-DATA CATCH (the key event):** green gates HID a learner-visible bug — create-case lemma pages inherited the inflected *surface's* gloss/pos (`заходити` published `pos="imperative"`; `восьмий` masc. as «eighth (feminine)»). Renderer `[lemma].astro` shows gloss as subtitle+SEO and pos as a label. **Fixed** (`_atlas_record_for_manifest`: create-cases now null gloss/pos, keep enrichment.meaning, preserve surface in provenance; plain folds unchanged) + tests. Re-verified on real data before merge.
+  - **Lesson reinforced:** §8/hazard/freshness gates passing ≠ correct. The freshness gate is **lexicon-CODE only** (not vocab — out of scope per #3150/#2928); always eyeball the real entries.
+- **#M-5 secret-guard REACTIVATED** (`5837a1c09f`). Registered in PreToolUse[Bash], deployed to .claude/.codex/.agent, 37 tests, live-verified.
+- **#2732 part 1 — lxml 6.1.0→6.0.4** (#3282 MERGED). The one genuine undocumented lock conflict (inscriptis hard-dep needs <6.1.0). CI green incl. pytest+pip-audit. Closed #3281 first (it chased the documented `requirements.txt:54-79` "DO NOT CHASE" pins — anthropic 0.97→0.46 etc.).
 
-## 🟢 IN FLIGHT — the resume point
-- **#3277 (DRAFT) — dedup TRANCHE 2.** Map 273→**324** (+51 create-cases). Create-cases fold + CREATE the lemma page (вареники→вареник, заходьте→заходити, восьма→восьмий, Богдане→Богдан). Homographs (33) NEVER auto-resolved (caught a mis-merge сьома→сім; #1-fear → all standalone, deferred). +3 politeness standalone. Code+map+tests done, 18 tests pass.
-  - **⏭️ TO FINISH #3277 (next session):** in the worktree `.worktrees/claude/dedup-t2` (branch `claude/dedup-tranche2-2882`, DBs symlinked) run a full **`make atlas`** (build_data_manifest + enrich_manifest + verify_manifest; ~32-min CPU enrich; §8 now clean via #3276). This regenerates the manifest (current vocab + T1+T2 folds, ~2480 entries) + fingerprint. **VERIFY ON REAL DATA** (new lemma pages exist + enriched; §8 CLEAN; counts; spot-check вареник/восьмий pages). Commit manifest + fingerprint → flip #3277 to ready → merge. This ALSO does the vocab refresh (manifest was stale at 2394).
+## ⏭️ NEXT (infra backlog — "buried alive", 58 open issues)
+1. **#3255 dmklinger gloss cleanup** (atlas-adjacent): reuse `_clean_gloss` for dmklinger's `Alternative form of X: <trans>` colon-prefix junk (~49). NEEDS a re-enrich (full `make atlas` ~32-min CPU in a worktree; warm slovnyk cache). Code in `scripts/lexicon/enrich_manifest.py`.
+2. **#2732 follow-ups:** part 2 (.dagger/uv.lock idna — needs dagger SDK checked out); strategic #1634 (pip-freeze→real-resolver lock-gen + **isolate marker-pdf as an optional extra** so its caps don't gate the main lock) — architectural, needs a decision.
+3. **Atlas remainder:** homograph curated pass (33 words, per-word judgment, NEVER auto-resolve — сьома/друга mis-merge is #1 fear); create-case **Богдан** minor (vocative-handler shadows the create-case → not created; pre-existing, not a #3277 regression; fix = vocative-vs-create precedence).
+4. Triage remaining open issues. **#3153** telemetry + **#2738** VESUM-distractor decision = high blast/gate-scope, hold for interactive.
 
-## ✅ Decided + recorded
-- **CEFR = PULS-only, NO estimation, blank uncovered** (user). Doc: `docs/decisions/2026-06-15-cefr-puls-only-no-estimation.md`. PULS VALIDATED 90%-within-±1 vs our curriculum; covers A1–B2 only. `_cefr` already PULS-only → no code change.
-
-## ⏭️ AFTER #3277 — remaining lemma-keying + Atlas
-1. **Homograph curated pass (33 words)** — per-word "which lemma?" for `біле/гори/сині/друга/сьома/жив/їм/…` (list: regenerate map analysis or see this session's transcript). Add resolved ones to the map as a curated dict; leave genuinely-ambiguous standalone. Each is a judgment call — do NOT auto-resolve (mis-merge = #1 fear).
-2. **#3255 dmklinger gloss cleanup** — reuse `_clean_gloss` for dmklinger's colon-prefix `Alternative form of X: <trans>` (49 pre-existing garbage). Needs a re-enrich (bundle with #3277's or after).
-
-## ⛔ PENDING USER PRESENT-TENSE GO (system change)
-**Re-register fixed `guard-secret-print.py` into `agents_extensions/shared/settings.json` + `bash scripts/deploy_prompts.sh`** → re-activate #M-5. Verified clean (28/28). Held: hooks/settings change needs explicit present-tense go (2026-06-14 rule).
-
-## ⚠️ HARD LESSON (reinforced 3× this session)
-**VERIFY OUTPUT ON REAL DATA — passing tests ≠ correct.** (1) kaikki green tests hid garbage (бабусю→"accusative singular"). (2) dedup "drop misspellings" would've deleted 465 valid phrases. (3) tranche-2 homograph "sole taught candidate" mis-merged сьома→сім — caught ONLY by diffing+eyeballing the regenerated map. Always print/classify the actual output before commit.
-
-## Atlas plan (SSOT: `docs/atlas-data-coverage-strategy.md`)
-translation/meaning/stress/grammar → ~100%; etymology ~80% max; CEFR capped at PULS A1–B2 (blank beyond, decided). kaikki=CC-BY-SA; slovnyk.me СУМ-20 fine attributed.
+## ⛔ NEEDS USER (blocked on you)
+- **#2036** hermes/anthropic logged out → run `hermes auth add anthropic` (OAuth) to restore the Claude-via-Hermes lane. Low urgency (native Claude dispatch lane available).
 
 ## Open worktrees / cleanup
-- `.worktrees/claude/dedup-t2` — KEEP (branch `claude/dedup-tranche2-2882`, #3277 draft; has vesum.db+sources.db symlinks for the enrich). Remove after #3277 merges.
-- #2842 core.bare flip — `check_core_bare.py --fix` exists, not hook-wired. Recheck after worktree churn.
+- All session worktrees cleaned (dedup-t2, deps-lxml-2732, codex deps-lock-2732 removed). `.worktrees/builds/folk-koliadky-…` + codex dispatch worktrees remain (track-owned, awareness-only).
 
-Prior handoff: `2026-06-15-claude-atlas-completion-hooks-handoff.md` (CEFR source links). This file's earlier intra-session versions are in git history.
+Atlas SSOT: `docs/atlas-data-coverage-strategy.md`. Prior handoff: `2026-06-15-claude-atlas-completion-hooks-handoff.md`.
