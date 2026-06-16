@@ -62,6 +62,16 @@ def test_author_prefixed_scholarly_title_matches_plan_reference_by_containment()
     assert result["unknown"] == []
 
 
+def test_initial_before_surname_matches_plan_author_by_containment() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "М. Костомаров «Слов'янська міфологія»"}],
+        {"references": [{"title": "Слов'янська міфологія", "author": "Костомаров М."}]},
+    )
+
+    assert result["passed"] is True
+    assert result["unknown"] == []
+
+
 def test_author_mismatch_does_not_launder_generic_title_by_containment() -> None:
     result = linear_pipeline._citation_gate(
         [{"source_ref": "Інший Автор, Українська мова, 9 клас"}],
@@ -74,12 +84,12 @@ def test_author_mismatch_does_not_launder_generic_title_by_containment() -> None
 
 def test_authorless_generic_title_does_not_resolve_by_containment() -> None:
     result = linear_pipeline._citation_gate(
-        [{"source_ref": "Інший Автор, Українська мова, 9 клас"}],
-        {"references": [{"title": "Українська мова"}]},
+        [{"source_ref": "Єфремов С. «Історія української літератури»"}],
+        {"references": [{"title": "Історія української літератури"}]},
     )
 
     assert result["passed"] is False
-    assert result["unknown"] == ["Інший Автор, Українська мова, 9 клас"]
+    assert result["unknown"] == ["Єфремов С. «Історія української літератури»"]
 
 
 def test_punctuation_collapse_does_not_cross_token_boundaries() -> None:
@@ -122,6 +132,16 @@ def test_title_word_does_not_satisfy_author_corroboration() -> None:
     assert result["unknown"] == ["Костомаров М. «Слов'янська міфологія»"]
 
 
+def test_author_word_inside_quoted_title_does_not_corroborate_author() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Петренко О. «Шевченко: Садок вишневий»"}],
+        {"references": [{"title": "Садок вишневий", "author": "Тарас Шевченко"}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Петренко О. «Шевченко: Садок вишневий»"]
+
+
 def test_koliadky_author_prefixed_plan_references_resolve_by_containment() -> None:
     plan_path = (
         linear_pipeline.PROJECT_ROOT
@@ -129,7 +149,6 @@ def test_koliadky_author_prefixed_plan_references_resolve_by_containment() -> No
     )
     plan = yaml.safe_load(plan_path.read_text("utf-8"))
     resources = [
-        {"source_ref": "Народна творчість — Koliadky Shchedrivky"},
         {"source_ref": "Костомаров М. «Слов'янська міфологія»"},
         {"source_ref": "Попович М. «Нарис історії культури України»"},
         {"source_ref": "Чижевський Д. «Історія української літератури»"},

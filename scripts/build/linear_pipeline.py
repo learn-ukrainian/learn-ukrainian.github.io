@@ -10587,25 +10587,7 @@ def _citation_ref_text_contains(reference_title: str, text: str) -> bool:
 
 
 _CITATION_CONTAINMENT_MIN_CHARS = 8
-_CITATION_AUTHORLESS_CONTAINMENT_MIN_CHARS = 18
-_CITATION_AUTHORLESS_CONTAINMENT_MIN_DISTINCTIVE_TOKENS = 3
-_CITATION_AUTHORLESS_GENERIC_TITLE_TOKENS = frozenset(
-    {
-        "class",
-        "grade",
-        "клас",
-        "мова",
-        "украина",
-        "украинская",
-        "украинськии",
-        "украинська",
-        "украіни",
-        "украінська",
-        "українська",
-        "український",
-        "україни",
-    }
-)
+_CITATION_TITLE_QUOTE_PAIRS = (("«", "»"), ("“", "”"), ("„", "”"), ('"', '"'))
 
 
 def _citation_ref_specific_enough_for_containment(reference_title: Any) -> bool:
@@ -10613,25 +10595,6 @@ def _citation_ref_specific_enough_for_containment(reference_title: Any) -> bool:
     return (
         len(normalized_ref) >= _CITATION_CONTAINMENT_MIN_CHARS
         and len(_citation_match_tokens(reference_title)) >= 2
-    )
-
-
-def _citation_distinctive_title_tokens(reference_title: Any) -> list[str]:
-    return [
-        token
-        for token in _citation_match_tokens(reference_title)
-        if len(token) >= 4
-        and not token.isdigit()
-        and token not in _CITATION_AUTHORLESS_GENERIC_TITLE_TOKENS
-    ]
-
-
-def _citation_ref_specific_enough_without_author(reference_title: Any) -> bool:
-    distinctive_tokens = _citation_distinctive_title_tokens(reference_title)
-    normalized_ref = _normalize_citation_match_text(reference_title)
-    return len(distinctive_tokens) >= _CITATION_AUTHORLESS_CONTAINMENT_MIN_DISTINCTIVE_TOKENS or (
-        len(normalized_ref) >= _CITATION_AUTHORLESS_CONTAINMENT_MIN_CHARS
-        and len(distinctive_tokens) >= 2
     )
 
 
@@ -10664,18 +10627,18 @@ def _citation_author_anchor_tokens(author: Any, author_tokens: Sequence[str]) ->
 
 def _citation_author_appears_in_source_tokens(
     author: Any,
-    source_tokens_without_title: Sequence[str],
+    source_author_tokens: Sequence[str],
 ) -> bool:
     author_tokens = _citation_author_tokens(author)
-    if _citation_token_sequence_contains(author_tokens, source_tokens_without_title):
+    if _citation_token_sequence_contains(author_tokens, source_author_tokens):
         return True
     author_anchors = _citation_author_anchor_tokens(author, author_tokens)
-    if author_anchors & set(source_tokens_without_title):
+    if author_anchors & set(source_author_tokens):
         return True
 
     folded_source_tokens = [
         folded
-        for token in source_tokens_without_title
+        for token in source_author_tokens
         if (folded := fold_citation_author(token))
     ]
     folded_author_tokens = _citation_folded_author_tokens(author)
@@ -10685,17 +10648,40 @@ def _citation_author_appears_in_source_tokens(
     return bool(folded_author_anchors & set(folded_source_tokens))
 
 
-def _citation_source_tokens_without_title(
+def _citation_author_slot_text(source_ref: str, title_char_start: int) -> str:
+    prefix = source_ref[:title_char_start]
+    title_slot_start: int | None = None
+    for open_quote, close_quote in _CITATION_TITLE_QUOTE_PAIRS:
+        open_index = prefix.rfind(open_quote)
+        if open_index == -1:
+            continue
+        if open_quote == close_quote:
+            is_unclosed = prefix.count(open_quote) % 2 == 1
+        else:
+            is_unclosed = prefix.rfind(close_quote) < open_index
+        if is_unclosed and (title_slot_start is None or open_index > title_slot_start):
+            title_slot_start = open_index
+    if title_slot_start is not None:
+        return prefix[:title_slot_start]
+    return prefix
+
+
+def _citation_source_author_tokens(
     reference_title: Any,
     source_ref: str,
 ) -> list[str] | None:
     title_tokens = _citation_match_tokens(reference_title)
-    source_tokens = _citation_match_tokens(source_ref)
+    normalized_source_ref = _normalize_citation_ref(source_ref)
+    source_token_spans = _textbook_match_token_spans(normalized_source_ref)
+    source_tokens = [token.text for token in source_token_spans]
     title_start = _citation_token_sequence_start(title_tokens, source_tokens)
     if title_start is None:
         return None
-    title_end = title_start + len(title_tokens)
-    return source_tokens[:title_start] + source_tokens[title_end:]
+    author_slot = _citation_author_slot_text(
+        normalized_source_ref,
+        source_token_spans[title_start].start,
+    )
+    return _citation_match_tokens(author_slot)
 
 
 def _citation_author_appears_in_source(
@@ -10703,15 +10689,15 @@ def _citation_author_appears_in_source(
     reference_title: Any,
     source_ref: str,
 ) -> bool:
-    source_tokens_without_title = _citation_source_tokens_without_title(
+    source_author_tokens = _citation_source_author_tokens(
         reference_title,
         source_ref,
     )
-    if source_tokens_without_title is None:
+    if source_author_tokens is None:
         return False
     return _citation_author_appears_in_source_tokens(
         author,
-        source_tokens_without_title,
+        source_author_tokens,
     )
 
 
@@ -10742,7 +10728,7 @@ def _citation_ref_resolves_by_containment(
     author = str(reference.get("author") or "").strip()
     if author:
         return _citation_author_appears_in_source(author, reference_title, source_ref)
-    return _citation_ref_specific_enough_without_author(reference_title)
+    return False
 
 
 def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> dict[str, Any]:
