@@ -63,7 +63,34 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 40 HANDOFF (2026-06-16 — C.3 part 3 review-fix ORPHANED by a premature merge → RELANDED + MERGED (#3330, regression on main closed); #3318 resolved by orchestrator; протиріччя over-flag DEFLAGGED + MERGED (#3343), deeper classifier fix filed #3342) — **RESUME HERE**
+## ▶▶▶ SESSION 40 HANDOFF (2026-06-16 — C.3 part 2 = GATE-FRONTIER LOOP FIX, MERGED + e2e-VALIDATED (#3361): loop now advances through rotating walls — activity_schema ✓ → word_count ✓ → vesum; remaining wall = vesum coinage convergence (budget + anchor-matching). Also: #3330 regression relanded, протиріччя deflagged #3343, #M-10 forensics #3373) — **RESUME HERE**
+
+### 🟢🟢 C.3 PART 2 OUTCOME — the REAL fix was the loop METRIC, not a coinage rephraser (MERGED #3361 + e2e-validated)
+The handoff/design-doc predicted "coinage churn needs a cross-model rephraser." **A P3-validate `--no-resume` build PROVED that wrong.** The real blocker was the bounded loop's progress metric: fixing an early gate (activity_schema) UNMASKED deeper gates → total violation count rose → the old `min_score_regressed`(total-count) + `PYTHON_QG_MIN_REGRESSION_PATIENCE=1` misread that PROGRESS as regression and BAILED after one round, restoring the worse pre-fix state.
+- **FIX MERGED (#3361, main):** gate-FRONTIER-aware metric — a round's progress = index of first-failing gate in `PYTHON_QG_GATE_ORDER`; advancing the frontier (clearing an earlier gate, even unmasking later ones) is PROGRESS; only a frontier REGRESS (earlier gate pass→fail) counts; patience 1→3; completed `PYTHON_QG_GATE_ORDER` (+ AST completeness guard test); `_normalize_for_vesum` strips markdown `**`/`*`/`_`. 2 adversarial review rounds (caught the design gap + gate-order incompleteness) + deterministic AST guards.
+- **e2e-VALIDATED (build `folk-koliadky-shchedrivky-20260616-202559`):** the loop advanced frontier 2→4→10 across rounds — **activity_schema CONVERGED, word_count CONVERGED** (the writer-correction closed a ~2000-word gap over 2 rounds — my under-write worry was wrong), reaching vesum. The OLD code bailed at round 2. **The rotating-wall bail is FIXED.**
+- **#M-10 forensics (#3373, MERGED):** build auto-commit was dropping `python_qg_correction_loop.json` (the loop summary — the exact diagnostic). Now committed + guard-tested.
+
+### 🧱 REMAINING WALL — vesum COINAGE convergence (the precise next #3079 task)
+The validated build `module_failed` at **vesum_verified** (frontier 10) — the loop reached it but couldn't clear the writer's coinages in the rounds left. THREE precise sub-issues (NOT generic "churn"):
+1. **Budget too tight.** `PYTHON_QG_SEMINAR_MAX_CORRECTION_ROUNDS=4` got consumed: 1 (activity_schema) + 2 (word_count) + 1 (vesum). vesum needs more rounds. Raise it (e.g. 8). Low risk — best-round/frontier caps the downside.
+2. **Cross-model corrector anchors don't apply.** The codex vesum corrector (it ALREADY runs — `_apply_reviewer_correction` invokes codex for vesum/calque gates; empty-candidates prompt permits rephrase) emitted rephrase fixes but they hit `reviewer_fixes_anchor_unmatched` (its `<find>` anchors don't match the module text verbatim). It still made progress (missing 5→4) but many fixes no-op'd. **This is the real lever** — anchor-matching robustness (normalize whitespace/markdown in anchor matching, or have the corrector quote exact spans).
+3. **Misses are confirmed coinages, NOT heritage.** `verify_words` + `search_heritage` (this session): `дерево-явір`, `побажальна`, `одновладна`, `сновати` are ALL absent from VESUM AND have NO heritage evidence (`явір` alone IS in VESUM; `сновати`→standard `снувати`; `дерево-явір`→`явір`/`дерево`). So the corrector should REPHRASE/REPLACE them — heritage-exemption does NOT apply. (`Вільговський` UA surname — codex already cleared it.)
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order) — C.3 part 2 frontier fix DONE+VALIDATED; next = vesum convergence
+1. **vesum coinage convergence (the remaining #3079 wall).** (a) Raise `PYTHON_QG_SEMINAR_MAX_CORRECTION_ROUNDS` 4→~8. (b) Fix the cross-model corrector's anchor-matching (`reviewer_fixes_anchor_unmatched` — normalize whitespace/markdown when matching `<find>`, or constrain the corrector to quote exact spans). Dispatch to codex + adversarial review (it's the correction loop). (c) THEN re-run P3-validate `--no-resume` → if python_qg clears, the LLM-QG loop (B1) finally engages → confirm pedagogical ≥8 → **B1 validated e2e** at last.
+2. **#3342 — heritage classifier over-weighting fix** (deeper протиріччя root cause): demote LT `replace.txt`/Штепа to style-warnings overridable by СУМ-20-codification + literary attestation (like Antonenko already is). Broad blast radius → careful weighting rule + adversarial review + regression sweep. My lane (#0.2). Relates #3098/#1659.
+3. (Parallel content lane, unblocked) dossier #26 `narodni-lehendy` → #27 `istorychni-perekazy`.
+
+### ⚠ CARRY-FORWARD
+- **Each gate/loop change MUST go through `ab ask-codex` adversarial review before self-merge** (8/8 now — caught real bugs on #3319 AND #3361). Fleet-review is load-bearing (#M-12).
+- **EVIDENCE-FIRST on the loop:** run P3-validate `--no-resume` to get ground truth BEFORE building a fix — it twice corrected a wrong hypothesis (coinage-churn → really the metric; word_count under-write → really converges).
+- **Build worktrees to reap** (artifacts on build branches; but `…-191728` + `…-202559` have UNTRACKED `python_qg_correction_loop.json` — they predate #3373; commit-or-keep, don't blind-reap).
+- Never reset/commit on `main`; folk push `--no-verify`. Role #0.2 LIVE.
+
+---
+<!-- Below: the earlier Session-40 detail (C.3 part 3 reland, #3318, протиріччя, #3150 lesson). Its
+     own NEXT ACTIONS block is SUPERSEDED by the C.3-part-2-outcome NEXT ACTIONS above. -->
 
 > **⏱ HONEST SCOPE:** INFRA/recovery session. C.3 part 3 (long-tail exemptions) is now CORRECTLY on main
 > (the orphan-merge regression below is closed). No new folk CONTENT (modules 6/42, dossiers 25/42, wikis 15/42
