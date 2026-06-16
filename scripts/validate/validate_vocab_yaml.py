@@ -26,6 +26,17 @@ VALID_GENDER = {'m', 'f', 'n', 'pl', '-', ''}
 logger = logging.getLogger("validate_vocab_yaml")
 
 
+def _items_from_data(data):
+    """Return (items, enriched_schema) for supported vocabulary shapes."""
+    if isinstance(data, list):
+        return data, False
+
+    if isinstance(data, dict) and isinstance(data.get('items'), list):
+        return data['items'], True
+
+    return None, False
+
+
 def validate_file(file_path):
     logger.info("Validating %s...", file_path.name)
     try:
@@ -37,37 +48,44 @@ def validate_file(file_path):
     errors = []
     lemmas = set()
 
-    if 'items' not in data or not isinstance(data['items'], list):
-        print("  ❌ Missing 'items' list")
+    items, enriched_schema = _items_from_data(data)
+    if items is None:
+        logger.error("  unsupported vocabulary schema: expected bare list or mapping with 'items' list")
         return False
 
-    for i, item in enumerate(data['items']):
-        lemma = item.get('lemma')
+    for i, item in enumerate(items):
+        if not isinstance(item, dict):
+            errors.append(f"Item #{i}: Expected mapping")
+            continue
+
+        lemma = item.get('lemma') if enriched_schema else item.get('word') or item.get('lemma')
         if not lemma:
-            errors.append(f"Item #{i}: Missing 'lemma'")
+            errors.append(f"Item #{i}: Missing 'lemma' or 'word'")
             continue
 
         if lemma in lemmas:
             errors.append(f"Duplicate lemma: '{lemma}'")
         lemmas.add(lemma)
 
-        # Mandatory Enrichment Check
-        if not item.get('ipa'):
-            errors.append(f"'{lemma}': Missing IPA")
         if not item.get('translation'):
             errors.append(f"'{lemma}': Missing Translation")
 
-        # Enum Checks
-        pos = item.get('pos', 'other')
-        if pos not in VALID_POS:
-            errors.append(f"'{lemma}': Invalid POS '{pos}'")
+        if enriched_schema:
+            # Mandatory Enrichment Check
+            if not item.get('ipa'):
+                errors.append(f"'{lemma}': Missing IPA")
 
-        if pos == 'noun':
-            gen = item.get('gender', '')
-            if not gen:
-                errors.append(f"'{lemma}' (noun): Missing Gender")
-            elif gen not in VALID_GENDER:
-                errors.append(f"'{lemma}': Invalid Gender '{gen}'")
+            # Enum Checks
+            pos = item.get('pos', 'other')
+            if pos not in VALID_POS:
+                errors.append(f"'{lemma}': Invalid POS '{pos}'")
+
+            if pos == 'noun':
+                gen = item.get('gender', '')
+                if not gen:
+                    errors.append(f"'{lemma}' (noun): Missing Gender")
+                elif gen not in VALID_GENDER:
+                    errors.append(f"'{lemma}': Invalid Gender '{gen}'")
 
     if errors:
         # Log count only — per-error detail goes to a side file to avoid
