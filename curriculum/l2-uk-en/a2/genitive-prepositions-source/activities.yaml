@@ -107,7 +107,7 @@ inline:
     - з
     - зі
     explanation: Із золота допомагає вимові.
-  - sentence: Ключі впали ___ стола.
+  - sentence: Ключі впали ___ столу.
     answer: зі
     options:
     - зі

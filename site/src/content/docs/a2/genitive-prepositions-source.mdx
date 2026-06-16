@@ -134,7 +134,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Що означає фраза?
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "сир з Франції", "options": [{"text": "походження", "correct": true}, {"text": "людина-джерело", "correct": false}, {"text": "час після події", "correct": false}], "explanation": "З Франції відповідає на питання звідки?"}, {"question": "лист від мами", "options": [{"text": "людина-джерело", "correct": true}, {"text": "матеріал", "correct": false}, {"text": "часовий старт", "correct": false}], "explanation": "Від мами показує, від кого лист."}, {"question": "після уроку", "options": [{"text": "час після події", "correct": true}, {"text": "походження", "correct": false}, {"text": "матеріал", "correct": false}], "explanation": "Після уроку означає, що урок був раніше."}, {"question": "сукня з шовку", "options": [{"text": "матеріал", "correct": true}, {"text": "відстань", "correct": false}, {"text": "людина-джерело", "correct": false}], "explanation": "З шовку відповідає на питання з чого?"}, {"question": "далеко від центру", "options": [{"text": "відстань", "correct": true}, {"text": "походження", "correct": false}, {"text": "матеріал", "correct": false}], "explanation": "Від центру показує орієнтир для відстані."}, {"question": "з понеділка", "options": [{"text": "початкова точка в часі", "correct": true}, {"text": "подарунок", "correct": false}, {"text": "подія після", "correct": false}], "explanation": "З понеділка означає починаючи з понеділка."}, {"question": "парасолька від дощу", "options": [{"text": "захист", "correct": true}, {"text": "походження", "correct": false}, {"text": "матеріал", "correct": false}], "explanation": "Від дощу означає захист від дощу."}, {"question": "ми знайомі з дитинства", "options": [{"text": "початкова точка в часі", "correct": true}, {"text": "відстань", "correct": false}, {"text": "людина-джерело", "correct": false}], "explanation": "З дитинства означає від дитинства, від раннього часу."}]`)} isUkrainian={true} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "сир з Франції", "options": [{"text": "походження", "correct": true}, {"text": "людина-джерело", "correct": false}, {"text": "час після події", "correct": false}], "explanation": "З Франції відповідає на питання звідки?"}, {"question": "лист від мами", "options": [{"text": "людина-джерело", "correct": true}, {"text": "матеріал", "correct": false}, {"text": "часовий старт", "correct": false}], "explanation": "Від мами показує, від кого лист."}, {"question": "після уроку", "options": [{"text": "час після події", "correct": true}, {"text": "походження", "correct": false}, {"text": "матеріал", "correct": false}], "explanation": "Після уроку означає, що урок був раніше."}, {"question": "сукня з шовку", "options": [{"text": "матеріал", "correct": true}, {"text": "відстань", "correct": false}, {"text": "людина-джерело", "correct": false}], "explanation": "З шовку відповідає на питання з чого?"}, {"question": "далеко від центру", "options": [{"text": "відстань", "correct": true}, {"text": "походження", "correct": false}, {"text": "матеріал", "correct": false}], "explanation": "Від центру показує орієнтир для відстані."}, {"question": "з понеділка", "options": [{"text": "початкова точка в часі", "correct": true}, {"text": "подарунок", "correct": false}, {"text": "подія після", "correct": false}], "explanation": "З понеділка означає починаючи з понеділка."}, {"question": "парасолька від дощу", "options": [{"text": "захист", "correct": true}, {"text": "походження", "correct": false}, {"text": "матеріал", "correct": false}], "explanation": "Від дощу означає захист від дощу."}, {"question": "ми знайомі з дитинства", "options": [{"text": "початкова точка в часі", "correct": true}, {"text": "відстань", "correct": false}, {"text": "людина-джерело", "correct": false}], "explanation": "З дитинства означає від дитинства, від раннього часу."}]`)} instruction={"Оберіть значення фрази з родовим відмінком."} isUkrainian={true} />
 
 ## Звідки? З, із, зі плюс родовий
 
@@ -236,7 +236,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 | --- | --- | --- |
 | з | перед голосним або простим приголосним | з Одеси, з України, з дому |
 | із | коли `з` звучить важко | із села, із золота, лист із Канади |
-| зі | перед важким збігом, особливо з л, шк, зн, ст | зі Львова, зі школи, зі стола |
+| зі | перед важким збігом, особливо з л, шк, зн, ст | зі Львова, зі школи, зі столу |
 
 Це правило служить вимові. Спробуйте сказати вголос:
 
@@ -248,7 +248,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 :::tip[Безпечне правило А2]
 Якщо після прийменника починається важкий збіг приголосних, оберіть
-`зі`: `зі школи`, `зі Львова`, `зі стола`.
+`зі`: `зі школи`, `зі Львова`, `зі столу`.
 :::
 
 Не перетворюйте милозвучність на тест з одним назавжди правильним
@@ -267,7 +267,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### З, із чи зі?
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ України.", "answer": "з", "options": ["з", "із", "зі"]}, {"sentence": "Вона ___ Львова.", "answer": "зі", "options": ["зі", "з", "із"]}, {"sentence": "Це лист ___ Канади.", "answer": "із", "options": ["із", "зі", "з"]}, {"sentence": "Ми повернулися ___ Одеси.", "answer": "з", "options": ["з", "зі", "із"]}, {"sentence": "Діти йдуть ___ школи.", "answer": "зі", "options": ["зі", "з", "із"]}, {"sentence": "Каблучка ___ золота.", "answer": "із", "options": ["із", "з", "зі"]}, {"sentence": "Ключі впали ___ стола.", "answer": "зі", "options": ["зі", "з", "із"]}, {"sentence": "Ми починаємо ___ ранку.", "answer": "з", "options": ["з", "із", "зі"]}]`)} isUkrainian={true} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ України.", "answer": "з", "options": ["з", "із", "зі"]}, {"sentence": "Вона ___ Львова.", "answer": "зі", "options": ["зі", "з", "із"]}, {"sentence": "Це лист ___ Канади.", "answer": "із", "options": ["із", "зі", "з"]}, {"sentence": "Ми повернулися ___ Одеси.", "answer": "з", "options": ["з", "зі", "із"]}, {"sentence": "Діти йдуть ___ школи.", "answer": "зі", "options": ["зі", "з", "із"]}, {"sentence": "Каблучка ___ золота.", "answer": "із", "options": ["із", "з", "зі"]}, {"sentence": "Ключі впали ___ столу.", "answer": "зі", "options": ["зі", "з", "із"]}, {"sentence": "Ми починаємо ___ ранку.", "answer": "з", "options": ["з", "із", "зі"]}]`)} instruction={"Доповніть фразу природною формою прийменника."} isUkrainian={true} />
 
 ## Від кого? Від плюс родовий
 
@@ -396,7 +396,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Називний і родовий
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Україна", "right": "з України"}, {"left": "Львів", "right": "зі Львова"}, {"left": "мама", "right": "від мами"}, {"left": "друг", "right": "від друга"}, {"left": "урок", "right": "після уроку"}, {"left": "робота", "right": "після роботи"}, {"left": "шовк", "right": "з шовку"}, {"left": "центр", "right": "від центру"}]`)} isUkrainian={true} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Україна", "right": "з України"}, {"left": "Львів", "right": "зі Львова"}, {"left": "мама", "right": "від мами"}, {"left": "друг", "right": "від друга"}, {"left": "урок", "right": "після уроку"}, {"left": "робота", "right": "після роботи"}, {"left": "шовк", "right": "з шовку"}, {"left": "центр", "right": "від центру"}]`)} instruction={"Зіставте словникову форму з фразою після прийменника."} isUkrainian={true} />
 
 ## Міні-розмова: мій день
 
@@ -482,7 +482,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Три прийменники
 
-<GroupSort client:only='react' groups={JSON.parse(`{"з/із/зі": ["з України", "із золота", "зі школи", "з ранку"], "від": ["від мами", "від дощу", "від центру", "від сусіда"], "після": ["після уроку", "після роботи", "після вечері", "після канікул"]}`)} isUkrainian={true} />
+<GroupSort client:only='react' groups={JSON.parse(`{"з/із/зі": ["з України", "із золота", "зі школи", "з ранку"], "від": ["від мами", "від дощу", "від центру", "від сусіда"], "після": ["після уроку", "після роботи", "після вечері", "після канікул"]}`)} instruction={"Розсортуйте фрази за головним прийменником."} isUkrainian={true} />
 
 </TabItem>
 <TabItem label="Словник">
@@ -512,11 +512,11 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Перевірка родового
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "з України", "isTrue": true, "explanation": "України - родовий відмінок."}, {"statement": "від мама", "isTrue": false, "explanation": "Потрібно: від мами."}, {"statement": "після уроку", "isTrue": true, "explanation": "Уроку - родовий відмінок."}, {"statement": "зі Львова", "isTrue": true, "explanation": "Форма зі природна перед Львова."}, {"statement": "після робота", "isTrue": false, "explanation": "Потрібно: після роботи."}, {"statement": "подарунок від друга", "isTrue": true, "explanation": "Від друга правильно показує джерело."}, {"statement": "сукня з шовк", "isTrue": false, "explanation": "Потрібно: сукня з шовку."}, {"statement": "далеко від центру", "isTrue": true, "explanation": "Від центру правильно показує відстань."}]`)} isUkrainian={true} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "з України", "isTrue": true, "explanation": "України - родовий відмінок."}, {"statement": "від мама", "isTrue": false, "explanation": "Потрібно: від мами."}, {"statement": "після уроку", "isTrue": true, "explanation": "Уроку - родовий відмінок."}, {"statement": "зі Львова", "isTrue": true, "explanation": "Форма зі природна перед Львова."}, {"statement": "після робота", "isTrue": false, "explanation": "Потрібно: після роботи."}, {"statement": "подарунок від друга", "isTrue": true, "explanation": "Від друга правильно показує джерело."}, {"statement": "сукня з шовк", "isTrue": false, "explanation": "Потрібно: сукня з шовку."}, {"statement": "далеко від центру", "isTrue": true, "explanation": "Від центру правильно показує відстань."}]`)} instruction={"Визначте, чи правильно побудована фраза."} isUkrainian={true} />
 
 ### Мій день після уроку
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ уроку я п'ю каву.", "answer": "Після", "options": ["Після", "Від", "З"]}, {"sentence": "Кава ___ Бразилії.", "answer": "з", "options": ["з", "від", "після"]}, {"sentence": "Це порада ___ подруги.", "answer": "від", "options": ["від", "після", "зі"]}, {"sentence": "Кафе недалеко ___ школи.", "answer": "від", "options": ["від", "після", "з"]}, {"sentence": "Ми працюємо ___ понеділка.", "answer": "з", "options": ["з", "після", "від"]}, {"sentence": "Парасолька ___ дощу лежить у сумці.", "answer": "від", "options": ["від", "з", "після"]}, {"sentence": "___ вечері ми дивимося фільм.", "answer": "Після", "options": ["Після", "Від", "Зі"]}, {"sentence": "Я ___ школи йду додому.", "answer": "зі", "options": ["зі", "від", "після"]}]`)} isUkrainian={true} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ уроку я п'ю каву.", "answer": "Після", "options": ["Після", "Від", "З"]}, {"sentence": "Кава ___ Бразилії.", "answer": "з", "options": ["з", "від", "після"]}, {"sentence": "Це порада ___ подруги.", "answer": "від", "options": ["від", "після", "зі"]}, {"sentence": "Кафе недалеко ___ школи.", "answer": "від", "options": ["від", "після", "з"]}, {"sentence": "Ми працюємо ___ понеділка.", "answer": "з", "options": ["з", "після", "від"]}, {"sentence": "Парасолька ___ дощу лежить у сумці.", "answer": "від", "options": ["від", "з", "після"]}, {"sentence": "___ вечері ми дивимося фільм.", "answer": "Після", "options": ["Після", "Від", "Зі"]}, {"sentence": "Я ___ школи йду додому.", "answer": "зі", "options": ["зі", "від", "після"]}]`)} instruction={"Оберіть прийменник."} isUkrainian={true} />
 
 ### Виправте маленьку помилку
 
@@ -524,7 +524,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Складіть речення
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Це / сир / з / Франції", "answer": "Це сир з Франції."}, {"jumbled": "Подарунок / від / бабусі / на / столі", "answer": "Подарунок від бабусі на столі."}, {"jumbled": "Після / уроку / я / п'ю / чай", "answer": "Після уроку я п'ю чай."}, {"jumbled": "Кафе / недалеко / від / центру", "answer": "Кафе недалеко від центру."}, {"jumbled": "Сукня / з / шовку / дуже / легка", "answer": "Сукня з шовку дуже легка."}, {"jumbled": "Ми / працюємо / з / понеділка", "answer": "Ми працюємо з понеділка."}]`)} />
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Це / сир / з / Франції", "answer": "Це сир з Франції."}, {"jumbled": "Подарунок / від / бабусі / на / столі", "answer": "Подарунок від бабусі на столі."}, {"jumbled": "Після / уроку / я / п'ю / чай", "answer": "Після уроку я п'ю чай."}, {"jumbled": "Кафе / недалеко / від / центру", "answer": "Кафе недалеко від центру."}, {"jumbled": "Сукня / з / шовку / дуже / легка", "answer": "Сукня з шовку дуже легка."}, {"jumbled": "Ми / працюємо / з / понеділка", "answer": "Ми працюємо з понеділка."}]`)} instruction={"Поставте слова в природний порядок."} />
 
 </TabItem>
 <TabItem label="Ресурси">
