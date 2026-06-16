@@ -42,6 +42,10 @@
   translation: basic
   pos: adjective
   example: "Це базовий список видових пар."
+- word: видовий партнер
+  translation: aspectual partner
+  pos: noun phrase
+  example: "Записуй дієслово разом із видовим партнером."
 - word: читати / прочитати
   translation: to read
   pos: verb pair
@@ -50,6 +54,14 @@
   translation: to write
   pos: verb pair
   example: "Вона писала нотатку і швидко написала лист."
+- word: робити / зробити
+  translation: to do, to make
+  pos: verb pair
+  example: "Ми робили завдання і зробили його до вечора."
+- word: готувати / приготувати
+  translation: to prepare, to cook
+  pos: verb pair
+  example: "Вони готували вечерю і приготували салат."
 - word: брати / взяти
   translation: to take
   pos: verb pair
@@ -78,3 +90,7 @@
   translation: to shape, to make by hand
   pos: verb pair
   example: "Діти ліпили вареники і зліпили останню партію."
+- word: шукати / знайти
+  translation: to look for / to find
+  pos: related verbs
+  example: "Я шукав ключі й нарешті знайшов їх."

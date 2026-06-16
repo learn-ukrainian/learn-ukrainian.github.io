@@ -4,8 +4,8 @@
 процес, інша показує результат. Тепер час зробити наступний крок:
 навчитися помічати й записувати такі форми разом.
 
-На A2 дуже корисно думати так: я вчу не одне дієслово, а маленьку
-команду з двох слів.
+На A2 дуже корисно думати так: я вчу не одне дієслово.
+Я вчу маленьку команду з двох слів.
 
 > `читати / прочитати`
 >
@@ -13,12 +13,21 @@
 >
 > `робити / зробити`
 
-Коли ви тримаєте пару разом, вам легше будувати речення, слухати
-діалоги й розуміти, чому в одному місці людина каже `говорив`, а в
-іншому `сказав`.
+Коли ви тримаєте пару разом, вам легше будувати речення.
+Вам легше слухати діалоги. Ви краще розумієте різницю:
+тут людина каже `говорив`, а там `сказав`.
 
-У наступних модулях ця звичка допоможе, коли до дієслів додадуться
+У наступних модулях ця звичка допоможе ще більше. До дієслів додадуться
 описи людей, родовий відмінок і кількість.
+
+**English support.** This module is about vocabulary habits, not about
+creating every verb form from a rule. Ukrainian aspect often lives in pairs.
+One verb helps you talk about the process, and the other helps you talk about
+the completed result.
+
+Write the pair as one vocabulary item. Do not keep `читати` on one card and
+`прочитати` far away on another card. A2 speaking becomes easier when the two
+forms are stored together from the start.
 
 ## Діалог 1 — нотатки до рецепта
 
@@ -39,6 +48,14 @@
 :::tip[Головна звичка модуля]
 Коли зустрічаєте нове дієслово, відразу питайте себе: де його пара?
 :::
+
+**English support.** The recipe situation gives you a concrete image. The
+grandmother is not asking for a grammar lecture. She is teaching a notebook
+habit: when one verb appears, look for the partner that belongs with it.
+
+This is why the module title says that verbs "go in pairs." The phrase is a
+memory tool. It reminds you to connect forms before you try to use them in
+longer stories.
 
 ## Чому дієслова краще вчити парами?
 
@@ -62,7 +79,7 @@
 | `говорити / сказати` | легше відрізняти тривалий процес і один мовленнєвий крок |
 
 На A2 це особливо важливо, бо ви вже говорите довше. У довших
-реченнях потрібна не тільки лексика, а й точний кут погляду на дію.
+реченнях потрібна не тільки лексика, а й точний погляд на дію.
 
 ### Як записувати дієслово в зошиті
 
@@ -75,6 +92,15 @@
 | `відповісти = to answer` | `відповідати / відповісти = to answer` |
 
 Коли пара лежить поруч, ви бачите систему, а не випадковий список.
+
+**English support.** A single English translation can hide the difference.
+Both `писати` and `написати` can be translated as "to write." The useful
+question is not only "what does it mean?" It is also "does this form show the
+process or the completed result?"
+
+Your notes should therefore keep three things together: the imperfective
+form, the perfective form, and one short example sentence. That is enough for
+this stage.
 
 ## Спосіб 1 — додати префікс
 
@@ -102,8 +128,22 @@
 > Я написав повідомлення й надіслав його.
 
 Префікс часто допомагає почути готовий крок. Але не думайте, що
-кожний префікс автоматично робить слово простою видовою парою без
-нового відтінку. На A2 достатньо знати центральні високочастотні пари.
+кожний префікс автоматично дає просту видову пару. Іноді з'являється
+новий відтінок. На A2 достатньо знати центральні високочастотні пари.
+
+**English support.** Prefixes are helpful, but they are not a machine where
+you can attach any prefix and get the correct pair. In many common pairs, the
+prefix is almost neutral for an A2 learner: `писати / написати`, `читати /
+прочитати`, `робити / зробити`.
+
+Still, prefixes can also create a new meaning. Learn the high-frequency pairs
+as ready-made vocabulary. Later, you will study the meanings of prefixes in
+more detail.
+
+For now, treat the prefix as a recognition signal. When you hear `написав`,
+do not stop and analyze every historical meaning of `на-`. First ask the A2
+question: is the speaker pointing to a finished written result? In the common
+pair `писати / написати`, the answer is usually yes.
 
 ### Міні-список для щоденного вживання
 
@@ -151,6 +191,41 @@
 
 Кожна така пара зекономить вам багато часу в читанні й слуханні.
 
+### Як перевіряти пару в словнику
+
+Коли ви не впевнені, не треба вигадувати форму наосліп. Відкрийте
+словник або надійний ресурс. Подивіться, який вид має дієслово.
+Потім знайдіть його видового партнера.
+
+Добрий запис може виглядати так:
+
+| Слово зі словника | Що записати |
+| --- | --- |
+| `відповісти` | `відповідати / відповісти` |
+| `вирішити` | `вирішувати / вирішити` |
+| `допомогти` | `допомагати / допомогти` |
+| `узяти` або `взяти` | `брати / взяти` |
+
+Не хвилюйтеся, якщо словник дає більше однієї форми. Для A2 спершу
+вибирайте найчастішу пару. Пишіть один короткий приклад.
+
+**English support.** A dictionary is not just for translation. It can help
+you check aspect. When you see one member of a pair, search for the other
+member and write both forms together.
+
+If several forms appear, choose the one that matches your A2 need. You do not
+need every prefix family yet. You need a small reliable set that helps you
+speak about everyday process and result.
+
+One practical card format is:
+
+`imperfective / perfective — English meaning — one process sentence — one
+result sentence`
+
+That format keeps you from memorizing only labels. It also keeps you from
+using the perfective form whenever English uses a simple past verb. The
+example sentences do the real teaching.
+
 ## Спосіб 3 — інше слово
 
 Є дуже часті пари, де партнери виглядають майже як окремі лексеми.
@@ -160,7 +235,6 @@
 | `брати` | `взяти` |
 | `говорити` | `сказати` |
 | `ловити` | `піймати` |
-| `класти` | `покласти` |
 
 Такі пари не треба "виводити". Їх треба впевнено запам'ятати.
 
@@ -169,23 +243,36 @@
 > **Менеджерка:** Ти говорив із клієнтом?
 > **Стажер:** Так, говорив, але ще не сказав про новий термін.
 > **Менеджерка:** Добре. Коли скажеш, напиши мені.
-> **Стажер:** Уже взяв нотатки й зараз напишу листа.
+> **Стажер:** Уже зробив нотатки й зараз напишу листа.
 
 Тут видно одразу кілька пар:
 
 - `говорив / сказав`;
-- `брав / взяв`;
+- `робив / зробив`;
 - `писати / написати` або майбутнє `напишу`.
 
-Такі пари дуже швидко входять у живе мовлення, бо вони часті й
-працюють у побуті, роботі та навчанні.
+Такі пари швидко входять у живе мовлення. Вони часті й працюють у
+побуті, роботі та навчанні.
+
+**English support.** Some pairs look irregular from an English point of view.
+Do not try to force them into a prefix rule. `брати / взяти` and `говорити /
+сказати` are common enough that you should memorize them as complete pairs.
+
+This is normal in Ukrainian. A very frequent verb often has an older or less
+transparent partner. Treat the pair like one vocabulary unit with two useful
+doors: process and result.
+
+These pairs are also useful because they appear in ordinary conversations.
+You will hear `говорив` when someone describes a conversation as an activity.
+You will hear `сказав` when the important point is one completed statement.
+That is why the pair belongs in your active vocabulary early.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
 ## Не кожні близькі слова є видовою парою
 
-Це місце часто плутає учнів. Якщо два дієслова пов'язані за змістом,
-це ще не гарантує, що вони є видовою парою.
+Тут легко заплутатися. Якщо два дієслова пов'язані за змістом, це ще
+не гарантує, що вони є видовою парою.
 
 Подивіться:
 
@@ -201,8 +288,22 @@
 
 Для A2 краще тримати в голові два правила:
 
-1. Спершу вчи найчастіші готові пари.
-2. Якщо сумніваєшся, перевір у словнику або в надійному ресурсі.
+1. Спершу вчіть найчастіші готові пари.
+2. Якщо сумніваєтеся, перевірте в словнику або в надійному ресурсі.
+
+**English support.** This warning prevents overgeneralization. `Шукати` and
+`знайти` belong to the same life situation, but they are not a neat mechanical
+pair like `читати / прочитати`. You can learn them together, but mark them as
+related actions.
+
+That note matters because it stops a common mistake: assuming every result
+verb is automatically the perfective partner of the process verb. Ukrainian
+does not work that mechanically.
+
+This is also why the module tells you to check a dictionary. A2 learners do
+not need to solve every morphological puzzle. They need to know when a pair is
+safe, when a pair is only related by meaning, and when a form should simply be
+memorized.
 
 ## Двадцять пар, які варто мати під рукою
 
@@ -228,11 +329,33 @@
 | `брати / взяти` | інше слово |
 | `говорити / сказати` | інше слово |
 | `ловити / піймати` | інше слово |
-| `класти / покласти` | інше слово |
+| `класти / покласти` | префікс |
 | `їсти / з'їсти` | префікс |
 
-Вам не треба вжити всі двадцять сьогодні. Але добре, якщо цей набір
+Вам не треба вживати всі двадцять сьогодні. Але добре, якщо цей набір
 почне жити у вашому словнику.
+
+Оберіть п'ять пар із таблиці. Запишіть їх у зошит. Біля кожної пари
+додайте два короткі речення:
+
+- одне речення про процес;
+- одне речення про результат.
+
+Наприклад:
+
+> Я довго слухав подкаст.
+>
+> Я послухав короткий випуск до кінця.
+
+Так список стає не таблицею для зубріння, а набором готових фраз.
+
+**English support.** The list of twenty pairs is a working shelf, not a test
+of memory. Choose the pairs that fit your real life first. If you write
+emails, start with `писати / написати` and `відповідати / відповісти`. If you
+cook, start with `готувати / приготувати` and `варити / зварити`.
+
+When a pair is personally useful, it becomes easier to remember. The grammar
+then supports communication instead of feeling like a separate chart.
 
 ## Як тренувати пари без перевантаження
 
@@ -256,22 +379,43 @@
 
 Так ви вчите не таблицю, а живий контраст.
 
+**English support.** Keep the practice small. Three pairs a day are better
+than twenty pairs that you only read once. Say one process sentence and one
+result sentence. Then close the book and try again later.
+
+This module is successful when you start asking one automatic question: "What
+is the partner?" That question prepares you for the next aspect modules.
+
+If you cannot make a sentence yet, use a frame. For process, try "I was doing
+X for a while." For result, try "I did X and now it is finished." Then replace
+the English frame with the Ukrainian pair. The frame is temporary, but it
+helps you choose the right member of the pair.
+
 <!-- INJECT_ACTIVITY: act-3 -->
 
 ## Підсумок
 
 На A2 дієслово краще записувати не окремо, а разом із видовим
-партнером. Найчастіше пара будується через префікс, іноді через зміну
-основи або суфікса, а іноді через зовсім інше слово.
+партнером. Найчастіше пара будується через префікс. Іноді вона має
+зміну основи або суфікса. Іноді партнером є зовсім інше слово.
 
 Найважливіша звичка цього модуля дуже проста:
 
 - побачив дієслово;
-- шукай партнера;
-- записуй пару разом;
-- одразу придумуй по одному реченню для процесу і для результату.
+- шукати партнера;
+- записувати пару разом;
+- одразу придумувати по одному реченню для процесу і для результату.
 
-У наступних модулях ми будемо використовувати ці пари вже в минулому
-часі, у майбутньому та в довших історіях.
+У наступних модулях ми будемо використовувати ці пари в минулому часі.
+Потім вони з'являться в майбутньому та в довших історіях.
+
+**English support.** Summary: do not learn aspect as an isolated grammar box.
+Learn it as vocabulary plus meaning. The pair tells you what action you are
+talking about. The context tells you whether the speaker sees the process or
+the result.
+
+That is the whole practical goal here. You are building a small internal
+dictionary where verbs arrive in pairs. Later modules will use these pairs in
+past stories, future plans, instructions, and longer conversations.
 
 <!-- INJECT_ACTIVITY: act-4 -->
