@@ -15,6 +15,10 @@ Usage:
     .venv/bin/python scripts/build/run_llm_qg_parity.py folk koliadky-shchedrivky
     .venv/bin/python scripts/build/run_llm_qg_parity.py folk <slug> --reviewer codex-tools
 
+The shared QG runner resumes dimensions whose prompt/raw-response artifacts
+already parse cleanly, and retries a dimension when the backend returns an empty
+or malformed response.
+
 Outputs ``<module_dir>/llm_qg.json`` and prints the aggregate verdict line. Exit
 code 0 on success, 1 on missing plan/module.
 """

@@ -6,6 +6,8 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
+import pytest
+
 from scripts.audit import certify_module
 
 
@@ -116,6 +118,94 @@ def test_build_checks_use_project_venv_python() -> None:
 
     assert python_commands
     assert all(command[0] == str(certify_module.VENV_PYTHON) for command in python_commands)
+
+
+def test_build_checks_include_standard_certification_guards() -> None:
+    target = certify_module.ModuleTarget(
+        lang_pair="l2-uk-en",
+        level="a1",
+        slug="my-family",
+        local_num=6,
+    )
+
+    checks = certify_module.build_checks(target, site_build=False, install_site_deps=False)
+    names = [check.name for check in checks]
+    vocab_check = next(check for check in checks if check.name == "validate vocabulary")
+
+    assert "validate vocabulary" in names
+    assert "validate plan config" in names
+    assert "check MDX generation drift" in names
+    assert "agent trailer audit" in names
+    assert vocab_check.command[1] == "scripts/validate/validate_vocab_yaml.py"
+    assert all("vocabulary.yaml" in arg for arg in vocab_check.command[2:])
+
+
+def test_build_checks_do_not_add_vocabulary_validator_for_missing_file() -> None:
+    target = certify_module.ModuleTarget(
+        lang_pair="l2-uk-en",
+        level="a1",
+        slug="does-not-exist",
+        local_num=999,
+    )
+
+    checks = certify_module.build_checks(target, site_build=False, install_site_deps=False)
+
+    assert "validate vocabulary" not in {check.name for check in checks}
+
+
+def test_vocabulary_presence_guard_fails_clearly_for_missing_file(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    target = certify_module.ModuleTarget(
+        lang_pair="l2-uk-en",
+        level="a1",
+        slug="does-not-exist",
+        local_num=999,
+    )
+
+    rc = certify_module.run_vocabulary_presence_guard(target)
+
+    captured = capsys.readouterr()
+    assert rc == 1
+    assert "no vocabulary source found for a1/does-not-exist" in captured.out
+    assert "curriculum/l2-uk-en/a1/does-not-exist/vocabulary.yaml" in captured.out
+
+
+def test_forbidden_diff_reason_flags_generated_artifacts_and_protected_configs() -> None:
+    cases = {
+        ".python-version": "protected repo config",
+        ".yamllint": "protected repo config",
+        ".markdownlint.json": "protected repo config",
+        "curriculum/l2-uk-en/a2/status/greetings.json": "generated status JSON",
+        "curriculum/l2-uk-en/a2/audit/greetings-review.md": "generated audit review",
+        "curriculum/l2-uk-en/a2/review/greetings-review.md": "generated review file",
+        "curriculum/l2-uk-en/a2/greetings/vocabulary.yaml.errors.txt": "validator sidecar",
+        "docs/A2-STATUS.md": "generated level status",
+        "data/telemetry/module-builds.sqlite": "local telemetry",
+    }
+
+    for rel_path, expected in cases.items():
+        assert expected in (certify_module.forbidden_diff_reason(rel_path) or "")
+
+    assert certify_module.forbidden_diff_reason("curriculum/l2-uk-en/a2/greetings/module.md") is None
+
+
+def test_changed_or_untracked_paths_reports_tracked_and_untracked(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git(repo, "init", "-b", "main")
+    _git(repo, "config", "user.email", "codex@example.test")
+    _git(repo, "config", "user.name", "Codex")
+    tracked = repo / "tracked\tfile.txt"
+    tracked.write_text("old\n", encoding="utf-8")
+    _git(repo, "add", "tracked\tfile.txt")
+    _git(repo, "commit", "-m", "init")
+    tracked.write_text("new\n", encoding="utf-8")
+    (repo / "untracked space.txt").write_text("new\n", encoding="utf-8")
+
+    paths = certify_module.changed_or_untracked_paths(repo)
+
+    assert paths == ("tracked\tfile.txt", "untracked space.txt")
 
 
 def test_parse_target_accepts_slug_and_module_number() -> None:

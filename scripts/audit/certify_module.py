@@ -8,6 +8,7 @@ leftover QG artifacts unless --clean-qg-artifacts removes known untracked files.
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import json
 import os
 import shlex
@@ -29,12 +30,15 @@ if str(PROJECT_ROOT) not in sys.path:
 from manifest_utils import get_module_by_number, get_modules_for_level, parse_numbered_slug
 
 from scripts.audit import check_mdx_source_parity
+from scripts.validate import validate_plans as plan_yaml_validator
 
 QG_ARTIFACT_NAMES = frozenset({"llm_qg.json", "python_qg.json"})
 QG_ARTIFACT_GLOBS = (
     "llm-qg-*-prompt.md",
     "llm-qg-*-response.raw.md",
 )
+PROTECTED_CONFIG_FILES = frozenset({".python-version", ".yamllint", ".markdownlint.json"})
+MAX_CHANGED_FILES_DEFAULT = 20
 
 
 @dataclass(frozen=True)
@@ -148,6 +152,18 @@ def module_source_files(target: ModuleTarget) -> list[Path]:
         CURRICULUM_ROOT / target.level / "activities" / f"{target.slug}.yaml",
         CURRICULUM_ROOT / target.level / "vocabulary" / f"{target.slug}.yaml",
         CURRICULUM_ROOT / target.level / "resources" / f"{target.slug}.yaml",
+    ]
+    return [path for path in candidates if path.exists()]
+
+
+def plan_source_file(target: ModuleTarget) -> Path:
+    return CURRICULUM_ROOT / "plans" / target.level / f"{target.slug}.yaml"
+
+
+def vocabulary_source_files(target: ModuleTarget) -> list[Path]:
+    candidates = [
+        target.module_dir / "vocabulary.yaml",
+        CURRICULUM_ROOT / target.level / "vocabulary" / f"{target.slug}.yaml",
     ]
     return [path for path in candidates if path.exists()]
 
@@ -271,6 +287,110 @@ def run_qg_guard(target: ModuleTarget, *, clean: bool, dry_run: bool) -> int:
     return 0
 
 
+def _git_lines(args: tuple[str, ...], repo_root: Path = PROJECT_ROOT, *, nul: bool = False) -> list[str]:
+    proc = subprocess.run(
+        ["git", "-C", str(repo_root), *args],
+        check=False,
+        capture_output=True,
+        env=_sanitized_git_env(),
+        text=True,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(proc.stderr.strip() or f"git {' '.join(args)} failed")
+    parts = proc.stdout.split("\0") if nul else proc.stdout.splitlines()
+    return [part for part in parts if part]
+
+
+def changed_or_untracked_paths(repo_root: Path = PROJECT_ROOT) -> tuple[str, ...]:
+    paths = set(_git_lines(("diff", "--name-only", "-z", "HEAD", "--"), repo_root=repo_root, nul=True))
+    paths.update(_git_lines(("ls-files", "-z", "--others", "--exclude-standard"), repo_root=repo_root, nul=True))
+    return tuple(sorted(paths))
+
+
+def forbidden_diff_reason(rel_path: str) -> str | None:
+    if rel_path in PROTECTED_CONFIG_FILES:
+        return "protected repo config must stay unchanged"
+    if rel_path.startswith("data/telemetry/"):
+        return "local telemetry database/state must not be committed"
+    if rel_path.startswith("curriculum/l2-uk-en/"):
+        if "/status/" in rel_path and rel_path.endswith(".json"):
+            return "generated status JSON must not be in module PRs"
+        if "/audit/" in rel_path and rel_path.endswith("-review.md"):
+            return "generated audit review must not be in module PRs"
+        if "/review/" in rel_path and rel_path.endswith("-review.md"):
+            return "generated review file must not be in module PRs"
+        if rel_path.endswith(".errors.txt"):
+            return "validator sidecar error file is a scratch artifact"
+    if fnmatch.fnmatchcase(rel_path, "docs/*-STATUS.md"):
+        return "generated level status report must not be in module PRs"
+    return None
+
+
+def run_diff_guard(*, max_changed_files: int) -> int:
+    print("\n== artifact/diff guard ==")
+    try:
+        paths = changed_or_untracked_paths()
+    except RuntimeError as exc:
+        print(f"[FAIL] artifact/diff guard could not inspect git diff: {exc}")
+        return 1
+
+    failures: list[tuple[str, str]] = []
+    if len(paths) > max_changed_files:
+        failures.append(
+            (
+                "<diff>",
+                f"{len(paths)} changed/untracked files exceeds limit {max_changed_files}; check for generated artifacts",
+            )
+        )
+    for rel_path in paths:
+        reason = forbidden_diff_reason(rel_path)
+        if reason:
+            failures.append((rel_path, reason))
+
+    if failures:
+        print("[FAIL] artifact/diff guard found disallowed or suspicious diff entries:")
+        for rel_path, reason in failures:
+            print(f"  - {rel_path}: {reason}")
+        return 1
+
+    print(f"[OK] artifact/diff guard: {len(paths)} changed/untracked file(s), no forbidden artifacts")
+    return 0
+
+
+def run_plan_yaml_validation(target: ModuleTarget) -> int:
+    print("\n== validate plan YAML ==")
+    plan_path = plan_source_file(target)
+    if not plan_path.exists():
+        print(f"[FAIL] missing plan: {_rel(plan_path)}")
+        return 1
+    issues = plan_yaml_validator.validate_plan(plan_path)
+    errors = [issue for issue in issues if issue.get("severity") == "error"]
+    if errors:
+        print(f"[FAIL] validate plan YAML: {_rel(plan_path)}")
+        for issue in errors:
+            print(f"  - {issue.get('type', 'ERROR')}: {issue.get('message', '')}")
+        return 1
+    print(f"[OK] validate plan YAML: {_rel(plan_path)}")
+    return 0
+
+
+def run_vocabulary_presence_guard(target: ModuleTarget) -> int:
+    print("\n== vocabulary source guard ==")
+    vocab_files = vocabulary_source_files(target)
+    if vocab_files:
+        for path in vocab_files:
+            print(f"[OK] vocabulary source: {_rel(path)}")
+        return 0
+    expected_paths = [
+        target.module_dir / "vocabulary.yaml",
+        CURRICULUM_ROOT / target.level / "vocabulary" / f"{target.slug}.yaml",
+    ]
+    print(f"[FAIL] no vocabulary source found for {target.label}; checked:")
+    for path in expected_paths:
+        print(f"  - {_rel(path)}")
+    return 1
+
+
 def build_checks(
     target: ModuleTarget,
     *,
@@ -278,6 +398,7 @@ def build_checks(
     install_site_deps: bool,
 ) -> list[CommandCheck]:
     source_files = module_source_files(target)
+    vocab_files = vocabulary_source_files(target)
     checks = [
         CommandCheck(
             "generate MDX",
@@ -300,25 +421,44 @@ def build_checks(
                 str(target.local_num),
             ),
         ),
-        CommandCheck(
-            "validate plan config",
-            (
-                str(VENV_PYTHON),
-                "scripts/validate_plan_config.py",
-                f"{target.level}/{target.slug}",
-            ),
-        ),
-        CommandCheck(
-            "check MDX generation drift",
-            (
-                str(VENV_PYTHON),
-                "scripts/audit/check_mdx_generation_drift.py",
-                "--files",
-                *(_rel(path) for path in source_files),
-            ),
-        ),
-        CommandCheck("git diff whitespace check", ("git", "diff", "--check")),
     ]
+    if vocab_files:
+        checks.append(
+            CommandCheck(
+                "validate vocabulary",
+                (
+                    str(VENV_PYTHON),
+                    "scripts/validate/validate_vocab_yaml.py",
+                    *(_rel(path) for path in vocab_files),
+                ),
+            )
+        )
+    checks.extend(
+        [
+            CommandCheck(
+                "validate plan config",
+                (
+                    str(VENV_PYTHON),
+                    "scripts/validate_plan_config.py",
+                    f"{target.level}/{target.slug}",
+                ),
+            ),
+            CommandCheck(
+                "check MDX generation drift",
+                (
+                    str(VENV_PYTHON),
+                    "scripts/audit/check_mdx_generation_drift.py",
+                    "--files",
+                    *(_rel(path) for path in source_files),
+                ),
+            ),
+            CommandCheck("git diff whitespace check", ("git", "diff", "--check")),
+            CommandCheck(
+                "agent trailer audit",
+                (str(VENV_PYTHON), "scripts/audit/lint_agent_trailer.py"),
+            ),
+        ]
+    )
 
     if site_build:
         site_dir = PROJECT_ROOT / "site"
@@ -377,6 +517,15 @@ def certify(args: argparse.Namespace) -> int:
     rc = run_qg_guard(target, clean=args.clean_qg_artifacts, dry_run=args.dry_run_qg_cleanup)
     if rc != 0:
         return rc
+    rc = run_diff_guard(max_changed_files=args.max_changed_files)
+    if rc != 0:
+        return rc
+    rc = run_plan_yaml_validation(target)
+    if rc != 0:
+        return rc
+    rc = run_vocabulary_presence_guard(target)
+    if rc != 0:
+        return rc
 
     for check in build_checks(
         target,
@@ -390,6 +539,10 @@ def certify(args: argparse.Namespace) -> int:
             rc = run_mdx_source_parity(target)
             if rc != 0:
                 return rc
+
+    rc = run_diff_guard(max_changed_files=args.max_changed_files)
+    if rc != 0:
+        return rc
 
     print(f"\n[OK] {target.label} deterministic certification passed")
     return 0
@@ -421,6 +574,15 @@ def build_parser() -> argparse.ArgumentParser:
         "--install-site-deps",
         action="store_true",
         help="Run npm ci in site/ before the production build.",
+    )
+    parser.add_argument(
+        "--max-changed-files",
+        type=int,
+        default=MAX_CHANGED_FILES_DEFAULT,
+        help=(
+            "Fail when the current diff has more changed/untracked files than this "
+            f"limit (default: {MAX_CHANGED_FILES_DEFAULT})."
+        ),
     )
     return parser
 
