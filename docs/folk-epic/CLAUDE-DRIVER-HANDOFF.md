@@ -63,7 +63,7 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 40 HANDOFF (2026-06-16 — C.3 part 3 review-fix ORPHANED by a premature merge → RELANDED + MERGED (regression on main closed); #3318 resolved by orchestrator; протиріччя over-flag found + fix BLOCKED on #3318) — **RESUME HERE**
+## ▶▶▶ SESSION 40 HANDOFF (2026-06-16 — C.3 part 3 review-fix ORPHANED by a premature merge → RELANDED + MERGED (#3330, regression on main closed); #3318 resolved by orchestrator; протиріччя over-flag DEFLAGGED + MERGED (#3343), deeper classifier fix filed #3342) — **RESUME HERE**
 
 > **⏱ HONEST SCOPE:** INFRA/recovery session. C.3 part 3 (long-tail exemptions) is now CORRECTLY on main
 > (the orphan-merge regression below is closed). No new folk CONTENT (modules 6/42, dossiers 25/42, wikis 15/42
@@ -108,27 +108,30 @@ import write_fingerprint; write_fingerprint()"`). The freshness gate only checks
 CONTENT drift is explicitly out-of-scope per the gate's own `#3150` TODO. **Concurrent lexicon-code PRs collide on
 the fingerprint file** → branch a lexicon PR off main only AFTER any other in-flight lexicon PR merges.
 
-### 🔎 протиріччя OVER-FLAG (user question 2026-06-16) — confirmed; fix BLOCKED on #3318 merge
-User asked if протиріччя is really a Russianism. **Verdict: OVER-FLAG.** Sole basis = one LanguageTool `replace.txt`
-style rule, re-labeled "surzhyk" in `SURZHYK_TO_AVOID_SEEDS` (`build_data_manifest.py:81`) +
-`_KNOWN_STANDARD_ALTERNATIVES` (`heritage_classifier.py:48`, DORMANT — `check_russian_shadow`=false 0.57).
-Counter-evidence (tool-verified): СУМ-20 says **authentic / NOT a russism**; NUS textbooks (Grade 6 golub 2023,
-Grade 9 burnejko, Grade 10 karaman) USE it; absent from Antonenko + UA-GEC. Harm = the public Word Atlas mislabels
-a codified word as surzhyk-to-avoid (contradicts learners' textbooks). **FIX (my lane #0.2):** remove протиріччя
-from both lists + surgical manifest-entry removal + DB-free fingerprint bump. **BLOCKED until #3318 merges** (else
-fingerprint-file merge conflict / stale-main cascade). Keep діюча/діючий/аранжировка (those ARE legit calques).
+### ✅ протиріччя OVER-FLAG (user question 2026-06-16) — DEFLAGGED + MERGED (#3343); deeper classifier issue #3342
+User asked if протиріччя is really a Russianism. **Verdict: OVER-FLAG.** Sole basis = LanguageTool `replace.txt`
++ the Штепа purist diaspora dictionary. Counter-evidence (tool-verified, codex-reviewed): СУМ-20 codifies it
+("Те саме, що суперечність" + Донченко/Копиленко/Харчук citations); literary attestation (Багряний); NUS textbooks
+(Grade 6 golub 2023, Grade 9 burnejko, Grade 10 karaman) USE it; absent from Antonenko + UA-GEC corrections;
+`check_russian_shadow`=false (0.57). **SHIPPED (PR #3343, merged `bf3368aadd`):** removed протиріччя from
+`SURZHYK_TO_AVOID_SEEDS` (`build_data_manifest.py`) + surgical manifest-entry removal (entries 2428→2427,
+from_surzhyk_to_avoid 8→7) + DB-free fingerprint bump. codex APPROVE (kept діюча/діючий/слідуючий/міроприємство —
+verified genuine calques: міроприємство condemned by Antonenko, діючий has calque_corrections evidence).
+**DEEPER ISSUE #3342 (filed, NOT fixed):** `heritage_classifier` STILL returns russianism for протиріччя via
+`lt_replacements` weighting — it over-weights LT/Штепа vs СУМ-20-codification + literary attestation (already
+demotes Antonenko warnings; LT/Штепа should be demoted too). Broad blast radius → focused follow-up I own (#0.2).
 
-### ▶ NEXT ACTIONS (RESUME HERE, in order)
-1. **протиріччя fix** — once #3318 is merged (check `gh pr view 3318 --json state`): branch off fresh main,
-   remove протиріччя from `SURZHYK_TO_AVOID_SEEDS` + `_KNOWN_STANDARD_ALTERNATIVES`, surgical manifest-entry
-   removal + DB-free fingerprint bump, PR → `ab ask-codex` review → CI → self-merge. Small, my lane.
-2. **C.3 part 2 — cross-model fixer route** (the BIGGEST remaining #3079 piece). Wire a cross-model agent (codex)
+### ▶ NEXT ACTIONS (RESUME HERE, in order) — protiріччя DONE (#3343); START AT C.3 part 2
+1. **C.3 part 2 — cross-model fixer route** (the BIGGEST remaining #3079 piece). Wire a cross-model agent (codex)
    as the automated REPHRASE fixer the best-round python_qg loop (`#3307`, `run_python_qg_with_corrections`)
    invokes for genuine coinage/calque gates (`дерево-явір`/`дерево-вісь`/`спільнолюдський`, calques
    `непринята`/`хранительками` → also #3098). REPHRASE not find/replace (find/replace churns). Design: doc §3 Part C.3.
-3. **THEN re-run P3-validate** `v7_build.py folk koliadky-shchedrivky --no-resume --worktree` — confirm a fresh
+2. **THEN re-run P3-validate** `v7_build.py folk koliadky-shchedrivky --no-resume --worktree` — confirm a fresh
    build CLEARS python_qg (now with A/B/C + C.3 part 1 loop + part 3 exemptions all on main) and reaches B1 ≥8.
    ONLY THEN is B1 validated e2e. (`--no-resume` MANDATORY — resume reuses main's stale artifacts.)
+3. **#3342 — heritage classifier over-weighting fix** (deeper протиріччя root cause): demote LT `replace.txt`/Штепа
+   to style-warnings overridable by СУМ-20-codification + literary attestation (like Antonenko already is). Broad
+   blast radius → careful weighting rule + adversarial review + regression sweep. My lane (#0.2). Relates #3098/#1659.
 4. (Parallel content lane, unblocked) dossier #26 `narodni-lehendy` → #27 `istorychni-perekazy`.
 
 ### ⚠ CARRY-FORWARD
