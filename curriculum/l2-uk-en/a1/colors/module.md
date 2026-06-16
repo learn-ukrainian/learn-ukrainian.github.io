@@ -13,7 +13,7 @@ By the end, you can:
 - recognize why **синій** is a soft-pattern color: **синій / синя / синє**;
 - keep **синій** and **блакитний** apart in useful visual contexts;
 - describe a few people safely with chunks such as **карі очі**,
-  **русяве волосся**, **сиве волосся**, and **руде волосся**.
+  **русяве волосся**, and **сиве волосся**.
 
 Keep the goal practical. You are not learning every shade or every case.
 You are learning to ask about color and attach one color to one familiar noun.
@@ -25,9 +25,8 @@ You are learning to ask about color and attach one color to one familiar noun.
 Start with the question, not with a color list. Say **Якого кольору...?** as a
 single chunk. You do not need to analyze why the form is **якого** yet.
 
-For reception (**Рецепція**), hear the question with a picture or **або аудіо**
-and answer first with the dictionary form (**словникова форма**). In practice,
-that means:
+When you hear the question with a picture or a classroom object, answer first
+with one color word that matches the noun. In practice, that means:
 
 - **Якого кольору олівець?** — **Червоний.**
 - **Якого кольору светр?** — **Синій.**
@@ -228,19 +227,16 @@ Store these as ready chunks:
 | **карі очі** | brown eyes |
 | **русяве волосся** | fair or light-brown hair |
 | **сиве волосся** | grey hair |
-| **руде волосся** | red hair |
 
-The words **рудий** and **сивий** are especially useful **для волосся**. If you
-read a story, you may also recognize **голубий** or **білосніжний**. Treat
-those as passive recognition for now. You do not need to produce them in your
-own A1 descriptions.
+The word **сивий** is especially useful **для волосся**. If you read a story,
+you may also recognize **голубий** as another blue word. Treat it as passive
+recognition for now. Your active pair is still **синій** and **блакитний**.
 
 Say:
 
 - **У неї карі очі.**
 - **У нього русяве волосся.**
 - **У бабусі сиве волосся.**
-- **У хлопчика руде волосся.**
 
 Do not copy English color idioms word for word. If you mean "I feel blue,"
 say **Мені сумно** or **У мене поганий настрій**.
@@ -260,8 +256,8 @@ Try it with three things near you:
 Стіл коричневий.
 Якого кольору ручка?
 Ручка синя.
-Якого кольору фото?
-Фото чорно-біле.
+Якого кольору небо?
+Небо блакитне.
 ```
 
 Support after the Ukrainian lines:
@@ -272,8 +268,8 @@ Support after the Ukrainian lines:
 | **Стіл коричневий.** | The table is brown. |
 | **Якого кольору ручка?** | What color is the pen? |
 | **Ручка синя.** | The pen is blue. |
-| **Якого кольору фото?** | What color is the photo? |
-| **Фото чорно-біле.** | The photo is black and white. |
+| **Якого кольору небо?** | What color is the sky? |
+| **Небо блакитне.** | The sky is light blue. |
 
 Then add one person-description chunk:
 
