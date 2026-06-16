@@ -288,6 +288,60 @@ def test_anonymous_folk_primary_resolves_against_module_primary(monkeypatch) -> 
     assert result["unknown"] == []
 
 
+def test_anonymous_folk_primary_rejects_known_author_corpus_hit(monkeypatch) -> None:
+    def search_literary_hits(*args: Any, **kwargs: Any) -> list[dict[str, Any]]:
+        return [
+            {
+                "title": "Тарас Шевченко. Мені однаково, чи буду...",
+                "text": (
+                    "Мені однаково, чи буду\n\n"
+                    "Я жить в Україні, чи ні.\n\n"
+                    "Чи хто згадає, чи забуде"
+                ),
+                "source_file": "ukrlib-shevchenko",
+                "author": "Шевченко Т.",
+                "work": "Тарас Шевченко. Мені однаково, чи буду...",
+                "genre": "poetry",
+                "source_type": "literary",
+                "corpus": "literary_texts",
+            }
+        ]
+
+    monkeypatch.setattr(linear_pipeline, "_search_literary_hits", search_literary_hits)
+
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Народна творчість «Мені однаково чи буду»"}],
+        {"level": "lit", "references": []},
+        level="lit",
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Народна творчість «Мені однаково чи буду»"]
+
+
+def test_anonymous_folk_primary_rejects_known_author_module_primary(monkeypatch) -> None:
+    monkeypatch.setattr(linear_pipeline, "_search_literary_hits", lambda *args, **kwargs: [])
+    module_text = """
+## Читання
+
+> Мені однаково, чи буду
+> Я жить в Україні, чи ні.
+> Чи хто згадає, чи забуде
+
+— Шевченко Т., «Мені однаково, чи буду»
+"""
+
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Народна творчість «Мені однаково чи буду»"}],
+        {"level": "lit", "references": []},
+        module_text=module_text,
+        level="lit",
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Народна творчість «Мені однаково чи буду»"]
+
+
 def test_fabricated_anonymous_folk_primary_still_rejected(monkeypatch) -> None:
     monkeypatch.setattr(linear_pipeline, "_search_literary_hits", lambda *args, **kwargs: [])
     module_text = """

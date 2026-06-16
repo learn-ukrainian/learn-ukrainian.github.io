@@ -670,7 +670,11 @@ _VESUM_APOSTROPHE_TRANSLATION = str.maketrans(
     }
 )
 _VESUM_WORD_EDGE_CHARS = "-'ʼ’‘`´"
-_ROMAN_NUMERAL_CHARS = frozenset("xivlcdmхі")
+_CYRILLIC_ROMAN_NUMERAL_TRANSLATION = str.maketrans({"Х": "X", "І": "I"})
+_ROMAN_NUMERAL_RE = re.compile(
+    r"^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$",
+    re.IGNORECASE,
+)
 # O-grade plural obliques (`-остей`, `-остями`, `-остях`, `-остям`) overlap
 # Russian `-ость` forms such as `новостей`; keep that fallback to longer
 # stems so it does not pass merely because short bases like `новий` verify.
@@ -9929,8 +9933,23 @@ def _vesum_gate(
             }
     if missing_lc:
         missing_lc = {word for word in missing_lc if not _is_sung_vowel_practice_lookup(word)}
+    roman_numeral_exempted_pairs: set[tuple[str, str, str]] = set()
     if missing_lc:
-        missing_lc = {word for word in missing_lc if not _is_roman_numeral_lookup(word)}
+        roman_numeral_exempted_pairs = {
+            (surface, lower, original_case_lookup)
+            for surface, lower, original_case_lookup in unchecked_pairs
+            if lower in missing_lc and _is_roman_numeral_lookup(original_case_lookup)
+        }
+        non_roman_missing_lc = {
+            lower
+            for _surface, lower, original_case_lookup in unchecked_pairs
+            if lower in missing_lc and not _is_roman_numeral_lookup(original_case_lookup)
+        }
+        missing_lc -= {
+            lower
+            for _surface, lower, _original_case_lookup in roman_numeral_exempted_pairs
+            if lower not in non_roman_missing_lc
+        }
     foreign_proper_attested_lc: set[str] = set()
     if missing_lc and _vesum_heritage_attestation_enabled(level):
         try:
@@ -9956,7 +9975,14 @@ def _vesum_gate(
                 "checked": len(unchecked_pairs),
             }
         missing_lc -= heritage_attested_lc
-    missing = sorted({surface for surface, lower, _original in unchecked_pairs if lower in missing_lc})
+    missing = sorted(
+        {
+            surface
+            for surface, lower, original in unchecked_pairs
+            if lower in missing_lc
+            and (surface, lower, original) not in roman_numeral_exempted_pairs
+        }
+    )
     heritage_attested_words = sorted(
         {surface for surface, lower, _original in unchecked_pairs if lower in heritage_attested_lc}
     )
@@ -10105,8 +10131,11 @@ def _is_sung_vowel_practice_lookup(word: str) -> bool:
 
 
 def _is_roman_numeral_lookup(word: str) -> bool:
-    token = _normalize_for_vesum(word).casefold()
-    return len(token) >= 2 and all(char in _ROMAN_NUMERAL_CHARS for char in token)
+    token = _normalize_for_vesum(word).strip()
+    if len(token) < 2 or token != token.upper():
+        return False
+    latin_token = token.translate(_CYRILLIC_ROMAN_NUMERAL_TRANSLATION)
+    return bool(_ROMAN_NUMERAL_RE.fullmatch(latin_token))
 
 
 def _normalize_for_vesum(lemma: str) -> str:
@@ -11253,6 +11282,35 @@ _QUOTED_CITATION_TITLE_RE = re.compile(
     r"|“(?P<curly>[^”\n]{3,240})”"
 )
 _ANONYMOUS_PRIMARY_MIN_TITLE_TOKENS = 3
+_ANONYMOUS_FOLK_AUTHOR_MARKERS = frozenset(
+    {
+        "народна творчість",
+        "народна пісня",
+        "народні пісні",
+        "народна дума",
+        "народні думи",
+        "народна казка",
+        "народна балада",
+        "фольклор",
+        "фольклорний запис",
+        "усна народна творчість",
+    }
+)
+_ANONYMOUS_FOLK_METADATA_FIELDS = (
+    "author",
+    "authors",
+    "creator",
+    "contributors",
+    "attribution",
+    "title",
+    "work",
+    "source_ref",
+    "source",
+    "source_file",
+    "genre",
+    "corpus",
+    "unit_key",
+)
 
 
 def _quoted_citation_titles(text: str) -> list[str]:
@@ -11279,6 +11337,45 @@ def _primary_excerpt_resolves_against_source(excerpt: str, source_text: str) -> 
     )
 
 
+def _anonymous_folk_metadata_text(value: Any) -> str:
+    if isinstance(value, Mapping):
+        return " ".join(_anonymous_folk_metadata_text(child) for child in value.values())
+    if isinstance(value, list | tuple | set):
+        return " ".join(_anonymous_folk_metadata_text(child) for child in value)
+    return str(value or "")
+
+
+def _has_anonymous_folk_marker(text: str) -> bool:
+    folded = text.casefold()
+    return any(marker in folded for marker in _ANONYMOUS_FOLK_AUTHOR_MARKERS)
+
+
+def _authorship_text_is_only_anonymous_folk(text: str) -> bool:
+    if not text.strip():
+        return True
+    if not _has_anonymous_folk_marker(text):
+        return False
+    remainder = _QUOTED_CITATION_TITLE_RE.sub(" ", text).casefold()
+    for marker in sorted(_ANONYMOUS_FOLK_AUTHOR_MARKERS, key=len, reverse=True):
+        remainder = remainder.replace(marker, " ")
+    return not re.findall(r"[A-Za-zА-ЯІЇЄҐа-яіїєґ]{2,}", remainder)
+
+
+def _metadata_authorship_is_anonymous_folk(candidate: Mapping[str, Any]) -> bool:
+    metadata_text = " ".join(
+        _anonymous_folk_metadata_text(candidate.get(field))
+        for field in _ANONYMOUS_FOLK_METADATA_FIELDS
+    )
+    if not _has_anonymous_folk_marker(metadata_text):
+        return False
+
+    author_text = " ".join(
+        _anonymous_folk_metadata_text(candidate.get(field))
+        for field in ("author", "authors", "creator", "contributors", "attribution")
+    ).strip()
+    return _authorship_text_is_only_anonymous_folk(author_text)
+
+
 def _anonymous_folk_primary_citation_resolves(
     resource: Mapping[str, Any],
     source_ref: str,
@@ -11302,18 +11399,25 @@ def _anonymous_folk_primary_citation_resolves(
     if not quoted_titles:
         return False
 
-    verified_primary_texts = (
-        _quote_fidelity_verified_blockquote_texts(module_text, level=level_key)
+    verified_primary_records = (
+        [
+            record
+            for record in _extract_blockquote_records(module_text, level=level_key)
+            if _blockquote_record_is_quote_fidelity_verified(record)
+            and _metadata_authorship_is_anonymous_folk(record)
+        ]
         if module_text
         else []
     )
     for title in quoted_titles:
         if any(
-            _primary_excerpt_resolves_against_source(title, primary_text)
-            for primary_text in verified_primary_texts
+            _primary_excerpt_resolves_against_source(title, str(record.get("quote") or ""))
+            for record in verified_primary_records
         ):
             return True
         for hit in _search_literary_hits(title, level=level_key, limit=20):
+            if not _metadata_authorship_is_anonymous_folk(hit):
+                continue
             hit_text = _result_text_for_match(hit)
             if hit_text and _primary_excerpt_resolves_against_source(title, hit_text):
                 return True
