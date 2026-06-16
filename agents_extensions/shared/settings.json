@@ -658,6 +658,11 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-push-pytest.py",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-secret-print.py",
+            "timeout": 5
           }
         ]
       }
