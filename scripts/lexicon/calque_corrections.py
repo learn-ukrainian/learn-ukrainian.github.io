@@ -269,6 +269,47 @@ CURATED_CALQUES: dict[str, dict[str, object]] = {
         "heritage_guard": "search_heritage(жовтіючий, include_live_slovnyk=false): No heritage evidence found.",
     },
     "бувший": {"corrections": ["колишній"], "note": "-вш- participle does not exist in Ukrainian (рос. бывший)", "source": ["avramenko-11"]},
+    # §6 lexical-calque slice 3 (#3098) — single-word blanket lexical calques.
+    "слідуючий": {
+        "kind": "lexical",
+        "corrections": ["наступний"],
+        "note": "рос. следующий; use наступний for 'next'",
+        "source": ["voron-9", "zabolotnyi-5"],
+        "evidence": [
+            "9-klas-ukrajinska-mova-voron-2017_s0232: следующий — тут: наступний; Як правильно перекласти ... следующий? ... наступний",
+        ],
+        "heritage_guard": "search_heritage(слідуючий, include_live_slovnyk=false): No heritage evidence found.",
+    },
+    "багаточисельний": {
+        "kind": "lexical",
+        "corrections": ["численний"],
+        "note": "рос. многочисленный; use численний for 'numerous'",
+        "source": ["antonenko-p065", "zabolotnyi-11"],
+        "evidence": [
+            "Антоненко-Давидович: Слова багаточисельний ... нема в українській мові, є прикметник численний",
+        ],
+        "heritage_guard": "search_heritage(багаточисельний, include_live_slovnyk=false): No heritage evidence found.",
+    },
+    "міроприємство": {
+        "kind": "lexical",
+        "corrections": ["захід", "заходи"],
+        "note": "рос. мероприятие; use захід / заходи",
+        "source": ["antonenko-p044", "glazova-10"],
+        "evidence": [
+            "Антоненко-Давидович: Відповідником до російських мера, мероприятие є захід, а в множині — заходи",
+        ],
+        "heritage_guard": "search_heritage(міроприємство, include_live_slovnyk=false): No heritage evidence found.",
+    },
+    "учбовий": {
+        "kind": "lexical",
+        "corrections": ["навчальний"],
+        "note": "рос. учебный; use навчальний",
+        "source": ["avramenko-5", "zabolotnyi-10"],
+        "evidence": [
+            "5-klas-ukrmova-avramenko-2022_s0038: НЕПРАВИЛЬНО учбовий заклад; ПРАВИЛЬНО навчальний заклад",
+        ],
+        "heritage_guard": "search_heritage(учбовий, include_live_slovnyk=false): ЕСУМ hits are related/noisy snippets, not safe headword attestation.",
+    },
 }
 
 # Phrasal / collocation calques (whole-phrase replacement).
@@ -466,6 +507,28 @@ SENSE_RESTRICTED_CALQUES: dict[str, dict[str, object]] = {
             "Грінченко: Рахунок ... Счет, разсчет. В рахунку помилився.",
         ],
         "heritage_guard": "search_heritage(рахунок, include_live_slovnyk=false): Грінченко authentic for account/count; therefore на рахунок is sense-restricted to the 'regarding' calque.",
+    },
+    "любий": {
+        "corrections": ["будь-який", "кожний", "усякий"],
+        "calque_sense": "any / whichever (рос. любой)",
+        "authentic_sense": "dear, beloved, pleasant (любий друже; любий мій)",
+        "note": "Грінченко attests любий as 'dear/beloved'; calque only when it means 'any' → будь-який.",
+        "source": ["ua-gec", "grinchenko", "antonenko"],
+        "evidence": [
+            "UA-GEC 1846: Error: любий; Correction: будь-який; Type: F/Calque",
+        ],
+        "heritage_guard": "search_heritage(любий, include_live_slovnyk=false): Грінченко authentic for 'dear/beloved'; therefore sense-restricted, not blanket.",
+    },
+    "неділя": {
+        "corrections": ["тиждень"],
+        "calque_sense": "week / a seven-day period (рос. неделя)",
+        "authentic_sense": "Sunday (day of the week)",
+        "note": "Грінченко attests неділя as Sunday; calque only when it means a week-long period → тиждень.",
+        "source": ["glazova-10", "grinchenko"],
+        "evidence": [
+            "10-klas-ukrmova-glazova-2018_s0075: Прем’єра ... через дві неділі ... Довідка. Тиждень",
+        ],
+        "heritage_guard": "search_heritage(неділя, include_live_slovnyk=false): Грінченко authentic for Sunday; therefore sense-restricted, not blanket.",
     },
 }
 
