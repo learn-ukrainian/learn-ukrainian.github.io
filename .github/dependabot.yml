@@ -62,6 +62,10 @@ updates:
       # 2.41.5`. It must move only via a pydantic bump (which recomputes the
       # lock and brings a matching pydantic-core). Closed PR: #2540.
       - dependency-name: "pydantic-core"
+      # pypdfium2 is exact-pinned by pdftext AND surya-ocr (both require
+      # pypdfium2==4.30.0). A standalone bump (e.g. 4.30.0->5.9.0, #3359) breaks
+      # the OCR/PDF stack; it moves only via a pdftext/surya-ocr bump. Full block.
+      - dependency-name: "pypdfium2"
       # starlette is capped by fastapi (fastapi==0.136.1 requires
       # starlette<0.51.0); starlette 1.x makes the lock unresolvable by pip.
       # Allow 0.50.x patches but block >=0.51 until a fastapi bump loosens the
