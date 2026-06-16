@@ -2,10 +2,18 @@
   translation: how many, how much
   pos: adv
   usage: Скільки коштує торт?
+- lemma: коштувати
+  translation: to cost
+  pos: verb
+  usage: коштувати
 - lemma: коштує
   translation: costs
   pos: verb
   usage: Скільки коштує сумка?
+- lemma: коштують
+  translation: cost, plural
+  pos: verb
+  usage: Скільки коштують три булочки?
 - lemma: нуль
   translation: zero
   pos: numeral
@@ -194,6 +202,10 @@
   translation: phone number
   pos: phrase
   usage: Мій номер телефону — нуль дев'яносто сім.
+- lemma: телефон
+  translation: telephone
+  pos: noun
+  usage: Це телефон.
 - lemma: мені
   translation: to me, age chunk
   pos: pronoun
@@ -202,6 +214,10 @@
   translation: to you, age chunk
   pos: pronoun
   usage: Скільки тобі років?
+- lemma: вам
+  translation: to you, polite age chunk
+  pos: pronoun
+  usage: Скільки вам років?
 - lemma: їй
   translation: to her, age chunk
   pos: pronoun

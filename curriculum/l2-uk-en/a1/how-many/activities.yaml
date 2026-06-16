@@ -128,55 +128,38 @@ inline:
           - рік
         explanation: Ask Скільки тобі років?
   - id: act-5
-    type: quiz
+    type: fill-in
     title: Групи номера телефону
-    instruction: Choose the line that reads the number naturally.
+    instruction: Choose the digits you would write from dictation.
     items:
-      - prompt: '097'
+      - sentence: нуль дев'яносто сім = ___
+        answer: '097'
         options:
-          - text: нуль дев'яносто сім
-            correct: true
-          - text: о дев'яносто сім
-            correct: false
-          - text: нуль дев'ятдесят сім
-            correct: false
+          - '097'
+          - '907'
+          - '0907'
         explanation: Say нуль; 90 is дев'яносто.
-      - prompt: '45'
+      - sentence: сорок п'ять = ___
+        answer: '45'
         options:
-          - text: сорок п'ять
-            correct: true
-          - text: чотиридесят п'ять
-            correct: false
-          - text: сорок пять
-            correct: false
+          - '45'
+          - '405'
+          - '54'
         explanation: 45 is сорок п'ять.
-      - prompt: '67'
+      - sentence: шістдесят сім = ___
+        answer: '67'
         options:
-          - text: шістдесят сім
-            correct: true
-          - text: шістьдесять сім
-            correct: false
-          - text: шістдесят семь
-            correct: false
+          - '67'
+          - '607'
+          - '76'
         explanation: Use шістдесят сім.
-      - prompt: '321'
+      - sentence: три два один = ___
+        answer: '321'
         options:
-          - text: три два один
-            correct: true
-          - text: триста двадцять один
-            correct: false
-          - text: три дві один
-            correct: false
+          - '321'
+          - '3021'
+          - '231'
         explanation: Phone numbers may be read digit by digit in a group.
-      - prompt: '050'
-        options:
-          - text: нуль п'ятдесят
-            correct: true
-          - text: о п'ятдесят
-            correct: false
-          - text: нуль п'ятьдесять
-            correct: false
-        explanation: Say нуль and п'ятдесят.
 workbook:
   - type: fill-in
     title: Напиши число
@@ -286,14 +269,14 @@ workbook:
           - п'ять столи / п'ять студенти
           - п'ять стола / п'ять студент
         explanation: With 5+, use the memorized chunk п'ять столів.
-      - sentence: Який час? / Що час?
-        error: Який час? / Що час?
-        answer: Котра година? / О котрій годині?
+      - sentence: сімдесят гривні / сімдесят гривень
+        error: сімдесят гривні
+        answer: сімдесят гривень
         options:
-          - Котра година? / О котрій годині?
-          - Який час? / Що час?
-          - Скільки час?
-        explanation: For time, use the fixed formula Котра година?
+          - сімдесят гривень
+          - сімдесят гривні
+          - сімдесят гривня
+        explanation: The 5+ price chunk is гривень.
       - sentence: Я маю 20 років / Я є 20 років
         error: Я маю 20 років / Я є 20 років
         answer: Мені 20 років
@@ -302,14 +285,14 @@ workbook:
           - Я маю 20 років
           - Я є 20 років
         explanation: Age uses the chunk Мені ... років.
-      - sentence: перше січень / сьоме травень
-        error: перше січень / сьоме травень
-        answer: перше січня / сьоме травня
+      - sentence: дві гривень / дві гривні
+        error: дві гривень
+        answer: дві гривні
         options:
-          - перше січня / сьоме травня
-          - перше січень / сьоме травень
-          - один січня / сім травня
-        explanation: Learn dates as fixed chunks for now.
+          - дві гривні
+          - дві гривень
+          - два гривні
+        explanation: The 2-4 price chunk is гривні.
       - sentence: п'ятьдесять / шістьдесять
         error: п'ятьдесять / шістьдесять
         answer: п'ятдесят / шістдесят
@@ -318,14 +301,14 @@ workbook:
           - п'ятьдесять / шістьдесять
           - п'ятдесять / шістьдесят
         explanation: Use п'ятдесят and шістдесят.
-      - sentence: один тисяча / один мільйон
-        error: один тисяча / один мільйон
-        answer: тисяча / мільйон
+      - sentence: Скільки вам год? / Скільки вам років?
+        error: Скільки вам год?
+        answer: Скільки вам років?
         options:
-          - тисяча / мільйон
-          - один тисяча / один мільйон
-          - одне тисяча / одне мільйон
-        explanation: Use тисяча and мільйон as standalone chunks.
+          - Скільки вам років?
+          - Скільки вам год?
+          - Скільки вам рік?
+        explanation: Ask age with the fixed chunk Скільки вам років?
   - type: fill-in
     title: Перевір правопис числівників
     instruction: Choose the standard form.
@@ -379,6 +362,20 @@ workbook:
           - пол-шостого
           - половина шостого
         explanation: Use the Ukrainian time chunk пів на шосту.
+      - sentence: Чай коштує дві ___.
+        answer: гривні
+        options:
+          - гривні
+          - гривень
+          - гривня
+        explanation: The 2-4 price chunk is гривні.
+      - sentence: Кава коштує сімдесят ___.
+        answer: гривень
+        options:
+          - гривень
+          - гривні
+          - гривня
+        explanation: The 5+ price chunk is гривень.
   - type: translate
     title: Обери український рядок
     instruction: Choose the Ukrainian sentence that matches the English cue.
