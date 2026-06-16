@@ -29,6 +29,10 @@ function fixChipByText(container: HTMLElement, text: string) {
   return btn as HTMLElement;
 }
 
+function revealCorrectionBtn(container: HTMLElement) {
+  return container.querySelector('[data-activity="error-correction-reveal"]') as HTMLButtonElement | null;
+}
+
 function feedback(container: HTMLElement) {
   return container.querySelector('[data-activity="error-correction-feedback"]');
 }
@@ -288,6 +292,42 @@ describe('ErrorCorrectionItem multi-word error', () => {
     const fb = feedback(container);
     expect(fb).toBeInTheDocument();
     expect(fb!.getAttribute('data-correct')).toBe('true');
+  });
+});
+
+describe('ErrorCorrectionItem sentence-level rewrite without options', () => {
+  const props = {
+    sentence: 'I will to read the book tomorrow.',
+    errorWord: 'I will to read the book tomorrow.',
+    correctForm: 'I will read the book tomorrow.',
+    options: [],
+    explanation: 'Do not use "to" after the future auxiliary.',
+  };
+
+  test('reveals the correction instead of dead-ending in the fix step', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<ErrorCorrectionItem {...props} />);
+
+    await user.click(wordByText(container, 'will'));
+
+    expect(itemContainer(container).getAttribute('data-step')).toBe('fix');
+    expect(container.querySelector('[data-activity="error-correction-fix-options"]')).toBeNull();
+    expect(revealCorrectionBtn(container)).toBeInTheDocument();
+
+    await user.click(revealCorrectionBtn(container)!);
+
+    expect(itemContainer(container).getAttribute('data-step')).toBe('complete');
+    const fb = feedback(container);
+    expect(fb).toBeInTheDocument();
+    expect(fb!.getAttribute('data-correct')).toBe('true');
+    expect(fb!.textContent).toContain('Correction:');
+    expect(fb!.textContent).toContain('I will read the book tomorrow.');
+    expect(fb!.textContent).toContain('Do not use "to"');
+
+    await user.click(retryBtn(container)!);
+
+    expect(itemContainer(container).getAttribute('data-step')).toBe('identify');
+    expect(feedback(container)).toBeNull();
   });
 });
 

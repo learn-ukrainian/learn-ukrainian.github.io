@@ -53,6 +53,7 @@ export function ErrorCorrectionItem({
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
   const [selectedFix, setSelectedFix] = useState<string | null>(null);
   const [wrongAttempts, setWrongAttempts] = useState<string[]>([]);
+  const [revealedCorrection, setRevealedCorrection] = useState(false);
 
   // Split sentence into words while preserving punctuation
   const words = sentence.match(/[\wа-яіїєґА-ЯІЇЄҐ']+|[^\s\wа-яіїєґА-ЯІЇЄҐ']+|\s+/gi) || [];
@@ -104,7 +105,16 @@ export function ErrorCorrectionItem({
   const handleFixSelect = (fix: string) => {
     if (step !== 'fix') return;
 
+    setRevealedCorrection(false);
     setSelectedFix(fix);
+    setStep('complete');
+  };
+
+  const handleRevealCorrection = () => {
+    if (step !== 'fix' || shuffledOptions.length > 0) return;
+
+    setRevealedCorrection(true);
+    setSelectedFix(correctForm);
     setStep('complete');
   };
 
@@ -113,16 +123,19 @@ export function ErrorCorrectionItem({
     setSelectedWord(null);
     setSelectedFix(null);
     setWrongAttempts([]);
+    setRevealedCorrection(false);
   };
 
   const isFixCorrect = selectedFix === correctForm;
   const isNoErrorCorrect = errorWord === null && step === 'complete';
+  const isCorrectionShown = revealedCorrection && step === 'complete';
 
   const step1Label = isUkrainian ? 'Крок 1: Знайдіть помилку' : 'Step 1: Find the error';
   const step2Label = isUkrainian ? 'Крок 2: Оберіть правильну форму' : 'Step 2: Choose the correct form';
   const completeLabel = isUkrainian ? 'Завершено' : 'Complete';
   const noErrorLabel = isUkrainian ? '✓ У цьому реченні немає помилок' : '✓ No error in this sentence';
   const fixPromptLabel = isUkrainian ? 'Оберіть правильну форму для' : 'Choose the correct form for';
+  const revealCorrectionLabel = isUkrainian ? 'Показати виправлення' : 'Show correction';
   const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
 
   return (
@@ -218,16 +231,34 @@ export function ErrorCorrectionItem({
         </div>
       )}
 
+      {/* Sentence-level rewrites can intentionally omit multiple-choice chips. */}
+      {step === 'fix' && shuffledOptions.length === 0 && (
+        <div className={styles.fixOptions} data-activity="error-correction-reveal-panel">
+          <p className={styles.fixPrompt}>{fixPromptLabel} "<strong>{errorWord}</strong>":</p>
+          <div className={styles.optionChips}>
+            <button
+              className={styles.chip}
+              data-activity="error-correction-reveal"
+              onClick={handleRevealCorrection}
+            >
+              {revealCorrectionLabel}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Result feedback */}
       {step === 'complete' && (
         <>
           <div
-            className={`${styles.feedback} ${(isFixCorrect || isNoErrorCorrect) ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
+            className={`${styles.feedback} ${(isFixCorrect || isNoErrorCorrect || isCorrectionShown) ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
             data-activity="error-correction-feedback"
-            data-correct={(isFixCorrect || isNoErrorCorrect) ? 'true' : 'false'}
+            data-correct={(isFixCorrect || isNoErrorCorrect || isCorrectionShown) ? 'true' : 'false'}
           >
             {isNoErrorCorrect ? (
               isUkrainian ? '✓ Правильно! У цьому реченні не було помилок.' : '✓ Correct! There was no error in this sentence.'
+            ) : isCorrectionShown ? (
+              `✓ ${isUkrainian ? 'Виправлення:' : 'Correction:'} "${errorWord}" → "${correctForm}"`
             ) : isFixCorrect ? (
               `✓ ${isUkrainian ? 'Правильно!' : 'Correct!'} "${errorWord}" → "${correctForm}"`
             ) : (
