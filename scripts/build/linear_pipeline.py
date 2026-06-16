@@ -10566,6 +10566,21 @@ def _citation_ref_text_contains(reference_title: str, text: str) -> bool:
     return bool(normalized_ref and normalized_ref in normalized_text)
 
 
+_CITATION_CONTAINMENT_MIN_CHARS = 8
+
+
+def _citation_ref_specific_enough_for_containment(reference_title: Any) -> bool:
+    normalized_ref = _normalize_citation_match_text(reference_title)
+    word_count = len(re.findall(r"\w+", _normalize_citation_ref(reference_title)))
+    return len(normalized_ref) >= _CITATION_CONTAINMENT_MIN_CHARS and word_count >= 2
+
+
+def _citation_ref_resolves_by_containment(reference_title: Any, source_ref: str) -> bool:
+    return _citation_ref_specific_enough_for_containment(
+        reference_title
+    ) and _citation_ref_text_contains(str(reference_title), source_ref)
+
+
 def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> dict[str, Any]:
     plan_reference_titles = extract_plan_reference_titles(plan)
     plan_titles = {_normalize_citation_ref(title) for title in plan_reference_titles}
@@ -10581,6 +10596,10 @@ def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> 
         if (
             normalized_ref not in plan_titles
             and (source_key is None or not any(citation_keys_match(source_key, plan_key) for plan_key in plan_keys))
+            and not any(
+                _citation_ref_resolves_by_containment(title, source_ref)
+                for title in plan_reference_titles
+            )
             and resource.get("packet_chunk_id") is None
         ):
             unknown.append(source_ref)

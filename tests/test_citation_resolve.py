@@ -52,11 +52,66 @@ def test_cyrillic_latin_lookalike_author_forms_match(author: str) -> None:
     assert _result(f"{author}, Grade 10, p.176")["passed"] is True
 
 
+def test_author_prefixed_scholarly_title_matches_plan_reference_by_containment() -> None:
+    result = _result(
+        "Костомаров М. «Слов'янська міфологія»",
+        "Слов'янська міфологія",
+    )
+
+    assert result["passed"] is True
+    assert result["unknown"] == []
+
+
+def test_koliadky_author_prefixed_plan_references_resolve_by_containment() -> None:
+    plan_path = (
+        linear_pipeline.PROJECT_ROOT
+        / "curriculum/l2-uk-en/plans/folk/koliadky-shchedrivky.yaml"
+    )
+    plan = yaml.safe_load(plan_path.read_text("utf-8"))
+    resources = [
+        {"source_ref": "Народна творчість — Koliadky Shchedrivky"},
+        {"source_ref": "Костомаров М. «Слов'янська міфологія»"},
+        {"source_ref": "Попович М. «Нарис історії культури України»"},
+        {"source_ref": "Чижевський Д. «Історія української літератури»"},
+        {
+            "source_ref": (
+                "Чубинський П. «Праці етнографічно-статистичної експедиції "
+                "в Західно-Руський край»"
+            )
+        },
+    ]
+
+    result = linear_pipeline._citation_gate(resources, plan)
+
+    assert result["passed"] is True
+    assert result["unknown"] == []
+
+
 def test_unknown_citation_still_rejected() -> None:
     result = _result("Tolstoy, War and Peace, p.500")
 
     assert result["passed"] is False
     assert result["unknown"] == ["Tolstoy, War and Peace, p.500"]
+
+
+def test_author_prefixed_title_not_in_plan_still_rejected() -> None:
+    result = _result(
+        "Костомаров М. «Слов'янська міфологія»",
+        "Історія української літератури",
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Костомаров М. «Слов'янська міфологія»"]
+
+
+def test_one_word_generic_plan_title_does_not_resolve_by_containment() -> None:
+    result = _result(
+        "Костомаров М. «Слов'янська міфологія»",
+        "Міфологія",
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Костомаров М. «Слов'янська міфологія»"]
 
 
 def test_partial_match_does_not_pass() -> None:
