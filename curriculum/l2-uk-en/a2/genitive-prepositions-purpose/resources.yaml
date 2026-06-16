@@ -12,9 +12,9 @@
   role: article
   source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-024"
   url: "https://opentext.ku.edu/dobraforma/chapter/7-2/"
-  notes: "Practice page directly aligned to для, без, біля, and після."
+  notes: "Practice page aligned to the core для, без, and біля pattern; this module extends the spatial set with навпроти and коло."
 - title: "Talk Ukrainian: Ukrainian prepositions"
   role: article
   source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-034"
   url: "https://talkukrainian.com/prepositions/"
-  notes: "Short learner-facing guide to common Ukrainian prepositions."
+  notes: "Short learner-facing guide for broader review of common Ukrainian prepositions."
