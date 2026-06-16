@@ -65,60 +65,130 @@ def _qg_report(
     return {"gates": gates}
 
 
-def test_python_qg_seminar_restores_best_round_when_later_round_diverges(
+def _qg_report_from_gates(gates: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    ordered = dict(gates)
+    ordered.setdefault("vocab_count", {"passed": True})
+    ordered["passed"] = all(gate.get("passed") is True for gate in ordered.values())
+    return {"gates": ordered}
+
+
+def test_python_qg_seminar_advances_through_rotating_wall(
     tmp_path: Path,
 ) -> None:
     module_dir = _module_dir(tmp_path)
     plan_path = _plan_path(tmp_path, "folk")
     qg_calls = 0
+    corrected_gates: list[str] = []
 
     def qg_runner() -> dict[str, Any]:
         nonlocal qg_calls
         qg_calls += 1
         module_text = (module_dir / "module.md").read_text(encoding="utf-8")
-        if "STATE2" in module_text:
-            return _qg_report(
-                vesum_missing=["new-a", "new-b", "new-c", "new-d", "new-e"],
+        if "WORD_FIXED" in module_text:
+            return _qg_report_from_gates(
+                {
+                    "activity_schema": {"passed": True, "violations": []},
+                    "word_count": {"passed": True, "count": 120, "minimum": 120},
+                    "vesum_verified": {"passed": False, "missing": ["**Дебат"]},
+                }
             )
-        if "STATE1" in module_text:
-            return _qg_report(
-                plan_sections=False,
-                vesum_missing=["best-a", "best-b"],
+        if "SCHEMA_FIXED" in module_text:
+            return _qg_report_from_gates(
+                {
+                    "activity_schema": {"passed": True, "violations": []},
+                    "word_count": {"passed": False, "count": 90, "minimum": 120},
+                    "vesum_verified": {"passed": False, "missing": ["**Дебат"]},
+                }
             )
-        return _qg_report(
-            word_count=False,
-            plan_sections=False,
-            vesum_missing=["old-a", "old-b", "old-c"],
+        return _qg_report_from_gates(
+            {
+                "activity_schema": {
+                    "passed": False,
+                    "violations": [{"message": "self_check must be a list"}],
+                }
+            }
         )
 
     def writer_corrector(context: linear_pipeline.CorrectionContext) -> dict[str, str]:
+        corrected_gates.append(context.gate)
+        if context.gate == "activity_schema":
+            return _writer_artifacts(
+                "SCHEMA_FIXED\n",
+                activity_prompt="schema fixed",
+            )
         if context.gate == "word_count":
-            return _writer_artifacts("STATE1\n", activity_prompt="best round")
-        if context.gate == "plan_sections":
-            return _writer_artifacts("STATE2\n", activity_prompt="churned round")
+            return _writer_artifacts("WORD_FIXED\n", activity_prompt="word count fixed")
         raise AssertionError(f"unexpected correction gate: {context.gate}")
 
-    report = linear_pipeline.run_python_qg_with_corrections(
+    report = linear_pipeline._run_python_qg_with_bounded_corrections(
         module_dir,
         plan_path,
         qg_runner=qg_runner,
         writer_corrector=writer_corrector,
+        max_correction_rounds=2,
     )
 
     assert qg_calls == 3
-    assert report["gates"]["vesum_verified"]["missing"] == ["best-a", "best-b"]
-    assert (module_dir / "module.md").read_text(encoding="utf-8") == "STATE1\n"
+    assert corrected_gates == ["activity_schema", "word_count"]
+    assert report["gates"]["activity_schema"]["passed"] is True
+    assert report["gates"]["word_count"]["passed"] is True
+    assert report["gates"]["vesum_verified"]["missing"] == ["**Дебат"]
+    assert (module_dir / "module.md").read_text(encoding="utf-8") == "WORD_FIXED\n"
     restored_activities = yaml.safe_load(
         (module_dir / "activities.yaml").read_text(encoding="utf-8")
     )
-    assert restored_activities[0]["prompt"] == "best round"
+    assert restored_activities[0]["prompt"] == "word count fixed"
 
     loop = json.loads(
         (module_dir / "python_qg_correction_loop.json").read_text(encoding="utf-8")
     )
-    assert loop["best_round"] == 2
-    assert loop["stopped_reason"] == "min_score_regressed"
-    assert [item["violation_count"] for item in loop["rounds"]] == [5, 3, 5]
+    assert loop["best_round"] == 3
+    assert loop["stopped_reason"] == "max_rounds"
+    assert loop["min_regression_patience"] == 3
+    assert loop["consecutive_regressions"] == 0
+    assert [item["violation_count"] for item in loop["rounds"]] == [1, 2, 1]
+    assert [item["frontier_gate"] for item in loop["rounds"]] == [
+        "activity_schema",
+        "word_count",
+        "vesum_verified",
+    ]
+    assert loop["rounds"][1]["frontier"] > loop["rounds"][0]["frontier"]
+
+
+def test_python_qg_best_round_prefers_frontier_then_violation_count() -> None:
+    rounds = [
+        {
+            "report": _qg_report_from_gates(
+                {
+                    "activity_schema": {
+                        "passed": False,
+                        "violations": [{"message": "schema"}],
+                    }
+                }
+            ),
+            "violation_count": 1,
+        },
+        {
+            "report": _qg_report_from_gates(
+                {
+                    "activity_schema": {"passed": True, "violations": []},
+                    "word_count": {"passed": False, "violations": ["a", "b"]},
+                }
+            ),
+            "violation_count": 2,
+        },
+        {
+            "report": _qg_report_from_gates(
+                {
+                    "activity_schema": {"passed": True, "violations": []},
+                    "word_count": {"passed": False, "violations": ["a"]},
+                }
+            ),
+            "violation_count": 1,
+        },
+    ]
+
+    assert linear_pipeline._python_qg_best_round_index(rounds) == 2
 
 
 def test_python_qg_seminar_breaks_immediately_on_pass(tmp_path: Path) -> None:
@@ -161,11 +231,29 @@ def test_python_qg_seminar_regression_restores_previous_snapshot(
     def qg_runner() -> dict[str, Any]:
         module_text = (module_dir / "module.md").read_text(encoding="utf-8")
         if "STATE1" in module_text:
-            return _qg_report(vesum_missing=["regressed-vesum"])
-        return _qg_report(word_count=False)
+            return _qg_report_from_gates(
+                {
+                    "activity_schema": {
+                        "passed": False,
+                        "violations": [{"message": "schema regressed"}],
+                    },
+                    "word_count": {"passed": True, "count": 120, "minimum": 120},
+                    "plan_sections": {"passed": True, "missing_headings": []},
+                }
+            )
+        return _qg_report_from_gates(
+            {
+                "activity_schema": {"passed": True, "violations": []},
+                "word_count": {"passed": True, "count": 120, "minimum": 120},
+                "plan_sections": {
+                    "passed": False,
+                    "missing_headings": ["Ключові терміни"],
+                },
+            }
+        )
 
     def writer_corrector(context: linear_pipeline.CorrectionContext) -> dict[str, str]:
-        assert context.gate == "word_count"
+        assert context.gate == "plan_sections"
         return _writer_artifacts("STATE1\n", activity_prompt="dirty round")
 
     report = linear_pipeline.run_python_qg_with_corrections(
@@ -175,7 +263,8 @@ def test_python_qg_seminar_regression_restores_previous_snapshot(
         writer_corrector=writer_corrector,
     )
 
-    assert report["gates"]["word_count"]["passed"] is False
+    assert report["gates"]["activity_schema"]["passed"] is True
+    assert report["gates"]["plan_sections"]["passed"] is False
     assert (module_dir / "module.md").read_text(encoding="utf-8") == "STATE0\n"
     assert yaml.safe_load((module_dir / "activities.yaml").read_text("utf-8")) == []
     loop = json.loads(
@@ -183,6 +272,11 @@ def test_python_qg_seminar_regression_restores_previous_snapshot(
     )
     assert loop["stopped_reason"] == "previously_passed_regression"
     assert loop["best_round"] == 1
+    correction = json.loads(
+        (module_dir / "python_qg_correction_r1.json").read_text(encoding="utf-8")
+    )
+    assert correction["rollback_reason"] == "previously_passed_regression"
+    assert correction["regressions"] == ["activity_schema"]
 
 
 def test_python_qg_core_uses_legacy_single_correction_path(tmp_path: Path) -> None:
