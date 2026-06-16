@@ -142,6 +142,36 @@ def test_author_word_inside_quoted_title_does_not_corroborate_author() -> None:
     assert result["unknown"] == ["Петренко О. «Шевченко: Садок вишневий»"]
 
 
+def test_nested_title_quote_does_not_corroborate_author_from_title_prefix() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Петренко О. «Шевченко “Садок вишневий”»"}],
+        {"references": [{"title": "Садок вишневий", "author": "Тарас Шевченко"}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Петренко О. «Шевченко “Садок вишневий”»"]
+
+
+def test_unquoted_title_does_not_resolve_by_containment() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Петренко О. Шевченко: Садок вишневий"}],
+        {"references": [{"title": "Садок вишневий", "author": "Тарас Шевченко"}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Петренко О. Шевченко: Садок вишневий"]
+
+
+def test_quoted_title_with_no_plan_match_still_rejected() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Петренко О. «Немає такого твору»"}],
+        {"references": [{"title": "Садок вишневий", "author": "Тарас Шевченко"}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Петренко О. «Немає такого твору»"]
+
+
 def test_koliadky_author_prefixed_plan_references_resolve_by_containment() -> None:
     plan_path = (
         linear_pipeline.PROJECT_ROOT
@@ -164,6 +194,14 @@ def test_koliadky_author_prefixed_plan_references_resolve_by_containment() -> No
 
     assert result["passed"] is True
     assert result["unknown"] == []
+
+    order_variant = linear_pipeline._citation_gate(
+        [{"source_ref": "М. Костомаров «Слов'янська міфологія»"}],
+        plan,
+    )
+
+    assert order_variant["passed"] is True
+    assert order_variant["unknown"] == []
 
 
 def test_unknown_citation_still_rejected() -> None:

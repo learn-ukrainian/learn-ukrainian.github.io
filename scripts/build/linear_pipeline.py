@@ -10587,7 +10587,7 @@ def _citation_ref_text_contains(reference_title: str, text: str) -> bool:
 
 
 _CITATION_CONTAINMENT_MIN_CHARS = 8
-_CITATION_TITLE_QUOTE_PAIRS = (("«", "»"), ("“", "”"), ("„", "”"), ('"', '"'))
+_CITATION_TITLE_OPEN_QUOTES = ("«", "“", "„", '"')
 
 
 def _citation_ref_specific_enough_for_containment(reference_title: Any) -> bool:
@@ -10648,22 +10648,22 @@ def _citation_author_appears_in_source_tokens(
     return bool(folded_author_anchors & set(folded_source_tokens))
 
 
-def _citation_author_slot_text(source_ref: str, title_char_start: int) -> str:
-    prefix = source_ref[:title_char_start]
-    title_slot_start: int | None = None
-    for open_quote, close_quote in _CITATION_TITLE_QUOTE_PAIRS:
-        open_index = prefix.rfind(open_quote)
-        if open_index == -1:
-            continue
-        if open_quote == close_quote:
-            is_unclosed = prefix.count(open_quote) % 2 == 1
-        else:
-            is_unclosed = prefix.rfind(close_quote) < open_index
-        if is_unclosed and (title_slot_start is None or open_index > title_slot_start):
-            title_slot_start = open_index
-    if title_slot_start is not None:
-        return prefix[:title_slot_start]
-    return prefix
+def _citation_first_title_open_quote_index(source_ref: str) -> int | None:
+    quote_indexes = [
+        index
+        for quote in _CITATION_TITLE_OPEN_QUOTES
+        if (index := source_ref.find(quote)) != -1
+    ]
+    if not quote_indexes:
+        return None
+    return min(quote_indexes)
+
+
+def _citation_author_slot_text(source_ref: str) -> str | None:
+    title_slot_start = _citation_first_title_open_quote_index(source_ref)
+    if title_slot_start is None:
+        return None
+    return source_ref[:title_slot_start]
 
 
 def _citation_source_author_tokens(
@@ -10672,15 +10672,19 @@ def _citation_source_author_tokens(
 ) -> list[str] | None:
     title_tokens = _citation_match_tokens(reference_title)
     normalized_source_ref = _normalize_citation_ref(source_ref)
+    first_title_quote = _citation_first_title_open_quote_index(normalized_source_ref)
+    if first_title_quote is None:
+        return None
     source_token_spans = _textbook_match_token_spans(normalized_source_ref)
     source_tokens = [token.text for token in source_token_spans]
     title_start = _citation_token_sequence_start(title_tokens, source_tokens)
     if title_start is None:
         return None
-    author_slot = _citation_author_slot_text(
-        normalized_source_ref,
-        source_token_spans[title_start].start,
-    )
+    if source_token_spans[title_start].start <= first_title_quote:
+        return None
+    author_slot = _citation_author_slot_text(normalized_source_ref)
+    if author_slot is None:
+        return None
     return _citation_match_tokens(author_slot)
 
 
