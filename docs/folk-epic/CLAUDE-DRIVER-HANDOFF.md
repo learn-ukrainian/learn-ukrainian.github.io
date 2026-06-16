@@ -63,7 +63,81 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 39 HANDOFF (2026-06-16 — P3-validate RAN FOR REAL (`--no-resume`) → outcome (c): python_qg's Gap-C rotating wall blocks the build BEFORE the B1 loop; root-caused the wall into a 4-class taxonomy that is MOSTLY gate false-positives; dispatched C.2a fix) — **RESUME HERE**
+## ▶▶▶ SESSION 40 HANDOFF (2026-06-16 — C.3 part 3 review-fix ORPHANED by a premature merge → RELANDED + MERGED (regression on main closed); #3318 resolved by orchestrator; протиріччя over-flag found + fix BLOCKED on #3318) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** INFRA/recovery session. C.3 part 3 (long-tail exemptions) is now CORRECTLY on main
+> (the orphan-merge regression below is closed). No new folk CONTENT (modules 6/42, dossiers 25/42, wikis 15/42
+> unchanged). B1 still e2e-UNPROVEN — C.3 part 2 (cross-model fixer) + the `--no-resume` P3-validate still pending.
+
+### 🟢 C.3 PART 3 (long-tail exemptions) — REVIEWED, FIXED, MERGED to main (PR #3319 → #3330)
+The flow that actually happened (and the lesson):
+1. PR #3319 (`folk-3079-c3-longtail`) added Roman-numeral + anonymous-folk-primary VESUM/citation exemptions.
+2. `ab ask-codex` adversarial review (mandatory for gate-loosening; 6/6 record) caught **2 REAL over-exemption bugs**:
+   (a) **BLOCKER** — a known-author work (e.g. Shevchenko «Мені однаково, чи буду») could be labeled
+   `Народна творчість «…»` and laundered through the citation gate (it resolved against the GENERAL literary
+   corpus with no authorship check); (b) **MAJOR** — the Roman-numeral predicate casefolded then `all(char ∈ set)`,
+   so lowercase lexical `хіх` was exempted AT CORE LEVELS.
+3. Dispatched codex fix `folk-3079-c3-longtail-fix` → landed `62ad3c93ee` (authorship gate via
+   `_metadata_authorship_is_anonymous_folk`; uppercase-origin + Cyrillic→Latin homoglyph map + strict
+   `_ROMAN_NUMERAL_RE`). Re-review: **APPROVE — both closed, no new over-exemption** (codex msg #1285;
+   tried ІС/ХІВ/МІМ/CIVIC/LIVID/ХМІЛЬ, all correctly failed; 0 empty-author corpus rows so the residual
+   empty-author+folk-marker shape is non-exploitable).
+4. **⚠ THE RACE (lesson):** the orchestrator squash-merged #3319 at **20:11** on its **PRE-FIX SHA**
+   (`ad580d3fd7`) — 4 min BEFORE the fix `62ad3c93ee` pushed at 20:15. So main briefly shipped the BUGGY gates;
+   codex's 20:15 push re-created the already-deleted branch (orphaning the fix). **LESSON: when you dispatch a
+   fix to an OPEN PR, the PR can be merged out from under you before the fix lands. After a fix dispatch to an
+   open PR, ALWAYS re-check PR state; if it merged without the fix, RELAND the fix via cherry-pick onto main.**
+5. **RELAND:** cherry-picked `62ad3c93ee` onto current main → **PR #3330 → CI green → self-merged
+   (`23aa05c955`).** Verified on main: `_ROMAN_NUMERAL_RE`/`_metadata_authorship_is_anonymous_folk` present,
+   old `_ROMAN_NUMERAL_CHARS` gone. **Regression CLOSED.** Orphaned branches `codex/folk-3079-c3-longtail`(+`-fix`) deleted.
+
+### ✅ #3318 (#3098 calque collocations) — RESOLVED by orchestrator (NOT me); diagnosis confirmed
+Root-caused: branch was clean/additive (1 commit `fdbf094cba`, 4 files: `calque_corrections.py`,
+`enrich_manifest.py +2`, 2 tests). Only failure was "Atlas Manifest Freshness" — the DB-free fingerprint went
+stale because `enrich_manifest.py`'s code hash changed. Orchestrator landed the correct fix `642736c5d8`
+(**surgical manifest delta** for виглядати+біля + DB-free fingerprint bump). My redundant fingerprint commit was
+discarded. **Left #3318 to the orchestrator (they're actively driving it; their worktree `.worktrees/pr3318-calque-3098` is live) — do NOT collide.**
+
+### 🧱 #3150 MANIFEST-REGEN LESSON (load-bearing for ANY lexicon-code PR)
+`make atlas` enrich is **NETWORK-dependent** (Горох/slovnyk.me/ЕСУМ/Вікісловник) + **23 min** + needs the big DBs
+(symlink `data/sources.db`+`data/vesum.db` into the worktree — they're gitignored, absent in worktrees). A local
+full regen is PARTIAL (I got 2119/2429 enriched) and STRIPS existing enrichment → a huge degrading diff. **DO NOT
+commit a local full-regen manifest.** For a lexicon-code PR: (1) **surgical manifest delta** (edit only the affected
+entries, like `642736c5d8`), (2) **DB-free fingerprint bump** (`python -c "from scripts.lexicon.manifest_fingerprint
+import write_fingerprint; write_fingerprint()"`). The freshness gate only checks the code-hash fingerprint; manifest
+CONTENT drift is explicitly out-of-scope per the gate's own `#3150` TODO. **Concurrent lexicon-code PRs collide on
+the fingerprint file** → branch a lexicon PR off main only AFTER any other in-flight lexicon PR merges.
+
+### 🔎 протиріччя OVER-FLAG (user question 2026-06-16) — confirmed; fix BLOCKED on #3318 merge
+User asked if протиріччя is really a Russianism. **Verdict: OVER-FLAG.** Sole basis = one LanguageTool `replace.txt`
+style rule, re-labeled "surzhyk" in `SURZHYK_TO_AVOID_SEEDS` (`build_data_manifest.py:81`) +
+`_KNOWN_STANDARD_ALTERNATIVES` (`heritage_classifier.py:48`, DORMANT — `check_russian_shadow`=false 0.57).
+Counter-evidence (tool-verified): СУМ-20 says **authentic / NOT a russism**; NUS textbooks (Grade 6 golub 2023,
+Grade 9 burnejko, Grade 10 karaman) USE it; absent from Antonenko + UA-GEC. Harm = the public Word Atlas mislabels
+a codified word as surzhyk-to-avoid (contradicts learners' textbooks). **FIX (my lane #0.2):** remove протиріччя
+from both lists + surgical manifest-entry removal + DB-free fingerprint bump. **BLOCKED until #3318 merges** (else
+fingerprint-file merge conflict / stale-main cascade). Keep діюча/діючий/аранжировка (those ARE legit calques).
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **протиріччя fix** — once #3318 is merged (check `gh pr view 3318 --json state`): branch off fresh main,
+   remove протиріччя from `SURZHYK_TO_AVOID_SEEDS` + `_KNOWN_STANDARD_ALTERNATIVES`, surgical manifest-entry
+   removal + DB-free fingerprint bump, PR → `ab ask-codex` review → CI → self-merge. Small, my lane.
+2. **C.3 part 2 — cross-model fixer route** (the BIGGEST remaining #3079 piece). Wire a cross-model agent (codex)
+   as the automated REPHRASE fixer the best-round python_qg loop (`#3307`, `run_python_qg_with_corrections`)
+   invokes for genuine coinage/calque gates (`дерево-явір`/`дерево-вісь`/`спільнолюдський`, calques
+   `непринята`/`хранительками` → also #3098). REPHRASE not find/replace (find/replace churns). Design: doc §3 Part C.3.
+3. **THEN re-run P3-validate** `v7_build.py folk koliadky-shchedrivky --no-resume --worktree` — confirm a fresh
+   build CLEARS python_qg (now with A/B/C + C.3 part 1 loop + part 3 exemptions all on main) and reaches B1 ≥8.
+   ONLY THEN is B1 validated e2e. (`--no-resume` MANDATORY — resume reuses main's stale artifacts.)
+4. (Parallel content lane, unblocked) dossier #26 `narodni-lehendy` → #27 `istorychni-perekazy`.
+
+### ⚠ CARRY-FORWARD
+- **Each gate-loosening change MUST go through `ab ask-codex` adversarial review before self-merge** (7/7 now — caught
+  2 real bugs again on #3319). Fleet-review is load-bearing (#M-12).
+- **After dispatching a fix to an OPEN PR, re-check PR state** — it can be merged before the fix lands (#3319 race).
+- Never reset/commit on `main`; folk push `--no-verify`. Role #0.2 LIVE (implement/drive infra; never file-and-forget).
+
+## ▶▶▶ SESSION 39 HANDOFF (2026-06-16 — P3-validate RAN FOR REAL (`--no-resume`) → outcome (c): python_qg's Gap-C rotating wall blocks the build BEFORE the B1 loop; root-caused the wall into a 4-class taxonomy that is MOSTLY gate false-positives; dispatched C.2a fix)
 
 > **⏱ HONEST SCOPE:** INFRA diagnostic + first-fix-dispatched session (per #0.2). No new folk content (modules 6/42,
 > dossiers 25/42, wikis 15/42 unchanged). B1 is STILL e2e-unproven — a fresh build can't reach the LLM-QG loop because
