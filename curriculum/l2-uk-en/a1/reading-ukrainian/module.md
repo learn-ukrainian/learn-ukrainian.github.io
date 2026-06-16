@@ -2,21 +2,22 @@
 
 **ма — мо — му — ми. ма́ма. молоко́.** — syllables and first words.
 
-Printed Ukrainian comes first. English support comes after the eye has found
-the letters, vowel sounds, and syllables.
+Приві́т! In Module 1 you met Ukrainian letters and the word **склад**. Here
+you turn that word into a reading tool. Printed Ukrainian comes first; English
+support helps you check what your eyes already found.
 
-Use one lawful listening pass before you read fast. Open the public ULP
-[Ukrainian Alphabet guide](https://www.ukrainianlessons.com/ukrainian-alphabet/)
-only as a listen-and-repeat support. Do not download, transcribe, remix, or
-reuse the audio. Listen for the vowel, point to it on this page, then read the
-printed word.
+For one listening pass before you read fast, open the public ULP
+[Ukrainian Alphabet guide](https://www.ukrainianlessons.com/ukrainian-alphabet/).
+Use it only as listen-and-repeat support: do not download, transcribe, remix,
+or reuse the audio. Listen for the vowel sound, point to the letter on this
+page, then read the printed word.
 
-You already know one rule from Module 1:
+Module 1 only previewed **склад**. This module teaches the counting rule:
 
 **one vowel sound = one склад**
 
-Here you use it as a reading tool: see a word, find its vowel sounds, split it
-into syllables, and read it without guessing from another alphabet.
+In print, count the letters that mark vowel sounds. Then split the word into
+syllables and read it without guessing from another alphabet.
 
 By the end, you can:
 
@@ -40,7 +41,7 @@ Start every reading attempt with one Ukrainian question:
 In Ukrainian, every syllable has a vowel sound. A single vowel can be a whole
 syllable, and a consonant by itself cannot make a syllable.
 
-| Слово́ | Голосні to notice | Склади́ |
+| Слово́ | Letters that mark vowel sounds | Склади́ |
 | --- | --- | --- |
 | **день** | **е** | 1 |
 | **ма́ма** | **а + а** | 2 |
@@ -74,7 +75,7 @@ Then join syllables:
 
 ## Голосні лі́тери
 
-**А О У Е И І** — six simple vowel letters.
+**А О У Е И І** — six simple letters for vowel sounds.
 
 The sounds are:
 
@@ -87,7 +88,7 @@ Read them as clean sounds. In **молоко́**, every **о** stays **о**:
 Say it slowly as three open beats, but keep the written word whole on the
 page.
 
-Now add the four special vowel letters:
+Now add the four other letters that mark vowel sounds:
 
 **Я Ю Є Ї**
 
@@ -113,6 +114,11 @@ Use three safe examples:
 
 You do not need every phonetic detail yet. Look at the position of
 **Я, Ю, Є, Ї**, then read the word slowly.
+
+:::caution
+Keep this beginner rule small: **Ї** is always **[йі]**. For **Я, Ю, Є**,
+look at the position first, then read slowly.
+:::
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
@@ -167,6 +173,11 @@ Read **день** with soft **н**, not with an extra vowel after it. Read
 **сім'я́** with a clear **й** before **я**. Read **джерело́** with joined
 **дж**.
 
+:::tip
+If a word feels long, do not speed up. Find the letters for vowel sounds, make
+small syllable beats, then smooth them into one word.
+:::
+
 <!-- INJECT_ACTIVITY: act-3 -->
 
 ## Пастки читання
@@ -184,8 +195,13 @@ Use these safety checks:
 | Reading **ї** as plain **і** | Read **ї** as **[йі]** |
 | Treating apostrophe as decoration | Keep the following **й** sound |
 
-Build the categories from Ukrainian examples: **ми**, **ді́ти**, **гора́**,
-**молоко́**. Do not use another language's alphabet as the shortcut.
+Build the habit from words on this page: **день**, **ма́ма**, **молоко́**,
+**Украї́на**. Do not use another language's alphabet as the shortcut.
+
+:::note
+These are reading habits, not a pronunciation exam. Slow accurate reading is a
+win at A1.
+:::
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
@@ -234,9 +250,8 @@ Before you leave the lesson tab, check that you can do these things:
 The workbook repeats easy words and a few longer words on purpose. Repetition
 is how the alphabet becomes automatic.
 
-<!-- INJECT_ACTIVITY: act-5 -->
-
 ## Далі
 
-Тепер переходь до словника й вправ. Keep the same routine there: find the
-vowel sounds first, then read the whole word.
+Тепер переходь до словника й вправ. You can now look at a printed Ukrainian
+word, find the letters that mark vowel sounds, count the syllables, and read
+the whole word more calmly.

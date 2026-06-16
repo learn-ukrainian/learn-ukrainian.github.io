@@ -20,17 +20,17 @@ inline:
         correct: 4
   - id: act-2
     type: match-up
-    title: Робота голосних лі́тер
-    instruction: З'єднай лі́теру з її першою читацькою роботою.
+    title: Роль літер у читанні
+    instruction: З'єднай лі́теру з її роллю в читанні.
     pairs:
       - left: А
-        right: чистий [а]
+        right: позначає [а]
       - left: О
-        right: чистий [о]
+        right: позначає [о]
       - left: И
-        right: чистий [и]
+        right: позначає [и]
       - left: І
-        right: чистий [і]
+        right: позначає [і]
       - left: Я на початку слова
         right: '[йа]'
       - left: Ї
@@ -70,7 +70,7 @@ inline:
         options:
           - один злитий звук
           - д плюс ж
-        explanation: ДЖ позначає одну злиту читацьку одиницю у словах як джерело́.
+        explanation: ДЖ читаємо як один злитий звук у словах як джерело́.
       - sentence: Украї́на — не читай ї як просте і.
         error: просте і
         correction: '[йі]'
@@ -85,38 +85,6 @@ inline:
           - пом'якшити н і зупинитися
           - додати і після нь
         explanation: Ь не має власного звука; він м'якшить попередній при́голосний.
-  - id: act-5
-    type: quiz
-    title: Мініпереві́рка читання
-    instruction: Обери правильну відповідь.
-    items:
-      - prompt: Склад — що це?
-        options:
-          - text: склад
-            correct: true
-          - text: лі́тера
-            correct: false
-          - text: вітання
-            correct: false
-        explanation: Склад — це один голосовий удар у слові.
-      - prompt: Молоко́ — скільки складів?
-        options:
-          - text: '3'
-            correct: true
-          - text: '2'
-            correct: false
-          - text: '1'
-            correct: false
-        explanation: Молоко́ має три голосні звуки й три склади́.
-      - prompt: Яка літера завжди [йі]?
-        options:
-          - text: Ї
-            correct: true
-          - text: І
-            correct: false
-          - text: И
-            correct: false
-        explanation: Ї завжди читаємо як [йі].
 workbook:
   - type: group-sort
     title: Один, два чи три склади́
@@ -136,6 +104,38 @@ workbook:
           - молоко́
           - ву́лиця
           - столи́ця
+  - type: odd-one-out
+    title: Зайве за кількістю складів
+    instruction: Обери слово, яке має іншу кількість складів.
+    items:
+      - words:
+          - ма́ма
+          - та́то
+          - вода́
+          - день
+        answer: день
+        explanation: День має один склад; інші слова мають два.
+      - words:
+          - молоко́
+          - ву́лиця
+          - столи́ця
+          - Ки́їв
+        answer: Ки́їв
+        explanation: Ки́їв має два склади; інші слова мають три.
+      - words:
+          - день
+          - Львів
+          - ма́ма
+          - так
+        answer: ма́ма
+        explanation: Ма́ма має два склади; інші слова мають один.
+      - words:
+          - бібліоте́ка
+          - університе́т
+          - фотогра́фія
+          - ка́ша
+        answer: ка́ша
+        explanation: Ка́ша має два склади; інші слова мають п'ять.
   - type: true-false
     title: Факти про читання
     instruction: Обери правда чи неправда.
@@ -149,7 +149,7 @@ workbook:
       - statement: У молоко́ звук о залишається чистим.
         correct: true
         explanation: Не перетворюй о на нечіткий голосни́й.
-      - statement: ДЖ and ДЗ should be read as joined units.
+      - statement: ДЖ і ДЗ читаємо як злиті одиниці.
         correct: true
         explanation: ДЖ і ДЗ читаємо як злиті одиниці.
   - type: match-up
@@ -188,5 +188,37 @@ workbook:
         video: https://www.youtube.com/watch?v=ksXIXj7CXwc
       - letter: І
         sound: '[і]'
-        word: ді́ти
+        word: пі́сня
         video: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  - id: act-5
+    type: quiz
+    title: Мініпереві́рка читання
+    instruction: Обери правильну відповідь.
+    items:
+      - prompt: Склад — що це?
+        options:
+          - text: лі́тера
+            correct: false
+          - text: syllable
+            correct: true
+          - text: greeting
+            correct: false
+        explanation: Склад — це частина слова з голосним звуком.
+      - prompt: Молоко́ — скільки складів?
+        options:
+          - text: '2'
+            correct: false
+          - text: '3'
+            correct: true
+          - text: '1'
+            correct: false
+        explanation: Молоко́ має три голосні звуки й три склади́.
+      - prompt: Яка літера завжди [йі]?
+        options:
+          - text: І
+            correct: false
+          - text: И
+            correct: false
+          - text: Ї
+            correct: true
+        explanation: Ї завжди читаємо як [йі].

@@ -61,21 +61,22 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 **ма — мо — му — ми. ма́ма. молоко́.** — syllables and first words.
 
-Printed Ukrainian comes first. English support comes after the eye has found
-the letters, vowel sounds, and syllables.
+Приві́т! In Module 1 you met Ukrainian letters and the word **склад**. Here
+you turn that word into a reading tool. Printed Ukrainian comes first; English
+support helps you check what your eyes already found.
 
-Use one lawful listening pass before you read fast. Open the public ULP
-[Ukrainian Alphabet guide](https://www.ukrainianlessons.com/ukrainian-alphabet/)
-only as a listen-and-repeat support. Do not download, transcribe, remix, or
-reuse the audio. Listen for the vowel, point to it on this page, then read the
-printed word.
+For one listening pass before you read fast, open the public ULP
+[Ukrainian Alphabet guide](https://www.ukrainianlessons.com/ukrainian-alphabet/).
+Use it only as listen-and-repeat support: do not download, transcribe, remix,
+or reuse the audio. Listen for the vowel sound, point to the letter on this
+page, then read the printed word.
 
-You already know one rule from Module 1:
+Module 1 only previewed **склад**. This module teaches the counting rule:
 
 **one vowel sound = one склад**
 
-Here you use it as a reading tool: see a word, find its vowel sounds, split it
-into syllables, and read it without guessing from another alphabet.
+In print, count the letters that mark vowel sounds. Then split the word into
+syllables and read it without guessing from another alphabet.
 
 By the end, you can:
 
@@ -99,7 +100,7 @@ Start every reading attempt with one Ukrainian question:
 In Ukrainian, every syllable has a vowel sound. A single vowel can be a whole
 syllable, and a consonant by itself cannot make a syllable.
 
-| Слово́ | Голосні to notice | Склади́ |
+| Слово́ | Letters that mark vowel sounds | Склади́ |
 | --- | --- | --- |
 | **день** | **е** | 1 |
 | **ма́ма** | **а + а** | 2 |
@@ -135,7 +136,7 @@ Then join syllables:
 
 ## Голосні лі́тери
 
-**А О У Е И І** — six simple vowel letters.
+**А О У Е И І** — six simple letters for vowel sounds.
 
 The sounds are:
 
@@ -148,7 +149,7 @@ Read them as clean sounds. In **молоко́**, every **о** stays **о**:
 Say it slowly as three open beats, but keep the written word whole on the
 page.
 
-Now add the four special vowel letters:
+Now add the four other letters that mark vowel sounds:
 
 **Я Ю Є Ї**
 
@@ -175,9 +176,14 @@ Use three safe examples:
 You do not need every phonetic detail yet. Look at the position of
 **Я, Ю, Є, Ї**, then read the word slowly.
 
-### Робота голосних лі́тер
+:::caution
+Keep this beginner rule small: **Ї** is always **[йі]**. For **Я, Ю, Є**,
+look at the position first, then read slowly.
+:::
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "А", "right": "чистий [а]"}, {"left": "О", "right": "чистий [о]"}, {"left": "И", "right": "чистий [и]"}, {"left": "І", "right": "чистий [і]"}, {"left": "Я на початку слова", "right": "[йа]"}, {"left": "Ї", "right": "завжди [йі]"}]`)} instruction={"З'єднай лі́теру з її першою читацькою роботою."} isUkrainian={false} />
+### Роль літер у читанні
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "А", "right": "позначає [а]"}, {"left": "О", "right": "позначає [о]"}, {"left": "И", "right": "позначає [и]"}, {"left": "І", "right": "позначає [і]"}, {"left": "Я на початку слова", "right": "[йа]"}, {"left": "Ї", "right": "завжди [йі]"}]`)} instruction={"З'єднай лі́теру з її роллю в читанні."} isUkrainian={false} />
 
 ## Читаємо слова́
 
@@ -230,6 +236,11 @@ Read **день** with soft **н**, not with an extra vowel after it. Read
 **сім'я́** with a clear **й** before **я**. Read **джерело́** with joined
 **дж**.
 
+:::tip
+If a word feels long, do not speed up. Find the letters for vowel sounds, make
+small syllable beats, then smooth them into one word.
+:::
+
 ### Поділи на склади́
 
 <DivideWords client:only='react' instruction={"Поділи кожне друковане слово на склади́."} items={JSON.parse(`[{"word": "ма́ма", "answer": "ма ма"}, {"word": "молоко́", "answer": "мо ло ко"}, {"word": "ву́лиця", "answer": "ву ли ця"}, {"word": "столи́ця", "answer": "сто ли ця"}, {"word": "люди́на", "answer": "лю ди на"}, {"word": "бібліоте́ка", "answer": "бі блі о те ка"}]`)} />
@@ -249,12 +260,17 @@ Use these safety checks:
 | Reading **ї** as plain **і** | Read **ї** as **[йі]** |
 | Treating apostrophe as decoration | Keep the following **й** sound |
 
-Build the categories from Ukrainian examples: **ми**, **ді́ти**, **гора́**,
-**молоко́**. Do not use another language's alphabet as the shortcut.
+Build the habit from words on this page: **день**, **ма́ма**, **молоко́**,
+**Украї́на**. Do not use another language's alphabet as the shortcut.
+
+:::note
+These are reading habits, not a pronunciation exam. Slow accurate reading is a
+win at A1.
+:::
 
 ### Пастки читання
 
-<ErrorCorrection client:only='react' instruction="Обери безпечнішу українську читацьку звичку." items={JSON.parse(`[{"sentence": "Не читай молоко́ як малоко.", "errorWord": "малоко", "correctForm": "молоко", "options": ["молоко", "нечітке о"], "explanation": "Українське о залишається чистим; читай молоко́ у три відкриті удари."}, {"sentence": "Не читай дж у слові джерело́ як д плюс ж.", "errorWord": "д плюс ж", "correctForm": "один злитий звук", "options": ["один злитий звук", "д плюс ж"], "explanation": "ДЖ позначає одну злиту читацьку одиницю у словах як джерело́."}, {"sentence": "Украї́на — не читай ї як просте і.", "errorWord": "просте і", "correctForm": "[йі]", "options": ["[йі]", "[і]"], "explanation": "Ї завжди читаємо як [йі]."}, {"sentence": "День — не треба додати голосний після нь.", "errorWord": "додати голосний", "correctForm": "пом'якшити н і зупинитися", "options": ["пом'якшити н і зупинитися", "додати і після нь"], "explanation": "Ь не має власного звука; він м'якшить попередній при́голосний."}]`)} isUkrainian={false} />
+<ErrorCorrection client:only='react' instruction="Обери безпечнішу українську читацьку звичку." items={JSON.parse(`[{"sentence": "Не читай молоко́ як малоко.", "errorWord": "малоко", "correctForm": "молоко", "options": ["молоко", "нечітке о"], "explanation": "Українське о залишається чистим; читай молоко́ у три відкриті удари."}, {"sentence": "Не читай дж у слові джерело́ як д плюс ж.", "errorWord": "д плюс ж", "correctForm": "один злитий звук", "options": ["один злитий звук", "д плюс ж"], "explanation": "ДЖ читаємо як один злитий звук у словах як джерело́."}, {"sentence": "Украї́на — не читай ї як просте і.", "errorWord": "просте і", "correctForm": "[йі]", "options": ["[йі]", "[і]"], "explanation": "Ї завжди читаємо як [йі]."}, {"sentence": "День — не треба додати голосний після нь.", "errorWord": "додати голосний", "correctForm": "пом'якшити н і зупинитися", "options": ["пом'якшити н і зупинитися", "додати і після нь"], "explanation": "Ь не має власного звука; він м'якшить попередній при́голосний."}]`)} isUkrainian={false} />
 
 ## Друк, зошит, перевірка
 
@@ -301,14 +317,11 @@ Before you leave the lesson tab, check that you can do these things:
 The workbook repeats easy words and a few longer words on purpose. Repetition
 is how the alphabet becomes automatic.
 
-### Мініпереві́рка читання
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Склад — що це?", "options": [{"text": "склад", "correct": true}, {"text": "лі́тера", "correct": false}, {"text": "вітання", "correct": false}], "explanation": "Склад — це один голосовий удар у слові."}, {"question": "Молоко́ — скільки складів?", "options": [{"text": "3", "correct": true}, {"text": "2", "correct": false}, {"text": "1", "correct": false}], "explanation": "Молоко́ має три голосні звуки й три склади́."}, {"question": "Яка літера завжди [йі]?", "options": [{"text": "Ї", "correct": true}, {"text": "І", "correct": false}, {"text": "И", "correct": false}], "explanation": "Ї завжди читаємо як [йі]."}]`)} instruction={"Обери правильну відповідь."} isUkrainian={false} />
-
 ## Далі
 
-Тепер переходь до словника й вправ. Keep the same routine there: find the
-vowel sounds first, then read the whole word.
+Тепер переходь до словника й вправ. You can now look at a printed Ukrainian
+word, find the letters that mark vowel sounds, count the syllables, and read
+the whole word more calmly.
 
 </TabItem>
 <TabItem label="Vocabulary">
@@ -324,7 +337,7 @@ vowel sounds first, then read the whole word.
 
 *(see lesson, §Склади)*
 
-### Робота голосних лі́тер
+### Роль літер у читанні
 
 *(see lesson, §Голосні лі́тери)*
 
@@ -336,17 +349,17 @@ vowel sounds first, then read the whole word.
 
 *(see lesson, §Пастки читання)*
 
-### Мініпереві́рка читання
-
-*(see lesson, §Друк, зошит, перевірка)*
-
 ### Один, два чи три склади́
 
 <GroupSort client:only='react' groups={JSON.parse(`{"Один склад": ["день", "Львів"], "Два склади́": ["ма́ма", "та́то", "Ки́їв"], "Три склади́": ["молоко́", "ву́лиця", "столи́ця"]}`)} instruction={"Розподіли слова за кількістю складів."} isUkrainian={false} />
 
+### Зайве за кількістю складів
+
+<OddOneOut client:only='react' instruction={"Обери слово, яке має іншу кількість складів."} items={JSON.parse(`[{"words": ["ма́ма", "та́то", "вода́", "день"], "correct": 3, "explanation": "День має один склад; інші слова мають два."}, {"words": ["молоко́", "ву́лиця", "столи́ця", "Ки́їв"], "correct": 3, "explanation": "Ки́їв має два склади; інші слова мають три."}, {"words": ["день", "Львів", "ма́ма", "так"], "correct": 2, "explanation": "Ма́ма має два склади; інші слова мають один."}, {"words": ["бібліоте́ка", "університе́т", "фотогра́фія", "ка́ша"], "correct": 3, "explanation": "Ка́ша має два склади; інші слова мають п'ять."}]`)} />
+
 ### Факти про читання
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Кожен український склад має голосни́й звук.", "isTrue": true, "explanation": "Голосни́й звук — центр складу."}, {"statement": "Ї іноді м'якшить попередній при́голосний.", "isTrue": false, "explanation": "Ї завжди читаємо як [йі]."}, {"statement": "У молоко́ звук о залишається чистим.", "isTrue": true, "explanation": "Не перетворюй о на нечіткий голосни́й."}, {"statement": "ДЖ and ДЗ should be read as joined units.", "isTrue": true, "explanation": "ДЖ і ДЗ читаємо як злиті одиниці."}]`)} instruction={"Обери правда чи неправда."} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Кожен український склад має голосни́й звук.", "isTrue": true, "explanation": "Голосни́й звук — центр складу."}, {"statement": "Ї іноді м'якшить попередній при́голосний.", "isTrue": false, "explanation": "Ї завжди читаємо як [йі]."}, {"statement": "У молоко́ звук о залишається чистим.", "isTrue": true, "explanation": "Не перетворюй о на нечіткий голосни́й."}, {"statement": "ДЖ і ДЗ читаємо як злиті одиниці.", "isTrue": true, "explanation": "ДЖ і ДЗ читаємо як злиті одиниці."}]`)} instruction={"Обери правда чи неправда."} isUkrainian={false} />
 
 ### Друк і зошит
 
@@ -354,7 +367,11 @@ vowel sounds first, then read the whole word.
 
 ### Повтор голосних
 
-<WatchAndRepeat client:only='react' items={JSON.parse(`[{"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "А", "word": "ма́ма", "sound": "[а]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "О", "word": "молоко́", "sound": "[о]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "У", "word": "ву́лиця", "sound": "[у]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "И", "word": "ми", "sound": "[и]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "І", "word": "ді́ти", "sound": "[і]"}]`)} title="Повтор голосних" instruction={"Подивися огляд абетки ще раз, потім повтори прості голосні."} />
+<WatchAndRepeat client:only='react' items={JSON.parse(`[{"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "А", "word": "ма́ма", "sound": "[а]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "О", "word": "молоко́", "sound": "[о]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "У", "word": "ву́лиця", "sound": "[у]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "И", "word": "ми", "sound": "[и]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "І", "word": "пі́сня", "sound": "[і]"}]`)} title="Повтор голосних" instruction={"Подивися огляд абетки ще раз, потім повтори прості голосні."} />
+
+### Мініпереві́рка читання
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Склад — що це?", "options": [{"text": "лі́тера", "correct": false}, {"text": "syllable", "correct": true}, {"text": "greeting", "correct": false}], "explanation": "Склад — це частина слова з голосним звуком."}, {"question": "Молоко́ — скільки складів?", "options": [{"text": "2", "correct": false}, {"text": "3", "correct": true}, {"text": "1", "correct": false}], "explanation": "Молоко́ має три голосні звуки й три склади́."}, {"question": "Яка літера завжди [йі]?", "options": [{"text": "І", "correct": false}, {"text": "И", "correct": false}, {"text": "Ї", "correct": true}], "explanation": "Ї завжди читаємо як [йі]."}]`)} instruction={"Обери правильну відповідь."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">
