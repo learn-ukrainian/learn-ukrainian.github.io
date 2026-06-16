@@ -294,28 +294,11 @@ _BLOCKED_SYNONYMS = {
     "флористська хризантема",
 }
 
-# #3116 — curated PER-LEMMA wrong-sense synonym exclusions. Each listed word is
-# authentic Ukrainian (Грінченко/ЕСУМ-attested, NOT a Russianism) that the
-# Karavansky synset over-includes under a sense the lemma does NOT carry. It is
-# excluded only for that specific lemma — NEVER globally (cf. _BLOCKED_SYNONYMS) —
-# so the word stays valid for the lemmas where it IS correct. This is the
-# блискучий/кам'янка heritage lesson: fix the wrong (lemma, sense) pair, never
-# stoplist a valid word.
-#   шлях → кам'яниця: Грінченко = "Каменное строеніе" (stone building) / sparrow
-#          trap; ЕСУМ adds the stone-bramble berry — no road sense. The road term
-#          is кам'янка (Грінченко sense 4: "Шосе. Кам'янкою їхати").
-#   річка → звір: Грінченко звір I = "Овраг, лощина" (ravine), звір II = "зверь"
-#          (beast) — neither is a river.
-_WRONG_SENSE_SYNONYMS: dict[str, frozenset[str]] = {
-    "шлях": frozenset({"кам'яниця"}),
-    "річка": frozenset({"звір"}),
-}
-
 # #3197 — Вікісловник's explicit antonym column carries pedagogical noise the POS
 # gate alone can't catch: alphabet meta-pairs (а→зет), co-hyponyms / paradigm
 # members dressed as opposites (дочка→матка, він→ми), wrong-sense opposites
 # (газ→гальмо, ім'я→неслава) and Russian contamination (не→да). Mirror the #3168
-# _WRONG_SENSE_SYNONYMS lesson: curated per-lemma filter, NEVER a global stoplist.
+# sense-guard lesson: use scoped validation, NEVER a global stoplist.
 # Two layers, both verified via the sources MCP (СУМ-11 / VESUM / russian_shadow):
 #   _DROP_ANTONYM_LEMMAS — lemmas whose ENTIRE antonym set is noise:
 #     а→зет (letter-name sequence); брат (no lexical antonym — сестра is the
@@ -1150,11 +1133,6 @@ def _clean_synonym_candidate(candidate: str, lemma: str) -> str | None:
         normalized_variant = variant.casefold()
         if term == normalized_variant or _contains_whole_token(term, normalized_variant):
             return None
-    excluded = _WRONG_SENSE_SYNONYMS.get(_base_lemma(lemma).casefold())
-    if excluded:
-        normalized = term.replace("’", "'").replace("ʼ", "'").replace("`", "'")
-        if normalized in excluded:
-            return None
     return term
 
 
@@ -1171,6 +1149,245 @@ def _slovnyk_synonym_group_head(row: dict[str, Any], lemma: str) -> str:
     return first
 
 
+_SENSE_STOP_WORDS = {
+    "або",
+    "без",
+    "біля",
+    "був",
+    "була",
+    "було",
+    "бути",
+    "было",
+    "весь",
+    "вона",
+    "вони",
+    "воно",
+    "все",
+    "для",
+    "еще",
+    "если",
+    "його",
+    "йому",
+    "из",
+    "или",
+    "кого",
+    "коли",
+    "кому",
+    "куди",
+    "над",
+    "них",
+    "нього",
+    "один",
+    "перед",
+    "після",
+    "про",
+    "при",
+    "саме",
+    "себе",
+    "слово",
+    "так",
+    "також",
+    "такий",
+    "таким",
+    "те",
+    "той",
+    "тільки",
+    "того",
+    "тому",
+    "хто",
+    "чого",
+    "щоб",
+    "яка",
+    "яке",
+    "який",
+    "яким",
+    "якої",
+    "яку",
+}
+_SENSE_TOKEN_RE = re.compile(r"[А-Яа-яЄєІіЇїҐґЁёЫыЭэЪъ'’ʼ-]{3,}")
+_SENSE_ROOT_ALIASES = (
+    frozenset({"дорог", "їзд", "курс", "маршрут", "напрям", "путь", "тракт", "ходін", "шлях", "шос"}),
+    frozenset({"потік", "поток", "рік", "річ", "струм"}),
+)
+_SENSE_ALIAS_PREFIXES = (
+    ("дорог", "їзд", "курс", "маршрут", "напрям", "путь", "тракт", "ходін", "шлях", "шос"),
+    ("потік", "поток", "рік", "річ", "струм"),
+)
+
+
+def _sense_root(token: str) -> str:
+    token = _strip_stress(token).casefold().replace("’", "'").replace("ʼ", "'")
+    token = token.strip("-'")
+    if token.startswith(("дорог", "шлях", "шос", "тракт", "маршрут", "путь")):
+        return token[:7].rstrip("ауиіеоюя")
+    if token.startswith(("річк", "рік", "потік", "поток", "струм")):
+        return token[:5].rstrip("ауиіеоюя")
+    for ending in (
+        "ами",
+        "ями",
+        "ові",
+        "еві",
+        "ого",
+        "ему",
+        "ому",
+        "ими",
+        "ий",
+        "ій",
+        "ая",
+        "ою",
+        "ею",
+        "ах",
+        "ях",
+        "ів",
+        "їв",
+        "ам",
+        "ям",
+        "ом",
+        "ем",
+        "а",
+        "у",
+        "и",
+        "і",
+        "е",
+        "о",
+        "ю",
+        "я",
+    ):
+        if len(token) - len(ending) >= 4 and token.endswith(ending):
+            token = token[: -len(ending)]
+            break
+    return token
+
+
+def _sense_roots(text: str) -> set[str]:
+    roots: set[str] = set()
+    direct_alias_roots = _sense_direct_alias_roots(text)
+    for token in _SENSE_TOKEN_RE.findall(clean_html_entities(text)):
+        normalized = _strip_stress(token).casefold().replace("’", "'").replace("ʼ", "'").strip("-'")
+        if normalized in _SENSE_STOP_WORDS:
+            continue
+        root = _sense_root(token)
+        if root and root not in _SENSE_STOP_WORDS and len(root) >= 3:
+            roots.add(root)
+    expanded = set(roots)
+    for aliases in _SENSE_ROOT_ALIASES:
+        if direct_alias_roots.intersection(aliases):
+            expanded.update(aliases)
+    return expanded
+
+
+def _sense_direct_alias_roots(text: str) -> set[str]:
+    roots: set[str] = set()
+    for token in _SENSE_TOKEN_RE.findall(clean_html_entities(text)):
+        normalized = _strip_stress(token).casefold().replace("’", "'").replace("ʼ", "'").strip("-'")
+        if normalized in _SENSE_STOP_WORDS:
+            continue
+        for prefixes in _SENSE_ALIAS_PREFIXES:
+            for prefix in prefixes:
+                if normalized.startswith(prefix):
+                    roots.add(prefix)
+    return roots
+
+
+def _dictionary_sense_lead(snippet: str) -> str:
+    lead = snippet
+    for old, new in {
+        "Признач.": "Призначений",
+        "перен.": "перен",
+        "діал.": "діал",
+        "розм.": "розм",
+        "заст.": "заст",
+        "спец.": "спец",
+        "Ум.": "Ум",
+    }.items():
+        lead = lead.replace(old, new)
+    lead = re.sub(r"^\s*\d+[\.)]\s*", "", lead)
+    lead = re.sub(
+        r"^\s*(?:перен|діал|розм|заст|спец|тільки одн\.)\.?,?\s*",
+        "",
+        lead,
+        flags=re.IGNORECASE,
+    )
+    lead = re.split(r"\.\s+", lead, maxsplit=1)[0]
+    return lead.strip(" ;,.")
+
+
+def _dictionary_sense_summary(text: str) -> str:
+    cleaned = clean_html_entities(text)
+    snippets: list[str] = []
+    header = re.search(r"(?:^|,\s*)(?:[^.]{0,60}\s)?(?:ч|ж|м|с)\.,?\s*", cleaned[:180])
+    if header:
+        lead = _dictionary_sense_lead(cleaned[header.end() : header.end() + 220])
+        if lead:
+            snippets.append(lead)
+    for match in re.finditer(
+        r"(?:^|\.\s+)[А-ЯІЇЄҐ][А-ЯІЇЄҐ́'’ʼ-]{2,}[¹²³]?,[^.]{0,90}(?:ч|ж|м|с)\.,?\s*",
+        cleaned,
+    ):
+        lead = _dictionary_sense_lead(cleaned[match.end() : match.end() + 220])
+        if lead:
+            snippets.append(lead)
+    for match in re.finditer(r"(?<![,.\d])\s\d+[\.)]\s*(?=[А-Яа-яЄєІіЇїҐґЁёЫыЭэЪъ])", cleaned):
+        lead = _dictionary_sense_lead(cleaned[match.end() : match.end() + 220])
+        if lead:
+            snippets.append(lead)
+    if not snippets:
+        snippets.append(_dictionary_sense_lead(cleaned[:220]))
+    return " ".join(snippets)
+
+
+@lru_cache(maxsize=4096)
+def _dictionary_sense_texts(word: str) -> tuple[str, ...]:
+    """Return local primary dictionary evidence for conservative sense checks."""
+    if not SOURCES_DB.exists():
+        return ()
+    texts: list[str] = []
+    try:
+        conn = sqlite3.connect(f"file:{SOURCES_DB}?mode=ro", uri=True)
+    except sqlite3.Error:
+        return ()
+    try:
+        for variant in get_apostrophe_variants(_strip_stress(word).casefold()):
+            for table in ("sum11", "grinchenko"):
+                try:
+                    row = conn.execute(
+                        f"SELECT definition FROM {table} WHERE word = ? AND definition != '' LIMIT 1",
+                        (variant,),
+                    ).fetchone()
+                except sqlite3.Error:
+                    continue
+                if row and row[0]:
+                    text = _dictionary_sense_summary(str(row[0]))
+                    if text not in texts:
+                        texts.append(text)
+    finally:
+        conn.close()
+    return tuple(texts)
+
+
+def _candidate_primary_sense_matches_lemma(lemma: str, candidate: str) -> bool:
+    """Keep unless dictionary evidence clearly puts candidate in a different sense."""
+    lemma_senses = _dictionary_sense_texts(_base_lemma(lemma))
+    candidate_senses = _dictionary_sense_texts(candidate)
+    if not lemma_senses or not candidate_senses:
+        return True
+    lemma_text = " ".join(lemma_senses)
+    candidate_text = " ".join(candidate_senses)
+    lemma_alias_roots = _sense_direct_alias_roots(lemma_text)
+    if not lemma_alias_roots:
+        return True
+    candidate_alias_roots = _sense_direct_alias_roots(candidate_text)
+    if lemma_alias_roots.intersection(candidate_alias_roots):
+        return True
+    if not candidate_alias_roots:
+        return False
+    lemma_roots = _sense_roots(lemma_text)
+    candidate_roots = _sense_roots(candidate_text)
+    if not lemma_roots or not candidate_roots:
+        return True
+    return bool(lemma_roots.intersection(candidate_roots))
+
+
 def _is_safe_slovnyk_synonym(
     lemma: str,
     candidate: str,
@@ -1181,6 +1398,8 @@ def _is_safe_slovnyk_synonym(
     if require_allowlist and candidate not in _safe_synonym_set(lemma):
         return False
     if not _candidate_matches_headword_pos(candidate, headword_pos):
+        return False
+    if not _candidate_primary_sense_matches_lemma(lemma, candidate):
         return False
     return not _candidate_is_headword_variant(lemma, candidate, headword_pos)
 

@@ -8,11 +8,11 @@ from scripts.lexicon import enrich_manifest as enrich_manifest_module
 from scripts.lexicon.enrich_manifest import (
     _DROP_ANTONYM_LEMMAS,
     _WRONG_ANTONYMS,
-    _WRONG_SENSE_SYNONYMS,
     KAIKKI_SOURCE,
     _antonyms_wiktionary,
     _base_lemma,
     _build_paradigm,
+    _candidate_primary_sense_matches_lemma,
     _cefr,
     _clean_synonym_candidate,
     _curated_calque,
@@ -406,18 +406,21 @@ def test_slovnyk_synonyms_omit_wrong_sense_voda(monkeypatch) -> None:
     assert "велемовність" not in items
 
 
-def test_wrong_sense_synonym_excluded_per_lemma_not_globally() -> None:
-    # #3116: кам'яниця (stone building, Грінченко) and звір (ravine/beast) are
-    # authentic words the Karavansky synset over-includes for шлях/річка. They are
-    # dropped for THAT lemma only — never globally — so a stoplist that would
-    # repeat the блискучий heritage error is avoided.
-    assert _clean_synonym_candidate("кам'яниця", "шлях") is None
-    assert _clean_synonym_candidate("звір", "річка") is None
-    # valid same-sense synonyms survive
-    assert _clean_synonym_candidate("дорога", "шлях") == "дорога"
-    assert _clean_synonym_candidate("струмок", "річка") == "струмок"
-    # NOT a global block: кам'яниця stays valid as a synonym of a different lemma
-    assert _clean_synonym_candidate("кам'яниця", "будинок") == "кам'яниця"
+def test_synonym_sense_guard_uses_candidate_dictionary_sense(monkeypatch) -> None:
+    sense_rows = {
+        "шлях": ("Смуга землі для їзди та ходіння; дорога.",),
+        "дорога": ("Смуга землі для їзди; шлях.",),
+        "кам'яниця": ("Каменное строеніе. Ловушка для воробьев.",),
+    }
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_dictionary_sense_texts",
+        lambda word: sense_rows.get(word, ()),
+    )
+
+    assert _candidate_primary_sense_matches_lemma("шлях", "дорога") is True
+    assert _candidate_primary_sense_matches_lemma("шлях", "кам'яниця") is False
+    assert _clean_synonym_candidate("кам'яниця", "шлях") == "кам'яниця"
 
 
 def test_synonym_qualifiers_and_sense_guard_for_shliakh(monkeypatch) -> None:
@@ -428,9 +431,23 @@ def test_synonym_qualifiers_and_sense_guard_for_shliakh(monkeypatch) -> None:
             "дорога": "noun",
             "тракт": "noun",
             "гостинець": "noun",
+            "путівець": "noun",
             "кам'янка": "noun",
             "кам'яниця": "noun",
         },
+    )
+    sense_rows = {
+        "шлях": ("Смуга землі для їзди та ходіння; дорога.",),
+        "дорога": ("Смуга землі для їзди та ходіння; шлях.",),
+        "тракт": ("Те саме, що шлях 1.",),
+        "гостинець": ("Подарунок. Великий битий шлях; шосе.",),
+        "кам'янка": ("Шосе. Кам'янкою їхати.",),
+        "кам'яниця": ("Каменное строеніе. Ловушка для воробьев.",),
+    }
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_dictionary_sense_texts",
+        lambda word: sense_rows.get(word, ()),
     )
     cache = {
         "lookups": {
@@ -439,7 +456,10 @@ def test_synonym_qualifiers_and_sense_guard_for_shliakh(monkeypatch) -> None:
                 "dictionary_label": "Словник синонімів української мови",
                 "word": "шлях",
                 "source_url": "https://slovnyk.me/dict/synonyms/шлях",
-                "text": "шлях ДОРО́ГА, ТРАКТ заст., ГОСТИ́НЕЦЬ розм., КА́М'ЯНКА діал. (брукована). Джерело: тест",
+                "text": (
+                    "шлях ДОРО́ГА, ТРАКТ заст., ГОСТИ́НЕЦЬ розм., "
+                    "ПУТІВЕ́ЦЬ діал., КА́М'ЯНКА діал. (брукована). Джерело: тест"
+                ),
             },
             "synonyms_karavansky": {
                 "dictionary_slug": "synonyms_karavansky",
@@ -463,6 +483,7 @@ def test_synonym_qualifiers_and_sense_guard_for_shliakh(monkeypatch) -> None:
     assert "дорога" in items
     assert "тракт (заст.)" in items
     assert "гостинець (розм.)" in items
+    assert "путівець (діал.)" in items
     assert "кам'янка (діал.)" in items
 
 
@@ -474,6 +495,16 @@ def test_synonym_sense_guard_for_richka(monkeypatch) -> None:
             "струмок": "noun",
             "звір": "noun",
         },
+    )
+    sense_rows = {
+        "річка": ("Те саме що ріка.",),
+        "струмок": ("Невеликий потік, утворений з вод.",),
+        "звір": ("Дика, звичайно хижа, тварина.",),
+    }
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_dictionary_sense_texts",
+        lambda word: sense_rows.get(word, ()),
     )
     cache = {
         "lookups": {
@@ -494,16 +525,14 @@ def test_synonym_sense_guard_for_richka(monkeypatch) -> None:
     assert "струмок" in items
 
 
-def test_wrong_sense_synonyms_are_authentic_not_russianisms() -> None:
-    # Contract guard: every excluded term is per-lemma sense-scoped, never a
-    # blanket entry. Keys are base lemmas; the excluded words must NOT leak into
-    # the global _BLOCKED_SYNONYMS stoplist (they are valid Ukrainian).
-    blocked = enrich_manifest_module._BLOCKED_SYNONYMS
-    for lemma, excluded in _WRONG_SENSE_SYNONYMS.items():
-        assert lemma == lemma.casefold(), f"key {lemma!r} must be casefolded"
-        assert excluded, f"{lemma} must list at least one excluded term"
-        for term in excluded:
-            assert term not in blocked, f"{term} is valid Ukrainian — must not be globally blocked"
+def test_synonym_sense_guard_keeps_candidates_without_source_evidence(monkeypatch) -> None:
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_dictionary_sense_texts",
+        lambda word: ("Смуга землі для їзди та ходіння; дорога.",) if word == "шлях" else (),
+    )
+
+    assert _candidate_primary_sense_matches_lemma("шлях", "путівець") is True
 
 
 def test_slovnyk_synonyms_promote_clean_sources_for_sample(monkeypatch) -> None:
