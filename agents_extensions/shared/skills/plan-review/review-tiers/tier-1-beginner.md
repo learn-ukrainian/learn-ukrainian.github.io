@@ -84,7 +84,7 @@ WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
 
 | Category | Pattern | Example | Required Fix |
 |----------|---------|---------|--------------|
-| **OVERWHELMING_INTRO** | Too much complexity too fast | First paragraph uses dense Ukrainian | Rewrite in easier Ukrainian with repeated frames |
+| **OVERWHELMING_INTRO** | Too much complexity too fast | First paragraph uses dense Ukrainian | A1: add English scaffolding; A2: rewrite in easier Ukrainian with repeated frames |
 | **NO_QUICK_WIN** | Long content before any practice | 500 words before first activity | Add mini-exercise earlier |
 | **MISSING_SUPPORT** | Learner left to guess meaning | Dense Ukrainian with no frame | Add a simple Ukrainian frame or a short gloss |
 | **SCARY_GRAMMAR** | Complex terminology for beginners | "Accusative case" without explanation | Simplify or explain term |
@@ -130,10 +130,14 @@ WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
 - Clear pronunciation guidance (stress marks)
 - Consistent grammar patterns (no exceptions early)
 
-**English in A2 must be minimal:**
-- vocabulary glosses
-- one-line clarification only when a concept would otherwise be opaque
-- never long English body scaffolding
+**A1 English must be:**
+- B1-level readability (accessible to non-native English speakers too)
+- encouraging and clear
+- scaffolded where the learner would otherwise struggle
+
+**English in A2 must be limited to:**
+- vocabulary glosses only (inline em-dash or Tab 2 Словник)
+- never one-line English clarifications or long English body scaffolding
 
 ### Activity Quality (Beginner Gates)
 
