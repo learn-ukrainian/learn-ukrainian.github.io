@@ -113,6 +113,7 @@ _MODULE_ARTIFACT_NAMES = (
     "python_qg.json",
     "wiki_coverage_gate.json",
     "wiki_coverage_review.json",
+    "python_qg_correction_loop.json",
     "llm_qg_correction_loop.json",
     "llm_qg.json",
 )
