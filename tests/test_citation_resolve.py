@@ -53,13 +53,73 @@ def test_cyrillic_latin_lookalike_author_forms_match(author: str) -> None:
 
 
 def test_author_prefixed_scholarly_title_matches_plan_reference_by_containment() -> None:
-    result = _result(
-        "Костомаров М. «Слов'янська міфологія»",
-        "Слов'янська міфологія",
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Костомаров М. «Слов'янська міфологія»"}],
+        {"references": [{"title": "Слов'янська міфологія", "author": "Костомаров М."}]},
     )
 
     assert result["passed"] is True
     assert result["unknown"] == []
+
+
+def test_author_mismatch_does_not_launder_generic_title_by_containment() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Інший Автор, Українська мова, 9 клас"}],
+        {"references": [{"title": "Українська мова", "author": "Караман О."}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Інший Автор, Українська мова, 9 клас"]
+
+
+def test_authorless_generic_title_does_not_resolve_by_containment() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Інший Автор, Українська мова, 9 клас"}],
+        {"references": [{"title": "Українська мова"}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Інший Автор, Українська мова, 9 клас"]
+
+
+def test_punctuation_collapse_does_not_cross_token_boundaries() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Автор Х., Точка: Нульова гіпотеза"}],
+        {"references": [{"title": "Точка Нуль", "author": "Автор Х."}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Автор Х., Точка: Нульова гіпотеза"]
+
+
+def test_author_corroboration_accepts_surname_initial_source_ref() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Шевченко Т.Г. «Садок вишневий»"}],
+        {"references": [{"title": "Садок вишневий", "author": "Тарас Шевченко"}]},
+    )
+
+    assert result["passed"] is True
+    assert result["unknown"] == []
+
+
+def test_first_name_alone_does_not_satisfy_author_corroboration() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Тарас Петренко «Садок вишневий»"}],
+        {"references": [{"title": "Садок вишневий", "author": "Тарас Шевченко"}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Тарас Петренко «Садок вишневий»"]
+
+
+def test_title_word_does_not_satisfy_author_corroboration() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Костомаров М. «Слов'янська міфологія»"}],
+        {"references": [{"title": "Слов'янська міфологія", "author": "Міфологія"}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Костомаров М. «Слов'янська міфологія»"]
 
 
 def test_koliadky_author_prefixed_plan_references_resolve_by_containment() -> None:

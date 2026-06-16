@@ -51,6 +51,7 @@ from scripts.build.citation_matcher import (
     extract_chunk_id_from_notes,
     extract_citation_key,
     extract_plan_reference_titles,
+    fold_citation_author,
     normalize_citation_ref,
 )
 from scripts.build.prompt_builder import DOWNSTREAM_TOKENS, TOKEN_RE, render_prompt
@@ -10560,29 +10561,193 @@ def _normalize_citation_match_text(value: Any) -> str:
     return re.sub(r"[^\wа-яіїєґА-ЯІЇЄҐ]+", "", normalized)
 
 
+def _citation_match_tokens(value: Any) -> list[str]:
+    return [token.text for token in _textbook_match_token_spans(_normalize_citation_ref(value))]
+
+
+def _citation_token_sequence_contains(needle: Sequence[str], haystack: Sequence[str]) -> bool:
+    return _citation_token_sequence_start(needle, haystack) is not None
+
+
+def _citation_token_sequence_start(needle: Sequence[str], haystack: Sequence[str]) -> int | None:
+    if not needle or len(needle) > len(haystack):
+        return None
+    needle_tuple = tuple(needle)
+    for start in range(0, len(haystack) - len(needle_tuple) + 1):
+        if tuple(haystack[start : start + len(needle_tuple)]) == needle_tuple:
+            return start
+    return None
+
+
 def _citation_ref_text_contains(reference_title: str, text: str) -> bool:
-    normalized_ref = _normalize_citation_match_text(reference_title)
-    normalized_text = _normalize_citation_match_text(text)
-    return bool(normalized_ref and normalized_ref in normalized_text)
+    return _citation_token_sequence_contains(
+        _citation_match_tokens(reference_title),
+        _citation_match_tokens(text),
+    )
 
 
 _CITATION_CONTAINMENT_MIN_CHARS = 8
+_CITATION_AUTHORLESS_CONTAINMENT_MIN_CHARS = 18
+_CITATION_AUTHORLESS_CONTAINMENT_MIN_DISTINCTIVE_TOKENS = 3
+_CITATION_AUTHORLESS_GENERIC_TITLE_TOKENS = frozenset(
+    {
+        "class",
+        "grade",
+        "клас",
+        "мова",
+        "украина",
+        "украинская",
+        "украинськии",
+        "украинська",
+        "украіни",
+        "украінська",
+        "українська",
+        "український",
+        "україни",
+    }
+)
 
 
 def _citation_ref_specific_enough_for_containment(reference_title: Any) -> bool:
     normalized_ref = _normalize_citation_match_text(reference_title)
-    word_count = len(re.findall(r"\w+", _normalize_citation_ref(reference_title)))
-    return len(normalized_ref) >= _CITATION_CONTAINMENT_MIN_CHARS and word_count >= 2
+    return (
+        len(normalized_ref) >= _CITATION_CONTAINMENT_MIN_CHARS
+        and len(_citation_match_tokens(reference_title)) >= 2
+    )
 
 
-def _citation_ref_resolves_by_containment(reference_title: Any, source_ref: str) -> bool:
-    return _citation_ref_specific_enough_for_containment(
-        reference_title
-    ) and _citation_ref_text_contains(str(reference_title), source_ref)
+def _citation_distinctive_title_tokens(reference_title: Any) -> list[str]:
+    return [
+        token
+        for token in _citation_match_tokens(reference_title)
+        if len(token) >= 4
+        and not token.isdigit()
+        and token not in _CITATION_AUTHORLESS_GENERIC_TITLE_TOKENS
+    ]
+
+
+def _citation_ref_specific_enough_without_author(reference_title: Any) -> bool:
+    distinctive_tokens = _citation_distinctive_title_tokens(reference_title)
+    normalized_ref = _normalize_citation_match_text(reference_title)
+    return len(distinctive_tokens) >= _CITATION_AUTHORLESS_CONTAINMENT_MIN_DISTINCTIVE_TOKENS or (
+        len(normalized_ref) >= _CITATION_AUTHORLESS_CONTAINMENT_MIN_CHARS
+        and len(distinctive_tokens) >= 2
+    )
+
+
+def _citation_author_tokens(author: Any) -> list[str]:
+    return [
+        token
+        for token in _citation_match_tokens(author)
+        if not re.fullmatch(r"[a-zа-яіїєґ]", token)
+    ]
+
+
+def _citation_folded_author_tokens(author: Any) -> list[str]:
+    return [
+        folded
+        for token in _citation_author_tokens(author)
+        if (folded := fold_citation_author(token))
+    ]
+
+
+def _citation_author_anchor_tokens(author: Any, author_tokens: Sequence[str]) -> set[str]:
+    distinctive = [token for token in author_tokens if len(token) >= 4 and not token.isdigit()]
+    if not distinctive:
+        return set()
+    if len(distinctive) == 1:
+        return {distinctive[0]}
+    if "," in str(author):
+        return {distinctive[0]}
+    return {distinctive[-1]}
+
+
+def _citation_author_appears_in_source_tokens(
+    author: Any,
+    source_tokens_without_title: Sequence[str],
+) -> bool:
+    author_tokens = _citation_author_tokens(author)
+    if _citation_token_sequence_contains(author_tokens, source_tokens_without_title):
+        return True
+    author_anchors = _citation_author_anchor_tokens(author, author_tokens)
+    if author_anchors & set(source_tokens_without_title):
+        return True
+
+    folded_source_tokens = [
+        folded
+        for token in source_tokens_without_title
+        if (folded := fold_citation_author(token))
+    ]
+    folded_author_tokens = _citation_folded_author_tokens(author)
+    if _citation_token_sequence_contains(folded_author_tokens, folded_source_tokens):
+        return True
+    folded_author_anchors = _citation_author_anchor_tokens(author, folded_author_tokens)
+    return bool(folded_author_anchors & set(folded_source_tokens))
+
+
+def _citation_source_tokens_without_title(
+    reference_title: Any,
+    source_ref: str,
+) -> list[str] | None:
+    title_tokens = _citation_match_tokens(reference_title)
+    source_tokens = _citation_match_tokens(source_ref)
+    title_start = _citation_token_sequence_start(title_tokens, source_tokens)
+    if title_start is None:
+        return None
+    title_end = title_start + len(title_tokens)
+    return source_tokens[:title_start] + source_tokens[title_end:]
+
+
+def _citation_author_appears_in_source(
+    author: Any,
+    reference_title: Any,
+    source_ref: str,
+) -> bool:
+    source_tokens_without_title = _citation_source_tokens_without_title(
+        reference_title,
+        source_ref,
+    )
+    if source_tokens_without_title is None:
+        return False
+    return _citation_author_appears_in_source_tokens(
+        author,
+        source_tokens_without_title,
+    )
+
+
+def _citation_plan_reference_records(plan: Mapping[str, Any]) -> list[Mapping[str, Any]]:
+    references = plan.get("references")
+    if references is None:
+        references = plan.get("plan_references", [])
+    if not isinstance(references, list):
+        return []
+    return [
+        ref
+        for ref in references
+        if isinstance(ref, Mapping) and (ref.get("title") or ref.get("work"))
+    ]
+
+
+def _citation_ref_resolves_by_containment(
+    reference: Mapping[str, Any],
+    source_ref: str,
+) -> bool:
+    reference_title = str(reference.get("title") or reference.get("work") or "")
+    if not (
+        _citation_ref_specific_enough_for_containment(reference_title)
+        and _citation_ref_text_contains(reference_title, source_ref)
+    ):
+        return False
+
+    author = str(reference.get("author") or "").strip()
+    if author:
+        return _citation_author_appears_in_source(author, reference_title, source_ref)
+    return _citation_ref_specific_enough_without_author(reference_title)
 
 
 def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> dict[str, Any]:
-    plan_reference_titles = extract_plan_reference_titles(plan)
+    plan_reference_records = _citation_plan_reference_records(plan)
+    plan_reference_titles = [str(ref.get("title") or ref.get("work") or "") for ref in plan_reference_records]
     plan_titles = {_normalize_citation_ref(title) for title in plan_reference_titles}
     plan_keys = {key for title in plan_reference_titles if (key := extract_citation_key(title)) is not None}
     unknown = []
@@ -10597,8 +10762,8 @@ def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> 
             normalized_ref not in plan_titles
             and (source_key is None or not any(citation_keys_match(source_key, plan_key) for plan_key in plan_keys))
             and not any(
-                _citation_ref_resolves_by_containment(title, source_ref)
-                for title in plan_reference_titles
+                _citation_ref_resolves_by_containment(reference, source_ref)
+                for reference in plan_reference_records
             )
             and resource.get("packet_chunk_id") is None
         ):
