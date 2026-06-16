@@ -62,6 +62,22 @@
   translation: to prepare, to cook
   pos: verb pair
   example: "Вони готували вечерю і приготували салат."
+- word: бачити / побачити
+  translation: to see
+  pos: verb pair
+  example: "Я бачив вивіску і потім побачив потрібний номер."
+- word: вчити / вивчити
+  translation: to learn, to study
+  pos: verb pair
+  example: "Ми вчили нові слова і вивчили три пари."
+- word: слухати / послухати
+  translation: to listen
+  pos: verb pair
+  example: "Я слухав подкаст і послухав короткий випуск до кінця."
+- word: дзвонити / подзвонити
+  translation: to call
+  pos: verb pair
+  example: "Вона дзвонила мамі і потім подзвонила колезі."
 - word: брати / взяти
   translation: to take
   pos: verb pair
@@ -82,6 +98,10 @@
   translation: to help
   pos: verb pair
   example: "Я допомагав другу і потім допоміг сестрі."
+- word: повертати / повернути
+  translation: to return
+  pos: verb pair
+  example: "Я повертав книгу і нарешті повернув її до бібліотеки."
 - word: варити / зварити
   translation: to cook, to boil
   pos: verb pair
@@ -90,6 +110,22 @@
   translation: to shape, to make by hand
   pos: verb pair
   example: "Діти ліпили вареники і зліпили останню партію."
+- word: ловити / піймати
+  translation: to catch
+  pos: verb pair
+  example: "Діти ловили м'яч і піймали його."
+- word: класти / покласти
+  translation: to put
+  pos: verb pair
+  example: "Він клав ключі на стіл і поклав їх у сумку."
+- word: їсти / з'їсти
+  translation: to eat
+  pos: verb pair
+  example: "Ми їли суп і з'їли його до кінця."
+- word: знаходити / знайти
+  translation: to find
+  pos: verb pair
+  example: "Я часто знаходжу цікаві слова і знайшов потрібний приклад."
 - word: шукати / знайти
   translation: to look for / to find
   pos: related verbs
