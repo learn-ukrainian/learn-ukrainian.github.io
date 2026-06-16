@@ -451,6 +451,30 @@ WIKI_COVERAGE_OVERALL_VERDICTS = {"PASS", "PARTIAL", "FAIL"}
 WIKI_COVERAGE_EVIDENCE_QUOTE_MARKERS = ('"', "“", "«")
 LLM_QG_CORE_MAX_ROUNDS = 1
 LLM_QG_SEMINAR_MAX_ROUNDS = 3
+PYTHON_QG_CORE_MAX_CORRECTION_ROUNDS = 1
+PYTHON_QG_SEMINAR_MAX_CORRECTION_ROUNDS = 4
+PYTHON_QG_MIN_REGRESSION_PATIENCE = 1
+PYTHON_QG_MALFORMED_REPORT_VIOLATIONS = 999
+PYTHON_QG_VIOLATION_COUNT_KEYS = (
+    "missing",
+    "violations",
+    "errors",
+    "findings",
+    "critical_findings",
+    "detections",
+    "regressions",
+    "invalid",
+    "missing_terms",
+    "missing_sections",
+    "malformed_callouts",
+    "missing_mandatory_callouts",
+    "unresolved",
+    "unresolved_citations",
+    "missing_required",
+    "missing_optional",
+    "missing_activity_ids",
+    "duplicate_ids",
+)
 _TELEMETRY_EVENT_SINK: Callable[..., None] | None = None
 
 
@@ -4595,6 +4619,21 @@ def llm_qg_max_rounds_for_level(level: str | None) -> int:
     )
 
 
+def python_qg_max_correction_rounds_for_level(level: str | None) -> int:
+    """Return the Python-QG correction-round budget for a curriculum level."""
+    return (
+        PYTHON_QG_SEMINAR_MAX_CORRECTION_ROUNDS
+        if str(level or "").strip().lower() in SEMINAR_LEVELS
+        else PYTHON_QG_CORE_MAX_CORRECTION_ROUNDS
+    )
+
+
+def _python_qg_level_from_plan_path(plan_path: Path) -> str | None:
+    with contextlib.suppress(LinearPipelineError, OSError, yaml.YAMLError):
+        return str(load_plan(plan_path).get("level") or "").strip().lower()
+    return None
+
+
 def _prompt_yaml_or_text(value: str | Mapping[str, Any] | None) -> str:
     if value is None:
         return "{}"
@@ -5471,6 +5510,63 @@ def _python_qg_passed(report: Mapping[str, Any]) -> bool:
     return isinstance(gates, Mapping) and gates.get("passed") is True
 
 
+def _python_qg_violation_value_count(value: Any) -> int:
+    if isinstance(value, Mapping):
+        return len(value)
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
+        return len(value)
+    return 1 if value else 0
+
+
+def _python_qg_explicit_violation_count(gate_report: Mapping[str, Any]) -> int:
+    return sum(
+        _python_qg_violation_value_count(gate_report.get(key))
+        for key in PYTHON_QG_VIOLATION_COUNT_KEYS
+    )
+
+
+def _python_qg_gate_violation_count(gate_report: Mapping[str, Any]) -> int:
+    explicit_count = _python_qg_explicit_violation_count(gate_report)
+    if "passed" not in gate_report:
+        return max(1, explicit_count)
+    if gate_report.get("passed") is not False:
+        return 0
+    return max(1, explicit_count)
+
+
+def _python_qg_violation_count(report: Mapping[str, Any]) -> int:
+    gates = report.get("gates")
+    if not isinstance(gates, Mapping):
+        return PYTHON_QG_MALFORMED_REPORT_VIOLATIONS
+    return sum(
+        _python_qg_gate_violation_count(gate_report)
+        for gate, gate_report in gates.items()
+        if gate != "passed" and isinstance(gate_report, Mapping)
+    )
+
+
+def _python_qg_review_loop_dims(violation_count: int) -> Mapping[str, Any]:
+    return {
+        "python_qg_violations": {
+            "score": -float(violation_count),
+            "verdict": "PASS" if violation_count == 0 else "REVISE",
+        }
+    }
+
+
+def _python_qg_round_summary(round_record: Mapping[str, Any]) -> dict[str, Any]:
+    report = round_record.get("report")
+    violation_count = int(round_record.get("violation_count") or 0)
+    return {
+        "round": round_record.get("round"),
+        "correction_round": round_record.get("correction_round"),
+        "passed": _python_qg_passed(report) if isinstance(report, Mapping) else False,
+        "violation_count": violation_count,
+        "score": -violation_count,
+        "failed_gate": round_record.get("failed_gate"),
+    }
+
+
 def run_llm_qg_with_corrections(
     *,
     plan: Mapping[str, Any],
@@ -5630,6 +5726,288 @@ def run_llm_qg_with_corrections(
 
 
 def run_python_qg_with_corrections(
+    module_dir: Path,
+    plan_path: Path,
+    *,
+    verify_words_fn: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
+    heritage_lookup_fn: Callable[[str], list[dict[str, Any]]] | None = None,
+    qg_runner: Callable[[], dict[str, Any]] | None = None,
+    writer_corrector: Callable[[CorrectionContext], str | Mapping[str, str] | None] | None = None,
+    reviewer_corrector: Callable[[CorrectionContext], str | None] | None = None,
+    dictionary_lookup_fn: Callable[[str, str], list[str | Mapping[str, str]]] | None = None,
+    writer: str = "claude-tools",
+    invoker: Callable[..., Any] | None = None,
+    event_sink: Callable[..., None] | None = None,
+) -> dict[str, Any]:
+    """Run Python QG with core legacy behavior and seminar best-round selection."""
+    level = _python_qg_level_from_plan_path(plan_path)
+    if level in SEMINAR_LEVELS:
+        return _run_python_qg_with_bounded_corrections(
+            module_dir,
+            plan_path,
+            verify_words_fn=verify_words_fn,
+            heritage_lookup_fn=heritage_lookup_fn,
+            qg_runner=qg_runner,
+            writer_corrector=writer_corrector,
+            reviewer_corrector=reviewer_corrector,
+            dictionary_lookup_fn=dictionary_lookup_fn,
+            writer=writer,
+            invoker=invoker,
+            event_sink=event_sink,
+            max_correction_rounds=python_qg_max_correction_rounds_for_level(level),
+        )
+    return _run_python_qg_with_legacy_single_shot_corrections(
+        module_dir,
+        plan_path,
+        verify_words_fn=verify_words_fn,
+        heritage_lookup_fn=heritage_lookup_fn,
+        qg_runner=qg_runner,
+        writer_corrector=writer_corrector,
+        reviewer_corrector=reviewer_corrector,
+        dictionary_lookup_fn=dictionary_lookup_fn,
+        writer=writer,
+        invoker=invoker,
+        event_sink=event_sink,
+    )
+
+
+def _run_python_qg_with_bounded_corrections(
+    module_dir: Path,
+    plan_path: Path,
+    *,
+    verify_words_fn: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
+    heritage_lookup_fn: Callable[[str], list[dict[str, Any]]] | None = None,
+    qg_runner: Callable[[], dict[str, Any]] | None = None,
+    writer_corrector: Callable[[CorrectionContext], str | Mapping[str, str] | None] | None = None,
+    reviewer_corrector: Callable[[CorrectionContext], str | None] | None = None,
+    dictionary_lookup_fn: Callable[[str, str], list[str | Mapping[str, str]]] | None = None,
+    writer: str = "claude-tools",
+    invoker: Callable[..., Any] | None = None,
+    event_sink: Callable[..., None] | None = None,
+    max_correction_rounds: int = PYTHON_QG_SEMINAR_MAX_CORRECTION_ROUNDS,
+) -> dict[str, Any]:
+    """Run seminar Python QG with bounded corrections and restore the best round."""
+    correction_budget = max(1, int(max_correction_rounds))
+    rounds: list[dict[str, Any]] = []
+    corrections: list[dict[str, Any]] = []
+    stopped_reason = "max_rounds"
+    consecutive_regressions = 0
+
+    def _run_qg() -> dict[str, Any]:
+        if qg_runner is not None:
+            report = qg_runner()
+        else:
+            report = run_python_qg(
+                module_dir,
+                plan_path,
+                verify_words_fn=verify_words_fn,
+                heritage_lookup_fn=heritage_lookup_fn,
+                event_sink=event_sink,
+            )
+        _attach_vocab_count_gate(report, module_dir=module_dir, plan_path=plan_path)
+        return report
+
+    def _record_round(
+        report: dict[str, Any],
+        *,
+        correction_round: int,
+        failed_gate: str | None = None,
+    ) -> dict[str, Any]:
+        round_record = {
+            "round": len(rounds) + 1,
+            "correction_round": correction_round,
+            "report": report,
+            "artifacts": _snapshot_correction_artifacts(module_dir),
+            "violation_count": _python_qg_violation_count(report),
+            "failed_gate": failed_gate,
+        }
+        rounds.append(round_record)
+        _emit(
+            event_sink,
+            "python_qg_correction_round",
+            max_correction_rounds=correction_budget,
+            **_python_qg_round_summary(round_record),
+        )
+        return round_record
+
+    report = _run_qg()
+    _record_round(report, correction_round=0)
+    correction_round = 0
+
+    while True:
+        if _python_qg_passed(report):
+            stopped_reason = "pass"
+            break
+        if correction_round >= correction_budget:
+            stopped_reason = "max_rounds"
+            break
+
+        failed_gate = _first_failed_correctable_gate(report)
+        if failed_gate is None:
+            stopped_reason = "no_correctable_failure"
+            break
+
+        correction_round += 1
+        before = report
+        artifact_snapshot = rounds[-1]["artifacts"]
+        handled, unmatched_anchors, correction_payload = _apply_python_qg_correction(
+            failed_gate,
+            report,
+            module_dir=module_dir,
+            plan_path=plan_path,
+            writer_corrector=writer_corrector,
+            reviewer_corrector=reviewer_corrector,
+            dictionary_lookup_fn=dictionary_lookup_fn,
+            writer=writer,
+            invoker=invoker,
+        )
+        if not handled:
+            _write_correction_artifact(
+                module_dir / f"python_qg_correction_r{correction_round}.json",
+                {
+                    "round": correction_round,
+                    "gate": failed_gate,
+                    "handled": False,
+                    "before": before,
+                    "correction": correction_payload,
+                },
+            )
+            _annotate_correction_terminal(
+                report,
+                failed_gate,
+                f"{failed_gate} has no ADR-008 correction path",
+            )
+            stopped_reason = "no_correction_path"
+            break
+
+        report = _run_qg()
+        regressions = _previously_passing_regressions(before, report)
+        correction_artifact: dict[str, Any] = {
+            "round": correction_round,
+            "gate": failed_gate,
+            "handled": True,
+            "unmatched_anchors": sorted(unmatched_anchors),
+            "before": before,
+            "correction": correction_payload,
+            "after": report,
+            "regressions": regressions,
+        }
+
+        if correction_payload.get("yaml_invalid"):
+            _restore_correction_artifacts(module_dir, artifact_snapshot)
+            report = _run_qg()
+            _annotate_correction_terminal(
+                report,
+                failed_gate,
+                f"{failed_gate} correction produced invalid YAML and was rolled back",
+            )
+            correction_artifact["rolled_back"] = True
+            correction_artifact["rollback_reason"] = "yaml_invalid"
+            correction_artifact["restored_after"] = report
+            _write_correction_artifact(
+                module_dir / f"python_qg_correction_r{correction_round}.json",
+                correction_artifact,
+            )
+            corrections.append(correction_artifact)
+            _record_round(report, correction_round=correction_round, failed_gate=failed_gate)
+            stopped_reason = "yaml_invalid"
+            break
+
+        if (
+            failed_gate == "vesum_verified"
+            and not _vesum_correction_improved(before, report)
+        ):
+            _restore_correction_artifacts(module_dir, artifact_snapshot)
+            report = _run_qg()
+            _annotate_correction_terminal(
+                report,
+                failed_gate,
+                "vesum_verified correction did not clear any previous missing surface and was rolled back",
+            )
+            correction_artifact["rolled_back"] = True
+            correction_artifact["rollback_reason"] = "vesum_no_improvement"
+            correction_artifact["restored_after"] = report
+            _write_correction_artifact(
+                module_dir / f"python_qg_correction_r{correction_round}.json",
+                correction_artifact,
+            )
+            corrections.append(correction_artifact)
+            _record_round(report, correction_round=correction_round, failed_gate=failed_gate)
+            stopped_reason = "vesum_no_improvement"
+            break
+
+        if regressions:
+            _restore_correction_artifacts(module_dir, artifact_snapshot)
+            report = _run_qg()
+            gates = report.setdefault("gates", {})
+            if isinstance(gates, dict):
+                gates["previously_passed_regression"] = {
+                    "passed": False,
+                    "regressions": regressions,
+                }
+                gates["passed"] = False
+            correction_artifact["rolled_back"] = True
+            correction_artifact["rollback_reason"] = "previously_passed_regression"
+            correction_artifact["restored_after"] = report
+            _write_correction_artifact(
+                module_dir / f"python_qg_correction_r{correction_round}.json",
+                correction_artifact,
+            )
+            corrections.append(correction_artifact)
+            _record_round(report, correction_round=correction_round, failed_gate=failed_gate)
+            stopped_reason = "previously_passed_regression"
+            break
+
+        _write_correction_artifact(
+            module_dir / f"python_qg_correction_r{correction_round}.json",
+            correction_artifact,
+        )
+        corrections.append(correction_artifact)
+        current_round = _record_round(
+            report,
+            correction_round=correction_round,
+            failed_gate=failed_gate,
+        )
+        if _python_qg_passed(report):
+            stopped_reason = "pass"
+            break
+
+        best_idx = best_round_index(
+            rounds,
+            lambda item: _python_qg_review_loop_dims(int(item["violation_count"])),
+        )
+        best_round = rounds[best_idx]
+        if min_score_regressed(
+            _python_qg_review_loop_dims(int(best_round["violation_count"])),
+            _python_qg_review_loop_dims(int(current_round["violation_count"])),
+        ):
+            consecutive_regressions += 1
+            if consecutive_regressions >= PYTHON_QG_MIN_REGRESSION_PATIENCE:
+                stopped_reason = "min_score_regressed"
+                break
+        else:
+            consecutive_regressions = 0
+
+    best_idx = best_round_index(
+        rounds,
+        lambda item: _python_qg_review_loop_dims(int(item["violation_count"])),
+    )
+    best_round = rounds[best_idx]
+    _restore_correction_artifacts(module_dir, best_round["artifacts"])
+    correction_loop = {
+        "max_correction_rounds": correction_budget,
+        "rounds": [_python_qg_round_summary(item) for item in rounds],
+        "best_round": best_round["round"],
+        "stopped_reason": stopped_reason,
+        "min_regression_patience": PYTHON_QG_MIN_REGRESSION_PATIENCE,
+        "consecutive_regressions": consecutive_regressions,
+        "corrections": corrections,
+    }
+    write_json(module_dir / "python_qg_correction_loop.json", correction_loop)
+    return dict(best_round["report"])
+
+
+def _run_python_qg_with_legacy_single_shot_corrections(
     module_dir: Path,
     plan_path: Path,
     *,
