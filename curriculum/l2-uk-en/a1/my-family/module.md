@@ -74,9 +74,8 @@ A short connected answer can reuse M5 and add family:
 У ме́не є оди́н брат.
 ```
 
-Notice the question words from earlier modules: **хто?** asks about a person,
-**що?** asks about a thing, **чий?** asks whose, and **який?** can ask what
-someone is like. For now, keep the answers short.
+Notice the question word from earlier modules: **хто?** asks about a person.
+For this lesson, use it in **Хто це?** and keep the answers short.
 
 The old name chunk still works inside family talk: **Мене звати [ім'я]**. Use
 it as one memorized block before you add family information.
@@ -167,8 +166,8 @@ requires more case grammar.
 
 ## Мій / моя́
 
-The Ukrainian "my" word changes to match the person or thing you own. It does
-not match the gender of the owner.
+The Ukrainian possessive pronoun for "my" changes to match the person or thing
+you own. It does not match the gender of the owner.
 
 | Owned word | My | Your, informal |
 | --- | --- | --- |
@@ -198,26 +197,25 @@ You may also hear the older classroom-style verb form **Це мій брат. Й
 звуть...**. Treat **Його звуть...** and **Його звати...** as recognition
 patterns for "his name is..." while you keep your own production simple.
 
-You may see **їхній** for "their." Recognize it, but do not make a full table
-yet. Also leave **свій** for later. It is useful, but it is not a first-family
-photo tool.
+Leave the other possessive forms for later. This module's photo tool is the
+small set you can already use: **мій**, **моя**, **моє**, **мої**, **твій**,
+**твоя**, **твоє**, **твої**.
 
-For "whose," match the question word to the noun:
+Use **чи** for a choice or a yes/no photo question:
 
 | Українська | English support |
 | --- | --- |
-| **Чий це брат?** | Whose brother is this? |
-| **Чия це сестра?** | Whose sister is this? |
+| **У тебе є брати чи сестри?** | Do you have brothers or sisters? |
 | **Чи це твоя бабуся?** | Is this your grandmother? |
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
 ## Слу́хай, фо́то, зошит
 
-For lawful listening, use public Ukrainian Lessons Podcast pages as listen-only
-support: Episode 6 for **сім'я́ / У ме́не є...**, Episode 7 for **мій /
-моя́**, and Episode 10 for connected review speech. Listen, repeat a short
-chunk, and come back to the page. Do not copy or transcribe paid material.
+The Resources tab has optional Ukrainian Lessons Podcast pages for this topic:
+Episode 6 for **сім'я́ / У ме́не є...**, Episode 7 for **мій / моя́**, and
+Episode 10 for connected review speech. Choose one short chunk, listen once,
+repeat once, and come back to the page.
 
 For handwriting recognition, ask a teacher, tutor, or classmate to write these
 original labels beside a simple family sketch: **ма́ма**, **та́то**,
@@ -239,27 +237,24 @@ Cover the English support and read the Ukrainian aloud:
 | **У ме́не є дві сестри́.** | I have two sisters. |
 | **Це мій брат. Його́ зва́ти Ко́ля.** | This is my brother. His name is Kolia. |
 | **Це моя́ сестра́. Її́ зва́ти Ка́тя.** | This is my sister. Her name is Katia. |
-| **Чий це брат?** | Whose brother is this? |
-| **Мені́ 20 ро́ків.** | I am 20 years old. |
-
-The age chunk can be generalized as **Мені́ [N] ро́ків**. If you add a job for
-a family member, keep it as one simple profession word: **акто́р**,
-**худо́жник**, **співа́к**, or **журналі́ст**.
+| **Чи це твоя́ бабу́ся?** | Is this your grandmother? |
 
 You can now make a four-sentence family introduction:
 
 ```text
 Мене́ зва́ти Марко́.
 Це моя́ сім'я́.
-Моя́ ма́ма — журналі́стка.
+Моя́ ма́ма — вчи́телька.
 У ме́не є одна́ сестра́.
 ```
 
 Use native Ukrainian family words in the workbook: **дружи́на** for wife,
 **чолові́к** for husband or man by context, **бабу́ся** for grandmother,
 **ро́дичі** for relatives, **дити́на** for child, **моло́дший** for younger,
-and **одру́жений** for married. Do not turn these into a Russian comparison
-lesson; just choose the Ukrainian word.
+and **одру́жений** for married. Register note: for everyday family talk, choose
+**чолові́к**. **Муж** is an older or elevated Ukrainian word in some contexts,
+not the first photo-sharing word for "husband."
 
-Use the workbook for extra practice: safer Ukrainian family sentences, native
-family-word choices, photo-dialogue blanks, and quick vocabulary recognition.
+In the workbook, build a small family-photo script step by step: choose safe
+sentences, pick the everyday Ukrainian family word, sort one/two chunks, notice
+the formal name signal, and then complete a short photo dialogue.
