@@ -959,9 +959,33 @@ def test_curated_calque_matches_collocation_slice2_sense_restricted_entries() ->
         assert "search_heritage" in card["heritage_guard"]
 
 
+def test_curated_calque_matches_single_word_lexical_slice3_entries() -> None:
+    expected = {
+        "слідуючий": ("lexical", "наступний"),
+        "багаточисельний": ("lexical", "численний"),
+        "міроприємство": ("lexical", "захід"),
+        "учбовий": ("lexical", "навчальний"),
+        "любий": ("sense_restricted", "будь-який"),
+        "неділя": ("sense_restricted", "тиждень"),
+    }
+    for headword, (kind, correction) in expected.items():
+        card = _curated_calque(headword, headword)
+        assert card is not None
+        assert card["kind"] == kind
+        assert correction in card["corrections"]
+        assert card["evidence"]
+        assert "search_heritage" in card["heritage_guard"]
+
+
 def test_collocation_slice2_authentic_phrases_are_not_exact_flagged() -> None:
     assert _curated_calque("біля школи", "біля школи") is None
     assert _curated_calque("на рахунок у банку", "на рахунок у банку") is None
+
+
+def test_single_word_lexical_slice3_authentic_phrases_are_not_exact_flagged() -> None:
+    assert _curated_calque("любий друже", "любий друже") is None
+    assert _curated_calque("у неділю", "у неділю") is None
+    assert _curated_calque("яблуко", "яблуко") is None
 
 
 def test_curated_calque_unknown_lemma_returns_none() -> None:

@@ -1744,7 +1744,7 @@ def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
         if key in CURATED_CALQUES:
             row = CURATED_CALQUES[key]
             return {
-                "kind": "participle",
+                "kind": str(row.get("kind", "participle")),
                 "corrections": list(row["corrections"]),
                 "note": str(row["note"]),
                 "source": list(row["source"]),
