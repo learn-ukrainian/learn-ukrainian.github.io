@@ -7962,6 +7962,7 @@ def _find_unique_reviewer_fix_normalized_span(
 ) -> tuple[int, int] | None:
     normalized_text, spans = _reviewer_fix_whitespace_normalized_view(text)
     normalized_anchor, _anchor_spans = _reviewer_fix_whitespace_normalized_view(anchor)
+    normalized_anchor = normalized_anchor.strip()
     offsets = _normalized_reviewer_anchor_offsets(normalized_text, normalized_anchor)
     if len(offsets) == 1:
         return _span_from_normalized_reviewer_anchor_offset(
@@ -7979,6 +7980,7 @@ def _find_unique_reviewer_fix_normalized_span(
         variant_anchor, _variant_spans = _reviewer_fix_whitespace_normalized_view(
             variant
         )
+        variant_anchor = variant_anchor.strip()
         if not variant_anchor or variant_anchor in seen_normalized_anchors:
             continue
         seen_normalized_anchors.add(variant_anchor)

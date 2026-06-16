@@ -100,6 +100,36 @@ def test_reviewer_fix_whitespace_normalized_anchor_match_applies_once(
     assert events[0]["matched_preview"] == "Alpha\n  beta   gamma"
 
 
+def test_reviewer_fix_trailing_boundary_whitespace_is_not_replaced() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "Intro: target\n\n- next item\n",
+        [{"find": "target ", "replace": "FIXED"}],
+    )
+
+    assert result.text == "Intro: FIXED\n\n- next item\n"
+    assert result.unmatched_anchors == frozenset()
+
+
+def test_reviewer_fix_leading_boundary_whitespace_is_not_replaced() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "Intro\n\ntarget",
+        [{"find": " target", "replace": "FIXED"}],
+    )
+
+    assert result.text == "Intro\n\nFIXED"
+    assert result.unmatched_anchors == frozenset()
+
+
+def test_reviewer_insert_after_trailing_boundary_whitespace_inserts_before_run() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "target\n\n- item",
+        [{"insert_after": "target ", "text": "INSERTED"}],
+    )
+
+    assert result.text == "targetINSERTED\n\n- item"
+    assert result.unmatched_anchors == frozenset()
+
+
 def test_reviewer_fix_ambiguous_normalized_anchor_fails_closed(
     tmp_path: Path,
 ) -> None:
