@@ -22,6 +22,10 @@
   translation: if, were it that
   pos: conjunction phrase
   usage: Коли б я мав нагоду, написав би довший лист.
+- lemma: якщо б
+  translation: if, if it were
+  pos: conjunction phrase
+  usage: Якщо б я знав раніше, купив би квитки; у нейтральному B1-письмі краще якби.
 - lemma: як би
   translation: how would
   pos: phrase
