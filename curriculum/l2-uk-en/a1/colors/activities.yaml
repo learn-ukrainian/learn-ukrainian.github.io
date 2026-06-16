@@ -59,6 +59,24 @@ inline:
           - text: Сіро-жовтий.
             correct: false
         explanation: The standard chunk is синьо-жовтий прапор.
+      - prompt: Якого кольору ваза?
+        options:
+          - text: Синя.
+            correct: true
+          - text: Синій.
+            correct: false
+          - text: Синє.
+            correct: false
+        explanation: Ваза is feminine, so the short answer is синя.
+      - prompt: Якого кольору листя?
+        options:
+          - text: Зелене.
+            correct: true
+          - text: Зелений.
+            correct: false
+          - text: Зелена.
+            correct: false
+        explanation: Листя is neuter in this lesson, so answer зелене.
   - id: act-2
     type: fill-in
     title: Закінчення кольорів
@@ -147,8 +165,6 @@ inline:
           - білий светр
           - чорна сукня
           - сіре пальто
-          - коричневі черевики
-          - помаранчевий олівець
       - label: Soft pattern -ій/-я/-є
         items:
           - синій светр
@@ -225,12 +241,6 @@ workbook:
         right: fair or light-brown hair
       - left: сиве волосся
         right: grey hair
-      - left: руде волосся
-        right: red hair
-      - left: блакитне небо
-        right: light-blue sky
-      - left: синьо-жовтий прапор
-        right: Ukrainian flag colors
   - type: error-correction
     title: Виправ кольорові пастки
     instruction: Choose the standard Ukrainian correction.
@@ -267,14 +277,14 @@ workbook:
           - У мене є синій настрій.
           - Я синій сьогодні.
         explanation: Do not copy the English color idiom. Use a Ukrainian mood phrase.
-      - sentence: Вона має червоне волосся.
-        error: Вона має червоне волосся.
-        answer: У неї руде волосся.
+      - sentence: У нього сіре волосся.
+        error: У нього сіре волосся.
+        answer: У нього сиве волосся.
         options:
-          - У неї руде волосся.
-          - Вона має червоне волосся.
-          - У неї червоний волосся.
-        explanation: For red hair, use руде волосся; for possession, use У неї...
+          - У нього сиве волосся.
+          - У нього сіре волосся.
+          - Він має сивий волосся.
+        explanation: For grey hair, use the fixed chunk сиве волосся.
       - sentence: ЧорнИй, білИй (з наголосом на закінченні)
         error: ЧорнИй, білИй (з наголосом на закінченні)
         answer: ЧОрний, бІлий
