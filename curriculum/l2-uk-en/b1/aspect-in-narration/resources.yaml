@@ -1,21 +1,39 @@
 - title: Заболотний Grade 7, p.54-60
   role: textbook
   packet_chunk_id: 7-klas-ukrmova-zabolotnyi-2024_s0134
-  notes: Планове джерело; у пакеті exact excerpt позначено corpus_missing=true, тому
-    використано знайдений авторсько-сторінковий chunk для загального правила виду.
+  notes: Джерело для загального правила виду дієслова; використовується як
+    підтримка базового контрасту недоконаний процес / доконаний результат.
   source_ref: Заболотний Grade 7, p.54-60
 - title: Litvinova Grade 7, p.30-40
   role: textbook
   packet_chunk_id: 7-klas-ukrmova-litvinova-2024_s0073
-  notes: Планове джерело; exact plan-page excerpt у пакеті відсутній, використано
-    знайдений chunk про морфологічну ознаку виду.
+  notes: Джерело для морфологічної ознаки виду; підтримує повторення
+    доконаного й недоконаного виду перед перенесенням правила в абзац.
   source_ref: Litvinova Grade 7, p.30-40
 - title: Авраменко Grade 7, p.63-68
   role: textbook
   packet_chunk_id: 7-klas-ukrmova-avramenko-2024_s0064
-  notes: Планове джерело; exact plan-page excerpt у пакеті відсутній, використано
-    знайдений chunk про доконаний і недоконаний вид.
+  notes: Джерело для доконаного й недоконаного виду; використовується для
+    перевірки видових форм у прикладах і вправах.
   source_ref: Авраменко Grade 7, p.63-68
+- title: Заболотний Grade 5, p.224
+  role: textbook
+  packet_chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s2532
+  notes: Джерело для шкільного розрізнення типів тексту; розповідь відповідає
+    на питання «що сталося?», опис — на питання «який?».
+  source_ref: wiki/grammar/b1/aspect-in-narration.sources.yaml S3
+- title: Авраменко Grade 7, p.127
+  role: textbook
+  packet_chunk_id: 7-klas-ukrmova-avramenko-2024_s3848
+  notes: Джерело для дієприслівників у розповідному тексті й послідовності
+    завершених дій, зокрема моделей на -вши.
+  source_ref: wiki/grammar/b1/aspect-in-narration.sources.yaml S5
+- title: Заболотний Grade 8, p.236
+  role: textbook
+  packet_chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s4724
+  notes: Джерело для короткого тексту-розповіді на 5-6 речень і перевірки
+    абзацу як цілого тексту, а не набору окремих дієслів.
+  source_ref: wiki/grammar/b1/aspect-in-narration.sources.yaml S4
 - title: Вид (мовознавство)
   role: wiki
   url: https://uk.wikipedia.org/wiki/%D0%92%D0%B8%D0%B4_(%D0%BC%D0%BE%D0%B2%D0%BE%D0%B7%D0%BD%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D0%BE)
