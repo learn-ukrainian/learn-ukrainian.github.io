@@ -14,6 +14,26 @@
   translation: portrait detail
   pos: noun phrase
   usage: Старий годинник став портретною деталлю в описі Павла.
+- lemma: делікатність
+  translation: tact, delicacy
+  pos: noun
+  usage: Делікатність допомагає описувати людину без грубої оцінки.
+- lemma: нетактовний
+  translation: tactless
+  pos: adjective
+  usage: Нетактовний коментар може образити людину.
+- lemma: категорія
+  translation: category
+  pos: noun
+  usage: Категорія допомагає впорядкувати портретну лексику.
+- lemma: саморедагування
+  translation: self-editing
+  pos: noun
+  usage: Саморедагування допомагає прибрати повтори й кальки.
+- lemma: перекладна конструкція
+  translation: translation-like construction
+  pos: noun phrase
+  usage: Перекладна конструкція граматично можлива, але звучить неприродно.
 - lemma: зріст
   translation: height
   pos: noun
@@ -113,7 +133,7 @@
 - lemma: лагідний
   translation: gentle
   pos: adjective
-  usage: Лагідний голос заспокоїв дитину.
+  usage: Лагідний голос допоміг розмові стати спокійнішою.
 - lemma: чуйний
   translation: responsive, empathetic
   pos: adjective
@@ -121,7 +141,7 @@
 - lemma: кмітливий
   translation: quick-witted
   pos: adjective
-  usage: Кмітливий учень швидко знайшов рішення.
+  usage: Кмітливий колега швидко знайшов рішення.
 - lemma: стриманий
   translation: reserved, restrained
   pos: adjective
@@ -157,7 +177,7 @@
 - lemma: замкнутий
   translation: withdrawn
   pos: adjective
-  usage: Замкнутий підліток мало розповідав про себе.
+  usage: Замкнутий сусід мало розповідав про себе.
 - lemma: самовпевнений
   translation: overconfident
   pos: adjective
