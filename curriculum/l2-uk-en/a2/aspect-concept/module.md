@@ -13,14 +13,9 @@
 одразу. Ми робимо перший крок. Помічаємо різницю між процесом і
 результатом. Слухаємо контекст і тренуємо найважливіші сигнали.
 
-**English support.** Aspect is a new question, not a new tense. Tense asks
-when something happens. Aspect asks how you want the listener to see the
-action. Is the action still in progress? Is it repeated? Or is the result
-already complete?
-
-For this first lesson, keep the idea simple. You are not memorizing every
-verb pair today. You are learning to notice the difference between an action
-inside its process and an action viewed after its endpoint.
+**English support.** Aspect is not a new tense. Ask: are we inside the action,
+seeing repetition, or looking at a finished result? Notice that contrast first;
+verb pairs come later.
 
 ## Діалог 1 — матч уже закінчився?
 
@@ -45,13 +40,9 @@ inside its process and an action viewed after its endpoint.
 Якщо ви бачите вже готовий підсумок, дуже часто потрібен доконаний вид.
 :::
 
-**English support.** The football dialogue gives a clean A2 contrast. While
-the player is running and looking for the moment, we see the action from the
-inside. When he scores, we see the completed result. This is the basic
-contrast you will use through the lesson.
-
-Do not worry about building new verb forms yet. First learn to hear the
-meaning: process, repetition, or completed result.
+Не будуйте нові форми одразу. Спочатку слухайте значення. Гравець ще
+біжить і шукає момент — це процес. Він уже забив — це результат.
+Цей контраст буде працювати в усьому модулі.
 
 ## Що таке вид дієслова?
 
@@ -79,14 +70,19 @@ meaning: process, repetition, or completed result.
 Ці три питання вже допомагають. Ви починаєте думати по-українськи.
 Ви не лише перекладаєте слово за словом.
 
-**English support.** Ask these questions before you translate. They help you
-choose the meaning first. If the sentence is about what was happening, expect
-the imperfective. If the sentence is about what got finished, expect the
-perfective.
+Слова-маркери допомагають, але не командують. Спершу дивіться на всю
+ситуацію. Те саме слово часу може стояти з обома видами, якщо змінюється
+фокус мовця.
 
-The word markers are useful, but they are not magic. The whole situation
-still matters. A time word can appear with both aspects if the speaker's
-focus changes.
+Маленька перевірка допомагає дуже швидко. Якщо до речення природно
+пасує питання `що ти робив?`, часто потрібен недоконаний вид. Якщо
+пасує питання `що ти вже зробив?`, часто потрібен доконаний вид.
+Це не механічне правило, але добрий перший крок для A2.
+
+Наприклад, `Я писав лист` добре відповідає на питання про заняття:
+`Що ти робив увечері?` А `Я написав лист` добре відповідає на питання
+про результат: `Що ти вже зробив?` Одне речення показує шлях, інше —
+готовий крок.
 
 ### Недоконаний і доконаний
 
@@ -107,13 +103,8 @@ focus changes.
 
 Це не дрібна стилістика. Вид змінює центр значення.
 
-**English support.** Notice what the table is doing. It does not ask you to
-produce new forms from memory. It shows two familiar actions and asks what
-the speaker cares about. The same topic can be described as an activity in
-progress or as a finished result.
-
-When you feel unsure, point to the meaning first. If you can explain the
-difference in English, the Ukrainian contrast will become easier to remember.
+Коли сумніваєтеся, не починайте з форми. Назвіть фокус: дія тривала чи
+результат уже є? Потім вибирайте дієслово.
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
@@ -155,13 +146,21 @@ difference in English, the Ukrainian contrast will become easier to remember.
 
 Тут теж не потрібен фінал. Ми описуємо правило або звичну реальність.
 
-**English support.** The imperfective is the safe choice for habits,
-repetition, duration, and background. It lets you say what was happening
-without proving that the action reached an endpoint.
+Тому слова `часто`, `щодня`, `довго`, `увесь вечір` часто ведуть до
+недоконаного виду. Вони малюють зразок, тривалість або фон, а не один
+готовий результат.
 
-This is why words like "often," "every day," and "for a long time" usually
-point toward the imperfective. They describe a pattern or a process, not a
-single completed result.
+Недоконаний вид також корисний, коли результат просто не важливий.
+Можливо, дія завершилася, але співрозмовник питає не про фінал. Він
+питає про досвід, заняття або фон. Тоді форма з процесом звучить
+природно.
+
+Порівняйте просту відповідь на питання `Що ти робив після роботи?`:
+
+> Я готував вечерю, слухав музику і читав новини.
+
+У цій відповіді може бути багато дій. Нам не потрібно щоразу показувати
+результат. Ми малюємо вечір як картину.
 
 ### Діалог 2 — чому ти не відповів?
 
@@ -177,10 +176,8 @@ single completed result.
 
 Саме так вид часто працює в реальному мовленні: не окремо, а разом.
 
-**English support.** Real stories often use both aspects. One verb gives the
-background. Another verb moves the story forward. In the phone-call dialogue,
-the cooking was the background, and noticing the missed call was the next
-completed step.
+Це корисна модель для короткої історії: одна дія дає фон, друга рухає
+сюжет уперед. Фон часто недоконаний, завершений крок часто доконаний.
 
 ## Доконаний вид: межа і результат
 
@@ -214,12 +211,22 @@ completed step.
 Перше речення відповідає на питання `чим ти займався?`
 Друге речення відповідає на питання `що ти вже зробив?`
 
-**English support.** The perfective does not mean that the action was fast.
-It means the speaker is pointing to the result or endpoint. A person can work
-for a long time and still use the perfective if the finished result matters.
+Доконаний вид не означає, що дія була швидкою. Людина могла працювати
+довго, але якщо в реченні головний готовий підсумок, ми дивимося на
+результат.
 
-At this stage, it is easiest to practice perfective verbs in the past. Future
-perfective forms exist, but later modules will make that system clearer.
+Результат може бути великим або дуже малим. `Я написав книгу` і
+`Я написав коротке повідомлення` мають різний масштаб, але в обох
+реченнях важливо, що текст уже готовий. Так само `ми знайшли квартиру`
+і `ми знайшли адресу` показують досягнуту межу: пошук дав потрібний
+підсумок.
+
+Тому не шукайте тільки "важливі" події. Доконаний вид часто стоїть у
+малих щоденних кроках: `купив хліб`, `відчинив двері`, `передзвонив
+колезі`, `прочитав повідомлення`.
+
+На цьому етапі найзручніше тренувати доконаний вид у минулому. Майбутні
+форми доконаного виду будуть окремою темою, а зараз нам важлива сама межа.
 
 Важлива A2-ідея:
 
@@ -236,10 +243,8 @@ perfective forms exist, but later modules will make that system clearer.
 - `сказали`;
 - `відчинив`.
 
-**English support.** This warning prevents a common beginner mistake. Forms
-like these may look similar to present-tense endings, but their meaning is
-future or completed, not present. For now, do not build a full tense chart.
-Just remember that true present meaning belongs to the imperfective.
+**English support.** Forms like `напишу` can look present-like, but they point
+to future or completion. For now: real present meaning uses the imperfective.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
@@ -263,13 +268,24 @@ Just remember that true present meaning belongs to the imperfective.
 - справжня пара зазвичай тримає той самий базовий зміст.
 - вид змінює не тему, а погляд на дію.
 
-**English support.** This is why the lesson separates meaning from
-vocabulary building. Some pairs are direct aspect pairs. Other verbs are only
-connected by the story. You can still understand the contrast, but you should
-not assume every related verb is a neat pair.
+M03 буде саме про словник видових пар. Тут важливо не записати всі пари,
+а почути фокус мовця. Якщо дієслова близькі за сюжетом, це ще не означає,
+що вони справжня видова пара.
 
-M03 will help you record real aspect pairs in vocabulary. In this module, the
-important skill is recognizing the speaker's focus.
+Коли ви ведете власний словник, поки записуйте лише ті пари, які вже
+бачили в уроці або в надійному словнику. Не додавайте префікс навмання.
+Українські видові пари часто мають зрозумілу форму, але не кожен префікс
+працює автоматично.
+
+Для цього модуля достатньо кількох прозорих пар:
+
+- `писати / написати`;
+- `читати / прочитати`;
+- `готувати / приготувати`;
+- `робити / зробити`.
+
+З ними можна побудувати багато особистих речень і не перевантажити
+пам'ять.
 
 ### Коли обидва види можливі
 
@@ -305,12 +321,9 @@ important skill is recognizing the speaker's focus.
 Такий спосіб слухання дуже допомагає в діалогах, новинах і коротких
 розповідях про день.
 
-**English support.** Start from the story. If one action is the background
-and another action is the finished step, the aspect contrast becomes easier.
-This is more useful than grabbing the first marker word and guessing.
-
-You can also pause after a verb and ask one short question: is this still
-inside the action, or after the result?
+Починайте з сюжету. Якщо одна дія є фоном, а друга — готовим кроком,
+контраст виду стає видимим. Після дієслова можна коротко спитати себе:
+я ще всередині дії чи вже після результату?
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
@@ -332,14 +345,18 @@ inside the action, or after the result?
 
 Саме точність ми й тренуємо.
 
-**English support.** This is a low-pressure grammar point. Both aspects can
-make understandable sentences, but they do not say exactly the same thing.
-Your goal is not to be perfect today. Your goal is to notice which view you
-need: process or result.
+Для повторення візьміть три знайомі дієслова. Спочатку зробіть речення
+про процес: `Я писав повідомлення`, `Ми готували вечерю`, `Вона читала
+звіт`. Потім зробіть речення про результат: `Я написав повідомлення`,
+`Ми приготували вечерю`, `Вона прочитала звіт`.
 
-Use small personal examples when you review. Think about a message, a meal,
-a report, or a short film. First describe the activity. Then describe the
-finished result. That small contrast is the whole lesson in a practical form.
+Після кожної пари скажіть собі, яке питання стоїть за реченням:
+`що відбувалося?` чи `що вийшло?` Так вид залишається частиною живої
+мови, а не окремою таблицею.
+
+**English support.** This is a low-pressure grammar point. Both versions may
+be understandable, but they choose different viewpoints: process or result.
+Practice with a message, a meal, a report, or a short film.
 
 ## Підсумок
 
@@ -355,22 +372,8 @@ finished result. That small contrast is the whole lesson in a practical form.
 У наступному модулі ми підемо далі. Ви побачите, як записувати видові
 пари в словнику. Також побачите, як вони часто будуються.
 
-**English support.** You can now explain the basic difference between the
-imperfective and the perfective. You can also look at a simple sentence and
-ask whether the speaker is showing a process, a habit, or a completed result.
-
-That is enough for this module. The next module will teach you how aspect
-pairs appear in vocabulary, so keep today's focus on meaning and listening.
-
-A good review routine is simple. Take three verbs you already know. Make one
-sentence that describes the activity, and one sentence that describes the
-finished result. Then say which question each sentence answers: what was
-happening, or what got done. This keeps aspect connected to real speech, not
-to a memorized rule list.
-
-If a marker word and the story seem to disagree, trust the story first. Marker
-words are clues, not commands. You make better choices when you read the whole
-situation and then choose the verb that matches the speaker's focus.
-That habit will also make the next aspect module easier next time.
+**English support.** Review routine: take three verbs you know. Make one
+process sentence and one result sentence. If a marker and the story disagree,
+trust the story first.
 
 <!-- INJECT_ACTIVITY: act-4 -->
