@@ -321,11 +321,33 @@ def _atlas_record_for_manifest(rec: dict, taught_lemma_keys: set[str]) -> dict |
         aliased = dict(rec)
         aliased["lemma"] = alias_target
         aliased["source"] = "built_vocabulary_normalized"
+        # A create-case (target lemma taught NOWHERE else) materializes a NEW lemma page whose
+        # head IS this record. The surface form's gloss/pos describe the inflected surface —
+        # e.g. заходьте is imperative "come in, polite/plural"; восьма is the feminine ordinal /
+        # "eight o'clock" — and would mislabel the citation-form lemma head (заходити = verb
+        # infinitive; восьмий = masc. ordinal). Do NOT assert them on the new lemma: the
+        # enrichment pass supplies the lemma's own meaning and the renderer degrades gracefully
+        # on null gloss/pos. Surface values are preserved in the provenance reason. (A plain
+        # fold into an ALREADY-TAUGHT lemma keeps its fields — it merges into the taught head,
+        # whose own gloss/pos win, so the surface values are harmless there.)
+        if _lemma_key(alias_target) not in taught_lemma_keys:
+            surface_gloss = aliased.get("gloss")
+            surface_pos = aliased.get("pos")
+            aliased["gloss"] = None
+            aliased["pos"] = None
+            reason = (
+                f"VESUM: inflected surface «{display_lemma}» "
+                f"(surface gloss={surface_gloss!r}, pos={surface_pos!r}) folded into a "
+                f"NEWLY-CREATED lemma page «{alias_target}»; surface gloss/pos not asserted on "
+                "the citation-form lemma (enrichment supplies the lemma's meaning)."
+            )
+        else:
+            reason = "VESUM: inflected form folded into already-taught lemma."
         aliased["atlas_normalization"] = _normalization_record(
             kind="vesum_inflection_to_lemma",
             source_lemma=display_lemma,
             target_lemma=alias_target,
-            reason="VESUM: inflected form folded into its lemma (lemma page created if new).",
+            reason=reason,
         )
         return aliased
 

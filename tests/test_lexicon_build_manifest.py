@@ -14,11 +14,15 @@ def test_vesum_alias_folds_inflection_into_taught_lemma(monkeypatch) -> None:
         "VESUM_INFLECTION_ALIASES_BY_KEY",
         {_lemma_key("брата"): "брат"},
     )
-    rec = {"lemma": "брата", "source": "built_vocabulary"}
+    rec = {"lemma": "брата", "source": "built_vocabulary", "gloss": "brother (gen./acc.)", "pos": "noun"}
     out = _atlas_record_for_manifest(rec, {_lemma_key("брат")})
     assert out["lemma"] == "брат"
     assert out["atlas_normalization"]["kind"] == "vesum_inflection_to_lemma"
     assert out["atlas_normalization"]["source_lemma"] == "брата"
+    # Fold into an ALREADY-TAUGHT lemma keeps surface fields — they merge into the taught
+    # head (whose own gloss/pos win in _merge_lemma_records), so they are harmless here.
+    assert out["gloss"] == "brother (gen./acc.)"
+    assert out["pos"] == "noun"
 
 
 def test_vesum_alias_folds_create_case_even_when_target_not_taught(monkeypatch) -> None:
@@ -29,10 +33,18 @@ def test_vesum_alias_folds_create_case_even_when_target_not_taught(monkeypatch) 
         "VESUM_INFLECTION_ALIASES_BY_KEY",
         {_lemma_key("вареники"): "вареник"},
     )
-    rec = {"lemma": "вареники", "source": "built_vocabulary"}
+    rec = {"lemma": "вареники", "source": "built_vocabulary", "gloss": "varenyky", "pos": "noun"}
     out = _atlas_record_for_manifest(rec, set())  # вареник NOT in taught set
     assert out["lemma"] == "вареник"
     assert out["atlas_normalization"]["kind"] == "vesum_inflection_to_lemma"
+    # Create-case: the surface's gloss/pos describe the inflected surface, NOT the new
+    # citation-form lemma head, so they must NOT be asserted on it (#3277 real-data catch:
+    # заходьте→заходити was published as pos="imperative", восьма→восьмий as "feminine").
+    # Enrichment supplies the lemma's meaning; renderer degrades gracefully on null.
+    assert out["gloss"] is None
+    assert out["pos"] is None
+    # Surface values are preserved as provenance for traceability.
+    assert "varenyky" in out["atlas_normalization"]["reason"]
 
 
 def test_vesum_alias_leaves_unmapped_form_untouched(monkeypatch) -> None:
