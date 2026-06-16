@@ -1748,6 +1748,8 @@ def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
                 "corrections": list(row["corrections"]),
                 "note": str(row["note"]),
                 "source": list(row["source"]),
+                "evidence": list(row.get("evidence", [])),
+                "heritage_guard": str(row.get("heritage_guard", "")),
             }
 
     for key in (lemma, base):
@@ -1769,6 +1771,8 @@ def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
             "corrections": list(row["corrections"]),
             "note": str(row["note"]),
             "source": list(row["source"]),
+            "evidence": list(row.get("evidence", [])),
+            "heritage_guard": str(row.get("heritage_guard", "")),
         }
 
     return None

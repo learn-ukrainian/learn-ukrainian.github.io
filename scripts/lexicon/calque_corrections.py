@@ -67,37 +67,232 @@ sense-scoped soft note, never a blanket warn or auto-replace.
 from __future__ import annotations
 
 # Confirmed active-participle calques → recommended Ukrainian replacement(s).
-# Each value: corrections (ordered, best-first), a short usage note, and the
-# provenance tag(s). Corrections that are full phrases (relative clauses) are
-# kept as-is because the participle has no single-word agent-noun equivalent.
+# Each value: corrections (ordered, best-first), a short usage note, provenance
+# tags, direct source evidence, and the heritage false-positive guard result.
+# Corrections that are full phrases (relative clauses) are kept as-is because
+# the participle has no single-word agent-noun equivalent.
 CURATED_CALQUES: dict[str, dict[str, object]] = {
-    "бажаючий": {"corrections": ["охочий"], "note": "усі бажаючі → усі охочі", "source": ["davydov", "antonenko-p145"]},
-    "працюючий": {"corrections": ["працівник", "той, що працює"], "note": "agent noun or relative clause", "source": ["davydov", "antonenko-p145"]},
-    "завідуючий": {"corrections": ["завідувач"], "note": "agent noun -ач", "source": ["glazova-11", "antonenko-p145"]},
-    "мандруючий": {"corrections": ["мандрівний"], "note": "мандруючий сюжет → мандрівний сюжет", "source": ["glazova-11"]},
-    "початкуючий": {"corrections": ["початківець"], "note": "початкуючий художник → художник-початківець", "source": ["glazova-11"]},
-    "узагальнюючий": {"corrections": ["узагальнювальний"], "note": "суфікс -альн-", "source": ["glazova-11"]},
-    "зволожуючий": {"corrections": ["зволожувальний"], "note": "суфікс -альн- (зволожувальний крем)", "source": ["glazova-11"]},
-    "знеболюючий": {"corrections": ["знеболювальний"], "note": "суфікс -альн- (знеболювальні ліки)", "source": ["glazova-11"]},
-    "хвилюючий": {"corrections": ["зворушливий"], "note": "хвилюючий спогад → зворушливий спогад", "source": ["glazova-11"]},
-    "діючий": {"corrections": ["чинний"], "note": "діючий закон → чинний закон (рос. действующий)", "source": ["glazova-11", "avramenko-11", "antonenko-p145"]},
-    "підростаючий": {"corrections": ["молодий"], "note": "підростаюче покоління → молоде покоління", "source": ["glazova-11"]},
-    "потопаючий": {"corrections": ["той, що потопає"], "note": "relative clause", "source": ["glazova-11"]},
-    "головуючий": {"corrections": ["голова"], "note": "головуючий на зборах → голова зборів", "source": ["avramenko-11"]},
-    "домінуючий": {"corrections": ["основний", "панівний"], "note": "рос. доминирующий", "source": ["avramenko-11"]},
-    "оточуючий": {"corrections": ["довколишній", "навколишній"], "note": "оточуюче середовище → довкілля / навколишнє середовище", "source": ["antonenko-p145", "search_heritage"]},
-    "відпочиваючий": {"corrections": ["відпочивальник", "той, хто відпочиває"], "note": "agent noun or relative clause", "source": ["davydov", "antonenko-p145"]},
-    "завмираючий": {"corrections": ["завмерлий", "той, що завмирає"], "note": "завмираючі звуки", "source": ["avramenko-7", "antonenko-p145"]},
-    "розквітаючий": {"corrections": ["розквітлий", "той, що розквітає"], "note": "розквітаючі дерева", "source": ["avramenko-7", "antonenko-p145"]},
-    "опадаючий": {"corrections": ["опалий"], "note": "present-participle calque → past form -лий", "source": ["avramenko-7", "antonenko-p145"]},
-    "в’янучий": {"corrections": ["зів’ялий"], "note": "present-participle calque → past form -лий", "source": ["avramenko-7", "antonenko-p145"]},
-    "жовтіючий": {"corrections": ["пожовклий"], "note": "present-participle calque → past form -лий", "source": ["avramenko-7", "antonenko-p145"]},
+    "бажаючий": {
+        "corrections": ["охочий"],
+        "note": "усі бажаючі → усі охочі",
+        "source": ["antonenko-p099", "glazova-11"],
+        "evidence": [
+            "antonenko-davydovych-yak-my-hovorymo_p099: Бажаючий – що (котрий, який) бажає – охочий",
+            "11-klas-ukrajinska-mova-glazova-2019_s0072: замість бажаючий — охочий",
+        ],
+        "heritage_guard": "search_heritage(бажаючий, include_live_slovnyk=false): no matching heritage headword; ЕСУМ hit is a related охочий-family row, not an attestation of бажаючий as safe.",
+    },
+    "працюючий": {
+        "corrections": ["працівник", "той, що працює"],
+        "note": "agent noun or relative clause",
+        "source": ["antonenko-p101", "antonenko-p144", "glazova-11"],
+        "evidence": [
+            "antonenko-davydovych-yak-my-hovorymo_p101: Працюючий – що (котрий, який) працює – ... працівник",
+            "antonenko-davydovych-yak-my-hovorymo_p144: Тато, що не працює в неділю ... (instead of не працюючий тато)",
+            "11-klas-ukrajinska-mova-glazova-2019_s0072: замість працюючий — працівник",
+        ],
+        "heritage_guard": "search_heritage(працюючий, include_live_slovnyk=false): No heritage evidence found.",
+    },
+    "завідуючий": {
+        "corrections": ["завідувач"],
+        "note": "agent noun -ач",
+        "source": ["glazova-11", "zabolotnyi-7"],
+        "evidence": [
+            "11-klas-ukrajinska-mova-glazova-2019_s0072: замість завідуючий — завідувач",
+            "7-klas-ukrmova-zabolotnyi-2024_s0124: завідувач бібліотеки / завідуючий бібліотекою",
+        ],
+        "heritage_guard": "search_heritage(завідуючий, include_live_slovnyk=false): ЕСУМ rows describe зав-/завгосп as Russian-modeled abbreviations, not a safe headword attestation.",
+    },
+    "мандруючий": {
+        "corrections": ["мандрівний"],
+        "note": "мандруючий сюжет → мандрівний сюжет",
+        "source": ["glazova-11"],
+        "evidence": ["11-klas-ukrajinska-mova-glazova-2019_s0072: мандрівний (а не мандруючий) сюжет"],
+        "heritage_guard": "search_heritage(мандруючий, include_live_slovnyk=false): No heritage evidence found.",
+    },
+    "початкуючий": {
+        "corrections": ["початківець"],
+        "note": "початкуючий художник → художник-початківець",
+        "source": ["antonenko-p101", "glazova-11", "zabolotnyi-7"],
+        "evidence": [
+            "antonenko-davydovych-yak-my-hovorymo_p101: Початкуючий – початківець",
+            "11-klas-ukrajinska-mova-glazova-2019_s0072: художник-початківець (а не початкуючий художник)",
+            "7-klas-ukrmova-zabolotnyi-2024_s0124: поет-початківець / початкуючий поет",
+        ],
+        "heritage_guard": "search_heritage(початкуючий, include_live_slovnyk=false): no matching heritage headword; ЕСУМ hit is a related письменець row.",
+    },
+    "узагальнюючий": {
+        "corrections": ["узагальнювальний"],
+        "note": "суфікс -альн-",
+        "source": ["glazova-11"],
+        "evidence": ["11-klas-ukrajinska-mova-glazova-2019_s0072: узагальнювальне (а не узагальнююче) слово"],
+        "heritage_guard": "search_heritage(узагальнюючий, include_live_slovnyk=false): No heritage evidence found.",
+    },
+    "зволожуючий": {
+        "corrections": ["зволожувальний"],
+        "note": "суфікс -альн- (зволожувальний крем)",
+        "source": ["glazova-11", "zabolotnyi-7"],
+        "evidence": [
+            "11-klas-ukrajinska-mova-glazova-2019_s0072: зволожувальний (а не зволожуючий) крем",
+            "7-klas-ukrmova-zabolotnyi-2024_s0124: зволожувальний крем / зволожуючий крем",
+        ],
+        "heritage_guard": "search_heritage(зволожуючий, include_live_slovnyk=false): No heritage evidence found.",
+    },
+    "знеболюючий": {
+        "corrections": ["знеболювальний"],
+        "note": "суфікс -альн- (знеболювальні ліки)",
+        "source": ["glazova-11", "zabolotnyi-7"],
+        "evidence": [
+            "11-klas-ukrajinska-mova-glazova-2019_s0072: знеболювальні (а не знеболюючі) ліки",
+            "7-klas-ukrmova-zabolotnyi-2024_s0124: знеболювальний засіб / знеболюючий засіб",
+        ],
+        "heritage_guard": "search_heritage(знеболюючий, include_live_slovnyk=false): no matching heritage headword; ЕСУМ hit is a новокаїн definition, not a safe headword attestation.",
+    },
+    "хвилюючий": {
+        "corrections": ["зворушливий"],
+        "note": "хвилюючий спогад → зворушливий спогад",
+        "source": ["glazova-11"],
+        "evidence": ["11-klas-ukrajinska-mova-glazova-2019_s0072: зворушливий (а не хвилюючий) спогад"],
+        "heritage_guard": "search_heritage(хвилюючий, include_live_slovnyk=false): No heritage evidence found.",
+    },
+    "діючий": {
+        "corrections": ["чинний", "активний"],
+        "note": "sense-split: діючий закон → чинний закон; діючий вулкан → активний вулкан (рос. действующий)",
+        "source": ["glazova-11", "avramenko-11", "avramenko-7", "zabolotnyi-7"],
+        "evidence": [
+            "11-klas-ukrajinska-mova-glazova-2019_s0072: чинний (а не діючий) закон",
+            "7-klas-ukrmova-avramenko-2024_s0106: синоніми ... діючий — чинний (закон) або активний (вулкан)",
+            "7-klas-ukrmova-zabolotnyi-2024_s0124: чинний закон / діючий закон",
+        ],
+        "heritage_guard": "search_heritage(діючий, include_live_slovnyk=false): no matching heritage headword; ЕСУМ hit is the діянка family row and does not clear діючий закон.",
+    },
+    "підростаючий": {
+        "corrections": ["молодий"],
+        "note": "підростаюче покоління → молоде покоління",
+        "source": ["glazova-11"],
+        "evidence": ["11-klas-ukrajinska-mova-glazova-2019_s0072: молоде (а не підростаюче) покоління"],
+        "heritage_guard": "search_heritage(підростаючий, include_live_slovnyk=false): No heritage evidence found.",
+    },
+    "потопаючий": {
+        "corrections": ["той, що потопає"],
+        "note": "relative clause",
+        "source": ["glazova-11"],
+        "evidence": ["11-klas-ukrajinska-mova-glazova-2019_s0072: Щури тікають з корабля, що потопає (not з потопаючого корабля)"],
+        "heritage_guard": "search_heritage(потопаючий, include_live_slovnyk=false): No heritage evidence found.",
+    },
+    "головуючий": {
+        "corrections": ["голова"],
+        "note": "головуючий на зборах → голова зборів",
+        "source": ["avramenko-11"],
+        "evidence": ["11-klas-ukrajinska-mova-avramenko-2019_s0075: головуючий на зборах — голова зборів"],
+        "heritage_guard": "search_heritage(головуючий, include_live_slovnyk=false): no matching heritage headword; ЕСУМ hit is an unrelated той/prezident row.",
+    },
+    "домінуючий": {
+        "corrections": ["основний", "панівний"],
+        "note": "рос. доминирующий",
+        "source": ["avramenko-11", "antonenko-p101"],
+        "evidence": [
+            "11-klas-ukrajinska-mova-avramenko-2019_s0075: домінуючий принцип — основний принцип",
+            "antonenko-davydovych-yak-my-hovorymo_p101: пануючий суперечить духу нашої мови; слід ... панівний",
+        ],
+        "heritage_guard": "search_heritage(домінуючий, include_live_slovnyk=false): no matching calque headword; ЕСУМ has related loan-family rows, so treat only the cited register/collocation as warn-worthy.",
+    },
+    "оточуючий": {
+        "corrections": ["довколишній", "навколишній"],
+        "note": "оточуюче середовище → довкілля / навколишнє середовище",
+        "source": ["zabolotnyi-7", "zabolotnyi-11"],
+        "evidence": [
+            "7-klas-ukrmova-zabolotnyi-2024_s0124: навколишнє середовище, довкілля / оточуюче середовище",
+            "11-klas-ukrmova-zabolotnyi-2019_s0078: навколишній / оточуючий",
+        ],
+        "heritage_guard": "search_heritage(оточуючий, include_live_slovnyk=false): No heritage evidence found.",
+    },
+    "відпочиваючий": {
+        "corrections": ["відпочивальник", "той, хто відпочиває"],
+        "note": "agent noun or relative clause",
+        "source": ["antonenko-p099", "antonenko-p100", "zabolotnyi-7"],
+        "evidence": [
+            "antonenko-davydovych-yak-my-hovorymo_p099: Відпочиваючий, відпочивальник, що (котрий, який) відпочиває",
+            "antonenko-davydovych-yak-my-hovorymo_p100: ... організовано розваги відпочивальників",
+            "7-klas-ukrmova-zabolotnyi-2024_s0124: відпочивальник / відпочиваючий",
+        ],
+        "heritage_guard": "search_heritage(відпочиваючий, include_live_slovnyk=false): No heritage evidence found.",
+    },
+    "завмираючий": {
+        "corrections": ["завмерлий", "той, що завмирає"],
+        "note": "завмираючі звуки",
+        "source": ["avramenko-7", "antonenko-p144"],
+        "evidence": [
+            "7-klas-ukrmova-avramenko-2024_s0108: завмираючі звуки — завмерлі звуки",
+            "antonenko-davydovych-yak-my-hovorymo_p144: active forms require a relative clause or adverbial construction",
+        ],
+        "heritage_guard": "search_heritage(завмираючий, include_live_slovnyk=false): No heritage evidence found.",
+    },
+    "розквітаючий": {
+        "corrections": ["розквітлий", "той, що розквітає"],
+        "note": "розквітаючі дерева",
+        "source": ["avramenko-7", "antonenko-p144"],
+        "evidence": [
+            "7-klas-ukrmova-avramenko-2024_s0108: розквітаючі дерева — розквітлі дерева",
+            "antonenko-davydovych-yak-my-hovorymo_p144: active forms require a relative clause or adverbial construction",
+        ],
+        "heritage_guard": "search_heritage(розквітаючий, include_live_slovnyk=false): No heritage evidence found.",
+    },
+    "опадаючий": {
+        "corrections": ["опалий"],
+        "note": "present-participle calque → past form -лий",
+        "source": ["avramenko-7", "antonenko-p144"],
+        "evidence": [
+            "7-klas-ukrmova-avramenko-2024_s0108: опадаюче листя — опале листя",
+            "antonenko-davydovych-yak-my-hovorymo_p144: active forms require a relative clause or adverbial construction",
+        ],
+        "heritage_guard": "search_heritage(опадаючий, include_live_slovnyk=false): no matching heritage headword; ЕСУМ hit is a кулон definition, not a safe headword attestation.",
+    },
+    "в’янучий": {
+        "corrections": ["зів’ялий"],
+        "note": "present-participle calque → past form -лий",
+        "source": ["avramenko-7", "antonenko-p144"],
+        "evidence": [
+            "7-klas-ukrmova-avramenko-2024_s0108: в’янучі квіти — зів’ялі квіти",
+            "antonenko-davydovych-yak-my-hovorymo_p144: active forms require a relative clause or adverbial construction",
+        ],
+        "heritage_guard": "search_heritage(в’янучий, include_live_slovnyk=false): No heritage evidence found.",
+    },
+    "жовтіючий": {
+        "corrections": ["пожовклий"],
+        "note": "present-participle calque → past form -лий",
+        "source": ["avramenko-7", "antonenko-p144"],
+        "evidence": [
+            "7-klas-ukrmova-avramenko-2024_s0108: жовтіюче листя — пожовкле листя",
+            "antonenko-davydovych-yak-my-hovorymo_p144: active forms require a relative clause or adverbial construction",
+        ],
+        "heritage_guard": "search_heritage(жовтіючий, include_live_slovnyk=false): No heritage evidence found.",
+    },
     "бувший": {"corrections": ["колишній"], "note": "-вш- participle does not exist in Ukrainian (рос. бывший)", "source": ["avramenko-11"]},
 }
 
 # Phrasal / collocation calques (whole-phrase replacement).
 PHRASAL_CALQUES: dict[str, dict[str, object]] = {
-    "прийняти участь": {"corrections": ["взяти участь"], "note": "рос. принять участие", "source": ["issue-3098"]},
+    "прийняти участь": {
+        "corrections": ["взяти участь"],
+        "note": "рос. принять участие",
+        "source": ["antonenko-p091", "zabolotnyi-10"],
+        "evidence": [
+            "antonenko-davydovych-yak-my-hovorymo_p091: прийняли участь ... треба було написати взяли участь",
+            "10-klas-ukrmova-zabolotnyi-2018_s0027: У змаганнях треба брати участь, а не приймати.",
+        ],
+        "heritage_guard": "search_heritage(прийняти участь, include_live_slovnyk=false): phrase guard not lexical; no heritage headword can clear the collocation.",
+    },
+    "приймати участь": {
+        "corrections": ["брати участь"],
+        "note": "рос. принимать участие",
+        "source": ["antonenko-p091", "zabolotnyi-10"],
+        "evidence": [
+            "antonenko-davydovych-yak-my-hovorymo_p091: Приймати участь – брати участь",
+            "10-klas-ukrmova-zabolotnyi-2018_s0027: У змаганнях треба брати участь, а не приймати.",
+        ],
+        "heritage_guard": "search_heritage(приймати участь, include_live_slovnyk=false): phrase guard not lexical; no heritage headword can clear the collocation.",
+    },
     "недремлюче око": {"corrections": ["недремне око"], "note": "Antonenko's example", "source": ["antonenko"]},
     "сидячі місця": {"corrections": ["місця для сидіння"], "note": "ненормативний вираз", "source": ["glazova-11"]},
     "миючі засоби": {"corrections": ["мийні засоби"], "note": "ненормативний вираз", "source": ["glazova-11"]},
