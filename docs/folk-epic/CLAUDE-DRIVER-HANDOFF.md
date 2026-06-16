@@ -86,7 +86,7 @@
   - **B. Bare «X» dialectal-form citation in analysis** (`activities.yaml:97,102`): mention-not-use; existing exemption covers only `як «X»`.
   - **C. Foreign comparative proper nouns** (`Йоль`,`Ялда`,`Ялду`): ad hoc — `Сатурналії` also absent from VESUM yet NOT flagged.
   - **D. Genuine coinage** (`дерево-явір`,`першопочаток`): the ONLY items a fixer should rephrase.
-  - `citations_resolve`: 5 CANONICAL works (Костомаров/Чубинський/Чижевський/Попович) + the primary, cited but absent from the plan `[S#]` registry.
+  - `citations_resolve`: 5 CANONICAL works (Костомаров/Чубинський/Чижевський/Попович) + the primary — **ALSO a gate FALSE-POSITIVE**: they ARE in the koliadky plan `references:` (lines 93-117, `type: primary`, matching author/work) and the writer cited them correctly; the gate just fails to resolve the prose `Author «Title»` form. Fix is GATE-SIDE, not plan promotion.
   - `word_count` 4026/4600: real under-write (downstream of unblocking python_qg).
 - **STRUCTURAL CONCLUSION (refines the §4 plan order): gate-correctness is logically PRIOR to the C.3 multi-gate loop** — a loop
   can't "fix" a verbatim primary / foreign comparison / cited dialectal form (deleting them is wrong), so A/B/C must be closed
@@ -109,7 +109,7 @@
 1. **Land C.2a** — review/iterate the `folk-3079-c2a` PR; confirm tool-backed acceptance (Class-A exempted, B/C/D still flagged, modern-prose typo still fails).
 2. **C.2b (Class B)** — guarded dialectal-citation exemption (do NOT over-widen bare «X»). **C.2c (Class C)** — foreign-proper-noun handling (allowlist/marker; fix Сатурналії-vs-Йоль). Both deterministic, my lane (#0.2).
 3. **C.3 (Class D + word_count + the loop)** — bounded multi-gate python_qg loop + cross-model fixer (rephrase `дерево-явір`/`першопочаток`; iterate across gates). The durable structural fix.
-4. **citations_resolve** — promote the 5 canonical sources into the koliadky plan `[S#]` registry (+ consider a canonical-source resolver).
+4. **citations_resolve** — GATE-SIDE fix: resolve the writer's prose `Author «Title»` citations against the plan `references` (the 5 sources are ALREADY in the koliadky plan, lines 93-117; `_citation_candidates` already loads `plan_references` at L7490). NOT plan promotion.
 5. **THEN re-run P3-validate** (`--no-resume`!) — once A+B+C+citations+word_count clear python_qg, confirm the B1 loop reaches pedagogical ≥8 unaided. ONLY THEN is B1 validated e2e.
 6. (Parallel content lane, unblocked) dossier #26 `narodni-lehendy` → #27 `istorychni-perekazy`.
 

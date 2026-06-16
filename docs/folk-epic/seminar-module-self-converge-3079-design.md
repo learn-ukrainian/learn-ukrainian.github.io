@@ -321,10 +321,15 @@ artifacts):
 | **D. Genuine coinage** | `дерево-явір`, `першопочаток` | `activities.yaml:170` ("світове дерево-явір"), module prose | Real descriptive compounds, not in VESUM, no quick heritage. `явір` IS in VESUM; the hyphenated compound is the writer's. These are the ONLY genuinely-fixable items — rephrase (`світове дерево — явір`) or deeper heritage-attest. | The **cross-model fixer** (Part C.3) rephrases; OR writer-correction. |
 
 `citations_resolve`: the 5 "unknown" are **canonical** Ukrainian scholarship (Костомаров «Слов'янська міфологія»,
-Чубинський, Чижевський, Попович) + the народна-творчість primary — cited by the writer but absent from the plan's
-`[S#]` registry. **Fix:** promote these canonical sources into the plan reference registry (plan-side) and/or a
-canonical-source resolver in `citations_resolve`. `word_count` 4026/4600 is a real under-write the LLM-QG/writer
-correction must close by ADDING prose — downstream of unblocking python_qg.
+Чубинський, Чижевський, Попович) + the народна-творчість primary. **CORRECTION (verified this session):** these ARE
+already in the koliadky plan `references:` (`curriculum/l2-uk-en/plans/folk/koliadky-shchedrivky.yaml:93-117`,
+`type: primary`, with matching `author:`/`work:` fields), and the writer's prose form (`Костомаров М. «Слов'янська
+міфологія»`) matches them. The gate flagged them anyway → **`citations_resolve` is ALSO a gate FALSE-POSITIVE**: its
+CHECK fails to resolve the writer's prose `Author «Title»` citation against the plan references — even though
+`_citation_candidates` (L7490) ALREADY loads `plan_references` for correction candidates. **Fix is GATE-SIDE**
+(resolve prose `Author «Title»` against the plan `references` author/work/title), NOT plan-registry promotion — the
+sources are already registered. `word_count` 4026/4600 is a real under-write the LLM-QG/writer correction must close
+by ADDING prose — downstream of unblocking python_qg.
 
 ### Structural conclusion (refines §1 Gap C and the §4 plan order)
 **Gate-correctness is logically PRIOR to the C.3 multi-gate loop.** A loop cannot "correct" a verbatim primary, a
@@ -344,9 +349,13 @@ churns/diverges on classes A/B/C. The corrected sequencing:
 3. **C.2c (Class C) — foreign-proper-noun handling** (allowlist or marker; fix the Сатурналії-vs-Йоль inconsistency).
 4. **C.3 (Class D + word_count + the loop) — bounded multi-gate python_qg loop + cross-model fixer** for the genuine
    residual coinages and to iterate across gates.
-5. **citations_resolve — plan-registry promotion of canonical sources** (+ optional canonical resolver).
+5. **citations_resolve — GATE-SIDE prose-citation resolution** (resolve `Author «Title»` against the plan
+   `references`; the sources are ALREADY registered, this is a resolution false-positive, not a registry gap).
 
 **Status this session:** C.2a dispatched for implementation (the first, highest-leverage, clearly-correct unit);
 B/C/D + citations + the loop sequenced for follow-on driving. This taxonomy supersedes §1's pre-build guess that
-Gap C was dominated by coinage churn — empirically it is dominated by **verbatim-primary + foreign-proper-noun +
-dialectal-citation false positives**, which are deterministic gate-correctness fixes, not LLM-fixer work.
+Gap C was dominated by coinage churn — empirically it is dominated by **gate FALSE POSITIVES** (verbatim-primary,
+foreign-proper-noun, dialectal-citation, AND citation-resolution), which are deterministic gate-correctness fixes,
+NOT LLM-fixer work. The ONLY genuine content issues in the whole koliadky failure are `word_count` (under-write) and
+the two Class-D coinages — everything else is the gates wrongly rejecting correct seminar content. That is the real
+shape of Gap C, and it is why the per-gate single-shot loop could never converge it.
