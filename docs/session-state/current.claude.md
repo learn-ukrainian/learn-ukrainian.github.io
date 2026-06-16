@@ -1,30 +1,30 @@
-# Current — Claude Session Handoff (2026-06-16 overnight — #3277 atlas dedup-T2 SHIPPED · #M-5 reactivated · #2732 part1 done)
+# Current — Claude Session Handoff (2026-06-16 — Atlas lemma-keying COMPLETE + infra grind)
 
-> **ROLE:** main orchestrator. User asleep, autonomous: "atlas top prio then infra, buried alive in issues, don't ask, finish it." Quality non-negotiable (#M-11).
+> **ROLE:** main orchestrator. User: grind issues, results-focused, use context to ~700k, **use the FLEET to unblock (#M-12)**, self-merge after fleet-review + CI-green, don't manufacture obstacles. Quality non-negotiable.
 
-> **State:** main = `590df3d782`+ (merge-train auto-merges Codex content/dependabot — awareness-only). Live hooks: **#M-5 secret-guard (reactivated this session)** + #M-0.5 admin + #M-7 pytest-push.
+> **State:** main moving (merge-train). Live hooks: #M-5 secret-guard + #M-0.5 admin + #M-7 pytest-push. **NEW blocking CI gate: validate_plan_ordering (#3290).**
 
-## ✅ SHIPPED this session (MERGED to main)
-- **#3277 — Atlas dedup TRANCHE 2 (create-page folds).** T1(273)+T2(324, +51 create-cases) lemma-keying; manifest refreshed to **2436 entries**, §8 0 violations, all hazard scans CLEAN, freshness gate GREEN, Frontend build green.
-  - **#M-11 REAL-DATA CATCH (the key event):** green gates HID a learner-visible bug — create-case lemma pages inherited the inflected *surface's* gloss/pos (`заходити` published `pos="imperative"`; `восьмий` masc. as «eighth (feminine)»). Renderer `[lemma].astro` shows gloss as subtitle+SEO and pos as a label. **Fixed** (`_atlas_record_for_manifest`: create-cases now null gloss/pos, keep enrichment.meaning, preserve surface in provenance; plain folds unchanged) + tests. Re-verified on real data before merge.
-  - **Lesson reinforced:** §8/hazard/freshness gates passing ≠ correct. The freshness gate is **lexicon-CODE only** (not vocab — out of scope per #3150/#2928); always eyeball the real entries.
-- **#M-5 secret-guard REACTIVATED** (`5837a1c09f`). Registered in PreToolUse[Bash], deployed to .claude/.codex/.agent, 37 tests, live-verified.
-- **#2732 part 1 — lxml 6.1.0→6.0.4** (#3282 MERGED). The one genuine undocumented lock conflict (inscriptis hard-dep needs <6.1.0). CI green incl. pytest+pip-audit. Closed #3281 first (it chased the documented `requirements.txt:54-79` "DO NOT CHASE" pins — anthropic 0.97→0.46 etc.).
+## ✅ SHIPPED + MERGED this session
+- **#3289** chtyvo.org.ua dead-link sweep → Wayback snapshots (live docs; bio/folk/archive left for owners).
+- **#3284** dmklinger gloss meta-junk cleanup (`Alternative form of X:` → real translation) — ~49→2 via _clean_gloss reuse.
+- **#3290** lit slug + **promote validate_plan_ordering to BLOCKING CI**. Over-exemption (inline+**DeepSeek** review, #M-12) FIXED: 10 LEGACY_SLUG→slug_intentional markers, c1/review-c1-5 added to curriculum.yaml, c2 pobut = 1 documented planned-unbuilt exemption, LEGACY_FIELD doc-commented. Closed #2526.
+- **#2732 part1** lxml 6.1.0→6.0.4 (#3282); closed wrong-approach #3281.
+- **#M-5** secret-guard reactivated.
+- **ATLAS LEMMA-KEYING COMPLETE:** #3277 (T1+T2 dedup + create-case gloss/pos-null fix) + **#3291** (32 curated homographs, gloss-disambiguated + codex-reviewed: сьома→сьомий NOT сім, друга→друг NOT другий; цьому standalone) + dmklinger tail (мечеть/паска, 0 residuals). Manifest 2428 entries, §8 0 violations.
 
-## 🟣 RESUME HERE (fresh session — context-handoff, heavy step deferred)
-> This was a marathon session (#M-5 + #2732 + #3277 with 3 build cycles). I deferred the #3255 re-enrich to a fresh session for SHARP real-data verification (the #3277 bug was caught only because I was sharp). Do this first:
+## 🟢 IN FLIGHT
+- **#3291 MERGED** (homographs + dmklinger tail) — real-data verified (#M-11: all 32 folds correct, 0 meta-junk residuals). Lemma-keying milestone CLOSED.
+- **#3098** (decolonization §6 active-participle calque layer — HIGHEST mission value) — curation dispatched to Codex `calque-participles-3098` (source-verified Antonenko/Pravopys/UA-GEC + heritage-guard, NO invention, no Лепетун-verbatim). **On return: I review EVERY correction linguistically (false-positive = #1 risk), then integrate + run the controlled re-enrich (post-#3291) to surface in §6.**
 
-1. **#3255 dmklinger gloss cleanup — PR #3284 (DRAFT) CODE REVIEWED-APPROVED by me** (comment posted: reuse of `_clean_gloss` is correct + gated by `_is_meta_clause`, no fabrication, 96 tests pass). **Remaining = the re-enrich gate (orchestrator-owned):**
-   - Branch `codex/dmklinger-gloss-3255`; PR changes `build_kaikki_lookup.py` + `enrich_manifest.py` → lexicon code changed → **freshness gate RED** until manifest+fingerprint regenerated.
-   - Steps: `git worktree add .worktrees/claude/dmklinger-3255 codex/dmklinger-gloss-3255` (from origin); symlink DBs into the worktree (`ln -s /Users/krisztiankoos/projects/learn-ukrainian/data/sources.db <wt>/data/sources.db` + same for `vesum.db`); rebase on origin/main if behind; run `make -C <wt> atlas PYTHON=/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` (~32-min warm-cache CPU; run_in_background, auto-wakes). VERIFY ON REAL DATA: pick a few dmklinger-sourced lemmas that had `Alternative form of X:` glosses and confirm they're now clean (gloss = the real translation, not the meta-prefix); §8 0 violations; freshness gate GREEN (`scripts/lexicon/check_manifest_freshness.py --root <wt> --fingerprint <wt>/site/src/data/lexicon-manifest.fingerprint.json` → exit 0). Commit manifest+fingerprint to the branch, flip #3284 ready, merge when CI green.
-2. **#2732 follow-ups:** part 2 (.dagger/uv.lock idna — needs dagger SDK checked out); strategic #1634 (pip-freeze→real-resolver lock-gen + **isolate marker-pdf as an optional extra** so its caps don't gate the main lock) — architectural, needs a decision.
-3. **Atlas remainder:** homograph curated pass (33 words, per-word judgment, NEVER auto-resolve — сьома/друга mis-merge is #1 fear); create-case **Богдан** minor (vocative-handler shadows the create-case → not created; pre-existing, not a #3277 regression; fix = vocative-vs-create precedence).
-4. Triage remaining open issues. **#3153** telemetry + **#2738** VESUM-distractor decision = high blast/gate-scope, hold for interactive.
+## ⏭️ QUEUED (atlas pipeline is SERIAL — one re-enrich at a time, #M-9)
+1. **#3098 integration** — review curated set → integrate → re-enrich → merge.
+2. **#3116** synonym wrong-sense over-reach (кам'яниця in шлях, звір in річка — adjacent-synset headword slips past sense-filter; enrich_manifest.py:~973). LOW (2 of 794). Fix = per-candidate sense-validation OR curated stoplist. Needs a re-enrich.
+3. **#2882** umbrella Atlas coverage push (meaning 77%, pronunciation 71%, etymology 62%, synonyms 42%).
+4. **#3150** vocab-fingerprint extension (make the freshness gate catch vocab drift, not just lexicon-code) — design + the re-enrich-per-content-PR tradeoff; possibly needs a hook (user-go).
 
-## ⛔ NEEDS USER (blocked on you)
-- **#2036** hermes/anthropic logged out → run `hermes auth add anthropic` (OAuth) to restore the Claude-via-Hermes lane. Low urgency (native Claude dispatch lane available).
+## ⛔ NEEDS USER
+- **#2036** hermes/anthropic logged out → `hermes auth add anthropic`.
 
-## Open worktrees / cleanup
-- All session worktrees cleaned (dedup-t2, deps-lxml-2732, codex deps-lock-2732 removed). `.worktrees/builds/folk-koliadky-…` + codex dispatch worktrees remain (track-owned, awareness-only).
-
-Atlas SSOT: `docs/atlas-data-coverage-strategy.md`. Prior handoff: `2026-06-15-claude-atlas-completion-hooks-handoff.md`.
+## Notes
+- Cross-model review (#M-12) earned its keep twice this session: DeepSeek confirmed the #3290 over-exemption; codex confirmed 31/33 homographs. Use it for gate/exemption/merge-confidence calls.
+- Atlas SSOT: `docs/atlas-data-coverage-strategy.md`. Track-owned (awareness-only): folk #3079, b1/a1/a2 content dispatches, BIO.
