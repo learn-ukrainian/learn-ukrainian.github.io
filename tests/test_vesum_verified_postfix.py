@@ -506,6 +506,30 @@ def test_vesum_gate_still_flags_known_bad_form_after_hyphen_fix() -> None:
     assert "Будьякий" not in gate["missing"]
 
 
+def test_vesum_gate_exempts_roman_numeral_misses_only() -> None:
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        roman_or_nonword = {"іх", "празднік", "хіх"}
+        return {
+            word: ([] if word in roman_or_nonword else [{"lemma": word}])
+            for word in words
+        }
+
+    gate = _vesum_gate(
+        module_text=(
+            "У ХІХ столітті після XVIII таблиці згадано ІХ розділ, "
+            "але празднік лишається помилкою."
+        ),
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+        level="hist",
+    )
+
+    assert gate["passed"] is False
+    assert gate["missing"] == ["празднік"]
+
+
 def test_vesum_gate_resolves_textbook_syllable_break_after_whole_lookup() -> None:
     seen: list[list[str]] = []
 

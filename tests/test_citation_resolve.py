@@ -267,6 +267,48 @@ def test_plan_references_field_is_supported() -> None:
     assert result["passed"] is True
 
 
+def test_anonymous_folk_primary_resolves_against_module_primary(monkeypatch) -> None:
+    monkeypatch.setattr(linear_pipeline, "_search_literary_hits", lambda *args, **kwargs: [])
+    module_text = """
+## Читання
+
+> Як ще не було початку світа,
+> Тогди не було неба, ні землі.
+
+— Народна творчість, «Як ще не було початку світа»
+"""
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "«Як ще не було початку світа» (народна творчість)"}],
+        {"level": "folk", "references": []},
+        module_text=module_text,
+        level="folk",
+    )
+
+    assert result["passed"] is True
+    assert result["unknown"] == []
+
+
+def test_fabricated_anonymous_folk_primary_still_rejected(monkeypatch) -> None:
+    monkeypatch.setattr(linear_pipeline, "_search_literary_hits", lambda *args, **kwargs: [])
+    module_text = """
+## Читання
+
+> Як ще не було початку світа,
+> Тогди не було неба, ні землі.
+
+— Народна творчість, «Як ще не було початку світа»
+"""
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "«Вигаданий рядок без корпусу» (народна творчість)"}],
+        {"level": "folk", "references": []},
+        module_text=module_text,
+        level="folk",
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["«Вигаданий рядок без корпусу» (народна творчість)"]
+
+
 def test_my_morning_module_passes_citations_resolve() -> None:
     # Source refs must match the LIVE plan_references at curriculum/l2-uk-en/
     # plans/a1/my-morning.yaml. Citation history on this plan:
