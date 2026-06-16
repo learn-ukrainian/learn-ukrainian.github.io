@@ -106,7 +106,7 @@ nodeenv==1.10.0
 numpy==2.4.2
 onnxruntime==1.24.3
 open_clip_torch==3.3.0
-openai==1.109.1
+openai==2.41.0
 opencv-python-headless==4.11.0.86
 packaging==26.0
 pandas==3.0.1
