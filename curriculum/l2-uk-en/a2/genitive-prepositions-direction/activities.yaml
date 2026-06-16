@@ -145,7 +145,7 @@ inline:
 - id: act-4
   type: group-sort
   title: Три значення до
-  instruction: Розсортуйте фрази за значенням.
+  instruction: "Розсортуйте фрази з до: місце, людина чи час."
   groups:
   - label: місце
     items:
