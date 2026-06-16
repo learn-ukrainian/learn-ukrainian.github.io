@@ -161,31 +161,51 @@ _LABEL_LINE_RE = re.compile(
 
 PYTHON_QG_GATE_ORDER = (
     "tool_theatre",
+    "strict_json_parse",
     "activity_schema",
     "quiz_translate_explanations",
     "word_count",
     "vocab_count",
+    "vocab_floor",
     "plan_sections",
     "formatting_standards",
     "scaffolding_leak",
     "vesum_verified",
     "bad_form_heritage",
     "citations_resolve",
+    "plan_reference_match",
+    "resource_coverage",
+    "chunk_context_for_all_refs",
+    "published_quote_for_publishable_refs",
+    "textbook_quote_fidelity",
     "textbook_grounding",
     "resources_search_attempted",
     "immersion_advisory",
     "l2_exposure_floor",
     "long_uk_ceiling",
     "component_density",
+    "archetype_fit",
     "inject_activity_ids",
     "activity_types",
     "ai_slop_clean",
+    "russianisms_strict",
+    "register_consistency",
+    "engagement_floor",
     "component_props",
     "russianisms_clean",
     "surzhyk_clean",
     "calques_clean",
     "paronym_clean",
+    "mdx_render",
 )
+PYTHON_QG_META_GATES = frozenset(
+    {
+        "passed",
+        "correction_terminal",
+        "previously_passed_regression",
+    }
+)
+PYTHON_QG_UNMAPPED_FAILURE_FRONTIER = -1
 WRITER_CORRECTION_GATES = frozenset(
     {
         "activity_schema",
@@ -5558,6 +5578,11 @@ def _python_qg_frontier(report: Mapping[str, Any]) -> int:
         gate_report = gates.get(gate)
         if isinstance(gate_report, Mapping) and gate_report.get("passed") is False:
             return index
+    if not _python_qg_passed(report):
+        # A failed report with no ordered failing gate has no trustworthy
+        # frontier. Rank it before the first mapped gate so it can never tie
+        # with, or beat, a truly passing report.
+        return PYTHON_QG_UNMAPPED_FAILURE_FRONTIER
     return len(PYTHON_QG_GATE_ORDER)
 
 
@@ -5566,6 +5591,10 @@ def _python_qg_frontier_gate(report: Mapping[str, Any]) -> str | None:
     if not isinstance(gates, Mapping):
         return None
     for gate in PYTHON_QG_GATE_ORDER:
+        gate_report = gates.get(gate)
+        if isinstance(gate_report, Mapping) and gate_report.get("passed") is False:
+            return gate
+    for gate in sorted(set(gates) - set(PYTHON_QG_GATE_ORDER) - PYTHON_QG_META_GATES):
         gate_report = gates.get(gate)
         if isinstance(gate_report, Mapping) and gate_report.get("passed") is False:
             return gate
@@ -7863,8 +7892,14 @@ def _previously_passing_regressions(
     after_gates = after.get("gates")
     if not isinstance(before_gates, Mapping) or not isinstance(after_gates, Mapping):
         return []
+    ordered_gate_set = set(PYTHON_QG_GATE_ORDER)
+    all_gate_names = (set(before_gates) | set(after_gates)) - PYTHON_QG_META_GATES
+    ordered_gate_names = [gate for gate in PYTHON_QG_GATE_ORDER if gate in all_gate_names]
+    ordered_gate_names.extend(
+        sorted(gate for gate in all_gate_names if gate not in ordered_gate_set)
+    )
     regressions = []
-    for gate in PYTHON_QG_GATE_ORDER:
+    for gate in ordered_gate_names:
         before_gate = before_gates.get(gate)
         after_gate = after_gates.get(gate)
         if (
