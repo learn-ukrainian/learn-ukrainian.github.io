@@ -30,6 +30,10 @@
   translation: my name is
   pos: phrase
   usage: Мене звати Олена.
+- lemma: прізвище
+  translation: surname
+  pos: noun
+  usage: "Прізвище: Шевченко."
 - lemma: як тебе звати?
   translation: what is your name? informal
   pos: phrase
@@ -118,6 +122,14 @@
   translation: Canadian woman
   pos: noun
   usage: Олена — канадка.
+- lemma: американець
+  translation: American man
+  pos: noun
+  usage: Андрій — американець.
+- lemma: американка
+  translation: American woman
+  pos: noun
+  usage: Софія — американка.
 - lemma: студент
   translation: male student
   pos: noun

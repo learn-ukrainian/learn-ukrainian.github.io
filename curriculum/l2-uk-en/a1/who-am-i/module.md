@@ -15,6 +15,9 @@ phrases as whole chunks:
 | **Ду́же приє́мно!** | Nice to meet you! |
 | **Зві́дки ти?** | Where are you from? |
 
+You do not need to explain every form yet. A first conversation can be built
+from safe pieces.
+
 By the end, you can:
 
 - ask **Як тебе́ зва́ти?** with a peer and **Як вас зва́ти?** with a new adult;
@@ -86,7 +89,7 @@ The third dialogue introduces another person:
 Тара́с: Це Андрі́й. Він зі Льво́ва.
 Ната́лка: Ду́же приє́мно. А хто це?
 Тара́с: Це Окса́на. Вона́ з Оде́си. Вона́ — лі́карка.
-Ната́лка: Ду́же приє́мно, Окса́но.
+Ната́лка: Ду́же приє́мно!
 ```
 
 English support after the Ukrainian dialogue:
@@ -183,9 +186,9 @@ Learn only the naming case now:
 | **вони́** | they |
 
 The important beginner contrast is **ти / ви**. Use **ти** **для дру́зів,
-діте́й** and close classmates when the relationship is informal. Use **ви**
-**для викладачі́в, ста́рших люде́й**, one unknown adult, a host, or several
-people.
+діте́й** (for friends and children) and close classmates when the relationship
+is informal. Use **ви** **для викладачі́в, ста́рших люде́й** (for teachers and
+older people), one unknown adult, a host, or several people.
 
 Mini-patterns:
 
@@ -212,6 +215,14 @@ Ukrainian present-time identity lines do not need a word for English "am" or
 | **Я — студе́нтка.** | I am a female student. |
 | **Він — лі́кар.** | He is a doctor. |
 | **Вона́ — лі́карка.** | She is a doctor. |
+
+The same identity pattern works for nationality:
+
+| Чоловіча форма | Жіноча форма |
+| --- | --- |
+| **Я — украї́нець.** | **Я — украї́нка.** |
+| **Я — канаді́єць.** | **Я — кана́дка.** |
+| **Я — америка́нець.** | **Я — америка́нка.** |
 
 The dash is a reading helper. It marks the place where English expects "am" or
 "is." In ordinary writing, you may see the same pattern without a dash:
@@ -278,17 +289,16 @@ Native Ukrainian choices matter even in tiny introductions. Use **та́то** f
 dad, **дружи́на** for wife, **ви́бачте** or **проба́чте** for excuse me,
 **дя́кую** or **спаси́бі** for thank you, and **теж** or **та́кож** for also.
 
-## Слу́хай і зошит
+## Слу́хай і записуй
 
-For lawful listening, use public Ukrainian Lessons Podcast pages as listen-only
-support: Episode 3 for introductions, Episode 4 for **Зві́дки?**, and Episode
-8 for professions. Listen, repeat a short chunk, and come back to the page.
-Do not copy or transcribe paid material.
+The Resources tab has three optional Ukrainian Lessons Podcast links: Episode
+3 for introductions, Episode 4 for **Зві́дки?**, and Episode 8 for
+professions. Listen for one short chunk, repeat it once, and come back here.
 
 For handwriting recognition, ask a teacher, tutor, or classmate to write these
-original labels in a notebook: **ім'я́**, **прі́звище**, **Ки́їв**,
-**студе́нтка**, **лі́карка**. First compare the notebook label with the printed
-word; then write your own line.
+original labels in a notebook: **ім'я́** (name), **прі́звище** (surname),
+**Ки́їв**, **студе́нтка**, **лі́карка**. First compare the notebook label with
+the printed word; then write your own line.
 
 ## Самопереві́рка
 
@@ -310,3 +320,7 @@ Cover the English support and read the Ukrainian aloud:
 Use the workbook for extra practice: profession pairs, dialogue fill-ins,
 safer Ukrainian sentence choices, native-form choices, and vocabulary
 recognition.
+
+You can now greet someone, ask and answer a name question, say where you are
+from, name a simple role, and return the question with **А тебе́?** or
+**А вас?**. Next, Module 6 uses these people words for family.
