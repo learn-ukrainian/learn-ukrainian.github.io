@@ -63,7 +63,54 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 40 HANDOFF (2026-06-16 — C.3 part 2 = GATE-FRONTIER LOOP FIX, MERGED + e2e-VALIDATED (#3361): loop now advances through rotating walls — activity_schema ✓ → word_count ✓ → vesum; remaining wall = vesum coinage convergence (budget + anchor-matching). Also: #3330 regression relanded, протиріччя deflagged #3343, #M-10 forensics #3373) — **RESUME HERE**
+## ▶▶▶ SESSION 41 HANDOFF (2026-06-16/17 — vesum-convergence fix MERGED (#3382): budget 4→8 + whitespace-normalized reviewer-fix anchor matching, converged via 5 adversarial rounds. NEXT = re-run P3-validate to prove B1 e2e) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** Continued C.3. Frontier loop fix (#3361) MERGED+validated last session; THIS session
+> built + MERGED the next wall's fix (#3382, vesum coinage convergence). No new folk CONTENT (modules
+> 6/42 etc. unchanged). **B1 still e2e-UNPROVEN** — gated on the P3-validate re-run (NEXT ACTION #1)
+> reaching the B1 LLM-QG loop. **0 dispatches in flight; main clean at handoff.**
+
+### 🟢 #3382 — vesum coinage convergence, MERGED to main (`70741124d6`)
+The frontier fix (#3361) let a P3-validate build reach `vesum_verified` but `module_failed` there: the
+round budget ran out + the codex cross-model corrector's rephrase `<find>` anchors hit
+`reviewer_fixes_anchor_unmatched` (near-verbatim — whitespace/markdown diffs). #3382 fixes both:
+- **Budget** `PYTHON_QG_SEMINAR_MAX_CORRECTION_ROUNDS` 4→8 (best-round/frontier caps churn).
+- **Whitespace-normalized reviewer-fix anchor matching** in `_apply_reviewer_fixes` (broad-blast-radius —
+  ALL reviewer-fix gates). FINAL CONVERGED DESIGN (the lesson, after the review caught a REAL
+  content-corruption edge in EACH of 4 rounds): **exact path = full-span verbatim replace, guarded
+  against empty/all-whitespace anchors; normalized FALLBACK only = match the UNSTRIPPED anchor (enforces
+  the whitespace word-boundary so `"target "` can't match inside `"retargeting"`), then TRIM the mapped
+  original span to its non-whitespace core (no whitespace-RUN over-capture), unique-match + ambiguity
+  fail-closed.** Telemetry: `reviewer_fix_anchor_normalized_match` fires when the normalized path lands.
+- **#M-12 review discipline was load-bearing ALL session: 12 real bugs caught** across #3319 (2), #3361
+  (2: design gap + incomplete `PYTHON_QG_GATE_ORDER`), #3382 (4 matcher edges) — NONE shipped. Always
+  `ab ask-codex` adversarial-review a gate/correction-loop change before self-merge.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **Re-run P3-validate (THE PAYOFF):** `.venv/bin/python -u scripts/build/v7_build.py folk
+   koliadky-shchedrivky --no-resume --worktree` (Monitor the JSONL). With #3361 (frontier) + #3382
+   (budget + anchor-matching) BOTH on main, the loop should now CLEAR python_qg (activity_schema✓
+   word_count✓ vesum✓) and finally engage the **B1 LLM-QG loop** → confirm pedagogical ≥8 → **B1
+   validated e2e at last** (#3079 quick-win proven). `--no-resume` MANDATORY. If vesum STILL doesn't fully
+   converge, read `python_qg_correction_loop.json` + the `reviewer_fix_anchor_normalized_match` /
+   `reviewer_fixes_anchor_unmatched` telemetry to see which coinages remain + whether the matcher landed.
+2. **#3342 — heritage classifier over-weighting fix** (deeper протиріччя root cause; demote LT/Штепа vs
+   СУМ-20+literary, like Antonenko already is). Broad blast radius → careful + adversarial review. #0.2.
+3. (Parallel content lane) dossier #26 `narodni-lehendy` → #27 `istorychni-perekazy`.
+
+### ⚠ CARRY-FORWARD
+- **EVIDENCE-FIRST on the loop:** run P3-validate `--no-resume` to get GROUND TRUTH before building a fix.
+  It corrected TWO wrong hypotheses this epic (coinage-churn → really the loop metric; word_count
+  under-write → really converges). Build, observe, THEN fix.
+- **The matcher lesson** (above): whitespace-boundary semantics in a content-mutating apply path are
+  subtle — exact=full-span, normalized=match-unstripped+trim, both fail-closed. Don't "simplify" by
+  stripping the anchor (it breaks the word-boundary constraint → substring corruption).
+- **Build worktrees to reap** but with untracked `python_qg_correction_loop.json` (predate #3373):
+  `folk-koliadky-shchedrivky-20260616-191728` + `…-202559`. Commit-or-keep, don't blind-reap (#M-10).
+  (#3373 fixed the auto-commit going forward; the NEW P3-validate build's worktree will commit it.)
+- Never reset/commit on `main`; folk push `--no-verify`. Role #0.2 LIVE (implement/drive infra).
+
+## ▶▶▶ SESSION 40 HANDOFF (2026-06-16 — C.3 part 2 = GATE-FRONTIER LOOP FIX, MERGED + e2e-VALIDATED (#3361): loop now advances through rotating walls — activity_schema ✓ → word_count ✓ → vesum; remaining wall = vesum coinage convergence (budget + anchor-matching). Also: #3330 regression relanded, протиріччя deflagged #3343, #M-10 forensics #3373)
 
 ### 🟢🟢 C.3 PART 2 OUTCOME — the REAL fix was the loop METRIC, not a coinage rephraser (MERGED #3361 + e2e-validated)
 The handoff/design-doc predicted "coinage churn needs a cross-model rephraser." **A P3-validate `--no-resume` build PROVED that wrong.** The real blocker was the bounded loop's progress metric: fixing an early gate (activity_schema) UNMASKED deeper gates → total violation count rose → the old `min_score_regressed`(total-count) + `PYTHON_QG_MIN_REGRESSION_PATIENCE=1` misread that PROGRESS as regression and BAILED after one round, restoring the worse pre-fix state.
