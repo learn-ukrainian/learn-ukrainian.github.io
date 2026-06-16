@@ -294,6 +294,11 @@ _BLOCKED_SYNONYMS = {
     "флористська хризантема",
 }
 
+_WRONG_SENSE_SYNONYMS: dict[str, frozenset[str]] = {
+    "шлях": frozenset({"кам'яниця"}),
+    "річка": frozenset({"звір"}),
+}
+
 # #3197 — Вікісловник's explicit antonym column carries pedagogical noise the POS
 # gate alone can't catch: alphabet meta-pairs (а→зет), co-hyponyms / paradigm
 # members dressed as opposites (дочка→матка, він→ми), wrong-sense opposites
@@ -1366,26 +1371,10 @@ def _dictionary_sense_texts(word: str) -> tuple[str, ...]:
 
 
 def _candidate_primary_sense_matches_lemma(lemma: str, candidate: str) -> bool:
-    """Keep unless dictionary evidence clearly puts candidate in a different sense."""
-    lemma_senses = _dictionary_sense_texts(_base_lemma(lemma))
-    candidate_senses = _dictionary_sense_texts(candidate)
-    if not lemma_senses or not candidate_senses:
-        return True
-    lemma_text = " ".join(lemma_senses)
-    candidate_text = " ".join(candidate_senses)
-    lemma_alias_roots = _sense_direct_alias_roots(lemma_text)
-    if not lemma_alias_roots:
-        return True
-    candidate_alias_roots = _sense_direct_alias_roots(candidate_text)
-    if lemma_alias_roots.intersection(candidate_alias_roots):
-        return True
-    if not candidate_alias_roots:
-        return False
-    lemma_roots = _sense_roots(lemma_text)
-    candidate_roots = _sense_roots(candidate_text)
-    if not lemma_roots or not candidate_roots:
-        return True
-    return bool(lemma_roots.intersection(candidate_roots))
+    """Keep every candidate except confirmed curated wrong-sense intruders."""
+    lemma_key = _lookup_key(_base_lemma(lemma))
+    candidate_key = _lookup_key(candidate)
+    return candidate_key not in _WRONG_SENSE_SYNONYMS.get(lemma_key, frozenset())
 
 
 def _is_safe_slovnyk_synonym(

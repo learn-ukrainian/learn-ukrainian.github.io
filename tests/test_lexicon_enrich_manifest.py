@@ -406,20 +406,18 @@ def test_slovnyk_synonyms_omit_wrong_sense_voda(monkeypatch) -> None:
     assert "велемовність" not in items
 
 
-def test_synonym_sense_guard_uses_candidate_dictionary_sense(monkeypatch) -> None:
-    sense_rows = {
-        "шлях": ("Смуга землі для їзди та ходіння; дорога.",),
-        "дорога": ("Смуга землі для їзди; шлях.",),
-        "кам'яниця": ("Каменное строеніе. Ловушка для воробьев.",),
-    }
-    monkeypatch.setattr(
-        enrich_manifest_module,
-        "_dictionary_sense_texts",
-        lambda word: sense_rows.get(word, ()),
-    )
-
+def test_synonym_sense_guard_uses_curated_exclusion_only() -> None:
     assert _candidate_primary_sense_matches_lemma("шлях", "дорога") is True
+    assert _candidate_primary_sense_matches_lemma("шлях", "тракт") is True
+    assert _candidate_primary_sense_matches_lemma("шлях", "гостинець") is True
+    assert _candidate_primary_sense_matches_lemma("шлях", "путівець") is True
     assert _candidate_primary_sense_matches_lemma("шлях", "кам'яниця") is False
+    assert _candidate_primary_sense_matches_lemma("річка", "струмок") is True
+    assert _candidate_primary_sense_matches_lemma("річка", "звір") is False
+    assert _candidate_primary_sense_matches_lemma("вельми", "дуже") is True
+    assert _candidate_primary_sense_matches_lemma("вельми", "значно") is True
+    assert _candidate_primary_sense_matches_lemma("вельми", "надзвичайно") is True
+    assert _candidate_primary_sense_matches_lemma("вельми", "сильно") is True
     assert _clean_synonym_candidate("кам'яниця", "шлях") == "кам'яниця"
 
 
@@ -533,6 +531,41 @@ def test_synonym_sense_guard_keeps_candidates_without_source_evidence(monkeypatc
     )
 
     assert _candidate_primary_sense_matches_lemma("шлях", "путівець") is True
+
+
+def test_synonym_sense_guard_keeps_velmy_adverbs(monkeypatch) -> None:
+    _patch_vesum_analyses(
+        monkeypatch,
+        {
+            "вельми": "adv",
+            "дуже": "adv",
+            "значно": "adv",
+            "надзвичайно": "adv",
+            "сильно": "adv",
+        },
+    )
+    cache = {
+        "lookups": {
+            "synonyms_karavansky": {
+                "dictionary_slug": "synonyms_karavansky",
+                "dictionary_label": "Словник синонімів Караванського",
+                "word": "вельми",
+                "source_url": "https://slovnyk.me/dict/synonyms_karavansky/вельми",
+                "text": "вельми ДУЖЕ, ЗНАЧНО, НАДЗВИЧАЙНО, СИЛЬНО. Джерело: тест",
+            },
+            "synonyms": {
+                "dictionary_slug": "synonyms",
+                "dictionary_label": "Словник синонімів української мови",
+                "word": "вельми",
+                "source_url": "https://slovnyk.me/dict/synonyms/вельми",
+                "text": "вельми ДУЖЕ, ЗНАЧНО, НАДЗВИЧАЙНО, СИЛЬНО. Джерело: тест",
+            },
+        }
+    }
+
+    section = _synonyms_slovnyk("вельми", cache, entry_pos="adv")
+    assert section is not None
+    assert section["items"] == ["дуже", "значно", "надзвичайно", "сильно"]
 
 
 def test_slovnyk_synonyms_promote_clean_sources_for_sample(monkeypatch) -> None:
