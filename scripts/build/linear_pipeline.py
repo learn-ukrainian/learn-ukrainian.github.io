@@ -9094,14 +9094,12 @@ def _foreign_proper_noun_attestation_index(
         if not lemma:
             continue
         surfaces = {lemma}
-        accepted_surfaces = row.get("accepted_surfaces", [])
-        if accepted_surfaces is None:
-            accepted_surfaces = []
-        if not isinstance(accepted_surfaces, list):
-            raise ValueError(
-                f"{source_path} lemma {lemma!r} field 'accepted_surfaces' must be a list"
-            )
-        for surface in accepted_surfaces:
+        forms = row.get("forms", [])
+        if forms is None:
+            forms = []
+        if not isinstance(forms, list):
+            raise ValueError(f"{source_path} lemma {lemma!r} field 'forms' must be a list")
+        for surface in forms:
             normalized = _normalize_for_vesum(str(surface or "")).lower()
             if normalized:
                 surfaces.add(normalized)
@@ -9119,89 +9117,12 @@ def _is_titlecase_ukrainian_proper_noun_surface(surface: str) -> bool:
     if not parts:
         return False
     for part in parts:
-        first_letter = next((char for char in part if char.isalpha()), "")
-        if not first_letter or not first_letter.isupper():
+        letters = [char for char in part if char.isalpha()]
+        if not letters or not letters[0].isupper():
             return False
-        if part == part.upper():
+        if any(not char.islower() for char in letters[1:]):
             return False
     return True
-
-
-def _foreign_proper_noun_lemma_candidates(surface: str) -> set[str]:
-    word = _normalize_for_vesum(surface).strip(_VESUM_WORD_EDGE_CHARS)
-    if not word:
-        return set()
-
-    lower = word.lower()
-    candidates = {lower}
-
-    def add(candidate: str) -> None:
-        if len(candidate) >= 3:
-            candidates.add(candidate)
-
-    if lower.endswith("ією"):
-        add(f"{lower[:-3]}ія")
-    if lower.endswith("єю"):
-        add(f"{lower[:-2]}я")
-    if lower.endswith("ею"):
-        add(f"{lower[:-2]}я")
-        add(f"{lower[:-2]}ь")
-    if lower.endswith("ою"):
-        add(f"{lower[:-2]}а")
-    if lower.endswith("ями"):
-        add(f"{lower[:-3]}ї")
-        add(f"{lower[:-3]}я")
-    if lower.endswith("ами") and not lower.endswith("ями"):
-        add(f"{lower[:-3]}и")
-        add(f"{lower[:-3]}а")
-    if lower.endswith("ях"):
-        add(f"{lower[:-2]}ї")
-        add(f"{lower[:-2]}я")
-    if lower.endswith("ах") and not lower.endswith("ях"):
-        add(f"{lower[:-2]}и")
-        add(f"{lower[:-2]}а")
-    if lower.endswith("ям"):
-        add(f"{lower[:-2]}ї")
-        add(f"{lower[:-2]}я")
-    if lower.endswith("ам") and not lower.endswith("ям"):
-        add(f"{lower[:-2]}и")
-        add(f"{lower[:-2]}а")
-    if lower.endswith("ів"):
-        add(f"{lower[:-2]}и")
-    if lower.endswith("ій"):
-        add(f"{lower[:-2]}ії")
-    if lower.endswith("ї"):
-        add(f"{lower[:-1]}я")
-    if lower.endswith("и") and not lower.endswith(("ами", "ями")):
-        add(f"{lower[:-1]}а")
-    if lower.endswith("а"):
-        add(lower[:-1])
-    if lower.endswith("я"):
-        add(f"{lower[:-1]}ь")
-        if lower[:-1].endswith("і"):
-            add(f"{lower[:-1]}й")
-    if lower.endswith("у"):
-        add(f"{lower[:-1]}а")
-        add(lower[:-1])
-        add(f"{lower[:-1]}ь")
-    if lower.endswith("ю"):
-        add(f"{lower[:-1]}я")
-        add(f"{lower[:-1]}ь")
-        if lower[:-1].endswith("і"):
-            add(f"{lower[:-1]}й")
-    if lower.endswith("ом"):
-        add(lower[:-2])
-    if lower.endswith("ем"):
-        add(lower[:-2])
-        add(f"{lower[:-2]}ь")
-    if lower.endswith(("ові", "еві", "єві")):
-        add(lower[:-3])
-    if lower.endswith("і"):
-        add(lower[:-1])
-        add(f"{lower[:-1]}а")
-        add(f"{lower[:-1]}ь")
-
-    return candidates
 
 
 def _resolve_foreign_proper_noun_attested_missing(
@@ -9215,7 +9136,7 @@ def _resolve_foreign_proper_noun_attested_missing(
     if not attestation_index:
         return set()
 
-    candidates_by_missing: dict[str, set[str]] = {word: set() for word in missing_lc}
+    attested: set[str] = set()
     for surface, lower, original_case_lookup in unchecked_pairs:
         if lower not in missing_lc:
             continue
@@ -9223,15 +9144,11 @@ def _resolve_foreign_proper_noun_attested_missing(
             normalized = _normalize_for_vesum(raw).strip()
             if not _is_titlecase_ukrainian_proper_noun_surface(normalized):
                 continue
-            candidates_by_missing[lower].update(
-                _foreign_proper_noun_lemma_candidates(normalized)
-            )
+            if normalized.lower() in attestation_index:
+                attested.add(lower)
+                break
 
-    return {
-        word
-        for word, candidates in candidates_by_missing.items()
-        if candidates and any(candidate in attestation_index for candidate in candidates)
-    }
+    return attested
 
 
 _HERITAGE_AUTHENTIC_CLASSIFICATIONS = frozenset(

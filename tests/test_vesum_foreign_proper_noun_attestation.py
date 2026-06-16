@@ -21,13 +21,18 @@ def _gate(text: str, *, level: str = "folk") -> dict[str, object]:
 
 
 def test_folk_vesum_gate_accepts_attested_foreign_proper_nouns() -> None:
-    gate = _gate("Йоль Ялда Ялду")
+    gate = _gate("Йоль Йолем Ялда Ялду")
 
     assert gate["passed"] is True
     assert gate["missing"] == []
     assert gate["heritage_attested"] == 0
-    assert gate["foreign_proper_noun_attested"] == 3
-    assert set(gate["foreign_proper_noun_attested_words"]) == {"Йоль", "Ялда", "Ялду"}
+    assert gate["foreign_proper_noun_attested"] == 4
+    assert set(gate["foreign_proper_noun_attested_words"]) == {
+        "Йолем",
+        "Йоль",
+        "Ялда",
+        "Ялду",
+    }
 
 
 def test_folk_vesum_gate_treats_attested_foreign_proper_nouns_consistently() -> None:
@@ -52,6 +57,22 @@ def test_folk_vesum_gate_rejects_lowercase_foreign_proper_noun_surfaces() -> Non
 
     assert gate["passed"] is False
     assert set(gate["missing"]) == {"йоль", "ялда", "ялду"}
+    assert gate["foreign_proper_noun_attested"] == 0
+
+
+def test_folk_vesum_gate_rejects_invalid_foreign_proper_noun_case_forms() -> None:
+    gate = _gate("Ірана Ялдаа")
+
+    assert gate["passed"] is False
+    assert set(gate["missing"]) == {"Ірана", "Ялдаа"}
+    assert gate["foreign_proper_noun_attested"] == 0
+
+
+def test_folk_vesum_gate_rejects_mixed_case_foreign_proper_noun_surfaces() -> None:
+    gate = _gate("ЙОль ЯЛду ІРан")
+
+    assert gate["passed"] is False
+    assert set(gate["missing"]) == {"ЙОль", "ЯЛду", "ІРан"}
     assert gate["foreign_proper_noun_attested"] == 0
 
 
