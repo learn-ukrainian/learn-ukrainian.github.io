@@ -1,8 +1,8 @@
 """Tests for A1/A2 immersion range bands (audit/config.py).
 
-Updated 2026-05-30 for the Ohoiko/ULP S1 harness:
+Updated 2026-06-16 for the A2 easy-Ukrainian policy:
 - A1: every core band uses 40-55% Ukrainian-first immersion
-- A2: S1 bridge/ramp/band1 use 40-55%, later A2 bands continue to ramp
+- A2: easy Ukrainian is the default body voice; English is limited to glosses or one-line clarification
 """
 
 import sys
@@ -63,38 +63,38 @@ class TestA1ImmersionRange:
 class TestA2ImmersionRange:
     """Test get_a2_immersion_range with 5-band graduated system.
 
-    Recalibrated 2026-05-30:
-    - Bridge (M01-03): 40-55% — ULP S1 baseline
-    - Ramp (M04-07): 40-55% — ULP S1 baseline
-    - Band 1 (M08-20): 40-55% — ULP S1 baseline
-    - Band 2 (M21-50): 50-80% — all cases, longer Ukrainian passages
-    - Band 3 (M51-63): 65-90% — near-full immersion, B1 prep
+    Recalibrated 2026-06-16:
+    - Bridge (M01-03): 75-100% — very easy Ukrainian after A1
+    - Ramp (M04-07): 85-100% — easy Ukrainian body prose
+    - Band 1 (M08-20): 85-100% — core A2 Ukrainian explanations
+    - Band 2 (M21-50): 90-100% — richer Ukrainian with controlled connectors
+    - Band 3 (M51-63): 95-100% — near-B1 Ukrainian, B1 prep
     """
 
     def test_bridge(self):
         """M01-03: bridge from A1."""
-        assert get_a2_immersion_range(1) == (40, 55)
-        assert get_a2_immersion_range(3) == (40, 55)
+        assert get_a2_immersion_range(1) == (75, 100)
+        assert get_a2_immersion_range(3) == (75, 100)
 
     def test_ramp(self):
         """M04-07: ramp up."""
-        assert get_a2_immersion_range(4) == (40, 55)
-        assert get_a2_immersion_range(7) == (40, 55)
+        assert get_a2_immersion_range(4) == (85, 100)
+        assert get_a2_immersion_range(7) == (85, 100)
 
     def test_band1_core_grammar(self):
         """M08-20: applied grammar, dialogue-rich."""
-        assert get_a2_immersion_range(8) == (40, 55)
-        assert get_a2_immersion_range(20) == (40, 55)
+        assert get_a2_immersion_range(8) == (85, 100)
+        assert get_a2_immersion_range(20) == (85, 100)
 
     def test_band2_applied_grammar(self):
         """M21-50: all cases, longer Ukrainian passages."""
-        assert get_a2_immersion_range(21) == (50, 80)
-        assert get_a2_immersion_range(50) == (50, 80)
+        assert get_a2_immersion_range(21) == (90, 100)
+        assert get_a2_immersion_range(50) == (90, 100)
 
     def test_band3_consolidation(self):
         """M51-63: near-full immersion, B1 prep."""
-        assert get_a2_immersion_range(51) == (65, 90)
-        assert get_a2_immersion_range(63) == (65, 90)
+        assert get_a2_immersion_range(51) == (95, 100)
+        assert get_a2_immersion_range(63) == (95, 100)
 
     def test_immersion_increases_monotonically(self):
         """Min immersion never decreases across A2 bands."""

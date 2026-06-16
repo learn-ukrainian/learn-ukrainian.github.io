@@ -2,7 +2,7 @@
 
 > **Target:** A1 and A2 modules
 > **Pedagogy:** PPP (Present-Practice-Produce)
-> **Immersion:** 10-90% Ukrainian (scaffolded with English, graduated by band)
+> **Immersion:** A1 is scaffolded with English; A2 uses easy Ukrainian with a natural complexity ramp
 > **Experience Goal:** Safe, encouraging tutoring — learner feels supported, not overwhelmed
 
 ---
@@ -12,8 +12,9 @@
 > **Key Question:** "Does this feel like a patient, encouraging tutor?"
 >
 > At A1/A2, learners are fragile. They need:
-> - Clear, simple explanations in English
-> - Gentle introduction of Ukrainian
+> - A1: clear, simple English support
+> - A2: clear, simple Ukrainian as the main teaching voice
+> - Gentle introduction of harder Ukrainian structures
 > - Lots of encouragement
 > - Predictable structure (safety)
 > - Quick wins (dopamine hits)
@@ -61,7 +62,7 @@ WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
 |--------|-------------|------|
 | New words per section | ≤5-7 | >10 new words without practice |
 | Concepts before practice | ≤2 concepts | >3 concepts before any exercise |
-| English support | Present when needed | Missing when learner would struggle |
+| Language support | A1 English support; A2 easy Ukrainian frames | A2 body prose replaced by English scaffolding |
 | Visual aids | Tables, charts for grammar | Prose-only explanations |
 
 ### Emotional Safety Mapping
@@ -83,9 +84,9 @@ WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
 
 | Category | Pattern | Example | Required Fix |
 |----------|---------|---------|--------------|
-| **OVERWHELMING_INTRO** | Too much Ukrainian too fast | First paragraph all Ukrainian | Add English scaffolding |
+| **OVERWHELMING_INTRO** | Too much complexity too fast | First paragraph uses dense Ukrainian | Rewrite in easier Ukrainian with repeated frames |
 | **NO_QUICK_WIN** | Long content before any practice | 500 words before first activity | Add mini-exercise earlier |
-| **MISSING_ENGLISH** | Learner left to guess meaning | Ukrainian without translation | Add translation/gloss |
+| **MISSING_SUPPORT** | Learner left to guess meaning | Dense Ukrainian with no frame | Add a simple Ukrainian frame or a short gloss |
 | **SCARY_GRAMMAR** | Complex terminology for beginners | "Accusative case" without explanation | Simplify or explain term |
 | **NO_ENCOURAGEMENT** | Flat, mechanical instruction | "Now do exercise 2" | Add "Great! Now let's..." |
 | **TOO_MUCH_AT_ONCE** | >3 concepts before practice | 5 verb forms in one section | Split into smaller chunks |
@@ -98,7 +99,7 @@ WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
 | Criterion | A+ Standard | B Standard | C or Below |
 |-----------|-------------|------------|------------|
 | **Opening** | Warm welcome, clear preview | Basic intro | Cold start |
-| **English Support** | Present throughout, scaffolded reduction | Present but inconsistent | Missing when needed |
+| **A1 English / A2 Easy Ukrainian** | A1 has support; A2 is simple Ukrainian | Some mismatch | A2 body relies on English scaffolding |
 | **Visual Aids** | Tables, charts, clear formatting | Some visual organization | Walls of text |
 | **Pacing** | Small chunks, frequent practice | Reasonable chunks | Overwhelming sections |
 | **Quick Wins** | Multiple small successes | At least one | None until end |
@@ -117,9 +118,9 @@ WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
 | A1.1 | 20-40% | Heavy English support |
 | A1.2 | 40-60% | Increasing Ukrainian |
 | A1.3 | 60-80% | Scaffolded transition |
-| A2 M01-20 | 45-65% | Core grammar — English for theory |
-| A2 M21-50 | 55-75% | Applied grammar — English only for abstract concepts |
-| A2 M51-70 | 70-90% | Consolidation — near-full Ukrainian |
+| A2 M01-20 | 85-100% | Easy Ukrainian; short repeated frames |
+| A2 M21-50 | 90-100% | Richer Ukrainian with controlled connectors |
+| A2 M51-70 | 95-100% | Near-B1 Ukrainian; transparent 2-3 clause sentences |
 
 ### Language Quality (Beginner Adaptation)
 
@@ -129,10 +130,10 @@ WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
 - Clear pronunciation guidance (stress marks)
 - Consistent grammar patterns (no exceptions early)
 
-**English must be:**
-- B1-level readability (accessible to non-native English speakers too)
-- Contractions allowed ("you'll", "don't")
-- Encouraging tone
+**English in A2 must be minimal:**
+- vocabulary glosses
+- one-line clarification only when a concept would otherwise be opaque
+- never long English body scaffolding
 
 ### Activity Quality (Beginner Gates)
 

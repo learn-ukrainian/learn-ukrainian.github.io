@@ -93,7 +93,7 @@ Read the activities YAML and check:
 
 ### CORE MODE (A1-C2)
 
-- [ ] **Immersion ratio appropriate** -- Estimate Ukrainian vs English word ratio. Compare against tier targets (A1.1: 20-40%, A2: 50-75%, B1+: 75%+).
+- [ ] **Immersion ratio appropriate** -- Estimate Ukrainian vs English word ratio. Compare against tier targets (A1 uses scaffolded immersion; A2 uses easy Ukrainian with a natural 85-100%+ ramp; B1+ is Ukrainian-only body prose).
 - [ ] **Grammar accuracy** -- Verify grammar explanations against textbooks using `mcp__sources__search_text`. Flag incorrect rules as **CRITICAL**.
 
 ### HISTORY/BIO/ISTORIO MODE

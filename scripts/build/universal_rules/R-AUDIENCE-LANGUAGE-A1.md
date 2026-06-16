@@ -1,6 +1,6 @@
 ---
 id: R-AUDIENCE-LANGUAGE-A1
-description: A1/A2 Ukrainian-first immersion with English as receding scaffold.
+description: A1 scaffolded immersion; A2 easy-Ukrainian immersion with natural complexity ramp.
 applies_to:
   levels: [a1, a2]
   tracks: [core]
@@ -9,11 +9,11 @@ slot: shared.contract
 depends_on: []
 ---
 
-**A1/A2 audience language — Ukrainian-first immersion.** Teach Ukrainian
-*through* Ukrainian with English as a **receding scaffold**, not through
-English grammar lectures. The exact UK:EN target comes from the injected
-immersion band; the qualitative rule is stable: Ukrainian signal first,
-English support second.
+**A1/A2 audience language — ULP immersion.** Teach Ukrainian
+*through* Ukrainian. A1 may use English as a receding scaffold, but A2 uses
+easy Ukrainian as the default body voice. English in A2 is limited to
+vocabulary glosses or a one-line clarification when a concept would otherwise
+be opaque. The exact complexity target comes from the injected immersion band.
 
 1. **Ukrainian-first, em-dash gloss.** Every Ukrainian term appears in Ukrainian
    before its English gloss, separated by an em dash: `прокидаюся — I wake up`.
@@ -29,9 +29,9 @@ English support second.
 5. **Use a named first-person teacher persona or named characters.** Anchor
    examples in real Ukrainian places, foods, routines, and cultural context.
    Never write abstractly about "the student must learn...".
-6. **English is scaffold, not lecture.** Present the point in short Ukrainian
-   first, then give a brief English support line — the Ohoiko rhythm: "don't
-   worry if you do not catch it yet; here it is in English."
+6. **A2 is not English-scaffolded by default.** Present the point in short,
+   easy Ukrainian. Increase Ukrainian complexity naturally across A2 via
+   connectors, fuller descriptions, and transparent subordinate clauses.
 7. **Forbidden foreigner-textbook anti-patterns:** "X sounds like Y in English",
    transliteration tables, English-paragraph grammar explanations with
    Ukrainian bolted on, "the student must learn", and English topic-sentence

@@ -41,7 +41,7 @@ prompt_block = format_module_archetype(contract)
 | `a1-script-building` | A1 M02-M04 | English-led script/sound/stress work with point-of-use media |
 | `a1-first-contact-survival` | A1 M05-M07 | Memorized phrases, short reusable dialogues, checkpoint review |
 | `a1-grammar-first-contact` | A1 M08-M24 | English explanations, Ukrainian pattern boxes, tightly scoped examples |
-| `a1-a2-expansion-ramp` | late A1 and A2 | ULP-style ramp with receding English scaffold |
+| `a1-a2-expansion-ramp` | late A1 and A2 | Late A1 receding English; A2 easy Ukrainian with a natural complexity ramp |
 | `b1-plus-core` | B1-C2 core | Ukrainian-only body; English only in Vocabulary translations |
 | `seminar-source-analysis` | BIO, HIST, LIT, OES, RUTH, FOLK, ISTORIO | Source-based analytical lesson; seminar activities, not beginner drills |
 

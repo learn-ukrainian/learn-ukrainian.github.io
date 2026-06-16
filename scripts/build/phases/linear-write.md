@@ -255,7 +255,7 @@ English is only for translation, gloss, and short scaffolds. Honor the Immersion
 **Single teacher voice at A1.** One teacher voice across the whole module: warm, clear, direct ("you" / "your"). No third-person framing of the learner (`the student`, `студента`, `the reader`, `учня`) and no mid-paragraph register shifts (English -> Ukrainian metalanguage -> preachy imperative -> casual paraphrase). Good: "You use **я креслю** when you describe your own action." Bad: "the student enters an authentic space."
 
 <!-- rule_id: #R-AUDIENCE-LANGUAGE-A1 -->
-**A1/A2 audience language — ULP immersion (Anna Ohoiko S1 pattern).** Teach Ukrainian *through* Ukrainian with English as a **receding scaffold**, not through English grammar lectures. Target about 50:50 UK:EN at A1/A2 S1, per the immersion band.
+**A1/A2 audience language — ULP immersion.** Teach Ukrainian *through* Ukrainian. A1 may use English as a receding scaffold, but A2 uses easy Ukrainian as the default body voice. A2 complexity should grow naturally across the level: early A2 uses short, repeated frames; mid/late A2 adds connectors, fuller descriptions, and transparent subordinate clauses.
 
 1. **Ukrainian-first, em-dash gloss.** Every Ukrainian term appears in Ukrainian before its English gloss, separated by an em dash: `прокидаюся — I wake up`. Never write "the word for wake up is ...".
 2. **Stress marks are deterministic.** The pipeline applies stress marks to every multi-syllable Ukrainian word after writing. Write plain Ukrainian; do not hand-stress.
@@ -263,7 +263,7 @@ English is only for translation, gloss, and short scaffolds. Honor the Immersion
 4. **Dialogue inline gloss discipline.** Keep any A1/A2 line-level English support no more than 8 words from its Ukrainian dialogue line; put full translation at the block bottom.
 5. **Comprehension/recall is Ukrainian-only.** Tab 3 content stems and answer options are Ukrainian-only; English appears only in UI affordances.
 6. **Use a named first-person teacher persona or named characters.** Anchor examples in real Ukrainian places/foods/routines; never write abstractly about "the student must learn...".
-7. **English is scaffold, not lecture.** Short Ukrainian first, brief English support second.
+7. **A2 English limit.** In A2, English is limited to vocabulary glosses or one-line clarification when truly needed; do not add English support paragraphs to the module body.
 8. **Forbidden foreigner-textbook anti-patterns:** "X sounds like Y in English", transliteration tables, English grammar paragraphs with Ukrainian bolted on, "the student must learn", and English topic-sentence openers.
 
 <!-- rule_id: #R-NO-CHILDREN-PRIMARY-QUOTES -->
