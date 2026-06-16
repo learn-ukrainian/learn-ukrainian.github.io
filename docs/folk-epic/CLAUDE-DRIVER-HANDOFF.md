@@ -70,6 +70,20 @@
 > python_qg's Gap-C wall terminates first. The session's value is the SHARP diagnostic (design doc §8) + the first
 > gate-correctness fix dispatched.
 
+### 🟢 PART C PROGRESS UPDATE (Session 39 continued — autonomous fleet loop, self-merged per #M-12)
+**ALL 3 vesum false-positive classes CLOSED on main** (each: codex build → `ab ask-codex` adversarial review → fix → CI → self-merge):
+- **C.2a MERGED (#3286)** — verbatim primaries in `activities.yaml`/`vocabulary.yaml` (per-field span strip vs verified module primaries + literary corpus).
+- **C.2b MERGED (#3292)** — bare «X»/'X' dialectal citations resolvable to a verified module primary (token-level; italic arm dropped).
+- **C.2c MERGED (#3294)** — foreign proper nouns via curated gazetteer `data/foreign_proper_noun_attestations.yaml` (EXPLICIT valid case forms only, true titlecase — no reverse-strip).
+- **citations (#3297) — IN FLIGHT** (fix #2 `folk-3079-citations-fix2`, watcher `bhe21zqmt`). `_citation_gate` resolves author-prefixed refs by token-seq containment + **slot-constrained author corroboration**; authorless containment dropped (fail-closed). koliadky's 4 author-bearing refs resolve.
+- **🔁 FLEET-REVIEW IS LOAD-BEARING (proves #M-12):** codex caught a REAL over-exemption/over-resolution bug in EVERY gate change — C.2a cross-field-boundary, C.2b italic emphasis, C.2c reverse-strip invalid forms, citations generic-title + author-slot laundering. ALL invisible to local tests + my own diff review; NONE shipped. Always `ab ask-codex` review a gate-loosening change before self-merge.
+
+**REMAINING for a clean koliadky build (→ then re-validate B1):**
+1. Land citations (#3297 fix #2).
+2. **Class-D coinages** (`дерево-явір`, `першопочаток`): GENUINE coinages, NOT false positives → the **C.3 multi-gate python_qg loop + cross-model coinage fixer** (the last structural piece; design doc §3 Part C.3). Biggest remaining infra.
+3. **word_count** (4026/4600): writer/LLM-QG correction adds prose — downstream of python_qg passing.
+4. **THEN re-run P3-validate** `v7_build.py folk koliadky-shchedrivky --no-resume --worktree` — confirm it now CLEARS python_qg and reaches the B1 LLM-QG loop at pedagogical ≥8. Only then is B1 validated e2e.
+
 ### 🔑 THE KEY FINDING — Session-38's "P3-validate" never validated anything (resume no-op), and the REAL P3-validate proves Gap C is gate FALSE-POSITIVES
 - **Session-38's in-flight build silently NO-OP'd.** `v7_build.py` **resumes by default** (`v7_build.py:1289`); the build
   worktree was cut from `origin/main` where koliadky already exists at 9.2 → writer + gates SKIPPED → `module.md`/`llm_qg.json`
