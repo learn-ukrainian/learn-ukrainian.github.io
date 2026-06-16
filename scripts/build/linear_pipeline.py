@@ -10194,17 +10194,22 @@ def _build_vesum_text(
         )
         module_text = _strip_quote_fidelity_verified_blockquotes(module_text, level=level)
     parts = [_strip_metalinguistic(module_text)]
+    strip_activity_field: Callable[[str], str] | None = None
+    if strip_verbatim_primaries:
+
+        def strip_activity_field(value: str) -> str:
+            return _strip_vesum_verbatim_primary_spans(
+                value,
+                level=level,
+                verified_primary_texts=verified_primary_texts,
+            )
+
     for activity in activities:
         activity_text = _activity_vesum_text(
             activity,
             emit_negative_example_events=emit_negative_example_events,
+            string_transform=strip_activity_field,
         )
-        if strip_verbatim_primaries:
-            activity_text = _strip_vesum_verbatim_primary_spans(
-                activity_text,
-                level=level,
-                verified_primary_texts=verified_primary_texts,
-            )
         parts.append(_strip_metalinguistic(activity_text))
     for entry in vocabulary:
         if isinstance(entry, dict):
@@ -10232,6 +10237,7 @@ def _activity_vesum_text(
     activity: dict[str, Any],
     *,
     emit_negative_example_events: bool = False,
+    string_transform: Callable[[str], str] | None = None,
 ) -> str:
     """Walk an activity's string values, excluding intentional-error fields.
 
@@ -10260,6 +10266,9 @@ def _activity_vesum_text(
     For highlight-morphemes activities, `morphemes:` is an answer key of bare
     sub-word units. Skip that subtree while keeping `text:`, `word:`, title,
     and instruction strings in VESUM scope.
+
+    When supplied, `string_transform` runs on each retained string leaf before
+    flattening so transforms cannot match across separate YAML fields.
     """
     activity_type = activity.get("type")
     activity_id = str(activity.get("id") or "")
@@ -10375,7 +10384,7 @@ def _activity_vesum_text(
                     item_idx=child_item_idx,
                 )
         elif isinstance(node, str):
-            out.append(node)
+            out.append(string_transform(node) if string_transform else node)
 
     walk(activity, None)
     return "\n".join(out)

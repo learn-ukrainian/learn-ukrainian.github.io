@@ -133,6 +133,47 @@ def test_core_level_yaml_primary_text_is_not_exempted(monkeypatch) -> None:
     assert "било" in text
 
 
+def test_literary_corpus_exemption_does_not_cross_activity_field_boundary(monkeypatch) -> None:
+    cross_field_hit = "Йоль дерево явір як першопочаток стоїть у лісі"
+
+    def literary_hit_for_cross_field_window(
+        query: str,
+        *,
+        level: str,
+        limit: int = 20,
+    ) -> list[dict[str, str]]:
+        _ = query, level, limit
+        return [
+            {
+                "source_type": "literary",
+                "corpus": "literary_texts",
+                "text": cross_field_hit,
+            }
+        ]
+
+    monkeypatch.setattr(
+        linear_pipeline,
+        "_search_literary_hits",
+        literary_hit_for_cross_field_window,
+    )
+
+    text = linear_pipeline._build_vesum_text(
+        "",
+        [
+            {
+                "type": "analysis",
+                "quote": "Йоль",
+                "prompt": "дерево явір як першопочаток стоїть у лісі",
+            }
+        ],
+        [],
+        [],
+        level="folk",
+    )
+
+    assert "Йоль" in text
+
+
 def test_modern_activity_nonword_still_fails_vesum(monkeypatch) -> None:
     monkeypatch.setattr(linear_pipeline, "_search_literary_hits", lambda *args, **kwargs: [])
     monkeypatch.setattr(
