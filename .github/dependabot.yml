@@ -81,3 +81,8 @@ updates:
       # cap — REMOVE this entry then. Closed PR: #3338.
       - dependency-name: "tokenizers"
         versions: [">=0.23.1"]
+      # openai is capped by marker-pdf (marker-pdf requires openai>=1.65.2,<2.0.0);
+      # the 1.x->2.x SDK is a breaking major. Block >=2.0.0 until marker-pdf
+      # supports openai 2.x — REMOVE this entry then. Closed PR: #3352.
+      - dependency-name: "openai"
+        versions: [">=2.0.0"]
