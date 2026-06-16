@@ -1,5 +1,5 @@
 {
-  "fingerprint": "b43391ac8ccd78ec28d251850f5c553d2bd2127c0d3cc228e73bfb383ee3ba7e",
+  "fingerprint": "cc655a7f9377ce6ccaccd0b193c4c65d2114a9c69872f9f8ebb00242fd59bb0b",
   "inputs": {
     "lexicon_code": [
       {
@@ -12,7 +12,7 @@
       },
       {
         "path": "scripts/lexicon/build_data_manifest.py",
-        "sha256": "0a34750044a50fcc156b40fc88c0b0c10df296f860769bc393d3eba105d86a4d"
+        "sha256": "55d7ba948e43d2c1e0a521e0d3d15b952ccf4a26cfc0348878e426a706fbb19d"
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",

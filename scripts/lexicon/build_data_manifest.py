@@ -78,7 +78,12 @@ SURZHYK_TO_AVOID_SEEDS: list[dict[str, str | None]] = [
     {"lemma": "всьо", "gloss": "avoid: все", "pos": "pron"},
     {"lemma": "діюча", "gloss": "avoid: чинна", "pos": "adj"},
     {"lemma": "міроприємство", "gloss": "avoid: захід", "pos": "noun"},
-    {"lemma": "протиріччя", "gloss": "avoid: суперечність", "pos": "noun"},
+    # протиріччя REMOVED 2026-06-16: over-flag. СУМ-20 codifies it ("Те саме, що
+    # суперечність") with literary attestations (Донченко/Копиленко/Харчук/Багряний);
+    # NUS textbooks (Grade 6/9/10) use it; absent from Antonenko + UA-GEC;
+    # check_russian_shadow=false. Sole flag-basis was LanguageTool replace.txt + the
+    # Штепа purist diaspora dictionary — a stylistic preference, not surzhyk. Deeper
+    # classifier over-weighting of LT/Штепа vs СУМ-20+literary tracked separately.
     {"lemma": "слідуючий", "gloss": "avoid: наступний", "pos": "adj"},
 ]
 
