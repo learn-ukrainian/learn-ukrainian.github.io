@@ -156,11 +156,12 @@ CURATED_CALQUES: dict[str, dict[str, object]] = {
         "heritage_guard": "search_heritage(хвилюючий, include_live_slovnyk=false): No heritage evidence found.",
     },
     "діючий": {
-        "corrections": ["чинний"],
-        "note": "діючий закон → чинний закон (рос. действующий)",
-        "source": ["glazova-11", "avramenko-11", "zabolotnyi-7"],
+        "corrections": ["чинний", "активний"],
+        "note": "sense-split: діючий закон → чинний закон; діючий вулкан → активний вулкан (рос. действующий)",
+        "source": ["glazova-11", "avramenko-11", "avramenko-7", "zabolotnyi-7"],
         "evidence": [
             "11-klas-ukrajinska-mova-glazova-2019_s0072: чинний (а не діючий) закон",
+            "7-klas-ukrmova-avramenko-2024_s0106: синоніми ... діючий — чинний (закон) або активний (вулкан)",
             "7-klas-ukrmova-zabolotnyi-2024_s0124: чинний закон / діючий закон",
         ],
         "heritage_guard": "search_heritage(діючий, include_live_slovnyk=false): no matching heritage headword; ЕСУМ hit is the діянка family row and does not clear діючий закон.",
