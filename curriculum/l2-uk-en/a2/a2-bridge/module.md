@@ -1,17 +1,16 @@
 # Ласкаво просимо до рівня А2
 
-Вітаємо в А2. Це не новий старт з нуля. Це момент, коли ваша
-українська починає працювати довше: не тільки "я хочу каву", а
-"я хочу каву після заняття, бо сьогодні довгий день". Не тільки
-"я в Києві", а "я живу в Києві, працюю в центрі й часто пишу
-друзям українською".
+Вітаємо в А2. Це не новий старт з нуля. Тепер ви берете знайомі
+фрази з А1 і робите їх довшими. Не тільки "я хочу каву", а
+"я хочу каву після заняття". Не тільки "я в Києві", а "я живу в
+Києві й часто пишу друзям українською".
 
-На рівні А1 ви зібрали перший набір інструментів: привітання,
-знайомство, базові питання, теперішній час, прості минулі й майбутні
-фрази, місця, покупки, їжу, плани, прохання і короткі історії. На А2
-ми не викидаємо ці інструменти. Ми беремо їх у реальніші ситуації:
-послуги, здоров'я, подорожі, робота, навчання, побут, вибір, пояснення
-причин і коротка розповідь про те, що сталося.
+На рівні А1 ви зібрали перший набір інструментів. Це привітання,
+знайомство, базові питання, теперішній час. Також це прості минулі й
+майбутні фрази, місця, покупки, їжа, плани, прохання і короткі історії.
+На А2 ми не забуваємо ці інструменти. Ми беремо їх у реальніші ситуації.
+Це послуги, здоров'я, подорожі, робота, навчання, побут і вибір. Також
+це пояснення причин і коротка розповідь про те, що сталося.
 
 Сьогоднішній модуль має три завдання:
 
@@ -20,8 +19,24 @@
 3. навчитися слухати милозвучність: `у/в`, `і/й`, `з/із/зі`.
 
 Це огляд, а не іспит. Якщо щось здається знайомим, добре. Якщо щось
-ще рухається повільно, теж добре: А2 саме для того, щоб зробити ці
+ще рухається повільно, теж добре. А2 саме для того, щоб зробити ці
 речі стабільнішими.
+
+**English support.** A2 is a bridge level. You already have useful A1
+language, but it may still feel slow. That is normal. The goal here is
+not to erase A1 and start again. The goal is to make familiar patterns
+more stable and to use them in more real situations.
+
+Treat every table as a map. You do not need to master all forms today.
+You need to recognize old forms quickly, notice that sound can change
+inside a word, and understand why short connector words can change for
+smoother speech. If a sentence feels crowded, split it and keep the
+meaning stable.
+
+When the Ukrainian text feels dense, slow down and look for three
+things: the role of the noun, the sound before and after a short word,
+and the meaning of the whole example. Those three checks will help you
+through the first part of A2.
 
 ## Діалог 1 — перший день курсу
 
@@ -47,12 +62,21 @@
 
 На А2 ми додамо ще три активні відмінки: родовий, давальний і орудний.
 Але нові відмінки будуть легшими, якщо старі не зникнуть з пам'яті.
-Тому починаємо з короткого ремонту основи.
+Тому починаємо з короткого повторення основи.
 
 :::tip[Межа А2]
 Це перший модуль-перехід. Ви маєте впізнати форми й обрати безпечну
-фразу, а не вивчити всю систему відмінків за один урок.
+фразу. Не треба вивчати всю систему відмінків за один урок.
 :::
+
+**English support.** The first dialogue uses safe A1 patterns. The new
+part is not the grammar itself, but the speed of recognition. Look at a
+short sentence and ask a simple question: who is acting, what is being
+studied, where something happens, or who is being addressed.
+
+This is why the table is small. It does not explain every case. It
+reminds you that a form has a job in the sentence. A2 will add more
+jobs, but the old jobs still matter every day.
 
 ## Чотири відмінки з А1
 
@@ -117,8 +141,8 @@
 > Кава на столі.
 
 Зазвичай він іде з прийменником: `у/в`, `на`, іноді `при`, `по` в
-окремих сталих фразах. На А2 місцевий стане ширшим: ми будемо говорити
-не тільки про місто чи кафе, а й про теми, зустрічі, роботу, сервісні
+окремих сталих фразах. На А2 місцевий стане ширшим. Не тільки про місто
+чи кафе. Ми будемо говорити про теми, зустрічі, роботу й сервісні
 ситуації.
 
 > Ми говоримо про подорож у новому модулі.
@@ -138,7 +162,7 @@
 > Пане Андрію, можна запитання?
 
 На А2 кличний потрібен не тільки для привітань. Він допомагає ввічливо
-ремонтувати розмову:
+уточнювати фразу:
 
 > Олено, повторіть, будь ласка.
 >
@@ -147,6 +171,21 @@
 > Ірино, я не зовсім зрозумів.
 
 Це маленька форма, але вона робить мовлення людяним.
+
+**English support.** The four A1 cases are not abstract labels here.
+They answer practical questions. The nominative shows who or what is
+present. The accusative often shows the thing affected by an action.
+The locative gives a place or setting. The vocative lets you speak to a
+person directly.
+
+If the names feel heavy, start from the question. Ask "who," "what,"
+"where," or "who am I speaking to." The case name can come after the
+meaning is clear. This order is safer for A2 learners than memorizing a
+table first.
+
+The vocative examples are useful in real speech. They help you ask for
+repetition, ask a polite question, or get someone's attention without
+sounding abrupt.
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
@@ -189,7 +228,17 @@
 
 Це не три різні подруги. Це одна людина в трьох ролях.
 
-## Звуки теж мають пам'ять
+**English support.** The full case map is here so you can see the
+whole system early. You are not expected to produce every form today.
+The important idea is role. One noun can be the person acting, the
+person receiving a message, or the person going with you.
+
+That is why case endings matter. They are not decoration. They tell the
+listener how each word fits into the sentence. At A2, this becomes a
+central tool for speaking more clearly without making every sentence
+long.
+
+## Коли звук у слові змінюється
 
 Українські слова іноді змінюють не тільки закінчення, а й звук у
 середині або в основі. На А2 вам не треба пояснювати кожну історичну
@@ -209,7 +258,7 @@
 Такі зміни називаються `чергування`. Це не випадковий шум. Це частина
 системи мови.
 
-### Не вчіть це як список страху
+### Не вчіть це як страшний список
 
 На початку А2 достатньо трьох навичок:
 
@@ -240,14 +289,14 @@
   `с`, `ш` та інші.
 
 Ці терміни потрібні не для теорії. Вони допомагають обирати короткі
-слова поруч: `у` чи `в`, `і` чи `й`, `з`, `із` чи `зі`.
+слова поруч. Наприклад: `у` чи `в`, `і` чи `й`, `з`, `із` чи `зі`.
 
 ### Наголос і кілька живих звуків
 
 `Наголос` в українській може допомагати розрізняти слова або форми.
 На цьому етапі вам не треба ставити наголос у кожній новій формі без
-помилки. Достатньо помічати: іноді голос сильніше падає на одну
-частину слова, а в іншій формі може рухатися.
+помилки. Достатньо помічати просту річ. Іноді голос сильніше падає на
+одну частину слова. В іншій формі він може рухатися.
 
 | Пара | Що слухаємо |
 | --- | --- |
@@ -273,13 +322,28 @@
 | `боротьба` | перед `б` чується м'якший перехід |
 | `вокзал` | перед `з` вимова природно зближується |
 
-Це не новий великий список для заучування. Це тренування слуху: слово
-на письмі знайоме, а в живій вимові сусідні звуки можуть допомагати або
-трохи міняти одне одного.
+Це не новий великий список для заучування. Це тренування слуху. Слово
+на письмі знайоме. У живій вимові сусідні звуки можуть допомагати. Вони
+можуть трохи міняти одне одного.
+
+**English support.** Sound changes can look surprising at first. The
+safe A2 task is recognition. When you see a changed form, pause and ask
+whether it belongs to a familiar word. This prevents a common learner
+problem: treating every changed form as a completely new word.
+
+You also do not need a full historical explanation. You need a working
+habit. Store useful pairs together. Read them aloud. Notice what
+changes and what stays recognizable. This is enough for the start of
+A2.
+
+The short notes about stress and neighboring consonants are listening
+support. They are not a demand to write sound rules from memory. They
+help you expect that real speech may sound a little different from the
+simple spelling shape.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
-## Милозвучність: українська любить плавний рух
+## Милозвучність: українська звучить плавніше
 
 `Милозвучність` означає, що українська часто обирає форму, яку легше
 сказати. Це не прикраса для поетів. Це щоденна граматика коротких слів.
@@ -340,8 +404,8 @@
 
 > Мама й тато вдома.
 
-Перед словами на `я`, `ю`, `є`, `ї`, `й` треба бути обережним, бо ці
-слова вже мають звук `й` на початку. На цьому рівні безпечніше:
+Перед словами на `я`, `ю`, `є`, `ї`, `й` треба бути обережним. Ці слова
+вже мають звук `й` на початку. На цьому рівні безпечніше:
 
 > Марія і Яна.
 >
@@ -355,7 +419,7 @@
 >
 > Я із Києва.
 >
-> Я зі мною? Ні: зі мною, з другом, із сестрою.
+> зі мною, з другом, із сестрою.
 
 На А2 вам потрібні насамперед готові природні шматки:
 
@@ -369,6 +433,19 @@
 
 Правило буде поступово ставати точнішим. Сьогодні головне - слухати
 важкий збіг приголосних і вибирати плавнішу форму.
+
+**English support.** Euphony is not a change in meaning. It is a change
+in sound shape. In many situations, two short Ukrainian forms mean the
+same thing, but one fits the sounds around it better.
+
+For A2, do not try to memorize every exception at once. First, look
+left and right. What sound comes before the blank? What sound comes
+after it? If both sides create a heavy consonant cluster, a vowel form
+often helps. If two vowels meet, a consonant form often helps.
+
+This is why translation alone is not enough. English often gives one
+fixed word, but Ukrainian may choose between two sound forms. The
+choice belongs to the phrase, not only to the dictionary entry.
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
@@ -400,9 +477,18 @@
 Остання фраза не є стандартним правилом з підручника. Це навчальна
 підказка для вас: дивіться не тільки на переклад, а й на сусідні звуки.
 
+**English support.** The dialogue shows a useful classroom move: ask
+whether a sentence sounds natural, then repeat the better version
+slowly. This is a practical A2 habit. You do not need to explain the
+whole rule every time.
+
+When you correct yourself, keep the meaning stable and change only the
+sound form. That helps you hear that the problem is not the idea. The
+problem is the contact between neighboring sounds.
+
 ## Що нас чекає на А2
 
-А2 має кілька великих доріг.
+А2 має кілька великих тем.
 
 ### Відмінки
 
@@ -452,16 +538,44 @@
 Ці речення ще контрольовані, але вони вже дозволяють говорити про
 причини, мету, умови і людей.
 
+**English support.** Longer A2 sentences should still be simple. A good
+sentence can have one main idea and one small connection. You can give
+a reason, a goal, a condition, or a short description. You do not need
+long chains of clauses.
+
+When you build a longer sentence, start from two short ideas. Check
+that each idea is clear by itself. Then add one connector. If the
+sentence becomes hard to say, make it shorter again. Clear speech is
+more useful than a complicated sentence.
+
+This is also why the examples stay close to everyday life. You can use
+the same pattern for class, travel, work, health, and family. The
+grammar grows, but the situations stay concrete.
+
 ### Українська як мова навчання
 
-Наприкінці А2 з'являться спеціальні модулі про граматичні слова
-українською: `відмінок`, `дієслово`, `основа`, `закінчення`, `речення`,
-`підмет`, `присудок`. Це підготовка до B1, де українська буде частіше
-вести пояснення.
+Наприкінці А2 з'являться спеціальні модулі. Вони пояснюють граматичні
+слова українською: `відмінок`, `дієслово`, `основа`, `закінчення`,
+`речення`, `підмет`, `присудок`. Це підготовка до B1, де українська буде
+частіше вести пояснення.
 
 Ми не робимо це раптово. Уже зараз ви бачите кілька термінів, але
 поруч є англійська підтримка. Крок за кроком підтримка стане меншою,
 а ваша автономія більшою.
+
+**English support.** The roadmap has four parts. First, cases become
+more active. Second, verbs start to show process and result more
+clearly. Third, sentences become a little longer, but they stay
+controlled. Fourth, grammar words in Ukrainian become more familiar.
+
+This gradual path matters. A2 is not the place for long abstract
+analysis. It is the place to make everyday speech more precise. You
+will still use short sentences. You will also begin to connect them
+with simple reasons, goals, and conditions.
+
+Use the roadmap as a checklist for confidence. If a topic looks new,
+that does not mean you should know it now. It means you will meet it
+again with practice and support.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
@@ -493,5 +607,17 @@
 
 > Я готовий / готова до А2.
 
-Наступний крок - вид дієслова як ідея: процес, результат і те, як
+Наступний крок - вид дієслова як ідея. Це процес, результат і те, як
 українська показує різницю між ними.
+
+**English support.** Before you continue, make sure the core picture is
+clear. A case shows a word's role. A sound change can still belong to a
+word you know. A short connector can change shape because of the sounds
+around it.
+
+You do not need perfect speed yet. A good A2 result is slower but
+accurate speech: a familiar noun in the right role, a smoother short
+word, and a sentence that stays easy to understand.
+
+Keep this page for review. Return to it when a later form feels new,
+because many later patterns reuse these basic roles and sound choices.
