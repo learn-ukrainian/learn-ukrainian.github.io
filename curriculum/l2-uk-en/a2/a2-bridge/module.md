@@ -1,8 +1,8 @@
 # Ласкаво просимо до рівня А2
 
 Вітаємо в А2. Це не новий старт з нуля. Тепер ви берете знайомі
-фрази з А1 і робите їх довшими. Не тільки "я хочу каву", а
-"я хочу каву після заняття". Не тільки "я в Києві", а "я живу в
+фрази з А1 і робите їх довшими. Не тільки "я хочу каву", а й
+"я хочу каву після заняття". Не тільки "я в Києві", а й "я живу в
 Києві й часто пишу друзям українською".
 
 На рівні А1 ви зібрали перший набір інструментів. Це привітання,
@@ -22,21 +22,11 @@
 ще рухається повільно, теж добре. А2 саме для того, щоб зробити ці
 речі стабільнішими.
 
-**English support.** A2 is a bridge level. You already have useful A1
-language, but it may still feel slow. That is normal. The goal here is
-not to erase A1 and start again. The goal is to make familiar patterns
-more stable and to use them in more real situations.
-
-Treat every table as a map. You do not need to master all forms today.
-You need to recognize old forms quickly, notice that sound can change
-inside a word, and understand why short connector words can change for
-smoother speech. If a sentence feels crowded, split it and keep the
-meaning stable.
-
-When the Ukrainian text feels dense, slow down and look for three
-things: the role of the noun, the sound before and after a short word,
-and the meaning of the whole example. Those three checks will help you
-through the first part of A2.
+**English support.** A2 is a bridge level: familiar A1 patterns become
+more stable and more useful in real situations. Treat tables as maps,
+not forms to master today. When the Ukrainian feels dense, check three
+things: the noun's role, the sounds around short words, and the whole
+meaning.
 
 ## Діалог 1 — перший день курсу
 
@@ -68,15 +58,6 @@ through the first part of A2.
 Це перший модуль-перехід. Ви маєте впізнати форми й обрати безпечну
 фразу. Не треба вивчати всю систему відмінків за один урок.
 :::
-
-**English support.** The first dialogue uses safe A1 patterns. The new
-part is not the grammar itself, but the speed of recognition. Look at a
-short sentence and ask a simple question: who is acting, what is being
-studied, where something happens, or who is being addressed.
-
-This is why the table is small. It does not explain every case. It
-reminds you that a form has a job in the sentence. A2 will add more
-jobs, but the old jobs still matter every day.
 
 ## Чотири відмінки з А1
 
@@ -141,9 +122,8 @@ jobs, but the old jobs still matter every day.
 > Кава на столі.
 
 Зазвичай він іде з прийменником: `у/в`, `на`, іноді `при`, `по` в
-окремих сталих фразах. На А2 місцевий стане ширшим. Не тільки про місто
-чи кафе. Ми будемо говорити про теми, зустрічі, роботу й сервісні
-ситуації.
+окремих сталих фразах. На А2 місцевий стане ширшим: не тільки про місто
+чи кафе, а й про теми, зустрічі, роботу й сервісні ситуації.
 
 > Ми говоримо про подорож у новому модулі.
 
@@ -172,20 +152,9 @@ jobs, but the old jobs still matter every day.
 
 Це маленька форма, але вона робить мовлення людяним.
 
-**English support.** The four A1 cases are not abstract labels here.
-They answer practical questions. The nominative shows who or what is
-present. The accusative often shows the thing affected by an action.
-The locative gives a place or setting. The vocative lets you speak to a
-person directly.
-
-If the names feel heavy, start from the question. Ask "who," "what,"
-"where," or "who am I speaking to." The case name can come after the
-meaning is clear. This order is safer for A2 learners than memorizing a
-table first.
-
-The vocative examples are useful in real speech. They help you ask for
-repetition, ask a polite question, or get someone's attention without
-sounding abrupt.
+**English support.** If the case names feel heavy, start from the
+question: who, what, where, or who am I speaking to. Label the case
+after the meaning is clear.
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
@@ -227,16 +196,6 @@ sounding abrupt.
 > Я йду з подругою.
 
 Це не три різні подруги. Це одна людина в трьох ролях.
-
-**English support.** The full case map is here so you can see the
-whole system early. You are not expected to produce every form today.
-The important idea is role. One noun can be the person acting, the
-person receiving a message, or the person going with you.
-
-That is why case endings matter. They are not decoration. They tell the
-listener how each word fits into the sentence. At A2, this becomes a
-central tool for speaking more clearly without making every sentence
-long.
 
 ## Коли звук у слові змінюється
 
@@ -284,8 +243,8 @@ long.
 
 Два корисні терміни:
 
-- `голосний` - звук, який легко тягнути: `а`, `е`, `и`, `і`, `о`, `у`;
-- `приголосний` - звук, який має перешкоду в роті: `м`, `т`, `к`, `в`,
+- `голосний` — звук, який легко тягнути: `а`, `е`, `и`, `і`, `о`, `у`;
+- `приголосний` — звук, який має перешкоду в роті: `м`, `т`, `к`, `в`,
   `с`, `ш` та інші.
 
 Ці терміни потрібні не для теорії. Вони допомагають обирати короткі
@@ -326,20 +285,9 @@ long.
 на письмі знайоме. У живій вимові сусідні звуки можуть допомагати. Вони
 можуть трохи міняти одне одного.
 
-**English support.** Sound changes can look surprising at first. The
-safe A2 task is recognition. When you see a changed form, pause and ask
-whether it belongs to a familiar word. This prevents a common learner
-problem: treating every changed form as a completely new word.
-
-You also do not need a full historical explanation. You need a working
-habit. Store useful pairs together. Read them aloud. Notice what
-changes and what stays recognizable. This is enough for the start of
-A2.
-
-The short notes about stress and neighboring consonants are listening
-support. They are not a demand to write sound rules from memory. They
-help you expect that real speech may sound a little different from the
-simple spelling shape.
+**English support.** The safe A2 task is recognition. When a form
+changes, ask whether it belongs to a familiar word. Store useful pairs
+together and read them aloud.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
@@ -431,21 +379,12 @@ simple spelling shape.
 - `зі школи`;
 - `зі святом`.
 
-Правило буде поступово ставати точнішим. Сьогодні головне - слухати
+Правило буде поступово ставати точнішим. Сьогодні головне — слухати
 важкий збіг приголосних і вибирати плавнішу форму.
 
-**English support.** Euphony is not a change in meaning. It is a change
-in sound shape. In many situations, two short Ukrainian forms mean the
-same thing, but one fits the sounds around it better.
-
-For A2, do not try to memorize every exception at once. First, look
-left and right. What sound comes before the blank? What sound comes
-after it? If both sides create a heavy consonant cluster, a vowel form
-often helps. If two vowels meet, a consonant form often helps.
-
-This is why translation alone is not enough. English often gives one
-fixed word, but Ukrainian may choose between two sound forms. The
-choice belongs to the phrase, not only to the dictionary entry.
+**English support.** Euphony changes sound shape, not meaning. For A2,
+look left and right: heavy consonant clusters often need a vowel form;
+two vowels often need a consonant form.
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
@@ -456,7 +395,7 @@ choice belongs to the phrase, not only to the dictionary entry.
 
 **Діалог 2 — як краще сказати?**
 
-> **Студент:** Оксано, можна запитання?
+> **Студент:** Оксано, чи можна запитати?
 > **Викладачка:** Так, звісно.
 > **Студент:** Я сказав "Тарас в школі". Це правильно?
 > **Викладачка:** Краще "Тарас у школі". Спробуйте повільно: Тарас у школі.
@@ -467,7 +406,7 @@ choice belongs to the phrase, not only to the dictionary entry.
 
 Корисні фрази для А2:
 
-- `Можна запитання?`
+- `Чи можна запитати?`
 - `Я не зовсім зрозумів.`
 - `Я не зовсім зрозуміла.`
 - `Повторіть, будь ласка.`
@@ -476,15 +415,6 @@ choice belongs to the phrase, not only to the dictionary entry.
 
 Остання фраза не є стандартним правилом з підручника. Це навчальна
 підказка для вас: дивіться не тільки на переклад, а й на сусідні звуки.
-
-**English support.** The dialogue shows a useful classroom move: ask
-whether a sentence sounds natural, then repeat the better version
-slowly. This is a practical A2 habit. You do not need to explain the
-whole rule every time.
-
-When you correct yourself, keep the meaning stable and change only the
-sound form. That helps you hear that the problem is not the idea. The
-problem is the contact between neighboring sounds.
 
 ## Що нас чекає на А2
 
@@ -498,7 +428,7 @@ problem is the contact between neighboring sounds.
 - `давальний`: мені холодно, я пишу другові, йому двадцять років;
 - `орудний`: з подругою, ручкою, лікарем.
 
-Мета не в тому, щоб декламувати таблиці. Мета - говорити точніше:
+Мета не в тому, щоб декламувати таблиці. Мета — говорити точніше:
 
 > Мені треба квиток.
 >
@@ -517,9 +447,9 @@ problem is the contact between neighboring sounds.
 
 Не треба зараз боятися слова `вид`. На початку це питання сенсу:
 
-> Я читав лист. - процес.
+> Я читав лист — процес.
 >
-> Я прочитав лист. - результат.
+> Я прочитав лист — результат.
 
 Повне майстерне використання прийде пізніше. На А2 ми будуємо основу.
 
@@ -538,19 +468,9 @@ problem is the contact between neighboring sounds.
 Ці речення ще контрольовані, але вони вже дозволяють говорити про
 причини, мету, умови і людей.
 
-**English support.** Longer A2 sentences should still be simple. A good
-sentence can have one main idea and one small connection. You can give
-a reason, a goal, a condition, or a short description. You do not need
-long chains of clauses.
-
-When you build a longer sentence, start from two short ideas. Check
-that each idea is clear by itself. Then add one connector. If the
-sentence becomes hard to say, make it shorter again. Clear speech is
-more useful than a complicated sentence.
-
-This is also why the examples stay close to everyday life. You can use
-the same pattern for class, travel, work, health, and family. The
-grammar grows, but the situations stay concrete.
+**English support.** Longer A2 sentences should still be simple: one
+main idea and one small connection. If the sentence becomes hard to
+say, make it shorter again.
 
 ### Українська як мова навчання
 
@@ -562,20 +482,6 @@ grammar grows, but the situations stay concrete.
 Ми не робимо це раптово. Уже зараз ви бачите кілька термінів, але
 поруч є англійська підтримка. Крок за кроком підтримка стане меншою,
 а ваша автономія більшою.
-
-**English support.** The roadmap has four parts. First, cases become
-more active. Second, verbs start to show process and result more
-clearly. Third, sentences become a little longer, but they stay
-controlled. Fourth, grammar words in Ukrainian become more familiar.
-
-This gradual path matters. A2 is not the place for long abstract
-analysis. It is the place to make everyday speech more precise. You
-will still use short sentences. You will also begin to connect them
-with simple reasons, goals, and conditions.
-
-Use the roadmap as a checklist for confidence. If a topic looks new,
-that does not mean you should know it now. It means you will meet it
-again with practice and support.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
@@ -607,17 +513,9 @@ again with practice and support.
 
 > Я готовий / готова до А2.
 
-Наступний крок - вид дієслова як ідея. Це процес, результат і те, як
+Наступний крок — вид дієслова як ідея. Це процес, результат і те, як
 українська показує різницю між ними.
 
-**English support.** Before you continue, make sure the core picture is
-clear. A case shows a word's role. A sound change can still belong to a
-word you know. A short connector can change shape because of the sounds
-around it.
-
-You do not need perfect speed yet. A good A2 result is slower but
-accurate speech: a familiar noun in the right role, a smoother short
-word, and a sentence that stays easy to understand.
-
-Keep this page for review. Return to it when a later form feels new,
-because many later patterns reuse these basic roles and sound choices.
+**English support.** A good A2 result is slower but accurate speech: a
+familiar noun in the right role, a smoother short word, and a sentence
+that stays easy to understand.
