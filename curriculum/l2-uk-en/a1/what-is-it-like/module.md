@@ -10,27 +10,13 @@ By the end, you can:
 - ask **який? / яка? / яке? / які?** with the right kind of noun;
 - use hard-ending adjective chunks in the nominative case:
   **великий стіл**, **нова книга**, **чисте вікно**, **гарні речі**;
-- describe a room, a bag, or a book-fair table with short A1 sentences;
+- describe a room or a book-fair table with short A1 sentences;
 - join two qualities with **і**, or contrast them with **а** and **але**;
 - repair common adjective traps such as **смачний**, **жовтий**,
   **правильний**, and **розумний**.
 
 Keep the scope small. Today is not a full adjective-declension lesson. You are
 training the first visible pattern: noun gender plus adjective ending.
-
-<!--
-Крок 1. Запитання який? та базова ідентифікація Спершу вводимо питальні слова який? яка? яке? які? та демонструємо їхнє узгодження з іменниками, формуючи стійкі лексичні блоки [S2]. Учень має зрозуміти, що англійське незмінне what kind of в українській мові має чотири форми [S10]. Доречно використовувати максимально прості, життєві контексти: Який це борщ? Які це макарони? [S10].
-Крок 2. Тверда група прикметників (Називний відмінок) Після розуміння запитань, вводимо найпоширеніші прикметники твердої групи (закінчення -ий, -а, -е, -і) [S1]. Демонструємо їх на контрастних прикладах з уже відомими іменниками: великий м’яч, велика кімната, велике відро [S1]. Учні практикують підстановку закінчень залежно від роду іменника [S10]. На цьому етапі слід уникати винятків.
-Крок 3. М'яка група прикметників (Називний відмінок) Коли тверда група засвоєна автоматично, обережно вводимо прикметники м'якої групи (закінчення -ій, -я, -є, -і) [S6]. Пояснюємо це не як "зовсім інші слова", а як слова з м'яким звуком перед закінченням, наводячи базові приклади: синій шарф, синє небо [S1]. Підручник для 4 класу пропонує порівнювати відмінкові закінчення твердої та м'якої груп, що є корисною аналітичною вправою і для дорослих учнів [S6].
-Крок 4. Прикметники в множині Наступним етапом є узгодження прикметників у множині [S1]. Підкреслюємо важливу деталь: у множині робиться узагальнення, і для чоловічого, і для жіночого, і для середнього роду використовується закінчення -і (рідше -ї для м'якої групи) [S1]. Ця уніфікація значно спрощує завдання для англомовних учнів на ранньому етапі [S8].
-Крок 5. Синтаксична роль та позиція в реченні Демонструємо, що прикметник зазвичай стоїть перед іменником (цікаву книжку), але також може виступати іменною частиною присудка без дієслова-зв'язки (Вона дуже активна жінка), уникаючи англійської кальки з обов'язковим дієсловом to be [S10] [S1].
-Крок 6. Якісні та відносні прикметники (Оглядово) Наприкінці рівня А1 учні лише поверхово ознайомлюються з різницею між прикметниками, що позначають ступінь ознаки (якісні: великий, смачний), та тими, що вказують на відношення (відносні: український, вчорашній) [S7]. Це створює ґрунт для майбутнього вивчення ступенів порівняння на рівні А2 [S7].
-Під час навчання українських прикметників абсолютно неприпустимо спиратися на пояснення через російську мову, використовувати російськомовні терміни, фонетичні аналогії чи кальки [S3].
-По-перше, уникайте порівнянь звуків в українських прикметникових закінченнях із російськими. Наприклад, закінчення чоловічого роду -ий (гарний, добрий) не має нічого спільного з російською формою ані фонетично, ані артикуляційно [S1].
-По-друге, уникайте використання лексичних кальок з російської у виборі прикметників. Наприклад, замість російського вкиду "вірний" у значенні "правильний" слід послідовно навчати правильного українського слововжитку: правильна відповідь [S7].
-По-третє, звертайте увагу на слова спільного роду (староста, листоноша, сирота, замазура), які часто викликають труднощі в англомовних учнів.
-Державний Прапор України є виключно синьо-жовтий.
--->
 
 ## Діалоги
 
@@ -98,11 +84,9 @@ the noun is neuter, use **-е**. For plural A1 chunks, use **-і**.
 This is the **Називний відмінок**, the naming form. You are describing the noun
 as it stands on its own: **стіл новий**, **книга нова**, **вікно нове**.
 
-Some adjectives belong to a soft pattern, such as **синій / синя / синє**.
-They are not зовсім інші слова; they keep the same agreement idea. The soft
-sound changes the visible ending to **-ій**, **-я**, **-є**, and plural **-і**.
-Full color practice comes next. For now, store only a few safe chunks:
-**синій шарф**, **синє небо**, **синьо-жовтий прапор**.
+Colors and soft-looking adjectives come next. If you see **синій** or
+**синє** today, treat it as a preview word, not a new pattern to practice. The
+productive pattern here is still **-ий / -а / -е / -і**.
 
 For **прикметники в множині**, the first A1 pattern is friendly: masculine,
 feminine, and neuter nouns all use **-і** in the plural. Ask **які?** and say
@@ -138,24 +122,13 @@ The three useful A1 formats are:
 | adjective before noun | **нова книга** | a new book |
 | adjective after noun | **Книга нова.** | The book is new. |
 
-Two overview notes belong with this pattern. First, **прикметники в множині**
-use the friendly A1 ending **-і**: **нові столи**, **нові книги**,
-**нові фото**. Second, for theory, only remember this much:
-**Оглядово, якісні: великий, смачний** name qualities, and
-**відносні: український, вчорашній** point to a place, language, or time.
+For plural, keep one friendly A1 rule: the same ending **-і** works for
+masculine, feminine, and neuter nouns. Say **нові столи**, **нові книги**,
+**нові фото**. You do not choose gender in plural.
 
-In plural, the same ending **-і** works for masculine, feminine, and neuter
-nouns: **нові столи**, **нові книги**, **нові фото**. This is an early
-generalization for **прикметники в множині**. It makes the task simpler because
-you do not choose gender in plural.
-
-The Ukrainian grammar word for this matching is **узгодження**. In this A1
-plural pattern, **чоловічого**, **жіночого**, and **середнього** nouns all use
-the plural adjective **закінчення -і**.
-
-You may sometimes see forms such as **цікаву книжку** in later lessons. That is
-an object form, not today's productive pattern. Today, keep the safe nominative
-chunks: **цікава книга**, **цікавий атлас**, **цікаве фото**.
+Later lessons will change adjective endings when a noun is an object. Today,
+keep the safe nominative chunks: **цікава книга**, **цікавий атлас**,
+**цікаве фото**.
 
 Use **і** for two qualities that simply go together:
 
@@ -221,7 +194,7 @@ words. Use the clean Ukrainian pair.
 | <!-- bad -->красний<!-- /bad --> прапор | **червоний прапор** |
 | <!-- bad -->плохий<!-- /bad --> фільм | **поганий фільм** |
 | <!-- bad -->вірна<!-- /bad --> відповідь | **правильна відповідь** |
-| <!-- bad -->любий<!-- /bad --> олівець | the standard "any pencil" form |
+| <!-- bad -->любий<!-- /bad --> олівець | **будь-який олівець** |
 | <!-- bad -->умний<!-- /bad --> хлопчик | **розумний хлопчик** |
 | <!-- bad -->ленивий<!-- /bad --> учень | **лінивий учень** |
 

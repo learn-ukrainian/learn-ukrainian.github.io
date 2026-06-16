@@ -313,30 +313,30 @@ workbook:
           - Яка твоє ім'я?
           - Який твоє ім'я?
         explanation: Ім'я is neuter; in real introductions, use Як тебе звати?
-      - sentence: Вона читає цікавий книжку.
-        error: Вона читає цікавий книжку.
-        answer: Вона читає цікаву книжку.
+      - sentence: Це цікавий книга.
+        error: Це цікавий книга.
+        answer: Це цікава книга.
         options:
-          - Вона читає цікаву книжку.
-          - Вона читає цікавий книжку.
-          - Вона читає цікаве книжку.
-        explanation: This is an object form; notice that adjective and noun move together.
-      - sentence: Моя мамалига смачний.
-        error: Моя мамалига смачний.
-        answer: Моя мамалига смачна.
+          - Це цікава книга.
+          - Це цікавий книга.
+          - Це цікаве книга.
+        explanation: Книга is feminine, so use цікава.
+      - sentence: Моя кава смачний.
+        error: Моя кава смачний.
+        answer: Моя кава смачна.
         options:
-          - Моя мамалига смачна.
-          - Моя мамалига смачний.
-          - Моя мамалига смачне.
-        explanation: Мамалига is feminine, so use смачна.
-      - sentence: Це мій синій ручка.
-        error: Це мій синій ручка.
-        answer: Це моя синя ручка.
+          - Моя кава смачна.
+          - Моя кава смачний.
+          - Моя кава смачне.
+        explanation: Кава is feminine, so use смачна.
+      - sentence: Це мій новий ручка.
+        error: Це мій новий ручка.
+        answer: Це моя нова ручка.
         options:
-          - Це моя синя ручка.
-          - Це мій синій ручка.
-          - Це моє синє ручка.
-        explanation: Ручка is feminine, and синій is a soft-stem adjective.
+          - Це моя нова ручка.
+          - Це мій новий ручка.
+          - Це моє нове ручка.
+        explanation: Ручка is feminine, so use моя and нова.
   - type: fill-in
     title: Виправ прикметникові пастки
     instruction: Choose the standard Ukrainian adjective.
