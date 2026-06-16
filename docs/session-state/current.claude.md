@@ -15,7 +15,7 @@
 ## 🟢 IN FLIGHT
 - **#3291 MERGED** (homographs + dmklinger tail) — real-data verified (#M-11: all 32 folds correct, 0 meta-junk residuals). Lemma-keying milestone CLOSED.
 - **#3296 / #3098 first slice MERGED** — decolonization §6 active-participle calque layer (20 curated forms, reviewed #M-4 via mcp__sources; діючий sense-split fix; виглядати live SENSE-RESTRICTED card; 19 armed for lesson cross-feed). #3098 left OPEN for broaden-to-collocations. (CI caught my stale діучий test assertion → fixed at the right layer, no --admin bypass.)
-- **#3116** (synonym wrong-sense over-reach: drop кам'яниця/звір intruders, KEEP гостинець/путівець; enrich_manifest.py:~973) — Codex `synonym-sense-3116` running. On return: review (do NOT over-drop legit dialectal synonyms — #1 risk), integrate, re-enrich, merge.
+- **#3116** (synonym wrong-sense over-reach) — PR #3301. First attempt (general sense-guard) OVER-DROPPED: broad pre-check (apply guard to all 5142 synonyms) showed 115 drops incl. LEGIT вельми→дуже/значно/надзвичайно (root-overlap heuristic over-fires on adverbs). REJECTED; fix dispatched `fix-3116-overdrop` → replace with a MINIMAL curated exclusion (only кам'яниця/звір; broad drop-count must be ≤5, no вельми). On return: re-run the broad drop-count (KEEP вельми→дуже), then re-enrich (rebase on main first — #3296 also touched enrich_manifest) + verify + merge. ALWAYS pre-check over-drop before any synonym-filter re-enrich.
 
 ## ⏭️ QUEUED (atlas pipeline is SERIAL — one re-enrich at a time, #M-9)
 1. **#3098 integration** — review curated set → integrate → re-enrich → merge.
