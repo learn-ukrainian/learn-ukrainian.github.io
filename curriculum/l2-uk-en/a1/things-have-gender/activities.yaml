@@ -59,6 +59,29 @@ inline:
           - text: він
             correct: false
         explanation: Вікно is neuter.
+  - id: act-2
+    type: group-sort
+    title: Сортуй предмети за родом
+    instruction: Sort each noun by its safest A1 gender chunk.
+    groups:
+      - label: він / мій
+        items:
+          - стіл
+          - стілець
+          - телефон
+          - комп'ютер
+      - label: вона / моя
+        items:
+          - книга
+          - кімната
+          - лампа
+          - ручка
+      - label: воно / моє
+        items:
+          - вікно
+          - ліжко
+          - крісло
+          - дзеркало
   - id: act-3
     type: quiz
     title: Він, вона чи воно?
@@ -136,6 +159,65 @@ inline:
           - text: воно
             correct: false
         explanation: Микола is a masculine name.
+  - id: act-5
+    type: quiz
+    title: Закінчення підказує рід
+    instruction: Choose the usual gender signal from the noun ending.
+    items:
+      - prompt: стіл закінчується на приголосний.
+        options:
+          - text: він / мій
+            correct: true
+          - text: вона / моя
+            correct: false
+          - text: воно / моє
+            correct: false
+        explanation: A clear consonant ending is usually masculine.
+      - prompt: телефон закінчується на приголосний.
+        options:
+          - text: він / мій
+            correct: true
+          - text: вона / моя
+            correct: false
+          - text: воно / моє
+            correct: false
+        explanation: Телефон is masculine in this A1 pattern.
+      - prompt: книга закінчується на -а.
+        options:
+          - text: вона / моя
+            correct: true
+          - text: він / мій
+            correct: false
+          - text: воно / моє
+            correct: false
+        explanation: A clear -а ending is usually feminine.
+      - prompt: кімната закінчується на -а.
+        options:
+          - text: вона / моя
+            correct: true
+          - text: він / мій
+            correct: false
+          - text: воно / моє
+            correct: false
+        explanation: Кімната is feminine in this A1 pattern.
+      - prompt: вікно закінчується на -о.
+        options:
+          - text: воно / моє
+            correct: true
+          - text: він / мій
+            correct: false
+          - text: вона / моя
+            correct: false
+        explanation: A clear -о ending is usually neuter.
+      - prompt: ліжко закінчується на -о.
+        options:
+          - text: воно / моє
+            correct: true
+          - text: вона / моя
+            correct: false
+          - text: він / мій
+            correct: false
+        explanation: Ліжко is neuter in this A1 pattern.
   - id: act-4
     type: fill-in
     title: Мій предмет
