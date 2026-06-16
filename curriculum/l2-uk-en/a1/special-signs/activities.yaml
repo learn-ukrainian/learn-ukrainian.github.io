@@ -3,34 +3,34 @@ inline:
   - id: act-1
     type: quiz
     title: М'яко чи розді́льно
-    instruction: Обери перше читацьке пояснення.
+    instruction: Обери пояснення для читання.
     items:
-      - prompt: Буря́к — що стається перед я?
+      - prompt: Буря́к — що відбувається перед літерою я?
         options:
-          - text: Р м'якшиться перед я.
+          - text: Р пом'якшується перед я.
             correct: true
           - text: Є апо́строф.
             correct: false
           - text: Ї завжди [йі].
             correct: false
-        explanation: У слові буря́к немає апо́строфа; р м'якшиться перед я.
+        explanation: У слові буря́к немає апо́строфа; р пом'якшується перед я.
       - prompt: Бур'я́н — що робить апо́строф?
         options:
-          - text: Р лишається твердим, потім чути [йа].
-            correct: true
           - text: Р зникає.
             correct: false
+          - text: Р залишається твердим, потім чути [йа].
+            correct: true
           - text: Додає звук [і].
             correct: false
         explanation: Апо́строф відділяє р від я.
       - prompt: Ї — що завжди правильно?
         options:
-          - text: Завжди [йі].
-            correct: true
           - text: Мовчить.
             correct: false
           - text: Це м'яки́й знак.
             correct: false
+          - text: Завжди [йі].
+            correct: true
         explanation: Ї завжди позначає [йі].
   - id: act-2
     type: match-up
@@ -38,13 +38,13 @@ inline:
     instruction: З'єднай кожне слово з підказкою про м'яки́й знак.
     pairs:
       - left: день
-        right: м'який фінальний н
+        right: м'який н у слові день
       - left: кінь
-        right: м'який фінальний н
+        right: м'який н у слові кінь
       - left: сіль
-        right: м'який фінальний л
+        right: м'який л у слові сіль
       - left: вчи́тель
-        right: м'який фінальний л
+        right: м'який л у слові вчи́тель
       - left: м'яки́й знак
         right: не має власного звука
   - id: act-3
@@ -70,24 +70,12 @@ inline:
           - "'"
           - ь
           - без знака
-      - sentence: свя́то потребує ____.
+      - sentence: У слові свя́то правильний вибір — ____.
         answer: без знака
         options:
           - без знака
           - "'"
           - ь
-      - sentence: бур_ян
-        answer: "'"
-        options:
-          - "'"
-          - ь
-          - без знака
-      - sentence: мале́нький needs ____.
-        answer: ь
-        options:
-          - ь
-          - "'"
-          - без знака
   - id: act-4
     type: error-correction
     title: Виправ пастки
@@ -98,8 +86,8 @@ inline:
         correction: сім'я́
         options:
           - сім'я́
-          - сімя без апо́строфа
-        explanation: The apostrophe is required in сім'я́.
+          - сімя
+        explanation: У слові сім'я́ потрібен апо́строф.
       - sentence: День — не пиши ден.
         error: ден
         correction: день
@@ -113,21 +101,14 @@ inline:
         options:
           - свя́то
           - св'ято
-        explanation: Свя́то — підготовлене слово без апо́строфа.
+        explanation: У слові свя́то немає апо́строфа.
       - sentence: Не пиши льожка з вигаданим м'яки́м знаком.
         error: льожка
         correction: ло́жка
         options:
           - ло́жка
-          - вигадане написання з ь
+          - льожка
         explanation: Ло́жка не має м'якого знака після л.
-      - sentence: Не роби повну паузу в слові сім'я́.
-        error: повну паузу
-        correction: плавний звук й
-        options:
-          - плавний звук й
-          - full stop
-        explanation: Апо́строф розділяє звуки, але не створює повної паузи.
   - id: act-5
     type: divide-words
     title: Практика переносу слів
@@ -136,7 +117,7 @@ inline:
       - word: Мар'я́на
         answer: Мар'-яна
       - word: дерев'я́ний
-        answer: дерев'-яний
+        answer: дере-в'яний
       - word: бур'я́н
         answer: бур'-ян
       - word: па́льці
@@ -166,13 +147,71 @@ workbook:
           - свя́то
           - цвях
           - ло́жка
+  - type: match-up
+    title: Поясни контраст
+    instruction: З'єднай слово з поясненням.
+    pairs:
+      - left: буря́к
+        right: "м'якість без апо́строфа: р + я"
+      - left: бур'я́н
+        right: 'апо́строф: р твердий, потім [йа]'
+      - left: свя́то
+        right: збіг св + я без апо́строфа
+      - left: цвях
+        right: збіг цв + я без апо́строфа
+  - type: error-correction
+    title: Виправ усі пастки
+    instruction: Обери правильну українську форму.
+    items:
+      - sentence: Не пиши сімя без апо́строфа.
+        error: сімя
+        correction: сім'я́
+        options:
+          - сім'я́
+          - сімя
+        explanation: У слові сім'я́ потрібен апо́строф.
+      - sentence: Не пиши пять без апо́строфа.
+        error: пять
+        correction: п'ять
+        options:
+          - п'ять
+          - пять
+        explanation: У слові п'ять потрібен апо́строф.
+      - sentence: Не пиши бурян без апо́строфа.
+        error: бурян
+        correction: бур'я́н
+        options:
+          - бур'я́н
+          - бурян
+        explanation: У слові бур'я́н потрібен апо́строф після р.
+      - sentence: День — не пиши ден.
+        error: ден
+        correction: день
+        options:
+          - день
+          - ден
+        explanation: День потребує м'якого знака.
+      - sentence: Не пиши св'ято з апо́строфом.
+        error: св'ято
+        correction: свя́то
+        options:
+          - свя́то
+          - св'ято
+        explanation: У слові свя́то немає апо́строфа.
+      - sentence: Не пиши льожка з вигаданим м'яки́м знаком.
+        error: льожка
+        correction: ло́жка
+        options:
+          - ло́жка
+          - льожка
+        explanation: Ло́жка не має м'якого знака після л.
   - type: true-false
     title: Факти про знаки
-    instruction: Обери правда чи неправда.
+    instruction: 'Обери: правда чи неправда.'
     items:
       - statement: Ь не має власного звука.
         correct: true
-        explanation: Він м'якшить попередній при́голосний.
+        explanation: Він пом'якшує попередній при́голосний.
       - statement: Апо́строф тримає попередній при́голосний твердим.
         correct: true
         explanation: Він відділяє при́голосний від йотованої голосної.
@@ -182,20 +221,40 @@ workbook:
       - statement: Свя́то має апо́строф.
         correct: false
         explanation: Свя́то — модельне слово без апо́строфа.
-  - type: match-up
-    title: Друк і зошит
-    instruction: З'єднай друковане слово з підказкою в зо́шиті.
-    pairs:
-      - left: 'друк: день'
-        right: 'зошит: слово з кінцевим ь'
-      - left: "друк: сім'я́"
-        right: 'зошит: apostrophe before я'
-      - left: "друк: п'ять"
-        right: 'зошит: апо́строф і кінцевий ь'
-      - left: 'друк: свя́то'
-        right: 'зошит: no apostrophe'
-      - left: "друк: бур'я́н"
-        right: 'зошит: apostrophe after р'
+  - type: fill-in
+    title: Додай знак у нових словах
+    instruction: Обери ь, апо́строф або без знака.
+    items:
+      - sentence: бур_ян
+        answer: "'"
+        options:
+          - "'"
+          - ь
+          - без знака
+      - sentence: комп_ютер
+        answer: "'"
+        options:
+          - "'"
+          - ь
+          - без знака
+      - sentence: ім_я
+        answer: "'"
+        options:
+          - "'"
+          - ь
+          - без знака
+      - sentence: У слові мален_кий потрібен ____.
+        answer: ь
+        options:
+          - ь
+          - "'"
+          - без знака
+      - sentence: У слові цвях правильний вибір — ____.
+        answer: без знака
+        options:
+          - без знака
+          - "'"
+          - ь
   - type: quiz
     title: Правильна форма
     instruction: Обери правильно написане слово.
@@ -204,20 +263,45 @@ workbook:
         options:
           - text: сім'я́
             correct: true
-          - text: сімя без апо́строфа
+          - text: сімя
             correct: false
         explanation: Сім'я́ потребує апо́строфа.
       - prompt: День — яка форма правильна?
         options:
-          - text: день
-            correct: true
           - text: ден
             correct: false
+          - text: день
+            correct: true
         explanation: День потребує м'якого знака.
       - prompt: Слово без апо́строфа?
         options:
+          - text: св'ято
+            correct: false
           - text: свя́то
             correct: true
-          - text: apostrophe spelling
-            correct: false
-        explanation: Свя́то — підготовлене слово без апо́строфа.
+        explanation: У слові свя́то немає апо́строфа.
+  - type: odd-one-out
+    title: Зайве за знаком
+    instruction: Обери слово, яке не має такого самого знака, як інші.
+    items:
+      - words:
+          - сім'я́
+          - м'я́со
+          - п'ять
+          - буря́к
+        answer: буря́к
+        explanation: Буря́к без апо́строфа; інші слова мають апо́строф.
+      - words:
+          - день
+          - кінь
+          - сіль
+          - свя́то
+        answer: свя́то
+        explanation: Свя́то без ь; інші слова мають м'який знак.
+      - words:
+          - буря́к
+          - свя́то
+          - цвях
+          - бур'я́н
+        answer: бур'я́н
+        explanation: Бур'я́н має апо́строф; інші слова тут без знака.

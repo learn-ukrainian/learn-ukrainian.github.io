@@ -2,11 +2,11 @@
   role: textbook
   source_ref: Захарійчук, 1 клас (НУШ 2025), p. 97
   notes: 'Plan reference: basic apostrophe rule before я, ю, є, ї.'
-- title: Авраменко, 5 клас, p. 75
-  role: textbook
-  source_ref: Авраменко, 5 клас, p. 75
-  notes: 'Plan reference: soft sign as a marker of consonant softness.'
 - title: Большакова, 2 клас, p. 58-59
   role: textbook
   source_ref: Большакова, 2 клас, p. 58-59
-  notes: 'Plan reference: apostrophe and line-break models.'
+  notes: 'Apostrophe as hard consonant + [йа], and transfer models Мар''-яна / Дере-в''яний.'
+- title: Вашуленко, 3 клас, p. 90
+  role: textbook
+  source_ref: Вашуленко, 3 клас, p. 90
+  notes: 'Line-break rule: apostrophe is not separated from the previous letter.'

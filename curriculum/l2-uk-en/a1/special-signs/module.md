@@ -6,11 +6,13 @@ beginner contrasts.
 The signs are small on the page, but they are not decorative. They tell your
 mouth how to read the nearby letters.
 
-Use a live or original listening pass. A native Ukrainian teacher or tutor can
-say **день**, **сім'я́**, **буря́к**, **бур'я́н**, and **свя́то** once; you
-point to the sign you hear on the page. If you record anything, record only
-your own voice or a teacher who has given permission. Do not download or copy
-third-party audio.
+Listen once before you write. A native Ukrainian teacher or tutor can say
+**день**, **сім'я́**, **буря́к**, **бур'я́н**, and **свя́то**; you point to
+the sign you hear on the page. If you are working alone, record your own voice
+and compare it with the routine below.
+
+Teacher Oksana's routine for this module is short: find the sign, say what it
+does, then read the word once.
 
 Keep the goal simple. You are not learning every spelling rule today. You are
 learning these beginner contrasts:
@@ -19,8 +21,8 @@ learning these beginner contrasts:
 - **сім'я́** — apostrophe keeps the previous consonant hard and lets you hear
   **[й]** before **я**;
 - **буря́к / бур'я́н / свя́то / цвях** — sometimes **я** softens, sometimes
-  apostrophe separates, and sometimes there is no apostrophe after a consonant
-  cluster.
+  apostrophe separates, and sometimes two consonants before **я** mean there is
+  no apostrophe.
 
 By the end, you can:
 
@@ -36,6 +38,9 @@ By the end, you can:
 
 **Я Ю Є Ї** — the four special vowel letters.
 
+Module 2 already introduced these letters. Here you only need the quick review
+that makes **ь** and apostrophe readable.
+
 At beginner level, use this rule:
 
 | Position | Beginner reading habit |
@@ -46,7 +51,7 @@ At beginner level, use this rule:
 
 Compare two words:
 
-| Слово́ | What happens |
+| Слово́ | Reading effect |
 | --- | --- |
 | **буря́к** | no apostrophe; **р** softens before **я** |
 | **бур'я́н** | apostrophe; **р** stays hard, then you hear **[йа]** |
@@ -54,10 +59,10 @@ Compare two words:
 The apostrophe is a Ukrainian reading instruction: do not soften the previous
 consonant; keep the next **й** sound.
 
-Use a hearing habit before a spelling habit. Say or hear the word slowly. Ask:
-**Чую окремий й?** — Do I hear a separate **й** before **я, ю, є, ї**? If yes,
-apostrophe may be part of the prepared spelling. If no, the vowel letter may
-simply be softening the previous consonant.
+Use one listening question before spelling. Say or hear the word slowly: do I
+hear a separate **й** before **я, ю, є, ї**? If yes, apostrophe may be part of
+the prepared spelling. If no, the vowel letter may simply soften the previous
+consonant.
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
@@ -77,13 +82,14 @@ It has no sound of its own. It changes the consonant before it.
 Do not read **ь** as **і**, **й**, or a tiny extra vowel. In **день**, stop on
 soft **н**. In **сіль**, stop on soft **л**.
 
-Short contrast pairs show the job:
+Short contrast pairs show the job. Treat them as sound examples, not new
+vocabulary to memorize today:
 
 | Without soft sign | With soft sign | Reading idea |
 | --- | --- | --- |
-| **стан** | **стань** | hard ending vs soft ending |
-| **лан** | **лань** | hard ending vs soft ending |
-| **рис** | **рись** | hard final **с** vs soft final consonant |
+| **стан** | **стань** | listen only for hard **н** vs soft **нь** |
+| **лан** | **лань** | listen only for hard **н** vs soft **нь** |
+| **рис** | **рись** | listen only for hard **с** vs soft **сь** |
 
 These pairs are reading tools. You do not need to use all of them in
 conversation today.
@@ -103,7 +109,7 @@ previous consonant hard and lets the next **я, ю, є, ї** start with **[й]**
 
 The first A1 model is:
 
-**б, п, в, м, ф, р + apostrophe + я, ю, є, ї**
+**б, п, в, м, ф, р + апостроф + я, ю, є, ї**
 
 Start with these words:
 
@@ -133,7 +139,7 @@ itself.
 | --- | --- | --- |
 | softness with no apostrophe | **буря́к** | **р** softens before **я** |
 | apostrophe | **бур'я́н** | **р** stays hard, then **[йа]** |
-| consonant cluster with no apostrophe | **свя́то**, **цвях** | no apostrophe in these prepared words |
+| two consonants before **я** with no apostrophe | **свя́то**, **цвях** | no apostrophe in these prepared words |
 
 Mechanical spelling fails here. You cannot put apostrophe before every **я**.
 You also cannot ignore apostrophe when it is written.
@@ -158,13 +164,13 @@ Common learner traps:
 | inventing a soft-sign version of **ло́жка** | do not invent a soft sign or soft **л** |
 | treating apostrophe as a hard stop | keep airflow and pronounce **й** |
 
-Keep this module Ukrainian-centered. Do not explain the apostrophe through
-another alphabet or another sign. Ukrainian has its own apostrophe and its own
-soft sign.
+Stay inside Ukrainian for this lesson. The apostrophe and soft sign already
+have Ukrainian jobs, so you do not need another alphabet or another sign to
+explain them.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-## Перенос, друк, зошит
+## Перенос і письмо
 
 You will sometimes see words split across a line in printed Ukrainian. At this
 level, use only prepared models:
@@ -172,19 +178,20 @@ level, use only prepared models:
 | Whole word | Safe line-break model |
 | --- | --- |
 | **Мар'я́на** | `Мар'-яна` |
-| **дерев'я́ний** | `дерев'-яний` |
+| **дерев'я́ний** | `дере-в'яний` |
 | **бур'я́н** | `бур'-ян` |
 | **па́льці** | `паль-ці` |
 
 The simple idea: **ь** and apostrophe stay with the letter before them. Also,
 do not leave one single letter alone on a line.
 
-**Друк / зошит** — recognition before writing.
+Reading before writing: first recognize the printed word, then copy the sign in
+a notebook cue.
 
 Use original text on this page, your own notebook, or live handwriting from a
-teacher/tutor. Do not copy a third-party handwriting sample.
+teacher/tutor.
 
-| Друк | Notebook recognition prompt |
+| Printed word | Notebook cue |
 | --- | --- |
 | **день** | find the soft sign at the end |
 | **сім'я́** | find the apostrophe before **я** |
@@ -208,12 +215,14 @@ Before you leave the lesson tab, check that you can do these things:
 - identify missing-apostrophe, missing-soft-sign, and invented-soft-sign
   errors.
 
-Use the signs as reading instructions, not decorations. A useful final routine
-is: find the sign, say what it does, then read the word once.
+Use the signs as reading instructions, not decorations. Before moving on,
+choose one word from each contrast and do a final sign check: name the sign,
+state its effect, then read the word.
 
 <!-- INJECT_ACTIVITY: act-5 -->
 
 ## Далі
 
-Тепер переходь до словника й вправ. Keep using the same small routine: find
-the sign, say what it does, then read the word.
+**Далі** means next. Go to Vocabulary and Activities; those drills reuse the
+same six contrast words: **день**, **сім'я́**, **буря́к**, **бур'я́н**,
+**свя́то**, **цвях**.

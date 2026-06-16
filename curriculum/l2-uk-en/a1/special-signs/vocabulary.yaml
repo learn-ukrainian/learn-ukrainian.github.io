@@ -66,6 +66,10 @@
   translation: name
   pos: noun
   usage: Ім'я́.
+- lemma: здоро́в'я
+  translation: health
+  pos: noun
+  usage: Здоро́в'я.
 - lemma: комп'ю́тер
   translation: computer
   pos: noun
@@ -89,15 +93,11 @@
 - lemma: мале́нький
   translation: small
   pos: adjective
-  usage: Мале́нький день.
+  usage: Мале́нький знак.
 - lemma: сього́дні
   translation: today
   pos: adverb
-  usage: Сього́дні день.
-- lemma: ба́тько
-  translation: father
-  pos: noun
-  usage: Ба́тько.
+  usage: Сього́дні свя́то.
 - lemma: ло́жка
   translation: spoon
   pos: noun
