@@ -127,7 +127,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Є чи немає
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "є брат", "right": "немає брата"}, {"left": "є плита", "right": "немає плити"}, {"left": "є дзеркало", "right": "немає дзеркала"}, {"left": "є квиток", "right": "немає квитка"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "є брат", "right": "немає брата"}, {"left": "є плита", "right": "немає плити"}, {"left": "є дзеркало", "right": "немає дзеркала"}, {"left": "є квиток", "right": "немає квитка"}]`)} instruction={"З'єднайте ствердну фразу з заперечною фразою в родовому."} isUkrainian={false} />
 
 ## Родовий однини
 
@@ -158,7 +158,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 | пісня | пісні | немає пісні |
 | вікно | вікна | немає вікна |
 
-Не треба запам'ятати все за один раз. Почніть із частих фраз:
+Не треба запам'ятовувати все за один раз. Почніть із частих фраз:
 
 - `немає часу`;
 - `немає грошей`;
@@ -197,7 +197,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 | --- | --- |
 | друг | багато друзів |
 | студент | кілька студентів |
-| книга | багато книжок |
+| книжка | багато книжок |
 | вікно | мало вікон |
 | гроші | мало грошей |
 | яблуко | декілька яблук |
@@ -226,7 +226,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Форма після немає
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У мене немає ___.", "answer": "часу", "options": ["час", "часу"]}, {"sentence": "Тут немає ___.", "answer": "кави", "options": ["кава", "кави"]}, {"sentence": "У кімнаті немає ___.", "answer": "вікна", "options": ["вікно", "вікна"]}, {"sentence": "У нас немає ___.", "answer": "квитків", "options": ["квитки", "квитків"]}, {"sentence": "На столі немає ___.", "answer": "ключа", "options": ["ключ", "ключа"]}, {"sentence": "У валізі немає ___.", "answer": "місця", "options": ["місце", "місця"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У мене немає ___.", "answer": "часу", "options": ["час", "часу"]}, {"sentence": "Тут немає ___.", "answer": "кави", "options": ["кава", "кави"]}, {"sentence": "У кімнаті немає ___.", "answer": "вікна", "options": ["вікно", "вікна"]}, {"sentence": "У нас немає ___.", "answer": "квитків", "options": ["квитки", "квитків"]}, {"sentence": "На столі немає ___.", "answer": "ключа", "options": ["ключ", "ключа"]}, {"sentence": "У валізі немає ___.", "answer": "місця", "options": ["місце", "місця"]}]`)} instruction={"Оберіть форму родового відмінка."} isUkrainian={false} />
 
 ## У магазині
 
@@ -250,7 +250,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Багато чи мало
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Багато + друг", "options": [{"text": "багато друзів", "correct": true}, {"text": "багато друзі", "correct": false}], "explanation": "Багато потребує родового множини."}, {"question": "Мало + книжка", "options": [{"text": "мало книжок", "correct": true}, {"text": "мало книги", "correct": false}], "explanation": "Мало також потребує родового множини."}, {"question": "Кілька + студент", "options": [{"text": "кілька студентів", "correct": true}, {"text": "кілька студенти", "correct": false}], "explanation": "Кілька потребує родового множини."}, {"question": "Декілька + яблуко", "options": [{"text": "декілька яблук", "correct": true}, {"text": "декілька яблука", "correct": false}], "explanation": "Після декілька потрібна форма яблук."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Багато + друг", "options": [{"text": "багато друзів", "correct": true}, {"text": "багато друзі", "correct": false}], "explanation": "Багато потребує родового множини."}, {"question": "Мало + книжка", "options": [{"text": "мало книжок", "correct": true}, {"text": "мало книги", "correct": false}], "explanation": "Мало також потребує родового множини."}, {"question": "Кілька + студент", "options": [{"text": "кілька студентів", "correct": true}, {"text": "кілька студенти", "correct": false}], "explanation": "Кілька потребує родового множини."}, {"question": "Декілька + яблуко", "options": [{"text": "декілька яблук", "correct": true}, {"text": "декілька яблука", "correct": false}], "explanation": "Після декілька потрібна форма яблук."}]`)} instruction={"Оберіть фразу з природним родовим множини."} isUkrainian={false} />
 
 ## Маленька карта квартири
 
@@ -301,7 +301,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Однина чи множина?
 
-<GroupSort client:only='react' groups={JSON.parse(`{"немає + однина": ["немає брата", "немає кави", "немає місця"], "кількість + множина": ["багато друзів", "мало грошей", "кілька книжок"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"немає + однина": ["немає брата", "немає кави", "немає місця"], "кількість + множина": ["багато друзів", "мало грошей", "кілька книжок"]}`)} instruction={"Розподіліть фрази за моделлю родового відмінка."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Vocabulary">
@@ -331,7 +331,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Родовий старт
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Після немає часто стоїть родовий відмінок.", "isTrue": true, "explanation": "У мене немає брата."}, {"statement": "Багато студентів - природна фраза з родовим множини.", "isTrue": true, "explanation": "Студентів - це родовий множини."}, {"statement": "Немає плита - правильна A2-форма.", "isTrue": false, "explanation": "Правильна фраза - немає плити."}, {"statement": "У мене немає часу - природна фраза.", "isTrue": true, "explanation": "Час у цій фразі має форму часу."}, {"statement": "Кілька яблук - родовий множини.", "isTrue": true, "explanation": "Яблуко переходить у форму яблук."}, {"statement": "Мало гроші - правильна фраза.", "isTrue": false, "explanation": "Потрібно мало грошей."}]`)} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Після немає часто стоїть родовий відмінок.", "isTrue": true, "explanation": "У мене немає брата."}, {"statement": "Багато студентів - природна фраза з родовим множини.", "isTrue": true, "explanation": "Студентів - це родовий множини."}, {"statement": "Немає плита - правильна A2-форма.", "isTrue": false, "explanation": "Правильна фраза - немає плити."}, {"statement": "У мене немає часу - природна фраза.", "isTrue": true, "explanation": "Час у цій фразі має форму часу."}, {"statement": "Кілька яблук - родовий множини.", "isTrue": true, "explanation": "Яблуко переходить у форму яблук."}, {"statement": "Мало гроші - правильна фраза.", "isTrue": false, "explanation": "Потрібно мало грошей."}]`)} instruction={"Визначте, чи правильне кожне твердження."} isUkrainian={false} />
 
 ### Виправ родовий
 
@@ -339,27 +339,27 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Квартира Олени
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У квартирі немає ___.", "answer": "холодильника", "options": ["холодильник", "холодильника", "холодильником"]}, {"sentence": "На кухні немає ___.", "answer": "плити", "options": ["плита", "плити", "плиту"]}, {"sentence": "У кімнаті багато ___.", "answer": "коробок", "options": ["коробки", "коробок", "коробка"]}, {"sentence": "У коробках кілька ___.", "answer": "книжок", "options": ["книжки", "книжок", "книжка"]}, {"sentence": "У ванній немає ___.", "answer": "рушників", "options": ["рушники", "рушників", "рушник"]}, {"sentence": "У квартирі мало ___.", "answer": "меблів", "options": ["меблі", "меблів", "меблями"]}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У квартирі немає ___.", "answer": "холодильника", "options": ["холодильник", "холодильника", "холодильником"]}, {"sentence": "На кухні немає ___.", "answer": "плити", "options": ["плита", "плити", "плиту"]}, {"sentence": "У кімнаті багато ___.", "answer": "коробок", "options": ["коробки", "коробок", "коробка"]}, {"sentence": "У коробках кілька ___.", "answer": "книжок", "options": ["книжки", "книжок", "книжка"]}, {"sentence": "У ванній немає ___.", "answer": "рушників", "options": ["рушники", "рушників", "рушник"]}, {"sentence": "У квартирі мало ___.", "answer": "меблів", "options": ["меблі", "меблів", "меблями"]}]`)} instruction={"Оберіть форму, яка природно завершує речення."} isUkrainian={false} />
 
 ### Називний і родовий
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "холодильник", "right": "холодильника"}, {"left": "плита", "right": "плити"}, {"left": "дзеркало", "right": "дзеркала"}, {"left": "ключ", "right": "ключа"}, {"left": "кава", "right": "кави"}, {"left": "місце", "right": "місця"}]`)} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "холодильник", "right": "холодильника"}, {"left": "плита", "right": "плити"}, {"left": "дзеркало", "right": "дзеркала"}, {"left": "ключ", "right": "ключа"}, {"left": "кава", "right": "кави"}, {"left": "місце", "right": "місця"}]`)} instruction={"З'єднайте початкове слово з формою після немає."} isUkrainian={false} />
 
 ### Сигнал родового
 
-<GroupSort client:only='react' groups={JSON.parse(`{"немає": ["немає квитка", "немає часу", "немає лимонів"], "багато": ["багато друзів", "багато коробок", "багато яблук"], "мало": ["мало грошей", "мало місця", "мало меблів"], "кілька/декілька": ["кілька книжок", "кілька студентів", "декілька яблук"]}`)} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"немає": ["немає квитка", "немає часу", "немає лимонів"], "багато": ["багато друзів", "багато коробок", "багато яблук"], "мало": ["мало грошей", "мало місця", "мало меблів"], "кілька/декілька": ["кілька книжок", "кілька студентів", "декілька яблук"]}`)} instruction={"Розподіліть фрази за словом-сигналом."} isUkrainian={false} />
 
 ### Складіть речення
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "У / мене / немає / часу", "answer": "У мене немає часу."}, {"jumbled": "Тут / немає / дзеркала", "answer": "Тут немає дзеркала."}, {"jumbled": "У / нас / багато / коробок", "answer": "У нас багато коробок."}, {"jumbled": "У / магазині / немає / лимонів", "answer": "У магазині немає лимонів."}, {"jumbled": "Купіть / кілька / яблук", "answer": "Купіть кілька яблук."}, {"jumbled": "У / валізі / мало / місця", "answer": "У валізі мало місця."}]`)} />
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "У / мене / немає / часу", "answer": "У мене немає часу."}, {"jumbled": "Тут / немає / дзеркала", "answer": "Тут немає дзеркала."}, {"jumbled": "У / нас / багато / коробок", "answer": "У нас багато коробок."}, {"jumbled": "У / магазині / немає / лимонів", "answer": "У магазині немає лимонів."}, {"jumbled": "Купіть / кілька / яблук", "answer": "Купіть кілька яблук."}, {"jumbled": "У / валізі / мало / місця", "answer": "У валізі мало місця."}]`)} instruction={"Поставте слова в природний порядок."} />
 
 ### Що вибрати?
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Потрібно сказати, що холодильника немає.", "options": [{"text": "Тут немає холодильника.", "correct": true}, {"text": "Тут немає холодильник.", "correct": false}, {"text": "Тут є немає холодильника.", "correct": false}], "explanation": "Після немає потрібна форма холодильника."}, {"question": "Потрібно сказати про велику кількість друзів.", "options": [{"text": "У мене багато друзів.", "correct": true}, {"text": "У мене багато друзі.", "correct": false}, {"text": "У мене друзі багато.", "correct": false}], "explanation": "Багато друзів - родовий множини."}, {"question": "Потрібно сказати, що грошей мало.", "options": [{"text": "У мене мало грошей.", "correct": true}, {"text": "У мене мало гроші.", "correct": false}, {"text": "У мене грошей мало немає.", "correct": false}], "explanation": "Мало грошей - природна фраза."}, {"question": "Потрібно попросити кілька яблук.", "options": [{"text": "Дайте, будь ласка, кілька яблук.", "correct": true}, {"text": "Дайте, будь ласка, кілька яблука.", "correct": false}, {"text": "Дайте, будь ласка, яблук кілька немає.", "correct": false}], "explanation": "Після кілька потрібна форма яблук."}]`)} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Потрібно сказати, що холодильника немає.", "options": [{"text": "Тут немає холодильника.", "correct": true}, {"text": "Тут немає холодильник.", "correct": false}, {"text": "Тут є немає холодильника.", "correct": false}], "explanation": "Після немає потрібна форма холодильника."}, {"question": "Потрібно сказати про велику кількість друзів.", "options": [{"text": "У мене багато друзів.", "correct": true}, {"text": "У мене багато друзі.", "correct": false}, {"text": "У мене друзі багато.", "correct": false}], "explanation": "Багато друзів - родовий множини."}, {"question": "Потрібно сказати, що грошей мало.", "options": [{"text": "У мене мало грошей.", "correct": true}, {"text": "У мене мало гроші.", "correct": false}, {"text": "У мене грошей мало немає.", "correct": false}], "explanation": "Мало грошей - природна фраза."}, {"question": "Потрібно попросити кілька яблук.", "options": [{"text": "Дайте, будь ласка, кілька яблук.", "correct": true}, {"text": "Дайте, будь ласка, кілька яблука.", "correct": false}, {"text": "Дайте, будь ласка, яблук кілька немає.", "correct": false}], "explanation": "Після кілька потрібна форма яблук."}]`)} instruction={"Оберіть найприродніше речення."} isUkrainian={false} />
 
 ### Коротка підказка, українська фраза
 
-<Translate client:only='react' questions={JSON.parse(`[{"source": "no time", "options": [{"text": "немає часу", "correct": true}, {"text": "немає час", "correct": false}, {"text": "багато часу немає", "correct": false}], "explanation": "Час переходить у форму часу."}, {"source": "many boxes", "options": [{"text": "багато коробок", "correct": true}, {"text": "багато коробки", "correct": false}, {"text": "немає коробка", "correct": false}], "explanation": "Багато коробок - родовий множини."}, {"source": "several books", "options": [{"text": "кілька книжок", "correct": true}, {"text": "кілька книжки", "correct": false}, {"text": "мало книжка", "correct": false}], "explanation": "Кілька книжок - природна форма."}, {"source": "no ticket", "options": [{"text": "немає квитка", "correct": true}, {"text": "немає квиток", "correct": false}, {"text": "багато квитка", "correct": false}], "explanation": "Квиток переходить у форму квитка."}]`)} isUkrainian={false} />
+<Translate client:only='react' questions={JSON.parse(`[{"source": "no time", "options": [{"text": "немає часу", "correct": true}, {"text": "немає час", "correct": false}, {"text": "багато часу немає", "correct": false}], "explanation": "Час переходить у форму часу."}, {"source": "many boxes", "options": [{"text": "багато коробок", "correct": true}, {"text": "багато коробки", "correct": false}, {"text": "немає коробка", "correct": false}], "explanation": "Багато коробок - родовий множини."}, {"source": "several books", "options": [{"text": "кілька книжок", "correct": true}, {"text": "кілька книжки", "correct": false}, {"text": "мало книжка", "correct": false}], "explanation": "Кілька книжок - природна форма."}, {"source": "no ticket", "options": [{"text": "немає квитка", "correct": true}, {"text": "немає квиток", "correct": false}, {"text": "багато квитка", "correct": false}], "explanation": "Квиток переходить у форму квитка."}]`)} instruction={"Оберіть українське речення, яке найкраще передає зміст."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">
