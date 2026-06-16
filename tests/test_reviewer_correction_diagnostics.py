@@ -71,3 +71,225 @@ def test_reviewer_correction_unmatched_anchor_emits_diagnostic(
     ]
     assert events[0]["gate"] == "russianisms_clean"
     assert events[0]["anchor_preview"] == "Missing anchor"
+
+
+def test_reviewer_fix_whitespace_normalized_anchor_match_applies_once(
+    tmp_path: Path,
+) -> None:
+    telemetry = tmp_path / "events.jsonl"
+    text = "Before\n\nAlpha\n  beta   gamma\n\nAfter\n"
+
+    with linear_pipeline.telemetry_event_sink(telemetry):
+        result = linear_pipeline._apply_reviewer_fixes(
+            text,
+            [{"find": "Alpha beta gamma", "replace": "Alpha beta delta"}],
+            gate="vesum_verified",
+            module_dir=_module_dir(tmp_path),
+            plan_path=tmp_path / "plan.yaml",
+        )
+
+    assert result.text == "Before\n\nAlpha beta delta\n\nAfter\n"
+    assert result.unmatched_anchors == frozenset()
+    events = _events(telemetry)
+    assert [event["event"] for event in events] == [
+        "reviewer_fix_anchor_normalized_match"
+    ]
+    assert events[0]["gate"] == "vesum_verified"
+    assert events[0]["operation"] == "replace"
+    assert events[0]["anchor_preview"] == "Alpha beta gamma"
+    assert events[0]["matched_preview"] == "Alpha\n  beta   gamma"
+
+
+def test_reviewer_fix_trailing_boundary_whitespace_is_not_replaced() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "Intro: target\n\n- next item\n",
+        [{"find": "target ", "replace": "FIXED"}],
+    )
+
+    assert result.text == "Intro: FIXED\n\n- next item\n"
+    assert result.unmatched_anchors == frozenset()
+
+
+def test_reviewer_fix_exact_match_replaces_full_trailing_space_span() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "foo  bar",
+        [{"find": "foo  ", "replace": "foo "}],
+    )
+
+    assert result.text == "foo bar"
+    assert result.unmatched_anchors == frozenset()
+
+
+def test_reviewer_fix_exact_delete_replaces_full_trailing_space_span() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "foo bar",
+        [{"find": "foo ", "replace": ""}],
+    )
+
+    assert result.text == "bar"
+    assert result.unmatched_anchors == frozenset()
+
+
+def test_reviewer_fix_all_whitespace_anchor_fails_closed() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "a   b",
+        [{"find": "   ", "replace": "X"}],
+    )
+
+    assert result.text == "a   b"
+    assert result.unmatched_anchors == frozenset({"   "})
+
+
+def test_reviewer_fix_empty_anchor_is_noop() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "a   b",
+        [{"find": "", "replace": "X"}],
+    )
+
+    assert result.text == "a   b"
+    assert result.unmatched_anchors == frozenset()
+
+
+def test_reviewer_fix_leading_boundary_whitespace_is_not_replaced() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "Intro\n\ntarget",
+        [{"find": " target", "replace": "FIXED"}],
+    )
+
+    assert result.text == "Intro\n\nFIXED"
+    assert result.unmatched_anchors == frozenset()
+
+
+def test_reviewer_fix_trailing_boundary_does_not_match_inside_larger_word() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "Intro: retargeting\n",
+        [{"find": "target ", "replace": "FIXED"}],
+    )
+
+    assert result.text == "Intro: retargeting\n"
+    assert result.unmatched_anchors == frozenset({"target "})
+
+
+def test_reviewer_insert_after_trailing_boundary_does_not_match_inside_larger_word() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "retargeting\n",
+        [{"insert_after": "target ", "text": "INSERTED"}],
+    )
+
+    assert result.text == "retargeting\n"
+    assert result.unmatched_anchors == frozenset({"target "})
+
+
+def test_reviewer_fix_literal_trailing_boundary_space_preserves_space() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "Intro: target retail\n",
+        [{"find": "target ", "replace": "FIXED "}],
+    )
+
+    assert result.text == "Intro: FIXED retail\n"
+    assert result.unmatched_anchors == frozenset()
+
+
+def test_reviewer_insert_after_trailing_boundary_whitespace_inserts_before_run() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "target\n\n- item",
+        [{"insert_after": "target ", "text": "INSERTED"}],
+    )
+
+    assert result.text == "targetINSERTED\n\n- item"
+    assert result.unmatched_anchors == frozenset()
+
+
+def test_reviewer_insert_after_all_whitespace_anchor_fails_closed() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "a   b",
+        [{"insert_after": "   ", "text": "X"}],
+    )
+
+    assert result.text == "a   b"
+    assert result.unmatched_anchors == frozenset({"   "})
+
+
+def test_reviewer_insert_after_empty_anchor_fails_closed() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "a   b",
+        [{"insert_after": "", "text": "X"}],
+    )
+
+    assert result.text == "a   b"
+    assert result.unmatched_anchors == frozenset({""})
+
+
+def test_reviewer_fix_ambiguous_normalized_anchor_fails_closed(
+    tmp_path: Path,
+) -> None:
+    telemetry = tmp_path / "events.jsonl"
+    text = "One\n  two\nMiddle\nOne\t\t two\n"
+
+    with linear_pipeline.telemetry_event_sink(telemetry):
+        result = linear_pipeline._apply_reviewer_fixes(
+            text,
+            [{"find": "One two", "replace": "Changed"}],
+            gate="vesum_verified",
+            module_dir=_module_dir(tmp_path),
+            plan_path=tmp_path / "plan.yaml",
+        )
+
+    assert result.text == text
+    assert result.unmatched_anchors == frozenset({"One two"})
+    events = _events(telemetry)
+    assert [event["event"] for event in events] == [
+        "reviewer_fixes_anchor_unmatched"
+    ]
+    assert "Changed" not in result.text
+
+
+def test_reviewer_fix_genuine_no_match_stays_unmatched(
+    tmp_path: Path,
+) -> None:
+    telemetry = tmp_path / "events.jsonl"
+    text = "Alpha beta\n"
+
+    with linear_pipeline.telemetry_event_sink(telemetry):
+        result = linear_pipeline._apply_reviewer_fixes(
+            text,
+            [{"find": "Gamma delta", "replace": "Changed"}],
+            gate="vesum_verified",
+            module_dir=_module_dir(tmp_path),
+            plan_path=tmp_path / "plan.yaml",
+        )
+
+    assert result.text == text
+    assert result.unmatched_anchors == frozenset({"Gamma delta"})
+    events = _events(telemetry)
+    assert [event["event"] for event in events] == [
+        "reviewer_fixes_anchor_unmatched"
+    ]
+
+
+def test_reviewer_fix_exact_match_fast_path_stays_silent(
+    tmp_path: Path,
+) -> None:
+    telemetry = tmp_path / "events.jsonl"
+
+    with linear_pipeline.telemetry_event_sink(telemetry):
+        result = linear_pipeline._apply_reviewer_fixes(
+            "Alpha beta\n",
+            [{"find": "Alpha beta", "replace": "Changed"}],
+            gate="vesum_verified",
+            module_dir=_module_dir(tmp_path),
+            plan_path=tmp_path / "plan.yaml",
+        )
+
+    assert result.text == "Changed\n"
+    assert result.unmatched_anchors == frozenset()
+    assert _events(telemetry) == []
+
+
+def test_reviewer_fix_applicable_count_ignores_missing_replace() -> None:
+    count = linear_pipeline._count_applicable_reviewer_fixes(
+        "Alpha\n  beta\n",
+        [{"find": "Alpha beta"}],
+    )
+
+    assert count == 0

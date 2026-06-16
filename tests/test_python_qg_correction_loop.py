@@ -436,5 +436,6 @@ def test_python_qg_core_uses_legacy_single_correction_path(tmp_path: Path) -> No
     assert report["gates"]["passed"] is True
     assert (module_dir / "module.md").read_text(encoding="utf-8") == "PASS\n"
     assert not (module_dir / "python_qg_correction_loop.json").exists()
+    assert linear_pipeline.PYTHON_QG_SEMINAR_MAX_CORRECTION_ROUNDS == 8
     assert linear_pipeline.python_qg_max_correction_rounds_for_level("a1") == 1
-    assert linear_pipeline.python_qg_max_correction_rounds_for_level("folk") == 4
+    assert linear_pipeline.python_qg_max_correction_rounds_for_level("folk") == 8

@@ -472,7 +472,7 @@ WIKI_COVERAGE_EVIDENCE_QUOTE_MARKERS = ('"', "“", "«")
 LLM_QG_CORE_MAX_ROUNDS = 1
 LLM_QG_SEMINAR_MAX_ROUNDS = 3
 PYTHON_QG_CORE_MAX_CORRECTION_ROUNDS = 1
-PYTHON_QG_SEMINAR_MAX_CORRECTION_ROUNDS = 4
+PYTHON_QG_SEMINAR_MAX_CORRECTION_ROUNDS = 8
 PYTHON_QG_MIN_REGRESSION_PATIENCE = 3
 PYTHON_QG_MALFORMED_REPORT_VIOLATIONS = 999
 PYTHON_QG_VIOLATION_COUNT_KEYS = (
@@ -6864,13 +6864,18 @@ def _count_applicable_reviewer_fixes(text: str, fixes: Sequence[Mapping[str, str
     for fix in fixes:
         if "insert_after" in fix and "text" in fix:
             anchor = str(fix["insert_after"])
-            if anchor in updated:
-                updated = updated.replace(anchor, anchor + str(fix["text"]), 1)
+            if span := _find_reviewer_fix_span(updated, anchor):
+                _, end = span
+                updated = updated[:end] + str(fix["text"]) + updated[end:]
                 count += 1
             continue
         find = str(fix.get("find") or "")
-        if find and find in updated:
-            updated = updated.replace(find, str(fix.get("replace") or ""), 1)
+        replace = fix.get("replace")
+        if find and replace is not None and (
+            span := _find_reviewer_fix_span(updated, find)
+        ):
+            start, end = span
+            updated = updated[:start] + str(replace) + updated[end:]
             count += 1
     return count
 
@@ -7813,6 +7818,32 @@ def _emit_reviewer_fix_anchor_unmatched(
     )
 
 
+def _emit_reviewer_fix_anchor_normalized_match(
+    anchor: str,
+    matched: str,
+    replacement: str | None,
+    *,
+    operation: str,
+    gate: str | None,
+    module_dir: Path | None,
+    plan_path: Path | None,
+) -> None:
+    emit_event(
+        "reviewer_fix_anchor_normalized_match",
+        **_correction_event_fields(
+            gate=gate or "",
+            module_dir=module_dir,
+            plan_path=plan_path,
+        )
+        if module_dir is not None and plan_path is not None
+        else {"gate": gate},
+        operation=operation,
+        anchor_preview=_correction_preview(anchor),
+        matched_preview=_correction_preview(matched),
+        text_preview=_correction_preview(replacement),
+    )
+
+
 def _emit_final_reviewer_unmatched_events(
     unmatched_anchors: frozenset[str],
     fixes: list[dict[str, str]],
@@ -7840,6 +7871,171 @@ def _emit_final_reviewer_unmatched_events(
             )
 
 
+def _reviewer_fix_whitespace_normalized_view(
+    text: str,
+) -> tuple[str, tuple[tuple[int, int], ...]]:
+    chars: list[str] = []
+    spans: list[tuple[int, int]] = []
+    index = 0
+    while index < len(text):
+        if text[index].isspace():
+            start = index
+            while index < len(text) and text[index].isspace():
+                index += 1
+            chars.append(" ")
+            spans.append((start, index))
+            continue
+        chars.append(text[index])
+        spans.append((index, index + 1))
+        index += 1
+    return "".join(chars), tuple(spans)
+
+
+def _strip_reviewer_anchor_stress(anchor: str) -> str:
+    decomposed = unicodedata.normalize("NFD", anchor)
+    stripped = "".join(char for char in decomposed if char != "\u0301")
+    return unicodedata.normalize("NFC", stripped)
+
+
+def _strip_reviewer_anchor_markdown_wrapper(anchor: str) -> str:
+    wrapper_chars = "*_`~"
+    start = 0
+    end = len(anchor)
+    while start < end and anchor[start] in wrapper_chars:
+        start += 1
+    while end > start and anchor[end - 1] in wrapper_chars:
+        end -= 1
+    return anchor[start:end]
+
+
+def _reviewer_anchor_normalized_variants(anchor: str) -> tuple[str, ...]:
+    variants: list[str] = []
+    candidates = (
+        anchor,
+        _strip_reviewer_anchor_stress(anchor),
+        _strip_reviewer_anchor_markdown_wrapper(anchor),
+        _strip_reviewer_anchor_markdown_wrapper(_strip_reviewer_anchor_stress(anchor)),
+    )
+    for candidate in candidates:
+        if candidate not in variants:
+            variants.append(candidate)
+    return tuple(variants)
+
+
+def _normalized_reviewer_anchor_offsets(
+    normalized_text: str,
+    normalized_anchor: str,
+) -> list[int]:
+    if not normalized_anchor:
+        return []
+    offsets: list[int] = []
+    start = 0
+    while True:
+        offset = normalized_text.find(normalized_anchor, start)
+        if offset < 0:
+            return offsets
+        offsets.append(offset)
+        if len(offsets) > 1:
+            return offsets
+        start = offset + 1
+
+
+def _span_from_normalized_reviewer_anchor_offset(
+    spans: tuple[tuple[int, int], ...],
+    offset: int,
+    anchor_length: int,
+) -> tuple[int, int]:
+    start = spans[offset][0]
+    end = spans[offset + anchor_length - 1][1]
+    return start, end
+
+
+def _trim_reviewer_fix_boundary_span(
+    text: str,
+    span: tuple[int, int],
+) -> tuple[int, int] | None:
+    start, end = span
+    while start < end and text[start].isspace():
+        start += 1
+    while end > start and text[end - 1].isspace():
+        end -= 1
+    if start == end:
+        return None
+    return start, end
+
+
+def _find_exact_reviewer_fix_span(
+    text: str,
+    anchor: str,
+) -> tuple[int, int] | None:
+    if not anchor or all(char.isspace() for char in anchor):
+        return None
+    offset = text.find(anchor)
+    if offset < 0:
+        return None
+    return offset, offset + len(anchor)
+
+
+def _find_unique_reviewer_fix_normalized_span(
+    text: str,
+    anchor: str,
+) -> tuple[int, int] | None:
+    normalized_text, spans = _reviewer_fix_whitespace_normalized_view(text)
+    normalized_anchor, _anchor_spans = _reviewer_fix_whitespace_normalized_view(anchor)
+    offsets = _normalized_reviewer_anchor_offsets(normalized_text, normalized_anchor)
+    if len(offsets) == 1:
+        return _trim_reviewer_fix_boundary_span(
+            text,
+            _span_from_normalized_reviewer_anchor_offset(
+                spans,
+                offsets[0],
+                len(normalized_anchor),
+            ),
+        )
+    if len(offsets) > 1:
+        return None
+
+    matched_spans: set[tuple[int, int]] = set()
+    ambiguous = False
+    seen_normalized_anchors = {normalized_anchor}
+    for variant in _reviewer_anchor_normalized_variants(anchor)[1:]:
+        variant_anchor, _variant_spans = _reviewer_fix_whitespace_normalized_view(
+            variant
+        )
+        if not variant_anchor or variant_anchor in seen_normalized_anchors:
+            continue
+        seen_normalized_anchors.add(variant_anchor)
+        variant_offsets = _normalized_reviewer_anchor_offsets(
+            normalized_text,
+            variant_anchor,
+        )
+        if len(variant_offsets) == 1:
+            if span := _trim_reviewer_fix_boundary_span(
+                text,
+                _span_from_normalized_reviewer_anchor_offset(
+                    spans,
+                    variant_offsets[0],
+                    len(variant_anchor),
+                ),
+            ):
+                matched_spans.add(span)
+        elif len(variant_offsets) > 1:
+            ambiguous = True
+    if ambiguous or len(matched_spans) != 1:
+        return None
+    return next(iter(matched_spans))
+
+
+def _find_reviewer_fix_span(
+    text: str,
+    anchor: str,
+) -> tuple[int, int] | None:
+    return _find_exact_reviewer_fix_span(
+        text,
+        anchor,
+    ) or _find_unique_reviewer_fix_normalized_span(text, anchor)
+
+
 def _apply_reviewer_fixes(
     text: str,
     fixes: list[dict[str, str]],
@@ -7854,8 +8050,22 @@ def _apply_reviewer_fixes(
     for fix in fixes:
         if "insert_after" in fix and "text" in fix:
             anchor = fix["insert_after"]
-            if anchor in updated:
-                updated = updated.replace(anchor, anchor + fix["text"], 1)
+            if span := _find_exact_reviewer_fix_span(updated, anchor):
+                _, end = span
+                updated = updated[:end] + fix["text"] + updated[end:]
+            elif span := _find_unique_reviewer_fix_normalized_span(updated, anchor):
+                start, end = span
+                matched = updated[start:end]
+                updated = updated[:end] + fix["text"] + updated[end:]
+                _emit_reviewer_fix_anchor_normalized_match(
+                    anchor,
+                    matched,
+                    fix["text"],
+                    operation="insert_after",
+                    gate=gate,
+                    module_dir=module_dir,
+                    plan_path=plan_path,
+                )
             else:
                 unmatched_anchors.add(anchor)
                 if emit_unmatched_events:
@@ -7869,8 +8079,26 @@ def _apply_reviewer_fixes(
             continue
         find = fix.get("find")
         replace = fix.get("replace")
-        if find and replace is not None and find in updated:
-            updated = updated.replace(find, replace, 1)
+        if find and replace is not None and (
+            span := _find_exact_reviewer_fix_span(updated, find)
+        ):
+            start, end = span
+            updated = updated[:start] + replace + updated[end:]
+        elif find and replace is not None and (
+            span := _find_unique_reviewer_fix_normalized_span(updated, find)
+        ):
+            start, end = span
+            matched = updated[start:end]
+            updated = updated[:start] + replace + updated[end:]
+            _emit_reviewer_fix_anchor_normalized_match(
+                find,
+                matched,
+                replace,
+                operation="replace",
+                gate=gate,
+                module_dir=module_dir,
+                plan_path=plan_path,
+            )
         elif find:
             unmatched_anchors.add(find)
             if emit_unmatched_events:
