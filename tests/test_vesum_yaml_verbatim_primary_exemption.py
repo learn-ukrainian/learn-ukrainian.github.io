@@ -135,6 +135,42 @@ def test_bare_dialect_citations_from_verified_primary_are_exempted(monkeypatch) 
     assert not {"било", "лем", "нащада"} & sent_for_verification
 
 
+def test_italic_emphasis_does_not_bypass_vesum_check(monkeypatch) -> None:
+    monkeypatch.setattr(linear_pipeline, "_search_literary_hits", lambda *args, **kwargs: [])
+    monkeypatch.setattr(
+        linear_pipeline,
+        "_resolve_folk_heritage_attested_missing",
+        lambda *args, **kwargs: set(),
+    )
+    sent_for_verification: set[str] = set()
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        sent_for_verification.update(words)
+        return {word: ([] if word == "било" else [{"lemma": word}]) for word in words}
+
+    result = linear_pipeline._vesum_gate(
+        module_text=KOLIADKY_MODULE,
+        activities=[
+            {
+                "type": "analysis",
+                "prompt": "Поясніть, чому свято *било* важливим для громади.",
+            }
+        ],
+        vocabulary=[],
+        resources=[],
+        level="folk",
+        verify_words_fn=verify_words,
+    )
+
+    missing_keys = {
+        linear_pipeline._normalize_for_vesum(surface).lower()
+        for surface in result["missing"]
+    }
+    assert result["passed"] is False
+    assert "било" in missing_keys
+    assert "било" in sent_for_verification
+
+
 def test_bare_citations_not_in_verified_primary_still_checked(monkeypatch) -> None:
     monkeypatch.setattr(linear_pipeline, "_search_literary_hits", lambda *args, **kwargs: [])
     monkeypatch.setattr(

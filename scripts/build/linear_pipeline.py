@@ -774,9 +774,8 @@ _BARE_PRIMARY_CITATION_RE = re.compile(
     r"|(?<![" + _BARE_PRIMARY_CITATION_WORD_BOUNDARY + r"])'"
     r"(?P<single>(?:[^'\n]|'(?=[" + _BARE_PRIMARY_CITATION_WORD_BOUNDARY + r"]))+)'"
     r"(?![" + _BARE_PRIMARY_CITATION_WORD_BOUNDARY + r"])"
-    r"|(?<!\*)\*(?!\*)(?P<italic>[^*\n]+?)\*(?!\*)"
 )
-_BARE_PRIMARY_CITATION_GROUPS = ("guillemet", "single", "italic")
+_BARE_PRIMARY_CITATION_GROUPS = ("guillemet", "single")
 
 _STANDALONE_POSTFIX_FRAGMENTS = frozenset({"ся", "сь", "тся", "тсь", "ться", "шся", "шсь", "чся", "чсь"})
 
