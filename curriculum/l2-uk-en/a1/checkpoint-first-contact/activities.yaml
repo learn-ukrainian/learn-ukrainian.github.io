@@ -49,6 +49,60 @@ inline:
           - text: Я 20 роки.
             correct: false
         explanation: Вік подаємо блоком Мені ... років.
+      - prompt: Скільки літер в українській абетці?
+        options:
+          - text: '33'
+            correct: true
+          - text: '38'
+            correct: false
+          - text: '32'
+            correct: false
+        explanation: Українська абетка має 33 літери.
+      - prompt: Скільки звуків в українській мові?
+        options:
+          - text: '38'
+            correct: true
+          - text: '33'
+            correct: false
+          - text: '10'
+            correct: false
+        explanation: У базовому підрахунку курсу українська має 38 звуків.
+      - prompt: Що робить м'який знак у слові день?
+        options:
+          - text: Пом'якшує попередній приголосний.
+            correct: true
+          - text: Позначає окремий голосний звук.
+            correct: false
+          - text: Замінює апостроф.
+            correct: false
+        explanation: Ь не має власного звука; він пом'якшує попередній приголосний.
+      - prompt: Яке написання з апострофом правильне?
+        options:
+          - text: сім'я
+            correct: true
+          - text: сімя
+            correct: false
+          - text: сімья
+            correct: false
+        explanation: Вивчений родинний приклад пишемо сім'я.
+      - prompt: Де позначено наголос?
+        options:
+          - text: Приві́т
+            correct: true
+          - text: Привіт
+            correct: false
+          - text: Прівіт
+            correct: false
+        explanation: Позначка над голосною показує наголошений склад.
+      - prompt: Ти додаєш одну родинну фразу.
+        options:
+          - text: У мене є мама і тато.
+            correct: true
+          - text: Мене є мама і тато.
+            correct: false
+          - text: Я звати мама і тато.
+            correct: false
+        explanation: У мене є... — безпечний блок для родини.
       - prompt: Ти ввічливо завершуєш перше знайомство.
         options:
           - text: Дуже приємно. До побачення!
@@ -73,8 +127,8 @@ inline:
         right: Так, у мене є брат.
       - left: Як її звати?
         right: Її звати Ірина.
-      - left: Чий це словник?
-        right: Це мій словник.
+      - left: Це твоя мама?
+        right: Так, це моя мама.
       - left: Скільки тобі років?
         right: Мені 20 років.
       - left: Дуже приємно.
@@ -232,14 +286,14 @@ inline:
         options:
           - Звідки
           - Хто
-          - Чий
+          - Де
         explanation: Звідки ти? питає, звідки людина.
       - sentence: Моя майбутня ___ — вчителька.
         answer: професія
         options:
           - професія
           - прізвище
-          - адреса
+          - знайомство
         explanation: Професія називає фах або заняття.
       - sentence: У мене є сестра. ___ звати Ірина.
         answer: Її
@@ -280,9 +334,9 @@ inline:
         options:
           - text: Мені теж. Звідки ти?
             correct: true
-          - text: Моє прізвище словник.
+          - text: Моє ім'я є Соломія.
             correct: false
-          - text: Це моя гривня.
+          - text: Моя фамілія Сміт.
             correct: false
         explanation: Мені теж дає взаємну відповідь і рухає розмову далі.
       - prompt: 'Рядок: Я з Дніпра. А ти?'
@@ -378,10 +432,10 @@ workbook:
         right: nationality
       - left: походження
         right: origin
-      - left: словник
-        right: dictionary
-      - left: адреса
-        right: address
+      - left: Дуже приємно
+        right: very nice to meet you
+      - left: Мені теж
+        right: me too
   - type: fill-in
     title: Етикет у чаті
     instruction: Доповни коротку розмову в чаті курсу.
@@ -412,12 +466,12 @@ workbook:
         options:
           - приємно
           - професія
-          - адреса
+          - знайомство
         explanation: Дуже приємно — ввічлива відповідь під час першого знайомства.
       - sentence: Мені ___.
         answer: теж
         options:
           - теж
           - звати
-          - словник
+          - професія
         explanation: Мені теж означає взаємну відповідь.

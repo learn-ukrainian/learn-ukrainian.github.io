@@ -28,9 +28,8 @@ them to Russian letters or Russian pronunciation. Non-target greetings and
 calques appear only as wrong choices inside correction practice.
 
 The roadmap behind this checkpoint has six learner steps: sound and alphabet
-control, greeting chunks, self-introduction, noun gender habits, vocative
-address, and modern chat etiquette. Use that order as a checklist, not as new
-grammar to memorize.
+control, reading words, special signs, stress, self-introduction, and one
+family line. Use that order as a checklist, not as new grammar to memorize.
 
 ## Що ми знаємо?
 
@@ -113,15 +112,17 @@ Now check the reading decisions.
 - In **вчителька**, read slowly; the word is useful, but the profession table
   is still small.
 - In direct address, **Богдан** becomes **Богдане** and **Соломія** becomes
-  **Соломіє**. At A1, recognize the signal and copy safe examples.
-  The same rule is why **Привіт, Анна!** is repaired as **Привіт, Анно!** in
-  careful Ukrainian address. The vocative is not archaic or optional here; it
-  is a fundamental **самобутньою ознакою української мови**, so direct address
-  should not use nominative where a safe vocative example is available.
+  **Соломіє**. At A1, recognize the signal and copy safe examples. Do not turn
+  this checkpoint into a full case table.
 
 Alphabet order is also a learner tool. If you look up **прізвище** in a
 dictionary, the first letter is not enough; after **п**, keep comparing the next
 letters. That habit matters more than speed.
+
+:::tip
+Read the text one line at a time. A checkpoint pass is steady pronunciation and
+safe chunks, not a perfect performance at full speed.
+:::
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
@@ -148,10 +149,10 @@ For family and identity, the owned word chooses the possessive form:
 | **місто** | **моє місто** |
 | **батьки** | **мої батьки** |
 
-The gender habit is not only a family topic. A dictionary entry should be stored
-with its gender when that helps you later: **словник** is masculine,
-**адреса** is feminine, and **прізвище** is neuter. You do not need a full case
-system today, but you do need the habit of learning a noun with its form cues.
+The gender habit is not only a family topic. A word should be stored with its
+gender when that helps you later: **студент** is masculine, **студентка** is
+feminine, and **прізвище** is neuter. You do not need a full case system today,
+but you do need the habit of learning a noun with its form cues.
 
 The safe social vocabulary also stays native Ukrainian. Use **прізвище** for
 surname in official-style lines, not colloquial **фамілія**. Use **тато** or
@@ -209,6 +210,12 @@ Use this as your graduation speech for A1.1:
 If you want a shorter answer, keep five sentences: name, origin, role, one
 family line, and closing. That is enough for the checkpoint.
 
+:::tip
+Your five-sentence answer can stay simple. If it has **Мене звати...**,
+**Я з...**, one identity line, one family line, and a polite closing, it is doing
+the job.
+:::
+
 <!-- INJECT_ACTIVITY: act-5 -->
 
 ### Перше знайомство онлайн
@@ -233,10 +240,10 @@ English support after the Ukrainian chat:
 | **Приві́т, Лі́но!** | Hi, Lina! |
 | **Мені́ теж.** | Me too. |
 
-This chat task also reviews the borrowed-word habit from the wiki brief:
+This online task also reviews the borrowed-word habit from the wiki brief:
 modern Ukrainian can use international words, but your core first-contact
-grammar should stay Ukrainian. Say **чат** if the setting is a chat, but still
-say **Мене звати...**, **Я з...**, and **До побачення**.
+grammar should stay Ukrainian. In a course chat, still say **Мене звати...**,
+**Я з...**, and **До побачення**.
 
 <!-- INJECT_ACTIVITY: act-6 -->
 
@@ -257,15 +264,16 @@ Use this final self-check before you move on.
 
 1. Read the short text aloud without stopping at **ї**, **є**, **и**, **і**,
    **ь**, or the apostrophe.
-2. Greet a peer informally and a teacher formally.
-3. Ask one person **Як тебе звати?**
-4. Say your name with **Мене звати...**
-5. Say where you are from with **Я з...**
-6. Say one role or profession without **є**.
-7. Say your age with **Мені ... років**.
-8. Add one family sentence with **У мене є...**
-9. Choose **мій / моя / моє / мої** for one family word.
-10. Close with **Дуже приємно** and **До побачення**.
+2. Say how many letters and sounds Ukrainian has: **33 літери, 38 звуків**.
+3. Greet a peer informally and a teacher formally.
+4. Ask one person **Як тебе звати?**
+5. Say your name with **Мене звати...**
+6. Say where you are from with **Я з...**
+7. Say one role or profession without **є**.
+8. Say your age with **Мені ... років**.
+9. Add one family sentence with **У мене є...**
+10. Choose **мій / моя / моє / мої** for one family word.
+11. Close with **Дуже приємно** and **До побачення**.
 
 Your final model can be simple:
 
