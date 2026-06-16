@@ -52,11 +52,183 @@ def test_cyrillic_latin_lookalike_author_forms_match(author: str) -> None:
     assert _result(f"{author}, Grade 10, p.176")["passed"] is True
 
 
+def test_author_prefixed_scholarly_title_matches_plan_reference_by_containment() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Костомаров М. «Слов'янська міфологія»"}],
+        {"references": [{"title": "Слов'янська міфологія", "author": "Костомаров М."}]},
+    )
+
+    assert result["passed"] is True
+    assert result["unknown"] == []
+
+
+def test_initial_before_surname_matches_plan_author_by_containment() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "М. Костомаров «Слов'янська міфологія»"}],
+        {"references": [{"title": "Слов'янська міфологія", "author": "Костомаров М."}]},
+    )
+
+    assert result["passed"] is True
+    assert result["unknown"] == []
+
+
+def test_author_mismatch_does_not_launder_generic_title_by_containment() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Інший Автор, Українська мова, 9 клас"}],
+        {"references": [{"title": "Українська мова", "author": "Караман О."}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Інший Автор, Українська мова, 9 клас"]
+
+
+def test_authorless_generic_title_does_not_resolve_by_containment() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Єфремов С. «Історія української літератури»"}],
+        {"references": [{"title": "Історія української літератури"}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Єфремов С. «Історія української літератури»"]
+
+
+def test_punctuation_collapse_does_not_cross_token_boundaries() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Автор Х., Точка: Нульова гіпотеза"}],
+        {"references": [{"title": "Точка Нуль", "author": "Автор Х."}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Автор Х., Точка: Нульова гіпотеза"]
+
+
+def test_author_corroboration_accepts_surname_initial_source_ref() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Шевченко Т.Г. «Садок вишневий»"}],
+        {"references": [{"title": "Садок вишневий", "author": "Тарас Шевченко"}]},
+    )
+
+    assert result["passed"] is True
+    assert result["unknown"] == []
+
+
+def test_first_name_alone_does_not_satisfy_author_corroboration() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Тарас Петренко «Садок вишневий»"}],
+        {"references": [{"title": "Садок вишневий", "author": "Тарас Шевченко"}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Тарас Петренко «Садок вишневий»"]
+
+
+def test_title_word_does_not_satisfy_author_corroboration() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Костомаров М. «Слов'янська міфологія»"}],
+        {"references": [{"title": "Слов'янська міфологія", "author": "Міфологія"}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Костомаров М. «Слов'янська міфологія»"]
+
+
+def test_author_word_inside_quoted_title_does_not_corroborate_author() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Петренко О. «Шевченко: Садок вишневий»"}],
+        {"references": [{"title": "Садок вишневий", "author": "Тарас Шевченко"}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Петренко О. «Шевченко: Садок вишневий»"]
+
+
+def test_nested_title_quote_does_not_corroborate_author_from_title_prefix() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Петренко О. «Шевченко “Садок вишневий”»"}],
+        {"references": [{"title": "Садок вишневий", "author": "Тарас Шевченко"}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Петренко О. «Шевченко “Садок вишневий”»"]
+
+
+def test_unquoted_title_does_not_resolve_by_containment() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Петренко О. Шевченко: Садок вишневий"}],
+        {"references": [{"title": "Садок вишневий", "author": "Тарас Шевченко"}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Петренко О. Шевченко: Садок вишневий"]
+
+
+def test_quoted_title_with_no_plan_match_still_rejected() -> None:
+    result = linear_pipeline._citation_gate(
+        [{"source_ref": "Петренко О. «Немає такого твору»"}],
+        {"references": [{"title": "Садок вишневий", "author": "Тарас Шевченко"}]},
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Петренко О. «Немає такого твору»"]
+
+
+def test_koliadky_author_prefixed_plan_references_resolve_by_containment() -> None:
+    plan_path = (
+        linear_pipeline.PROJECT_ROOT
+        / "curriculum/l2-uk-en/plans/folk/koliadky-shchedrivky.yaml"
+    )
+    plan = yaml.safe_load(plan_path.read_text("utf-8"))
+    resources = [
+        {"source_ref": "Костомаров М. «Слов'янська міфологія»"},
+        {"source_ref": "Попович М. «Нарис історії культури України»"},
+        {"source_ref": "Чижевський Д. «Історія української літератури»"},
+        {
+            "source_ref": (
+                "Чубинський П. «Праці етнографічно-статистичної експедиції "
+                "в Західно-Руський край»"
+            )
+        },
+    ]
+
+    result = linear_pipeline._citation_gate(resources, plan)
+
+    assert result["passed"] is True
+    assert result["unknown"] == []
+
+    order_variant = linear_pipeline._citation_gate(
+        [{"source_ref": "М. Костомаров «Слов'янська міфологія»"}],
+        plan,
+    )
+
+    assert order_variant["passed"] is True
+    assert order_variant["unknown"] == []
+
+
 def test_unknown_citation_still_rejected() -> None:
     result = _result("Tolstoy, War and Peace, p.500")
 
     assert result["passed"] is False
     assert result["unknown"] == ["Tolstoy, War and Peace, p.500"]
+
+
+def test_author_prefixed_title_not_in_plan_still_rejected() -> None:
+    result = _result(
+        "Костомаров М. «Слов'янська міфологія»",
+        "Історія української літератури",
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Костомаров М. «Слов'янська міфологія»"]
+
+
+def test_one_word_generic_plan_title_does_not_resolve_by_containment() -> None:
+    result = _result(
+        "Костомаров М. «Слов'янська міфологія»",
+        "Міфологія",
+    )
+
+    assert result["passed"] is False
+    assert result["unknown"] == ["Костомаров М. «Слов'янська міфологія»"]
 
 
 def test_partial_match_does_not_pass() -> None:
