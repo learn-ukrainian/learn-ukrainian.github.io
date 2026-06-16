@@ -22,10 +22,6 @@
   translation: vowel
   pos: adjective / noun
   usage: Голосний звук.
-- lemma: звук
-  translation: sound
-  pos: noun
-  usage: Звук о.
 - lemma: слово
   translation: word
   pos: noun
@@ -38,14 +34,6 @@
   translation: question
   pos: noun
   usage: Це питання.
-- lemma: так
-  translation: "yes"
-  pos: particle
-  usage: Так.
-- lemma: ні
-  translation: "no"
-  pos: particle
-  usage: Ні.
 - lemma: хто
   translation: who
   pos: pronoun
@@ -66,10 +54,6 @@
   translation: how
   pos: adverb
   usage: Як спра́ви?
-- lemma: це
-  translation: this is / this
-  pos: pronoun
-  usage: Це ка́ва.
 - lemma: кава
   translation: coffee
   pos: noun
@@ -81,7 +65,7 @@
 - lemma: столиця
   translation: capital
   pos: noun
-  usage: Ки́їв - столи́ця.
+  usage: Це столи́ця.
 - lemma: замок
   translation: castle / lock
   pos: noun
@@ -94,6 +78,10 @@
   translation: organ
   pos: noun
   usage: О́рган і орга́н.
+- lemma: сім'я
+  translation: seed / family by stress
+  pos: noun
+  usage: Сі́м'я і сім'я́.
 - lemma: ранок
   translation: morning
   pos: noun
@@ -142,14 +130,14 @@
   translation: milk
   pos: noun
   usage: Молоко́.
-- lemma: книжка
-  translation: small book
+- lemma: голова
+  translation: head
   pos: noun
-  usage: Кни́жка.
-- lemma: книжки
-  translation: books
+  usage: Голова́.
+- lemma: голови
+  translation: heads
   pos: noun plural
-  usage: Книжки́.
+  usage: Го́лови.
 - lemma: людина
   translation: person
   pos: noun
@@ -162,14 +150,14 @@
   translation: rest / vacation
   pos: noun
   usage: Відпочи́нок.
-- lemma: кілометр
-  translation: kilometer
-  pos: noun
-  usage: Кіломе́тр.
-- lemma: маленький
-  translation: small
+- lemma: новий
+  translation: new
   pos: adjective
-  usage: Мале́нький.
+  usage: Нови́й.
+- lemma: старий
+  translation: old
+  pos: adjective
+  usage: Стари́й.
 - lemma: аптека
   translation: pharmacy
   pos: noun
@@ -178,35 +166,7 @@
   translation: nicely / beautiful
   pos: adverb
   usage: Як га́рно!
-- lemma: привіт
-  translation: hi
-  pos: interjection
-  usage: Приві́т!
-- lemma: справи
-  translation: things / affairs
-  pos: noun plural
-  usage: Як спра́ви?
-- lemma: добре
-  translation: good / well
-  pos: adverb
-  usage: До́бре!
-- lemma: у тебе
-  translation: and you / with you
-  pos: phrase
-  usage: А у те́бе?
-- lemma: Оля
-  translation: Olia
+- lemma: Марія
+  translation: Maria
   pos: proper noun
-  usage: О́ля.
-- lemma: Тарас
-  translation: Taras
-  pos: proper noun
-  usage: Тара́с.
-- lemma: Київ
-  translation: Kyiv
-  pos: proper noun
-  usage: Ки́їв.
-- lemma: Україна
-  translation: Ukraine
-  pos: proper noun
-  usage: Украї́на.
+  usage: Марі́я.

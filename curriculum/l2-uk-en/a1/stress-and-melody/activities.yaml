@@ -2,9 +2,9 @@ inline:
   - id: act-1
     type: quiz
     title: Де на́голос
-    instruction: Спочатку слухай, потім обери склад із позначеним на́голосом.
+    instruction: Обери склад із позначеним на́голосом.
     items:
-      - prompt: 'Слухай, потім читай: ка́ва. Де на́голос?'
+      - prompt: 'Читай: ка́ва. Де на́голос?'
         options:
           - text: перший склад
             correct: true
@@ -13,7 +13,7 @@ inline:
           - text: немає наголосу
             correct: false
         explanation: У слові ка́ва на́голос на ка́.
-      - prompt: 'Слухай, потім читай: вода́. Де на́голос?'
+      - prompt: 'Читай: вода́. Де на́голос?'
         options:
           - text: останній склад
             correct: true
@@ -22,7 +22,7 @@ inline:
           - text: усі склади однакові
             correct: false
         explanation: У слові вода́ на́голос на да́.
-      - prompt: 'Слухай, потім читай: столи́ця. Де на́голос?'
+      - prompt: 'Читай: столи́ця. Де на́голос?'
         options:
           - text: середній склад
             correct: true
@@ -74,22 +74,31 @@ inline:
             correct: false
         explanation: Оклик має сильнішу спадну мелодику.
   - id: act-3
-    type: match-up
-    title: На́голос змінює значення
-    instruction: З'єднай наголошене слово з короткою англійською підказкою.
-    pairs:
-      - left: за́мок
-        right: castle
-      - left: замо́к
-        right: lock
-      - left: а́тлас
-        right: atlas
-      - left: атла́с
-        right: satin
-      - left: о́рган
-        right: body organ
-      - left: орга́н
-        right: musical instrument
+    type: quiz
+    title: Швидкий контраст
+    instruction: Обери коротку англійську підказку.
+    items:
+      - prompt: за́мок
+        options:
+          - text: castle
+            correct: true
+          - text: lock
+            correct: false
+        explanation: За́мок із наголосом на першому складі — castle.
+      - prompt: замо́к
+        options:
+          - text: lock
+            correct: true
+          - text: castle
+            correct: false
+        explanation: Замо́к із наголосом на останньому складі — lock.
+      - prompt: сім'я́
+        options:
+          - text: family
+            correct: true
+          - text: seed
+            correct: false
+        explanation: Сім'я́ з фінальним наголосом — family.
   - id: act-4
     type: fill-in
     title: Пунктуація і мелодика
@@ -130,46 +139,108 @@ inline:
           - '?'
           - '!'
         explanation: Це твердження.
-workbook:
-  - type: error-correction
-    title: Виправ пастки наголосу
-    instruction: Обери безпечнішу українську читацьку звичку.
+  - id: act-5
+    type: fill-in
+    title: Типові пастки наголосу
+    instruction: Обери нормативну форму з позначеним наголосом.
     items:
-      - sentence: Молоко́ — тримай усі голосні чистими.
-        error: нечіткі перші два голосні
-        correction: мо-ло-ко́
+      - sentence: "Це мій ___ комп'ютер."
+        answer: нови́й
         options:
-          - мо-ло-ко́
-          - нечіткі голосні
-        explanation: Українські голосні залишаються чистими поза на́голосом.
-      - sentence: Кіломе́тр — став на́голос на -ме́тр.
-        error: кі́лометр
-        correction: кіломе́тр
+          - нови́й
+          - но́вий
+        explanation: У слові нови́й наголос наприкінці.
+      - sentence: "Мій дідусь ___."
+        answer: стари́й
         options:
-          - кіломе́тр
-          - кі́лометр
-        explanation: Підготовлена модель — кіломе́тр.
-      - sentence: Кни́жка / книжки́ — помічай рухомий на́голос.
-        error: кни́жки
-        correction: книжки́
-        options:
-          - книжки́
-          - кни́жки
-        explanation: У цій множинній моделі на́голос переходить на закінчення.
-      - sentence: Одина́дцять — наголос на -на́-.
-        error: о́динадцять
-        correction: одина́дцять
+          - стари́й
+          - ста́рий
+        explanation: У слові стари́й наголос наприкінці.
+      - sentence: "У мене ___ гривень."
+        answer: одина́дцять
         options:
           - одина́дцять
           - о́динадцять
-        explanation: Ціль A1 має на́голос на -на́-.
-      - sentence: Чотирна́дцять — наголос на -на́-.
-        error: чоти́рнадцять
-        correction: чотирна́дцять
+        explanation: Одина́дцять має наголос на -на́-.
+      - sentence: "Я знаю ___ нових слів."
+        answer: чотирна́дцять
         options:
           - чотирна́дцять
           - чоти́рнадцять
-        explanation: Ціль A1 має на́голос на -на́-.
+        explanation: Чотирна́дцять теж має наголос на -на́-.
+      - sentence: "Множина слова голова́: ___."
+        answer: го́лови
+        options:
+          - го́лови
+          - голови́
+        explanation: У цій словниковій парі наголос рухається.
+      - sentence: "Мене звати ___."
+        answer: Марі́я
+        options:
+          - Марі́я
+          - Ма́рія
+        explanation: У цьому імені наголос на рі́.
+workbook:
+  - type: fill-in
+    title: Типові помилки наголосу
+    instruction: Обери нормативну форму з позначеним наголосом.
+    items:
+      - sentence: "новий: ___"
+        answer: нови́й
+        options:
+          - нови́й
+          - но́вий
+        explanation: У слові нови́й наголос на останній частині.
+      - sentence: "старий: ___"
+        answer: стари́й
+        options:
+          - стари́й
+          - ста́рий
+        explanation: У слові стари́й наголос на останній частині.
+      - sentence: "одинадцять: ___"
+        answer: одина́дцять
+        options:
+          - одина́дцять
+          - о́динадцять
+        explanation: Одина́дцять має наголос на -на́-.
+      - sentence: "чотирнадцять: ___"
+        answer: чотирна́дцять
+        options:
+          - чотирна́дцять
+          - чоти́рнадцять
+        explanation: Чотирна́дцять теж має наголос на -на́-.
+      - sentence: "множина слова голова́: ___"
+        answer: го́лови
+        options:
+          - го́лови
+          - голови́
+        explanation: "У цій парі наголос рухається: голова́, але го́лови."
+      - sentence: "ім'я: ___"
+        answer: Марі́я
+        options:
+          - Марі́я
+          - Ма́рія
+        explanation: У цьому імені наголос на рі́.
+  - type: match-up
+    title: На́голос змінює значення
+    instruction: З'єднай наголошене слово з короткою англійською підказкою.
+    pairs:
+      - left: за́мок
+        right: castle
+      - left: замо́к
+        right: lock
+      - left: а́тлас
+        right: atlas
+      - left: атла́с
+        right: satin
+      - left: о́рган
+        right: body organ
+      - left: орга́н
+        right: musical instrument
+      - left: сі́м'я
+        right: seed
+      - left: сім'я́
+        right: family
   - type: group-sort
     title: Сортуй за наголосом
     instruction: Розподіли кожне слово за позначеним наголошеним складом.

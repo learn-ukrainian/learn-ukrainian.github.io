@@ -2,16 +2,13 @@
 
 **ка́ва. вода́. Це ка́ва? Де метро́?** — stress and sentence melody.
 
-First listen, then read. Use the lawful public resource already listed for
-this module: [ULP Season 1, Episode 5 — Pronunciation
-Trainer](https://www.ukrainianlessons.com/episode5/). Open the page, listen
-for the stress practice, and repeat short model words. Do not download,
-transcribe, remix, or reuse the audio; this lesson only links to it for
-listening support.
+Teacher Oksana starts with a tiny routine: listen, mark, repeat. If you have a
+teacher or tutor, let them read one word first. If you are working alone, read
+the stress mark first and then say the word slowly.
 
 Today you are not memorizing every stress pattern in Ukrainian. You are
-learning why stress matters, how to read prepared words with stress marks, and
-how to use three beginner sentence melodies.
+learning why stress matters, how to read words with stress marks, and how to
+use three beginner sentence melodies.
 
 By the end, you can:
 
@@ -26,6 +23,12 @@ By the end, you can:
   **як**;
 - read a short greeting dialogue with Ukrainian rhythm.
 
+:::tip
+If you want extra listening support, open [ULP Season 1, Episode 5 —
+Pronunciation Trainer](https://www.ukrainianlessons.com/episode5/) from the
+Resources tab and copy only short model words.
+:::
+
 ## Наголос
 
 **ка́ва. вода́. молоко́.** Listen first, then read the marks.
@@ -35,13 +38,11 @@ In learning materials, this course marks it with an accent: **ка́ва**,
 **вода́**, **молоко́**. In ordinary Ukrainian texts, the mark is usually
 absent, so you learn stress as part of each new word.
 
-Use this listening pass before the table:
+Use this quick pass before the table:
 
-1. Open the linked ULP Episode 5 page.
-2. Listen for one short stress model.
-3. Without reading the English support, point to the stronger syllable in the
-   marked word.
-4. Repeat the word once.
+1. Point to the stress mark.
+2. Say only the stronger syllable.
+3. Say the whole word once.
 
 Ukrainian stress is free. It can fall near the beginning, middle, or end of a
 word.
@@ -52,9 +53,9 @@ word.
 | final syllable | **вода́**, **зима́**, **рука́**, **метро́**, **кафе́** |
 | middle syllable | **столи́ця**, **люди́на**, **одина́дцять** |
 
-There is no useful shortcut for A1 learners. Treat stress as part of the word,
-just like spelling. When you add a word to your notebook, add its stress too:
-**ка́ва**, not just кава.
+There is no useful shortcut for A1 learners. That is normal. Treat stress as
+part of the word, just like spelling. When you add a word to your notebook,
+add its stress too: **ка́ва**, not just кава.
 
 A second habit matters just as much: do not blur unstressed vowels. In
 **молоко́**, the first two **о** sounds stay **о**. They are lighter than the
@@ -62,7 +63,7 @@ stressed final **о**, but they stay clear. Read slowly first:
 **мо-ло-ко́**. Keep every vowel clear, then speed up.
 
 Some Ukrainian words move stress when the form changes. For now, only notice
-the idea. **кни́жка** can become **книжки́** in plural. That is a future
+the idea. **голова́** can become **го́лови** in plural. That is a future
 grammar habit, but you can already hear that Ukrainian stress can move.
 
 Stress can also change meaning:
@@ -75,11 +76,21 @@ Stress can also change meaning:
 | **атла́с** | satin |
 | **о́рган** | body organ |
 | **орга́н** | musical instrument |
+| **сі́м'я** | seed |
+| **сім'я́** | family |
 
 Do not guess these from spelling alone. Use the stress mark when it is given,
 and check a dictionary such as goroh.pp.ua when you are unsure.
 
+:::tip
+You already saw **за́мок** and **замо́к**, and you already know **сім'я́**
+from Module 3. Here they are reminders, not a new memory load: the mark is
+small, but it can carry meaning.
+:::
+
 <!-- INJECT_ACTIVITY: act-1 -->
+
+<!-- INJECT_ACTIVITY: act-3 -->
 
 ## Мелодика
 
@@ -96,8 +107,6 @@ three safe models:
 
 The punctuation helps you choose the melody, but your voice must still do the
 work.
-
-<!-- INJECT_ACTIVITY: act-4 -->
 
 Now add the most important beginner exception. A question with a question word
 usually falls, not rises:
@@ -117,13 +126,20 @@ But a yes/no question rises:
 | **Це вода́?** | rising **↗** |
 | **А у те́бе?** | rising **↗** |
 
-Logical stress is the important word inside the sentence. In **Це ка́ва?**,
-you can make **ка́ва** the important word if you are checking the object. In
-**А у те́бе?**, the important part is **те́бе** because you are turning the
-question back to the other person.
+<!-- INJECT_ACTIVITY: act-4 -->
+
+Logical stress means the important word inside the sentence. Keep this simple
+today. In **Це ка́ва?**, the important word is **ка́ва** because you are
+checking the object. In **А у те́бе?**, the important part is **те́бе** because
+you are turning the question back to the other person.
 
 Keep the explanation Ukrainian-centered. Listen to the Ukrainian words, notice
 the stress, and copy the contour.
+
+:::tip
+Do not worry if your melody feels slow at first. Slow and clear is the right
+A1 target.
+:::
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
@@ -201,21 +217,21 @@ English support after the Ukrainian dialogue:
 | **Ось вода́.** | Here is water. |
 | **Як га́рно!** | How nice! |
 
-<!-- INJECT_ACTIVITY: act-3 -->
-
 Common traps now become workbook habits:
 
 | Trap | Safer Ukrainian habit |
 | --- | --- |
 | blurring unstressed vowels in **молоко́** | keep **мо-ло-ко́** clear |
-| reading **кіломе́тр** with first-syllable stress | stress the **-ме́тр** part |
-| keeping stress fixed in **кни́жка / книжки́** | notice that stress can move |
+| reading **нови́й** or **стари́й** with early stress | stress the final part |
+| keeping stress fixed in **голова́ / го́лови** | notice that stress can move |
 | always emphasizing a pronoun | put logical stress on the meaningful word |
-| reading **мале́нький** with first-syllable stress | stress the middle part of **мале́нький** |
+| reading **Марі́я** with first-syllable stress | stress the **рі́** part |
 | reading **одина́дцять** or **чотирна́дцять** with early stress | stress **на́** |
 
 You do not need to produce all of these words fluently today. You need to
 recognize the safer habit and avoid building the wrong one.
+
+<!-- INJECT_ACTIVITY: act-5 -->
 
 ## Друк, зошит, голос
 
@@ -255,5 +271,9 @@ Ask a native Ukrainian teacher or tutor to listen to one read-aloud from this
 module. The feedback target is narrow: stress, clear vowels, and the direction
 of the sentence melody.
 
-The workbook adds extra practice with the same skills: clear-vowel repair,
-stress sorting, quick facts, and word recognition.
+You can now read a marked Ukrainian word, keep vowels clear, and choose the
+first safe melody for a statement or question. Next, Module 5 uses this sound
+control when you introduce yourself.
+
+The workbook adds extra practice with the same skills: stress sorting,
+stress-transfer repair, quick facts, and word recognition.
