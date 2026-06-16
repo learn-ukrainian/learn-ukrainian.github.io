@@ -41,7 +41,7 @@ beautifulsoup4>=4.14
 requests>=2.33.0
 
 # YouTube ingestion
-yt-dlp>=2026.3.17
+yt-dlp>=2026.6.9
 
 # Build utilities
 jinja2>=3.1
