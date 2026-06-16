@@ -94,6 +94,7 @@ references:
   work: 'The Russo-Ukrainian War: The Return of History'
 sequence: 132
 slug: povnomasshtabne-vtorhnennia
+slug_intentional: true
 subtitle: The Full-Scale Invasion and the Battle for Kyiv
 title: Повномасштабне вторгнення та битва за Київ
 version: '4.0'

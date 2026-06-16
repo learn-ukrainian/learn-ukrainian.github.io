@@ -29,23 +29,10 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 CURRICULUM_PATH = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
 PLANS_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans"
 
-# Exact legacy exceptions that predate the blocking CI gate in #2526. Keep these
-# keyed to the observed value so future drift still fails.
-LEGACY_SLUG_MISMATCHES = {
-    ("hist", "povnomasshtabne-vtorhnessnia.yaml", "povnomasshtabne-vtorhnennia"),
-    ("hist", "zunr.yaml", "zunr-akt-zluky"),
-    ("istorio", "2004-krymska-kryza.yaml", "2004-separatystskyi-syid"),
-    ("ruth", "black-council.yaml", "chorna-rada"),
-    ("lit-essay", "essay-synthesis-1.yaml", "khvylovy-ukraina-chy-malorosiia"),
-    ("lit-hist-fic", "shklyar-black-raven-2.yaml", "shklyar-chornyy-voron"),
-    ("lit-war", "zhadan-internat-war.yaml", "zhadan-internat"),
-    ("lit-youth", "rutkivsky-dzhury-2.yaml", "rutkivsky-dzhury"),
-    ("lit-youth", "rutkivsky-dzhury-3.yaml", "rutkivsky-dzhury-trilogy"),
-    ("lit-drama", "karpenko-karyi-theatre.yaml", "karpenko-karyi-martyn-borulya"),
-}
-
 LEGACY_FIELD_MISMATCHES = {
+    # Metadata-only plan correction blocked by HIST plan immutability review.
     ("hist", "ruska-pravda.yaml", "module", "ruska-pravda", "hist-013"),
+    # Metadata-only plan correction blocked by ISTORIO plan immutability review.
     (
         "istorio",
         "syntez-rozdorizhzhia.yaml",
@@ -53,6 +40,7 @@ LEGACY_FIELD_MISMATCHES = {
         "istorio-syntez-rozdorizhzhia",
         "istorio-094",
     ),
+    # Metadata-only plan correction blocked by LIT-ESSAY plan immutability review.
     (
         "lit-essay",
         "lypynsky-ham-japheth.yaml",
@@ -60,7 +48,9 @@ LEGACY_FIELD_MISMATCHES = {
         "lypynsky-ham-japheth",
         "lit-essay-015",
     ),
+    # Renumbering blocked until the LIT-ESSAY source sequence is reconciled.
     ("lit-essay", "prokopovych-baroque-oratory.yaml", "sequence", "3", "2"),
+    # Renumbering blocked until the LIT-ESSAY source module id is reconciled.
     (
         "lit-essay",
         "prokopovych-baroque-oratory.yaml",
@@ -68,6 +58,7 @@ LEGACY_FIELD_MISMATCHES = {
         "lit-essay-003",
         "lit-essay-002",
     ),
+    # Metadata-only plan correction blocked by LIT-HIST-FIC plan immutability review.
     (
         "lit-hist-fic",
         "lepkyi-mazepa.yaml",
@@ -75,8 +66,11 @@ LEGACY_FIELD_MISMATCHES = {
         "lepkyi-mazepa",
         "lit-hist-fic-003",
     ),
+    # Metadata-only plan correction blocked by RUTH plan immutability review.
     ("ruth", "berynda-leksykon.yaml", "module", "berynda-leksykon", "ruth-102"),
+    # Renumbering blocked until the LIT-WAR source sequence is reconciled.
     ("lit-war", "gorlis-gorsky-kholodnyi-yar.yaml", "sequence", "1", "26"),
+    # Renumbering blocked until the LIT-WAR source module id is reconciled.
     (
         "lit-war",
         "gorlis-gorsky-kholodnyi-yar.yaml",
@@ -84,7 +78,9 @@ LEGACY_FIELD_MISMATCHES = {
         "lit-war-001",
         "lit-war-026",
     ),
+    # Renumbering blocked until the LIT-WAR source sequence is reconciled.
     ("lit-war", "upa-underground-literature.yaml", "sequence", "1", "27"),
+    # Renumbering blocked until the LIT-WAR source module id is reconciled.
     (
         "lit-war",
         "upa-underground-literature.yaml",
@@ -92,6 +88,7 @@ LEGACY_FIELD_MISMATCHES = {
         "lit-war-001",
         "lit-war-027",
     ),
+    # Metadata-only plan correction blocked by LIT-HUMOR plan immutability review.
     (
         "lit-humor",
         "andrukhovych-postmodern-irony.yaml",
@@ -99,6 +96,7 @@ LEGACY_FIELD_MISMATCHES = {
         "andrukhovych-postmodern-irony",
         "lit-humor-009",
     ),
+    # Metadata-only plan correction blocked by LIT-HUMOR plan immutability review.
     (
         "lit-humor",
         "modern-memes-as-folklore.yaml",
@@ -106,6 +104,7 @@ LEGACY_FIELD_MISMATCHES = {
         "modern-memes-as-folklore",
         "lit-humor-013",
     ),
+    # Metadata-only plan correction blocked by LIT-DRAMA plan immutability review.
     (
         "lit-drama",
         "arie-chornobyl.yaml",
@@ -113,7 +112,9 @@ LEGACY_FIELD_MISMATCHES = {
         "arie-chornobyl",
         "lit-drama-011",
     ),
+    # Renumbering blocked until the LIT-DRAMA source sequence is reconciled.
     ("lit-drama", "karpenko-karyi-theatre.yaml", "sequence", "1", "13"),
+    # Renumbering blocked until the LIT-DRAMA source module id is reconciled.
     (
         "lit-drama",
         "karpenko-karyi-theatre.yaml",
@@ -121,6 +122,7 @@ LEGACY_FIELD_MISMATCHES = {
         "lit-drama-001",
         "lit-drama-013",
     ),
+    # Metadata-only plan correction blocked by LIT-DRAMA plan immutability review.
     (
         "lit-drama",
         "kulish-narodnyi-malahii.yaml",
@@ -128,7 +130,9 @@ LEGACY_FIELD_MISMATCHES = {
         "kulish-narodnyi-malahii",
         "lit-drama-006",
     ),
+    # Renumbering blocked until the LIT-DRAMA source sequence is reconciled.
     ("lit-drama", "skovoroda-dialogues-theatre.yaml", "sequence", "1", "15"),
+    # Renumbering blocked until the LIT-DRAMA source module id is reconciled.
     (
         "lit-drama",
         "skovoroda-dialogues-theatre.yaml",
@@ -136,7 +140,9 @@ LEGACY_FIELD_MISMATCHES = {
         "lit-drama-001",
         "lit-drama-015",
     ),
+    # Renumbering blocked until the LIT-DRAMA source sequence is reconciled.
     ("lit-drama", "ukrainian-drama-origins.yaml", "sequence", "1", "14"),
+    # Renumbering blocked until the LIT-DRAMA source module id is reconciled.
     (
         "lit-drama",
         "ukrainian-drama-origins.yaml",
@@ -144,6 +150,7 @@ LEGACY_FIELD_MISMATCHES = {
         "lit-drama-01",
         "lit-drama-014",
     ),
+    # Metadata-only plan correction blocked by LIT-DRAMA plan immutability review.
     (
         "lit-drama",
         "vorozhbyt-bad-roads.yaml",
@@ -151,7 +158,9 @@ LEGACY_FIELD_MISMATCHES = {
         "lit-drama-10",
         "lit-drama-010",
     ),
+    # Renumbering blocked until the LIT-DRAMA source sequence is reconciled.
     ("lit-drama", "vynnychenko-european-stage.yaml", "sequence", "2", "17"),
+    # Renumbering blocked until the LIT-DRAMA source module id is reconciled.
     (
         "lit-drama",
         "vynnychenko-european-stage.yaml",
@@ -159,14 +168,18 @@ LEGACY_FIELD_MISMATCHES = {
         "lit-drama-002",
         "lit-drama-017",
     ),
+    # C1 review is indexed after existing modules; moving it to c1-072 would
+    # displace morfolohichni-stylistychni-zasoby and force a broad C1 renumber.
+    ("c1", "review-c1-5.yaml", "sequence", "72", "133"),
+    # C1 review is indexed after existing modules; c1-072 is already occupied
+    # by morfolohichni-stylistychni-zasoby pending a dedicated C1 ordering pass.
+    ("c1", "review-c1-5.yaml", "module", "c1-072", "c1-133"),
 }
 
-LEGACY_ORPHAN_FILES = {("c1", "review-c1-5.yaml")}
-LEGACY_MISSING_PLAN_FILES = {("c2", "pobut-i-shchodenne-zhyttia.yaml", "68")}
-
-
-def _is_legacy_slug_mismatch(level: str, filename: str, actual_slug: str) -> bool:
-    return (level, filename, actual_slug) in LEGACY_SLUG_MISMATCHES
+LEGACY_MISSING_PLAN_FILES = {
+    # planned-unbuilt; tracked by the C2.4 State Standard thematic redesign block.
+    ("c2", "pobut-i-shchodenne-zhyttia.yaml", "68"),
+}
 
 
 def _is_legacy_field_mismatch(
@@ -342,8 +355,6 @@ def validate_track(level: str, slugs: list[str], fix: bool = False) -> tuple[lis
 
         # Check if slug is in curriculum
         if file_slug not in slug_to_seq:
-            if (level, plan_file.name) in LEGACY_ORPHAN_FILES:
-                continue
             warnings.append(f"[{level}] ORPHAN: {plan_file.name} has no curriculum.yaml entry")
             continue
 
@@ -359,7 +370,6 @@ def validate_track(level: str, slugs: list[str], fix: bool = False) -> tuple[lis
             plan_slug
             and plan_slug != file_slug
             and plan.get("slug_intentional") is not True
-            and not _is_legacy_slug_mismatch(level, plan_file.name, plan_slug)
         ):
             errors.append(
                 f"[{level}] {plan_file.name}: slug={plan_slug!r}, expected={file_slug!r}; "
