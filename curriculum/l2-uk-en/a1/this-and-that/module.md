@@ -1,9 +1,9 @@
 # Це і те
 
-Pointing is useful before you know many sentences. Ukrainian gives you one
-easy word first: **це**. Then it gives you a more precise set: **цей / ця /
-це / ці** for things near you, and **той / та / те / ті** for things farther
-away or already mentioned.
+Привіт! Pointing is useful before you know many sentences. Ukrainian gives
+you one easy word first: **це**. Then it gives you a more precise set:
+**цей / ця / це / ці** for things near you, and **той / та / те / ті** for
+things farther away or already mentioned.
 
 By the end, you can:
 
@@ -11,84 +11,63 @@ By the end, you can:
 - choose **цей / ця / це / ці** by the noun's gender or plural form;
 - choose **той / та / те / ті** for "that / those";
 - combine pointing words with familiar adjectives and colors;
-- avoid common traps such as **цей є мій стіл**, **це цікавий книга**, and
-  ambiguous **та** in lists.
-
-<!--
-Wiki coverage obligations:
-step-1: Start from the universal particle це in the model «Це + [іменник]». It supports Що це? and Хто це? before gender matters.
-step-2: Link personal pronouns to noun gender: стіл — він, книга — вона, вікно — воно, and plural things — вони.
-step-3: Introduce near demonstratives цей (чоловічий рід), ця (жіночий рід), це (середній рід), ці (множина) as nominative chunks that depend on the noun: цей стіл, ця книга, це вікно, ці ручки.
-step-4: Introduce far demonstratives той, та, те, ті through spatial contrast, with який / яка / яке / які plus чий and котрий as later-recognition question words for choosing.
-step-5: Treat тая, теє, ції, такеє as пасивне засвоєння and poetic recognition only; оцей, оця, оце, отой, ота, ото, and отакий are spoken emphatic forms for passive recognition.
-step-6: Case forms and prepositions belong later. A1 only recognizes chunks such as цю книгу and того хлопця; у нього / у неї / з ним / «з ними» show the н- preview after його / її / їм, and stress can move to the корінь in later chunks such as «у то́му».
-step-7: Negative and indefinite pronouns such as ніхто, аніскільки, декотрий, казна-хто and prefixes ні-, ані-, аби-, де- are A2 material, not active A1 material.
-err-1: Wrong Цей є мій стіл -> correct Це мій стіл, because present-tense бути is normally dropped and universal це introduces the sentence.
-err-2: Wrong Я маю 20 років -> correct Мені 20 років, the age model from M11.
-err-3: Wrong Моє ім'я є Марк -> correct Мене звати Марк, the name model from M5.
-err-4: Wrong Я бачу теє хлопця -> correct Я бачу того хлопця; teye-style forms are poetic/passive, not everyday A1 speech.
-err-5: Wrong Я розмовляв з його -> correct Я розмовляв з ним; the н- after prepositions is later grammar and only previewed here.
-err-6: Wrong У тому́ -> correct У то́му in the later preposition chunk; this stress detail is preview-only.
-err-7: Wrong Це цікавий книга -> correct Ця книга цікава, because the pointing word before a feminine noun agrees with the noun.
-ban-1: Do not explain Ukrainian through Russian or use Russian as a bridge or standard.
-ban-2: Do not explain Ukrainian sounds or letters as "like Russian X but..."; Ukrainian is taught as its own system.
-ban-3: Keep vocabulary clean: тато, прізвище, Добрий день, До побачення; avoid presenting русизми as Ukrainian choices.
-ban-4: Use Ukrainian cultural framing precisely: синьо-жовтий прапор, Holodomor 1932-1933, and Ukrainian cultural references.
--->
+- avoid common traps such as **Це є цікава книга**, **цей сумку**, code
+  switching, and ambiguous **та** in lists.
 
 ## Діалоги
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
-At a table, a bag is close to you and another bag is across the room.
+In an electronics shop, one phone is close to you and another phone is on the
+far shelf.
 
 ```text
-Ірина: Добрий день! Скільки коштує ця сумка?
-Консультант: Ця червона? Двісті гривень.
-Ірина: Ні, та синя.
-Консультант: Та синя коштує сто п'ятдесят гривень.
-Ірина: А цей рюкзак?
-Консультант: Цей — сто гривень.
+Ірина: Добрий день! Скільки коштує цей телефон?
+Консультант: Цей чорний? Вісімсот гривень.
+Ірина: Ні, той синій телефон.
+Консультант: Той коштує тисячу гривень.
+Ірина: А ця камера?
+Консультант: Ця — дев'ятсот гривень.
 ```
 
 Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Ірина: Добрий день! Скільки коштує ця сумка?** | Iryna: Good afternoon! How much does this bag cost? |
-| **Консультант: Ця червона? Двісті гривень.** | Assistant: This red one? Two hundred hryvnias. |
-| **Ірина: Ні, та синя.** | Iryna: No, that blue one. |
-| **Консультант: Та синя коштує сто п'ятдесят гривень.** | Assistant: That blue one costs one hundred fifty hryvnias. |
-| **Ірина: А цей рюкзак?** | Iryna: And this backpack? |
-| **Консультант: Цей — сто гривень.** | Assistant: This one is one hundred hryvnias. |
+| **Ірина: Добрий день! Скільки коштує цей телефон?** | Iryna: Good afternoon! How much does this phone cost? |
+| **Консультант: Цей чорний? Вісімсот гривень.** | Assistant: This black one? Eight hundred hryvnias. |
+| **Ірина: Ні, той синій телефон.** | Iryna: No, that blue phone. |
+| **Консультант: Той коштує тисячу гривень.** | Assistant: That one costs one thousand hryvnias. |
+| **Ірина: А ця камера?** | Iryna: And this camera? |
+| **Консультант: Ця — дев'ятсот гривень.** | Assistant: This one is nine hundred hryvnias. |
 
 In a room, the same grammar works without prices:
 
 ```text
-Оля: Що це?
-Дмитро: Це мій стіл.
-Оля: А те?
-Дмитро: Те — крісло.
-Оля: Цей стілець новий?
-Дмитро: Так, цей новий, а той старий.
-Оля: Добре, дякую.
+Ірина: Що це?
+Консультант: Це стіл.
+Ірина: А те?
+Консультант: Те — крісло.
+Ірина: Цей стілець новий?
+Консультант: Так, цей новий, а той старий.
+Ірина: Добре, дякую.
 ```
 
 Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Оля: Що це?** | Olia: What is this? |
-| **Дмитро: Це мій стіл.** | Dmytro: This is my table. |
-| **Оля: А те?** | Olia: And that? |
-| **Дмитро: Те — крісло.** | Dmytro: That is an armchair. |
-| **Оля: Цей стілець новий?** | Olia: Is this chair new? |
-| **Дмитро: Так, цей новий, а той старий.** | Dmytro: Yes, this one is new, and that one is old. |
-| **Оля: Добре, дякую.** | Olia: Good, thank you. |
+| **Ірина: Що це?** | Iryna: What is this? |
+| **Консультант: Це стіл.** | Assistant: This is a table. |
+| **Ірина: А те?** | Iryna: And that? |
+| **Консультант: Те — крісло.** | Assistant: That is an armchair. |
+| **Ірина: Цей стілець новий?** | Iryna: Is this chair new? |
+| **Консультант: Так, цей новий, а той старий.** | Assistant: Yes, this one is new, and that one is old. |
+| **Ірина: Добре, дякую.** | Iryna: Good, thank you. |
 
 The pattern is small:
 
-- **цей** = this one, masculine: **цей рюкзак**, **цей стіл**
+- **цей** = this one, masculine: **цей телефон**, **цей стіл**
 - **ця** = this one, feminine: **ця сумка**, **ця книга**
 - **це** = this one, neuter: **це вікно**, **це радіо**
 - **той / та / те** = that one farther away: **той стіл**, **та книга**,
@@ -103,6 +82,9 @@ When you point and name a thing, ask two quick questions: is it near or far,
 and what is the noun's gender? Near + **стіл** gives **цей стіл**. Far +
 **книга** gives **та книга**.
 :::
+
+Quick win: **Ось ця книга тут. Той стіл там.** You already understand a
+small pointing sentence.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
@@ -167,6 +149,15 @@ Ask with **який / яка / яке / які**:
 **Чи** is the question word for "or" here. It helps you choose between two
 visible things.
 
+If your brain hesitates, use a two-step loop. First name the thing with
+**це**: **Це телефон. Це камера. Це радіо.** Then point more precisely:
+**цей телефон**, **ця камера**, **це радіо**. After that, make the distance
+contrast: **цей телефон — той телефон**, **ця камера — та камера**,
+**це радіо — те радіо**. You are not learning a new idea each time. You are
+changing one small choice: near or far, then masculine, feminine, neuter, or
+plural. That is enough for today. Small correct chunks beat long uncertain
+sentences for now.
+
 <!-- INJECT_ACTIVITY: act-4 -->
 
 ### «Та» у двох ролях
@@ -186,6 +177,8 @@ together:
 
 At A1, use **і** for lists when **та** already means "that" nearby. This is a
 style safety habit, not a ban on the connector **та**.
+
+<!-- INJECT_ACTIVITY: act-5 -->
 
 Use **ті** for plural things farther away: **ті ручки**, **ті телефони**,
 **ті чорні рюкзаки**. The near/far contrast is now complete: **ці** means
@@ -212,14 +205,13 @@ Do not build the full case table today. Just notice the useful feminine
 shopping chunk **цю книгу**. If you say **цей книгу**, the pointing word and
 the feminine noun do not match. The safe chunk is **цю книгу**.
 
-You may also see old or emphatic forms:
+You may also see emphatic pointing forms:
 
 - **оцей / оця / оце** = this exact one, right here
 - **отой / ота / ото** = that exact one over there
-- **тая / теє / ції** = poetic-looking forms you only need to recognize
 
 Use **цей / ця / це / той / та / те** actively. Treat the other forms as
-recognition items for reading, songs, or later lessons.
+recognition items for reading or later lessons.
 
 ### Виправ пастки
 
@@ -227,19 +219,14 @@ Keep these repairs close:
 
 | If you want to say... | Use this | Avoid this |
 | --- | --- | --- |
-| This is my table. | **Це мій стіл.** | **Цей є мій стіл.** |
+| This is an interesting book. | **Це цікава книга.** | **Це є цікава книга.** |
 | This book is interesting. | **Ця книга цікава.** | **Це цікавий книга.** |
-| I am 20 years old. | **Мені 20 років.** | **Я маю 20 років.** |
-| My name is Mark. | **Мене звати Марк.** | **Моє ім'я є Марк.** |
-| I see that boy. | **Я бачу того хлопця.** | **Я бачу теє хлопця.** |
+| I want to buy this bag. | **Я хочу купити цю сумку.** | **Я хочу купити цей сумку.** |
+| What is this? This is a table. | **Що це? — Це стіл.** | **Что это? — Это стіл.** |
+| That book and a pen are in the room. | **У кімнаті є та книга і ручка.** | **У кімнаті є та книга та ручка.** |
 
-The last two preview later grammar, but they protect you from building a bad
-habit now. **Мене звати** comes from your introduction module, and
-**Мені 20 років** comes from the numbers module.
-
-After prepositions, Ukrainian pronouns often change in a way English does not:
-**з ним**, **у нього**, **у неї**. That is later material. For today, simply
-recognize **Я розмовляю з ним** as the safe chunk, not **з його**.
+The buying chunk **цю сумку / цю книгу** is just a useful phrase today. You do
+not need the full case table yet.
 
 ### Мініперевірка: мій світ
 
