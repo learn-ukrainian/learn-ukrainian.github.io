@@ -14,7 +14,8 @@
 
 ## 🟢 IN FLIGHT
 - **#3291 MERGED** (homographs + dmklinger tail) — real-data verified (#M-11: all 32 folds correct, 0 meta-junk residuals). Lemma-keying milestone CLOSED.
-- **#3098** (decolonization §6 active-participle calque layer — HIGHEST mission value) — PR #3296, REVIEWED (#M-4 via mcp__sources): 20 curated calques, evidence REAL (Antonenko p101 «Працюючий … працівник» confirmed verbatim; textbook corrections match), no over-flag (no блискучий/колючий traps), heritage-guard clears all. Fixed 1 entry: діючий was only «чинний» → sense-split «чинний (закон) / активний (вулкан)» per Avramenko Grade-7. Re-enrich `bo33qy9ml` running → verify §8 + commit + merge. NOTE: 0/20 calque forms are in current atlas vocab → §6 cards ARMED-but-inert on pages now; live value = lesson Russianism-flag cross-feed (#2156) + future vocab.
+- **#3296 / #3098 first slice MERGED** — decolonization §6 active-participle calque layer (20 curated forms, reviewed #M-4 via mcp__sources; діючий sense-split fix; виглядати live SENSE-RESTRICTED card; 19 armed for lesson cross-feed). #3098 left OPEN for broaden-to-collocations. (CI caught my stale діучий test assertion → fixed at the right layer, no --admin bypass.)
+- **#3116** (synonym wrong-sense over-reach: drop кам'яниця/звір intruders, KEEP гостинець/путівець; enrich_manifest.py:~973) — Codex `synonym-sense-3116` running. On return: review (do NOT over-drop legit dialectal synonyms — #1 risk), integrate, re-enrich, merge.
 
 ## ⏭️ QUEUED (atlas pipeline is SERIAL — one re-enrich at a time, #M-9)
 1. **#3098 integration** — review curated set → integrate → re-enrich → merge.
