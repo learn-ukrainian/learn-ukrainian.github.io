@@ -14,7 +14,7 @@
 
 ## 🟢 IN FLIGHT
 - **#3291 MERGED** (homographs + dmklinger tail) — real-data verified (#M-11: all 32 folds correct, 0 meta-junk residuals). Lemma-keying milestone CLOSED.
-- **#3098** (decolonization §6 active-participle calque layer — HIGHEST mission value) — curation dispatched to Codex `calque-participles-3098` (source-verified Antonenko/Pravopys/UA-GEC + heritage-guard, NO invention, no Лепетун-verbatim). **On return: I review EVERY correction linguistically (false-positive = #1 risk), then integrate + run the controlled re-enrich (post-#3291) to surface in §6.**
+- **#3098** (decolonization §6 active-participle calque layer — HIGHEST mission value) — PR #3296, REVIEWED (#M-4 via mcp__sources): 20 curated calques, evidence REAL (Antonenko p101 «Працюючий … працівник» confirmed verbatim; textbook corrections match), no over-flag (no блискучий/колючий traps), heritage-guard clears all. Fixed 1 entry: діючий was only «чинний» → sense-split «чинний (закон) / активний (вулкан)» per Avramenko Grade-7. Re-enrich `bo33qy9ml` running → verify §8 + commit + merge. NOTE: 0/20 calque forms are in current atlas vocab → §6 cards ARMED-but-inert on pages now; live value = lesson Russianism-flag cross-feed (#2156) + future vocab.
 
 ## ⏭️ QUEUED (atlas pipeline is SERIAL — one re-enrich at a time, #M-9)
 1. **#3098 integration** — review curated set → integrate → re-enrich → merge.
