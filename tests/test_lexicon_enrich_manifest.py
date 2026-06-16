@@ -925,6 +925,45 @@ def test_curated_calque_matches_phrasal_entry() -> None:
     assert card["source"] == ["ua-gec", "grok-3098"]
 
 
+def test_curated_calque_matches_collocation_slice2_phrasal_entries() -> None:
+    expected = {
+        "при допомозі": "за допомогою",
+        "співпадати": "збігатися",
+        "в кінці кінців": "врешті-решт",
+    }
+    for phrase, correction in expected.items():
+        card = _curated_calque(phrase, phrase)
+        assert card is not None
+        assert card["kind"] == "phrasal"
+        assert correction in card["corrections"]
+        assert card["evidence"]
+        assert "search_heritage" in card["heritage_guard"]
+
+
+def test_curated_calque_matches_collocation_slice2_sense_restricted_entries() -> None:
+    expected = {
+        "на протязі": "протягом",
+        "являтися": "бути",
+        "дякуючи": "завдяки",
+        "так як": "оскільки",
+        "біля": "близько",
+        "на рахунок": "щодо",
+    }
+    for phrase, correction in expected.items():
+        card = _curated_calque(phrase, phrase)
+        assert card is not None
+        assert card["kind"] == "sense_restricted"
+        assert correction in card["corrections"]
+        assert card["calque_sense"] != card["authentic_sense"]
+        assert card["evidence"]
+        assert "search_heritage" in card["heritage_guard"]
+
+
+def test_collocation_slice2_authentic_phrases_are_not_exact_flagged() -> None:
+    assert _curated_calque("біля школи", "біля школи") is None
+    assert _curated_calque("на рахунок у банку", "на рахунок у банку") is None
+
+
 def test_curated_calque_unknown_lemma_returns_none() -> None:
     assert _curated_calque("яблуко", "яблуко") is None
 

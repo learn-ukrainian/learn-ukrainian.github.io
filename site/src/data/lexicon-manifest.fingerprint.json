@@ -1,5 +1,5 @@
 {
-  "fingerprint": "13f2f7c85580a8698c7b2a5b50c342612de2739cb1d15f120b582a0d8e45b41b",
+  "fingerprint": "b43391ac8ccd78ec28d251850f5c553d2bd2127c0d3cc228e73bfb383ee3ba7e",
   "inputs": {
     "lexicon_code": [
       {
@@ -24,7 +24,7 @@
       },
       {
         "path": "scripts/lexicon/calque_corrections.py",
-        "sha256": "66125f9451fb77de840edfe291684187f167ca6e3c8fe19932d2b189a40437e9"
+        "sha256": "d07e477961e20e0b4c73380c679b880674330b92cbd0db017275ec43f64934e7"
       },
       {
         "path": "scripts/lexicon/check_manifest_freshness.py",
@@ -36,7 +36,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "d819a97701daaae80f7aed977d11f20eefa1c26e1399aae2107c48ae6ae26d2f"
+        "sha256": "bb4c0b19c10ea7fe71be29ad7137037d84723c077e0d099c7e5ac7bcc2e0234d"
       },
       {
         "path": "scripts/lexicon/generate_vesum_aliases.py",

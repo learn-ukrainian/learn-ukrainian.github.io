@@ -303,6 +303,35 @@ PHRASAL_CALQUES: dict[str, dict[str, object]] = {
     "з моєї точки зору": {"corrections": ["на мою думку"], "note": "рос. с моей точки зрения", "source": ["ua-gec", "grok-3098"]},  # ua-gec 0573, 1031
     "ні в якому разі": {"corrections": ["аж ніяк", "у жодному разі"], "note": "рос. ни в коем случае", "source": ["ua-gec", "grok-3098"]},  # ua-gec 0717, 1844
     "прийшло в голову": {"corrections": ["спало на думку"], "note": "рос. пришло в голову (F/Collocation); в голову прийшли → спали на гадку", "source": ["ua-gec", "grok-3098"]},  # ua-gec 0834
+    # §6 collocation/phrasal slice 2 (#3098) — kept only with direct correction evidence.
+    "при допомозі": {
+        "corrections": ["за допомогою"],
+        "note": "syntactic calque; use the instrumental phrase за допомогою",
+        "source": ["glazova-11"],
+        "evidence": [
+            "11-klas-ukrajinska-mova-glazova-2019_s0079: Неправильно: при допомозі; Правильно: за допомогою",
+        ],
+        "heritage_guard": "search_heritage(при допомозі, include_live_slovnyk=false): No heritage evidence found.",
+    },
+    "співпадати": {
+        "corrections": ["збігатися"],
+        "note": "рос. совпадать; дані співпадають → дані збігаються",
+        "source": ["avramenko-5"],
+        "evidence": [
+            "5-klas-ukrmova-avramenko-2022_s0038: Неправильно: дані співпадають; Правильно: дані збігаються",
+        ],
+        "heritage_guard": "search_heritage(співпадати, include_live_slovnyk=false): No heritage evidence found.",
+    },
+    "в кінці кінців": {
+        "corrections": ["кінець кінцем", "зрештою", "урешті-решт", "врешті-решт"],
+        "note": "рос. в конце концов",
+        "source": ["zabolotnyi-9", "ua-gec"],
+        "evidence": [
+            "9-klas-ukrmova-zabolotnyi-2017_s0291: Правильно: кінець кінцем; НЕправильно: в кінці кінців",
+            "UA-GEC 0935: Error: в кінці кінців; Correction: врешті-решт; Type: F/Calque",
+        ],
+        "heritage_guard": "search_heritage(в кінці кінців, include_live_slovnyk=false): No heritage evidence found.",
+    },
 }
 
 # Sense-restricted calques (#3098 grok-swarm extension) — POLYSEMES.
@@ -357,6 +386,86 @@ SENSE_RESTRICTED_CALQUES: dict[str, dict[str, object]] = {
         "authentic_sense": "to look (well/ill); to peer out (гарно виглядати; виглядати у вікно)",
         "note": "Грінченко/СУМ-20 attest 'look; peer out'; calque only when 'виглядає' replaces 'здається' (= it seems).",
         "source": ["grinchenko", "sum-20", "grok-3098"],
+    },
+    "являтися": {
+        "corrections": ["бути", "є"],
+        "calque_sense": "to be / constitute (рос. являться = 'to be')",
+        "authentic_sense": "to appear, show oneself, arrive (явитися комусь / десь)",
+        "note": "Грінченко attests являтися as 'show/appear'; calque only in copular use: являтися переможцем → бути переможцем.",
+        "source": ["grinchenko", "avramenko-9", "zabolotnyi-9", "ua-gec"],
+        "evidence": [
+            "9-klas-ukrajinska-mova-avramenko-2017_s0162: Неправильно: являтися переможцем; Правильно: бути переможцем",
+            "9-klas-ukrmova-zabolotnyi-2017_s0101: Правильно: він є студентом; НЕПРАВИЛЬНО: він являється студентом",
+            "UA-GEC 0301: Error: являється; Correction: є; Type: F/Calque",
+            "Грінченко: Являтися ... Являться, явиться, показываться, показаться.",
+        ],
+        "heritage_guard": "search_heritage(являтися, include_live_slovnyk=false): Грінченко authentic for 'appear/show'; therefore sense-restricted, not blanket.",
+    },
+    "на протязі": {
+        "corrections": ["протягом", "упродовж", "впродовж"],
+        "calque_sense": "during / over a time span (рос. на протяжении)",
+        "authentic_sense": "in a draft; along/over a distance (сидіти на протязі; на протязі кількох кілометрів)",
+        "note": "Calque only for time duration: на протязі години → протягом/упродовж години; keep the draft/distance senses.",
+        "source": ["litvinova-7", "zabolotnyi-7", "zabolotnyi-9", "ua-gec"],
+        "evidence": [
+            "7-klas-ukrmova-litvinova-2024_s0186: для тривалости використовуємо протягом, упродовж/впродовж; на протязі означає на різкому струмені повітря",
+            "7-klas-ukrmova-zabolotnyi-2024_s0229: на протязі години ненормативне; для часу вживаємо протягом або впродовж; на протязі можна сидіти / уживати для відстані",
+            "UA-GEC 0490: Error: на протязі; Correction: протягом; Type: F/Calque",
+            "UA-GEC 1730: Error: на протязі; Correction: упродовж; Type: F/Collocation",
+        ],
+        "heritage_guard": "search_heritage(на протязі, include_live_slovnyk=false): ЕСУМ row is not a time-duration clearance; textbooks explicitly preserve draft/distance senses.",
+    },
+    "дякуючи": {
+        "corrections": ["завдяки"],
+        "calque_sense": "because of / thanks to as a preposition with a cause (рос. благодаря)",
+        "authentic_sense": "adverbial participle of дякувати: while thanking someone",
+        "note": "Calque only in causal-preposition use: дякуючи підтримці → завдяки підтримці.",
+        "source": ["zabolotnyi-7"],
+        "evidence": [
+            "7-klas-ukrmova-zabolotnyi-2024_s0143: Правильно: Переміг завдяки підтримці друзів; НЕправильно: Переміг, дякуючи підтримці друзів.",
+            "7-klas-ukrmova-zabolotnyi-2024_s0229: Правильно: завдяки підтримці; НЕправильно: дякуючи підтримці",
+        ],
+        "heritage_guard": "search_heritage(дякуючи, include_live_slovnyk=false): no direct safe headword clearance for the causal-preposition use; keep sense-restricted because дієприслівник дякуючи is grammatical.",
+    },
+    "так як": {
+        "corrections": ["оскільки", "бо"],
+        "calque_sense": "because / since (рос. так как)",
+        "authentic_sense": "comparative construction так, як ('in the way that'), normally comma-marked",
+        "note": "Calque only in causal conjunction use: так як → оскільки/бо; do not confuse with так, як.",
+        "source": ["ua-gec"],
+        "evidence": [
+            "UA-GEC 0026: Error: так як; Correction: оскільки; Type: F/Calque",
+            "UA-GEC 0569: Error: так як; Correction: бо; Type: F/Calque",
+        ],
+        "heritage_guard": "search_heritage(так як, include_live_slovnyk=false): no phrase clearance; ЕСУМ hits attest components/other expressions, so this remains sense-restricted.",
+    },
+    "біля": {
+        "corrections": ["близько"],
+        "calque_sense": "approximately / about before a quantity (рос. около)",
+        "authentic_sense": "next to, near (біля школи, біля будинку)",
+        "note": "Грінченко attests біля as 'near'; calque only before approximate quantities: біля двох років → близько двох років.",
+        "source": ["grinchenko", "litvinova-7", "zabolotnyi-7", "ua-gec"],
+        "evidence": [
+            "7-klas-ukrmova-litvinova-2024_s0186: БІЛЯ: біля школи, біля будинку; БЛИЗЬКО: близько третьої години, потрібно близько двадцяти хвилин",
+            "7-klas-ukrmova-zabolotnyi-2024_s0229: Правильно: близько двох років; НЕправильно: біля двох років",
+            "UA-GEC 0385: Error: біля; Correction: близько; Type: F/Calque",
+            "Грінченко: Біля ... Подле, возле, около. Ліг біля моря одпочить.",
+        ],
+        "heritage_guard": "search_heritage(біля, include_live_slovnyk=false): Грінченко authentic for 'near'; therefore sense-restricted, not blanket.",
+    },
+    "на рахунок": {
+        "corrections": ["щодо", "стосовно"],
+        "calque_sense": "regarding / concerning (рос. насчёт)",
+        "authentic_sense": "to/onto an account, including bank-account contexts",
+        "note": "Calque only in 'regarding' use: на рахунок цього → щодо цього; keep literal account/bank uses.",
+        "source": ["avramenko-5", "zabolotnyi-9", "grinchenko", "ua-gec"],
+        "evidence": [
+            "5-klas-ukrmova-avramenko-2022_s0057: Неправильно: на рахунок цього; Правильно: щодо цього",
+            "9-klas-ukrmova-zabolotnyi-2017_s0031: Правильно: рахунок у банку; НЕПРАВИЛЬНО: счьот у банку",
+            "UA-GEC 1296: Error: на рахунок; Correction: щодо; Type: F/Calque",
+            "Грінченко: Рахунок ... Счет, разсчет. В рахунку помилився.",
+        ],
+        "heritage_guard": "search_heritage(рахунок, include_live_slovnyk=false): Грінченко authentic for account/count; therefore на рахунок is sense-restricted to the 'regarding' calque.",
     },
 }
 
