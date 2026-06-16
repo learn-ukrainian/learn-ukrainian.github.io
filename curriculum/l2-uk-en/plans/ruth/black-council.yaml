@@ -93,6 +93,7 @@ references:
   type: wiki
 sequence: 80
 slug: chorna-rada
+slug_intentional: true
 subtitle: Аналіз мовної стилізації Пантелеймона Куліша
 title: Чорна Рада
 version: '4.0'

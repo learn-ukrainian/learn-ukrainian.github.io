@@ -91,7 +91,8 @@ references:
   path: wiki/lit/ivan-franko-overview.md
   type: wiki
 sequence: 42
-slug: franko-biography
+slug: franko-titan-pratsi
+slug_intentional: true
 subtitle: 'Ivan Franko: A Titan of Labor'
 title: 'Іван Франко: Титан праці'
 version: '4.0'

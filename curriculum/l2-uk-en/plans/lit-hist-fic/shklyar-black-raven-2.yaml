@@ -89,6 +89,7 @@ references:
   type: wiki
 sequence: 13
 slug: shklyar-chornyy-voron
+slug_intentional: true
 subtitle: 'Коли роман стає зброєю: аналіз феномену "Чорного Ворона"'
 title: 'Василь Шкляр: "Чорний Ворон"'
 version: '4.0'

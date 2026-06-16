@@ -88,6 +88,7 @@ references:
   type: wiki
 sequence: 51
 slug: khvylovy-ukraina-chy-malorosiia
+slug_intentional: true
 subtitle: 'Khvylovy''s Pamphlets: "Ukraine or Little Russia?"'
 title: 'Памфлети Хвильового: "Україна чи Малоросія?"'
 version: '4.0'

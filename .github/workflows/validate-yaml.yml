@@ -253,6 +253,9 @@ jobs:
             python scripts/validate_plan_config.py "${level}/${slug}"
           done
 
+      - name: Validate Plan Ordering
+        run: python scripts/validate_plan_ordering.py
+
   schema-check:
     name: Schema JSON Syntax
     runs-on: ubuntu-latest

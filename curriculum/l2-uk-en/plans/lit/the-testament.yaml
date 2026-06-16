@@ -92,7 +92,8 @@ references:
   path: wiki/lit/shevchenko-zapovit.md
   type: wiki
 sequence: 15
-slug: the-testament
+slug: zapovit
+slug_intentional: true
 subtitle: 'The Testament: A Political and Poetic Manifesto'
 title: '"Заповіт": Політичний і поетичний маніфест'
 version: '4.0'

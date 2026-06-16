@@ -93,6 +93,7 @@ references:
   work: 'From Kuchma to Yushchenko: Ukraine''s 2004 Presidential Elections'
 sequence: 129
 slug: 2004-separatystskyi-syid
+slug_intentional: true
 subtitle: The 2004 Severodonetsk Congress and the "First Attempt" to Split Ukraine
 title: '2004: Сєвєродонецький з''їзд і "перша спроба" розколу України'
 version: '4.0'
