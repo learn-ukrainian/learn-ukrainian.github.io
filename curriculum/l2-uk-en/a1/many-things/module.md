@@ -1,83 +1,66 @@
 # Багато речей
 
-Ukrainian does not add one universal ending for "more than one." You learn a
-few useful plural shapes, then keep each new noun together with its plural
-form: **стіл - столи**, **книга - книги**, **вікно - вікна**. The good news is
-that adjectives become simpler in the plural: **великий / велика / велике**
-all become **великі**.
+Привіт! Today you move from one familiar object to many familiar objects.
+Ukrainian does not use one universal plural ending, so the safest A1 habit is
+to learn pairs: **стіл - столи**, **книга - книги**, **вікно - вікна**.
+
+The encouraging part is that plural adjectives are simpler than singular
+adjectives. In singular you matched gender: **великий стіл**, **велика
+книга**, **велике вікно**. In plural, all three become **великі**.
 
 By the end, you can:
 
-- turn familiar classroom nouns into safe plural chunks;
-- choose **ці / ті / мої / які** with plural nouns;
-- describe groups with plural adjectives and colors;
-- use **два, три, чотири** with ordinary plural noun forms;
-- recognize plural-only words such as **гроші**, **двері**, and **окуляри**
-  without trying to force them into singular.
+- form useful nominative plural chunks for classroom things;
+- recognize three common plural shapes: **-и**, **-і**, **-а / -я**;
+- use plural adjectives ending in **-і**;
+- describe groups with **ці**, **ті**, **мої**, and **які**.
 
-<!--
-Wiki coverage obligations:
-step-1: Include plural people pronoun chunks ми/ви and recognition chunks нас/вас/нам/вам/нами/вами in simple invitations.
-step-2: Teach Називний відмінок множини noun patterns -и/-і and -а/-я with зошити, учні, гривні.
-step-3: Present plural-only words (гроші, двері, окуляри, радощі, сани, ворота) and singular-only collective words (молодь, дітвора, птаство, листя) as recognition, not active counting.
-step-4: Teach plural adjectives from тверда група examples by contrasting однина with plural: які? and -і for all genders: великі, сині.
-step-5: Show soft-base adjectives such as синій -> сині, літній -> літні, осінній -> осінні.
-step-6: State 2/3/4 + nominative plural: два зошити, три книги, чотири смартфони; два селянина is a later/passive exception, not active A1.
-step-7: Preview 5+ as later genitive plural chunks: п'ять зошитів, десять учнів.
-err-1: Wrong великий м'ячі -> correct великі м'ячі, because plural adjectives use -і.
-err-2: Wrong nonstandard blue-scarf plural -> correct сині шарфи, because plural removes gender endings and uses які? сині.
-err-3: Wrong два зошитів / два смартфонів -> correct два зошити / чотири смартфони for 2, 3, 4.
-err-4: Wrong п'ять зошити / десять учні -> correct п'ять зошитів / десять учнів as a later 5+ chunk.
-err-5: Wrong один двері / два двері -> correct одні двері / двоє дверей for plural-only nouns.
-err-6: Wrong молоді / дітвори -> correct молодь / дітвора as singular-only collective nouns.
-err-7: Wrong для ми / з ми -> correct для нас / з нами.
-ban-1: Teach Ukrainian plural grammar on its own terms; do not use Russian as a bridge.
-ban-2: For два, три, чотири, state the Ukrainian pattern directly: два зошити, три смартфони, чотири відсотки.
-ban-3: Do not phrase Ukrainian rules as exceptions to another language.
-ban-4: Keep двоє, троє, четверо as Ukrainian collective-number recognition chunks for plural-only nouns.
--->
+:::tip
+You are not building the whole plural system today. You are collecting safe
+pairs and using them in small sentences. That is enough.
+:::
 
 ## Діалоги
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
-The classroom is getting ready for a Ukrainian lesson. Several things are on
-the tables, so the first job is simple: name one thing, then name many.
+The classroom is getting ready for a Ukrainian lesson. The teacher points to
+one item first, then the students name many.
 
 ```text
-Марко: Що тут є?
-Оля: Тут столи, стільці і вікна.
-Марко: Які столи?
-Оля: Столи великі й нові.
-Марко: А стільці?
-Оля: Стільці старі, але чисті.
-Марко: А ці вікна?
-Оля: Ці вікна чисті й великі.
+Вчитель: Це один стілець. А тут?
+Учні: Тут стільці.
+Вчитель: Це одна дошка. А тут?
+Учні: Тут дошки.
+Вчитель: Це одне крісло. А тут?
+Учні: Тут крісла.
+Вчитель: Добре. Тут є олівці, ручки, підручники і карти.
+Учні: Це речі!
 ```
 
 Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Марко: Що тут є?** | Marko: What is here? |
-| **Оля: Тут столи, стільці і вікна.** | Olia: There are tables, chairs, and windows here. |
-| **Марко: Які столи?** | Marko: What are the tables like? |
-| **Оля: Столи великі й нові.** | Olia: The tables are big and new. |
-| **Марко: А стільці?** | Marko: And the chairs? |
-| **Оля: Стільці старі, але чисті.** | Olia: The chairs are old, but clean. |
-| **Марко: А ці вікна?** | Marko: And these windows? |
-| **Оля: Ці вікна чисті й великі.** | Olia: These windows are clean and big. |
+| **Вчитель: Це один стілець. А тут?** | Teacher: This is one chair. And here? |
+| **Учні: Тут стільці.** | Students: There are chairs here. |
+| **Вчитель: Це одна дошка. А тут?** | Teacher: This is one board. And here? |
+| **Учні: Тут дошки.** | Students: There are boards here. |
+| **Вчитель: Це одне крісло. А тут?** | Teacher: This is one armchair. And here? |
+| **Учні: Тут крісла.** | Students: There are armchairs here. |
+| **Вчитель: Добре. Тут є олівці, ручки, підручники і карти.** | Teacher: Good. There are pencils, pens, textbooks, and maps here. |
+| **Учні: Це речі!** | Students: These are things! |
 
-At a small shop, plural forms appear because you want more than one item:
+At a small shop, plural forms appear because you want more than one object.
 
 ```text
 Покупець: У вас є ручки?
 Продавець: Так. Які ручки - червоні чи сині?
 Покупець: Сині. І ще зошити.
 Продавець: Скільки?
-Покупець: Три зошити і дві ручки.
-Продавець: Добре. Для вас є нові сині ручки.
-Покупець: Дякую. Нам треба саме ці.
+Покупець: Три зошити.
+Продавець: Ось ці ручки і ті зошити.
+Покупець: Дякую. Мої сумки маленькі, але ці речі легкі.
 ```
 
 Support after the Ukrainian lines:
@@ -88,9 +71,9 @@ Support after the Ukrainian lines:
 | **Продавець: Так. Які ручки - червоні чи сині?** | Seller: Yes. Which pens - red or blue? |
 | **Покупець: Сині. І ще зошити.** | Customer: Blue ones. And notebooks too. |
 | **Продавець: Скільки?** | Seller: How many? |
-| **Покупець: Три зошити і дві ручки.** | Customer: Three notebooks and two pens. |
-| **Продавець: Добре. Для вас є нові сині ручки.** | Seller: Good. For you there are new blue pens. |
-| **Покупець: Дякую. Нам треба саме ці.** | Customer: Thank you. We need exactly these. |
+| **Покупець: Три зошити.** | Customer: Three notebooks. |
+| **Продавець: Ось ці ручки і ті зошити.** | Seller: Here are these pens and those notebooks. |
+| **Покупець: Дякую. Мої сумки маленькі, але ці речі легкі.** | Customer: Thank you. My bags are small, but these things are light. |
 
 Notice four small plural helpers:
 
@@ -98,89 +81,80 @@ Notice four small plural helpers:
 | --- | --- | --- |
 | **ці** | these | **ці ручки**, **ці столи** |
 | **ті** | those | **ті книги**, **ті стільці** |
-| **мої** | my, plural | **мої зошити**, **мої книги** |
-| **які** | which / what kind, plural | **Які ручки?** |
+| **мої** | my, plural | **мої зошити**, **мої сумки** |
+| **які** | which / what kind, plural | **Які ручки?**, **Які столи?** |
 
-Plural can also mean people. This is another way to talk about **багато**:
-more than one person is acting together. Keep these as useful chunks for
-invitations and classroom teamwork:
-
-- **ми** = we, **ви** = you plural / formal you
-- **для нас** = for us, **для вас** = for you
-- **нам треба** = we need, **вам треба** = you need
-- **з нами** = with us, **з вами** = with you
-
-You do not need a pronoun table today. Just recognize the chunks when people
-are acting together: **Ми тут. Нам треба три зошити. Ідіть з нами.**
+When a noun is plural, the singular gender choice goes quiet. You no longer
+need **цей / ця / це**, **той / та / те**, **мій / моя / моє**, or
+**який / яка / яке**. Use the plural forms: **ці**, **ті**, **мої**, **які**.
 
 :::tip
-When a noun is plural, the old gender question becomes quiet. You no longer
-need **мій / моя / моє** or **який / яка / яке**. Use the plural forms:
-**мої** and **які**.
+If the noun means more than one thing, ask yourself one quick question:
+"Which plural helper fits?" Then choose **ці**, **ті**, **мої**, or **які**.
 :::
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
 ## Один → багато
 
-Start with the nouns you already know. Learn the plural as part of the word,
-not as a guess.
+Start with nouns you already know. Learn the plural as part of the word, not
+as a guess.
 
 | One | Many | Pattern to notice |
 | --- | --- | --- |
 | **стіл** | **столи** | masculine, often **-и** |
 | **зошит** | **зошити** | masculine, often **-и** |
 | **телефон** | **телефони** | masculine, often **-и** |
-| **стілець** | **стільці** | masculine, **-ець** often changes |
+| **стілець** | **стільці** | **-ець** often changes |
 | **книга** | **книги** | feminine, often **-и** |
-| **ручка** | **ручки** | feminine, often **-и** |
-| **сумка** | **сумки** | feminine, often **-и** |
+| **ручка** | **ручки** | after **к**, write **и** |
+| **сумка** | **сумки** | after **к**, write **и** |
+| **лампа** | **лампи** | feminine, often **-и** |
 | **вікно** | **вікна** | neuter **-о** becomes **-а** |
 | **крісло** | **крісла** | neuter **-о** becomes **-а** |
 | **дзеркало** | **дзеркала** | neuter **-о** becomes **-а** |
 
-This is the nominative plural pattern, **називний відмінок множини**, in its
-safest A1 shape. You will meet the same shape in people and money words such
-as **учні** and **гривні**.
+This is the nominative plural, **називний відмінок множини**, in its safest A1
+shape. You meet three common models:
 
-This is enough for A1:
+- many nouns use **-и**: **столи**, **книги**, **ручки**, **сумки**;
+- some nouns use **-і**: **стільці**, later **учні**;
+- many neuter nouns ending in **-о** use **-а**: **вікна**, **крісла**,
+  **дзеркала**.
 
-- many masculine and feminine nouns use **-и** or **-і**;
-- many neuter nouns ending in **-о** use **-а**;
-- a few words, such as **стілець - стільці**, need their own memory hook.
+You may also see the matching **-я** side later, especially with some neuter
+words ending in **-е**, for example **місце - місця**. For this module, keep
+**-а** active and treat **-я** as recognition.
 
-Do not turn the list into a rule machine. Say the pair aloud and keep the pair
-together: **стіл - столи**, **книга - книги**, **вікно - вікна**. If a new
-word matters, learn both forms at the same time.
+Use a slow loop when you practice. Point to one object, say the singular, then
+point to more objects and say the plural. Keep the words short and ordinary:
+**це стіл - це столи**, **це книга - це книги**, **це вікно - це вікна**.
+Then do the same with classroom words: **це стілець - це стільці**, **це
+ручка - це ручки**, **це зошит - це зошити**. You are training your ear to
+hear the pair, not trying to calculate a rule under pressure.
 
-Some words already look plural and do not have a simple everyday singular:
-**гроші**, **двері**, **окуляри**, **сани**, **ворота**, **радощі**. Treat
-them as whole words first. You can say **ці двері** and **мої окуляри**.
-Later you will learn special counting phrases such as **одні двері** and
-**двоє дверей**; Ukrainian also has collective number words such as **двоє**,
-**троє**, and **четверо** for later work with plural-only nouns. Keep that
-Ukrainian feature; do not replace it with a flattened counting shortcut.
+You do not need to predict every plural. Keep the pair together and say it
+aloud: **стіл - столи**, **книга - книги**, **вікно - вікна**. If a new noun
+matters, learn both forms at the same time.
 
-Some collective words usually stay singular: **молодь**, **дітвора**,
-**птаство**, **листя**. At A1, just recognize that they name a group while
-behaving like singular words. Do not force a plural ending onto them.
-
-<!-- INJECT_ACTIVITY: act-3 -->
+:::warning
+Do not add a plural ending to the English word in your head. Ukrainian plural
+forms have their own shape. Copy the pair you see, then reuse it.
+:::
 
 ## Прикметники у множині
 
-Plural adjectives are friendlier than singular adjectives. In singular, you
-had to match gender:
+<!-- INJECT_ACTIVITY: act-3 -->
+
+Plural adjectives are friendly. In singular, the adjective changes for gender:
 
 | Masculine | Feminine | Neuter |
 | --- | --- | --- |
 | **великий стіл** | **велика книга** | **велике вікно** |
 | **новий зошит** | **нова сумка** | **нове крісло** |
-| **синій шарф** | **синя ручка** | **синє вікно** |
+| **синій телефон** | **синя ручка** | **синє дзеркало** |
 
-In the plural, use **які?** and the adjective ending **-і**. A textbook may
-call the regular hard-adjective path **тверда група**, but your A1 habit is
-simpler: move from **однина** to plural and use **-і**.
+In plural, use **які?** and the adjective ending **-і**.
 
 | Many things | Description |
 | --- | --- |
@@ -188,78 +162,54 @@ simpler: move from **однина** to plural and use **-і**.
 | **книги** | **нові книги** |
 | **вікна** | **чисті вікна** |
 | **ручки** | **сині ручки** |
-| **зошити** | **корисні зошити** |
+| **сумки** | **маленькі сумки** |
+| **лампи** | **жовті лампи** |
 
-The noun can come from any gender in the singular. The plural adjective still
-uses **-і**:
+The noun can come from any gender in singular. The plural adjective still uses
+**-і**:
 
 - **великий стіл -> великі столи**
 - **нова книга -> нові книги**
 - **чисте вікно -> чисті вікна**
-- **синій шарф -> сині шарфи**
-- **літній день -> літні дні**
-- **осінній ранок -> осінні ранки**
+- **синя ручка -> сині ручки**
+- **жовта лампа -> жовті лампи**
 
 This protects you from a common English-speaker habit. English keeps the
 adjective unchanged: big table, big tables. Ukrainian changes the adjective:
 **великий стіл**, but **великі столи**. If your noun is plural, your adjective
 is plural too.
 
-Use colors the same way:
+Now combine the helpers with plural adjectives:
 
-- **червоні ручки**
-- **сині зошити**
-- **білі стіни**
-- **чорні стільці**
-- **жовті лампи**
-
-Then add pointing words from the last module:
-
-- **Ці столи великі.**
-- **Ці книги нові.**
-- **Ті вікна чисті.**
-- **Ті стільці старі.**
-- **Мої ручки сині.**
-
-### З числами
-
-You already met the number pattern in prices and ages. Here it helps with
-classroom objects.
-
-For **два, три, чотири**, use the ordinary plural form you are learning:
-
-| Number chunk | Safe A1 phrase |
+| Chunk | Meaning |
 | --- | --- |
-| **два** | **два зошити**, **два столи** |
-| **три** | **три книги**, **три ручки** |
-| **чотири** | **чотири смартфони**, **чотири стільці** |
+| **ці великі столи** | these big tables |
+| **ті старі стільці** | those old chairs |
+| **мої сині зошити** | my blue notebooks |
+| **які червоні ручки?** | which red pens? |
+| **ці чисті вікна** | these clean windows |
 
-For **п'ять** and higher, you will often see a different later chunk:
-**п'ять зошитів**, **десять учнів**, **сто гривень**. Do not build the full
-case system today. Just keep the useful phrases as phrases.
+Great: you can now describe groups without choosing masculine, feminine, or
+neuter adjective endings. The plural ending **-і** does the work.
 
-Some later human nouns have special shapes, for example **два селянина**.
-That exception is not active A1 work; skip it unless a later lesson asks for
-it.
+Try one more supported pattern before you move on. Start with a plural noun,
+then add one adjective:
 
-The practical classroom line is:
+- **столи -> великі столи**
+- **книги -> нові книги**
+- **вікна -> чисті вікна**
+- **ручки -> сині ручки**
+- **лампи -> жовті лампи**
 
-**Нам треба три зошити і дві ручки.** = We need three notebooks and two pens.
+Now add a helper at the front: **ці великі столи**, **ті нові книги**, **мої
+сині ручки**, **які чисті вікна?** If the whole chunk is plural, every visible
+helper and adjective uses the plural shape too.
 
-That one sentence ties the module together: a plural people chunk (**нам**),
-numbers (**три**, **дві**), plural nouns (**зошити**, **ручки**), and no extra
-grammar table.
-
-<!-- INJECT_ACTIVITY: act-5 -->
+<!-- INJECT_ACTIVITY: act-4 -->
 
 ## Підсумок
 
-Keep the module in three short habits.
-
-Learn Ukrainian plural grammar directly. Do not use Russian as a bridge,
-standard, or comparison point; do not frame Ukrainian rules as exceptions to
-Russian. The Ukrainian pattern is enough on its own: **два зошити**,
-**три книги**, **чотири смартфони**.
+Keep three short habits.
 
 First, learn noun pairs:
 
@@ -267,8 +217,12 @@ First, learn noun pairs:
 - **стілець - стільці**
 - **книга - книги**
 - **ручка - ручки**
+- **сумка - сумки**
+- **лампа - лампи**
 - **вікно - вікна**
 - **крісло - крісла**
+- **дзеркало - дзеркала**
+- **річ - речі**
 
 Second, use one plural adjective ending:
 
@@ -284,20 +238,10 @@ Third, combine plural helpers:
 - **мої сині зошити**
 - **які червоні ручки?**
 
-### Виправ пастки
-
-Use these repairs when English tries to keep Ukrainian too simple:
-
-| Avoid | Use | Why |
-| --- | --- | --- |
-| **великий м'ячі** | **великі м'ячі** | Plural adjective: **-і** |
-| copying a singular **-я** ending into plural | **сині шарфи** | The plural form is **сині** |
-| **два зошитів** | **два зошити** | **2, 3, 4** use the ordinary plural form here |
-| **п'ять зошити** | **п'ять зошитів** | Treat **5+** as a later memorized chunk |
-| **один двері** | **одні двері** | **двері** is plural-only |
-| **молоді** for the group | **молодь** | The group word stays singular |
-| **для ми** | **для нас** | Pronouns change in chunks |
-| **з ми** | **з нами** | After **з**, use **нами** |
+:::tip
+You can now point to groups, ask about groups, and describe groups. That is a
+real A1 step forward.
+:::
 
 ### Мініперевірка: кімната
 
@@ -308,7 +252,7 @@ Look around your desk or room. Make six tiny plural sentences:
 - **Ті стільці старі.**
 - **Мої зошити сині.**
 - **Ці книги нові.**
-- **Три ручки тут.**
+- **Ці лампи жовті.**
 
 Now ask three plural questions:
 
@@ -316,6 +260,5 @@ Now ask three plural questions:
 - **Які ручки - червоні чи сині?**
 - **Ці книги чи ті книги?**
 
-Keep the Ukrainian pattern direct. The plural noun changes, the adjective uses
-**-і**, and **ці / ті / мої / які** do the plural work for pointing, owning,
-and asking.
+You have enough for today: plural noun pairs, plural adjective **-і**, and
+plural helpers **ці / ті / мої / які**.
