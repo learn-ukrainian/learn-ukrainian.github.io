@@ -27,7 +27,11 @@ import argparse
 import json
 from pathlib import Path
 
-from scripts.lexicon.build_data_manifest import MANIFEST_PATH, _lemma_key
+from scripts.lexicon.build_data_manifest import (
+    _lemma_key,
+    _load_built_vocab,
+    _vocabulary_modules,
+)
 from scripts.verification.vesum import verify_word
 
 ALIAS_MAP_PATH = Path(__file__).resolve().parents[2] / "data" / "lexicon" / "vesum_inflection_aliases.json"
@@ -37,7 +41,13 @@ ALIAS_MAP_PATH = Path(__file__).resolve().parents[2] / "data" / "lexicon" / "ves
 # lemma X", so folding them into the verb lemma would mislead. `може` is the strongest case: as
 # "maybe" it is a particle, semantically distinct from могти "to be able". (Ordinary conjugations
 # like люблю→любити / їмо→їсти are NOT here — those fold correctly.) Per user call 2026-06-15.
-_KEEP_STANDALONE_FORMS = {"дякую", "прошу", "може", "будь", "будьте", "вітаю"}
+_KEEP_STANDALONE_FORMS = {
+    "дякую", "прошу", "може", "будь", "будьте", "вітаю",
+    # tranche 2: politeness interjections taught as fixed expressions (like дякую), not as
+    # the bare imperative of their verb. Per user direction "fully lemma-key but keep the
+    # true interjections standalone" (2026-06-16).
+    "вибачте", "пробачте", "перепрошую",
+}
 
 
 def _strip_stress(text: str) -> str:
@@ -52,14 +62,23 @@ def _vesum_lemmas(form: str) -> list[str]:
     return sorted({str(r.get("lemma") or "").strip() for r in rows if r.get("lemma")})
 
 
-def _manifest_lemmas(manifest_path: Path) -> list[str]:
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    return [e["lemma"] for e in manifest.get("entries", []) if e.get("lemma")]
+def _course_surface_forms() -> list[str]:
+    """All taught surface forms from course vocab (NOT the post-dedup manifest, which has
+    already-folded forms removed). This is the correct, dedup-stable input — every form that
+    needs aliasing, with the same taught-set build_data_manifest uses."""
+    seen: set[str] = set()
+    forms: list[str] = []
+    for module in _vocabulary_modules():
+        for rec in _load_built_vocab(module):
+            lemma = rec.get("lemma")
+            if lemma and lemma not in seen:
+                seen.add(lemma)
+                forms.append(lemma)
+    return forms
 
 
-def build_alias_map(manifest_path: Path = MANIFEST_PATH) -> dict[str, dict[str, str]]:
-    lemmas = _manifest_lemmas(manifest_path)
-    taught = {_lemma_key(lemma) for lemma in lemmas}
+def build_alias_map(forms: list[str] | None = None) -> dict[str, dict[str, str]]:
+    lemmas = _course_surface_forms() if forms is None else forms
     keep_standalone = {_lemma_key(form) for form in _KEEP_STANDALONE_FORMS}
     aliases: dict[str, dict[str, str]] = {}
     for form in lemmas:
@@ -68,31 +87,34 @@ def build_alias_map(manifest_path: Path = MANIFEST_PATH) -> dict[str, dict[str, 
             continue  # lexicalized functional form → keep its own Atlas page
         vlemmas = _vesum_lemmas(form)
         if len(vlemmas) != 1:
-            continue  # ambiguous (>1) or absent from VESUM (0) → leave alone
-        target = vlemmas[0]
+            # 0 lemmas = absent from VESUM (phrases / proper names) → never touch.
+            # >1 = HOMOGRAPH → never auto-resolve. "Sole taught candidate" mis-merges true
+            # homographs (сьома→сім not сьомий; друга→друг not другий — caught 2026-06-16), so
+            # these stay standalone, deferred to a curated per-word pass. Mis-merging distinct
+            # words is the project's #1 fear; conservative is correct here.
+            continue
+        target = vlemmas[0]  # unambiguous: fold (incl. create-cases where the lemma isn't taught)
         target_key = _lemma_key(target)
         if target_key == form_key:
             continue  # form is its own lemma
-        if target_key not in taught:
-            continue  # would create a new lemma page → defer to curated human pass
         aliases[form] = {"lemma": target}
     return dict(sorted(aliases.items()))
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Generate VESUM inflection→lemma alias map (#2882).")
-    parser.add_argument("--manifest", type=Path, default=MANIFEST_PATH)
     parser.add_argument("--out", type=Path, default=ALIAS_MAP_PATH)
     parser.add_argument("--dry-run", action="store_true", help="Print summary; do not write.")
     args = parser.parse_args(argv)
 
-    aliases = build_alias_map(args.manifest)
+    aliases = build_alias_map()
     payload = {
         "schema_version": 1,
         "description": (
-            "Auto-generated VESUM inflection→lemma aliases. Gates: single unambiguous VESUM "
-            "lemma; form is not its own lemma; target lemma already taught. Never drops; never "
-            "resolves homographs. Regenerate via scripts.lexicon.generate_vesum_aliases."
+            "Auto-generated VESUM inflection→lemma aliases (from course-vocab surfaces). Gates: "
+            "single unambiguous VESUM lemma (folds, creating the lemma page if new), OR homograph "
+            "resolved to its SOLE taught candidate; form != its own lemma; functional interjections "
+            "excluded; never drops. Regenerate via scripts.lexicon.generate_vesum_aliases."
         ),
         "aliases": aliases,
     }

@@ -1,5 +1,5 @@
 {
-  "fingerprint": "8a3b2dd88fab85a4a6b40dc197af003c76a38f9e0cb1dae0342970917820ae2c",
+  "fingerprint": "eeba55287678ee0bef787ec29ad6b13f9b99d3de3f74f3c8aff285918447b8c0",
   "inputs": {
     "lexicon_code": [
       {
@@ -12,7 +12,7 @@
       },
       {
         "path": "scripts/lexicon/build_data_manifest.py",
-        "sha256": "6a515312494aac2dbfd9f0e038323f54a5659193fe28d4573a39e47729165584"
+        "sha256": "0a34750044a50fcc156b40fc88c0b0c10df296f860769bc393d3eba105d86a4d"
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",
@@ -40,7 +40,7 @@
       },
       {
         "path": "scripts/lexicon/generate_vesum_aliases.py",
-        "sha256": "779e54b378f8f4aeff45101d8b5dc5cff55fba9916459ecb5dfcf89cbcc876f1"
+        "sha256": "9aec3f0bcc8e75ad555860a8f94627867d454df15b31a7a318342554b473fe6b"
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",

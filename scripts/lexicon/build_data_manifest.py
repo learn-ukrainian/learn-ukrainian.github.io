@@ -311,20 +311,43 @@ def _atlas_record_for_manifest(rec: dict, taught_lemma_keys: set[str]) -> dict |
         )
         return canonicalized
 
-    # Auto-generated VESUM aliasing: fold an unambiguous inflected form into its lemma, but
-    # ONLY when that lemma is already taught (no new pages) — same non-destructive contract
-    # as the vocative mapping above. The map is pre-gated (single VESUM lemma; form != lemma;
-    # lemma taught); the taught re-check keeps it safe if the map drifts from the vocab.
+    # Auto-generated VESUM aliasing: fold an inflected form into its lemma. The committed map
+    # is the authority — it is pre-gated by generate_vesum_aliases (unambiguous single VESUM
+    # lemma, OR homograph resolved to its sole taught candidate; form != lemma; functional
+    # interjections excluded). Folding to a lemma NOT yet taught CREATES that lemma page via
+    # _merge_lemma_records (tranche 2 "create-page" cases, e.g. вареники→вареник).
     alias_target = VESUM_INFLECTION_ALIASES_BY_KEY.get(key)
-    if alias_target and _lemma_key(alias_target) in taught_lemma_keys:
+    if alias_target:
         aliased = dict(rec)
         aliased["lemma"] = alias_target
         aliased["source"] = "built_vocabulary_normalized"
+        # A create-case (target lemma taught NOWHERE else) materializes a NEW lemma page whose
+        # head IS this record. The surface form's gloss/pos describe the inflected surface —
+        # e.g. заходьте is imperative "come in, polite/plural"; восьма is the feminine ordinal /
+        # "eight o'clock" — and would mislabel the citation-form lemma head (заходити = verb
+        # infinitive; восьмий = masc. ordinal). Do NOT assert them on the new lemma: the
+        # enrichment pass supplies the lemma's own meaning and the renderer degrades gracefully
+        # on null gloss/pos. Surface values are preserved in the provenance reason. (A plain
+        # fold into an ALREADY-TAUGHT lemma keeps its fields — it merges into the taught head,
+        # whose own gloss/pos win, so the surface values are harmless there.)
+        if _lemma_key(alias_target) not in taught_lemma_keys:
+            surface_gloss = aliased.get("gloss")
+            surface_pos = aliased.get("pos")
+            aliased["gloss"] = None
+            aliased["pos"] = None
+            reason = (
+                f"VESUM: inflected surface «{display_lemma}» "
+                f"(surface gloss={surface_gloss!r}, pos={surface_pos!r}) folded into a "
+                f"NEWLY-CREATED lemma page «{alias_target}»; surface gloss/pos not asserted on "
+                "the citation-form lemma (enrichment supplies the lemma's meaning)."
+            )
+        else:
+            reason = "VESUM: inflected form folded into already-taught lemma."
         aliased["atlas_normalization"] = _normalization_record(
             kind="vesum_inflection_to_lemma",
             source_lemma=display_lemma,
             target_lemma=alias_target,
-            reason="VESUM: unambiguous inflected form folded into already-taught lemma.",
+            reason=reason,
         )
         return aliased
 
