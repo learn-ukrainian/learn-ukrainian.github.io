@@ -10,7 +10,8 @@ refresh a badly-stale committed manifest — the regen diff was +120K lines) mad
 abort the commit (`VERDICT: do NOT commit`). The 4 lemmas: `Афіни`, `Чернівці`,
 `УЗД`, `хвастливий`.
 
-## Why — all 4 were gate false-positives, zero content bugs
+## Root cause
+**All 4 were gate false-positives — zero content bugs.**
 The `lemma_in_vesum` gate (`scripts/audit/validate_atlas_conformance.py`) proves a
 single-word Atlas head is a real Ukrainian word by exact-matching it against VESUM's
 `forms` table. Three independent defects made it reject valid words:
