@@ -69,3 +69,9 @@ updates:
       # PR: #2710.
       - dependency-name: "starlette"
         versions: [">=0.51.0"]
+      # lxml is capped by inscriptis (inscriptis==2.7.1 requires lxml<6.1.0);
+      # lxml 6.1.0 re-breaks the inscriptis import that #2732 fixed by pinning
+      # down to 6.0.4 (#3282). Allow 6.0.x patches but block >=6.1.0 until
+      # inscriptis supports lxml 6.1.x — REMOVE this entry then. Closed PR: #3329.
+      - dependency-name: "lxml"
+        versions: [">=6.1.0"]
