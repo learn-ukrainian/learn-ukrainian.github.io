@@ -46,6 +46,10 @@
   translation: auxiliary verb
   pos: noun phrase
   usage: У формі буду писати слово буду є допоміжним дієсловом.
+- lemma: допоміжна конструкція
+  translation: auxiliary construction
+  pos: noun phrase
+  usage: Буду писати є допоміжною конструкцією з дієсловом бути.
 - lemma: особове закінчення
   translation: personal ending
   pos: noun phrase
@@ -210,3 +214,59 @@
   translation: standard, normative
   pos: adjective
   usage: Нормативний вибір форми залежить від виду дієслова.
+- lemma: організаційний комітет
+  translation: organizing committee
+  pos: noun phrase
+  usage: Організаційний комітет готуватиме благодійний концерт.
+- lemma: благодійний концерт
+  translation: charity concert
+  pos: noun phrase
+  usage: Благодійний концерт допоможе зібрати кошти.
+- lemma: волонтер / волонтерка
+  translation: volunteer
+  pos: noun
+  usage: Волонтерка поширить афішу в соцмережах.
+- lemma: кошти
+  translation: funds, money
+  pos: plural noun
+  usage: Волонтери збиратимуть кошти два тижні.
+- lemma: афіша
+  translation: poster, event announcement
+  pos: noun
+  usage: Команда напише афішу до середи.
+- lemma: аудиторія
+  translation: classroom, lecture hall
+  pos: noun
+  usage: Ми домовимося про велику аудиторію.
+- lemma: соцмережі
+  translation: social media
+  pos: plural noun
+  usage: Олена поширить афішу в соцмережах.
+- lemma: музикант / музикантка
+  translation: musician
+  pos: noun
+  usage: Організатори говоритимуть з музикантами ввечері.
+- lemma: часовий маркер
+  translation: time marker
+  pos: noun phrase
+  usage: Часовий маркер до вечора підказує результат.
+- lemma: домовленість
+  translation: agreement, arrangement
+  pos: noun
+  usage: Домовленість про дату буде готова після зустрічі.
+- lemma: співрозмовник / співрозмовниця
+  translation: conversation partner
+  pos: noun
+  usage: Форма дієслова керує очікуванням співрозмовника.
+- lemma: очікування
+  translation: expectation
+  pos: noun
+  usage: Вид дієслова змінює очікування слухача.
+- lemma: пожертва
+  translation: donation
+  pos: noun
+  usage: Команда збиратиме пожертви протягом місяця.
+- lemma: реєстрація
+  translation: registration
+  pos: noun
+  usage: До вечора ми закриємо реєстрацію.
