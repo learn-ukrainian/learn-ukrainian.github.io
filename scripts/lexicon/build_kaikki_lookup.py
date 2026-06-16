@@ -140,6 +140,9 @@ def _is_meta_clause(clause: str) -> bool:
     )
 
 
+_LEADING_QUALIFIER_RE = re.compile(r"^\([^)]+\)\s+(.+)$")
+
+
 def _clean_gloss(gloss: str) -> str:
     """Drop meta clauses (form-of / misspelling / spelling-variant), keep real translations.
 
@@ -147,6 +150,17 @@ def _clean_gloss(gloss: str) -> str:
     unchanged so good glosses keep their exact formatting.
     """
     g = gloss.strip()
+    # A leading register/regional qualifier hides the meta clause from the checks below, which
+    # expect the clause to START with the meta pattern: e.g. "(Black Sea) Alternative form of
+    # ме́чет: bread oven" or "(colloquial) Alternative form of Па́сха". Strip ONE leading "(...)"
+    # and re-clean; act ONLY if that reveals a meta clause (cleaned remainder differs), so legit
+    # glosses like "(of a person) tall" are returned untouched.
+    qual = _LEADING_QUALIFIER_RE.match(g)
+    if qual:
+        remainder = qual.group(1).strip()
+        cleaned = _clean_gloss(remainder)
+        if cleaned != remainder:
+            return cleaned
     if ":" in g:
         prefix, suffix = g.split(":", 1)
         if _is_meta_clause(prefix):

@@ -56,6 +56,15 @@ def test_clean_gloss_strips_meta_clause_keeps_translation() -> None:
     assert _clean_gloss("common misspelling of Строго́нівка (Strohónivka)") == ""
 
 
+def test_clean_gloss_strips_leading_qualifier_before_meta_clause() -> None:
+    # #3255 tail: a leading register/regional qualifier hid the meta clause from detection
+    # (мечеть, паска residuals). Strip the qualifier, then drop/keep correctly.
+    assert _clean_gloss("(Black Sea) Alternative form of ме́чет: bread oven") == "bread oven"
+    assert _clean_gloss("(colloquial) Alternative form of Па́сха (proper noun)") == ""
+    # a legit gloss whose leading "(...)" is NOT followed by a meta clause is left untouched
+    assert _clean_gloss("(of a person) tall") == "(of a person) tall"
+
+
 def test_extract_glosses_filters_form_entries() -> None:
     # an inflected-form entry yields no translation glosses
     entry = {"senses": [{"glosses": ["accusative singular", "vocative singular"]}]}
