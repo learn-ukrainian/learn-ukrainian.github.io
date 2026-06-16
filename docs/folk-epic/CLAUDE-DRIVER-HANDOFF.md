@@ -63,7 +63,39 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 41 HANDOFF (2026-06-16/17 — vesum-convergence fix MERGED (#3382): budget 4→8 + whitespace-normalized reviewer-fix anchor matching, converged via 5 adversarial rounds. NEXT = re-run P3-validate to prove B1 e2e) — **RESUME HERE**
+## ▶▶▶ SESSION 42 HANDOFF (2026-06-17 — ⛔ PROJECT-AT-RISK: user will DELETE without a VISIBLE folk RESULT by ~tomorrow. Cost is the binding constraint. Honest state: 6 folk modules have CONTENT but 0 currently pass `verify_shippable`; #3079 infra merged but UNPROVEN) — **RESUME HERE**
+
+### 🛑 READ FIRST — HARD CONSTRAINTS (user, 2026-06-17). Everything below is subordinate to these.
+- **MONEY/QUOTA IS THE BINDING CONSTRAINT.** User runs on **Claude Max + Codex Max (flat-rate, USAGE-CAPPED — not per-token)**. "Bleeding" = burning the weekly/5-hour quotas on BOTH accounts and locking the user out. A marathon orchestrator session + 3 V7 builds + a 5-round dispatch grind on ONE matcher drained both. **DO NOT REPEAT.**
+- **NO HUMANS.** The project must be **fully autonomous** — no "manual corpus-hammer", no human-in-the-loop. (Prior handoffs leaned on a human read; that is RETIRED — the user has no one. The automated gates + LLM-QG are the only quality floor.)
+- **QUALITY still required** — user will not accept cheap garbage. So the answer is **DISCIPLINE, not model-downgrade.**
+- **⛔ DELETE RISK:** user is out of patience ("I am tired of this", "I don't believe you") and will DELETE the project if there is **no VISIBLE folk result by ~tomorrow.** A *visible* result = a folk module a user can OPEN and SEE, or folk surfaced live — NOT more infra, NOT a handoff, NOT promises.
+
+### 💸 COST-DISCIPLINE RULES (mandatory — this is how we stop the bleed while keeping quality)
+1. **1 build per validation, never 3.** A V7 build = a long claude-tools write + up to N correction rounds (each a model call) — the single heaviest draw on BOTH quotas. Treat each build as expensive.
+2. **1 fix + 1 review per problem, then STOP and reassess.** NO multi-round auto-escalation. The 5-round matcher grind is the anti-pattern that drained the quota.
+3. **Routine review → DeepSeek** (`--agent deepseek`, off the Codex-Max quota). Reserve a Codex/GPT pass for ONE critical adversarial check only.
+4. **`PYTHON_QG_SEMINAR_MAX_CORRECTION_ROUNDS` is now 8** (I raised it #3382) — that is quota-hungry (up to 8 model calls/build). **Consider tuning down OR routing correction rounds to an unmetered lane.** Flagged, not done.
+5. **Short orchestrator sessions.** End at a real milestone. No marathons (the orchestrator itself runs on Claude-Max quota).
+
+### 🧱 HONEST STATE (deterministic, this session)
+- **Folk content: 6/42 modules have `module.md`** (kalendarna, koliadky, dumy, narodna-kultura, narodni-viruvannia, zamovliannia; ~4,800 words each), ~25/42 dossiers, plans 42/42. **Folk is HIDDEN from learners** (`HIDDEN_MODULE_LINK_TRACKS` in `site/src/components/LevelLanding.tsx` + `hiddenPublicPaths` in `site/astro.config.mjs`).
+- **❗ 0 folk modules currently pass `verify_shippable`.** Ran it this session (deterministic, no quota): kalendarna ❌, koliadky ❌, dumy ❌ (NOT SHIPPABLE — the `tail` cut the red step; re-run `python -m scripts.build.verify_shippable folk <slug>` to see WHICH gate — python_qg vs mdx_render). So there is **no currently-gate-clean folk module**; "just surface the existing ones" is NOT a clean win until ≥1 passes.
+- **#3079 auto-converge infra: MERGED but UNPROVEN e2e.** #3361 (gate-frontier loop) + #3382 (budget 4→8 + whitespace-normalized reviewer-fix anchor matching) are on main. The frontier fix WAS validated last session (loop auto-advances activity_schema→word_count→vesum). The full e2e proof build was KILLED mid-run this session to stop the quota bleed — so "a folk module self-converges fully, unaided" is **strongly-evidenced but NOT confirmed.**
+
+### ▶ NEXT ACTIONS — CHEAPEST PATH TO A VISIBLE RESULT (in order; mind the quota rules above)
+1. **Diagnose the `verify_shippable` red step on the BEST module (kalendarna) — FREE/deterministic, no model API.** `.venv/bin/python -m scripts.build.verify_shippable folk kalendarna-obriadovist-zvychai` (full output). If the red step is **mdx_render or a deterministic gate**, fix it DIRECTLY (no expensive build) — that may make kalendarna shippable for ~$0 of quota.
+2. **If ≥1 module passes → SURFACE folk as PREVIEW/BETA** (remove `'folk'` from `HIDDEN_MODULE_LINK_TRACKS` + `hiddenPublicPaths`; coordinate — reverses orchestrator #3027). PR → CI (free) → self-merge. **That is the VISIBLE result** — folk live, near-zero quota.
+3. **ONLY IF** surfacing needs a fresh build: run exactly ONE `v7_build.py folk <slug> --no-resume --worktree` (Monitor JSONL) — this also finally proves #3079 e2e. One build, not three.
+4. Defer #3342 (classifier) + dossiers — they don't produce a visible result under the deadline.
+
+### ⚠ CARRY-FORWARD
+- **Evidence-first + cost-first:** deterministic checks (verify_shippable, gate reruns) are FREE — exhaust them before spending a model build. The visible win may be a deterministic render-fix, not a rebuild.
+- Build worktrees w/ untracked `python_qg_correction_loop.json` (predate #3373): `…-191728`, `…-202559`, `…-221809` (last one killed mid-run). Don't blind-reap (#M-10).
+- The matcher lesson (#3382): exact=full-span verbatim guarded; normalized fallback=match-unstripped+trim; fail-closed. Don't re-touch.
+- Never reset/commit on `main`; folk push `--no-verify`. Role #0.2 LIVE. 0 dispatches in flight at handoff.
+
+## ▶▶▶ SESSION 41 HANDOFF (2026-06-16/17 — vesum-convergence fix MERGED (#3382): budget 4→8 + whitespace-normalized reviewer-fix anchor matching, converged via 5 adversarial rounds. NEXT = re-run P3-validate to prove B1 e2e)
 
 > **⏱ HONEST SCOPE:** Continued C.3. Frontier loop fix (#3361) MERGED+validated last session; THIS session
 > built + MERGED the next wall's fix (#3382, vesum coinage convergence). No new folk CONTENT (modules
