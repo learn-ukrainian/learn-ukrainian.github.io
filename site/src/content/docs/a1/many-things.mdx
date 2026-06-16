@@ -59,64 +59,69 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs syncKey="module-tab">
 <TabItem label="Lesson">
 
-Ukrainian does not add one universal ending for "more than one." You learn a
-few useful plural shapes, then keep each new noun together with its plural
-form: **стіл - столи**, **книга - книги**, **вікно - вікна**. The good news is
-that adjectives become simpler in the plural: **великий / велика / велике**
-all become **великі**.
+Привіт! Today you move from one familiar object to many familiar objects.
+Ukrainian does not use one universal plural ending, so the safest A1 habit is
+to learn pairs: **стіл - столи**, **книга - книги**, **вікно - вікна**.
+
+The encouraging part is that plural adjectives are simpler than singular
+adjectives. In singular you matched gender: **великий стіл**, **велика
+книга**, **велике вікно**. In plural, all three become **великі**.
 
 By the end, you can:
 
-- turn familiar classroom nouns into safe plural chunks;
-- choose **ці / ті / мої / які** with plural nouns;
-- describe groups with plural adjectives and colors;
-- use **два, три, чотири** with ordinary plural noun forms;
-- recognize plural-only words such as **гроші**, **двері**, and **окуляри**
-  without trying to force them into singular.
+- form useful nominative plural chunks for classroom things;
+- recognize three common plural shapes: **-и**, **-і**, **-а / -я**;
+- use plural adjectives ending in **-і**;
+- describe groups with **ці**, **ті**, **мої**, and **які**.
+
+:::tip
+You are not building the whole plural system today. You are collecting safe
+pairs and using them in small sentences. That is enough.
+:::
 
 ## Діалоги
 
-### Одна річ, багато речей
+### Один → багато
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "стіл", "options": [{"text": "столи", "correct": true}, {"text": "стіла", "correct": false}, {"text": "стілів", "correct": false}], "explanation": "Learn the pair стіл - столи."}, {"question": "книга", "options": [{"text": "книги", "correct": true}, {"text": "книгі", "correct": false}, {"text": "книга", "correct": false}], "explanation": "Книга becomes книги."}, {"question": "вікно", "options": [{"text": "вікна", "correct": true}, {"text": "вікни", "correct": false}, {"text": "вікні", "correct": false}], "explanation": "Many neuter nouns ending in -о use -а."}, {"question": "стілець", "options": [{"text": "стільці", "correct": true}, {"text": "стілеці", "correct": false}, {"text": "стільця", "correct": false}], "explanation": "Learn стілець - стільці as its own pair."}, {"question": "крісло", "options": [{"text": "крісла", "correct": true}, {"text": "крісли", "correct": false}, {"text": "кріслі", "correct": false}], "explanation": "Крісло becomes крісла."}, {"question": "ручка", "options": [{"text": "ручки", "correct": true}, {"text": "ручкі", "correct": false}, {"text": "ручка", "correct": false}], "explanation": "Ручка becomes ручки."}]`)} instruction={"Choose the plural chunk."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "стіл → ___", "answer": "столи", "options": ["столи", "стіла", "столі"]}, {"sentence": "книга → ___", "answer": "книги", "options": ["книги", "книгі", "книга"]}, {"sentence": "вікно → ___", "answer": "вікна", "options": ["вікна", "вікни", "вікні"]}, {"sentence": "стілець → ___", "answer": "стільці", "options": ["стільці", "стілеці", "стільця"]}, {"sentence": "зошит → ___", "answer": "зошити", "options": ["зошити", "зошита", "зошиті"]}, {"sentence": "ручка → ___", "answer": "ручки", "options": ["ручки", "ручкі", "ручка"]}, {"sentence": "сумка → ___", "answer": "сумки", "options": ["сумки", "сумкі", "сумка"]}, {"sentence": "лампа → ___", "answer": "лампи", "options": ["лампи", "лампа", "лампі"]}, {"sentence": "крісло → ___", "answer": "крісла", "options": ["крісла", "крісли", "кріслі"]}, {"sentence": "дзеркало → ___", "answer": "дзеркала", "options": ["дзеркала", "дзеркали", "дзеркалі"]}]`)} instruction={"Write the plural form."} isUkrainian={false} />
 
-The classroom is getting ready for a Ukrainian lesson. Several things are on
-the tables, so the first job is simple: name one thing, then name many.
+The classroom is getting ready for a Ukrainian lesson. The teacher points to
+one item first, then the students name many.
 
 ```text
-Марко: Що тут є?
-Оля: Тут столи, стільці і вікна.
-Марко: Які столи?
-Оля: Столи великі й нові.
-Марко: А стільці?
-Оля: Стільці старі, але чисті.
-Марко: А ці вікна?
-Оля: Ці вікна чисті й великі.
+Вчитель: Це один стілець. А тут?
+Учні: Тут стільці.
+Вчитель: Це одна дошка. А тут?
+Учні: Тут дошки.
+Вчитель: Це одне крісло. А тут?
+Учні: Тут крісла.
+Вчитель: Добре. Тут є олівці, ручки, підручники і карти.
+Учні: Це речі!
 ```
 
 Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Марко: Що тут є?** | Marko: What is here? |
-| **Оля: Тут столи, стільці і вікна.** | Olia: There are tables, chairs, and windows here. |
-| **Марко: Які столи?** | Marko: What are the tables like? |
-| **Оля: Столи великі й нові.** | Olia: The tables are big and new. |
-| **Марко: А стільці?** | Marko: And the chairs? |
-| **Оля: Стільці старі, але чисті.** | Olia: The chairs are old, but clean. |
-| **Марко: А ці вікна?** | Marko: And these windows? |
-| **Оля: Ці вікна чисті й великі.** | Olia: These windows are clean and big. |
+| **Вчитель: Це один стілець. А тут?** | Teacher: This is one chair. And here? |
+| **Учні: Тут стільці.** | Students: There are chairs here. |
+| **Вчитель: Це одна дошка. А тут?** | Teacher: This is one board. And here? |
+| **Учні: Тут дошки.** | Students: There are boards here. |
+| **Вчитель: Це одне крісло. А тут?** | Teacher: This is one armchair. And here? |
+| **Учні: Тут крісла.** | Students: There are armchairs here. |
+| **Вчитель: Добре. Тут є олівці, ручки, підручники і карти.** | Teacher: Good. There are pencils, pens, textbooks, and maps here. |
+| **Учні: Це речі!** | Students: These are things! |
 
-At a small shop, plural forms appear because you want more than one item:
+At a small shop, plural forms appear because you want more than one object.
 
 ```text
 Покупець: У вас є ручки?
 Продавець: Так. Які ручки - червоні чи сині?
 Покупець: Сині. І ще зошити.
 Продавець: Скільки?
-Покупець: Три зошити і дві ручки.
-Продавець: Добре. Для вас є нові сині ручки.
-Покупець: Дякую. Нам треба саме ці.
+Покупець: Три зошити.
+Продавець: Ось ці ручки і ті зошити.
+Покупець: Дякую. Мої сумки маленькі, але ці речі легкі.
 ```
 
 Support after the Ukrainian lines:
@@ -127,9 +132,9 @@ Support after the Ukrainian lines:
 | **Продавець: Так. Які ручки - червоні чи сині?** | Seller: Yes. Which pens - red or blue? |
 | **Покупець: Сині. І ще зошити.** | Customer: Blue ones. And notebooks too. |
 | **Продавець: Скільки?** | Seller: How many? |
-| **Покупець: Три зошити і дві ручки.** | Customer: Three notebooks and two pens. |
-| **Продавець: Добре. Для вас є нові сині ручки.** | Seller: Good. For you there are new blue pens. |
-| **Покупець: Дякую. Нам треба саме ці.** | Customer: Thank you. We need exactly these. |
+| **Покупець: Три зошити.** | Customer: Three notebooks. |
+| **Продавець: Ось ці ручки і ті зошити.** | Seller: Here are these pens and those notebooks. |
+| **Покупець: Дякую. Мої сумки маленькі, але ці речі легкі.** | Customer: Thank you. My bags are small, but these things are light. |
 
 Notice four small plural helpers:
 
@@ -137,93 +142,84 @@ Notice four small plural helpers:
 | --- | --- | --- |
 | **ці** | these | **ці ручки**, **ці столи** |
 | **ті** | those | **ті книги**, **ті стільці** |
-| **мої** | my, plural | **мої зошити**, **мої книги** |
-| **які** | which / what kind, plural | **Які ручки?** |
+| **мої** | my, plural | **мої зошити**, **мої сумки** |
+| **які** | which / what kind, plural | **Які ручки?**, **Які столи?** |
 
-Plural can also mean people. This is another way to talk about **багато**:
-more than one person is acting together. Keep these as useful chunks for
-invitations and classroom teamwork:
-
-- **ми** = we, **ви** = you plural / formal you
-- **для нас** = for us, **для вас** = for you
-- **нам треба** = we need, **вам треба** = you need
-- **з нами** = with us, **з вами** = with you
-
-You do not need a pronoun table today. Just recognize the chunks when people
-are acting together: **Ми тут. Нам треба три зошити. Ідіть з нами.**
+When a noun is plural, the singular gender choice goes quiet. You no longer
+need **цей / ця / це**, **той / та / те**, **мій / моя / моє**, or
+**який / яка / яке**. Use the plural forms: **ці**, **ті**, **мої**, **які**.
 
 :::tip
-When a noun is plural, the old gender question becomes quiet. You no longer
-need **мій / моя / моє** or **який / яка / яке**. Use the plural forms:
-**мої** and **які**.
+If the noun means more than one thing, ask yourself one quick question:
+"Which plural helper fits?" Then choose **ці**, **ті**, **мої**, or **які**.
 :::
 
-### Пари однини й множини
+### Обери множину
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "стіл", "right": "столи"}, {"left": "книга", "right": "книги"}, {"left": "вікно", "right": "вікна"}, {"left": "стілець", "right": "стільці"}, {"left": "телефон", "right": "телефони"}, {"left": "зошит", "right": "зошити"}, {"left": "лампа", "right": "лампи"}, {"left": "дзеркало", "right": "дзеркала"}]`)} instruction={"Match one thing with many things."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "стіл", "options": [{"text": "столи", "correct": true}, {"text": "стола", "correct": false}, {"text": "столів", "correct": false}], "explanation": "The A1 pair is стіл - столи."}, {"question": "книга", "options": [{"text": "книги", "correct": true}, {"text": "книгі", "correct": false}, {"text": "книга", "correct": false}], "explanation": "Книга becomes книги."}, {"question": "вікно", "options": [{"text": "вікна", "correct": true}, {"text": "вікни", "correct": false}, {"text": "вікні", "correct": false}], "explanation": "Вікно becomes вікна."}, {"question": "стілець", "options": [{"text": "стільці", "correct": true}, {"text": "стілеці", "correct": false}, {"text": "стільця", "correct": false}], "explanation": "Learn стілець - стільці as a pair."}, {"question": "телефон", "options": [{"text": "телефони", "correct": true}, {"text": "телефона", "correct": false}, {"text": "телефонів", "correct": false}], "explanation": "Телефон becomes телефони in this nominative plural pattern."}, {"question": "зошит", "options": [{"text": "зошити", "correct": true}, {"text": "зошита", "correct": false}, {"text": "зошитів", "correct": false}], "explanation": "Зошит becomes зошити."}, {"question": "ручка", "options": [{"text": "ручки", "correct": true}, {"text": "ручкі", "correct": false}, {"text": "ручка", "correct": false}], "explanation": "The plural is ручки."}, {"question": "крісло", "options": [{"text": "крісла", "correct": true}, {"text": "крісли", "correct": false}, {"text": "кріслі", "correct": false}], "explanation": "Крісло becomes крісла."}]`)} instruction={"Choose the correct plural form."} isUkrainian={false} />
 
 ## Один → багато
 
-Start with the nouns you already know. Learn the plural as part of the word,
-not as a guess.
+Start with nouns you already know. Learn the plural as part of the word, not
+as a guess.
 
 | One | Many | Pattern to notice |
 | --- | --- | --- |
 | **стіл** | **столи** | masculine, often **-и** |
 | **зошит** | **зошити** | masculine, often **-и** |
 | **телефон** | **телефони** | masculine, often **-и** |
-| **стілець** | **стільці** | masculine, **-ець** often changes |
+| **стілець** | **стільці** | **-ець** often changes |
 | **книга** | **книги** | feminine, often **-и** |
-| **ручка** | **ручки** | feminine, often **-и** |
-| **сумка** | **сумки** | feminine, often **-и** |
+| **ручка** | **ручки** | after **к**, write **и** |
+| **сумка** | **сумки** | after **к**, write **и** |
+| **лампа** | **лампи** | feminine, often **-и** |
 | **вікно** | **вікна** | neuter **-о** becomes **-а** |
 | **крісло** | **крісла** | neuter **-о** becomes **-а** |
 | **дзеркало** | **дзеркала** | neuter **-о** becomes **-а** |
 
-This is the nominative plural pattern, **називний відмінок множини**, in its
-safest A1 shape. You will meet the same shape in people and money words such
-as **учні** and **гривні**.
+This is the nominative plural, **називний відмінок множини**, in its safest A1
+shape. You meet three common models:
 
-This is enough for A1:
+- many nouns use **-и**: **столи**, **книги**, **ручки**, **сумки**;
+- some nouns use **-і**: **стільці**, later **учні**;
+- many neuter nouns ending in **-о** use **-а**: **вікна**, **крісла**,
+  **дзеркала**.
 
-- many masculine and feminine nouns use **-и** or **-і**;
-- many neuter nouns ending in **-о** use **-а**;
-- a few words, such as **стілець - стільці**, need their own memory hook.
+You may also see the matching **-я** side later, especially with some neuter
+words ending in **-е**, for example **місце - місця**. For this module, keep
+**-а** active and treat **-я** as recognition.
 
-Do not turn the list into a rule machine. Say the pair aloud and keep the pair
-together: **стіл - столи**, **книга - книги**, **вікно - вікна**. If a new
-word matters, learn both forms at the same time.
+Use a slow loop when you practice. Point to one object, say the singular, then
+point to more objects and say the plural. Keep the words short and ordinary:
+**це стіл - це столи**, **це книга - це книги**, **це вікно - це вікна**.
+Then do the same with classroom words: **це стілець - це стільці**, **це
+ручка - це ручки**, **це зошит - це зошити**. You are training your ear to
+hear the pair, not trying to calculate a rule under pressure.
 
-Some words already look plural and do not have a simple everyday singular:
-**гроші**, **двері**, **окуляри**, **сани**, **ворота**, **радощі**. Treat
-them as whole words first. You can say **ці двері** and **мої окуляри**.
-Later you will learn special counting phrases such as **одні двері** and
-**двоє дверей**; Ukrainian also has collective number words such as **двоє**,
-**троє**, and **четверо** for later work with plural-only nouns. Keep that
-Ukrainian feature; do not replace it with a flattened counting shortcut.
+You do not need to predict every plural. Keep the pair together and say it
+aloud: **стіл - столи**, **книга - книги**, **вікно - вікна**. If a new noun
+matters, learn both forms at the same time.
 
-Some collective words usually stay singular: **молодь**, **дітвора**,
-**птаство**, **листя**. At A1, just recognize that they name a group while
-behaving like singular words. Do not force a plural ending onto them.
-
-### Закінчення прикметника в множині
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "нов__ книги", "answer": "і", "options": ["і", "а", "ий"]}, {"sentence": "велик__ столи", "answer": "і", "options": ["і", "ий", "е"]}, {"sentence": "чист__ вікна", "answer": "і", "options": ["і", "е", "а"]}, {"sentence": "син__ зошити", "answer": "і", "options": ["і", "я", "є"]}, {"sentence": "літн__ дні", "answer": "і", "options": ["і", "ій", "я"]}, {"sentence": "осінн__ ранки", "answer": "і", "options": ["і", "я", "є"]}, {"sentence": "червон__ ручки", "answer": "і", "options": ["і", "а", "ий"]}, {"sentence": "жовт__ лампи", "answer": "і", "options": ["і", "а", "е"]}]`)} instruction={"Choose the ending that makes the adjective plural."} isUkrainian={false} />
+:::warning
+Do not add a plural ending to the English word in your head. Ukrainian plural
+forms have their own shape. Copy the pair you see, then reuse it.
+:::
 
 ## Прикметники у множині
 
-Plural adjectives are friendlier than singular adjectives. In singular, you
-had to match gender:
+### Прикметник у множині
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "нов__ книги", "answer": "і", "options": ["і", "а", "ий"]}, {"sentence": "велик__ столи", "answer": "і", "options": ["і", "ий", "е"]}, {"sentence": "чист__ вікна", "answer": "і", "options": ["і", "е", "а"]}, {"sentence": "син__ зошити", "answer": "і", "options": ["і", "я", "є"]}, {"sentence": "червон__ ручки", "answer": "і", "options": ["і", "а", "ий"]}, {"sentence": "жовт__ лампи", "answer": "і", "options": ["і", "а", "е"]}, {"sentence": "стар__ стільці", "answer": "і", "options": ["і", "ий", "а"]}, {"sentence": "чорн__ сумки", "answer": "і", "options": ["і", "а", "е"]}]`)} instruction={"Choose the ending that makes the adjective plural."} isUkrainian={false} />
+
+Plural adjectives are friendly. In singular, the adjective changes for gender:
 
 | Masculine | Feminine | Neuter |
 | --- | --- | --- |
 | **великий стіл** | **велика книга** | **велике вікно** |
 | **новий зошит** | **нова сумка** | **нове крісло** |
-| **синій шарф** | **синя ручка** | **синє вікно** |
+| **синій телефон** | **синя ручка** | **синє дзеркало** |
 
-In the plural, use **які?** and the adjective ending **-і**. A textbook may
-call the regular hard-adjective path **тверда група**, but your A1 habit is
-simpler: move from **однина** to plural and use **-і**.
+In plural, use **які?** and the adjective ending **-і**.
 
 | Many things | Description |
 | --- | --- |
@@ -231,80 +227,56 @@ simpler: move from **однина** to plural and use **-і**.
 | **книги** | **нові книги** |
 | **вікна** | **чисті вікна** |
 | **ручки** | **сині ручки** |
-| **зошити** | **корисні зошити** |
+| **сумки** | **маленькі сумки** |
+| **лампи** | **жовті лампи** |
 
-The noun can come from any gender in the singular. The plural adjective still
-uses **-і**:
+The noun can come from any gender in singular. The plural adjective still uses
+**-і**:
 
 - **великий стіл -> великі столи**
 - **нова книга -> нові книги**
 - **чисте вікно -> чисті вікна**
-- **синій шарф -> сині шарфи**
-- **літній день -> літні дні**
-- **осінній ранок -> осінні ранки**
+- **синя ручка -> сині ручки**
+- **жовта лампа -> жовті лампи**
 
 This protects you from a common English-speaker habit. English keeps the
 adjective unchanged: big table, big tables. Ukrainian changes the adjective:
 **великий стіл**, but **великі столи**. If your noun is plural, your adjective
 is plural too.
 
-Use colors the same way:
+Now combine the helpers with plural adjectives:
 
-- **червоні ручки**
-- **сині зошити**
-- **білі стіни**
-- **чорні стільці**
-- **жовті лампи**
-
-Then add pointing words from the last module:
-
-- **Ці столи великі.**
-- **Ці книги нові.**
-- **Ті вікна чисті.**
-- **Ті стільці старі.**
-- **Мої ручки сині.**
-
-### З числами
-
-You already met the number pattern in prices and ages. Here it helps with
-classroom objects.
-
-For **два, три, чотири**, use the ordinary plural form you are learning:
-
-| Number chunk | Safe A1 phrase |
+| Chunk | Meaning |
 | --- | --- |
-| **два** | **два зошити**, **два столи** |
-| **три** | **три книги**, **три ручки** |
-| **чотири** | **чотири смартфони**, **чотири стільці** |
+| **ці великі столи** | these big tables |
+| **ті старі стільці** | those old chairs |
+| **мої сині зошити** | my blue notebooks |
+| **які червоні ручки?** | which red pens? |
+| **ці чисті вікна** | these clean windows |
 
-For **п'ять** and higher, you will often see a different later chunk:
-**п'ять зошитів**, **десять учнів**, **сто гривень**. Do not build the full
-case system today. Just keep the useful phrases as phrases.
+Great: you can now describe groups without choosing masculine, feminine, or
+neuter adjective endings. The plural ending **-і** does the work.
 
-Some later human nouns have special shapes, for example **два селянина**.
-That exception is not active A1 work; skip it unless a later lesson asks for
-it.
+Try one more supported pattern before you move on. Start with a plural noun,
+then add one adjective:
 
-The practical classroom line is:
+- **столи -> великі столи**
+- **книги -> нові книги**
+- **вікна -> чисті вікна**
+- **ручки -> сині ручки**
+- **лампи -> жовті лампи**
 
-**Нам треба три зошити і дві ручки.** = We need three notebooks and two pens.
+Now add a helper at the front: **ці великі столи**, **ті нові книги**, **мої
+сині ручки**, **які чисті вікна?** If the whole chunk is plural, every visible
+helper and adjective uses the plural shape too.
 
-That one sentence ties the module together: a plural people chunk (**нам**),
-numbers (**три**, **дві**), plural nouns (**зошити**, **ручки**), and no extra
-grammar table.
+### Однина чи множина
 
-### Ці, ті, мої, які
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "These tables are big.", "options": [{"text": "Ці столи великі.", "correct": true}, {"text": "Цей столи великі.", "correct": false}, {"text": "Ця столи великі.", "correct": false}], "explanation": "Use ці with plural nouns near you."}, {"question": "Those chairs are old.", "options": [{"text": "Ті стільці старі.", "correct": true}, {"text": "Той стільці старі.", "correct": false}, {"text": "Та стільці старі.", "correct": false}], "explanation": "Use ті for plural nouns farther away."}, {"question": "My notebooks are blue.", "options": [{"text": "Мої зошити сині.", "correct": true}, {"text": "Мій зошити сині.", "correct": false}, {"text": "Моя зошити сині.", "correct": false}], "explanation": "The plural form of my is мої."}, {"question": "Which pens?", "options": [{"text": "Які ручки?", "correct": true}, {"text": "Яка ручки?", "correct": false}, {"text": "Який ручки?", "correct": false}], "explanation": "The plural question word is які."}, {"question": "These books are new.", "options": [{"text": "Ці книги нові.", "correct": true}, {"text": "Це книги нове.", "correct": false}, {"text": "Ця книги нова.", "correct": false}], "explanation": "Use plural ці and plural нові."}]`)} instruction={"Choose the plural helper."} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Однина": ["стіл", "книга", "вікно", "стілець", "лампа", "крісло"], "Множина": ["столи", "книги", "вікна", "стільці", "лампи", "крісла"]}`)} instruction={"Sort each noun as one thing or many things."} isUkrainian={false} />
 
 ## 📋 Підсумок
 
-Keep the module in three short habits.
-
-Learn Ukrainian plural grammar directly. Do not use Russian as a bridge,
-standard, or comparison point; do not frame Ukrainian rules as exceptions to
-Russian. The Ukrainian pattern is enough on its own: **два зошити**,
-**три книги**, **чотири смартфони**.
+Keep three short habits.
 
 First, learn noun pairs:
 
@@ -312,8 +284,12 @@ First, learn noun pairs:
 - **стілець - стільці**
 - **книга - книги**
 - **ручка - ручки**
+- **сумка - сумки**
+- **лампа - лампи**
 - **вікно - вікна**
 - **крісло - крісла**
+- **дзеркало - дзеркала**
+- **річ - речі**
 
 Second, use one plural adjective ending:
 
@@ -329,20 +305,10 @@ Third, combine plural helpers:
 - **мої сині зошити**
 - **які червоні ручки?**
 
-### Виправ пастки
-
-Use these repairs when English tries to keep Ukrainian too simple:
-
-| Avoid | Use | Why |
-| --- | --- | --- |
-| **великий м'ячі** | **великі м'ячі** | Plural adjective: **-і** |
-| copying a singular **-я** ending into plural | **сині шарфи** | The plural form is **сині** |
-| **два зошитів** | **два зошити** | **2, 3, 4** use the ordinary plural form here |
-| **п'ять зошити** | **п'ять зошитів** | Treat **5+** as a later memorized chunk |
-| **один двері** | **одні двері** | **двері** is plural-only |
-| **молоді** for the group | **молодь** | The group word stays singular |
-| **для ми** | **для нас** | Pronouns change in chunks |
-| **з ми** | **з нами** | After **з**, use **нами** |
+:::tip
+You can now point to groups, ask about groups, and describe groups. That is a
+real A1 step forward.
+:::
 
 ### Мініперевірка: кімната
 
@@ -353,7 +319,7 @@ Look around your desk or room. Make six tiny plural sentences:
 - **Ті стільці старі.**
 - **Мої зошити сині.**
 - **Ці книги нові.**
-- **Три ручки тут.**
+- **Ці лампи жовті.**
 
 Now ask three plural questions:
 
@@ -361,53 +327,46 @@ Now ask three plural questions:
 - **Які ручки - червоні чи сині?**
 - **Ці книги чи ті книги?**
 
-Keep the Ukrainian pattern direct. The plural noun changes, the adjective uses
-**-і**, and **ці / ті / мої / які** do the plural work for pointing, owning,
-and asking.
+You have enough for today: plural noun pairs, plural adjective **-і**, and
+plural helpers **ці / ті / мої / які**.
 
 </TabItem>
 <TabItem label="Vocabulary">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"стіл","translation":"table, singular","pos":"noun","example":"Це стіл.","examples":["table, singular","Це стіл."],"atlas_href":"/lexicon/стіл/"},{"word":"столи","translation":"tables","pos":"noun","example":"Столи великі.","examples":["tables","Столи великі."],"atlas_href":"/lexicon/столи/"},{"word":"стілець","translation":"chair, singular","pos":"noun","example":"Це стілець.","examples":["chair, singular","Це стілець."],"atlas_href":"/lexicon/стілець/"},{"word":"стільці","translation":"chairs","pos":"noun","example":"Стільці старі.","examples":["chairs","Стільці старі."],"atlas_href":"/lexicon/стільці/"},{"word":"книга","translation":"book, singular","pos":"noun","example":"Ця книга нова.","examples":["book, singular","Ця книга нова."],"atlas_href":"/lexicon/книга/"},{"word":"книги","translation":"books","pos":"noun","example":"Книги нові.","examples":["books","Книги нові."],"atlas_href":"/lexicon/книги/"},{"word":"вікно","translation":"window, singular","pos":"noun","example":"Це вікно.","examples":["window, singular","Це вікно."],"atlas_href":"/lexicon/вікно/"},{"word":"вікна","translation":"windows","pos":"noun","example":"Вікна чисті.","examples":["windows","Вікна чисті."],"atlas_href":"/lexicon/вікна/"},{"word":"зошит","translation":"notebook, singular","pos":"noun","example":"Це мій зошит.","examples":["notebook, singular","Це мій зошит."],"atlas_href":"/lexicon/зошит/"},{"word":"зошити","translation":"notebooks","pos":"noun","example":"Три зошити тут.","examples":["notebooks","Три зошити тут."],"atlas_href":"/lexicon/зошити/"},{"word":"ручка","translation":"pen, singular","pos":"noun","example":"Це ручка.","examples":["pen, singular","Це ручка."],"atlas_href":"/lexicon/ручка/"},{"word":"ручки","translation":"pens","pos":"noun","example":"Ці ручки сині.","examples":["pens","Ці ручки сині."],"atlas_href":"/lexicon/ручки/"},{"word":"сумка","translation":"bag, singular","pos":"noun","example":"Ця сумка червона.","examples":["bag, singular","Ця сумка червона."],"atlas_href":"/lexicon/сумка/"},{"word":"сумки","translation":"bags","pos":"noun","example":"Сумки чорні.","examples":["bags","Сумки чорні."],"atlas_href":"/lexicon/сумки/"},{"word":"лампа","translation":"lamp, singular","pos":"noun","example":"Лампа біла.","examples":["lamp, singular","Лампа біла."],"atlas_href":"/lexicon/лампа/"},{"word":"лампи","translation":"lamps","pos":"noun","example":"Лампи жовті.","examples":["lamps","Лампи жовті."],"atlas_href":"/lexicon/лампи/"},{"word":"крісло","translation":"armchair, singular","pos":"noun","example":"Це крісло.","examples":["armchair, singular","Це крісло."],"atlas_href":"/lexicon/крісло/"},{"word":"крісла","translation":"armchairs","pos":"noun","example":"Крісла чисті.","examples":["armchairs","Крісла чисті."],"atlas_href":"/lexicon/крісла/"},{"word":"дзеркало","translation":"mirror, singular","pos":"noun","example":"Дзеркало нове.","examples":["mirror, singular","Дзеркало нове."],"atlas_href":"/lexicon/дзеркало/"},{"word":"дзеркала","translation":"mirrors","pos":"noun","example":"Дзеркала чисті.","examples":["mirrors","Дзеркала чисті."],"atlas_href":"/lexicon/дзеркала/"},{"word":"річ","translation":"thing","pos":"noun","example":"Це моя річ.","examples":["thing","Це моя річ."],"atlas_href":"/lexicon/річ/"},{"word":"речі","translation":"things","pos":"noun","example":"Це мої речі.","examples":["things","Це мої речі."],"atlas_href":"/lexicon/речі/"},{"word":"ці","translation":"these","pos":"pronoun","example":"Ці столи великі.","examples":["these","Ці столи великі."],"atlas_href":"/lexicon/ці/"},{"word":"ті","translation":"those","pos":"pronoun","example":"Ті стільці старі.","examples":["those","Ті стільці старі."],"atlas_href":"/lexicon/ті/"},{"word":"мої","translation":"my, plural","pos":"pronoun","example":"Мої зошити сині.","examples":["my, plural","Мої зошити сині."],"atlas_href":"/lexicon/мої/"},{"word":"які","translation":"which; what kind, plural","pos":"pronoun","example":"Які ручки?","examples":["which; what kind, plural","Які ручки?"],"atlas_href":"/lexicon/які/"},{"word":"ми","translation":"we","pos":"pronoun","example":"Ми тут.","examples":["we","Ми тут."],"atlas_href":"/lexicon/ми/"},{"word":"ви","translation":"you, plural or formal","pos":"pronoun","example":"Ви тут?","examples":["you, plural or formal","Ви тут?"],"atlas_href":"/lexicon/ви/"},{"word":"нас","translation":"us","pos":"pronoun","example":"Для нас.","examples":["us","Для нас."],"atlas_href":"/lexicon/нас/"},{"word":"вас","translation":"you, plural/formal object","pos":"pronoun","example":"Для вас.","examples":["you, plural/formal object","Для вас."],"atlas_href":"/lexicon/вас/"},{"word":"нам","translation":"to us","pos":"pronoun","example":"Нам треба три зошити.","examples":["to us","Нам треба три зошити."],"atlas_href":"/lexicon/нам/"},{"word":"вам","translation":"to you","pos":"pronoun","example":"Вам треба ручки.","examples":["to you","Вам треба ручки."],"atlas_href":"/lexicon/вам/"},{"word":"нами","translation":"with us","pos":"pronoun","example":"З нами.","examples":["with us","З нами."],"atlas_href":"/lexicon/нами/"},{"word":"вами","translation":"with you","pos":"pronoun","example":"З вами.","examples":["with you","З вами."],"atlas_href":"/lexicon/вами/"},{"word":"гроші","translation":"money, plural-only","pos":"noun","example":"Це гроші.","examples":["money, plural-only","Це гроші."],"atlas_href":"/lexicon/гроші/"},{"word":"двері","translation":"door; doors, plural-only form","pos":"noun","example":"Ці двері старі.","examples":["door; doors, plural-only form","Ці двері старі."],"atlas_href":"/lexicon/двері/"},{"word":"окуляри","translation":"glasses, plural-only","pos":"noun","example":"Мої окуляри тут.","examples":["glasses, plural-only","Мої окуляри тут."],"atlas_href":"/lexicon/окуляри/"},{"word":"молодь","translation":"youth, collective singular","pos":"noun","example":"Молодь тут.","examples":["youth, collective singular","Молодь тут."],"atlas_href":"/lexicon/молодь/"},{"word":"дітвора","translation":"children as a group, collective singular","pos":"noun","example":"Дітвора там.","examples":["children as a group, collective singular","Дітвора там."],"atlas_href":"/lexicon/дітвора/"},{"word":"птаство","translation":"birds as a group, collective singular","pos":"noun","example":"Птаство тут.","examples":["birds as a group, collective singular","Птаство тут."],"atlas_href":"/lexicon/птаство/"},{"word":"великий","translation":"big, masculine","pos":"adjective","example":"Великий стіл.","examples":["big, masculine","Великий стіл."],"atlas_href":"/lexicon/великий/"},{"word":"великі","translation":"big, plural","pos":"adjective","example":"Великі столи.","examples":["big, plural","Великі столи."],"atlas_href":"/lexicon/великі/"},{"word":"нові","translation":"new, plural","pos":"adjective","example":"Нові книги.","examples":["new, plural","Нові книги."],"atlas_href":"/lexicon/нові/"},{"word":"чисті","translation":"clean, plural","pos":"adjective","example":"Чисті вікна.","examples":["clean, plural","Чисті вікна."],"atlas_href":"/lexicon/чисті/"},{"word":"сині","translation":"blue, plural","pos":"adjective","example":"Сині зошити.","examples":["blue, plural","Сині зошити."],"atlas_href":"/lexicon/сині/"},{"word":"осінні","translation":"autumn, plural adjective","pos":"adjective","example":"Осінні ранки.","examples":["autumn, plural adjective","Осінні ранки."],"atlas_href":"/lexicon/осінні/"},{"word":"два зошити","translation":"two notebooks","pos":"phrase","example":"Два зошити тут.","examples":["two notebooks","Два зошити тут."],"atlas_href":"/lexicon/два-зошити/"},{"word":"три книги","translation":"three books","pos":"phrase","example":"Три книги тут.","examples":["three books","Три книги тут."],"atlas_href":"/lexicon/три-книги/"},{"word":"чотири смартфони","translation":"four smartphones","pos":"phrase","example":"Чотири смартфони тут.","examples":["four smartphones","Чотири смартфони тут."],"atlas_href":"/lexicon/чотири-смартфони/"},{"word":"п'ять зошитів","translation":"five notebooks, later 5+ chunk","pos":"phrase","example":"П'ять зошитів is a recognition chunk here.","examples":["five notebooks, later 5+ chunk","П'ять зошитів is a recognition chunk here."],"atlas_href":"/lexicon/п-ять-зошитів/"},{"word":"двоє дверей","translation":"two doors, collective-number chunk","pos":"phrase","example":"Двоє дверей is passive recognition here.","examples":["two doors, collective-number chunk","Двоє дверей is passive recognition here."],"atlas_href":"/lexicon/двоє-дверей/"}]`)} title="Vocabulary" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"стіл","translation":"table, singular","pos":"noun","example":"Це стіл.","examples":["table, singular","Це стіл."],"atlas_href":"/lexicon/стіл/"},{"word":"столи","translation":"tables","pos":"noun","example":"Столи великі.","examples":["tables","Столи великі."]},{"word":"стілець","translation":"chair, singular","pos":"noun","example":"Це стілець.","examples":["chair, singular","Це стілець."],"atlas_href":"/lexicon/стілець/"},{"word":"стільці","translation":"chairs","pos":"noun","example":"Стільці старі.","examples":["chairs","Стільці старі."]},{"word":"книга","translation":"book, singular","pos":"noun","example":"Ця книга нова.","examples":["book, singular","Ця книга нова."],"atlas_href":"/lexicon/книга/"},{"word":"книги","translation":"books","pos":"noun","example":"Книги нові.","examples":["books","Книги нові."]},{"word":"вікно","translation":"window, singular","pos":"noun","example":"Це вікно.","examples":["window, singular","Це вікно."],"atlas_href":"/lexicon/вікно/"},{"word":"вікна","translation":"windows","pos":"noun","example":"Вікна чисті.","examples":["windows","Вікна чисті."]},{"word":"телефон","translation":"phone, singular","pos":"noun","example":"Це телефон.","examples":["phone, singular","Це телефон."],"atlas_href":"/lexicon/телефон/"},{"word":"телефони","translation":"phones","pos":"noun","example":"Телефони нові.","examples":["phones","Телефони нові."]},{"word":"зошит","translation":"notebook, singular","pos":"noun","example":"Це мій зошит.","examples":["notebook, singular","Це мій зошит."],"atlas_href":"/lexicon/зошит/"},{"word":"зошити","translation":"notebooks","pos":"noun","example":"Зошити сині.","examples":["notebooks","Зошити сині."]},{"word":"ручка","translation":"pen, singular","pos":"noun","example":"Це ручка.","examples":["pen, singular","Це ручка."],"atlas_href":"/lexicon/ручка/"},{"word":"ручки","translation":"pens","pos":"noun","example":"Ці ручки сині.","examples":["pens","Ці ручки сині."]},{"word":"сумка","translation":"bag, singular","pos":"noun","example":"Ця сумка червона.","examples":["bag, singular","Ця сумка червона."],"atlas_href":"/lexicon/сумка/"},{"word":"сумки","translation":"bags","pos":"noun","example":"Сумки чорні.","examples":["bags","Сумки чорні."]},{"word":"лампа","translation":"lamp, singular","pos":"noun","example":"Лампа біла.","examples":["lamp, singular","Лампа біла."],"atlas_href":"/lexicon/лампа/"},{"word":"лампи","translation":"lamps","pos":"noun","example":"Лампи жовті.","examples":["lamps","Лампи жовті."]},{"word":"крісло","translation":"armchair, singular","pos":"noun","example":"Це крісло.","examples":["armchair, singular","Це крісло."],"atlas_href":"/lexicon/крісло/"},{"word":"крісла","translation":"armchairs","pos":"noun","example":"Крісла чисті.","examples":["armchairs","Крісла чисті."]},{"word":"дзеркало","translation":"mirror, singular","pos":"noun","example":"Дзеркало нове.","examples":["mirror, singular","Дзеркало нове."],"atlas_href":"/lexicon/дзеркало/"},{"word":"дзеркала","translation":"mirrors","pos":"noun","example":"Дзеркала чисті.","examples":["mirrors","Дзеркала чисті."]},{"word":"річ","translation":"thing","pos":"noun","example":"Це моя річ.","examples":["thing","Це моя річ."],"atlas_href":"/lexicon/річ/"},{"word":"речі","translation":"things","pos":"noun","example":"Це мої речі.","examples":["things","Це мої речі."]},{"word":"ці","translation":"these","pos":"pronoun","example":"Ці столи великі.","examples":["these","Ці столи великі."]},{"word":"ті","translation":"those","pos":"pronoun","example":"Ті стільці старі.","examples":["those","Ті стільці старі."]},{"word":"мої","translation":"my, plural","pos":"pronoun","example":"Мої зошити сині.","examples":["my, plural","Мої зошити сині."]},{"word":"які","translation":"which; what kind, plural","pos":"pronoun","example":"Які ручки?","examples":["which; what kind, plural","Які ручки?"]},{"word":"великий","translation":"big, masculine","pos":"adjective","example":"Великий стіл.","examples":["big, masculine","Великий стіл."],"atlas_href":"/lexicon/великий/"},{"word":"великі","translation":"big, plural","pos":"adjective","example":"Великі столи.","examples":["big, plural","Великі столи."]},{"word":"нові","translation":"new, plural","pos":"adjective","example":"Нові книги.","examples":["new, plural","Нові книги."]},{"word":"чисті","translation":"clean, plural","pos":"adjective","example":"Чисті вікна.","examples":["clean, plural","Чисті вікна."]},{"word":"сині","translation":"blue, plural","pos":"adjective","example":"Сині зошити.","examples":["blue, plural","Сині зошити."]},{"word":"червоні","translation":"red, plural","pos":"adjective","example":"Червоні ручки.","examples":["red, plural","Червоні ручки."]},{"word":"жовті","translation":"yellow, plural","pos":"adjective","example":"Жовті лампи.","examples":["yellow, plural","Жовті лампи."]},{"word":"чорні","translation":"black, plural","pos":"adjective","example":"Чорні сумки.","examples":["black, plural","Чорні сумки."]},{"word":"старі","translation":"old, plural","pos":"adjective","example":"Старі стільці.","examples":["old, plural","Старі стільці."]},{"word":"маленькі","translation":"small, plural","pos":"adjective","example":"Маленькі сумки.","examples":["small, plural","Маленькі сумки."]}]`)} title="Vocabulary" />
 
-<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"стіл","back":"table, singular"},{"front":"столи","back":"tables"},{"front":"стілець","back":"chair, singular"},{"front":"стільці","back":"chairs"},{"front":"книга","back":"book, singular"},{"front":"книги","back":"books"},{"front":"вікно","back":"window, singular"},{"front":"вікна","back":"windows"},{"front":"зошит","back":"notebook, singular"},{"front":"зошити","back":"notebooks"},{"front":"ручка","back":"pen, singular"},{"front":"ручки","back":"pens"},{"front":"сумка","back":"bag, singular"},{"front":"сумки","back":"bags"},{"front":"лампа","back":"lamp, singular"},{"front":"лампи","back":"lamps"},{"front":"крісло","back":"armchair, singular"},{"front":"крісла","back":"armchairs"},{"front":"дзеркало","back":"mirror, singular"},{"front":"дзеркала","back":"mirrors"},{"front":"річ","back":"thing"},{"front":"речі","back":"things"},{"front":"ці","back":"these"},{"front":"ті","back":"those"},{"front":"мої","back":"my, plural"},{"front":"які","back":"which; what kind, plural"},{"front":"ми","back":"we"},{"front":"ви","back":"you, plural or formal"},{"front":"нас","back":"us"},{"front":"вас","back":"you, plural/formal object"},{"front":"нам","back":"to us"},{"front":"вам","back":"to you"},{"front":"нами","back":"with us"},{"front":"вами","back":"with you"},{"front":"гроші","back":"money, plural-only"},{"front":"двері","back":"door; doors, plural-only form"},{"front":"окуляри","back":"glasses, plural-only"},{"front":"молодь","back":"youth, collective singular"},{"front":"дітвора","back":"children as a group, collective singular"},{"front":"птаство","back":"birds as a group, collective singular"},{"front":"великий","back":"big, masculine"},{"front":"великі","back":"big, plural"},{"front":"нові","back":"new, plural"},{"front":"чисті","back":"clean, plural"},{"front":"сині","back":"blue, plural"},{"front":"осінні","back":"autumn, plural adjective"},{"front":"два зошити","back":"two notebooks"},{"front":"три книги","back":"three books"},{"front":"чотири смартфони","back":"four smartphones"},{"front":"п'ять зошитів","back":"five notebooks, later 5+ chunk"},{"front":"двоє дверей","back":"two doors, collective-number chunk"}]`)} />
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"стіл","back":"table, singular"},{"front":"столи","back":"tables"},{"front":"стілець","back":"chair, singular"},{"front":"стільці","back":"chairs"},{"front":"книга","back":"book, singular"},{"front":"книги","back":"books"},{"front":"вікно","back":"window, singular"},{"front":"вікна","back":"windows"},{"front":"телефон","back":"phone, singular"},{"front":"телефони","back":"phones"},{"front":"зошит","back":"notebook, singular"},{"front":"зошити","back":"notebooks"},{"front":"ручка","back":"pen, singular"},{"front":"ручки","back":"pens"},{"front":"сумка","back":"bag, singular"},{"front":"сумки","back":"bags"},{"front":"лампа","back":"lamp, singular"},{"front":"лампи","back":"lamps"},{"front":"крісло","back":"armchair, singular"},{"front":"крісла","back":"armchairs"},{"front":"дзеркало","back":"mirror, singular"},{"front":"дзеркала","back":"mirrors"},{"front":"річ","back":"thing"},{"front":"речі","back":"things"},{"front":"ці","back":"these"},{"front":"ті","back":"those"},{"front":"мої","back":"my, plural"},{"front":"які","back":"which; what kind, plural"},{"front":"великий","back":"big, masculine"},{"front":"великі","back":"big, plural"},{"front":"нові","back":"new, plural"},{"front":"чисті","back":"clean, plural"},{"front":"сині","back":"blue, plural"},{"front":"червоні","back":"red, plural"},{"front":"жовті","back":"yellow, plural"},{"front":"чорні","back":"black, plural"},{"front":"старі","back":"old, plural"},{"front":"маленькі","back":"small, plural"}]`)} />
 
 </TabItem>
 <TabItem label="Activities">
 
-### Одна річ, багато речей
+### Один → багато
 
 *(see lesson, §Діалоги)*
 
-### Пари однини й множини
+### Обери множину
 
 *(see lesson, §Діалоги)*
 
-### Закінчення прикметника в множині
+### Прикметник у множині
 
-*(see lesson, §Один → багато)*
+*(see lesson, §Прикметники у множині)*
+
+### Однина чи множина
+
+*(see lesson, §Прикметники у множині)*
+
+### Пари для пам'яті
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "стіл", "right": "столи"}, {"left": "книга", "right": "книги"}, {"left": "вікно", "right": "вікна"}, {"left": "стілець", "right": "стільці"}, {"left": "телефон", "right": "телефони"}, {"left": "зошит", "right": "зошити"}, {"left": "сумка", "right": "сумки"}, {"left": "дзеркало", "right": "дзеркала"}]`)} instruction={"Match one thing with many things."} isUkrainian={false} />
 
 ### Ці, ті, мої, які
 
-*(see lesson, §З числами)*
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "These tables are big.", "options": [{"text": "Ці столи великі.", "correct": true}, {"text": "Цей столи великі.", "correct": false}, {"text": "Ця столи великі.", "correct": false}], "explanation": "Use ці with plural nouns near you."}, {"question": "Those chairs are old.", "options": [{"text": "Ті стільці старі.", "correct": true}, {"text": "Той стільці старі.", "correct": false}, {"text": "Та стільці старі.", "correct": false}], "explanation": "Use ті for plural nouns farther away."}, {"question": "My notebooks are blue.", "options": [{"text": "Мої зошити сині.", "correct": true}, {"text": "Мій зошити сині.", "correct": false}, {"text": "Моя зошити сині.", "correct": false}], "explanation": "The plural form of my is мої."}, {"question": "Which pens?", "options": [{"text": "Які ручки?", "correct": true}, {"text": "Яка ручки?", "correct": false}, {"text": "Який ручки?", "correct": false}], "explanation": "The plural question word is які."}, {"question": "These books are new.", "options": [{"text": "Ці книги нові.", "correct": true}, {"text": "Це книги нове.", "correct": false}, {"text": "Ця книги нова.", "correct": false}], "explanation": "Use plural ці and plural нові."}, {"question": "Which bags are small?", "options": [{"text": "Які сумки маленькі?", "correct": true}, {"text": "Яка сумки маленька?", "correct": false}, {"text": "Який сумки маленький?", "correct": false}], "explanation": "Use plural які with plural сумки."}]`)} instruction={"Choose the plural helper."} isUkrainian={false} />
 
-### Однина, звичайна множина, форма з числом
+### Маленькі групи
 
-<GroupSort client:only='react' groups={JSON.parse(`{"One thing": ["стіл", "книга", "вікно", "стілець"], "Ordinary plural": ["столи", "книги", "вікна", "стільці"], "Special number chunk": ["п'ять зошитів", "десять учнів", "сто гривень", "двоє дверей"]}`)} instruction={"Sort each chunk by what it shows."} isUkrainian={false} />
-
-### Фрази про людей
-
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "we", "right": "ми"}, {"left": "you, plural or formal", "right": "ви"}, {"left": "for us", "right": "для нас"}, {"left": "for you", "right": "для вас"}, {"left": "we need", "right": "нам треба"}, {"left": "you need", "right": "вам треба"}, {"left": "with us", "right": "з нами"}, {"left": "with you", "right": "з вами"}]`)} instruction={"Match the English prompt with the Ukrainian chunk."} isUkrainian={false} />
-
-### Фрази з числами
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "два ___", "answer": "зошити", "options": ["зошити", "зошитів", "зошит"]}, {"sentence": "три ___", "answer": "книги", "options": ["книги", "книг", "книга"]}, {"sentence": "чотири ___", "answer": "смартфони", "options": ["смартфони", "смартфонів", "смартфон"]}, {"sentence": "п'ять ___", "answer": "зошитів", "options": ["зошитів", "зошити", "зошит"]}, {"sentence": "десять ___", "answer": "учнів", "options": ["учнів", "учні", "учень"]}, {"sentence": "сто ___", "answer": "гривень", "options": ["гривень", "гривні", "гривня"]}]`)} instruction={"Choose the noun chunk after the number."} isUkrainian={false} />
-
-<span id="repair-traps"></span>
-
-### Виправ пастки множини
-
-<ErrorCorrection client:only='react' instruction="Choose the standard Ukrainian repair." items={JSON.parse(`[{"sentence": "великий м'ячі", "errorWord": "великий м'ячі", "correctForm": "великі м'ячі", "options": ["великі м'ячі", "великий м'ячі", "велика м'ячі"], "explanation": "Plural adjectives use -і."}, {"sentence": "синія шарфи", "errorWord": "синія шарфи", "correctForm": "сині шарфи", "options": ["сині шарфи", "синія шарфи", "синій шарфи"], "explanation": "The plural color form is сині."}, {"sentence": "два зошитів / два смартфонів", "errorWord": "два зошитів / два смартфонів", "correctForm": "два зошити / чотири смартфони", "options": ["два зошити / чотири смартфони", "два зошитів / два смартфонів", "два зошита / чотири смартфона"], "explanation": "Two, three, and four use the ordinary plural form here."}, {"sentence": "п'ять зошити / десять учні", "errorWord": "п'ять зошити / десять учні", "correctForm": "п'ять зошитів / десять учнів", "options": ["п'ять зошитів / десять учнів", "п'ять зошити / десять учні", "п'ять зошита / десять учня"], "explanation": "Keep the 5+ chunk п'ять зошитів."}, {"sentence": "один двері / два двері", "errorWord": "один двері / два двері", "correctForm": "одні двері / двоє дверей", "options": ["одні двері / двоє дверей", "один двері / два двері", "одна двері / дві двері"], "explanation": "Двері is plural-only in everyday use."}, {"sentence": "молоді / дітвори", "errorWord": "молоді / дітвори", "correctForm": "молодь / дітвора", "options": ["молодь / дітвора", "молоді / дітвори", "молодя / дітвори"], "explanation": "Молодь is a singular collective word."}, {"sentence": "для ми / з ми", "errorWord": "для ми / з ми", "correctForm": "для нас / з нами", "options": ["для нас / з нами", "для ми / з ми", "для нам / з нас"], "explanation": "Use the pronoun chunks: для нас, з нами."}]`)} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "ці велик__ столи", "answer": "і", "options": ["і", "ий", "а"]}, {"sentence": "ті стар__ стільці", "answer": "і", "options": ["і", "ий", "е"]}, {"sentence": "мої син__ зошити", "answer": "і", "options": ["і", "я", "є"]}, {"sentence": "ці чист__ вікна", "answer": "і", "options": ["і", "е", "а"]}, {"sentence": "ті жовт__ лампи", "answer": "і", "options": ["і", "а", "е"]}, {"sentence": "мої чорн__ сумки", "answer": "і", "options": ["і", "а", "е"]}]`)} instruction={"Choose the plural adjective ending."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">

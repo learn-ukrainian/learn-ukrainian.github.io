@@ -1,19 +1,94 @@
 ---
 inline:
   - id: act-1
+    type: fill-in
+    title: Один → багато
+    instruction: Write the plural form.
+    items:
+      - sentence: стіл → ___
+        answer: столи
+        options:
+          - столи
+          - стіла
+          - столі
+        explanation: Learn the pair стіл - столи.
+      - sentence: книга → ___
+        answer: книги
+        options:
+          - книги
+          - книгі
+          - книга
+        explanation: Книга becomes книги.
+      - sentence: вікно → ___
+        answer: вікна
+        options:
+          - вікна
+          - вікни
+          - вікні
+        explanation: Many neuter nouns ending in -о use -а.
+      - sentence: стілець → ___
+        answer: стільці
+        options:
+          - стільці
+          - стілеці
+          - стільця
+        explanation: Learn стілець - стільці as its own pair.
+      - sentence: зошит → ___
+        answer: зошити
+        options:
+          - зошити
+          - зошита
+          - зошиті
+        explanation: Зошит becomes зошити.
+      - sentence: ручка → ___
+        answer: ручки
+        options:
+          - ручки
+          - ручкі
+          - ручка
+        explanation: After к, write ручки.
+      - sentence: сумка → ___
+        answer: сумки
+        options:
+          - сумки
+          - сумкі
+          - сумка
+        explanation: After к, write сумки.
+      - sentence: лампа → ___
+        answer: лампи
+        options:
+          - лампи
+          - лампа
+          - лампі
+        explanation: Лампа becomes лампи.
+      - sentence: крісло → ___
+        answer: крісла
+        options:
+          - крісла
+          - крісли
+          - кріслі
+        explanation: Крісло becomes крісла.
+      - sentence: дзеркало → ___
+        answer: дзеркала
+        options:
+          - дзеркала
+          - дзеркали
+          - дзеркалі
+        explanation: Дзеркало becomes дзеркала.
+  - id: act-2
     type: quiz
-    title: Одна річ, багато речей
-    instruction: Choose the plural chunk.
+    title: Обери множину
+    instruction: Choose the correct plural form.
     items:
       - prompt: стіл
         options:
           - text: столи
             correct: true
-          - text: стіла
+          - text: стола
             correct: false
-          - text: стілів
+          - text: столів
             correct: false
-        explanation: Learn the pair стіл - столи.
+        explanation: The A1 pair is стіл - столи.
       - prompt: книга
         options:
           - text: книги
@@ -31,7 +106,7 @@ inline:
             correct: false
           - text: вікні
             correct: false
-        explanation: Many neuter nouns ending in -о use -а.
+        explanation: Вікно becomes вікна.
       - prompt: стілець
         options:
           - text: стільці
@@ -40,7 +115,34 @@ inline:
             correct: false
           - text: стільця
             correct: false
-        explanation: Learn стілець - стільці as its own pair.
+        explanation: Learn стілець - стільці as a pair.
+      - prompt: телефон
+        options:
+          - text: телефони
+            correct: true
+          - text: телефона
+            correct: false
+          - text: телефонів
+            correct: false
+        explanation: Телефон becomes телефони in this nominative plural pattern.
+      - prompt: зошит
+        options:
+          - text: зошити
+            correct: true
+          - text: зошита
+            correct: false
+          - text: зошитів
+            correct: false
+        explanation: Зошит becomes зошити.
+      - prompt: ручка
+        options:
+          - text: ручки
+            correct: true
+          - text: ручкі
+            correct: false
+          - text: ручка
+            correct: false
+        explanation: The plural is ручки.
       - prompt: крісло
         options:
           - text: крісла
@@ -50,39 +152,9 @@ inline:
           - text: кріслі
             correct: false
         explanation: Крісло becomes крісла.
-      - prompt: ручка
-        options:
-          - text: ручки
-            correct: true
-          - text: ручкі
-            correct: false
-          - text: ручка
-            correct: false
-        explanation: Ручка becomes ручки.
-  - id: act-2
-    type: match-up
-    title: Пари однини й множини
-    instruction: Match one thing with many things.
-    pairs:
-      - left: стіл
-        right: столи
-      - left: книга
-        right: книги
-      - left: вікно
-        right: вікна
-      - left: стілець
-        right: стільці
-      - left: телефон
-        right: телефони
-      - left: зошит
-        right: зошити
-      - left: лампа
-        right: лампи
-      - left: дзеркало
-        right: дзеркала
   - id: act-3
     type: fill-in
-    title: Закінчення прикметника в множині
+    title: Прикметник у множині
     instruction: Choose the ending that makes the adjective plural.
     items:
       - sentence: нов__ книги
@@ -113,20 +185,6 @@ inline:
           - я
           - є
         explanation: Синій becomes сині.
-      - sentence: літн__ дні
-        answer: і
-        options:
-          - і
-          - ій
-          - я
-        explanation: Літній becomes літні.
-      - sentence: осінн__ ранки
-        answer: і
-        options:
-          - і
-          - я
-          - є
-        explanation: Осінній becomes осінні.
       - sentence: червон__ ручки
         answer: і
         options:
@@ -141,8 +199,63 @@ inline:
           - а
           - е
         explanation: Жовта becomes жовті.
-  - id: act-5
-    type: quiz
+      - sentence: стар__ стільці
+        answer: і
+        options:
+          - і
+          - ий
+          - а
+        explanation: Старий becomes старі.
+      - sentence: чорн__ сумки
+        answer: і
+        options:
+          - і
+          - а
+          - е
+        explanation: Чорна becomes чорні.
+  - id: act-4
+    type: group-sort
+    title: Однина чи множина
+    instruction: Sort each noun as one thing or many things.
+    groups:
+      - label: Однина
+        items:
+          - стіл
+          - книга
+          - вікно
+          - стілець
+          - лампа
+          - крісло
+      - label: Множина
+        items:
+          - столи
+          - книги
+          - вікна
+          - стільці
+          - лампи
+          - крісла
+workbook:
+  - type: match-up
+    title: Пари для пам'яті
+    instruction: Match one thing with many things.
+    pairs:
+      - left: стіл
+        right: столи
+      - left: книга
+        right: книги
+      - left: вікно
+        right: вікна
+      - left: стілець
+        right: стільці
+      - left: телефон
+        right: телефони
+      - left: зошит
+        right: зошити
+      - left: сумка
+        right: сумки
+      - left: дзеркало
+        right: дзеркала
+  - type: quiz
     title: Ці, ті, мої, які
     instruction: Choose the plural helper.
     items:
@@ -191,153 +304,58 @@ inline:
           - text: Ця книги нова.
             correct: false
         explanation: Use plural ці and plural нові.
-workbook:
-  - type: group-sort
-    title: Однина, звичайна множина, форма з числом
-    instruction: Sort each chunk by what it shows.
-    groups:
-      - label: One thing
-        items:
-          - стіл
-          - книга
-          - вікно
-          - стілець
-      - label: Ordinary plural
-        items:
-          - столи
-          - книги
-          - вікна
-          - стільці
-      - label: Special number chunk
-        items:
-          - п'ять зошитів
-          - десять учнів
-          - сто гривень
-          - двоє дверей
-  - type: match-up
-    title: Фрази про людей
-    instruction: Match the English prompt with the Ukrainian chunk.
-    pairs:
-      - left: we
-        right: ми
-      - left: you, plural or formal
-        right: ви
-      - left: for us
-        right: для нас
-      - left: for you
-        right: для вас
-      - left: we need
-        right: нам треба
-      - left: you need
-        right: вам треба
-      - left: with us
-        right: з нами
-      - left: with you
-        right: з вами
+      - prompt: Which bags are small?
+        options:
+          - text: Які сумки маленькі?
+            correct: true
+          - text: Яка сумки маленька?
+            correct: false
+          - text: Який сумки маленький?
+            correct: false
+        explanation: Use plural які with plural сумки.
   - type: fill-in
-    title: Фрази з числами
-    instruction: Choose the noun chunk after the number.
+    title: Маленькі групи
+    instruction: Choose the plural adjective ending.
     items:
-      - sentence: два ___
-        answer: зошити
+      - sentence: ці велик__ столи
+        answer: і
         options:
-          - зошити
-          - зошитів
-          - зошит
-        explanation: With 2, use the ordinary plural chunk два зошити.
-      - sentence: три ___
-        answer: книги
+          - і
+          - ий
+          - а
+        explanation: Великі describes plural столи.
+      - sentence: ті стар__ стільці
+        answer: і
         options:
-          - книги
-          - книг
-          - книга
-        explanation: Три книги is the A1-safe phrase.
-      - sentence: чотири ___
-        answer: смартфони
+          - і
+          - ий
+          - е
+        explanation: Старі describes plural стільці.
+      - sentence: мої син__ зошити
+        answer: і
         options:
-          - смартфони
-          - смартфонів
-          - смартфон
-        explanation: Чотири uses the ordinary plural form here.
-      - sentence: п'ять ___
-        answer: зошитів
+          - і
+          - я
+          - є
+        explanation: Сині describes plural зошити.
+      - sentence: ці чист__ вікна
+        answer: і
         options:
-          - зошитів
-          - зошити
-          - зошит
-        explanation: Treat п'ять зошитів as a later 5+ chunk.
-      - sentence: десять ___
-        answer: учнів
+          - і
+          - е
+          - а
+        explanation: Чисті describes plural вікна.
+      - sentence: ті жовт__ лампи
+        answer: і
         options:
-          - учнів
-          - учні
-          - учень
-        explanation: Treat десять учнів as a later 5+ chunk.
-      - sentence: сто ___
-        answer: гривень
+          - і
+          - а
+          - е
+        explanation: Жовті describes plural лампи.
+      - sentence: мої чорн__ сумки
+        answer: і
         options:
-          - гривень
-          - гривні
-          - гривня
-        explanation: Сто гривень is the price chunk from the numbers module.
-  - type: error-correction
-    title: Виправ пастки множини
-    instruction: Choose the standard Ukrainian repair.
-    anchor_id: repair-traps
-    items:
-      - sentence: великий м'ячі
-        error: великий м'ячі
-        answer: великі м'ячі
-        options:
-          - великі м'ячі
-          - великий м'ячі
-          - велика м'ячі
-        explanation: Plural adjectives use -і.
-      - sentence: синія шарфи
-        error: синія шарфи
-        answer: сині шарфи
-        options:
-          - сині шарфи
-          - синія шарфи
-          - синій шарфи
-        explanation: The plural color form is сині.
-      - sentence: два зошитів / два смартфонів
-        error: два зошитів / два смартфонів
-        answer: два зошити / чотири смартфони
-        options:
-          - два зошити / чотири смартфони
-          - два зошитів / два смартфонів
-          - два зошита / чотири смартфона
-        explanation: Two, three, and four use the ordinary plural form here.
-      - sentence: п'ять зошити / десять учні
-        error: п'ять зошити / десять учні
-        answer: п'ять зошитів / десять учнів
-        options:
-          - п'ять зошитів / десять учнів
-          - п'ять зошити / десять учні
-          - п'ять зошита / десять учня
-        explanation: Keep the 5+ chunk п'ять зошитів.
-      - sentence: один двері / два двері
-        error: один двері / два двері
-        answer: одні двері / двоє дверей
-        options:
-          - одні двері / двоє дверей
-          - один двері / два двері
-          - одна двері / дві двері
-        explanation: Двері is plural-only in everyday use.
-      - sentence: молоді / дітвори
-        error: молоді / дітвори
-        answer: молодь / дітвора
-        options:
-          - молодь / дітвора
-          - молоді / дітвори
-          - молодя / дітвори
-        explanation: Молодь is a singular collective word.
-      - sentence: для ми / з ми
-        error: для ми / з ми
-        answer: для нас / з нами
-        options:
-          - для нас / з нами
-          - для ми / з ми
-          - для нам / з нас
-        explanation: 'Use the pronoun chunks: для нас, з нами.'
+          - і
+          - а
+          - е
+        explanation: Чорні describes plural сумки.

@@ -30,6 +30,14 @@
   translation: windows
   pos: noun
   usage: Вікна чисті.
+- lemma: телефон
+  translation: phone, singular
+  pos: noun
+  usage: Це телефон.
+- lemma: телефони
+  translation: phones
+  pos: noun
+  usage: Телефони нові.
 - lemma: зошит
   translation: notebook, singular
   pos: noun
@@ -37,7 +45,7 @@
 - lemma: зошити
   translation: notebooks
   pos: noun
-  usage: Три зошити тут.
+  usage: Зошити сині.
 - lemma: ручка
   translation: pen, singular
   pos: noun
@@ -102,62 +110,6 @@
   translation: which; what kind, plural
   pos: pronoun
   usage: Які ручки?
-- lemma: ми
-  translation: we
-  pos: pronoun
-  usage: Ми тут.
-- lemma: ви
-  translation: you, plural or formal
-  pos: pronoun
-  usage: Ви тут?
-- lemma: нас
-  translation: us
-  pos: pronoun
-  usage: Для нас.
-- lemma: вас
-  translation: you, plural/formal object
-  pos: pronoun
-  usage: Для вас.
-- lemma: нам
-  translation: to us
-  pos: pronoun
-  usage: Нам треба три зошити.
-- lemma: вам
-  translation: to you
-  pos: pronoun
-  usage: Вам треба ручки.
-- lemma: нами
-  translation: with us
-  pos: pronoun
-  usage: З нами.
-- lemma: вами
-  translation: with you
-  pos: pronoun
-  usage: З вами.
-- lemma: гроші
-  translation: money, plural-only
-  pos: noun
-  usage: Це гроші.
-- lemma: двері
-  translation: door; doors, plural-only form
-  pos: noun
-  usage: Ці двері старі.
-- lemma: окуляри
-  translation: glasses, plural-only
-  pos: noun
-  usage: Мої окуляри тут.
-- lemma: молодь
-  translation: youth, collective singular
-  pos: noun
-  usage: Молодь тут.
-- lemma: дітвора
-  translation: children as a group, collective singular
-  pos: noun
-  usage: Дітвора там.
-- lemma: птаство
-  translation: birds as a group, collective singular
-  pos: noun
-  usage: Птаство тут.
 - lemma: великий
   translation: big, masculine
   pos: adjective
@@ -178,27 +130,23 @@
   translation: blue, plural
   pos: adjective
   usage: Сині зошити.
-- lemma: осінні
-  translation: autumn, plural adjective
+- lemma: червоні
+  translation: red, plural
   pos: adjective
-  usage: Осінні ранки.
-- lemma: два зошити
-  translation: two notebooks
-  pos: phrase
-  usage: Два зошити тут.
-- lemma: три книги
-  translation: three books
-  pos: phrase
-  usage: Три книги тут.
-- lemma: чотири смартфони
-  translation: four smartphones
-  pos: phrase
-  usage: Чотири смартфони тут.
-- lemma: п'ять зошитів
-  translation: five notebooks, later 5+ chunk
-  pos: phrase
-  usage: П'ять зошитів is a recognition chunk here.
-- lemma: двоє дверей
-  translation: two doors, collective-number chunk
-  pos: phrase
-  usage: Двоє дверей is passive recognition here.
+  usage: Червоні ручки.
+- lemma: жовті
+  translation: yellow, plural
+  pos: adjective
+  usage: Жовті лампи.
+- lemma: чорні
+  translation: black, plural
+  pos: adjective
+  usage: Чорні сумки.
+- lemma: старі
+  translation: old, plural
+  pos: adjective
+  usage: Старі стільці.
+- lemma: маленькі
+  translation: small, plural
+  pos: adjective
+  usage: Маленькі сумки.
