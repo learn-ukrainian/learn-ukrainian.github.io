@@ -123,7 +123,7 @@ Both verified end-to-end: HTML fetch → windows-1251 decode → dop3 div extrac
 | Peresopnytske Gospel | `uk.wikisource.org` | Famous 1556-1561 translation. Check Wikisource first. |
 | Пересторога (1605) | `uk.wikisource.org` / `biletsky-khrestomatiia` excerpt | We already have excerpts in `wave5-biletsky-khrestomatiia.jsonl`. Full text: try Wikisource. |
 | Doroshenko «Нарис історії України» | `diasporiana.org.ua` (PDF) | Diaspora library, PDF-only. Needs PDF→text extraction. |
-| Polonska-Vasilenko «Історія України» | `diasporiana.org.ua` (PDF) or `chtyvo.org.ua` | Same. |
+| Polonska-Vasilenko «Історія України» | `diasporiana.org.ua` (PDF) or archived Chtyvo snapshots | Same. |
 
 ### Group C — binary conversion needed
 
@@ -213,7 +213,7 @@ Separate tickets or scoped as addenda to #1026:
 1. **Wikisource sweep** — run `scripts/rag/scrape_wikisource.py` for: Orlyk Constitution (Ukrainian), Ostromir Gospel, Peresopnytske Gospel, Перестoрога 1605. Needs the existing Wikisource scraper, possibly with per-work `--pages` targets.
 
 2. **Diasporiana PDF pipeline** — write a new `scripts/rag/scrape_diasporiana.py` that:
-   - Downloads PDFs from diasporiana.org.ua / chtyvo.org.ua
+   - Downloads PDFs from diasporiana.org.ua / archived Chtyvo snapshots
    - Extracts text via pdftotext / pdfminer
    - Chunks + writes JSONL
    - Targets: Doroshenko «Нарис історії України», Polonska-Vasilenko «Історія України»
