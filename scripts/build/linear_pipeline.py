@@ -415,6 +415,7 @@ TELEMETRY_MAX_MAPPING_CHARS = 500
 TELEMETRY_MAX_FAILED_WORDS = 5
 TELEMETRY_MAX_THEATRE_VIOLATIONS = 25
 TEXTBOOK_GROUNDING_MIN_WORDS = 30
+VESUM_PRIMARY_EXEMPTION_MIN_WORDS = 8
 
 RULE_VOICE_META = "#R-VOICE-META"
 RULE_BAD_FORM_MARKER = "#R-BAD-FORM-MARKER"
@@ -10184,22 +10185,42 @@ def _build_vesum_text(
     emit_negative_example_events: bool = False,
 ) -> str:
     """Compose the text blob that VESUM verifies, with structural exclusions."""
-    if _vesum_heritage_attestation_enabled(level):
+    strip_verbatim_primaries = _vesum_heritage_attestation_enabled(level)
+    verified_primary_texts: list[str] = []
+    if strip_verbatim_primaries:
+        verified_primary_texts = _quote_fidelity_verified_blockquote_texts(
+            module_text,
+            level=level,
+        )
         module_text = _strip_quote_fidelity_verified_blockquotes(module_text, level=level)
     parts = [_strip_metalinguistic(module_text)]
-    for activity in activities:
-        parts.append(
-            _strip_metalinguistic(
-                _activity_vesum_text(
-                    activity,
-                    emit_negative_example_events=emit_negative_example_events,
-                )
+    strip_activity_field: Callable[[str], str] | None = None
+    if strip_verbatim_primaries:
+
+        def strip_activity_field(value: str) -> str:
+            return _strip_vesum_verbatim_primary_spans(
+                value,
+                level=level,
+                verified_primary_texts=verified_primary_texts,
             )
+
+    for activity in activities:
+        activity_text = _activity_vesum_text(
+            activity,
+            emit_negative_example_events=emit_negative_example_events,
+            string_transform=strip_activity_field,
         )
+        parts.append(_strip_metalinguistic(activity_text))
     for entry in vocabulary:
         if isinstance(entry, dict):
             parts.append(_strip_metalinguistic(str(entry.get("lemma", ""))))
             usage = _strip_usage_parentheticals(str(entry.get("usage", "")))
+            if strip_verbatim_primaries:
+                usage = _strip_vesum_verbatim_primary_spans(
+                    usage,
+                    level=level,
+                    verified_primary_texts=verified_primary_texts,
+                )
             parts.append(_strip_metalinguistic(usage))
     for entry in resources:
         if isinstance(entry, dict):
@@ -10216,6 +10237,7 @@ def _activity_vesum_text(
     activity: dict[str, Any],
     *,
     emit_negative_example_events: bool = False,
+    string_transform: Callable[[str], str] | None = None,
 ) -> str:
     """Walk an activity's string values, excluding intentional-error fields.
 
@@ -10244,6 +10266,9 @@ def _activity_vesum_text(
     For highlight-morphemes activities, `morphemes:` is an answer key of bare
     sub-word units. Skip that subtree while keeping `text:`, `word:`, title,
     and instruction strings in VESUM scope.
+
+    When supplied, `string_transform` runs on each retained string leaf before
+    flattening so transforms cannot match across separate YAML fields.
     """
     activity_type = activity.get("type")
     activity_id = str(activity.get("id") or "")
@@ -10359,7 +10384,7 @@ def _activity_vesum_text(
                     item_idx=child_item_idx,
                 )
         elif isinstance(node, str):
-            out.append(node)
+            out.append(string_transform(node) if string_transform else node)
 
     walk(activity, None)
     return "\n".join(out)
@@ -10878,6 +10903,14 @@ def _blockquote_record_is_quote_fidelity_verified(record: Mapping[str, Any]) -> 
     return bool(record.get("quote") and record.get("attribution") and not record.get("no_verify"))
 
 
+def _quote_fidelity_verified_blockquote_texts(text: str, *, level: str | None) -> list[str]:
+    return [
+        str(record["quote"])
+        for record in _extract_blockquote_records(text, level=level)
+        if _blockquote_record_is_quote_fidelity_verified(record)
+    ]
+
+
 def _strip_quote_fidelity_verified_blockquotes(text: str, *, level: str | None) -> str:
     records = _extract_blockquote_records(text, level=level)
     quote_line_numbers = {
@@ -10943,6 +10976,143 @@ def _contains_textbook_quote(blockquote: str, result_text: str) -> bool:
         if window in result_blob:
             return True
     return False
+
+
+_MATCH_TOKEN_WITH_SPAN_RE = re.compile(
+    r"[0-9A-Za-zА-Яа-яҐґЄєІіЇї][0-9A-Za-zА-Яа-яҐґЄєІіЇї'’ʼ-]*"
+)
+
+
+@dataclass(frozen=True)
+class _MatchToken:
+    text: str
+    start: int
+    end: int
+
+
+def _match_token_key(token: str) -> str:
+    normalized = _normalize_match_text(token)
+    normalized = re.sub(r"[*_`~#>|]", " ", normalized)
+    pieces = re.findall(r"[0-9A-Za-zА-Яа-яҐґЄєІіЇї'-]+", normalized.casefold())
+    if not pieces:
+        return ""
+    return _collapse_syllable_break("".join(pieces))
+
+
+def _textbook_match_token_spans(text: str) -> list[_MatchToken]:
+    tokens: list[_MatchToken] = []
+    for match in _MATCH_TOKEN_WITH_SPAN_RE.finditer(text):
+        token = _match_token_key(match.group(0))
+        if token:
+            tokens.append(_MatchToken(token, match.start(), match.end()))
+    return tokens
+
+
+def _merge_text_spans(spans: Sequence[tuple[int, int]]) -> list[tuple[int, int]]:
+    merged: list[tuple[int, int]] = []
+    for start, end in sorted(spans):
+        if start >= end:
+            continue
+        if not merged or start > merged[-1][1]:
+            merged.append((start, end))
+            continue
+        previous_start, previous_end = merged[-1]
+        merged[-1] = (previous_start, max(previous_end, end))
+    return merged
+
+
+def _matching_token_spans(
+    candidate_text: str,
+    source_text: str,
+    *,
+    min_words: int,
+) -> list[tuple[int, int]]:
+    candidate_tokens = _textbook_match_token_spans(candidate_text)
+    source_tokens = [token.text for token in _textbook_match_token_spans(source_text)]
+    if len(candidate_tokens) < min_words or len(source_tokens) < min_words:
+        return []
+
+    source_windows: dict[tuple[str, ...], list[int]] = {}
+    for source_start in range(0, len(source_tokens) - min_words + 1):
+        window = tuple(source_tokens[source_start : source_start + min_words])
+        source_windows.setdefault(window, []).append(source_start)
+
+    candidate_token_texts = [token.text for token in candidate_tokens]
+    spans: list[tuple[int, int]] = []
+    for candidate_start in range(0, len(candidate_tokens) - min_words + 1):
+        window = tuple(candidate_token_texts[candidate_start : candidate_start + min_words])
+        source_starts = source_windows.get(window)
+        if not source_starts:
+            continue
+        for source_start in source_starts:
+            match_len = min_words
+            while (
+                candidate_start + match_len < len(candidate_token_texts)
+                and source_start + match_len < len(source_tokens)
+                and candidate_token_texts[candidate_start + match_len]
+                == source_tokens[source_start + match_len]
+            ):
+                match_len += 1
+            spans.append(
+                (
+                    candidate_tokens[candidate_start].start,
+                    candidate_tokens[candidate_start + match_len - 1].end,
+                )
+            )
+            break
+    return _merge_text_spans(spans)
+
+
+def _blank_text_spans(text: str, spans: Sequence[tuple[int, int]]) -> str:
+    merged = _merge_text_spans(spans)
+    if not merged:
+        return text
+    chunks: list[str] = []
+    cursor = 0
+    for start, end in merged:
+        chunks.append(text[cursor:start])
+        removed = text[start:end]
+        chunks.append("\n" * removed.count("\n") or " ")
+        cursor = end
+    chunks.append(text[cursor:])
+    return "".join(chunks)
+
+
+def _strip_vesum_verbatim_primary_spans(
+    text: str,
+    *,
+    level: str | None,
+    verified_primary_texts: Sequence[str],
+) -> str:
+    """Blank matched seminar primary spans before modern VESUM verification."""
+    if len(_textbook_match_token_spans(text)) < VESUM_PRIMARY_EXEMPTION_MIN_WORDS:
+        return text
+
+    stripped = text
+    for source_text in verified_primary_texts:
+        spans = _matching_token_spans(
+            stripped,
+            source_text,
+            min_words=VESUM_PRIMARY_EXEMPTION_MIN_WORDS,
+        )
+        stripped = _blank_text_spans(stripped, spans)
+
+    if len(_textbook_match_token_spans(stripped)) < VESUM_PRIMARY_EXEMPTION_MIN_WORDS:
+        return stripped
+
+    corpus_spans: list[tuple[int, int]] = []
+    for hit in _search_literary_hits(stripped, level=str(level or ""), limit=20):
+        hit_text = _result_text_for_match(hit)
+        if not hit_text:
+            continue
+        corpus_spans.extend(
+            _matching_token_spans(
+                stripped,
+                hit_text,
+                min_words=VESUM_PRIMARY_EXEMPTION_MIN_WORDS,
+            )
+        )
+    return _blank_text_spans(stripped, corpus_spans)
 
 
 _TOPIC_STOPWORDS = {
