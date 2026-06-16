@@ -40,6 +40,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 TEXTBOOK_SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 FOLK_HERITAGE_ATTESTATIONS_PATH = PROJECT_ROOT / "data" / "folk_heritage_attestations.yaml"
+FOREIGN_PROPER_NOUN_ATTESTATIONS_PATH = PROJECT_ROOT / "data" / "foreign_proper_noun_attestations.yaml"
 CLAUDE_WRITER_AGENT_SOURCE = PROJECT_ROOT / "agents_extensions/shared" / "agents" / "curriculum-writer.md"
 CLAUDE_WRITER_AGENT_TARGET = PROJECT_ROOT / ".claude" / "agents" / "curriculum-writer.md"
 
@@ -9053,6 +9054,103 @@ def _folk_heritage_attestation_index(
     return index
 
 
+def _foreign_proper_noun_attestation_urls(row: Mapping[str, Any]) -> list[str]:
+    urls = row.get("wikipedia_urls")
+    if isinstance(urls, list):
+        return [str(url).strip() for url in urls if str(url or "").strip()]
+
+    url = row.get("wikipedia_url") or row.get("url")
+    if isinstance(url, str) and url.strip():
+        return [url.strip()]
+    return []
+
+
+def _foreign_proper_noun_attestation_is_valid(row: Mapping[str, Any]) -> bool:
+    return any(
+        url.startswith("https://uk.wikipedia.org/wiki/")
+        for url in _foreign_proper_noun_attestation_urls(row)
+    )
+
+
+def _foreign_proper_noun_attestation_index(
+    path: Path | None = None,
+) -> dict[str, Mapping[str, Any]]:
+    source_path = path or FOREIGN_PROPER_NOUN_ATTESTATIONS_PATH
+    if not source_path.exists():
+        return {}
+
+    data = yaml.safe_load(source_path.read_text(encoding="utf-8")) or {}
+    if not isinstance(data, Mapping):
+        raise ValueError(f"{source_path} must contain a YAML mapping")
+    rows = data.get("attestations", [])
+    if not isinstance(rows, list):
+        raise ValueError(f"{source_path} field 'attestations' must be a list")
+
+    index: dict[str, Mapping[str, Any]] = {}
+    for row in rows:
+        if not isinstance(row, Mapping) or not _foreign_proper_noun_attestation_is_valid(row):
+            continue
+        lemma = _normalize_for_vesum(str(row.get("lemma") or "")).lower()
+        if not lemma:
+            continue
+        surfaces = {lemma}
+        forms = row.get("forms", [])
+        if forms is None:
+            forms = []
+        if not isinstance(forms, list):
+            raise ValueError(f"{source_path} lemma {lemma!r} field 'forms' must be a list")
+        for surface in forms:
+            normalized = _normalize_for_vesum(str(surface or "")).lower()
+            if normalized:
+                surfaces.add(normalized)
+        for surface in surfaces:
+            index[surface] = row
+    return index
+
+
+def _is_titlecase_ukrainian_proper_noun_surface(surface: str) -> bool:
+    token = surface.strip(_VESUM_WORD_EDGE_CHARS)
+    if not token or not _CYRILLIC_LETTER_RE.search(token):
+        return False
+
+    parts = [part for part in re.split(r"[-‐-―]", token) if part]
+    if not parts:
+        return False
+    for part in parts:
+        letters = [char for char in part if char.isalpha()]
+        if not letters or not letters[0].isupper():
+            return False
+        if any(not char.islower() for char in letters[1:]):
+            return False
+    return True
+
+
+def _resolve_foreign_proper_noun_attested_missing(
+    missing_lc: set[str],
+    unchecked_pairs: Sequence[tuple[str, str, str]],
+) -> set[str]:
+    if not missing_lc:
+        return set()
+
+    attestation_index = _foreign_proper_noun_attestation_index()
+    if not attestation_index:
+        return set()
+
+    attested: set[str] = set()
+    for surface, lower, original_case_lookup in unchecked_pairs:
+        if lower not in missing_lc:
+            continue
+        for raw in (surface, original_case_lookup):
+            normalized = _normalize_for_vesum(raw).strip()
+            if not _is_titlecase_ukrainian_proper_noun_surface(normalized):
+                continue
+            if normalized.lower() in attestation_index:
+                attested.add(lower)
+                break
+
+    return attested
+
+
 _HERITAGE_AUTHENTIC_CLASSIFICATIONS = frozenset(
     {"authentic-archaism", "dialect", "historism", "borrowing", "standard"}
 )
@@ -9448,6 +9546,20 @@ def _vesum_gate(
             }
     if missing_lc:
         missing_lc = {word for word in missing_lc if not _is_sung_vowel_practice_lookup(word)}
+    foreign_proper_attested_lc: set[str] = set()
+    if missing_lc and _vesum_heritage_attestation_enabled(level):
+        try:
+            foreign_proper_attested_lc = _resolve_foreign_proper_noun_attested_missing(
+                missing_lc,
+                unchecked_pairs,
+            )
+        except Exception as exc:
+            return {
+                "passed": False,
+                "error": str(exc),
+                "checked": len(unchecked_pairs),
+            }
+        missing_lc -= foreign_proper_attested_lc
     heritage_attested_lc: set[str] = set()
     if missing_lc and _vesum_heritage_attestation_enabled(level):
         try:
@@ -9463,6 +9575,9 @@ def _vesum_gate(
     heritage_attested_words = sorted(
         {surface for surface, lower, _original in unchecked_pairs if lower in heritage_attested_lc}
     )
+    foreign_proper_attested_words = sorted(
+        {surface for surface, lower, _original in unchecked_pairs if lower in foreign_proper_attested_lc}
+    )
     ignored_missing_lc = _vesum_missing_exclusion_keys(
         ignored_missing_surfaces,
         min_word_length=VESUM_MIN_WORD_LENGTH,
@@ -9475,6 +9590,8 @@ def _vesum_gate(
         "whitelisted": len(surface_pairs) - len(unchecked_pairs),
         "heritage_attested": len(heritage_attested_words),
         "heritage_attested_words": heritage_attested_words[:100],
+        "foreign_proper_noun_attested": len(foreign_proper_attested_words),
+        "foreign_proper_noun_attested_words": foreign_proper_attested_words[:100],
         "missing": missing[:100],
         "missing_count": len(missing),
     }

@@ -1,0 +1,70 @@
+---
+# Curated fallback for seminar/folk VESUM misses where live uk.wikipedia
+# lookups are too slow or flaky for gate-time use. Rows list only attested
+# lemmas and explicit valid Ukrainian case forms; the pipeline does not infer
+# forms by stripping endings from VESUM misses.
+attestations:
+- lemma: Йоль
+  forms:
+  - Йоль
+  - Йолю
+  - Йолеві
+  - Йолем
+  - Йолі
+  wikipedia_urls:
+  - https://uk.wikipedia.org/wiki/Йоль
+  gloss: германське свято зимового сонцестояння
+- lemma: Ялда
+  forms:
+  - Ялда
+  - Ялди
+  - Ялді
+  - Ялду
+  - Ялдою
+  - Ялдо
+  wikipedia_urls:
+  - https://uk.wikipedia.org/wiki/Свята_Ірану
+  - https://uk.wikipedia.org/wiki/Азар_(місяць)
+  gloss: іранська ніч зимового сонцестояння
+- lemma: Сатурналії
+  forms:
+  - Сатурналії
+  - Сатурналій
+  - Сатурналіям
+  - Сатурналіями
+  - Сатурналіях
+  wikipedia_urls:
+  - https://uk.wikipedia.org/wiki/Сатурналії
+  gloss: давньоримське свято на честь Сатурна
+- lemma: Рим
+  forms:
+  - Рим
+  - Риму
+  - Римові
+  - Римом
+  - Римі
+  - Риме
+  wikipedia_urls:
+  - https://uk.wikipedia.org/wiki/Рим
+  gloss: місто; чужоземна культурна референція в порівняльній прозі
+- lemma: Іран
+  forms:
+  - Іран
+  - Ірану
+  - Іранові
+  - Іраном
+  - Ірані
+  - Іране
+  wikipedia_urls:
+  - https://uk.wikipedia.org/wiki/Іран
+  gloss: країна; чужоземна культурна референція в порівняльній прозі
+- lemma: Скандинавія
+  forms:
+  - Скандинавія
+  - Скандинавії
+  - Скандинавію
+  - Скандинавією
+  - Скандинавіє
+  wikipedia_urls:
+  - https://uk.wikipedia.org/wiki/Скандинавія
+  gloss: регіон; чужоземна культурна референція в порівняльній прозі
