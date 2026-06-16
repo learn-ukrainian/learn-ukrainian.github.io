@@ -1,34 +1,33 @@
-# Current — Claude Session Handoff (2026-06-16 — Atlas lemma-keying + decolonization §6 SHIPPED; 7 PRs merged)
+# Current — Claude Session Handoff (2026-06-16 evening — §6 moat slice 3 SHIPPED; full merge-train + 3 dependabot rounds cleared)
 
-> **ROLE:** main orchestrator. User: grind issues, results-focused, use context to ~700k, **use the FLEET (#M-12)**, self-merge after fleet-review + CI-green, don't manufacture obstacles, don't idle. Quality non-negotiable.
+> **ROLE:** main orchestrator. User: grind the queue, results-focused, use the FLEET (#M-12), self-merge after review + CI-green, don't manufacture obstacles, don't idle. Quality non-negotiable.
 
-> **State:** main moving (merge-train). Live hooks: #M-5 secret-guard + #M-0.5 admin + #M-7 pytest-push. **NEW blocking CI gate: validate_plan_ordering (#3290).** Atlas manifest = 2428 entries, §8 clean.
+> **State:** main moving fast (merge-train). HEAD past `748332e7fd`. Atlas §6 decolonization moat now spans participles + collocations + lexical calques (5 manifest lemmas: біля, виглядати, міроприємство, неділя, слідуючий + many live-MCP-only). Live blocking CI: freshness gate, validate_plan_ordering, pytest/ruff/frontend/CodeQL.
 
-## ✅ SHIPPED + MERGED this session (7 PRs)
-- **#3282** lxml 6.1.0→6.0.4 (deps lock; closed wrong-approach #3281).
-- **#3289** chtyvo.org.ua dead-links → Wayback snapshots.
-- **#3284** dmklinger gloss meta-junk cleanup (49→2 via _clean_gloss).
-- **#3290** lit slug_intentional + **promote validate_plan_ordering to BLOCKING CI** (over-exemption fixed per DeepSeek). Closed #2526.
-- **#3291** 32 curated homographs (gloss-disambiguated, codex-reviewed: сьома→сьомий not сім; цьому standalone) + dmklinger qualifier-prefix tail (0 residuals).
-- **#3296** decolonization §6 active-participle calque layer (#3098 first slice): 20 source-verified calques, діючий sense-split fix, виглядати live SENSE-RESTRICTED card.
-- **#M-5** secret-guard reactivated (earlier).
-- **MILESTONES:** Atlas lemma-keying COMPLETE (T1+T2 dedup + create-case gloss/pos fix + homographs + dmklinger). Decolonization §6 moat first slice live.
+## ✅ SHIPPED + MERGED this session (~22 PRs)
+- **§6 decolonization moat slice 3 (#3366, advances #3098):** 6 single-word lexical calques — слідуючий→наступний, багаточисельний→численний, міроприємство→захід, учбовий→навчальний + sense-restricted любий ("any" vs authentic "dear") / неділя ("week" vs authentic "Sunday"). VESUM-verified 6/6 + heritage-confirmed no over-flagging. Surgical 3-lemma manifest patch.
+- **#3318** §6 slice 2 (collocations + виглядати/біля sense-splits). **#3319 / #3361** folk #3079 pipeline (VESUM-gate exemptions + frontier-aware self-converge). **#3335** B1 M16 cert (VESUM-reviewed inline). **#3327** postmortem hygiene. ~13 dependabot bumps merged across 3 rounds.
 
-## ✅ Resolved/closed
-- **#3116** synonym wrong-sense over-reach — CLOSED resolved (#M-11 verified: кам'яниця/звір already removed by a prior re-enrich's sense-filter; legit dialectal кам'янка/гостинець/путівець kept). First fix attempt over-dropped (115, incl. legit вельми→дуже) — caught by a broad pre-check before any re-enrich; curated-exclusion safety-net sits on closed PR #3301 if it ever regresses.
+## 🔧 KEY TECHNIQUE — surgical manifest patch (USE THIS, NOT full re-enrich)
+Full `make atlas` / `enrich_manifest` re-enrich is **lossy + non-deterministic**: `_wiki_reference` hits live uk.wikipedia uncached → drops ~200 wiki refs per run (filed **#3331**). To land a small lexicon change: run `_curated_calque` over the committed manifest deterministically (network-free), patch only affected lemmas' `heritage_status.curated_calque` + `§6_note`, regen fingerprint. Diff stays minimal; wiki refs preserved. (#3318 + #3366 both used this.)
 
-## ⏭️ NEXT (needs fresh context / scoping / a decision — not quick grinds)
-1. **#3098 broaden** (decolonization §6) — first slice (participles) shipped; broaden to collocation calques + #2156 calque-axis cross-feed. Curated-set pattern in `scripts/lexicon/calque_corrections.py`; needs a re-enrich.
-2. **#2882** Atlas coverage push (BIG, multi-step): meaning ~78%, pronunciation ~71%, etymology ~62%, **synonyms ~42%**, wiki ~27%. Each field-gain = source-add + a re-enrich; scope per-field before dispatching.
-3. **#3150** vocab-fingerprint: extend `manifest_fingerprint.build_fingerprint` to hash the sorted vocabulary.yaml set (so the freshness gate catches VOCAB drift, not just lexicon-code). **DECISION NEEDED:** this makes every content PR fail the freshness gate until a re-enrich is committed — confirm that workflow (or pair with an auto-regen hook = user-go) before implementing.
+## ⚠️ DEPENDABOT WHACK-A-MOLE — root cause #2716 (ESCALATED, needs proper fix)
+Flat fully-pinned `requirements-lock.txt` lets Dependabot propose bumps past parents' caps. **7 cap-violation packages this session.** Ignore list now: pydantic-core, pypdfium2, starlette, lxml, tokenizers, openai. **TODO: add huggingface-hub `>=1.0`** (transformers caps `<1.0`; closed #3370, ignore not yet shipped). Proper fix (constraints-aware manifest) commented on #2716. **Rule:** cap-check EVERY major bump before merging (`importlib.metadata` requires-scan); close + ignore violations; merge within-cap + uncapped.
 
-## ⛔ NEEDS USER
-- **#2036** hermes/anthropic logged out → `hermes auth add anthropic` (OAuth) to restore the Claude-via-Hermes lane.
+## ⏭️ OPEN QUEUE (pre-assessed)
+1. **#3367 stanza 1.11→1.12.2 — FAILING 1 check.** Investigate the failure (test or cap). Left open.
+2. **#3373 fix(build): auto-commit python_qg_correction_loop.json (#M-10 forensics)** — INFRA, my lane (v7_build.py + test). Run `/code-review` (build-pipeline LOGIC change) before merge.
+3. **#3356 [codex] Harden A2 certification tooling** — infra/tooling, review before merge.
+4. **#3098 broaden** — slices 1-3 done (participles, collocations, lexical). Next: prepositional-government calques ("по"+Dat) OR re-feed #2156 calque axis. **Dispatch sizing lesson: keep calque dispatches ≤6 candidates + `high` effort + commit-early** — v1 (18 candidates, xhigh) burned 2.3M tokens with NULL deliverable; v2 (6 candidates) succeeded.
+5. Drafts (track-owned, leave): #3236 b1, #3374 a1.
 
-## Quality patterns that earned their keep this session (reuse)
-- **Verify atlas merges on REAL DATA before merge** (#M-11) — caught the create-case gloss/pos mislabel + the dmklinger tail + #3116-already-resolved.
-- **Cross-model review (#M-12)** — DeepSeek caught #3290 over-exemption; codex confirmed homographs; mcp__sources confirmed/fixed діучий.
-- **Broad pre-check before a synonym/calque re-enrich** — apply the filter to all ~5142 synonyms + count drops; caught the #3116 over-drop (115, incl. legit вельми→дуже) before wasting a 32-min build.
-- No `--admin` bypass on CI fails; root-cause + fix at the right layer (#M-0.5/#M-7).
+## ⛔ NEEDS USER DECISION
+- **Orphaned working-tree A2-immersion edits** (in main tree, NOT committed): `.agents/skills/content-review/content-review-prompt.md` + `.../plan-review/review-tiers/tier-1-beginner.md` impose 50-75% hard limits / "English as main voice" — **contradicts the 2026-05-23 SSOT directive** (`v7-design-and-corpus.md`: no hard limits, converge to full immersion by end of A2). Plus untracked `docs/prompts/a2-certification-orchestration-prompt.md`. **Recommend revert**; reconcile stale `module-content-quality.md:143` "A2 40-75%" vs SSOT. Left untouched (committing = system change needing explicit go).
+
+## Quality patterns that earned their keep (reuse)
+- **Verify before promote (#M-11):** a `grep -c '§6_note'` said "2" but the deterministic Python check found all 5 lemmas correct — trust the tool, not the grep. Slice-3 v1 re-enrich was caught lossy (+509/−2492) before any commit.
+- **Cap-check before merging deps majors** — caught lxml/tokenizers/openai/pypdfium2/huggingface-hub cap-violations that flat-lock CI shows green.
+- **Inline VESUM/heritage review IS the Claude seat** — verified слідуючий/любий/неділя via mcp__sources; filled the gap thin Agy+Cursor dispatch reviews leave.
+- **Bounded dispatches deliver; over-scoped ones starve** (slice-3 v1 lesson).
 
 ## Atlas SSOT: `docs/atlas-data-coverage-strategy.md`. Track-owned (awareness-only): folk #3079, b1/a1/a2 content dispatches, BIO.
