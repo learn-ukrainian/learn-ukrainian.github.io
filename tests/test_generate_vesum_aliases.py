@@ -8,14 +8,14 @@ def test_build_alias_map_gates(monkeypatch) -> None:
     fake = {
         "брата": [{"lemma": "брат"}],                       # single lemma -> fold
         "вареники": [{"lemma": "вареник"}],                 # single, lemma NOT taught -> fold (create-page)
-        "біле": [{"lemma": "білий"}, {"lemma": "біль"}],    # homograph -> NEVER auto-resolve -> skip
+        "цьому": [{"lemma": "це"}, {"lemma": "цей"}],       # UNCURATED homograph -> NEVER resolve -> skip
         "добридень": [],                                     # absent from VESUM (phrase) -> skip
         "брат": [{"lemma": "брат"}],                         # form is its own lemma -> skip
     }
     monkeypatch.setattr(gen, "verify_word", lambda w: fake.get(w, []))
 
-    aliases = gen.build_alias_map(["брата", "вареники", "біле", "добридень", "брат"])
-    # create-cases now fold (tranche 2); homographs + phrases stay out
+    aliases = gen.build_alias_map(["брата", "вареники", "цьому", "добридень", "брат"])
+    # create-cases now fold (tranche 2); uncurated homographs + phrases stay out
     assert aliases == {"брата": {"lemma": "брат"}, "вареники": {"lemma": "вареник"}}
 
 
@@ -27,11 +27,29 @@ def test_keep_standalone_forms_are_not_folded(monkeypatch) -> None:
     assert "може" in gen._KEEP_STANDALONE_FORMS
 
 
-def test_homograph_is_never_auto_resolved(monkeypatch) -> None:
-    # #2882: even when only ONE candidate lemma is taught, a true homograph must NOT fold —
-    # "sole taught candidate" mis-merges (сьома→сім not сьомий). Stay standalone.
+def test_uncurated_homograph_is_never_auto_resolved(monkeypatch) -> None:
+    # #2882: a true homograph with NO curated decision must NOT fold — "sole taught candidate"
+    # mis-merges. `цьому` (це vs цей) was deliberately left out of _CURATED_HOMOGRAPHS
+    # (genuinely ambiguous demonstrative, codex-flagged), so it must stay standalone.
+    monkeypatch.setattr(gen, "verify_word", lambda w: [{"lemma": "це"}, {"lemma": "цей"}])
+    aliases = gen.build_alias_map(["цьому"])
+    assert "цьому" not in aliases
+    assert "цьому" not in gen._CURATED_HOMOGRAPHS
+
+
+def test_curated_homograph_resolves_by_gloss_decision(monkeypatch) -> None:
+    # #2882 curated pass: сьома is the ORDINAL ("seventh"/"seven o'clock"), so it folds to
+    # сьомий — NOT the cardinal сім. This is the exact mis-merge the auto-heuristic made.
     monkeypatch.setattr(gen, "verify_word", lambda w: [{"lemma": "сьомий"}, {"lemma": "сім"}])
-    aliases = gen.build_alias_map(["сьома", "сім"])  # сім taught, сьомий not
+    aliases = gen.build_alias_map(["сьома"])
+    assert aliases["сьома"] == {"lemma": "сьомий"}
+
+
+def test_curated_homograph_guard_rejects_lemma_absent_from_vesum(monkeypatch) -> None:
+    # Safety net: a curated lemma must be one of VESUM's candidates for the form. If VESUM no
+    # longer lists it (typo / dictionary drift), DO NOT fold — stay standalone, never mis-merge.
+    monkeypatch.setattr(gen, "verify_word", lambda w: [{"lemma": "сім"}, {"lemma": "інше"}])
+    aliases = gen.build_alias_map(["сьома"])  # curated→сьомий, but сьомий not in candidates
     assert "сьома" not in aliases
 
 
