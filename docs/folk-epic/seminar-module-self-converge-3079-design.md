@@ -290,3 +290,72 @@ Corpus-hammer (#M-11) every embedded primary in the loop's output before any shi
 3. **Shared helper extraction (P0)** — port wiki helpers into `scripts/common/review_loop.py` so module +
    wiki share one tested loop, vs. duplicate the logic in `linear_pipeline.py`. **Recommendation: extract**
    (one tested implementation; the wiki loop is the battle-tested one).
+
+---
+
+## 8. P3-VALIDATE FINDINGS (Session 39, 2026-06-16) — the rotating wall is mostly GATE FALSE-POSITIVES, not coinages
+
+**P3-validate ran for real this session** (`v7_build.py folk koliadky-shchedrivky --no-resume --worktree`, build
+`folk-koliadky-shchedrivky-20260616-002047`). **Root-cause note on the prior "validation":** the Session-38
+in-flight build silently NO-OP'd — `v7_build.py` **resumes by default** (`v7_build.py:1289` "skip a phase iff its
+on-disk artifact exists AND reports success"), the worktree was cut from `origin/main` where koliadky already
+exists at 9.2, so the writer/gates were skipped and `module.md`/`llm_qg.json` came back **byte-identical to main**.
+The 9.2 was stale. **Any "does a fresh build self-converge" validation MUST pass `--no-resume`.**
+
+### Outcome (c): the build never reached the B1 LLM-QG loop — `python_qg` terminated first
+`module_failed phase=python_qg, reason="Python QG failed after ADR-008 correction paths"` (492s, after 2 correction
+passes on the SAME failing words → per-gate single-shot `attempts` wall at `linear_pipeline.py:5662`). The 3 failing
+gates: `word_count` (4026/4600), `vesum_verified` (7 missing), `citations_resolve` (5 unknown). So **B1 is necessary
+but unreachable on a fresh build until Gap C is closed** — exactly as §1 Gap C predicted, now with the precise
+taxonomy below.
+
+### The 7 `vesum_verified` "missing" words split into 4 classes — 3 are FALSE POSITIVES no corrector can fix
+Verified deterministically (ran `_extract_blockquote_records` + `verify_words` + `search_heritage` on the real build
+artifacts):
+
+| Class | Words (this build) | Where | Why flagged | Proper fix |
+|---|---|---|---|---|
+| **A. Verbatim folk primary embedded in `activities.yaml`** | `нащада`, `било`, `сонінько` | `activities.yaml:91` (col quoted in a compare activity), `:72` (a щедрівка `passage:`) | The module.md blockquote exemption (`_strip_quote_fidelity_verified_blockquotes`, L10188) **works** — it correctly strips these from `module.md` scope — but it does NOT reach yaml `passage`/list fields. `сонінько` is NOT in VESUM and has **no** heritage evidence → it can ONLY be handled by primary-exemption, not per-word attestation. | **Extend the verbatim-primary exemption to embedded primaries in `activities.yaml`/`vocabulary.yaml` quote fields** (#2991 yaml-scope × #3162 primary-embedding). |
+| **B. Meta-linguistic citation of dialectal forms** | `нащада`, `било`, `лем` (again) | `activities.yaml:97,102` — analysis text citing «било», «з нащада», «лем» as objects of discussion | A MENTION, not a use. The existing citation arm of `_WARNING_QUOTE_RE` (L763) exempts only `як/such as «X»`; bare «X» citation of a dialectal form in analysis is not exempted (the restriction to `як «X»` was deliberate — do NOT widen to all bare «X»). | Add a **guarded** dialectal-citation exemption: bare «X» exempt only when X also appears in a verified primary of the same module, or after an explicit `діалектн…`/`запис`/foreign-reject marker. |
+| **C. Foreign comparative proper nouns** | `Йоль`, `Ялда`, `Ялду` | module prose L32 + `activities.yaml:155` (comparing Yule/Yalda/Saturnalia) | Transliterated foreign festival names, declined into UK cases. Not Ukrainian lemmas. **Inconsistency proof:** `Сатурналії` is ALSO absent from VESUM yet was NOT flagged → the proper-noun handling is ad hoc. | Foreign-proper-noun handling — an allowlist of attested foreign cultural terms OR a writer foreign-term marker the gate honours. |
+| **D. Genuine coinage** | `дерево-явір`, `першопочаток` | `activities.yaml:170` ("світове дерево-явір"), module prose | Real descriptive compounds, not in VESUM, no quick heritage. `явір` IS in VESUM; the hyphenated compound is the writer's. These are the ONLY genuinely-fixable items — rephrase (`світове дерево — явір`) or deeper heritage-attest. | The **cross-model fixer** (Part C.3) rephrases; OR writer-correction. |
+
+`citations_resolve`: the 5 "unknown" are **canonical** Ukrainian scholarship (Костомаров «Слов'янська міфологія»,
+Чубинський, Чижевський, Попович) + the народна-творчість primary. **CORRECTION (verified this session):** these ARE
+already in the koliadky plan `references:` (`curriculum/l2-uk-en/plans/folk/koliadky-shchedrivky.yaml:93-117`,
+`type: primary`, with matching `author:`/`work:` fields), and the writer's prose form (`Костомаров М. «Слов'янська
+міфологія»`) matches them. The gate flagged them anyway → **`citations_resolve` is ALSO a gate FALSE-POSITIVE**: its
+CHECK fails to resolve the writer's prose `Author «Title»` citation against the plan references — even though
+`_citation_candidates` (L7490) ALREADY loads `plan_references` for correction candidates. **Fix is GATE-SIDE**
+(resolve prose `Author «Title»` against the plan `references` author/work/title), NOT plan-registry promotion — the
+sources are already registered. `word_count` 4026/4600 is a real under-write the LLM-QG/writer correction must close
+by ADDING prose — downstream of unblocking python_qg.
+
+### Structural conclusion (refines §1 Gap C and the §4 plan order)
+**Gate-correctness is logically PRIOR to the C.3 multi-gate loop.** A loop cannot "correct" a verbatim primary, a
+glossed foreign comparison, or a cited dialectal form — deleting them is wrong. So even a perfect multi-gate loop
+churns/diverges on classes A/B/C. The corrected sequencing:
+
+1. **C.2a (Class A) — extend verbatim-primary VESUM exemption to embedded primaries in `activities.yaml`/`vocabulary.yaml`.**
+   HIGHEST leverage (every folk module embeds cols/щедрівки/думи as activity passages), unambiguously correct,
+   reuses the existing `_extract_blockquote_records`/attribution machinery. **Signal design (pick the robust one):**
+   (i) cross-reference — an activity passage that reproduces a verified `module.md` primary inherits its exemption
+   (safe, but misses passages unique to activities, e.g. the `сонінько` щедрівка); (ii) **verify_quote / literary-corpus
+   resolution** — a passage that resolves to a folk/literary corpus primary is exempt (robust, can't be gamed; the
+   `_textbook_grounding_gate` already does corpus matching for textbooks, so extending to the literary/folk corpus is
+   architecturally consistent = #3162's "literary-corpus routing"); (iii) structural primary-source marker the writer
+   emits. **Recommendation: (ii) corpus-resolution, with (i) as a corroborating fast-path.**
+2. **C.2b (Class B) — guarded dialectal-citation exemption** (do not over-widen bare «X»).
+3. **C.2c (Class C) — foreign-proper-noun handling** (allowlist or marker; fix the Сатурналії-vs-Йоль inconsistency).
+4. **C.3 (Class D + word_count + the loop) — bounded multi-gate python_qg loop + cross-model fixer** for the genuine
+   residual coinages and to iterate across gates.
+5. **citations_resolve — GATE-SIDE prose-citation resolution** (resolve `Author «Title»` against the plan
+   `references`; the sources are ALREADY registered, this is a resolution false-positive, not a registry gap).
+
+**Status this session:** C.2a dispatched for implementation (the first, highest-leverage, clearly-correct unit);
+B/C/D + citations + the loop sequenced for follow-on driving. This taxonomy supersedes §1's pre-build guess that
+Gap C was dominated by coinage churn — empirically it is dominated by **gate FALSE POSITIVES** (verbatim-primary,
+foreign-proper-noun, dialectal-citation, AND citation-resolution), which are deterministic gate-correctness fixes,
+NOT LLM-fixer work. The ONLY genuine content issues in the whole koliadky failure are `word_count` (under-write) and
+the two Class-D coinages — everything else is the gates wrongly rejecting correct seminar content. That is the real
+shape of Gap C, and it is why the per-gate single-shot loop could never converge it.

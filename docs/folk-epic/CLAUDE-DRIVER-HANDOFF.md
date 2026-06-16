@@ -63,7 +63,79 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 38 HANDOFF (2026-06-16 — #3079 B1 BUILT+MERGED (the insert-only LLM-QG pedagogical loop is LIVE); ROLE CHANGED (#0.2: I implement infra myself); P3-validate surfaced Gap C is the real blocker → diagnosed+fixed+MERGED the first wall #2991; P3-validate RE-RUN IN FLIGHT) — **RESUME HERE**
+## ▶▶▶ SESSION 39 HANDOFF (2026-06-16 — P3-validate RAN FOR REAL (`--no-resume`) → outcome (c): python_qg's Gap-C rotating wall blocks the build BEFORE the B1 loop; root-caused the wall into a 4-class taxonomy that is MOSTLY gate false-positives; dispatched C.2a fix) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** INFRA diagnostic + first-fix-dispatched session (per #0.2). No new folk content (modules 6/42,
+> dossiers 25/42, wikis 15/42 unchanged). B1 is STILL e2e-unproven — a fresh build can't reach the LLM-QG loop because
+> python_qg's Gap-C wall terminates first. The session's value is the SHARP diagnostic (design doc §8) + the first
+> gate-correctness fix dispatched.
+
+### 🔑 THE KEY FINDING — Session-38's "P3-validate" never validated anything (resume no-op), and the REAL P3-validate proves Gap C is gate FALSE-POSITIVES
+- **Session-38's in-flight build silently NO-OP'd.** `v7_build.py` **resumes by default** (`v7_build.py:1289`); the build
+  worktree was cut from `origin/main` where koliadky already exists at 9.2 → writer + gates SKIPPED → `module.md`/`llm_qg.json`
+  came back **byte-identical to main**. The 9.2 was STALE, not a fresh derivation. **LESSON (baked into NEXT ACTIONS): any
+  "does a fresh build self-converge" validation MUST pass `--no-resume`.**
+- **The real P3-validate** (`v7_build.py folk koliadky-shchedrivky --no-resume --worktree`, build
+  `folk-koliadky-shchedrivky-20260616-002047`) ran the writer fresh, hit `python_qg`, and **terminated there**:
+  `module_failed phase=python_qg, reason="Python QG failed after ADR-008 correction paths"` — the per-gate single-shot
+  `attempts` wall (`linear_pipeline.py:5662`) after 2 passes on the same words. **It NEVER reached the B1 LLM-QG loop.**
+- **Root-caused the 7 `vesum_verified` misses + citations + word_count into a 4-class taxonomy (design doc §8, file:line + tool-verified):**
+  - **A. Verbatim folk primary embedded in `activities.yaml`** (`нащада`,`било`,`сонінько`): the module.md blockquote exemption
+    (`_strip_quote_fidelity_verified_blockquotes`) WORKS but doesn't reach yaml `passage:`/list fields. `сонінько` has NO VESUM +
+    NO heritage → exemption is the ONLY correct fix. **= #2991 yaml-scope × #3162.**
+  - **B. Bare «X» dialectal-form citation in analysis** (`activities.yaml:97,102`): mention-not-use; existing exemption covers only `як «X»`.
+  - **C. Foreign comparative proper nouns** (`Йоль`,`Ялда`,`Ялду`): ad hoc — `Сатурналії` also absent from VESUM yet NOT flagged.
+  - **D. Genuine coinage** (`дерево-явір`,`першопочаток`): the ONLY items a fixer should rephrase.
+  - `citations_resolve`: 5 CANONICAL works (Костомаров/Чубинський/Чижевський/Попович) + the primary — **ALSO a gate FALSE-POSITIVE**: they ARE in the koliadky plan `references:` (lines 93-117, `type: primary`, matching author/work) and the writer cited them correctly; the gate just fails to resolve the prose `Author «Title»` form. Fix is GATE-SIDE, not plan promotion.
+  - `word_count` 4026/4600: real under-write (downstream of unblocking python_qg).
+- **STRUCTURAL CONCLUSION (refines the §4 plan order): gate-correctness is logically PRIOR to the C.3 multi-gate loop** — a loop
+  can't "fix" a verbatim primary / foreign comparison / cited dialectal form (deleting them is wrong), so A/B/C must be closed
+  as deterministic gate fixes FIRST; C.3 + the cross-model fixer then handle only D + word_count + cross-gate iteration.
+
+### ✅ DONE THIS SESSION
+- **Real P3-validate executed** (`--no-resume`) → outcome (c) above. Reaped the 2 stale build worktrees (232024 failed-run, 000802 resume-no-op); forensics retained on their `build/folk/koliadky-shchedrivky-*` branches (#M-10).
+- **Design doc §8 written** — the P3-validate findings + 4-class taxonomy + corrected Part C sequencing (C.2a→C.2b→C.2c→C.3→citations) with signal-design options. In THIS PR.
+- **C.2a DISPATCHED → PR #3286 → MERGED (see "✅ C.2a MERGED" below).** codex `folk-3079-c2a`
+  implemented it (177 LOC + 5 tests, `linear_pipeline.py`): `_strip_vesum_verbatim_primary_spans` blanks verbatim
+  primary SPANS (≥8-word window) in `activities.yaml`/`vocabulary.yaml` matched against (a) verified `module.md` blockquotes
+  [fast-path] + (b) literary-corpus hits (`_search_literary_hits`). Span-scoped, seminar-gated, fail-safe. **My review (tool-backed):**
+  Class-A `нащада`/`било`/`сонінько` exempted; out-of-scope `Йоль`/`дерево-явір`/`першопочаток` still checked; over-exemption guard
+  holds (planted `привітаннячкоз` still fails); the 3 `test_vesum_heritage_attestation` failures are VERIFIED PRE-EXISTING (fail
+  identically on base `404a4b7810`, local-DB-vs-CI discrepancy). CI green except `Test (pytest)` (was pending at handoff).
+  **Merge deferred to orchestrator — shared pipeline infra (driver opens, doesn't self-merge).** Brief: `/tmp/folk-3079-c2a-vesum-primary-yaml-brief.md`.
+
+### ✅ C.2a MERGED (PR #3286 → main `3955402947`)
+Full fleet loop, no orchestrator: codex built it → codex adversarial review caught a real cross-field-boundary over-exemption
+bug → fix dispatched (`_activity_vesum_text` now applies the primary-span strip per string LEAF, before flatten, so matches
+can't cross yaml fields) + a cross-boundary regression test → CI green → **self-merged per #M-12**. The verbatim-primary VESUM
+exemption now reaches `activities.yaml`/`vocabulary.yaml` — folk's dominant Gap-C wall is closed.
+
+### ⚠ IN-FLIGHT AT HANDOFF
+- **C.2b DISPATCHED** — codex `folk-3079-c2b` (Monitor `b6z52t4zz`), off main (has C.2a). Class B: exempt bare «X» dialectal
+  citations whose token resolves to a verified module primary (reuses C.2a's `verified_primary_texts` — can't over-exempt
+  arbitrary forms). Brief: `/tmp/folk-3079-c2b-dialectal-citation-brief.md`. **First thing next session:** check the C.2b PR →
+  fleet-review (`ab ask-codex`) → CI-green → SELF-MERGE (#M-12).
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **C.2b** — land it (review → CI → self-merge). Then **C.2c** (Class C foreign proper nouns: `Йоль`/`Ялда` allowlist or marker; fix the Сатурналії-vs-Йоль inconsistency).
+2. **C.2b (Class B)** — guarded dialectal-citation exemption (do NOT over-widen bare «X»). **C.2c (Class C)** — foreign-proper-noun handling (allowlist/marker; fix Сатурналії-vs-Йоль). Both deterministic, my lane (#0.2).
+3. **C.3 (Class D + word_count + the loop)** — bounded multi-gate python_qg loop + cross-model fixer (rephrase `дерево-явір`/`першопочаток`; iterate across gates). The durable structural fix.
+4. **citations_resolve** — GATE-SIDE fix: resolve the writer's prose `Author «Title»` citations against the plan `references` (the 5 sources are ALREADY in the koliadky plan, lines 93-117; `_citation_candidates` already loads `plan_references` at L7490). NOT plan promotion.
+5. **THEN re-run P3-validate** (`--no-resume`!) — once A+B+C+citations+word_count clear python_qg, confirm the B1 loop reaches pedagogical ≥8 unaided. ONLY THEN is B1 validated e2e.
+6. (Parallel content lane, unblocked) dossier #26 `narodni-lehendy` → #27 `istorychni-perekazy`.
+
+### ⚠ CARRY-FORWARD
+- **🆕 STANDING ORDER (user 2026-06-16, MEMORY #M-12) — USE THE AGENT FLEET; DON'T MANUFACTURE OBSTACLES.** When a PR needs
+  review, get it from the FLEET (`ab ask-codex` adversarial review / deepseek), NOT the busy human/main orchestrator — "dont
+  point to the other orchestrator he is very busy." Folk driver HAS a merge grant: **fleet-review → CI-green → SELF-MERGE**;
+  never park a clean PR "for the orchestrator." This OVERRIDES the agent-def "never merge / orchestrator reconciles" line for
+  track work (still NO direct main commits — route through a PR; still honor BLOCKING-CI #M-0.5). PROGRESS. (Cross-model review
+  earns its keep — codex caught a real over-exemption bug on #3286 that my own review missed → fix dispatched `folk-3079-c2a-fix`.)
+- **`--no-resume` is MANDATORY for any self-converge validation build** — without it, resume silently reuses main's artifacts and reports a stale pass (cost Session 38 a 2-hr no-op).
+- Build worktree to reap once C.2a lands: `folk-koliadky-shchedrivky-20260616-002047` (artifacts on its build branch). The failed-build `module.md`/`activities.yaml` there are the C.2a TEST FIXTURE — don't delete until C.2a's tests are committed.
+- B1 e2e-UNPROVEN until step 5. Role #0.2 LIVE (I implement/drive infra; never file-and-forget). Never reset/commit on `main`; folk push `--no-verify`.
+
+## ▶▶▶ SESSION 38 HANDOFF (2026-06-16 — #3079 B1 BUILT+MERGED (the insert-only LLM-QG pedagogical loop is LIVE); ROLE CHANGED (#0.2: I implement infra myself); P3-validate surfaced Gap C is the real blocker → diagnosed+fixed+MERGED the first wall #2991; P3-validate RE-RUN IN FLIGHT)
 
 > **⏱ HONEST SCOPE:** B1 (the #3079 quick win) is built + unit-tested + **MERGED to main** — but it is **NOT yet
 > e2e-validated**: a fresh seminar build can't even REACH the LLM-QG loop because python_qg dies first at the
