@@ -1,9 +1,12 @@
+import json
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 import pytest
 
 from scripts.build import linear_pipeline, v7_build
+from scripts.common.thresholds import QG_DIMS
 
 
 def test_reviewer_override_normalizes_alias():
@@ -157,3 +160,121 @@ def test_reviewer_assert_v7_build(tmp_path: Path):
                         wiki_manifest={},
                         wiki_coverage_gate={},
                     )
+
+
+def _llm_qg_response(dim: str) -> str:
+    return json.dumps(
+        {
+            "score": 8.5,
+            "evidence": f'"{dim} evidence quote"',
+            "verdict": "PASS",
+        }
+    )
+
+
+def _patch_llm_qg_prompt(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        v7_build.linear_pipeline,
+        "render_review_prompt",
+        lambda *_args, **_kwargs: f"prompt::{_args[3]}",
+    )
+    monkeypatch.setattr(v7_build, "_generated_content", lambda _module_dir: "generated")
+
+
+def test_llm_qg_retries_empty_dimension_response(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_llm_qg_prompt(monkeypatch)
+    first_dim = QG_DIMS[0]
+    calls: list[str] = []
+
+    def invoke(_agent: str, prompt: str, **_kwargs: object) -> SimpleNamespace:
+        dim = prompt.split("::", 1)[1]
+        calls.append(dim)
+        if dim == first_dim and calls.count(dim) == 1:
+            return SimpleNamespace(response="")
+        return SimpleNamespace(response=_llm_qg_response(dim))
+
+    monkeypatch.setattr("scripts.agent_runtime.runner.invoke", invoke)
+
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    report = v7_build._run_llm_qg(
+        plan={"slug": "test-slug", "level": "a1"},
+        plan_content="plan",
+        module_dir=module_dir,
+        writer="claude-tools",
+        reviewer_override="codex-tools",
+    )
+
+    assert calls.count(first_dim) == 2
+    assert set(report["dimensions"]) == set(QG_DIMS)
+    assert (module_dir / f"llm-qg-{first_dim}-response.raw.md").read_text(
+        encoding="utf-8"
+    ).strip()
+
+
+def test_llm_qg_resumes_current_successful_dimension_artifact(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_llm_qg_prompt(monkeypatch)
+    resumed_dim = QG_DIMS[0]
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    (module_dir / f"llm-qg-{resumed_dim}-prompt.md").write_text(
+        f"prompt::{resumed_dim}",
+        encoding="utf-8",
+    )
+    (module_dir / f"llm-qg-{resumed_dim}-response.raw.md").write_text(
+        _llm_qg_response(resumed_dim),
+        encoding="utf-8",
+    )
+    calls: list[str] = []
+
+    def invoke(_agent: str, prompt: str, **_kwargs: object) -> SimpleNamespace:
+        dim = prompt.split("::", 1)[1]
+        calls.append(dim)
+        return SimpleNamespace(response=_llm_qg_response(dim))
+
+    monkeypatch.setattr("scripts.agent_runtime.runner.invoke", invoke)
+
+    report = v7_build._run_llm_qg(
+        plan={"slug": "test-slug", "level": "a1"},
+        plan_content="plan",
+        module_dir=module_dir,
+        writer="claude-tools",
+        reviewer_override="codex-tools",
+    )
+
+    assert resumed_dim not in calls
+    assert set(report["dimensions"]) == set(QG_DIMS)
+
+
+def test_llm_qg_reports_malformed_dimension_response_clearly(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_llm_qg_prompt(monkeypatch)
+
+    def invoke(_agent: str, _prompt: str, **_kwargs: object) -> SimpleNamespace:
+        return SimpleNamespace(response="not structured output")
+
+    monkeypatch.setattr("scripts.agent_runtime.runner.invoke", invoke)
+
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    with pytest.raises(linear_pipeline.LinearPipelineError) as exc_info:
+        v7_build._run_llm_qg(
+            plan={"slug": "test-slug", "level": "a1"},
+            plan_content="plan",
+            module_dir=module_dir,
+            writer="claude-tools",
+            reviewer_override="codex-tools",
+        )
+
+    message = str(exc_info.value)
+    assert f"LLM QG {QG_DIMS[0]} failed after" in message
+    assert "malformed backend response" in message
+    assert "response.raw.md" in message

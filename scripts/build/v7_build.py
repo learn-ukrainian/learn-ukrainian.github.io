@@ -45,6 +45,7 @@ WRITER_ALIASES = {
     "agy": "agy-tools",
 }
 WRITER_CHOICES = (*linear_pipeline.WRITER_CHOICES, *WRITER_ALIASES)
+LLM_QG_DIM_MAX_ATTEMPTS = 2
 
 
 @dataclass(slots=True)
@@ -972,6 +973,52 @@ def _normalize_writer(writer: str) -> str:
     return WRITER_ALIASES.get(writer, writer)
 
 
+def _parse_llm_qg_dim_response(response: str, *, dim: str, response_path: Path) -> dict[str, Any]:
+    if not response.strip():
+        raise linear_pipeline.LinearPipelineError(
+            f"LLM QG {dim} empty backend response in {response_path}"
+        )
+    try:
+        return linear_pipeline.parse_review_response(response, dim)
+    except linear_pipeline.LinearPipelineError as exc:
+        raise linear_pipeline.LinearPipelineError(
+            f"LLM QG {dim} malformed backend response in {response_path}: {exc}"
+        ) from exc
+
+
+def _resume_llm_qg_dim_if_current(
+    *,
+    dim: str,
+    prompt: str,
+    prompt_path: Path,
+    response_path: Path,
+) -> dict[str, Any] | None:
+    if not prompt_path.exists() or not response_path.exists():
+        return None
+    try:
+        if prompt_path.read_text(encoding="utf-8") != prompt:
+            return None
+        response = response_path.read_text(encoding="utf-8")
+        parsed = _parse_llm_qg_dim_response(response, dim=dim, response_path=response_path)
+    except OSError as exc:
+        print(
+            f"[llm-qg] {dim}: could not read existing artifacts; retrying ({exc})",
+            file=sys.stderr,
+            flush=True,
+        )
+        return None
+    except linear_pipeline.LinearPipelineError as exc:
+        print(
+            f"[llm-qg] {dim}: existing response artifact is unusable; retrying ({exc})",
+            file=sys.stderr,
+            flush=True,
+        )
+        return None
+
+    print(f"[llm-qg] {dim}: resumed from {response_path.name}", flush=True)
+    return parsed
+
+
 def _run_llm_qg(
     *,
     plan: Mapping[str, Any],
@@ -1009,28 +1056,58 @@ def _run_llm_qg(
             use_generator=use_generator,
             obligation_checklist=obligation_checklist,
         )
-        (module_dir / f"llm-qg-{dim}-prompt.md").write_text(prompt, encoding="utf-8")
-        result = invoke(
-            agent_name,
-            prompt,
-            mode="read-only",
-            cwd=module_dir,
-            model=defaults["model"],
-            task_id=f"linear-v7-qg-{plan['slug']}-{dim}",
-            entrypoint="dispatch",
-            effort=defaults["effort"],
-            tool_config={"output_format": "stream-json"},
-            stdout_silence_timeout=stdout_silence_timeout,
+        prompt_path = module_dir / f"llm-qg-{dim}-prompt.md"
+        response_path = module_dir / f"llm-qg-{dim}-response.raw.md"
+        resumed = _resume_llm_qg_dim_if_current(
+            dim=dim,
+            prompt=prompt,
+            prompt_path=prompt_path,
+            response_path=response_path,
         )
-        response = str(getattr(result, "response", "") or "")
-        # Persist raw reviewer response BEFORE parse so #M-10 forensic
-        # continuity holds when the parser raises (build #10, 2026-05-21
-        # exposed prose-wrapped JSON shape with no saved artifact).
-        (module_dir / f"llm-qg-{dim}-response.raw.md").write_text(
-            response,
-            encoding="utf-8",
-        )
-        report[dim] = linear_pipeline.parse_review_response(response, dim)
+        if resumed is not None:
+            report[dim] = resumed
+            continue
+
+        prompt_path.write_text(prompt, encoding="utf-8")
+        last_error: linear_pipeline.LinearPipelineError | None = None
+        for attempt in range(1, LLM_QG_DIM_MAX_ATTEMPTS + 1):
+            result = invoke(
+                agent_name,
+                prompt,
+                mode="read-only",
+                cwd=module_dir,
+                model=defaults["model"],
+                task_id=f"linear-v7-qg-{plan['slug']}-{dim}",
+                entrypoint="dispatch",
+                effort=defaults["effort"],
+                tool_config={"output_format": "stream-json"},
+                stdout_silence_timeout=stdout_silence_timeout,
+            )
+            response = str(getattr(result, "response", "") or "")
+            # Persist raw reviewer response BEFORE parse so #M-10 forensic
+            # continuity holds when the parser raises (build #10, 2026-05-21
+            # exposed prose-wrapped JSON shape with no saved artifact).
+            response_path.write_text(response, encoding="utf-8")
+            try:
+                report[dim] = _parse_llm_qg_dim_response(
+                    response,
+                    dim=dim,
+                    response_path=response_path,
+                )
+                break
+            except linear_pipeline.LinearPipelineError as exc:
+                last_error = exc
+                if attempt < LLM_QG_DIM_MAX_ATTEMPTS:
+                    print(
+                        f"[llm-qg] {dim}: attempt {attempt}/{LLM_QG_DIM_MAX_ATTEMPTS} failed; retrying ({exc})",
+                        file=sys.stderr,
+                        flush=True,
+                    )
+                    continue
+                raise linear_pipeline.LinearPipelineError(
+                    f"LLM QG {dim} failed after {LLM_QG_DIM_MAX_ATTEMPTS} attempt(s); "
+                    f"raw response saved to {response_path}: {last_error}"
+                ) from last_error
 
     return linear_pipeline.aggregate_llm_review(
         report,
