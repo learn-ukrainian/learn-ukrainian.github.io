@@ -1,3 +1,4 @@
+# Checkpoint review vocabulary: recycled chunks from M01-M06 plus integration labels.
 - lemma: ім'я
   translation: first name
   pos: noun
@@ -30,22 +31,6 @@
   translation: hello / greetings
   pos: interjection
   usage: Вітаю! Мене звати Олена.
-- lemma: Добрий день
-  translation: good afternoon / hello
-  pos: phrase
-  usage: Добрий день!
-- lemma: Привіт
-  translation: hi
-  pos: interjection
-  usage: Привіт!
-- lemma: До побачення
-  translation: goodbye
-  pos: phrase
-  usage: До побачення!
-- lemma: Бувай
-  translation: bye
-  pos: interjection
-  usage: Бувай!
 - lemma: Дуже приємно
   translation: very nice to meet you
   pos: phrase
@@ -54,31 +39,31 @@
   translation: me too
   pos: phrase
   usage: Мені теж.
-- lemma: мене звати
+- lemma: Мене звати
   translation: my name is
   pos: phrase
   usage: Мене звати Богдан.
-- lemma: як тебе звати?
+- lemma: Як тебе звати?
   translation: what is your name? informal
   pos: phrase
   usage: Як тебе звати?
-- lemma: звідки ти?
+- lemma: Звідки ти?
   translation: where are you from? informal
   pos: phrase
   usage: Звідки ти?
-- lemma: я з
+- lemma: Я з
   translation: I am from
   pos: phrase
   usage: Я з Канади.
-- lemma: мені 20 років
+- lemma: Мені 20 років
   translation: I am 20 years old
   pos: phrase
   usage: Мені 20 років.
-- lemma: у мене є
+- lemma: У мене є
   translation: I have
   pos: phrase
   usage: У мене є сестра.
-- lemma: у тебе є
+- lemma: У тебе є
   translation: do you have / you have
   pos: phrase
   usage: У тебе є брат?
@@ -90,10 +75,6 @@
   translation: female student
   pos: noun
   usage: Я студентка.
-- lemma: вчитель
-  translation: male teacher
-  pos: noun
-  usage: Він вчитель.
 - lemma: вчителька
   translation: female teacher
   pos: noun
@@ -102,26 +83,10 @@
   translation: engineer
   pos: noun
   usage: Мій тато — інженер.
-- lemma: лікар
-  translation: male doctor
-  pos: noun
-  usage: Він лікар.
-- lemma: лікарка
-  translation: female doctor
-  pos: noun
-  usage: Вона лікарка.
-- lemma: українець
-  translation: Ukrainian man
-  pos: noun
-  usage: Андрій — українець.
 - lemma: українка
   translation: Ukrainian woman
   pos: noun
   usage: Олена — українка.
-- lemma: канадієць
-  translation: Canadian man
-  pos: noun
-  usage: Марко — канадієць.
 - lemma: канадка
   translation: Canadian woman
   pos: noun
@@ -174,27 +139,3 @@
   translation: her
   pos: pronoun
   usage: Її звати Ірина.
-- lemma: словник
-  translation: dictionary
-  pos: noun
-  usage: Це мій словник.
-- lemma: адреса
-  translation: address
-  pos: noun
-  usage: Це моя адреса.
-- lemma: гривня
-  translation: hryvnia, Ukrainian currency
-  pos: noun
-  usage: Гривня — валюта України.
-- lemma: чат
-  translation: chat
-  pos: noun
-  usage: Це чат курсу.
-- lemma: Богдане
-  translation: Bohdan, vocative
-  pos: proper noun form
-  usage: Привіт, Богдане!
-- lemma: Соломіє
-  translation: Solomiia, vocative
-  pos: proper noun form
-  usage: Дуже приємно, Соломіє.
