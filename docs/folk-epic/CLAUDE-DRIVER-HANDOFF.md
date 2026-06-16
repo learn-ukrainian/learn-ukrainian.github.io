@@ -75,14 +75,36 @@
 - **C.2a MERGED (#3286)** — verbatim primaries in `activities.yaml`/`vocabulary.yaml` (per-field span strip vs verified module primaries + literary corpus).
 - **C.2b MERGED (#3292)** — bare «X»/'X' dialectal citations resolvable to a verified module primary (token-level; italic arm dropped).
 - **C.2c MERGED (#3294)** — foreign proper nouns via curated gazetteer `data/foreign_proper_noun_attestations.yaml` (EXPLICIT valid case forms only, true titlecase — no reverse-strip).
-- **citations (#3297) — IN FLIGHT** (fix #2 `folk-3079-citations-fix2`, watcher `bhe21zqmt`). `_citation_gate` resolves author-prefixed refs by token-seq containment + **slot-constrained author corroboration**; authorless containment dropped (fail-closed). koliadky's 4 author-bearing refs resolve.
+- **citations MERGED (#3297)** — `_citation_gate` resolves author-prefixed refs by token-seq containment + **slot-constrained author corroboration** (author only in the pre-first-quote slot; requires a quoted title; authorless containment dropped — fail-closed). Took 3 fix-iterations (codex caught generic-title laundering, then author-anywhere, then nested-quote/no-quote — all closed by construction). koliadky's 4 author-bearing refs resolve.
 - **🔁 FLEET-REVIEW IS LOAD-BEARING (proves #M-12):** codex caught a REAL over-exemption/over-resolution bug in EVERY gate change — C.2a cross-field-boundary, C.2b italic emphasis, C.2c reverse-strip invalid forms, citations generic-title + author-slot laundering. ALL invisible to local tests + my own diff review; NONE shipped. Always `ab ask-codex` review a gate-loosening change before self-merge.
 
-**REMAINING for a clean koliadky build (→ then re-validate B1):**
-1. Land citations (#3297 fix #2).
-2. **Class-D coinages** (`дерево-явір`, `першопочаток`): GENUINE coinages, NOT false positives → the **C.3 multi-gate python_qg loop + cross-model coinage fixer** (the last structural piece; design doc §3 Part C.3). Biggest remaining infra.
-3. **word_count** (4026/4600): writer/LLM-QG correction adds prose — downstream of python_qg passing.
-4. **THEN re-run P3-validate** `v7_build.py folk koliadky-shchedrivky --no-resume --worktree` — confirm it now CLEARS python_qg and reaches the B1 LLM-QG loop at pedagogical ≥8. Only then is B1 validated e2e.
+### 🧪 VERIFICATION BUILD (2026-06-16 09:04, `--no-resume`, build `...-090439`, branch `dbc2219b1b`) — A/B/C/citations PROVEN e2e; the structural tail is now the whole problem
+Fired a fresh koliadky `--no-resume` build on main-with-all-4-fixes. **Result: ALL the prior false-positives are GONE** — `Йоль`/`Ялда`/`Ялду`
+(C.2c ✓), `нащада`/`сонінько` (C.2a ✓), the 4 scholarly citations (citations ✓). **The 4 deterministic fixes work e2e.** BUT the build
+**still `module_failed` at python_qg** — it never reached the B1 LLM-QG loop — because of TWO structural problems the A/B/C work exposed:
+1. **A stochastic LONG TAIL of NEW false-positive classes** each fresh writer surfaces — this build: `ХІХ` (Roman numeral), `Вільговського`
+   (UA author **surname** — NOT foreign, so outside C.2c), `сновати` (folk verb from the col), + genuine coinages/calques. Per-class
+   deterministic fixes (A/B/C-style) are **whack-a-mole** — proven: each build finds different classes.
+2. **The deterministic corrector CHURNS / DIVERGES** — final `vesum missing` GREW from 4 → **8** across correction rounds
+   (`['Вільговського','ХІХ','дерево-вісь','дерево-явір','непринята','сновати','спільнолюдський','хранительками']`): it fixed `сновати`
+   then spawned `дерево-вісь`/`спільнолюдський` (new coinages) + `непринята`/`хранительками` (calques). The loop committed the WORSE round.
+   `citations unknown`: only the anonymous народна-творчість primary (no plan `[S#]` ref / no author → can't containment-resolve).
+   `word_count`: **4469/4600 — nearly solved** (writer wrote more this build; ~131 short).
+
+### ▶ THE REMAINING WORK = C.3, now EMPIRICALLY SCOPED (the next session's primary epic-piece)
+The build converts "we think C.3 is needed" into "here is exactly the churn/divergence + long-tail that proves it." C.3 has 3 parts:
+1. **Best-round + MIN-guard on the python_qg correction loop** (port `scripts/common/review_loop.py` — ALREADY built for wiki+B1 — into
+   `run_python_qg_with_corrections`, `linear_pipeline.py:5619`; the single-shot wall is L5662). This STOPS the divergence (keep the 4-miss
+   round, never commit the churned 8-miss tail). Highest-leverage, reuses tested machinery.
+2. **Cross-model fixer route** for genuine coinages/calques (`дерево-явір`/`дерево-вісь`/`спільнолюдський`, `непринята`/`хранительками`) —
+   rephrase, not find/replace (find/replace is what churns). The manual recipe used codex; wire it as the automated fixer (design §3 Part C.3).
+3. **A few clean deterministic long-tail exemptions** that ARE legit (not whack-a-mole — these are objective metalinguistic non-word classes):
+   **Roman numerals** (`ХІХ`/`XVIII`…), **anonymous folk-tradition primary citations** (`«…» (народна творчість)` — recognize as a known
+   anonymous-primary category OR auto-register the #3162-embedded primary as a plan ref), and **cited UA author surnames** (extend
+   `PROPER_NAME_WHITELIST`/attestation to surnames in citation context). `непринята`/`хранительками` calques → route to #3098.
+**Each gate-loosening change MUST go through `ab ask-codex` adversarial review before self-merge (5/5 caught real over-exemption bugs).**
+**THEN re-run** `v7_build.py folk koliadky-shchedrivky --no-resume --worktree` — confirm it CLEARS python_qg + reaches B1 at pedagogical ≥8.
+Only then is B1 validated e2e. (word_count is nearly there; the writer may clear it once the loop stops churning.)
 
 ### 🔑 THE KEY FINDING — Session-38's "P3-validate" never validated anything (resume no-op), and the REAL P3-validate proves Gap C is gate FALSE-POSITIVES
 - **Session-38's in-flight build silently NO-OP'd.** `v7_build.py` **resumes by default** (`v7_build.py:1289`); the build
