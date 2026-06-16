@@ -120,6 +120,36 @@ def test_reviewer_fix_leading_boundary_whitespace_is_not_replaced() -> None:
     assert result.unmatched_anchors == frozenset()
 
 
+def test_reviewer_fix_trailing_boundary_does_not_match_inside_larger_word() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "Intro: retargeting\n",
+        [{"find": "target ", "replace": "FIXED"}],
+    )
+
+    assert result.text == "Intro: retargeting\n"
+    assert result.unmatched_anchors == frozenset({"target "})
+
+
+def test_reviewer_insert_after_trailing_boundary_does_not_match_inside_larger_word() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "retargeting\n",
+        [{"insert_after": "target ", "text": "INSERTED"}],
+    )
+
+    assert result.text == "retargeting\n"
+    assert result.unmatched_anchors == frozenset({"target "})
+
+
+def test_reviewer_fix_literal_trailing_boundary_space_preserves_space() -> None:
+    result = linear_pipeline._apply_reviewer_fixes(
+        "Intro: target retail\n",
+        [{"find": "target ", "replace": "FIXED"}],
+    )
+
+    assert result.text == "Intro: FIXED retail\n"
+    assert result.unmatched_anchors == frozenset()
+
+
 def test_reviewer_insert_after_trailing_boundary_whitespace_inserts_before_run() -> None:
     result = linear_pipeline._apply_reviewer_fixes(
         "target\n\n- item",
