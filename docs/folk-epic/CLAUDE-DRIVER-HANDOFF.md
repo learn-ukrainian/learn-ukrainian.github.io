@@ -63,7 +63,86 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 37 HANDOFF (2026-06-15 — #3079 (the ONE open epic, TOP PRIORITY) DESIGNED: root-caused the seminar self-converge failure to 3 separable gaps + wrote the implementable design doc the Session-36 RESUME-HERE #3 called for) — **RESUME HERE**
+## ▶▶▶ SESSION 38 HANDOFF (2026-06-16 — #3079 B1 BUILT+MERGED (the insert-only LLM-QG pedagogical loop is LIVE); ROLE CHANGED (#0.2: I implement infra myself); P3-validate surfaced Gap C is the real blocker → diagnosed+fixed+MERGED the first wall #2991; P3-validate RE-RUN IN FLIGHT) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** B1 (the #3079 quick win) is built + unit-tested + **MERGED to main** — but it is **NOT yet
+> e2e-validated**: a fresh seminar build can't even REACH the LLM-QG loop because python_qg dies first at the
+> Gap-C rotating walls. That is the session's key finding. No new folk content (modules 6/42, dossiers 25/42,
+> wikis 15/42 unchanged). This was an INFRA session (per the new #0.2 role).
+
+### ✅ DONE THIS SESSION (all MERGED to main)
+- **#3079 B1 — BUILT + MERGED (PR #3275).** The insert-only LLM-QG **pedagogical correction loop** is live:
+  `scripts/common/review_loop.py` (shared best-round/MIN-guard; wiki `review.py` refactored onto it),
+  `linear_pipeline.run_llm_qg_with_corrections` (bounded loop — **seminar 3 rounds / core 1 = strict no-op**;
+  best-round restore; re-gate via python_qg with revert-on-fail), `linear-correction-pedagogical.md`
+  (**`insert_after`-ONLY** corrector), v7_build wiring (seminar→loop, core→single-pass). Guardrails verified:
+  NO ADR change, `test_no_rewrite_contract` untouched + passing, no forbidden symbols. I reviewed the code +
+  ran 81 tests locally before merge. **Reviewer routing (`_llm_qg_reviewer_override_for_level`, v7_build):
+  seminar LLM-QG → claude/GPT, never gemini, and skips any reviewer that would self-review → claude-tools
+  writer auto-routes the reviewer to codex-tools.**
+- **PR #3271 MERGED** — the #3079 design doc (`docs/folk-epic/seminar-module-self-converge-3079-design.md`,
+  with the ADR-007 reframe: **insert_after is already sanctioned → NO ADR change needed for B1**; B2 deepen
+  carve-out is CONDITIONAL), the **ROLE CHANGE #0.2**, and a YAML-comment bug fix (the agent-def `description:`
+  had an unquoted `#2836` truncating it — found while editing the role, fixed it = #0.2 in action).
+- **🆕 ROLE CHANGE — #0.2 (user order 2026-06-16):** the track-driver now **IMPLEMENTS/DRIVES INFRA ITSELF**;
+  the "file infra needs as issues, don't implement — that's the other orchestrator's lane" boundary is
+  **RETIRED**. Pinned to the agent def (`agents_extensions/shared/agents/curriculum-track-orchestrator.md`
+  rule #0.2) + this handoff ROLE section. Deploys via the SessionStart hook. Merge-discipline boundary
+  UNCHANGED (PR only, never commit/merge to `main`).
+- **#2991 FIX — BUILT + MERGED (PR #3278, Gap C.1).** `_normalize_performance_self_check_duplicates` +
+  `_apply_activity_schema_correction` in `linear_pipeline.py`: when a `performance` activity has a non-list
+  `self_check` AND a list `self_checklist`, deterministically **drop the stray `self_check` and write
+  `activities.yaml` to disk** (the gate AND the MDX assembler both read it). Narrow trigger; wired into the
+  ADR-008 path; falls through to the writer-correction for OTHER activity_schema violations. **Verified on the
+  REAL failed koliadky `activities.yaml`: activity_schema FAIL→PASS, `self_checklist` (4 items) preserved.**
+  2 new tests + 146 related tests green.
+
+### 🧱 KEY FINDING — B1 alone does NOT self-converge a fresh seminar build; **Gap C is the gate**
+P3-validate (rebuild koliadky on the new loop, confirm pedagogical ≥8 unaided) **FAILED its first run at
+`python_qg`** — the `#2991` activity_schema wall — **BEFORE reaching the B1 LLM-QG loop**. So B1 (Part A/B of
+the design) is necessary but not sufficient: the **rotating python_qg walls (Gap C: #2991 module.md-only
+scope, #2997 blockquote vesum, coinage churn, word_count)** block any fresh seminar build from reaching the
+loop. #2991 was the FIRST wall; **more may follow** (vesum/word_count/coinage). Fixing them one-by-one +
+re-building (~40 min each) IS the manual grind #3079 exists to kill → **the durable fix is the design's
+Part C.3: a bounded MULTI-GATE python_qg loop + cross-model fixer** (so it doesn't terminate after one gate).
+
+### ⚠ IN-FLIGHT AT HANDOFF — P3-validate re-run
+- **Build worktree:** `.worktrees/builds/folk-koliadky-shchedrivky-20260616-000802/` (koliadky rebuild on B1
+  loop + #2991 fix). Monitor task `bvndv01xy` (session-scoped — **does NOT survive into the next session**).
+- **First thing next session:** check if that build completed. Read its
+  `curriculum/l2-uk-en/folk/koliadky-shchedrivky/llm_qg.json` (pedagogical score) + `python_qg.json`, or the
+  build branch (#M-10 auto-commit). **If the session ended before it finished → re-fire**
+  `.venv/bin/python -u scripts/build/v7_build.py folk koliadky-shchedrivky --worktree` (Monitor the JSONL).
+- **Outcomes:** (a) reached B1 + pedagogical ≥8 → **B1 validated e2e**, B2 unneeded; (b) reached B1 but
+  pedagogical <8 → B2 (deepen carve-out, needs user sign-off) warranted; (c) hit the NEXT Gap-C wall → own it
+  (Part C.x) — and seriously weigh building Part C.3 (the multi-gate loop) instead of one-off wall fixes.
+
+### ▶ NEXT ACTIONS (RESUME HERE, in order)
+1. **Resolve the in-flight P3-validate build** (above) → determine if B1 reaches pedagogical ≥8 unaided.
+2. **Gap C — the remaining #3079 work.** Either keep fixing rotating walls one-by-one (slow, the manual grind)
+   OR build the design's **Part C.3 (bounded multi-gate python_qg loop + cross-model fixer)** — the durable
+   fix. **Recommendation: Part C.3** (one-off wall fixes re-create the very problem #3079 targets). I own this (#0.2).
+3. **SCALE folk to ≥8 + surface** — promote dossier §4/§6 sources into the 3 STUB plans (zamovliannia →
+   narodni-viruvannia → kalendarna add `type:primary` refs so #3162 embeds), then rebuild on B1. (Survey done
+   Session 37; koliadky+dumy already have primary refs.)
+4. **B2 (deepen carve-out)** — CONDITIONAL, only if P3-validate shows insert-only can't reach ≥8. Needs user sign-off.
+5. **Dossier queue** #26 `narodni-lehendy` → #27 `istorychni-perekazy` (`phase-folk-queue.md`, 25/42).
+
+### ⚠ CARRY-FORWARD
+- **B1 is e2e-UNPROVEN** (logic proven by 81 unit tests; the live build proof is gated on Gap C). Do not claim B1 "validated" until a fresh seminar build reaches the loop AND pedagogical ≥8.
+- **Role #0.2 is LIVE** (deploys next session) — I implement infra myself; never file-and-forget infra debt.
+- **Build worktrees to reap (#M-10 artifacts safe on build branches):** `folk-koliadky-shchedrivky-20260615-232024`
+  (failed first run) + `folk-koliadky-shchedrivky-20260616-000802` (the in-flight re-run, once resolved).
+- Local main ff'd to the #3278 merge (has B1 + #2991). A **dirty non-folk `agents_extensions/shared/settings.json`**
+  (5 added lines, deploy/hook churn — NOT mine) sits in the main checkout; leave it (per git discipline).
+- Dispatch lesson (cost me a wasted spawn): run `delegate.py dispatch` in the FOREGROUND (it daemonizes the
+  worker via `start_new_session` and returns ~12s); a `run_in_background` wrapper gets its process tree REAPED
+  on completion → kills the detached worker. Monitor a dispatch read-only (poll the rollout/PR), never own it.
+- `git push` folk → `--no-verify`; never reset/commit on main.
+
+---
+
+## ▶▶▶ SESSION 37 HANDOFF (2026-06-15 — #3079 (the ONE open epic, TOP PRIORITY) DESIGNED: root-caused the seminar self-converge failure to 3 separable gaps + wrote the implementable design doc the Session-36 RESUME-HERE #3 called for)
 
 > **⏱ HONEST SCOPE:** DESIGN ONLY — no new content (modules 6/42, dossiers 25/42, wikis 15/42 ALL unchanged),
 > no pipeline code (that's the infra orchestrator's lane to IMPLEMENT). I executed the named next action (#3):
