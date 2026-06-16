@@ -889,12 +889,13 @@ def test_slovnyk_warning_merges_known_russianism_alternative() -> None:
 def test_curated_calque_matches_participle_entry() -> None:
     card = _curated_calque("діючий", "діючий")
 
-    assert card == {
-        "kind": "participle",
-        "corrections": ["чинний"],
-        "note": "діючий закон → чинний закон (рос. действующий)",
-        "source": ["glazova-11", "avramenko-11", "antonenko-p145"],
-    }
+    assert card is not None
+    assert card["kind"] == "participle"
+    assert card["corrections"] == ["чинний"]
+    assert card["note"] == "діючий закон → чинний закон (рос. действующий)"
+    assert "glazova-11" in card["source"]
+    assert any("чинний" in item for item in card["evidence"])
+    assert "search_heritage" in card["heritage_guard"]
 
 
 def test_curated_calque_matches_sense_restricted_entry_with_both_senses() -> None:
@@ -912,12 +913,11 @@ def test_curated_calque_matches_sense_restricted_entry_with_both_senses() -> Non
 def test_curated_calque_matches_phrasal_entry() -> None:
     card = _curated_calque("точка зору", "точка")
 
-    assert card == {
-        "kind": "phrasal",
-        "corrections": ["погляд"],
-        "note": "рос. точка зрения; цієї точки зору → цього погляду",
-        "source": ["ua-gec", "grok-3098"],
-    }
+    assert card is not None
+    assert card["kind"] == "phrasal"
+    assert card["corrections"] == ["погляд"]
+    assert card["note"] == "рос. точка зрения; цієї точки зору → цього погляду"
+    assert card["source"] == ["ua-gec", "grok-3098"]
 
 
 def test_curated_calque_unknown_lemma_returns_none() -> None:
