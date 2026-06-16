@@ -161,31 +161,51 @@ _LABEL_LINE_RE = re.compile(
 
 PYTHON_QG_GATE_ORDER = (
     "tool_theatre",
+    "strict_json_parse",
     "activity_schema",
     "quiz_translate_explanations",
     "word_count",
     "vocab_count",
+    "vocab_floor",
     "plan_sections",
     "formatting_standards",
     "scaffolding_leak",
     "vesum_verified",
     "bad_form_heritage",
     "citations_resolve",
+    "plan_reference_match",
+    "resource_coverage",
+    "chunk_context_for_all_refs",
+    "published_quote_for_publishable_refs",
+    "textbook_quote_fidelity",
     "textbook_grounding",
     "resources_search_attempted",
     "immersion_advisory",
     "l2_exposure_floor",
     "long_uk_ceiling",
     "component_density",
+    "archetype_fit",
     "inject_activity_ids",
     "activity_types",
     "ai_slop_clean",
+    "russianisms_strict",
+    "register_consistency",
+    "engagement_floor",
     "component_props",
     "russianisms_clean",
     "surzhyk_clean",
     "calques_clean",
     "paronym_clean",
+    "mdx_render",
 )
+PYTHON_QG_META_GATES = frozenset(
+    {
+        "passed",
+        "correction_terminal",
+        "previously_passed_regression",
+    }
+)
+PYTHON_QG_UNMAPPED_FAILURE_FRONTIER = -1
 WRITER_CORRECTION_GATES = frozenset(
     {
         "activity_schema",
@@ -453,7 +473,7 @@ LLM_QG_CORE_MAX_ROUNDS = 1
 LLM_QG_SEMINAR_MAX_ROUNDS = 3
 PYTHON_QG_CORE_MAX_CORRECTION_ROUNDS = 1
 PYTHON_QG_SEMINAR_MAX_CORRECTION_ROUNDS = 4
-PYTHON_QG_MIN_REGRESSION_PATIENCE = 1
+PYTHON_QG_MIN_REGRESSION_PATIENCE = 3
 PYTHON_QG_MALFORMED_REPORT_VIOLATIONS = 999
 PYTHON_QG_VIOLATION_COUNT_KEYS = (
     "missing",
@@ -5550,6 +5570,67 @@ def _python_qg_violation_count(report: Mapping[str, Any]) -> int:
     )
 
 
+def _python_qg_frontier(report: Mapping[str, Any]) -> int:
+    gates = report.get("gates")
+    if not isinstance(gates, Mapping):
+        return -1
+    for index, gate in enumerate(PYTHON_QG_GATE_ORDER):
+        gate_report = gates.get(gate)
+        if isinstance(gate_report, Mapping) and gate_report.get("passed") is False:
+            return index
+    if not _python_qg_passed(report):
+        # A failed report with no ordered failing gate has no trustworthy
+        # frontier. Rank it before the first mapped gate so it can never tie
+        # with, or beat, a truly passing report.
+        return PYTHON_QG_UNMAPPED_FAILURE_FRONTIER
+    return len(PYTHON_QG_GATE_ORDER)
+
+
+def _python_qg_frontier_gate(report: Mapping[str, Any]) -> str | None:
+    gates = report.get("gates")
+    if not isinstance(gates, Mapping):
+        return None
+    for gate in PYTHON_QG_GATE_ORDER:
+        gate_report = gates.get(gate)
+        if isinstance(gate_report, Mapping) and gate_report.get("passed") is False:
+            return gate
+    for gate in sorted(set(gates) - set(PYTHON_QG_GATE_ORDER) - PYTHON_QG_META_GATES):
+        gate_report = gates.get(gate)
+        if isinstance(gate_report, Mapping) and gate_report.get("passed") is False:
+            return gate
+    return None
+
+
+def _python_qg_round_frontier(round_record: Mapping[str, Any]) -> int:
+    raw_frontier = round_record.get("frontier")
+    if isinstance(raw_frontier, int):
+        return raw_frontier
+    report = round_record.get("report")
+    if isinstance(report, Mapping):
+        return _python_qg_frontier(report)
+    return -1
+
+
+def _python_qg_best_round_index(rounds: Sequence[Mapping[str, Any]]) -> int:
+    if not rounds:
+        raise ValueError("_python_qg_best_round_index requires at least one round")
+    return max(
+        range(len(rounds)),
+        key=lambda i: (
+            _python_qg_round_frontier(rounds[i]),
+            -int(rounds[i].get("violation_count") or 0),
+            -i,
+        ),
+    )
+
+
+def _python_qg_frontier_regressed(
+    reference: Mapping[str, Any],
+    current: Mapping[str, Any],
+) -> bool:
+    return _python_qg_frontier(current) < _python_qg_frontier(reference)
+
+
 def _python_qg_review_loop_dims(violation_count: int) -> Mapping[str, Any]:
     return {
         "python_qg_violations": {
@@ -5562,12 +5643,15 @@ def _python_qg_review_loop_dims(violation_count: int) -> Mapping[str, Any]:
 def _python_qg_round_summary(round_record: Mapping[str, Any]) -> dict[str, Any]:
     report = round_record.get("report")
     violation_count = int(round_record.get("violation_count") or 0)
+    frontier = _python_qg_round_frontier(round_record)
     return {
         "round": round_record.get("round"),
         "correction_round": round_record.get("correction_round"),
         "passed": _python_qg_passed(report) if isinstance(report, Mapping) else False,
         "violation_count": violation_count,
         "score": -violation_count,
+        "frontier": frontier,
+        "frontier_gate": _python_qg_frontier_gate(report) if isinstance(report, Mapping) else None,
         "failed_gate": round_record.get("failed_gate"),
     }
 
@@ -5824,6 +5908,7 @@ def _run_python_qg_with_bounded_corrections(
             "report": report,
             "artifacts": _snapshot_correction_artifacts(module_dir),
             "violation_count": _python_qg_violation_count(report),
+            "frontier": _python_qg_frontier(report),
             "failed_gate": failed_gate,
         }
         rounds.append(round_record)
@@ -5977,15 +6062,9 @@ def _run_python_qg_with_bounded_corrections(
             stopped_reason = "pass"
             break
 
-        best_idx = best_round_index(
-            rounds,
-            lambda item: _python_qg_review_loop_dims(int(item["violation_count"])),
-        )
+        best_idx = _python_qg_best_round_index(rounds)
         best_round = rounds[best_idx]
-        if min_score_regressed(
-            _python_qg_review_loop_dims(int(best_round["violation_count"])),
-            _python_qg_review_loop_dims(int(current_round["violation_count"])),
-        ):
+        if _python_qg_frontier_regressed(best_round["report"], current_round["report"]):
             consecutive_regressions += 1
             if consecutive_regressions >= PYTHON_QG_MIN_REGRESSION_PATIENCE:
                 stopped_reason = "min_score_regressed"
@@ -5993,10 +6072,7 @@ def _run_python_qg_with_bounded_corrections(
         else:
             consecutive_regressions = 0
 
-    best_idx = best_round_index(
-        rounds,
-        lambda item: _python_qg_review_loop_dims(int(item["violation_count"])),
-    )
+    best_idx = _python_qg_best_round_index(rounds)
     best_round = rounds[best_idx]
     _restore_correction_artifacts(module_dir, best_round["artifacts"])
     correction_loop = {
@@ -7816,8 +7892,14 @@ def _previously_passing_regressions(
     after_gates = after.get("gates")
     if not isinstance(before_gates, Mapping) or not isinstance(after_gates, Mapping):
         return []
+    ordered_gate_set = set(PYTHON_QG_GATE_ORDER)
+    all_gate_names = (set(before_gates) | set(after_gates)) - PYTHON_QG_META_GATES
+    ordered_gate_names = [gate for gate in PYTHON_QG_GATE_ORDER if gate in all_gate_names]
+    ordered_gate_names.extend(
+        sorted(gate for gate in all_gate_names if gate not in ordered_gate_set)
+    )
     regressions = []
-    for gate in PYTHON_QG_GATE_ORDER:
+    for gate in ordered_gate_names:
         before_gate = before_gates.get(gate)
         after_gate = after_gates.get(gate)
         if (
@@ -10177,6 +10259,8 @@ def _normalize_for_vesum(lemma: str) -> str:
             lambda m: _strip_morpheme_hyphen(m.group(1)),
             text,
         )
+    text = re.sub(r"^(?:\*\*|\*|_)+", "", text.strip())
+    text = re.sub(r"(?:\*\*|\*|_)+$", "", text)
     return _canonicalize_vesum_apostrophes(text).strip()
 
 
