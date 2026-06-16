@@ -75,3 +75,9 @@ updates:
       # inscriptis supports lxml 6.1.x — REMOVE this entry then. Closed PR: #3329.
       - dependency-name: "lxml"
         versions: [">=6.1.0"]
+      # tokenizers is capped by transformers (transformers==4.57.6 requires
+      # tokenizers>=0.22.0,<=0.23.0); 0.23.1 breaks the test suite. Allow
+      # 0.22.x-0.23.0 but block >0.23.0 until a transformers bump raises the
+      # cap — REMOVE this entry then. Closed PR: #3338.
+      - dependency-name: "tokenizers"
+        versions: [">=0.23.1"]
