@@ -22,6 +22,10 @@
   translation: whom, which
   pos: pronoun
   example: "Чоловік, якого я бачу, мій сусід."
+- word: котрий
+  translation: which, that (formal)
+  pos: pronoun
+  example: "Це будинок, котрий стоїть на розі."
 - word: де
   translation: where
   pos: adverb
