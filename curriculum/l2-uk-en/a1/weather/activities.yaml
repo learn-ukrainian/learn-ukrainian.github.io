@@ -2,258 +2,102 @@
 inline:
   - id: act-1
     type: match-up
-    title: Weather line to real-world clue
-    instruction: Match each Ukrainian weather line with the best clue.
+    title: Погода і контекст
+    instruction: З'єднай вираз про погоду з логічним контекстом або порою року.
     pairs:
-      - left: Іде дощ.
-        right: umbrella
-      - left: Іде сніг.
-        right: winter street
-      - left: Світить сонце.
-        right: sunglasses
-      - left: Дме вітер.
-        right: moving trees
-      - left: Мінус десять.
-        right: very cold
-      - left: Плюс тридцять.
-        right: very hot
-      - left: Сьогодні хмарно.
-        right: no visible sun
-      - left: Завтра буде тепло.
-        right: good day for a walk
+      - left: іде дощ
+        right: холодно і мокро
+      - left: іде сніг
+        right: зима
+      - left: світить сонце
+        right: сонячно
+      - left: дме вітер
+        right: прохолодно
+      - left: мінус десять
+        right: холодно
+      - left: плюс тридцять
+        right: спекотно
+      - left: плюс двадцять
+        right: тепло
+      - left: хмарно
+        right: сонце не світить
   - id: act-2
     type: fill-in
-    title: Window weather chunks
-    instruction: Complete each window line with the safe weather chunk.
+    title: Погода і пора року
+    instruction: Обери логічну погоду для кожної пори року або температури.
     items:
-      - sentence: 'Яка сьогодні погода? Сьогодні ___.'
-        answer: холодно
+      - sentence: 'Взимку часто ___.'
+        answer: іде сніг
         options:
-          - холодно
-          - холодний
-          - я холодно
-        explanation: Weather state words do not need a subject.
-      - sentence: 'Надворі ___. Сонця не видно.'
-        answer: хмарно
-        options:
-          - хмарно
-          - хмара
-          - хмарний погода
-        explanation: Хмарно answers the weather question as a state.
-      - sentence: 'Зараз ___ дощ.'
-        answer: іде
-        options:
-          - іде
-          - є
-          - має
-        explanation: Іде дощ is the safe precipitation chunk.
-      - sentence: 'Завтра ___ тепло і сонячно.'
-        answer: буде
-        options:
-          - буде
-          - є
-          - має
-        explanation: Завтра буде... is the simple future weather frame.
+          - іде сніг
+          - іде дощ
+          - світить сонце
+        explanation: 'Сніг first connects with зима.'
       - sentence: 'Влітку дуже ___.'
         answer: спекотно
         options:
           - спекотно
-          - спекотний
-          - жар
-        explanation: Use спекотно for hot weather.
-      - sentence: 'Увечері мені ___.'
+          - холодно
+          - хмарно
+        explanation: 'Спекотно is the safe A1 word for hot weather.'
+      - sentence: 'Восени часто ___.'
+        answer: іде дощ
+        options:
+          - іде дощ
+          - іде сніг
+          - сонячно
+        explanation: 'Осінь often connects with rain in this first weather map.'
+      - sentence: 'Навесні ___ і красиво.'
+        answer: тепло
+        options:
+          - тепло
+          - холодно
+          - спекотно
+        explanation: 'Навесні тепло is the target season-weather chunk.'
+      - sentence: 'Сьогодні мінус п''ять, дуже ___.'
         answer: холодно
         options:
           - холодно
-          - холодний
-          - холод
-        explanation: Мені холодно describes a person's state.
-  - id: act-3
-    type: odd-one-out
-    title: Find the unsafe weather line
-    instruction: Choose the line that does not fit the safe Ukrainian pattern.
-    items:
-      - words:
-          - Сьогодні тепло.
-          - Надворі сонячно.
-          - Це є дуже сонячно.
-          - Завтра буде тепло.
-        answer: Це є дуже сонячно.
-        explanation: Do not copy English it is with це є for this weather line.
-      - words:
-          - Іде дощ.
-          - Іде сніг.
-          - Він іде дощ.
-          - Дме вітер.
-        answer: Він іде дощ.
-        explanation: Rain does not need він.
-      - words:
-          - Мені холодно.
-          - Мені вдень було холодно.
-          - Я є холодно.
-          - На вулиці холодно.
-        answer: Я є холодно.
-        explanation: Use мені for a person's state.
-      - words:
-          - опади
-          - сніг
-          - дощ
-          - осадки
-        answer: осадки
-        explanation: Use the Ukrainian weather noun опади.
-  - id: act-4
-    type: group-sort
-    title: Season weather shelves
-    instruction: Sort each chunk onto the season where it first fits.
-    groups:
-      - name: ЗИМА
-        items:
-          - іде сніг
-          - мороз
-          - мінус десять
-          - холодно
-      - name: Весна
-        items:
           - тепло
-          - світить сонце
-          - іде дощ
-          - квітень
-      - name: Літо
-        items:
           - спекотно
-          - сонячно
-          - плюс тридцять
-          - липень
-      - name: Осінь
-        items:
+        explanation: 'Мінус п''ять points to холодно.'
+      - sentence: 'Сьогодні плюс двадцять п''ять, ___.'
+        answer: тепло
+        options:
+          - тепло
           - прохолодно
+          - холодно
+        explanation: 'Плюс двадцять п''ять can be described as тепло here.'
+  - id: act-3
+    type: fill-in
+    title: Діалог про погоду
+    instruction: Доповни короткий діалог про погоду.
+    items:
+      - sentence: '— Яка сьогодні ___? — Сьогодні тепло.'
+        answer: погода
+        options:
+          - погода
+          - сонце
+          - дощ
+        explanation: 'Яка сьогодні погода? is the target question.'
+      - sentence: '— Завтра ___ сонячно. — Добре, гуляємо!'
+        answer: буде
+        options:
+          - буде
+          - є
+          - був
+        explanation: 'Завтра буде... is the simple future weather frame.'
+      - sentence: '— Яка пора року тобі ___? — Літо.'
+        answer: подобається
+        options:
+          - подобається
+          - любить
+          - робить
+        explanation: 'Use the chunk тобі подобається.'
+      - sentence: '— Чому ти любиш літо? — Тому що влітку ___.'
+        answer: сонячно
+        options:
+          - сонячно
+          - холодно
           - хмарно
-          - часто йде дощ
-          - листопад
-workbook:
-  - type: true-false
-    title: Weather pattern checks
-    instruction: Decide whether each statement describes the Ukrainian weather pattern safely.
-    items:
-      - statement: 'Холодно, тепло, сонячно, and хмарно can answer Яка погода?'
-        correct: true
-        explanation: They are safe state words for weather.
-      - statement: 'Ukrainian needs це є before every weather state.'
-        correct: false
-        explanation: Say Сьогодні холодно or Надворі сонячно.
-      - statement: 'Іде дощ is the safe A1 precipitation chunk.'
-        correct: true
-        explanation: It is the default spoken pattern for rain.
-      - statement: 'Дощ падає зараз is the best first A1 weather line.'
-        correct: false
-        explanation: Learn Іде дощ first.
-      - statement: 'Сніг and мороз naturally sort with ЗИМА in the first season map.'
-        correct: true
-        explanation: This is the basic weather-season link.
-      - statement: 'Мені подобається теплий дощ is safer than Я подобаюсь теплий дощ.'
-        correct: true
-        explanation: Use Мені подобається... for likes.
-  - type: translate
-    title: Build weather notes
-    instruction: Choose the safe Ukrainian weather note.
-    items:
-      - source: Today it is cold.
-        options:
-          - text: 'Сьогодні холодно.'
-            correct: true
-          - text: 'Сьогодні є холодно.'
-            correct: false
-          - text: 'Я холодно сьогодні.'
-            correct: false
-        explanation: Use the state word without English-style it is.
-      - source: It is raining now.
-        options:
-          - text: 'Зараз іде дощ.'
-            correct: true
-          - text: 'Дощ падає зараз.'
-            correct: false
-          - text: 'Це дощить зараз.'
-            correct: false
-        explanation: Іде дощ is the target A1 chunk.
-      - source: In summer it is hot and sunny.
-        options:
-          - text: 'Влітку спекотно і сонячно.'
-            correct: true
-          - text: 'В літо спекотний і сонячний.'
-            correct: false
-          - text: 'Літо є жар.'
-            correct: false
-        explanation: Use the season chunk влітку and state words.
-      - source: I like spring.
-        options:
-          - text: 'Мені подобається весна.'
-            correct: true
-          - text: 'Я подобаюсь весна.'
-            correct: false
-          - text: 'Я є подобається весна.'
-            correct: false
-        explanation: Мені подобається... is the safe preference frame.
-      - source: I am cold in the evening.
-        options:
-          - text: 'Увечері мені холодно.'
-            correct: true
-          - text: 'Увечері я є холодно.'
-            correct: false
-          - text: 'Увечері я маю холодно.'
-            correct: false
-        explanation: Use мені холодно for a person's state.
-  - type: order
-    title: Plan the walk after checking weather
-    instruction: Put the dialogue in a logical order.
-    is_ukrainian: true
-    items:
-      - Яка сьогодні погода?
-      - Сьогодні холодно і йде дощ.
-      - А завтра?
-      - Завтра буде тепло і сонячно.
-      - Добре! Тоді завтра гуляємо.
-    correct_order: [0, 1, 2, 3, 4]
-  - type: error-correction
-    title: Repair weather calques
-    instruction: Choose the safe Ukrainian repair.
-    items:
-      - sentence: 'Це є дуже сонячно.'
-        error: 'Це є'
-        answer: 'Надворі сонячно.'
-        options:
-          - 'Надворі сонячно.'
-          - 'Це є дуже сонячно.'
-          - 'Сонячний є надворі.'
-        explanation: Weather states can stand without це є.
-      - sentence: 'Він іде дощ.'
-        error: 'Він'
-        answer: 'Зараз іде дощ.'
-        options:
-          - 'Зараз іде дощ.'
-          - 'Він іде дощ.'
-          - 'Дощ має іти.'
-        explanation: Rain does not take він.
-      - sentence: 'Я є холодно.'
-        error: 'Я є'
-        answer: 'Мені холодно.'
-        options:
-          - 'Мені холодно.'
-          - 'Я є холодно.'
-          - 'Я маю холодно.'
-        explanation: Use мені for a person's state.
-      - sentence: 'Сьогодні погода є добре.'
-        error: 'добре'
-        answer: 'Сьогодні гарна погода.'
-        options:
-          - 'Сьогодні гарна погода.'
-          - 'Сьогодні погода є добре.'
-          - 'Сьогодні добрий погода.'
-        explanation: Погода is feminine, so use гарна.
-      - sentence: 'Я подобаюсь теплий дощ.'
-        error: 'Я подобаюсь'
-        answer: 'Мені подобається теплий дощ.'
-        options:
-          - 'Мені подобається теплий дощ.'
-          - 'Я подобаюсь теплий дощ.'
-          - 'Я є люблю теплий дощ.'
-        explanation: Use Мені подобається... for likes.
+        explanation: 'Влітку сонячно fits the plan dialogue.'

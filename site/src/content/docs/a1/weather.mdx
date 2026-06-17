@@ -60,34 +60,28 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <TabItem label="Lesson">
 
 This lesson gives you a small Ukrainian weather toolkit. The main habit is
-simple: for weather, Ukrainian often describes the state directly. You do not
-need an English-style "it" at the front.
+simple: Ukrainian often describes weather as a state, without an English-style
+"it" at the front.
 
 By the end, you can:
 
-- ask and answer **Яка погода?** and **Як погода?**;
-- describe the day with **тепло, холодно, сонячно, хмарно**;
-- say **іде дощ**, **іде сніг**, **дме вітер**, and **світить сонце**;
-- connect weather with **зима, весна, літо, осінь**;
-- say what kind of season you like with **Мені подобається...**;
-- repair unsafe lines such as **Це є дуже сонячно**, **Він іде дощ**,
-  **Я є холодно**, **осадки**, and **Я подобаюсь теплий дощ**.
+- ask and answer **Яка погода?**;
+- say **Сьогодні холодно**, **Сьогодні тепло**, **Сьогодні спекотно**;
+- use **іде дощ**, **іде сніг**, **дме вітер**, and **світить сонце**;
+- connect weather with months and seasons;
+- make a simple plan for today or tomorrow.
 
 ## Діалоги
 
-### Weather line to real-world clue
-
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Іде дощ.", "right": "umbrella"}, {"left": "Іде сніг.", "right": "winter street"}, {"left": "Світить сонце.", "right": "sunglasses"}, {"left": "Дме вітер.", "right": "moving trees"}, {"left": "Мінус десять.", "right": "very cold"}, {"left": "Плюс тридцять.", "right": "very hot"}, {"left": "Сьогодні хмарно.", "right": "no visible sun"}, {"left": "Завтра буде тепло.", "right": "good day for a walk"}]`)} instruction={"Match each Ukrainian weather line with the best clue."} isUkrainian={false} />
-
 The first scene is at the window. Two friends are deciding whether to go for a
-walk.
+walk today or tomorrow.
 
 ```text
 Іванко: Яка сьогодні погода?
 Галя: Сьогодні холодно і йде дощ.
 Іванко: А завтра?
 Галя: Завтра буде тепло і сонячно.
-Іванко: Добре! Тоді завтра гуляємо.
+Іванко: Добре! Тоді завтра гуляємо!
 ```
 
 Support after the Ukrainian lines:
@@ -95,23 +89,23 @@ Support after the Ukrainian lines:
 | Українська | English support |
 | --- | --- |
 | **Іванко: Яка сьогодні погода?** | Ivanko: What is the weather like today? |
-| **Галя: Сьогодні холодно і йде дощ.** | Halia: Today it is cold and it is raining. |
+| **Галя: Сьогодні холодно і йде дощ.** | Halia: Today it is cold and raining. |
 | **Іванко: А завтра?** | Ivanko: And tomorrow? |
 | **Галя: Завтра буде тепло і сонячно.** | Halia: Tomorrow it will be warm and sunny. |
-| **Іванко: Добре! Тоді завтра гуляємо.** | Ivanko: Good! Then tomorrow we will walk. |
+| **Іванко: Добре! Тоді завтра гуляємо!** | Ivanko: Good! Then tomorrow we walk! |
 
-The useful answer is short: **Сьогодні холодно. Іде дощ.** Ukrainian does not
-need **це є** for this kind of weather line. Say **Надворі сонячно**, not
+The useful answer can be very short: **Сьогодні холодно. Іде дощ.** Ukrainian
+does not need **це є** in this weather line. Say **Надворі сонячно**, not
 **Це є дуже сонячно**. Say **Зараз іде дощ**, not **Він іде дощ**.
 
-The second scene connects weather to seasons and likes.
+The second scene connects weather to seasons and likes from earlier lessons.
 
 ```text
 Галя: Яка пора року тобі подобається?
 Іванко: Мені подобається літо.
 Галя: Чому?
 Іванко: Тому що влітку тепло і сонячно. А тобі?
-Галя: Мені подобається осінь. Восени красиво, але часто йде дощ.
+Галя: Мені подобається осінь. Восени красиво.
 ```
 
 Support after the Ukrainian lines:
@@ -122,15 +116,14 @@ Support after the Ukrainian lines:
 | **Іванко: Мені подобається літо.** | Ivanko: I like summer. |
 | **Галя: Чому?** | Halia: Why? |
 | **Іванко: Тому що влітку тепло і сонячно. А тобі?** | Ivanko: Because in summer it is warm and sunny. And you? |
-| **Галя: Мені подобається осінь. Восени красиво, але часто йде дощ.** | Halia: I like autumn. In autumn it is beautiful, but it often rains. |
+| **Галя: Мені подобається осінь. Восени красиво.** | Halia: I like autumn. In autumn it is beautiful. |
 
-For likes, keep the same chunk you learned before: **Мені подобається...**
-Do not build the English order word by word. **Мені подобається теплий дощ** is
-safe. **Я подобаюсь теплий дощ** is not.
+For likes, keep the same chunk: **Мені подобається...** You can now combine it
+with a season: **Мені подобається літо**, **Мені подобається осінь**.
 
-### Window weather chunks
+### Діалог про погоду
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Яка сьогодні погода? Сьогодні ___.", "answer": "холодно", "options": ["холодно", "холодний", "я холодно"]}, {"sentence": "Надворі ___. Сонця не видно.", "answer": "хмарно", "options": ["хмарно", "хмара", "хмарний погода"]}, {"sentence": "Зараз ___ дощ.", "answer": "іде", "options": ["іде", "є", "має"]}, {"sentence": "Завтра ___ тепло і сонячно.", "answer": "буде", "options": ["буде", "є", "має"]}, {"sentence": "Влітку дуже ___.", "answer": "спекотно", "options": ["спекотно", "спекотний", "жар"]}, {"sentence": "Увечері мені ___.", "answer": "холодно", "options": ["холодно", "холодний", "холод"]}]`)} instruction={"Complete each window line with the safe weather chunk."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "— Яка сьогодні ___? — Сьогодні тепло.", "answer": "погода", "options": ["погода", "сонце", "дощ"]}, {"sentence": "— Завтра ___ сонячно. — Добре, гуляємо!", "answer": "буде", "options": ["буде", "є", "був"]}, {"sentence": "— Яка пора року тобі ___? — Літо.", "answer": "подобається", "options": ["подобається", "любить", "робить"]}, {"sentence": "— Чому ти любиш літо? — Тому що влітку ___.", "answer": "сонячно", "options": ["сонячно", "холодно", "хмарно"]}]`)} instruction={"Доповни короткий діалог про погоду."} isUkrainian={false} />
 
 ## Яка погода?
 
@@ -139,8 +132,8 @@ Start with one question and one small answer.
 | Question | Safe A1 answer |
 | --- | --- |
 | **Яка погода?** | **Сьогодні тепло.** |
-| **Як погода?** | **Надворі хмарно.** |
 | **Яка сьогодні погода?** | **Сьогодні холодно і йде дощ.** |
+| **Яка завтра погода?** | **Завтра буде сонячно.** |
 
 The first weather words are state words:
 
@@ -148,32 +141,22 @@ The first weather words are state words:
 | --- | --- | --- |
 | **тепло** | warm | **Сьогодні тепло.** |
 | **холодно** | cold | **Надворі холодно.** |
-| **сонячно** | sunny | **Завтра буде сонячно.** |
-| **хмарно** | cloudy | **Сьогодні хмарно.** |
 | **спекотно** | hot | **Влітку спекотно.** |
 | **прохолодно** | cool | **Увечері прохолодно.** |
+| **сонячно** | sunny | **Завтра буде сонячно.** |
+| **хмарно** | cloudy | **Сьогодні хмарно.** |
+| **ясно** | clear | **Сьогодні ясно.** |
 
 These are impersonal weather chunks. They describe the state; they do not need
 a subject. English says "it is cold." Ukrainian can simply say **холодно**. If
 you want a place, add **надворі** or **на вулиці**: **Надворі холодно. На
 вулиці тепло.**
 
-The school-grammar idea behind this is simple:
+School grammar calls this kind of sentence **безособове речення**. You do not
+need the full grammar system today. For A1, remember the practical rule:
+weather states can be complete Ukrainian sentences.
 
-> Безособові речення найчастіше передають явища природи, фізичний і психічний стан людини, значення можливості чи бажаності якоїсь дії. НАПРИКЛАД: 1. А ввечері на вулиці дощить. 2. Мені вдень було холодно. 3. Треба вранці замовити таксі. Іноді односкладні безособові речення виступають синтаксичними синонімами до двоскладних.
-
-*— Заболотний Grade 8, p.126*
-
-You do not need to analyze the whole quote today. The A1 idea is this:
-weather states can be complete Ukrainian sentences without an English-style
-subject.
-
-For rain and snow, use the old independent Ukrainian pattern **іде + weather
-word**. It is not a translation from Russian or another neighboring language.
-It is the normal pattern to learn first:
-
-The Ukrainian pattern is **іде + [опади]**. In learner words, that means
-**іде дощ** and **іде сніг**.
+For rain and snow, learn the whole phrase:
 
 | Weather event | Safe chunk |
 | --- | --- |
@@ -182,20 +165,27 @@ The Ukrainian pattern is **іде + [опади]**. In learner words, that means
 | wind | **дме вітер** |
 | sun | **світить сонце** |
 
-You can also recognize **дощить**, especially in **Надворі дощить**, but your
-default A1 line is **Іде дощ.** Do not say **Дощ падає зараз** or **Це дощить
-зараз** when you need the basic spoken weather line.
+You can also use the weather chunks with time words:
 
-Use opposites to build quick weather meaning: **сонячно - хмарно** and
-**тепло - холодно**. Add one more careful pair: **гарна погода** and
-**погана погода**. Here **погода** is a feminine noun, so the adjective changes:
-**гарна погода**, not **добре погода**. You can also say **Надворі добре**.
+```text
+Сьогодні хмарно.
+Зараз іде дощ.
+Завтра буде тепло і сонячно.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Сьогодні хмарно.** | Today it is cloudy. |
+| **Зараз іде дощ.** | It is raining now. |
+| **Завтра буде тепло і сонячно.** | Tomorrow it will be warm and sunny. |
 
 For a person, use **мені** with the state word:
 
 ```text
 Мені холодно.
-Мені вдень було холодно.
+Мені ввечері було холодно.
 ```
 
 Support after the Ukrainian lines:
@@ -203,17 +193,13 @@ Support after the Ukrainian lines:
 | Українська | English support |
 | --- | --- |
 | **Мені холодно.** | I am cold. |
-| **Мені вдень було холодно.** | I was cold during the day. |
+| **Мені ввечері було холодно.** | I was cold in the evening. |
 
 This is a ready chunk. Do not say **Я є холодно** or **Я маю холодно**.
 
-### Find the unsafe weather line
+### Погода і контекст
 
-<OddOneOut client:only='react' instruction={"Choose the line that does not fit the safe Ukrainian pattern."} items={JSON.parse(`[{"words": ["Сьогодні тепло.", "Надворі сонячно.", "Це є дуже сонячно.", "Завтра буде тепло."], "correct": 2, "explanation": "Do not copy English it is with це є for this weather line."}, {"words": ["Іде дощ.", "Іде сніг.", "Він іде дощ.", "Дме вітер."], "correct": 2, "explanation": "Rain does not need він."}, {"words": ["Мені холодно.", "Мені вдень було холодно.", "Я є холодно.", "На вулиці холодно."], "correct": 2, "explanation": "Use мені for a person's state."}, {"words": ["опади", "сніг", "дощ", "осадки"], "correct": 3, "explanation": "Use the Ukrainian weather noun опади."}]`)} />
-
-### Season weather shelves
-
-<GroupSort client:only='react' groups={JSON.parse(`{"ЗИМА": ["іде сніг", "мороз", "мінус десять", "холодно"], "Весна": ["тепло", "світить сонце", "іде дощ", "квітень"], "Літо": ["спекотно", "сонячно", "плюс тридцять", "липень"], "Осінь": ["прохолодно", "хмарно", "часто йде дощ", "листопад"]}`)} instruction={"Sort each chunk onto the season where it first fits."} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "іде дощ", "right": "холодно і мокро"}, {"left": "іде сніг", "right": "зима"}, {"left": "світить сонце", "right": "сонячно"}, {"left": "дме вітер", "right": "прохолодно"}, {"left": "мінус десять", "right": "холодно"}, {"left": "плюс тридцять", "right": "спекотно"}, {"left": "плюс двадцять", "right": "тепло"}, {"left": "хмарно", "right": "сонце не світить"}]`)} instruction={"З'єднай вираз про погоду з логічним контекстом або порою року."} isUkrainian={false} />
 
 ## Погода і пори року
 
@@ -222,17 +208,30 @@ lesson.
 
 | Season | Weather chunks |
 | --- | --- |
-| **зима** | **Взимку холодно. Іде сніг. Мороз.** |
-| **весна** | **Навесні тепло. Світить сонце. Іде дощ.** |
+| **зима** | **Взимку холодно. Іде сніг.** |
+| **весна** | **Навесні тепло. Світить сонце.** |
 | **літо** | **Влітку спекотно. Сонячно.** |
-| **осінь** | **Восени прохолодно. Хмарно. Часто йде дощ.** |
+| **осінь** | **Восени прохолодно. Часто йде дощ.** |
 
-If a card says **сніг** or **мороз**, it naturally belongs with **ЗИМА**. If a
-card says **спекотно** or **плюс тридцять**, it naturally belongs with
-**літо**. The same weather phrase can change by place, but these first links
-give you a safe starting point.
+You can add months if you want a small calendar note:
 
-You can add temperature very simply:
+```text
+У січні холодно.
+У квітні тепло.
+У липні спекотно.
+У жовтні прохолодно.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **У січні холодно.** | In January it is cold. |
+| **У квітні тепло.** | In April it is warm. |
+| **У липні спекотно.** | In July it is hot. |
+| **У жовтні прохолодно.** | In October it is cool. |
+
+Temperature can stay simple:
 
 ```text
 Сьогодні плюс двадцять градусів.
@@ -250,28 +249,18 @@ Support after the Ukrainian lines:
 | **Плюс двадцять - тепло.** | Plus twenty is warm. |
 | **Мінус десять - холодно.** | Minus ten is cold. |
 
-Three short nature lines are useful for recognition: **Сонце світить. Дощ іде.
-Сніг падає.** In your own speaking, prefer the everyday chunks **світить
-сонце**, **іде дощ**, and **іде сніг**.
+You do not need a long forecast. A safe A1 weather note can have three short
+parts: time, weather, and plan.
 
-Ukrainian nature vocabulary is rich. At A1, you only need to recognize a small
-synonym row for bad winter weather: **завірюха, віхола, сніговій**. These words
-are not required for your own sentences today, but they show why Ukrainian
-weather vocabulary should be learned on its own terms. Avoid Russian-imperial
-teaching habits that present Ukrainian as a secondary language or as a
-фонетичним чи лексичним варіантом російської. Do not use Russian phonetic
-analogies for Ukrainian sounds. Learn **х** in **хмарно** and **г** in
-**гарний** as Ukrainian sounds. Do not replace this row with a Russian
-winter-storm label.
+```text
+Сьогодні прохолодно і хмарно.
+Завтра буде тепло.
+Тоді завтра гуляємо.
+```
 
-Категорично заборонено спиратися на фонетичні аналогії з російською
-мовою. When you explain the letter **х** in **хмарно** or **г** in
-**гарний**, не можна посилатися на звучання в російській мові. These are
-independent Ukrainian sounds.
+### Погода і пора року
 
-Use the Ukrainian weather noun **опади** for precipitation. Do not use
-**осадки**. For hot weather, prefer **спекотно** and **спекотний**. You may
-hear **жарко**, but **спекотно** is the better course word.
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Взимку часто ___.", "answer": "іде сніг", "options": ["іде сніг", "іде дощ", "світить сонце"]}, {"sentence": "Влітку дуже ___.", "answer": "спекотно", "options": ["спекотно", "холодно", "хмарно"]}, {"sentence": "Восени часто ___.", "answer": "іде дощ", "options": ["іде дощ", "іде сніг", "сонячно"]}, {"sentence": "Навесні ___ і красиво.", "answer": "тепло", "options": ["тепло", "холодно", "спекотно"]}, {"sentence": "Сьогодні мінус п'ять, дуже ___.", "answer": "холодно", "options": ["холодно", "тепло", "спекотно"]}, {"sentence": "Сьогодні плюс двадцять п'ять, ___.", "answer": "тепло", "options": ["тепло", "прохолодно", "холодно"]}]`)} instruction={"Обери логічну погоду для кожної пори року або температури."} isUkrainian={false} />
 
 ## 📋 Підсумок
 
@@ -284,28 +273,12 @@ First: ask and answer the weather question.
 Сьогодні прохолодно і хмарно.
 ```
 
-Support after the Ukrainian lines:
-
-| Українська | English support |
-| --- | --- |
-| **Яка сьогодні погода?** | What is the weather like today? |
-| **Сьогодні прохолодно і хмарно.** | Today it is cool and cloudy. |
-
-Second: use the precipitation chunks.
+Second: use the rain and snow chunks.
 
 ```text
 Зараз іде дощ.
-Завтра буде сніг.
 Взимку іде сніг.
 ```
-
-Support after the Ukrainian lines:
-
-| Українська | English support |
-| --- | --- |
-| **Зараз іде дощ.** | It is raining now. |
-| **Завтра буде сніг.** | Tomorrow there will be snow. |
-| **Взимку іде сніг.** | In winter it snows. |
 
 Third: connect weather to a season.
 
@@ -315,41 +288,15 @@ Third: connect weather to a season.
 Навесні тепло.
 ```
 
-Support after the Ukrainian lines:
-
-| Українська | English support |
-| --- | --- |
-| **Влітку спекотно і сонячно.** | In summer it is hot and sunny. |
-| **Восени часто йде дощ.** | In autumn it often rains. |
-| **Навесні тепло.** | In spring it is warm. |
-
 Fourth: say a simple preference.
 
 ```text
-Що тобі подобається більше? Спекотне літо чи студена зима?
-Мені подобається спекотне літо.
-Мені подобається студена зима, але мені холодно ввечері.
+Що тобі подобається більше?
+Мені подобається літо.
+Мені подобається осінь.
 ```
 
-Support after the Ukrainian lines:
-
-| Українська | English support |
-| --- | --- |
-| **Що тобі подобається більше? Спекотне літо чи студена зима?** | What do you like more? A hot summer or a cold winter? |
-| **Мені подобається спекотне літо.** | I like a hot summer. |
-| **Мені подобається студена зима, але мені холодно ввечері.** | I like a cold winter, but I am cold in the evening. |
-
-:::caution
-Keep the weather system Ukrainian. Do not compare Ukrainian words with Russian
-words, do not use **осадки**, and do not explain **іде дощ** as a borrowed
-pattern. Конструкція **іде дощ** is a **незалежний давній український
-структурний патерн**, not **переклад з російської чи іншої
-сусідньої мови**. Build your weather speech from Ukrainian chunks:
-**Надворі сонячно**, **Іде дощ**, **Мені холодно**, **Мені подобається теплий
-дощ**.
-:::
-
-Write your own five-line weather note:
+Now write your own five-line weather note:
 
 ```text
 Сьогодні холодно.
@@ -372,44 +319,24 @@ Support after the Ukrainian lines:
 </TabItem>
 <TabItem label="Vocabulary">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"погода","translation":"weather","pos":"noun","example":"Яка сьогодні погода?","examples":["weather","Яка сьогодні погода?"],"atlas_href":"/lexicon/погода/"},{"word":"тепло","translation":"warm","pos":"adverb","example":"Сьогодні тепло.","examples":["warm","Сьогодні тепло."],"atlas_href":"/lexicon/тепло/"},{"word":"холодно","translation":"cold","pos":"adverb","example":"Надворі холодно.","examples":["cold","Надворі холодно."],"atlas_href":"/lexicon/холодно/"},{"word":"сонячно","translation":"sunny","pos":"adverb","example":"Завтра буде сонячно.","examples":["sunny","Завтра буде сонячно."],"atlas_href":"/lexicon/сонячно/"},{"word":"хмарно","translation":"cloudy","pos":"adverb","example":"Сьогодні хмарно.","examples":["cloudy","Сьогодні хмарно."],"atlas_href":"/lexicon/хмарно/"},{"word":"спекотно","translation":"hot","pos":"adverb","example":"Влітку спекотно.","examples":["hot","Влітку спекотно."],"atlas_href":"/lexicon/спекотно/"},{"word":"прохолодно","translation":"cool","pos":"adverb","example":"Увечері прохолодно.","examples":["cool","Увечері прохолодно."],"atlas_href":"/lexicon/прохолодно/"},{"word":"дощ","translation":"rain","pos":"noun","example":"Іде дощ.","examples":["rain","Іде дощ."],"atlas_href":"/lexicon/дощ/"},{"word":"сніг","translation":"snow","pos":"noun","example":"Іде сніг.","examples":["snow","Іде сніг."],"atlas_href":"/lexicon/сніг/"},{"word":"сонце","translation":"sun","pos":"noun","example":"Світить сонце.","examples":["sun","Світить сонце."],"atlas_href":"/lexicon/сонце/"},{"word":"вітер","translation":"wind","pos":"noun","example":"Дме вітер.","examples":["wind","Дме вітер."],"atlas_href":"/lexicon/вітер/"},{"word":"мороз","translation":"frost; freezing cold","pos":"noun","example":"Взимку мороз.","examples":["frost; freezing cold","Взимку мороз."],"atlas_href":"/lexicon/мороз/"},{"word":"опади","translation":"precipitation","pos":"noun","example":"Дощ і сніг - це опади.","examples":["precipitation","Дощ і сніг - це опади."],"atlas_href":"/lexicon/опади/"},{"word":"іде дощ","translation":"it is raining","pos":"weather chunk","example":"Зараз іде дощ.","examples":["it is raining","Зараз іде дощ."],"atlas_href":"/lexicon/іде-дощ/"},{"word":"іде сніг","translation":"it is snowing","pos":"weather chunk","example":"Взимку іде сніг.","examples":["it is snowing","Взимку іде сніг."],"atlas_href":"/lexicon/іде-сніг/"},{"word":"дме вітер","translation":"the wind is blowing","pos":"weather chunk","example":"Сьогодні дме вітер.","examples":["the wind is blowing","Сьогодні дме вітер."],"atlas_href":"/lexicon/дме-вітер/"},{"word":"світить сонце","translation":"the sun is shining","pos":"weather chunk","example":"Світить сонце.","examples":["the sun is shining","Світить сонце."],"atlas_href":"/lexicon/світить-сонце/"},{"word":"надворі","translation":"outside; outdoors","pos":"adverb","example":"Надворі тепло.","examples":["outside; outdoors","Надворі тепло."],"atlas_href":"/lexicon/надворі/"},{"word":"на вулиці","translation":"outside; in the street","pos":"phrase","example":"На вулиці холодно.","examples":["outside; in the street","На вулиці холодно."],"atlas_href":"/lexicon/на-вулиці/"},{"word":"сьогодні","translation":"today","pos":"adverb","example":"Сьогодні хмарно.","examples":["today","Сьогодні хмарно."],"atlas_href":"/lexicon/сьогодні/"},{"word":"завтра","translation":"tomorrow","pos":"adverb","example":"Завтра буде тепло.","examples":["tomorrow","Завтра буде тепло."],"atlas_href":"/lexicon/завтра/"},{"word":"вчора","translation":"yesterday","pos":"adverb","example":"Вчора було холодно.","examples":["yesterday","Вчора було холодно."],"atlas_href":"/lexicon/вчора/"},{"word":"градус","translation":"degree","pos":"noun","example":"Плюс двадцять градусів.","examples":["degree","Плюс двадцять градусів."],"atlas_href":"/lexicon/градус/"},{"word":"плюс","translation":"plus","pos":"temperature word","example":"Сьогодні плюс двадцять.","examples":["plus","Сьогодні плюс двадцять."],"atlas_href":"/lexicon/плюс/"},{"word":"мінус","translation":"minus","pos":"temperature word","example":"Сьогодні мінус десять.","examples":["minus","Сьогодні мінус десять."],"atlas_href":"/lexicon/мінус/"},{"word":"гарний","translation":"good; beautiful","pos":"adjective","example":"Сьогодні гарна погода.","examples":["good; beautiful","Сьогодні гарна погода."],"atlas_href":"/lexicon/гарний/"},{"word":"поганий","translation":"bad","pos":"adjective","example":"Сьогодні погана погода.","examples":["bad","Сьогодні погана погода."],"atlas_href":"/lexicon/поганий/"},{"word":"теплий","translation":"warm","pos":"adjective","example":"Мені подобається теплий дощ.","examples":["warm","Мені подобається теплий дощ."],"atlas_href":"/lexicon/теплий/"},{"word":"холодний","translation":"cold","pos":"adjective","example":"Холодний день.","examples":["cold","Холодний день."],"atlas_href":"/lexicon/холодний/"},{"word":"зима","translation":"winter","pos":"noun","example":"Взимку холодно.","examples":["winter","Взимку холодно."],"atlas_href":"/lexicon/зима/"},{"word":"весна","translation":"spring","pos":"noun","example":"Навесні тепло.","examples":["spring","Навесні тепло."],"atlas_href":"/lexicon/весна/"},{"word":"літо","translation":"summer","pos":"noun","example":"Влітку спекотно.","examples":["summer","Влітку спекотно."],"atlas_href":"/lexicon/літо/"},{"word":"осінь","translation":"autumn; fall","pos":"noun","example":"Восени часто йде дощ.","examples":["autumn; fall","Восени часто йде дощ."],"atlas_href":"/lexicon/осінь/"},{"word":"взимку","translation":"in winter","pos":"adverb","example":"Взимку іде сніг.","examples":["in winter","Взимку іде сніг."],"atlas_href":"/lexicon/взимку/"},{"word":"навесні","translation":"in spring","pos":"adverb","example":"Навесні світить сонце.","examples":["in spring","Навесні світить сонце."],"atlas_href":"/lexicon/навесні/"},{"word":"влітку","translation":"in summer","pos":"adverb","example":"Влітку тепло.","examples":["in summer","Влітку тепло."],"atlas_href":"/lexicon/влітку/"},{"word":"восени","translation":"in autumn","pos":"adverb","example":"Восени хмарно.","examples":["in autumn","Восени хмарно."],"atlas_href":"/lexicon/восени/"},{"word":"Мені холодно.","translation":"I am cold.","pos":"state chunk","example":"Увечері мені холодно.","examples":["I am cold.","Увечері мені холодно."],"atlas_href":"/lexicon/мені-холодно/"},{"word":"Мені подобається...","translation":"I like...","pos":"preference chunk","example":"Мені подобається весна.","examples":["I like...","Мені подобається весна."],"atlas_href":"/lexicon/мені-подобається/"},{"word":"завірюха","translation":"snowstorm","pos":"passive noun","example":"Завірюха - зимове слово.","examples":["snowstorm","Завірюха - зимове слово."],"atlas_href":"/lexicon/завірюха/"},{"word":"віхола","translation":"snowstorm; blizzard","pos":"passive noun","example":"Віхола - зимове слово.","examples":["snowstorm; blizzard","Віхола - зимове слово."],"atlas_href":"/lexicon/віхола/"},{"word":"сніговій","translation":"snowstorm","pos":"passive noun","example":"Сніговій - зимове слово.","examples":["snowstorm","Сніговій - зимове слово."],"atlas_href":"/lexicon/сніговій/"}]`)} title="Vocabulary" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"погода","translation":"weather","pos":"noun","example":"Яка сьогодні погода?","examples":["weather","Яка сьогодні погода?"],"atlas_href":"/lexicon/погода/"},{"word":"холодно","translation":"cold","pos":"adverb","example":"Надворі холодно.","examples":["cold","Надворі холодно."],"atlas_href":"/lexicon/холодно/"},{"word":"тепло","translation":"warm","pos":"adverb","example":"Сьогодні тепло.","examples":["warm","Сьогодні тепло."],"atlas_href":"/lexicon/тепло/"},{"word":"спекотно","translation":"hot","pos":"adverb","example":"Влітку спекотно.","examples":["hot","Влітку спекотно."],"atlas_href":"/lexicon/спекотно/"},{"word":"прохолодно","translation":"cool","pos":"adverb","example":"Увечері прохолодно.","examples":["cool","Увечері прохолодно."],"atlas_href":"/lexicon/прохолодно/"},{"word":"сонячно","translation":"sunny","pos":"adverb","example":"Завтра буде сонячно.","examples":["sunny","Завтра буде сонячно."],"atlas_href":"/lexicon/сонячно/"},{"word":"хмарно","translation":"cloudy","pos":"adverb","example":"Сьогодні хмарно.","examples":["cloudy","Сьогодні хмарно."],"atlas_href":"/lexicon/хмарно/"},{"word":"ясно","translation":"clear","pos":"adverb","example":"Сьогодні ясно.","examples":["clear","Сьогодні ясно."]},{"word":"дощ","translation":"rain","pos":"noun","example":"Іде дощ.","examples":["rain","Іде дощ."],"atlas_href":"/lexicon/дощ/"},{"word":"сніг","translation":"snow","pos":"noun","example":"Іде сніг.","examples":["snow","Іде сніг."],"atlas_href":"/lexicon/сніг/"},{"word":"сонце","translation":"sun","pos":"noun","example":"Світить сонце.","examples":["sun","Світить сонце."],"atlas_href":"/lexicon/сонце/"},{"word":"вітер","translation":"wind","pos":"noun","example":"Дме вітер.","examples":["wind","Дме вітер."],"atlas_href":"/lexicon/вітер/"},{"word":"іде дощ","translation":"it is raining","pos":"weather chunk","example":"Зараз іде дощ.","examples":["it is raining","Зараз іде дощ."],"atlas_href":"/lexicon/іде-дощ/"},{"word":"іде сніг","translation":"it is snowing","pos":"weather chunk","example":"Взимку іде сніг.","examples":["it is snowing","Взимку іде сніг."],"atlas_href":"/lexicon/іде-сніг/"},{"word":"дме вітер","translation":"the wind is blowing","pos":"weather chunk","example":"Сьогодні дме вітер.","examples":["the wind is blowing","Сьогодні дме вітер."],"atlas_href":"/lexicon/дме-вітер/"},{"word":"світить сонце","translation":"the sun is shining","pos":"weather chunk","example":"Світить сонце.","examples":["the sun is shining","Світить сонце."],"atlas_href":"/lexicon/світить-сонце/"},{"word":"сьогодні","translation":"today","pos":"adverb","example":"Сьогодні хмарно.","examples":["today","Сьогодні хмарно."],"atlas_href":"/lexicon/сьогодні/"},{"word":"завтра","translation":"tomorrow","pos":"adverb","example":"Завтра буде тепло.","examples":["tomorrow","Завтра буде тепло."],"atlas_href":"/lexicon/завтра/"},{"word":"вчора","translation":"yesterday","pos":"adverb","example":"Вчора було холодно.","examples":["yesterday","Вчора було холодно."],"atlas_href":"/lexicon/вчора/"},{"word":"надворі","translation":"outside; outdoors","pos":"adverb","example":"Надворі тепло.","examples":["outside; outdoors","Надворі тепло."],"atlas_href":"/lexicon/надворі/"},{"word":"на вулиці","translation":"outside; in the street","pos":"phrase","example":"На вулиці холодно.","examples":["outside; in the street","На вулиці холодно."],"atlas_href":"/lexicon/на-вулиці/"},{"word":"градус","translation":"degree","pos":"noun","example":"Плюс двадцять градусів.","examples":["degree","Плюс двадцять градусів."],"atlas_href":"/lexicon/градус/"},{"word":"плюс","translation":"plus","pos":"temperature word","example":"Сьогодні плюс двадцять.","examples":["plus","Сьогодні плюс двадцять."],"atlas_href":"/lexicon/плюс/"},{"word":"мінус","translation":"minus","pos":"temperature word","example":"Сьогодні мінус десять.","examples":["minus","Сьогодні мінус десять."],"atlas_href":"/lexicon/мінус/"},{"word":"зима","translation":"winter","pos":"noun","example":"Взимку холодно.","examples":["winter","Взимку холодно."],"atlas_href":"/lexicon/зима/"},{"word":"весна","translation":"spring","pos":"noun","example":"Навесні тепло.","examples":["spring","Навесні тепло."],"atlas_href":"/lexicon/весна/"},{"word":"літо","translation":"summer","pos":"noun","example":"Влітку спекотно.","examples":["summer","Влітку спекотно."],"atlas_href":"/lexicon/літо/"},{"word":"осінь","translation":"autumn; fall","pos":"noun","example":"Восени часто йде дощ.","examples":["autumn; fall","Восени часто йде дощ."],"atlas_href":"/lexicon/осінь/"},{"word":"взимку","translation":"in winter","pos":"adverb","example":"Взимку іде сніг.","examples":["in winter","Взимку іде сніг."],"atlas_href":"/lexicon/взимку/"},{"word":"навесні","translation":"in spring","pos":"adverb","example":"Навесні світить сонце.","examples":["in spring","Навесні світить сонце."],"atlas_href":"/lexicon/навесні/"},{"word":"влітку","translation":"in summer","pos":"adverb","example":"Влітку тепло.","examples":["in summer","Влітку тепло."],"atlas_href":"/lexicon/влітку/"},{"word":"восени","translation":"in autumn","pos":"adverb","example":"Восени хмарно.","examples":["in autumn","Восени хмарно."],"atlas_href":"/lexicon/восени/"},{"word":"Мені холодно.","translation":"I am cold.","pos":"state chunk","example":"Увечері мені холодно.","examples":["I am cold.","Увечері мені холодно."],"atlas_href":"/lexicon/мені-холодно/"},{"word":"Мені подобається...","translation":"I like...","pos":"preference chunk","example":"Мені подобається літо.","examples":["I like...","Мені подобається літо."],"atlas_href":"/lexicon/мені-подобається/"}]`)} title="Vocabulary" />
 
-<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"погода","back":"weather"},{"front":"тепло","back":"warm"},{"front":"холодно","back":"cold"},{"front":"сонячно","back":"sunny"},{"front":"хмарно","back":"cloudy"},{"front":"спекотно","back":"hot"},{"front":"прохолодно","back":"cool"},{"front":"дощ","back":"rain"},{"front":"сніг","back":"snow"},{"front":"сонце","back":"sun"},{"front":"вітер","back":"wind"},{"front":"мороз","back":"frost; freezing cold"},{"front":"опади","back":"precipitation"},{"front":"іде дощ","back":"it is raining"},{"front":"іде сніг","back":"it is snowing"},{"front":"дме вітер","back":"the wind is blowing"},{"front":"світить сонце","back":"the sun is shining"},{"front":"надворі","back":"outside; outdoors"},{"front":"на вулиці","back":"outside; in the street"},{"front":"сьогодні","back":"today"},{"front":"завтра","back":"tomorrow"},{"front":"вчора","back":"yesterday"},{"front":"градус","back":"degree"},{"front":"плюс","back":"plus"},{"front":"мінус","back":"minus"},{"front":"гарний","back":"good; beautiful"},{"front":"поганий","back":"bad"},{"front":"теплий","back":"warm"},{"front":"холодний","back":"cold"},{"front":"зима","back":"winter"},{"front":"весна","back":"spring"},{"front":"літо","back":"summer"},{"front":"осінь","back":"autumn; fall"},{"front":"взимку","back":"in winter"},{"front":"навесні","back":"in spring"},{"front":"влітку","back":"in summer"},{"front":"восени","back":"in autumn"},{"front":"Мені холодно.","back":"I am cold."},{"front":"Мені подобається...","back":"I like..."},{"front":"завірюха","back":"snowstorm"},{"front":"віхола","back":"snowstorm; blizzard"},{"front":"сніговій","back":"snowstorm"}]`)} />
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"погода","back":"weather"},{"front":"холодно","back":"cold"},{"front":"тепло","back":"warm"},{"front":"спекотно","back":"hot"},{"front":"прохолодно","back":"cool"},{"front":"сонячно","back":"sunny"},{"front":"хмарно","back":"cloudy"},{"front":"ясно","back":"clear"},{"front":"дощ","back":"rain"},{"front":"сніг","back":"snow"},{"front":"сонце","back":"sun"},{"front":"вітер","back":"wind"},{"front":"іде дощ","back":"it is raining"},{"front":"іде сніг","back":"it is snowing"},{"front":"дме вітер","back":"the wind is blowing"},{"front":"світить сонце","back":"the sun is shining"},{"front":"сьогодні","back":"today"},{"front":"завтра","back":"tomorrow"},{"front":"вчора","back":"yesterday"},{"front":"надворі","back":"outside; outdoors"},{"front":"на вулиці","back":"outside; in the street"},{"front":"градус","back":"degree"},{"front":"плюс","back":"plus"},{"front":"мінус","back":"minus"},{"front":"зима","back":"winter"},{"front":"весна","back":"spring"},{"front":"літо","back":"summer"},{"front":"осінь","back":"autumn; fall"},{"front":"взимку","back":"in winter"},{"front":"навесні","back":"in spring"},{"front":"влітку","back":"in summer"},{"front":"восени","back":"in autumn"},{"front":"Мені холодно.","back":"I am cold."},{"front":"Мені подобається...","back":"I like..."}]`)} />
 
 </TabItem>
 <TabItem label="Activities">
 
-### Weather line to real-world clue
-
-*(see lesson, §Діалоги)*
-
-### Window weather chunks
-
-*(see lesson, §Діалоги)*
-
-### Find the unsafe weather line
+### Погода і контекст
 
 *(see lesson, §Яка погода?)*
 
-### Season weather shelves
+### Погода і пора року
 
-*(see lesson, §Яка погода?)*
+*(see lesson, §Погода і пори року)*
 
-### Weather pattern checks
+### Діалог про погоду
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Холодно, тепло, сонячно, and хмарно can answer Яка погода?", "isTrue": true, "explanation": "They are safe state words for weather."}, {"statement": "Ukrainian needs це є before every weather state.", "isTrue": false, "explanation": "Say Сьогодні холодно or Надворі сонячно."}, {"statement": "Іде дощ is the safe A1 precipitation chunk.", "isTrue": true, "explanation": "It is the default spoken pattern for rain."}, {"statement": "Дощ падає зараз is the best first A1 weather line.", "isTrue": false, "explanation": "Learn Іде дощ first."}, {"statement": "Сніг and мороз naturally sort with ЗИМА in the first season map.", "isTrue": true, "explanation": "This is the basic weather-season link."}, {"statement": "Мені подобається теплий дощ is safer than Я подобаюсь теплий дощ.", "isTrue": true, "explanation": "Use Мені подобається... for likes."}]`)} instruction={"Decide whether each statement describes the Ukrainian weather pattern safely."} isUkrainian={false} />
-
-### Build weather notes
-
-<Translate client:only='react' questions={JSON.parse(`[{"source": "Today it is cold.", "options": [{"text": "Сьогодні холодно.", "correct": true}, {"text": "Сьогодні є холодно.", "correct": false}, {"text": "Я холодно сьогодні.", "correct": false}], "explanation": "Use the state word without English-style it is."}, {"source": "It is raining now.", "options": [{"text": "Зараз іде дощ.", "correct": true}, {"text": "Дощ падає зараз.", "correct": false}, {"text": "Це дощить зараз.", "correct": false}], "explanation": "Іде дощ is the target A1 chunk."}, {"source": "In summer it is hot and sunny.", "options": [{"text": "Влітку спекотно і сонячно.", "correct": true}, {"text": "В літо спекотний і сонячний.", "correct": false}, {"text": "Літо є жар.", "correct": false}], "explanation": "Use the season chunk влітку and state words."}, {"source": "I like spring.", "options": [{"text": "Мені подобається весна.", "correct": true}, {"text": "Я подобаюсь весна.", "correct": false}, {"text": "Я є подобається весна.", "correct": false}], "explanation": "Мені подобається... is the safe preference frame."}, {"source": "I am cold in the evening.", "options": [{"text": "Увечері мені холодно.", "correct": true}, {"text": "Увечері я є холодно.", "correct": false}, {"text": "Увечері я маю холодно.", "correct": false}], "explanation": "Use мені холодно for a person's state."}]`)} instruction={"Choose the safe Ukrainian weather note."} isUkrainian={false} />
-
-### Plan the walk after checking weather
-
-<Order client:only='react' items={JSON.parse(`["Яка сьогодні погода?", "Сьогодні холодно і йде дощ.", "А завтра?", "Завтра буде тепло і сонячно.", "Добре! Тоді завтра гуляємо."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4]`)} instruction={"Put the dialogue in a logical order."} isUkrainian={true} />
-
-### Repair weather calques
-
-<ErrorCorrection client:only='react' instruction="Choose the safe Ukrainian repair." items={JSON.parse(`[{"sentence": "Це є дуже сонячно.", "errorWord": "Це є", "correctForm": "Надворі сонячно.", "options": ["Надворі сонячно.", "Це є дуже сонячно.", "Сонячний є надворі."], "explanation": "Weather states can stand without це є."}, {"sentence": "Він іде дощ.", "errorWord": "Він", "correctForm": "Зараз іде дощ.", "options": ["Зараз іде дощ.", "Він іде дощ.", "Дощ має іти."], "explanation": "Rain does not take він."}, {"sentence": "Я є холодно.", "errorWord": "Я є", "correctForm": "Мені холодно.", "options": ["Мені холодно.", "Я є холодно.", "Я маю холодно."], "explanation": "Use мені for a person's state."}, {"sentence": "Сьогодні погода є добре.", "errorWord": "добре", "correctForm": "Сьогодні гарна погода.", "options": ["Сьогодні гарна погода.", "Сьогодні погода є добре.", "Сьогодні добрий погода."], "explanation": "Погода is feminine, so use гарна."}, {"sentence": "Я подобаюсь теплий дощ.", "errorWord": "Я подобаюсь", "correctForm": "Мені подобається теплий дощ.", "options": ["Мені подобається теплий дощ.", "Я подобаюсь теплий дощ.", "Я є люблю теплий дощ."], "explanation": "Use Мені подобається... for likes."}]`)} isUkrainian={false} />
+*(see lesson, §Діалоги)*
 
 </TabItem>
 <TabItem label="Resources">
