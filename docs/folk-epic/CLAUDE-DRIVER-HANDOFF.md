@@ -65,6 +65,24 @@
 
 ## ▶▶▶ SESSION 44 HANDOFF (2026-06-17 — 🎯 DESIGN LOCKED: the seminar content-quality gate is the BACKBONE for building ALL seminar tracks. Read `docs/folk-epic/seminar-quality-gate-design.md` and execute from there) — **RESUME HERE**
 
+> ### 🥇 #1 NEXT-SESSION JOB (user 2026-06-17, TOP PRIORITY — do this FIRST, before the gate build):
+> **Expose per-module STATUS + per-dimension SCORING from the Monitor API.** The user wants to
+> track every module's status + quality scores via the API. **The foundation already exists —
+> adjust/extend it, don't rebuild:**
+> - **Extend `scripts/api/state_router.py`** (already serves `/api/state/track-health`,
+>   `/api/state/failing`, `/api/state/build-status`; per-module helper in
+>   `scripts/api/agent_router.py::get_module_state`). Add e.g. `GET /api/state/scores/{track}`
+>   (all modules) + `/{track}/{slug}` (one), returning per module: status +
+>   `aggregate{verdict,terminal_verdict,min_score,min_dim,failing_dims}` +
+>   `dimensions{<dim>.score}` (incl. the new `beauty` once it lands).
+> - **Score source (verified):** `curriculum/l2-uk-en/<level>/<slug>/llm_qg.json` (`.aggregate`
+>   + `.dimensions`); status at `curriculum/l2-uk-en/<level>/status/<slug>.json`.
+> - Add a `tests/` test for the endpoint; document in `docs/MONITOR-API.md`.
+> - THEN proceed to the gate build (design-doc §8). This API view is how the user watches the
+>   prototype converge to ≥8, so it lands first.
+
+
+
 > **This session = alignment + design, not build.** The user reframed the goal: build a
 > **reusable, per-track-FLEXIBLE content-quality gate** (sometimes beauty-leaning, sometimes
 > history-leaning — NOT hardwired), **prototyped on folk's 6 modules**, then rolled to every
