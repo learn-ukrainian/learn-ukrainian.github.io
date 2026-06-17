@@ -1,0 +1,172 @@
+- lemma: прийти
+  translation: "to come, arrive on foot; perfective"
+  pos: verb
+  usage: "Гості прийшли до садиби ввечері."
+- lemma: приходити
+  translation: "to come habitually or repeatedly; imperfective"
+  pos: verb
+  usage: "Вона приходить до бібліотеки щосереди."
+- lemma: приїхати
+  translation: "to arrive by transport; perfective"
+  pos: verb
+  usage: "Ми приїхали до Львова потягом."
+- lemma: приїздити
+  translation: "to come by transport habitually; imperfective"
+  pos: verb
+  usage: "Бабуся приїздить до нас на літо."
+- lemma: приїжджати
+  translation: "to arrive or visit by transport habitually; common imperfective"
+  pos: verb
+  usage: "Друзі часто приїжджають на вихідні."
+- lemma: прибігти
+  translation: "to come running, run up; perfective"
+  pos: verb
+  usage: "Хлопчик прибіг до воріт."
+- lemma: прибігати
+  translation: "to come running habitually; imperfective"
+  pos: verb
+  usage: "Пес прибігає, коли чує машину."
+- lemma: прилетіти
+  translation: "to arrive by air; perfective"
+  pos: verb
+  usage: "Літак прилетів із Варшави."
+- lemma: припливти
+  translation: "to arrive by water or swim up; perfective"
+  pos: verb
+  usage: "Човен приплив до берега."
+- lemma: принести
+  translation: "to bring by carrying; perfective"
+  pos: verb
+  usage: "Принесіть, будь ласка, ключ від кімнати."
+- lemma: приносити
+  translation: "to bring habitually or repeatedly; imperfective"
+  pos: verb
+  usage: "Листоноша приносить пошту щоранку."
+- lemma: привести
+  translation: "to bring or lead someone; perfective"
+  pos: verb
+  usage: "Мати привела дитину до лікаря."
+- lemma: привозити
+  translation: "to bring by vehicle habitually; imperfective"
+  pos: verb
+  usage: "Кур'єр привозить посилки до офісу."
+- lemma: привезти
+  translation: "to bring or deliver by vehicle; perfective"
+  pos: verb
+  usage: "Таксі привезло гостей до готелю."
+- lemma: дійти
+  translation: "to reach on foot, walk all the way to; perfective"
+  pos: verb
+  usage: "Ми дійшли до вершини за дві години."
+- lemma: доходити
+  translation: "to reach habitually, extend as far as; imperfective"
+  pos: verb
+  usage: "Стежка доходить до річки."
+- lemma: доїхати
+  translation: "to reach by transport, get all the way to; perfective"
+  pos: verb
+  usage: "Вони доїхали до Ужгорода вночі."
+- lemma: доїжджати
+  translation: "to be reaching or regularly get to by transport; common imperfective"
+  pos: verb
+  usage: "Автобус доїжджає до кінцевої зупинки."
+- lemma: добігти
+  translation: "to run as far as, reach running; perfective"
+  pos: verb
+  usage: "Студент добіг до зупинки і встиг."
+- lemma: долетіти
+  translation: "to fly all the way to; perfective"
+  pos: verb
+  usage: "Ми долетіли до Кишинева без пересадки."
+- lemma: доплисти
+  translation: "to swim or sail all the way to; perfective"
+  pos: verb
+  usage: "Він доплив до берега спокійно."
+- lemma: донести
+  translation: "to carry all the way to; perfective"
+  pos: verb
+  usage: "Я доніс валізу до кімнати."
+- lemma: довести
+  translation: "to lead all the way to; perfective"
+  pos: verb
+  usage: "Провідник довів групу до табору."
+- lemma: довезти
+  translation: "to transport all the way to; perfective"
+  pos: verb
+  usage: "Водій довіз нас до вокзалу."
+- lemma: прибуття
+  translation: "arrival"
+  pos: noun:n
+  usage: "Прибуття поїзда оголосили на вокзалі."
+- lemma: досягнення
+  translation: "reaching, achievement"
+  pos: noun:n
+  usage: "Досягнення вершини було головною метою походу."
+- lemma: пункт призначення
+  translation: "destination"
+  pos: phrase
+  usage: "Пункт призначення нашого маршруту - Яремче."
+- lemma: кінцева точка
+  translation: "endpoint, final point"
+  pos: phrase
+  usage: "Кінцева точка маршруту була біля водоспаду."
+- lemma: маршрут
+  translation: "route"
+  pos: noun:m
+  usage: "Маршрут проходить через центр міста."
+- lemma: подолати
+  translation: "to overcome, cover a distance; perfective"
+  pos: verb
+  usage: "Ми подолали останні кілометри пішки."
+- lemma: дістатися
+  translation: "to get to, reach"
+  pos: verb
+  usage: "Як дістатися до вокзалу?"
+- lemma: за розкладом
+  translation: "according to schedule"
+  pos: phrase
+  usage: "Поїзд прибув за розкладом."
+- lemma: вчасно
+  translation: "on time"
+  pos: adverb
+  usage: "Автобус приїхав вчасно."
+- lemma: нарешті
+  translation: "finally"
+  pos: adverb
+  usage: "Нарешті ми доїхали до села."
+- lemma: ледве
+  translation: "barely, with difficulty"
+  pos: adverb
+  usage: "Ми ледве дійшли до хатини."
+- lemma: садиба
+  translation: "rural guesthouse, estate"
+  pos: noun:f
+  usage: "Гості приїхали до садиби ввечері."
+- lemma: зупинка
+  translation: "stop"
+  pos: noun:f
+  usage: "Він добіг до зупинки."
+- lemma: вокзал
+  translation: "railway station"
+  pos: noun:m
+  usage: "Ми приїхали на вокзал рано."
+- lemma: вершина
+  translation: "summit, peak"
+  pos: noun:f
+  usage: "Група дійшла до вершини."
+- lemma: берег
+  translation: "shore, bank"
+  pos: noun:m
+  usage: "Човен приплив до берега."
+- lemma: кур'єр
+  translation: "courier"
+  pos: noun:m
+  usage: "Кур'єр привіз посилку."
+- lemma: посилка
+  translation: "package, parcel"
+  pos: noun:f
+  usage: "Посилка прийшла учора."
+- lemma: листоноша
+  translation: "mail carrier"
+  pos: noun:m
+  usage: "Листоноша приніс листи."
