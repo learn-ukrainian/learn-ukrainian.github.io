@@ -1,5 +1,6 @@
 @import './lesson.css';
 @import '../css/custom.css';
+@import './word-atlas.css';
 
 :root {
   color-scheme: light;

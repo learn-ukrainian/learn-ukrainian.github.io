@@ -1,0 +1,801 @@
+---
+interface CourseUsage {
+  track: string;
+  module_num: number;
+  slug: string;
+  context: string;
+}
+
+interface DefinitionCard {
+  id: string;
+  source: string;
+  source_pill?: string;
+  note?: string;
+  definitions: string[];
+  source_url?: string;
+  sovietization_risk?: number;
+  sovietization_keywords?: string[];
+  flag_note?: string;
+}
+
+interface SourcedText {
+  text: string;
+  source: string;
+  stages?: Array<{ period: string; word: string; note?: string }>;
+}
+
+interface NounParadigm {
+  kind: "noun";
+  cases: Record<string, { singular: string; plural: string }>;
+}
+
+interface VerbParadigm {
+  kind: "verb";
+  infinitive?: string;
+  tenses?: Record<string, Record<string, Record<string, string>>>;
+  imperative?: Record<string, Record<string, string>>;
+  past?: Record<string, string>;
+}
+
+type MorphologyParadigm = NounParadigm | VerbParadigm | { kind: "other" };
+
+interface Enrichment {
+  stress?: { form: string; source: string };
+  cefr?: { level: string; source: string; text?: string; pos?: string };
+  morphology?: {
+    pos: string;
+    form_count: number;
+    forms: Array<{ form: string; label: string; stress?: string }>;
+    paradigm?: MorphologyParadigm;
+    stress?: { source: string; forms: Record<string, string> };
+    source: string;
+  };
+  meaning?: {
+    definitions: string[];
+    source: string;
+    synonyms?: string[];
+    note?: string;
+    sovietization_risk?: number;
+    sovietization_keywords?: string[];
+  };
+  definition_cards?: DefinitionCard[];
+  etymology?: SourcedText;
+  literary_attestation?: {
+    text: string;
+    source: string;
+    source_label?: string;
+    chunk_id?: string;
+    source_url?: string;
+  };
+  translation?: { en: string[]; source: string; pos?: string };
+  sources?: string[];
+  textbooks?: Array<{ title: string; text?: string; tag?: string; url?: string }>;
+  external_materials?: Array<{ group?: string; title: string; description?: string; tag?: string; url?: string; kind?: string }>;
+}
+
+interface HeritageAttestation {
+  source: string;
+  ref: string;
+  detail?: string;
+}
+
+interface CuratedCalque {
+  kind: "participle" | "phrasal" | "sense_restricted";
+  corrections: string[];
+  note: string;
+  source: string[];
+  calque_sense?: string;
+  authentic_sense?: string;
+}
+
+interface HeritageStatus {
+  classification: string;
+  attestations: HeritageAttestation[];
+  is_russianism: boolean;
+  russian_shadow: boolean;
+  calque_warning?: { detail?: string } | null;
+  curated_calque?: CuratedCalque | null;
+}
+
+interface LexiconSections {
+  synonyms?: { items: string[]; source: string; source_urls?: string[] };
+  antonyms?: { items: string[]; source: string; source_urls?: string[] };
+  idioms?: {
+    items: Array<{ text?: string; phrase: string; definition: string; source: string; source_url?: string }>;
+    source: string;
+    source_urls?: string[];
+  };
+}
+
+interface LexiconEntry {
+  lemma: string;
+  url_slug: string;
+  gloss: string | null;
+  pos: string | null;
+  ipa: string | null;
+  pronunciation?: { ipa: string; source: string } | null;
+  primary_source: string;
+  course_usage: CourseUsage[];
+  sections?: LexiconSections | null;
+  enrichment?: Enrichment | null;
+  heritage_status?: HeritageStatus | null;
+  wiki_reference?: {
+    wikipedia?: { title: string; summary: string; url: string };
+    wiktionary_url?: string;
+    wikisource_url?: string | null;
+    attribution: string;
+  } | null;
+}
+
+interface Props {
+  entry: LexiconEntry;
+  allEntries: LexiconEntry[];
+  generatedAt: string;
+  manifestVersion: string;
+}
+
+const { entry, allEntries, generatedAt, manifestVersion } = Astro.props as Props;
+const enrichment = entry.enrichment ?? null;
+const sections = entry.sections ?? null;
+const heritage = entry.heritage_status ?? null;
+const definitionCards = enrichment?.definition_cards ?? [];
+const sovietizedCards = definitionCards.filter((card) => (card.sovietization_risk ?? 0) > 0 || card.id.includes("flagged"));
+const maxSovietizationRisk = Math.max(0, ...sovietizedCards.map((card) => card.sovietization_risk ?? 1));
+const sovietizationKeywords = Array.from(new Set(sovietizedCards.flatMap((card) => card.sovietization_keywords ?? [])));
+const letter = entry.lemma.charAt(0).toLocaleUpperCase("uk");
+const headerStress = enrichment?.stress?.form ?? null;
+const cefrLevel = enrichment?.cefr?.level ?? null;
+const paradigm = enrichment?.morphology?.paradigm ?? null;
+const nounParadigm = paradigm?.kind === "noun" ? paradigm : null;
+const verbParadigm = paradigm?.kind === "verb" ? paradigm : null;
+const posLabel = formatPos(entry.pos, enrichment?.morphology?.pos);
+const headwordIpa = formatIpa(entry.pronunciation?.ipa ?? entry.ipa);
+const statusBadges = buildStatusBadges();
+const etymologyStages = buildEtymologyStages(enrichment?.etymology);
+const courseUsage = entry.course_usage.slice().sort((a, b) => {
+  if (a.track !== b.track) return a.track.localeCompare(b.track);
+  return a.module_num - b.module_num;
+});
+const textbookItems = enrichment?.textbooks ?? [];
+const externalGroups = groupExternalMaterials(enrichment?.external_materials ?? []);
+const componentLinks = buildComponentLinks(entry, allEntries);
+const sourceList = buildSourceList();
+const phraseHasGloss = Boolean(entry.gloss && (!enrichment?.meaning || enrichment.meaning.definitions.length === 0));
+const shouldShowEditorialWarning = maxSovietizationRisk > 0 || Boolean(heritage?.is_russianism);
+const shouldShowHeritageDefense = Boolean(
+  heritage &&
+    !heritage.is_russianism &&
+    heritage.classification &&
+    heritage.classification !== "unknown" &&
+    (heritage.classification !== "standard" || heritage.attestations.length > 0 || maxSovietizationRisk > 0),
+);
+const styleNotes = buildStyleNotes();
+
+const CASE_ROWS = [
+  { key: "називний", label: "Називний" },
+  { key: "родовий", label: "Родовий" },
+  { key: "давальний", label: "Давальний" },
+  { key: "знахідний", label: "Знахідний" },
+  { key: "орудний", label: "Орудний" },
+  { key: "місцевий", label: "Місцевий" },
+  { key: "кличний", label: "Кличний" },
+];
+
+const PERSON_ROWS = [
+  { key: "1", label: "1 особа" },
+  { key: "2", label: "2 особа" },
+  { key: "3", label: "3 особа" },
+];
+
+const TRACK_LABELS_UK: Record<string, string> = {
+  a1: "A1",
+  a2: "A2",
+  b1: "B1",
+  b2: "B2",
+  c1: "C1",
+  c2: "C2",
+  hist: "HIST",
+  istorio: "ISTORIO",
+  bio: "BIO",
+  lit: "LIT",
+  oes: "OES",
+  ruth: "RUTH",
+};
+
+const CONTEXT_LABELS_UK: Record<string, string> = {
+  built_vocabulary: "вивчається",
+  plan_required: "обов'язкова",
+  plan_recommended: "рекомендована",
+  surzhyk_to_avoid: "остерігайтеся",
+};
+
+const switchEntries = buildSwitchEntries();
+
+function formatIpa(value: string | null | undefined) {
+  const trimmed = value?.trim();
+  if (!trimmed) return null;
+  return trimmed.startsWith("[") || trimmed.startsWith("/") ? trimmed : `[${trimmed}]`;
+}
+
+function formatPos(pos: string | null | undefined, morphologyPos: string | undefined) {
+  const labels: Record<string, string> = {
+    noun: "іменник",
+    verb: "дієслово",
+    adj: "прикметник",
+    adverb: "прислівник",
+    adv: "прислівник",
+    phrase: "фраза",
+    pron: "займенник",
+    pronoun: "займенник",
+    prep: "прийменник",
+    conj: "сполучник",
+    particle: "частка",
+    interjection: "вигук",
+  };
+  return morphologyPos ?? (pos ? labels[pos] ?? pos : null);
+}
+
+function sourceClass(card: DefinitionCard) {
+  if (card.id.includes("sum11") && ((card.sovietization_risk ?? 0) > 0 || card.id.includes("flagged"))) {
+    return "sum11-flagged";
+  }
+  if (card.id.includes("sum20")) return "sum20";
+  if (card.id.includes("grinchenko")) return "grinchenko";
+  if (card.id.includes("sum11")) return "sum11";
+  return card.id;
+}
+
+function stressDisplay(form: string | undefined | null) {
+  if (!form) return "";
+  return enrichment?.morphology?.stress?.forms?.[form] ?? form;
+}
+
+function buildStatusBadges() {
+  const badges: Array<{ className: string; label: string; title?: string }> = [];
+  if (heritage?.is_russianism) {
+    badges.push({ className: "heritage-warn", label: "⚠ Потребує українського відповідника" });
+  } else if (heritage?.classification && heritage.classification !== "unknown") {
+    const heritageLabel = heritage.classification === "dialect"
+      ? "✓ Питома українська (діалектизм)"
+      : heritage.classification === "borrowing"
+        ? "✓ Засвоєне українське запозичення"
+        : heritage.classification === "historism"
+          ? "✓ Питома українська лексика"
+          : "✓ Питома українська лексика";
+    badges.push({ className: "heritage-ok", label: heritageLabel });
+  }
+  if (cefrLevel) {
+    badges.push({ className: "cefr", label: `CEFR ${cefrLevel}${enrichment?.cefr?.source?.includes("estimated") ? " · орієнтовно" : ""}` });
+  }
+  if (heritage?.classification === "historism" || heritage?.classification === "archaism" || heritage?.classification === "authentic-archaism") {
+    badges.push({ className: "archaic", label: heritage.classification === "historism" ? "Історизм у сучасному вжитку" : "Архаїзм" });
+  }
+  if (heritage?.classification === "dialect") {
+    badges.push({ className: "dialect", label: "Регіонально-літературне" });
+  }
+  if (maxSovietizationRisk > 0) {
+    badges.push({ className: "heritage-warn", label: "⚠ Радянські формулювання в СУМ-11" });
+  }
+  return badges;
+}
+
+function buildEtymologyStages(etymology: SourcedText | undefined) {
+  if (!etymology) return [];
+  if (etymology.stages?.length) {
+    return etymology.stages.map((stage, index) => ({
+      period: stage.period,
+      word: stage.word,
+      note: stage.note ?? etymology.text,
+      className: index === etymology.stages!.length - 1 ? "modern" : "archaic",
+    }));
+  }
+  return [
+    {
+      period: etymology.source,
+      word: entry.lemma,
+      note: etymology.text,
+      className: "modern",
+    },
+  ];
+}
+
+function buildStyleNotes() {
+  const notes: string[] = [];
+  if (heritage?.russian_shadow) {
+    notes.push("Морфологічна тінь російської форми: перевіряйте відмінювання за VESUM та Правописом 2019.");
+  }
+  if (heritage?.calque_warning?.detail) {
+    notes.push(`Калькове застереження: ${heritage.calque_warning.detail}`);
+  }
+  if (heritage?.curated_calque) {
+    notes.push(`${heritage.curated_calque.note} Нейтральні відповідники: ${heritage.curated_calque.corrections.join(", ")}.`);
+  }
+  if (maxSovietizationRisk > 0) {
+    notes.push("СУМ-11 подано для прозорості, але радянські ілюстрації не слід сприймати як стилістично нейтральний сучасний приклад.");
+  }
+  return notes;
+}
+
+function buildComponentLinks(current: LexiconEntry, entries: LexiconEntry[]) {
+  if (current.pos !== "phrase") return [];
+  const normalize = (value: string) =>
+    value
+      .toLocaleLowerCase("uk")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^\p{L}'’]+/gu, "");
+  const byLemma = new Map(entries.map((item) => [normalize(item.lemma), item]));
+  return Array.from(new Set(current.lemma.split(/\s+/).map(normalize)))
+    .map((word) => byLemma.get(word))
+    .filter((item): item is LexiconEntry => Boolean(item) && item.url_slug !== current.url_slug);
+}
+
+function buildSourceList() {
+  const sources = new Set<string>();
+  for (const source of enrichment?.sources ?? []) sources.add(source);
+  if (entry.pronunciation?.source) sources.add(entry.pronunciation.source);
+  if (enrichment?.stress?.source) sources.add(enrichment.stress.source);
+  if (enrichment?.cefr?.source) sources.add(enrichment.cefr.source);
+  if (enrichment?.morphology?.source) sources.add(enrichment.morphology.source);
+  if (enrichment?.meaning?.source) sources.add(enrichment.meaning.source);
+  for (const card of definitionCards) sources.add(card.source);
+  if (enrichment?.etymology?.source) sources.add(enrichment.etymology.source);
+  if (sections?.synonyms?.source) sources.add(sections.synonyms.source);
+  if (sections?.antonyms?.source) sources.add(sections.antonyms.source);
+  if (sections?.idioms?.source) sources.add(sections.idioms.source);
+  if (enrichment?.literary_attestation?.source) sources.add(enrichment.literary_attestation.source);
+  if (enrichment?.translation?.source) sources.add(enrichment.translation.source);
+  if (entry.course_usage.length > 0) sources.add("curriculum_vocabulary");
+  if (entry.wiki_reference?.wikipedia) sources.add("query_wikipedia");
+  if (entry.wiki_reference?.wiktionary_url) sources.add("uk.wiktionary");
+  return Array.from(sources).sort((a, b) => a.localeCompare(b, "uk"));
+}
+
+function buildSwitchEntries() {
+  const preferred = ["князь", "прапор", "файний"];
+  const byLemma = new Map(allEntries.map((item) => [item.lemma, item]));
+  const selected = [
+    ...preferred.map((lemma) => byLemma.get(lemma)).filter((item): item is LexiconEntry => Boolean(item)),
+    entry,
+    ...allEntries.filter((item) => item.enrichment).slice(0, 12),
+  ];
+  return selected.filter((item, index, arr) => arr.findIndex((candidate) => candidate.url_slug === item.url_slug) === index).slice(0, 15);
+}
+
+function groupExternalMaterials(items: NonNullable<Enrichment["external_materials"]>) {
+  const groups = new Map<string, NonNullable<Enrichment["external_materials"]>>();
+  for (const item of items) {
+    const key = item.group ?? item.kind ?? "Зовнішні матеріали";
+    const bucket = groups.get(key) ?? [];
+    bucket.push(item);
+    groups.set(key, bucket);
+  }
+  return Array.from(groups.entries()).map(([name, materials]) => ({ name, materials }));
+}
+---
+
+<div class="word-atlas" data-word-atlas>
+  <div class="word-switch">
+    <label for="word-atlas-switcher">Слово:</label>
+    <select id="word-atlas-switcher" data-word-switch>
+      {switchEntries.map((item) => (
+        <option value={item.url_slug} selected={item.url_slug === entry.url_slug}>
+          {item.lemma}{item.gloss ? ` — ${item.gloss}` : ""}
+        </option>
+      ))}
+    </select>
+    <form class="atlas-search" action="/lexicon/index/" method="get">
+      <input name="q" type="search" aria-label="Шукати" placeholder="Шукати слово або джерело" />
+      <button class="atlas-button search" type="submit">Шукати</button>
+      <a class="atlas-button filter" href="/lexicon/index/">Фільтр</a>
+    </form>
+    <div class="theme-toggle" role="group" aria-label="Тема">
+      <button type="button" data-theme-choice="light">Світла</button>
+      <button type="button" data-theme-choice="dark">Темна</button>
+    </div>
+    <span class="poc-label">Атлас слів (Лексикон)</span>
+  </div>
+
+  <div class="topnav">
+    <div class="topnav-inner">
+      <span class="topnav-brand">learn-ukrainian</span>
+      <a class="topnav-link" href="/">Головна</a>
+      <a class="topnav-link" href="/a1/">A1-A2</a>
+      <a class="topnav-link" href="/b1/">B1</a>
+      <a class="topnav-link active" href="/lexicon/">Лексикон</a>
+      <a class="topnav-link" href="/lexicon/index/">А-Я</a>
+    </div>
+  </div>
+
+  <div id={`word-${entry.url_slug}`}>
+    <div class="word-hero">
+      <div class="word-hero-inner">
+        <span class="lexicon-badge">Лексикон · A-Я · {letter}</span>
+        <h1 class="word-title">
+          {entry.lemma}
+          {headerStress && <span class="word-stress">[{headerStress}]</span>}
+        </h1>
+        <div class="word-pos">
+          {[posLabel, headwordIpa, entry.gloss ? `«${entry.gloss}»` : null].filter(Boolean).join(" · ")}
+        </div>
+        <div class="word-badges">
+          {statusBadges.map((badge) => (
+            <span class={`status-badge ${badge.className}`} title={badge.title}>{badge.label}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="content-area">
+      {shouldShowEditorialWarning && (
+        <section class="atlas-section">
+          <div class="editorial-warn">
+            <div class="editorial-warn-header">
+              <div class="editorial-warn-icon" aria-hidden="true">⚠</div>
+              {maxSovietizationRisk > 0 ? "Радянські ідеологічні формулювання у СУМ-11" : "Редакційне попередження"}
+            </div>
+            {maxSovietizationRisk > 0 ? (
+              <>
+                <p>
+                  СУМ-11 показано для прозорості, але ця картка має ознаки радянської редакторської політики.
+                  Це не означає, що саме слово негативне: перевагу слід надавати сучасним або дорадянським джерелам.
+                </p>
+                <p class="atlas-muted">
+                  Тригер: <code>sovietization_risk={maxSovietizationRisk}</code>
+                  {sovietizationKeywords.length > 0 && <> · keywords: <code>{sovietizationKeywords.join(", ")}</code></>}
+                </p>
+              </>
+            ) : (
+              <p>Класифікатор позначає цю форму як проблемну для стандартної української. Перевіряйте рекомендовані відповідники в джерелах.</p>
+            )}
+          </div>
+        </section>
+      )}
+
+      {shouldShowHeritageDefense && (
+        <section class="atlas-section">
+          <div class="editorial-success">
+            <div class="editorial-success-header">
+              <div class="editorial-success-icon" aria-hidden="true">✓</div>
+              {heritage?.classification === "dialect"
+                ? "Питома українська — регіональна форма, не русизм"
+                : "Питома українська лексика"}
+            </div>
+            <p>
+              Статус за класифікатором: <strong>{heritage?.classification}</strong>.
+              {heritage?.attestations?.length
+                ? ` Засвідчення: ${heritage.attestations.map((item) => `${item.source} ${item.ref}`).join("; ")}.`
+                : " Форма не позначена як русизм."}
+            </p>
+          </div>
+        </section>
+      )}
+
+      {(definitionCards.length > 0 || enrichment?.meaning || phraseHasGloss) && (
+        <section class="atlas-section">
+          <h2>Значення</h2>
+          {definitionCards.map((card) => (
+            <div class={`def-card ${sourceClass(card)}`}>
+              <div class="def-source">
+                <span class="src-pill">{card.source_pill ?? card.source}</span>
+                {card.note && <span>{card.note}</span>}
+              </div>
+              <div class="def-text">
+                {card.definitions.map((definition) => <p>{definition}</p>)}
+              </div>
+              {card.flag_note && <div class="def-flag-inline">{card.flag_note}</div>}
+            </div>
+          ))}
+          {definitionCards.length === 0 && enrichment?.meaning && (
+            <div class="def-card sum20">
+              <div class="def-source">
+                <span class="src-pill">{enrichment.meaning.source}</span>
+                <span>словникове тлумачення</span>
+              </div>
+              <div class="def-text">
+                {enrichment.meaning.definitions.map((definition) => <p>{definition}</p>)}
+              </div>
+              {enrichment.meaning.note && <div class="def-flag-inline">{enrichment.meaning.note}</div>}
+            </div>
+          )}
+          {definitionCards.length === 0 && !enrichment?.meaning && phraseHasGloss && (
+            <div class="def-card sum20">
+              <div class="def-source">
+                <span class="src-pill">Курс</span>
+                <span>курсова фраза / chunk</span>
+              </div>
+              <div class="def-text">
+                <p>{entry.gloss}</p>
+              </div>
+            </div>
+          )}
+          {componentLinks.length > 0 && (
+            <div class="component-links">
+              <div class="chip-label">Складники:</div>
+              <div class="chip-row">
+                {componentLinks.map((item) => (
+                  <a class="chip" href={`/lexicon/${item.url_slug}/`}>{item.lemma}</a>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+      )}
+
+      {enrichment?.etymology && (
+        <section class="atlas-section">
+          <h2>Етимологія</h2>
+          <div class="ety-timeline">
+            {etymologyStages.map((stage, index) => (
+              <>
+                {index > 0 && <div class="ety-arrow">→</div>}
+                <div class="ety-stage" data-ety-note={stage.note}>
+                  <div class="ety-period">{stage.period}</div>
+                  <div class={`ety-word ${stage.className}`}>{stage.word}</div>
+                </div>
+              </>
+            ))}
+          </div>
+          <div class="ety-note" data-ety-note-output>{enrichment.etymology.text}</div>
+          <p class="atlas-muted">Джерело: {enrichment.etymology.source}</p>
+        </section>
+      )}
+
+      {enrichment?.morphology && (
+        <section class="atlas-section">
+          <h2>Морфологія</h2>
+          <p class="atlas-muted">
+            {enrichment.morphology.pos} · {enrichment.morphology.form_count} форм · {enrichment.morphology.source}
+          </p>
+          {nounParadigm ? (
+            <table class="paradigm-table">
+              <tr><th class="col-case">Відмінок</th><th>Однина</th><th>Множина</th></tr>
+              {CASE_ROWS.map((caseRow) => (
+                <tr>
+                  <td class="case-name">{caseRow.label}</td>
+                  <td class="form">{stressDisplay(nounParadigm.cases[caseRow.key]?.singular)}</td>
+                  <td class="form">{stressDisplay(nounParadigm.cases[caseRow.key]?.plural)}</td>
+                </tr>
+              ))}
+            </table>
+          ) : verbParadigm ? (
+            <>
+              {verbParadigm.infinitive && (
+                <p><strong>Інфінітив:</strong> <span class="ukr">{stressDisplay(verbParadigm.infinitive)}</span></p>
+              )}
+              {Object.entries(verbParadigm.tenses ?? {}).map(([tense, numbers]) => (
+                <table class="paradigm-table">
+                  <tr><th class="col-case">{tense}</th><th>Однина</th><th>Множина</th></tr>
+                  {PERSON_ROWS.map((person) => (
+                    <tr>
+                      <td class="case-name">{person.label}</td>
+                      <td class="form">{stressDisplay(numbers["однина"]?.[person.key])}</td>
+                      <td class="form">{stressDisplay(numbers["множина"]?.[person.key])}</td>
+                    </tr>
+                  ))}
+                </table>
+              ))}
+            </>
+          ) : (
+            <table class="paradigm-table">
+              <tr><th>Форма</th><th>Позначка</th></tr>
+              {enrichment.morphology.forms.slice(0, 24).map((form) => (
+                <tr>
+                  <td class="form">{form.stress ?? stressDisplay(form.form)}</td>
+                  <td class="case-name">{form.label}</td>
+                </tr>
+              ))}
+            </table>
+          )}
+        </section>
+      )}
+
+      {styleNotes.length > 0 && (
+        <section class="atlas-section">
+          <h2>Стилістичні нотатки</h2>
+          <div class="editorial-calque info">
+            <div class="editorial-calque-header">
+              <div class="editorial-info-icon" aria-hidden="true">ℹ</div>
+              Редакційна нотатка
+            </div>
+            {styleNotes.map((note) => <p>{note}</p>)}
+          </div>
+        </section>
+      )}
+
+      {((sections?.synonyms?.items.length ?? 0) > 0 || (sections?.antonyms?.items.length ?? 0) > 0) && (
+        <section class="atlas-section">
+          <h2>Синоніми та антоніми</h2>
+          {(sections?.synonyms?.items.length ?? 0) > 0 && (
+            <div>
+              <div class="chip-label">Синоніми:</div>
+              <div class="chip-row">
+                {sections.synonyms.items.map((item) => <span class="chip">{item}</span>)}
+              </div>
+            </div>
+          )}
+          {(sections?.antonyms?.items.length ?? 0) > 0 && (
+            <div style="margin-top: 14px;">
+              <div class="chip-label">Антоніми:</div>
+              <div class="chip-row">
+                {sections.antonyms.items.map((item) => <span class="chip antonym">{item}</span>)}
+              </div>
+            </div>
+          )}
+          <div class="data-caveat">Дані синонімів та антонімів показано з джерел маніфесту; звіряйте з контекстом перед уживанням.</div>
+        </section>
+      )}
+
+      {(sections?.idioms?.items.length ?? 0) > 0 && (
+        <section class="atlas-section">
+          <h2>Фразеологізми та сталі вирази</h2>
+          {sections.idioms.items.map((idiom) => (
+            <div class="resource-card">
+              <h4>{idiom.phrase}</h4>
+              <p>{idiom.definition}</p>
+              {idiom.source_url ? (
+                <a class="tag" href={idiom.source_url}>{idiom.source}</a>
+              ) : (
+                <span class="tag">{idiom.source}</span>
+              )}
+            </div>
+          ))}
+        </section>
+      )}
+
+      {enrichment?.literary_attestation && (
+        <section class="atlas-section">
+          <h2>Літературні засвідчення</h2>
+          <div class="source-box">
+            <div class="source-box-header">{enrichment.literary_attestation.source_label ?? "Літературний корпус"}</div>
+            <blockquote>{enrichment.literary_attestation.text}</blockquote>
+            <div class="source-cite">
+              {enrichment.literary_attestation.source}
+              {enrichment.literary_attestation.chunk_id && ` · ${enrichment.literary_attestation.chunk_id}`}
+            </div>
+          </div>
+          <p class="atlas-muted">Джерело: <code>{enrichment.literary_attestation.source}</code></p>
+        </section>
+      )}
+
+      {textbookItems.length > 0 && (
+        <section class="atlas-section">
+          <h2>У шкільних підручниках</h2>
+          {textbookItems.map((item) => (
+            <div class="resource-card textbook">
+              <h4>{item.title}</h4>
+              {item.text && <p>{item.text}</p>}
+              {item.tag && <span class="tag">{item.tag}</span>}
+            </div>
+          ))}
+        </section>
+      )}
+
+      {externalGroups.length > 0 && (
+        <section class="atlas-section">
+          <h2>Зовнішні матеріали</h2>
+          {externalGroups.map((group) => (
+            <div class="external-group">
+              <div class="external-group-header">{group.name} <span class="external-group-count">{group.materials.length}</span></div>
+              {group.materials.map((item) => (
+                <div class={`resource-card ${item.kind ?? "blog"}`}>
+                  <h4>{item.url ? <a href={item.url}>{item.title}</a> : item.title}</h4>
+                  {item.description && <p>{item.description}</p>}
+                  {item.tag && <span class="tag">{item.tag}</span>}
+                </div>
+              ))}
+            </div>
+          ))}
+        </section>
+      )}
+
+      {courseUsage.length > 0 && (
+        <section class="atlas-section">
+          <h2>У курсі — модулі, де зустрічається це слово</h2>
+          {courseUsage.map((usage) => (
+            <div class="used-in-card">
+              <span class="module-id">{TRACK_LABELS_UK[usage.track] ?? usage.track.toUpperCase()} M{String(usage.module_num).padStart(2, "0")}</span>
+              <span class="module-title">{usage.slug}</span>
+              <span class="lesson-gloss">{CONTEXT_LABELS_UK[usage.context] ?? usage.context}</span>
+              <a href={`/${usage.track}/${usage.slug}/`}>відкрити →</a>
+            </div>
+          ))}
+          <p class="atlas-muted">Сканування <code>curriculum/l2-uk-en/*/*/vocabulary.yaml</code> · {courseUsage.length} модулі</p>
+        </section>
+      )}
+
+      {(enrichment?.translation?.en?.length ?? 0) > 0 && (
+        <section class="atlas-section">
+          <h2>Переклад</h2>
+          <div class="translation-block">
+            <span class="uk-side">{entry.lemma}</span>
+            <span class="arrow">↔</span>
+            <div class="en-side">
+              {enrichment.translation.en.map((term) => <span class="en-term">{term}</span>)}
+            </div>
+          </div>
+          <p class="atlas-muted">Джерело: {enrichment.translation.source}</p>
+        </section>
+      )}
+
+      {entry.wiki_reference && (
+        <section class="atlas-section">
+          <h2>Wikipedia</h2>
+          <div class="wiki-card">
+            {entry.wiki_reference.wikipedia ? (
+              <>
+                <h4>{entry.wiki_reference.wikipedia.title}</h4>
+                {entry.wiki_reference.wikipedia.summary && <p>{entry.wiki_reference.wikipedia.summary}</p>}
+                <p class="wiki-source">
+                  Джерело: <a href={entry.wiki_reference.wikipedia.url} target="_blank" rel="noopener noreferrer">{entry.wiki_reference.wikipedia.url}</a>
+                </p>
+              </>
+            ) : (
+              <h4>Wikimedia</h4>
+            )}
+            <p class="wiki-source">
+              {entry.wiki_reference.wiktionary_url && <a href={entry.wiki_reference.wiktionary_url} target="_blank" rel="noopener noreferrer">Вікісловник</a>}
+              {entry.wiki_reference.wikisource_url && <> · <a href={entry.wiki_reference.wikisource_url} target="_blank" rel="noopener noreferrer">Вікіджерела</a></>}
+            </p>
+          </div>
+        </section>
+      )}
+
+      <div class="provenance-footer">
+        <h3>Походження даних</h3>
+        <div class="provenance-list">
+          {sourceList.map((source) => (
+            <span class="src">{source}</span>
+          ))}
+        </div>
+        <div class="meta-line">
+          <span>manifest: {manifestVersion}</span>
+          <span>згенеровано: {generatedAt}</span>
+          {maxSovietizationRisk > 0 && <span>СУМ-11 показано через прозорість, з обов'язковим прапорцем</span>}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    const root = document.querySelector('[data-word-atlas]');
+    const switcher = root?.querySelector('[data-word-switch]');
+    switcher?.addEventListener('change', () => {
+      const value = switcher.value;
+      window.location.href = value ? `/lexicon/${encodeURIComponent(value)}/` : '/lexicon/';
+    });
+
+    const syncThemeButtons = () => {
+      const theme = document.documentElement.dataset.theme || 'light';
+      root?.querySelectorAll('[data-theme-choice]').forEach((button) => {
+        button.classList.toggle('active', button.dataset.themeChoice === theme);
+      });
+    };
+
+    root?.querySelectorAll('[data-theme-choice]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const next = button.dataset.themeChoice;
+        document.documentElement.dataset.theme = next;
+        try {
+          window.localStorage.setItem('lu-theme', next);
+        } catch {}
+        syncThemeButtons();
+      });
+    });
+    syncThemeButtons();
+
+    root?.querySelectorAll('[data-ety-note]').forEach((stage) => {
+      stage.addEventListener('click', () => {
+        root.querySelectorAll('[data-ety-note]').forEach((item) => item.classList.remove('active'));
+        stage.classList.add('active');
+        const output = stage.closest('.atlas-section')?.querySelector('[data-ety-note-output]');
+        if (output) {
+          output.textContent = stage.dataset.etyNote || output.textContent;
+          output.style.background = 'var(--teal-light)';
+        }
+      });
+    });
+  })();
+</script>
