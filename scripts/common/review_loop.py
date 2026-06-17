@@ -41,11 +41,13 @@ def aggregate_min(dim_results: Mapping[str, Any]) -> tuple[float, str | None]:
 def min_score_regressed(
     prev: Mapping[str, Any],
     curr: Mapping[str, Any],
+    *,
+    tolerance: float = 0.0,
 ) -> bool:
-    """True iff the aggregate MIN score dropped round-over-round."""
+    """True iff the aggregate MIN score dropped beyond tolerance."""
     prev_min, _ = aggregate_min(prev)
     curr_min, _ = aggregate_min(curr)
-    return curr_min < prev_min
+    return (prev_min - curr_min) > float(tolerance)
 
 
 def best_round_index(

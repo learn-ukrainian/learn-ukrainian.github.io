@@ -80,6 +80,76 @@ def test_llm_qg_best_round_uses_highest_aggregate_min_not_last(tmp_path: Path) -
     assert module_text.count("Self-check prompt.") == 1
 
 
+def test_llm_qg_min_score_drop_within_noise_tolerance_does_not_stop(tmp_path: Path) -> None:
+    module_dir = _module_dir(tmp_path)
+    plan_path = _plan_path(tmp_path)
+    reports = [
+        _llm_report(pedagogical=7.0),
+        _llm_report(pedagogical=6.5),
+        _llm_report(pedagogical=6.6),
+    ]
+
+    def llm_runner(**_: Any) -> dict[str, Any]:
+        return reports.pop(0)
+
+    def corrector(context: linear_pipeline.CorrectionContext) -> str:
+        round_id = len(reports)
+        return (
+            "<fixes><fix><insert_after>Anchor sentence.</insert_after>"
+            f"<text>\n\nTolerance scaffold {round_id}.</text></fix></fixes>"
+        )
+
+    linear_pipeline.run_llm_qg_with_corrections(
+        plan={"level": "folk", "sequence": 1, "slug": "sample"},
+        plan_path=plan_path,
+        plan_content="plan",
+        module_dir=module_dir,
+        writer="codex-tools",
+        llm_qg_runner=llm_runner,
+        python_qg_runner=_python_qg_pass,
+        corrector=corrector,
+        max_rounds=3,
+    )
+
+    loop = json.loads((module_dir / "llm_qg_correction_loop.json").read_text(encoding="utf-8"))
+    assert loop["stopped_reason"] == "max_rounds"
+    assert [round_summary["round"] for round_summary in loop["rounds"]] == [1, 2, 3]
+
+
+def test_llm_qg_min_score_drop_beyond_noise_tolerance_stops(tmp_path: Path) -> None:
+    module_dir = _module_dir(tmp_path)
+    plan_path = _plan_path(tmp_path)
+    reports = [
+        _llm_report(pedagogical=7.0),
+        _llm_report(pedagogical=6.4),
+    ]
+
+    def llm_runner(**_: Any) -> dict[str, Any]:
+        return reports.pop(0)
+
+    def corrector(context: linear_pipeline.CorrectionContext) -> str:
+        return (
+            "<fixes><fix><insert_after>Anchor sentence.</insert_after>"
+            "<text>\n\nRegression scaffold.</text></fix></fixes>"
+        )
+
+    linear_pipeline.run_llm_qg_with_corrections(
+        plan={"level": "folk", "sequence": 1, "slug": "sample"},
+        plan_path=plan_path,
+        plan_content="plan",
+        module_dir=module_dir,
+        writer="codex-tools",
+        llm_qg_runner=llm_runner,
+        python_qg_runner=_python_qg_pass,
+        corrector=corrector,
+        max_rounds=3,
+    )
+
+    loop = json.loads((module_dir / "llm_qg_correction_loop.json").read_text(encoding="utf-8"))
+    assert loop["stopped_reason"] == "min_score_regressed"
+    assert [round_summary["round"] for round_summary in loop["rounds"]] == [1, 2]
+
+
 def test_llm_qg_insert_after_fix_is_reviewed_on_next_round(tmp_path: Path) -> None:
     module_dir = _module_dir(tmp_path)
     plan_path = _plan_path(tmp_path)

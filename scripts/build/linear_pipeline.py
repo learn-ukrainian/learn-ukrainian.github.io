@@ -471,6 +471,10 @@ WIKI_COVERAGE_OVERALL_VERDICTS = {"PASS", "PARTIAL", "FAIL"}
 WIKI_COVERAGE_EVIDENCE_QUOTE_MARKERS = ('"', "“", "«")
 LLM_QG_CORE_MAX_ROUNDS = 1
 LLM_QG_SEMINAR_MAX_ROUNDS = 3
+LLM_QG_REVIEWER_SAMPLES = {"seminar": 3}
+# LLM judges have measurable round-over-round noise; only stop correction on
+# min-score drops that exceed this conservative tolerance.
+LLM_QG_REGRESSION_NOISE_TOLERANCE = 0.5
 PYTHON_QG_CORE_MAX_CORRECTION_ROUNDS = 1
 PYTHON_QG_SEMINAR_MAX_CORRECTION_ROUNDS = 8
 PYTHON_QG_MIN_REGRESSION_PATIENCE = 3
@@ -4653,6 +4657,12 @@ def python_qg_max_correction_rounds_for_level(level: str | None) -> int:
     )
 
 
+def llm_qg_reviewer_samples_for_level(level: str | None) -> int:
+    """Return the per-dim LLM-QG reviewer sample count for a curriculum level."""
+    profile = "seminar" if str(level or "").strip().lower() in SEMINAR_LEVELS else "core"
+    return max(1, int(LLM_QG_REVIEWER_SAMPLES.get(profile, 1)))
+
+
 def _python_qg_level_from_plan_path(plan_path: Path) -> str | None:
     with contextlib.suppress(LinearPipelineError, OSError, yaml.YAMLError):
         return str(load_plan(plan_path).get("level") or "").strip().lower()
@@ -5249,6 +5259,101 @@ def parse_review_response(
     return entry
 
 
+def llm_qg_median_sample_index(scores: Sequence[float]) -> int:
+    """Return the source-sample index for the median score.
+
+    Even-sized ensembles choose the lower-middle score so the selected report
+    remains one real reviewer sample rather than synthesized evidence.
+    """
+    if not scores:
+        raise LinearPipelineError("LLM QG reviewer ensemble requires at least one score")
+    return sorted(range(len(scores)), key=lambda index: (float(scores[index]), index))[
+        (len(scores) - 1) // 2
+    ]
+
+
+def select_median_llm_review_sample(
+    dim_results: Sequence[Mapping[str, Any]],
+    *,
+    dim: str,
+    reviewer: str | None = None,
+    module: str | None = None,
+    writer_under_review: str | None = None,
+    event_sink: Callable[..., None] | None = None,
+) -> dict[str, Any]:
+    """Select the full per-dim result whose score is the ensemble median."""
+    if not dim_results:
+        raise LinearPipelineError(f"LLM QG reviewer ensemble for {dim} has no samples")
+    scores = [float(result["score"]) for result in dim_results]
+    chosen_index = llm_qg_median_sample_index(scores)
+    _emit(
+        event_sink,
+        "reviewer_ensemble",
+        dim=dim,
+        n=len(dim_results),
+        scores=scores,
+        median_score=scores[chosen_index],
+        chosen_sample_index=chosen_index,
+        reviewer=reviewer,
+        module=module,
+        writer_under_review=writer_under_review,
+    )
+    return dict(dim_results[chosen_index])
+
+
+def invoke_reviewer_dim_ensemble(
+    prompt: str,
+    reviewer: str,
+    *,
+    dim: str,
+    writer_under_review: str,
+    reviewer_samples: int,
+    cwd: Path = PROJECT_ROOT,
+    invoker: Callable[..., Any] | None = None,
+    module: str | None = None,
+    event_sink: Callable[..., None] | None = None,
+    stdout_silence_timeout: int | None = None,
+) -> dict[str, Any]:
+    """Invoke a per-dim reviewer once or as a median-of-N ensemble."""
+    sample_count = max(1, int(reviewer_samples))
+    if sample_count == 1:
+        response = invoke_reviewer_dim(
+            prompt,
+            reviewer,
+            dim=dim,
+            writer_under_review=writer_under_review,
+            cwd=cwd,
+            invoker=invoker,
+            module=module,
+            event_sink=event_sink,
+            stdout_silence_timeout=stdout_silence_timeout,
+        )
+        return parse_review_response(response, dim)
+
+    dim_results: list[dict[str, Any]] = []
+    for _sample_index in range(sample_count):
+        response = invoke_reviewer_dim(
+            prompt,
+            reviewer,
+            dim=dim,
+            writer_under_review=writer_under_review,
+            cwd=cwd,
+            invoker=invoker,
+            module=module,
+            event_sink=event_sink,
+            stdout_silence_timeout=stdout_silence_timeout,
+        )
+        dim_results.append(parse_review_response(response, dim))
+    return select_median_llm_review_sample(
+        dim_results,
+        dim=dim,
+        reviewer=reviewer,
+        module=module,
+        writer_under_review=writer_under_review,
+        event_sink=event_sink,
+    )
+
+
 def parse_wiki_coverage_review_response(response: str) -> dict[str, Any]:
     payload = _parse_json_or_yaml_mapping(response)
     verdicts = payload.get("verdicts")
@@ -5676,9 +5781,14 @@ def run_llm_qg_with_corrections(
     python_qg_runner: Callable[[], dict[str, Any]] | None = None,
     invoker: Callable[..., Any] | None = None,
     event_sink: Callable[..., None] | None = None,
+    reviewer_samples: int | None = None,
 ) -> dict[str, Any]:
     """Run LLM-QG with a bounded insert-only pedagogical correction loop."""
     review_rounds = max(1, int(max_rounds or llm_qg_max_rounds_for_level(plan.get("level"))))
+    llm_qg_reviewer_samples = max(
+        1,
+        int(reviewer_samples or llm_qg_reviewer_samples_for_level(plan.get("level"))),
+    )
     rounds: list[dict[str, Any]] = []
     corrections: list[dict[str, Any]] = []
     pending_python_qg: dict[str, Any] | None = None
@@ -5698,6 +5808,8 @@ def run_llm_qg_with_corrections(
             stdout_silence_timeout=stdout_silence_timeout,
             use_generator=use_generator,
             obligation_checklist=obligation_checklist,
+            event_sink=event_sink,
+            reviewer_samples=llm_qg_reviewer_samples,
         )
         round_record = {
             "round": round_num,
@@ -5721,6 +5833,7 @@ def run_llm_qg_with_corrections(
         if round_num > 1 and min_score_regressed(
             _llm_qg_dimensions(rounds[-2]["llm_qg"]),
             _llm_qg_dimensions(llm_qg),
+            tolerance=LLM_QG_REGRESSION_NOISE_TOLERANCE,
         ):
             stopped_reason = "min_score_regressed"
             break

@@ -266,6 +266,7 @@ def _run(args: argparse.Namespace) -> int:
         phase = "review"
         started_at = time.monotonic()
         report: dict[str, dict[str, Any]] = {}
+        reviewer_samples = linear_pipeline.llm_qg_reviewer_samples_for_level(level)
         for dim in QG_DIMS:
             prompt = linear_pipeline.render_review_prompt(
                 plan,
@@ -273,17 +274,17 @@ def _run(args: argparse.Namespace) -> int:
                 content,
                 dim,
             )
-            response = linear_pipeline.invoke_reviewer_dim(
+            report[dim] = linear_pipeline.invoke_reviewer_dim_ensemble(
                 prompt,
                 reviewer,
                 dim=dim,
                 writer_under_review=writer_under_review,
+                reviewer_samples=reviewer_samples,
                 cwd=content_path.parent,
                 module=module_ref,
                 event_sink=event_sink,
                 stdout_silence_timeout=args.writer_timeout,
             )
-            report[dim] = linear_pipeline.parse_review_response(response, dim)
 
         audit_calls_total = sum(
             1 for event in captured_events if event["event"] == "reviewer_audit_call"

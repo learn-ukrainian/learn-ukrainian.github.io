@@ -1032,11 +1032,14 @@ def _run_llm_qg(
     stdout_silence_timeout: int | None = None,
     use_generator: bool = False,
     obligation_checklist: Mapping[str, Any] | None = None,
+    event_sink: Callable[..., None] | None = None,
+    reviewer_samples: int = 1,
 ) -> dict[str, Any]:
     from scripts.agent_runtime.runner import invoke
 
     reviewer = _reviewer_for_writer(writer, reviewer_override)
     defaults = linear_pipeline.REVIEWER_DEFAULTS[reviewer]
+    sample_count = max(1, int(reviewer_samples))
 
     assert linear_pipeline.WRITER_DEFAULTS[writer]["model"] != defaults["model"], \
         f"same-model self-review forbidden: writer={writer} reviewer={reviewer}"
@@ -1058,56 +1061,86 @@ def _run_llm_qg(
         )
         prompt_path = module_dir / f"llm-qg-{dim}-prompt.md"
         response_path = module_dir / f"llm-qg-{dim}-response.raw.md"
-        resumed = _resume_llm_qg_dim_if_current(
-            dim=dim,
-            prompt=prompt,
-            prompt_path=prompt_path,
-            response_path=response_path,
-        )
-        if resumed is not None:
-            report[dim] = resumed
-            continue
+        if sample_count == 1:
+            resumed = _resume_llm_qg_dim_if_current(
+                dim=dim,
+                prompt=prompt,
+                prompt_path=prompt_path,
+                response_path=response_path,
+            )
+            if resumed is not None:
+                report[dim] = resumed
+                continue
 
         prompt_path.write_text(prompt, encoding="utf-8")
-        last_error: linear_pipeline.LinearPipelineError | None = None
-        for attempt in range(1, LLM_QG_DIM_MAX_ATTEMPTS + 1):
-            result = invoke(
-                agent_name,
-                prompt,
-                mode="read-only",
-                cwd=module_dir,
-                model=defaults["model"],
-                task_id=f"linear-v7-qg-{plan['slug']}-{dim}",
-                entrypoint="dispatch",
-                effort=defaults["effort"],
-                tool_config={"output_format": "stream-json"},
-                stdout_silence_timeout=stdout_silence_timeout,
+        dim_results: list[dict[str, Any]] = []
+        raw_responses: list[str] = []
+        for sample_index in range(sample_count):
+            sample_response_path = (
+                response_path
+                if sample_count == 1
+                else module_dir / f"llm-qg-{dim}-sample-{sample_index + 1}-response.raw.md"
             )
-            response = str(getattr(result, "response", "") or "")
-            # Persist raw reviewer response BEFORE parse so #M-10 forensic
-            # continuity holds when the parser raises (build #10, 2026-05-21
-            # exposed prose-wrapped JSON shape with no saved artifact).
-            response_path.write_text(response, encoding="utf-8")
-            try:
-                report[dim] = _parse_llm_qg_dim_response(
-                    response,
-                    dim=dim,
-                    response_path=response_path,
+            task_id = f"linear-v7-qg-{plan['slug']}-{dim}"
+            if sample_count > 1:
+                task_id = f"{task_id}-s{sample_index + 1}"
+            last_error: linear_pipeline.LinearPipelineError | None = None
+            for attempt in range(1, LLM_QG_DIM_MAX_ATTEMPTS + 1):
+                result = invoke(
+                    agent_name,
+                    prompt,
+                    mode="read-only",
+                    cwd=module_dir,
+                    model=defaults["model"],
+                    task_id=task_id,
+                    entrypoint="dispatch",
+                    effort=defaults["effort"],
+                    tool_config={"output_format": "stream-json"},
+                    stdout_silence_timeout=stdout_silence_timeout,
                 )
-                break
-            except linear_pipeline.LinearPipelineError as exc:
-                last_error = exc
-                if attempt < LLM_QG_DIM_MAX_ATTEMPTS:
-                    print(
-                        f"[llm-qg] {dim}: attempt {attempt}/{LLM_QG_DIM_MAX_ATTEMPTS} failed; retrying ({exc})",
-                        file=sys.stderr,
-                        flush=True,
+                response = str(getattr(result, "response", "") or "")
+                # Persist raw reviewer response BEFORE parse so #M-10 forensic
+                # continuity holds when the parser raises (build #10, 2026-05-21
+                # exposed prose-wrapped JSON shape with no saved artifact).
+                sample_response_path.write_text(response, encoding="utf-8")
+                try:
+                    dim_results.append(
+                        _parse_llm_qg_dim_response(
+                            response,
+                            dim=dim,
+                            response_path=sample_response_path,
+                        )
                     )
-                    continue
-                raise linear_pipeline.LinearPipelineError(
-                    f"LLM QG {dim} failed after {LLM_QG_DIM_MAX_ATTEMPTS} attempt(s); "
-                    f"raw response saved to {response_path}: {last_error}"
-                ) from last_error
+                    raw_responses.append(response)
+                    break
+                except linear_pipeline.LinearPipelineError as exc:
+                    last_error = exc
+                    if attempt < LLM_QG_DIM_MAX_ATTEMPTS:
+                        print(
+                            f"[llm-qg] {dim}: attempt {attempt}/{LLM_QG_DIM_MAX_ATTEMPTS} failed; retrying ({exc})",
+                            file=sys.stderr,
+                            flush=True,
+                        )
+                        continue
+                    raise linear_pipeline.LinearPipelineError(
+                        f"LLM QG {dim} failed after {LLM_QG_DIM_MAX_ATTEMPTS} attempt(s); "
+                        f"raw response saved to {sample_response_path}: {last_error}"
+                    ) from last_error
+
+        if sample_count == 1:
+            report[dim] = dim_results[0]
+        else:
+            scores = [float(result["score"]) for result in dim_results]
+            chosen_index = linear_pipeline.llm_qg_median_sample_index(scores)
+            response_path.write_text(raw_responses[chosen_index], encoding="utf-8")
+            report[dim] = linear_pipeline.select_median_llm_review_sample(
+                dim_results,
+                dim=dim,
+                reviewer=reviewer,
+                module=f"{str(plan['level']).lower()}/{plan['slug']}",
+                writer_under_review=writer,
+                event_sink=event_sink,
+            )
 
     return linear_pipeline.aggregate_llm_review(
         report,
@@ -1912,6 +1945,7 @@ def _run(args: argparse.Namespace) -> int:
             writer=writer,
             reviewer_override=reviewer_override,
         )
+        llm_qg_reviewer_samples = linear_pipeline.llm_qg_reviewer_samples_for_level(level)
         timeout_agent = _reviewer_for_writer(writer, llm_qg_reviewer_override)
         started_at = time.monotonic()
         if (
@@ -1941,6 +1975,7 @@ def _run(args: argparse.Namespace) -> int:
                     obligation_checklist=obligation_checklist,
                     max_rounds=linear_pipeline.llm_qg_max_rounds_for_level(level),
                     event_sink=tracker.emit,
+                    reviewer_samples=llm_qg_reviewer_samples,
                 )
             else:
                 llm_qg = _run_llm_qg(
@@ -1955,6 +1990,8 @@ def _run(args: argparse.Namespace) -> int:
                     stdout_silence_timeout=args.writer_timeout,
                     use_generator=use_generator,
                     obligation_checklist=obligation_checklist,
+                    event_sink=tracker.emit,
+                    reviewer_samples=llm_qg_reviewer_samples,
                 )
             linear_pipeline.write_json(module_dir / "llm_qg.json", llm_qg)
         aggregate = llm_qg["aggregate"]
