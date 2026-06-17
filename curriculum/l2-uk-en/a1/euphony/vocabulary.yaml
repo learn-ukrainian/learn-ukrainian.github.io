@@ -10,7 +10,7 @@
   translation: and
   pos: alternating conjunction
   example: "Брат і сестра, мама й тато."
-- word: з, із, зі
+- word: з/із/зі
   translation: from; with
   pos: alternating preposition
   example: "Я йду зі школи."
@@ -34,6 +34,10 @@
   translation: Lviv
   pos: proper noun
   example: "Сестра у Львові."
+- word: Одеса
+  translation: Odesa
+  pos: proper noun
+  example: "Він з Одеси."
 - word: місто
   translation: city
   pos: noun
@@ -42,10 +46,6 @@
   translation: school
   pos: noun
   example: "Вона в школі."
-- word: робота
-  translation: work; job
-  pos: noun
-  example: "Робота в офісі."
 - word: офіс
   translation: office
   pos: noun
@@ -70,46 +70,6 @@
   translation: pharmacy
   pos: noun
   example: "В аптеці черга."
-- word: університет
-  translation: university
-  pos: noun
-  example: "В університеті тихо."
-- word: учитель
-  translation: teacher
-  pos: noun
-  example: "Учитель у школі."
-- word: Іван
-  translation: Ivan
-  pos: proper noun
-  example: "Ти й Іван ідете в театр?"
-- word: Яна
-  translation: Yana
-  pos: proper noun
-  example: "Марія і Яна в місті."
-- word: Ялта
-  translation: Yalta
-  pos: proper noun
-  example: "Марія і Ялта - важкі сусіди для й."
-- word: яблуко
-  translation: apple
-  pos: noun
-  example: "І яблуко, і апельсин."
-- word: ютуб
-  translation: YouTube
-  pos: noun
-  example: "Відео і ютуб."
-- word: акваріум
-  translation: aquarium
-  pos: noun
-  example: "Риба в акваріумі."
-- word: фотографія
-  translation: photograph
-  pos: noun
-  example: "Фотографія у файлі."
-- word: вівторок
-  translation: Tuesday
-  pos: noun
-  example: "У вівторок урок."
 - word: брат
   translation: brother
   pos: noun
@@ -126,6 +86,26 @@
   translation: father
   pos: noun
   example: "Мама й тато в театрі."
+- word: друг
+  translation: friend
+  pos: noun
+  example: "Іван з другом."
+- word: Іван
+  translation: Ivan
+  pos: proper noun
+  example: "Ти й Іван ідете в театр?"
+- word: Олена
+  translation: Olena
+  pos: proper noun
+  example: "Ти й Олена йдете в театр?"
+- word: Максим
+  translation: Maksym
+  pos: proper noun
+  example: "Я і Максим ідемо в парк."
+- word: Яна
+  translation: Yana
+  pos: proper noun
+  example: "Марія і Яна в місті."
 - word: мною
   translation: me; with me
   pos: pronoun form
@@ -142,11 +122,7 @@
   translation: to work
   pos: verb
   example: "Я працюю в офісі."
-- word: вчитися
-  translation: to study
+- word: йти
+  translation: to go
   pos: verb
-  example: "Я вчуся в університеті."
-- word: удосконалювати
-  translation: to improve
-  pos: verb
-  example: "Вони удосконалюють план."
+  example: "Я йду зі школи."
