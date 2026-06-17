@@ -1,3 +1,11 @@
+- word: дієслово
+  translation: verb
+  pos: noun
+  example: "Дієслово називає дію, процес або стан."
+- word: дієслівна форма
+  translation: verb form
+  pos: phrase
+  example: "Форма 'пишемо' - дієслівна форма першої особи множини."
 - word: час
   translation: tense, time
   pos: noun
@@ -78,6 +86,14 @@
   translation: headword
   pos: phrase
   example: "Заголовне слово стоїть на початку статті."
+- word: граматична інформація
+  translation: grammatical information
+  pos: phrase
+  example: "Словникова стаття дає граматичну інформацію про слово."
+- word: прислівник
+  translation: adverb
+  pos: noun
+  example: "Прислівник описує дію і не змінюється за родом чи числом."
 - word: прислівник місця
   translation: adverb of place
   pos: phrase
