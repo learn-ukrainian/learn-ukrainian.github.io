@@ -98,3 +98,15 @@
   translation: to agree grammatically
   pos: verb
   example: "Прикметник узгоджується з іменником."
+- word: метамова
+  translation: metalanguage
+  pos: noun
+  example: "Метамова допомагає говорити про граматику."
+- word: закінчення
+  translation: ending
+  pos: noun
+  example: "Закінчення допомагає побачити форму слова."
+- word: роль у реченні
+  translation: role in a sentence
+  pos: phrase
+  example: "Роль у реченні допомагає визначити відмінок."
