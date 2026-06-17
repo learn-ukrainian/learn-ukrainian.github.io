@@ -21,8 +21,6 @@ written or careful-speech option.
 
 ## Діалоги
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 Start with questions that identify a person, a thing, a place, and a time.
 Read the first dialogue as a small interview. The answers are short on purpose:
 you are practicing the question word, not long explanations.
@@ -51,10 +49,8 @@ Support after the Ukrainian lines:
 | **Анна: Коли ти працюєш?** | Anna: When do you work? |
 | **Том: Вранці.** | Tom: In the morning. |
 
-Notice that **хто** asks about people and other living beings, or **істоти**.
-**Що** asks about things, topics, actions, and other **неістоти**. At A1, keep
-them in these simple forms. Later you will meet forms such as **кого** and
-**чого**, but today the active questions are **Хто це?** and **Що це?**
+Notice that **хто** asks about people, and **що** asks about things, topics, or
+actions. At A1, keep them in these simple forms: **Хто це?** and **Що це?**
 
 Now add the home dialogue from the plan. It shows a question plus a very common
 negative answer.
@@ -83,7 +79,33 @@ Support after the Ukrainian lines:
 before the verb: **не знаю**, **не хочу**, **не можу**, **не розумію**. Do not
 attach it to the verb.
 
-<!-- INJECT_ACTIVITY: act-2 -->
+The same question words work in the city center. In this short navigation
+exchange, listen for **де**, **куди**, **як**, and **коли**. The answers stay
+short because the question word is the focus.
+
+```text
+Турист: Де музей?
+Перехожий: Музей там, у центрі.
+Турист: Куди йти?
+Перехожий: До центру.
+Турист: Як іти?
+Перехожий: Прямо.
+Турист: Коли працює музей?
+Перехожий: Сьогодні.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Турист: Де музей?** | Tourist: Where is the museum? |
+| **Перехожий: Музей там, у центрі.** | Passerby: The museum is there, in the center. |
+| **Турист: Куди йти?** | Tourist: Where should I go? |
+| **Перехожий: До центру.** | Passerby: To the center. |
+| **Турист: Як іти?** | Tourist: How should I go? |
+| **Перехожий: Прямо.** | Passerby: Straight ahead. |
+| **Турист: Коли працює музей?** | Tourist: When is the museum open? |
+| **Перехожий: Сьогодні.** | Passerby: Today. |
 
 ## Питальні слова
 
@@ -118,14 +140,7 @@ word like **де**, **коли**, or **чому**, or keep the sentence order an
 question mark for a yes/no question: **Ти знаєш?**
 :::
 
-Three question words are recognition-only today. **Який / яка / яке / які** ask
-about quality: **Який цей суп?** **Чий / чия / чиє / чиї** ask about ownership:
-**Чия це книжка?** **Котрий** asks about an ordered choice. They change for
-gender or number, so use them only in the ready examples for now. You may also
-recognize **звідки** in the travel question **Звідки ти?** It means "where from"
-and belongs with the same family of unchanged place questions.
-
-<!-- INJECT_ACTIVITY: act-3 -->
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ## Заперечення
 
@@ -137,15 +152,15 @@ the verb you are making negative.
 | **Я знаю.** | **Я не знаю.** |
 | **Ти розумієш?** | **Ти не розумієш?** |
 | **Він працює.** | **Він не працює.** |
+| **Ми розуміємо.** | **Ми не розуміємо.** |
 | **Я хочу читати.** | **Я не хочу читати.** |
 | **Я можу піти.** | **Я не можу піти.** |
 
 For spelling, say the two words separately in your head: **не знаю**,
-**не знаєш**, **не хочу**, **не можу**. The quoted classroom model is
-**«не знаєш»**: the negative particle stays separate. Much later you may meet
-verbs that only live with **не**, such as **нехтувати**, **ненавидіти**, and
-**нездужати**. Do not use those as the A1 rule; they are exceptions to
-recognize.
+**не знаєш**, **не хочу**, **не можу**. Treat this as a spacing rule and a word
+order rule: **не** is separate and it stands directly before the verb.
+
+<!-- INJECT_ACTIVITY: act-2 -->
 
 Use **ні** as a short "no" answer: **Ні, я не знаю.** When **ні-** starts words
 such as **ніхто**, **нічого**, **ніколи**, and **ніде**, Ukrainian still keeps
@@ -161,14 +176,13 @@ such as **ніхто**, **нічого**, **ніколи**, and **ніде**, Uk
 
 English often uses one negative word. Ukrainian uses the negative word plus
 **не** before the verb. This is not extra logic to explain away; it is the
-standard Ukrainian pattern.
+standard Ukrainian pattern. For this lesson, produce the ready patterns with
+**ніхто**, **нічого**, **ніколи**, and **ніде**.
 
-Two later shapes are useful to recognize. First, **ніщо** is the dictionary-like
-"nothing" form, while **нічого** is the form you will often see in **Я нічого
-не знаю**. Second, a preposition can split a negative pronoun: **ні в що не
-вірю**, **ні в кого не питаю**, **ні до чого не торкаюся**, **«ні з яким»**.
-Do not build new sentences with this yet; just recognize the three-word split
-after a preposition.
+You may also see **ніщо** as a subject: **Ніщо не допомагає.** Keep the same
+rule: the negative word still travels with **не** before the verb.
+
+<!-- INJECT_ACTIVITY: act-3 -->
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
@@ -197,19 +211,13 @@ If the sentence is yes/no, make sure the written question mark is there and say
 it with rising intonation. If the sentence is negative, find the verb and put
 **не** right before it.
 
-### Виправ пастки
-
 | Avoid | Use | Why |
 | --- | --- | --- |
-| <!-- bad -->Я бачу нікого.<!-- /bad --> | **Я нікого не бачу.** | negative pronoun + **не** before the verb |
-| <!-- bad -->Хто це книжка?<!-- /bad --> | **Чия це книжка?** | ownership uses **чия**, not **хто** |
-| <!-- bad -->Хто є ця книжка?<!-- /bad --> | **Чия це книжка?** | do not insert **є** here |
-| <!-- bad -->Я не вірю в ніщо.<!-- /bad --> | **Я ні в що не вірю.** | a preposition splits **ні + що** |
-| <!-- bad -->Я незнаю.<!-- /bad --> | **Я не знаю.** | **не** is separate before the verb |
-| flat **Ти читаєш?** | **Ти читаєш?** with rising intonation, or **Чи ти читаєш?** | yes/no questions need a question signal |
-| <!-- bad -->Неде.<!-- /bad --> / <!-- bad -->Ні де.<!-- /bad --> | **Ніде.** | **ніде** is one word |
-| <!-- bad -->Як є цей суп?<!-- /bad --> / <!-- bad -->Як цей суп?<!-- /bad --> | **Який цей суп?** | quality uses **який** |
+| **Я незнаю.** | **Я не знаю.** | **не** is separate before the verb |
+| **Я нічого знаю.** | **Я нічого не знаю.** | **нічого** still needs **не** |
+| **Ніхто говорить.** | **Ніхто не говорить.** | **ніхто** still needs **не** |
+| **Ти читаєш.** as a question | **Ти читаєш?** with rising intonation | yes/no questions need a question signal |
 
-Keep the active set small. Produce **хто, що, де, куди, коли, чому, як** and
-**не + verb**. Recognize **чи**, **який**, **чий**, **котрий**, and the split
-shape **ні в що**, but do not make them your main production task today.
+Keep the active set small. Produce **хто, що, де, куди, коли, чому, як**,
+**не + verb**, and the ready double-negative chunks. Recognize **чи** as an
+optional written or careful-speech question marker.
