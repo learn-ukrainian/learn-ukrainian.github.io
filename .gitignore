@@ -89,7 +89,8 @@ temp/
 *.yml.orig
 .venv/
 .agent/
-.agents/  # deploy target (rsync'd from agents_extensions/shared/skills); like .claude/.codex/.agent
+# deploy target (rsync'd from agents_extensions/shared/skills); like .claude/.codex/.agent
+.agents/
 # Temporary/sample images in docs (textbook screenshots, vision test outputs)
 docs/temp_*.png
 docs/bolshakova_*.png
