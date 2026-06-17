@@ -46,10 +46,10 @@
   translation: I get ready
   pos: verb form
   usage: Я збираюся на роботу.
-- lemma: розчісуватися
+- lemma: причісуватися
   translation: to comb one's hair
   pos: infinitive
-  usage: Я розчісуюся вранці.
+  usage: Я причісуюся вранці.
 - lemma: снідати
   translation: to have breakfast
   pos: infinitive
@@ -70,14 +70,6 @@
   translation: I watch; I look
   pos: verb form
   usage: Я дивлюся в дзеркало.
-- lemma: користуватися
-  translation: to use
-  pos: infinitive
-  usage: Я користуюся телефоном.
-- lemma: користуюся
-  translation: I use
-  pos: verb form
-  usage: Я користуюся телефоном.
 - lemma: навчатися
   translation: to study; to learn
   pos: infinitive
@@ -86,6 +78,18 @@
   translation: I study; I learn
   pos: verb form
   usage: Я навчаюся вдома.
+- lemma: поспішати
+  translation: to hurry
+  pos: infinitive
+  usage: У суботу я не поспішаю.
+- lemma: повертатися
+  translation: to return
+  pos: infinitive
+  usage: Я повертаюся додому.
+- lemma: лежати
+  translation: to lie down
+  pos: infinitive
+  usage: У суботу я лежу.
 - lemma: йти
   translation: to go
   pos: infinitive
@@ -114,6 +118,10 @@
   translation: quickly
   pos: adverb
   usage: Я швидко одягаюся.
+- lemma: готовий
+  translation: ready
+  pos: adjective
+  usage: Нарешті я готовий.
 - lemma: завжди
   translation: always
   pos: adverb
