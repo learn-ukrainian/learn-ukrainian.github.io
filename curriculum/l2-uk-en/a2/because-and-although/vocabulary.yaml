@@ -38,6 +38,10 @@
   translation: complex sentence
   pos: noun
   example: "Складне речення має дві частини."
+- word: тому
+  translation: therefore, that is why
+  pos: adverb
+  example: "Було пізно, тому ми поїхали додому."
 - word: протиставлення
   translation: contrast
   pos: noun
