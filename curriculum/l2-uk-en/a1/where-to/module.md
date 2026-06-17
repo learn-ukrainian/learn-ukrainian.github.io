@@ -2,7 +2,7 @@
 
 This lesson turns city places into movement. In **Де це?** you learned static
 location: **Я в банку**, **Олена в школі**, **книжка на столі**. Now the
-question is **куди?**: **Я йду в банк**, **Олена йде в школу**, **ми їдемо на
+question is **куди?**: **Я йду в банк**, **Олена йде у школу**, **ми їдемо на
 вокзал**.
 
 By the end, you can:
@@ -11,13 +11,11 @@ By the end, you can:
 - contrast **де?** with **куди?** without mixing endings;
 - use **в/у** and **на** with direction chunks: **у школу**, **на роботу**,
   **в аптеку**, **у банк**;
-- use **до** for people: **до лікаря**, **до бабусі**;
-- keep Ukrainian place language clean: **Київ / Kyiv**, **в Україні**,
-  **в Україну**.
+- use city names as destinations: **у Львів**, **в Одесу**, **в Київ**;
+- keep Ukrainian place language clean: **Київ / Kyiv**, **Львів / Lviv**,
+  **Одеса / Odesa**.
 
 ## Діалоги
-
-<!-- INJECT_ACTIVITY: act-1 -->
 
 First listen for the movement verb. **Іти** usually means going on foot.
 **Їхати** means going by transport. Both can answer **куди?**
@@ -26,7 +24,7 @@ First listen for the movement verb. **Іти** usually means going on foot.
 Оксана: Добрий день, Степане! Куди ти йдеш?
 Степан: Я йду в банк. А ти?
 Оксана: Я йду на пошту, а потім на роботу.
-Степан: Після банку я йду в магазин.
+Степан: Потім я йду в магазин.
 Оксана: Чудово. Потім ходімо в кафе.
 Степан: Добре. До зустрічі в кафе!
 ```
@@ -38,7 +36,7 @@ Support after the Ukrainian lines:
 | **Оксана: Добрий день, Степане! Куди ти йдеш?** | Oksana: Good afternoon, Stepan! Where are you going? |
 | **Степан: Я йду в банк. А ти?** | Stepan: I am going to the bank. And you? |
 | **Оксана: Я йду на пошту, а потім на роботу.** | Oksana: I am going to the post office, and then to work. |
-| **Степан: Після банку я йду в магазин.** | Stepan: After the bank I am going to the shop. |
+| **Степан: Потім я йду в магазин.** | Stepan: Then I am going to the shop. |
 | **Оксана: Чудово. Потім ходімо в кафе.** | Oksana: Great. Then let's go to a cafe. |
 | **Степан: Добре. До зустрічі в кафе!** | Stepan: Good. See you at the cafe! |
 
@@ -54,7 +52,7 @@ The second dialogue is about travel between cities.
 Степан: Я їду у Львів. А Олена?
 Оксана: Вона їде в Одесу, а брат їде в Київ.
 Степан: А Марко?
-Оксана: Марко йде до лікаря, а потім додому.
+Оксана: Марко їде на вокзал, а потім додому.
 Степан: Добре, до побачення!
 ```
 
@@ -66,16 +64,14 @@ Support after the Ukrainian lines:
 | **Степан: Я їду у Львів. А Олена?** | Stepan: I am going to Lviv. And Olena? |
 | **Оксана: Вона їде в Одесу, а брат їде в Київ.** | Oksana: She is going to Odesa, and her brother is going to Kyiv. |
 | **Степан: А Марко?** | Stepan: And Marko? |
-| **Оксана: Марко йде до лікаря, а потім додому.** | Oksana: Marko is going to the doctor, and then home. |
+| **Оксана: Марко їде на вокзал, а потім додому.** | Oksana: Marko is going to the train station, and then home. |
 | **Степан: Добре, до побачення!** | Stepan: Good, goodbye! |
 
-Notice two guardrails. For countries and cities, use Ukrainian names and
-Ukrainian direction: **Київ / Kyiv**, **Львів / Lviv**, **Одеса / Odesa**,
-**в Україні** for location and **в Україну** for direction. For a person, use
-**до**: **до лікаря**, **до мами**, **до бабусі**. Do not say **в лікаря** or
-**на лікаря** for this meaning.
+Use Ukrainian city names and English transliterations: **Київ / Kyiv**,
+**Львів / Lviv**, **Одеса / Odesa**. For this lesson, keep the destination
+pattern simple: **їду у Львів**, **їду в Одесу**, **їду в Київ**.
 
-<!-- INJECT_ACTIVITY: act-2 -->
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ## Куди? Знахідний відмінок
 
@@ -120,16 +116,11 @@ Feminine place words usually change **-а** to **-у** and **-я** to **-ю**:
 This is enough for real A1 errands: **Я йду в аптеку. Ти йдеш на роботу.
 Вона йде у бібліотеку. Ми їдемо на вулицю Шевченка.**
 
-**Фонетичні закономірності.** The old static forms are still correct, but only for **де?**:
-**в аптеці**, **у бібліотеці**, **на роботі**, **у школі**. The form
-**аптека -> в аптеці** has the normal Ukrainian **к -> ц** change before
-**-і**. The same sound pattern appears in familiar words such as **рука -> в
-руці**, **нога -> на нозі**, **горох -> у горосі**. Treat this as a basic
-Ukrainian **чергування приголосних**, not as a **незручний виняток**.
+<!-- INJECT_ACTIVITY: act-2 -->
 
-<!-- INJECT_ACTIVITY: act-3 -->
-
-<!-- INJECT_ACTIVITY: act-4 -->
+The old static forms are still correct, but only for **де?**:
+**в аптеці**, **у бібліотеці**, **на роботі**, **у школі**. Do not use the
+static ending after **йду** or **їду**.
 
 ## Де чи куди?
 
@@ -139,33 +130,33 @@ The easiest test is the verb. State verbs usually answer **де?**:
 
 | Sentence frame | Question | Use |
 | --- | --- | --- |
-| **Я живу...** | **де?** | **в Україні**, **у Києві**, **в місті** |
+| **Я живу...** | **де?** | **у Києві**, **в місті**, **на вулиці Шевченка** |
 | **Я працюю...** | **де?** | **на роботі**, **в офісі** |
 | **Я вчуся...** | **де?** | **у школі**, **в університеті** |
 | **Я йду...** | **куди?** | **у школу**, **в аптеку**, **у парк** |
 | **Я їду...** | **куди?** | **на вокзал**, **у Львів**, **в Одесу** |
 
+<!-- INJECT_ACTIVITY: act-3 -->
+
 Use **іти** when the movement is on foot or the way of movement is not
 important: **Я йду в магазин. Ми йдемо в парк.** Use **їхати** when a vehicle
-is part of the idea: **Я їду на вокзал. Вона їде у Львів. Ми їдемо в Україну.**
+is part of the idea: **Я їду на вокзал. Вона їде у Львів. Ми їдемо в Одесу.**
 
-**Напрямок із прийменником до.** There is one more direction pattern at A1: **до + родовий відмінок**. It is
-especially important with people: **Я йду до лікаря. Вона йде до бабусі. Ми
-йдемо до мами.** With places, **до** is also possible when you mean "toward /
-up to": **до магазину**, **до Києва**, **до дому**. Unlike patterns **як
-в/на**, **до** has no matching static-location use here. For now, keep one
-firm rule: person destination means **до**, not **в** or **на**.
+<!-- INJECT_ACTIVITY: act-4 -->
+
+One useful no-preposition direction word is **додому**: **Я повертаюся
+додому.** Treat it as a ready-made A1 answer to **куди?**
 
 Here are the common repairs you need now:
 
 | Learner line | Better line | Why |
 | --- | --- | --- |
-| Я йду в школі. | **Я йду в школу.** | Movement answers **куди?** |
+| Я йду в школі. | **Я йду у школу.** | Movement answers **куди?** |
 | Я живу Київ. | **Я живу в Києві.** | Static location needs **в/у** plus locative. |
-| Я йду в лікаря. | **Я йду до лікаря.** | A person destination uses **до**. |
+| Я йду в бібліотеці. | **Я йду в бібліотеку.** | Movement uses the direction form. |
 | Ми були в концерті. | **Ми були на концерті.** | Events use the familiar **на** chunk. |
 | Книжка на столу. | **Книжка на столі.** | Static surface location uses **на столі**. |
-| Аптека — в аптекі. | **Аптека — в аптеці.** | **к -> ц** before **-і** in this form. |
+| Аптека — в аптекі. | **Аптека — в аптеці.** | Static **де?** form from the previous module. |
 
 <span id="підсумок"></span>
 
@@ -178,23 +169,22 @@ Keep the lesson as a two-question system:
 | say where you are | **де?** | **у школі**, **на роботі**, **у банку** |
 | say where you are going | **куди?** | **у школу**, **на роботу**, **у банк** |
 | say travel by transport | **куди?** | **їду на вокзал**, **їду у Львів** |
-| say going to a person | **куди?** | **до лікаря**, **до бабусі** |
-| answer without endings | place adverbs | **тут**, **там**, **вдома**, **близько**, **далеко** |
+| answer without endings | place adverbs | **тут**, **там**, **вдома**, **близько**, **далеко**, **додому** |
 
 Self-check:
 
 1. Say where you are now: **Я в місті. Я вдома. Я на роботі.**
 2. Say where you are going next: **Я йду в магазин. Я їду на вокзал.**
-3. Contrast one place: **Я в школі. Я йду в школу.**
-4. Add a person destination: **Я йду до лікаря.**
-5. Use Ukrainian country direction: **Я їду в Україну.**
+3. Contrast one place: **Я в школі. Я йду у школу.**
+4. Add a city destination: **Я їду в Одесу.**
+5. Add the ready-made homeward word: **Я повертаюся додому.**
 
 For your final mini-route, keep the verbs and places clear:
 
-**Сьогодні я йду в банк, потім на пошту, потім в аптеку. Після обіду я їду на
-вокзал. Увечері я йду до Оксани, а потім додому.**
+**Сьогодні я йду в банк, потім на пошту, потім в аптеку. Потім я їду на
+вокзал. Увечері я йду в кафе, а потім додому.**
 
 Now change only the destinations: **в магазин**, **у бібліотеку**, **на
-роботу**, **до лікаря**, **у парк**. If you can keep **де?** and **куди?**
+роботу**, **на зупинку**, **у парк**. If you can keep **де?** and **куди?**
 separate while swapping places, the new case is already becoming a usable
 navigation tool.
