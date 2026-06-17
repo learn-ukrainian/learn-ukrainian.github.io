@@ -102,7 +102,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Називний чи орудний?
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я ___.", "options": [{"text": "вчителька", "correct": true}, {"text": "вчителькою", "correct": false}, {"text": "вчительці", "correct": false}], "explanation": "У теперішньому стані часто вживаємо називний."}, {"question": "Я працюю ___.", "options": [{"text": "вчителька", "correct": false}, {"text": "вчителькою", "correct": true}, {"text": "вчительці", "correct": false}], "explanation": "Працювати ким? - вчителькою."}, {"question": "Він буде ___.", "options": [{"text": "лікар", "correct": false}, {"text": "лікарем", "correct": true}, {"text": "лікаря", "correct": false}], "explanation": "Бути в майбутньому часі потребує орудного."}, {"question": "Вона стала ___.", "options": [{"text": "інженерка", "correct": false}, {"text": "інженеркою", "correct": true}, {"text": "інженерки", "correct": false}], "explanation": "Стати ким? - інженеркою."}]`)} isUkrainian={true} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я ___.", "options": [{"text": "вчителька", "correct": true}, {"text": "вчителькою", "correct": false}, {"text": "вчительці", "correct": false}], "explanation": "У теперішньому стані часто вживаємо називний."}, {"question": "Я працюю ___.", "options": [{"text": "вчителька", "correct": false}, {"text": "вчителькою", "correct": true}, {"text": "вчительці", "correct": false}], "explanation": "Працювати ким? - вчителькою."}, {"question": "Він буде ___.", "options": [{"text": "лікар", "correct": false}, {"text": "лікарем", "correct": true}, {"text": "лікаря", "correct": false}], "explanation": "Бути в майбутньому часі потребує орудного."}, {"question": "Вона стала ___.", "options": [{"text": "інженерка", "correct": false}, {"text": "інженеркою", "correct": true}, {"text": "інженерки", "correct": false}], "explanation": "Стати ким? - інженеркою."}]`)} instruction={"Оберіть форму, яка підходить до речення."} isUkrainian={true} />
 
 ## Професії в орудному
 
@@ -129,7 +129,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Професія і форма
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "лікар", "right": "лікарем"}, {"left": "лікарка", "right": "лікаркою"}, {"left": "інженер", "right": "інженером"}, {"left": "вчителька", "right": "вчителькою"}]`)} isUkrainian={true} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "лікар", "right": "лікарем"}, {"left": "лікарка", "right": "лікаркою"}, {"left": "інженер", "right": "інженером"}, {"left": "вчителька", "right": "вчителькою"}]`)} instruction={"З'єднайте називний з орудним."} isUkrainian={true} />
 
 ## Дієслова з орудним відмінком
 
@@ -154,7 +154,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Дієслова з орудним
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я цікавлюся ___.", "answer": "історією", "options": ["історія", "історію", "історією"]}, {"sentence": "Вона захоплюється ___.", "answer": "музикою", "options": ["музика", "музику", "музикою"]}, {"sentence": "Ми пишаємося ___.", "answer": "командою", "options": ["команда", "команду", "командою"]}, {"sentence": "Андрій займається ___.", "answer": "спортом", "options": ["спорт", "спортом", "спорту"]}]`)} isUkrainian={true} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я цікавлюся ___.", "answer": "історією", "options": ["історія", "історію", "історією"]}, {"sentence": "Вона захоплюється ___.", "answer": "музикою", "options": ["музика", "музику", "музикою"]}, {"sentence": "Ми пишаємося ___.", "answer": "командою", "options": ["команда", "команду", "командою"]}, {"sentence": "Андрій займається ___.", "answer": "спортом", "options": ["спорт", "спортом", "спорту"]}]`)} instruction={"Оберіть форму після дієслова."} isUkrainian={true} />
 
 ## Питання для знайомства
 
@@ -165,6 +165,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 | Ким ти працюєш? | Я працюю програмісткою. |
 | Хто ти за фахом? | Я лікар. |
 | Ким ти хочеш стати? | Хочу стати журналістом. |
+| Ким ти мрієш стати? | Мрію стати ветеринаром. |
 | Чим ти цікавишся? | Цікавлюся психологією. |
 | Чим ти захоплюєшся? | Захоплююся фотографією. |
 
@@ -180,6 +181,8 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 >
 > Я хочу стати ...
 >
+> Я мрію стати ...
+>
 > Я цікавлюся ...
 
 Приклади:
@@ -188,11 +191,13 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 >
 > Я хочу стати психологом.
 >
+> Я мрію стати ветеринаром.
+>
 > Я цікавлюся освітою.
 
 ### Професія чи інтерес?
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Професія": ["працюю лікарем", "буду вчителькою", "стала журналісткою", "працював кухарем"], "Інтерес або діяльність": ["цікавлюся історією", "захоплююся музикою", "займаюся спортом", "пишаюся командою"]}`)} isUkrainian={true} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Професія": ["працюю лікарем", "буду вчителькою", "стала журналісткою", "працював кухарем"], "Інтерес або діяльність": ["цікавлюся історією", "захоплююся музикою", "займаюся спортом", "пишаюся командою"]}`)} instruction={"Розсортуйте фрази за моделлю."} isUkrainian={true} />
 
 ## 📋 Підсумок
 
@@ -215,9 +220,9 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 </TabItem>
 <TabItem label="Словник">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"професія","translation":"profession","pos":"noun","example":"Яка у тебе професія?","examples":["profession","Яка у тебе професія?"],"atlas_href":"/lexicon/професія/"},{"word":"фах","translation":"specialty, profession","pos":"noun","example":"Хто ти за фахом?","examples":["specialty, profession","Хто ти за фахом?"],"atlas_href":"/lexicon/фах/"},{"word":"працювати","translation":"to work","pos":"verb","example":"Я працюю інженером.","examples":["to work","Я працюю інженером."],"atlas_href":"/lexicon/працювати/"},{"word":"стати","translation":"to become","pos":"verb","example":"Вона стала лікаркою.","examples":["to become","Вона стала лікаркою."],"atlas_href":"/lexicon/стати/"},{"word":"бути","translation":"to be","pos":"verb","example":"Він буде вчителем.","examples":["to be","Він буде вчителем."],"atlas_href":"/lexicon/бути/"},{"word":"лікар","translation":"doctor","pos":"noun","example":"Мій брат працює лікарем.","examples":["doctor","Мій брат працює лікарем."],"atlas_href":"/lexicon/лікар/"},{"word":"лікарка","translation":"female doctor","pos":"noun","example":"Олена стала лікаркою.","examples":["female doctor","Олена стала лікаркою."],"atlas_href":"/lexicon/лікарка/"},{"word":"вчитель","translation":"male teacher","pos":"noun","example":"Він буде вчителем.","examples":["male teacher","Він буде вчителем."],"atlas_href":"/lexicon/вчитель/"},{"word":"вчителька","translation":"female teacher","pos":"noun","example":"Наталя працює вчителькою.","examples":["female teacher","Наталя працює вчителькою."],"atlas_href":"/lexicon/вчителька/"},{"word":"інженер","translation":"engineer","pos":"noun","example":"Андрій працює інженером.","examples":["engineer","Андрій працює інженером."],"atlas_href":"/lexicon/інженер/"},{"word":"програмістка","translation":"female programmer","pos":"noun","example":"Вона стала програмісткою.","examples":["female programmer","Вона стала програмісткою."],"atlas_href":"/lexicon/програмістка/"},{"word":"цікавитися","translation":"to be interested in","pos":"verb","example":"Я цікавлюся історією.","examples":["to be interested in","Я цікавлюся історією."],"atlas_href":"/lexicon/цікавитися/"},{"word":"захоплюватися","translation":"to be passionate about","pos":"verb","example":"Він захоплюється музикою.","examples":["to be passionate about","Він захоплюється музикою."],"atlas_href":"/lexicon/захоплюватися/"},{"word":"пишатися","translation":"to be proud of","pos":"verb","example":"Ми пишаємося командою.","examples":["to be proud of","Ми пишаємося командою."],"atlas_href":"/lexicon/пишатися/"},{"word":"займатися","translation":"to do, to be engaged in","pos":"verb","example":"Вона займається спортом.","examples":["to do, to be engaged in","Вона займається спортом."],"atlas_href":"/lexicon/займатися/"}]`)} title="Словник" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"професія","translation":"profession","pos":"noun","example":"Яка у тебе професія?","examples":["profession","Яка у тебе професія?"],"atlas_href":"/lexicon/професія/"},{"word":"фах","translation":"specialty, profession","pos":"noun","example":"Хто ти за фахом?","examples":["specialty, profession","Хто ти за фахом?"],"atlas_href":"/lexicon/фах/"},{"word":"працювати","translation":"to work","pos":"verb","example":"Я працюю інженером.","examples":["to work","Я працюю інженером."],"atlas_href":"/lexicon/працювати/"},{"word":"стати","translation":"to become","pos":"verb","example":"Вона стала лікаркою.","examples":["to become","Вона стала лікаркою."],"atlas_href":"/lexicon/стати/"},{"word":"мріяти","translation":"to dream","pos":"verb","example":"Я мрію стати лікаркою.","examples":["to dream","Я мрію стати лікаркою."]},{"word":"бути","translation":"to be","pos":"verb","example":"Він буде вчителем.","examples":["to be","Він буде вчителем."],"atlas_href":"/lexicon/бути/"},{"word":"лікар","translation":"doctor","pos":"noun","example":"Мій брат працює лікарем.","examples":["doctor","Мій брат працює лікарем."],"atlas_href":"/lexicon/лікар/"},{"word":"лікарка","translation":"female doctor","pos":"noun","example":"Олена стала лікаркою.","examples":["female doctor","Олена стала лікаркою."],"atlas_href":"/lexicon/лікарка/"},{"word":"вчитель","translation":"male teacher","pos":"noun","example":"Він буде вчителем.","examples":["male teacher","Він буде вчителем."],"atlas_href":"/lexicon/вчитель/"},{"word":"вчителька","translation":"female teacher","pos":"noun","example":"Наталя працює вчителькою.","examples":["female teacher","Наталя працює вчителькою."],"atlas_href":"/lexicon/вчителька/"},{"word":"інженер","translation":"engineer","pos":"noun","example":"Андрій працює інженером.","examples":["engineer","Андрій працює інженером."],"atlas_href":"/lexicon/інженер/"},{"word":"програмістка","translation":"female programmer","pos":"noun","example":"Вона стала програмісткою.","examples":["female programmer","Вона стала програмісткою."],"atlas_href":"/lexicon/програмістка/"},{"word":"цікавитися","translation":"to be interested in","pos":"verb","example":"Я цікавлюся історією.","examples":["to be interested in","Я цікавлюся історією."],"atlas_href":"/lexicon/цікавитися/"},{"word":"захоплюватися","translation":"to be passionate about","pos":"verb","example":"Він захоплюється музикою.","examples":["to be passionate about","Він захоплюється музикою."],"atlas_href":"/lexicon/захоплюватися/"},{"word":"пишатися","translation":"to be proud of","pos":"verb","example":"Ми пишаємося командою.","examples":["to be proud of","Ми пишаємося командою."],"atlas_href":"/lexicon/пишатися/"},{"word":"займатися","translation":"to do, to be engaged in","pos":"verb","example":"Вона займається спортом.","examples":["to do, to be engaged in","Вона займається спортом."],"atlas_href":"/lexicon/займатися/"}]`)} title="Словник" />
 
-<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"професія","back":"profession"},{"front":"фах","back":"specialty, profession"},{"front":"працювати","back":"to work"},{"front":"стати","back":"to become"},{"front":"бути","back":"to be"},{"front":"лікар","back":"doctor"},{"front":"лікарка","back":"female doctor"},{"front":"вчитель","back":"male teacher"},{"front":"вчителька","back":"female teacher"},{"front":"інженер","back":"engineer"},{"front":"програмістка","back":"female programmer"},{"front":"цікавитися","back":"to be interested in"},{"front":"захоплюватися","back":"to be passionate about"},{"front":"пишатися","back":"to be proud of"},{"front":"займатися","back":"to do, to be engaged in"}]`)} />
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"професія","back":"profession"},{"front":"фах","back":"specialty, profession"},{"front":"працювати","back":"to work"},{"front":"стати","back":"to become"},{"front":"мріяти","back":"to dream"},{"front":"бути","back":"to be"},{"front":"лікар","back":"doctor"},{"front":"лікарка","back":"female doctor"},{"front":"вчитель","back":"male teacher"},{"front":"вчителька","back":"female teacher"},{"front":"інженер","back":"engineer"},{"front":"програмістка","back":"female programmer"},{"front":"цікавитися","back":"to be interested in"},{"front":"захоплюватися","back":"to be passionate about"},{"front":"пишатися","back":"to be proud of"},{"front":"займатися","back":"to do, to be engaged in"}]`)} />
 
 </TabItem>
 <TabItem label="Зошит">
@@ -240,7 +245,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Кар'єрна перевірка
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я працюю інженером.", "isTrue": true, "explanation": "Працювати ким? - інженером."}, {"statement": "Вона буде лікарка.", "isTrue": false, "explanation": "Потрібно буде лікаркою."}, {"statement": "Я цікавлюся освітою.", "isTrue": true, "explanation": "Цікавитися чим? - освітою."}, {"statement": "Він захоплюється музика.", "isTrue": false, "explanation": "Потрібно музикою."}]`)} isUkrainian={true} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я працюю інженером.", "isTrue": true, "explanation": "Працювати ким? - інженером."}, {"statement": "Вона буде лікарка.", "isTrue": false, "explanation": "Потрібно буде лікаркою."}, {"statement": "Я цікавлюся освітою.", "isTrue": true, "explanation": "Цікавитися чим? - освітою."}, {"statement": "Він захоплюється музика.", "isTrue": false, "explanation": "Потрібно музикою."}]`)} instruction={"Позначте, чи речення природне."} isUkrainian={true} />
 
 ### Виправте професію
 
