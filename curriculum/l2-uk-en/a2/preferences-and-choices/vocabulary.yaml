@@ -34,10 +34,22 @@
   translation: to agree
   pos: verb
   example: "Я цілком погоджуюся."
+- word: безумовно
+  translation: absolutely, certainly
+  pos: adverb
+  example: "Безумовно, це зручний варіант."
 - word: рація
   translation: rightness, reason in the phrase мати рацію
   pos: noun
   example: "Ви маєте рацію."
+- word: інакше
+  translation: differently, otherwise
+  pos: adverb
+  example: "Я думаю інакше, тому що маю інший приклад."
+- word: дозволити
+  translation: to allow, to permit
+  pos: verb
+  example: "Дозвольте не погодитися з цією думкою."
 - word: незгода
   translation: disagreement
   pos: noun
@@ -78,3 +90,15 @@
   translation: in conclusion, to finish
   pos: phrase
   example: "На завершення, це спокійніший варіант."
+- word: компроміс
+  translation: compromise
+  pos: noun
+  example: "Це хороший компроміс для групи."
+- word: варіант
+  translation: option, variant
+  pos: noun
+  example: "Цей варіант дешевший і спокійніший."
+- word: частковий
+  translation: partial
+  pos: adjective
+  example: "Часткова згода допомагає продовжити розмову."
