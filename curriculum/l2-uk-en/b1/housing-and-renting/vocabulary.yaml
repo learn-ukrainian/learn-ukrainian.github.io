@@ -1,0 +1,432 @@
+- lemma: квартира
+  translation: "apartment"
+  pos: noun:f
+  usage: "Здається однокімнатна квартира біля метро."
+- lemma: оренда
+  translation: "rent; rental"
+  pos: noun:f
+  usage: "Оренда коштує дванадцять тисяч гривень на місяць."
+- lemma: орендар
+  translation: "tenant"
+  pos: noun:m
+  usage: "Орендар уточнює умови договору."
+- lemma: орендарка
+  translation: "female tenant"
+  pos: noun:f
+  usage: "Орендарка хоче подивитися квартиру після роботи."
+- lemma: орендодавець
+  translation: "landlord; lessor"
+  pos: noun:m
+  usage: "Орендодавець відповідає на питання про завдаток."
+- lemma: власник
+  translation: "owner"
+  pos: noun:m
+  usage: "Власник показує квартиру."
+- lemma: договір оренди
+  translation: "lease agreement"
+  pos: phrase
+  usage: "Договір оренди укладаємо на рік."
+- lemma: завдаток
+  translation: "deposit"
+  pos: noun:m
+  usage: "Завдаток становить одну місячну оплату."
+- lemma: комунальні послуги
+  translation: "utilities"
+  pos: phrase
+  usage: "Комунальні послуги оплачуються окремо."
+- lemma: комунальні
+  translation: "utilities"
+  pos: noun:pl
+  usage: "Комунальні взимку можуть бути високі."
+- lemma: опалення
+  translation: "heating"
+  pos: noun:n
+  usage: "У квартирі не працює опалення."
+- lemma: індивідуальне опалення
+  translation: "individual heating"
+  pos: phrase
+  usage: "У новобудові є індивідуальне опалення."
+- lemma: вмебльована
+  translation: "furnished"
+  pos: adj:f
+  usage: "Квартира вмебльована і готова до заселення."
+- lemma: мебльована
+  translation: "furnished"
+  pos: adj:f
+  usage: "У розмові також кажуть мебльована квартира."
+- lemma: меблі
+  translation: "furniture"
+  pos: noun:pl
+  usage: "Меблі включені у вартість оренди."
+- lemma: поверх
+  translation: "floor; storey"
+  pos: noun:m
+  usage: "Квартира на третьому поверсі."
+- lemma: площа
+  translation: "area; square footage"
+  pos: noun:f
+  usage: "Площа квартири - сорок два квадратні метри."
+- lemma: площею
+  translation: "with an area of"
+  pos: form
+  usage: "Квартира площею сорок квадратних метрів."
+- lemma: квадратний метр
+  translation: "square metre"
+  pos: phrase
+  usage: "Кухня має десять квадратних метрів."
+- lemma: ремонт
+  translation: "renovation; repair"
+  pos: noun:m
+  usage: "У квартирі новий ремонт."
+- lemma: євроремонт
+  translation: "modern renovation"
+  pos: noun:m
+  usage: "Євроремонт - рекламний маркер в оголошеннях."
+- lemma: під ключ
+  translation: "turnkey; ready to move in"
+  pos: phrase
+  usage: "Квартира під ключ має меблі й техніку."
+- lemma: будинок
+  translation: "house; building"
+  pos: noun:m
+  usage: "Квартира у новому будинку."
+- lemma: приватний будинок
+  translation: "private house"
+  pos: phrase
+  usage: "Вони шукають приватний будинок за містом."
+- lemma: гуртожиток
+  translation: "dormitory"
+  pos: noun:m
+  usage: "Кімната в гуртожитку дешевша за квартиру."
+- lemma: кімната
+  translation: "room"
+  pos: noun:f
+  usage: "Кімната світла і простора."
+- lemma: вітальня
+  translation: "living room"
+  pos: noun:f
+  usage: "У квартирі є велика вітальня."
+- lemma: спальня
+  translation: "bedroom"
+  pos: noun:f
+  usage: "Спальня виходить на тихе подвір'я."
+- lemma: кухня
+  translation: "kitchen"
+  pos: noun:f
+  usage: "Кухня з посудомийкою."
+- lemma: ванна кімната
+  translation: "bathroom"
+  pos: phrase
+  usage: "У ванній кімнаті протікає кран."
+- lemma: туалет
+  translation: "toilet"
+  pos: noun:m
+  usage: "Туалет окремий."
+- lemma: санвузол
+  translation: "bathroom/toilet unit"
+  pos: noun:m
+  usage: "Санвузол може бути суміжний або роздільний."
+- lemma: коридор
+  translation: "hallway"
+  pos: noun:m
+  usage: "У коридорі стоїть шафа."
+- lemma: балкон
+  translation: "balcony"
+  pos: noun:m
+  usage: "Кімната з балконом."
+- lemma: комора
+  translation: "storage room"
+  pos: noun:f
+  usage: "У квартирі є невелика комора."
+- lemma: підвал
+  translation: "basement"
+  pos: noun:m
+  usage: "У будинку є підвал."
+- lemma: горище
+  translation: "attic"
+  pos: noun:n
+  usage: "Горище потребує ремонту."
+- lemma: шафа
+  translation: "wardrobe; cabinet"
+  pos: noun:f
+  usage: "У спальні є велика шафа."
+- lemma: ліжко
+  translation: "bed"
+  pos: noun:n
+  usage: "Ліжко нове."
+- lemma: стіл
+  translation: "table; desk"
+  pos: noun:m
+  usage: "Біля вікна стоїть стіл."
+- lemma: крісло
+  translation: "armchair"
+  pos: noun:n
+  usage: "У вітальні є крісло."
+- lemma: диван
+  translation: "sofa"
+  pos: noun:m
+  usage: "Диван розкладається."
+- lemma: плита
+  translation: "stove"
+  pos: noun:f
+  usage: "На кухні є газова плита."
+- lemma: холодильник
+  translation: "refrigerator"
+  pos: noun:m
+  usage: "Холодильник працює добре."
+- lemma: пральна машина
+  translation: "washing machine"
+  pos: phrase
+  usage: "Зламалася пральна машина."
+- lemma: посудомийка
+  translation: "dishwasher"
+  pos: noun:f
+  usage: "Кухня з посудомийкою зручніша."
+- lemma: бойлер
+  translation: "water heater"
+  pos: noun:m
+  usage: "У ванній є бойлер."
+- lemma: кондиціонер
+  translation: "air conditioner"
+  pos: noun:m
+  usage: "Кондиціонер працює влітку."
+- lemma: ліфт
+  translation: "elevator"
+  pos: noun:m
+  usage: "У будинку не працює ліфт."
+- lemma: водопостачання
+  translation: "water supply"
+  pos: noun:n
+  usage: "Водопостачання відновили ввечері."
+- lemma: електрика
+  translation: "electricity"
+  pos: noun:f
+  usage: "Електрика оплачується за лічильником."
+- lemma: інтернет
+  translation: "internet"
+  pos: noun:m
+  usage: "Інтернет включений у вартість."
+- lemma: сміття
+  translation: "garbage"
+  pos: noun:n
+  usage: "Вивіз сміття входить у комунальні."
+- lemma: цвіль
+  translation: "mold"
+  pos: noun:f
+  usage: "У кімнаті з'явилася цвіль."
+- lemma: протікати
+  translation: "to leak"
+  pos: verb:impf
+  usage: "У ванній протікає кран."
+- lemma: протікає кран
+  translation: "the faucet is leaking"
+  pos: phrase
+  usage: "Протікає кран, потрібен сантехнік."
+- lemma: протікає труба
+  translation: "the pipe is leaking"
+  pos: phrase
+  usage: "Терміново протікає труба."
+- lemma: полагодити
+  translation: "to fix; repair"
+  pos: verb:pf
+  usage: "Треба полагодити замок."
+- lemma: майстер
+  translation: "repair person; technician"
+  pos: noun:m
+  usage: "Прошу надіслати майстра."
+- lemma: сантехнік
+  translation: "plumber"
+  pos: noun:m
+  usage: "Терміново потрібен сантехнік."
+- lemma: електрик
+  translation: "electrician"
+  pos: noun:m
+  usage: "Потрібен електрик, бо іскрить розетка."
+- lemma: аварійна служба
+  translation: "emergency maintenance service"
+  pos: phrase
+  usage: "Треба викликати аварійну службу."
+- lemma: служба газу
+  translation: "gas service"
+  pos: phrase
+  usage: "У разі запаху газу дзвонять до служби газу."
+- lemma: окремо
+  translation: "separately"
+  pos: adv
+  usage: "Комунальні оплачуються окремо."
+- lemma: включено
+  translation: "included"
+  pos: form
+  usage: "Інтернет включено у вартість."
+- lemma: без посередників
+  translation: "without intermediaries"
+  pos: phrase
+  usage: "В оголошенні написано без посередників."
+- lemma: посередник
+  translation: "intermediary; agent"
+  pos: noun:m
+  usage: "Посередник може брати комісію."
+- lemma: комісія
+  translation: "commission; fee"
+  pos: noun:f
+  usage: "Агентська комісія оплачується окремо."
+- lemma: термін
+  translation: "term; period"
+  pos: noun:m
+  usage: "На який термін укладаємо договір?"
+- lemma: на рік
+  translation: "for one year"
+  pos: phrase
+  usage: "Договір укладаємо на рік."
+- lemma: на місяць
+  translation: "per month; for one month"
+  pos: phrase
+  usage: "Оренда на місяць коштує десять тисяч."
+- lemma: заїхати
+  translation: "to move in"
+  pos: verb:pf
+  usage: "Коли можна заїхати?"
+- lemma: виїзд
+  translation: "move-out; departure"
+  pos: noun:m
+  usage: "Про виїзд треба повідомити за місяць."
+- lemma: огляд
+  translation: "viewing; inspection"
+  pos: noun:m
+  usage: "Огляд квартири можливий після шостої."
+- lemma: подивитися квартиру
+  translation: "to view an apartment"
+  pos: phrase
+  usage: "Коли можна подивитися квартиру?"
+- lemma: оголошення
+  translation: "advertisement; listing"
+  pos: noun:n
+  usage: "Я пишу щодо оголошення про оренду."
+- lemma: здається
+  translation: "is available for rent; seems"
+  pos: verb
+  usage: "Здається квартира біля метро."
+- lemma: новобудова
+  translation: "newly built building"
+  pos: noun:f
+  usage: "Новобудова має ліфт і консьєржа."
+- lemma: центр
+  translation: "city centre"
+  pos: noun:m
+  usage: "Квартира в центрі дорожча."
+- lemma: район
+  translation: "district; area"
+  pos: noun:m
+  usage: "Район тихий і зелений."
+- lemma: поруч
+  translation: "nearby"
+  pos: adv
+  usage: "Поруч є зупинка."
+- lemma: біля метро
+  translation: "near the metro"
+  pos: phrase
+  usage: "Шукаю квартиру біля метро."
+- lemma: зупинка
+  translation: "public transport stop"
+  pos: noun:f
+  usage: "До зупинки близько ста метрів."
+- lemma: подвір'я
+  translation: "courtyard"
+  pos: noun:n
+  usage: "Вікна виходять на подвір'я."
+- lemma: вулиця
+  translation: "street"
+  pos: noun:f
+  usage: "Квартира на вулиці Франка."
+- lemma: адреса
+  translation: "address"
+  pos: noun:f
+  usage: "Зустрінемося за адресою вулиця Франка, 12."
+- lemma: Шановний пане
+  translation: "Dear Mr."
+  pos: phrase
+  usage: "Шановний пане Ігорю, хочу уточнити умови."
+- lemma: пані
+  translation: "Ms.; Mrs.; lady"
+  pos: noun:f
+  usage: "Пані Олено, добрий день."
+- lemma: шановний орендодавцю
+  translation: "dear landlord"
+  pos: phrase
+  usage: "Шановний орендодавцю, прошу надіслати майстра."
+- lemma: хочу уточнити
+  translation: "I would like to clarify"
+  pos: phrase
+  usage: "Хочу уточнити суму комунальних узимку."
+- lemma: підкажіть, будь ласка
+  translation: "please tell me"
+  pos: phrase
+  usage: "Підкажіть, будь ласка, коли можна подивитися квартиру."
+- lemma: якнайшвидше
+  translation: "as soon as possible"
+  pos: adv
+  usage: "Прошу надіслати майстра якнайшвидше."
+- lemma: терміново
+  translation: "urgently"
+  pos: adv
+  usage: "Терміново потрібен сантехнік."
+- lemma: з тваринами
+  translation: "with pets"
+  pos: phrase
+  usage: "Чи можна з тваринами?"
+- lemma: без тварин
+  translation: "no pets"
+  pos: phrase
+  usage: "В оголошенні написано без тварин."
+- lemma: курити
+  translation: "to smoke"
+  pos: verb:impf
+  usage: "Чи можна курити на балконі?"
+- lemma: шуміти
+  translation: "to make noise"
+  pos: verb:impf
+  usage: "Сусіди шумлять після десятої."
+- lemma: не працює
+  translation: "does not work"
+  pos: phrase
+  usage: "Не працює опалення."
+- lemma: зламалася
+  translation: "broke down"
+  pos: verb:pf:f
+  usage: "Зламалася пральна машина."
+- lemma: замок
+  translation: "lock"
+  pos: noun:m
+  usage: "Замок не зачиняється."
+- lemma: розетка
+  translation: "electrical outlet"
+  pos: noun:f
+  usage: "Іскрить розетка."
+- lemma: батарея
+  translation: "radiator"
+  pos: noun:f
+  usage: "Батареї холодні вже другий день."
+- lemma: гаряча вода
+  translation: "hot water"
+  pos: phrase
+  usage: "У квартирі немає гарячої води."
+- lemma: 1к
+  translation: "one-room"
+  pos: abbr
+  usage: "1к квартира означає однокімнатна квартира."
+- lemma: 2к
+  translation: "two-room"
+  pos: abbr
+  usage: "2к квартира означає двокімнатна квартира."
+- lemma: кв.м
+  translation: "sq m"
+  pos: abbr
+  usage: "55 кв.м означає п'ятдесят п'ять квадратних метрів."
+- lemma: грн/міс
+  translation: "UAH per month"
+  pos: abbr
+  usage: "12 000 грн/міс - це ціна за місяць."
+- lemma: б/м
+  translation: "without furniture"
+  pos: abbr
+  usage: "У цьому модулі б/м означає без меблів."
