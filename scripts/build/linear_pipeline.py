@@ -5752,8 +5752,18 @@ def run_llm_qg_with_corrections(
     python_qg_runner: Callable[[], dict[str, Any]] | None = None,
     invoker: Callable[..., Any] | None = None,
     event_sink: Callable[..., None] | None = None,
+    resource_liveness_fn: Callable[[str], bool] | None = None,
 ) -> dict[str, Any]:
-    """Run LLM-QG with a bounded subjective correction loop."""
+    """Run LLM-QG with a bounded subjective correction loop.
+
+    ``resource_liveness_fn`` (optional): forwarded to the post-correction
+    ``run_python_qg_with_corrections`` re-validation so that, when build-time
+    writer telemetry is absent (static / ``--enhance``), each applied craft fix is
+    re-checked in the same telemetry-substitute mode the initial python_qg used.
+    Without it the first correction's re-validation would HARD-fail
+    ``resources_search_attempted`` and roll back as ``python_qg_failed``, truncating
+    the loop to one round. Left ``None`` at build time (telemetry present).
+    """
     review_rounds = max(1, int(max_rounds or llm_qg_max_rounds_for_level(plan.get("level"))))
     rounds: list[dict[str, Any]] = []
     corrections: list[dict[str, Any]] = []
@@ -5864,6 +5874,11 @@ def run_llm_qg_with_corrections(
                 plan_path,
                 writer=writer,
                 event_sink=event_sink,
+                # Re-validate the applied craft fix in the same telemetry-substitute
+                # mode the initial python_qg used. In --enhance (no writer telemetry)
+                # this prevents resources_search_attempted from HARD-failing the
+                # re-check and rolling back round 1 as python_qg_failed (#3079).
+                resource_liveness_fn=resource_liveness_fn,
             )
         else:
             python_qg = python_qg_runner()

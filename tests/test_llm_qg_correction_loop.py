@@ -52,6 +52,54 @@ def _python_qg_pass() -> dict[str, Any]:
     return {"gates": {"passed": True}}
 
 
+def _insert_corrector(context: linear_pipeline.CorrectionContext) -> str:
+    return (
+        "<fixes><fix><insert_after>Anchor sentence.</insert_after>"
+        "<text>\n\nSelf-check prompt.</text></fix></fixes>"
+    )
+
+
+def test_llm_qg_loop_forwards_resource_liveness_fn_to_revalidation(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """In --enhance (no writer telemetry) the loop's post-correction python_qg
+    re-validation must receive resource_liveness_fn — otherwise round 1 rolls back
+    as python_qg_failed and the craft loop never iterates (#3079). This drives the
+    REAL re-validation path (python_qg_runner left None)."""
+    module_dir = _module_dir(tmp_path)
+    plan_path = _plan_path(tmp_path)
+
+    def sentinel(url: str) -> bool:
+        return True
+
+    seen: dict[str, Any] = {}
+
+    def fake_pyqg(module_dir, plan_path, **kwargs):
+        seen["resource_liveness_fn"] = kwargs.get("resource_liveness_fn")
+        return {"gates": {"passed": True}}
+
+    monkeypatch.setattr(linear_pipeline, "run_python_qg_with_corrections", fake_pyqg)
+
+    reports = [_llm_report(pedagogical=6.0), _llm_report(pedagogical=9.0)]
+
+    def llm_runner(**_: Any) -> dict[str, Any]:
+        return reports.pop(0)
+
+    linear_pipeline.run_llm_qg_with_corrections(
+        plan={"level": "folk", "sequence": 1, "slug": "sample"},
+        plan_path=plan_path,
+        plan_content="plan",
+        module_dir=module_dir,
+        writer="codex-tools",
+        llm_qg_runner=llm_runner,
+        corrector=_insert_corrector,
+        max_rounds=3,
+        resource_liveness_fn=sentinel,  # python_qg_runner left None -> real path
+    )
+
+    assert seen.get("resource_liveness_fn") is sentinel
+
+
 def test_llm_qg_needs_subjective_fix_selects_terminal_dims_only() -> None:
     seminar_report = _llm_report(
         profile="seminar",

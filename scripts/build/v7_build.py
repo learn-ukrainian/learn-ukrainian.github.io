@@ -2204,6 +2204,11 @@ def _run(args: argparse.Namespace) -> int:
                     obligation_checklist=obligation_checklist,
                     max_rounds=linear_pipeline.llm_qg_max_rounds_for_level(level),
                     event_sink=tracker.emit,
+                    # --enhance has no writer telemetry, so the loop's post-correction
+                    # python_qg re-validation must use the same liveness substitute as
+                    # the initial python_qg, else round 1 rolls back as python_qg_failed
+                    # and the craft loop never iterates (#3079). None at build time.
+                    resource_liveness_fn=url_is_live if enhance else None,
                 )
             else:
                 llm_qg = _run_llm_qg(
