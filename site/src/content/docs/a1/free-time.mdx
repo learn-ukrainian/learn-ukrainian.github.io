@@ -77,10 +77,6 @@ By the end, you can:
 
 ## Діалоги
 
-### Notice board invitations
-
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Ходімо в кіно в суботу о п'ятій.", "isTrue": true, "explanation": "Invitation + place + day + time is a safe plan."}, {"statement": "Ходімо до кіно в суботу.", "isTrue": false, "explanation": "Use the chunk ходімо в кіно."}, {"statement": "Давай слухати музику ввечері.", "isTrue": true, "explanation": "Давай + infinitive is a friendly A1 invitation."}, {"statement": "Я ніколи працюю у неділю.", "isTrue": false, "explanation": "Ніколи needs не, so say я ніколи не працюю."}, {"statement": "Якщо буде дощ, ходімо в музей.", "isTrue": true, "explanation": "This combines weather and an alternative activity."}, {"statement": "Брати участь у гуртку.", "isTrue": true, "explanation": "Брати участь is the safe Ukrainian chunk."}]`)} instruction={"Decide if each plan is a safe A1 invitation."} isUkrainian={false} />
-
 The first scene is at a community center notice board. Вітя and Оленка choose a
 weekend activity. Notice the order: invitation + place + day + time.
 
@@ -147,24 +143,6 @@ The question **Як часто?** asks for frequency. Answer with one adverb
 (**часто**, **іноді**, **рідко**) or a time phrase (**раз на тиждень**,
 **двічі на тиждень**, **раз на місяць**).
 
-Two useful interview questions are:
-
-```text
-Чим ти любиш займатись у вільний від навчання час?
-Які фільми ти любиш дивитися?
-```
-
-Support after the Ukrainian lines:
-
-| Українська | English support |
-| --- | --- |
-| **Чим ти любиш займатись у вільний від навчання час?** | What do you like doing in your free time away from study? |
-| **Які фільми ти любиш дивитися?** | What films do you like watching? |
-
-### Build hobby chunks
-
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "грати", "right": "у футбол"}, {"left": "грати", "right": "на гітарі"}, {"left": "слухати", "right": "музику"}, {"left": "дивитися", "right": "фільми"}, {"left": "ходити", "right": "в кіно"}, {"left": "ходити", "right": "в театр"}, {"left": "читати", "right": "книгу"}, {"left": "відпочивати", "right": "вдома"}]`)} instruction={"Match each verb with the natural hobby chunk."} isUkrainian={false} />
-
 ## Хобі і спорт
 
 Learn hobbies as verb chunks, not as isolated nouns. This protects you from
@@ -185,6 +163,10 @@ English-style word-for-word phrases.
 | **займатися спортом** | to do sport |
 | **малювати** | to draw |
 | **фотографувати** | to take photos |
+
+### Хобі: дієслово і слово
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "грати", "right": "у футбол"}, {"left": "грати", "right": "на гітарі"}, {"left": "слухати", "right": "музику"}, {"left": "дивитися", "right": "фільми"}, {"left": "ходити", "right": "в кіно"}, {"left": "ходити", "right": "в театр"}, {"left": "читати", "right": "книгу"}, {"left": "малювати", "right": "вдома"}]`)} instruction={"З'єднай дієслово з логічним словом або фразою."} isUkrainian={false} />
 
 For sports and games, use **грати у/в**. For musical instruments, use
 **грати на**. Treat these as set phrases for now:
@@ -231,21 +213,9 @@ Ukrainian places and names naturally: **Київ**, **Львів**, **Карпа
 same chunks also work in short questions: **Куди ходиш у вихідні?** — **В
 кіно.**
 
-Коли формуємо лексичну базу уроку, спираємося на сучасні автентичні українські
-реалії, not abstract shared-space examples.
+### Прийменник у фразі
 
-Keep the same terminology discipline in hobby examples. Use **«Добрий день»**,
-write **«Київ»**, and say **«брати участь у гуртку»**. For short self-lines,
-keep the Ukrainian models **«Я студент»**, **«Він спортсмен»**, and **«Мені 20
-років»**.
-
-### Frequency and invitations
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ працюю у неділю.", "answer": "ніколи не", "options": ["ніколи не", "ніколи", "завжди не"]}, {"sentence": "Вона грає у теніс двічі ___.", "answer": "на тиждень", "options": ["на тиждень", "у тиждень", "в тиждень"]}, {"sentence": "___ в кіно у суботу! — Добре!", "answer": "Ходімо", "options": ["Ходімо", "Ходжу", "Ходиш"]}, {"sentence": "Я люблю спорт, тому ___ граю у баскетбол.", "answer": "часто", "options": ["часто", "ніколи", "не"]}, {"sentence": "Я не маю часу, тому ___ читаю книги.", "answer": "рідко", "options": ["рідко", "завжди", "кожен"]}, {"sentence": "— Що ти робиш ___? — Відпочиваю.", "answer": "у вихідні", "options": ["у вихідні", "вихідні", "на вихідні"]}]`)} instruction={"Choose the word or chunk that completes the sentence."} isUkrainian={false} />
-
-### Choose the safe preposition
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Він грає ___ піаніно.", "options": [{"text": "на", "correct": true}, {"text": "у", "correct": false}, {"text": "в", "correct": false}], "explanation": "Instruments use грати на."}, {"question": "Ми граємо ___ футбол.", "options": [{"text": "у", "correct": true}, {"text": "на", "correct": false}, {"text": "до", "correct": false}], "explanation": "Sports use грати у/в."}, {"question": "Я хочу ходити ___ концерт.", "options": [{"text": "на", "correct": true}, {"text": "в", "correct": false}, {"text": "до", "correct": false}], "explanation": "Use ходити на концерт."}, {"question": "Вони ходять ___ театр раз на місяць.", "options": [{"text": "в", "correct": true}, {"text": "на", "correct": false}, {"text": "до", "correct": false}], "explanation": "Use ходити в театр."}, {"question": "Ми йдемо ___ кіно.", "options": [{"text": "в", "correct": true}, {"text": "до", "correct": false}, {"text": "на", "correct": false}], "explanation": "The safe chunk is йти в кіно."}]`)} instruction={"Pick the phrase that keeps the activity chunk natural."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Він грає ___ піаніно.", "answer": "на", "options": ["на", "у", "в"]}, {"sentence": "Ми граємо ___ футбол.", "answer": "у", "options": ["у", "на", "в"]}, {"sentence": "Я хочу ходити ___ концерт.", "answer": "на", "options": ["на", "в", "у"]}, {"sentence": "Вони ходять ___ театр раз на місяць.", "answer": "в", "options": ["в", "на", "у"]}]`)} instruction={"Обери прийменник, який зберігає природну фразу."} isUkrainian={false} />
 
 ## Як часто?
 
@@ -264,7 +234,7 @@ The word **ніколи** needs **не**:
 
 ```text
 Я ніколи не працюю у неділю.
-Він ніколи не грає в гру вночі.
+Я ніколи не дивлюся фільми вночі.
 ```
 
 Support after the Ukrainian lines:
@@ -272,15 +242,19 @@ Support after the Ukrainian lines:
 | Українська | English support |
 | --- | --- |
 | **Я ніколи не працюю у неділю.** | I never work on Sunday. |
-| **Він ніколи не грає в гру вночі.** | He never plays a game at night. |
+| **Я ніколи не дивлюся фільми вночі.** | I never watch films at night. |
 
 Do not write **Я ніколи працюю**. Ukrainian uses the negative particle with
 **ніколи**.
 
+### Частота і запрошення
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ працюю у неділю.", "answer": "ніколи не", "options": ["ніколи не", "завжди", "часто"]}, {"sentence": "Вона грає у теніс двічі ___.", "answer": "на тиждень", "options": ["на тиждень", "у тиждень", "в тиждень"]}, {"sentence": "— ___ в кіно у суботу! — Добре!", "answer": "Ходімо", "options": ["Ходімо", "Давай", "Ідемо"]}, {"sentence": "Я люблю спорт, тому ___ граю у баскетбол.", "answer": "часто", "options": ["часто", "ніколи", "рідко"]}, {"sentence": "Я не маю часу, тому ___ читаю книги.", "answer": "рідко", "options": ["рідко", "часто", "завжди"]}, {"sentence": "— Що ти робиш ___? — Відпочиваю.", "answer": "у вихідні", "options": ["у вихідні", "вихідні", "на вихідні"]}]`)} instruction={"Обери слово або фразу, які найкраще завершують речення."} isUkrainian={false} />
+
 You can also count how often:
 
 ```text
-Коли ти читаєш? — Вранці, після уроків або на вихідних.
+Коли ти читаєш? — Вранці, після уроків або у вихідні.
 Він щодня грає у футбол.
 Я граю у футбол раз на тиждень.
 Вона грає у теніс двічі на тиждень.
@@ -293,7 +267,7 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Коли ти читаєш? — Вранці, після уроків або на вихідних.** | When do you read? — In the morning, after lessons, or on weekends. |
+| **Коли ти читаєш? — Вранці, після уроків або у вихідні.** | When do you read? — In the morning, after lessons, or on weekends. |
 | **Він щодня грає у футбол.** | He plays football every day. |
 | **Я граю у футбол раз на тиждень.** | I play football once a week. |
 | **Вона грає у теніс двічі на тиждень.** | She plays tennis twice a week. |
@@ -301,10 +275,8 @@ Support after the Ukrainian lines:
 | **Вони тренуються тричі на тиждень.** | They train three times a week. |
 | **Я читаю кожен день.** | I read every day. |
 
-Build a complete A1.4 plan with four pieces. **Підмет + Присудок + Обставина
-часу** is the safe sentence shape: **Я часто читаю цікаві книги на вихідних.**
-At A1, you do not need the case labels, but the roles are clear: subject,
-action, object, and time.
+Build a complete A1.4 plan with four pieces: day, time, weather, and activity.
+A safe sentence is: **Я часто читаю цікаві книги у вихідні.**
 
 ```text
 У суботу о п'ятій ходімо в кіно.
@@ -322,10 +294,8 @@ Support after the Ukrainian lines:
 | **Якщо буде дощ, ходімо в музей.** | If it rains, let's go to the museum. |
 | **У Карпатах холодно, але ми часто фотографуємо.** | In the Carpathians it is cold, but we often take photos. |
 
-For a short contrast, use **а** or **але**: **Я часто читаю, а брат часто грає
-у футбол.** **Я люблю сучасну музику, а мій брат любить активний спорт.** For
-a tiny integrated text, title it **Мій звичайний день** and include one free
-time line. You can also say: **Я люблю кіно, але рідко ходжу в театр.**
+For a short contrast, keep one simple sentence: **Я часто читаю, а брат часто
+грає у футбол.** You can also say: **Я люблю кіно, але рідко ходжу в театр.**
 
 ## 📋 Підсумок
 
@@ -334,7 +304,7 @@ For free time, keep three patterns in your head:
 **Action chunk + frequency + time = a useful sentence.**
 
 ```text
-Я часто читаю на вихідних.
+Я часто читаю у вихідні.
 Іноді я слухаю музику ввечері.
 Ми рідко ходимо в театр.
 ```
@@ -343,7 +313,7 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Я часто читаю на вихідних.** | I often read on weekends. |
+| **Я часто читаю у вихідні.** | I often read on weekends. |
 | **Іноді я слухаю музику ввечері.** | Sometimes I listen to music in the evening. |
 | **Ми рідко ходимо в театр.** | We rarely go to the theater. |
 
@@ -375,18 +345,6 @@ Support after the Ukrainian lines:
 | **Сьогодні сонячно, тому ходімо гуляти.** | Today it is sunny, so let's go for a walk. |
 | **Буде дощ, тому ходімо в музей.** | It will rain, so let's go to the museum. |
 
-:::caution
-Build this topic from Ukrainian chunks. For Ukrainian learning by foreigners,
-practice means свідоме уникнення усіх фонетичних, лексичних чи культурних
-порівнянь з російською мовою. Do not compare hobby words with Russian or
-explain them through Russian forms. Також категорично заборонено подавати
-спільну лексику як запозичену з російської чи як пострадянську. Words such as
-**спорт** and **футбол** belong fully to Ukrainian speech here. Use **Добрий
-день**, **Київ**, **брати участь**, **Я студент**, **Він спортсмен**, and
-**Мені 20 років** as safe Ukrainian models. Avoid nonstandard participation
-calques.
-:::
-
 Write five short lines about your free time:
 
 ```text
@@ -410,44 +368,24 @@ Support after the Ukrainian lines:
 </TabItem>
 <TabItem label="Vocabulary">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"вільний час","translation":"free time","pos":"noun phrase","example":"У вільний час я читаю.","examples":["free time","У вільний час я читаю."],"atlas_href":"/lexicon/вільний-час/"},{"word":"вихідні","translation":"weekend; days off","pos":"plural noun","example":"У вихідні я відпочиваю.","examples":["weekend; days off","У вихідні я відпочиваю."],"atlas_href":"/lexicon/вихідні/"},{"word":"хобі","translation":"hobby","pos":"noun","example":"Моє хобі — музика.","examples":["hobby","Моє хобі — музика."],"atlas_href":"/lexicon/хобі/"},{"word":"спорт","translation":"sport","pos":"noun","example":"Я люблю спорт.","examples":["sport","Я люблю спорт."],"atlas_href":"/lexicon/спорт/"},{"word":"футбол","translation":"football; soccer","pos":"noun","example":"Я граю у футбол.","examples":["football; soccer","Я граю у футбол."],"atlas_href":"/lexicon/футбол/"},{"word":"баскетбол","translation":"basketball","pos":"noun","example":"Ми граємо у баскетбол.","examples":["basketball","Ми граємо у баскетбол."],"atlas_href":"/lexicon/баскетбол/"},{"word":"теніс","translation":"tennis","pos":"noun","example":"Вона грає у теніс.","examples":["tennis","Вона грає у теніс."],"atlas_href":"/lexicon/теніс/"},{"word":"музика","translation":"music","pos":"noun","example":"Я слухаю музику.","examples":["music","Я слухаю музику."],"atlas_href":"/lexicon/музика/"},{"word":"фільм","translation":"film; movie","pos":"noun","example":"Я дивлюся фільм.","examples":["film; movie","Я дивлюся фільм."],"atlas_href":"/lexicon/фільм/"},{"word":"кіно","translation":"cinema; movie theater","pos":"noun","example":"Ходімо в кіно.","examples":["cinema; movie theater","Ходімо в кіно."],"atlas_href":"/lexicon/кіно/"},{"word":"театр","translation":"theater","pos":"noun","example":"Ми ходимо в театр.","examples":["theater","Ми ходимо в театр."],"atlas_href":"/lexicon/театр/"},{"word":"концерт","translation":"concert","pos":"noun","example":"Вони ходять на концерт.","examples":["concert","Вони ходять на концерт."],"atlas_href":"/lexicon/концерт/"},{"word":"музей","translation":"museum","pos":"noun","example":"Ходімо в музей.","examples":["museum","Ходімо в музей."],"atlas_href":"/lexicon/музей/"},{"word":"гурток","translation":"club; activity group","pos":"noun","example":"Це музичний гурток.","examples":["club; activity group","Це музичний гурток."],"atlas_href":"/lexicon/гурток/"},{"word":"читати","translation":"to read","pos":"verb","example":"Я читаю книгу.","examples":["to read","Я читаю книгу."],"atlas_href":"/lexicon/читати/"},{"word":"слухати","translation":"to listen","pos":"verb","example":"Я слухаю музику.","examples":["to listen","Я слухаю музику."],"atlas_href":"/lexicon/слухати/"},{"word":"дивитися","translation":"to watch","pos":"verb","example":"Я дивлюся фільми.","examples":["to watch","Я дивлюся фільми."],"atlas_href":"/lexicon/дивитися/"},{"word":"гуляти","translation":"to walk","pos":"verb","example":"Я гуляю в парку.","examples":["to walk","Я гуляю в парку."],"atlas_href":"/lexicon/гуляти/"},{"word":"відпочивати","translation":"to rest","pos":"verb","example":"Я відпочиваю вдома.","examples":["to rest","Я відпочиваю вдома."],"atlas_href":"/lexicon/відпочивати/"},{"word":"грати","translation":"to play","pos":"verb","example":"Я граю у футбол.","examples":["to play","Я граю у футбол."],"atlas_href":"/lexicon/грати/"},{"word":"займатися спортом","translation":"to do sport","pos":"phrase","example":"Я займаюся спортом.","examples":["to do sport","Я займаюся спортом."],"atlas_href":"/lexicon/займатися-спортом/"},{"word":"малювати","translation":"to draw","pos":"verb","example":"Я іноді малюю.","examples":["to draw","Я іноді малюю."],"atlas_href":"/lexicon/малювати/"},{"word":"фотографувати","translation":"to take photos","pos":"verb","example":"У Карпатах я фотографую.","examples":["to take photos","У Карпатах я фотографую."],"atlas_href":"/lexicon/фотографувати/"},{"word":"грати у футбол","translation":"to play football","pos":"phrase","example":"Він грає у футбол.","examples":["to play football","Він грає у футбол."],"atlas_href":"/lexicon/грати-у-футбол/"},{"word":"грати на гітарі","translation":"to play guitar","pos":"phrase","example":"Вона грає на гітарі.","examples":["to play guitar","Вона грає на гітарі."],"atlas_href":"/lexicon/грати-на-гітарі/"},{"word":"ходити в кіно","translation":"to go to the cinema","pos":"phrase","example":"Ми ходимо в кіно раз на місяць.","examples":["to go to the cinema","Ми ходимо в кіно раз на місяць."],"atlas_href":"/lexicon/ходити-в-кіно/"},{"word":"ходити в театр","translation":"to go to the theater","pos":"phrase","example":"Вони ходять в театр.","examples":["to go to the theater","Вони ходять в театр."],"atlas_href":"/lexicon/ходити-в-театр/"},{"word":"ходити на концерт","translation":"to go to a concert","pos":"phrase","example":"Я хочу ходити на концерт.","examples":["to go to a concert","Я хочу ходити на концерт."],"atlas_href":"/lexicon/ходити-на-концерт/"},{"word":"завжди","translation":"always","pos":"adverb","example":"Я завжди читаю ввечері.","examples":["always","Я завжди читаю ввечері."],"atlas_href":"/lexicon/завжди/"},{"word":"зазвичай","translation":"usually","pos":"adverb","example":"Я зазвичай гуляю у вихідні.","examples":["usually","Я зазвичай гуляю у вихідні."],"atlas_href":"/lexicon/зазвичай/"},{"word":"часто","translation":"often","pos":"adverb","example":"Я часто слухаю музику.","examples":["often","Я часто слухаю музику."],"atlas_href":"/lexicon/часто/"},{"word":"іноді","translation":"sometimes","pos":"adverb","example":"Я іноді малюю.","examples":["sometimes","Я іноді малюю."],"atlas_href":"/lexicon/іноді/"},{"word":"інколи","translation":"sometimes","pos":"adverb","example":"Інколи ми ходимо в музей.","examples":["sometimes","Інколи ми ходимо в музей."],"atlas_href":"/lexicon/інколи/"},{"word":"рідко","translation":"rarely","pos":"adverb","example":"Я рідко ходжу в театр.","examples":["rarely","Я рідко ходжу в театр."],"atlas_href":"/lexicon/рідко/"},{"word":"ніколи","translation":"never","pos":"adverb","example":"Я ніколи не працюю у неділю.","examples":["never","Я ніколи не працюю у неділю."],"atlas_href":"/lexicon/ніколи/"},{"word":"раз на тиждень","translation":"once a week","pos":"frequency chunk","example":"Я ходжу в кіно раз на тиждень.","examples":["once a week","Я ходжу в кіно раз на тиждень."],"atlas_href":"/lexicon/раз-на-тиждень/"},{"word":"двічі на тиждень","translation":"twice a week","pos":"frequency chunk","example":"Вона грає у теніс двічі на тиждень.","examples":["twice a week","Вона грає у теніс двічі на тиждень."],"atlas_href":"/lexicon/двічі-на-тиждень/"},{"word":"тричі на тиждень","translation":"three times a week","pos":"frequency chunk","example":"Вони тренуються тричі на тиждень.","examples":["three times a week","Вони тренуються тричі на тиждень."],"atlas_href":"/lexicon/тричі-на-тиждень/"},{"word":"раз на місяць","translation":"once a month","pos":"frequency chunk","example":"Ми ходимо в театр раз на місяць.","examples":["once a month","Ми ходимо в театр раз на місяць."],"atlas_href":"/lexicon/раз-на-місяць/"},{"word":"Ходімо!","translation":"Let's go!","pos":"invitation chunk","example":"Ходімо в кіно!","examples":["Let's go!","Ходімо в кіно!"]},{"word":"Давай!","translation":"Let's!","pos":"informal invitation chunk","example":"Давай грати разом!","examples":["Let's!","Давай грати разом!"]},{"word":"як часто?","translation":"how often?","pos":"question chunk","example":"Як часто ти граєш у футбол?","examples":["how often?","Як часто ти граєш у футбол?"],"atlas_href":"/lexicon/як-часто/"},{"word":"у вихідні","translation":"on weekends","pos":"time chunk","example":"У вихідні я читаю.","examples":["on weekends","У вихідні я читаю."],"atlas_href":"/lexicon/у-вихідні/"}]`)} title="Vocabulary" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"вільний час","translation":"free time","pos":"noun phrase","example":"У вільний час я читаю.","examples":["free time","У вільний час я читаю."],"atlas_href":"/lexicon/вільний-час/"},{"word":"вихідні","translation":"weekend; days off","pos":"plural noun","example":"У вихідні я відпочиваю.","examples":["weekend; days off","У вихідні я відпочиваю."]},{"word":"хобі","translation":"hobby","pos":"noun","example":"Моє хобі — музика.","examples":["hobby","Моє хобі — музика."],"atlas_href":"/lexicon/хобі/"},{"word":"спорт","translation":"sport","pos":"noun","example":"Я люблю спорт.","examples":["sport","Я люблю спорт."],"atlas_href":"/lexicon/спорт/"},{"word":"футбол","translation":"football; soccer","pos":"noun","example":"Я граю у футбол.","examples":["football; soccer","Я граю у футбол."],"atlas_href":"/lexicon/футбол/"},{"word":"баскетбол","translation":"basketball","pos":"noun","example":"Ми граємо у баскетбол.","examples":["basketball","Ми граємо у баскетбол."],"atlas_href":"/lexicon/баскетбол/"},{"word":"теніс","translation":"tennis","pos":"noun","example":"Вона грає у теніс.","examples":["tennis","Вона грає у теніс."],"atlas_href":"/lexicon/теніс/"},{"word":"музика","translation":"music","pos":"noun","example":"Я слухаю музику.","examples":["music","Я слухаю музику."],"atlas_href":"/lexicon/музика/"},{"word":"фільм","translation":"film; movie","pos":"noun","example":"Я дивлюся фільм.","examples":["film; movie","Я дивлюся фільм."],"atlas_href":"/lexicon/фільм/"},{"word":"кіно","translation":"cinema; movie theater","pos":"noun","example":"Ходімо в кіно.","examples":["cinema; movie theater","Ходімо в кіно."],"atlas_href":"/lexicon/кіно/"},{"word":"театр","translation":"theater","pos":"noun","example":"Ми ходимо в театр.","examples":["theater","Ми ходимо в театр."],"atlas_href":"/lexicon/театр/"},{"word":"концерт","translation":"concert","pos":"noun","example":"Вони ходять на концерт.","examples":["concert","Вони ходять на концерт."],"atlas_href":"/lexicon/концерт/"},{"word":"музей","translation":"museum","pos":"noun","example":"Ходімо в музей.","examples":["museum","Ходімо в музей."],"atlas_href":"/lexicon/музей/"},{"word":"гурток","translation":"club; activity group","pos":"noun","example":"Це музичний гурток.","examples":["club; activity group","Це музичний гурток."],"atlas_href":"/lexicon/гурток/"},{"word":"читати","translation":"to read","pos":"verb","example":"Я читаю книгу.","examples":["to read","Я читаю книгу."],"atlas_href":"/lexicon/читати/"},{"word":"слухати","translation":"to listen","pos":"verb","example":"Я слухаю музику.","examples":["to listen","Я слухаю музику."],"atlas_href":"/lexicon/слухати/"},{"word":"дивитися","translation":"to watch","pos":"verb","example":"Я дивлюся фільми.","examples":["to watch","Я дивлюся фільми."],"atlas_href":"/lexicon/дивитися/"},{"word":"гуляти","translation":"to walk","pos":"verb","example":"Я гуляю в парку.","examples":["to walk","Я гуляю в парку."],"atlas_href":"/lexicon/гуляти/"},{"word":"відпочивати","translation":"to rest","pos":"verb","example":"Я відпочиваю вдома.","examples":["to rest","Я відпочиваю вдома."],"atlas_href":"/lexicon/відпочивати/"},{"word":"грати","translation":"to play","pos":"verb","example":"Я граю у футбол.","examples":["to play","Я граю у футбол."],"atlas_href":"/lexicon/грати/"},{"word":"займатися спортом","translation":"to do sport","pos":"phrase","example":"Я займаюся спортом.","examples":["to do sport","Я займаюся спортом."],"atlas_href":"/lexicon/займатися-спортом/"},{"word":"малювати","translation":"to draw","pos":"verb","example":"Я іноді малюю.","examples":["to draw","Я іноді малюю."],"atlas_href":"/lexicon/малювати/"},{"word":"фотографувати","translation":"to take photos","pos":"verb","example":"У Карпатах я фотографую.","examples":["to take photos","У Карпатах я фотографую."],"atlas_href":"/lexicon/фотографувати/"},{"word":"грати у футбол","translation":"to play football","pos":"phrase","example":"Він грає у футбол.","examples":["to play football","Він грає у футбол."],"atlas_href":"/lexicon/грати-у-футбол/"},{"word":"грати на гітарі","translation":"to play guitar","pos":"phrase","example":"Вона грає на гітарі.","examples":["to play guitar","Вона грає на гітарі."],"atlas_href":"/lexicon/грати-на-гітарі/"},{"word":"ходити в кіно","translation":"to go to the cinema","pos":"phrase","example":"Ми ходимо в кіно раз на місяць.","examples":["to go to the cinema","Ми ходимо в кіно раз на місяць."],"atlas_href":"/lexicon/ходити-в-кіно/"},{"word":"ходити в театр","translation":"to go to the theater","pos":"phrase","example":"Вони ходять в театр.","examples":["to go to the theater","Вони ходять в театр."],"atlas_href":"/lexicon/ходити-в-театр/"},{"word":"ходити на концерт","translation":"to go to a concert","pos":"phrase","example":"Я хочу ходити на концерт.","examples":["to go to a concert","Я хочу ходити на концерт."],"atlas_href":"/lexicon/ходити-на-концерт/"},{"word":"завжди","translation":"always","pos":"adverb","example":"Я завжди читаю ввечері.","examples":["always","Я завжди читаю ввечері."],"atlas_href":"/lexicon/завжди/"},{"word":"зазвичай","translation":"usually","pos":"adverb","example":"Я зазвичай гуляю у вихідні.","examples":["usually","Я зазвичай гуляю у вихідні."],"atlas_href":"/lexicon/зазвичай/"},{"word":"часто","translation":"often","pos":"adverb","example":"Я часто слухаю музику.","examples":["often","Я часто слухаю музику."],"atlas_href":"/lexicon/часто/"},{"word":"іноді","translation":"sometimes","pos":"adverb","example":"Я іноді малюю.","examples":["sometimes","Я іноді малюю."],"atlas_href":"/lexicon/іноді/"},{"word":"інколи","translation":"sometimes","pos":"adverb","example":"Інколи ми ходимо в музей.","examples":["sometimes","Інколи ми ходимо в музей."],"atlas_href":"/lexicon/інколи/"},{"word":"рідко","translation":"rarely","pos":"adverb","example":"Я рідко ходжу в театр.","examples":["rarely","Я рідко ходжу в театр."],"atlas_href":"/lexicon/рідко/"},{"word":"ніколи","translation":"never","pos":"adverb","example":"Я ніколи не працюю у неділю.","examples":["never","Я ніколи не працюю у неділю."],"atlas_href":"/lexicon/ніколи/"},{"word":"раз на тиждень","translation":"once a week","pos":"frequency chunk","example":"Я ходжу в кіно раз на тиждень.","examples":["once a week","Я ходжу в кіно раз на тиждень."],"atlas_href":"/lexicon/раз-на-тиждень/"},{"word":"двічі на тиждень","translation":"twice a week","pos":"frequency chunk","example":"Вона грає у теніс двічі на тиждень.","examples":["twice a week","Вона грає у теніс двічі на тиждень."],"atlas_href":"/lexicon/двічі-на-тиждень/"},{"word":"тричі на тиждень","translation":"three times a week","pos":"frequency chunk","example":"Вони тренуються тричі на тиждень.","examples":["three times a week","Вони тренуються тричі на тиждень."],"atlas_href":"/lexicon/тричі-на-тиждень/"},{"word":"раз на місяць","translation":"once a month","pos":"frequency chunk","example":"Ми ходимо в театр раз на місяць.","examples":["once a month","Ми ходимо в театр раз на місяць."],"atlas_href":"/lexicon/раз-на-місяць/"},{"word":"Ходімо!","translation":"Let's go!","pos":"invitation chunk","example":"Ходімо в кіно!","examples":["Let's go!","Ходімо в кіно!"]},{"word":"Давай!","translation":"Let's!","pos":"informal invitation chunk","example":"Давай грати разом!","examples":["Let's!","Давай грати разом!"]},{"word":"як часто?","translation":"how often?","pos":"question chunk","example":"Як часто ти граєш у футбол?","examples":["how often?","Як часто ти граєш у футбол?"],"atlas_href":"/lexicon/як-часто/"},{"word":"у вихідні","translation":"on weekends","pos":"time chunk","example":"У вихідні я читаю.","examples":["on weekends","У вихідні я читаю."],"atlas_href":"/lexicon/у-вихідні/"}]`)} title="Vocabulary" />
 
 <FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"вільний час","back":"free time"},{"front":"вихідні","back":"weekend; days off"},{"front":"хобі","back":"hobby"},{"front":"спорт","back":"sport"},{"front":"футбол","back":"football; soccer"},{"front":"баскетбол","back":"basketball"},{"front":"теніс","back":"tennis"},{"front":"музика","back":"music"},{"front":"фільм","back":"film; movie"},{"front":"кіно","back":"cinema; movie theater"},{"front":"театр","back":"theater"},{"front":"концерт","back":"concert"},{"front":"музей","back":"museum"},{"front":"гурток","back":"club; activity group"},{"front":"читати","back":"to read"},{"front":"слухати","back":"to listen"},{"front":"дивитися","back":"to watch"},{"front":"гуляти","back":"to walk"},{"front":"відпочивати","back":"to rest"},{"front":"грати","back":"to play"},{"front":"займатися спортом","back":"to do sport"},{"front":"малювати","back":"to draw"},{"front":"фотографувати","back":"to take photos"},{"front":"грати у футбол","back":"to play football"},{"front":"грати на гітарі","back":"to play guitar"},{"front":"ходити в кіно","back":"to go to the cinema"},{"front":"ходити в театр","back":"to go to the theater"},{"front":"ходити на концерт","back":"to go to a concert"},{"front":"завжди","back":"always"},{"front":"зазвичай","back":"usually"},{"front":"часто","back":"often"},{"front":"іноді","back":"sometimes"},{"front":"інколи","back":"sometimes"},{"front":"рідко","back":"rarely"},{"front":"ніколи","back":"never"},{"front":"раз на тиждень","back":"once a week"},{"front":"двічі на тиждень","back":"twice a week"},{"front":"тричі на тиждень","back":"three times a week"},{"front":"раз на місяць","back":"once a month"},{"front":"Ходімо!","back":"Let's go!"},{"front":"Давай!","back":"Let's!"},{"front":"як часто?","back":"how often?"},{"front":"у вихідні","back":"on weekends"}]`)} />
 
 </TabItem>
 <TabItem label="Activities">
 
-### Notice board invitations
-
-*(see lesson, §Діалоги)*
-
-### Build hobby chunks
-
-*(see lesson, §Діалоги)*
-
-### Frequency and invitations
+### Хобі: дієслово і слово
 
 *(see lesson, §Хобі і спорт)*
 
-### Choose the safe preposition
+### Частота і запрошення
+
+*(see lesson, §Як часто?)*
+
+### Прийменник у фразі
 
 *(see lesson, §Хобі і спорт)*
-
-### From weather to plan
-
-<Order client:only='react' items={JSON.parse(`["Сьогодні субота.", "Оленко, що ти робиш у вихідні?", "Зазвичай я гуляю і читаю.", "Буде тепло.", "Давай грати у футбол о третій.", "Добре, а якщо буде дощ?", "Якщо буде дощ, ходімо в музей.", "Чудово!"]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5, 6, 7]`)} instruction={"Put the planning lines into a natural order."} isUkrainian={true} />
-
-### Frequency shelves
-
-<GroupSort client:only='react' groups={JSON.parse(`{"Always or usually": ["завжди", "зазвичай", "кожен день"], "Sometimes or rarely": ["іноді", "інколи", "рідко"], "Counted frequency": ["раз на тиждень", "двічі на тиждень", "раз на місяць"], "Invitations": ["Ходімо в кіно!", "Давай грати разом!", "Ходімо в музей!"]}`)} instruction={"Sort the chunks by what they answer."} isUkrainian={false} />
-
-### Say a free-time plan
-
-<Translate client:only='react' questions={JSON.parse(`[{"source": "I often listen to music.", "options": [{"text": "Я часто слухаю музику.", "correct": true}, {"text": "Я слухаю до музики часто.", "correct": false}, {"text": "Я часто слухаю до музики.", "correct": false}], "explanation": "Часто usually stands before the verb."}, {"source": "I play football twice a week.", "options": [{"text": "Я граю у футбол двічі на тиждень.", "correct": true}, {"text": "Я граю футбол двічі на тиждень.", "correct": false}, {"text": "Я граю на футбол двічі в тиждень.", "correct": false}], "explanation": "Sports use грати у/в."}, {"source": "Let's go to the cinema on Saturday at five.", "options": [{"text": "Ходімо в кіно в суботу о п'ятій.", "correct": true}, {"text": "Ходімо до кіно в суботу о п'ятій.", "correct": false}, {"text": "Ходжу в кіно в суботу о п'ятій.", "correct": false}], "explanation": "Ходімо в кіно is the clean invitation."}, {"source": "If it rains, let's go to the museum.", "options": [{"text": "Якщо буде дощ, ходімо в музей.", "correct": true}, {"text": "Якщо буде дощ, ходімо до музей.", "correct": false}, {"text": "Якщо є дощ, ходжу в музей.", "correct": false}], "explanation": "This combines weather and an alternative."}, {"source": "I never work on Sunday.", "options": [{"text": "Я ніколи не працюю у неділю.", "correct": true}, {"text": "Я ніколи працюю у неділю.", "correct": false}, {"text": "Я не ніколи працюю у неділю.", "correct": false}], "explanation": "Ніколи needs не."}]`)} instruction={"Translate into Ukrainian using the chunks from the lesson."} isUkrainian={false} />
-
-### Repair hobby interference
-
-<ErrorCorrection client:only='react' instruction="Choose the Ukrainian repair for each unsafe learner sentence." items={JSON.parse(`[{"sentence": "Я граю гру (англ. I play a game).", "errorWord": "граю гру", "correctForm": "Я граю в гру.", "options": ["Я граю в гру.", "Я граю гру.", "Я граю до гри."], "explanation": "Games use грати в/у + object."}, {"sentence": "Я слухаю до музики (англ. I listen to music).", "errorWord": "до музики", "correctForm": "Я слухаю музику.", "options": ["Я слухаю музику.", "Я слухаю до музики.", "Я слухаю на музику."], "explanation": "Слухати takes a direct object without a preposition."}, {"sentence": "Я займаюся спорт (англ. I do sport).", "errorWord": "спорт", "correctForm": "Я займаюся спортом.", "options": ["Я займаюся спортом.", "Я займаюся спорт.", "Я роблю спорт."], "explanation": "The safe chunk is займатися спортом."}, {"sentence": "Я дивлюся на телевізор (англ. I look at the TV).", "errorWord": "на телевізор", "correctForm": "Я дивлюся телевізор.", "options": ["Я дивлюся телевізор.", "Я дивлюся на телевізор.", "Я слухаю телевізор."], "explanation": "For watching TV, use дивитися телевізор."}, {"sentence": "На моєму вільному часі (англ. In my free time).", "errorWord": "На моєму вільному часі", "correctForm": "У мій вільний час.", "options": ["У мій вільний час.", "На моєму вільному часі.", "До мого вільного часу."], "explanation": "Use у/в + chunk, not на."}, {"sentence": "Ми йдемо до кіно (англ. Go to the movies).", "errorWord": "до кіно", "correctForm": "Ми йдемо в кіно.", "options": ["Ми йдемо в кіно.", "Ми йдемо до кіно.", "Ми йдемо на кіно."], "explanation": "The safe direction chunk is в кіно."}]`)} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">
@@ -456,7 +394,6 @@ Support after the Ukrainian lines:
 
 **📝 Articles:**
 - 📄 [Daily Routines](https://thelanguages.com/learn/ukrainian/foundations/vocabulary/4/) — Reinforces day-plan vocabulary used when free-time activities connect with routine.
-- 📄 [Dative Pronouns and Подобатися](https://opentext.ku.edu/dobraforma/chapter/15-1/) — Useful follow-up for liking and preference chunks after this module.
 - 📄 [Ukrainian Vocabulary: Verbs](https://www.ukrainianlessons.com/vocabulary-verbs/) — Learner-safe verb reference for high-frequency actions such as reading, listening, playing, watching, walking, and resting.
 - 📄 [Котра година? Time Vocabulary in Ukrainian](https://www.ukrainianlessons.com/grammar-time/) — Follow-up reference for combining free-time invitations with clock time.
 :::
