@@ -1,0 +1,280 @@
+- lemma: наказовий спосіб
+  translation: "imperative mood"
+  pos: phrase
+  usage: "У наказовому способі вид показує намір мовця."
+- lemma: вид
+  translation: "aspect"
+  pos: noun:m
+  usage: "Вид допомагає розрізняти процес і результат."
+- lemma: доконаний вид
+  translation: "perfective aspect"
+  pos: phrase
+  usage: "Доконаний вид у наказі часто просить конкретний результат."
+- lemma: недоконаний вид
+  translation: "imperfective aspect"
+  pos: phrase
+  usage: "Недоконаний вид потрібен для процесу, звички або заборони."
+- lemma: результат
+  translation: "result"
+  pos: noun:m
+  usage: "Форма напишіть просить готовий результат."
+- lemma: процес
+  translation: "process"
+  pos: noun:m
+  usage: "Форма пишіть може описувати процес роботи."
+- lemma: заборона
+  translation: "prohibition"
+  pos: noun:f
+  usage: "Звичайна заборона має модель не плюс недоконаний вид."
+- lemma: застереження
+  translation: "warning, caution"
+  pos: noun:n
+  usage: "Не впади - застереження про небажаний результат."
+- lemma: дозвіл
+  translation: "permission"
+  pos: noun:m
+  usage: "Починайте може звучати як дозвіл почати роботу."
+- lemma: запрошення
+  translation: "invitation"
+  pos: noun:n
+  usage: "Сідайте до столу - гостинне запрошення."
+- lemma: порада
+  translation: "advice"
+  pos: noun:f
+  usage: "Не хвилюйся - м'яка порада, а не сувора заборона."
+- lemma: інструкція
+  translation: "instruction"
+  pos: noun:f
+  usage: "У рецепті інструкція часто має доконані накази."
+- lemma: правило
+  translation: "rule"
+  pos: noun:n
+  usage: "Не відкривайте підозрілі файли - правило безпеки."
+- lemma: прагматичний
+  translation: "pragmatic"
+  pos: adj
+  usage: "Вибір виду є прагматичним, бо залежить від наміру."
+- lemma: намір
+  translation: "intention"
+  pos: noun:m
+  usage: "Намір мовця керує вибором виду."
+- lemma: контрольований
+  translation: "controlled"
+  pos: adj
+  usage: "Контрольована дія в забороні вимагає недоконаного виду."
+- lemma: випадковий
+  translation: "accidental"
+  pos: adj
+  usage: "Не загуби квиток попереджає про випадковий результат."
+- lemma: конкретний
+  translation: "specific, concrete"
+  pos: adj
+  usage: "Конкретний результат часто виражається доконаним видом."
+- lemma: загальний
+  translation: "general"
+  pos: adj
+  usage: "Загальне правило потребує недоконаного виду."
+- lemma: повторюваний
+  translation: "repeated, recurring"
+  pos: adj
+  usage: "Повторювана дія зазвичай має недоконаний вид."
+- lemma: регулярно
+  translation: "regularly"
+  pos: adv
+  usage: "Перевіряйте пошту регулярно."
+- lemma: щодня
+  translation: "every day"
+  pos: adv
+  usage: "Записуйте нові слова щодня."
+- lemma: обережно
+  translation: "carefully, watch out"
+  pos: adv
+  usage: "Обережно, не впади на сходах."
+- lemma: стежити
+  translation: "to watch, monitor"
+  pos: verb:impf
+  usage: "Стежте, щоб ніхто не загубив квитки."
+- lemma: помити
+  translation: "to wash"
+  pos: verb:pf
+  usage: "Помийте руки перед приготуванням."
+- lemma: мити
+  translation: "to wash"
+  pos: verb:impf
+  usage: "Мийте руки перед їжею."
+- lemma: нарізати
+  translation: "to chop, slice"
+  pos: verb:pf
+  usage: "Наріжте цибулю дрібними кубиками."
+- lemma: різати
+  translation: "to cut, slice"
+  pos: verb:impf
+  usage: "Не ріжте хліб на цій дошці."
+- lemma: додати
+  translation: "to add"
+  pos: verb:pf
+  usage: "Додайте трохи солі."
+- lemma: додавати
+  translation: "to add"
+  pos: verb:impf
+  usage: "Не додавайте забагато солі."
+- lemma: перемішати
+  translation: "to mix"
+  pos: verb:pf
+  usage: "Перемішайте начинку."
+- lemma: перемішувати
+  translation: "to mix"
+  pos: verb:impf
+  usage: "Не перемішуйте тісто занадто довго."
+- lemma: зберегти
+  translation: "to save"
+  pos: verb:pf
+  usage: "Збережіть зміни перед виходом."
+- lemma: зберігати
+  translation: "to save, keep"
+  pos: verb:impf
+  usage: "Зберігайте копії важливих документів."
+- lemma: надіслати
+  translation: "to send"
+  pos: verb:pf
+  usage: "Надішліть файл до п'ятої."
+- lemma: надсилати
+  translation: "to send"
+  pos: verb:impf
+  usage: "Не надсилайте пароль у чаті."
+- lemma: записати
+  translation: "to write down"
+  pos: verb:pf
+  usage: "Запиши адресу."
+- lemma: записувати
+  translation: "to write down, record"
+  pos: verb:impf
+  usage: "Записуйте нові слова щодня."
+- lemma: прочитати
+  translation: "to read through"
+  pos: verb:pf
+  usage: "Прочитайте інструкцію до кінця."
+- lemma: читати
+  translation: "to read"
+  pos: verb:impf
+  usage: "Читайте уважно й не поспішайте."
+- lemma: відчинити
+  translation: "to open (door/window)"
+  pos: verb:pf
+  usage: "Відчиніть вікно, будь ласка."
+- lemma: відчиняти
+  translation: "to open (door/window)"
+  pos: verb:impf
+  usage: "Не відчиняйте двері незнайомим людям."
+- lemma: відкрити
+  translation: "to open (file/app/book)"
+  pos: verb:pf
+  usage: "Відкрийте застосунок."
+- lemma: відкривати
+  translation: "to open (file/app/book)"
+  pos: verb:impf
+  usage: "Не відкривайте підозрілі файли."
+- lemma: зайти
+  translation: "to enter, drop in"
+  pos: verb:pf
+  usage: "Зайдіть до кабінету після перерви."
+- lemma: заходити
+  translation: "to come in, enter"
+  pos: verb:impf
+  usage: "Заходьте, будь ласка."
+- lemma: сісти
+  translation: "to sit down"
+  pos: verb:pf
+  usage: "Сядьте на перше місце."
+- lemma: сідати
+  translation: "to sit down"
+  pos: verb:impf
+  usage: "Сідайте до столу."
+- lemma: взяти
+  translation: "to take"
+  pos: verb:pf
+  usage: "Візьміть талон у черзі."
+- lemma: брати
+  translation: "to take"
+  pos: verb:impf
+  usage: "Беріть чай, будь ласка."
+- lemma: почати
+  translation: "to begin"
+  pos: verb:pf
+  usage: "Почніть вправу зараз."
+- lemma: починати
+  translation: "to begin"
+  pos: verb:impf
+  usage: "Починайте, коли будете готові."
+- lemma: торкнутися
+  translation: "to touch once"
+  pos: verb:pf
+  usage: "Торкніться екрана один раз."
+- lemma: торкатися
+  translation: "to touch"
+  pos: verb:impf
+  usage: "Не торкайтеся експонатів."
+- lemma: забути
+  translation: "to forget"
+  pos: verb:pf
+  usage: "Не забудь ключі."
+- lemma: забувати
+  translation: "to forget"
+  pos: verb:impf
+  usage: "Не забувай тренуватися."
+- lemma: загубити
+  translation: "to lose"
+  pos: verb:pf
+  usage: "Не загубіть квитки."
+- lemma: губити
+  translation: "to lose"
+  pos: verb:impf
+  usage: "Не губи речі."
+- lemma: впасти
+  translation: "to fall"
+  pos: verb:pf
+  usage: "Обережно, не впади."
+- lemma: падати
+  translation: "to fall"
+  pos: verb:impf
+  usage: "Не падай духом."
+- lemma: розбити
+  translation: "to break, smash"
+  pos: verb:pf
+  usage: "Не розбий чашку."
+- lemma: розбивати
+  translation: "to break, smash"
+  pos: verb:impf
+  usage: "Не розбивайте групу без потреби."
+- lemma: обпектися
+  translation: "to burn oneself"
+  pos: verb:pf
+  usage: "Обережно, не обпечіться."
+- lemma: хвилюватися
+  translation: "to worry"
+  pos: verb:impf
+  usage: "Не хвилюйся перед виступом."
+- lemma: запізнитися
+  translation: "to be late"
+  pos: verb:pf
+  usage: "Не запізнися на потяг, це конкретне застереження."
+- lemma: запізнюватися
+  translation: "to be late"
+  pos: verb:impf
+  usage: "Не запізнюйся на уроки."
+- lemma: перевірити
+  translation: "to check"
+  pos: verb:pf
+  usage: "Перевірте список учасників."
+- lemma: перевіряти
+  translation: "to check"
+  pos: verb:impf
+  usage: "Перевіряйте пошту щоранку."
+- lemma: службовий
+  translation: "service, official"
+  pos: adj
+  usage: "Не відчиняйте службові двері без координатора."
+- lemma: підозрілий
+  translation: "suspicious"
+  pos: adj
+  usage: "Не відкривайте підозрілий файл."
