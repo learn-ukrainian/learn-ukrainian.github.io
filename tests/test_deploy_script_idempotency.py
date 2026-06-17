@@ -163,6 +163,32 @@ def test_codex_orphan_is_caught(tmp_path: Path) -> None:
     assert "undeclared orphan 'stale-only.txt'" in combined_output
 
 
+def test_agent_transient_briefs_are_preserved(tmp_path: Path) -> None:
+    """In-flight dispatch briefs in .agent/ must neither abort the deploy nor be wiped.
+
+    Regression for #3456: a single undeclared brief aborted the whole deploy, so
+    committed source prompt fixes silently never reached the runtime targets. The
+    *-brief.md / dispatch-*.md patterns are declared in ORPHAN_PATHS_AGENT, so the
+    preflight guard ignores them and rsync --delete preserves them.
+    """
+    repo = _init_checkout(tmp_path)
+    agent_dir = repo / ".agent"
+    agent_dir.mkdir(parents=True)
+    brief = agent_dir / "atlas-3150-brief.md"
+    brief.write_text("transient dispatch brief\n", encoding="utf-8")
+    dispatch = agent_dir / "dispatch-3098-slice3.md"
+    dispatch.write_text("transient dispatch prompt\n", encoding="utf-8")
+
+    deploy_result = _run(repo, DEPLOY_SCRIPT)
+    assert deploy_result.returncode == 0, (
+        "deploy aborted with an in-flight brief present:\n"
+        f"stdout: {deploy_result.stdout}\nstderr: {deploy_result.stderr}"
+    )
+    # rsync --delete must preserve the declared transient scratch.
+    assert brief.exists(), "atlas-3150-brief.md was wiped by rsync --delete"
+    assert dispatch.exists(), "dispatch-3098-slice3.md was wiped by rsync --delete"
+
+
 def test_drift_is_caught(tmp_path: Path) -> None:
     """Post-deploy edits to a target tree must be reported as drift."""
     repo = _init_checkout(tmp_path)

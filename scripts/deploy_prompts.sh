@@ -57,7 +57,13 @@ ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees"
 # tmp/ — runtime scratch (issue/PR draft bodies, transient tarballs) written into
 #          .agent/ by orchestration tooling. Runtime-only, NOT source-tracked.
 #          Same rationale as prompts/: declare so rsync --delete preserves it.
-ORPHAN_PATHS_AGENT="wake cache prompts tmp *-thread-bootstrap.md *-thread-handoff.md *-thread-lease.json"
+# *-brief.md / dispatch-*.md — transient dispatch briefs (.agent/atlas-3150-brief.md,
+#          .agent/dispatch-3098-slice3.md) hand-authored by orchestrators when firing a
+#          dispatch. Same category as prompts/ and tmp/: runtime-only scratch, NOT
+#          source-tracked. Without these patterns a single in-flight brief aborts the
+#          ENTIRE deploy (every target), so committed source prompt fixes silently never
+#          reach .claude/ + .codex/ + .agent/ runtime — agents keep running stale prompts (#3456).
+ORPHAN_PATHS_AGENT="wake cache prompts tmp *-thread-bootstrap.md *-thread-handoff.md *-thread-lease.json *-brief.md dispatch-*.md"
 ORPHAN_PATHS_AGENTS=""
 # agents/curriculum-orchestrator.toml and agents/curriculum-writer.toml —
 # Codex agent definitions with no shared equivalent.
