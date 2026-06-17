@@ -18,6 +18,10 @@
   translation: emphasis, stress
   pos: noun
   example: "Наголос падає на нову інформацію."
+- word: акцент
+  translation: accent, emphasis
+  pos: noun
+  example: "Акцент у реченні часто стоїть ближче до кінця."
 - word: інверсія
   translation: inversion
   pos: noun
@@ -30,6 +34,10 @@
   translation: neutral
   pos: adjective
   example: "Нейтральний порядок звучить спокійно."
+- word: емфатичний
+  translation: emphatic
+  pos: adjective
+  example: "Емфатичний порядок виділяє важливу деталь."
 - word: маркований
   translation: marked, emphasized
   pos: adjective
@@ -46,6 +54,10 @@
   translation: object
   pos: noun
   example: "Додаток може стояти на початку для контрасту."
+- word: означення
+  translation: attribute, modifier
+  pos: noun
+  example: "Означення часто стоїть перед іменником."
 - word: відомий
   translation: known
   pos: adjective
@@ -54,10 +66,22 @@
   translation: new
   pos: adjective
   example: "Нова інформація часто звучить наприкінці."
+- word: початок
+  translation: beginning
+  pos: noun
+  example: "Тема часто стоїть ближче до початку."
+- word: кінець
+  translation: end
+  pos: noun
+  example: "Рема часто стоїть ближче до кінця."
 - word: винести наперед
   translation: to move to the front
   pos: phrase
   example: "Можна винести наперед слово книга."
+- word: виділяти
+  translation: to highlight, to single out
+  pos: verb
+  example: "Порядок слів допомагає виділяти нову інформацію."
 - word: підкреслювати
   translation: to emphasize
   pos: verb
