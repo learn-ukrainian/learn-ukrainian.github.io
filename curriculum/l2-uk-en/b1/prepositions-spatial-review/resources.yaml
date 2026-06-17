@@ -1,0 +1,17 @@
+resources:
+  - title: "B1 grammar wiki: spatial prepositions"
+    url: "wiki/grammar/b1/prepositions-spatial-review.md"
+    type: internal
+    note: "Reference overview for preposition/adverb contrast, case government, and typical L2 errors."
+  - title: "Zabolotnyi Grade 7: preposition/adverb contrast"
+    url: "wiki/grammar/b1/prepositions-spatial-review.sources.yaml#S1"
+    type: textbook
+    note: "Model examples such as поблизу села vs поблизу було джерело."
+  - title: "Avramenko Grade 7: prepositions as service words"
+    url: "wiki/grammar/b1/prepositions-spatial-review.sources.yaml#S2"
+    type: textbook
+    note: "Synonym replacement and spatial relation examples."
+  - title: "Litvinova Grade 7: simple, compound, and multi-word prepositions"
+    url: "wiki/grammar/b1/prepositions-spatial-review.sources.yaml#S4"
+    type: textbook
+    note: "Spelling patterns: з-під, з-за, посеред, поруч з."
