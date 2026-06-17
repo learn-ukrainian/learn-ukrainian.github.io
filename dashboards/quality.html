@@ -117,6 +117,7 @@ tr:hover td { background: var(--bg3); }
   <div class="tab" onclick="switchTab('reviews')">Review Coverage</div>
   <div class="tab" onclick="switchTab('issues')">Outstanding Issues</div>
   <div class="tab" onclick="switchTab('weak')">Weak Modules</div>
+  <div class="tab" onclick="switchTab('scores')">Module Scores ★</div>
 </div>
 
 <!-- ===== TAB: RESEARCH ===== -->
@@ -157,6 +158,30 @@ tr:hover td { background: var(--bg3); }
     </select>
   </div>
   <div id="weak-content"><div class="loading-msg">Loading weak modules...</div></div>
+</div>
+
+<!-- ===== TAB: SCORES ===== -->
+<div id="tab-scores" class="tab-panel">
+  <div class="issue-filters">
+    <label style="font-size:13px;color:var(--text2)">Track:</label>
+    <select class="filter-select" id="scores-track-filter" onchange="loadScores()">
+      <option value="folk" selected>folk</option>
+      <option value="hist">hist</option>
+      <option value="bio">bio</option>
+      <option value="istorio">istorio</option>
+      <option value="lit">lit</option>
+      <option value="oes">oes</option>
+      <option value="ruth">ruth</option>
+      <option value="a1">a1</option>
+      <option value="a2">a2</option>
+      <option value="b1">b1</option>
+      <option value="b2">b2</option>
+      <option value="c1">c1</option>
+      <option value="c2">c2</option>
+    </select>
+    <span style="font-size:12px;color:var(--text3);margin-left:8px">LLM-QG per-module quality scores (live from <code>llm_qg.json</code>). ★ = seminar-terminal dim — must reach its floor for the module to ship.</span>
+  </div>
+  <div id="scores-content"><div class="loading-msg">Loading scores...</div></div>
 </div>
 </div><!-- /container -->
 
@@ -467,11 +492,61 @@ function escHtml(str) {
   return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+// ---- MODULE SCORES (LLM-QG per-dim) ----
+const SCORE_DIMS = ['pedagogical','engagement','beauty','decolonization','naturalness','tone'];
+const SEMINAR_TERMINAL = new Set(['pedagogical','engagement','beauty','decolonization']);
+async function loadScores() {
+  const track = document.getElementById('scores-track-filter').value;
+  const el = document.getElementById('scores-content');
+  el.innerHTML = '<div class="loading-msg">Loading scores...</div>';
+  try {
+    const data = await fetchJson(`/api/state/scores/${track}`);
+    const dimHead = SCORE_DIMS.map(d =>
+      `<th title="${d}">${d.slice(0,4)}${SEMINAR_TERMINAL.has(d) ? ' ★' : ''}</th>`).join('');
+    const rows = data.modules.map(m => {
+      if (!m.scored) {
+        return `<tr style="opacity:.45">
+          <td>${m.num}</td><td>${m.slug}</td><td>${m.status || '—'}</td>
+          <td>—</td><td>—</td>${SCORE_DIMS.map(() => '<td>—</td>').join('')}</tr>`;
+      }
+      const a = m.aggregate || {};
+      const tv = a.terminal_verdict || '—';
+      const tvColor = tv === 'PASS' ? 'var(--green)' : tv === 'REJECT' ? 'var(--red)' : 'var(--orange)';
+      const cells = SCORE_DIMS.map(d => {
+        const s = m.dimensions ? m.dimensions[d] : undefined;
+        const term = SEMINAR_TERMINAL.has(d);
+        return `<td class="score-cell ${scoreClass(s)}"${term ? ' style="font-weight:700"' : ''}>${scoreStr(s)}</td>`;
+      }).join('');
+      return `<tr>
+        <td>${m.num}</td><td style="font-weight:600">${m.slug}</td>
+        <td>${m.status || '—'}</td>
+        <td style="color:${tvColor};font-weight:600">${tv}</td>
+        <td>${a.min_dim ? `${a.min_dim} ${scoreStr(a.min_score)}` : '—'}</td>
+        ${cells}</tr>`;
+    }).join('');
+    el.innerHTML = `
+      <div style="margin-bottom:8px;font-size:13px;color:var(--text2)">${data.scored}/${data.count} modules scored · track <b>${data.track}</b></div>
+      <table>
+        <thead><tr><th>#</th><th>Module</th><th>Status</th><th>Terminal</th><th>Min dim</th>${dimHead}</tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div style="margin-top:12px;font-size:11px;color:var(--text3)">
+        <span style="color:var(--green)">■ ≥8 (passing)</span>
+        <span style="color:var(--orange);margin-left:8px">■ 6–8</span>
+        <span style="color:var(--red);margin-left:8px">■ &lt;6</span>
+        &nbsp;| <b>★</b> / bold = seminar-terminal dim (must reach floor to ship) | <b>Terminal</b> = profile-gated verdict | source: <code>llm_qg.json</code>, live.
+      </div>`;
+  } catch (e) {
+    el.innerHTML = `<div class="error-msg">Error: ${e.message}</div>`;
+  }
+}
+
 // ---- Init ----
 loadResearch();
 loadReviews();
 loadIssues();
 loadWeak();
+loadScores();
 </script>
 </body>
 </html>
