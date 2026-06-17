@@ -63,7 +63,51 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 47 HANDOFF (2026-06-17 — 🛠 LOOP FIX #3079 DONE + verified (PR #3480, CI green incl. ADR-007 test). Re-test build IN FLIGHT to prove convergence. DON'T re-do the loop fix) — **RESUME HERE**
+## ▶▶▶ SESSION 48 HANDOFF (2026-06-17 — ✅ #3079 FIX BEHAVIORALLY VALIDATED (craft-preserving find/replace, NOT insert; beauty scored; decoloniz passed). Complete re-test build re-running for CONVERGED scores. Process lesson: don't dispatch long builds) — **RESUME HERE**
+
+> **⚠️ ANTI-RE-COLLISION:** loop fix #3079 = PR #3480 (DONE, CI green, held). Re-test #1 (`folk-retest-kalendarna`)
+> was **CUT by the dispatch silence-timeout** (`needs_finalize`), NOT a fix failure. A COMPLETE re-test is
+> re-running (see below). Don't re-do the fix; don't re-fire the cut dispatch.
+>
+> **✅ #3079 BEHAVIORALLY VALIDATED (re-test #1 build log, branch `codex/folk-retest-kalendarna` worktree):**
+> the build reached LLM-QG round 1 with the 6-dim gate (`min pedagogical 6.8, failing=[pedagogical,
+> naturalness, beauty]`; **decolonization PASSED this run** — the de-risk's 8.7 regression did not recur),
+> and the **generalized loop emitted CRAFT-PRESERVING `<find>/<replace>`** — e.g. it replaced a flat
+> corpus-formula block with vivid prose («громада виходить надвір, кличе тепло, веде гру…»), NOT a dry
+> insert. **The de-risk's insert-only craft-degradation failure mode is GONE.** The fix works as designed.
+> What's still MISSING: the CONVERGED final scores — the build was cut before round-2 review, so its final
+> `llm_qg.json` is the stale 5-dim curated one (ignore it).
+>
+> **🔧 PROCESS LESSON (reusable): do NOT run a long (>60 min) V7 build inside a `delegate.py` codex
+> dispatch.** The dispatch's `silence_timeout` (default 3600s) kills it — codex emits no stdout while
+> waiting on the build subprocess, so the dispatch sees 60 min of "silence" and aborts (hard_timeout 7200
+> is never reached). **Run builds via the `Monitor` tool or a detached background process** (the project's
+> standing build-monitoring guidance). Optional infra hardening (#0.2 follow-up, NOT done): emit a periodic
+> heartbeat event during long quiet writer/correction phases so any wrapper sees liveness.
+>
+> **⏳ IN FLIGHT — COMPLETE re-test (detached background build, NOT a delegate dispatch):**
+> worktree `.worktrees/dispatch/claude/folk-retest2` (branch `claude/folk-retest2` off the loop-fix branch),
+> `v7_build.py folk kalendarna-obriadovist-zvychai --no-resume`, log at that worktree's `build.log`. Started
+> ~16:30Z, pid was 2983 (verify: `pgrep -fl 'v7_build.py folk kalendarna'`). Watch live:
+> `/api/state/scores/folk/kalendarna-obriadovist-zvychai` is NOT it (that reads main); read the worktree's
+> `curriculum/.../kalendarna-obriadovist-zvychai/llm_qg.json` + `llm_qg_correction_loop.json` when done.
+>
+> **▶ NEXT ACTION (on complete-build verdict):**
+> - **CONVERGED (all 4 seminar-terminal dims ≥ floors, `module_done`) →** merge PR #3480 (squash), close
+>   #3459 (superseded). #3079 + Phase A land together. Then Phase C/D (enhance methodology — but note
+>   decolonization did NOT regress on this rebuild, so rebuild may be viable after all; decide from data).
+> - **NOT converged →** read the per-round trace: which terminal dim stayed <floor, did find/replace move it
+>   up across rounds (budget short → raise `llm_qg_max_rounds`, currently 3) or flat (iterate that dim's
+>   rubric/corrector prompt in `linear-correction-subjective.md`). Craft must NOT regress (the fix's job).
+>
+> **State:** PRs mine open: #3480 (Phase A + #3079 loop fix, draft/HELD — the merge target), #3459 (Phase-A-only,
+> close as superseded on merge). On main: scores API (S45) + S46/S47/S48 handoffs. Delegate dispatches in
+> flight: 0 (the complete build is a raw bg process, not a dispatch). Evidence branches (keep #M-10):
+> `codex/folk-derisk-kalendarna`, `codex/folk-loopfix-subjective`, `codex/folk-retest-kalendarna`.
+> Tasks: #6 loop fix (impl+validated, merge pending complete-build convergence), #3 panel (deferred), #4 Phase C/D/E.
+> Merge grant LIVE; worktree-only; never to main.
+
+## ▶▶▶ SESSION 47 HANDOFF (2026-06-17 — 🛠 LOOP FIX #3079 DONE + verified (PR #3480, CI green incl. ADR-007 test). Re-test build IN FLIGHT to prove convergence. DON'T re-do the loop fix)
 
 > **⚠️ ANTI-RE-COLLISION:** the S46 "priority #0 = fix the corrector" is **DONE** — do NOT re-implement it.
 > The fix is PR #3480 (`codex/folk-loopfix-subjective`, draft/held), stacked on Phase A. A re-test build is
