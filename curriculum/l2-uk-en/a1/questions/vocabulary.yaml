@@ -35,7 +35,7 @@
   pos: particle
   usage: Я не знаю.
 - lemma: ні
-  translation: no
+  translation: "no"
   pos: particle
   usage: Ні, я не знаю.
 - lemma: ніхто
@@ -102,19 +102,3 @@
   translation: because
   pos: phrase
   usage: Тому що вона все знає.
-- lemma: звідки
-  translation: where from
-  pos: question word
-  usage: Звідки ти?
-- lemma: який
-  translation: what kind; which
-  pos: question word
-  usage: Який цей суп?
-- lemma: чий
-  translation: whose
-  pos: question word
-  usage: Чия це книжка?
-- lemma: котрий
-  translation: which one in order
-  pos: question word
-  usage: Котрий урок?
