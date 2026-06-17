@@ -147,7 +147,7 @@ inline:
     options:
     - вечора
     - вечір
-    - вечером
+    - вечором
     explanation: До вечора - родовий.
 - id: act-3
   type: match-up
