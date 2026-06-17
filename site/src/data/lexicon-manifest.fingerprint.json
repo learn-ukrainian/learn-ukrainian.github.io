@@ -1,5 +1,5 @@
 {
-  "fingerprint": "e8521477b6dc9bc7bd354e0a79edfdaefe6df219face679bb1c8134067279207",
+  "fingerprint": "d07f8cee0637c9e2221cf484f829c5696c8746d00ac92de6d67847e10c41d5bb",
   "inputs": {
     "lexicon_code": [
       {
@@ -36,7 +36,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "a29716b73d987607ca683858320caf1462c89ba7a2eb4056fd7dc6349522d2a3"
+        "sha256": "2c8922a6da0a6da4d07d24cc59ab063bd709d2a6cd567ae87bed1e42b114efd9"
       },
       {
         "path": "scripts/lexicon/generate_vesum_aliases.py",
@@ -52,7 +52,7 @@
       },
       {
         "path": "scripts/lexicon/measure_manifest_coverage.py",
-        "sha256": "9d5f6f2d7ff5297241d08e0f8f93f4999f2d27c9497372e2b63978a455f8bee3"
+        "sha256": "b76c9ff8e5db5929aa051f111fb50cb27cb0a304dc6d260f0f650ffc3f2bcf24"
       },
       {
         "path": "scripts/lexicon/migrate_sum11_sovietization.py",

@@ -10,7 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
-SECTIONS = ("stress", "meaning", "etymology", "translation")
+SECTIONS = ("stress", "meaning", "etymology", "translation", "cefr")
 
 
 def _core_entries(manifest: dict) -> list[dict]:

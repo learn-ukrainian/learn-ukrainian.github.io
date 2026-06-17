@@ -32,6 +32,8 @@ from scripts.lexicon.enrich_manifest import (
     _merge_slovnyk_warning,
     _morphology,
     _parse_translations,
+    _prepare_cefr_estimates,
+    _proper_noun_wikipedia_meaning,
     _sense_correct_synonyms,
     _slovnyk_cache,
     _SlovnykTransientError,
@@ -1206,6 +1208,61 @@ def test_cefr_lookup_uses_exact_puls_row() -> None:
     }
 
 
+def test_cefr_estimate_is_labelled_from_grac_cache(monkeypatch, tmp_path) -> None:
+    conn = _conn()
+    cache_path = tmp_path / "grac_frequency.json"
+    cache_path.write_text(
+        json.dumps(
+            {
+                "абетка": {"word": "абетка", "freq": 200, "rel_freq": 4.0},
+                "бариста": {"word": "бариста", "freq": 20, "rel_freq": 0.4},
+                "вдома": {"word": "вдома", "freq": 9000, "rel_freq": 45.0},
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(enrich_manifest_module, "GRAC_FREQUENCY_CACHE", cache_path)
+    monkeypatch.setattr(enrich_manifest_module, "_GRAC_FREQUENCY_CACHE_DATA", None)
+    monkeypatch.setattr(enrich_manifest_module, "_GRAC_FREQUENCY_CACHE_DIRTY", False)
+
+    _prepare_cefr_estimates(
+        conn,
+        {"entries": [{"lemma": "вдома"}, {"lemma": "абетка"}, {"lemma": "бариста"}]},
+    )
+
+    assert _cefr(conn, "вдома") == {
+        "level": "A1",
+        "source": "estimated (GRAC frequency)",
+        "text": "A1 (орієнтовно / estimated; GRAC 45.00/million, rank 1/3)",
+    }
+
+
+def test_cefr_puls_row_wins_over_grac_estimate(monkeypatch, tmp_path) -> None:
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO puls_cefr (word, level, pos, text) VALUES (?, ?, ?, ?)",
+        ("вдома", "A2", "прислівник", "вдома (A2, прислівник)"),
+    )
+    cache_path = tmp_path / "grac_frequency.json"
+    cache_path.write_text(
+        json.dumps({"вдома": {"word": "вдома", "freq": 9000, "rel_freq": 45.0}}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(enrich_manifest_module, "GRAC_FREQUENCY_CACHE", cache_path)
+    monkeypatch.setattr(enrich_manifest_module, "_GRAC_FREQUENCY_CACHE_DATA", None)
+    monkeypatch.setattr(enrich_manifest_module, "_GRAC_FREQUENCY_CACHE_DIRTY", False)
+
+    _prepare_cefr_estimates(conn, {"entries": [{"lemma": "вдома"}]})
+
+    assert _cefr(conn, "вдома") == {
+        "level": "A2",
+        "source": "PULS CEFR",
+        "pos": "прислівник",
+        "text": "вдома (A2, прислівник)",
+    }
+
+
 def test_literary_attestation_requires_exact_form_hit() -> None:
     conn = _conn()
     conn.execute(
@@ -1545,6 +1602,7 @@ def test_enrich_uses_base_form_for_pair_single_form_sections(monkeypatch, tmp_pa
     monkeypatch.setattr(enrich_manifest_module, "_kaikki_pronunciation", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_idioms_slovnyk", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    monkeypatch.setattr(enrich_manifest_module, "_prepare_cefr_estimates", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_cefr", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_meaning", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_literary_attestation", lambda *args, **kwargs: None)
@@ -1642,6 +1700,7 @@ def test_enrich_populates_antonyms_phraseology_and_variant_etymology(monkeypatch
     monkeypatch.setattr(enrich_manifest_module, "_kaikki_pronunciation", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_idioms_slovnyk", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    monkeypatch.setattr(enrich_manifest_module, "_prepare_cefr_estimates", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_cefr", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_morphology", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_meaning", lambda *args, **kwargs: None)
@@ -1748,6 +1807,29 @@ def test_wiki_reference_success(monkeypatch, tmp_path) -> None:
     assert ref_with_lit is not None
     assert ref_with_lit["wikisource_url"] is not None
     assert "uk.wikisource.org" in ref_with_lit["wikisource_url"]
+
+
+def test_proper_noun_wikipedia_meaning_uses_one_line_cached_gloss(monkeypatch, tmp_path) -> None:
+    fake_wiki_data = {
+        "title": "Штати",
+        "extract": "Сполучені Штати Америки — держава в Північній Америці. Друге речення не входить.",
+        "url": "https://uk.wikipedia.org/wiki/Сполучені_Штати_Америки",
+    }
+
+    def mock_query(title: str) -> dict | None:
+        if title == "Штати":
+            return fake_wiki_data
+        return None
+
+    monkeypatch.setattr(enrich_manifest_module, "WIKI_REFERENCE_CACHE", tmp_path / "wiki_reference.json")
+    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DATA", None)
+    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DIRTY", False)
+    monkeypatch.setattr(enrich_manifest_module, "query_wikipedia", mock_query)
+
+    assert _proper_noun_wikipedia_meaning("Штати") == {
+        "definitions": ["Сполучені Штати Америки — держава в Північній Америці."],
+        "source": "Вікіпедія",
+    }
 
 
 def test_wiki_reference_missing(monkeypatch, tmp_path) -> None:
