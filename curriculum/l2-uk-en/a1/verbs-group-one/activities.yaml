@@ -1,41 +1,161 @@
 ---
 inline:
   - id: act-1
-    type: quiz
-    title: Послухай першу групу
-    instruction: Choose the safe present-tense Ukrainian line.
+    type: fill-in
+    title: Провідміняй читати
+    instruction: Choose the ending that completes each Group One form.
     items:
-      - prompt: I read a text.
+      - sentence: Я чита__ текст.
+        answer: ю
         options:
-          - text: Я читаю текст.
-            correct: true
-          - text: Я читати текст.
-            correct: false
-          - text: Я читаєш текст.
-            correct: false
+          - ю
+          - єш
+          - є
         explanation: Я uses читаю.
-      - prompt: You read a book.
+      - sentence: Ти чита__ книгу?
+        answer: єш
         options:
-          - text: Ти читаєш книгу.
-            correct: true
-          - text: Ти читаю книгу.
-            correct: false
-          - text: Ти читати книгу.
-            correct: false
+          - єш
+          - ю
+          - є
         explanation: Ти uses читаєш.
-      - prompt: She listens to music.
+      - sentence: Він чита__ текст.
+        answer: є
         options:
-          - text: Вона слухає музику.
-            correct: true
-          - text: Вона слухаю музику.
-            correct: false
-          - text: Вона слухати музику.
-            correct: false
+          - є
+          - ю
+          - єте
+        explanation: Він uses читає.
+      - sentence: Вона слуха__ музику.
+        answer: є
+        options:
+          - є
+          - ю
+          - ємо
         explanation: Вона uses слухає.
+      - sentence: Ми чита__ текст.
+        answer: ємо
+        options:
+          - ємо
+          - єте
+          - ють
+        explanation: Ми uses читаємо.
+      - sentence: Ви чита__?
+        answer: єте
+        options:
+          - єте
+          - ємо
+          - ють
+        explanation: Ви uses читаєте.
+      - sentence: Вони чита__.
+        answer: ють
+        options:
+          - ють
+          - є
+          - ю
+        explanation: Вони uses читають.
+      - sentence: Я зна__ це слово.
+        answer: ю
+        options:
+          - ю
+          - єш
+          - є
+        explanation: Я uses знаю.
+      - sentence: Ти зна__ це слово?
+        answer: єш
+        options:
+          - єш
+          - ю
+          - ємо
+        explanation: Ти uses знаєш.
+      - sentence: Ми зна__ текст.
+        answer: ємо
+        options:
+          - ємо
+          - єте
+          - ють
+        explanation: Ми uses знаємо.
   - id: act-2
+    type: quiz
+    title: Обери правильну форму
+    instruction: Choose the verb form that fits the person.
+    items:
+      - prompt: Вона ___ книгу.
+        options:
+          - text: читає
+            correct: true
+          - text: читаю
+            correct: false
+          - text: читаєш
+            correct: false
+        explanation: Вона uses читає.
+      - prompt: Я ___ музику.
+        options:
+          - text: слухаю
+            correct: true
+          - text: слухаєш
+            correct: false
+          - text: слухає
+            correct: false
+        explanation: Я uses слухаю.
+      - prompt: Ти ___ вечерю?
+        options:
+          - text: готуєш
+            correct: true
+          - text: готую
+            correct: false
+          - text: готує
+            correct: false
+        explanation: Ти uses готуєш.
+      - prompt: Ми ___ в офісі.
+        options:
+          - text: працюємо
+            correct: true
+          - text: працюєте
+            correct: false
+          - text: працюють
+            correct: false
+        explanation: Ми uses працюємо.
+      - prompt: Ви ___ українську?
+        options:
+          - text: вивчаєте
+            correct: true
+          - text: вивчаємо
+            correct: false
+          - text: вивчають
+            correct: false
+        explanation: Ви uses вивчаєте.
+      - prompt: Вони ___ в парку.
+        options:
+          - text: гуляють
+            correct: true
+          - text: гуляє
+            correct: false
+          - text: гуляю
+            correct: false
+        explanation: Вони uses гуляють.
+      - prompt: Сашко ___ українську.
+        options:
+          - text: знає
+            correct: true
+          - text: знаю
+            correct: false
+          - text: знаєш
+            correct: false
+        explanation: Сашко is він, so use знає.
+      - prompt: Я ___ вдома.
+        options:
+          - text: працюю
+            correct: true
+          - text: працюєш
+            correct: false
+          - text: працює
+            correct: false
+        explanation: Я uses працюю.
+  - id: act-3
     type: match-up
-    title: Таблиця читати
-    instruction: Match the person with the Group One form.
+    title: Особа й форма
+    instruction: Match the person with the form of читати.
     pairs:
       - left: я
         right: читаю
@@ -49,231 +169,50 @@ inline:
         right: читаєте
       - left: вони
         right: читають
-  - id: act-3
-    type: fill-in
-    title: Будуй речення з читати
-    instruction: Choose the present-tense form that fits the person.
-    items:
-      - sentence: Я ___ текст.
-        answer: читаю
-        options:
-          - читаю
-          - читаєш
-          - читає
-        explanation: Я uses читаю.
-      - sentence: Ти ___ книгу?
-        answer: читаєш
-        options:
-          - читаєш
-          - читаю
-          - читаємо
-        explanation: Ти uses читаєш.
-      - sentence: Вона ___.
-        answer: читає
-        options:
-          - читає
-          - читаєте
-          - читають
-        explanation: Вона uses читає.
-      - sentence: Ми ___ текст.
-        answer: читаємо
-        options:
-          - читаємо
-          - читаєте
-          - читають
-        explanation: Ми uses читаємо.
-      - sentence: Ви ___?
-        answer: читаєте
-        options:
-          - читаєте
-          - читаємо
-          - читають
-        explanation: Ви uses читаєте.
-      - sentence: Вони ___.
-        answer: читають
-        options:
-          - читають
-          - читає
-          - читаю
-        explanation: Вони uses читають.
   - id: act-4
     type: fill-in
-    title: Знати й розуміти
-    instruction: Complete each short sentence.
+    title: Що ти робиш?
+    instruction: Complete the short dialogue with the safe form.
     items:
-      - sentence: Я ___ це слово.
-        answer: знаю
+      - sentence: Що ти ___?
+        answer: робиш
         options:
-          - знаю
-          - знаєш
-          - знає
-        explanation: Я знаю.
-      - sentence: Ти ___ Київ?
-        answer: знаєш
+          - робиш
+          - роблю
+          - робить
+        explanation: Use Що ти робиш? as a ready question.
+      - sentence: Я ___ музику.
+        answer: слухаю
         options:
-          - знаєш
-          - знаю
-          - знають
-        explanation: Ти знаєш.
-      - sentence: Вона ___ відповідь.
-        answer: знає
+          - слухаю
+          - слухаєш
+          - слухає
+        explanation: Я uses слухаю.
+      - sentence: Вона ___ вечерю.
+        answer: готує
         options:
-          - знає
-          - знаєте
-          - знаємо
-        explanation: Вона знає.
-      - sentence: Я ___.
-        answer: розумію
+          - готує
+          - готую
+          - готуєш
+        explanation: Вона uses готує.
+      - sentence: Де ти ___?
+        answer: працюєш
         options:
-          - розумію
-          - розумієш
-          - розуміє
-        explanation: Я розумію.
-      - sentence: Ти ___?
-        answer: розумієш
-        options:
-          - розумієш
-          - розумію
-          - розуміють
-        explanation: Ти розумієш.
-workbook:
-  - type: group-sort
-    title: Хто яке закінчення використовує?
-    instruction: Sort the forms by person.
-    groups:
-      - name: Я
-        items:
-          - читаю
-          - знаю
-          - працюю
-      - name: Ти
-        items:
-          - читаєш
-          - знаєш
           - працюєш
-      - name: Він / вона
-        items:
-          - читає
-          - знає
+          - працюю
           - працює
-      - name: Ми / ви / вони
-        items:
-          - читаємо
-          - читаєте
-          - читають
-  - type: fill-in
-    title: Працювати й готувати
-    instruction: Choose the whole present-tense form.
-    items:
-      - sentence: Я ___ вдома.
+        explanation: Ти uses працюєш.
+      - sentence: Я ___ в офісі.
         answer: працюю
         options:
           - працюю
           - працюєш
           - працює
-        explanation: Я працюю.
-      - sentence: Ти ___ вечерю?
-        answer: готуєш
+        explanation: Я uses працюю.
+      - sentence: Ти ___ українську?
+        answer: вивчаєш
         options:
-          - готуєш
-          - готую
-          - готує
-        explanation: Ти готуєш.
-      - sentence: Ми ___ каву.
-        answer: готуємо
-        options:
-          - готуємо
-          - готуєте
-          - готують
-        explanation: Ми готуємо.
-      - sentence: Вони ___ сьогодні.
-        answer: працюють
-        options:
-          - працюють
-          - працює
-          - працюю
-        explanation: Вони працюють.
-  - type: error-correction
-    title: Виправ пастки першої групи
-    instruction: Choose the standard Ukrainian repair.
-    anchor_id: group-one-repairs
-    items:
-      - sentence: Я є читаю книжку.
-        error: Я є читаю книжку.
-        answer: Я читаю книжку.
-        options:
-          - Я читаю книжку.
-          - Я читаю текст.
-          - Я знаю книжку.
-        explanation: Ukrainian does not add a separate am word before читаю.
-      - sentence: Я працюваю в школі.
-        error: Я працюваю в школі.
-        answer: Я працюю в школі.
-        options:
-          - Я працюю в школі.
-          - Я працюю вдома.
-          - Я читаю в школі.
-        explanation: Працювати gives працюю, not an extra -ва- form.
-      - sentence: Він розумієть мене.
-        error: Він розумієть мене.
-        answer: Він розуміє мене.
-        options:
-          - Він розуміє мене.
-          - Він знає мене.
-          - Він читає текст.
-        explanation: Він uses розуміє.
-      - sentence: Ти відпочиєш вдома?
-        error: Ти відпочиєш вдома?
-        answer: Ти відпочиваєш вдома?
-        options:
-          - Ти відпочиваєш вдома?
-          - Ти гуляєш вдома?
-          - Ти працюєш вдома?
-        explanation: Present-tense відпочивати gives відпочиваєш.
-      - sentence: Ми читаєм текст.
-        error: Ми читаєм текст.
-        answer: Ми читаємо текст.
-        options:
-          - Ми читаємо текст.
-          - Ми знаємо текст.
-          - Ми слухаємо текст.
-        explanation: Use the full -ємо ending.
-      - sentence: Ти плавиш в басейні?
-        error: Ти плавиш в басейні?
-        answer: Ти плаваєш в басейні?
-        options:
-          - Ти плаваєш в басейні?
-          - Ти гуляєш в басейні?
-          - Ти читаєш в басейні?
-        explanation: Плавати follows Group One here, so use плаваєш.
-  - type: quiz
-    title: Мінідіалог
-    instruction: Choose the best next line.
-    items:
-      - prompt: Що ти читаєш?
-        options:
-          - text: Я читаю текст.
-            correct: true
-          - text: Я читаєш текст.
-            correct: false
-          - text: Я читати текст.
-            correct: false
-        explanation: Я читаю is the safe answer.
-      - prompt: Ти знаєш це слово?
-        options:
-          - text: Так, я знаю це слово.
-            correct: true
-          - text: Так, я знаєш це слово.
-            correct: false
-          - text: Так, я знати це слово.
-            correct: false
-        explanation: Я знаю.
-      - prompt: Ми готуємо вечерю?
-        options:
-          - text: Так, ми готуємо вечерю.
-            correct: true
-          - text: Так, ми готуєте вечерю.
-            correct: false
-          - text: Так, ми готують вечерю.
-            correct: false
-        explanation: Ми готуємо.
+          - вивчаєш
+          - вивчаю
+          - вивчає
+        explanation: Ти uses вивчаєш.

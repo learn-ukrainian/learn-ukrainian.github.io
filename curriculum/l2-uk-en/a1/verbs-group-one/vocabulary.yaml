@@ -1,29 +1,29 @@
 - lemma: читати
   translation: to read
   pos: infinitive
-  usage: Я читаю текст.
+  usage: Я читаю книгу.
 - lemma: читаю
   translation: I read; I am reading
   pos: verb form
-  usage: Я читаю книжку.
+  usage: Я читаю книгу.
 - lemma: читаєш
   translation: you read; you are reading
   pos: verb form
   usage: Ти читаєш книгу?
 - lemma: читає
-  translation: he/she reads
+  translation: he/she reads; is reading
   pos: verb form
-  usage: Вона читає.
+  usage: Вона читає книгу.
 - lemma: читаємо
-  translation: we read
+  translation: we read; are reading
   pos: verb form
   usage: Ми читаємо текст.
 - lemma: читаєте
-  translation: you all read
+  translation: you all read; are reading
   pos: verb form
   usage: Ви читаєте?
 - lemma: читають
-  translation: they read
+  translation: they read; are reading
   pos: verb form
   usage: Вони читають.
 - lemma: знати
@@ -37,84 +37,156 @@
 - lemma: знаєш
   translation: you know
   pos: verb form
-  usage: Ти знаєш Київ?
+  usage: Ти знаєш українську?
 - lemma: знає
   translation: he/she knows
   pos: verb form
-  usage: Вона знає відповідь.
+  usage: Сашко знає українську.
+- lemma: знаємо
+  translation: we know
+  pos: verb form
+  usage: Ми знаємо текст.
 - lemma: працювати
   translation: to work
   pos: infinitive
-  usage: Я працюю вдома.
+  usage: Я працюю в офісі.
 - lemma: працюю
-  translation: I work
+  translation: I work; I am working
   pos: verb form
-  usage: Я працюю сьогодні.
+  usage: Я працюю в офісі.
 - lemma: працюєш
-  translation: you work
+  translation: you work; are working
   pos: verb form
-  usage: Ти працюєш сьогодні?
+  usage: Де ти працюєш?
+- lemma: працює
+  translation: he/she works
+  pos: verb form
+  usage: Вона працює сьогодні.
+- lemma: працюємо
+  translation: we work; are working
+  pos: verb form
+  usage: Ми працюємо сьогодні.
+- lemma: працюєте
+  translation: you all work
+  pos: verb form
+  usage: Ви працюєте сьогодні?
 - lemma: працюють
   translation: they work
   pos: verb form
-  usage: Вони працюють.
-- lemma: готувати
-  translation: to cook; to prepare
-  pos: infinitive
-  usage: Ми готуємо вечерю.
-- lemma: готую
-  translation: I cook
-  pos: verb form
-  usage: Я готую каву.
-- lemma: готуєш
-  translation: you cook
-  pos: verb form
-  usage: Ти готуєш вечерю?
+  usage: Вони працюють сьогодні.
 - lemma: слухати
   translation: to listen
   pos: infinitive
-  usage: Вона слухає музику.
+  usage: Я слухаю музику.
 - lemma: слухаю
-  translation: I listen
+  translation: I listen; I am listening
   pos: verb form
   usage: Я слухаю музику.
+- lemma: слухаєш
+  translation: you listen; are listening
+  pos: verb form
+  usage: Ти слухаєш музику?
+- lemma: слухає
+  translation: he/she listens
+  pos: verb form
+  usage: Вона слухає музику.
 - lemma: гуляти
   translation: to walk
   pos: infinitive
-  usage: Вони гуляють.
-- lemma: розуміти
-  translation: to understand
-  pos: infinitive
-  usage: Я розумію.
-- lemma: розумію
-  translation: I understand
+  usage: Вони гуляють у парку.
+- lemma: гуляю
+  translation: I walk
   pos: verb form
-  usage: Я розумію.
-- lemma: розумієш
-  translation: you understand
+  usage: Я гуляю.
+- lemma: гуляєш
+  translation: you walk
   pos: verb form
-  usage: Ти розумієш?
-- lemma: відпочивати
-  translation: to rest
+  usage: Ти гуляєш?
+- lemma: гуляє
+  translation: he/she walks
+  pos: verb form
+  usage: Вона гуляє.
+- lemma: гуляють
+  translation: they walk
+  pos: verb form
+  usage: Вони гуляють у парку.
+- lemma: готувати
+  translation: to cook; to prepare
   pos: infinitive
-  usage: Ти відпочиваєш вдома?
-- lemma: плавати
-  translation: to swim
+  usage: Я готую вечерю.
+- lemma: готую
+  translation: I cook; I am cooking
+  pos: verb form
+  usage: Я готую вечерю.
+- lemma: готуєш
+  translation: you cook; are cooking
+  pos: verb form
+  usage: Ти готуєш вечерю?
+- lemma: готує
+  translation: he/she cooks
+  pos: verb form
+  usage: Вона готує вечерю.
+- lemma: готуємо
+  translation: we cook
+  pos: verb form
+  usage: Ми готуємо вечерю.
+- lemma: робити
+  translation: to do
   pos: infinitive
-  usage: Ти плаваєш у басейні?
+  usage: Що ти робиш?
+- lemma: робиш
+  translation: you do; are doing
+  pos: verb form
+  usage: Що ти робиш?
+- lemma: вивчати
+  translation: to study; to learn
+  pos: infinitive
+  usage: Я вивчаю українську.
+- lemma: вивчаю
+  translation: I study; I am learning
+  pos: verb form
+  usage: Я вивчаю українську.
+- lemma: вивчаєш
+  translation: you study; are learning
+  pos: verb form
+  usage: Ти вивчаєш українську?
+- lemma: вивчаєте
+  translation: you all study; are learning
+  pos: verb form
+  usage: Ви вивчаєте українську?
+- lemma: малювати
+  translation: to draw
+  pos: infinitive
+  usage: Я малюю.
+- lemma: грати
+  translation: to play
+  pos: infinitive
+  usage: Вони грають.
 - lemma: вечеря
   translation: dinner
   pos: noun
-  usage: Ми готуємо вечерю.
+  usage: Я готую вечерю.
 - lemma: музика
   translation: music
   pos: noun
-  usage: Вона слухає музику.
+  usage: Я слухаю музику.
+- lemma: книга
+  translation: book
+  pos: noun
+  usage: Я читаю книгу.
+- lemma: слово
+  translation: word
+  pos: noun
+  usage: Я знаю це слово.
 - lemma: текст
   translation: text
   pos: noun
-  usage: Я читаю текст.
-- lemma: книжка
-  translation: book
+  usage: Ми читаємо текст.
+- lemma: офіс
+  translation: office
   pos: noun
-  usage: Я читаю книжку.
+  usage: Я працюю в офісі.
+- lemma: українська
+  translation: Ukrainian language
+  pos: noun
+  usage: Ти знаєш українську?

@@ -59,210 +59,137 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs syncKey="module-tab">
 <TabItem label="Lesson">
 
-Here is your first full verb pattern. Group One verbs often show **-є-** in
-the middle of the present-tense forms: **читаю, читаєш, читає, читаємо,
-читаєте, читають**. You do not need a grammar-table habit before you can use
-them. Start with one pattern, say a few real sentences, then notice how the
-same endings help with other useful verbs.
+In M15, you used **люблю + -ти**: **Я люблю читати**. Now you can make
+present-tense sentences from some of those action words.
+
+The first pattern is **перша дієвідміна**, or Group One. Your anchor verb is
+**читати**:
+
+```text
+я читаю
+ти читаєш
+він / вона читає
+ми читаємо
+ви читаєте
+вони читають
+```
 
 By the end, you can:
 
-- say **Я читаю**, **Ти читаєш?**, and **Вона читає**;
-- use **ми читаємо**, **ви читаєте**, and **вони читають** for groups;
-- recognize Group One verbs such as **знати**, **слухати**, **гуляти**, and **готувати**;
-- use **працювати** and **готувати** without adding an extra **-ва-**;
-- avoid adding **є** before a present-tense verb;
-- recognize future-looking forms such as **читатиму** as later material.
+- use all six present-tense forms of **читати**;
+- build simple sentences with **знати**, **працювати**, **слухати**,
+  **гуляти**, and **готувати**;
+- recognize the endings **-ю**, **-єш**, **-є**, **-ємо**, **-єте**, **-ють**;
+- ask **Що ти робиш?** and answer with one Group One verb;
+- keep object words such as **книгу**, **музику**, and **вечерю** as chunks.
+
+:::tip
+Today is a real verb table day, but keep the task small. Learn one pattern,
+then reuse it with a few everyday verbs.
+:::
 
 ## Діалоги
 
-### Послухай першу групу
+### Провідміняй читати
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "I read a text.", "options": [{"text": "Я читаю текст.", "correct": true}, {"text": "Я читати текст.", "correct": false}, {"text": "Я читаєш текст.", "correct": false}], "explanation": "Я uses читаю."}, {"question": "You read a book.", "options": [{"text": "Ти читаєш книгу.", "correct": true}, {"text": "Ти читаю книгу.", "correct": false}, {"text": "Ти читати книгу.", "correct": false}], "explanation": "Ти uses читаєш."}, {"question": "She listens to music.", "options": [{"text": "Вона слухає музику.", "correct": true}, {"text": "Вона слухаю музику.", "correct": false}, {"text": "Вона слухати музику.", "correct": false}], "explanation": "Вона uses слухає."}]`)} instruction={"Choose the safe present-tense Ukrainian line."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я чита__ текст.", "answer": "ю", "options": ["ю", "єш", "є"]}, {"sentence": "Ти чита__ книгу?", "answer": "єш", "options": ["єш", "ю", "є"]}, {"sentence": "Він чита__ текст.", "answer": "є", "options": ["є", "ю", "єте"]}, {"sentence": "Вона слуха__ музику.", "answer": "є", "options": ["є", "ю", "ємо"]}, {"sentence": "Ми чита__ текст.", "answer": "ємо", "options": ["ємо", "єте", "ють"]}, {"sentence": "Ви чита__?", "answer": "єте", "options": ["єте", "ємо", "ють"]}, {"sentence": "Вони чита__.", "answer": "ють", "options": ["ють", "є", "ю"]}, {"sentence": "Я зна__ це слово.", "answer": "ю", "options": ["ю", "єш", "є"]}, {"sentence": "Ти зна__ це слово?", "answer": "єш", "options": ["єш", "ю", "ємо"]}, {"sentence": "Ми зна__ текст.", "answer": "ємо", "options": ["ємо", "єте", "ють"]}]`)} instruction={"Choose the ending that completes each Group One form."} isUkrainian={false} />
 
-At a study table, Marta and Oleh talk about ordinary things: reading, work,
-music, and dinner. The Ukrainian lines are short enough to reuse.
+Юля and Сашко are in a shared kitchen. Юля is cooking, and Сашко asks what
+she is doing.
 
 ```text
-Марта: Привіт, Олеже!
-Олег: Привіт, Марто!
-Марта: Що ти читаєш?
-Олег: Я читаю текст.
-Марта: Ти знаєш це слово?
-Олег: Так, я знаю це слово.
-Марта: Анна слухає музику?
-Олег: Так, вона слухає музику.
-Марта: Ми готуємо вечерю?
-Олег: Так, ми готуємо вечерю.
-Марта: Ви працюєте сьогодні?
-Олег: Так, ми працюємо сьогодні.
-Марта: Вони гуляють?
-Олег: Так, вони гуляють.
+Сашко: Юлю, що ти робиш?
+Юля: Я готую вечерю. А ти?
+Сашко: Я читаю книгу і слухаю музику.
+Юля: Ти знаєш це слово?
+Сашко: Так, я знаю це слово.
+Юля: А що робить Олена?
+Сашко: Вона готує вечерю.
 ```
 
 Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Марта: Привіт, Олеже!** | Marta: Hi, Oleh! |
-| **Олег: Привіт, Марто!** | Oleh: Hi, Marta! |
-| **Марта: Що ти читаєш?** | Marta: What are you reading? |
-| **Олег: Я читаю текст.** | Oleh: I am reading a text. |
-| **Марта: Ти знаєш це слово?** | Marta: Do you know this word? |
-| **Олег: Так, я знаю це слово.** | Oleh: Yes, I know this word. |
-| **Марта: Анна слухає музику?** | Marta: Is Anna listening to music? |
-| **Олег: Так, вона слухає музику.** | Oleh: Yes, she is listening to music. |
-| **Марта: Ми готуємо вечерю?** | Marta: Are we cooking dinner? |
-| **Олег: Так, ми готуємо вечерю.** | Oleh: Yes, we are cooking dinner. |
-| **Марта: Ви працюєте сьогодні?** | Marta: Are you working today? |
-| **Олег: Так, ми працюємо сьогодні.** | Oleh: Yes, we are working today. |
-| **Марта: Вони гуляють?** | Marta: Are they walking? |
-| **Олег: Так, вони гуляють.** | Oleh: Yes, they are walking. |
+| **Сашко: Юлю, що ти робиш?** | Sashko: Yulia, what are you doing? |
+| **Юля: Я готую вечерю. А ти?** | Yulia: I am cooking dinner. And you? |
+| **Сашко: Я читаю книгу і слухаю музику.** | Sashko: I am reading a book and listening to music. |
+| **Юля: Ти знаєш це слово?** | Yulia: Do you know this word? |
+| **Сашко: Так, я знаю це слово.** | Sashko: Yes, I know this word. |
+| **Юля: А що робить Олена?** | Yulia: And what is Olena doing? |
+| **Сашко: Вона готує вечерю.** | Sashko: She is cooking dinner. |
 
-:::tip
-Ukrainian present-tense verbs already show the person. **Читаю** clearly
-means "I read / I am reading." You may still say **я читаю**, but do not add
-a separate "am" word.
+Now the same pattern moves to work and study.
+
+```text
+Юля: Де ти працюєш?
+Сашко: Я працюю в офісі. А ти?
+Юля: Я не працюю, я навчаюся.
+Сашко: Ти знаєш українську?
+Юля: Так, я вивчаю українську.
+Сашко: Чудово!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Юля: Де ти працюєш?** | Yulia: Where do you work? |
+| **Сашко: Я працюю в офісі. А ти?** | Sashko: I work in an office. And you? |
+| **Юля: Я не працюю, я навчаюся.** | Yulia: I do not work; I study. |
+| **Сашко: Ти знаєш українську?** | Sashko: Do you know Ukrainian? |
+| **Юля: Так, я вивчаю українську.** | Yulia: Yes, I am learning Ukrainian. |
+| **Сашко: Чудово!** | Sashko: Great! |
+
+:::note
+**Що ти робиш?** is a ready question today. **Робиш** belongs to another verb
+group, so use the question as a chunk and keep your table work on Group One.
 :::
 
-### Таблиця читати
+### Обери правильну форму
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "я", "right": "читаю"}, {"left": "ти", "right": "читаєш"}, {"left": "він / вона", "right": "читає"}, {"left": "ми", "right": "читаємо"}, {"left": "ви", "right": "читаєте"}, {"left": "вони", "right": "читають"}]`)} instruction={"Match the person with the Group One form."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Вона ___ книгу.", "options": [{"text": "читає", "correct": true}, {"text": "читаю", "correct": false}, {"text": "читаєш", "correct": false}], "explanation": "Вона uses читає."}, {"question": "Я ___ музику.", "options": [{"text": "слухаю", "correct": true}, {"text": "слухаєш", "correct": false}, {"text": "слухає", "correct": false}], "explanation": "Я uses слухаю."}, {"question": "Ти ___ вечерю?", "options": [{"text": "готуєш", "correct": true}, {"text": "готую", "correct": false}, {"text": "готує", "correct": false}], "explanation": "Ти uses готуєш."}, {"question": "Ми ___ в офісі.", "options": [{"text": "працюємо", "correct": true}, {"text": "працюєте", "correct": false}, {"text": "працюють", "correct": false}], "explanation": "Ми uses працюємо."}, {"question": "Ви ___ українську?", "options": [{"text": "вивчаєте", "correct": true}, {"text": "вивчаємо", "correct": false}, {"text": "вивчають", "correct": false}], "explanation": "Ви uses вивчаєте."}, {"question": "Вони ___ в парку.", "options": [{"text": "гуляють", "correct": true}, {"text": "гуляє", "correct": false}, {"text": "гуляю", "correct": false}], "explanation": "Вони uses гуляють."}, {"question": "Сашко ___ українську.", "options": [{"text": "знає", "correct": true}, {"text": "знаю", "correct": false}, {"text": "знаєш", "correct": false}], "explanation": "Сашко is він, so use знає."}, {"question": "Я ___ вдома.", "options": [{"text": "працюю", "correct": true}, {"text": "працюєш", "correct": false}, {"text": "працює", "correct": false}], "explanation": "Я uses працюю."}]`)} instruction={"Choose the verb form that fits the person."} isUkrainian={false} />
 
 ## Перша дієвідміна
 
-The textbook label for this pattern is **перша дієвідміна**. For A1, call it
-**Group One** and learn one anchor verb: **читати**. In a grammar note, this
-may be called **Тип «читати»** because the stem **чита-** stays clear.
-The same small family includes **гуляти** and **плавати**.
+Group One verbs in this module usually come from **-ати**, **-яти**, or
+**-увати** infinitives. The useful signal in the present tense is the ending.
 
-| Person | Pattern | Safe sentence |
-| --- | --- | --- |
-| я | **читаю** | **Я читаю текст.** |
-| ти | **читаєш** | **Ти читаєш книгу?** |
-| він/вона | **читає** | **Вона читає.** |
-| ми | **читаємо** | **Ми читаємо текст.** |
-| ви | **читаєте** | **Ви читаєте?** |
-| вони | **читають** | **Вони читають.** |
-
-Notice the full endings: **-ємо** and **-єте**. Say the whole form:
-**читаємо**, **читаєте**. This is not an extra decoration; it is the standard
-Ukrainian present-tense form.
-
-Two more Group One verbs are immediately useful:
-
-| Infinitive | I form | you form | he/she form |
+| Person | Ending | читати | Example |
 | --- | --- | --- | --- |
-| **слухати** | **слухаю** | **слухаєш** | **слухає** |
-| **гуляти** | **гуляю** | **гуляєш** | **гуляє** |
+| я | **-ю** | **читаю** | **Я читаю книгу.** |
+| ти | **-єш** | **читаєш** | **Ти читаєш?** |
+| він/вона | **-є** | **читає** | **Вона читає.** |
+| ми | **-ємо** | **читаємо** | **Ми читаємо текст.** |
+| ви | **-єте** | **читаєте** | **Ви читаєте?** |
+| вони | **-ють** | **читають** | **Вони читають.** |
 
-The verb already carries the person, so keep the sentence clean:
+Say the full group endings: **читаємо**, **читаєте**, **читають**. Do not
+cut them short.
 
-```text
-Я читаю книжку.
-Ти слухаєш музику?
-Вона гуляє.
-```
+The same endings help with six common verbs.
 
-Support after the Ukrainian lines:
-
-| Українська | English support |
-| --- | --- |
-| **Я читаю книжку.** | I am reading a book. |
-| **Ти слухаєш музику?** | Are you listening to music? |
-| **Вона гуляє.** | She is walking. |
-
-### Будуй речення з читати
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ текст.", "answer": "читаю", "options": ["читаю", "читаєш", "читає"]}, {"sentence": "Ти ___ книгу?", "answer": "читаєш", "options": ["читаєш", "читаю", "читаємо"]}, {"sentence": "Вона ___.", "answer": "читає", "options": ["читає", "читаєте", "читають"]}, {"sentence": "Ми ___ текст.", "answer": "читаємо", "options": ["читаємо", "читаєте", "читають"]}, {"sentence": "Ви ___?", "answer": "читаєте", "options": ["читаєте", "читаємо", "читають"]}, {"sentence": "Вони ___.", "answer": "читають", "options": ["читають", "читає", "читаю"]}]`)} instruction={"Choose the present-tense form that fits the person."} isUkrainian={false} />
-
-### Мінімодель: знати й розуміти
-
-**Знати** works nicely with the Group One endings:
-
-| Person | Form | Example |
-| --- | --- | --- |
-| я | **знаю** | **Я знаю це слово.** |
-| ти | **знаєш** | **Ти знаєш Київ?** |
-| він/вона | **знає** | **Вона знає відповідь.** |
-| ми | **знаємо** | **Ми знаємо текст.** |
-| ви | **знаєте** | **Ви знаєте?** |
-| вони | **знають** | **Вони знають.** |
-
-You may also meet the high-frequency **Тип «розуміти»**: **розумію,
-розумієш, розуміє**. Keep it as a useful mini-pattern, not a new full lesson.
-Related words you can recognize include **розуміти**, **вміти**, and **чути**.
-
-```text
-Я розумію.
-Ти розумієш?
-Він розуміє мене.
-```
-
-Support after the Ukrainian lines:
-
-| Українська | English support |
-| --- | --- |
-| **Я розумію.** | I understand. |
-| **Ти розумієш?** | Do you understand? |
-| **Він розуміє мене.** | He understands me. |
-
-### Знати й розуміти
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ це слово.", "answer": "знаю", "options": ["знаю", "знаєш", "знає"]}, {"sentence": "Ти ___ Київ?", "answer": "знаєш", "options": ["знаєш", "знаю", "знають"]}, {"sentence": "Вона ___ відповідь.", "answer": "знає", "options": ["знає", "знаєте", "знаємо"]}, {"sentence": "Я ___.", "answer": "розумію", "options": ["розумію", "розумієш", "розуміє"]}, {"sentence": "Ти ___?", "answer": "розумієш", "options": ["розумієш", "розумію", "розуміють"]}]`)} instruction={"Complete each short sentence."} isUkrainian={false} />
-
-## Я, ти, він/вона
-
-Start with three people before you use the whole table.
-
-| English prompt | Ukrainian answer |
-| --- | --- |
-| I read. | **Я читаю.** |
-| You read. | **Ти читаєш.** |
-| He reads. | **Він читає.** |
-| She knows. | **Вона знає.** |
-| You listen. | **Ти слухаєш.** |
-| I walk. | **Я гуляю.** |
-
-Now add group forms:
-
-| English prompt | Ukrainian answer |
-| --- | --- |
-| We read. | **Ми читаємо.** |
-| You all read. | **Ви читаєте.** |
-| They read. | **Вони читають.** |
-| We know. | **Ми знаємо.** |
-| You all know. | **Ви знаєте.** |
-| They know. | **Вони знають.** |
-
-If you hesitate, ask two questions:
-
-1. Who is doing it: **я, ти, він/вона, ми, ви, вони**?
-2. Which ending fits: **-ю, -єш, -є, -ємо, -єте, -ють**?
-
-### Використовуй працювати й готувати
-
-Some Group One verbs end in **-увати** or **-ювати**. This is **Тип
-«працювати»**. In the present tense, do not keep the full **-ува-** sound.
-Use the short forms:
-
-| Infinitive | I | you | he/she | we | you all | they |
+| Infinitive | я | ти | він/вона | ми | ви | вони |
 | --- | --- | --- | --- | --- | --- | --- |
-| **працювати** | **працюю** | **працюєш** | **працює** | **працюємо** | **працюєте** | **працюють** |
-| **готувати** | **готую** | **готуєш** | **готує** | **готуємо** | **готуєте** | **готують** |
+| **читати** | читаю | читаєш | читає | читаємо | читаєте | читають |
+| **знати** | знаю | знаєш | знає | знаємо | знаєте | знають |
+| **слухати** | слухаю | слухаєш | слухає | слухаємо | слухаєте | слухають |
+| **гуляти** | гуляю | гуляєш | гуляє | гуляємо | гуляєте | гуляють |
+| **працювати** | працюю | працюєш | працює | працюємо | працюєте | працюють |
+| **готувати** | готую | готуєш | готує | готуємо | готуєте | готують |
 
-You may notice grammar notes that mark the sound split as `ти готу-єш` or
-compare words such as `спі-вати`, `відпочи-вати`, **працювати**,
-**готувати**, **танцювати**, **фотографувати**, and **читати**. Do not say
-the hyphen; it only shows where the form is built.
+Two familiar action words also fit the same idea: **Я малюю** and **Вони
+грають**. Keep them for recognition today; the six rows above are enough for
+practice.
 
-Use whole forms in sentences:
+For **працювати** and **готувати**, the whole present-tense form is shorter
+than the infinitive: **працюю**, **готуєш**, **працюють**. Do not add an
+extra **-ва-**.
 
 ```text
 Я працюю вдома.
 Ти готуєш вечерю?
-Вони працюють сьогодні.
-Ми готуємо каву.
+Вони гуляють.
 ```
 
 Support after the Ukrainian lines:
@@ -271,121 +198,129 @@ Support after the Ukrainian lines:
 | --- | --- |
 | **Я працюю вдома.** | I work at home. |
 | **Ти готуєш вечерю?** | Are you cooking dinner? |
-| **Вони працюють сьогодні.** | They are working today. |
-| **Ми готуємо каву.** | We are making coffee. |
+| **Вони гуляють.** | They are walking. |
 
-For everyday speech, keep the sentence frame predictable. Put the person
-first, then the verb, then one small object or place. This gives you useful
-sentences without overloading the ending:
+### Особа й форма
 
-| Frame | Example you can reuse |
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "я", "right": "читаю"}, {"left": "ти", "right": "читаєш"}, {"left": "він / вона", "right": "читає"}, {"left": "ми", "right": "читаємо"}, {"left": "ви", "right": "читаєте"}, {"left": "вони", "right": "читають"}]`)} instruction={"Match the person with the form of читати."} isUkrainian={false} />
+
+## Я, ти, він/вона
+
+The three most useful forms are the singular forms.
+
+| Person | Form | Sentence |
+| --- | --- | --- |
+| **я** | **читаю** | **Я читаю книгу.** |
+| **ти** | **читаєш** | **Ти читаєш книгу?** |
+| **він/вона** | **читає** | **Вона читає книгу.** |
+
+Use the same idea with other verbs:
+
+| Person | Verb | Sentence |
+| --- | --- | --- |
+| **я** | **знаю** | **Я знаю це слово.** |
+| **ти** | **слухаєш** | **Ти слухаєш музику?** |
+| **вона** | **готує** | **Вона готує вечерю.** |
+| **я** | **працюю** | **Я працюю в офісі.** |
+
+Group forms are still important. At A1, recognize and reuse them in simple
+sentences.
+
+| Person | Form | Sentence |
+| --- | --- | --- |
+| **ми** | **читаємо** | **Ми читаємо текст.** |
+| **ви** | **знаєте** | **Ви знаєте українську?** |
+| **вони** | **гуляють** | **Вони гуляють у парку.** |
+
+:::warning
+Do not add English "am" before the Ukrainian verb. **Я читаю** already means
+"I read" or "I am reading."
+:::
+
+Some object words change shape after the verb. You do not need a full case
+lesson here. Learn these as small chunks:
+
+| Base word | Chunk in today's sentences |
 | --- | --- |
-| **Я + verb + object** | **Я читаю текст.** |
-| **Ти + verb + object?** | **Ти слухаєш музику?** |
-| **Вона + verb + today** | **Вона працює сьогодні.** |
-| **Ми + verb + object** | **Ми готуємо вечерю.** |
-| **Вони + verb + place** | **Вони гуляють у парку.** |
+| **книга** | **Я читаю книгу.** |
+| **музика** | **Я слухаю музику.** |
+| **вечеря** | **Я готую вечерю.** |
+| **українська** | **Я вивчаю українську.** |
 
-When you answer, do not translate every English word. "I am reading" and "I
-read" both fit **Я читаю** in this beginner context. The time word can come
-later: **Я читаю сьогодні**, **Ми працюємо сьогодні**, **Вони гуляють
-сьогодні**. Your main signal is still the verb ending.
+### Що ти робиш?
 
-### Пізніше: форми майбутнього часу
-
-Ukrainian also has future forms. You may see grammar labels such as
-**форми майбутнього часу**, **складеної** future, **читатиму**, or
-**читатимеш**. Treat them as recognition-only today. Your active job is the
-present tense:
-
-- **Я читаю.**
-- **Ти читаєш.**
-- **Ми читаємо.**
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Що ти ___?", "answer": "робиш", "options": ["робиш", "роблю", "робить"]}, {"sentence": "Я ___ музику.", "answer": "слухаю", "options": ["слухаю", "слухаєш", "слухає"]}, {"sentence": "Вона ___ вечерю.", "answer": "готує", "options": ["готує", "готую", "готуєш"]}, {"sentence": "Де ти ___?", "answer": "працюєш", "options": ["працюєш", "працюю", "працює"]}, {"sentence": "Я ___ в офісі.", "answer": "працюю", "options": ["працюю", "працюєш", "працює"]}, {"sentence": "Ти ___ українську?", "answer": "вивчаєш", "options": ["вивчаєш", "вивчаю", "вивчає"]}]`)} instruction={"Complete the short dialogue with the safe form."} isUkrainian={false} />
 
 ## 📋 Підсумок
 
-Use Group One to make small present-tense sentences.
+Group One gives you your first full present-tense table.
 
-| Person | Reading | Knowing | Working |
-| --- | --- | --- | --- |
-| я | **читаю** | **знаю** | **працюю** |
-| ти | **читаєш** | **знаєш** | **працюєш** |
-| він/вона | **читає** | **знає** | **працює** |
-| ми | **читаємо** | **знаємо** | **працюємо** |
-| ви | **читаєте** | **знаєте** | **працюєте** |
-| вони | **читають** | **знають** | **працюють** |
+| Person | Ending | Anchor form |
+| --- | --- | --- |
+| **я** | **-ю** | **читаю** |
+| **ти** | **-єш** | **читаєш** |
+| **він/вона** | **-є** | **читає** |
+| **ми** | **-ємо** | **читаємо** |
+| **ви** | **-єте** | **читаєте** |
+| **вони** | **-ють** | **читають** |
 
-Build a short day:
+Build a small conversation:
 
-1. **Я читаю текст.**
-2. **Я слухаю музику.**
-3. **Ти знаєш це слово?**
-4. **Вона працює сьогодні.**
-5. **Ми готуємо вечерю.**
-6. **Вони гуляють.**
+```text
+Що ти робиш?
+Я читаю книгу.
+Я слухаю музику.
+Ти знаєш це слово?
+Вона готує вечерю.
+Ми працюємо сьогодні.
+```
 
-Keep the repairs simple:
+Support after the Ukrainian lines:
 
-| Watch for | Use |
+| Українська | English support |
 | --- | --- |
-| extra "am" before a verb | **Я читаю книжку.** |
-| extra **-ва-** in **працювати** | **Я працюю в школі.** |
-| short group ending | **Ми читаємо текст.** |
-| Group Two ending on **плавати** | **Ти плаваєш у басейні?** |
+| **Що ти робиш?** | What are you doing? |
+| **Я читаю книгу.** | I am reading a book. |
+| **Я слухаю музику.** | I am listening to music. |
+| **Ти знаєш це слово?** | Do you know this word? |
+| **Вона готує вечерю.** | She is cooking dinner. |
+| **Ми працюємо сьогодні.** | We are working today. |
 
-The next module will compare this with Group Two. For now, let **-єш**,
-**-є**, **-ємо**, **-єте**, and **-ють** become familiar.
+Quick self-check:
 
-One final scan is enough before you speak. If the subject is **я**, look for
-**-ю**: **читаю**, **знаю**, **працюю**, **готую**. If the subject is **ти**,
-look for **-єш**: **читаєш**, **знаєш**, **працюєш**, **готуєш**. If the
-subject is **ми**, say the full **-ємо** ending: **читаємо**, **знаємо**,
-**працюємо**, **готуємо**. These four quick checks make your first Group One
-sentences sound complete.
+1. Say **слухати** with **я**, **ти**, **він/вона**:
+   **я слухаю**, **ти слухаєш**, **він/вона слухає**.
+2. Ask one question: **Що ти робиш?**
+3. Answer with one sentence: **Я читаю книгу** or **Я слухаю музику**.
+
+Next, you will compare this with Group Two verbs. For now, let the Group One
+endings become automatic: **-ю**, **-єш**, **-є**, **-ємо**, **-єте**, **-ють**.
 
 </TabItem>
 <TabItem label="Vocabulary">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"читати","translation":"to read","pos":"infinitive","example":"Я читаю текст.","examples":["to read","Я читаю текст."],"atlas_href":"/lexicon/читати/"},{"word":"читаю","translation":"I read; I am reading","pos":"verb form","example":"Я читаю книжку.","examples":["I read; I am reading","Я читаю книжку."],"atlas_href":"/lexicon/читаю/"},{"word":"читаєш","translation":"you read; you are reading","pos":"verb form","example":"Ти читаєш книгу?","examples":["you read; you are reading","Ти читаєш книгу?"],"atlas_href":"/lexicon/читаєш/"},{"word":"читає","translation":"he/she reads","pos":"verb form","example":"Вона читає.","examples":["he/she reads","Вона читає."],"atlas_href":"/lexicon/читає/"},{"word":"читаємо","translation":"we read","pos":"verb form","example":"Ми читаємо текст.","examples":["we read","Ми читаємо текст."],"atlas_href":"/lexicon/читаємо/"},{"word":"читаєте","translation":"you all read","pos":"verb form","example":"Ви читаєте?","examples":["you all read","Ви читаєте?"],"atlas_href":"/lexicon/читаєте/"},{"word":"читають","translation":"they read","pos":"verb form","example":"Вони читають.","examples":["they read","Вони читають."],"atlas_href":"/lexicon/читають/"},{"word":"знати","translation":"to know","pos":"infinitive","example":"Я знаю це слово.","examples":["to know","Я знаю це слово."],"atlas_href":"/lexicon/знати/"},{"word":"знаю","translation":"I know","pos":"verb form","example":"Я знаю це слово.","examples":["I know","Я знаю це слово."],"atlas_href":"/lexicon/знаю/"},{"word":"знаєш","translation":"you know","pos":"verb form","example":"Ти знаєш Київ?","examples":["you know","Ти знаєш Київ?"],"atlas_href":"/lexicon/знаєш/"},{"word":"знає","translation":"he/she knows","pos":"verb form","example":"Вона знає відповідь.","examples":["he/she knows","Вона знає відповідь."],"atlas_href":"/lexicon/знає/"},{"word":"працювати","translation":"to work","pos":"infinitive","example":"Я працюю вдома.","examples":["to work","Я працюю вдома."],"atlas_href":"/lexicon/працювати/"},{"word":"працюю","translation":"I work","pos":"verb form","example":"Я працюю сьогодні.","examples":["I work","Я працюю сьогодні."],"atlas_href":"/lexicon/працюю/"},{"word":"працюєш","translation":"you work","pos":"verb form","example":"Ти працюєш сьогодні?","examples":["you work","Ти працюєш сьогодні?"],"atlas_href":"/lexicon/працюєш/"},{"word":"працюють","translation":"they work","pos":"verb form","example":"Вони працюють.","examples":["they work","Вони працюють."],"atlas_href":"/lexicon/працюють/"},{"word":"готувати","translation":"to cook; to prepare","pos":"infinitive","example":"Ми готуємо вечерю.","examples":["to cook; to prepare","Ми готуємо вечерю."],"atlas_href":"/lexicon/готувати/"},{"word":"готую","translation":"I cook","pos":"verb form","example":"Я готую каву.","examples":["I cook","Я готую каву."],"atlas_href":"/lexicon/готую/"},{"word":"готуєш","translation":"you cook","pos":"verb form","example":"Ти готуєш вечерю?","examples":["you cook","Ти готуєш вечерю?"],"atlas_href":"/lexicon/готуєш/"},{"word":"слухати","translation":"to listen","pos":"infinitive","example":"Вона слухає музику.","examples":["to listen","Вона слухає музику."],"atlas_href":"/lexicon/слухати/"},{"word":"слухаю","translation":"I listen","pos":"verb form","example":"Я слухаю музику.","examples":["I listen","Я слухаю музику."],"atlas_href":"/lexicon/слухаю/"},{"word":"гуляти","translation":"to walk","pos":"infinitive","example":"Вони гуляють.","examples":["to walk","Вони гуляють."],"atlas_href":"/lexicon/гуляти/"},{"word":"розуміти","translation":"to understand","pos":"infinitive","example":"Я розумію.","examples":["to understand","Я розумію."],"atlas_href":"/lexicon/розуміти/"},{"word":"розумію","translation":"I understand","pos":"verb form","example":"Я розумію.","examples":["I understand","Я розумію."],"atlas_href":"/lexicon/розумію/"},{"word":"розумієш","translation":"you understand","pos":"verb form","example":"Ти розумієш?","examples":["you understand","Ти розумієш?"],"atlas_href":"/lexicon/розумієш/"},{"word":"відпочивати","translation":"to rest","pos":"infinitive","example":"Ти відпочиваєш вдома?","examples":["to rest","Ти відпочиваєш вдома?"],"atlas_href":"/lexicon/відпочивати/"},{"word":"плавати","translation":"to swim","pos":"infinitive","example":"Ти плаваєш у басейні?","examples":["to swim","Ти плаваєш у басейні?"],"atlas_href":"/lexicon/плавати/"},{"word":"вечеря","translation":"dinner","pos":"noun","example":"Ми готуємо вечерю.","examples":["dinner","Ми готуємо вечерю."],"atlas_href":"/lexicon/вечеря/"},{"word":"музика","translation":"music","pos":"noun","example":"Вона слухає музику.","examples":["music","Вона слухає музику."],"atlas_href":"/lexicon/музика/"},{"word":"текст","translation":"text","pos":"noun","example":"Я читаю текст.","examples":["text","Я читаю текст."],"atlas_href":"/lexicon/текст/"},{"word":"книжка","translation":"book","pos":"noun","example":"Я читаю книжку.","examples":["book","Я читаю книжку."],"atlas_href":"/lexicon/книжка/"}]`)} title="Vocabulary" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"читати","translation":"to read","pos":"infinitive","example":"Я читаю книгу.","examples":["to read","Я читаю книгу."],"atlas_href":"/lexicon/читати/"},{"word":"читаю","translation":"I read; I am reading","pos":"verb form","example":"Я читаю книгу.","examples":["I read; I am reading","Я читаю книгу."]},{"word":"читаєш","translation":"you read; you are reading","pos":"verb form","example":"Ти читаєш книгу?","examples":["you read; you are reading","Ти читаєш книгу?"]},{"word":"читає","translation":"he/she reads; is reading","pos":"verb form","example":"Вона читає книгу.","examples":["he/she reads; is reading","Вона читає книгу."]},{"word":"читаємо","translation":"we read; are reading","pos":"verb form","example":"Ми читаємо текст.","examples":["we read; are reading","Ми читаємо текст."]},{"word":"читаєте","translation":"you all read; are reading","pos":"verb form","example":"Ви читаєте?","examples":["you all read; are reading","Ви читаєте?"]},{"word":"читають","translation":"they read; are reading","pos":"verb form","example":"Вони читають.","examples":["they read; are reading","Вони читають."]},{"word":"знати","translation":"to know","pos":"infinitive","example":"Я знаю це слово.","examples":["to know","Я знаю це слово."],"atlas_href":"/lexicon/знати/"},{"word":"знаю","translation":"I know","pos":"verb form","example":"Я знаю це слово.","examples":["I know","Я знаю це слово."]},{"word":"знаєш","translation":"you know","pos":"verb form","example":"Ти знаєш українську?","examples":["you know","Ти знаєш українську?"]},{"word":"знає","translation":"he/she knows","pos":"verb form","example":"Сашко знає українську.","examples":["he/she knows","Сашко знає українську."]},{"word":"знаємо","translation":"we know","pos":"verb form","example":"Ми знаємо текст.","examples":["we know","Ми знаємо текст."]},{"word":"працювати","translation":"to work","pos":"infinitive","example":"Я працюю в офісі.","examples":["to work","Я працюю в офісі."],"atlas_href":"/lexicon/працювати/"},{"word":"працюю","translation":"I work; I am working","pos":"verb form","example":"Я працюю в офісі.","examples":["I work; I am working","Я працюю в офісі."]},{"word":"працюєш","translation":"you work; are working","pos":"verb form","example":"Де ти працюєш?","examples":["you work; are working","Де ти працюєш?"]},{"word":"працює","translation":"he/she works","pos":"verb form","example":"Вона працює сьогодні.","examples":["he/she works","Вона працює сьогодні."]},{"word":"працюємо","translation":"we work; are working","pos":"verb form","example":"Ми працюємо сьогодні.","examples":["we work; are working","Ми працюємо сьогодні."]},{"word":"працюєте","translation":"you all work","pos":"verb form","example":"Ви працюєте сьогодні?","examples":["you all work","Ви працюєте сьогодні?"]},{"word":"працюють","translation":"they work","pos":"verb form","example":"Вони працюють сьогодні.","examples":["they work","Вони працюють сьогодні."]},{"word":"слухати","translation":"to listen","pos":"infinitive","example":"Я слухаю музику.","examples":["to listen","Я слухаю музику."],"atlas_href":"/lexicon/слухати/"},{"word":"слухаю","translation":"I listen; I am listening","pos":"verb form","example":"Я слухаю музику.","examples":["I listen; I am listening","Я слухаю музику."]},{"word":"слухаєш","translation":"you listen; are listening","pos":"verb form","example":"Ти слухаєш музику?","examples":["you listen; are listening","Ти слухаєш музику?"]},{"word":"слухає","translation":"he/she listens","pos":"verb form","example":"Вона слухає музику.","examples":["he/she listens","Вона слухає музику."]},{"word":"гуляти","translation":"to walk","pos":"infinitive","example":"Вони гуляють у парку.","examples":["to walk","Вони гуляють у парку."],"atlas_href":"/lexicon/гуляти/"},{"word":"гуляю","translation":"I walk","pos":"verb form","example":"Я гуляю.","examples":["I walk","Я гуляю."]},{"word":"гуляєш","translation":"you walk","pos":"verb form","example":"Ти гуляєш?","examples":["you walk","Ти гуляєш?"]},{"word":"гуляє","translation":"he/she walks","pos":"verb form","example":"Вона гуляє.","examples":["he/she walks","Вона гуляє."]},{"word":"гуляють","translation":"they walk","pos":"verb form","example":"Вони гуляють у парку.","examples":["they walk","Вони гуляють у парку."]},{"word":"готувати","translation":"to cook; to prepare","pos":"infinitive","example":"Я готую вечерю.","examples":["to cook; to prepare","Я готую вечерю."],"atlas_href":"/lexicon/готувати/"},{"word":"готую","translation":"I cook; I am cooking","pos":"verb form","example":"Я готую вечерю.","examples":["I cook; I am cooking","Я готую вечерю."]},{"word":"готуєш","translation":"you cook; are cooking","pos":"verb form","example":"Ти готуєш вечерю?","examples":["you cook; are cooking","Ти готуєш вечерю?"]},{"word":"готує","translation":"he/she cooks","pos":"verb form","example":"Вона готує вечерю.","examples":["he/she cooks","Вона готує вечерю."]},{"word":"готуємо","translation":"we cook","pos":"verb form","example":"Ми готуємо вечерю.","examples":["we cook","Ми готуємо вечерю."]},{"word":"робити","translation":"to do","pos":"infinitive","example":"Що ти робиш?","examples":["to do","Що ти робиш?"],"atlas_href":"/lexicon/робити/"},{"word":"робиш","translation":"you do; are doing","pos":"verb form","example":"Що ти робиш?","examples":["you do; are doing","Що ти робиш?"]},{"word":"вивчати","translation":"to study; to learn","pos":"infinitive","example":"Я вивчаю українську.","examples":["to study; to learn","Я вивчаю українську."],"atlas_href":"/lexicon/вивчати/"},{"word":"вивчаю","translation":"I study; I am learning","pos":"verb form","example":"Я вивчаю українську.","examples":["I study; I am learning","Я вивчаю українську."]},{"word":"вивчаєш","translation":"you study; are learning","pos":"verb form","example":"Ти вивчаєш українську?","examples":["you study; are learning","Ти вивчаєш українську?"]},{"word":"вивчаєте","translation":"you all study; are learning","pos":"verb form","example":"Ви вивчаєте українську?","examples":["you all study; are learning","Ви вивчаєте українську?"]},{"word":"малювати","translation":"to draw","pos":"infinitive","example":"Я малюю.","examples":["to draw","Я малюю."],"atlas_href":"/lexicon/малювати/"},{"word":"грати","translation":"to play","pos":"infinitive","example":"Вони грають.","examples":["to play","Вони грають."],"atlas_href":"/lexicon/грати/"},{"word":"вечеря","translation":"dinner","pos":"noun","example":"Я готую вечерю.","examples":["dinner","Я готую вечерю."],"atlas_href":"/lexicon/вечеря/"},{"word":"музика","translation":"music","pos":"noun","example":"Я слухаю музику.","examples":["music","Я слухаю музику."],"atlas_href":"/lexicon/музика/"},{"word":"книга","translation":"book","pos":"noun","example":"Я читаю книгу.","examples":["book","Я читаю книгу."],"atlas_href":"/lexicon/книга/"},{"word":"слово","translation":"word","pos":"noun","example":"Я знаю це слово.","examples":["word","Я знаю це слово."],"atlas_href":"/lexicon/слово/"},{"word":"текст","translation":"text","pos":"noun","example":"Ми читаємо текст.","examples":["text","Ми читаємо текст."],"atlas_href":"/lexicon/текст/"},{"word":"офіс","translation":"office","pos":"noun","example":"Я працюю в офісі.","examples":["office","Я працюю в офісі."],"atlas_href":"/lexicon/офіс/"},{"word":"українська","translation":"Ukrainian language","pos":"noun","example":"Ти знаєш українську?","examples":["Ukrainian language","Ти знаєш українську?"],"atlas_href":"/lexicon/українська/"}]`)} title="Vocabulary" />
 
-<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"читати","back":"to read"},{"front":"читаю","back":"I read; I am reading"},{"front":"читаєш","back":"you read; you are reading"},{"front":"читає","back":"he/she reads"},{"front":"читаємо","back":"we read"},{"front":"читаєте","back":"you all read"},{"front":"читають","back":"they read"},{"front":"знати","back":"to know"},{"front":"знаю","back":"I know"},{"front":"знаєш","back":"you know"},{"front":"знає","back":"he/she knows"},{"front":"працювати","back":"to work"},{"front":"працюю","back":"I work"},{"front":"працюєш","back":"you work"},{"front":"працюють","back":"they work"},{"front":"готувати","back":"to cook; to prepare"},{"front":"готую","back":"I cook"},{"front":"готуєш","back":"you cook"},{"front":"слухати","back":"to listen"},{"front":"слухаю","back":"I listen"},{"front":"гуляти","back":"to walk"},{"front":"розуміти","back":"to understand"},{"front":"розумію","back":"I understand"},{"front":"розумієш","back":"you understand"},{"front":"відпочивати","back":"to rest"},{"front":"плавати","back":"to swim"},{"front":"вечеря","back":"dinner"},{"front":"музика","back":"music"},{"front":"текст","back":"text"},{"front":"книжка","back":"book"}]`)} />
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"читати","back":"to read"},{"front":"читаю","back":"I read; I am reading"},{"front":"читаєш","back":"you read; you are reading"},{"front":"читає","back":"he/she reads; is reading"},{"front":"читаємо","back":"we read; are reading"},{"front":"читаєте","back":"you all read; are reading"},{"front":"читають","back":"they read; are reading"},{"front":"знати","back":"to know"},{"front":"знаю","back":"I know"},{"front":"знаєш","back":"you know"},{"front":"знає","back":"he/she knows"},{"front":"знаємо","back":"we know"},{"front":"працювати","back":"to work"},{"front":"працюю","back":"I work; I am working"},{"front":"працюєш","back":"you work; are working"},{"front":"працює","back":"he/she works"},{"front":"працюємо","back":"we work; are working"},{"front":"працюєте","back":"you all work"},{"front":"працюють","back":"they work"},{"front":"слухати","back":"to listen"},{"front":"слухаю","back":"I listen; I am listening"},{"front":"слухаєш","back":"you listen; are listening"},{"front":"слухає","back":"he/she listens"},{"front":"гуляти","back":"to walk"},{"front":"гуляю","back":"I walk"},{"front":"гуляєш","back":"you walk"},{"front":"гуляє","back":"he/she walks"},{"front":"гуляють","back":"they walk"},{"front":"готувати","back":"to cook; to prepare"},{"front":"готую","back":"I cook; I am cooking"},{"front":"готуєш","back":"you cook; are cooking"},{"front":"готує","back":"he/she cooks"},{"front":"готуємо","back":"we cook"},{"front":"робити","back":"to do"},{"front":"робиш","back":"you do; are doing"},{"front":"вивчати","back":"to study; to learn"},{"front":"вивчаю","back":"I study; I am learning"},{"front":"вивчаєш","back":"you study; are learning"},{"front":"вивчаєте","back":"you all study; are learning"},{"front":"малювати","back":"to draw"},{"front":"грати","back":"to play"},{"front":"вечеря","back":"dinner"},{"front":"музика","back":"music"},{"front":"книга","back":"book"},{"front":"слово","back":"word"},{"front":"текст","back":"text"},{"front":"офіс","back":"office"},{"front":"українська","back":"Ukrainian language"}]`)} />
 
 </TabItem>
 <TabItem label="Activities">
 
-### Послухай першу групу
+### Провідміняй читати
 
 *(see lesson, §Діалоги)*
 
-### Таблиця читати
+### Обери правильну форму
 
 *(see lesson, §Діалоги)*
 
-### Будуй речення з читати
+### Особа й форма
 
 *(see lesson, §Перша дієвідміна)*
 
-### Знати й розуміти
+### Що ти робиш?
 
-*(see lesson, §Мінімодель: знати й розуміти)*
-
-### Хто яке закінчення використовує?
-
-<GroupSort client:only='react' groups={JSON.parse(`{"Я": ["читаю", "знаю", "працюю"], "Ти": ["читаєш", "знаєш", "працюєш"], "Він / вона": ["читає", "знає", "працює"], "Ми / ви / вони": ["читаємо", "читаєте", "читають"]}`)} instruction={"Sort the forms by person."} isUkrainian={false} />
-
-### Працювати й готувати
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ вдома.", "answer": "працюю", "options": ["працюю", "працюєш", "працює"]}, {"sentence": "Ти ___ вечерю?", "answer": "готуєш", "options": ["готуєш", "готую", "готує"]}, {"sentence": "Ми ___ каву.", "answer": "готуємо", "options": ["готуємо", "готуєте", "готують"]}, {"sentence": "Вони ___ сьогодні.", "answer": "працюють", "options": ["працюють", "працює", "працюю"]}]`)} instruction={"Choose the whole present-tense form."} isUkrainian={false} />
-
-<span id="group-one-repairs"></span>
-
-### Виправ пастки першої групи
-
-<ErrorCorrection client:only='react' instruction="Choose the standard Ukrainian repair." items={JSON.parse(`[{"sentence": "Я є читаю книжку.", "errorWord": "Я є читаю книжку.", "correctForm": "Я читаю книжку.", "options": ["Я читаю книжку.", "Я читаю текст.", "Я знаю книжку."], "explanation": "Ukrainian does not add a separate am word before читаю."}, {"sentence": "Я працюваю в школі.", "errorWord": "Я працюваю в школі.", "correctForm": "Я працюю в школі.", "options": ["Я працюю в школі.", "Я працюю вдома.", "Я читаю в школі."], "explanation": "Працювати gives працюю, not an extra -ва- form."}, {"sentence": "Він розумієть мене.", "errorWord": "Він розумієть мене.", "correctForm": "Він розуміє мене.", "options": ["Він розуміє мене.", "Він знає мене.", "Він читає текст."], "explanation": "Він uses розуміє."}, {"sentence": "Ти відпочиєш вдома?", "errorWord": "Ти відпочиєш вдома?", "correctForm": "Ти відпочиваєш вдома?", "options": ["Ти відпочиваєш вдома?", "Ти гуляєш вдома?", "Ти працюєш вдома?"], "explanation": "Present-tense відпочивати gives відпочиваєш."}, {"sentence": "Ми читаєм текст.", "errorWord": "Ми читаєм текст.", "correctForm": "Ми читаємо текст.", "options": ["Ми читаємо текст.", "Ми знаємо текст.", "Ми слухаємо текст."], "explanation": "Use the full -ємо ending."}, {"sentence": "Ти плавиш в басейні?", "errorWord": "Ти плавиш в басейні?", "correctForm": "Ти плаваєш в басейні?", "options": ["Ти плаваєш в басейні?", "Ти гуляєш в басейні?", "Ти читаєш в басейні?"], "explanation": "Плавати follows Group One here, so use плаваєш."}]`)} isUkrainian={false} />
-
-### Мінідіалог
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що ти читаєш?", "options": [{"text": "Я читаю текст.", "correct": true}, {"text": "Я читаєш текст.", "correct": false}, {"text": "Я читати текст.", "correct": false}], "explanation": "Я читаю is the safe answer."}, {"question": "Ти знаєш це слово?", "options": [{"text": "Так, я знаю це слово.", "correct": true}, {"text": "Так, я знаєш це слово.", "correct": false}, {"text": "Так, я знати це слово.", "correct": false}], "explanation": "Я знаю."}, {"question": "Ми готуємо вечерю?", "options": [{"text": "Так, ми готуємо вечерю.", "correct": true}, {"text": "Так, ми готуєте вечерю.", "correct": false}, {"text": "Так, ми готують вечерю.", "correct": false}], "explanation": "Ми готуємо."}]`)} instruction={"Choose the best next line."} isUkrainian={false} />
+*(see lesson, §Я, ти, він/вона)*
 
 </TabItem>
 <TabItem label="Resources">

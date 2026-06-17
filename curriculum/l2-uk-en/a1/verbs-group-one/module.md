@@ -1,201 +1,132 @@
 # Дієслова першої групи
 
-Here is your first full verb pattern. Group One verbs often show **-є-** in
-the middle of the present-tense forms: **читаю, читаєш, читає, читаємо,
-читаєте, читають**. You do not need a grammar-table habit before you can use
-them. Start with one pattern, say a few real sentences, then notice how the
-same endings help with other useful verbs.
+In M15, you used **люблю + -ти**: **Я люблю читати**. Now you can make
+present-tense sentences from some of those action words.
+
+The first pattern is **перша дієвідміна**, or Group One. Your anchor verb is
+**читати**:
+
+```text
+я читаю
+ти читаєш
+він / вона читає
+ми читаємо
+ви читаєте
+вони читають
+```
 
 By the end, you can:
 
-- say **Я читаю**, **Ти читаєш?**, and **Вона читає**;
-- use **ми читаємо**, **ви читаєте**, and **вони читають** for groups;
-- recognize Group One verbs such as **знати**, **слухати**, **гуляти**, and **готувати**;
-- use **працювати** and **готувати** without adding an extra **-ва-**;
-- avoid adding **є** before a present-tense verb;
-- recognize future-looking forms such as **читатиму** as later material.
+- use all six present-tense forms of **читати**;
+- build simple sentences with **знати**, **працювати**, **слухати**,
+  **гуляти**, and **готувати**;
+- recognize the endings **-ю**, **-єш**, **-є**, **-ємо**, **-єте**, **-ють**;
+- ask **Що ти робиш?** and answer with one Group One verb;
+- keep object words such as **книгу**, **музику**, and **вечерю** as chunks.
+
+:::tip
+Today is a real verb table day, but keep the task small. Learn one pattern,
+then reuse it with a few everyday verbs.
+:::
 
 ## Діалоги
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
-At a study table, Marta and Oleh talk about ordinary things: reading, work,
-music, and dinner. The Ukrainian lines are short enough to reuse.
+Юля and Сашко are in a shared kitchen. Юля is cooking, and Сашко asks what
+she is doing.
 
 ```text
-Марта: Привіт, Олеже!
-Олег: Привіт, Марто!
-Марта: Що ти читаєш?
-Олег: Я читаю текст.
-Марта: Ти знаєш це слово?
-Олег: Так, я знаю це слово.
-Марта: Анна слухає музику?
-Олег: Так, вона слухає музику.
-Марта: Ми готуємо вечерю?
-Олег: Так, ми готуємо вечерю.
-Марта: Ви працюєте сьогодні?
-Олег: Так, ми працюємо сьогодні.
-Марта: Вони гуляють?
-Олег: Так, вони гуляють.
+Сашко: Юлю, що ти робиш?
+Юля: Я готую вечерю. А ти?
+Сашко: Я читаю книгу і слухаю музику.
+Юля: Ти знаєш це слово?
+Сашко: Так, я знаю це слово.
+Юля: А що робить Олена?
+Сашко: Вона готує вечерю.
 ```
 
 Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Марта: Привіт, Олеже!** | Marta: Hi, Oleh! |
-| **Олег: Привіт, Марто!** | Oleh: Hi, Marta! |
-| **Марта: Що ти читаєш?** | Marta: What are you reading? |
-| **Олег: Я читаю текст.** | Oleh: I am reading a text. |
-| **Марта: Ти знаєш це слово?** | Marta: Do you know this word? |
-| **Олег: Так, я знаю це слово.** | Oleh: Yes, I know this word. |
-| **Марта: Анна слухає музику?** | Marta: Is Anna listening to music? |
-| **Олег: Так, вона слухає музику.** | Oleh: Yes, she is listening to music. |
-| **Марта: Ми готуємо вечерю?** | Marta: Are we cooking dinner? |
-| **Олег: Так, ми готуємо вечерю.** | Oleh: Yes, we are cooking dinner. |
-| **Марта: Ви працюєте сьогодні?** | Marta: Are you working today? |
-| **Олег: Так, ми працюємо сьогодні.** | Oleh: Yes, we are working today. |
-| **Марта: Вони гуляють?** | Marta: Are they walking? |
-| **Олег: Так, вони гуляють.** | Oleh: Yes, they are walking. |
+| **Сашко: Юлю, що ти робиш?** | Sashko: Yulia, what are you doing? |
+| **Юля: Я готую вечерю. А ти?** | Yulia: I am cooking dinner. And you? |
+| **Сашко: Я читаю книгу і слухаю музику.** | Sashko: I am reading a book and listening to music. |
+| **Юля: Ти знаєш це слово?** | Yulia: Do you know this word? |
+| **Сашко: Так, я знаю це слово.** | Sashko: Yes, I know this word. |
+| **Юля: А що робить Олена?** | Yulia: And what is Olena doing? |
+| **Сашко: Вона готує вечерю.** | Sashko: She is cooking dinner. |
 
-:::tip
-Ukrainian present-tense verbs already show the person. **Читаю** clearly
-means "I read / I am reading." You may still say **я читаю**, but do not add
-a separate "am" word.
+Now the same pattern moves to work and study.
+
+```text
+Юля: Де ти працюєш?
+Сашко: Я працюю в офісі. А ти?
+Юля: Я не працюю, я навчаюся.
+Сашко: Ти знаєш українську?
+Юля: Так, я вивчаю українську.
+Сашко: Чудово!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Юля: Де ти працюєш?** | Yulia: Where do you work? |
+| **Сашко: Я працюю в офісі. А ти?** | Sashko: I work in an office. And you? |
+| **Юля: Я не працюю, я навчаюся.** | Yulia: I do not work; I study. |
+| **Сашко: Ти знаєш українську?** | Sashko: Do you know Ukrainian? |
+| **Юля: Так, я вивчаю українську.** | Yulia: Yes, I am learning Ukrainian. |
+| **Сашко: Чудово!** | Sashko: Great! |
+
+:::note
+**Що ти робиш?** is a ready question today. **Робиш** belongs to another verb
+group, so use the question as a chunk and keep your table work on Group One.
 :::
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
 ## Перша дієвідміна
 
-The textbook label for this pattern is **перша дієвідміна**. For A1, call it
-**Group One** and learn one anchor verb: **читати**. In a grammar note, this
-may be called **Тип «читати»** because the stem **чита-** stays clear.
-The same small family includes **гуляти** and **плавати**.
+Group One verbs in this module usually come from **-ати**, **-яти**, or
+**-увати** infinitives. The useful signal in the present tense is the ending.
 
-| Person | Pattern | Safe sentence |
-| --- | --- | --- |
-| я | **читаю** | **Я читаю текст.** |
-| ти | **читаєш** | **Ти читаєш книгу?** |
-| він/вона | **читає** | **Вона читає.** |
-| ми | **читаємо** | **Ми читаємо текст.** |
-| ви | **читаєте** | **Ви читаєте?** |
-| вони | **читають** | **Вони читають.** |
-
-Notice the full endings: **-ємо** and **-єте**. Say the whole form:
-**читаємо**, **читаєте**. This is not an extra decoration; it is the standard
-Ukrainian present-tense form.
-
-Two more Group One verbs are immediately useful:
-
-| Infinitive | I form | you form | he/she form |
+| Person | Ending | читати | Example |
 | --- | --- | --- | --- |
-| **слухати** | **слухаю** | **слухаєш** | **слухає** |
-| **гуляти** | **гуляю** | **гуляєш** | **гуляє** |
+| я | **-ю** | **читаю** | **Я читаю книгу.** |
+| ти | **-єш** | **читаєш** | **Ти читаєш?** |
+| він/вона | **-є** | **читає** | **Вона читає.** |
+| ми | **-ємо** | **читаємо** | **Ми читаємо текст.** |
+| ви | **-єте** | **читаєте** | **Ви читаєте?** |
+| вони | **-ють** | **читають** | **Вони читають.** |
 
-The verb already carries the person, so keep the sentence clean:
+Say the full group endings: **читаємо**, **читаєте**, **читають**. Do not
+cut them short.
 
-```text
-Я читаю книжку.
-Ти слухаєш музику?
-Вона гуляє.
-```
+The same endings help with six common verbs.
 
-Support after the Ukrainian lines:
-
-| Українська | English support |
-| --- | --- |
-| **Я читаю книжку.** | I am reading a book. |
-| **Ти слухаєш музику?** | Are you listening to music? |
-| **Вона гуляє.** | She is walking. |
-
-<!-- INJECT_ACTIVITY: act-3 -->
-
-### Мінімодель: знати й розуміти
-
-**Знати** works nicely with the Group One endings:
-
-| Person | Form | Example |
-| --- | --- | --- |
-| я | **знаю** | **Я знаю це слово.** |
-| ти | **знаєш** | **Ти знаєш Київ?** |
-| він/вона | **знає** | **Вона знає відповідь.** |
-| ми | **знаємо** | **Ми знаємо текст.** |
-| ви | **знаєте** | **Ви знаєте?** |
-| вони | **знають** | **Вони знають.** |
-
-You may also meet the high-frequency **Тип «розуміти»**: **розумію,
-розумієш, розуміє**. Keep it as a useful mini-pattern, not a new full lesson.
-Related words you can recognize include **розуміти**, **вміти**, and **чути**.
-
-```text
-Я розумію.
-Ти розумієш?
-Він розуміє мене.
-```
-
-Support after the Ukrainian lines:
-
-| Українська | English support |
-| --- | --- |
-| **Я розумію.** | I understand. |
-| **Ти розумієш?** | Do you understand? |
-| **Він розуміє мене.** | He understands me. |
-
-<!-- INJECT_ACTIVITY: act-4 -->
-
-## Я, ти, він/вона
-
-Start with three people before you use the whole table.
-
-| English prompt | Ukrainian answer |
-| --- | --- |
-| I read. | **Я читаю.** |
-| You read. | **Ти читаєш.** |
-| He reads. | **Він читає.** |
-| She knows. | **Вона знає.** |
-| You listen. | **Ти слухаєш.** |
-| I walk. | **Я гуляю.** |
-
-Now add group forms:
-
-| English prompt | Ukrainian answer |
-| --- | --- |
-| We read. | **Ми читаємо.** |
-| You all read. | **Ви читаєте.** |
-| They read. | **Вони читають.** |
-| We know. | **Ми знаємо.** |
-| You all know. | **Ви знаєте.** |
-| They know. | **Вони знають.** |
-
-If you hesitate, ask two questions:
-
-1. Who is doing it: **я, ти, він/вона, ми, ви, вони**?
-2. Which ending fits: **-ю, -єш, -є, -ємо, -єте, -ють**?
-
-### Використовуй працювати й готувати
-
-Some Group One verbs end in **-увати** or **-ювати**. This is **Тип
-«працювати»**. In the present tense, do not keep the full **-ува-** sound.
-Use the short forms:
-
-| Infinitive | I | you | he/she | we | you all | they |
+| Infinitive | я | ти | він/вона | ми | ви | вони |
 | --- | --- | --- | --- | --- | --- | --- |
-| **працювати** | **працюю** | **працюєш** | **працює** | **працюємо** | **працюєте** | **працюють** |
-| **готувати** | **готую** | **готуєш** | **готує** | **готуємо** | **готуєте** | **готують** |
+| **читати** | читаю | читаєш | читає | читаємо | читаєте | читають |
+| **знати** | знаю | знаєш | знає | знаємо | знаєте | знають |
+| **слухати** | слухаю | слухаєш | слухає | слухаємо | слухаєте | слухають |
+| **гуляти** | гуляю | гуляєш | гуляє | гуляємо | гуляєте | гуляють |
+| **працювати** | працюю | працюєш | працює | працюємо | працюєте | працюють |
+| **готувати** | готую | готуєш | готує | готуємо | готуєте | готують |
 
-You may notice grammar notes that mark the sound split as `ти готу-єш` or
-compare words such as `спі-вати`, `відпочи-вати`, **працювати**,
-**готувати**, **танцювати**, **фотографувати**, and **читати**. Do not say
-the hyphen; it only shows where the form is built.
+Two familiar action words also fit the same idea: **Я малюю** and **Вони
+грають**. Keep them for recognition today; the six rows above are enough for
+practice.
 
-Use whole forms in sentences:
+For **працювати** and **готувати**, the whole present-tense form is shorter
+than the infinitive: **працюю**, **готуєш**, **працюють**. Do not add an
+extra **-ва-**.
 
 ```text
 Я працюю вдома.
 Ти готуєш вечерю?
-Вони працюють сьогодні.
-Ми готуємо каву.
+Вони гуляють.
 ```
 
 Support after the Ukrainian lines:
@@ -204,74 +135,96 @@ Support after the Ukrainian lines:
 | --- | --- |
 | **Я працюю вдома.** | I work at home. |
 | **Ти готуєш вечерю?** | Are you cooking dinner? |
-| **Вони працюють сьогодні.** | They are working today. |
-| **Ми готуємо каву.** | We are making coffee. |
+| **Вони гуляють.** | They are walking. |
 
-For everyday speech, keep the sentence frame predictable. Put the person
-first, then the verb, then one small object or place. This gives you useful
-sentences without overloading the ending:
+<!-- INJECT_ACTIVITY: act-3 -->
 
-| Frame | Example you can reuse |
+## Я, ти, він/вона
+
+The three most useful forms are the singular forms.
+
+| Person | Form | Sentence |
+| --- | --- | --- |
+| **я** | **читаю** | **Я читаю книгу.** |
+| **ти** | **читаєш** | **Ти читаєш книгу?** |
+| **він/вона** | **читає** | **Вона читає книгу.** |
+
+Use the same idea with other verbs:
+
+| Person | Verb | Sentence |
+| --- | --- | --- |
+| **я** | **знаю** | **Я знаю це слово.** |
+| **ти** | **слухаєш** | **Ти слухаєш музику?** |
+| **вона** | **готує** | **Вона готує вечерю.** |
+| **я** | **працюю** | **Я працюю в офісі.** |
+
+Group forms are still important. At A1, recognize and reuse them in simple
+sentences.
+
+| Person | Form | Sentence |
+| --- | --- | --- |
+| **ми** | **читаємо** | **Ми читаємо текст.** |
+| **ви** | **знаєте** | **Ви знаєте українську?** |
+| **вони** | **гуляють** | **Вони гуляють у парку.** |
+
+:::warning
+Do not add English "am" before the Ukrainian verb. **Я читаю** already means
+"I read" or "I am reading."
+:::
+
+Some object words change shape after the verb. You do not need a full case
+lesson here. Learn these as small chunks:
+
+| Base word | Chunk in today's sentences |
 | --- | --- |
-| **Я + verb + object** | **Я читаю текст.** |
-| **Ти + verb + object?** | **Ти слухаєш музику?** |
-| **Вона + verb + today** | **Вона працює сьогодні.** |
-| **Ми + verb + object** | **Ми готуємо вечерю.** |
-| **Вони + verb + place** | **Вони гуляють у парку.** |
+| **книга** | **Я читаю книгу.** |
+| **музика** | **Я слухаю музику.** |
+| **вечеря** | **Я готую вечерю.** |
+| **українська** | **Я вивчаю українську.** |
 
-When you answer, do not translate every English word. "I am reading" and "I
-read" both fit **Я читаю** in this beginner context. The time word can come
-later: **Я читаю сьогодні**, **Ми працюємо сьогодні**, **Вони гуляють
-сьогодні**. Your main signal is still the verb ending.
-
-### Пізніше: форми майбутнього часу
-
-Ukrainian also has future forms. You may see grammar labels such as
-**форми майбутнього часу**, **складеної** future, **читатиму**, or
-**читатимеш**. Treat them as recognition-only today. Your active job is the
-present tense:
-
-- **Я читаю.**
-- **Ти читаєш.**
-- **Ми читаємо.**
+<!-- INJECT_ACTIVITY: act-4 -->
 
 ## Підсумок
 
-Use Group One to make small present-tense sentences.
+Group One gives you your first full present-tense table.
 
-| Person | Reading | Knowing | Working |
-| --- | --- | --- | --- |
-| я | **читаю** | **знаю** | **працюю** |
-| ти | **читаєш** | **знаєш** | **працюєш** |
-| він/вона | **читає** | **знає** | **працює** |
-| ми | **читаємо** | **знаємо** | **працюємо** |
-| ви | **читаєте** | **знаєте** | **працюєте** |
-| вони | **читають** | **знають** | **працюють** |
+| Person | Ending | Anchor form |
+| --- | --- | --- |
+| **я** | **-ю** | **читаю** |
+| **ти** | **-єш** | **читаєш** |
+| **він/вона** | **-є** | **читає** |
+| **ми** | **-ємо** | **читаємо** |
+| **ви** | **-єте** | **читаєте** |
+| **вони** | **-ють** | **читають** |
 
-Build a short day:
+Build a small conversation:
 
-1. **Я читаю текст.**
-2. **Я слухаю музику.**
-3. **Ти знаєш це слово?**
-4. **Вона працює сьогодні.**
-5. **Ми готуємо вечерю.**
-6. **Вони гуляють.**
+```text
+Що ти робиш?
+Я читаю книгу.
+Я слухаю музику.
+Ти знаєш це слово?
+Вона готує вечерю.
+Ми працюємо сьогодні.
+```
 
-Keep the repairs simple:
+Support after the Ukrainian lines:
 
-| Watch for | Use |
+| Українська | English support |
 | --- | --- |
-| extra "am" before a verb | **Я читаю книжку.** |
-| extra **-ва-** in **працювати** | **Я працюю в школі.** |
-| short group ending | **Ми читаємо текст.** |
-| Group Two ending on **плавати** | **Ти плаваєш у басейні?** |
+| **Що ти робиш?** | What are you doing? |
+| **Я читаю книгу.** | I am reading a book. |
+| **Я слухаю музику.** | I am listening to music. |
+| **Ти знаєш це слово?** | Do you know this word? |
+| **Вона готує вечерю.** | She is cooking dinner. |
+| **Ми працюємо сьогодні.** | We are working today. |
 
-The next module will compare this with Group Two. For now, let **-єш**,
-**-є**, **-ємо**, **-єте**, and **-ють** become familiar.
+Quick self-check:
 
-One final scan is enough before you speak. If the subject is **я**, look for
-**-ю**: **читаю**, **знаю**, **працюю**, **готую**. If the subject is **ти**,
-look for **-єш**: **читаєш**, **знаєш**, **працюєш**, **готуєш**. If the
-subject is **ми**, say the full **-ємо** ending: **читаємо**, **знаємо**,
-**працюємо**, **готуємо**. These four quick checks make your first Group One
-sentences sound complete.
+1. Say **слухати** with **я**, **ти**, **він/вона**:
+   **я слухаю**, **ти слухаєш**, **він/вона слухає**.
+2. Ask one question: **Що ти робиш?**
+3. Answer with one sentence: **Я читаю книгу** or **Я слухаю музику**.
+
+Next, you will compare this with Group Two verbs. For now, let the Group One
+endings become automatic: **-ю**, **-єш**, **-є**, **-ємо**, **-єте**, **-ють**.
