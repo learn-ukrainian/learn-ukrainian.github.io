@@ -38,6 +38,10 @@
   translation: to explain
   pos: verb
   example: "Учитель пояснює правила групам."
+- word: радити
+  translation: to advise
+  pos: verb
+  example: "Я раджу друзям цей фільм."
 - word: подарунок
   translation: gift
   pos: noun
@@ -68,6 +72,10 @@
   pos: noun
   gender: f
   example: "Книги лежать на полицях."
+- word: прикрашати
+  translation: to decorate
+  pos: verb
+  example: "Ми прикрашаємо кімнату квітами."
 - word: автобус
   translation: bus
   pos: noun
