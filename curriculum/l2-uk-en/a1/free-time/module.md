@@ -18,8 +18,6 @@ By the end, you can:
 
 ## Діалоги
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 The first scene is at a community center notice board. Вітя and Оленка choose a
 weekend activity. Notice the order: invitation + place + day + time.
 
@@ -86,22 +84,6 @@ The question **Як часто?** asks for frequency. Answer with one adverb
 (**часто**, **іноді**, **рідко**) or a time phrase (**раз на тиждень**,
 **двічі на тиждень**, **раз на місяць**).
 
-Two useful interview questions are:
-
-```text
-Чим ти любиш займатись у вільний від навчання час?
-Які фільми ти любиш дивитися?
-```
-
-Support after the Ukrainian lines:
-
-| Українська | English support |
-| --- | --- |
-| **Чим ти любиш займатись у вільний від навчання час?** | What do you like doing in your free time away from study? |
-| **Які фільми ти любиш дивитися?** | What films do you like watching? |
-
-<!-- INJECT_ACTIVITY: act-2 -->
-
 ## Хобі і спорт
 
 Learn hobbies as verb chunks, not as isolated nouns. This protects you from
@@ -122,6 +104,8 @@ English-style word-for-word phrases.
 | **займатися спортом** | to do sport |
 | **малювати** | to draw |
 | **фотографувати** | to take photos |
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 For sports and games, use **грати у/в**. For musical instruments, use
 **грати на**. Treat these as set phrases for now:
@@ -168,17 +152,7 @@ Ukrainian places and names naturally: **Київ**, **Львів**, **Карпа
 same chunks also work in short questions: **Куди ходиш у вихідні?** — **В
 кіно.**
 
-Коли формуємо лексичну базу уроку, спираємося на сучасні автентичні українські
-реалії, not abstract shared-space examples.
-
-Keep the same terminology discipline in hobby examples. Use **«Добрий день»**,
-write **«Київ»**, and say **«брати участь у гуртку»**. For short self-lines,
-keep the Ukrainian models **«Я студент»**, **«Він спортсмен»**, and **«Мені 20
-років»**.
-
 <!-- INJECT_ACTIVITY: act-3 -->
-
-<!-- INJECT_ACTIVITY: act-4 -->
 
 ## Як часто?
 
@@ -197,7 +171,7 @@ The word **ніколи** needs **не**:
 
 ```text
 Я ніколи не працюю у неділю.
-Він ніколи не грає в гру вночі.
+Я ніколи не дивлюся фільми вночі.
 ```
 
 Support after the Ukrainian lines:
@@ -205,15 +179,17 @@ Support after the Ukrainian lines:
 | Українська | English support |
 | --- | --- |
 | **Я ніколи не працюю у неділю.** | I never work on Sunday. |
-| **Він ніколи не грає в гру вночі.** | He never plays a game at night. |
+| **Я ніколи не дивлюся фільми вночі.** | I never watch films at night. |
 
 Do not write **Я ніколи працюю**. Ukrainian uses the negative particle with
 **ніколи**.
 
+<!-- INJECT_ACTIVITY: act-2 -->
+
 You can also count how often:
 
 ```text
-Коли ти читаєш? — Вранці, після уроків або на вихідних.
+Коли ти читаєш? — Вранці, після уроків або у вихідні.
 Він щодня грає у футбол.
 Я граю у футбол раз на тиждень.
 Вона грає у теніс двічі на тиждень.
@@ -226,7 +202,7 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Коли ти читаєш? — Вранці, після уроків або на вихідних.** | When do you read? — In the morning, after lessons, or on weekends. |
+| **Коли ти читаєш? — Вранці, після уроків або у вихідні.** | When do you read? — In the morning, after lessons, or on weekends. |
 | **Він щодня грає у футбол.** | He plays football every day. |
 | **Я граю у футбол раз на тиждень.** | I play football once a week. |
 | **Вона грає у теніс двічі на тиждень.** | She plays tennis twice a week. |
@@ -234,10 +210,8 @@ Support after the Ukrainian lines:
 | **Вони тренуються тричі на тиждень.** | They train three times a week. |
 | **Я читаю кожен день.** | I read every day. |
 
-Build a complete A1.4 plan with four pieces. **Підмет + Присудок + Обставина
-часу** is the safe sentence shape: **Я часто читаю цікаві книги на вихідних.**
-At A1, you do not need the case labels, but the roles are clear: subject,
-action, object, and time.
+Build a complete A1.4 plan with four pieces: day, time, weather, and activity.
+A safe sentence is: **Я часто читаю цікаві книги у вихідні.**
 
 ```text
 У суботу о п'ятій ходімо в кіно.
@@ -255,10 +229,8 @@ Support after the Ukrainian lines:
 | **Якщо буде дощ, ходімо в музей.** | If it rains, let's go to the museum. |
 | **У Карпатах холодно, але ми часто фотографуємо.** | In the Carpathians it is cold, but we often take photos. |
 
-For a short contrast, use **а** or **але**: **Я часто читаю, а брат часто грає
-у футбол.** **Я люблю сучасну музику, а мій брат любить активний спорт.** For
-a tiny integrated text, title it **Мій звичайний день** and include one free
-time line. You can also say: **Я люблю кіно, але рідко ходжу в театр.**
+For a short contrast, keep one simple sentence: **Я часто читаю, а брат часто
+грає у футбол.** You can also say: **Я люблю кіно, але рідко ходжу в театр.**
 
 ## Підсумок
 
@@ -267,7 +239,7 @@ For free time, keep three patterns in your head:
 **Action chunk + frequency + time = a useful sentence.**
 
 ```text
-Я часто читаю на вихідних.
+Я часто читаю у вихідні.
 Іноді я слухаю музику ввечері.
 Ми рідко ходимо в театр.
 ```
@@ -276,7 +248,7 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Я часто читаю на вихідних.** | I often read on weekends. |
+| **Я часто читаю у вихідні.** | I often read on weekends. |
 | **Іноді я слухаю музику ввечері.** | Sometimes I listen to music in the evening. |
 | **Ми рідко ходимо в театр.** | We rarely go to the theater. |
 
@@ -307,18 +279,6 @@ Support after the Ukrainian lines:
 | --- | --- |
 | **Сьогодні сонячно, тому ходімо гуляти.** | Today it is sunny, so let's go for a walk. |
 | **Буде дощ, тому ходімо в музей.** | It will rain, so let's go to the museum. |
-
-:::caution
-Build this topic from Ukrainian chunks. For Ukrainian learning by foreigners,
-practice means свідоме уникнення усіх фонетичних, лексичних чи культурних
-порівнянь з російською мовою. Do not compare hobby words with Russian or
-explain them through Russian forms. Також категорично заборонено подавати
-спільну лексику як запозичену з російської чи як пострадянську. Words such as
-**спорт** and **футбол** belong fully to Ukrainian speech here. Use **Добрий
-день**, **Київ**, **брати участь**, **Я студент**, **Він спортсмен**, and
-**Мені 20 років** as safe Ukrainian models. Avoid nonstandard participation
-calques.
-:::
 
 Write five short lines about your free time:
 
