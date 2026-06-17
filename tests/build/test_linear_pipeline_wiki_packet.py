@@ -37,11 +37,11 @@ def test_build_knowledge_packet_reads_wiki_and_sources(monkeypatch) -> None:
         plan=plan,
     )
 
-    assert "Подача теми «Мій ранок»" in packet
-    assert "засвоєнням зворотних дієслів" in packet
-    assert "wiki/pedagogy/a1/my-morning.md" in packet
-    assert "S1=4-klas-ukrmova-zaharijchuk_s1922" in packet
-    assert "S9=ukrainian_wiki/reflexive-verbs-nuances" in packet
+    assert "Введення теми має відбуватися покроково" in packet
+    assert "зворотних дієслів" in packet
+    assert "pedagogy/a1/my-morning.md" in packet
+    assert "Source: Сторінка 25 (zaharijchuk, Grade 1, p.24" in packet
+    assert "Source: Сторінка 53 (zaharijchuk, Grade 1, p.52" in packet
     assert "mcp__sources__verify_lemma" in packet
     assert "mcp__sources__search_style_guide" in packet
     assert "mcp__sources__search_definitions" in packet

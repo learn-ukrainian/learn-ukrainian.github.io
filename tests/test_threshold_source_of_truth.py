@@ -19,6 +19,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from common.thresholds import (
+    LEVEL_THRESHOLDS,
+    QG_DIMS,
     REVIEW_PASS_FLOOR,
     REVIEW_REJECT_FLOOR,
     STYLE_REVIEW_DIMENSION_FLOOR,
@@ -172,6 +174,23 @@ def test_no_canonical_name_redeclared_outside_thresholds() -> None:
         "Canonical threshold names must live only in scripts/common/thresholds.py.\n"
         + "\n".join(offenders)
     )
+
+
+def test_qg_dims_include_beauty_as_sixth_dimension() -> None:
+    assert QG_DIMS == (
+        "pedagogical",
+        "naturalness",
+        "decolonization",
+        "engagement",
+        "tone",
+        "beauty",
+    )
+
+
+def test_every_level_has_beauty_review_floor() -> None:
+    for level, thresholds in LEVEL_THRESHOLDS.items():
+        assert "beauty" in thresholds.review_floors, level
+        assert set(thresholds.review_floors) == set(QG_DIMS)
 
 
 def test_review_pass_floor_imports_are_legacy_allowlisted() -> None:

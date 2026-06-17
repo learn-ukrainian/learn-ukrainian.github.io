@@ -16,31 +16,42 @@ def test_terminal_and_warning_dims_partition_qg_dims() -> None:
     assert frozenset() == LLM_QG_TERMINAL_DIMS & LLM_QG_WARNING_DIMS
 
 
-def test_decolonization_is_only_terminal_dim_in_2026_05_23_baseline() -> None:
-    """Per architectural reset 2026-05-23 decision #3."""
+def test_legacy_terminal_dim_set_preserves_2026_05_23_baseline() -> None:
+    """Back-compat constant preserves architectural reset 2026-05-23 decision #3."""
     assert frozenset({"decolonization"}) == LLM_QG_TERMINAL_DIMS
 
 
 def test_terminal_dims_for_profiles() -> None:
     assert terminal_dims_for("core") == frozenset()
-    assert terminal_dims_for("seminar") == frozenset({"decolonization"})
-    assert terminal_dims_for(None) == frozenset({"decolonization"})
+    assert terminal_dims_for("seminar") == frozenset(
+        {"decolonization", "pedagogical", "engagement", "beauty"}
+    )
+    assert terminal_dims_for("track") == frozenset(
+        {"decolonization", "pedagogical", "engagement", "beauty"}
+    )
+    assert terminal_dims_for("folk") == frozenset(
+        {"decolonization", "pedagogical", "engagement", "beauty"}
+    )
+    assert terminal_dims_for(None) == frozenset(
+        {"decolonization", "pedagogical", "engagement", "beauty"}
+    )
 
 
 def test_warning_dim_reject_does_not_drive_terminal_verdict() -> None:
     """A REJECT in a warning dim leaves terminal_verdict == PASS."""
     scores = {
-        "pedagogical": 4.0,  # REJECT (below 6.0 reject floor)
-        "naturalness": 9.0,
+        "pedagogical": 9.0,
+        "naturalness": 4.0,  # REJECT (below 6.0 reject floor)
         "decolonization": 9.5,  # PASS
         "engagement": 8.5,
         "tone": 8.5,
+        "beauty": 8.5,
     }
-    verdict = aggregate_review(scores, "A1")
+    verdict = aggregate_review(scores, "A1", profile="seminar")
     assert verdict.verdict == "REJECT"
     assert verdict.terminal_verdict == "PASS"
-    assert "pedagogical" in verdict.rejected_dims
-    assert "pedagogical" in verdict.warning_dims
+    assert "naturalness" in verdict.rejected_dims
+    assert "naturalness" in verdict.warning_dims
 
 
 def test_core_decolonization_revise_is_warning_not_terminal() -> None:
@@ -51,6 +62,7 @@ def test_core_decolonization_revise_is_warning_not_terminal() -> None:
         "decolonization": 7.0,  # REVISE
         "engagement": 8.5,
         "tone": 8.5,
+        "beauty": 8.5,
     }
     verdict = aggregate_review(scores, "A1", profile="core")
     assert verdict.verdict == "REVISE"
@@ -67,6 +79,7 @@ def test_seminar_decolonization_revise_stays_terminal() -> None:
         "decolonization": 7.0,  # REVISE
         "engagement": 9.0,
         "tone": 9.0,
+        "beauty": 9.0,
     }
     verdict = aggregate_review(scores, "bio", profile="seminar")
     assert verdict.verdict == "REVISE"
@@ -82,6 +95,7 @@ def test_all_pass_yields_pass_on_both() -> None:
         "decolonization": 9.0,
         "engagement": 8.5,
         "tone": 8.5,
+        "beauty": 8.5,
     }
     verdict = aggregate_review(scores, "A1")
     assert verdict.verdict == "PASS"
@@ -97,8 +111,9 @@ def test_warning_revise_does_not_drive_terminal_revise() -> None:
         "decolonization": 9.0,
         "engagement": 8.5,
         "tone": 8.5,
+        "beauty": 8.5,
     }
-    verdict = aggregate_review(scores, "A1")
+    verdict = aggregate_review(scores, "A1", profile="core")
     assert verdict.verdict == "REVISE"
     assert verdict.terminal_verdict == "PASS"
 
@@ -114,7 +129,11 @@ def test_aggregate_llm_review_json_shape_includes_terminal_warning_fields() -> N
         for dim in QG_DIMS
     }
 
-    aggregate = linear_pipeline.aggregate_llm_review(report, "A1")["aggregate"]
+    aggregate = linear_pipeline.aggregate_llm_review(
+        report,
+        "A1",
+        profile="core",
+    )["aggregate"]
 
     assert aggregate["verdict"] == "REJECT"
     assert aggregate["terminal_verdict"] == "PASS"

@@ -52,19 +52,24 @@ QG_DIMS: tuple[str, ...] = (
     "decolonization",
     "engagement",
     "tone",
+    "beauty",
 )
-"""The 5 LLM QG dimensions per North Star §7."""
+"""The 6 LLM QG dimensions per North Star §7."""
 
 LLM_QG_TERMINAL_DIMS: frozenset[str] = frozenset({"decolonization"})
-"""LLM QG dims whose REJECT verdict terminates the build.
+"""Back-compat LLM QG dims whose REJECT verdict terminates the build.
 
 Per architectural reset 2026-05-23
 (docs/session-state/2026-05-23-architectural-reset-strip-v7-llm-demote.md
 decision #2): subjective dims (pedagogical, naturalness, engagement, tone)
 were stochastic and produced zero shipped modules across 6 builds
-2026-05-22 to 2026-05-23. They're demoted to warning. Decolonization stays
-terminal because political safety is not subjective: Russian framing leaking
-in is a hard rule, not a judgment call.
+2026-05-22 to 2026-05-23. The profile resolver below wires the seminar-only
+re-promotion of pedagogical, engagement, and beauty per
+docs/folk-epic/seminar-quality-gate-design.md §3. Merge remains blocked until
+the Phase B de-risk proves the correction loop closes the gap; the blast
+radius is seminar-scoped, and core profiles remain untouched. Decolonization
+stays terminal for seminars because political safety is not subjective:
+Russian framing leaking in is a hard rule, not a judgment call.
 
 Adding a dim here means: a REJECT in that dim raises LinearPipelineError and
 kills the build. Removing a dim means: a REJECT in that dim emits
@@ -75,8 +80,18 @@ shipped modules with captured human decisions; see PR-G placeholder), dims can
 be re-added to this set with the agreement-rate justification logged.
 """
 
+SEMINAR_TERMINAL_DIMS: frozenset[str] = frozenset(
+    {"decolonization", "pedagogical", "engagement", "beauty"}
+)
+"""Default terminal LLM QG dims for seminar/track profiles."""
+
+# Per-track override hook (design §2a): folk leans beauty; hist will lean rigor.
+# Empty today: all seminar tracks use SEMINAR_TERMINAL_DIMS. Add entries as
+# tracks are tuned.
+TRACK_DIM_PROFILES: dict[str, frozenset[str]] = {}
+
 LLM_QG_WARNING_DIMS: frozenset[str] = frozenset(QG_DIMS) - LLM_QG_TERMINAL_DIMS
-"""Derived: LLM QG dims whose REJECT verdict is logged but does not terminate."""
+"""Derived legacy warning dims for callers still using LLM_QG_TERMINAL_DIMS."""
 
 
 def terminal_dims_for(profile: str | None) -> frozenset[str]:
@@ -88,7 +103,8 @@ def terminal_dims_for(profile: str | None) -> frozenset[str]:
     """
     if profile is not None and str(profile).strip().casefold() == "core":
         return frozenset()
-    return LLM_QG_TERMINAL_DIMS
+    profile_key = str(profile).strip().casefold() if profile is not None else ""
+    return TRACK_DIM_PROFILES.get(profile_key, SEMINAR_TERMINAL_DIMS)
 
 
 STYLE_REVIEW_TARGET: float = 9.0
@@ -185,6 +201,7 @@ def _make_review_floors(
     decolonization: float,
     engagement: float,
     tone: float,
+    beauty: float,
 ) -> Mapping[str, DimensionFloor]:
     pass_floors = {
         "pedagogical": pedagogical,
@@ -192,6 +209,7 @@ def _make_review_floors(
         "decolonization": decolonization,
         "engagement": engagement,
         "tone": tone,
+        "beauty": beauty,
     }
     return MappingProxyType({
         dim: DimensionFloor(pass_floor=pass_floor, reject_floor=REVIEW_REJECT_FLOOR)
@@ -208,6 +226,7 @@ _LEVEL_THRESHOLDS: dict[str, LevelThresholds] = {
             decolonization=9.0,
             engagement=8.0,
             tone=8.0,
+            beauty=8.0,
         ),
     ),
     "A2": LevelThresholds(
@@ -218,6 +237,7 @@ _LEVEL_THRESHOLDS: dict[str, LevelThresholds] = {
             decolonization=9.0,
             engagement=8.0,
             tone=8.0,
+            beauty=8.0,
         ),
     ),
     "B1": LevelThresholds(
@@ -228,6 +248,7 @@ _LEVEL_THRESHOLDS: dict[str, LevelThresholds] = {
             decolonization=9.0,
             engagement=8.0,
             tone=8.0,
+            beauty=8.0,
         ),
     ),
     "B2": LevelThresholds(
@@ -238,6 +259,7 @@ _LEVEL_THRESHOLDS: dict[str, LevelThresholds] = {
             decolonization=9.0,
             engagement=8.0,
             tone=8.0,
+            beauty=8.0,
         ),
     ),
     "C1": LevelThresholds(
@@ -248,6 +270,7 @@ _LEVEL_THRESHOLDS: dict[str, LevelThresholds] = {
             decolonization=9.0,
             engagement=8.0,
             tone=8.0,
+            beauty=8.0,
         ),
     ),
     "C2": LevelThresholds(
@@ -258,6 +281,7 @@ _LEVEL_THRESHOLDS: dict[str, LevelThresholds] = {
             decolonization=9.0,
             engagement=8.0,
             tone=8.0,
+            beauty=8.0,
         ),
     ),
 }
@@ -273,6 +297,7 @@ _DEFAULT_THRESHOLDS = LevelThresholds(
         decolonization=9.0,
         engagement=8.0,
         tone=8.0,
+        beauty=8.0,
     ),
 )
 """Fallback for unknown level codes. Matches the audit-side ``default``

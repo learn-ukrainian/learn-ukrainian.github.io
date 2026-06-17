@@ -1406,6 +1406,34 @@ def test_aggregate_llm_review_requires_exact_qg_dims() -> None:
         linear_pipeline.aggregate_llm_review(report, "A1")
 
 
+def test_validate_llm_review_report_accepts_beauty_dim() -> None:
+    report = {
+        dim: {
+            "score": 9.0,
+            "evidence": f'"Specific quoted evidence for {dim}."',
+            "verdict": "PASS",
+        }
+        for dim in QG_DIMS
+    }
+
+    linear_pipeline.validate_llm_review_report(report)
+
+
+def test_validate_llm_review_report_rejects_missing_beauty_dim() -> None:
+    report = {
+        dim: {
+            "score": 9.0,
+            "evidence": f'"Specific quoted evidence for {dim}."',
+            "verdict": "PASS",
+        }
+        for dim in QG_DIMS
+    }
+    del report["beauty"]
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match=r"missing=.*beauty"):
+        linear_pipeline.validate_llm_review_report(report)
+
+
 def test_aggregate_llm_review_requires_quoted_evidence() -> None:
     report = {
         dim: {

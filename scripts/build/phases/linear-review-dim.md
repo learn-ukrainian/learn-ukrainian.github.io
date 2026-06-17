@@ -33,11 +33,16 @@ For `{DIM}` specifically:
   callouts carry real pedagogy vs filler, whether the tone is warm vs
   bureaucratic, whether direct-address phrases (e.g. `Notice the soft sign
   in **писатися**`) are content-anchored vs generic, whether dialogue feels
-  human vs robotic. Score the *quality* of engagement, not its presence —
+  human vs robotic. For seminar tracks, assess whether the lesson helps the
+  learner care about the heritage and want to keep reading, not merely whether
+  it includes hooks. Score the *quality* of engagement, not its presence —
   presence is the gate's job.
 - `pedagogical`: does the sequencing actually teach? Are examples
   illuminating? Does each concept earn the next? The gate confirmed word
   budgets and section presence; you assess whether the pedagogy *works*.
+  For seminar tracks, the learner is advanced and near-full-immersion:
+  academic depth should be woven through source-guided Ukrainian teaching, not
+  flattened into dry scholarship or beginner drills.
   Source-pedagogy failures are in scope even when the plan/wiki asked for
   them: REVISE or REJECT any grammar module that promotes a metaphor,
   discourse heuristic, activity label, or writer-created grouping into a
@@ -156,6 +161,33 @@ For `{DIM}` specifically:
     named persona or named characters, and no foreigner-textbook anti-patterns
     such as transliteration tables, "X sounds like Y in English", "the student
     must learn", or English topic-sentence openers.
+- `beauty`: does the lesson convey the beauty of the source AND read
+  beautifully itself? This dimension has two required halves:
+  (1) **Craft**: vivid, elegant, memorable Ukrainian a learner wants to
+  re-read; imagery and rhythm where the subject invites it; no flat
+  encyclopedic exposition, cliché, purple prose, or mechanical scaffolding
+  dressed up as style. (2) **Soul**: authentic folk texts (пісні, думи,
+  голосіння, заклинання, колядки) are quoted verbatim, cited, verified, and
+  framed so their beauty and identity-bearing power resonate. Let the source
+  speak rather than summarizing it dry.
+
+  Score anchors:
+  - 9-10: genuine literary quality in the lesson prose AND at least one
+    primary folk text quoted and framed so its beauty lands emotionally; the
+    source's voice is present, not paraphrased away.
+  - 8: solid, clean, engaging craft with no flat stretches AND the source
+    present via at least one well-chosen, well-framed authentic quote that
+    conveys its character.
+  - 6: competent but flat; folk texts are described or summarized rather than
+    quoted and made to resonate.
+  - <=4: dry, generic, textbook-encyclopedic; no primary-text presence, or
+    quotes dumped without framing.
+
+  Evidence required: cite a verbatim excerpt from the lesson exemplifying (or
+  failing) craft, and name the primary folk text quoted or note its absence. A
+  PASS with no quoted excerpt is invalid. Corpus note: the folk literary corpus
+  is not yet fully routed, so score honestly against authentic quotes present
+  and do not penalize for corpus depth that Phase C has not delivered.
 
 A dim score that re-states what a deterministic gate already enforced is a
 reviewer-protocol failure. Cite something the gate cannot see.
@@ -182,7 +214,8 @@ teach while applying the existing `{DIM}` rubric.
 The Tier-1 audits below (A through I, expanded in this rebuild) feed evidence
 into specific dims as labeled. Audit F (activity split) → pedagogical +
 engagement. Audit G (corpus access) → all dims, weighted strongest for
-pedagogical (out-of-level citations are mostly a pedagogical problem). Audit H
+pedagogical and beauty on source-centered seminar modules (out-of-level
+citations are mostly a pedagogical problem). Audit H
 (student-aware) → pedagogical + engagement + naturalness. Audit I (audit-line
 integrity) → all dims, as a meta-signal that the writer was honest with itself.
 

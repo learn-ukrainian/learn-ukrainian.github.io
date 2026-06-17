@@ -8,7 +8,7 @@
 
 ## Binding constraint (North Star §7, paraphrased)
 
-> LLM QG passes only when **Pedagogical, Naturalness, Decolonization, Engagement, Tone** each ≥ the per-level floor in `LEVEL_THRESHOLDS`. **No weighted average. One failing dim fails the module.**
+> LLM QG passes only when **Pedagogical, Naturalness, Decolonization, Engagement, Tone, Beauty** each ≥ the per-level floor in `LEVEL_THRESHOLDS`. **No weighted average. One failing dim fails the module.**
 
 This document specifies the schema + aggregator semantics that satisfy this constraint and supplies the per-level per-dim default floors.
 
@@ -22,7 +22,7 @@ This document specifies the schema + aggregator semantics that satisfy this cons
 | `REVIEW_REJECT_FLOOR` | global, level-agnostic | 6.0 |
 | `LevelThresholds.naturalness_min` | per-level, single dim | A1/A2/B1=9.0, B2+=8.0 |
 
-The Phase 4 LLM QG contract requires per-level floors for **all 5 dims**, not just naturalness. The current schema can't express that without ad-hoc parallel constants. `scripts/build/v6_build.py:1854-1858` already enforces a single global `REVIEW_TARGET_SCORE` per-dim floor (`dim_floor_fail` predicate); the aggregator is already MIN (`min(raw_scores)`, line 1844). The change is in the **floor lookup**, not the aggregator shape.
+The Phase 4 LLM QG contract requires per-level floors for **all 6 dims**, not just naturalness. The current schema can't express that without ad-hoc parallel constants. `scripts/build/v6_build.py:1854-1858` already enforces a single global `REVIEW_TARGET_SCORE` per-dim floor (`dim_floor_fail` predicate); the aggregator is already MIN (`min(raw_scores)`, line 1844). The change is in the **floor lookup**, not the aggregator shape.
 
 ## Schema (proposed)
 
@@ -35,8 +35,9 @@ QG_DIMS: tuple[str, ...] = (
     "decolonization",
     "engagement",
     "tone",
+    "beauty",
 )
-"""The 5 LLM QG dimensions per North Star §7. Tests assert this tuple
+"""The 6 LLM QG dimensions per North Star §7. Tests assert this tuple
 matches the per-dim reviewer prompt set under
 ``scripts/build/phases/v6-review/`` (post-retirement of legacy 9-dim)."""
 
@@ -78,16 +79,16 @@ class LevelThresholds:
 
 ## Per-level per-dim default floors
 
-Rationale: A1/A2/B1 are stricter than B2+ because thin source material at lower CEFR levels makes awkwardness easier to miss; this matches the existing `naturalness_min` pattern. **Decolonization is held high regardless of level** — it's identity-critical and not a complexity-tradeoff. **Pedagogical and Naturalness track Decolonization at lower levels** because a beginner module that fails either of those is unshippable. **Engagement and Tone hold steady at 8.0** — these are quality-stretch dims that tolerate B-grade and still ship.
+Rationale: A1/A2/B1 are stricter than B2+ because thin source material at lower CEFR levels makes awkwardness easier to miss; this matches the existing `naturalness_min` pattern. **Decolonization is held high regardless of level** — it's identity-critical and not a complexity-tradeoff. **Pedagogical and Naturalness track Decolonization at lower levels** because a beginner module that fails either of those is unshippable. **Engagement, Tone, and Beauty hold steady at 8.0** — these are quality-stretch dims that tolerate B-grade and still ship.
 
-| Level | pedagogical | naturalness | decolonization | engagement | tone |
-|---|---|---|---|---|---|
-| A1   | 9.0 | 9.0 | 9.0 | 8.0 | 8.0 |
-| A2   | 9.0 | 9.0 | 9.0 | 8.0 | 8.0 |
-| B1   | 9.0 | 9.0 | 9.0 | 8.0 | 8.0 |
-| B2   | 8.0 | 8.0 | 9.0 | 8.0 | 8.0 |
-| C1   | 8.0 | 8.0 | 9.0 | 8.0 | 8.0 |
-| C2   | 8.0 | 8.0 | 9.0 | 8.0 | 8.0 |
+| Level | pedagogical | naturalness | decolonization | engagement | tone | beauty |
+|---|---|---|---|---|---|---|
+| A1   | 9.0 | 9.0 | 9.0 | 8.0 | 8.0 | 8.0 |
+| A2   | 9.0 | 9.0 | 9.0 | 8.0 | 8.0 | 8.0 |
+| B1   | 9.0 | 9.0 | 9.0 | 8.0 | 8.0 | 8.0 |
+| B2   | 8.0 | 8.0 | 9.0 | 8.0 | 8.0 | 8.0 |
+| C1   | 8.0 | 8.0 | 9.0 | 8.0 | 8.0 | 8.0 |
+| C2   | 8.0 | 8.0 | 9.0 | 8.0 | 8.0 | 8.0 |
 
 REJECT floor: **6.0 across all (level, dim)** — matches the current `REVIEW_REJECT_FLOOR` global. Below 6 means the module is structurally broken and needs a re-plan, not a fix-loop. (User policy 2026-04-23 in strict-reviewer-persona.md.)
 

@@ -26,6 +26,7 @@ def _parse_doc_floor_table() -> dict[str, dict[str, float]]:
         r"\|\s*(\d+\.\d)\s*"
         r"\|\s*(\d+\.\d)\s*"
         r"\|\s*(\d+\.\d)\s*"
+        r"\|\s*(\d+\.\d)\s*"
         r"\|\s*(\d+\.\d)\s*\|$",
         re.MULTILINE,
     )

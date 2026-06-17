@@ -30,11 +30,16 @@ judgment regex cannot make. For `{DIM}`:
 
 - `engagement`: does the prose *hold attention*? Assess whether callouts carry
   real pedagogy vs filler, whether tone is warm vs bureaucratic, whether
-  direct-address is content-anchored, whether dialogue feels human. Score the
-  *quality* of engagement, not its presence.
+  direct-address is content-anchored, whether dialogue feels human. For seminar
+  tracks, assess whether the lesson helps the learner care about the heritage
+  and want to keep reading. Score the *quality* of engagement, not its
+  presence.
 - `pedagogical`: does the sequencing actually teach? Are examples illuminating?
   Does each concept earn the next? Respect the learner's prior knowledge
-  (BUILD, don't REPEAT). Source-pedagogy failures are in scope even when the
+  (BUILD, don't REPEAT). For seminar tracks, the learner is advanced and
+  near-full-immersion: academic depth should be woven through source-guided
+  Ukrainian teaching, not flattened into dry scholarship or beginner drills.
+  Source-pedagogy failures are in scope even when the
   plan/wiki asked for them: REVISE or REJECT any grammar module that promotes a
   metaphor, discourse heuristic, activity label, or writer-created grouping into
   a grammar taxonomy unless Ukrainian textbook/corpus evidence explicitly
@@ -80,6 +85,28 @@ judgment regex cannot make. For `{DIM}`:
   apply the matching anchor.
 - `tone`: is the teacher's voice consistent and warm? Assess register beyond the
   META_NARRATION the gate caught.
+- `beauty`: does the lesson convey the beauty of the source AND read
+  beautifully itself? This dimension has two required halves:
+  (1) **Craft**: vivid, elegant, memorable Ukrainian a learner wants to
+  re-read; imagery and rhythm where the subject invites it; no flat
+  encyclopedic exposition, cliché, purple prose, or mechanical scaffolding
+  dressed up as style. (2) **Soul**: authentic folk texts (пісні, думи,
+  голосіння, заклинання, колядки) are quoted verbatim, cited, verified, and
+  framed so their beauty and identity-bearing power resonate. Let the source
+  speak rather than summarizing it dry.
+
+  Score anchors: 9-10 = genuine literary quality in the lesson prose AND at
+  least one primary folk text quoted and framed so its beauty lands
+  emotionally; 8 = solid craft with no flat stretches AND at least one
+  well-framed authentic quote; 6 = competent but flat, with folk texts
+  described or summarized rather than made to resonate; <=4 = dry, generic, no
+  primary-text presence, or quotes dumped without framing.
+
+  Evidence required: cite a verbatim excerpt from the lesson exemplifying (or
+  failing) craft, and name the primary folk text quoted or note its absence. A
+  PASS with no quoted excerpt is invalid. Corpus note: the folk literary corpus
+  is not yet fully routed, so score honestly against authentic quotes present
+  and do not penalize for corpus depth that Phase C has not delivered.
 
 A dim score that re-states what a deterministic gate already enforced is a
 reviewer-protocol failure. Cite something the gate cannot see.
@@ -162,7 +189,9 @@ Unverified items become FLAG strings in your evidence and weigh the score down.
 - **H. Corpus-access (all dims).** Verify no out-of-level citations
   (a1/a2: Grades 1-4/1-5 only; no adult literary; external limited to ULP /
   Pohribnyi). FLAG `out_of_level_textbook` / `out_of_level_literary` /
-  `out_of_level_external`. Score as PEDAGOGICAL evidence-against.
+  `out_of_level_external`. Score as PEDAGOGICAL evidence-against, and as
+  BEAUTY evidence-against where source choice weakens source-centered seminar
+  craft.
 - **I. Student-aware (pedagogical, engagement, naturalness).** Verify the writer
   did not re-explain already-taught grammar (`re_explained_known_grammar`) and
   did not introduce unknown vocab without inline gloss

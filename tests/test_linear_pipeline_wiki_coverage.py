@@ -12,13 +12,14 @@ ROOT = Path(__file__).resolve().parents[1]
 WRITER_TEMPLATE = ROOT / "scripts/build/phases/linear-write.md"
 
 
-def test_qg_dims_remain_five_standard_dimensions() -> None:
+def test_qg_dims_remain_six_standard_dimensions() -> None:
     assert QG_DIMS == (
         "pedagogical",
         "naturalness",
         "decolonization",
         "engagement",
         "tone",
+        "beauty",
     )
 
 

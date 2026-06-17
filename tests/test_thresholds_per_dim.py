@@ -26,6 +26,7 @@ EXPECTED_PASS_FLOORS = {
         "decolonization": 9.0,
         "engagement": 8.0,
         "tone": 8.0,
+        "beauty": 8.0,
     },
     "A2": {
         "pedagogical": 9.0,
@@ -33,6 +34,7 @@ EXPECTED_PASS_FLOORS = {
         "decolonization": 9.0,
         "engagement": 8.0,
         "tone": 8.0,
+        "beauty": 8.0,
     },
     "B1": {
         "pedagogical": 9.0,
@@ -40,6 +42,7 @@ EXPECTED_PASS_FLOORS = {
         "decolonization": 9.0,
         "engagement": 8.0,
         "tone": 8.0,
+        "beauty": 8.0,
     },
     "B2": {
         "pedagogical": 8.0,
@@ -47,6 +50,7 @@ EXPECTED_PASS_FLOORS = {
         "decolonization": 9.0,
         "engagement": 8.0,
         "tone": 8.0,
+        "beauty": 8.0,
     },
     "C1": {
         "pedagogical": 8.0,
@@ -54,6 +58,7 @@ EXPECTED_PASS_FLOORS = {
         "decolonization": 9.0,
         "engagement": 8.0,
         "tone": 8.0,
+        "beauty": 8.0,
     },
     "C2": {
         "pedagogical": 8.0,
@@ -61,6 +66,7 @@ EXPECTED_PASS_FLOORS = {
         "decolonization": 9.0,
         "engagement": 8.0,
         "tone": 8.0,
+        "beauty": 8.0,
     },
 }
 
@@ -101,6 +107,7 @@ def test_aggregate_review_passes_when_all_dims_clear_pass_floors() -> None:
             "decolonization": 9.0,
             "engagement": 8.0,
             "tone": 8.0,
+            "beauty": 8.0,
         },
         "A1",
     )
@@ -120,6 +127,7 @@ def test_aggregate_review_revises_when_one_dim_between_reject_and_pass() -> None
             "decolonization": 9.0,
             "engagement": 8.0,
             "tone": 8.0,
+            "beauty": 8.0,
         },
         "A1",
     )
@@ -139,6 +147,7 @@ def test_aggregate_review_rejects_when_any_dim_below_reject_floor() -> None:
             "decolonization": 5.9,
             "engagement": 10.0,
             "tone": 10.0,
+            "beauty": 10.0,
         },
         "B2",
     )
@@ -158,6 +167,7 @@ def test_aggregate_review_core_profile_keeps_full_reject_terminal_pass() -> None
             "decolonization": 5.9,
             "engagement": 10.0,
             "tone": 10.0,
+            "beauty": 10.0,
         },
         "A1",
         profile="core",
@@ -172,8 +182,39 @@ def test_aggregate_review_core_profile_keeps_full_reject_terminal_pass() -> None
 
 def test_terminal_dims_for_defaults_to_strict_terminal_set() -> None:
     assert terminal_dims_for("core") == frozenset()
-    assert terminal_dims_for("seminar") == frozenset({"decolonization"})
-    assert terminal_dims_for(None) == frozenset({"decolonization"})
+    assert terminal_dims_for("seminar") == frozenset(
+        {"decolonization", "pedagogical", "engagement", "beauty"}
+    )
+    assert terminal_dims_for("track") == frozenset(
+        {"decolonization", "pedagogical", "engagement", "beauty"}
+    )
+    assert terminal_dims_for("folk") == frozenset(
+        {"decolonization", "pedagogical", "engagement", "beauty"}
+    )
+    assert terminal_dims_for(None) == frozenset(
+        {"decolonization", "pedagogical", "engagement", "beauty"}
+    )
+
+
+def test_aggregate_review_seminar_gates_beauty_but_core_does_not() -> None:
+    scores = {
+        "pedagogical": 8.0,
+        "naturalness": 8.0,
+        "decolonization": 9.0,
+        "engagement": 8.0,
+        "tone": 8.0,
+        "beauty": 7.0,
+    }
+
+    seminar_verdict = aggregate_review(scores, "B2", profile="folk")
+    core_verdict = aggregate_review(scores, "B2", profile="core")
+
+    assert seminar_verdict.verdict == "REVISE"
+    assert seminar_verdict.terminal_verdict == "REVISE"
+    assert seminar_verdict.failing_dims == ("beauty",)
+    assert core_verdict.verdict == "REVISE"
+    assert core_verdict.terminal_verdict == "PASS"
+    assert core_verdict.warning_dims == ("beauty",)
 
 
 def test_aggregate_review_tolerates_extra_legacy_dims() -> None:
@@ -184,6 +225,7 @@ def test_aggregate_review_tolerates_extra_legacy_dims() -> None:
             "decolonization": 9.0,
             "engagement": 8.0,
             "tone": 8.0,
+            "beauty": 8.0,
             "language": 0.0,
         },
         "B2",

@@ -131,6 +131,7 @@ def _reviewer_response(dim: str) -> str:
         "decolonization": 7.5,
         "engagement": 9.0,
         "tone": 8.0,
+        "beauty": 8.0,
     }
     quote_a = f"{dim} quote one"
     quote_b = f"{dim} quote two"
@@ -160,6 +161,7 @@ def _reviewer_audit_calls(dim: str) -> list[dict[str, Any]]:
         ],
         "engagement": [("query_wikipedia", "quote_verification", 1)],
         "tone": [("search_idioms", "sovietization_check", 1)],
+        "beauty": [("search_literary", "quote_verification", 1)],
     }
     return [
         {
@@ -272,14 +274,14 @@ def test_reviewer_telemetry_events_and_rollup_fire_from_dim_wrappers() -> None:
     )
 
     dim_events = _events_named(events, "reviewer_dim_evidence")
-    assert len(dim_events) == 5
+    assert len(dim_events) == len(QG_DIMS)
     assert {event["dim"] for event in dim_events} == set(QG_DIMS)
     assert all(len(event["evidence_quotes"]) == 3 for event in dim_events)
     assert all(len(event["rubric_mapping"]) <= 500 for event in dim_events)
     assert all(event["writer_under_review"] == "claude-tools" for event in dim_events)
 
     audit_events = _events_named(events, "reviewer_audit_call")
-    assert len(audit_events) == 8
+    assert len(audit_events) == 9
     assert {event["audit_type"] for event in audit_events} == {
         "source_attribution",
         "quote_verification",
@@ -291,12 +293,12 @@ def test_reviewer_telemetry_events_and_rollup_fire_from_dim_wrappers() -> None:
     assert all(event["flags_raised"] == [] for event in audit_events)
 
     summary = _events_named(events, "phase_review_summary")[0]
-    assert summary["dims_scored"] == 5
-    assert summary["dims_with_evidence"] == 5
-    assert summary["audit_calls_total"] == 8
+    assert summary["dims_scored"] == len(QG_DIMS)
+    assert summary["dims_with_evidence"] == len(QG_DIMS)
+    assert summary["audit_calls_total"] == 9
     assert summary["flags_raised_total"] == 0
     assert summary["min_dim_score"] == 7.5
-    assert summary["weighted_score"] == 8.2
+    assert summary["weighted_score"] == 8.17
 
 
 def test_telemetry_event_schema_is_bounded_and_flat() -> None:
