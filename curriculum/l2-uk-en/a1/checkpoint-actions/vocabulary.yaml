@@ -26,6 +26,10 @@
   translation: you write
   pos: verb form
   usage: Ти пишеш гарно.
+- lemma: пишете
+  translation: you write (plural/formal)
+  pos: verb form
+  usage: Ви пишете дуже гарно.
 - lemma: працювати
   translation: to work
   pos: infinitive
@@ -42,6 +46,10 @@
   translation: he/she works
   pos: verb form
   usage: Вона працює в школі.
+- lemma: працюєте
+  translation: you work (plural/formal)
+  pos: verb form
+  usage: Ви працюєте сьогодні?
 - lemma: говорити
   translation: to speak
   pos: infinitive
@@ -62,6 +70,14 @@
   translation: to do; to make
   pos: infinitive
   usage: Що ти робиш?
+- lemma: роблю
+  translation: I do; I make
+  pos: verb form
+  usage: Я роблю вправу.
+- lemma: робиш
+  translation: you do; you make
+  pos: verb form
+  usage: Що ти робиш потім?
 - lemma: роблять
   translation: they do; they make
   pos: verb form
@@ -74,10 +90,22 @@
   translation: I want
   pos: modal verb form
   usage: Я хочу гуляти.
+- lemma: хочеш
+  translation: you want
+  pos: modal verb form
+  usage: Ти хочеш гуляти?
 - lemma: можу
   translation: I can
   pos: modal verb form
   usage: Я можу готувати.
+- lemma: можеш
+  translation: you can
+  pos: modal verb form
+  usage: Ти можеш допомагати?
+- lemma: може
+  translation: he/she can
+  pos: modal verb form
+  usage: Марина може готувати.
 - lemma: мушу
   translation: I have to
   pos: modal verb form
@@ -90,6 +118,14 @@
   translation: he/she wants
   pos: verb form
   usage: Він хоче кави.
+- lemma: могти
+  translation: to be able to
+  pos: infinitive
+  usage: Я можу готувати.
+- lemma: мусити
+  translation: to have to; must
+  pos: infinitive
+  usage: Я мушу працювати.
 - lemma: прокидатися
   translation: to wake up
   pos: infinitive
@@ -106,6 +142,70 @@
   translation: I wash up
   pos: reflexive verb form
   usage: Я вмиваюся вранці.
+- lemma: снідати
+  translation: to have breakfast
+  pos: infinitive
+  usage: Я снідаю вдома.
+- lemma: снідаю
+  translation: I have breakfast
+  pos: verb form
+  usage: Потім снідаю вдома.
+- lemma: готувати
+  translation: to cook; to prepare
+  pos: infinitive
+  usage: Я хочу готувати сьогодні.
+- lemma: готуєш
+  translation: you cook
+  pos: verb form
+  usage: Ти готуєш сьогодні.
+- lemma: готуємо
+  translation: we cook
+  pos: verb form
+  usage: Тоді ми готуємо.
+- lemma: прибирати
+  translation: to clean
+  pos: infinitive
+  usage: Я можу прибирати.
+- lemma: допомагати
+  translation: to help
+  pos: infinitive
+  usage: Ти можеш допомагати?
+- lemma: допомагаю
+  translation: I help
+  pos: verb form
+  usage: Я допомагаю після шостої.
+- lemma: танцювати
+  translation: to dance
+  pos: infinitive
+  usage: Я люблю танцювати.
+- lemma: співати
+  translation: to sing
+  pos: infinitive
+  usage: Вони люблять співати.
+- lemma: грати
+  translation: to play
+  pos: infinitive
+  usage: Я можу грати.
+- lemma: гуляти
+  translation: to walk
+  pos: infinitive
+  usage: Я хочу гуляти.
+- lemma: піти
+  translation: to go
+  pos: infinitive
+  usage: Я хочу піти в парк.
+- lemma: гуляю
+  translation: I walk
+  pos: verb form
+  usage: Зараз я не гуляю.
+- lemma: гуляють
+  translation: they walk
+  pos: verb form
+  usage: Вони гуляють у парку.
+- lemma: навчатися
+  translation: to study; to learn
+  pos: infinitive
+  usage: Я навчаюся вдома.
 - lemma: дивитися
   translation: to watch; to look
   pos: infinitive
