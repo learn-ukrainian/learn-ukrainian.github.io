@@ -2,9 +2,9 @@
   role: article
   source_ref: "docs/resources/external_resources.yaml: a2-checkpoint-syntax"
   url: "https://www.ukrainianlessons.com/ukrainian-conjunctions/"
-  notes: "Review resource for conjunctions used across the A2.7 complex-sentence unit."
+  notes: "Повторення сполучників, які потрібні для блоку A2.7 про складні речення."
 - title: "ULP: Ukrainian Word Order"
   role: article
   source_ref: "docs/resources/external_resources.yaml: a2-checkpoint-syntax"
   url: "https://www.ukrainianlessons.com/word-order/"
-  notes: "Optional review of word order and emphasis before the checkpoint writing task."
+  notes: "Додаткове повторення порядку слів і наголосу перед письмовим завданням."
