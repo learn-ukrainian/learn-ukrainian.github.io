@@ -61,7 +61,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 This lesson turns city places into movement. In **Де це?** you learned static
 location: **Я в банку**, **Олена в школі**, **книжка на столі**. Now the
-question is **куди?**: **Я йду в банк**, **Олена йде в школу**, **ми їдемо на
+question is **куди?**: **Я йду в банк**, **Олена йде у школу**, **ми їдемо на
 вокзал**.
 
 By the end, you can:
@@ -70,15 +70,11 @@ By the end, you can:
 - contrast **де?** with **куди?** without mixing endings;
 - use **в/у** and **на** with direction chunks: **у школу**, **на роботу**,
   **в аптеку**, **у банк**;
-- use **до** for people: **до лікаря**, **до бабусі**;
-- keep Ukrainian place language clean: **Київ / Kyiv**, **в Україні**,
-  **в Україну**.
+- use city names as destinations: **у Львів**, **в Одесу**, **в Київ**;
+- keep Ukrainian place language clean: **Київ / Kyiv**, **Львів / Lviv**,
+  **Одеса / Odesa**.
 
 ## Діалоги
-
-### Де or куди?
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я йду в банк.", "options": [{"text": "Куди?", "correct": true}, {"text": "Де?", "correct": false}, {"text": "Хто?", "correct": false}], "explanation": "Йду shows movement, so ask куди?"}, {"question": "Оксана на пошті.", "options": [{"text": "Де?", "correct": true}, {"text": "Куди?", "correct": false}, {"text": "Коли?", "correct": false}], "explanation": "На пошті is a static location."}, {"question": "Ми їдемо у Львів.", "options": [{"text": "Куди?", "correct": true}, {"text": "Де?", "correct": false}, {"text": "Що?", "correct": false}], "explanation": "Їдемо is movement by transport."}, {"question": "Книжка на столі.", "options": [{"text": "Де?", "correct": true}, {"text": "Куди?", "correct": false}, {"text": "Звідки?", "correct": false}], "explanation": "На столі answers where the book is."}, {"question": "Марко йде до лікаря.", "options": [{"text": "Куди?", "correct": true}, {"text": "Де?", "correct": false}, {"text": "Який?", "correct": false}], "explanation": "До лікаря is a person destination."}]`)} instruction={"Choose the question that matches the sentence."} isUkrainian={false} />
 
 First listen for the movement verb. **Іти** usually means going on foot.
 **Їхати** means going by transport. Both can answer **куди?**
@@ -87,7 +83,7 @@ First listen for the movement verb. **Іти** usually means going on foot.
 Оксана: Добрий день, Степане! Куди ти йдеш?
 Степан: Я йду в банк. А ти?
 Оксана: Я йду на пошту, а потім на роботу.
-Степан: Після банку я йду в магазин.
+Степан: Потім я йду в магазин.
 Оксана: Чудово. Потім ходімо в кафе.
 Степан: Добре. До зустрічі в кафе!
 ```
@@ -99,7 +95,7 @@ Support after the Ukrainian lines:
 | **Оксана: Добрий день, Степане! Куди ти йдеш?** | Oksana: Good afternoon, Stepan! Where are you going? |
 | **Степан: Я йду в банк. А ти?** | Stepan: I am going to the bank. And you? |
 | **Оксана: Я йду на пошту, а потім на роботу.** | Oksana: I am going to the post office, and then to work. |
-| **Степан: Після банку я йду в магазин.** | Stepan: After the bank I am going to the shop. |
+| **Степан: Потім я йду в магазин.** | Stepan: Then I am going to the shop. |
 | **Оксана: Чудово. Потім ходімо в кафе.** | Oksana: Great. Then let's go to a cafe. |
 | **Степан: Добре. До зустрічі в кафе!** | Stepan: Good. See you at the cafe! |
 
@@ -115,7 +111,7 @@ The second dialogue is about travel between cities.
 Степан: Я їду у Львів. А Олена?
 Оксана: Вона їде в Одесу, а брат їде в Київ.
 Степан: А Марко?
-Оксана: Марко йде до лікаря, а потім додому.
+Оксана: Марко їде на вокзал, а потім додому.
 Степан: Добре, до побачення!
 ```
 
@@ -127,18 +123,16 @@ Support after the Ukrainian lines:
 | **Степан: Я їду у Львів. А Олена?** | Stepan: I am going to Lviv. And Olena? |
 | **Оксана: Вона їде в Одесу, а брат їде в Київ.** | Oksana: She is going to Odesa, and her brother is going to Kyiv. |
 | **Степан: А Марко?** | Stepan: And Marko? |
-| **Оксана: Марко йде до лікаря, а потім додому.** | Oksana: Marko is going to the doctor, and then home. |
+| **Оксана: Марко їде на вокзал, а потім додому.** | Oksana: Marko is going to the train station, and then home. |
 | **Степан: Добре, до побачення!** | Stepan: Good, goodbye! |
 
-Notice two guardrails. For countries and cities, use Ukrainian names and
-Ukrainian direction: **Київ / Kyiv**, **Львів / Lviv**, **Одеса / Odesa**,
-**в Україні** for location and **в Україну** for direction. For a person, use
-**до**: **до лікаря**, **до мами**, **до бабусі**. Do not say **в лікаря** or
-**на лікаря** for this meaning.
+Use Ukrainian city names and English transliterations: **Київ / Kyiv**,
+**Львів / Lviv**, **Одеса / Odesa**. For this lesson, keep the destination
+pattern simple: **їду у Львів**, **їду в Одесу**, **їду в Київ**.
 
-### Direction chunks
+### Де or куди?
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я йду ___ банк.", "answer": "у", "options": ["у", "на", "до"]}, {"sentence": "Олена йде ___ роботу.", "answer": "на", "options": ["на", "в", "біля"]}, {"sentence": "Ми йдемо в ___.", "answer": "аптеку", "options": ["аптеку", "аптеці", "аптека"]}, {"sentence": "Степан іде у ___.", "answer": "бібліотеку", "options": ["бібліотеку", "бібліотеці", "бібліотека"]}, {"sentence": "Я їду ___ вокзал.", "answer": "на", "options": ["на", "в", "у"]}, {"sentence": "Марко йде ___ лікаря.", "answer": "до", "options": ["до", "в", "на"]}]`)} instruction={"Complete each movement sentence."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Я йду в банк.", "options": [{"text": "Куди?", "correct": true}, {"text": "Де?", "correct": false}, {"text": "Хто?", "correct": false}], "explanation": "Йду shows movement, so ask куди?"}, {"question": "Оксана на пошті.", "options": [{"text": "Де?", "correct": true}, {"text": "Куди?", "correct": false}, {"text": "Коли?", "correct": false}], "explanation": "На пошті is a static location."}, {"question": "Ми їдемо у Львів.", "options": [{"text": "Куди?", "correct": true}, {"text": "Де?", "correct": false}, {"text": "Що?", "correct": false}], "explanation": "Їдемо is movement by transport."}, {"question": "Книжка на столі.", "options": [{"text": "Де?", "correct": true}, {"text": "Куди?", "correct": false}, {"text": "Звідки?", "correct": false}], "explanation": "На столі answers where the book is."}, {"question": "Марко їде на вокзал.", "options": [{"text": "Куди?", "correct": true}, {"text": "Де?", "correct": false}, {"text": "Який?", "correct": false}], "explanation": "Їде на вокзал is movement toward a place."}, {"question": "Я працюю в офісі.", "options": [{"text": "Де?", "correct": true}, {"text": "Куди?", "correct": false}, {"text": "Коли?", "correct": false}], "explanation": "Працюю shows a static place."}, {"question": "Олена йде в аптеку.", "options": [{"text": "Куди?", "correct": true}, {"text": "Де?", "correct": false}, {"text": "Хто?", "correct": false}], "explanation": "Йде в аптеку is movement toward a place."}, {"question": "Степан на роботі.", "options": [{"text": "Де?", "correct": true}, {"text": "Куди?", "correct": false}, {"text": "Що?", "correct": false}], "explanation": "На роботі answers де?"}]`)} instruction={"Choose the question that matches the sentence."} isUkrainian={false} />
 
 ## Куди? Знахідний відмінок
 
@@ -183,20 +177,13 @@ Feminine place words usually change **-а** to **-у** and **-я** to **-ю**:
 This is enough for real A1 errands: **Я йду в аптеку. Ти йдеш на роботу.
 Вона йде у бібліотеку. Ми їдемо на вулицю Шевченка.**
 
-**Фонетичні закономірності.** The old static forms are still correct, but only for **де?**:
-**в аптеці**, **у бібліотеці**, **на роботі**, **у школі**. The form
-**аптека -> в аптеці** has the normal Ukrainian **к -> ц** change before
-**-і**. The same sound pattern appears in familiar words such as **рука -> в
-руці**, **нога -> на нозі**, **горох -> у горосі**. Treat this as a basic
-Ukrainian **чергування приголосних**, not as a **незручний виняток**.
+### Static and direction chunks
 
-### Four route shelves
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я йду ___ банк.", "answer": "у", "options": ["у", "на", "до"]}, {"sentence": "Олена йде ___ роботу.", "answer": "на", "options": ["на", "в", "біля"]}, {"sentence": "Ми йдемо в ___.", "answer": "аптеку", "options": ["аптеку", "аптеці", "аптека"]}, {"sentence": "Степан йде у ___.", "answer": "бібліотеку", "options": ["бібліотеку", "бібліотеці", "бібліотека"]}, {"sentence": "Я їду ___ вокзал.", "answer": "на", "options": ["на", "в", "у"]}, {"sentence": "Марко йде ___ зупинку.", "answer": "на", "options": ["на", "в", "біля"]}, {"sentence": "Він у ___.", "answer": "банку", "options": ["банку", "банк", "банком"]}, {"sentence": "Оксана на ___.", "answer": "пошті", "options": ["пошті", "пошту", "пошта"]}, {"sentence": "Вона їде в ___.", "answer": "Одесу", "options": ["Одесу", "Одесі", "Одеса"]}, {"sentence": "Я працюю на ___.", "answer": "роботі", "options": ["роботі", "роботу", "робота"]}]`)} instruction={"Complete each sentence with the correct place chunk."} isUkrainian={false} />
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Static де?": ["у школі", "на роботі", "у банку", "на столі"], "Direction куди?": ["у школу", "на роботу", "у банк", "на вокзал"], "To a person": ["до лікаря", "до мами", "до бабусі", "до Оксани"], "No case ending": ["тут", "там", "вдома", "далеко"]}`)} instruction={"Sort each chunk by what it does."} isUkrainian={false} />
-
-### Static to direction
-
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "у школі", "right": "у школу"}, {"left": "на роботі", "right": "на роботу"}, {"left": "в аптеці", "right": "в аптеку"}, {"left": "у бібліотеці", "right": "у бібліотеку"}, {"left": "у банку", "right": "у банк"}, {"left": "у парку", "right": "у парк"}, {"left": "в Одесі", "right": "в Одесу"}, {"left": "в Україні", "right": "в Україну"}]`)} instruction={"Match each static place chunk to the movement chunk."} isUkrainian={false} />
+The old static forms are still correct, but only for **де?**:
+**в аптеці**, **у бібліотеці**, **на роботі**, **у школі**. Do not use the
+static ending after **йду** or **їду**.
 
 ## Де чи куди?
 
@@ -206,33 +193,37 @@ The easiest test is the verb. State verbs usually answer **де?**:
 
 | Sentence frame | Question | Use |
 | --- | --- | --- |
-| **Я живу...** | **де?** | **в Україні**, **у Києві**, **в місті** |
+| **Я живу...** | **де?** | **у Києві**, **в місті**, **на вулиці Шевченка** |
 | **Я працюю...** | **де?** | **на роботі**, **в офісі** |
 | **Я вчуся...** | **де?** | **у школі**, **в університеті** |
 | **Я йду...** | **куди?** | **у школу**, **в аптеку**, **у парк** |
 | **Я їду...** | **куди?** | **на вокзал**, **у Львів**, **в Одесу** |
 
+### Де? or куди? shelves
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Static де?": ["у школі", "на роботі", "у банку", "в аптеці", "в Одесі"], "Direction куди?": ["у школу", "на роботу", "у банк", "в аптеку", "в Одесу"]}`)} instruction={"Sort each chunk into static location or direction."} isUkrainian={false} />
+
 Use **іти** when the movement is on foot or the way of movement is not
 important: **Я йду в магазин. Ми йдемо в парк.** Use **їхати** when a vehicle
-is part of the idea: **Я їду на вокзал. Вона їде у Львів. Ми їдемо в Україну.**
+is part of the idea: **Я їду на вокзал. Вона їде у Львів. Ми їдемо в Одесу.**
 
-**Напрямок із прийменником до.** There is one more direction pattern at A1: **до + родовий відмінок**. It is
-especially important with people: **Я йду до лікаря. Вона йде до бабусі. Ми
-йдемо до мами.** With places, **до** is also possible when you mean "toward /
-up to": **до магазину**, **до Києва**, **до дому**. Unlike patterns **як
-в/на**, **до** has no matching static-location use here. For now, keep one
-firm rule: person destination means **до**, not **в** or **на**.
+### Іти or їхати?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "I am going to the shop on foot.", "options": [{"text": "Я йду в магазин.", "correct": true}, {"text": "Я їду в магазин.", "correct": false}, {"text": "Я в магазині.", "correct": false}], "explanation": "On foot uses йду."}, {"question": "We are going to the station by bus.", "options": [{"text": "Ми їдемо на вокзал.", "correct": true}, {"text": "Ми йдемо на вокзал.", "correct": false}, {"text": "Ми на вокзалі.", "correct": false}], "explanation": "By bus uses їдемо."}, {"question": "Oksana is going to Lviv by train.", "options": [{"text": "Оксана їде у Львів.", "correct": true}, {"text": "Оксана йде у Львів.", "correct": false}, {"text": "Оксана у Львові.", "correct": false}], "explanation": "By train uses їде."}, {"question": "Stepan is walking to the post office.", "options": [{"text": "Степан йде на пошту.", "correct": true}, {"text": "Степан їде на пошту.", "correct": false}, {"text": "Степан на пошті.", "correct": false}], "explanation": "Walking uses йде."}, {"question": "They are going to the park on foot.", "options": [{"text": "Вони йдуть у парк.", "correct": true}, {"text": "Вони їдуть у парк.", "correct": false}, {"text": "Вони в парку.", "correct": false}], "explanation": "On foot uses йдуть."}, {"question": "I am going to Odesa by train.", "options": [{"text": "Я їду в Одесу.", "correct": true}, {"text": "Я йду в Одесу.", "correct": false}, {"text": "Я в Одесі.", "correct": false}], "explanation": "By train uses їду."}]`)} instruction={"Choose the movement verb that fits the sentence."} isUkrainian={false} />
+
+One useful no-preposition direction word is **додому**: **Я повертаюся
+додому.** Treat it as a ready-made A1 answer to **куди?**
 
 Here are the common repairs you need now:
 
 | Learner line | Better line | Why |
 | --- | --- | --- |
-| Я йду в школі. | **Я йду в школу.** | Movement answers **куди?** |
+| Я йду в школі. | **Я йду у школу.** | Movement answers **куди?** |
 | Я живу Київ. | **Я живу в Києві.** | Static location needs **в/у** plus locative. |
-| Я йду в лікаря. | **Я йду до лікаря.** | A person destination uses **до**. |
+| Я йду в бібліотеці. | **Я йду в бібліотеку.** | Movement uses the direction form. |
 | Ми були в концерті. | **Ми були на концерті.** | Events use the familiar **на** chunk. |
 | Книжка на столу. | **Книжка на столі.** | Static surface location uses **на столі**. |
-| Аптека — в аптекі. | **Аптека — в аптеці.** | **к -> ц** before **-і** in this form. |
+| Аптека — в аптекі. | **Аптека — в аптеці.** | Static **де?** form from the previous module. |
 
 <span id="підсумок"></span>
 
@@ -245,33 +236,32 @@ Keep the lesson as a two-question system:
 | say where you are | **де?** | **у школі**, **на роботі**, **у банку** |
 | say where you are going | **куди?** | **у школу**, **на роботу**, **у банк** |
 | say travel by transport | **куди?** | **їду на вокзал**, **їду у Львів** |
-| say going to a person | **куди?** | **до лікаря**, **до бабусі** |
-| answer without endings | place adverbs | **тут**, **там**, **вдома**, **близько**, **далеко** |
+| answer without endings | place adverbs | **тут**, **там**, **вдома**, **близько**, **далеко**, **додому** |
 
 Self-check:
 
 1. Say where you are now: **Я в місті. Я вдома. Я на роботі.**
 2. Say where you are going next: **Я йду в магазин. Я їду на вокзал.**
-3. Contrast one place: **Я в школі. Я йду в школу.**
-4. Add a person destination: **Я йду до лікаря.**
-5. Use Ukrainian country direction: **Я їду в Україну.**
+3. Contrast one place: **Я в школі. Я йду у школу.**
+4. Add a city destination: **Я їду в Одесу.**
+5. Add the ready-made homeward word: **Я повертаюся додому.**
 
 For your final mini-route, keep the verbs and places clear:
 
-**Сьогодні я йду в банк, потім на пошту, потім в аптеку. Після обіду я їду на
-вокзал. Увечері я йду до Оксани, а потім додому.**
+**Сьогодні я йду в банк, потім на пошту, потім в аптеку. Потім я їду на
+вокзал. Увечері я йду в кафе, а потім додому.**
 
 Now change only the destinations: **в магазин**, **у бібліотеку**, **на
-роботу**, **до лікаря**, **у парк**. If you can keep **де?** and **куди?**
+роботу**, **на зупинку**, **у парк**. If you can keep **де?** and **куди?**
 separate while swapping places, the new case is already becoming a usable
 navigation tool.
 
 </TabItem>
 <TabItem label="Vocabulary">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"куди","translation":"where to","pos":"adverb","example":"Куди ти йдеш?","examples":["where to","Куди ти йдеш?"],"atlas_href":"/lexicon/куди/"},{"word":"де","translation":"where","pos":"adverb","example":"Де ти зараз?","examples":["where","Де ти зараз?"],"atlas_href":"/lexicon/де/"},{"word":"тут","translation":"here","pos":"adverb","example":"Школа тут.","examples":["here","Школа тут."],"atlas_href":"/lexicon/тут/"},{"word":"там","translation":"there","pos":"adverb","example":"Парк там.","examples":["there","Парк там."],"atlas_href":"/lexicon/там/"},{"word":"вдома","translation":"at home","pos":"adverb","example":"Я вдома.","examples":["at home","Я вдома."],"atlas_href":"/lexicon/вдома/"},{"word":"близько","translation":"near; close","pos":"adverb","example":"Аптека близько.","examples":["near; close","Аптека близько."],"atlas_href":"/lexicon/близько/"},{"word":"далеко","translation":"far","pos":"adverb","example":"Вокзал далеко.","examples":["far","Вокзал далеко."],"atlas_href":"/lexicon/далеко/"},{"word":"в","translation":"in; at; to","pos":"preposition","example":"Я йду в банк.","examples":["in; at; to","Я йду в банк."],"atlas_href":"/lexicon/в/"},{"word":"у","translation":"in; at; to","pos":"preposition","example":"Я йду у школу.","examples":["in; at; to","Я йду у школу."],"atlas_href":"/lexicon/у/"},{"word":"на","translation":"on; at; to","pos":"preposition","example":"Я йду на роботу.","examples":["on; at; to","Я йду на роботу."],"atlas_href":"/lexicon/на/"},{"word":"до","translation":"to; toward","pos":"preposition","example":"Я йду до лікаря.","examples":["to; toward","Я йду до лікаря."],"atlas_href":"/lexicon/до/"},{"word":"іти","translation":"to go on foot","pos":"verb","example":"Я йду в магазин.","examples":["to go on foot","Я йду в магазин."],"atlas_href":"/lexicon/іти/"},{"word":"йти","translation":"to go on foot","pos":"verb","example":"Куди ти йдеш?","examples":["to go on foot","Куди ти йдеш?"],"atlas_href":"/lexicon/йти/"},{"word":"їхати","translation":"to go by transport","pos":"verb","example":"Ми їдемо на вокзал.","examples":["to go by transport","Ми їдемо на вокзал."],"atlas_href":"/lexicon/їхати/"},{"word":"повертатися","translation":"to return","pos":"verb","example":"Я повертаюся додому.","examples":["to return","Я повертаюся додому."],"atlas_href":"/lexicon/повертатися/"},{"word":"додому","translation":"homeward","pos":"adverb","example":"Я йду додому.","examples":["homeward","Я йду додому."],"atlas_href":"/lexicon/додому/"},{"word":"місто","translation":"city; town","pos":"noun","example":"Ми їдемо у місто.","examples":["city; town","Ми їдемо у місто."],"atlas_href":"/lexicon/місто/"},{"word":"парк","translation":"park","pos":"noun","example":"Я йду у парк.","examples":["park","Я йду у парк."],"atlas_href":"/lexicon/парк/"},{"word":"школа","translation":"school","pos":"noun","example":"Олена йде у школу.","examples":["school","Олена йде у школу."],"atlas_href":"/lexicon/школа/"},{"word":"робота","translation":"work","pos":"noun","example":"Степан іде на роботу.","examples":["work","Степан іде на роботу."],"atlas_href":"/lexicon/робота/"},{"word":"магазин","translation":"shop; store","pos":"noun","example":"Я йду у магазин.","examples":["shop; store","Я йду у магазин."],"atlas_href":"/lexicon/магазин/"},{"word":"банк","translation":"bank","pos":"noun","example":"Тато йде у банк.","examples":["bank","Тато йде у банк."],"atlas_href":"/lexicon/банк/"},{"word":"аптека","translation":"pharmacy","pos":"noun","example":"Я йду в аптеку.","examples":["pharmacy","Я йду в аптеку."],"atlas_href":"/lexicon/аптека/"},{"word":"бібліотека","translation":"library","pos":"noun","example":"Ми йдемо у бібліотеку.","examples":["library","Ми йдемо у бібліотеку."],"atlas_href":"/lexicon/бібліотека/"},{"word":"ресторан","translation":"restaurant","pos":"noun","example":"Вони йдуть у ресторан.","examples":["restaurant","Вони йдуть у ресторан."],"atlas_href":"/lexicon/ресторан/"},{"word":"кафе","translation":"cafe","pos":"noun","example":"Ходімо в кафе.","examples":["cafe","Ходімо в кафе."],"atlas_href":"/lexicon/кафе/"},{"word":"вокзал","translation":"train station","pos":"noun","example":"Вона їде на вокзал.","examples":["train station","Вона їде на вокзал."],"atlas_href":"/lexicon/вокзал/"},{"word":"зупинка","translation":"stop","pos":"noun","example":"Я йду на зупинку.","examples":["stop","Я йду на зупинку."],"atlas_href":"/lexicon/зупинка/"},{"word":"лікар","translation":"doctor","pos":"noun","example":"Марко йде до лікаря.","examples":["doctor","Марко йде до лікаря."],"atlas_href":"/lexicon/лікар/"},{"word":"бабуся","translation":"grandmother","pos":"noun","example":"Олена йде до бабусі.","examples":["grandmother","Олена йде до бабусі."],"atlas_href":"/lexicon/бабуся/"},{"word":"Київ","translation":"Kyiv","pos":"proper noun","example":"Брат їде в Київ.","examples":["Kyiv","Брат їде в Київ."],"atlas_href":"/lexicon/київ/"},{"word":"Україна","translation":"Ukraine","pos":"proper noun","example":"Ми їдемо в Україну.","examples":["Ukraine","Ми їдемо в Україну."],"atlas_href":"/lexicon/україна/"},{"word":"Львів","translation":"Lviv","pos":"proper noun","example":"Я їду у Львів.","examples":["Lviv","Я їду у Львів."],"atlas_href":"/lexicon/львів/"},{"word":"Одеса","translation":"Odesa","pos":"proper noun","example":"Олена їде в Одесу.","examples":["Odesa","Олена їде в Одесу."],"atlas_href":"/lexicon/одеса/"}]`)} title="Vocabulary" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"куди","translation":"where to","pos":"adverb","example":"Куди ти йдеш?","examples":["where to","Куди ти йдеш?"],"atlas_href":"/lexicon/куди/"},{"word":"де","translation":"where","pos":"adverb","example":"Де ти зараз?","examples":["where","Де ти зараз?"],"atlas_href":"/lexicon/де/"},{"word":"тут","translation":"here","pos":"adverb","example":"Школа тут.","examples":["here","Школа тут."],"atlas_href":"/lexicon/тут/"},{"word":"там","translation":"there","pos":"adverb","example":"Парк там.","examples":["there","Парк там."],"atlas_href":"/lexicon/там/"},{"word":"вдома","translation":"at home","pos":"adverb","example":"Я вдома.","examples":["at home","Я вдома."],"atlas_href":"/lexicon/вдома/"},{"word":"близько","translation":"near; close","pos":"adverb","example":"Аптека близько.","examples":["near; close","Аптека близько."],"atlas_href":"/lexicon/близько/"},{"word":"далеко","translation":"far","pos":"adverb","example":"Вокзал далеко.","examples":["far","Вокзал далеко."],"atlas_href":"/lexicon/далеко/"},{"word":"в","translation":"in; at; to","pos":"preposition","example":"Я йду в банк.","examples":["in; at; to","Я йду в банк."],"atlas_href":"/lexicon/в/"},{"word":"у","translation":"in; at; to","pos":"preposition","example":"Я йду у школу.","examples":["in; at; to","Я йду у школу."],"atlas_href":"/lexicon/у/"},{"word":"на","translation":"on; at; to","pos":"preposition","example":"Я йду на роботу.","examples":["on; at; to","Я йду на роботу."],"atlas_href":"/lexicon/на/"},{"word":"йти","translation":"to go on foot","pos":"verb","example":"Куди ти йдеш?","examples":["to go on foot","Куди ти йдеш?"],"atlas_href":"/lexicon/йти/"},{"word":"їхати","translation":"to go by transport","pos":"verb","example":"Ми їдемо на вокзал.","examples":["to go by transport","Ми їдемо на вокзал."],"atlas_href":"/lexicon/їхати/"},{"word":"повертатися","translation":"to return","pos":"verb","example":"Я повертаюся додому.","examples":["to return","Я повертаюся додому."],"atlas_href":"/lexicon/повертатися/"},{"word":"додому","translation":"homeward","pos":"adverb","example":"Я йду додому.","examples":["homeward","Я йду додому."],"atlas_href":"/lexicon/додому/"},{"word":"місто","translation":"city; town","pos":"noun","example":"Ми їдемо у місто.","examples":["city; town","Ми їдемо у місто."],"atlas_href":"/lexicon/місто/"},{"word":"парк","translation":"park","pos":"noun","example":"Я йду у парк.","examples":["park","Я йду у парк."],"atlas_href":"/lexicon/парк/"},{"word":"школа","translation":"school","pos":"noun","example":"Олена йде у школу.","examples":["school","Олена йде у школу."],"atlas_href":"/lexicon/школа/"},{"word":"робота","translation":"work","pos":"noun","example":"Степан йде на роботу.","examples":["work","Степан йде на роботу."],"atlas_href":"/lexicon/робота/"},{"word":"магазин","translation":"shop; store","pos":"noun","example":"Я йду у магазин.","examples":["shop; store","Я йду у магазин."],"atlas_href":"/lexicon/магазин/"},{"word":"банк","translation":"bank","pos":"noun","example":"Степан йде у банк.","examples":["bank","Степан йде у банк."],"atlas_href":"/lexicon/банк/"},{"word":"пошта","translation":"post office","pos":"noun","example":"Оксана йде на пошту.","examples":["post office","Оксана йде на пошту."],"atlas_href":"/lexicon/пошта/"},{"word":"аптека","translation":"pharmacy","pos":"noun","example":"Я йду в аптеку.","examples":["pharmacy","Я йду в аптеку."],"atlas_href":"/lexicon/аптека/"},{"word":"бібліотека","translation":"library","pos":"noun","example":"Ми йдемо у бібліотеку.","examples":["library","Ми йдемо у бібліотеку."],"atlas_href":"/lexicon/бібліотека/"},{"word":"ресторан","translation":"restaurant","pos":"noun","example":"Вони йдуть у ресторан.","examples":["restaurant","Вони йдуть у ресторан."],"atlas_href":"/lexicon/ресторан/"},{"word":"кафе","translation":"cafe","pos":"noun","example":"Ходімо в кафе.","examples":["cafe","Ходімо в кафе."],"atlas_href":"/lexicon/кафе/"},{"word":"вокзал","translation":"train station","pos":"noun","example":"Вона їде на вокзал.","examples":["train station","Вона їде на вокзал."],"atlas_href":"/lexicon/вокзал/"},{"word":"зупинка","translation":"stop","pos":"noun","example":"Я йду на зупинку.","examples":["stop","Я йду на зупинку."],"atlas_href":"/lexicon/зупинка/"},{"word":"Київ","translation":"Kyiv","pos":"proper noun","example":"Брат їде в Київ.","examples":["Kyiv","Брат їде в Київ."],"atlas_href":"/lexicon/київ/"},{"word":"Львів","translation":"Lviv","pos":"proper noun","example":"Я їду у Львів.","examples":["Lviv","Я їду у Львів."],"atlas_href":"/lexicon/львів/"},{"word":"Одеса","translation":"Odesa","pos":"proper noun","example":"Олена їде в Одесу.","examples":["Odesa","Олена їде в Одесу."],"atlas_href":"/lexicon/одеса/"}]`)} title="Vocabulary" />
 
-<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"куди","back":"where to"},{"front":"де","back":"where"},{"front":"тут","back":"here"},{"front":"там","back":"there"},{"front":"вдома","back":"at home"},{"front":"близько","back":"near; close"},{"front":"далеко","back":"far"},{"front":"в","back":"in; at; to"},{"front":"у","back":"in; at; to"},{"front":"на","back":"on; at; to"},{"front":"до","back":"to; toward"},{"front":"іти","back":"to go on foot"},{"front":"йти","back":"to go on foot"},{"front":"їхати","back":"to go by transport"},{"front":"повертатися","back":"to return"},{"front":"додому","back":"homeward"},{"front":"місто","back":"city; town"},{"front":"парк","back":"park"},{"front":"школа","back":"school"},{"front":"робота","back":"work"},{"front":"магазин","back":"shop; store"},{"front":"банк","back":"bank"},{"front":"аптека","back":"pharmacy"},{"front":"бібліотека","back":"library"},{"front":"ресторан","back":"restaurant"},{"front":"кафе","back":"cafe"},{"front":"вокзал","back":"train station"},{"front":"зупинка","back":"stop"},{"front":"лікар","back":"doctor"},{"front":"бабуся","back":"grandmother"},{"front":"Київ","back":"Kyiv"},{"front":"Україна","back":"Ukraine"},{"front":"Львів","back":"Lviv"},{"front":"Одеса","back":"Odesa"}]`)} />
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"куди","back":"where to"},{"front":"де","back":"where"},{"front":"тут","back":"here"},{"front":"там","back":"there"},{"front":"вдома","back":"at home"},{"front":"близько","back":"near; close"},{"front":"далеко","back":"far"},{"front":"в","back":"in; at; to"},{"front":"у","back":"in; at; to"},{"front":"на","back":"on; at; to"},{"front":"йти","back":"to go on foot"},{"front":"їхати","back":"to go by transport"},{"front":"повертатися","back":"to return"},{"front":"додому","back":"homeward"},{"front":"місто","back":"city; town"},{"front":"парк","back":"park"},{"front":"школа","back":"school"},{"front":"робота","back":"work"},{"front":"магазин","back":"shop; store"},{"front":"банк","back":"bank"},{"front":"пошта","back":"post office"},{"front":"аптека","back":"pharmacy"},{"front":"бібліотека","back":"library"},{"front":"ресторан","back":"restaurant"},{"front":"кафе","back":"cafe"},{"front":"вокзал","back":"train station"},{"front":"зупинка","back":"stop"},{"front":"Київ","back":"Kyiv"},{"front":"Львів","back":"Lviv"},{"front":"Одеса","back":"Odesa"}]`)} />
 
 </TabItem>
 <TabItem label="Activities">
@@ -280,33 +270,33 @@ navigation tool.
 
 *(see lesson, §Діалоги)*
 
-### Direction chunks
-
-*(see lesson, §Діалоги)*
-
-### Four route shelves
+### Static and direction chunks
 
 *(see lesson, §Куди? Знахідний відмінок)*
 
-### Static to direction
+### Де? or куди? shelves
 
-*(see lesson, §Куди? Знахідний відмінок)*
+*(see lesson, §Де чи куди?)*
+
+### Іти or їхати?
+
+*(see lesson, §Де чи куди?)*
 
 ### Movement guardrails
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Іти usually means going on foot.", "isTrue": true, "explanation": "Use іти for walking or general movement."}, {"statement": "Їхати usually means going by transport.", "isTrue": true, "explanation": "Use їхати when a vehicle is part of the idea."}, {"statement": "Я йду в школу answers куди?", "isTrue": true, "explanation": "It is movement toward school."}, {"statement": "Я в школі answers куди?", "isTrue": false, "explanation": "Я в школі answers де?"}, {"statement": "Use до for a person destination.", "isTrue": true, "explanation": "Say до лікаря, до мами, до бабусі."}, {"statement": "Kyiv is the Ukrainian English form for Київ.", "isTrue": true, "explanation": "Use Київ / Kyiv."}]`)} instruction={"Decide whether the statement fits the lesson."} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Іти usually means going on foot.", "isTrue": true, "explanation": "Use іти for walking or general movement."}, {"statement": "Їхати usually means going by transport.", "isTrue": true, "explanation": "Use їхати when a vehicle is part of the idea."}, {"statement": "Я йду у школу answers куди?", "isTrue": true, "explanation": "It is movement toward school."}, {"statement": "Я в школі answers куди?", "isTrue": false, "explanation": "Я в школі answers де?"}, {"statement": "Додому can answer куди?", "isTrue": true, "explanation": "Я повертаюся додому answers where to."}, {"statement": "Kyiv is the Ukrainian English form for Київ.", "isTrue": true, "explanation": "Use Київ / Kyiv."}]`)} instruction={"Decide whether the statement fits the lesson."} isUkrainian={false} />
 
 ### Saturday errands
 
-<Order client:only='react' items={JSON.parse(`["Спочатку я йду в банк.", "Потім я йду на пошту.", "Після цього йду в аптеку.", "Потім їду на вокзал.", "Увечері йду до Оксани.", "Нарешті повертаюся додому."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5]`)} instruction={"Put the route in a natural order."} isUkrainian={true} />
+<Order client:only='react' items={JSON.parse(`["Спочатку я йду в банк.", "Потім я йду на пошту.", "Після цього йду в аптеку.", "Потім їду на вокзал.", "Увечері йду в кафе.", "Нарешті повертаюся додому."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5]`)} instruction={"Put the route in a natural order."} isUkrainian={true} />
 
 ### Find the wrong route
 
-<OddOneOut client:only='react' instruction={"Choose the phrase that does not fit the pattern."} items={JSON.parse(`[{"words": ["у школу", "на роботу", "в аптеку", "у школі"], "correct": 3, "explanation": "The first three answer куди?; у школі answers де?"}, {"words": ["у банку", "на роботі", "в аптеці", "в аптеку"], "correct": 3, "explanation": "В аптеку is direction; the others are static locations."}, {"words": ["до лікаря", "до мами", "до бабусі", "на лікаря"], "correct": 3, "explanation": "A person destination uses до."}, {"words": ["в Україну", "у Львів", "в Одесу", "у Києві"], "correct": 3, "explanation": "У Києві is static; the others are directions."}]`)} />
+<OddOneOut client:only='react' instruction={"Choose the phrase that does not fit the pattern."} items={JSON.parse(`[{"words": ["у школу", "на роботу", "в аптеку", "у школі"], "correct": 3, "explanation": "The first three answer куди?; у школі answers де?"}, {"words": ["у банку", "на роботі", "в аптеці", "в аптеку"], "correct": 3, "explanation": "В аптеку is direction; the others are static locations."}, {"words": ["на пошту", "на роботу", "на вокзал", "на бібліотеку"], "correct": 3, "explanation": "Бібліотека uses у/в бібліотеку for direction."}, {"words": ["в Київ", "у Львів", "в Одесу", "у Києві"], "correct": 3, "explanation": "У Києві is static; the others are directions."}]`)} />
 
 ### Repair where-to interference
 
-<ErrorCorrection client:only='react' instruction="Choose the natural Ukrainian sentence." items={JSON.parse(`[{"sentence": "Я йду в школі.", "errorWord": "в школі", "correctForm": "Я йду в школу.", "options": ["Я йду в школу.", "Я йду в школі.", "Я йду школа."], "explanation": "Йду asks куди?, so use в школу."}, {"sentence": "Я живу Київ.", "errorWord": "живу Київ", "correctForm": "Я живу в Києві. (або у Києві)", "options": ["Я живу в Києві. (або у Києві)", "Я живу Київ.", "Я живу до Києва."], "explanation": "Жити answers де? and needs в/у plus locative."}, {"sentence": "Я йду в лікаря.", "errorWord": "в лікаря", "correctForm": "Я йду до лікаря.", "options": ["Я йду до лікаря.", "Я йду в лікаря.", "Я йду на лікаря."], "explanation": "Use до for a person destination."}, {"sentence": "Ми були в концерті.", "errorWord": "в концерті", "correctForm": "Ми були на концерті.", "options": ["Ми були на концерті.", "Ми були в концерті.", "Ми були до концерту."], "explanation": "The familiar event chunk is на концерті."}, {"sentence": "Книжка на столу.", "errorWord": "на столу", "correctForm": "Книжка на столі.", "options": ["Книжка на столі.", "Книжка на столу.", "Книжка в стіл."], "explanation": "Static surface location uses на столі."}, {"sentence": "Аптека — в аптекі.", "errorWord": "в аптекі", "correctForm": "Аптека — в аптеці.", "options": ["Аптека — в аптеці.", "Аптека — в аптекі.", "Аптека — в аптеку."], "explanation": "Аптека changes to в аптеці for де?"}]`)} isUkrainian={false} />
+<ErrorCorrection client:only='react' instruction="Choose the natural Ukrainian sentence." items={JSON.parse(`[{"sentence": "Я йду в школі.", "errorWord": "в школі", "correctForm": "Я йду у школу.", "options": ["Я йду у школу.", "Я йду в школі.", "Я йду школа."], "explanation": "Йду asks куди?, so use у школу."}, {"sentence": "Я живу Київ.", "errorWord": "живу Київ", "correctForm": "Я живу в Києві. (або у Києві)", "options": ["Я живу в Києві. (або у Києві)", "Я живу Київ.", "Я живу до Києва."], "explanation": "Жити answers де? and needs в/у plus locative."}, {"sentence": "Я йду в бібліотеці.", "errorWord": "в бібліотеці", "correctForm": "Я йду в бібліотеку.", "options": ["Я йду в бібліотеку.", "Я йду в бібліотеці.", "Я йду бібліотека."], "explanation": "Йду asks куди?, so use в бібліотеку."}, {"sentence": "Ми були в концерті.", "errorWord": "в концерті", "correctForm": "Ми були на концерті.", "options": ["Ми були на концерті.", "Ми були в концерті.", "Ми були до концерту."], "explanation": "The familiar event chunk is на концерті."}, {"sentence": "Книжка на столу.", "errorWord": "на столу", "correctForm": "Книжка на столі.", "options": ["Книжка на столі.", "Книжка на столу.", "Книжка в стіл."], "explanation": "Static surface location uses на столі."}, {"sentence": "Аптека — в аптекі.", "errorWord": "в аптекі", "correctForm": "Аптека — в аптеці.", "options": ["Аптека — в аптеці.", "Аптека — в аптекі.", "Аптека — в аптеку."], "explanation": "Аптека changes to в аптеці for де?"}]`)} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">

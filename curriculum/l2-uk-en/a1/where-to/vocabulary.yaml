@@ -38,14 +38,6 @@
   translation: on; at; to
   pos: preposition
   example: "Я йду на роботу."
-- word: до
-  translation: to; toward
-  pos: preposition
-  example: "Я йду до лікаря."
-- word: іти
-  translation: to go on foot
-  pos: verb
-  example: "Я йду в магазин."
 - word: йти
   translation: to go on foot
   pos: verb
@@ -77,7 +69,7 @@
 - word: робота
   translation: work
   pos: noun
-  example: "Степан іде на роботу."
+  example: "Степан йде на роботу."
 - word: магазин
   translation: shop; store
   pos: noun
@@ -85,7 +77,11 @@
 - word: банк
   translation: bank
   pos: noun
-  example: "Тато йде у банк."
+  example: "Степан йде у банк."
+- word: пошта
+  translation: post office
+  pos: noun
+  example: "Оксана йде на пошту."
 - word: аптека
   translation: pharmacy
   pos: noun
@@ -110,22 +106,10 @@
   translation: stop
   pos: noun
   example: "Я йду на зупинку."
-- word: лікар
-  translation: doctor
-  pos: noun
-  example: "Марко йде до лікаря."
-- word: бабуся
-  translation: grandmother
-  pos: noun
-  example: "Олена йде до бабусі."
 - word: Київ
   translation: Kyiv
   pos: proper noun
   example: "Брат їде в Київ."
-- word: Україна
-  translation: Ukraine
-  pos: proper noun
-  example: "Ми їдемо в Україну."
 - word: Львів
   translation: Lviv
   pos: proper noun
