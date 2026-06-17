@@ -59,6 +59,11 @@
   pos: noun
   gender: f
   example: "Ми підемо на виставку."
+- word: кіно
+  translation: cinema, movies
+  pos: noun
+  gender: n
+  example: "Ходімо в кіно в суботу."
 - word: басейн
   translation: swimming pool
   pos: noun
