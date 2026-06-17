@@ -1,0 +1,236 @@
+- lemma: подорож
+  translation: "journey, trip"
+  pos: noun:f
+  usage: "Подорож Україною почалася з ранкового потяга до Львова."
+- lemma: мандрівка
+  translation: "journey, trip; slightly more literary"
+  pos: noun:f
+  usage: "Ця мандрівка Карпатами тривала п'ять днів."
+- lemma: подорожувати
+  translation: "to travel"
+  pos: verb
+  usage: "Ми любимо подорожувати Україною поїздом."
+- lemma: мандрувати
+  translation: "to travel, wander"
+  pos: verb
+  usage: "Улітку вони мандрували Закарпаттям."
+- lemma: квиток
+  translation: "ticket"
+  pos: noun:m
+  usage: "Я купив квиток до Івано-Франківська."
+- lemma: зворотний квиток
+  translation: "return ticket"
+  pos: phrase
+  usage: "Зворотний квиток краще купити заздалегідь."
+- lemma: розклад руху
+  translation: "transport schedule, timetable"
+  pos: phrase
+  usage: "Перевірте розклад руху перед поїздкою."
+- lemma: вокзал
+  translation: "railway station"
+  pos: noun:m
+  usage: "Ми приїхали на вокзал за годину до відходу поїзда."
+- lemma: платформа
+  translation: "platform"
+  pos: noun:f
+  usage: "Поїзд стоїть на третій платформі."
+- lemma: перон
+  translation: "train platform"
+  pos: noun:m
+  usage: "Пасажири вийшли на перон після оголошення."
+- lemma: зупинка
+  translation: "stop"
+  pos: noun:f
+  usage: "Найближча зупинка трамвая біля музею."
+- lemma: маршрут
+  translation: "route"
+  pos: noun:m
+  usage: "Наш маршрут проходить через Львів, Яремче й Чернівці."
+- lemma: пересадка
+  translation: "transfer, connection"
+  pos: noun:f
+  usage: "У Тернополі в нас була коротка пересадка."
+- lemma: дістатися
+  translation: "to get to, reach"
+  pos: verb
+  usage: "Як дістатися до центру з вокзалу?"
+- lemma: маршрутка
+  translation: "minibus, shared-route van"
+  pos: noun:f
+  usage: "До села можна доїхати маршруткою."
+- lemma: купе
+  translation: "train compartment"
+  pos: noun:n
+  usage: "Ми взяли два місця в купе."
+- lemma: плацкарт
+  translation: "open sleeping car"
+  pos: noun:m
+  usage: "Плацкарт дешевший за купе, але менш приватний."
+- lemma: сидячий вагон
+  translation: "seated carriage"
+  pos: phrase
+  usage: "На короткий маршрут зручно взяти сидячий вагон."
+- lemma: провідник
+  translation: "train attendant, conductor"
+  pos: noun:m
+  usage: "Провідник перевірив квитки перед відходом поїзда."
+- lemma: провідниця
+  translation: "train attendant, conductor; feminine"
+  pos: noun:f
+  usage: "Провідниця підказала, де наше купе."
+- lemma: пасажир
+  translation: "passenger"
+  pos: noun:m
+  usage: "Пасажири чекають посадки на пероні."
+- lemma: рейс
+  translation: "flight, route service"
+  pos: noun:m
+  usage: "Рейс до Відня затримується на сорок хвилин."
+- lemma: затримка
+  translation: "delay"
+  pos: noun:f
+  usage: "Через затримку ми не встигли на пересадку."
+- lemma: пам'ятка
+  translation: "landmark, heritage site"
+  pos: noun:f
+  usage: "Софійський собор - одна з найвідоміших пам'яток Києва."
+- lemma: екскурсія
+  translation: "excursion, guided tour"
+  pos: noun:f
+  usage: "Екскурсія старим містом починається біля ратуші."
+- lemma: готель
+  translation: "hotel"
+  pos: noun:m
+  usage: "Від вокзалу до готелю можна дійти пішки."
+- lemma: хостел
+  translation: "hostel"
+  pos: noun:m
+  usage: "Хостел розташований біля університету."
+- lemma: багаж
+  translation: "luggage"
+  pos: noun:m
+  usage: "Ваш багаж можна здати біля стійки реєстрації."
+- lemma: валіза
+  translation: "suitcase"
+  pos: noun:f
+  usage: "Валізу донесли до номера після поселення."
+- lemma: зал очікування
+  translation: "waiting hall"
+  pos: phrase
+  usage: "У залі очікування було багато пасажирів."
+- lemma: посадка
+  translation: "boarding"
+  pos: noun:f
+  usage: "Посадка на рейс починається о чотирнадцятій тридцять."
+- lemma: реєстрація
+  translation: "check-in, registration"
+  pos: noun:f
+  usage: "Де реєстрація на рейс до Варшави?"
+- lemma: прикордонний контроль
+  translation: "border control"
+  pos: phrase
+  usage: "Після прикордонного контролю ми пройшли до виходу."
+- lemma: закордонний паспорт
+  translation: "passport for international travel"
+  pos: phrase
+  usage: "Для міжнародного рейсу потрібен закордонний паспорт."
+- lemma: відходити
+  translation: "to depart; of trains or ships"
+  pos: verb
+  usage: "Поїзд відходить від третьої платформи."
+- lemma: виїжджати
+  translation: "to depart, set out by vehicle"
+  pos: verb
+  usage: "Автобус виїжджає з автостанції о сьомій."
+- lemma: вилітати
+  translation: "to depart by air, take off"
+  pos: verb
+  usage: "Літак вилітає без затримки."
+- lemma: прибувати
+  translation: "to arrive; formal or schedule style"
+  pos: verb
+  usage: "Потяг прибуває на першу колію."
+- lemma: вирушати
+  translation: "to set off"
+  pos: verb
+  usage: "Уранці група вирушає до Карпат."
+- lemma: поїхати
+  translation: "to set off by transport; perfective"
+  pos: verb
+  usage: "Після сніданку ми поїхали до Львова."
+- lemma: піти
+  translation: "to set off on foot; perfective"
+  pos: verb
+  usage: "Після поселення ми пішли до центру."
+- lemma: від'їхати
+  translation: "to depart, move away by transport"
+  pos: verb
+  usage: "Автобус від'їхав від вокзалу рівно о восьмій."
+- lemma: приїхати
+  translation: "to arrive by transport"
+  pos: verb
+  usage: "Ми приїхали до Чернівців уранці."
+- lemma: доїхати
+  translation: "to reach by transport"
+  pos: verb
+  usage: "До Яремча доїхали маршруткою."
+- lemma: зайти
+  translation: "to enter briefly, stop by on foot"
+  pos: verb
+  usage: "Ми зайшли до кав'ярні біля площі."
+- lemma: вийти
+  translation: "to exit, go out"
+  pos: verb
+  usage: "На наступній зупинці треба вийти."
+- lemma: пересісти
+  translation: "to transfer, change vehicles"
+  pos: verb
+  usage: "У Тернополі ми пересіли на інший потяг."
+- lemma: переїхати
+  translation: "to cross by vehicle, move across"
+  pos: verb
+  usage: "Ми переїхали через міст над Дністром."
+- lemma: проїхати
+  translation: "to pass by, travel through"
+  pos: verb
+  usage: "Автобус проїхав центр і зупинився біля парку."
+- lemma: обійти
+  translation: "to walk around, go around"
+  pos: verb
+  usage: "За вечір ми обійшли старий центр."
+- lemma: підійти
+  translation: "to approach on foot"
+  pos: verb
+  usage: "Підійдіть до каси номер два."
+- lemma: ліворуч
+  translation: "to the left"
+  pos: adverb
+  usage: "На перехресті поверніть ліворуч."
+- lemma: праворуч
+  translation: "to the right"
+  pos: adverb
+  usage: "Музей буде праворуч від площі."
+- lemma: прямо
+  translation: "straight ahead"
+  pos: adverb
+  usage: "Ідіть прямо до світлофора."
+- lemma: на розі
+  translation: "on the corner"
+  pos: adverbial phrase
+  usage: "Аптека розташована на розі вулиць."
+- lemma: перехрестя
+  translation: "intersection, crossroads"
+  pos: noun:n
+  usage: "Біля перехрестя треба перейти дорогу."
+- lemma: провулок
+  translation: "lane, side street"
+  pos: noun:m
+  usage: "Готель стоїть у тихому провулку."
+- lemma: краєвид
+  translation: "view, landscape"
+  pos: noun:m
+  usage: "З мосту відкривається гарний краєвид на місто."
+- lemma: вигоди
+  translation: "amenities, conveniences"
+  pos: noun:pl
+  usage: "У готелі є номери з усіма вигодами."
