@@ -1,8 +1,14 @@
-# Current — Claude Session Handoff (2026-06-16 evening — §6 moat slice 3 SHIPPED; full merge-train + 3 dependabot rounds cleared)
+# Current — Claude Session Handoff (2026-06-17 — ATLAS finished data+design; 3 follow-ups in-flight)
 
 > **ROLE:** main orchestrator. User: grind the queue, results-focused, use the FLEET (#M-12), self-merge after review + CI-green, don't manufacture obstacles, don't idle. Quality non-negotiable.
 
-> **State:** main moving fast (merge-train). HEAD past `748332e7fd`. Atlas §6 decolonization moat now spans participles + collocations + lexical calques (5 manifest lemmas: біля, виглядати, міроприємство, неділя, слідуючий + many live-MCP-only). Live blocking CI: freshness gate, validate_plan_ordering, pytest/ruff/frontend/CodeQL.
+> **🔱 ACTIVE FOCUS → full detail in `docs/session-state/2026-06-17-claude-atlas-poc-plus-three-followups.md`.**
+> **Atlas DONE (merged):** data #3405/#3416 (CEFR 99.9%, all sections at ceiling), determinism #3331, **POC design #3437** (browser-verified light+dark, 0 stubs, deployed). Also immersion #3393.
+> **Atlas NOT "done" per user until 3 follow-ups land:** **#3150** auto-expansion (DISPATCHED `atlas-3150-autoexpand`, verify+merge), **#3450** inflected-form dedupe, **#3449** open dictionary dataset (owner decision: publish-all + attribute + takedown, NO gating). Sequence manifest-touching work one-at-a-time (#M-9). Codex stalls silent mid build/`make atlas` — cancel+recover the build yourself (recipe in the dated doc). Deploy is MANUAL (`gh workflow run deploy-pages.yml`).
+> **HARD: never raise English (MEMORY #M-13).** Awareness-only: A2-cert merge-train PRs (e.g. #3451) are track work, not the Atlas follow-ups.
+
+---
+## (prior session) 2026-06-16 evening — §6 moat slice 3 SHIPPED; full merge-train + 3 dependabot rounds cleared
 
 ## ✅ SHIPPED + MERGED this session (~22 PRs)
 - **§6 decolonization moat slice 3 (#3366, advances #3098):** 6 single-word lexical calques — слідуючий→наступний, багаточисельний→численний, міроприємство→захід, учбовий→навчальний + sense-restricted любий ("any" vs authentic "dear") / неділя ("week" vs authentic "Sunday"). VESUM-verified 6/6 + heritage-confirmed no over-flagging. Surgical 3-lemma manifest patch.
