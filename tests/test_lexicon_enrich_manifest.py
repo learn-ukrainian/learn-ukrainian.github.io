@@ -23,7 +23,9 @@ from scripts.lexicon.enrich_manifest import (
     _idioms,
     _idioms_frazeolohichnyi,
     _idioms_slovnyk,
+    _kaikki_meaning,
     _kaikki_pronunciation,
+    _kaikki_stress,
     _literary_attestation,
     _literary_excerpt,
     _meaning,
@@ -1248,6 +1250,57 @@ def test_kaikki_pronunciation_uses_stress_stripped_lookup() -> None:
     assert pronunciation == {"ipa": "[ɐu̯ˈtɔbʊs]", "source": KAIKKI_SOURCE}
 
 
+def test_kaikki_stress_maps_ipa_primary_stress_to_lemma_vowel() -> None:
+    lookup = {
+        "україна": {
+            "ipa": ["[ʊkrɐˈjinɐ]"],
+            "etymology_text": "",
+            "pos": ["name"],
+            "glosses": [],
+        }
+    }
+
+    stress = _kaikki_stress(lookup, "Україна")
+
+    assert stress == {"form": "Украї́на", "source": KAIKKI_SOURCE, "ipa": "[ʊkrɐˈjinɐ]"}
+
+
+def test_kaikki_stress_rejects_syllable_count_mismatch() -> None:
+    lookup = {"тестовий": {"ipa": ["[ˈtɛst]"], "etymology_text": "", "pos": ["adj"], "glosses": []}}
+
+    assert _kaikki_stress(lookup, "тестовий") is None
+
+
+def test_kaikki_stress_marks_unambiguous_one_vowel_lemma() -> None:
+    lookup = {
+        "львів": {
+            "ipa": ["[lʲʋʲiu̯]"],
+            "etymology_text": "",
+            "pos": ["name"],
+            "glosses": [],
+        }
+    }
+
+    assert _kaikki_stress(lookup, "Львів") == {"form": "Льві́в", "source": KAIKKI_SOURCE, "ipa": "[lʲʋʲiu̯]"}
+
+
+def test_kaikki_meaning_uses_direct_glosses() -> None:
+    lookup = {
+        "абетка": {
+            "ipa": [],
+            "etymology_text": "",
+            "pos": ["noun"],
+            "glosses": ["alphabet", "alphabet"],
+        }
+    }
+
+    assert _kaikki_meaning(lookup, "абетка") == {
+        "definitions": ["alphabet"],
+        "source": KAIKKI_SOURCE,
+        "note": "English Wiktionary gloss fallback; direct per-lemma row.",
+    }
+
+
 def test_kaikki_etymology_is_final_fallback() -> None:
     conn = _conn()
     lookup = {
@@ -1263,22 +1316,7 @@ def test_kaikki_etymology_is_final_fallback() -> None:
     assert etymology == {"text": "From Old East Slavic мѣсто.", "source": KAIKKI_SOURCE}
 
 
-@pytest.mark.parametrize(
-    ("derived", "base"),
-    [
-        ("добре", "добрий"),
-        ("чудово", "чудо"),
-        ("пізно", "пізній"),
-        ("нормально", "нормальний"),
-        ("сьома", "сім"),
-        ("навчатися", "вчити"),
-        ("вмиватися", "мити"),
-        ("збиратися", "брати"),
-        ("одягатися", "одяг"),
-        ("повертатися", "вертати"),
-    ],
-)
-def test_derivational_etymology_falls_back_to_base_forms(derived: str, base: str) -> None:
+def test_etymology_does_not_fall_back_to_derived_base_forms() -> None:
     conn = _conn()
     conn.execute(
         """
@@ -1292,16 +1330,10 @@ def test_derivational_etymology_falls_back_to_base_forms(derived: str, base: str
     )
     conn.execute(
         "INSERT INTO goroh_etymology VALUES (?, ?, ?, ?)",
-        (base, base, f"Fixture etymology for {base}.", f"https://goroh.example/{base}"),
+        ("добрий", "добрий", "Fixture etymology for добрий.", "https://goroh.example/добрий"),
     )
 
-    etymology = _etymology(conn, derived, {})
-
-    assert etymology == {
-        "text": f"Fixture etymology for {base}.",
-        "source": f"Горох (за ЕСУМ) (etymology of base form {base})",
-        "source_url": f"https://goroh.example/{base}",
-    }
+    assert _etymology(conn, "добре", {}) is None
 
 
 def test_etymology_lookup_variants_include_normalised_apostrophe_and_v_u_alternates() -> None:
@@ -1357,7 +1389,7 @@ def test_compositional_greeting_phrases_have_no_etymology_fallback() -> None:
     assert _etymology(conn, "До побачення!", {}) is None
 
 
-def test_kaikki_etymology_skips_russian_labeled_cyrillic() -> None:
+def test_kaikki_etymology_allows_direct_cognate_comparisons() -> None:
     conn = _conn()
     lookup = {
         "базовий": {
@@ -1367,7 +1399,39 @@ def test_kaikki_etymology_skips_russian_labeled_cyrillic() -> None:
         }
     }
 
-    assert _etymology(conn, "базовий", lookup) is None
+    assert _etymology(conn, "базовий", lookup) == {
+        "text": "From ба́за. Compare Russian ба́зовый (bázovyj), Belarusian ба́завы.",
+        "source": KAIKKI_SOURCE,
+    }
+
+
+def test_kaikki_etymology_skips_garbled_tree_text() -> None:
+    conn = _conn()
+    lookup = {
+        "японія": {
+            "ipa": [],
+            "etymology_text": "Etymology tree Hokkien 日本 bor. Ukrainian Японія.",
+            "pos": ["name"],
+        }
+    }
+
+    assert _etymology(conn, "Японія", lookup) is None
+
+
+def test_kaikki_etymology_does_not_treat_labor_as_garbled_marker() -> None:
+    conn = _conn()
+    lookup = {
+        "робота": {
+            "ipa": [],
+            "etymology_text": "Old East Slavic робота (robota, “labor, work”), itself from Proto-Slavic *orbota.",
+            "pos": ["noun"],
+        }
+    }
+
+    assert _etymology(conn, "робота", lookup) == {
+        "text": "Old East Slavic робота (robota, “labor, work”), itself from Proto-Slavic *orbota.",
+        "source": KAIKKI_SOURCE,
+    }
 
 
 def test_kaikki_etymology_does_not_overwrite_goroh() -> None:
@@ -1652,7 +1716,7 @@ def test_translation_returns_none_when_lemma_absent(monkeypatch) -> None:
     assert _translation(conn, "неіснуючеслово") is None
 
 
-def test_wiki_reference_success(monkeypatch) -> None:
+def test_wiki_reference_success(monkeypatch, tmp_path) -> None:
     fake_wiki_data = {
         "title": "Україна",
         "description": "держава в Східній Європі",
@@ -1665,6 +1729,9 @@ def test_wiki_reference_success(monkeypatch) -> None:
             return fake_wiki_data
         return None
 
+    monkeypatch.setattr(enrich_manifest_module, "WIKI_REFERENCE_CACHE", tmp_path / "wiki_reference.json")
+    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DATA", None)
+    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DIRTY", False)
     monkeypatch.setattr(enrich_manifest_module, "query_wikipedia", mock_query)
 
     # test without literary attestation
@@ -1683,11 +1750,77 @@ def test_wiki_reference_success(monkeypatch) -> None:
     assert "uk.wikisource.org" in ref_with_lit["wikisource_url"]
 
 
-def test_wiki_reference_missing(monkeypatch) -> None:
+def test_wiki_reference_missing(monkeypatch, tmp_path) -> None:
     def mock_query(title: str) -> dict | None:
         return None
 
+    monkeypatch.setattr(enrich_manifest_module, "WIKI_REFERENCE_CACHE", tmp_path / "wiki_reference.json")
+    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DATA", None)
+    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DIRTY", False)
     monkeypatch.setattr(enrich_manifest_module, "query_wikipedia", mock_query)
 
     ref = enrich_manifest_module._wiki_reference("варити")
     assert ref is None
+
+
+def test_wiki_reference_uses_disk_cache(monkeypatch, tmp_path) -> None:
+    cache_path = tmp_path / "wiki_reference.json"
+    fake_wiki_data = {
+        "title": "Україна",
+        "extract": "Україна — держава в Східній Європі.",
+        "url": "https://uk.wikipedia.org/wiki/Україна",
+    }
+    calls: list[str] = []
+
+    def mock_query(title: str) -> dict | None:
+        calls.append(title)
+        return fake_wiki_data
+
+    monkeypatch.setattr(enrich_manifest_module, "WIKI_REFERENCE_CACHE", cache_path)
+    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DATA", None)
+    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DIRTY", False)
+    monkeypatch.setattr(enrich_manifest_module, "query_wikipedia", mock_query)
+
+    first = enrich_manifest_module._wiki_reference("Україна")
+
+    assert first is not None
+    assert calls == ["Україна"]
+    assert json.loads(cache_path.read_text(encoding="utf-8")) == {"Україна": fake_wiki_data}
+
+    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DATA", None)
+
+    def fail_query(title: str) -> dict | None:
+        raise AssertionError(f"live query should not run for cached title: {title}")
+
+    monkeypatch.setattr(enrich_manifest_module, "query_wikipedia", fail_query)
+
+    second = enrich_manifest_module._wiki_reference("Україна")
+
+    assert second == first
+
+
+def test_wiki_reference_caches_missing_results(monkeypatch, tmp_path) -> None:
+    cache_path = tmp_path / "wiki_reference.json"
+    calls: list[str] = []
+
+    def mock_query(title: str) -> dict | None:
+        calls.append(title)
+        return None
+
+    monkeypatch.setattr(enrich_manifest_module, "WIKI_REFERENCE_CACHE", cache_path)
+    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DATA", None)
+    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DIRTY", False)
+    monkeypatch.setattr(enrich_manifest_module, "query_wikipedia", mock_query)
+
+    assert enrich_manifest_module._wiki_reference("варити") is None
+    assert calls == ["варити"]
+    assert json.loads(cache_path.read_text(encoding="utf-8")) == {"варити": None}
+
+    monkeypatch.setattr(enrich_manifest_module, "_WIKI_REFERENCE_CACHE_DATA", None)
+
+    def fail_query(title: str) -> dict | None:
+        raise AssertionError(f"live query should not run for cached miss: {title}")
+
+    monkeypatch.setattr(enrich_manifest_module, "query_wikipedia", fail_query)
+
+    assert enrich_manifest_module._wiki_reference("варити") is None
