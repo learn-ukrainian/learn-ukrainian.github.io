@@ -15,7 +15,7 @@ inline:
   - id: act-2
     type: fill-in
     title: Правильна форма
-    instruction: Оберіть орудний відмінок без прийменника.
+    instruction: Оберіть форму орудного відмінка без прийменника.
     items:
       - sentence: "Я пишу ___."
         answer: ручкою
