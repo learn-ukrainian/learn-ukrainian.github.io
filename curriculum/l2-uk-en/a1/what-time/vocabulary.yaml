@@ -130,6 +130,22 @@
   translation: quarter
   pos: noun
   usage: Чверть на восьму.
+- lemma: ранок
+  translation: morning
+  pos: noun
+  usage: Ранок починається.
+- lemma: день
+  translation: day; afternoon
+  pos: noun
+  usage: День теплий.
+- lemma: вечір
+  translation: evening
+  pos: noun
+  usage: Вечір тихий.
+- lemma: ніч
+  translation: night
+  pos: noun
+  usage: Ніч тиха.
 - lemma: ранку
   translation: in the morning; AM
   pos: time-of-day word
