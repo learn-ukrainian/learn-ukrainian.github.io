@@ -124,23 +124,23 @@ inline:
   - id: act-3
     type: match-up
     title: Підбери фразу
-    instruction: Зіставте англійський зміст або ситуацію з природною українською фразою.
+    instruction: Зіставте ситуаційну підказку з природною українською фразою.
     pairs:
-      - left: "in life"
+      - left: "сфера: життя"
         right: "у житті"
-      - left: "at work"
+      - left: "контекст: робота"
         right: "на роботі"
-      - left: "in education"
+      - left: "сфера: освіта"
         right: "в освіті"
-      - left: "last month"
+      - left: "час: минулий місяць"
         right: "у минулому місяці"
-      - left: "this week"
+      - left: "час: цей тиждень"
         right: "на цьому тижні"
-      - left: "in childhood"
+      - left: "період життя: дитинство"
         right: "у дитинстві"
-      - left: "by phone"
+      - left: "канал: телефон"
         right: "по телефону"
-      - left: "by radio"
+      - left: "канал: радіо"
         right: "по радіо"
   - id: act-4
     type: group-sort
@@ -162,6 +162,10 @@ inline:
         items:
           - "по телефону"
           - "по радіо"
+      - label: "місце або шлях"
+        items:
+          - "у Києві"
+          - "на пошті"
           - "по дорозі"
 workbook:
   - id: act-5
