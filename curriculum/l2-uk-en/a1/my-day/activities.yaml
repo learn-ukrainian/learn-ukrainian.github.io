@@ -1,306 +1,156 @@
 ---
 inline:
   - id: act-1
+    type: match-up
+    title: Дія і час доби
+    instruction: З'єднай дію з логічним часом доби.
+    pairs:
+      - left: прокидаюся
+        right: вранці
+      - left: снідаю
+        right: вранці
+      - left: працюю
+        right: вдень
+      - left: обідаю
+        right: вдень
+      - left: вечеряю
+        right: ввечері
+      - left: дивлюся фільм
+        right: ввечері
+      - left: лягаю спати
+        right: вночі
+      - left: сплю
+        right: вночі
+  - id: act-2
     type: fill-in
-    title: Parts of the day in a real diary
-    instruction: Choose the time chunk that makes the diary line natural.
+    title: Послідовність дня
+    instruction: Обери слово або дію, яка логічно продовжує день.
     items:
-      - sentence: '___ я прокидаюся і снідаю.'
+      - sentence: '___ я прокидаюся і вмиваюся.'
+        answer: Спочатку
+        options:
+          - Спочатку
+          - Потім
+          - Нарешті
+        explanation: День зазвичай починається з прокидання.
+      - sentence: 'Після того я ___.'
+        answer: снідаю
+        options:
+          - снідаю
+          - вечеряю
+          - лягаю спати
+        explanation: Після ранкового вмивання логічно снідати.
+      - sentence: 'Вдень я ___ в офісі.'
+        answer: працюю
+        options:
+          - працюю
+          - прокидаюся
+          - снідаю
+        explanation: Робота в офісі логічно підходить до вдень.
+      - sentence: 'О першій годині я ___.'
+        answer: обідаю
+        options:
+          - обідаю
+          - вечеряю
+          - прокидаюся
+        explanation: О першій зазвичай обідають.
+      - sentence: '___ я читаю книгу або дивлюся фільм.'
+        answer: Потім
+        options:
+          - Потім
+          - Спочатку
+          - Вранці
+        explanation: Потім продовжує розповідь після роботи або обіду.
+      - sentence: '___ я лягаю спати о дванадцятій.'
+        answer: Нарешті
+        options:
+          - Нарешті
+          - Спочатку
+          - Вдень
+        explanation: Лягати спати - остання дія дня.
+  - id: act-3
+    type: fill-in
+    title: Частина доби
+    instruction: Обери правильну частину доби для речення.
+    items:
+      - sentence: "Я п'ю каву ___."
         answer: вранці
         options:
           - вранці
           - вночі
-          - після обіду
-        explanation: Morning routine starts вранці.
-      - sentence: "___ я працюю з дев'ятої до п'ятої."
-        answer: вдень
-        options:
-          - вдень
-          - вночі
-          - вранці
-        explanation: Workday action usually fits вдень.
-      - sentence: '___ я обідаю о першій.'
-        answer: вдень
-        options:
-          - вдень
-          - вночі
           - ввечері
-        explanation: Lunch belongs to the day.
-      - sentence: '___ я дивлюся фільм.'
+        explanation: Кава найчастіше підходить до ранку.
+      - sentence: 'Ми вечеряємо ___.'
         answer: ввечері
         options:
           - ввечері
           - вранці
-          - вночі
-        explanation: Film time often fits evening.
-      - sentence: '___ я лягаю спати.'
-        answer: вночі
-        options:
-          - вночі
           - вдень
+        explanation: Вечеря належить до вечора.
+      - sentence: "Вона працює з дев'ятої до п'ятої ___."
+        answer: вдень
+        options:
+          - вдень
+          - вночі
           - вранці
-        explanation: Bedtime fits вночі.
-      - sentence: '___ я маю зробити домашнє завдання.'
+        explanation: Робочий день з дев'ятої до п'ятої - це вдень.
+      - sentence: 'Вони гуляють у парку ___.'
         answer: після обіду
         options:
           - після обіду
-          - вранці
-          - пів на восьму
-        explanation: Після обіду is a useful afternoon chunk.
-  - id: act-2
-    type: order
-    title: Put the diary in order
-    instruction: Put the diary lines from morning to night.
-    is_ukrainian: true
-    items:
-      - О сьомій я прокидаюся.
-      - Спочатку роблю зарядку.
-      - Потім снідаю.
-      - О дев'ятій працюю.
-      - О першій обідаю.
-      - Після обіду читаю.
-      - Ввечері дивлюся фільм.
-      - Нарешті лягаю спати.
-    correct_order: [0, 1, 2, 3, 4, 5, 6, 7]
-  - id: act-3
-    type: match-up
-    title: Routine action to useful time
-    instruction: Match each action with a likely time chunk.
-    pairs:
-      - left: прокидаюся
-        right: о сьомій
-      - left: роблю зарядку
-        right: спочатку
-      - left: снідаю
-        right: вранці
-      - left: обідаю
-        right: о першій
-      - left: читаю
-        right: після обіду
-      - left: вечеряю
-        right: ввечері
-      - left: лягаю спати
-        right: вночі
-      - left: планую читати
-        right: у середу
-  - id: act-4
-    type: quiz
-    title: Planning conversation choices
-    instruction: Choose the line that keeps the plan safe and A1-sized.
-    items:
-      - prompt: 'Що ти будеш робити завтра?'
-        options:
-          - text: Вранці буду працювати.
-            correct: true
-          - text: Вранці я працював учора.
-            correct: false
-          - text: Який час завтра?
-            correct: false
-        explanation: Буду працювати is a ready future chunk.
-      - prompt: 'О котрій ти прокидаєшся?'
-        options:
-          - text: О сьомій.
-            correct: true
-          - text: Сім годин.
-            correct: false
-          - text: У сім годин.
-            correct: false
-        explanation: Use о + ordinal time chunk.
-      - prompt: 'Хочеш гуляти ввечері?'
-        options:
-          - text: Так. Ходімо в парк!
-            correct: true
-          - text: Так. Давайте підемо в парк!
-            correct: false
-          - text: Так. Який час парк?
-            correct: false
-        explanation: Ходімо! is the safe A1 invitation chunk.
-      - prompt: 'Яка сьогодні погода?'
-        options:
-          - text: Сьогодні тепло.
-            correct: true
-          - text: Сьогодні є тепло.
-            correct: false
-          - text: Погода є добре.
-            correct: false
-        explanation: Weather state chunks stay short.
-workbook:
-  - type: group-sort
-    title: Day shelves
-    instruction: Sort each chunk onto the shelf where it belongs.
-    groups:
-      - name: Morning
-        items:
-          - вранці
-          - я прокидаюся
-          - роблю зарядку
-          - снідаю
-      - name: Day and afternoon
-        items:
-          - вдень
-          - о першій
-          - обідаю
-          - після обіду
-      - name: Evening and night
-        items:
-          - ввечері
-          - вечеряю
           - вночі
-          - лягаю спати
-      - name: Planning chunks
-        items:
-          - я планую
-          - хочу читати
-          - маю зробити
-          - мені потрібно
-  - type: unjumble
-    title: Build connected day lines
-    instruction: Put the words in a safe A1 order.
-    items:
-      - words:
-          - Вранці
-          - я
-          - прокидаюся
-        answer: Вранці я прокидаюся
-      - words:
-          - Спочатку
-          - я
-          - снідаю
-        answer: Спочатку я снідаю
-      - words:
-          - О
-          - першій
-          - я
-          - обідаю
-        answer: О першій я обідаю
-      - words:
-          - Після
-          - обіду
-          - я
-          - читаю
-        answer: Після обіду я читаю
-      - words:
-          - У
-          - середу
-          - я
-          - планую
-          - читати
-        answer: У середу я планую читати
-      - words:
-          - Нарешті
-          - я
-          - лягаю
-          - спати
-        answer: Нарешті я лягаю спати
-  - type: error-correction
-    title: Repair clock and birthday traps
-    instruction: Choose the safe Ukrainian repair.
-    items:
-      - sentence: "Сім годин. (Seven o'clock)"
-        error: 'Сім годин'
-        answer: 'Сьома година.'
-        options:
-          - 'Сьома година.'
-          - 'Сім годин.'
-          - 'Сьомий година.'
-        explanation: For clock time, use the feminine ordinal hour.
-      - sentence: "У шість годин. (At six o'clock)"
-        error: 'У шість годин'
-        answer: 'О шостій (годині).'
-        options:
-          - 'О шостій (годині).'
-          - 'У шість годин.'
-          - 'На шість година.'
-        explanation: Action time uses о/об plus the time chunk.
-      - sentence: 'Пів сьомої. (Half past six)'
-        error: 'Пів сьомої'
-        answer: 'Пів на сьому.'
-        options:
-          - 'Пів на сьому.'
-          - 'Пів сьомої.'
-          - 'Половина сьома.'
-        explanation: Use пів на + next hour.
-      - sentence: 'Без десяти шість. (Ten to six)'
-        error: 'Без десяти шість'
-        answer: 'За десять шоста.'
-        options:
-          - 'За десять шоста.'
-          - 'Десять до шостої.'
-          - 'Без десяти шість.'
-        explanation: Use за or до, not без.
-      - sentence: 'Моє день народження. (My birthday)'
-        error: 'Моє'
-        answer: 'Мій день народження.'
-        options:
-          - 'Мій день народження.'
-          - 'Моє день народження.'
-          - 'Моя день народження.'
-        explanation: День is masculine, so use мій.
-      - sentence: "П'ять після восьми. (Five past eight)"
-        error: 'після'
-        answer: "П'ять по восьмій."
-        options:
-          - "П'ять по восьмій."
-          - "П'ять хвилин на дев'яту."
-          - "П'ять після восьми."
-        explanation: Use по or на for this clock phrase, not після.
-  - type: fill-in
-    title: Repair routine Ukrainian
-    instruction: Choose the safe routine word or chunk.
+          - вранці
+        explanation: Після обіду - природний час для прогулянки.
+  - id: act-4
+    type: fill-in
+    title: Типові пари у розпорядку дня
+    instruction: Обери нормативну українську форму.
     items:
       - sentence: 'Вранці я ___.'
         answer: беру душ
         options:
           - беру душ
           - приймаю душ
-          - маю душ
-        explanation: Use брати душ.
+        explanation: У розмовній українській природно сказати беру душ.
       - sentence: 'Коли я хворий, я ___.'
-        answer: п'ю ліки
+        answer: "п'ю ліки"
         options:
-          - п'ю ліки
+          - "п'ю ліки"
           - приймаю ліки
-          - беру ліки
-        explanation: Use пити ліки.
+        explanation: Для ліків уживаємо пити ліки.
       - sentence: '___ зараз? — Восьма.'
         answer: Котра година
         options:
           - Котра година
           - Який час
-          - Скільки години
-        explanation: Use Котра година? for clock time.
+        explanation: Для запитання про годинник уживаємо Котра година?
       - sentence: '___ в парк після обіду!'
         answer: Ходімо
         options:
           - Ходімо
           - Давайте підемо
-          - Пішли давайте
-        explanation: Use Ходімо! as a whole invitation chunk.
+        explanation: Ходімо! подається як готовий чанк-запрошення.
       - sentence: 'О восьмій годині я їм ___.'
         answer: сніданок
         options:
           - сніданок
           - завтрак
-          - ранкову їжу
-        explanation: Use сніданок.
+        explanation: Українське слово - сніданок.
       - sentence: 'Мама готує дуже ___ обід.'
         answer: смачний
         options:
           - смачний
           - вкусний
-          - смаковий
-        explanation: Use смачний.
+        explanation: Українське слово - смачний.
       - sentence: 'Ввечері я хочу ___.'
         answer: поїсти
         options:
           - поїсти
           - покушати
-          - їстися
-        explanation: Use поїсти.
+        explanation: У нейтральній українській природно сказати поїсти.
       - sentence: 'О сьомій я ___ і встав.'
         answer: прокинувся
         options:
           - прокинувся
           - проснувся
-          - прокидав
-        explanation: Use прокинувся as the safe recognition chunk here.
+        explanation: Тут потрібна нормативна форма прокинувся.

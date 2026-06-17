@@ -12,15 +12,12 @@ By the end, you can:
 - connect routine actions with **спочатку**, **потім**, **після цього**, and
   **нарешті**;
 - use time chunks such as **о сьомій**, **о першій**, **пів на восьму**;
-- plan one day with **я планую**, **хочу + infinitive**, **маю + infinitive**,
-  and **мені потрібно + infinitive**;
-- repair unsafe routine and time phrases such as **Сім годин**, **У шість
-  годин**, **Пів сьомої**, **Без десяти шість**, **приймаю душ**, and
-  **Давайте підемо**.
+- recognize tomorrow-plan chunks such as **буду працювати** and **буду вивчати
+  українську** without studying future-tense grammar yet;
+- choose everyday Ukrainian routine phrases such as **беру душ**, **п'ю ліки**,
+  **Котра година?**, and **Ходімо!**.
 
 ## Діалоги
-
-<!-- INJECT_ACTIVITY: act-1 -->
 
 The first scene is a short diary conversation after a normal day. The past-time
 forms appear as ready chunks only. You do not need the grammar of the past tense
@@ -77,7 +74,10 @@ Use **Ходімо!** as one whole invitation chunk. Do not build **Давайт
 підемо!** at A1. For time questions, keep **Котра година?** and **О котрій
 годині?**. Do not ask **Який час?** for clock time.
 
-<!-- INJECT_ACTIVITY: act-2 -->
+Use the same rule for a few daily-routine phrases: learn the natural Ukrainian
+chunk and do not translate word by word from another language.
+
+<!-- INJECT_ACTIVITY: act-4 -->
 
 ## Мій типовий день
 
@@ -131,9 +131,9 @@ hour as an order word: **перша**, **друга**, **сьома**. For actio
 **о/об**: **о сьомій годині**, **о дев'ятій**, **об одинадцятій**. For half
 past, keep the chunk **пів на сьому** or **пів на восьму**.
 
-<!-- INJECT_ACTIVITY: act-3 -->
+<!-- INJECT_ACTIVITY: act-1 -->
 
-<!-- INJECT_ACTIVITY: act-4 -->
+<!-- INJECT_ACTIVITY: act-3 -->
 
 ## Від ранку до вечора
 
@@ -158,10 +158,8 @@ Here is a complete A1 day:
 Потім снідаю.
 О дев'ятій працюю.
 О першій обідаю.
-Після обіду я маю зробити домашнє завдання.
-У середу я планую читати.
-Мені потрібно зробити план.
-Ввечері хочу гуляти, бо буде тепло.
+Після обіду відпочиваю і вчу українську.
+Ввечері вечеряю і дивлюся фільм.
 Нарешті о десятій лягаю спати.
 ```
 
@@ -176,40 +174,15 @@ Support after the Ukrainian lines:
 | **Потім снідаю.** | Then I have breakfast. |
 | **О дев'ятій працюю.** | At nine I work. |
 | **О першій обідаю.** | At one I have lunch. |
-| **Після обіду я маю зробити домашнє завдання.** | After lunch I have to do homework. |
-| **У середу я планую читати.** | On Wednesday I plan to read. |
-| **Мені потрібно зробити план.** | I need to make a plan. |
-| **Ввечері хочу гуляти, бо буде тепло.** | In the evening I want to walk because it will be warm. |
+| **Після обіду відпочиваю і вчу українську.** | After lunch I rest and study Ukrainian. |
+| **Ввечері вечеряю і дивлюся фільм.** | In the evening I have dinner and watch a film. |
 | **Нарешті о десятій лягаю спати.** | Finally, at ten I go to bed. |
 
-For minutes, do not overload yourself. At A1, recognize only the safe shapes
-you have already seen: **чверть на восьму**, **п'ять по восьмій**, **за десять
-сьома**, **десять до шостої**. The time prepositions are **на**, **по**,
-**за**, and **до**. Avoid **без** and **після** for clock time. Say **за
-десять шоста** or **десять до шостої**, not **Без десяти шість**. Say **п'ять
-по восьмій** or **п'ять хвилин на дев'яту**, not **П'ять після восьми**. Keep
-**пів** only inside the safe half-hour chunk: **пів на сьому**.
+For tomorrow, keep only the ready future chunk from the dialogue:
+**буду працювати**, **буду вивчати українську**. The grammar of future tense
+comes later. Today your main job is still the story line: time, sequence, action.
 
-Planning uses light chunks, not a full future-tense lesson:
-
-```text
-Я планую читати.
-Я хочу гуляти.
-Я маю зробити план.
-Мені потрібно зробити домашнє завдання.
-```
-
-Support after the Ukrainian lines:
-
-| Українська | English support |
-| --- | --- |
-| **Я планую читати.** | I plan to read. |
-| **Я хочу гуляти.** | I want to walk. |
-| **Я маю зробити план.** | I have to make a plan. |
-| **Мені потрібно зробити домашнє завдання.** | I need to do homework. |
-
-The dictionary verb is **планувати**, but the useful A1 line is **я планую**.
-For duty, keep the paired chunk **маю / мені потрібно** plus an infinitive.
+<!-- INJECT_ACTIVITY: act-2 -->
 
 ## Підсумок
 
@@ -237,30 +210,17 @@ Support after the Ukrainian lines:
 | **Ввечері читаю.** | In the evening I read. |
 | **Нарешті лягаю спати.** | Finally I go to bed. |
 
-:::caution
-Keep routine time Ukrainian. Routine and clock phrases are often affected by
-Russian-language interference, so do not present those models as acceptable
-spoken options. Avoid **без** for approaching time: not **без п'ятнадцяти
-три**, not **без двадцяти чотири**. Ukrainian uses order words with
-**година**: **друга година**, **п'ята година**, **сьома година**. For half
-past, say **пів на сьому** or **пів на першу**, not **пів сьомої** or
-**пів першої**. Use **Добрий день** and **До побачення**, not **Здрастуйте**
-or **Пока**. In family routine lines, use **тато**, not **папа**.
-
-Тема розпорядку дня та часу є однією з найбільш уражених російськомовною
-інтерференцією. That is why this lesson gives the Ukrainian chunks first and
-does not teach Russian-influenced time models as normal alternatives.
-:::
-
-Write your own six-line day. Use one line for the morning, one for work or
-study, one for lunch, one for weather, one for a plan, and one for the evening:
+Write your own six- or seven-line day. Include the morning, work or study,
+lunch, weather, after lunch, and the evening:
 
 ```text
 Сьогодні середа.
 Вранці я прокидаюся о сьомій.
 Спочатку беру душ і снідаю.
 О дев'ятій я працюю.
-Після обіду я планую читати.
+О першій я обідаю.
+Сьогодні тепло.
+Після обіду я відпочиваю.
 Ввечері лягаю спати о десятій.
 ```
 
@@ -272,5 +232,7 @@ Support after the Ukrainian lines:
 | **Вранці я прокидаюся о сьомій.** | In the morning I wake up at seven. |
 | **Спочатку беру душ і снідаю.** | First I take a shower and have breakfast. |
 | **О дев'ятій я працюю.** | At nine I work. |
-| **Після обіду я планую читати.** | After lunch I plan to read. |
+| **О першій я обідаю.** | At one I have lunch. |
+| **Сьогодні тепло.** | Today it is warm. |
+| **Після обіду я відпочиваю.** | After lunch I rest. |
 | **Ввечері лягаю спати о десятій.** | In the evening I go to bed at ten. |

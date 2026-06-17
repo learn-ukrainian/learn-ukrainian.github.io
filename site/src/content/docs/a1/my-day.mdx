@@ -71,17 +71,12 @@ By the end, you can:
 - connect routine actions with **спочатку**, **потім**, **після цього**, and
   **нарешті**;
 - use time chunks such as **о сьомій**, **о першій**, **пів на восьму**;
-- plan one day with **я планую**, **хочу + infinitive**, **маю + infinitive**,
-  and **мені потрібно + infinitive**;
-- repair unsafe routine and time phrases such as **Сім годин**, **У шість
-  годин**, **Пів сьомої**, **Без десяти шість**, **приймаю душ**, and
-  **Давайте підемо**.
+- recognize tomorrow-plan chunks such as **буду працювати** and **буду вивчати
+  українську** without studying future-tense grammar yet;
+- choose everyday Ukrainian routine phrases such as **беру душ**, **п'ю ліки**,
+  **Котра година?**, and **Ходімо!**.
 
 ## Діалоги
-
-### Parts of the day in a real diary
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ я прокидаюся і снідаю.", "answer": "вранці", "options": ["вранці", "вночі", "після обіду"]}, {"sentence": "___ я працюю з дев'ятої до п'ятої.", "answer": "вдень", "options": ["вдень", "вночі", "вранці"]}, {"sentence": "___ я обідаю о першій.", "answer": "вдень", "options": ["вдень", "вночі", "ввечері"]}, {"sentence": "___ я дивлюся фільм.", "answer": "ввечері", "options": ["ввечері", "вранці", "вночі"]}, {"sentence": "___ я лягаю спати.", "answer": "вночі", "options": ["вночі", "вдень", "вранці"]}, {"sentence": "___ я маю зробити домашнє завдання.", "answer": "після обіду", "options": ["після обіду", "вранці", "пів на восьму"]}]`)} instruction={"Choose the time chunk that makes the diary line natural."} isUkrainian={false} />
 
 The first scene is a short diary conversation after a normal day. The past-time
 forms appear as ready chunks only. You do not need the grammar of the past tense
@@ -138,9 +133,12 @@ Use **Ходімо!** as one whole invitation chunk. Do not build **Давайт
 підемо!** at A1. For time questions, keep **Котра година?** and **О котрій
 годині?**. Do not ask **Який час?** for clock time.
 
-### Put the diary in order
+Use the same rule for a few daily-routine phrases: learn the natural Ukrainian
+chunk and do not translate word by word from another language.
 
-<Order client:only='react' items={JSON.parse(`["О сьомій я прокидаюся.", "Спочатку роблю зарядку.", "Потім снідаю.", "О дев'ятій працюю.", "О першій обідаю.", "Після обіду читаю.", "Ввечері дивлюся фільм.", "Нарешті лягаю спати."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5, 6, 7]`)} instruction={"Put the diary lines from morning to night."} isUkrainian={true} />
+### Типові пари у розпорядку дня
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Вранці я ___.", "answer": "беру душ", "options": ["беру душ", "приймаю душ"]}, {"sentence": "Коли я хворий, я ___.", "answer": "п'ю ліки", "options": ["п'ю ліки", "приймаю ліки"]}, {"sentence": "___ зараз? — Восьма.", "answer": "Котра година", "options": ["Котра година", "Який час"]}, {"sentence": "___ в парк після обіду!", "answer": "Ходімо", "options": ["Ходімо", "Давайте підемо"]}, {"sentence": "О восьмій годині я їм ___.", "answer": "сніданок", "options": ["сніданок", "завтрак"]}, {"sentence": "Мама готує дуже ___ обід.", "answer": "смачний", "options": ["смачний", "вкусний"]}, {"sentence": "Ввечері я хочу ___.", "answer": "поїсти", "options": ["поїсти", "покушати"]}, {"sentence": "О сьомій я ___ і встав.", "answer": "прокинувся", "options": ["прокинувся", "проснувся"]}]`)} instruction={"Обери нормативну українську форму."} isUkrainian={false} />
 
 ## Мій типовий день
 
@@ -194,13 +192,13 @@ hour as an order word: **перша**, **друга**, **сьома**. For actio
 **о/об**: **о сьомій годині**, **о дев'ятій**, **об одинадцятій**. For half
 past, keep the chunk **пів на сьому** or **пів на восьму**.
 
-### Routine action to useful time
+### Дія і час доби
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "прокидаюся", "right": "о сьомій"}, {"left": "роблю зарядку", "right": "спочатку"}, {"left": "снідаю", "right": "вранці"}, {"left": "обідаю", "right": "о першій"}, {"left": "читаю", "right": "після обіду"}, {"left": "вечеряю", "right": "ввечері"}, {"left": "лягаю спати", "right": "вночі"}, {"left": "планую читати", "right": "у середу"}]`)} instruction={"Match each action with a likely time chunk."} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "прокидаюся", "right": "вранці"}, {"left": "снідаю", "right": "вранці"}, {"left": "працюю", "right": "вдень"}, {"left": "обідаю", "right": "вдень"}, {"left": "вечеряю", "right": "ввечері"}, {"left": "дивлюся фільм", "right": "ввечері"}, {"left": "лягаю спати", "right": "вночі"}, {"left": "сплю", "right": "вночі"}]`)} instruction={"З'єднай дію з логічним часом доби."} isUkrainian={false} />
 
-### Planning conversation choices
+### Частина доби
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що ти будеш робити завтра?", "options": [{"text": "Вранці буду працювати.", "correct": true}, {"text": "Вранці я працював учора.", "correct": false}, {"text": "Який час завтра?", "correct": false}], "explanation": "Буду працювати is a ready future chunk."}, {"question": "О котрій ти прокидаєшся?", "options": [{"text": "О сьомій.", "correct": true}, {"text": "Сім годин.", "correct": false}, {"text": "У сім годин.", "correct": false}], "explanation": "Use о + ordinal time chunk."}, {"question": "Хочеш гуляти ввечері?", "options": [{"text": "Так. Ходімо в парк!", "correct": true}, {"text": "Так. Давайте підемо в парк!", "correct": false}, {"text": "Так. Який час парк?", "correct": false}], "explanation": "Ходімо! is the safe A1 invitation chunk."}, {"question": "Яка сьогодні погода?", "options": [{"text": "Сьогодні тепло.", "correct": true}, {"text": "Сьогодні є тепло.", "correct": false}, {"text": "Погода є добре.", "correct": false}], "explanation": "Weather state chunks stay short."}]`)} instruction={"Choose the line that keeps the plan safe and A1-sized."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я п'ю каву ___.", "answer": "вранці", "options": ["вранці", "вночі", "ввечері"]}, {"sentence": "Ми вечеряємо ___.", "answer": "ввечері", "options": ["ввечері", "вранці", "вдень"]}, {"sentence": "Вона працює з дев'ятої до п'ятої ___.", "answer": "вдень", "options": ["вдень", "вночі", "вранці"]}, {"sentence": "Вони гуляють у парку ___.", "answer": "після обіду", "options": ["після обіду", "вночі", "вранці"]}]`)} instruction={"Обери правильну частину доби для речення."} isUkrainian={false} />
 
 ## Від ранку до вечора
 
@@ -225,10 +223,8 @@ Here is a complete A1 day:
 Потім снідаю.
 О дев'ятій працюю.
 О першій обідаю.
-Після обіду я маю зробити домашнє завдання.
-У середу я планую читати.
-Мені потрібно зробити план.
-Ввечері хочу гуляти, бо буде тепло.
+Після обіду відпочиваю і вчу українську.
+Ввечері вечеряю і дивлюся фільм.
 Нарешті о десятій лягаю спати.
 ```
 
@@ -243,40 +239,17 @@ Support after the Ukrainian lines:
 | **Потім снідаю.** | Then I have breakfast. |
 | **О дев'ятій працюю.** | At nine I work. |
 | **О першій обідаю.** | At one I have lunch. |
-| **Після обіду я маю зробити домашнє завдання.** | After lunch I have to do homework. |
-| **У середу я планую читати.** | On Wednesday I plan to read. |
-| **Мені потрібно зробити план.** | I need to make a plan. |
-| **Ввечері хочу гуляти, бо буде тепло.** | In the evening I want to walk because it will be warm. |
+| **Після обіду відпочиваю і вчу українську.** | After lunch I rest and study Ukrainian. |
+| **Ввечері вечеряю і дивлюся фільм.** | In the evening I have dinner and watch a film. |
 | **Нарешті о десятій лягаю спати.** | Finally, at ten I go to bed. |
 
-For minutes, do not overload yourself. At A1, recognize only the safe shapes
-you have already seen: **чверть на восьму**, **п'ять по восьмій**, **за десять
-сьома**, **десять до шостої**. The time prepositions are **на**, **по**,
-**за**, and **до**. Avoid **без** and **після** for clock time. Say **за
-десять шоста** or **десять до шостої**, not **Без десяти шість**. Say **п'ять
-по восьмій** or **п'ять хвилин на дев'яту**, not **П'ять після восьми**. Keep
-**пів** only inside the safe half-hour chunk: **пів на сьому**.
+For tomorrow, keep only the ready future chunk from the dialogue:
+**буду працювати**, **буду вивчати українську**. The grammar of future tense
+comes later. Today your main job is still the story line: time, sequence, action.
 
-Planning uses light chunks, not a full future-tense lesson:
+### Послідовність дня
 
-```text
-Я планую читати.
-Я хочу гуляти.
-Я маю зробити план.
-Мені потрібно зробити домашнє завдання.
-```
-
-Support after the Ukrainian lines:
-
-| Українська | English support |
-| --- | --- |
-| **Я планую читати.** | I plan to read. |
-| **Я хочу гуляти.** | I want to walk. |
-| **Я маю зробити план.** | I have to make a plan. |
-| **Мені потрібно зробити домашнє завдання.** | I need to do homework. |
-
-The dictionary verb is **планувати**, but the useful A1 line is **я планую**.
-For duty, keep the paired chunk **маю / мені потрібно** plus an infinitive.
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ я прокидаюся і вмиваюся.", "answer": "Спочатку", "options": ["Спочатку", "Потім", "Нарешті"]}, {"sentence": "Після того я ___.", "answer": "снідаю", "options": ["снідаю", "вечеряю", "лягаю спати"]}, {"sentence": "Вдень я ___ в офісі.", "answer": "працюю", "options": ["працюю", "прокидаюся", "снідаю"]}, {"sentence": "О першій годині я ___.", "answer": "обідаю", "options": ["обідаю", "вечеряю", "прокидаюся"]}, {"sentence": "___ я читаю книгу або дивлюся фільм.", "answer": "Потім", "options": ["Потім", "Спочатку", "Вранці"]}, {"sentence": "___ я лягаю спати о дванадцятій.", "answer": "Нарешті", "options": ["Нарешті", "Спочатку", "Вдень"]}]`)} instruction={"Обери слово або дію, яка логічно продовжує день."} isUkrainian={false} />
 
 ## 📋 Підсумок
 
@@ -304,30 +277,17 @@ Support after the Ukrainian lines:
 | **Ввечері читаю.** | In the evening I read. |
 | **Нарешті лягаю спати.** | Finally I go to bed. |
 
-:::caution
-Keep routine time Ukrainian. Routine and clock phrases are often affected by
-Russian-language interference, so do not present those models as acceptable
-spoken options. Avoid **без** for approaching time: not **без п'ятнадцяти
-три**, not **без двадцяти чотири**. Ukrainian uses order words with
-**година**: **друга година**, **п'ята година**, **сьома година**. For half
-past, say **пів на сьому** or **пів на першу**, not **пів сьомої** or
-**пів першої**. Use **Добрий день** and **До побачення**, not **Здрастуйте**
-or **Пока**. In family routine lines, use **тато**, not **папа**.
-
-Тема розпорядку дня та часу є однією з найбільш уражених російськомовною
-інтерференцією. That is why this lesson gives the Ukrainian chunks first and
-does not teach Russian-influenced time models as normal alternatives.
-:::
-
-Write your own six-line day. Use one line for the morning, one for work or
-study, one for lunch, one for weather, one for a plan, and one for the evening:
+Write your own six- or seven-line day. Include the morning, work or study,
+lunch, weather, after lunch, and the evening:
 
 ```text
 Сьогодні середа.
 Вранці я прокидаюся о сьомій.
 Спочатку беру душ і снідаю.
 О дев'ятій я працюю.
-Після обіду я планую читати.
+О першій я обідаю.
+Сьогодні тепло.
+Після обіду я відпочиваю.
 Ввечері лягаю спати о десятій.
 ```
 
@@ -339,50 +299,36 @@ Support after the Ukrainian lines:
 | **Вранці я прокидаюся о сьомій.** | In the morning I wake up at seven. |
 | **Спочатку беру душ і снідаю.** | First I take a shower and have breakfast. |
 | **О дев'ятій я працюю.** | At nine I work. |
-| **Після обіду я планую читати.** | After lunch I plan to read. |
+| **О першій я обідаю.** | At one I have lunch. |
+| **Сьогодні тепло.** | Today it is warm. |
+| **Після обіду я відпочиваю.** | After lunch I rest. |
 | **Ввечері лягаю спати о десятій.** | In the evening I go to bed at ten. |
 
 </TabItem>
 <TabItem label="Vocabulary">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"день","translation":"day","pos":"noun","example":"Це мій день.","examples":["day","Це мій день."],"atlas_href":"/lexicon/день/"},{"word":"ранок","translation":"morning","pos":"noun","example":"Ранок починається о сьомій.","examples":["morning","Ранок починається о сьомій."],"atlas_href":"/lexicon/ранок/"},{"word":"вечір","translation":"evening","pos":"noun","example":"Вечір тихий.","examples":["evening","Вечір тихий."],"atlas_href":"/lexicon/вечір/"},{"word":"ніч","translation":"night","pos":"noun","example":"Вночі я сплю.","examples":["night","Вночі я сплю."],"atlas_href":"/lexicon/ніч/"},{"word":"година","translation":"hour; o'clock","pos":"noun","example":"Котра година?","examples":["hour; o'clock","Котра година?"],"atlas_href":"/lexicon/година/"},{"word":"хвилина","translation":"minute","pos":"noun","example":"П'ять хвилин.","examples":["minute","П'ять хвилин."],"atlas_href":"/lexicon/хвилина/"},{"word":"вранці","translation":"in the morning","pos":"adverb","example":"Вранці я снідаю.","examples":["in the morning","Вранці я снідаю."],"atlas_href":"/lexicon/вранці/"},{"word":"вдень","translation":"during the day","pos":"adverb","example":"Вдень я працюю.","examples":["during the day","Вдень я працюю."],"atlas_href":"/lexicon/вдень/"},{"word":"ввечері","translation":"in the evening","pos":"adverb","example":"Ввечері я читаю.","examples":["in the evening","Ввечері я читаю."],"atlas_href":"/lexicon/ввечері/"},{"word":"вночі","translation":"at night","pos":"adverb","example":"Вночі я сплю.","examples":["at night","Вночі я сплю."],"atlas_href":"/lexicon/вночі/"},{"word":"після обіду","translation":"after lunch; in the afternoon","pos":"time chunk","example":"Після обіду я відпочиваю.","examples":["after lunch; in the afternoon","Після обіду я відпочиваю."],"atlas_href":"/lexicon/після-обіду/"},{"word":"спочатку","translation":"first","pos":"sequence word","example":"Спочатку я снідаю.","examples":["first","Спочатку я снідаю."],"atlas_href":"/lexicon/спочатку/"},{"word":"потім","translation":"then","pos":"sequence word","example":"Потім я працюю.","examples":["then","Потім я працюю."],"atlas_href":"/lexicon/потім/"},{"word":"після цього","translation":"after that","pos":"sequence word","example":"Після цього я читаю.","examples":["after that","Після цього я читаю."],"atlas_href":"/lexicon/після-цього/"},{"word":"також","translation":"also","pos":"adverb","example":"Також я вчу українську.","examples":["also","Також я вчу українську."],"atlas_href":"/lexicon/також/"},{"word":"нарешті","translation":"finally","pos":"sequence word","example":"Нарешті я лягаю спати.","examples":["finally","Нарешті я лягаю спати."],"atlas_href":"/lexicon/нарешті/"},{"word":"прокидатися","translation":"to wake up","pos":"verb","example":"Я прокидаюся о сьомій.","examples":["to wake up","Я прокидаюся о сьомій."],"atlas_href":"/lexicon/прокидатися/"},{"word":"вмиватися","translation":"to wash oneself","pos":"verb","example":"Я вмиваюся вранці.","examples":["to wash oneself","Я вмиваюся вранці."],"atlas_href":"/lexicon/вмиватися/"},{"word":"одягатися","translation":"to get dressed","pos":"verb","example":"Я одягаюся.","examples":["to get dressed","Я одягаюся."],"atlas_href":"/lexicon/одягатися/"},{"word":"снідати","translation":"to have breakfast","pos":"verb","example":"Я снідаю вранці.","examples":["to have breakfast","Я снідаю вранці."],"atlas_href":"/lexicon/снідати/"},{"word":"обідати","translation":"to have lunch","pos":"verb","example":"Я обідаю о першій.","examples":["to have lunch","Я обідаю о першій."],"atlas_href":"/lexicon/обідати/"},{"word":"вечеряти","translation":"to have dinner","pos":"verb","example":"Ми вечеряємо ввечері.","examples":["to have dinner","Ми вечеряємо ввечері."],"atlas_href":"/lexicon/вечеряти/"},{"word":"працювати","translation":"to work","pos":"verb","example":"Я працюю вдень.","examples":["to work","Я працюю вдень."],"atlas_href":"/lexicon/працювати/"},{"word":"відпочивати","translation":"to rest","pos":"verb","example":"Після обіду я відпочиваю.","examples":["to rest","Після обіду я відпочиваю."],"atlas_href":"/lexicon/відпочивати/"},{"word":"читати","translation":"to read","pos":"verb","example":"Я читаю книгу.","examples":["to read","Я читаю книгу."],"atlas_href":"/lexicon/читати/"},{"word":"дивитися","translation":"to watch","pos":"verb","example":"Я дивлюся фільм.","examples":["to watch","Я дивлюся фільм."],"atlas_href":"/lexicon/дивитися/"},{"word":"лягати спати","translation":"to go to bed","pos":"phrase","example":"Я лягаю спати о десятій.","examples":["to go to bed","Я лягаю спати о десятій."],"atlas_href":"/lexicon/лягати-спати/"},{"word":"робити зарядку","translation":"to exercise","pos":"phrase","example":"Спочатку роблю зарядку.","examples":["to exercise","Спочатку роблю зарядку."],"atlas_href":"/lexicon/робити-зарядку/"},{"word":"брати душ","translation":"to take a shower","pos":"phrase","example":"Вранці я беру душ.","examples":["to take a shower","Вранці я беру душ."],"atlas_href":"/lexicon/брати-душ/"},{"word":"пити ліки","translation":"to take medicine","pos":"phrase","example":"Я п'ю ліки.","examples":["to take medicine","Я п'ю ліки."],"atlas_href":"/lexicon/пити-ліки/"},{"word":"Котра година?","translation":"What time is it?","pos":"question chunk","example":"Котра година? — Восьма.","examples":["What time is it?","Котра година? — Восьма."],"atlas_href":"/lexicon/котра-година/"},{"word":"О котрій годині?","translation":"At what time?","pos":"question chunk","example":"О котрій годині ти працюєш?","examples":["At what time?","О котрій годині ти працюєш?"],"atlas_href":"/lexicon/о-котрій-годині/"},{"word":"о сьомій","translation":"at seven","pos":"time chunk","example":"О сьомій я прокидаюся.","examples":["at seven","О сьомій я прокидаюся."],"atlas_href":"/lexicon/о-сьомій/"},{"word":"пів на восьму","translation":"half past seven","pos":"time chunk","example":"Зараз пів на восьму.","examples":["half past seven","Зараз пів на восьму."],"atlas_href":"/lexicon/пів-на-восьму/"},{"word":"план","translation":"plan","pos":"noun","example":"Це мій план.","examples":["plan","Це мій план."],"atlas_href":"/lexicon/план/"},{"word":"планувати","translation":"to plan","pos":"verb","example":"Я планую читати.","examples":["to plan","Я планую читати."],"atlas_href":"/lexicon/планувати/"},{"word":"мені потрібно","translation":"I need","pos":"modal chunk","example":"Мені потрібно зробити план.","examples":["I need","Мені потрібно зробити план."],"atlas_href":"/lexicon/мені-потрібно/"},{"word":"я маю","translation":"I have to","pos":"modal chunk","example":"Я маю зробити домашнє завдання.","examples":["I have to","Я маю зробити домашнє завдання."],"atlas_href":"/lexicon/я-маю/"},{"word":"Ходімо!","translation":"Let's go!","pos":"invitation chunk","example":"Ходімо в парк!","examples":["Let's go!","Ходімо в парк!"]},{"word":"типовий","translation":"typical","pos":"adjective","example":"Це мій типовий день.","examples":["typical","Це мій типовий день."],"atlas_href":"/lexicon/типовий/"},{"word":"вільний","translation":"free","pos":"adjective","example":"У мене є вільний час.","examples":["free","У мене є вільний час."],"atlas_href":"/lexicon/вільний/"}]`)} title="Vocabulary" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"день","translation":"day","pos":"noun","example":"Це мій день.","examples":["day","Це мій день."],"atlas_href":"/lexicon/день/"},{"word":"ранок","translation":"morning","pos":"noun","example":"Ранок починається о сьомій.","examples":["morning","Ранок починається о сьомій."],"atlas_href":"/lexicon/ранок/"},{"word":"вечір","translation":"evening","pos":"noun","example":"Вечір тихий.","examples":["evening","Вечір тихий."],"atlas_href":"/lexicon/вечір/"},{"word":"ніч","translation":"night","pos":"noun","example":"Вночі я сплю.","examples":["night","Вночі я сплю."],"atlas_href":"/lexicon/ніч/"},{"word":"година","translation":"hour; o'clock","pos":"noun","example":"Котра година?","examples":["hour; o'clock","Котра година?"],"atlas_href":"/lexicon/година/"},{"word":"вранці","translation":"in the morning","pos":"adverb","example":"Вранці я снідаю.","examples":["in the morning","Вранці я снідаю."],"atlas_href":"/lexicon/вранці/"},{"word":"вдень","translation":"during the day","pos":"adverb","example":"Вдень я працюю.","examples":["during the day","Вдень я працюю."],"atlas_href":"/lexicon/вдень/"},{"word":"ввечері","translation":"in the evening","pos":"adverb","example":"Ввечері я читаю.","examples":["in the evening","Ввечері я читаю."],"atlas_href":"/lexicon/ввечері/"},{"word":"вночі","translation":"at night","pos":"adverb","example":"Вночі я сплю.","examples":["at night","Вночі я сплю."],"atlas_href":"/lexicon/вночі/"},{"word":"після обіду","translation":"after lunch; in the afternoon","pos":"time chunk","example":"Після обіду я відпочиваю.","examples":["after lunch; in the afternoon","Після обіду я відпочиваю."],"atlas_href":"/lexicon/після-обіду/"},{"word":"після","translation":"after","pos":"preposition","example":"Після обіду я читаю.","examples":["after","Після обіду я читаю."]},{"word":"спочатку","translation":"first","pos":"sequence word","example":"Спочатку я снідаю.","examples":["first","Спочатку я снідаю."],"atlas_href":"/lexicon/спочатку/"},{"word":"потім","translation":"then","pos":"sequence word","example":"Потім я працюю.","examples":["then","Потім я працюю."],"atlas_href":"/lexicon/потім/"},{"word":"після цього","translation":"after that","pos":"sequence word","example":"Після цього я читаю.","examples":["after that","Після цього я читаю."],"atlas_href":"/lexicon/після-цього/"},{"word":"також","translation":"also","pos":"adverb","example":"Також я вчу українську.","examples":["also","Також я вчу українську."],"atlas_href":"/lexicon/також/"},{"word":"нарешті","translation":"finally","pos":"sequence word","example":"Нарешті я лягаю спати.","examples":["finally","Нарешті я лягаю спати."],"atlas_href":"/lexicon/нарешті/"},{"word":"прокидатися","translation":"to wake up","pos":"verb","example":"Я прокидаюся о сьомій.","examples":["to wake up","Я прокидаюся о сьомій."],"atlas_href":"/lexicon/прокидатися/"},{"word":"вмиватися","translation":"to wash oneself","pos":"verb","example":"Я вмиваюся вранці.","examples":["to wash oneself","Я вмиваюся вранці."],"atlas_href":"/lexicon/вмиватися/"},{"word":"одягатися","translation":"to get dressed","pos":"verb","example":"Я одягаюся.","examples":["to get dressed","Я одягаюся."],"atlas_href":"/lexicon/одягатися/"},{"word":"снідати","translation":"to have breakfast","pos":"verb","example":"Я снідаю вранці.","examples":["to have breakfast","Я снідаю вранці."],"atlas_href":"/lexicon/снідати/"},{"word":"обідати","translation":"to have lunch","pos":"verb","example":"Я обідаю о першій.","examples":["to have lunch","Я обідаю о першій."],"atlas_href":"/lexicon/обідати/"},{"word":"вечеряти","translation":"to have dinner","pos":"verb","example":"Ми вечеряємо ввечері.","examples":["to have dinner","Ми вечеряємо ввечері."],"atlas_href":"/lexicon/вечеряти/"},{"word":"працювати","translation":"to work","pos":"verb","example":"Я працюю вдень.","examples":["to work","Я працюю вдень."],"atlas_href":"/lexicon/працювати/"},{"word":"відпочивати","translation":"to rest","pos":"verb","example":"Після обіду я відпочиваю.","examples":["to rest","Після обіду я відпочиваю."],"atlas_href":"/lexicon/відпочивати/"},{"word":"читати","translation":"to read","pos":"verb","example":"Я читаю книгу.","examples":["to read","Я читаю книгу."],"atlas_href":"/lexicon/читати/"},{"word":"дивитися","translation":"to watch","pos":"verb","example":"Я дивлюся фільм.","examples":["to watch","Я дивлюся фільм."],"atlas_href":"/lexicon/дивитися/"},{"word":"лягати спати","translation":"to go to bed","pos":"phrase","example":"Я лягаю спати о десятій.","examples":["to go to bed","Я лягаю спати о десятій."],"atlas_href":"/lexicon/лягати-спати/"},{"word":"робити зарядку","translation":"to exercise","pos":"phrase","example":"Спочатку роблю зарядку.","examples":["to exercise","Спочатку роблю зарядку."],"atlas_href":"/lexicon/робити-зарядку/"},{"word":"брати душ","translation":"to take a shower","pos":"phrase","example":"Вранці я беру душ.","examples":["to take a shower","Вранці я беру душ."],"atlas_href":"/lexicon/брати-душ/"},{"word":"пити ліки","translation":"to take medicine","pos":"phrase","example":"Я п'ю ліки.","examples":["to take medicine","Я п'ю ліки."],"atlas_href":"/lexicon/пити-ліки/"},{"word":"Котра година?","translation":"What time is it?","pos":"question chunk","example":"Котра година? — Восьма.","examples":["What time is it?","Котра година? — Восьма."],"atlas_href":"/lexicon/котра-година/"},{"word":"О котрій годині?","translation":"At what time?","pos":"question chunk","example":"О котрій годині ти працюєш?","examples":["At what time?","О котрій годині ти працюєш?"],"atlas_href":"/lexicon/о-котрій-годині/"},{"word":"о сьомій","translation":"at seven","pos":"time chunk","example":"О сьомій я прокидаюся.","examples":["at seven","О сьомій я прокидаюся."],"atlas_href":"/lexicon/о-сьомій/"},{"word":"пів на восьму","translation":"half past seven","pos":"time chunk","example":"Зараз пів на восьму.","examples":["half past seven","Зараз пів на восьму."],"atlas_href":"/lexicon/пів-на-восьму/"},{"word":"Ходімо!","translation":"Let's go!","pos":"invitation chunk","example":"Ходімо в парк!","examples":["Let's go!","Ходімо в парк!"]},{"word":"типовий","translation":"typical","pos":"adjective","example":"Це мій типовий день.","examples":["typical","Це мій типовий день."],"atlas_href":"/lexicon/типовий/"},{"word":"вільний","translation":"free","pos":"adjective","example":"У мене є вільний час.","examples":["free","У мене є вільний час."],"atlas_href":"/lexicon/вільний/"}]`)} title="Vocabulary" />
 
-<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"день","back":"day"},{"front":"ранок","back":"morning"},{"front":"вечір","back":"evening"},{"front":"ніч","back":"night"},{"front":"година","back":"hour; o'clock"},{"front":"хвилина","back":"minute"},{"front":"вранці","back":"in the morning"},{"front":"вдень","back":"during the day"},{"front":"ввечері","back":"in the evening"},{"front":"вночі","back":"at night"},{"front":"після обіду","back":"after lunch; in the afternoon"},{"front":"спочатку","back":"first"},{"front":"потім","back":"then"},{"front":"після цього","back":"after that"},{"front":"також","back":"also"},{"front":"нарешті","back":"finally"},{"front":"прокидатися","back":"to wake up"},{"front":"вмиватися","back":"to wash oneself"},{"front":"одягатися","back":"to get dressed"},{"front":"снідати","back":"to have breakfast"},{"front":"обідати","back":"to have lunch"},{"front":"вечеряти","back":"to have dinner"},{"front":"працювати","back":"to work"},{"front":"відпочивати","back":"to rest"},{"front":"читати","back":"to read"},{"front":"дивитися","back":"to watch"},{"front":"лягати спати","back":"to go to bed"},{"front":"робити зарядку","back":"to exercise"},{"front":"брати душ","back":"to take a shower"},{"front":"пити ліки","back":"to take medicine"},{"front":"Котра година?","back":"What time is it?"},{"front":"О котрій годині?","back":"At what time?"},{"front":"о сьомій","back":"at seven"},{"front":"пів на восьму","back":"half past seven"},{"front":"план","back":"plan"},{"front":"планувати","back":"to plan"},{"front":"мені потрібно","back":"I need"},{"front":"я маю","back":"I have to"},{"front":"Ходімо!","back":"Let's go!"},{"front":"типовий","back":"typical"},{"front":"вільний","back":"free"}]`)} />
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"день","back":"day"},{"front":"ранок","back":"morning"},{"front":"вечір","back":"evening"},{"front":"ніч","back":"night"},{"front":"година","back":"hour; o'clock"},{"front":"вранці","back":"in the morning"},{"front":"вдень","back":"during the day"},{"front":"ввечері","back":"in the evening"},{"front":"вночі","back":"at night"},{"front":"після обіду","back":"after lunch; in the afternoon"},{"front":"після","back":"after"},{"front":"спочатку","back":"first"},{"front":"потім","back":"then"},{"front":"після цього","back":"after that"},{"front":"також","back":"also"},{"front":"нарешті","back":"finally"},{"front":"прокидатися","back":"to wake up"},{"front":"вмиватися","back":"to wash oneself"},{"front":"одягатися","back":"to get dressed"},{"front":"снідати","back":"to have breakfast"},{"front":"обідати","back":"to have lunch"},{"front":"вечеряти","back":"to have dinner"},{"front":"працювати","back":"to work"},{"front":"відпочивати","back":"to rest"},{"front":"читати","back":"to read"},{"front":"дивитися","back":"to watch"},{"front":"лягати спати","back":"to go to bed"},{"front":"робити зарядку","back":"to exercise"},{"front":"брати душ","back":"to take a shower"},{"front":"пити ліки","back":"to take medicine"},{"front":"Котра година?","back":"What time is it?"},{"front":"О котрій годині?","back":"At what time?"},{"front":"о сьомій","back":"at seven"},{"front":"пів на восьму","back":"half past seven"},{"front":"Ходімо!","back":"Let's go!"},{"front":"типовий","back":"typical"},{"front":"вільний","back":"free"}]`)} />
 
 </TabItem>
 <TabItem label="Activities">
 
-### Parts of the day in a real diary
-
-*(see lesson, §Діалоги)*
-
-### Put the diary in order
-
-*(see lesson, §Діалоги)*
-
-### Routine action to useful time
+### Дія і час доби
 
 *(see lesson, §Мій типовий день)*
 
-### Planning conversation choices
+### Послідовність дня
+
+*(see lesson, §Від ранку до вечора)*
+
+### Частина доби
 
 *(see lesson, §Мій типовий день)*
 
-### Day shelves
+### Типові пари у розпорядку дня
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Morning": ["вранці", "я прокидаюся", "роблю зарядку", "снідаю"], "Day and afternoon": ["вдень", "о першій", "обідаю", "після обіду"], "Evening and night": ["ввечері", "вечеряю", "вночі", "лягаю спати"], "Planning chunks": ["я планую", "хочу читати", "маю зробити", "мені потрібно"]}`)} instruction={"Sort each chunk onto the shelf where it belongs."} isUkrainian={false} />
-
-### Build connected day lines
-
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Вранці / я / прокидаюся", "answer": "Вранці я прокидаюся"}, {"jumbled": "Спочатку / я / снідаю", "answer": "Спочатку я снідаю"}, {"jumbled": "О / першій / я / обідаю", "answer": "О першій я обідаю"}, {"jumbled": "Після / обіду / я / читаю", "answer": "Після обіду я читаю"}, {"jumbled": "У / середу / я / планую / читати", "answer": "У середу я планую читати"}, {"jumbled": "Нарешті / я / лягаю / спати", "answer": "Нарешті я лягаю спати"}]`)} instruction={"Put the words in a safe A1 order."} />
-
-### Repair clock and birthday traps
-
-<ErrorCorrection client:only='react' instruction="Choose the safe Ukrainian repair." items={JSON.parse(`[{"sentence": "Сім годин. (Seven o'clock)", "errorWord": "Сім годин", "correctForm": "Сьома година.", "options": ["Сьома година.", "Сім годин.", "Сьомий година."], "explanation": "For clock time, use the feminine ordinal hour."}, {"sentence": "У шість годин. (At six o'clock)", "errorWord": "У шість годин", "correctForm": "О шостій (годині).", "options": ["О шостій (годині).", "У шість годин.", "На шість година."], "explanation": "Action time uses о/об plus the time chunk."}, {"sentence": "Пів сьомої. (Half past six)", "errorWord": "Пів сьомої", "correctForm": "Пів на сьому.", "options": ["Пів на сьому.", "Пів сьомої.", "Половина сьома."], "explanation": "Use пів на + next hour."}, {"sentence": "Без десяти шість. (Ten to six)", "errorWord": "Без десяти шість", "correctForm": "За десять шоста.", "options": ["За десять шоста.", "Десять до шостої.", "Без десяти шість."], "explanation": "Use за or до, not без."}, {"sentence": "Моє день народження. (My birthday)", "errorWord": "Моє", "correctForm": "Мій день народження.", "options": ["Мій день народження.", "Моє день народження.", "Моя день народження."], "explanation": "День is masculine, so use мій."}, {"sentence": "П'ять після восьми. (Five past eight)", "errorWord": "після", "correctForm": "П'ять по восьмій.", "options": ["П'ять по восьмій.", "П'ять хвилин на дев'яту.", "П'ять після восьми."], "explanation": "Use по or на for this clock phrase, not після."}]`)} isUkrainian={false} />
-
-### Repair routine Ukrainian
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Вранці я ___.", "answer": "беру душ", "options": ["беру душ", "приймаю душ", "маю душ"]}, {"sentence": "Коли я хворий, я ___.", "answer": "п'ю ліки", "options": ["п'ю ліки", "приймаю ліки", "беру ліки"]}, {"sentence": "___ зараз? — Восьма.", "answer": "Котра година", "options": ["Котра година", "Який час", "Скільки години"]}, {"sentence": "___ в парк після обіду!", "answer": "Ходімо", "options": ["Ходімо", "Давайте підемо", "Пішли давайте"]}, {"sentence": "О восьмій годині я їм ___.", "answer": "сніданок", "options": ["сніданок", "завтрак", "ранкову їжу"]}, {"sentence": "Мама готує дуже ___ обід.", "answer": "смачний", "options": ["смачний", "вкусний", "смаковий"]}, {"sentence": "Ввечері я хочу ___.", "answer": "поїсти", "options": ["поїсти", "покушати", "їстися"]}, {"sentence": "О сьомій я ___ і встав.", "answer": "прокинувся", "options": ["прокинувся", "проснувся", "прокидав"]}]`)} instruction={"Choose the safe routine word or chunk."} isUkrainian={false} />
+*(see lesson, §Діалоги)*
 
 </TabItem>
 <TabItem label="Resources">
@@ -391,7 +337,6 @@ Support after the Ukrainian lines:
 
 **📝 Articles:**
 - 📄 [Daily Routines](https://thelanguages.com/learn/ukrainian/foundations/vocabulary/4/) — Learner-safe A1 daily-routine vocabulary with simple Ukrainian example sentences.
-- 📄 [Dative Pronouns and Подобатися](https://opentext.ku.edu/dobraforma/chapter/15-1/) — Useful follow-up for dative chunks such as мені потрібно.
 - 📄 [Котра година? Time Vocabulary in Ukrainian](https://www.ukrainianlessons.com/grammar-time/) — Follow-up reference for Ukrainian clock-time chunks used in a daily schedule.
 :::
 
