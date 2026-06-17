@@ -14,6 +14,18 @@
   translation: once, sometime
   pos: adverb
   example: "Ми колись уже говорили про це."
+- word: якось
+  translation: somehow, once
+  pos: adverb
+  example: "Ми якось уже зустрічалися біля університету."
+- word: чомусь
+  translation: for some reason
+  pos: adverb
+  example: "Чомусь він не відповідає."
+- word: чийсь
+  translation: someone's
+  pos: pronoun
+  example: "На столі лежить чийсь телефон."
 - word: хто-небудь
   translation: anyone, someone at all
   pos: pronoun
@@ -30,14 +42,30 @@
   translation: anything, whatever
   pos: pronoun
   example: "Я готовий обговорити будь-що."
+- word: будь-де
+  translation: anywhere
+  pos: adverb
+  example: "Улітку можна гуляти будь-де."
+- word: будь-коли
+  translation: anytime
+  pos: adverb
+  example: "Цей квиток можна купити будь-коли до вечора."
 - word: дехто
   translation: some people
   pos: pronoun
   example: "Дехто хоче більше практики."
+- word: дещо
+  translation: something, somewhat
+  pos: pronoun
+  example: "У цьому тексті є дещо цікаве."
 - word: деякий
   translation: some, certain
   pos: pronoun
   example: "Деякі студенти прийшли раніше."
+- word: деколи
+  translation: sometimes
+  pos: adverb
+  example: "Деколи ми повертаємося до старих правил."
 - word: абияк
   translation: carelessly, anyhow
   pos: adverb
@@ -46,6 +74,14 @@
   translation: just anyone, any random person
   pos: pronoun
   example: "Не довіряй документи абикому."
+- word: абикому
+  translation: dative case of абихто; to just anyone
+  pos: pronoun
+  example: "Не віддавай ключі абикому."
+- word: абиде
+  translation: just anywhere, in any random place
+  pos: adverb
+  example: "Не залишай документи абиде."
 - word: ніхто
   translation: nobody
   pos: pronoun
@@ -66,10 +102,22 @@
   translation: never
   pos: adverb
   example: "Вона ніколи не запізнюється."
+- word: ніяк
+  translation: in no way, not at all
+  pos: adverb
+  example: "Я ніяк не можу знайти ключі."
 - word: нікому
   translation: to nobody
   pos: pronoun
   example: "Я нікому не телефонував."
+- word: нічий
+  translation: nobody's, belonging to nobody
+  pos: pronoun
+  example: "Це нічий велосипед."
+- word: ніякий
+  translation: no, not any
+  pos: pronoun
+  example: "Вона не дала ніякої відповіді."
 - word: ні з ким
   translation: with nobody
   pos: phrase
