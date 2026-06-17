@@ -5,6 +5,29 @@
 > lit · oes · ruth). Author: Claude folk-track driver. This is the load-bearing spec —
 > a fresh session executes from here.
 
+## 0. Core principle — AGENTS IN TANDEM > the best solo model (user 2026-06-17)
+
+> *"Agents working in tandem surpass the most advanced LLM model. We have to stick to this."*
+> Proven in-house this very session: Codex (a different model) found **3 real holes** in the
+> liveness gate that my own (Claude) review missed. Tandem catches what solo cannot.
+
+This is the methodology's spine, not a nicety. It applies in **three** concrete ways:
+
+1. **Writing = ensemble bake-off.** Multiple fleet writers (claude / codex / agy / cursor /
+   grok-build) draft the same module/wiki; the best advances (or we merge best-of). Never a
+   single writer for content that must be beautiful.
+2. **Verification = cross-model, adversarial.** Every module/finding is checked by a
+   *different* model than wrote it (deepseek high-volume; codex green-team). Self-review is
+   the weakest link; the `SELF_REVIEW_DETECTED` gate already forbids same-model review.
+3. **The gate itself = a model PANEL, not one reviewer.** ← This is the key insight: the
+   subjective dims (beauty/engagement/pedagogy) were demoted in May 2026 because a *single*
+   reviewer scored them too noisily. **A panel (e.g. deepseek + codex + agy + claude) scoring
+   each dim, aggregated by median/majority, collapses that variance** — making the SOLE-judge
+   gate trustworthy precisely because no single model is the judge. Tandem solves the noise
+   that solo created. Build the gate this way.
+
+Everything below serves this principle.
+
 ## 1. Why this exists
 
 `verify_shippable` only proves *machine correctness* (renders, valid VESUM words, real
@@ -89,9 +112,13 @@ Touchpoints:
   rubric; SHARPEN `engagement`→ enjoyment / "fall in love with the heritage"; SHARPEN
   `pedagogical`→ the advanced-immersion seminar learner. The reviewer MUST emit a `beauty`
   score or the dim is silently skipped by `aggregate_review`.
-- **Noise mitigation (sole judge!):** rubric must give concrete 8-vs-6 anchors per dim;
-  consider median-of-N sampling for the subjective dims; log per-dim evidence quotes
-  (falsifiable) as already required by the reviewer-evidence gate.
+- **Noise mitigation (sole judge!) — via §0 tandem panel, not a single reviewer:** the
+  subjective dims (beauty/engagement/pedagogy) are scored by a **PANEL of models** (deepseek
+  + codex + agy + claude) and aggregated by **median/majority** — this is what makes a SOLE
+  autonomous judge trustworthy and is the direct fix for the May 2026 single-reviewer noise
+  that demoted these dims. Each panellist gives concrete 8-vs-6 anchors + a falsifiable
+  evidence quote (already required by the reviewer-evidence gate). Implementation: the QG
+  review step fans out to N models and `aggregate_review` consumes the per-dim median.
 - **Tests:** `tests/test_threshold_source_of_truth.py` (QG_DIMS count), any dim-count
   asserts, + new tests: seminar profile gates on beauty/engagement/pedagogy <8; core
   profile does NOT; beauty floor present on every level.
