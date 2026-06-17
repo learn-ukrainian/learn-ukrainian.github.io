@@ -83,3 +83,28 @@
   translation: vocative case
   pos: phrase
   example: "Тарасе - це кличний відмінок."
+- word: квиток
+  translation: ticket
+  pos: noun
+  gender: m
+  example: "Без квитків подорож може стати нервовою."
+- word: огляд
+  translation: checkup, examination
+  pos: noun
+  gender: m
+  example: "Коли мені прийти на огляд?"
+- word: прикраса
+  translation: decoration
+  pos: noun
+  gender: f
+  example: "Олена може допомогти з прикрасами."
+- word: валіза
+  translation: suitcase
+  pos: noun
+  gender: f
+  example: "Валізи беремо великі чи малі?"
+- word: адміністратор
+  translation: administrator, front desk manager
+  pos: noun
+  gender: m
+  example: "Ми домовимося з адміністратором кафе."
