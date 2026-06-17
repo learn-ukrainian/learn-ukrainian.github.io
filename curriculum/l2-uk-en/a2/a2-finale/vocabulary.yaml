@@ -42,10 +42,22 @@
   translation: to recommend
   pos: verb
   example: "Що ви порадите на десерт?"
+- word: маршрутка
+  translation: minibus
+  pos: noun
+  example: "Маршрутка зручна, якщо трамвай не їде до готелю."
 - word: будівля
   translation: building
   pos: noun
   example: "Що це за будівля?"
+- word: прогулянка
+  translation: walk, stroll
+  pos: noun
+  example: "Коротка прогулянка допомагає побачити центр."
+- word: дізнатися
+  translation: to find out, to learn
+  pos: verb
+  example: "Я хочу дізнатися, коли відкривається музей."
 - word: листівка
   translation: postcard
   pos: noun
@@ -74,6 +86,14 @@
   translation: to arrange, agree
   pos: verb
   example: "Увечері ми домовилися про завтра."
+- word: підсумок
+  translation: summary
+  pos: noun
+  example: "Підсумок дня показує, що вже виходить добре."
+- word: вітаємо
+  translation: congratulations
+  pos: interjection
+  example: "Вітаємо: ви завершили рівень A2."
 - word: готовий
   translation: ready
   pos: adjective
