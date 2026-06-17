@@ -65,21 +65,21 @@ inline:
     title: Питання і відповідь
     instruction: Зіставте прохання або ввічливу репліку з природною відповіддю.
     pairs:
-      - left: "Help me, please."
+      - left: "прохання про допомогу"
         right: "Допоможіть мені, будь ласка."
-      - left: "Show me the form."
+      - left: "прохання показати бланк"
         right: "Покажіть мені бланк."
-      - left: "Explain it to me."
+      - left: "прохання пояснити"
         right: "Поясніть мені."
-      - left: "Thank you."
+      - left: "подяка працівникові"
         right: "Дякую вам."
-      - left: "Address to sister Olena"
+      - left: "адресний рядок: сестра Олена"
         right: "Дорогій сестрі Олені"
-      - left: "Send the letter to a friend"
+      - left: "лист другові"
         right: "Надішліть листа другові"
-      - left: "Give the parcel to the clerk"
+      - left: "посилка працівниці"
         right: "Дайте посилку працівниці"
-      - left: "Write to the recipient"
+      - left: "повідомлення одержувачеві"
         right: "Напишіть одержувачеві коротке повідомлення"
   - id: act-3
     type: quiz
@@ -187,7 +187,7 @@ workbook:
         explanation: "Це правильна адресна форма."
       - statement: "Шановний Андрій."
         answer: false
-        explanation: "У звертанні для адреси краще давальний: Андрію."
+        explanation: "В адресному рядку потрібен давальний: Шановному Андрію."
       - statement: "Напишіть одержувачеві коротке повідомлення."
         answer: true
         explanation: "Одержувачеві тут у давальному."
