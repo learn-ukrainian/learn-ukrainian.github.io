@@ -2,14 +2,14 @@
   role: article
   source_ref: "docs/resources/external_resources.yaml: a2-because-and-although"
   url: "https://www.ukrainianlessons.com/ukrainian-conjunctions/"
-  notes: "Learner-facing overview of common Ukrainian conjunctions, useful after this lesson."
+  notes: "Огляд поширених українських сполучників для повторення після уроку."
 - title: "Talk Ukrainian: Ukrainian conjunctions"
   role: article
   source_ref: "docs/resources/external_resources.yaml: a2-because-and-although"
   url: "https://talkukrainian.com/conjunctions/"
-  notes: "Concise grammar reference for coordinating and subordinating conjunctions."
+  notes: "Коротка граматична довідка про сурядні й підрядні сполучники."
 - title: "ULP: Ukrainian Conjunctions Guide"
   role: article
   source_ref: "docs/resources/external_resources.yaml: a2-because-and-although"
   url: "https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/"
-  notes: "Longer reference for learners who want more examples beyond A2."
+  notes: "Довший довідник із додатковими прикладами поза межами A2."
