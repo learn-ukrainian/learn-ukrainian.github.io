@@ -10,10 +10,22 @@
   translation: compound future
   pos: noun
   example: "Складений майбутній має форму буду + інфінітив."
+- word: доконаний вид
+  translation: perfective aspect
+  pos: noun
+  example: "Доконаний вид часто показує готовий результат."
+- word: недоконаний вид
+  translation: imperfective aspect
+  pos: noun
+  example: "Недоконаний вид показує процес або повторення."
 - word: інфінітив
   translation: infinitive
   pos: noun
   example: "У фразі буду читати слово читати - інфінітив."
+- word: буду
+  translation: I will, auxiliary
+  pos: verb
+  example: "Завтра я буду працювати вдома."
 - word: обіцянка
   translation: promise
   pos: noun
@@ -34,6 +46,22 @@
   translation: result
   pos: noun
   example: "Напишу листа показує результат."
+- word: межа
+  translation: boundary, endpoint
+  pos: noun
+  example: "Доконане дієслово має межу дії."
+- word: повторення
+  translation: repetition
+  pos: noun
+  example: "Слово щодня часто показує повторення."
+- word: тривалість
+  translation: duration
+  pos: noun
+  example: "Дві години показує тривалість."
+- word: новорічна обіцянка
+  translation: New Year's resolution
+  pos: phrase
+  example: "Новорічна обіцянка має бути реалістичною."
 - word: завтра
   translation: tomorrow
   pos: adv
@@ -46,22 +74,46 @@
   translation: next week
   pos: phrase
   example: "Наступного тижня вони будуть вчитися онлайн."
+- word: до весни
+  translation: by spring
+  pos: phrase
+  example: "До весни я напишу перший розділ."
+- word: щодня
+  translation: every day
+  pos: adv
+  example: "Я буду вчити слова щодня."
 - word: написати / напишу
   translation: to write, I will write
   pos: future form
   example: "Я напишу короткий лист."
+- word: писати / буду писати
+  translation: to write, I will be writing
+  pos: future form
+  example: "Я буду писати листа годину."
 - word: зробити / зроблю
   translation: to do, I will do
   pos: future form
   example: "Я зроблю вправу після перерви."
+- word: робити / буду робити
+  translation: to do, I will be doing
+  pos: future form
+  example: "Я буду робити вправи щодня."
 - word: сказати / скажу
   translation: to say, I will say
   pos: future form
   example: "Я скажу це українською."
+- word: говорити / будемо говорити
+  translation: to talk, we will be talking
+  pos: future form
+  example: "Ми будемо говорити про подорож."
 - word: прочитати / прочитаю
   translation: to read through, I will read
   pos: future form
   example: "Я прочитаю статтю до вечора."
+- word: читати / буду читати
+  translation: to read, I will be reading
+  pos: future form
+  example: "Увечері я буду читати книжку."
 - word: подзвонити / подзвоню
   translation: to call, I will call
   pos: future form
@@ -70,11 +122,7 @@
   translation: to buy, I will buy
   pos: future form
   example: "Ми купимо квитки сьогодні."
-- word: буду працювати
-  translation: I will be working
-  pos: phrase
-  example: "Завтра я буду працювати вдома."
-- word: будемо говорити
-  translation: we will be talking
-  pos: phrase
-  example: "Ми будемо говорити про подорож."
+- word: складати / скласти іспит
+  translation: to take/pass an exam
+  pos: verb pair
+  example: "Дмитро буде готуватися і складе іспит."
