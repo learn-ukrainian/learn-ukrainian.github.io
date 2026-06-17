@@ -78,3 +78,23 @@
   translation: to call
   pos: verb pair
   example: "Коли я вечеряв, мені подзвонила мама."
+- word: шукати / знайти
+  translation: to look for, to find
+  pos: verb pair
+  example: "Ми довго шукали ключі і нарешті знайшли їх."
+- word: купувати / купити
+  translation: to buy
+  pos: verb pair
+  example: "Вони купували квитки онлайн і купили два місця."
+- word: відкривати / відкрити
+  translation: to open
+  pos: verb pair
+  example: "Він відкривав двері обережно і нарешті відкрив їх."
+- word: закінчувати / закінчити
+  translation: to finish
+  pos: verb pair
+  example: "Я закінчував звіт і закінчив його перед вечерею."
+- word: слухати / послухати
+  translation: to listen
+  pos: verb pair
+  example: "Ми слухали дощ, а потім послухали короткий подкаст."
