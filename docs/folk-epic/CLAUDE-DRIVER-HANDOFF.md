@@ -85,7 +85,16 @@
 > - Proper design: a `v7_build.py` mode/flag (e.g. `--enhance` / `--from-phase=llm_qg`) OR a small
 >   `scripts/build/enhance_module.py` that loads the curated module dir, runs `python_qg` (curated passes),
 >   then `run_llm_qg_with_corrections(...)` (the fixed loop), writes `llm_qg.json` + correction loop. Reuse
->   existing plumbing; do NOT re-run the writer. Investigate v7_build resume internals first (#0.1).
+>   existing plumbing; do NOT re-run the writer.
+>   - **Resume internals ALREADY investigated (S49):** the "delete llm_qg.json + resume" shortcut does NOT
+>     work — `v7_build._phase_artifact_passes` (v7_build.py:1383) gates the `writer` skip on the FULL artifact
+>     set (`module.md`,`activities.yaml`,`vocabulary.yaml`,`resources.yaml`,**`writer_output.raw.md`**,
+>     **`implementation_map.json`**) + `python_qg` skip on a passing `python_qg.json` + the wiki-gate JSONs.
+>     Curated modules lack most of these (hand-curated, not clean-build output), so resume would RE-RUN the
+>     writer = the rebuild we're avoiding. So: build a real entry point; do NOT fabricate artifacts. It must
+>     supply `run_llm_qg_with_corrections`'s args (plan, plan_content, module_dir, writer, llm_qg_runner,
+>     profile, wiki_manifest, implementation_map) — see how `v7_build._run` constructs them at the `llm_qg`
+>     phase (v7_build.py:~1908-1928) and lift that wiring.
 > - Then run it on curated kalendarna (via Monitor/bg — NOT a delegate dispatch). Converged (all 4 terminal
 >   dims ≥ floors) → **merge PR #3480** (squash), close #3459 (superseded). Then enhance the other 5 modules.
 >
