@@ -1,273 +1,266 @@
 # Дієслова другої групи
 
-Group Two is your second present-tense verb pattern. The clearest beginner
-signal is the **вони** form: Group One often ends in **-ють** or **-уть**,
-while Group Two often ends in **-ять** or **-ать**. Today you will use a few
-safe Group Two verbs, then compare them with the Group One forms from the last
-lesson.
+In M16, you learned one present-tense verb pattern: **читати -> читаю,
+читаєш, читає, читаємо, читаєте, читають**. Today you add the second pattern:
+**говорити -> говорю, говориш, говорить, говоримо, говорите, говорять**.
+
+The big beginner signal is small:
+
+- Group One often has **ти ... -єш** and **вони ... -ють**: **ти читаєш**,
+  **вони читають**.
+- Group Two often has **ти ... -иш** and **вони ... -ять/-ать**:
+  **ти говориш**, **вони говорять**, **вони бачать**.
 
 By the end, you can:
 
-- say **Я говорю**, **Ти говориш**, and **Він говорить**;
-- use **робити**, **бачити**, **вчити**, **просити**, and **ходити** in short chunks;
-- recognize **вони говорять**, **вони роблять**, **вони бачать**, and **вони ходять**;
-- compare **І дієвідміна** and **ІІ дієвідміна** by the **вони** ending;
-- keep tricky first-person forms such as **роблю** and **ходжу** as ready chunks;
-- recognize exceptions such as **спати**, **дати**, and **їсти** without making them active grammar yet.
+- conjugate **говорити** in the present tense;
+- use **говорити**, **бачити**, **робити**, **вчити**, **просити**, and
+  **ходити** in short sentences;
+- compare **І дієвідміна** and **ІІ дієвідміна** by the **ти** and **вони**
+  forms;
+- keep first-person chunks such as **роблю**, **ходжу**, and **прошу** ready;
+- recognize **дивлюся** and **вчуся** as useful preview forms with **-ся**.
 
 ## Діалоги
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
-Marta and Oleh are still studying. This time they talk about speaking,
-seeing, doing, asking, and walking.
+Тарас and Микола are at the gym. They do simple exercises, rest, and talk
+about what they can say in Ukrainian.
 
 ```text
-Марта: Олеже, ти говориш українською?
-Олег: Так, я говорю українською.
-Марта: Анна говорить англійською?
-Олег: Так, вона говорить англійською.
-Марта: Що ти робиш?
-Олег: Я роблю вправу.
-Марта: Ти бачиш це слово?
-Олег: Так, я бачу це слово.
-Марта: Ми вчимо нові форми?
-Олег: Так, ми вчимо нові форми.
-Марта: Вони ходять до школи?
-Олег: Так, вони ходять до школи.
+Тарас: Ти говориш українською?
+Микола: Так, я говорю трохи. А ти?
+Тарас: Я бачу, що ти добре говориш!
+Микола: Дякую, я вчуся.
 ```
-
-Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Марта: Олеже, ти говориш українською?** | Marta: Oleh, do you speak Ukrainian? |
-| **Олег: Так, я говорю українською.** | Oleh: Yes, I speak Ukrainian. |
-| **Марта: Анна говорить англійською?** | Marta: Does Anna speak English? |
-| **Олег: Так, вона говорить англійською.** | Oleh: Yes, she speaks English. |
-| **Марта: Що ти робиш?** | Marta: What are you doing? |
-| **Олег: Я роблю вправу.** | Oleh: I am doing an exercise. |
-| **Марта: Ти бачиш це слово?** | Marta: Do you see this word? |
-| **Олег: Так, я бачу це слово.** | Oleh: Yes, I see this word. |
-| **Марта: Ми вчимо нові форми?** | Marta: Are we learning new forms? |
-| **Олег: Так, ми вчимо нові форми.** | Oleh: Yes, we are learning new forms. |
-| **Марта: Вони ходять до школи?** | Marta: Do they go to school? |
-| **Олег: Так, вони ходять до школи.** | Oleh: Yes, they go to school. |
+| **Ти говориш українською?** | Do you speak Ukrainian? |
+| **Так, я говорю трохи. А ти?** | Yes, I speak a little. And you? |
+| **Я бачу, що ти добре говориш!** | I see that you speak well! |
+| **Дякую, я вчуся.** | Thanks, I am learning. |
+
+Look at the useful forms:
+
+- **ти говориш** - you speak;
+- **я говорю** - I speak;
+- **я бачу** - I see;
+- **ти добре говориш** - you speak well;
+- **я вчуся** - I am learning.
+
+**Вчуся** has **-ся** at the end. That ending often points to a reflexive
+verb. You do not need the full reflexive system yet. For now, keep **я вчуся**
+as one ready phrase.
+
+Later, at home, Тарас and Микола use two more Group Two chunks.
+
+```text
+Микола: Що ти робиш увечері?
+Тарас: Я дивлюся фільм. А ти?
+Микола: Я вчу нові слова.
+Тарас: Молодець!
+```
+
+| Українська | English support |
+| --- | --- |
+| **Що ти робиш увечері?** | What are you doing in the evening? |
+| **Я дивлюся фільм. А ти?** | I am watching a film. And you? |
+| **Я вчу нові слова.** | I am learning new words. |
+| **Молодець!** | Well done! |
+
+**Дивлюся** also has **-ся**. This module only asks you to recognize it.
+You will work with reflexive verbs more directly later.
+
+The preview infinitives are **вчитися** and **дивитися**. Keep them as
+recognition words today. Your active sentences are only **я вчуся** and
+**я дивлюся фільм**.
 
 :::tip
-Use the **вони** form as your quick check: **читають** points to Group One,
-while **говорять** points to Group Two.
+Your quick check today is the **ти** form: **читаєш** points to Group One,
+while **говориш**, **робиш**, and **бачиш** point to Group Two.
 :::
-
-<!-- INJECT_ACTIVITY: act-2 -->
 
 ## Друга дієвідміна
 
-The textbook label for this pattern is **друга дієвідміна**, or **ІІ
-дієвідміна**. The Group One label from the previous lesson is **І
-дієвідміна**. At A1, do not memorize every rule behind those labels. Use the
-visible forms.
+The Ukrainian term is **друга дієвідміна**, or **ІІ дієвідміна**. The
+infinitive often ends in **-ити**: **говорити**, **бачити**, **робити**,
+**вчити**, **просити**, **ходити**.
 
-| Quick test | Group One | Group Two |
-| --- | --- | --- |
-| they read / speak | **вони читають** | **вони говорять** |
-| they listen / do | **вони слухають** | **вони роблять** |
-| they walk / see | **вони гуляють** | **вони бачать** |
+Use **говорити** as the clean anchor.
 
-Group Two often has **и** in **ти** and **ми** forms: **говориш**,
-**говоримо**, **робиш**, **робимо**. This Ukrainian vowel **[и]** belongs to
-the Ukrainian sound map. For the **українського голосного звука [и]**, listen
-inside the **закінченнях -иш, -имо**: **говориш**, **говоримо**, **робиш**,
-**робимо**. Build the sound from Ukrainian examples, then connect it to the
-written ending.
+| Person | Ending | Form | Safe sentence |
+| --- | --- | --- | --- |
+| я | **-ю** | **говорю** | **Я говорю українською.** |
+| ти | **-иш** | **говориш** | **Ти говориш українською?** |
+| він/вона | **-ить** | **говорить** | **Вона говорить добре.** |
+| ми | **-имо** | **говоримо** | **Ми говоримо повільно.** |
+| ви | **-ите** | **говорите** | **Ви говорите українською?** |
+| вони | **-ять** | **говорять** | **Вони говорять українською.** |
 
-Here is the anchor verb **говорити**:
+Read the table once, then say only three forms aloud:
 
-| Person | Form | Safe sentence |
-| --- | --- | --- |
-| я | **говорю** | **Я говорю українською.** |
-| ти | **говориш** | **Ти говориш українською?** |
-| він/вона | **говорить** | **Вона говорить.** |
-| ми | **говоримо** | **Ми говоримо повільно.** |
-| ви | **говорите** | **Ви говорите?** |
-| вони | **говорять** | **Вони говорять українською.** |
+```text
+Я говорю.
+Ти говориш.
+Вона говорить.
+```
 
-The most important active contrast today is small:
+That is already enough for real conversation.
 
-- **читати** -> **ти читаєш**, **вони читають**;
-- **говорити** -> **ти говориш**, **вони говорять**;
-- **робити** -> **ти робиш**, **вони роблять**.
+### Шість дієслів другої групи
 
-<!-- NO_VERIFY: verified with mcp__sources get_chunk_context chunk 10-klas-ukrmova-karaman-2018_s0319; local quote-fidelity helper cannot import its sources DB search path in this worktree. -->
-> II дієвідміна.
-> Особові закінчення: -у (-ю), -иш (-їш), -ить, -іть (-їть), -имо, -імо (їмо), -ите (-їте), -ать (-ять): спішу, спішиш, спішить, спішимо, спішите, спішать. В основі наявні суфікси -а-, -и-, -і-(-ї-) (що випадають в особових формах).
+Here are the six active verbs from the plan. The full table is for recognition
+and reuse; your speaking can stay with short chunks.
 
-*— Караман Grade 10, p.179*
+| Infinitive | я | ти | він/вона | ми | ви | вони |
+| --- | --- | --- | --- | --- | --- | --- |
+| **говорити** | **говорю** | **говориш** | **говорить** | **говоримо** | **говорите** | **говорять** |
+| **бачити** | **бачу** | **бачиш** | **бачить** | **бачимо** | **бачите** | **бачать** |
+| **робити** | **роблю** | **робиш** | **робить** | **робимо** | **робите** | **роблять** |
+| **вчити** | **вчу** | **вчиш** | **вчить** | **вчимо** | **вчите** | **вчать** |
+| **просити** | **прошу** | **просиш** | **просить** | **просимо** | **просите** | **просять** |
+| **ходити** | **ходжу** | **ходиш** | **ходить** | **ходимо** | **ходите** | **ходять** |
 
-That source note is for orientation only. Your active verbs are **говорити**,
-**робити**, **бачити**, **вчити**, **просити**, and **ходити**.
+The **я** column has a few ready chunks:
 
-<!-- INJECT_ACTIVITY: act-3 -->
+- **я роблю** - I do / I make;
+- **я ходжу** - I go regularly / I walk;
+- **я прошу** - I ask for;
+- **я бачу** - I see;
+- **я вчу** - I learn / I study.
 
-### Використовуй говорити, робити, бачити
-
-Use these three verbs first.
-
-| Infinitive | I | you | he/she | they |
-| --- | --- | --- | --- | --- |
-| **говорити** | **говорю** | **говориш** | **говорить** | **говорять** |
-| **робити** | **роблю** | **робиш** | **робить** | **роблять** |
-| **бачити** | **бачу** | **бачиш** | **бачить** | **бачать** |
-
-The **я** form can change inside the word. Do not calculate it today. Learn a
-`готовий чанк`: **я роблю**, **я ходжу**, **я прошу**, **я сиджу**, **я бачу**.
-Then use the simple **ти** and **він/вона** forms:
+Do not calculate those forms during speech. Learn them as chunks.
 
 ```text
 Я роблю вправу.
-Ти робиш вправу?
-Він робить вправу.
 Я бачу слово.
-Ти бачиш слово?
+Я прошу каву.
+Я ходжу до школи.
+Я вчу українську.
 ```
-
-Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
 | **Я роблю вправу.** | I am doing an exercise. |
-| **Ти робиш вправу?** | Are you doing an exercise? |
-| **Він робить вправу.** | He is doing an exercise. |
 | **Я бачу слово.** | I see a word. |
-| **Ти бачиш слово?** | Do you see a word? |
+| **Я прошу каву.** | I ask for coffee. |
+| **Я ходжу до школи.** | I go to school regularly. |
+| **Я вчу українську.** | I study Ukrainian. |
 
-When you write your own line, choose one verb and one useful object. Keep the
-object familiar:
+You also know **любити** from M15. It is a Group Two verb too: **ти любиш**,
+**вони люблять**. Keep it as review, not as a new table.
 
-| Verb chunk | Add this | Sentence |
-| --- | --- | --- |
-| **я роблю** | **вправу** | **Я роблю вправу.** |
-| **я бачу** | **слово** | **Я бачу слово.** |
-| **я прошу** | **каву** | **Я прошу каву.** |
-| **я ходжу** | **до школи** | **Я ходжу до школи.** |
+### -ять чи -ать?
 
-This is enough for real speech. You do not need to explain why **робити**
-gives **роблю** before you can use **Я роблю вправу**.
+Most Group Two **вони** forms in this module end in **-ять**:
 
-<!-- INJECT_ACTIVITY: act-4 -->
+| Infinitive | They form |
+| --- | --- |
+| **говорити** | **вони говорять** |
+| **робити** | **вони роблять** |
+| **просити** | **вони просять** |
+| **ходити** | **вони ходять** |
+
+After **ч**, **ш**, **ж**, or **щ**, you often see **-ать**:
+
+| Infinitive | They form |
+| --- | --- |
+| **бачити** | **вони бачать** |
+| **вчити** | **вони вчать** |
+
+This is a spelling and sound pattern, not a new grammar task. If you know
+**вони бачать** and **вони вчать**, you are fine.
 
 ## Група I чи II?
 
-Use the **вони** ending when you need a fast comparison.
+<!-- INJECT_ACTIVITY: act-2 -->
 
-| Infinitive | They form | Group |
+Put the two patterns side by side.
+
+| Person | І дієвідміна: **читати** | ІІ дієвідміна: **говорити** |
 | --- | --- | --- |
-| **читати** | **вони читають** | Group One |
-| **слухати** | **вони слухають** | Group One |
-| **говорити** | **вони говорять** | Group Two |
-| **робити** | **вони роблять** | Group Two |
-| **бачити** | **вони бачать** | Group Two |
-| **ходити** | **вони ходять** | Group Two |
-| **стояти** | **вони стоять** | Group Two |
-| **сидіти** | **вони сидять** | Group Two |
+| я | **читаю** | **говорю** |
+| ти | **читаєш** | **говориш** |
+| він/вона | **читає** | **говорить** |
+| ми | **читаємо** | **говоримо** |
+| ви | **читаєте** | **говорите** |
+| вони | **читають** | **говорять** |
 
-**Стояти** and **сидіти** are useful but slightly tricky, so keep them in
-short present-tense chunks:
+For A1, compare only the visible endings:
 
-```text
-Він стоїть.
-Вона сидить.
-Вони стоять.
-Вони сидять.
-```
+| Quick question | Group One | Group Two |
+| --- | --- | --- |
+| What does **ти** end with? | **-єш**: **читаєш** | **-иш**: **говориш** |
+| What does **він/вона** end with? | **-є**: **читає** | **-ить**: **говорить** |
+| What does **вони** end with? | **-ють**: **читають** | **-ять/-ать**: **говорять**, **бачать** |
 
-Support after the Ukrainian lines:
+Try a quick sort:
 
-| Українська | English support |
-| --- | --- |
-| **Він стоїть.** | He is standing. |
-| **Вона сидить.** | She is sitting. |
-| **Вони стоять.** | They are standing. |
-| **Вони сидять.** | They are sitting. |
+- **читати**, **слухати**, **гуляти**, **працювати** -> Group One;
+- **говорити**, **бачити**, **робити**, **вчити**, **просити**, **ходити** ->
+  Group Two.
 
-### Ще корисні фрази другої групи
+:::tip
+If you forget the group name, ask yourself: **ти читаєш** or **ти говориш**?
+That one sound often gives you the answer.
+:::
 
-Use these in small sentences:
+### Форма на я
 
-| Infinitive | I | you | he/she | we | they |
-| --- | --- | --- | --- | --- | --- |
-| **вчити** | **вчу** | **вчиш** | **вчить** | **вчимо** | **вчать** |
-| **просити** | **прошу** | **просиш** | **просить** | **просимо** | **просять** |
-| **ходити** | **ходжу** | **ходиш** | **ходить** | **ходимо** | **ходять** |
-| **любити** | **люблю** | **любиш** | **любить** | **любимо** | **люблять** |
+Only the **я** form has the most visible consonant changes today.
 
-You already know **любити** from preferences. Now you can recognize why
-**ти любиш** and **вони люблять** fit the Group Two pattern.
+| Infinitive | я form | Keep it as |
+| --- | --- | --- |
+| **робити** | **роблю** | **я роблю** |
+| **ходити** | **ходжу** | **я ходжу** |
+| **просити** | **прошу** | **я прошу** |
+| **бачити** | **бачу** | **я бачу** |
+| **вчити** | **вчу** | **я вчу** |
+
+The rest of each verb is more regular:
 
 ```text
-Я ходжу до школи.
-Ти просиш каву?
-Ми вчимо українську.
-Вони люблять музику.
+ти робиш, він робить, вони роблять
+ти ходиш, він ходить, вони ходять
+ти просиш, він просить, вони просять
 ```
 
-Support after the Ukrainian lines:
+Do not memorize a sound-change rule yet. Memorize the **я** chunk beside the
+infinitive.
 
-| Українська | English support |
-| --- | --- |
-| **Я ходжу до школи.** | I go to school. |
-| **Ти просиш каву?** | Are you asking for coffee? |
-| **Ми вчимо українську.** | We are learning Ukrainian. |
-| **Вони люблять музику.** | They like music. |
-
-### Винятки лише для впізнавання
-
-Some verbs are common but irregular enough to wait. Recognize these, but do
-not build full tables today:
-
-| Infinitive | Recognition form |
-| --- | --- |
-| **спати** | **вони сплять** |
-| **бігти** | later verb |
-| **боятися** | later verb |
-| **дати** | **я дам** |
-| **їсти** | **ти їси**, **вони їдять** |
-
-If you see **я сплю**, answer only the one line you know. Do not invent the
-whole table yet.
-
-The recognition-only list protects your active practice. You can understand
-**вони сплять** or **ти їси** when you meet them, but your speaking task stays
-with the regular Group Two chunks above. This keeps the lesson useful without
-turning every exception into a table.
+<!-- INJECT_ACTIVITY: act-3 -->
 
 ## Підсумок
 
-Keep three ideas separate.
+You now have two present-tense verb groups.
 
-| Job | Tool | Example |
-| --- | --- | --- |
-| speak or ask about language | **говорити** | **Я говорю українською.** |
-| do an exercise | **робити** | **Я роблю вправу.** |
-| see a word | **бачити** | **Я бачу слово.** |
-| compare groups | **вони** ending | **читають** vs **говорять** |
+| Group | Anchor | ти | він/вона | вони |
+| --- | --- | --- | --- | --- |
+| І дієвідміна | **читати** | **читаєш** | **читає** | **читають** |
+| ІІ дієвідміна | **говорити** | **говориш** | **говорить** | **говорять** |
 
-Build a short answer:
+Use these model sentences:
 
-1. **Я говорю українською.**
-2. **Я роблю вправу.**
-3. **Я бачу це слово.**
-4. **Ти бачиш це слово?**
-5. **Ми вчимо українську.**
-6. **Вони ходять до школи.**
+```text
+Я говорю українською.
+Ти бачиш це слово?
+Вона говорить добре.
+Ми вчимо українську.
+Ви просите каву?
+Вони ходять до школи.
+```
 
-Repair the common traps by choosing the ready Ukrainian form:
+Self-check:
 
-| Watch for | Use |
-| --- | --- |
-| Group One ending on **робити** | **Вони роблять.** |
-| **е** where Group Two needs **и** | **Ти бачиш.** |
-| invented **я** form | **Я сиджу.** |
-| old identity pattern | **Я студент.** |
-| English-style name phrase | **Мене звати Томас.** |
-| English-style age phrase | **Мені 20 років.** |
+1. Провідміняйте **бачити** для **я**, **ти**, **він/вона**.
+2. **Слухати** належить до І чи ІІ дієвідміни?
+3. **Говорити** належить до І чи ІІ дієвідміни?
+4. Which form sounds right: **ти говориш** or **ти говорєш**?
+
+<!-- INJECT_ACTIVITY: act-4 -->
+
+You do not need every Ukrainian verb today. You only need a strong second
+pattern: **говорю, говориш, говорить, говоримо, говорите, говорять**. That
+pattern will make the next modules much easier.

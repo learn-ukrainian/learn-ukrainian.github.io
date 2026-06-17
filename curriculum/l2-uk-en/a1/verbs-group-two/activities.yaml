@@ -1,280 +1,220 @@
 ---
 inline:
   - id: act-1
-    type: quiz
-    title: Розігрів другої групи
-    instruction: Choose the safe Group Two line.
-    items:
-      - prompt: I speak Ukrainian.
-        options:
-          - text: Я говорю українською.
-            correct: true
-          - text: Я говориш українською.
-            correct: false
-          - text: Я говорити українською.
-            correct: false
-        explanation: Я uses говорю.
-      - prompt: You see the word.
-        options:
-          - text: Ти бачиш слово.
-            correct: true
-          - text: Ти бачу слово.
-            correct: false
-          - text: Ти бачити слово.
-            correct: false
-        explanation: Ти uses бачиш.
-      - prompt: They are doing an exercise.
-        options:
-          - text: Вони роблять вправу.
-            correct: true
-          - text: Вони роблять вправа.
-            correct: false
-          - text: Вони робити вправу.
-            correct: false
-        explanation: Вони роблять is the Group Two form.
-  - id: act-2
-    type: match-up
-    title: Таблиця говорити
-    instruction: Match the person with the present-tense form.
-    pairs:
-      - left: я
-        right: говорю
-      - left: ти
-        right: говориш
-      - left: він / вона
-        right: говорить
-      - left: ми
-        right: говоримо
-      - left: ви
-        right: говорите
-      - left: вони
-        right: говорять
-  - id: act-3
     type: fill-in
-    title: Говорити, робити, бачити
-    instruction: Choose the form that fits the person.
+    title: Провідміняй говорити
+    instruction: Choose the ending that completes the Group Two form.
     items:
-      - sentence: Я ___ українською.
-        answer: говорю
+      - sentence: Я говор__ українською.
+        answer: ю
         options:
-          - говорю
-          - говориш
-          - говорить
+          - ю
+          - иш
+          - ить
         explanation: Я говорю.
-      - sentence: Ти ___ українською?
-        answer: говориш
+      - sentence: Ти говор__ українською?
+        answer: иш
         options:
-          - говориш
-          - говорю
-          - говоримо
+          - иш
+          - ю
+          - ять
         explanation: Ти говориш.
-      - sentence: Він ___.
+      - sentence: Він говор__ добре.
+        answer: ить
+        options:
+          - ить
+          - иш
+          - имо
+        explanation: Він говорить.
+      - sentence: Вона говор__ повільно.
+        answer: ить
+        options:
+          - ить
+          - ите
+          - ю
+        explanation: Вона говорить.
+      - sentence: Ми говор__ українською.
+        answer: имо
+        options:
+          - имо
+          - ите
+          - иш
+        explanation: Ми говоримо.
+      - sentence: Ви говор__ українською?
+        answer: ите
+        options:
+          - ите
+          - имо
+          - ить
+        explanation: Ви говорите.
+      - sentence: Вони говор__ українською.
+        answer: ять
+        options:
+          - ять
+          - иш
+          - ю
+        explanation: Вони говорять.
+      - sentence: Я робл__ вправу.
+        answer: ю
+        options:
+          - ю
+          - иш
+          - ять
+        explanation: Я роблю is a ready first-person chunk.
+      - sentence: Ти бач__ слово?
+        answer: иш
+        options:
+          - иш
+          - у
+          - ать
+        explanation: Ти бачиш.
+      - sentence: Вони бач__ слово.
+        answer: ать
+        options:
+          - ать
+          - иш
+          - у
+        explanation: Вони бачать.
+  - id: act-2
+    type: group-sort
+    title: І чи ІІ дієвідміна
+    instruction: Sort the infinitives by the present-tense group.
+    groups:
+      - name: І дієвідміна / Group One
+        items:
+          - читати
+          - слухати
+          - гуляти
+          - працювати
+      - name: ІІ дієвідміна / Group Two
+        items:
+          - говорити
+          - бачити
+          - робити
+          - вчити
+          - просити
+          - ходити
+  - id: act-3
+    type: quiz
+    title: Обери правильну форму
+    instruction: Choose the form that fits the sentence.
+    items:
+      - prompt: Ти ___ українською?
+        options:
+          - text: говориш
+            correct: true
+          - text: говорю
+            correct: false
+          - text: говорить
+            correct: false
+        explanation: Ти говориш.
+      - prompt: Вона ___ добре.
+        options:
+          - text: говорить
+            correct: true
+          - text: говориш
+            correct: false
+          - text: говорять
+            correct: false
+        explanation: Вона говорить.
+      - prompt: Ми ___ українську.
+        options:
+          - text: вчимо
+            correct: true
+          - text: вчиш
+            correct: false
+          - text: вчить
+            correct: false
+        explanation: Ми вчимо.
+      - prompt: Я ___ це слово.
+        options:
+          - text: бачу
+            correct: true
+          - text: бачиш
+            correct: false
+          - text: бачить
+            correct: false
+        explanation: Я бачу.
+      - prompt: Ти ___ це слово?
+        options:
+          - text: бачиш
+            correct: true
+          - text: бачу
+            correct: false
+          - text: бачать
+            correct: false
+        explanation: Ти бачиш.
+      - prompt: Вони ___ до школи.
+        options:
+          - text: ходять
+            correct: true
+          - text: ходиш
+            correct: false
+          - text: ходжу
+            correct: false
+        explanation: Вони ходять.
+      - prompt: Я ___ каву.
+        options:
+          - text: прошу
+            correct: true
+          - text: просиш
+            correct: false
+          - text: просить
+            correct: false
+        explanation: Я прошу is the ready first-person chunk.
+      - prompt: Вони ___ слово.
+        options:
+          - text: бачать
+            correct: true
+          - text: бачиш
+            correct: false
+          - text: бачу
+            correct: false
+        explanation: Вони бачать uses -ать after ч.
+  - id: act-4
+    type: fill-in
+    title: Доповни речення
+    instruction: Choose the correct present-tense form.
+    items:
+      - sentence: Вона ___ українською. (говорити)
         answer: говорить
         options:
           - говорить
-          - говорите
-          - говорять
-        explanation: Він говорить.
-      - sentence: Я ___ вправу.
+          - говориш
+          - говорю
+        explanation: Вона говорить.
+      - sentence: Я ___ вправу. (робити)
         answer: роблю
         options:
           - роблю
           - робиш
           - робить
         explanation: Я роблю is a ready chunk.
-      - sentence: Ти ___ слово?
+      - sentence: Ти ___ слово? (бачити)
         answer: бачиш
         options:
           - бачиш
           - бачу
-          - бачить
+          - бачать
         explanation: Ти бачиш.
-      - sentence: Вони ___ слово.
-        answer: бачать
+      - sentence: Ми ___ нові слова. (вчити)
+        answer: вчимо
         options:
-          - бачать
-          - бачиш
-          - бачу
-        explanation: Вони бачать.
-  - id: act-4
-    type: group-sort
-    title: Перша чи друга група
-    instruction: Sort the they-forms by group.
-    groups:
-      - name: І дієвідміна / Group One
-        items:
-          - читають
-          - слухають
-          - гуляють
-      - name: ІІ дієвідміна / Group Two
-        items:
-          - говорять
-          - роблять
-          - бачать
-          - ходять
-          - стоять
-          - сидять
-workbook:
-  - type: fill-in
-    title: Готові фрази з «я»
-    instruction: Choose the ready first-person chunk.
-    items:
-      - sentence: Я ___ вправу.
-        answer: роблю
-        options:
-          - роблю
-          - робиш
-          - робить
-        explanation: Learn я роблю as a chunk.
-      - sentence: Я ___ до школи.
-        answer: ходжу
-        options:
-          - ходжу
-          - ходиш
-          - ходить
-        explanation: Learn я ходжу as a chunk.
-      - sentence: Я ___ каву.
+          - вчимо
+          - вчиш
+          - вчать
+        explanation: Ми вчимо.
+      - sentence: Я ___ каву. (просити)
         answer: прошу
         options:
           - прошу
           - просиш
           - просить
-        explanation: Learn я прошу as a chunk.
-      - sentence: Я ___ тут.
-        answer: сиджу
+        explanation: Я прошу is the first-person chunk.
+      - sentence: Вони ___ до школи. (ходити)
+        answer: ходять
         options:
-          - сиджу
-          - сидиш
-          - сидить
-        explanation: Learn я сиджу as a chunk.
-  - type: quiz
-    title: Форми лише для впізнавання
-    instruction: Choose the form you should recognize, not overbuild.
-    items:
-      - prompt: They sleep.
-        options:
-          - text: Вони сплять.
-            correct: true
-          - text: Вони спати.
-            correct: false
-          - text: Вони спить.
-            correct: false
-        explanation: Recognize вони сплять.
-      - prompt: You eat.
-        options:
-          - text: Ти їси.
-            correct: true
-          - text: Ти їсть.
-            correct: false
-          - text: Ти їдять.
-            correct: false
-        explanation: Recognize ти їси.
-      - prompt: They eat.
-        options:
-          - text: Вони їдять.
-            correct: true
-          - text: Вони їси.
-            correct: false
-          - text: Вони їсть.
-            correct: false
-        explanation: Recognize вони їдять.
-  - type: error-correction
-    title: Виправ пастки другої групи
-    instruction: Choose the standard Ukrainian repair.
-    anchor_id: group-two-repairs
-    items:
-      - sentence: Вони робуть
-        error: Вони робуть
-        answer: Вони роблять
-        options:
-          - Вони роблять
-          - Вони працюють
-          - Вони читають
-        explanation: Робити uses вони роблять.
-      - sentence: Ти бачеш
-        error: Ти бачеш
-        answer: Ти бачиш
-        options:
-          - Ти бачиш
-          - Ти говориш
-          - Ти робиш
-        explanation: Group Two uses бачиш.
-      - sentence: Я сидю
-        error: Я сидю
-        answer: Я сиджу
-        options:
-          - Я сиджу
-          - Я ходжу
-          - Я бачу
-        explanation: Learn я сиджу as a ready chunk.
-      - sentence: Він стоє
-        error: Він стоє
-        answer: Він стоїть
-        options:
-          - Він стоїть
-          - Він сидить
-          - Він говорить
-        explanation: Стояти gives він стоїть.
-      - sentence: Я сплю, ти сплєш
-        error: Я сплю, ти сплєш
-        answer: Я сплю, ти спиш
-        options:
-          - Я сплю, ти спиш
-          - Я сплю, ти їси
-          - Я сплю, ти сидиш
-        explanation: Recognize ти спиш; do not invent the form.
-      - sentence: Я є студент
-        error: Я є студент
-        answer: Я студент
-        options:
-          - Я студент
-          - Я вчитель
-          - Я Томас
-        explanation: Ukrainian can use Я студент without є.
-      - sentence: Моє ім'я є Томас
-        error: Моє ім'я є Томас
-        answer: Мене звати Томас
-        options:
-          - Мене звати Томас
-          - Я студент Томас
-          - Це Томас
-        explanation: Use Мене звати for names.
-      - sentence: Я маю 20 років
-        error: Я маю 20 років
-        answer: Мені 20 років
-        options:
-          - Мені 20 років
-          - Я студент 20 років
-          - Це 20 років
-        explanation: Use Мені plus age.
-  - type: quiz
-    title: Мінідіалог
-    instruction: Choose the best next line.
-    items:
-      - prompt: Ти говориш українською?
-        options:
-          - text: Так, я говорю українською.
-            correct: true
-          - text: Так, я говориш українською.
-            correct: false
-          - text: Так, я говорити українською.
-            correct: false
-        explanation: Я говорю.
-      - prompt: Що ти робиш?
-        options:
-          - text: Я роблю вправу.
-            correct: true
-          - text: Я робиш вправу.
-            correct: false
-          - text: Я робити вправу.
-            correct: false
-        explanation: Я роблю is the safe answer.
-      - prompt: Ти бачиш це слово?
-        options:
-          - text: Так, я бачу це слово.
-            correct: true
-          - text: Так, я бачиш це слово.
-            correct: false
-          - text: Так, я бачити це слово.
-            correct: false
-        explanation: Я бачу.
+          - ходять
+          - ходиш
+          - ходжу
+        explanation: Вони ходять.
