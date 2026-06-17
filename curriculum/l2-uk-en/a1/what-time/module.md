@@ -14,8 +14,8 @@ By the end, you can:
 - use **о** before most hour words and **об** before **одинадцятій**;
 - recognize **пів на** for half hours and **чверть** phrases when you hear
   them;
-- repair common unsafe time phrases such as **у вісім годин**, **пів восьмої**,
-  **чверть після сьомої**, and **без двадцяти три**.
+- repair two common unsafe time phrases: **у вісім годин** and
+  **пів восьмої**.
 
 ## Діалоги
 
@@ -133,19 +133,10 @@ For a half hour, name the hour that is coming next: 6:30 is **пів на сьо
 because the clock is moving toward seven.
 :::
 
-Quarter phrases are useful to recognize. For **1–29 хвилин**, the minute number
-uses a simple **називний відмінок** shape in the chunk: **п'ятнадцять хвилин на
-восьму** or **чверть на восьму**. Here **15 хвилин** can be said as
-**чверть**. **Чверть на восьму** means 7:15, moving toward eight.
-**Чверть по сьомій** also describes 7:15, looking back after seven. For
-**31–59 хвилин**, the late-half formulas use **за** with the minute amount, or
-**до** with the next hour: **за чверть восьма**, **двадцять до третьої**. You
-will see grammar labels such as **знахідний відмінок**, **називний відмінок**,
-and **родовий відмінок** in fuller references, but at A1 treat the whole phrase
-as a chunk. For your active A1 answer, it is fine to use the simpler
-**офіційний** digital style when you need it: **сьома п'ятнадцять**,
-**сьома сорок п'ять**. The important repair is to avoid English-style
-**після** for clock time and avoid **без** for "to" the next hour.
+Quarter phrases are useful to recognize, but they are not your main speaking
+task yet. If you hear **чверть на третю**, understand it as 2:15. If you hear
+**за чверть третя**, understand it as 2:45. For active A1 speech, first be
+secure with full hours and **пів на**.
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
@@ -189,12 +180,6 @@ Do not use **у** or **в** for clock time. The sentence **Урок почина
 восьмій**. The same repair works for everyday plans: **Зустріч о другій**,
 **кава о третій**, **урок о четвертій**, **вечеря о сьомій**.
 
-You can also ask about a range with chunks you will see often:
-**з котрої години?** and **до котрої години?** For now, use them in short
-answers: **з дев'ятої до п'ятої**. A workday sentence can be simple:
-**Я працюю з дев'ятої до п'ятої.** This is enough for A1. The full grammar of
-these forms comes later.
-
 ## Підсумок
 
 Keep three cards in your head.
@@ -234,21 +219,17 @@ Support after the Ukrainian lines:
 Third card: repair the unsafe time habits before they become automatic.
 
 :::caution
-You may hear nonstandard **російськомовні кальки** or **суржик** time phrases
-in everyday speech. For this course, keep the **літературна норма** and treat
-those forms as **ненормативні**: **о/об**, **на**, **по**, **за**, and **до**
-are your safe clock words.
-In other words, **формування навичок називання часу** protects you from
-**проникнення російськомовних кальок (суржику)** before they become habits.
+Keep the course pattern simple and stable. For clock time, use
+**перша**, **друга**, **третя**. For a scheduled action, use **о/об**:
+**о першій**, **о другій**, **об одинадцятій**. For half hours, keep **на** in
+the chunk: **пів на восьму**.
 :::
 
 | Avoid | Use | Why |
 | --- | --- | --- |
 | <del>Зараз є п'ять годин.</del> | **Зараз п'ята (година).** | clock time uses the feminine ordinal hour |
 | <del>Уроки починаються у вісім годин.</del> | **Уроки починаються о восьмій.** | schedule time uses **о/об**, not **у/в** |
-| <del>Чверть після сьомої.</del> | **Чверть на восьму.** / **чверть по сьомій** | clock phrases use **на** or **по** |
 | <del>Пів восьмої.</del> | **Пів на восьму.** | **на** belongs to the half-hour chunk |
-| <del>Без двадцяти три.</del> | **За двадцять третя.** / **двадцять до третьої** | use **за** or **до**, not **без** |
 
 For your own answer, write five short lines. Use one line for the time now, one
 line for waking up, one line for work or study, one line for lunch or dinner,
