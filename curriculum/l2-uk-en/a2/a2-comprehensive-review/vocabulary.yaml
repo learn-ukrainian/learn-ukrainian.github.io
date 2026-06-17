@@ -2,6 +2,42 @@
   translation: review, revision
   pos: noun
   example: "Перед іспитом нам потрібне спокійне повторення."
+- word: граматика
+  translation: grammar
+  pos: noun
+  example: "Граматика допомагає бачити зв'язки між словами."
+- word: відмінок
+  translation: grammatical case
+  pos: noun
+  example: "Відмінок показує форму слова в реченні."
+- word: дієслово
+  translation: verb
+  pos: noun
+  example: "Дієслово називає дію, стан або процес."
+- word: прикметник
+  translation: adjective
+  pos: noun
+  example: "Прикметник узгоджується з іменником."
+- word: займенник
+  translation: pronoun
+  pos: noun
+  example: "Займенник може замінювати іменник."
+- word: речення
+  translation: sentence
+  pos: noun
+  example: "Речення має граматичну основу."
+- word: помилка
+  translation: error, mistake
+  pos: noun
+  example: "Помилка показує, що треба повторити."
+- word: впевненість
+  translation: confidence
+  pos: noun
+  example: "Впевненість зростає після кількох власних прикладів."
+- word: складний
+  translation: complex, compound
+  pos: adjective
+  example: "Складний текст легше читати через граматичні сигнали."
 - word: повна картина
   translation: full picture
   pos: phrase
