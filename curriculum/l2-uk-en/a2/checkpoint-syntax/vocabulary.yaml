@@ -6,6 +6,14 @@
   translation: conjunction
   pos: noun
   example: "Сполучник з'єднує частини речення."
+- word: підрядний
+  translation: subordinate
+  pos: adjective
+  example: "Підрядна частина пояснює головну частину."
+- word: головний
+  translation: main
+  pos: adjective
+  example: "Головна частина може стояти на початку речення."
 - word: кома
   translation: comma
   pos: noun
@@ -45,7 +53,7 @@
 - word: тема
   translation: topic, theme
   pos: noun
-  example: "Тема - відома інформація."
+  example: "Тема — відома інформація."
 - word: рема
   translation: new information
   pos: noun
@@ -54,6 +62,10 @@
   translation: because
   pos: conjunction
   example: "Я прийшов, тому що мав питання."
+- word: бо
+  translation: because
+  pos: conjunction
+  example: "Я залишився удома, бо захворів."
 - word: хоча
   translation: although
   pos: conjunction
@@ -68,7 +80,7 @@
   example: "Це колега, який працює поруч."
 - word: де
   translation: where
-  pos: conjunction
+  pos: relative adverb
   example: "Це офіс, де ми працюємо."
 - word: якщо
   translation: if
