@@ -1,0 +1,256 @@
+- lemma: біля
+  translation: "near, beside; takes genitive"
+  pos: preposition
+  usage: "Біля школи є зупинка автобуса."
+- lemma: коло
+  translation: "near, by; takes genitive"
+  pos: preposition
+  usage: "Коло хати росте бузок."
+- lemma: поблизу
+  translation: "nearby, close to; takes genitive"
+  pos: preposition/adverb
+  usage: "Поблизу університету відкрили книгарню."
+- lemma: неподалік від
+  translation: "not far from; takes genitive after від"
+  pos: compound preposition
+  usage: "Неподалік від вокзалу є готель."
+- lemma: серед
+  translation: "among, in the middle of; takes genitive"
+  pos: preposition
+  usage: "Серед дерев видно дах будинку."
+- lemma: посеред
+  translation: "in the very middle of; takes genitive"
+  pos: preposition
+  usage: "Посеред кімнати стоїть стіл."
+- lemma: навпроти
+  translation: "opposite, across from; takes genitive"
+  pos: preposition/adverb
+  usage: "Навпроти вокзалу працює аптека."
+- lemma: довкола
+  translation: "around; takes genitive"
+  pos: preposition/adverb
+  usage: "Довкола озера ростуть верби."
+- lemma: навколо
+  translation: "around; takes genitive"
+  pos: preposition/adverb
+  usage: "Навколо будинку є паркан."
+- lemma: обабіч
+  translation: "on both sides of; takes genitive"
+  pos: preposition
+  usage: "Обабіч дороги стояли каштани."
+- lemma: позаду
+  translation: "behind; takes genitive when prepositional"
+  pos: preposition/adverb
+  usage: "Позаду будинку є тихий двір."
+- lemma: попереду
+  translation: "in front of, ahead of; takes genitive when prepositional"
+  pos: preposition/adverb
+  usage: "Попереду групи йшла екскурсоводка."
+- lemma: між
+  translation: "between; takes instrumental"
+  pos: preposition
+  usage: "Між будинками є вузький прохід."
+- lemma: поміж
+  translation: "between, among; takes instrumental"
+  pos: preposition
+  usage: "Поміж деревами стоїть лавка."
+- lemma: над
+  translation: "above, over; takes instrumental"
+  pos: preposition
+  usage: "Над столом висить лампа."
+- lemma: понад
+  translation: "above, along above; takes instrumental"
+  pos: preposition
+  usage: "Понад берегом тягнулася стежка."
+- lemma: під
+  translation: "under; instrumental for location, accusative for direction"
+  pos: preposition
+  usage: "Кіт сидить під столом, а потім заліз під стіл."
+- lemma: за
+  translation: "behind; instrumental for location, accusative for direction"
+  pos: preposition
+  usage: "За будинком є сад, але ми зайшли за будинок."
+- lemma: перед
+  translation: "in front of; takes instrumental"
+  pos: preposition
+  usage: "Перед входом стояла черга."
+- lemma: поруч з
+  translation: "next to; з/із/зі plus instrumental"
+  pos: compound preposition
+  usage: "Поруч із будинком є маленький сквер."
+- lemma: попід
+  translation: "along under or near the base of; takes instrumental"
+  pos: preposition
+  usage: "Попід вікнами росли квіти."
+- lemma: з-під
+  translation: "from under; takes genitive"
+  pos: compound preposition
+  usage: "Я дістав книжку з-під ліжка."
+- lemma: з-за
+  translation: "from behind; takes genitive"
+  pos: compound preposition
+  usage: "Автобус виїхав з-за рогу."
+- lemma: з-поміж
+  translation: "from among; takes genitive"
+  pos: compound preposition
+  usage: "З-поміж студентів вибрали волонтера."
+- lemma: прийменник
+  translation: "preposition"
+  pos: noun:m
+  usage: "Прийменник працює разом з іменником у відмінку."
+- lemma: прислівник
+  translation: "adverb"
+  pos: noun:m
+  usage: "У реченні Він сидів навпроти слово навпроти є прислівником."
+- lemma: керування
+  translation: "case government"
+  pos: noun:n
+  usage: "Керування прийменника треба вчити разом із прикладом."
+- lemma: родовий відмінок
+  translation: "genitive case"
+  pos: phrase
+  usage: "Після біля потрібний родовий відмінок."
+- lemma: орудний відмінок
+  translation: "instrumental case"
+  pos: phrase
+  usage: "Після між у просторовому значенні потрібний орудний відмінок."
+- lemma: знахідний відмінок
+  translation: "accusative case"
+  pos: phrase
+  usage: "Для напрямку під стіл уживаємо знахідний відмінок."
+- lemma: місцевий відмінок
+  translation: "locative case"
+  pos: phrase
+  usage: "У парку має місцевий відмінок, бо відповідає на питання де."
+- lemma: місце
+  translation: "place, location"
+  pos: noun:n
+  usage: "Місце відповідає на питання де."
+- lemma: напрямок
+  translation: "direction"
+  pos: noun:m
+  usage: "Напрямок відповідає на питання куди."
+- lemma: орієнтир
+  translation: "reference point, landmark"
+  pos: noun:m
+  usage: "У фразі біля театру театр є орієнтиром."
+- lemma: розташування
+  translation: "position, placement"
+  pos: noun:n
+  usage: "Розташування кімнати можна описати через прийменники."
+- lemma: маршрут
+  translation: "route"
+  pos: noun:m
+  usage: "Маршрут іде від вокзалу до готелю."
+- lemma: навігація
+  translation: "navigation"
+  pos: noun:f
+  usage: "Навігація містом потребує точних орієнтирів."
+- lemma: площа
+  translation: "city square"
+  pos: noun:f
+  usage: "Посеред площі стоїть пам'ятник."
+- lemma: перехрестя
+  translation: "intersection, crossroads"
+  pos: noun:n
+  usage: "За перехрестям починається парк."
+- lemma: квартал
+  translation: "city block"
+  pos: noun:m
+  usage: "Ми живемо в сусідньому кварталі."
+- lemma: узбіччя
+  translation: "roadside"
+  pos: noun:n
+  usage: "На узбіччі стояла машина."
+- lemma: вокзал
+  translation: "railway station"
+  pos: noun:m
+  usage: "Навпроти вокзалу є аптека."
+- lemma: зупинка
+  translation: "stop, transit stop"
+  pos: noun:f
+  usage: "Біля зупинки чекають пасажири."
+- lemma: вхід
+  translation: "entrance"
+  pos: noun:m
+  usage: "Перед входом стоїть охоронець."
+- lemma: вихід
+  translation: "exit"
+  pos: noun:m
+  usage: "Навпроти виходу є сквер."
+- lemma: прохід
+  translation: "passage"
+  pos: noun:m
+  usage: "Між будинками є вузький прохід."
+- lemma: двір
+  translation: "courtyard"
+  pos: noun:m
+  usage: "Позаду будинку є тихий двір."
+- lemma: лавка
+  translation: "bench"
+  pos: noun:f
+  usage: "Під каштаном стоїть лавка."
+- lemma: кіоск
+  translation: "kiosk"
+  pos: noun:m
+  usage: "За кіоском починається тиха вулиця."
+- lemma: каштан
+  translation: "chestnut tree"
+  pos: noun:m
+  usage: "Обабіч дороги росли каштани."
+- lemma: стежка
+  translation: "path"
+  pos: noun:f
+  usage: "Понад берегом тягнулася стежка."
+- lemma: берег
+  translation: "bank, shore"
+  pos: noun:m
+  usage: "Понад берегом росли верби."
+- lemma: ріг
+  translation: "corner"
+  pos: noun:m
+  usage: "Трамвай виїхав з-за рогу."
+- lemma: паркан
+  translation: "fence"
+  pos: noun:m
+  usage: "Сусід визирнув з-за паркану."
+- lemma: двері
+  translation: "door, doors"
+  pos: noun:pl
+  usage: "Позаду дверей висить куртка."
+- lemma: вікно
+  translation: "window"
+  pos: noun:n
+  usage: "Стіл стоїть біля вікна."
+- lemma: шафа
+  translation: "wardrobe, cabinet"
+  pos: noun:f
+  usage: "Між шафою і дверима є прохід."
+- lemma: рюкзак
+  translation: "backpack"
+  pos: noun:m
+  usage: "Рюкзак лежить під столом."
+- lemma: килимок
+  translation: "small rug, mat"
+  pos: noun:m
+  usage: "Ключ лежав під килимком."
+- lemma: полиця
+  translation: "shelf"
+  pos: noun:f
+  usage: "Над столом висить полиця."
+- lemma: сквер
+  translation: "small public garden"
+  pos: noun:m
+  usage: "Навпроти виходу є сквер."
+- lemma: під'їзд
+  translation: "building entrance"
+  pos: noun:m
+  usage: "Перед під'їздом стоять велосипеди."
+- lemma: укриття
+  translation: "shelter"
+  pos: noun:n
+  usage: "Біля школи є укриття."
+- lemma: затор
+  translation: "traffic jam"
+  pos: noun:m
+  usage: "Ми спізнилися через затор, а не із-за затору."
