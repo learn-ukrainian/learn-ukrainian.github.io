@@ -96,6 +96,7 @@ jobs:
             atlas:
               - '.github/workflows/ci.yml'
               - 'scripts/lexicon/*.py'
+              - 'curriculum/l2-uk-en/**/vocabulary.yaml'
               - 'site/src/data/lexicon-manifest.json'
               - 'site/src/data/lexicon-manifest.fingerprint.json'
 
@@ -108,6 +109,8 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
+          # Full history so the diff-scoped vocab gate can diff vs origin/main (#3150).
+          fetch-depth: 0
 
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
@@ -118,6 +121,16 @@ jobs:
 
       - name: Check DB-free Atlas manifest freshness
         run: python scripts/lexicon/check_manifest_freshness.py
+
+      # Diff-scoped + advisory (#3150): only flags modules whose vocabulary.yaml changed
+      # in THIS PR (no cross-PR coupling on the merge-train), and never blocks merge — a
+      # full manifest regen is ~33 min and the merge-train adds vocab faster than that.
+      # Blocking enforcement belongs on promote / an eventual auto-regen, not here.
+      - name: Check Atlas vocabulary manifest coverage (advisory, diff-scoped)
+        continue-on-error: true
+        run: |
+          git fetch --no-tags --quiet origin main || true
+          python scripts/lexicon/check_manifest_vocabulary_coverage.py --changed-only --base origin/main
 
   lint:
     name: Lint (ruff)

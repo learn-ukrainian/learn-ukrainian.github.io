@@ -311,6 +311,12 @@ _VESUM_GAP_HERITAGE_LEMMAS: frozenset[str] = frozenset(
         # псл. *хвастати (Proto-Slavic); СУМ-20: «те саме, що хвалькуватий». Not in
         # VESUM, but pre-Soviet + etymologically attested → authentic, keep.
         "хвастливий",
+        # Грінченко 1907: «Лет, -ту, м. Леть, полет» (Черк. у.); СУМ-11/СУМ-20: «ЛЕТ, у,
+        # ч., поет. Дія за знач. літати і летіти» (Коцюбинський, Нагнибіда); Голоскевич
+        # 1929: «Лет, ле́ту»; ЕСУМ s.v. летіти. Poetic verbal noun of летіти — on-topic for
+        # b1/verbal-nouns. Not in VESUM, but pre-Soviet + СУМ + etymologically attested →
+        # authentic, keep (verified via mcp__sources heritage 2026-06-17).
+        "лет",
     }
 )
 

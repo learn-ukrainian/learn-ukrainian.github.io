@@ -1,5 +1,5 @@
 {
-  "fingerprint": "d07f8cee0637c9e2221cf484f829c5696c8746d00ac92de6d67847e10c41d5bb",
+  "fingerprint": "4f0098416af9bf838f7587e92c2adb7200651a6f740d2e2cccd4b322bd6c49ab",
   "inputs": {
     "lexicon_code": [
       {
@@ -12,7 +12,7 @@
       },
       {
         "path": "scripts/lexicon/build_data_manifest.py",
-        "sha256": "5253c7abb405ea040b18132ae6e856b638998e37f7980c5d9a6d858e0363f869"
+        "sha256": "05a09ce5155ed01319ccfdf7f92693622b91bda93e8cab908b2c25c435610b51"
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",
@@ -29,6 +29,10 @@
       {
         "path": "scripts/lexicon/check_manifest_freshness.py",
         "sha256": "eaafd2f61e199ff9f56cfe114a683533aad908d92f97cb2791eadb9560e9d0a9"
+      },
+      {
+        "path": "scripts/lexicon/check_manifest_vocabulary_coverage.py",
+        "sha256": "56669779ca2f3af5047476db11ad7ffdb00fc41e962e2c0f13c61582b4ad1c6f"
       },
       {
         "path": "scripts/lexicon/derivational_morphology.py",
@@ -67,6 +71,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 15
+    "lexicon_code_files": 16
   }
 }
