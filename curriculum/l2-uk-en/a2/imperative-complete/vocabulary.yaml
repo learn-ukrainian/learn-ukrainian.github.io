@@ -30,6 +30,22 @@
   translation: let's talk
   pos: imperative
   example: "Поговорімо після уроку."
+- word: починаймо
+  translation: let's start
+  pos: imperative
+  example: "Починаймо урок."
+- word: пишімо
+  translation: let's write
+  pos: imperative
+  example: "Пишімо короткі речення."
+- word: скажімо
+  translation: let's say
+  pos: imperative
+  example: "Скажімо це українською."
+- word: перевірмо
+  translation: let's check
+  pos: imperative
+  example: "Перевірмо список перед поїздкою."
 - word: будь
   translation: be
   pos: imperative
@@ -54,10 +70,10 @@
   translation: happy
   pos: adjective
   example: "Оленко, будь щасливою."
-- word: здоровий / здоровим
+- word: здоровий / здоровим / здоровими
   translation: healthy
   pos: adjective
-  example: "Марку, будь здоровим."
+  example: "Марку, будь здоровим. Друзі, будьте здоровими."
 - word: уважний / уважним
   translation: attentive
   pos: adjective
