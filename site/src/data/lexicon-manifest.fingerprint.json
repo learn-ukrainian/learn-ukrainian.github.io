@@ -1,5 +1,5 @@
 {
-  "fingerprint": "eccb00c2620084ceeec600a88ea0a1a0e32f529369f3195ed4e6cf2136130fb5",
+  "fingerprint": "e8521477b6dc9bc7bd354e0a79edfdaefe6df219face679bb1c8134067279207",
   "inputs": {
     "lexicon_code": [
       {
@@ -12,7 +12,7 @@
       },
       {
         "path": "scripts/lexicon/build_data_manifest.py",
-        "sha256": "55d7ba948e43d2c1e0a521e0d3d15b952ccf4a26cfc0348878e426a706fbb19d"
+        "sha256": "5253c7abb405ea040b18132ae6e856b638998e37f7980c5d9a6d858e0363f869"
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",
@@ -36,7 +36,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "030d781f1b442b42369c038901694d6a91ad174bdc88469309d3827d639fa76a"
+        "sha256": "a29716b73d987607ca683858320caf1462c89ba7a2eb4056fd7dc6349522d2a3"
       },
       {
         "path": "scripts/lexicon/generate_vesum_aliases.py",
@@ -51,6 +51,10 @@
         "sha256": "6a406d00131e74cff8f56852e7d68d2e3a9ca507314df14191872b2c1e01ca55"
       },
       {
+        "path": "scripts/lexicon/measure_manifest_coverage.py",
+        "sha256": "9d5f6f2d7ff5297241d08e0f8f93f4999f2d27c9497372e2b63978a455f8bee3"
+      },
+      {
         "path": "scripts/lexicon/migrate_sum11_sovietization.py",
         "sha256": "4919c84c88b8cf0bc1508250e6da4c80860e8a33a4a4df49402c8aedef3e9e68"
       },
@@ -63,6 +67,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 14
+    "lexicon_code_files": 15
   }
 }

@@ -56,6 +56,12 @@ def test_vesum_alias_leaves_unmapped_form_untouched(monkeypatch) -> None:
     assert "atlas_normalization" not in out
 
 
+def test_slash_particle_not_published_as_atlas_head() -> None:
+    rec = {"lemma": "б/би", "source": "built_vocabulary", "gloss": "conditional particle", "pos": "particle"}
+
+    assert _atlas_record_for_manifest(rec, set()) is None
+
+
 def test_surzhyk_to_avoid_seed_group_is_in_manifest() -> None:
     manifest = build_manifest()
     entries = {entry["lemma"]: entry for entry in manifest["entries"]}

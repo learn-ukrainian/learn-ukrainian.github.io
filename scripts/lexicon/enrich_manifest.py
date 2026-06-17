@@ -74,6 +74,7 @@ from scripts.wiki.slovnyk_me import primary_synonym_sense_text
 MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 SOURCES_DB = ROOT / "data" / "sources.db"
 KAIKKI_LOOKUP = ROOT / "data" / "lexicon" / "kaikki_uk_lookup.json"
+WIKI_REFERENCE_CACHE = ROOT / "data" / "lexicon" / "cache" / "wiki_reference.json"
 
 
 def _default_slovnyk_cache() -> Path:
@@ -128,7 +129,11 @@ _TRANSLATION_SOURCE = "dmklinger"
 _SUM20_COVERED_INITIALS = set("абвгґдеєжзиіїйклмнопр")
 _UKRAINIAN_WORD_RE = re.compile(r"^[А-Яа-яЄєІіЇїҐґ'’ʼ-]+$")
 _UKRAINIAN_VOWELS = set("аеєиіїоуюяАЕЄИІЇОУЮЯ")
-_RUSSIAN_LABELED_CYRILLIC_RE = re.compile(r"Russian[^.;:]*[А-Яа-яЁёЫыЭэЪъ]", flags=re.IGNORECASE)
+_IPA_STRESS_RE = re.compile(r"[ˈˌ]")
+_IPA_PRIMARY_STRESS_RE = re.compile(r"ˈ")
+_IPA_NON_SYLLABIC_MARK_RE = re.compile(r"[\u032f\u0311]")
+_IPA_VOWEL_RE = re.compile(r"[aeiouyɐɑɒæɛɜɞɘəɚɝɨɪɯɵøœɔɤʊʉɾ]+", flags=re.IGNORECASE)
+_KAIKKI_GARBLED_ETYMOLOGY_RE = re.compile(r"\bEtymology tree\b|\[Term\?\]", flags=re.IGNORECASE)
 
 _SLOVNYK_DICT_LABELS: dict[str, str] = {
     "newsum": "Словник української мови у 20 томах (СУМ-20)",
@@ -1845,6 +1850,12 @@ def _morphology(lemma: str) -> dict | None:
     return morphology
 
 
+# Foreign-script (kana / CJK / hangul) detector. Вікісловник occasionally leaks a
+# "запис кирилицею <foreign word>" transliteration note that is pure noise for a
+# Ukrainian learner-facing meaning — drop any definition that contains such glyphs.
+_NON_UKRAINIAN_SCRIPT_RE = re.compile(r"[぀-ヿ㐀-鿿가-힯]")
+
+
 def _clean_wiki_def(raw: str) -> str:
     """Strip Вікісловник wiki-markup noise (templates, quote leaks, refs)."""
     text = _unescape_html_entities(raw)
@@ -1853,6 +1864,10 @@ def _clean_wiki_def(raw: str) -> str:
     # first newline, leaking the rest of a multi-line comment (CodeQL
     # py/bad-tag-filter). Input is trusted Вікісловник DB text, but match fully.
     text = re.sub(r"<!--[\s\S]*?-->", "", text)
+    # Strip residual HTML/XML tags (<ref>, <span title=…>, </text>) that leak from
+    # Вікісловник wikitext — the [|{}\[] split below does NOT cut on `<`, so these
+    # survived into learner-facing meanings (#2882 spot-check garbage).
+    text = re.sub(r"<[^>]*>", " ", text)
     text = re.sub(r"\{\{[^{}]*\}\}", "", text)
     text = re.split(r"\.\s{2,}", text)[0]  # cut a leaked quotation after the def
     text = re.split(r"[|{}\[]", text)[0]  # cut residual template/ref markers
@@ -1868,6 +1883,12 @@ def _clean_wiki_defs(raw: str | None) -> list[str]:
     out: list[str] = []
     for d in arr:
         cleaned = _clean_wiki_def(str(d))
+        # Reject residual tag fragments (lone `<`/`>` after stripping) and
+        # foreign-script transliteration noise — better an empty meaning than garbage.
+        if "<" in cleaned or ">" in cleaned:
+            continue
+        if _NON_UKRAINIAN_SCRIPT_RE.search(cleaned):
+            continue
         if len(cleaned) >= 6 and cleaned not in out:
             out.append(cleaned)
     return out[:3]
@@ -2032,6 +2053,7 @@ def _meaning(
     lemma: str,
     *,
     has_sum11_flags: bool | None = None,
+    kaikki_lookup: dict[str, dict[str, Any]] | None = None,
 ) -> dict | None:
     """Modern Ukrainian meaning: Вікісловник (clean, + synonyms) → СУМ-11 fallback.
 
@@ -2082,7 +2104,7 @@ def _meaning(
         if syns:
             block["synonyms"] = syns
         return block
-    return None
+    return _kaikki_meaning(kaikki_lookup or {}, lemma)
 
 
 def _definition_body(
@@ -2416,14 +2438,95 @@ def _kaikki_pronunciation(lookup: dict[str, dict[str, Any]], lemma: str) -> dict
     return None
 
 
+def _ipa_stressed_syllable_index(ipa: str) -> int | None:
+    primary = _IPA_PRIMARY_STRESS_RE.search(ipa)
+    if not primary:
+        return None
+    before_stress = _IPA_STRESS_RE.sub("", ipa[: primary.start()])
+    cleaned = _IPA_NON_SYLLABIC_MARK_RE.sub("", before_stress)
+    return len(_IPA_VOWEL_RE.findall(cleaned))
+
+
+def _stress_lemma_vowel(lemma: str, stressed_syllable_index: int) -> str:
+    clean = _strip_stress(lemma).strip()
+    if not clean or _has_whitespace(clean) or not _UKRAINIAN_WORD_RE.fullmatch(clean):
+        return ""
+    vowel_positions = [index for index, char in enumerate(clean) if char in _UKRAINIAN_VOWELS]
+    if not vowel_positions or stressed_syllable_index >= len(vowel_positions):
+        return ""
+    position = vowel_positions[stressed_syllable_index]
+    return clean[: position + 1] + "\u0301" + clean[position + 1 :]
+
+
+def _kaikki_stress(lookup: dict[str, dict[str, Any]], lemma: str) -> dict[str, str] | None:
+    row = _kaikki_row(lookup, lemma)
+    if not row:
+        return None
+    ipa_values = row.get("ipa")
+    if not isinstance(ipa_values, list):
+        return None
+    clean = _strip_stress(lemma).strip()
+    vowel_count = _count_vowels(clean)
+    if vowel_count < 1:
+        return None
+    for value in ipa_values:
+        ipa = clean_html_entities(str(value or "")).strip()
+        if not ipa:
+            continue
+        ipa_without_stress = _IPA_STRESS_RE.sub("", _IPA_NON_SYLLABIC_MARK_RE.sub("", ipa))
+        ipa_vowel_count = len(_IPA_VOWEL_RE.findall(ipa_without_stress))
+        if ipa_vowel_count != vowel_count:
+            continue
+        stressed_syllable_index = _ipa_stressed_syllable_index(ipa)
+        if stressed_syllable_index is None and vowel_count == 1:
+            stressed_syllable_index = 0
+        if stressed_syllable_index is None:
+            continue
+        form = _stress_lemma_vowel(clean, stressed_syllable_index)
+        if form and _strip_stress(form).casefold() == clean.casefold():
+            return {"form": form, "source": KAIKKI_SOURCE, "ipa": ipa}
+    return None
+
+
+def _kaikki_meaning(lookup: dict[str, dict[str, Any]], lemma: str) -> dict[str, object] | None:
+    row = _kaikki_row(lookup, lemma)
+    if not row:
+        return None
+    glosses = row.get("glosses")
+    if not isinstance(glosses, list):
+        return None
+    definitions: list[str] = []
+    seen: set[str] = set()
+    for gloss in glosses:
+        text = re.sub(r"\s+", " ", clean_html_entities(str(gloss or "")).strip())
+        if not text:
+            continue
+        key = text.casefold()
+        if key in seen:
+            continue
+        seen.add(key)
+        definitions.append(_truncate_text(text, 600))
+    if not definitions:
+        return None
+    return {
+        "definitions": definitions[:6],
+        "source": KAIKKI_SOURCE,
+        "note": "English Wiktionary gloss fallback; direct per-lemma row.",
+    }
+
+
+def _kaikki_etymology_text_is_usable(text: str) -> bool:
+    if not text:
+        return False
+    return not _KAIKKI_GARBLED_ETYMOLOGY_RE.search(text)
+
+
 def _kaikki_etymology(lookup: dict[str, dict[str, Any]], lemma: str) -> dict | None:
     row = _kaikki_row(lookup, lemma)
     if not row:
         return None
     text = clean_html_entities(str(row.get("etymology_text") or "").strip()[:600])
-    if not text:
-        return None
-    if _RUSSIAN_LABELED_CYRILLIC_RE.search(text):
+    if not _kaikki_etymology_text_is_usable(text):
         return None
     return {"text": text, "source": KAIKKI_SOURCE}
 
@@ -2477,18 +2580,11 @@ def _with_base_etymology_label(etymology: dict, base_form: str) -> dict:
 
 
 def _etymology(conn: sqlite3.Connection, lemma: str, kaikki_lookup: dict[str, dict[str, Any]] | None = None) -> dict | None:
-    """Cached etymology by authority order, with derived-lemma base fallback."""
+    """Cached etymology by direct per-lemma authority order."""
     lookup_word = _lookup_key(_base_lemma(lemma))
     if lookup_word in _COMPOSITIONAL_ETYMOLOGY_EXCLUSIONS:
         return None
-    exact = _source_etymology(conn, lemma, kaikki_lookup)
-    if exact:
-        return exact
-    for base_form in _derivational_etymology_candidates(lemma):
-        etymology = _source_etymology(conn, base_form, kaikki_lookup)
-        if etymology:
-            return _with_base_etymology_label(etymology, base_form)
-    return None
+    return _source_etymology(conn, lemma, kaikki_lookup)
 
 
 def _cefr(conn: sqlite3.Connection, lemma: str) -> dict[str, str] | None:
@@ -2683,6 +2779,36 @@ def _literary_attestation(conn: sqlite3.Connection, lemma: str) -> dict[str, Any
     return None
 
 
+_WIKI_REFERENCE_CACHE_DATA: dict[str, Any] | None = None
+_WIKI_REFERENCE_CACHE_DIRTY = False
+
+
+def _load_wiki_reference_cache(path: Path | None = None) -> dict[str, Any]:
+    global _WIKI_REFERENCE_CACHE_DATA
+    path = path or WIKI_REFERENCE_CACHE
+    if _WIKI_REFERENCE_CACHE_DATA is not None:
+        return _WIKI_REFERENCE_CACHE_DATA
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        data = {}
+    _WIKI_REFERENCE_CACHE_DATA = data if isinstance(data, dict) else {}
+    return _WIKI_REFERENCE_CACHE_DATA
+
+
+def _write_wiki_reference_cache(path: Path | None = None) -> None:
+    global _WIKI_REFERENCE_CACHE_DIRTY
+    path = path or WIKI_REFERENCE_CACHE
+    if not _WIKI_REFERENCE_CACHE_DIRTY or _WIKI_REFERENCE_CACHE_DATA is None:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(_WIKI_REFERENCE_CACHE_DATA, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    _WIKI_REFERENCE_CACHE_DIRTY = False
+
+
 @functools.cache
 def query_wikipedia(title: str) -> dict[str, Any] | None:
     """Wrapper around rag.source_query.wikipedia_summary to support unit test mocking.
@@ -2701,10 +2827,23 @@ def query_wikipedia(title: str) -> dict[str, Any] | None:
         return None
 
 
+def _cached_wikipedia_summary(title: str) -> dict[str, Any] | None:
+    global _WIKI_REFERENCE_CACHE_DIRTY
+    cache = _load_wiki_reference_cache()
+    if title in cache:
+        cached = cache[title]
+        return cached if isinstance(cached, dict) else None
+    wiki_data = query_wikipedia(title)
+    cache[title] = wiki_data if isinstance(wiki_data, dict) else None
+    _WIKI_REFERENCE_CACHE_DIRTY = True
+    _write_wiki_reference_cache()
+    return wiki_data if isinstance(wiki_data, dict) else None
+
+
 def _wiki_reference(lemma: str, literary_attestation: dict | None = None) -> dict[str, Any] | None:
     """Fetch uk.wikipedia summary and generate uk.wiktionary and uk.wikisource links."""
     clean_lemma = _strip_stress(_base_lemma(lemma)).strip()
-    wiki_data = query_wikipedia(clean_lemma)
+    wiki_data = _cached_wikipedia_summary(clean_lemma)
     if not wiki_data:
         return None
 
@@ -2796,13 +2935,17 @@ def enrich() -> tuple[int, int]:
             stressed_lemma = _stress_display_form(lemma)
             if stressed_lemma:
                 block["stress"] = {"form": stressed_lemma, "source": _STRESS_SOURCE}
+            else:
+                kaikki_stress = _kaikki_stress(kaikki_lookup, lemma)
+                if kaikki_stress:
+                    block["stress"] = kaikki_stress
             cefr = _cefr(conn, lemma)
             if cefr:
                 block["cefr"] = cefr
             morph = _morphology(base)
             if morph:
                 block["morphology"] = morph
-            meaning = _meaning(conn, lemma, has_sum11_flags=has_sum11_flags)
+            meaning = _meaning(conn, lemma, has_sum11_flags=has_sum11_flags, kaikki_lookup=kaikki_lookup)
             if meaning:
                 block["meaning"] = meaning
             if definition_cards:
