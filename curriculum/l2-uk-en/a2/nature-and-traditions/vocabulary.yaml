@@ -62,10 +62,22 @@
   translation: Christmas
   pos: noun
   example: "На Різдво ми готуємо кутю."
+- word: Святий Вечір
+  translation: Christmas Eve, Holy Evening
+  pos: phrase
+  example: "Святий Вечір - це вечеря перед Різдвом."
+- word: Новий рік
+  translation: New Year
+  pos: phrase
+  example: "Новий рік святкують першого січня."
 - word: Великдень
   translation: Easter
   pos: noun
   example: "На Великдень ми печемо паску."
+- word: Вербна неділя
+  translation: Palm Sunday
+  pos: phrase
+  example: "Вербна неділя є перед Великоднем."
 - word: писанка
   translation: decorated Easter egg
   pos: noun
@@ -94,6 +106,18 @@
   translation: Independence Day
   pos: phrase
   example: "День Незалежності - державне свято."
+- word: День Конституції
+  translation: Constitution Day
+  pos: phrase
+  example: "День Конституції України відзначають 28 червня."
+- word: захисник
+  translation: defender, masculine
+  pos: noun
+  example: "У цей день згадують захисників і захисниць України."
+- word: врожай
+  translation: harvest
+  pos: noun
+  example: "Цього року врожай яблук був добрий."
 - word: громада
   translation: community
   pos: noun
