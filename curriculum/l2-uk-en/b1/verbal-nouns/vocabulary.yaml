@@ -1,0 +1,596 @@
+- lemma: віддієслівний іменник
+  translation: "verbal noun; noun derived from a verb"
+  pos: phrase
+  usage: "Віддієслівний іменник називає дію як предмет."
+- lemma: дія
+  translation: "action"
+  pos: noun:f
+  usage: "Дія може стати іменником у формальному тексті."
+- lemma: процес
+  translation: "process"
+  pos: noun:m
+  usage: "Тестування - це процес перевірки програми."
+- lemma: результат
+  translation: "result"
+  pos: noun:m
+  usage: "Дослідження може називати процес або результат."
+- lemma: подія
+  translation: "event"
+  pos: noun:f
+  usage: "Відкриття центру - важлива подія для громади."
+- lemma: поняття
+  translation: "concept"
+  pos: noun:n
+  usage: "Знання - це абстрактне поняття."
+- lemma: суфікс
+  translation: "suffix"
+  pos: noun:m
+  usage: "Суфікс допомагає утворити нове слово."
+- lemma: суфіксальний
+  translation: "suffixal"
+  pos: adj:m
+  usage: "Читання має суфіксальний спосіб творення."
+- lemma: безафіксний
+  translation: "zero-derived; without affix"
+  pos: adj:m
+  usage: "Пошук - приклад безафіксного іменника."
+- lemma: словотвір
+  translation: "word formation"
+  pos: noun:m
+  usage: "Словотвір пояснює, як з'являються нові слова."
+- lemma: творення
+  translation: "formation; creation"
+  pos: noun:n
+  usage: "Творення іменників від дієслів має кілька моделей."
+- lemma: основа
+  translation: "stem; base"
+  pos: noun:f
+  usage: "Основа дієслова допомагає впізнати форму."
+- lemma: основа інфінітива
+  translation: "infinitive stem"
+  pos: phrase
+  usage: "Основа інфінітива не завжди дає форму автоматично."
+- lemma: подвоєння
+  translation: "doubling"
+  pos: noun:n
+  usage: "У слові читання є подвоєння н."
+- lemma: подвоєний
+  translation: "doubled"
+  pos: adj:m
+  usage: "У відкриття пишемо подвоєний т."
+- lemma: закінчення
+  translation: "ending"
+  pos: noun:n
+  usage: "Закінчення показує відмінок і число."
+- lemma: відмінок
+  translation: "case"
+  pos: noun:m
+  usage: "Після іменника часто потрібен родовий відмінок."
+- lemma: родовий відмінок
+  translation: "genitive case"
+  pos: phrase
+  usage: "Дослідження проблеми вимагає родового відмінка."
+- lemma: керування
+  translation: "government; control"
+  pos: noun:n
+  usage: "Керування проєктом потребує досвіду."
+- lemma: залежне слово
+  translation: "dependent word"
+  pos: phrase
+  usage: "Залежне слово після іменника часто стоїть у родовому."
+- lemma: регістр
+  translation: "register"
+  pos: noun:m
+  usage: "Регістр допомагає вибрати іменник або дієслово."
+- lemma: стиль
+  translation: "style"
+  pos: noun:m
+  usage: "Стиль речення може бути офіційним або розмовним."
+- lemma: офіційний стиль
+  translation: "formal style"
+  pos: phrase
+  usage: "В офіційному стилі часто вживають іменники на -ння."
+- lemma: академічний стиль
+  translation: "academic style"
+  pos: phrase
+  usage: "Академічний стиль потребує точних понять."
+- lemma: книжний
+  translation: "bookish; literary"
+  pos: adj:m
+  usage: "Здобуття освіти звучить книжніше, ніж навчання."
+- lemma: нейтральний
+  translation: "neutral"
+  pos: adj:m
+  usage: "Спілкування може бути нейтральним словом."
+- lemma: природний
+  translation: "natural"
+  pos: adj:m
+  usage: "У розмові дієслово часто природніше."
+- lemma: неприродний
+  translation: "unnatural"
+  pos: adj:m
+  usage: "Надмірна номіналізація звучить неприродно."
+- lemma: канцелярит
+  translation: "bureaucratese"
+  pos: noun:m
+  usage: "Канцелярит ховає дію за важкими іменниками."
+- lemma: номіналізація
+  translation: "nominalization"
+  pos: noun:f
+  usage: "Номіналізація перетворює дію на іменник."
+- lemma: читання
+  translation: "reading"
+  pos: noun:n
+  usage: "Читання статті допомогло зрозуміти тему."
+- lemma: читати
+  translation: "to read"
+  pos: verb
+  usage: "Я люблю читати українські тексти."
+- lemma: писання
+  translation: "writing as process"
+  pos: noun:n
+  usage: "Писання від руки допомагає запам'ятати форму."
+- lemma: писати
+  translation: "to write"
+  pos: verb
+  usage: "Студенти писали короткі звіти."
+- lemma: написання
+  translation: "writing; act of writing"
+  pos: noun:n
+  usage: "Після написання коду буде перевірка."
+- lemma: знання
+  translation: "knowledge"
+  pos: noun:n
+  usage: "Знання правил допомагає писати краще."
+- lemma: знати
+  translation: "to know"
+  pos: verb
+  usage: "Я знаю основні моделі творення."
+- lemma: питання
+  translation: "question; issue"
+  pos: noun:n
+  usage: "Це питання потребує пояснення."
+- lemma: питати
+  translation: "to ask"
+  pos: verb
+  usage: "Студенти питають про подвоєння."
+- lemma: навчання
+  translation: "learning; teaching; education"
+  pos: noun:n
+  usage: "Навчання триватиме шість місяців."
+- lemma: навчати
+  translation: "to teach"
+  pos: verb
+  usage: "Викладач навчає студентів граматики."
+- lemma: навчатися
+  translation: "to study; to learn"
+  pos: verb
+  usage: "Учасники навчаються онлайн."
+- lemma: вивчення
+  translation: "study; learning of a subject"
+  pos: noun:n
+  usage: "Вивчення мови потребує регулярної практики."
+- lemma: вивчати
+  translation: "to study"
+  pos: verb
+  usage: "Ми вивчаємо українську щодня."
+- lemma: дослідження
+  translation: "research; study"
+  pos: noun:n
+  usage: "Дослідження проблеми показало нові факти."
+- lemma: досліджувати
+  translation: "to research; investigate"
+  pos: verb
+  usage: "Команда досліджує проблему громади."
+- lemma: бачення
+  translation: "vision; way of seeing"
+  pos: noun:n
+  usage: "Моє бачення ситуації змінилося."
+- lemma: бачити
+  translation: "to see"
+  pos: verb
+  usage: "Я бачу різницю між формами."
+- lemma: відкриття
+  translation: "opening; discovery"
+  pos: noun:n
+  usage: "Відкриття виставки відбудеться завтра."
+- lemma: відкрити
+  translation: "to open; discover"
+  pos: verb
+  usage: "Місто відкриє новий центр."
+- lemma: закриття
+  translation: "closing; closure"
+  pos: noun:n
+  usage: "Закриття реєстрації заплановано на п'ятницю."
+- lemma: закрити
+  translation: "to close"
+  pos: verb
+  usage: "Організатори закрили реєстрацію."
+- lemma: здобуття
+  translation: "obtaining; attainment"
+  pos: noun:n
+  usage: "Здобуття освіти потребує часу."
+- lemma: здобути
+  translation: "to obtain; gain"
+  pos: verb
+  usage: "Вона здобула новий досвід."
+- lemma: забуття
+  translation: "oblivion; forgetting"
+  pos: noun:n
+  usage: "Деякі слова не мають піти в забуття."
+- lemma: забути
+  translation: "to forget"
+  pos: verb
+  usage: "Я забув стару форму слова."
+- lemma: прибуття
+  translation: "arrival"
+  pos: noun:n
+  usage: "Прибуття поїзда оголосили на вокзалі."
+- lemma: приїзд
+  translation: "arrival; coming"
+  pos: noun:m
+  usage: "Приїзд гостей змінив наші плани."
+- lemma: приїхати
+  translation: "to arrive by vehicle; come"
+  pos: verb
+  usage: "Гості приїхали вранці."
+- lemma: життя
+  translation: "life"
+  pos: noun:n
+  usage: "Життя громади стало темою дослідження."
+- lemma: жити
+  translation: "to live"
+  pos: verb
+  usage: "Вони живуть у новому районі."
+- lemma: спілкування
+  translation: "communication; interaction"
+  pos: noun:n
+  usage: "Спілкування з носіями мови допомагає говорити."
+- lemma: спілкуватися
+  translation: "to communicate; interact"
+  pos: verb
+  usage: "Студенти спілкуються українською."
+- lemma: створення
+  translation: "creation"
+  pos: noun:n
+  usage: "Створення сайту тривало місяць."
+- lemma: створити
+  translation: "to create"
+  pos: verb
+  usage: "Команда створила новий сайт."
+- lemma: відновлення
+  translation: "restoration; renewal"
+  pos: noun:n
+  usage: "Відновлення дороги розпочато навесні."
+- lemma: відновити
+  translation: "to restore; renew"
+  pos: verb
+  usage: "Місто відновило старий парк."
+- lemma: забезпечення
+  translation: "provision; ensuring"
+  pos: noun:n
+  usage: "Забезпечення якості потребує перевірки."
+- lemma: забезпечити
+  translation: "to provide; ensure"
+  pos: verb
+  usage: "Команда забезпечила якість матеріалів."
+- lemma: мислення
+  translation: "thinking"
+  pos: noun:n
+  usage: "Критичне мислення важливе для читання новин."
+- lemma: мислити
+  translation: "to think"
+  pos: verb
+  usage: "Учні вчаться мислити критично."
+- lemma: ходіння
+  translation: "walking as process"
+  pos: noun:n
+  usage: "Ходіння сходами корисне для здоров'я."
+- lemma: хід
+  translation: "course; move; gait"
+  pos: noun:m
+  usage: "Хід подій змінився після зустрічі."
+- lemma: ходити
+  translation: "to walk; go regularly"
+  pos: verb
+  usage: "Я ходжу на заняття щотижня."
+- lemma: говоріння
+  translation: "speaking skill"
+  pos: noun:n
+  usage: "Говоріння тренують на кожному уроці."
+- lemma: мовлення
+  translation: "speech; speaking"
+  pos: noun:n
+  usage: "Усне мовлення потребує практики."
+- lemma: говорити
+  translation: "to speak"
+  pos: verb
+  usage: "Я хочу говорити природніше."
+- lemma: малювання
+  translation: "drawing; painting"
+  pos: noun:n
+  usage: "Малювання допомагає дітям описувати кольори."
+- lemma: малювати
+  translation: "to draw; paint"
+  pos: verb
+  usage: "Діти малюють карту міста."
+- lemma: планування
+  translation: "planning"
+  pos: noun:n
+  usage: "Планування проєкту почалося в понеділок."
+- lemma: планувати
+  translation: "to plan"
+  pos: verb
+  usage: "Ми плануємо новий курс."
+- lemma: тестування
+  translation: "testing"
+  pos: noun:n
+  usage: "Тестування системи триватиме два дні."
+- lemma: тестувати
+  translation: "to test"
+  pos: verb
+  usage: "Розробники тестують програму."
+- lemma: редагування
+  translation: "editing"
+  pos: noun:n
+  usage: "Редагування тексту зайняло годину."
+- lemma: редагувати
+  translation: "to edit"
+  pos: verb
+  usage: "Я редагую звіт перед надсиланням."
+- lemma: бронювання
+  translation: "reservation; booking"
+  pos: noun:n
+  usage: "Бронювання номера підтверджено."
+- lemma: бронювати
+  translation: "to book; reserve"
+  pos: verb
+  usage: "Ми бронюємо кімнату онлайн."
+- lemma: сканування
+  translation: "scanning"
+  pos: noun:n
+  usage: "Сканування документів завершено."
+- lemma: копіювання
+  translation: "copying"
+  pos: noun:n
+  usage: "Копіювання файлів відбувається автоматично."
+- lemma: будівництво
+  translation: "construction"
+  pos: noun:n
+  usage: "Будівництво школи завершено."
+- lemma: будувати
+  translation: "to build"
+  pos: verb
+  usage: "Компанія будує нову школу."
+- lemma: виробництво
+  translation: "production; manufacturing"
+  pos: noun:n
+  usage: "Виробництво меблів зросло цього року."
+- lemma: виробляти
+  translation: "to produce; manufacture"
+  pos: verb
+  usage: "Фабрика виробляє обладнання."
+- lemma: пошук
+  translation: "search"
+  pos: noun:m
+  usage: "Пошук квартири зайняв місяць."
+- lemma: шукати
+  translation: "to search; look for"
+  pos: verb
+  usage: "Ми шукаємо відповідь у тексті."
+- lemma: підпис
+  translation: "signature"
+  pos: noun:m
+  usage: "Підпис документа має бути чітким."
+- lemma: підписання
+  translation: "signing"
+  pos: noun:n
+  usage: "Підписання договору відбудеться завтра."
+- lemma: підписати
+  translation: "to sign"
+  pos: verb
+  usage: "Директор підписав договір."
+- lemma: біг
+  translation: "running"
+  pos: noun:m
+  usage: "Біг корисний для здоров'я."
+- lemma: бігти
+  translation: "to run"
+  pos: verb
+  usage: "Спортсмен біжить швидко."
+- lemma: спів
+  translation: "singing"
+  pos: noun:m
+  usage: "Спів дітей лунав у залі."
+- lemma: співати
+  translation: "to sing"
+  pos: verb
+  usage: "Діти співають українську пісню."
+- lemma: крик
+  translation: "shout; cry"
+  pos: noun:m
+  usage: "Крик на уроці заважає іншим."
+- lemma: кричати
+  translation: "to shout"
+  pos: verb
+  usage: "Не треба кричати в коридорі."
+- lemma: лет
+  translation: "flight"
+  pos: noun:m
+  usage: "Лет птаха був швидким."
+- lemma: летіти
+  translation: "to fly"
+  pos: verb
+  usage: "Літак летить до Варшави."
+- lemma: обмін
+  translation: "exchange"
+  pos: noun:m
+  usage: "Обмін досвідом був корисним."
+- lemma: обміняти
+  translation: "to exchange"
+  pos: verb
+  usage: "Ми обміняли квитки."
+- lemma: вибір
+  translation: "choice"
+  pos: noun:m
+  usage: "Вибір форми залежить від стилю."
+- lemma: вибрати
+  translation: "to choose"
+  pos: verb
+  usage: "Студент вибрав природний варіант."
+- lemma: перевірка
+  translation: "checking; verification"
+  pos: noun:f
+  usage: "Перевірка документів завершена."
+- lemma: перевірити
+  translation: "to check; verify"
+  pos: verb
+  usage: "Викладач перевірив відповіді."
+- lemma: проведення
+  translation: "conducting; holding"
+  pos: noun:n
+  usage: "Проведення консультацій заплановано на травень."
+- lemma: провести
+  translation: "to conduct; hold"
+  pos: verb
+  usage: "Команда провела консультацію."
+- lemma: підтримка
+  translation: "support"
+  pos: noun:f
+  usage: "Підтримка студентів є метою проєкту."
+- lemma: підтримати
+  translation: "to support"
+  pos: verb
+  usage: "Проєкт підтримав нових учасників."
+- lemma: підготовка
+  translation: "preparation"
+  pos: noun:f
+  usage: "Підготовка до іспиту почалася за місяць."
+- lemma: готуватися
+  translation: "to prepare oneself"
+  pos: verb
+  usage: "Студенти готуються до іспиту."
+- lemma: початок
+  translation: "beginning; start"
+  pos: noun:m
+  usage: "Перед початком занять буде тестування."
+- lemma: завершення
+  translation: "completion; ending"
+  pos: noun:n
+  usage: "Після завершення курсу буде сертифікат."
+- lemma: завершити
+  translation: "to complete; finish"
+  pos: verb
+  usage: "Учасники завершили курс."
+- lemma: вступ
+  translation: "admission; entrance"
+  pos: noun:m
+  usage: "Підготовка до вступу триває весь семестр."
+- lemma: вступити
+  translation: "to enter; be admitted"
+  pos: verb
+  usage: "Вона хоче вступити до університету."
+- lemma: розвиток
+  translation: "development"
+  pos: noun:m
+  usage: "Розвиток навичок потребує практики."
+- lemma: розвивати
+  translation: "to develop"
+  pos: verb
+  usage: "Курс розвиває цифрові навички."
+- lemma: підтвердження
+  translation: "confirmation"
+  pos: noun:n
+  usage: "Після реєстрації учасники отримають підтвердження."
+- lemma: підтвердити
+  translation: "to confirm"
+  pos: verb
+  usage: "Будь ласка, підтвердьте отримання листа."
+- lemma: отримання
+  translation: "receiving; obtaining"
+  pos: noun:n
+  usage: "Підтвердження отримання листа потрібне сьогодні."
+- lemma: отримати
+  translation: "to receive"
+  pos: verb
+  usage: "Ми отримали ваш лист."
+- lemma: надсилання
+  translation: "sending"
+  pos: noun:n
+  usage: "Надсилання документів завершено."
+- lemma: надіслати
+  translation: "to send"
+  pos: verb
+  usage: "Вона надіслала документи."
+- lemma: пояснення
+  translation: "explanation"
+  pos: noun:n
+  usage: "Пояснення правила було коротким."
+- lemma: пояснити
+  translation: "to explain"
+  pos: verb
+  usage: "Викладач пояснив правило."
+- lemma: порівняння
+  translation: "comparison"
+  pos: noun:n
+  usage: "Порівняння форм показує різницю."
+- lemma: порівняти
+  translation: "to compare"
+  pos: verb
+  usage: "Порівняйте два речення."
+- lemma: обговорення
+  translation: "discussion"
+  pos: noun:n
+  usage: "Обговорення результатів тривало годину."
+- lemma: обговорити
+  translation: "to discuss"
+  pos: verb
+  usage: "Учасники обговорили результати."
+- lemma: розв'язання
+  translation: "solution; solving"
+  pos: noun:n
+  usage: "Розв'язання проблеми потребує часу."
+- lemma: розв'язати
+  translation: "to solve"
+  pos: verb
+  usage: "Команда розв'язала проблему."
+- lemma: оплата
+  translation: "payment"
+  pos: noun:f
+  usage: "Після оплати надішлемо підтвердження."
+- lemma: оплатити
+  translation: "to pay"
+  pos: verb
+  usage: "Клієнт оплатив курс."
+- lemma: реєстрація
+  translation: "registration"
+  pos: noun:f
+  usage: "Реєстрація завершується в п'ятницю."
+- lemma: зареєструватися
+  translation: "to register"
+  pos: verb
+  usage: "Учасники мають зареєструватися онлайн."
+- lemma: завдання
+  translation: "task; assignment"
+  pos: noun:n
+  usage: "Завдання містить дванадцять прикладів."
+- lemma: звіт
+  translation: "report"
+  pos: noun:m
+  usage: "Написання звіту тривало два дні."
+- lemma: документація
+  translation: "documentation"
+  pos: noun:f
+  usage: "Читання документації обов'язкове."
+- lemma: громада
+  translation: "community"
+  pos: noun:f
+  usage: "Дослідження описує життя громади."
+- lemma: навчальний центр
+  translation: "learning center"
+  pos: phrase
+  usage: "Відкриття навчального центру відбудеться восени."
+- lemma: цифрові навички
+  translation: "digital skills"
+  pos: phrase
+  usage: "Розвиток цифрових навичок є частиною курсу."
