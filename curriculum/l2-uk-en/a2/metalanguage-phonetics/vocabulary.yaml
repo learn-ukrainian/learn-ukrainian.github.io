@@ -62,6 +62,54 @@
   translation: transcription
   pos: noun
   example: "Транскрипція показує звучання слова."
+- word: графіка
+  translation: writing system
+  pos: noun
+  example: "Графіка описує літери та інші письмові знаки."
+- word: орфоепія
+  translation: orthoepy, pronunciation rules
+  pos: noun
+  example: "Орфоепія пояснює правильну літературну вимову."
+- word: орфографія
+  translation: orthography, spelling rules
+  pos: noun
+  example: "Орфографія пояснює правильне написання слів."
+- word: сонорний
+  translation: sonorant
+  pos: adjective
+  example: "У сонорному приголосному голос переважає над шумом."
+- word: пом'якшений
+  translation: partially softened
+  pos: adjective
+  example: "Пом'якшений приголосний звучить м'якше через сусідній звук."
+- word: йотований
+  translation: iotated
+  pos: adjective
+  example: "Літери я, ю, є, ї часто називають йотованими."
+- word: свистячий
+  translation: sibilant, whistling consonant
+  pos: adjective
+  example: "Звуки з, ц, с, дз належать до свистячих."
+- word: шиплячий
+  translation: hushing consonant
+  pos: adjective
+  example: "Звуки ж, ч, ш, дж належать до шиплячих."
+- word: губний
+  translation: labial
+  pos: adjective
+  example: "Губний приголосний утворюється за допомогою губ."
+- word: орфоепічна помилка
+  translation: pronunciation error
+  pos: noun
+  example: "Неправильний наголос може бути орфоепічною помилкою."
+- word: вільний наголос
+  translation: free stress
+  pos: noun
+  example: "Вільний наголос може падати на різні склади."
+- word: рухомий наголос
+  translation: mobile stress
+  pos: noun
+  example: "Рухомий наголос змінюється в різних формах слова."
 - word: звукосполука
   translation: sound combination
   pos: noun
