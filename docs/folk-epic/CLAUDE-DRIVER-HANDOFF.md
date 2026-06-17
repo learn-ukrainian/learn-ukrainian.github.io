@@ -63,7 +63,29 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 50 HANDOFF (2026-06-17 — 🤝 SESSION WRAP. Seminar gate machinery fully BUILT (beauty gate + #3079 craft loop + --enhance mode + scores UI), all verified. ONE small fix stands between here and the convergence proof: wire #3428 static python_qg into --enhance) — **RESUME HERE**
+## ▶▶▶ SESSION 51 HANDOFF (2026-06-17 — ✅ BOTH `--enhance` python_qg blockers FIXED + pushed to #3495 (proven: enhance now reaches AND ITERATES the llm_qg craft loop). ⛔ Convergence proof FAILED — DETERMINISTIC root cause = REVIEWER NON-DETERMINISM (Δ up to 2.4 on identical content), not the corrector. #3495 STAYS HELD.) — **RESUME HERE**
+
+> **🟢 ONE-LINE STATE:** The S50 enhance-telemetry fix is DONE — 2 commits on PR #3495 (`codex/folk-enhance-mode`), pushed, tested. `--enhance` now passes python_qg AND the llm_qg craft loop ITERATES. But curated kalendarna does NOT converge: terminal dims pedagogical **7.1** / engagement **7.0** / beauty **7.6** / decolonization 8.4 (floor 8.0; 3/4 short). Tool-backed root cause = the per-dim LLM reviewer is wildly non-deterministic (same content, Δ up to 2.4, pass/fail flips) — which defeats the best-round guard. **#3079's real blocker is reviewer variance, not the craft loop.**
+>
+> ### ✅ DONE THIS SESSION (branch `codex/folk-enhance-mode` / PR #3495 — pushed)
+> - `4318dd02a6` — initial python_qg substitutes resource-liveness for absent writer telemetry (the `resources_search_attempted` wall #3428 solved for verify_shippable). PROVEN: enhance passes python_qg, reaches llm_qg.
+> - `9596b1eb0e` — thread `resource_liveness_fn` into the llm_qg loop's **post-correction python_qg re-validation** (else round 1 rolls back as `python_qg_failed`, truncating the loop to 1 round). PROVEN: loop now iterates (round1→correction→round2).
+> - Extracted shared `scripts/build/resource_liveness.py` (correct layering — pipeline reuses the checker without back-depending on the `verify_shippable` CLI; verify_shippable now imports it). Tests: `test_resource_liveness.py`, `test_python_qg_resource_liveness_threading.py` (both correction paths + None-default), llm_qg-loop forwarding test. 19+39 targeted green; ruff clean. **6 build-test failures verified PRE-EXISTING** (identical on base commit b8e39cb592 — env-dependent ulp_fidelity data; not mine).
+>
+> ### ⛔ #3495 STAYS HELD — do NOT merge
+> Convergence unproven (the merge gate). #3495 promotes `beauty` to a terminal dim; no folk module clears all 4 terminal dims (best non-decolonization dim ~7.6), so merging activates a gate nothing passes → blocks all folk shipping. Merge ONLY after a folk module converges ≥8 on all 4 terminal dims. (PR comment posted with the run-2 verdict + variance table.)
+>
+> ### 📊 EVIDENCE (tool-backed #M-4) — reviewer non-determinism is THE blocker
+> Same pristine curated kalendarna, round-1 review across two runs: tone 5.8↔8.2 (**Δ2.4**), pedagogical 5.8↔7.1, engagement 8.1↔7.0 (**flips pass→fail**), decolonization 9.0↔8.4, naturalness 7.0↔7.6, beauty 7.4↔7.6. The run-2 `min_score_regressed` stop (tone→5.5) is NOISE — the 4 applied craft fixes were tasteful craft-preserving prose rewrites (NOT dry inserts), targeting pedagogical/engagement/beauty/decolonization; they would not crater tone. `invoke_reviewer_dim` (`linear_pipeline.py:4925`) passes NO temperature/seed and takes ONE sample per dim. Cf. open issue **#3159** (reviewer noise structural). Pedagogical also carries STRUCTURAL deductions a prose corrector can't fix: `activity_split_under_range` (4 inline vs contract) + `audit_line_missing` flags.
+>
+> ### 🎯 NEXT ACTION (priority #0 — #3079 real root cause)
+> 1. **REDUCE REVIEWER VARIANCE** (proper fix, best practice = self-consistency): N samples per dim, aggregate by **MEDIAN** (default N=3 seminar / 1 core to bound cost). Touch `invoke_reviewer_dim` + its callers in `run_llm_qg`. Add a **noise-aware best-round/regression guard** (don't stop on sub-noise min regressions). ⚠️ COST: N× reviewer calls per dim per round — a standing compute increase; **get user sign-off on N before enabling fleet-wide** (it triples seminar reviewer cost at N=3). >50 LOC cross-file → dispatch (codex) with worktree+PR; consider a fleet design consult first (#M-12).
+> 2. Re-run `--enhance` on curated kalendarna (Monitor/bg, NOT delegate dispatch). Converged on all 4 terminal dims → un-hold + merge #3495 (squash), close #3480.
+> 3. If variance reduced but pedagogical still short → curated module needs activity/audit enrichment OR an enhance/curated reviewer-rubric calibration (the structural deductions above).
+>
+> ### 🗂 FORENSICS: `/tmp/kalendarna-run{1,2}-*.json|md`; logs `enhance-convergence*.log` on the branch; PR #3495 comment (run-2 verdict + variance table). In-flight dispatches: 0. Merge grant LIVE; worktree-only; never to main.
+
+## ▶▶▶ SESSION 50 HANDOFF (2026-06-17 — 🤝 SESSION WRAP. Seminar gate machinery fully BUILT (beauty gate + #3079 craft loop + --enhance mode + scores UI), all verified. ONE small fix stands between here and the convergence proof: wire #3428 static python_qg into --enhance)
 
 > **🟢 ONE-LINE STATE:** Everything for the seminar quality gate is built + verified + staged in PRs.
 > The end-to-end convergence proof is blocked only by a small, known fix (`--enhance`'s python_qg trips
