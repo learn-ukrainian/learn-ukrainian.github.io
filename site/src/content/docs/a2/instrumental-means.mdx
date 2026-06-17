@@ -102,7 +102,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Дія і знаряддя
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "писати", "right": "ручкою"}, {"left": "малювати", "right": "олівцем"}, {"left": "різати", "right": "ножем"}, {"left": "їсти", "right": "ложкою"}]`)} isUkrainian={true} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "писати", "right": "ручкою"}, {"left": "малювати", "right": "олівцем"}, {"left": "різати", "right": "ножем"}, {"left": "їсти", "right": "ложкою"}]`)} instruction={"З'єднайте дію з природним знаряддям."} isUkrainian={true} />
 
 ## Форми однини
 
@@ -130,7 +130,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Правильна форма
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я пишу ___.", "answer": "ручкою", "options": ["ручка", "ручкою", "з ручкою"]}, {"sentence": "Ліна малює ___.", "answer": "олівцем", "options": ["олівець", "олівцем", "з олівцем"]}, {"sentence": "Він їде на роботу ___.", "answer": "автобусом", "options": ["автобус", "автобусом", "з автобусом"]}, {"sentence": "Ми їдемо до Львова ___.", "answer": "потягом", "options": ["потяг", "потягом", "з потягом"]}]`)} isUkrainian={true} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я пишу ___.", "answer": "ручкою", "options": ["ручка", "ручкою", "з ручкою"]}, {"sentence": "Ліна малює ___.", "answer": "олівцем", "options": ["олівець", "олівцем", "з олівцем"]}, {"sentence": "Він їде на роботу ___.", "answer": "автобусом", "options": ["автобус", "автобусом", "з автобусом"]}, {"sentence": "Ми їдемо до Львова ___.", "answer": "потягом", "options": ["потяг", "потягом", "з потягом"]}]`)} instruction={"Оберіть форму орудного відмінка без прийменника."} isUkrainian={true} />
 
 ## Транспорт
 
@@ -171,7 +171,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Однина чи множина
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Ми малюємо ___.", "options": [{"text": "фарбами", "correct": true}, {"text": "фарби", "correct": false}, {"text": "фарбу", "correct": false}], "explanation": "Фарби у множині мають форму фарбами."}, {"question": "Вона ріже папір ___.", "options": [{"text": "ножицями", "correct": true}, {"text": "ножиці", "correct": false}, {"text": "ножиця", "correct": false}], "explanation": "Ножиці - множина, орудний ножицями."}, {"question": "Я їм суп ___.", "options": [{"text": "ложкою", "correct": true}, {"text": "ложка", "correct": false}, {"text": "з ложкою", "correct": false}], "explanation": "Ложка є знаряддям."}, {"question": "Вони працюють ___.", "options": [{"text": "руками", "correct": true}, {"text": "руки", "correct": false}, {"text": "рукам", "correct": false}], "explanation": "Руки у множині мають форму руками."}]`)} isUkrainian={true} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Ми малюємо ___.", "options": [{"text": "фарбами", "correct": true}, {"text": "фарби", "correct": false}, {"text": "фарбу", "correct": false}], "explanation": "Фарби у множині мають форму фарбами."}, {"question": "Вона ріже папір ___.", "options": [{"text": "ножицями", "correct": true}, {"text": "ножиці", "correct": false}, {"text": "ножиця", "correct": false}], "explanation": "Ножиці - множина, орудний ножицями."}, {"question": "Я їм суп ___.", "options": [{"text": "ложкою", "correct": true}, {"text": "ложка", "correct": false}, {"text": "з ложкою", "correct": false}], "explanation": "Ложка є знаряддям."}, {"question": "Вони працюють ___.", "options": [{"text": "руками", "correct": true}, {"text": "руки", "correct": false}, {"text": "рукам", "correct": false}], "explanation": "Руки у множині мають форму руками."}]`)} instruction={"Оберіть форму, яка підходить до речення."} isUkrainian={true} />
 
 ## Інструмент чи супровід?
 
@@ -189,7 +189,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Інструмент чи супровід?
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Інструмент або засіб": ["писати ручкою", "їхати автобусом", "різати ножем", "малювати фарбами"], "Супровід": ["гуляти з другом", "готувати з мамою", "їхати з колегою", "малювати з викладачкою"]}`)} isUkrainian={true} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Інструмент або засіб": ["писати ручкою", "їхати автобусом", "різати ножем", "малювати фарбами"], "Супровід": ["гуляти з другом", "готувати з мамою", "їхати з колегою", "малювати з викладачкою"]}`)} instruction={"Розсортуйте фрази за значенням."} isUkrainian={true} />
 
 ## Міні-сцена: як ти добираєшся?
 
@@ -258,7 +258,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Без прийменника
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я пишу ручкою.", "isTrue": true, "explanation": "Інструмент стоїть в орудному без з."}, {"statement": "Я пишу з ручкою.", "isTrue": false, "explanation": "Це звучить як супровід; для інструмента краще ручкою."}, {"statement": "Вона їде трамваєм.", "isTrue": true, "explanation": "Трамваєм - засіб пересування."}, {"statement": "Ми йдемо пішком.", "isTrue": false, "explanation": "Природна форма - пішки."}]`)} isUkrainian={true} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Я пишу ручкою.", "isTrue": true, "explanation": "Інструмент стоїть в орудному без з."}, {"statement": "Я пишу з ручкою.", "isTrue": false, "explanation": "Це звучить як супровід; для інструмента краще ручкою."}, {"statement": "Вона їде трамваєм.", "isTrue": true, "explanation": "Трамваєм - засіб пересування."}, {"statement": "Ми йдемо пішком.", "isTrue": false, "explanation": "Природна форма - пішки."}]`)} instruction={"Позначте, чи речення правильне."} isUkrainian={true} />
 
 ### Виправте речення
 
