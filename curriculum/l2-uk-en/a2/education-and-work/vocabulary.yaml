@@ -9,7 +9,7 @@
 - word: університет
   translation: university
   pos: noun
-  example: "Університет, де я навчався, у центрі міста."
+  example: "Університет, де я навчався, знаходиться у центрі міста."
 - word: факультет
   translation: faculty, department
   pos: noun
@@ -17,7 +17,7 @@
 - word: спеціальність
   translation: specialty, major
   pos: noun
-  example: "Моя спеціальність - комп'ютерні науки."
+  example: "Моя спеціальність — комп'ютерні науки."
 - word: диплом
   translation: diploma, degree
   pos: noun
@@ -34,6 +34,14 @@
   translation: profession
   pos: noun
   example: "Професія лікаря дуже відповідальна."
+- word: працювати
+  translation: to work
+  pos: verb
+  example: "Я вивчаю українську, щоб працювати з клієнтами."
+- word: робота
+  translation: work, job
+  pos: noun
+  example: "Хоча робота важка, вона цікава."
 - word: посада
   translation: position
   pos: noun
@@ -54,6 +62,10 @@
   translation: colleague
   pos: noun
   example: "Колега, який сидить поруч, допомагає мені."
+- word: керівник
+  translation: manager, supervisor
+  pos: noun
+  example: "Якщо завдання складне, я питаю керівника."
 - word: зарплата
   translation: salary
   pos: noun
@@ -65,11 +77,23 @@
 - word: завдання
   translation: task
   pos: noun
-  example: "Якщо завдання складне, я питаю керівника."
+  example: "Сьогодні в мене важливе завдання."
 - word: проєкт
   translation: project
   pos: noun
   example: "Ми працюємо над новим проєктом."
+- word: навички
+  translation: skills
+  pos: noun
+  example: "Я проходжу курс, щоб отримати нові навички."
+- word: вакансія
+  translation: job opening
+  pos: noun
+  example: "Якщо знайду цікаву вакансію, подам резюме."
+- word: резюме
+  translation: resume, CV
+  pos: noun
+  example: "Я подаю резюме, щоб знайти нову роботу."
 - word: співбесіда
   translation: job interview
   pos: noun
