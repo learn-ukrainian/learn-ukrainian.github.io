@@ -17,19 +17,15 @@ By the end, you can:
 
 ## Діалоги
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
-Begin with practical hearing. **Практичне відчуття звучності** means you read
-pairs aloud and notice which one gives your mouth an easier path. Say both
-versions slowly. Treat this as a short **розморожування** for your mouth before
-you make a grammar choice:
+Start with your ear. Say each pair aloud once. The smoother line is the one
+that your mouth can say without a hard stop:
 
 | Easier | Harder |
 | --- | --- |
-| **працюють у нас** | працюють в нас |
 | **в Києві** | у Києві |
 | **у Львові** | в Львові |
 | **мама й тато** | мама і тато |
+| **брат і сестра** | брат й сестра |
 
 You do not need a long theory before speaking. The first question is simple:
 which version has fewer heavy sound collisions?
@@ -77,18 +73,15 @@ Support after the Ukrainian lines:
 
 Use **й** after a vowel when the next word begins cleanly: **ти й Іван**.
 Use **і** between consonants: **Максим іде**, **брат і сестра**. Keep **і**
-before **Яна**, **ютуб**, **яблуко**, **є** or **ї**, because those letters
-begin with a [й]-sound in speech.
-
-<!-- INJECT_ACTIVITY: act-2 -->
+before **Яна** or letters like **є** and **ї**, because they begin with a
+[й]-sound in speech.
 
 ## У чи В?
 
-The core pattern is the **базове правило між голосними й приголосними**. When a
-tiny connector stands between sounds, Ukrainian tries to avoid two heavy
-consonants in a row and two open vowels in a row. Read the tiny examples
-**день у день** and **дощ іде**; the small word changes the rhythm of the whole
-phrase.
+The core pattern is a simple sound check. When a tiny connector stands between
+sounds, Ukrainian tries to avoid two heavy consonants in a row and two open
+vowels in a row. You only need two labels here: **голосний** is a vowel sound,
+and **приголосний** is a consonant sound.
 
 Use this as an A1 working rule:
 
@@ -98,7 +91,7 @@ Use this as an A1 working rule:
 | after a consonant + before a consonant | **у** | **Тарас у школі.** |
 | start of a sentence before a consonant | **У** | **У місті цікаво.** |
 | start of a sentence before a vowel | **В** | **В Одесі тепло.** |
-| before words like **Львів** or **фірма** | usually **у** | **сестра у Львові** |
+| before words like **Львів** | usually **у** | **сестра у Львові** |
 
 Say the pairs aloud:
 
@@ -108,7 +101,7 @@ Say the pairs aloud:
 Я працюю в офісі.
 Максим працює у банку.
 У місті є аптека.
-В університеті тихо.
+В офісі тихо.
 ```
 
 Support after the Ukrainian lines:
@@ -120,15 +113,14 @@ Support after the Ukrainian lines:
 | **Я працюю в офісі.** | I work in an office. |
 | **Максим працює у банку.** | Maksym works in a bank. |
 | **У місті є аптека.** | There is a pharmacy in the city. |
-| **В університеті тихо.** | It is quiet at the university. |
+| **В офісі тихо.** | It is quiet in the office. |
 
 The **position at the beginning of a sentence or after a pause** is about
 sentence edges. At the beginning of a sentence, choose the form that gives the
 first word a clean launch. Before a consonant, use **У**: **У парку тепло. У
-школі урок.** Before a vowel, use **В**: **В офісі тихо. В аптеці черга.**
-Another safe sentence-start example is **Іде дощ.** The same check works after
-punctuation pauses: **коми** and **двокрапки** often give the next phrase a new
-sound start.
+школі урок.** Before a vowel, use **В**: **В офісі тихо. В аптеці черга.** The
+same check works after punctuation pauses: **коми** and **двокрапки** often give
+the next phrase a new sound start.
 
 After a comma, pause, or colon, the same idea returns:
 
@@ -144,23 +136,20 @@ Support after the Ukrainian lines:
 | **Так, у нас є час.** | Yes, we have time. |
 | **Сьогодні тепло: у парку багато людей.** | It is warm today: there are many people in the park. |
 
-**Фонетичні винятки** keep the line from becoming physically awkward. Before
-words like **Львів**, **фірма**, **твій**, or **хвилина**, prefer **у**, even
-when a simple pattern might suggest **в**:
+Some common chunks keep the line from becoming physically awkward. Before
+words like **Львів**, prefer **у**, even when a simple pattern might suggest
+**в**:
 
 | Prefer | Avoid |
 | --- | --- |
 | **сестра у Львові** | сестра в Львові |
-| **звернувся у фірму** | звернувся в фірму |
 | **квиток у кіно** | квиток в кіно |
 
 The same principle appears in words such as **учитель/вчитель** and
 **уже/вже**. At A1, notice the idea but do not overwork it. Your main job is to
 read short place lines aloud and choose the smoother form.
 
-<!-- INJECT_ACTIVITY: act-3 -->
-
-<!-- INJECT_ACTIVITY: act-4 -->
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ## І чи Й? З, із, чи зі?
 
@@ -169,7 +158,7 @@ For **і/й**, use the same sound logic.
 | Situation | Safer choice | Example |
 | --- | --- | --- |
 | between consonants | **і** | **брат і сестра** |
-| after a vowel before a vowel | **й** | **мама й тато** |
+| after a vowel before a word like **тато** or **Олена** | **й** | **мама й тато** |
 | at the beginning of a sentence | **І** | **І він іде.** |
 | before **я, ю, є, ї, й** | **і** | **Марія і Яна** |
 
@@ -178,8 +167,8 @@ Say these aloud:
 ```text
 Брат і сестра в школі.
 Мама й тато в театрі.
-Марія і Яна в місті.
-Відео і ютуб - це тема для перерви.
+Я і Максим ідемо в парк.
+Ти й Олена йдете в театр.
 ```
 
 Support after the Ukrainian lines:
@@ -188,14 +177,13 @@ Support after the Ukrainian lines:
 | --- | --- |
 | **Брат і сестра в школі.** | Brother and sister are at school. |
 | **Мама й тато в театрі.** | Mother and father are at the theater. |
-| **Марія і Яна в місті.** | Mariia and Yana are in the city. |
-| **Відео і ютуб - це тема для перерви.** | Video and YouTube are a break topic. |
+| **Я і Максим ідемо в парк.** | Maksym and I are going to the park. |
+| **Ти й Олена йдете в театр.** | You and Olena are going to the theater. |
 
-A later recognition note: sometimes **і** stays because two ideas are being
-contrasted or named as a pair. This is **логічне зіставлення**:
-**Шевченко і сучасність**, **батьки і діти**, **добро і зло**. For now, keep
-the examples as fixed reading lines. Do not use this preview to guess freely in
-your own sentences yet.
+Keep **і** before **Яна** or letters like **є** and **ї**, because they begin
+with a [й]-sound in speech. A safe A1 line is **Марія і Яна в місті.**
+
+<!-- INJECT_ACTIVITY: act-2 -->
 
 Now add the smaller set **з**, **із**, **зі**. The basic meanings can be "from" or
 "with"; the spelling depends on the next sounds.
@@ -203,19 +191,22 @@ Now add the smaller set **з**, **із**, **зі**. The basic meanings can be "f
 | Form | Safe A1 examples |
 | --- | --- |
 | **з** | **з Одеси**, **з другом**, **з Іваном** |
-| **із** | **із сестрою**, **із школи** |
+| **із** | **із сестрою** |
 | **зі** | **зі мною**, **зі святом**, **зі школи** |
 
-You will see both **із школи** and **зі школи** in real Ukrainian. At A1, use
-**зі** in very common clusters like **зі мною**, **зі святом**, and **зі
-школи**. The goal is not to memorize a giant table. The goal is to hear that
-**з мною** is cramped, while **зі мною** is easy.
+At A1, use **зі** in very common clusters like **зі мною**, **зі святом**,
+and **зі школи**. The goal is not to memorize a giant table. The goal is to
+hear that **з мною** is cramped, while **зі мною** is easy.
+
+<!-- INJECT_ACTIVITY: act-3 -->
 
 :::tip
 When you are unsure, read the whole phrase aloud once. Do not translate "in" or
 "and" first and then choose a Ukrainian form. Choose the Ukrainian sound that
 lets the phrase move smoothly.
 :::
+
+<!-- INJECT_ACTIVITY: act-4 -->
 
 ## Підсумок
 
@@ -234,9 +225,8 @@ Keep these repair pairs in memory:
 | Вона у школі. | **Вона в школі.** |
 | Брат й сестра. | **Брат і сестра.** |
 | В місті цікаво. | **У місті цікаво.** |
-| Відео й ютуб. | **Відео і ютуб.** |
-| Звернувся в фірму. | **Звернувся у фірму.** |
-| Вони вдосконалюють... | **Вони удосконалюють...** |
+| З мною. | **Зі мною.** |
+| З святом! | **Зі святом!** |
 
 For the next places lessons, you will reuse these choices constantly:
 
