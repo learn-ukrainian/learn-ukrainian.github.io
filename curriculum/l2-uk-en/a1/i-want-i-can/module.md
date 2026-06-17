@@ -13,8 +13,6 @@ After the helper verb, keep the second action in the dictionary **-ти** form:
 
 ## Діалоги
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 Olia and Denys are deciding what to do tonight. Read for the job of each helper
 verb: **хочу** tells desire, **можу** tells possibility, and **мушу** tells an
 obligation.
@@ -83,27 +81,13 @@ too. **На жаль, не можу** is a complete answer because the previous 
 already gives the missing action.
 :::
 
-<!-- INJECT_ACTIVITY: act-2 -->
-
 ## Дієслово «хотіти»
 
 **Хотіти** means "to want." It is irregular, so learn the present-tense forms
 as ready chunks. Ukrainian grammar still treats **хотіти** as **І дієвідміна**
 even though the infinitive ends in **-іти**.
-
-<!-- NO_VERIFY: verified with mcp__sources get_chunk_context chunk 10-klas-ukrmova-karaman-2018_s0319. -->
-> В основі інфінітива наявні суфікси -а-, -і- (що не випадають в особових формах) та -ува-, -ну-. співати, біліти, будувати, кинути.
-> В основі інфінітива наявні звукосполучення -оро-, -оло-. боротися, колоти.
-> Односкладова основа на голосний: пити, лити. Односкладова основа на приголосний: нести, могти. Окремі дієслова: хотіти, гудіти, сопіти, ревіти, іржати.
-
-*— Караман Grade 10, p.179*
-
-<!-- NO_VERIFY: verified with mcp__sources get_chunk_context chunk 7-klas-ukrmova-litvinova-2024_s0062. -->
-> I дієвідміна
-> гудіти, іржати, ревіти,
-> сопіти, хотіти
-
-*— Літвінова Grade 7, p.55*
+For A1, the important thing is practical: do not guess from the ending
+**-іти**. Learn the six **хоч-** forms as one small pattern.
 
 Here are the active forms:
 
@@ -115,6 +99,8 @@ Here are the active forms:
 | ми | **хочемо** | **Ми хочемо піти.** |
 | ви | **хочете** | **Ви хочете каву?** |
 | вони | **хочуть** | **Вони хочуть працювати.** |
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 Use **хотіти + інфінітив** when the desired thing is an action:
 
@@ -133,11 +119,14 @@ Support after the Ukrainian lines:
 | **Ми хочемо піти в парк.** | We want to go to the park. |
 
 You can also want a thing: **Я хочу каву**, **Я хочу воду**, **Я хочу цю
-книгу**. This is **знахідний відмінок** in a tiny A1 shape: feminine nouns on
-**-а/-я** often change to **-у/-ю** for a direct object: **кава -> каву**,
-**вода -> воду**. For many inanimate masculine and neuter words, **форма
-знахідного відмінка збігається з формою називного**: **чай -> чай**, **яблуко
--> яблуко**.
+книгу**. The menu word is **кава**; in these request chunks you see **каву**.
+For A1, keep the chunks whole. You only need the shape: **хочу + action word**
+or **хочу + thing**.
+
+:::tip
+If the forms feel irregular, that is normal. Learn **я хочу**, **ти хочеш**,
+and **ви хочете** as ready chunks first.
+:::
 
 For a normal negative, put **не** before the helper verb: **Я не хочу їсти**,
 **Він не хоче працювати**, **Ми не хочемо йти**. Later you will see different
@@ -147,8 +136,6 @@ Notice the difference between an action and a thing. **Я хочу пити** me
 want to drink." **Я хочу воду** means "I want water." The first sentence ends
 with an infinitive, and the second sentence ends with an object. Both are useful,
 but do not mix the shapes.
-
-<!-- INJECT_ACTIVITY: act-3 -->
 
 ## Дієслова «могти» та «мусити»
 
@@ -211,15 +198,19 @@ is.
 You may also hear **треба** for "need to / should." Keep **треба** as a preview
 today. Your active tool is **мусити + інфінітив**.
 
+:::tip
+**Мушу** can sound serious, but it does not always mean an emergency. In this
+lesson, read it simply as "I have to."
+:::
+
+<!-- INJECT_ACTIVITY: act-2 -->
+
 Now compare the three helper verbs in the same tiny schedule. **Я хочу піти в
 кіно** gives the desire. **Сьогодні я не можу піти** gives the practical block.
 **Я мушу працювати** gives the reason. **Завтра я можу гуляти** opens a new
 possibility. This pattern lets you make a real plan with very little grammar.
-When desire or ability points forward, you may recognize an **аналітична**
-future preview such as **буду малювати** or **будеш малювати**; keep it for
-recognition, not active production.
 
-<!-- INJECT_ACTIVITY: act-4 -->
+<!-- INJECT_ACTIVITY: act-3 -->
 
 ## Підсумок
 
@@ -251,18 +242,13 @@ In a café, use the polite service frame first: **Можна мені, будь 
 каву?** If you need advice, ask **Що можете порадити?** If you accept the
 suggestion, say **Тоді ще борщ, будь ласка.**
 
-Use the repair table as a quick writing check. First, find the helper verb.
+<!-- INJECT_ACTIVITY: act-4 -->
+
+Use this repair table as a quick writing check. First, find the helper verb.
 Second, ask whether the next word is an action in **-ти**. Third, check the
 person: **я хочу / можу / мушу**, **ти хочеш / можеш / мусиш**. Last, for a
 café line, ask whether the sentence sounds like a request rather than a demand.
-These checks catch most beginner mistakes before you submit an answer.
 When unsure, keep the sentence short and choose a complete action word.
-
-Recognition-only pronunciation note: words ending in **-ться** are pronounced
-with **[ц':а]**. A textbook example writes **сміється** and shows
-**[см’ійец:а]**. You do not need to produce this pattern today.
-
-### Виправ пастки
 
 | Avoid | Use | Why |
 | --- | --- | --- |
