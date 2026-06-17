@@ -5,7 +5,7 @@
 - word: пунктуація
   translation: punctuation
   pos: noun
-  example: "Пунктуація пояснює розділові знаки."
+  example: "Пунктуація пояснює правила розділових знаків."
 - word: словосполучення
   translation: word combination
   pos: noun
@@ -13,27 +13,55 @@
 - word: головне слово
   translation: main word
   pos: phrase
-  example: "Головне слово ставить питання."
+  example: "Головне слово ставить питання до залежного слова."
 - word: залежне слово
   translation: dependent word
   pos: phrase
-  example: "Залежне слово відповідає на питання."
+  example: "Залежне слово відповідає на питання від головного слова."
 - word: граматична основа
   translation: grammatical core
   pos: phrase
-  example: "Граматична основа - підмет і присудок."
+  example: "Граматична основа - це підмет і присудок."
+- word: підмет
+  translation: subject
+  pos: noun
+  example: "Підмет називає того, про кого йдеться в реченні."
+- word: присудок
+  translation: predicate
+  pos: noun
+  example: "Присудок називає дію, стан або ознаку підмета."
 - word: другорядний член
   translation: secondary sentence member
   pos: phrase
-  example: "Додаток - другорядний член речення."
+  example: "Додаток, означення й обставина - це другорядні члени."
+- word: додаток
+  translation: object
+  pos: noun
+  example: "У реченні 'Я читаю книжку' слово 'книжку' - додаток."
+- word: означення
+  translation: attribute
+  pos: noun
+  example: "Означення пояснює ознаку предмета."
+- word: обставина
+  translation: adverbial modifier
+  pos: noun
+  example: "Обставина називає місце, час або спосіб дії."
 - word: просте речення
   translation: simple sentence
   pos: phrase
   example: "Просте речення має одну граматичну основу."
 - word: складне речення
-  translation: complex or compound sentence
+  translation: compound or complex sentence
   pos: phrase
-  example: "Складне речення має дві або більше основ."
+  example: "Складне речення має дві або більше граматичні основи."
+- word: сполучник
+  translation: conjunction
+  pos: noun
+  example: "Сполучник 'і' поєднує частини речення."
+- word: сполучне слово
+  translation: connective word
+  pos: phrase
+  example: "Сполучне слово теж поєднує частини складного речення."
 - word: сполучниковий зв'язок
   translation: conjunctional connection
   pos: phrase
@@ -49,11 +77,39 @@
 - word: кома
   translation: comma
   pos: noun
-  example: "Перед 'бо' часто ставимо кому."
+  example: "Між частинами складного речення часто ставимо кому."
 - word: тире
   translation: dash
   pos: noun
   example: "Тире може стояти між підметом і присудком."
+- word: називний відмінок
+  translation: nominative case
+  pos: phrase
+  example: "Називний відмінок відповідає на питання хто? що?"
+- word: родовий відмінок
+  translation: genitive case
+  pos: phrase
+  example: "Родовий відмінок відповідає на питання кого? чого?"
+- word: давальний відмінок
+  translation: dative case
+  pos: phrase
+  example: "Давальний відмінок відповідає на питання кому? чому?"
+- word: знахідний відмінок
+  translation: accusative case
+  pos: phrase
+  example: "Знахідний відмінок відповідає на питання кого? що?"
+- word: орудний відмінок
+  translation: instrumental case
+  pos: phrase
+  example: "Орудний відмінок відповідає на питання ким? чим?"
+- word: місцевий відмінок
+  translation: locative case
+  pos: phrase
+  example: "Місцевий відмінок відповідає на питання на кому? на чому?"
+- word: кличний відмінок
+  translation: vocative case
+  pos: phrase
+  example: "Кличний відмінок використовуємо для звертання: друже!"
 - word: керувати формою
   translation: to govern a form
   pos: phrase
@@ -63,9 +119,9 @@
   pos: phrase
   example: "У фразі 'читаю книжку' слово 'книжку' - прямий додаток."
 - word: адресат
-  translation: addressee, recipient
+  translation: addressee or recipient
   pos: noun
-  example: "Давальний часто називає адресата."
+  example: "Давальний відмінок часто називає адресата."
 - word: структура
   translation: structure
   pos: noun
@@ -77,4 +133,4 @@
 - word: пояснення
   translation: explanation
   pos: noun
-  example: "Я розумію граматичне пояснення українською."
+  example: "Я читаю граматичне пояснення українською."
