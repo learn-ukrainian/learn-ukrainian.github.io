@@ -11,7 +11,8 @@ no fabrication):
 - **meaning** — legacy single-source meaning kept for compatibility.
 - **definition_cards** — separate СУМ-20 and СУМ-11 definition cards with
   source caveats.
-- **cefr** — PULS CEFR lookup when available.
+- **cefr** — PULS CEFR lookup when available, otherwise a visibly labelled
+  GRAC-frequency estimate for entries outside PULS.
 - **literary_attestation** — exact-form literary corpus hit when available.
 - **synonyms** — source-attested Ukrainian candidates from clean slovnyk.me
   synonym dictionaries, with noisy legacy sources kept A1-sense allowlisted.
@@ -75,6 +76,7 @@ MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 SOURCES_DB = ROOT / "data" / "sources.db"
 KAIKKI_LOOKUP = ROOT / "data" / "lexicon" / "kaikki_uk_lookup.json"
 WIKI_REFERENCE_CACHE = ROOT / "data" / "lexicon" / "cache" / "wiki_reference.json"
+GRAC_FREQUENCY_CACHE = ROOT / "data" / "lexicon" / "cache" / "grac_frequency.json"
 
 
 def _default_slovnyk_cache() -> Path:
@@ -124,6 +126,7 @@ _SLOVNYK_BACKOFF_CAP_SECONDS = 90.0
 _SLOVNYK_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup; issue #2985)"
 _STRESS_SOURCE = "ukrainian-word-stress"
 _CEFR_SOURCE = "PULS CEFR"
+_CEFR_ESTIMATED_SOURCE = "estimated (GRAC frequency)"
 _LITERARY_SOURCE = "literary_fts"
 _TRANSLATION_SOURCE = "dmklinger"
 _SUM20_COVERED_INITIALS = set("абвгґдеєжзиіїйклмнопр")
@@ -134,6 +137,9 @@ _IPA_PRIMARY_STRESS_RE = re.compile(r"ˈ")
 _IPA_NON_SYLLABIC_MARK_RE = re.compile(r"[\u032f\u0311]")
 _IPA_VOWEL_RE = re.compile(r"[aeiouyɐɑɒæɛɜɞɘəɚɝɨɪɯɵøœɔɤʊʉɾ]+", flags=re.IGNORECASE)
 _KAIKKI_GARBLED_ETYMOLOGY_RE = re.compile(r"\bEtymology tree\b|\[Term\?\]", flags=re.IGNORECASE)
+_GRAC_WORDLIST_URL = "https://sketch.uacorpus.org/bonito/run.cgi/wordlist"
+_GRAC_CORPUS = "grac19a"
+_GRAC_BATCH_SIZE = 25
 
 _SLOVNYK_DICT_LABELS: dict[str, str] = {
     "newsum": "Словник української мови у 20 томах (СУМ-20)",
@@ -2587,7 +2593,12 @@ def _etymology(conn: sqlite3.Connection, lemma: str, kaikki_lookup: dict[str, di
     return _source_etymology(conn, lemma, kaikki_lookup)
 
 
-def _cefr(conn: sqlite3.Connection, lemma: str) -> dict[str, str] | None:
+_GRAC_FREQUENCY_CACHE_DATA: dict[str, Any] | None = None
+_GRAC_FREQUENCY_CACHE_DIRTY = False
+_CEFR_ESTIMATE_LEVEL_BY_KEY: dict[str, dict[str, Any]] = {}
+
+
+def _puls_cefr(conn: sqlite3.Connection, lemma: str) -> dict[str, str] | None:
     for variant in _split_lemma_variants(lemma):
         try:
             row = conn.execute(
@@ -2607,6 +2618,169 @@ def _cefr(conn: sqlite3.Connection, lemma: str) -> dict[str, str] | None:
                 block["text"] = clean_html_entities(str(row[2]).strip())
             return block
     return None
+
+
+def _load_grac_frequency_cache(path: Path | None = None) -> dict[str, Any]:
+    global _GRAC_FREQUENCY_CACHE_DATA
+    path = path or GRAC_FREQUENCY_CACHE
+    if _GRAC_FREQUENCY_CACHE_DATA is not None:
+        return _GRAC_FREQUENCY_CACHE_DATA
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        data = {}
+    _GRAC_FREQUENCY_CACHE_DATA = data if isinstance(data, dict) else {}
+    return _GRAC_FREQUENCY_CACHE_DATA
+
+
+def _write_grac_frequency_cache(path: Path | None = None) -> None:
+    global _GRAC_FREQUENCY_CACHE_DIRTY
+    path = path or GRAC_FREQUENCY_CACHE
+    if not _GRAC_FREQUENCY_CACHE_DIRTY or _GRAC_FREQUENCY_CACHE_DATA is None:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(_GRAC_FREQUENCY_CACHE_DATA, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    _GRAC_FREQUENCY_CACHE_DIRTY = False
+
+
+def _grac_lookup_key(lemma: str) -> str:
+    return _strip_stress(_base_lemma(lemma)).strip()
+
+
+def _grac_word_candidates(word: str) -> list[str]:
+    candidates: list[str] = []
+    for variant in get_apostrophe_variants(word):
+        candidates.append(variant)
+        candidates.append(variant.casefold())
+    seen: set[str] = set()
+    return [c for c in candidates if c and not (c in seen or seen.add(c))]
+
+
+def _fetch_grac_frequency_batch(words: list[str]) -> dict[str, dict[str, Any] | None]:
+    candidates_by_word = {word: _grac_word_candidates(word) for word in words}
+    candidate_to_words: dict[str, list[str]] = {}
+    for word, candidates in candidates_by_word.items():
+        for candidate in candidates:
+            candidate_to_words.setdefault(candidate, []).append(word)
+    if not candidate_to_words:
+        return {word: None for word in words}
+
+    pattern = "^(?:" + "|".join(re.escape(candidate) for candidate in candidate_to_words) + ")$"
+    try:
+        response = requests.get(
+            _GRAC_WORDLIST_URL,
+            params={
+                "corpname": _GRAC_CORPUS,
+                "wlattr": "word",
+                "wlpat": pattern,
+                "wlminfreq": 1,
+                "wlmaxitems": max(10, len(candidate_to_words) + 10),
+                "format": "json",
+            },
+            headers={"User-Agent": _SLOVNYK_USER_AGENT},
+            timeout=30,
+        )
+        response.raise_for_status()
+        items = response.json().get("Items", [])
+    except (requests.RequestException, ValueError):
+        return {word: None for word in words}
+
+    best_by_word: dict[str, dict[str, Any] | None] = {word: None for word in words}
+    for item in items:
+        form = str(item.get("str") or "")
+        freq = int(item.get("frq") or 0)
+        rel_freq = float(item.get("relfreq") or 0.0)
+        for word in candidate_to_words.get(form, []):
+            current = best_by_word[word]
+            if not current or rel_freq > float(current.get("rel_freq") or 0.0):
+                best_by_word[word] = {"word": form, "freq": freq, "rel_freq": rel_freq}
+    return best_by_word
+
+
+def _ensure_grac_frequency_cache(words: list[str]) -> None:
+    global _GRAC_FREQUENCY_CACHE_DIRTY
+    cache = _load_grac_frequency_cache()
+    missing = [word for word in words if word not in cache]
+    for start in range(0, len(missing), _GRAC_BATCH_SIZE):
+        batch = missing[start : start + _GRAC_BATCH_SIZE]
+        results = _fetch_grac_frequency_batch(batch)
+        for word in batch:
+            cache[word] = results.get(word)
+        _GRAC_FREQUENCY_CACHE_DIRTY = True
+        _write_grac_frequency_cache()
+
+
+def _prepare_cefr_estimates(conn: sqlite3.Connection, manifest: dict[str, Any]) -> None:
+    """Prepare labelled CEFR estimates from GRAC frequency for non-PULS lemmas.
+
+    Mapping rationale: estimates use GRAC relative-frequency quantiles within the
+    current Atlas lemmas that lack PULS. Top 20% -> A1, then A2/B1/B2, and the
+    lowest positive-frequency 20% -> C1. This keeps very common words out of
+    advanced bands without pretending the estimate is authoritative.
+    """
+    _CEFR_ESTIMATE_LEVEL_BY_KEY.clear()
+    words: list[str] = []
+    for entry in manifest.get("entries", []):
+        lemma = str(entry.get("lemma") or "")
+        word = _grac_lookup_key(lemma)
+        if not word or _has_whitespace(word) or not _UKRAINIAN_WORD_RE.fullmatch(word):
+            continue
+        if _puls_cefr(conn, lemma):
+            continue
+        words.append(word)
+
+    unique_words = sorted(set(words), key=str.casefold)
+    _ensure_grac_frequency_cache(unique_words)
+    cache = _load_grac_frequency_cache()
+    scored: list[tuple[str, float, int, str]] = []
+    for word in unique_words:
+        row = cache.get(word)
+        if not isinstance(row, dict):
+            continue
+        rel_freq = float(row.get("rel_freq") or 0.0)
+        freq = int(row.get("freq") or 0)
+        if rel_freq <= 0.0 or freq <= 0:
+            continue
+        scored.append((word, rel_freq, freq, str(row.get("word") or word)))
+
+    scored.sort(key=lambda item: (-item[1], item[0].casefold()))
+    total = len(scored)
+    if not total:
+        return
+    bands = ("A1", "A2", "B1", "B2", "C1")
+    for index, (word, rel_freq, freq, grac_word) in enumerate(scored):
+        band_index = min(4, int(index * len(bands) / total))
+        _CEFR_ESTIMATE_LEVEL_BY_KEY[word] = {
+            "level": bands[band_index],
+            "rel_freq": rel_freq,
+            "freq": freq,
+            "grac_word": grac_word,
+            "rank": index + 1,
+            "total": total,
+        }
+
+
+def _estimated_cefr(lemma: str) -> dict[str, str] | None:
+    word = _grac_lookup_key(lemma)
+    estimate = _CEFR_ESTIMATE_LEVEL_BY_KEY.get(word)
+    if not estimate:
+        return None
+    level = str(estimate["level"])
+    rel_freq = float(estimate["rel_freq"])
+    rank = int(estimate["rank"])
+    total = int(estimate["total"])
+    return {
+        "level": level,
+        "source": _CEFR_ESTIMATED_SOURCE,
+        "text": f"{level} (орієнтовно / estimated; GRAC {rel_freq:.2f}/million, rank {rank}/{total})",
+    }
+
+
+def _cefr(conn: sqlite3.Connection, lemma: str) -> dict[str, str] | None:
+    return _puls_cefr(conn, lemma) or _estimated_cefr(lemma)
 
 
 def _parse_translations(raw: object) -> list[str]:
@@ -2862,6 +3036,29 @@ def _wiki_reference(lemma: str, literary_attestation: dict | None = None) -> dic
     }
 
 
+def _wikipedia_one_line_gloss(raw: object) -> str:
+    text = re.sub(r"\s+", " ", clean_html_entities(str(raw or ""))).strip()
+    if not text:
+        return ""
+    sentence = re.split(r"(?<=[.!?])\s+", text, maxsplit=1)[0].strip()
+    return sentence[:300].strip(" ;,")
+
+
+def _proper_noun_wikipedia_meaning(lemma: str) -> dict[str, object] | None:
+    clean_lemma = _strip_stress(_base_lemma(lemma)).strip()
+    wiki_data = _cached_wikipedia_summary(clean_lemma)
+    if not wiki_data:
+        return None
+    gloss = _wikipedia_one_line_gloss(wiki_data.get("extract"))
+    if not gloss:
+        return None
+    return {"definitions": [gloss], "source": "Вікіпедія"}
+
+
+def _is_proper_noun_entry(entry: dict[str, Any]) -> bool:
+    return "proper noun" in str(entry.get("pos") or "").casefold()
+
+
 def _single_word_etymology_coverage(manifest: dict) -> tuple[int, int]:
     entries = [
         entry
@@ -2879,6 +3076,7 @@ def enrich() -> tuple[int, int]:
     enriched = 0
     try:
         has_sum11_flags = _sum11_has_flag_columns(conn)
+        _prepare_cefr_estimates(conn, manifest)
         for entry in manifest["entries"]:
             if entry.get("gloss"):
                 entry["gloss"] = clean_gloss(str(entry["gloss"]))
@@ -2946,6 +3144,8 @@ def enrich() -> tuple[int, int]:
             if morph:
                 block["morphology"] = morph
             meaning = _meaning(conn, lemma, has_sum11_flags=has_sum11_flags, kaikki_lookup=kaikki_lookup)
+            if _is_proper_noun_entry(entry):
+                meaning = _proper_noun_wikipedia_meaning(lemma) or meaning
             if meaning:
                 block["meaning"] = meaning
             if definition_cards:

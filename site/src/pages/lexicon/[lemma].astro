@@ -292,6 +292,7 @@ const nounParadigm = paradigm?.kind === "noun" ? paradigm : null;
 const verbParadigm = paradigm?.kind === "verb" ? paradigm : null;
 const headerStress = enrichment?.stress?.form ?? null;
 const cefrLevel = enrichment?.cefr?.level ?? null;
+const cefrEstimated = enrichment?.cefr?.source === "estimated (GRAC frequency)";
 const definitionCards = enrichment?.definition_cards ?? [];
 const pronunciation = entry.pronunciation ?? null;
 const wikiRef = entry.wiki_reference ?? null;
@@ -459,7 +460,7 @@ const frontmatter = {
       <div class="atlas-status-badges" aria-label="Статус статті">
         <span>{CONTEXT_LABELS_UK[entry.primary_source] ?? entry.primary_source}</span>
         <span>{courseUsage.length} {courseUsage.length === 1 ? "модуль" : "модулів"}</span>
-        {cefrLevel && <span class="status-badge cefr">CEFR {cefrLevel}</span>}
+        {cefrLevel && <span class="status-badge cefr">CEFR {cefrLevel}{cefrEstimated ? " (орієнтовно / estimated)" : ""}</span>}
         {enrichment?.morphology && <span>{enrichment.morphology.form_count} форм</span>}
         {showHeritageWarning && heritageWarning && (
           <span class="atlas-heritage-pill atlas-heritage-pill--russism">
