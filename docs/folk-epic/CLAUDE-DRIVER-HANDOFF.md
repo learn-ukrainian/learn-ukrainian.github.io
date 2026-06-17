@@ -63,7 +63,38 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 45 HANDOFF (2026-06-17 — ✅ USER #1 JOB DONE: per-module status+scores Monitor API endpoint shipped. Phase A (`beauty` dim) DISPATCHED in parallel; Phase B de-risk is the next gate) — **RESUME HERE**
+## ▶▶▶ SESSION 46 HANDOFF (2026-06-17 — 🔬 PHASE B DE-RISK RAN: `beauty` dim WORKS (8.0 reachable) but the loop did NOT converge — root cause = the pedagogical corrector DEGRADES craft. Loop fix (#3079) is now PRIORITY #0; Phase A stays HELD) — **RESUME HERE**
+
+> **TL;DR:** Shipped the user #1 API scores endpoint (S45, merged #3458). Built Phase A `beauty`-dim
+> gate (held draft PR #3459). Ran the §8-step-0 de-risk build on kalendarna against the Phase A gate.
+> **Verdict: partial — the gate dims are sound, the correction LOOP is the problem.** Next session
+> executes the loop fix (#3079) then re-tests with an ENHANCE (not rebuild) loop.
+
+### 🔬 DE-RISK VERDICT (dispatch `folk-derisk-kalendarna`, evidence on branch `codex/folk-derisk-kalendarna` — DO NOT DELETE, #M-10)
+ONE kalendarna build, `--no-resume`, against the Phase A gate (`beauty` wired, seminar-terminal = `{decolonization,pedagogical,engagement,beauty}`). Final (best round 1) `llm_qg.json`:
+- **beauty 8.0 ✓** · engagement 8.2 ✓ · tone 8.4 ✓ · **pedagogical 7.2 ✗** · naturalness 7.8 (warning, not terminal) · **decolonization 8.7 ✗ (needs 9)** → `terminal_verdict=REVISE` (did NOT ship).
+- **`stopped_reason: min_score_regressed`** after round 2: the **insert-only pedagogical corrector** inserted dry procedural checklist prose («зроби коротку перевірку джерела: 1)… 2)… 3)…») that **DROPPED beauty+engagement below 8** (round-2 failing expanded to incl. engagement+beauty). The beauty reviewer raw response literally cited that inserted checklist as the craft failure. **The loop fights itself: fixing pedagogical tanks craft.**
+- **Fresh rebuild REGRESSED vs the curated module on main** (decolonization 10.0→8.7, naturalness 10.0→7.8; curated kalendarna PASSes today because only decolonization was terminal pre-Phase-A and it was 10.0).
+
+### ✅ WHAT THE DE-RISK PROVED
+1. **The `beauty` dim + craft+soul rubric WORK** — reachable at 8.0 even with #3162 unresolved (kalendarna's cited веснянка couplet supplied the "soul"). The gate code (PR #3459) is sound.
+2. **The loop CAN move some subjective dims** (engagement→8.2). It is NOT "loop can't move subjective dims at all."
+3. **The blocker is the correction-loop DESIGN, not reviewer noise** ⇒ the §3 multi-model panel is NOT the fix here (it addresses noise; this is real content degradation). Panel deferred.
+
+### ▶ NEXT ACTIONS (priority order — fresh context recommended; investigate before coding per #0.1)
+0. **PRIORITY #0 — fix the pedagogical corrector (#3079), root-cause.** Target: `pedagogical_correction_context` (`scripts/build/linear_pipeline.py:~4670`) + the insert-only corrector path. It must NOT degrade beauty/engagement — make pedagogical correction **craft-preserving / holistic-rewrite-aware**, not dry-checklist insertion. (Task #6.) Investigate the corrector + `_apply_reviewer_fixes` insert path first; design the proper fix; dispatch with tests.
+1. **Re-test the loop as ENHANCE, not rebuild.** The de-risk conflated loop-convergence with rebuild-regression. Re-run the correction loop on the **curated** kalendarna (decoloniz 10 / naturalness 10 already) to drive pedagogical 7→8 + confirm beauty — without the rebuild confound. If a craft-preserving corrector converges it → **Phase A (PR #3459) can merge.**
+2. **Phase D methodology PIVOT (evidence-based): ENHANCE curated modules, don't rebuild from scratch.** Rebuild lost curated decolonization/naturalness quality. Phase C/D should enhance the 6 curated modules toward ≥8 per-dim, preserving their curated strengths.
+3. Phase A PR #3459 stays **HELD** (draft) until step 1 shows convergence (design §3 — merging terminal promotion without a converging loop = every seminar build fails with no path to pass, which is exactly what round 2 demonstrated).
+
+### ⚙ STATE AT HANDOFF
+- **On main:** `/api/state/scores/{track}[/{slug}]` (PR #3458, `5785dae9e5`) — watch convergence live. Phase A gate code is NOT on main (held in draft PR #3459).
+- **Open PRs (mine):** #3459 (Phase A, draft, HELD). (#3452 Atlas-handoff = orchestrator's lane, left alone.)
+- **Dispatches in flight:** 0 of mine at handoff (de-risk done). `atlas-3150` (lexicon) not mine.
+- **Tasks:** #1 Phase A (done, held), #2 de-risk (done), #6 loop fix (#0, pending), #3 panel (deferred — not the fix), #4 Phase C/D/E (pivot to enhance).
+- Merge grant LIVE (CI-green → self-merge; Phase A excepted per §3). Worktree-only; never commit to main. Role #0.2 (I own/implement infra) LIVE.
+
+
 
 > **✅ DONE this session — USER #1 PRIORITY (the API scores view, S44 line 68):** built
 > `GET /api/state/scores/{track}` + `/{track}/{slug}` in `scripts/api/state_router.py`. Returns per
