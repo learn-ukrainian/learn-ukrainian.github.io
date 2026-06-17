@@ -1,0 +1,196 @@
+- lemma: ринок
+  translation: market
+  pos: noun:m
+  usage: "На ринку можна спитати про ціну і попросити знижку."
+- lemma: базар
+  translation: market, bazaar
+  pos: noun:m
+  usage: "Базар часто має живіше спілкування, ніж магазин."
+- lemma: крамниця
+  translation: shop, small store
+  pos: noun:f
+  usage: "У цій крамниці ціни фіксовані."
+- lemma: продавець
+  translation: seller, salesperson
+  pos: noun:m
+  usage: "Продавець порадив дешевший варіант."
+- lemma: продавчиня
+  translation: saleswoman, female seller
+  pos: noun:f
+  usage: "Продавчиня показала більший розмір."
+- lemma: покупець
+  translation: buyer, customer
+  pos: noun:m
+  usage: "Покупець попросив чек і гарантію."
+- lemma: покупчиня
+  translation: female buyer, customer
+  pos: noun:f
+  usage: "Покупчиня хотіла обміняти бракований товар."
+- lemma: ціна
+  translation: price
+  pos: noun:f
+  usage: "Яка ціна за кілограм яблук?"
+- lemma: знижка
+  translation: discount
+  pos: noun:f
+  usage: "Чи можна отримати знижку, якщо я візьму два кілограми?"
+- lemma: здача
+  translation: change, money returned
+  pos: noun:f
+  usage: "У вас буде здача з двохсот гривень?"
+- lemma: готівка
+  translation: cash
+  pos: noun:f
+  usage: "На цьому ринку часто просять платити готівкою."
+- lemma: картка
+  translation: card, payment card
+  pos: noun:f
+  usage: "Можна оплатити карткою?"
+- lemma: чек
+  translation: receipt
+  pos: noun:m
+  usage: "Дайте, будь ласка, чек."
+- lemma: гарантія
+  translation: warranty, guarantee
+  pos: noun:f
+  usage: "Чи є гарантія на ремонт?"
+- lemma: повернення
+  translation: return, product return
+  pos: noun:n
+  usage: "Підкажіть, будь ласка, умови повернення."
+- lemma: бракований
+  translation: defective
+  pos: adjective
+  usage: "Цей товар бракований, тому я хочу повернути гроші."
+- lemma: розмір
+  translation: size
+  pos: noun:m
+  usage: "Чи є цей светр у більшому розмірі?"
+- lemma: примірочна
+  translation: fitting room
+  pos: noun:f
+  usage: "Де примірочна?"
+- lemma: тканина
+  translation: fabric
+  pos: noun:f
+  usage: "Ця тканина щільніша і тепліша."
+- lemma: якість
+  translation: quality
+  pos: noun:f
+  usage: "Якість обслуговування тут краща."
+- lemma: якісний
+  translation: high-quality
+  pos: adjective
+  usage: "Цей рюкзак більш якісний, але дорожчий."
+- lemma: посилка
+  translation: parcel
+  pos: noun:f
+  usage: "Я хочу відправити посилку до Харкова."
+- lemma: доставка
+  translation: delivery
+  pos: noun:f
+  usage: "Яка доставка найшвидша?"
+- lemma: рахунок
+  translation: bill, account
+  pos: noun:m
+  usage: "У банку рахунок означає account, а в кафе - bill."
+- lemma: переказ
+  translation: money transfer
+  pos: noun:m
+  usage: "Мені потрібно зробити переказ на рахунок."
+- lemma: обмін валют
+  translation: currency exchange
+  pos: phrase
+  usage: "Де найвигідніший обмін валют?"
+- lemma: курс
+  translation: exchange rate
+  pos: noun:m
+  usage: "Який сьогодні курс євро?"
+- lemma: комісія
+  translation: fee, commission
+  pos: noun:f
+  usage: "Яка комісія за переказ?"
+- lemma: ремонт
+  translation: repair
+  pos: noun:m
+  usage: "Скільки коштує ремонт телефона?"
+- lemma: майстерня
+  translation: workshop, repair shop
+  pos: noun:f
+  usage: "У цій майстерні ремонт дешевший, але довший."
+- lemma: перукарня
+  translation: hair salon
+  pos: noun:f
+  usage: "Ця перукарня краща за ту."
+- lemma: перукар
+  translation: hairdresser, barber
+  pos: noun:m
+  usage: "Перукар працює дуже акуратно."
+- lemma: перукарка
+  translation: female hairdresser
+  pos: noun:f
+  usage: "Перукарка порадила коротшу стрижку."
+- lemma: стрижка
+  translation: haircut
+  pos: noun:f
+  usage: "Мені потрібна стрижка."
+- lemma: ательє
+  translation: tailor's shop, atelier
+  pos: noun:n
+  usage: "В ательє можна вкоротити штани."
+- lemma: кравець
+  translation: tailor
+  pos: noun:m
+  usage: "Кравець пояснив, що ремонт одягу буде дешевший."
+- lemma: кравчиня
+  translation: female tailor
+  pos: noun:f
+  usage: "Кравчиня підшила рукави акуратніше."
+- lemma: кав'ярня
+  translation: coffee shop
+  pos: noun:f
+  usage: "Ця кав'ярня затишніша, ніж сусідня."
+- lemma: обслуговування
+  translation: service, customer service
+  pos: noun:n
+  usage: "Обслуговування було швидше, ніж я очікувала."
+- lemma: дешевший
+  translation: cheaper
+  pos: adjective
+  usage: "Цей варіант дешевший за той."
+- lemma: дорожчий
+  translation: more expensive
+  pos: adjective
+  usage: "Ремонт дорожчий, але надійніший."
+- lemma: кращий
+  translation: better
+  pos: adjective
+  usage: "Цей сервіс кращий від попереднього."
+- lemma: найкращий
+  translation: best
+  pos: adjective
+  usage: "Це найкращий варіант зі знижкою."
+- lemma: найвигідніший
+  translation: most advantageous
+  pos: adjective
+  usage: "Який варіант найвигідніший для великої суми?"
+- lemma: швидший
+  translation: faster
+  pos: adjective
+  usage: "Кур'єр швидший, але дорожчий."
+- lemma: повільніший
+  translation: slower
+  pos: adjective
+  usage: "Доставка у відділення повільніша."
+- lemma: зручніший
+  translation: more convenient
+  pos: adjective
+  usage: "Запис через застосунок зручніший."
+- lemma: надійніший
+  translation: more reliable
+  pos: adjective
+  usage: "Цей ремонт надійніший, бо має довшу гарантію."
+- lemma: ввічливо
+  translation: politely
+  pos: adverb
+  usage: "Скаргу треба формулювати ввічливо і чітко."
