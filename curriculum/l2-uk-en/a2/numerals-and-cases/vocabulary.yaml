@@ -86,3 +86,19 @@
   translation: address
   pos: noun
   example: "Напишіть адресу і номер квартири."
+- word: обидва
+  translation: both, masculine
+  pos: numeral
+  example: "Обидва брати прийшли на свято."
+- word: обидві
+  translation: both, feminine
+  pos: numeral
+  example: "Обидві команди мають по десять учасників."
+- word: десяток
+  translation: a ten, a dozen
+  pos: noun
+  example: "Потрібен один десяток олівців."
+- word: пів
+  translation: half
+  pos: numeral
+  example: "Купіть пів кілограма яблук."
