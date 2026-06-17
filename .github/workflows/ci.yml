@@ -96,6 +96,7 @@ jobs:
             atlas:
               - '.github/workflows/ci.yml'
               - 'scripts/lexicon/*.py'
+              - 'curriculum/l2-uk-en/**/vocabulary.yaml'
               - 'site/src/data/lexicon-manifest.json'
               - 'site/src/data/lexicon-manifest.fingerprint.json'
 
@@ -118,6 +119,9 @@ jobs:
 
       - name: Check DB-free Atlas manifest freshness
         run: python scripts/lexicon/check_manifest_freshness.py
+
+      - name: Check Atlas vocabulary manifest coverage
+        run: python scripts/lexicon/check_manifest_vocabulary_coverage.py
 
   lint:
     name: Lint (ruff)

@@ -18,6 +18,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM_ROOT = Path("curriculum") / "l2-uk-en"
 DOCS_ROOT = Path("site") / "src" / "content" / "docs"
+ATLAS_OUTPUT_FILES = (
+    Path("site") / "src" / "data" / "lexicon-manifest.json",
+    Path("site") / "src" / "data" / "lexicon-manifest.fingerprint.json",
+)
 
 LESSON_SOURCE_FILES = frozenset(
     {
@@ -314,6 +318,11 @@ def _commit(repo_root: Path, rels: list[Path], message: str) -> None:
     _run_git(repo_root, ["commit", "-m", message])
 
 
+def _run_make_atlas(repo_root: Path) -> int:
+    proc = subprocess.run(["make", "atlas"], cwd=repo_root, env=_sanitized_git_env())
+    return proc.returncode
+
+
 def promote(args: argparse.Namespace, *, repo_root: Path = ROOT) -> int:
     repo_root = repo_root.resolve()
     try:
@@ -356,6 +365,16 @@ def promote(args: argparse.Namespace, *, repo_root: Path = ROOT) -> int:
         written.append(item.dest_rel)
         print(f"wrote {item.dest_rel.as_posix()}")
 
+    if args.refresh_atlas and any(rel.name == "vocabulary.yaml" for rel in written):
+        print("refreshing Word Atlas manifest via `make atlas`")
+        atlas_status = _run_make_atlas(repo_root)
+        if atlas_status != 0:
+            print("ERROR `make atlas` failed; fix the Atlas build before committing promotion", file=sys.stderr)
+            return atlas_status
+        written.extend(rel for rel in ATLAS_OUTPUT_FILES if (repo_root / rel).exists())
+    elif args.refresh_atlas:
+        print("OK atlas refresh skipped; promoted files did not change vocabulary.yaml")
+
     if not written:
         print("OK no changes")
         return 0
@@ -386,6 +405,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--no-commit", action="store_true", help="Write files but skip git commit")
     parser.add_argument("--message", help="Override the default commit message")
     parser.add_argument("--force", action="store_true", help="Overwrite conflicting in-tree lesson source")
+    parser.add_argument(
+        "--refresh-atlas",
+        action="store_true",
+        help="After promoting vocabulary.yaml, run `make atlas` and include manifest outputs in the commit",
+    )
     return parser
 
 

@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 from scripts.lexicon.check_manifest_freshness import check_freshness
+from scripts.lexicon.check_manifest_vocabulary_coverage import check_vocabulary_coverage
 from scripts.lexicon.manifest_fingerprint import build_fingerprint, write_fingerprint
 
 
@@ -20,6 +21,25 @@ def _fixture_repo(tmp_path: Path) -> Path:
         encoding="utf-8",
     )
     return root
+
+
+def _write_manifest(root: Path, entries: list[dict]) -> Path:
+    manifest = root / "site" / "src" / "data" / "lexicon-manifest.json"
+    manifest.write_text(
+        json.dumps({"version": "test", "entries": entries}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    return manifest
+
+
+def _manifest_entry(lemma: str, *modules: tuple[str, str]) -> dict:
+    return {
+        "lemma": lemma,
+        "course_usage": [
+            {"track": track, "module_num": 1, "slug": slug, "context": "built_vocabulary"}
+            for track, slug in modules
+        ],
+    }
 
 
 def test_manifest_fingerprint_is_stable_across_runs(tmp_path: Path) -> None:
@@ -75,3 +95,82 @@ def test_manifest_freshness_check_fails_on_mismatched_sidecar(tmp_path: Path, ca
     output = capsys.readouterr().out
     assert "Atlas manifest stale vs lexicon code" in output
     assert "dictionary DB/cache version drift is out of scope" in output
+
+
+def test_manifest_vocabulary_coverage_fails_when_new_vocab_lemma_missing(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    root = _fixture_repo(tmp_path)
+    vocabulary = root / "curriculum" / "l2-uk-en" / "a1" / "hello" / "vocabulary.yaml"
+    vocabulary.write_text(
+        vocabulary.read_text(encoding="utf-8")
+        + "- lemma: новеслово\n"
+        "  translation: fake new word\n",
+        encoding="utf-8",
+    )
+    manifest = _write_manifest(
+        root,
+        [
+            _manifest_entry("привіт", ("a1", "hello")),
+            _manifest_entry("дім", ("a1", "hello")),
+        ],
+    )
+
+    assert check_vocabulary_coverage(root=root, manifest_path=manifest) == 2
+    output = capsys.readouterr().out
+    assert "Atlas manifest stale vs module vocabulary" in output
+    assert "run `make atlas` locally and commit" in output
+    assert "новеслово" in output
+
+
+def test_manifest_vocabulary_coverage_passes_when_vocab_lemma_present(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    root = _fixture_repo(tmp_path)
+    vocabulary = root / "curriculum" / "l2-uk-en" / "a1" / "hello" / "vocabulary.yaml"
+    vocabulary.write_text(
+        vocabulary.read_text(encoding="utf-8")
+        + "- lemma: новеслово\n"
+        "  translation: fake new word\n",
+        encoding="utf-8",
+    )
+    manifest = _write_manifest(
+        root,
+        [
+            _manifest_entry("привіт", ("a1", "hello")),
+            _manifest_entry("дім", ("a1", "hello")),
+            _manifest_entry("новеслово", ("a1", "hello")),
+        ],
+    )
+
+    assert check_vocabulary_coverage(root=root, manifest_path=manifest) == 0
+    output = capsys.readouterr().out
+    assert "Atlas vocabulary coverage OK" in output
+
+
+def test_manifest_vocabulary_coverage_fails_when_module_usage_missing(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    root = _fixture_repo(tmp_path)
+    other = root / "curriculum" / "l2-uk-en" / "a1" / "second"
+    other.mkdir()
+    (other / "vocabulary.yaml").write_text(
+        "- lemma: привіт\n"
+        "  translation: hello again\n",
+        encoding="utf-8",
+    )
+    manifest = _write_manifest(
+        root,
+        [
+            _manifest_entry("привіт", ("a1", "hello")),
+            _manifest_entry("дім", ("a1", "hello")),
+        ],
+    )
+
+    assert check_vocabulary_coverage(root=root, manifest_path=manifest) == 2
+    output = capsys.readouterr().out
+    assert "missing course_usage links" in output
+    assert "привіт: a1/second" in output

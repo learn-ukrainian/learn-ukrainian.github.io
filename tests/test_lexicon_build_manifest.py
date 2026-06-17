@@ -62,6 +62,29 @@ def test_slash_particle_not_published_as_atlas_head() -> None:
     assert _atlas_record_for_manifest(rec, set()) is None
 
 
+def test_suffixes_abbreviations_and_passive_like_label_not_published_as_atlas_heads() -> None:
+    for lemma in ("-ся", "-сь", "1к", "2к", "кв.м", "грн/міс", "б/м", "пасивноподібний"):
+        rec = {"lemma": lemma, "source": "built_vocabulary"}
+
+        assert _atlas_record_for_manifest(rec, set()) is None
+
+
+def test_manifest_canonicalizes_service_vocab_to_valid_atlas_heads() -> None:
+    delivery = _atlas_record_for_manifest(
+        {"lemma": "доставка", "source": "built_vocabulary", "gloss": "delivery", "pos": "noun:f"},
+        set(),
+    )
+    fitting_room = _atlas_record_for_manifest(
+        {"lemma": "примірочна", "source": "built_vocabulary", "gloss": "fitting room", "pos": "noun:f"},
+        set(),
+    )
+
+    assert delivery["lemma"] == "доставляння"
+    assert delivery["atlas_normalization"]["kind"] == "vesum_canonical_head"
+    assert fitting_room["lemma"] == "примірочна кімната"
+    assert fitting_room["atlas_normalization"]["kind"] == "vesum_canonical_head"
+
+
 def test_surzhyk_to_avoid_seed_group_is_in_manifest() -> None:
     manifest = build_manifest()
     entries = {entry["lemma"]: entry for entry in manifest["entries"]}

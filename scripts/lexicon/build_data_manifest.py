@@ -50,6 +50,14 @@ _NON_ATLAS_LEMMA_KEYS = {
         "у/в",
         "і/й",
         "б/би",
+        "-ся",
+        "-сь",
+        "1к",
+        "2к",
+        "кв.м",
+        "грн/міс",
+        "б/м",
+        "пасивноподібний",
     )
 }
 
@@ -65,6 +73,14 @@ VESUM_CANONICAL_HEADS: dict[str, tuple[str, str]] = {
     "бірка": (
         "бирка",
         "VESUM and Grinchenko index the label/tag headword as бирка.",
+    ),
+    "доставка": (
+        "доставляння",
+        "VESUM indexes the delivery/action noun as доставляння; course surface доставка maps to that Atlas head.",
+    ),
+    "примірочна": (
+        "примірочна кімната",
+        "Course shorthand примірочна denotes the fitting-room phrase примірочна кімната.",
     ),
     "прийом": (
         "приймання",
