@@ -21,7 +21,7 @@ def _mk(tmp_path):
 
 def test_shippable_when_all_green(tmp_path, monkeypatch):
     md, plan = _mk(tmp_path)
-    monkeypatch.setattr(lp, "run_python_qg", lambda m, p: {"gates": {"passed": True}})
+    monkeypatch.setattr(lp, "run_python_qg", lambda m, p, **kw: {"gates": {"passed": True}})
     monkeypatch.setattr(lp, "assemble_mdx", lambda m, o, p: "MDXBODY")
     monkeypatch.setattr(
         lp, "run_mdx_render_gate", lambda t: {"passed": True, "message": "ok", "failures": []}
@@ -39,7 +39,7 @@ def test_render_runs_even_when_python_qg_red(tmp_path, monkeypatch):
     monkeypatch.setattr(
         lp,
         "run_python_qg",
-        lambda m, p: {"gates": {"passed": False, "vesum_verified": {"passed": False}}},
+        lambda m, p, **kw: {"gates": {"passed": False, "vesum_verified": {"passed": False}}},
     )
     monkeypatch.setattr(lp, "assemble_mdx", lambda m, o, p: "MDXBODY")
     seen = {}
@@ -60,7 +60,7 @@ def test_render_runs_when_python_qg_raises(tmp_path, monkeypatch):
     """A python_qg CRASH (not just a red gate) must still reach the render check."""
     md, plan = _mk(tmp_path)
 
-    def boom(m, p):
+    def boom(m, p, **kw):
         raise RuntimeError("vesum db missing")
 
     monkeypatch.setattr(lp, "run_python_qg", boom)
@@ -81,7 +81,7 @@ def test_render_runs_when_python_qg_raises(tmp_path, monkeypatch):
 
 def test_render_failure_blocks_ship(tmp_path, monkeypatch):
     md, plan = _mk(tmp_path)
-    monkeypatch.setattr(lp, "run_python_qg", lambda m, p: {"gates": {"passed": True}})
+    monkeypatch.setattr(lp, "run_python_qg", lambda m, p, **kw: {"gates": {"passed": True}})
     monkeypatch.setattr(lp, "assemble_mdx", lambda m, o, p: "MDXBODY")
     monkeypatch.setattr(
         lp,
@@ -94,7 +94,7 @@ def test_render_failure_blocks_ship(tmp_path, monkeypatch):
 
 def test_assemble_crash_blocks_ship(tmp_path, monkeypatch):
     md, plan = _mk(tmp_path)
-    monkeypatch.setattr(lp, "run_python_qg", lambda m, p: {"gates": {"passed": True}})
+    monkeypatch.setattr(lp, "run_python_qg", lambda m, p, **kw: {"gates": {"passed": True}})
 
     def boom(m, o, p):
         raise RuntimeError("assembler exploded")
@@ -108,7 +108,7 @@ def test_assemble_crash_blocks_ship(tmp_path, monkeypatch):
 def test_skipped_render_not_shippable(tmp_path, monkeypatch):
     """Node-absent (mdx_render=None) must NOT certify shippable — no render evidence."""
     md, plan = _mk(tmp_path)
-    monkeypatch.setattr(lp, "run_python_qg", lambda m, p: {"gates": {"passed": True}})
+    monkeypatch.setattr(lp, "run_python_qg", lambda m, p, **kw: {"gates": {"passed": True}})
     monkeypatch.setattr(lp, "assemble_mdx", lambda m, o, p: "MDXBODY")
     monkeypatch.setattr(
         lp,
