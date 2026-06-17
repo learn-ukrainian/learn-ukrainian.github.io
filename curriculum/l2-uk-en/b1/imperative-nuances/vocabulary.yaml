@@ -1,0 +1,212 @@
+- lemma: наказовий спосіб
+  translation: imperative mood
+  pos: phrase
+  usage: "Наказовий спосіб виражає прохання, наказ, пораду або заклик."
+- lemma: наказ
+  translation: command, order
+  pos: noun:m
+  usage: "Прямий наказ може звучати різко без пом'якшувальних слів."
+- lemma: прохання
+  translation: request
+  pos: noun:n
+  usage: "Ввічливе прохання часто містить будь ласка."
+- lemma: порада
+  translation: advice
+  pos: noun:f
+  usage: "Порада може мати форму наказового способу: відпочинь."
+- lemma: спонукання
+  translation: prompting, encouragement to act
+  pos: noun:n
+  usage: "Спонукання не завжди є суворим наказом."
+- lemma: дозвіл
+  translation: permission
+  pos: noun:m
+  usage: "Хай він увійде може виражати дозвіл."
+- lemma: побажання
+  translation: wish
+  pos: noun:n
+  usage: "Нехай щастить - коротке побажання."
+- lemma: заперечення
+  translation: negation
+  pos: noun:n
+  usage: "У запереченні наказового способу часто потрібен недоконаний вид."
+- lemma: заборона
+  translation: prohibition
+  pos: noun:f
+  usage: "Не переходьте дорогу на червоне - заборона."
+- lemma: застереження
+  translation: warning, caution
+  pos: noun:n
+  usage: "Обережно, не впади - застереження, а не звичайна заборона."
+- lemma: доконаний вид
+  translation: perfective aspect
+  pos: phrase
+  usage: "Доконаний вид у наказі часто означає один конкретний результат."
+- lemma: недоконаний вид
+  translation: imperfective aspect
+  pos: phrase
+  usage: "Недоконаний вид потрібен для процесів, правил і звичайних заборон."
+- lemma: м'який знак
+  translation: soft sign
+  pos: noun:m
+  usage: "М'який знак пишемо у формах будь, лізь, глянь."
+- lemma: хай
+  translation: let, may
+  pos: particle
+  usage: "Хай він зателефонує після обіду."
+- lemma: нехай
+  translation: let, may
+  pos: particle
+  usage: "Нехай усі зайдуть до зали."
+- lemma: будь ласка
+  translation: please
+  pos: phrase
+  usage: "Передайте, будь ласка, сіль."
+- lemma: прошу
+  translation: I request, please
+  pos: verb
+  usage: "Прошу не палити в приміщенні."
+- lemma: давай / давайте
+  translation: let's, give; informal prompt
+  pos: phrase
+  usage: "У стандартному запрошенні краще сказати ходімо або обговорімо."
+- lemma: ходімо
+  translation: let's go
+  pos: verb
+  usage: "Ходімо в кіно після заняття."
+- lemma: обговорімо
+  translation: let's discuss
+  pos: verb
+  usage: "Обговорімо план зустрічі."
+- lemma: читаймо
+  translation: let's read
+  pos: verb
+  usage: "Читаймо текст уголос."
+- lemma: бережімо
+  translation: let us protect
+  pos: verb
+  usage: "Бережімо українську мову."
+- lemma: будь
+  translation: be
+  pos: verb
+  usage: "Будь уважний на дорозі."
+- lemma: будьте
+  translation: be, formal/plural
+  pos: verb
+  usage: "Будьте готові до обговорення."
+- lemma: будьмо
+  translation: let us be
+  pos: verb
+  usage: "Будьмо чесні одне з одним."
+- lemma: лізь
+  translation: climb
+  pos: verb
+  usage: "Лізь обережно і тримайся поручня."
+- lemma: глянь
+  translation: look, take a look
+  pos: verb
+  usage: "Глянь на це речення ще раз."
+- lemma: занось
+  translation: bring in, carry in
+  pos: verb
+  usage: "Занось коробки до кімнати поступово."
+- lemma: поставмо
+  translation: let's put, let us place
+  pos: verb
+  usage: "Поставмо столи біля сцени."
+- lemma: вірмо
+  translation: let us believe
+  pos: verb
+  usage: "Вірмо в наші сили."
+- lemma: кличмо
+  translation: let us call
+  pos: verb
+  usage: "Кличмо всіх до зали."
+- lemma: тримайся
+  translation: hold on, stay strong
+  pos: verb
+  usage: "Тримайся, усе буде добре."
+- lemma: тримаймося
+  translation: let's hold on, let's stay together
+  pos: verb
+  usage: "Тримаймося разом у складній ситуації."
+- lemma: не відчиняй
+  translation: do not open
+  pos: phrase
+  usage: "Не відчиняй вікно, тут холодно."
+- lemma: не забувай
+  translation: do not forget
+  pos: phrase
+  usage: "Не забувай вимикати світло."
+- lemma: чи не могли б ви
+  translation: could you possibly
+  pos: phrase
+  usage: "Чи не могли б ви повторити питання?"
+- lemma: інфінітив
+  translation: infinitive
+  pos: noun:m
+  usage: "Після прошу часто стоїть інфінітив: прошу не шуміти."
+- lemma: регістр
+  translation: register
+  pos: noun:m
+  usage: "Регістр визначає, чи фраза звучить дружньо, офіційно або різко."
+- lemma: ввічливий
+  translation: polite
+  pos: adjective
+  usage: "Ввічливий наказ має пом'якшувальні слова."
+- lemma: прямий
+  translation: direct
+  pos: adjective
+  usage: "Прямий наказ без будь ласка може звучати твердо."
+- lemma: рецепт
+  translation: recipe
+  pos: noun:m
+  usage: "Рецепт часто містить наказові форми: наріжте, додайте, перемішайте."
+- lemma: інструкція
+  translation: instruction, manual
+  pos: noun:f
+  usage: "Інструкція пояснює послідовність дій."
+- lemma: нарізати
+  translation: to cut up
+  pos: verb
+  usage: "Наріжте цибулю дрібними кубиками."
+- lemma: додати
+  translation: to add
+  pos: verb
+  usage: "Додайте сіль і перець."
+- lemma: перемішати
+  translation: to mix, to stir
+  pos: verb
+  usage: "Перемішайте тісто до однорідності."
+- lemma: подавати
+  translation: to serve
+  pos: verb
+  usage: "Подавайте страву гарячою."
+- lemma: вимикати
+  translation: to turn off
+  pos: verb
+  usage: "Не забувайте вимикати світло."
+- lemma: шанувати
+  translation: to honor, to respect
+  pos: verb
+  usage: "Шануймо людей, які допомагають громаді."
+- lemma: єднатися
+  translation: to unite
+  pos: verb
+  usage: "Єднаймося навколо спільної справи."
+- lemma: берегти
+  translation: to protect, to preserve
+  pos: verb
+  usage: "Бережімо рідну мову."
+- lemma: репетиція
+  translation: rehearsal
+  pos: noun:f
+  usage: "На репетиції режисер дає акторам вказівки."
+- lemma: режисер
+  translation: director
+  pos: noun:m
+  usage: "Режисер сказав: вийди на сцену зліва."
+- lemma: вказівка
+  translation: instruction, direction
+  pos: noun:f
+  usage: "Вказівка має бути чіткою і ввічливою."
