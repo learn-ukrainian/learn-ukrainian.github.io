@@ -63,7 +63,44 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 44 HANDOFF (2026-06-17 — 🎯 DESIGN LOCKED: the seminar content-quality gate is the BACKBONE for building ALL seminar tracks. Read `docs/folk-epic/seminar-quality-gate-design.md` and execute from there) — **RESUME HERE**
+## ▶▶▶ SESSION 45 HANDOFF (2026-06-17 — ✅ USER #1 JOB DONE: per-module status+scores Monitor API endpoint shipped. Phase A (`beauty` dim) DISPATCHED in parallel; Phase B de-risk is the next gate) — **RESUME HERE**
+
+> **✅ DONE this session — USER #1 PRIORITY (the API scores view, S44 line 68):** built
+> `GET /api/state/scores/{track}` + `/{track}/{slug}` in `scripts/api/state_router.py`. Returns per
+> module: `status` + `aggregate{verdict,terminal_verdict,min_score,min_dim,failing_dims,warning_dims}` +
+> `dimensions{<dim>.score}`, reading `curriculum/l2-uk-en/<track>/<slug>/llm_qg.json` + the audit status
+> cache. **`beauty` auto-surfaces once Phase A lands** (dims read generically). Always-fresh (no cache) so
+> polling during a build shows the latest round. 7 tests (`tests/test_api_state_scores.py`), documented in
+> `docs/MONITOR-API.md`. **Smoke-verified on real folk data: 42 modules, 6 scored** — pedagogical 5.8–7.0,
+> engagement 6.8–7.4 (confirms the design's "weak content ships" premise); koliadky is strong (ped 9.2/eng 9.0).
+> Shipped in THIS PR (branch `claude/folk-s45-api-scores`); self-merge when CI green (NOT blocked like Phase A).
+>
+> **▶ IN-FLIGHT (verify before assuming — `curl /api/delegate/active`):**
+> - **Dispatch `folk-phaseA-beauty-gate`** (codex gpt-5.5 xhigh) — branch `codex/folk-phaseA-beauty-gate`
+>   off origin/main. Brief: `batch_state/briefs/phaseA-beauty-gate.md` (gitignored; re-derivable from design §3).
+>   CODE ONLY: `beauty`→`QG_DIMS`; `beauty=8.0` at all 7 `_make_review_floors` sites; seminar-scoped terminal
+>   dims `{decolonization,pedagogical,engagement,beauty}` via `terminal_dims_for` (core stays `frozenset()`);
+>   `beauty` in the seminar reviewer rubric + output-format JSON; tests. **Opens a DRAFT PR, NOT merged** —
+>   design §3 forbids merging the terminal promotion until the Phase B de-risk proves convergence (else every
+>   seminar build fails with no path to pass). The `beauty` rubric (craft + soul) was authored by me in the brief.
+> - (Not mine: `atlas-3150-autoexpand` codex — lexicon lane.)
+>
+> **▶ NEXT ACTION (Phase B de-risk — design §8 step 0, THE gate):** when the Phase A branch lands, run **ONE**
+> v7 build on **kalendarna** against that branch, watching per-round subjective-dim scores:
+> 1. `git worktree add … codex/folk-phaseA-beauty-gate` (branch FROM the Phase A branch, not main).
+> 2. Symlink data into the sparse worktree (`ln -s <main>/data/vesum.db data/vesum.db; ln -s <main>/data/sources.db data/sources.db`); reuse the main `.venv`.
+> 3. `PYTHONPATH=$PWD .venv/bin/python -u scripts/build/v7_build.py folk kalendarna-obriadovist-zvychai --no-resume 2>&1 | grep --line-buffered '^{"event"'` under `Monitor`.
+> 4. **Verdict:** does the correction loop (#3079, seminar budget 8) drive pedagogical/engagement/beauty to ≥8 and SHIP, or thrash/fail? `llm_qg_correction_loop.json` + per-round `llm_qg.json` give the trace. Distinguish "loop can't move subjective dims" vs "#3162 corpus blocks beauty's soul-half" from reviewer evidence.
+>    - **converges →** finalize+merge Phase A. **single-reviewer NOISE →** build the §3 multi-model panel (deepseek+codex+agy+claude, median). **loop can't move subjective dims →** loop fix (#3079) = priority #0. (Cleanest: dispatch the de-risk to codex — self-contained worktree+symlinks+build+report.) Watch convergence live via the new `/api/state/scores/folk/kalendarna-obriadovist-zvychai`.
+>
+> **Carry-forward:** kalendarna `module.md` (Jun 17) NEWER than its `llm_qg.json` (Jun 9) — baseline is round 0.
+> #3162 (Phase C blocker, "soul" half of beauty): 3-part fix — route folk primaries to `literary_texts` (mirror
+> #2973, `_build_textbook_excerpt_context` ~L1775) + non-word-counted primary-text reading panel + extend ukrlib
+> /narod/ ingest. I OWN it (#0.2) at Phase C. Merge grant LIVE (CI-green → self-merge; Phase A held per §3).
+> Worktree-only; never commit to main. Tasks: #5 API (done, this PR), #1 Phase A in-flight, #2 de-risk
+> blocked-by #1, #3 panel/profiles cond., #4 Phase C/D/E.
+
+## ▶▶▶ SESSION 44 HANDOFF (2026-06-17 — 🎯 DESIGN LOCKED: the seminar content-quality gate is the BACKBONE for building ALL seminar tracks. Read `docs/folk-epic/seminar-quality-gate-design.md` and execute from there)
 
 > ### 🥇 #1 NEXT-SESSION JOB (user 2026-06-17, TOP PRIORITY — do this FIRST, before the gate build):
 > **Expose per-module STATUS + per-dimension SCORING from the Monitor API.** The user wants to
