@@ -5,6 +5,7 @@ pipeline version phase resolution, and legacy research/content checks.
 """
 
 import contextlib
+import json
 import re
 import sys
 from datetime import UTC, datetime
@@ -229,6 +230,141 @@ def _get_quick_verify(orch_dir: Path) -> dict:
         return json.loads(qv_path.read_text("utf-8"))
     except Exception:
         return {}
+
+
+def _read_json_file(path: Path) -> dict | None:
+    """Read a JSON object, returning None for absent or unusable artifacts."""
+    try:
+        if not path.exists():
+            return None
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    return data if isinstance(data, dict) else None
+
+
+def read_llm_qg(track_dir: Path, slug: str) -> dict | None:
+    """Read a module's LLM quality-gate artifact if present."""
+    try:
+        path = safe_join(track_dir, slug, "llm_qg.json")
+    except ValueError:
+        return None
+    return _read_json_file(path)
+
+
+def read_wiki_gate(track_dir: Path, slug: str) -> dict | None:
+    """Read a module's wiki completeness gate artifact if present."""
+    try:
+        path = safe_join(track_dir, slug, "wiki_completeness_gate.json")
+    except ValueError:
+        return None
+    return _read_json_file(path)
+
+
+def read_module_status(track_dir: Path, slug: str) -> dict | None:
+    """Read a generated module status cache opportunistically if present."""
+    try:
+        path = safe_join(track_dir, "status", f"{slug}.json")
+    except ValueError:
+        return None
+    return _read_json_file(path)
+
+
+def _project_llm_qg_dimensions(dimensions: object, *, verbose: bool) -> dict | None:
+    if not isinstance(dimensions, dict):
+        return None
+
+    projected = {}
+    for name, value in dimensions.items():
+        if verbose:
+            projected[name] = value
+            continue
+        if isinstance(value, dict):
+            projected[name] = value.get("score")
+        else:
+            projected[name] = value
+    return projected
+
+
+def summarize_llm_qg(llm_qg: dict | None) -> dict | None:
+    """Return the compact per-module LLM-QG summary used by API projections."""
+    if not isinstance(llm_qg, dict):
+        return None
+
+    aggregate = llm_qg.get("aggregate") if isinstance(llm_qg.get("aggregate"), dict) else {}
+    return {
+        "verdict": aggregate.get("verdict"),
+        "min_score": aggregate.get("min_score"),
+        "min_dim": aggregate.get("min_dim"),
+        "dimensions": _project_llm_qg_dimensions(llm_qg.get("dimensions"), verbose=False),
+    }
+
+
+def compute_llm_qg_track(track_id: str, level_cfg: dict, *, verbose: bool = False) -> dict:
+    """Compute per-module LLM quality-gate status from artifacts already on disk."""
+    track_dir = CURRICULUM_ROOT / level_cfg["path"]
+    plan_slugs = get_plan_slugs(track_id)
+    modules = []
+    min_scores = []
+    scored = 0
+    passing = 0
+    failing = 0
+
+    for num, slug in plan_slugs:
+        llm_qg = read_llm_qg(track_dir, slug)
+        wiki_gate = read_wiki_gate(track_dir, slug)
+        status = read_module_status(track_dir, slug)
+        has_llm_qg = llm_qg is not None
+
+        aggregate = (
+            llm_qg.get("aggregate")
+            if has_llm_qg and isinstance(llm_qg.get("aggregate"), dict)
+            else None
+        )
+        dimensions = _project_llm_qg_dimensions(
+            llm_qg.get("dimensions") if has_llm_qg else None,
+            verbose=verbose,
+        )
+        verdict = aggregate.get("verdict") if isinstance(aggregate, dict) else None
+
+        if has_llm_qg:
+            scored += 1
+            if verdict == "PASS":
+                passing += 1
+            else:
+                failing += 1
+            min_score = aggregate.get("min_score") if isinstance(aggregate, dict) else None
+            if isinstance(min_score, (int, float)) and not isinstance(min_score, bool):
+                min_scores.append(float(min_score))
+
+        modules.append({
+            "num": num,
+            "slug": slug,
+            "has_llm_qg": has_llm_qg,
+            "verdict": verdict,
+            "aggregate": aggregate,
+            "dimensions": dimensions if has_llm_qg else None,
+            "wiki_gate": (
+                {"verdict": wiki_gate.get("verdict")}
+                if isinstance(wiki_gate, dict) and "verdict" in wiki_gate
+                else None
+            ),
+            "status": status,
+        })
+
+    return {
+        "track": track_id,
+        "generated_at": datetime.now(UTC).isoformat(),
+        "summary": {
+            "total": len(plan_slugs),
+            "scored": scored,
+            "passing": passing,
+            "failing": failing,
+            "unscored": len(plan_slugs) - scored,
+            "min_dim_score": min(min_scores) if min_scores else None,
+        },
+        "modules": modules,
+    }
 
 
 def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:

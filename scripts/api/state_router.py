@@ -49,9 +49,12 @@ from .state_build import (
     compute_track_health,
 )
 from .state_compute import (
+    compute_llm_qg_track,
     compute_module_detail,
     compute_research_detail,
+    read_llm_qg,
     severity_key,
+    summarize_llm_qg,
 )
 from .state_coverage import (
     compute_pipeline_track,
@@ -834,6 +837,22 @@ async def build_status_all():
     return result
 
 
+@router.get("/llm-qg/{track_id}")
+async def llm_qg_track(
+    track_id: str,
+    verbose: bool = Query(
+        False,
+        description="True = include full dimension evidence. Default returns score-only dimensions.",
+    ),
+):
+    """Per-module LLM quality-gate scores from build artifacts on disk."""
+    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
+    if not level_cfg:
+        return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
+
+    return await asyncio.to_thread(compute_llm_qg_track, track_id, level_cfg, verbose=verbose)
+
+
 @router.get("/build-stats")
 async def build_stats_all():
     """V6 build stats aggregated across all tracks."""
@@ -944,6 +963,8 @@ async def module_detail_by_slug(
     audit = full.get("audit") or {}
     review = full.get("review") or {}
     final_review = full.get("final_review")
+    track_dir = CURRICULUM_ROOT / level_cfg["path"]
+    llm_qg = await asyncio.to_thread(read_llm_qg, track_dir, slug)
 
     return {
         "track": track_id,
@@ -971,6 +992,7 @@ async def module_detail_by_slug(
         "blocking_issues": audit.get("blocking_issues") or [],
         "retry_count": retry_count,
         "worker": current_worker,
+        "llm_qg": summarize_llm_qg(llm_qg),
     }
 
 
