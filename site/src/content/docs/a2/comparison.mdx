@@ -68,7 +68,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <DialogueBox
   client:only="react"
   title="Діалог"
-  exchanges={JSON.parse('[{"speaker":"Покупець","text":"Добрий день. Мені потрібен новий телефон. Цей більший, ніж мій старий?"},{"speaker":"Консультант","text":"Так, екран більший, але сам телефон не дуже важкий."},{"speaker":"Покупець","text":"А ця модель дешевша за ту?"},{"speaker":"Консультант","text":"Так, вона дешевша, але камера гірша. Ось третя модель: вона дорожча, зате краща для фото."},{"speaker":"Покупець","text":"Яка модель найкраща для роботи?"},{"speaker":"Консультант","text":"Найкраща для роботи - ця: батарея сильніша, екран яскравіший, пам\'яті більше."},{"speaker":"Покупець","text":"Добре. Вона не найдешевша, але, мабуть, найзручніша для мене."}]')}
+  exchanges={JSON.parse('[{"speaker":"Покупець","text":"Добрий день. Мені потрібен новий телефон. Цей більший, ніж мій старий?"},{"speaker":"Консультант","text":"Так, екран більший, але сам телефон не дуже важкий."},{"speaker":"Покупець","text":"А ця модель дешевша за ту?"},{"speaker":"Консультант","text":"Так, вона дешевша, але камера гірша. Ось третя модель: вона дорожча, зате краща для фото."},{"speaker":"Покупець","text":"Яка модель найкраща для роботи?"},{"speaker":"Консультант","text":"Найкраща для роботи — ця: батарея сильніша, екран яскравіший, пам\'яті більше."},{"speaker":"Покупець","text":"Добре. Вона не найдешевша, але, мабуть, найзручніша для мене."}]')}
 />
 
 У діалозі люди не просто називають телефони. Вони ставлять речі поруч і
@@ -88,6 +88,22 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 На A2 важливо говорити коротко і без подвійного порівняння. Не треба
 казати `більш кращий`. Достатньо сказати `кращий` або `більш зручний`,
 залежно від слова.
+
+У цьому модулі ми працюємо з трьома рішеннями. Спочатку ви називаєте
+ознаку: `дорогий`, `зручний`, `солодкий`. Потім показуєте різницю між
+двома речами: `дорожчий`, `зручніший`, `солодший`. Нарешті вибираєте
+один варіант із групи: `найдорожчий`, `найзручніший`, `найсолодший`.
+Так порівняння стає не списком форм, а способом пояснити вибір.
+
+Запам'ятайте просту логіку:
+
+1. Дві речі — вищий ступінь: `цей маршрут коротший`.
+2. Друга річ названа прямо — додайте `ніж` або `за`.
+3. Одна річ серед групи — найвищий ступінь: `це найкоротший маршрут`.
+4. Якщо слово довге або незручне — використайте `більш` / `найбільш`.
+
+На пізньому A2 важливо не тільки знати форму, а й пояснити причину:
+`Я обираю цей варіант, бо він дешевший і зручніший для групи`.
 
 ## Вищий ступінь: один предмет проти іншого
 
@@ -114,10 +130,29 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 | важкий | важчий | Рюкзак важчий, ніж сумка. |
 | дорогий | дорожчий | Квиток дорожчий у п'ятницю. |
 
-У деяких словах змінюється приголосний: `дорогий` -> `дорожчий`,
-`важкий` -> `важчий`, `тихий` -> `тихіший`. Не треба вивчати всі
+У деяких словах змінюється приголосний: `дорогий` → `дорожчий`,
+`важкий` → `важчий`, `тихий` → `тихіший`. Не треба вивчати всі
 чергування одразу. Краще почати з дуже частих пар і повторювати їх у
 реальних фразах.
+
+Практичний спосіб перевірити форму — поставити її в коротке речення.
+Якщо форма звучить важко, спробуйте складену модель:
+
+| Початкова форма | Проста форма | Безпечна складена форма |
+| --- | --- | --- |
+| солодкий | солодший | більш солодкий |
+| практичний | практичніший | більш практичний |
+| офіційний | офіційніший | більш офіційний |
+| комфортний | комфортніший | більш комфортний |
+
+У мовленні прості форми звучать природно з частими словами:
+`солодший чай`, `дешевший квиток`, `зручніший час`. Складені форми
+допомагають, коли слово довге або коли ви хочете говорити обережніше:
+`більш офіційний лист`, `більш комфортний варіант`.
+
+Не всі прості форми однаково часті. Наприклад, `офіційніший` можливе
+слово, але в навчальному A2-тексті `більш офіційний` зазвичай звучить
+простіше. Ваша мета — не показати всі можливості, а сказати зрозуміло.
 
 Є також складена форма: `більш` або `менш` + прикметник.
 
@@ -138,7 +173,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Утворіть вищий ступінь
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "новий -> ___", "answer": "новіший", "options": ["новіший", "новийший", "більш новіший"]}, {"sentence": "дешевий -> ___", "answer": "дешевший", "options": ["дешевший", "дешевіший", "більш дешевший"]}, {"sentence": "зручний -> ___", "answer": "зручніший", "options": ["зручніший", "зручнийший", "найзручніший"]}, {"sentence": "цікавий -> ___", "answer": "цікавіший", "options": ["цікавіший", "цікавший", "самий цікавий"]}, {"sentence": "дорогий -> ___", "answer": "дорожчий", "options": ["дорожчий", "дорогіший", "більш дорожчий"]}, {"sentence": "тихий -> ___", "answer": "тихіший", "options": ["тихіший", "тишший", "найтихіший"]}, {"sentence": "важкий -> ___", "answer": "важчий", "options": ["важчий", "важкийший", "більш важчий"]}, {"sentence": "офіційний -> ___", "answer": "більш офіційний", "options": ["більш офіційний", "офіційніший", "більш офіційніший"]}]`)} isUkrainian={true} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "новий → ___", "answer": "новіший", "options": ["новіший", "новийший", "більш новіший"]}, {"sentence": "дешевий → ___", "answer": "дешевший", "options": ["дешевший", "дешевіший", "більш дешевший"]}, {"sentence": "зручний → ___", "answer": "зручніший", "options": ["зручніший", "зручнийший", "найзручніший"]}, {"sentence": "цікавий → ___", "answer": "цікавіший", "options": ["цікавіший", "цікавший", "самий цікавий"]}, {"sentence": "дорогий → ___", "answer": "дорожчий", "options": ["дорожчий", "дорогіший", "більш дорожчий"]}, {"sentence": "тихий → ___", "answer": "тихіший", "options": ["тихіший", "тишший", "найтихіший"]}, {"sentence": "важкий → ___", "answer": "важчий", "options": ["важчий", "важкийший", "більш важчий"]}, {"sentence": "офіційний → ___", "answer": "більш офіційний", "options": ["більш офіційний", "офіційніший", "більш офіційніший"]}]`)} instruction={"Оберіть природну форму вищого ступеня."} isUkrainian={true} />
 
 ## Ніж і за: як назвати другий предмет
 
@@ -166,6 +201,19 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 іменник жіночого роду, форму видно краще: `за стару дорогу`,
 `за центральну вулицю`, `за цю модель`.
 
+З людьми й живими істотами знахідний може бути помітнішим:
+
+> Марко старший за брата.
+>
+> Олена молодша за сестру.
+
+Якщо форма після `за` вас зупиняє, не ускладнюйте речення. Модель з
+`ніж` часто легша:
+
+> Марко старший, ніж його брат.
+>
+> Олена молодша, ніж її сестра.
+
 Обидві моделі правильні. У мовленні можна вибирати ту, яка звучить
 простішою у конкретному реченні.
 
@@ -178,22 +226,27 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 На A2 безпечна стратегія така: якщо сумніваєтеся у відмінку після `за`,
 використайте `ніж`.
 
+Також стежте за комою. Перед `ніж` у таких порівняннях зазвичай ставимо
+кому: `Цей текст коротший, ніж попередній`. Перед `за` кома не потрібна:
+`Цей текст коротший за попередній`. Це проста дрібниця, але вона робить
+письмо чистішим.
+
 ### Ніж чи за?
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Цей маршрут коротший ___ той.", "options": [{"text": "за", "correct": true}, {"text": "ніж", "correct": false}, {"text": "най", "correct": false}], "explanation": "Можна сказати коротший за той."}, {"question": "Цей маршрут коротший, ___ той.", "options": [{"text": "ніж", "correct": true}, {"text": "за", "correct": false}, {"text": "най", "correct": false}], "explanation": "Після коми природна модель з ніж."}, {"question": "Наша кімната світліша ___ вашу.", "options": [{"text": "за", "correct": true}, {"text": "ніж", "correct": false}, {"text": "най", "correct": false}], "explanation": "За + знахідний: за вашу кімнату, тут іменник пропущено."}, {"question": "Наша кімната світліша, ___ ваша.", "options": [{"text": "ніж", "correct": true}, {"text": "за", "correct": false}, {"text": "най", "correct": false}], "explanation": "Ніж + називний: ваша кімната."}, {"question": "Ця кава міцніша ___ чай.", "options": [{"text": "за", "correct": true}, {"text": "ніж", "correct": false}, {"text": "най", "correct": false}], "explanation": "Можна сказати міцніша за чай."}, {"question": "Ця кава міцніша, ___ чай.", "options": [{"text": "ніж", "correct": true}, {"text": "за", "correct": false}, {"text": "най", "correct": false}], "explanation": "Можна сказати міцніша, ніж чай."}, {"question": "Новий телефон дорожчий ___ старий.", "options": [{"text": "за", "correct": true}, {"text": "ніж", "correct": false}, {"text": "най", "correct": false}], "explanation": "Дорожчий за старий - коротка модель."}, {"question": "Новий телефон дорожчий, ___ старий.", "options": [{"text": "ніж", "correct": true}, {"text": "за", "correct": false}, {"text": "най", "correct": false}], "explanation": "Дорожчий, ніж старий - модель з ніж."}]`)} isUkrainian={true} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Цей маршрут коротший ___ той.", "options": [{"text": "за", "correct": true}, {"text": "ніж", "correct": false}, {"text": "най", "correct": false}], "explanation": "Можна сказати коротший за той."}, {"question": "Цей маршрут коротший, ___ той.", "options": [{"text": "ніж", "correct": true}, {"text": "за", "correct": false}, {"text": "най", "correct": false}], "explanation": "Після коми природна модель з ніж."}, {"question": "Наша кімната світліша ___ вашу.", "options": [{"text": "за", "correct": true}, {"text": "ніж", "correct": false}, {"text": "най", "correct": false}], "explanation": "За + знахідний: за вашу кімнату, тут іменник пропущено."}, {"question": "Наша кімната світліша, ___ ваша.", "options": [{"text": "ніж", "correct": true}, {"text": "за", "correct": false}, {"text": "най", "correct": false}], "explanation": "Ніж + називний: ваша кімната."}, {"question": "Ця кава міцніша ___ чай.", "options": [{"text": "за", "correct": true}, {"text": "ніж", "correct": false}, {"text": "най", "correct": false}], "explanation": "Можна сказати міцніша за чай."}, {"question": "Ця кава міцніша, ___ чай.", "options": [{"text": "ніж", "correct": true}, {"text": "за", "correct": false}, {"text": "най", "correct": false}], "explanation": "Можна сказати міцніша, ніж чай."}, {"question": "Новий телефон дорожчий ___ старий.", "options": [{"text": "за", "correct": true}, {"text": "ніж", "correct": false}, {"text": "най", "correct": false}], "explanation": "Дорожчий за старий — коротка модель."}, {"question": "Новий телефон дорожчий, ___ старий.", "options": [{"text": "ніж", "correct": true}, {"text": "за", "correct": false}, {"text": "най", "correct": false}], "explanation": "Дорожчий, ніж старий — модель з ніж."}]`)} instruction={"Оберіть природну форму порівняння."} isUkrainian={true} />
 
 ## Найвищий ступінь: один із усіх
 
 Найвищий ступінь показує, що річ має ознаку найбільше серед групи.
 Найчастіше ми додаємо `най-` до вищої форми:
 
-> дешевший -> найдешевший
+> дешевший → найдешевший
 >
-> зручніший -> найзручніший
+> зручніший → найзручніший
 >
-> цікавіший -> найцікавіший
+> цікавіший → найцікавіший
 >
-> дорожчий -> найдорожчий
+> дорожчий → найдорожчий
 
 У реченні це звучить так:
 
@@ -222,9 +275,22 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 навчального письма і нейтральної української краще використовувати
 `найкращий`, `найдешевший`, `найзручніший`.
 
+Найвищий ступінь майже завжди потребує групи, навіть якщо група не
+названа прямо. Коли ви кажете `це найкращий варіант`, слухач розуміє:
+ви порівняли кілька варіантів. Тому корисно додавати короткий контекст:
+
+> Це найкращий варіант для нашої групи.
+>
+> Це найдешевший квиток на сьогодні.
+>
+> Це найзручніший час із трьох можливих.
+
+Так речення звучить не як окрема граматична форма, а як реальна відповідь
+на питання `що обрати?`
+
 ### Найвищий ступінь
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "добрий", "right": "найкращий"}, {"left": "поганий", "right": "найгірший"}, {"left": "великий", "right": "найбільший"}, {"left": "малий", "right": "найменший"}, {"left": "зручний", "right": "найзручніший"}, {"left": "дорогий", "right": "найдорожчий"}, {"left": "цікавий", "right": "найцікавіший"}, {"left": "офіційний", "right": "найбільш офіційний"}]`)} isUkrainian={true} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "добрий", "right": "найкращий"}, {"left": "поганий", "right": "найгірший"}, {"left": "великий", "right": "найбільший"}, {"left": "малий", "right": "найменший"}, {"left": "зручний", "right": "найзручніший"}, {"left": "дорогий", "right": "найдорожчий"}, {"left": "цікавий", "right": "найцікавіший"}, {"left": "офіційний", "right": "найбільш офіційний"}]`)} instruction={"З'єднайте початкову форму з природною найвищою формою."} isUkrainian={true} />
 
 ## Особливі форми, які треба запам'ятати
 
@@ -257,6 +323,30 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 >
 > Нам треба більше часу.
 
+Ще кілька частих прислівників:
+
+| Початкова форма | Вищий ступінь | Найвищий ступінь |
+| --- | --- | --- |
+| швидко | швидше | найшвидше |
+| повільно | повільніше | найповільніше |
+| тихо | тихіше | найтихіше |
+| легко | легше | найлегше |
+
+Прислівник відповідає на питання `як?`, тому він не має роду:
+
+> Марта читає швидше.
+>
+> Автобус їде повільніше.
+>
+> Мені легше писати короткі речення.
+
+Прикметник описує іменник і змінюється:
+
+> швидший поїзд, швидша відповідь, швидше рішення.
+
+Це важливий контраст для кінця A2: `кращий план`, але `працювати краще`;
+`гірша дорога`, але `їхати гірше`.
+
 Порівняйте:
 
 | Прикметник | Прислівник |
@@ -281,7 +371,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 > У місті більше людей і більше подій. Там цікавіші музеї, але дорога
 > дорожча. У селі тихіше і дешевше. Озеро найкраще для відпочинку, якщо
-> буде тепло. Для мене найзручніший варіант - село, бо воно ближче за
+> буде тепло. Для мене найзручніший варіант — село, бо воно ближче за
 > озеро і спокійніше, ніж місто.
 
 Такий текст уже звучить як доросла A2-відповідь. У ньому є вибір,
@@ -294,9 +384,56 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 >
 > Цей розклад найзручніший для мене.
 
+## Міні-читання: три маршрути
+
+Олена щодня їде на курс української. Вона має три маршрути. Перший —
+метро. Це найшвидший варіант: дорога займає двадцять хвилин. Але вранці
+метро набагато людніше, ніж автобус, і Олена швидко втомлюється.
+
+Другий маршрут — автобус. Він повільніший за метро, але зручніший для
+читання. В автобусі Олена повторює слова і слухає короткі діалоги.
+Квиток такий самий, але дорога довша на десять хвилин.
+
+Третій маршрут — пішки через парк. Це найприємніший варіант у теплу
+погоду, але найгірший, коли йде дощ. Олена обирає метро в понеділок,
+автобус у середу, а парк у п'ятницю. Так її тиждень гнучкіший, і дорога
+не здається однаковою щодня.
+
+Після читання дайте короткі відповіді:
+
+1. Який маршрут найшвидший?
+2. Який маршрут зручніший для повторення слів?
+3. Який маршрут найприємніший у теплу погоду?
+4. Чому Олена не обирає один маршрут на весь тиждень?
+
+У відповідях використайте `ніж` або `за` принаймні один раз. Наприклад:
+`Автобус повільніший за метро, але зручніший для повторення`.
+
+## Міні-читання: рейтинг міст
+
+У групі студенти порівнюють чотири українські міста: Київ, Львів, Одесу
+і Чернівці. Це не офіційний рейтинг, а навчальна вправа, тому важливо не
+вгадати «правильну» відповідь, а пояснити вибір.
+
+За розміром Київ більший за Львів і Чернівці. У нашій групі він також
+найбільший за кількістю населення. Львів менший за Київ, але для багатьох
+студентів він зручніший для короткої подорожі, бо центр компактніший.
+Одеса тепліша влітку, ніж Львів, і має море. Чернівці менші за Одесу, але
+спокійніші й дуже красиві.
+
+Коли студенти говорять про красу, відповіді різні. Марта каже, що Львів
+найгарніший для прогулянок. Денис обирає Одесу, бо для нього море
+важливіше за стару архітектуру. Олена каже, що Чернівці найприємніші,
+бо там тихіше. Сергій обирає Київ, бо там більше подій і більше роботи.
+
+Цей текст показує важливу річ: `найбільший` можна перевірити фактами, але
+`найгарніший` часто залежить від людини. Тому в A2-відповіді добре
+додавати коротке пояснення: `Для мене Львів найгарніший, бо там зручний
+центр і багато старих вулиць`.
+
 ### Чи правильно?
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Цей варіант кращий.", "isTrue": true, "explanation": "Кращий - правильна суплетивна форма."}, {"statement": "Цей варіант більш кращий.", "isTrue": false, "explanation": "Не змішуємо більш і кращий."}, {"statement": "Кімната більша, ніж кухня.", "isTrue": true, "explanation": "Ніж + називний - правильна модель."}, {"statement": "Кімната більша за кухню.", "isTrue": true, "explanation": "За + знахідний - правильна модель."}, {"statement": "Це самий найкращий план.", "isTrue": false, "explanation": "Достатньо сказати найкращий план."}, {"statement": "Це найбільш офіційний варіант.", "isTrue": true, "explanation": "Складена найвища форма правильна."}, {"statement": "Моя сумка важчий.", "isTrue": false, "explanation": "Сумка - жіночий рід: важча."}, {"statement": "Сьогодні мені краще.", "isTrue": true, "explanation": "Краще може бути прислівником і не узгоджується."}]`)} isUkrainian={true} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Цей варіант кращий.", "isTrue": true, "explanation": "Кращий — правильна суплетивна форма."}, {"statement": "Цей варіант більш кращий.", "isTrue": false, "explanation": "Не змішуємо більш і кращий."}, {"statement": "Кімната більша, ніж кухня.", "isTrue": true, "explanation": "Ніж + називний — правильна модель."}, {"statement": "Кімната більша за кухню.", "isTrue": true, "explanation": "За + знахідний — правильна модель."}, {"statement": "Це самий найкращий план.", "isTrue": false, "explanation": "Достатньо сказати найкращий план."}, {"statement": "Це найбільш офіційний варіант.", "isTrue": true, "explanation": "Складена найвища форма правильна."}, {"statement": "Моя сумка важчий.", "isTrue": false, "explanation": "Сумка — жіночий рід: важча."}, {"statement": "Сьогодні мені краще.", "isTrue": true, "explanation": "Краще може бути прислівником і не узгоджується."}]`)} instruction={"Визначте, чи речення має правильну форму порівняння."} isUkrainian={true} />
 
 ## Типові помилки
 
@@ -351,7 +488,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 > Ранкова зустріч зручніша, ніж вечірня. Вечірня зустріч краща для
 > Олени, але гірша для мене. Онлайн-зустріч дешевша за зустріч у кафе.
-> Найкращий варіант для групи - субота о десятій. Я обираю цей час, бо
+> Найкращий варіант для групи — субота о десятій. Я обираю цей час, бо
 > він найспокійніший.
 
 ## 📋 Підсумок
@@ -360,19 +497,19 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 Найвищий ступінь вибирає один варіант із групи: `найдешевший`,
 `найзручніший`, `найкращий`. Для другого предмета використовуйте `ніж`
 або `за`: `кращий, ніж старий`, `кращий за старий`. Запам'ятайте часті
-особливі форми: `великий -> більший`, `малий -> менший`, `добрий ->
-кращий`, `поганий -> гірший`.
+особливі форми: `великий` → `більший`, `малий` → `менший`, `добрий` →
+`кращий`, `поганий` → `гірший`.
 
-Самоперевірка: як сказати `This route is shorter than that one` двома
-способами: з `ніж` і з `за`? Як сказати `the best option`? Чому
-`більш кращий` не є доброю навчальною формою?
+Самоперевірка: як сказати `Цей маршрут коротший за той` двома способами:
+з `ніж` і з `за`? Як сказати `найкращий варіант` у реченні про вашу
+групу? Чому `більш кращий` не є доброю навчальною формою?
 
 </TabItem>
 <TabItem label="Словник">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"порівняння","translation":"comparison","pos":"noun","example":"Порівняння допомагає вибрати кращий варіант.","examples":["comparison","Порівняння допомагає вибрати кращий варіант."],"atlas_href":"/lexicon/порівняння/"},{"word":"більший","translation":"bigger","pos":"adjective","example":"Цей екран більший, ніж мій старий.","examples":["bigger","Цей екран більший, ніж мій старий."],"atlas_href":"/lexicon/більший/"},{"word":"більша","translation":"bigger, feminine","pos":"adjective","example":"Наша кімната більша за кухню.","examples":["bigger, feminine","Наша кімната більша за кухню."],"atlas_href":"/lexicon/більша/"},{"word":"менший","translation":"smaller","pos":"adjective","example":"Цей ноутбук менший і легший.","examples":["smaller","Цей ноутбук менший і легший."],"atlas_href":"/lexicon/менший/"},{"word":"кращий","translation":"better","pos":"adjective","example":"Цей план кращий для групи.","examples":["better","Цей план кращий для групи."],"atlas_href":"/lexicon/кращий/"},{"word":"гірший","translation":"worse","pos":"adjective","example":"Старий маршрут гірший уранці.","examples":["worse","Старий маршрут гірший уранці."],"atlas_href":"/lexicon/гірший/"},{"word":"найкращий","translation":"the best","pos":"adjective","example":"Це найкращий варіант для мене.","examples":["the best","Це найкращий варіант для мене."],"atlas_href":"/lexicon/найкращий/"},{"word":"найбільший","translation":"the biggest","pos":"adjective","example":"Це найбільший екран у магазині.","examples":["the biggest","Це найбільший екран у магазині."],"atlas_href":"/lexicon/найбільший/"},{"word":"найменший","translation":"the smallest","pos":"adjective","example":"Найменший пакет дешевший.","examples":["the smallest","Найменший пакет дешевший."],"atlas_href":"/lexicon/найменший/"},{"word":"дешевший","translation":"cheaper","pos":"adjective","example":"Цей квиток дешевший за той.","examples":["cheaper","Цей квиток дешевший за той."],"atlas_href":"/lexicon/дешевший/"},{"word":"дорожчий","translation":"more expensive","pos":"adjective","example":"Новий телефон дорожчий, але зручніший.","examples":["more expensive","Новий телефон дорожчий, але зручніший."],"atlas_href":"/lexicon/дорожчий/"},{"word":"зручніший","translation":"more convenient","pos":"adjective","example":"Ранковий час зручніший для зустрічі.","examples":["more convenient","Ранковий час зручніший для зустрічі."],"atlas_href":"/lexicon/зручніший/"},{"word":"цікавіший","translation":"more interesting","pos":"adjective","example":"Другий музей цікавіший для дітей.","examples":["more interesting","Другий музей цікавіший для дітей."],"atlas_href":"/lexicon/цікавіший/"},{"word":"тихіший","translation":"quieter","pos":"adjective","example":"Цей район тихіший увечері.","examples":["quieter","Цей район тихіший увечері."],"atlas_href":"/lexicon/тихіший/"},{"word":"важчий","translation":"heavier","pos":"adjective","example":"Рюкзак важчий, ніж сумка.","examples":["heavier","Рюкзак важчий, ніж сумка."],"atlas_href":"/lexicon/важчий/"},{"word":"легший","translation":"lighter, easier","pos":"adjective","example":"Це легший спосіб.","examples":["lighter, easier","Це легший спосіб."],"atlas_href":"/lexicon/легший/"},{"word":"ніж","translation":"than","pos":"conjunction","example":"Метро швидше, ніж автобус.","examples":["than","Метро швидше, ніж автобус."],"atlas_href":"/lexicon/ніж/"},{"word":"за","translation":"than, in comparisons","pos":"preposition","example":"Метро швидше за автобус.","examples":["than, in comparisons","Метро швидше за автобус."],"atlas_href":"/lexicon/за/"},{"word":"набагато","translation":"much, significantly","pos":"adverb","example":"Цей варіант набагато кращий.","examples":["much, significantly","Цей варіант набагато кращий."],"atlas_href":"/lexicon/набагато/"},{"word":"трохи","translation":"a little, slightly","pos":"adverb","example":"Ця кава трохи міцніша.","examples":["a little, slightly","Ця кава трохи міцніша."],"atlas_href":"/lexicon/трохи/"},{"word":"значно","translation":"considerably","pos":"adverb","example":"Нова програма значно зручніша.","examples":["considerably","Нова програма значно зручніша."],"atlas_href":"/lexicon/значно/"},{"word":"навпаки","translation":"on the contrary","pos":"adverb","example":"Я думав, що буде дорожче; навпаки, це дешевше.","examples":["on the contrary","Я думав, що буде дорожче; навпаки, це дешевше."],"atlas_href":"/lexicon/навпаки/"}]`)} title="Словник" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"порівняння","translation":"comparison","pos":"noun","example":"Порівняння допомагає вибрати кращий варіант.","examples":["comparison","Порівняння допомагає вибрати кращий варіант."],"atlas_href":"/lexicon/порівняння/"},{"word":"більший","translation":"bigger","pos":"adjective","example":"Цей екран більший, ніж мій старий.","examples":["bigger","Цей екран більший, ніж мій старий."],"atlas_href":"/lexicon/більший/"},{"word":"більша","translation":"bigger, feminine","pos":"adjective","example":"Наша кімната більша за кухню.","examples":["bigger, feminine","Наша кімната більша за кухню."]},{"word":"менший","translation":"smaller","pos":"adjective","example":"Цей ноутбук менший і легший.","examples":["smaller","Цей ноутбук менший і легший."],"atlas_href":"/lexicon/менший/"},{"word":"кращий","translation":"better","pos":"adjective","example":"Цей план кращий для групи.","examples":["better","Цей план кращий для групи."],"atlas_href":"/lexicon/кращий/"},{"word":"гірший","translation":"worse","pos":"adjective","example":"Старий маршрут гірший уранці.","examples":["worse","Старий маршрут гірший уранці."],"atlas_href":"/lexicon/гірший/"},{"word":"найкращий","translation":"the best","pos":"adjective","example":"Це найкращий варіант для мене.","examples":["the best","Це найкращий варіант для мене."],"atlas_href":"/lexicon/найкращий/"},{"word":"найбільший","translation":"the biggest","pos":"adjective","example":"Це найбільший екран у магазині.","examples":["the biggest","Це найбільший екран у магазині."],"atlas_href":"/lexicon/найбільший/"},{"word":"найменший","translation":"the smallest","pos":"adjective","example":"Найменший пакет дешевший.","examples":["the smallest","Найменший пакет дешевший."],"atlas_href":"/lexicon/найменший/"},{"word":"дешевший","translation":"cheaper","pos":"adjective","example":"Цей квиток дешевший за той.","examples":["cheaper","Цей квиток дешевший за той."],"atlas_href":"/lexicon/дешевший/"},{"word":"солодший","translation":"sweeter","pos":"adjective","example":"Цей чай солодший, ніж кава.","examples":["sweeter","Цей чай солодший, ніж кава."]},{"word":"дорожчий","translation":"more expensive","pos":"adjective","example":"Новий телефон дорожчий, але зручніший.","examples":["more expensive","Новий телефон дорожчий, але зручніший."],"atlas_href":"/lexicon/дорожчий/"},{"word":"зручніший","translation":"more convenient","pos":"adjective","example":"Ранковий час зручніший для зустрічі.","examples":["more convenient","Ранковий час зручніший для зустрічі."],"atlas_href":"/lexicon/зручніший/"},{"word":"цікавіший","translation":"more interesting","pos":"adjective","example":"Другий музей цікавіший для дітей.","examples":["more interesting","Другий музей цікавіший для дітей."],"atlas_href":"/lexicon/цікавіший/"},{"word":"тихіший","translation":"quieter","pos":"adjective","example":"Цей район тихіший увечері.","examples":["quieter","Цей район тихіший увечері."],"atlas_href":"/lexicon/тихіший/"},{"word":"важчий","translation":"heavier","pos":"adjective","example":"Рюкзак важчий, ніж сумка.","examples":["heavier","Рюкзак важчий, ніж сумка."],"atlas_href":"/lexicon/важчий/"},{"word":"легший","translation":"lighter, easier","pos":"adjective","example":"Це легший спосіб.","examples":["lighter, easier","Це легший спосіб."],"atlas_href":"/lexicon/легший/"},{"word":"ніж","translation":"than","pos":"conjunction","example":"Метро швидше, ніж автобус.","examples":["than","Метро швидше, ніж автобус."],"atlas_href":"/lexicon/ніж/"},{"word":"за","translation":"than, in comparisons","pos":"preposition","example":"Метро швидше за автобус.","examples":["than, in comparisons","Метро швидше за автобус."],"atlas_href":"/lexicon/за/"},{"word":"набагато","translation":"much, significantly","pos":"adverb","example":"Цей варіант набагато кращий.","examples":["much, significantly","Цей варіант набагато кращий."],"atlas_href":"/lexicon/набагато/"},{"word":"трохи","translation":"a little, slightly","pos":"adverb","example":"Ця кава трохи міцніша.","examples":["a little, slightly","Ця кава трохи міцніша."],"atlas_href":"/lexicon/трохи/"},{"word":"значно","translation":"considerably","pos":"adverb","example":"Нова програма значно зручніша.","examples":["considerably","Нова програма значно зручніша."],"atlas_href":"/lexicon/значно/"},{"word":"навпаки","translation":"on the contrary","pos":"adverb","example":"Я думав, що буде дорожче; навпаки, це дешевше.","examples":["on the contrary","Я думав, що буде дорожче; навпаки, це дешевше."],"atlas_href":"/lexicon/навпаки/"}]`)} title="Словник" />
 
-<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"порівняння","back":"comparison"},{"front":"більший","back":"bigger"},{"front":"більша","back":"bigger, feminine"},{"front":"менший","back":"smaller"},{"front":"кращий","back":"better"},{"front":"гірший","back":"worse"},{"front":"найкращий","back":"the best"},{"front":"найбільший","back":"the biggest"},{"front":"найменший","back":"the smallest"},{"front":"дешевший","back":"cheaper"},{"front":"дорожчий","back":"more expensive"},{"front":"зручніший","back":"more convenient"},{"front":"цікавіший","back":"more interesting"},{"front":"тихіший","back":"quieter"},{"front":"важчий","back":"heavier"},{"front":"легший","back":"lighter, easier"},{"front":"ніж","back":"than"},{"front":"за","back":"than, in comparisons"},{"front":"набагато","back":"much, significantly"},{"front":"трохи","back":"a little, slightly"},{"front":"значно","back":"considerably"},{"front":"навпаки","back":"on the contrary"}]`)} />
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"порівняння","back":"comparison"},{"front":"більший","back":"bigger"},{"front":"більша","back":"bigger, feminine"},{"front":"менший","back":"smaller"},{"front":"кращий","back":"better"},{"front":"гірший","back":"worse"},{"front":"найкращий","back":"the best"},{"front":"найбільший","back":"the biggest"},{"front":"найменший","back":"the smallest"},{"front":"дешевший","back":"cheaper"},{"front":"солодший","back":"sweeter"},{"front":"дорожчий","back":"more expensive"},{"front":"зручніший","back":"more convenient"},{"front":"цікавіший","back":"more interesting"},{"front":"тихіший","back":"quieter"},{"front":"важчий","back":"heavier"},{"front":"легший","back":"lighter, easier"},{"front":"ніж","back":"than"},{"front":"за","back":"than, in comparisons"},{"front":"набагато","back":"much, significantly"},{"front":"трохи","back":"a little, slightly"},{"front":"значно","back":"considerably"},{"front":"навпаки","back":"on the contrary"}]`)} />
 
 </TabItem>
 <TabItem label="Зошит">
@@ -391,15 +528,15 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Чи правильно?
 
-*(див. урок, §Порівняння в повсякденному рішенні)*
+*(див. урок, §Міні-читання: рейтинг міст)*
 
 ### Виправте порівняння
 
-<ErrorCorrection client:only='react' instruction="Оберіть виправлене речення." items={JSON.parse(`[{"sentence": "Цей телефон більш кращий.", "errorWord": "більш кращий", "correctForm": "Цей телефон кращий.", "options": ["Цей телефон кращий.", "Цей телефон більш кращий."], "explanation": "Кращий уже є вищим ступенем."}, {"sentence": "Ця модель самий дешевий.", "errorWord": "самий дешевий", "correctForm": "Ця модель найдешевша.", "options": ["Ця модель найдешевша.", "Ця модель самий дешевий."], "explanation": "Для жіночого роду: найдешевша."}, {"sentence": "Мій район тихіший за центр.", "errorWord": null, "correctForm": "Мій район тихіший за центр.", "options": ["Мій район тихіший за центр.", "Мій район тихіший ніж за центр."], "explanation": "Це речення вже правильне."}, {"sentence": "Цей текст коротший ніж попередній.", "errorWord": "немає коми", "correctForm": "Цей текст коротший, ніж попередній.", "options": ["Цей текст коротший, ніж попередній.", "Цей текст коротший ніж попередній."], "explanation": "Перед ніж у такій моделі потрібна кома."}, {"sentence": "Ця кава гірший.", "errorWord": "гірший", "correctForm": "Ця кава гірша.", "options": ["Ця кава гірша.", "Ця кава гірший."], "explanation": "Кава - жіночий рід."}, {"sentence": "Це найбільш найзручніший час.", "errorWord": "найбільш найзручніший", "correctForm": "Це найзручніший час.", "options": ["Це найзручніший час.", "Це найбільш найзручніший час."], "explanation": "Не поєднуємо дві найвищі моделі."}, {"sentence": "Автобус повільніший за метро.", "errorWord": null, "correctForm": "Автобус повільніший за метро.", "options": ["Автобус повільніший за метро.", "Автобус повільніший най метро."], "explanation": "За метро - правильна модель."}, {"sentence": "Це більш офіційніший лист.", "errorWord": "більш офіційніший", "correctForm": "Це більш офіційний лист.", "options": ["Це більш офіційний лист.", "Це більш офіційніший лист."], "explanation": "Після більш прикметник лишається у початковій формі."}]`)} isUkrainian={true} />
+<ErrorCorrection client:only='react' instruction="Оберіть виправлене речення." items={JSON.parse(`[{"sentence": "Цей телефон більш кращий.", "errorWord": "більш кращий", "correctForm": "Цей телефон кращий.", "options": ["Цей телефон кращий.", "Цей телефон більш кращий."], "explanation": "Кращий уже є вищим ступенем."}, {"sentence": "Ця модель самий дешевий.", "errorWord": "самий дешевий", "correctForm": "Ця модель найдешевша.", "options": ["Ця модель найдешевша.", "Ця модель самий дешевий."], "explanation": "Для жіночого роду: найдешевша."}, {"sentence": "Мій район тихіший за центр.", "errorWord": null, "correctForm": "Мій район тихіший за центр.", "options": ["Мій район тихіший за центр.", "Мій район тихіший ніж за центр."], "explanation": "Це речення вже правильне."}, {"sentence": "Цей текст коротший ніж попередній.", "errorWord": "немає коми", "correctForm": "Цей текст коротший, ніж попередній.", "options": ["Цей текст коротший, ніж попередній.", "Цей текст коротший ніж попередній."], "explanation": "Перед ніж у такій моделі потрібна кома."}, {"sentence": "Ця кава гірший.", "errorWord": "гірший", "correctForm": "Ця кава гірша.", "options": ["Ця кава гірша.", "Ця кава гірший."], "explanation": "Кава — жіночий рід."}, {"sentence": "Це найбільш найзручніший час.", "errorWord": "найбільш найзручніший", "correctForm": "Це найзручніший час.", "options": ["Це найзручніший час.", "Це найбільш найзручніший час."], "explanation": "Не поєднуємо дві найвищі моделі."}, {"sentence": "Автобус повільніший за метро.", "errorWord": null, "correctForm": "Автобус повільніший за метро.", "options": ["Автобус повільніший за метро.", "Автобус повільніший най метро."], "explanation": "За метро — правильна модель."}, {"sentence": "Це більш офіційніший лист.", "errorWord": "більш офіційніший", "correctForm": "Це більш офіційний лист.", "options": ["Це більш офіційний лист.", "Це більш офіційніший лист."], "explanation": "Після більш прикметник лишається у початковій формі."}]`)} isUkrainian={true} />
 
 ### Проста чи складена форма?
 
-<GroupSort client:only='react' groups={JSON.parse(`{"проста": ["дешевший", "кращий", "найбільший", "цікавіший"], "складена": ["більш офіційний", "менш популярний", "найбільш надійний", "найменш зручний"]}`)} isUkrainian={true} />
+<GroupSort client:only='react' groups={JSON.parse(`{"проста": ["дешевший", "кращий", "найбільший", "цікавіший"], "складена": ["більш офіційний", "менш популярний", "найбільш надійний", "найменш зручний"]}`)} instruction={"Розсортуйте форми за моделлю творення."} isUkrainian={true} />
 
 </TabItem>
 <TabItem label="Ресурси">
@@ -407,11 +544,11 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 :::info[🎧 🔗 Зовнішні ресурси]
 
 **📝 Статті:**
-- 📄 [Dobra Forma: Comparative Degree of Adjectives](https://opentext.ku.edu/dobraforma/chapter/20-1/) — Catalog-backed practice for forming comparative adjective forms.
-- 📄 [Dobra Forma: Comparative Degree of Adjectives (Exceptions)](https://opentext.ku.edu/dobraforma/chapter/20-2/) — Follow-up for common irregular comparatives such as кращий and гірший.
-- 📄 [Dobra Forma: Superlative Degree of Adjectives](https://opentext.ku.edu/dobraforma/chapter/20-3/) — Practice with най- and superlative adjective forms.
-- 📄 [Talk Ukrainian: Degrees of Comparison of Adjectives](https://talkukrainian.com/adjectives-degrees-comparison/) — Compact learner-facing reference for comparative and superlative adjectives.
-- 📄 [Talk Ukrainian: Degrees of Comparison of Adverbs](https://talkukrainian.com/adverbs-degrees-comparison/) — Useful for forms such as краще, гірше, більше, менше.
+- 📄 [Dobra Forma: Comparative Degree of Adjectives](https://opentext.ku.edu/dobraforma/chapter/20-1/) — Каталогізована практика для творення вищого ступеня прикметників.
+- 📄 [Dobra Forma: Comparative Degree of Adjectives (Exceptions)](https://opentext.ku.edu/dobraforma/chapter/20-2/) — Додаткова практика з частими особливими формами, як-от кращий і гірший.
+- 📄 [Dobra Forma: Superlative Degree of Adjectives](https://opentext.ku.edu/dobraforma/chapter/20-3/) — Практика з префіксом най- і формами найвищого ступеня.
+- 📄 [Talk Ukrainian: Degrees of Comparison of Adjectives](https://talkukrainian.com/adjectives-degrees-comparison/) — Коротка довідка для учнів про вищий і найвищий ступені прикметників.
+- 📄 [Talk Ukrainian: Degrees of Comparison of Adverbs](https://talkukrainian.com/adverbs-degrees-comparison/) — Корисно для форм прислівників: краще, гірше, більше, менше.
 :::
 
 </TabItem>

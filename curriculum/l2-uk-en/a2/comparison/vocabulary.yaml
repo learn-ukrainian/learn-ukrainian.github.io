@@ -38,6 +38,10 @@
   translation: cheaper
   pos: adjective
   example: "Цей квиток дешевший за той."
+- word: солодший
+  translation: sweeter
+  pos: adjective
+  example: "Цей чай солодший, ніж кава."
 - word: дорожчий
   translation: more expensive
   pos: adjective
