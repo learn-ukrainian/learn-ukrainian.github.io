@@ -63,7 +63,45 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 46 HANDOFF (2026-06-17 — 🔬 PHASE B DE-RISK RAN: `beauty` dim WORKS (8.0 reachable) but the loop did NOT converge — root cause = the pedagogical corrector DEGRADES craft. Loop fix (#3079) is now PRIORITY #0; Phase A stays HELD) — **RESUME HERE**
+## ▶▶▶ SESSION 47 HANDOFF (2026-06-17 — 🛠 LOOP FIX #3079 DONE + verified (PR #3480, CI green incl. ADR-007 test). Re-test build IN FLIGHT to prove convergence. DON'T re-do the loop fix) — **RESUME HERE**
+
+> **⚠️ ANTI-RE-COLLISION:** the S46 "priority #0 = fix the corrector" is **DONE** — do NOT re-implement it.
+> The fix is PR #3480 (`codex/folk-loopfix-subjective`, draft/held), stacked on Phase A. A re-test build is
+> in flight to prove it converges; merge gates on that.
+>
+> **✅ #3079 LOOP FIX (PR #3480, draft, CI green incl. `test_no_rewrite_contract.py`):** generalized
+> `run_llm_qg_with_corrections` from *pedagogical-only / insert-only* → corrects **all failing TERMINAL
+> dims** (`_llm_qg_needs_subjective_fix(profile)` uses `terminal_dims_for` ⇒ **core = no-op**, untouched)
+> via **craft-preserving `<find>/<replace>`** fixes (`_apply_subjective_fixes`, both find/replace + insert,
+> size caps kept; new prompt `scripts/build/phases/linear-correction-subjective.md` carries the authored
+> craft-preservation HARD RULES: never insert dry checklist prose, revise weak sentences in place, every
+> fix must read as beautiful Ukrainian). ADR-007 compliant (find/replace is sanctioned; no rewrite-block).
+> I verified the diff + prompt + green CI myself. **The PR shows Phase A + the loop fix combined = the §3
+> coherent "gate that can actually converge" unit.** It SUPERSEDES the Phase-A-only draft #3459.
+>
+> **⏳ IN FLIGHT — re-test (dispatch `folk-retest-kalendarna`, off `codex/folk-loopfix-subjective`):** ONE
+> kalendarna build (`--no-resume`) under the gate + fixed loop — clean A/B vs the de-risk. Watcher monitors
+> it; ~60–90 min. Brief: `batch_state/briefs/phaseB-retest-kalendarna.md`. Watch live:
+> `/api/state/scores/folk/kalendarna-obriadovist-zvychai`.
+>
+> **▶ NEXT ACTION (on re-test verdict):**
+> - **CONVERGED (all seminar-terminal dims ≥ floors, `module_done`) →** merge PR #3480 (squash) — Phase A +
+>   converging loop land together; **close #3459** (superseded). Then Phase C/D (enhance methodology).
+> - **NOT converged →** read `llm_qg_correction_loop.json` per-round trace (on `codex/folk-retest-kalendarna`):
+>   which terminal dim stayed below floor, did it move up across rounds (budget short → raise
+>   `llm_qg_max_rounds`) or flat (that dim's corrector still weak → iterate the prompt), and confirm NO craft
+>   regression. De-risk root cause was pedagogical-insert-degrades-craft; verify that's gone. Note especially
+>   whether `decolonization` 8.7→9 is now fixable via framing find/replace.
+> - The de-risk also showed **fresh rebuild regresses curated quality** (decoloniz 10→8.7) — if the fixed
+>   loop can lift decolonization on a rebuild, rebuild is viable; else **Phase D = ENHANCE curated modules**.
+>
+> **State:** PRs mine open: #3480 (combined, draft/HELD), #3459 (Phase-A-only, to be closed as superseded).
+> On main: the scores API (S45). Dispatches in flight at handoff: `folk-retest-kalendarna` (mine). Evidence
+> branches (keep, #M-10): `codex/folk-derisk-kalendarna` (de-risk), `codex/folk-loopfix-subjective` (the fix).
+> Tasks: #6 loop fix (impl done, merge pending re-test), #3 panel (deferred — not the fix), #4 Phase C/D/E.
+> Merge grant LIVE (CI-green → self-merge; #3480 held until re-test converges). Worktree-only; never to main.
+
+## ▶▶▶ SESSION 46 HANDOFF (2026-06-17 — 🔬 PHASE B DE-RISK RAN: `beauty` dim WORKS (8.0 reachable) but the loop did NOT converge — root cause = the pedagogical corrector DEGRADES craft. Loop fix (#3079) is now PRIORITY #0; Phase A stays HELD)
 
 > **TL;DR:** Shipped the user #1 API scores endpoint (S45, merged #3458). Built Phase A `beauty`-dim
 > gate (held draft PR #3459). Ran the §8-step-0 de-risk build on kalendarna against the Phase A gate.
