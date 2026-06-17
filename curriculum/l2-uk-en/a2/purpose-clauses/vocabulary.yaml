@@ -62,6 +62,10 @@
   translation: to retell, to relay
   pos: verb
   example: "Перекажіть повідомлення від колеги."
+- word: передати
+  translation: to pass on, to relay
+  pos: verb
+  example: "Колега попросив передати, що зустріч перенесли."
 - word: попросити
   translation: to ask, to request
   pos: verb
