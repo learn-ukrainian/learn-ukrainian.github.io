@@ -46,6 +46,12 @@ WRITER_ALIASES = {
 }
 WRITER_CHOICES = (*linear_pipeline.WRITER_CHOICES, *WRITER_ALIASES)
 LLM_QG_DIM_MAX_ATTEMPTS = 2
+ENHANCE_REQUIRED_CONTENT_FILES = (
+    "module.md",
+    "activities.yaml",
+    "vocabulary.yaml",
+    "resources.yaml",
+)
 
 
 @dataclass(slots=True)
@@ -919,6 +925,140 @@ def _generated_content(module_dir: Path) -> str:
     return "\n\n".join(parts)
 
 
+def _require_enhance_content(module_dir: Path) -> None:
+    missing = [
+        name
+        for name in ENHANCE_REQUIRED_CONTENT_FILES
+        if not (module_dir / name).exists()
+    ]
+    if missing:
+        raise linear_pipeline.LinearPipelineError(
+            "--enhance requires existing content files in "
+            f"{module_dir}: missing {', '.join(missing)}"
+        )
+
+
+def _phase_skipped_for_enhance(
+    phase: str,
+    started_at: float,
+    *,
+    level: str,
+    slug: str,
+    event_sink: Callable[..., None],
+    archive: run_archive.RunArchive | None,
+    artifact_dir: Path | None = None,
+    **fields: Any,
+) -> None:
+    event_sink(
+        "phase_skipped",
+        level=level,
+        slug=slug,
+        phase=phase,
+        reason="enhance",
+        **fields,
+    )
+    _phase_done(
+        phase,
+        started_at,
+        level=level,
+        slug=slug,
+        event_sink=event_sink,
+        archive=archive,
+        artifact_dir=artifact_dir,
+        skipped=True,
+        reason="enhance",
+        **fields,
+    )
+
+
+def _enhance_wiki_manifest(
+    *,
+    module_dir: Path,
+    level: str,
+    slug: str,
+    plan: Mapping[str, Any],
+    event_sink: Callable[..., None],
+) -> tuple[dict[str, Any], str]:
+    manifest_path = module_dir / "wiki_manifest.json"
+    if manifest_path.exists():
+        try:
+            wiki_manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise linear_pipeline.LinearPipelineError(
+                f"--enhance found invalid wiki_manifest.json: {exc}"
+            ) from exc
+        if not isinstance(wiki_manifest_data, dict):
+            raise linear_pipeline.LinearPipelineError(
+                "--enhance found wiki_manifest.json but it is not a JSON object"
+            )
+        source = "existing"
+    else:
+        wiki_manifest_data = linear_pipeline.build_wiki_manifest_data(
+            level=level,
+            slug=slug,
+            plan=plan,
+        )
+        manifest_path.parent.mkdir(parents=True, exist_ok=True)
+        manifest_path.write_text(
+            json.dumps(wiki_manifest_data, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        source = "generated"
+    event_sink(
+        "enhance_metadata_ready",
+        level=level,
+        slug=slug,
+        artifact="wiki_manifest.json",
+        source=source,
+        path=str(manifest_path),
+    )
+    return wiki_manifest_data, json.dumps(wiki_manifest_data, ensure_ascii=False, indent=2)
+
+
+def _enhance_implementation_map(
+    *,
+    module_dir: Path,
+    plan: Mapping[str, Any],
+    wiki_manifest_data: Mapping[str, Any],
+    level: str,
+    slug: str,
+    event_sink: Callable[..., None],
+) -> dict[str, Any]:
+    impl_map_path = module_dir / "implementation_map.json"
+    if impl_map_path.exists():
+        impl_map = read_implementation_map(impl_map_path)
+        source = "existing"
+    else:
+        impl_map = seed_implementation_map(dict(wiki_manifest_data), plan=dict(plan))
+        write_implementation_map(impl_map, impl_map_path)
+        source = "generated"
+    event_sink(
+        "enhance_metadata_ready",
+        level=level,
+        slug=slug,
+        artifact="implementation_map.json",
+        source=source,
+        path=str(impl_map_path),
+    )
+    return impl_map
+
+
+def _python_qg_failure_detail(report: Mapping[str, Any]) -> str:
+    gates = report.get("gates")
+    if not isinstance(gates, Mapping):
+        return "malformed gates report"
+    failed = [
+        str(gate)
+        for gate, gate_report in gates.items()
+        if gate != "passed"
+        and isinstance(gate_report, Mapping)
+        and gate_report.get("passed") is False
+    ]
+    if not failed:
+        return "no failing gate named"
+    return "failing gates: " + ", ".join(failed)
+
+
 def _reviewer_for_writer(writer: str, reviewer_override: str | None = None) -> str:
     if reviewer_override:
         return _normalize_writer(reviewer_override)
@@ -1187,6 +1327,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --worktree\n"
             "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --writer gemini-tools\n"
             "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --writer codex-tools --telemetry-out audit/bakeoff-2026-05-05/gpt55.write.jsonl\n"
+            "  .venv/bin/python scripts/build/v7_build.py folk kalendarna-obriadovist-zvychai --enhance\n"
             "  .venv/bin/python scripts/build/v7_build.py b1-pro intro --out /tmp/v7-intro\n\n"
             "Outputs:\n"
             "  Emits JSONL monitor events to stdout, or appends them to --telemetry-out. Full builds write the writer "
@@ -1199,6 +1340,14 @@ def build_parser() -> argparse.ArgumentParser:
             "Pass --worktree PATH to choose the worktree path; relative paths "
             "resolve from the repository root. If --out is also passed, relative "
             "--out paths resolve inside the build worktree.\n\n"
+            "Enhance mode:\n"
+            "  Pass --enhance to operate in place on an existing module directory. "
+            "Enhance requires module.md, activities.yaml, vocabulary.yaml, and "
+            "resources.yaml, skips the generative packet/writer/stress/ULP phases, "
+            "regenerates missing wiki_manifest.json and implementation_map.json, "
+            "and reruns python_qg, wiki coverage review, LLM QG, and MDX. "
+            "--no-resume is ignored with --enhance because enhance always reruns "
+            "the review gates on current content.\n\n"
             "Exit codes:\n"
             "  0 on successful build or dry run.\n"
             "  1 on plan, packet, writer, QG, review, MDX, or filesystem failure.\n"
@@ -1332,6 +1481,17 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--enhance",
+        action="store_true",
+        help=(
+            "Enhance existing curated content in place: require module.md, "
+            "activities.yaml, vocabulary.yaml, and resources.yaml; skip "
+            "knowledge_packet, writer, stress_annotation, and ulp_fidelity_gate; "
+            "then rerun python_qg, wiki coverage, LLM QG, and MDX. If passed "
+            "with --no-resume, --enhance wins and --no-resume is ignored."
+        ),
+    )
+    parser.add_argument(
         "--use-generator",
         action="store_true",
         help=(
@@ -1459,6 +1619,7 @@ def _run(args: argparse.Namespace) -> int:
     # Optional flag (argparse always sets it; test SimpleNamespace fixtures may
     # omit it, mirroring the getattr handling of no_resume below).
     use_generator = getattr(args, "use_generator", False)
+    enhance = getattr(args, "enhance", False)
     module_started_at = time.monotonic()
     phase = "start"
     timeout_agent = writer
@@ -1472,7 +1633,14 @@ def _run(args: argparse.Namespace) -> int:
     # (docs/session-state/2026-05-23-architectural-reset-strip-v7-llm-demote.md
     # decision #8), each of 6 failed builds 2026-05-22 to 2026-05-23 burned
     # 5-20 minutes replaying writer when only a later phase had failed.
-    resume_enabled = not getattr(args, "no_resume", False)
+    no_resume = getattr(args, "no_resume", False)
+    if enhance and no_resume:
+        print(
+            "Warning: --enhance ignores --no-resume; enhance reruns review gates "
+            "while skipping generative phases.",
+            file=sys.stderr,
+        )
+    resume_enabled = (not no_resume) and (not enhance)
     force_rerun = False
 
     tracker.emit("module_start", level=level, slug=slug)
@@ -1495,11 +1663,34 @@ def _run(args: argparse.Namespace) -> int:
             archive=archive,
         )
 
+        module_dir = _resolve_output_dir(args.out, level, slug)
+        if enhance:
+            phase = "enhance"
+            _require_enhance_content(module_dir)
+
         phase = "knowledge_packet"
         _phase_started(archive, phase)
         started_at = time.monotonic()
-        resume_module_dir = _resolve_output_dir(args.out, level, slug)
-        if (
+        resume_module_dir = module_dir
+        if enhance:
+            knowledge_packet = ""
+            wiki_manifest_data, wiki_manifest = _enhance_wiki_manifest(
+                module_dir=module_dir,
+                level=level,
+                slug=slug,
+                plan=plan,
+                event_sink=tracker.emit,
+            )
+            _phase_skipped_for_enhance(
+                phase,
+                started_at,
+                level=level,
+                slug=slug,
+                event_sink=tracker.emit,
+                archive=archive,
+                artifact_dir=module_dir,
+            )
+        elif (
             resume_enabled
             and not force_rerun
             and _phase_artifact_passes(resume_module_dir, "knowledge_packet")
@@ -1526,16 +1717,15 @@ def _run(args: argparse.Namespace) -> int:
                 plan=plan,
             )
             wiki_manifest = json.dumps(wiki_manifest_data, ensure_ascii=False, indent=2)
-        _phase_done(
-            phase,
-            started_at,
-            level=level,
-            slug=slug,
-            event_sink=tracker.emit,
-            archive=archive,
-        )
-
-        module_dir = _resolve_output_dir(args.out, level, slug)
+        if not enhance:
+            _phase_done(
+                phase,
+                started_at,
+                level=level,
+                slug=slug,
+                event_sink=tracker.emit,
+                archive=archive,
+            )
 
         phase = "wiki_completeness_gate"
         _phase_started(archive, phase)
@@ -1606,7 +1796,31 @@ def _run(args: argparse.Namespace) -> int:
         module_dir.mkdir(parents=True, exist_ok=True)
         impl_map_path = module_dir / "implementation_map.json"
         obligation_checklist: Mapping[str, Any] | None = None
-        if (
+        if enhance:
+            impl_map = _enhance_implementation_map(
+                module_dir=module_dir,
+                plan=plan,
+                wiki_manifest_data=wiki_manifest_data,
+                level=level,
+                slug=slug,
+                event_sink=tracker.emit,
+            )
+            writer_output = ""
+            if use_generator:
+                obligation_checklist = linear_pipeline.build_wiki_coverage_obligation_checklist(
+                    wiki_manifest_data,
+                    seeded_map=impl_map,
+                )
+            _phase_skipped_for_enhance(
+                phase,
+                started_at,
+                level=level,
+                slug=slug,
+                event_sink=tracker.emit,
+                archive=archive,
+                artifact_dir=module_dir,
+            )
+        elif (
             resume_enabled
             and not force_rerun
             and _phase_artifact_passes(module_dir, "writer")
@@ -1685,21 +1899,38 @@ def _run(args: argparse.Namespace) -> int:
             )
             artifacts = linear_pipeline.parse_writer_output(writer_output)
             linear_pipeline.write_writer_artifacts(module_dir, artifacts)
-        _phase_done(
-            phase,
-            started_at,
-            level=level,
-            slug=slug,
-            writer=writer,
-            event_sink=tracker.emit,
-            archive=archive,
-            artifact_dir=module_dir,
-        )
+        if not enhance:
+            _phase_done(
+                phase,
+                started_at,
+                level=level,
+                slug=slug,
+                writer=writer,
+                event_sink=tracker.emit,
+                archive=archive,
+                artifact_dir=module_dir,
+            )
 
         phase = "stress_annotation"
         _phase_started(archive, phase)
         started_at = time.monotonic()
-        if level in SEMINAR_LEVELS:
+        if enhance:
+            stress_annotation = {
+                "passed": True,
+                "phase": "stress_annotation",
+                "skipped": True,
+                "reason": "enhance",
+            }
+            _phase_skipped_for_enhance(
+                phase,
+                started_at,
+                level=level,
+                slug=slug,
+                event_sink=tracker.emit,
+                archive=archive,
+                artifact_dir=module_dir,
+            )
+        elif level in SEMINAR_LEVELS:
             stress_annotation = _run_stress_annotation_for_level(module_dir, level)
             linear_pipeline.write_json(
                 module_dir / "stress_annotation.json",
@@ -1720,22 +1951,39 @@ def _run(args: argparse.Namespace) -> int:
                 module_dir / "stress_annotation.json",
                 stress_annotation,
             )
-        _phase_done(
-            phase,
-            started_at,
-            level=level,
-            slug=slug,
-            event_sink=tracker.emit,
-            archive=archive,
-            artifact_dir=module_dir,
-        )
+        if not enhance:
+            _phase_done(
+                phase,
+                started_at,
+                level=level,
+                slug=slug,
+                event_sink=tracker.emit,
+                archive=archive,
+                artifact_dir=module_dir,
+            )
         if not isinstance(stress_annotation, Mapping) or stress_annotation.get("passed") is not True:
             raise linear_pipeline.LinearPipelineError("Stress annotation failed")
 
         phase = "ulp_fidelity_gate"
         _phase_started(archive, phase)
         started_at = time.monotonic()
-        if (
+        if enhance:
+            ulp_fidelity_gate = {
+                "passed": True,
+                "phase": "ulp_fidelity_gate",
+                "skipped": True,
+                "reason": "enhance",
+            }
+            _phase_skipped_for_enhance(
+                phase,
+                started_at,
+                level=level,
+                slug=slug,
+                event_sink=tracker.emit,
+                archive=archive,
+                artifact_dir=module_dir,
+            )
+        elif (
             resume_enabled
             and not force_rerun
             and _phase_artifact_passes(module_dir, "ulp_fidelity_gate")
@@ -1755,15 +2003,16 @@ def _run(args: argparse.Namespace) -> int:
                 module_dir / "ulp_fidelity_gate.json",
                 ulp_fidelity_gate,
             )
-        _phase_done(
-            phase,
-            started_at,
-            level=level,
-            slug=slug,
-            event_sink=tracker.emit,
-            archive=archive,
-            artifact_dir=module_dir,
-        )
+        if not enhance:
+            _phase_done(
+                phase,
+                started_at,
+                level=level,
+                slug=slug,
+                event_sink=tracker.emit,
+                archive=archive,
+                artifact_dir=module_dir,
+            )
         if not isinstance(ulp_fidelity_gate, Mapping) or ulp_fidelity_gate.get("passed") is not True:
             failed = (
                 ulp_fidelity_gate.get("failed_checks")
@@ -1802,8 +2051,13 @@ def _run(args: argparse.Namespace) -> int:
         )
         gates = python_qg.get("gates") if isinstance(python_qg, Mapping) else None
         if not isinstance(gates, Mapping) or gates.get("passed") is not True:
+            detail = (
+                _python_qg_failure_detail(python_qg)
+                if isinstance(python_qg, Mapping)
+                else "malformed report"
+            )
             raise linear_pipeline.LinearPipelineError(
-                "Python QG failed after ADR-008 correction paths"
+                f"Python QG failed after ADR-008 correction paths: {detail}"
             )
 
         phase = "wiki_coverage_gate"
