@@ -8321,6 +8321,11 @@ def run_python_qg(
             _load_writer_tool_calls(module_dir),
             plan=plan,
             resource_coverage=gates.get("resource_coverage"),
+            telemetry_present=_writer_tool_call_telemetry_present(module_dir),
+            grounding_verified=(
+                bool((gates.get("citations_resolve") or {}).get("passed"))
+                and bool((gates.get("chunk_context_for_all_refs") or {}).get("passed"))
+            ),
         ),
     )
     record("immersion_advisory", _advisory_immersion_pct(module_text, plan))
@@ -12465,12 +12470,30 @@ def _load_jsonl_tool_calls(path: Path) -> list[dict[str, Any]]:
     return calls
 
 
+_WRITER_TOOL_CALL_TELEMETRY_NAMES = (
+    "writer_tool_calls.json",
+    "writer_trace.json",
+    "writer_telemetry.jsonl",
+)
+
+
+def _writer_tool_call_telemetry_present(module_dir: Path) -> bool:
+    """True iff any writer tool-call telemetry artifact exists for this module.
+
+    Distinguishes a build-time run (``invoke_writer`` persists the trace) from a
+    static re-verification of an already-built module whose telemetry was never
+    persisted (e.g. pre-#3373 folk modules). ``resources_search_attempted`` is a
+    build-time tool-call gate; without this signal a static shippability check
+    cannot tell "writer ran no search" (a real failure) from "telemetry is simply
+    not on disk" (un-evaluable). See ``_resources_search_attempted_gate``.
+    """
+    if any((module_dir / name).exists() for name in _WRITER_TOOL_CALL_TELEMETRY_NAMES):
+        return True
+    return any(module_dir.glob("*.write.jsonl"))
+
+
 def _load_writer_tool_calls(module_dir: Path) -> list[dict[str, Any]]:
-    candidates = [
-        module_dir / "writer_tool_calls.json",
-        module_dir / "writer_trace.json",
-        module_dir / "writer_telemetry.jsonl",
-    ]
+    candidates = [module_dir / name for name in _WRITER_TOOL_CALL_TELEMETRY_NAMES]
     calls: list[dict[str, Any]] = []
     for path in candidates:
         if not path.exists():
@@ -12498,9 +12521,32 @@ def _resources_search_attempted_gate(
     *,
     plan: Mapping[str, Any] | None = None,
     resource_coverage: Mapping[str, Any] | None = None,
+    telemetry_present: bool = True,
+    grounding_verified: bool = False,
 ) -> dict[str, Any]:
-    """HARD gate: writer must attempt at least one external-resource search."""
-    attempted = [call for call in writer_tool_calls if _tool_name_from_call(call) in MULTIMEDIA_SEARCH_TOOLS]
+    """HARD gate: writer must attempt at least one external-resource search.
+
+    This inspects build-time writer tool-call telemetry, so it can only be
+    evaluated during a build (when ``invoke_writer`` persists the trace). When a
+    module is re-verified statically (e.g. ``verify_shippable`` on an
+    already-built module) the telemetry file may be absent — which is NOT
+    evidence the writer skipped the search. To avoid a false HARD failure the
+    gate is treated as not-applicable (skipped, passing) when BOTH:
+
+    * ``telemetry_present`` is False (no writer trace on disk), AND
+    * ``grounding_verified`` is True (resources are independently confirmed real
+      by ``citations_resolve`` + ``chunk_context_for_all_refs``).
+
+    A fabricated-resource module fails those grounding gates, so it can never
+    reach the skip path — the anti-fabrication contract is preserved. Builds are
+    unaffected: telemetry is present, and a present trace with no search still
+    fails exactly as before.
+    """
+    attempted = [
+        call
+        for call in writer_tool_calls
+        if _tool_name_from_call(call) in MULTIMEDIA_SEARCH_TOOLS
+    ]
     search_tools_used = sorted({_tool_name_from_call(call) for call in attempted})
     manual_coverage_verified = (
         not attempted
@@ -12509,13 +12555,24 @@ def _resources_search_attempted_gate(
             resource_coverage,
         )
     )
-    return {
-        "passed": bool(attempted) or manual_coverage_verified,
+    telemetry_absent_but_grounded = (
+        not attempted
+        and not manual_coverage_verified
+        and not telemetry_present
+        and grounding_verified
+    )
+    result: dict[str, Any] = {
+        "passed": bool(attempted)
+        or manual_coverage_verified
+        or telemetry_absent_but_grounded,
         "severity": "HARD",
         "search_attempt_count": len(attempted),
         "search_tools_used": search_tools_used,
         "manual_coverage_verified": manual_coverage_verified,
     }
+    if telemetry_absent_but_grounded:
+        result["skipped"] = "build_telemetry_absent_resources_independently_grounded"
+    return result
 
 
 def _manual_resource_coverage_can_stand_in_for_search_telemetry(
