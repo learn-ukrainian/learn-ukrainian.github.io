@@ -46,8 +46,8 @@
   translation: sour cream
   pos: noun
   example: "Борщ зі сметаною."
-- word: гриби
-  translation: mushrooms
+- word: гриб
+  translation: mushroom
   pos: noun
   example: "Піца з грибами."
 - word: разом
