@@ -12,6 +12,8 @@ Endpoints:
   GET /api/state/module/{track}/{num}  Single module deep-dive with comms
   GET /api/state/final-reviews/{track} Phase F results aggregated per track
   GET /api/state/failing              Modules with audit/phase failures
+  GET /api/state/scores/{track}       Per-module status + LLM-QG aggregate + per-dim scores
+  GET /api/state/scores/{track}/{slug} One module's status + per-dimension scores
   GET /api/state/research-coverage    Per-track research completeness
   GET /api/state/research/{track}    Per-module research quality + dimensions + upgrade queue
   GET /api/state/review-coverage      Per-track review completeness + quality
@@ -24,6 +26,7 @@ Performance notes:
 """
 
 import asyncio
+import json
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -721,6 +724,113 @@ async def failing_modules(track: str | None = Query(None)):
         return {"count": len(failing), "modules": failing}
 
     return await asyncio.to_thread(_compute)
+
+
+def _read_llm_qg_scores(module_dir: Path) -> dict[str, Any]:
+    """Read per-module LLM-QG aggregate + per-dimension scores from llm_qg.json.
+
+    Returns ``{"aggregate": {...}|None, "dimensions": {dim: score}}``. Missing,
+    unreadable, or malformed files degrade to ``aggregate=None`` / empty dims
+    (a module may not have been QG-scored yet). The dimension map is read
+    generically, so a newly-added dim (e.g. ``beauty`` once Phase A lands) is
+    surfaced automatically with no change here.
+    """
+    path = module_dir / "llm_qg.json"
+    if not path.exists():
+        return {"aggregate": None, "dimensions": {}}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError, ValueError):
+        return {"aggregate": None, "dimensions": {}}
+
+    raw_agg = data.get("aggregate") if isinstance(data, dict) else None
+    aggregate: dict[str, Any] | None = None
+    if isinstance(raw_agg, dict):
+        aggregate = {
+            "verdict": raw_agg.get("verdict"),
+            "terminal_verdict": raw_agg.get("terminal_verdict"),
+            "min_score": raw_agg.get("min_score"),
+            "min_dim": raw_agg.get("min_dim"),
+            "failing_dims": raw_agg.get("failing_dims", []),
+            "warning_dims": raw_agg.get("warning_dims", []),
+        }
+
+    raw_dims = data.get("dimensions") if isinstance(data, dict) else None
+    dimensions: dict[str, Any] = {}
+    if isinstance(raw_dims, dict):
+        for dim, entry in raw_dims.items():
+            if isinstance(entry, dict) and "score" in entry:
+                dimensions[dim] = entry.get("score")
+    return {"aggregate": aggregate, "dimensions": dimensions}
+
+
+def _module_score_record(track_id: str, track_dir: Path, num: int, slug: str) -> dict[str, Any]:
+    """Assemble one module's status + LLM-QG score record."""
+    audit = get_audit_status(track_dir, slug)
+    scores = _read_llm_qg_scores(safe_join(track_dir, slug))
+    return {
+        "track": track_id,
+        "num": num,
+        "slug": slug,
+        "status": audit.get("status"),
+        "word_count": audit.get("word_count"),
+        "word_target": audit.get("word_target"),
+        "scored": scores["aggregate"] is not None,
+        "aggregate": scores["aggregate"],
+        "dimensions": scores["dimensions"],
+    }
+
+
+@router.get("/scores/{track}")
+async def module_scores(track: str):
+    """Per-module status + LLM-QG aggregate + per-dimension scores for a track.
+
+    The view the user watches the seminar quality-gate prototype converge with
+    (docs/folk-epic/seminar-quality-gate-design.md). Source of truth:
+    ``curriculum/l2-uk-en/<track>/<slug>/llm_qg.json`` (``.aggregate`` +
+    ``.dimensions``) plus the audit status cache. Always fresh (small reads, no
+    cache) so polling during a build reflects the latest round.
+    """
+    def _compute() -> dict[str, Any] | None:
+        level_cfg = next((l for l in LEVELS if l["id"] == track), None)
+        if not level_cfg:
+            return None
+        track_dir = CURRICULUM_ROOT / level_cfg["path"]
+        modules = [
+            _module_score_record(track, track_dir, num, slug)
+            for num, slug in get_plan_slugs(track)
+        ]
+        scored = sum(1 for m in modules if m["scored"])
+        return {"track": track, "count": len(modules), "scored": scored, "modules": modules}
+
+    result = await asyncio.to_thread(_compute)
+    if result is None:
+        return JSONResponse(status_code=404, content={"error": f"Track '{track}' not found"})
+    return _with_state_meta(result, source="fs:llm_qg+status", stale_after_s=0.0, cache="miss", age_s=0.0)
+
+
+@router.get("/scores/{track}/{slug}")
+async def module_scores_one(track: str, slug: str):
+    """One module's status + LLM-QG aggregate + per-dimension scores."""
+    def _compute() -> dict[str, Any] | None:
+        level_cfg = next((l for l in LEVELS if l["id"] == track), None)
+        if not level_cfg:
+            return None
+        track_dir = CURRICULUM_ROOT / level_cfg["path"]
+        match = next((ns for ns in get_plan_slugs(track) if ns[1] == slug), None)
+        if match is None:
+            return {"__not_found__": "slug"}
+        num, resolved_slug = match
+        return _module_score_record(track, track_dir, num, resolved_slug)
+
+    result = await asyncio.to_thread(_compute)
+    if result is None:
+        return JSONResponse(status_code=404, content={"error": f"Track '{track}' not found"})
+    if result.get("__not_found__"):
+        return JSONResponse(
+            status_code=404, content={"error": f"Module '{slug}' not found in track '{track}'"}
+        )
+    return _with_state_meta(result, source="fs:llm_qg+status", stale_after_s=0.0, cache="miss", age_s=0.0)
 
 
 @router.get("/research-coverage")

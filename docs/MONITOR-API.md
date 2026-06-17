@@ -517,6 +517,44 @@ Each entry includes `pipeline_version`, `failed_phases`, and `blocking_issues`.
 
 ---
 
+### `GET /api/state/scores/{track}` and `GET /api/state/scores/{track}/{slug}`
+
+Per-module **status + LLM-QG quality scores** — the live view for watching the
+seminar quality-gate prototype converge to ≥8
+(`docs/folk-epic/seminar-quality-gate-design.md`). Source of truth:
+`curriculum/l2-uk-en/<track>/<slug>/llm_qg.json` (`.aggregate` + `.dimensions`)
+plus the audit status cache. Always fresh (small reads, no TTL cache) so polling
+during a build reflects the latest correction round.
+
+```bash
+curl -s http://localhost:8765/api/state/scores/folk | python3 -m json.tool
+curl -s http://localhost:8765/api/state/scores/folk/kalendarna-obriadovist-zvychai | python3 -m json.tool
+```
+
+Track response: `{track, count, scored, modules[], meta}`. Each module:
+
+```json
+{
+  "track": "folk", "num": 4, "slug": "kalendarna-obriadovist-zvychai",
+  "status": "not_run", "word_count": null, "word_target": null,
+  "scored": true,
+  "aggregate": {
+    "verdict": "REVISE", "terminal_verdict": "PASS",
+    "min_score": 7.0, "min_dim": "pedagogical",
+    "failing_dims": ["pedagogical", "engagement", "tone"], "warning_dims": [...]
+  },
+  "dimensions": {"pedagogical": 7.0, "naturalness": 10.0, "decolonization": 10.0,
+                 "engagement": 7.0, "tone": 7.5}
+}
+```
+
+- A module not yet QG-scored returns `scored: false`, `aggregate: null`, `dimensions: {}`.
+- `dimensions` is read generically, so a newly-added dim (e.g. `beauty` once the
+  seminar gate Phase A lands) appears automatically with no endpoint change.
+- Unknown track or slug → `404`.
+
+---
+
 ### `GET /api/state/research-coverage`
 
 Per-track research completeness and quality distribution.
