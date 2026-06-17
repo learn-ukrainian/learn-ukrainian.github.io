@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "hard_fail": false,
+  "phonetic_hard_fail": false,
+  "coverage_pct": 1.0,
+  "covered": 0,
+  "total": 0,
+  "min_pct": 0.8,
+  "obligations": []
+}

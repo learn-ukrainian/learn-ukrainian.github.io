@@ -1,71 +1,100 @@
 {
   "dimensions": {
     "pedagogical": {
-      "score": 7.0,
-      "evidence": "<activity_split_audit>level=FOLK inline_n=5 workbook_n=11 inline_range=[5,7] workbook_range=[11,15] split_valid=true</activity_split_audit>",
+      "score": 7.2,
+      "evidence": "\"Ми працюємо із закритим колом джерел цього модуля — із записаними текстами та свідченнями дослідників, поданими тут. Ми не додаємо чужих творів і не приписуємо обрядові значень, яких джерело не підтверджує.\"",
       "verdict": "REVISE",
       "evidence_quotes": [
-        "<activity_split_audit>level=FOLK inline_n=5 workbook_n=11 inline_range=[5,7] workbook_range=[11,15] split_valid=true</activity_split_audit>",
-        "## Деколонізаційна ра́мка",
-        "Щоб ба́чити цю систе́му я́сно, потрі́бні три робо́чі поня́ття. Пе́рше — **обря́д**: уста́лена символі́чна ді́я або́ послідо́вність дій, яку грома́да повто́рює в пе́вний час і в пе́вному про́сторі. Дру́ге — **моти́в**: повто́рюваний о́браз, сюже́тний елеме́нт або́ слове́сна фо́рмула, що перехо́дить із те́ксту в текст, із села́ в село́. Тре́тє — **варіа́нт**: регіона́льна, часова́ або́ викона́вська фо́рма того́ самого те́ксту чи ді́йства."
+        "Це важливе спостереження для всього курсу. Ти вже бачив у попередньому модулі, як працює речитатив у замовляннях: там панує синтаксичний, нерівноскладовий ритм, і виконавець має широке поле для імпровізації. Календарна пісня влаштована протилежно.",
+        "Ми працюємо із закритим колом джерел цього модуля — із записаними текстами та свідченнями дослідників, поданими тут. Ми не додаємо чужих творів і не приписуємо обрядові значень, яких джерело не підтверджує.",
+        "Три поняття — обряд, мотив і варіант — це не сухі терміни, а робочі ключі, якими відмикається будь-який сезонний цикл."
+      ],
+      "rubric_mapping": "Quote 1: Evidence FOR pedagogical sequencing. It explicitly connects the previous module on замовляння to the current contrast between речитатив and рівноскладова календарна пісня, so the lesson builds on prior knowledge rather than restarting from zero. Quote 2: Evidence AGAINST source-pedagogy. The module repeatedly claims a closed, cited corpus discipline, but the visible resources list only Wikipedia entries while several folk quotations and Hrushevsky claims lack full bibliographic...",
+      "flags": [
+        "unverified citation",
+        "unknown_vocab_unscaffolded",
+        "missing_foreshadowing_gloss",
+        "unsignposted_repetition"
       ]
     },
     "naturalness": {
-      "score": 10.0,
-      "evidence": "\"Нівелюва́ння, уніфіка́ція та гомогеніза́ція — інструме́нти асиміля́ції; розмаї́ття — озна́ка самості́йної культу́ри.\"",
-      "verdict": "PASS",
+      "score": 7.8,
+      "evidence": "\"Грушевський пояснює це двома обставинами. По-перше, частина обрядів перейшла на гри підлітків і молоді, а це врятувало їх від нагінок церкви та адміністрації, які знищували забави старшого віку.\"",
+      "verdict": "REVISE",
       "evidence_quotes": [
-        "Че́рез нього хліборо́бська грома́да узго́джувала своє́ життя́ з ру́хом со́нця, зі змі́нами пір ро́ку та з ри́тмом польови́х робі́т.",
-        "Тут ста́не в приго́ді й те, що ти вже ба́чив у попере́дньому матеріа́лі про замовля́ння та при́мо́вки.",
-        "Нівелюва́ння, уніфіка́ція та гомогеніза́ція — інструме́нти асиміля́ції; розмаї́ття — озна́ка самості́йної культу́ри."
+        "Ця варіативність — не хаос, а ознака живої традиції, у якій громада добирала образи під свій терен і свою потребу.",
+        "Грушевський пояснює це двома обставинами. По-перше, частина обрядів перейшла на гри підлітків і молоді, а це врятувало їх від нагінок церкви та адміністрації, які знищували забави старшого віку.",
+        "Тому, завершуючи розгляд, варто тримати в голові всю траєкторію: коло громади, зошит збирача, сторінка поета, хорова партитура."
+      ],
+      "rubric_mapping": "Quote 1: evidence FOR naturalness; the Ukrainian is idiomatic, compact, and seminar-appropriate, with a native-feeling metaphorical contrast between хаос and жива традиція. Quote 2: evidence AGAINST naturalness; most of the sentence is clear, but «перейшла на гри» is an unnatural collocation where native prose would expect «перейшла в ігри» or «перейшла до ігор», and the Hrushevsky attribution remains an unverified citation in this audit. Quote 3: evidence FOR naturalness; the rhythmic list...",
+      "flags": [
+        "unverified citation"
       ]
     },
     "decolonization": {
-      "score": 10.0,
-      "evidence": "\"Імпе́рські й радя́нські ра́мки ча́сто знеосо́блювали украї́нську календа́рну **обрядо́вість**. Її розчиня́ли в нечітко́му «загальнослов'я́нському» або́ «етнографі́чному» матеріа́лі, де зника́ли украї́нська на́зва, регіо́н і джерело́.\"",
+      "score": 8.7,
+      "evidence": "\"Деколонізований підхід руйнує цей ланцюг із першого кроку. Він починає з українських назв, регіонів, дій і джерел.\"",
       "verdict": "PASS",
       "evidence_quotes": [
-        "Імпе́рські й радя́нські ра́мки ча́сто знеосо́блювали украї́нську календа́рну **обрядо́вість**. Її розчиня́ли в нечітко́му «загальнослов'я́нському» або́ «етнографі́чному» матеріа́лі, де зника́ли украї́нська на́зва, регіо́н і джерело́.",
-        "Ко́ли ти ка́жеш «гаї́вка», а не безли́ке «весня́не́», коли́ вка́зуєш Полі́сся чи Галичину́, а не розми́ту «слов'я́нську давнину́», систе́ма зно́ву стає ви́ди́мою як украї́нська.",
-        "Фо́рмула «бра́тні народи» прихо́вує са́ме те, що деколонізо́ваний о́пис поверта́є, — окре́мішність і самобу́тність украї́нської тради́ції."
+        "Імперська та радянська етнографія охоче розчиняла українську календарну обрядовість у нечіткому «загальнослов'янському» матеріалі.",
+        "Деколонізований підхід руйнує цей ланцюг із першого кроку. Він починає з українських назв, регіонів, дій і джерел.",
+        "Деколонізація тут означає не вигадування унікальності, а просту наукову точність: описувати своє своїми словами та своїми джерелами."
+      ],
+      "rubric_mapping": "Quote 1: evidence FOR decolonization in a topic-loaded FOLK module because it explicitly names the imperial/Soviet erasure mechanism rather than treating Ukrainian rites as generic Slavic material. Quote 2: evidence FOR the dimension because it gives the corrective method: Ukrainian names, regions, actions, and sources as the frame. Quote 3: evidence FOR a mature decolonized stance because it rejects both imperial absorption and romantic overcorrection, grounding Ukrainian distinctiveness in...",
+      "flags": [
+        "unverified citation"
       ]
     },
     "engagement": {
-      "score": 7.0,
-      "evidence": "\"<activity_split_audit>level=FOLK inline_n=5 workbook_n=11 inline_range=[5,7] workbook_range=[11,15] split_valid=true</activity_split_audit>\"",
-      "verdict": "REVISE",
+      "score": 8.2,
+      "evidence": "\"Зверни увагу на будову з рівними складами: рядки тримають однакову складову довжину, і саме ця симетрія зберегла текст.\"",
+      "verdict": "PASS",
       "evidence_quotes": [
-        "Тут стане в пригоді й те, що ти вже бачив у попередньому матеріалі про замовляння та примовки.",
-        "Уяви, що перед тобою незнайомий запис — пісня, опис дії чи свідчення збирача. Перший крок — визначити обряд",
-        "<activity_split_audit>level=FOLK inline_n=5 workbook_n=11 inline_range=[5,7] workbook_range=[11,15] split_valid=true</activity_split_audit>"
-      ]
+        "Зверни увагу на будову з рівними складами: рядки тримають однакову складову довжину, і саме ця симетрія зберегла текст.",
+        "Перш ніж розбирати символіку, варто почути, як звучить сам корпус.",
+        "Зберегти, закликати, святкувати, подякувати — чотири дії, чотири пори, одне коло."
+      ],
+      "rubric_mapping": "Quote 1: evidence FOR engagement because the direct address is content-anchored and turns a formal metrical point into something the learner can actively notice in the cited folk text. Quote 2: evidence FOR engagement because it creates a real seminar rhythm: source first, analysis second, which helps the learner want to read the quoted corpus rather than just absorb exposition. Quote 3: evidence FOR engagement because it gives the module a memorable organizing mnemonic for a large seasonal..."
     },
     "tone": {
-      "score": 7.5,
-      "evidence": "\"<activity_split_audit>level=FOLK inline_n=5 workbook_n=11 inline_range=[5,7] workbook_range=[11,15] split_valid=true</activity_split_audit>\"",
-      "verdict": "REVISE",
+      "score": 8.4,
+      "evidence": "\"Коли ти чуєш слово обряд, бачиш за ним не одну сцену, а усталену символічну дію або послідовність дій, що повторюється рік у рік.\"",
+      "verdict": "PASS",
       "evidence_quotes": [
-        "Тут ста́не в приго́ді й те, що ти вже ба́чив у попере́дньому матеріа́лі про замовля́ння та при́мо́вки.",
-        "І наоста́нок — про ра́дість. Вивча́ти наро́дний календа́р ва́рто не лише́ зара́ди то́чності, а й зара́ди живо́го зв'язку з тими, хто співа́в ці пісні́ до на́с.",
-        "<activity_split_audit>level=FOLK inline_n=5 workbook_n=11 inline_range=[5,7] workbook_range=[11,15] split_valid=true</activity_split_audit>"
+        "Коли ти чуєш слово обряд, бачиш за ним не одну сцену, а усталену символічну дію або послідовність дій, що повторюється рік у рік.",
+        "Ти вже бачив у попередньому модулі, як працює речитатив у замовляннях: там панує синтаксичний, нерівноскладовий ритм, і виконавець має широке поле для імпровізації.",
+        "Через це аналітик мусить завжди ставити чотири питання до кожного запису: що співали, хто співав, у якому колі та просторі й у який час."
+      ],
+      "rubric_mapping": "Quote 1: evidence FOR tone; the direct second-person address is warm, precise, and content-anchored rather than generic encouragement, matching a seminar facilitator voice. Quote 2: evidence FOR tone; it links to prior learning without re-teaching and keeps a consistent peer-register Ukrainian voice. Quote 3: mild evidence AGAINST tone; the shift from direct learner address to generalized 'аналітик мусить' is more formal and impersonal, though still within a scholarly seminar register rather..."
+    },
+    "beauty": {
+      "score": 8.0,
+      "evidence": "\"Вже весна воскресла,\n> Що ж сь нам принесла?\n> Ой я вам принесла,\n> Дівоцькую красу\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Календарна обрядовість не потребує прикрас: її сила в тому, що вона засвідчена в численних варіантах, зібраних із різних регіонів, і складається в систему, яку можна показати, а не вигадати.",
+        "Вже весна воскресла,\n> Що ж сь нам принесла?\n> Ой я вам принесла,\n> Дівоцькую красу",
+        "Українська календарна обрядовість зберігає тяглість саме тому, що вміє переходити з одного середовища в інше й щоразу промовляти заново — своїми іменами, своїми образами, своїми записами."
+      ],
+      "rubric_mapping": "Quote 1: evidence FOR craft; the prose is elegant and disciplined, with a memorable contrast between ornament and evidence that suits a source-centered folk module. Quote 2: evidence FOR soul; a primary folk text is quoted directly, so the source voice is present rather than paraphrased away, but the attribution is not fully verifiable from the provided resources and the MCP quote audit could not be completed in this run. Quote 3: evidence FOR craft and soul; it frames the tradition as living...",
+      "flags": [
+        "quote_verification_unavailable"
       ]
     }
   },
   "aggregate": {
     "verdict": "REVISE",
-    "terminal_verdict": "PASS",
+    "terminal_verdict": "REVISE",
     "failing_dims": [
       "pedagogical",
-      "engagement",
-      "tone"
+      "naturalness",
+      "decolonization"
     ],
     "rejected_dims": [],
     "warning_dims": [
-      "pedagogical",
-      "engagement",
-      "tone"
+      "naturalness"
     ],
-    "min_score": 7.0,
+    "min_score": 7.2,
     "min_dim": "pedagogical"
   }
 }

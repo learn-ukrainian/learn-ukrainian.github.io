@@ -1,0 +1,20 @@
+{
+  "max_correction_rounds": 8,
+  "rounds": [
+    {
+      "round": 1,
+      "correction_round": 0,
+      "passed": true,
+      "violation_count": 0,
+      "score": 0,
+      "frontier": 37,
+      "frontier_gate": null,
+      "failed_gate": null
+    }
+  ],
+  "best_round": 1,
+  "stopped_reason": "pass",
+  "min_regression_patience": 3,
+  "consecutive_regressions": 0,
+  "corrections": []
+}

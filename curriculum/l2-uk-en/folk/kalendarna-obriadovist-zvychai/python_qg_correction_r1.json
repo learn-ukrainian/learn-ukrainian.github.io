@@ -1,0 +1,408 @@
+{
+  "round": 1,
+  "gate": "activity_schema",
+  "handled": true,
+  "unmatched_anchors": [],
+  "before": {
+    "module": "folk-004",
+    "level": "FOLK",
+    "slug": "kalendarna-obriadovist-zvychai",
+    "pipeline": "linear-phase-4",
+    "plan_references": [
+      {
+        "title": "Календарна обрядовість і звичаї",
+        "note": "Stub — corpus-grounded sources pending the dossier (docs/folk-epic/folk-dossier-schema.md §6 Збирачі та дослідники).",
+        "type": "pending"
+      }
+    ],
+    "gates": {
+      "activity_schema": {
+        "passed": false,
+        "checked": 0,
+        "violations": [
+          {
+            "activity_id": "#6",
+            "activity_index": 6,
+            "item_index": null,
+            "activity_type": "performance",
+            "offending_field": "self_check",
+            "expected_field": "self_check",
+            "expected_type": "list",
+            "actual_type": "str",
+            "message": "performance activity 'self_check' must be a list, not a str",
+            "scope": "activity"
+          }
+        ],
+        "message": "ACTIVITY_SCHEMA_GATE FAILED: 1 violations\n\n  activity #6 '#6':\n    performance activity 'self_check' must be a list, not a str\n\nCanonical 'error-correction' item shape:\n  - sentence: \"Я <error> вранці.\"\n    error: \"вмиваюся\"\n    correction: \"вмиваюся\""
+      },
+      "passed": false,
+      "vocab_count": {
+        "passed": true,
+        "count": 42,
+        "floor": 35,
+        "candidate_source": "plan.vocabulary_hints.recommended",
+        "unused_recommended_count": 0,
+        "unused_recommended_lemmas": []
+      }
+    }
+  },
+  "correction": {
+    "kind": "pipeline_activity_schema_self_check_normalization",
+    "gate": "activity_schema",
+    "gate_report": {
+      "passed": false,
+      "checked": 0,
+      "violations": [
+        {
+          "activity_id": "#6",
+          "activity_index": 6,
+          "item_index": null,
+          "activity_type": "performance",
+          "offending_field": "self_check",
+          "expected_field": "self_check",
+          "expected_type": "list",
+          "actual_type": "str",
+          "message": "performance activity 'self_check' must be a list, not a str",
+          "scope": "activity"
+        }
+      ],
+      "message": "ACTIVITY_SCHEMA_GATE FAILED: 1 violations\n\n  activity #6 '#6':\n    performance activity 'self_check' must be a list, not a str\n\nCanonical 'error-correction' item shape:\n  - sentence: \"Я <error> вранці.\"\n    error: \"вмиваюся\"\n    correction: \"вмиваюся\""
+    },
+    "applied": true,
+    "diagnostic": {
+      "kind": "performance_self_check_duplicate",
+      "normalized_count": 1,
+      "normalized": [
+        {
+          "activity_index": 6,
+          "activity_id": "#6",
+          "removed_type": "str",
+          "self_checklist_count": 3
+        }
+      ]
+    }
+  },
+  "after": {
+    "module": "folk-004",
+    "level": "FOLK",
+    "slug": "kalendarna-obriadovist-zvychai",
+    "pipeline": "linear-phase-4",
+    "plan_references": [
+      {
+        "title": "Календарна обрядовість і звичаї",
+        "note": "Stub — corpus-grounded sources pending the dossier (docs/folk-epic/folk-dossier-schema.md §6 Збирачі та дослідники).",
+        "type": "pending"
+      }
+    ],
+    "gates": {
+      "activity_schema": {
+        "passed": true,
+        "checked": 0,
+        "violations": []
+      },
+      "quiz_translate_explanations": {
+        "passed": true,
+        "checked": 0,
+        "violations": []
+      },
+      "word_count": {
+        "passed": false,
+        "count": 2706,
+        "target": 5000,
+        "min_with_tolerance": 4600,
+        "tolerance_below_pct": 8.0
+      },
+      "plan_sections": {
+        "passed": true,
+        "missing_headings": [],
+        "duplicate_headings": [],
+        "archetype": "folk-experiential",
+        "word_budgets": [
+          {
+            "section": "Постановка проблеми",
+            "count": 435,
+            "min": 585,
+            "max": 715,
+            "passed": false,
+            "under_min": true,
+            "over_max": false
+          },
+          {
+            "section": "Корпус і контекст",
+            "count": 608,
+            "min": 1260,
+            "max": 1540,
+            "passed": false,
+            "under_min": true,
+            "over_max": false
+          },
+          {
+            "section": "Поетика, символіка і виконання",
+            "count": 711,
+            "min": 1485,
+            "max": 1815,
+            "passed": false,
+            "under_min": true,
+            "over_max": false
+          },
+          {
+            "section": "Деколонізаційна рамка",
+            "count": 442,
+            "min": 945,
+            "max": 1155,
+            "passed": false,
+            "under_min": true,
+            "over_max": false
+          },
+          {
+            "section": "Підсумок",
+            "count": 498,
+            "min": 855,
+            "max": 1045,
+            "passed": false,
+            "under_min": true,
+            "over_max": false
+          }
+        ]
+      },
+      "formatting_standards": {
+        "passed": true,
+        "malformed_callouts": [],
+        "missing_mandatory_callouts": []
+      },
+      "scaffolding_leak": {
+        "passed": true,
+        "offending": []
+      },
+      "vesum_verified": {
+        "passed": false,
+        "checked": 1584,
+        "whitelisted": 2,
+        "heritage_attested": 2,
+        "heritage_attested_words": [
+          "забавні",
+          "співовий"
+        ],
+        "foreign_proper_noun_attested": 0,
+        "foreign_proper_noun_attested_words": [],
+        "missing": [
+          "рівноскладово",
+          "співових"
+        ],
+        "missing_count": 2,
+        "rule_ids": [
+          "#R-VESUM-ALL-WORDS",
+          "#R-BAD-FORM-MARKER"
+        ]
+      },
+      "bad_form_heritage": {
+        "passed": true,
+        "checked": 0,
+        "marker_count": 0,
+        "skipped_empty": 0,
+        "findings": [],
+        "finding_count": 0
+      },
+      "citations_resolve": {
+        "passed": true,
+        "unknown": []
+      },
+      "plan_reference_match": {
+        "passed": true,
+        "warnings": [
+          "plan_has_no_chunk_ids_skipping_membership_check"
+        ]
+      },
+      "resource_coverage": {
+        "passed": true,
+        "skipped": "not_a1_m1_m7_archetype"
+      },
+      "chunk_context_for_all_refs": {
+        "passed": true,
+        "verdict": "PASS"
+      },
+      "published_quote_for_publishable_refs": {
+        "passed": true,
+        "verdict": "PASS",
+        "matched": [],
+        "blockquotes_checked": 0
+      },
+      "textbook_quote_fidelity": {
+        "passed": true,
+        "checked": 4,
+        "violations": [],
+        "message": "verify_quote: 4 verified",
+        "verdict": "PASS",
+        "severity": null
+      },
+      "resources_search_attempted": {
+        "passed": true,
+        "severity": "HARD",
+        "search_attempt_count": 4,
+        "search_tools_used": [
+          "query_wikipedia"
+        ],
+        "manual_coverage_verified": false
+      },
+      "immersion_advisory": {
+        "passed": true,
+        "pct": 99.55,
+        "min_pct": 100,
+        "max_pct": 100,
+        "policy": "b2+"
+      },
+      "l2_exposure_floor": {
+        "passed": true,
+        "required": {
+          "uk_dialogue_lines": 0,
+          "vocab_entries": 0,
+          "uk_example_sentences": 0,
+          "uk_tab3_activities": 0
+        },
+        "observed": {
+          "uk_dialogue_lines": 14,
+          "vocab_entries": 0,
+          "uk_example_sentences": 2,
+          "uk_tab3_activities": 3
+        },
+        "reason": null,
+        "policy": "b2+"
+      },
+      "long_uk_ceiling": {
+        "passed": true,
+        "required": {
+          "max_unsupported_uk_words": 10000,
+          "support_proximity": 8
+        },
+        "observed": {
+          "offending_runs": 0
+        },
+        "reason": null,
+        "offending_runs": [],
+        "policy": "b2+"
+      },
+      "component_density": {
+        "passed": true,
+        "required": {},
+        "observed": [],
+        "reason": null,
+        "mismatches": [],
+        "ignored_components": [],
+        "policy": "b2+"
+      },
+      "archetype_fit": {
+        "passed": true,
+        "archetype": "folk-experiential",
+        "label": "Folk experiential",
+        "checks": [
+          {
+            "name": "no_internal_wiki_links",
+            "passed": true,
+            "severity": "ERROR",
+            "message": "Student-facing artifacts must not expose internal wiki paths.",
+            "links": []
+          }
+        ],
+        "violations": []
+      },
+      "inject_activity_ids": {
+        "passed": true,
+        "injected": [
+          "act-1",
+          "act-2",
+          "act-3"
+        ],
+        "missing": [],
+        "unused": [],
+        "workbook_only": [],
+        "reason": null
+      },
+      "activity_types": {
+        "passed": true,
+        "types": [
+          "ritual-sequencing",
+          "motif-formula",
+          "ritual-sequencing",
+          "variant-comparison",
+          "motif-formula",
+          "performance",
+          "ritual-sequencing",
+          "essay-response",
+          "critical-analysis",
+          "comparative-study"
+        ],
+        "disallowed": [],
+        "forbidden": []
+      },
+      "ai_slop_clean": {
+        "passed": true,
+        "hits": []
+      },
+      "russianisms_strict": {
+        "passed": true,
+        "critical_findings": [],
+        "warning_findings": [],
+        "critical_count": 0,
+        "warning_count": 0
+      },
+      "register_consistency": {
+        "passed": true,
+        "verdict": "PASS",
+        "severity": "WARN",
+        "violations": [],
+        "violation_count": 0,
+        "scope_level": "folk"
+      },
+      "engagement_floor": {
+        "passed": true,
+        "callout_count": 2,
+        "callout_min": 1,
+        "meta_narration_hits": [],
+        "issues": [],
+        "_plan_word_target": 5000
+      },
+      "component_props": {
+        "passed": true,
+        "errors": []
+      },
+      "russianisms_clean": {
+        "passed": true,
+        "hits": [],
+        "detections": []
+      },
+      "surzhyk_clean": {
+        "passed": true,
+        "hits": [],
+        "detections": []
+      },
+      "calques_clean": {
+        "passed": true,
+        "hits": [],
+        "detections": []
+      },
+      "paronym_clean": {
+        "passed": true,
+        "hits": [],
+        "detections": []
+      },
+      "previously_passed_regression": {
+        "passed": true,
+        "regressions": []
+      },
+      "mdx_render": {
+        "passed": null,
+        "message": "deferred — no assembled MDX at python_qg time; run the standalone render gate after assemble_mdx (run_mdx_render_gate / scripts.build.mdx_render_gate / verify_shippable.py). #3137"
+      },
+      "passed": false,
+      "vocab_count": {
+        "passed": true,
+        "count": 42,
+        "floor": 35,
+        "candidate_source": "plan.vocabulary_hints.recommended",
+        "unused_recommended_count": 0,
+        "unused_recommended_lemmas": []
+      }
+    }
+  },
+  "regressions": []
+}
