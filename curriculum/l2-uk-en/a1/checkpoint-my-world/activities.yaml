@@ -2,70 +2,103 @@
 inline:
   - id: act-1
     type: quiz
-    title: Розігрів перед підсумком
-    instruction: Choose the safe Ukrainian line.
+    title: Рід і узгодження
+    instruction: Choose the phrase where the adjective matches the noun.
     items:
-      - prompt: My name is John.
+      - prompt: стіл
         options:
-          - text: Мене звати Джон.
+          - text: великий стіл
             correct: true
-          - text: Моє ім'я є Джон.
+          - text: велика стіл
             correct: false
-          - text: Я є Джон.
+          - text: велике стіл
             correct: false
-        explanation: Use Мене звати... for a name.
-      - prompt: I am a student.
+        explanation: Стіл is masculine, so use великий.
+      - prompt: книга
         options:
-          - text: Я студент.
+          - text: нова книга
             correct: true
-          - text: Я є студент.
+          - text: новий книга
             correct: false
-          - text: Мене студент.
+          - text: нове книга
             correct: false
-        explanation: Present identity normally drops є.
-      - prompt: My book is on the table.
+        explanation: Книга is feminine, so use нова.
+      - prompt: вікно
         options:
-          - text: Моя книга на столі.
+          - text: чисте вікно
             correct: true
-          - text: Мій книга на столі.
+          - text: чистий вікно
             correct: false
-          - text: Моє книга на столі.
+          - text: чиста вікно
             correct: false
-        explanation: Книга is feminine, so use моя.
-      - prompt: I have glasses.
+        explanation: Вікно is neuter, so use чисте.
+      - prompt: лампа
         options:
-          - text: У мене є окуляри.
+          - text: біла лампа
             correct: true
-          - text: Вона має один окуляри.
+          - text: білий лампа
             correct: false
-          - text: У мене є один окуляри.
+          - text: біле лампа
             correct: false
-        explanation: Окуляри is plural-only.
+        explanation: Лампа is feminine, so use біла.
+      - prompt: зошит
+        options:
+          - text: синій зошит
+            correct: true
+          - text: синя зошит
+            correct: false
+          - text: синє зошит
+            correct: false
+        explanation: Зошит is masculine, so use синій.
+      - prompt: сумка
+        options:
+          - text: чорна сумка
+            correct: true
+          - text: чорний сумка
+            correct: false
+          - text: чорне сумка
+            correct: false
+        explanation: Сумка is feminine, so use чорна.
+      - prompt: крісло
+        options:
+          - text: нове крісло
+            correct: true
+          - text: новий крісло
+            correct: false
+          - text: нова крісло
+            correct: false
+        explanation: Крісло is neuter, so use нове.
+      - prompt: книги
+        options:
+          - text: нові книги
+            correct: true
+          - text: нова книги
+            correct: false
+          - text: новий книги
+            correct: false
+        explanation: Plural adjectives use -і.
+      - prompt: ручки
+        options:
+          - text: червоні ручки
+            correct: true
+          - text: червона ручки
+            correct: false
+          - text: червоний ручки
+            correct: false
+        explanation: Ручки is plural, so use червоні.
+      - prompt: вікна
+        options:
+          - text: чисті вікна
+            correct: true
+          - text: чисте вікна
+            correct: false
+          - text: чистий вікна
+            correct: false
+        explanation: Вікна is plural, so use чисті.
   - id: act-2
-    type: match-up
-    title: Рід і слова-підказки
-    instruction: Match each noun with the control word.
-    pairs:
-      - left: стіл
-        right: він
-      - left: книга
-        right: вона
-      - left: вікно
-        right: воно
-      - left: кімната
-        right: вона
-      - left: місто
-        right: воно
-      - left: книги
-        right: вони
-      - left: окуляри
-        right: вони
-      - left: телефон
-        right: він
-  - id: act-3
     type: fill-in
     title: Діалог на ринку
-    instruction: Complete the checkpoint dialogue.
+    instruction: Complete the shopping lines with the correct checkpoint word.
     items:
       - sentence: ___ вишиванка біла.
         answer: Ця
@@ -73,46 +106,60 @@ inline:
           - Ця
           - Цей
           - Це
-        explanation: Вишиванка is feminine in this context.
+        explanation: Вишиванка is feminine in this checkpoint scene.
       - sentence: ___ глечик старий.
         answer: Той
         options:
           - Той
           - Та
           - Те
-        explanation: Глечик is masculine.
-      - sentence: ___ намисто гарне.
+        explanation: Глечик is masculine, so use той.
+      - sentence: ___ намисто коштує сто гривень.
         answer: Це
         options:
           - Це
           - Ця
           - Цей
-        explanation: Намисто is neuter.
+        explanation: Намисто is neuter, and це also works as "this is."
       - sentence: ___ писанки червоні.
         answer: Ці
         options:
           - Ці
           - Ця
           - Це
-        explanation: Писанки is plural.
-      - sentence: Скільки ___ це намисто?
+        explanation: Писанки is plural, so use ці.
+      - sentence: Ця сумка ___.
+        answer: червона
+        options:
+          - червона
+          - червоний
+          - червоне
+        explanation: Сумка is feminine, so use червона.
+      - sentence: Той зошит ___ двадцять гривень.
         answer: коштує
         options:
           - коштує
           - звати
-          - років
-        explanation: Скільки коштує...? asks a price.
-      - sentence: Сто ___.
-        answer: гривень
+          - чисте
+        explanation: Коштує is the price word.
+      - sentence: ___ гривень.
+        answer: Двісті
         options:
-          - гривень
-          - роки
-          - ім'я
-        explanation: Сто гривень is the price chunk.
-  - id: act-4
+          - Двісті
+          - Синій
+          - Моє
+        explanation: Двісті гривень is the price chunk from the dialogue.
+      - sentence: Один зошит коштує ___ гривень.
+        answer: двадцять
+        options:
+          - двадцять
+          - блакитний
+          - моя
+        explanation: The plan dialogue uses двадцять гривень for one notebook.
+  - id: act-3
     type: group-sort
-    title: Категорії повторення
-    instruction: Sort the words by checkpoint category.
+    title: Категорії A1.2
+    instruction: Sort the recycled words into objects, colors, and numbers/prices.
     groups:
       - name: Objects
         items:
@@ -124,7 +171,7 @@ inline:
         items:
           - червоний
           - синій
-          - білий
+          - блакитний
           - жовтий
       - name: Numbers and prices
         items:
@@ -132,116 +179,128 @@ inline:
           - двадцять
           - сто
           - гривень
+  - id: act-4
+    type: quiz
+    title: Однина чи множина
+    instruction: Choose the correct plural version of the sentence.
+    items:
+      - prompt: Ця книга нова.
+        options:
+          - text: Ці книги нові.
+            correct: true
+          - text: Ці книга нова.
+            correct: false
+          - text: Ця книги нові.
+            correct: false
+        explanation: Книга becomes книги, and нова becomes нові.
+      - prompt: Цей стіл великий.
+        options:
+          - text: Ці столи великі.
+            correct: true
+          - text: Цей столи великий.
+            correct: false
+          - text: Ці стіл великий.
+            correct: false
+        explanation: Стіл becomes столи, and великий becomes великі.
+      - prompt: Це вікно чисте.
+        options:
+          - text: Ці вікна чисті.
+            correct: true
+          - text: Це вікна чисте.
+            correct: false
+          - text: Ці вікно чисті.
+            correct: false
+        explanation: Вікно becomes вікна, and чисте becomes чисті.
+      - prompt: Ця ручка синя.
+        options:
+          - text: Ці ручки сині.
+            correct: true
+          - text: Ці ручка синя.
+            correct: false
+          - text: Ця ручки сині.
+            correct: false
+        explanation: Ручка becomes ручки, and синя becomes сині.
+      - prompt: Та сумка чорна.
+        options:
+          - text: Ті сумки чорні.
+            correct: true
+          - text: Та сумки чорна.
+            correct: false
+          - text: Ті сумка чорні.
+            correct: false
+        explanation: Сумка becomes сумки, and чорна becomes чорні.
+      - prompt: Той стілець старий.
+        options:
+          - text: Ті стільці старі.
+            correct: true
+          - text: Той стільці старий.
+            correct: false
+          - text: Ті стілець старі.
+            correct: false
+        explanation: Стілець becomes стільці, and старий becomes старі.
+      - prompt: Мій зошит синій.
+        options:
+          - text: Мої зошити сині.
+            correct: true
+          - text: Мій зошити синій.
+            correct: false
+          - text: Мої зошит сині.
+            correct: false
+        explanation: Зошит becomes зошити, and синій becomes сині.
+      - prompt: Яка ручка?
+        options:
+          - text: Які ручки?
+            correct: true
+          - text: Яка ручки?
+            correct: false
+          - text: Яке ручки?
+            correct: false
+        explanation: Plural descriptions use які.
 workbook:
   - type: quiz
-    title: Однина, множина й опис
-    instruction: Choose the sentence that matches the noun.
+    title: Мій, моя, моє, мої
+    instruction: Choose the possessive that matches the noun.
     items:
-      - prompt: стіл
+      - prompt: ___ стіл
         options:
-          - text: Мій стіл великий.
+          - text: мій стіл
             correct: true
-          - text: Моя стіл велика.
+          - text: моя стіл
             correct: false
-          - text: Моє стіл велике.
+          - text: моє стіл
             correct: false
         explanation: Стіл is masculine.
-      - prompt: кімната
+      - prompt: ___ лампа
         options:
-          - text: Моя кімната чиста.
+          - text: моя лампа
             correct: true
-          - text: Мій кімната чистий.
+          - text: мій лампа
             correct: false
-          - text: Моє кімната чисте.
+          - text: моє лампа
             correct: false
-        explanation: Кімната is feminine.
-      - prompt: вікно
+        explanation: Лампа is feminine.
+      - prompt: ___ вікно
         options:
-          - text: Моє вікно чисте.
+          - text: моє вікно
             correct: true
-          - text: Моя вікно чиста.
+          - text: мій вікно
             correct: false
-          - text: Мій вікно чистий.
+          - text: моя вікно
             correct: false
         explanation: Вікно is neuter.
-      - prompt: книги
+      - prompt: ___ книги
         options:
-          - text: Мої книги нові.
+          - text: мої книги
             correct: true
-          - text: Моя книги нова.
+          - text: моя книги
             correct: false
-          - text: Мій книги новий.
+          - text: мій книги
             correct: false
         explanation: Книги is plural.
-  - type: quiz
-    title: Виправ підсумкові пастки
-    instruction: Choose the corrected Ukrainian sentence.
-    items:
-      - prompt: Я є студент.
-        options:
-          - text: Я студент.
-            correct: true
-          - text: Я є студент.
-            correct: false
-          - text: Мене студент.
-            correct: false
-        explanation: Present identity normally drops є.
-      - prompt: Моє ім'я є Джон.
-        options:
-          - text: Мене звати Джон.
-            correct: true
-          - text: Моє ім'я є Джон.
-            correct: false
-          - text: Я звати Джон.
-            correct: false
-        explanation: Use the name chunk Мене звати...
-      - prompt: Мій книга на столі.
-        options:
-          - text: Моя книга на столі.
-            correct: true
-          - text: Мій книга на столі.
-            correct: false
-          - text: Моє книга на столі.
-            correct: false
-        explanation: Книга is feminine.
-      - prompt: Вона має один окуляри.
-        options:
-          - text: Вона має окуляри. (або У неї є окуляри.)
-            correct: true
-          - text: Вона має один окуляри.
-            correct: false
-          - text: Вона має одна окуляри.
-            correct: false
-        explanation: Окуляри is plural-only.
-      - prompt: Я бачу великий кімнату.
-        options:
-          - text: Я бачу велику кімнату.
-            correct: true
-          - text: Я бачу великий кімнату.
-            correct: false
-          - text: Я бачу велике кімнату.
-            correct: false
-        explanation: Treat велику кімнату as a safe object chunk.
-      - prompt: Мені 20 роки.
-        options:
-          - text: Мені 20 років.
-            correct: true
-          - text: Мені 20 роки.
-            correct: false
-          - text: Я маю 20 роки.
-            correct: false
-        explanation: Age uses Мені ... років.
   - type: fill-in
-    title: Напиши підсумковий текст
-    instruction: Complete a short personal description.
+    title: Опис кімнати
+    instruction: Complete the room description with familiar A1.2 forms.
     items:
-      - sentence: Мене ___ Анна.
-        answer: звати
-        options:
-          - звати
-          - ім'я
-          - є
-        explanation: Мене звати... is the name chunk.
       - sentence: Це ___ кімната.
         answer: моя
         options:
@@ -270,41 +329,91 @@ workbook:
           - нова
           - новий
         explanation: Книги is plural.
-      - sentence: Мені 20 ___.
-        answer: років
+      - sentence: Та сумка ___.
+        answer: синя
         options:
-          - років
-          - роки
-          - рік
-        explanation: Use the learned age chunk.
+          - синя
+          - синій
+          - синє
+        explanation: Сумка is feminine.
+      - sentence: Один зошит коштує двадцять ___.
+        answer: гривень
+        options:
+          - гривень
+          - гривня
+          - книги
+        explanation: Двадцять гривень is a price chunk.
+  - type: group-sort
+    title: Pointing words
+    instruction: Sort the pointing words by number and distance.
+    groups:
+      - name: This / these
+        items:
+          - цей
+          - ця
+          - це
+          - ці
+      - name: That / those
+        items:
+          - той
+          - та
+          - те
+          - ті
   - type: quiz
-    title: Український культурний контекст
-    instruction: Choose the learner-safe course form.
+    title: Виправ пастки
+    instruction: Choose the corrected checkpoint phrase.
     items:
-      - prompt: The national flag colors
+      - prompt: Мій книга.
         options:
-          - text: синьо-жовтий прапор
+          - text: Моя книга.
             correct: true
-          - text: жовто-синій порядок
+          - text: Мій книга.
             correct: false
-          - text: синій знак
+          - text: Моє книга.
             correct: false
-        explanation: Use синьо-жовтий прапор for the Ukrainian flag.
-      - prompt: The capital in English-facing text
+        explanation: Книга is feminine.
+      - prompt: Цей лампа.
         options:
-          - text: Kyiv
+          - text: Ця лампа.
             correct: true
-          - text: Kiyiv
+          - text: Цей лампа.
             correct: false
-          - text: Kyjiv
+          - text: Це лампа.
             correct: false
-        explanation: Kyiv is the Ukrainian form in English.
-      - prompt: The Ukrainian currency
+        explanation: Лампа is feminine, so use ця.
+      - prompt: Великий вікно.
         options:
-          - text: гривня
+          - text: Велике вікно.
             correct: true
-          - text: крамниця
+          - text: Великий вікно.
             correct: false
-          - text: прізвище
+          - text: Велика вікно.
             correct: false
-        explanation: Гривня is the Ukrainian currency.
+        explanation: Вікно is neuter, so use велике.
+      - prompt: Ці книга.
+        options:
+          - text: Ці книги.
+            correct: true
+          - text: Ці книга.
+            correct: false
+          - text: Ця книги.
+            correct: false
+        explanation: Ці needs a plural noun.
+      - prompt: Ті зошит.
+        options:
+          - text: Ті зошити.
+            correct: true
+          - text: Ті зошит.
+            correct: false
+          - text: Той зошити.
+            correct: false
+        explanation: Ті needs a plural noun.
+      - prompt: Двадцять гривня.
+        options:
+          - text: Двадцять гривень.
+            correct: true
+          - text: Двадцять гривня.
+            correct: false
+          - text: Двадцять книги.
+            correct: false
+        explanation: Use the learned price chunk гривень.

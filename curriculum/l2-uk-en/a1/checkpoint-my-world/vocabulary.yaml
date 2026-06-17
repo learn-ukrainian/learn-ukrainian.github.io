@@ -6,6 +6,10 @@
   translation: table
   pos: noun
   usage: Мій стіл великий.
+- lemma: столи
+  translation: tables
+  pos: noun plural
+  usage: Це столи.
 - lemma: книга
   translation: book
   pos: noun
@@ -21,7 +25,7 @@
 - lemma: вікна
   translation: windows
   pos: noun plural
-  usage: Вікна чисті.
+  usage: Ці вікна чисті.
 - lemma: лампа
   translation: lamp
   pos: noun
@@ -30,18 +34,54 @@
   translation: bag
   pos: noun
   usage: Та сумка синя.
-- lemma: окуляри
-  translation: glasses, plural-only
+- lemma: сумки
+  translation: bags
   pos: noun plural
-  usage: У мене є окуляри.
-- lemma: двері
-  translation: door; doors, plural-only
+  usage: У вас є сумки?
+- lemma: зошит
+  translation: notebook
+  pos: noun
+  usage: Один зошит коштує двадцять гривень.
+- lemma: зошити
+  translation: notebooks
   pos: noun plural
-  usage: Ці двері білі.
-- lemma: ліки
-  translation: medicine, plural-only
+  usage: Ті зошити сині.
+- lemma: стілець
+  translation: chair
+  pos: noun
+  usage: Той стілець старий.
+- lemma: стільці
+  translation: chairs
   pos: noun plural
-  usage: Ліки тут.
+  usage: Ті стільці старі.
+- lemma: ручка
+  translation: pen
+  pos: noun
+  usage: Ця ручка синя.
+- lemma: ручки
+  translation: pens
+  pos: noun plural
+  usage: Ці ручки червоні.
+- lemma: крісло
+  translation: armchair
+  pos: noun
+  usage: Нове крісло.
+- lemma: вишиванка
+  translation: embroidered shirt (recognition)
+  pos: noun
+  usage: Це вишиванка.
+- lemma: глечик
+  translation: clay jug (recognition)
+  pos: noun
+  usage: Той глечик старий.
+- lemma: намисто
+  translation: necklace (recognition)
+  pos: noun
+  usage: Це намисто коштує сто гривень.
+- lemma: писанки
+  translation: decorated Easter eggs (recognition)
+  pos: noun plural
+  usage: Ці писанки червоні.
 - lemma: мій
   translation: my, masculine
   pos: pronoun
@@ -53,7 +93,7 @@
 - lemma: моє
   translation: my, neuter
   pos: pronoun
-  usage: Моє місто.
+  usage: Моє вікно.
 - lemma: мої
   translation: my, plural
   pos: pronoun
@@ -61,15 +101,15 @@
 - lemma: цей
   translation: this, masculine
   pos: pronoun
-  usage: Цей стіл.
+  usage: Цей зошит.
 - lemma: ця
   translation: this, feminine
   pos: pronoun
   usage: Ця лампа.
 - lemma: це
-  translation: this, neuter; this is
+  translation: this; this is
   pos: pronoun
-  usage: Це намисто.
+  usage: Це вікно.
 - lemma: ці
   translation: these
   pos: pronoun
@@ -77,7 +117,7 @@
 - lemma: той
   translation: that, masculine
   pos: pronoun
-  usage: Той глечик.
+  usage: Той стіл.
 - lemma: та
   translation: that, feminine
   pos: pronoun
@@ -105,7 +145,55 @@
 - lemma: великі
   translation: big, plural
   pos: adjective
-  usage: Великі кімнати.
+  usage: Великі столи.
+- lemma: новий
+  translation: new, masculine
+  pos: adjective
+  usage: Новий стіл.
+- lemma: нова
+  translation: new, feminine
+  pos: adjective
+  usage: Нова книга.
+- lemma: нове
+  translation: new, neuter
+  pos: adjective
+  usage: Нове крісло.
+- lemma: нові
+  translation: new, plural
+  pos: adjective
+  usage: Нові книги.
+- lemma: чистий
+  translation: clean, masculine
+  pos: adjective
+  usage: Чистий стіл.
+- lemma: чиста
+  translation: clean, feminine
+  pos: adjective
+  usage: Чиста кімната.
+- lemma: чисте
+  translation: clean, neuter
+  pos: adjective
+  usage: Чисте вікно.
+- lemma: чисті
+  translation: clean, plural
+  pos: adjective
+  usage: Чисті вікна.
+- lemma: червоний
+  translation: red, masculine
+  pos: adjective
+  usage: Червоний зошит.
+- lemma: червона
+  translation: red, feminine
+  pos: adjective
+  usage: Червона сумка.
+- lemma: червоне
+  translation: red, neuter
+  pos: adjective
+  usage: Червоне вікно.
+- lemma: червоні
+  translation: red, plural
+  pos: adjective
+  usage: Червоні ручки.
 - lemma: синій
   translation: dark blue, masculine
   pos: adjective
@@ -122,10 +210,14 @@
   translation: dark blue, plural
   pos: adjective
   usage: Сині зошити.
+- lemma: блакитний
+  translation: light blue, masculine
+  pos: adjective
+  usage: Блакитний зошит.
 - lemma: білий
   translation: white, masculine
   pos: adjective
-  usage: Білий сніг.
+  usage: Білий стіл.
 - lemma: біла
   translation: white, feminine
   pos: adjective
@@ -137,24 +229,64 @@
 - lemma: білі
   translation: white, plural
   pos: adjective
-  usage: Білі стіни.
-- lemma: гривня
-  translation: hryvnia
-  pos: noun
-  usage: Одна гривня.
+  usage: Білі вікна.
+- lemma: чорний
+  translation: black, masculine
+  pos: adjective
+  usage: Чорний зошит.
+- lemma: чорна
+  translation: black, feminine
+  pos: adjective
+  usage: Чорна сумка.
+- lemma: чорні
+  translation: black, plural
+  pos: adjective
+  usage: Чорні сумки.
+- lemma: жовтий
+  translation: yellow, masculine
+  pos: adjective
+  usage: Жовтий зошит.
+- lemma: жовта
+  translation: yellow, feminine
+  pos: adjective
+  usage: Жовта лампа.
+- lemma: жовті
+  translation: yellow, plural
+  pos: adjective
+  usage: Жовті писанки.
+- lemma: старий
+  translation: old, masculine
+  pos: adjective
+  usage: Той глечик старий.
+- lemma: старі
+  translation: old, plural
+  pos: adjective
+  usage: Ті стільці старі.
+- lemma: скільки
+  translation: how much; how many
+  pos: adverb
+  usage: Скільки коштує?
+- lemma: коштує
+  translation: costs
+  pos: verb
+  usage: Один зошит коштує двадцять гривень.
 - lemma: гривень
   translation: hryvnias, price chunk
   pos: noun plural
   usage: Сто гривень.
-- lemma: прізвище
-  translation: surname
-  pos: noun
-  usage: Моє прізвище.
-- lemma: Мене звати
-  translation: my name is
-  pos: phrase
-  usage: Мене звати Анна.
-- lemma: Мені 20 років
-  translation: I am 20 years old
-  pos: phrase
-  usage: Мені 20 років.
+- lemma: три
+  translation: three
+  pos: numeral
+  usage: Три книги.
+- lemma: двадцять
+  translation: twenty
+  pos: numeral
+  usage: Двадцять гривень.
+- lemma: сто
+  translation: one hundred
+  pos: numeral
+  usage: Сто гривень.
+- lemma: двісті
+  translation: two hundred
+  pos: numeral
+  usage: Двісті гривень.
