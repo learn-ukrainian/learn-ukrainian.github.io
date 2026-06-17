@@ -110,7 +110,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Формальна формула
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "лікар", "right": "пане лікарю"}, {"left": "директор", "right": "пане директоре"}, {"left": "вчителька", "right": "пані вчителько"}, {"left": "лікарка", "right": "пані лікарко"}]`)} isUkrainian={true} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "лікар", "right": "пане лікарю"}, {"left": "директор", "right": "пане директоре"}, {"left": "вчителька", "right": "пані вчителько"}, {"left": "лікарка", "right": "пані лікарко"}]`)} instruction={"З'єднайте називну форму з ввічливим звертанням."} isUkrainian={true} />
 
 ## Професійні звертання
 
@@ -143,7 +143,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Оберіть кличний
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Пане ___, у мене питання.", "options": [{"text": "лікар", "correct": false}, {"text": "лікарю", "correct": true}, {"text": "лікаря", "correct": false}], "explanation": "У звертанні потрібна форма лікарю."}, {"question": "Пані ___, можна повторити?", "options": [{"text": "вчителька", "correct": false}, {"text": "вчительку", "correct": false}, {"text": "вчителько", "correct": true}], "explanation": "Кличний відмінок від вчителька - вчителько."}, {"question": "___, ходімо на каву.", "options": [{"text": "Друже", "correct": true}, {"text": "Друг", "correct": false}, {"text": "Друга", "correct": false}], "explanation": "Друг у звертанні має форму друже."}, {"question": "___, це ваш кабінет?", "options": [{"text": "Пане директор", "correct": false}, {"text": "Пане директоре", "correct": true}, {"text": "Пана директора", "correct": false}], "explanation": "Формальна модель - пане директоре."}]`)} isUkrainian={true} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Пане ___, у мене питання.", "options": [{"text": "лікар", "correct": false}, {"text": "лікарю", "correct": true}, {"text": "лікаря", "correct": false}], "explanation": "У звертанні потрібна форма лікарю."}, {"question": "Пані ___, можна повторити?", "options": [{"text": "вчителька", "correct": false}, {"text": "вчительку", "correct": false}, {"text": "вчителько", "correct": true}], "explanation": "Кличний відмінок від вчителька - вчителько."}, {"question": "___, ходімо на каву.", "options": [{"text": "Друже", "correct": true}, {"text": "Друг", "correct": false}, {"text": "Друга", "correct": false}], "explanation": "Друг у звертанні має форму друже."}, {"question": "___, це ваш кабінет?", "options": [{"text": "Пане директор", "correct": false}, {"text": "Пане директоре", "correct": true}, {"text": "Пана директора", "correct": false}], "explanation": "Формальна модель - пане директоре."}]`)} instruction={"Оберіть форму, яка природно звучить у звертанні."} isUkrainian={true} />
 
 ## Імена в кличному
 
@@ -167,7 +167,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 З близькими людьми кличний відмінок може бути теплим:
 
-| Нейтрально | Тепліше |
+| Коротко | Тепліше з `мій/моя` |
 | --- | --- |
 | друже | друже мій |
 | подруго | подруго моя |
@@ -192,7 +192,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Регістр звертання
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Формально": ["пане лікарю", "пані директорко", "пане Ковальчуку"], "Дружньо": ["Андрію", "Оксано", "друже"], "Тепло": ["друже мій", "люба моя", "сонечко"]}`)} isUkrainian={true} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Формально": ["пане лікарю", "пані директорко", "пане Ковальчуку"], "Дружньо": ["Андрію", "Оксано", "друже"], "Тепло": ["друже мій", "люба моя", "сонечко"]}`)} instruction={"Розсортуйте звертання за ситуацією."} isUkrainian={true} />
 
 ## Який регістр обрати?
 
@@ -275,11 +275,11 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Доповніть звертання
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Пане ___, мені потрібна довідка.", "answer": "лікарю", "options": ["лікар", "лікарю", "лікарем"]}, {"sentence": "Пані ___, я зробив завдання.", "answer": "вчителько", "options": ["вчителька", "вчителькою", "вчителько"]}, {"sentence": "___, ти маєш хвилину?", "answer": "колего", "options": ["колега", "колего", "колегою"]}, {"sentence": "___ мій, я радий тебе бачити.", "answer": "друже", "options": ["друг", "друже", "другом"]}]`)} isUkrainian={true} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Пане ___, мені потрібна довідка.", "answer": "лікарю", "options": ["лікар", "лікарю", "лікарем"]}, {"sentence": "Пані ___, я зробив завдання.", "answer": "вчителько", "options": ["вчителька", "вчителькою", "вчителько"]}, {"sentence": "___, ти маєш хвилину?", "answer": "колего", "options": ["колега", "колего", "колегою"]}, {"sentence": "___ мій, я радий тебе бачити.", "answer": "друже", "options": ["друг", "друже", "другом"]}]`)} instruction={"Впишіть правильну форму кличного відмінка."} isUkrainian={true} />
 
 ### Чи доречний регістр?
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "У лікарні: Пане лікарю, добрий день.", "isTrue": true, "explanation": "Це ввічлива формальна форма."}, {"statement": "До директора в офіційному листі: друже мій.", "isTrue": false, "explanation": "Для офіційного листа краще пане директоре."}, {"statement": "До близької подруги: подруго моя.", "isTrue": true, "explanation": "Це тепле дружнє звертання."}, {"statement": "У класі до вчительки: пані вчителько.", "isTrue": true, "explanation": "Це природне ввічливе звертання."}]`)} isUkrainian={true} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "У лікарні: Пане лікарю, добрий день.", "isTrue": true, "explanation": "Це ввічлива формальна форма."}, {"statement": "До директора в офіційному листі: друже мій.", "isTrue": false, "explanation": "Для офіційного листа краще пане директоре."}, {"statement": "До близької подруги: подруго моя.", "isTrue": true, "explanation": "Це тепле дружнє звертання."}, {"statement": "У класі до вчительки: пані вчителько.", "isTrue": true, "explanation": "Це природне ввічливе звертання."}]`)} instruction={"Позначте, чи звертання добре підходить до ситуації."} isUkrainian={true} />
 
 </TabItem>
 <TabItem label="Ресурси">
