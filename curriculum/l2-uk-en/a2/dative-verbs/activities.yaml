@@ -62,7 +62,7 @@ inline:
         explanation: "Співчувати керує давальним: сестрі."
   - id: act-2
     type: quiz
-    title: Датив чи ні?
+    title: Давальний чи ні?
     instruction: Оберіть правильний відмінок або модель.
     items:
       - question: "У реченні `Я допомагаю мамі` слово `мамі` - це..."
@@ -123,24 +123,24 @@ inline:
         explanation: "Це теж модель віку з давальним."
   - id: act-3
     type: match-up
-    title: Переклади моделей
-    instruction: Зіставте англійську підказку з природною українською моделлю.
+    title: Підбери модель
+    instruction: Зіставте ситуаційну підказку з природною українською моделлю.
     pairs:
-      - left: "help mom"
+      - left: "допомога мамі"
         right: "допомагати мамі"
-      - left: "thank the teacher"
+      - left: "подяка вчителеві"
         right: "дякувати вчителеві"
-      - left: "call a friend"
+      - left: "дзвінок другові"
         right: "дзвонити другові"
-      - left: "advise you"
+      - left: "порада тобі"
         right: "радити тобі"
-      - left: "I like this book"
+      - left: "один предмет: книжка"
         right: "Мені подобається ця книжка"
-      - left: "I like these films"
+      - left: "кілька предметів: фільми"
         right: "Мені подобаються ці фільми"
-      - left: "I am 25"
+      - left: "вік: я, 25"
         right: "Мені двадцять п'ять років"
-      - left: "the grandfather is 80"
+      - left: "вік: дідусь, 80"
         right: "Дідусеві вісімдесят років"
   - id: act-4
     type: group-sort
