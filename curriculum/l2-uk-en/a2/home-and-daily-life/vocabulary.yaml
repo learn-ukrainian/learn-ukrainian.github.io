@@ -78,6 +78,10 @@
   translation: to have dinner
   pos: verb
   example: "Ми вечеряємо на кухні."
+- word: лягати спати
+  translation: to go to bed
+  pos: phrase
+  example: "Я лягаю спати перед одинадцятою."
 - word: гостинці
   translation: small gifts or treats for hosts
   pos: noun
