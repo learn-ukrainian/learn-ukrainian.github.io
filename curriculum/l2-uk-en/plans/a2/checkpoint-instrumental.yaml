@@ -2,7 +2,7 @@ module: a2-031
 level: A2
 sequence: 31
 slug: checkpoint-instrumental
-version: 1.0.4
+version: 1.0.5
 title: 'Контрольна точка: Орудний відмінок'
 subtitle: 'Перевірка знань: усі функції орудного відмінка'
 focus: review
@@ -81,7 +81,7 @@ vocabulary_hints:
   - визначити (to identify, to determine)
 activity_hints:
 - type: quiz
-  focus: 'Змішаний тест на орудний відмінок, що охоплює всі функції з М21-М26'
+  focus: 'Змішаний тест на орудний відмінок, що охоплює всі функції попереднього блоку'
   items: 10
 - type: fill-in
   focus: 'Трансформація речень — поставити іменникові словосполучення в орудний відмінок із правильним узгодженням'
@@ -114,6 +114,11 @@ references:
 - title: Голуб Grade 6, с. 179
   notes: 'Таблиці відмінювання займенників для повторення форм займенників в орудному відмінку'
 plan_fixes:
+- version: 1.0.5
+  date: '2026-06-17'
+  trigger: A2 M31 certification pass.
+  changes:
+  - Corrected a stale numbered activity hint scope reference to the full prior instrumental block.
 - version: 1.0.4
   date: '2026-06-04'
   trigger: 'A2 readiness audit recovery for #2551/#2558/#2682.'
