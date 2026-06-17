@@ -73,6 +73,10 @@
   translation: blue
   pos: adjective
   example: "Вона пише синім олівцем."
+- word: літній
+  translation: summer, related to summer
+  pos: adjective
+  example: "Ми зустрілися цим літнім вечором."
 - word: сусід
   translation: male neighbor
   pos: noun
@@ -92,3 +96,7 @@
   translation: meanwhile
   pos: phrase
   example: "Тим часом ми готуємо вечерю."
+- word: цим вечором
+  translation: this evening
+  pos: phrase
+  example: "Цим вечором я працюю вдома."
