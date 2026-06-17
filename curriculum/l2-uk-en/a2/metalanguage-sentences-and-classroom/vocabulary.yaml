@@ -54,6 +54,14 @@
   translation: sharing the same root
   pos: adjective
   example: "Слова 'писати' і 'запис' спільнокореневі."
+- word: споріднені слова
+  translation: related words
+  pos: phrase
+  example: "Споріднені слова мають спільний корінь."
+- word: морфемний аналіз
+  translation: morphemic analysis
+  pos: phrase
+  example: "Морфемний аналіз показує корінь, префікс, суфікс і закінчення."
 - word: прочитайте
   translation: read
   pos: verb
