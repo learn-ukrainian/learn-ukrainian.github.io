@@ -74,12 +74,35 @@ By the end, you can:
 
 ## Діалоги
 
-### Static place signals
+Start with a fast call-and-response. The grammar appears because each answer
+reuses one useful question: **Де?**
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Which line answers Де?", "options": [{"text": "Олена в школі.", "correct": true}, {"text": "Тарас іде в школу.", "correct": false}, {"text": "Ми їдемо в місто.", "correct": false}], "explanation": "В школі describes static location."}, {"question": "Choose the static location line.", "options": [{"text": "Мама на роботі.", "correct": true}, {"text": "Ми їдемо в місто.", "correct": false}, {"text": "Я йду на роботу.", "correct": false}], "explanation": "На роботі answers Де?"}, {"question": "Which line answers where the book is?", "options": [{"text": "Книга на столі.", "correct": true}, {"text": "Я йду на пошту.", "correct": false}, {"text": "Книга до столу.", "correct": false}], "explanation": "На столі answers Де?"}, {"question": "Choose the static place sentence.", "options": [{"text": "Банк у центрі.", "correct": true}, {"text": "Він їде до лікарні.", "correct": false}, {"text": "Я йду в банк.", "correct": false}], "explanation": "У центрі describes where the bank is."}]`)} instruction={"Choose the line that answers the question Де?"} isUkrainian={false} />
+```text
+Олена: Де Олена?
+Марко: Вона в школі.
+Олена: А Тарас?
+Марко: Він на роботі.
+Олена: А діти?
+Марко: Вони в парку.
+Олена: А кішка?
+Марко: Вона на дивані!
+```
 
-Start with a simple scene in a new city. The grammar appears because the
-neighbor is answering one useful question again and again: **Де?**
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: Де Олена?** | Olena: Where is Olena? |
+| **Марко: Вона в школі.** | Marko: She is at school. |
+| **Олена: А Тарас?** | Olena: And Taras? |
+| **Марко: Він на роботі.** | Marko: He is at work. |
+| **Олена: А діти?** | Olena: And the children? |
+| **Марко: Вони в парку.** | Marko: They are in the park. |
+| **Олена: А кішка?** | Olena: And the cat? |
+| **Марко: Вона на дивані!** | Marko: She is on the sofa! |
+
+Next, use the same pattern in a new city. The neighbor is answering the same
+question with practical place chunks.
 
 ```text
 Новий мешканець: Добрий день! Де аптека?
@@ -137,9 +160,9 @@ Support after the Ukrainian lines:
 Here **живу**, **працюю**, and **є** describe a static place. They answer
 **де?**, not **куди?** You are saying where someone or something is located.
 
-### Base word to place chunk
+### В/у чи на?
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "школа", "right": "в школі"}, {"left": "робота", "right": "на роботі"}, {"left": "банк", "right": "у банку"}, {"left": "магазин", "right": "у магазині"}, {"left": "вулиця", "right": "на вулиці"}, {"left": "місто", "right": "у місті"}, {"left": "пошта", "right": "на пошті"}, {"left": "Київ", "right": "у Києві"}]`)} instruction={"Match each dictionary form with the A1 place phrase."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Олена ___ школі.", "options": [{"text": "в", "correct": true}, {"text": "на", "correct": false}, {"text": "до", "correct": false}], "explanation": "В школі answers Де?"}, {"question": "Мама ___ роботі.", "options": [{"text": "на", "correct": true}, {"text": "в", "correct": false}, {"text": "до", "correct": false}], "explanation": "The common chunk is на роботі."}, {"question": "Максим ___ банку.", "options": [{"text": "у", "correct": true}, {"text": "на", "correct": false}, {"text": "до", "correct": false}], "explanation": "Bank as a contained institution uses у банку."}, {"question": "Я ___ магазині.", "options": [{"text": "в", "correct": true}, {"text": "на", "correct": false}, {"text": "до", "correct": false}], "explanation": "В магазині is a static place answer."}, {"question": "Аптека ___ вулиці.", "options": [{"text": "на", "correct": true}, {"text": "в", "correct": false}, {"text": "до", "correct": false}], "explanation": "Street location uses на вулиці."}, {"question": "Пошта ___ площі.", "options": [{"text": "на", "correct": true}, {"text": "в", "correct": false}, {"text": "до", "correct": false}], "explanation": "Square location uses на площі."}, {"question": "Тато ___ вокзалі.", "options": [{"text": "на", "correct": true}, {"text": "в", "correct": false}, {"text": "до", "correct": false}], "explanation": "The traditional chunk is на вокзалі."}, {"question": "Марко ___ лікарні.", "options": [{"text": "у", "correct": true}, {"text": "на", "correct": false}, {"text": "до", "correct": false}], "explanation": "Лікарня is treated as a contained place: у лікарні."}, {"question": "Ми ___ кафе.", "options": [{"text": "в", "correct": true}, {"text": "на", "correct": false}, {"text": "до", "correct": false}], "explanation": "Кафе does not change form; use the whole chunk в кафе."}, {"question": "Друг ___ Одесі.", "options": [{"text": "в", "correct": true}, {"text": "на", "correct": false}, {"text": "до", "correct": false}], "explanation": "Cities use в/у plus the locative form: в Одесі."}]`)} instruction={"Choose the preposition that completes each static place sentence."} isUkrainian={false} />
 
 ## Місцевий відмінок
 
@@ -157,6 +180,20 @@ Some masculine place words use **-у**: **банк -> у банку**, **пар�
 **урок -> на уроці**. For now, learn frequent place chunks rather than a full
 declension table.
 
+Keep these A1 forms together with their prepositions:
+
+| Base word | Place answer |
+| --- | --- |
+| школа | **в школі** |
+| робота | **на роботі** |
+| магазин | **у магазині** |
+| місто | **у місті** |
+| банк | **у банку** |
+| парк | **у парку** |
+| офіс | **в офісі** |
+| пошта | **на пошті** |
+| кафе | **в кафе** |
+
 Use the helper from Ukrainian school grammar:
 
 | Case | Helper question | A1 place answer |
@@ -167,19 +204,13 @@ The helper tells you why **Я живу в Києві** is different from the dic
 word **Київ**. To describe exact place, the word must fit the place phrase:
 **Столиця України — Київ. Я зараз у Києві.**
 
-**Чергування приголосних в основі слова: фонетичні зміни.** A few
-words change the final consonant before **-і**. The useful A1 pattern is
-**г/к/х -> з/ц/с**: **нога -> на нозі**, **рука -> в руці**, **горох -> у
-горосі**. Remember the practical repair **Гроші в руці**. You do not need to
-generate every form yet; just notice the change when you see it.
+### Де?
 
-### Answer Де?
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Олена ___ (школа).", "answer": "в школі", "options": []}, {"sentence": "Тарас ___ (робота).", "answer": "на роботі", "options": []}, {"sentence": "Максим ___ (банк).", "answer": "у банку", "options": []}, {"sentence": "Я ___ (магазин).", "answer": "в магазині", "options": []}, {"sentence": "Аптека ___ (вулиця).", "answer": "на вулиці", "options": []}, {"sentence": "Ми ___ (місто).", "answer": "у місті", "options": []}, {"sentence": "Софія ___ (лікарня).", "answer": "у лікарні", "options": []}, {"sentence": "Я живу ___ (Київ).", "answer": "у Києві", "options": []}]`)} instruction={"Choose the correct place phrase for each sentence."} isUkrainian={false} />
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Олена ___ (школа).", "answer": "в школі", "options": ["в школі", "в школа", "на школа"]}, {"sentence": "Тарас ___ (робота).", "answer": "на роботі", "options": ["на роботі", "в робота", "на робота"]}, {"sentence": "Максим ___ (банк).", "answer": "у банку", "options": ["у банку", "у банк", "на банку"]}, {"sentence": "Ми ___ (місто).", "answer": "у місті", "options": ["у місті", "на місті", "у місто"]}, {"sentence": "Аптека ___ (вулиця).", "answer": "на вулиці", "options": ["на вулиці", "в вулиці", "на вулиця"]}, {"sentence": "Я живу ___ (Київ).", "answer": "у Києві", "options": ["у Києві", "в Київ", "на Києві"]}, {"sentence": "Софія ___ (лікарня).", "answer": "у лікарні", "options": ["у лікарні", "на лікарні", "у лікарня"]}, {"sentence": "Я ___ (пошта).", "answer": "на пошті", "options": ["на пошті", "у пошті", "на пошта"]}]`)} instruction={"Choose the correct place phrase for each sentence."} isUkrainian={false} />
+### Називний -> місцевий
 
-### В/у or на shelves
-
-<GroupSort client:only='react' groups={JSON.parse(`{"В/у: contained place or city": ["в школі", "у банку", "в магазині", "у лікарні", "в Одесі"], "На: open place, event, or traditional chunk": ["на роботі", "на вулиці", "на площі", "на уроці", "на пошті"]}`)} instruction={"Sort each chunk by the preposition pattern it uses."} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "школа", "right": "в школі"}, {"left": "робота", "right": "на роботі"}, {"left": "банк", "right": "у банку"}, {"left": "магазин", "right": "у магазині"}, {"left": "вулиця", "right": "на вулиці"}, {"left": "місто", "right": "у місті"}, {"left": "пошта", "right": "на пошті"}, {"left": "Київ", "right": "у Києві"}]`)} instruction={"Match each dictionary form with the A1 place phrase."} isUkrainian={false} />
 
 ## В чи на?
 
@@ -188,10 +219,8 @@ closed or contained place: **в школі**, **у банку**, **в магаз
 лікарні**, **в кафе**. Use **на** for many open spaces, surfaces, events, and
 traditional institution chunks: **на вулиці**, **на площі**, **на роботі**,
 **на уроці**, **на пошті**, **на вокзалі**.
-Later you will also meet this **на** pattern with words such as **станція**,
-**фабрика**, **майдан**, **перон**, **проспект**, and **Полтавщина**. With
-countries and many city or village names, choose **в/у**: **в Україну**,
-**у Франції**, **у школі**.
+With countries and cities in static place answers, choose **в/у**:
+**в Україні**, **у Києві**, **у Львові**, **в Одесі**.
 
 | Use **в/у** | Use **на** |
 | --- | --- |
@@ -211,36 +240,20 @@ Do not explain Ukrainian locative through Russian grammar terms, and do not
 describe Ukrainian sounds by comparing them to Russian sounds. This lesson uses
 Ukrainian questions, Ukrainian examples, and Ukrainian place chunks.
 
+### Де це?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Де Олена?", "options": [{"text": "Вона в школі.", "correct": true}, {"text": "Вона в школу.", "correct": false}, {"text": "Вона на школа.", "correct": false}], "explanation": "В школі answers Де?"}, {"question": "Де Тарас?", "options": [{"text": "Він на роботі.", "correct": true}, {"text": "Він на роботу.", "correct": false}, {"text": "Він в робота.", "correct": false}], "explanation": "На роботі is the static place chunk."}, {"question": "Де Максим?", "options": [{"text": "Він у банку.", "correct": true}, {"text": "Він у банк.", "correct": false}, {"text": "Він на банку.", "correct": false}], "explanation": "У банку answers Де?"}, {"question": "Де книга?", "options": [{"text": "Книга на столі.", "correct": true}, {"text": "Книга на стіл.", "correct": false}, {"text": "Книга столі.", "correct": false}], "explanation": "Ukrainian locative place phrases normally need a preposition."}, {"question": "Де Марко живе?", "options": [{"text": "Він живе у Києві.", "correct": true}, {"text": "Він живе в Київ.", "correct": false}, {"text": "Він живе у Київ.", "correct": false}], "explanation": "Static city location uses у Києві."}, {"question": "Де пошта?", "options": [{"text": "Пошта на площі.", "correct": true}, {"text": "Пошта в площу.", "correct": false}, {"text": "Пошта на площа.", "correct": false}], "explanation": "Площа changes to площі after на."}]`)} instruction={"Choose the correct locative place answer."} isUkrainian={false} />
+
 :::tip
 When you are unsure, ask the question first. **Де?** points to a static place:
 **в школі**, **на роботі**, **у банку**. **Куди?** points to movement and often
 needs a different form.
 :::
 
-**Статичне місце та напрямок: Де? vs Куди?** The static question **де?** is
-not the same as the movement question **куди?**
-Compare:
-
-| Static place: **Де?** | Direction: **Куди?** |
-| --- | --- |
-| **Він у школі.** | **Він іде в школу.** |
-| **Оксана гуляє у парку.** | **Оксана йде в парк.** |
-| **Я на роботі.** | **Я йду на роботу.** |
-
-One compact contrast line is useful: **Вона була (де?) на стадіоні, а потім
-пішла (куди?) в басейн**.
-
-At A1, use this as a warning light. If the verb is **жити**, **бути**,
-**працювати**, **гуляти**, **стояти**, **лежати**, or **сидіти**, you are often
-answering **де?** If the verb is **іти** or **їхати**, you may be answering
-**куди?** and a later case pattern may be needed.
-
-**Місцевий та давальний відмінки.** Some Ukrainian forms look the same, so the
-preposition and the question matter. The **форма білочці** can appear in two
-jobs. **На білочці руда шубка** answers **на кому?** and describes a location.
-**Ми дали білочці горішки** answers **кому?** and **позначає отримувача**, like
-**нагороду мені**. For this A1 module, keep the simple test: locative place
-phrases almost always have **в/у** or **на**.
+Keep one warning light: **де?** and **куди?** do not always use the same form.
+Say **Він у школі** for where he is, but **Він іде в школу** for where he is
+going. Direction gets its own practice later; this lesson uses locative forms
+for static answers.
 
 <span id="підсумок"></span>
 
@@ -273,9 +286,7 @@ Common repairs:
 | Я живу в Київ. | **Я живу в Києві.** |
 | Книга столі. | **Книга на столі.** |
 | Я в пошті. | **Я на пошті.** |
-| Bad hand-form ending | **Гроші в руці.** |
 | Він іде в школі. | **Він іде в школу.** |
-| Добрий день. Де є мій тато? | **Добрий день! Де мій тато?** |
 
 Now answer three real questions:
 
@@ -300,28 +311,28 @@ the next module, **Моє місто**.
 </TabItem>
 <TabItem label="Vocabulary">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"де","translation":"where","pos":"question word","example":"Де школа?","examples":["where","Де школа?"],"atlas_href":"/lexicon/де/"},{"word":"місцевий відмінок","translation":"locative case","pos":"grammar term","example":"Місцевий відмінок відповідає на питання де?","examples":["locative case","Місцевий відмінок відповідає на питання де?"],"atlas_href":"/lexicon/місцевий-відмінок/"},{"word":"в/у","translation":"in; at","pos":"preposition","example":"Я живу в Україні.","examples":["in; at","Я живу в Україні."]},{"word":"на","translation":"on; at","pos":"preposition","example":"Мама на роботі.","examples":["on; at","Мама на роботі."],"atlas_href":"/lexicon/на/"},{"word":"школа","translation":"school","pos":"noun","example":"Олена в школі.","examples":["school","Олена в школі."],"atlas_href":"/lexicon/школа/"},{"word":"робота","translation":"work; job","pos":"noun","example":"Тарас на роботі.","examples":["work; job","Тарас на роботі."],"atlas_href":"/lexicon/робота/"},{"word":"банк","translation":"bank","pos":"noun","example":"Максим у банку.","examples":["bank","Максим у банку."],"atlas_href":"/lexicon/банк/"},{"word":"магазин","translation":"shop; store","pos":"noun","example":"Я в магазині.","examples":["shop; store","Я в магазині."],"atlas_href":"/lexicon/магазин/"},{"word":"вулиця","translation":"street","pos":"noun","example":"Аптека на вулиці.","examples":["street","Аптека на вулиці."],"atlas_href":"/lexicon/вулиця/"},{"word":"місто","translation":"city; town","pos":"noun","example":"Ми у місті.","examples":["city; town","Ми у місті."],"atlas_href":"/lexicon/місто/"},{"word":"парк","translation":"park","pos":"noun","example":"Оксана гуляє у парку.","examples":["park","Оксана гуляє у парку."],"atlas_href":"/lexicon/парк/"},{"word":"лікарня","translation":"hospital","pos":"noun","example":"Софія у лікарні.","examples":["hospital","Софія у лікарні."],"atlas_href":"/lexicon/лікарня/"},{"word":"кафе","translation":"cafe","pos":"noun","example":"Ми в кафе.","examples":["cafe","Ми в кафе."],"atlas_href":"/lexicon/кафе/"},{"word":"площа","translation":"square","pos":"noun","example":"Пошта на площі.","examples":["square","Пошта на площі."],"atlas_href":"/lexicon/площа/"},{"word":"вокзал","translation":"train station","pos":"noun","example":"Тато на вокзалі.","examples":["train station","Тато на вокзалі."],"atlas_href":"/lexicon/вокзал/"},{"word":"пошта","translation":"post office","pos":"noun","example":"Я на пошті.","examples":["post office","Я на пошті."],"atlas_href":"/lexicon/пошта/"},{"word":"офіс","translation":"office","pos":"noun","example":"Марко в офісі.","examples":["office","Марко в офісі."],"atlas_href":"/lexicon/офіс/"},{"word":"поверх","translation":"floor; storey","pos":"noun","example":"Офіс на другому поверсі.","examples":["floor; storey","Офіс на другому поверсі."],"atlas_href":"/lexicon/поверх/"},{"word":"центр","translation":"center; downtown","pos":"noun","example":"Банк у центрі.","examples":["center; downtown","Банк у центрі."],"atlas_href":"/lexicon/центр/"},{"word":"стіл","translation":"table; desk","pos":"noun","example":"Книга на столі.","examples":["table; desk","Книга на столі."],"atlas_href":"/lexicon/стіл/"},{"word":"кімната","translation":"room","pos":"noun","example":"Я в кімнаті.","examples":["room","Я в кімнаті."],"atlas_href":"/lexicon/кімната/"},{"word":"будинок","translation":"building; house","pos":"noun","example":"Кафе в будинку.","examples":["building; house","Кафе в будинку."],"atlas_href":"/lexicon/будинок/"},{"word":"село","translation":"village","pos":"noun","example":"Бабуся в селі.","examples":["village","Бабуся в селі."],"atlas_href":"/lexicon/село/"},{"word":"річка","translation":"river","pos":"noun","example":"Парк біля річки.","examples":["river","Парк біля річки."],"atlas_href":"/lexicon/річка/"},{"word":"Україна","translation":"Ukraine","pos":"proper noun","example":"Я живу в Україні.","examples":["Ukraine","Я живу в Україні."],"atlas_href":"/lexicon/україна/"},{"word":"Київ","translation":"Kyiv","pos":"proper noun","example":"Я живу у Києві.","examples":["Kyiv","Я живу у Києві."],"atlas_href":"/lexicon/київ/"},{"word":"Львів","translation":"Lviv","pos":"proper noun","example":"Сестра у Львові.","examples":["Lviv","Сестра у Львові."],"atlas_href":"/lexicon/львів/"},{"word":"Одеса","translation":"Odesa","pos":"proper noun","example":"Друг в Одесі.","examples":["Odesa","Друг в Одесі."],"atlas_href":"/lexicon/одеса/"},{"word":"Хрещатик","translation":"Khreshchatyk","pos":"proper noun","example":"Офіс на Хрещатику.","examples":["Khreshchatyk","Офіс на Хрещатику."],"atlas_href":"/lexicon/хрещатик/"},{"word":"бути","translation":"to be","pos":"verb","example":"Я був у парку.","examples":["to be","Я був у парку."],"atlas_href":"/lexicon/бути/"},{"word":"жити","translation":"to live","pos":"verb","example":"Я живу в Києві.","examples":["to live","Я живу в Києві."],"atlas_href":"/lexicon/жити/"},{"word":"працювати","translation":"to work","pos":"verb","example":"Я працюю в офісі.","examples":["to work","Я працюю в офісі."],"atlas_href":"/lexicon/працювати/"},{"word":"гуляти","translation":"to walk; to stroll","pos":"verb","example":"Ми гуляємо у парку.","examples":["to walk; to stroll","Ми гуляємо у парку."],"atlas_href":"/lexicon/гуляти/"},{"word":"стояти","translation":"to stand","pos":"verb","example":"Автобус стоїть на площі.","examples":["to stand","Автобус стоїть на площі."],"atlas_href":"/lexicon/стояти/"},{"word":"лежати","translation":"to lie; be lying","pos":"verb","example":"Книга лежить на столі.","examples":["to lie; be lying","Книга лежить на столі."],"atlas_href":"/lexicon/лежати/"},{"word":"сидіти","translation":"to sit","pos":"verb","example":"Кіт сидить на дивані.","examples":["to sit","Кіт сидить на дивані."],"atlas_href":"/lexicon/сидіти/"},{"word":"іти","translation":"to go on foot","pos":"verb","example":"Він іде в школу.","examples":["to go on foot","Він іде в школу."],"atlas_href":"/lexicon/іти/"},{"word":"їхати","translation":"to go by transport","pos":"verb","example":"Ми їдемо в місто.","examples":["to go by transport","Ми їдемо в місто."],"atlas_href":"/lexicon/їхати/"},{"word":"біля","translation":"near; by","pos":"preposition","example":"Банк біля пошти.","examples":["near; by","Банк біля пошти."],"atlas_href":"/lexicon/біля/"},{"word":"до","translation":"to; toward","pos":"preposition","example":"Я йду до школи.","examples":["to; toward","Я йду до школи."],"atlas_href":"/lexicon/до/"},{"word":"рука","translation":"hand; arm","pos":"noun","example":"Гроші в руці.","examples":["hand; arm","Гроші в руці."],"atlas_href":"/lexicon/рука/"},{"word":"нога","translation":"leg; foot","pos":"noun","example":"На нозі черевик.","examples":["leg; foot","На нозі черевик."],"atlas_href":"/lexicon/нога/"},{"word":"горох","translation":"peas","pos":"noun","example":"У горосі є білок.","examples":["peas","У горосі є білок."],"atlas_href":"/lexicon/горох/"},{"word":"білочка","translation":"squirrel","pos":"noun","example":"На білочці руда шубка.","examples":["squirrel","На білочці руда шубка."],"atlas_href":"/lexicon/білочка/"},{"word":"тато","translation":"dad; father","pos":"noun","example":"Де мій тато?","examples":["dad; father","Де мій тато?"],"atlas_href":"/lexicon/тато/"}]`)} title="Vocabulary" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"де","translation":"where","pos":"question word","example":"Де школа?","examples":["where","Де школа?"],"atlas_href":"/lexicon/де/"},{"word":"місцевий відмінок","translation":"locative case","pos":"grammar term","example":"Місцевий відмінок відповідає на питання де?","examples":["locative case","Місцевий відмінок відповідає на питання де?"],"atlas_href":"/lexicon/місцевий-відмінок/"},{"word":"в/у","translation":"in; at","pos":"preposition","example":"Я живу в Україні.","examples":["in; at","Я живу в Україні."]},{"word":"на","translation":"on; at","pos":"preposition","example":"Мама на роботі.","examples":["on; at","Мама на роботі."],"atlas_href":"/lexicon/на/"},{"word":"школа","translation":"school","pos":"noun","example":"Олена в школі.","examples":["school","Олена в школі."],"atlas_href":"/lexicon/школа/"},{"word":"робота","translation":"work; job","pos":"noun","example":"Тарас на роботі.","examples":["work; job","Тарас на роботі."],"atlas_href":"/lexicon/робота/"},{"word":"банк","translation":"bank","pos":"noun","example":"Максим у банку.","examples":["bank","Максим у банку."],"atlas_href":"/lexicon/банк/"},{"word":"магазин","translation":"shop; store","pos":"noun","example":"Я в магазині.","examples":["shop; store","Я в магазині."],"atlas_href":"/lexicon/магазин/"},{"word":"вулиця","translation":"street","pos":"noun","example":"Аптека на вулиці.","examples":["street","Аптека на вулиці."],"atlas_href":"/lexicon/вулиця/"},{"word":"місто","translation":"city; town","pos":"noun","example":"Ми у місті.","examples":["city; town","Ми у місті."],"atlas_href":"/lexicon/місто/"},{"word":"парк","translation":"park","pos":"noun","example":"Оксана гуляє у парку.","examples":["park","Оксана гуляє у парку."],"atlas_href":"/lexicon/парк/"},{"word":"лікарня","translation":"hospital","pos":"noun","example":"Марко у лікарні.","examples":["hospital","Марко у лікарні."],"atlas_href":"/lexicon/лікарня/"},{"word":"кафе","translation":"cafe","pos":"noun","example":"Ми в кафе.","examples":["cafe","Ми в кафе."],"atlas_href":"/lexicon/кафе/"},{"word":"площа","translation":"square","pos":"noun","example":"Пошта на площі.","examples":["square","Пошта на площі."],"atlas_href":"/lexicon/площа/"},{"word":"вокзал","translation":"train station","pos":"noun","example":"Тато на вокзалі.","examples":["train station","Тато на вокзалі."],"atlas_href":"/lexicon/вокзал/"},{"word":"пошта","translation":"post office","pos":"noun","example":"Я на пошті.","examples":["post office","Я на пошті."],"atlas_href":"/lexicon/пошта/"},{"word":"аптека","translation":"pharmacy","pos":"noun","example":"Аптека на вулиці.","examples":["pharmacy","Аптека на вулиці."],"atlas_href":"/lexicon/аптека/"},{"word":"офіс","translation":"office","pos":"noun","example":"Марко в офісі.","examples":["office","Марко в офісі."],"atlas_href":"/lexicon/офіс/"},{"word":"поверх","translation":"floor; storey","pos":"noun","example":"Офіс на другому поверсі.","examples":["floor; storey","Офіс на другому поверсі."],"atlas_href":"/lexicon/поверх/"},{"word":"центр","translation":"center; downtown","pos":"noun","example":"Банк у центрі.","examples":["center; downtown","Банк у центрі."],"atlas_href":"/lexicon/центр/"},{"word":"стіл","translation":"table; desk","pos":"noun","example":"Книга на столі.","examples":["table; desk","Книга на столі."],"atlas_href":"/lexicon/стіл/"},{"word":"діти","translation":"children","pos":"noun","example":"Діти в парку.","examples":["children","Діти в парку."],"atlas_href":"/lexicon/діти/"},{"word":"кішка","translation":"cat","pos":"noun","example":"Кішка на дивані.","examples":["cat","Кішка на дивані."]},{"word":"диван","translation":"sofa","pos":"noun","example":"Кішка на дивані.","examples":["sofa","Кішка на дивані."],"atlas_href":"/lexicon/диван/"},{"word":"урок","translation":"lesson; class","pos":"noun","example":"Студент на уроці.","examples":["lesson; class","Студент на уроці."],"atlas_href":"/lexicon/урок/"},{"word":"Україна","translation":"Ukraine","pos":"proper noun","example":"Я живу в Україні.","examples":["Ukraine","Я живу в Україні."],"atlas_href":"/lexicon/україна/"},{"word":"Київ","translation":"Kyiv","pos":"proper noun","example":"Я живу у Києві.","examples":["Kyiv","Я живу у Києві."],"atlas_href":"/lexicon/київ/"},{"word":"Львів","translation":"Lviv","pos":"proper noun","example":"Сестра у Львові.","examples":["Lviv","Сестра у Львові."],"atlas_href":"/lexicon/львів/"},{"word":"Одеса","translation":"Odesa","pos":"proper noun","example":"Друг в Одесі.","examples":["Odesa","Друг в Одесі."],"atlas_href":"/lexicon/одеса/"},{"word":"Хрещатик","translation":"Khreshchatyk","pos":"proper noun","example":"Офіс на Хрещатику.","examples":["Khreshchatyk","Офіс на Хрещатику."],"atlas_href":"/lexicon/хрещатик/"},{"word":"бути","translation":"to be","pos":"verb","example":"Я був у парку.","examples":["to be","Я був у парку."],"atlas_href":"/lexicon/бути/"},{"word":"жити","translation":"to live","pos":"verb","example":"Я живу в Києві.","examples":["to live","Я живу в Києві."],"atlas_href":"/lexicon/жити/"},{"word":"працювати","translation":"to work","pos":"verb","example":"Я працюю в офісі.","examples":["to work","Я працюю в офісі."],"atlas_href":"/lexicon/працювати/"},{"word":"гуляти","translation":"to walk; to stroll","pos":"verb","example":"Ми гуляємо у парку.","examples":["to walk; to stroll","Ми гуляємо у парку."],"atlas_href":"/lexicon/гуляти/"},{"word":"іти","translation":"to go on foot","pos":"verb","example":"Він іде в школу.","examples":["to go on foot","Він іде в школу."],"atlas_href":"/lexicon/іти/"},{"word":"їхати","translation":"to go by transport","pos":"verb","example":"Ми їдемо в місто.","examples":["to go by transport","Ми їдемо в місто."],"atlas_href":"/lexicon/їхати/"},{"word":"біля","translation":"near; by","pos":"preposition","example":"Банк біля пошти.","examples":["near; by","Банк біля пошти."],"atlas_href":"/lexicon/біля/"}]`)} title="Vocabulary" />
 
-<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"де","back":"where"},{"front":"місцевий відмінок","back":"locative case"},{"front":"в/у","back":"in; at"},{"front":"на","back":"on; at"},{"front":"школа","back":"school"},{"front":"робота","back":"work; job"},{"front":"банк","back":"bank"},{"front":"магазин","back":"shop; store"},{"front":"вулиця","back":"street"},{"front":"місто","back":"city; town"},{"front":"парк","back":"park"},{"front":"лікарня","back":"hospital"},{"front":"кафе","back":"cafe"},{"front":"площа","back":"square"},{"front":"вокзал","back":"train station"},{"front":"пошта","back":"post office"},{"front":"офіс","back":"office"},{"front":"поверх","back":"floor; storey"},{"front":"центр","back":"center; downtown"},{"front":"стіл","back":"table; desk"},{"front":"кімната","back":"room"},{"front":"будинок","back":"building; house"},{"front":"село","back":"village"},{"front":"річка","back":"river"},{"front":"Україна","back":"Ukraine"},{"front":"Київ","back":"Kyiv"},{"front":"Львів","back":"Lviv"},{"front":"Одеса","back":"Odesa"},{"front":"Хрещатик","back":"Khreshchatyk"},{"front":"бути","back":"to be"},{"front":"жити","back":"to live"},{"front":"працювати","back":"to work"},{"front":"гуляти","back":"to walk; to stroll"},{"front":"стояти","back":"to stand"},{"front":"лежати","back":"to lie; be lying"},{"front":"сидіти","back":"to sit"},{"front":"іти","back":"to go on foot"},{"front":"їхати","back":"to go by transport"},{"front":"біля","back":"near; by"},{"front":"до","back":"to; toward"},{"front":"рука","back":"hand; arm"},{"front":"нога","back":"leg; foot"},{"front":"горох","back":"peas"},{"front":"білочка","back":"squirrel"},{"front":"тато","back":"dad; father"}]`)} />
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"де","back":"where"},{"front":"місцевий відмінок","back":"locative case"},{"front":"в/у","back":"in; at"},{"front":"на","back":"on; at"},{"front":"школа","back":"school"},{"front":"робота","back":"work; job"},{"front":"банк","back":"bank"},{"front":"магазин","back":"shop; store"},{"front":"вулиця","back":"street"},{"front":"місто","back":"city; town"},{"front":"парк","back":"park"},{"front":"лікарня","back":"hospital"},{"front":"кафе","back":"cafe"},{"front":"площа","back":"square"},{"front":"вокзал","back":"train station"},{"front":"пошта","back":"post office"},{"front":"аптека","back":"pharmacy"},{"front":"офіс","back":"office"},{"front":"поверх","back":"floor; storey"},{"front":"центр","back":"center; downtown"},{"front":"стіл","back":"table; desk"},{"front":"діти","back":"children"},{"front":"кішка","back":"cat"},{"front":"диван","back":"sofa"},{"front":"урок","back":"lesson; class"},{"front":"Україна","back":"Ukraine"},{"front":"Київ","back":"Kyiv"},{"front":"Львів","back":"Lviv"},{"front":"Одеса","back":"Odesa"},{"front":"Хрещатик","back":"Khreshchatyk"},{"front":"бути","back":"to be"},{"front":"жити","back":"to live"},{"front":"працювати","back":"to work"},{"front":"гуляти","back":"to walk; to stroll"},{"front":"іти","back":"to go on foot"},{"front":"їхати","back":"to go by transport"},{"front":"біля","back":"near; by"}]`)} />
 
 </TabItem>
 <TabItem label="Activities">
 
-### Static place signals
+### В/у чи на?
 
 *(see lesson, §Діалоги)*
 
-### Base word to place chunk
-
-*(see lesson, §Діалоги)*
-
-### Answer Де?
+### Де?
 
 *(see lesson, §Місцевий відмінок)*
 
-### В/у or на shelves
+### Називний -&gt; місцевий
 
 *(see lesson, §Місцевий відмінок)*
+
+### Де це?
+
+*(see lesson, §В чи на?)*
 
 ### Build the neighbor note
 
@@ -329,15 +340,15 @@ the next module, **Моє місто**.
 
 ### Which question fits?
 
-<OddOneOut client:only='react' instruction={"Choose the line that does not match the question pattern."} items={JSON.parse(`[{"words": ["Мама на роботі.", "Оксана гуляє у парку.", "Банк у центрі.", "Він іде в школу."], "correct": 3, "explanation": "The first three answer Де?; іде в школу answers Куди?"}, {"words": ["Я їду в місто.", "Він іде в школу.", "Ми йдемо на пошту.", "Книга на столі."], "correct": 3, "explanation": "The first three show direction; на столі is static location."}, {"words": ["На білочці руда шубка.", "На мені светр.", "На ньому куртка.", "Ми дали білочці горішки."], "correct": 3, "explanation": "The first three use на кому? for location; дали білочці answers кому?"}, {"words": ["у Києві", "у Львові", "в Одесі", "на Києві"], "correct": 3, "explanation": "Cities use в/у plus locative, not на."}]`)} />
+<OddOneOut client:only='react' instruction={"Choose the line that does not match the question pattern."} items={JSON.parse(`[{"words": ["Мама на роботі.", "Оксана гуляє у парку.", "Банк у центрі.", "Він іде в школу."], "correct": 3, "explanation": "The first three answer Де?; іде в школу answers Куди?"}, {"words": ["Я їду в місто.", "Він іде в школу.", "Ми йдемо на пошту.", "Книга на столі."], "correct": 3, "explanation": "The first three show direction; на столі is static location."}, {"words": ["у Києві", "у Львові", "в Одесі", "у Київ"], "correct": 3, "explanation": "У Київ is direction; static city location is у Києві."}]`)} />
 
 ### Locative guardrails
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Місцевий відмінок usually answers Де?", "isTrue": true, "explanation": "This module uses locative for static place."}, {"statement": "The helper questions are на/у кому? на/у чому?", "isTrue": true, "explanation": "These are the A1 helper questions for the locative case."}, {"statement": "Cities use на: на Києві, на Львові.", "isTrue": false, "explanation": "Use в/у with cities: у Києві, у Львові."}, {"statement": "The respectful country phrase is в Україні.", "isTrue": true, "explanation": "Use в Україні for Ukraine."}, {"statement": "Я живу в Київ is a finished A1 locative sentence.", "isTrue": false, "explanation": "The place form is Києві: Я живу в Києві."}, {"statement": "На пошті is a common traditional chunk.", "isTrue": true, "explanation": "Learn пошта together with на пошті."}]`)} instruction={"Decide whether the statement matches this lesson."} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Місцевий відмінок usually answers Де?", "isTrue": true, "explanation": "This module uses locative for static place."}, {"statement": "The helper questions are на/у кому? на/у чому?", "isTrue": true, "explanation": "These are the A1 helper questions for the locative case."}, {"statement": "Static city location can use direction forms such as у Київ.", "isTrue": false, "explanation": "Use в/у plus locative with cities: у Києві, у Львові."}, {"statement": "The respectful country phrase is в Україні.", "isTrue": true, "explanation": "Use в Україні for Ukraine."}, {"statement": "Я живу в Київ is a finished A1 locative sentence.", "isTrue": false, "explanation": "The place form is Києві: Я живу в Києві."}, {"statement": "На пошті is a common traditional chunk.", "isTrue": true, "explanation": "Learn пошта together with на пошті."}]`)} instruction={"Decide whether the statement matches this lesson."} isUkrainian={false} />
 
-### Repair locative interference
+### Repair locative forms
 
-<ErrorCorrection client:only='react' instruction="Choose the natural Ukrainian repair for each learner sentence." items={JSON.parse(`[{"sentence": "Я живу в Київ.", "errorWord": "в Київ", "correctForm": "Я живу в Києві.", "options": ["Я живу в Києві.", "Я живу в Київ.", "Я живу на Києві."], "explanation": "Static city location needs the locative form Києві."}, {"sentence": "Книга столі.", "errorWord": "столі", "correctForm": "Книга на столі.", "options": ["Книга на столі.", "Книга столі.", "Книга в стіл."], "explanation": "Ukrainian locative place phrases normally need a preposition."}, {"sentence": "Я в пошті.", "errorWord": "в пошті", "correctForm": "Я на пошті.", "options": ["Я на пошті.", "Я в пошті.", "Я у пошта."], "explanation": "The common institution chunk is на пошті."}, {"sentence": "Гроші в рукі.", "errorWord": "рукі", "correctForm": "Гроші в руці.", "options": ["Гроші в руці.", "Гроші в рукі.", "Гроші на рука."], "explanation": "Рука changes to руці in this locative phrase."}, {"sentence": "Він іде в школі.", "errorWord": "в школі", "correctForm": "Він іде в школу.", "options": ["Він іде в школу.", "Він іде в школі.", "Він є в школі."], "explanation": "Іде asks Куди?, so this is direction, not static Де?"}, {"sentence": "Добрий день. Де є мій тато?", "errorWord": "Де є", "correctForm": "Добрий день! Де мій тато?", "options": ["Добрий день! Де мій тато?", "Добрий день. Де є мій тато?", "Добрий день! Де на мій тато?"], "explanation": "Ukrainian normally omits the present-tense linking verb here."}]`)} isUkrainian={false} />
+<ErrorCorrection client:only='react' instruction="Choose the natural Ukrainian repair for each learner sentence." items={JSON.parse(`[{"sentence": "Я живу в Київ.", "errorWord": "в Київ", "correctForm": "Я живу в Києві.", "options": ["Я живу в Києві.", "Я живу в Київ.", "Я живу у Київ."], "explanation": "Static city location needs the locative form Києві."}, {"sentence": "Книга столі.", "errorWord": "столі", "correctForm": "Книга на столі.", "options": ["Книга на столі.", "Книга столі.", "Книга в стіл."], "explanation": "Ukrainian locative place phrases normally need a preposition."}, {"sentence": "Я в пошті.", "errorWord": "в пошті", "correctForm": "Я на пошті.", "options": ["Я на пошті.", "Я в пошті.", "Я у пошта."], "explanation": "The common institution chunk is на пошті."}, {"sentence": "Він іде в школі.", "errorWord": "в школі", "correctForm": "Він іде в школу.", "options": ["Він іде в школу.", "Він іде в школі.", "Він є в школі."], "explanation": "Іде asks Куди?, so this is direction, not static Де?"}]`)} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">

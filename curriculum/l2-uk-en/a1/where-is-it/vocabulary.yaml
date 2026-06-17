@@ -45,7 +45,7 @@
 - word: лікарня
   translation: hospital
   pos: noun
-  example: "Софія у лікарні."
+  example: "Марко у лікарні."
 - word: кафе
   translation: cafe
   pos: noun
@@ -62,6 +62,10 @@
   translation: post office
   pos: noun
   example: "Я на пошті."
+- word: аптека
+  translation: pharmacy
+  pos: noun
+  example: "Аптека на вулиці."
 - word: офіс
   translation: office
   pos: noun
@@ -78,22 +82,22 @@
   translation: table; desk
   pos: noun
   example: "Книга на столі."
-- word: кімната
-  translation: room
+- word: діти
+  translation: children
   pos: noun
-  example: "Я в кімнаті."
-- word: будинок
-  translation: building; house
+  example: "Діти в парку."
+- word: кішка
+  translation: cat
   pos: noun
-  example: "Кафе в будинку."
-- word: село
-  translation: village
+  example: "Кішка на дивані."
+- word: диван
+  translation: sofa
   pos: noun
-  example: "Бабуся в селі."
-- word: річка
-  translation: river
+  example: "Кішка на дивані."
+- word: урок
+  translation: lesson; class
   pos: noun
-  example: "Парк біля річки."
+  example: "Студент на уроці."
 - word: Україна
   translation: Ukraine
   pos: proper noun
@@ -130,18 +134,6 @@
   translation: to walk; to stroll
   pos: verb
   example: "Ми гуляємо у парку."
-- word: стояти
-  translation: to stand
-  pos: verb
-  example: "Автобус стоїть на площі."
-- word: лежати
-  translation: to lie; be lying
-  pos: verb
-  example: "Книга лежить на столі."
-- word: сидіти
-  translation: to sit
-  pos: verb
-  example: "Кіт сидить на дивані."
 - word: іти
   translation: to go on foot
   pos: verb
@@ -154,27 +146,3 @@
   translation: near; by
   pos: preposition
   example: "Банк біля пошти."
-- word: до
-  translation: to; toward
-  pos: preposition
-  example: "Я йду до школи."
-- word: рука
-  translation: hand; arm
-  pos: noun
-  example: "Гроші в руці."
-- word: нога
-  translation: leg; foot
-  pos: noun
-  example: "На нозі черевик."
-- word: горох
-  translation: peas
-  pos: noun
-  example: "У горосі є білок."
-- word: білочка
-  translation: squirrel
-  pos: noun
-  example: "На білочці руда шубка."
-- word: тато
-  translation: dad; father
-  pos: noun
-  example: "Де мій тато?"
