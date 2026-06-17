@@ -2,6 +2,10 @@
   translation: practice exam
   pos: phrase
   example: "Пробний іспит допомагає побачити сильні й слабкі теми."
+- word: іспит
+  translation: exam
+  pos: noun
+  example: "Іспит перевіряє читання, письмо і граматику."
 - word: завдання
   translation: task, exercise
   pos: noun
@@ -34,6 +38,14 @@
   translation: self-assessment
   pos: noun
   example: "Самооцінка важливіша за одну цифру."
+- word: оцінка
+  translation: grade, assessment
+  pos: noun
+  example: "Оцінка показує рівень виконання завдання."
+- word: правильний
+  translation: correct
+  pos: adjective
+  example: "Правильний вибір залежить від контексту."
 - word: таймер
   translation: timer
   pos: noun
