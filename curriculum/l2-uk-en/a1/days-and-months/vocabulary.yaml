@@ -134,18 +134,50 @@
   translation: in January
   pos: month chunk
   example: "Свято у січні."
+- word: у лютому
+  translation: in February
+  pos: month chunk
+  example: "Зустріч у лютому."
 - word: у березні
   translation: in March
   pos: month chunk
   example: "День народження у березні."
+- word: у квітні
+  translation: in April
+  pos: month chunk
+  example: "Урок у квітні."
+- word: у травні
+  translation: in May
+  pos: month chunk
+  example: "Кава у травні."
+- word: у червні
+  translation: in June
+  pos: month chunk
+  example: "Зустріч у червні."
+- word: у липні
+  translation: in July
+  pos: month chunk
+  example: "Канікули у липні."
 - word: у серпні
   translation: in August
   pos: month chunk
   example: "Канікули у серпні."
+- word: у вересні
+  translation: in September
+  pos: month chunk
+  example: "Школа у вересні."
+- word: у жовтні
+  translation: in October
+  pos: month chunk
+  example: "Зустріч у жовтні."
 - word: у листопаді
   translation: in November
   pos: month chunk
   example: "Вистава у листопаді."
+- word: у грудні
+  translation: in December
+  pos: month chunk
+  example: "Свято у грудні."
 - word: зима
   translation: winter
   pos: noun
@@ -169,7 +201,7 @@
 - word: навесні
   translation: in spring
   pos: adverb
-  example: "Навесні світить сонце."
+  example: "Навесні у мене день народження."
 - word: влітку
   translation: in summer
   pos: adverb
@@ -177,35 +209,11 @@
 - word: восени
   translation: in autumn
   pos: adverb
-  example: "Восени йде дощ."
-- word: сонце
-  translation: sun
-  pos: noun
-  example: "Сонце світить."
-- word: дощ
-  translation: rain
-  pos: noun
-  example: "Іде дощ."
-- word: сніг
-  translation: snow
-  pos: noun
-  example: "Падає сніг."
-- word: вітер
-  translation: wind
-  pos: noun
-  example: "Дме вітер."
-- word: мороз
-  translation: frost; freezing cold
-  pos: noun
-  example: "Взимку мороз."
+  example: "Восени школа."
 - word: дата
   translation: date
   pos: noun
   example: "Це важлива дата."
-- word: свято
-  translation: holiday
-  pos: noun
-  example: "Свято у січні."
 - word: день народження
   translation: birthday
   pos: phrase
@@ -238,11 +246,3 @@
   translation: to plan
   pos: infinitive
   example: "Я планую тиждень."
-- word: народитися
-  translation: to be born
-  pos: infinitive
-  example: "Я народився першого січня."
-- word: святкувати
-  translation: to celebrate
-  pos: infinitive
-  example: "Ми святкуємо в суботу."
