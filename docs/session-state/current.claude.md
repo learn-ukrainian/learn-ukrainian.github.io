@@ -1,39 +1,38 @@
-# Current — Claude Session Handoff (2026-06-17 — ATLAS finished data+design; 3 follow-ups in-flight)
+# Current — Claude Session Handoff (2026-06-17 — Atlas mis-diagnosis caught + recovered; LLM-QG API shipped)
 
 > **ROLE:** main orchestrator. User: grind the queue, results-focused, use the FLEET (#M-12), self-merge after review + CI-green, don't manufacture obstacles, don't idle. Quality non-negotiable.
 
-> **🔱 ACTIVE FOCUS → full detail in `docs/session-state/2026-06-17-claude-atlas-poc-plus-three-followups.md`.**
-> **Atlas DONE (merged):** data #3405/#3416 (CEFR 99.9%, all sections at ceiling), determinism #3331, **POC design #3437** (browser-verified light+dark, 0 stubs, deployed). Also immersion #3393.
-> **Atlas NOT "done" per user until 3 follow-ups land:** **#3150** auto-expansion (DISPATCHED `atlas-3150-autoexpand`, verify+merge), **#3450** inflected-form dedupe, **#3449** open dictionary dataset (owner decision: publish-all + attribute + takedown, NO gating). Sequence manifest-touching work one-at-a-time (#M-9). Codex stalls silent mid build/`make atlas` — cancel+recover the build yourself (recipe in the dated doc). Deploy is MANUAL (`gh workflow run deploy-pages.yml`).
-> **HARD: never raise English (MEMORY #M-13).** Awareness-only: A2-cert merge-train PRs (e.g. #3451) are track work, not the Atlas follow-ups.
+> **TONE NOTE:** this session the user was (rightly) frustrated about Atlas. Trust on Atlas specifically is low after a real mis-diagnosis (below). Be rigorous and honest on anything Atlas-touching.
 
----
-## (prior session) 2026-06-16 evening — §6 moat slice 3 SHIPPED; full merge-train + 3 dependabot rounds cleared
+## 🔴 TOP PENDING — PR #3483 (atlas-3150 recovery) is GREEN + ready; NOT merged
+Branch `codex/atlas-3150-autoexpand` @ `cbe83e6a90`. **mergeState CLEAN, all checks green.** Closes #3150.
+- **What it is:** the `atlas-3150-autoexpand` dispatch's real work — a manifest-vocabulary-coverage gate + regenerated manifest (entries 2447→2891, wiki 657→761, heritage 100%) + the gate redesigned to **diff-scoped + advisory** (see below).
+- **DO NEXT:** I deliberately did NOT self-merge (I mis-diagnosed this exact feature today — see lesson). Per #M-12: fire a **focused codex cross-review** on the LOGIC only — `scripts/lexicon/check_manifest_vocabulary_coverage.py` (diff-scope), the `.github/workflows/ci.yml` change, and the `лет` allowlist in `scripts/audit/validate_atlas_conformance.py` — NOT the 70K-line generated manifest blob. If clean + CI green → merge. (`ab ask-codex` or `delegate.py --agent deepseek` review lane.)
+- **After merge:** clean up worktree `.worktrees/dispatch/codex/atlas-3150-autoexpand` (has `data/sources.db`/`vesum.db` symlinks → main; safe to `git worktree remove --force`).
 
-## ✅ SHIPPED + MERGED this session (~22 PRs)
-- **§6 decolonization moat slice 3 (#3366, advances #3098):** 6 single-word lexical calques — слідуючий→наступний, багаточисельний→численний, міроприємство→захід, учбовий→навчальний + sense-restricted любий ("any" vs authentic "dear") / неділя ("week" vs authentic "Sunday"). VESUM-verified 6/6 + heritage-confirmed no over-flagging. Surgical 3-lemma manifest patch.
-- **#3318** §6 slice 2 (collocations + виглядати/біля sense-splits). **#3319 / #3361** folk #3079 pipeline (VESUM-gate exemptions + frontier-aware self-converge). **#3335** B1 M16 cert (VESUM-reviewed inline). **#3327** postmortem hygiene. ~13 dependabot bumps merged across 3 rounds.
+## ⚠️ THE ATLAS MIS-DIAGNOSIS LESSON (encode into MEMORY next session)
+I wrongly condemned a **successful** dispatch as a catastrophe via two forensics errors:
+1. **Measured a mid-write working-tree file** (`wiki_reference=0` transient) instead of the COMMITTED blob (`git show HEAD:path` = 718). The codex process was still live-writing; file mtime advanced with no action from me — the tell I missed.
+2. **Read `git diff origin/main..HEAD` (base-divergence) as a "deleted module"** — the branch predated 5 certifications on main, so everything main gained looked "deleted by HEAD." `git show HEAD --stat` proved the commit touched ZERO curriculum files.
+→ Rules: **attribute changes via `git show <sha>` not `base..HEAD`**; **only measure committed artifacts** (`git show HEAD:`), check process liveness + mtime before trusting a dispatch-worktree read; **`status=failed` ≠ failed deliverable** (#2985 finalize-zombie — inspect the commit, run its gates, recover). Full autopsy: `docs/bug-autopsies/atlas-3150-misdiagnosis.md`.
+- Record corrected this session: autopsy retitled (#3470 MERGED), **#3331 re-closed** (reopened on the false premise), **#3150 corrected** (recoverable, not blocked).
 
-## 🔧 KEY TECHNIQUE — surgical manifest patch (USE THIS, NOT full re-enrich)
-Full `make atlas` / `enrich_manifest` re-enrich is **lossy + non-deterministic**: `_wiki_reference` hits live uk.wikipedia uncached → drops ~200 wiki refs per run (filed **#3331**). To land a small lexicon change: run `_curated_calque` over the committed manifest deterministically (network-free), patch only affected lemmas' `heritage_status.curated_calque` + `§6_note`, regen fingerprint. Diff stays minimal; wiki refs preserved. (#3318 + #3366 both used this.)
+## 🟢 SHIPPED + MERGED this session
+- **LLM-QG Monitor API (#3455 + #3458):** user's #1 priority — `/api/state/llm-qg/{track}` exposes per-module per-dimension LLM-QG scores (aggregate + dimensions, `?verbose` for evidence) + an `llm_qg` block on `/api/state/module/{track}/slug/{slug}`. **Live** (restarted `api` service). Real intel: of 6 scored folk modules only 1 (koliadky-shchedrivky) PASSES — rest REVISE/REJECT on `pedagogical` (5.8-7.1). Folk is track-owned — that orchestrator should act.
+- **#M-13 immersion landmine CLOSED:** all 3 runtimes (`.claude/.codex/.agent`) carried STALE English-raising A2 prompts (45-75%, "English for theory") while committed source was already correct (85-100% "Ukrainian IN Ukrainian"). Synced 4 files (`skills/content-review/content-review-prompt.md`, `skills/plan-review/review-tiers/tier-1-beginner.md`, `quick-ref/a2.md`, `phases/calibration/a2.md`) into all runtimes (gitignored local — not a committed change).
+- **#3470** (autopsy correction), 2 docs PRs (#3452/#3453) earlier.
 
-## ⚠️ DEPENDABOT WHACK-A-MOLE — root cause #2716 (ESCALATED, needs proper fix)
-Flat fully-pinned `requirements-lock.txt` lets Dependabot propose bumps past parents' caps. **7 cap-violation packages this session.** Ignore list now: pydantic-core, pypdfium2, starlette, lxml, tokenizers, openai. **TODO: add huggingface-hub `>=1.0`** (transformers caps `<1.0`; closed #3370, ignore not yet shipped). Proper fix (constraints-aware manifest) commented on #2716. **Rule:** cap-check EVERY major bump before merging (`importlib.metadata` requires-scan); close + ignore violations; merge within-cap + uncapped.
+## ⏭️ OPEN QUEUE / PARKED
+1. **#3483 merge** (above) — fire codex review → merge.
+2. **#3150 remaining (the real goal):** the vocab gate is now diff-scoped + advisory (interim). Blocking enforcement needs **auto/incremental re-enrich** so the manifest stays green by itself — BLOCKED on CI DB access (#2928, 1.6GB sources.db / 967MB vesum.db not in CI). Full `make atlas` regen = ~33 min; merge-train adds vocab every ~5-10 min → manual regen is a treadmill. Design note in #3483's comment.
+3. **#3456** (filed): `agents:deploy` orphan-guard aborts whole deploy when a dispatch brief sits in `.agent/` → source prompt fixes silently never reach runtime (recurrence of #3039; convention-fix never enforced). Infra/my lane. This is WHY the #M-13 fix needed manual sync.
+4. **DASHBOARD-PANEL AUDIT — user's ORIGINAL ask this session, NEVER DONE.** "We have lots of panels, some not working; ensure working panels and remove obsolete/unsupported-by-current-API ones." Initial recon: 20 dashboards in `dashboards/*.html`, 183 API routes (`/openapi.json`), served at `localhost:8765/` (`ukraine-ops`). Deterministic method: cross-ref each dashboard's `/api/...` refs vs OpenAPI route templates (normalize path params), classify fully-dead (remove page) / partially-dead (remove panel) / healthy; remove obsolete. Proper root-cause fix = a dashboard-endpoint conformance CI gate (prevent future rot).
+5. **Enrichment-floor guard** — `git stash@{0}` ("wip: atlas enrichment guard"). Premised on the FALSE catastrophe, so NOT pushed. Optional proactive hardening only (cold-cache re-enrich risk is real per #3124/#3197). Drop or finish honestly if wanted.
 
-## ⏭️ OPEN QUEUE (pre-assessed)
-1. **#3367 stanza 1.11→1.12.2 — FAILING 1 check.** Investigate the failure (test or cap). Left open.
-2. **#3373 fix(build): auto-commit python_qg_correction_loop.json (#M-10 forensics)** — INFRA, my lane (v7_build.py + test). Run `/code-review` (build-pipeline LOGIC change) before merge.
-3. **#3356 [codex] Harden A2 certification tooling** — infra/tooling, review before merge.
-4. **#3098 broaden** — slices 1-3 done (participles, collocations, lexical). Next: prepositional-government calques ("по"+Dat) OR re-feed #2156 calque axis. **Dispatch sizing lesson: keep calque dispatches ≤6 candidates + `high` effort + commit-early** — v1 (18 candidates, xhigh) burned 2.3M tokens with NULL deliverable; v2 (6 candidates) succeeded.
-5. Drafts (track-owned, leave): #3236 b1, #3374 a1.
+## 🧹 HOUSEKEEPING
+- **Main tree has NON-mine uncommitted changes** (do NOT commit): Headroom MCP integration — `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `.mcp.json`, `.cursor/mcp.json`, `start-claude.sh` + untracked `uv.lock`. Environment/user-added; left untouched.
+- **MEMORY.md over budget** (152 lines, soft 150) — trim before adding; the Atlas mis-diagnosis lesson should land there (tight one-liner + the autopsy link).
+- Track-owned open PRs (awareness-only): #3495 (build --enhance), #3480/#3465 (folk drafts).
+- `headroom` MCP now available (local `:8787`) for compressed handoffs — see CLAUDE.md § Headroom.
 
-## ⛔ NEEDS USER DECISION
-- **Orphaned working-tree A2-immersion edits** (in main tree, NOT committed): `.agents/skills/content-review/content-review-prompt.md` + `.../plan-review/review-tiers/tier-1-beginner.md` impose 50-75% hard limits / "English as main voice" — **contradicts the 2026-05-23 SSOT directive** (`v7-design-and-corpus.md`: no hard limits, converge to full immersion by end of A2). Plus untracked `docs/prompts/a2-certification-orchestration-prompt.md`. **Recommend revert**; reconcile stale `module-content-quality.md:143` "A2 40-75%" vs SSOT. Left untouched (committing = system change needing explicit go).
-
-## Quality patterns that earned their keep (reuse)
-- **Verify before promote (#M-11):** a `grep -c '§6_note'` said "2" but the deterministic Python check found all 5 lemmas correct — trust the tool, not the grep. Slice-3 v1 re-enrich was caught lossy (+509/−2492) before any commit.
-- **Cap-check before merging deps majors** — caught lxml/tokenizers/openai/pypdfium2/huggingface-hub cap-violations that flat-lock CI shows green.
-- **Inline VESUM/heritage review IS the Claude seat** — verified слідуючий/любий/неділя via mcp__sources; filled the gap thin Agy+Cursor dispatch reviews leave.
-- **Bounded dispatches deliver; over-scoped ones starve** (slice-3 v1 lesson).
-
-## Atlas SSOT: `docs/atlas-data-coverage-strategy.md`. Track-owned (awareness-only): folk #3079, b1/a1/a2 content dispatches, BIO.
+## Atlas SSOT: `docs/atlas-data-coverage-strategy.md`. Verify-before-promote: #M-11. Manifest regen = `make atlas` (needs data/ → run in main tree or symlink DBs into a worktree, per user 2026-06-17).
