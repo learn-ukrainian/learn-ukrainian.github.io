@@ -12,6 +12,14 @@ inline:
         right: за музеєм
       - left: Де парк?
         right: між школою і бібліотекою
+      - left: Де книга?
+        right: під ліжком
+      - left: Де сад?
+        right: за будинком
+      - left: Де фонтан?
+        right: перед театром
+      - left: Де стілець?
+        right: між столом і стіною
   - id: act-2
     type: fill-in
     title: Орудний після прийменника
@@ -45,10 +53,38 @@ inline:
           - вікнами
           - вікон
         explanation: Між вікнами - орудний множини.
+      - sentence: "Килим лежить під ___."
+        answer: диваном
+        options:
+          - диван
+          - диваном
+          - дивану
+        explanation: Де? Під диваном.
+      - sentence: "Сад росте за ___."
+        answer: будинком
+        options:
+          - будинок
+          - будинком
+          - будинку
+        explanation: За будинком описує місце позаду будинку.
+      - sentence: "Фонтан стоїть перед ___."
+        answer: театром
+        options:
+          - театр
+          - театром
+          - театру
+        explanation: Перед театром відповідає на питання де?
+      - sentence: "Місто розташоване між ___."
+        answer: горами
+        options:
+          - гори
+          - горами
+          - гір
+        explanation: Між горами - орудний множини.
   - id: act-3
     type: quiz
     title: Простір чи інше значення?
-    instruction: Оберіть значення фрази з прийменником за.
+    instruction: Оберіть значення фрази з прийменником перед або за.
     items:
       - question: "Кафе за музеєм."
         options:
@@ -78,6 +114,34 @@ inline:
           - без будинку
         correct: 0
         explanation: Це просторове значення з орудним відмінком.
+      - question: "Вона стоїть перед школою."
+        options:
+          - місце
+          - час
+          - подяка
+        correct: 0
+        explanation: Перед школою описує місце.
+      - question: "Ми снідаємо перед роботою."
+        options:
+          - місце
+          - час
+          - підтримка
+        correct: 1
+        explanation: Перед роботою відповідає на питання коли?
+      - question: "Він чекає перед кафе."
+        options:
+          - місце
+          - причина подяки
+          - розклад
+        correct: 0
+        explanation: Перед кафе описує місце.
+      - question: "Я телефоную перед сном."
+        options:
+          - місце
+          - час
+          - позаду
+        correct: 1
+        explanation: Перед сном - часова фраза.
   - id: act-4
     type: group-sort
     title: Де? чи коли?
@@ -112,6 +176,18 @@ workbook:
       - statement: "Кафе за музей."
         correct: false
         explanation: Для місця потрібно за музеєм.
+      - statement: "Книга лежить під ліжком."
+        correct: true
+        explanation: Під ліжком правильно відповідає на питання де?
+      - statement: "Машина стоїть перед будинку."
+        correct: false
+        explanation: Потрібно перед будинком.
+      - statement: "Скульптура стоїть між вікна."
+        correct: false
+        explanation: Потрібно між вікнами.
+      - statement: "Ми читаємо перед сном."
+        correct: true
+        explanation: Перед сном - правильна часова фраза з орудним.
   - type: error-correction
     title: Виправте фразу
     instruction: Оберіть правильне речення.

@@ -37,7 +37,7 @@
   translation: wall
   pos: noun
   gender: f
-  example: "Стіл біля стіни."
+  example: "Стіл стоїть перед стіною."
 - word: обід
   translation: lunch
   pos: noun
@@ -93,3 +93,23 @@
   pos: noun
   gender: f
   example: "Дякую за допомогу."
+- word: театр
+  translation: theater
+  pos: noun
+  gender: m
+  example: "Фонтан перед театром."
+- word: диван
+  translation: sofa
+  pos: noun
+  gender: m
+  example: "Килим під диваном."
+- word: гора
+  translation: mountain
+  pos: noun
+  gender: f
+  example: "Місто між горами."
+- word: урок
+  translation: lesson
+  pos: noun
+  gender: m
+  example: "Ми говоримо перед уроком."
