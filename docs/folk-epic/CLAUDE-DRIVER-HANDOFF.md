@@ -63,7 +63,36 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 42 HANDOFF (2026-06-17 — ⛔ PROJECT-AT-RISK: user will DELETE without a VISIBLE folk RESULT by ~tomorrow. Cost is the binding constraint. Honest state: 6 folk modules have CONTENT but 0 currently pass `verify_shippable`; #3079 infra merged but UNPROVEN) — **RESUME HERE**
+## ▶▶▶ SESSION 43 HANDOFF (2026-06-17 — 🟢 SYSTEMIC BLOCKER FIXED + MERGED (#3428): the resources_search_attempted false-fail is gone; **5 of 6 folk modules now pass `verify_shippable` with a REAL liveness gate**. Surfacing is 3 cheap/deterministic steps away — NO model builds needed) — **RESUME HERE**
+
+> **⏱ HONEST SCOPE:** This session diagnosed folk deterministically (free), then fixed the root-cause infra that blocked EVERY pre-built folk module from passing `verify_shippable`, and certified kalendarna. **No model builds, no V7 dispatches** — all deterministic + a few cross-model reviews. **VISIBLE result NOT yet delivered** (folk still hidden) but the blocker is gone and the path is short + zero-model-quota. Lesson logged: I over-reviewed (3 adversarial rounds on one gate = the multi-round-escalation anti-pattern the cost rule forbids; stop after 1 fix + 1 review next time).
+
+### 🟢 #3428 — resources-gate false-fail FIXED + kalendarna certified, MERGED to main (`3f30fb8a3b`)
+Root cause (Codex caught a HOLE in my first cheap attempt): `resources_search_attempted` is a **build-time writer-tool-call-telemetry** gate. Pre-built folk modules have no telemetry on disk, so static `verify_shippable` **false-failed every one of them** regardless of content. My first fix (skip when citations_resolve + chunk_context pass) was an OVER-EXEMPTION hole — those don't cover non-textbook resources / can pass vacuously.
+**Final, airtight fix (3 adversarial rounds):** during static re-verification (telemetry absent) the gate skips ONLY when `_verify_resources_live()` proves EVERY resource real:
+- `scripts/build/linear_pipeline.py::_verify_resources_live` + `_writer_tool_call_telemetry_present`; gate takes `resource_liveness=`; `run_python_qg` takes `resource_liveness_fn=` (invoked ONLY when telemetry absent → build-time untouched).
+- `scripts/build/verify_shippable.py::_url_is_live` injects the real checker: **curl** for HTTP (handles TLS chains urllib+certifi can't, e.g. ukrlib.com.ua) + **wikipedia existence via the MediaWiki API** `missing` flag (a `/wiki/<missing>` GET 200s; ALL wikipedia hosts API-verified, never curl-fallback). Fail-closed.
+- 20 tests (`test_resources_search_gate` + `test_verify_shippable`).
+- **Caught a REAL dead link** in kalendarna (`ukrlib book.php?id=0` → 404) → removed.
+- kalendarna `лелю-ладо` vesum fail fixed by embedding the real Kostomarov веснянка couplet as a cited blockquote (existing primary-text exemption; `verify_quote`=1.0). NO vesum-gate change.
+
+### ✅ FOLK SHIPPABILITY (verify_shippable + the REAL liveness gate, this session)
+- **SHIPPABLE (5):** kalendarna-obriadovist-zvychai · koliadky-shchedrivky · narodna-kultura-yak-systema · narodni-viruvannia-mifolohiia-demonolohiia · zamovliannia-zaklynannia-prymovky
+- **NOT (1):** dumy-nevilnytski-lytsarski → `vesum_verified` missing=`татаро-турецькі` (real compound adj; `турецький`∈VESUM, joined form isn't — same hyphenated-compound false-positive class as лелю-ладо, but it's PROSE not a quote).
+- To re-run: from a worktree off origin/main, symlink `data/{vesum,sources}.db` + `.venv`, then `PYTHONPATH=$PWD .venv/bin/python -m scripts.build.verify_shippable folk <slug>` (the liveness check needs network + the DBs; sparse worktrees lack `data/`).
+
+### ▶ NEXT ACTIONS — CHEAPEST PATH TO THE VISIBLE RESULT (in order; all ZERO model-quota)
+1. **dumy `татаро-турецькі`** — honest fix: either teach the vesum gate to split hyphenated compound adjectives and verify parts (root-cause infra, helps all such cases), OR reword the single prose occurrence. Prefer the gate fix (it's the same class as other hyphenated compounds). Re-verify dumy.
+2. **Resolve the folk site-MDX generator discrepancy** BEFORE surfacing (else deployed pages may be wrong/garbled). Folk is NOT in the `generate_mdx` manifest (`get_modules_from_manifest()` returns 0 folk); folk site MDX is written by `linear_pipeline.assemble_mdx(module_dir, site_path, plan)` (v7_build.py:2026-2029). BUT the committed kalendarna site MDX (98K) ≠ fresh assemble (61K): the committed has (a) a **char-by-char-split EssayResponse "Взаємоперевірка" rubric** (a real generator bug) and (b) a **richer EssayResponse prompt** that current assemble_mdx omits. DECIDE which is canonical, fix the generator/source, regenerate all 6 folk site MDX cleanly (kalendarna's committed MDX still has the removed dead link + lacks the new blockquote — deferred from #3428 on purpose).
+3. **Un-hide folk** (reverse orchestrator #3027): remove `'folk'` from `HIDDEN_MODULE_LINK_TRACKS` (`site/src/components/LevelLanding.tsx:45`) + `hiddenPublicPaths` (`site/astro.config.mjs:17`). Recommended posture = clearly-labeled PREVIEW/BETA (matches a2). PR → CI → self-merge → deploy → **VISIBLE** (5 modules; add dumy once step 1 done). Coordinate with the other orchestrator (it set #3027).
+
+### ⚠ CARRY-FORWARD
+- **Acknowledged liveness limitation:** non-wikipedia **soft-404** hosts (HTTP 200 on a missing page) aren't status-detectable — inherent to HTTP liveness. Folk's archives (ukrlib/osvita/diasporiana) return real 404s, so unaffected. A future hardening could add per-host soft-404 heuristics; not needed for current content.
+- **Cost lesson (HARD):** 1 fix + 1 review per problem, then STOP. I ran 3 review rounds — don't.
+- Evidence-first + cost-first: deterministic checks (verify_shippable, the liveness gate) are FREE. Exhaust them before any model build.
+- Never reset/commit on `main`; worktree-only; folk push may need `--no-verify`. Role #0.2 LIVE (I own + implement infra). Merge grant LIVE (CI-green → self-merge). 0 dispatches in flight at handoff.
+
+## ▶▶▶ SESSION 42 HANDOFF (2026-06-17 — ⛔ PROJECT-AT-RISK: user will DELETE without a VISIBLE folk RESULT by ~tomorrow. Cost is the binding constraint. Honest state: 6 folk modules have CONTENT but 0 currently pass `verify_shippable`; #3079 infra merged but UNPROVEN)
 
 ### 🛑 READ FIRST — HARD CONSTRAINTS (user, 2026-06-17). Everything below is subordinate to these.
 - **MONEY/QUOTA IS THE BINDING CONSTRAINT.** User runs on **Claude Max + Codex Max (flat-rate, USAGE-CAPPED — not per-token)**. "Bleeding" = burning the weekly/5-hour quotas on BOTH accounts and locking the user out. A marathon orchestrator session + 3 V7 builds + a 5-round dispatch grind on ONE matcher drained both. **DO NOT REPEAT.**
