@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "verdict": "SKIP",
+  "level": "folk",
+  "sequence": 4,
+  "profile": "seminar",
+  "reason": "ulp_fidelity applies only to a1/a2 core",
+  "failed_checks": [],
+  "warnings": [],
+  "checks": {}
+}

@@ -1,145 +1,140 @@
 - lemma: обряд
   translation: rite, ritual
-  pos: noun
-  usage: Кожен обряд має своє місце в році.
-  notes: Усталена символічна дія або послідовність дій, прив'язана до певної дати.
-- lemma: обрядовість
-  translation: ritual practice, body of rites
-  pos: noun
-  usage: Календарна обрядовість тримається на чотирьох циклах.
-- lemma: обрядодія
-  translation: ritual act
-  pos: noun
-  usage: Спів супроводжує обрядодію закликання весни.
+  pos: ч.
+  usage: Кожен обряд має своє місце в річному колі громади.
 - lemma: мотив
-  translation: motif; recurring image or formula
-  pos: noun
-  usage: Мотив достатку повторюється від колядки до обжинкової пісні.
+  translation: motif, recurring image
+  pos: ч.
+  usage: Мотив воскресання природи повторюється в багатьох веснянках.
 - lemma: варіант
-  translation: variant; regional or performative version
-  pos: noun
-  usage: Той самий спів існує в багатьох регіональних варіантах.
-- lemma: цикл
-  translation: cycle
-  pos: noun
-  usage: Зимовий цикл відкриває обрядовий рік.
+  translation: variant, regional version
+  pos: ч.
+  usage: Та сама пісня має варіант у кожному селі.
 - lemma: кутя
-  translation: kutia (ritual grain dish for Christmas Eve)
-  pos: noun
-  usage: На Святвечір родина куштує кутю.
+  translation: kutia (ritual dish of boiled grain)
+  pos: ж.
+  usage: На різдвяному столі стоїть кутя з вареного зерна.
 - lemma: дідух
-  translation: didukh (ceremonial sheaf)
-  pos: noun
-  usage: Господар вносить дідух і ставить його на покуті.
+  translation: didukh (ritual sheaf placed in the home)
+  pos: ч.
+  usage: Дідух ставлять на покуті як знак родючості й роду.
 - lemma: веснянка
-  translation: vesnianka (spring ritual song)
-  pos: noun
-  usage: Веснянки співають, закликаючи тепло.
+  translation: spring song
+  pos: ж.
+  usage: Веснянка закликає тепло й оновлення природи.
 - lemma: гаївка
-  translation: haivka (western spring/Easter song)
-  pos: noun
-  usage: Гаївки тісно пов'язані з великоднім тижнем.
+  translation: haivka (Western-Ukrainian spring round-song)
+  pos: ж.
+  usage: Гаївка тісно пов'язана з великодніми іграми.
 - lemma: гагілки
-  translation: hahilky (Galician spring songs)
-  pos: noun
-  usage: Гагілки — галицькі варіанти весняного співу.
-  notes: Вживається переважно у формі множини.
-- lemma: колядка
-  translation: koliadka (Christmas carol)
-  pos: noun
-  usage: Колядка величає дім і бажає достатку.
-- lemma: щедрівка
-  translation: shchedrivka (New Year well-wishing song)
-  pos: noun
-  usage: Щедрівку співають під час новорічного обходу.
-- lemma: колядування
-  translation: carolling (the rite of going house to house)
-  pos: noun
-  usage: Колядування — це обхід дворів із піснями.
-- lemma: посівання
-  translation: ritual sowing of grain on New Year
-  pos: noun
-  usage: На Новий рік хлопці ходять із посіванням.
+  translation: hahilky (regional spring songs)
+  pos: мн.
+  usage: Гагілки — регіональна назва весняного закличного співу.
 - lemma: обжинки
   translation: harvest-end rite
-  pos: noun
-  usage: Обжинки замикають аграрний рік.
-  notes: Вживається у формі множини.
-- lemma: зажинки
-  translation: rite of starting the harvest
-  pos: noun
-  usage: Зажинки відкривають жнива, а обжинки їх завершують.
-  notes: Вживається у формі множини.
-- lemma: сніп
-  translation: sheaf
-  pos: noun
-  usage: Із останнього снопа плетуть обжинковий вінок.
-- lemma: вінок
-  translation: wreath
-  pos: noun
-  usage: Дівчина несе обжинковий вінок на голові.
-- lemma: жнива
-  translation: harvest (reaping)
-  pos: noun
-  usage: Обжинки відбуваються наприкінці жнив.
-  notes: Вживається у формі множини.
-- lemma: хоровод
-  translation: round dance with song
-  pos: noun
-  usage: Стара гра про просо збереглася як хоровод.
-- lemma: гільце
-  translation: giltse (decorated ritual treelet)
-  pos: noun
-  usage: Громада ставить і прикрашає купальське гільце.
-- lemma: сонцестояння
-  translation: solstice
-  pos: noun
-  usage: Купала пов'язане з літнім сонцестоянням.
-- lemma: рівнодення
-  translation: equinox
-  pos: noun
-  usage: Весняні обряди близькі до часу рівнодення.
+  pos: мн.
+  usage: Обжинки завершують осінній цикл подякою полю.
+- lemma: посівання
+  translation: sowing rite (New Year grain-scattering)
+  pos: с.
+  usage: Уранці засівають оселю зерном — це обряд посівання.
+- lemma: цикл
+  translation: cycle
+  pos: ч.
+  usage: Зимовий цикл відкриває рік колядками та щедрівками.
+- lemma: весняний
+  translation: spring (adjective)
+  pos: прикм.
+  usage: Весняний цикл виводить громаду у відкритий простір.
+- lemma: закликання
+  translation: calling, invocation (of spring/warmth)
+  pos: с.
+  usage: Закликання тепла відкриває весняне дійство.
+- lemma: воскресання
+  translation: resurrection, revival
+  pos: с.
+  usage: Формула поєднує воскресання з аграрним оновленням.
 - lemma: синкретизм
-  translation: syncretism (coexistence of religious layers)
-  pos: noun
-  usage: Синкретизм поєднує християнський і дохристиянський шари в одній пісні.
-- lemma: синкретичний
-  translation: syncretic
-  pos: adj
-  usage: Купальська пісня має виразно синкретичний характер.
+  translation: syncretism (blend of belief layers)
+  pos: ч.
+  usage: Синкретизм поєднує християнський і аграрний шари в одній пісні.
+- lemma: дійство
+  translation: ritual performance, enactment
+  pos: с.
+  usage: Купальське дійство будується навколо вогню й води.
+- lemma: величальний
+  translation: laudatory, of praise
+  pos: прикм.
+  usage: 'Колядка має величальний характер: вона славить господаря.'
+- lemma: хоровод
+  translation: round dance
+  pos: ч.
+  usage: Хоровод поєднує спів із рухом гурту в колі.
+- lemma: кривий танець
+  translation: '"crooked dance" (winding ritual dance)'
+  pos: ч.
+  usage: Кривий танець веде гурт звивистою лінією між рядами.
+- lemma: родючість
+  translation: fertility
+  pos: ж.
+  usage: Вода у весняному циклі пов'язана з родючістю.
+- lemma: оновлення
+  translation: renewal
+  pos: с.
+  usage: Весна означає сезонне оновлення природи й праці.
 - lemma: персоніфікація
   translation: personification
-  pos: noun
-  usage: Персоніфікація природи помітна в образі Купала.
-- lemma: перформативність
-  translation: performativity (text bound to action)
-  pos: noun
-  usage: Перформативність означає, що текст прив'язаний до дії.
-- lemma: величальний
-  translation: glorifying, laudatory
-  pos: adj
-  usage: Обжинкова пісня має величальний характер.
-- lemma: закликальний
-  translation: invocatory, summoning
-  pos: adj
-  usage: Веснянка часто має закликальний зміст.
-- lemma: родючість
-  translation: fertility (of land)
-  pos: noun
-  usage: Купальські обряди мали забезпечити родючість.
-- lemma: опудало
-  translation: effigy, scarecrow
-  pos: noun
-  usage: Опудало Купала наприкінці свята топлять або спалюють.
-- lemma: ряджений
-  translation: costumed (mummer)
-  pos: adj
-  usage: На Маланку ходять ряджені гурти.
-- lemma: обрядовий
-  translation: ritual (adjective)
-  pos: adj
-  usage: Обрядовий рефрен відрізняє пісню від побутової.
-- lemma: деколонізація
-  translation: decolonization
-  pos: noun
-  usage: Деколонізація опису повертає традиції власний центр.
+  pos: ж.
+  usage: Персоніфікація робить весну дійовою особою пісні.
+- lemma: сакральний
+  translation: sacred
+  pos: прикм.
+  usage: Обряд надає предметові сакрального значення.
+- lemma: аграрний
+  translation: agrarian
+  pos: прикм.
+  usage: За піснею стоїть аграрна логіка річного року.
+- lemma: сезонний
+  translation: seasonal
+  pos: прикм.
+  usage: Сезонне оновлення повторюється щовесни.
+- lemma: величання
+  translation: glorification, laudatory singing
+  pos: с.
+  usage: Величання спрямоване на людину, поле або весну.
+- lemma: колядування
+  translation: caroling (winter ritual singing)
+  pos: с.
+  usage: Колядування відкриває зимовий цикл обходом дворів.
+- lemma: щедрування
+  translation: shchedrivka-singing
+  pos: с.
+  usage: Щедрування супроводжує новорічний цикл.
+- lemma: засівання
+  translation: grain-scattering rite
+  pos: с.
+  usage: Засівання зерном символізує достаток на новий рік.
+- lemma: жнива
+  translation: harvest
+  pos: мн.
+  usage: Завершені жнива позначає останній сніп.
+- lemma: рефрен
+  translation: refrain
+  pos: ч.
+  usage: Рефрен повертає той самий рядок і тримає ритм гурту.
+- lemma: зачин
+  translation: formulaic opening
+  pos: ч.
+  usage: Зачин вводить образ весни на початку пісні.
+- lemma: спадкоємність
+  translation: continuity, inheritance
+  pos: ж.
+  usage: Обряд забезпечує спадкоємність між поколіннями.
+- lemma: тяглість
+  translation: continuity over time
+  pos: ж.
+  usage: Циклічність обряду підтримує тяглість культури.
+- lemma: міфологізація
+  translation: mythologization (over-reading symbols as cult)
+  pos: ж.
+  usage: Надмірна міфологізація домальовує те, чого джерело не дає.
