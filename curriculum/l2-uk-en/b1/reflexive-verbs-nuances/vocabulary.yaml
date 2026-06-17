@@ -1,0 +1,312 @@
+- lemma: зворотне дієслово
+  translation: "reflexive verb"
+  pos: phrase
+  usage: "Зворотне дієслово має суфікс -ся або -сь."
+- lemma: суфікс
+  translation: "suffix"
+  pos: noun:m
+  usage: "Суфікс -ся стоїть після закінчення дієслова."
+- lemma: -ся
+  translation: "reflexive suffix -sia"
+  pos: suffix
+  usage: "Форма -ся є базовою словниковою формою."
+- lemma: -сь
+  translation: "short reflexive suffix -s"
+  pos: suffix
+  usage: "Форма -сь часто з'являється перед словом на голосний."
+- lemma: себе
+  translation: "self"
+  pos: pronoun
+  usage: "Історично -ся пов'язане із займенником себе."
+- lemma: власне зворотний
+  translation: "properly reflexive"
+  pos: phrase
+  usage: "Митися - власне зворотна дія."
+- lemma: взаємний
+  translation: "reciprocal"
+  pos: adj
+  usage: "Зустрічатися може позначати взаємну дію."
+- lemma: безособовий
+  translation: "impersonal"
+  pos: adj
+  usage: "Мені не спиться - безособова конструкція."
+- lemma: пасивноподібний
+  translation: "passive-like"
+  pos: adj
+  usage: "Будинок будується - пасивноподібна форма."
+- lemma: стан
+  translation: "state"
+  pos: noun:m
+  usage: "Хвилюватися описує емоційний стан."
+- lemma: емоція
+  translation: "emotion"
+  pos: noun:f
+  usage: "Не всі дієслова емоцій мають -ся."
+- lemma: милозвучність
+  translation: "euphony"
+  pos: noun:f
+  usage: "Милозвучність допомагає вибрати -ся або -сь."
+- lemma: вимова
+  translation: "pronunciation"
+  pos: noun:f
+  usage: "Вимова -ться відрізняється від написання."
+- lemma: написання
+  translation: "spelling"
+  pos: noun:n
+  usage: "У написанні зберігаємо -ться."
+- lemma: давальний відмінок
+  translation: "dative case"
+  pos: phrase
+  usage: "У фразі мені не спиться слово мені стоїть у давальному."
+- lemma: підмет
+  translation: "subject"
+  pos: noun:m
+  usage: "У безособовій конструкції немає звичайного підмета."
+- lemma: виконавець
+  translation: "doer, agent"
+  pos: noun:m
+  usage: "Пасивноподібна форма часто не називає виконавця."
+- lemma: дія
+  translation: "action"
+  pos: noun:f
+  usage: "Зворотна дія може бути спрямована на самого виконавця."
+- lemma: роль
+  translation: "role"
+  pos: noun:f
+  usage: "Важливо бачити роль учасника в дії."
+- lemma: керування
+  translation: "government, complement pattern"
+  pos: noun:n
+  usage: "Керування дієслова треба вчити разом із формою."
+- lemma: регістр
+  translation: "register"
+  pos: noun:m
+  usage: "Регістр допомагає вибрати перепрошую або вибачаюся."
+- lemma: офіційний
+  translation: "formal, official"
+  pos: adj
+  usage: "В офіційному стилі краще сказати прошу вибачення."
+- lemma: розмовний
+  translation: "colloquial"
+  pos: adj
+  usage: "Розмовний стиль допускає більше варіантів."
+- lemma: митися
+  translation: "to wash oneself"
+  pos: verb:impf
+  usage: "Дитина миється перед сном."
+- lemma: вмиватися
+  translation: "to wash one's face"
+  pos: verb:impf
+  usage: "Я вмиваюся холодною водою."
+- lemma: голитися
+  translation: "to shave oneself"
+  pos: verb:impf
+  usage: "Марко голиться біля дзеркала."
+- lemma: одягатися
+  translation: "to get dressed"
+  pos: verb:impf
+  usage: "Олена швидко одягається."
+- lemma: зачісуватися
+  translation: "to comb one's hair"
+  pos: verb:impf
+  usage: "Вона зачісується перед виходом."
+- lemma: взуватися
+  translation: "to put on shoes"
+  pos: verb:impf
+  usage: "Діти взуваються в коридорі."
+- lemma: прокидатися
+  translation: "to wake up"
+  pos: verb:impf
+  usage: "Я прокидаюся о сьомій."
+- lemma: підводитися
+  translation: "to get up, rise"
+  pos: verb:impf
+  usage: "Після дзвінка студенти підводяться."
+- lemma: збиратися
+  translation: "to get ready; to intend"
+  pos: verb:impf
+  usage: "Ми збираємося на роботу."
+- lemma: зустрічатися
+  translation: "to meet each other"
+  pos: verb:impf
+  usage: "Друзі зустрічаються біля метро."
+- lemma: зустрітися
+  translation: "to meet each other once"
+  pos: verb:pf
+  usage: "Ми зустрілися вчора."
+- lemma: листуватися
+  translation: "to correspond"
+  pos: verb:impf
+  usage: "Вони листуються електронною поштою."
+- lemma: обійматися
+  translation: "to hug each other"
+  pos: verb:impf
+  usage: "Родичі обіймаються на вокзалі."
+- lemma: цілуватися
+  translation: "to kiss each other"
+  pos: verb:impf
+  usage: "У фільмі герої цілуються."
+- lemma: вітатися
+  translation: "to greet each other"
+  pos: verb:impf
+  usage: "Сусіди вітаються щоранку."
+- lemma: знайомитися
+  translation: "to get acquainted"
+  pos: verb:impf
+  usage: "Студенти знайомляться одне з одним."
+- lemma: познайомитися
+  translation: "to get acquainted once"
+  pos: verb:pf
+  usage: "Хочу познайомитися з вашою колегою."
+- lemma: спілкуватися
+  translation: "to communicate"
+  pos: verb:impf
+  usage: "Ми спілкуємося українською."
+- lemma: бачитися
+  translation: "to see each other"
+  pos: verb:impf
+  usage: "Ми давно не бачилися."
+- lemma: хвилюватися
+  translation: "to worry"
+  pos: verb:impf
+  usage: "Я хвилююся перед іспитом."
+- lemma: сердитися
+  translation: "to be angry"
+  pos: verb:impf
+  usage: "Він сердиться на брата."
+- lemma: дивуватися
+  translation: "to be surprised"
+  pos: verb:impf
+  usage: "Вона дивується новині."
+- lemma: соромитися
+  translation: "to be ashamed, shy"
+  pos: verb:impf
+  usage: "Не соромтеся питати."
+- lemma: боятися
+  translation: "to be afraid"
+  pos: verb:impf
+  usage: "Дитина боїться темряви."
+- lemma: сподіватися
+  translation: "to hope"
+  pos: verb:impf
+  usage: "Ми сподіваємося на відповідь."
+- lemma: сміятися
+  translation: "to laugh"
+  pos: verb:impf
+  usage: "Вони сміються на кухні."
+- lemma: не спиться
+  translation: "cannot sleep; sleep does not come"
+  pos: phrase
+  usage: "Мені не спиться через шум."
+- lemma: хочеться
+  translation: "feel like, want"
+  pos: verb:impers
+  usage: "Нам хочеться кави."
+- lemma: здається
+  translation: "it seems"
+  pos: verb:impers
+  usage: "Мені здається, що він правий."
+- lemma: працюється
+  translation: "work goes, one feels like working"
+  pos: verb:impers
+  usage: "У цій кімнаті добре працюється."
+- lemma: дихається
+  translation: "one breathes, it is breathable"
+  pos: verb:impers
+  usage: "Тут легко дихається."
+- lemma: будуватися
+  translation: "to be under construction"
+  pos: verb:impf
+  usage: "Будинок будується біля парку."
+- lemma: зачинятися
+  translation: "to close; to be closed"
+  pos: verb:impf
+  usage: "Двері погано зачиняються."
+- lemma: відчинятися
+  translation: "to open; to be opened"
+  pos: verb:impf
+  usage: "Вікно не відчиняється."
+- lemma: відкриватися
+  translation: "to open; become available"
+  pos: verb:impf
+  usage: "Реєстрація відкривається завтра."
+- lemma: зберігатися
+  translation: "to be saved, stored"
+  pos: verb:impf
+  usage: "Файл не зберігається."
+- lemma: подаватися
+  translation: "to be submitted; to be served"
+  pos: verb:impf
+  usage: "Документи подаються онлайн."
+- lemma: продаватися
+  translation: "to be sold, be for sale"
+  pos: verb:impf
+  usage: "Квитки продаються на сайті."
+- lemma: читатися
+  translation: "to read, be easy/hard to read"
+  pos: verb:impf
+  usage: "Цей текст читається легко."
+- lemma: пратися
+  translation: "to wash, be washable"
+  pos: verb:impf
+  usage: "Ця тканина добре переться."
+- lemma: вчити
+  translation: "to teach; to learn by memorizing"
+  pos: verb:impf
+  usage: "Я вчу правило."
+- lemma: вчитися
+  translation: "to study, learn"
+  pos: verb:impf
+  usage: "Я вчуся в університеті."
+- lemma: збирати
+  translation: "to collect"
+  pos: verb:impf
+  usage: "Вони збирають документи."
+- lemma: повертати
+  translation: "to return something; to turn"
+  pos: verb:impf
+  usage: "Поверніть ключі власнику."
+- lemma: повертатися
+  translation: "to return, come back"
+  pos: verb:impf
+  usage: "Ми повертаємося додому."
+- lemma: хвилювати
+  translation: "to worry, move emotionally"
+  pos: verb:impf
+  usage: "Ця новина хвилює мене."
+- lemma: знайомити
+  translation: "to introduce people"
+  pos: verb:impf
+  usage: "Викладач знайомить студентів."
+- lemma: користуватися
+  translation: "to use"
+  pos: verb:impf
+  usage: "Я користуюся телефоном щодня."
+- lemma: домовитися
+  translation: "to agree, make arrangements"
+  pos: verb:pf
+  usage: "Ми домовилися про зустріч."
+- lemma: дякувати
+  translation: "to thank"
+  pos: verb:impf
+  usage: "Дякую вам за допомогу."
+- lemma: чекати
+  translation: "to wait"
+  pos: verb:impf
+  usage: "Я чекаю на автобус."
+- lemma: радіти
+  translation: "to be glad"
+  pos: verb:impf
+  usage: "Ми радіємо вашому успіху."
+- lemma: сумувати
+  translation: "to miss, be sad"
+  pos: verb:impf
+  usage: "Вона сумує за домом."
+- lemma: перепрошую
+  translation: "excuse me, I apologize"
+  pos: phrase
+  usage: "Перепрошую за затримку."
+- lemma: прошу вибачення
+  translation: "I apologize"
+  pos: phrase
+  usage: "Прошу вибачення за незручності."
