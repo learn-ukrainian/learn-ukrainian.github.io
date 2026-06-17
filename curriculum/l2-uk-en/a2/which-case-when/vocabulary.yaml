@@ -28,6 +28,11 @@
   pos: noun
   gender: n
   example: "Місце відповідає на питання де?"
+- word: час
+  translation: time
+  pos: noun
+  gender: m
+  example: "У середу - це час, тому форма особлива."
 - word: характеристика
   translation: characteristic, description
   pos: noun
@@ -43,6 +48,10 @@
   pos: noun
   gender: m
   example: "Контекст показує значення прийменника."
+- word: керувати
+  translation: to govern, to control
+  pos: verb
+  example: "Дієслово може керувати відмінком."
 - word: тригер
   translation: trigger, cue
   pos: noun
