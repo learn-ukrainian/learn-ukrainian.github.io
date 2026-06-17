@@ -5,14 +5,18 @@
 - lemma: люблю
   translation: I like
   pos: verb form
-  usage: Я люблю музику.
+  usage: Я люблю гуляти.
 - lemma: любиш
   translation: you like
   pos: verb form
   usage: Ти любиш готувати?
-- lemma: подобається
-  translation: is pleasing; like
-  pos: verb chunk
+- lemma: робити
+  translation: to do
+  pos: infinitive
+  usage: Що ти любиш робити?
+- lemma: подобатися
+  translation: to be pleasing; to like
+  pos: verb
   usage: Мені подобається ця книга.
 - lemma: мені подобається
   translation: I like
@@ -22,6 +26,14 @@
   translation: you like
   pos: phrase
   usage: Тобі подобається цей фільм?
+- lemma: не люблю
+  translation: I do not like
+  pos: phrase
+  usage: Я не люблю готувати.
+- lemma: не подобається
+  translation: do not like
+  pos: phrase
+  usage: Мені не подобається цей фільм.
 - lemma: читати
   translation: to read
   pos: infinitive
@@ -50,6 +62,10 @@
   translation: to draw
   pos: infinitive
   usage: Я люблю малювати.
+- lemma: подорожувати
+  translation: to travel
+  pos: infinitive
+  usage: Я люблю подорожувати.
 - lemma: співати
   translation: to sing
   pos: infinitive
@@ -58,10 +74,6 @@
   translation: music
   pos: noun
   usage: Мені подобається музика.
-- lemma: музику
-  translation: music, object chunk
-  pos: noun chunk
-  usage: Я люблю музику.
 - lemma: фільм
   translation: film
   pos: noun
@@ -70,15 +82,7 @@
   translation: book
   pos: noun
   usage: Мені подобається ця книга.
-- lemma: улюблений
-  translation: favorite, masculine
-  pos: adjective
-  usage: Це мій улюблений спорт.
-- lemma: захоплення
-  translation: interest; hobby
-  pos: noun
-  usage: Моє захоплення - музика.
-- lemma: брати участь
-  translation: to take part
-  pos: phrase
-  usage: Я беру участь.
+- lemma: Київ
+  translation: Kyiv
+  pos: proper noun
+  usage: Мені подобається Київ.
