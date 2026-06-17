@@ -44,6 +44,11 @@
   pos: noun
   gender: m
   example: "Це частий виняток."
+- word: десяток
+  translation: a dozen, set of ten
+  pos: noun
+  gender: m
+  example: "Потрібен десяток яєць."
 - word: тарілка
   translation: plate
   pos: noun
