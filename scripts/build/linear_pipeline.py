@@ -8218,8 +8218,16 @@ def run_python_qg(
     gate_observer: Callable[[str], None] | None = None,
     ignored_vesum_missing_surfaces: Collection[str] = (),
     event_sink: Callable[..., None] | None = None,
+    resource_liveness_fn: Callable[[str], bool] | None = None,
 ) -> dict[str, Any]:
-    """Run deterministic Phase 4 quality gates for one module directory."""
+    """Run deterministic Phase 4 quality gates for one module directory.
+
+    ``resource_liveness_fn`` (optional): a URL -> bool liveness checker. Only
+    invoked during static re-verification (when build-time writer telemetry is
+    absent) to let ``resources_search_attempted`` substitute proof-that-the-
+    resources-are-real for the missing search telemetry. Left ``None`` at build
+    time, so builds never perform network liveness checks.
+    """
     plan = plan_check(plan_path)
     module_text = _read_required(module_dir / "module.md")
     activities = _load_bare_activity_list(module_dir / "activities.yaml")
@@ -8315,12 +8323,19 @@ def run_python_qg(
         _published_quote_for_publishable_refs_gate(module_text, plan, module_dir),
     )
     record("textbook_quote_fidelity", _textbook_quote_fidelity_gate(module_text, level=level))
+    telemetry_present = _writer_tool_call_telemetry_present(module_dir)
     record(
         "resources_search_attempted",
         _resources_search_attempted_gate(
             _load_writer_tool_calls(module_dir),
             plan=plan,
             resource_coverage=gates.get("resource_coverage"),
+            telemetry_present=telemetry_present,
+            resource_liveness=(
+                _verify_resources_live(resources, url_live_fn=resource_liveness_fn)
+                if (resource_liveness_fn is not None and not telemetry_present)
+                else None
+            ),
         ),
     )
     record("immersion_advisory", _advisory_immersion_pct(module_text, plan))
@@ -12465,12 +12480,30 @@ def _load_jsonl_tool_calls(path: Path) -> list[dict[str, Any]]:
     return calls
 
 
+_WRITER_TOOL_CALL_TELEMETRY_NAMES = (
+    "writer_tool_calls.json",
+    "writer_trace.json",
+    "writer_telemetry.jsonl",
+)
+
+
+def _writer_tool_call_telemetry_present(module_dir: Path) -> bool:
+    """True iff any writer tool-call telemetry artifact exists for this module.
+
+    Distinguishes a build-time run (``invoke_writer`` persists the trace) from a
+    static re-verification of an already-built module whose telemetry was never
+    persisted (e.g. pre-#3373 folk modules). ``resources_search_attempted`` is a
+    build-time tool-call gate; without this signal a static shippability check
+    cannot tell "writer ran no search" (a real failure) from "telemetry is simply
+    not on disk" (un-evaluable). See ``_resources_search_attempted_gate``.
+    """
+    if any((module_dir / name).exists() for name in _WRITER_TOOL_CALL_TELEMETRY_NAMES):
+        return True
+    return any(module_dir.glob("*.write.jsonl"))
+
+
 def _load_writer_tool_calls(module_dir: Path) -> list[dict[str, Any]]:
-    candidates = [
-        module_dir / "writer_tool_calls.json",
-        module_dir / "writer_trace.json",
-        module_dir / "writer_telemetry.jsonl",
-    ]
+    candidates = [module_dir / name for name in _WRITER_TOOL_CALL_TELEMETRY_NAMES]
     calls: list[dict[str, Any]] = []
     for path in candidates:
         if not path.exists():
@@ -12493,14 +12526,86 @@ def _load_writer_tool_calls(module_dir: Path) -> list[dict[str, Any]]:
     return calls
 
 
+def _verify_resources_live(
+    resources: list[dict[str, Any]],
+    *,
+    url_live_fn: Callable[[str], bool],
+) -> dict[str, Any]:
+    """Independently verify that every resource is real (fail-closed).
+
+    Used only to substitute for ABSENT build-time search telemetry during static
+    re-verification (see ``_resources_search_attempted_gate``). Each resource
+    bearing a ``url`` is confirmed live via ``url_live_fn`` (HTTP liveness / wiki
+    existence). A resource WITHOUT a url is only acceptable when ``role`` is
+    ``textbook`` (validated separately by ``citations_resolve``); any other
+    no-url resource fails closed, so an unverifiable resource blocks the skip.
+    ``passed`` is True only when there is ≥1 resource and EVERY resource verified
+    — a single fabricated/dead URL keeps the gate failing. This is what closes
+    the over-exemption hole: the skip requires PROOF the resources are real, not
+    an inference from textbook-grounding gates.
+    """
+    results: list[dict[str, Any]] = []
+    all_ok = True
+    for entry in resources:
+        if not isinstance(entry, Mapping):
+            all_ok = False
+            results.append({"resource": str(entry)[:80], "live": False, "reason": "not_a_mapping"})
+            continue
+        url = str(entry.get("url") or "").strip()
+        role = str(entry.get("role") or "")
+        title = entry.get("title")
+        if not url:
+            ok = role == "textbook"
+            results.append(
+                {
+                    "title": title,
+                    "role": role,
+                    "url": None,
+                    "live": ok,
+                    "reason": "textbook_via_citations" if ok else "no_url_unverifiable",
+                }
+            )
+            all_ok = all_ok and ok
+            continue
+        live = bool(url_live_fn(url))
+        results.append({"title": title, "role": role, "url": url, "live": live})
+        all_ok = all_ok and live
+    return {"passed": bool(resources) and all_ok, "checked": len(resources), "results": results}
+
+
 def _resources_search_attempted_gate(
     writer_tool_calls: list[dict[str, Any]],
     *,
     plan: Mapping[str, Any] | None = None,
     resource_coverage: Mapping[str, Any] | None = None,
+    telemetry_present: bool = True,
+    resource_liveness: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """HARD gate: writer must attempt at least one external-resource search."""
-    attempted = [call for call in writer_tool_calls if _tool_name_from_call(call) in MULTIMEDIA_SEARCH_TOOLS]
+    """HARD gate: writer must attempt at least one external-resource search.
+
+    This inspects build-time writer tool-call telemetry, so it can only be
+    evaluated during a build (when ``invoke_writer`` persists the trace). When a
+    module is re-verified statically (e.g. ``verify_shippable`` on an
+    already-built module) the telemetry file may be absent — which is NOT
+    evidence the writer skipped the search. To avoid a false HARD failure the
+    gate is treated as not-applicable (skipped, passing) when BOTH:
+
+    * ``telemetry_present`` is False (no writer trace on disk), AND
+    * ``resource_liveness`` proves EVERY resource is real (``passed`` True from
+      ``_verify_resources_live`` — each url-bearing resource confirmed live, no
+      unverifiable resource present).
+
+    Verifying the resources are real is a STRONGER anti-fabrication signal than
+    the search telemetry it replaces: a fabricated or dead resource fails the
+    liveness check, so a fabricated-resource module can never reach the skip.
+    Build-time runs are unaffected — telemetry is present, the liveness path is
+    not taken, and a present trace with no search still fails exactly as before.
+    """
+    attempted = [
+        call
+        for call in writer_tool_calls
+        if _tool_name_from_call(call) in MULTIMEDIA_SEARCH_TOOLS
+    ]
     search_tools_used = sorted({_tool_name_from_call(call) for call in attempted})
     manual_coverage_verified = (
         not attempted
@@ -12509,13 +12614,26 @@ def _resources_search_attempted_gate(
             resource_coverage,
         )
     )
-    return {
-        "passed": bool(attempted) or manual_coverage_verified,
+    liveness_verified = bool(resource_liveness) and resource_liveness.get("passed") is True
+    telemetry_absent_resources_verified_live = (
+        not attempted
+        and not manual_coverage_verified
+        and not telemetry_present
+        and liveness_verified
+    )
+    result: dict[str, Any] = {
+        "passed": bool(attempted)
+        or manual_coverage_verified
+        or telemetry_absent_resources_verified_live,
         "severity": "HARD",
         "search_attempt_count": len(attempted),
         "search_tools_used": search_tools_used,
         "manual_coverage_verified": manual_coverage_verified,
     }
+    if telemetry_absent_resources_verified_live:
+        result["skipped"] = "build_telemetry_absent_resources_verified_live"
+        result["resources_verified_live"] = resource_liveness.get("checked")
+    return result
 
 
 def _manual_resource_coverage_can_stand_in_for_search_telemetry(
