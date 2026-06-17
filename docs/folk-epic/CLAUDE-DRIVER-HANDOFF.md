@@ -63,7 +63,27 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 43 HANDOFF (2026-06-17 — 🟢 SYSTEMIC BLOCKER FIXED + MERGED (#3428): the resources_search_attempted false-fail is gone; **5 of 6 folk modules now pass `verify_shippable` with a REAL liveness gate**. Surfacing is 3 cheap/deterministic steps away — NO model builds needed) — **RESUME HERE**
+## ▶▶▶ SESSION 44 HANDOFF (2026-06-17 — 🎯 DESIGN LOCKED: the seminar content-quality gate is the BACKBONE for building ALL seminar tracks. Read `docs/folk-epic/seminar-quality-gate-design.md` and execute from there) — **RESUME HERE**
+
+> **This session = alignment + design, not build.** The user reframed the goal: build a
+> **reusable, per-track-FLEXIBLE content-quality gate** (sometimes beauty-leaning, sometimes
+> history-leaning — NOT hardwired), **prototyped on folk's 6 modules**, then rolled to every
+> seminar track. **Gate is the SOLE judge** (no human sign-off). **Cost is not the
+> constraint — quality is**; nothing is free (deepseek cheapest, gemini/agy no longer cheap);
+> **utilize the WHOLE fleet** (claude, codex, agy, cursor, grok-4.*, grok-build, deepseek) by fit.
+>
+> **➡️ THE BACKBONE SPEC IS `docs/folk-epic/seminar-quality-gate-design.md`** — decisions,
+> the per-track dimension-profile flexibility principle, the gate change (add `beauty`; make
+> pedagogy+engagement+beauty terminal ≥8 **scoped to seminar profiles only** so core/Codex is
+> untouched), the de-risk-the-correction-loop-FIRST ordering, fleet roles, and the #3162
+> literary-corpus blocker. **Execution order is §8 of that doc.** Nothing was built/merged
+> this session beyond the design doc; 0 dispatches in flight.
+>
+> Carry-forward unchanged from S43: liveness gate merged (#3428); 5/6 folk modules pass
+> `verify_shippable` (dumy fails on `татаро-турецькі`); folk is ALREADY live/surfaced;
+> deployed kalendarna page is stale vs corrected source (MDX regen + generator discrepancy).
+
+## ▶▶▶ SESSION 43 HANDOFF (2026-06-17 — 🟢 SYSTEMIC BLOCKER FIXED + MERGED (#3428): the resources_search_attempted false-fail is gone; **5 of 6 folk modules now pass `verify_shippable` with a REAL liveness gate**. Surfacing is 3 cheap/deterministic steps away — NO model builds needed)
 
 > **⏱ HONEST SCOPE:** This session diagnosed folk deterministically (free), then fixed the root-cause infra that blocked EVERY pre-built folk module from passing `verify_shippable`, and certified kalendarna. **No model builds, no V7 dispatches** — all deterministic + a few cross-model reviews. **VISIBLE result NOT yet delivered** (folk still hidden) but the blocker is gone and the path is short + zero-model-quota. Lesson logged: I over-reviewed (3 adversarial rounds on one gate = the multi-round-escalation anti-pattern the cost rule forbids; stop after 1 fix + 1 review next time).
 
