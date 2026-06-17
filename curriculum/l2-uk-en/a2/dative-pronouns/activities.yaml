@@ -62,28 +62,28 @@ inline:
   title: Стан людини
   instruction: Оберіть природну фразу з давальним відмінком.
   items:
-  - question: "I am cold."
+  - question: "Ви говорите про себе: холодно."
     options:
     - "Мені холодно."
     - "Я холодно."
     - "Мене холодно."
     correct: 0
     explanation: Стан часто має модель давальний + прислівник.
-  - question: "She is interested."
+  - question: "Ви говорите про неї: цікаво."
     options:
     - "Їй цікаво."
     - "Її цікаво."
     - "Вона цікаво."
     correct: 0
     explanation: Їй відповідає на питання кому?
-  - question: "We need a ticket."
+  - question: "Ви говорите про нас: потрібен квиток."
     options:
     - "Нам потрібен квиток."
     - "Нас потрібен квиток."
     - "Ми потрібен квиток."
     correct: 0
     explanation: Кому потрібен? - нам.
-  - question: "They are bored."
+  - question: "Ви говорите про них: нудно."
     options:
     - "Їм нудно."
     - "Їх нудно."
