@@ -2,9 +2,9 @@
   role: article
   source_ref: "docs/resources/external_resources.yaml: a2-word-order-emphasis"
   url: "https://www.ukrainianlessons.com/word-order/"
-  notes: "Learner-facing explanation of flexible Ukrainian word order and emphasis."
+  notes: "Пояснення для учнів про гнучкий порядок слів в українській мові та акцент у реченні."
 - title: "Ukrainian Language Stack Exchange: word order discussions"
   role: reference
   source_ref: "docs/resources/external_resources.yaml: a2-word-order-emphasis"
   url: "https://ukrainian.stackexchange.com/questions/tagged/word-order"
-  notes: "Optional reference for learners who want more examples of sentence emphasis."
+  notes: "Додаткові приклади й обговорення для учнів, які хочуть більше бачити роботу порядку слів."
