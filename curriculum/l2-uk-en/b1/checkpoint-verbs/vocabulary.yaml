@@ -1,0 +1,316 @@
+- lemma: умовний спосіб
+  translation: "conditional mood"
+  pos: phrase
+  usage: "Умовний спосіб часто має частку би або б."
+- lemma: наказовий спосіб
+  translation: "imperative mood"
+  pos: phrase
+  usage: "Наказовий спосіб має форми читай, читаймо, читайте."
+- lemma: реальна умова
+  translation: "real condition"
+  pos: phrase
+  usage: "Реальна умова починається з якщо."
+- lemma: нереальна умова
+  translation: "unreal condition"
+  pos: phrase
+  usage: "Нереальна умова часто починається з якби."
+- lemma: зворотне дієслово
+  translation: "reflexive verb"
+  pos: phrase
+  usage: "Зворотне дієслово має -ся або -сь."
+- lemma: пасивний стан
+  translation: "passive voice"
+  pos: phrase
+  usage: "Пасивний стан переносить увагу на об'єкт або результат."
+- lemma: віддієслівний іменник
+  translation: "verbal noun"
+  pos: phrase
+  usage: "Віддієслівний іменник називає дію як поняття."
+- lemma: префіксальний спосіб
+  translation: "prefixal word formation"
+  pos: phrase
+  usage: "Префіксальний спосіб додає префікс до готового дієслова."
+- lemma: суфіксальний спосіб
+  translation: "suffixal word formation"
+  pos: phrase
+  usage: "Суфіксальний спосіб використовує суфікс для творення слова."
+- lemma: видова пара
+  translation: "aspectual pair"
+  pos: phrase
+  usage: "Видова пара має близьке лексичне значення."
+- lemma: милозвучність
+  translation: "euphony"
+  pos: noun
+  usage: "Милозвучність впливає на вибір -ся або -сь."
+- lemma: хай
+  translation: "let; may"
+  pos: particle
+  usage: "Хай він напише відповідь до вечора."
+- lemma: нехай
+  translation: "let; may"
+  pos: particle
+  usage: "Нехай вони перевірять дані."
+- lemma: будь ласка
+  translation: "please"
+  pos: phrase
+  usage: "Передайте документ, будь ласка."
+- lemma: ходімо
+  translation: "let's go"
+  pos: verb
+  usage: "Ходімо до аудиторії після перерви."
+- lemma: якби
+  translation: "if only; if (unreal)"
+  pos: conjunction
+  usage: "Якби я знав адресу, приїхав би раніше."
+- lemma: якщо
+  translation: "if"
+  pos: conjunction
+  usage: "Якщо матиму час, зателефоную."
+- lemma: би
+  translation: "conditional particle"
+  pos: particle
+  usage: "Я хотів би уточнити деталь."
+- lemma: б
+  translation: "conditional particle"
+  pos: particle
+  usage: "Він прийшов би раніше."
+- lemma: хотів би
+  translation: "would like"
+  pos: phrase
+  usage: "Я хотів би поставити запитання."
+- lemma: могли б
+  translation: "could (polite)"
+  pos: phrase
+  usage: "Чи не могли б ви допомогти?"
+- lemma: відкрити
+  translation: "to open"
+  pos: verb
+  usage: "Відкрийте файл після перевірки."
+- lemma: відкривати
+  translation: "to open repeatedly; to be opening"
+  pos: verb
+  usage: "Не відкривайте підозрілі файли."
+- lemma: перевірити
+  translation: "to check"
+  pos: verb
+  usage: "Перевірте адресу перед відправленням."
+- lemma: перевіряти
+  translation: "to check habitually"
+  pos: verb
+  usage: "Перевіряйте дані уважно."
+- lemma: написати
+  translation: "to write"
+  pos: verb
+  usage: "До обіду я напишу відповідь."
+- lemma: писати
+  translation: "to write"
+  pos: verb
+  usage: "Щодня пишіть короткий текст."
+- lemma: не забудьте
+  translation: "do not forget"
+  pos: phrase
+  usage: "Не забудьте паспорт."
+- lemma: не забувайте
+  translation: "do not forget habitually"
+  pos: phrase
+  usage: "Не забувайте перевіряти контекст."
+- lemma: зустрічатися
+  translation: "to meet each other"
+  pos: verb
+  usage: "Ми зустрічаємося після роботи."
+- lemma: митися
+  translation: "to wash oneself"
+  pos: verb
+  usage: "Дитина миється перед сном."
+- lemma: готуватися
+  translation: "to prepare oneself"
+  pos: verb
+  usage: "Я готуюся до контрольної."
+- lemma: хвилюватися
+  translation: "to worry"
+  pos: verb
+  usage: "Не хвилюйтеся перед співбесідою."
+- lemma: не спиться
+  translation: "cannot sleep"
+  pos: phrase
+  usage: "Мені сьогодні не спиться."
+- lemma: працюється
+  translation: "work goes; it is working for someone"
+  pos: verb
+  usage: "Сьогодні мені добре працюється."
+- lemma: будується
+  translation: "is being built"
+  pos: verb
+  usage: "Будинок будується біля парку."
+- lemma: продається
+  translation: "is sold; is for sale"
+  pos: verb
+  usage: "Квитки продаються онлайн."
+- lemma: підписано
+  translation: "signed"
+  pos: passive
+  usage: "Документ підписано вчора."
+- lemma: прийнято
+  translation: "accepted"
+  pos: passive
+  usage: "Заявку прийнято автоматично."
+- lemma: надіслано
+  translation: "sent"
+  pos: passive
+  usage: "Повідомлення надіслано автоматично."
+- lemma: перевірено
+  translation: "checked"
+  pos: passive
+  usage: "Дані перевірено."
+- lemma: підготовлено
+  translation: "prepared"
+  pos: passive
+  usage: "Звіт підготовлено."
+- lemma: ухвалено
+  translation: "approved; adopted"
+  pos: passive
+  usage: "Рішення ухвалено одноголосно."
+- lemma: обговорення
+  translation: "discussion"
+  pos: noun
+  usage: "Після обговорення ми ухвалили рішення."
+- lemma: читання
+  translation: "reading"
+  pos: noun
+  usage: "Читання українською допомагає повторити вид."
+- lemma: відкриття
+  translation: "opening; discovery"
+  pos: noun
+  usage: "Відкриття файлу без перевірки небезпечне."
+- lemma: підписання
+  translation: "signing"
+  pos: noun
+  usage: "Перед підписанням договору перевірте дату."
+- lemma: навчання
+  translation: "learning; study"
+  pos: noun
+  usage: "Під час навчання важлива самоперевірка."
+- lemma: логування
+  translation: "logging"
+  pos: noun
+  usage: "Логування допомагає знайти помилку."
+- lemma: пошук
+  translation: "search"
+  pos: noun
+  usage: "Пошук квартири потребує терпіння."
+- lemma: підпис
+  translation: "signature"
+  pos: noun
+  usage: "Підпис має стояти внизу заяви."
+- lemma: запис
+  translation: "record; note"
+  pos: noun
+  usage: "Запис зберігається в системі."
+- lemma: крик
+  translation: "shout"
+  pos: noun
+  usage: "Крик у коридорі всіх налякав."
+- lemma: крикнути
+  translation: "to shout once"
+  pos: verb
+  usage: "Крикнути ім'я - це одна коротка дія."
+- lemma: кричати
+  translation: "to shout"
+  pos: verb
+  usage: "Кричати довго неприємно для всіх."
+- lemma: перечитати
+  translation: "to reread"
+  pos: verb
+  usage: "Перечитайте абзац ще раз."
+- lemma: дочитати
+  translation: "to finish reading"
+  pos: verb
+  usage: "Дочитайте текст до кінця."
+- lemma: перевстановити
+  translation: "to reinstall"
+  pos: verb
+  usage: "Перевстановити програму означає встановити її знову."
+- lemma: недооцінити
+  translation: "to underestimate"
+  pos: verb
+  usage: "Ми недооцінили складність завдання."
+- lemma: переоцінити
+  translation: "to overestimate"
+  pos: verb
+  usage: "Він переоцінив свої сили."
+- lemma: перевантажити
+  translation: "to overload"
+  pos: verb
+  usage: "Не перевантажуйте графік."
+- lemma: перевтомитися
+  translation: "to become exhausted"
+  pos: verb
+  usage: "Після тижня без сну можна перевтомитися."
+- lemma: заземлити
+  translation: "to ground"
+  pos: verb
+  usage: "Треба заземлити обладнання."
+- lemma: знебарвити
+  translation: "to decolorize"
+  pos: verb
+  usage: "Знебарвити тканину означає прибрати колір."
+- lemma: знешкодити
+  translation: "to neutralize"
+  pos: verb
+  usage: "Фахівці знешкодили небезпеку."
+- lemma: фільтрувати
+  translation: "to filter"
+  pos: verb
+  usage: "Список заявок треба фільтрувати за датою."
+- lemma: стукнути
+  translation: "to knock once"
+  pos: verb
+  usage: "Стукніть один раз і зачекайте."
+- lemma: стукати
+  translation: "to knock repeatedly"
+  pos: verb
+  usage: "Не стукайте десять хвилин."
+- lemma: біліти
+  translation: "to become white"
+  pos: verb
+  usage: "Стіна біліє після ремонту."
+- lemma: білити
+  translation: "to whiten"
+  pos: verb
+  usage: "Майстри білили стелю."
+- lemma: зеленіти
+  translation: "to become green"
+  pos: verb
+  usage: "Парк зеленіє навесні."
+- lemma: розповсюдити
+  translation: "to distribute; to spread"
+  pos: verb
+  usage: "Розповсюдити інформацію означає поширити її серед людей."
+- lemma: поширити
+  translation: "to spread"
+  pos: verb
+  usage: "Поширити оголошення можна в чаті."
+- lemma: активний стан
+  translation: "active voice"
+  pos: phrase
+  usage: "Активний стан часто звучить природніше за пасив."
+- lemma: канцелярит
+  translation: "bureaucratese"
+  pos: noun
+  usage: "Надмірні віддієслівні іменники створюють канцелярит."
+- lemma: безособовий
+  translation: "impersonal"
+  pos: adjective
+  usage: "Мені не спиться - безособова конструкція."
+- lemma: давальний відмінок
+  translation: "dative case"
+  pos: phrase
+  usage: "У реченні мені не спиться є давальний відмінок."
+- lemma: знахідний відмінок
+  translation: "accusative case"
+  pos: phrase
+  usage: "У формі заявку прийнято об'єкт стоїть у знахідному відмінку."
+- lemma: перехідне дієслово
+  translation: "transitive verb"
+  pos: phrase
+  usage: "Перехідне дієслово має прямий об'єкт."
