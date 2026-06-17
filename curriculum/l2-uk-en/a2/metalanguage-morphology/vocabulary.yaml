@@ -30,6 +30,10 @@
   translation: zero ending
   pos: phrase
   example: "У слові 'стіл' можна говорити про нульове закінчення."
+- word: звукове закінчення
+  translation: expressed ending
+  pos: phrase
+  example: "У формі 'стола' є звукове закінчення."
 - word: спільнокореневий
   translation: sharing the same root
   pos: adjective
@@ -46,6 +50,46 @@
   translation: function word
   pos: phrase
   example: "Прийменник - службова частина мови."
+- word: іменник
+  translation: noun
+  pos: noun
+  example: "Іменник відповідає на питання хто? що?"
+- word: прикметник
+  translation: adjective
+  pos: noun
+  example: "Прикметник описує іменник."
+- word: числівник
+  translation: numeral
+  pos: noun
+  example: "Числівник називає кількість або порядок."
+- word: займенник
+  translation: pronoun
+  pos: noun
+  example: "Займенник може замінювати іменник або прикметник."
+- word: дієслово
+  translation: verb
+  pos: noun
+  example: "Дієслово називає дію або стан."
+- word: прислівник
+  translation: adverb
+  pos: noun
+  example: "Прислівник часто відповідає на питання як? де? коли?"
+- word: самостійний
+  translation: independent
+  pos: adjective
+  example: "Іменник - самостійна частина мови."
+- word: службовий
+  translation: function
+  pos: adjective
+  example: "Прийменник - службова частина мови."
+- word: прийменник
+  translation: preposition
+  pos: noun
+  example: "Прийменник часто керує відмінком."
+- word: сполучник
+  translation: conjunction
+  pos: noun
+  example: "Сполучник поєднує слова або частини речення."
 - word: частка
   translation: particle
   pos: noun
@@ -66,10 +110,22 @@
   translation: word formation
   pos: noun
   example: "Словотвір пояснює, як утворюються нові слова."
-- word: розбір слова
-  translation: word analysis
+- word: морфема
+  translation: morpheme
+  pos: noun
+  example: "Морфема - найменша значуща частина слова."
+- word: розбір слова за будовою
+  translation: morphemic analysis
   pos: phrase
-  example: "Розбір слова починається з кореня."
+  example: "Розбір слова за будовою починається зі зміни форми."
+- word: змінний
+  translation: changeable
+  pos: adjective
+  example: "Змінні слова мають закінчення."
+- word: незмінний
+  translation: unchangeable
+  pos: adjective
+  example: "Незмінні слова не мають закінчення."
 - word: утворювати
   translation: to form
   pos: verb
