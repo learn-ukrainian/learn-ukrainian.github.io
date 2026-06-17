@@ -1,0 +1,148 @@
+- lemma: іти
+  translation: "to go on foot, unidirectional"
+  pos: verb
+  usage: "Я іду до університету пішки."
+- lemma: ходити
+  translation: "to go on foot habitually, back and forth, or in various directions"
+  pos: verb
+  usage: "Я ходжу до університету щодня."
+- lemma: їхати
+  translation: "to go by vehicle, unidirectional"
+  pos: verb
+  usage: "Ми їдемо до Львова потягом."
+- lemma: їздити
+  translation: "to go by vehicle habitually, back and forth, or in various directions"
+  pos: verb
+  usage: "Вона їздить на роботу автобусом."
+- lemma: бігти
+  translation: "to run in one direction"
+  pos: verb
+  usage: "Дитина біжить до мами."
+- lemma: бігати
+  translation: "to run habitually, for exercise, or in various directions"
+  pos: verb
+  usage: "Я бігаю в парку щоранку."
+- lemma: нести
+  translation: "to carry on foot in one direction"
+  pos: verb
+  usage: "Він несе валізу до вокзалу."
+- lemma: носити
+  translation: "to carry habitually or around; also to wear"
+  pos: verb
+  usage: "Кур'єр носить документи по офісу."
+- lemma: вести
+  translation: "to lead someone or something in one direction"
+  pos: verb
+  usage: "Мати веде дитину до лікаря."
+- lemma: водити
+  translation: "to lead habitually; to drive or guide regularly"
+  pos: verb
+  usage: "Екскурсоводка водить групи по музею."
+- lemma: везти
+  translation: "to transport by vehicle in one direction"
+  pos: verb
+  usage: "Таксі везе нас до аеропорту."
+- lemma: возити
+  translation: "to transport habitually, back and forth, or around"
+  pos: verb
+  usage: "Ця машина возить продукти до крамниць."
+- lemma: летіти
+  translation: "to fly in one direction"
+  pos: verb
+  usage: "Літак летить до Варшави."
+- lemma: літати
+  translation: "to fly habitually, back and forth, or in various directions"
+  pos: verb
+  usage: "Вона часто літає у відрядження."
+- lemma: пливти
+  translation: "to swim or sail in one direction"
+  pos: verb
+  usage: "Човен пливе до берега."
+- lemma: плавати
+  translation: "to swim habitually or around"
+  pos: verb
+  usage: "Діти плавають у басейні."
+- lemma: односпрямований
+  translation: "unidirectional"
+  pos: adjective
+  usage: "Іти - односпрямоване дієслово руху."
+- lemma: різноспрямований
+  translation: "multidirectional or habitual"
+  pos: adjective
+  usage: "Ходити - різноспрямоване дієслово руху."
+- lemma: напрямок
+  translation: "direction"
+  pos: noun:m
+  usage: "Напрямок руху показують дієслово, прийменник і відмінок."
+- lemma: звична дія
+  translation: "habitual action"
+  pos: phrase
+  usage: "Щодня підказує звичну дію."
+- lemma: в обидва боки
+  translation: "both ways, there and back"
+  pos: phrase
+  usage: "У театр і назад - це рух в обидва боки."
+- lemma: пішки
+  translation: "on foot"
+  pos: adverb
+  usage: "До центру ми йдемо пішки."
+- lemma: транспортом
+  translation: "by transport"
+  pos: adverbial phrase
+  usage: "До моря вони їдуть транспортом."
+- lemma: автобусом
+  translation: "by bus"
+  pos: noun:instrumental
+  usage: "Студенти їздять автобусом на практику."
+- lemma: потягом
+  translation: "by train"
+  pos: noun:instrumental
+  usage: "Ми їдемо потягом до Харкова."
+- lemma: щодня
+  translation: "every day"
+  pos: adverb
+  usage: "Щодня я ходжу на роботу."
+- lemma: зараз
+  translation: "right now"
+  pos: adverb
+  usage: "Зараз я іду до метро."
+- lemma: сьогодні
+  translation: "today"
+  pos: adverb
+  usage: "Сьогодні ми їдемо до друзів."
+- lemma: зазвичай
+  translation: "usually"
+  pos: adverb
+  usage: "Зазвичай вона їздить трамваєм."
+- lemma: іноді
+  translation: "sometimes"
+  pos: adverb
+  usage: "Іноді ми ходимо пішки."
+- lemma: туди-сюди
+  translation: "back and forth"
+  pos: adverb
+  usage: "Діти бігали туди-сюди по коридору."
+- lemma: валіза
+  translation: "suitcase"
+  pos: noun:f
+  usage: "Я несу важку валізу."
+- lemma: екскурсоводка
+  translation: "female tour guide"
+  pos: noun:f
+  usage: "Екскурсоводка веде групу до собору."
+- lemma: маршрут
+  translation: "route"
+  pos: noun:m
+  usage: "Опишіть свій маршрут до роботи."
+- lemma: зупинка
+  translation: "stop, station stop"
+  pos: noun:f
+  usage: "Автобус їде до наступної зупинки."
+- lemma: вокзал
+  translation: "railway station"
+  pos: noun:m
+  usage: "Ми йдемо до вокзалу пішки."
+- lemma: аеропорт
+  translation: "airport"
+  pos: noun:m
+  usage: "Таксі везе пасажирів до аеропорту."

@@ -1,0 +1,791 @@
+version: '1.0'
+module: motion-base-review
+level: b1
+inline:
+  - id: act-1
+    type: quiz
+    title: Один маршрут чи звичка?
+    instruction: Оберіть дієслово руху, яке відповідає контексту.
+    items:
+      - question: "Зараз я ____ до метро пішки."
+        options:
+          - іду
+          - ходжу
+          - їжджу
+        correct: 0
+        explanation: Зараз і пішки в одному напрямку - іду.
+      - question: "Я ____ до метро щодня, бо живу близько."
+        options:
+          - ходжу
+          - іду
+          - біжу
+        correct: 0
+        explanation: Щодня показує звичку, тому ходжу.
+      - question: "Ми ____ до Львова потягом."
+        options:
+          - їдемо
+          - ідемо
+          - бігаємо
+        correct: 0
+        explanation: Потягом означає транспорт, тому їдемо.
+      - question: "Вона часто ____ на роботу автобусом."
+        options:
+          - їздить
+          - їде
+          - ходить
+        correct: 0
+        explanation: Часто й автобусом дають звичну транспортну дію.
+      - question: "Дитина ____ до мами через кімнату."
+        options:
+          - біжить
+          - бігає
+          - їздить
+        correct: 0
+        explanation: Це один рух бігом у напрямку до мами.
+      - question: "Я ____ в парку щоранку."
+        options:
+          - бігаю
+          - біжу
+          - їду
+        correct: 0
+        explanation: Щоранку показує регулярне заняття.
+      - question: "Кур'єр ____ пакет до рецепції."
+        options:
+          - несе
+          - носить
+          - везе
+        correct: 0
+        explanation: Одна людина переносить пакет пішки в одному напрямку.
+      - question: "Кур'єр щодня ____ документи по офісах."
+        options:
+          - носить
+          - несе
+          - веде
+        correct: 0
+        explanation: Щодня й по офісах показують повторюваний рух у різних напрямках.
+      - question: "Гід ____ туристів до собору."
+        options:
+          - веде
+          - водить
+          - везе
+        correct: 0
+        explanation: Один маршрут із групою до собору - веде.
+      - question: "Ця екскурсоводка ____ групи по музею щосуботи."
+        options:
+          - водить
+          - веде
+          - возить
+        correct: 0
+        explanation: Щосуботи й по музею - регулярна дія з різними точками.
+      - question: "Таксі ____ нас до аеропорту."
+        options:
+          - везе
+          - несе
+          - веде
+        correct: 0
+        explanation: Таксі транспортує пасажирів, тому везе.
+      - question: "Ця вантажівка ____ продукти до крамниць щодня."
+        options:
+          - возить
+          - везе
+          - носить
+        correct: 0
+        explanation: Щодня показує регулярне транспортування.
+  - id: act-2
+    type: fill-in
+    title: Форми теперішнього часу
+    instruction: Оберіть правильну форму дієслова руху.
+    items:
+      - sentence: "Я зараз ____ до аптеки. (іти)"
+        answer: іду
+        options:
+          - іду
+          - ідеш
+          - ідуть
+        explanation: Я потребує форми першої особи однини.
+      - sentence: "Ми ____ через парк до університету. (іти)"
+        answer: ідемо
+        options:
+          - ідемо
+          - ідете
+          - ідуть
+        explanation: Ми - перша особа множини.
+      - sentence: "Вони ____ до центру трамваєм. (їхати)"
+        answer: їдуть
+        options:
+          - їдуть
+          - їдемо
+          - їдеш
+        explanation: Вони потребує форми третьої особи множини.
+      - sentence: "Ти часто ____ на роботу трамваєм? (їздити)"
+        answer: їздиш
+        options:
+          - їздиш
+          - їжджу
+          - їздять
+        explanation: Ти - друга особа однини.
+      - sentence: "Я щодня ____ на роботу автобусом. (їздити)"
+        answer: їжджу
+        options:
+          - їжджу
+          - їзджу
+          - їздиш
+        explanation: Нормативна форма першої особи - їжджу.
+      - sentence: "Дитина ____ до дверей. (бігти)"
+        answer: біжить
+        options:
+          - біжить
+          - бігає
+          - біжать
+        explanation: Дитина - третя особа однини.
+      - sentence: "Спортсмени ____ на стадіоні щовечора. (бігати)"
+        answer: бігають
+        options:
+          - бігають
+          - біжать
+          - біжимо
+        explanation: Щовечора показує звичне тренування.
+      - sentence: "Я ____ валізу до таксі. (нести)"
+        answer: несу
+        options:
+          - несу
+          - несеш
+          - несуть
+        explanation: Я - несу.
+      - sentence: "Вона ____ документи між кабінетами щодня. (носити)"
+        answer: носить
+        options:
+          - носить
+          - несе
+          - ношу
+        explanation: Щодня й між кабінетами - носить.
+      - sentence: "Я ____ машину обережно. (водити)"
+        answer: воджу
+        options:
+          - воджу
+          - вожу
+          - веду
+        explanation: Водити машину в першій особі - воджу.
+      - sentence: "Водій ____ нас до вокзалу. (везти)"
+        answer: везе
+        options:
+          - везе
+          - возить
+          - веде
+        explanation: Конкретна поїздка зараз - везе.
+      - sentence: "Ця служба ____ ліки по місту. (возити)"
+        answer: возить
+        options:
+          - возить
+          - везе
+          - носить
+        explanation: По місту й регулярна функція - возить.
+  - id: act-3
+    type: match-up
+    title: Пари руху
+    instruction: Поєднайте односпрямоване дієслово з його різноспрямованою парою.
+    pairs:
+      - left: іти
+        right: ходити
+      - left: їхати
+        right: їздити
+      - left: бігти
+        right: бігати
+      - left: нести
+        right: носити
+      - left: вести
+        right: водити
+      - left: везти
+        right: возити
+      - left: летіти
+        right: літати
+      - left: пливти
+        right: плавати
+      - left: йшов
+        right: ходив
+      - left: їхав
+        right: їздив
+      - left: біг
+        right: бігав
+      - left: віз
+        right: возив
+  - id: act-4
+    type: group-sort
+    title: Три типи контексту
+    instruction: Розподіліть фрази за тим, що вони підказують.
+    groups:
+      - label: Один напрямок зараз
+        items:
+          - зараз іду до метро
+          - їдемо до Львова потягом
+          - біжить до фінішу
+          - несе валізу до таксі
+      - label: Звичка або регулярність
+        items:
+          - ходжу до спортзалу щотижня
+          - їжджу на роботу трамваєм
+          - бігаю в парку щоранку
+          - водить групи щосуботи
+      - label: Різні напрямки або туди-сюди
+        items:
+          - діти бігають по двору
+          - ходив по кімнаті
+          - їздили до моря влітку
+          - носили коробки між кабінетами
+  - id: act-5
+    type: error-correction
+    title: Редактор руху
+    instruction: Знайдіть помилку в дієслові або формі й замініть її природним варіантом.
+    items:
+      - sentence: "Я ходжу до магазину зараз."
+        error: ходжу
+        correction: іду
+        error_type: word
+        explanation: Зараз і один маршрут пішки - іду.
+      - sentence: "Я іду до спортзалу щодня."
+        error: іду
+        correction: ходжу
+        error_type: word
+        explanation: Щодня показує звичку.
+      - sentence: "Ми ідемо до Львова потягом."
+        error: ідемо
+        correction: їдемо
+        error_type: word
+        explanation: Потягом - транспорт, тому їдемо.
+      - sentence: "Вона їде на роботу автобусом щодня."
+        error: їде
+        correction: їздить
+        error_type: word
+        explanation: Щодня показує регулярну транспортну дію.
+      - sentence: "Я їзджу до батьків щомісяця."
+        error: їзджу
+        correction: їжджу
+        error_type: word
+        explanation: Нормативна форма першої особи - їжджу.
+      - sentence: "Діти біжать у дворі щовечора."
+        error: біжать
+        correction: бігають
+        error_type: word
+        explanation: Щовечора й у дворі показують регулярний рух.
+      - sentence: "Кур'єр везе пакет сходами до офісу."
+        error: везе
+        correction: несе
+        error_type: word
+        explanation: Сходами й у руках - несе.
+      - sentence: "Таксі несе нас до аеропорту."
+        error: несе
+        correction: везе
+        error_type: word
+        explanation: Таксі транспортує, тому везе.
+      - sentence: "Гід водить групу до собору зараз."
+        error: водить
+        correction: веде
+        error_type: word
+        explanation: Один маршрут зараз - веде.
+      - sentence: "Екскурсоводка веде групи по музею щосуботи."
+        error: веде
+        correction: водить
+        error_type: word
+        explanation: Щосуботи й по музею - водить.
+      - sentence: "Вони швидко біжуть до зупинки."
+        error: біжуть
+        correction: біжать
+        error_type: word
+        explanation: Третя особа множини від бігти - біжать.
+      - sentence: "Ми їздили додому, коли почався дощ."
+        error: їздили
+        correction: їхали
+        error_type: word
+        explanation: Коли почався дощ фокусує процес однієї дороги.
+workbook:
+  - id: wb-1
+    type: quiz
+    title: Діагностика контексту
+    instruction: Оберіть пояснення, яке найкраще підходить до речення.
+    items:
+      - question: "Я йшов до метро, коли зустрів Марка."
+        options:
+          - процес одного маршруту пішки
+          - звичка
+          - рух транспортом
+        correct: 0
+        explanation: Йшов описує процес дороги.
+      - question: "Я ходив до метро, щоб купити картку."
+        options:
+          - відвідування або рух туди й назад
+          - рух транспортом зараз
+          - переносити предмет
+        correct: 0
+        explanation: Ходив часто подає подію як відвідування.
+      - question: "Ми їхали додому, коли почався сніг."
+        options:
+          - процес однієї поїздки
+          - регулярна поїздка
+          - біг у різних напрямках
+        correct: 0
+        explanation: Коли почався сніг ставить фокус на процесі.
+      - question: "Ми їздили додому на вихідні."
+        options:
+          - поїздка туди й назад
+          - рух пішки зараз
+          - дія без руху
+        correct: 0
+        explanation: Їздили часто означає подорож і повернення.
+      - question: "Діти бігали навколо будинку."
+        options:
+          - рух у різних напрямках або по колу
+          - один прямий біг до фінішу
+          - транспортний рух
+        correct: 0
+        explanation: Навколо будинку підказує різноспрямований рух.
+      - question: "Спортсмен біг до фінішу."
+        options:
+          - один напрямок
+          - звичка
+          - перенесення предмета
+        correct: 0
+        explanation: До фінішу показує ціль одного бігу.
+      - question: "Вона несла книжки до бібліотеки."
+        options:
+          - переносила предмети пішки в одному напрямку
+          - транспортувала книжки машиною
+          - регулярно водила людей
+        correct: 0
+        explanation: Нести означає перенесення в руках пішки в одному напрямку.
+      - question: "Вона носила книжки між аудиторіями."
+        options:
+          - повторювала перенесення в різних напрямках
+          - летіла літаком
+          - їхала до міста
+        correct: 0
+        explanation: Носила між аудиторіями показує повторюване перенесення.
+      - question: "Гід вів групу до музею."
+        options:
+          - один напрямок із групою
+          - регулярні екскурсії
+          - транспортне перевезення
+        correct: 0
+        explanation: Вів означає один напрямок із групою.
+      - question: "Гід водив групи по місту."
+        options:
+          - регулярні або різноспрямовані маршрути
+          - один маршрут у цю хвилину
+          - біг до фінішу
+        correct: 0
+        explanation: Водив групи по місту показує регулярні або різноспрямовані маршрути.
+      - question: "Вантажівка везла меблі до складу."
+        options:
+          - конкретне транспортування
+          - перенесення в руках
+          - звичний піший маршрут
+        correct: 0
+        explanation: Везла означає конкретне транспортування в одному напрямку.
+      - question: "Ця служба возила ліки по області."
+        options:
+          - регулярне транспортування різними маршрутами
+          - один біг
+          - рух пішки без об'єкта
+        correct: 0
+        explanation: Возила по області показує повторюване транспортування.
+  - id: wb-2
+    type: match-up
+    title: Форми першої особи
+    instruction: Поєднайте інфінітив із формою я.
+    pairs:
+      - left: іти
+        right: іду
+      - left: ходити
+        right: ходжу
+      - left: їхати
+        right: їду
+      - left: їздити
+        right: їжджу
+      - left: бігти
+        right: біжу
+      - left: бігати
+        right: бігаю
+      - left: нести
+        right: несу
+      - left: носити
+        right: ношу
+      - left: вести
+        right: веду
+      - left: водити
+        right: воджу
+      - left: везти
+        right: везу
+      - left: возити
+        right: вожу
+  - id: wb-3
+    type: group-sort
+    title: Спосіб руху
+    instruction: Розподіліть речення за способом руху.
+    groups:
+      - label: Пішки
+        items:
+          - Я іду до школи.
+          - Ми ходимо до парку щонеділі.
+          - Вона йшла через площу.
+          - Вони ходили в театр.
+      - label: Транспортом
+        items:
+          - Ми їдемо потягом.
+          - Я їжджу на роботу трамваєм.
+          - Таксі везе пасажира.
+          - Вантажівка возить товар.
+      - label: Бігом або з предметом
+        items:
+          - Дитина біжить до дверей.
+          - Спортсмени бігають у парку.
+          - Кур'єр несе пакет.
+          - Працівники носили коробки.
+  - id: wb-4
+    type: fill-in
+    title: Минулий час руху
+    instruction: Оберіть форму минулого часу, яка відповідає контексту.
+    items:
+      - sentence: "Учора я ____ до офісу пішки, коли зустрів колегу."
+        answer: йшов
+        options:
+          - йшов
+          - ходив
+          - їздив
+        explanation: Коли зустрів колегу фокусує процес одного маршруту.
+      - sentence: "Минулого тижня я ____ до нового музею."
+        answer: ходив
+        options:
+          - ходив
+          - йшов
+          - їхав
+        explanation: Ходив подає відвідування.
+      - sentence: "Ми ____ до Одеси всю ніч."
+        answer: їхали
+        options:
+          - їхали
+          - їздили
+          - ходили
+        explanation: Усю ніч описує процес дороги.
+      - sentence: "Улітку ми ____ до Одеси кілька разів."
+        answer: їздили
+        options:
+          - їздили
+          - їхали
+          - йшли
+        explanation: Кілька разів показує повторення.
+      - sentence: "Пес ____ до воріт і зупинився."
+        answer: біг
+        options:
+          - біг
+          - бігав
+          - їздив
+        explanation: До воріт - один напрямок.
+      - sentence: "Діти ____ по двору до вечора."
+        answer: бігали
+        options:
+          - бігали
+          - бігли
+          - їхали
+        explanation: По двору - різні напрямки.
+      - sentence: "Вона ____ дитину до лікаря."
+        answer: вела
+        options:
+          - вела
+          - водила
+          - везла
+        explanation: Один маршрут із дитиною пішки - вела.
+      - sentence: "Вона часто ____ дитину до лікаря минулої зими."
+        answer: водила
+        options:
+          - водила
+          - вела
+          - несла
+        explanation: Часто показує повторювану дію.
+      - sentence: "Водій ____ нас до вокзалу."
+        answer: віз
+        options:
+          - віз
+          - возив
+          - ніс
+        explanation: Конкретна поїздка транспортом - віз.
+      - sentence: "Цей водій ____ туристів по області все літо."
+        answer: возив
+        options:
+          - возив
+          - віз
+          - водив
+        explanation: Все літо й по області - возив.
+      - sentence: "Брат ____ валізу до кімнати."
+        answer: ніс
+        options:
+          - ніс
+          - носив
+          - віз
+        explanation: Один рух із валізою в руках - ніс.
+      - sentence: "Працівник ____ коробки між поверхами."
+        answer: носив
+        options:
+          - носив
+          - ніс
+          - віз
+        explanation: Між поверхами підказує повторюваний рух.
+  - id: wb-5
+    type: cloze
+    title: Один день у місті
+    instruction: Оберіть дієслова та форми, які роблять текст природним.
+    text: "Уранці я {1} до метро пішки, але зазвичай {2} на роботу трамваєм. Сьогодні трамваї не працювали, тому я {3} автобусом через центр. Біля офісу кур'єр {4} пакет до рецепції, а водій {5} нові стільці до складу. О дванадцятій екскурсоводка {6} групу до музею, бо вона щосереди {7} туристів по старому місту. Після роботи я не {8} додому одразу: я {9} до спортзалу. На доріжці я {10} двадцять хвилин, а діти поруч {11} по залі. Увечері таксі {12} мене додому."
+    blanks:
+      - id: 1
+        answer: іду
+        options:
+          - іду
+          - ходжу
+          - їжджу
+      - id: 2
+        answer: їжджу
+        options:
+          - їжджу
+          - їду
+          - іду
+      - id: 3
+        answer: їду
+        options:
+          - їду
+          - їжджу
+          - ходжу
+      - id: 4
+        answer: несе
+        options:
+          - несе
+          - носить
+          - везе
+      - id: 5
+        answer: везе
+        options:
+          - везе
+          - возить
+          - веде
+      - id: 6
+        answer: веде
+        options:
+          - веде
+          - водить
+          - везе
+      - id: 7
+        answer: водить
+        options:
+          - водить
+          - веде
+          - носить
+      - id: 8
+        answer: їду
+        options:
+          - їду
+          - їжджу
+          - ходжу
+      - id: 9
+        answer: іду
+        options:
+          - іду
+          - ходжу
+          - бігаю
+      - id: 10
+        answer: бігаю
+        options:
+          - бігаю
+          - біжу
+          - їду
+      - id: 11
+        answer: бігають
+        options:
+          - бігають
+          - біжать
+          - ходять
+      - id: 12
+        answer: везе
+        options:
+          - везе
+          - веде
+          - несе
+  - id: wb-6
+    type: translate
+    title: Переклад без одного go
+    instruction: Оберіть природний український варіант.
+    items:
+      - source: I am going to the pharmacy on foot now.
+        options:
+          - text: Я зараз іду до аптеки пішки.
+            correct: true
+          - text: Я зараз ходжу до аптеки пішки.
+            correct: false
+        explanation: Now and on foot in one direction - іду.
+      - source: I go to the pharmacy every week.
+        options:
+          - text: Я ходжу до аптеки щотижня.
+            correct: true
+          - text: Я іду до аптеки щотижня.
+            correct: false
+        explanation: Every week shows a habit.
+      - source: We are going to Lviv by train.
+        options:
+          - text: Ми їдемо до Львова потягом.
+            correct: true
+          - text: Ми ідемо до Львова потягом.
+            correct: false
+        explanation: By train requires a transport verb.
+      - source: She goes to work by bus every day.
+        options:
+          - text: Вона щодня їздить на роботу автобусом.
+            correct: true
+          - text: Вона щодня їде на роботу автобусом.
+            correct: false
+        explanation: Every day makes the action habitual.
+      - source: The child is running to the door.
+        options:
+          - text: Дитина біжить до дверей.
+            correct: true
+          - text: Дитина бігає до дверей.
+            correct: false
+        explanation: One run toward a target - біжить.
+      - source: The children run in the yard every evening.
+        options:
+          - text: Діти бігають у дворі щовечора.
+            correct: true
+          - text: Діти біжать у дворі щовечора.
+            correct: false
+        explanation: Every evening and in the yard indicate repeated movement.
+      - source: The courier is carrying the package to the office.
+        options:
+          - text: Кур'єр несе пакет до офісу.
+            correct: true
+          - text: Кур'єр носить пакет до офісу зараз.
+            correct: false
+        explanation: One current carrying route - несе.
+      - source: The courier carries documents between offices every day.
+        options:
+          - text: Кур'єр щодня носить документи між офісами.
+            correct: true
+          - text: Кур'єр щодня несе документи між офісами.
+            correct: false
+        explanation: Щодня and between offices make it repeated.
+      - source: The guide is leading the group to the cathedral.
+        options:
+          - text: Гід веде групу до собору.
+            correct: true
+          - text: Гід водить групу до собору зараз.
+            correct: false
+        explanation: One current route - веде.
+      - source: The guide leads groups around the city on Saturdays.
+        options:
+          - text: Гід водить групи по місту щосуботи.
+            correct: true
+          - text: Гід веде групи по місту щосуботи.
+            correct: false
+        explanation: Щосуботи and around the city indicate habitual guided routes.
+      - source: The taxi is taking us to the airport.
+        options:
+          - text: Таксі везе нас до аеропорту.
+            correct: true
+          - text: Таксі несе нас до аеропорту.
+            correct: false
+        explanation: A vehicle transports passengers, so везе.
+      - source: This van delivers food around the city.
+        options:
+          - text: Цей фургон возить їжу по місту.
+            correct: true
+          - text: Цей фургон везе їжу по місту щодня.
+            correct: false
+        explanation: Around the city as a regular function calls for возить.
+  - id: wb-7
+    type: error-correction
+    title: Маршрут без кальок
+    instruction: Виправте неправильний вибір дієслова або форми.
+    items:
+      - sentence: "Я є іти до школи."
+        error: є іти
+        correction: іду
+        error_type: phrase
+        explanation: Український теперішній час не потребує англійської кальки.
+      - sentence: "Ми ходимо до вокзалу зараз."
+        error: ходимо
+        correction: ідемо
+        error_type: word
+        explanation: Зараз і один маршрут пішки - ідемо.
+      - sentence: "Ти ідеш на роботу автобусом?"
+        error: ідеш
+        correction: їдеш
+        error_type: word
+        explanation: Автобусом - транспорт.
+      - sentence: "Я їзджу до університету трамваєм."
+        error: їзджу
+        correction: їжджу
+        error_type: word
+        explanation: Нормативна форма - їжджу.
+      - sentence: "Вони біжуть до автобуса."
+        error: біжуть
+        correction: біжать
+        error_type: word
+        explanation: Третя особа множини від бігти - біжать.
+      - sentence: "Вона бігає до фінішу зараз."
+        error: бігає
+        correction: біжить
+        error_type: word
+        explanation: До фінішу зараз - один напрямок.
+      - sentence: "Брат носить мою валізу до таксі зараз."
+        error: носить
+        correction: несе
+        error_type: word
+        explanation: Один поточний рух із валізою - несе.
+      - sentence: "Працівники несуть коробки між поверхами весь день."
+        error: несуть
+        correction: носять
+        error_type: word
+        explanation: Весь день і між поверхами показують повторюване перенесення.
+      - sentence: "Викладач водить студентів до аудиторії зараз."
+        error: водить
+        correction: веде
+        error_type: word
+        explanation: Один маршрут зараз - веде.
+      - sentence: "Мій тато веде машину щодня."
+        error: веде
+        correction: водить
+        error_type: word
+        explanation: Щодня керувати машиною - водить машину.
+      - sentence: "Автобус носить пасажирів до центру."
+        error: носить
+        correction: возить
+        error_type: word
+        explanation: Автобус регулярно транспортує пасажирів.
+      - sentence: "Коли ти зателефонував, ми їздили через центр."
+        error: їздили
+        correction: їхали
+        error_type: word
+        explanation: Коли ти зателефонував фокусує процес однієї поїздки.
+  - id: wb-8
+    type: essay-response
+    title: Мій маршрут
+    instruction: Напишіть короткий опис маршруту з базовими дієсловами руху.
+    prompt: "Опишіть свій типовий день або одну поїздку містом. Використайте щонайменше шість дієслів руху: два односпрямовані, два різноспрямовані, одне дієслово з предметом або групою, і одне транспортне дієслово. Додайте щонайменше три прийменникові конструкції: до + родовий, в/на + знахідний або через + знахідний."
+    min_words: 120
+    model_answer: >-
+      Зазвичай я ходжу на роботу пішки до метро, а потім їжджу трамваєм
+      до центру. Сьогодні я вийшов раніше, тому спокійно йшов через парк і
+      ніс невелику сумку з документами. Біля зупинки я зустрів колегу, і ми
+      разом їхали до офісу автобусом. Водій віз нас повільно, бо в центрі
+      був затор. Після роботи я не поїхав додому одразу, а пішов у спортзал.
+      Там я бігав двадцять хвилин, а тренер водив нову групу по залі й
+      показував вправи. Увечері я йшов додому вже без поспіху. Такий день
+      добре показує різницю: я ходжу на роботу регулярно, але сьогодні
+      йшов через парк; я їжджу трамваєм зазвичай, але сьогодні їхав
+      автобусом; я ніс сумку, а автобус віз пасажирів. Такі деталі допомагають
+      точніше описувати маршрут, спосіб руху й повторюваність дії.
+    rubric:
+      - criteria: односпрямовані дієслова
+        description: Є щонайменше дві форми для одного напрямку.
+      - criteria: різноспрямовані дієслова
+        description: Є щонайменше дві форми для звички, повторення або різних напрямків.
+      - criteria: спосіб руху точний
+        description: Пішки, транспортом, бігом, із предметом або групою не змішані.
+      - criteria: прийменники й відмінки
+        description: Конструкції до, в/на, через мають правильні форми.
+      - criteria: зв'язний текст
+        description: Опис читається як один маршрут або типовий день.
