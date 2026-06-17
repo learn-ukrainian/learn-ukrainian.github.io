@@ -77,7 +77,12 @@
 >   **has NO ADR-008 correction path** (`correction_terminal`) → module_failed BEFORE reaching LLM-QG.
 >   (Forensics: branch `claude/folk-retest2`.)
 >
-> **🎯 NEXT DELIVERABLE — build an ENHANCE entry point (priority #0; I own it, #0.2).** Run LLM-QG review +
+> **🎯 NEXT DELIVERABLE — ENHANCE entry point (priority #0). ⏳ DISPATCHED (codex `folk-enhance-mode`,
+> branch `codex/folk-enhance-mode` off the loop-fix branch; brief `batch_state/briefs/enhance-entry-point.md`):
+> adds a `v7_build.py --enhance` mode = run review + the craft loop on existing curated content (skip
+> knowledge_packet/writer/stress/ulp, run python_qg + llm_qg). On its PR: review the diff, then RUN
+> `--enhance` on curated kalendarna via Monitor/bg → converged (all 4 terminal dims ≥ floors) → merge BOTH
+> the enhance PR and #3480 (close #3459).** Original spec for reference:** Run LLM-QG review +
 > the generalized craft correction loop on the **CURATED** module content (which already has the
 > properly-attributed quote, python_qg-passing, decolonization 10) — NO writer/rebuild phase. This:
 > (a) is the CLEAN convergence test (no rebuild-variance confounds), and (b) **IS the Phase D mechanism**
