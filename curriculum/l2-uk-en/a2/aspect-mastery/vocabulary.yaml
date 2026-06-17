@@ -138,10 +138,10 @@
   translation: to translate
   pos: verb pair
   example: "Вони переклали короткий текст."
-- word: повторювати / повторити
-  translation: to repeat, to review
+- word: казати / сказати
+  translation: to say, to tell
   pos: verb pair
-  example: "Ми повторили правило перед тестом."
+  example: "Вона часто казала це, а сьогодні сказала прямо."
 - word: класти / покласти
   translation: to put, to place
   pos: verb pair
