@@ -1,0 +1,472 @@
+- lemma: пасивний стан
+  translation: "passive voice"
+  pos: phrase
+  usage: "У пасивному стані підмет зазнає дії."
+- lemma: активний стан
+  translation: "active voice"
+  pos: phrase
+  usage: "В активному стані підмет виконує дію."
+- lemma: пасивна конструкція
+  translation: "passive construction"
+  pos: phrase
+  usage: "Ця пасивна конструкція звучить офіційно."
+- lemma: активна конструкція
+  translation: "active construction"
+  pos: phrase
+  usage: "Активна конструкція часто звучить природніше."
+- lemma: підмет
+  translation: "subject"
+  pos: noun:m
+  usage: "Підмет у реченні виконує або зазнає дії."
+- lemma: додаток
+  translation: "object"
+  pos: noun:m
+  usage: "У формі на -но додаток залишається у знахідному."
+- lemma: виконавець
+  translation: "agent; performer"
+  pos: noun:m
+  usage: "Якщо виконавець важливий, краще сказати активно."
+- lemma: дія
+  translation: "action"
+  pos: noun:f
+  usage: "Пасив показує, що дія спрямована на предмет."
+- lemma: результат
+  translation: "result"
+  pos: noun:m
+  usage: "Форми на -но/-то часто називають результат."
+- lemma: процес
+  translation: "process"
+  pos: noun:m
+  usage: "Форма на -ся часто показує процес."
+- lemma: правило
+  translation: "rule"
+  pos: noun:n
+  usage: "Квитки продаються онлайн - це правило продажу."
+- lemma: властивість
+  translation: "property; feature"
+  pos: noun:f
+  usage: "Книжка легко читається - це властивість тексту."
+- lemma: природний
+  translation: "natural"
+  pos: adj:m
+  usage: "Активний варіант тут природний."
+- lemma: неприродний
+  translation: "unnatural"
+  pos: adj:m
+  usage: "Пасив із явним виконавцем може звучати неприродно."
+- lemma: канцелярит
+  translation: "bureaucratese"
+  pos: noun:m
+  usage: "Надмірний пасив створює канцелярит."
+- lemma: стиль
+  translation: "style; register"
+  pos: noun:m
+  usage: "Стиль допомагає вибрати актив або пасив."
+- lemma: службовий звіт
+  translation: "official report"
+  pos: phrase
+  usage: "У службовому звіті природні форми на -но/-то."
+- lemma: повідомлення
+  translation: "message; notification"
+  pos: noun:n
+  usage: "Системне повідомлення каже: файл збережено."
+- lemma: оголошення
+  translation: "announcement; notice"
+  pos: noun:n
+  usage: "В оголошенні часто пишуть: реєстрація відкривається завтра."
+- lemma: репортаж
+  translation: "news report"
+  pos: noun:m
+  usage: "Репортаж може поєднувати активні й пасивні форми."
+- lemma: інструкція
+  translation: "instruction"
+  pos: noun:f
+  usage: "В інструкції пишуть: документи подаються онлайн."
+- lemma: безособова форма
+  translation: "impersonal form"
+  pos: phrase
+  usage: "Збудовано - безособова форма на -но."
+- lemma: форма на -но
+  translation: "form ending in -но"
+  pos: phrase
+  usage: "Форма на -но не змінюється за родом."
+- lemma: форма на -то
+  translation: "form ending in -то"
+  pos: phrase
+  usage: "Відкрито - форма на -то."
+- lemma: незмінний
+  translation: "indeclinable; unchanging"
+  pos: adj:m
+  usage: "Надіслано є незмінною формою."
+- lemma: узгоджуватися
+  translation: "to agree grammatically"
+  pos: verb
+  usage: "Форма на -но не узгоджується з іменником."
+- lemma: знахідний відмінок
+  translation: "accusative case"
+  pos: phrase
+  usage: "Книгу прочитано: книгу стоїть у знахідному."
+- lemma: орудний відмінок
+  translation: "instrumental case"
+  pos: phrase
+  usage: "Орудний може називати виконавця, але така модель часто важка."
+- lemma: перехідне дієслово
+  translation: "transitive verb"
+  pos: phrase
+  usage: "Перехідне дієслово має прямий додаток."
+- lemma: неперехідне дієслово
+  translation: "intransitive verb"
+  pos: phrase
+  usage: "Неперехідне дієслово не має прямого додатка."
+- lemma: пасивний дієприкметник
+  translation: "passive participle"
+  pos: phrase
+  usage: "Пасивний дієприкметник буде окремою темою."
+- lemma: зворотне дієслово
+  translation: "reflexive verb"
+  pos: phrase
+  usage: "Не кожне зворотне дієслово є пасивом."
+- lemma: пасивноподібний
+  translation: "passive-like"
+  pos: adj:m
+  usage: "Будинок будується - пасивноподібна форма."
+- lemma: будуватися
+  translation: "to be built; to be under construction"
+  pos: verb
+  usage: "Новий міст будується біля вокзалу."
+- lemma: будується
+  translation: "is being built"
+  pos: form
+  usage: "Будинок будується вже другий рік."
+- lemma: будувався
+  translation: "was being built"
+  pos: form
+  usage: "Палац культури будувався кілька років."
+- lemma: збудовано
+  translation: "has been built"
+  pos: form
+  usage: "Міст збудовано до кінця року."
+- lemma: відремонтовано
+  translation: "has been repaired; renovated"
+  pos: form
+  usage: "Аудиторію відремонтовано."
+- lemma: ремонтується
+  translation: "is being repaired"
+  pos: form
+  usage: "Міст зараз ремонтується."
+- lemma: виконано
+  translation: "has been completed"
+  pos: form
+  usage: "Роботу виконано вчасно."
+- lemma: виконуватися
+  translation: "to be carried out"
+  pos: verb
+  usage: "План виконується поступово."
+- lemma: прочитано
+  translation: "has been read"
+  pos: form
+  usage: "Книгу прочитано до кінця."
+- lemma: читається
+  translation: "is read; reads"
+  pos: form
+  usage: "Цей текст читається легко."
+- lemma: написано
+  translation: "has been written"
+  pos: form
+  usage: "Звіт написано без помилок."
+- lemma: пишеться
+  translation: "is being written; is written"
+  pos: form
+  usage: "Ця форма пишеться з м'яким знаком."
+- lemma: надіслано
+  translation: "has been sent"
+  pos: form
+  usage: "Листа надіслано вчора."
+- lemma: надсилається
+  translation: "is being sent; is sent regularly"
+  pos: form
+  usage: "Повідомлення надсилається автоматично."
+- lemma: ухвалено
+  translation: "has been adopted; passed"
+  pos: form
+  usage: "Рішення ухвалено одноголосно."
+- lemma: ухвалювати
+  translation: "to adopt; to pass"
+  pos: verb
+  usage: "Рада ухвалила рішення."
+- lemma: відкрито
+  translation: "has been opened"
+  pos: form
+  usage: "Вхід відкрито з десятої ранку."
+- lemma: відкривається
+  translation: "opens; is opening"
+  pos: form
+  usage: "Реєстрація відкривається завтра."
+- lemma: закрито
+  translation: "has been closed"
+  pos: form
+  usage: "Доступ закрито."
+- lemma: зачинено
+  translation: "has been shut"
+  pos: form
+  usage: "Двері зачинено."
+- lemma: зачиняється
+  translation: "closes; is closing"
+  pos: form
+  usage: "Двері не зачиняються."
+- lemma: видано
+  translation: "has been published; issued"
+  pos: form
+  usage: "Книжку видано українською мовою."
+- lemma: видавати
+  translation: "to publish; to issue"
+  pos: verb
+  usage: "Видавництво видало новий підручник."
+- lemma: опубліковано
+  translation: "has been published"
+  pos: form
+  usage: "Результати опубліковано на сайті."
+- lemma: публікуватися
+  translation: "to be published; to publish oneself"
+  pos: verb
+  usage: "Оголошення публікується щотижня."
+- lemma: спроєктовано
+  translation: "has been designed"
+  pos: form
+  usage: "Будівлю спроєктовано для культурного центру."
+- lemma: проєктувати
+  translation: "to design"
+  pos: verb
+  usage: "Архітектор проєктує будівлю."
+- lemma: підготовлено
+  translation: "has been prepared"
+  pos: form
+  usage: "Презентацію підготовлено."
+- lemma: готується
+  translation: "is being prepared; is preparing"
+  pos: form
+  usage: "Звіт готується до п'ятниці."
+- lemma: проведено
+  translation: "has been held; conducted"
+  pos: form
+  usage: "Засідання проведено онлайн."
+- lemma: проводитися
+  translation: "to be held; conducted"
+  pos: verb
+  usage: "Екскурсії проводяться щосуботи."
+- lemma: перевірено
+  translation: "has been checked"
+  pos: form
+  usage: "Документи перевірено."
+- lemma: перевіряється
+  translation: "is being checked"
+  pos: form
+  usage: "Заявка перевіряється автоматично."
+- lemma: прийнято
+  translation: "has been accepted"
+  pos: form
+  usage: "Заявку прийнято."
+- lemma: прийматися
+  translation: "to be accepted"
+  pos: verb
+  usage: "Заявки приймаються до п'ятниці."
+- lemma: підтверджено
+  translation: "has been confirmed"
+  pos: form
+  usage: "Оплату підтверджено."
+- lemma: підтверджується
+  translation: "is being confirmed; is confirmed"
+  pos: form
+  usage: "Оплата підтверджується автоматично."
+- lemma: збережено
+  translation: "has been saved"
+  pos: form
+  usage: "Файл збережено."
+- lemma: зберігається
+  translation: "is stored; is being saved"
+  pos: form
+  usage: "Файл зберігається у хмарі."
+- lemma: змінено
+  translation: "has been changed"
+  pos: form
+  usage: "Пароль змінено."
+- lemma: змінюється
+  translation: "changes; is being changed"
+  pos: form
+  usage: "Пароль змінюється в налаштуваннях."
+- lemma: пошкоджено
+  translation: "has been damaged"
+  pos: form
+  usage: "Двері пошкоджено."
+- lemma: лагодиться
+  translation: "is being repaired"
+  pos: form
+  usage: "Кран лагодиться, але якщо майстер важливий, краще сказати: майстер лагодить кран."
+- lemma: використовується
+  translation: "is used"
+  pos: form
+  usage: "Цей метод використовується в дослідженнях."
+- lemma: використовуватися
+  translation: "to be used"
+  pos: verb
+  usage: "Форма використовується в офіційному стилі."
+- lemma: називатися
+  translation: "to be called"
+  pos: verb
+  usage: "Цей розділ називається пасивний стан."
+- lemma: називається
+  translation: "is called"
+  pos: form
+  usage: "Форма називається безособовою."
+- lemma: вважатися
+  translation: "to be considered"
+  pos: verb
+  usage: "Такий варіант вважається офіційним."
+- lemma: вважається
+  translation: "is considered"
+  pos: form
+  usage: "Активний стан вважається природнішим у цьому реченні."
+- lemma: знаходитися
+  translation: "to be located"
+  pos: verb
+  usage: "Музей знаходиться в центрі, хоча можна сказати простіше: музей у центрі."
+- lemma: розташований
+  translation: "located"
+  pos: adj:m
+  usage: "Музей розташований у центрі."
+- lemma: продаватися
+  translation: "to be sold"
+  pos: verb
+  usage: "Квитки продаються онлайн."
+- lemma: продається
+  translation: "is sold; sells"
+  pos: form
+  usage: "Книжка продається в книгарні."
+- lemma: продано
+  translation: "has been sold"
+  pos: form
+  usage: "Усі квитки продано."
+- lemma: вироблятися
+  translation: "to be produced"
+  pos: verb
+  usage: "Цей сир виробляється на місцевій фермі."
+- lemma: передаватися
+  translation: "to be transmitted; passed on"
+  pos: verb
+  usage: "Інформація передається електронною поштою."
+- lemma: розглядатися
+  translation: "to be reviewed; considered"
+  pos: verb
+  usage: "Запит розглядається протягом трьох днів."
+- lemma: розглянуто
+  translation: "has been reviewed"
+  pos: form
+  usage: "Заявку розглянуто."
+- lemma: завершено
+  translation: "has been completed"
+  pos: form
+  usage: "Проєкт завершено."
+- lemma: завершується
+  translation: "is ending; is being completed"
+  pos: form
+  usage: "Проєкт завершується цього тижня."
+- lemma: оновлено
+  translation: "has been updated"
+  pos: form
+  usage: "Дані оновлено."
+- lemma: оновлюється
+  translation: "is updated; is being updated"
+  pos: form
+  usage: "Сторінка оновлюється автоматично."
+- lemma: встановлено
+  translation: "has been installed; set"
+  pos: form
+  usage: "Нове обладнання встановлено."
+- lemma: встановлюється
+  translation: "is being installed"
+  pos: form
+  usage: "Програма встановлюється на комп'ютер."
+- lemma: відреставровано
+  translation: "has been restored"
+  pos: form
+  usage: "Головну залу відреставровано."
+- lemma: пофарбовано
+  translation: "has been painted"
+  pos: form
+  usage: "Стіни пофарбовано у світлі кольори."
+- lemma: замінено
+  translation: "has been replaced"
+  pos: form
+  usage: "Старі крісла замінено на нові."
+- lemma: розширено
+  translation: "has been expanded"
+  pos: form
+  usage: "Сцену розширено."
+- lemma: завантажено
+  translation: "has been uploaded; loaded"
+  pos: form
+  usage: "Презентацію завантажено."
+- lemma: доступ
+  translation: "access"
+  pos: noun:m
+  usage: "Доступ відкрито."
+- lemma: заявка
+  translation: "application; request"
+  pos: noun:f
+  usage: "Заявку прийнято."
+- lemma: квиток
+  translation: "ticket"
+  pos: noun:m
+  usage: "Квитки продаються онлайн."
+- lemma: рішення
+  translation: "decision"
+  pos: noun:n
+  usage: "Рішення ухвалено."
+- lemma: проєкт
+  translation: "project"
+  pos: noun:m
+  usage: "Проєкт завершено."
+- lemma: звіт
+  translation: "report"
+  pos: noun:m
+  usage: "Звіт написано."
+- lemma: документ
+  translation: "document"
+  pos: noun:m
+  usage: "Документ не надіслано."
+- lemma: лист
+  translation: "letter; email"
+  pos: noun:m
+  usage: "Листа надіслано вчора."
+- lemma: файл
+  translation: "file"
+  pos: noun:m
+  usage: "Файл не відкривається."
+- lemma: пароль
+  translation: "password"
+  pos: noun:m
+  usage: "Пароль змінено."
+- lemma: реєстрація
+  translation: "registration"
+  pos: noun:f
+  usage: "Реєстрація відкривається завтра."
+- lemma: оплата
+  translation: "payment"
+  pos: noun:f
+  usage: "Оплату підтверджено."
+- lemma: автоматично
+  translation: "automatically"
+  pos: adv
+  usage: "Файл зберігається автоматично."
+- lemma: онлайн
+  translation: "online"
+  pos: adv
+  usage: "Документи подаються онлайн."
+- lemma: вчасно
+  translation: "on time"
+  pos: adv
+  usage: "Роботу виконано вчасно."
+- lemma: явний виконавець
+  translation: "explicit agent"
+  pos: phrase
+  usage: "Пасив із явним виконавцем часто краще переписати активно."
