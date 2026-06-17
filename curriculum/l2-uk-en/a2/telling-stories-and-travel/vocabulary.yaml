@@ -26,6 +26,18 @@
   translation: station
   pos: noun
   example: "Потяг стояв на маленькій станції."
+- word: провідниця
+  translation: train attendant
+  pos: noun
+  example: "Провідниця перевіряла квитки."
+- word: пересадка
+  translation: transfer, change
+  pos: noun
+  example: "На маршруті була пересадка в Івано-Франківську."
+- word: пересісти
+  translation: to transfer, to change seats/vehicles
+  pos: verb
+  example: "Ми пересіли в інший вагон."
 - word: зупинитися
   translation: to stop, to stay
   pos: verb
@@ -34,6 +46,14 @@
   translation: to arrive by vehicle
   pos: verb
   example: "Ми доїхали за десять годин."
+- word: вирушити
+  translation: to set off
+  pos: verb
+  example: "Ми вирушили з вокзалу ввечері."
+- word: маршрут
+  translation: route, itinerary
+  pos: noun
+  example: "Маршрут проходить через Тернопіль."
 - word: поїхати / їздити
   translation: to go once / to go and return regularly
   pos: motion contrast
@@ -54,10 +74,22 @@
   translation: hotel
   pos: noun
   example: "Ми зупинилися в готелі."
+- word: бронювання
+  translation: reservation
+  pos: noun
+  example: "Бронювання хатинки вже підтвердили."
+- word: хатинка
+  translation: small cottage
+  pos: noun
+  example: "Ми зупинимося в хатинці біля лісу."
 - word: центр
   translation: center, downtown
   pos: noun
   example: "Ми ходили центром."
+- word: набережна
+  translation: waterfront, embankment
+  pos: noun
+  example: "Ми ходили набережною біля моря."
 - word: музей
   translation: museum
   pos: noun
