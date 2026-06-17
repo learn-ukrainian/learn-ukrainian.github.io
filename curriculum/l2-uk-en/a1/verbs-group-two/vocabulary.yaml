@@ -5,7 +5,7 @@
 - lemma: говорю
   translation: I speak
   pos: verb form
-  usage: Я говорю українською.
+  usage: Я говорю трохи.
 - lemma: говориш
   translation: you speak
   pos: verb form
@@ -13,27 +13,19 @@
 - lemma: говорить
   translation: he/she speaks
   pos: verb form
-  usage: Вона говорить.
+  usage: Вона говорить добре.
+- lemma: говоримо
+  translation: we speak
+  pos: verb form
+  usage: Ми говоримо повільно.
+- lemma: говорите
+  translation: you speak (plural/formal)
+  pos: verb form
+  usage: Ви говорите українською?
 - lemma: говорять
   translation: they speak
   pos: verb form
   usage: Вони говорять українською.
-- lemma: робити
-  translation: to do; to make
-  pos: infinitive
-  usage: Я роблю вправу.
-- lemma: роблю
-  translation: I do; I make
-  pos: verb form
-  usage: Я роблю вправу.
-- lemma: робиш
-  translation: you do
-  pos: verb form
-  usage: Ти робиш вправу?
-- lemma: роблять
-  translation: they do
-  pos: verb form
-  usage: Вони роблять вправу.
 - lemma: бачити
   translation: to see
   pos: infinitive
@@ -46,70 +38,166 @@
   translation: you see
   pos: verb form
   usage: Ти бачиш це слово?
+- lemma: бачить
+  translation: he/she sees
+  pos: verb form
+  usage: Він бачить слово.
+- lemma: бачимо
+  translation: we see
+  pos: verb form
+  usage: Ми бачимо слово.
+- lemma: бачите
+  translation: you see (plural/formal)
+  pos: verb form
+  usage: Ви бачите слово?
 - lemma: бачать
   translation: they see
   pos: verb form
   usage: Вони бачать слово.
-- lemma: вчити
-  translation: to learn; to teach
+- lemma: робити
+  translation: to do; to make
   pos: infinitive
-  usage: Ми вчимо українську.
-- lemma: вчу
-  translation: I learn
+  usage: Я роблю вправу.
+- lemma: роблю
+  translation: I do; I make
   pos: verb form
-  usage: Я вчу українську.
-- lemma: просити
-  translation: to ask for
+  usage: Я роблю вправу.
+- lemma: робиш
+  translation: you do
+  pos: verb form
+  usage: Ти робиш вправу?
+- lemma: робить
+  translation: he/she does
+  pos: verb form
+  usage: Він робить вправу.
+- lemma: робимо
+  translation: we do
+  pos: verb form
+  usage: Ми робимо вправу.
+- lemma: робите
+  translation: you do (plural/formal)
+  pos: verb form
+  usage: Ви робите вправу?
+- lemma: роблять
+  translation: they do
+  pos: verb form
+  usage: Вони роблять вправу.
+- lemma: вчити
+  translation: to learn; to study; to teach
   pos: infinitive
-  usage: Ти просиш каву?
+  usage: Я вчу українську.
+- lemma: вчу
+  translation: I learn; I study
+  pos: verb form
+  usage: Я вчу нові слова.
+- lemma: вчиш
+  translation: you learn; you study
+  pos: verb form
+  usage: Ти вчиш українську?
+- lemma: вчить
+  translation: he/she learns; he/she studies
+  pos: verb form
+  usage: Вона вчить нові слова.
+- lemma: вчимо
+  translation: we learn; we study
+  pos: verb form
+  usage: Ми вчимо українську.
+- lemma: вчите
+  translation: you learn; you study (plural/formal)
+  pos: verb form
+  usage: Ви вчите нові слова?
+- lemma: вчать
+  translation: they learn; they study
+  pos: verb form
+  usage: Вони вчать нові слова.
+- lemma: просити
+  translation: to ask for; to request
+  pos: infinitive
+  usage: Я прошу каву.
 - lemma: прошу
   translation: I ask for
   pos: verb form
   usage: Я прошу каву.
+- lemma: просиш
+  translation: you ask for
+  pos: verb form
+  usage: Ти просиш каву?
+- lemma: просить
+  translation: he/she asks for
+  pos: verb form
+  usage: Він просить каву.
+- lemma: просимо
+  translation: we ask for
+  pos: verb form
+  usage: Ми просимо каву.
+- lemma: просите
+  translation: you ask for (plural/formal)
+  pos: verb form
+  usage: Ви просите каву?
+- lemma: просять
+  translation: they ask for
+  pos: verb form
+  usage: Вони просять каву.
 - lemma: ходити
   translation: to go regularly; to walk
   pos: infinitive
   usage: Я ходжу до школи.
 - lemma: ходжу
-  translation: I go
+  translation: I go regularly; I walk
   pos: verb form
   usage: Я ходжу до школи.
+- lemma: ходиш
+  translation: you go regularly; you walk
+  pos: verb form
+  usage: Ти ходиш до школи?
+- lemma: ходить
+  translation: he/she goes regularly; he/she walks
+  pos: verb form
+  usage: Вона ходить до школи.
+- lemma: ходимо
+  translation: we go regularly; we walk
+  pos: verb form
+  usage: Ми ходимо до школи.
+- lemma: ходите
+  translation: you go regularly; you walk (plural/formal)
+  pos: verb form
+  usage: Ви ходите до школи?
 - lemma: ходять
-  translation: they go
+  translation: they go regularly; they walk
   pos: verb form
   usage: Вони ходять до школи.
-- lemma: стояти
-  translation: to stand
+- lemma: дивитися
+  translation: to watch; to look (reflexive preview)
   pos: infinitive
-  usage: Він стоїть.
-- lemma: стоїть
-  translation: he/she stands
+  usage: Я дивлюся фільм.
+- lemma: дивлюся
+  translation: I watch; I look (preview)
   pos: verb form
-  usage: Він стоїть.
-- lemma: сидіти
-  translation: to sit
+  usage: Я дивлюся фільм.
+- lemma: вчитися
+  translation: to learn; to study (reflexive preview)
   pos: infinitive
-  usage: Я сиджу.
-- lemma: сиджу
-  translation: I sit
+  usage: Я вчуся.
+- lemma: вчуся
+  translation: I am learning; I study (preview)
   pos: verb form
-  usage: Я сиджу тут.
-- lemma: спати
-  translation: to sleep
+  usage: Дякую, я вчуся.
+- lemma: любити
+  translation: to love; to like
   pos: infinitive
-  usage: Вони сплять.
-- lemma: їсти
-  translation: to eat
-  pos: infinitive
-  usage: Ти їси.
-- lemma: дати
-  translation: to give
-  pos: infinitive
-  usage: Я дам.
+  usage: Ти любиш музику?
+- lemma: любиш
+  translation: you like; you love
+  pos: verb form
+  usage: Ти любиш музику?
+- lemma: люблять
+  translation: they like; they love
+  pos: verb form
+  usage: Вони люблять музику.
 - lemma: трохи
   translation: a little
   pos: adverb
-  usage: Я трохи говорю.
+  usage: Я говорю трохи.
 - lemma: добре
   translation: well
   pos: adverb
@@ -117,4 +205,4 @@
 - lemma: увечері
   translation: in the evening
   pos: adverb
-  usage: Увечері вони ходять до школи.
+  usage: Що ти робиш увечері?
