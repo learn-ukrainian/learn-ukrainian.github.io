@@ -15,8 +15,6 @@ By the end, you can:
 
 ## Що ми знаємо?
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 You already have the A1.4 toolkit. Think of it as five cards.
 
 | Card | Safe question | Safe answer |
@@ -47,24 +45,24 @@ Support after the Ukrainian lines:
 This is also a self-check. If you can answer **коли?**, **о котрій?**,
 **яка погода?**, and **що робиш?** in one scene, A1.4 is working.
 
-<!-- INJECT_ACTIVITY: act-2 -->
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ## Читання
 
-Read the week plan aloud. It reuses the earlier modules and adds Ukrainian
-cultural context without making a new culture lesson.
+Read the week plan aloud. It reuses the earlier modules without adding a new
+grammar topic.
 
 ```text
 Цього тижня я маю простий план.
 У понеділок я працюю з дев'ятої до п'ятої.
 У вівторок о сьомій вечора вивчаю українську.
 У середу буде холодно, тому я читаю вдома.
-На полиці є книжки: Тарас Шевченко, Леся Українка, Ліна Костенко.
 У четвер буде тепло і сонячно.
 У п'ятницю я гуляю після роботи.
 У суботу о десятій друзі їдуть до Києва.
-Вони мають гривні на квитки і синьо-жовтий прапор на фото.
 У неділю, якщо буде дощ, ми ходимо в музей.
+Ввечері я часто слухаю музику.
+Мені подобається осінь.
 ```
 
 Support after the Ukrainian lines:
@@ -75,12 +73,12 @@ Support after the Ukrainian lines:
 | **У понеділок я працюю з дев'ятої до п'ятої.** | On Monday I work from nine to five. |
 | **У вівторок о сьомій вечора вивчаю українську.** | On Tuesday at seven in the evening I study Ukrainian. |
 | **У середу буде холодно, тому я читаю вдома.** | On Wednesday it will be cold, so I read at home. |
-| **На полиці є книжки: Тарас Шевченко, Леся Українка, Ліна Костенко.** | On the shelf there are books: Taras Shevchenko, Lesia Ukrainka, Lina Kostenko. |
 | **У четвер буде тепло і сонячно.** | On Thursday it will be warm and sunny. |
 | **У п'ятницю я гуляю після роботи.** | On Friday I walk after work. |
 | **У суботу о десятій друзі їдуть до Києва.** | On Saturday at ten, friends go to Kyiv. |
-| **Вони мають гривні на квитки і синьо-жовтий прапор на фото.** | They have hryvnias for tickets and the blue-yellow flag in a photo. |
 | **У неділю, якщо буде дощ, ми ходимо в музей.** | On Sunday, if it rains, we go to a museum. |
+| **Ввечері я часто слухаю музику.** | In the evening I often listen to music. |
+| **Мені подобається осінь.** | I like autumn. |
 
 Answer in short phrases:
 
@@ -90,11 +88,7 @@ Answer in short phrases:
 - **Куди друзі їдуть у суботу?**
 - **Що ми робимо, якщо буде дощ?**
 
-Keep the national markers precise: **Київ**, **гривня**, **синьо-жовтий**,
-and **Тризуб** are Ukrainian reference points. When a history date appears
-later in the course, keep it exact, for example **Голодомор 1932-1933 років**.
-
-<!-- INJECT_ACTIVITY: act-3 -->
+<!-- INJECT_ACTIVITY: act-2 -->
 
 ## Граматика
 
@@ -168,28 +162,22 @@ Support after the Ukrainian lines:
 
 ### Minute, quarter, and half-hour chunks
 
-For recognition, keep the safe chunks from the time lesson:
-**пів на восьму**, **пів на шосту**, **чверть на дванадцяту**,
-**п'ять по восьмій**, **за десять шоста**, and **десять до шостої**.
-Use **на**, **по**, **за**, and **до** as your safe clock words.
+For recognition, keep a few safe chunks from the time lesson:
+**Десята тридцять**, **пів на восьму**, and **п'ять по восьмій**.
 
 ```text
+Зараз десята тридцять.
 Зараз пів на восьму.
-Зараз пів на шосту.
 Зараз п'ять по восьмій.
-Зараз за десять шоста.
-Урок закінчується о двадцятій хвилині на шосту.
 ```
 
 Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
+| **Зараз десята тридцять.** | It is ten thirty. |
 | **Зараз пів на восьму.** | It is half past seven. |
-| **Зараз пів на шосту.** | It is half past five. |
 | **Зараз п'ять по восьмій.** | It is five past eight. |
-| **Зараз за десять шоста.** | It is ten to six. |
-| **Урок закінчується о двадцятій хвилині на шосту.** | The lesson ends at twenty minutes to six. |
 
 ### Routine planning
 
@@ -211,10 +199,7 @@ Support after the Ukrainian lines:
 | **Після обіду гуляю, якщо тепло.** | After lunch I walk if it is warm. |
 | **Нарешті ввечері читаю.** | Finally, in the evening I read. |
 
-You may see bigger source phrases behind this checkpoint: **вставати**,
-**вставати о шостій ранку**, **план дня головного менеджера**, and
-**раціональний розподіл часу**. At A1, shrink them into your own short plan:
-**я прокидаюся о сьомій**, **мій план дня**, **я планую час**.
+<!-- INJECT_ACTIVITY: act-3 -->
 
 ### Nature and weather description
 
@@ -236,16 +221,6 @@ Support after the Ukrainian lines:
 | **У лісі зелена трава.** | In the forest there is green grass. |
 | **Вранці світить сонце.** | In the morning the sun is shining. |
 
-For the written checkpoint, the move is simple: **письмово описувати тварин і
-предмети** with known adjectives, or **використання прикметників** such as
-**зелений**, **холодний**, **малий**, and **гарний**.
-
-Do not explain Ukrainian sounds through another language. Hear **и**, **х**,
-and **г** as Ukrainian sounds in Ukrainian words such as **синьо-жовтий**,
-**хмарно**, and **гарний**.
-
-<!-- INJECT_ACTIVITY: act-4 -->
-
 ## Діалог
 
 Read the planning dialogue. It combines time, calendar, weather, routine, and
@@ -259,7 +234,7 @@ free time in one practical scene.
 Оля: Буде тепло і сонячно.
 Данило: Чудово. Спочатку їдемо до парку?
 Оля: Так, а потім ходімо в музей.
-Данило: О котрій музей?
+Данило: О котрій годині йдемо в музей?
 Оля: О першій. Якщо буде дощ, спочатку йдемо в музей.
 Данило: А ввечері?
 Оля: Ввечері я рідко працюю, тому давай слухати музику.
@@ -277,16 +252,11 @@ Support after the Ukrainian lines:
 | **Оля: Буде тепло і сонячно.** | Olia: It will be warm and sunny. |
 | **Данило: Чудово. Спочатку їдемо до парку?** | Danylo: Great. First we go to the park? |
 | **Оля: Так, а потім ходімо в музей.** | Olia: Yes, and then let's go to the museum. |
-| **Данило: О котрій музей?** | Danylo: What time is the museum? |
+| **Данило: О котрій годині йдемо в музей?** | Danylo: What time are we going to the museum? |
 | **Оля: О першій. Якщо буде дощ, спочатку йдемо в музей.** | Olia: At one. If it rains, first we go to the museum. |
 | **Данило: А ввечері?** | Danylo: And in the evening? |
 | **Оля: Ввечері я рідко працюю, тому давай слухати музику.** | Olia: In the evening I rarely work, so let's listen to music. |
 | **Данило: Добре. До побачення!** | Danylo: Good. Goodbye! |
-
-Notice the clean everyday forms: **Добрий день**, **До побачення**,
-**прізвище**, **тато**, **Мені 20 років**, **Я студент**, and
-**Він спортсмен**. Use Ukrainian zero-copula and age chunks; do not force an
-English helper into these lines.
 
 ## Підсумок
 
@@ -312,16 +282,6 @@ Support after the Ukrainian lines:
 | **Якщо буде дощ, я читаю вдома.** | If it rains, I read at home. |
 | **Ввечері я слухаю музику.** | In the evening I listen to music. |
 
-:::caution
-Keep the time and nature system Ukrainian. Use **о/об**, **на**, **по**,
-**за**, and **до** for clock time. Present Ukrainian language on its own
-independent terms; do not use Russian-language phonetic comparisons or
-borrowed clock shortcuts. For cultural context, keep Ukrainian forms precise:
-**Київ**, **гривня**, **синьо-жовтий прапор**, **Тризуб**, **Тарас
-Шевченко**, **Леся Українка**, and **Ліна Костенко**. Everyday forms also
-stay precise: **Добрий день**, **До побачення**, **прізвище**, and **тато**.
-:::
-
 Write your own six-line checkpoint answer. Include:
 
 - one day: **у суботу**;
@@ -330,3 +290,7 @@ Write your own six-line checkpoint answer. Include:
 - one sequence word: **спочатку** or **потім**;
 - one free-time action: **гуляю**, **читаю**, **слухаю музику**;
 - one alternative: **якщо буде дощ...**.
+
+You have now reviewed the A1.4 toolkit: clock time, calendar words, seasons,
+weather, daily routine, free time, sequence, and frequency. Next comes A1.5:
+places, the city, directions, and transport.
