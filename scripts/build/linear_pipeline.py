@@ -63,7 +63,7 @@ from scripts.common.review_loop import (
     best_round_index,
     min_score_regressed,
 )
-from scripts.common.thresholds import QG_DIMS, aggregate_review
+from scripts.common.thresholds import QG_DIMS, aggregate_review, terminal_dims_for
 from scripts.config import get_immersion_policy, get_immersion_range, get_immersion_rule
 from scripts.generate_mdx.core import generate_mdx
 from scripts.pipeline.learner_state import build_learner_state, format_learner_state
@@ -4667,28 +4667,76 @@ def _prompt_yaml_or_text(value: str | Mapping[str, Any] | None) -> str:
     return _yaml_inline(value)
 
 
-def pedagogical_correction_context(
+SUBJECTIVE_DIM_RUBRIC_REMINDERS: Mapping[str, str] = {
+    "pedagogical": (
+        "Sequencing must actually teach: examples illuminate the concept, each "
+        "idea earns the next, and seminar depth is woven through source-guided "
+        "Ukrainian teaching rather than flattened into dry scholarship."
+    ),
+    "naturalness": (
+        "Ukrainian should read as native teaching prose after deterministic "
+        "VESUM and russianism gates: assess flow, register, idiom, and whether "
+        "the sentence would sound natural in context."
+    ),
+    "decolonization": (
+        "Teach Ukrainian on its own terms. Clean canonical Ukrainian is "
+        "substantive decolonization; fix Russian-centered, imperial, or Soviet "
+        "framing in place without bolting on unrelated rhetoric."
+    ),
+    "engagement": (
+        "The prose should hold attention beyond meeting callout counts: warm, "
+        "content-anchored, human, and for seminar tracks capable of making the "
+        "learner care about the heritage and keep reading."
+    ),
+    "tone": (
+        "Teacher voice should stay consistent, warm, direct, and appropriate to "
+        "the level; fix register shifts, bureaucratic prose, and third-person "
+        "learner framing."
+    ),
+    "beauty": (
+        "The lesson must read beautifully and convey the source's soul: vivid, "
+        "memorable Ukrainian, authentic folk text quoted and framed so its "
+        "beauty and identity-bearing power resonate."
+    ),
+}
+
+
+def _subjective_correction_findings(
+    llm_qg: Mapping[str, Any],
+    failing_dims: Sequence[str],
+) -> dict[str, Any]:
+    dimensions = _llm_qg_dimensions(llm_qg)
+    findings: dict[str, Any] = {}
+    for dim in failing_dims:
+        payload = dimensions.get(dim)
+        entry = dict(payload) if isinstance(payload, Mapping) else {}
+        entry["rubric_reminder"] = SUBJECTIVE_DIM_RUBRIC_REMINDERS.get(dim, "")
+        findings[dim] = entry
+    return {
+        "failing_terminal_dims": list(failing_dims),
+        "dimensions": findings,
+        "aggregate": dict(_llm_qg_aggregate(llm_qg)),
+    }
+
+
+def subjective_correction_context(
     *,
     plan: Mapping[str, Any],
     llm_qg: Mapping[str, Any],
+    failing_dims: Sequence[str],
     module_text: str,
     plan_content: str,
     wiki_manifest: str | Mapping[str, Any] | None = None,
     obligation_checklist: Mapping[str, Any] | None = None,
 ) -> dict[str, str]:
-    """Build prompt context for one insert-only pedagogical correction."""
-    dimensions = llm_qg.get("dimensions")
-    pedagogical = dimensions.get("pedagogical") if isinstance(dimensions, Mapping) else {}
-    aggregate = llm_qg.get("aggregate")
-    findings = {
-        "pedagogical": dict(pedagogical) if isinstance(pedagogical, Mapping) else {},
-        "aggregate": dict(aggregate) if isinstance(aggregate, Mapping) else {},
-    }
+    """Build prompt context for one multi-dim subjective correction."""
+    findings = _subjective_correction_findings(llm_qg, failing_dims)
     return {
         "LEVEL": str(plan.get("level") or ""),
         "MODULE_NUM": str(plan.get("sequence") or ""),
         "MODULE_SLUG": str(plan.get("slug") or ""),
-        "PEDAGOGICAL_FINDINGS": _yaml_inline(findings),
+        "FAILING_TERMINAL_DIMS": ", ".join(failing_dims),
+        "SUBJECTIVE_FINDINGS": _yaml_inline(findings),
         "PLAN_CONTENT": plan_content,
         "WIKI_MANIFEST": _prompt_yaml_or_text(wiki_manifest),
         "OBLIGATION_CHECKLIST": _prompt_yaml_or_text(obligation_checklist),
@@ -4696,20 +4744,22 @@ def pedagogical_correction_context(
     }
 
 
-def render_pedagogical_correction_prompt(
+def render_subjective_correction_prompt(
     *,
     plan: Mapping[str, Any],
     llm_qg: Mapping[str, Any],
+    failing_dims: Sequence[str],
     module_text: str,
     plan_content: str,
     wiki_manifest: str | Mapping[str, Any] | None = None,
     obligation_checklist: Mapping[str, Any] | None = None,
 ) -> str:
     return render_phase_prompt(
-        PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-correction-pedagogical.md",
-        pedagogical_correction_context(
+        PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-correction-subjective.md",
+        subjective_correction_context(
             plan=plan,
             llm_qg=llm_qg,
+            failing_dims=failing_dims,
             module_text=module_text,
             plan_content=plan_content,
             wiki_manifest=wiki_manifest,
@@ -5435,9 +5485,22 @@ def _llm_qg_aggregate(llm_qg: Mapping[str, Any]) -> Mapping[str, Any]:
     return aggregate if isinstance(aggregate, Mapping) else {}
 
 
-def _llm_qg_needs_pedagogical_fix(llm_qg: Mapping[str, Any]) -> bool:
+def _llm_qg_needs_subjective_fix(
+    llm_qg: Mapping[str, Any],
+    profile: str | None,
+) -> tuple[str, ...]:
+    terminal_dims = terminal_dims_for(profile)
+    if not terminal_dims:
+        return ()
     failing = _llm_qg_aggregate(llm_qg).get("failing_dims") or ()
-    return "pedagogical" in {str(dim) for dim in failing}
+    selected: list[str] = []
+    seen: set[str] = set()
+    for dim in failing:
+        dim_key = str(dim)
+        if dim_key in terminal_dims and dim_key not in seen:
+            selected.append(dim_key)
+            seen.add(dim_key)
+    return tuple(selected)
 
 
 def _llm_qg_round_summary(round_record: Mapping[str, Any]) -> dict[str, Any]:
@@ -5458,7 +5521,7 @@ def _llm_qg_round_summary(round_record: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
-def _invoke_pedagogical_corrector(
+def _invoke_subjective_corrector(
     *,
     prompt: str,
     module_dir: Path,
@@ -5478,7 +5541,7 @@ def _invoke_pedagogical_corrector(
         mode="read-only",
         cwd=module_dir,
         model=REVIEWER_DEFAULTS["codex-tools"]["model"],
-        task_id=f"linear-llm-qg-pedagogical-fix-{plan.get('slug', 'module')}-r{round_num}",
+        task_id=f"linear-llm-qg-fix-{plan.get('slug', 'module')}-r{round_num}",
         entrypoint="runtime",
         effort=REVIEWER_DEFAULTS["codex-tools"]["effort"],
         tool_config=_runtime_tool_config("codex-tools", workspace_dir=module_dir),
@@ -5487,32 +5550,45 @@ def _invoke_pedagogical_corrector(
     return str(getattr(result, "response", "") or "")
 
 
-def _apply_pedagogical_insert_fixes(
+def _validate_subjective_fix_shapes(
+    fixes: list[dict[str, str]],
+) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
+    accepted: list[dict[str, str]] = []
+    rejected: list[dict[str, str]] = []
+    for fix in fixes:
+        if "find" in fix and "replace" in fix:
+            accepted_fix, rejected_fix = _validate_reviewer_fix_shapes(
+                [fix],
+                max_lines=6,
+                max_chars=240,
+            )
+        elif "insert_after" in fix and "text" in fix:
+            accepted_fix, rejected_fix = _validate_reviewer_fix_shapes(
+                [fix],
+                max_lines=8,
+                max_chars=800,
+            )
+        else:
+            accepted_fix, rejected_fix = [], [fix]
+        accepted.extend(accepted_fix)
+        rejected.extend(rejected_fix)
+    return accepted, rejected
+
+
+def _apply_subjective_fixes(
     *,
     response: str,
     module_dir: Path,
     plan_path: Path,
 ) -> dict[str, Any]:
     fixes = _parse_reviewer_fixes(response)
-    insert_fixes = [
-        fix for fix in fixes
-        if "insert_after" in fix and "text" in fix
-    ]
-    rejected_shape_fixes = [
-        fix for fix in fixes
-        if not ("insert_after" in fix and "text" in fix)
-    ]
-    accepted_fixes, rejected_oversize = _validate_reviewer_fix_shapes(
-        insert_fixes,
-        max_lines=8,
-        max_chars=800,
-    )
+    accepted_fixes, rejected_fixes = _validate_subjective_fix_shapes(fixes)
     module_path = module_dir / "module.md"
     original_text = _read_required(module_path)
     apply_result = _apply_reviewer_fixes(
         original_text,
         accepted_fixes,
-        gate="llm_qg_pedagogical",
+        gate="llm_qg_subjective",
         module_dir=module_dir,
         plan_path=plan_path,
     )
@@ -5520,11 +5596,11 @@ def _apply_pedagogical_insert_fixes(
     if changed:
         module_path.write_text(apply_result.text, encoding="utf-8")
     return {
-        "kind": "llm_qg_pedagogical",
+        "kind": "llm_qg_subjective",
         "response": response,
         "fixes": fixes,
         "accepted_fixes": accepted_fixes,
-        "rejected_fixes": [*rejected_shape_fixes, *rejected_oversize],
+        "rejected_fixes": rejected_fixes,
         "unmatched_anchors": sorted(apply_result.unmatched_anchors),
         "applied": changed,
     }
@@ -5677,7 +5753,7 @@ def run_llm_qg_with_corrections(
     invoker: Callable[..., Any] | None = None,
     event_sink: Callable[..., None] | None = None,
 ) -> dict[str, Any]:
-    """Run LLM-QG with a bounded insert-only pedagogical correction loop."""
+    """Run LLM-QG with a bounded subjective correction loop."""
     review_rounds = max(1, int(max_rounds or llm_qg_max_rounds_for_level(plan.get("level"))))
     rounds: list[dict[str, Any]] = []
     corrections: list[dict[str, Any]] = []
@@ -5727,26 +5803,28 @@ def run_llm_qg_with_corrections(
         if round_num >= review_rounds:
             stopped_reason = "max_rounds"
             break
-        if not _llm_qg_needs_pedagogical_fix(llm_qg):
-            stopped_reason = "no_pedagogical_failure"
+        failing_terminal_dims = _llm_qg_needs_subjective_fix(llm_qg, profile)
+        if not failing_terminal_dims:
+            stopped_reason = "no_terminal_failure"
             break
 
         module_text = _read_required(module_dir / "module.md")
-        prompt = render_pedagogical_correction_prompt(
+        prompt = render_subjective_correction_prompt(
             plan=plan,
             llm_qg=llm_qg,
+            failing_dims=failing_terminal_dims,
             module_text=module_text,
             plan_content=plan_content,
             wiki_manifest=wiki_manifest,
             obligation_checklist=obligation_checklist,
         )
-        (module_dir / f"llm-qg-pedagogical-correction-r{round_num}-prompt.md").write_text(
+        (module_dir / f"llm-qg-correction-r{round_num}-prompt.md").write_text(
             prompt,
             encoding="utf-8",
         )
         context = CorrectionContext(
-            gate="llm_qg_pedagogical",
-            gate_report=_llm_qg_dimensions(llm_qg).get("pedagogical", {}),
+            gate="llm_qg_subjective",
+            gate_report=_subjective_correction_findings(llm_qg, failing_terminal_dims),
             module_dir=module_dir,
             plan_path=plan_path,
             qg_report=llm_qg,
@@ -5755,7 +5833,7 @@ def run_llm_qg_with_corrections(
         response = (
             corrector(context)
             if corrector is not None
-            else _invoke_pedagogical_corrector(
+            else _invoke_subjective_corrector(
                 prompt=prompt,
                 module_dir=module_dir,
                 plan=plan,
@@ -5764,15 +5842,16 @@ def run_llm_qg_with_corrections(
                 stdout_silence_timeout=stdout_silence_timeout,
             )
         ) or ""
-        (module_dir / f"llm-qg-pedagogical-correction-r{round_num}-response.raw.md").write_text(
+        (module_dir / f"llm-qg-correction-r{round_num}-response.raw.md").write_text(
             response,
             encoding="utf-8",
         )
-        correction = _apply_pedagogical_insert_fixes(
+        correction = _apply_subjective_fixes(
             response=response,
             module_dir=module_dir,
             plan_path=plan_path,
         )
+        correction["failing_terminal_dims"] = list(failing_terminal_dims)
         correction["round"] = round_num
         corrections.append(correction)
         if not correction.get("applied"):
