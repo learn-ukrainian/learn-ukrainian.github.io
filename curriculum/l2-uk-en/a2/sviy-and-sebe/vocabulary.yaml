@@ -26,6 +26,10 @@
   translation: one's own, instrumental masculine/neuter
   pos: pronoun
   example: "Я пишаюся своїм містом."
+- word: горджуся
+  translation: I am proud, first-person form of гордитися
+  pos: verb
+  example: "Я горджуся своїм містом."
 - word: своїми
   translation: one's own, instrumental plural
   pos: pronoun
@@ -50,6 +54,10 @@
   translation: at one's place, in oneself
   pos: phrase
   example: "Я залишив ключі у себе."
+- word: при собі
+  translation: on oneself, with oneself
+  pos: phrase
+  example: "На іспит треба мати паспорт при собі."
 - word: почуватися
   translation: to feel
   pos: verb
@@ -62,6 +70,14 @@
   translation: to behave
   pos: phrase
   example: "Він веде себе спокійно."
+- word: бути собою
+  translation: to be oneself
+  pos: phrase
+  example: "На співбесіді важливо бути собою."
+- word: сам по собі
+  translation: by itself
+  pos: phrase
+  example: "Цей факт сам по собі важливий."
 - word: уявити
   translation: to imagine
   pos: verb
@@ -90,3 +106,19 @@
   translation: daily
   pos: adjective
   example: "Щоденний розклад допомагає."
+- word: берегти
+  translation: to protect, to take care of
+  pos: verb
+  example: "Важливо берегти себе."
+- word: напружений
+  translation: tense, stressful
+  pos: adjective
+  example: "День був напружений."
+- word: нагадувати
+  translation: to remind
+  pos: verb
+  example: "Я нагадую собі робити паузи."
+- word: керівниця
+  translation: manager, supervisor
+  pos: noun
+  example: "Керівниця радить берегти себе."

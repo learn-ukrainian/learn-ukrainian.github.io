@@ -91,6 +91,22 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 | Кому для себе? | собі | Я купив собі чай. |
 | Кого / що повертаємо до підмета? | себе | Він побачив себе у дзеркалі. |
 
+Маленька перевірка перед правилом: знайдіть у реченні підмет і спитайте:
+«Чия це річ?» або «Для кого ця дія?». Якщо відповідь повертається до
+того самого підмета, дуже часто потрібні `свій`, `собі`, `себе` або
+`з собою`.
+
+> Сестра взяла свою сумку.
+
+Підмет - `сестра`. Сумка належить сестрі. Тому `свою`.
+
+> Сестра взяла її сумку.
+
+Тепер сумка належить іншій жінці. Підмет не є власником, тому `її`, а не
+`свою`. Така різниця особливо важлива в дорослих ситуаціях: документи,
+квитки, телефони, родинні речі, робочі плани. Одне коротке слово може
+змінити, хто саме є власником.
+
 ## Свій: власник є підметом
 
 Головне правило просте: використовуйте `свій`, коли власник речі є
@@ -125,6 +141,30 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 | Марко читає його лист. | Марко читає лист іншого чоловіка. |
 
 Тому в третій особі `свій` часто рятує речення від двозначності.
+Англійське `his / her` не завжди показує цю різницю, тому тут корисно
+мислити не перекладом, а схемою:
+
+1. знайдіть підмет;
+2. знайдіть річ або людину, про яку йдеться;
+3. спитайте: це належить підмету?
+4. якщо так, оберіть форму `свій`; якщо ні, оберіть `його`, `її`, `їхній`
+   або конкретне ім'я.
+
+Порівняйте ще дві пари:
+
+> Мама поклала свій телефон у сумку.
+>
+> Мама поклала її телефон у сумку.
+
+У першому реченні телефон мами. У другому - телефон іншої жінки,
+наприклад сестри. Так само:
+
+> Друзі запросили своїх батьків.
+>
+> Друзі запросили їхніх батьків.
+
+Перше речення означає: кожен запросив власних батьків або група запросила
+батьків цієї групи. Друге речення може означати батьків інших людей.
 
 Форма `свій` узгоджується не з власником, а з річчю:
 
@@ -141,7 +181,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Свій чи його / її?
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Олена взяла ___ сумку. Це сумка Олени.", "options": [{"text": "свою", "correct": true}, {"text": "її", "correct": false}, {"text": "його", "correct": false}], "explanation": "Власник є підметом, тому свою."}, {"question": "Олена взяла ___ сумку. Це сумка Марії.", "options": [{"text": "її", "correct": true}, {"text": "свою", "correct": false}, {"text": "свій", "correct": false}], "explanation": "Якщо сумка іншої жінки, потрібне її."}, {"question": "Марко перевірив ___ розклад. Це розклад Марка.", "options": [{"text": "свій", "correct": true}, {"text": "його", "correct": false}, {"text": "її", "correct": false}], "explanation": "Власник є підметом, тому свій."}, {"question": "Марко перевірив ___ розклад. Це розклад Андрія.", "options": [{"text": "його", "correct": true}, {"text": "свій", "correct": false}, {"text": "свою", "correct": false}], "explanation": "Якщо розклад іншого чоловіка, потрібне його."}, {"question": "Вони запросили ___ друзів.", "options": [{"text": "своїх", "correct": true}, {"text": "свій", "correct": false}, {"text": "свою", "correct": false}], "explanation": "Друзі належать підмету вони, форма множини - своїх."}, {"question": "Я шукаю ___ паспорт.", "options": [{"text": "свій", "correct": true}, {"text": "свою", "correct": false}, {"text": "своє", "correct": false}], "explanation": "Паспорт - чоловічий рід."}, {"question": "Ти забула ___ ключі?", "options": [{"text": "свої", "correct": true}, {"text": "свій", "correct": false}, {"text": "своє", "correct": false}], "explanation": "Ключі - множина."}, {"question": "Ми любимо ___ місто.", "options": [{"text": "своє", "correct": true}, {"text": "своя", "correct": false}, {"text": "свої", "correct": false}], "explanation": "Місто - середній рід."}]`)} isUkrainian={true} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Олена взяла ___ сумку. Це сумка Олени.", "options": [{"text": "свою", "correct": true}, {"text": "її", "correct": false}, {"text": "його", "correct": false}], "explanation": "Власник є підметом, тому свою."}, {"question": "Олена взяла ___ сумку. Це сумка Марії.", "options": [{"text": "її", "correct": true}, {"text": "свою", "correct": false}, {"text": "свій", "correct": false}], "explanation": "Якщо сумка іншої жінки, потрібне її."}, {"question": "Марко перевірив ___ розклад. Це розклад Марка.", "options": [{"text": "свій", "correct": true}, {"text": "його", "correct": false}, {"text": "її", "correct": false}], "explanation": "Власник є підметом, тому свій."}, {"question": "Марко перевірив ___ розклад. Це розклад Андрія.", "options": [{"text": "його", "correct": true}, {"text": "свій", "correct": false}, {"text": "свою", "correct": false}], "explanation": "Якщо розклад іншого чоловіка, потрібне його."}, {"question": "Вони запросили ___ друзів.", "options": [{"text": "своїх", "correct": true}, {"text": "свій", "correct": false}, {"text": "свою", "correct": false}], "explanation": "Друзі належать підмету вони, форма множини - своїх."}, {"question": "Я шукаю ___ паспорт.", "options": [{"text": "свій", "correct": true}, {"text": "свою", "correct": false}, {"text": "своє", "correct": false}], "explanation": "Паспорт - чоловічий рід."}, {"question": "Ти забула ___ ключі?", "options": [{"text": "свої", "correct": true}, {"text": "свій", "correct": false}, {"text": "своє", "correct": false}], "explanation": "Ключі - множина."}, {"question": "Ми любимо ___ місто.", "options": [{"text": "своє", "correct": true}, {"text": "своя", "correct": false}, {"text": "свої", "correct": false}], "explanation": "Місто - середній рід."}]`)} instruction={"Оберіть форму, яка передає потрібне значення."} isUkrainian={true} />
 
 ## Свій у відмінках
 
@@ -155,9 +195,27 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 | сер. | своє | свого | своєму | своє | своїм | своєму / своїм |
 | множ. | свої | своїх | своїм | свої / своїх | своїми | своїх |
 
+У знахідному відмінку дивіться, чи іменник живий. Для неживих речей форма
+часто така сама, як називний:
+
+> Я бачу свій паспорт.
+>
+> Ми перевірили свої квитки.
+
+Для людей і тварин форма часто така сама, як родовий:
+
+> Вони запросили своїх друзів.
+>
+> Олена шукає свого кота.
+
+Це не нове правило тільки для `свій`. Це те саме правило знахідного
+відмінка, яке ви вже бачили з іменниками та прикметниками.
+
 Подивіться на форми в коротких фразах:
 
 > Я пишаюся своїм містом.
+>
+> Я горджуся своїм містом.
 >
 > Вона допомагає своїй сестрі.
 >
@@ -171,10 +229,18 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 | Питання | Форма |
 | --- | --- |
-| пишаюся чим? містом | своїм містом |
+| пишаюся / горджуся чим? містом | своїм містом |
 | допомагаю кому? сестрі | своїй сестрі |
 | бачу що? сумку | свою сумку |
 | говорю про що? плани | про свої плани |
+
+`Пишатися` і `гордитися / горджуся` дуже близькі за значенням. У курсі ви
+частіше бачите `пишатися`, але форма після обох дієслів однакова:
+орудний відмінок.
+
+> Я пишаюся своїм містом.
+>
+> Я горджуся своїм містом.
 
 Є сталі й дуже часті словосполучення:
 
@@ -190,9 +256,23 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 >
 > зі своєю родиною
 
-### Форми слова свій
+Мікровправа без вибору: закрийте правий стовпець і скажіть форму
+самостійно.
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я пишаюся ___ містом.", "answer": "своїм", "options": ["свій", "свого", "своїм"]}, {"sentence": "Вона допомагає ___ сестрі.", "answer": "своїй", "options": ["своя", "своєї", "своїй"]}, {"sentence": "Він говорить про ___ роботу.", "answer": "свою", "options": ["свій", "свою", "своєї"]}, {"sentence": "Ми зустрілися зі ___ друзями.", "answer": "своїми", "options": ["свої", "своїх", "своїми"]}, {"sentence": "Вони говорили про ___ плани.", "answer": "свої", "options": ["свої", "своїх", "своїми"]}, {"sentence": "Марко не знайшов ___ паспорта.", "answer": "свого", "options": ["свій", "свого", "своїм"]}, {"sentence": "Олена прийшла зі ___ родиною.", "answer": "своєю", "options": ["своя", "своєї", "своєю"]}, {"sentence": "Я живу у ___ місті.", "answer": "своєму", "options": ["своє", "свого", "своєму"]}]`)} isUkrainian={true} />
+| Початок | Відповідь |
+| --- | --- |
+| пишаюся ___ містом | своїм |
+| допомагаю ___ сестрі | своїй |
+| говорю про ___ роботу | свою |
+| зустрівся зі ___ друзями | своїми |
+| не знайшов ___ паспорта | свого |
+| живу у ___ місті | своєму |
+| прийшла зі ___ родиною | своєю |
+| запросили ___ батьків | своїх |
+
+### Чи правильно?
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Олена взяла свою сумку.", "isTrue": true, "explanation": "Сумка належить Олені, підмету речення."}, {"statement": "Олена взяла свій сумку.", "isTrue": false, "explanation": "Сумка - жіночий рід: свою сумку."}, {"statement": "Марко перевірив свій розклад.", "isTrue": true, "explanation": "Розклад належить Маркові, підмету речення."}, {"statement": "Марко перевірив свою розклад.", "isTrue": false, "explanation": "Розклад - чоловічий рід, тому свій розклад."}, {"statement": "Ми перевірили свої квитки.", "isTrue": true, "explanation": "Квитки - множина, власник є підметом ми."}, {"statement": "Вона пишається своїм містом.", "isTrue": true, "explanation": "Пишатися чим? своїм містом."}, {"statement": "Вони говорили про своїх плани.", "isTrue": false, "explanation": "Про що? про свої плани."}, {"statement": "Олена взяла її сумку. Це сумка Олени.", "isTrue": false, "explanation": "Якщо це сумка Олени, краще свою сумку."}]`)} instruction={"Визначте, чи правильно використано свій."} isUkrainian={true} />
 
 ## Себе, собі, собою
 
@@ -205,7 +285,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 | родовий | себе | Я не впізнав себе на фото. |
 | знахідний | себе | Вона бачить себе у дзеркалі. |
 | давальний | собі | Він купив собі каву. |
-| місцевий | собі | Я подумав про це в собі. |
+| місцевий | собі | Він носить документи при собі. |
 | орудний | собою | Ми взяли документи з собою. |
 
 Найчастіші фрази треба вивчати як готові блоки:
@@ -223,6 +303,10 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 > говорити про себе
 >
 > бути собою
+>
+> носити при собі
+>
+> сам / сама по собі
 
 Порівняйте:
 
@@ -243,7 +327,54 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ### Себе, собі, собою
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "бачити", "right": "себе у дзеркалі"}, {"left": "купити", "right": "собі каву"}, {"left": "взяти документи", "right": "з собою"}, {"left": "говорити", "right": "про себе"}, {"left": "уявити", "right": "собі подорож"}, {"left": "бути", "right": "собою"}, {"left": "почувати себе", "right": "добре"}, {"left": "вести себе", "right": "спокійно"}]`)} isUkrainian={true} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я не впізнав ___ на фото.", "answer": "себе", "options": ["себе", "собі", "собою"]}, {"sentence": "Вона купила ___ каву.", "answer": "собі", "options": ["себе", "собі", "собою"]}, {"sentence": "Ми взяли документи з ___.", "answer": "собою", "options": ["себе", "собі", "собою"]}, {"sentence": "Він говорить про ___.", "answer": "себе", "options": ["себе", "собі", "собою"]}, {"sentence": "Уявіть ___ коротку подорож.", "answer": "собі", "options": ["себе", "собі", "собою"]}, {"sentence": "На іспит треба мати паспорт при ___.", "answer": "собі", "options": ["себе", "собі", "собою"]}, {"sentence": "На роботі важливо бути ___.", "answer": "собою", "options": ["себе", "собі", "собою"]}, {"sentence": "Вона бачить ___ у дзеркалі.", "answer": "себе", "options": ["себе", "собі", "собою"]}]`)} instruction={"Оберіть правильну форму зворотного займенника."} isUkrainian={true} />
+
+Є кілька фраз, які не треба перекладати слово за словом. Краще вчити їх
+як готові частини речення.
+
+| Фраза | Значення в реченні |
+| --- | --- |
+| `мати при собі` | мати щось із собою зараз |
+| `бути собою` | не вдавати іншу людину |
+| `сам по собі` / `сама по собі` | окремо, без додаткового контексту |
+| `взяти себе в руки` | заспокоїтися і діяти зібрано |
+
+> На іспит треба мати при собі паспорт.
+>
+> На співбесіді важливо бути собою.
+>
+> Ця помилка сама по собі не страшна, але її треба виправити.
+>
+> Перед складною розмовою він узяв себе в руки.
+
+### Вислови із себе
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "взяти з собою", "right": "мати річ поруч, коли кудись ідеш"}, {"left": "купити собі", "right": "купити для власного використання"}, {"left": "уявити собі", "right": "створити образ у думках"}, {"left": "говорити про себе", "right": "розповідати про власне життя або досвід"}, {"left": "почувати себе добре", "right": "мати добрий фізичний або емоційний стан"}, {"left": "вести себе спокійно", "right": "поводитися без паніки або конфлікту"}, {"left": "бути собою", "right": "не вдавати іншу людину"}, {"left": "мати при собі", "right": "носити або тримати щось із собою зараз"}]`)} instruction={"З'єднайте вислів із його значенням."} isUkrainian={true} />
+
+### Себе і дієслова на -ся
+
+Форма `-ся` історично пов'язана із словом `себе`. Тому багато дієслів
+легше зрозуміти через ідею «дія повертається до людини».
+
+> мити себе -> митися
+>
+> одягати себе -> одягатися
+>
+> готувати себе -> готуватися
+
+Але в сучасній українській мові не кожне дієслово на `-ся` можна просто
+замінити словом `себе`. Наприклад:
+
+> сміятися
+>
+> зустрічатися
+>
+> навчатися
+
+Ці дієслова треба вчити як окремі слова. На A2 достатньо пам'ятати дві
+речі: `себе / собі / собою` - це окремі займенники після дієслова або
+прийменника, а `-ся` - частина дієслова. Вони родичі за змістом, але не
+завжди взаємозамінні.
 
 ## Свій і себе разом
 
@@ -277,9 +408,33 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 Такий текст простий, але природний. У ньому немає складних фраз, зате є
 корисні зв'язки: `з собою`, `свій паспорт`, `своє житло`, `собі каву`.
 
-### Чи правильно?
+### Міні-читання: своя рутина і свої межі
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Олена взяла свою сумку.", "isTrue": true, "explanation": "Сумка належить Олені, підмету речення."}, {"statement": "Олена взяла свій сумку.", "isTrue": false, "explanation": "Сумка - жіночий рід: свою сумку."}, {"statement": "Марко купив собі каву.", "isTrue": true, "explanation": "Собі означає для себе."}, {"statement": "Себе хоче каву.", "isTrue": false, "explanation": "Себе не має форми називного і не може бути підметом."}, {"statement": "Ми взяли паспорти з собою.", "isTrue": true, "explanation": "З собою - природна стала фраза."}, {"statement": "Вона пишається своїм містом.", "isTrue": true, "explanation": "Пишатися чим? своїм містом."}, {"statement": "Вони говорили про своїх плани.", "isTrue": false, "explanation": "Про що? про свої плани."}, {"statement": "Я почуваю себе добре.", "isTrue": true, "explanation": "Фраза повна, бо є добре."}]`)} isUkrainian={true} />
+Прочитайте текст і позначте всі форми `свій` та `себе`.
+
+> Назар працює в невеликій команді й самостійно планує свій день. Зранку
+> він перевіряє свій календар, кладе телефон і документи в рюкзак та
+> бере з собою пляшку води. На роботі Назар має звичку спочатку читати
+> свої повідомлення, а потім відповідати колегам. Якщо день напружений,
+> він нагадує собі зробити коротку паузу.
+>
+> Після обіду Назар говорить із керівницею про свій проєкт. Він
+> пишається своїм результатом і гордиться своєю командою, але чесно каже,
+> що йому треба більше часу. Керівниця радить йому берегти себе і не
+> брати на себе всі завдання одразу. Увечері Назар повертається додому,
+> почувається втомлено, але спокійно: він зробив свою частину роботи і
+> залишив собі час на відпочинок.
+
+Питання до тексту:
+
+1. Які речі Назар бере з собою?
+2. Чим він пишається?
+3. Що він нагадує собі в напружений день?
+4. Чому фраза `берегти себе` важлива в цьому тексті?
+
+Тепер замініть ім'я `Назар` на `Олена` і змініть тільки ті форми, які
+дійсно мають змінитися. Пам'ятайте: `свій` узгоджується з річчю, а не з
+іменем людини.
 
 ## Типові помилки
 
@@ -320,6 +475,21 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 >
 > Я почуваю себе спокійно.
 
+**Помилка 5:** ставити `свій`, коли власник не є підметом.
+
+> Олена сказала Маркові взяти свій паспорт.
+
+Це речення може означати паспорт Олени, бо підмет головного речення -
+Олена. Якщо треба сказати, що Марко має взяти паспорт Марка, краще
+зробити речення яснішим:
+
+> Олена сказала Маркові: «Візьми свій паспорт».
+>
+> Олена сказала, щоб Марко взяв свій паспорт.
+
+У другому реченні підметом у частині `Марко взяв` є Марко, тому `свій`
+працює без двозначності.
+
 ## Завдання: опис рутин
 
 Напишіть шість речень про день людини. Можна писати про себе або про
@@ -349,16 +519,19 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 У наступному уроці ця точність допоможе розрізняти слова на зразок
 `хтось`, `будь-хто`, `ніхто` і `ні з ким`.
 
-Самоперевірка: яка різниця між `Вона взяла свою сумку` і `Вона взяла її
-сумку`? Як сказати `I bought myself coffee`? Як сказати `We took our
-documents with us` українською?
+Самоперевірка:
+
+1. Яка різниця між `Вона взяла свою сумку` і `Вона взяла її сумку`?
+2. Яка форма потрібна в реченні `Я купив ___ каву`?
+3. Як сказати українською: `Ми взяли документи ___`?
+4. Чому `Себе хоче каву` неможливе речення?
 
 </TabItem>
 <TabItem label="Словник">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"свій","translation":"one's own, masculine","pos":"pronoun","example":"Марко взяв свій паспорт.","examples":["one's own, masculine","Марко взяв свій паспорт."],"atlas_href":"/lexicon/свій/"},{"word":"своя","translation":"one's own, feminine","pos":"pronoun","example":"Олена взяла свою сумку.","examples":["one's own, feminine","Олена взяла свою сумку."],"atlas_href":"/lexicon/своя/"},{"word":"своє","translation":"one's own, neuter","pos":"pronoun","example":"Я люблю своє місто.","examples":["one's own, neuter","Я люблю своє місто."],"atlas_href":"/lexicon/своє/"},{"word":"свої","translation":"one's own, plural","pos":"pronoun","example":"Ми перевірили свої квитки.","examples":["one's own, plural","Ми перевірили свої квитки."],"atlas_href":"/lexicon/свої/"},{"word":"свого","translation":"one's own, genitive","pos":"pronoun","example":"Він не знайшов свого паспорта.","examples":["one's own, genitive","Він не знайшов свого паспорта."],"atlas_href":"/lexicon/свого/"},{"word":"своїй","translation":"one's own, dative feminine","pos":"pronoun","example":"Вона допомагає своїй сестрі.","examples":["one's own, dative feminine","Вона допомагає своїй сестрі."],"atlas_href":"/lexicon/своїй/"},{"word":"своїм","translation":"one's own, instrumental masculine/neuter","pos":"pronoun","example":"Я пишаюся своїм містом.","examples":["one's own, instrumental masculine/neuter","Я пишаюся своїм містом."],"atlas_href":"/lexicon/своїм/"},{"word":"своїми","translation":"one's own, instrumental plural","pos":"pronoun","example":"Ми зустрілися зі своїми друзями.","examples":["one's own, instrumental plural","Ми зустрілися зі своїми друзями."],"atlas_href":"/lexicon/своїми/"},{"word":"себе","translation":"oneself, accusative/genitive","pos":"pronoun","example":"Вона бачить себе у дзеркалі.","examples":["oneself, accusative/genitive","Вона бачить себе у дзеркалі."],"atlas_href":"/lexicon/себе/"},{"word":"собі","translation":"oneself, dative/locative","pos":"pronoun","example":"Я купив собі каву.","examples":["oneself, dative/locative","Я купив собі каву."],"atlas_href":"/lexicon/собі/"},{"word":"собою","translation":"oneself, instrumental","pos":"pronoun","example":"Ми взяли документи з собою.","examples":["oneself, instrumental","Ми взяли документи з собою."],"atlas_href":"/lexicon/собою/"},{"word":"з собою","translation":"with oneself","pos":"phrase","example":"Візьміть паспорт з собою.","examples":["with oneself","Візьміть паспорт з собою."],"atlas_href":"/lexicon/з-собою/"},{"word":"у себе","translation":"at one's place, in oneself","pos":"phrase","example":"Я залишив ключі у себе.","examples":["at one's place, in oneself","Я залишив ключі у себе."],"atlas_href":"/lexicon/у-себе/"},{"word":"почуватися","translation":"to feel","pos":"verb","example":"Я почуваюся добре.","examples":["to feel","Я почуваюся добре."],"atlas_href":"/lexicon/почуватися/"},{"word":"почувати себе","translation":"to feel oneself","pos":"phrase","example":"Вона почуває себе спокійно.","examples":["to feel oneself","Вона почуває себе спокійно."],"atlas_href":"/lexicon/почувати-себе/"},{"word":"вести себе","translation":"to behave","pos":"phrase","example":"Він веде себе спокійно.","examples":["to behave","Він веде себе спокійно."],"atlas_href":"/lexicon/вести-себе/"},{"word":"уявити","translation":"to imagine","pos":"verb","example":"Уявіть собі маленьку подорож.","examples":["to imagine","Уявіть собі маленьку подорож."],"atlas_href":"/lexicon/уявити/"},{"word":"дзеркало","translation":"mirror","pos":"noun","example":"Вона бачить себе у дзеркалі.","examples":["mirror","Вона бачить себе у дзеркалі."],"atlas_href":"/lexicon/дзеркало/"},{"word":"парасолька","translation":"umbrella","pos":"noun","example":"Я завжди беру з собою парасольку.","examples":["umbrella","Я завжди беру з собою парасольку."],"atlas_href":"/lexicon/парасолька/"},{"word":"власний","translation":"own","pos":"adjective","example":"Це мій власний вибір.","examples":["own","Це мій власний вибір."],"atlas_href":"/lexicon/власний/"},{"word":"самостійно","translation":"independently","pos":"adverb","example":"Він працює самостійно.","examples":["independently","Він працює самостійно."],"atlas_href":"/lexicon/самостійно/"},{"word":"звичка","translation":"habit","pos":"noun","example":"Це моя щоденна звичка.","examples":["habit","Це моя щоденна звичка."],"atlas_href":"/lexicon/звичка/"},{"word":"щоденний","translation":"daily","pos":"adjective","example":"Щоденний розклад допомагає.","examples":["daily","Щоденний розклад допомагає."],"atlas_href":"/lexicon/щоденний/"}]`)} title="Словник" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"свій","translation":"one's own, masculine","pos":"pronoun","example":"Марко взяв свій паспорт.","examples":["one's own, masculine","Марко взяв свій паспорт."],"atlas_href":"/lexicon/свій/"},{"word":"своя","translation":"one's own, feminine","pos":"pronoun","example":"Олена взяла свою сумку.","examples":["one's own, feminine","Олена взяла свою сумку."]},{"word":"своє","translation":"one's own, neuter","pos":"pronoun","example":"Я люблю своє місто.","examples":["one's own, neuter","Я люблю своє місто."]},{"word":"свої","translation":"one's own, plural","pos":"pronoun","example":"Ми перевірили свої квитки.","examples":["one's own, plural","Ми перевірили свої квитки."]},{"word":"свого","translation":"one's own, genitive","pos":"pronoun","example":"Він не знайшов свого паспорта.","examples":["one's own, genitive","Він не знайшов свого паспорта."]},{"word":"своїй","translation":"one's own, dative feminine","pos":"pronoun","example":"Вона допомагає своїй сестрі.","examples":["one's own, dative feminine","Вона допомагає своїй сестрі."]},{"word":"своїм","translation":"one's own, instrumental masculine/neuter","pos":"pronoun","example":"Я пишаюся своїм містом.","examples":["one's own, instrumental masculine/neuter","Я пишаюся своїм містом."]},{"word":"горджуся","translation":"I am proud, first-person form of гордитися","pos":"verb","example":"Я горджуся своїм містом.","examples":["I am proud, first-person form of гордитися","Я горджуся своїм містом."]},{"word":"своїми","translation":"one's own, instrumental plural","pos":"pronoun","example":"Ми зустрілися зі своїми друзями.","examples":["one's own, instrumental plural","Ми зустрілися зі своїми друзями."]},{"word":"себе","translation":"oneself, accusative/genitive","pos":"pronoun","example":"Вона бачить себе у дзеркалі.","examples":["oneself, accusative/genitive","Вона бачить себе у дзеркалі."],"atlas_href":"/lexicon/себе/"},{"word":"собі","translation":"oneself, dative/locative","pos":"pronoun","example":"Я купив собі каву.","examples":["oneself, dative/locative","Я купив собі каву."],"atlas_href":"/lexicon/собі/"},{"word":"собою","translation":"oneself, instrumental","pos":"pronoun","example":"Ми взяли документи з собою.","examples":["oneself, instrumental","Ми взяли документи з собою."]},{"word":"з собою","translation":"with oneself","pos":"phrase","example":"Візьміть паспорт з собою.","examples":["with oneself","Візьміть паспорт з собою."],"atlas_href":"/lexicon/з-собою/"},{"word":"у себе","translation":"at one's place, in oneself","pos":"phrase","example":"Я залишив ключі у себе.","examples":["at one's place, in oneself","Я залишив ключі у себе."],"atlas_href":"/lexicon/у-себе/"},{"word":"при собі","translation":"on oneself, with oneself","pos":"phrase","example":"На іспит треба мати паспорт при собі.","examples":["on oneself, with oneself","На іспит треба мати паспорт при собі."]},{"word":"почуватися","translation":"to feel","pos":"verb","example":"Я почуваюся добре.","examples":["to feel","Я почуваюся добре."],"atlas_href":"/lexicon/почуватися/"},{"word":"почувати себе","translation":"to feel oneself","pos":"phrase","example":"Вона почуває себе спокійно.","examples":["to feel oneself","Вона почуває себе спокійно."],"atlas_href":"/lexicon/почувати-себе/"},{"word":"вести себе","translation":"to behave","pos":"phrase","example":"Він веде себе спокійно.","examples":["to behave","Він веде себе спокійно."],"atlas_href":"/lexicon/вести-себе/"},{"word":"бути собою","translation":"to be oneself","pos":"phrase","example":"На співбесіді важливо бути собою.","examples":["to be oneself","На співбесіді важливо бути собою."]},{"word":"сам по собі","translation":"by itself","pos":"phrase","example":"Цей факт сам по собі важливий.","examples":["by itself","Цей факт сам по собі важливий."]},{"word":"уявити","translation":"to imagine","pos":"verb","example":"Уявіть собі маленьку подорож.","examples":["to imagine","Уявіть собі маленьку подорож."],"atlas_href":"/lexicon/уявити/"},{"word":"дзеркало","translation":"mirror","pos":"noun","example":"Вона бачить себе у дзеркалі.","examples":["mirror","Вона бачить себе у дзеркалі."],"atlas_href":"/lexicon/дзеркало/"},{"word":"парасолька","translation":"umbrella","pos":"noun","example":"Я завжди беру з собою парасольку.","examples":["umbrella","Я завжди беру з собою парасольку."],"atlas_href":"/lexicon/парасолька/"},{"word":"власний","translation":"own","pos":"adjective","example":"Це мій власний вибір.","examples":["own","Це мій власний вибір."],"atlas_href":"/lexicon/власний/"},{"word":"самостійно","translation":"independently","pos":"adverb","example":"Він працює самостійно.","examples":["independently","Він працює самостійно."],"atlas_href":"/lexicon/самостійно/"},{"word":"звичка","translation":"habit","pos":"noun","example":"Це моя щоденна звичка.","examples":["habit","Це моя щоденна звичка."],"atlas_href":"/lexicon/звичка/"},{"word":"щоденний","translation":"daily","pos":"adjective","example":"Щоденний розклад допомагає.","examples":["daily","Щоденний розклад допомагає."],"atlas_href":"/lexicon/щоденний/"},{"word":"берегти","translation":"to protect, to take care of","pos":"verb","example":"Важливо берегти себе.","examples":["to protect, to take care of","Важливо берегти себе."]},{"word":"напружений","translation":"tense, stressful","pos":"adjective","example":"День був напружений.","examples":["tense, stressful","День був напружений."]},{"word":"нагадувати","translation":"to remind","pos":"verb","example":"Я нагадую собі робити паузи.","examples":["to remind","Я нагадую собі робити паузи."]},{"word":"керівниця","translation":"manager, supervisor","pos":"noun","example":"Керівниця радить берегти себе.","examples":["manager, supervisor","Керівниця радить берегти себе."],"atlas_href":"/lexicon/керівниця/"}]`)} title="Словник" />
 
-<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"свій","back":"one's own, masculine"},{"front":"своя","back":"one's own, feminine"},{"front":"своє","back":"one's own, neuter"},{"front":"свої","back":"one's own, plural"},{"front":"свого","back":"one's own, genitive"},{"front":"своїй","back":"one's own, dative feminine"},{"front":"своїм","back":"one's own, instrumental masculine/neuter"},{"front":"своїми","back":"one's own, instrumental plural"},{"front":"себе","back":"oneself, accusative/genitive"},{"front":"собі","back":"oneself, dative/locative"},{"front":"собою","back":"oneself, instrumental"},{"front":"з собою","back":"with oneself"},{"front":"у себе","back":"at one's place, in oneself"},{"front":"почуватися","back":"to feel"},{"front":"почувати себе","back":"to feel oneself"},{"front":"вести себе","back":"to behave"},{"front":"уявити","back":"to imagine"},{"front":"дзеркало","back":"mirror"},{"front":"парасолька","back":"umbrella"},{"front":"власний","back":"own"},{"front":"самостійно","back":"independently"},{"front":"звичка","back":"habit"},{"front":"щоденний","back":"daily"}]`)} />
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"свій","back":"one's own, masculine"},{"front":"своя","back":"one's own, feminine"},{"front":"своє","back":"one's own, neuter"},{"front":"свої","back":"one's own, plural"},{"front":"свого","back":"one's own, genitive"},{"front":"своїй","back":"one's own, dative feminine"},{"front":"своїм","back":"one's own, instrumental masculine/neuter"},{"front":"горджуся","back":"I am proud, first-person form of гордитися"},{"front":"своїми","back":"one's own, instrumental plural"},{"front":"себе","back":"oneself, accusative/genitive"},{"front":"собі","back":"oneself, dative/locative"},{"front":"собою","back":"oneself, instrumental"},{"front":"з собою","back":"with oneself"},{"front":"у себе","back":"at one's place, in oneself"},{"front":"при собі","back":"on oneself, with oneself"},{"front":"почуватися","back":"to feel"},{"front":"почувати себе","back":"to feel oneself"},{"front":"вести себе","back":"to behave"},{"front":"бути собою","back":"to be oneself"},{"front":"сам по собі","back":"by itself"},{"front":"уявити","back":"to imagine"},{"front":"дзеркало","back":"mirror"},{"front":"парасолька","back":"umbrella"},{"front":"власний","back":"own"},{"front":"самостійно","back":"independently"},{"front":"звичка","back":"habit"},{"front":"щоденний","back":"daily"},{"front":"берегти","back":"to protect, to take care of"},{"front":"напружений","back":"tense, stressful"},{"front":"нагадувати","back":"to remind"},{"front":"керівниця","back":"manager, supervisor"}]`)} />
 
 </TabItem>
 <TabItem label="Зошит">
@@ -367,17 +540,17 @@ documents with us` українською?
 
 *(див. урок, §Свій: власник є підметом)*
 
-### Форми слова свій
-
-*(див. урок, §Свій у відмінках)*
-
 ### Себе, собі, собою
+
+*(див. урок, §Себе, собі, собою)*
+
+### Вислови із себе
 
 *(див. урок, §Себе, собі, собою)*
 
 ### Чи правильно?
 
-*(див. урок, §Свій і себе разом)*
+*(див. урок, §Свій у відмінках)*
 
 ### Виправте свій або себе
 
@@ -385,7 +558,7 @@ documents with us` українською?
 
 ### Функція форми
 
-<GroupSort client:only='react' groups={JSON.parse(`{"чия річ": ["свій паспорт", "свою сумку", "своє місто", "свої ключі"], "дія для себе": ["купити собі", "уявити собі", "нагадати собі", "зробити собі"], "повернення до підмета": ["бачити себе", "говорити про себе", "бути собою", "взяти з собою"]}`)} isUkrainian={true} />
+<GroupSort client:only='react' groups={JSON.parse(`{"чия річ": ["свій паспорт", "свою сумку", "своє місто", "свої ключі"], "дія для себе": ["купити собі", "уявити собі", "нагадати собі", "зробити собі"], "повернення до підмета": ["бачити себе", "говорити про себе", "бути собою", "взяти з собою"]}`)} instruction={"Розсортуйте фрази за тим, що вони показують."} isUkrainian={true} />
 
 </TabItem>
 <TabItem label="Ресурси">
@@ -393,11 +566,11 @@ documents with us` українською?
 :::info[🎧 🔗 Зовнішні ресурси]
 
 **📝 Статті:**
-- 📄 [Dobra Forma 12-1: Possessive Pronouns (мій, твій, чий)](https://opentext.ku.edu/dobraforma/chapter/12-1/) — Catalog-backed review of possessive pronoun agreement before свій.
-- 📄 [Talk Ukrainian: Possessive Pronouns - мій, твій vs свій](https://talkukrainian.com/possessive-pronouns/) — Compact learner-facing reference that explicitly contrasts мій, твій and свій.
-- 📄 [ULP: Possessive Pronouns Declension](https://www.ukrainianlessons.com/possessive-pronouns-declension/) — Declension table support for forms that pattern with свій.
-- 📄 [ULP: Reflexive Possessive Pronoun](https://www.ukrainianlessons.com/reflexive-possessive-pronoun/) — Existing catalog reference for when to use свій.
-- 📄 [ULP: Reflexive Verbs in Ukrainian](https://www.ukrainianlessons.com/reflexive-verbs/) — Background support for the relationship between себе and -ся forms.
+- 📄 [Dobra Forma 12-1: Possessive Pronouns (мій, твій, чий)](https://opentext.ku.edu/dobraforma/chapter/12-1/) — Каталожна опора для повторення узгодження присвійних займенників перед темою свій.
+- 📄 [Talk Ukrainian: Possessive Pronouns - мій, твій vs свій](https://talkukrainian.com/possessive-pronouns/) — Коротка довідка для учнів із прямим контрастом мій, твій і свій.
+- 📄 [ULP: Possessive Pronouns Declension](https://www.ukrainianlessons.com/possessive-pronouns-declension/) — Підтримка для таблиць відмінювання форм, за якими працює свій.
+- 📄 [ULP: Reflexive Possessive Pronoun](https://www.ukrainianlessons.com/reflexive-possessive-pronoun/) — Наявна каталогова довідка про те, коли вживати свій.
+- 📄 [ULP: Reflexive Verbs in Ukrainian](https://www.ukrainianlessons.com/reflexive-verbs/) — Фонова підтримка для зв'язку між себе та дієслівними формами на -ся.
 :::
 
 </TabItem>
