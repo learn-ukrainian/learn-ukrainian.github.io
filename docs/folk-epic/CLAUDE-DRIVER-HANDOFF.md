@@ -63,7 +63,56 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 49 HANDOFF (2026-06-17 — 🧭 PLAN PIVOT: 3 fresh-rebuild attempts each hit a DIFFERENT orthogonal blocker → rebuild can't prove loop convergence. NEXT DELIVERABLE = an ENHANCE entry point (run review+craft-loop on CURATED content). #3079 fix stays behaviorally-validated; #3480 stays HELD) — **RESUME HERE**
+## ▶▶▶ SESSION 50 HANDOFF (2026-06-17 — 🤝 SESSION WRAP. Seminar gate machinery fully BUILT (beauty gate + #3079 craft loop + --enhance mode + scores UI), all verified. ONE small fix stands between here and the convergence proof: wire #3428 static python_qg into --enhance) — **RESUME HERE**
+
+> **🟢 ONE-LINE STATE:** Everything for the seminar quality gate is built + verified + staged in PRs.
+> The end-to-end convergence proof is blocked only by a small, known fix (`--enhance`'s python_qg trips
+> the writer-telemetry gate `resources_search_attempted`). Fix that → run `--enhance` on curated kalendarna
+> → if all 4 seminar-terminal dims ≥ floors, merge the stack. Nothing in flight; tree clean.
+>
+> ### ✅ ON MAIN
+> - Scores API `/api/state/scores/{track}[/{slug}]` (#3458).
+> - **Scores UI** — "Module Scores ★" tab in `dashboards/quality.html` (**PR #3506**, per-module × per-dim
+>   grid, ≥8 greened, ★=seminar-terminal; consumes the scores API live). _[merging on CI-green this session;
+>   if #3506 still open at resume, self-merge it — CI-green, JS node-checked + render-tested on live data.]_
+> - Handoffs S45–S50.
+>
+> ### 🟡 HELD PRs (do NOT merge until convergence proven, design §3)
+> - **#3495** — the coherent stack: **Phase A `beauty` gate + #3079 craft-preserving loop + `v7_build --enhance`**. CI-green. THE merge target.
+> - **#3480** — Phase A + #3079 only; **superseded by #3495** → close on merge.
+> - (#3483 lexicon Atlas #3150 — NOT folk, leave for the other orchestrator.)
+>
+> ### 🎯 NEXT ACTION (priority #0 — small, well-scoped; see PR #3495 comments for the full diagnosis)
+> 1. **Fix `--enhance`'s python_qg to tolerate absent writer telemetry** (it skips the writer, so the
+>    build-time gate `resources_search_attempted` fails with no corrector → module_failed before llm_qg).
+>    **Wire #3428's static treatment** — `run_python_qg(resource_liveness_fn=...)` the way
+>    `scripts/build/verify_shippable.py` does (telemetry-absent → verify resources live). Check for any OTHER
+>    writer-telemetry-dependent gates needing the same. Commit to the `codex/folk-enhance-mode` branch (PR #3495).
+> 2. **Run** `v7_build.py folk kalendarna-obriadovist-zvychai --enhance` via **Monitor/background (NOT a
+>    delegate dispatch** — silence_timeout kills long builds). Read `llm_qg.json` + `llm_qg_correction_loop.json`.
+> 3. **Converged** (pedagogical, engagement, beauty, decolonization all ≥ floors, `module_done`) → **merge #3495**
+>    (squash), close #3480/#3459. Then `--enhance` the other 5 folk modules (Phase D). **Not** → read the
+>    per-round trace; iterate `linear-correction-subjective.md` or raise `llm_qg_max_rounds` (currently 3).
+>    Watch live via the new `/api/state/scores/folk/...` + the Module Scores dashboard tab.
+>
+> ### 📊 WHAT'S PROVEN vs NOT
+> - PROVEN: `beauty` dim reachable (8.0); #3079 loop emits **craft-preserving `<find>/<replace>`** (revises
+>   flat prose, no dry inserts) — the de-risk's craft-degradation is GONE; `--enhance` correctly skips the writer.
+> - NOT yet proven: a folk module **converging ≥8 on all 4 terminal dims end-to-end** (every build so far was
+>   blocked at python_qg before reaching the full llm_qg loop — 3 rebuild blockers + the enhance telemetry gate).
+>
+> ### 🔧 INFRA FINDINGS (own/file later, #0.2 — not blocking the above)
+> - `textbook_quote_fidelity` + `resources_search_attempted` are python_qg gates with **no ADR-008 corrector**
+>   (the latter is the enhance blocker — fixed by step 1 above; the former bites fresh rebuilds).
+> - Long V7 builds must run via Monitor/background, NOT a `delegate.py` codex dispatch (silence_timeout 3600s kills them).
+> - Optional: build heartbeat during long quiet phases.
+>
+> ### 🗂 EVIDENCE BRANCHES (keep, #M-10): `codex/folk-derisk-kalendarna`, `codex/folk-loopfix-subjective`,
+> `codex/folk-retest-kalendarna`, `claude/folk-retest2`, `claude/folk-enhance-run` (enhance.log = resources_search_attempted fail).
+> Tasks: #6 loop fix (done/validated), #7 enhance entry point (done; needs the python_qg-static fix), #8 scores UI (#3506),
+> #3 panel (deferred — not the fix), #4 Phase C/D/E (enhance methodology). Merge grant LIVE; worktree-only; never to main.
+
+## ▶▶▶ SESSION 49 HANDOFF (2026-06-17 — 🧭 PLAN PIVOT: 3 fresh-rebuild attempts each hit a DIFFERENT orthogonal blocker → rebuild can't prove loop convergence. NEXT DELIVERABLE = an ENHANCE entry point (run review+craft-loop on CURATED content). #3079 fix stays behaviorally-validated; #3480 stays HELD)
 
 > **Where we are:** Phase A `beauty` gate + #3079 craft-preserving loop fix are DONE/verified/CI-green in
 > held PR #3480. The #3079 fix is **behaviorally validated** (re-test#1: generalized loop emits
