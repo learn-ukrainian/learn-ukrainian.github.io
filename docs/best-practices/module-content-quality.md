@@ -139,8 +139,10 @@ HOOK → TENSION → JOURNEY → CLIMAX → RESOLUTION → CALL TO ACTION
 
 | Level | Ukrainian % |
 |-------|------------|
-| A1 | 10-40% (English scaffolded) |
-| A2 | 40-75% |
+| A1 | 10-40% (English scaffolds Ukrainian content) |
+| A2 M01-20 | 85-100% (easy Ukrainian is the teaching voice; English for glosses only) |
+| A2 M21-50 | 90-100% (richer Ukrainian; English for glosses only) |
+| A2 M51-70 | 95-100% (near-B1 Ukrainian; English for glosses only) |
 | B1 | 90-100% |
 | B2+ | 100% |
 | Seminar tracks | 98-100% |
