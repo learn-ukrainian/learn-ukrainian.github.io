@@ -85,7 +85,13 @@ def _wikipedia_article_exists(url: str) -> bool | None:
     The MediaWiki API reports a ``missing`` flag for non-existent titles.
     """
     parts = urllib.parse.urlsplit(url)
-    if not parts.netloc.endswith("wikipedia.org") or not parts.path.startswith("/wiki/"):
+    # Normalize the host: ``.hostname`` lowercases and strips port/userinfo, so a
+    # fabricated ``https://UK.WIKIPEDIA.ORG/wiki/Missing`` or ``...:443/...`` cannot
+    # dodge the MediaWiki existence check and fall through to a curl 200 (the
+    # missing-page stub) — Codex re-review #2 hole.
+    host = (parts.hostname or "").lower()
+    is_wikipedia = host == "wikipedia.org" or host.endswith(".wikipedia.org")
+    if not is_wikipedia or not parts.path.startswith("/wiki/"):
         return None
     title = urllib.parse.unquote(parts.path[len("/wiki/"):])
     if not title:

@@ -123,3 +123,26 @@ def test_skipped_render_not_shippable(tmp_path, monkeypatch):
 def test_missing_inputs_not_shippable(tmp_path):
     rep = vs.verify("folk", "x", module_dir=tmp_path / "nope", plan_path=tmp_path / "nope.yaml")
     assert rep["shippable"] is False
+
+
+def test_wikipedia_host_matching_normalizes_case_and_port(monkeypatch):
+    """A missing wiki article must be caught regardless of host case/port, instead
+    of falling through to a curl 200 on the missing-page stub (Codex hole #2)."""
+    seen = []
+
+    def fake_curl(url, *, status_only):
+        seen.append(url)
+        if "api.php" in url:
+            # MediaWiki API reports a MISSING article
+            return 200, '{"query": {"pages": {"-1": {"missing": ""}}}}'
+        return 200, ""  # a missing-page /wiki/ GET would still be HTTP 200
+
+    monkeypatch.setattr(vs, "_curl", fake_curl)
+    for url in (
+        "https://UK.WIKIPEDIA.ORG/wiki/Definitely_missing_title",
+        "https://uk.wikipedia.org:443/wiki/Definitely_missing_title",
+    ):
+        vs._url_live_cache.clear()
+        assert vs._url_is_live(url) is False
+    # the API path (not a bare curl GET) decided it — the hole would have skipped it
+    assert any("api.php" in u for u in seen)
