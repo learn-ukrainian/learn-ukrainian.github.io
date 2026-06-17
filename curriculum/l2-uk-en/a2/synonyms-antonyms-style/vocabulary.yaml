@@ -54,6 +54,26 @@
   translation: style
   pos: noun
   example: "Офіційний стиль потребує нейтральних слів."
+- word: нейтральний
+  translation: neutral
+  pos: adjective
+  example: "Нейтральний варіант доречний у більшості ситуацій."
+- word: офіційний
+  translation: official, formal
+  pos: adjective
+  example: "Офіційний лист потребує точних слів."
+- word: розмовний
+  translation: conversational
+  pos: adjective
+  example: "Розмовний стиль природний між друзями."
+- word: неформальний
+  translation: informal
+  pos: adjective
+  example: "Пестлива форма часто звучить неформально."
+- word: буквальний
+  translation: literal
+  pos: adjective
+  example: "Теплий голос не має буквального значення."
 - word: стилістика
   translation: stylistics
   pos: noun
@@ -78,3 +98,39 @@
   translation: precise
   pos: adjective
   example: "Точний синонім покращує текст."
+- word: порівняння
+  translation: comparison, simile
+  pos: noun
+  example: "Квіти як море - це порівняння."
+- word: прислів'я
+  translation: proverb
+  pos: noun
+  example: "У прислів'ї часто є контраст."
+- word: виразність
+  translation: expressiveness
+  pos: noun
+  example: "Повтор може додати тексту виразності."
+- word: доречний
+  translation: appropriate
+  pos: adjective
+  example: "У листі потрібне доречне слово."
+- word: прудко
+  translation: quickly, briskly
+  pos: adverb
+  example: "Він іде прудко, бо запізнюється."
+- word: оповідати
+  translation: to narrate, to tell
+  pos: verb
+  example: "Дідусь любить оповідати давні історії."
+- word: значний
+  translation: significant
+  pos: adjective
+  example: "Це значний успіх для групи."
+- word: затишний
+  translation: cozy
+  pos: adjective
+  example: "У мене є затишна кімната."
+- word: невеликий
+  translation: small, not large
+  pos: adjective
+  example: "Біля вікна стоїть невеликий столик."
