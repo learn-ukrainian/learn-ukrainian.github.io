@@ -72,10 +72,6 @@ After the helper verb, keep the second action in the dictionary **-ти** form:
 
 ## Діалоги
 
-### Обери правильний модальний рядок
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "You want to read, not say that you are reading now.", "options": [{"text": "Я хочу читати.", "correct": true}, {"text": "Я хочу читаю.", "correct": false}, {"text": "Я хотіти читати.", "correct": false}], "explanation": "After хочу, keep the second action in the -ти form."}, {"question": "You can help someone.", "options": [{"text": "Я можу допомогти.", "correct": true}, {"text": "Я можеш допомогти.", "correct": false}, {"text": "Я можу допомагаю.", "correct": false}], "explanation": "Я uses можу, then the infinitive допомогти."}, {"question": "You have to work.", "options": [{"text": "Я мушу працювати.", "correct": true}, {"text": "Я мусиш працювати.", "correct": false}, {"text": "Я мушу працюю.", "correct": false}], "explanation": "Learn я мушу plus an infinitive."}]`)} instruction={"Choose the Ukrainian line that fits each situation."} isUkrainian={false} />
-
 Olia and Denys are deciding what to do tonight. Read for the job of each helper
 verb: **хочу** tells desire, **можу** tells possibility, and **мушу** tells an
 obligation.
@@ -144,27 +140,13 @@ too. **На жаль, не можу** is a complete answer because the previous 
 already gives the missing action.
 :::
 
-### Склади план на вечір
-
-<Order client:only='react' items={JSON.parse(`["Ти хочеш піти в кіно?", "Так, я хочу піти.", "Ти можеш сьогодні?", "На жаль, не можу.", "Я мушу працювати.", "Добре, завтра гуляємо."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5]`)} instruction={"Put the short exchange in a natural order."} isUkrainian={false} />
-
 ## Дієслово «хотіти»
 
 **Хотіти** means "to want." It is irregular, so learn the present-tense forms
 as ready chunks. Ukrainian grammar still treats **хотіти** as **І дієвідміна**
 even though the infinitive ends in **-іти**.
-
-> В основі інфінітива наявні суфікси -а-, -і- (що не випадають в особових формах) та -ува-, -ну-. співати, біліти, будувати, кинути.
-> В основі інфінітива наявні звукосполучення -оро-, -оло-. боротися, колоти.
-> Односкладова основа на голосний: пити, лити. Односкладова основа на приголосний: нести, могти. Окремі дієслова: хотіти, гудіти, сопіти, ревіти, іржати.
-
-*— Караман Grade 10, p.179*
-
-> I дієвідміна
-> гудіти, іржати, ревіти,
-> сопіти, хотіти
-
-*— Літвінова Grade 7, p.55*
+For A1, the important thing is practical: do not guess from the ending
+**-іти**. Learn the six **хоч-** forms as one small pattern.
 
 Here are the active forms:
 
@@ -176,6 +158,10 @@ Here are the active forms:
 | ми | **хочемо** | **Ми хочемо піти.** |
 | ви | **хочете** | **Ви хочете каву?** |
 | вони | **хочуть** | **Вони хочуть працювати.** |
+
+### Форми хотіти
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ читати.", "answer": "хочу", "options": ["хочу", "хочеш", "хоче"]}, {"sentence": "Ти ___ гуляти?", "answer": "хочеш", "options": ["хочеш", "хочу", "хочемо"]}, {"sentence": "Вона ___ каву.", "answer": "хоче", "options": ["хоче", "хочуть", "хочете"]}, {"sentence": "Ми ___ піти.", "answer": "хочемо", "options": ["хочемо", "хочете", "хочуть"]}, {"sentence": "Ви ___ каву?", "answer": "хочете", "options": ["хочете", "хочемо", "хоче"]}, {"sentence": "Вони ___ працювати.", "answer": "хочуть", "options": ["хочуть", "хоче", "хочеш"]}, {"sentence": "Оля і Денис ___ піти в кіно.", "answer": "хочуть", "options": ["хочуть", "хочете", "хочеш"]}, {"sentence": "Я не ___ їсти.", "answer": "хочу", "options": ["хочу", "хоче", "хочуть"]}, {"sentence": "Денисе, ти ___ каву?", "answer": "хочеш", "options": ["хочеш", "хочете", "хочемо"]}]`)} instruction={"Choose the form of хотіти that fits the person."} isUkrainian={false} />
 
 Use **хотіти + інфінітив** when the desired thing is an action:
 
@@ -194,11 +180,14 @@ Support after the Ukrainian lines:
 | **Ми хочемо піти в парк.** | We want to go to the park. |
 
 You can also want a thing: **Я хочу каву**, **Я хочу воду**, **Я хочу цю
-книгу**. This is **знахідний відмінок** in a tiny A1 shape: feminine nouns on
-**-а/-я** often change to **-у/-ю** for a direct object: **кава -> каву**,
-**вода -> воду**. For many inanimate masculine and neuter words, **форма
-знахідного відмінка збігається з формою називного**: **чай -> чай**, **яблуко
--> яблуко**.
+книгу**. The menu word is **кава**; in these request chunks you see **каву**.
+For A1, keep the chunks whole. You only need the shape: **хочу + action word**
+or **хочу + thing**.
+
+:::tip
+If the forms feel irregular, that is normal. Learn **я хочу**, **ти хочеш**,
+and **ви хочете** as ready chunks first.
+:::
 
 For a normal negative, put **не** before the helper verb: **Я не хочу їсти**,
 **Він не хоче працювати**, **Ми не хочемо йти**. Later you will see different
@@ -208,10 +197,6 @@ Notice the difference between an action and a thing. **Я хочу пити** me
 want to drink." **Я хочу воду** means "I want water." The first sentence ends
 with an infinitive, and the second sentence ends with an object. Both are useful,
 but do not mix the shapes.
-
-### Форми хотіти
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ читати.", "answer": "хочу", "options": ["хочу", "хочеш", "хоче"]}, {"sentence": "Ти ___ гуляти?", "answer": "хочеш", "options": ["хочеш", "хочу", "хочемо"]}, {"sentence": "Вона ___ каву.", "answer": "хоче", "options": ["хоче", "хочуть", "хочете"]}, {"sentence": "Ми ___ піти.", "answer": "хочемо", "options": ["хочемо", "хочете", "хочуть"]}, {"sentence": "Ви ___ каву?", "answer": "хочете", "options": ["хочете", "хочемо", "хоче"]}, {"sentence": "Вони ___ працювати.", "answer": "хочуть", "options": ["хочуть", "хоче", "хочеш"]}]`)} instruction={"Choose the form of хотіти that fits the person."} isUkrainian={false} />
 
 ## Дієслова «могти» та «мусити»
 
@@ -274,17 +259,23 @@ is.
 You may also hear **треба** for "need to / should." Keep **треба** as a preview
 today. Your active tool is **мусити + інфінітив**.
 
+:::tip
+**Мушу** can sound serious, but it does not always mean an emergency. In this
+lesson, read it simply as "I have to."
+:::
+
+### Хочу, можу чи мушу?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "You want to read.", "options": [{"text": "Я хочу читати.", "correct": true}, {"text": "Я можу читати.", "correct": false}, {"text": "Я мушу читати.", "correct": false}], "explanation": "Desire uses хочу."}, {"question": "You are able to help.", "options": [{"text": "Я можу допомогти.", "correct": true}, {"text": "Я хочу допомогти.", "correct": false}, {"text": "Я мушу допомогти.", "correct": false}], "explanation": "Ability uses можу."}, {"question": "You have to work.", "options": [{"text": "Я мушу працювати.", "correct": true}, {"text": "Я хочу працювати.", "correct": false}, {"text": "Я можу працювати.", "correct": false}], "explanation": "Obligation uses мушу."}, {"question": "You cannot go today.", "options": [{"text": "Сьогодні я не можу піти.", "correct": true}, {"text": "Сьогодні я не хочу піти.", "correct": false}, {"text": "Сьогодні я мушу піти.", "correct": false}], "explanation": "A practical block uses не можу."}, {"question": "Ask one friend if they want to go to the cinema.", "options": [{"text": "Ти хочеш піти в кіно?", "correct": true}, {"text": "Ти можеш піти в кіно?", "correct": false}, {"text": "Ти мусиш піти в кіно?", "correct": false}], "explanation": "The question asks about desire."}, {"question": "Ask politely what the server can recommend.", "options": [{"text": "Що можете порадити?", "correct": true}, {"text": "Що хочете порадити?", "correct": false}, {"text": "Що мусите порадити?", "correct": false}], "explanation": "Polite possibility uses можете."}, {"question": "The menu word is кава. With friends, you want coffee.", "options": [{"text": "Я хочу каву.", "correct": true}, {"text": "Я можу каву.", "correct": false}, {"text": "Я мушу каву.", "correct": false}], "explanation": "Wanting a thing uses хочу plus the object."}, {"question": "You have to study new words.", "options": [{"text": "Я мушу вчити нові слова.", "correct": true}, {"text": "Я можу вчити нові слова.", "correct": false}, {"text": "Я хочу вчити нові слова.", "correct": false}], "explanation": "Obligation uses мушу."}]`)} instruction={"Choose the line that fits the situation."} isUkrainian={false} />
+
 Now compare the three helper verbs in the same tiny schedule. **Я хочу піти в
 кіно** gives the desire. **Сьогодні я не можу піти** gives the practical block.
 **Я мушу працювати** gives the reason. **Завтра я можу гуляти** opens a new
 possibility. This pattern lets you make a real plan with very little grammar.
-When desire or ability points forward, you may recognize an **аналітична**
-future preview such as **буду малювати** or **будеш малювати**; keep it for
-recognition, not active production.
 
-### Постав дієслово-помічник перед дією
+### Доповни речення
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "можу / Я / допомогти", "answer": "Я можу допомогти"}, {"jumbled": "Ти / читати / можеш", "answer": "Ти можеш читати"}, {"jumbled": "піти / Вона / може", "answer": "Вона може піти"}, {"jumbled": "працювати / Ми / можемо", "answer": "Ми можемо працювати"}, {"jumbled": "можете / Ви / порадити", "answer": "Ви можете порадити"}, {"jumbled": "гуляти / Вони / можуть", "answer": "Вони можуть гуляти"}]`)} instruction={"Rebuild each sentence with the helper verb before the infinitive."} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ гуляти, але не можу сьогодні.", "answer": "хочу", "options": ["хочу", "можу", "мушу"]}, {"sentence": "Я хочу піти, але не ___.", "answer": "можу", "options": ["можу", "хочу", "мушу"]}, {"sentence": "Я не можу: я ___ працювати.", "answer": "мушу", "options": ["мушу", "можу", "хочу"]}, {"sentence": "Оля ___ гуляти, але не може сьогодні.", "answer": "хоче", "options": ["хоче", "може", "мусить"]}, {"sentence": "Денис не ___ піти: він мусить працювати.", "answer": "може", "options": ["може", "хоче", "мусить"]}, {"sentence": "Вони хочуть гуляти, але ___ працювати.", "answer": "мусять", "options": ["мусять", "можуть", "хочуть"]}]`)} instruction={"Choose хочу, можу, or мушу in the right form."} isUkrainian={false} />
 
 ## 📋 Підсумок
 
@@ -316,18 +307,15 @@ In a café, use the polite service frame first: **Можна мені, будь 
 каву?** If you need advice, ask **Що можете порадити?** If you accept the
 suggestion, say **Тоді ще борщ, будь ласка.**
 
-Use the repair table as a quick writing check. First, find the helper verb.
+### Правильне чи особливе дієслово?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "хотіти", "options": [{"text": "І дієвідміна, особливі форми хочу, хочеш", "correct": true}, {"text": "ІІ дієвідміна, як говорити", "correct": false}, {"text": "No present-tense forms", "correct": false}], "explanation": "Хотіти is treated as І дієвідміна but has special chunks."}, {"question": "могти", "options": [{"text": "І дієвідміна, особливі форми можу, можеш", "correct": true}, {"text": "ІІ дієвідміна, як робити", "correct": false}, {"text": "Only an infinitive", "correct": false}], "explanation": "Могти changes to мож- in the active forms."}, {"question": "мусити", "options": [{"text": "ІІ дієвідміна; learn я мушу", "correct": true}, {"text": "І дієвідміна; я мусю", "correct": false}, {"text": "It has no ти form", "correct": false}], "explanation": "Мусити follows ІІ endings, with я мушу as the key chunk."}, {"question": "читати", "options": [{"text": "І дієвідміна, regular review verb", "correct": true}, {"text": "ІІ дієвідміна, like говорити", "correct": false}, {"text": "Irregular like хотіти", "correct": false}], "explanation": "Читати is a regular Group One review verb."}, {"question": "говорити", "options": [{"text": "ІІ дієвідміна, regular review verb", "correct": true}, {"text": "І дієвідміна, like читати", "correct": false}, {"text": "Irregular like могти", "correct": false}], "explanation": "Говорити is a Group Two review verb from the previous module."}, {"question": "допомогти", "options": [{"text": "Infinitive after можу in this lesson", "correct": true}, {"text": "A present-tense helper form", "correct": false}, {"text": "A noun object like каву", "correct": false}], "explanation": "In Я можу допомогти, допомогти stays in the infinitive."}]`)} instruction={"Choose the correct conjugation note."} isUkrainian={false} />
+
+Use this repair table as a quick writing check. First, find the helper verb.
 Second, ask whether the next word is an action in **-ти**. Third, check the
 person: **я хочу / можу / мушу**, **ти хочеш / можеш / мусиш**. Last, for a
 café line, ask whether the sentence sounds like a request rather than a demand.
-These checks catch most beginner mistakes before you submit an answer.
 When unsure, keep the sentence short and choose a complete action word.
-
-Recognition-only pronunciation note: words ending in **-ться** are pronounced
-with **[ц':а]**. A textbook example writes **сміється** and shows
-**[см’ійец:а]**. You do not need to produce this pattern today.
-
-### Виправ пастки
 
 | Avoid | Use | Why |
 | --- | --- | --- |
@@ -341,46 +329,28 @@ with **[ц':а]**. A textbook example writes **сміється** and shows
 </TabItem>
 <TabItem label="Vocabulary">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"хотіти","translation":"to want","pos":"infinitive","example":"Я хочу читати.","examples":["to want","Я хочу читати."],"atlas_href":"/lexicon/хотіти/"},{"word":"хочу","translation":"I want","pos":"verb form","example":"Я хочу каву.","examples":["I want","Я хочу каву."],"atlas_href":"/lexicon/хочу/"},{"word":"хочеш","translation":"you want","pos":"verb form","example":"Ти хочеш гуляти?","examples":["you want","Ти хочеш гуляти?"],"atlas_href":"/lexicon/хочеш/"},{"word":"хоче","translation":"he/she wants","pos":"verb form","example":"Вона хоче каву.","examples":["he/she wants","Вона хоче каву."],"atlas_href":"/lexicon/хоче/"},{"word":"хочемо","translation":"we want","pos":"verb form","example":"Ми хочемо піти.","examples":["we want","Ми хочемо піти."],"atlas_href":"/lexicon/хочемо/"},{"word":"хочете","translation":"you all want; formal you want","pos":"verb form","example":"Ви хочете каву?","examples":["you all want; formal you want","Ви хочете каву?"],"atlas_href":"/lexicon/хочете/"},{"word":"хочуть","translation":"they want","pos":"verb form","example":"Вони хочуть працювати.","examples":["they want","Вони хочуть працювати."],"atlas_href":"/lexicon/хочуть/"},{"word":"могти","translation":"to be able; can","pos":"infinitive","example":"Я можу допомогти.","examples":["to be able; can","Я можу допомогти."],"atlas_href":"/lexicon/могти/"},{"word":"можу","translation":"I can","pos":"verb form","example":"Я можу читати.","examples":["I can","Я можу читати."],"atlas_href":"/lexicon/можу/"},{"word":"можеш","translation":"you can","pos":"verb form","example":"Ти можеш допомогти?","examples":["you can","Ти можеш допомогти?"],"atlas_href":"/lexicon/можеш/"},{"word":"може","translation":"he/she can","pos":"verb form","example":"Він може піти.","examples":["he/she can","Він може піти."],"atlas_href":"/lexicon/може/"},{"word":"можемо","translation":"we can","pos":"verb form","example":"Ми можемо працювати.","examples":["we can","Ми можемо працювати."],"atlas_href":"/lexicon/можемо/"},{"word":"можете","translation":"you all can; formal you can","pos":"verb form","example":"Що можете порадити?","examples":["you all can; formal you can","Що можете порадити?"],"atlas_href":"/lexicon/можете/"},{"word":"можуть","translation":"they can","pos":"verb form","example":"Вони можуть гуляти.","examples":["they can","Вони можуть гуляти."],"atlas_href":"/lexicon/можуть/"},{"word":"мусити","translation":"to have to; must","pos":"infinitive","example":"Я мушу працювати.","examples":["to have to; must","Я мушу працювати."],"atlas_href":"/lexicon/мусити/"},{"word":"мушу","translation":"I have to","pos":"verb form","example":"Я мушу працювати.","examples":["I have to","Я мушу працювати."],"atlas_href":"/lexicon/мушу/"},{"word":"мусиш","translation":"you have to","pos":"verb form","example":"Ти мусиш читати?","examples":["you have to","Ти мусиш читати?"],"atlas_href":"/lexicon/мусиш/"},{"word":"мусить","translation":"he/she has to","pos":"verb form","example":"Вона мусить чекати.","examples":["he/she has to","Вона мусить чекати."],"atlas_href":"/lexicon/мусить/"},{"word":"мусимо","translation":"we have to","pos":"verb form","example":"Ми мусимо вчити.","examples":["we have to","Ми мусимо вчити."],"atlas_href":"/lexicon/мусимо/"},{"word":"мусите","translation":"you all have to; formal you have to","pos":"verb form","example":"Ви мусите чекати?","examples":["you all have to; formal you have to","Ви мусите чекати?"],"atlas_href":"/lexicon/мусите/"},{"word":"мусять","translation":"they have to","pos":"verb form","example":"Вони мусять працювати.","examples":["they have to","Вони мусять працювати."],"atlas_href":"/lexicon/мусять/"},{"word":"інфінітив","translation":"infinitive","pos":"noun","example":"Читати - інфінітив.","examples":["infinitive","Читати - інфінітив."],"atlas_href":"/lexicon/інфінітив/"},{"word":"піти","translation":"to go","pos":"infinitive","example":"Я хочу піти в кіно.","examples":["to go","Я хочу піти в кіно."],"atlas_href":"/lexicon/піти/"},{"word":"допомогти","translation":"to help","pos":"infinitive","example":"Ти можеш допомогти?","examples":["to help","Ти можеш допомогти?"],"atlas_href":"/lexicon/допомогти/"},{"word":"працювати","translation":"to work","pos":"infinitive","example":"Я мушу працювати.","examples":["to work","Я мушу працювати."],"atlas_href":"/lexicon/працювати/"},{"word":"їсти","translation":"to eat","pos":"infinitive","example":"Я не хочу їсти.","examples":["to eat","Я не хочу їсти."],"atlas_href":"/lexicon/їсти/"},{"word":"кава","translation":"coffee","pos":"noun","example":"Це кава.","examples":["coffee","Це кава."],"atlas_href":"/lexicon/кава/"},{"word":"каву","translation":"coffee (object form)","pos":"noun form","example":"Можна мені каву?","examples":["coffee (object form)","Можна мені каву?"],"atlas_href":"/lexicon/каву/"},{"word":"борщ","translation":"borshch","pos":"noun","example":"Борщ дуже смачний.","examples":["borshch","Борщ дуже смачний."],"atlas_href":"/lexicon/борщ/"},{"word":"порадити","translation":"to recommend; to advise","pos":"infinitive","example":"Що можете порадити?","examples":["to recommend; to advise","Що можете порадити?"],"atlas_href":"/lexicon/порадити/"},{"word":"шкода","translation":"that's a pity; unfortunately","pos":"expression","example":"Шкода. Я не можу.","examples":["that's a pity; unfortunately","Шкода. Я не можу."],"atlas_href":"/lexicon/шкода/"},{"word":"на жаль","translation":"unfortunately","pos":"phrase","example":"На жаль, не можу.","examples":["unfortunately","На жаль, не можу."],"atlas_href":"/lexicon/на-жаль/"},{"word":"можна","translation":"may; is it possible","pos":"modal word","example":"Можна мені каву?","examples":["may; is it possible","Можна мені каву?"],"atlas_href":"/lexicon/можна/"},{"word":"тоді","translation":"then","pos":"adverb","example":"Тоді ще борщ.","examples":["then","Тоді ще борщ."],"atlas_href":"/lexicon/тоді/"},{"word":"ще","translation":"more; also","pos":"adverb","example":"Тоді ще борщ.","examples":["more; also","Тоді ще борщ."],"atlas_href":"/lexicon/ще/"},{"word":"треба","translation":"need to; should","pos":"modal word","example":"Треба читати.","examples":["need to; should","Треба читати."],"atlas_href":"/lexicon/треба/"}]`)} title="Vocabulary" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"хотіти","translation":"to want","pos":"infinitive","example":"Я хочу читати.","examples":["to want","Я хочу читати."],"atlas_href":"/lexicon/хотіти/"},{"word":"хочу","translation":"I want","pos":"verb form","example":"Я хочу каву.","examples":["I want","Я хочу каву."]},{"word":"хочеш","translation":"you want","pos":"verb form","example":"Ти хочеш гуляти?","examples":["you want","Ти хочеш гуляти?"]},{"word":"хоче","translation":"he/she wants","pos":"verb form","example":"Вона хоче каву.","examples":["he/she wants","Вона хоче каву."]},{"word":"хочемо","translation":"we want","pos":"verb form","example":"Ми хочемо піти.","examples":["we want","Ми хочемо піти."]},{"word":"хочете","translation":"you all want; formal you want","pos":"verb form","example":"Ви хочете каву?","examples":["you all want; formal you want","Ви хочете каву?"]},{"word":"хочуть","translation":"they want","pos":"verb form","example":"Вони хочуть працювати.","examples":["they want","Вони хочуть працювати."]},{"word":"могти","translation":"to be able; can","pos":"infinitive","example":"Я можу допомогти.","examples":["to be able; can","Я можу допомогти."],"atlas_href":"/lexicon/могти/"},{"word":"можу","translation":"I can","pos":"verb form","example":"Я можу читати.","examples":["I can","Я можу читати."]},{"word":"можеш","translation":"you can","pos":"verb form","example":"Ти можеш допомогти?","examples":["you can","Ти можеш допомогти?"]},{"word":"може","translation":"he/she can","pos":"verb form","example":"Він може піти.","examples":["he/she can","Він може піти."],"atlas_href":"/lexicon/може/"},{"word":"можемо","translation":"we can","pos":"verb form","example":"Ми можемо працювати.","examples":["we can","Ми можемо працювати."]},{"word":"можете","translation":"you all can; formal you can","pos":"verb form","example":"Що можете порадити?","examples":["you all can; formal you can","Що можете порадити?"]},{"word":"можуть","translation":"they can","pos":"verb form","example":"Вони можуть гуляти.","examples":["they can","Вони можуть гуляти."]},{"word":"мусити","translation":"to have to; must","pos":"infinitive","example":"Я мушу працювати.","examples":["to have to; must","Я мушу працювати."],"atlas_href":"/lexicon/мусити/"},{"word":"мушу","translation":"I have to","pos":"verb form","example":"Я мушу працювати.","examples":["I have to","Я мушу працювати."]},{"word":"мусиш","translation":"you have to","pos":"verb form","example":"Ти мусиш читати?","examples":["you have to","Ти мусиш читати?"]},{"word":"мусить","translation":"he/she has to","pos":"verb form","example":"Вона мусить чекати.","examples":["he/she has to","Вона мусить чекати."]},{"word":"мусимо","translation":"we have to","pos":"verb form","example":"Ми мусимо вчити.","examples":["we have to","Ми мусимо вчити."]},{"word":"мусите","translation":"you all have to; formal you have to","pos":"verb form","example":"Ви мусите чекати?","examples":["you all have to; formal you have to","Ви мусите чекати?"]},{"word":"мусять","translation":"they have to","pos":"verb form","example":"Вони мусять працювати.","examples":["they have to","Вони мусять працювати."]},{"word":"інфінітив","translation":"infinitive","pos":"noun","example":"Читати - інфінітив.","examples":["infinitive","Читати - інфінітив."],"atlas_href":"/lexicon/інфінітив/"},{"word":"піти","translation":"to go","pos":"infinitive","example":"Я хочу піти в кіно.","examples":["to go","Я хочу піти в кіно."],"atlas_href":"/lexicon/піти/"},{"word":"допомогти","translation":"to help","pos":"infinitive","example":"Ти можеш допомогти?","examples":["to help","Ти можеш допомогти?"],"atlas_href":"/lexicon/допомогти/"},{"word":"працювати","translation":"to work","pos":"infinitive","example":"Я мушу працювати.","examples":["to work","Я мушу працювати."],"atlas_href":"/lexicon/працювати/"},{"word":"їсти","translation":"to eat","pos":"infinitive","example":"Я не хочу їсти.","examples":["to eat","Я не хочу їсти."],"atlas_href":"/lexicon/їсти/"},{"word":"кава","translation":"coffee","pos":"noun","example":"Це кава.","examples":["coffee","Це кава."],"atlas_href":"/lexicon/кава/"},{"word":"каву","translation":"coffee (object form)","pos":"noun form","example":"Можна мені каву?","examples":["coffee (object form)","Можна мені каву?"]},{"word":"борщ","translation":"borshch","pos":"noun","example":"Борщ дуже смачний.","examples":["borshch","Борщ дуже смачний."],"atlas_href":"/lexicon/борщ/"},{"word":"порадити","translation":"to recommend; to advise","pos":"infinitive","example":"Що можете порадити?","examples":["to recommend; to advise","Що можете порадити?"],"atlas_href":"/lexicon/порадити/"},{"word":"шкода","translation":"that's a pity; unfortunately","pos":"expression","example":"Шкода. Я не можу.","examples":["that's a pity; unfortunately","Шкода. Я не можу."],"atlas_href":"/lexicon/шкода/"},{"word":"на жаль","translation":"unfortunately","pos":"phrase","example":"На жаль, не можу.","examples":["unfortunately","На жаль, не можу."],"atlas_href":"/lexicon/на-жаль/"},{"word":"можна","translation":"may; is it possible","pos":"modal word","example":"Можна мені каву?","examples":["may; is it possible","Можна мені каву?"],"atlas_href":"/lexicon/можна/"},{"word":"тоді","translation":"then","pos":"adverb","example":"Тоді ще борщ.","examples":["then","Тоді ще борщ."],"atlas_href":"/lexicon/тоді/"},{"word":"ще","translation":"more; also","pos":"adverb","example":"Тоді ще борщ.","examples":["more; also","Тоді ще борщ."],"atlas_href":"/lexicon/ще/"},{"word":"треба","translation":"need to; should","pos":"modal word","example":"Треба читати.","examples":["need to; should","Треба читати."],"atlas_href":"/lexicon/треба/"}]`)} title="Vocabulary" />
 
 <FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"хотіти","back":"to want"},{"front":"хочу","back":"I want"},{"front":"хочеш","back":"you want"},{"front":"хоче","back":"he/she wants"},{"front":"хочемо","back":"we want"},{"front":"хочете","back":"you all want; formal you want"},{"front":"хочуть","back":"they want"},{"front":"могти","back":"to be able; can"},{"front":"можу","back":"I can"},{"front":"можеш","back":"you can"},{"front":"може","back":"he/she can"},{"front":"можемо","back":"we can"},{"front":"можете","back":"you all can; formal you can"},{"front":"можуть","back":"they can"},{"front":"мусити","back":"to have to; must"},{"front":"мушу","back":"I have to"},{"front":"мусиш","back":"you have to"},{"front":"мусить","back":"he/she has to"},{"front":"мусимо","back":"we have to"},{"front":"мусите","back":"you all have to; formal you have to"},{"front":"мусять","back":"they have to"},{"front":"інфінітив","back":"infinitive"},{"front":"піти","back":"to go"},{"front":"допомогти","back":"to help"},{"front":"працювати","back":"to work"},{"front":"їсти","back":"to eat"},{"front":"кава","back":"coffee"},{"front":"каву","back":"coffee (object form)"},{"front":"борщ","back":"borshch"},{"front":"порадити","back":"to recommend; to advise"},{"front":"шкода","back":"that's a pity; unfortunately"},{"front":"на жаль","back":"unfortunately"},{"front":"можна","back":"may; is it possible"},{"front":"тоді","back":"then"},{"front":"ще","back":"more; also"},{"front":"треба","back":"need to; should"}]`)} />
 
 </TabItem>
 <TabItem label="Activities">
 
-### Обери правильний модальний рядок
-
-*(see lesson, §Діалоги)*
-
-### Склади план на вечір
-
-*(see lesson, §Діалоги)*
-
 ### Форми хотіти
 
 *(see lesson, §Дієслово «хотіти»)*
 
-### Постав дієслово-помічник перед дією
+### Хочу, можу чи мушу?
 
 *(see lesson, §Дієслова «могти» та «мусити»)*
 
-### Перевір роль модального дієслова
+### Доповни речення
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "After хочу, use an infinitive in Я хочу читати.", "isTrue": true, "explanation": "Читати is the action word after хочу."}, {"statement": "Я не можу піти is a complete safe negative.", "isTrue": true, "explanation": "Не stands before можу, then the action follows."}, {"statement": "Мусити always means an emergency right now.", "isTrue": false, "explanation": "Мусити marks obligation; urgency comes from context."}, {"statement": "In a café, Можна мені, будь ласка, каву? is a polite service chunk.", "isTrue": true, "explanation": "Use this chunk before practicing blunt wants in service speech."}]`)} instruction={"Decide whether each statement is safe for this lesson."} isUkrainian={false} />
+*(see lesson, §Дієслова «могти» та «мусити»)*
 
-### Ввічливість у кав'ярні
+### Правильне чи особливе дієслово?
 
-<Translate client:only='react' questions={JSON.parse(`[{"source": "Ask for coffee politely.", "options": [{"text": "Можна мені, будь ласка, каву?", "correct": true}, {"text": "Я хочу кава.", "correct": false}, {"text": "Дай кава.", "correct": false}], "explanation": "Можна мені, будь ласка, каву? is the safe service chunk."}, {"source": "Ask what the server can recommend.", "options": [{"text": "Що можете порадити?", "correct": true}, {"text": "Що можу порадити?", "correct": false}, {"text": "Що хочеш порадити?", "correct": false}], "explanation": "Ви можете gives the polite можете."}, {"source": "Accept the borshch suggestion.", "options": [{"text": "Тоді ще борщ, будь ласка.", "correct": true}, {"text": "Тоді я хочеш борщ.", "correct": false}, {"text": "Тоді борщ хочу ти.", "correct": false}], "explanation": "Тоді ще борщ, будь ласка is a natural A1 order chunk."}]`)} instruction={"Choose the polite Ukrainian café line."} isUkrainian={false} />
-
-### Ситуація → рядок
-
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "You want to go tomorrow.", "right": "Я хочу піти завтра."}, {"left": "You cannot go today.", "right": "Сьогодні я не можу піти."}, {"left": "You have to work.", "right": "Я мушу працювати."}, {"left": "You ask what the server can recommend.", "right": "Що можете порадити?"}, {"left": "You ask for coffee politely.", "right": "Можна мені, будь ласка, каву?"}]`)} instruction={"Match each English situation to the Ukrainian line."} isUkrainian={false} />
-
-<span id="repair-traps"></span>
-
-### Виправ пастки модальних дієслів
-
-<ErrorCorrection client:only='react' instruction="Choose the standard Ukrainian repair." items={JSON.parse(`[{"sentence": "Я хочу до їсти.", "errorWord": "Я хочу до їсти.", "correctForm": "Я хочу їсти.", "options": ["Я хочу їсти.", "Я хочу до їсти.", "Я хочу їм."], "explanation": "Ukrainian infinitives already carry the action form; do not add до."}, {"sentence": "Я їсту / Я їмлю.", "errorWord": "Я їсту / Я їмлю.", "correctForm": "Я їм.", "options": ["Я їм.", "Я їсту.", "Я їмлю."], "explanation": "Їсти has a special ready chunk, я їм."}, {"sentence": "Я хочу читаю.", "errorWord": "Я хочу читаю.", "correctForm": "Я хочу читати.", "options": ["Я хочу читати.", "Я хочу читаю.", "Я хотіти читати."], "explanation": "The second action stays in the infinitive."}, {"sentence": "Ти хоче гуляти?", "errorWord": "Ти хоче гуляти?", "correctForm": "Ти хочеш гуляти?", "options": ["Ти хочеш гуляти?", "Ти хоче гуляти?", "Ти хочу гуляти?"], "explanation": "Ти uses хочеш."}, {"sentence": "Я могу допомогти.", "errorWord": "Я могу допомогти.", "correctForm": "Я можу допомогти.", "options": ["Я можу допомогти.", "Я могу допомогти.", "Я можеш допомогти."], "explanation": "Ukrainian uses можу."}, {"sentence": "Я мусю працювати.", "errorWord": "Я мусю працювати.", "correctForm": "Я мушу працювати.", "options": ["Я мушу працювати.", "Я мусю працювати.", "Я мусиш працювати."], "explanation": "Learn я мушу as a ready chunk."}, {"sentence": "Я не можу не.", "errorWord": "Я не можу не.", "correctForm": "Я не можу піти.", "options": ["Я не можу піти.", "Я не можу не.", "Я не може піти."], "explanation": "Finish не можу with an action."}, {"sentence": "Я п'ю кава.", "errorWord": "Я п'ю кава.", "correctForm": "Я п'ю каву.", "options": ["Я п'ю каву.", "Я п'ю кава.", "Я п'ю кави."], "explanation": "A familiar feminine object changes кава to каву."}, {"sentence": "Я хочу кава.", "errorWord": "Я хочу кава.", "correctForm": "Можна мені, будь ласка, каву?", "options": ["Можна мені, будь ласка, каву?", "Я хочу кава.", "Можна я кава?"], "explanation": "Use the polite café chunk for service speech."}, {"sentence": "Він смієтся / бореться.", "errorWord": "Він смієтся / бореться.", "correctForm": "Він сміється / борешся.", "options": ["Він сміється / борешся.", "Він смієтся / бореться.", "Він сміється / борешться."], "explanation": "This is recognition-only spelling and pronunciation for -ся verbs."}]`)} isUkrainian={false} />
+*(see lesson, §Підсумок)*
 
 </TabItem>
 <TabItem label="Resources">

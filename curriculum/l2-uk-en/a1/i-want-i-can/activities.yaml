@@ -1,56 +1,6 @@
 ---
 inline:
   - id: act-1
-    type: quiz
-    title: Обери правильний модальний рядок
-    instruction: Choose the Ukrainian line that fits each situation.
-    items:
-      - prompt: You want to read, not say that you are reading now.
-        options:
-          - text: Я хочу читати.
-            correct: true
-          - text: Я хочу читаю.
-            correct: false
-          - text: Я хотіти читати.
-            correct: false
-        explanation: After хочу, keep the second action in the -ти form.
-      - prompt: You can help someone.
-        options:
-          - text: Я можу допомогти.
-            correct: true
-          - text: Я можеш допомогти.
-            correct: false
-          - text: Я можу допомагаю.
-            correct: false
-        explanation: Я uses можу, then the infinitive допомогти.
-      - prompt: You have to work.
-        options:
-          - text: Я мушу працювати.
-            correct: true
-          - text: Я мусиш працювати.
-            correct: false
-          - text: Я мушу працюю.
-            correct: false
-        explanation: Learn я мушу plus an infinitive.
-  - id: act-2
-    type: order
-    title: Склади план на вечір
-    instruction: Put the short exchange in a natural order.
-    items:
-      - Ти хочеш піти в кіно?
-      - Так, я хочу піти.
-      - Ти можеш сьогодні?
-      - На жаль, не можу.
-      - Я мушу працювати.
-      - Добре, завтра гуляємо.
-    correct_order:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-  - id: act-3
     type: fill-in
     title: Форми хотіти
     instruction: Choose the form of хотіти that fits the person.
@@ -97,185 +47,207 @@ inline:
           - хоче
           - хочеш
         explanation: Вони хочуть.
-  - id: act-4
-    type: unjumble
-    title: Постав дієслово-помічник перед дією
-    instruction: Rebuild each sentence with the helper verb before the infinitive.
-    items:
-      - words:
-          - можу
-          - Я
-          - допомогти
-        answer: Я можу допомогти
-      - words:
-          - Ти
-          - читати
-          - можеш
-        answer: Ти можеш читати
-      - words:
-          - піти
-          - Вона
-          - може
-        answer: Вона може піти
-      - words:
-          - працювати
-          - Ми
-          - можемо
-        answer: Ми можемо працювати
-      - words:
-          - можете
-          - Ви
-          - порадити
-        answer: Ви можете порадити
-      - words:
-          - гуляти
-          - Вони
-          - можуть
-        answer: Вони можуть гуляти
-workbook:
-  - type: true-false
-    title: Перевір роль модального дієслова
-    instruction: Decide whether each statement is safe for this lesson.
-    items:
-      - statement: After хочу, use an infinitive in Я хочу читати.
-        answer: true
-        explanation: Читати is the action word after хочу.
-      - statement: Я не можу піти is a complete safe negative.
-        answer: true
-        explanation: Не stands before можу, then the action follows.
-      - statement: Мусити always means an emergency right now.
-        answer: false
-        explanation: Мусити marks obligation; urgency comes from context.
-      - statement: In a café, Можна мені, будь ласка, каву? is a polite service chunk.
-        answer: true
-        explanation: Use this chunk before practicing blunt wants in service speech.
-  - type: translate
-    title: Ввічливість у кав'ярні
-    instruction: Choose the polite Ukrainian café line.
-    items:
-      - source: Ask for coffee politely.
+      - sentence: Оля і Денис ___ піти в кіно.
+        answer: хочуть
         options:
-          - text: Можна мені, будь ласка, каву?
+          - хочуть
+          - хочете
+          - хочеш
+        explanation: Two people are вони, so use хочуть.
+      - sentence: Я не ___ їсти.
+        answer: хочу
+        options:
+          - хочу
+          - хоче
+          - хочуть
+        explanation: Negation does not change the я form.
+      - sentence: Денисе, ти ___ каву?
+        answer: хочеш
+        options:
+          - хочеш
+          - хочете
+          - хочемо
+        explanation: Денисе is one person addressed as ти, so use хочеш.
+  - id: act-2
+    type: quiz
+    title: Хочу, можу чи мушу?
+    instruction: Choose the line that fits the situation.
+    items:
+      - prompt: You want to read.
+        options:
+          - text: Я хочу читати.
             correct: true
-          - text: Я хочу кава.
+          - text: Я можу читати.
             correct: false
-          - text: Дай кава.
+          - text: Я мушу читати.
             correct: false
-        explanation: Можна мені, будь ласка, каву? is the safe service chunk.
-      - source: Ask what the server can recommend.
+        explanation: Desire uses хочу.
+      - prompt: You are able to help.
+        options:
+          - text: Я можу допомогти.
+            correct: true
+          - text: Я хочу допомогти.
+            correct: false
+          - text: Я мушу допомогти.
+            correct: false
+        explanation: Ability uses можу.
+      - prompt: You have to work.
+        options:
+          - text: Я мушу працювати.
+            correct: true
+          - text: Я хочу працювати.
+            correct: false
+          - text: Я можу працювати.
+            correct: false
+        explanation: Obligation uses мушу.
+      - prompt: You cannot go today.
+        options:
+          - text: Сьогодні я не можу піти.
+            correct: true
+          - text: Сьогодні я не хочу піти.
+            correct: false
+          - text: Сьогодні я мушу піти.
+            correct: false
+        explanation: A practical block uses не можу.
+      - prompt: Ask one friend if they want to go to the cinema.
+        options:
+          - text: Ти хочеш піти в кіно?
+            correct: true
+          - text: Ти можеш піти в кіно?
+            correct: false
+          - text: Ти мусиш піти в кіно?
+            correct: false
+        explanation: The question asks about desire.
+      - prompt: Ask politely what the server can recommend.
         options:
           - text: Що можете порадити?
             correct: true
-          - text: Що можу порадити?
+          - text: Що хочете порадити?
             correct: false
-          - text: Що хочеш порадити?
+          - text: Що мусите порадити?
             correct: false
-        explanation: Ви можете gives the polite можете.
-      - source: Accept the borshch suggestion.
+        explanation: Polite possibility uses можете.
+      - prompt: The menu word is кава. With friends, you want coffee.
         options:
-          - text: Тоді ще борщ, будь ласка.
+          - text: Я хочу каву.
             correct: true
-          - text: Тоді я хочеш борщ.
+          - text: Я можу каву.
             correct: false
-          - text: Тоді борщ хочу ти.
+          - text: Я мушу каву.
             correct: false
-        explanation: Тоді ще борщ, будь ласка is a natural A1 order chunk.
-  - type: match-up
-    title: Ситуація → рядок
-    instruction: Match each English situation to the Ukrainian line.
-    pairs:
-      - left: You want to go tomorrow.
-        right: Я хочу піти завтра.
-      - left: You cannot go today.
-        right: Сьогодні я не можу піти.
-      - left: You have to work.
-        right: Я мушу працювати.
-      - left: You ask what the server can recommend.
-        right: Що можете порадити?
-      - left: You ask for coffee politely.
-        right: Можна мені, будь ласка, каву?
-  - type: error-correction
-    title: Виправ пастки модальних дієслів
-    instruction: Choose the standard Ukrainian repair.
-    anchor_id: repair-traps
+        explanation: Wanting a thing uses хочу plus the object.
+      - prompt: You have to study new words.
+        options:
+          - text: Я мушу вчити нові слова.
+            correct: true
+          - text: Я можу вчити нові слова.
+            correct: false
+          - text: Я хочу вчити нові слова.
+            correct: false
+        explanation: Obligation uses мушу.
+  - id: act-3
+    type: fill-in
+    title: Доповни речення
+    instruction: Choose хочу, можу, or мушу in the right form.
     items:
-      - sentence: Я хочу до їсти.
-        error: Я хочу до їсти.
-        answer: Я хочу їсти.
+      - sentence: Я ___ гуляти, але не можу сьогодні.
+        answer: хочу
         options:
-          - Я хочу їсти.
-          - Я хочу до їсти.
-          - Я хочу їм.
-        explanation: Ukrainian infinitives already carry the action form; do not add до.
-      - sentence: Я їсту / Я їмлю.
-        error: Я їсту / Я їмлю.
-        answer: Я їм.
+          - хочу
+          - можу
+          - мушу
+        explanation: The first part gives desire.
+      - sentence: Я хочу піти, але не ___.
+        answer: можу
         options:
-          - Я їм.
-          - Я їсту.
-          - Я їмлю.
-        explanation: Їсти has a special ready chunk, я їм.
-      - sentence: Я хочу читаю.
-        error: Я хочу читаю.
-        answer: Я хочу читати.
+          - можу
+          - хочу
+          - мушу
+        explanation: Але не можу gives the practical block.
+      - sentence: "Я не можу: я ___ працювати."
+        answer: мушу
         options:
-          - Я хочу читати.
-          - Я хочу читаю.
-          - Я хотіти читати.
-        explanation: The second action stays in the infinitive.
-      - sentence: Ти хоче гуляти?
-        error: Ти хоче гуляти?
-        answer: Ти хочеш гуляти?
+          - мушу
+          - можу
+          - хочу
+        explanation: The reason is an obligation.
+      - sentence: Оля ___ гуляти, але не може сьогодні.
+        answer: хоче
         options:
-          - Ти хочеш гуляти?
-          - Ти хоче гуляти?
-          - Ти хочу гуляти?
-        explanation: Ти uses хочеш.
-      - sentence: Я могу допомогти.
-        error: Я могу допомогти.
-        answer: Я можу допомогти.
+          - хоче
+          - може
+          - мусить
+        explanation: The first part gives her desire.
+      - sentence: "Денис не ___ піти: він мусить працювати."
+        answer: може
         options:
-          - Я можу допомогти.
-          - Я могу допомогти.
-          - Я можеш допомогти.
-        explanation: Ukrainian uses можу.
-      - sentence: Я мусю працювати.
-        error: Я мусю працювати.
-        answer: Я мушу працювати.
+          - може
+          - хоче
+          - мусить
+        explanation: Не може gives the practical block.
+      - sentence: Вони хочуть гуляти, але ___ працювати.
+        answer: мусять
         options:
-          - Я мушу працювати.
-          - Я мусю працювати.
-          - Я мусиш працювати.
-        explanation: Learn я мушу as a ready chunk.
-      - sentence: Я не можу не.
-        error: Я не можу не.
-        answer: Я не можу піти.
+          - мусять
+          - можуть
+          - хочуть
+        explanation: Але marks the obligation that blocks the plan.
+  - id: act-4
+    type: quiz
+    title: Правильне чи особливе дієслово?
+    instruction: Choose the correct conjugation note.
+    items:
+      - prompt: хотіти
         options:
-          - Я не можу піти.
-          - Я не можу не.
-          - Я не може піти.
-        explanation: Finish не можу with an action.
-      - sentence: Я п'ю кава.
-        error: Я п'ю кава.
-        answer: Я п'ю каву.
+          - text: І дієвідміна, особливі форми хочу, хочеш
+            correct: true
+          - text: ІІ дієвідміна, як говорити
+            correct: false
+          - text: No present-tense forms
+            correct: false
+        explanation: Хотіти is treated as І дієвідміна but has special chunks.
+      - prompt: могти
         options:
-          - Я п'ю каву.
-          - Я п'ю кава.
-          - Я п'ю кави.
-        explanation: A familiar feminine object changes кава to каву.
-      - sentence: Я хочу кава.
-        error: Я хочу кава.
-        answer: Можна мені, будь ласка, каву?
+          - text: І дієвідміна, особливі форми можу, можеш
+            correct: true
+          - text: ІІ дієвідміна, як робити
+            correct: false
+          - text: Only an infinitive
+            correct: false
+        explanation: Могти changes to мож- in the active forms.
+      - prompt: мусити
         options:
-          - Можна мені, будь ласка, каву?
-          - Я хочу кава.
-          - Можна я кава?
-        explanation: Use the polite café chunk for service speech.
-      - sentence: Він смієтся / бореться.
-        error: Він смієтся / бореться.
-        answer: Він сміється / борешся.
+          - text: ІІ дієвідміна; learn я мушу
+            correct: true
+          - text: І дієвідміна; я мусю
+            correct: false
+          - text: It has no ти form
+            correct: false
+        explanation: Мусити follows ІІ endings, with я мушу as the key chunk.
+      - prompt: читати
         options:
-          - Він сміється / борешся.
-          - Він смієтся / бореться.
-          - Він сміється / борешться.
-        explanation: This is recognition-only spelling and pronunciation for -ся verbs.
+          - text: І дієвідміна, regular review verb
+            correct: true
+          - text: ІІ дієвідміна, like говорити
+            correct: false
+          - text: Irregular like хотіти
+            correct: false
+        explanation: Читати is a regular Group One review verb.
+      - prompt: говорити
+        options:
+          - text: ІІ дієвідміна, regular review verb
+            correct: true
+          - text: І дієвідміна, like читати
+            correct: false
+          - text: Irregular like могти
+            correct: false
+        explanation: Говорити is a Group Two review verb from the previous module.
+      - prompt: допомогти
+        options:
+          - text: Infinitive after можу in this lesson
+            correct: true
+          - text: A present-tense helper form
+            correct: false
+          - text: A noun object like каву
+            correct: false
+        explanation: In Я можу допомогти, допомогти stays in the infinitive.
