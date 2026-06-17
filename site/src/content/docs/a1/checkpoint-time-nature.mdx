@@ -74,10 +74,6 @@ By the end, you can:
 
 ## Що ми знаємо?
 
-### A1.4 skill map
-
-<GroupSort client:only='react' groups={JSON.parse(`{"Clock time": ["Котра година?", "Зараз сьома.", "Зустріч о десятій."], "Calendar": ["У суботу.", "У жовтні.", "Влітку."], "Weather": ["Сьогодні тепло.", "Іде дощ.", "Надворі хмарно."], "Free-time plan": ["Ходімо в музей.", "Давай слухати музику.", "Я часто читаю."]}`)} instruction={"Sort each line by the checkpoint skill it proves."} isUkrainian={false} />
-
 You already have the A1.4 toolkit. Think of it as five cards.
 
 | Card | Safe question | Safe answer |
@@ -108,26 +104,26 @@ Support after the Ukrainian lines:
 This is also a self-check. If you can answer **коли?**, **о котрій?**,
 **яка погода?**, and **що робиш?** in one scene, A1.4 is working.
 
-### Question to checkpoint answer
+### Час, дні і погода
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Котра година?", "right": "Десята тридцять."}, {"left": "О котрій зустріч?", "right": "О першій."}, {"left": "Яка сьогодні погода?", "right": "Тепло і сонячно."}, {"left": "Коли твій день народження?", "right": "У жовтні."}, {"left": "Що ти робиш у суботу?", "right": "Граю у футбол."}, {"left": "Як часто ти читаєш?", "right": "Кожен день ввечері."}, {"left": "Ходімо в парк!", "right": "Добре, о котрій?"}, {"left": "Що ти будеш робити завтра?", "right": "Буду працювати."}]`)} instruction={"Match each question with the answer that fits a weekend plan."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Зустріч ___ годині.", "answer": "о п'ятій", "options": ["о п'ятій", "в п'ятій", "у п'ята"]}, {"sentence": "Ми йдемо в кіно ___.", "answer": "у суботу", "options": ["у суботу", "в суботі", "на суботу"]}, {"sentence": "Мій день народження ___.", "answer": "у січні", "options": ["у січні", "в січень", "січень"]}, {"sentence": "Сьогодні ___ і холодно.", "answer": "іде дощ", "options": ["іде дощ", "іде дощова", "дощить"]}, {"sentence": "Взимку дуже ___.", "answer": "холодно", "options": ["холодно", "спекотно", "тепло"]}, {"sentence": "Я прокидаюся о сьомій ___.", "answer": "ранку", "options": ["ранку", "рано", "вранці"]}]`)} instruction={"Обери правильний варіант для повторення A1.4."} isUkrainian={false} />
 
 ## Читання
 
-Read the week plan aloud. It reuses the earlier modules and adds Ukrainian
-cultural context without making a new culture lesson.
+Read the week plan aloud. It reuses the earlier modules without adding a new
+grammar topic.
 
 ```text
 Цього тижня я маю простий план.
 У понеділок я працюю з дев'ятої до п'ятої.
 У вівторок о сьомій вечора вивчаю українську.
 У середу буде холодно, тому я читаю вдома.
-На полиці є книжки: Тарас Шевченко, Леся Українка, Ліна Костенко.
 У четвер буде тепло і сонячно.
 У п'ятницю я гуляю після роботи.
 У суботу о десятій друзі їдуть до Києва.
-Вони мають гривні на квитки і синьо-жовтий прапор на фото.
 У неділю, якщо буде дощ, ми ходимо в музей.
+Ввечері я часто слухаю музику.
+Мені подобається осінь.
 ```
 
 Support after the Ukrainian lines:
@@ -138,12 +134,12 @@ Support after the Ukrainian lines:
 | **У понеділок я працюю з дев'ятої до п'ятої.** | On Monday I work from nine to five. |
 | **У вівторок о сьомій вечора вивчаю українську.** | On Tuesday at seven in the evening I study Ukrainian. |
 | **У середу буде холодно, тому я читаю вдома.** | On Wednesday it will be cold, so I read at home. |
-| **На полиці є книжки: Тарас Шевченко, Леся Українка, Ліна Костенко.** | On the shelf there are books: Taras Shevchenko, Lesia Ukrainka, Lina Kostenko. |
 | **У четвер буде тепло і сонячно.** | On Thursday it will be warm and sunny. |
 | **У п'ятницю я гуляю після роботи.** | On Friday I walk after work. |
 | **У суботу о десятій друзі їдуть до Києва.** | On Saturday at ten, friends go to Kyiv. |
-| **Вони мають гривні на квитки і синьо-жовтий прапор на фото.** | They have hryvnias for tickets and the blue-yellow flag in a photo. |
 | **У неділю, якщо буде дощ, ми ходимо в музей.** | On Sunday, if it rains, we go to a museum. |
+| **Ввечері я часто слухаю музику.** | In the evening I often listen to music. |
+| **Мені подобається осінь.** | I like autumn. |
 
 Answer in short phrases:
 
@@ -153,13 +149,9 @@ Answer in short phrases:
 - **Куди друзі їдуть у суботу?**
 - **Що ми робимо, якщо буде дощ?**
 
-Keep the national markers precise: **Київ**, **гривня**, **синьо-жовтий**,
-and **Тризуб** are Ukrainian reference points. When a history date appears
-later in the course, keep it exact, for example **Голодомор 1932-1933 років**.
+### Питання і відповідь
 
-### Weekend plan gaps
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Зустріч ___ годині.", "answer": "о п'ятій", "options": ["о п'ятій", "в п'ятій", "у п'ята"]}, {"sentence": "Ми йдемо в кіно ___.", "answer": "у суботу", "options": ["у суботу", "в суботі", "на суботу"]}, {"sentence": "Мій день народження ___.", "answer": "у січні", "options": ["у січні", "в січень", "січень"]}, {"sentence": "Сьогодні ___ і холодно.", "answer": "іде дощ", "options": ["іде дощ", "іде дощова", "дощить холод"]}, {"sentence": "Взимку дуже ___.", "answer": "холодно", "options": ["холодно", "спекотно", "тепло"]}, {"sentence": "Я прокидаюся о сьомій ___.", "answer": "ранку", "options": ["ранку", "рано", "вранці"]}]`)} instruction={"Choose the checkpoint chunk that completes the plan."} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Котра година?", "right": "Десята тридцять."}, {"left": "О котрій зустріч?", "right": "О першій."}, {"left": "Яка сьогодні погода?", "right": "Тепло і сонячно."}, {"left": "Коли твій день народження?", "right": "У жовтні."}, {"left": "Що ти робиш у суботу?", "right": "Граю у футбол."}, {"left": "Як часто ти читаєш?", "right": "Кожного дня ввечері."}, {"left": "Ходімо в парк!", "right": "Добре, о котрій?"}, {"left": "Що ти будеш робити завтра?", "right": "Буду працювати."}]`)} instruction={"З'єднай питання з логічною відповіддю."} isUkrainian={false} />
 
 ## Граматика
 
@@ -233,28 +225,22 @@ Support after the Ukrainian lines:
 
 ### Minute, quarter, and half-hour chunks
 
-For recognition, keep the safe chunks from the time lesson:
-**пів на восьму**, **пів на шосту**, **чверть на дванадцяту**,
-**п'ять по восьмій**, **за десять шоста**, and **десять до шостої**.
-Use **на**, **по**, **за**, and **до** as your safe clock words.
+For recognition, keep a few safe chunks from the time lesson:
+**Десята тридцять**, **пів на восьму**, and **п'ять по восьмій**.
 
 ```text
+Зараз десята тридцять.
 Зараз пів на восьму.
-Зараз пів на шосту.
 Зараз п'ять по восьмій.
-Зараз за десять шоста.
-Урок закінчується о двадцятій хвилині на шосту.
 ```
 
 Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
+| **Зараз десята тридцять.** | It is ten thirty. |
 | **Зараз пів на восьму.** | It is half past seven. |
-| **Зараз пів на шосту.** | It is half past five. |
 | **Зараз п'ять по восьмій.** | It is five past eight. |
-| **Зараз за десять шоста.** | It is ten to six. |
-| **Урок закінчується о двадцятій хвилині на шосту.** | The lesson ends at twenty minutes to six. |
 
 ### Routine planning
 
@@ -276,10 +262,9 @@ Support after the Ukrainian lines:
 | **Після обіду гуляю, якщо тепло.** | After lunch I walk if it is warm. |
 | **Нарешті ввечері читаю.** | Finally, in the evening I read. |
 
-You may see bigger source phrases behind this checkpoint: **вставати**,
-**вставати о шостій ранку**, **план дня головного менеджера**, and
-**раціональний розподіл часу**. At A1, shrink them into your own short plan:
-**я прокидаюся о сьомій**, **мій план дня**, **я планую час**.
+### Абзац про день
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ я прокидаюся і снідаю.", "answer": "Спочатку", "options": ["Спочатку", "Потім", "Нарешті"]}, {"sentence": "___ я йду на роботу.", "answer": "Потім", "options": ["Потім", "Вранці", "Вночі"]}, {"sentence": "Я працюю з дев'ятої ___ п'ятої.", "answer": "до", "options": ["до", "і", "по"]}, {"sentence": "___ я гуляю в парку.", "answer": "Після обіду", "options": ["Після обіду", "Вранці", "Вночі"]}, {"sentence": "Я гуляю, тому що сьогодні ___ і сонячно.", "answer": "тепло", "options": ["тепло", "холодно", "дощ"]}, {"sentence": "___ я вечеряю і слухаю музику.", "answer": "Ввечері", "options": ["Ввечері", "Вдень", "Вранці"]}, {"sentence": "___ я лягаю спати о дванадцятій.", "answer": "Нарешті", "options": ["Нарешті", "Спочатку", "Потім"]}]`)} instruction={"Обери слово або фразу, які завершують опис дня."} isUkrainian={false} />
 
 ### Nature and weather description
 
@@ -301,18 +286,6 @@ Support after the Ukrainian lines:
 | **У лісі зелена трава.** | In the forest there is green grass. |
 | **Вранці світить сонце.** | In the morning the sun is shining. |
 
-For the written checkpoint, the move is simple: **письмово описувати тварин і
-предмети** with known adjectives, or **використання прикметників** such as
-**зелений**, **холодний**, **малий**, and **гарний**.
-
-Do not explain Ukrainian sounds through another language. Hear **и**, **х**,
-and **г** as Ukrainian sounds in Ukrainian words such as **синьо-жовтий**,
-**хмарно**, and **гарний**.
-
-### Build the Saturday trip
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Start with the day and destination.", "options": [{"text": "У суботу ми їдемо до Києва.", "correct": true}, {"text": "На суботу ми їдемо в Київ.", "correct": false}, {"text": "У суботі ми їдемо Київ.", "correct": false}], "explanation": "Use у суботу and до Києва."}, {"question": "Give the meeting time.", "options": [{"text": "Зустріч о десятій ранку.", "correct": true}, {"text": "Зустріч в десять годин.", "correct": false}, {"text": "Зустріч на десяту ранку.", "correct": false}], "explanation": "Schedule time uses о plus the time chunk."}, {"question": "Add the weather.", "options": [{"text": "Буде тепло і сонячно.", "correct": true}, {"text": "Погода буде тепла і сонячна.", "correct": false}, {"text": "Це є тепло і сонячно.", "correct": false}], "explanation": "Short weather chunks are enough."}, {"question": "Add a first action.", "options": [{"text": "Спочатку гуляємо в парку.", "correct": true}, {"text": "На початку ми є гуляємо в парку.", "correct": false}, {"text": "Перший гуляємо у парк.", "correct": false}], "explanation": "Спочатку connects the action safely."}, {"question": "Add a rain alternative.", "options": [{"text": "Якщо буде дощ, спочатку йдемо в музей.", "correct": true}, {"text": "Якщо є дощ, спочатку ходимо до музей.", "correct": false}, {"text": "Коли дощова, спочатку йдемо музей.", "correct": false}], "explanation": "Якщо буде дощ is the safe condition chunk."}]`)} instruction={"Choose the line that fits each part of the travel plan."} isUkrainian={false} />
-
 ## Діалог
 
 Read the planning dialogue. It combines time, calendar, weather, routine, and
@@ -326,7 +299,7 @@ free time in one practical scene.
 Оля: Буде тепло і сонячно.
 Данило: Чудово. Спочатку їдемо до парку?
 Оля: Так, а потім ходімо в музей.
-Данило: О котрій музей?
+Данило: О котрій годині йдемо в музей?
 Оля: О першій. Якщо буде дощ, спочатку йдемо в музей.
 Данило: А ввечері?
 Оля: Ввечері я рідко працюю, тому давай слухати музику.
@@ -344,16 +317,11 @@ Support after the Ukrainian lines:
 | **Оля: Буде тепло і сонячно.** | Olia: It will be warm and sunny. |
 | **Данило: Чудово. Спочатку їдемо до парку?** | Danylo: Great. First we go to the park? |
 | **Оля: Так, а потім ходімо в музей.** | Olia: Yes, and then let's go to the museum. |
-| **Данило: О котрій музей?** | Danylo: What time is the museum? |
+| **Данило: О котрій годині йдемо в музей?** | Danylo: What time are we going to the museum? |
 | **Оля: О першій. Якщо буде дощ, спочатку йдемо в музей.** | Olia: At one. If it rains, first we go to the museum. |
 | **Данило: А ввечері?** | Danylo: And in the evening? |
 | **Оля: Ввечері я рідко працюю, тому давай слухати музику.** | Olia: In the evening I rarely work, so let's listen to music. |
 | **Данило: Добре. До побачення!** | Danylo: Good. Goodbye! |
-
-Notice the clean everyday forms: **Добрий день**, **До побачення**,
-**прізвище**, **тато**, **Мені 20 років**, **Я студент**, and
-**Він спортсмен**. Use Ukrainian zero-copula and age chunks; do not force an
-English helper into these lines.
 
 ## 📋 Підсумок
 
@@ -379,16 +347,6 @@ Support after the Ukrainian lines:
 | **Якщо буде дощ, я читаю вдома.** | If it rains, I read at home. |
 | **Ввечері я слухаю музику.** | In the evening I listen to music. |
 
-:::caution
-Keep the time and nature system Ukrainian. Use **о/об**, **на**, **по**,
-**за**, and **до** for clock time. Present Ukrainian language on its own
-independent terms; do not use Russian-language phonetic comparisons or
-borrowed clock shortcuts. For cultural context, keep Ukrainian forms precise:
-**Київ**, **гривня**, **синьо-жовтий прапор**, **Тризуб**, **Тарас
-Шевченко**, **Леся Українка**, and **Ліна Костенко**. Everyday forms also
-stay precise: **Добрий день**, **До побачення**, **прізвище**, and **тато**.
-:::
-
 Write your own six-line checkpoint answer. Include:
 
 - one day: **у суботу**;
@@ -397,6 +355,10 @@ Write your own six-line checkpoint answer. Include:
 - one sequence word: **спочатку** or **потім**;
 - one free-time action: **гуляю**, **читаю**, **слухаю музику**;
 - one alternative: **якщо буде дощ...**.
+
+You have now reviewed the A1.4 toolkit: clock time, calendar words, seasons,
+weather, daily routine, free time, sequence, and frequency. Next comes A1.5:
+places, the city, directions, and transport.
 
 </TabItem>
 <TabItem label="Vocabulary">
@@ -408,37 +370,17 @@ Write your own six-line checkpoint answer. Include:
 </TabItem>
 <TabItem label="Activities">
 
-### A1.4 skill map
+### Час, дні і погода
 
 *(see lesson, §Що ми знаємо?)*
 
-### Question to checkpoint answer
-
-*(see lesson, §Що ми знаємо?)*
-
-### Weekend plan gaps
+### Питання і відповідь
 
 *(see lesson, §Читання)*
 
-### Build the Saturday trip
+### Абзац про день
 
-*(see lesson, §Nature and weather description)*
-
-### Find the unsafe checkpoint chunk
-
-<OddOneOut client:only='react' instruction={"Choose the line that does not fit the safe A1.4 pattern."} items={JSON.parse(`[{"words": ["Зустріч о п'ятій.", "Фільм о десятій годині.", "Кава об одинадцятій.", "Зустріч в п'ять годин."], "correct": 3, "explanation": "Schedule time uses о/об."}, {"words": ["Пів на восьму.", "Пів на шосту.", "Чверть на дванадцяту.", "Пів восьмої."], "correct": 3, "explanation": "The checkpoint chunk is пів на plus the next hour."}, {"words": ["Іде дощ.", "Сьогодні тепло.", "Надворі хмарно.", "Він іде дощ."], "correct": 3, "explanation": "Weather can be an impersonal Ukrainian sentence."}, {"words": ["Взимку.", "Навесні.", "Влітку.", "Весною."], "correct": 3, "explanation": "Навесні is the safe A1 season chunk in this checkpoint."}, {"words": ["Я студент.", "Мені 20 років.", "Він спортсмен.", "Я є студент."], "correct": 3, "explanation": "Ukrainian normally omits the present-tense helper here."}]`)} />
-
-### Checkpoint readiness checks
-
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "У суботу о десятій ходімо в парк.", "isTrue": true, "explanation": "Day plus time plus invitation is a complete plan."}, {"statement": "Влітку часто тепло і сонячно.", "isTrue": true, "explanation": "Влітку is the safe season chunk."}, {"statement": "Я працюю з дев'ятої до п'ятої.", "isTrue": true, "explanation": "This workday range is useful and safe at A1."}, {"statement": "Сьогодні холодно, тому я читаю вдома.", "isTrue": true, "explanation": "Weather plus reason plus action is a good checkpoint line."}, {"statement": "Мені подобається весна.", "isTrue": true, "explanation": "Мені подобається is the safe preference chunk."}, {"statement": "О першій ходімо в музей.", "isTrue": true, "explanation": "The schedule chunk о першій combines naturally with an invitation."}]`)} instruction={"Decide whether each line is ready for an A1.4 checkpoint answer."} isUkrainian={false} />
-
-### Rebuild integrated checkpoint lines
-
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "У / суботу / о / десятій / ходімо / в / парк", "answer": "У суботу о десятій ходімо в парк"}, {"jumbled": "Якщо / буде / дощ / ходімо / в / музей", "answer": "Якщо буде дощ ходімо в музей"}, {"jumbled": "Взимку / ліс / холодний", "answer": "Взимку ліс холодний"}, {"jumbled": "Я / працюю / з / дев'ятої / до / п'ятої", "answer": "Я працюю з дев'ятої до п'ятої"}, {"jumbled": "Зараз / п'ять / по / восьмій", "answer": "Зараз п'ять по восьмій"}, {"jumbled": "Я / хочу / вставати / о / шостій / ранку", "answer": "Я хочу вставати о шостій ранку"}]`)} instruction={"Put the words in a safe A1.4 order."} />
-
-### Final repair gaps
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Season repair: ___", "answer": "Взимку я люблю читати книжки.", "options": ["Взимку я люблю читати книжки.", "Зимою я люблю читати книжки.", "На зимі я люблю читати книжки."]}, {"sentence": "Five-past-eight repair: ___", "answer": "Фільм починається п'ять по восьмій.", "options": ["Фільм починається п'ять по восьмій.", "Фільм починається п'ять після восьмої.", "Фільм починається п'ять в восьмій."]}, {"sentence": "Ten-to-six repair: ___", "answer": "Автобус приїде за десять шоста.", "options": ["Автобус приїде за десять шоста.", "Автобус приїде без десяти шість.", "Автобус приїде до десяти шість."]}, {"sentence": "Twenty-to-six repair: ___", "answer": "Урок закінчується о двадцятій хвилині на шосту.", "options": ["Урок закінчується о двадцятій хвилині на шосту.", "Урок закінчується в двадцять хвилин шостої.", "Урок закінчується двадцять після п'ятої."]}, {"sentence": "Name and age repair: ___", "answer": "Мене звати Джон, і мені 20 років.", "options": ["Мене звати Джон, і мені 20 років.", "Моє ім'я є Джон, і я маю 20 років.", "Я є Джон, і я маю 20 років."]}, {"sentence": "Student line repair: ___", "answer": "У понеділок я студент.", "options": ["У понеділок я студент.", "У понеділок я є студент.", "У понеділок мене студент."]}]`)} instruction={"Choose the full repair for each unsafe checkpoint sentence."} isUkrainian={false} />
+*(see lesson, §Routine planning)*
 
 </TabItem>
 <TabItem label="Resources">
@@ -447,12 +389,10 @@ Write your own six-line checkpoint answer. Include:
 
 **📝 Articles:**
 - 📄 [Daily Routines](https://thelanguages.com/learn/ukrainian/foundations/vocabulary/4/) — Reinforces day-plan vocabulary reused from the daily-routine module.
+- 📄 [Days of the Week in Ukrainian](https://www.ukrainianlessons.com/vocabulary-days/) — Review weekday names and simple calendar chunks.
+- 📄 [Days, Months and Seasons in Ukrainian](https://talkukrainian.com/days-months-seasons/) — Compact learner reference for days, months, and seasons.
+- 📄 [Weather in Ukrainian](https://www.ukrainianlessons.com/weather-vocabulary/) — Review common Ukrainian weather words and short weather phrases.
 - 📄 [Котра година? Time Vocabulary in Ukrainian](https://www.ukrainianlessons.com/grammar-time/) — Review safe clock-time questions, hour chunks, and schedule phrases.
-
-**🎧 Audio:**
-- 🎧 [FMU 1-16 | How to ORDER at the Restaurant in Ukrainian](https://www.ukrainianlessons.com/fmu16/) — Source-registry follow-up for planning days, times, and practical outings.
-- 🎧 [ULP 1-32 | Shopping for Clothes - Accusative Case in Ukrainian](https://www.ukrainianlessons.com/episode32/) — Source-registry follow-up for action planning and everyday errands after this checkpoint.
-- 🎧 [ULP 1-33 | Talking about Books in Ukrainian](https://www.ukrainianlessons.com/episode33/) — Supports the checkpoint reading context where free time includes reading Ukrainian authors.
 :::
 
 </TabItem>
