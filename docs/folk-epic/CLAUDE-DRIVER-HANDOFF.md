@@ -63,7 +63,47 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 48 HANDOFF (2026-06-17 — ✅ #3079 FIX BEHAVIORALLY VALIDATED (craft-preserving find/replace, NOT insert; beauty scored; decoloniz passed). Complete re-test build re-running for CONVERGED scores. Process lesson: don't dispatch long builds) — **RESUME HERE**
+## ▶▶▶ SESSION 49 HANDOFF (2026-06-17 — 🧭 PLAN PIVOT: 3 fresh-rebuild attempts each hit a DIFFERENT orthogonal blocker → rebuild can't prove loop convergence. NEXT DELIVERABLE = an ENHANCE entry point (run review+craft-loop on CURATED content). #3079 fix stays behaviorally-validated; #3480 stays HELD) — **RESUME HERE**
+
+> **Where we are:** Phase A `beauty` gate + #3079 craft-preserving loop fix are DONE/verified/CI-green in
+> held PR #3480. The #3079 fix is **behaviorally validated** (re-test#1: generalized loop emits
+> craft-preserving `<find>/<replace>`, scores beauty, decolonization passed). What's still UNPROVEN: a folk
+> module **converging ≥8 on all 4 seminar-terminal dims end-to-end** — because **fresh `--no-resume` rebuild
+> is an unreliable test vehicle**, hitting a different orthogonal wall each time:
+> - de-risk: rebuild regressed decolonization 10→8.7 (curated quality lost).
+> - re-test#1: cut by the dispatch `silence_timeout` (process bug, fixed by using bg/Monitor).
+> - re-test#2 (complete bg build): **failed at `python_qg`** — fresh writer embedded the веснянка couplet
+>   «Вже весна воскресла…» **without attribution** → `textbook_quote_fidelity` HARD REJECT, and that gate
+>   **has NO ADR-008 correction path** (`correction_terminal`) → module_failed BEFORE reaching LLM-QG.
+>   (Forensics: branch `claude/folk-retest2`.)
+>
+> **🎯 NEXT DELIVERABLE — build an ENHANCE entry point (priority #0; I own it, #0.2).** Run LLM-QG review +
+> the generalized craft correction loop on the **CURATED** module content (which already has the
+> properly-attributed quote, python_qg-passing, decolonization 10) — NO writer/rebuild phase. This:
+> (a) is the CLEAN convergence test (no rebuild-variance confounds), and (b) **IS the Phase D mechanism**
+> the S46 pivot identified (enhance the 6 curated modules, don't rebuild from scratch).
+> - Proper design: a `v7_build.py` mode/flag (e.g. `--enhance` / `--from-phase=llm_qg`) OR a small
+>   `scripts/build/enhance_module.py` that loads the curated module dir, runs `python_qg` (curated passes),
+>   then `run_llm_qg_with_corrections(...)` (the fixed loop), writes `llm_qg.json` + correction loop. Reuse
+>   existing plumbing; do NOT re-run the writer. Investigate v7_build resume internals first (#0.1).
+> - Then run it on curated kalendarna (via Monitor/bg — NOT a delegate dispatch). Converged (all 4 terminal
+>   dims ≥ floors) → **merge PR #3480** (squash), close #3459 (superseded). Then enhance the other 5 modules.
+>
+> **📌 SECONDARY infra finding (#0.2, file/fix later, NOT blocking enhance):** `textbook_quote_fidelity`
+> is a gate with NO corrector — a writer-emitted quote missing attribution hard-fails with no recovery.
+> Either the writer must always attribute embedded primary quotes, or add a corrector that inserts the
+> attribution / wraps with the NO_VERIFY/citation. Enhance-mode sidesteps it (curated quotes are attributed).
+> Optional build-heartbeat hardening (S48) also still open.
+>
+> **State:** PRs mine open: #3480 (Phase A + #3079, draft/HELD — merge target), #3459 (Phase-A-only, close
+> on merge). On main: scores API (S45) + handoffs S46–S49. Delegate dispatches in flight: 0. Evidence
+> branches (keep #M-10): `codex/folk-derisk-kalendarna`, `codex/folk-loopfix-subjective`,
+> `codex/folk-retest-kalendarna` (needs_finalize), `claude/folk-retest2` (python_qg-fail forensics).
+> Tasks: #6 loop fix (impl+behaviorally-validated; convergence proof pending the enhance path), #3 panel
+> (deferred), #4 Phase C/D/E (enhance methodology confirmed). Merge grant LIVE; worktree-only; never to main.
+> **Don't burn more fresh rebuilds to prove convergence — build the enhance path.**
+
+## ▶▶▶ SESSION 48 HANDOFF (2026-06-17 — ✅ #3079 FIX BEHAVIORALLY VALIDATED (craft-preserving find/replace, NOT insert; beauty scored; decoloniz passed). Complete re-test build re-running for CONVERGED scores. Process lesson: don't dispatch long builds)
 
 > **⚠️ ANTI-RE-COLLISION:** loop fix #3079 = PR #3480 (DONE, CI green, held). Re-test #1 (`folk-retest-kalendarna`)
 > was **CUT by the dispatch silence-timeout** (`needs_finalize`), NOT a fix failure. A COMPLETE re-test is
