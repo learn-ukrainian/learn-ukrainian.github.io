@@ -5906,8 +5906,15 @@ def run_python_qg_with_corrections(
     writer: str = "claude-tools",
     invoker: Callable[..., Any] | None = None,
     event_sink: Callable[..., None] | None = None,
+    resource_liveness_fn: Callable[[str], bool] | None = None,
 ) -> dict[str, Any]:
-    """Run Python QG with core legacy behavior and seminar best-round selection."""
+    """Run Python QG with core legacy behavior and seminar best-round selection.
+
+    ``resource_liveness_fn`` (optional): URL -> bool liveness checker forwarded to
+    ``run_python_qg``. Only relevant when build-time writer telemetry is absent
+    (static / ``--enhance`` re-verification); left ``None`` at build time so
+    builds never touch the network. See ``run_python_qg`` for the gate semantics.
+    """
     level = _python_qg_level_from_plan_path(plan_path)
     if level in SEMINAR_LEVELS:
         return _run_python_qg_with_bounded_corrections(
@@ -5922,6 +5929,7 @@ def run_python_qg_with_corrections(
             writer=writer,
             invoker=invoker,
             event_sink=event_sink,
+            resource_liveness_fn=resource_liveness_fn,
             max_correction_rounds=python_qg_max_correction_rounds_for_level(level),
         )
     return _run_python_qg_with_legacy_single_shot_corrections(
@@ -5936,6 +5944,7 @@ def run_python_qg_with_corrections(
         writer=writer,
         invoker=invoker,
         event_sink=event_sink,
+        resource_liveness_fn=resource_liveness_fn,
     )
 
 
@@ -5952,6 +5961,7 @@ def _run_python_qg_with_bounded_corrections(
     writer: str = "claude-tools",
     invoker: Callable[..., Any] | None = None,
     event_sink: Callable[..., None] | None = None,
+    resource_liveness_fn: Callable[[str], bool] | None = None,
     max_correction_rounds: int = PYTHON_QG_SEMINAR_MAX_CORRECTION_ROUNDS,
 ) -> dict[str, Any]:
     """Run seminar Python QG with bounded corrections and restore the best round."""
@@ -5971,6 +5981,7 @@ def _run_python_qg_with_bounded_corrections(
                 verify_words_fn=verify_words_fn,
                 heritage_lookup_fn=heritage_lookup_fn,
                 event_sink=event_sink,
+                resource_liveness_fn=resource_liveness_fn,
             )
         _attach_vocab_count_gate(report, module_dir=module_dir, plan_path=plan_path)
         return report
@@ -6180,6 +6191,7 @@ def _run_python_qg_with_legacy_single_shot_corrections(
     writer: str = "claude-tools",
     invoker: Callable[..., Any] | None = None,
     event_sink: Callable[..., None] | None = None,
+    resource_liveness_fn: Callable[[str], bool] | None = None,
 ) -> dict[str, Any]:
     """Run Python QG and apply one ADR-008 correction attempt per failed gate.
 
@@ -6201,6 +6213,7 @@ def _run_python_qg_with_legacy_single_shot_corrections(
                 verify_words_fn=verify_words_fn,
                 heritage_lookup_fn=heritage_lookup_fn,
                 event_sink=event_sink,
+                resource_liveness_fn=resource_liveness_fn,
             )
         _attach_vocab_count_gate(report, module_dir=module_dir, plan_path=plan_path)
         return report

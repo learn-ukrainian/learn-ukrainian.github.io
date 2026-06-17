@@ -8,6 +8,7 @@ deterministically without data/, MCP, or Node.
 from __future__ import annotations
 
 import scripts.build.linear_pipeline as lp
+import scripts.build.resource_liveness as rl
 import scripts.build.verify_shippable as vs
 
 
@@ -125,43 +126,8 @@ def test_missing_inputs_not_shippable(tmp_path):
     assert rep["shippable"] is False
 
 
-def test_wikipedia_host_matching_normalizes_case_and_port(monkeypatch):
-    """A missing wiki article must be caught regardless of host case/port, instead
-    of falling through to a curl 200 on the missing-page stub (Codex hole #2)."""
-    seen = []
-
-    def fake_curl(url, *, status_only):
-        seen.append(url)
-        if "api.php" in url:
-            # MediaWiki API reports a MISSING article
-            return 200, '{"query": {"pages": {"-1": {"missing": ""}}}}'
-        return 200, ""  # a missing-page /wiki/ GET would still be HTTP 200
-
-    monkeypatch.setattr(vs, "_curl", fake_curl)
-    for url in (
-        "https://UK.WIKIPEDIA.ORG/wiki/Definitely_missing_title",
-        "https://uk.wikipedia.org:443/wiki/Definitely_missing_title",
-        # non-/wiki/ article form must ALSO route to the API (Codex hole #3)
-        "https://uk.wikipedia.org/w/index.php?title=Definitely_missing_title",
-    ):
-        vs._url_live_cache.clear()
-        assert vs._url_is_live(url) is False
-    # the API path (not a bare curl GET) decided it — the hole would have skipped it
-    assert any("api.php" in u for u in seen)
-
-
-def test_wikipedia_url_without_title_fails_closed(monkeypatch):
-    """A wikipedia-host URL with no extractable article title must fail closed,
-    not fall through to a curl 200 (Codex hole #3)."""
-    curled = []
-
-    def fake_curl(url, *, status_only):
-        curled.append(url)
-        return 200, ""  # a bare wikipedia GET would be 200 -> the hole if reached
-
-    monkeypatch.setattr(vs, "_curl", fake_curl)
-    vs._url_live_cache.clear()
-    # /w/index.php?oldid=... has no `title` -> not confirmable -> fail closed,
-    # and must NOT be probed with a bare liveness GET.
-    assert vs._url_is_live("https://uk.wikipedia.org/w/index.php?oldid=12345") is False
-    assert curled == []  # never fell through to a generic curl on a wikipedia host
+def test_verify_shippable_reuses_shared_liveness_checker():
+    """verify_shippable's resource-liveness checker is the shared module's
+    ``url_is_live`` (extracted in #3079 so the pipeline can reuse it without
+    back-depending on this CLI)."""
+    assert vs._url_is_live is rl.url_is_live

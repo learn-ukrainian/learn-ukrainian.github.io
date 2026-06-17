@@ -28,6 +28,7 @@ from scripts.build.phases.implementation_map import (
     seed_implementation_map,
     write_implementation_map,
 )
+from scripts.build.resource_liveness import url_is_live
 from scripts.common.thresholds import QG_DIMS, terminal_dims_for
 from scripts.orchestration import reap_worktrees
 
@@ -2038,6 +2039,14 @@ def _run(args: argparse.Namespace) -> int:
                 module_dir,
                 plan_path,
                 writer=writer,
+                # --enhance skips the writer, so there is no resource-search
+                # telemetry on disk -> resources_search_attempted would HARD-fail
+                # with no corrector (module_failed before llm_qg). Supply a real
+                # per-resource liveness checker so the gate substitutes proof the
+                # resources are real for the absent telemetry (#3079, same class
+                # #3428 solved for verify_shippable). At build time enhance is
+                # False -> None -> telemetry present -> no network liveness checks.
+                resource_liveness_fn=url_is_live if enhance else None,
             )
             linear_pipeline.write_json(module_dir / "python_qg.json", python_qg)
         _phase_done(
