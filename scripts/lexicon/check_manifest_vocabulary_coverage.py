@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -91,6 +92,38 @@ def _vocabulary_modules(root: Path) -> list[ModuleRef]:
     return modules
 
 
+def changed_vocab_modules(root: Path, base: str) -> set[tuple[str, str]] | None:
+    """Modules whose ``vocabulary.yaml`` changed vs ``base`` (PR diff-scope, #3150).
+
+    Returns the ``{(track, slug)}`` set of changed modules, or ``None`` when the git
+    diff cannot be computed (base ref absent, not a git tree). The caller treats
+    ``None`` as "fall back to full-curriculum coverage" rather than silently passing —
+    a fail-open here would let an uncovered new module slip through.
+    """
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(root), "diff", "--name-only", f"{base}...HEAD", "--", str(CURRICULUM_REL)],
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+    except (OSError, subprocess.CalledProcessError):
+        return None
+
+    changed: set[tuple[str, str]] = set()
+    for line in out.splitlines():
+        parts = Path(line.strip()).parts
+        # curriculum/l2-uk-en/{track}/{slug}/vocabulary.yaml — exactly this depth.
+        if (
+            len(parts) == 5
+            and parts[0] == "curriculum"
+            and parts[1] == "l2-uk-en"
+            and parts[4] == "vocabulary.yaml"
+        ):
+            changed.add((parts[2], parts[3]))
+    return changed
+
+
 def _load_built_vocab(root: Path, module: ModuleRef) -> list[dict[str, Any]]:
     path = root / CURRICULUM_REL / module.track / module.slug / "vocabulary.yaml"
     if not path.exists():
@@ -118,8 +151,18 @@ def _load_built_vocab(root: Path, module: ModuleRef) -> list[dict[str, Any]]:
     return records
 
 
-def expected_vocabulary_coverage(root: Path = ROOT) -> tuple[dict[str, ExpectedLemma], int]:
-    """Return normalized Atlas lemmas current vocabulary files must cover."""
+def expected_vocabulary_coverage(
+    root: Path = ROOT,
+    *,
+    restrict: set[tuple[str, str]] | None = None,
+) -> tuple[dict[str, ExpectedLemma], int]:
+    """Return normalized Atlas lemmas current vocabulary files must cover.
+
+    ``restrict`` (a ``{(track, slug)}`` set) limits the coverage requirement to those
+    modules (PR diff-scope, #3150). ``taught_lemma_keys`` is still computed over the
+    FULL curriculum so ``_atlas_record_for_manifest`` makes the same include/exclude
+    decision it would in a full run — only the *checked* module set narrows.
+    """
     root = root.resolve()
     modules = _vocabulary_modules(root)
     raw_records_by_module = [(module, _load_built_vocab(root, module)) for module in modules]
@@ -130,7 +173,11 @@ def expected_vocabulary_coverage(root: Path = ROOT) -> tuple[dict[str, ExpectedL
     }
 
     expected: dict[str, ExpectedLemma] = {}
+    checked = 0
     for module, raw_records in raw_records_by_module:
+        if restrict is not None and (module.track, module.slug) not in restrict:
+            continue
+        checked += 1
         for raw_record in raw_records:
             record = _atlas_record_for_manifest(raw_record, taught_lemma_keys)
             if record is None:
@@ -140,7 +187,7 @@ def expected_vocabulary_coverage(root: Path = ROOT) -> tuple[dict[str, ExpectedL
             expected.setdefault(key, ExpectedLemma(lemma=lemma)).modules.add(
                 (module.track, module.slug)
             )
-    return expected, len(modules)
+    return expected, checked
 
 
 def _manifest_entries_by_key(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -179,6 +226,7 @@ def check_vocabulary_coverage(
     *,
     root: Path = ROOT,
     manifest_path: Path = DEFAULT_MANIFEST,
+    restrict: set[tuple[str, str]] | None = None,
 ) -> int:
     root = root.resolve()
     if not manifest_path.exists():
@@ -189,8 +237,15 @@ def check_vocabulary_coverage(
         )
         return 2
 
+    if restrict is not None and not restrict:
+        print(
+            "Atlas vocabulary coverage OK: no module vocabulary changed in this diff "
+            "(diff-scoped) — nothing to check."
+        )
+        return 0
+
     manifest_entries = _manifest_entries_by_key(_load_json(manifest_path))
-    expected, module_count = expected_vocabulary_coverage(root)
+    expected, module_count = expected_vocabulary_coverage(root, restrict=restrict)
 
     missing_entries = [
         expected_item
@@ -242,12 +297,34 @@ def main() -> int:
         default=DEFAULT_MANIFEST,
         help="Committed lexicon manifest.",
     )
+    parser.add_argument(
+        "--changed-only",
+        action="store_true",
+        help="Diff-scope (#3150): only require modules whose vocabulary.yaml changed vs --base "
+        "to be covered. Removes cross-PR coupling on a fast merge-train.",
+    )
+    parser.add_argument(
+        "--base",
+        default="origin/main",
+        help="Base ref for --changed-only diff (default: origin/main).",
+    )
     args = parser.parse_args()
     root = args.root.resolve()
     manifest = args.manifest
     if not manifest.is_absolute():
         manifest = root / manifest
-    return check_vocabulary_coverage(root=root, manifest_path=manifest)
+
+    restrict: set[tuple[str, str]] | None = None
+    if args.changed_only:
+        restrict = changed_vocab_modules(root, args.base)
+        if restrict is None:
+            print(
+                f"# diff-scope unavailable (could not diff vs {args.base}); "
+                "falling back to full-curriculum coverage."
+            )
+        else:
+            print(f"# diff-scoped vs {args.base}: {len(restrict)} changed vocabulary module(s).")
+    return check_vocabulary_coverage(root=root, manifest_path=manifest, restrict=restrict)
 
 
 if __name__ == "__main__":
