@@ -77,24 +77,32 @@ def _curl(url: str, *, status_only: bool) -> tuple[int, str]:
 
 
 def _wikipedia_article_exists(url: str) -> bool | None:
-    """True/False if ``url`` is a wikipedia article (existence via MediaWiki API);
-    None if ``url`` is not a wikipedia /wiki/ link.
+    """True/False if ``url`` is a wikipedia URL (existence via MediaWiki API);
+    None ONLY if ``url`` is not a wikipedia host.
 
-    A plain GET on uk.wikipedia.org/wiki/<missing> returns HTTP 200 (a "create
-    this page" stub), so HTTP liveness alone cannot detect a fabricated article.
-    The MediaWiki API reports a ``missing`` flag for non-existent titles.
+    Wikipedia returns HTTP 200 for a *missing* article across all its URL forms
+    (``/wiki/<title>`` create-stub, ``/w/index.php?title=<missing>``, etc.), so an
+    HTTP-status liveness check cannot detect a fabricated article. Therefore EVERY
+    wikipedia-host URL is resolved here (never falls through to a generic curl):
+    the article identifier is read from the ``/wiki/`` path or the ``?title=``
+    query and confirmed via the MediaWiki API ``missing`` flag. A wikipedia URL
+    with no extractable article title fails closed (cannot be confirmed real).
+    Hostname is normalized via ``.hostname`` (lowercase, no port/userinfo) so case
+    or ``:443`` cannot dodge the check. (Codex re-review holes #2 and #3.)
     """
     parts = urllib.parse.urlsplit(url)
-    # Normalize the host: ``.hostname`` lowercases and strips port/userinfo, so a
-    # fabricated ``https://UK.WIKIPEDIA.ORG/wiki/Missing`` or ``...:443/...`` cannot
-    # dodge the MediaWiki existence check and fall through to a curl 200 (the
-    # missing-page stub) — Codex re-review #2 hole.
     host = (parts.hostname or "").lower()
-    is_wikipedia = host == "wikipedia.org" or host.endswith(".wikipedia.org")
-    if not is_wikipedia or not parts.path.startswith("/wiki/"):
-        return None
-    title = urllib.parse.unquote(parts.path[len("/wiki/"):])
+    if not (host == "wikipedia.org" or host.endswith(".wikipedia.org")):
+        return None  # not wikipedia -> caller uses generic curl liveness
+    title = ""
+    if parts.path.startswith("/wiki/"):
+        title = urllib.parse.unquote(parts.path[len("/wiki/"):])
+    else:
+        title = (urllib.parse.parse_qs(parts.query).get("title") or [""])[0]
     if not title:
+        # A wikipedia host URL we cannot resolve to an article title (search,
+        # Special:, raw /w/ endpoints, curid/oldid). Cannot confirm a real article
+        # and Wikipedia 200s on missing pages -> fail closed (do NOT curl-pass it).
         return False
     api = f"{parts.scheme}://{parts.netloc}/w/api.php?" + urllib.parse.urlencode(
         {"action": "query", "titles": title, "redirects": "1", "format": "json"}
