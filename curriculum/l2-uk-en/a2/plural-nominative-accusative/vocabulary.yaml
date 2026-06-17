@@ -21,6 +21,14 @@
   pos: noun
   gender: f
   example: "Книга - це неістота."
+- word: живий
+  translation: animate, living
+  pos: adjective
+  example: "Пінгвіни - живі істоти."
+- word: неживий
+  translation: inanimate, non-living
+  pos: adjective
+  example: "Ключі - неживі предмети."
 - word: підмет
   translation: subject
   pos: noun
