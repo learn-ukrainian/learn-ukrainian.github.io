@@ -61,6 +61,42 @@ inline:
           - text: 'у бібліотека'
             correct: false
         explanation: Бібліотека changes to бібліотеці.
+      - prompt: 'Where is someone in the hospital?'
+        options:
+          - text: 'у лікарні'
+            correct: true
+          - text: 'на лікарні'
+            correct: false
+          - text: 'у лікарня'
+            correct: false
+        explanation: Лікарня changes to лікарні.
+      - prompt: 'Where do you buy bread?'
+        options:
+          - text: 'у магазині'
+            correct: true
+          - text: 'на магазині'
+            correct: false
+          - text: 'у магазин'
+            correct: false
+        explanation: Магазин uses the location chunk у магазині.
+      - prompt: 'Where does a tourist sleep?'
+        options:
+          - text: 'у готелі'
+            correct: true
+          - text: 'на готелі'
+            correct: false
+          - text: 'у готель'
+            correct: false
+        explanation: Готель changes to готелі.
+      - prompt: 'Where is the match?'
+        options:
+          - text: 'на стадіоні'
+            correct: true
+          - text: 'у стадіоні'
+            correct: false
+          - text: 'на стадіон'
+            correct: false
+        explanation: Learn стадіон with на стадіоні.
   - id: act-3
     type: fill-in
     title: У моєму місті є
@@ -68,79 +104,81 @@ inline:
     items:
       - sentence: 'У моєму місті є великий ___.'
         answer: 'парк'
-        options:
-          - 'парк'
-          - 'парку'
-          - 'парком'
         explanation: 'After є, name the object: парк.'
       - sentence: 'Бібліотека ___ університету.'
         answer: 'біля'
-        options:
-          - 'біля'
-          - 'далеко'
-          - 'там'
         explanation: Біля connects two places.
       - sentence: 'Аптека ___ розі.'
         answer: 'на'
-        options:
-          - 'на'
-          - 'в'
-          - 'до'
         explanation: The chunk is на розі.
       - sentence: 'Магазин тут, ___ дому.'
         answer: 'біля'
-        options:
-          - 'біля'
-          - 'на'
-          - 'до'
         explanation: Біля дому is a fixed A1 chunk.
       - sentence: 'Школа далеко, ___ центрі міста.'
         answer: 'у'
-        options:
-          - 'у'
-          - 'на'
-          - 'до'
         explanation: Use у центрі міста.
       - sentence: 'У місті ___ багато парків.'
         answer: 'є'
-        options:
-          - 'є'
-          - 'має'
-          - 'йде'
         explanation: Use є for existence.
   - id: act-4
-    type: odd-one-out
-    title: Find the odd city chunk
-    instruction: Choose the phrase that does not fit the pattern.
+    type: quiz
+    title: Куди б ви пішли?
+    instruction: Choose the city place. Direction endings come in the next module.
     items:
-      - words:
-          - 'в аптеці'
-          - 'у бібліотеці'
-          - 'у банку'
-          - 'на аптеці'
-        answer: 'на аптеці'
-        explanation: Аптека uses в аптеці.
-      - words:
-          - 'на пошті'
-          - 'на вокзалі'
-          - 'на стадіоні'
-          - 'у пошті'
-        answer: 'у пошті'
-        explanation: The common chunk is на пошті.
-      - words:
-          - 'біля дому'
-          - 'біля парку'
-          - 'біля університету'
-          - 'біля парк'
-        answer: 'біля парк'
-        explanation: 'Біля changes the following noun: біля парку.'
-      - words:
-          - 'Київ'
-          - 'Одеса'
-          - 'Львів'
-          - 'Kiev'
-        answer: 'Kiev'
-        explanation: Use Kyiv for the Ukrainian capital in English.
+      - prompt: 'You need medicine. Which place?'
+        options:
+          - text: 'аптека'
+            correct: true
+          - text: 'музей'
+            correct: false
+          - text: 'стадіон'
+            correct: false
+        explanation: Medicine is connected with аптека.
+      - prompt: 'You want to read a book quietly. Which place?'
+        options:
+          - text: 'бібліотека'
+            correct: true
+          - text: 'вокзал'
+            correct: false
+          - text: 'банк'
+            correct: false
+        explanation: Reading books fits бібліотека.
+      - prompt: 'You need bread for dinner. Which place?'
+        options:
+          - text: 'магазин'
+            correct: true
+          - text: 'театр'
+            correct: false
+          - text: 'церква'
+            correct: false
+        explanation: Food shopping fits магазин.
+      - prompt: 'You want dinner with friends. Which place?'
+        options:
+          - text: 'ресторан'
+            correct: true
+          - text: 'пошта'
+            correct: false
+          - text: 'лікарня'
+            correct: false
+        explanation: Dinner with friends fits ресторан.
+      - prompt: 'You are waiting for a train. Which place?'
+        options:
+          - text: 'вокзал'
+            correct: true
+          - text: 'готель'
+            correct: false
+          - text: 'університет'
+            correct: false
+        explanation: A train connects with вокзал.
+      - prompt: 'You are a tourist and need a room. Which place?'
+        options:
+          - text: 'готель'
+            correct: true
+          - text: 'кафе'
+            correct: false
+          - text: 'стадіон'
+            correct: false
+        explanation: A tourist room connects with готель.
 workbook:
   - type: group-sort
     title: City shelves
@@ -158,12 +196,12 @@ workbook:
           - 'там'
           - 'далеко'
           - 'близько'
-      - name: 'People in the city'
+      - name: 'Near-place chunks'
         items:
-          - 'лікар'
-          - 'офіціант'
-          - 'продавець'
-          - 'банкір'
+          - 'біля дому'
+          - 'біля парку'
+          - 'поруч із площею'
+          - 'далеко від дому'
   - type: order
     title: Mini-map note
     instruction: Put the city note in a natural order.
@@ -185,7 +223,7 @@ workbook:
         explanation: Kyiv is the Ukrainian English form.
       - statement: 'Площа is the Ukrainian word for square.'
         answer: true
-        explanation: Use площа, not a Russian street word.
+        explanation: Use площа for a city square.
       - statement: 'У місті має багато парків is the best A1 model.'
         answer: false
         explanation: Say У місті є багато парків.
@@ -215,14 +253,14 @@ workbook:
           - 'Моє місто є Київ.'
           - 'Моє місто на Київ.'
         explanation: Ukrainian can identify the city without є.
-      - sentence: 'Я йду у парку.'
-        error: 'у парку'
-        correction: 'Я йду в парк. (або до парку)'
+      - sentence: 'Я в аптека.'
+        error: 'аптека'
+        correction: 'Я в аптеці.'
         options:
-          - 'Я йду в парк. (або до парку)'
-          - 'Я йду у парку.'
-          - 'Я на парку.'
-        explanation: Йду asks куди?, so use в парк.
+          - 'Я в аптеці.'
+          - 'Я в аптека.'
+          - 'Я на аптеці.'
+        explanation: For location, аптека changes to аптеці.
       - sentence: 'Магазин біля парк.'
         error: 'біля парк'
         correction: 'Магазин біля парку.'

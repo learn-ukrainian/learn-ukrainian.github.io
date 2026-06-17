@@ -101,15 +101,11 @@
 - word: зупинка
   translation: stop; station stop
   pos: noun
-  example: "Зупинка біля дому."
-- word: транспорт
-  translation: transport
+  example: "Зупинка біля церкви."
+- word: озеро
+  translation: lake
   pos: noun
-  example: "Транспорт у місті."
-- word: метро
-  translation: metro; subway
-  pos: noun
-  example: "Станція метро близько."
+  example: "Озеро далеко від дому."
 - word: тут
   translation: here
   pos: adverb
@@ -130,46 +126,26 @@
   translation: near; by
   pos: preposition
   example: "Бібліотека біля парку."
-- word: праворуч
-  translation: to the right
-  pos: adverb
-  example: "Аптека праворуч."
-- word: ліворуч
-  translation: to the left
-  pos: adverb
-  example: "Музей ліворуч."
-- word: прямо
-  translation: straight ahead
-  pos: adverb
-  example: "Ідіть прямо."
+- word: поруч із
+  translation: next to; beside
+  pos: preposition
+  example: "Музей поруч із площею."
+- word: далеко від
+  translation: far from
+  pos: expression
+  example: "Озеро далеко від дому."
+- word: на розі
+  translation: on the corner
+  pos: expression
+  example: "Аптека на розі."
+- word: є
+  translation: there is; there are
+  pos: verb
+  example: "У місті є парк."
 - word: лікар
   translation: doctor
   pos: noun
   example: "Лікар у лікарні."
-- word: архітектор
-  translation: architect
-  pos: noun
-  example: "Архітектор у місті."
-- word: кухар
-  translation: cook; chef
-  pos: noun
-  example: "Кухар у ресторані."
-- word: менеджер
-  translation: manager
-  pos: noun
-  example: "Менеджер в офісі."
-- word: банкір
-  translation: banker
-  pos: noun
-  example: "Банкір у банку."
-- word: офіціант
-  translation: waiter
-  pos: noun
-  example: "Офіціант у кафе."
-- word: продавець
-  translation: salesperson
-  pos: noun
-  example: "Продавець у магазині."
 - word: гривня
   translation: hryvnia
   pos: noun
