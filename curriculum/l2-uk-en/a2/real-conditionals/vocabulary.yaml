@@ -9,7 +9,7 @@
 - word: умова
   translation: condition
   pos: noun
-  example: "Якщо вводить умову."
+  example: "Слово якщо вводить умову."
 - word: результат
   translation: result
   pos: noun
@@ -18,6 +18,26 @@
   translation: real
   pos: adjective
   example: "Це реальна умова, бо вона можлива."
+- word: погода
+  translation: weather
+  pos: noun
+  example: "Якщо буде гарна погода, ми підемо гуляти."
+- word: допомогти
+  translation: to help
+  pos: verb
+  example: "Якщо ти хочеш, я допоможу."
+- word: поспішити
+  translation: to hurry
+  pos: verb
+  example: "Якщо не поспішиш, запізнишся."
+- word: вільний
+  translation: free, available
+  pos: adjective
+  example: "Якщо буде вільний час, зателефонуй."
+- word: залишитися
+  translation: to stay, to remain
+  pos: verb
+  example: "Якщо буде дощ, ми залишимося вдома."
 - word: можливий
   translation: possible
   pos: adjective
@@ -66,10 +86,26 @@
   translation: sun
   pos: noun
   example: "Якщо буде сонце, поїдемо на дачу."
+- word: змокнути
+  translation: to get wet
+  pos: verb
+  example: "Якщо не візьмеш парасольку, змокнеш."
+- word: запізнитися
+  translation: to be late
+  pos: verb
+  example: "Якщо не поспішиш, запізнишся."
+- word: парасолька
+  translation: umbrella
+  pos: noun
+  example: "Якщо буде дощ, візьми парасольку."
+- word: відпустка
+  translation: vacation, holiday
+  pos: noun
+  example: "Якщо все буде добре, ми поїдемо у відпустку."
 - word: якби
   translation: if (hypothetical)
   pos: conjunction
-  example: "Якби тут тільки для розпізнавання на A2."
+  example: "Слово якби тут тільки для розпізнавання на A2."
 - word: теперішній час
   translation: present tense
   pos: phrase
