@@ -1,0 +1,468 @@
+- lemma: словотвір
+  translation: "word formation"
+  pos: noun:m
+  usage: "Словотвір показує, як із наявних основ з'являються нові слова."
+- lemma: творення дієслів
+  translation: "verb formation"
+  pos: phrase
+  usage: "Творення дієслів часто відбувається за допомогою префіксів."
+- lemma: спосіб творення
+  translation: "formation method"
+  pos: phrase
+  usage: "У завданні треба визначити спосіб творення дієслова."
+- lemma: префіксальний спосіб
+  translation: "prefixal word formation"
+  pos: phrase
+  usage: "Написати утворене префіксальним способом від писати."
+- lemma: суфіксальний спосіб
+  translation: "suffixal word formation"
+  pos: phrase
+  usage: "Синіти має суфіксальний спосіб творення."
+- lemma: префіксально-суфіксальний
+  translation: "prefix-suffix"
+  pos: adj:m
+  usage: "Заземлити часто розбирають як префіксально-суфіксальне утворення."
+- lemma: префікс
+  translation: "prefix"
+  pos: noun:m
+  usage: "Префікс пере- може означати повторення або надмірність."
+- lemma: суфікс
+  translation: "suffix"
+  pos: noun:m
+  usage: "Суфікс -нути часто додає значення одноразової дії."
+- lemma: корінь
+  translation: "root"
+  pos: noun:m
+  usage: "Корінь несе основне лексичне значення слова."
+- lemma: основа
+  translation: "stem; base"
+  pos: noun:f
+  usage: "Основа допомагає побачити словотвірну будову."
+- lemma: основа інфінітива
+  translation: "infinitive stem"
+  pos: phrase
+  usage: "Основа інфінітива важлива для словотвору і дієвідміни."
+- lemma: словотвірна основа
+  translation: "derivational base"
+  pos: phrase
+  usage: "Словотвірна основа може бути іменниковою або прикметниковою."
+- lemma: словотвірний ланцюжок
+  translation: "derivational chain"
+  pos: phrase
+  usage: "Словотвірний ланцюжок пояснює послідовність споріднених слів."
+- lemma: розкладати
+  translation: "to decompose; to break down"
+  pos: verb
+  usage: "Учні вчаться розкладати незнайоме дієслово на частини."
+- lemma: розкласти
+  translation: "to decompose; to break down"
+  pos: verb
+  usage: "Спробуйте розкласти перевірити на префікс і корінь."
+- lemma: розбір
+  translation: "analysis; parsing"
+  pos: noun:m
+  usage: "Словотвірний розбір не повинен бути механічним."
+- lemma: значення
+  translation: "meaning"
+  pos: noun:n
+  usage: "Префікс змінює значення дієслова."
+- lemma: відтінок
+  translation: "shade; nuance"
+  pos: noun:m
+  usage: "Кожен префікс додає свій відтінок."
+- lemma: дія
+  translation: "action"
+  pos: noun:f
+  usage: "Дієслово називає дію або стан."
+- lemma: доконаний вид
+  translation: "perfective aspect"
+  pos: phrase
+  usage: "Написати має доконаний вид."
+- lemma: недоконаний вид
+  translation: "imperfective aspect"
+  pos: phrase
+  usage: "Писати має недоконаний вид."
+- lemma: видова пара
+  translation: "aspectual pair"
+  pos: phrase
+  usage: "Писати і написати можуть утворювати видову пару в конкретному значенні."
+- lemma: лексичне значення
+  translation: "lexical meaning"
+  pos: phrase
+  usage: "Префікс може змінити не тільки вид, а й лексичне значення."
+- lemma: писати
+  translation: "to write"
+  pos: verb
+  usage: "Писати - недоконане дієслово без префікса."
+- lemma: написати
+  translation: "to write; to finish writing"
+  pos: verb
+  usage: "Написати лист означає довести дію до результату."
+- lemma: переписати
+  translation: "to rewrite; to copy again"
+  pos: verb
+  usage: "Переписати текст означає написати його ще раз або наново."
+- lemma: перевірити
+  translation: "to check; to verify"
+  pos: verb
+  usage: "Перевірити відповідь - завершити перевірку."
+- lemma: перечитати
+  translation: "to reread"
+  pos: verb
+  usage: "Перечитати абзац означає прочитати його ще раз."
+- lemma: дочитати
+  translation: "to finish reading"
+  pos: verb
+  usage: "Дочитати книжку - довести читання до кінця."
+- lemma: дочекатися
+  translation: "to wait until; to get to see"
+  pos: verb
+  usage: "Дочекатися відповіді означає чекати до результату."
+- lemma: заспівати
+  translation: "to start singing; to sing"
+  pos: verb
+  usage: "Заспівати може означати почати співати."
+- lemma: заплакати
+  translation: "to start crying"
+  pos: verb
+  usage: "Дитина заплакала після дзвінка."
+- lemma: побігти
+  translation: "to start running"
+  pos: verb
+  usage: "Побігти часто означає почати бігти."
+- lemma: почекати
+  translation: "to wait a little"
+  pos: verb
+  usage: "Почекайте хвилину біля входу."
+- lemma: наготувати
+  translation: "to cook a lot; to prepare plenty"
+  pos: verb
+  usage: "Наготувати борщу можна на кілька днів."
+- lemma: набрати
+  translation: "to gather; to dial; to gain"
+  pos: verb
+  usage: "Набрати номер означає ввести номер телефону."
+- lemma: розрізати
+  translation: "to cut apart"
+  pos: verb
+  usage: "Розрізати папір - поділити його на частини."
+- lemma: розбити
+  translation: "to break; to split"
+  pos: verb
+  usage: "Розбити склянку - зробити її частинами."
+- lemma: розповісти
+  translation: "to tell"
+  pos: verb
+  usage: "Розповісти історію означає передати її словами."
+- lemma: розповсюдити
+  translation: "to distribute; to spread"
+  pos: verb
+  usage: "Розповсюдити інформацію означає поширити її серед людей."
+- lemma: поширити
+  translation: "to spread; to extend"
+  pos: verb
+  usage: "Поширити новину можна через сайт."
+- lemma: зробити
+  translation: "to do; to make"
+  pos: verb
+  usage: "Зробити завдання - довести дію до результату."
+- lemma: спекти
+  translation: "to bake"
+  pos: verb
+  usage: "Спекти пиріг - завершити приготування в печі."
+- lemma: вимкнути
+  translation: "to turn off"
+  pos: verb
+  usage: "Вимкніть світло перед виходом."
+- lemma: увімкнути
+  translation: "to turn on"
+  pos: verb
+  usage: "Увімкніть мікрофон перед відповіддю."
+- lemma: перемкнути
+  translation: "to switch"
+  pos: verb
+  usage: "Перемкнути канал означає перейти на інший."
+- lemma: відрізати
+  translation: "to cut off"
+  pos: verb
+  usage: "Відрізати шматок хліба - відокремити його ножем."
+- lemma: відключити
+  translation: "to disconnect; to turn off"
+  pos: verb
+  usage: "Відключити інтернет означає припинити з'єднання."
+- lemma: відтворити
+  translation: "to reproduce; to play back"
+  pos: verb
+  usage: "Відтворити звук можна в плеєрі."
+- lemma: приєднати
+  translation: "to attach; to join"
+  pos: verb
+  usage: "Приєднати файл до листа означає додати його."
+- lemma: прикріпити
+  translation: "to attach; to fasten"
+  pos: verb
+  usage: "Прикріпіть документ до заявки."
+- lemma: підписати
+  translation: "to sign"
+  pos: verb
+  usage: "Підписати заяву потрібно внизу сторінки."
+- lemma: підсилити
+  translation: "to strengthen; to reinforce"
+  pos: verb
+  usage: "Підсилити аргумент можна прикладом."
+- lemma: пришвидшити
+  translation: "to speed up; to make faster"
+  pos: verb
+  usage: "Пришвидшити процес означає зробити його швидшим."
+- lemma: підказати
+  translation: "to prompt; to give a hint"
+  pos: verb
+  usage: "Підказати відповідь не завжди корисно."
+- lemma: підробити
+  translation: "to forge; to work extra"
+  pos: verb
+  usage: "Підробити документ означає зробити фальшивку."
+- lemma: обговорити
+  translation: "to discuss"
+  pos: verb
+  usage: "Обговорити план означає розглянути його з різних боків."
+- lemma: обдумати
+  translation: "to think over"
+  pos: verb
+  usage: "Обдумати відповідь треба перед іспитом."
+- lemma: недооцінити
+  translation: "to underestimate"
+  pos: verb
+  usage: "Недооцінити ризик означає оцінити його занизько."
+- lemma: недоїсти
+  translation: "to not eat enough; to leave uneaten"
+  pos: verb
+  usage: "Недоїсти обід - не з'їсти його повністю."
+- lemma: перевтомитися
+  translation: "to become overtired"
+  pos: verb
+  usage: "Перевтомитися можна після довгого тижня."
+- lemma: переоцінити
+  translation: "to overestimate; to reassess"
+  pos: verb
+  usage: "Переоцінити сили означає подумати, що їх більше, ніж є."
+- lemma: будувати
+  translation: "to build"
+  pos: verb
+  usage: "Будувати міст - тривалий процес."
+- lemma: програмувати
+  translation: "to program"
+  pos: verb
+  usage: "Програмувати зручно після чіткого плану."
+- lemma: фільтрувати
+  translation: "to filter"
+  pos: verb
+  usage: "Фільтрувати список можна за датою."
+- lemma: редагувати
+  translation: "to edit"
+  pos: verb
+  usage: "Редагувати текст треба після першої версії."
+- lemma: організувати
+  translation: "to organize"
+  pos: verb
+  usage: "Організувати зустріч можна онлайн."
+- lemma: копіювати
+  translation: "to copy"
+  pos: verb
+  usage: "Копіювати файл варто перед змінами."
+- lemma: бронювати
+  translation: "to book; to reserve"
+  pos: verb
+  usage: "Бронювати квитки краще заздалегідь."
+- lemma: малювати
+  translation: "to draw; to paint"
+  pos: verb
+  usage: "Малювати можна олівцем або фарбами."
+- lemma: танцювати
+  translation: "to dance"
+  pos: verb
+  usage: "Танцювати вчаться на курсі."
+- lemma: зимувати
+  translation: "to winter; to spend the winter"
+  pos: verb
+  usage: "Птахи можуть зимувати в тепліших місцях."
+- lemma: білий
+  translation: "white"
+  pos: adj:m
+  usage: "Від білий утворюємо біліти або білити з різним значенням."
+- lemma: білити
+  translation: "to whiten; to whitewash"
+  pos: verb
+  usage: "Білити стіну означає робити її білою."
+- lemma: біліти
+  translation: "to become white; to look white"
+  pos: verb
+  usage: "Дахи біліють після снігу."
+- lemma: синій
+  translation: "blue"
+  pos: adj:m
+  usage: "Синій пов'язаний із дієсловом синіти."
+- lemma: синіти
+  translation: "to turn blue; to look blue"
+  pos: verb
+  usage: "Небо починає синіти після дощу."
+- lemma: червоний
+  translation: "red"
+  pos: adj:m
+  usage: "Від червоний утворюємо червоніти."
+- lemma: червоніти
+  translation: "to turn red; to blush"
+  pos: verb
+  usage: "Учень червоніє, коли хвилюється."
+- lemma: чорний
+  translation: "black"
+  pos: adj:m
+  usage: "Чорний пов'язаний із чорніти."
+- lemma: чорніти
+  translation: "to turn black; to look black"
+  pos: verb
+  usage: "Хмари чорніють перед бурею."
+- lemma: зелений
+  translation: "green"
+  pos: adj:m
+  usage: "Від зелений утворюємо зеленіти."
+- lemma: зеленіти
+  translation: "to turn green; to grow green"
+  pos: verb
+  usage: "Парк зеленіє навесні."
+- lemma: штовхати
+  translation: "to push repeatedly"
+  pos: verb
+  usage: "Не треба штовхати двері, якщо вони зачинені."
+- lemma: штовхнути
+  translation: "to push once"
+  pos: verb
+  usage: "Штовхнути двері - зробити один короткий рух."
+- lemma: стукати
+  translation: "to knock; to tap repeatedly"
+  pos: verb
+  usage: "Стукати у двері можна кілька разів."
+- lemma: стукнути
+  translation: "to knock once; to hit once"
+  pos: verb
+  usage: "Стукнути у двері - зробити один удар."
+- lemma: кричати
+  translation: "to shout"
+  pos: verb
+  usage: "Кричати довго неприємно для слухачів."
+- lemma: крикнути
+  translation: "to shout once"
+  pos: verb
+  usage: "Крикнути ім'я - подати короткий голосний сигнал."
+- lemma: свистіти
+  translation: "to whistle"
+  pos: verb
+  usage: "Свистіти можна мелодію."
+- lemma: свиснути
+  translation: "to whistle once"
+  pos: verb
+  usage: "Свиснути означає зробити короткий свист."
+- lemma: заземлити
+  translation: "to ground; to earth"
+  pos: verb
+  usage: "Заземлити прилад означає під'єднати його до землі для безпеки."
+- lemma: озброїти
+  translation: "to arm; to equip"
+  pos: verb
+  usage: "Озброїти команду інструментами означає забезпечити її всім потрібним."
+- lemma: роззброїти
+  translation: "to disarm"
+  pos: verb
+  usage: "Роззброїти означає забрати зброю."
+- lemma: освітлити
+  translation: "to illuminate; to light up"
+  pos: verb
+  usage: "Освітлити кімнату можна лампою."
+- lemma: знешкодити
+  translation: "to neutralize; to render harmless"
+  pos: verb
+  usage: "Знешкодити небезпеку означає зробити її нешкідливою."
+- lemma: знебарвити
+  translation: "to decolorize; to bleach"
+  pos: verb
+  usage: "Знебарвити тканину означає прибрати колір."
+- lemma: зневоднити
+  translation: "to dehydrate; to remove water"
+  pos: verb
+  usage: "Зневоднити організм небезпечно для здоров'я."
+- lemma: встановити
+  translation: "to install; to establish"
+  pos: verb
+  usage: "Встановити програму можна з офіційного сайту."
+- lemma: перевстановити
+  translation: "to reinstall"
+  pos: verb
+  usage: "Перевстановити програму означає встановити її знову."
+- lemma: навантажити
+  translation: "to load; to burden"
+  pos: verb
+  usage: "Навантажити сервер можна занадто великою кількістю запитів."
+- lemma: перенавантажити
+  translation: "to overload"
+  pos: verb
+  usage: "Перенавантажити графік означає додати забагато справ."
+- lemma: приставка
+  translation: "prefix (school synonym)"
+  pos: noun:f
+  usage: "У шкільній традиції приставка часто означає те саме, що префікс."
+- lemma: морфема
+  translation: "morpheme"
+  pos: noun:f
+  usage: "Префікс і суфікс - це морфеми."
+- lemma: споріднені слова
+  translation: "related words"
+  pos: phrase
+  usage: "Споріднені слова мають спільний корінь."
+- lemma: продуктивний
+  translation: "productive"
+  pos: adj:m
+  usage: "Префіксація є дуже продуктивною для українських дієслів."
+- lemma: механічний
+  translation: "mechanical"
+  pos: adj:m
+  usage: "Механічний переклад префікса часто дає помилку."
+- lemma: напрямок
+  translation: "direction"
+  pos: noun:m
+  usage: "Просторові префікси часто пов'язані з напрямком."
+- lemma: початок дії
+  translation: "beginning of an action"
+  pos: phrase
+  usage: "За- може позначати початок дії в слові заспівати."
+- lemma: завершення дії
+  translation: "completion of an action"
+  pos: phrase
+  usage: "До- може позначати завершення дії в слові дочитати."
+- lemma: повторення
+  translation: "repetition"
+  pos: noun:n
+  usage: "Пере- часто має значення повторення."
+- lemma: надмірність
+  translation: "excess"
+  pos: noun:f
+  usage: "Пере- може також означати надмірність."
+- lemma: віддалення
+  translation: "moving away; separation"
+  pos: noun:n
+  usage: "Від- часто пов'язане з віддаленням або відокремленням."
+- lemma: наближення
+  translation: "approach"
+  pos: noun:n
+  usage: "При- часто має значення наближення або приєднання."
+- lemma: накопичення
+  translation: "accumulation"
+  pos: noun:n
+  usage: "На- може показувати накопичення результату."
+- lemma: роз'єднання
+  translation: "separation; splitting apart"
+  pos: noun:n
+  usage: "Роз- часто позначає роз'єднання або розподіл."
+- lemma: одноразова дія
+  translation: "single action"
+  pos: phrase
+  usage: "Штовхнути називає одноразову дію."
