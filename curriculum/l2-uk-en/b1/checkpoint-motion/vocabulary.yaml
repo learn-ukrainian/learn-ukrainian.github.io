@@ -1,0 +1,160 @@
+- lemma: контрольна робота
+  translation: "test, assessment"
+  pos: phrase
+  usage: "Контрольна робота перевіряє весь блок дієслів руху."
+- lemma: самооцінка
+  translation: "self-assessment"
+  pos: noun
+  usage: "Після кожного блоку зробіть коротку самооцінку."
+- lemma: просторовий прийменник
+  translation: "spatial preposition"
+  pos: phrase
+  usage: "Просторовий прийменник показує місце або напрямок."
+- lemma: керування
+  translation: "government"
+  pos: noun
+  usage: "Керування прийменника визначає потрібний відмінок."
+- lemma: родовий відмінок
+  translation: "genitive case"
+  pos: phrase
+  usage: "Біля вокзалу потребує родового відмінка."
+- lemma: орудний відмінок
+  translation: "instrumental case"
+  pos: phrase
+  usage: "Між будинками має орудний відмінок."
+- lemma: знахідний відмінок
+  translation: "accusative case"
+  pos: phrase
+  usage: "Під міст означає напрямок і має знахідний відмінок."
+- lemma: місце
+  translation: "location"
+  pos: noun
+  usage: "Під мостом описує місце."
+- lemma: напрямок
+  translation: "direction"
+  pos: noun
+  usage: "Під міст описує напрямок."
+- lemma: односпрямований
+  translation: "unidirectional"
+  pos: adjective
+  usage: "Іти - односпрямований рух у конкретний момент."
+- lemma: різноспрямований
+  translation: "multidirectional"
+  pos: adjective
+  usage: "Ходити - різноспрямований або регулярний рух."
+- lemma: префікс
+  translation: "prefix"
+  pos: noun
+  usage: "Префікс змінює фазу маршруту."
+- lemma: прибуття
+  translation: "arrival"
+  pos: noun
+  usage: "Приїхати показує прибуття."
+- lemma: досягнення
+  translation: "reaching, attainment"
+  pos: noun
+  usage: "Доїхати показує досягнення мети."
+- lemma: вирушання
+  translation: "setting off"
+  pos: noun
+  usage: "Поїхати означає вирушання."
+- lemma: віддалення
+  translation: "moving away"
+  pos: noun
+  usage: "Від'їхати означає віддалення."
+- lemma: вхід
+  translation: "entry"
+  pos: noun
+  usage: "Зайти в кав'ярню - вхід у простір."
+- lemma: вихід
+  translation: "exit"
+  pos: noun
+  usage: "Вийти з метро - вихід із простору."
+- lemma: перетин
+  translation: "crossing"
+  pos: noun
+  usage: "Перейти вулицю - перетин."
+- lemma: рух повз
+  translation: "movement past"
+  pos: phrase
+  usage: "Проїхати повз вокзал - рух повз орієнтир."
+- lemma: рух навколо
+  translation: "movement around"
+  pos: phrase
+  usage: "Обійти будинок - рух навколо нього."
+- lemma: наближення
+  translation: "approach"
+  pos: noun
+  usage: "Підійти до вікна - наближення."
+- lemma: маршрут
+  translation: "route"
+  pos: noun
+  usage: "Опишіть маршрут від дому до вокзалу."
+- lemma: розклад
+  translation: "schedule"
+  pos: noun
+  usage: "Перевірте розклад поїздів."
+- lemma: рейс
+  translation: "flight, service"
+  pos: noun
+  usage: "Рейс прилетів із Варшави."
+- lemma: причал
+  translation: "pier, dock"
+  pos: noun
+  usage: "Катер відплив від причалу."
+- lemma: аеропорт
+  translation: "airport"
+  pos: noun
+  usage: "Ми доїхали до аеропорту за годину."
+- lemma: вокзал
+  translation: "railway station"
+  pos: noun
+  usage: "Автобус під'їхав до вокзалу."
+- lemma: пересадка
+  translation: "transfer"
+  pos: noun
+  usage: "У Львові була коротка пересадка."
+- lemma: переносне значення
+  translation: "figurative meaning"
+  pos: phrase
+  usage: "Час летить - переносне значення."
+- lemma: пряме значення
+  translation: "literal meaning"
+  pos: phrase
+  usage: "Літак летить - пряме значення."
+- lemma: йдеться про
+  translation: "it is about"
+  pos: phrase
+  usage: "У тексті йдеться про подорож."
+- lemma: справи йдуть
+  translation: "things are going"
+  pos: phrase
+  usage: "Після відпустки справи йдуть краще."
+- lemma: час летить
+  translation: "time flies"
+  pos: phrase
+  usage: "У подорожі час летить."
+- lemma: дощ іде
+  translation: "it is raining"
+  pos: phrase
+  usage: "У Карпатах зранку йде дощ."
+- lemma: нести відповідальність
+  translation: "to bear responsibility"
+  pos: phrase
+  usage: "Організатор несе відповідальність за групу."
+- lemma: вести переговори
+  translation: "to conduct negotiations"
+  pos: phrase
+  usage: "Команда веде переговори з перевізником."
+- lemma: водити за ніс
+  translation: "to deceive, lead on"
+  pos: phrase
+  usage: "Не води мене за ніс щодо часу виїзду."
+- lemma: виправити помилку
+  translation: "to correct an error"
+  pos: phrase
+  usage: "У контрольній треба виправити помилку й пояснити її."
+- lemma: пояснити вибір
+  translation: "to explain the choice"
+  pos: phrase
+  usage: "Поясніть вибір префікса одним реченням."
