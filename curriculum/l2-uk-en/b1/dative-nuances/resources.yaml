@@ -1,0 +1,25 @@
+- title: "B1 M53: genitive nuances"
+  role: curriculum
+  notes: "Попередній модуль дав модель точного пояснення ролі відмінка і контрастів із керуванням."
+- title: "A2 dative basics"
+  role: curriculum
+  notes: "Базові форми мені, тобі, йому, їй, нам, вам, їм і адресат дії вже мають бути знайомі."
+- title: "Авраменко Grade 8, безособові речення"
+  role: textbook
+  notes: "Подає безособові речення для стану людини та порівняння Я хочу спати / Мені хочеться спати."
+  source_ref: "8-klas-ukrmova-avramenko-2025, розділ про безособові речення"
+- title: "Заболотний Grade 6, таблиця відмінків"
+  role: textbook
+  notes: "Систематизує питання давального кому? чому? і базові форми іменників."
+  source_ref: "6-klas-ukrmova-zabolotnyi-2020, відмінювання іменників"
+- title: "Варзацька Grade 4, таблиці відмінювання"
+  role: textbook
+  notes: "Показує давальний учневі/учню, школі, учням, школам та паралельні чоловічі закінчення."
+  source_ref: "4-klas-ukrayinska-mova-varzatska-2021-1, §12"
+- title: "A1 checkpoint communication review"
+  role: style
+  notes: "Нагадує, що завдяки вживається для позитивного результату; негативні причини краще виражати через або внаслідок."
+  source_ref: "wiki/pedagogy/a1/checkpoint-communication.md"
+- title: "State Standard 2024, §4.2.2.3"
+  role: standard
+  notes: "Підтримує розширення значень давального відмінка, зокрема адресата, стану, потреби і призначення."
