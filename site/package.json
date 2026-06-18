@@ -3,8 +3,10 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
+    "predev": "node scripts/reconstitute_manifest.js",
     "dev": "astro dev",
     "start": "astro dev",
+    "prebuild": "node scripts/reconstitute_manifest.js",
     "build": "astro build",
     "build:full": "BUILD_ETYMOLOGY_ROUTES=1 astro build",
     "preview": "astro preview",

@@ -1,0 +1,848 @@
+{
+  "version": "0.1",
+  "generated_at": "2026-06-17T15:02:06+00:00",
+  "stats": {
+    "lemmas_total": 2891,
+    "modules_covered": 161,
+    "from_built": 2878,
+    "from_surzhyk_to_avoid": 7,
+    "from_heritage_status_seed": 6
+  },
+  "modules": [
+    {
+      "track": "a1",
+      "module_num": 55,
+      "slug": "a1-finale"
+    },
+    {
+      "track": "a1",
+      "module_num": 33,
+      "slug": "around-the-city"
+    },
+    {
+      "track": "a1",
+      "module_num": 38,
+      "slug": "at-the-cafe"
+    },
+    {
+      "track": "a1",
+      "module_num": 21,
+      "slug": "checkpoint-actions"
+    },
+    {
+      "track": "a1",
+      "module_num": 47,
+      "slug": "checkpoint-communication"
+    },
+    {
+      "track": "a1",
+      "module_num": 7,
+      "slug": "checkpoint-first-contact"
+    },
+    {
+      "track": "a1",
+      "module_num": 41,
+      "slug": "checkpoint-food-shopping"
+    },
+    {
+      "track": "a1",
+      "module_num": 14,
+      "slug": "checkpoint-my-world"
+    },
+    {
+      "track": "a1",
+      "module_num": 35,
+      "slug": "checkpoint-places"
+    },
+    {
+      "track": "a1",
+      "module_num": 27,
+      "slug": "checkpoint-time-nature"
+    },
+    {
+      "track": "a1",
+      "module_num": 10,
+      "slug": "colors"
+    },
+    {
+      "track": "a1",
+      "module_num": 23,
+      "slug": "days-and-months"
+    },
+    {
+      "track": "a1",
+      "module_num": 54,
+      "slug": "emergencies"
+    },
+    {
+      "track": "a1",
+      "module_num": 28,
+      "slug": "euphony"
+    },
+    {
+      "track": "a1",
+      "module_num": 36,
+      "slug": "food-and-drink"
+    },
+    {
+      "track": "a1",
+      "module_num": 26,
+      "slug": "free-time"
+    },
+    {
+      "track": "a1",
+      "module_num": 53,
+      "slug": "health"
+    },
+    {
+      "track": "a1",
+      "module_num": 42,
+      "slug": "hey-friend"
+    },
+    {
+      "track": "a1",
+      "module_num": 46,
+      "slug": "holidays"
+    },
+    {
+      "track": "a1",
+      "module_num": 11,
+      "slug": "how-many"
+    },
+    {
+      "track": "a1",
+      "module_num": 37,
+      "slug": "i-eat-i-drink"
+    },
+    {
+      "track": "a1",
+      "module_num": 18,
+      "slug": "i-want-i-can"
+    },
+    {
+      "track": "a1",
+      "module_num": 44,
+      "slug": "linking-ideas"
+    },
+    {
+      "track": "a1",
+      "module_num": 13,
+      "slug": "many-things"
+    },
+    {
+      "track": "a1",
+      "module_num": 30,
+      "slug": "my-city"
+    },
+    {
+      "track": "a1",
+      "module_num": 25,
+      "slug": "my-day"
+    },
+    {
+      "track": "a1",
+      "module_num": 6,
+      "slug": "my-family"
+    },
+    {
+      "track": "a1",
+      "module_num": 20,
+      "slug": "my-morning"
+    },
+    {
+      "track": "a1",
+      "module_num": 51,
+      "slug": "my-plans"
+    },
+    {
+      "track": "a1",
+      "module_num": 52,
+      "slug": "my-story"
+    },
+    {
+      "track": "a1",
+      "module_num": 40,
+      "slug": "people-around-me"
+    },
+    {
+      "track": "a1",
+      "module_num": 43,
+      "slug": "please-do-this"
+    },
+    {
+      "track": "a1",
+      "module_num": 19,
+      "slug": "questions"
+    },
+    {
+      "track": "a1",
+      "module_num": 2,
+      "slug": "reading-ukrainian"
+    },
+    {
+      "track": "a1",
+      "module_num": 39,
+      "slug": "shopping"
+    },
+    {
+      "track": "a1",
+      "module_num": 1,
+      "slug": "sounds-letters-and-hello"
+    },
+    {
+      "track": "a1",
+      "module_num": 3,
+      "slug": "special-signs"
+    },
+    {
+      "track": "a1",
+      "module_num": 4,
+      "slug": "stress-and-melody"
+    },
+    {
+      "track": "a1",
+      "module_num": 8,
+      "slug": "things-have-gender"
+    },
+    {
+      "track": "a1",
+      "module_num": 12,
+      "slug": "this-and-that"
+    },
+    {
+      "track": "a1",
+      "module_num": 32,
+      "slug": "transport"
+    },
+    {
+      "track": "a1",
+      "module_num": 16,
+      "slug": "verbs-group-one"
+    },
+    {
+      "track": "a1",
+      "module_num": 17,
+      "slug": "verbs-group-two"
+    },
+    {
+      "track": "a1",
+      "module_num": 24,
+      "slug": "weather"
+    },
+    {
+      "track": "a1",
+      "module_num": 48,
+      "slug": "what-happened"
+    },
+    {
+      "track": "a1",
+      "module_num": 15,
+      "slug": "what-i-like"
+    },
+    {
+      "track": "a1",
+      "module_num": 9,
+      "slug": "what-is-it-like"
+    },
+    {
+      "track": "a1",
+      "module_num": 22,
+      "slug": "what-time"
+    },
+    {
+      "track": "a1",
+      "module_num": 50,
+      "slug": "what-will-happen"
+    },
+    {
+      "track": "a1",
+      "module_num": 45,
+      "slug": "when-and-where"
+    },
+    {
+      "track": "a1",
+      "module_num": 34,
+      "slug": "where-from"
+    },
+    {
+      "track": "a1",
+      "module_num": 29,
+      "slug": "where-is-it"
+    },
+    {
+      "track": "a1",
+      "module_num": 31,
+      "slug": "where-to"
+    },
+    {
+      "track": "a1",
+      "module_num": 5,
+      "slug": "who-am-i"
+    },
+    {
+      "track": "a1",
+      "module_num": 49,
+      "slug": "yesterday"
+    },
+    {
+      "track": "a2",
+      "module_num": 1,
+      "slug": "a2-bridge"
+    },
+    {
+      "track": "a2",
+      "module_num": 67,
+      "slug": "a2-comprehensive-review"
+    },
+    {
+      "track": "a2",
+      "module_num": 69,
+      "slug": "a2-finale"
+    },
+    {
+      "track": "a2",
+      "module_num": 68,
+      "slug": "a2-practice-exam"
+    },
+    {
+      "track": "a2",
+      "module_num": 37,
+      "slug": "all-cases-practice"
+    },
+    {
+      "track": "a2",
+      "module_num": 2,
+      "slug": "aspect-concept"
+    },
+    {
+      "track": "a2",
+      "module_num": 40,
+      "slug": "aspect-in-past"
+    },
+    {
+      "track": "a2",
+      "module_num": 3,
+      "slug": "aspect-in-vocabulary"
+    },
+    {
+      "track": "a2",
+      "module_num": 42,
+      "slug": "aspect-mastery"
+    },
+    {
+      "track": "a2",
+      "module_num": 47,
+      "slug": "because-and-although"
+    },
+    {
+      "track": "a2",
+      "module_num": 39,
+      "slug": "checkpoint-cases"
+    },
+    {
+      "track": "a2",
+      "module_num": 23,
+      "slug": "checkpoint-dative"
+    },
+    {
+      "track": "a2",
+      "module_num": 8,
+      "slug": "checkpoint-foundations"
+    },
+    {
+      "track": "a2",
+      "module_num": 16,
+      "slug": "checkpoint-genitive"
+    },
+    {
+      "track": "a2",
+      "module_num": 31,
+      "slug": "checkpoint-instrumental"
+    },
+    {
+      "track": "a2",
+      "module_num": 53,
+      "slug": "checkpoint-syntax"
+    },
+    {
+      "track": "a2",
+      "module_num": 46,
+      "slug": "checkpoint-verbs"
+    },
+    {
+      "track": "a2",
+      "module_num": 54,
+      "slug": "comparison"
+    },
+    {
+      "track": "a2",
+      "module_num": 19,
+      "slug": "dative-adjectives-pronouns"
+    },
+    {
+      "track": "a2",
+      "module_num": 18,
+      "slug": "dative-nouns"
+    },
+    {
+      "track": "a2",
+      "module_num": 17,
+      "slug": "dative-pronouns"
+    },
+    {
+      "track": "a2",
+      "module_num": 21,
+      "slug": "dative-verbs"
+    },
+    {
+      "track": "a2",
+      "module_num": 35,
+      "slug": "dozvillia-i-khobi"
+    },
+    {
+      "track": "a2",
+      "module_num": 52,
+      "slug": "education-and-work"
+    },
+    {
+      "track": "a2",
+      "module_num": 12,
+      "slug": "euphony-advanced"
+    },
+    {
+      "track": "a2",
+      "module_num": 7,
+      "slug": "foundations-practice"
+    },
+    {
+      "track": "a2",
+      "module_num": 13,
+      "slug": "genitive-adjectives-pronouns"
+    },
+    {
+      "track": "a2",
+      "module_num": 6,
+      "slug": "genitive-dates-numbers"
+    },
+    {
+      "track": "a2",
+      "module_num": 5,
+      "slug": "genitive-intro"
+    },
+    {
+      "track": "a2",
+      "module_num": 14,
+      "slug": "genitive-plural"
+    },
+    {
+      "track": "a2",
+      "module_num": 11,
+      "slug": "genitive-prepositions-direction"
+    },
+    {
+      "track": "a2",
+      "module_num": 10,
+      "slug": "genitive-prepositions-purpose"
+    },
+    {
+      "track": "a2",
+      "module_num": 9,
+      "slug": "genitive-prepositions-source"
+    },
+    {
+      "track": "a2",
+      "module_num": 38,
+      "slug": "home-and-daily-life"
+    },
+    {
+      "track": "a2",
+      "module_num": 44,
+      "slug": "imperative-complete"
+    },
+    {
+      "track": "a2",
+      "module_num": 57,
+      "slug": "indefinite-negative-pronouns"
+    },
+    {
+      "track": "a2",
+      "module_num": 24,
+      "slug": "instrumental-accompaniment"
+    },
+    {
+      "track": "a2",
+      "module_num": 29,
+      "slug": "instrumental-adjectives-pronouns"
+    },
+    {
+      "track": "a2",
+      "module_num": 25,
+      "slug": "instrumental-means"
+    },
+    {
+      "track": "a2",
+      "module_num": 28,
+      "slug": "instrumental-prepositions"
+    },
+    {
+      "track": "a2",
+      "module_num": 26,
+      "slug": "instrumental-profession"
+    },
+    {
+      "track": "a2",
+      "module_num": 4,
+      "slug": "liudyna-i-stosunky"
+    },
+    {
+      "track": "a2",
+      "module_num": 20,
+      "slug": "locative-expanded"
+    },
+    {
+      "track": "a2",
+      "module_num": 65,
+      "slug": "metalanguage-morphology"
+    },
+    {
+      "track": "a2",
+      "module_num": 64,
+      "slug": "metalanguage-phonetics"
+    },
+    {
+      "track": "a2",
+      "module_num": 63,
+      "slug": "metalanguage-sentences-and-classroom"
+    },
+    {
+      "track": "a2",
+      "module_num": 66,
+      "slug": "metalanguage-syntax-cases"
+    },
+    {
+      "track": "a2",
+      "module_num": 62,
+      "slug": "metalanguage-verbs-and-time"
+    },
+    {
+      "track": "a2",
+      "module_num": 61,
+      "slug": "metalanguage-words-and-cases"
+    },
+    {
+      "track": "a2",
+      "module_num": 43,
+      "slug": "motion-verbs"
+    },
+    {
+      "track": "a2",
+      "module_num": 60,
+      "slug": "nature-and-traditions"
+    },
+    {
+      "track": "a2",
+      "module_num": 55,
+      "slug": "numerals-and-cases"
+    },
+    {
+      "track": "a2",
+      "module_num": 33,
+      "slug": "plural-genitive"
+    },
+    {
+      "track": "a2",
+      "module_num": 32,
+      "slug": "plural-nominative-accusative"
+    },
+    {
+      "track": "a2",
+      "module_num": 34,
+      "slug": "plural-other-cases"
+    },
+    {
+      "track": "a2",
+      "module_num": 59,
+      "slug": "preferences-and-choices"
+    },
+    {
+      "track": "a2",
+      "module_num": 48,
+      "slug": "purpose-clauses"
+    },
+    {
+      "track": "a2",
+      "module_num": 51,
+      "slug": "real-conditionals"
+    },
+    {
+      "track": "a2",
+      "module_num": 49,
+      "slug": "relative-clauses"
+    },
+    {
+      "track": "a2",
+      "module_num": 22,
+      "slug": "services-and-communication"
+    },
+    {
+      "track": "a2",
+      "module_num": 15,
+      "slug": "shopping-and-health"
+    },
+    {
+      "track": "a2",
+      "module_num": 56,
+      "slug": "sviy-and-sebe"
+    },
+    {
+      "track": "a2",
+      "module_num": 58,
+      "slug": "synonyms-antonyms-style"
+    },
+    {
+      "track": "a2",
+      "module_num": 41,
+      "slug": "synthetic-future"
+    },
+    {
+      "track": "a2",
+      "module_num": 45,
+      "slug": "telling-stories-and-travel"
+    },
+    {
+      "track": "a2",
+      "module_num": 27,
+      "slug": "vocative-expanded"
+    },
+    {
+      "track": "a2",
+      "module_num": 36,
+      "slug": "which-case-when"
+    },
+    {
+      "track": "a2",
+      "module_num": 50,
+      "slug": "word-order-emphasis"
+    },
+    {
+      "track": "a2",
+      "module_num": 30,
+      "slug": "work-and-food"
+    },
+    {
+      "track": "b1",
+      "module_num": 12,
+      "slug": "alternation-consonants-nouns"
+    },
+    {
+      "track": "b1",
+      "module_num": 13,
+      "slug": "alternation-consonants-verbs"
+    },
+    {
+      "track": "b1",
+      "module_num": 11,
+      "slug": "alternation-vowels"
+    },
+    {
+      "track": "b1",
+      "module_num": 5,
+      "slug": "aspect-future-tense"
+    },
+    {
+      "track": "b1",
+      "module_num": 24,
+      "slug": "aspect-in-conditionals"
+    },
+    {
+      "track": "b1",
+      "module_num": 27,
+      "slug": "aspect-in-imperatives"
+    },
+    {
+      "track": "b1",
+      "module_num": 6,
+      "slug": "aspect-in-narration"
+    },
+    {
+      "track": "b1",
+      "module_num": 8,
+      "slug": "aspect-in-negation"
+    },
+    {
+      "track": "b1",
+      "module_num": 4,
+      "slug": "aspect-past-tense"
+    },
+    {
+      "track": "b1",
+      "module_num": 2,
+      "slug": "b1-baseline-future-aspect"
+    },
+    {
+      "track": "b1",
+      "module_num": 1,
+      "slug": "b1-baseline-past-present"
+    },
+    {
+      "track": "b1",
+      "module_num": 10,
+      "slug": "checkpoint-aspect"
+    },
+    {
+      "track": "b1",
+      "module_num": 21,
+      "slug": "checkpoint-morphophonemics"
+    },
+    {
+      "track": "b1",
+      "module_num": 22,
+      "slug": "conditionals-real"
+    },
+    {
+      "track": "b1",
+      "module_num": 23,
+      "slug": "conditionals-unreal"
+    },
+    {
+      "track": "b1",
+      "module_num": 7,
+      "slug": "daily-life-and-routines"
+    },
+    {
+      "track": "b1",
+      "module_num": 14,
+      "slug": "health-at-the-doctor"
+    },
+    {
+      "track": "b1",
+      "module_num": 29,
+      "slug": "housing-and-renting"
+    },
+    {
+      "track": "b1",
+      "module_num": 26,
+      "slug": "imperative-nuances"
+    },
+    {
+      "track": "b1",
+      "module_num": 19,
+      "slug": "noun-subclasses-feminine"
+    },
+    {
+      "track": "b1",
+      "module_num": 17,
+      "slug": "noun-subclasses-hissing"
+    },
+    {
+      "track": "b1",
+      "module_num": 16,
+      "slug": "noun-subclasses-masculine"
+    },
+    {
+      "track": "b1",
+      "module_num": 30,
+      "slug": "passive-voice-intro"
+    },
+    {
+      "track": "b1",
+      "module_num": 3,
+      "slug": "people-and-relationships"
+    },
+    {
+      "track": "b1",
+      "module_num": 20,
+      "slug": "pluralia-tantum"
+    },
+    {
+      "track": "b1",
+      "module_num": 28,
+      "slug": "reflexive-verbs-nuances"
+    },
+    {
+      "track": "b1",
+      "module_num": 18,
+      "slug": "restaurant-and-food"
+    },
+    {
+      "track": "b1",
+      "module_num": 25,
+      "slug": "shopping-and-services"
+    },
+    {
+      "track": "b1",
+      "module_num": 15,
+      "slug": "simplification-consonants"
+    },
+    {
+      "track": "b1",
+      "module_num": 31,
+      "slug": "verbal-nouns"
+    },
+    {
+      "track": "b1",
+      "module_num": 9,
+      "slug": "work-and-career"
+    },
+    {
+      "track": "folk",
+      "module_num": 12,
+      "slug": "dumy-nevilnytski-lytsarski"
+    },
+    {
+      "track": "folk",
+      "module_num": 4,
+      "slug": "kalendarna-obriadovist-zvychai"
+    },
+    {
+      "track": "folk",
+      "module_num": 5,
+      "slug": "koliadky-shchedrivky"
+    },
+    {
+      "track": "folk",
+      "module_num": 1,
+      "slug": "narodna-kultura-yak-systema"
+    },
+    {
+      "track": "folk",
+      "module_num": 2,
+      "slug": "narodni-viruvannia-mifolohiia-demonolohiia"
+    },
+    {
+      "track": "folk",
+      "module_num": 3,
+      "slug": "zamovliannia-zaklynannia-prymovky"
+    }
+  ],
+  "seed_groups": [
+    {
+      "id": "surzhyk-to-avoid",
+      "source": "surzhyk_to_avoid",
+      "description": "Classifier-verified Russianism/surzhyk examples for visible Atlas warnings.",
+      "lemmas": [
+        "агенство",
+        "авось",
+        "автозагар",
+        "всьо",
+        "діюча",
+        "міроприємство",
+        "слідуючий"
+      ]
+    },
+    {
+      "id": "heritage-status-samples",
+      "source": "heritage_status_seed",
+      "description": "Source-backed heritage status sample pages for Atlas design conformance QA.",
+      "lemmas": [
+        "вельми",
+        "глагол",
+        "гетьман",
+        "опришок",
+        "десятина",
+        "кобіта"
+      ]
+    }
+  ],
+  "enrichment_generated": true
+}

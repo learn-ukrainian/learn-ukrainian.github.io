@@ -363,3 +363,4 @@ data/processed/v2/
 # Dead-code inventory reports are regenerable (scripts/audit/find_dead_code.py); do not track (#1863)
 audit/cleanup-inventory-*.md
 docs/outreach/
+site/src/data/lexicon-manifest.json
