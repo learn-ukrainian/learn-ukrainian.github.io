@@ -1,0 +1,160 @@
+- lemma: порядковий числівник
+  translation: "ordinal numeral"
+  pos: noun phrase
+  usage: "Порядковий числівник відповідає на питання котрий?"
+- lemma: кількісний числівник
+  translation: "cardinal numeral"
+  pos: noun phrase
+  usage: "Кількісний числівник відповідає на питання скільки?"
+- lemma: відмінювання
+  translation: "declension"
+  pos: noun
+  usage: "Відмінювання порядкових числівників подібне до відмінювання прикметників."
+- lemma: узгодження
+  translation: "agreement"
+  pos: noun
+  usage: "Узгодження з іменником визначає рід, число і відмінок числівника."
+- lemma: називний відмінок
+  translation: "nominative case"
+  pos: noun phrase
+  usage: "Сьогодні п'яте березня: п'яте стоїть у називному відмінку."
+- lemma: родовий відмінок
+  translation: "genitive case"
+  pos: noun phrase
+  usage: "Зустріч відбудеться п'ятого березня."
+- lemma: давальний відмінок
+  translation: "dative case"
+  pos: noun phrase
+  usage: "Поставте питання п'ятому учасникові."
+- lemma: знахідний відмінок
+  translation: "accusative case"
+  pos: noun phrase
+  usage: "Квиток купили на двадцять перше квітня."
+- lemma: орудний відмінок
+  translation: "instrumental case"
+  pos: noun phrase
+  usage: "Ми задоволені третім результатом."
+- lemma: місцевий відмінок
+  translation: "locative case"
+  pos: noun phrase
+  usage: "Офіс розташований на четвертому поверсі."
+- lemma: перший
+  translation: "first"
+  pos: ordinal numeral
+  usage: "Перший урок починається о восьмій."
+- lemma: другий
+  translation: "second"
+  pos: ordinal numeral
+  usage: "Каса працює на другому поверсі."
+- lemma: третій
+  translation: "third"
+  pos: ordinal numeral
+  usage: "Третій відмінюється як прикметник м'якої групи."
+- lemma: п'ятий
+  translation: "fifth"
+  pos: ordinal numeral
+  usage: "П'ятий вагон стоїть біля виходу."
+- lemma: сьомий
+  translation: "seventh"
+  pos: ordinal numeral
+  usage: "Ми живемо на сьомому поверсі."
+- lemma: двадцять перший
+  translation: "twenty-first"
+  pos: compound ordinal
+  usage: "У двадцять першому столітті цифрові дати всюди."
+- lemma: складений порядковий числівник
+  translation: "compound ordinal numeral"
+  pos: noun phrase
+  usage: "У складеному порядковому числівнику змінюється лише останнє слово."
+- lemma: останнє слово
+  translation: "last word"
+  pos: noun phrase
+  usage: "У формі двісті двадцять п'ятої змінено тільки останнє слово."
+- lemma: дата
+  translation: "date"
+  pos: noun
+  usage: "Назвіть дату зустрічі повністю словами."
+- lemma: число
+  translation: "calendar day, number"
+  pos: noun
+  usage: "У фразі п'яте березня мається на увазі п'яте число."
+- lemma: місяць
+  translation: "month"
+  pos: noun
+  usage: "Назва місяця в датах стоїть у родовому відмінку."
+- lemma: рік
+  translation: "year"
+  pos: noun
+  usage: "Він народився у дві тисячі першому році."
+- lemma: котра година
+  translation: "what time is it"
+  pos: phrase
+  usage: "Котра година? Уже пів на дев'яту."
+- lemma: година
+  translation: "hour"
+  pos: noun
+  usage: "О третій годині починається консультація."
+- lemma: хвилина
+  translation: "minute"
+  pos: noun
+  usage: "За десять хвилин четверта."
+- lemma: пів на
+  translation: "half past, literally half toward"
+  pos: phrase
+  usage: "Зустрінемося о пів на п'яту."
+- lemma: половина
+  translation: "half"
+  pos: noun
+  usage: "Половина години в українській моделі часто звучить як пів на наступну годину."
+- lemma: чверть
+  translation: "quarter"
+  pos: noun
+  usage: "За чверть восьма означає 7:45."
+- lemma: на п'яту
+  translation: "toward five, after four"
+  pos: time phrase
+  usage: "Десять хвилин на п'яту означає 4:10."
+- lemma: за десять
+  translation: "ten to"
+  pos: time phrase
+  usage: "За десять сьома означає 6:50."
+- lemma: поверх
+  translation: "floor, storey"
+  pos: noun
+  usage: "Аудиторія на третьому поверсі."
+- lemma: платформа
+  translation: "platform"
+  pos: noun
+  usage: "Поїзд вирушає з другої платформи."
+- lemma: колія
+  translation: "track"
+  pos: noun
+  usage: "Електричка прибуває на четверту колію."
+- lemma: вагон
+  translation: "train car"
+  pos: noun
+  usage: "У квитку написано п'ятий вагон."
+- lemma: кабінет
+  translation: "office, room"
+  pos: noun
+  usage: "Прийом відбудеться в кабінеті двісті десятому."
+- lemma: століття
+  translation: "century"
+  pos: noun
+  usage: "Подія сталася у двадцятому столітті."
+- lemma: вдруге
+  translation: "for the second time"
+  pos: adverb
+  usage: "Я читаю цей текст вдруге."
+- lemma: утретє
+  translation: "for the third time"
+  pos: adverb
+  usage: "Він утретє запитав про час."
+- lemma: по-перше
+  translation: "firstly"
+  pos: adverb
+  usage: "По-перше, перевірте дату; по-друге, перевірте час."
+- lemma: насамперед
+  translation: "first of all"
+  pos: adverb
+  usage: "Насамперед запишіть дату словами."
