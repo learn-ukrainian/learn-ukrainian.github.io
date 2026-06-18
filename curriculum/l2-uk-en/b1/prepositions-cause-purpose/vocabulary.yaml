@@ -1,0 +1,156 @@
+- lemma: причина
+  translation: "cause, reason"
+  pos: noun
+  usage: "Причина запізнення була поважною."
+- lemma: мета
+  translation: "purpose, goal"
+  pos: noun
+  usage: "Мета проєкту - допомогти студентам."
+- lemma: через
+  translation: "because of; through"
+  pos: preposition
+  usage: "Через хворобу студент пропустив лекцію."
+- lemma: завдяки
+  translation: "thanks to"
+  pos: preposition
+  usage: "Завдяки підтримці друзів ми встигли завершити роботу."
+- lemma: від
+  translation: "from, due to"
+  pos: preposition
+  usage: "Вона почервоніла від сорому."
+- lemma: з причини
+  translation: "for the reason of, because of"
+  pos: phrase
+  usage: "З технічних причин зустріч перенесли."
+- lemma: з цікавості
+  translation: "out of curiosity"
+  pos: phrase
+  usage: "Я відкрив старий лист з цікавості."
+- lemma: від радості
+  translation: "from joy"
+  pos: phrase
+  usage: "Діти сміялися від радості."
+- lemma: від холоду
+  translation: "from cold"
+  pos: phrase
+  usage: "Він тремтів від холоду."
+- lemma: з поваги
+  translation: "out of respect"
+  pos: phrase
+  usage: "Ми говорили тихо з поваги до присутніх."
+- lemma: з вини
+  translation: "through someone's fault"
+  pos: phrase
+  usage: "З моєї вини лист надіслали пізно."
+- lemma: унаслідок
+  translation: "as a result of"
+  pos: preposition
+  usage: "Унаслідок зливи дорогу тимчасово закрили."
+- lemma: внаслідок
+  translation: "as a result of"
+  pos: preposition
+  usage: "Внаслідок помилки в системі реєстрація затрималася."
+- lemma: у результаті
+  translation: "as a result of"
+  pos: phrase
+  usage: "У результаті обговорення план змінили."
+- lemma: у зв'язку з
+  translation: "in connection with"
+  pos: phrase
+  usage: "У зв'язку з ремонтом аудиторію перенесли."
+- lemma: для
+  translation: "for"
+  pos: preposition
+  usage: "Цей посібник створено для студентів."
+- lemma: заради
+  translation: "for the sake of"
+  pos: preposition
+  usage: "Вони працювали заради спільної мети."
+- lemma: задля
+  translation: "for the sake of"
+  pos: preposition
+  usage: "Задля безпеки двері зачиняють о десятій."
+- lemma: щоб
+  translation: "in order to; so that"
+  pos: conjunction
+  usage: "Я прийшов раніше, щоб допомогти."
+- lemma: аби
+  translation: "so that, in order to"
+  pos: conjunction
+  usage: "Вона повторила правило, аби всі зрозуміли."
+- lemma: для того щоб
+  translation: "in order to"
+  pos: conjunction phrase
+  usage: "Для того щоб вступити, треба подати документи."
+- lemma: заради того щоб
+  translation: "for the sake of doing"
+  pos: conjunction phrase
+  usage: "Він тренувався заради того, щоб виступити краще."
+- lemma: з метою
+  translation: "with the aim of"
+  pos: phrase
+  usage: "З метою покращення сервісу відкрили новий кабінет."
+- lemma: по
+  translation: "for, to get (purpose of movement)"
+  pos: preposition
+  usage: "Вона зайшла по довідку до деканату."
+- lemma: за
+  translation: "for, after, behind"
+  pos: preposition
+  usage: "Студент зайшов за викладачем, а не по довідку."
+- lemma: навіщо
+  translation: "what for"
+  pos: adverb
+  usage: "Навіщо ви прийшли до деканату?"
+- lemma: чому
+  translation: "why"
+  pos: adverb
+  usage: "Чому зустріч перенесли?"
+- lemma: для чого
+  translation: "for what purpose"
+  pos: phrase
+  usage: "Для чого потрібна ця довідка?"
+- lemma: через те що
+  translation: "because"
+  pos: conjunction phrase
+  usage: "Заняття скасували через те, що викладач захворів."
+- lemma: завдяки тому що
+  translation: "thanks to the fact that"
+  pos: conjunction phrase
+  usage: "Ми встигли завдяки тому, що всі працювали разом."
+- lemma: тому що
+  translation: "because"
+  pos: conjunction phrase
+  usage: "Я залишився вдома, тому що погано почувався."
+- lemma: бо
+  translation: "because"
+  pos: conjunction
+  usage: "Я прийшов рано, бо хотів поговорити."
+- lemma: офіційна причина
+  translation: "formal reason"
+  pos: phrase
+  usage: "В офіційному листі треба назвати офіційну причину."
+- lemma: нейтральна причина
+  translation: "neutral reason"
+  pos: phrase
+  usage: "Нейтральна причина не обов'язково позитивна або негативна."
+- lemma: позитивна причина
+  translation: "positive cause"
+  pos: phrase
+  usage: "Позитивна причина часто виражається словом завдяки."
+- lemma: негативна причина
+  translation: "negative cause"
+  pos: phrase
+  usage: "Негативна причина часто виражається словом через."
+- lemma: внутрішня мотивація
+  translation: "internal motivation"
+  pos: phrase
+  usage: "З цікавості показує внутрішню мотивацію."
+- lemma: реакція
+  translation: "reaction"
+  pos: noun
+  usage: "Від радості описує реакцію, а не план."
+- lemma: перешкода
+  translation: "obstacle"
+  pos: noun
+  usage: "Через затор виникла перешкода для руху."
