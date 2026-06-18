@@ -1,0 +1,152 @@
+- lemma: словотвір
+  translation: "word formation"
+  pos: noun
+  usage: "Словотвір пояснює, як із відомих основ утворюються нові слова."
+- lemma: суфікс
+  translation: "suffix"
+  pos: noun
+  usage: "Суфікс стоїть після кореня: ліс + ов + ий."
+- lemma: префікс
+  translation: "prefix"
+  pos: noun
+  usage: "Префікс стоїть перед коренем: без + хмар + ний."
+- lemma: префіксально-суфіксальний
+  translation: "prefixal-suffixal"
+  pos: adjective
+  usage: "Прикметник прибережний утворено префіксально-суфіксальним способом."
+- lemma: складний прикметник
+  translation: "compound adjective"
+  pos: phrase
+  usage: "Складний прикметник може мати дві основи: правобережний."
+- lemma: сполучна голосна
+  translation: "connecting vowel"
+  pos: phrase
+  usage: "У слові чорноокий сполучна голосна -о- поєднує дві основи."
+- lemma: подвоєння
+  translation: "doubling"
+  pos: noun
+  usage: "Подвоєння -нн- видно у словах осінній, денний, туманний."
+- lemma: продуктивний
+  translation: "productive"
+  pos: adjective
+  usage: "Продуктивний суфікс активно утворює нові прикметники."
+- lemma: присвійний прикметник
+  translation: "possessive adjective"
+  pos: phrase
+  usage: "Присвійний прикметник називає належність: батьків дім."
+- lemma: батьків
+  translation: "father's"
+  pos: adjective
+  usage: "Батьків голос було чути з кімнати."
+- lemma: материн
+  translation: "mother's"
+  pos: adjective
+  usage: "Материна порада допомогла прийняти рішення."
+- lemma: зменшувальний
+  translation: "diminutive"
+  pos: adjective
+  usage: "Зменшувальний суфікс додає м'якості: чистенький."
+- lemma: збільшувальний
+  translation: "augmentative"
+  pos: adjective
+  usage: "Збільшувальний відтінок є в слові здоровенний."
+- lemma: наближений
+  translation: "approximate"
+  pos: adjective
+  usage: "Синюватий означає наближений до синього кольору."
+- lemma: твірна основа
+  translation: "derivational base"
+  pos: phrase
+  usage: "У слові київський твірна основа - Київ."
+- lemma: похідне слово
+  translation: "derived word"
+  pos: phrase
+  usage: "Лісовий - похідне слово від іменника ліс."
+- lemma: мотивувальне слово
+  translation: "motivating word"
+  pos: phrase
+  usage: "Мотивувальне слово допомагає пояснити значення похідного."
+- lemma: суфіксальний
+  translation: "suffixal"
+  pos: adjective
+  usage: "Суфіксальний спосіб найчастіший у творенні прикметників."
+- lemma: префіксальний
+  translation: "prefixal"
+  pos: adjective
+  usage: "Префіксальний спосіб додає значення посилення або заперечення."
+- lemma: якісний прикметник
+  translation: "qualitative adjective"
+  pos: phrase
+  usage: "Якісний прикметник називає ознаку, яку можна порівнювати."
+- lemma: відносний прикметник
+  translation: "relative adjective"
+  pos: phrase
+  usage: "Відносний прикметник показує зв'язок із предметом або місцем."
+- lemma: суфікс -ськ-
+  translation: "-sk- suffix"
+  pos: suffix
+  usage: "Суфікс -ськ- творить прикметники на зразок київський."
+- lemma: суфікс -зьк-
+  translation: "-zk- suffix"
+  pos: suffix
+  usage: "Після г, ж, з часто маємо -зьк-: празький, паризький."
+- lemma: суфікс -цьк-
+  translation: "-tsk- suffix"
+  pos: suffix
+  usage: "Після к, ч, ц часто маємо -цьк-: козацький."
+- lemma: безхмарний
+  translation: "cloudless"
+  pos: adjective
+  usage: "Безхмарний день утворено від словосполучення без хмар."
+- lemma: прибережний
+  translation: "coastal, riverside"
+  pos: adjective
+  usage: "Прибережний парк розташований біля води."
+- lemma: антивоєнний
+  translation: "anti-war"
+  pos: adjective
+  usage: "Антивоєнний плакат має чітку громадянську позицію."
+- lemma: післявоєнний
+  translation: "postwar"
+  pos: adjective
+  usage: "Післявоєнне відновлення потребує часу."
+- lemma: передсвятковий
+  translation: "pre-holiday"
+  pos: adjective
+  usage: "Передсвятковий настрій відчувається в місті."
+- lemma: осінній
+  translation: "autumnal"
+  pos: adjective
+  usage: "Осінній день має подвоєне -нн- після основи на -н-."
+- lemma: денний
+  translation: "daytime, daily"
+  pos: adjective
+  usage: "Денний розклад відрізняється від вечірнього."
+- lemma: піщаний
+  translation: "sandy"
+  pos: adjective
+  usage: "Піщаний берег пишемо з одним -н-."
+- lemma: дерев'яний
+  translation: "wooden"
+  pos: adjective
+  usage: "Дерев'яний стіл має суфікс -ян- з одним -н-."
+- lemma: козацький
+  translation: "Cossack, related to Cossacks"
+  pos: adjective
+  usage: "Козак дає козацький із -цьк-."
+- lemma: паризький
+  translation: "Parisian"
+  pos: adjective
+  usage: "Париж дає паризький із -зьк-."
+- lemma: київський
+  translation: "Kyivan"
+  pos: adjective
+  usage: "Київський утворено від назви Київ."
+- lemma: чорноокий
+  translation: "black-eyed"
+  pos: adjective
+  usage: "Чорноокий пишемо разом, бо це основа + сполучна голосна + основа."
+- lemma: темно-зелений
+  translation: "dark green"
+  pos: adjective
+  usage: "Темно-зелений пишемо через дефіс як відтінок кольору."
