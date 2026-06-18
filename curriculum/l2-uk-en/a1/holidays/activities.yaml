@@ -145,6 +145,13 @@ workbook:
           - 'Новий рік'
           - 'Новому році'
         explanation: 'Use the fixed greeting form.'
+      - sentence: 'Добрий день, Олено! З ___! Бажаю здоров''я.'
+        answer: 'Різдвом Христовим'
+        options:
+          - 'Різдвом Христовим'
+          - 'щасливого Різдва'
+          - 'Різдво Христове'
+        explanation: 'Use the Ukrainian greeting chunk after an everyday polite opening.'
       - sentence: "З ___ Христовим! Бажаю здоров'я."
         answer: 'Різдвом'
         options:
@@ -218,6 +225,50 @@ workbook:
       - statement: 'Пасха is the preferred active A1 word in this module.'
         answer: false
         explanation: 'Use Великдень as the active word.'
+  - type: match-up
+    title: Greeting to holiday
+    instruction: Match each holiday with the greeting you can use.
+    pairs:
+      - left: 'Новий рік'
+        right: 'З Новим роком!'
+      - left: 'Різдво Христове'
+        right: 'З Різдвом Христовим!'
+      - left: 'Великдень'
+        right: 'З Великоднем!'
+      - left: 'День Незалежності України'
+        right: 'З Днем Незалежності України!'
+  - type: fill-in
+    title: Winter cycle contrast
+    instruction: Keep the Christmas and Shchedryi Vechir words separate.
+    items:
+      - sentence: 'На Різдво співають ___.'
+        answer: 'колядки'
+        options:
+          - 'колядки'
+          - 'щедрівки'
+          - 'писанки'
+        explanation: 'Колядки belong with Різдво.'
+      - sentence: 'На Щедрий вечір звучать ___.'
+        answer: 'щедрівки'
+        options:
+          - 'щедрівки'
+          - 'колядки'
+          - 'паски'
+        explanation: 'Щедрівки belong with Щедрий вечір.'
+      - sentence: 'На Щедрий вечір діти ___.'
+        answer: 'щедрують'
+        options:
+          - 'щедрують'
+          - 'печуть паски'
+          - 'фарбують яйця'
+        explanation: 'Щедрувати means to perform shchedrivky.'
+      - sentence: 'На Великдень ми ___.'
+        answer: 'печемо паски'
+        options:
+          - 'печемо паски'
+          - 'співаємо колядки'
+          - 'щедруємо'
+        explanation: 'Паски belong with Великдень.'
   - type: error-correction
     title: Repair holiday interference
     instruction: Correct the greeting, pattern, or holiday word.
@@ -242,6 +293,10 @@ workbook:
         error: 'Великдень'
         correction: 'Великоднем'
         explanation: 'Use the fixed greeting З Великоднем.'
+      - sentence: 'Щасливого Різдва!'
+        error: 'Щасливого Різдва'
+        correction: 'З Різдвом Христовим'
+        explanation: 'Use the Ukrainian Christmas greeting chunk taught in this module.'
       - sentence: 'Ми печемо писанки.'
         error: 'печемо писанки'
         correction: 'фарбуємо яйця / робимо писанки'
