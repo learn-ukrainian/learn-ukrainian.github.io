@@ -234,6 +234,68 @@ workbook:
       - statement: 'Що, де, коли should stay in short A1 frames here.'
         answer: true
         explanation: 'Short details are the target.'
+  - type: match-up
+    title: Tool to checkpoint skill
+    instruction: Match each ready phrase to the A1.7 skill it proves.
+    pairs:
+      - left: 'Маріє, принеси листівки.'
+        right: 'calling form plus request'
+      - left: 'Я хочу допомогти, але я зайнятий.'
+        right: 'contrast connector'
+      - left: 'Я знаю, де маркери.'
+        right: 'short place detail'
+      - left: 'Пишемо коротко, бо часу мало.'
+        right: 'reason connector'
+      - left: 'З Різдвом Христовим!'
+        right: 'holiday greeting'
+      - left: 'Друзі, заходьте.'
+        right: 'group address plus command'
+  - type: fill-in
+    title: Holiday table mini-dialogue
+    instruction: Choose the checkpoint word that completes each line.
+    items:
+      - sentence: 'Олено, ___ листівки, будь ласка.'
+        answer: 'принеси'
+        options:
+          - 'принеси'
+          - 'приносити'
+          - 'приносить'
+        explanation: 'Use the command form принеси.'
+      - sentence: 'Тарасе, постав столи, ___ людей багато.'
+        answer: 'бо'
+        options:
+          - 'бо'
+          - 'де'
+          - 'а'
+        explanation: 'Use бо for a reason.'
+      - sentence: 'Я думаю, ___ все готово.'
+        answer: 'що'
+        options:
+          - 'що'
+          - 'коли'
+          - 'але'
+        explanation: 'Use що for a fact.'
+      - sentence: 'Марія пише привітання, ___ Тарас ставить стіл.'
+        answer: 'а'
+        options:
+          - 'а'
+          - 'що'
+          - 'де'
+        explanation: 'Use а to compare two actions.'
+      - sentence: 'Скажіть, ___ ви вільні.'
+        answer: 'коли'
+        options:
+          - 'коли'
+          - 'бо'
+          - 'але'
+        explanation: 'Use коли for time.'
+      - sentence: '___ Новим роком!'
+        answer: 'З'
+        options:
+          - 'З'
+          - 'На'
+          - 'У'
+        explanation: 'Use the fixed greeting З Новим роком.'
   - type: error-correction
     title: Repair the checkpoint
     instruction: Correct the A1.7 communication mistake.
