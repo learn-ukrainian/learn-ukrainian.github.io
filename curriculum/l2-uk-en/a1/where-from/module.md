@@ -1,12 +1,23 @@
 # Звідки?
 
-This lesson completes your first city-place triangle. You already know how to
-say where you are: **Я в Україні**, **я у Києві**, **Олена на роботі**. You
-also know where you are going: **Я їду в Україну**, **я йду в банк**, **Олена
-йде на роботу**. Now you can answer **звідки?**: **Я з України**, **я з
-Києва**, **Олена йде з роботи**.
+<!-- <implementation_map_audit>manifest_obligations=14 covered_in_map=14 missing=[]</implementation_map_audit> -->
+<!-- <bad_form_audit>italic_bad_form_patterns_found=0 converted_to_marker=0 remaining=0</bad_form_audit> -->
+<!-- <activity_split_audit>level=A1 inline_n=4 workbook_n=6 inline_range=[4,6] workbook_range=[6,9] split_valid=true</activity_split_audit> -->
 
-By the end, you can:
+**Де? Куди? Звідки? — where? where to? where from?** The third question
+completes your place map. Compare the three safe chunks:
+
+- **Я в Україні** — I am in Ukraine;
+- **Я їду в Україну** — I am going to Ukraine;
+- **Я з України** — I am from Ukraine.
+
+The same rhythm works with city and daily-life chunks: **я у Києві**, **я йду
+у Київ**, **я з Києва**; **Олена на роботі** — Olena is at work, **Олена йде
+на роботу** — Olena is going to work, **Олена йде з роботи** — Olena is coming
+from work.
+
+**Малі перемоги — small wins.** Keep these five targets in sight while you
+read:
 
 - ask **Звідки ти?**, **Звідки ви?**, and **З якого міста?**;
 - answer with **з/із/зі + родовий відмінок** as learned chunks;
@@ -19,8 +30,8 @@ By the end, you can:
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
-The first dialogue is an international student meeting in Kyiv. Listen for the
-question **звідки?** and the short answer **я з...**
+**Звідки ти? — Я з...** The first dialogue is an international student meeting
+in Kyiv. Listen for that short question and answer.
 
 ```text
 Марко: Добрий день! Мене звати Марко. А тебе?
@@ -32,17 +43,17 @@ question **звідки?** and the short answer **я з...**
 Марко: Так. Я українець і говорю українською.
 ```
 
-Support after the Ukrainian lines:
+**Підказка — quick help.**
 
 | Українська | English support |
 | --- | --- |
-| **Марко: Добрий день! Мене звати Марко. А тебе?** | Marko: Good afternoon! My name is Marko. And you? |
-| **Анна: Мене звати Анна. Дуже приємно.** | Anna: My name is Anna. Nice to meet you. |
-| **Марко: Звідки ти?** | Marko: Where are you from? |
-| **Анна: Я з Канади, із Торонто. А ти?** | Anna: I am from Canada, from Toronto. And you? |
-| **Марко: Я з України, з Києва.** | Marko: I am from Ukraine, from Kyiv. |
-| **Анна: Ти говориш українською?** | Anna: Do you speak Ukrainian? |
-| **Марко: Так. Я українець і говорю українською.** | Marko: Yes. I am Ukrainian and I speak Ukrainian. |
+| Марко: Добрий день! Мене звати Марко. А тебе? | Marko: Good afternoon! My name is Marko. And you? |
+| Анна: Мене звати Анна. Дуже приємно. | Anna: My name is Anna. Nice to meet you. |
+| Марко: Звідки ти? | Marko: Where are you from? |
+| Анна: Я з Канади, із Торонто. А ти? | Anna: I am from Canada, from Toronto. And you? |
+| Марко: Я з України, з Києва. | Marko: I am from Ukraine, from Kyiv. |
+| Анна: Ти говориш українською? | Anna: Do you speak Ukrainian? |
+| Марко: Так. Я українець і говорю українською. | Marko: Yes. I am Ukrainian and I speak Ukrainian. |
 
 **Канонічні фрази ідентифікації.** Keep the first answer short. Ukrainian does
 not need **є** in the present-tense identity line: **Я з України**, not **Я є з
@@ -50,30 +61,35 @@ not need **є** in the present-tense identity line: **Я з України**, no
 the city only after the country: **Я з України, з Києва. Я з Канади, із
 Торонто.**
 
-The second dialogue is about movement away from a place.
+Use **З якого міста?** when you already know the country and want the city:
+**З якого міста ти? — Я з Києва.** For now, answer with one memorized city
+chunk: **з Києва**, **зі Львова**, **з Одеси**, **з Харкова**, **із Торонто**.
+
+**Звідки ти йдеш? — Я йду з...** The second dialogue shows movement away from a
+place.
 
 ```text
 Оксана: Звідки ти йдеш?
 Степан: Я йду з роботи. А ти?
 Оксана: Я йду зі школи, а потім іду додому.
 Степан: А Олена?
-Оксана: Вона йде з магазину. Потім їде в центр.
+Оксана: Вона йде з роботи. Потім іде додому.
 Степан: Добре. До зустрічі!
 ```
 
-Support after the Ukrainian lines:
+**Підказка — quick help.**
 
 | Українська | English support |
 | --- | --- |
-| **Оксана: Звідки ти йдеш?** | Oksana: Where are you coming from? |
-| **Степан: Я йду з роботи. А ти?** | Stepan: I am coming from work. And you? |
-| **Оксана: Я йду зі школи, а потім іду додому.** | Oksana: I am coming from school, and then I am going home. |
-| **Степан: А Олена?** | Stepan: And Olena? |
-| **Оксана: Вона йде з магазину. Потім їде в центр.** | Oksana: She is coming from the shop. Then she is going to the center. |
-| **Степан: Добре. До зустрічі!** | Stepan: Good. See you! |
+| Оксана: Звідки ти йдеш? | Oksana: Where are you coming from? |
+| Степан: Я йду з роботи. А ти? | Stepan: I am coming from work. And you? |
+| Оксана: Я йду зі школи, а потім іду додому. | Oksana: I am coming from school, and then I am going home. |
+| Степан: А Олена? | Stepan: And Olena? |
+| Оксана: Вона йде з роботи. Потім іде додому. | Oksana: She is coming from work. Then she is going home. |
+| Степан: Добре. До зустрічі! | Stepan: Good. See you! |
 
-Use one mental map. **Де?** asks about static location. **Куди?** asks about
-the destination. **Звідки?** asks about the source or origin.
+**Одна мапа — one map.** **Де?** asks about static location. **Куди?** asks
+about the destination. **Звідки?** asks about the source or origin.
 
 | Question | Meaning | Pattern | Example |
 | --- | --- | --- | --- |
@@ -85,33 +101,32 @@ the destination. **Звідки?** asks about the source or origin.
 
 ## Звідки?
 
-**Загальні назви та капіталізація власних назв.** Start with the basic
-geography words **місто**, **країна**, **вулиця**, **село**, and **столиця**.
-They are common nouns and normally begin with a lowercase letter. Specific
-names are different: **Україна**, **Київ**, **Львів**, **Харків**, **Одеса**,
-**Дніпро**, **Канада**, **Польща**, **Японія**. These are proper names, so they
-begin with a capital letter.
+**Слова — words. Назви — names.** Meet five geography words: **місто** — city,
+**країна** — country, **вулиця** — street, **село** — village, and
+**столиця** — capital city. These common nouns normally begin with a lowercase
+letter. Specific names are different: **Україна**, **Київ**, **Львів**,
+**Харків**, **Одеса**, **Дніпро**, **Канада**, **Польща**, **Японія**. These
+are proper names, so they begin with a capital letter.
 
-**Родовий відмінок (Genitive Case).** For A1, learn **з/із/зі + родовий
-відмінок** as practical chunks. The grammar name is **родовий відмінок**, but
-you do not need a full A2 table yet. The visible pattern is simple: typical
-masculine place names often add **-а/-я**, while many feminine country and city
-names use **-и/-і**. You need these forms now:
+**Форма після з/із/зі.** For A1, learn **з/із/зі + родовий відмінок** as
+practical chunks. The grammar name is useful, but you do not need a full A2
+table yet. Do not try to build every form from a rule today. Copy the safe
+chunks, say them aloud, and reuse them in short answers:
 
-| Base name | From-place chunk |
-| --- | --- |
-| Україна | **з України** |
-| Канада | **з Канади** |
-| Польща | **з Польщі** |
-| Німеччина | **з Німеччини** |
-| Англія | **з Англії** |
-| Київ | **з Києва** |
-| Львів | **зі Львова** |
-| Одеса | **з Одеси** |
-| Харків | **з Харкова** |
-| робота | **з роботи** |
-| школа | **зі школи** |
-| магазин | **з магазину** |
+| Base name | Meaning | After з/із/зі |
+| --- | --- | --- |
+| Україна | Ukraine | **з України** |
+| Канада | Canada | **з Канади** |
+| Польща | Poland | **з Польщі** |
+| Німеччина | Germany | **з Німеччини** |
+| Англія | England | **з Англії** |
+| Київ | Kyiv | **з Києва** |
+| Львів | Lviv | **зі Львова** |
+| Одеса | Odesa | **з Одеси** |
+| Харків | Kharkiv | **з Харкова** |
+| робота | work | **з роботи** |
+| школа | school | **зі школи** |
+| магазин | shop | **з магазину** |
 
 **З/із/зі and euphony.** The choice is not random. Use what is easiest to
 pronounce. **З України**, **з Канади**, and **з Одеси** are light. **Із
@@ -119,13 +134,11 @@ pronounce. **З України**, **з Канади**, and **з Одеси** are
 Львова**, and **зі школи** avoid a hard cluster. This connects directly to the
 Ukrainian **милозвучність** you practiced in M28.
 
-**Фонетичні чергування голосних у топонімах.** Some Ukrainian city names change
-inside the stem when the ending is added. Names such as **Київ**, **Львів**,
-**Харків**, and **Тернопіль** end with a closed syllable that learners notice
-quickly. The important A1 forms are **Київ -> Києва** and **Львів ->
-Львова**. The closed syllable with **і** opens and the vowel alternates: **і**
-becomes **є** in **Києва** and **о** in **Львова**. Treat this as a normal
-Ukrainian pattern, not as an exception explained through another language.
+**Київ -> Києва, Львів -> Львова.** Some Ukrainian city names change inside the
+word after **з/із/зі**. You do not need the full historical explanation now.
+Treat these as normal Ukrainian forms and practice the sound: **з Києва**, **зі
+Львова**. Do not explain Ukrainian city names through Russian forms; the course
+uses Ukrainian names and Ukrainian patterns.
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
@@ -133,7 +146,8 @@ Ukrainian pattern, not as an exception explained through another language.
 
 ## Країни і міста
 
-Here is a compact origin set for real introductions:
+**Країна -> з країни -> людина.** Use this table for recognition first. In your
+own speech today, one country and one city are enough.
 
 | Country | From | Person |
 | --- | --- | --- |
@@ -146,12 +160,12 @@ Here is a compact origin set for real introductions:
 | **Японія** | **з Японії** | **японець / японка** |
 | **США** | **зі США** | **американець / американка** |
 
-**Демоніми та ідентичність.** A demonym names a person by place. Use masculine
-and feminine forms as pairs: **українець / українка**, **киянин / киянка**,
-**львів'янин / львів'янка**, **харків'янин / харків'янка**, **одесит /
-одеситка**. Match the form to the person and keep the **чоловічий/жіночий**
-contrast visible: **Він киянин. Вона киянка. Вона львів'янка**, not **вона
-львів'янин**.
+**Людина з міста.** Produce only a few pairs today: **українець / українка** —
+Ukrainian man/woman, **киянин / киянка** — Kyiv man/woman,
+**львів'янин / львів'янка** — Lviv man/woman. The listening set also shows
+**харків'янин / харків'янка** — Kharkiv man/woman and **одесит / одеситка** —
+Odesa man/woman for recognition. Match the form to the person: **Він
+киянин. Вона киянка. Вона львів'янка**, not **вона львів'янин**.
 
 You can now separate current home and origin:
 
@@ -166,16 +180,25 @@ Ask the question first. **Де?** keeps you in the place, **куди?** sends yo
 the place, and **звідки?** brings you from the place.
 :::
 
-**Орієнтація на мапі (напрямки).** For a first map description, keep four
-adjectives: **північний**, **південний**, **західний**, **східний**. Say
-**західна Україна**, **східна Україна**, **південне місто**, **північний
-район**. This is enough to say **Львів — це місто на заході України** and
-**Харків — це місто на сході України** without adding a geography lecture.
+**Мапа: північ, південь, захід, схід.** For a first map description, recognize
+four adjectives: **північний** — northern, **південний** — southern,
+**західний** — western, **східний** — eastern. Say **західна Україна** —
+western Ukraine, **східна Україна** — eastern Ukraine, and **південне місто**
+— a southern city. This is enough to say **Львів — це місто на заході
+України** and **Харків — це місто на сході України** without adding a
+geography lecture.
 
 Keep the toponyms Ukrainian. In English, use **Kyiv**, **Lviv**, **Kharkiv**,
 and **Odesa**. The Russian-imperial spellings **Kiev**, **Lvov**, **Kharkov**,
 and **Odessa** are not course forms. In Ukrainian, use **Київ**, **Львів**,
 **Харків**, **Одеса**, **Дніпро**, and write them with a capital letter.
+
+:::note
+Kyiv and Lviv are Ukrainian European city names, not Russian-style spellings to
+"convert." Use modern Ukrainian address names too: **вулиця Хрещатик**,
+**Соборна площа**, **місто Дніпро**. When you write your own city in
+Ukrainian, choose the Ukrainian spelling, not a Russian transliteration habit.
+:::
 
 <span id="підсумок"></span>
 
