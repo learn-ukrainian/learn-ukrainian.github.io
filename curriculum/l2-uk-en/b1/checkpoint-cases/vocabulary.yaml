@@ -1,0 +1,132 @@
+- lemma: контрольна робота
+  translation: "test, assessment"
+  pos: phrase
+  usage: "Контрольна робота перевіряє весь блок розширених відмінків і прийменників."
+- lemma: повторення
+  translation: "review, revision"
+  pos: noun
+  usage: "Повторення допомагає побачити відмінок як функцію в реченні."
+- lemma: самооцінка
+  translation: "self-assessment"
+  pos: noun
+  usage: "Після контрольної зробіть самооцінку за кожною граматичною зоною."
+- lemma: комплексний
+  translation: "comprehensive, integrated"
+  pos: adjective
+  usage: "Комплексне завдання поєднує відмінки, прийменники, числівники і займенники."
+- lemma: діагностика
+  translation: "diagnostics"
+  pos: noun
+  usage: "Діагностика показує, яку тему треба повторити перед наступним блоком."
+- lemma: рубрика
+  translation: "rubric"
+  pos: noun
+  usage: "Рубрика пояснює, як оцінити офіційний лист орендодавцеві."
+- lemma: аналіз помилок
+  translation: "error analysis"
+  pos: phrase
+  usage: "Аналіз помилок важливіший за випадкове вгадування правильної форми."
+- lemma: прогалина
+  translation: "gap in knowledge"
+  pos: noun
+  usage: "Якщо є прогалина в давальному, повторіть безособові конструкції."
+- lemma: частковий родовий
+  translation: "partitive genitive"
+  pos: phrase
+  usage: "У фразі склянка води працює частковий родовий."
+- lemma: родовий заперечення
+  translation: "genitive of negation"
+  pos: phrase
+  usage: "У реченні немає часу використано родовий заперечення."
+- lemma: давальний суб'єкта стану
+  translation: "dative subject of state"
+  pos: phrase
+  usage: "Мені холодно показує давальний суб'єкта стану."
+- lemma: безособова конструкція
+  translation: "impersonal construction"
+  pos: phrase
+  usage: "Студентам потрібно підготувати презентацію - безособова конструкція з давальним."
+- lemma: орудний характеристики
+  translation: "instrumental of characteristic"
+  pos: phrase
+  usage: "Він працює викладачем - приклад орудного характеристики."
+- lemma: орудний засобу
+  translation: "instrumental of means"
+  pos: phrase
+  usage: "Писати ручкою - простий приклад орудного засобу."
+- lemma: орудний шляху
+  translation: "instrumental of route"
+  pos: phrase
+  usage: "Ми йшли центральною вулицею до університету."
+- lemma: пасивний агент
+  translation: "passive agent"
+  pos: phrase
+  usage: "Звіт підготовлено студентами - студенти є пасивним агентом."
+- lemma: кличний відмінок
+  translation: "vocative case"
+  pos: phrase
+  usage: "Пане професоре, дозвольте поставити запитання."
+- lemma: ім'я по батькові
+  translation: "patronymic"
+  pos: phrase
+  usage: "У формальному звертанні ім'я по батькові теж має кличну форму."
+- lemma: часовий прийменник
+  translation: "temporal preposition"
+  pos: phrase
+  usage: "Через тиждень і протягом місяця - часові прийменникові конструкції."
+- lemma: причиновий прийменник
+  translation: "preposition of cause"
+  pos: phrase
+  usage: "Через ремонт ми перенесли зустріч."
+- lemma: цільова конструкція
+  translation: "purpose construction"
+  pos: phrase
+  usage: "Для консультації треба написати викладачеві."
+- lemma: порядковий числівник
+  translation: "ordinal numeral"
+  pos: phrase
+  usage: "На третьому поверсі є вільна аудиторія."
+- lemma: кількісний вираз
+  translation: "quantitative expression"
+  pos: phrase
+  usage: "П'ять студентів, троє учасників і багато часу - кількісні вирази."
+- lemma: збірний числівник
+  translation: "collective numeral"
+  pos: phrase
+  usage: "Троє студентів підготували спільний виступ."
+- lemma: дріб
+  translation: "fraction"
+  pos: noun
+  usage: "Половина групи підтримала перший варіант."
+- lemma: питально-відносний займенник
+  translation: "interrogative-relative pronoun"
+  pos: phrase
+  usage: "Я знаю, чий це підручник і кому його повернути."
+- lemma: неозначений займенник
+  translation: "indefinite pronoun"
+  pos: phrase
+  usage: "Хтось із мешканців залишив повідомлення орендодавцеві."
+- lemma: заперечний займенник
+  translation: "negative pronoun"
+  pos: phrase
+  usage: "Ні з ким не вдалося домовитися про перегляд квартири."
+- lemma: зворотний займенник
+  translation: "reflexive pronoun"
+  pos: phrase
+  usage: "Студент підготував для себе коротку пам'ятку."
+- lemma: орендодавець
+  translation: "landlord"
+  pos: noun
+  usage: "Орендодавцеві треба написати ввічливого листа."
+- lemma: умови оренди
+  translation: "rental terms"
+  pos: phrase
+  usage: "В умовах оренди зазначено оплату за перший місяць."
+- lemma: комунальні послуги
+  translation: "utilities"
+  pos: phrase
+  usage: "Комунальні послуги оплачують окремо протягом місяця."
+- lemma: університетський семінар
+  translation: "university seminar"
+  pos: phrase
+  usage: "На університетському семінарі студенти презентують українські міста."

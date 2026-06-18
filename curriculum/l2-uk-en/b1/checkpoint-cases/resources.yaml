@@ -1,0 +1,55 @@
+- title: "B1.5: відмінки, прийменники, числівники й займенники"
+  role: curriculum
+  notes: "Контрольна робота повторює сертифіковані модулі B1.5: розширені значення родового, давального й орудного відмінків; офіційний кличний; часові та причиново-цільові прийменники; місця, дати, числівники й займенники в академічному та житловому контекстах."
+- title: "B1 M52: Однорідні члени речення"
+  role: curriculum
+  notes: "Джерело для перевірки узгодженого переліку умов, причин, дат і характеристик у складніших реченнях контрольної."
+  source_ref: curriculum/l2-uk-en/b1/homogeneous-members/module.md
+- title: "B1 M53: Родовий відмінок (деталі)"
+  role: curriculum
+  notes: "Джерело для повторення часткового родового, родового після заперечення, родового в датах і вибору закінчень -а/-я та -у/-ю."
+  source_ref: curriculum/l2-uk-en/b1/genitive-nuances/module.md
+- title: "B1 M54: Давальний відмінок (деталі)"
+  role: curriculum
+  notes: "Джерело для повторення давального суб'єкта стану, віку, адресата та безособових конструкцій на кшталт потрібно, вдалося, довелося."
+  source_ref: curriculum/l2-uk-en/b1/dative-nuances/module.md
+- title: "B1 M55: Освіта і навчання"
+  role: curriculum
+  notes: "Контекстне джерело для університетського семінару, презентації, викладачів, дисциплін, аудиторій і навчального регістру."
+  source_ref: curriculum/l2-uk-en/b1/education-and-university/module.md
+- title: "B1 M56: Орудний відмінок (деталі)"
+  role: curriculum
+  notes: "Джерело для повторення орудного характеристики, професії, засобу, шляху, керування і пасивного агента."
+  source_ref: curriculum/l2-uk-en/b1/instrumental-nuances/module.md
+- title: "B1 M57: Кличний відмінок (офіційний)"
+  role: curriculum
+  notes: "Джерело для формального звертання з іменем по батькові, посадою, титулом і нейтральним діловим тоном."
+  source_ref: curriculum/l2-uk-en/b1/vocative-formal/module.md
+- title: "B1 M58: Часові прийменники"
+  role: curriculum
+  notes: "Джерело для повторення через, за, перед, після, до, під час, протягом, на та пов'язаних відмінкових рамок."
+  source_ref: curriculum/l2-uk-en/b1/prepositions-temporal/module.md
+- title: "B1 M59: Місця і розташування"
+  role: curriculum
+  notes: "Контекстне джерело для опису міста, району, походження, розташування житла і просторових орієнтирів."
+  source_ref: curriculum/l2-uk-en/b1/places-and-locations/module.md
+- title: "B1 M60: Причина і мета"
+  role: curriculum
+  notes: "Джерело для повторення через, завдяки, внаслідок, у зв'язку з, для, заради, заради того щоб і щоб."
+  source_ref: curriculum/l2-uk-en/b1/prepositions-cause-purpose/module.md
+- title: "B1 M61: Порядкові числівники і відмінки"
+  role: curriculum
+  notes: "Джерело для дат, поверхів, порядкових числівників і узгодження з іменниками в різних відмінках."
+  source_ref: curriculum/l2-uk-en/b1/cases-with-ordinal-numerals/module.md
+- title: "B1 M62: Кількісні вирази"
+  role: curriculum
+  notes: "Джерело для кількісних числівників, збірних числівників, дробів і неозначено-кількісних слів."
+  source_ref: curriculum/l2-uk-en/b1/cases-with-quantity-expressions/module.md
+- title: "B1 M63: Займенники (деталі)"
+  role: curriculum
+  notes: "Джерело для питально-відносних, зворотного, неозначених, заперечних і означальних займенників з правильним написанням та відмінюванням."
+  source_ref: curriculum/l2-uk-en/b1/advanced-pronouns/module.md
+- title: "B1 M29: Житло і оренда"
+  role: curriculum
+  notes: "Контекстне джерело для оголошень про житло, орендодавців, умов оренди, комунальних послуг і листа щодо квартири."
+  source_ref: curriculum/l2-uk-en/b1/housing-and-renting/module.md
