@@ -63,7 +63,48 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 55 HANDOFF (2026-06-18 — 📚 DOSSIER LANE WAVE 3: +2 dossiers (загадки, народні танці) verified + batched into this PR. Gap 10 → 8. 9 dossiers shipped this session across 3 PRs.) — **RESUME HERE**
+## ▶▶▶ SESSION 56 HANDOFF (2026-06-18 — 🖼 WIKI LANE OPENED + agy-WIKI VERDICT REVERSED: first folk wiki `charivni-kazky` shipped on `--writer claude` (MIN 9.0/10). agy FAILS wikis too → folk wiki writer = claude, NOT agy.) — **RESUME HERE**
+
+**🟢 ONE-LINE STATE:** First folk WIKI shipped this PR: `wiki/folk/prose/charivni-kazky.md` (2473w,
+claude writer, review MIN **9.0/10** — factual 10 / ukr_perspective 9 / register 9 / source_grounding 9;
+driver-eyeballed: scholarly, [S1–S18] cited, Кощій local-vs-import decolonization nuance). Dossier gap 8
+(wave-6 `istorychni-perekazy`+`narodna-kukhnia` in flight). Wiki gap 26 → 25; 8 dossier-ready wikis left.
+
+### ⚠️⚠️ WRITER VERDICT — REVERSAL (S56, evidence-backed): **agy FAILS structured generation (dossiers AND
+wikis)** — it emits plan-narration ("I will… Wait!…") instead of the artifact. agy wiki = 1375w narration,
+MIN **1.0/10** (3 dims REJECT). claude wiki = real 2473w, MIN **9.0**. The earlier S53 "keep agy default /
+Gemini-family always for wiki" line was WRONG (it leaned on register-discipline wiring + an UNVERIFIED
+"5 wikis shipped on agy" claim; the real agy weakness is content depth + grounding, which no gate fixes).
+**FOLK/SEMINAR WIKI WRITER = `claude`** (compile.py help text was right all along). `gpt-5.5` is an
+untested-but-promising cheaper alternative (aced all 9 dossiers) — **USER DECISION PENDING: default folk
+wikis to claude (proven, ~11min/wiki metered) or A/B gpt-5.5 first?** Do NOT use `--writer agy` for folk.
+
+### 📐 WIKI LANE RECIPE (proven this session):
+1. Run `compile.py --track folk --slug <X> --writer claude --review` **in the MAIN working tree** — NOT a
+   worktree (`sources_db.py` resolves `data/` via `Path(__file__).parents[2]`; worktrees sparse-exclude `data/`).
+   ⚠️ main tree may hold the OTHER orchestrator's WIP — touch only your wiki files.
+2. Compile is SLOW: ~324s claude write + 4 claude reviewers (source_grounding slowest ~490s). Budget ≥900s.
+   Gate = MIN of 4 dims ≥8.
+3. Copy `wiki/folk/<cat>/<slug>.md` + `.sources.yaml` → a `claude/folk-wikis-waveN` branch worktree.
+   **Do NOT include `index.md`** (recent folk-wiki PRs don't; index regenerated separately — needs a batch
+   `--update-index` follow-up). Then `git checkout HEAD -- wiki/index.md` + `rm -rf` untracked wiki dirs in
+   main to clean your footprint (leave other-orchestrator WIP).
+4. Commit article+sidecar+handoff → PR → CI-green → self-merge.
+   8 dossier-ready wiki slugs left: kazky-pro-tvaryn, kolomyiky, narodni-balady, pisni-literaturnoho-pokhodzhennia,
+   rodynno-pobutovi-pisni, sotsialno-pobutovi-kazky, striletski-povstanski-pisni, suspilno-pobutovi-pisni.
+
+### 🎯 REMAINING DOSSIER GAP (8): istorychni-perekazy + narodna-kukhnia in flight (wave 6) → then
+narodna-kultura-ta-vysoka-kultura-mistky, narodne-zhytlo-sadyba-hospodarstvo, narodni-anekdoty,
+narodni-opovidannia-buvalshchyny-memoraty, narodni-remesla-ta-khudozhni-promysly, rehionalni-etnokulturni-tradytsii.
+
+### ⚠️ INFRA carried (#0.2): `search_images` SigLIP deferred for l2-uk-en; `render_canonical_formulas_block`
+unwired in wiki writer prompt; `index.md` needs batch regen after wiki batch; stale index entry for phantom
+`folk/genres/charivni-kazky.md` (drops on regen). Help-string reconciliation now INVERTED (help text correct;
+the "Gemini-family always" policy is the stale part) — HOLD for user nod.
+
+### IN-FLIGHT: wave-6 dossiers (istorychni-perekazy, narodna-kukhnia). Merge grant LIVE; worktree-only; never main.
+
+## ▶▶▶ SESSION 55 HANDOFF (2026-06-18 — 📚 DOSSIER LANE WAVE 3: +2 dossiers (загадки, народні танці) verified + batched into PR #3542 (MERGED). Gap 10 → 8. 9 dossiers shipped across 3 PRs.)
 
 **🟢 ONE-LINE STATE:** Folk dossier gap **10 → 8**. This batch PR (wave 3) adds `zahadky`, `narodni-tantsi`
 — both 10-section, wordcount PASS; zahadky 5 confirmed riddle exemplars (incl. «Поле не міряне, вівці не

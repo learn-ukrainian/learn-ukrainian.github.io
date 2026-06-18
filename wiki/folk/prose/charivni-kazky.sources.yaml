@@ -1,0 +1,80 @@
+# Source registry for wiki/folk/prose/charivni-kazky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 3-klas-ukrainska-mova-savchuk-2020-2_s1733
+  type: textbook
+  title: А кріт до білчиного гнізда навіть не добрався. Пошкріб
+  page: 80
+  grade: 3
+- id: S2
+  file: 4-klas-ukrayinska-mova-savchenko-2021-2_s1853
+  type: textbook
+  title: ВІДКРИВАЄМО СВІТ ЛІТЕРАТУРНИХ ВІДКРИВАЄМО СВІТ ЛІТЕРАТУРНИХ
+  page: 108
+  grade: 4
+- id: S3
+  file: wave7-krypyakevych-istkult_c0283
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S4
+  file: wave4-hrushevsky-istlit_c0457
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S7
+  file: wikipedia/Казка
+  type: wikipedia
+  title: Казка
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%B0%D0%B7%D0%BA%D0%B0
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c3053
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c3054
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c3055
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S11
+  file: wave12-hrushevsky-iu-odnotom_c0467
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S12
+  file: wave12-hrushevsky-iu-odnotom_c0485
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S13
+  file: wave12-hrushevsky-iu-odnotom_c0553
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S14
+  file: wave7-entsyklopediia-ukrainoznavstva_c0638
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S15
+  file: wave7-entsyklopediia-ukrainoznavstva_c0639
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S17
+  file: wave8-ukr-lit-entsyklopediia_c3056
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S18
+  file: wave12-hrushevsky-iu-odnotom_c0475
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
