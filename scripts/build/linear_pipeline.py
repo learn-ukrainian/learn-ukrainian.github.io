@@ -10173,9 +10173,12 @@ def _vesum_gate(
     2. **Intentional misspellings in `error-correction` activities** —
        `error:`, `errorWord:`, and `error_word:` fields contain the typo the
        student must fix (e.g. `прокидаєштся`). Verifying them would always fail.
-    3. **Wrong multiple-choice options** — `options: [{text, correct}]` values
-       with `correct: false` are author-labeled distractors. They may include
-       intentionally non-standard forms that test overgeneralization.
+    3. **Intentional-error multiple-choice options** — `options: [{text, correct, intentional_error}]`
+       values with `intentional_error: true` are deliberately incorrect/nonstandard forms
+       (e.g. overgeneralized morphology like "п'юся") used as distractors to test common
+       learner errors. They are excluded from VESUM verification (the opt-out). Regular
+       distractors (`correct: false` without `intentional_error`) are real Ukrainian words
+       placed in pedagogically wrong context and must be verified.
     4. **Sentence-initial capitalization** — VESUM is case-sensitive, so
        `Спочатку` (capitalized first word) returns no matches even though
        `спочатку` does. Lookup is performed in lowercase; the report keeps
@@ -11250,15 +11253,12 @@ def _activity_vesum_text(
     future nested shape like `error: { text: "...", note: "..." }` would be
     entirely excluded.
 
-    For multiple-choice-style `options: [{text, correct}]` lists, `text` on
-    options with falsy `correct` is an intentional wrong answer. Skip only that
-    option's text leaf so correct options and surrounding prompts are still
-    verified.
+    For multiple-choice-style `options: [{text, correct}]` lists, verify distractors
+    by default. Only skip the `text` leaf of options explicitly marked with
+    `intentional_error: true`.
 
     For fill-in activities, bare-list `options:` values are suffix fragments,
-    not VESUM lemmas. For quiz-like item dicts with `options:` plus `answer:`,
-    only the option equal to the answer is verified; sibling distractors can be
-    fabricated wrong forms.
+    not VESUM lemmas, and are unconditionally skipped.
 
     For true-false activities, false statements are intentional wrong claims
     and may contain fabricated Ukrainian forms. Only true statements are
@@ -11282,30 +11282,6 @@ def _activity_vesum_text(
         skip_subtree.update(_HIGHLIGHT_MORPHEMES_ANSWER_KEY_FIELDS)
 
     out: list[str] = []
-
-    def answer_values(*answers: Any) -> set[str]:
-        values: set[str] = set()
-        for answer in answers:
-            if isinstance(answer, str):
-                values.add(answer)
-            elif isinstance(answer, list):
-                values.update(item for item in answer if isinstance(item, str))
-        return values
-
-    def walk_answer_options(options: Any, answers: set[str]) -> None:
-        if not answers:
-            return
-        if isinstance(options, list):
-            for option in options:
-                if isinstance(option, str):
-                    if option in answers:
-                        walk(option, "options")
-                elif isinstance(option, dict):
-                    text = option.get("text")
-                    if isinstance(text, str) and text in answers:
-                        walk(option, "options", in_options_list=True)
-        elif isinstance(options, str) and options in answers:
-            walk(options, "options")
 
     def walk_truefalse_statement(
         statement: Any,
@@ -11338,11 +11314,10 @@ def _activity_vesum_text(
         item_idx: int | None = None,
     ) -> None:
         if isinstance(node, dict):
-            wrong_option = (
+            intentional_error_option = (
                 in_options_list
                 and isinstance(node.get("text"), str)
-                and "correct" in node
-                and not node.get("correct", False)
+                and node.get("intentional_error") is True
             )
             for key, child in node.items():
                 if key in skip_subtree:
@@ -11361,12 +11336,6 @@ def _activity_vesum_text(
                     # is always a suffix fragment.  Skip unconditionally.
                     # See #1967.
                     continue
-                if key == "options" and ("answer" in node or "correctAnswer" in node):
-                    walk_answer_options(
-                        child,
-                        answer_values(node.get("answer"), node.get("correctAnswer")),
-                    )
-                    continue
                 if activity_type == "true-false" and key == "statement":
                     walk_truefalse_statement(
                         child,
@@ -11374,7 +11343,7 @@ def _activity_vesum_text(
                         item_idx=item_idx,
                     )
                     continue
-                if wrong_option and key == "text":
+                if intentional_error_option and key == "text":
                     continue
                 walk(child, key, item_idx=item_idx)
         elif isinstance(node, list):
