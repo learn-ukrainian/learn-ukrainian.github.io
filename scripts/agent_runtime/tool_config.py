@@ -156,20 +156,22 @@ def _codex_server_is_usable(server_config: Any) -> bool:
         return False
     server_type = str(server_config.get("type") or "").strip().lower()
     url = str(server_config.get("url") or "").strip()
+    command = str(server_config.get("command") or "").strip()
     if server_type == "sse":
         return False
     if url.rstrip("/").endswith("/sse"):
         return False
-    return bool(url)
+    return bool(url or command)
 
 
 def _agy_server_is_usable(server_config: Any) -> bool:
-    """Return true for Antigravity streamable-HTTP MCP server entries."""
+    """Return true for Antigravity streamable-HTTP or stdio MCP server entries."""
     if not isinstance(server_config, dict):
         return False
     http_url = str(server_config.get("httpUrl") or "").strip()
     url = str(server_config.get("url") or "").strip()
-    return bool(http_url or url)
+    command = str(server_config.get("command") or "").strip()
+    return bool(http_url or url or command)
 
 
 def _agy_mcp_servers(

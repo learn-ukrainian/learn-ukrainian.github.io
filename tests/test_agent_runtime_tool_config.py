@@ -153,6 +153,74 @@ def test_codex_sanitize_server_config_preserves_codex_fields() -> None:
     }
 
 
+def test_build_mcp_tool_config_codex_accepts_stdio_server(
+    tmp_path: Path,
+) -> None:
+    """Stdio MCP servers such as Headroom must not be dropped."""
+    config_path = tmp_path / ".mcp.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "headroom": {
+                        "type": "stdio",
+                        "command": "headroom",
+                        "args": ["mcp", "serve"],
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    tool_config, diagnostics = build_mcp_tool_config(
+        "codex",
+        mcp_servers=["headroom"],
+        mcp_config_path=config_path,
+    )
+
+    assert tool_config == {
+        "mcp_servers": {
+            "headroom": {
+                "command": "headroom",
+                "args": ["mcp", "serve"],
+            }
+        }
+    }
+    assert diagnostics["resolution_status"] == "ok"
+    assert diagnostics["resolved_servers"] == ["headroom"]
+
+
+def test_build_mcp_tool_config_codex_rejects_stale_sse_stdio_type(
+    tmp_path: Path,
+) -> None:
+    config_path = tmp_path / ".mcp.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "legacy": {
+                        "type": "sse",
+                        "command": "legacy-mcp",
+                        "args": [],
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    tool_config, diagnostics = build_mcp_tool_config(
+        "codex",
+        mcp_servers=["legacy"],
+        mcp_config_path=config_path,
+    )
+
+    assert tool_config is None
+    assert diagnostics["resolution_status"] == "servers_not_found"
+    assert diagnostics["missing_server_names"] == ["legacy"]
+
+
 def test_build_mcp_tool_config_codex_without_mcp_servers_key_returns_none(
     tmp_path: Path,
 ) -> None:

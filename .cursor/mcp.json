@@ -1,5 +1,12 @@
 {
   "mcpServers": {
+    "headroom": {
+      "command": "headroom",
+      "args": [
+        "mcp",
+        "serve"
+      ]
+    },
     "sources": {
       "url": "http://127.0.0.1:8766/mcp"
     }

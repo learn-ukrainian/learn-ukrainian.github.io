@@ -102,9 +102,13 @@ check_pair \
     ".agent" \
     "wake" \
     "cache" \
+    "prompts" \
+    "tmp" \
     "*-thread-bootstrap.md" \
     "*-thread-handoff.md" \
-    "*-thread-lease.json" || drift=1
+    "*-thread-lease.json" \
+    "*-brief.md" \
+    "dispatch-*.md" || drift=1
 check_pair \
     "agents_extensions/shared" \
     ".codex" \
@@ -115,7 +119,7 @@ check_pair \
     "memory" || drift=1
 check_overlay "agents_extensions/codex" ".codex" || drift=1
 check_pair "agents_extensions/shared/skills" ".agents/skills" || drift=1
-check_pair "gemini_extensions" ".gemini" "config.yaml" "docs/" "rules/" || drift=1
+check_pair "gemini_extensions" ".gemini" "config.yaml" "docs/" "rules/" "tmp/" || drift=1
 check_pair "agents_extensions/shared/rules" ".gemini/rules" || drift=1
 
 exit "$drift"

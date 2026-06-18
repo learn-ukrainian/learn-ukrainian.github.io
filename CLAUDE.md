@@ -14,7 +14,7 @@
 
 > **Status**: `curriculum/l2-uk-en/{level}/status/{slug}.json` | Update: `.venv/bin/python scripts/audit_module.py {path}`
 
-> **Cross-session Memory**: Built-in auto-memory at `~/.claude/projects/.../memory/MEMORY.md`. Inter-agent comms via `scripts/ai_agent_bridge/__main__.py` (not MCP).
+> **Cross-session Memory**: Built-in auto-memory at `~/.claude/projects/.../memory/MEMORY.md`. Inter-agent comms via `scripts/ai_agent_bridge/__main__.py`; Headroom is also available as the `headroom` MCP server for compressed handoffs, retrieval, stats, and shared proxy memory.
 
 > **Default subagent**: Always use `subagent_type: "curriculum-orchestrator"` when spawning agents for curriculum orchestration work.
 
@@ -69,6 +69,19 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 ## Inter-Agent Communication
 
 **Gemini and Codex are your colleagues.** Claude = architect/reviewer, Gemini = content builder, Codex = Green Team adversarial reviewer and bug hunter. Full protocol: [`agent-cooperation.md`](docs/best-practices/agent-cooperation.md)
+
+### Headroom
+
+Headroom runs locally at `http://127.0.0.1:8787`; MCP is exposed at
+the `headroom` stdio server via `headroom mcp serve`. Use
+`headroom_compress` before sharing logs, search results, tool outputs, or
+handoffs over roughly 200 lines / 20 KB; pass the hash plus a short summary,
+and retrieve the original only when needed. Check health with
+`curl -s http://127.0.0.1:8787/health`; start it with
+`headroom install start --profile default` if it is down. Do not run
+`headroom learn --apply` unless explicitly requested because it rewrites agent
+instruction files. Do not treat Headroom memory as factual authority for
+curriculum content.
 
 ---
 

@@ -74,6 +74,18 @@ All `mcp_rag_*` tools now query SQLite FTS5, not Qdrant. Same tool names, same i
 - `query_cefr_level` — PULS CEFR vocabulary
 - `search_definitions` / `search_grinchenko_1907` / `search_idioms` / `search_synonyms`
 
+### Headroom MCP (shared compression and memory)
+
+Headroom is available as the `headroom` MCP server via `headroom mcp serve`.
+Use `headroom_compress` before sharing logs, search results, tool outputs, or
+handoffs over roughly 200 lines / 20 KB; pass the hash plus a short summary,
+and retrieve the original only when needed. The local proxy also has shared
+memory enabled. If it is down, start it with
+`headroom install start --profile default`; verify with
+`curl -s http://127.0.0.1:8787/health`. Do not run `headroom learn --apply`
+unless explicitly requested. Do not treat Headroom memory as factual authority
+for curriculum content.
+
 ### Build Pipeline (v6)
 ```
 CHECK → RESEARCH (wiki→packet) → PRE-VERIFY (VESUM/pravopys/style) → SKELETON → WRITE → EXERCISES → ACTIVITIES → VERIFY → REVIEW → ANNOTATE → PUBLISH

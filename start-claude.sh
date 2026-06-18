@@ -126,5 +126,12 @@ export LEARN_UKRAINIAN_TELEMETRY_FOOTER="${LEARN_UKRAINIAN_TELEMETRY_FOOTER:-1}"
 # `npx @anthropic-ai/claude-code@latest`, but that route broke 2026-06-12 — the
 # npx-cached binary exits 194. The native install at ~/.local/bin/claude auto-updates
 # via `claude update`, so npx is no longer needed to stay current.)
+# Keep Headroom routing healthy when the local proxy is configured. The helper
+# is sourced because it may clear dead proxy environment variables before launch.
+if [ -f "$PROJECT_DIR/scripts/ensure_headroom.sh" ]; then
+    # shellcheck source=scripts/ensure_headroom.sh
+    source "$PROJECT_DIR/scripts/ensure_headroom.sh"
+fi
+
 echo "Launching Claude Code (native install)..."
 exec "$CLAUDE_BIN" --chrome --permission-mode bypassPermissions "$@"

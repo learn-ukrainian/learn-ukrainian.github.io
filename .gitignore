@@ -98,6 +98,10 @@ docs/bolshakova_*.png
 gha-creds-*.json
 .pytest_cache/
 
+# uv lockfiles are local scratch in this repo; dependencies are managed through
+# pyproject.toml plus the project venv.
+/uv.lock
+
 # ULP mapping intermediate files (build artifacts)
 docs/resources/ukrainianlessons/resource_module_scores.json
 docs/resources/ukrainianlessons/resource_module_scores_v*.json

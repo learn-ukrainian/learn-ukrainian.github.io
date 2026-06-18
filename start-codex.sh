@@ -149,6 +149,24 @@ if [ "$CODEX_TARGET" = "worktree" ]; then
     TARGET_DIR="$WORKTREE_DIR"
 fi
 
+# Deploy shared agent extensions into ignored runtime dirs for the checkout
+# Codex will actually use. This keeps .codex/.agents generated while
+# agents_extensions/ remains the tracked source of truth.
+if command -v npm >/dev/null 2>&1 \
+    && [ -f "$TARGET_DIR/package.json" ] \
+    && grep -q '"agents:deploy"' "$TARGET_DIR/package.json" 2>/dev/null; then
+    echo "Checking agent extensions..."
+    (cd "$TARGET_DIR" && npm run agents:deploy --silent >/dev/null 2>&1) || true
+    echo "Agent extensions deployed"
+fi
+
+# Keep Headroom routing healthy when the local proxy is configured. The helper
+# is sourced because it may clear dead proxy environment variables before launch.
+if [ -f "$TARGET_DIR/scripts/ensure_headroom.sh" ]; then
+    # shellcheck source=scripts/ensure_headroom.sh
+    source "$TARGET_DIR/scripts/ensure_headroom.sh"
+fi
+
 echo ""
 echo "LEARN UKRAINIAN - Ukrainian Language Learning"
 echo ""
