@@ -1,0 +1,92 @@
+- lemma: найвищий ступінь
+  translation: "superlative degree"
+  pos: phrase
+  usage: "Найвищий ступінь називає найбільшу або найменшу міру ознаки в групі."
+- lemma: ступені порівняння
+  translation: "degrees of comparison"
+  pos: phrase
+  usage: "Ступені порівняння мають лише якісні прикметники."
+- lemma: префікс
+  translation: "prefix"
+  pos: noun
+  usage: "Префікс най- додається до форми вищого ступеня."
+- lemma: най-
+  translation: "most, superlative prefix"
+  pos: prefix
+  usage: "Най- пишеться разом із прикметником: найкращий."
+- lemma: проста форма
+  translation: "simple, synthetic form"
+  pos: phrase
+  usage: "Проста форма найвищого ступеня має префікс най-."
+- lemma: складена форма
+  translation: "compound, analytic form"
+  pos: phrase
+  usage: "Складена форма має слова найбільш або найменш."
+- lemma: найбільш
+  translation: "most"
+  pos: adverb
+  usage: "Найбільш переконливий аргумент прозвучав наприкінці."
+- lemma: найменш
+  translation: "least"
+  pos: adverb
+  usage: "Найменш ризикований план підходить для першої спроби."
+- lemma: найкращий
+  translation: "best"
+  pos: adjective
+  usage: "Це найкращий варіант для групи."
+- lemma: найгірший
+  translation: "worst"
+  pos: adjective
+  usage: "Найгірший результат усе одно дав корисний досвід."
+- lemma: найдорожчий
+  translation: "most expensive"
+  pos: adjective
+  usage: "Найдорожчий квиток не завжди найзручніший."
+- lemma: найвищий
+  translation: "highest, tallest"
+  pos: adjective
+  usage: "Говерла - найвища гора України."
+- lemma: щонайкращий
+  translation: "the very best"
+  pos: adjective
+  usage: "Команда шукала щонайкращий спосіб пояснити правило."
+- lemma: якнайшвидший
+  translation: "as fast as possible"
+  pos: adjective
+  usage: "Нам потрібен якнайшвидший, але безпечний маршрут."
+- lemma: підсилений
+  translation: "intensified"
+  pos: adjective
+  usage: "Підсилена форма додає емоційний або прагматичний акцент."
+- lemma: синонімічний
+  translation: "synonymic"
+  pos: adjective
+  usage: "Синонімічний засіб може замінити формальний найвищий ступінь."
+- lemma: стилістичний
+  translation: "stylistic"
+  pos: adjective
+  usage: "Стилістичний вибір залежить від жанру тексту."
+- lemma: вельми
+  translation: "very, exceedingly"
+  pos: adverb
+  usage: "Це вельми точне формулювання для офіційного звіту."
+- lemma: вкрай
+  translation: "extremely"
+  pos: adverb
+  usage: "Це вкрай важливе застереження."
+- lemma: надзвичайно
+  translation: "extraordinarily"
+  pos: adverb
+  usage: "Виступ був надзвичайно переконливим."
+- lemma: прегарний
+  translation: "very beautiful"
+  pos: adjective
+  usage: "Прегарний краєвид звучить емоційніше, ніж просто найгарніший."
+- lemma: білісінький
+  translation: "absolutely white"
+  pos: adjective
+  usage: "Білісінький сніг - образний синонімічний засіб."
+- lemma: занадто
+  translation: "too, excessively"
+  pos: adverb
+  usage: "Занадто складний текст потребує редагування."
