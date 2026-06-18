@@ -6,7 +6,7 @@ CI, security, and deploy automation for the learn-ukrainian curriculum.
 
 | Workflow | Purpose | Trigger | Notes |
 |----------|---------|---------|-------|
-| `ci.yml` | Lint (ruff), Quality Gates (radon), Lint Prompts, root-script guard, MDX source parity, lesson-schema drift, **Test (pytest)**, Frontend (build + vitest), Secret Scanning (trufflehog) | PR / push to main | `Test (pytest)` is the only **required** status check. Required path is hermetic — no network model downloads (Stanza/HF tests are `slow` and excluded; see `docs/bug-autopsies/stanza-model-md5-flake.md`). pytest gates on **Python** paths only; `site/**` gates the frontend job, so content/MDX PRs skip pytest. |
+| `ci.yml` | Lint (ruff), Quality Gates (radon), Lint Prompts, Agent Config, root-script guard, MDX source parity, lesson-schema drift, **Test (pytest)**, Frontend (build + vitest), Secret Scanning (trufflehog) | PR / push to main | `Test (pytest)` is the only **required** status check. Required path is hermetic — no network model downloads (Stanza/HF tests are `slow` and excluded; see `docs/bug-autopsies/stanza-model-md5-flake.md`). pytest gates on **Python/test/runtime** paths only; agent/MCP/prompt config uses the lightweight Agent Config lane, and `site/**` gates the frontend job. |
 | `content-ci.yml` | Advisory content gates (bio dossier Section-7 xref, dossier word-count) | PR | Non-blocking; unfiltered `pull_request` so it never wedges as "expected". |
 | `security-audit.yml` | Advisory dependency-vuln report (`pip-audit` + `npm audit`) | PR / weekly | Report-only; visibility layer over the dependabot backlog. Does not block. |
 | `zizmor.yml` | Static security analysis of all workflow YAML | PR / push / weekly | SARIF → Security tab. Runs `--offline`. |

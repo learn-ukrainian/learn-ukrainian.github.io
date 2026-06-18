@@ -11,14 +11,22 @@ on:
       - 'requirements*.txt'
       - 'requirements.lock'
       - 'scripts/**/*.py'
+      - 'scripts/check_rules_deployment.sh'
+      - 'scripts/deploy_prompts.sh'
+      - 'scripts/ensure_headroom.sh'
+      - 'start-claude.sh'
+      - 'start-codex.sh'
       - 'tests/**/*.py'
       - 'pyproject.toml'
-      # Widened from per-subdir globs (phases, skills) to the whole tree so
-      # changes to hooks, statusline, rules, commands, etc. also trigger CI
-      # and satisfy the required `Test (pytest)` branch-protection check.
-      # Prior recurrence: #1544 widened for scripts/build/phases/**/*.md,
-      # #1546 widened for agents_extensions/shared/** after statusline PR blocked.
+      - 'package.json'
+      - 'package-lock.json'
+      - '.mcp.json'
+      - '.cursor/mcp.json'
+      - 'AGENTS.md'
+      - 'CLAUDE.md'
+      - 'GEMINI.md'
       - 'agents_extensions/shared/**'
+      - 'agents_extensions/codex/**'
       - 'gemini_extensions/**'
       - 'scripts/build/phases/**/*.md'
       - 'scripts/build/contracts/**/*.md'
@@ -40,15 +48,20 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      # code = python OR frontend changed (union). Used by the broad secret scan.
+      # code = any high-signal source/config change. Used by the broad secret scan.
       code: ${{ steps.filter.outputs.code }}
-      # python = Python/test paths only. Gates pytest + ruff/radon/prompt/root/schema.
+      # python = Python/test paths only. Gates pytest + ruff/radon/root guards.
       # Deliberately EXCLUDES site/** so content/MDX PRs do NOT run pytest.
       python: ${{ steps.filter.outputs.python }}
       # frontend = generated site inputs/outputs. Gates the build/vitest job plus
       # MDX source/drift checks, so curriculum source edits cannot leave stale
       # committed MDX.
       frontend: ${{ steps.filter.outputs.frontend }}
+      # agent_config = agent/MCP/prompt deployment config. Gates lightweight
+      # JSON/shell/deploy checks without forcing the full pytest suite.
+      agent_config: ${{ steps.filter.outputs.agent_config }}
+      # lesson_schema = schema contract inputs. Gates only the schema drift job.
+      lesson_schema: ${{ steps.filter.outputs.lesson_schema }}
       # atlas = inputs that can stale the committed DB-enriched Word Atlas
       # manifest but are available on CI.
       atlas: ${{ steps.filter.outputs.atlas }}
@@ -67,8 +80,21 @@ jobs:
               - 'requirements.lock'
               - 'pyproject.toml'
               - 'scripts/**/*.py'
+              - 'scripts/check_rules_deployment.sh'
+              - 'scripts/deploy_prompts.sh'
+              - 'scripts/ensure_headroom.sh'
+              - 'start-claude.sh'
+              - 'start-codex.sh'
               - 'tests/**/*.py'
+              - 'package.json'
+              - 'package-lock.json'
+              - '.mcp.json'
+              - '.cursor/mcp.json'
+              - 'AGENTS.md'
+              - 'CLAUDE.md'
+              - 'GEMINI.md'
               - 'agents_extensions/shared/**'
+              - 'agents_extensions/codex/**'
               - 'gemini_extensions/**'
               - 'scripts/build/phases/**/*.md'
               - 'scripts/build/contracts/**/*.md'
@@ -83,16 +109,36 @@ jobs:
               - 'pyproject.toml'
               - 'scripts/**/*.py'
               - 'tests/**/*.py'
-              - 'agents_extensions/shared/**'
-              - 'gemini_extensions/**'
-              - 'scripts/build/phases/**/*.md'
-              - 'scripts/build/contracts/**/*.md'
-              - 'docs/lesson-contract.md'
-              - 'docs/lesson-schema.yaml'
             frontend:
               - '.github/workflows/ci.yml'
               - 'site/**'
               - 'curriculum/l2-uk-en/**'
+            agent_config:
+              - '.github/workflows/ci.yml'
+              - '.mcp.json'
+              - '.cursor/mcp.json'
+              - 'AGENTS.md'
+              - 'CLAUDE.md'
+              - 'GEMINI.md'
+              - 'package.json'
+              - 'package-lock.json'
+              - 'start-claude.sh'
+              - 'start-codex.sh'
+              - 'scripts/check_rules_deployment.sh'
+              - 'scripts/deploy_prompts.sh'
+              - 'scripts/ensure_headroom.sh'
+              - 'scripts/lint/**/*.py'
+              - 'scripts/lint_prompts.py'
+              - 'agents_extensions/shared/**'
+              - 'agents_extensions/codex/**'
+              - 'gemini_extensions/**'
+              - 'scripts/build/phases/**/*.md'
+            lesson_schema:
+              - '.github/workflows/ci.yml'
+              - 'docs/lesson-contract.md'
+              - 'docs/lesson-schema.yaml'
+              - 'scripts/build/contracts/**/*.md'
+              - 'scripts/build/generate_lesson_schema.py'
             atlas:
               - '.github/workflows/ci.yml'
               - 'scripts/lexicon/*.py'
@@ -241,7 +287,7 @@ jobs:
     name: Lint Prompts
     runs-on: ubuntu-latest
     needs: changes
-    if: needs.changes.outputs.python == 'true'
+    if: needs.changes.outputs.python == 'true' || needs.changes.outputs.agent_config == 'true'
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
@@ -253,6 +299,63 @@ jobs:
 
       - name: Lint prompt templates
         run: python scripts/lint/lint_prompts.py
+
+  agent-config:
+    name: Agent Config
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.agent_config == 'true'
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6 — SHA-pinned per supply-chain hardening 2026-05-19
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Validate agent JSON config
+        run: |
+          jq empty \
+            .mcp.json \
+            .cursor/mcp.json \
+            agents_extensions/shared/settings.json
+          if [[ -f agents_extensions/shared/settings.local.json ]]; then
+            jq empty agents_extensions/shared/settings.local.json
+          fi
+
+      - name: Validate agent shell entrypoints
+        run: |
+          bash -n \
+            start-claude.sh \
+            start-codex.sh \
+            scripts/ensure_headroom.sh \
+            scripts/deploy_prompts.sh \
+            scripts/check_rules_deployment.sh
+
+      - name: Create local test venv
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install pytest pyyaml
+
+      - name: Verify agent extension deployment
+        run: |
+          npm run agents:deploy --silent
+          bash scripts/check_rules_deployment.sh
+
+      - name: Run focused agent config tests
+        run: |
+          .venv/bin/python -m pytest \
+            tests/test_deploy_script_idempotency.py \
+            tests/test_agent_runtime_tool_config.py \
+            -v --tb=short
 
   scripts-root-guard:
     name: No new root scripts
@@ -373,7 +476,7 @@ jobs:
       contents: read
       actions: write
     needs: changes
-    if: needs.changes.outputs.python == 'true'
+    if: needs.changes.outputs.lesson_schema == 'true'
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
