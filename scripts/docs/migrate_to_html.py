@@ -14,7 +14,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 try:
-    from jinja2 import Template
+    from jinja2 import Environment, select_autoescape
     from markdown_it import MarkdownIt
 except ImportError:
     print("Error: markdown-it-py and Jinja2 are required.")
@@ -214,7 +214,8 @@ def migrate(input_path: Path, output_path: Path, *, force: bool = False) -> bool
     md = MarkdownIt()
     content_html = md.render(md_text)
 
-    template = Template(HTML_TEMPLATE)
+    env = Environment(autoescape=select_autoescape(['html', 'xml']))
+    template = env.from_string(HTML_TEMPLATE)
     final_html = template.render(
         title=title,
         metadata=metadata,

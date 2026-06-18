@@ -1,6 +1,7 @@
 import json
 import sqlite3
 import typing
+from urllib.parse import urlparse
 
 import pytest
 
@@ -1799,14 +1800,14 @@ def test_wiki_reference_success(monkeypatch, tmp_path) -> None:
     assert ref["wikipedia"]["title"] == "Україна"
     assert ref["wikipedia"]["summary"] == "Україна — держава в Східній Європі."
     assert ref["wikipedia"]["url"] == "https://uk.wikipedia.org/wiki/Україна"
-    assert "uk.wiktionary.org" in ref["wiktionary_url"]
+    assert urlparse(ref["wiktionary_url"]).netloc == "uk.wiktionary.org"
     assert ref["wikisource_url"] is None
 
     # test with literary attestation
     ref_with_lit = enrich_manifest_module._wiki_reference("Україна", {"text": "some excerpt"})
     assert ref_with_lit is not None
     assert ref_with_lit["wikisource_url"] is not None
-    assert "uk.wikisource.org" in ref_with_lit["wikisource_url"]
+    assert urlparse(ref_with_lit["wikisource_url"]).netloc == "uk.wikisource.org"
 
 
 def test_proper_noun_wikipedia_meaning_uses_one_line_cached_gloss(monkeypatch, tmp_path) -> None:
