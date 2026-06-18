@@ -1,7 +1,11 @@
 # Що буде?
 
-Now move from **учора** to **завтра**. The A1 future pattern for this step is
-only:
+<!-- plan_coverage_audit objectives=4 content_sections=4 dialogue_situations=1 activity_hints=3 covered=true missing=[] -->
+<!-- bad_form_audit bad_form_patterns_found=8 marked_with_bad_tags=8 remaining_unmarked=0 -->
+<!-- activity_split_audit level=A1 inline_n=4 workbook_n=6 inline_range=[4,6] workbook_range=[6,9] split_valid=true -->
+
+Привіт! Now move from **учора** to **завтра**. The A1 future pattern for this
+step is only:
 
 **буду / будеш / буде / будемо / будете / будуть + infinitive**
 
@@ -94,6 +98,40 @@ This dialogue adds planning words:
 - **план** - plan;
 - **звучить добре** - sounds good.
 
+### Ворожка на кухні
+
+This is a playful village-kitchen scene, not a new grammar system. Listen for
+one future pattern: **будеш + infinitive**.
+
+```text
+Ворожка: Ти будеш багато подорожувати.
+Клієнт: Справді?
+Ворожка: Так. Будеш зустрічати цікавих людей.
+Клієнт: А я буду отримувати подарунки?
+Ворожка: Так, будеш отримувати подарунки.
+Клієнт: А я буду щасливий?
+Ворожка: Будеш щасливий. А якщо ти жінка: будеш щаслива.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Ворожка: Ти будеш багато подорожувати.** | Fortune teller: You will travel a lot. |
+| **Клієнт: Справді?** | Client: Really? |
+| **Ворожка: Так. Будеш зустрічати цікавих людей.** | Fortune teller: Yes. You will meet interesting people. |
+| **Клієнт: А я буду отримувати подарунки?** | Client: And will I receive gifts? |
+| **Ворожка: Так, будеш отримувати подарунки.** | Fortune teller: Yes, you will receive gifts. |
+| **Клієнт: А я буду щасливий?** | Client: And will I be happy? |
+| **Ворожка: Будеш щасливий. А якщо ти жінка: будеш щаслива.** | Fortune teller: You will be happy. For a female client: you will be happy. |
+
+:::note[Recognition first]
+For your own A1 answers, keep the useful pattern: **я буду працювати**,
+**ти будеш відпочивати**, **ми будемо гуляти**. In the fortune-teller scene,
+recognize **подорожувати**, **зустрічати**, and **отримувати** as infinitives
+after **будеш**.
+:::
+
 <!-- INJECT_ACTIVITY: act-2 -->
 
 ## Майбутній час
@@ -115,6 +153,12 @@ Use the table as a map:
 | **ми** | **ми будемо робити** | we will do |
 | **ви** | **ви будете робити** | you will do |
 | **вони** | **вони будуть робити** | they will do |
+
+:::note[A1 boundary]
+Ukrainian also has simple future forms such as **прочитаю**. Leave them for
+later. Today your active pattern is **буду / будеш / буде / будемо / будете /
+будуть + infinitive**.
+:::
 
 Keep the infinitive unchanged after the future form:
 
@@ -223,10 +267,10 @@ Repair it by returning the second verb to the infinitive:
 
 | Learner sentence | Better A1 sentence |
 | --- | --- |
-| <del>**Я буду читаю завтра.**</del> | **Я буду читати завтра.** |
-| <del>**Ти будеш робиш ввечері?**</del> | **Ти будеш робити ввечері?** |
-| <del>**Ми будемо дивимося футбол.**</del> | **Ми будемо дивитися футбол.** |
-| <del>**Вони будуть працюють.**</del> | **Вони будуть працювати.** |
+| <bad>**Я буду читаю завтра.**</bad> | **Я буду читати завтра.** |
+| <bad>**Ти будеш робиш ввечері?**</bad> | **Ти будеш робити ввечері?** |
+| <bad>**Ми будемо дивимося футбол.**</bad> | **Ми будемо дивитися футбол.** |
+| <bad>**Вони будуть працюють.**</bad> | **Вони будуть працювати.** |
 
 The repair is always the same: after **буду / будеш / буде / будемо / будете /
 будуть**, use an infinitive.
@@ -235,10 +279,10 @@ Another trap is choosing the wrong future form of **бути**:
 
 | Person | Repair |
 | --- | --- |
-| <del>**я буде робити**</del> | **я буду робити** |
-| <del>**ти буду робити**</del> | **ти будеш робити** |
-| <del>**ми буде робити**</del> | **ми будемо робити** |
-| <del>**вони будемо робити**</del> | **вони будуть робити** |
+| <bad>**я буде робити**</bad> | **я буду робити** |
+| <bad>**ти буду робити**</bad> | **ти будеш робити** |
+| <bad>**ми буде робити**</bad> | **ми будемо робити** |
+| <bad>**вони будемо робити**</bad> | **вони будуть робити** |
 
 ## Підсумок
 
@@ -267,5 +311,6 @@ Self-check:
 2. Can you keep the second verb unchanged: **буду читати**, **будемо робити**?
 3. Can you make a plan with a time word: **Завтра я буду працювати**?
 
-Stop with the compound future. The next module uses this same pattern for
-plans and invitations with days and times.
+You can now ask **Що ти будеш робити завтра?** and answer with one clear
+future sentence. Stop with the compound future for now. The next module uses
+this same pattern for plans and invitations with days and times.
