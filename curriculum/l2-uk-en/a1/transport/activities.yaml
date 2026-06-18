@@ -1,25 +1,81 @@
 inline:
   - id: act-1
-    type: match-up
-    title: Transport to situation
-    instruction: Match each situation with the natural transport word.
-    pairs:
-      - left: 'airport to hotel, faster but expensive'
-        right: 'таксі'
-      - left: 'city route number seven'
-        right: 'автобус'
-      - left: 'underground city travel'
-        right: 'метро'
-      - left: 'rail trip to Lviv'
-        right: 'потяг'
-      - left: 'city rails on the street'
-        right: 'трамвай'
-      - left: 'electric city bus with wires'
-        right: 'тролейбус'
-      - left: 'flight to another country'
-        right: 'літак'
-      - left: 'small route minibus'
-        right: 'маршрутка'
+    type: quiz
+    title: Який транспорт?
+    instruction: Choose the natural transport word for each situation.
+    items:
+      - prompt: 'From the airport to the hotel, faster but expensive.'
+        options:
+          - text: 'таксі'
+            correct: true
+          - text: 'трамвай'
+            correct: false
+          - text: 'колія'
+            correct: false
+        explanation: 'Таксі is the faster, more expensive option in the dialogue.'
+      - prompt: 'City route number seven.'
+        options:
+          - text: 'автобус'
+            correct: true
+          - text: 'літак'
+            correct: false
+          - text: 'вокзал'
+            correct: false
+        explanation: 'Автобус номер сім is a city bus route.'
+      - prompt: 'Underground city travel.'
+        options:
+          - text: 'метро'
+            correct: true
+          - text: 'маршрутка'
+            correct: false
+          - text: 'потяг'
+            correct: false
+        explanation: 'Метро is the underground city system.'
+      - prompt: 'Rail trip to Lviv.'
+        options:
+          - text: 'потяг'
+            correct: true
+          - text: 'таксі'
+            correct: false
+          - text: 'зупинка'
+            correct: false
+        explanation: 'A trip to Lviv by rail uses потяг.'
+      - prompt: 'City rails on the street.'
+        options:
+          - text: 'трамвай'
+            correct: true
+          - text: 'літак'
+            correct: false
+          - text: 'квиток'
+            correct: false
+        explanation: 'Трамвай runs on rails in the city.'
+      - prompt: 'Electric city bus with overhead wires.'
+        options:
+          - text: 'тролейбус'
+            correct: true
+          - text: 'метро'
+            correct: false
+          - text: 'потяг'
+            correct: false
+        explanation: 'Тролейбус is the electric city bus with wires.'
+      - prompt: 'Flight to another country.'
+        options:
+          - text: 'літак'
+            correct: true
+          - text: 'автобус'
+            correct: false
+          - text: 'станція'
+            correct: false
+        explanation: 'Літак is the transport for a flight.'
+      - prompt: 'Small route minibus.'
+        options:
+          - text: 'маршрутка'
+            correct: true
+          - text: 'колія'
+            correct: false
+          - text: 'таксі'
+            correct: false
+        explanation: 'Маршрутка is a small route minibus.'
   - id: act-2
     type: fill-in
     title: Ticket window
@@ -46,7 +102,7 @@ inline:
           - 'там'
           - 'тут'
         explanation: 'Туди й назад means there and back.'
-      - sentence: "Потяг відбуває ___ дев'ятій."
+      - sentence: "Відправлення ___ дев'ятій."
         answer: 'о'
         options:
           - 'о'
@@ -60,6 +116,13 @@ inline:
           - 'три'
           - 'третє'
         explanation: 'Колія is feminine: третя.'
+      - sentence: 'О котрій ___?'
+        answer: 'відправлення'
+        options:
+          - 'відправлення'
+          - 'зупинка'
+          - 'станція'
+        explanation: 'О котрій відправлення? asks the departure time.'
   - id: act-3
     type: quiz
     title: Автобусом чи на метро?
@@ -101,34 +164,71 @@ inline:
           - text: 'до потяга'
             correct: false
         explanation: 'Use potiahom: потягом.'
+      - prompt: 'How do you say by tram?'
+        options:
+          - text: 'трамваєм'
+            correct: true
+          - text: 'на трамваю'
+            correct: false
+          - text: 'за трамваєм'
+            correct: false
+        explanation: 'Use the means form трамваєм.'
+      - prompt: 'How do you say by trolleybus?'
+        options:
+          - text: 'тролейбусом'
+            correct: true
+          - text: 'у тролейбусу'
+            correct: false
+          - text: 'до тролейбуса'
+            correct: false
+        explanation: 'Use the means form тролейбусом.'
   - id: act-4
-    type: group-sort
-    title: Passenger shelves
-    instruction: Sort the words and phrases by role.
-    groups:
-      - name: 'Vehicles'
-        items:
-          - 'автобус'
-          - 'метро'
-          - 'таксі'
-          - 'трамвай'
-      - name: 'Passenger words'
-        items:
-          - 'квиток'
-          - 'зупинка'
+    type: fill-in
+    title: Ask the route
+    instruction: Complete each short route question or answer.
+    items:
+      - sentence: 'Як дістатися до ___?'
+        answer: 'вокзалу'
+        options:
+          - 'вокзалу'
           - 'вокзал'
-          - 'пасажир'
-      - name: 'Direction words'
-        items:
+          - 'вокзалі'
+        explanation: 'The route chunk is до вокзалу.'
+      - sentence: 'Як дістатися до ___?'
+        answer: 'центру'
+        options:
+          - 'центру'
+          - 'центр'
+          - 'центрі'
+        explanation: 'The route chunk is до центру.'
+      - sentence: 'Ідіть ___.'
+        answer: 'прямо'
+        options:
           - 'прямо'
+          - 'зупинка'
+          - 'квиток'
+        explanation: 'Ідіть прямо means go straight.'
+      - sentence: 'Поверніть ___.'
+        answer: 'направо'
+        options:
           - 'направо'
+          - 'квиток'
+          - 'метро'
+        explanation: 'Поверніть направо means turn right.'
+      - sentence: 'Поверніть ___.'
+        answer: 'наліво'
+        options:
           - 'наліво'
-          - 'до центру'
-      - name: 'Public phrases'
-        items:
-          - 'Обережно, двері зачиняються!'
-          - 'Сплачуйте за проїзд.'
-          - 'Поступайтесь місцем старшому.'
+          - 'пасажир'
+          - 'колія'
+        explanation: 'Поверніть наліво means turn left.'
+      - sentence: 'Мені ___ тут?'
+        answer: 'виходити'
+        options:
+          - 'виходити'
+          - 'квиток'
+          - 'коштує'
+        explanation: 'Мені виходити тут? asks if this is your stop.'
 workbook:
   - type: order
     title: Airport to hotel route
@@ -155,12 +255,12 @@ workbook:
       - statement: 'Зупинка is the lesson word for stop.'
         answer: true
         explanation: 'Use зупинка.'
-      - statement: 'Потяг рушає is a natural transport sentence.'
+      - statement: 'Один квиток до Львова, будь ласка is a natural ticket line.'
         answer: true
-        explanation: 'Рушає works for a vehicle starting to move.'
-      - statement: 'Я в автобусі means I am inside the bus.'
+        explanation: 'This is the ticket-window chunk from the dialogue.'
+      - statement: 'Я в автобусі answers де?'
         answer: true
-        explanation: 'That is static location.'
+        explanation: 'It means I am inside the bus.'
   - type: odd-one-out
     title: Find the odd transport chunk
     instruction: Choose the phrase that does not fit the pattern.
@@ -187,12 +287,12 @@ workbook:
         answer: 'в таксію'
         explanation: 'Таксі does not change.'
       - words:
-          - 'потяг рушає'
-          - 'автобус відбуває'
-          - 'ми вирушаємо'
+          - 'Як дістатися до вокзалу?'
+          - 'Де зупинка?'
+          - 'Ідіть прямо.'
           - 'брати автобус'
         answer: 'брати автобус'
-        explanation: 'Say їхати автобусом or сідати в автобус.'
+        explanation: 'Use їхати автобусом or сідати в автобус.'
   - type: error-correction
     title: Repair transport interference
     instruction: Choose the natural Ukrainian transport sentence.
@@ -205,22 +305,6 @@ workbook:
           - 'Брати автобус'
           - 'Їхати за автобусом'
         explanation: 'Ukrainian uses the transport as means or says to get into it.'
-      - sentence: 'Автобус відправляється'
-        error: 'відправляється'
-        correction: 'Автобус відбуває / Автобус рушає'
-        options:
-          - 'Автобус відбуває / Автобус рушає'
-          - 'Автобус відправляється'
-          - 'Автобус бере дорогу'
-        explanation: 'For a vehicle, use відбуває or рушає.'
-      - sentence: 'Ми відправляємося в дорогу'
-        error: 'відправляємося'
-        correction: 'Ми вирушаємо в дорогу'
-        options:
-          - 'Ми вирушаємо в дорогу'
-          - 'Ми відправляємося в дорогу'
-          - 'Ми рушає автобусом'
-        explanation: 'For people starting a trip, use вирушаємо.'
       - sentence: 'Їхати за автобусом (Travel by bus)'
         error: 'за автобусом'
         correction: 'Їхати автобусом'
@@ -237,11 +321,19 @@ workbook:
           - 'В таксію / на метрі'
           - 'У таксієм / на метрою'
         explanation: 'Таксі and метро do not change.'
-      - sentence: 'Я приїхав на вокзалі'
-        error: 'на вокзалі'
-        correction: 'Я приїхав на вокзал'
+      - sentence: 'Де остановка?'
+        error: 'остановка'
+        correction: 'Де зупинка?'
         options:
-          - 'Я приїхав на вокзал'
-          - 'Я приїхав на вокзалі'
-          - 'Я в вокзал приїхав'
-        explanation: 'Приїхав answers куди?, so use на вокзал.'
+          - 'Де зупинка?'
+          - 'Де остановка?'
+          - 'Куди зупинка?'
+        explanation: 'Use зупинка for a stop.'
+      - sentence: 'Один білет, будь ласка.'
+        error: 'білет'
+        correction: 'Один квиток, будь ласка.'
+        options:
+          - 'Один квиток, будь ласка.'
+          - 'Один білет, будь ласка.'
+          - 'Одна зупинка, будь ласка.'
+        explanation: 'Use квиток for this lesson.'

@@ -17,7 +17,7 @@
 - word: потяг
   translation: train
   pos: noun
-  example: "Потяг рушає о дев'ятій."
+  example: "Потяг до Львова."
 - word: трамвай
   translation: tram
   pos: noun
@@ -34,14 +34,10 @@
   translation: plane
   pos: noun
   example: "Ми летимо літаком."
-- word: корабель
-  translation: ship
-  pos: noun
-  example: "Вони пливуть кораблем."
 - word: машина
   translation: car
   pos: noun
-  example: "Тато їде машиною."
+  example: "Вона їде на машині."
 - word: квиток
   translation: ticket
   pos: noun
@@ -54,18 +50,22 @@
   translation: station
   pos: noun
   example: "Я їду на вокзал."
+- word: станція
+  translation: station
+  pos: noun
+  example: "Станція метро близько."
+- word: колія
+  translation: track; platform track
+  pos: noun
+  example: "Колія третя."
 - word: пасажир
   translation: passenger
   pos: noun
   example: "Пасажир купує квиток."
-- word: водій
-  translation: driver
+- word: касир
+  translation: cashier; ticket clerk
   pos: noun
-  example: "Водій каже: Добрий день."
-- word: двері
-  translation: doors
-  pos: noun
-  example: "Обережно, двері зачиняються!"
+  example: "Касир продає квиток."
 - word: їхати
   translation: to go by transport
   pos: verb
@@ -74,42 +74,22 @@
   translation: to fly
   pos: verb
   example: "Ми летимо літаком."
-- word: пливти
-  translation: to go by water; to swim
-  pos: verb
-  example: "Вони пливуть кораблем."
-- word: рушати
-  translation: to set off; to start moving
-  pos: verb
-  example: "Потяг рушає."
-- word: відбувати
-  translation: to depart
-  pos: verb
-  example: "Автобус відбуває з Києва."
-- word: вирушати
-  translation: to set out
-  pos: verb
-  example: "Ми вирушаємо в дорогу."
-- word: приїхати
-  translation: to arrive by transport
-  pos: verb
-  example: "Я приїхав на вокзал."
 - word: дістатися
   translation: to get to
   pos: verb
   example: "Як дістатися до вокзалу?"
-- word: розраховуватися
-  translation: to pay; to settle up
+- word: коштувати
+  translation: to cost
   pos: verb
-  example: "Розраховуйтесь, будь ласка, за проїзд."
-- word: поступатися
-  translation: to give up; to yield
-  pos: verb
-  example: "Поступайтесь місцем старшому."
-- word: проїзд
-  translation: fare; passage
+  example: "Скільки коштує квиток?"
+- word: відправлення
+  translation: departure
   pos: noun
-  example: "Сплачуйте за проїзд."
+  example: "О котрій відправлення?"
+- word: виходити
+  translation: to get off; to exit
+  pos: verb
+  example: "Мені виходити тут?"
 - word: прямо
   translation: straight ahead
   pos: adverb

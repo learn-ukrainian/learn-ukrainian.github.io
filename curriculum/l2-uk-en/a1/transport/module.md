@@ -12,14 +12,13 @@ By the end, you can:
   **на метро**, **на таксі**;
 - ask **Як дістатися до...?**, **Де зупинка?**, and **Скільки коштує квиток?**;
 - use transport with direction: **їду на вокзал**, **їду до Львова**;
-- avoid transport calques such as **брати автобус** for "take a bus."
+- keep the A1 passenger chunks **квиток**, **зупинка**, **прямо**, **направо**,
+  and **наліво** ready for short real exchanges.
 
 ## Діалоги
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
-The first dialogue begins at the airport. You need a hotel route, so the useful
-question is **Як дістатися до готелю?**
+The first dialogue begins at Boryspil airport. You need a hotel route, so the
+useful question is **Як дістатися до готелю?**
 
 ```text
 Приїжджий: Добрий день! Як дістатися до готелю?
@@ -45,6 +44,8 @@ This is the basic passenger pattern: **їхати автобусом**, **їха
 **їхати трамваєм**, but **їхати на метро** and **їхати на таксі**. Learn the
 transport word together with its travel model.
 
+<!-- INJECT_ACTIVITY: act-1 -->
+
 The second dialogue is at a station.
 
 ```text
@@ -52,7 +53,7 @@ The second dialogue is at a station.
 Касир: В один бік чи туди й назад?
 Пасажир: Туди й назад. Скільки коштує?
 Касир: П'ятсот гривень.
-Пасажир: О котрій відбуває потяг?
+Пасажир: О котрій відправлення?
 Касир: О дев'ятій ранку. Колія третя.
 ```
 
@@ -64,7 +65,7 @@ Support after the Ukrainian lines:
 | **Касир: В один бік чи туди й назад?** | Cashier: One way or there and back? |
 | **Пасажир: Туди й назад. Скільки коштує?** | Passenger: There and back. How much does it cost? |
 | **Касир: П'ятсот гривень.** | Cashier: Five hundred hryvnias. |
-| **Пасажир: О котрій відбуває потяг?** | Passenger: At what time does the train depart? |
+| **Пасажир: О котрій відправлення?** | Passenger: What time is the departure? |
 | **Касир: О дев'ятій ранку. Колія третя.** | Cashier: At nine in the morning. Track three. |
 
 :::tip
@@ -81,7 +82,7 @@ from zero.
 nominative: **Це автобус. Це синьо-жовтий автобус. Там їде трамвай. Це метро.
 Це таксі.** The core list is short: **автобус**, **трамвай**,
 **тролейбус**, **метро**, **таксі**, **потяг**, **літак**, **маршрутка**.
-The main verb is **їхати**: **Я їду. Тато їде машиною. Ми їдемо до центру.**
+The main verb is **їхати**: **Я їду. Тато їде автобусом. Ми їдемо до центру.**
 
 **Орудний відмінок засобу пересування.** To say "by bus" in Ukrainian, do not
 add a separate word for "by." Use the transport form itself:
@@ -93,20 +94,18 @@ add a separate word for "by." Use the transport form itself:
 | трамвай | **їхати трамваєм** |
 | тролейбус | **їхати тролейбусом** |
 | літак | **летіти літаком** |
-| корабель | **пливти кораблем** |
 
-The two early exceptions are **на метро** and **на таксі**. These words do not
-change: **Я їду на метро. Ми їдемо на таксі.** Keep them as fixed chunks.
+The two early fixed chunks are **на метро** and **на таксі**. These words do not
+change: **Я їду на метро. Ми їдемо на таксі.** You can also say **на машині**
+for travel by car. Keep these as whole chunks.
 You may see **на поїзді** or **на автобусі** in longer real-life texts, but
 this A1 module keeps one reliable standard for the means of travel:
-**поїздом**, **потягом**, **автобусом**, **трамваєм**. If your sentence means
+**потягом**, **автобусом**, **трамваєм**. If your sentence means
 "the vehicle I use," choose the no-preposition means form. If your sentence
 means "inside the vehicle," wait for the **де?** pattern in the next section.
 This separation keeps **чим їхати?** different from **де сидіти?**
 
 <!-- INJECT_ACTIVITY: act-3 -->
-
-<!-- INJECT_ACTIVITY: act-4 -->
 
 ## Корисні фрази
 
@@ -122,7 +121,7 @@ uses **у/в** with the local place form. Keep the questions separate:
 **Чим їдеш? Автобусом. Де ти? В автобусі. Куди їдеш? На вокзал.**
 
 **Лексика інфраструктури.** A passenger needs more than vehicle names. Learn
-**квиток**, **зупинка**, **вокзал**, **пасажир**, **водій**, and **двері**.
+**квиток**, **зупинка**, **вокзал**, **станція**, **колія**, and **пасажир**.
 Useful questions:
 
 | Need | Phrase |
@@ -133,29 +132,18 @@ Useful questions:
 | identify a stop | **Яка це зупинка?** |
 | buy a ticket | **Один квиток до Львова, будь ласка.** |
 | ask price | **Скільки коштує квиток?** |
+| ask departure time | **О котрій відправлення?** |
 
-You will also hear short public-transport phrases. **Обережно, двері
-зачиняються!** means the doors are closing. **Сплачуйте за проїзд** or
-**Розраховуйтесь, будь ласка, за проїзд** tells passengers to pay the fare.
-**Поступайтесь місцем старшому** is a polite public-space norm.
-
-**Дієслова початку мандрівки.** Use precise Ukrainian motion verbs early.
-For a vehicle, **автобус відбуває** or **потяг рушає**. For people,
-**ми вирушаємо в дорогу** or **вони вирушають у подорож**. The prefix
-**при-** shows arrival or approach in words such as **приїхати** and
-**примандрувати**; do not confuse it with intensifying **пре-** as in
-**пречудово**. At A1, you only need the practical forms:
-**потяг рушає**, **автобус відбуває**, **я приїхав на вокзал**.
-For the wiki grammar memory, keep the contrast visible: **при-: «приїхати»,
-«примандрувати»** points toward arrival or approach, while **пре-:
-«пречудово»** intensifies an adjective or adverb. The useful motion trio is
-**рушати, вирушати, відбувати**. A train or bus **рушає** or **відбуває**; a
-person or group **вирушає**. This gives you natural A1 lines without a lecture:
-**Потяг рушає. Автобус відбуває. Ми вирушаємо в дорогу.**
+Directions stay very small in this module. Use **Ідіть прямо** for "go
+straight", **поверніть направо** for "turn right", and **поверніть наліво**
+for "turn left." A full A1 route can be just one line:
+**Ідіть прямо, а потім поверніть направо.**
 
 Keep the transport vocabulary clean. Use **зупинка**, not "остановка". Use
 **квиток**, not "білет", for this lesson. Start a polite transport exchange
 with **Добрий день**, not "Здрастуйте".
+
+<!-- INJECT_ACTIVITY: act-4 -->
 
 <span id="підсумок"></span>
 
@@ -167,7 +155,7 @@ Transport Ukrainian is a set of practical chunks:
 | --- | --- |
 | vehicle name | **автобус**, **метро**, **таксі**, **потяг**, **трамвай** |
 | means of travel | **автобусом**, **потягом**, **трамваєм**, **літаком** |
-| fixed transport chunks | **на метро**, **на таксі** |
+| fixed transport chunks | **на метро**, **на таксі**, **на машині** |
 | location inside | **в автобусі**, **у трамваї**, **у метро**, **у таксі** |
 | route question | **Як дістатися до...?** |
 | ticket line | **Один квиток до Львова, будь ласка.** |
@@ -177,11 +165,10 @@ Common repairs:
 | Learner line | Better line |
 | --- | --- |
 | Брати автобус. | **Їхати автобусом. / Сідати в автобус.** |
-| Автобус відправляється. | **Автобус відбуває. / Автобус рушає.** |
-| Ми відправляємося в дорогу. | **Ми вирушаємо в дорогу.** |
 | Їхати за автобусом. | **Їхати автобусом.** |
 | В таксію / на метрі. | **У таксі / на метро.** |
-| Я приїхав на вокзалі. | **Я приїхав на вокзал.** |
+| Де остановка? | **Де зупинка?** |
+| Один білет, будь ласка. | **Один квиток, будь ласка.** |
 
 Self-check:
 
@@ -189,7 +176,7 @@ Self-check:
 2. Say how you travel to work: **Я їду автобусом / на метро / на таксі.**
 3. Ask for a route: **Як дістатися до вокзалу?**
 4. Buy a ticket: **Один квиток до Львова, будь ласка.**
-5. Say your arrival: **Я приїхав на вокзал.**
+5. Give one direction: **Ідіть прямо / поверніть направо / поверніть наліво.**
 
 Final mini-dialogue:
 
@@ -197,7 +184,7 @@ Final mini-dialogue:
 метро. Де зупинка? Зупинка ось там. Дякую. До побачення!**
 
 Now expand the same dialogue once: **Один квиток до центру, будь ласка. Мені
-виходити тут? Ні, наступна зупинка. Обережно, двері зачиняються!** Then swap
-one transport word: **автобусом**, **потягом**, **трамваєм**, **на метро**,
-**на таксі**. If the travel model stays stable while the vehicle changes, this
-module has done its job.
+виходити тут? Ні, наступна зупинка. О котрій відправлення?** Then swap one
+transport word: **автобусом**, **потягом**, **трамваєм**, **на метро**,
+**на таксі**, **на машині**. If the travel model stays stable while the vehicle
+changes, this module has done its job.
