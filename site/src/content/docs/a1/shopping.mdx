@@ -92,10 +92,6 @@ case lesson.
 
 ## Діалоги
 
-### Price questions
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Скільки ___ хліб?", "answer": "коштує", "options": ["коштує", "коштують", "коштувати"]}, {"sentence": "Скільки ___ молоко?", "answer": "коштує", "options": ["коштує", "коштують", "коштувала"]}, {"sentence": "Скільки ___ цей сир?", "answer": "коштує", "options": ["коштує", "коштують", "коштуєте"]}, {"sentence": "Скільки ___ яблука?", "answer": "коштують", "options": ["коштують", "коштує", "коштувати"]}, {"sentence": "Скільки ___ помідори?", "answer": "коштують", "options": ["коштують", "коштує", "коштуєш"]}, {"sentence": "Скільки ___ пляшка води?", "answer": "коштує", "options": ["коштує", "коштують", "коштуємо"]}, {"sentence": "Скільки ___ три пляшки води?", "answer": "коштують", "options": ["коштують", "коштує", "коштувала"]}, {"sentence": "Скільки ___ ця сукня?", "answer": "коштує", "options": ["коштує", "коштують", "коштуємо"]}]`)} instruction={"Choose the word that completes each shopping question."} isUkrainian={false} />
-
 ### На ринку
 
 ```text
@@ -114,19 +110,28 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Покупець: Добрий день!** | Customer: Good afternoon! |
-| **Продавчиня: Добрий день!** | Saleswoman: Good afternoon! |
-| **Покупець: Скільки коштує кілограм яблук?** | Customer: How much is a kilogram of apples? |
-| **Продавчиня: Сорок гривень.** | Saleswoman: Forty hryvnias. |
-| **Покупець: А помідори?** | Customer: And tomatoes? |
-| **Продавчиня: Тридцять п'ять гривень за кілограм.** | Saleswoman: Thirty-five hryvnias per kilogram. |
-| **Покупець: Дайте, будь ласка, два кілограми помідорів і один кілограм яблук.** | Customer: Please give me two kilograms of tomatoes and one kilogram of apples. |
-| **Продавчиня: Сімдесят п'ять гривень.** | Saleswoman: Seventy-five hryvnias. |
-| **Покупець: Ось, будь ласка.** | Customer: Here you are. |
+| Покупець: Добрий день! | Customer: Good afternoon! |
+| Продавчиня: Добрий день! | Seller: Good afternoon! |
+| Покупець: Скільки коштує кілограм яблук? | Customer: How much is a kilogram of apples? |
+| Продавчиня: Сорок гривень. | Seller: Forty hryvnias. |
+| Покупець: А помідори? | Customer: And tomatoes? |
+| Продавчиня: Тридцять п'ять гривень за кілограм. | Seller: Thirty-five hryvnias per kilogram. |
+| Покупець: Дайте, будь ласка, два кілограми помідорів і один кілограм яблук. | Customer: Please give me two kilograms of tomatoes and one kilogram of apples. |
+| Продавчиня: Сімдесят п'ять гривень. | Seller: Seventy-five hryvnias. |
+| Покупець: Ось, будь ласка. | Customer: Here you are. |
 
 This is the basic market frame. You do not need to explain every ending in
-**два кілограми помідорів**. The learner needs the whole buying phrase. The
+**два кілограми помідорів**. You need the whole buying phrase. The
 same is true for **Дайте, будь ласка, два кілограми помідорів**.
+
+:::tip
+First useful shopping line: **Скільки коштує?** If you forget the item, start
+with that question and point politely.
+:::
+
+### Price questions
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Скільки ___ хліб?", "answer": "коштує", "options": ["коштує", "коштують", "коштувати"]}, {"sentence": "Скільки ___ молоко?", "answer": "коштує", "options": ["коштує", "коштують", "коштувала"]}, {"sentence": "Скільки ___ цей сир?", "answer": "коштує", "options": ["коштує", "коштують", "коштуєте"]}, {"sentence": "Скільки ___ яблука?", "answer": "коштують", "options": ["коштують", "коштує", "коштувати"]}, {"sentence": "Скільки ___ помідори?", "answer": "коштують", "options": ["коштують", "коштує", "коштуєш"]}, {"sentence": "Скільки ___ пляшка води?", "answer": "коштує", "options": ["коштує", "коштують", "коштуємо"]}, {"sentence": "Скільки ___ три пляшки води?", "answer": "коштують", "options": ["коштують", "коштує", "коштувала"]}, {"sentence": "Скільки ___ ця сукня?", "answer": "коштує", "options": ["коштує", "коштують", "коштуємо"]}]`)} instruction={"Choose the word that completes each shopping question."} isUkrainian={false} />
 
 ### У супермаркеті
 
@@ -145,18 +150,18 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Дочка: Вибачте, де тут хліб?** | Daughter: Excuse me, where is the bread here? |
-| **Працівниця: Хліб у третьому ряді.** | Employee: Bread is in the third aisle. |
-| **Дочка: А молоко?** | Daughter: And milk? |
-| **Працівниця: Молоко в холодильнику, там.** | Employee: Milk is in the refrigerator, over there. |
-| **Дочка: Скільки коштує цей сир?** | Daughter: How much is this cheese? |
-| **Працівниця: Сто двадцять гривень.** | Employee: One hundred twenty hryvnias. |
-| **Дочка: Дорого! А є дешевший?** | Daughter: Expensive! Is there a cheaper one? |
-| **Працівниця: Так, ось цей - вісімдесят дев'ять гривень.** | Employee: Yes, this one is eighty-nine hryvnias. |
+| Дочка: Вибачте, де тут хліб? | Daughter: Excuse me, where is the bread here? |
+| Працівниця: Хліб у третьому ряді. | Employee: Bread is in the third aisle. |
+| Дочка: А молоко? | Daughter: And milk? |
+| Працівниця: Молоко в холодильнику, там. | Employee: Milk is in the refrigerator, over there. |
+| Дочка: Скільки коштує цей сир? | Daughter: How much is this cheese? |
+| Працівниця: Сто двадцять гривень. | Employee: One hundred twenty hryvnias. |
+| Дочка: Дорого! А є дешевший? | Daughter: Expensive! Is there a cheaper one? |
+| Працівниця: Так, ось цей - вісімдесят дев'ять гривень. | Employee: Yes, this one is eighty-nine hryvnias. |
 
 Use **У вас є хліб?** or **Чи є у вас хліб?** when you ask about availability.
-The old textbook example is **— Чи є у вас трембіта? — Так, є**. Use the same
-availability frame with everyday goods.
+Keep it practical with everyday goods: **У вас є молоко?**,
+**У вас є яблука?**, **У вас є хліб?**
 
 ### На касі
 
@@ -173,21 +178,17 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Касирка: Ось ваші яблука, молоко і сир.** | Cashier: Here are your apples, milk, and cheese. |
-| **Касирка: З вас сто сім гривень.** | Cashier: That is one hundred seven hryvnias from you. |
-| **Покупець: Можна карткою?** | Customer: Can I pay by card? |
-| **Касирка: Так.** | Cashier: Yes. |
-| **Покупець: Карткою, будь ласка.** | Customer: By card, please. |
-| **Касирка: Дякую. Гарного дня!** | Cashier: Thank you. Have a good day! |
+| Касирка: Ось ваші яблука, молоко і сир. | Cashier: Here are your apples, milk, and cheese. |
+| Касирка: З вас сто сім гривень. | Cashier: Your total is one hundred seven hryvnias. |
+| Покупець: Можна карткою? | Customer: Can I pay by card? |
+| Касирка: Так. | Cashier: Yes. |
+| Покупець: Карткою, будь ласка. | Customer: By card, please. |
+| Касирка: Дякую. Гарного дня! | Cashier: Thank you. Have a good day! |
 
 A shopping dialogue should not stop after **Дайте, будь ласка**. It reaches a
 natural checkout: **З вас ... гривень**, **Можна карткою?**, and
 **Карткою, будь ласка**. If you pay cash, say **готівкою** or hand over the
 money: **Ось сто сім гривень.**
-
-### Гривня, гривні, гривень
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "21 ___", "options": [{"text": "гривня", "correct": true}, {"text": "гривні", "correct": false}, {"text": "гривень", "correct": false}], "explanation": "21 ends like 1: гривня."}, {"question": "32 ___", "options": [{"text": "гривні", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривень", "correct": false}], "explanation": "32 ends like 2: гривні."}, {"question": "45 ___", "options": [{"text": "гривень", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривні", "correct": false}], "explanation": "45 uses гривень."}, {"question": "100 ___", "options": [{"text": "гривень", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривні", "correct": false}], "explanation": "100 uses гривень."}, {"question": "1 ___", "options": [{"text": "гривня", "correct": true}, {"text": "гривні", "correct": false}, {"text": "гривень", "correct": false}], "explanation": "1 is гривня."}, {"question": "3 ___", "options": [{"text": "гривні", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривень", "correct": false}], "explanation": "3 is гривні."}, {"question": "10 ___", "options": [{"text": "гривень", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривні", "correct": false}], "explanation": "10 is гривень."}, {"question": "54 ___", "options": [{"text": "гривні", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривень", "correct": false}], "explanation": "54 ends like 4: гривні."}]`)} instruction={"Choose the currency form that fits the number."} isUkrainian={false} />
 
 ## Скільки коштує?
 
@@ -215,15 +216,17 @@ For prices, say the currency as a chunk:
 | **45 грн** | **сорок п'ять гривень** |
 | **100 грн** | **сто гривень** |
 
+:::note
+For A1, you are not mastering every numeral rule. You are learning to read a
+price label and answer at the checkout.
+:::
+
+### Гривня, гривні, гривень
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "21 ___", "options": [{"text": "гривня", "correct": true}, {"text": "гривні", "correct": false}, {"text": "гривень", "correct": false}], "explanation": "21 ends like 1: гривня."}, {"question": "32 ___", "options": [{"text": "гривні", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривень", "correct": false}], "explanation": "32 ends like 2: гривні."}, {"question": "45 ___", "options": [{"text": "гривень", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривні", "correct": false}], "explanation": "45 uses гривень."}, {"question": "100 ___", "options": [{"text": "гривень", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривні", "correct": false}], "explanation": "100 uses гривень."}, {"question": "1 ___", "options": [{"text": "гривня", "correct": true}, {"text": "гривні", "correct": false}, {"text": "гривень", "correct": false}], "explanation": "1 is гривня."}, {"question": "3 ___", "options": [{"text": "гривні", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривень", "correct": false}], "explanation": "3 is гривні."}, {"question": "10 ___", "options": [{"text": "гривень", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривні", "correct": false}], "explanation": "10 is гривень."}, {"question": "54 ___", "options": [{"text": "гривні", "correct": true}, {"text": "гривня", "correct": false}, {"text": "гривень", "correct": false}], "explanation": "54 ends like 4: гривні."}]`)} instruction={"Choose the currency form that fits the number."} isUkrainian={false} />
+
 Use the practical pattern only. You do not need a full numeral lesson here.
 The key is to recognize price labels and answer at the checkout.
-For listening practice, you may hear a realistic line such as
-**Кілограм бананів коштує від 54 до 75 гривень**. It is a recognition example,
-not a promise about today's price.
-
-### Where do you buy it?
-
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "помідори", "right": "ринок"}, {"left": "м'ясо", "right": "м'ясний відділ"}, {"left": "сир", "right": "молочний відділ"}, {"left": "хліб", "right": "крамниця"}, {"left": "молоко", "right": "супермаркет"}, {"left": "вода", "right": "магазин"}, {"left": "сукня", "right": "магазин одягу"}, {"left": "книжка", "right": "книгарня"}]`)} instruction={"Match each item with a likely place or department."} isUkrainian={false} />
 
 ## Де купити?
 
@@ -241,6 +244,10 @@ types.
 | **молочний відділ** | **молоко**, **сир** |
 | **книгарня** | **книжка** |
 
+### Where do you buy it?
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "помідори", "right": "ринок"}, {"left": "м'ясо", "right": "м'ясний відділ"}, {"left": "сир", "right": "молочний відділ"}, {"left": "хліб", "right": "крамниця"}, {"left": "молоко", "right": "супермаркет"}, {"left": "вода", "right": "магазин"}, {"left": "сукня", "right": "магазин одягу"}, {"left": "книжка", "right": "книгарня"}]`)} instruction={"Match each item with a likely place or department."} isUkrainian={false} />
+
 Use these location questions:
 
 ```text
@@ -254,37 +261,37 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Вибачте, де тут хліб?** | Excuse me, where is the bread here? |
-| **У вас є вода?** | Do you have water? |
-| **А є дешевший сир?** | Is there a cheaper cheese? |
-| **А є дешевша вода?** | Is there cheaper water? |
+| Вибачте, де тут хліб? | Excuse me, where is the bread here? |
+| У вас є вода? | Do you have water? |
+| А є дешевший сир? | Is there a cheaper cheese? |
+| А є дешевша вода? | Is there cheaper water? |
 
 Now add quantity chunks. Memorize the whole phrases:
 
 - **один кілограм яблук**
 - **два кілограми помідорів**
 - **Дайте, будь ласка, два кілограми помідорів**
-- **три кілограми бананів**
-- **три кілограми бананів** is a useful recognition pattern from the wiki;
-- **два з половиною апельсини** is useful to recognize, but it is not a main
-  A1 production target;
 - **літр молока**
 - **пляшка води**
 - **три пляшки води**
 - **пачка чаю**
 - **буханка хліба**
 
-The payment words are also chunks: **карткою**, **готівкою**,
-**безготівковий розрахунок**, and **готівковий розрахунок**. For A1, simply
+### Quantity chunks
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Дайте, будь ласка, ___ яблук.", "answer": "один кілограм", "options": ["один кілограм", "одна пляшка", "один літр"]}, {"sentence": "Дайте ___ молока.", "answer": "літр", "options": ["літр", "пляшку", "буханку"]}, {"sentence": "Дайте ___ води.", "answer": "пляшку", "options": ["пляшку", "кілограм", "буханку"]}, {"sentence": "Дайте ___ чаю.", "answer": "пачку", "options": ["пачку", "літр", "пляшку"]}, {"sentence": "Дайте ___ хліба.", "answer": "буханку", "options": ["буханку", "літр", "пляшку"]}, {"sentence": "Дайте, будь ласка, ___ помідорів.", "answer": "два кілограми", "options": ["два кілограми", "дві пляшки", "два літри"]}, {"sentence": "Купіть три ___ води.", "answer": "пляшки", "options": ["пляшки", "пляшка", "кілограм"]}]`)} instruction={"Choose the quantity word or phrase that fits the product."} isUkrainian={false} />
+
+The payment words are also chunks: **карткою** and **готівкою**. For A1, simply
 connect them to the cashier's question. A card payment is **карткою**; cash is
 **готівкою**.
 
 A small optional clothing extension can appear at the end of shopping practice:
 **Я хочу приміряти пальто.** Use **приміряти** for trying on clothes.
 
-### Quantity chunks
-
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Дайте, будь ласка, ___ яблук.", "answer": "один кілограм", "options": ["один кілограм", "одна пляшка", "один літр"]}, {"sentence": "Дайте ___ молока.", "answer": "літр", "options": ["літр", "пляшку", "буханку"]}, {"sentence": "Дайте ___ води.", "answer": "пляшку", "options": ["пляшку", "кілограм", "буханку"]}, {"sentence": "Дайте ___ чаю.", "answer": "пачку", "options": ["пачку", "літр", "пляшку"]}, {"sentence": "Дайте ___ хліба.", "answer": "буханку", "options": ["буханку", "літр", "пляшку"]}, {"sentence": "Дайте, будь ласка, ___ помідорів.", "answer": "два кілограми", "options": ["два кілограми", "дві пляшки", "два літри"]}, {"sentence": "Купіть три ___ води.", "answer": "пляшки", "options": ["пляшки", "пляшка", "кілограм"]}]`)} instruction={"Choose the quantity word or phrase that fits the product."} isUkrainian={false} />
+:::tip
+Keep the order short: **Дайте, будь ласка, один кілограм яблук**. That is
+enough for a useful market exchange.
+:::
 
 ## 📋 Підсумок
 
@@ -306,15 +313,20 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Добрий день! У вас є яблука?** | Good afternoon! Do you have apples? |
-| **Так, є.** | Yes, we do. |
-| **Скільки коштує кілограм яблук?** | How much is a kilogram of apples? |
-| **Сорок гривень.** | Forty hryvnias. |
-| **Дайте, будь ласка, один кілограм яблук і літр молока.** | Please give me one kilogram of apples and a liter of milk. |
-| **З вас сто сім гривень.** | That is one hundred seven hryvnias. |
-| **Можна карткою?** | Can I pay by card? |
-| **Карткою, будь ласка.** | By card, please. |
-| **Дякую. До побачення!** | Thank you. Goodbye! |
+| Добрий день! У вас є яблука? | Good afternoon! Do you have apples? |
+| Так, є. | Yes, we do. |
+| Скільки коштує кілограм яблук? | How much is a kilogram of apples? |
+| Сорок гривень. | Forty hryvnias. |
+| Дайте, будь ласка, один кілограм яблук і літр молока. | Please give me one kilogram of apples and a liter of milk. |
+| З вас сто сім гривень. | Your total is one hundred seven hryvnias. |
+| Можна карткою? | Can I pay by card? |
+| Карткою, будь ласка. | By card, please. |
+| Дякую. До побачення! | Thank you. Goodbye! |
+
+:::note
+You can now make a complete small purchase: ask availability, ask price, name a
+quantity, hear the total, and pay.
+:::
 
 Self-check:
 
@@ -327,8 +339,7 @@ Self-check:
 - react with **Дорого!**, **Дешево!**, or **Добре, беру.**;
 - finish at the checkout with **З вас...**, **Можна карткою?**,
   **Карткою, будь ласка**, or **готівкою**;
-- recognize service phrases such as **п'ятдесят гривень**,
-  **двісті гривень**, and **Скільки гривень я вам винен?**
+- recognize price labels such as **40 грн**, **89 грн**, and **107 грн**.
 
 <span id="repair-shopping-interference"></span>
 
@@ -336,36 +347,38 @@ Self-check:
 
 Use these repairs in shopping scenes:
 
-| Problem | Use |
+| Avoid | Use |
 | --- | --- |
-| price question with **є** | **Скільки це коштує?** |
-| unnatural possession frame | **У мене є 20 гривень.** |
-| direct English-style shop question | **У вас є хліб?** |
-| card payment with **з** | **Карткою, будь ласка.** |
-| weak quantity chunk | **Дайте, будь ласка, один кілограм яблук.** |
-| wrong currency ending | **Це коштує 50 гривень.** |
+| **<del>Скільки це є?</del>** | **Скільки це коштує?** |
+| **<del>Я маю 20 гривнів.</del>** | **У мене є 20 гривень.** |
+| **<del>Ви маєте хліб?</del>** | **У вас є хліб?** |
+| **<del>Я плачу з карткою.</del>** | **Карткою, будь ласка.** |
+| **<del>Дайте один кілограм яблука.</del>** | **Дайте, будь ласка, один кілограм яблук.** |
+| **<del>Це коштує 50 гривн.</del>** | **Це коштує 50 гривень.** |
+| **<del>Я хочу поміряти пальто.</del>** | **Я хочу приміряти пальто.** |
+| **<del>Два яблука коштує сорок гривень.</del>** | **Два яблука коштують сорок гривень.** |
 
 </TabItem>
 <TabItem label="Vocabulary">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"покупки","translation":"shopping","pos":"noun","example":"Сьогодні у нас покупки.","examples":["shopping","Сьогодні у нас покупки."],"atlas_href":"/lexicon/покупки/"},{"word":"магазин","translation":"shop; store","pos":"noun","example":"Магазин поруч.","examples":["shop; store","Магазин поруч."],"atlas_href":"/lexicon/магазин/"},{"word":"супермаркет","translation":"supermarket","pos":"noun","example":"Молоко в супермаркеті.","examples":["supermarket","Молоко в супермаркеті."],"atlas_href":"/lexicon/супермаркет/"},{"word":"ринок","translation":"market","pos":"noun","example":"Яблука на ринку.","examples":["market","Яблука на ринку."],"atlas_href":"/lexicon/ринок/"},{"word":"крамниця","translation":"small shop","pos":"noun","example":"Це маленька крамниця.","examples":["small shop","Це маленька крамниця."],"atlas_href":"/lexicon/крамниця/"},{"word":"аптека","translation":"pharmacy","pos":"noun","example":"Аптека там.","examples":["pharmacy","Аптека там."],"atlas_href":"/lexicon/аптека/"},{"word":"м'ясний відділ","translation":"meat department","pos":"phrase","example":"М'ясо в м'ясному відділі.","examples":["meat department","М'ясо в м'ясному відділі."],"atlas_href":"/lexicon/м-ясний-відділ/"},{"word":"молочний відділ","translation":"dairy department","pos":"phrase","example":"Сир у молочному відділі.","examples":["dairy department","Сир у молочному відділі."],"atlas_href":"/lexicon/молочний-відділ/"},{"word":"книгарня","translation":"bookshop","pos":"noun","example":"Книжка в книгарні.","examples":["bookshop","Книжка в книгарні."],"atlas_href":"/lexicon/книгарня/"},{"word":"продавчиня","translation":"saleswoman","pos":"noun","example":"Продавчиня каже ціну.","examples":["saleswoman","Продавчиня каже ціну."],"atlas_href":"/lexicon/продавчиня/"},{"word":"касирка","translation":"cashier","pos":"noun","example":"Касирка каже: З вас сто гривень.","examples":["cashier","Касирка каже: З вас сто гривень."],"atlas_href":"/lexicon/касирка/"},{"word":"ціна","translation":"price","pos":"noun","example":"Ціна висока.","examples":["price","Ціна висока."],"atlas_href":"/lexicon/ціна/"},{"word":"коштувати","translation":"to cost","pos":"verb","example":"Скільки коштує сир?","examples":["to cost","Скільки коштує сир?"],"atlas_href":"/lexicon/коштувати/"},{"word":"скільки","translation":"how much; how many","pos":"adverb","example":"Скільки коштує хліб?","examples":["how much; how many","Скільки коштує хліб?"],"atlas_href":"/lexicon/скільки/"},{"word":"гривня","translation":"hryvnia","pos":"noun","example":"Одна гривня.","examples":["hryvnia","Одна гривня."],"atlas_href":"/lexicon/гривня/"},{"word":"гривні","translation":"hryvnias","pos":"noun","example":"Тридцять дві гривні.","examples":["hryvnias","Тридцять дві гривні."],"atlas_href":"/lexicon/гривні/"},{"word":"гривень","translation":"hryvnias","pos":"noun","example":"Сто гривень.","examples":["hryvnias","Сто гривень."],"atlas_href":"/lexicon/гривень/"},{"word":"грн","translation":"UAH; hryvnia abbreviation","pos":"abbreviation","example":"Ціна: 40 грн.","examples":["UAH; hryvnia abbreviation","Ціна: 40 грн."],"atlas_href":"/lexicon/грн/"},{"word":"картка","translation":"card","pos":"noun","example":"Можна карткою?","examples":["card","Можна карткою?"],"atlas_href":"/lexicon/картка/"},{"word":"готівка","translation":"cash","pos":"noun","example":"Можна готівкою?","examples":["cash","Можна готівкою?"],"atlas_href":"/lexicon/готівка/"},{"word":"карткою","translation":"by card","pos":"chunk","example":"Карткою, будь ласка.","examples":["by card","Карткою, будь ласка."],"atlas_href":"/lexicon/карткою/"},{"word":"готівкою","translation":"in cash","pos":"chunk","example":"Готівкою, будь ласка.","examples":["in cash","Готівкою, будь ласка."],"atlas_href":"/lexicon/готівкою/"},{"word":"купити","translation":"to buy","pos":"verb","example":"Я хочу купити хліб.","examples":["to buy","Я хочу купити хліб."],"atlas_href":"/lexicon/купити/"},{"word":"купувати","translation":"to buy; to be buying","pos":"verb","example":"Ми купуємо молоко.","examples":["to buy; to be buying","Ми купуємо молоко."],"atlas_href":"/lexicon/купувати/"},{"word":"платити","translation":"to pay","pos":"verb","example":"Я плачу карткою.","examples":["to pay","Я плачу карткою."],"atlas_href":"/lexicon/платити/"},{"word":"заплатити","translation":"to pay","pos":"verb","example":"Я хочу заплатити.","examples":["to pay","Я хочу заплатити."],"atlas_href":"/lexicon/заплатити/"},{"word":"розрахуватися","translation":"to pay; to settle up","pos":"verb","example":"Можна розрахуватися карткою?","examples":["to pay; to settle up","Можна розрахуватися карткою?"],"atlas_href":"/lexicon/розрахуватися/"},{"word":"кілограм","translation":"kilogram","pos":"noun","example":"Кілограм яблук.","examples":["kilogram","Кілограм яблук."],"atlas_href":"/lexicon/кілограм/"},{"word":"літр","translation":"liter","pos":"noun","example":"Літр молока.","examples":["liter","Літр молока."],"atlas_href":"/lexicon/літр/"},{"word":"пляшка","translation":"bottle","pos":"noun","example":"Пляшка води.","examples":["bottle","Пляшка води."],"atlas_href":"/lexicon/пляшка/"},{"word":"пачка","translation":"pack","pos":"noun","example":"Пачка чаю.","examples":["pack","Пачка чаю."],"atlas_href":"/lexicon/пачка/"},{"word":"буханка","translation":"loaf","pos":"noun","example":"Буханка хліба.","examples":["loaf","Буханка хліба."],"atlas_href":"/lexicon/буханка/"},{"word":"один кілограм яблук","translation":"one kilogram of apples","pos":"chunk","example":"Дайте один кілограм яблук.","examples":["one kilogram of apples","Дайте один кілограм яблук."],"atlas_href":"/lexicon/один-кілограм-яблук/"},{"word":"два кілограми помідорів","translation":"two kilograms of tomatoes","pos":"chunk","example":"Дайте два кілограми помідорів.","examples":["two kilograms of tomatoes","Дайте два кілограми помідорів."],"atlas_href":"/lexicon/два-кілограми-помідорів/"},{"word":"літр молока","translation":"a liter of milk","pos":"chunk","example":"Дайте літр молока.","examples":["a liter of milk","Дайте літр молока."],"atlas_href":"/lexicon/літр-молока/"},{"word":"пляшка води","translation":"a bottle of water","pos":"chunk","example":"Пляшка води коштує десять гривень.","examples":["a bottle of water","Пляшка води коштує десять гривень."],"atlas_href":"/lexicon/пляшка-води/"},{"word":"дорого","translation":"expensive","pos":"adverb","example":"Дорого!","examples":["expensive","Дорого!"],"atlas_href":"/lexicon/дорого/"},{"word":"дешево","translation":"cheap","pos":"adverb","example":"Дешево!","examples":["cheap","Дешево!"],"atlas_href":"/lexicon/дешево/"},{"word":"дешевший","translation":"cheaper","pos":"adjective","example":"А є дешевший сир?","examples":["cheaper","А є дешевший сир?"],"atlas_href":"/lexicon/дешевший/"},{"word":"дешевша","translation":"cheaper","pos":"adjective","example":"А є дешевша вода?","examples":["cheaper","А є дешевша вода?"],"atlas_href":"/lexicon/дешевша/"},{"word":"знижка","translation":"discount","pos":"noun","example":"Є знижка?","examples":["discount","Є знижка?"],"atlas_href":"/lexicon/знижка/"},{"word":"чек","translation":"receipt","pos":"noun","example":"Можна чек?","examples":["receipt","Можна чек?"],"atlas_href":"/lexicon/чек/"},{"word":"купюра","translation":"banknote","pos":"noun","example":"Це купюра.","examples":["banknote","Це купюра."],"atlas_href":"/lexicon/купюра/"},{"word":"пін-код","translation":"PIN code","pos":"noun","example":"Введіть пін-код.","examples":["PIN code","Введіть пін-код."],"atlas_href":"/lexicon/пін-код/"},{"word":"бюджет","translation":"budget","pos":"noun","example":"Це мій бюджет.","examples":["budget","Це мій бюджет."],"atlas_href":"/lexicon/бюджет/"},{"word":"безкоштовно","translation":"free of charge","pos":"adverb","example":"Це безкоштовно.","examples":["free of charge","Це безкоштовно."],"atlas_href":"/lexicon/безкоштовно/"},{"word":"безготівковий розрахунок","translation":"cashless payment","pos":"phrase","example":"Картка - це безготівковий розрахунок.","examples":["cashless payment","Картка - це безготівковий розрахунок."],"atlas_href":"/lexicon/безготівковий-розрахунок/"},{"word":"готівковий розрахунок","translation":"cash payment","pos":"phrase","example":"Готівка - це готівковий розрахунок.","examples":["cash payment","Готівка - це готівковий розрахунок."],"atlas_href":"/lexicon/готівковий-розрахунок/"},{"word":"винен","translation":"owing","pos":"adjective","example":"Скільки я вам винен?","examples":["owing","Скільки я вам винен?"],"atlas_href":"/lexicon/винен/"},{"word":"приміряти","translation":"to try on","pos":"verb","example":"Я хочу приміряти пальто.","examples":["to try on","Я хочу приміряти пальто."],"atlas_href":"/lexicon/приміряти/"}]`)} title="Vocabulary" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"покупки","translation":"shopping","pos":"noun","example":"Сьогодні у нас покупки.","examples":["shopping","Сьогодні у нас покупки."]},{"word":"магазин","translation":"shop; store","pos":"noun","example":"Магазин поруч.","examples":["shop; store","Магазин поруч."],"atlas_href":"/lexicon/магазин/"},{"word":"супермаркет","translation":"supermarket","pos":"noun","example":"Молоко в супермаркеті.","examples":["supermarket","Молоко в супермаркеті."],"atlas_href":"/lexicon/супермаркет/"},{"word":"ринок","translation":"market","pos":"noun","example":"Яблука на ринку.","examples":["market","Яблука на ринку."],"atlas_href":"/lexicon/ринок/"},{"word":"крамниця","translation":"small shop","pos":"noun","example":"Це маленька крамниця.","examples":["small shop","Це маленька крамниця."],"atlas_href":"/lexicon/крамниця/"},{"word":"аптека","translation":"pharmacy","pos":"noun","example":"Аптека там.","examples":["pharmacy","Аптека там."],"atlas_href":"/lexicon/аптека/"},{"word":"м'ясний відділ","translation":"meat department","pos":"phrase","example":"М'ясо в м'ясному відділі.","examples":["meat department","М'ясо в м'ясному відділі."],"atlas_href":"/lexicon/м-ясний-відділ/"},{"word":"молочний відділ","translation":"dairy department","pos":"phrase","example":"Сир у молочному відділі.","examples":["dairy department","Сир у молочному відділі."],"atlas_href":"/lexicon/молочний-відділ/"},{"word":"книгарня","translation":"bookshop","pos":"noun","example":"Книжка в книгарні.","examples":["bookshop","Книжка в книгарні."],"atlas_href":"/lexicon/книгарня/"},{"word":"продавчиня","translation":"saleswoman","pos":"noun","example":"Продавчиня каже ціну.","examples":["saleswoman","Продавчиня каже ціну."],"atlas_href":"/lexicon/продавчиня/"},{"word":"касирка","translation":"cashier","pos":"noun","example":"Касирка каже: З вас сто гривень.","examples":["cashier","Касирка каже: З вас сто гривень."],"atlas_href":"/lexicon/касирка/"},{"word":"ціна","translation":"price","pos":"noun","example":"Ціна висока.","examples":["price","Ціна висока."],"atlas_href":"/lexicon/ціна/"},{"word":"коштувати","translation":"to cost","pos":"verb","example":"Скільки коштує сир?","examples":["to cost","Скільки коштує сир?"],"atlas_href":"/lexicon/коштувати/"},{"word":"скільки","translation":"how much; how many","pos":"adverb","example":"Скільки коштує хліб?","examples":["how much; how many","Скільки коштує хліб?"],"atlas_href":"/lexicon/скільки/"},{"word":"гривня","translation":"hryvnia","pos":"noun","example":"Одна гривня.","examples":["hryvnia","Одна гривня."],"atlas_href":"/lexicon/гривня/"},{"word":"гривні","translation":"hryvnias","pos":"noun","example":"Тридцять дві гривні.","examples":["hryvnias","Тридцять дві гривні."]},{"word":"гривень","translation":"hryvnias","pos":"noun","example":"Сто гривень.","examples":["hryvnias","Сто гривень."]},{"word":"грн","translation":"UAH; hryvnia abbreviation","pos":"abbreviation","example":"Ціна: 40 грн.","examples":["UAH; hryvnia abbreviation","Ціна: 40 грн."],"atlas_href":"/lexicon/грн/"},{"word":"картка","translation":"card","pos":"noun","example":"Можна карткою?","examples":["card","Можна карткою?"],"atlas_href":"/lexicon/картка/"},{"word":"готівка","translation":"cash","pos":"noun","example":"Можна готівкою?","examples":["cash","Можна готівкою?"],"atlas_href":"/lexicon/готівка/"},{"word":"карткою","translation":"by card","pos":"chunk","example":"Карткою, будь ласка.","examples":["by card","Карткою, будь ласка."]},{"word":"готівкою","translation":"in cash","pos":"chunk","example":"Готівкою, будь ласка.","examples":["in cash","Готівкою, будь ласка."]},{"word":"купити","translation":"to buy","pos":"verb","example":"Я хочу купити хліб.","examples":["to buy","Я хочу купити хліб."],"atlas_href":"/lexicon/купити/"},{"word":"купувати","translation":"to buy; to be buying","pos":"verb","example":"Ми купуємо молоко.","examples":["to buy; to be buying","Ми купуємо молоко."],"atlas_href":"/lexicon/купувати/"},{"word":"платити","translation":"to pay","pos":"verb","example":"Я плачу карткою.","examples":["to pay","Я плачу карткою."],"atlas_href":"/lexicon/платити/"},{"word":"кілограм","translation":"kilogram","pos":"noun","example":"Кілограм яблук.","examples":["kilogram","Кілограм яблук."],"atlas_href":"/lexicon/кілограм/"},{"word":"літр","translation":"liter","pos":"noun","example":"Літр молока.","examples":["liter","Літр молока."],"atlas_href":"/lexicon/літр/"},{"word":"пляшка","translation":"bottle","pos":"noun","example":"Пляшка води.","examples":["bottle","Пляшка води."],"atlas_href":"/lexicon/пляшка/"},{"word":"пачка","translation":"pack","pos":"noun","example":"Пачка чаю.","examples":["pack","Пачка чаю."],"atlas_href":"/lexicon/пачка/"},{"word":"буханка","translation":"loaf","pos":"noun","example":"Буханка хліба.","examples":["loaf","Буханка хліба."],"atlas_href":"/lexicon/буханка/"},{"word":"один кілограм яблук","translation":"one kilogram of apples","pos":"chunk","example":"Дайте один кілограм яблук.","examples":["one kilogram of apples","Дайте один кілограм яблук."],"atlas_href":"/lexicon/один-кілограм-яблук/"},{"word":"два кілограми помідорів","translation":"two kilograms of tomatoes","pos":"chunk","example":"Дайте два кілограми помідорів.","examples":["two kilograms of tomatoes","Дайте два кілограми помідорів."],"atlas_href":"/lexicon/два-кілограми-помідорів/"},{"word":"літр молока","translation":"a liter of milk","pos":"chunk","example":"Дайте літр молока.","examples":["a liter of milk","Дайте літр молока."],"atlas_href":"/lexicon/літр-молока/"},{"word":"пляшка води","translation":"a bottle of water","pos":"chunk","example":"Пляшка води коштує десять гривень.","examples":["a bottle of water","Пляшка води коштує десять гривень."],"atlas_href":"/lexicon/пляшка-води/"},{"word":"дорого","translation":"expensive","pos":"adverb","example":"Дорого!","examples":["expensive","Дорого!"],"atlas_href":"/lexicon/дорого/"},{"word":"дешево","translation":"cheap","pos":"adverb","example":"Дешево!","examples":["cheap","Дешево!"],"atlas_href":"/lexicon/дешево/"},{"word":"дешевший","translation":"cheaper","pos":"adjective","example":"А є дешевший сир?","examples":["cheaper","А є дешевший сир?"],"atlas_href":"/lexicon/дешевший/"},{"word":"дешевша","translation":"cheaper","pos":"adjective","example":"А є дешевша вода?","examples":["cheaper","А є дешевша вода?"]},{"word":"знижка","translation":"discount","pos":"noun","example":"Є знижка?","examples":["discount","Є знижка?"],"atlas_href":"/lexicon/знижка/"},{"word":"приміряти","translation":"to try on","pos":"verb","example":"Я хочу приміряти пальто.","examples":["to try on","Я хочу приміряти пальто."],"atlas_href":"/lexicon/приміряти/"}]`)} title="Vocabulary" />
 
-<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"покупки","back":"shopping"},{"front":"магазин","back":"shop; store"},{"front":"супермаркет","back":"supermarket"},{"front":"ринок","back":"market"},{"front":"крамниця","back":"small shop"},{"front":"аптека","back":"pharmacy"},{"front":"м'ясний відділ","back":"meat department"},{"front":"молочний відділ","back":"dairy department"},{"front":"книгарня","back":"bookshop"},{"front":"продавчиня","back":"saleswoman"},{"front":"касирка","back":"cashier"},{"front":"ціна","back":"price"},{"front":"коштувати","back":"to cost"},{"front":"скільки","back":"how much; how many"},{"front":"гривня","back":"hryvnia"},{"front":"гривні","back":"hryvnias"},{"front":"гривень","back":"hryvnias"},{"front":"грн","back":"UAH; hryvnia abbreviation"},{"front":"картка","back":"card"},{"front":"готівка","back":"cash"},{"front":"карткою","back":"by card"},{"front":"готівкою","back":"in cash"},{"front":"купити","back":"to buy"},{"front":"купувати","back":"to buy; to be buying"},{"front":"платити","back":"to pay"},{"front":"заплатити","back":"to pay"},{"front":"розрахуватися","back":"to pay; to settle up"},{"front":"кілограм","back":"kilogram"},{"front":"літр","back":"liter"},{"front":"пляшка","back":"bottle"},{"front":"пачка","back":"pack"},{"front":"буханка","back":"loaf"},{"front":"один кілограм яблук","back":"one kilogram of apples"},{"front":"два кілограми помідорів","back":"two kilograms of tomatoes"},{"front":"літр молока","back":"a liter of milk"},{"front":"пляшка води","back":"a bottle of water"},{"front":"дорого","back":"expensive"},{"front":"дешево","back":"cheap"},{"front":"дешевший","back":"cheaper"},{"front":"дешевша","back":"cheaper"},{"front":"знижка","back":"discount"},{"front":"чек","back":"receipt"},{"front":"купюра","back":"banknote"},{"front":"пін-код","back":"PIN code"},{"front":"бюджет","back":"budget"},{"front":"безкоштовно","back":"free of charge"},{"front":"безготівковий розрахунок","back":"cashless payment"},{"front":"готівковий розрахунок","back":"cash payment"},{"front":"винен","back":"owing"},{"front":"приміряти","back":"to try on"}]`)} />
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"покупки","back":"shopping"},{"front":"магазин","back":"shop; store"},{"front":"супермаркет","back":"supermarket"},{"front":"ринок","back":"market"},{"front":"крамниця","back":"small shop"},{"front":"аптека","back":"pharmacy"},{"front":"м'ясний відділ","back":"meat department"},{"front":"молочний відділ","back":"dairy department"},{"front":"книгарня","back":"bookshop"},{"front":"продавчиня","back":"saleswoman"},{"front":"касирка","back":"cashier"},{"front":"ціна","back":"price"},{"front":"коштувати","back":"to cost"},{"front":"скільки","back":"how much; how many"},{"front":"гривня","back":"hryvnia"},{"front":"гривні","back":"hryvnias"},{"front":"гривень","back":"hryvnias"},{"front":"грн","back":"UAH; hryvnia abbreviation"},{"front":"картка","back":"card"},{"front":"готівка","back":"cash"},{"front":"карткою","back":"by card"},{"front":"готівкою","back":"in cash"},{"front":"купити","back":"to buy"},{"front":"купувати","back":"to buy; to be buying"},{"front":"платити","back":"to pay"},{"front":"кілограм","back":"kilogram"},{"front":"літр","back":"liter"},{"front":"пляшка","back":"bottle"},{"front":"пачка","back":"pack"},{"front":"буханка","back":"loaf"},{"front":"один кілограм яблук","back":"one kilogram of apples"},{"front":"два кілограми помідорів","back":"two kilograms of tomatoes"},{"front":"літр молока","back":"a liter of milk"},{"front":"пляшка води","back":"a bottle of water"},{"front":"дорого","back":"expensive"},{"front":"дешево","back":"cheap"},{"front":"дешевший","back":"cheaper"},{"front":"дешевша","back":"cheaper"},{"front":"знижка","back":"discount"},{"front":"приміряти","back":"to try on"}]`)} />
 
 </TabItem>
 <TabItem label="Activities">
 
 ### Price questions
 
-*(see lesson, §Діалоги)*
+*(see lesson, §На ринку)*
 
 ### Гривня, гривні, гривень
 
-*(see lesson, §На касі)*
+*(see lesson, §Скільки коштує?)*
 
 ### Where do you buy it?
 
-*(see lesson, §Скільки коштує?)*
+*(see lesson, §Де купити?)*
 
 ### Quantity chunks
 
@@ -383,11 +396,19 @@ Use these repairs in shopping scenes:
 
 <TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Скільки коштує? asks about price.", "isTrue": true, "explanation": "Коштує is the price verb."}, {"statement": "Скільки коштують яблука? is used for plural apples.", "isTrue": true, "explanation": "Use коштують with plural items."}, {"statement": "Кілограм яблук is taught here as a ready shopping chunk.", "isTrue": true, "explanation": "The module avoids a full case lesson."}, {"statement": "Карткою, будь ласка means by card, please.", "isTrue": true, "explanation": "It is the checkout payment chunk."}, {"statement": "З вас сто сім гривень is a greeting.", "isTrue": false, "explanation": "It is a checkout total."}, {"statement": "Приміряти is useful when trying on clothes.", "isTrue": true, "explanation": "Use приміряти for clothing."}, {"statement": "Скільки це є? is the course price question.", "isTrue": false, "explanation": "Use Скільки це коштує?"}, {"statement": "Грн is the common price-label abbreviation for гривня.", "isTrue": true, "explanation": "Грн appears on price labels."}]`)} instruction={"Decide whether each statement fits this module."} isUkrainian={false} />
 
+### Shopping chunks
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "яблука", "right": "один кілограм яблук"}, {"left": "помідори", "right": "два кілограми помідорів"}, {"left": "молоко", "right": "літр молока"}, {"left": "вода", "right": "пляшка води"}, {"left": "чай", "right": "пачка чаю"}, {"left": "хліб", "right": "буханка хліба"}]`)} instruction={"Match the product with a natural buying chunk."} isUkrainian={false} />
+
+### Build shopping lines
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Скільки / коштує / хліб", "answer": "Скільки коштує хліб"}, {"jumbled": "У / вас / є / яблука", "answer": "У вас є яблука"}, {"jumbled": "Дайте / будь ласка / один / кілограм / яблук", "answer": "Дайте, будь ласка, один кілограм яблук"}, {"jumbled": "З / вас / сто / сім / гривень", "answer": "З вас сто сім гривень"}, {"jumbled": "Можна / карткою", "answer": "Можна карткою"}, {"jumbled": "Карткою / будь ласка", "answer": "Карткою, будь ласка"}]`)} instruction={"Put the words in a natural shopping order."} />
+
 <span id="repair-shopping-interference"></span>
 
 ### Repair shopping interference
 
-<ErrorCorrection client:only='react' instruction="Choose the clean Ukrainian repair." items={JSON.parse(`[{"sentence": "How much is it? → Скільки це є?", "errorWord": "How much is it? → Скільки це є?", "correctForm": "Скільки це коштує?", "options": ["Скільки це коштує?", "Скільки це є?", "Скільки це має?"], "explanation": "Use коштує for price questions."}, {"sentence": "I have 20 hryvnias. → Я маю 20 гривнів.", "errorWord": "I have 20 hryvnias. → Я маю 20 гривнів.", "correctForm": "У мене є 20 гривень.", "options": ["У мене є 20 гривень.", "Я маю 20 гривнів.", "У мене 20 гривні."], "explanation": "Use У мене є and гривень."}, {"sentence": "Do you have...? → Ви маєте хліб?", "errorWord": "Do you have...? → Ви маєте хліб?", "correctForm": "У вас є хліб?", "options": ["У вас є хліб?", "Ви маєте хліб?", "Вас є хліб?"], "explanation": "Use the shop availability chunk У вас є."}, {"sentence": "I will pay with a card. → Я плачу з карткою.", "errorWord": "I will pay with a card. → Я плачу з карткою.", "correctForm": "Карткою, будь ласка.", "options": ["Карткою, будь ласка.", "Я плачу з карткою.", "З карткою, будь ласка."], "explanation": "At checkout, use the chunk Карткою, будь ласка."}, {"sentence": "Give me one kilo apples. → Дайте один кілограм яблука.", "errorWord": "Give me one kilo apples. → Дайте один кілограм яблука.", "correctForm": "Дайте, будь ласка, один кілограм яблук.", "options": ["Дайте, будь ласка, один кілограм яблук.", "Дайте один кілограм яблука.", "Дайте одна кілограм яблук."], "explanation": "Use the whole chunk один кілограм яблук."}, {"sentence": "It costs 50 grivnas. → Це коштує 50 гривн.", "errorWord": "It costs 50 grivnas. → Це коштує 50 гривн.", "correctForm": "Це коштує 50 гривень.", "options": ["Це коштує 50 гривень.", "Це коштує 50 гривн.", "Це коштує 50 гривні."], "explanation": "The money word is гривня; 50 uses гривень."}, {"sentence": "Я хочу поміряти пальто.", "errorWord": "поміряти", "correctForm": "Я хочу приміряти пальто.", "options": ["Я хочу приміряти пальто.", "Я хочу поміряти пальто.", "Я хочу міряти пальто."], "explanation": "Use приміряти for trying on clothes."}, {"sentence": "Два яблука коштує сорок гривень.", "errorWord": "коштує", "correctForm": "Два яблука коштують сорок гривень.", "options": ["Два яблука коштують сорок гривень.", "Два яблука коштує сорок гривень.", "Два яблука коштувати сорок гривень."], "explanation": "Use коштують with plural apples."}]`)} isUkrainian={false} />
+<ErrorCorrection client:only='react' instruction="Choose the clean Ukrainian repair." items={JSON.parse(`[{"sentence": "Скільки це є?", "errorWord": "Скільки це є?", "correctForm": "Скільки це коштує?", "options": ["Скільки це коштує?", "Скільки це є?", "Скільки це має?"], "explanation": "Use коштує for price questions."}, {"sentence": "Я маю 20 гривнів.", "errorWord": "Я маю 20 гривнів.", "correctForm": "У мене є 20 гривень.", "options": ["У мене є 20 гривень.", "Я маю 20 гривнів.", "У мене 20 гривні."], "explanation": "Use У мене є and гривень."}, {"sentence": "Ви маєте хліб?", "errorWord": "Ви маєте хліб?", "correctForm": "У вас є хліб?", "options": ["У вас є хліб?", "Ви маєте хліб?", "Вас є хліб?"], "explanation": "Use the shop availability chunk У вас є."}, {"sentence": "Я плачу з карткою.", "errorWord": "Я плачу з карткою.", "correctForm": "Карткою, будь ласка.", "options": ["Карткою, будь ласка.", "Я плачу з карткою.", "З карткою, будь ласка."], "explanation": "At checkout, use the chunk Карткою, будь ласка."}, {"sentence": "Дайте один кілограм яблука.", "errorWord": "Дайте один кілограм яблука.", "correctForm": "Дайте, будь ласка, один кілограм яблук.", "options": ["Дайте, будь ласка, один кілограм яблук.", "Дайте один кілограм яблука.", "Дайте одна кілограм яблук."], "explanation": "Use the whole chunk один кілограм яблук."}, {"sentence": "Це коштує 50 гривн.", "errorWord": "Це коштує 50 гривн.", "correctForm": "Це коштує 50 гривень.", "options": ["Це коштує 50 гривень.", "Це коштує 50 гривн.", "Це коштує 50 гривні."], "explanation": "The money word is гривня; 50 uses гривень."}, {"sentence": "Я хочу поміряти пальто.", "errorWord": "поміряти", "correctForm": "Я хочу приміряти пальто.", "options": ["Я хочу приміряти пальто.", "Я хочу поміряти пальто.", "Я хочу міряти пальто."], "explanation": "Use приміряти for trying on clothes."}, {"sentence": "Два яблука коштує сорок гривень.", "errorWord": "коштує", "correctForm": "Два яблука коштують сорок гривень.", "options": ["Два яблука коштують сорок гривень.", "Два яблука коштує сорок гривень.", "Два яблука коштувати сорок гривень."], "explanation": "Use коштують with plural apples."}]`)} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">

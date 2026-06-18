@@ -279,53 +279,106 @@ workbook:
       - statement: 'Грн is the common price-label abbreviation for гривня.'
         answer: true
         explanation: 'Грн appears on price labels.'
+  - type: match-up
+    title: Shopping chunks
+    instruction: Match the product with a natural buying chunk.
+    pairs:
+      - left: 'яблука'
+        right: 'один кілограм яблук'
+      - left: 'помідори'
+        right: 'два кілограми помідорів'
+      - left: 'молоко'
+        right: 'літр молока'
+      - left: 'вода'
+        right: 'пляшка води'
+      - left: 'чай'
+        right: 'пачка чаю'
+      - left: 'хліб'
+        right: 'буханка хліба'
+  - type: unjumble
+    title: Build shopping lines
+    instruction: Put the words in a natural shopping order.
+    items:
+      - words:
+          - 'Скільки'
+          - 'коштує'
+          - 'хліб'
+        answer: 'Скільки коштує хліб'
+      - words:
+          - 'У'
+          - 'вас'
+          - 'є'
+          - 'яблука'
+        answer: 'У вас є яблука'
+      - words:
+          - 'Дайте'
+          - 'будь ласка'
+          - 'один'
+          - 'кілограм'
+          - 'яблук'
+        answer: 'Дайте, будь ласка, один кілограм яблук'
+      - words:
+          - 'З'
+          - 'вас'
+          - 'сто'
+          - 'сім'
+          - 'гривень'
+        answer: 'З вас сто сім гривень'
+      - words:
+          - 'Можна'
+          - 'карткою'
+        answer: 'Можна карткою'
+      - words:
+          - 'Карткою'
+          - 'будь ласка'
+        answer: 'Карткою, будь ласка'
   - type: error-correction
     title: Repair shopping interference
     instruction: Choose the clean Ukrainian repair.
     anchor_id: repair-shopping-interference
     items:
-      - sentence: 'How much is it? → Скільки це є?'
-        error: 'How much is it? → Скільки це є?'
+      - sentence: 'Скільки це є?'
+        error: 'Скільки це є?'
         answer: 'Скільки це коштує?'
         options:
           - 'Скільки це коштує?'
           - 'Скільки це є?'
           - 'Скільки це має?'
         explanation: 'Use коштує for price questions.'
-      - sentence: 'I have 20 hryvnias. → Я маю 20 гривнів.'
-        error: 'I have 20 hryvnias. → Я маю 20 гривнів.'
+      - sentence: 'Я маю 20 гривнів.'
+        error: 'Я маю 20 гривнів.'
         answer: 'У мене є 20 гривень.'
         options:
           - 'У мене є 20 гривень.'
           - 'Я маю 20 гривнів.'
           - 'У мене 20 гривні.'
         explanation: 'Use У мене є and гривень.'
-      - sentence: 'Do you have...? → Ви маєте хліб?'
-        error: 'Do you have...? → Ви маєте хліб?'
+      - sentence: 'Ви маєте хліб?'
+        error: 'Ви маєте хліб?'
         answer: 'У вас є хліб?'
         options:
           - 'У вас є хліб?'
           - 'Ви маєте хліб?'
           - 'Вас є хліб?'
         explanation: 'Use the shop availability chunk У вас є.'
-      - sentence: 'I will pay with a card. → Я плачу з карткою.'
-        error: 'I will pay with a card. → Я плачу з карткою.'
+      - sentence: 'Я плачу з карткою.'
+        error: 'Я плачу з карткою.'
         answer: 'Карткою, будь ласка.'
         options:
           - 'Карткою, будь ласка.'
           - 'Я плачу з карткою.'
           - 'З карткою, будь ласка.'
         explanation: 'At checkout, use the chunk Карткою, будь ласка.'
-      - sentence: 'Give me one kilo apples. → Дайте один кілограм яблука.'
-        error: 'Give me one kilo apples. → Дайте один кілограм яблука.'
+      - sentence: 'Дайте один кілограм яблука.'
+        error: 'Дайте один кілограм яблука.'
         answer: 'Дайте, будь ласка, один кілограм яблук.'
         options:
           - 'Дайте, будь ласка, один кілограм яблук.'
           - 'Дайте один кілограм яблука.'
           - 'Дайте одна кілограм яблук.'
         explanation: 'Use the whole chunk один кілограм яблук.'
-      - sentence: 'It costs 50 grivnas. → Це коштує 50 гривн.'
-        error: 'It costs 50 grivnas. → Це коштує 50 гривн.'
+      - sentence: 'Це коштує 50 гривн.'
+        error: 'Це коштує 50 гривн.'
         answer: 'Це коштує 50 гривень.'
         options:
           - 'Це коштує 50 гривень.'
