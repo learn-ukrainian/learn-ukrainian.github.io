@@ -1,0 +1,80 @@
+- lemma: дієприкметниковий зворот
+  translation: "participle phrase"
+  pos: phrase
+  usage: "Дієприкметниковий зворот складається з дієприкметника та залежних слів."
+- lemma: означуване слово
+  translation: "modified word"
+  pos: phrase
+  usage: "Означуване слово - це іменник або займенник, який описується зворотом; до нього ставиться питання який?/яка?/яке?/які?"
+- lemma: залежні слова
+  translation: "dependent words"
+  pos: phrase
+  usage: "У фразі лист, написаний олівцем залежні слова - олівцем."
+- lemma: означення
+  translation: "attribute"
+  pos: noun
+  usage: "У реченні зворот виконує роль поширеного означення."
+- lemma: поширене означення
+  translation: "expanded attribute"
+  pos: phrase
+  usage: "Поширене означення додає до іменника кілька уточнювальних слів."
+- lemma: відокремлення
+  translation: "setting off with commas"
+  pos: noun
+  usage: "Відокремлення потрібне, коли зворот стоїть після означуваного слова."
+- lemma: постпозиція
+  translation: "postposition"
+  pos: noun
+  usage: "Постпозиція означає, що зворот стоїть після іменника."
+- lemma: препозиція
+  translation: "preposition"
+  pos: noun
+  usage: "У препозиції зворот стоїть перед означуваним словом."
+- lemma: підрядне речення
+  translation: "subordinate clause"
+  pos: phrase
+  usage: "Дієприкметниковий зворот часто можна замінити підрядним реченням із який."
+- lemma: трансформація
+  translation: "transformation"
+  pos: noun
+  usage: "Трансформація допомагає перевірити зміст: лист, написаний олівцем - лист, який написали олівцем."
+- lemma: пунктограма
+  translation: "punctuation rule"
+  pos: noun
+  usage: "Пунктограма для звороту залежить від позиції щодо іменника."
+- lemma: межа звороту
+  translation: "boundary of the phrase"
+  pos: phrase
+  usage: "Спочатку знайдіть межу звороту, а потім ставте коми."
+- lemma: кома
+  translation: "comma"
+  pos: noun
+  usage: "Кома відокремлює зворот після означуваного слова."
+- lemma: обставинний відтінок
+  translation: "adverbial shade"
+  pos: phrase
+  usage: "Обставинний відтінок причини може вимагати коми навіть перед іменником."
+- lemma: літературний стиль
+  translation: "literary style"
+  pos: phrase
+  usage: "Дієприкметникові звороти частіше трапляються в літературному стилі."
+- lemma: офіційний текст
+  translation: "formal text"
+  pos: phrase
+  usage: "В офіційному тексті зворот допомагає стисло подати інформацію."
+- lemma: надмірне вживання
+  translation: "overuse"
+  pos: phrase
+  usage: "Надмірне вживання зворотів робить речення важким."
+- lemma: розставляти коми
+  translation: "to place commas"
+  pos: verb phrase
+  usage: "На B1 треба впевнено розставляти коми в базових моделях."
+- lemma: який
+  translation: "which, who"
+  pos: pronoun
+  usage: "Слово який допомагає перетворити зворот на підрядне речення."
+- lemma: відокремлене означення
+  translation: "detached attribute"
+  pos: phrase
+  usage: "Дієприкметниковий зворот після іменника є типовим відокремленим означенням."
