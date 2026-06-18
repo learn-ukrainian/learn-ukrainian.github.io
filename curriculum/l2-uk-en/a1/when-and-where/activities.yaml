@@ -224,6 +224,68 @@ workbook:
         right: 'I know where...'
       - left: 'Скажи, коли...'
         right: 'Tell me when...'
+  - type: fill-in
+    title: Guest directions frames
+    instruction: Choose що, де, or коли for each short apartment-direction sentence.
+    items:
+      - sentence: 'Я знаю, ___ парк.'
+        answer: 'де'
+        options:
+          - 'де'
+          - 'що'
+          - 'коли'
+        explanation: 'A park location needs де.'
+      - sentence: 'Скажи, ___ ти біля фонтану.'
+        answer: 'коли'
+        options:
+          - 'коли'
+          - 'що'
+          - 'де'
+        explanation: 'Use коли for the time when something happens.'
+      - sentence: 'Я бачу, ___ будинок близько.'
+        answer: 'що'
+        options:
+          - 'що'
+          - 'де'
+          - 'коли'
+        explanation: 'Use що for a fact.'
+      - sentence: 'Ти знаєш, ___ вулиця Садова?'
+        answer: 'де'
+        options:
+          - 'де'
+          - 'коли'
+          - 'що'
+        explanation: 'A street location needs де.'
+      - sentence: 'Я думаю, ___ це мій будинок.'
+        answer: 'що'
+        options:
+          - 'що'
+          - 'коли'
+          - 'де'
+        explanation: 'Думаю, що introduces a thought.'
+      - sentence: 'Скажи, ___ зустріч у кафе.'
+        answer: 'коли'
+        options:
+          - 'коли'
+          - 'що'
+          - 'де'
+        explanation: 'A meeting needs a time.'
+  - type: match-up
+    title: Recognition repair pairs
+    instruction: Match each copied pattern with the Ukrainian repair.
+    pairs:
+      - left: 'Куди ти живеш?'
+        right: 'Де ти живеш?'
+      - left: 'Я знаю де Київ.'
+        right: 'Я знаю, де Київ.'
+      - left: 'Звідки ти чекаєш?'
+        right: 'Відколи ти чекаєш?'
+      - left: 'Він спитав коли ми прийдемо.'
+        right: 'Він спитав, коли ми прийдемо.'
+      - left: 'Я буду тут до того часу поки ти не прийдеш.'
+        right: 'Я буду тут, поки ти не прийдеш.'
+      - left: 'Він читає з тих пір.'
+        right: 'Він читає відтоді.'
   - type: unjumble
     title: Build short complex sentences
     instruction: Put the words in a natural order.

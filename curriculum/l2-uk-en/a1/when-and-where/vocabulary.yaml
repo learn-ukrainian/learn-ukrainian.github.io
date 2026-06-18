@@ -10,6 +10,38 @@
   translation: when
   pos: question word; connector
   example: "Скажи, коли урок."
+- word: куди
+  translation: where to
+  pos: question word
+  example: "Куди ти йдеш?"
+- word: звідки
+  translation: from where
+  pos: question word
+  example: "Звідки ти?"
+- word: відколи
+  translation: since when
+  pos: question word; connector
+  example: "Відколи ти чекаєш?"
+- word: поки
+  translation: while; until
+  pos: connector
+  example: "Я буду тут, поки ти не прийдеш."
+- word: відтоді
+  translation: since then
+  pos: adverb
+  example: "Він читає відтоді."
+- word: щойно
+  translation: just now
+  pos: adverb
+  example: "Я щойно прийшов."
+- word: тільки
+  translation: only; just
+  pos: adverb
+  example: "Тільки сьогодні."
+- word: як тільки
+  translation: as soon as
+  pos: connector
+  example: "Як тільки ти вдома, скажи."
 - word: знати
   translation: to know
   pos: verb
