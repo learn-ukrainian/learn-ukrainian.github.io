@@ -33,7 +33,7 @@
 - word: м'ясо
   translation: meat
   pos: noun
-  example: "Для борщу потрібно м'ясо."
+  example: "У борщі є м'ясо."
 - word: риба
   translation: fish
   pos: noun
@@ -78,10 +78,30 @@
   translation: to have dinner
   pos: verb
   example: "Увечері я вечеряю."
+- word: їсти
+  translation: to eat
+  pos: verb
+  example: "Я хочу їсти."
+- word: пити
+  translation: to drink
+  pos: verb
+  example: "Я хочу пити."
+- word: голодний
+  translation: hungry
+  pos: adjective
+  example: "Я голодний."
 - word: каша
   translation: porridge
   pos: noun
   example: "Каша гаряча."
+- word: рис
+  translation: rice
+  pos: noun
+  example: "На вечерю риба з рисом."
+- word: макарони
+  translation: pasta
+  pos: noun
+  example: "Макарони на столі."
 - word: сир
   translation: cheese; cottage cheese
   pos: noun
@@ -98,14 +118,54 @@
   translation: potato
   pos: noun
   example: "Смажена картопля."
+- word: картопляний
+  translation: potato; made with potato
+  pos: adjective
+  example: "Картопляний суп."
 - word: буряк
   translation: beet
   pos: noun
-  example: "Для борщу потрібен буряк."
+  example: "У борщі є буряк."
+- word: морква
+  translation: carrot
+  pos: noun
+  example: "Для борщу є морква."
 - word: капуста
   translation: cabbage
   pos: noun
-  example: "Для борщу потрібна капуста."
+  example: "У борщі є капуста."
+- word: цибуля
+  translation: onion
+  pos: noun
+  example: "Для борщу є цибуля."
+- word: помідор
+  translation: tomato
+  pos: noun
+  example: "На столі помідор."
+- word: огірок
+  translation: cucumber
+  pos: noun
+  example: "Огірок холодний."
+- word: банан
+  translation: banana
+  pos: noun
+  example: "Банан солодкий."
+- word: апельсин
+  translation: orange
+  pos: noun
+  example: "Апельсин на столі."
+- word: лимон
+  translation: lemon
+  pos: noun
+  example: "Чай з лимоном."
+- word: полуничний
+  translation: strawberry
+  pos: adjective
+  example: "Полуничний джем."
+- word: джем
+  translation: jam
+  pos: noun
+  example: "Полуничний джем."
 - word: цукор
   translation: sugar
   pos: noun
@@ -122,6 +182,38 @@
   translation: compote
   pos: noun
   example: "Я п'ю компот."
+- word: курка
+  translation: chicken
+  pos: noun
+  example: "Курка на вечерю."
+- word: йогурт
+  translation: yogurt
+  pos: noun
+  example: "Йогурт на сніданок."
+- word: олія
+  translation: oil
+  pos: noun
+  example: "Олія на столі."
+- word: кефір
+  translation: kefir
+  pos: noun
+  example: "Я п'ю кефір."
+- word: лимонад
+  translation: lemonade
+  pos: noun
+  example: "Лимонад холодний."
+- word: пиво
+  translation: beer
+  pos: noun
+  example: "Пиво - напій."
+- word: вино
+  translation: wine
+  pos: noun
+  example: "Вино - напій."
+- word: склянка
+  translation: glass
+  pos: noun
+  example: "Склянка води."
 - word: смажений
   translation: fried
   pos: adjective
@@ -130,6 +222,26 @@
   translation: tasty
   pos: adjective
   example: "Борщ дуже смачний."
+- word: гарячий
+  translation: hot
+  pos: adjective
+  example: "Чай гарячий."
+- word: теплий
+  translation: warm
+  pos: adjective
+  example: "Тепле молоко."
+- word: холодний
+  translation: cold
+  pos: adjective
+  example: "Вода холодна."
+- word: солодкий
+  translation: sweet
+  pos: adjective
+  example: "Сік солодкий."
+- word: солоний
+  translation: salty
+  pos: adjective
+  example: "Сіль солона."
 - word: без цукру
   translation: without sugar
   pos: chunk
