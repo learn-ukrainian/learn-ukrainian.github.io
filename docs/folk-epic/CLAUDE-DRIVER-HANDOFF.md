@@ -63,7 +63,50 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 52 HANDOFF (2026-06-18 — 🎉 FIRST FOLK MODULE SHIPPED: kalendarna passes the quality system end-to-end. Root cause of the 10-session stall = reviewer non-determinism; fixed via median-of-N ensemble (MERGED to main) + reverting #3495's premature terminal promotion to the project's own validated decolonization-only policy. Floor held at 8.0 — NOT lowered.) — **RESUME HERE**
+## ▶▶▶ SESSION 53 HANDOFF (2026-06-18 — 📚 FOLK DOSSIER FOUNDATION LANE OPENED: 3 dossiers built + verified + batched into this PR. agy-on-dossiers A/B FAILED → foundation stays codex.) — **RESUME HERE**
+
+**🟢 ONE-LINE STATE:** Folk dossier gap **17 → 14**. This batch PR adds `narodni-lehendy`,
+`pysankarstvo`, `prykazky-ta-pryslivia` — all 10-section, wordcount-gate PASS, `verify_quote`-confirmed
++ driver corpus-hammered. Wiki gap 26 (9 dossier-ready). 1 module shipped (kalendarna).
+
+**🔬 A/B VERDICT (answers user "utilize agy more" probe, 2026-06-18):** agy via raw `delegate dispatch`
+**FAILS dossier work** — emits plan-narration ("I will verify… I will search…"), stalls on a *deferred*
+`sources` MCP tool, 0 commits in 90 s (`folk-dossier-pysankarstvo` agy run, reassigned to codex →
+shipped). **codex gpt-5.5 xhigh is the reliable foundation writer.** agy's proven lane = WIKI compile
+(`compile.py --writer agy` — tool access managed by the script + gate-backed). **DO NOT route dossiers
+to agy via dispatch.**
+
+**📐 DOSSIER RECIPE (proven, reuse):** `codex gpt-5.5 --effort xhigh --worktree`; brief = schema ref
+(`docs/folk-epic/folk-dossier-schema.md`) + a gold-standard model dossier + #M-4 preamble + corpus-tool
+list + "commit conventional, NO push / NO PR (driver opens PR)". ~13–16 min, ~6–7k words.
+**Driver QA per dossier:** structural gate (10 §§ + wordcount PASS) + read §4 + independently
+`verify_quote` ONE **fuller-line** quote (⚠️ NOT 4-word fragments — they false-negative on the fuzzy
+line-matcher: "Михайлик вернеться в Київ" scored 0.56 as a fragment but 0.98+ on the full line, text
+genuinely attested in `48346587_c0282`. Methodology note S53). Then cherry-pick verified commits onto a
+`claude/folk-dossiers-waveN` branch, refresh THIS handoff, open ONE batch PR.
+
+### 🎯 NEXT ACTIONS (priority order)
+1. **Drain dossier gap (14 left):** codex waves of 2, batch ~3–4 per PR. Remaining slugs:
+   `dytiachyi-folklor-kolyskovi`, `istorychni-perekazy`, `narodna-kukhnia-obriadova-yizha`,
+   `narodna-kultura-ta-vysoka-kultura-mistky`, `narodna-vyshyvka-rushnyk-strii`,
+   `narodne-zhytlo-sadyba-hospodarstvo`, `narodni-anekdoty`, `narodni-muzychni-instrumenty`,
+   `narodni-opovidannia-buvalshchyny-memoraty`, `narodni-remesla-ta-khudozhni-promysly`,
+   `narodni-tantsi`, `rehionalni-etnokulturni-tradytsii`, `vertep-narodna-drama`, `zahadky`.
+2. **Wiki lane (agy):** 9 dossier-ready slugs — `charivni-kazky`, `kazky-pro-tvaryn`, `kolomyiky`,
+   `narodni-balady`, `pisni-literaturnoho-pokhodzhennia`, `rodynno-pobutovi-pisni`,
+   `sotsialno-pobutovi-kazky`, `striletski-povstanski-pisni`, `suspilno-pobutovi-pisni`.
+   `compile.py --track folk --slug <X> --writer agy --review`. Dry-run confirmed dossier grounding flows
+   in (#3088 dossier-seeded retrieval). Verify register dim holds on the first, then batch.
+3. **INFRA (mine, #0.2):** (a) wire `render_canonical_formulas_block` (preventive anchor-discipline) into
+   the wiki writer prompt — currently **UNWIRED (0 callers)**; discipline is corrective-only post-compile
+   (`compile.py:396`). Also confirm `вербатимний`/`приближенням` are anchors in
+   `data/canonical_anchors.yaml`. (b) reconcile the stale `compile.py --writer` help string ("use claude
+   for folk" contradicts the agy-default policy) — **HOLD for user nod** (it encodes the policy the user
+   raised 2026-06-18).
+
+### IN-FLIGHT: 0. Merge grant LIVE (review → CI-green → self-merge, squash; folk track work). Worktree-only; never main.
+
+## ▶▶▶ SESSION 52 HANDOFF (2026-06-18 — 🎉 FIRST FOLK MODULE SHIPPED: kalendarna passes the quality system end-to-end. Root cause of the 10-session stall = reviewer non-determinism; fixed via median-of-N ensemble (MERGED to main) + reverting #3495's premature terminal promotion to the project's own validated decolonization-only policy. Floor held at 8.0 — NOT lowered.)
 
 > **🟢 ONE-LINE STATE:** `folk/kalendarna-obriadovist-zvychai` is the first shipped folk seminar module — all deterministic gates green, MDX renders (17 islands), decolonization terminal **9.2** ≥ 8.0 (ensemble-stabilized), corpus-hammer confirmed (embedded koliadka = genuine Hrushevsky/Vahylevych variant, literary-corpus verbatim match). Live on the site (MDX on main, folk nav not hidden). NEXT per user: **folk wiki + dossiers using the agent fleet as helpers.**
 >
