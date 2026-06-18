@@ -51,7 +51,7 @@ inline:
         right: 'sparkling water'
   - id: act-3
     type: fill-in
-    title: Cafe chunks, not case tables
+    title: Cafe drink chunks
     instruction: Choose the whole chunk that completes the service line.
     items:
       - sentence: 'Мені каву ___, будь ласка.'
@@ -101,18 +101,18 @@ inline:
     title: Food guardrails
     instruction: Decide whether each statement fits this module.
     items:
-      - statement: 'Борщ is taught here as a Ukrainian cultural dish.'
+      - statement: 'Борщ is a Ukrainian cultural dish in this module.'
         answer: true
-        explanation: 'Borscht is framed as Ukrainian, not as generic regional soup.'
-      - statement: 'At A1, без цукру is taught as a full chunk.'
+        explanation: 'It is named as Ukrainian family and cultural food.'
+      - statement: 'Без цукру is practiced as a full chunk.'
         answer: true
-        explanation: 'The module does not teach a formal genitive lesson.'
+        explanation: 'Practice the whole phrase as a service line.'
       - statement: 'Творог is the standard course word for cheese.'
         answer: false
         explanation: 'Use сир, or кисломолочний сир when needed.'
       - statement: 'Смажена картопля is the clean Ukrainian form.'
         answer: true
-        explanation: 'Do not use жарена картопля as course language.'
+        explanation: 'Use смажена картопля for fried potatoes.'
       - statement: "Я п'ю борщ is the natural line for soup."
         answer: false
         explanation: 'Ukrainian says я їм борщ.'
@@ -198,6 +198,78 @@ workbook:
       - 'Я їм рибу з рисом.'
       - "Я п'ю чай без цукру."
     correct_order: [0, 1, 2, 3, 4, 5, 6, 7]
+  - type: match-up
+    title: Extra food-table glosses
+    instruction: Match the food word with its English support.
+    pairs:
+      - left: 'рис'
+        right: 'rice'
+      - left: 'макарони'
+        right: 'pasta'
+      - left: 'морква'
+        right: 'carrot'
+      - left: 'цибуля'
+        right: 'onion'
+      - left: 'помідор'
+        right: 'tomato'
+      - left: 'огірок'
+        right: 'cucumber'
+      - left: 'апельсин'
+        right: 'orange'
+      - left: 'йогурт'
+        right: 'yogurt'
+      - left: 'олія'
+        right: 'oil'
+      - left: 'кефір'
+        right: 'kefir'
+      - left: 'лимонад'
+        right: 'lemonade'
+  - type: fill-in
+    title: Meal verb rhythm
+    instruction: Choose the natural short line.
+    items:
+      - sentence: 'Вранці я ___.'
+        answer: 'снідаю'
+        options:
+          - 'снідаю'
+          - 'обідаю'
+          - 'вечеряю'
+        explanation: 'Morning meal: я снідаю.'
+      - sentence: 'Вдень я ___.'
+        answer: 'обідаю'
+        options:
+          - 'обідаю'
+          - 'вечеряю'
+          - "п'ю"
+        explanation: 'Lunch: я обідаю.'
+      - sentence: 'Увечері я ___.'
+        answer: 'вечеряю'
+        options:
+          - 'вечеряю'
+          - 'снідаю'
+          - 'їм чай'
+        explanation: 'Dinner: я вечеряю.'
+      - sentence: 'Я ___ борщ.'
+        answer: 'їм'
+        options:
+          - 'їм'
+          - "п'ю"
+          - 'снідаю'
+        explanation: 'Soup and borscht are eaten.'
+      - sentence: "Я ___ чай."
+        answer: "п'ю"
+        options:
+          - "п'ю"
+          - 'їм'
+          - 'вечеряю'
+        explanation: 'Tea is drunk.'
+      - sentence: 'Я хочу каву ___.'
+        answer: 'з молоком'
+        options:
+          - 'з молоком'
+          - 'без цукру'
+          - 'смачна'
+        explanation: 'Кава з молоком is a whole drink chunk.'
   - type: unjumble
     title: Build safe food lines
     instruction: Put the words in a natural A1 order.
@@ -231,8 +303,8 @@ workbook:
           - 'будь ласка'
         answer: 'Чай без цукру, будь ласка'
       - words:
-          - 'Смачного'
-        answer: 'Смачного'
+          - 'Смачного!'
+        answer: 'Смачного!'
   - type: error-correction
     title: Repair food and drink interference
     instruction: Choose the clean Ukrainian repair.
@@ -245,7 +317,7 @@ workbook:
           - 'Я хочу їсти. / Я голодний.'
           - 'Я маю голод. / Я є голодний.'
           - 'Я є хочу їсти. / Я маю голодний.'
-        explanation: 'Use Я хочу їсти or Я голодний; do not copy English have/be patterns.'
+        explanation: 'Use Я хочу їсти or Я голодний for hunger.'
       - sentence: "Кіт п'є теплий молоко."
         error: 'теплий молоко'
         answer: "Кіт п'є тепле молоко."
@@ -261,7 +333,7 @@ workbook:
           - 'Вареники із сиром.'
           - 'Вареники з творогом.'
           - 'Вареники із сир.'
-        explanation: 'Use сир for the course form.'
+        explanation: 'Use сир in this food context.'
       - sentence: 'Я люблю творог.'
         error: 'творог'
         answer: 'Я люблю сир.'
@@ -269,7 +341,7 @@ workbook:
           - 'Я люблю сир.'
           - 'Я люблю творог.'
           - 'Я люблю сиром.'
-        explanation: 'Use сир as the course form.'
+        explanation: 'Use сир as the everyday Ukrainian food word.'
       - sentence: 'На столі жарена картопля.'
         error: 'жарена'
         answer: 'На столі смажена картопля.'
@@ -296,9 +368,9 @@ workbook:
         explanation: 'Use одну воду, or ask for a glass of water.'
       - sentence: 'Суп з картофель.'
         error: 'картофель'
-        answer: 'Суп із картоплею. або Картопляний суп.'
+        answer: 'Суп із картоплею. Або картопляний суп.'
         options:
-          - 'Суп із картоплею. або Картопляний суп.'
+          - 'Суп із картоплею. Або картопляний суп.'
           - 'Суп з картофель.'
           - 'Суп із картофель.'
         explanation: 'Use картопля / картоплею or картопляний.'
@@ -334,6 +406,14 @@ workbook:
           - 'Дайте чай без цукор.'
           - 'Дайте чай з цукру.'
         explanation: 'Без цукру is memorized as a whole chunk.'
+      - sentence: 'Чай з цукор.'
+        error: 'з цукор'
+        answer: 'Чай з цукром.'
+        options:
+          - 'Чай з цукром.'
+          - 'Чай з цукор.'
+          - 'Чай без цукром.'
+        explanation: 'Чай з цукром is a whole drink chunk.'
       - sentence: 'Борщ дуже смачно.'
         error: 'дуже смачно'
         answer: 'Борщ дуже смачний.'
@@ -342,3 +422,19 @@ workbook:
           - 'Борщ дуже смачно.'
           - 'Борщ дуже смачна.'
         explanation: 'With the noun борщ, use смачний.'
+      - sentence: 'Каша дуже смачний.'
+        error: 'смачний'
+        answer: 'Каша дуже смачна.'
+        options:
+          - 'Каша дуже смачна.'
+          - 'Каша дуже смачний.'
+          - 'Каша дуже смачно.'
+        explanation: 'With the noun каша, use смачна.'
+      - sentence: 'Приємного апетиту!'
+        error: 'Приємного апетиту!'
+        answer: 'Смачного!'
+        options:
+          - 'Смачного!'
+          - 'Приємного апетиту!'
+          - 'Добрий апетит!'
+        explanation: 'Смачного! is the natural meal formula here.'
