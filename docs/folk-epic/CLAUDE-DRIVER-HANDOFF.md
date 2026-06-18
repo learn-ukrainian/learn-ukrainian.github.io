@@ -63,7 +63,17 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 60 HANDOFF (2026-06-18 — 🖼 WIKI WRITER A/B RESOLVED: gpt-5.5 IS viable (MIN 8.0 PASS) → cheaper batch default w/ claude fallback. 2nd folk wiki `kazky-pro-tvaryn` shipped this PR.) — **RESUME HERE**
+## ▶▶▶ SESSION 61 HANDOFF (2026-06-18 — ✅ WIKI WAVE 7: 4 wikis (gpt-5.5), ALL corpus-hammered + pisni re-grounded at root → 22/42. 🔍 MODULE COUNT CORRECTION: 5 machine-pass DoD, not 1. 🧹 search_images "blocker" = phantom.) — **RESUME HERE**
+
+**🟢 ONE-LINE STATE:** Wikis **18→22/42** (this PR: `kolomyiky` 9.0, `narodni-balady` 8.0, `pisni-literaturnoho-pokhodzhennia` 8.0, `rodynno-pobutovi-pisni` 9.0 — **gpt-5.5 writer, batch default now FULLY validated 4/4 ≥8**). All 4 corpus-hammered. pisni `source_grounding` REVISE root-caused + fixed: writer dropped the dossier's Крижанівський-music source → added **S25** (wikipedia «Реве та стогне», fact verify_quote/wiki-confirmed), re-cited 3 music claims off text-only S24, softened contested Прач `1790`→«кінця XVIII ст.», replaced Skovoroda-theatre overreach w/ [S21]-grounded vertep/school channel → **6 VERIFY markers across pisni(5)+narodni-balady(1) resolved at root**, 0 remain, citation integrity clean.
+
+### 🔍 MODULE COUNT CORRECTION (verify_shippable run 2026-06-18 — handoff's "1/42" UNDERCOUNTS by 4): **5 folk modules machine-pass DoD NOW** (python_qg + assemble_mdx + mdx_render all green): `kalendarna-obriadovist-zvychai`, `koliadky-shchedrivky`, `narodna-kultura-yak-systema`, `narodni-viruvannia-mifolohiia-demonolohiia`, `zamovliannia-zaklynannia-prymovky`. **6th (`dumy-nevilnytski-lytsarski`) is 1 token away**: `vesum_verified` fails ONLY on `татаро-турецькі` (GRAC freq 1, not in VESUM) → root-cause fix = `турецько-татарські` (freq 16, IN VESUM) in `module.md`. **NEXT ACTION = module-cert sprint**: corpus-hammer the 5 green + apply dumy 1-token fix → re-verify_shippable → certify status → ship PR (turns folk **1/42 → 6/42 shipped**). Do NOT un-hide nav without explicit user go (reverses #3027 + user "deliver e2e first" gate).
+
+### 🧹 INFRA CORRECTION (#0.1/#0.2 — drop a phantom blocker): `search_images` is **NOT** a Phase-3 module gate (prior handoffs overstated it). It is 1-of-3 multimedia tools — the `resources_search_attempted` gate (`scripts/build/phases/linear-write.md:434`) counts `query_wikipedia` OR `search_external` OR `search_images`; the first two work without it. Modules carry **no required image slots** (checked schema + 6 built modules). The SigLIP image search only needs Qdrant on :6334 (down locally) → it's an OPTIONAL Resources-tab enrichment, not a blocker. Real Phase-3 gates = #3079 self-converge + `verify_shippable`. REMOVED from the carried-infra list below.
+
+### IN-FLIGHT: 0. Merge grant LIVE; worktree-only; never main.
+
+## ▶▶▶ SESSION 60 HANDOFF (2026-06-18 — 🖼 WIKI WRITER A/B RESOLVED: gpt-5.5 IS viable (MIN 8.0 PASS) → cheaper batch default w/ claude fallback. 2nd folk wiki `kazky-pro-tvaryn` shipped this PR.)
 
 **🟢 ONE-LINE STATE:** Dossiers **42/42 COMPLETE**. Wikis now **18/42** (this PR adds `kazky-pro-tvaryn`,
 gpt-5.5 writer). **gpt-5.5 wiki A/B verdict:** real 3.3k-word article, discipline-clean, **review PASSED
