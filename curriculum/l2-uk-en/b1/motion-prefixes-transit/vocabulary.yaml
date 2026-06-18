@@ -1,0 +1,152 @@
+- lemma: перейти
+  translation: "to cross on foot; perfective"
+  pos: verb
+  usage: "Перейдіть дорогу на зелене світло."
+- lemma: перейду
+  translation: "I will cross on foot"
+  pos: verb form
+  usage: "Я перейду через міст і зачекаю біля входу."
+- lemma: перейшов
+  translation: "crossed on foot; masculine past"
+  pos: verb form
+  usage: "Він перейшов вулицю біля пішохідного переходу."
+- lemma: перейшла
+  translation: "crossed on foot; feminine past"
+  pos: verb form
+  usage: "Вона перейшла площу й зайшла до метро."
+- lemma: переходити
+  translation: "to cross, cross habitually; imperfective"
+  pos: verb
+  usage: "Дорогу потрібно переходити на зелене світло."
+- lemma: переїхати
+  translation: "to drive across, cross by vehicle, relocate; perfective"
+  pos: verb
+  usage: "Автобус переїхав міст через Дніпро."
+- lemma: переїду
+  translation: "I will cross by vehicle, I will relocate"
+  pos: verb form
+  usage: "У липні я переїду до іншого району."
+- lemma: переїжджати
+  translation: "to cross by vehicle, relocate habitually; imperfective"
+  pos: verb
+  usage: "Ми щодня переїжджаємо міст дорогою на роботу."
+- lemma: перебігти
+  translation: "to run across; perfective"
+  pos: verb
+  usage: "Не перебігайте дорогу перед автобусом."
+- lemma: перебігати
+  translation: "to run across habitually or in process"
+  pos: verb
+  usage: "Діти іноді перебігають подвір'я після дзвінка."
+- lemma: перенести
+  translation: "to carry across, transfer, reschedule; perfective"
+  pos: verb
+  usage: "Волонтер переніс коробку через коридор."
+- lemma: перенесу
+  translation: "I will carry across, I will reschedule"
+  pos: verb form
+  usage: "Я перенесу зустріч на п'ятницю."
+- lemma: перевести
+  translation: "to lead across, transfer, translate; perfective"
+  pos: verb
+  usage: "Інструктор перевів групу через дорогу."
+- lemma: перевезти
+  translation: "to transport across; perfective"
+  pos: verb
+  usage: "Вантажівка перевезла обладнання через кордон."
+- lemma: перелетіти
+  translation: "to fly across; perfective"
+  pos: verb
+  usage: "Птахи перелетіли через річку."
+- lemma: переплисти
+  translation: "to swim or sail across; perfective"
+  pos: verb
+  usage: "Плавець переплив річку за кілька хвилин."
+- lemma: пройти
+  translation: "to pass, walk past, go through; perfective"
+  pos: verb
+  usage: "Пройдіть через парк і поверніть праворуч."
+- lemma: пройду
+  translation: "I will pass, I will go through"
+  pos: verb form
+  usage: "Я пройду повз музей і зустріну вас біля арки."
+- lemma: пройшов
+  translation: "passed, walked through; masculine past"
+  pos: verb form
+  usage: "Він пройшов по вулиці до кінця кварталу."
+- lemma: проходити
+  translation: "to pass, go through habitually or in process"
+  pos: verb
+  usage: "Екскурсія проходить через старий двір."
+- lemma: проїхати
+  translation: "to drive past, drive through, miss a stop; perfective"
+  pos: verb
+  usage: "Ми проїхали повз вокзал і не зупинилися."
+- lemma: проїду
+  translation: "I will drive past or through"
+  pos: verb form
+  usage: "Я проїду два перехрестя й поверну ліворуч."
+- lemma: проїжджати
+  translation: "to drive past or through habitually; imperfective"
+  pos: verb
+  usage: "Цей автобус проїжджає через центр щодня."
+- lemma: пробігти
+  translation: "to run past or through; perfective"
+  pos: verb
+  usage: "Спортсмен пробіг повз нас і не зупинився."
+- lemma: пробігати
+  translation: "to run past habitually or in process"
+  pos: verb
+  usage: "Щоранку вона пробігає по набережній."
+- lemma: пронести
+  translation: "to carry through or past; perfective"
+  pos: verb
+  usage: "Працівник проніс сумку через контроль."
+- lemma: провести
+  translation: "to guide through, lead along; perfective"
+  pos: verb
+  usage: "Екскурсовод провів гостей по музею."
+- lemma: провезти
+  translation: "to transport through or past; perfective"
+  pos: verb
+  usage: "Водій провіз туристів через центр міста."
+- lemma: пролетіти
+  translation: "to fly past or through; perfective"
+  pos: verb
+  usage: "Літак пролетів над містом."
+- lemma: проплисти
+  translation: "to sail or swim past; perfective"
+  pos: verb
+  usage: "Човен проплив повз берег."
+- lemma: через
+  translation: "through, across; takes accusative in spatial routes"
+  pos: preposition
+  usage: "Перейдіть через дорогу на переході."
+- lemma: повз
+  translation: "past, by; takes accusative"
+  pos: preposition
+  usage: "Ми пройшли повз театр без зупинки."
+- lemma: по
+  translation: "along, over a surface; takes dative in this spatial use"
+  pos: preposition
+  usage: "Пройдіть по цій вулиці до перехрестя."
+- lemma: наскрізь
+  translation: "right through, from one side to the other"
+  pos: adverb
+  usage: "Коридор веде наскрізь через будівлю."
+- lemma: пішохідний перехід
+  translation: "pedestrian crossing"
+  pos: phrase
+  usage: "На пішохідному переході треба зупинитися."
+- lemma: перехрестя
+  translation: "intersection, crossroads"
+  pos: noun:n
+  usage: "Проїдьте два перехрестя й поверніть праворуч."
+- lemma: міст
+  translation: "bridge"
+  pos: noun:m
+  usage: "Ми переїхали міст через Дніпро."
+- lemma: кордон
+  translation: "border"
+  pos: noun:m
+  usage: "Вантажівка перевезла товар через кордон."
