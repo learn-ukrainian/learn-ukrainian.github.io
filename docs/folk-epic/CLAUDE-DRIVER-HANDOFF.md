@@ -63,7 +63,34 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 59 HANDOFF (2026-06-18 — ✅🎉 FOLK DOSSIER FOUNDATION COMPLETE: 42/42. This PR adds the final 2 (mistky synthesis + memoraty). Next workstream = WIKIS.) — **RESUME HERE**
+## ▶▶▶ SESSION 60 HANDOFF (2026-06-18 — 🖼 WIKI WRITER A/B RESOLVED: gpt-5.5 IS viable (MIN 8.0 PASS) → cheaper batch default w/ claude fallback. 2nd folk wiki `kazky-pro-tvaryn` shipped this PR.) — **RESUME HERE**
+
+**🟢 ONE-LINE STATE:** Dossiers **42/42 COMPLETE**. Wikis now **18/42** (this PR adds `kazky-pro-tvaryn`,
+gpt-5.5 writer). **gpt-5.5 wiki A/B verdict:** real 3.3k-word article, discipline-clean, **review PASSED
+MIN 8.0/10** (ukr_perspective 10 / factual 10 / register 9 / source_grounding 8-REVISE). cf. claude
+`charivni-kazky` MIN 9.0 (source_grounding 9). **Both pass; gpt-5.5 is the cheaper codex-lane option,
+claude marginally higher on grounding.**
+
+### 🎯 WIKI BATCH PLAN-OF-RECORD (Phase 2): writer = **gpt-5.5 default** (passes gate ≥8, codex lane, faster/cheaper
+than claude's ~11min metered), **claude fallback** for any slug scoring <8 or the most decolonization-charged.
+24 wikis remaining. Recipe (S56): compile in MAIN tree (`data/` sparse-excluded in worktrees) → ⚠️ `rm` ONLY the
+NEW untracked slug dir, NEVER `rm -rf wiki/folk/prose/` (it nukes already-merged tracked wikis like charivni —
+S60 near-miss, restored via `git checkout HEAD --`) → copy `.md`+`.sources.yaml` to a `claude/folk-wikis-waveN`
+branch (NO index.md) → batch ~3-4/PR → regen index.md once at batch end (+ drop phantom `folk/genres/charivni-kazky.md`).
+Remaining dossier-ready-then-all slugs: kolomyiky, narodni-balady, pisni-literaturnoho-pokhodzhennia,
+rodynno-pobutovi-pisni, sotsialno-pobutovi-kazky, striletski-povstanski-pisni, suspilno-pobutovi-pisni, + the
+other ~17 (all 42 now dossier-backed). **NEXT SESSION: run the wiki batch (gpt-5.5) — this session is long; fresh context recommended.**
+
+### 🎯 Phase 3 = MODULES (1/42: kalendarna). GATE before starting: fix `search_images` SigLIP deferral (l2-uk-en).
+Recipe: v7_build + median-of-N ensemble → verify_shippable → corpus-hammer → un-hide folk nav (LevelLanding.tsx:45 + astro.config.mjs:17).
+
+### ⚠️ INFRA carried (#0.2): `search_images` deferred (blocks module image hotspots); `render_canonical_formulas_block`
+unwired in wiki prompt; index.md batch-regen owed; `--writer` help-string vs "Gemini-family always" policy — the
+A/B now SETTLES this: help text right that agy≠folk, but gpt-5.5 (not only claude) is a valid folk writer → update both. HOLD edits for user nod.
+
+### IN-FLIGHT: 0. Merge grant LIVE; worktree-only; never main.
+
+## ▶▶▶ SESSION 59 HANDOFF (2026-06-18 — ✅🎉 FOLK DOSSIER FOUNDATION COMPLETE: 42/42 (PR #3570 MERGED). Next workstream = WIKIS.)
 
 **🟢 ONE-LINE STATE:** **Folk research dossiers = 42/42 COMPLETE** (this PR adds
 `narodna-kultura-ta-vysoka-kultura-mistky` + `narodni-opovidannia-buvalshchyny-memoraty`; both 10-§,

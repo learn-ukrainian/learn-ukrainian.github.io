@@ -1,0 +1,60 @@
+# Source registry for wiki/folk/prose/kazky-pro-tvaryn.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-entsyklopediia-ukrainoznavstva_c0640
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S2
+  file: 5-klas-ukrlit-zabolotnyi-2022_s2000
+  type: textbook
+  title: НАРОДНІ КАЗКИ (p. 37)
+  page: 37
+  grade: 5
+- id: S3
+  file: wikipedia/Байка
+  type: wikipedia
+  title: Байка
+  url: https://uk.wikipedia.org/wiki/%D0%91%D0%B0%D0%B9%D0%BA%D0%B0
+- id: S6
+  file: wikipedia/Казка
+  type: wikipedia
+  title: Казка
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%B0%D0%B7%D0%BA%D0%B0
+- id: S7
+  file: 3-klas-ukrainska-mova-savchenko-2020-2_s1677
+  type: textbook
+  title: У 2 класі ти читав/читала казки про тварин. Тепер пропо
+  page: 42
+  grade: 3
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c3053
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c3054
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c3056
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S11
+  file: wave12-hrushevsky-iu-odnotom_c0467
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S12
+  file: ukrlib-franko_c0039
+  type: literary
+  title: Іван Франко. Коли ще звірі говорили (збірка)
+  author: Франко І.
+- id: S13
+  file: ukrlib-franko_c0004
+  type: literary
+  title: Іван Франко. Фарбований лис (адаптована версія)
+  author: Франко І.
