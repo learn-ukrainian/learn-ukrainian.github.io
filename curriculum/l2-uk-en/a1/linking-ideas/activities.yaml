@@ -180,8 +180,6 @@ inline:
         items:
           - 'а'
           - 'але'
-          - 'проте'
-          - 'зате'
       - name: 'choice'
         items:
           - 'або'
@@ -192,6 +190,9 @@ inline:
           - 'тому що'
       - name: 'recognize later'
         items:
+          - 'проте'
+          - 'зате'
+          - 'однак'
           - 'щоб'
           - 'якщо'
           - 'коли'
@@ -214,23 +215,85 @@ workbook:
         answer: 'Ви студент чи лікар?'
       - words: ['Ми', 'вдома', 'тому', 'що', 'йде', 'дощ']
         answer: 'Ми вдома, тому що йде дощ.'
+  - type: fill-in
+    title: Travel plan connectors
+    instruction: Choose the connector that fits the short travel sentence.
+    items:
+      - sentence: 'Карпати ___ море?'
+        answer: 'чи'
+        options:
+          - 'чи'
+          - 'бо'
+          - 'але'
+        explanation: 'Use чи for a choice question.'
+      - sentence: 'Гори гарні, ___ далеко.'
+        answer: 'але'
+        options:
+          - 'але'
+          - 'і'
+          - 'тому що'
+        explanation: 'Use але when the second part limits the first.'
+      - sentence: 'Море тепле, ___ літо.'
+        answer: 'бо'
+        options:
+          - 'бо'
+          - 'а'
+          - 'та'
+        explanation: 'Use бо to give the reason.'
+      - sentence: 'Я хочу в гори, ___ ти?'
+        answer: 'а'
+        options:
+          - 'а'
+          - 'або'
+          - 'бо'
+        explanation: 'Use а to compare two choices.'
+      - sentence: 'Карпати ___ море - дві хороші ідеї.'
+        answer: 'і'
+        options:
+          - 'і'
+          - 'але'
+          - 'чи'
+        explanation: 'Use і to add both ideas.'
+      - sentence: 'Поїдемо в Карпати, ___ там дешевше.'
+        answer: 'бо'
+        options:
+          - 'бо'
+          - 'та'
+          - 'а'
+        explanation: 'Use бо to explain why.'
+  - type: match-up
+    title: Comma habit repairs
+    instruction: Match each sentence with the repaired comma pattern.
+    pairs:
+      - left: 'Я працюю а брат навчається.'
+        right: 'Я працюю, а брат навчається.'
+      - left: 'Я хочу але не можу.'
+        right: 'Я хочу, але не можу.'
+      - left: 'Я вдома бо я хворий.'
+        right: 'Я вдома, бо я хворий.'
+      - left: 'Ми вдома тому що йде дощ.'
+        right: 'Ми вдома, тому що йде дощ.'
+      - left: 'Яблука банани і груші.'
+        right: 'Яблука, банани і груші.'
+      - left: 'Я читаю і пишу.'
+        right: 'Я читаю і пишу.'
   - type: match-up
     title: Repair linking interference
     instruction: Match each learner mistake with the Ukrainian repair.
     pairs:
-      - left: '<!-- bad -->Він вивчає українську, тому що це є цікаво.<!-- /bad -->'
+      - left: 'Він вивчає українську, тому що це є цікаво.'
         right: 'Він вивчає українську, тому що це цікаво.'
-      - left: '<!-- bad -->Я не прийшов, що я захворів.<!-- /bad -->'
+      - left: 'Я не прийшов, що я захворів.'
         right: 'Я не прийшов, бо я захворів. (або тому що)'
-      - left: '<!-- bad -->Я поважаю його за те що він дуже сміливий. (написання разом)<!-- /bad -->'
+      - left: 'Я поважаю його за те що він дуже сміливий.'
         right: 'Я поважаю його за те, що він дуже сміливий.'
-      - left: '<!-- bad -->Я працюю а мій брат навчається в університеті. (без коми)<!-- /bad -->'
+      - left: 'Я працюю а мій брат навчається в університеті.'
         right: 'Я працюю, а мій брат навчається в університеті.'
-      - left: '<!-- bad -->Він дуже хоче що б ми всі прийшли.<!-- /bad -->'
+      - left: 'Він дуже хоче що б ми всі прийшли.'
         right: 'Він дуже хоче, щоб ми всі прийшли.'
-      - left: '<!-- bad -->Добрий день, я маю 20 років, і я студент.<!-- /bad -->'
+      - left: 'Добрий день, я маю 20 років, і я студент.'
         right: 'Добрий день, мені 20 років, і я студент.'
-      - left: '<!-- bad -->Я купив яблука і банани і груші.<!-- /bad -->'
+      - left: 'Я купив яблука і банани і груші.'
         right: 'Я купив яблука, банани і груші.'
   - type: true-false
     title: Connector checks

@@ -1,5 +1,9 @@
 # Зв'язок думок
 
+<!-- implementation_map_audit manifest_obligations=14 covered_in_map=14 missing=[] -->
+<!-- bad_form_audit bad_form_patterns_found=10 marked_with_bad_tags=10 remaining_unmarked=0 -->
+<!-- activity_split_audit level=A1 inline_n=4 workbook_n=6 inline_range=[4,6] workbook_range=[6,9] split_valid=true -->
+
 You already know how to greet, call a person, and ask for action. Now you can
 make your Ukrainian sound less like separate flashcards and more like one clear
 thought.
@@ -27,6 +31,12 @@ A1 sentence.
 :::tip[One simple habit]
 Put a comma before **а**, **але**, **бо**, and **тому що** when they link two
 parts of a thought: **Я працюю, а брат навчається.**
+:::
+
+:::caution[A1 boundary]
+Use this module for practical linking, not formal sentence analysis. Your active
+tools are **і / й / та**, **а**, **але**, **або / чи**, **бо**, and **тому що**.
+Other connectors below are recognition-only.
 :::
 
 ## Діалоги
@@ -122,16 +132,10 @@ This dialogue uses the plan scene. Keep the sentence work simple:
 sort a whole grammar system. You need to know what each little word does in a
 real sentence.
 
-<!-- NO_VERIFY: verified with mcp__sources get_chunk_context chunk 7-klas-ukrmova-avramenko-2024_s0192. -->
-> Для поєднання однорідних членів речення та рівноправних частин
-> складного речення послуговуємося сполучниками сурядності: Скрізь
-> добре, а вдома найліпше (нар. тв.).
-> Для зв'язку залежної частини складного речення з головною -
-> сполучниками підрядності.
-> — Авраменко Grade 7, p.175
-
-That school reference explains the larger grammar category. Your active A1 task
-is smaller: use the connector to add, compare, choose, or give a reason.
+The grammar reference behind the plan uses larger school categories:
+**сполучники сурядності** for equal parts and **сполучники підрядності** for a
+dependent reason or purpose part. Your active A1 task is smaller: use the
+connector to add, compare, choose, or give a reason.
 
 | Connector | Use | A1 example |
 | --- | --- | --- |
@@ -290,13 +294,13 @@ Comma habit:
 
 | Learner sentence | Better Ukrainian |
 | --- | --- |
-| <!-- bad -->**Він вивчає українську, тому що це є цікаво.**<!-- /bad --> | **Він вивчає українську, тому що це цікаво.** |
-| <!-- bad -->**Я не прийшов, що я захворів.**<!-- /bad --> | **Я не прийшов, бо я захворів.** |
-| <!-- bad -->**Я поважаю його за те що він дуже сміливий.**<!-- /bad --> | **Я поважаю його за те, що він дуже сміливий.** |
-| <!-- bad -->**Я працюю а мій брат навчається в університеті.**<!-- /bad --> | **Я працюю, а мій брат навчається в університеті.** |
-| <!-- bad -->**Він дуже хоче що б ми всі прийшли.**<!-- /bad --> | **Він дуже хоче, щоб ми всі прийшли.** |
-| <!-- bad -->**Добрий день, я маю 20 років, і я студент.**<!-- /bad --> | **Добрий день, мені 20 років, і я студент.** |
-| <!-- bad -->**Я купив яблука і банани і груші.**<!-- /bad --> | **Я купив яблука, банани і груші.** |
+| <bad>Він вивчає українську, тому що це є цікаво.</bad> | **Він вивчає українську, тому що це цікаво.** |
+| <bad>Я не прийшов, що я захворів.</bad> | **Я не прийшов, бо я захворів.** |
+| <bad>Я поважаю його за те що він дуже сміливий.</bad> | **Я поважаю його за те, що він дуже сміливий.** |
+| <bad>Я працюю а мій брат навчається в університеті.</bad> | **Я працюю, а мій брат навчається в університеті.** |
+| <bad>Він дуже хоче що б ми всі прийшли.</bad> | **Він дуже хоче, щоб ми всі прийшли.** |
+| <bad>Добрий день, я маю 20 років, і я студент.</bad> | **Добрий день, мені 20 років, і я студент.** |
+| <bad>Я купив яблука і банани і груші.</bad> | **Я купив яблука, банани і груші.** |
 
 The first repair keeps the Ukrainian present tense clean: do not copy "is" into
 **це цікаво**. The second repair uses **бо** or **тому що** for a reason, not a
@@ -306,9 +310,9 @@ needs formal syntax.
 Keep the decolonized language habit too. Do not use Russian as a shortcut, and
 do not copy banned forms into Ukrainian. For these connector habits, that means:
 
-- use **бо**, **тому що**, or later **оскільки**, not <!-- bad -->**так як**<!-- /bad -->;
-- use **Добрий день**, not <!-- bad -->**Здрастуйте**<!-- /bad -->;
-- use **До побачення** when saying goodbye, not <!-- bad -->**пока**<!-- /bad -->;
+- use **бо**, **тому що**, or later **оскільки**, not <bad>так як</bad>;
+- use **Добрий день**, not <bad>Здрастуйте</bad>;
+- use **До побачення** when saying goodbye, not <bad>пока</bad>;
 - say **Київ**, **гривня**, and **синьо-жовтий стяг** when those words appear.
 
 Next module asks when and where something happens. These connectors prepare you
@@ -323,7 +327,7 @@ Use this mini-checklist when English sentence habits push too hard:
 
 | Check | Repair |
 | --- | --- |
-| Did I copy **is**? | **це цікаво**, not <!-- bad -->**це є цікаво**<!-- /bad --> |
+| Did I copy **is**? | Use **це цікаво** without a present-tense "is." |
 | Did I use **що** for "because"? | **бо** or **тому що** |
 | Did I forget a comma before **а**, **але**, **бо**, **тому що**? | Add the comma. |
 | Did I split **щоб** in a purpose sentence? | Write **щоб** together. |
