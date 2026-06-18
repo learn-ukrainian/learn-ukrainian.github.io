@@ -261,6 +261,62 @@ workbook:
       - "Діти п'ють молоко."
       - 'Смачного!'
     correct_order: [0, 1, 2, 3, 4, 5, 6]
+  - type: match-up
+    title: Food-day object pairs
+    instruction: Match the starter with the clean food or drink line.
+    pairs:
+      - left: 'я п''ю + кава'
+        right: 'я п''ю каву'
+      - left: 'вона п''є + вода'
+        right: 'вона п''є воду'
+      - left: 'ти їси + риба'
+        right: 'ти їси рибу'
+      - left: 'вони їдять + каша'
+        right: 'вони їдять кашу'
+      - left: 'ми їмо + картопля'
+        right: 'ми їмо картоплю'
+      - left: 'я їм + хліб'
+        right: 'я їм хліб'
+      - left: 'діти п''ють + молоко'
+        right: 'діти п''ють молоко'
+      - left: 'він п''є + сік'
+        right: 'він п''є сік'
+  - type: unjumble
+    title: Build food and drink lines
+    instruction: Put the words in a natural A1 order.
+    items:
+      - words:
+          - 'Я'
+          - 'їм'
+          - 'кашу'
+        answer: 'Я їм кашу'
+      - words:
+          - 'Вона'
+          - "п'є"
+          - 'воду'
+        answer: "Вона п'є воду"
+      - words:
+          - 'Ми'
+          - 'їмо'
+          - 'суп'
+          - 'і'
+          - 'салат'
+        answer: 'Ми їмо суп і салат'
+      - words:
+          - 'Діти'
+          - "п'ють"
+          - 'молоко'
+        answer: "Діти п'ють молоко"
+      - words:
+          - 'Я'
+          - 'хочу'
+          - 'воду'
+        answer: 'Я хочу воду'
+      - words:
+          - 'Ти'
+          - 'їси'
+          - 'рибу'
+        answer: 'Ти їси рибу'
   - type: error-correction
     title: Repair eat and drink interference
     instruction: Choose the clean Ukrainian repair.
@@ -298,14 +354,14 @@ workbook:
           - 'Ти їсиш яблуко.'
           - 'Ти їсть яблуко.'
         explanation: 'The form is ти їси.'
-      - sentence: 'Я мию мене.'
-        error: 'Я мию мене.'
-        answer: 'Я вмиваюся.'
+      - sentence: "Я п'ю вода."
+        error: "Я п'ю вода."
+        answer: "Я п'ю воду."
         options:
-          - 'Я вмиваюся.'
-          - 'Я мию мене.'
-          - 'Я мию я.'
-        explanation: 'Use the Ukrainian reflexive verb вмиватися.'
+          - "Я п'ю воду."
+          - "Я п'ю вода."
+          - "Я п'ю воді."
+        explanation: "Вода becomes воду after п'ю."
       - sentence: "На перерві: Я п'ю кава."
         error: "Я п'ю кава."
         answer: "Я п'ю каву."

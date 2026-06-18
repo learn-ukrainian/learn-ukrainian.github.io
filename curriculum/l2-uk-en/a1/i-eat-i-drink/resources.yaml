@@ -3,20 +3,10 @@
   source_ref: "ULP Season 1, Episode 32"
   url: https://www.ukrainianlessons.com/episode32/
   notes: "Beginner introduction to the accusative case for inanimate objects."
-- title: "Ukrainian Course: Nouns in the Accusative Case"
-  role: grammar table
-  source_ref: "ukrainiancourse.com"
-  url: https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-accusative-case/
-  notes: "Reference table for accusative noun forms; this module uses only the A1-safe inanimate pattern."
-- title: "Ukrainian Course: Grammar Tables"
-  role: grammar tables index
-  source_ref: "ukrainiancourse.com"
-  url: https://www.ukrainiancourse.com/grammar-tables/
-  notes: "General grammar-table index; the module keeps їсти and пити as A1 classroom paradigms."
-- title: "Заболотний Grade 6, p.94"
-  role: textbook grounding
-  source_ref: "Заболотний Grade 6, p.94"
-  notes: "School grammar grounding for the accusative case as the object receiving an action."
+- title: "State Standard 2024, Topic 3"
+  role: communicative standard
+  source_ref: "State Standard 2024, Topic 3"
+  notes: "A1-safe everyday eating and drinking lines inside the food and restaurant communicative domain."
 - title: "Wiki: pedagogy/a1/i-eat-i-drink"
   role: internal wiki
   source_ref: "Wiki: pedagogy/a1/i-eat-i-drink"
