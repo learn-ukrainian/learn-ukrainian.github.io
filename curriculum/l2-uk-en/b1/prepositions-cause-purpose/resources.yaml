@@ -1,0 +1,32 @@
+- title: "B1 M58: prepositions temporal"
+  role: curriculum
+  notes: "Попередній модуль уже показав через + Зн.в. у часовому значенні; M60 розрізняє це з причинним через + Зн.в."
+- title: "B1 M59: places and locations"
+  role: curriculum
+  notes: "Попередній модуль закріпив просторові прийменники й відмінки; M60 переносить увагу з простору на причину, мету й регістр."
+- title: "B1 M79: complex subordinate reason"
+  role: curriculum
+  notes: "Пізніший синтаксичний модуль розширить через те що, тому що, оскільки та інші підрядні причини."
+- title: "B1 M81: complex subordinate purpose"
+  role: curriculum
+  notes: "Пізніший синтаксичний модуль розширить щоб, аби, для того щоб і підрядні мети."
+- title: "Заболотний Grade 7, p.193"
+  role: textbook
+  notes: "Подає культуру мовлення: завдяки вказує на причину, що сприяє здійсненню дії; через - на причину, що заважає; також розрізняє зайти за книжкою і зайти по книжку."
+  source_ref: "7-klas-ukrmova-zabolotnyi-2024, p.193"
+- title: "Авраменко Grade 11, §22-23"
+  role: textbook
+  notes: "Пояснює нормативні значення прийменника по, зокрема мету дії: піти по гриби, поїхати по продукти; застерігає від калькованого по замість з, за, щодо, для."
+  source_ref: "11-klas-ukrajinska-mova-avramenko-2019, §22-23, pp.71-75"
+- title: "Заболотний Grade 9, §20"
+  role: textbook
+  notes: "Описує підрядні частини мети: питання з якою метою? навіщо?; сполучники щоб, щоби, аби, для того щоб, заради того щоб, на те щоб, з тим щоб."
+  source_ref: "9-klas-ukrajinska-mova-zabolotnij-2017, §20, pp.108-112"
+- title: "Заболотний Grade 7, compound conjunction spelling"
+  role: textbook
+  notes: "Підтримує окреме написання складених сполучників тому що, через те що, для того щоб, у зв'язку з тим що та правило однієї коми."
+  source_ref: "7-klas-ukrmova-zabolotnyi-2024, p.193+"
+- title: "Headroom source retrieval"
+  role: orchestration
+  notes: "Стислий запис джерел для M60: завдяки/через, по для мети, складені сполучники причини й мети."
+  source_ref: "headroom hash 5e4ff86db024473add9ad555"
