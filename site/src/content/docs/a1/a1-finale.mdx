@@ -59,7 +59,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs syncKey="module-tab">
 <TabItem label="Lesson">
 
-This is the final A1 integration module. It does **not** introduce new
+Привіт! This is the final A1 integration module. It does **not** introduce new
 grammar. You will use the tools you already have for one complete day in a
 Ukrainian city.
 
@@ -75,6 +75,7 @@ The task is simple: speak clearly in short A1 lines.
 | buy or order | **Будь ласка... Скільки коштує?** |
 | repair | **Повторіть, будь ласка. Повільніше, будь ласка.** |
 | ask for help | **Мені потрібна допомога.** |
+| stay in touch | **Ось мій номер. Напиши мені.** |
 
 :::tip[A1 boundary]
 Keep the speech short. Use known chunks, known time words, and the compound
@@ -85,7 +86,7 @@ future **буду / будемо + infinitive**.
 
 ### Complete the A1 line
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Учора я ___ у кафе.", "answer": "снідав", "options": ["снідав", "снідаю", "буду снідати"]}, {"sentence": "Зараз я ___ на метро.", "answer": "їду", "options": ["їду", "їхав", "буду їхати"]}, {"sentence": "Завтра я ___ гуляти в парку.", "answer": "буду", "options": ["буду", "був", "є"]}, {"sentence": "___, будь ласка.", "answer": "Повторіть", "options": ["Повторіть", "Сувенір", "Квиток"]}]`)} instruction={"Choose the word or phrase that fits the time and situation."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Зранку я ___ у кафе.", "answer": "снідав", "options": ["снідав", "буду снідати", "снідаю"]}, {"sentence": "Зараз я ___ по Хрещатику.", "answer": "гуляю", "options": ["гуляю", "гуляв", "буду гуляти"]}, {"sentence": "Учора я ___ квиток.", "answer": "купив", "options": ["купив", "купую", "буду купувати"]}, {"sentence": "Завтра я ___ по Україні.", "answer": "буду подорожувати", "options": ["буду подорожувати", "подорожував", "подорожую"]}, {"sentence": "Ввечері ми ___ в кіно.", "answer": "ходили", "options": ["ходили", "ходимо", "будемо ходити"]}, {"sentence": "Зараз Олена ___ борщ і салат.", "answer": "замовляє", "options": ["замовляє", "замовляла", "буде замовляти"]}, {"sentence": "Учора була гарна погода, і ми ___ в парку.", "answer": "гуляли", "options": ["гуляли", "гуляємо", "будемо гуляти"]}, {"sentence": "Я вже ___ до рівня А2!", "answer": "готовий", "options": ["готовий", "коштує", "болить"]}]`)} instruction={"Choose the word or phrase that fits the time and situation."} isUkrainian={false} />
 
 You wake up in Kyiv on the last day of A1.
 
@@ -116,15 +117,19 @@ and polite phrases. It also uses time naturally:
 - **Зараз я йду** - present.
 - **Далі я буду їхати в центр** - future.
 
+When you tell your own story, choose your form: **прокинувся / прокинулася**,
+**снідав / снідала**, **їхав / їхала**, **купив / купила**,
+**зустрів / зустріла**.
+
 After breakfast, you need transport.
 
 ```text
 Вибачте, як дістатися до Хрещатика?
 Їдьте на метро. Станція Хрещатик.
-Мені потрібна зелена лінія?
-Так, зелена лінія.
+Мені потрібна червона лінія?
+Так, червона лінія.
 Повторіть, будь ласка.
-Зелена лінія. Одна станція.
+Червона лінія. Одна станція.
 ```
 
 Support after the Ukrainian lines:
@@ -133,17 +138,17 @@ Support after the Ukrainian lines:
 | --- | --- |
 | **Вибачте, як дістатися до Хрещатика?** | Excuse me, how do I get to Khreshchatyk? |
 | **Їдьте на метро. Станція Хрещатик.** | Go by metro. Khreshchatyk station. |
-| **Мені потрібна зелена лінія?** | Do I need the green line? |
-| **Так, зелена лінія.** | Yes, the green line. |
+| **Мені потрібна червона лінія?** | Do I need the red line? |
+| **Так, червона лінія.** | Yes, the red line. |
 | **Повторіть, будь ласка.** | Please repeat. |
-| **Зелена лінія. Одна станція.** | The green line. One station. |
+| **Червона лінія. Одна станція.** | The red line. One station. |
 
 The repair phrase is not a failure. It is an A1 success: you keep the
 conversation open.
 
 ### Put the final day in order
 
-<Order client:only='react' items={JSON.parse(`["Я прокинувся в готелі.", "Я снідав у кафе.", "Я їхав на метро в центр.", "Я купив сувенір.", "Я обідав з Оленою.", "Ми ходили в кіно.", "Я повернувся в готель."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5, 6]`)} instruction={"Arrange the events from morning to night."} isUkrainian={false} />
+<Order client:only='react' items={JSON.parse(`["Я прокинувся в готелі.", "Я снідав у кафе.", "Я їхав на метро в центр.", "Я купив сувенір.", "Я обідав з Оленою.", "Ми ходили в кіно.", "Ми вечеряли в ресторані.", "Я повернувся в готель."]`)} correct_order={JSON.parse(`[0, 1, 2, 3, 4, 5, 6, 7]`)} instruction={"Arrange the events from morning to night."} isUkrainian={false} />
 
 ## День
 
@@ -207,7 +212,7 @@ that fits the situation.
 
 ### Situation and phrase
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "introducing yourself", "right": "Мене звати..."}, {"left": "asking for directions", "right": "Як дістатися до метро?"}, {"left": "ordering coffee", "right": "Каву з молоком, будь ласка."}, {"left": "asking the price", "right": "Скільки коштує?"}, {"left": "repairing understanding", "right": "Повторіть, будь ласка."}, {"left": "asking for help", "right": "Мені потрібна допомога."}]`)} instruction={"Match each everyday situation with the A1 phrase."} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "introducing yourself", "right": "Мене звати..."}, {"left": "asking for directions", "right": "Як дістатися до метро?"}, {"left": "ordering coffee", "right": "Каву з молоком, будь ласка."}, {"left": "asking the price", "right": "Скільки коштує?"}, {"left": "repairing understanding", "right": "Повторіть, будь ласка."}, {"left": "asking for help", "right": "Мені потрібна допомога."}, {"left": "emergency situation", "right": "Допоможіть! Викличте швидку!"}, {"left": "at the pharmacy", "right": "Дайте, будь ласка, таблетки від головного болю."}, {"left": "saying goodbye", "right": "Дякую! До побачення!"}]`)} instruction={"Match each everyday situation with the A1 phrase."} isUkrainian={false} />
 
 ### Sort your A1 toolkit
 
@@ -221,8 +226,9 @@ In the evening, you can talk about the whole day and make simple plans.
 Олена: Що будемо робити ввечері?
 Учень: Ходімо в кіно. О котрій?
 Олена: О сьомій.
-Учень: Добре. Після кіно ми будемо вечеряти?
-Олена: Так, біля метро є ресторан.
+Учень: Я хочу подивитися український фільм.
+Олена: Добре. Після кіно ми будемо вечеряти?
+Учень: Так, біля метро є ресторан.
 ```
 
 Support after the Ukrainian lines:
@@ -232,20 +238,22 @@ Support after the Ukrainian lines:
 | **Олена: Що будемо робити ввечері?** | Olena: What will we do this evening? |
 | **Учень: Ходімо в кіно. О котрій?** | Learner: Let's go to the cinema. At what time? |
 | **Олена: О сьомій.** | Olena: At seven. |
-| **Учень: Добре. Після кіно ми будемо вечеряти?** | Learner: Good. After the movie, will we have dinner? |
-| **Олена: Так, біля метро є ресторан.** | Olena: Yes, there is a restaurant near the metro. |
+| **Учень: Я хочу подивитися український фільм.** | Learner: I want to watch a Ukrainian film. |
+| **Олена: Добре. Після кіно ми будемо вечеряти?** | Olena: Good. After the movie, will we have dinner? |
+| **Учень: Так, біля метро є ресторан.** | Learner: Yes, there is a restaurant near the metro. |
 
 At night, you write a short message to your teacher.
 
 **Сьогодні був чудовий день. Зранку я снідав у кафе. Потім я їхав на метро в
-центр. Вдень я купив сувенір і обідав з Оленою. Ввечері ми ходили в кіно.
-Зараз я в готелі. Завтра я буду гуляти в парку і буду повторювати українську.**
+центр. Вдень я купив сувенір і зустрів Олену. Ми обідали разом. Ввечері ми
+ходили в кіно і дивилися український фільм. Зараз я в готелі. Завтра я буду
+гуляти в парку і буду повторювати українську.**
 
 Notice the three time zones:
 
 | Time word | Verb shape | Example |
 | --- | --- | --- |
-| **зранку / вдень / ввечері** | past for the finished day | **я снідав, я купив, ми ходили** |
+| **зранку / вдень / ввечері** | past for the finished day | **я снідав, я купив, я зустрів, ми ходили** |
 | **зараз** | present for now | **я в готелі** |
 | **завтра** | compound future | **я буду гуляти, буду повторювати** |
 
@@ -277,11 +285,12 @@ You can now handle short everyday exchanges.
 
 ```text
 Студент 1: Я закінчив А1. Вітаю!
-Студент 2: Вітаю! Що ти тепер можеш?
-Студент 1: Я можу представитися, замовити їжу, купити квиток і попросити допомогу.
-Студент 2: А що ти будеш робити далі?
+Студент 2: Вітаю! Я теж. Ми вивчили стільки!
+Студент 1: Що ти тепер можеш?
+Студент 2: Я можу представитися, замовити їжу, купити квиток і попросити допомогу. А що ти будеш робити далі?
 Студент 1: Я буду говорити щодня. Я буду читати короткі тексти. Я буду слухати українську.
-Студент 2: Чудовий план. До зустрічі!
+Студент 2: Чудовий план. Ось мій номер телефону.
+Студент 1: Дякую. Напиши мені. До зустрічі на А2!
 ```
 
 Support after the Ukrainian lines:
@@ -289,11 +298,46 @@ Support after the Ukrainian lines:
 | Українська | English support |
 | --- | --- |
 | **Студент 1: Я закінчив А1. Вітаю!** | Student 1: I finished A1. Congratulations! |
-| **Студент 2: Вітаю! Що ти тепер можеш?** | Student 2: Congratulations! What can you do now? |
-| **Студент 1: Я можу представитися, замовити їжу, купити квиток і попросити допомогу.** | Student 1: I can introduce myself, order food, buy a ticket, and ask for help. |
-| **Студент 2: А що ти будеш робити далі?** | Student 2: And what will you do next? |
+| **Студент 2: Вітаю! Я теж. Ми вивчили стільки!** | Student 2: Congratulations! Me too. We learned so much! |
+| **Студент 1: Що ти тепер можеш?** | Student 1: What can you do now? |
+| **Студент 2: Я можу представитися, замовити їжу, купити квиток і попросити допомогу. А що ти будеш робити далі?** | Student 2: I can introduce myself, order food, buy a ticket, and ask for help. And what will you do next? |
 | **Студент 1: Я буду говорити щодня. Я буду читати короткі тексти. Я буду слухати українську.** | Student 1: I will speak every day. I will read short texts. I will listen to Ukrainian. |
-| **Студент 2: Чудовий план. До зустрічі!** | Student 2: Great plan. See you! |
+| **Студент 2: Чудовий план. Ось мій номер телефону.** | Student 2: Great plan. Here is my phone number. |
+| **Студент 1: Дякую. Напиши мені. До зустрічі на А2!** | Student 1: Thank you. Write to me. See you in A2! |
+
+### Після А1: плани в Україні
+
+```text
+Подруга: Ти закінчив А1. Вітаю! Що ти хочеш робити далі?
+Учень: Я буду подорожувати Україною.
+Подруга: Куди ти хочеш поїхати?
+Учень: Я хочу побачити Карпати. Потім я хочу побачити Лавру в Києві.
+Подруга: Чудовий план. А що ти будеш робити щодня?
+Учень: Я буду говорити українською щодня і читати короткі тексти.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Подруга: Ти закінчив А1. Вітаю! Що ти хочеш робити далі?** | Friend: You finished A1. Congratulations! What do you want to do next? |
+| **Учень: Я буду подорожувати Україною.** | Learner: I will travel around Ukraine. |
+| **Подруга: Куди ти хочеш поїхати?** | Friend: Where do you want to go? |
+| **Учень: Я хочу побачити Карпати. Потім я хочу побачити Лавру в Києві.** | Learner: I want to see the Carpathians. Then I want to see the Lavra in Kyiv. |
+| **Подруга: Чудовий план. А що ти будеш робити щодня?** | Friend: Great plan. And what will you do every day? |
+| **Учень: Я буду говорити українською щодня і читати короткі тексти.** | Learner: I will speak Ukrainian every day and read short texts. |
+
+### Repair final A1 lines
+
+In the finale, repair the line before you continue. Keep the clear A1 chunk.
+
+| Avoid | Use |
+| --- | --- |
+| <bad>Моє ім'я є Адам.</bad> | **Мене звати Адам.** |
+| <bad>Вчора я снідаю у кафе.</bad> | **Учора я снідав / снідала у кафе.** |
+| <bad>Завтра я гуляв у парку.</bad> | **Завтра я буду гуляти в парку.** |
+| <bad>Я буду читаю українську.</bad> | **Я буду читати українську.** |
+| <bad>Я маю Канада.</bad> | **Я з Канади.** |
 
 ## 📋 Підсумок
 
@@ -320,9 +364,9 @@ today, the win is A1: clear short speech in real situations.
 </TabItem>
 <TabItem label="Vocabulary">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"фінал","translation":"finale","pos":"noun","example":"Це фінал А1.","examples":["finale","Це фінал А1."],"atlas_href":"/lexicon/фінал/"},{"word":"готовий","translation":"ready","pos":"adjective","example":"Я готовий до нового дня.","examples":["ready","Я готовий до нового дня."],"atlas_href":"/lexicon/готовий/"},{"word":"готова","translation":"ready","pos":"adjective","example":"Я готова говорити українською.","examples":["ready","Я готова говорити українською."],"atlas_href":"/lexicon/готова/"},{"word":"вітаю","translation":"congratulations","pos":"phrase","example":"Вітаю, ти закінчив А1.","examples":["congratulations","Вітаю, ти закінчив А1."],"atlas_href":"/lexicon/вітаю/"},{"word":"початок","translation":"beginning","pos":"noun","example":"Це тільки початок.","examples":["beginning","Це тільки початок."],"atlas_href":"/lexicon/початок/"},{"word":"сувенір","translation":"souvenir","pos":"noun","example":"Я купив сувенір.","examples":["souvenir","Я купив сувенір."],"atlas_href":"/lexicon/сувенір/"},{"word":"листівка","translation":"postcard","pos":"noun","example":"Ця листівка коштує п'ятдесят гривень.","examples":["postcard","Ця листівка коштує п'ятдесят гривень."],"atlas_href":"/lexicon/листівка/"},{"word":"магніт","translation":"magnet","pos":"noun","example":"Я беру цей магніт.","examples":["magnet","Я беру цей магніт."],"atlas_href":"/lexicon/магніт/"},{"word":"квиток","translation":"ticket","pos":"noun","example":"Мені потрібен квиток.","examples":["ticket","Мені потрібен квиток."],"atlas_href":"/lexicon/квиток/"},{"word":"картка","translation":"card","pos":"noun","example":"Карткою можна?","examples":["card","Карткою можна?"],"atlas_href":"/lexicon/картка/"},{"word":"готель","translation":"hotel","pos":"noun","example":"Я в готелі.","examples":["hotel","Я в готелі."],"atlas_href":"/lexicon/готель/"},{"word":"центр","translation":"center","pos":"noun","example":"Я їду в центр.","examples":["center","Я їду в центр."],"atlas_href":"/lexicon/центр/"},{"word":"лінія","translation":"line","pos":"noun","example":"Мені потрібна зелена лінія.","examples":["line","Мені потрібна зелена лінія."],"atlas_href":"/lexicon/лінія/"},{"word":"карта","translation":"map","pos":"noun","example":"Я дивлюся на карту.","examples":["map","Я дивлюся на карту."],"atlas_href":"/lexicon/карта/"},{"word":"круасан","translation":"croissant","pos":"noun","example":"Будь ласка, круасан.","examples":["croissant","Будь ласка, круасан."],"atlas_href":"/lexicon/круасан/"},{"word":"борщ","translation":"borshch","pos":"noun","example":"Я хочу борщ і воду.","examples":["borshch","Я хочу борщ і воду."],"atlas_href":"/lexicon/борщ/"},{"word":"познайомитися","translation":"to meet","pos":"verb","example":"Я хочу познайомитися з Оленою.","examples":["to meet","Я хочу познайомитися з Оленою."],"atlas_href":"/lexicon/познайомитися/"},{"word":"повторювати","translation":"to review","pos":"verb","example":"Я буду повторювати українську.","examples":["to review","Я буду повторювати українську."],"atlas_href":"/lexicon/повторювати/"},{"word":"подорожувати","translation":"to travel","pos":"verb","example":"Я буду подорожувати Україною.","examples":["to travel","Я буду подорожувати Україною."],"atlas_href":"/lexicon/подорожувати/"},{"word":"щодня","translation":"every day","pos":"adverb","example":"Я буду говорити щодня.","examples":["every day","Я буду говорити щодня."],"atlas_href":"/lexicon/щодня/"},{"word":"чудовий","translation":"wonderful","pos":"adjective","example":"Сьогодні був чудовий день.","examples":["wonderful","Сьогодні був чудовий день."],"atlas_href":"/lexicon/чудовий/"},{"word":"зрозуміло","translation":"understood","pos":"phrase","example":"Добре, зрозуміло.","examples":["understood","Добре, зрозуміло."],"atlas_href":"/lexicon/зрозуміло/"}]`)} title="Vocabulary" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"фінал","translation":"finale","pos":"noun","example":"Це фінал А1.","examples":["finale","Це фінал А1."],"atlas_href":"/lexicon/фінал/"},{"word":"готовий","translation":"ready","pos":"adjective","example":"Я готовий до нового дня.","examples":["ready","Я готовий до нового дня."],"atlas_href":"/lexicon/готовий/"},{"word":"готова","translation":"ready","pos":"adjective","example":"Я готова говорити українською.","examples":["ready","Я готова говорити українською."]},{"word":"вітаю","translation":"congratulations","pos":"phrase","example":"Вітаю, ти закінчив А1.","examples":["congratulations","Вітаю, ти закінчив А1."],"atlas_href":"/lexicon/вітаю/"},{"word":"початок","translation":"beginning","pos":"noun","example":"Це тільки початок.","examples":["beginning","Це тільки початок."],"atlas_href":"/lexicon/початок/"},{"word":"сувенір","translation":"souvenir","pos":"noun","example":"Я купив сувенір.","examples":["souvenir","Я купив сувенір."],"atlas_href":"/lexicon/сувенір/"},{"word":"листівка","translation":"postcard","pos":"noun","example":"Ця листівка коштує п'ятдесят гривень.","examples":["postcard","Ця листівка коштує п'ятдесят гривень."],"atlas_href":"/lexicon/листівка/"},{"word":"магніт","translation":"magnet","pos":"noun","example":"Я беру цей магніт.","examples":["magnet","Я беру цей магніт."],"atlas_href":"/lexicon/магніт/"},{"word":"квиток","translation":"ticket","pos":"noun","example":"Мені потрібен квиток.","examples":["ticket","Мені потрібен квиток."],"atlas_href":"/lexicon/квиток/"},{"word":"картка","translation":"card","pos":"noun","example":"Карткою можна?","examples":["card","Карткою можна?"],"atlas_href":"/lexicon/картка/"},{"word":"готель","translation":"hotel","pos":"noun","example":"Я в готелі.","examples":["hotel","Я в готелі."],"atlas_href":"/lexicon/готель/"},{"word":"центр","translation":"center","pos":"noun","example":"Я їду в центр.","examples":["center","Я їду в центр."],"atlas_href":"/lexicon/центр/"},{"word":"лінія","translation":"line","pos":"noun","example":"Мені потрібна червона лінія.","examples":["line","Мені потрібна червона лінія."],"atlas_href":"/lexicon/лінія/"},{"word":"карта","translation":"map","pos":"noun","example":"Я дивлюся на карту.","examples":["map","Я дивлюся на карту."],"atlas_href":"/lexicon/карта/"},{"word":"круасан","translation":"croissant","pos":"noun","example":"Будь ласка, круасан.","examples":["croissant","Будь ласка, круасан."],"atlas_href":"/lexicon/круасан/"},{"word":"борщ","translation":"borshch","pos":"noun","example":"Я хочу борщ і воду.","examples":["borshch","Я хочу борщ і воду."],"atlas_href":"/lexicon/борщ/"},{"word":"зустріти","translation":"to meet","pos":"verb","example":"Я хочу зустріти Олену.","examples":["to meet","Я хочу зустріти Олену."],"atlas_href":"/lexicon/зустріти/"},{"word":"познайомитися","translation":"to meet","pos":"verb","example":"Я хочу познайомитися з Оленою.","examples":["to meet","Я хочу познайомитися з Оленою."],"atlas_href":"/lexicon/познайомитися/"},{"word":"фільм","translation":"film","pos":"noun","example":"Це український фільм.","examples":["film","Це український фільм."],"atlas_href":"/lexicon/фільм/"},{"word":"повторювати","translation":"to review","pos":"verb","example":"Я буду повторювати українську.","examples":["to review","Я буду повторювати українську."],"atlas_href":"/lexicon/повторювати/"},{"word":"подорожувати","translation":"to travel","pos":"verb","example":"Я буду подорожувати Україною.","examples":["to travel","Я буду подорожувати Україною."],"atlas_href":"/lexicon/подорожувати/"},{"word":"Карпати","translation":"Carpathians","pos":"proper noun","example":"Я хочу побачити Карпати.","examples":["Carpathians","Я хочу побачити Карпати."],"atlas_href":"/lexicon/карпати/"},{"word":"Лавра","translation":"Lavra","pos":"proper noun","example":"Я хочу побачити Лавру в Києві.","examples":["Lavra","Я хочу побачити Лавру в Києві."]},{"word":"щодня","translation":"every day","pos":"adverb","example":"Я буду говорити щодня.","examples":["every day","Я буду говорити щодня."],"atlas_href":"/lexicon/щодня/"},{"word":"чудовий","translation":"wonderful","pos":"adjective","example":"Сьогодні був чудовий день.","examples":["wonderful","Сьогодні був чудовий день."],"atlas_href":"/lexicon/чудовий/"},{"word":"зрозуміло","translation":"understood","pos":"phrase","example":"Добре, зрозуміло.","examples":["understood","Добре, зрозуміло."],"atlas_href":"/lexicon/зрозуміло/"}]`)} title="Vocabulary" />
 
-<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"фінал","back":"finale"},{"front":"готовий","back":"ready"},{"front":"готова","back":"ready"},{"front":"вітаю","back":"congratulations"},{"front":"початок","back":"beginning"},{"front":"сувенір","back":"souvenir"},{"front":"листівка","back":"postcard"},{"front":"магніт","back":"magnet"},{"front":"квиток","back":"ticket"},{"front":"картка","back":"card"},{"front":"готель","back":"hotel"},{"front":"центр","back":"center"},{"front":"лінія","back":"line"},{"front":"карта","back":"map"},{"front":"круасан","back":"croissant"},{"front":"борщ","back":"borshch"},{"front":"познайомитися","back":"to meet"},{"front":"повторювати","back":"to review"},{"front":"подорожувати","back":"to travel"},{"front":"щодня","back":"every day"},{"front":"чудовий","back":"wonderful"},{"front":"зрозуміло","back":"understood"}]`)} />
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"фінал","back":"finale"},{"front":"готовий","back":"ready"},{"front":"готова","back":"ready"},{"front":"вітаю","back":"congratulations"},{"front":"початок","back":"beginning"},{"front":"сувенір","back":"souvenir"},{"front":"листівка","back":"postcard"},{"front":"магніт","back":"magnet"},{"front":"квиток","back":"ticket"},{"front":"картка","back":"card"},{"front":"готель","back":"hotel"},{"front":"центр","back":"center"},{"front":"лінія","back":"line"},{"front":"карта","back":"map"},{"front":"круасан","back":"croissant"},{"front":"борщ","back":"borshch"},{"front":"зустріти","back":"to meet"},{"front":"познайомитися","back":"to meet"},{"front":"фільм","back":"film"},{"front":"повторювати","back":"to review"},{"front":"подорожувати","back":"to travel"},{"front":"Карпати","back":"Carpathians"},{"front":"Лавра","back":"Lavra"},{"front":"щодня","back":"every day"},{"front":"чудовий","back":"wonderful"},{"front":"зрозуміло","back":"understood"}]`)} />
 
 </TabItem>
 <TabItem label="Activities">
@@ -345,7 +389,7 @@ today, the win is A1: clear short speech in real situations.
 
 ### Choose the A1 response
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "A cashier says: Сто гривень.", "options": [{"text": "Карткою можна?", "correct": true}, {"text": "Я з Канади.", "correct": false}, {"text": "Мені холодно.", "correct": false}], "explanation": "Карткою можна? fits payment."}, {"question": "A friend asks: Що ти робив сьогодні?", "options": [{"text": "Зранку я снідав у кафе.", "correct": true}, {"text": "Завтра я снідав у кафе.", "correct": false}, {"text": "Я метро коштує.", "correct": false}], "explanation": "The question asks about earlier today, so a past line fits."}, {"question": "You did not understand the direction.", "options": [{"text": "Повторіть, будь ласка.", "correct": true}, {"text": "Я беру це.", "correct": false}, {"text": "Він мій тато.", "correct": false}], "explanation": "Use a repair phrase."}, {"question": "You want to talk about tomorrow.", "options": [{"text": "Завтра я буду гуляти.", "correct": true}, {"text": "Завтра я гуляв.", "correct": false}, {"text": "Учора я буду гуляти.", "correct": false}], "explanation": "Завтра pairs with буду + infinitive."}]`)} instruction={"Pick the response that fits the situation."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "How do you ask about the price of a ticket?", "options": [{"text": "Скільки коштує квиток?", "correct": true}, {"text": "Де тут квиток?", "correct": false}, {"text": "Дайте один квиток.", "correct": false}], "explanation": "Скільки коштує...? asks the price."}, {"question": "You invite a friend to a cafe.", "options": [{"text": "Ходімо в кафе!", "correct": true}, {"text": "Я був у кафе.", "correct": false}, {"text": "Де кафе?", "correct": false}], "explanation": "Ходімо... is the A1 invitation chunk."}, {"question": "How do you say: My head hurts?", "options": [{"text": "У мене болить голова.", "correct": true}, {"text": "У мене температура.", "correct": false}, {"text": "Я хворий.", "correct": false}], "explanation": "У мене болить голова is the practiced health phrase."}, {"question": "Someone asks: 'Де ви?'", "options": [{"text": "Я на вулиці Хрещатик.", "correct": true}, {"text": "Мене звати Адам.", "correct": false}, {"text": "Я з Канади.", "correct": false}], "explanation": "Answer the location question with a place."}, {"question": "What time frame is in: 'Завтра я буду читати книгу'?", "options": [{"text": "Майбутній", "correct": true}, {"text": "Минулий", "correct": false}, {"text": "Теперішній", "correct": false}], "explanation": "Завтра and буду читати mark the future."}]`)} instruction={"Pick the response that fits the situation."} isUkrainian={false} />
 
 ### A1 finale check
 
@@ -362,6 +406,10 @@ today, the win is A1: clear short speech in real situations.
 ### Finish A1
 
 <Translate client:only='react' questions={JSON.parse(`[{"source": "My name is Adam. I am from Canada.", "options": [{"text": "Мене звати Адам. Я з Канади.", "correct": true}, {"text": "Моє ім'я є Адам. Я маю Канада.", "correct": false}, {"text": "Адам коштує Канада.", "correct": false}], "explanation": "Use Мене звати... and Я з..."}, {"source": "Yesterday I bought a souvenir.", "options": [{"text": "Учора я купив сувенір.", "correct": true}, {"text": "Завтра я купив сувенір.", "correct": false}, {"text": "Сувенір мене звати.", "correct": false}], "explanation": "Учора points to the past."}, {"source": "Tomorrow I will read Ukrainian.", "options": [{"text": "Завтра я буду читати українську.", "correct": true}, {"text": "Учора я буду читати українську.", "correct": false}, {"text": "Завтра я читав українську.", "correct": false}], "explanation": "Use завтра + буду читати."}]`)} instruction={"Choose the Ukrainian phrase that matches the English prompt."} isUkrainian={false} />
+
+### Repair final A1 lines
+
+<ErrorCorrection client:only='react' instruction="Fix the common finale mistake." items={JSON.parse(`[{"sentence": "Моє ім'я є Адам.", "errorWord": "Моє ім'я є", "correctForm": "Мене звати", "options": [], "explanation": "Use the A1 name chunk: Мене звати Адам."}, {"sentence": "Вчора я снідаю у кафе.", "errorWord": "снідаю", "correctForm": "снідав / снідала", "options": [], "explanation": "Use a past form after учора / вчора."}, {"sentence": "Завтра я гуляв у парку.", "errorWord": "гуляв", "correctForm": "буду гуляти", "options": [], "explanation": "Use буду + infinitive for tomorrow."}, {"sentence": "Я буду читаю українську.", "errorWord": "читаю", "correctForm": "читати", "options": [], "explanation": "After буду, use the infinitive."}, {"sentence": "Я маю Канада.", "errorWord": "маю Канада", "correctForm": "з Канади", "options": [], "explanation": "Use Я з Канади for country of origin."}]`)} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">
