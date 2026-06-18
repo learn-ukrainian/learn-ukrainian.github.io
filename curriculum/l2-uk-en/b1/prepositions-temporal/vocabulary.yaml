@@ -1,0 +1,220 @@
+- lemma: прийменник
+  translation: "preposition"
+  pos: noun
+  usage: "Прийменник керує відмінком і змінює значення фрази."
+- lemma: часовий
+  translation: "temporal, related to time"
+  pos: adjective
+  usage: "Часовий прийменник показує відношення між подіями."
+- lemma: тривалість
+  translation: "duration"
+  pos: noun
+  usage: "За + знахідний часто називає тривалість виконання."
+- lemma: проміжок часу
+  translation: "time interval"
+  pos: phrase
+  usage: "Через годину означає проміжок часу від тепер."
+- lemma: відлік
+  translation: "countdown, point of reckoning"
+  pos: noun
+  usage: "У фразі через годину відлік починається зараз."
+- lemma: через
+  translation: "in, after; because of"
+  pos: preposition
+  usage: "Через тиждень після відкриття буде концерт."
+- lemma: за
+  translation: "within, in the time of"
+  pos: preposition
+  usage: "Дизайнер зробив афішу за два дні."
+- lemma: знахідний відмінок
+  translation: "accusative case"
+  pos: phrase
+  usage: "Через і за в часових виразах часто керують знахідним."
+- lemma: родовий відмінок
+  translation: "genitive case"
+  pos: phrase
+  usage: "Після, до, під час і протягом керують родовим."
+- lemma: орудний відмінок
+  translation: "instrumental case"
+  pos: phrase
+  usage: "Перед керує орудним: перед лекцією."
+- lemma: місцевий відмінок
+  translation: "locative case"
+  pos: phrase
+  usage: "По обіді має місцеву форму обіді."
+- lemma: перед
+  translation: "before"
+  pos: preposition
+  usage: "Перед лекцією волонтери перевірили звук."
+- lemma: після
+  translation: "after"
+  pos: preposition
+  usage: "Після лекції гості залишилися на каву."
+- lemma: до
+  translation: "until, by; to"
+  pos: preposition
+  usage: "Заявку треба подати до п'ятниці."
+- lemma: під час
+  translation: "during"
+  pos: phrase
+  usage: "Під час лекції не користуйтеся телефоном."
+- lemma: протягом
+  translation: "throughout, during"
+  pos: preposition
+  usage: "Протягом тижня ми збирали заявки."
+- lemma: упродовж
+  translation: "throughout"
+  pos: preposition
+  usage: "Упродовж року центр проводив майстерні."
+- lemma: впродовж
+  translation: "throughout"
+  pos: preposition
+  usage: "Впродовж семестру студенти працювали над проєктом."
+- lemma: на
+  translation: "for, onto, on"
+  pos: preposition
+  usage: "Ми орендували зал на тиждень."
+- lemma: по
+  translation: "after; for; along, depending on case"
+  pos: preposition
+  usage: "По обіді команда зустрінеться з гідом."
+- lemma: по обіді
+  translation: "after lunch"
+  pos: phrase
+  usage: "По обіді ми поговоримо про програму."
+- lemma: по завершенні
+  translation: "after completion"
+  pos: phrase
+  usage: "По завершенні лекції студенти поставили питання."
+- lemma: по закінченні
+  translation: "after the end of"
+  pos: phrase
+  usage: "По закінченні курсу учасники отримають сертифікат."
+- lemma: дедлайн
+  translation: "deadline"
+  pos: noun
+  usage: "До п'ятниці означає дедлайн."
+- lemma: крайній термін
+  translation: "deadline, final date"
+  pos: phrase
+  usage: "Крайній термін подання заявки - до понеділка."
+- lemma: межа
+  translation: "boundary, limit"
+  pos: noun
+  usage: "До задає часову межу."
+- lemma: розклад
+  translation: "schedule"
+  pos: noun
+  usage: "У розкладі важливо точно позначити час."
+- lemma: подія
+  translation: "event"
+  pos: noun
+  usage: "Подія почнеться через тиждень."
+- lemma: зустріч
+  translation: "meeting"
+  pos: noun
+  usage: "Після зустрічі ми надішлемо протокол."
+- lemma: лекція
+  translation: "lecture"
+  pos: noun
+  usage: "Перед лекцією перевірте мікрофон."
+- lemma: репетиція
+  translation: "rehearsal"
+  pos: noun
+  usage: "Під час репетиції двері були зачинені."
+- lemma: фестиваль
+  translation: "festival"
+  pos: noun
+  usage: "Через тиждень після відкриття буде фінальний концерт."
+- lemma: афіша
+  translation: "poster, event announcement"
+  pos: noun
+  usage: "Дизайнер зробив афішу за два дні."
+- lemma: заявка
+  translation: "application, registration form"
+  pos: noun
+  usage: "Заявку треба подати до п'ятниці."
+- lemma: учасник
+  translation: "participant"
+  pos: noun
+  usage: "Учасники прийдуть о третій годині."
+- lemma: координаторка
+  translation: "coordinator (female)"
+  pos: noun
+  usage: "Координаторка збирала заявки протягом місяця."
+- lemma: волонтер
+  translation: "volunteer"
+  pos: noun
+  usage: "Волонтери працювали упродовж тижня."
+- lemma: культурний центр
+  translation: "cultural center"
+  pos: phrase
+  usage: "Культурний центр орендував зал на місяць."
+- lemma: зал
+  translation: "hall, room"
+  pos: noun
+  usage: "Зал заброньовано на дві години."
+- lemma: обладнання
+  translation: "equipment"
+  pos: noun
+  usage: "Обладнання взяли на два дні."
+- lemma: годинник
+  translation: "clock, watch"
+  pos: noun
+  usage: "Годинник показує пів на шосту."
+- lemma: о
+  translation: "at, for clock time"
+  pos: preposition
+  usage: "Лекція починається о третій годині."
+- lemma: об
+  translation: "at, before a vowel in clock time"
+  pos: preposition
+  usage: "Зустріч буде об одинадцятій."
+- lemma: пів на шосту
+  translation: "half past five"
+  pos: phrase
+  usage: "Пів на шосту означає 5:30."
+- lemma: за десять хвилин шоста
+  translation: "ten minutes to six"
+  pos: phrase
+  usage: "За десять хвилин шоста означає 5:50."
+- lemma: щопонеділка
+  translation: "every Monday"
+  pos: adverb
+  usage: "Клуб збирається щопонеділка."
+- lemma: щосереди
+  translation: "every Wednesday"
+  pos: adverb
+  usage: "Розмовна практика відбувається щосереди."
+- lemma: щороку
+  translation: "every year"
+  pos: adverb
+  usage: "Фестиваль відбувається щороку."
+- lemma: взимку
+  translation: "in winter"
+  pos: adverb
+  usage: "Взимку центр працює до сьомої."
+- lemma: навесні
+  translation: "in spring"
+  pos: adverb
+  usage: "Навесні відкриється нова виставка."
+- lemma: вранці
+  translation: "in the morning"
+  pos: adverb
+  usage: "Вранці ми перевіримо розклад."
+- lemma: зранку
+  translation: "from the morning, early in the morning"
+  pos: adverb
+  usage: "Зранку координаторка відповіла на листи."
+- lemma: увечері
+  translation: "in the evening"
+  pos: adverb
+  usage: "Увечері буде концерт."
+- lemma: наступний
+  translation: "next"
+  pos: adjective
+  usage: "Наступного тижня почнеться курс."
+- lemma: цього року
+  translation: "this year"
+  pos: phrase
+  usage: "Цього року фестиваль відбудеться в червні."
