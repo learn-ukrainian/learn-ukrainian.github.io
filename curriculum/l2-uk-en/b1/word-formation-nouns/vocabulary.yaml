@@ -1,0 +1,240 @@
+- lemma: словотвір
+  translation: "word formation"
+  pos: noun
+  usage: "Словотвір пояснює, як із відомого слова постає новий іменник."
+- lemma: мотивувальне слово
+  translation: "motivating word, base word"
+  pos: phrase
+  usage: "У слові читач мотивувальне слово - читати."
+- lemma: твірна основа
+  translation: "derivational stem"
+  pos: phrase
+  usage: "Твірна основа поєднується з формантом і дає похідне слово."
+- lemma: похідний іменник
+  translation: "derived noun"
+  pos: phrase
+  usage: "Пекарня - похідний іменник від пекар або пекти."
+- lemma: формант
+  translation: "word-forming element"
+  pos: noun
+  usage: "Суфікс -ач є формантом у слові читач."
+- lemma: суфіксальний спосіб
+  translation: "suffixal derivation"
+  pos: phrase
+  usage: "Читати -> читач - це суфіксальний спосіб."
+- lemma: префіксальний спосіб
+  translation: "prefixal derivation"
+  pos: phrase
+  usage: "Префіксальний спосіб додає префікс до твірної основи."
+- lemma: префіксально-суфіксальний спосіб
+  translation: "prefixal-suffixal derivation"
+  pos: phrase
+  usage: "Закарпаття утворене префіксально-суфіксальним способом."
+- lemma: безафіксний спосіб
+  translation: "zero derivation"
+  pos: phrase
+  usage: "Підписати -> підпис показує безафіксний спосіб."
+- lemma: словотвірний ланцюжок
+  translation: "derivational chain"
+  pos: phrase
+  usage: "Школа -> школяр -> школярка -> школярство - словотвірний ланцюжок."
+- lemma: назва особи
+  translation: "agent noun, noun naming a person"
+  pos: phrase
+  usage: "Читач і працівник - назви осіб за діяльністю."
+- lemma: назва місця
+  translation: "place noun"
+  pos: phrase
+  usage: "Пекарня й читальня - назви місць."
+- lemma: назва приміщення
+  translation: "room or facility name"
+  pos: phrase
+  usage: "Їдальня - назва приміщення, де їдять."
+- lemma: віддієслівний
+  translation: "deverbal"
+  pos: adjective
+  usage: "Читання - віддієслівний іменник."
+- lemma: віддієслівний іменник
+  translation: "verbal noun"
+  pos: phrase
+  usage: "Навчання може називати процес або результат."
+- lemma: збірний іменник
+  translation: "collective noun"
+  pos: phrase
+  usage: "Студентство - збірний іменник."
+- lemma: продуктивний суфікс
+  translation: "productive suffix"
+  pos: phrase
+  usage: "Продуктивний суфікс активно творить нові слова."
+- lemma: непродуктивний суфікс
+  translation: "unproductive suffix"
+  pos: phrase
+  usage: "Непродуктивний суфікс рідко творить нові сучасні слова."
+- lemma: читач
+  translation: "reader"
+  pos: noun
+  usage: "Читач бере книжку в бібліотеці."
+- lemma: слухач
+  translation: "listener, attendee"
+  pos: noun
+  usage: "Слухач курсу ставить запитання після лекції."
+- lemma: викладач
+  translation: "lecturer, instructor"
+  pos: noun
+  usage: "Викладач пояснює словотвірні моделі."
+- lemma: працівник
+  translation: "worker, employee"
+  pos: noun
+  usage: "Працівник центру допомагає відвідувачам."
+- lemma: працівниця
+  translation: "female worker, employee"
+  pos: noun
+  usage: "Працівниця читальні видала нову картку."
+- lemma: захисник
+  translation: "defender"
+  pos: noun
+  usage: "Захисник міста повернувся до громади."
+- lemma: захисниця
+  translation: "female defender"
+  pos: noun
+  usage: "Захисниця виступила на зустрічі зі студентами."
+- lemma: учитель
+  translation: "teacher"
+  pos: noun
+  usage: "Учитель проводить заняття в класі."
+- lemma: учителька
+  translation: "female teacher"
+  pos: noun
+  usage: "Учителька підготувала вправи з української мови."
+- lemma: пекар
+  translation: "baker"
+  pos: noun
+  usage: "Пекар працює в пекарні."
+- lemma: пекарка
+  translation: "female baker"
+  pos: noun
+  usage: "Пекарка продає свіжий хліб."
+- lemma: школяр
+  translation: "school pupil"
+  pos: noun
+  usage: "Школяр читає оголошення про гурток."
+- lemma: школярка
+  translation: "female school pupil"
+  pos: noun
+  usage: "Школярка записалася до театральної студії."
+- lemma: журналіст
+  translation: "journalist"
+  pos: noun
+  usage: "Журналіст пише матеріал про громаду."
+- lemma: журналістка
+  translation: "female journalist"
+  pos: noun
+  usage: "Журналістка бере інтерв'ю в директорки центру."
+- lemma: пекарня
+  translation: "bakery"
+  pos: noun
+  usage: "У пекарні пахне житнім хлібом."
+- lemma: читальня
+  translation: "reading room"
+  pos: noun
+  usage: "У читальні тихо працюють студенти."
+- lemma: їдальня
+  translation: "canteen, dining hall"
+  pos: noun
+  usage: "Їдальня відчиняється о дванадцятій."
+- lemma: майстерня
+  translation: "workshop"
+  pos: noun
+  usage: "У майстерні ремонтують велосипеди."
+- lemma: лікарня
+  translation: "hospital"
+  pos: noun
+  usage: "Лікарня приймає пацієнтів цілодобово."
+- lemma: кладовище
+  translation: "cemetery"
+  pos: noun
+  usage: "Кладовище розташоване за селом."
+- lemma: Прикарпаття
+  translation: "Prykarpattia, area near the Carpathians"
+  pos: proper_noun
+  usage: "Прикарпаття лежить біля Карпат."
+- lemma: Закарпаття
+  translation: "Zakarpattia, area beyond the Carpathians"
+  pos: proper_noun
+  usage: "Закарпаття має особливу культурну історію."
+- lemma: читання
+  translation: "reading"
+  pos: noun
+  usage: "Читання розвиває словниковий запас."
+- lemma: навчання
+  translation: "learning, study"
+  pos: noun
+  usage: "Навчання триває весь семестр."
+- lemma: відкриття
+  translation: "opening, discovery"
+  pos: noun
+  usage: "Відкриття центру відбулося в суботу."
+- lemma: підпис
+  translation: "signature"
+  pos: noun
+  usage: "Підпис стояв унизу заяви."
+- lemma: перехід
+  translation: "crossing, transition"
+  pos: noun
+  usage: "Перехід через вулицю має бути безпечним."
+- lemma: доброта
+  translation: "kindness"
+  pos: noun
+  usage: "Доброта виявляється в щоденних діях."
+- lemma: висота
+  translation: "height"
+  pos: noun
+  usage: "Висота будівлі добре помітна здалеку."
+- lemma: студентство
+  translation: "student body"
+  pos: noun
+  usage: "Студентство підтримало волонтерський проєкт."
+- lemma: козацтво
+  translation: "Cossackdom"
+  pos: noun
+  usage: "Козацтво має важливе місце в історичній пам'яті."
+- lemma: киянин
+  translation: "Kyivan man, resident of Kyiv"
+  pos: noun
+  usage: "Киянин показав гостям старий Поділ."
+- lemma: киянка
+  translation: "Kyivan woman, resident of Kyiv"
+  pos: noun
+  usage: "Киянка розповіла про новий маршрут метро."
+- lemma: львів'янин
+  translation: "Lviv resident, man from Lviv"
+  pos: noun
+  usage: "Львів'янин порадив кав'ярню біля площі Ринок."
+- lemma: львів'янка
+  translation: "Lviv resident, woman from Lviv"
+  pos: noun
+  usage: "Львів'янка провела екскурсію центром міста."
+- lemma: одесит
+  translation: "Odesa resident, man from Odesa"
+  pos: noun
+  usage: "Одесит жартував про морський вітер."
+- lemma: одеситка
+  translation: "Odesa resident, woman from Odesa"
+  pos: noun
+  usage: "Одеситка запросила друзів на Приморський бульвар."
+- lemma: фахівець
+  translation: "specialist, expert"
+  pos: noun
+  usage: "Фахівець перевірив технічний опис."
+- lemma: фахівчиня
+  translation: "female specialist, expert"
+  pos: noun
+  usage: "Фахівчиня пояснила правила без складних термінів."
+- lemma: митець
+  translation: "artist, creator"
+  pos: noun
+  usage: "Митець працює з деревом і металом."
+- lemma: мисткиня
+  translation: "female artist, creator"
+  pos: noun
+  usage: "Мисткиня відкрила виставку в галереї."
