@@ -1,0 +1,126 @@
+# Source registry for wiki/folk/historical/istorychni-pisni.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-ukrlit-zabolotnyi-2025_s4433
+  type: textbook
+  title: НА СТРУНАХ КОБЗИ, ЛІРИ І БАНДУРИ (p. 9)
+  page: 9
+  grade: 8
+- id: S4
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4929
+  type: textbook
+  title: УСНА НАРОДНА ТВОРЧІСТЬ РОДИННО-ПОБУТОВІ ПІСНІ
+  page: 5
+  grade: 9
+- id: S5
+  file: ukrainian_wiki/istorychni-perekazy_Український-фольклор-Історичні-перекази-Пам-ять-про-минуле-Основний-зміст-Жанрова-система-від-міфу-та-казки-до-історичного-переказу
+  type: ukrainian_wiki
+  title: 'Український фольклор: Історичні перекази: Пам''ять про минуле'
+  section_path: 'Український фольклор: Історичні перекази: Пам''ять про минуле > Основний
+    зміст > Жанрова система: від міфу та казки до історичного переказу'
+- id: S8
+  file: wikipedia/Фольклор
+  type: wikipedia
+  title: Фольклор
+  url: https://uk.wikipedia.org/wiki/%D0%A4%D0%BE%D0%BB%D1%8C%D0%BA%D0%BB%D0%BE%D1%80
+- id: S9
+  file: wikipedia/Історичний міф
+  type: wikipedia
+  title: Історичний міф
+  url: https://uk.wikipedia.org/wiki/%D0%86%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%BD%D0%B8%D0%B9%20%D0%BC%D1%96%D1%84
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c2976
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S11
+  file: wave7-istkult-t2-xiii-xvii_c0871
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S12
+  file: wave4-hrushevsky-iur-t7-10_c0817
+  type: literary
+  title: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+- id: S13
+  file: wave8-ukr-lit-entsyklopediia_c1266
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S14
+  file: wave7-antonovych-kultura_c0642
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S15
+  file: wave7-antonovych-kultura_c0657
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S16
+  file: wave7-heroes-ukr-kultura_c0029
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S17
+  file: wave7-holobutsky-zaporizhzhia_c0184
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+- id: S18
+  file: ukrlib-narod-dumy_c0000
+  type: literary
+  title: Народна творчість. Пісня про Байду
+  author: Народна творчість
+- id: S19
+  file: wave4-hrushevsky-iur-t7-10_c2949
+  type: literary
+  title: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+- id: S20
+  file: ukrlib-hrinchenko_c0032
+  type: literary
+  title: Борис Грінченко. Серед бурі
+  author: Грінченко Б.
+- id: S21
+  file: ukrlib-nechuy_c0015
+  type: literary
+  title: Іван Нечуй-Левицький. Маруся Богуславка
+  author: Нечуй-Левицький І.
+- id: S22
+  file: ukrlib-nechuy_c0008
+  type: literary
+  title: Іван Нечуй-Левицький. В концерті
+  author: Нечуй-Левицький І.
+- id: S23
+  file: wave8-ukr-lit-entsyklopediia_c2977
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S24
+  file: wave7-entsyklopediia-ukrainoznavstva_c0417
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S25
+  file: wave9-rusanivsky-ist-lit-movy_c0257
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S26
+  file: wave10-shevchenkivsky-slovnyk_c1253
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S27
+  file: wave10-shevchenko-tvory-t1_c0268
+  type: literary
+  title: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+- id: S28
+  file: wave5-dramaturhiia-xix_c0026
+  type: literary
+  title: Українська драматургія першої половини XIX ст.
+  author: Антологія
