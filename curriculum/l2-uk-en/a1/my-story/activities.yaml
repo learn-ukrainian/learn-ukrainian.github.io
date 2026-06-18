@@ -209,3 +209,27 @@ workbook:
           - text: 'Зараз я вчив українську.'
             correct: false
         explanation: 'Use буду + infinitive for the future.'
+  - type: error-correction
+    title: Repair the timeline
+    instruction: Fix the time word and verb so the story stays clear.
+    items:
+      - sentence: 'Раніше я живу в Канаді.'
+        error: 'живу'
+        correction: 'жив / жила'
+        explanation: 'Раніше points to the past.'
+      - sentence: 'Зараз я жив у Києві.'
+        error: 'жив'
+        correction: 'живу'
+        explanation: 'Зараз points to the present.'
+      - sentence: 'Далі я працював тут.'
+        error: 'працював'
+        correction: 'буду працювати'
+        explanation: 'Далі points to a future plan.'
+      - sentence: 'Я буду працюю в офісі.'
+        error: 'працюю'
+        correction: 'працювати'
+        explanation: 'After буду, use the infinitive працювати.'
+      - sentence: 'Моє ім''я є Софія.'
+        error: 'Моє ім''я є'
+        correction: 'Мене звати'
+        explanation: 'Use the familiar A1 name chunk Мене звати.'

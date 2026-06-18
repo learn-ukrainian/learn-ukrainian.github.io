@@ -1,7 +1,12 @@
 # Моя історія
 
-You can now talk about **what happened**, **what is true now**, and **what will
-happen next**. This module turns those three tools into one simple life story.
+<!-- plan_coverage_audit objectives=4 content_sections=4 dialogue_situations=1 activity_hints=4 covered=true missing=[] -->
+<!-- bad_form_audit bad_form_patterns_found=6 marked_with_bad_tags=6 remaining_unmarked=0 -->
+<!-- activity_split_audit level=A1 inline_n=4 workbook_n=6 inline_range=[4,6] workbook_range=[6,9] split_valid=true -->
+
+Привіт! You can now talk about **what happened**, **what is true now**, and
+**what will happen next**. This module turns those three tools into one simple
+life story.
 
 The safe A1 story frame is:
 
@@ -92,6 +97,36 @@ This story moves like a simple timeline:
 4. **Далі я буду...**
 
 For A1, that is enough. A good story is clear, not long.
+
+### Дідусь розповідає
+
+```text
+Онука: Дідусю, розкажи свою історію.
+Дідусь: Я народився в селі.
+Дідусь: У дитинстві я ходив у школу.
+Дідусь: Потім я переїхав у місто.
+Дідусь: Зараз я працюю в лікарні.
+Онука: А що ти будеш робити далі?
+Дідусь: Улітку я буду відпочивати на дачі.
+Онука: Чудова історія!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Онука: Дідусю, розкажи свою історію.** | Granddaughter: Grandpa, tell your story. |
+| **Дідусь: Я народився в селі.** | Grandfather: I was born in a village. |
+| **Дідусь: У дитинстві я ходив у школу.** | Grandfather: In childhood I went to school. |
+| **Дідусь: Потім я переїхав у місто.** | Grandfather: Then I moved to a city. |
+| **Дідусь: Зараз я працюю в лікарні.** | Grandfather: Now I work in a hospital. |
+| **Онука: А що ти будеш робити далі?** | Granddaughter: And what will you do next? |
+| **Дідусь: Улітку я буду відпочивати на дачі.** | Grandfather: In summer I will rest at the dacha. |
+| **Онука: Чудова історія!** | Granddaughter: A wonderful story! |
+
+The place words are useful, but the grammar stays familiar:
+**в селі**, **у школу**, **у місто**, **в лікарні**, **на дачі**. Learn them as
+whole chunks for this story.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
@@ -200,12 +235,12 @@ Keep the time word and the verb in the same time.
 
 | Learner sentence | Better A1 sentence |
 | --- | --- |
-| <del>**Раніше я живу в Канаді.**</del> | **Раніше я жив / жила в Канаді.** |
-| <del>**Зараз я жив у Києві.**</del> | **Зараз я живу в Києві.** |
-| <del>**Далі я працював тут.**</del> | **Далі я буду працювати тут.** |
-| <del>**Я буду працюю в офісі.**</del> | **Я буду працювати в офісі.** |
-| <del>**Вона буде подорожує.**</del> | **Вона буде подорожувати.** |
-| <del>**Моє ім'я є Софія.**</del> | **Мене звати Софія.** |
+| <bad>**Раніше я живу в Канаді.**</bad> | **Раніше я жив / жила в Канаді.** |
+| <bad>**Зараз я жив у Києві.**</bad> | **Зараз я живу в Києві.** |
+| <bad>**Далі я працював тут.**</bad> | **Далі я буду працювати тут.** |
+| <bad>**Я буду працюю в офісі.**</bad> | **Я буду працювати в офісі.** |
+| <bad>**Вона буде подорожує.**</bad> | **Вона буде подорожувати.** |
+| <bad>**Моє ім'я є Софія.**</bad> | **Мене звати Софія.** |
 
 The last repair is important. Ukrainian does not need the English-style
 sentence **my name is...**. Use the familiar A1 chunk **Мене звати...**.
@@ -238,3 +273,6 @@ Support after the Ukrainian lines:
 
 Stop here. If you can tell this kind of story, you can connect past, present,
 and future without leaving A1.
+
+You can now tell a short life story in three time frames: **раніше**, **зараз**,
+and **далі**.
