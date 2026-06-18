@@ -141,6 +141,19 @@ Bad pedagogy creates durable learner errors. Strong modules beat many mediocre m
 - V7 builds must run in worktrees because they write curriculum artifacts and telemetry.
 - Pre-submit checklist authority is `AGENTS.md:11-26`; read it directly before PR work.
 
+## Headroom — compress big context, keep handoffs tight
+Headroom (the `headroom` MCP, shared compression + memory layer) is ON across the fleet — use it:
+- **Large content** (build logs, corpus/search dumps, cross-agent review bundles, validation output —
+  roughly >200 lines / 20 KB): call `headroom_compress` FIRST, reason over the hash + a one-line
+  summary, and `headroom_retrieve` only the exact detail. Single biggest context-saver on a long
+  orchestration session — default to it.
+- **Handoffs:** `docs/session-state/current.orchestrator.md` stays the durable cross-agent SSOT. The
+  proxy memory store is local-only with no MCP write tool yet (`native_tool`/`bridge` off) — it
+  auto-injects context but cannot carry the handoff across agents, so keep git as the backstop and push
+  bulky evidence behind Headroom hashes rather than pasting it. Migrate the handoff body to Headroom
+  once the durable memory-write tool lands.
+- Full rule: `agents_extensions/shared/rules/headroom.md`. Never run `headroom learn --apply`.
+
 ## Definition of Done — render before promote (#3137/#3138)
 `python_qg`-green does NOT mean a module renders. The `mdx_render` gate is deferred and historically
 never ran, so a template-literal escape bug (#3137) shipped: on 2026-06-14 three modules went out

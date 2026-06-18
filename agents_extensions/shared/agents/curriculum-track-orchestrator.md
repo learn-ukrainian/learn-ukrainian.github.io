@@ -114,6 +114,23 @@ initialPrompt: |
   It must always carry: current epic phase, IN-FLIGHT dispatches + their watcher ids, NEXT ACTION,
   and the role/boundary reminders above.
 
+  ### Headroom — compress big context, keep the handoff tight
+  Headroom (the `headroom` MCP, shared compression + memory layer) is ON — use it so a long driver
+  session does not burn context or git-churn:
+  - **Large content** (build logs, corpus/search dumps, review bundles, validation output — roughly
+    >200 lines / 20 KB): call `headroom_compress` FIRST, reason over the returned hash + a one-line
+    summary, and `headroom_retrieve` only the exact fragment you need (e.g. to corpus-hammer a quote).
+    This is the single biggest context-saver on a marathon track-driver session — do it by default,
+    not as an afterthought.
+  - **Handoff durability:** your git-tracked handoff stays the durable cross-agent SSOT. The proxy's
+    memory store is local-only and currently has NO MCP write tool (`native_tool`/`bridge` off), so do
+    NOT rely on it to carry the handoff across agents (codex). It DOES auto-inject relevant memory
+    context, so keep the handoff tight and push bulky evidence behind Headroom hashes rather than
+    pasting it. When the durable memory-write tool lands, migrate the handoff body to Headroom and cut
+    git to a thin pointer — until then, git is the backstop.
+  - Full rule: `agents_extensions/shared/rules/headroom.md`. Never run `headroom learn --apply`
+    (it rewrites agent instruction files).
+
   ## COMMUNICATE WITH MAIN ORCHESTRATOR
   Use this ping format when main needs to know something:
   `TRACK-UPDATE track=<track> pr=<number|none> state=<blocked|ready|in-flight>
