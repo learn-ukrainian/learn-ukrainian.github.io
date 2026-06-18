@@ -1,5 +1,9 @@
 # Перевірка: Спілкування
 
+<!-- plan_coverage_audit objectives=5 content_sections=5 dialogue_situations=1 activity_hints=4 covered=true missing=[] -->
+<!-- bad_form_audit bad_form_patterns_found=8 marked_with_bad_tags=8 remaining_unmarked=0 -->
+<!-- activity_split_audit level=A1 inline_n=4 workbook_n=6 inline_range=[4,6] workbook_range=[6,9] split_valid=true -->
+
 This checkpoint checks the communication tools from modules 42-46. There is no
 new grammar here. Your task is to combine what you already practiced:
 
@@ -12,6 +16,12 @@ new grammar here. Your task is to combine what you already practiced:
 The checkpoint scene is simple: friends organize a small holiday table and a
 school fair. You need to speak clearly, ask politely, and keep the sentence
 connections short.
+
+:::note[A1 checkpoint boundary]
+Use only the tools you already know: one address, one request, one short
+connector, and one holiday greeting. Do not add a new grammar table today. The
+goal is control across M42-M46.
+:::
 
 ## Що ми знаємо?
 
@@ -27,6 +37,7 @@ Use this quick self-check before the longer dialogue.
 | Connected thought | **Я хочу допомогти, але я зайнятий.** |
 | Reason | **Я вдома, бо я хворий.** |
 | What / where / when detail | **Я знаю, де стіл. Скажи, коли зустріч.** |
+| Polite opening and closing | **Добрий день! До побачення!** |
 | Holiday greeting | **З Різдвом Христовим! З Новим роком!** |
 
 The most important checkpoint habit is not speed. It is control. Keep one clear
@@ -57,9 +68,10 @@ communication unit.
 > Сьогодні ми готуємо маленький святковий стіл у класі. **Маріє, принеси
 > листівки**, будь ласка. **Тарасе, постав стіл** біля вікна. **Олено, напиши:
 > "З Різдвом Христовим!"** Я знаю, **де** лежать маркери, але я не знаю,
-> **де** наші плакати. Скажіть, **коли** ви вільні. Ми святкуємо Різдво, **і**
-> ми вітаємо друзів. Ми печемо паски на Великдень, **а** сьогодні пишемо
-> зимові привітання. **З Новим роком і веселих свят!**
+> **де** наші плакати. Я думаю, **що** все готово. Скажіть, **коли** ви
+> вільні. Ми святкуємо Різдво, **і** ми вітаємо друзів. Пишемо коротко, **бо**
+> часу мало. Ми печемо паски на Великдень, **а** сьогодні пишемо зимові
+> привітання. **З Новим роком і веселих свят!**
 
 What appears in the text?
 
@@ -68,6 +80,7 @@ What appears in the text?
 - **і, а, але, бо** - connectors from M44;
 - **де, коли, що** - short details from M45;
 - **З Різдвом Христовим, З Новим роком** - holiday greetings from M46.
+- **паски** - Easter breads from M46; recognition only in this checkpoint.
 
 You can answer four simple questions:
 
@@ -218,11 +231,14 @@ Use the repair list when your English habits push too hard:
 
 | Learner sentence | Better Ukrainian |
 | --- | --- |
-| <del>**Олена, принести листівки.**</del> | **Олено, принеси листівки.** |
-| <del>**Тарас, постав стіл.**</del> | **Тарасе, постав стіл.** |
-| <del>**Я знаю де маркери.**</del> | **Я знаю, де маркери.** |
-| <del>**Я хочу допомогти але я зайнятий.**</del> | **Я хочу допомогти, але я зайнятий.** |
-| <del>**Вітаю з Новий рік!**</del> | **Вітаю з Новим роком!** |
+| <bad>**Олена, принести листівки.**</bad> | **Олено, принеси листівки.** |
+| <bad>**Тарас, постав стіл.**</bad> | **Тарасе, постав стіл.** |
+| <bad>**Я знаю де маркери.**</bad> | **Я знаю, де маркери.** |
+| <bad>**Я хочу допомогти але я зайнятий.**</bad> | **Я хочу допомогти, але я зайнятий.** |
+| <bad>**Вітаю з Новий рік!**</bad> | **Вітаю з Новим роком!** |
+| <bad>**Маріє, принести маркери.**</bad> | **Маріє, принеси маркери.** |
+| <bad>**Я думаю що все готово.**</bad> | **Я думаю, що все готово.** |
+| <bad>**Ми святкуємо на Різдво.**</bad> | **Ми святкуємо Різдво.** |
 
 This checkpoint closes A1.7 communication. Stop here when you can read the
 dialogue, answer the questions, and repair the common mistakes without adding
