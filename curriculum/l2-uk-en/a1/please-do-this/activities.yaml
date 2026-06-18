@@ -194,14 +194,14 @@ workbook:
           - 'дай'
           - 'дати'
         explanation: 'Пане Іване takes polite ви.'
-      - sentence: 'Тарасе, ___ сюди.'
+      - sentence: 'Тарасе, ___ в кафе.'
         answer: 'іди'
         options:
           - 'іди'
           - 'ідіть'
           - 'іти'
         explanation: 'Use іди with one familiar person.'
-      - sentence: 'Друзі, ___ сюди.'
+      - sentence: 'Друзі, ___ в кафе.'
         answer: 'ідіть'
         options:
           - 'ідіть'
@@ -251,20 +251,60 @@ workbook:
         answer: true
         explanation: 'Address plus command plus будь ласка is a good A1 pattern.'
   - type: match-up
+    title: Infinitive to request pair
+    instruction: Match the infinitive with the two useful A1 request forms.
+    pairs:
+      - left: 'читати'
+        right: 'читай / читайте'
+      - left: 'писати'
+        right: 'пиши / пишіть'
+      - left: 'слухати'
+        right: 'слухай / слухайте'
+      - left: 'говорити'
+        right: 'говори / говоріть'
+      - left: 'дати'
+        right: 'дай / дайте'
+      - left: 'сказати'
+        right: 'скажи / скажіть'
+      - left: 'іти'
+        right: 'іди / ідіть'
+      - left: 'відкрити'
+        right: 'відкрий / відкрийте'
+  - type: unjumble
+    title: Class and cafe requests
+    instruction: Put each request in a natural order.
+    items:
+      - words: ['Відкрийте', 'підручники', 'будь', 'ласка']
+        answer: 'Відкрийте підручники, будь ласка.'
+      - words: ['Читайте', 'текст', 'будь', 'ласка']
+        answer: 'Читайте текст, будь ласка.'
+      - words: ['Пишіть', 'три', 'речення']
+        answer: 'Пишіть три речення.'
+      - words: ['Дайте', 'мені', 'меню', 'будь', 'ласка']
+        answer: 'Дайте мені меню, будь ласка.'
+      - words: ['Дайте', 'рахунок', 'будь', 'ласка']
+        answer: 'Дайте рахунок, будь ласка.'
+      - words: ['Скажіть', 'ще', 'раз', 'будь', 'ласка']
+        answer: 'Скажіть ще раз, будь ласка.'
+      - words: ['Олено', 'читай', 'текст']
+        answer: 'Олено, читай текст.'
+      - words: ['Тарасе', 'дай', 'меню', 'будь', 'ласка']
+        answer: 'Тарасе, дай меню, будь ласка.'
+  - type: match-up
     title: Repair imperative interference
     instruction: Match each learner mistake with the Ukrainian repair.
     pairs:
-      - left: '<!-- bad -->Будь ласка, читати текст.<!-- /bad -->'
-        right: 'Будь ласка, читай(те) текст.'
-      - left: '<!-- bad -->Давай робити це зараз.<!-- /bad -->'
+      - left: 'Будь ласка, читати текст.'
+        right: 'Будь ласка, читай текст. / Будь ласка, читайте текст.'
+      - left: 'Давай робити це зараз.'
         right: 'Робімо це зараз!'
-      - left: '<!-- bad -->Хай він працювати.<!-- /bad -->'
+      - left: 'Хай він працювати.'
         right: 'Хай він працює.'
-      - left: '<!-- bad -->Поставь книгу на стіл.<!-- /bad -->'
+      - left: 'Поставь книгу на стіл.'
         right: 'Постав книгу на стіл.'
-      - left: '<!-- bad -->Доповіди керівнику.<!-- /bad -->'
+      - left: 'Доповіди керівнику.'
         right: 'Доповідай керівнику.'
-      - left: '<!-- bad -->Читаємте разом!<!-- /bad -->'
+      - left: 'Читаємте разом!'
         right: 'Читаймо разом!'
   - type: error-correction
     title: Fix the request
@@ -278,19 +318,23 @@ workbook:
         error: 'читати'
         correction: 'читайте'
         explanation: 'Use читайте for polite address.'
-      - sentence: 'Дайте меню? Ні: дати меню, будь ласка.'
-        error: 'дати'
-        correction: 'дайте'
-        explanation: 'Use дайте in the polite request.'
+      - sentence: 'Давай робити це зараз.'
+        error: 'Давай робити'
+        correction: 'Робімо'
+        explanation: 'Use the fixed recognition repair Робімо це зараз!.'
+      - sentence: 'Хай він працювати.'
+        error: 'працювати'
+        correction: 'працює'
+        explanation: 'After хай, recognize the finite verb repair.'
       - sentence: 'Поставь книгу на стіл.'
         error: 'Поставь'
         correction: 'Постав'
         explanation: 'Do not write a soft sign here.'
-      - sentence: 'Хай він працювати.'
-        error: 'працювати'
-        correction: 'працює'
-        explanation: 'After хай, use a finite verb form.'
+      - sentence: 'Доповіди керівнику.'
+        error: 'Доповіди'
+        correction: 'Доповідай'
+        explanation: 'Recognize the fixed repair Доповідай.'
       - sentence: 'Читаємте разом!'
         error: 'Читаємте'
         correction: 'Читаймо'
-        explanation: 'Use the single Ukrainian form Читаймо for this repair.'
+        explanation: 'Use the fixed recognition repair Читаймо разом!.'

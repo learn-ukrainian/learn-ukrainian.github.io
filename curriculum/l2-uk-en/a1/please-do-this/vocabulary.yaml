@@ -49,11 +49,11 @@
 - word: дивись
   translation: look! (ti)
   pos: command
-  example: "Дивись сюди."
+  example: "Дивись на меню."
 - word: дивіться
   translation: look! (vy; polite or plural)
   pos: command
-  example: "Дивіться сюди."
+  example: "Дивіться на меню."
 - word: говорити
   translation: to speak
   pos: verb
@@ -101,7 +101,7 @@
 - word: ідіть
   translation: go! (vy; polite or plural)
   pos: command
-  example: "Ідіть сюди."
+  example: "Ідіть у кафе."
 - word: відкрити
   translation: to open
   pos: verb
@@ -138,6 +138,10 @@
   translation: sentence
   pos: noun
   example: "Напишіть три речення."
+- word: рахунок
+  translation: bill; check
+  pos: noun
+  example: "Дайте рахунок, будь ласка."
 - word: м'яч
   translation: ball
   pos: noun
