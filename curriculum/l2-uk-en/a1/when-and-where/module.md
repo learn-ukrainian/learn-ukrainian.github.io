@@ -1,5 +1,9 @@
 # Коли і де
 
+<!-- implementation_map_audit manifest_obligations=13 covered_in_map=13 missing=[] -->
+<!-- bad_form_audit bad_form_patterns_found=9 marked_with_bad_tags=9 remaining_unmarked=0 -->
+<!-- activity_split_audit level=A1 inline_n=4 workbook_n=6 inline_range=[4,6] workbook_range=[6,9] split_valid=true -->
+
 You already know how to link short thoughts with **і**, **а**, **але**, and
 **бо**. Now you can add three very useful words for simple complex sentences:
 
@@ -26,6 +30,13 @@ detail**.
 :::tip[Comma habit]
 When **що**, **де**, or **коли** connects two parts of a sentence, write a comma
 before it: **Я знаю, де кафе.**
+:::
+
+:::caution[A1 boundary]
+Your active frames are short: **Я знаю, що...**, **Я знаю, де...**,
+**Скажи, коли...**. Forms such as **звідки**, **відколи**, and **поки** appear
+only as recognition repairs here. Later time markers such as **щойно**,
+**тільки**, and **як тільки** are also for recognition only in this module.
 :::
 
 ## Діалоги
@@ -210,20 +221,38 @@ Connectors sit inside a longer sentence and join two parts:
 The first part tells us the action: **знаю**, **не знаю**, **скажи**, **думаю**,
 **каже**. The connector then gives the detail.
 
+### Later time words: recognition only
+
+You may also see short time markers such as **щойно**, **тільки**, and
+**як тільки**. They help answer **коли?** in later sentence work:
+
+- **щойно** - just now;
+- **тільки** - only / just;
+- **як тільки** - as soon as.
+
+For active A1 production here, keep using **коли**: **Скажи, коли урок.** The
+later words above are useful to recognize, not to build long sentences yet.
+
 ### A1 repair habit
 
 Many English speakers write the Ukrainian sentence like English:
 
 | Learner sentence | Better Ukrainian |
 | --- | --- |
-| <del>**Я знаю де кафе.**</del> | **Я знаю, де кафе.** |
-| <del>**Скажи коли урок.**</del> | **Скажи, коли урок.** |
-| <del>**Я думаю що це добре.**</del> | **Я думаю, що це добре.** |
-| <del>**Куди ти живеш?**</del> | **Де ти живеш?** |
-| <del>**Я знаю, що кафе?**</del> | **Ти знаєш, де кафе?** |
+| <bad>Я знаю де Київ.</bad> | **Я знаю, де Київ.** |
+| <bad>Скажи коли урок.</bad> | **Скажи, коли урок.** |
+| <bad>Я думаю що це добре.</bad> | **Я думаю, що це добре.** |
+| <bad>Куди ти живеш?</bad> | **Де ти живеш?** |
+| <bad>Я знаю, що кафе?</bad> | **Ти знаєш, де кафе?** |
+| <bad>Звідки ти чекаєш?</bad> | Recognize **Відколи ти чекаєш?** as the time-point repair. |
+| <bad>Він спитав коли ми прийдемо.</bad> | **Він спитав, коли ми прийдемо.** |
+| <bad>Я буду тут до того часу поки ти не прийдеш.</bad> | Recognize the simpler repair: **Я буду тут, поки ти не прийдеш.** |
+| <bad>Він читає з тих пір.</bad> | Recognize **Він читає відтоді.** as the short repair. |
 
 The last repair matters because **що** is not a universal question word. Use
-**де** for a place and **коли** for a time.
+**де** for a place and **коли** for a time. The rows with **відколи**,
+**поки**, and **відтоді** are recognition-only; do not make them active A1
+production targets.
 
 <span id="підсумок"></span>
 
