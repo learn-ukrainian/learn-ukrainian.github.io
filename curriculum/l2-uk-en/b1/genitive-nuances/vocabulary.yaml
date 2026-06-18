@@ -1,0 +1,152 @@
+- lemma: родовий відмінок
+  translation: "genitive case"
+  pos: phrase
+  usage: "Родовий відмінок відповідає на питання кого? чого?"
+- lemma: частковий
+  translation: "partitive, expressing part of a whole"
+  pos: adjective
+  usage: "Частковий родовий з'являється у фразах склянка води, трохи солі."
+- lemma: частина
+  translation: "part"
+  pos: noun
+  usage: "Родовий може показувати частину від цілого."
+- lemma: ціле
+  translation: "whole"
+  pos: noun
+  usage: "У фразі шматок хліба хліб є цілим, від якого взяли частину."
+- lemma: кількість
+  translation: "quantity"
+  pos: noun
+  usage: "Слова кількості часто вимагають родового."
+- lemma: міра
+  translation: "measure"
+  pos: noun
+  usage: "Кілограм, літр і склянка можуть називати міру."
+- lemma: склянка
+  translation: "glass"
+  pos: noun
+  usage: "Дайте склянку соку."
+- lemma: шматок
+  translation: "piece"
+  pos: noun
+  usage: "Вона взяла шматок хліба."
+- lemma: багато
+  translation: "many, much"
+  pos: adverb
+  usage: "Після багато вживаємо родовий: багато часу, багато людей."
+- lemma: трохи
+  translation: "a little, some"
+  pos: adverb
+  usage: "Додайте трохи солі."
+- lemma: немає
+  translation: "there is no, there are no"
+  pos: verb
+  usage: "Сьогодні немає часу."
+- lemma: заперечення
+  translation: "negation"
+  pos: noun
+  usage: "Заперечення може запускати родовий відмінок."
+- lemma: відсутність
+  translation: "absence"
+  pos: noun
+  usage: "Конструкція немає виражає відсутність."
+- lemma: бажати
+  translation: "to wish, to desire"
+  pos: verb
+  usage: "Бажаю вам успіху."
+- lemma: потребувати
+  translation: "to need, to require"
+  pos: verb
+  usage: "Цей проєкт потребує часу."
+- lemma: досягти
+  translation: "to achieve, to reach"
+  pos: verb
+  usage: "Команда досягла мети."
+- lemma: позбутися
+  translation: "to get rid of"
+  pos: verb
+  usage: "Він хоче позбутися страху."
+- lemma: набути
+  translation: "to acquire, to gain"
+  pos: verb
+  usage: "Вона набула досвіду."
+- lemma: шукати
+  translation: "to search for, to seek"
+  pos: verb
+  usage: "Шукати книжку, але шукати правди."
+- lemma: вартий
+  translation: "worth, worthy of"
+  pos: adjective
+  usage: "Цей текст вартий уваги."
+- lemma: гідний
+  translation: "worthy"
+  pos: adjective
+  usage: "Такий вчинок гідний поваги."
+- lemma: дата
+  translation: "date"
+  pos: noun
+  usage: "У датах часто вживаємо родовий: другого лютого."
+- lemma: часовий вираз
+  translation: "time expression"
+  pos: phrase
+  usage: "Цього тижня - часовий вираз із родовим."
+- lemma: закінчення
+  translation: "ending, suffix"
+  pos: noun
+  usage: "Закінчення -а/-я та -у/-ю залежать від значення іменника."
+- lemma: ІІ відміна
+  translation: "second declension"
+  pos: phrase
+  usage: "Іменники чоловічого роду ІІ відміни мають складний вибір закінчення."
+- lemma: конкретний
+  translation: "concrete, specific"
+  pos: adjective
+  usage: "Конкретні предмети часто мають закінчення -а/-я."
+- lemma: абстрактний
+  translation: "abstract"
+  pos: adjective
+  usage: "Абстрактні поняття часто мають закінчення -у/-ю."
+- lemma: речовина
+  translation: "substance, material"
+  pos: noun
+  usage: "Цукор як речовина має форму цукру."
+- lemma: явище природи
+  translation: "natural phenomenon"
+  pos: phrase
+  usage: "Дощ як явище природи має форму дощу."
+- lemma: прийменник
+  translation: "preposition"
+  pos: noun
+  usage: "Прийменник керує формою іменника після себе."
+- lemma: керувати
+  translation: "to govern"
+  pos: verb
+  usage: "Прийменник біля керує родовим відмінком."
+- lemma: замість
+  translation: "instead of"
+  pos: preposition
+  usage: "Замість кави я взяв чай."
+- lemma: крім
+  translation: "except, besides"
+  pos: preposition
+  usage: "Крім мене, усі знали адресу."
+- lemma: щодо
+  translation: "regarding"
+  pos: preposition
+  usage: "Щодо вашого питання потрібна відповідь."
+- lemma: внаслідок
+  translation: "as a result of"
+  pos: preposition
+  usage: "Внаслідок дощу матч перенесли."
+- lemma: з-під
+  translation: "from under"
+  pos: preposition
+  usage: "Ключі дістали з-під столу."
+- lemma: з-за
+  translation: "from behind"
+  pos: preposition
+  usage: "Сонце виглянуло з-за хмар."
+- lemma: з-поміж
+  translation: "from among"
+  pos: preposition
+  usage: "З-поміж студентів обрали волонтерів."
