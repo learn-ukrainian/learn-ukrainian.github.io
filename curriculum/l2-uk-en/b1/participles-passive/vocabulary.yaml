@@ -1,0 +1,104 @@
+- lemma: пасивний дієприкметник
+  translation: "passive participle"
+  pos: phrase
+  usage: "Пасивний дієприкметник називає ознаку предмета за дією, виконаною над ним."
+- lemma: дія над предметом
+  translation: "action performed on an object"
+  pos: phrase
+  usage: "У словосполученні написаний лист є дія над предметом: лист хтось написав."
+- lemma: виконавець дії
+  translation: "performer of an action"
+  pos: phrase
+  usage: "Виконавець дії може стояти в орудному: лист, написаний студенткою."
+- lemma: прочитаний
+  translation: "read"
+  pos: participle
+  usage: "Прочитана книга лежала на столі."
+- lemma: збудований
+  translation: "built"
+  pos: participle
+  usage: "Збудований міст з'єднав два береги."
+- lemma: написаний
+  translation: "written"
+  pos: participle
+  usage: "Написаний лист треба надіслати сьогодні."
+- lemma: вишитий
+  translation: "embroidered"
+  pos: participle
+  usage: "Вишита сорочка висіла у вітрині музею."
+- lemma: зроблений
+  translation: "made, done"
+  pos: participle
+  usage: "Зроблене завдання перевірили на занятті."
+- lemma: принесений
+  translation: "brought"
+  pos: participle
+  usage: "Принесені документи поклали на стіл."
+- lemma: відкритий
+  translation: "opened"
+  pos: participle/adjective
+  usage: "Відкриті двері вели до зали."
+- lemma: ношений
+  translation: "worn, carried"
+  pos: participle/adjective
+  usage: "Ношений одяг передали до благодійного центру."
+- lemma: закручений
+  translation: "twisted, screwed"
+  pos: participle
+  usage: "Закручений гвинт тримав полицю."
+- lemma: чергування
+  translation: "alternation"
+  pos: noun
+  usage: "У формі ношений видно чергування с -> ш."
+- lemma: побачений
+  translation: "seen"
+  pos: participle
+  usage: "Побачений краєвид довго згадували туристи."
+- lemma: загоєний
+  translation: "healed"
+  pos: participle
+  usage: "Загоєна рана вже не боліла."
+- lemma: заметений
+  translation: "swept"
+  pos: participle
+  usage: "Заметена доріжка блищала після дощу."
+- lemma: пофарбований
+  translation: "painted"
+  pos: participle
+  usage: "Пофарбована лавка стояла біля входу."
+- lemma: воджений
+  translation: "driven, led"
+  pos: participle
+  usage: "Воджений є навчальним прикладом чергування д -> дж; у живому тексті часто краще перебудувати речення."
+- lemma: битий
+  translation: "beaten, broken-in"
+  pos: participle/adjective
+  usage: "Битий шлях вів до старого млина."
+- lemma: митий
+  translation: "washed"
+  pos: participle/adjective
+  usage: "Миті яблука поклали в миску."
+- lemma: колотий
+  translation: "chopped, split"
+  pos: participle/adjective
+  usage: "Колоті дрова лежали біля печі."
+- lemma: зварений
+  translation: "boiled, cooked"
+  pos: participle
+  usage: "Зварена картопля була ще теплою."
+- lemma: варений
+  translation: "boiled, cooked"
+  pos: adjective/participle
+  usage: "Варена картопля стала назвою страви, а зварена картопля підкреслює результат дії."
+- lemma: форма на -но/-то
+  translation: "impersonal passive form in -no/-to"
+  pos: phrase
+  usage: "Книгу прочитано є форма на -но/-то, пов'язана з прочитаний."
+- lemma: узгодження
+  translation: "agreement"
+  pos: noun
+  usage: "Пасивний дієприкметник має узгодження з іменником у роді, числі й відмінку."
+- lemma: орудний виконавця
+  translation: "instrumental of the performer"
+  pos: phrase
+  usage: "У фразі написаний студенткою лист слово студенткою має орудний виконавця."
