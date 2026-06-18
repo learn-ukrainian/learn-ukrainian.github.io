@@ -63,7 +63,30 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 56 HANDOFF (2026-06-18 — 🖼 WIKI LANE OPENED + agy-WIKI VERDICT REVERSED: first folk wiki `charivni-kazky` shipped on `--writer claude` (MIN 9.0/10). agy FAILS wikis too → folk wiki writer = claude, NOT agy.) — **RESUME HERE**
+## ▶▶▶ SESSION 57 HANDOFF (2026-06-18 — 📚 DOSSIER WAVE 4: +2 dossiers (історичні перекази, народна кухня/обрядова їжа) verified + batched into this PR. Gap 8 → 6.) — **RESUME HERE**
+
+**🟢 ONE-LINE STATE:** Folk dossier gap **8 → 6**. This batch PR (wave 4) adds `istorychni-perekazy`,
+`narodna-kukhnia-obriadova-yizha` — both 10-section, wordcount PASS, verify_quote-confirmed + corpus-hammered
+(«За Сибіром сонце сходить» @1.0 `ff912500_c0000`; Зіновіїв «Хліб покріпляє серце» @1.0 `9dddf65a_c0346`).
+**Session total so far: 11 dossiers + 1 wiki across 5 PRs** (#3537/#3540/#3542 dossiers, #3561 wiki, this=wave4).
+
+### 🎯 REMAINING DOSSIER GAP (6): codex waves of 2 (recipe S53; generator `/tmp/gen_dossier_brief.py`)
+`narodna-kultura-ta-vysoka-kultura-mistky`, `narodne-zhytlo-sadyba-hospodarstvo`, `narodni-anekdoty`,
+`narodni-opovidannia-buvalshchyny-memoraty`, `narodni-remesla-ta-khudozhni-promysly`, `rehionalni-etnokulturni-tradytsii`.
+
+### 🖼 WIKI LANE (recipe + verdict in S56 below — READ IT): writer = **claude** (agy FAILS; MIN 9.0 proven).
+8 dossier-ready wiki slugs left: kazky-pro-tvaryn, kolomyiky, narodni-balady, pisni-literaturnoho-pokhodzhennia,
+rodynno-pobutovi-pisni, sotsialno-pobutovi-kazky, striletski-povstanski-pisni, suspilno-pobutovi-pisni.
+**USER DECISION PENDING:** default folk wikis to claude (proven, ~11min/wiki metered) or A/B gpt-5.5 first?
+Wiki lane HELD pending that call; dossier lane continues meanwhile.
+
+### ⚠️ INFRA carried (#0.2): `search_images` SigLIP deferred for l2-uk-en; `render_canonical_formulas_block`
+unwired in wiki writer prompt; `index.md` batch-regen owed after wiki batch (+ drop stale phantom
+`folk/genres/charivni-kazky.md` entry); `--writer` help-string vs "Gemini-family always" policy reconciliation — HOLD for user nod.
+
+### IN-FLIGHT: 0. Merge grant LIVE (review → CI-green → self-merge, squash; folk track). Worktree-only; never main.
+
+## ▶▶▶ SESSION 56 HANDOFF (2026-06-18 — 🖼 WIKI LANE OPENED + agy-WIKI VERDICT REVERSED: first folk wiki `charivni-kazky` shipped on `--writer claude` (MIN 9.0/10). agy FAILS wikis too → folk wiki writer = claude, NOT agy.)
 
 **🟢 ONE-LINE STATE:** First folk WIKI shipped this PR: `wiki/folk/prose/charivni-kazky.md` (2473w,
 claude writer, review MIN **9.0/10** — factual 10 / ukr_perspective 9 / register 9 / source_grounding 9;
