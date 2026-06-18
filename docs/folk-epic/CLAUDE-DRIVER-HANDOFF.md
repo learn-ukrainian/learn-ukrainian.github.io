@@ -63,7 +63,30 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 62 HANDOFF (2026-06-18 — ✅ wave-7 wikis MERGED (#3586 → 22/42) + dumy vesum fix MERGED (#3587). 🎯 ALL 6 built folk modules machine-pass DoD. NEXT = corpus-hammer the 6.) — **RESUME HERE**
+## ▶▶▶ SESSION 63 HANDOFF (2026-06-19 — ✅ 6 built folk modules CORPUS-HAMMERED (quote-verification, 0 fabrications) + machine-green → **6/42 modules certified-shippable**. NEXT = build the remaining 36 modules and/or deeper pedagogy review.) — **RESUME HERE**
+
+**🟢 ONE-LINE STATE:** Wikis **22/42**. **Modules: 6/42 BUILT and now CERTIFIED-shippable** (`verify_shippable` GREEN + corpus-hammer DONE): kalendarna-obriadovist-zvychai, koliadky-shchedrivky, narodna-kultura-yak-systema, narodni-viruvannia-mifolohiia-demonolohiia, zamovliannia-zaklynannia-prymovky, dumy-nevilnytski-lytsarski. The remaining **36 folk modules are NOT yet built** (queue in `phase-folk-queue.md`).
+
+### ✅ CORPUS-HAMMER RESULT (S63, deterministic, 2026-06-19): load-bearing authentic fragments across all 6 modules are **verbatim / strongly attested** in the folklore corpus — **0 fabrications, 0 misattributions**:
+- dumy: «тихі води, ясні зорі, край веселий, мир хрещений» VERBATIM in Драгоманов + Костомаров + Кониський; «Втеча трьох братів з Азова» real duma (ЕУ/Чижевський/УЛЕ).
+- koliadky: cosmogonic «Як ще не було початку світа» confirmed (Енциклопедія українознавства).
+- zamovliannia: «Волос, волос, вийди на колос» + «Я тебе виганяю, виклинаю…» VERBATIM in ЕУ.
+- narodni-viruvannia: Крип'якевич demonology + «Імен інших божеств не знаємо» VERBATIM — and CONFIRMS the #M-4 honest no-fake-pantheon stance (no romantic Берегиня reconstruction).
+- kalendarna: веснянки/гаївки «ой лелю-ладо» confirmed (ЕУ + Крип'якевич). narodna-kultura: systems overview, low verbatim-quote density.
+- **Scope caveat (honest):** this was a QUOTE-LEVEL corpus-hammer (fabrication/misattribution axis — the #1 risk for learner-facing folk text) across all 6, not a full line-by-line prose read. Deeper pedagogy/vocab-leveling/activity-quality review = **recommended DeepSeek-pro `content-review` polish** before public un-hide (not yet run).
+
+### 🎯 NEXT ACTIONS (pick by priority):
+1. **Build the remaining 36 folk modules** — the big arc. Blocked on #3079 (seminar module self-converge) for hands-off scaling; until then each is a manual v7_build + correction loop. **My lane** (S60 role).
+2. **Deeper pedagogy content-review of the 6 certified modules** — DeepSeek-pro `content-review` lane (#M0), optional polish.
+3. **Wiki wave 8** — 20 wikis remain (list in S62), gpt-5.5 recipe proven.
+
+### ⛔ USER-GATED — un-hide folk nav (`site/src/components/LevelLanding.tsx:45` + `site/astro.config.mjs:17`): needs explicit user GO (reverses orchestrator #3027 + "deliver e2e first" gate). 6 modules now render e2e + certified → the gate's content precondition is largely met; still awaiting user word + orchestrator coordination.
+
+### ⚠️ INFRA carried (#0.2): `render_canonical_formulas_block` unwired in wiki prompt; wiki `index.md` batch-regen owed (+ drop phantom `folk/genres/charivni-kazky.md`); `--writer` help vs "Gemini-family always" reconciliation. (search_images phantom blocker already removed in S62.)
+
+### IN-FLIGHT: 0. Merge grant LIVE; worktree-only; never main.
+
+## ▶▶▶ SESSION 62 HANDOFF (2026-06-18 — ✅ wave-7 wikis MERGED (#3586 → 22/42) + dumy vesum fix MERGED (#3587). 🎯 ALL 6 built folk modules machine-pass DoD. NEXT = corpus-hammer the 6.)
 
 **🟢 ONE-LINE STATE:** Wikis **22/42** (wave 7 merged: kolomyiky/narodni-balady/pisni-literaturnoho-pokhodzhennia/rodynno-pobutovi-pisni, gpt-5.5). **MODULES: all 6 built folk modules now machine-pass `verify_shippable`** (python_qg + assemble_mdx + mdx_render): `kalendarna-obriadovist-zvychai`, `koliadky-shchedrivky`, `narodna-kultura-yak-systema`, `narodni-viruvannia-mifolohiia-demonolohiia`, `zamovliannia-zaklynannia-prymovky`, `dumy-nevilnytski-lytsarski` (dumy fixed #3587). The old **"1/42" was a tracking undercount, NOT a build gap** — verified deterministically 2026-06-18.
 
