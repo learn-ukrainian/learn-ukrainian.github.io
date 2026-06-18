@@ -32,6 +32,20 @@ inline:
           - 'о'
           - 'до'
         explanation: 'Use на вулиці for on a street.'
+      - sentence: '___ швидку!'
+        answer: 'Викличте'
+        options:
+          - 'Викличте'
+          - 'Загубіть'
+          - 'Підпишіть'
+        explanation: 'Викличте швидку asks someone to summon an ambulance.'
+      - sentence: '___ поліцію!'
+        answer: 'Викличте'
+        options:
+          - 'Викличте'
+          - 'Візьміть'
+          - 'Коштує'
+        explanation: 'Викличте поліцію is the safe emergency command.'
   - id: act-2
     type: match-up
     title: Numbers and services
@@ -48,29 +62,17 @@ inline:
       - left: '104'
         right: 'газова служба'
   - id: act-3
-    type: group-sort
-    title: Sort emergency words
-    instruction: Put each phrase into the right group.
-    groups:
-      - name: 'numbers'
-        items:
-          - '112'
-          - '101'
-          - '102'
-          - '103'
-          - '104'
-      - name: 'problems'
-        items:
-          - 'Тут аварія'
-          - 'Тут пожежа'
-          - 'Мені погано'
-          - 'Я загубив паспорт'
-      - name: 'place and identity'
-        items:
-          - 'Я на вулиці'
-          - 'Я біля метро'
-          - 'Мене звати'
-          - 'Мій номер телефону'
+    type: order
+    title: Put the 112 call in order
+    instruction: Arrange the emergency call from first answer to identity.
+    items:
+      - 'Служба порятунку, слухаю вас.'
+      - 'Допоможіть! Тут аварія.'
+      - 'Де ви?'
+      - 'На вулиці Хрещатик, біля метро.'
+      - 'Як вас звати?'
+      - 'Мене звати Адам.'
+    correct_order: [0, 1, 2, 3, 4, 5]
   - id: act-4
     type: quiz
     title: Choose the emergency phrase
@@ -103,6 +105,15 @@ inline:
           - text: 'Сто три звати.'
             correct: false
         explanation: 'Use Подзвоніть за номером...'
+      - prompt: 'You need someone to summon an ambulance.'
+        options:
+          - text: 'Викличте швидку!'
+            correct: true
+          - text: 'Швидка звати!'
+            correct: false
+          - text: 'Паспорт швидку!'
+            correct: false
+        explanation: 'Викличте швидку asks someone to summon an ambulance.'
 workbook:
   - type: true-false
     title: Emergency language check
@@ -120,7 +131,7 @@ workbook:
       - statement: 'Потрібна швидка.'
         answer: true
         explanation: 'This asks for an ambulance.'
-      - statement: 'Подзвоніть за номером голова.'
+      - statement: 'Подзвоніть за номером телефон.'
         answer: false
         explanation: 'A phone phrase needs a number.'
   - type: unjumble
@@ -229,3 +240,22 @@ workbook:
           - text: 'Сто два на вулиці.'
             correct: false
         explanation: 'Use Подзвоніть за номером...'
+  - type: error-correction
+    title: Repair emergency lines
+    instruction: Fix the sentence by using the safe A1 emergency phrase.
+    items:
+      - sentence: 'Мене номер Анна.'
+        error: 'Мене номер Анна'
+        correction: 'Мене звати Анна'
+      - sentence: 'Я на вулиця Шевченка.'
+        error: 'на вулиця'
+        correction: 'на вулиці Шевченка'
+      - sentence: 'Потрібен швидка.'
+        error: 'Потрібен швидка'
+        correction: 'Потрібна швидка'
+      - sentence: 'Я загубив паспорта.'
+        error: 'загубив паспорта'
+        correction: 'Я загубив паспорт'
+      - sentence: 'Подзвоніть номером 112.'
+        error: 'Подзвоніть номером'
+        correction: 'Подзвоніть за номером 112'

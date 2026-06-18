@@ -14,6 +14,10 @@
   translation: please call
   pos: phrase
   example: "Подзвоніть за номером 112."
+- word: викликати
+  translation: to summon/call
+  pos: verb
+  example: "Викличте швидку!"
 - word: номер
   translation: number
   pos: noun
@@ -34,10 +38,18 @@
   translation: accident
   pos: noun
   example: "Тут аварія."
+- word: загубити
+  translation: to lose
+  pos: verb
+  example: "Я загубив паспорт."
 - word: поліція
   translation: police
   pos: noun
   example: "Потрібна поліція."
+- word: лікарня
+  translation: hospital
+  pos: noun
+  example: "Це лікарня."
 - word: швидка
   translation: ambulance
   pos: noun
@@ -50,10 +62,18 @@
   translation: passport
   pos: noun
   example: "Я загубив паспорт."
+- word: алергія
+  translation: allergy
+  pos: noun
+  example: "У мене алергія на ці таблетки."
 - word: адреса
   translation: address
   pos: noun
   example: "Адреса: вулиця Франка, будинок десять."
+- word: форма
+  translation: form
+  pos: noun
+  example: "Заповніть цю форму, будь ласка."
 - word: будинок
   translation: building
   pos: noun
