@@ -49,7 +49,7 @@
 - word: лінія
   translation: line
   pos: noun
-  example: "Мені потрібна зелена лінія."
+  example: "Мені потрібна червона лінія."
 - word: карта
   translation: map
   pos: noun
@@ -62,10 +62,18 @@
   translation: borshch
   pos: noun
   example: "Я хочу борщ і воду."
+- word: зустріти
+  translation: to meet
+  pos: verb
+  example: "Я хочу зустріти Олену."
 - word: познайомитися
   translation: to meet
   pos: verb
   example: "Я хочу познайомитися з Оленою."
+- word: фільм
+  translation: film
+  pos: noun
+  example: "Це український фільм."
 - word: повторювати
   translation: to review
   pos: verb
@@ -74,6 +82,14 @@
   translation: to travel
   pos: verb
   example: "Я буду подорожувати Україною."
+- word: Карпати
+  translation: Carpathians
+  pos: proper noun
+  example: "Я хочу побачити Карпати."
+- word: Лавра
+  translation: Lavra
+  pos: proper noun
+  example: "Я хочу побачити Лавру в Києві."
 - word: щодня
   translation: every day
   pos: adverb

@@ -4,34 +4,62 @@ inline:
     title: Complete the A1 line
     instruction: Choose the word or phrase that fits the time and situation.
     items:
-      - sentence: 'Учора я ___ у кафе.'
+      - sentence: 'Зранку я ___ у кафе.'
         answer: 'снідав'
         options:
           - 'снідав'
-          - 'снідаю'
           - 'буду снідати'
-        explanation: 'Учора points to the past.'
-      - sentence: 'Зараз я ___ на метро.'
-        answer: 'їду'
+          - 'снідаю'
+        explanation: 'Зранку can describe an earlier part of the day in the final story.'
+      - sentence: 'Зараз я ___ по Хрещатику.'
+        answer: 'гуляю'
         options:
-          - 'їду'
-          - 'їхав'
-          - 'буду їхати'
+          - 'гуляю'
+          - 'гуляв'
+          - 'буду гуляти'
         explanation: 'Зараз points to the present.'
-      - sentence: 'Завтра я ___ гуляти в парку.'
-        answer: 'буду'
+      - sentence: 'Учора я ___ квиток.'
+        answer: 'купив'
         options:
-          - 'буду'
-          - 'був'
-          - 'є'
-        explanation: 'Буду + infinitive is the A1 future.'
-      - sentence: '___, будь ласка.'
-        answer: 'Повторіть'
+          - 'купив'
+          - 'купую'
+          - 'буду купувати'
+        explanation: 'Учора points to the past.'
+      - sentence: 'Завтра я ___ по Україні.'
+        answer: 'буду подорожувати'
         options:
-          - 'Повторіть'
-          - 'Сувенір'
-          - 'Квиток'
-        explanation: 'Повторіть, будь ласка is the repair phrase.'
+          - 'буду подорожувати'
+          - 'подорожував'
+          - 'подорожую'
+        explanation: 'Завтра pairs with буду + infinitive.'
+      - sentence: 'Ввечері ми ___ в кіно.'
+        answer: 'ходили'
+        options:
+          - 'ходили'
+          - 'ходимо'
+          - 'будемо ходити'
+        explanation: 'This line reports what happened in the evening.'
+      - sentence: 'Зараз Олена ___ борщ і салат.'
+        answer: 'замовляє'
+        options:
+          - 'замовляє'
+          - 'замовляла'
+          - 'буде замовляти'
+        explanation: 'Зараз points to the present.'
+      - sentence: 'Учора була гарна погода, і ми ___ в парку.'
+        answer: 'гуляли'
+        options:
+          - 'гуляли'
+          - 'гуляємо'
+          - 'будемо гуляти'
+        explanation: 'Учора була sets the past frame.'
+      - sentence: 'Я вже ___ до рівня А2!'
+        answer: 'готовий'
+        options:
+          - 'готовий'
+          - 'коштує'
+          - 'болить'
+        explanation: 'Готовий до рівня А2 is the finale can-do line.'
   - id: act-2
     type: order
     title: Put the final day in order
@@ -43,8 +71,9 @@ inline:
       - 'Я купив сувенір.'
       - 'Я обідав з Оленою.'
       - 'Ми ходили в кіно.'
+      - 'Ми вечеряли в ресторані.'
       - 'Я повернувся в готель.'
-    correct_order: [0, 1, 2, 3, 4, 5, 6]
+    correct_order: [0, 1, 2, 3, 4, 5, 6, 7]
   - id: act-3
     type: match-up
     title: Situation and phrase
@@ -62,6 +91,12 @@ inline:
         right: 'Повторіть, будь ласка.'
       - left: 'asking for help'
         right: 'Мені потрібна допомога.'
+      - left: 'emergency situation'
+        right: 'Допоможіть! Викличте швидку!'
+      - left: 'at the pharmacy'
+        right: 'Дайте, будь ласка, таблетки від головного болю.'
+      - left: 'saying goodbye'
+        right: 'Дякую! До побачення!'
   - id: act-4
     type: group-sort
     title: Sort your A1 toolkit
@@ -92,42 +127,51 @@ workbook:
     title: Choose the A1 response
     instruction: Pick the response that fits the situation.
     items:
-      - prompt: 'A cashier says: Сто гривень.'
+      - prompt: 'How do you ask about the price of a ticket?'
         options:
-          - text: 'Карткою можна?'
+          - text: 'Скільки коштує квиток?'
             correct: true
+          - text: 'Де тут квиток?'
+            correct: false
+          - text: 'Дайте один квиток.'
+            correct: false
+        explanation: 'Скільки коштує...? asks the price.'
+      - prompt: 'You invite a friend to a cafe.'
+        options:
+          - text: 'Ходімо в кафе!'
+            correct: true
+          - text: 'Я був у кафе.'
+            correct: false
+          - text: 'Де кафе?'
+            correct: false
+        explanation: 'Ходімо... is the A1 invitation chunk.'
+      - prompt: 'How do you say: My head hurts?'
+        options:
+          - text: 'У мене болить голова.'
+            correct: true
+          - text: 'У мене температура.'
+            correct: false
+          - text: 'Я хворий.'
+            correct: false
+        explanation: 'У мене болить голова is the practiced health phrase.'
+      - prompt: "Someone asks: 'Де ви?'"
+        options:
+          - text: 'Я на вулиці Хрещатик.'
+            correct: true
+          - text: 'Мене звати Адам.'
+            correct: false
           - text: 'Я з Канади.'
             correct: false
-          - text: 'Мені холодно.'
-            correct: false
-        explanation: 'Карткою можна? fits payment.'
-      - prompt: 'A friend asks: Що ти робив сьогодні?'
+        explanation: 'Answer the location question with a place.'
+      - prompt: "What time frame is in: 'Завтра я буду читати книгу'?"
         options:
-          - text: 'Зранку я снідав у кафе.'
+          - text: 'Майбутній'
             correct: true
-          - text: 'Завтра я снідав у кафе.'
+          - text: 'Минулий'
             correct: false
-          - text: 'Я метро коштує.'
+          - text: 'Теперішній'
             correct: false
-        explanation: 'The question asks about earlier today, so a past line fits.'
-      - prompt: 'You did not understand the direction.'
-        options:
-          - text: 'Повторіть, будь ласка.'
-            correct: true
-          - text: 'Я беру це.'
-            correct: false
-          - text: 'Він мій тато.'
-            correct: false
-        explanation: 'Use a repair phrase.'
-      - prompt: 'You want to talk about tomorrow.'
-        options:
-          - text: 'Завтра я буду гуляти.'
-            correct: true
-          - text: 'Завтра я гуляв.'
-            correct: false
-          - text: 'Учора я буду гуляти.'
-            correct: false
-        explanation: 'Завтра pairs with буду + infinitive.'
+        explanation: 'Завтра and буду читати mark the future.'
   - type: true-false
     title: A1 finale check
     instruction: Decide whether the line is clear A1 Ukrainian.
@@ -222,3 +266,27 @@ workbook:
           - text: 'Завтра я читав українську.'
             correct: false
         explanation: 'Use завтра + буду читати.'
+  - type: error-correction
+    title: Repair final A1 lines
+    instruction: Fix the common finale mistake.
+    items:
+      - sentence: "Моє ім'я є Адам."
+        error: "Моє ім'я є"
+        correction: 'Мене звати'
+        explanation: 'Use the A1 name chunk: Мене звати Адам.'
+      - sentence: 'Вчора я снідаю у кафе.'
+        error: 'снідаю'
+        correction: 'снідав / снідала'
+        explanation: 'Use a past form after учора / вчора.'
+      - sentence: 'Завтра я гуляв у парку.'
+        error: 'гуляв'
+        correction: 'буду гуляти'
+        explanation: 'Use буду + infinitive for tomorrow.'
+      - sentence: 'Я буду читаю українську.'
+        error: 'читаю'
+        correction: 'читати'
+        explanation: 'After буду, use the infinitive.'
+      - sentence: 'Я маю Канада.'
+        error: 'маю Канада'
+        correction: 'з Канади'
+        explanation: 'Use Я з Канади for country of origin.'
