@@ -1,7 +1,11 @@
 # Учора
 
-In the last module, you learned the A1 past endings. Now use them in one
-small story about a day. The shape is simple:
+<!-- plan_coverage_audit objectives=4 content_sections=4 dialogue_situations=1 activity_hints=3 covered=true missing=[] -->
+<!-- bad_form_audit bad_form_patterns_found=6 marked_with_bad_tags=6 remaining_unmarked=0 -->
+<!-- activity_split_audit level=A1 inline_n=4 workbook_n=6 inline_range=[4,6] workbook_range=[6,9] split_valid=true -->
+
+Привіт! In the last module, you learned the A1 past endings. Today you put
+them in one small story about a day. The shape is simple:
 
 **Учора -> зранку -> потім -> вдень -> ввечері -> нарешті**
 
@@ -84,6 +88,48 @@ Support after the Ukrainian lines:
 This second dialogue adds places: **вдома**, **в офісі**, **в магазині**,
 **додому**. A day narrative often needs only time, place, and one action.
 
+### Заява в поліцію: коротка історія
+
+Sometimes a yesterday story is practical. You may need to say what happened in
+order. This is recognition practice first: notice the same time line and the
+same speaker pattern.
+
+```text
+Поліцейський: Розкажіть, що сталося.
+Свідок: Учора я припаркував велосипед біля магазину.
+Поліцейський: А потім?
+Свідок: Потім я зайшов у кав'ярню.
+Поліцейський: Що було далі?
+Свідок: Коли я вийшов, велосипед зник.
+Поліцейський: Ви когось бачили?
+Свідок: Так, я бачив чоловіка в куртці та кепці.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Поліцейський: Розкажіть, що сталося.** | Police officer: Tell me what happened. |
+| **Свідок: Учора я припаркував велосипед біля магазину.** | Witness: Yesterday I parked the bicycle near the store. |
+| **Поліцейський: А потім?** | Police officer: And then? |
+| **Свідок: Потім я зайшов у кав'ярню.** | Witness: Then I went into a cafe. |
+| **Поліцейський: Що було далі?** | Police officer: What happened next? |
+| **Свідок: Коли я вийшов, велосипед зник.** | Witness: When I came out, the bicycle was gone. |
+| **Поліцейський: Ви когось бачили?** | Police officer: Did you see anyone? |
+| **Свідок: Так, я бачив чоловіка в куртці та кепці.** | Witness: Yes, I saw a man in a jacket and cap. |
+
+:::note[A1 boundary]
+Use this dialogue for sequence and recognition. Words such as **велосипед**,
+**кав'ярня**, **куртка**, and **кепка** help the story feel real, but your own
+active story can still use familiar words like **кафе**, **магазин**,
+**колега**, and **продукти**.
+:::
+
+The witness is a male speaker, so his forms stay in one pattern:
+**припаркував**, **зайшов**, **вийшов**, **бачив**. Анна's story used
+**прокинулася**, **поснідала**, **пішла**, **купила**. The idea is the same:
+one speaker, one consistent past-tense pattern.
+
 <!-- INJECT_ACTIVITY: act-2 -->
 
 ## Розповідь про день
@@ -100,6 +146,7 @@ grammar:
 | **вдень** | afternoon or day-time | **Вдень я обідала.** |
 | **після цього** | after that | **Після цього я працювала.** |
 | **ввечері** | evening | **Ввечері я повернулася.** |
+| **вночі** | at night | **Вночі я була вдома.** |
 | **нарешті** | final action | **Нарешті я лягла спати.** |
 
 The verb forms can stay familiar. This is not a lesson about pairs of verbs or
@@ -132,6 +179,24 @@ For example:
 
 The English story may feel too plain, but that is useful at A1. The goal is a
 stable sentence chain, not a dramatic biography.
+
+:::tip[Quick win]
+If you can say **Учора я прокинулася. Потім я поснідала.**, you already have a
+real two-sentence past story. Add one time word at a time.
+:::
+
+### Repair traps
+
+Use this table when a story suddenly changes speaker pattern or time:
+
+| Learner sentence | Better Ukrainian | Why |
+| --- | --- | --- |
+| <bad>**Учора я прокинулася. Потім я поснідав.**</bad> | **Учора я прокинулася. Потім я поснідала.** | One female speaker. |
+| <bad>**Зранку я прокинувся. Потім я пішла.**</bad> | **Зранку я прокинувся. Потім я пішов.** | One male speaker. |
+| <bad>**Ввечері я повернувся. Нарешті я лягла спати.**</bad> | **Ввечері я повернувся. Нарешті я ліг спати.** | Keep the male pattern. |
+| <bad>**Учора я працює в офісі.**</bad> | **Учора я працювала в офісі.** / **Учора я працював в офісі.** | **Учора** needs a past form. |
+| <bad>**Після цього я ходила в магазин і купив продукти.**</bad> | **Після цього я ходила в магазин і купила продукти.** | Keep one speaker. |
+| <bad>**О одинадцятій я лягла спати.**</bad> | **Об одинадцятій я лягла спати.** | Use **об** before **одинадцятій**. |
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
@@ -267,4 +332,7 @@ Self-check with one six-sentence story:
 | **Ввечері я повернулася додому.** | In the evening I returned home. |
 | **Нарешті я лягла спати.** | Finally I went to bed. |
 
-If every verb matches the same speaker, the story is doing its job.
+If every verb matches the same speaker, the story is doing its job. You can now
+tell a six-sentence yesterday story with time markers, places, people, food,
+and consistent past forms. Next you will move the same clear control into
+future time.
