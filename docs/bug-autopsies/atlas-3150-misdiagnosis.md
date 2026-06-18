@@ -11,6 +11,15 @@
 > the reviewing orchestrator (me). This file documents the mis-diagnosis itself, the real and
 > instructive failure.
 
+## Symptom
+The reviewing orchestrator broadcast a **false catastrophe**: it told the user that the
+`atlas-3150-autoexpand` dispatch had "zeroed all manifest enrichment (wiki 691→0)" and "deleted a
+certified module," then acted on that belief — wrote a (now-retracted) autopsy
+(`atlas-reenrich-enrichment-loss.md`, merged in #3466), reopened #3331, and blocked #3150. None of
+it was real: the dispatch's committed work was sound and gates-passing. The expensive, confusing
+part was that every downstream artifact (autopsy, reopened issue, block) was built on a single
+measurement taken at the wrong moment against the wrong object.
+
 ## What actually happened
 The `atlas-3150-autoexpand` dispatch (#3150) **succeeded**. Commit `4ea59f3f` (9 files, zero
 curriculum) added a manifest-vocabulary-coverage gate (`check_manifest_vocabulary_coverage.py`),
@@ -22,7 +31,9 @@ wired it into CI, updated `build_data_manifest.py` / `promote_module.py`, added 
 It was marked `status=failed` only because it **hung at the push/PR step** — the known **#2985
 finalize-zombie** (work done + locally committed, never finalized). Not a data failure.
 
-## The two forensics errors (the actual bug)
+## Root cause
+The two forensics errors below — not any defect in the dispatch — are the actual bug:
+
 1. **Measured a mid-write transient, not the committed artifact.** I read the worktree's
    *working-tree* `lexicon-manifest.json` and found `wiki_reference=0`. The codex process was
    **still live-writing the file** (it rewrites enrichment in place; I caught the gap between
