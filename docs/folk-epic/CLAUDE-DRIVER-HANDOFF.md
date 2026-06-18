@@ -63,7 +63,35 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 54 HANDOFF (2026-06-18 — 📚 DOSSIER LANE WAVE 2: +4 dossiers (vertep, муз.інструменти, дитячий фольклор, вишивка) verified + batched into this PR. Gap 14 → 10.) — **RESUME HERE**
+## ▶▶▶ SESSION 55 HANDOFF (2026-06-18 — 📚 DOSSIER LANE WAVE 3: +2 dossiers (загадки, народні танці) verified + batched into this PR. Gap 10 → 8. 9 dossiers shipped this session across 3 PRs.) — **RESUME HERE**
+
+**🟢 ONE-LINE STATE:** Folk dossier gap **10 → 8**. This batch PR (wave 3) adds `zahadky`, `narodni-tantsi`
+— both 10-section, wordcount PASS; zahadky 5 confirmed riddle exemplars (incl. «Поле не міряне, вівці не
+лічені, пастух рогатий» @0.96 `fc2291b5_c2538`), tantsi 7 confirmed exemplars; both honestly do-not-quote
+the unconfirmed. PRs #3537 (wave 1, 3 dossiers) + #3540 (wave 2, 4 dossiers) already MERGED. Recipe +
+A/B verdict unchanged (codex foundation lane; agy = wiki only).
+
+### 🎯 REMAINING DOSSIER GAP (8): codex waves of 2, batch ~4/PR (recipe in S53; generator `/tmp/gen_dossier_brief.py`)
+`istorychni-perekazy`, `narodna-kukhnia-obriadova-yizha`, `narodna-kultura-ta-vysoka-kultura-mistky`,
+`narodne-zhytlo-sadyba-hospodarstvo`, `narodni-anekdoty`, `narodni-opovidannia-buvalshchyny-memoraty`,
+`narodni-remesla-ta-khudozhni-promysly`, `rehionalni-etnokulturni-tradytsii`.
+**Then 9 dossier-ready WIKIS on agy** (`compile.py --track folk --slug <X> --writer agy --review`):
+charivni-kazky, kazky-pro-tvaryn, kolomyiky, narodni-balady, pisni-literaturnoho-pokhodzhennia,
+rodynno-pobutovi-pisni, sotsialno-pobutovi-kazky, striletski-povstanski-pisni, suspilno-pobutovi-pisni.
+
+### 📓 CONTENT FINDING (S55): the literary corpus is **thin on short-form paremiological verbatims**
+(riddles, dance-song refrains): several classic riddles/songs scored `verify_quote` 0.0 — NOT in the
+corpus, so correctly do-not-quoted. Expect quote-sparser §4 for `zahadky`/`narodni-anekdoty`/dance genres;
+this is a corpus-coverage limit, not a writer failure. (zahadky dispatch exited `rc=-9` post-commit —
+file complete + committed, kill was during wrap-up, not truncation.)
+
+### ⚠️ INFRA (mine #0.2): `search_images` SigLIP **deferred for l2-uk-en** (all folk multimodal blocks ship
+imageless — writers note the deferral, no fabrication). Carried: wire `render_canonical_formulas_block`
+into wiki writer prompt (unwired); reconcile stale `compile.py --writer` help string — HOLD for user nod.
+
+### IN-FLIGHT: 0. Merge grant LIVE (review → CI-green → self-merge, squash; folk track). Worktree-only; never main.
+
+## ▶▶▶ SESSION 54 HANDOFF (2026-06-18 — 📚 DOSSIER LANE WAVE 2: +4 dossiers (vertep, муз.інструменти, дитячий фольклор, вишивка) verified + batched into PR #3540 (MERGED). Gap 14 → 10.)
 
 **🟢 ONE-LINE STATE:** Folk dossier gap **14 → 10**. This batch PR (wave 2) adds `vertep-narodna-drama`,
 `narodni-muzychni-instrumenty`, `dytiachyi-folklor-kolyskovi`, `narodna-vyshyvka-rushnyk-strii` — all
