@@ -1,5 +1,9 @@
 # Покупки
 
+<!-- <implementation_map_audit>manifest_obligations=16 covered_in_map=16 missing=[]</implementation_map_audit> -->
+<!-- <bad_form_audit>bad_form_patterns_found=8 marked_with_bad_tags=8 remaining_unmarked=0</bad_form_audit> -->
+<!-- <activity_split_audit>level=A1 inline_n=4 workbook_n=6 inline_range=[4,6] workbook_range=[6,9] split_valid=true</activity_split_audit> -->
+
 You now move the cafe payment language into shops, markets, and a simple
 checkout. Ask whether a product is available, ask the price, name a quantity,
 decide, and pay.
@@ -33,8 +37,6 @@ case lesson.
 
 ## Діалоги
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ### На ринку
 
 ```text
@@ -53,19 +55,26 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Покупець: Добрий день!** | Customer: Good afternoon! |
-| **Продавчиня: Добрий день!** | Saleswoman: Good afternoon! |
-| **Покупець: Скільки коштує кілограм яблук?** | Customer: How much is a kilogram of apples? |
-| **Продавчиня: Сорок гривень.** | Saleswoman: Forty hryvnias. |
-| **Покупець: А помідори?** | Customer: And tomatoes? |
-| **Продавчиня: Тридцять п'ять гривень за кілограм.** | Saleswoman: Thirty-five hryvnias per kilogram. |
-| **Покупець: Дайте, будь ласка, два кілограми помідорів і один кілограм яблук.** | Customer: Please give me two kilograms of tomatoes and one kilogram of apples. |
-| **Продавчиня: Сімдесят п'ять гривень.** | Saleswoman: Seventy-five hryvnias. |
-| **Покупець: Ось, будь ласка.** | Customer: Here you are. |
+| Покупець: Добрий день! | Customer: Good afternoon! |
+| Продавчиня: Добрий день! | Seller: Good afternoon! |
+| Покупець: Скільки коштує кілограм яблук? | Customer: How much is a kilogram of apples? |
+| Продавчиня: Сорок гривень. | Seller: Forty hryvnias. |
+| Покупець: А помідори? | Customer: And tomatoes? |
+| Продавчиня: Тридцять п'ять гривень за кілограм. | Seller: Thirty-five hryvnias per kilogram. |
+| Покупець: Дайте, будь ласка, два кілограми помідорів і один кілограм яблук. | Customer: Please give me two kilograms of tomatoes and one kilogram of apples. |
+| Продавчиня: Сімдесят п'ять гривень. | Seller: Seventy-five hryvnias. |
+| Покупець: Ось, будь ласка. | Customer: Here you are. |
 
 This is the basic market frame. You do not need to explain every ending in
-**два кілограми помідорів**. The learner needs the whole buying phrase. The
+**два кілограми помідорів**. You need the whole buying phrase. The
 same is true for **Дайте, будь ласка, два кілограми помідорів**.
+
+:::tip
+First useful shopping line: **Скільки коштує?** If you forget the item, start
+with that question and point politely.
+:::
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ### У супермаркеті
 
@@ -84,18 +93,18 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Дочка: Вибачте, де тут хліб?** | Daughter: Excuse me, where is the bread here? |
-| **Працівниця: Хліб у третьому ряді.** | Employee: Bread is in the third aisle. |
-| **Дочка: А молоко?** | Daughter: And milk? |
-| **Працівниця: Молоко в холодильнику, там.** | Employee: Milk is in the refrigerator, over there. |
-| **Дочка: Скільки коштує цей сир?** | Daughter: How much is this cheese? |
-| **Працівниця: Сто двадцять гривень.** | Employee: One hundred twenty hryvnias. |
-| **Дочка: Дорого! А є дешевший?** | Daughter: Expensive! Is there a cheaper one? |
-| **Працівниця: Так, ось цей - вісімдесят дев'ять гривень.** | Employee: Yes, this one is eighty-nine hryvnias. |
+| Дочка: Вибачте, де тут хліб? | Daughter: Excuse me, where is the bread here? |
+| Працівниця: Хліб у третьому ряді. | Employee: Bread is in the third aisle. |
+| Дочка: А молоко? | Daughter: And milk? |
+| Працівниця: Молоко в холодильнику, там. | Employee: Milk is in the refrigerator, over there. |
+| Дочка: Скільки коштує цей сир? | Daughter: How much is this cheese? |
+| Працівниця: Сто двадцять гривень. | Employee: One hundred twenty hryvnias. |
+| Дочка: Дорого! А є дешевший? | Daughter: Expensive! Is there a cheaper one? |
+| Працівниця: Так, ось цей - вісімдесят дев'ять гривень. | Employee: Yes, this one is eighty-nine hryvnias. |
 
 Use **У вас є хліб?** or **Чи є у вас хліб?** when you ask about availability.
-The old textbook example is **— Чи є у вас трембіта? — Так, є**. Use the same
-availability frame with everyday goods.
+Keep it practical with everyday goods: **У вас є молоко?**,
+**У вас є яблука?**, **У вас є хліб?**
 
 ### На касі
 
@@ -112,19 +121,17 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Касирка: Ось ваші яблука, молоко і сир.** | Cashier: Here are your apples, milk, and cheese. |
-| **Касирка: З вас сто сім гривень.** | Cashier: That is one hundred seven hryvnias from you. |
-| **Покупець: Можна карткою?** | Customer: Can I pay by card? |
-| **Касирка: Так.** | Cashier: Yes. |
-| **Покупець: Карткою, будь ласка.** | Customer: By card, please. |
-| **Касирка: Дякую. Гарного дня!** | Cashier: Thank you. Have a good day! |
+| Касирка: Ось ваші яблука, молоко і сир. | Cashier: Here are your apples, milk, and cheese. |
+| Касирка: З вас сто сім гривень. | Cashier: Your total is one hundred seven hryvnias. |
+| Покупець: Можна карткою? | Customer: Can I pay by card? |
+| Касирка: Так. | Cashier: Yes. |
+| Покупець: Карткою, будь ласка. | Customer: By card, please. |
+| Касирка: Дякую. Гарного дня! | Cashier: Thank you. Have a good day! |
 
 A shopping dialogue should not stop after **Дайте, будь ласка**. It reaches a
 natural checkout: **З вас ... гривень**, **Можна карткою?**, and
 **Карткою, будь ласка**. If you pay cash, say **готівкою** or hand over the
 money: **Ось сто сім гривень.**
-
-<!-- INJECT_ACTIVITY: act-2 -->
 
 ## Скільки коштує?
 
@@ -152,13 +159,15 @@ For prices, say the currency as a chunk:
 | **45 грн** | **сорок п'ять гривень** |
 | **100 грн** | **сто гривень** |
 
+:::note
+For A1, you are not mastering every numeral rule. You are learning to read a
+price label and answer at the checkout.
+:::
+
+<!-- INJECT_ACTIVITY: act-2 -->
+
 Use the practical pattern only. You do not need a full numeral lesson here.
 The key is to recognize price labels and answer at the checkout.
-For listening practice, you may hear a realistic line such as
-**Кілограм бананів коштує від 54 до 75 гривень**. It is a recognition example,
-not a promise about today's price.
-
-<!-- INJECT_ACTIVITY: act-3 -->
 
 ## Де купити?
 
@@ -176,6 +185,8 @@ types.
 | **молочний відділ** | **молоко**, **сир** |
 | **книгарня** | **книжка** |
 
+<!-- INJECT_ACTIVITY: act-3 -->
+
 Use these location questions:
 
 ```text
@@ -189,35 +200,35 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Вибачте, де тут хліб?** | Excuse me, where is the bread here? |
-| **У вас є вода?** | Do you have water? |
-| **А є дешевший сир?** | Is there a cheaper cheese? |
-| **А є дешевша вода?** | Is there cheaper water? |
+| Вибачте, де тут хліб? | Excuse me, where is the bread here? |
+| У вас є вода? | Do you have water? |
+| А є дешевший сир? | Is there a cheaper cheese? |
+| А є дешевша вода? | Is there cheaper water? |
 
 Now add quantity chunks. Memorize the whole phrases:
 
 - **один кілограм яблук**
 - **два кілограми помідорів**
 - **Дайте, будь ласка, два кілограми помідорів**
-- **три кілограми бананів**
-- **три кілограми бананів** is a useful recognition pattern from the wiki;
-- **два з половиною апельсини** is useful to recognize, but it is not a main
-  A1 production target;
 - **літр молока**
 - **пляшка води**
 - **три пляшки води**
 - **пачка чаю**
 - **буханка хліба**
 
-The payment words are also chunks: **карткою**, **готівкою**,
-**безготівковий розрахунок**, and **готівковий розрахунок**. For A1, simply
+<!-- INJECT_ACTIVITY: act-4 -->
+
+The payment words are also chunks: **карткою** and **готівкою**. For A1, simply
 connect them to the cashier's question. A card payment is **карткою**; cash is
 **готівкою**.
 
 A small optional clothing extension can appear at the end of shopping practice:
 **Я хочу приміряти пальто.** Use **приміряти** for trying on clothes.
 
-<!-- INJECT_ACTIVITY: act-4 -->
+:::tip
+Keep the order short: **Дайте, будь ласка, один кілограм яблук**. That is
+enough for a useful market exchange.
+:::
 
 ## Підсумок
 
@@ -239,15 +250,20 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Добрий день! У вас є яблука?** | Good afternoon! Do you have apples? |
-| **Так, є.** | Yes, we do. |
-| **Скільки коштує кілограм яблук?** | How much is a kilogram of apples? |
-| **Сорок гривень.** | Forty hryvnias. |
-| **Дайте, будь ласка, один кілограм яблук і літр молока.** | Please give me one kilogram of apples and a liter of milk. |
-| **З вас сто сім гривень.** | That is one hundred seven hryvnias. |
-| **Можна карткою?** | Can I pay by card? |
-| **Карткою, будь ласка.** | By card, please. |
-| **Дякую. До побачення!** | Thank you. Goodbye! |
+| Добрий день! У вас є яблука? | Good afternoon! Do you have apples? |
+| Так, є. | Yes, we do. |
+| Скільки коштує кілограм яблук? | How much is a kilogram of apples? |
+| Сорок гривень. | Forty hryvnias. |
+| Дайте, будь ласка, один кілограм яблук і літр молока. | Please give me one kilogram of apples and a liter of milk. |
+| З вас сто сім гривень. | Your total is one hundred seven hryvnias. |
+| Можна карткою? | Can I pay by card? |
+| Карткою, будь ласка. | By card, please. |
+| Дякую. До побачення! | Thank you. Goodbye! |
+
+:::note
+You can now make a complete small purchase: ask availability, ask price, name a
+quantity, hear the total, and pay.
+:::
 
 Self-check:
 
@@ -260,8 +276,7 @@ Self-check:
 - react with **Дорого!**, **Дешево!**, or **Добре, беру.**;
 - finish at the checkout with **З вас...**, **Можна карткою?**,
   **Карткою, будь ласка**, or **готівкою**;
-- recognize service phrases such as **п'ятдесят гривень**,
-  **двісті гривень**, and **Скільки гривень я вам винен?**
+- recognize price labels such as **40 грн**, **89 грн**, and **107 грн**.
 
 <span id="repair-shopping-interference"></span>
 
@@ -269,11 +284,13 @@ Self-check:
 
 Use these repairs in shopping scenes:
 
-| Problem | Use |
+| Avoid | Use |
 | --- | --- |
-| price question with **є** | **Скільки це коштує?** |
-| unnatural possession frame | **У мене є 20 гривень.** |
-| direct English-style shop question | **У вас є хліб?** |
-| card payment with **з** | **Карткою, будь ласка.** |
-| weak quantity chunk | **Дайте, будь ласка, один кілограм яблук.** |
-| wrong currency ending | **Це коштує 50 гривень.** |
+| **<!-- bad -->Скільки це є?<!-- /bad -->** | **Скільки це коштує?** |
+| **<!-- bad -->Я маю 20 гривнів.<!-- /bad -->** | **У мене є 20 гривень.** |
+| **<!-- bad -->Ви маєте хліб?<!-- /bad -->** | **У вас є хліб?** |
+| **<!-- bad -->Я плачу з карткою.<!-- /bad -->** | **Карткою, будь ласка.** |
+| **<!-- bad -->Дайте один кілограм яблука.<!-- /bad -->** | **Дайте, будь ласка, один кілограм яблук.** |
+| **<!-- bad -->Це коштує 50 гривн.<!-- /bad -->** | **Це коштує 50 гривень.** |
+| **<!-- bad -->Я хочу поміряти пальто.<!-- /bad -->** | **Я хочу приміряти пальто.** |
+| **<!-- bad -->Два яблука коштує сорок гривень.<!-- /bad -->** | **Два яблука коштують сорок гривень.** |
