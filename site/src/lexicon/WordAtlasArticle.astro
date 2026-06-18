@@ -88,6 +88,14 @@ interface CuratedCalque {
   authentic_sense?: string;
 }
 
+interface ReverseCalque {
+  calque: string;
+  kind: "participle" | "phrasal" | "sense_restricted";
+  note: string;
+  source: string[];
+  calque_sense?: string;
+}
+
 interface HeritageStatus {
   classification: string;
   attestations: HeritageAttestation[];
@@ -95,6 +103,7 @@ interface HeritageStatus {
   russian_shadow: boolean;
   calque_warning?: { detail?: string } | null;
   curated_calque?: CuratedCalque | null;
+  reverse_calques?: ReverseCalque[] | null;
 }
 
 interface LexiconSections {
@@ -309,6 +318,10 @@ function buildStyleNotes() {
   }
   if (heritage?.curated_calque) {
     notes.push(`${heritage.curated_calque.note} Нейтральні відповідники: ${heritage.curated_calque.corrections.join(", ")}.`);
+  }
+  if (heritage?.reverse_calques?.length) {
+    const calqueForms = heritage.reverse_calques.map((rev) => `«${rev.calque}»`);
+    notes.push(`Рекомендовано замість скалькованої форми ${calqueForms.join(" або ")} (стилістична порада §6).`);
   }
   if (maxSovietizationRisk > 0) {
     notes.push("СУМ-11 подано для прозорості, але радянські ілюстрації не слід сприймати як стилістично нейтральний сучасний приклад.");
