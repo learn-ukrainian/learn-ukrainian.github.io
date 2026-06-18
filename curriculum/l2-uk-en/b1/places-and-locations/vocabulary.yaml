@@ -1,0 +1,164 @@
+- lemma: місцевість
+  translation: "area, locality"
+  pos: noun
+  usage: "Ця місцевість відома озерами й лісами."
+- lemma: розташування
+  translation: "location, placement"
+  pos: noun
+  usage: "Розташування готелю зручне для прогулянок центром."
+- lemma: околиця
+  translation: "outskirts, surrounding area"
+  pos: noun
+  usage: "На околиці міста є старий парк."
+- lemma: передмістя
+  translation: "suburb"
+  pos: noun
+  usage: "Ми живемо в тихому передмісті Львова."
+- lemma: центр міста
+  translation: "city center"
+  pos: phrase
+  usage: "У центрі міста розташована ратуша."
+- lemma: район
+  translation: "district"
+  pos: noun
+  usage: "Цей район зручний для студентів."
+- lemma: площа
+  translation: "square"
+  pos: noun
+  usage: "На площі стоїть пам'ятник."
+- lemma: вулиця
+  translation: "street"
+  pos: noun
+  usage: "Кав'ярня розташована на вулиці Шевченка."
+- lemma: провулок
+  translation: "lane, alley"
+  pos: noun
+  usage: "Музей у маленькому провулку біля театру."
+- lemma: набережна
+  translation: "embankment, waterfront"
+  pos: noun
+  usage: "Увечері ми гуляли набережною Дніпра."
+- lemma: берег
+  translation: "bank, shore"
+  pos: noun
+  usage: "Місто стоїть на березі Південного Бугу."
+- lemma: узбережжя
+  translation: "coast, shoreline"
+  pos: noun
+  usage: "На узбережжі Чорного моря багато курортів."
+- lemma: острів
+  translation: "island"
+  pos: noun
+  usage: "На острові є невеликий заповідник."
+- lemma: півострів
+  translation: "peninsula"
+  pos: noun
+  usage: "Кримський півострів має складну історію й географію."
+- lemma: річка
+  translation: "river"
+  pos: noun
+  usage: "Дніпро - найбільша річка України."
+- lemma: озеро
+  translation: "lake"
+  pos: noun
+  usage: "Синевир - відоме озеро в Карпатах."
+- lemma: море
+  translation: "sea"
+  pos: noun
+  usage: "Одеса розташована біля Чорного моря."
+- lemma: рівнина
+  translation: "plain"
+  pos: noun
+  usage: "На рівнині видно поля й села."
+- lemma: низовина
+  translation: "lowland"
+  pos: noun
+  usage: "Поліська низовина має багато лісів і боліт."
+- lemma: височина
+  translation: "upland, highland"
+  pos: noun
+  usage: "Подільська височина простягається на заході України."
+- lemma: гора
+  translation: "mountain"
+  pos: noun
+  usage: "На горі відкривається широкий краєвид."
+- lemma: гори
+  translation: "mountains"
+  pos: noun
+  usage: "У Карпатах є високі гори й полонини."
+- lemma: пагорб
+  translation: "hill"
+  pos: noun
+  usage: "На пагорбі стоїть стара церква."
+- lemma: долина
+  translation: "valley"
+  pos: noun
+  usage: "У долині річки багато садів."
+- lemma: яр
+  translation: "ravine"
+  pos: noun
+  usage: "Стежка йде вздовж глибокого яру."
+- lemma: степ
+  translation: "steppe"
+  pos: noun
+  usage: "На півдні України простягається степ."
+- lemma: ліс
+  translation: "forest"
+  pos: noun
+  usage: "У лісі прохолодно навіть улітку."
+- lemma: парк
+  translation: "park"
+  pos: noun
+  usage: "У парку є озеро й дитячий майданчик."
+- lemma: заповідник
+  translation: "nature reserve"
+  pos: noun
+  usage: "У заповіднику не можна зривати рослини."
+- lemma: національний парк
+  translation: "national park"
+  pos: phrase
+  usage: "У національному парку прокладено туристичні маршрути."
+- lemma: краєвид
+  translation: "landscape, view"
+  pos: noun
+  usage: "З вежі відкривається чудовий краєвид."
+- lemma: пам'ятка
+  translation: "landmark, monument, site"
+  pos: noun
+  usage: "У місті багато архітектурних пам'яток."
+- lemma: орієнтир
+  translation: "landmark, reference point"
+  pos: noun
+  usage: "Театр буде добрим орієнтиром."
+- lemma: місцевий відмінок
+  translation: "locative case"
+  pos: phrase
+  usage: "Місцевий відмінок відповідає на питання де?."
+- lemma: родовий відмінок
+  translation: "genitive case"
+  pos: phrase
+  usage: "З + родовий відповідає на питання звідки?."
+- lemma: знахідний відмінок
+  translation: "accusative case"
+  pos: phrase
+  usage: "У/на + знахідний може показувати напрямок."
+- lemma: походження
+  translation: "origin"
+  pos: noun
+  usage: "Походження людини можна назвати фразою я з Полтави."
+- lemma: напрямок
+  translation: "direction"
+  pos: noun
+  usage: "До Києва і у Київ обидва показують напрямок."
+- lemma: звідки
+  translation: "from where"
+  pos: adverb
+  usage: "Звідки ви? - Я з Чернівців."
+- lemma: куди
+  translation: "where to"
+  pos: adverb
+  usage: "Куди ви їдете? - До Львова."
+- lemma: де
+  translation: "where"
+  pos: adverb
+  usage: "Де розташований театр?"
