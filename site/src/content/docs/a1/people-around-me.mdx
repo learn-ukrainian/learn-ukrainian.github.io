@@ -87,10 +87,6 @@ do not turn the page into a full declension table.
 
 ## Діалоги
 
-### Хто чи що?
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "учитель", "options": [{"text": "хто?", "correct": true}, {"text": "що?", "correct": false}], "explanation": "A teacher is a person."}, {"question": "директор", "options": [{"text": "хто?", "correct": true}, {"text": "що?", "correct": false}], "explanation": "A director is a person."}, {"question": "тато", "options": [{"text": "хто?", "correct": true}, {"text": "що?", "correct": false}], "explanation": "Тато is a person."}, {"question": "кіт", "options": [{"text": "хто?", "correct": true}, {"text": "що?", "correct": false}], "explanation": "Animals answer хто? in this grammar contrast."}, {"question": "дерево", "options": [{"text": "що?", "correct": true}, {"text": "хто?", "correct": false}], "explanation": "Plants are граматичні неістоти in Ukrainian."}, {"question": "хліб", "options": [{"text": "що?", "correct": true}, {"text": "хто?", "correct": false}], "explanation": "Хліб is a thing."}, {"question": "книга", "options": [{"text": "що?", "correct": true}, {"text": "хто?", "correct": false}], "explanation": "Книга is a thing."}, {"question": "подруга", "options": [{"text": "хто?", "correct": true}, {"text": "що?", "correct": false}], "explanation": "Подруга is a person."}]`)} instruction={"Choose whether the word answers хто? or що?"} isUkrainian={false} />
-
 ### Кого ти бачиш?
 
 ```text
@@ -106,17 +102,22 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Марко: Кого ти бачиш на фото?** | Marko: Whom do you see in the photo? |
-| **Олена: Я бачу маму і тата.** | Olena: I see mom and dad. |
-| **Марко: А хто це?** | Marko: And who is this? |
-| **Олена: Це мій брат. Ти знаєш мого брата?** | Olena: This is my brother. Do you know my brother? |
-| **Марко: Ні, я не знаю твого брата.** | Marko: No, I do not know your brother. |
-| **Олена: Ходімо, я тебе познайомлю!** | Olena: Come on, I will introduce you! |
+| Марко: Кого ти бачиш на фото? | Marko: Whom do you see in the photo? |
+| Олена: Я бачу маму і тата. | Olena: I see mom and dad. |
+| Марко: А хто це? | Marko: And who is this? |
+| Олена: Це мій брат. Ти знаєш мого брата? | Olena: This is my brother. Do you know my brother? |
+| Марко: Ні, я не знаю твого брата. | Marko: No, I do not know your brother. |
+| Олена: Ходімо, я тебе познайомлю! | Olena: Come on, I will introduce you! |
 
 The question **кого?** points to a person. Notice the forms:
 **маму**, **тата**, **мого брата**, **твого брата**. A male person changes:
 **брат → брата**. A female person with **-а** usually changes like the food word
 from M37: **мама → маму**, just as **кава → каву**.
+
+:::tip
+First useful people question: **Кого ти бачиш?** Answer with one person first:
+**Я бачу маму.** Then add a second person.
+:::
 
 ### На роботі
 
@@ -132,11 +133,11 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Ірина: Ти знаєш нашу вчительку?** | Iryna: Do you know our teacher? |
-| **Данило: Так, я знаю Олену Петрівну.** | Danylo: Yes, I know Olena Petrivna. |
-| **Ірина: А нового лікаря?** | Iryna: And the new doctor? |
-| **Данило: Ні, я ще не знаю лікаря.** | Danylo: No, I do not know the doctor yet. |
-| **Ірина: Він дуже добрий. Я чекаю його зараз.** | Iryna: He is very kind. I am waiting for him now. |
+| Ірина: Ти знаєш нашу вчительку? | Iryna: Do you know our teacher? |
+| Данило: Так, я знаю Олену Петрівну. | Danylo: Yes, I know Olena Petrivna. |
+| Ірина: А нового лікаря? | Iryna: And the new doctor? |
+| Данило: Ні, я ще не знаю лікаря. | Danylo: No, I do not know the doctor yet. |
+| Ірина: Він дуже добрий. Я чекаю його зараз. | Iryna: He is very kind. I am waiting for him now. |
 
 Here the people are not only family. You can talk about **вчительку**,
 **Олену Петрівну**, **лікаря**, and **його**. Keep the pronouns as chunks:
@@ -158,20 +159,24 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Наречена: Ось фото з весілля.** | Bride: Here is a photo from the wedding. |
-| **Друг: Бачиш маму? А тата?** | Friend: Do you see mom? And dad? |
-| **Наречена: Так, я бачу маму і тата.** | Bride: Yes, I see mom and dad. |
-| **Друг: Знаєш Олену?** | Friend: Do you know Olena? |
-| **Наречена: Так, я знаю Олену. А це мій дядько і моя тітка.** | Bride: Yes, I know Olena. And this is my uncle and my aunt. |
-| **Друг: А хто це?** | Friend: And who is this? |
-| **Наречена: Це наречений.** | Bride: This is the groom. |
+| Наречена: Ось фото з весілля. | Bride: Here is a photo from the wedding. |
+| Друг: Бачиш маму? А тата? | Friend: Do you see mom? And dad? |
+| Наречена: Так, я бачу маму і тата. | Bride: Yes, I see mom and dad. |
+| Друг: Знаєш Олену? | Friend: Do you know Olena? |
+| Наречена: Так, я знаю Олену. А це мій дядько і моя тітка. | Bride: Yes, I know Olena. And this is my uncle and my aunt. |
+| Друг: А хто це? | Friend: And who is this? |
+| Наречена: Це наречений. | Bride: This is the groom. |
 
 Photo talk is useful because every line points to a visible person. Use the
 same small verbs: **бачу**, **знаю**, **люблю**, **чекаю**, **шукаю**. The
-learner does not need wedding vocabulary as a long list. The scene simply
+You do not need wedding vocabulary as a long list. The scene simply
 shows people around the speaker and lets **кого?** feel natural: **бачу маму**,
 **бачу тата**, **знаю Олену**, **чекаю нареченого**. Keep pointing to real
 people in the picture and saying one clean sentence at a time.
+
+Recognition words in this dialogue: **наречена** is a bride, **наречений** is a
+groom, **дядько** is an uncle, and **тітка** is an aunt. Use them only to
+understand the photo scene.
 
 ### Я бачу...
 
@@ -183,12 +188,16 @@ Start with the two school questions:
 
 | Question | Use it for | Examples |
 | --- | --- | --- |
-| **Хто?** | people and animals | **учитель**, **директор**, **тато**, **кіт** |
+| **Хто?** | people and animals | **вчитель**, **лікар**, **тато**, **кіт** |
 | **Що?** | things, places, ideas, plants | **стіл**, **хліб**, **дерево**, **книга** |
 
-People by job or family role, such as **учитель**, **директор**, and **тато**,
+People by job or family role, such as **вчитель**, **лікар**, and **тато**,
 answer **хто?**. Animals also answer **хто?**. Things and plants answer
 **що?**: **дерево — це що?**
+
+### Хто чи що?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "вчитель", "options": [{"text": "хто?", "correct": true}, {"text": "що?", "correct": false}], "explanation": "A teacher is a person."}, {"question": "лікар", "options": [{"text": "хто?", "correct": true}, {"text": "що?", "correct": false}], "explanation": "A doctor is a person."}, {"question": "тато", "options": [{"text": "хто?", "correct": true}, {"text": "що?", "correct": false}], "explanation": "Тато is a person."}, {"question": "кіт", "options": [{"text": "хто?", "correct": true}, {"text": "що?", "correct": false}], "explanation": "Animals answer хто? in this grammar contrast."}, {"question": "дерево", "options": [{"text": "що?", "correct": true}, {"text": "хто?", "correct": false}], "explanation": "Plants answer що? in this grammar contrast."}, {"question": "хліб", "options": [{"text": "що?", "correct": true}, {"text": "хто?", "correct": false}], "explanation": "Хліб is a thing."}, {"question": "книга", "options": [{"text": "що?", "correct": true}, {"text": "хто?", "correct": false}], "explanation": "Книга is a thing."}, {"question": "подруга", "options": [{"text": "хто?", "correct": true}, {"text": "що?", "correct": false}], "explanation": "Подруга is a person."}]`)} instruction={"Choose whether the word answers хто? or що?"} isUkrainian={false} />
 
 Now add the object question:
 
@@ -201,14 +210,13 @@ Now add the object question:
 | **лікар** | **Кого я чекаю?** | **Я чекаю лікаря.** |
 | **хліб** | **Що я бачу?** | **Я бачу хліб.** |
 
-The school observation can be very short: **Тато намалював кошеня. Кошеня
-лягло на килимок**. In the first sentence, **тато** does the action and
-**кошеня** receives the action. In the second sentence, **кошеня** does the
-action. A1 learners only need the idea: subject stays in the dictionary shape;
-direct objects may change.
+The classroom observation can be very short. In **Я бачу брата**, **я** does
+the seeing and **брата** receives the action. In **Брат бачить мене**, **брат**
+does the seeing and **мене** receives the action. You only need the idea: one
+word does the action, and one word answers **кого?** or **що?**
 
-In school terms, the subject is the **виконавець** of the action and appears in
-the **називний відмінок**. The direct object answers **кого?** or **що?**.
+School terms can stay simple: one word does the action, and one word receives
+the action. For this lesson, use the questions **кого?** and **що?**.
 
 ### Кого or що shelves
 
@@ -231,11 +239,11 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Я бачу маму.** | I see mom. |
-| **Я знаю Олену.** | I know Olena. |
-| **Я люблю тата.** | I love dad. |
-| **Я чекаю лікаря.** | I am waiting for the doctor. |
-| **Я шукаю подругу.** | I am looking for a female friend. |
+| Я бачу маму. | I see mom. |
+| Я знаю Олену. | I know Olena. |
+| Я люблю тата. | I love dad. |
+| Я чекаю лікаря. | I am waiting for the doctor. |
+| Я шукаю подругу. | I am looking for a female friend. |
 
 Female-person forms follow the same practical pattern as M37 feminine things:
 
@@ -245,7 +253,7 @@ Female-person forms follow the same practical pattern as M37 feminine things:
 | **сестра** | **Я знаю сестру.** |
 | **Олена** | **Я чекаю Олену.** |
 | **подруга** | **Я люблю подругу.** |
-| **учителька** | **Я знаю вчительку.** |
+| **вчителька** | **Я знаю вчительку.** |
 
 Male-person forms are the new part. For a male person, the object form looks
 like the genitive form:
@@ -262,10 +270,8 @@ like the genitive form:
 This is why **Я бачу хліб** stays unchanged but **Я бачу брата** changes. A
 thing answers **що?**; a person answers **кого?**.
 
-For recognition, notice textbook-style male-person examples:
-**зустрів однокласника, хлопця, товариша**. For contrast, inanimate masculine
-things can stay unchanged in ordinary A1 lines: **бачу завод, інститут,
-папір**.
+For recognition, other male-person words follow the same everyday pattern. You
+only need to produce the table lines above.
 
 Pronoun chunks are useful, but keep them small:
 
@@ -310,15 +316,12 @@ Self-check:
 - **лікар → лікаря**: **Я чекаю лікаря.**
 - **хліб → хліб**: **Я бачу хліб.**
 
-Bridge for later: grammar does not always follow biology. Collective words
-such as **група**, **зграя**, **народ**, and **натовп** are treated as things
-for this contrast. Some masculine inanimate nouns later have parallel object
-forms, as in **узяв олівець — узяв олівця** and **написав лист — написав
-листа**. Plural instrumental endings such as **-ами**, **-ями**, and **-ми**
-belong later. For A1, stay with the direct-object singular forms above.
+Bridge for later: plural people, more pronouns, and edge cases come after A1.
+For now, stay with one clear direct object: **Я бачу маму**, **Я бачу брата**,
+**Я бачу хліб**.
 
 Use Ukrainian people words and greetings: **тато**, **мама**, **прізвище**,
-**Добрий день**, **До побачення**, **Київ / Kyiv**.
+**Добрий день**, **До побачення**.
 
 <span id="repair-people-around-me-interference"></span>
 
@@ -326,30 +329,30 @@ Use Ukrainian people words and greetings: **тато**, **мама**, **пріз
 
 Repair these common learner forms:
 
-| Problem | Use |
+| Avoid | Use |
 | --- | --- |
-| wrong male-person object | **Я бачу мого брата.** |
-| tree as a person | **Дерево — це що?** |
-| dictionary pronoun as object | **Я люблю його.** |
-| collective noun treated as animate | **Ми бачимо великий натовп.** |
-| wrong neighbor ending | **Я зустрів сусіда.** |
-| age with possession | **Йому 20 років.** |
-| forced present copula | **Я студент.** |
-| family-name term | **Яке твоє прізвище?** |
+| **<del>Я бачу мій брат.</del>** | **Я бачу мого брата.** |
+| **<del>Дерево — це хто?</del>** | **Дерево — це що?** |
+| **<del>Я люблю він.</del>** | **Я люблю його.** |
+| **<del>Я чекаю лікар.</del>** | **Я чекаю лікаря.** |
+| **<del>Я бачу сусіду.</del>** | **Я бачу сусіда.** |
+| **<del>Він має 20 років.</del>** | **Йому 20 років.** |
+| **<del>Я є студент.</del>** | **Я студент.** |
+| **<del>Яка твоя фамілія?</del>** | **Яке твоє прізвище?** |
 
 </TabItem>
 <TabItem label="Vocabulary">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"люди","translation":"people","pos":"noun","example":"Це люди навколо мене.","examples":["people","Це люди навколо мене."],"atlas_href":"/lexicon/люди/"},{"word":"хто","translation":"who","pos":"pronoun","example":"Хто це?","examples":["who","Хто це?"],"atlas_href":"/lexicon/хто/"},{"word":"що","translation":"what","pos":"pronoun","example":"Що це?","examples":["what","Що це?"],"atlas_href":"/lexicon/що/"},{"word":"кого","translation":"whom","pos":"pronoun","example":"Кого ти бачиш?","examples":["whom","Кого ти бачиш?"],"atlas_href":"/lexicon/кого/"},{"word":"бачити","translation":"to see","pos":"verb","example":"Я бачу маму.","examples":["to see","Я бачу маму."],"atlas_href":"/lexicon/бачити/"},{"word":"знати","translation":"to know","pos":"verb","example":"Я знаю Олену.","examples":["to know","Я знаю Олену."],"atlas_href":"/lexicon/знати/"},{"word":"любити","translation":"to love","pos":"verb","example":"Я люблю тата.","examples":["to love","Я люблю тата."],"atlas_href":"/lexicon/любити/"},{"word":"чекати","translation":"to wait for","pos":"verb","example":"Я чекаю лікаря.","examples":["to wait for","Я чекаю лікаря."],"atlas_href":"/lexicon/чекати/"},{"word":"шукати","translation":"to look for","pos":"verb","example":"Я шукаю подругу.","examples":["to look for","Я шукаю подругу."],"atlas_href":"/lexicon/шукати/"},{"word":"познайомити","translation":"to introduce","pos":"verb","example":"Я тебе познайомлю.","examples":["to introduce","Я тебе познайомлю."],"atlas_href":"/lexicon/познайомити/"},{"word":"мама","translation":"mom","pos":"noun","example":"Це моя мама.","examples":["mom","Це моя мама."],"atlas_href":"/lexicon/мама/"},{"word":"маму","translation":"mom (object form)","pos":"noun","example":"Я бачу маму.","examples":["mom (object form)","Я бачу маму."],"atlas_href":"/lexicon/маму/"},{"word":"тато","translation":"dad","pos":"noun","example":"Це мій тато.","examples":["dad","Це мій тато."],"atlas_href":"/lexicon/тато/"},{"word":"тата","translation":"dad (object form)","pos":"noun","example":"Я люблю тата.","examples":["dad (object form)","Я люблю тата."],"atlas_href":"/lexicon/тата/"},{"word":"брат","translation":"brother","pos":"noun","example":"Це мій брат.","examples":["brother","Це мій брат."],"atlas_href":"/lexicon/брат/"},{"word":"брата","translation":"brother (object form)","pos":"noun","example":"Я бачу брата.","examples":["brother (object form)","Я бачу брата."],"atlas_href":"/lexicon/брата/"},{"word":"сестра","translation":"sister","pos":"noun","example":"Це моя сестра.","examples":["sister","Це моя сестра."],"atlas_href":"/lexicon/сестра/"},{"word":"сестру","translation":"sister (object form)","pos":"noun","example":"Я знаю сестру.","examples":["sister (object form)","Я знаю сестру."],"atlas_href":"/lexicon/сестру/"},{"word":"друг","translation":"male friend","pos":"noun","example":"Це мій друг.","examples":["male friend","Це мій друг."],"atlas_href":"/lexicon/друг/"},{"word":"друга","translation":"male friend (object form)","pos":"noun","example":"Я знаю друга.","examples":["male friend (object form)","Я знаю друга."],"atlas_href":"/lexicon/друга/"},{"word":"подруга","translation":"female friend","pos":"noun","example":"Це моя подруга.","examples":["female friend","Це моя подруга."],"atlas_href":"/lexicon/подруга/"},{"word":"подругу","translation":"female friend (object form)","pos":"noun","example":"Я шукаю подругу.","examples":["female friend (object form)","Я шукаю подругу."],"atlas_href":"/lexicon/подругу/"},{"word":"Олена","translation":"Olena","pos":"proper noun","example":"Це Олена.","examples":["Olena","Це Олена."],"atlas_href":"/lexicon/олена/"},{"word":"Олену","translation":"Olena (object form)","pos":"proper noun","example":"Я знаю Олену.","examples":["Olena (object form)","Я знаю Олену."],"atlas_href":"/lexicon/олену/"},{"word":"вчитель","translation":"teacher","pos":"noun","example":"Це вчитель.","examples":["teacher","Це вчитель."],"atlas_href":"/lexicon/вчитель/"},{"word":"вчителя","translation":"teacher (object form)","pos":"noun","example":"Я знаю вчителя.","examples":["teacher (object form)","Я знаю вчителя."],"atlas_href":"/lexicon/вчителя/"},{"word":"учитель","translation":"teacher","pos":"noun","example":"Учитель у класі.","examples":["teacher","Учитель у класі."],"atlas_href":"/lexicon/учитель/"},{"word":"учителька","translation":"female teacher","pos":"noun","example":"Це учителька.","examples":["female teacher","Це учителька."],"atlas_href":"/lexicon/учителька/"},{"word":"вчителька","translation":"female teacher","pos":"noun","example":"Я знаю вчительку.","examples":["female teacher","Я знаю вчительку."],"atlas_href":"/lexicon/вчителька/"},{"word":"лікар","translation":"doctor","pos":"noun","example":"Це лікар.","examples":["doctor","Це лікар."],"atlas_href":"/lexicon/лікар/"},{"word":"лікаря","translation":"doctor (object form)","pos":"noun","example":"Я чекаю лікаря.","examples":["doctor (object form)","Я чекаю лікаря."],"atlas_href":"/lexicon/лікаря/"},{"word":"сусід","translation":"male neighbor","pos":"noun","example":"Це мій сусід.","examples":["male neighbor","Це мій сусід."],"atlas_href":"/lexicon/сусід/"},{"word":"сусіда","translation":"male neighbor (object form)","pos":"noun","example":"Я бачу сусіда.","examples":["male neighbor (object form)","Я бачу сусіда."],"atlas_href":"/lexicon/сусіда/"},{"word":"колега","translation":"colleague","pos":"noun","example":"Це мій колега.","examples":["colleague","Це мій колега."],"atlas_href":"/lexicon/колега/"},{"word":"викладач","translation":"lecturer","pos":"noun","example":"Це викладач.","examples":["lecturer","Це викладач."],"atlas_href":"/lexicon/викладач/"},{"word":"продавець","translation":"seller","pos":"noun","example":"Продавець у магазині.","examples":["seller","Продавець у магазині."],"atlas_href":"/lexicon/продавець/"},{"word":"покупець","translation":"buyer","pos":"noun","example":"Покупець чекає.","examples":["buyer","Покупець чекає."],"atlas_href":"/lexicon/покупець/"},{"word":"директор","translation":"director","pos":"noun","example":"Директор тут.","examples":["director","Директор тут."],"atlas_href":"/lexicon/директор/"},{"word":"дитина","translation":"child","pos":"noun","example":"Це дитина.","examples":["child","Це дитина."],"atlas_href":"/lexicon/дитина/"},{"word":"людина","translation":"person","pos":"noun","example":"Це добра людина.","examples":["person","Це добра людина."],"atlas_href":"/lexicon/людина/"},{"word":"мене","translation":"me","pos":"pronoun","example":"Вона знає мене.","examples":["me","Вона знає мене."],"atlas_href":"/lexicon/мене/"},{"word":"тебе","translation":"you","pos":"pronoun","example":"Я тебе бачу.","examples":["you","Я тебе бачу."],"atlas_href":"/lexicon/тебе/"},{"word":"його","translation":"him; it","pos":"pronoun","example":"Я чекаю його.","examples":["him; it","Я чекаю його."],"atlas_href":"/lexicon/його/"},{"word":"її","translation":"her; it","pos":"pronoun","example":"Я знаю її.","examples":["her; it","Я знаю її."],"atlas_href":"/lexicon/її/"},{"word":"нас","translation":"us","pos":"pronoun","example":"Вони бачать нас.","examples":["us","Вони бачать нас."],"atlas_href":"/lexicon/нас/"},{"word":"вас","translation":"you plural/formal","pos":"pronoun","example":"Я знаю вас.","examples":["you plural/formal","Я знаю вас."],"atlas_href":"/lexicon/вас/"},{"word":"їх","translation":"them","pos":"pronoun","example":"Ми бачимо їх.","examples":["them","Ми бачимо їх."],"atlas_href":"/lexicon/їх/"},{"word":"істота","translation":"animate being","pos":"noun","example":"Брат - це істота.","examples":["animate being","Брат - це істота."],"atlas_href":"/lexicon/істота/"},{"word":"неістота","translation":"inanimate thing","pos":"noun","example":"Хліб - це неістота.","examples":["inanimate thing","Хліб - це неістота."],"atlas_href":"/lexicon/неістота/"},{"word":"натовп","translation":"crowd","pos":"noun","example":"Ми бачимо великий натовп.","examples":["crowd","Ми бачимо великий натовп."],"atlas_href":"/lexicon/натовп/"},{"word":"група","translation":"group","pos":"noun","example":"Це група.","examples":["group","Це група."],"atlas_href":"/lexicon/група/"},{"word":"прізвище","translation":"surname","pos":"noun","example":"Яке твоє прізвище?","examples":["surname","Яке твоє прізвище?"],"atlas_href":"/lexicon/прізвище/"}]`)} title="Vocabulary" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"люди","translation":"people","pos":"noun","example":"Це люди навколо мене.","examples":["people","Це люди навколо мене."]},{"word":"хто","translation":"who","pos":"pronoun","example":"Хто це?","examples":["who","Хто це?"],"atlas_href":"/lexicon/хто/"},{"word":"що","translation":"what","pos":"pronoun","example":"Що це?","examples":["what","Що це?"],"atlas_href":"/lexicon/що/"},{"word":"кого","translation":"whom","pos":"pronoun","example":"Кого ти бачиш?","examples":["whom","Кого ти бачиш?"]},{"word":"бачити","translation":"to see","pos":"verb","example":"Я бачу маму.","examples":["to see","Я бачу маму."],"atlas_href":"/lexicon/бачити/"},{"word":"знати","translation":"to know","pos":"verb","example":"Я знаю Олену.","examples":["to know","Я знаю Олену."],"atlas_href":"/lexicon/знати/"},{"word":"любити","translation":"to love","pos":"verb","example":"Я люблю тата.","examples":["to love","Я люблю тата."],"atlas_href":"/lexicon/любити/"},{"word":"чекати","translation":"to wait for","pos":"verb","example":"Я чекаю лікаря.","examples":["to wait for","Я чекаю лікаря."],"atlas_href":"/lexicon/чекати/"},{"word":"шукати","translation":"to look for","pos":"verb","example":"Я шукаю подругу.","examples":["to look for","Я шукаю подругу."],"atlas_href":"/lexicon/шукати/"},{"word":"познайомити","translation":"to introduce","pos":"verb","example":"Я тебе познайомлю.","examples":["to introduce","Я тебе познайомлю."],"atlas_href":"/lexicon/познайомити/"},{"word":"мама","translation":"mom","pos":"noun","example":"Це моя мама.","examples":["mom","Це моя мама."],"atlas_href":"/lexicon/мама/"},{"word":"маму","translation":"mom (object form)","pos":"noun","example":"Я бачу маму.","examples":["mom (object form)","Я бачу маму."]},{"word":"тато","translation":"dad","pos":"noun","example":"Це мій тато.","examples":["dad","Це мій тато."],"atlas_href":"/lexicon/тато/"},{"word":"тата","translation":"dad (object form)","pos":"noun","example":"Я люблю тата.","examples":["dad (object form)","Я люблю тата."]},{"word":"брат","translation":"brother","pos":"noun","example":"Це мій брат.","examples":["brother","Це мій брат."],"atlas_href":"/lexicon/брат/"},{"word":"брата","translation":"brother (object form)","pos":"noun","example":"Я бачу брата.","examples":["brother (object form)","Я бачу брата."]},{"word":"сестра","translation":"sister","pos":"noun","example":"Це моя сестра.","examples":["sister","Це моя сестра."],"atlas_href":"/lexicon/сестра/"},{"word":"сестру","translation":"sister (object form)","pos":"noun","example":"Я знаю сестру.","examples":["sister (object form)","Я знаю сестру."]},{"word":"друг","translation":"male friend","pos":"noun","example":"Це мій друг.","examples":["male friend","Це мій друг."],"atlas_href":"/lexicon/друг/"},{"word":"друга","translation":"male friend (object form)","pos":"noun","example":"Я знаю друга.","examples":["male friend (object form)","Я знаю друга."]},{"word":"подруга","translation":"female friend","pos":"noun","example":"Це моя подруга.","examples":["female friend","Це моя подруга."],"atlas_href":"/lexicon/подруга/"},{"word":"подругу","translation":"female friend (object form)","pos":"noun","example":"Я шукаю подругу.","examples":["female friend (object form)","Я шукаю подругу."]},{"word":"Олена","translation":"Olena","pos":"proper noun","example":"Це Олена.","examples":["Olena","Це Олена."],"atlas_href":"/lexicon/олена/"},{"word":"Олену","translation":"Olena (object form)","pos":"proper noun","example":"Я знаю Олену.","examples":["Olena (object form)","Я знаю Олену."]},{"word":"наречена","translation":"bride","pos":"noun","example":"Це наречена.","examples":["bride","Це наречена."],"atlas_href":"/lexicon/наречена/"},{"word":"наречений","translation":"groom","pos":"noun","example":"Це наречений.","examples":["groom","Це наречений."]},{"word":"дядько","translation":"uncle","pos":"noun","example":"Це мій дядько.","examples":["uncle","Це мій дядько."],"atlas_href":"/lexicon/дядько/"},{"word":"тітка","translation":"aunt","pos":"noun","example":"Це моя тітка.","examples":["aunt","Це моя тітка."],"atlas_href":"/lexicon/тітка/"},{"word":"вчитель","translation":"teacher","pos":"noun","example":"Це вчитель.","examples":["teacher","Це вчитель."],"atlas_href":"/lexicon/вчитель/"},{"word":"вчителя","translation":"teacher (object form)","pos":"noun","example":"Я знаю вчителя.","examples":["teacher (object form)","Я знаю вчителя."]},{"word":"вчителька","translation":"female teacher","pos":"noun","example":"Я знаю вчительку.","examples":["female teacher","Я знаю вчительку."],"atlas_href":"/lexicon/вчителька/"},{"word":"лікар","translation":"doctor","pos":"noun","example":"Це лікар.","examples":["doctor","Це лікар."],"atlas_href":"/lexicon/лікар/"},{"word":"лікаря","translation":"doctor (object form)","pos":"noun","example":"Я чекаю лікаря.","examples":["doctor (object form)","Я чекаю лікаря."]},{"word":"сусід","translation":"male neighbor","pos":"noun","example":"Це мій сусід.","examples":["male neighbor","Це мій сусід."],"atlas_href":"/lexicon/сусід/"},{"word":"сусіда","translation":"male neighbor (object form)","pos":"noun","example":"Я бачу сусіда.","examples":["male neighbor (object form)","Я бачу сусіда."],"atlas_href":"/lexicon/сусіда/"},{"word":"колега","translation":"colleague","pos":"noun","example":"Це мій колега.","examples":["colleague","Це мій колега."],"atlas_href":"/lexicon/колега/"},{"word":"викладач","translation":"lecturer","pos":"noun","example":"Це викладач.","examples":["lecturer","Це викладач."],"atlas_href":"/lexicon/викладач/"},{"word":"продавець","translation":"seller","pos":"noun","example":"Продавець у магазині.","examples":["seller","Продавець у магазині."],"atlas_href":"/lexicon/продавець/"},{"word":"покупець","translation":"buyer","pos":"noun","example":"Покупець чекає.","examples":["buyer","Покупець чекає."],"atlas_href":"/lexicon/покупець/"},{"word":"мене","translation":"me","pos":"pronoun","example":"Вона знає мене.","examples":["me","Вона знає мене."]},{"word":"тебе","translation":"you","pos":"pronoun","example":"Я тебе бачу.","examples":["you","Я тебе бачу."]},{"word":"його","translation":"him; it","pos":"pronoun","example":"Я чекаю його.","examples":["him; it","Я чекаю його."],"atlas_href":"/lexicon/його/"},{"word":"її","translation":"her; it","pos":"pronoun","example":"Я знаю її.","examples":["her; it","Я знаю її."],"atlas_href":"/lexicon/її/"},{"word":"нас","translation":"us","pos":"pronoun","example":"Вони бачать нас.","examples":["us","Вони бачать нас."]},{"word":"вас","translation":"you plural/formal","pos":"pronoun","example":"Я знаю вас.","examples":["you plural/formal","Я знаю вас."]},{"word":"їх","translation":"them","pos":"pronoun","example":"Ми бачимо їх.","examples":["them","Ми бачимо їх."]},{"word":"істота","translation":"animate being","pos":"noun","example":"Брат - це істота.","examples":["animate being","Брат - це істота."],"atlas_href":"/lexicon/істота/"},{"word":"неістота","translation":"inanimate thing","pos":"noun","example":"Хліб - це неістота.","examples":["inanimate thing","Хліб - це неістота."],"atlas_href":"/lexicon/неістота/"},{"word":"прізвище","translation":"surname","pos":"noun","example":"Яке твоє прізвище?","examples":["surname","Яке твоє прізвище?"],"atlas_href":"/lexicon/прізвище/"}]`)} title="Vocabulary" />
 
-<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"люди","back":"people"},{"front":"хто","back":"who"},{"front":"що","back":"what"},{"front":"кого","back":"whom"},{"front":"бачити","back":"to see"},{"front":"знати","back":"to know"},{"front":"любити","back":"to love"},{"front":"чекати","back":"to wait for"},{"front":"шукати","back":"to look for"},{"front":"познайомити","back":"to introduce"},{"front":"мама","back":"mom"},{"front":"маму","back":"mom (object form)"},{"front":"тато","back":"dad"},{"front":"тата","back":"dad (object form)"},{"front":"брат","back":"brother"},{"front":"брата","back":"brother (object form)"},{"front":"сестра","back":"sister"},{"front":"сестру","back":"sister (object form)"},{"front":"друг","back":"male friend"},{"front":"друга","back":"male friend (object form)"},{"front":"подруга","back":"female friend"},{"front":"подругу","back":"female friend (object form)"},{"front":"Олена","back":"Olena"},{"front":"Олену","back":"Olena (object form)"},{"front":"вчитель","back":"teacher"},{"front":"вчителя","back":"teacher (object form)"},{"front":"учитель","back":"teacher"},{"front":"учителька","back":"female teacher"},{"front":"вчителька","back":"female teacher"},{"front":"лікар","back":"doctor"},{"front":"лікаря","back":"doctor (object form)"},{"front":"сусід","back":"male neighbor"},{"front":"сусіда","back":"male neighbor (object form)"},{"front":"колега","back":"colleague"},{"front":"викладач","back":"lecturer"},{"front":"продавець","back":"seller"},{"front":"покупець","back":"buyer"},{"front":"директор","back":"director"},{"front":"дитина","back":"child"},{"front":"людина","back":"person"},{"front":"мене","back":"me"},{"front":"тебе","back":"you"},{"front":"його","back":"him; it"},{"front":"її","back":"her; it"},{"front":"нас","back":"us"},{"front":"вас","back":"you plural/formal"},{"front":"їх","back":"them"},{"front":"істота","back":"animate being"},{"front":"неістота","back":"inanimate thing"},{"front":"натовп","back":"crowd"},{"front":"група","back":"group"},{"front":"прізвище","back":"surname"}]`)} />
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"люди","back":"people"},{"front":"хто","back":"who"},{"front":"що","back":"what"},{"front":"кого","back":"whom"},{"front":"бачити","back":"to see"},{"front":"знати","back":"to know"},{"front":"любити","back":"to love"},{"front":"чекати","back":"to wait for"},{"front":"шукати","back":"to look for"},{"front":"познайомити","back":"to introduce"},{"front":"мама","back":"mom"},{"front":"маму","back":"mom (object form)"},{"front":"тато","back":"dad"},{"front":"тата","back":"dad (object form)"},{"front":"брат","back":"brother"},{"front":"брата","back":"brother (object form)"},{"front":"сестра","back":"sister"},{"front":"сестру","back":"sister (object form)"},{"front":"друг","back":"male friend"},{"front":"друга","back":"male friend (object form)"},{"front":"подруга","back":"female friend"},{"front":"подругу","back":"female friend (object form)"},{"front":"Олена","back":"Olena"},{"front":"Олену","back":"Olena (object form)"},{"front":"наречена","back":"bride"},{"front":"наречений","back":"groom"},{"front":"дядько","back":"uncle"},{"front":"тітка","back":"aunt"},{"front":"вчитель","back":"teacher"},{"front":"вчителя","back":"teacher (object form)"},{"front":"вчителька","back":"female teacher"},{"front":"лікар","back":"doctor"},{"front":"лікаря","back":"doctor (object form)"},{"front":"сусід","back":"male neighbor"},{"front":"сусіда","back":"male neighbor (object form)"},{"front":"колега","back":"colleague"},{"front":"викладач","back":"lecturer"},{"front":"продавець","back":"seller"},{"front":"покупець","back":"buyer"},{"front":"мене","back":"me"},{"front":"тебе","back":"you"},{"front":"його","back":"him; it"},{"front":"її","back":"her; it"},{"front":"нас","back":"us"},{"front":"вас","back":"you plural/formal"},{"front":"їх","back":"them"},{"front":"істота","back":"animate being"},{"front":"неістота","back":"inanimate thing"},{"front":"прізвище","back":"surname"}]`)} />
 
 </TabItem>
 <TabItem label="Activities">
 
 ### Хто чи що?
 
-*(see lesson, §Діалоги)*
+*(see lesson, §Кого?)*
 
 ### Я бачу...
 
@@ -369,7 +372,15 @@ Repair these common learner forms:
 
 ### Animate accusative checks
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Кого? is the question for people and animals as direct objects.", "isTrue": true, "explanation": "Use кого? for animate direct objects."}, {"statement": "Я бачу хліб keeps хліб unchanged.", "isTrue": true, "explanation": "Хліб is an inanimate masculine noun in this A1 pattern."}, {"statement": "Я бачу брата changes брат because брат is a male person.", "isTrue": true, "explanation": "Male animate nouns change in this object position."}, {"statement": "Мама becomes маму, like кава becomes каву.", "isTrue": true, "explanation": "The feminine object ending is familiar from M37."}, {"statement": "Дерево answers хто? in Ukrainian grammar.", "isTrue": false, "explanation": "Дерево answers що?"}, {"statement": "Я бачу його is a useful pronoun chunk.", "isTrue": true, "explanation": "Його is an object pronoun chunk."}, {"statement": "Натовп is treated as a person for this contrast.", "isTrue": false, "explanation": "Натовп is a collective noun treated as inanimate."}, {"statement": "Plural instrumental endings are the main A1 goal here.", "isTrue": false, "explanation": "They are only a later bridge note."}]`)} instruction={"Decide whether each statement fits the lesson."} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Кого? is the question for people and animals as direct objects.", "isTrue": true, "explanation": "Use кого? for animate direct objects."}, {"statement": "Я бачу хліб keeps хліб unchanged.", "isTrue": true, "explanation": "Хліб is an inanimate masculine noun in this A1 pattern."}, {"statement": "Я бачу брата changes брат because брат is a male person.", "isTrue": true, "explanation": "Male animate nouns change in this object position."}, {"statement": "Мама becomes маму, like кава becomes каву.", "isTrue": true, "explanation": "The feminine object ending is familiar from M37."}, {"statement": "Дерево answers хто? in Ukrainian grammar.", "isTrue": false, "explanation": "Дерево answers що?"}, {"statement": "Я бачу його is a useful pronoun chunk.", "isTrue": true, "explanation": "Його is an object pronoun chunk."}, {"statement": "Я чекаю лікаря uses the object form лікаря.", "isTrue": true, "explanation": "Лікар becomes лікаря."}, {"statement": "Я знаю друга keeps друг unchanged.", "isTrue": false, "explanation": "Друг becomes друга."}]`)} instruction={"Decide whether each statement fits the lesson."} isUkrainian={false} />
+
+### People and things questions
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "мама", "right": "кого?"}, {"left": "брат", "right": "кого?"}, {"left": "лікар", "right": "кого?"}, {"left": "хліб", "right": "що?"}, {"left": "дерево", "right": "що?"}, {"left": "кава", "right": "що?"}]`)} instruction={"Match each word with the question it answers in this lesson."} isUkrainian={false} />
+
+### Build people lines
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Кого / ти / бачиш", "answer": "Кого ти бачиш"}, {"jumbled": "Я / бачу / маму", "answer": "Я бачу маму"}, {"jumbled": "Я / знаю / друга", "answer": "Я знаю друга"}, {"jumbled": "Я / чекаю / лікаря", "answer": "Я чекаю лікаря"}, {"jumbled": "Вона / знає / мене", "answer": "Вона знає мене"}, {"jumbled": "Я / бачу / хліб", "answer": "Я бачу хліб"}]`)} instruction={"Put the words in a natural order."} />
 
 ### Introduce a brother
 
@@ -379,7 +390,7 @@ Repair these common learner forms:
 
 ### Repair people-around-me interference
 
-<ErrorCorrection client:only='react' instruction="Choose the clean Ukrainian repair." items={JSON.parse(`[{"sentence": "Я бачу мій брат.", "errorWord": "Я бачу мій брат.", "correctForm": "Я бачу мого брата.", "options": ["Я бачу мого брата.", "Я бачу мій брат.", "Я бачу моїм братом."], "explanation": "Use the object phrase мого брата."}, {"sentence": "Дерево — це хто?", "errorWord": "Дерево — це хто?", "correctForm": "Дерево — це що?", "options": ["Дерево — це що?", "Дерево — це хто?", "Дерево — це кого?"], "explanation": "Plants answer що? in Ukrainian grammar."}, {"sentence": "Я люблю він.", "errorWord": "Я люблю він.", "correctForm": "Я люблю його.", "options": ["Я люблю його.", "Я люблю він.", "Я люблю йому."], "explanation": "Use the object pronoun його."}, {"sentence": "Ми бачимо велику натовп.", "errorWord": "Ми бачимо велику натовп.", "correctForm": "Ми бачимо великий натовп.", "options": ["Ми бачимо великий натовп.", "Ми бачимо велику натовп.", "Ми бачимо великого натовпа."], "explanation": "Натовп is treated as inanimate here."}, {"sentence": "Я зустрів сусіду.", "errorWord": "Я зустрів сусіду.", "correctForm": "Я зустрів сусіда.", "options": ["Я зустрів сусіда.", "Я зустрів сусіду.", "Я зустрів сусідом."], "explanation": "Сусід becomes сусіда."}, {"sentence": "Він має 20 років.", "errorWord": "Він має 20 років.", "correctForm": "Йому 20 років.", "options": ["Йому 20 років.", "Він має 20 років.", "Його 20 років."], "explanation": "Age uses йому in this chunk."}, {"sentence": "Я є студент.", "errorWord": "Я є студент.", "correctForm": "Я студент.", "options": ["Я студент.", "Я є студент.", "Я маю студент."], "explanation": "In this basic identity line, omit є."}, {"sentence": "Яка твоя фамілія?", "errorWord": "Яка твоя фамілія?", "correctForm": "Яке твоє прізвище?", "options": ["Яке твоє прізвище?", "Яка твоя фамілія?", "Який твій фамілія?"], "explanation": "Use прізвище for surname."}]`)} isUkrainian={false} />
+<ErrorCorrection client:only='react' instruction="Choose the clean Ukrainian repair." items={JSON.parse(`[{"sentence": "Я бачу мій брат.", "errorWord": "Я бачу мій брат.", "correctForm": "Я бачу мого брата.", "options": ["Я бачу мого брата.", "Я бачу мій брат.", "Я бачу моїм братом."], "explanation": "Use the object phrase мого брата."}, {"sentence": "Дерево — це хто?", "errorWord": "Дерево — це хто?", "correctForm": "Дерево — це що?", "options": ["Дерево — це що?", "Дерево — це хто?", "Дерево — це кого?"], "explanation": "Plants answer що? in Ukrainian grammar."}, {"sentence": "Я люблю він.", "errorWord": "Я люблю він.", "correctForm": "Я люблю його.", "options": ["Я люблю його.", "Я люблю він.", "Я люблю йому."], "explanation": "Use the object pronoun його."}, {"sentence": "Я чекаю лікар.", "errorWord": "Я чекаю лікар.", "correctForm": "Я чекаю лікаря.", "options": ["Я чекаю лікаря.", "Я чекаю лікар.", "Я чекаю лікарем."], "explanation": "Лікар becomes лікаря."}, {"sentence": "Я бачу сусіду.", "errorWord": "Я бачу сусіду.", "correctForm": "Я бачу сусіда.", "options": ["Я бачу сусіда.", "Я бачу сусіду.", "Я бачу сусідом."], "explanation": "Сусід becomes сусіда."}, {"sentence": "Він має 20 років.", "errorWord": "Він має 20 років.", "correctForm": "Йому 20 років.", "options": ["Йому 20 років.", "Він має 20 років.", "Його 20 років."], "explanation": "Age uses йому in this chunk."}, {"sentence": "Я є студент.", "errorWord": "Я є студент.", "correctForm": "Я студент.", "options": ["Я студент.", "Я є студент.", "Я маю студент."], "explanation": "In this basic identity line, omit є."}, {"sentence": "Яка твоя фамілія?", "errorWord": "Яка твоя фамілія?", "correctForm": "Яке твоє прізвище?", "options": ["Яке твоє прізвище?", "Яка твоя фамілія?", "Який твій фамілія?"], "explanation": "Use прізвище for surname."}]`)} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">

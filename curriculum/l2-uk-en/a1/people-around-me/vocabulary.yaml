@@ -94,6 +94,22 @@
   translation: Olena (object form)
   pos: proper noun
   example: "Я знаю Олену."
+- word: наречена
+  translation: bride
+  pos: noun
+  example: "Це наречена."
+- word: наречений
+  translation: groom
+  pos: noun
+  example: "Це наречений."
+- word: дядько
+  translation: uncle
+  pos: noun
+  example: "Це мій дядько."
+- word: тітка
+  translation: aunt
+  pos: noun
+  example: "Це моя тітка."
 - word: вчитель
   translation: teacher
   pos: noun
@@ -102,14 +118,6 @@
   translation: teacher (object form)
   pos: noun
   example: "Я знаю вчителя."
-- word: учитель
-  translation: teacher
-  pos: noun
-  example: "Учитель у класі."
-- word: учителька
-  translation: female teacher
-  pos: noun
-  example: "Це учителька."
 - word: вчителька
   translation: female teacher
   pos: noun
@@ -146,18 +154,6 @@
   translation: buyer
   pos: noun
   example: "Покупець чекає."
-- word: директор
-  translation: director
-  pos: noun
-  example: "Директор тут."
-- word: дитина
-  translation: child
-  pos: noun
-  example: "Це дитина."
-- word: людина
-  translation: person
-  pos: noun
-  example: "Це добра людина."
 - word: мене
   translation: me
   pos: pronoun
@@ -194,14 +190,6 @@
   translation: inanimate thing
   pos: noun
   example: "Хліб - це неістота."
-- word: натовп
-  translation: crowd
-  pos: noun
-  example: "Ми бачимо великий натовп."
-- word: група
-  translation: group
-  pos: noun
-  example: "Це група."
 - word: прізвище
   translation: surname
   pos: noun

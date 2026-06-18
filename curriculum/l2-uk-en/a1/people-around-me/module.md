@@ -1,5 +1,9 @@
 # Люди навколо мене
 
+<!-- <implementation_map_audit>manifest_obligations=14 covered_in_map=14 missing=[]</implementation_map_audit> -->
+<!-- <bad_form_audit>bad_form_patterns_found=8 marked_with_bad_tags=8 remaining_unmarked=0</bad_form_audit> -->
+<!-- <activity_split_audit>level=A1 inline_n=4 workbook_n=6 inline_range=[4,6] workbook_range=[6,9] split_valid=true</activity_split_audit> -->
+
 You already used the direct object with food and drinks: **Я їм хліб**,
 **Я п'ю каву**, **Я беру воду**. Now use the same object position with people:
 **Я бачу маму**, **Я знаю Олену**, **Я чекаю лікаря**.
@@ -28,8 +32,6 @@ do not turn the page into a full declension table.
 
 ## Діалоги
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
 ### Кого ти бачиш?
 
 ```text
@@ -45,17 +47,22 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Марко: Кого ти бачиш на фото?** | Marko: Whom do you see in the photo? |
-| **Олена: Я бачу маму і тата.** | Olena: I see mom and dad. |
-| **Марко: А хто це?** | Marko: And who is this? |
-| **Олена: Це мій брат. Ти знаєш мого брата?** | Olena: This is my brother. Do you know my brother? |
-| **Марко: Ні, я не знаю твого брата.** | Marko: No, I do not know your brother. |
-| **Олена: Ходімо, я тебе познайомлю!** | Olena: Come on, I will introduce you! |
+| Марко: Кого ти бачиш на фото? | Marko: Whom do you see in the photo? |
+| Олена: Я бачу маму і тата. | Olena: I see mom and dad. |
+| Марко: А хто це? | Marko: And who is this? |
+| Олена: Це мій брат. Ти знаєш мого брата? | Olena: This is my brother. Do you know my brother? |
+| Марко: Ні, я не знаю твого брата. | Marko: No, I do not know your brother. |
+| Олена: Ходімо, я тебе познайомлю! | Olena: Come on, I will introduce you! |
 
 The question **кого?** points to a person. Notice the forms:
 **маму**, **тата**, **мого брата**, **твого брата**. A male person changes:
 **брат → брата**. A female person with **-а** usually changes like the food word
 from M37: **мама → маму**, just as **кава → каву**.
+
+:::tip
+First useful people question: **Кого ти бачиш?** Answer with one person first:
+**Я бачу маму.** Then add a second person.
+:::
 
 ### На роботі
 
@@ -71,11 +78,11 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Ірина: Ти знаєш нашу вчительку?** | Iryna: Do you know our teacher? |
-| **Данило: Так, я знаю Олену Петрівну.** | Danylo: Yes, I know Olena Petrivna. |
-| **Ірина: А нового лікаря?** | Iryna: And the new doctor? |
-| **Данило: Ні, я ще не знаю лікаря.** | Danylo: No, I do not know the doctor yet. |
-| **Ірина: Він дуже добрий. Я чекаю його зараз.** | Iryna: He is very kind. I am waiting for him now. |
+| Ірина: Ти знаєш нашу вчительку? | Iryna: Do you know our teacher? |
+| Данило: Так, я знаю Олену Петрівну. | Danylo: Yes, I know Olena Petrivna. |
+| Ірина: А нового лікаря? | Iryna: And the new doctor? |
+| Данило: Ні, я ще не знаю лікаря. | Danylo: No, I do not know the doctor yet. |
+| Ірина: Він дуже добрий. Я чекаю його зараз. | Iryna: He is very kind. I am waiting for him now. |
 
 Here the people are not only family. You can talk about **вчительку**,
 **Олену Петрівну**, **лікаря**, and **його**. Keep the pronouns as chunks:
@@ -97,20 +104,24 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Наречена: Ось фото з весілля.** | Bride: Here is a photo from the wedding. |
-| **Друг: Бачиш маму? А тата?** | Friend: Do you see mom? And dad? |
-| **Наречена: Так, я бачу маму і тата.** | Bride: Yes, I see mom and dad. |
-| **Друг: Знаєш Олену?** | Friend: Do you know Olena? |
-| **Наречена: Так, я знаю Олену. А це мій дядько і моя тітка.** | Bride: Yes, I know Olena. And this is my uncle and my aunt. |
-| **Друг: А хто це?** | Friend: And who is this? |
-| **Наречена: Це наречений.** | Bride: This is the groom. |
+| Наречена: Ось фото з весілля. | Bride: Here is a photo from the wedding. |
+| Друг: Бачиш маму? А тата? | Friend: Do you see mom? And dad? |
+| Наречена: Так, я бачу маму і тата. | Bride: Yes, I see mom and dad. |
+| Друг: Знаєш Олену? | Friend: Do you know Olena? |
+| Наречена: Так, я знаю Олену. А це мій дядько і моя тітка. | Bride: Yes, I know Olena. And this is my uncle and my aunt. |
+| Друг: А хто це? | Friend: And who is this? |
+| Наречена: Це наречений. | Bride: This is the groom. |
 
 Photo talk is useful because every line points to a visible person. Use the
 same small verbs: **бачу**, **знаю**, **люблю**, **чекаю**, **шукаю**. The
-learner does not need wedding vocabulary as a long list. The scene simply
+You do not need wedding vocabulary as a long list. The scene simply
 shows people around the speaker and lets **кого?** feel natural: **бачу маму**,
 **бачу тата**, **знаю Олену**, **чекаю нареченого**. Keep pointing to real
 people in the picture and saying one clean sentence at a time.
+
+Recognition words in this dialogue: **наречена** is a bride, **наречений** is a
+groom, **дядько** is an uncle, and **тітка** is an aunt. Use them only to
+understand the photo scene.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
@@ -120,12 +131,14 @@ Start with the two school questions:
 
 | Question | Use it for | Examples |
 | --- | --- | --- |
-| **Хто?** | people and animals | **учитель**, **директор**, **тато**, **кіт** |
+| **Хто?** | people and animals | **вчитель**, **лікар**, **тато**, **кіт** |
 | **Що?** | things, places, ideas, plants | **стіл**, **хліб**, **дерево**, **книга** |
 
-People by job or family role, such as **учитель**, **директор**, and **тато**,
+People by job or family role, such as **вчитель**, **лікар**, and **тато**,
 answer **хто?**. Animals also answer **хто?**. Things and plants answer
 **що?**: **дерево — це що?**
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 Now add the object question:
 
@@ -138,14 +151,13 @@ Now add the object question:
 | **лікар** | **Кого я чекаю?** | **Я чекаю лікаря.** |
 | **хліб** | **Що я бачу?** | **Я бачу хліб.** |
 
-The school observation can be very short: **Тато намалював кошеня. Кошеня
-лягло на килимок**. In the first sentence, **тато** does the action and
-**кошеня** receives the action. In the second sentence, **кошеня** does the
-action. A1 learners only need the idea: subject stays in the dictionary shape;
-direct objects may change.
+The classroom observation can be very short. In **Я бачу брата**, **я** does
+the seeing and **брата** receives the action. In **Брат бачить мене**, **брат**
+does the seeing and **мене** receives the action. You only need the idea: one
+word does the action, and one word answers **кого?** or **що?**
 
-In school terms, the subject is the **виконавець** of the action and appears in
-the **називний відмінок**. The direct object answers **кого?** or **що?**.
+School terms can stay simple: one word does the action, and one word receives
+the action. For this lesson, use the questions **кого?** and **що?**.
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
@@ -166,11 +178,11 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Я бачу маму.** | I see mom. |
-| **Я знаю Олену.** | I know Olena. |
-| **Я люблю тата.** | I love dad. |
-| **Я чекаю лікаря.** | I am waiting for the doctor. |
-| **Я шукаю подругу.** | I am looking for a female friend. |
+| Я бачу маму. | I see mom. |
+| Я знаю Олену. | I know Olena. |
+| Я люблю тата. | I love dad. |
+| Я чекаю лікаря. | I am waiting for the doctor. |
+| Я шукаю подругу. | I am looking for a female friend. |
 
 Female-person forms follow the same practical pattern as M37 feminine things:
 
@@ -180,7 +192,7 @@ Female-person forms follow the same practical pattern as M37 feminine things:
 | **сестра** | **Я знаю сестру.** |
 | **Олена** | **Я чекаю Олену.** |
 | **подруга** | **Я люблю подругу.** |
-| **учителька** | **Я знаю вчительку.** |
+| **вчителька** | **Я знаю вчительку.** |
 
 Male-person forms are the new part. For a male person, the object form looks
 like the genitive form:
@@ -197,10 +209,8 @@ like the genitive form:
 This is why **Я бачу хліб** stays unchanged but **Я бачу брата** changes. A
 thing answers **що?**; a person answers **кого?**.
 
-For recognition, notice textbook-style male-person examples:
-**зустрів однокласника, хлопця, товариша**. For contrast, inanimate masculine
-things can stay unchanged in ordinary A1 lines: **бачу завод, інститут,
-папір**.
+For recognition, other male-person words follow the same everyday pattern. You
+only need to produce the table lines above.
 
 Pronoun chunks are useful, but keep them small:
 
@@ -243,15 +253,12 @@ Self-check:
 - **лікар → лікаря**: **Я чекаю лікаря.**
 - **хліб → хліб**: **Я бачу хліб.**
 
-Bridge for later: grammar does not always follow biology. Collective words
-such as **група**, **зграя**, **народ**, and **натовп** are treated as things
-for this contrast. Some masculine inanimate nouns later have parallel object
-forms, as in **узяв олівець — узяв олівця** and **написав лист — написав
-листа**. Plural instrumental endings such as **-ами**, **-ями**, and **-ми**
-belong later. For A1, stay with the direct-object singular forms above.
+Bridge for later: plural people, more pronouns, and edge cases come after A1.
+For now, stay with one clear direct object: **Я бачу маму**, **Я бачу брата**,
+**Я бачу хліб**.
 
 Use Ukrainian people words and greetings: **тато**, **мама**, **прізвище**,
-**Добрий день**, **До побачення**, **Київ / Kyiv**.
+**Добрий день**, **До побачення**.
 
 <span id="repair-people-around-me-interference"></span>
 
@@ -259,13 +266,13 @@ Use Ukrainian people words and greetings: **тато**, **мама**, **пріз
 
 Repair these common learner forms:
 
-| Problem | Use |
+| Avoid | Use |
 | --- | --- |
-| wrong male-person object | **Я бачу мого брата.** |
-| tree as a person | **Дерево — це що?** |
-| dictionary pronoun as object | **Я люблю його.** |
-| collective noun treated as animate | **Ми бачимо великий натовп.** |
-| wrong neighbor ending | **Я зустрів сусіда.** |
-| age with possession | **Йому 20 років.** |
-| forced present copula | **Я студент.** |
-| family-name term | **Яке твоє прізвище?** |
+| **<!-- bad -->Я бачу мій брат.<!-- /bad -->** | **Я бачу мого брата.** |
+| **<!-- bad -->Дерево — це хто?<!-- /bad -->** | **Дерево — це що?** |
+| **<!-- bad -->Я люблю він.<!-- /bad -->** | **Я люблю його.** |
+| **<!-- bad -->Я чекаю лікар.<!-- /bad -->** | **Я чекаю лікаря.** |
+| **<!-- bad -->Я бачу сусіду.<!-- /bad -->** | **Я бачу сусіда.** |
+| **<!-- bad -->Він має 20 років.<!-- /bad -->** | **Йому 20 років.** |
+| **<!-- bad -->Я є студент.<!-- /bad -->** | **Я студент.** |
+| **<!-- bad -->Яка твоя фамілія?<!-- /bad -->** | **Яке твоє прізвище?** |
