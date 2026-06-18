@@ -1,0 +1,124 @@
+- lemma: довкілля
+  translation: "environment, surroundings"
+  pos: noun
+  usage: "Довкілля потребує захисту, бо від нього залежить якість життя."
+- lemma: погода
+  translation: "weather"
+  pos: noun
+  usage: "Погода сьогодні хмарна, але без сильних опадів."
+- lemma: опади
+  translation: "precipitation"
+  pos: noun
+  usage: "У прогнозі повідомили про опади на заході України."
+- lemma: хмарно
+  translation: "cloudy"
+  pos: adverb
+  usage: "Зранку було хмарно, тому в горах стало прохолодніше."
+- lemma: мряка
+  translation: "drizzle"
+  pos: noun
+  usage: "Мряка тривала весь ранок і вкрила місто сірим туманом."
+- lemma: злива
+  translation: "downpour"
+  pos: noun
+  usage: "Після короткої зливи вулиці стали чистішими."
+- lemma: калина
+  translation: "viburnum, guelder rose"
+  pos: noun
+  usage: "Калина біля хати часто сприймається як український культурний символ."
+- lemma: соняшник
+  translation: "sunflower"
+  pos: noun
+  usage: "Соняшник повертає голівку до світла й нагадує про літні поля."
+- lemma: лелека
+  translation: "stork"
+  pos: noun
+  usage: "Лелека на даху в українській традиції пов'язаний із домом і добробутом."
+- lemma: забруднення
+  translation: "pollution"
+  pos: noun
+  usage: "Забруднення повітря й води шкодить людям, рослинам і тваринам."
+- lemma: заповідник
+  translation: "nature reserve"
+  pos: noun
+  usage: "Заповідник охороняє рідкісні види та цілі екосистеми."
+- lemma: переробка
+  translation: "recycling"
+  pos: noun
+  usage: "Переробка відходів зменшує кількість сміття на полігонах."
+- lemma: вимирання
+  translation: "extinction"
+  pos: noun
+  usage: "Вимирання видів часто пов'язане зі знищенням природних місць існування."
+- lemma: урожай
+  translation: "harvest"
+  pos: noun
+  usage: "Урожай залежить від ґрунту, погоди й праці людей."
+- lemma: краєвид
+  translation: "landscape, scenic view"
+  pos: noun
+  usage: "З вершини відкрився краєвид на ліс, річку й далекі села."
+- lemma: завірюха
+  translation: "blizzard"
+  pos: noun
+  usage: "У Карпатах завірюха може швидко змінити умови на стежці."
+- lemma: ожеледиця
+  translation: "ice on roads, glaze ice"
+  pos: noun
+  usage: "Після дощу й морозу на дорогах утворилася ожеледиця."
+- lemma: бабине літо
+  translation: "Indian summer, warm autumn spell"
+  pos: noun
+  usage: "Бабине літо приносить теплі дні після перших осінніх холодів."
+- lemma: іній
+  translation: "hoarfrost"
+  pos: noun
+  usage: "Іній зробив дерева сріблястими."
+- lemma: чорнобривці
+  translation: "marigolds"
+  pos: noun
+  usage: "Чорнобривці часто ростуть біля українських хат і в міських клумбах."
+- lemma: барвінок
+  translation: "periwinkle"
+  pos: noun
+  usage: "Барвінок залишається зеленим і має символічне значення в народній культурі."
+- lemma: борсук
+  translation: "badger"
+  pos: noun
+  usage: "Борсук живе в норі й шукає їжу в лісі або на узліссі."
+- lemma: зубр
+  translation: "European bison"
+  pos: noun
+  usage: "Зубр є рідкісною великою твариною, яку охороняють у природних територіях."
+- lemma: сортувати
+  translation: "to sort"
+  pos: verb
+  usage: "Варто сортувати папір, скло, пластик і органічні відходи."
+- lemma: екосистема
+  translation: "ecosystem"
+  pos: noun
+  usage: "Екосистема працює як мережа взаємозалежних рослин, тварин, води й ґрунту."
+- lemma: туман
+  translation: "fog"
+  pos: noun
+  usage: "Туман над річкою робить ранок тихішим."
+- lemma: роса
+  translation: "dew"
+  pos: noun
+  usage: "На траві блищить роса після прохолодної ночі."
+- lemma: брунька
+  translation: "bud"
+  pos: noun
+  usage: "Навесні на гілках з'являються бруньки."
+- lemma: жнива
+  translation: "harvest season"
+  pos: noun
+  usage: "Жнива починаються тоді, коли зерно достигає."
+- lemma: вирубка
+  translation: "deforestation, logging"
+  pos: noun
+  usage: "Надмірна вирубка лісів руйнує місця існування тварин."
+- lemma: збереження
+  translation: "preservation, conservation"
+  pos: noun
+  usage: "Збереження природи починається з відповідальних щоденних рішень."
