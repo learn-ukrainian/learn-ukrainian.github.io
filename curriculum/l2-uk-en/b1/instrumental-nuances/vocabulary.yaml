@@ -1,0 +1,208 @@
+- lemma: орудний відмінок
+  translation: "instrumental case"
+  pos: phrase
+  usage: "Орудний відмінок відповідає на питання ким? чим?"
+- lemma: засіб
+  translation: "means"
+  pos: noun
+  usage: "У реченні їхати автобусом автобус є засобом руху."
+- lemma: знаряддя
+  translation: "tool, instrument"
+  pos: noun
+  usage: "Ручка є знаряддям письма."
+- lemma: характеристика
+  translation: "characterisation"
+  pos: noun
+  usage: "Орудний характеристики називає роль або якість."
+- lemma: професійна роль
+  translation: "professional role"
+  pos: phrase
+  usage: "Вона працює лікаркою: лікаркою є професійна роль."
+- lemma: працювати
+  translation: "to work"
+  pos: verb
+  usage: "Працювати ким? викладачем, лікаркою, інженером."
+- lemma: стати
+  translation: "to become"
+  pos: verb
+  usage: "Він став керівником проєкту."
+- lemma: залишатися
+  translation: "to remain"
+  pos: verb
+  usage: "Я залишаюся студентом."
+- lemma: вважатися
+  translation: "to be considered"
+  pos: verb
+  usage: "Ця книжка вважається класикою."
+- lemma: керівник
+  translation: "manager, leader"
+  pos: noun
+  usage: "Він став керівником групи."
+- lemma: фахівець
+  translation: "specialist"
+  pos: noun
+  usage: "Її вважають доброю фахівчинею."
+- lemma: ручка
+  translation: "pen"
+  pos: noun
+  usage: "Я пишу ручкою."
+- lemma: олівець
+  translation: "pencil"
+  pos: noun
+  usage: "Дитина малює олівцем."
+- lemma: ніж
+  translation: "knife"
+  pos: noun
+  usage: "Хліб нарізали ножем."
+- lemma: ключ
+  translation: "key"
+  pos: noun
+  usage: "Двері відчинили ключем."
+- lemma: картка
+  translation: "card"
+  pos: noun
+  usage: "У крамниці можна платити карткою."
+- lemma: готівка
+  translation: "cash"
+  pos: noun
+  usage: "Він заплатив готівкою."
+- lemma: трамвай
+  translation: "tram"
+  pos: noun
+  usage: "Ми їхали трамваєм."
+- lemma: потяг
+  translation: "train"
+  pos: noun
+  usage: "Вони приїхали потягом."
+- lemma: метро
+  translation: "metro"
+  pos: noun
+  usage: "До центру зручно їхати метро."
+- lemma: українською
+  translation: "in Ukrainian"
+  pos: adverbial
+  usage: "На занятті ми говоримо українською."
+- lemma: латиниця
+  translation: "Latin script"
+  pos: noun
+  usage: "Назву можна записати латиницею."
+- lemma: кирилиця
+  translation: "Cyrillic script"
+  pos: noun
+  usage: "Українська переважно записується кирилицею."
+- lemma: шлях
+  translation: "path, route"
+  pos: noun
+  usage: "Орудний шляху показує маршрут руху."
+- lemma: вулиця
+  translation: "street"
+  pos: noun
+  usage: "Ми йшли тихою вулицею."
+- lemma: дорога
+  translation: "road"
+  pos: noun
+  usage: "Автобус їхав новою дорогою."
+- lemma: стежка
+  translation: "path, trail"
+  pos: noun
+  usage: "Туристи піднялися вузькою стежкою."
+- lemma: міст
+  translation: "bridge"
+  pos: noun
+  usage: "Ми пройшли мостом через річку."
+- lemma: парк
+  translation: "park"
+  pos: noun
+  usage: "Вранці я біг парком."
+- lemma: річка
+  translation: "river"
+  pos: noun
+  usage: "Човен плив річкою."
+- lemma: сумісність
+  translation: "accompaniment, togetherness"
+  pos: noun
+  usage: "Прийменник з + орудний часто показує сумісність."
+- lemma: з другом
+  translation: "with a friend"
+  pos: phrase
+  usage: "Я прийшов на лекцію з другом."
+- lemma: із сестрою
+  translation: "with a sister"
+  pos: phrase
+  usage: "Вона говорила із сестрою."
+- lemma: зі мною
+  translation: "with me"
+  pos: phrase
+  usage: "Поговоріть зі мною після заняття."
+- lemma: під
+  translation: "under"
+  pos: preposition
+  usage: "Книжка лежить під столом."
+- lemma: над
+  translation: "above, over"
+  pos: preposition
+  usage: "Над містом було ясне небо."
+- lemma: між
+  translation: "between"
+  pos: preposition
+  usage: "Між будинками є вузький прохід."
+- lemma: перед
+  translation: "before, in front of"
+  pos: preposition
+  usage: "Перед лекцією студенти переглянули нотатки."
+- lemma: згідно з
+  translation: "according to"
+  pos: preposition
+  usage: "Згідно з розкладом, семінар починається о десятій."
+- lemma: у зв'язку з
+  translation: "in connection with, due to"
+  pos: preposition
+  usage: "У зв'язку з ремонтом аудиторія зачинена."
+- lemma: порівняно з
+  translation: "compared with"
+  pos: preposition
+  usage: "Порівняно з минулим роком, група стала більшою."
+- lemma: цікавитися
+  translation: "to be interested in"
+  pos: verb
+  usage: "Я цікавлюся історією міста."
+- lemma: захоплюватися
+  translation: "to admire, be passionate about"
+  pos: verb
+  usage: "Вона захоплюється українською музикою."
+- lemma: користуватися
+  translation: "to use"
+  pos: verb
+  usage: "Студенти користуються електронним словником."
+- lemma: пишатися
+  translation: "to be proud of"
+  pos: verb
+  usage: "Ми пишаємося командою."
+- lemma: керувати
+  translation: "to manage, lead"
+  pos: verb
+  usage: "Викладач керує проєктом."
+- lemma: володіти
+  translation: "to possess, master"
+  pos: verb
+  usage: "Вона добре володіє англійською."
+- lemma: задовольнятися
+  translation: "to be satisfied with"
+  pos: verb
+  usage: "Не треба задовольнятися першим варіантом."
+- lemma: агент пасиву
+  translation: "passive agent"
+  pos: phrase
+  usage: "У реченні лист підписано директором директором є агент пасиву."
+- lemma: ухвалено
+  translation: "has been adopted, approved"
+  pos: passive
+  usage: "Рішення ухвалено радою."
+- lemma: підписано
+  translation: "has been signed"
+  pos: passive
+  usage: "Документ підписано ректором."
+- lemma: виконано
+  translation: "has been performed"
+  pos: passive
+  usage: "Пісню виконано хором."
