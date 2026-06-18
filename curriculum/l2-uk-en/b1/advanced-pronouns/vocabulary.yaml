@@ -1,0 +1,192 @@
+- lemma: займенник
+  translation: "pronoun"
+  pos: noun
+  usage: "Займенник замінює або уточнює іменник, прикметник, числівник чи цілу ситуацію."
+- lemma: питальний займенник
+  translation: "interrogative pronoun"
+  pos: noun phrase
+  usage: "Питальний займенник допомагає поставити питання: хто, що, який, чий?"
+- lemma: відносний займенник
+  translation: "relative pronoun"
+  pos: noun phrase
+  usage: "Відносний займенник з'єднує частини складного речення."
+- lemma: питально-відносний
+  translation: "interrogative-relative"
+  pos: adjective
+  usage: "Хто, що, який, чий і котрий належать до питально-відносних займенників."
+- lemma: хто
+  translation: "who"
+  pos: pronoun
+  usage: "Хто це сказав? Я знаю, хто це сказав."
+- lemma: що
+  translation: "what, that which"
+  pos: pronoun
+  usage: "Що сталося? Я розумію те, що сталося."
+- lemma: який
+  translation: "which, what kind of"
+  pos: pronoun/adjective
+  usage: "Який документ треба підписати? Це документ, який треба підписати."
+- lemma: чий
+  translation: "whose"
+  pos: pronoun/adjective
+  usage: "Чий це зошит? Студент, чий зошит лежить тут, уже пішов."
+- lemma: котрий
+  translation: "which one, what time"
+  pos: pronoun/adjective
+  usage: "Котра година? У котрому вагоні ви їдете?"
+- lemma: скільки
+  translation: "how many, how much"
+  pos: pronoun/numeral
+  usage: "Скільки студентів прийшло? Я знаю, скільки студентів прийшло."
+- lemma: себе
+  translation: "oneself"
+  pos: reflexive pronoun
+  usage: "Зворотний займенник себе не має називного відмінка."
+- lemma: собі
+  translation: "to oneself"
+  pos: reflexive pronoun form
+  usage: "Я уявив собі іншу ситуацію."
+- lemma: собою
+  translation: "with/by oneself"
+  pos: reflexive pronoun form
+  usage: "Вона була задоволена собою після виступу."
+- lemma: свій
+  translation: "one's own"
+  pos: possessive pronoun
+  usage: "Я взяв свою книжку, а не чужу."
+- lemma: зворотний
+  translation: "reflexive"
+  pos: adjective
+  usage: "Себе і свій мають зворотне значення, але різну граматичну роль."
+- lemma: неозначений
+  translation: "indefinite"
+  pos: adjective
+  usage: "Неозначений займенник називає невідому або неважливу особу чи річ."
+- lemma: хтось
+  translation: "someone"
+  pos: indefinite pronoun
+  usage: "Хтось постукав у двері."
+- lemma: щось
+  translation: "something"
+  pos: indefinite pronoun
+  usage: "У цьому тексті щось змінилося."
+- lemma: якийсь
+  translation: "some, some kind of"
+  pos: indefinite pronoun/adjective
+  usage: "Якийсь студент залишив парасольку в аудиторії."
+- lemma: чийсь
+  translation: "someone's"
+  pos: indefinite possessive pronoun
+  usage: "На столі лежить чийсь телефон."
+- lemma: будь-хто
+  translation: "anyone"
+  pos: indefinite pronoun
+  usage: "Будь-хто може поставити питання після лекції."
+- lemma: будь-що
+  translation: "anything"
+  pos: indefinite pronoun
+  usage: "Не обіцяйте будь-що без плану."
+- lemma: будь-який
+  translation: "any"
+  pos: indefinite pronoun/adjective
+  usage: "Будь-який приклад треба перевірити в контексті."
+- lemma: хто-небудь
+  translation: "anyone, someone"
+  pos: indefinite pronoun
+  usage: "Чи є тут хто-небудь із першої групи?"
+- lemma: що-небудь
+  translation: "anything, something"
+  pos: indefinite pronoun
+  usage: "Напишіть що-небудь коротке про себе."
+- lemma: дехто
+  translation: "some people, certain people"
+  pos: indefinite pronoun
+  usage: "Дехто вже прочитав статтю."
+- lemma: дещо
+  translation: "something, a few things"
+  pos: indefinite pronoun
+  usage: "Дещо в цьому поясненні треба уточнити."
+- lemma: абихто
+  translation: "just anyone"
+  pos: indefinite pronoun
+  usage: "До складної роботи не варто допускати абикого."
+- lemma: абиякий
+  translation: "just any, poor-quality"
+  pos: indefinite pronoun/adjective
+  usage: "Абиякий приклад не допоможе зрозуміти правило."
+- lemma: заперечний
+  translation: "negative"
+  pos: adjective
+  usage: "Заперечний займенник називає відсутність особи, речі або ознаки."
+- lemma: ніхто
+  translation: "nobody"
+  pos: negative pronoun
+  usage: "Ніхто не заперечує проти цього рішення."
+- lemma: ніщо
+  translation: "nothing"
+  pos: negative pronoun
+  usage: "Ніщо не змінило головної думки тексту."
+- lemma: нічий
+  translation: "nobody's"
+  pos: negative possessive pronoun
+  usage: "Це нічий зошит, бо власник не підписав його."
+- lemma: ніякий
+  translation: "no, not any"
+  pos: negative pronoun/adjective
+  usage: "Ніякий аргумент не переконав комісію."
+- lemma: ні з ким
+  translation: "with nobody"
+  pos: negative pronoun phrase
+  usage: "Він ні з ким не радився перед рішенням."
+- lemma: ні в чому
+  translation: "in nothing"
+  pos: negative pronoun phrase
+  usage: "Вона ні в чому не винна."
+- lemma: нікого
+  translation: "nobody, no one"
+  pos: negative pronoun form
+  usage: "Ніко́го немає в аудиторії, але ні́кого й спитати про ключ."
+- lemma: нічого
+  translation: "nothing"
+  pos: negative pronoun form
+  usage: "Нічо́го не видно, але ні́чого боятися."
+- lemma: разом
+  translation: "written together"
+  pos: adverb
+  usage: "Хтось, дехто, ніхто і нічий пишемо разом."
+- lemma: через дефіс
+  translation: "with a hyphen"
+  pos: phrase
+  usage: "Будь-хто, хто-небудь і хтозна-що пишемо через дефіс."
+- lemma: окремо
+  translation: "separately"
+  pos: adverb
+  usage: "Якщо є прийменник, пишемо окремо: ні з ким, будь у кого."
+- lemma: сполучне слово
+  translation: "relative/linking word"
+  pos: noun phrase
+  usage: "У реченні Я знаю, хто прийшов слово хто є сполучним словом."
+- lemma: означальний займенник
+  translation: "determinative pronoun"
+  pos: noun phrase
+  usage: "Кожен, весь, сам та інший належать до означальних займенників."
+- lemma: кожен
+  translation: "each, everyone"
+  pos: determinative pronoun
+  usage: "Кожен має право поставити питання."
+- lemma: весь
+  translation: "all, whole"
+  pos: determinative pronoun
+  usage: "Весь текст треба перечитати уважно."
+- lemma: сам
+  translation: "self, alone"
+  pos: determinative pronoun
+  usage: "Він сам написав заяву."
+- lemma: той самий
+  translation: "the same"
+  pos: pronoun phrase
+  usage: "Це той самий приклад, який ми обговорювали вчора."
+- lemma: інший
+  translation: "other, another"
+  pos: determinative pronoun/adjective
+  usage: "Інший студент запропонував коротше пояснення."
