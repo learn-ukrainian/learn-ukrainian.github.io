@@ -1,0 +1,228 @@
+- lemma: освіта
+  translation: "education"
+  pos: noun
+  usage: "Освіта є важливою частиною суспільного життя."
+- lemma: навчання
+  translation: "study, learning process"
+  pos: noun
+  usage: "Навчання починається у вересні."
+- lemma: вища освіта
+  translation: "higher education"
+  pos: phrase
+  usage: "Вона здобуває вищу освіту в Києві."
+- lemma: заклад освіти
+  translation: "educational institution"
+  pos: phrase
+  usage: "Університет є закладом освіти."
+- lemma: університет
+  translation: "university"
+  pos: noun
+  usage: "Я навчаюся в університеті."
+- lemma: факультет
+  translation: "faculty, school within a university"
+  pos: noun
+  usage: "Він навчається на історичному факультеті."
+- lemma: кафедра
+  translation: "academic department, chair"
+  pos: noun
+  usage: "Кафедра затвердила тему курсової роботи."
+- lemma: деканат
+  translation: "dean's office"
+  pos: noun
+  usage: "Студент звернувся до деканату."
+- lemma: декан
+  translation: "dean"
+  pos: noun
+  usage: "Декан факультету зустрівся зі студентами."
+- lemma: викладач
+  translation: "instructor, lecturer"
+  pos: noun
+  usage: "Викладач пояснив тему семінару."
+- lemma: професор
+  translation: "professor"
+  pos: noun
+  usage: "Професор прочитав відкриту лекцію."
+- lemma: першокурсник
+  translation: "first-year student"
+  pos: noun
+  usage: "Першокурсник уточнив розклад у деканаті."
+- lemma: старшокурсниця
+  translation: "senior-year female student"
+  pos: noun
+  usage: "Старшокурсниця допомогла групі знайти аудиторію."
+- lemma: одногрупник
+  translation: "groupmate"
+  pos: noun
+  usage: "Одногрупник надіслав мені конспект лекції."
+- lemma: куратор
+  translation: "student group advisor"
+  pos: noun
+  usage: "Куратор пояснив правила сесії."
+- lemma: науковий керівник
+  translation: "academic advisor, research supervisor"
+  pos: phrase
+  usage: "Науковий керівник порадив змінити тему роботи."
+- lemma: спеціальність
+  translation: "major, specialization"
+  pos: noun
+  usage: "Моя спеціальність - комп'ютерні науки."
+- lemma: освітня програма
+  translation: "degree program, educational program"
+  pos: phrase
+  usage: "Освітня програма має кілька вибіркових курсів."
+- lemma: навчальний план
+  translation: "curriculum, study plan"
+  pos: phrase
+  usage: "Навчальний план містить обов'язкові дисципліни."
+- lemma: дисципліна
+  translation: "academic subject, discipline"
+  pos: noun
+  usage: "Ця дисципліна триває два семестри."
+- lemma: лекція
+  translation: "lecture"
+  pos: noun
+  usage: "Лекція з історії починається о дев'ятій."
+- lemma: семінар
+  translation: "seminar"
+  pos: noun
+  usage: "На семінарі студенти обговорюють текст."
+- lemma: практичне заняття
+  translation: "practical class"
+  pos: phrase
+  usage: "Практичне заняття відбудеться в лабораторії."
+- lemma: лабораторна робота
+  translation: "lab work"
+  pos: phrase
+  usage: "Лабораторну роботу потрібно здати до п'ятниці."
+- lemma: консультація
+  translation: "consultation, office-hour session"
+  pos: noun
+  usage: "Перед іспитом буде консультація."
+- lemma: розклад
+  translation: "schedule"
+  pos: noun
+  usage: "Розклад опубліковано на сайті факультету."
+- lemma: курс
+  translation: "year of study, course"
+  pos: noun
+  usage: "Вона навчається на другому курсі."
+- lemma: семестр
+  translation: "semester"
+  pos: noun
+  usage: "Семестр завершується сесією."
+- lemma: залік
+  translation: "pass/fail assessment"
+  pos: noun
+  usage: "Студенти складають залік наприкінці семестру."
+- lemma: іспит
+  translation: "exam"
+  pos: noun
+  usage: "Іспит з біології буде у вівторок."
+- lemma: сесія
+  translation: "exam period"
+  pos: noun
+  usage: "Під час сесії студенти складають заліки та іспити."
+- lemma: перескладання
+  translation: "retake"
+  pos: noun
+  usage: "Перескладання відбудеться наступного тижня."
+- lemma: оцінка
+  translation: "grade, mark"
+  pos: noun
+  usage: "Вона отримала високу оцінку з хімії."
+- lemma: бали
+  translation: "points, score"
+  pos: noun
+  usage: "Результат НМТ переводять у бали для вступу."
+- lemma: НМТ
+  translation: "National Multi-Subject Test"
+  pos: abbreviation
+  usage: "Абітурієнти готуються до НМТ."
+- lemma: абітурієнт
+  translation: "applicant, prospective student"
+  pos: noun
+  usage: "Абітурієнт подав заяви до кількох університетів."
+- lemma: вступити
+  translation: "to enter, to be admitted"
+  pos: verb
+  usage: "Вона хоче вступити до університету."
+- lemma: бюджетне місце
+  translation: "state-funded place"
+  pos: phrase
+  usage: "Він вступив на бюджетне місце."
+- lemma: контрактна форма
+  translation: "fee-paying form of study"
+  pos: phrase
+  usage: "Вона навчається на контрактній формі."
+- lemma: стипендія
+  translation: "stipend, scholarship"
+  pos: noun
+  usage: "Стипендія виплачується щомісяця."
+- lemma: гуртожиток
+  translation: "dormitory"
+  pos: noun
+  usage: "Гуртожиток розташований недалеко від факультету."
+- lemma: бібліотека
+  translation: "library"
+  pos: noun
+  usage: "У бібліотеці є читальний зал."
+- lemma: читальний зал
+  translation: "reading room"
+  pos: phrase
+  usage: "У читальному залі студенти працюють із джерелами."
+- lemma: аудиторія
+  translation: "classroom, lecture room"
+  pos: noun
+  usage: "Семінар буде в аудиторії 214."
+- lemma: корпус
+  translation: "building, campus building"
+  pos: noun
+  usage: "Третій корпус біля бібліотеки."
+- lemma: студентський квиток
+  translation: "student ID card"
+  pos: phrase
+  usage: "Студентський квиток підтверджує статус студента."
+- lemma: залікова книжка
+  translation: "grade book"
+  pos: phrase
+  usage: "Залікова книжка містить результати контролю."
+- lemma: електронний кабінет
+  translation: "online account, electronic cabinet"
+  pos: phrase
+  usage: "Перевірте дані в електронному кабінеті."
+- lemma: заява
+  translation: "application, formal request"
+  pos: noun
+  usage: "Студент подав заяву до деканату."
+- lemma: довідка
+  translation: "certificate, official confirmation"
+  pos: noun
+  usage: "Мені потрібна довідка з університету."
+- lemma: курсова робота
+  translation: "term paper"
+  pos: phrase
+  usage: "Курсова робота має бути готова до травня."
+- lemma: дипломна робота
+  translation: "thesis"
+  pos: phrase
+  usage: "Дипломна робота присвячена історії мови."
+- lemma: дослідження
+  translation: "research"
+  pos: noun
+  usage: "Дослідження показало цікаві результати."
+- lemma: рекомендована література
+  translation: "recommended reading"
+  pos: phrase
+  usage: "Рекомендована література подана в програмі курсу."
+- lemma: бакалавр
+  translation: "bachelor's degree holder, bachelor level"
+  pos: noun
+  usage: "Після бакалавра вона планує вступити до магістратури."
+- lemma: магістр
+  translation: "master's degree holder, master level"
+  pos: noun
+  usage: "Магістр пише дипломну роботу."
+- lemma: доктор філософії
+  translation: "Doctor of Philosophy, PhD"
+  pos: phrase
+  usage: "Доктор філософії є науковим ступенем."
