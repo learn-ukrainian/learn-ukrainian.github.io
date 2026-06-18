@@ -10173,9 +10173,12 @@ def _vesum_gate(
     2. **Intentional misspellings in `error-correction` activities** —
        `error:`, `errorWord:`, and `error_word:` fields contain the typo the
        student must fix (e.g. `прокидаєштся`). Verifying them would always fail.
-    3. **Wrong multiple-choice options** — `options: [{text, correct}]` values
-       with `correct: false` are author-labeled distractors. They may include
-       intentionally non-standard forms that test overgeneralization.
+    3. **Intentional-error multiple-choice options** — `options: [{text, correct, intentional_error}]`
+       values with `intentional_error: true` are deliberately incorrect/nonstandard forms
+       (e.g. overgeneralized morphology like "п'юся") used as distractors to test common
+       learner errors. They are excluded from VESUM verification (the opt-out). Regular
+       distractors (`correct: false` without `intentional_error`) are real Ukrainian words
+       placed in pedagogically wrong context and must be verified.
     4. **Sentence-initial capitalization** — VESUM is case-sensitive, so
        `Спочатку` (capitalized first word) returns no matches even though
        `спочатку` does. Lookup is performed in lowercase; the report keeps
