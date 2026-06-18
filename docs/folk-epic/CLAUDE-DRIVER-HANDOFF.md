@@ -63,7 +63,31 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 53 HANDOFF (2026-06-18 — 📚 FOLK DOSSIER FOUNDATION LANE OPENED: 3 dossiers built + verified + batched into this PR. agy-on-dossiers A/B FAILED → foundation stays codex.) — **RESUME HERE**
+## ▶▶▶ SESSION 54 HANDOFF (2026-06-18 — 📚 DOSSIER LANE WAVE 2: +4 dossiers (vertep, муз.інструменти, дитячий фольклор, вишивка) verified + batched into this PR. Gap 14 → 10.) — **RESUME HERE**
+
+**🟢 ONE-LINE STATE:** Folk dossier gap **14 → 10**. This batch PR (wave 2) adds `vertep-narodna-drama`,
+`narodni-muzychni-instrumenty`, `dytiachyi-folklor-kolyskovi`, `narodna-vyshyvka-rushnyk-strii` — all
+10-section, wordcount PASS, `verify_quote`-confirmed + driver corpus-hammered (vertep §4 verbatim-checked
+vs corpus chunk `21c791c4_c0311`; vyshyvka Нечуй-Левицький @1.0 `ac1dffab_c0016`). PR #3537 (wave 1,
+3 dossiers) already MERGED. Recipe + A/B verdict unchanged from S53 (codex foundation lane; agy = wiki only).
+
+### 🎯 REMAINING DOSSIER GAP (10): codex waves of 2, batch ~4/PR
+`istorychni-perekazy`, `narodna-kukhnia-obriadova-yizha`, `narodna-kultura-ta-vysoka-kultura-mistky`,
+`narodne-zhytlo-sadyba-hospodarstvo`, `narodni-anekdoty`, `narodni-opovidannia-buvalshchyny-memoraty`,
+`narodni-remesla-ta-khudozhni-promysly`, `narodni-tantsi`, `rehionalni-etnokulturni-tradytsii`, `zahadky`.
+Then 9 dossier-ready WIKIS on agy (`compile.py --writer agy --review`).
+
+### ⚠️ INFRA FINDING (S54, mine #0.2 — investigate/file): `search_images` (SigLIP) is **DEFERRED for the
+l2-uk-en folk track** — returns *"Image search deferred — will be available for l2-uk-direct track."* So
+folk dossier multimodal-hook blocks ship with **no image chunk_ids** (writers correctly note the deferral
+rather than fabricate — good #M-4 discipline). This will starve the eventual module's symbolic-decode
+image hotspots. NOT blocking dossiers/wikis. Action: confirm whether the l2-uk-en SigLIP index is
+intentionally gated vs missing, then file/drive. (Carried infra: wire `render_canonical_formulas_block`
+into wiki writer prompt; reconcile stale `--writer` help string — HOLD for user nod.)
+
+### IN-FLIGHT: 0 (at time of this PR). Merge grant LIVE (review → CI-green → self-merge, squash; folk track). Worktree-only; never main.
+
+## ▶▶▶ SESSION 53 HANDOFF (2026-06-18 — 📚 FOLK DOSSIER FOUNDATION LANE OPENED: 3 dossiers built + verified + batched into PR #3537 (MERGED). agy-on-dossiers A/B FAILED → foundation stays codex.)
 
 **🟢 ONE-LINE STATE:** Folk dossier gap **17 → 14**. This batch PR adds `narodni-lehendy`,
 `pysankarstvo`, `prykazky-ta-pryslivia` — all 10-section, wordcount-gate PASS, `verify_quote`-confirmed
