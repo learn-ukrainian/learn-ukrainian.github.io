@@ -101,6 +101,9 @@ DASHBOARD_LOADS = {
         "/api/runtime/recent?limit=50",
         "/api/runtime/auth",
     ],
+    "headroom.html": [
+        "/api/runtime/headroom/stats",
+    ],
     "routing.html": [
         "/api/state/routing-budget",
         "/api/runtime/agents",
@@ -161,6 +164,7 @@ BUDGETS = {
     "/api/rag/search_text?q=test&limit=5": 1.5,
     "/api/runtime/agents": 1.5,
     "/api/runtime/auth": 1.5,
+    "/api/runtime/headroom/stats": 1.5,
     "/api/runtime/recent?limit=50": 1.5,
     "/api/runtime/usage?days=7": 1.5,
     "/api/state/routing-budget": 1.5,
@@ -253,6 +257,13 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
     monkeypatch.setattr(comms_router, "MESSAGE_DB", broker_db)
     monkeypatch.setattr(dashboard_comms, "MESSAGE_DB", broker_db)
     monkeypatch.setattr(state_helpers, "MESSAGE_DB", broker_db)
+    image_root = tmp_path / "textbook_images"
+    textbooks_dir = tmp_path / "textbooks"
+    image_root.mkdir()
+    textbooks_dir.mkdir()
+    monkeypatch.setattr(images_router, "IMAGES_DIR", image_root)
+    monkeypatch.setattr(images_router, "TEXTBOOKS_DIR", textbooks_dir)
+    monkeypatch.setattr(images_router, "ANNOTATIONS_FILE", image_root / "image_text_pairs.jsonl")
     images_router._index.reload()
     images_router._page_cache.clear()
 
