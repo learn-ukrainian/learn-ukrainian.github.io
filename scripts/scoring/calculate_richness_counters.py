@@ -12,7 +12,9 @@ import statistics
 from pathlib import Path
 
 import yaml
-from calculate_richness_config import (
+from slug_utils import to_bare_slug
+
+from .calculate_richness_config import (
     CITATION_MARKERS,
     COLLOCATION_PATTERNS,
     CULTURAL_TERMS,
@@ -24,7 +26,6 @@ from calculate_richness_config import (
     TIMELINE_MARKERS,
     UKRAINIAN_PLACES,
 )
-from slug_utils import to_bare_slug
 
 
 def count_engagement_boxes(content: str) -> int:
