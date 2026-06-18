@@ -1,5 +1,13 @@
 # Що сталося?
 
+<!-- plan_coverage_audit objectives=4 content_sections=4 dialogue_situations=1 activity_hints=3 covered=true missing=[] -->
+<!-- bad_form_audit bad_form_patterns_found=8 marked_with_bad_tags=8 remaining_unmarked=0 -->
+<!-- activity_split_audit level=A1 inline_n=4 workbook_n=6 inline_range=[4,6] workbook_range=[6,9] split_valid=true -->
+
+Привіт! Today you make one small time jump: from **зараз** to **учора**.
+You will learn how to say what happened, ask **Що ти робив/робила?**, and keep
+the past ending matched to the person or thing you are talking about.
+
 You already know how present-tense verbs change for the person:
 **я читаю**, **ти читаєш**, **він читає**. Past tense is different. In the
 simple A1 pattern here, the past verb shows **gender in the singular**, not
@@ -19,6 +27,12 @@ The useful question is:
 **Що ти робив?** - What were you doing? (to a male speaker)
 
 **Що ти робила?** - What were you doing? (to a female speaker)
+
+:::note[A1 boundary]
+Stay with the regular visible endings today: **-в**, **-ла**, **-ло**, **-ли**.
+Use the familiar verbs in this lesson first. Your win is simple: match the past
+ending to the subject.
+:::
 
 :::tip[Gender, not person]
 In the past tense, **я читав**, **ти читав**, and **він читав** can share the
@@ -67,10 +81,10 @@ The grammar work is small but important:
 
 ```text
 Марія: Як ти провів вихідні?
-Іван: Добре. У суботу я гуляв.
+Іван: Добре. У суботу я ходив на концерт.
 Іван: У неділю я дивився фільм.
 Іван: А ти що робила?
-Марія: Я ходила в кафе.
+Марія: Я читала роман і ходила в кафе.
 Марія: Ми їли торт.
 Іван: Ви пили каву?
 Марія: Так, ми пили каву.
@@ -81,16 +95,19 @@ Support after the Ukrainian lines:
 | Українська | English support |
 | --- | --- |
 | **Марія: Як ти провів вихідні?** | Mariia: How did you spend the weekend? |
-| **Іван: Добре. У суботу я гуляв.** | Ivan: Good. On Saturday I walked. |
+| **Іван: Добре. У суботу я ходив на концерт.** | Ivan: Good. On Saturday I went to a concert. |
 | **Іван: У неділю я дивився фільм.** | Ivan: On Sunday I watched a film. |
 | **Іван: А ти що робила?** | Ivan: And what were you doing? |
-| **Марія: Я ходила в кафе.** | Mariia: I went to a cafe. |
+| **Марія: Я читала роман і ходила в кафе.** | Mariia: I read a novel and went to a cafe. |
 | **Марія: Ми їли торт.** | Mariia: We ate cake. |
 | **Іван: Ви пили каву?** | Ivan: Did you drink coffee? |
 | **Марія: Так, ми пили каву.** | Mariia: Yes, we drank coffee. |
 
 Notice the plural forms: **ми їли**, **ми пили**, **ви пили**. In the plural,
 use **-ли**. Do not add present-tense person endings after it.
+
+For now, just understand **концерт** - concert and **роман** - novel when you
+see them in the dialogue. You do not need to use them yet.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
@@ -137,24 +154,21 @@ Good A1 questions:
 
 Short details help the past sentence sound real:
 
-**Розширення речення другорядними членами** means a past sentence can grow by
-one small detail at a time.
+A past sentence can grow by one small detail at a time.
 
 - **що?** - **Я їв сніданок.** / **Я їла сніданок.**
 - **куди?** - **Я йшов до школи.** / **Я йшла до школи.**
 - **яку?** - **Я читав цікаву книжку.** / **Я читала цікаву книжку.**
 
-The time marker **вчора** tells you the action is before now. The beginner
+The time marker **учора** tells you the action is before now. The beginner
 formation is still the same: use **-в** for masculine, **-ла для жіночого**
 forms, **-ло** for neuter, and **-ли** for plural.
 
-School Ukrainian often asks **що зробив?** or **що зробила?** to notice gender:
-**Місяць згубив намистинки. Ніч згубила намистинки.** You only need the idea:
-masculine subject, masculine past form; feminine subject, feminine past form.
+A quick check with names you know is enough:
+**Іван читав. Марія читала.** Same action, different subject gender.
 
-Keep the grammar here narrow. Later Ukrainian will give you more verb choices.
-For this A1 step, practice only the endings **-в**, **-ла**, **-ло**, and
-**-ли** with familiar verbs.
+Keep the grammar here narrow. Practice only the endings **-в**, **-ла**,
+**-ло**, and **-ли** with familiar verbs.
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
@@ -200,30 +214,31 @@ Use the repair list to keep English habits from taking over:
 
 | Learner sentence | Better Ukrainian |
 | --- | --- |
-| <del>**Чоловік: Я читала.**</del> | **Чоловік: Я читав.** |
-| <del>**Жінка: Я читав.**</del> | **Жінка: Я читала.** |
-| <del>**Сонце встав.**</del> | **Сонце встало.** |
-| <del>**Я буду читав завтра.**</del> | **Я буду читати завтра.** |
+| <bad>**Чоловік: Я читала.**</bad> | **Чоловік: Я читав.** |
+| <bad>**Жінка: Я читав.**</bad> | **Жінка: Я читала.** |
+| <bad>**Ми читалимо текст.**</bad> | **Ми читали текст.** |
+| <bad>**Вони читалить текст.**</bad> | **Вони читали текст.** |
+| <bad>**Сонце встав.**</bad> | **Сонце встало.** |
+| <bad>**Я буду читав завтра.**</bad> | **Я буду читати завтра.** |
+| <bad>**Він принісв книгу.**</bad> | Recognition only: **Він приніс книгу.** |
+| <bad>**Він везв сумку.**</bad> | Recognition only: **Він віз сумку.** |
 
 The last line looks ahead to future tense. The repair is simple for now:
 after **буду**, use the infinitive **читати**, not a past form.
 
-Some verb pairs will later show more meaning differences, for example
-**читав** and **прочитав**, or **летіли** and **полетіли**. Do not study that
-system here. For this A1 lesson, your job is only to match the past ending to
-the subject.
+You may see other past forms such as **прочитав**, **полетіли**, **ніс**,
+**віз**, or **мерз**. Just recognize that they are past forms. For speaking
+today, stay with regular forms like **читав**, **читала**, **читало**,
+**читали**.
 
-Later grammar will use words like **процес**, **незавершена дія**, and
-**результат**. That is not your task now. Later grammar will also show
-consonant-stem forms.
+:::caution[Do not build every past form today]
+Forms like **приніс** and **віз** are useful to recognize later, but they are
+not built by adding **-в**. For this lesson, produce the regular forms in the
+tables and treat these harder forms as repairs you can understand.
+:::
 
-**Знайомство з основами на приголосний** comes later. Forms such as **ніс**,
-**віз**, and **мерз** are not the active A1 pattern. For today, stay with regular
-forms like **читав**, **читала**, **читало**, **читали**.
-
-The next grammar step is **майбутнього часу і наказового способу**, future
-time and requests. For now, one future repair is enough: after **буду**, use an
-infinitive, as in **Я буду читати завтра.**
+The next time step is future tense. For now, one future repair is enough: after
+**буду**, use an infinitive, as in **Я буду читати завтра.**
 
 ### Mini story practice
 
@@ -270,6 +285,11 @@ Self-check:
 1. Can you say **я читав** or **я читала** for yourself?
 2. Can you change **він працював** to **вона працювала**?
 3. Can you change **вона говорила** to **вони говорили**?
+
+:::tip[Progress marker]
+If you can answer **Що ти робив/робила учора?** with one correct sentence, you
+have your first past-tense answer. A longer story comes next.
+:::
 
 Stop here when the endings feel visible. The next module uses the same forms
 to tell a simple story about yesterday.
