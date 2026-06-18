@@ -74,6 +74,14 @@
   translation: Shchedryi Vechir song
   pos: noun
   example: "На Щедрий вечір звучать щедрівки."
+- word: щедрувати
+  translation: to perform shchedrivky
+  pos: verb
+  example: "На Щедрий вечір діти щедрують."
+- word: святвечір
+  translation: Christmas Eve supper time
+  pos: noun
+  example: "Святвечір - родинний вечір."
 - word: Щедрий вечір
   translation: Shchedryi Vechir
   pos: noun phrase

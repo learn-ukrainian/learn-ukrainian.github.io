@@ -1,5 +1,9 @@
 # Свята
 
+<!-- implementation_map_audit manifest_obligations=14 covered_in_map=14 missing=[] -->
+<!-- bad_form_audit bad_form_patterns_found=9 marked_with_bad_tags=9 remaining_unmarked=0 -->
+<!-- activity_split_audit level=A1 inline_n=4 workbook_n=6 inline_range=[4,6] workbook_range=[6,9] split_valid=true -->
+
 This module gives you practical holiday speech, not a long calendar lecture.
 You will learn to greet someone, write one short message, and say what people do
 at a few Ukrainian holidays.
@@ -15,6 +19,23 @@ Active phrases:
 
 At A1, learn these as ready chunks. Do not stop to build the whole instrumental
 case. First say the greeting naturally.
+
+:::caution[A1 boundary]
+The active skill is short holiday speech: a greeting, one wish, one date, and
+one simple family or state-holiday sentence. Treat **з Новим роком**, **з
+Різдвом**, **з Великоднем**, and **з Днем Незалежності України** as fixed
+chunks. Do not turn this module into a full instrumental-case lesson or a long
+culture lecture.
+:::
+
+Before a holiday greeting, use the everyday etiquette you already know:
+
+- **Добрий день, Олено!**
+- **З Новим роком!**
+- **Бажаю здоров'я і радості.**
+- **До побачення!**
+
+This keeps the message polite and complete without adding new grammar.
 
 :::tip[Two different patterns]
 Use **святкувати + назва свята** for the holiday itself:
@@ -186,14 +207,26 @@ Useful words:
 - **гість** - guest;
 - **колядка** - Christmas carol;
 - **щедрівка** - Shchedryi Vechir / New Year cycle song.
+- **щедрувати** - to perform shchedrivky;
+- **святвечір** - Christmas Eve supper time.
 
 Keep the cultural distinction clear:
 
 - **На Різдво співають колядки.**
 - **На Щедрий вечір звучать щедрівки.**
+- **На Щедрий вечір діти щедрують.**
 
 Do not put **колядки** and **щедрівки** into one generic basket. The words name
 different parts of the Ukrainian winter cycle.
+
+For recognition only: **Святвечір** and **Щедрий вечір** are different winter
+evenings. At A1, it is enough to recognize the names and keep **колядки** with
+**Різдво**, **щедрівки / щедрувати** with **Щедрий вечір**.
+
+Recognition-only culture note: the famous Ukrainian щедрівка **Щедрик** mentions
+a **ластівка** (swallow). You do not need to retell the history at A1; just know
+that **щедрівки** have their own older Ukrainian tradition and are not simply
+"Christmas carols."
 
 ### Великдень
 
@@ -260,8 +293,12 @@ You can now do four practical things:
 
 | Learner sentence | Better Ukrainian |
 | --- | --- |
-| <del>**Вітаю з Новий рік!**</del> | **Вітаю з Новим роком!** |
-| <del>**Ми святкуємо на Різдво.**</del> | **Ми святкуємо Різдво.** |
-| <del>**Ми співаємо колядки на Новий рік.**</del> | **На Різдво ми співаємо колядки.** |
-| <del>**З днем незалежності україни!**</del> | **З Днем Незалежності України!** |
-| <del>**Пасха**</del> | **Великдень** |
+| <bad>**Вітаю з Новий рік!**</bad> | **Вітаю з Новим роком!** |
+| <bad>**Ми святкуємо на Різдво.**</bad> | **Ми святкуємо Різдво.** |
+| <bad>**На Різдво ми співаємо щедрівки.**</bad> | **На Різдво ми співаємо колядки.** |
+| <bad>**З днем незалежності україни!**</bad> | **З Днем Незалежності України!** |
+| <bad>**З Великдень!**</bad> | **З Великоднем!** |
+| <bad>**Щасливого Різдва!**</bad> | **З Різдвом Христовим!** |
+| <bad>**Ми печемо писанки.**</bad> | **Ми печемо паски / фарбуємо яйця.** |
+| <bad>**День Незалежності України - 22 січня.**</bad> | **День Незалежності України - 24 серпня.** |
+| <bad>**Пасха**</bad> | **Великдень** |
