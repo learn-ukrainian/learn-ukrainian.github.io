@@ -34,10 +34,22 @@
   translation: supermarket
   pos: noun
   example: "Супермаркет поруч."
+- word: кафе
+  translation: cafe
+  pos: noun
+  example: "Кафе поруч."
+- word: ресторан
+  translation: restaurant
+  pos: noun
+  example: "Ресторан у центрі."
 - word: аптека
   translation: pharmacy
   pos: noun
   example: "Аптека близько."
+- word: бібліотека
+  translation: library
+  pos: noun
+  example: "Як дістатися до бібліотеки?"
 - word: лікарня
   translation: hospital
   pos: noun
@@ -70,6 +82,10 @@
   translation: bus
   pos: noun
   example: "Я їду автобусом."
+- word: квиток
+  translation: ticket
+  pos: noun
+  example: "Квиток у мене."
 - word: трамвай
   translation: tram
   pos: noun
@@ -98,6 +114,22 @@
   translation: minute
   pos: noun
   example: "Одна хвилина."
+- word: близько
+  translation: close; nearby
+  pos: adverb
+  example: "Аптека близько."
+- word: далеко
+  translation: far
+  pos: adverb
+  example: "Вокзал далеко."
+- word: на розі
+  translation: on the corner
+  pos: phrase
+  example: "Бібліотека на розі."
+- word: додому
+  translation: home; toward home
+  pos: adverb
+  example: "Потім повертаюся додому."
 - word: вибачте
   translation: excuse me
   pos: phrase
@@ -133,16 +165,8 @@
 - word: праворуч
   translation: on the right
   pos: adverb
-  example: "Готель праворуч."
+  example: "Музей праворуч."
 - word: ліворуч
   translation: on the left
   pos: adverb
   example: "Музей ліворуч."
-- word: гривня
-  translation: hryvnia
-  pos: noun
-  example: "Квиток коштує двадцять гривень."
-- word: синьо-жовтий
-  translation: blue-and-yellow
-  pos: adjective
-  example: "Синьо-жовтий прапор над будівлею."

@@ -1,8 +1,13 @@
 # У місті
 
-This lesson combines the last five modules into one real city skill. You will
-ask for a route, follow simple directions, describe your neighborhood, and
-switch between **де?**, **куди?**, and transport phrases without stopping.
+<!-- <implementation_map_audit>manifest_obligations=13 covered_in_map=13 missing=[]</implementation_map_audit> -->
+<!-- <bad_form_audit>italic_bad_form_patterns_found=2 converted_to_marker=2 remaining=0</bad_form_audit> -->
+<!-- <activity_split_audit>level=A1 inline_n=6 workbook_n=6 inline_range=[4,6] workbook_range=[6,9] split_valid=true</activity_split_audit> -->
+
+**Місто. Маршрут. Район.** You already know static places, direction forms,
+transport, and direction words. In this lesson, those pieces become one city
+map script: ask for a route, follow the answer, and describe your own
+neighborhood in short Ukrainian.
 
 By the end, you can:
 
@@ -11,40 +16,48 @@ By the end, you can:
 - say where something is: **в аптеці**, **на площі**, **у центрі**;
 - say where you go: **в магазин**, **на роботу**, **до бібліотеки**;
 - describe a daily route with **пішки**, **на метро**, **автобусом**, and
-  **п'ять хвилин**.
+  **п'ять хвилин**;
+- keep a route Ukrainian: **Київ / Kyiv**, **Львів / Lviv**, **зупинка**, not
+  borrowed street words.
 
 ## Діалоги
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
-The first dialogue is a street question. Use **Вибачте** before asking a
-stranger.
+**Вибачте. Маршрут. Транспорт.** Use **Вибачте** before asking a stranger,
+then listen for three things: the direction, the place, and the transport.
 
 ```text
 Турист: Вибачте, як дістатися до бібліотеки?
-Містянка: Ідіть прямо, потім направо. Бібліотека на розі.
+Жінка: Ідіть прямо, потім направо. Бібліотека на розі.
 Турист: А музей?
-Містянка: Музей далеко. Їдьте на метро до центру.
+Жінка: Музей далеко. Їдьте на метро до центру.
 Турист: Дякую!
-Містянка: Будь ласка. Гарного дня!
+Жінка: Будь ласка. Гарного дня!
 ```
 
 Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Турист: Вибачте, як дістатися до бібліотеки?** | Tourist: Excuse me, how do I get to the library? |
-| **Містянка: Ідіть прямо, потім направо. Бібліотека на розі.** | Local woman: Go straight, then right. The library is on the corner. |
-| **Турист: А музей?** | Tourist: And the museum? |
-| **Містянка: Музей далеко. Їдьте на метро до центру.** | Local woman: The museum is far. Go by metro to the center. |
-| **Турист: Дякую!** | Tourist: Thank you! |
-| **Містянка: Будь ласка. Гарного дня!** | Local woman: You're welcome. Have a good day! |
+| Турист: Вибачте, як дістатися до бібліотеки? | Tourist: Excuse me, how do I get to the library? |
+| Жінка: Ідіть прямо, потім направо. Бібліотека на розі. | Woman: Go straight, then right. The library is on the corner. |
+| Турист: А музей? | Tourist: And the museum? |
+| Жінка: Музей далеко. Їдьте на метро до центру. | Woman: The museum is far. Go by metro to the center. |
+| Турист: Дякую! | Tourist: Thank you! |
+| Жінка: Будь ласка. Гарного дня! | Woman: You're welcome. Have a good day! |
 
 The answer combines old tools: direction words, city places, and transport.
 **Бібліотека на розі** answers **де?**. **Ідіть прямо** and **їдьте на метро**
 answer what to do next.
 
-The second dialogue describes a daily route.
+You can use the same script on a walk in Lviv with words you already know:
+**Ми на площі. Ідемо до театру. Потім ідемо направо до парку.** Do not worry
+about making a long tour. At A1, three clear route beats are enough.
+
+The second dialogue describes a daily route. This is useful because many city
+conversations are not tourist conversations; they are ordinary "how do you get
+there?" questions.
 
 ```text
 Гід: Як ти дістаєшся на роботу?
@@ -59,56 +72,57 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Гід: Як ти дістаєшся на роботу?** | Guide: How do you get to work? |
-| **Олена: Спочатку йду на зупинку.** | Olena: First I walk to the stop. |
-| **Гід: А потім?** | Guide: And then? |
-| **Олена: Потім їду автобусом до центру.** | Olena: Then I go by bus to the center. |
-| **Гід: Де твоя робота?** | Guide: Where is your work? |
-| **Олена: Робота в офісі на площі. Потім іду пішки п'ять хвилин.** | Olena: Work is in an office on the square. Then I walk five minutes. |
+| Гід: Як ти дістаєшся на роботу? | Guide: How do you get to work? |
+| Олена: Спочатку йду на зупинку. | Olena: First I walk to the stop. |
+| Гід: А потім? | Guide: And then? |
+| Олена: Потім їду автобусом до центру. | Olena: Then I go by bus to the center. |
+| Гід: Де твоя робота? | Guide: Where is your work? |
+| Олена: Робота в офісі на площі. Потім іду пішки п'ять хвилин. | Olena: Work is in an office on the square. Then I walk five minutes. |
 
 :::tip
 For city routes, build in three beats: **де я зараз?**, **куди далі?**,
 **чим або як?** Example: **Я на зупинці. Їду до центру. Потім іду пішки.**
 :::
 
+:::note
+If you mix the forms, pause and ask the question first. **Де?** means "already
+there." **Куди?** means "going there." **Як? / чим?** tells the transport or
+walking method.
+:::
+
 <!-- INJECT_ACTIVITY: act-2 -->
 
 ## Де і куди разом
 
-**Називний відмінок як база.** Start by naming the city object before you move
-or locate it: **місто**, **вулиця**, **парк**, **школа**. The base sentences
-are simple: **Це Київ. Це вулиця. Це великий парк.** Once the object is clear,
-you can attach a place form or a direction form.
+Three route questions keep the grammar small: **де?**, **куди?**, and
+**як? / чим?** Each question has its own job.
 
-**Статичне розташування: Місцевий відмінок.** The question **Де ти живеш?** needs a location
-answer. Use state verbs such as **жити**, **бути**, and **працювати** with
-**в/у** or **на** plus the locative: **я вдома**, **ми в школі**, **мама на
-роботі**, **я живу в Києві**, **банк у центрі**. The habit is:
-**питання де? → прийменник → закінчення місцевого відмінка**. Say this pattern
-before you answer a route question. It keeps **я в школі**, **мама на роботі**,
-and **ми у центрі** in the static lane instead of turning every place into a
-destination.
+**1. Де? Місцевий відмінок (Locative case).** Use this when someone or
+something is already in one place: **я в школі**, **банк у центрі**, **аптека
+на розі**, **я живу в Києві**. These are location chunks. They use **в/у** or
+**на** plus the **місцевий відмінок** form.
 
-**Розширення дієслівного ряду.** After **жити**, use everyday verbs that also
-need a place: **вчитись у школі**, **гуляти в парку**, **працювати в офісі**,
-**купувати хліб у магазині**. You can add a small demonstrative chunk:
-**у цьому місті**, **у тому місті**, **на цій вулиці**.
+**2. Куди? Знахідний відмінок (Accusative case).** Use this when there is
+movement: **я йду в магазин**, **ми йдемо до бібліотеки**, **вона їде до
+центру**, **я йду на зупинку**. Motion verbs such as **іти** and **їхати** help
+you hear the direction job. The **до + родовий відмінок (Genitive case)**
+chunk, as in **до бібліотеки**, is a ready A1 route phrase here.
 
-**Напрямок: Знахідний відмінок.** The question **куди?** is dynamic. Use motion verbs such as
-**іти** and **їхати**. At A1 the most useful direction prepositions are
-**до** and **в/у**: **іти до бібліотеки**, **їхати до центру**, **йти в парк**,
-**їхати в місто**. Keep the contrast visible: static place uses the locative,
-dynamic direction uses the accusative or **до + genitive**.
-In a real route, you often alternate the two: **Музей у центрі** answers
-**де?**, but **їдьте до центру** answers **куди?**. **Парк поруч** tells you
-where it is; **йдіть у парк** tells you where to go.
+**3. Як? / чим? Route method.** Add how the person moves: **пішки**, **на
+метро**, **автобусом**. This part does not replace **де?** or **куди?**; it
+answers a different question.
 
-| Situation | Question | Model | Example |
+| Situation | Question | Safe model | Example |
 | --- | --- | --- | --- |
-| static place | **де?** | **в/на + місцевий** | **Я в парку.** |
-| direction | **куди?** | **в/на + знахідний** | **Я йду в парк.** |
-| destination with **до** | **куди?** | **до + родовий** | **Я йду до бібліотеки.** |
+| static place | **де?** | **в/у/на + місцевий відмінок** | **Я в парку.** |
+| direction | **куди?** | **в/у/на + знахідний відмінок** | **Я йду в парк.** |
+| route chunk with **до** | **куди?** | **до + родовий відмінок** | **Я йду до бібліотеки.** |
 | transport | **чим? / як?** | **автобусом / на метро** | **Їду автобусом.** |
+
+:::tip
+A full city answer can be very short: **Музей у центрі. Їдьте на метро. Потім
+ідіть прямо.** Short and correct is better than long and tangled.
+:::
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
@@ -116,7 +130,8 @@ where it is; **йдіть у парк** tells you where to go.
 
 ## Мій район
 
-A neighborhood description combines existence, distance, and route:
+**Мій район.** A neighborhood description combines existence, distance, and
+route:
 
 **Я живу на вулиці Франка. Біля мого дому є парк і магазин. Аптека близько:
 п'ять хвилин пішки. Школа далеко, треба їхати автобусом. У моєму районі є
@@ -129,27 +144,34 @@ Use these practical words:
 | **район** | neighborhood | **Мій район тихий.** |
 | **центр** | center | **Музей у центрі.** |
 | **поруч** | nearby | **Кафе поруч.** |
+| **близько** | close | **Аптека близько.** |
+| **далеко** | far | **Вокзал далеко.** |
 | **пішки** | on foot | **Я йду пішки.** |
 | **хвилина** | minute | **П'ять хвилин пішки.** |
 | **на околиці** | on the outskirts | **Школа на околиці.** |
 
-Direction commands are polite previews of the imperative. Learn them as fixed
-route words: **ідіть прямо**, **ідіть направо**, **ідіть наліво**, **їдьте на
-метро**, **їдьте автобусом**. The next grammar module can explain command
-forms; today you only need to understand and reuse them.
+For now, command forms are fixed route chunks: **ідіть прямо**, **ідіть
+направо**, **ідіть наліво**, **їдьте на метро**, **їдьте автобусом**. The next
+grammar module can explain the imperative; today the goal is to understand and
+reuse the route chunks.
 
-You may hear more spatial words later: **над**, **під**, **між**, **перед**,
-**за**. For static position they use the instrumental case; for direction they
-can take the accusative. That is a preview, not a new A1 table. For now, keep
-the live city route short: **прямо**, **направо**, **наліво**, **до центру**,
-**на розі**.
+Keep the live city route short: **прямо**, **направо**, **наліво**, **до
+центру**, **на розі**. Later you will learn richer spatial words, but today the
+goal is practical confidence.
 
-Keep the city Ukrainian. Use **Київ**, **Харків**, **Одеса**, **Миколаїв** and
-Ukrainian phonetics. Do not explain **у/в** through another language; it is
-Ukrainian **милозвучність**. People pay in **гривня**, and the flag over city
-buildings is **синьо-жовтий**. A polite street opening is **Добрий день**. When
-you introduce yourself, say **Мене звати Олена**. For age, say **Мені двадцять
-років**.
+Keep the city Ukrainian. Use **Київ / Kyiv**, **Львів / Lviv**, **Одеса /
+Odesa**, and **Харків / Kharkiv**. Say **зупинка**, not
+<!-- bad -->остановка<!-- /bad -->. Say **квиток** ("ticket"), not
+<!-- bad -->білет<!-- /bad -->, when a route includes transport. Ukrainian
+**у/в** choice is Ukrainian **милозвучність**, not a copy of another language.
+
+:::caution
+Do not make every place a destination. **Я в парку** means "I am in the park."
+**Я йду в парк** means "I am going to the park." The small ending change is the
+map signal.
+:::
+
+<!-- INJECT_ACTIVITY: act-5 -->
 
 <span id="підсумок"></span>
 
@@ -168,8 +190,8 @@ Common repairs:
 | --- | --- |
 | Я живу Київ. / Я бути школа. | **Я живу в Києві. / Я в школі.** |
 | Я йду в парк. (when you mean "I am walking in the park") | **Я гуляю в парку.** |
-| Кіт на столі (when you mean "in the desk") | **Кіт у столі.** |
-| Я даю гроші місті. | **Я даю гроші місту.** |
+| Магазин на вулицю. | **Магазин на вулиці.** |
+| Я їду автобус до центру. | **Я їду автобусом до центру.** |
 | Я живу у Одесі. | **Я живу в Одесі.** |
 | Я йду до місті. | **Я йду до міста.** |
 
@@ -181,6 +203,8 @@ Self-check:
 4. Describe your route: **Я йду на зупинку, їду автобусом, потім іду пішки.**
 5. Describe your neighborhood: **У моєму районі є парк, аптека і кафе.**
 
+<!-- INJECT_ACTIVITY: act-6 -->
+
 Final mini-route:
 
 **Я живу на вулиці Франка. Зранку йду на зупинку п'ять хвилин пішки. Потім їду
@@ -190,4 +214,4 @@ Final mini-route:
 Make the route personal by replacing only three words: your street, your
 transport, and your destination. Keep the grammar frame stable: **на вулиці**,
 **на зупинку**, **автобусом / на метро**, **до центру**, **в офісі**, **у
-магазин**. This turns the city vocabulary into a reusable map script.
+магазин**. You can now turn city vocabulary into a reusable map script.
