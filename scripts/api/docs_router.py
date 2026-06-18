@@ -38,15 +38,15 @@ router = APIRouter(tags=["docs"])
 # docs/resources/podcasts/raw/ (raw scrapes — not curated reports).
 ALLOWED_ROOTS = {
     "audit": PROJECT_ROOT / "audit",
-    "docs/session-state": PROJECT_ROOT / "docs" / "session-state",
-    "docs/handoffs": PROJECT_ROOT / "docs" / "handoffs",
-    "docs/reports": PROJECT_ROOT / "docs" / "reports",
-    "docs/architecture": PROJECT_ROOT / "docs" / "architecture",
-    "docs/best-practices": PROJECT_ROOT / "docs" / "best-practices",
-    "docs/decisions": PROJECT_ROOT / "docs" / "decisions",
-    "docs/references/external": PROJECT_ROOT / "docs" / "references" / "external",
-    "docs/proposals": PROJECT_ROOT / "docs" / "proposals",
-    "docs/poc": PROJECT_ROOT / "docs" / "poc",
+    "session-state": PROJECT_ROOT / "docs" / "session-state",
+    "handoffs": PROJECT_ROOT / "docs" / "handoffs",
+    "reports": PROJECT_ROOT / "docs" / "reports",
+    "architecture": PROJECT_ROOT / "docs" / "architecture",
+    "best-practices": PROJECT_ROOT / "docs" / "best-practices",
+    "decisions": PROJECT_ROOT / "docs" / "decisions",
+    "references": PROJECT_ROOT / "docs" / "references" / "external",
+    "proposals": PROJECT_ROOT / "docs" / "proposals",
+    "poc": PROJECT_ROOT / "docs" / "poc",
 }
 
 # Discovery roots: walk these trees broadly to find all artifacts.
@@ -80,7 +80,10 @@ def _build_effective_roots() -> dict[str, Path]:
 
 EFFECTIVE_ROOTS = _build_effective_roots()
 
-_ALLOWED_EXT = {".html", ".md", ".txt", ".json", ".png", ".jpg", ".jpeg", ".svg", ".webp", ".pdf"}
+_ALLOWED_EXT = {
+    ".html", ".md", ".txt", ".json", ".png", ".jpg", ".jpeg", ".svg", ".webp", ".pdf",
+    ".css", ".js", ".gif", ".woff", ".woff2"
+}
 _MIME_TYPES = {
     ".html": "text/html",
     ".md": "text/markdown",
@@ -92,6 +95,11 @@ _MIME_TYPES = {
     ".svg": "image/svg+xml",
     ".webp": "image/webp",
     ".pdf": "application/pdf",
+    ".css": "text/css",
+    ".js": "application/javascript",
+    ".gif": "image/gif",
+    ".woff": "font/woff",
+    ".woff2": "font/woff2",
 }
 
 
