@@ -1,20 +1,20 @@
-- title: "Communicative Ukrainian: Transport and Directions"
-  role: phrase list
-  source_ref: "ukrainianlanguage.uk"
-  url: https://ukrainianlanguage.uk/communicative/module02/pg02-5.htm
-  notes: "Reachable practical reference for route and direction phrases."
-- title: "Ukrainian Language: Unit 10, Page 1"
-  role: reading unit
-  source_ref: "ukrainianlanguage.uk"
-  url: https://ukrainianlanguage.uk/read/unit10/page10-1.htm
-  notes: "Reachable beginner city-place reading page."
-- title: "Ukrainian Course: Nouns in the Prepositional Case"
-  role: grammar table
-  source_ref: "ukrainiancourse.com"
-  url: https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-prepositional-case/
-  notes: "Reachable locative/prepositional-case table for static city locations."
-- title: "Ukrainian Course: Nouns in the Accusative Case"
-  role: grammar table
-  source_ref: "ukrainiancourse.com"
-  url: https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-accusative-case/
-  notes: "Reachable accusative-case table for destination forms."
+- title: "Around Town in Ukrainian"
+  role: vocabulary article
+  source_ref: "Ukrainian Lessons"
+  url: https://www.ukrainianlessons.com/vocabulary-town/
+  notes: "Mapped ULP article for A1 city-place vocabulary."
+- title: "Directions in Ukrainian"
+  role: directions article
+  source_ref: "Ukrainian Lessons"
+  url: https://www.ukrainianlessons.com/vocabulary-directions/
+  notes: "Mapped ULP article for direction words and asking routes."
+- title: "ULP 1-18 | Directions in Ukrainian"
+  role: podcast lesson
+  source_ref: "Ukrainian Lessons Podcast"
+  url: https://www.ukrainianlessons.com/episode18/
+  notes: "Mapped ULP listening support for asking and understanding directions."
+- title: "ULP 1-20 | My favorite city in Ukrainian"
+  role: podcast review
+  source_ref: "Ukrainian Lessons Podcast"
+  url: https://www.ukrainianlessons.com/lesson/20/
+  notes: "Mapped ULP review episode for city description."
