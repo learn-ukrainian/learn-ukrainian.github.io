@@ -270,7 +270,7 @@ def performance_to_jsx(data: PerformanceData, title: str, is_ukrainian_forced: b
 # =============================================================================
 
 _FOLK_CONTENT_BLOCK_RE = re.compile(
-    r"^:::(myth-box|high-culture-bridge)\s*\n(.*?)\n:::\s*$",
+    r"^:::(myth-box|high-culture-bridge|primary-reading)\s*\n(.*?)\n:::\s*$",
     re.MULTILINE | re.DOTALL,
 )
 
@@ -285,6 +285,10 @@ def convert_folk_content_blocks(content: str) -> str:
 
     def replace(match: re.Match[str]) -> str:
         block_type = match.group(1)
+        if block_type == 'primary-reading':
+            content = match.group(2).strip()
+            return f"<PrimaryReading>\n\n{content}\n\n</PrimaryReading>"
+
         payload = _yaml_directive_payload(match.group(2))
         if block_type == 'myth-box':
             claim = str(payload.get('claim', '')).strip()
