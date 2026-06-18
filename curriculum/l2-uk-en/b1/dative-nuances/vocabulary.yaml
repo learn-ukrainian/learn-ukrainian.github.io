@@ -1,0 +1,148 @@
+- lemma: давальний відмінок
+  translation: "dative case"
+  pos: phrase
+  usage: "Давальний відмінок відповідає на питання кому? чому?"
+- lemma: суб'єкт стану
+  translation: "experiencer of a state"
+  pos: phrase
+  usage: "У реченні Мені холодно мені є суб'єктом стану."
+- lemma: безособовий
+  translation: "impersonal"
+  pos: adjective
+  usage: "Безособова конструкція не має звичайного підмета."
+- lemma: стан
+  translation: "state, condition"
+  pos: noun
+  usage: "Фізичний або емоційний стан часто виражається через давальний."
+- lemma: адресат
+  translation: "addressee, recipient"
+  pos: noun
+  usage: "Адресат дії стоїть у давальному відмінку."
+- lemma: отримувач
+  translation: "recipient"
+  pos: noun
+  usage: "У фразі подарувати сестрі сестра є отримувачем."
+- lemma: потреба
+  translation: "need"
+  pos: noun
+  usage: "Потреба може виражатися конструкцією мені потрібно."
+- lemma: потрібно
+  translation: "it is necessary"
+  pos: predicative
+  usage: "Мені потрібно відпочити."
+- lemma: треба
+  translation: "need to, must"
+  pos: predicative
+  usage: "Нам треба більше часу."
+- lemma: варто
+  translation: "it is worth, should"
+  pos: predicative
+  usage: "Тобі варто перевірити текст."
+- lemma: можна
+  translation: "it is allowed, one may"
+  pos: predicative
+  usage: "Вам можна зайти після перерви."
+- lemma: вдалося
+  translation: "managed, succeeded"
+  pos: verb
+  usage: "Їй вдалося скласти іспит."
+- lemma: довелося
+  translation: "had to"
+  pos: verb
+  usage: "Нам довелося чекати автобус."
+- lemma: пощастило
+  translation: "was lucky"
+  pos: verb
+  usage: "Їм пощастило знайти квитки."
+- lemma: хочеться
+  translation: "feel like, want softly"
+  pos: verb
+  usage: "Мені хочеться кави."
+- lemma: не спиться
+  translation: "cannot sleep, sleep will not come"
+  pos: phrase
+  usage: "Мені не спиться перед іспитом."
+- lemma: байдуже
+  translation: "indifferent"
+  pos: predicative
+  usage: "Йому байдуже до цієї теми."
+- lemma: соромно
+  translation: "ashamed"
+  pos: predicative
+  usage: "Мені соромно за помилку."
+- lemma: зрозуміло
+  translation: "clear, understandable"
+  pos: predicative
+  usage: "Нам зрозуміло це правило."
+- lemma: вік
+  translation: "age"
+  pos: noun
+  usage: "Вік в українській мові часто виражається давальним."
+- lemma: скільки років
+  translation: "how old"
+  pos: phrase
+  usage: "Скільки тобі років?"
+- lemma: майже
+  translation: "almost"
+  pos: adverb
+  usage: "Мені майже тридцять."
+- lemma: за сорок
+  translation: "over forty"
+  pos: phrase
+  usage: "Йому за сорок."
+- lemma: під п'ятдесят
+  translation: "nearly fifty"
+  pos: phrase
+  usage: "Їй під п'ятдесят."
+- lemma: допомагати
+  translation: "to help"
+  pos: verb
+  usage: "Допомагати кому? сусідці."
+- lemma: заважати
+  translation: "to bother, disturb"
+  pos: verb
+  usage: "Шум заважає студентам."
+- lemma: радити
+  translation: "to advise"
+  pos: verb
+  usage: "Викладач радить студентові повторити тему."
+- lemma: відповідати
+  translation: "to answer, reply"
+  pos: verb
+  usage: "Деканат відповів студентам."
+- lemma: телефонувати
+  translation: "to phone"
+  pos: verb
+  usage: "Я телефоную лікарю."
+- lemma: дзвонити
+  translation: "to call, ring"
+  pos: verb
+  usage: "Вона дзвонить другові."
+- lemma: завдячувати
+  translation: "to owe gratitude to"
+  pos: verb
+  usage: "Ми завдячуємо батькам підтримкою."
+- lemma: дарувати
+  translation: "to give as a gift"
+  pos: verb
+  usage: "Дарувати сестрі книжку."
+- lemma: зацікавлена особа
+  translation: "interested/affected person"
+  pos: phrase
+  usage: "Мамі це сподобається."
+- lemma: призначення
+  translation: "designation, purpose"
+  pos: noun
+  usage: "Подарунок мамі показує призначення."
+- lemma: завдяки
+  translation: "thanks to"
+  pos: preposition
+  usage: "Завдяки викладачеві ми швидко розібрали тему."
+- lemma: назустріч
+  translation: "towards, to meet"
+  pos: preposition
+  usage: "Ми вийшли назустріч гостям."
+- lemma: керування
+  translation: "case government"
+  pos: noun
+  usage: "Керування дієслова визначає потрібний відмінок."
