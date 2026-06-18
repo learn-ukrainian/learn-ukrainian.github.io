@@ -1,0 +1,31 @@
+- title: "Local B1 comparison and word-formation block"
+  role: curriculum
+  notes: "Контрольна робота повторює сертифіковані модулі B1.4: вищий і найвищий ступені прикметників, порівняння прислівників, творення прикметників, присвійні прикметники, творення назв осіб і місць."
+- title: "B1 M44: Вищий ступінь прикметників"
+  role: curriculum
+  notes: "Джерело для повторення простих і складених форм вищого ступеня, конструкцій за/від/ніж, узгодження та типових помилок."
+  source_ref: curriculum/l2-uk-en/b1/adjectives-comparative/module.md
+- title: "B1 M45: Найвищий ступінь прикметників"
+  role: curriculum
+  notes: "Джерело для повторення най-, найбільш/найменш, щонай-/якнай-, межі групи порівняння та заборони розмовного калькування типу самий великий."
+  source_ref: curriculum/l2-uk-en/b1/adjectives-superlative/module.md
+- title: "B1 M46: Ступені порівняння та творення прислівників"
+  role: curriculum
+  notes: "Джерело для паралелі прикметник/прислівник: швидший/швидше, тихіший/тихіше, найточніший/найточніше."
+  source_ref: curriculum/l2-uk-en/b1/adverbs-comparison-formation/module.md
+- title: "B1 M48: Творення прикметників"
+  role: curriculum
+  notes: "Джерело для повторення -н-/-нн-, -ськ-/-зьк-/-цьк-, префіксальних і складних прикметникових моделей."
+  source_ref: curriculum/l2-uk-en/b1/word-formation-adjectives/module.md
+- title: "B1 M49: Присвійні прикметники"
+  role: curriculum
+  notes: "Джерело для розрізнення присвійного, відносного прикметника і родового відмінка в тексті."
+  source_ref: curriculum/l2-uk-en/b1/possessive-adjectives/module.md
+- title: "B1 M50: Творення назв осіб і місць"
+  role: curriculum
+  notes: "Джерело для повторення назв діячів, назв місць, віддієслівних іменників, безафіксного творення та словотвірних ланцюжків."
+  source_ref: curriculum/l2-uk-en/b1/word-formation-nouns/module.md
+- title: "B1 M25: Покупки і послуги"
+  role: curriculum
+  notes: "Контекстне джерело для лексики ринку, магазину, пошти, банку, гарантії, повернення, порівняння сервісів і написання відгуку."
+  source_ref: curriculum/l2-uk-en/b1/shopping-and-services/module.md

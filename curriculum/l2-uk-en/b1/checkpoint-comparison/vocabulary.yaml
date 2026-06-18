@@ -1,0 +1,140 @@
+- lemma: контрольна робота
+  translation: "test, assessment"
+  pos: phrase
+  usage: "Контрольна робота перевіряє весь блок порівняння і словотвору."
+- lemma: повторення
+  translation: "review, revision"
+  pos: noun
+  usage: "Повторення допомагає побачити систему, а не окремі правила."
+- lemma: самооцінка
+  translation: "self-assessment"
+  pos: noun
+  usage: "Після контрольної зробіть чесну самооцінку."
+- lemma: комплексний
+  translation: "comprehensive, integrated"
+  pos: adjective
+  usage: "Комплексне завдання поєднує граматику, лексику і письмо."
+- lemma: діагностика
+  translation: "diagnostics"
+  pos: noun
+  usage: "Діагностика показує, яку тему треба повторити."
+- lemma: рубрика
+  translation: "rubric"
+  pos: noun
+  usage: "Рубрика пояснює критерії для письмової відповіді."
+- lemma: аналіз помилок
+  translation: "error analysis"
+  pos: phrase
+  usage: "Аналіз помилок важливіший за механічне виправлення."
+- lemma: вищий ступінь
+  translation: "comparative degree"
+  pos: phrase
+  usage: "Дорожчий - це вищий ступінь прикметника дорогий."
+- lemma: найвищий ступінь
+  translation: "superlative degree"
+  pos: phrase
+  usage: "Найзручніший називає один варіант у межах групи."
+- lemma: суплетивна форма
+  translation: "suppletive form"
+  pos: phrase
+  usage: "Кращий - суплетивна форма до гарний або добрий."
+- lemma: проста форма
+  translation: "simple form"
+  pos: phrase
+  usage: "Проста форма вищого ступеня часто коротша: дешевший."
+- lemma: складена форма
+  translation: "compound form"
+  pos: phrase
+  usage: 'Форма "більш офіційний" природна для аналітичного тексту.'
+- lemma: порівняльна конструкція
+  translation: "comparative construction"
+  pos: phrase
+  usage: "Конструкція дорожчий за попередній тариф потребує знахідного."
+- lemma: межа групи
+  translation: "comparison set boundary"
+  pos: phrase
+  usage: "Для найвищого ступеня треба назвати межу групи."
+- lemma: словотвір
+  translation: "word formation"
+  pos: noun
+  usage: "Словотвір пояснює, як основа отримує нове значення."
+- lemma: суфіксальний
+  translation: "suffixal"
+  pos: adjective
+  usage: "Суфіксальний спосіб додає значення через суфікс."
+- lemma: префіксальний
+  translation: "prefixal"
+  pos: adjective
+  usage: "Префіксальний спосіб змінює значення основи на початку слова."
+- lemma: префіксально-суфіксальний
+  translation: "prefix-suffix"
+  pos: adjective
+  usage: "Префіксально-суфіксальний спосіб працює з двох боків основи."
+- lemma: складання
+  translation: "compounding"
+  pos: noun
+  usage: "Складання дає прикметники на кшталт темно-зелений."
+- lemma: безафіксний спосіб
+  translation: "zero derivation"
+  pos: phrase
+  usage: "Підписати - підпис показує безафіксний спосіб."
+- lemma: словотвірний ланцюжок
+  translation: "derivational chain"
+  pos: phrase
+  usage: "Словотвірний ланцюжок допомагає розширити словник."
+- lemma: діяч
+  translation: "agent, person who acts"
+  pos: noun
+  usage: "Суфікси -ник і -ач часто творять назви діячів."
+- lemma: назва місця
+  translation: "place name"
+  pos: phrase
+  usage: "Кав'ярня і читальня - назви місць або приміщень."
+- lemma: віддієслівний іменник
+  translation: "verbal noun"
+  pos: phrase
+  usage: "Обслуговування - віддієслівний іменник."
+- lemma: прислівник
+  translation: "adverb"
+  pos: noun
+  usage: "Прислівник швидко має форму швидше."
+- lemma: чек
+  translation: "receipt"
+  pos: noun
+  usage: "Збережіть чек для повернення товару."
+- lemma: гарантія
+  translation: "warranty"
+  pos: noun
+  usage: "Гарантія діє один рік."
+- lemma: бракований
+  translation: "defective"
+  pos: adjective
+  usage: "Бракований товар можна повернути."
+- lemma: повернення
+  translation: "return"
+  pos: noun
+  usage: "Повернення оформлюють із чеком."
+- lemma: знижка
+  translation: "discount"
+  pos: noun
+  usage: "Ця знижка більша, ніж минулого тижня."
+- lemma: доставка
+  translation: "delivery"
+  pos: noun
+  usage: "Доставка швидша, але дорожча."
+- lemma: рахунок
+  translation: "account, bill"
+  pos: noun
+  usage: "У банку відкривають рахунок."
+- lemma: переказ
+  translation: "transfer"
+  pos: noun
+  usage: "Переказ можна зробити онлайн."
+- lemma: курс
+  translation: "exchange rate"
+  pos: noun
+  usage: "Курс сьогодні вигідніший для покупця."
+- lemma: відгук
+  translation: "review"
+  pos: noun
+  usage: "У відгуку порівняйте якість і ціну."
