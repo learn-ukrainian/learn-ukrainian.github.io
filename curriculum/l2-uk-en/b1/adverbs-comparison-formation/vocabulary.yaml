@@ -1,0 +1,96 @@
+- lemma: прислівник
+  translation: "adverb"
+  pos: noun
+  usage: "Прислівник зазвичай описує дію, ознаку або інший прислівник."
+- lemma: творення
+  translation: "formation"
+  pos: noun
+  usage: "Творення прислівників може бути суфіксальним або префіксально-суфіксальним."
+- lemma: суфіксальний
+  translation: "suffixal"
+  pos: adjective
+  usage: "Швидко утворено суфіксальним способом від швидкий."
+- lemma: префіксальний
+  translation: "prefixal"
+  pos: adjective
+  usage: "Помалу - префіксальна прислівникова форма без дефіса."
+- lemma: суфіксально-префіксальний
+  translation: "prefixal-suffixal"
+  pos: adjective
+  usage: "По-українськи утворено суфіксально-префіксальним способом."
+- lemma: складання
+  translation: "compounding"
+  pos: noun
+  usage: "Праворуч і мимоволі можна пояснювати через історичне складання."
+- lemma: незмінний
+  translation: "invariable"
+  pos: adjective
+  usage: "Прислівник незмінний: швидше не має роду чи відмінка."
+- lemma: швидше
+  translation: "faster, more quickly"
+  pos: adverb
+  usage: "Вона біжить швидше за мене."
+- lemma: тихіше
+  translation: "more quietly"
+  pos: adverb
+  usage: "Говоріть тихіше, будь ласка."
+- lemma: дорожче
+  translation: "more expensively"
+  pos: adverb
+  usage: "У центрі житло коштує дорожче."
+- lemma: вище
+  translation: "higher"
+  pos: adverb
+  usage: "Спортсменка стрибнула вище за суперницю."
+- lemma: краще
+  translation: "better"
+  pos: adverb
+  usage: "Після практики він пише краще."
+- lemma: гірше
+  translation: "worse"
+  pos: adverb
+  usage: "Без сну людина працює гірше."
+- lemma: найшвидше
+  translation: "fastest, most quickly"
+  pos: adverb
+  usage: "Найшвидше доїхати метро."
+- lemma: найчастіше
+  translation: "most often"
+  pos: adverb
+  usage: "Вона тренується найчастіше вранці."
+- lemma: якнайшвидше
+  translation: "as quickly as possible"
+  pos: adverb
+  usage: "Надішліть відповідь якнайшвидше."
+- lemma: щонайкраще
+  translation: "as well as possible, very best"
+  pos: adverb
+  usage: "Команда підготувалася щонайкраще."
+- lemma: по-українськи
+  translation: "in Ukrainian, Ukrainian-style"
+  pos: adverb
+  usage: "На уроці ми говоримо по-українськи."
+- lemma: по-доброму
+  translation: "kindly, in a kind way"
+  pos: adverb
+  usage: "Він пояснив правило по-доброму й терпляче."
+- lemma: помалу
+  translation: "slowly, gradually"
+  pos: adverb
+  usage: "Помалу ми звикаємо до нової системи."
+- lemma: потроху
+  translation: "little by little"
+  pos: adverb
+  usage: "Потроху складна тема стає зрозумілішою."
+- lemma: мимоволі
+  translation: "involuntarily"
+  pos: adverb
+  usage: "Він мимоволі повторив стару помилку."
+- lemma: самохіть
+  translation: "of one's own will"
+  pos: adverb
+  usage: "Студенти самохіть залишилися після заняття."
+- lemma: праворуч
+  translation: "to the right, on the right"
+  pos: adverb
+  usage: "Поверніть праворуч біля парку."
