@@ -1,0 +1,160 @@
+- lemma: присвійний прикметник
+  translation: "possessive adjective"
+  pos: phrase
+  usage: "Присвійний прикметник відповідає на питання чий? чия? чиє? чиї?"
+- lemma: належність
+  translation: "belonging, ownership"
+  pos: noun
+  usage: "Такі прикметники називають належність предмета певній особі."
+- lemma: чий
+  translation: "whose"
+  pos: pronoun
+  usage: "Питання чий? допомагає відрізнити присвійний прикметник від відносного."
+- lemma: батьків
+  translation: "father's"
+  pos: adjective
+  usage: "Батьків дім стояв біля саду."
+- lemma: батькова
+  translation: "father's, feminine nominative"
+  pos: adjective
+  usage: "Батькова куртка висіла в коридорі."
+- lemma: братів
+  translation: "brother's"
+  pos: adjective
+  usage: "Братів велосипед залишився біля воріт."
+- lemma: дідусів
+  translation: "grandfather's"
+  pos: adjective
+  usage: "Дідусів годинник ішов дуже тихо."
+- lemma: Петрів
+  translation: "Petro's"
+  pos: adjective
+  usage: "Петрів зошит лежить на парті."
+- lemma: Андріїв
+  translation: "Andrii's"
+  pos: adjective
+  usage: "Андріїв рюкзак стояв біля дверей."
+- lemma: Олексіїв
+  translation: "Oleksii's"
+  pos: adjective
+  usage: "Олексіїв план був найдетальнішим."
+- lemma: Сергіїв
+  translation: "Serhii's"
+  pos: adjective
+  usage: "Сергіїв голос легко впізнати."
+- lemma: Шевченків
+  translation: "Shevchenko's"
+  pos: adjective
+  usage: "Шевченків рукопис зберігають у музеї."
+- lemma: Франків
+  translation: "Franko's"
+  pos: adjective
+  usage: "Франків стиль важливо читати в історичному контексті."
+- lemma: материн
+  translation: "mother's"
+  pos: adjective
+  usage: "Материн голос заспокоював дитину."
+- lemma: материна
+  translation: "mother's, feminine nominative"
+  pos: adjective
+  usage: "Материна мова звучить у родинних спогадах."
+- lemma: сестрин
+  translation: "sister's"
+  pos: adjective
+  usage: "Сестрин лист прийшов уранці."
+- lemma: бабусин
+  translation: "grandmother's"
+  pos: adjective
+  usage: "Бабусин рецепт усі пам'ятали напам'ять."
+- lemma: Лесин
+  translation: "Lesia's"
+  pos: adjective
+  usage: "Лесин записник лежав на столі."
+- lemma: Маріїн
+  translation: "Mariya's"
+  pos: adjective
+  usage: "Маріїн малюнок висить у класі."
+- lemma: Софіїн
+  translation: "Sofiia's"
+  pos: adjective
+  usage: "Софіїн гребінець загубився в сумці."
+- lemma: тітчин
+  translation: "aunt's"
+  pos: adjective
+  usage: "Тітчин пиріг пахнув корицею."
+- lemma: подружин
+  translation: "female friend's"
+  pos: adjective
+  usage: "Подружин лист був короткий, але теплий."
+- lemma: Ольжин
+  translation: "Olha's"
+  pos: adjective
+  usage: "Ольжин коментар допоміг групі."
+- lemma: Оленчин
+  translation: "Olenka's"
+  pos: adjective
+  usage: "Оленчин щоденник лежав у шухляді."
+- lemma: Марійчин
+  translation: "Mariika's"
+  pos: adjective
+  usage: "Марійчин подарунок був зроблений власноруч."
+- lemma: Наталчин
+  translation: "Natalka's"
+  pos: adjective
+  usage: "Наталчин рюкзак стояв біля шафи."
+- lemma: суфікс -ів/-їв
+  translation: "-iv/-yiv suffix"
+  pos: suffix
+  usage: "Суфікс -ів/-їв творить форми від багатьох іменників II відміни."
+- lemma: суфікс -ин/-їн
+  translation: "-yn/-yin suffix"
+  pos: suffix
+  usage: "Суфікс -ин/-їн часто вживаємо після основ на -а/-я, а також в окремій формі материн."
+- lemma: чергування
+  translation: "alternation"
+  pos: noun
+  usage: "У слові тітчин бачимо чергування к на ч."
+- lemma: змішане відмінювання
+  translation: "mixed declension"
+  pos: phrase
+  usage: "Присвійні прикметники мають змішане відмінювання."
+- lemma: коротка форма
+  translation: "short form"
+  pos: phrase
+  usage: "У називному чоловічого роду маємо коротку форму: батьків дім."
+- lemma: повна форма
+  translation: "full form"
+  pos: phrase
+  usage: "В непрямих відмінках з'являється повна форма: у батьковому домі."
+- lemma: непрямий відмінок
+  translation: "oblique case"
+  pos: phrase
+  usage: "У непрямому відмінку форма вже має звичайне прикметникове закінчення."
+- lemma: відносний прикметник
+  translation: "relative adjective"
+  pos: phrase
+  usage: "Шевченківський стиль - відносний прикметник, а Шевченків рукопис - присвійний."
+- lemma: родовий відмінок
+  translation: "genitive case"
+  pos: phrase
+  usage: "Книжка сестри і сестрина книжка можуть називати ту саму належність."
+- lemma: власна назва
+  translation: "proper name"
+  pos: phrase
+  usage: "Присвійні прикметники від власних назв пишемо з великої літери."
+- lemma: фразеологізм
+  translation: "idiom"
+  pos: noun
+  usage: "У фразеологізмах прикметник може писатися з малої літери: ахіллесова п'ята."
+- lemma: спадщина
+  translation: "heritage, legacy"
+  pos: noun
+  usage: "Шевченкова спадщина важлива для української культури."
+- lemma: творчість
+  translation: "creative work, oeuvre"
+  pos: noun
+  usage: "Франкова творчість поєднує літературу й громадянську думку."
+- lemma: поезія
+  translation: "poetry"
+  pos: noun
+  usage: "Шевченкова поезія має сильний емоційний голос."
