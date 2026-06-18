@@ -269,3 +269,65 @@ workbook:
           - 'Я зі Львова.'
           - 'Я з місто Львів.'
         explanation: 'In speech, say the city name in the from-place form.'
+  - type: fill-in
+    title: Country, city, current home
+    instruction: Complete each short introduction with a safe learned chunk.
+    items:
+      - sentence: 'Я ___, з Києва.'
+        answer: 'з України'
+        options:
+          - 'з України'
+          - 'в Україні'
+          - 'в Україну'
+        explanation: 'Country origin answers звідки?: з України.'
+      - sentence: 'Анна ___, із Торонто.'
+        answer: 'з Канади'
+        options:
+          - 'з Канади'
+          - 'у Канаді'
+          - 'до Канади'
+        explanation: 'Origin from Canada is з Канади.'
+      - sentence: 'Олена живе в Києві, але вона ___.'
+        answer: 'зі Львова'
+        options:
+          - 'зі Львова'
+          - 'у Львові'
+          - 'до Львова'
+        explanation: 'Origin from Lviv is зі Львова.'
+      - sentence: 'Ми зараз в Україні, але ми ___.'
+        answer: 'з Польщі'
+        options:
+          - 'з Польщі'
+          - 'у Польщі'
+          - 'до Польщі'
+        explanation: 'Use з Польщі for origin.'
+      - sentence: 'Джон ___, але зараз живе у Києві.'
+        answer: 'зі США'
+        options:
+          - 'зі США'
+          - 'у США'
+          - 'до США'
+        explanation: 'Use зі США for easier pronunciation.'
+      - sentence: 'Марко ___ і говорить українською.'
+        answer: 'з Києва'
+        options:
+          - 'з Києва'
+          - 'у Києві'
+          - 'у Київ'
+        explanation: 'З якого міста? — з Києва.'
+  - type: match-up
+    title: Ask the right place question
+    instruction: Match each answer with the question it answers.
+    pairs:
+      - left: 'Я в Україні.'
+        right: 'Де ти?'
+      - left: 'Я їду в Україну.'
+        right: 'Куди ти їдеш?'
+      - left: 'Я з України.'
+        right: 'Звідки ти?'
+      - left: 'Я у Києві.'
+        right: 'Де ти зараз живеш?'
+      - left: 'Я з Києва.'
+        right: 'З якого міста ти?'
+      - left: 'Я йду з роботи.'
+        right: 'Звідки ти йдеш?'
