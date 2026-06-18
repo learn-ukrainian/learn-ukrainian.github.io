@@ -63,7 +63,34 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 58 HANDOFF (2026-06-18 — 📚 DOSSIER WAVE 5: +4 dossiers (ремесла, житло/садиба, анекдоти, регіони) batched into this PR. Gap 6 → 2. FINAL wave 9 (mistky + memoraty) in flight → gap → 0.) — **RESUME HERE**
+## ▶▶▶ SESSION 59 HANDOFF (2026-06-18 — ✅🎉 FOLK DOSSIER FOUNDATION COMPLETE: 42/42. This PR adds the final 2 (mistky synthesis + memoraty). Next workstream = WIKIS.) — **RESUME HERE**
+
+**🟢 ONE-LINE STATE:** **Folk research dossiers = 42/42 COMPLETE** (this PR adds
+`narodna-kultura-ta-vysoka-kultura-mistky` + `narodni-opovidannia-buvalshchyny-memoraty`; both 10-§,
+wordcount PASS, verify_quote-confirmed + corpus-hammered — memoraty Крип'якевич русалка @1.0 `48346587_c0280`;
+mistky synthesis, 66 scholar/citation markers). **Session total: 17 dossiers + 1 wiki across ≥7 PRs.**
+The entire knowledge layer for the folk track is now built.
+
+### 🎯 NEXT WORKSTREAM = WIKIS (Phase 2). 25 of 42 remaining; ALL now dossier-backed.
+Writer = **claude** (proven MIN 9.0, charivni-kazky PR #3561; agy FAILS — narration not content). Recipe in S56:
+compile in MAIN tree (data/ sparse-excluded in worktrees) → copy `.md`+`.sources.yaml` to a
+`claude/folk-wikis-waveN` branch (NO index.md; regen at batch end) → clean main footprint → batch PR.
+**USER DECISION PENDING (asked S56/plan):** default folk wikis to claude (proven, ~11min/wiki metered) or
+A/B gpt-5.5 first (aced all 17 dossiers, codex lane, cheaper — untested on wikis)? Plan-of-record absent steer:
+run a 1-wiki gpt-5.5 A/B, pick winner, then batch ~3-4/PR.
+
+### 🎯 Phase 3 = MODULES (1/42 shipped: kalendarna). Recipe: v7_build + median-of-N ensemble (variance fixed) →
+verify_shippable → corpus-hammer. Endpoint: enough modules e2e to un-hide folk nav (LevelLanding.tsx:45 +
+astro.config.mjs:17 — coordinate w/ orchestrator, reverses #3027). GATE before Phase 3: fix search_images.
+
+### ⚠️ INFRA carried (#0.2, sequence during Phase 2): **`search_images` SigLIP deferred for l2-uk-en** (ALL
+folk dossier multimodal blocks shipped imageless — MUST fix before modules consume image hotspots);
+`render_canonical_formulas_block` unwired in wiki writer prompt; `index.md` batch-regen owed + drop phantom
+`folk/genres/charivni-kazky.md` entry; `--writer` help-string vs "Gemini-family always" policy reconciliation — HOLD for user nod.
+
+### IN-FLIGHT: 0. Merge grant LIVE (review → CI-green → self-merge, squash; folk track). Worktree-only; never main.
+
+## ▶▶▶ SESSION 58 HANDOFF (2026-06-18 — 📚 DOSSIER WAVE 5: +4 dossiers (ремесла, житло/садиба, анекдоти, регіони) batched into PR #3565 (MERGED). Gap 6 → 2.)
 
 **🟢 ONE-LINE STATE:** Folk dossier gap **6 → 2** (this PR) → **0** when wave 9 lands. This batch PR (wave 5)
 adds `narodni-remesla-ta-khudozhni-promysly`, `narodne-zhytlo-sadyba-hospodarstvo`, `narodni-anekdoty`,
