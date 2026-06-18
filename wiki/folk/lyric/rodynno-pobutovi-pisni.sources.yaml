@@ -1,0 +1,133 @@
+# Source registry for wiki/folk/lyric/rodynno-pobutovi-pisni.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s4979
+  type: textbook
+  title: ВСТУП
+  page: 4
+  grade: 9
+- id: S2
+  file: ukrainian_wiki/rodynna-liryka-kolomyiky_Український-фольклор-Родинна-лірика-та-коломийки-Інтимний-голос-Основний-зміст-Родинно-побутові-пісні-унікальний-образ-гордої-жінки
+  type: ukrainian_wiki
+  title: 'Український фольклор: Родинна лірика та коломийки: Інтимний голос'
+  section_path: 'Український фольклор: Родинна лірика та коломийки: Інтимний голос
+    > Основний зміст > Родинно-побутові пісні: унікальний образ гордої жінки'
+- id: S3
+  file: wave7-entsyklopediia-ukrainoznavstva_c0630
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S4
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4930
+  type: textbook
+  title: СОНЦЕ НИЗЕНЬКО
+  page: 10
+  grade: 9
+- id: S5
+  file: wikipedia/Українські соціально-побутові пісні
+  type: wikipedia
+  title: Українські соціально-побутові пісні
+  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96%20%D1%81%D0%BE%D1%86%D1%96%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE-%D0%BF%D0%BE%D0%B1%D1%83%D1%82%D0%BE%D0%B2%D1%96%20%D0%BF%D1%96%D1%81%D0%BD%D1%96
+- id: S6
+  file: ukrainian_wiki/chumatski-burlatski-pisni_Український-фольклор-Чумацькі-та-бурлацькі-пісні-Голос-мандрівника-Основний-зміст-Історичне-тло-та-соціальна-база-Від-козака-до-чумака-й-бурлаки
+  type: ukrainian_wiki
+  title: 'Український фольклор: Чумацькі та бурлацькі пісні: Голос мандрівника'
+  section_path: 'Український фольклор: Чумацькі та бурлацькі пісні: Голос мандрівника
+    > Основний зміст > Історичне тло та соціальна база: Від козака до чумака й бурлаки'
+- id: S7
+  file: 7-klas-ukrlit-zabolotnyi-2024_s3701
+  type: textbook
+  title: Розділ 1. НАРОДНА ТВОРЧІСТЬ
+  page: 11
+  grade: 7
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c4434
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave7-istkult-t2-xiii-xvii_c0280
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c1006
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S11
+  file: wave7-krypyakevych-istkult_c0420
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S12
+  file: wave8-ukr-lit-entsyklopediia_c2428
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S13
+  file: wave7-heroes-ukr-kultura_c0340
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S14
+  file: ukrlib-honchar_c0009
+  type: literary
+  title: Олесь Гончар. Безсмертний полтавець
+  author: Гончар О.
+- id: S15
+  file: wave7-heroes-ukr-kultura_c0343
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S16
+  file: wave7-heroes-ukr-kultura_c0341
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S17
+  file: wave9-ohiyenko-ist-lit-movy_c0348
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S18
+  file: wave8-ukr-lit-entsyklopediia_c3588
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S19
+  file: wave8-ukr-lit-entsyklopediia_c3411
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S20
+  file: wave8-ukr-lit-entsyklopediia_c2427
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S21
+  file: wave7-heroes-ukr-kultura_c0342
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S22
+  file: ukrlib-nechuy_c0024
+  type: literary
+  title: Іван Нечуй-Левицький. Кайдашева сім'я
+  author: Нечуй-Левицький І.
+- id: S23
+  file: ukrlib-nechuy_c0039
+  type: literary
+  title: Іван Нечуй-Левицький. Кайдашева сім'я
+  author: Нечуй-Левицький І.
+- id: S24
+  file: ukrlib-matios_c0001
+  type: literary
+  title: Марія Матіос. Майже ніколи не навпаки
+  author: Матіос М.
+- id: S25
+  file: wave10-shevchenkivsky-slovnyk_c1412
+  type: literary
+  title: Шевченківський словник
+  author: Колектив

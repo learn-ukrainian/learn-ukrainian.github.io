@@ -1,0 +1,102 @@
+# Source registry for wiki/folk/lyric/pisni-literaturnoho-pokhodzhennia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 6-klas-ukrlit-zabolotnyi-2023_s2813
+  type: textbook
+  title: ПІСНІ ЛІТЕРАТУРНОГО ПОХОДЖЕННЯ ПІСНІ ЛІТЕРАТУРНОГО ПОХОДЖЕННЯ
+  page: 35
+  grade: 6
+- id: S3
+  file: wikipedia/Історичні пісні
+  type: wikipedia
+  title: Історичні пісні
+  url: https://uk.wikipedia.org/wiki/%D0%86%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%BD%D1%96%20%D0%BF%D1%96%D1%81%D0%BD%D1%96
+- id: S4
+  file: ukrainian_wiki/chumatski-burlatski-pisni_Український-фольклор-Чумацькі-та-бурлацькі-пісні-Голос-мандрівника-Основний-зміст-Бурлацькі-наймитські-та-заробітчанські-пісні-Естетика-соціального-відчаю
+  type: ukrainian_wiki
+  title: 'Український фольклор: Чумацькі та бурлацькі пісні: Голос мандрівника'
+  section_path: 'Український фольклор: Чумацькі та бурлацькі пісні: Голос мандрівника
+    > Основний зміст > Бурлацькі, наймитські та заробітчанські пісні: Естетика соціального
+    відчаю'
+- id: S5
+  file: ukrainian_wiki/ritual-songs_Академічна-C1-Обрядові-пісні-Коло-життя-Основний-зміст-2-Календарно-обрядовий-цикл-Від-космогонії-до-християнства
+  type: ukrainian_wiki
+  title: 'Академічна C1: Обрядові пісні: Коло життя'
+  section_path: 'Академічна C1: Обрядові пісні: Коло життя > Основний зміст > 2. Календарно-обрядовий
+    цикл: Від космогонії до християнства'
+- id: S9
+  file: wave9-ohiyenko-ist-lit-movy_c0159
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S10
+  file: wave5-oldukr-xviii_c0022
+  type: literary
+  title: Українська література XVIII ст.
+  author: Антологія
+- id: S11
+  file: wave8-ukr-lit-entsyklopediia_c3453
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S13
+  file: wave10-shevchenkivsky-slovnyk_c0876
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S14
+  file: ukrlib-skovoroda_c0003
+  type: literary
+  title: Григорій Сковорода. Життя та творчість Григорія Сковороди
+  author: Сковорода Г.
+- id: S15
+  file: ukrlib-skovoroda_c0004
+  type: literary
+  title: Григорій Сковорода. Життя та творчість Григорія Сковороди
+  author: Сковорода Г.
+- id: S17
+  file: wave8-chyzhevsky-skovoroda_c0322
+  type: literary
+  title: Чижевський — Філософія Сковороди
+  author: Чижевський Д.
+- id: S18
+  file: wave4-chyzhevsky-istoriia-lit_c0539
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S19
+  file: wave4-chyzhevsky-istoriia-lit_c0899
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S20
+  file: wave9-rusanivsky-ist-lit-movy_c0313
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S21
+  file: wave8-ukr-lit-entsyklopediia_c4780
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S22
+  file: wave7-entsyklopediia-ukrainoznavstva_c1936
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S23
+  file: ukrlib-skovoroda_c0000
+  type: literary
+  title: Григорій Сковорода. Сад божественних пісень
+  author: Сковорода Г.
+- id: S24
+  file: wave10-shevchenko-tvory-t1_c0083
+  type: literary
+  title: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+- id: S25
+  file: wikipedia/Реве та стогне Дніпр широкий
+  type: wikipedia
+  title: 'Реве та стогне Дніпр широкий (пісня Д. Крижанівського на вірші Т. Шевченка, друк тексту й нот 1886)'
+  url: https://uk.wikipedia.org/wiki/Реве_та_стогне_Дніпр_широкий

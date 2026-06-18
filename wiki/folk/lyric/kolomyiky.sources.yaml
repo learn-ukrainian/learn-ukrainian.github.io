@@ -1,0 +1,97 @@
+# Source registry for wiki/folk/lyric/kolomyiky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-ukrlit-mishhenko-2015_s3636
+  type: textbook
+  title: розділ 1. ЛІТЕРАТУРНА П’ЯТИХВИЛИНКА
+  page: 14
+  grade: 7
+- id: S5
+  file: 7-klas-ukrlit-mishhenko-2015_s3693
+  type: textbook
+  title: розділ 4. СЛОВНИК ЕРУДИТА
+  page: 257
+  grade: 7
+- id: S6
+  file: 7-klas-ukrlit-mishhenko-2015_s3637
+  type: textbook
+  title: ТЕСТОВІ ЗАВДАННЯ ДО РОЗДІЛУ «ІЗ ПІСЕННИХ СКАРБІВ»
+  page: 32
+  grade: 7
+- id: S7
+  file: 7-klas-ukrlit-zabolotnyi-2024_s3703
+  type: textbook
+  title: Розділ 1. ОЙ НА ГОРІ ТА ЖЕНЦІ ЖНУТЬ. НАРОДНА ТВОРЧІСТЬ
+  page: 13
+  grade: 7
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c3604
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c3605
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave7-entsyklopediia-ukrainoznavstva_c0631
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S11
+  file: wave7-entsyklopediia-ukrainoznavstva_c2273
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S12
+  file: wave7-popovych-narys-kultury_c0318
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S13
+  file: ukrlib-kotsyubynsky_c0041
+  type: literary
+  title: Михайло Коцюбинський. Тіні забутих предків
+  author: Коцюбинський М.
+- id: S14
+  file: wave8-ukr-lit-entsyklopediia_c3606
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S15
+  file: wave10-shevchenkivsky-slovnyk_c0916
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S16
+  file: wave7-entsyklopediia-ukrainoznavstva_c0654
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S17
+  file: wave7-entsyklopediia-ukrainoznavstva_c0651
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S18
+  file: wave8-ukr-lit-entsyklopediia_c2557
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S19
+  file: ukrlib-franko_c0003
+  type: literary
+  title: Іван Франко. Лесишина челядь
+  author: Франко І.
+- id: S20
+  file: ukrlib-andiyevska_c0179
+  type: literary
+  title: Емма Андієвська. Роман про добру людину
+  author: Андієвська Е.
+- id: S21
+  file: wave7-antonovych-vybrani_c0136
+  type: literary
+  title: Антонович — Вибрані праці
+  author: Антонович В.
