@@ -1,0 +1,212 @@
+- lemma: летіти
+  translation: "to fly in one direction"
+  pos: verb
+  usage: "Літак летить до Відня."
+- lemma: лечу
+  translation: "I am flying"
+  pos: verb form
+  usage: "Зараз я лечу до Варшави ранковим рейсом."
+- lemma: летиш
+  translation: "you are flying"
+  pos: verb form
+  usage: "Ти летиш до Львова чи їдеш потягом?"
+- lemma: летять
+  translation: "they are flying"
+  pos: verb form
+  usage: "Птахи летять над морем."
+- lemma: літати
+  translation: "to fly habitually, back and forth, or in different directions"
+  pos: verb
+  usage: "Вона часто літає у відрядження."
+- lemma: прилетіти
+  translation: "to arrive by air; perfective"
+  pos: verb
+  usage: "Літак прилетів з Лондона."
+- lemma: прилітати
+  translation: "to arrive by air habitually or in process"
+  pos: verb
+  usage: "Цей рейс прилітає щодня."
+- lemma: долетіти
+  translation: "to fly all the way to; perfective"
+  pos: verb
+  usage: "Ми долетіли до Стамбула за дві години."
+- lemma: полетіти
+  translation: "to set off by air, start flying; perfective"
+  pos: verb
+  usage: "Ми полетіли о сьомій ранку."
+- lemma: відлетіти
+  translation: "to fly away, depart by air; perfective"
+  pos: verb
+  usage: "Птах відлетів від вікна."
+- lemma: залетіти
+  translation: "to fly into; perfective"
+  pos: verb
+  usage: "Метелик залетів у кімнату."
+- lemma: вилетіти
+  translation: "to fly out, depart from an airport; perfective"
+  pos: verb
+  usage: "Рейс вилетів з Києва за розкладом."
+- lemma: перелетіти
+  translation: "to fly across; perfective"
+  pos: verb
+  usage: "Птахи перелетіли через море."
+- lemma: пролетіти
+  translation: "to fly past, over, or through; perfective"
+  pos: verb
+  usage: "Літак пролетів над містом."
+- lemma: облетіти
+  translation: "to fly around; perfective"
+  pos: verb
+  usage: "Гелікоптер облетів острів."
+- lemma: підлетіти
+  translation: "to fly up to, approach by air; perfective"
+  pos: verb
+  usage: "Пташка підлетіла до годівниці."
+- lemma: пливти
+  translation: "to swim or sail in one direction"
+  pos: verb
+  usage: "Човен пливе до берега."
+- lemma: пливу
+  translation: "I am swimming or sailing"
+  pos: verb form
+  usage: "Я пливу до буйка."
+- lemma: пливеш
+  translation: "you are swimming or sailing"
+  pos: verb form
+  usage: "Ти пливеш занадто далеко від берега."
+- lemma: пливуть
+  translation: "they are swimming or sailing"
+  pos: verb form
+  usage: "Качки пливуть через ставок."
+- lemma: плавати
+  translation: "to swim habitually, for exercise, or in different directions"
+  pos: verb
+  usage: "Діти плавають у басейні."
+- lemma: припливти
+  translation: "to arrive by water; perfective"
+  pos: verb
+  usage: "Корабель приплив до порту."
+- lemma: припливати
+  translation: "to arrive by water habitually or in process"
+  pos: verb
+  usage: "Пором припливає до пристані щогодини."
+- lemma: доплисти
+  translation: "to swim or sail all the way to; perfective"
+  pos: verb
+  usage: "Плавець доплив до фінішу."
+- lemma: допливати
+  translation: "to swim or sail all the way to habitually or in process"
+  pos: verb
+  usage: "Діти допливають до буйка тільки з тренером."
+- lemma: поплисти
+  translation: "to set sail, start swimming; perfective"
+  pos: verb
+  usage: "Човен поплив до острова."
+- lemma: відпливти
+  translation: "to sail or swim away; perfective"
+  pos: verb
+  usage: "Пором відплив від причалу."
+- lemma: заплисти
+  translation: "to swim or sail into, beyond; perfective"
+  pos: verb
+  usage: "Човен заплив у затоку."
+- lemma: виплисти
+  translation: "to swim or sail out, emerge on water; perfective"
+  pos: verb
+  usage: "Човен виплив із туману."
+- lemma: переплисти
+  translation: "to swim or sail across; perfective"
+  pos: verb
+  usage: "Спортсмен переплив річку."
+- lemma: проплисти
+  translation: "to swim or sail past, through, or along; perfective"
+  pos: verb
+  usage: "Човен проплив повз маяк."
+- lemma: обплисти
+  translation: "to swim or sail around; perfective"
+  pos: verb
+  usage: "Яхта обпливла острів."
+- lemma: підплисти
+  translation: "to swim or sail up to; perfective"
+  pos: verb
+  usage: "Човен підплив до причалу."
+- lemma: аеропорт
+  translation: "airport"
+  pos: noun:m
+  usage: "Ми приїхали до аеропорту за дві години до вильоту."
+- lemma: термінал
+  translation: "terminal"
+  pos: noun:m
+  usage: "Рейс вилітає з другого термінала."
+- lemma: рейс
+  translation: "flight, scheduled service"
+  pos: noun:m
+  usage: "Рейс на Прагу затримується."
+- lemma: посадковий талон
+  translation: "boarding pass"
+  pos: phrase
+  usage: "Покажіть посадковий талон біля виходу."
+- lemma: посадка на рейс
+  translation: "boarding a flight"
+  pos: phrase
+  usage: "Посадка на рейс починається о сьомій."
+- lemma: виліт
+  translation: "departure by air"
+  pos: noun:m
+  usage: "Табло показує час вильоту."
+- lemma: приліт
+  translation: "arrival by air"
+  pos: noun:m
+  usage: "Зал прильоту розташований унизу."
+- lemma: пересадка
+  translation: "connection, transfer"
+  pos: noun:f
+  usage: "У нас коротка пересадка у Відні."
+- lemma: порт
+  translation: "port, harbor"
+  pos: noun:m
+  usage: "Корабель приплив до порту вранці."
+- lemma: причал
+  translation: "pier, dock"
+  pos: noun:m
+  usage: "Пором відплив від причалу."
+- lemma: пристань
+  translation: "landing stage, small pier"
+  pos: noun:f
+  usage: "Човен підплив до пристані."
+- lemma: пором
+  translation: "ferry"
+  pos: noun:m
+  usage: "Пором переплив затоку за пів години."
+- lemma: корабель
+  translation: "ship"
+  pos: noun:m
+  usage: "Корабель проплив повз маяк."
+- lemma: човен
+  translation: "boat"
+  pos: noun:m
+  usage: "Човен заплив у тиху затоку."
+- lemma: палуба
+  translation: "deck"
+  pos: noun:f
+  usage: "Пасажири стояли на палубі."
+- lemma: каюта
+  translation: "cabin on a ship"
+  pos: noun:f
+  usage: "Наша каюта була біля сходів."
+- lemma: берег
+  translation: "shore, bank"
+  pos: noun:m
+  usage: "Плавець доплив до берега."
+- lemma: острів
+  translation: "island"
+  pos: noun:m
+  usage: "Яхта обпливла острів."
+- lemma: затока
+  translation: "bay"
+  pos: noun:f
+  usage: "Ми перепливли затоку на човні."
+- lemma: маяк
+  translation: "lighthouse"
+  pos: noun:m
+  usage: "Пором проплив повз маяк."
