@@ -1,0 +1,188 @@
+- lemma: дозвілля
+  translation: leisure, free time
+  pos: noun:n
+  usage: "У вихідні моє дозвілля зазвичай пов'язане з кіно, читанням і прогулянками."
+- lemma: захоплення
+  translation: hobby, passion
+  pos: noun:n
+  usage: "Моє головне захоплення - фотографія, бо вона вчить уважно дивитися на місто."
+- lemma: хобі
+  translation: hobby
+  pos: noun:n
+  usage: "Я шукаю хобі, яке можна поєднати з вивченням української."
+- lemma: вільний час
+  translation: free time
+  pos: phrase
+  usage: "У вільний час вона ходить на виставки або слухає подкасти."
+- lemma: мистецтво
+  translation: art
+  pos: noun:n
+  usage: "Сучасне мистецтво може дивувати, навіть якщо не все одразу зрозуміло."
+- lemma: культура
+  translation: culture
+  pos: noun:f
+  usage: "Культура міста помітна в музеях, фестивалях і щоденних звичках людей."
+- lemma: виставка
+  translation: exhibition
+  pos: noun:f
+  usage: "Виставка, яку ми відвідали в суботу, була присвячена фотографії."
+- lemma: вистава
+  translation: theater performance
+  pos: noun:f
+  usage: "Після вистави глядачі довго аплодували акторам."
+- lemma: експозиція
+  translation: exhibition display
+  pos: noun:f
+  usage: "Нова експозиція показує історію міста через особисті речі мешканців."
+- lemma: живопис
+  translation: painting as an art form
+  pos: noun:m
+  usage: "Український живопис XIX століття часто поєднує пейзаж і історичну пам'ять."
+- lemma: скульптура
+  translation: sculpture
+  pos: noun:f
+  usage: "У парку встановили скульптуру, яку створила місцева художниця."
+- lemma: театр
+  translation: theater
+  pos: noun:m
+  usage: "Ми купили квитки до театру, хоча місць залишилося небагато."
+- lemma: концерт
+  translation: concert
+  pos: noun:m
+  usage: "На концерті звучали народні пісні й сучасні аранжування."
+- lemma: свято
+  translation: holiday, celebration
+  pos: noun:n
+  usage: "Свято може бути родинним, державним, релігійним або місцевим."
+- lemma: святкувати
+  translation: to celebrate
+  pos: verb
+  usage: "Ми святкуємо День Незалежності двадцять четвертого серпня."
+- lemma: традиція
+  translation: tradition
+  pos: noun:f
+  usage: "Ця традиція змінюється, але родинний зміст залишається важливим."
+- lemma: звичай
+  translation: custom
+  pos: noun:m
+  usage: "Звичай колядувати пов'язаний із зимовим святковим циклом."
+- lemma: обряд
+  translation: ritual
+  pos: noun:m
+  usage: "Обряд не треба описувати як екзотику; краще пояснити, хто що робить і навіщо."
+- lemma: Різдво
+  translation: Christmas
+  pos: noun:n
+  usage: "На Різдво в багатьох родинах готують кутю і співають колядки."
+- lemma: Святвечір
+  translation: Christmas Eve
+  pos: noun:m
+  usage: "Святвечір - це вечір перед Різдвом, коли родина збирається за столом."
+- lemma: колядка
+  translation: Christmas carol
+  pos: noun:f
+  usage: "Колядка звучить як побажання добробуту й радості."
+- lemma: щедрівка
+  translation: New Year cycle carol
+  pos: noun:f
+  usage: "Щедрівка належить до зимового обрядового циклу."
+- lemma: кутя
+  translation: kutia, ritual Christmas dish
+  pos: noun:f
+  usage: "Кутя - традиційна страва Святвечора."
+- lemma: узвар
+  translation: dried fruit drink
+  pos: noun:m
+  usage: "До святкового столу часто подають узвар із сухофруктів."
+- lemma: Великдень
+  translation: Easter
+  pos: noun:m
+  usage: "На Великдень печуть паску й пишуть писанки."
+- lemma: паска
+  translation: Easter bread
+  pos: noun:f
+  usage: "Паску кладуть до великоднього кошика."
+- lemma: писанка
+  translation: decorated Easter egg
+  pos: noun:f
+  usage: "Писанка - це розписане великоднє яйце з символічним орнаментом."
+- lemma: гаївки
+  translation: spring ritual songs and dances
+  pos: noun:pl
+  usage: "Гаївки пов'язані з весняним святковим циклом."
+- lemma: Івана Купала
+  translation: Ivan Kupala holiday
+  pos: proper noun
+  usage: "Свято Івана Купала в підручниках описують через воду, вогонь і вінки."
+- lemma: вінок
+  translation: wreath
+  pos: noun:m
+  usage: "У купальській традиції вінок може мати символічне значення."
+- lemma: рушник
+  translation: embroidered ritual towel
+  pos: noun:m
+  usage: "Рушник часто згадують у весільних і родинних обрядах."
+- lemma: вишиванка
+  translation: embroidered shirt
+  pos: noun:f
+  usage: "Вишиванка є знаком української культурної ідентичності."
+- lemma: ярмарок
+  translation: fair, market festival
+  pos: noun:m
+  usage: "На ярмарку продають кераміку, мед, книжки й вироби ручної роботи."
+- lemma: ресторан
+  translation: restaurant
+  pos: noun:m
+  usage: "Ми забронювали столик у ресторані після вистави."
+- lemma: кафе
+  translation: cafe
+  pos: noun:n
+  usage: "У невеликому кафе біля музею подають вареники й узвар."
+- lemma: меню
+  translation: menu
+  pos: noun:n
+  usage: "Принесіть, будь ласка, меню українською."
+- lemma: замовлення
+  translation: order
+  pos: noun:n
+  usage: "Офіціант повторив наше замовлення, щоб не помилитися."
+- lemma: страва
+  translation: dish
+  pos: noun:f
+  usage: "Ця страва регіональна, тому її не завжди знайдеш у кожному ресторані."
+- lemma: шеф-кухар
+  translation: chef
+  pos: noun:m
+  usage: "Шеф-кухар пояснив, що банош краще подавати з бринзою."
+- lemma: регіональна кухня
+  translation: regional cuisine
+  pos: phrase
+  usage: "Регіональна кухня допомагає говорити про культуру без стереотипів."
+- lemma: банош
+  translation: banosh, Hutsul cornmeal dish
+  pos: noun:m
+  usage: "У Карпатах нам порадили банош із бринзою."
+- lemma: деруни
+  translation: potato pancakes
+  pos: noun:pl
+  usage: "Деруни часто подають зі сметаною."
+- lemma: голубці
+  translation: cabbage rolls
+  pos: noun:pl
+  usage: "Голубці були гарячі, але не надто гострі."
+- lemma: чайові
+  translation: tips, gratuity
+  pos: noun:pl
+  usage: "Ми залишили чайові за уважне обслуговування."
+- lemma: враження
+  translation: impression
+  pos: noun:n
+  usage: "Після концерту в мене залишилося сильне враження."
+- lemma: на мою думку
+  translation: in my opinion
+  pos: phrase
+  usage: "На мою думку, ця виставка цікава навіть тим, хто рідко ходить у музеї."
+- lemma: я вважаю, що
+  translation: I think that
+  pos: phrase
+  usage: "Я вважаю, що традиції живуть тоді, коли люди розуміють їхній сенс."
