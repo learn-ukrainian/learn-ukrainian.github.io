@@ -59,8 +59,8 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs syncKey="module-tab">
 <TabItem label="Lesson">
 
-In the last module, you learned the A1 past endings. Now use them in one
-small story about a day. The shape is simple:
+Привіт! In the last module, you learned the A1 past endings. Today you put
+them in one small story about a day. The shape is simple:
 
 **Учора -> зранку -> потім -> вдень -> ввечері -> нарешті**
 
@@ -145,6 +145,48 @@ Support after the Ukrainian lines:
 This second dialogue adds places: **вдома**, **в офісі**, **в магазині**,
 **додому**. A day narrative often needs only time, place, and one action.
 
+### Заява в поліцію: коротка історія
+
+Sometimes a yesterday story is practical. You may need to say what happened in
+order. This is recognition practice first: notice the same time line and the
+same speaker pattern.
+
+```text
+Поліцейський: Розкажіть, що сталося.
+Свідок: Учора я припаркував велосипед біля магазину.
+Поліцейський: А потім?
+Свідок: Потім я зайшов у кав'ярню.
+Поліцейський: Що було далі?
+Свідок: Коли я вийшов, велосипед зник.
+Поліцейський: Ви когось бачили?
+Свідок: Так, я бачив чоловіка в куртці та кепці.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Поліцейський: Розкажіть, що сталося.** | Police officer: Tell me what happened. |
+| **Свідок: Учора я припаркував велосипед біля магазину.** | Witness: Yesterday I parked the bicycle near the store. |
+| **Поліцейський: А потім?** | Police officer: And then? |
+| **Свідок: Потім я зайшов у кав'ярню.** | Witness: Then I went into a cafe. |
+| **Поліцейський: Що було далі?** | Police officer: What happened next? |
+| **Свідок: Коли я вийшов, велосипед зник.** | Witness: When I came out, the bicycle was gone. |
+| **Поліцейський: Ви когось бачили?** | Police officer: Did you see anyone? |
+| **Свідок: Так, я бачив чоловіка в куртці та кепці.** | Witness: Yes, I saw a man in a jacket and cap. |
+
+:::note[A1 boundary]
+Use this dialogue for sequence and recognition. Words such as **велосипед**,
+**кав'ярня**, **куртка**, and **кепка** help the story feel real, but your own
+active story can still use familiar words like **кафе**, **магазин**,
+**колега**, and **продукти**.
+:::
+
+The witness is a male speaker, so his forms stay in one pattern:
+**припаркував**, **зайшов**, **вийшов**, **бачив**. Анна's story used
+**прокинулася**, **поснідала**, **пішла**, **купила**. The idea is the same:
+one speaker, one consistent past-tense pattern.
+
 ### Time words for yesterday
 
 <FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ я прокинулася о сьомій.", "answer": "Зранку", "options": ["Зранку", "Ввечері", "Нарешті"]}, {"sentence": "___ я пішла на роботу.", "answer": "Потім", "options": ["Потім", "Учора", "Вночі"]}, {"sentence": "___ я обідала в кафе.", "answer": "Вдень", "options": ["Вдень", "Зранку", "Нарешті"]}, {"sentence": "___ я повернулася додому.", "answer": "Ввечері", "options": ["Ввечері", "Спочатку", "Зранку"]}, {"sentence": "___ я лягла спати.", "answer": "Нарешті", "options": ["Нарешті", "Вдень", "Після цього"]}]`)} instruction={"Choose the time word that fits each part of the day."} isUkrainian={false} />
@@ -163,6 +205,7 @@ grammar:
 | **вдень** | afternoon or day-time | **Вдень я обідала.** |
 | **після цього** | after that | **Після цього я працювала.** |
 | **ввечері** | evening | **Ввечері я повернулася.** |
+| **вночі** | at night | **Вночі я була вдома.** |
 | **нарешті** | final action | **Нарешті я лягла спати.** |
 
 The verb forms can stay familiar. This is not a lesson about pairs of verbs or
@@ -195,6 +238,24 @@ For example:
 
 The English story may feel too plain, but that is useful at A1. The goal is a
 stable sentence chain, not a dramatic biography.
+
+:::tip[Quick win]
+If you can say **Учора я прокинулася. Потім я поснідала.**, you already have a
+real two-sentence past story. Add one time word at a time.
+:::
+
+### Repair traps
+
+Use this table when a story suddenly changes speaker pattern or time:
+
+| Learner sentence | Better Ukrainian | Why |
+| --- | --- | --- |
+| <bad>**Учора я прокинулася. Потім я поснідав.**</bad> | **Учора я прокинулася. Потім я поснідала.** | One female speaker. |
+| <bad>**Зранку я прокинувся. Потім я пішла.**</bad> | **Зранку я прокинувся. Потім я пішов.** | One male speaker. |
+| <bad>**Ввечері я повернувся. Нарешті я лягла спати.**</bad> | **Ввечері я повернувся. Нарешті я ліг спати.** | Keep the male pattern. |
+| <bad>**Учора я працює в офісі.**</bad> | **Учора я працювала в офісі.** / **Учора я працював в офісі.** | **Учора** needs a past form. |
+| <bad>**Після цього я ходила в магазин і купив продукти.**</bad> | **Після цього я ходила в магазин і купила продукти.** | Keep one speaker. |
+| <bad>**О одинадцятій я лягла спати.**</bad> | **Об одинадцятій я лягла спати.** | Use **об** before **одинадцятій**. |
 
 ### Sort story words
 
@@ -334,12 +395,15 @@ Self-check with one six-sentence story:
 | **Ввечері я повернулася додому.** | In the evening I returned home. |
 | **Нарешті я лягла спати.** | Finally I went to bed. |
 
-If every verb matches the same speaker, the story is doing its job.
+If every verb matches the same speaker, the story is doing its job. You can now
+tell a six-sentence yesterday story with time markers, places, people, food,
+and consistent past forms. Next you will move the same clear control into
+future time.
 
 </TabItem>
 <TabItem label="Vocabulary">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"учора","translation":"yesterday","pos":"adverb","example":"Учора я прокинулася рано.","examples":["yesterday","Учора я прокинулася рано."],"atlas_href":"/lexicon/учора/"},{"word":"зранку","translation":"in the morning","pos":"adverb","example":"Зранку я поснідала.","examples":["in the morning","Зранку я поснідала."],"atlas_href":"/lexicon/зранку/"},{"word":"вдень","translation":"in the afternoon","pos":"adverb","example":"Вдень я обідала з колегою.","examples":["in the afternoon","Вдень я обідала з колегою."],"atlas_href":"/lexicon/вдень/"},{"word":"ввечері","translation":"in the evening","pos":"adverb","example":"Ввечері я дивилася серіал.","examples":["in the evening","Ввечері я дивилася серіал."],"atlas_href":"/lexicon/ввечері/"},{"word":"потім","translation":"then","pos":"adverb","example":"Потім я пішла на роботу.","examples":["then","Потім я пішла на роботу."],"atlas_href":"/lexicon/потім/"},{"word":"спочатку","translation":"first","pos":"adverb","example":"Спочатку я поснідала.","examples":["first","Спочатку я поснідала."],"atlas_href":"/lexicon/спочатку/"},{"word":"нарешті","translation":"finally","pos":"adverb","example":"Нарешті я лягла спати.","examples":["finally","Нарешті я лягла спати."],"atlas_href":"/lexicon/нарешті/"},{"word":"прокинутися","translation":"to wake up","pos":"verb","example":"Я прокинулася о сьомій.","examples":["to wake up","Я прокинулася о сьомій."],"atlas_href":"/lexicon/прокинутися/"},{"word":"поснідати","translation":"to have breakfast","pos":"verb","example":"Я поснідала вдома.","examples":["to have breakfast","Я поснідала вдома."],"atlas_href":"/lexicon/поснідати/"},{"word":"обідати","translation":"to have lunch","pos":"verb","example":"Я обідала в кафе.","examples":["to have lunch","Я обідала в кафе."],"atlas_href":"/lexicon/обідати/"},{"word":"повернутися","translation":"to return","pos":"verb","example":"Я повернулася додому.","examples":["to return","Я повернулася додому."],"atlas_href":"/lexicon/повернутися/"},{"word":"лягти","translation":"to lie down","pos":"verb","example":"Я лягла спати.","examples":["to lie down","Я лягла спати."],"atlas_href":"/lexicon/лягти/"},{"word":"звичайний","translation":"ordinary","pos":"adjective","example":"Учора був звичайний день.","examples":["ordinary","Учора був звичайний день."],"atlas_href":"/lexicon/звичайний/"},{"word":"продукти","translation":"groceries","pos":"noun plural","example":"Я купила продукти.","examples":["groceries","Я купила продукти."],"atlas_href":"/lexicon/продукти/"},{"word":"серіал","translation":"TV series","pos":"noun","example":"Я дивилася серіал.","examples":["TV series","Я дивилася серіал."],"atlas_href":"/lexicon/серіал/"},{"word":"колега","translation":"colleague","pos":"noun","example":"Я обідала з колегою.","examples":["colleague","Я обідала з колегою."],"atlas_href":"/lexicon/колега/"},{"word":"офіс","translation":"office","pos":"noun","example":"Я працювала в офісі.","examples":["office","Я працювала в офісі."],"atlas_href":"/lexicon/офіс/"},{"word":"додому","translation":"homeward, home","pos":"adverb","example":"Я повернулася додому.","examples":["homeward, home","Я повернулася додому."],"atlas_href":"/lexicon/додому/"}]`)} title="Vocabulary" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"учора","translation":"yesterday","pos":"adverb","example":"Учора я прокинулася рано.","examples":["yesterday","Учора я прокинулася рано."],"atlas_href":"/lexicon/учора/"},{"word":"зранку","translation":"in the morning","pos":"adverb","example":"Зранку я поснідала.","examples":["in the morning","Зранку я поснідала."],"atlas_href":"/lexicon/зранку/"},{"word":"вдень","translation":"in the afternoon","pos":"adverb","example":"Вдень я обідала з колегою.","examples":["in the afternoon","Вдень я обідала з колегою."],"atlas_href":"/lexicon/вдень/"},{"word":"ввечері","translation":"in the evening","pos":"adverb","example":"Ввечері я дивилася серіал.","examples":["in the evening","Ввечері я дивилася серіал."],"atlas_href":"/lexicon/ввечері/"},{"word":"потім","translation":"then","pos":"adverb","example":"Потім я пішла на роботу.","examples":["then","Потім я пішла на роботу."],"atlas_href":"/lexicon/потім/"},{"word":"спочатку","translation":"first","pos":"adverb","example":"Спочатку я поснідала.","examples":["first","Спочатку я поснідала."],"atlas_href":"/lexicon/спочатку/"},{"word":"нарешті","translation":"finally","pos":"adverb","example":"Нарешті я лягла спати.","examples":["finally","Нарешті я лягла спати."],"atlas_href":"/lexicon/нарешті/"},{"word":"прокинутися","translation":"to wake up","pos":"verb","example":"Я прокинулася о сьомій.","examples":["to wake up","Я прокинулася о сьомій."],"atlas_href":"/lexicon/прокинутися/"},{"word":"поснідати","translation":"to have breakfast","pos":"verb","example":"Я поснідала вдома.","examples":["to have breakfast","Я поснідала вдома."],"atlas_href":"/lexicon/поснідати/"},{"word":"обідати","translation":"to have lunch","pos":"verb","example":"Я обідала в кафе.","examples":["to have lunch","Я обідала в кафе."],"atlas_href":"/lexicon/обідати/"},{"word":"повернутися","translation":"to return","pos":"verb","example":"Я повернулася додому.","examples":["to return","Я повернулася додому."],"atlas_href":"/lexicon/повернутися/"},{"word":"лягти","translation":"to lie down","pos":"verb","example":"Я лягла спати.","examples":["to lie down","Я лягла спати."],"atlas_href":"/lexicon/лягти/"},{"word":"звичайний","translation":"ordinary","pos":"adjective","example":"Учора був звичайний день.","examples":["ordinary","Учора був звичайний день."],"atlas_href":"/lexicon/звичайний/"},{"word":"продукти","translation":"groceries","pos":"noun plural","example":"Я купила продукти.","examples":["groceries","Я купила продукти."]},{"word":"серіал","translation":"TV series","pos":"noun","example":"Я дивилася серіал.","examples":["TV series","Я дивилася серіал."],"atlas_href":"/lexicon/серіал/"},{"word":"колега","translation":"colleague","pos":"noun","example":"Я обідала з колегою.","examples":["colleague","Я обідала з колегою."],"atlas_href":"/lexicon/колега/"},{"word":"офіс","translation":"office","pos":"noun","example":"Я працювала в офісі.","examples":["office","Я працювала в офісі."],"atlas_href":"/lexicon/офіс/"},{"word":"додому","translation":"homeward, home","pos":"adverb","example":"Я повернулася додому.","examples":["homeward, home","Я повернулася додому."],"atlas_href":"/lexicon/додому/"}]`)} title="Vocabulary" />
 
 <FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"учора","back":"yesterday"},{"front":"зранку","back":"in the morning"},{"front":"вдень","back":"in the afternoon"},{"front":"ввечері","back":"in the evening"},{"front":"потім","back":"then"},{"front":"спочатку","back":"first"},{"front":"нарешті","back":"finally"},{"front":"прокинутися","back":"to wake up"},{"front":"поснідати","back":"to have breakfast"},{"front":"обідати","back":"to have lunch"},{"front":"повернутися","back":"to return"},{"front":"лягти","back":"to lie down"},{"front":"звичайний","back":"ordinary"},{"front":"продукти","back":"groceries"},{"front":"серіал","back":"TV series"},{"front":"колега","back":"colleague"},{"front":"офіс","back":"office"},{"front":"додому","back":"homeward, home"}]`)} />
 
@@ -352,15 +416,15 @@ If every verb matches the same speaker, the story is doing its job.
 
 ### Time words for yesterday
 
-*(see lesson, §Коротка перевірка дня)*
+*(see lesson, §Заява в поліцію: коротка історія)*
 
 ### Sort story words
 
-*(see lesson, §Розповідь про день)*
+*(see lesson, §Repair traps)*
 
 ### Keep the speaker consistent
 
-*(see lesson, §Розповідь про день)*
+*(see lesson, §Repair traps)*
 
 ### Infinitive to story form
 
