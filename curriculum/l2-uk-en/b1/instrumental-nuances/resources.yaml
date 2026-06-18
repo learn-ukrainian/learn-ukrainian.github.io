@@ -1,0 +1,24 @@
+- title: "B1 M54: dative nuances"
+  role: curriculum
+  notes: "Попередній модуль тренує відмінкову роль через керівне слово; M56 використовує ту саму стратегію для орудного."
+- title: "A2 instrumental basics"
+  role: curriculum
+  notes: "Базові форми орудного та прості моделі з/із + Ор.в. уже мають бути знайомі."
+- title: "B1 M23: passive voice intro"
+  role: curriculum
+  notes: "Пасивний агент в орудному подається як розпізнавання і перефразування, не як нова продукція дієприкметників."
+- title: "Пономарьова Grade 4, masculine instrumental endings"
+  role: textbook
+  notes: "Подає питання ким? чим? і закінчення -ом, -ем, -єм для іменників чоловічого роду."
+  source_ref: "4-klas-ukrayinska-mova-ponomarova-2021-1, таблиця орудного відмінка"
+- title: "Заболотний Grade 8, case question table"
+  role: textbook
+  notes: "Подає питання орудного: ким? чим? яким? чиїм? скількома? котрим?"
+  source_ref: "8-klas-ukrmova-zabolotnyi-2025, таблиця відмінків"
+- title: "State Standard 2024, §4.2.2.5"
+  role: standard
+  notes: "Підтримує роботу з прийменниками та розширеними значеннями орудного відмінка."
+- title: "Headroom source retrieval"
+  role: orchestration
+  notes: "Стислий запис локального пошуку джерел для M56."
+  source_ref: "headroom hash eb627e6818930a7e1b9f62ee"
