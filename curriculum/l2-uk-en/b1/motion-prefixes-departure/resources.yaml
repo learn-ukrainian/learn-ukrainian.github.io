@@ -1,0 +1,20 @@
+- title: "B1 grammar wiki: motion prefixes departure"
+  role: internal
+  notes: "Reference overview for departure and distancing prefixes with motion verbs: піти, поїхати, відійти, від'їхати, apostrophe spelling, aspect, and L2 errors."
+  url: "wiki/grammar/b1/motion-prefixes-departure.md"
+- title: "Motion-prefix departure source registry"
+  role: internal
+  notes: "Textbook source registry used by the grammar wiki for по-, від-, apostrophe rules before ї, and examples of spatial prefixation."
+  url: "wiki/grammar/b1/motion-prefixes-departure.sources.yaml"
+- title: "Motion-prefix arrival"
+  role: curriculum
+  notes: "Previous prefix module that certifies the contrastive arrival and endpoint forms: прийти, приїхати, дійти, доїхати."
+  url: "b1/motion-prefixes-arrival"
+- title: "Traveling Ukraine"
+  role: curriculum
+  notes: "Travel narrative module that introduces route talk, stations, schedules, platforms, and practical transport vocabulary reused here."
+  url: "b1/traveling-ukraine"
+- title: "Spatial prepositions review"
+  role: curriculum
+  notes: "B1 module that establishes direction and source constructions used with departure verbs: з/із + родовий, від + родовий, до + родовий, в/на + знахідний."
+  url: "b1/prepositions-spatial-review"

@@ -1,0 +1,132 @@
+- lemma: піти
+  translation: "to leave, set off on foot; perfective"
+  pos: verb
+  usage: "Після сніданку ми пішли на перон проводжати друзів."
+- lemma: піду
+  translation: "I will go, I will set off on foot"
+  pos: verb form
+  usage: "Я піду з дому о сьомій, щоб не запізнитися."
+- lemma: пішов
+  translation: "went, left on foot; masculine past"
+  pos: verb form
+  usage: "Брат пішов до каси купити квиток."
+- lemma: пішла
+  translation: "went, left on foot; feminine past"
+  pos: verb form
+  usage: "Сестра пішла до кав'ярні біля вокзалу."
+- lemma: поїхати
+  translation: "to leave, depart by transport; perfective"
+  pos: verb
+  usage: "Ми поїхали до Чернівців ранковим потягом."
+- lemma: поїду
+  translation: "I will go by transport"
+  pos: verb form
+  usage: "Завтра я поїду автобусом до Тернополя."
+- lemma: побігти
+  translation: "to take off running, run off; perfective"
+  pos: verb
+  usage: "Дитина побігла до мами на пероні."
+- lemma: понести
+  translation: "to start carrying, carry away; perfective"
+  pos: verb
+  usage: "Він поніс валізу до камери схову."
+- lemma: повести
+  translation: "to lead or take someone; perfective"
+  pos: verb
+  usage: "Екскурсоводка повела групу до виходу."
+- lemma: повезти
+  translation: "to start transporting, take by vehicle; perfective"
+  pos: verb
+  usage: "Водій повіз туристів до готелю."
+- lemma: полетіти
+  translation: "to fly off, take a flight; perfective"
+  pos: verb
+  usage: "Літак полетів до Варшави після короткої затримки."
+- lemma: поплисти
+  translation: "to set sail, start moving by water; perfective"
+  pos: verb
+  usage: "Човен поплив від пристані до острова."
+- lemma: відійти
+  translation: "to step away, move away on foot; perfective"
+  pos: verb
+  usage: "Відійди від дверей, будь ласка, пасажири виходять."
+- lemma: відійду
+  translation: "I will step away"
+  pos: verb form
+  usage: "Я відійду від каси, коли куплю квиток."
+- lemma: відійшов
+  translation: "stepped away, moved away; masculine past"
+  pos: verb form
+  usage: "Пасажир відійшов від краю платформи."
+- lemma: відходити
+  translation: "to depart, move away habitually or by schedule; imperfective"
+  pos: verb
+  usage: "Потяг відходить від третьої платформи о шостій."
+- lemma: від'їхати
+  translation: "to drive or ride away; perfective"
+  pos: verb
+  usage: "Автобус від'їхав від зупинки без запізнення."
+- lemma: від'їду
+  translation: "I will ride away, depart by vehicle"
+  pos: verb form
+  usage: "Я від'їду від офісу після наради."
+- lemma: від'їжджати
+  translation: "to be leaving by vehicle; imperfective"
+  pos: verb
+  usage: "Маршрутки від'їжджають від автостанції щогодини."
+- lemma: від'їзд
+  translation: "departure"
+  pos: noun:m
+  usage: "Від'їзд потяга оголосили за десять хвилин."
+- lemma: відбігти
+  translation: "to run away from, run aside; perfective"
+  pos: verb
+  usage: "Діти відбігли від дороги, коли побачили автобус."
+- lemma: віднести
+  translation: "to carry away, take something away by hand; perfective"
+  pos: verb
+  usage: "Віднеси рюкзак від входу."
+- lemma: відвести
+  translation: "to lead someone away; perfective"
+  pos: verb
+  usage: "Мати відвела дитину від натовпу."
+- lemma: відвезти
+  translation: "to transport away, drive someone or something away; perfective"
+  pos: verb
+  usage: "Таксі відвезло гостей від вокзалу до готелю."
+- lemma: відлетіти
+  translation: "to fly away; perfective"
+  pos: verb
+  usage: "Літак відлетів від термінала вчасно."
+- lemma: відпливти
+  translation: "to sail or swim away; perfective"
+  pos: verb
+  usage: "Човен відплив від берега після сигналу."
+- lemma: відбувати
+  translation: "to depart, be scheduled to depart; native Ukrainian for transport"
+  pos: verb
+  usage: "Поїзд відбуває зі Львова о двадцять першій."
+- lemma: виїжджати
+  translation: "to leave by vehicle, set out; imperfective"
+  pos: verb
+  usage: "Ми виїжджаємо з міста рано-вранці."
+- lemma: перон
+  translation: "train platform"
+  pos: noun:m
+  usage: "Пасажири стояли на пероні й чекали відходу потяга."
+- lemma: проводжати
+  translation: "to see someone off"
+  pos: verb
+  usage: "Родина прийшла проводжати студентку на вокзал."
+- lemma: проводи
+  translation: "seeing-off, farewell at departure"
+  pos: noun:pl
+  usage: "Проводи були короткі, бо потяг уже відходив."
+- lemma: камера схову
+  translation: "left-luggage office, storage locker"
+  pos: phrase
+  usage: "Ми понесли сумки до камери схову перед прогулянкою."
+- lemma: край платформи
+  translation: "edge of the platform"
+  pos: phrase
+  usage: "Відійдіть від краю платформи до жовтої лінії."
