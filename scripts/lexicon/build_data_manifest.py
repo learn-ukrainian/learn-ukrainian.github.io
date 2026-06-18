@@ -517,10 +517,10 @@ def build_manifest() -> dict:
                 1 for e in entries if e["primary_source"].startswith("built_vocabulary")
             ),
             "from_surzhyk_to_avoid": sum(
-                1 for e in entries if e["primary_source"] == "surzhyk_to_avoid"
+                1 for e in entries if e.get("seed_group") == "surzhyk-to-avoid"
             ),
             "from_heritage_status_seed": sum(
-                1 for e in entries if e["primary_source"] == "heritage_status_seed"
+                1 for e in entries if e.get("seed_group") == "heritage-status-samples"
             ),
         },
         "modules": modules,

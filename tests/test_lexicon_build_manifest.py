@@ -106,9 +106,12 @@ def test_heritage_status_seed_group_is_in_manifest() -> None:
     assert manifest["stats"]["from_heritage_status_seed"] == len(seed_lemmas)
     assert manifest["seed_groups"][1]["lemmas"] == seed_lemmas
     for lemma in seed_lemmas:
-        assert entries[lemma]["primary_source"] == "heritage_status_seed"
         assert entries[lemma]["seed_group"] == "heritage-status-samples"
-        assert entries[lemma]["course_usage"] == []
+        if entries[lemma]["primary_source"] == "heritage_status_seed":
+            assert entries[lemma]["course_usage"] == []
+        else:
+            assert entries[lemma]["primary_source"].startswith("built_vocabulary")
+            assert entries[lemma]["course_usage"]
 
 
 def test_manifest_sources_all_vocabulary_files_and_a2_word_field() -> None:
