@@ -1,0 +1,188 @@
+- lemma: кількісний числівник
+  translation: "cardinal numeral"
+  pos: noun phrase
+  usage: "Кількісний числівник відповідає на питання скільки?"
+- lemma: збірний числівник
+  translation: "collective numeral"
+  pos: noun phrase
+  usage: "Збірний числівник уживаємо у фразах двоє дітей, троє дверей."
+- lemma: узгодження
+  translation: "agreement"
+  pos: noun
+  usage: "Узгодження числівника з іменником залежить від останнього компонента числа."
+- lemma: неозначено-кількісний
+  translation: "indefinite-quantitative"
+  pos: adjective
+  usage: "Неозначено-кількісні слова називають приблизну або нечітку кількість."
+- lemma: кілька
+  translation: "several"
+  pos: indefinite numeral
+  usage: "Кілька студентів залишилися після лекції."
+- lemma: декілька
+  translation: "several"
+  pos: indefinite numeral
+  usage: "Декілька сторінок треба перечитати уважніше."
+- lemma: чимало
+  translation: "quite a lot"
+  pos: adverbial quantifier
+  usage: "На підготовку пішло чимало часу."
+- lemma: достатньо
+  translation: "enough"
+  pos: adverbial quantifier
+  usage: "У нас достатньо прикладів для вправи."
+- lemma: понад
+  translation: "more than"
+  pos: preposition
+  usage: "Понад тисячу людей відвідали захід."
+- lemma: близько
+  translation: "about, approximately"
+  pos: preposition
+  usage: "Близько ста учасників зареєструвалися онлайн."
+- lemma: один
+  translation: "one"
+  pos: cardinal numeral
+  usage: "Один стіл, одна кімната, одне вікно."
+- lemma: два
+  translation: "two"
+  pos: cardinal numeral
+  usage: "Два столи стоять біля вікна."
+- lemma: дві
+  translation: "two, feminine"
+  pos: cardinal numeral
+  usage: "Дві книжки лежать на столі."
+- lemma: три
+  translation: "three"
+  pos: cardinal numeral
+  usage: "Три кімнати виходять у двір."
+- lemma: чотири
+  translation: "four"
+  pos: cardinal numeral
+  usage: "Чотири студенти працюють у групі."
+- lemma: п'ять
+  translation: "five"
+  pos: cardinal numeral
+  usage: "П'ять студентів здали роботу вчасно."
+- lemma: двадцять один
+  translation: "twenty-one"
+  pos: compound cardinal
+  usage: "Двадцять один студент прийшов на зустріч."
+- lemma: двадцять два
+  translation: "twenty-two"
+  pos: compound cardinal
+  usage: "Двадцять два студенти заповнили анкету."
+- lemma: двадцять п'ять
+  translation: "twenty-five"
+  pos: compound cardinal
+  usage: "Двадцять п'ять студентів взяли участь в опитуванні."
+- lemma: останній компонент
+  translation: "last component"
+  pos: noun phrase
+  usage: "У складеному числі останній компонент визначає форму іменника."
+- lemma: непрямий відмінок
+  translation: "oblique case"
+  pos: noun phrase
+  usage: "У непрямому відмінку кажемо з двома столами, а не з два столи."
+- lemma: родовий множини
+  translation: "genitive plural"
+  pos: noun phrase
+  usage: "Після п'ять часто потрібен родовий множини: п'ять столів."
+- lemma: родовий однини
+  translation: "genitive singular"
+  pos: noun phrase
+  usage: "Половина яблука має іменник у родовому однини."
+- lemma: називний множини
+  translation: "nominative plural"
+  pos: noun phrase
+  usage: "Два столи має форму називного множини."
+- lemma: двоє
+  translation: "two, collective"
+  pos: collective numeral
+  usage: "Двоє дітей чекали біля школи."
+- lemma: троє
+  translation: "three, collective"
+  pos: collective numeral
+  usage: "Троє дверей у коридорі були зачинені."
+- lemma: четверо
+  translation: "four, collective"
+  pos: collective numeral
+  usage: "Четверо хлопців допомогли перенести столи."
+- lemma: обидва
+  translation: "both, masculine/neuter"
+  pos: collective-like numeral
+  usage: "Обидва учасники підписали форму."
+- lemma: обидві
+  translation: "both, feminine"
+  pos: collective-like numeral
+  usage: "Обидві кімнати вільні після обіду."
+- lemma: pluralia tantum
+  translation: "plural-only nouns"
+  pos: grammar term
+  usage: "Двері й окуляри належать до pluralia tantum."
+- lemma: двері
+  translation: "doors"
+  pos: plural noun
+  usage: "Троє дверей ведуть у різні аудиторії."
+- lemma: окуляри
+  translation: "glasses"
+  pos: plural noun
+  usage: "Двоє окулярів лежать у футлярах."
+- lemma: дитина
+  translation: "child"
+  pos: noun
+  usage: "Двоє дітей гралися біля будинку."
+- lemma: половина
+  translation: "half"
+  pos: noun
+  usage: "Половина яблука лежала на тарілці."
+- lemma: третина
+  translation: "third"
+  pos: noun
+  usage: "Третина групи відповіла українською."
+- lemma: чверть
+  translation: "quarter"
+  pos: noun
+  usage: "Чверть години минула непомітно."
+- lemma: півтора
+  translation: "one and a half, masculine/neuter"
+  pos: fractional numeral
+  usage: "Півтора кілограма борошна вистачить."
+- lemma: півтори
+  translation: "one and a half, feminine"
+  pos: fractional numeral
+  usage: "Півтори години ми працювали над текстом."
+- lemma: відсоток
+  translation: "percent"
+  pos: noun
+  usage: "Двадцять п'ять відсотків студентів обрали онлайн-курс."
+- lemma: тисяча
+  translation: "thousand"
+  pos: noun numeral
+  usage: "Тисяча гривень уже на рахунку."
+- lemma: мільйон
+  translation: "million"
+  pos: noun numeral
+  usage: "Мільйон людей може мати різні мовні звички."
+- lemma: гривня
+  translation: "hryvnia"
+  pos: noun
+  usage: "Дві гривні, п'ять гривень, двадцять одна гривня."
+- lemma: кілограм
+  translation: "kilogram"
+  pos: noun
+  usage: "Купіть два кілограми картоплі."
+- lemma: грам
+  translation: "gram"
+  pos: noun
+  usage: "Додайте триста грамів сиру."
+- lemma: літр
+  translation: "liter"
+  pos: noun
+  usage: "Потрібен один літр води."
+- lemma: забагато
+  translation: "too much, too many"
+  pos: adverbial quantifier
+  usage: "У рецепті забагато солі."
+- lemma: замало
+  translation: "too little, too few"
+  pos: adverbial quantifier
+  usage: "У вправі замало прикладів із дробами."
