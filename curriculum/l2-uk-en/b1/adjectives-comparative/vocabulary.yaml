@@ -1,0 +1,112 @@
+- lemma: вищий ступінь
+  translation: "comparative degree"
+  pos: phrase
+  usage: "Вищий ступінь показує більшу або меншу міру ознаки."
+- lemma: ступені порівняння
+  translation: "degrees of comparison"
+  pos: phrase
+  usage: "Ступені порівняння мають лише якісні прикметники."
+- lemma: проста форма
+  translation: "simple, synthetic form"
+  pos: phrase
+  usage: "Проста форма твориться за допомогою суфікса."
+- lemma: складена форма
+  translation: "compound, analytic form"
+  pos: phrase
+  usage: "Складена форма має слова більш або менш."
+- lemma: суфікс
+  translation: "suffix"
+  pos: noun
+  usage: "Суфікс -іш- додається до основи прикметника."
+- lemma: основа
+  translation: "stem"
+  pos: noun
+  usage: "Основа слова змінюється перед суфіксом -ш-."
+- lemma: початкова форма
+  translation: "base form"
+  pos: phrase
+  usage: "Початкова форма прикметника - називний чоловічий рід."
+- lemma: якісний прикметник
+  translation: "qualitative adjective"
+  pos: phrase
+  usage: "Якісний прикметник може мати більшу або меншу міру ознаки."
+- lemma: відносний прикметник
+  translation: "relative adjective"
+  pos: phrase
+  usage: "Відносний прикметник зазвичай не має ступенів порівняння."
+- lemma: абсолютна ознака
+  translation: "absolute quality"
+  pos: phrase
+  usage: "Абсолютна ознака не має більшої або меншої міри."
+- lemma: чергування приголосних
+  translation: "consonant alternation"
+  pos: phrase
+  usage: "У формі дорожчий відбувається чергування приголосних."
+- lemma: порівняльна конструкція
+  translation: "comparison construction"
+  pos: phrase
+  usage: "Порівняльна конструкція може мати прийменник за."
+- lemma: за
+  translation: "than, compared with"
+  pos: preposition
+  usage: "Київ більший за Львів."
+- lemma: від
+  translation: "than, from"
+  pos: preposition
+  usage: "Ця кімната світліша від попередньої."
+- lemma: ніж
+  translation: "than"
+  pos: conjunction
+  usage: "Ця дорога коротша, ніж стара."
+- lemma: більш
+  translation: "more"
+  pos: adverb
+  usage: "Більш офіційний варіант потрібен у заяві."
+- lemma: менш
+  translation: "less"
+  pos: adverb
+  usage: "Менш складне завдання підійде для початку."
+- lemma: набагато
+  translation: "much, significantly"
+  pos: adverb
+  usage: "Цей маршрут набагато коротший."
+- lemma: значно
+  translation: "considerably"
+  pos: adverb
+  usage: "Нова система значно зручніша."
+- lemma: дещо
+  translation: "somewhat"
+  pos: adverb
+  usage: "Ця відповідь дещо точніша."
+- lemma: трохи
+  translation: "a little"
+  pos: adverb
+  usage: "Ця кімната трохи світліша."
+- lemma: дорожчий
+  translation: "more expensive"
+  pos: adjective
+  usage: "Новий квиток дорожчий за старий."
+- lemma: ближчий
+  translation: "closer"
+  pos: adjective
+  usage: "Цей вихід ближчий до метро."
+- lemma: вищий
+  translation: "higher, taller"
+  pos: adjective
+  usage: "Будинок вищий за школу."
+- lemma: нижчий
+  translation: "lower, shorter"
+  pos: adjective
+  usage: "Стіл нижчий від полиці."
+- lemma: кращий
+  translation: "better"
+  pos: adjective
+  usage: "Кращий варіант не завжди дорожчий."
+- lemma: гірший
+  translation: "worse"
+  pos: adjective
+  usage: "Гірший результат теж корисний для аналізу."
+- lemma: чим... тим...
+  translation: "the... the..."
+  pos: construction
+  usage: "Чим коротший маршрут, тим зручніша поїздка."
