@@ -63,7 +63,33 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 57 HANDOFF (2026-06-18 — 📚 DOSSIER WAVE 4: +2 dossiers (історичні перекази, народна кухня/обрядова їжа) verified + batched into this PR. Gap 8 → 6.) — **RESUME HERE**
+## ▶▶▶ SESSION 58 HANDOFF (2026-06-18 — 📚 DOSSIER WAVE 5: +4 dossiers (ремесла, житло/садиба, анекдоти, регіони) batched into this PR. Gap 6 → 2. FINAL wave 9 (mistky + memoraty) in flight → gap → 0.) — **RESUME HERE**
+
+**🟢 ONE-LINE STATE:** Folk dossier gap **6 → 2** (this PR) → **0** when wave 9 lands. This batch PR (wave 5)
+adds `narodni-remesla-ta-khudozhni-promysly`, `narodne-zhytlo-sadyba-hospodarstvo`, `narodni-anekdoty`,
+`rehionalni-etnokulturni-tradytsii` — all 10-§, wordcount PASS, verify_quote-confirmed + corpus-hammered
+(remesla Франко «То в нас у роді, з батька на сина переходить» @1.0 `150f1f1a_c0005`). anekdoty correctly
+keeps degrading ethnic/gender stereotype material **analysis-only, not performance text** (decolonization).
+**Session total: 15 dossiers + 1 wiki across ≥6 PRs.**
+
+### 🎯 DOSSIER GAP — IN FLIGHT (wave 9, FINAL): `narodna-kultura-ta-vysoka-kultura-mistky` (synthesis) +
+`narodni-opovidannia-buvalshchyny-memoraty`. When they land + verify + merge → **dossier coverage 42/42 = COMPLETE.**
+
+### 🖼 WIKI LANE (the next big workstream once dossiers done) — writer = **claude** (agy FAILS; charivni-kazky
+shipped MIN 9.0, PR #3561). 8 dossier-ready slugs: kazky-pro-tvaryn, kolomyiky, narodni-balady,
+pisni-literaturnoho-pokhodzhennia, rodynno-pobutovi-pisni, sotsialno-pobutovi-kazky, striletski-povstanski-pisni,
+suspilno-pobutovi-pisni (+ the now-complete dossiers unlock the rest of the 42-wiki set). Recipe in S56.
+**USER DECISION PENDING:** default folk wikis to claude (proven, ~11min/wiki metered) or A/B gpt-5.5 first?
+
+### ⚠️ INFRA carried (#0.2): `search_images` SigLIP deferred for l2-uk-en; `render_canonical_formulas_block`
+unwired in wiki writer prompt; `index.md` batch-regen owed after wiki batch (+ drop phantom
+`folk/genres/charivni-kazky.md` entry); `--writer` help-string vs "Gemini-family always" policy reconciliation — HOLD for user nod.
+### 📓 CORPUS FINDING (S55, holds): literary corpus thin on short-form verbatims (riddles, anekdoty, dance/oral
+1st-person) → those genres ship quote-sparse §4 with liberal do-not-quote. Not a writer failure.
+
+### IN-FLIGHT: wave 9 (mistky, memoraty). Merge grant LIVE; worktree-only; never main.
+
+## ▶▶▶ SESSION 57 HANDOFF (2026-06-18 — 📚 DOSSIER WAVE 4: +2 dossiers (історичні перекази, народна кухня/обрядова їжа) verified + batched into PR #3562 (MERGED). Gap 8 → 6.)
 
 **🟢 ONE-LINE STATE:** Folk dossier gap **8 → 6**. This batch PR (wave 4) adds `istorychni-perekazy`,
 `narodna-kukhnia-obriadova-yizha` — both 10-section, wordcount PASS, verify_quote-confirmed + corpus-hammered
