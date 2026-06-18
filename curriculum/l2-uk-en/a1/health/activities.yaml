@@ -234,3 +234,27 @@ workbook:
           - text: 'У мене кашель.'
             correct: false
         explanation: 'Use Повторіть, будь ласка.'
+  - type: error-correction
+    title: Repair health chunks
+    instruction: Fix the sentence by using the safe A1 health phrase.
+    items:
+      - sentence: 'Моя голова болить.'
+        error: 'Моя голова болить'
+        correction: 'У мене болить голова'
+        explanation: 'Use У мене болить + body part.'
+      - sentence: 'Я маю біль голова.'
+        error: 'Я маю біль голова'
+        correction: 'У мене болить голова'
+        explanation: 'Use the natural Ukrainian health chunk.'
+      - sentence: 'Я є хворий.'
+        error: 'Я є хворий'
+        correction: 'Я хворий'
+        explanation: 'Say Я хворий without є.'
+      - sentence: 'Я потрібно лікар.'
+        error: 'Я потрібно лікар'
+        correction: 'Мені потрібен лікар'
+        explanation: 'Use the fixed help phrase.'
+      - sentence: 'У мене є нежить.'
+        error: 'У мене є нежить'
+        correction: 'У мене нежить'
+        explanation: 'Say У мене нежить without є.'
