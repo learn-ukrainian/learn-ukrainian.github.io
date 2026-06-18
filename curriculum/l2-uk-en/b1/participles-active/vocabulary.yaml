@@ -1,0 +1,132 @@
+- lemma: дієприкметник
+  translation: "participle"
+  pos: noun
+  usage: "Дієприкметник називає ознаку предмета за дією."
+- lemma: активний дієприкметник
+  translation: "active participle"
+  pos: phrase
+  usage: "Активний дієприкметник показує, що предмет сам виконує дію або сам змінився."
+- lemma: пасивний дієприкметник
+  translation: "passive participle"
+  pos: phrase
+  usage: "Пасивний дієприкметник називає ознаку за дією над предметом."
+- lemma: ознака за дією
+  translation: "attribute based on an action"
+  pos: phrase
+  usage: "Зів'ялий листок має ознаку за дією: листок зів'яв."
+- lemma: теперішній час
+  translation: "present tense"
+  pos: phrase
+  usage: "Активні дієприкметники теперішнього часу мають обмежене вживання."
+- lemma: минулий час
+  translation: "past tense"
+  pos: phrase
+  usage: "Форми минулого часу на -л- часто природніші."
+- lemma: суфікс
+  translation: "suffix"
+  pos: noun
+  usage: "Суфікс -л- творить форми зів'ялий, посивілий, розквітлий."
+- lemma: квітучий
+  translation: "blooming"
+  pos: adjective/participle
+  usage: "Квітучий сад є усталеним і природним образом."
+- lemma: палаючий
+  translation: "blazing, burning"
+  pos: adjective/participle
+  usage: "Палаючий вогонь описує предмет, що сам горить."
+- lemma: зів'ялий
+  translation: "wilted"
+  pos: participle
+  usage: "Зів'яла квітка стояла у вазі."
+- lemma: розквітлий
+  translation: "blossomed"
+  pos: participle
+  usage: "Розквітлий сад привабив гостей."
+- lemma: опалий
+  translation: "fallen, shed"
+  pos: participle
+  usage: "Опале листя лежало на доріжці."
+- lemma: зниклий
+  translation: "disappeared, missing"
+  pos: participle
+  usage: "Зниклий документ знайшли в архіві."
+- lemma: посивілий
+  translation: "gone grey"
+  pos: participle
+  usage: "Посивілий професор усміхнувся студентам."
+- lemma: пожовклий
+  translation: "yellowed"
+  pos: participle
+  usage: "Пожовклі сторінки зошита зберігали старі нотатки."
+- lemma: змарнілий
+  translation: "worn, emaciated"
+  pos: participle
+  usage: "Змарніле обличчя свідчило про втому."
+- lemma: збанкрутілий
+  translation: "bankrupt"
+  pos: participle
+  usage: "Збанкрутіле підприємство продали іншій компанії."
+- lemma: чинний
+  translation: "current, valid"
+  pos: adjective
+  usage: "Чинний закон діє зараз."
+- lemma: наявний
+  translation: "available, existing"
+  pos: adjective
+  usage: "Наявні умови описано в договорі."
+- lemma: мийний
+  translation: "washing, cleaning"
+  pos: adjective
+  usage: "Мийний засіб стоїть біля раковини."
+- lemma: охочий
+  translation: "willing, eager"
+  pos: adjective/noun
+  usage: "Усі охочі можуть записатися на консультацію."
+- lemma: завідувач
+  translation: "head, manager"
+  pos: noun
+  usage: "Завідувач кафедри підписав лист."
+- lemma: голова зборів
+  translation: "chair of a meeting"
+  pos: phrase
+  usage: "Голова зборів відкрив обговорення."
+- lemma: описовий зворот
+  translation: "descriptive phrase"
+  pos: phrase
+  usage: "Описовий зворот допомагає уникнути кальки."
+- lemma: підрядне речення
+  translation: "subordinate clause"
+  pos: phrase
+  usage: "Студенти, які працюють над проєктом, звучать природніше."
+- lemma: калька
+  translation: "calque"
+  pos: noun
+  usage: "Діючий закон у цьому значенні є калькою."
+- lemma: природний відповідник
+  translation: "natural equivalent"
+  pos: phrase
+  usage: "Чинний є природним відповідником до діючий у правовому контексті."
+- lemma: несуча конструкція
+  translation: "load-bearing structure"
+  pos: phrase
+  usage: "Несуча конструкція є технічним терміном."
+- lemma: блукаючий нерв
+  translation: "vagus nerve"
+  pos: phrase
+  usage: "Блукаючий нерв - усталений анатомічний термін."
+- lemma: лежачий хворий
+  translation: "bedridden patient"
+  pos: phrase
+  usage: "Лежачий хворий потребує особливого догляду."
+- lemma: родючий ґрунт
+  translation: "fertile soil"
+  pos: phrase
+  usage: "Родючий ґрунт добре підходить для саду."
+- lemma: співучий
+  translation: "melodious, songlike"
+  pos: adjective
+  usage: "Співуча мова звучить м'яко."
+- lemma: живучий
+  translation: "tenacious, resilient"
+  pos: adjective
+  usage: "Живуча рослина витримала холод."
