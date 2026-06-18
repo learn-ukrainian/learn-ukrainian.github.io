@@ -1,0 +1,32 @@
+- title: "B1 M56: instrumental nuances"
+  role: curriculum
+  notes: "Попередньо вводить перед + Ор.в. і за + Ор.в.; M58 відокремлює часове за + Зн.в. та перед + Ор.в. у часовій функції."
+- title: "B1 M57: vocative formal"
+  role: curriculum
+  notes: "Попередній модуль у навігації; M58 продовжує фазу B1.5 про відмінкові й прийменникові нюанси."
+- title: "B1 M59: places and locations"
+  role: curriculum
+  notes: "Наступний модуль використовуватиме до + Р.в. для напрямку; M58 закріплює до + Р.в. як часову межу."
+- title: "B1 M60: prepositions cause purpose"
+  role: curriculum
+  notes: "Наступний прийменниковий модуль поверне через у причинному значенні; M58 фокусує через + Зн.в. як часовий інтервал."
+- title: "Авраменко Grade 11, §14"
+  role: textbook
+  notes: "Подає нормативні годинникові форми: о/об для точного часу, на/по для правої частини циферблата, за/до для лівої частини, пів на шосту; застерігає від кальок типу без десяти шість."
+  source_ref: "11-klas-ukrmova-avramenko-2019, §14, pp.41-44"
+- title: "Авраменко Grade 11, §22-23"
+  role: textbook
+  notes: "Пояснює нормативні значення прийменника по, зокрема часові по обіді, по смерті, по п'яте липня, та відрізняє їх від калькованого надуживання."
+  source_ref: "11-klas-ukrmova-avramenko-2019, §22-23, pp.71-75"
+- title: "Литвінова Grade 7, §30"
+  role: textbook
+  notes: "Подає протягом/упродовж для часової тривалості, розмежовує на протязі як буквальний протяг, і наводить часові приклади з по."
+  source_ref: "7-klas-ukrmova-litvinova-2024, §30, pp.181-190"
+- title: "Заболотний Grade 7"
+  role: textbook
+  notes: "Підтримує виправлення часових кальок на протязі -> протягом та розрізнення через у часовому й причинному контекстах."
+  source_ref: "7-klas-ukrmova-zabolotnyi, p.193"
+- title: "Headroom source retrieval"
+  role: orchestration
+  notes: "Стислий запис пошуку джерел, планового контексту й read-only helper memo для M58."
+  source_ref: "headroom hashes 6f66faa35711b375e4c02260; 939f694c99cce9296a693f38"
