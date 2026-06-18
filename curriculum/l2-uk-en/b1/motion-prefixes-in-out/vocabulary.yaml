@@ -1,0 +1,160 @@
+- lemma: зайти
+  translation: "to enter, drop by; perfective"
+  pos: verb
+  usage: "Зайдіть у кабінет після наради."
+- lemma: зайду
+  translation: "I will enter, I will drop by"
+  pos: verb form
+  usage: "Після роботи я зайду до аптеки."
+- lemma: зайшов
+  translation: "entered, dropped by; masculine past"
+  pos: verb form
+  usage: "Новий працівник зайшов до офісу вчасно."
+- lemma: зайшла
+  translation: "entered, dropped by; feminine past"
+  pos: verb form
+  usage: "Вона зайшла в кав'ярню по каву."
+- lemma: заїхати
+  translation: "to drive in, stop by by vehicle; perfective"
+  pos: verb
+  usage: "Машина заїхала у двір повільно."
+- lemma: заїду
+  translation: "I will drive in, I will stop by"
+  pos: verb form
+  usage: "Завтра я заїду до сервісу перед роботою."
+- lemma: забігти
+  translation: "to run in, pop in briefly; perfective"
+  pos: verb
+  usage: "Студент забіг до друкарні перед парою."
+- lemma: забіжу
+  translation: "I will run in, I will pop in briefly"
+  pos: verb form
+  usage: "Я забіжу до пошти на п'ять хвилин."
+- lemma: занести
+  translation: "to carry in; perfective"
+  pos: verb
+  usage: "Занеси парасолю в дім, бо починається дощ."
+- lemma: занесу
+  translation: "I will carry in"
+  pos: verb form
+  usage: "Я занесу коробку до кабінету."
+- lemma: завести
+  translation: "to lead or bring someone in; perfective"
+  pos: verb
+  usage: "Секретар завів гостя до переговорної."
+- lemma: завезти
+  translation: "to deliver or transport in; perfective"
+  pos: verb
+  usage: "Кур'єр завіз меблі на склад."
+- lemma: залетіти
+  translation: "to fly in; perfective"
+  pos: verb
+  usage: "Птах залетів у відчинене вікно."
+- lemma: заплисти
+  translation: "to sail or swim in; perfective"
+  pos: verb
+  usage: "Човен заплив у тиху затоку."
+- lemma: заходити
+  translation: "to enter, drop by habitually; imperfective"
+  pos: verb
+  usage: "Сусід часто заходить до нас увечері."
+- lemma: заїжджати
+  translation: "to drive in, stop by habitually; imperfective"
+  pos: verb
+  usage: "Вона заїжджає на парковку дуже обережно."
+- lemma: забігати
+  translation: "to run in, pop in habitually; imperfective"
+  pos: verb
+  usage: "Колега іноді забігає до кав'ярні перед роботою."
+- lemma: заносити
+  translation: "to carry in habitually or repeatedly"
+  pos: verb
+  usage: "Працівники заносять коробки в архів щоп'ятниці."
+- lemma: вийти
+  translation: "to exit, go out; perfective"
+  pos: verb
+  usage: "Вийдіть з будівлі через бічні двері."
+- lemma: вийду
+  translation: "I will exit, I will go out"
+  pos: verb form
+  usage: "Я вийду з офісу о шостій."
+- lemma: вийшов
+  translation: "exited, went out; masculine past"
+  pos: verb form
+  usage: "Директор вийшов з кабінету після зустрічі."
+- lemma: вийшла
+  translation: "exited, went out; feminine past"
+  pos: verb form
+  usage: "Вона вийшла на вулицю без парасолі."
+- lemma: виїхати
+  translation: "to drive out, leave by vehicle; perfective"
+  pos: verb
+  usage: "Автомобіль виїхав з гаража."
+- lemma: виїду
+  translation: "I will drive out"
+  pos: verb form
+  usage: "Я виїду з двору після вантажівки."
+- lemma: вибігти
+  translation: "to run out; perfective"
+  pos: verb
+  usage: "Діти вибігли з класу на перерву."
+- lemma: вибіжу
+  translation: "I will run out"
+  pos: verb form
+  usage: "Я вибіжу з під'їзду, коли приїде таксі."
+- lemma: винести
+  translation: "to carry out; perfective"
+  pos: verb
+  usage: "Винеси сміття з кухні, будь ласка."
+- lemma: винесу
+  translation: "I will carry out"
+  pos: verb form
+  usage: "Я винесу стільці з аудиторії після заняття."
+- lemma: вивести
+  translation: "to lead or bring someone out; perfective"
+  pos: verb
+  usage: "Учителька вивела дітей з музею."
+- lemma: вивезти
+  translation: "to transport out; perfective"
+  pos: verb
+  usage: "Вантажівка вивезла коробки зі складу."
+- lemma: вилетіти
+  translation: "to fly out; perfective"
+  pos: verb
+  usage: "Птах вилетів з кімнати через балкон."
+- lemma: виплисти
+  translation: "to swim or sail out; perfective"
+  pos: verb
+  usage: "Човен виплив із затоки на річку."
+- lemma: виходити
+  translation: "to exit, go out habitually or in process; imperfective"
+  pos: verb
+  usage: "Щодня вона виходить з дому о восьмій."
+- lemma: виїжджати
+  translation: "to drive out habitually or in process; imperfective"
+  pos: verb
+  usage: "Ми виїжджаємо з міста рано-вранці."
+- lemma: вибігати
+  translation: "to run out habitually or in process"
+  pos: verb
+  usage: "Діти вибігають з класу після дзвінка."
+- lemma: виносити
+  translation: "to carry out habitually or repeatedly"
+  pos: verb
+  usage: "Черговий виносить сміття з офісу щовечора."
+- lemma: кав'ярня
+  translation: "cafe"
+  pos: noun:f
+  usage: "Ми зайшли в кав'ярню по каву."
+- lemma: двір
+  translation: "courtyard, yard"
+  pos: noun:m
+  usage: "Машина виїхала з двору на головну дорогу."
+- lemma: бічний вхід
+  translation: "side entrance"
+  pos: phrase
+  usage: "Вийдіть через бічний вхід, бо центральні двері зачинені."
+- lemma: парковка
+  translation: "parking lot"
+  pos: noun:f
+  usage: "Таксі заїхало на парковку біля офісу."
