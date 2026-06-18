@@ -1,0 +1,120 @@
+- lemma: однорідний
+  translation: "homogeneous, syntactically parallel"
+  pos: adjective
+  usage: "Однорідні члени відповідають на те саме питання."
+- lemma: однорідні члени
+  translation: "homogeneous sentence members"
+  pos: phrase
+  usage: "У реченні У кошику лежали яблука, груші й сливи є однорідні підмети."
+- lemma: синтаксична роль
+  translation: "syntactic role"
+  pos: phrase
+  usage: "Однорідні члени мають однакову синтаксичну роль."
+- lemma: залежати
+  translation: "to depend on, be governed by"
+  pos: verb
+  usage: "Усі три додатки залежать від присудка купили."
+- lemma: питання
+  translation: "question"
+  pos: noun
+  usage: "Поставте те саме питання до кожного слова в переліку."
+- lemma: сполучник
+  translation: "conjunction"
+  pos: noun
+  usage: "Сполучник і може з'єднувати однорідні члени без коми."
+- lemma: єднальний
+  translation: "additive, connective"
+  pos: adjective
+  usage: "І, й, та в значенні і - єднальні сполучники."
+- lemma: протиставний
+  translation: "adversative, contrastive"
+  pos: adjective
+  usage: "Перед протиставним але ставимо кому."
+- lemma: розділовий
+  translation: "disjunctive, alternative"
+  pos: adjective
+  usage: "Або і чи можуть бути розділовими сполучниками."
+- lemma: повторюваний сполучник
+  translation: "repeated conjunction"
+  pos: phrase
+  usage: "У моделі і...і кома стоїть перед повторюваними сполучниками."
+- lemma: одиничний сполучник
+  translation: "single conjunction"
+  pos: phrase
+  usage: "Перед одиничним і між однорідними членами коми немає."
+- lemma: узагальнювальне слово
+  translation: "generalizing word"
+  pos: phrase
+  usage: "Усе - узагальнювальне слово в реченні Усе: книжки, зошити, ручки - лежало на столі."
+- lemma: перелік
+  translation: "list, enumeration"
+  pos: noun
+  usage: "Після узагальнювального слова може стояти перелік."
+- lemma: двокрапка
+  translation: "colon"
+  pos: noun
+  usage: "Двокрапку ставимо після узагальнювального слова перед переліком."
+- lemma: тире
+  translation: "dash"
+  pos: noun
+  usage: "Тире ставимо після переліку перед узагальнювальним словом."
+- lemma: кома
+  translation: "comma"
+  pos: noun
+  usage: "Кома потрібна перед але й проте."
+- lemma: пунктуація
+  translation: "punctuation"
+  pos: noun
+  usage: "Пунктуація показує межі переліку."
+- lemma: перелічувальна інтонація
+  translation: "enumerative intonation"
+  pos: phrase
+  usage: "Перелічувальна інтонація допомагає почути однорідні члени."
+- lemma: підмет
+  translation: "subject"
+  pos: noun
+  usage: "Діти й дорослі - однорідні підмети."
+- lemma: присудок
+  translation: "predicate"
+  pos: noun
+  usage: "Вона читала, писала й редагувала - однорідні присудки."
+- lemma: додаток
+  translation: "object"
+  pos: noun
+  usage: "Ми купили хліб, сир і молоко - однорідні додатки."
+- lemma: означення
+  translation: "attribute, modifier"
+  pos: noun
+  usage: "Теплий, ясний день почався рано - однорідні означення."
+- lemma: обставина
+  translation: "adverbial modifier"
+  pos: noun
+  usage: "Він працював тихо, уважно й швидко - однорідні обставини."
+- lemma: асиндетон
+  translation: "asyndeton"
+  pos: noun
+  usage: "Асиндетон створює швидкий ритм: Прийшов, побачив, переміг."
+- lemma: полісиндетон
+  translation: "polysyndeton"
+  pos: noun
+  usage: "Полісиндетон уповільнює перелік: і дощ, і вітер, і холод."
+- lemma: редагувати
+  translation: "to edit"
+  pos: verb
+  usage: "Редагуйте речення, щоб пунктуація відповідала правилу."
+- lemma: двокрапка з тире
+  translation: "colon plus dash"
+  pos: phrase
+  usage: "Якщо речення продовжується після переліку, можлива модель двокрапка з тире."
+- lemma: синтаксис
+  translation: "syntax"
+  pos: noun
+  usage: "Синтаксис пояснює, як члени речення пов'язані між собою."
+- lemma: ускладнене речення
+  translation: "complicated simple sentence"
+  pos: phrase
+  usage: "Речення з однорідними членами є ускладненим простим реченням."
+- lemma: сурядний зв'язок
+  translation: "coordination"
+  pos: phrase
+  usage: "Сурядний зв'язок об'єднує рівноправні члени речення."
