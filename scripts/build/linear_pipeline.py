@@ -10615,9 +10615,12 @@ def _normalize_for_vesum(lemma: str) -> str:
             lambda m: _strip_morpheme_hyphen(m.group(1)),
             text,
         )
-    text = re.sub(r"^(?:\*\*|\*|_)+", "", text.strip())
-    text = re.sub(r"(?:\*\*|\*|_)+$", "", text)
+    text = _strip_markdown_edge_markers(text)
     return _canonicalize_vesum_apostrophes(text).strip()
+
+
+def _strip_markdown_edge_markers(text: str) -> str:
+    return text.strip().lstrip("*_").rstrip("*_")
 
 
 def _canonicalize_vesum_apostrophes(text: str) -> str:
