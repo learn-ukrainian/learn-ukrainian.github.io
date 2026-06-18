@@ -1,7 +1,11 @@
 # Мої плани
 
-You can now say what will happen with **буду / будеш / буде / будемо /
-будете / будуть + infinitive**. This step uses that pattern for real plans:
+<!-- plan_coverage_audit objectives=4 content_sections=4 dialogue_situations=1 activity_hints=3 covered=true missing=[] -->
+<!-- bad_form_audit bad_form_patterns_found=5 marked_with_bad_tags=5 remaining_unmarked=0 -->
+<!-- activity_split_audit level=A1 inline_n=4 workbook_n=6 inline_range=[4,6] workbook_range=[6,9] split_valid=true -->
+
+Привіт! You can now say what will happen with **буду / будеш / буде / будемо
+/ будете / будуть + infinitive**. This step uses that pattern for real plans:
 days, times, invitations, and short answers.
 
 The core planning line is:
@@ -102,6 +106,41 @@ This dialogue combines:
 - planning words: **план**, **тиждень**, **зустріч**, **вечірка**;
 - answers: **звичайно**, **з задоволенням**, **на жаль, не можу**.
 
+### Груповий чат: плануємо вихідні
+
+This short chat adds one real weekend problem: three friends have different
+plans, but they still find one shared time.
+
+```text
+Олена: У суботу буду прибирати квартиру.
+Тарас: А я буду бігати в парку.
+Марія: Може, ввечері підемо в кіно?
+Олена: Ходімо!
+Тарас: О котрій?
+Марія: О шостій.
+Тарас: Добре, я буду вільний.
+Олена: Чудово. До зустрічі!
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Олена: У суботу буду прибирати квартиру.** | Olena: On Saturday I will clean the apartment. |
+| **Тарас: А я буду бігати в парку.** | Taras: And I will run in the park. |
+| **Марія: Може, ввечері підемо в кіно?** | Mariia: Maybe in the evening we will go to the cinema? |
+| **Олена: Ходімо!** | Olena: Let's go! |
+| **Тарас: О котрій?** | Taras: At what time? |
+| **Марія: О шостій.** | Mariia: At six. |
+| **Тарас: Добре, я буду вільний.** | Taras: Good, I will be free. |
+| **Олена: Чудово. До зустрічі!** | Olena: Great. See you! |
+
+:::note[A1 boundary]
+For your own answer, keep the easy M50 pattern: **я буду прибирати**, **я
+буду бігати**, **я буду вільний / вільна**. Treat **підемо** and **Ходімо!**
+as invitation chunks you can recognize and reuse.
+:::
+
 <!-- INJECT_ACTIVITY: act-2 -->
 
 ## Планування
@@ -200,11 +239,11 @@ Keep the M50 rule inside your weekly plan:
 
 | Learner sentence | Better A1 sentence |
 | --- | --- |
-| <del>**У суботу я буду прибираю квартиру.**</del> | **У суботу я буду прибирати квартиру.** |
-| <del>**У неділю ми будемо відпочиваємо.**</del> | **У неділю ми будемо відпочивати.** |
-| <del>**О шостій ви будете дивитеся кіно.**</del> | **О шостій ви будете дивитися кіно.** |
-| <del>**Вони будуть готують на вечірку.**</del> | **Вони будуть готувати на вечірку.** |
-| <del>**На шостій ми будемо дивитися кіно.**</del> | **О шостій ми будемо дивитися кіно.** |
+| <bad>**У суботу я буду прибираю квартиру.**</bad> | **У суботу я буду прибирати квартиру.** |
+| <bad>**У неділю ми будемо відпочиваємо.**</bad> | **У неділю ми будемо відпочивати.** |
+| <bad>**О шостій ви будете дивитеся кіно.**</bad> | **О шостій ви будете дивитися кіно.** |
+| <bad>**Вони будуть готують на вечірку.**</bad> | **Вони будуть готувати на вечірку.** |
+| <bad>**На шостій ми будемо дивитися кіно.**</bad> | **О шостій ми будемо дивитися кіно.** |
 
 Use **о** with clock time:
 
@@ -255,5 +294,6 @@ Self-check:
 3. Did you use **буду / будеш / буде / будемо / будете / будуть + infinitive**?
 4. Did you answer the invitation politely?
 
+You can now make a weekend plan and answer an invitation with one polite line.
 Stop here after your week plan. The next module moves to a personal story, but
 this module stays with plans, invitations, days, and times.
