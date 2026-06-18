@@ -308,6 +308,48 @@ workbook:
       - statement: 'Добрий день and До побачення are the clean etiquette forms here.'
         answer: true
         explanation: 'The lesson keeps Ukrainian greeting and goodbye language clean.'
+  - type: group-sort
+    title: Address register
+    instruction: Sort each address by the situation where it fits best.
+    groups:
+      - name: 'Family address'
+        items:
+          - 'мамо'
+          - 'тату'
+          - 'бабусю'
+          - 'дідусю'
+      - name: 'Friend or classmate address'
+        items:
+          - 'друже'
+          - 'Олено'
+          - 'Тарасе'
+          - 'Маріє'
+      - name: 'Polite service address'
+        items:
+          - 'пане Іване'
+          - 'пане Сергію'
+          - 'пані Оксано'
+          - 'пані Маріє'
+  - type: unjumble
+    title: Build address lines
+    instruction: Put each line in a natural order.
+    items:
+      - words: ['Олено', 'привіт']
+        answer: 'Олено, привіт!'
+      - words: ['Тарасе', 'ходи', 'сюди']
+        answer: 'Тарасе, ходи сюди.'
+      - words: ['Мамо', 'де', 'телефон']
+        answer: 'Мамо, де телефон?'
+      - words: ['Гей', 'друже']
+        answer: 'Гей, друже!'
+      - words: ['Добрий', 'день', 'пане', 'Іване']
+        answer: 'Добрий день, пане Іване!'
+      - words: ['Пані', 'Оксано', 'ось', 'меню']
+        answer: 'Пані Оксано, ось меню.'
+      - words: ['Маріє', 'радий', 'тебе', 'бачити']
+        answer: 'Маріє, радий тебе бачити!'
+      - words: ['Андрію', 'дякую']
+        answer: 'Андрію, дякую.'
   - type: error-correction
     title: Fix the address
     instruction: Correct the address form in each sentence.
