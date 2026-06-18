@@ -4,20 +4,20 @@ inline:
     title: Хто чи що?
     instruction: Choose whether the word answers хто? or що?
     items:
-      - prompt: 'учитель'
+      - prompt: 'вчитель'
         options:
           - text: 'хто?'
             correct: true
           - text: 'що?'
             correct: false
         explanation: 'A teacher is a person.'
-      - prompt: 'директор'
+      - prompt: 'лікар'
         options:
           - text: 'хто?'
             correct: true
           - text: 'що?'
             correct: false
-        explanation: 'A director is a person.'
+        explanation: 'A doctor is a person.'
       - prompt: 'тато'
         options:
           - text: 'хто?'
@@ -38,7 +38,7 @@ inline:
             correct: true
           - text: 'хто?'
             correct: false
-        explanation: 'Plants are граматичні неістоти in Ukrainian.'
+        explanation: 'Plants answer що? in this grammar contrast.'
       - prompt: 'хліб'
         options:
           - text: 'що?'
@@ -246,12 +246,62 @@ workbook:
       - statement: 'Я бачу його is a useful pronoun chunk.'
         answer: true
         explanation: 'Його is an object pronoun chunk.'
-      - statement: 'Натовп is treated as a person for this contrast.'
+      - statement: 'Я чекаю лікаря uses the object form лікаря.'
+        answer: true
+        explanation: 'Лікар becomes лікаря.'
+      - statement: 'Я знаю друга keeps друг unchanged.'
         answer: false
-        explanation: 'Натовп is a collective noun treated as inanimate.'
-      - statement: 'Plural instrumental endings are the main A1 goal here.'
-        answer: false
-        explanation: 'They are only a later bridge note.'
+        explanation: 'Друг becomes друга.'
+  - type: match-up
+    title: People and things questions
+    instruction: Match each word with the question it answers in this lesson.
+    pairs:
+      - left: 'мама'
+        right: 'кого?'
+      - left: 'брат'
+        right: 'кого?'
+      - left: 'лікар'
+        right: 'кого?'
+      - left: 'хліб'
+        right: 'що?'
+      - left: 'дерево'
+        right: 'що?'
+      - left: 'кава'
+        right: 'що?'
+  - type: unjumble
+    title: Build people lines
+    instruction: Put the words in a natural order.
+    items:
+      - words:
+          - 'Кого'
+          - 'ти'
+          - 'бачиш'
+        answer: 'Кого ти бачиш'
+      - words:
+          - 'Я'
+          - 'бачу'
+          - 'маму'
+        answer: 'Я бачу маму'
+      - words:
+          - 'Я'
+          - 'знаю'
+          - 'друга'
+        answer: 'Я знаю друга'
+      - words:
+          - 'Я'
+          - 'чекаю'
+          - 'лікаря'
+        answer: 'Я чекаю лікаря'
+      - words:
+          - 'Вона'
+          - 'знає'
+          - 'мене'
+        answer: 'Вона знає мене'
+      - words:
+          - 'Я'
+          - 'бачу'
+          - 'хліб'
+        answer: 'Я бачу хліб'
   - type: order
     title: Introduce a brother
     instruction: Put the dialogue in order.
@@ -294,21 +344,21 @@ workbook:
           - 'Я люблю він.'
           - 'Я люблю йому.'
         explanation: 'Use the object pronoun його.'
-      - sentence: 'Ми бачимо велику натовп.'
-        error: 'Ми бачимо велику натовп.'
-        answer: 'Ми бачимо великий натовп.'
+      - sentence: 'Я чекаю лікар.'
+        error: 'Я чекаю лікар.'
+        answer: 'Я чекаю лікаря.'
         options:
-          - 'Ми бачимо великий натовп.'
-          - 'Ми бачимо велику натовп.'
-          - 'Ми бачимо великого натовпа.'
-        explanation: 'Натовп is treated as inanimate here.'
-      - sentence: 'Я зустрів сусіду.'
-        error: 'Я зустрів сусіду.'
-        answer: 'Я зустрів сусіда.'
+          - 'Я чекаю лікаря.'
+          - 'Я чекаю лікар.'
+          - 'Я чекаю лікарем.'
+        explanation: 'Лікар becomes лікаря.'
+      - sentence: 'Я бачу сусіду.'
+        error: 'Я бачу сусіду.'
+        answer: 'Я бачу сусіда.'
         options:
-          - 'Я зустрів сусіда.'
-          - 'Я зустрів сусіду.'
-          - 'Я зустрів сусідом.'
+          - 'Я бачу сусіда.'
+          - 'Я бачу сусіду.'
+          - 'Я бачу сусідом.'
         explanation: 'Сусід becomes сусіда.'
       - sentence: 'Він має 20 років.'
         error: 'Він має 20 років.'
