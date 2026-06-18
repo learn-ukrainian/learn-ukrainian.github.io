@@ -110,6 +110,26 @@
   translation: bread
   pos: noun
   example: "Я їм хліб."
+- word: чай
+  translation: tea
+  pos: noun
+  example: "Вона п'є чай."
+- word: масло
+  translation: butter
+  pos: noun
+  example: "Це масло."
+- word: маслом
+  translation: butter (with butter form)
+  pos: noun form
+  example: "Хліб з маслом."
+- word: яйце
+  translation: egg
+  pos: noun
+  example: "Це яйце."
+- word: яйця
+  translation: eggs
+  pos: noun
+  example: "Вони їдять яйця."
 - word: суп
   translation: soup
   pos: noun

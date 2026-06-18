@@ -1,17 +1,27 @@
 # Я їм, я п'ю
 
-You already know food and drink words. Now you can say what you eat and drink
-with the two everyday verbs **їсти** and **пити**. This is also the first clear
-A1 place for the direct object: the food or drink that receives the action.
+<!-- <implementation_map_audit>manifest_obligations=13 covered_in_map=13 missing=[]</implementation_map_audit> -->
+<!-- <bad_form_audit>italic_bad_form_patterns_found=11 converted_to_marker=11 remaining=0</bad_form_audit> -->
+<!-- <activity_split_audit>level=A1 inline_n=4 workbook_n=6 inline_range=[4,6] workbook_range=[6,9] split_valid=true</activity_split_audit> -->
+
+**Їм. П'ю. Каву. Воду.** You already know food and drink words. Now you can
+make a small daily line: what you eat, what you drink, and what direct-object
+form the food noun takes after the verb.
+
+This is a manageable A1 step. The two everyday verbs are **їсти** and
+**пити**. The food or drink after them is the direct object: the noun phrase
+that answers **що?** after the verb.
 
 The key question is **що?**:
 
 - **Я їм що?** - **хліб**, **суп**, **кашу**.
 - **Я п'ю що?** - **чай**, **сік**, **воду**.
 
-For inanimate food and drink words, most forms stay familiar. The main new
-change is feminine **-а/-я -> -у/-ю**: **кава -> каву**,
-**вода -> воду**, **риба -> рибу**, **картопля -> картоплю**.
+For inanimate food and drink words, most forms stay familiar. You have already
+seen the visible ending **-а/-я -> -у/-ю** in earlier **куди?** direction
+lines. Here the same small ending helps with a new question: **що я їм? що я
+п'ю?** **Кава -> каву**, **вода -> воду**, **риба -> рибу**,
+**картопля -> картоплю**.
 
 By the end, you can:
 
@@ -28,12 +38,10 @@ By the end, you can:
 :::tip
 Ask **що?** after **їсти**, **пити**, **хотіти**, **любити**, **купувати**, and
 **бачити**. If the object is a feminine food or drink word ending in **-а/-я**,
-expect **-у/-ю**.
+expect **-у/-ю**. Same visible ending, new job.
 :::
 
 ## Діалоги
-
-<!-- INJECT_ACTIVITY: act-1 -->
 
 ### Розмова за сніданком
 
@@ -51,13 +59,22 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Мама: Що ти їси на сніданок?** | Mom: What are you eating for breakfast? |
-| **Данило: Я їм кашу і п'ю каву.** | Danylo: I am eating porridge and drinking coffee. |
-| **Мама: А Олена?** | Mom: And Olena? |
-| **Данило: Вона їсть хліб з маслом і п'є чай.** | Danylo: She eats bread with butter and drinks tea. |
-| **Мама: А діти?** | Mom: And the children? |
-| **Данило: Вони їдять яйця і п'ють молоко.** | Danylo: They eat eggs and drink milk. |
-| **Мама: Добре. Смачного!** | Mom: Good. Enjoy your meal! |
+| Мама: Що ти їси на сніданок? | Mom: What are you eating for breakfast? |
+| Данило: Я їм кашу і п'ю каву. | Danylo: I am eating porridge and drinking coffee. |
+| Мама: А Олена? | Mom: And Olena? |
+| Данило: Вона їсть хліб з маслом і п'є чай. | Danylo: She eats bread with butter and drinks tea. |
+| Мама: А діти? | Mom: And the children? |
+| Данило: Вони їдять яйця і п'ють молоко. | Danylo: They eat eggs and drink milk. |
+| Мама: Добре. Смачного! | Mom: Good. Enjoy your meal! |
+
+New words in that scene:
+
+- **чай** - tea;
+- **яйця** - eggs;
+- **хліб з маслом** - bread with butter.
+
+Treat **з маслом** as one food phrase here; you do not need the full grammar of
+**з** today.
 
 The dialogue gives the full sound of both verbs without a chart first:
 **я їм**, **вона їсть**, **вони їдять**; **я п'ю**, **вона п'є**,
@@ -67,10 +84,12 @@ not **<!-- bad -->Я є їм хліб<!-- /bad -->**.
 This is the **перша особа** path first: **я їм** and **я п'ю** become complete
 when a **прямий об'єкт** answers **що?**.
 
-The food is also doing grammar work. **Каша** becomes **кашу** after
+The nouns also show the grammar pattern. **Каша** becomes **кашу** after
 **я їм** because it answers **що?** and ends in **-а**. **Кава** becomes
 **каву** after **я п'ю** for the same reason. But **хліб**, **чай**, **молоко**,
 and **яйце** stay the same in these inanimate food lines.
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 ### За обідом на роботі
 
@@ -87,12 +106,12 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Ірина: Що ви їсте на обід?** | Iryna: What are you eating for lunch? |
-| **Колеги: Ми їмо суп і салат.** | Coworkers: We are eating soup and salad. |
-| **Ірина: А що п'єте?** | Iryna: And what are you drinking? |
-| **Колеги: Ми п'ємо воду або сік.** | Coworkers: We are drinking water or juice. |
-| **Ірина: Я теж хочу суп і воду.** | Iryna: I also want soup and water. |
-| **Колега: Добре, замовляй.** | Coworker: Good, order. |
+| Ірина: Що ви їсте на обід? | Iryna: What are you eating for lunch? |
+| Колеги: Ми їмо суп і салат. | Coworkers: We are eating soup and salad. |
+| Ірина: А що п'єте? | Iryna: And what are you drinking? |
+| Колеги: Ми п'ємо воду або сік. | Coworkers: We are drinking water or juice. |
+| Ірина: Я теж хочу суп і воду. | Iryna: I also want soup and water. |
+| Колега: Добре, замовляй. | Coworker: Okay, go ahead and order. |
 
 Here **ми їмо** and **ми п'ємо** move the verbs into the plural. The direct
 objects stay simple: **суп**, **салат**, **сік** do not change; **вода** becomes
@@ -106,9 +125,8 @@ form: **Я хочу воду**, **я хочу каву**, **я хочу суп**
 
 ## Їсти і пити
 
-The verb **їсти** is irregular. Learn it as its own small system. Ukrainian
-school grammar, including a **Заболотний, 7 клас** verb table, treats **їсти**
-as a special present-tense pattern rather than a regular model.
+The verb **їсти** is irregular. Learn it as its own small system. Do not try to
+force it into a regular pattern; for today, the six useful forms are enough.
 
 | Person | Їсти | Example |
 | --- | --- | --- |
@@ -148,14 +166,20 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Я їм хліб.** | I eat bread. |
-| **Ти їси рибу?** | Do you eat fish? |
-| **Вона п'є воду.** | She drinks water. |
-| **Ми п'ємо чай.** | We drink tea. |
+| Я їм хліб. | I eat bread. |
+| Ти їси рибу? | Do you eat fish? |
+| Вона п'є воду. | She drinks water. |
+| Ми п'ємо чай. | We drink tea. |
 
-These are direct actions. The action goes straight to the food or drink. Later,
-the same tool helps with **я читаю книгу**, **я бачу прапор**, and **я купую
-каву**. For now, keep the food examples automatic.
+These verbs take direct objects. The noun after the verb answers **що?** Later,
+the same direct-object pattern helps with **я читаю книгу**, **я бачу прапор**,
+and **я купую каву**. For now, keep the food examples automatic.
+
+:::tip
+Small win: if you can say **Я їм суп** and **Я п'ю воду**, you already have the
+shape of the lesson. The table only helps you say the same thing with **ти**,
+**вона**, **ми**, **ви**, and **вони**.
+:::
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
@@ -187,12 +211,12 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Це кава. Я п'ю каву.** | This is coffee. I drink coffee. |
-| **Це вода. Я п'ю воду.** | This is water. I drink water. |
-| **Це риба. Я їм рибу.** | This is fish. I eat fish. |
-| **Це картопля. Я їм картоплю.** | This is potato. I eat potato. |
+| Це кава. Я п'ю каву. | This is coffee. I drink coffee. |
+| Це вода. Я п'ю воду. | This is water. I drink water. |
+| Це риба. Я їм рибу. | This is fish. I eat fish. |
+| Це картопля. Я їм картоплю. | This is potato. I eat potato. |
 
-Masculine and neuter food words make the learner's job easier:
+Masculine and neuter inanimate nouns make your job easier:
 
 ```text
 Це суп. Я їм суп.
@@ -205,16 +229,22 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Це суп. Я їм суп.** | This is soup. I eat soup. |
-| **Це сік. Я п'ю сік.** | This is juice. I drink juice. |
-| **Це молоко. Я п'ю молоко.** | This is milk. I drink milk. |
-| **Це яблуко. Я їм яблуко.** | This is an apple. I eat an apple. |
+| Це суп. Я їм суп. | This is soup. I eat soup. |
+| Це сік. Я п'ю сік. | This is juice. I drink juice. |
+| Це молоко. Я п'ю молоко. | This is milk. I drink milk. |
+| Це яблуко. Я їм яблуко. | This is an apple. I eat an apple. |
 
 The words **любити**, **бачити**, and **купувати** also use the same direct
-object idea when they act on a thing: the action **переходить** to the object.
+object idea with inanimate nouns: the verb **переходить** to the object.
 You can already understand lines such as **Я люблю Київ**, **Я бачу
 синьо-жовтий прапор**, and **Я купую каву**. In a shop or cafe, keep the money
 word Ukrainian too: **гривня**.
+
+:::note
+Today you do not need the whole accusative case. Keep one noun rule: masculine
+and neuter inanimate words stay the same, while feminine **-а/-я** becomes
+**-у/-ю**.
+:::
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
@@ -222,7 +252,7 @@ word Ukrainian too: **гривня**.
 
 The grammar name is **знахідний відмінок**. The practical A1 test is simpler:
 
-1. Is there an action like **їсти**, **пити**, **хотіти**, **любити**,
+1. Is there a verb like **їсти**, **пити**, **хотіти**, **любити**,
    **бачити**, or **купувати**?
 2. Does the object answer **що?**
 3. Is the object an inanimate feminine word ending in **-а** or **-я**?
@@ -240,10 +270,15 @@ neuter and inanimate, keep it unchanged for this path.
 | **хліб** | **Я їм хліб.** |
 | **молоко** | **Діти п'ють молоко.** |
 
-The contrast also repairs a common learner line:
+The contrast also repairs a common first line:
 **<!-- bad -->Я хочу вода<!-- /bad -->** becomes **Я хочу пити** or
 **Я хочу воду**. Both are useful. The first uses an infinitive. The second uses
 the direct object **воду**.
+
+:::caution
+Do not add English-style helper words. Ukrainian says **Я їм хліб**, not
+**<!-- bad -->Я є їм хліб<!-- /bad -->**. The verb already carries the meaning.
+:::
 
 ## Підсумок
 
@@ -261,25 +296,23 @@ Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Вранці я їм кашу і п'ю каву.** | In the morning I eat porridge and drink coffee. |
-| **На обід я їм суп, салат і хліб.** | For lunch I eat soup, salad, and bread. |
-| **Я п'ю воду або сік.** | I drink water or juice. |
-| **Увечері ми їмо рибу і картоплю.** | In the evening we eat fish and potato. |
-| **Діти п'ють молоко.** | The children drink milk. |
+| Вранці я їм кашу і п'ю каву. | In the morning I eat porridge and drink coffee. |
+| На обід я їм суп, салат і хліб. | For lunch I eat soup, salad, and bread. |
+| Я п'ю воду або сік. | I drink water or juice. |
+| Увечері ми їмо рибу і картоплю. | In the evening we eat fish and potatoes. |
+| Діти п'ють молоко. | The children drink milk. |
 
 Keep three checks in your head:
 
 - **їсти** is irregular: **їм, їси, їсть, їмо, їсте, їдять**;
 - **пити** carries the apostrophe: **п'ю, п'єш, п'є, п'ємо, п'єте, п'ють**;
-- feminine inanimate food words change in the direct object:
+- feminine inanimate food nouns change in the direct object:
   **кава -> каву**, **вода -> воду**, **риба -> рибу**,
   **картопля -> картоплю**.
 
-Use clean Ukrainian classroom language. Say **тато** in family examples, use
-**Добрий день** and **До побачення** for formal service scenes, introduce
-yourself with **Мене звати Анна**, say **Я студент** without a helper verb, and
-say **Мені 20 років** for age. These patterns keep Ukrainian grammar from
-being squeezed into English or Russian frames.
+That is enough for today. You are not trying to master every direct object in
+Ukrainian. You are making food and drink lines sound clean: **Я їм кашу**,
+**Я п'ю каву**, **Я хочу воду**.
 
 <span id="repair-i-eat-i-drink-interference"></span>
 
@@ -291,7 +324,7 @@ being squeezed into English or Russian frames.
 | **<!-- bad -->Я хочу вода.<!-- /bad -->** | **Я хочу пити.** or **Я хочу воду.** |
 | **<!-- bad -->Він їст суп.<!-- /bad -->** | **Він їсть суп.** |
 | **<!-- bad -->Ти їсиш яблуко.<!-- /bad -->** | **Ти їси яблуко.** |
-| **<!-- bad -->Я мию мене.<!-- /bad -->** | **Я вмиваюся.** |
+| **<!-- bad -->Я п'ю вода.<!-- /bad -->** | **Я п'ю воду.** |
 | **<!-- bad -->Я п'ю кава.<!-- /bad -->** | **Я п'ю каву.** |
 
 For self-check, name three things you eat today and three things you drink.
