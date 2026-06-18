@@ -1,0 +1,20 @@
+- title: "B1 grammar wiki: motion prefixes in/out"
+  role: internal
+  notes: "Reference overview for за- and ви- with motion verbs: зайти, заїхати, занести, вийти, виїхати, винести, preposition government, and L2 errors."
+  url: "wiki/grammar/b1/motion-prefixes-in-out.md"
+- title: "Motion-prefix in/out source registry"
+  role: internal
+  notes: "Textbook source registry used by the grammar wiki for за-/ви- spatial prefixation and examples of entering, dropping by, and exiting."
+  url: "wiki/grammar/b1/motion-prefixes-in-out.sources.yaml"
+- title: "Motion-prefix departure"
+  role: curriculum
+  notes: "Previous prefix module that distinguishes route start, departure, and distancing: піти, поїхати, відійти, від'їхати."
+  url: "b1/motion-prefixes-departure"
+- title: "Motion-prefix arrival"
+  role: curriculum
+  notes: "Arrival and endpoint module that prepares the contrast between entering a space and arriving at a destination."
+  url: "b1/motion-prefixes-arrival"
+- title: "Spatial prepositions review"
+  role: curriculum
+  notes: "B1 module that establishes direction and source constructions used here: в/у + accusative, до + genitive, з/із + genitive, на + accusative."
+  url: "b1/prepositions-spatial-review"
