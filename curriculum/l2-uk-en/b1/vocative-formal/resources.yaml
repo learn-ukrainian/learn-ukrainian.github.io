@@ -1,0 +1,29 @@
+- title: "B1 M12: alternation consonants nouns"
+  role: curriculum
+  notes: "Попередньо пояснює чергування у кличному: друг - друже, козак - козаче, хлопець - хлопче."
+- title: "B1 masculine noun subclasses"
+  role: curriculum
+  notes: "Подає кличні форми для іменників на -ар/-яр/-ин і не має дублюватися в M57."
+- title: "B1 M56: instrumental nuances"
+  role: curriculum
+  notes: "Попередній модуль у навігації; M57 продовжує фазу нюансів відмінків."
+- title: "Литвінова Grade 6, §28"
+  role: textbook
+  notes: "Подає офіційні звертання: пане Євгене, пані Оксано, добродію, Тамаро Іванівно, Іване Вікторовичу; прикметники у звертанні лишаються називними."
+  source_ref: "6-klas-ukrmova-litvinova-2023, §28, pp.140-142"
+- title: "Глазова Grade 11, §23"
+  role: textbook
+  notes: "Пояснює правила для ім'я + по батькові, загальна назва + ім'я, загальна назва + прізвище."
+  source_ref: "11-klas-ukrajinska-mova-glazova-2019, §23"
+- title: "Заболотний Grade 8, речення із звертаннями"
+  role: textbook
+  notes: "Подає приклади пане лейтенанте, колего Віталію, Ігорю Андрійовичу, Маріє Василівно та пунктуацію звертань."
+  source_ref: "8-klas-ukrmova-zabolotnyi-2025, речення із звертаннями"
+- title: "Авраменко Grade 8, §62-63"
+  role: textbook
+  notes: "Підтверджує базові кличні закінчення для чоловічих і жіночих імен та варіанти Олегу/Олеже."
+  source_ref: "8-klas-ukrmova-avramenko-2025, §62-63"
+- title: "Headroom source retrieval"
+  role: orchestration
+  notes: "Стислий запис локального пошуку джерел для M57."
+  source_ref: "headroom hash 8a30f1aa4f99c431d065a2c4"

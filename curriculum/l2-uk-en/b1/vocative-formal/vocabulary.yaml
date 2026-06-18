@@ -1,0 +1,208 @@
+- lemma: кличний відмінок
+  translation: "vocative case"
+  pos: phrase
+  usage: "Кличний відмінок потрібен у звертанні Іване."
+- lemma: звертання
+  translation: "address, salutation"
+  pos: noun
+  usage: "Звертання в листі виділяємо комою або знаком оклику."
+- lemma: по батькові
+  translation: "patronymic"
+  pos: phrase
+  usage: "Ім'я та по батькові в звертанні мають кличну форму."
+- lemma: пан
+  translation: "Mr., sir"
+  pos: noun
+  usage: "Пан у кличному має форму пане."
+- lemma: пані
+  translation: "Ms., madam"
+  pos: noun
+  usage: "Пані не змінюється: пані Олено."
+- lemma: пане
+  translation: "sir, Mr. (vocative)"
+  pos: vocative
+  usage: "Пане Андрію, чи можете відповісти?"
+- lemma: добродій
+  translation: "sir, gentleman"
+  pos: noun
+  usage: "Добродій у кличному має форму добродію."
+- lemma: добродійка
+  translation: "madam, lady"
+  pos: noun
+  usage: "Добродійка у кличному має форму добродійко."
+- lemma: добродію
+  translation: "sir (very formal vocative)"
+  pos: vocative
+  usage: "Вельмишановний добродію, просимо Вас до слова."
+- lemma: добродійко
+  translation: "madam (very formal vocative)"
+  pos: vocative
+  usage: "Шановна добродійко, дякуємо за звернення."
+- lemma: шановний
+  translation: "respected, dear"
+  pos: adjective
+  usage: "Шановний пане директоре!"
+- lemma: шановна
+  translation: "respected, dear (feminine)"
+  pos: adjective
+  usage: "Шановна Маріє Степанівно!"
+- lemma: вельмишановний
+  translation: "most respected"
+  pos: adjective
+  usage: "Вельмишановний добродію!"
+- lemma: колега
+  translation: "colleague"
+  pos: noun
+  usage: "Колега у звертанні: колего."
+- lemma: колего
+  translation: "colleague (vocative)"
+  pos: vocative
+  usage: "Колего Ірино, надішліть протокол."
+- lemma: прізвище
+  translation: "surname"
+  pos: noun
+  usage: "У моделі пане Ковальчук прізвище лишається називним."
+- lemma: посада
+  translation: "position, office"
+  pos: noun
+  usage: "Посада в звертанні часто має кличний: директоре."
+- lemma: звання
+  translation: "rank, title"
+  pos: noun
+  usage: "У звертанні пане лейтенанте звання стоїть у кличному."
+- lemma: офіційний
+  translation: "official, formal"
+  pos: adjective
+  usage: "Офіційний лист починається з ввічливого звертання."
+- lemma: діловий
+  translation: "business, professional"
+  pos: adjective
+  usage: "Діловий стиль потребує точних форм звертання."
+- lemma: листування
+  translation: "correspondence"
+  pos: noun
+  usage: "У діловому листуванні кличний дуже важливий."
+- lemma: електронний лист
+  translation: "email"
+  pos: phrase
+  usage: "Електронний лист можна почати словами Добрий день, пані Олено."
+- lemma: формула звертання
+  translation: "address formula"
+  pos: phrase
+  usage: "Формула звертання залежить від регістру."
+- lemma: регістр
+  translation: "register"
+  pos: noun
+  usage: "Регістр може бути неформальним, нейтральним або офіційним."
+- lemma: неформальний
+  translation: "informal"
+  pos: adjective
+  usage: "Оксано! - неформальне звертання."
+- lemma: нейтральний
+  translation: "neutral"
+  pos: adjective
+  usage: "Пані Олено - нейтрально-офіційна форма."
+- lemma: формальний
+  translation: "formal"
+  pos: adjective
+  usage: "Шановна Олено Вікторівно - формальне звертання."
+- lemma: урочистий
+  translation: "ceremonial"
+  pos: adjective
+  usage: "Вельмишановні пані та панове - урочиста формула."
+- lemma: директор
+  translation: "director"
+  pos: noun
+  usage: "Директор у звертанні: директоре."
+- lemma: директоре
+  translation: "director (vocative)"
+  pos: vocative
+  usage: "Шановний пане директоре!"
+- lemma: голова
+  translation: "chair, head"
+  pos: noun
+  usage: "Голова у звертанні: голово."
+- lemma: голово
+  translation: "chair, head (vocative)"
+  pos: vocative
+  usage: "Шановна пані Голово!"
+- lemma: професор
+  translation: "professor"
+  pos: noun
+  usage: "Професор у звертанні: професоре."
+- lemma: професоре
+  translation: "professor (vocative)"
+  pos: vocative
+  usage: "Професоре Олександре, прошу слова."
+- lemma: лікар
+  translation: "doctor"
+  pos: noun
+  usage: "Лікар у звертанні: лікарю."
+- lemma: лікарю
+  translation: "doctor (vocative)"
+  pos: vocative
+  usage: "Лікарю Онищук, дякую за консультацію."
+- lemma: редакторка
+  translation: "editor (female)"
+  pos: noun
+  usage: "Редакторка у звертанні: редакторко."
+- lemma: редакторко
+  translation: "editor (female vocative)"
+  pos: vocative
+  usage: "Шановна редакторко, надсилаю матеріал."
+- lemma: координатор
+  translation: "coordinator"
+  pos: noun
+  usage: "Координатор у звертанні: координаторе."
+- lemma: координаторе
+  translation: "coordinator (vocative)"
+  pos: vocative
+  usage: "Пане координаторе, уточніть програму."
+- lemma: панове
+  translation: "gentlemen, sirs"
+  pos: vocative
+  usage: "Пані та панове, вітаємо на конференції."
+- lemma: пані та панове
+  translation: "ladies and gentlemen"
+  pos: phrase
+  usage: "Вельмишановні пані та панове!"
+- lemma: учасник
+  translation: "participant"
+  pos: noun
+  usage: "Шановні учасники конференції!"
+- lemma: учасниця
+  translation: "participant (female)"
+  pos: noun
+  usage: "Шановні учасниці й учасники!"
+- lemma: кома
+  translation: "comma"
+  pos: noun
+  usage: "Звертання всередині речення виділяємо комами."
+- lemma: знак оклику
+  translation: "exclamation mark"
+  pos: phrase
+  usage: "Після звертання в листі можна поставити знак оклику."
+- lemma: називний відмінок
+  translation: "nominative case"
+  pos: phrase
+  usage: "Прикметник шановний у звертанні лишається в називному."
+- lemma: давальний відмінок
+  translation: "dative case"
+  pos: phrase
+  usage: "У звертанні не пишемо шановному пане директоре."
+- lemma: установа
+  translation: "institution"
+  pos: noun
+  usage: "У листі до установи важлива точна форма звертання."
+- lemma: державний службовець
+  translation: "civil servant"
+  pos: phrase
+  usage: "До державного службовця звертаються офіційно."
+- lemma: конференція
+  translation: "conference"
+  pos: noun
+  usage: "Шановні учасники конференції!"
+- lemma: церемонія
+  translation: "ceremony"
+  pos: noun
+  usage: "На церемонії доречні урочисті звертання."
