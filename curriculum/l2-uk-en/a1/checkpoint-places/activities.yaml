@@ -172,9 +172,9 @@ workbook:
       - statement: 'Вона працює на пошті.'
         answer: true
         explanation: 'На пошті is the safe Ukrainian chunk.'
-      - statement: 'Я з Америки.'
+      - statement: 'Я з Канади.'
         answer: true
-        explanation: 'Звідки? uses the from-place form.'
+        explanation: 'Звідки? uses з/із/зі plus the learned родовий form.'
       - statement: 'Книга є на столі.'
         answer: false
         explanation: 'A natural A1 location line is Книга на столі.'
@@ -280,15 +280,15 @@ workbook:
           - text: 'Вона живе в Київ.'
             correct: false
         explanation: 'Живе answers де? and needs в/у plus locative.'
-      - prompt: 'Repair: Я з Америці.'
+      - prompt: 'Repair: Я з Канаді.'
         options:
-          - text: 'Я з Америки.'
+          - text: 'Я з Канади.'
             correct: true
-          - text: 'Я з Америці.'
+          - text: 'Я з Канаді.'
             correct: false
-          - text: 'Я в Америку.'
+          - text: 'Я в Канаду.'
             correct: false
-        explanation: 'Звідки? uses a from-place form, not the static place form.'
+        explanation: 'Звідки? uses the learned родовий form, not the static place form.'
   - type: unjumble
     title: Rebuild final city lines
     instruction: Put the words in a safe A1.5 order.
@@ -322,13 +322,75 @@ workbook:
           - 'я'
           - 'їду'
           - 'на'
-          - 'вокзал'
-          - 'на'
           - 'метро'
-        answer: 'Увечері я їду на вокзал на метро'
+          - 'на'
+          - 'вокзал'
+        answer: 'Увечері я їду на метро на вокзал'
       - words:
           - 'Вона'
           - 'йде'
           - 'зі'
           - 'школи'
         answer: 'Вона йде зі школи'
+  - type: fill-in
+    title: One city story chunks
+    instruction: Complete the checkpoint story with learned place chunks.
+    items:
+      - sentence: 'Сьогодні Анна ___ Києві.'
+        answer: 'в'
+        options:
+          - 'в'
+          - 'з'
+          - 'на'
+        explanation: 'Before the vowel in Києві, в is smooth and answers де?'
+      - sentence: 'Вона ___ Канади, із Торонто.'
+        answer: 'з'
+        options:
+          - 'з'
+          - 'в'
+          - 'на'
+        explanation: 'Origin answers звідки?: з Канади.'
+      - sentence: 'Анна йде ___ музей.'
+        answer: 'в'
+        options:
+          - 'в'
+          - 'у'
+          - 'з'
+        explanation: 'В музей is a learned destination chunk.'
+      - sentence: 'Музей ___ площі.'
+        answer: 'на'
+        options:
+          - 'на'
+          - 'в'
+          - 'з'
+        explanation: 'На площі answers де?'
+      - sentence: 'До центру вона їде ___.'
+        answer: 'на метро'
+        options:
+          - 'на метро'
+          - 'з метро'
+          - 'у метрою'
+        explanation: 'На метро is the transport chunk.'
+      - sentence: 'Після музею вона їде ___.'
+        answer: 'на вокзал'
+        options:
+          - 'на вокзал'
+          - 'на вокзалі'
+          - 'з вокзалу'
+        explanation: 'Їде asks куди?, so use на вокзал.'
+  - type: match-up
+    title: Function check
+    instruction: Match each phrase with the question it answers.
+    pairs:
+      - left: 'у центрі'
+        right: 'Де?'
+      - left: 'у музей'
+        right: 'Куди?'
+      - left: 'з Канади'
+        right: 'Звідки?'
+      - left: 'на метро'
+        right: 'Як?'
+      - left: 'прямо'
+        right: 'Куди повернути?'
+      - left: 'на площі'
+        right: 'Де?'
