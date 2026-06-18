@@ -1,9 +1,13 @@
 # Екстрені ситуації
 
-This module gives you **emergency language** for a short clear call or for
-asking another person to call.
+<!-- plan_coverage_audit objectives=4 content_sections=4 dialogue_situations=1 activity_hints=4 covered=true missing=[] -->
+<!-- bad_form_audit bad_form_patterns_found=5 marked_with_bad_tags=5 remaining_unmarked=0 -->
+<!-- activity_split_audit level=A1 inline_n=4 workbook_n=6 inline_range=[4,6] workbook_range=[6,9] split_valid=true -->
 
-Official Ukrainian emergency numbers checked on 2026-06-03:
+Привіт! This module gives you **emergency language** for a short clear call or
+for asking another person to call.
+
+Official Ukrainian emergency numbers rechecked on 2026-06-18:
 
 | Number | Ukrainian label | English check |
 | --- | --- | --- |
@@ -18,12 +22,13 @@ service numbers.
 
 The core call frame is:
 
-**Допоможіть! Тут аварія. Я на вулиці Шевченка, будинок п'ять. Мене звати
-Анна.**
+**Допоможіть! Тут аварія. Я на вулиці Хрещатик, біля метро Майдан
+Незалежності. Мене звати Анна.**
 
 | Step | Phrase |
 | --- | --- |
 | call for help | **Допоможіть!** |
+| summon help | **Викличте швидку! Викличте поліцію!** |
 | say the problem | **Тут аварія / пожежа.** |
 | say the place | **Я на вулиці... біля...** |
 | say your name | **Мене звати...** |
@@ -38,31 +43,37 @@ phrases.
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
-### Дзвінок на 112
+### Дзвінок на 112: аварія на Хрещатику
 
 ```text
-Оператор: Служба 112. Слухаю вас.
-Анна: Допоможіть! Тут аварія.
+Оператор 112: Служба порятунку, слухаю вас.
+Адам: Допоможіть! Тут аварія.
 Оператор: Де ви?
-Анна: Я на вулиці Шевченка, будинок п'ять.
+Адам: На вулиці Хрещатик, біля метро Майдан Незалежності.
+Оператор: Що сталося?
+Адам: Машина пошкоджена. Є постраждалий. Людина не рухається.
 Оператор: Як вас звати?
-Анна: Мене звати Анна Коваль.
+Адам: Мене звати Адам Сміт.
 Оператор: Ваш номер телефону?
-Анна: Нуль дев'яносто три, сто двадцять, сорок п'ять, шістдесят сім.
+Адам: Нуль дев'яносто три, п'ятсот двадцять один...
+Оператор: Зрозуміло. Швидка вже їде. Залишайтеся на місці.
 ```
 
 Support after the Ukrainian lines:
 
 | Українська | English support |
 | --- | --- |
-| **Оператор: Служба 112. Слухаю вас.** | Operator: 112 service. I am listening. |
-| **Анна: Допоможіть! Тут аварія.** | Anna: Help! There is an accident here. |
+| **Оператор 112: Служба порятунку, слухаю вас.** | 112 operator: Rescue service, I am listening. |
+| **Адам: Допоможіть! Тут аварія.** | Adam: Help! There is an accident here. |
 | **Оператор: Де ви?** | Operator: Where are you? |
-| **Анна: Я на вулиці Шевченка, будинок п'ять.** | Anna: I am on Shevchenka Street, building five. |
+| **Адам: На вулиці Хрещатик, біля метро Майдан Незалежності.** | Adam: On Khreshchatyk Street, near Maidan Nezalezhnosti metro. |
+| **Оператор: Що сталося?** | Operator: What happened? |
+| **Адам: Машина пошкоджена. Є постраждалий. Людина не рухається.** | Adam: The car is damaged. There is an injured person. The person is not moving. |
 | **Оператор: Як вас звати?** | Operator: What is your name? |
-| **Анна: Мене звати Анна Коваль.** | Anna: My name is Anna Koval. |
+| **Адам: Мене звати Адам Сміт.** | Adam: My name is Adam Smith. |
 | **Оператор: Ваш номер телефону?** | Operator: Your phone number? |
-| **Анна: Нуль дев'яносто три, сто двадцять, сорок п'ять, шістдесят сім.** | Anna: Zero ninety-three, one hundred twenty, forty-five, sixty-seven. |
+| **Адам: Нуль дев'яносто три, п'ятсот двадцять один...** | Adam: Zero ninety-three, five hundred twenty-one... |
+| **Оператор: Зрозуміло. Швидка вже їде. Залишайтеся на місці.** | Operator: Understood. The ambulance is already coming. Stay in place. |
 
 This call uses only four learner jobs:
 
@@ -74,6 +85,16 @@ This call uses only four learner jobs:
 If the operator speaks quickly, use **Повторіть, будь ласка** or
 **Повільніше, будь ласка**.
 
+If someone tells you to call the ambulance number directly, keep the same
+information:
+
+```text
+Водій: Допоможіть! Аварія на Хрещатику! Викличте швидку!
+Оператор 103: Є постраждалий?
+Водій: Так, є постраждалий. Машина пошкоджена.
+Оператор 103: Назвіть адресу, будь ласка.
+```
+
 ### Попросіть людину подзвонити
 
 ```text
@@ -83,7 +104,7 @@ If the operator speaks quickly, use **Повторіть, будь ласка** 
 Перехожий: Де?
 Турист: Тут, біля метро.
 Перехожий: Як вас звати?
-Турист: Мене звати Марко. Я не розумію швидко.
+Турист: Мене звати Марко. Говоріть повільніше, будь ласка.
 Перехожий: Добре, я говорю повільно.
 ```
 
@@ -97,7 +118,7 @@ Support after the Ukrainian lines:
 | **Перехожий: Де?** | Passerby: Where? |
 | **Турист: Тут, біля метро.** | Tourist: Here, near the metro. |
 | **Перехожий: Як вас звати?** | Passerby: What is your name? |
-| **Турист: Мене звати Марко. Я не розумію швидко.** | Tourist: My name is Marko. I do not understand fast speech. |
+| **Турист: Мене звати Марко. Говоріть повільніше, будь ласка.** | Tourist: My name is Marko. Please speak more slowly. |
 | **Перехожий: Добре, я говорю повільно.** | Passerby: Okay, I am speaking slowly. |
 
 The phrase **Подзвоніть за номером...** is useful when another person has the
@@ -108,6 +129,50 @@ phone. Keep the number clear:
 - **Подзвоніть за номером 102.**
 - **Подзвоніть за номером 103.**
 - **Подзвоніть за номером 104.**
+
+The verb **викликати** is the emergency-service verb for summoning help. Learn
+these as fixed commands:
+
+- **Викличте швидку!**
+- **Викличте поліцію!**
+- **Викличте службу порятунку!**
+
+### У поліції: загубив паспорт
+
+```text
+Адам: Вибачте, де тут поліція?
+Перехожа: Поліція? Прямо і наліво.
+Адам: Дякую.
+Поліцейська: Добрий день. Що сталося?
+Адам: Добрий день. Я загубив паспорт.
+Поліцейська: Де ви його загубили?
+Адам: Я не знаю. Може, в метро.
+Поліцейська: Як ваше прізвище?
+Адам: Сміт. Адам Сміт.
+Поліцейська: Ваш номер телефону?
+Адам: Нуль дев'яносто три, п'ятсот двадцять один...
+Поліцейська: Добре. Заповніть цю форму, будь ласка.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Адам: Вибачте, де тут поліція?** | Adam: Excuse me, where is the police here? |
+| **Перехожа: Поліція? Прямо і наліво.** | Passerby: Police? Straight and left. |
+| **Поліцейська: Добрий день. Що сталося?** | Police officer: Good afternoon. What happened? |
+| **Адам: Добрий день. Я загубив паспорт.** | Adam: Good afternoon. I lost my passport. |
+| **Поліцейська: Де ви його загубили?** | Police officer: Where did you lose it? |
+| **Адам: Я не знаю. Може, в метро.** | Adam: I do not know. Maybe in the metro. |
+| **Поліцейська: Як ваше прізвище?** | Police officer: What is your surname? |
+| **Адам: Сміт. Адам Сміт.** | Adam: Smith. Adam Smith. |
+| **Поліцейська: Ваш номер телефону?** | Police officer: Your phone number? |
+| **Адам: Нуль дев'яносто три, п'ятсот двадцять один...** | Adam: Zero ninety-three, five hundred twenty-one... |
+| **Поліцейська: Добре. Заповніть цю форму, будь ласка.** | Police officer: Good. Fill in this form, please. |
+
+The police-station frame is also short:
+
+**Я загубив / загубила паспорт. Моє прізвище... Мій номер телефону...**
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
@@ -134,9 +199,12 @@ Useful words:
 | **пожежа** | fire |
 | **поліція** | police |
 | **швидка** | ambulance |
+| **лікарня** | hospital |
+| **викликати / викличте** | to summon / call |
 | **газ** | gas |
 | **паспорт** | passport |
 | **телефон** | phone |
+| **форма** | form |
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
@@ -208,6 +276,52 @@ Keep the answer slow and separate:
 
 This is not a story. It is a clear information block.
 
+## Допомога в лікарні або аптеці
+
+In an emergency, you may need one safe sentence in a hospital or pharmacy. Use
+known M53 health chunks and keep the grammar fixed.
+
+| Place | A1 help phrase |
+| --- | --- |
+| hospital | **Мені потрібен лікар.** |
+| hospital | **У мене болить голова / горло.** |
+| pharmacy | **У мене алергія на ці таблетки.** |
+| pharmacy | **Мені потрібна допомога.** |
+| any place | **Я не розумію. Повторіть, будь ласка.** |
+| any place | **Ви говорите англійською?** |
+
+Short help dialogue:
+
+```text
+Пацієнт: Добрий день. Мені потрібен лікар.
+Працівниця: Що сталося?
+Пацієнт: У мене алергія на ці таблетки.
+Працівниця: Добре. Ваше ім'я?
+Пацієнт: Мене звати Сара Браун. Говоріть повільніше, будь ласка.
+Працівниця: Добре, я говорю повільно.
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Пацієнт: Добрий день. Мені потрібен лікар.** | Patient: Good afternoon. I need a doctor. |
+| **Працівниця: Що сталося?** | Staff member: What happened? |
+| **Пацієнт: У мене алергія на ці таблетки.** | Patient: I am allergic to these pills. |
+| **Працівниця: Добре. Ваше ім'я?** | Staff member: Okay. Your name? |
+| **Пацієнт: Мене звати Сара Браун. Говоріть повільніше, будь ласка.** | Patient: My name is Sarah Brown. Please speak more slowly. |
+| **Працівниця: Добре, я говорю повільно.** | Staff member: Okay, I am speaking slowly. |
+
+Repair common emergency mistakes before you need them:
+
+| Avoid | Use |
+| --- | --- |
+| <bad>Мене номер Анна.</bad> | **Мене звати Анна.** |
+| <bad>Я на вулиця Шевченка.</bad> | **Я на вулиці Шевченка.** |
+| <bad>Потрібен швидка.</bad> | **Потрібна швидка.** |
+| <bad>Я загубив паспорта.</bad> | **Я загубив паспорт.** |
+| <bad>Подзвоніть номером 112.</bad> | **Подзвоніть за номером 112.** |
+
 ## Підсумок
 
 Your A1 emergency-language toolkit:
@@ -215,6 +329,7 @@ Your A1 emergency-language toolkit:
 | Need | Phrase |
 | --- | --- |
 | help | **Допоможіть!** |
+| summon help | **Викличте швидку! Викличте поліцію!** |
 | ask another person to call | **Подзвоніть за номером 112, будь ласка.** |
 | accident | **Тут аварія.** |
 | fire | **Тут пожежа.** |
@@ -238,3 +353,6 @@ Support after the Ukrainian lines:
 | **Допоможіть! Тут пожежа. Я в Києві, на вулиці Франка, будинок десять. Мене звати Сара Браун. Мій номер телефону: нуль дев'яносто сім, триста десять, двадцять два, сорок один. Повторіть, будь ласка.** | Help! There is a fire here. I am in Kyiv, on Franka Street, building ten. My name is Sarah Brown. My phone number is zero ninety-seven, three hundred ten, twenty-two, forty-one. Please repeat. |
 
 That is the goal: a clear problem, a clear place, and clear identity words.
+
+You can now make a short emergency call, give your location and personal
+information, and ask for help in a hospital, pharmacy, or police station.
