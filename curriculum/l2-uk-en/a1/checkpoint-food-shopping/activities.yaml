@@ -217,7 +217,7 @@ workbook:
         answer: true
         explanation: 'Use the phrase as a memorized chunk here.'
       - statement: 'Adding -а to борщ is not the A1.6 target form.'
-        answer: false
+        answer: true
         explanation: 'Use Я люблю борщ.'
       - statement: 'Мені каву з молоком, будь ласка is a cafe order.'
         answer: true
@@ -304,13 +304,49 @@ workbook:
           - 'кілограм'
           - 'буханку'
         explanation: 'Use склянку води.'
+  - type: match-up
+    title: From market to cafe
+    instruction: Match each moment in the day with the line that fits.
+    pairs:
+      - left: 'Anna asks the tomato price.'
+        right: 'Скільки коштують помідори?'
+      - left: 'The seller gives the total.'
+        right: 'З вас сто сорок гривень.'
+      - left: 'Anna pays with a card.'
+        right: 'Я плачу карткою.'
+      - left: 'Anna orders soup and water.'
+        right: 'Мені борщ і воду, будь ласка.'
+      - left: 'The server asks for here or to go.'
+        right: 'Вам тут чи із собою?'
+      - left: 'Anna asks for the bill.'
+        right: 'Дайте, будь ласка, рахунок.'
+      - left: 'Olena thanks after lunch.'
+        right: 'Було дуже смачно, дякую!'
+  - type: group-sort
+    title: Що? or кого?
+    instruction: Sort the object forms by the question they answer.
+    groups:
+      - name: 'Що? food and things'
+        items:
+          - 'борщ'
+          - 'воду'
+          - 'хліб'
+          - 'яблука'
+          - 'рахунок'
+      - name: 'Кого? people'
+        items:
+          - 'Олену'
+          - 'брата'
+          - 'друга'
+          - 'лікаря'
+          - 'маму'
   - type: quiz
     title: Repair A1.6 interference
     instruction: Pick the A1.6 sentence you would actually say.
     items:
       - prompt: 'Repair: Я хочу вода.'
         options:
-          - text: 'Я хочу воду. (Або: Я хочу води).'
+          - text: 'Я хочу воду.'
             correct: true
           - text: 'Я хочу вода.'
             correct: false
