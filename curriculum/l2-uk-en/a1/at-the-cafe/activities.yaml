@@ -274,59 +274,69 @@ workbook:
           - 'Рахунок, будь ласка.'
           - 'Можна карткою?'
           - 'До побачення!'
+  - type: match-up
+    title: Cafe repair pairs
+    instruction: Match the repair form with the course cafe form.
+    pairs:
+      - left: 'счет'
+        right: 'рахунок'
+      - left: 'кава на винос'
+        right: 'кава із собою'
+      - left: 'пірожене'
+        right: 'тістечко'
+      - left: 'кулечок'
+        right: 'пакетик'
+      - left: 'вкусна кава'
+        right: 'смачна кава'
+      - left: 'трубочка'
+        right: 'соломинка'
+      - left: 'чашку кофе'
+        right: 'чашку кави'
+  - type: unjumble
+    title: Build cafe lines
+    instruction: Put the words in a natural cafe order.
+    items:
+      - words:
+          - 'Мені'
+          - 'каву'
+          - 'будь ласка'
+        answer: 'Мені каву, будь ласка'
+      - words:
+          - 'Дайте'
+          - 'будь ласка'
+          - 'борщ'
+        answer: 'Дайте, будь ласка, борщ'
+      - words:
+          - 'Можна'
+          - 'воду'
+        answer: 'Можна воду'
+      - words:
+          - 'Велику'
+          - 'каву'
+          - 'із собою'
+          - 'будь ласка'
+        answer: 'Велику каву із собою, будь ласка'
+      - words:
+          - 'Рахунок'
+          - 'будь ласка'
+        answer: 'Рахунок, будь ласка'
+      - words:
+          - 'Можна'
+          - 'карткою'
+        answer: 'Можна карткою'
   - type: error-correction
     title: Repair cafe interference
     instruction: Choose the clean Ukrainian repair.
     anchor_id: repair-at-the-cafe-interference
     items:
-      - sentence: 'Доброго дня!'
-        error: 'Доброго дня!'
-        answer: 'Добрий день!'
+      - sentence: 'Мені кава, будь ласка.'
+        error: 'кава'
+        answer: 'Мені каву, будь ласка.'
         options:
-          - 'Добрий день!'
-          - 'Доброго дня!'
-          - 'Добрий дня!'
-        explanation: 'Use Добрий день as the neutral greeting.'
-      - sentence: 'Вибачаюсь!'
-        error: 'Вибачаюсь!'
-        answer: 'Вибачте! / Перепрошую!'
-        options:
-          - 'Вибачте! / Перепрошую!'
-          - 'Вибачаюсь!'
-          - 'Я вибачаю себе!'
-        explanation: 'Use Вибачте or Перепрошую.'
-      - sentence: 'Я хочу кава.'
-        error: 'Я хочу кава.'
-        answer: 'Я хочу каву. / Дайте каву.'
-        options:
-          - 'Я хочу каву. / Дайте каву.'
-          - 'Я хочу кава.'
-          - 'Я хочу каві.'
-        explanation: 'Кава becomes каву in this request.'
-      - sentence: 'ПрошУ (як прохання)'
-        error: 'ПрошУ (як прохання)'
-        answer: 'ПрОшу (як "будь ласка")'
-        options:
-          - 'ПрОшу (як "будь ласка")'
-          - 'ПрошУ (як прохання)'
-          - 'Прошу без наголосу.'
-        explanation: 'As a polite inserted word meaning please, the stress is ПрОшу.'
-      - sentence: '[балєт], [проблєма]'
-        error: '[балєт], [проблєма]'
-        answer: '[балет], [проблема]'
-        options:
-          - '[балет], [проблема]'
-          - '[балєт], [проблєма]'
-          - '[балет], [проблєма]'
-        explanation: 'Keep л before е hard in these examples.'
-      - sentence: 'Здрастуйте! / Пока!'
-        error: 'Здрастуйте! / Пока!'
-        answer: 'Добрий день! / До побачення!'
-        options:
-          - 'Добрий день! / До побачення!'
-          - 'Здрастуйте! / Пока!'
-          - 'Добрий день! / Пока!'
-        explanation: 'Use Ukrainian greeting and goodbye formulas.'
+          - 'Мені каву, будь ласка.'
+          - 'Мені кава, будь ласка.'
+          - 'Мені каві, будь ласка.'
+        explanation: 'Кава becomes каву in this order frame.'
       - sentence: 'Можна счет?'
         error: 'счет'
         answer: 'Можна рахунок?'
@@ -351,3 +361,35 @@ workbook:
           - 'Дайте пірожене.'
           - 'Дайте тісто.'
         explanation: 'Use тістечко.'
+      - sentence: 'Дайте кулечок.'
+        error: 'кулечок'
+        answer: 'Дайте пакетик.'
+        options:
+          - 'Дайте пакетик.'
+          - 'Дайте кулечок.'
+          - 'Дайте пакет.'
+        explanation: 'Use пакетик for a small bag.'
+      - sentence: 'Кава вкусна.'
+        error: 'вкусна'
+        answer: 'Кава смачна.'
+        options:
+          - 'Кава смачна.'
+          - 'Кава вкусна.'
+          - 'Кава смачно.'
+        explanation: 'Use смачна with кава.'
+      - sentence: 'Можна трубочку?'
+        error: 'трубочку'
+        answer: 'Можна соломинку?'
+        options:
+          - 'Можна соломинку?'
+          - 'Можна трубочку?'
+          - 'Можна соломинкою?'
+        explanation: 'Use соломинку for a drinking straw.'
+      - sentence: 'Одну чашку кофе, будь ласка.'
+        error: 'кофе'
+        answer: 'Одну чашку кави, будь ласка.'
+        options:
+          - 'Одну чашку кави, будь ласка.'
+          - 'Одну чашку кофе, будь ласка.'
+          - 'Одну чашка кави, будь ласка.'
+        explanation: 'Use кави in чашку кави.'
