@@ -1,7 +1,12 @@
 # Здоров'я
 
-This module gives you **language for saying what hurts**. It does not teach you
-how to judge a medical problem. At A1, your job is small and practical:
+<!-- plan_coverage_audit objectives=4 content_sections=4 dialogue_situations=1 activity_hints=4 covered=true missing=[] -->
+<!-- bad_form_audit bad_form_patterns_found=5 marked_with_bad_tags=5 remaining_unmarked=0 -->
+<!-- activity_split_audit level=A1 inline_n=4 workbook_n=6 inline_range=[4,6] workbook_range=[6,9] split_valid=true -->
+
+Привіт! This module gives you **language for saying what hurts**. It does not
+teach you how to judge a medical problem. At A1, your job is small and
+practical:
 
 **У мене болить голова. Мені потрібен лікар.**
 
@@ -35,8 +40,10 @@ guess what the problem is or tell anyone what to do.
 Анна: Добрий день. У мене болить голова.
 Лікар: Ще щось?
 Анна: У мене болить горло. І в мене температура.
-Лікар: Повторіть, будь ласка: голова і горло?
-Анна: Так. Голова і горло.
+Лікар: Ви кашляєте?
+Анна: Так, трохи. І в мене нежить.
+Лікар: Повторіть, будь ласка: голова, горло, кашель, нежить?
+Анна: Так. Голова, горло, кашель, нежить.
 Лікар: Зрозуміло.
 Анна: Дякую.
 ```
@@ -49,8 +56,10 @@ Support after the Ukrainian lines:
 | **Анна: Добрий день. У мене болить голова.** | Anna: Good afternoon. My head hurts. |
 | **Лікар: Ще щось?** | Doctor: Anything else? |
 | **Анна: У мене болить горло. І в мене температура.** | Anna: My throat hurts. And I have a fever. |
-| **Лікар: Повторіть, будь ласка: голова і горло?** | Doctor: Please repeat: head and throat? |
-| **Анна: Так. Голова і горло.** | Anna: Yes. Head and throat. |
+| **Лікар: Ви кашляєте?** | Doctor: Are you coughing? |
+| **Анна: Так, трохи. І в мене нежить.** | Anna: Yes, a little. And I have a runny nose. |
+| **Лікар: Повторіть, будь ласка: голова, горло, кашель, нежить?** | Doctor: Please repeat: head, throat, cough, runny nose? |
+| **Анна: Так. Голова, горло, кашель, нежить.** | Anna: Yes. Head, throat, cough, runny nose. |
 | **Лікар: Зрозуміло.** | Doctor: Understood. |
 | **Анна: Дякую.** | Anna: Thank you. |
 
@@ -59,6 +68,8 @@ The learner line is short:
 - **У мене болить голова.**
 - **У мене болить горло.**
 - **У мене температура.**
+- **У мене кашель.**
+- **У мене нежить.**
 
 No extra explanation is needed. In real life, a professional asks the follow-up
 questions. Your A1 task is to make the first message clear.
@@ -96,6 +107,36 @@ message to a clear first report. The useful phrases are:
 - **У мене болить живіт.**
 - **Мені потрібен лікар.**
 - **Повторіть, будь ласка.**
+
+### В аптеці: прошу ліки
+
+```text
+Покупець: Добрий день. У мене болить голова.
+Фармацевт: Від головного болю?
+Покупець: Так. Дайте, будь ласка, таблетки.
+Покупець: І щось від кашлю, будь ласка.
+Фармацевт: Ось, будь ласка. Ще щось?
+Покупець: А є щось від нежитю?
+Фармацевт: Так, ось краплі.
+Покупець: Дякую. Скільки це коштує?
+```
+
+Support after the Ukrainian lines:
+
+| Українська | English support |
+| --- | --- |
+| **Покупець: Добрий день. У мене болить голова.** | Customer: Good afternoon. My head hurts. |
+| **Фармацевт: Від головного болю?** | Pharmacist: For a headache? |
+| **Покупець: Так. Дайте, будь ласка, таблетки.** | Customer: Yes. Please give me pills. |
+| **Покупець: І щось від кашлю, будь ласка.** | Customer: And something for a cough, please. |
+| **Фармацевт: Ось, будь ласка. Ще щось?** | Pharmacist: Here you are. Anything else? |
+| **Покупець: А є щось від нежитю?** | Customer: And is there something for a runny nose? |
+| **Фармацевт: Так, ось краплі.** | Pharmacist: Yes, here are drops. |
+| **Покупець: Дякую. Скільки це коштує?** | Customer: Thank you. How much does this cost? |
+
+At A1, learn the pharmacy phrases as chunks:
+**таблетки від головного болю**, **щось від кашлю**, **щось від нежитю**.
+Do not analyze the case after **від** here.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
@@ -254,11 +295,11 @@ Keep the Ukrainian phrase shape.
 
 | Learner sentence | Better A1 sentence |
 | --- | --- |
-| <del>**Моя голова болить.**</del> | **У мене болить голова.** |
-| <del>**Я маю біль голова.**</del> | **У мене болить голова.** |
-| <del>**Я є хворий.**</del> | **Я хворий.** |
-| <del>**Я потрібно лікар.**</del> | **Мені потрібен лікар.** |
-| <del>**У мене є нежить.**</del> | **У мене нежить.** |
+| <bad>**Моя голова болить.**</bad> | **У мене болить голова.** |
+| <bad>**Я маю біль голова.**</bad> | **У мене болить голова.** |
+| <bad>**Я є хворий.**</bad> | **Я хворий.** |
+| <bad>**Я потрібно лікар.**</bad> | **Мені потрібен лікар.** |
+| <bad>**У мене є нежить.**</bad> | **У мене нежить.** |
 
 These repairs are about natural Ukrainian phrases. You do not need to name the
 grammar. Memorize the safe chunks and use them.
@@ -290,3 +331,6 @@ Support after the Ukrainian lines:
 
 That is enough for this module: say the symptom, ask for help, and use repair
 phrases when you need them.
+
+You can now say what hurts, name a simple symptom, and ask for a doctor or
+pharmacy help in short A1 Ukrainian.
