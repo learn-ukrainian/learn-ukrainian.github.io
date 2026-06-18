@@ -15,13 +15,14 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
-    "@astrojs/mdx": "^6.0.3",
+    "@astrojs/mdx": "^5.0.0",
     "@astrojs/react": "^5.0.7",
     "@astrojs/sitemap": "^3.7.3",
     "@mdx-js/mdx": "^3.1.1",
     "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
-    "astro": "^6.4.7",
+    "astro": "^6.4.8",
+    "esbuild": "^0.28.1",
     "playwright": "^1.60.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.7",
@@ -29,7 +30,8 @@
     "remark-directive": "^4.0.0",
     "remark-gfm": "^4.0.1",
     "sharp": "^0.34.2",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
