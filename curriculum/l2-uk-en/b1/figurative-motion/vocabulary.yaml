@@ -1,0 +1,144 @@
+- lemma: переносне значення
+  translation: "figurative meaning"
+  pos: phrase
+  usage: "У вислові `час летить` дієслово має переносне значення."
+- lemma: пряме значення
+  translation: "literal meaning"
+  pos: phrase
+  usage: "У реченні `птах летить` дієслово має пряме значення."
+- lemma: багатозначне слово
+  translation: "polysemous word"
+  pos: phrase
+  usage: "`Йти` - багатозначне слово, бо воно описує не тільки ходьбу."
+- lemma: фразеологізм
+  translation: "idiom, phraseological unit"
+  pos: noun:m
+  usage: "`Водити за ніс` - фразеологізм."
+- lemma: дощ іде
+  translation: "it is raining"
+  pos: phrase
+  usage: "Надворі йде сильний дощ."
+- lemma: сніг іде
+  translation: "it is snowing"
+  pos: phrase
+  usage: "Уранці йшов густий сніг."
+- lemma: час іде
+  translation: "time passes"
+  pos: phrase
+  usage: "Час іде, а ми ще не почали."
+- lemma: час летить
+  translation: "time flies"
+  pos: phrase
+  usage: "На канікулах час летить дуже швидко."
+- lemma: час пливе
+  translation: "time drifts, time flows slowly"
+  pos: phrase
+  usage: "У селі час ніби пливе повільніше."
+- lemma: час біжить
+  translation: "time runs"
+  pos: phrase
+  usage: "Час біжить, треба закінчувати."
+- lemma: справи йдуть
+  translation: "things are going, affairs are progressing"
+  pos: phrase
+  usage: "Справи йдуть добре."
+- lemma: мова йде про
+  translation: "the topic is about"
+  pos: phrase
+  usage: "Мова йде про безпеку, але нейтральніше: `йдеться про безпеку`."
+- lemma: йдеться про
+  translation: "it is about"
+  pos: impersonal phrase
+  usage: "У статті йдеться про культуру мовлення."
+- lemma: фільм іде
+  translation: "a film is playing"
+  pos: phrase
+  usage: "У кінотеатрі йде новий фільм."
+- lemma: урок іде
+  translation: "a lesson is in progress"
+  pos: phrase
+  usage: "Урок уже йде, не галасуйте."
+- lemma: переговори йдуть
+  translation: "negotiations are underway"
+  pos: phrase
+  usage: "Переговори йдуть другий день."
+- lemma: прийшов час
+  translation: "the time has come"
+  pos: phrase
+  usage: "Прийшов час діяти."
+- lemma: прийшла ідея
+  translation: "an idea came"
+  pos: phrase
+  usage: "Мені прийшла ідея написати лист."
+- lemma: вийшло
+  translation: "it turned out, it worked"
+  pos: verb form
+  usage: "У нас усе вийшло."
+- lemma: не вийшло
+  translation: "it did not work out"
+  pos: phrase
+  usage: "План був добрий, але нічого не вийшло."
+- lemma: підійти
+  translation: "to suit, to fit"
+  pos: verb
+  usage: "Цей варіант мені підходить."
+- lemma: дійти до висновку
+  translation: "to reach a conclusion"
+  pos: phrase
+  usage: "Після обговорення ми дійшли до висновку."
+- lemma: зайти далеко
+  translation: "to go too far"
+  pos: phrase
+  usage: "У суперечці він зайшов надто далеко."
+- lemma: обійтися без
+  translation: "to get by without"
+  pos: phrase
+  usage: "Ми обійдемося без додаткових витрат."
+- lemma: злетіти
+  translation: "to soar, rise sharply"
+  pos: verb
+  usage: "Ціни злетіли за один місяць."
+- lemma: пролетіти
+  translation: "to pass quickly"
+  pos: verb
+  usage: "Вихідні пролетіли непомітно."
+- lemma: облетіти
+  translation: "to spread rapidly"
+  pos: verb
+  usage: "Новина облетіла все місто."
+- lemma: хмари пливуть
+  translation: "clouds drift"
+  pos: phrase
+  usage: "Над містом пливуть хмари."
+- lemma: думки пливуть
+  translation: "thoughts drift"
+  pos: phrase
+  usage: "Після довгого дня думки пливуть повільно."
+- lemma: мелодія пливе
+  translation: "a melody flows"
+  pos: phrase
+  usage: "Тиха мелодія пливе з кімнати."
+- lemma: мурашки біжать
+  translation: "goosebumps run"
+  pos: phrase
+  usage: "Від цієї пісні мурашки біжать по шкірі."
+- lemma: нести відповідальність
+  translation: "to bear responsibility"
+  pos: phrase
+  usage: "Керівник несе відповідальність за рішення."
+- lemma: носити ім'я
+  translation: "to bear a name"
+  pos: phrase
+  usage: "Вулиця носить ім'я Лесі Українки."
+- lemma: вести переговори
+  translation: "to conduct negotiations"
+  pos: phrase
+  usage: "Команда веде переговори з партнерами."
+- lemma: поводитися
+  translation: "to behave"
+  pos: verb
+  usage: "У нейтральному мовленні краще сказати: `поводитися спокійно`."
+- lemma: водити за ніс
+  translation: "to deceive, lead someone on"
+  pos: idiom
+  usage: "Не води мене за ніс, скажи правду."
