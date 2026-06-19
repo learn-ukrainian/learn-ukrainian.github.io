@@ -23,6 +23,12 @@ paths:
   - ~/.agy
   - ~/.agy/*
   - ~/.agy/**
+  # Deprecated pre-`~/.agy` antigravity-cli config path, referenced illustratively
+  # in the 2026-05-21 handoff prose. Allowlisted so historical handoffs stay
+  # lintable (the path legitimately no longer exists after the ~/.agy migration).
+  - ~/.gemini/antigravity-cli/mcp_config.json
+  - ~/.gemini/antigravity-cli/*
+  - ~/.gemini/antigravity-cli/**
   # Cursor agent transcripts — `~/.cursor/projects/<encoded-cwd>/agent-transcripts/<session_id>/<session_id>.jsonl`.
   # Per-session UUIDs change every invocation; allowlisting the glob keeps
   # handoff docs honest about the recovery path used by the bridge fallback
