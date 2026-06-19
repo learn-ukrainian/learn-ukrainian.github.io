@@ -63,7 +63,24 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 65 HANDOFF (2026-06-19 — 🏁 SESSION CLOSE: #3624 site fix CI-GREEN (awaiting orchestrator merge); worktrees cleaned; reading-tasks plan APPROVED + ready to build. Confirms S64 with final verified deltas.) — **RESUME HERE**
+## ▶▶▶ SESSION 66 HANDOFF (2026-06-19 — ✅ reading-tasks plan `hazy-dreaming-willow.md` Phases A+B SHIPPED, C started. Folk wikis 22/42, modules 6/42 certified + now anti-leakage-gated.) — **RESUME HERE**
+
+**🟢 ONE-LINE STATE:** The approved reading-tasks/anti-leakage plan (`docs/plans/hazy-dreaming-willow.md`) is executing. Phase A (#3599 `:::primary-reading`) + Phase B (#3632 URL-resolution gate + `role:reading`) **MERGED**; Phase C (retrofit 6 modules) **partially shipped this PR**, rest is bounded follow-up.
+
+### ✅ DONE THIS SESSION
+- **Phase A — PR #3599 MERGED** (`93ea93f5a3`): gemini `:::primary-reading` embed panel (#3162). Reviewed inline + codex cross-model + deterministic e2e MDX render; refuted codex's false-positive KeyError BLOCKER.
+- **Phase B — PR #3632 MERGED** (`bdd7db302645`): mandatory `resources_url_resolve` gate (allowlist `data/primary_text_sources.yaml` + bare-domain reject + liveness-when-networked) + `role:reading` + CSS + tests; scoped to seminar/folk (core-track skip → #3630). **Review caught + I fixed a real defect** (`6160e05022`): codex had mandated on-site `wiki/...` reading links, but folk wikis are served only via internal `/api/wiki` (no public route) → dead links. Now reading links = public allowlisted URLs; on-site text via `:::primary-reading`. Gate-hardening follow-up #3634.
+- **Phase C (THIS PR) — partial:** purged the **9 hallucinated bare-domain/guessed-id links** (dumy 4 + kalendarna 5, added under #3120); added **1 verified wikisource primary-text reading task** to dumy (`uk.wikisource.org/wiki/Українські_народні_думи`, gate-liveness-confirmed). All **6 modules verify_shippable GREEN** post-edit. **vesum gate scans resource title/notes** — reading-task text must be VESUM-clean (avoid brand «Вікіджерела» + hyphenated compounds like «дівчини-бранки»; learned this session).
+
+### ⏭ NEXT ACTIONS (priority)
+1. **Finish Phase C (5 modules):** source a genuine, resolving primary-text reading task (Вікіджерела/litopys/specific ukrlib work page — NOT bare landings/guessed ids; VESUM-clean entry text) for kalendarna, koliadky, narodna-kultura, narodni-viruvannia, zamovliannia. dumy is the worked exemplar. verify_shippable GREEN each. **Run from a data-bearing tree** (worktrees sparse-exclude `data/`; symlink `data/sources.db`+`data/vesum.db` into the worktree, as this session did).
+2. **PR #3624** (`claude/folk-site-immersion-nav`, nav un-hide + #M-13 labels): CI-GREEN, **awaiting ORCHESTRATOR merge** (reverses #3027 + core-track labels → NOT self-merge). Still green this session.
+3. **Wave-8 wikis** corpus-hammer + PR → 26/42 (branch `claude/folk-wikis-wave8`, commit `6369788b8b`).
+4. **Folk-writer policy reconciliation** (#0.2 carried): `compile.py` default `agy` vs practice gpt-5.5 vs "Gemini-family always" — fold into wave-8 PR.
+
+### ⚠️ carried infra (#0.2): #3630 (core-track link hygiene), #3634 (gate reject relative URLs), `render_canonical_formulas_block` unwired, wiki index.md batch-regen owed.
+
+## ▶▶▶ SESSION 65 HANDOFF (2026-06-19 — 🏁 SESSION CLOSE: #3624 site fix CI-GREEN (awaiting orchestrator merge); worktrees cleaned; reading-tasks plan APPROVED + ready to build. Confirms S64 with final verified deltas.)
 
 **🟢 ONE-LINE STATE:** Folk wikis **22/42** (merged), modules **6/42 certified**. Session pivoted to module+site QUALITY. Everything below is the FINAL verified state (supersedes S64 where they differ).
 
