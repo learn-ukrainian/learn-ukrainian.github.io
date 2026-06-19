@@ -8945,6 +8945,7 @@ def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
         if artifact == "resources.yaml":
             role = str(item.get("role") or "").strip()
             url = str(item.get("url") or "").strip()
+            normalized_url = url.lstrip("./")
             if role not in RESOURCE_ROLES:
                 raise LinearPipelineError(
                     f"{artifact} schema validation failed: item {index} "
@@ -8953,6 +8954,13 @@ def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
             if role != "textbook" and not url:
                 raise LinearPipelineError(
                     f"{artifact} schema validation failed: item {index} role {role!r} requires url"
+                )
+            if normalized_url.startswith(INTERNAL_RESOURCE_URL_PREFIXES):
+                raise LinearPipelineError(
+                    f"{artifact} schema validation failed: item {index} has internal "
+                    f"AI-facing resource url {url!r}; resources.yaml must contain "
+                    "student-facing sources only (on-site primary text belongs in a "
+                    ":::primary-reading block, reading-task links use public allowlisted URLs)"
                 )
 
 
