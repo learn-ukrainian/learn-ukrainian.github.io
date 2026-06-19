@@ -68,7 +68,9 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 
 ## Inter-Agent Communication
 
-**Gemini and Codex are your colleagues.** Claude = architect/reviewer, Gemini = content builder, Codex = Green Team adversarial reviewer and bug hunter. Full protocol: [`agent-cooperation.md`](docs/best-practices/agent-cooperation.md)
+**Codex and Claude are the top-priority agents; agy, DeepSeek, cursor, grok-build, and grok-4.\* are support/specialist lanes.** Claude = architect/reviewer, Codex = novel-impl + adversarial review, agy (Gemini-family, metered) = content/scripts, DeepSeek = off-seat review, grok-build = native-CLI writer/fixer. Full protocol: [`agent-cooperation.md`](docs/best-practices/agent-cooperation.md)
+
+> **Fleet roster + when-to-use + no-idle routing (READ to keep lanes busy):** [`docs/best-practices/agent-activity-matrix.md`](docs/best-practices/agent-activity-matrix.md) — §2 roster (current lanes/cost/models) + §2b capacity routing (free lane → next work). Canonical per-task routing rule: `agents_extensions/shared/rules/model-assignment.md` (served at `/api/rules`).
 
 ### Headroom
 

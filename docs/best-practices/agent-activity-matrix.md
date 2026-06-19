@@ -1,6 +1,6 @@
 # Agent activity matrix
 
-> **Status:** v1.2 — updated 2026-05-18 by orchestrator (Claude). Evidence index at `audit/INDEX-bakeoff-evidence.md`. **v1.2 adds §8 quality-vs-cost ranking view + Qwen-3.6 integration + codex retraction sync.** See §10 Provenance for version history.
+> **Status:** v1.3 — updated 2026-06-19 (fleet correction, user-sourced). **§2 roster + §8 ranking corrected; the per-task bakeoff SCORE cells (§3–§7) were NOT re-run and predate these lane changes — treat them as STALE per the 30-day rule until re-bakeoffed.** v1.3 deltas: agy is **metered** (not unmetered); **Codex + Claude are the top-priority lanes**; **grok-4.\* (via Hermes) and grok-build (native grok CLI) are both active lanes to actively use**; **Qwen is EXCLUDED** (too costly, user 2026-05-29); the **Claude dispatch lane is AVAILABLE** (the planned post-2026-06-15 sunset was cancelled); models are now **Opus 4.8 / gpt-5.5**. v1.2 (2026-05-18) added §8 ranking + Qwen integration + codex retraction sync. See §10 Provenance for version history.
 > **Purpose:** one canonical place where a task type maps to *primary agent* + *runner-ups* + *eval metric* + *last verified* + *known weakness* + *known strength*. Replaces gut-routing.
 > **Audience:** dual — agents read the JSON projection at `/api/activity-matrix` (future endpoint), humans read this markdown.
 > **Cadence:** every cell has a `last_verified` date. If older than 30 days, the cell is stale and a re-bakeoff should be scheduled before relying on it.
@@ -26,12 +26,13 @@ Each cell carries:
 
 | Agent | Sub-models in use | Auth lane | Cost lane | Status |
 |---|---|---|---|---|
-| **Claude** | Opus 4.7 (orchestrator inline + headless dispatch + Q&A); Sonnet 4.7 (mid-tier headless); Haiku (cheap Explore subagent grep/read) | Anthropic API (interactive, weekly cap $690 — doubled until mid-July 2026 promo); $200/mo agentic pool launches 2026-06-15 (RESERVED for user cold-start, NOT orchestrator) | Interactive cap shared with user sessions | **Pre-June-15: full dispatch.** Post-June-15: NO `delegate.py --agent claude`; inline-via-curriculum-writer subagent only. |
-| **Codex** | gpt-5.5 (default); older versions deprecated | OpenAI via Codex CLI (codex-cli 0.130.0) | $1000/wk; current burn 0% | Primary novel-impl & mechanical-with-design-judgment dispatch lane |
-| **Gemini** | gemini-3.0-flash-preview (routine, fast); gemini-3.1-pro-preview (deep) | Google AI Studio via gemini-cli 0.42.0 | $500/wk; current burn 0%; UNMETERED for routine | Default for routine: ingestion runs, fixtures, docs-near-code, tests/migrations |
-| **DeepSeek** | deepseek-v4-pro (load-bearing content review w/ VESUM); deepseek-v4-flash (cheap PR code review) | Hermes adapter (deepseek 0.13.0) | Cheap; routing budget not currently capped | Primary code review + content review (with sources MCP) |
-| **Grok** | grok-4.3 via Hermes (one-shot text only) | Hermes adapter (xai-oauth) | Cheap | Discuss-only — no file-edit capability yet (#2072) |
-| **Qwen** | qwen/qwen3.6-plus (default); qwen/qwen3.6-flash (cheap); qwen/qwen3.6-max-preview (top tier); qwen/qwen3.6-35b-a3b:thinking (reasoning-augmented) | Hermes adapter via OpenRouter (`provider: openrouter`, base `https://openrouter.ai/api/v1`) | Cheap (OpenRouter routing) | **NEWLY WIRED 2026-05-18 — no role bakeoff yet.** Smoke-test passed (5s, returncode 0). Available for content/review/Q&A bakeoffs starting this session. Kimi explicitly deferred per user direction. |
+| **Claude** ⭐ | Opus 4.8 (orchestrator inline + headless dispatch + Q&A); Sonnet 4.x (mid-tier headless); Haiku (cheap Explore subagent grep/read) | Anthropic API (interactive weekly cap, doubled until ~mid-July 2026 promo) + `delegate.py --agent claude` headless | Metered; interactive cap shared with user sessions | **TOP-PRIORITY lane.** Dispatch lane **AVAILABLE** (the planned post-2026-06-15 sunset was CANCELLED). Architecture, V7 writer (claude-tools), hard-bug reasoning, adversarial review (**inline only — never `claude -p`/`--agent claude` subagent for the Claude review seat**). Cap 2 in-flight. |
+| **Codex** ⭐ | gpt-5.5 (default) | OpenAI via Codex CLI | $1000/wk bucket (metered) | **TOP-PRIORITY lane.** Novel impl, cross-file patterns, hard debug, primary V7 reviewer + novel-architecture code review. Cap 2 in-flight. |
+| **agy** | Gemini-family (Antigravity CLI; **replaced gemini-cli 2026-06-08**) | `delegate.py --agent agy` / `ab ask-agy` | **METERED** (corrected 2026-06-19 — NOT unmetered; route by fit/cost, not as a free default) | Support lane: existing scripts, ingestion, fixtures/migrations, docs-near-code, wiki writing; §7/factual cleared 2026-06-13. Cap 2 in-flight. |
+| **DeepSeek** | deepseek-v4-pro (content review + VESUM via `sources` MCP); deepseek-v4-flash (cheap PR code review) | `delegate.py --agent deepseek` (Hermes adapter) | Cheap | **Off-seat REVIEW lane — use it, don't review inline.** Primary PR-diff + content review. |
+| **Grok** | **grok-build** via native grok CLI (`delegate.py --agent grok-build`, **file-editing dispatch**, validated 2026-06-14 — prefer over grok-4.3); **grok-4.\*** via Hermes (`ab ask-grok`, one-shot/discuss) | native grok CLI / Hermes (xai-oauth) | Cheap | **Active — use both.** grok-build is a real writer/fixer dispatch lane (V7 grok-tools writer); grok-4.\* for one-shot Q&A/discuss. |
+| **cursor** | cursor-agent | `delegate.py --agent cursor` / `ab ask-cursor` | Metered | Valid writer/fixer dispatch lane (integrated 2026-05-24). |
+| **Qwen** | — | — | — | ❌ **EXCLUDED** — too expensive (user 2026-05-29). Adapter exists but **do not route to it.** |
 
 **Sub-agents (children of the orchestrator session, not separate dispatches):**
 - `Explore` (Haiku) — grep/file-read across the codebase.
@@ -39,6 +40,20 @@ Each cell carries:
 - `curriculum-writer` (Opus, single-module Ukrainian content writing) — proxy for V7 writer when claude-tools is unavailable post-June-15.
 - `curriculum-orchestrator` (Opus) — full-tool orchestration sub-session.
 - `general-purpose` — catch-all.
+
+### 2b. Capacity / no-idle routing (read this when a lane is free)
+
+The rest of this doc is *task → agent*. This section is the **inverse — *free lane → next work*** — so capacity is never left idle (user directive 2026-06-19; cf. MEMORY #M-6 "parallel by default").
+
+- **In-flight caps:** 2 Codex + 2 Claude + 2 agy concurrent (check `/api/delegate/active`; queue if full). DeepSeek (review), cursor + grok-build (writer/fixer) are additional lanes not counted in the 2+2+2.
+- **When a lane frees up, pull the next item that FITS it — don't idle, don't make-work:**
+  - **Codex / Claude (top-priority):** the hardest open work first — novel impl, cross-file refactors, architecture, V7 module building/review, hard debugging. Don't burn these on mechanical work a cheaper lane can do.
+  - **agy / cursor / grok-build:** mechanical-with-judgment — running scripts, fixtures/migrations, docs-near-code, wiki/content writing, schema edits, bounded refactors.
+  - **DeepSeek:** any open PR diff or content+VESUM review — route reviews here off-seat; don't review inline.
+  - **grok-4.\* / hermes / opencode (`ab ask-*`):** one-shot Q&A, second opinions, quick research with no commit.
+  - **Explore (Haiku subagent):** search/grep fan-out.
+- **Where "next work" comes from:** the active track handoff's NEXT-ACTIONS, open GH issues, and the build/review queue. If nothing genuinely fits a free lane, log it and leave it idle — do **not** manufacture busywork (quality > utilization).
+- **Quality gate, not just utilization:** gates passing ≠ shippable (#M-11). Anything a support lane produces gets a strong-model (Codex/Claude) or cross-model (DeepSeek) review before it ships. "Keep the lane busy" never lowers the bar.
 
 ---
 
