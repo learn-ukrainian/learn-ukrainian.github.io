@@ -1,108 +1,120 @@
-- lemma: речення допусту
-  translation: "concessive clause"
-  pos: phrase
-  usage: "Речення допусту називає перешкоду, попри яку головна дія все одно відбувається."
-- lemma: підрядна обставинна частина допусту
-  translation: "adverbial subordinate clause of concession"
-  pos: phrase
-  usage: "Підрядна обставинна частина допусту відповідає на питання незважаючи на що? попри що?"
 - lemma: допуст
-  translation: "concession"
+  translation: concession (clause type)
   pos: noun
-  usage: "Допуст показує, що очікувана перешкода не зупинила дію."
-- lemma: перешкода
-  translation: "obstacle"
+  usage: Допуст пока́зує перешко́ду, яка не зупини́ла ді́ї.
+- lemma: підря́дне обста́винне допусту
+  translation: concessive subordinate (adverbial) clause
+  pos: phrase
+  usage: Підря́дне обста́винне допусту відповіда́є на пита́ння «незважа́ючи на що?».
+- lemma: речення допусту
+  translation: concessive sentence
+  pos: phrase
+  usage: У реченні допусту ді́я відбу́вається всу́переч перешко́ді.
+- lemma: підря́дна части́на
+  translation: subordinate clause
+  pos: phrase
+  usage: 'Підря́дна части́на назива́є перешко́ду: «хоча́ ча́су ма́ло».'
+- lemma: головна́ части́на
+  translation: main clause
+  pos: phrase
+  usage: 'Головна́ части́на назива́є ді́ю: «ми заве́ршуємо проє́кт».'
+- lemma: перешко́да
+  translation: obstacle
   pos: noun
-  usage: "У допустовому реченні підрядна частина часто називає перешкоду."
-- lemma: усупереч
-  translation: "contrary to, despite"
-  pos: preposition
-  usage: "Усупереч труднощам команда завершила проєкт."
-- lemma: всупереч
-  translation: "contrary to, despite"
-  pos: preposition
-  usage: "Всупереч прогнозу зустріч відбулася вчасно."
-- lemma: попри
-  translation: "despite"
-  pos: preposition
-  usage: "Попри втому студенти продовжили обговорення."
-- lemma: незважаючи на
-  translation: "despite, notwithstanding"
-  pos: preposition phrase
-  usage: "Незважаючи на затримку, учасники не скасували подію."
+  usage: Перешко́да є реа́льною, але́ ді́ю не спиня́є.
+- lemma: обста́вина
+  translation: circumstance
+  pos: noun
+  usage: Допуст — це обста́вина, усу́переч які́й трива́є ді́я.
+- lemma: очі́кування
+  translation: expectation
+  pos: noun
+  usage: 'Допуст лама́є очі́кування: перешко́да є, а ді́я відбу́вається.'
+- lemma: усу́переч
+  translation: contrary to, despite (+ Dat.)
+  pos: prep
+  usage: Усу́переч хо́лоду ми пішли́ гуля́ти.
+- lemma: всу́переч
+  translation: contrary to (variant of усу́переч)
+  pos: prep
+  usage: Всу́переч прогно́зу день видався те́плий.
+- lemma: по́при
+  translation: despite (+ Acc.)
+  pos: prep
+  usage: По́при дощ матч трива́в.
+- lemma: по́при те що
+  translation: despite the fact that
+  pos: phrase
+  usage: По́при те що пого́да погі́ршилася, захід відбу́вся.
+- lemma: незважа́ючи на
+  translation: despite (+ Acc.)
+  pos: prep
+  usage: Незважа́ючи на за́три́мку, по́тяг прибу́в.
+- lemma: незважа́ючи на те що
+  translation: despite the fact that (formal)
+  pos: phrase
+  usage: Незважа́ючи на те що да́них браку́є, коміте́т ухва́лює рі́шення.
 - lemma: хоч
-  translation: "although, even though"
-  pos: conjunction
-  usage: "Хоч було пізно, ми дописали звіт."
-- lemma: хоча
-  translation: "although"
-  pos: conjunction
-  usage: "Хоча завдання було складне, група виконала його."
-- lemma: дарма що
-  translation: "even though, despite the fact that"
-  pos: conjunction phrase
-  usage: "Дарма що часу було мало, команда встигла підготуватися."
-- lemma: незважаючи на те що
-  translation: "despite the fact that"
-  pos: conjunction phrase
-  usage: "Незважаючи на те що дощ не припинявся, лекцію провели офлайн."
-- lemma: попри те що
-  translation: "despite the fact that"
-  pos: conjunction phrase
-  usage: "Попри те що аргумент здавався сильним, у ньому були слабкі місця."
+  translation: although (neutral, slightly colloquial)
+  pos: conj
+  usage: Хоч було́ хо́лодно, ми пішли́ на прогу́лянку.
+- lemma: хоча́
+  translation: although (neutral, slightly formal)
+  pos: conj
+  usage: Хоча́ він запізни́вся, ми почека́ли на нього.
+- lemma: дарма́ що
+  translation: even though (stresses futility)
+  pos: phrase
+  usage: Дарма́ що він стара́вся, ні́чого не ви́йшло.
 - lemma: хай
-  translation: "even if, let"
-  pos: conjunction
-  usage: "Хай дорога буде важка, ми дійдемо до мети."
-- lemma: нехай
-  translation: "even if, let"
-  pos: conjunction
-  usage: "Нехай часу небагато, варто спробувати."
-- lemma: хоч би
-  translation: "even if"
-  pos: conjunction phrase
-  usage: "Хоч би як складно було, треба перевірити факти."
-- lemma: як не
-  translation: "however much, no matter how"
-  pos: conjunction phrase
-  usage: "Як не поспішай, без плану легко пропустити важливу деталь."
-- lemma: скільки не
-  translation: "however much, no matter how much"
-  pos: conjunction phrase
-  usage: "Скільки не перечитуй текст, без прикладів правило важко запам'ятати."
-- lemma: протиставне співвідносне слово
-  translation: "adversative correlative word"
-  pos: phrase
-  usage: "Після початкової підрядної допусту може стояти проте, однак, але або все ж."
-- lemma: проте
-  translation: "however, nevertheless"
-  pos: conjunction
-  usage: "Хоча аргумент був емоційний, проте він не переконав аудиторію."
-- lemma: однак
-  translation: "however"
-  pos: conjunction
-  usage: "Хоч даних було мало, однак висновок був обережний."
+  translation: even if; let (concessive particle)
+  pos: part
+  usage: Хай люту́є зима́, а весна́ все одно́ при́йде.
+- lemma: неха́й
+  translation: even if; let (variant of хай)
+  pos: part
+  usage: Неха́й доро́га важка́, ми ді́йдемо.
+- lemma: проте́
+  translation: however, nevertheless (correlative)
+  pos: conj
+  usage: Хоч було́ хо́лодно, проте́ ми пішли́ на прогу́лянку.
+- lemma: одна́к
+  translation: however (correlative)
+  pos: conj
+  usage: Хоч коза́цька де́ржа́ва існува́ла недо́вго, одна́к ма́ла вели́кий вплив.
+- lemma: зате́
+  translation: but on the other hand (correlative)
+  pos: conj
+  usage: Хоч завда́ння складне, зате́ результа́т ва́ртий зуси́ль.
 - lemma: все ж
-  translation: "still, nevertheless"
+  translation: still, nevertheless
   pos: phrase
-  usage: "Дарма що група втомилася, вона все ж завершила вправу."
-- lemma: зате
-  translation: "but on the other hand"
-  pos: conjunction
-  usage: "Хоч текст був довгий, зате приклади були зрозумілі."
-- lemma: причина
-  translation: "reason, cause"
+  usage: Хоча́ вона́ хворі́ла, та все ж прийшла́ на робо́ту.
+- lemma: супере́чність
+  translation: contradiction
   pos: noun
-  usage: "Причина пояснює, чому дія відбулася або не відбулася."
-- lemma: умова
-  translation: "condition"
+  usage: Допуст трима́ється на супере́чності між перешко́дою й ді́єю.
+- lemma: по́ступка
+  translation: concession (in argument)
   pos: noun
-  usage: "Умова відкриває сценарій, за якого дія можлива."
-- lemma: протиставлення
-  translation: "contrast, opposition"
+  usage: У деба́тах допусто́ве речення ро́бить по́ступку опоне́нтові.
+- lemma: контраргуме́нт
+  translation: counterargument
   pos: noun
-  usage: "Допуст і протиставлення близькі за змістом, але мають різну синтаксичну будову."
-- lemma: аргументація
-  translation: "argumentation"
+  usage: Я визнаю контраргуме́нт, але́ мій аргуме́нт сильні́ший.
+- lemma: аргумента́ція
+  translation: argumentation
   pos: noun
-  usage: "У B1 речення допусту допомагають будувати зважену аргументацію."
+  usage: Допусто́ві речення ро́блять аргумента́цію гнучко́ю.
+- lemma: деба́ти
+  translation: debate (pl. only)
+  pos: noun
+  usage: У деба́тах допуст допомага́є ви́знати ри́зики й подола́ти їх.
+- lemma: межа́ части́н
+  translation: boundary between clauses
+  pos: phrase
+  usage: Ко́му ста́вимо на межі́ части́н складного речення.
+- lemma: розділо́вий знак
+  translation: punctuation mark
+  pos: phrase
+  usage: Розділо́вий знак — ко́ма — відділя́є підря́дну части́ну від головно́ї.
