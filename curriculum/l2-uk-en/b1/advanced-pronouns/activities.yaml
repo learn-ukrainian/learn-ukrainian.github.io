@@ -208,7 +208,7 @@ inline:
       - left: "ні з прийменником окремо"
         right: "ні з ким"
       - left: "наголос змінює значення"
-        right: "ніко́го немає / ні́кого спитати"
+        right: "нікого немає / нікого спитати"
   - id: act-4
     type: group-sort
     title: Розряди займенників
@@ -361,14 +361,14 @@ workbook:
           - "ні-до-кого"
         correct: 0
         explanation: "Прийменник до розриває форму."
-      - question: "Що означає ніко́го немає?"
+      - question: "Що означає нікого немає?"
         options:
           - "відсутня будь-яка особа"
           - "немає кого спитати"
           - "будь-хто може прийти"
         correct: 0
         explanation: "Наголос на корені позначає відсутність."
-      - question: "Що означає ні́кого спитати?"
+      - question: "Що означає нікого спитати?"
         options:
           - "немає кого спитати"
           - "усі присутні"
@@ -665,11 +665,11 @@ workbook:
         correction: "Ні в чому"
         error_type: phrase
         explanation: "Прийменник в стоїть окремо."
-      - sentence: "Ніко́го спитати про ключ."
-        error: "Ніко́го"
-        correction: "Ні́кого"
+      - sentence: "Ні кого спитати про ключ."
+        error: "Ні кого"
+        correction: "Нікого"
         error_type: phrase
-        explanation: "Для значення немає кого спитати потрібен наголос на префіксі."
+        explanation: "Заперечний займенник без прийменника пишемо разом: нікого."
       - sentence: "Весь студенти здали роботи."
         error: "Весь студенти"
         correction: "Усі студенти"
@@ -763,18 +763,18 @@ workbook:
         explanation: "Прийменник з розриває заперечний займенник."
       - source: "There is no one in the room."
         options:
-          - text: "У кімнаті ніко́го немає."
+          - text: "У кімнаті нікого немає."
             correct: true
-          - text: "У кімнаті ні́кого спитати."
+          - text: "У кімнаті нікого спитати."
             correct: false
           - text: "У кімнаті будь-хто немає."
             correct: false
         explanation: "Наголос на корені: відсутність особи."
       - source: "There is no one to ask."
         options:
-          - text: "Ні́кого спитати."
+          - text: "Нікого спитати."
             correct: true
-          - text: "Ніко́го немає."
+          - text: "Нікого немає."
             correct: false
           - text: "Хтось спитати."
             correct: false
