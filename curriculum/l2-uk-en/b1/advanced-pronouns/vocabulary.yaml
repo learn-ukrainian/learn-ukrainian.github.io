@@ -145,11 +145,11 @@
 - lemma: нікого
   translation: "nobody, no one"
   pos: negative pronoun form
-  usage: "Ніко́го немає в аудиторії, але ні́кого й спитати про ключ."
+  usage: "Нікого немає в аудиторії, але нікого й спитати про ключ."
 - lemma: нічого
   translation: "nothing"
   pos: negative pronoun form
-  usage: "Нічо́го не видно, але ні́чого боятися."
+  usage: "Нічого не видно, але нічого боятися."
 - lemma: разом
   translation: "written together"
   pos: adverb
