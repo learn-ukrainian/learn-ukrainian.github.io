@@ -1,0 +1,20 @@
+- title: "B1 M78 plan: Часові речення"
+  role: curriculum
+  notes: "Планове джерело для підрядних обставинних часу, сполучників коли, поки, доки, щойно, як тільки, після того як, перш ніж і видо-часових кореляцій."
+  source_ref: curriculum/l2-uk-en/plans/b1/complex-subordinate-time.yaml
+- title: "9 клас: підрядні обставинні речення"
+  role: textbook
+  notes: "Локальне підручникове джерело для класифікації підрядних обставинних частин, питання до всієї головної частини, коми та сполучників часу."
+  source_ref: docs/references/textbooks-txt/9-klas-ukrajinska-mova-voron-2017.txt
+- title: "11 клас: повторення складнопідрядних речень"
+  role: textbook
+  notes: "Джерело для узагальнення типів підрядних частин, межі між головною і підрядною частиною та пунктуації в складному реченні."
+  source_ref: docs/references/textbooks-txt/11-klas-ukrajinska-mova-voron-2019.txt
+- title: "B1 M77: Означальні речення"
+  role: curriculum
+  notes: "Попередній сертифікований модуль для контрасту між коли в означальному реченні день, коли... і коли як часовим сполучником."
+  source_ref: curriculum/l2-uk-en/b1/complex-subordinate-relative/module.md
+- title: "B1 M70-M71: Дієприслівники"
+  role: curriculum
+  notes: "Попередні модулі для порівняння часових підрядних частин із дієприслівниками недоконаного й доконаного виду."
+  source_ref: curriculum/l2-uk-en/b1/gerunds-imperfective/module.md

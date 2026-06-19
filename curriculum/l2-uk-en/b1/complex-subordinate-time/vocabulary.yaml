@@ -1,0 +1,108 @@
+- lemma: часове речення
+  translation: "temporal clause"
+  pos: phrase
+  usage: "Часове речення показує, коли відбувається дія головної частини."
+- lemma: підрядна обставинна частина часу
+  translation: "temporal adverbial subordinate clause"
+  pos: phrase
+  usage: "Підрядна обставинна частина часу відповідає на питання коли? відколи? доки?"
+- lemma: головна частина
+  translation: "main clause"
+  pos: phrase
+  usage: "Головна частина називає подію, а підрядна уточнює її часову рамку."
+- lemma: підрядна частина
+  translation: "subordinate clause"
+  pos: phrase
+  usage: "Підрядна частина з коли може стояти перед або після головної."
+- lemma: коли
+  translation: "when"
+  pos: conjunction/adverb
+  usage: "Коли почався дощ, ми зайшли до кав'ярні."
+- lemma: поки
+  translation: "while, until"
+  pos: conjunction
+  usage: "Поки я читав листа, телефон мовчав."
+- lemma: доки
+  translation: "while, until"
+  pos: conjunction
+  usage: "Доки тривала лекція, студенти занотовували приклади."
+- lemma: поки не
+  translation: "until"
+  pos: conjunction phrase
+  usage: "Ми чекали, поки не приїхав автобус."
+- lemma: щойно
+  translation: "as soon as"
+  pos: conjunction/adverb
+  usage: "Щойно лекція закінчилася, студенти поставили запитання."
+- lemma: як тільки
+  translation: "as soon as"
+  pos: conjunction phrase
+  usage: "Як тільки отримаєш лист, дай мені знати."
+- lemma: після того як
+  translation: "after"
+  pos: conjunction phrase
+  usage: "Після того як ми обговорили план, команда почала працювати."
+- lemma: перш ніж
+  translation: "before"
+  pos: conjunction phrase
+  usage: "Перш ніж відповідати, прочитайте запитання до кінця."
+- lemma: перед тим як
+  translation: "before"
+  pos: conjunction phrase
+  usage: "Перед тим як вийти з дому, перевірте документи."
+- lemma: відтоді як
+  translation: "since"
+  pos: conjunction phrase
+  usage: "Відтоді як він переїхав до Львова, ми часто листуємося."
+- lemma: відколи
+  translation: "since when"
+  pos: conjunction/adverb
+  usage: "Відколи почався курс, я щодня слухаю українське радіо."
+- lemma: доти...доки
+  translation: "until, as long as"
+  pos: correlative conjunction
+  usage: "Ми працювали доти, доки не завершили звіт."
+- lemma: одночасність
+  translation: "simultaneity"
+  pos: noun
+  usage: "Одночасність часто виражаємо недоконаним видом в обох частинах."
+- lemma: різночасність
+  translation: "non-simultaneity"
+  pos: noun
+  usage: "Різночасність показує, що одна дія сталася раніше за іншу."
+- lemma: послідовність
+  translation: "sequence"
+  pos: noun
+  usage: "Щойно підкреслює швидку послідовність двох подій."
+- lemma: тривалість
+  translation: "duration"
+  pos: noun
+  usage: "Поки й доки можуть показувати тривалість дії."
+- lemma: межа дії
+  translation: "boundary of an action"
+  pos: phrase
+  usage: "Поки не часто називає межу, після якої ситуація змінюється."
+- lemma: доконаний вид
+  translation: "perfective aspect"
+  pos: phrase
+  usage: "Доконаний вид у підрядній частині часто показує завершену попередню дію."
+- lemma: недоконаний вид
+  translation: "imperfective aspect"
+  pos: phrase
+  usage: "Недоконаний вид описує процес, тло або повторювану дію."
+- lemma: видо-часова кореляція
+  translation: "aspect-tense correlation"
+  pos: phrase
+  usage: "Видо-часова кореляція допомагає розрізнити одночасність і послідовність."
+- lemma: кома між частинами
+  translation: "comma between clauses"
+  pos: phrase
+  usage: "Кома між частинами показує межу підрядного часового речення."
+- lemma: препозиція
+  translation: "initial position, preposition of a clause"
+  pos: noun
+  usage: "У препозиції підрядна частина задає часову рамку перед головною."
+- lemma: постпозиція
+  translation: "final position, postposition of a clause"
+  pos: noun
+  usage: "У постпозиції підрядна частина уточнює час уже названої події."
