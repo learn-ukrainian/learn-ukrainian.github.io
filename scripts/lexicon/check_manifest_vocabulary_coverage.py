@@ -182,11 +182,15 @@ def expected_vocabulary_coverage(
             record = _atlas_record_for_manifest(raw_record, taught_lemma_keys)
             if record is None:
                 continue
-            lemma = str(record["lemma"])
-            key = _lemma_key(lemma)
-            expected.setdefault(key, ExpectedLemma(lemma=lemma)).modules.add(
-                (module.track, module.slug)
-            )
+            records = record if isinstance(record, list) else [record]
+            for item in records:
+                if item.get("form_of"):
+                    continue
+                lemma = str(item["lemma"])
+                key = _lemma_key(lemma)
+                expected.setdefault(key, ExpectedLemma(lemma=lemma)).modules.add(
+                    (module.track, module.slug)
+                )
     return expected, checked
 
 

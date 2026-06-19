@@ -2,9 +2,9 @@
   "version": "0.1",
   "generated_at": "2026-06-18T22:25:18+00:00",
   "stats": {
-    "lemmas_total": 4154,
+    "lemmas_total": 4148,
     "modules_covered": 197,
-    "from_built": 4142,
+    "from_built": 4136,
     "from_surzhyk_to_avoid": 7,
     "from_heritage_status_seed": 6,
     "form_of_count": 338
@@ -25248,22 +25248,6 @@
       ]
     },
     {
-      "lemma": "з/із/зі",
-      "url_slug": "з-із-зі",
-      "gloss": "from; with",
-      "pos": "alternating preposition",
-      "ipa": null,
-      "primary_source": "built_vocabulary",
-      "course_usage": [
-        {
-          "track": "a1",
-          "module_num": 28,
-          "slug": "euphony",
-          "context": "built_vocabulary"
-        }
-      ]
-    },
-    {
       "lemma": "за",
       "url_slug": "за",
       "gloss": "than, in comparisons",
@@ -44026,22 +44010,6 @@
       ]
     },
     {
-      "lemma": "най-",
-      "url_slug": "най",
-      "gloss": "most, superlative prefix",
-      "pos": "prefix",
-      "ipa": null,
-      "primary_source": "built_vocabulary",
-      "course_usage": [
-        {
-          "track": "b1",
-          "module_num": 45,
-          "slug": "adjectives-superlative",
-          "context": "built_vocabulary"
-        }
-      ]
-    },
-    {
       "lemma": "найбільш",
       "url_slug": "найбільш",
       "gloss": "most",
@@ -46355,22 +46323,6 @@
           "track": "b1",
           "module_num": 64,
           "slug": "checkpoint-cases",
-          "context": "built_vocabulary"
-        }
-      ]
-    },
-    {
-      "lemma": "неозначено-кількісний",
-      "url_slug": "неозначено-кількісний",
-      "gloss": "indefinite-quantitative",
-      "pos": "adjective",
-      "ipa": null,
-      "primary_source": "built_vocabulary",
-      "course_usage": [
-        {
-          "track": "b1",
-          "module_num": 62,
-          "slug": "cases-with-quantity-expressions",
           "context": "built_vocabulary"
         }
       ]
@@ -52380,22 +52332,6 @@
       ]
     },
     {
-      "lemma": "палаючий",
-      "url_slug": "палаючий",
-      "gloss": "blazing, burning",
-      "pos": "adjective/participle",
-      "ipa": null,
-      "primary_source": "built_vocabulary",
-      "course_usage": [
-        {
-          "track": "b1",
-          "module_num": 65,
-          "slug": "participles-active",
-          "context": "built_vocabulary"
-        }
-      ]
-    },
-    {
       "lemma": "палець",
       "url_slug": "палець",
       "gloss": null,
@@ -52881,22 +52817,6 @@
           "track": "b1",
           "module_num": 34,
           "slug": "prepositions-spatial-review",
-          "context": "built_vocabulary"
-        }
-      ]
-    },
-    {
-      "lemma": "парковка",
-      "url_slug": "парковка",
-      "gloss": "parking lot",
-      "pos": "noun:f",
-      "ipa": null,
-      "primary_source": "built_vocabulary",
-      "course_usage": [
-        {
-          "track": "b1",
-          "module_num": 39,
-          "slug": "motion-prefixes-in-out",
           "context": "built_vocabulary"
         }
       ]
@@ -55154,22 +55074,6 @@
       "url_slug": "питальний-займенник",
       "gloss": "interrogative pronoun",
       "pos": "noun phrase",
-      "ipa": null,
-      "primary_source": "built_vocabulary",
-      "course_usage": [
-        {
-          "track": "b1",
-          "module_num": 63,
-          "slug": "advanced-pronouns",
-          "context": "built_vocabulary"
-        }
-      ]
-    },
-    {
-      "lemma": "питально-відносний",
-      "url_slug": "питально-відносний",
-      "gloss": "interrogative-relative",
-      "pos": "adjective",
       "ipa": null,
       "primary_source": "built_vocabulary",
       "course_usage": [
