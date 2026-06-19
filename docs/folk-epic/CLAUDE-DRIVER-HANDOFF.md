@@ -82,6 +82,9 @@
 2. Then resume user-confirmed folk sequencing: **(2) finish wikis 22→42** (wave-8's 4 on `claude/folk-wikis-wave8` `6369788b8b` → corpus-hammer + PR → 26/42, then ~16 more), **(3) 36-module build-out** on the complete wiki base, using `EXEMPLAR-STANDARD.md` as the template + ship checklist.
 3. dumy-nevilnytski-lytsarski is the natural 2nd exemplar candidate (richer §4 corpus → can demo ≥4 primary-reading boxes).
 
+### ⚠️ PR #3648 CI: one red check is PRE-EXISTING & NON-BLOCKING
+`Atlas Manifest Freshness` fails — but it's **not a required check** (it does not block merge) and it's **pre-existing main debt**, NOT caused by this PR (my diff touches no `scripts/lexicon/*.py`). Root cause: #3646 changed lexicon code without `make atlas`. Filed as **#3649**, routed to the lexicon lane (proper fix needs the canonical dictionary DB; regenerating from a local DB risks manifest drift). All other checks green.
+
 ### 🧷 BOUNDARY
 PR opened, **NOT merged** — exemplar awaits user sign-off. No direct commits to `main`. Reference doc + handoff bundled in the same PR.
 
