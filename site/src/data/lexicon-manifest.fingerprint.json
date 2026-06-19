@@ -1,5 +1,5 @@
 {
-  "fingerprint": "9a5e2cf3de1863c55dcd62596141f3b54a4e11a9551eb3bbfaf1492e31f72ab6",
+  "fingerprint": "7dd6f12ec95468e0066e93bbaa83ee64ed3d592c617870bda500c973f8efafd5",
   "inputs": {
     "lexicon_code": [
       {
@@ -43,6 +43,10 @@
         "sha256": "c8814a4a1b97c7e8942c46077322ccfb12c0e687eb188cfa7396693a5bbe27e1"
       },
       {
+        "path": "scripts/lexicon/export_open_dataset.py",
+        "sha256": "0ceb0d6373e301c92611c239bb8bcd616f71af8ebb938d0e48b2b85346e6d065"
+      },
+      {
         "path": "scripts/lexicon/generate_vesum_aliases.py",
         "sha256": "583f2cfd82892779321bdd91e7127212750f0be7ac430c2bec9512cef71e1084"
       },
@@ -71,6 +75,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 16
+    "lexicon_code_files": 17
   }
 }
