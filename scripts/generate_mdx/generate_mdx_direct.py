@@ -22,14 +22,15 @@ if _pkg_dir not in sys.path:
     sys.path.insert(0, _pkg_dir)
 
 import yaml
-from generate_mdx_direct_content import (
+
+from scripts.generate_mdx.generate_mdx_direct_content import (
     render_checkpoint,
     render_communicative,
     render_grammar,
     render_script_foundation,
     render_vocabulary_module,
 )
-from generate_mdx_direct_renderers import (
+from scripts.generate_mdx.generate_mdx_direct_renderers import (
     escape_jsx_string,
     render_activity,
 )

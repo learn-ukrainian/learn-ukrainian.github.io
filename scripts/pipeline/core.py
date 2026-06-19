@@ -858,7 +858,7 @@ def build_placeholders(ctx: ModuleContext) -> None:
 
     # Folk Micro-Genres (загадки, скоромовки, прислів'я etc.)
     try:
-        from folk_injector import build_folk_material
+        from scripts.content.folk_injector import build_folk_material
         folk_text = build_folk_material(track=ctx.track, slug=ctx.slug)
         placeholders["FOLK_MATERIAL"] = folk_text
         ctx._folk_material = folk_text

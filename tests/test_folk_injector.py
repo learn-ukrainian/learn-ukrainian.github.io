@@ -5,7 +5,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts" / "content"))
 
-from folk_injector import (
+from scripts.content.folk_injector import (
     _load_folk_data,
     _match_themes,
     build_folk_material,
