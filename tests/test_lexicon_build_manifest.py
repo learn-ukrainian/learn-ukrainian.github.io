@@ -191,3 +191,55 @@ def test_manifest_url_slugs_are_unique() -> None:
     duplicates = {slug: lemmas for slug, lemmas in slugs.items() if len(lemmas) > 1}
 
     assert duplicates == {}
+
+
+def test_resolve_slug_collisions_folds_comma_variant() -> None:
+    """Comma-variant lemmas that collide on slug fold into one canonical entry."""
+    from scripts.lexicon.build_data_manifest import (
+        _resolve_slug_collisions,
+        _slug_for_url,
+    )
+
+    # Precondition: the slug function folds commas, so these collide.
+    assert _slug_for_url("тому що") == _slug_for_url("тому, що")
+
+    by_lemma = {
+        "тому що": {
+            "lemma": "тому що",
+            "url_slug": _slug_for_url("тому що"),
+            "gloss": "because",
+            "pos": "conj",
+            "ipa": None,
+            "primary_source": "built_vocabulary",
+            "course_usage": [
+                {"track": "b1", "module_num": 1, "slug": "m1", "context": "built_vocabulary"}
+            ],
+        },
+        "тому, що": {
+            "lemma": "тому, що",
+            "url_slug": _slug_for_url("тому, що"),
+            "gloss": "because (comma form)",
+            "pos": "conj",
+            "ipa": None,
+            "primary_source": "built_vocabulary",
+            "course_usage": [
+                {"track": "b1", "module_num": 2, "slug": "m2", "context": "built_vocabulary"}
+            ],
+            "atlas_normalizations": [{"kind": "calque_correction", "source_lemma": "x"}],
+        },
+    }
+
+    _resolve_slug_collisions(by_lemma)
+
+    survivors = list(by_lemma.values())
+    assert len(survivors) == 1
+    entry = survivors[0]
+    # Canonical = the form WITHOUT interior punctuation.
+    assert entry["lemma"] == "тому що"
+    assert entry["slug_variants"] == ["тому, що"]
+    # course_usage from both folded entries is merged (deduped by module identity).
+    assert {u["module_num"] for u in entry["course_usage"]} == {1, 2}
+    # normalizations from the folded entry are carried over.
+    assert any(
+        n["kind"] == "calque_correction" for n in entry.get("atlas_normalizations", [])
+    )
