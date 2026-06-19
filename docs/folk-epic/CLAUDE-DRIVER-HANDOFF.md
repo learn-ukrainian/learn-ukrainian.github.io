@@ -63,7 +63,18 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 67 HANDOFF (2026-06-19 — ✅ koliadky-shchedrivky PRODUCTION-GRADE EXEMPLAR built + verified → PR opened, awaiting USER review) — **RESUME HERE**
+## ▶▶▶ SESSION 68 HANDOFF (2026-06-19 — ✅ exemplar #3648 MERGED to main; Phase 2 folk wikis STARTED on this branch) — **RESUME HERE**
+
+**🟢 STATE:** Exemplar `koliadky-shchedrivky` DONE + MERGED (#3648, `85d15c41ab`). Now finishing folk wikis 22→42. This branch `claude/folk-wikis-wave8` is rebased onto current `main` + data DBs symlinked in the worktree.
+
+### Phase 2 — wave-8 wikis (4 compiled, PENDING corpus-hammer)
+`wiki/folk/historical/striletski-povstanski-pisni`, `.../lyric/suspilno-pobutovi-pisni`, `.../prose/sotsialno-pobutovi-kazky`, `.../short-forms/prykazky-ta-pryslivia`.
+- **⚠️ CORPUS-HAMMER FINDING (real):** `scripts/wiki/review.py --hard-gate` on wiki 1 (striletski) → **NEEDS_FIXES**: source_grounding **REVISE 7 → REJECT 5** (2 rounds); other 3 dims PASS 9-10. Root-cause hypothesis: weak `[S#]` registry — `.sources.yaml` entries are `folk-micro-*` with `type: unknown` (no real corpus provenance). **DO NOT PR as-is — fails the hard-gate.**
+- **NEXT:** re-ground the `[S#]` sources against the corpus (or fix the compile step that produced the weak registry — likely affects ALL folk wikis, so #0.1 root-cause it) → re-run `review.py --article wiki/folk/<dir>/<slug>.md --hard-gate` per wiki from this worktree → all 4 PASS → commit (exclude `wiki/.reviews/` scratch) + force-push + PR → **26/42**. Then ~16 more wikis → 42/42, then the 36-module build-out via `docs/folk-epic/EXEMPLAR-STANDARD.md`. `dumy` = natural 2nd exemplar.
+
+### Open issue: Atlas Manifest Freshness CI (#3649) — pre-existing lexicon-lane debt from #3646, NON-blocking (not a required check). Not a folk fix; routed to lexicon lane.
+
+## ▶▶▶ SESSION 67 HANDOFF (2026-06-19 — ✅ koliadky-shchedrivky PRODUCTION-GRADE EXEMPLAR — MERGED via #3648)
 
 **🟢 ONE-LINE STATE:** User's TOP-PRIORITY ask — produce ONE production-grade folk exemplar — is DONE for `koliadky-shchedrivky`. PR opened (NOT merged; user explicitly wants to *review* the exemplar as the template). Reference standard + ship checklist written for the 36 remaining builds.
 
