@@ -1,0 +1,124 @@
+- lemma: складнопідрядне речення
+  translation: "complex sentence with subordination"
+  pos: phrase
+  usage: "Складнопідрядне речення має головну частину і залежну підрядну частину."
+- lemma: головна частина
+  translation: "main clause"
+  pos: phrase
+  usage: "Від головної частини ставимо питання до підрядної."
+- lemma: підрядна частина
+  translation: "subordinate clause"
+  pos: phrase
+  usage: "Підрядна частина пояснює слово або зміст головної частини."
+- lemma: з'ясувальне речення
+  translation: "object clause, explanatory subordinate clause"
+  pos: phrase
+  usage: "З'ясувальне речення відповідає на питання що? кого? чого? про що?"
+- lemma: підрядний зв'язок
+  translation: "subordinate connection"
+  pos: phrase
+  usage: "Підрядний зв'язок означає, що одна частина залежить від іншої."
+- lemma: сполучник підрядності
+  translation: "subordinating conjunction"
+  pos: phrase
+  usage: "Сполучник підрядності з'єднує частини, але не є членом підрядної частини."
+- lemma: сполучне слово
+  translation: "connective word, relative word"
+  pos: phrase
+  usage: "Сполучне слово з'єднує частини і виконує роль члена речення."
+- lemma: пояснюване слово
+  translation: "explained word"
+  pos: phrase
+  usage: "Пояснюване слово в головній частині потребує розкриття змісту."
+- lemma: непрямі відмінки
+  translation: "indirect cases"
+  pos: phrase
+  usage: "З'ясувальні підрядні часто відповідають на питання непрямих відмінків."
+- lemma: прямий відмінок
+  translation: "direct case, nominative-like direct question in school terminology"
+  pos: phrase
+  usage: "У шкільному описі з'ясувальні частини можуть відповідати і на питання прямого відмінка."
+- lemma: дієслово мовлення
+  translation: "verb of speech"
+  pos: phrase
+  usage: "Після дієслів мовлення часто стоїть підрядна частина з що або чи."
+- lemma: дієслово мислення
+  translation: "verb of thought"
+  pos: phrase
+  usage: "Думати, знати, вважати - типові дієслова мислення."
+- lemma: дієслово сприйняття
+  translation: "verb of perception"
+  pos: phrase
+  usage: "Бачити, чути, помічати можуть вводити з'ясувальні підрядні."
+- lemma: дієслово волевиявлення
+  translation: "verb of volition"
+  pos: phrase
+  usage: "Хотіти, просити, наказати часто вимагають конструкції з щоб."
+- lemma: що
+  translation: "that; what"
+  pos: conjunction/pronoun
+  usage: "Я знаю, що зустріч перенесли."
+- lemma: щоб
+  translation: "so that; in order that"
+  pos: conjunction
+  usage: "Я хочу, щоб ти перевірив джерело."
+- lemma: чи
+  translation: "whether"
+  pos: conjunction/particle
+  usage: "Запитай, чи викладачка вже надіслала план."
+- lemma: хто
+  translation: "who"
+  pos: pronoun
+  usage: "Ніхто не знає, хто залишив повідомлення."
+- lemma: який
+  translation: "which, what kind of"
+  pos: pronoun
+  usage: "Поясни, який варіант краще звучить."
+- lemma: де
+  translation: "where"
+  pos: adverb
+  usage: "Скажи, де відбудеться зустріч."
+- lemma: куди
+  translation: "where to"
+  pos: adverb
+  usage: "Я не пам'ятаю, куди поклав квитки."
+- lemma: коли
+  translation: "when"
+  pos: adverb
+  usage: "Вона запитала, коли почнеться пара."
+- lemma: як
+  translation: "how; as"
+  pos: conjunction/adverb
+  usage: "Викладач пояснив, як оформити цитату."
+- lemma: чому
+  translation: "why"
+  pos: adverb
+  usage: "Ми не розуміли, чому заняття перенесли."
+- lemma: скільки
+  translation: "how many, how much"
+  pos: pronoun/adverb
+  usage: "Студентка уточнила, скільки джерел потрібно."
+- lemma: вказівне слово
+  translation: "correlative, demonstrative word"
+  pos: phrase
+  usage: "У конструкції про те, що слово те бере на себе форму після прийменника."
+- lemma: непряме питання
+  translation: "indirect question"
+  pos: phrase
+  usage: "Я не знаю, чи він прийде - це непряме питання."
+- lemma: кома перед підрядною частиною
+  translation: "comma before a subordinate clause"
+  pos: phrase
+  usage: "Кома перед підрядною частиною показує межу між частинами."
+- lemma: схема речення
+  translation: "sentence scheme"
+  pos: phrase
+  usage: "Схема [ ], (що...) допомагає побачити залежність."
+- lemma: головне слово
+  translation: "head word, controlling word"
+  pos: phrase
+  usage: "Головне слово сказав відкриває місце для змісту повідомлення."
+- lemma: зміст повідомлення
+  translation: "content of a message"
+  pos: phrase
+  usage: "Підрядна частина розкриває зміст повідомлення."
