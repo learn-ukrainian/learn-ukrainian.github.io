@@ -1005,6 +1005,26 @@ class ActivityParser:
             tasks=data.get('tasks', [])
         )
 
+    @staticmethod
+    def _as_str_list(value) -> list[str]:
+        """Coerce a YAML scalar-or-list into a clean list[str].
+
+        Guards against a bare string being supplied where a list is expected:
+        iterating a string yields one item per CHARACTER, which downstream
+        rendered the essay-response «Взаємоперевірка» peer-review as single-letter
+        bullets (koliadky-shchedrivky exemplar bug, 2026-06-19). A non-empty
+        string becomes a single-item list; blanks are dropped.
+        """
+        if value is None:
+            return []
+        if isinstance(value, str):
+            value = value.strip()
+            return [value] if value else []
+        if isinstance(value, (list, tuple)):
+            return [str(v).strip() for v in value if str(v).strip()]
+        text = str(value).strip()
+        return [text] if text else []
+
     def _parse_essay_response(self, data: dict) -> EssayResponseActivity:
         return EssayResponseActivity(
             title=data.get('title', ''),
@@ -1014,7 +1034,7 @@ class ActivityParser:
             prompt=data.get('prompt', ''),
             min_words=data.get('min_words', 0),
             model_answer=data.get('model_answer', ''),
-            peer_review_guidelines=data.get('peer_review_guidelines', []),
+            peer_review_guidelines=self._as_str_list(data.get('peer_review_guidelines', [])),
             rubric=data.get('rubric', [])
         )
 

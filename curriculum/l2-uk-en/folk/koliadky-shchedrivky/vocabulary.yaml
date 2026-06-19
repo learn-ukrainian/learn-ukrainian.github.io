@@ -27,6 +27,11 @@
   translation: ritual; related to a traditional rite
   pos: adj
   usage: Колядка — частина обрядового сценарію зимового циклу.
+- lemma: обрядодія
+  translation: ritual action; a complete ceremonial act uniting song, movement, mask,
+    gift and addressee
+  pos: noun
+  usage: Колядування — це обрядодія, а не самостійний концертний номер.
 - lemma: автохтонний
   translation: autochthonous; of local, native origin (opposite of borrowed)
   pos: adj
