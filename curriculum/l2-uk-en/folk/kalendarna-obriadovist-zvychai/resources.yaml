@@ -18,3 +18,7 @@
 # NOTE (#3162): the hallucinated bare-domain/guessed-id "reading links" added under
 # #3120 were purged here; a verified primary-text reading task (allowlisted, resolving)
 # will be added once a specific calendar-song source page is confirmed live.
+- title: 'Веснянки'
+  role: reading
+  url: https://uk.wikisource.org/wiki/Веснянки
+  notes: 'Прочитай тексти веснянок як збірник першоджерел і познач образи весни, поля та громади.'
