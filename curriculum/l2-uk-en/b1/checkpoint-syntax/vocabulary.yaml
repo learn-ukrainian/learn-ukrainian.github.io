@@ -1,0 +1,191 @@
+- lemma: контрольна робота
+  translation: checkpoint assessment, test
+  pos: phrase
+  usage: "Контрольна робота 7 перевіряє складні речення й чуже мовлення."
+- lemma: складне речення
+  translation: complex sentence
+  pos: phrase
+  usage: "Складне речення має дві або більше граматичні основи."
+- lemma: граматична основа
+  translation: grammatical base, subject-predicate core
+  pos: phrase
+  usage: "Перед пунктуацією знайдіть граматичні основи."
+- lemma: сполучник
+  translation: conjunction
+  pos: noun
+  gender: m
+  usage: "Сполучник показує зв'язок між частинами речення."
+- lemma: складносурядне речення
+  translation: compound sentence
+  pos: phrase
+  usage: "Складносурядне речення поєднує рівноправні частини."
+- lemma: сурядний зв'язок
+  translation: coordination
+  pos: phrase
+  usage: "Сурядний зв'язок може бути єднальним, протиставним або розділовим."
+- lemma: єднальний сполучник
+  translation: additive coordinating conjunction
+  pos: phrase
+  usage: "І та й часто працюють як єднальні сполучники."
+- lemma: протиставний сполучник
+  translation: adversative conjunction
+  pos: phrase
+  usage: "Але й проте вводять протиставний зв'язок."
+- lemma: розділовий сполучник
+  translation: disjunctive conjunction
+  pos: phrase
+  usage: "Або...або створює розділовий зв'язок."
+- lemma: складнопідрядне речення
+  translation: complex sentence with subordinate clause
+  pos: phrase
+  usage: "У складнопідрядному реченні одна частина залежить від іншої."
+- lemma: підрядне речення
+  translation: subordinate clause construction
+  pos: phrase
+  usage: "Підрядне речення визначаємо за питанням до залежної частини."
+- lemma: головна частина
+  translation: main clause
+  pos: phrase
+  usage: "Головна частина може стояти перед підрядною або після неї."
+- lemma: підрядна частина
+  translation: subordinate clause
+  pos: phrase
+  usage: "Підрядна частина відповідає на питання до головної."
+- lemma: з'ясувальна частина
+  translation: content clause
+  pos: phrase
+  usage: "З'ясувальна частина розкриває зміст мовлення або думки."
+- lemma: означальна частина
+  translation: relative clause
+  pos: phrase
+  usage: "Означальна частина пояснює іменник."
+- lemma: речення часу
+  translation: time clause
+  pos: phrase
+  usage: "Речення часу відповідає на питання коли?"
+- lemma: речення причини
+  translation: reason clause
+  pos: phrase
+  usage: "Речення причини відповідає на питання чому?"
+- lemma: речення умови
+  translation: conditional clause
+  pos: phrase
+  usage: "Речення умови починається словами якщо або якби."
+- lemma: речення мети
+  translation: purpose clause
+  pos: phrase
+  usage: "Речення мети відповідає на питання для чого?"
+- lemma: речення допусту
+  translation: concessive clause
+  pos: phrase
+  usage: "Речення допусту називає перешкоду, яка не зупинила дію."
+- lemma: класифікація
+  translation: classification
+  pos: noun
+  gender: f
+  usage: "Класифікація речень починається з пошуку граматичних основ."
+- lemma: перетворення
+  translation: transformation, conversion
+  pos: noun
+  gender: n
+  usage: "Перетворення прямої мови на непряму змінює точку зору."
+- lemma: повторення
+  translation: review, repetition
+  pos: noun
+  gender: n
+  usage: "Повторення має бути точковим: сурядність, підрядність або чуже мовлення."
+- lemma: самооцінка
+  translation: self-assessment
+  pos: noun
+  gender: f
+  usage: "Самооцінка показує, яку зону треба повторити перед наступним модулем."
+- lemma: сполучне слово
+  translation: connective word
+  pos: phrase
+  usage: "Який у підрядній частині є сполучним словом і має свій відмінок."
+- lemma: складений сполучник
+  translation: compound conjunction
+  pos: phrase
+  usage: "Тому що й після того як часто сприймаємо як складені сполучники."
+- lemma: пряма мова
+  translation: direct speech
+  pos: phrase
+  usage: "Пряма мова передає чужі слова дослівно."
+- lemma: непряма мова
+  translation: indirect speech, reported speech
+  pos: phrase
+  usage: "Непряма мова переказує зміст чужої репліки."
+- lemma: слова автора
+  translation: reporting clause, author's words
+  pos: phrase
+  usage: "Слова автора пояснюють, хто говорить або запитує."
+- lemma: лапки
+  translation: quotation marks
+  pos: noun
+  usage: "Українська пряма мова використовує лапки « »."
+- lemma: тире
+  translation: dash
+  pos: noun
+  gender: n
+  usage: "У діалозі кожна репліка починається з тире."
+- lemma: двокрапка
+  translation: colon
+  pos: noun
+  gender: f
+  usage: "Після слів автора перед прямою мовою ставимо двокрапку."
+- lemma: репліка
+  translation: dialogue line, utterance
+  pos: noun
+  gender: f
+  usage: "Кожна нова репліка діалогу починається з нового рядка."
+- lemma: зміна особи
+  translation: person shift
+  pos: phrase
+  usage: "Зміна особи пояснює, чому я стає він або вона."
+- lemma: вказівне слово
+  translation: deictic word
+  pos: phrase
+  usage: "Тут, зараз і завтра можуть змінюватися в непрямій мові."
+- lemma: дозвілля
+  translation: leisure
+  pos: noun
+  gender: n
+  usage: "Дозвілля в модулі пов'язане з концертами, виставками й читанням."
+- lemma: культурна подія
+  translation: cultural event
+  pos: phrase
+  usage: "Опишіть культурну подію, використовуючи складні речення."
+- lemma: фестиваль
+  translation: festival
+  pos: noun
+  gender: m
+  usage: "Фестиваль короткого кіно став контекстом для граматичних завдань."
+- lemma: виставка
+  translation: exhibition
+  pos: noun
+  gender: f
+  usage: "Виставка афіш відкрилася перед показом фільму."
+- lemma: кінопоказ
+  translation: film screening
+  pos: noun
+  gender: m
+  usage: "Після кінопоказу глядачі залишилися на дискусію."
+- lemma: книжковий клуб
+  translation: book club
+  pos: phrase
+  usage: "Книжковий клуб зручний для завдань із прямою та непрямою мовою."
+- lemma: дискусія
+  translation: discussion
+  pos: noun
+  gender: f
+  usage: "Після вистави почалася дискусія з режисеркою."
+- lemma: афіша
+  translation: poster, event listing
+  pos: noun
+  gender: f
+  usage: "Марко побачив афішу фестивалю біля бібліотеки."
+- lemma: волонтерка
+  translation: female volunteer
+  pos: noun
+  gender: f
+  usage: "Волонтерка запитала, чи ми маємо квитки."
