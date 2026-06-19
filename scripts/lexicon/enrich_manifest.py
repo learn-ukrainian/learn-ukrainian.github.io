@@ -67,6 +67,11 @@ from scripts.lexicon.calque_corrections import (
     PHRASAL_CALQUES,
     SENSE_RESTRICTED_CALQUES,
 )
+from scripts.lexicon.esum_garbled import (
+    garbled_esum_entry,
+    strip_garbled_tail,
+    trim_curated_goroh_text,
+)
 from scripts.lexicon.heritage_classifier import classify_lemma
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, write_fingerprint
 from scripts.verification.vesum import verify_lemma, verify_word
@@ -2365,7 +2370,7 @@ def _goroh_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
     if not row or not row[0]:
         return None
     return {
-        "text": clean_html_entities(row[0].strip()[:600]),
+        "text": clean_html_entities(trim_curated_goroh_text(row[0].strip()[:600], lemma)),
         "source": "Горох (за ЕСУМ)",
         "source_url": row[1],
     }
@@ -2397,7 +2402,13 @@ def _esum_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
         cite += f", т. {row[1]}"
     if row[2]:
         cite += f", с. {row[2]}"
-    return {"text": clean_html_entities(row[0].strip()[:600]), "source": cite}
+    text = clean_html_entities(row[0].strip()[:600])
+    if garbled_esum_entry(word):
+        text = clean_html_entities(strip_garbled_tail(text, word))
+        cite += " (garbled tail stripped)"
+    if not text:
+        return None
+    return {"text": text, "source": cite}
 
 
 def _wiktionary_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:

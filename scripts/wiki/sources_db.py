@@ -26,6 +26,12 @@ from pathlib import Path
 
 import yaml
 
+from scripts.lexicon.esum_garbled import (
+    garbled_esum_entry,
+    strip_garbled_tail,
+    trim_curated_goroh_text,
+)
+
 from . import slovnyk_me
 from .channels import rank_external_hits
 from .chunking import chunk_text, policy_for
@@ -1435,6 +1441,48 @@ def _single_loaded_esum_volume(conn: sqlite3.Connection) -> int | None:
     return None
 
 
+def _goroh_override_for_esum(conn: sqlite3.Connection, lemma: str) -> dict[str, str] | None:
+    if not garbled_esum_entry(lemma):
+        return None
+    try:
+        row = conn.execute(
+            """
+            SELECT etymology_text, source_url
+            FROM goroh_etymology
+            WHERE requested_lemma = ? AND etymology_text != ''
+            LIMIT 1
+            """,
+            (lemma,),
+        ).fetchone()
+    except sqlite3.OperationalError:
+        return None
+    if not row or not row["etymology_text"]:
+        return None
+    return {
+        "etymology_text": trim_curated_goroh_text(row["etymology_text"], lemma),
+        "source": "Горох (за ЕСУМ)",
+        "source_url": row["source_url"],
+    }
+
+
+def _clean_garbled_esum_results(conn: sqlite3.Connection, rows: list[dict]) -> list[dict]:
+    cleaned: list[dict] = []
+    for row in rows:
+        lemma = str(row.get("lemma") or "")
+        if not garbled_esum_entry(lemma):
+            cleaned.append(row)
+            continue
+        item = dict(row)
+        override = _goroh_override_for_esum(conn, lemma)
+        if override:
+            item.update(override)
+        else:
+            item["etymology_text"] = strip_garbled_tail(str(item.get("etymology_text") or ""), lemma)
+            item["source"] = f"{item.get('source') or 'ЕСУМ'} (garbled tail stripped)"
+        cleaned.append(item)
+    return cleaned
+
+
 def search_esum(
     query: str,
     volume: int | None = None,
@@ -1485,7 +1533,7 @@ def search_esum(
         remaining = limit - len(results)
         fts_query = _escape_fts5_phrase(query)
         if remaining <= 0 or not fts_query:
-            return results
+            return _clean_garbled_esum_results(conn, results)
 
         fts_params: list[object] = [fts_query]
         fts_vol_filter = ""
@@ -1512,7 +1560,7 @@ def search_esum(
             results.append(item)
             if len(results) >= limit:
                 break
-        return results
+        return _clean_garbled_esum_results(conn, results)
     finally:
         _close_if_temporary(conn, db_path)
 
