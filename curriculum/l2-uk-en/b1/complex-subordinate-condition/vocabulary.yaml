@@ -1,0 +1,96 @@
+- lemma: речення умови
+  translation: "conditional clause"
+  pos: phrase
+  usage: "Речення умови називає ситуацію, за якої дія головної частини стане можливою."
+- lemma: підрядна обставинна частина умови
+  translation: "conditional adverbial subordinate clause"
+  pos: phrase
+  usage: "Підрядна обставинна частина умови відповідає на питання за якої умови?"
+- lemma: умова
+  translation: "condition"
+  pos: noun
+  usage: "Умова може бути реальною, нереальною або офіційно сформульованою."
+- lemma: реальна умова
+  translation: "real condition"
+  pos: phrase
+  usage: "Реальна умова описує можливу ситуацію в теперішньому або майбутньому."
+- lemma: нереальна умова
+  translation: "unreal condition"
+  pos: phrase
+  usage: "Нереальна умова показує уявну або контрфактичну ситуацію."
+- lemma: умовний спосіб
+  translation: "conditional mood"
+  pos: phrase
+  usage: "Умовний спосіб часто поєднується з якби в нереальних умовах."
+- lemma: якщо
+  translation: "if"
+  pos: conjunction
+  usage: "Якщо матимеш час, напиши мені після заняття."
+- lemma: якби
+  translation: "if, if only"
+  pos: conjunction
+  usage: "Якби я мав більше часу, підготував би докладніший звіт."
+- lemma: коли
+  translation: "when, if"
+  pos: conjunction
+  usage: "Коли хочеш отримати відповідь, сформулюй питання конкретно."
+- lemma: коли б
+  translation: "if, if only"
+  pos: conjunction phrase
+  usage: "Коли б ми знали про затримку раніше, змінили б маршрут."
+- lemma: як
+  translation: "if, when"
+  pos: conjunction
+  usage: "Як захочеш поговорити, зателефонуй."
+- lemma: то
+  translation: "then"
+  pos: correlative particle
+  usage: "Якщо прийдеш раніше, то допоможеш підготувати залу."
+- lemma: тоді
+  translation: "then"
+  pos: correlative adverb
+  usage: "Якщо дощ не припиниться, тоді залишимося вдома."
+- lemma: за умови що
+  translation: "provided that, on the condition that"
+  pos: formal conjunction phrase
+  usage: "За умови що документи подадуть вчасно, заявку розглянуть цього тижня."
+- lemma: у випадку якщо
+  translation: "in case, if"
+  pos: formal conjunction phrase
+  usage: "У випадку якщо система не працюватиме, зверніться до адміністратора."
+- lemma: якщо тільки
+  translation: "unless, provided that"
+  pos: limiting conjunction phrase
+  usage: "Ми зустрінемося о шостій, якщо тільки поїзд не запізниться."
+- lemma: умовне коли
+  translation: "conditional коли"
+  pos: phrase
+  usage: "Умовне коли можна замінити на якщо без великої зміни змісту."
+- lemma: часове коли
+  translation: "temporal коли"
+  pos: phrase
+  usage: "Часове коли відповідає на питання коли? і не дорівнює якщо."
+- lemma: співвідносне слово
+  translation: "correlative word"
+  pos: phrase
+  usage: "То і тоді можуть підкреслювати результат у головній частині."
+- lemma: можливість
+  translation: "possibility"
+  pos: noun
+  usage: "Умова відкриває можливість, але не стверджує факт."
+- lemma: факт
+  translation: "fact"
+  pos: noun
+  usage: "Причина пояснює факт, а умова описує можливу ситуацію."
+- lemma: наслідок
+  translation: "consequence"
+  pos: noun
+  usage: "У головній частині часто названо наслідок виконання умови."
+- lemma: формальна умова
+  translation: "formal condition"
+  pos: phrase
+  usage: "Формальна умова доречна в правилах, договорах і службових інструкціях."
+- lemma: обмеження
+  translation: "restriction, limitation"
+  pos: noun
+  usage: "Якщо тільки вводить обмеження або виняток."
