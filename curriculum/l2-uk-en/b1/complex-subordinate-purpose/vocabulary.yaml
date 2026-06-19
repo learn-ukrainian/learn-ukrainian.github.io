@@ -1,0 +1,104 @@
+- lemma: речення мети
+  translation: "purpose clause"
+  pos: phrase
+  usage: "Речення мети називає бажаний результат дії головної частини."
+- lemma: підрядна обставинна частина мети
+  translation: "adverbial subordinate clause of purpose"
+  pos: phrase
+  usage: "Підрядна обставинна частина мети відповідає на питання для чого? навіщо?"
+- lemma: мета
+  translation: "purpose, goal"
+  pos: noun
+  usage: "Мета показує, заради чого людина виконує дію."
+- lemma: ціль
+  translation: "aim, objective"
+  pos: noun
+  usage: "Ціль може бути конкретним результатом: скласти іспит, подати заяву, підготувати залу."
+- lemma: щоб
+  translation: "in order to, so that"
+  pos: conjunction
+  usage: "Ми прийшли раніше, щоб підготувати залу."
+- lemma: аби
+  translation: "in order to, so that"
+  pos: conjunction
+  usage: "Вона повторила інструкцію, аби всі зрозуміли порядок роботи."
+- lemma: для того щоб
+  translation: "in order to"
+  pos: conjunction phrase
+  usage: "Для того щоб скласти іспит, треба повторити всі теми."
+- lemma: з тим щоб
+  translation: "with the aim of, in order to"
+  pos: formal conjunction phrase
+  usage: "Комісію створили з тим, щоб перевірити якість перекладу."
+- lemma: інфінітив
+  translation: "infinitive"
+  pos: noun
+  usage: "Коли підмет той самий, після щоб часто стоїть інфінітив."
+- lemma: однаковий підмет
+  translation: "same subject"
+  pos: phrase
+  usage: "Однаковий підмет дає модель: Я прийшов, щоб допомогти."
+- lemma: різні підмети
+  translation: "different subjects"
+  pos: phrase
+  usage: "Різні підмети дають модель: Я прийшов, щоб ти допоміг."
+- lemma: форма минулого часу після щоб
+  translation: "past-tense form after щоб"
+  pos: phrase
+  usage: "Після щоб у реченні з різними підметами українська вживає форму минулого часу: щоб ти побачив."
+- lemma: умовний відтінок
+  translation: "subjunctive-like nuance"
+  pos: phrase
+  usage: "Форма побачив після щоб не означає минуле, а передає бажану дію."
+- lemma: з'ясувальне щоб
+  translation: "object-clause щоб"
+  pos: phrase
+  usage: "У реченні Я хочу, щоб ти прийшов підрядна частина розкриває зміст бажання."
+- lemma: цільове щоб
+  translation: "purpose щоб"
+  pos: phrase
+  usage: "У реченні Я подзвонив, щоб ти прийшов підрядна частина називає мету дзвінка."
+- lemma: пояснюване слово
+  translation: "explained controlling word"
+  pos: phrase
+  usage: "З'ясувальне речення часто залежить від пояснюваного слова хочу, прошу або наказав."
+- lemma: вся головна дія
+  translation: "the whole main action"
+  pos: phrase
+  usage: "Підрядна мети стосується всієї головної дії, а не одного іменника."
+- lemma: для + родовий
+  translation: "for + genitive"
+  pos: phrase
+  usage: "Для навчання потрібен регулярний план."
+- lemma: заради
+  translation: "for the sake of"
+  pos: preposition
+  usage: "Команда працювала заради безпеки дітей."
+- lemma: задля
+  translation: "for the sake of"
+  pos: preposition
+  usage: "Задля якості перекладу редактор перевірив терміни."
+- lemma: з метою
+  translation: "with the aim of"
+  pos: formal preposition phrase
+  usage: "З метою безпеки вхід зачинили після шостої."
+- lemma: навіщо
+  translation: "what for"
+  pos: question adverb
+  usage: "Навіщо команда прийшла раніше?"
+- lemma: для чого
+  translation: "for what purpose"
+  pos: question phrase
+  usage: "Для чого студент подав заяву?"
+- lemma: з якою метою
+  translation: "with what purpose"
+  pos: question phrase
+  usage: "З якою метою організатори змінили розклад?"
+- lemma: не для того щоб
+  translation: "not in order to"
+  pos: conjunction phrase
+  usage: "Ми вчимо правило не для того, щоб зазубрити термін, а щоб писати точніше."
+- lemma: стилістична вага
+  translation: "stylistic weight"
+  pos: phrase
+  usage: "Для того щоб і з тим щоб мають більшу стилістичну вагу, ніж просте щоб."
