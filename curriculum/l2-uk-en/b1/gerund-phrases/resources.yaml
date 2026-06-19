@@ -1,0 +1,34 @@
+- title: "B1 M72: Дієприслівниковий зворот"
+  role: curriculum
+  notes: "Основний модуль про дієприслівник із залежними словами, відокремлення комами, винятки та стилістику."
+- title: "B1 M70: Дієприслівники недоконаного виду"
+  role: curriculum
+  notes: "Попередній модуль дає форми одночасної додаткової дії: читаючи, слухаючи, працюючи."
+  source_ref: curriculum/l2-uk-en/b1/gerunds-imperfective/module.md
+- title: "B1 M71: Дієприслівники доконаного виду"
+  role: curriculum
+  notes: "Попередній модуль дає форми попередньої завершеної дії: прочитавши, дізнавшись, повернувшись."
+  source_ref: curriculum/l2-uk-en/b1/gerunds-perfective/module.md
+- title: "B1 M67: Дієприкметниковий зворот"
+  role: curriculum
+  notes: "Паралельний модуль для порівняння означення і обставини, а також різних правил пунктуації."
+  source_ref: curriculum/l2-uk-en/b1/participle-phrases/module.md
+- title: "B1 M72 plan: gerund-phrases"
+  role: curriculum
+  notes: "Плановий перелік цілей і лексики для теми дієприслівникового звороту."
+  source_ref: curriculum/l2-uk-en/plans/b1/gerund-phrases.yaml
+- title: "Заболотний, 7 клас: дієприслівниковий зворот"
+  role: textbook
+  notes: "Джерело для визначення: дієприслівник із залежними словами, один член речення, обставина."
+  source_ref: docs/references/textbooks-txt/7-klas-ukrmova-zabolotnyi-2024.txt
+- title: "Заболотний, 8 клас: відокремлені обставини"
+  role: textbook
+  notes: "Джерело для правила ком і винятків: фразеологізми, підсилювальна і/й, спосіб дії."
+  source_ref: docs/references/textbooks-txt/8-klas-ukrmova-zabolotnyi-2025.txt
+- title: "Авраменко, 11 клас: відокремлені обставини"
+  role: textbook
+  notes: "Підтверджує винятки для дієприслівникових зворотів і одиничних дієприслівників."
+  source_ref: docs/references/textbooks-txt/11-klas-ukrajinska-mova-avramenko-2019.txt
+- title: "Local source lookup"
+  role: reference
+  notes: "Headroom source-summary hash 28edea07de0b447c7f97c172: локальний пошук підтвердив правило відокремлення та B1-безпечні винятки."

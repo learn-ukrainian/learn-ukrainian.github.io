@@ -1,0 +1,116 @@
+- lemma: короткий прикметник
+  translation: short-form adjective
+  pos: phrase
+  usage: "Короткий прикметник не має звичайного відмінкового закінчення: зелен, ясен, повен."
+- lemma: повний прикметник
+  translation: full adjective form
+  pos: phrase
+  usage: "Повний прикметник змінюється за родом, числом і відмінком: зелений, зелена, зеленого."
+- lemma: стягнена форма
+  translation: contracted full form
+  pos: phrase
+  usage: "Стягнена форма зелений є нейтральною для сучасної української мови."
+- lemma: нестягнена форма
+  translation: uncontracted full form
+  pos: phrase
+  usage: "Нестягнена форма зеленеє звучить поетично або народнопісенно."
+- lemma: народнопоетичний
+  translation: folk-poetic
+  pos: adjective
+  usage: "Форми ясен, дрібен, зелен часто мають народнопоетичний відтінок."
+- lemma: художній стиль
+  translation: literary style
+  pos: phrase
+  usage: "У художньому стилі коротка форма може створювати ритм і піднесеність."
+- lemma: присудковий
+  translation: predicative
+  pos: adjective
+  usage: "У реченні Я певен слово певен ужито присудково."
+- lemma: якісний прикметник
+  translation: qualitative adjective
+  pos: phrase
+  usage: "Короткі форми пов'язані насамперед із якісними прикметниками."
+- lemma: потрібен
+  translation: needed
+  pos: adjective
+  usage: "Мені потрібен час, а тобі потрібна допомога."
+- lemma: потрібна
+  translation: needed, feminine
+  pos: adjective
+  usage: "Для реєстрації потрібна довідка."
+- lemma: певен
+  translation: sure, certain
+  pos: adjective
+  usage: "Я певен, що ця відповідь правильна."
+- lemma: певна
+  translation: sure, feminine
+  pos: adjective
+  usage: "Вона певна, що зможе пояснити правило."
+- lemma: годен
+  translation: capable, fit
+  pos: adjective
+  usage: "Він годен працювати самостійно."
+- lemma: годна
+  translation: capable, feminine
+  pos: adjective
+  usage: "Вона годна виконати це завдання без допомоги."
+- lemma: ладен
+  translation: ready, willing
+  pos: adjective
+  usage: "Я ладен почекати кілька хвилин."
+- lemma: ладна
+  translation: ready, willing, feminine
+  pos: adjective
+  usage: "Марія ладна допомогти після заняття."
+- lemma: варт
+  translation: worth
+  pos: adjective
+  usage: "Цей текст варт уважного читання."
+- lemma: варта
+  translation: worth, feminine
+  pos: adjective
+  usage: "Ця вистава варта уваги."
+- lemma: рад
+  translation: glad
+  pos: adjective
+  usage: "Я рад вас бачити."
+- lemma: рада
+  translation: glad, feminine
+  pos: adjective
+  usage: "Я рада вас бачити після перерви."
+- lemma: зелен
+  translation: green, poetic short form
+  pos: adjective
+  usage: "У фольклорному або поетичному тексті можна зустріти зелен гай."
+- lemma: ясен
+  translation: bright, clear, poetic short form
+  pos: adjective
+  usage: "Фраза ясен місяцю звучить як народнопісенне звертання."
+- lemma: дрібен
+  translation: fine, small, poetic short form
+  pos: adjective
+  usage: "Дрібен дощик - типовий народнопоетичний образ."
+- lemma: повен
+  translation: full, poetic or predicative short form
+  pos: adjective
+  usage: "У текстах трапляється образ човен води повен."
+- lemma: славен
+  translation: renowned, glorious, short form
+  pos: adjective
+  usage: "Славен край звучить піднесено й книжно."
+- lemma: красен
+  translation: beautiful, fair, poetic short form
+  pos: adjective
+  usage: "Красен день належить до піднесеного або художнього мовлення."
+- lemma: усічений
+  translation: truncated
+  pos: adjective
+  usage: "Усічений прикметник у поезії треба відрізняти від короткої форми."
+- lemma: закінчення
+  translation: ending
+  pos: noun:n
+  usage: "Коротка форма зелен не має звичайного прикметникового закінчення."
+- lemma: неузгоджуваний
+  translation: non-agreeing
+  pos: adjective
+  usage: "Багато коротких поетичних форм є неузгоджуваними в сучасному описі."

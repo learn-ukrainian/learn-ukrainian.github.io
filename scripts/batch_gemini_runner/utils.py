@@ -65,14 +65,14 @@ def _switch_gemini_account(new_account: str) -> bool:
         # Acquire lock (spin with short sleep for up to 10s)
         for _ in range(100):
             try:
-                fd = os.open(str(lock_file), os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+                fd = os.open(str(lock_file), os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
                 break
             except FileExistsError:
                 time.sleep(0.1)
         else:
             # Timeout -- force acquire (stale lock from crashed process)
             lock_file.unlink(missing_ok=True)
-            fd = os.open(str(lock_file), os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+            fd = os.open(str(lock_file), os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
 
         data = json.loads(GEMINI_ACCOUNTS_FILE.read_text(encoding="utf-8"))
         old_active = data.get("active", "")

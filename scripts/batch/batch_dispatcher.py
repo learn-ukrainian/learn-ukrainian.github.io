@@ -46,7 +46,7 @@ from pathlib import Path
 # Ensure scripts/ is on sys.path for sibling imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from batch_dispatcher_config import (
+from batch.batch_dispatcher_config import (
     COOLDOWN_SECONDS,
     DISPATCHER_STATE_FILE,
     INTER_DISPATCH_PAUSE,
@@ -54,7 +54,7 @@ from batch_dispatcher_config import (
     TRACKS,
     TrackState,
 )
-from batch_dispatcher_helpers import (
+from batch.batch_dispatcher_helpers import (
     BATCH_STATE_DIR,
     FAILURES_DIR,
     check_dependencies,

@@ -52,7 +52,7 @@ from threading import Lock
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from audit.status_cache import get_source_paths, read_status
-from batch_dispatcher_config import (
+from batch.batch_dispatcher_config import (
     COOLDOWN_SECONDS,
     TRACK_BY_NAME,
     TRACKS,

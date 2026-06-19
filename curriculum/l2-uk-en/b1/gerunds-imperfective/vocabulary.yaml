@@ -1,0 +1,120 @@
+- lemma: дієприслівник
+  translation: adverbial participle, gerund
+  pos: noun:m
+  usage: "Дієприслівник називає додаткову дію: Читаючи, я роблю нотатки."
+- lemma: недоконаний вид
+  translation: imperfective aspect
+  pos: phrase
+  usage: "Дієприслівники теперішнього часу утворюємо від дієслів недоконаного виду."
+- lemma: додаткова дія
+  translation: secondary action
+  pos: phrase
+  usage: "У реченні Слухаючи музику, я працюю додаткова дія - слухання."
+- lemma: одночасність
+  translation: simultaneity
+  pos: noun:f
+  usage: "Форма читаючи показує одночасність читання й основної дії."
+- lemma: логічний підмет
+  translation: logical subject
+  pos: phrase
+  usage: "Логічний підмет дієприслівника має збігатися з підметом присудка."
+- lemma: спільний підмет
+  translation: shared subject
+  pos: phrase
+  usage: "У реченні Працюючи вдома, я слухаю радіо є спільний підмет я."
+- lemma: обставина
+  translation: adverbial modifier
+  pos: noun:f
+  usage: "Дієприслівник у реченні найчастіше виконує роль обставини."
+- lemma: незмінюваний
+  translation: invariable
+  pos: adjective
+  usage: "Дієприслівник є незмінюваний: читаючи не має форм роду чи відмінка."
+- lemma: теперішній час
+  translation: present tense
+  pos: phrase
+  usage: "Дієприслівники недоконаного виду мають значення теперішнього часу щодо присудка."
+- lemma: основа теперішнього часу
+  translation: present-tense stem
+  pos: phrase
+  usage: "Форму читаючи утворюємо від основи теперішнього часу читають."
+- lemma: дієвідміна
+  translation: conjugation class
+  pos: noun:f
+  usage: "Дієвідміна допомагає вибрати суфікс -учи/-ючи або -ачи/-ячи."
+- lemma: суфікс
+  translation: suffix
+  pos: noun:m
+  usage: "Суфікс -ючи бачимо у формі працюючи."
+- lemma: постфікс
+  translation: postfix
+  pos: noun:m
+  usage: "У зворотній формі усміхаючись постфікс -сь стоїть після суфікса."
+- lemma: читаючи
+  translation: while reading
+  pos: gerund
+  usage: "Читаючи статтю, я виписую нові слова."
+- lemma: слухаючи
+  translation: while listening
+  pos: gerund
+  usage: "Слухаючи подкаст, Марія готує каву."
+- lemma: пишучи
+  translation: while writing
+  pos: gerund
+  usage: "Пишучи есе, студент перевіряє приклади."
+- lemma: говорячи
+  translation: while speaking
+  pos: gerund
+  usage: "Говорячи повільно, викладач допомагає групі."
+- lemma: працюючи
+  translation: while working
+  pos: gerund
+  usage: "Працюючи в бібліотеці, ми користуємося словниками."
+- lemma: стоячи
+  translation: while standing
+  pos: gerund
+  usage: "Стоячи біля входу, я чекав на друзів."
+- lemma: сидячи
+  translation: while sitting
+  pos: gerund
+  usage: "Сидячи біля вікна, Олена читала новини."
+- lemma: біжучи
+  translation: while running
+  pos: gerund
+  usage: "Біжучи набережною, я слухаю музику."
+- lemma: дивлячись
+  translation: while watching, looking
+  pos: gerund
+  usage: "Дивлячись на мапу, туристи обирали маршрут."
+- lemma: усміхаючись
+  translation: while smiling
+  pos: gerund
+  usage: "Усміхаючись, волонтерка пояснювала правила."
+- lemma: навчаючись
+  translation: while studying
+  pos: gerund
+  usage: "Навчаючись у Києві, він багато читав українською."
+- lemma: хвилюючись
+  translation: while worrying
+  pos: gerund
+  usage: "Хвилюючись перед іспитом, студент повторював таблицю."
+- lemma: дієприслівниковий зворот
+  translation: gerund phrase
+  pos: phrase
+  usage: "Дієприслівниковий зворот має залежні слова: читаючи статтю про місто."
+- lemma: відокремлення
+  translation: separation by punctuation
+  pos: noun:n
+  usage: "Відокремлення комами часто потрібне для дієприслівникового звороту."
+- lemma: прислівник
+  translation: adverb
+  pos: noun:m
+  usage: "Прислівник повільно не називає окремої дії, на відміну від дієприслівника."
+- lemma: дієприкметник
+  translation: participle
+  pos: noun:m
+  usage: "Дієприкметник сяючі змінюється як прикметник, а дієприслівник сяючи не змінюється."
+- lemma: не думаючи
+  translation: without thinking
+  pos: phrase
+  usage: "Зазвичай не з дієприслівником пишемо окремо: не думаючи."

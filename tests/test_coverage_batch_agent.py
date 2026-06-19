@@ -932,8 +932,8 @@ class TestBatchDispatcherPickTrack:
     @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
     def test_force_track_done(self, mock_load):
         from batch.batch_dispatcher_config import TrackState
+        from batch.batch_dispatcher_helpers import get_track_dstate
         from batch_dispatcher import BatchDispatcher
-        from batch_dispatcher_helpers import get_track_dstate
         d = BatchDispatcher(force_track="a1")
         dstate = get_track_dstate(d.state, "a1")
         dstate["state"] = TrackState.DONE
@@ -1454,8 +1454,8 @@ class TestBatchDispatcherUpdateTrackStates:
     @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
     def test_track_becomes_done(self, mock_load):
         from batch.batch_dispatcher_config import TrackState
+        from batch.batch_dispatcher_helpers import get_track_dstate
         from batch_dispatcher import BatchDispatcher
-        from batch_dispatcher_helpers import get_track_dstate
         d = BatchDispatcher(include_tracks=["a1"])
         scan = {"a1": {"total": 10, "passed": 10, "failed": 0, "stale": 0, "unbuilt": 0, "pass_rate": 1.0}}
         d._update_track_states(scan)
@@ -1481,8 +1481,8 @@ class TestBatchDispatcherUpdateTrackStates:
     @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
     def test_stale_counts_as_done(self, mock_load):
         from batch.batch_dispatcher_config import TrackState
+        from batch.batch_dispatcher_helpers import get_track_dstate
         from batch_dispatcher import BatchDispatcher
-        from batch_dispatcher_helpers import get_track_dstate
         d = BatchDispatcher(include_tracks=["a1"])
         scan = {"a1": {"total": 10, "passed": 8, "failed": 0, "stale": 2, "unbuilt": 0, "pass_rate": 0.8}}
         d._update_track_states(scan)
@@ -1496,8 +1496,8 @@ class TestBatchDispatcherUpdateTrackStates:
     @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
     def test_blocked_by_deps(self, mock_load):
         from batch.batch_dispatcher_config import TrackState
+        from batch.batch_dispatcher_helpers import get_track_dstate
         from batch_dispatcher import BatchDispatcher
-        from batch_dispatcher_helpers import get_track_dstate
         d = BatchDispatcher(include_tracks=["a2"])
         scan = {"a2": {"total": 10, "passed": 0, "failed": 10, "stale": 0, "unbuilt": 0, "pass_rate": 0.0}}
         d._update_track_states(scan)
@@ -1511,8 +1511,8 @@ class TestBatchDispatcherUpdateTrackStates:
     @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
     def test_cooldown_expired(self, mock_load):
         from batch.batch_dispatcher_config import TrackState
+        from batch.batch_dispatcher_helpers import get_track_dstate
         from batch_dispatcher import BatchDispatcher
-        from batch_dispatcher_helpers import get_track_dstate
         d = BatchDispatcher(include_tracks=["a1"])
         dstate = get_track_dstate(d.state, "a1")
         dstate["state"] = TrackState.COOLDOWN
@@ -1528,8 +1528,8 @@ class TestBatchDispatcherUpdateTrackStates:
     @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
     def test_cooldown_no_timestamp(self, mock_load):
         from batch.batch_dispatcher_config import TrackState
+        from batch.batch_dispatcher_helpers import get_track_dstate
         from batch_dispatcher import BatchDispatcher
-        from batch_dispatcher_helpers import get_track_dstate
         d = BatchDispatcher(include_tracks=["a1"])
         dstate = get_track_dstate(d.state, "a1")
         dstate["state"] = TrackState.COOLDOWN
@@ -1545,8 +1545,8 @@ class TestBatchDispatcherUpdateTrackStates:
     @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
     def test_done_with_regression(self, mock_load):
         from batch.batch_dispatcher_config import TrackState
+        from batch.batch_dispatcher_helpers import get_track_dstate
         from batch_dispatcher import BatchDispatcher
-        from batch_dispatcher_helpers import get_track_dstate
         d = BatchDispatcher(include_tracks=["a1"])
         dstate = get_track_dstate(d.state, "a1")
         dstate["state"] = TrackState.DONE
@@ -1697,8 +1697,8 @@ class TestBatchDispatcherUpdateTrackStatesEdgeCases:
     @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
     def test_stalled_not_promoted(self, mock_load):
         from batch.batch_dispatcher_config import TrackState
+        from batch.batch_dispatcher_helpers import get_track_dstate
         from batch_dispatcher import BatchDispatcher
-        from batch_dispatcher_helpers import get_track_dstate
         d = BatchDispatcher(include_tracks=["a1"])
         dstate = get_track_dstate(d.state, "a1")
         dstate["state"] = TrackState.STALLED
@@ -1714,8 +1714,8 @@ class TestBatchDispatcherUpdateTrackStatesEdgeCases:
     @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
     def test_cooldown_malformed_timestamp(self, mock_load):
         from batch.batch_dispatcher_config import TrackState
+        from batch.batch_dispatcher_helpers import get_track_dstate
         from batch_dispatcher import BatchDispatcher
-        from batch_dispatcher_helpers import get_track_dstate
         d = BatchDispatcher(include_tracks=["a1"])
         dstate = get_track_dstate(d.state, "a1")
         dstate["state"] = TrackState.COOLDOWN
@@ -1731,8 +1731,8 @@ class TestBatchDispatcherUpdateTrackStatesEdgeCases:
     @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
     def test_pending_becomes_eligible_with_deps(self, mock_load):
         from batch.batch_dispatcher_config import TrackState
+        from batch.batch_dispatcher_helpers import get_track_dstate
         from batch_dispatcher import BatchDispatcher
-        from batch_dispatcher_helpers import get_track_dstate
         d = BatchDispatcher(include_tracks=["a1"])
         dstate = get_track_dstate(d.state, "a1")
         assert dstate["state"] == TrackState.PENDING
@@ -1747,8 +1747,8 @@ class TestBatchDispatcherUpdateTrackStatesEdgeCases:
     @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
     def test_done_stays_done(self, mock_load):
         from batch.batch_dispatcher_config import TrackState
+        from batch.batch_dispatcher_helpers import get_track_dstate
         from batch_dispatcher import BatchDispatcher
-        from batch_dispatcher_helpers import get_track_dstate
         d = BatchDispatcher(include_tracks=["a1"])
         dstate = get_track_dstate(d.state, "a1")
         dstate["state"] = TrackState.DONE
@@ -1763,8 +1763,8 @@ class TestBatchDispatcherUpdateTrackStatesEdgeCases:
     @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
     def test_done_with_stale_stays_done(self, mock_load):
         from batch.batch_dispatcher_config import TrackState
+        from batch.batch_dispatcher_helpers import get_track_dstate
         from batch_dispatcher import BatchDispatcher
-        from batch_dispatcher_helpers import get_track_dstate
         d = BatchDispatcher(include_tracks=["a1"])
         dstate = get_track_dstate(d.state, "a1")
         dstate["state"] = TrackState.DONE
@@ -1886,8 +1886,8 @@ class TestBatchDispatcherPickTrackEdgeCases:
     @patch("batch_dispatcher.PROJECT_ROOT", Path("/tmp/test"))
     def test_no_eligible_no_stalled(self, mock_load):
         from batch.batch_dispatcher_config import TrackState
+        from batch.batch_dispatcher_helpers import get_track_dstate
         from batch_dispatcher import BatchDispatcher
-        from batch_dispatcher_helpers import get_track_dstate
         d = BatchDispatcher(include_tracks=["a1"])
         dstate = get_track_dstate(d.state, "a1")
         dstate["state"] = TrackState.BLOCKED
@@ -1902,8 +1902,8 @@ class TestBatchDispatcherPickTrackEdgeCases:
     @patch("batch_dispatcher.compute_priority_score", return_value=5.0)
     def test_eligible_picked(self, mock_score, mock_load):
         from batch.batch_dispatcher_config import TrackState
+        from batch.batch_dispatcher_helpers import get_track_dstate
         from batch_dispatcher import BatchDispatcher
-        from batch_dispatcher_helpers import get_track_dstate
         d = BatchDispatcher(include_tracks=["a1"])
         dstate = get_track_dstate(d.state, "a1")
         dstate["state"] = TrackState.ELIGIBLE
@@ -2031,8 +2031,8 @@ class TestBatchDispatcherRunningTrackCleanup:
     @patch("batch_dispatcher.BATCH_STATE_DIR")
     def test_running_no_lock_file(self, mock_bsd, mock_load, tmp_path):
         from batch.batch_dispatcher_config import TrackState
+        from batch.batch_dispatcher_helpers import get_track_dstate
         from batch_dispatcher import BatchDispatcher
-        from batch_dispatcher_helpers import get_track_dstate
 
         lock_dir = tmp_path / "locks"
         lock_dir.mkdir(parents=True)

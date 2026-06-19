@@ -1,0 +1,120 @@
+- lemma: контрольна робота
+  translation: "test, checkpoint assessment"
+  pos: phrase
+  usage: "Контрольна робота 6 перевіряє весь блок дієприкметників і дієприслівників."
+- lemma: діагностична карта
+  translation: "diagnostic map"
+  pos: phrase
+  usage: "Діагностична карта показує, до якого модуля повернутися після помилки."
+- lemma: самооцінка
+  translation: "self-assessment"
+  pos: noun
+  usage: "Після кожного блоку зробіть коротку самооцінку."
+- lemma: активний дієприкметник
+  translation: "active participle"
+  pos: phrase
+  usage: "Активний дієприкметник називає ознаку за дією самого предмета."
+- lemma: пасивний дієприкметник
+  translation: "passive participle"
+  pos: phrase
+  usage: "Пасивний дієприкметник називає ознаку за дією над предметом."
+- lemma: дієприкметниковий зворот
+  translation: "participle phrase"
+  pos: phrase
+  usage: "Дієприкметниковий зворот пояснює іменник і може відокремлюватися комами."
+- lemma: означуване слово
+  translation: "modified noun"
+  pos: phrase
+  usage: "Позиція щодо означуваного слова впливає на пунктуацію звороту."
+- lemma: узгодження
+  translation: "agreement"
+  pos: noun
+  usage: "Узгодження дієприкметника з іменником треба перевіряти в роді, числі й відмінку."
+- lemma: чергування приголосних
+  translation: "consonant alternation"
+  pos: phrase
+  usage: "У формі закручений видно чергування приголосних."
+- lemma: калька
+  translation: "calque"
+  pos: noun
+  usage: "Форму діючий закон краще замінити, бо це калька."
+- lemma: природний відповідник
+  translation: "natural equivalent"
+  pos: phrase
+  usage: "Природний відповідник до діючий закон - чинний закон."
+- lemma: короткий прикметник
+  translation: "short-form adjective"
+  pos: phrase
+  usage: "Короткий прикметник у поезії може мати сильний стилістичний ефект."
+- lemma: повна нестягнена форма
+  translation: "full uncontracted adjective form"
+  pos: phrase
+  usage: "Форма зеленеє є повною нестягненою формою."
+- lemma: присудкова модель
+  translation: "predicative pattern"
+  pos: phrase
+  usage: "Мені потрібен час - сучасна присудкова модель."
+- lemma: дієприслівник
+  translation: "adverbial participle, gerund"
+  pos: noun
+  usage: "Дієприслівник називає додаткову дію."
+- lemma: дієприслівниковий зворот
+  translation: "gerund phrase"
+  pos: phrase
+  usage: "Дієприслівниковий зворот зазвичай відокремлюється комами."
+- lemma: одночасність
+  translation: "simultaneity"
+  pos: noun
+  usage: "Читаючи показує одночасність із головною дією."
+- lemma: різночасність
+  translation: "temporal non-simultaneity"
+  pos: noun
+  usage: "Прочитавши показує різночасність: одна дія завершилася раніше."
+- lemma: спільний підмет
+  translation: "shared subject"
+  pos: phrase
+  usage: "Дієприслівниковий зворот потребує спільного підмета з головною дією."
+- lemma: фразеологізований зворот
+  translation: "idiomatized phrase"
+  pos: phrase
+  usage: "Не покладаючи рук є фразеологізованим зворотом і зазвичай пишеться без коми."
+- lemma: академічний стиль
+  translation: "academic style"
+  pos: phrase
+  usage: "Академічний стиль потребує точних термінів і зрозумілих зв'язків."
+- lemma: медіатекст
+  translation: "media text"
+  pos: noun
+  usage: "У контрольній є короткий медіатекст про університетський проєкт."
+- lemma: джерело інформації
+  translation: "source of information"
+  pos: phrase
+  usage: "Назвіть джерело інформації перед оцінкою новини."
+- lemma: фактчекінг
+  translation: "fact-checking"
+  pos: noun
+  usage: "Фактчекінг допомагає відрізнити факт від оцінки."
+- lemma: рубрика
+  translation: "rubric"
+  pos: noun
+  usage: "Рубрика пояснює, як оцінити інтегроване письмове завдання."
+- lemma: редагування
+  translation: "editing"
+  pos: noun
+  usage: "Редагування кальок є окремою частиною контрольної."
+- lemma: перефразування
+  translation: "paraphrasing"
+  pos: noun
+  usage: "Перефразування допомагає замінити зворот підрядним реченням."
+- lemma: зворотний дієприслівник
+  translation: "reflexive gerund"
+  pos: phrase
+  usage: "Повернувшись - зворотний дієприслівник доконаного виду."
+- lemma: відокремлення
+  translation: "separation by punctuation"
+  pos: noun
+  usage: "Відокремлення комами залежить від типу звороту."
+- lemma: готовність до синтаксису
+  translation: "readiness for syntax"
+  pos: phrase
+  usage: "Контрольна перевіряє готовність до синтаксису складного речення."

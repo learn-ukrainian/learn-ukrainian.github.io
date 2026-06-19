@@ -1,0 +1,20 @@
+- title: "B1 M77 plan: Означальні речення"
+  role: curriculum
+  notes: "Планове джерело для означальних підрядних частин, займенника який у різних відмінках, сполучних слів що, де, куди, коли, чий і пунктуації."
+  source_ref: curriculum/l2-uk-en/plans/b1/complex-subordinate-relative.yaml
+- title: "9 клас: підрядні означальні речення"
+  role: textbook
+  notes: "Локальне підручникове джерело для залежності означальної підрядної частини від конкретного слова, питань який? котрий? чий? і сполучних слів який, котрий, чий, де, куди, звідки, коли."
+  source_ref: docs/references/textbooks-txt/9-klas-ukrajinska-mova-voron-2017.txt
+- title: "11 клас: повторення складнопідрядних речень"
+  role: textbook
+  notes: "Джерело для узагальнення типів підрядних частин, ролі означуваного слова, коми між частинами та порівняння означальних із з'ясувальними."
+  source_ref: docs/references/textbooks-txt/11-klas-ukrajinska-mova-voron-2019.txt
+- title: "B1 M76: З'ясувальні речення"
+  role: curriculum
+  notes: "Попередній сертифікований модуль для контрасту між підрядною частиною, що розкриває зміст дієслова, і підрядною частиною, що описує іменник."
+  source_ref: curriculum/l2-uk-en/b1/complex-subordinate-object/module.md
+- title: "B1 M67: Дієприкметниковий зворот"
+  role: curriculum
+  notes: "Попередня тема про ознаку за дією; використовується для обережного порівняння дієприкметникового звороту й означальної підрядної частини."
+  source_ref: curriculum/l2-uk-en/b1/participle-phrases/module.md
