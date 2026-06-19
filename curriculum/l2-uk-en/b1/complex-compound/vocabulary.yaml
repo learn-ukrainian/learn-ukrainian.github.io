@@ -1,0 +1,120 @@
+- lemma: складносурядне речення
+  translation: "compound sentence"
+  pos: phrase
+  usage: "Складносурядне речення має дві або більше рівноправні частини."
+- lemma: сурядний зв'язок
+  translation: "coordinate connection"
+  pos: phrase
+  usage: "Сурядний зв'язок поєднує граматично рівноправні частини."
+- lemma: сурядний сполучник
+  translation: "coordinating conjunction"
+  pos: phrase
+  usage: "Сурядний сполучник показує зв'язок між частинами речення."
+- lemma: граматична основа
+  translation: "grammatical base, subject-predicate core"
+  pos: phrase
+  usage: "Щоб упізнати складне речення, знайдіть граматичні основи."
+- lemma: рівноправні частини
+  translation: "coordinate parts"
+  pos: phrase
+  usage: "У складносурядному реченні рівноправні частини не залежать одна від одної."
+- lemma: єднальний сполучник
+  translation: "copulative conjunction"
+  pos: phrase
+  usage: "Єднальний сполучник поєднує події як додавання або послідовність."
+- lemma: протиставний сполучник
+  translation: "adversative conjunction"
+  pos: phrase
+  usage: "Протиставний сполучник показує контраст або зіставлення."
+- lemma: розділовий сполучник
+  translation: "disjunctive conjunction"
+  pos: phrase
+  usage: "Розділовий сполучник показує вибір, чергування або взаємовиключення."
+- lemma: одночасність
+  translation: "simultaneity"
+  pos: noun
+  usage: "Одночасність означає, що дві дії відбуваються в той самий час."
+- lemma: послідовність
+  translation: "sequence"
+  pos: noun
+  usage: "Послідовність показує, що одна дія сталася після іншої."
+- lemma: протиставлення
+  translation: "opposition"
+  pos: noun
+  usage: "Протиставлення зіставляє несумісні або контрастні факти."
+- lemma: зіставлення
+  translation: "juxtaposition, comparison"
+  pos: noun
+  usage: "Зіставлення порівнює дві паралельні ситуації без різкого конфлікту."
+- lemma: чергування
+  translation: "alternation"
+  pos: noun
+  usage: "Чергування часто передають повторювані сполучники то...то."
+- lemma: взаємовиключення
+  translation: "mutual exclusion"
+  pos: noun
+  usage: "Взаємовиключення означає: можливий тільки один варіант."
+- lemma: спільний другорядний член
+  translation: "shared secondary member"
+  pos: phrase
+  usage: "Спільний другорядний член може прибрати кому між двома частинами."
+- lemma: спільне вставне слово
+  translation: "shared parenthetical word"
+  pos: phrase
+  usage: "Може, день потеплішає і вітер стихне - вставне слово спільне для обох частин."
+- lemma: модальна частка
+  translation: "modal particle"
+  pos: phrase
+  usage: "Частки лише, тільки, навіть можуть бути спільними для двох частин."
+- lemma: крапка з комою
+  translation: "semicolon"
+  pos: phrase
+  usage: "Крапка з комою розділяє поширені частини зі своїми комами."
+- lemma: тире
+  translation: "dash"
+  pos: noun
+  usage: "Тире підкреслює швидку зміну або наслідок."
+- lemma: кома
+  translation: "comma"
+  pos: noun
+  usage: "Кома є основним знаком між частинами складносурядного речення."
+- lemma: схема речення
+  translation: "sentence scheme"
+  pos: phrase
+  usage: "Схема [ ], і [ ] показує дві рівноправні частини."
+- lemma: неповторюваний сполучник
+  translation: "non-repeated conjunction"
+  pos: phrase
+  usage: "Виняток із комою працює саме з неповторюваним сполучником."
+- lemma: повторюваний сполучник
+  translation: "repeated conjunction"
+  pos: phrase
+  usage: "Повторюваний сполучник або...або зазвичай потребує коми."
+- lemma: інтонація переліку
+  translation: "listing intonation"
+  pos: phrase
+  usage: "Єднальні й розділові частини часто мають інтонацію переліку."
+- lemma: інтонація протиставлення
+  translation: "contrastive intonation"
+  pos: phrase
+  usage: "Інтонація протиставлення виділяє дві частини як контраст."
+- lemma: швидка зміна подій
+  translation: "rapid change of events"
+  pos: phrase
+  usage: "Швидка зміна подій може оформлюватися тире."
+- lemma: причиново-наслідковий зв'язок
+  translation: "cause-result relation"
+  pos: phrase
+  usage: "Причиново-наслідковий зв'язок часто підсилюють тире."
+- lemma: складнопідрядне речення
+  translation: "complex sentence with subordination"
+  pos: phrase
+  usage: "Складнопідрядне речення має головну й залежну частини."
+- lemma: однорідні члени
+  translation: "homogeneous sentence members"
+  pos: phrase
+  usage: "Однорідні члени мають одну граматичну основу, а складносурядне речення - дві."
+- lemma: пунктуаційне рішення
+  translation: "punctuation decision"
+  pos: phrase
+  usage: "Пунктуаційне рішення залежить від структури й смислового зв'язку."
