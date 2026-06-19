@@ -1,0 +1,43 @@
+- title: "B1.6: дієприкметники, короткі прикметники, дієприслівники і медіа"
+  role: curriculum
+  notes: "Контрольна робота повторює сертифіковані модулі M65-M73: активні й пасивні дієприкметники, дієприкметникові звороти, культурну лексику, короткі прикметники, дієприслівники двох видів, дієприслівникові звороти та медійну лексику."
+- title: "B1 M65: Активні дієприкметники"
+  role: curriculum
+  notes: "Джерело для повторення активних форм теперішнього і минулого часу, меж природності та редагування кальок."
+  source_ref: curriculum/l2-uk-en/b1/participles-active/module.md
+- title: "B1 M66: Пасивні дієприкметники"
+  role: curriculum
+  notes: "Джерело для суфіксів -н-, -ен-/-єн-, -т-, чергувань і узгодження з іменником."
+  source_ref: curriculum/l2-uk-en/b1/participles-passive/module.md
+- title: "B1 M67: Дієприкметниковий зворот"
+  role: curriculum
+  notes: "Джерело для меж означального звороту, позиції щодо означуваного слова та правил відокремлення."
+  source_ref: curriculum/l2-uk-en/b1/participle-phrases/module.md
+- title: "B1 M68: Дозвілля, культура і свята"
+  role: curriculum
+  notes: "Контекстне джерело для культурних подій, афіш, фестивалів і коротких відгуків у завданнях контрольної."
+  source_ref: curriculum/l2-uk-en/b1/leisure-culture-festivals/module.md
+- title: "B1 M69: Короткі прикметники"
+  role: curriculum
+  notes: "Джерело для розрізнення поетичних коротких форм, повних нестягнених форм і сучасних присудкових моделей потрібен, певен, ладен, варт, рад."
+  source_ref: curriculum/l2-uk-en/b1/short-form-adjectives/module.md
+- title: "B1 M70: Дієприслівники недоконаного виду"
+  role: curriculum
+  notes: "Джерело для одночасності, суфіксів -учи/-ючи, -ачи/-ячи та вибору недоконаного виду."
+  source_ref: curriculum/l2-uk-en/b1/gerunds-imperfective/module.md
+- title: "B1 M71: Дієприслівники доконаного виду"
+  role: curriculum
+  notes: "Джерело для попередньої дії, суфіксів -вши/-ши, зворотних форм і часової логіки."
+  source_ref: curriculum/l2-uk-en/b1/gerunds-perfective/module.md
+- title: "B1 M72: Дієприслівниковий зворот"
+  role: curriculum
+  notes: "Джерело для меж звороту, ком, фразеологізованих винятків і правила спільного підмета."
+  source_ref: curriculum/l2-uk-en/b1/gerund-phrases/module.md
+- title: "B1 M73: Суспільство і медіа"
+  role: curriculum
+  notes: "Контекстне джерело для академічно-медійного міні-тексту, фактів, джерел і відповідального коментаря."
+  source_ref: curriculum/l2-uk-en/b1/society-and-media/module.md
+- title: "7 клас: активні й пасивні дієприкметники"
+  role: reference
+  notes: "Локальне підручникове джерело для суфіксальних груп, обмеження активних дієприкметників теперішнього часу та чергувань у пасивних формах."
+  source_ref: docs/references/textbooks-txt/7-klas-ukrmova-litvinova-2024.txt

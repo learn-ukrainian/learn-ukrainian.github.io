@@ -104,7 +104,7 @@ No plan YAML was modified.
 ## 9. Image candidates
 
 - **Best PD/CC portrait:** Wikimedia Commons — search category/file **`Bohdan Rubchak`**; verify the individual file's license and US status (born 1935, d. 2018 — not automatically PD).
-- **Backup candidates:** obituary portraits on Історична правда and the Chtyvo author page (outlet/repository copyright — permission or fair dealing).
+- **Backup candidates:** obituary portraits on Історична правда and the Diasporiana author page (outlet/repository copyright — permission or fair dealing).
 - **If no PD/CC portrait exists:** propose a *Координати* (1969) cover scan as cover-as-artifact, or a UIC faculty portrait (rights to confirm).
 
 ## 10. Sources used
@@ -121,7 +121,7 @@ No plan YAML was modified.
 - Історична правда. "In memoriam. Помер видатний поет української еміграції Богдан Рубчак." 2018-09-24. https://www.istpravda.com.ua/short/2018/09/24/152978/ — death date, biographical corroboration.
 - bukvoid.com.ua / nashformat.ua — confirm his 100+ essays and the volume *Міти метаморфоз*. Accessed 2026-05-28.
 - Ukrainian Wikiquote, "Рубчак Богдан" — primary-quote attribution (poems "Камінь," "Поетові"). Flagged for exact-wording single-sourcing.
-- onlyart.org.ua / chtyvo.org.ua author pages — bibliography corroboration.
+- onlyart.org.ua / diasporiana.org.ua author pages — bibliography corroboration.
 
 **Tier 3 (navigation only):**
 - Ukrainian Wikipedia, "Богдан Рубчак" — starting point; birthplace (Калуш), dates, UIC affiliation cross-checked against IEU.

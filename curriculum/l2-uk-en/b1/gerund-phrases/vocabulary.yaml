@@ -1,0 +1,120 @@
+- lemma: дієприслівниковий зворот
+  translation: gerund phrase, adverbial participial phrase
+  pos: phrase
+  usage: "Дієприслівниковий зворот складається з дієприслівника та залежних слів."
+- lemma: дієприслівник
+  translation: adverbial participle, gerund
+  pos: noun:m
+  usage: "Дієприслівник називає додаткову дію і не змінюється."
+- lemma: залежні слова
+  translation: dependent words
+  pos: phrase
+  usage: "У звороті читаючи новини залежне слово - новини."
+- lemma: обставина
+  translation: adverbial modifier
+  pos: noun:f
+  usage: "Дієприслівниковий зворот у реченні виконує роль обставини."
+- lemma: означення
+  translation: attribute
+  pos: noun:n
+  usage: "Дієприкметниковий зворот виконує роль означення, а дієприслівниковий - обставини."
+- lemma: відокремлення
+  translation: setting off with commas
+  pos: noun:n
+  usage: "Відокремлення показує межі звороту на письмі."
+- lemma: фразеологічний зворот
+  translation: phraseological expression
+  pos: phrase
+  usage: "Фразеологічний зворот не покладаючи рук зазвичай не відокремлюємо комами."
+- lemma: не покладаючи рук
+  translation: tirelessly, without rest
+  pos: phrase
+  usage: "Волонтери працювали не покладаючи рук."
+- lemma: затамувавши подих
+  translation: holding one's breath
+  pos: phrase
+  usage: "Глядачі слухали затамувавши подих."
+- lemma: не чуючи ніг
+  translation: with no feeling in one's legs, exhausted
+  pos: phrase
+  usage: "Після марафону спортсмени бігли не чуючи ніг."
+- lemma: склавши руки
+  translation: idly, with folded hands
+  pos: phrase
+  usage: "У кризі не можна сидіти склавши руки."
+- lemma: підсилювальна частка
+  translation: intensifying particle
+  pos: phrase
+  usage: "Підсилювальна частка й може стояти перед дієприслівниковим зворотом."
+- lemma: однорідні обставини
+  translation: homogeneous adverbial modifiers
+  pos: phrase
+  usage: "Слова мужньо й не шкодуючи життя можуть бути однорідними обставинами."
+- lemma: спосіб дії
+  translation: manner of action
+  pos: phrase
+  usage: "У реченні читати лежачи форма лежачи означає спосіб дії."
+- lemma: межа звороту
+  translation: phrase boundary
+  pos: phrase
+  usage: "Спочатку знайдіть межу звороту, а потім ставте коми."
+- lemma: логічний підмет
+  translation: logical subject
+  pos: phrase
+  usage: "Логічний підмет звороту має збігатися з підметом присудка."
+- lemma: спільний підмет
+  translation: shared subject
+  pos: phrase
+  usage: "Спільний підмет потрібен для дієприслівникового звороту."
+- lemma: дієприкметниковий зворот
+  translation: participle phrase
+  pos: phrase
+  usage: "Дієприкметниковий зворот пояснює іменник."
+- lemma: пунктуація
+  translation: punctuation
+  pos: noun:f
+  usage: "Пунктуація з дієприслівниковим зворотом простіша, ніж із дієприкметниковим."
+- lemma: кома
+  translation: comma
+  pos: noun:f
+  usage: "Кома відокремлює зворот на початку або в кінці речення."
+- lemma: виняток
+  translation: exception
+  pos: noun:m
+  usage: "Фразеологізми - важливий виняток із правила ком."
+- lemma: стилістика
+  translation: stylistics
+  pos: noun:f
+  usage: "Стилістика допомагає вирішити, чи не перевантажений текст."
+- lemma: канцелярит
+  translation: bureaucratese
+  pos: noun:m
+  usage: "Надмірні звороти можуть створювати канцелярит."
+- lemma: підрядне речення
+  translation: subordinate clause
+  pos: phrase
+  usage: "Коли підмети різні, краще використати підрядне речення."
+- lemma: коли
+  translation: when
+  pos: conjunction
+  usage: "Коли я перейшов дорогу, мені стало легше."
+- lemma: після того як
+  translation: after
+  pos: phrase
+  usage: "Після того як я прочитав повідомлення, я відповів."
+- lemma: не прощаючись
+  translation: without saying goodbye
+  pos: gerund phrase
+  usage: "Він підвівся і, не прощаючись, вийшов."
+- lemma: працюючи над собою
+  translation: working on oneself
+  pos: gerund phrase
+  usage: "Працюючи над собою щодня, ви поступово змінюєте звички."
+- lemma: прочитавши книгу
+  translation: having read the book
+  pos: gerund phrase
+  usage: "Прочитавши книгу, студент підготував відгук."
+- lemma: не зробивши кроку
+  translation: without taking a step
+  pos: gerund phrase
+  usage: "Не зробивши кроку, нічого не зміниш."

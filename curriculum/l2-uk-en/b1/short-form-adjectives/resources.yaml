@@ -1,0 +1,27 @@
+- title: "B1 M69: Короткі прикметники"
+  role: curriculum
+  notes: "Основний B1 модуль про короткі форми прикметників, нестягнені поетичні форми, сучасні присудкові моделі та редагування типових помилок."
+- title: "B1 plan: short-form-adjectives"
+  role: curriculum
+  notes: "Плановий перелік цілей і лексики: короткий прикметник, повний прикметник, потрібен, певен, годен, ладен, варт, рад, зелен, ясен, народнопоетичний."
+  source_ref: curriculum/l2-uk-en/plans/b1/short-form-adjectives.yaml
+- title: "Local grammar wiki: short-form-adjectives"
+  role: reference
+  notes: "Локальний орієнтир для B1: не навчати продуктивну російську модель, активно тренувати сучасні присудкові слова, пасивно розпізнавати поетичні короткі форми."
+  source_ref: wiki/grammar/b1/short-form-adjectives.md
+- title: "Avramenko Grade 6 Ukrainian language, p.130"
+  role: textbook
+  notes: "Джерело для розрізнення повних і коротких прикметників: повні форми змінюються, короткі не змінюються й не мають закінчення; короткі й нестягнені форми властиві фольклору та поезії."
+  source_ref: 6-klas-ukrmova-avramenko-2023_s0138
+- title: "Zabolotnyi Grade 6 Ukrainian language, p.140-141"
+  role: textbook
+  notes: "Джерело для народнопоетичного й поетичного вжитку коротких і нестягнених форм, а також для моделі ясен / ясная / яснеє / яснії."
+  source_ref: 6-klas-ukrmova-zabolotnyi-2020_s0142; 6-klas-ukrmova-zabolotnyi-2020_s0143
+- title: "Holub Grade 6 Ukrainian language, p.127-128"
+  role: textbook
+  notes: "Джерело для прикладів повен, золотая, срібнії, яснії та стилістичного обмеження коротких і нестягнених форм художнім, переважно поетичним, мовленням."
+  source_ref: 6-klas-ukrmova-golub-2023_s0130; 6-klas-ukrmova-golub-2023_s0131
+- title: "Karaman Grade 10 Ukrainian language, p.155-158"
+  role: textbook
+  notes: "Джерело для тези, що в сучасній українській переважають повні форми, коротких форм небагато, вони незмінні й мають одну форму; приклади годен, дрібен, зелен, красен, ладен, певен, славен."
+  source_ref: 10-klas-ukrmova-karaman-2018_s0280; 10-klas-ukrmova-karaman-2018_s0282

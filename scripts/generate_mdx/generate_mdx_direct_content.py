@@ -7,7 +7,8 @@ vocabulary, grammar, checkpoint) into MDX markup. Used by generate_mdx_direct.
 from __future__ import annotations
 
 from atlas_links import atlas_href_for
-from generate_mdx_direct_renderers import dump_json_for_jsx, escape_jsx_string
+
+from scripts.generate_mdx.generate_mdx_direct_renderers import dump_json_for_jsx, escape_jsx_string
 
 # Session grouping for abetka: letter groups by pedagogical sequence
 ABETKA_SESSIONS = [

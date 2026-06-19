@@ -117,7 +117,7 @@ Bio peers in scope: his МУР co-founders Viktor Petrov, Yurii Kosach, Yuri She
 ## 9. Image candidates
 
 - **Best PD/CC portrait:** Wikimedia Commons has a Kostetskyi entry (linked from Wikidata Q12113556); confirm the individual file's licence before use (diaspora-era photo — verify PD/CC status, not assumed).
-- **Backup candidates:** ЕСУ and IEU host portraits; the chtyvo.org.ua author page (chtyvo.org.ua/authors/Kostetskyi_Ihor) and ВУЕ carry images. Prefer a Commons file with a clear PD/CC tag.
+- **Backup candidates:** ЕСУ and IEU host portraits; the ukrlib author page and ВУЕ carry images. Prefer a Commons file with a clear PD/CC tag.
 - **Era-appropriate context image:** a cover of an *На горі* edition (e.g., its Ukrainian Eliot/Pound/Lorca translations) or an issue of the almanac *Хорс* would document the diaspora-publishing achievement; a МУР group photograph (1945–48) situates him among Petrov/Kosach/Shevelov.
 - **If no PD/CC portrait clears review:** use an *На горі* book-cover image as the lead, pending portrait rights clearance.
 

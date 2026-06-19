@@ -345,6 +345,11 @@ PHRASAL_CALQUES: dict[str, dict[str, object]] = {
     "ні в якому разі": {"corrections": ["аж ніяк", "у жодному разі"], "note": "рос. ни в коем случае", "source": ["ua-gec", "grok-3098"]},  # ua-gec 0717, 1844
     "прийшло в голову": {"corrections": ["спало на думку"], "note": "рос. пришло в голову (F/Collocation); в голову прийшли → спали на гадку", "source": ["ua-gec", "grok-3098"]},  # ua-gec 0834
     # §6 collocation/phrasal slice 2 (#3098) — kept only with direct correction evidence.
+    "приймати міри": {"corrections": ["вживати заходів"], "note": "рос. принимать меры", "source": ["ua-gec", "grok-3098"]},
+    "прийняти міри": {"corrections": ["вжити заходів"], "note": "рос. принять меры", "source": ["ua-gec", "grok-3098"]},
+    "мати відношення": {"corrections": ["мати стосунок"], "note": "рос. иметь отношение", "source": ["ua-gec", "grok-3098"]},
+    "більша половина": {"corrections": ["більша частина"], "note": "рос. большая половина (половини є рівними)", "source": ["antonenko-davydovych", "grok-3098"]},
+    "підводити підсумки": {"corrections": ["підбивати підсумки"], "note": "рос. подводить итоги", "source": ["antonenko-davydovych", "grok-3098"]},
     "при допомозі": {
         "corrections": ["за допомогою"],
         "note": "syntactic calque; use the instrumental phrase за допомогою",

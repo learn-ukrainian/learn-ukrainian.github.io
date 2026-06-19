@@ -5,3 +5,4 @@ options:
     correct: true
   - text: "олівець"
     correct: false
+    intentional_error: true

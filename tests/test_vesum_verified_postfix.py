@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import time
+
 import pytest
 import yaml
 
@@ -7,6 +9,7 @@ from scripts.build.linear_pipeline import (
     _iter_vesum_word_surfaces,
     _looks_like_stem_fragment,
     _normalize_for_vesum,
+    _strip_markdown_edge_markers,
     _vesum_gate,
 )
 
@@ -100,6 +103,25 @@ def test_normalize_for_vesum_canonicalizes_apostrophe_variants() -> None:
     assert _normalize_for_vesum("в‘ють") == "в'ють"
     assert _normalize_for_vesum("в`ють") == "в'ють"
     assert _normalize_for_vesum("в´ють") == "в'ють"
+
+
+def test_strip_markdown_edge_markers_preserves_intended_behavior() -> None:
+    assert _strip_markdown_edge_markers("**Дебат") == "Дебат"
+    assert _strip_markdown_edge_markers("Дебат**") == "Дебат"
+    assert _strip_markdown_edge_markers("*_слово_**") == "слово"
+    assert _strip_markdown_edge_markers(" будь-що ") == "будь-що"
+    assert _strip_markdown_edge_markers("слово***!") == "слово***!"
+
+
+def test_strip_markdown_edge_markers_handles_unmatched_star_run_quickly() -> None:
+    raw = "слово" + ("*" * 50_000) + "!"
+
+    started_at = time.perf_counter()
+    normalized = _strip_markdown_edge_markers(raw)
+    elapsed = time.perf_counter() - started_at
+
+    assert normalized == raw
+    assert elapsed < 1.0
 
 
 def test_vesum_gate_normalizes_stress_and_markdown_before_lookup() -> None:

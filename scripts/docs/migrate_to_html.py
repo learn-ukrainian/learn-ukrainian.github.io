@@ -144,7 +144,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   </header>
 
   <main>
-    {{ content }}
+    {{ content | safe }}
   </main>
 </div>
 </body>
@@ -214,7 +214,7 @@ def migrate(input_path: Path, output_path: Path, *, force: bool = False) -> bool
     md = MarkdownIt()
     content_html = md.render(md_text)
 
-    template = Template(HTML_TEMPLATE)
+    template = Template(HTML_TEMPLATE, autoescape=True)
     final_html = template.render(
         title=title,
         metadata=metadata,

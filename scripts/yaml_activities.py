@@ -29,6 +29,7 @@ except ImportError:
 class QuizOption:
     text: str
     correct: bool
+    intentional_error: bool = False
 
 
 @dataclass
@@ -785,7 +786,11 @@ class ActivityParser:
                     is_correct = i == correct_index if type(correct_index) is int else opt == correct_answer
                     options.append(QuizOption(text=opt, correct=is_correct))
                 else:
-                    options.append(QuizOption(text=opt['text'], correct=opt.get('correct', False)))
+                    options.append(QuizOption(
+                        text=opt['text'],
+                        correct=opt.get('correct', False),
+                        intentional_error=opt.get('intentional_error', False)
+                    ))
             question = item_data.get('question') or item_data.get('prompt', '')
             items.append(QuizItem(question=question, options=options, explanation=item_data.get('explanation')))
         return QuizActivity(
@@ -806,7 +811,11 @@ class ActivityParser:
                     is_correct = (opt in correct_answer) if isinstance(correct_answer, list) else (opt == correct_answer)
                     options.append(QuizOption(text=opt, correct=is_correct))
                 else:
-                    options.append(QuizOption(text=opt['text'], correct=opt.get('correct', False)))
+                    options.append(QuizOption(
+                        text=opt['text'],
+                        correct=opt.get('correct', False),
+                        intentional_error=opt.get('intentional_error', False)
+                    ))
             question = item_data.get('question') or item_data.get('prompt', '')
             items.append(SelectItem(question=question, options=options, min_correct=item_data.get('min_correct'), explanation=item_data.get('explanation')))
         return SelectActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)

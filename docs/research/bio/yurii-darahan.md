@@ -49,7 +49,7 @@
 
 ## 4. Primary-source quotes (≥2 required)
 
-> **Honesty note (#M-4):** `verify_quote` returns no corpus entry for Дараган. The verse quotes are cited verbatim to *Сагайдак* (1925) as reproduced on Ukrainian literary archives (virchi.narod.ru / chtyvo); the prose quote is the documented letter to Микита Шаповал.
+> **Honesty note (#M-4):** `verify_quote` returns no corpus entry for Дараган. The verse quotes are cited verbatim to *Сагайдак* (1925) as reproduced on Ukrainian literary archives (virchi.narod.ru / ukrlib); the prose quote is the documented letter to Микита Шаповал.
 
 ### Quote 1 — the quiver in the wild field (the title image)
 
@@ -125,7 +125,7 @@
 - Українська Вікіпедія. "Дараган Юрій Юрійович." https://uk.wikipedia.org/wiki/Дараган_Юрій_Юрійович. Accessed 2026-05-29.
 
 **Primary-source documents accessed (printed/online text):**
-- *Сагайдак* (Прага, 1925) — Quotes 1 and 2, sourced from virchi.narod.ru / chtyvo full-text.
+- *Сагайдак* (Прага, 1925) — Quotes 1 and 2, sourced from virchi.narod.ru / ukrlib full-text.
 - Лист до Микити Шаповала (c. 1925), publ. «Жива вода», 1996, № 4 — the "я завжди зостанусь українцем" statement.
 
 ---

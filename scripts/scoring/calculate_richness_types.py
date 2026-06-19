@@ -13,8 +13,9 @@ import re
 from pathlib import Path
 
 import yaml
-from calculate_richness_config import MODULE_TYPE_MAP
 from slug_utils import to_bare_slug
+
+from .calculate_richness_config import MODULE_TYPE_MAP
 
 
 def extract_level(file_path: str | Path | None) -> str:

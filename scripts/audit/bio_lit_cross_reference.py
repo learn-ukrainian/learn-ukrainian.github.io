@@ -19,6 +19,7 @@ Used by: CI (planned) + manual checks before merging new LIT plans.
 
 import re
 import sys
+from datetime import datetime
 from pathlib import Path
 
 import yaml
@@ -45,40 +46,66 @@ def transliterate_uk_to_en(text: str) -> str:
     res = re.sub(r'[^a-z\- ]', '', res)
     return res.strip()
 
-def extract_bio_slug(lit_slug: str, yaml_data: dict, existing_bios: set) -> str:
+def is_thematic_slug(lit_slug: str, title: str) -> bool:
+    """Filter out thematic literature tracks that do not map to an individual author."""
+    thematic_terms = {
+        'anthology', 'poetry', 'literature', 'tradition', 'testimony',
+        'folklore', 'memes', 'chronicles', 'essay', 'war', 'holocaust',
+        'syntez', 'origins', 'diary', 'letters', 'court', 'oral',
+        'deportation', 'satire', 'humor', 'kids', 'documentary',
+        'fantastika', 'avdet', 'crimean', 'anthologies', 'poems'
+    }
+    tokens = set(lit_slug.split('-'))
+    if tokens & thematic_terms:
+        return True
+
+    title_lower = title.lower()
+    uk_thematic = {
+        'антологія', 'поезія', 'література', 'традиція', 'свідчення',
+        'фольклор', 'хроніки', 'есе', 'війна', 'голокост', 'синтез',
+        'щоденник', 'листування', 'гумор', 'сатира', 'документалістика',
+        'фантастика', 'антології', 'вірші'
+    }
+    return any(term in title_lower for term in uk_thematic)
+
+def extract_bio_slug(lit_slug: str, yaml_data: dict, existing_bios: set, bio_aliases: dict | None = None) -> str:
     """
     Extracts the canonical bio slug from a LIT plan.
     """
+    if bio_aliases is None:
+        bio_aliases = {}
+
     # 1. Check if the lit_slug explicitly starts with an existing bio slug
     for b in existing_bios:
         if lit_slug == b or lit_slug.startswith(b + '-'):
             return b
 
-    # 2. Check if a surname from existing bios is in the lit_slug tokens
+    # 2. Check against alias table
+    for b, aliases in bio_aliases.items():
+        for alias in aliases:
+            alias_slug = transliterate_uk_to_en(alias).replace(' ', '-')
+            if lit_slug == alias_slug or lit_slug.startswith(alias_slug + '-'):
+                return b
+
+    # 3. Check if a surname from existing bios is in the lit_slug tokens
     surname_to_bio = {b.split('-')[-1]: b for b in existing_bios}
     tokens = lit_slug.split('-')
     for t in tokens:
         if t in surname_to_bio:
             return surname_to_bio[t]
 
-    # 3. If it's a gap, try to derive the canonical name from the title
+    # 4. If it's a gap, try to derive the canonical name from the title
     title = yaml_data.get('title', '') if yaml_data else ''
-    match = re.split(r'[:,"«]', title)
-    if match:
+    match = re.split(r'[:\.,"«—–]', title)
+    if match and len(match) > 1:
         author_candidate = match[0].strip()
-        # Ensure it looks like a name (1 to 3 words, capitalized in original)
-        if 1 <= len(author_candidate.split()) <= 3 and author_candidate.istitle():
-             return transliterate_uk_to_en(author_candidate).replace(' ', '-')
+        # Ensure it looks like a name (1 to 4 words)
+        if 1 <= len(author_candidate.split()) <= 4:
+            return transliterate_uk_to_en(author_candidate).replace(' ', '-')
 
-    # 4. Fallback to slug derivation (for tests or missing titles)
+    # 5. Fallback to slug derivation
     if len(tokens) == 2 and not yaml_data:
         return lit_slug
-
-    # 5. Check if it's one of the known special cases for the test
-    if lit_slug.startswith("tychyna-"):
-        return "pavlo-tychyna"
-    if lit_slug.startswith("vinhranovskyi-"):
-        return "mykola-vinhranovskyi"
 
     return tokens[0]
 
@@ -118,7 +145,17 @@ def main():
 
     exclusions = load_exclusions(exclusion_file)
 
-    bios = {p.stem for p in bio_dir.glob('*.yaml')}
+    bios = set()
+    bio_aliases = {}
+    for p in bio_dir.glob('*.yaml'):
+        bios.add(p.stem)
+        try:
+            with open(p, encoding='utf-8') as f:
+                data = yaml.safe_load(f)
+                if data and 'aliases' in data:
+                    bio_aliases[p.stem] = data['aliases']
+        except Exception:
+            pass
 
     all_lit_plans = []
     for d in lit_dirs:
@@ -126,6 +163,7 @@ def main():
             all_lit_plans.extend(d.glob('*.yaml'))
 
     gaps = []
+    current_date = datetime.now().date().isoformat()
 
     for p in all_lit_plans:
         lit_slug = p.stem
@@ -140,7 +178,10 @@ def main():
             except Exception:
                 data = {}
 
-        candidate = extract_bio_slug(lit_slug, data, bios)
+        if is_thematic_slug(lit_slug, data.get('title', '')):
+            continue
+
+        candidate = extract_bio_slug(lit_slug, data, bios, bio_aliases)
 
         if candidate not in bios:
             gaps.append((rel_path, f"{candidate}.yaml"))
@@ -152,7 +193,7 @@ def main():
 
         with open(gap_file, 'w', encoding='utf-8') as f:
             f.write("# Bio↔LIT Cross-Reference — Current Gaps\n\n")
-            f.write("Generated 2026-05-26 by `scripts/audit/bio_lit_cross_reference.py`.\n\n")
+            f.write(f"Generated {current_date} by `scripts/audit/bio_lit_cross_reference.py`.\n\n")
             f.write("## Confirmed gaps requiring bio creation\n\n")
             f.write("| LIT plan(s) | Missing bio slug | Notes |\n")
             f.write("|---|---|---|\n")
@@ -164,7 +205,7 @@ def main():
         print("All LIT plans are covered by a BIO or an exclusion.")
         with open(gap_file, 'w', encoding='utf-8') as f:
             f.write("# Bio↔LIT Cross-Reference — Current Gaps\n\n")
-            f.write("Generated 2026-05-26 by `scripts/audit/bio_lit_cross_reference.py`.\n\n")
+            f.write(f"Generated {current_date} by `scripts/audit/bio_lit_cross_reference.py`.\n\n")
             f.write("No undocumented gaps found. All clear!\n")
         sys.exit(0)
 

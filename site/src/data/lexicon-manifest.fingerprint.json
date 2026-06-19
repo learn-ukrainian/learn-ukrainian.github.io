@@ -1,5 +1,5 @@
 {
-  "fingerprint": "4429414577f027a615128e36a7dca2dcaca468588588becccfef7b39b42bd4bc",
+  "fingerprint": "c952286d427a0f778185edc26a463ab5b5321a1668a2761630d4c8dc4bb86871",
   "inputs": {
     "lexicon_code": [
       {
@@ -12,7 +12,7 @@
       },
       {
         "path": "scripts/lexicon/build_data_manifest.py",
-        "sha256": "fb283a095391fcc6f7738476fda36f164d14b2587ef44ad8b10efce62ecd3a81"
+        "sha256": "e89cda21e8ed0ae504b239adf1c80278b81efa098d2ae9605c6d10ec514aa0d8"
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",
@@ -24,7 +24,7 @@
       },
       {
         "path": "scripts/lexicon/calque_corrections.py",
-        "sha256": "b5d8ec683d1d8f3f4c64bbde9e6d8bab8c1778bd8af0eb13203dc80a5a434edc"
+        "sha256": "d1af3c47b47916c90f7e9fa6fa1e2a9e29283ffda14e430415a97848f91556c5"
       },
       {
         "path": "scripts/lexicon/check_manifest_freshness.py",
@@ -40,7 +40,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "2c8922a6da0a6da4d07d24cc59ab063bd709d2a6cd567ae87bed1e42b114efd9"
+        "sha256": "c8814a4a1b97c7e8942c46077322ccfb12c0e687eb188cfa7396693a5bbe27e1"
       },
       {
         "path": "scripts/lexicon/generate_vesum_aliases.py",

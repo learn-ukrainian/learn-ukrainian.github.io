@@ -487,6 +487,64 @@ def _merge_heritage_seed_records(by_lemma: dict[str, dict]) -> None:
         }
 
 
+def _resolve_slug_collisions(by_lemma: dict[str, dict]) -> None:
+    """Guarantee ``url_slug`` uniqueness by folding entries that collide.
+
+    Two distinct lemmas can yield the same slug when they differ only by
+    characters ``_slug_for_url`` deliberately folds (commas, spaces, slashes,
+    apostrophes) — e.g. ``тому що`` vs ``тому, що`` and ``через те що`` vs
+    ``через те, що``, added as separate entries by the §6 calque-correction
+    layer (#3098). Astro's ``[lemma].astro`` route keys on the slug, so a
+    collision would make two lemmas resolve to one page; ``build_manifest``
+    must enforce the invariant ``test_manifest_url_slugs_are_unique`` checks.
+
+    Colliding entries are folded into one deterministic canonical
+    (no interior punctuation > highest source priority > shortest lemma >
+    alphabetical), merging ``course_usage`` (deduped by module identity) and
+    ``atlas_normalizations``, backfilling missing optional fields, and recording
+    the folded surface form(s) under ``slug_variants``.
+    """
+    by_slug: dict[str, list[str]] = {}
+    for key, entry in by_lemma.items():
+        by_slug.setdefault(entry["url_slug"], []).append(key)
+
+    for collision_keys in by_slug.values():
+        if len(collision_keys) < 2:
+            continue
+
+        def _rank(k: str) -> tuple:
+            e = by_lemma[k]
+            has_interior_punct = bool(re.search(r"[^\w\s]", e["lemma"], re.UNICODE))
+            return (
+                has_interior_punct,
+                _source_priority(e["primary_source"]),
+                len(e["lemma"]),
+                e["lemma"],
+            )
+
+        canonical_key, *folded_keys = sorted(collision_keys, key=_rank)
+        canonical = by_lemma[canonical_key]
+        for fold_key in folded_keys:
+            other = by_lemma.pop(fold_key)
+            for u in other.get("course_usage", []):
+                usage_id = (u["track"], u["module_num"], u["slug"])
+                if not any(
+                    (x["track"], x["module_num"], x["slug"]) == usage_id
+                    for x in canonical["course_usage"]
+                ):
+                    canonical["course_usage"].append(u)
+            for norm in other.get("atlas_normalizations", []):
+                _append_normalization(canonical, norm)
+            for field in ("gloss", "pos", "ipa"):
+                if not canonical.get(field) and other.get(field):
+                    canonical[field] = other[field]
+            if "seed_group" in other and "seed_group" not in canonical:
+                canonical["seed_group"] = other["seed_group"]
+            variants = canonical.setdefault("slug_variants", [])
+            if other["lemma"] != canonical["lemma"] and other["lemma"] not in variants:
+                variants.append(other["lemma"])
+
+
 def build_manifest() -> dict:
     """Build the manifest dict and return it (caller writes to disk)."""
     by_lemma: dict[str, dict] = {}
@@ -511,6 +569,7 @@ def build_manifest() -> dict:
 
     _merge_seed_records(by_lemma)
     _merge_heritage_seed_records(by_lemma)
+    _resolve_slug_collisions(by_lemma)
 
     entries = sorted(by_lemma.values(), key=lambda e: e["lemma"])
     return {

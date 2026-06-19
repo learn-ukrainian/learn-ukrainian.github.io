@@ -29,11 +29,11 @@ describe('remark admonitions', () => {
     expect(html).not.toContain(':::info');
   });
 
-  it('renders a plain tip directive with the default title', async () => {
+  it('renders a plain tip directive with the default Ukrainian title (#M-13)', async () => {
     const html = await renderMarkdown('::::tip\nKeep going.\n::::\n');
 
     expect(html).toContain('<aside class="admonition admonition-tip">');
-    expect(html).toContain('<p class="admonition-title">Tip</p>');
+    expect(html).toContain('<p class="admonition-title">Порада</p>');
     expect(html).toContain('<p>Keep going.</p>');
     expect(html).not.toContain('::::tip');
   });

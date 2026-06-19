@@ -14,7 +14,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from audit.status_cache import get_source_paths, read_status
-from batch_dispatcher_config import (
+from batch.batch_dispatcher_config import (
     COST_ESTIMATES,
     RUNNER_MAX_CONSECUTIVE_FAILURES,
     RUNNER_MAX_FAILURE_RATE,

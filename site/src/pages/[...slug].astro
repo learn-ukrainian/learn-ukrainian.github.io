@@ -275,7 +275,11 @@ const TRACKS: Record<string, TrackOverview> = {
 };
 
 const HIDDEN_DOCS = new Set(['a1/review-clears-needs-human']);
-const HIDDEN_LINK_TRACKS = new Set(['folk']);
+// Folk un-hidden 2026-06-19: 6 modules are e2e-certified and folk is already
+// public (astro.config hiddenPublicPaths=[]); this completes the nav un-hide so
+// folk module pages get their left sidebar + breadcrumbs + search (reverses #3027 —
+// coordinate with orchestrator on the launch posture).
+const HIDDEN_LINK_TRACKS = new Set<string>();
 const SEARCH_LESSON_PREFIXES = new Set(['a1', 'a2']);
 const normalizeId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
 const hrefFromRoute = (route: string) => `/${route}/`;
@@ -528,15 +532,16 @@ const sidebar = props.kind === 'doc'
       });
       const currentIndex = links.findIndex((link) => link.active);
       const position = currentIndex >= 0 ? currentIndex + 1 : 0;
-      const isB1 = docTrack === 'b1';
       return {
         backHref: `/${docTrack}/`,
         backLabel: TRACKS[docTrack]?.label ?? docTrack.toUpperCase(),
+        // Ukrainian sidebar labels for ALL tracks (immersion rule #M-13) — was
+        // gated to b1 only, which leaked English nav text for folk/seminars/core.
         positionLabel: position > 0
-          ? isB1 ? `Урок ${position} з ${links.length}` : `Lesson ${position} of ${links.length}`
-          : isB1 ? `${links.length} уроки` : `${links.length} lessons`,
-        titleLabel: isB1 ? 'Уроки' : undefined,
-        navLabel: isB1 ? 'Уроки цього рівня' : undefined,
+          ? `Урок ${position} з ${links.length}`
+          : `${links.length} уроки`,
+        titleLabel: 'Уроки',
+        navLabel: 'Уроки цього рівня',
         progressDone: position,
         progressTotal: links.length,
         links,

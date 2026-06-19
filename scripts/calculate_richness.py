@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""Stub: module moved to scripts/scoring/calculate_richness.py"""
-import importlib.util as _ilu
+"""Compatibility entrypoint for scripts/scoring/calculate_richness.py."""
+import importlib as _il
+import runpy
 import sys as _sys
 from pathlib import Path as _P
 
-_f = _P(__file__).parent / "scoring" / "calculate_richness.py"
+_project_root = _P(__file__).resolve().parent.parent
+if str(_project_root) not in _sys.path:
+    _sys.path.insert(0, str(_project_root))
+
 if __name__ == "__main__":
-    import runpy
-    runpy.run_path(str(_f), run_name="__main__")
+    runpy.run_module("scripts.scoring.calculate_richness", run_name="__main__")
 else:
-    _s = _ilu.spec_from_file_location("calculate_richness", _f)
-    _m = _ilu.module_from_spec(_s)
+    _m = _il.import_module("scripts.scoring.calculate_richness")
     _sys.modules[__name__] = _m
-    _s.loader.exec_module(_m)

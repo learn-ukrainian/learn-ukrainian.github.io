@@ -117,7 +117,7 @@ def _event_file(day: datetime | None = None) -> Path:
 
 
 def _write_line(path: Path, line: bytes) -> None:
-    fd = os.open(str(path), os.O_APPEND | os.O_CREAT | os.O_WRONLY, 0o644)
+    fd = os.open(str(path), os.O_APPEND | os.O_CREAT | os.O_WRONLY, 0o600)
     try:
         os.write(fd, line)
     finally:

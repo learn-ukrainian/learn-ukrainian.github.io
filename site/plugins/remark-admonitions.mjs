@@ -1,12 +1,14 @@
 const ADMONITION_TYPES = new Set(['info', 'tip', 'caution', 'note', 'danger', 'warning']);
 
+// Ukrainian labels — this is a Ukrainian-immersion curriculum; admonition
+// callouts must never surface English UI text (immersion rule #M-13).
 const DEFAULT_TITLES = {
-  info: 'Info',
-  tip: 'Tip',
-  caution: 'Caution',
-  note: 'Note',
-  danger: 'Danger',
-  warning: 'Warning',
+  info: 'Інформація',
+  tip: 'Порада',
+  caution: 'Увага',
+  note: 'Примітка',
+  danger: 'Небезпека',
+  warning: 'Застереження',
 };
 
 function visit(node, callback) {

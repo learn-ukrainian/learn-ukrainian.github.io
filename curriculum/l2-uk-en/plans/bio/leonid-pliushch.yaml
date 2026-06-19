@@ -149,7 +149,7 @@ references:
   title: ПЛЮЩ ЛЕОНІД ІВАНОВИЧ (KHPG)
   type: reference
 - note: Електронна сторінка видання мемуару для перевірки первинного голосу.
-  path: https://chtyvo.org.ua/authors/Pliusch_Leonid/U_karnavali_istorii_Svidchennia/
+  path: https://diasporiana.org.ua/memuari/5057-plyushh-l-u-karnavali-istoriyi/
   title: 'У карнавалі історії: Свідчення'
   type: primary
 - note: Онлайн-текст мемуару; використовувати лише після звірки з виданням 2002 року.
@@ -165,7 +165,7 @@ sequence: 248
 slug: leonid-pliushch
 subtitle: Mathematician, Witness, and Victim of Punitive Psychiatry
 title: 'Леонід Плющ: карнавал історії і каральна психіатрія'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: самостійне поширення текстів поза державною цензурою; у справі Плюща канал правозахисного свідчення
   pos: ч.
