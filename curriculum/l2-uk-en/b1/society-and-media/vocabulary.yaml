@@ -1,0 +1,175 @@
+- lemma: засоби масової інформації
+  translation: mass media
+  pos: phrase
+  usage: Засоби масової інформації повідомляють про подію, але читач має перевірити джерело.
+  notes: Часто скорочується як ЗМІ.
+- lemma: ЗМІ
+  translation: mass media
+  pos: abbreviation
+  usage: У новині було зазначено, що ЗМІ отримали коментар від міської ради.
+  notes: Вимовляється як назви літер; у письмі зазвичай великими літерами.
+- lemma: масмедіа
+  translation: mass media
+  pos: plural noun
+  usage: Сучасні масмедіа поєднують текст, відео, звук і коментарі читачів.
+- lemma: медіатекст
+  translation: media text
+  pos: noun:m
+  usage: Новина, інтерв'ю, допис і реклама можуть бути медіатекстами.
+- lemma: публіцистичний стиль
+  translation: publicistic style, media register
+  pos: phrase
+  usage: Публіцистичний стиль поєднує інформацію, оцінку й переконання.
+- lemma: суспільство
+  translation: society
+  pos: noun:n
+  usage: Суспільство обговорює важливі зміни через медіа й публічні дискусії.
+- lemma: громадянин
+  translation: citizen
+  pos: noun:m
+  usage: Кожен громадянин має право отримувати достовірну інформацію.
+- lemma: громадянка
+  translation: citizen
+  pos: noun:f
+  usage: Громадянка надіслала петицію до місцевої ради.
+- lemma: громадянське суспільство
+  translation: civil society
+  pos: phrase
+  usage: Громадянське суспільство часто реагує швидше за офіційні установи.
+- lemma: громада
+  translation: community, local municipality
+  pos: noun:f
+  usage: Громада організувала збір для бібліотеки.
+- lemma: волонтер
+  translation: volunteer
+  pos: noun:m
+  usage: Волонтер розповів журналістці про потреби центру.
+- lemma: волонтерка
+  translation: volunteer
+  pos: noun:f
+  usage: Волонтерка пояснила, як працює пункт допомоги.
+- lemma: благодійність
+  translation: charity
+  pos: noun:f
+  usage: Благодійність стала темою короткого репортажу.
+- lemma: петиція
+  translation: petition
+  pos: noun:f
+  usage: Петиція зібрала багато підписів за два дні.
+- lemma: новина
+  translation: news item
+  pos: noun:f
+  usage: Ця новина має чіткий заголовок, лід і посилання на джерело.
+- lemma: заголовок
+  translation: headline
+  pos: noun:m
+  usage: Заголовок має повідомляти тему, а не маніпулювати страхом.
+- lemma: лід
+  translation: lead, opening paragraph
+  pos: noun:m
+  usage: Лід відповідає на головні запитання новини.
+  notes: Журналістський термін; не плутати з матеріалом "лід" як ice.
+- lemma: джерело
+  translation: source
+  pos: noun:n
+  usage: У тексті треба вказати джерело інформації.
+- lemma: достовірний
+  translation: reliable, trustworthy
+  pos: adjective
+  usage: Достовірне джерело подає докази й не приховує контекст.
+- lemma: факт
+  translation: fact
+  pos: noun:m
+  usage: Факт можна перевірити за документами або кількома джерелами.
+- lemma: думка
+  translation: opinion
+  pos: noun:f
+  usage: Думка показує оцінку автора, а не перевірену подію.
+- lemma: оцінка
+  translation: evaluation, assessment
+  pos: noun:f
+  usage: Оцінка в новині має бути відокремлена від факту.
+- lemma: повідомити
+  translation: to report, to inform
+  pos: verb:pf
+  usage: Речниця повідомила про нові правила роботи центру.
+- lemma: повідомляти
+  translation: to report, to inform
+  pos: verb:impf
+  usage: Суспільне повідомляє новини українською щодня.
+- lemma: заявити
+  translation: to state officially
+  pos: verb:pf
+  usage: Міністр заявив, що рішення ухвалять після консультацій.
+- lemma: підтвердити
+  translation: to confirm
+  pos: verb:pf
+  usage: Редакція підтвердила інформацію у двох незалежних джерелах.
+- lemma: спростувати
+  translation: to refute, to deny
+  pos: verb:pf
+  usage: Фактчекери спростували неправдиве повідомлення.
+- lemma: кореспондент
+  translation: correspondent, reporter
+  pos: noun:m
+  usage: Кореспондент поставив уточнювальне запитання.
+- lemma: кореспондентка
+  translation: correspondent, reporter
+  pos: noun:f
+  usage: Кореспондентка підготувала репортаж із громади.
+- lemma: прес-конференція
+  translation: press conference
+  pos: noun:f
+  usage: Після прес-конференції журналісти опублікували короткі новини.
+- lemma: коментар
+  translation: comment
+  pos: noun:m
+  usage: Коментар експертки допоміг пояснити причини рішення.
+- lemma: допис
+  translation: social media post
+  pos: noun:m
+  usage: Допис у соцмережі не завжди є надійним джерелом.
+- lemma: підписник
+  translation: follower, subscriber
+  pos: noun:m
+  usage: Підписник попросив автора додати посилання на джерело.
+- lemma: стрічка
+  translation: feed
+  pos: noun:f
+  usage: У стрічці багато емоційних заголовків, тому треба читати уважно.
+- lemma: поширити
+  translation: to share, to disseminate
+  pos: verb:pf
+  usage: Ми вирішили поширити тільки перевірену новину.
+- lemma: маніпулювання
+  translation: manipulation
+  pos: noun:n
+  usage: Маніпулювання приховує мету впливу на читача.
+- lemma: медіаманіпулювання
+  translation: media manipulation
+  pos: noun:n
+  usage: Медіаманіпулювання часто використовує страх, ярлики й вибіркові цитати.
+- lemma: ярлик
+  translation: label
+  pos: noun:m
+  usage: Ярлик замінює аргумент і заважає спокійній дискусії.
+- lemma: фейк
+  translation: fake news, false claim
+  pos: noun:m
+  usage: Фейк треба перевірити, перш ніж його спростовувати.
+- lemma: фактчекінг
+  translation: fact-checking
+  pos: noun:m
+  usage: "Фактчекінг починається з питання: що саме стверджується?"
+- lemma: медіаграмотність
+  translation: media literacy
+  pos: noun:f
+  usage: Медіаграмотність допомагає аналізувати, оцінювати й створювати повідомлення.
+- lemma: електорат
+  translation: electorate
+  pos: noun:m
+  usage: У публіцистичних текстах слово електорат належить до суспільно-політичної лексики.
+- lemma: суверенітет
+  translation: sovereignty
+  pos: noun:m
+  usage: Суверенітет України часто обговорюють у суспільних новинах.

@@ -1,0 +1,16 @@
+- title: "B1 M76 plan: З'ясувальні речення"
+  role: curriculum
+  notes: "Планове джерело для визначення складнопідрядного речення, з'ясувальних підрядних частин, сполучників і сполучних слів."
+  source_ref: curriculum/l2-uk-en/plans/b1/complex-subordinate-object.yaml
+- title: "9 клас: складнопідрядне речення і з'ясувальні підрядні"
+  role: textbook
+  notes: "Локальне підручникове джерело для нерівноправності частин, питання від головної до підрядної, ролі сполучників і сполучних слів, коми між частинами та непрямих питань."
+  source_ref: docs/references/textbooks-txt/9-klas-ukrajinska-mova-voron-2017.txt
+- title: "B1 M75: Складносурядне речення"
+  role: curriculum
+  notes: "Попередній сертифікований модуль для контрасту між рівноправними сурядними частинами і залежною підрядною частиною."
+  source_ref: curriculum/l2-uk-en/b1/complex-compound/module.md
+- title: "B1 M63: Займенники (деталі)"
+  role: curriculum
+  notes: "Підготовче джерело для питально-відносних слів хто, що, який, чий, котрий, що виступають сполучними словами у складнопідрядних реченнях."
+  source_ref: curriculum/l2-uk-en/b1/advanced-pronouns/module.md
