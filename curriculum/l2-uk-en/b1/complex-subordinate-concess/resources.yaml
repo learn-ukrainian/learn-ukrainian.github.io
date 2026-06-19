@@ -1,32 +1,20 @@
-- title: "B1 M82 plan: Речення допусту"
-  role: curriculum
-  notes: "Планове джерело для підрядних обставинних допусту, сполучників хоч/хоча, дарма що, незважаючи на те що, попри те що і контрасту з причиною та умовою."
-  source_ref: curriculum/l2-uk-en/plans/b1/complex-subordinate-concess.yaml
-- title: "9 клас: підрядне допустове речення"
+- title: Заболотний Grade 9, p.112
   role: textbook
-  notes: "Локальне джерело для визначення допустового речення, питання незважаючи на що? і сполучників хоч, хоча, дарма що, як не, хоч як, хоч скільки."
-  source_ref: docs/references/textbooks-txt/9-klas-ukrajinska-mova-voron-2017.txt
-- title: "9 клас: складнопідрядне речення з підрядною допусту"
+  notes: §21 Складнопідрядні речення з підрядними частинами мети, умови, допусту;
+    визначення допусту й перелік сполучників. Grounding chunks 9-klas-ukrajinska-mova-zabolotnij-2017_s0153
+    (с.112) та _s0156 (с.115, означення допусту, порядок частин, протиставні сполучники).
+- title: Ворон Grade 9, p.80
   role: textbook
-  notes: "Локальне джерело для питань незважаючи на що? усупереч чому?, сполучників хоч/хоча, дарма що, незважаючи на те що, хай/нехай і протиставних співвідносних слів."
-  source_ref: docs/references/textbooks-txt/9-klas-ukrajinska-mova-zabolotnij-2017.txt
-- title: "7 клас: групи сполучників підрядності"
+  notes: 'Підрядні обставинні допустові: питання «незважаючи на що?», перелік сполучників,
+    гнучкість позиції, прийменник проти сполучника. Grounding chunk 9-klas-ukrajinska-mova-voron-2017_s0104
+    (с.83).'
+- title: Авраменко Grade 9, p.86-87
   role: textbook
-  notes: "Джерело для класифікації допустових сполучників: хоч, хоча, хай, нехай, дарма що, незважаючи на те що."
-  source_ref: docs/references/textbooks-txt/7-klas-ukrmova-avramenko-2024.txt
-- title: "B1 M79: Речення причини"
-  role: curriculum
-  notes: "Попередній сертифікований модуль для контрасту між причиною чому? і допустом попри що?"
-  source_ref: curriculum/l2-uk-en/b1/complex-subordinate-reason/module.md
-- title: "B1 M80: Речення умови"
-  role: curriculum
-  notes: "Попередній сертифікований модуль для контрасту між умовою за якої умови? і допустом незважаючи на що?"
-  source_ref: curriculum/l2-uk-en/b1/complex-subordinate-condition/module.md
-- title: "B1 M75: Складносурядне речення"
-  role: curriculum
-  notes: "Попередній модуль для розрізнення підрядного допусту і протиставного складносурядного речення з але, проте, однак."
-  source_ref: curriculum/l2-uk-en/b1/complex-compound/module.md
-- title: "B1 M83 plan: Пряма і непряма мова"
-  role: curriculum
-  notes: "Наступний плановий модуль для переходу від складних підрядних обставинних речень до передачі чужого мовлення."
-  source_ref: curriculum/l2-uk-en/plans/b1/reported-speech.yaml
+  notes: §24–25 Складнопідрядні з підрядними причини, мети, умови та допустовими —
+    контекст для зіставлення типів. Grounding chunk 9-klas-ukrajinska-mova-avramenko-2017_s0132
+    (с.90, означення допусту й перелік сполучників).
+- title: Складнопідрядне речення — Вікіпедія
+  role: wiki
+  url: https://uk.wikipedia.org/wiki/Складнопідрядне_речення
+  notes: Оглядова стаття про будову складнопідрядного речення, залежність підрядної
+    частини та позицію щодо головної — фон для теми допусту.
