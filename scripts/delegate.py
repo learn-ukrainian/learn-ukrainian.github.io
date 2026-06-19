@@ -252,7 +252,7 @@ def _append_dispatch_event(event: str, **fields: Any) -> None:
         fd = os.open(
             str(_TASKS_DIR / "dispatch_events.jsonl"),
             os.O_APPEND | os.O_CREAT | os.O_WRONLY,
-            0o644,
+            0o600,
         )
         try:
             os.write(fd, line)

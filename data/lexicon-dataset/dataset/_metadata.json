@@ -1,12 +1,13 @@
 {
   "version": "0.1",
-  "generated_at": "2026-06-17T15:02:06+00:00",
+  "generated_at": "2026-06-18T22:25:18+00:00",
   "stats": {
-    "lemmas_total": 2891,
-    "modules_covered": 161,
-    "from_built": 2878,
+    "lemmas_total": 4148,
+    "modules_covered": 197,
+    "from_built": 4136,
     "from_surzhyk_to_avoid": 7,
-    "from_heritage_status_seed": 6
+    "from_heritage_status_seed": 6,
+    "form_of_count": 338
   },
   "modules": [
     {
@@ -631,6 +632,26 @@
     },
     {
       "track": "b1",
+      "module_num": 44,
+      "slug": "adjectives-comparative"
+    },
+    {
+      "track": "b1",
+      "module_num": 45,
+      "slug": "adjectives-superlative"
+    },
+    {
+      "track": "b1",
+      "module_num": 63,
+      "slug": "advanced-pronouns"
+    },
+    {
+      "track": "b1",
+      "module_num": 46,
+      "slug": "adverbs-comparison-formation"
+    },
+    {
+      "track": "b1",
       "module_num": 12,
       "slug": "alternation-consonants-nouns"
     },
@@ -686,13 +707,43 @@
     },
     {
       "track": "b1",
+      "module_num": 61,
+      "slug": "cases-with-ordinal-numerals"
+    },
+    {
+      "track": "b1",
+      "module_num": 62,
+      "slug": "cases-with-quantity-expressions"
+    },
+    {
+      "track": "b1",
       "module_num": 10,
       "slug": "checkpoint-aspect"
     },
     {
       "track": "b1",
+      "module_num": 64,
+      "slug": "checkpoint-cases"
+    },
+    {
+      "track": "b1",
+      "module_num": 51,
+      "slug": "checkpoint-comparison"
+    },
+    {
+      "track": "b1",
       "module_num": 21,
       "slug": "checkpoint-morphophonemics"
+    },
+    {
+      "track": "b1",
+      "module_num": 43,
+      "slug": "checkpoint-motion"
+    },
+    {
+      "track": "b1",
+      "module_num": 33,
+      "slug": "checkpoint-verbs"
     },
     {
       "track": "b1",
@@ -711,8 +762,33 @@
     },
     {
       "track": "b1",
+      "module_num": 54,
+      "slug": "dative-nuances"
+    },
+    {
+      "track": "b1",
+      "module_num": 55,
+      "slug": "education-and-university"
+    },
+    {
+      "track": "b1",
+      "module_num": 42,
+      "slug": "figurative-motion"
+    },
+    {
+      "track": "b1",
+      "module_num": 53,
+      "slug": "genitive-nuances"
+    },
+    {
+      "track": "b1",
       "module_num": 14,
       "slug": "health-at-the-doctor"
+    },
+    {
+      "track": "b1",
+      "module_num": 52,
+      "slug": "homogeneous-members"
     },
     {
       "track": "b1",
@@ -723,6 +799,46 @@
       "track": "b1",
       "module_num": 26,
       "slug": "imperative-nuances"
+    },
+    {
+      "track": "b1",
+      "module_num": 56,
+      "slug": "instrumental-nuances"
+    },
+    {
+      "track": "b1",
+      "module_num": 35,
+      "slug": "motion-base-review"
+    },
+    {
+      "track": "b1",
+      "module_num": 41,
+      "slug": "motion-flight-swim"
+    },
+    {
+      "track": "b1",
+      "module_num": 36,
+      "slug": "motion-prefixes-arrival"
+    },
+    {
+      "track": "b1",
+      "module_num": 38,
+      "slug": "motion-prefixes-departure"
+    },
+    {
+      "track": "b1",
+      "module_num": 39,
+      "slug": "motion-prefixes-in-out"
+    },
+    {
+      "track": "b1",
+      "module_num": 40,
+      "slug": "motion-prefixes-transit"
+    },
+    {
+      "track": "b1",
+      "module_num": 47,
+      "slug": "nature-and-environment"
     },
     {
       "track": "b1",
@@ -741,6 +857,21 @@
     },
     {
       "track": "b1",
+      "module_num": 67,
+      "slug": "participle-phrases"
+    },
+    {
+      "track": "b1",
+      "module_num": 65,
+      "slug": "participles-active"
+    },
+    {
+      "track": "b1",
+      "module_num": 66,
+      "slug": "participles-passive"
+    },
+    {
+      "track": "b1",
       "module_num": 30,
       "slug": "passive-voice-intro"
     },
@@ -751,8 +882,33 @@
     },
     {
       "track": "b1",
+      "module_num": 59,
+      "slug": "places-and-locations"
+    },
+    {
+      "track": "b1",
       "module_num": 20,
       "slug": "pluralia-tantum"
+    },
+    {
+      "track": "b1",
+      "module_num": 49,
+      "slug": "possessive-adjectives"
+    },
+    {
+      "track": "b1",
+      "module_num": 60,
+      "slug": "prepositions-cause-purpose"
+    },
+    {
+      "track": "b1",
+      "module_num": 34,
+      "slug": "prepositions-spatial-review"
+    },
+    {
+      "track": "b1",
+      "module_num": 58,
+      "slug": "prepositions-temporal"
     },
     {
       "track": "b1",
@@ -776,8 +932,33 @@
     },
     {
       "track": "b1",
+      "module_num": 37,
+      "slug": "traveling-ukraine"
+    },
+    {
+      "track": "b1",
+      "module_num": 32,
+      "slug": "verb-formation-suffixes"
+    },
+    {
+      "track": "b1",
       "module_num": 31,
       "slug": "verbal-nouns"
+    },
+    {
+      "track": "b1",
+      "module_num": 57,
+      "slug": "vocative-formal"
+    },
+    {
+      "track": "b1",
+      "module_num": 48,
+      "slug": "word-formation-adjectives"
+    },
+    {
+      "track": "b1",
+      "module_num": 50,
+      "slug": "word-formation-nouns"
     },
     {
       "track": "b1",
@@ -843,6 +1024,5 @@
         "кобіта"
       ]
     }
-  ],
-  "enrichment_generated": true
+  ]
 }

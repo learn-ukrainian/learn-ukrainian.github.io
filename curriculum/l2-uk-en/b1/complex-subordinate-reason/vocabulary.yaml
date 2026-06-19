@@ -1,0 +1,92 @@
+- lemma: речення причини
+  translation: "causal clause"
+  pos: phrase
+  usage: "Речення причини пояснює, чому відбулася дія головної частини."
+- lemma: підрядна обставинна частина причини
+  translation: "causal adverbial subordinate clause"
+  pos: phrase
+  usage: "Підрядна обставинна частина причини відповідає на питання чому?"
+- lemma: причина
+  translation: "cause, reason"
+  pos: noun
+  usage: "Причина затримки була зрозуміла всій команді."
+- lemma: обґрунтування
+  translation: "justification, grounding"
+  pos: noun
+  usage: "У поясненні потрібне коротке обґрунтування рішення."
+- lemma: бо
+  translation: "because"
+  pos: conjunction
+  usage: "Ми залишилися вдома, бо почався дощ."
+- lemma: тому що
+  translation: "because"
+  pos: conjunction phrase
+  usage: "Зустріч перенесли, тому що керівниця захворіла."
+- lemma: тому, що
+  translation: "because, for the reason that"
+  pos: split conjunction phrase
+  usage: "Я підтримав пропозицію тому, що вона реалістична."
+- lemma: оскільки
+  translation: "since, because"
+  pos: conjunction
+  usage: "Оскільки дедлайн наближався, команда працювала уважніше."
+- lemma: через те що
+  translation: "because of the fact that"
+  pos: conjunction phrase
+  usage: "Через те що дорогу ремонтували, автобус змінив маршрут."
+- lemma: через те, що
+  translation: "for the reason that"
+  pos: split conjunction phrase
+  usage: "Матч перенесли через те, що поле було небезпечним."
+- lemma: у зв'язку з тим що
+  translation: "in connection with the fact that"
+  pos: formal conjunction phrase
+  usage: "У зв'язку з тим що систему оновлюють, сервіс тимчасово недоступний."
+- lemma: завдяки тому що
+  translation: "thanks to the fact that"
+  pos: conjunction phrase
+  usage: "Завдяки тому що волонтери допомогли, ми завершили ремонт швидше."
+- lemma: з тієї причини що
+  translation: "for the reason that"
+  pos: formal conjunction phrase
+  usage: "З тієї причини що дані неповні, висновок треба перевірити."
+- lemma: адже
+  translation: "after all, because"
+  pos: conjunction/particle
+  usage: "Варто перепитати, адже умови змінилися."
+- lemma: причинний сполучник
+  translation: "causal conjunction"
+  pos: phrase
+  usage: "Причинний сполучник пов'язує пояснення з головною дією."
+- lemma: розщеплена конструкція
+  translation: "split construction"
+  pos: phrase
+  usage: "У розщепленій конструкції кома стоїть перед що."
+- lemma: співвідносне слово
+  translation: "correlative word"
+  pos: phrase
+  usage: "Слово тому може бути співвідносним словом у головній частині."
+- lemma: логічний наголос
+  translation: "logical emphasis"
+  pos: phrase
+  usage: "Логічний наголос може змінити місце коми."
+- lemma: перешкода
+  translation: "obstacle"
+  pos: noun
+  usage: "Через те що називає причину як перешкоду або обставину."
+- lemma: позитивна причина
+  translation: "positive cause"
+  pos: phrase
+  usage: "Завдяки тому що вводить позитивну причину результату."
+- lemma: офіційний стиль
+  translation: "formal style"
+  pos: phrase
+  usage: "Оскільки та у зв'язку з тим що частіше трапляються в офіційному стилі."
+- lemma: розмовний стиль
+  translation: "colloquial style"
+  pos: phrase
+  usage: "Бо природне в розмовному стилі й коротких поясненнях."
+- lemma: умова
+  translation: "condition"
+  pos: noun
+  usage: "Умова називає можливість, а причина пояснює уже відомий факт."

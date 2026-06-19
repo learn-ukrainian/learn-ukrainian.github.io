@@ -1,0 +1,32 @@
+- title: "B1 M82 plan: Речення допусту"
+  role: curriculum
+  notes: "Планове джерело для підрядних обставинних допусту, сполучників хоч/хоча, дарма що, незважаючи на те що, попри те що і контрасту з причиною та умовою."
+  source_ref: curriculum/l2-uk-en/plans/b1/complex-subordinate-concess.yaml
+- title: "9 клас: підрядне допустове речення"
+  role: textbook
+  notes: "Локальне джерело для визначення допустового речення, питання незважаючи на що? і сполучників хоч, хоча, дарма що, як не, хоч як, хоч скільки."
+  source_ref: docs/references/textbooks-txt/9-klas-ukrajinska-mova-voron-2017.txt
+- title: "9 клас: складнопідрядне речення з підрядною допусту"
+  role: textbook
+  notes: "Локальне джерело для питань незважаючи на що? усупереч чому?, сполучників хоч/хоча, дарма що, незважаючи на те що, хай/нехай і протиставних співвідносних слів."
+  source_ref: docs/references/textbooks-txt/9-klas-ukrajinska-mova-zabolotnij-2017.txt
+- title: "7 клас: групи сполучників підрядності"
+  role: textbook
+  notes: "Джерело для класифікації допустових сполучників: хоч, хоча, хай, нехай, дарма що, незважаючи на те що."
+  source_ref: docs/references/textbooks-txt/7-klas-ukrmova-avramenko-2024.txt
+- title: "B1 M79: Речення причини"
+  role: curriculum
+  notes: "Попередній сертифікований модуль для контрасту між причиною чому? і допустом попри що?"
+  source_ref: curriculum/l2-uk-en/b1/complex-subordinate-reason/module.md
+- title: "B1 M80: Речення умови"
+  role: curriculum
+  notes: "Попередній сертифікований модуль для контрасту між умовою за якої умови? і допустом незважаючи на що?"
+  source_ref: curriculum/l2-uk-en/b1/complex-subordinate-condition/module.md
+- title: "B1 M75: Складносурядне речення"
+  role: curriculum
+  notes: "Попередній модуль для розрізнення підрядного допусту і протиставного складносурядного речення з але, проте, однак."
+  source_ref: curriculum/l2-uk-en/b1/complex-compound/module.md
+- title: "B1 M83 plan: Пряма і непряма мова"
+  role: curriculum
+  notes: "Наступний плановий модуль для переходу від складних підрядних обставинних речень до передачі чужого мовлення."
+  source_ref: curriculum/l2-uk-en/plans/b1/reported-speech.yaml

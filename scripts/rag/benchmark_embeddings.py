@@ -224,7 +224,7 @@ def load_queries() -> list[dict]:
 
 def acquire_benchmark_lock(lock_path: str, benchmark_kind: str = "embedder"):
     """Acquire a non-blocking file lock for benchmark mutual exclusion."""
-    raw_fd = os.open(lock_path, os.O_CREAT | os.O_RDWR, 0o644)
+    raw_fd = os.open(lock_path, os.O_CREAT | os.O_RDWR, 0o600)
     lock_fd = os.fdopen(raw_fd, "a+", encoding="utf-8")
     try:
         fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)

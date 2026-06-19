@@ -2134,10 +2134,7 @@ def test_vesum_gate_skips_error_field_of_error_correction_items_shape(
     assert "одягаєшся" in forwarded
 
 
-@pytest.mark.parametrize("answer_key", ["correctAnswer", "answer"])
-def test_activity_vesum_text_filters_quiz_distractors_by_answer_spelling(
-    answer_key: str,
-) -> None:
+def test_activity_vesum_text_verifies_distractors_unless_opted_out() -> None:
     activity = {
         "id": "act-1",
         "type": "quiz",
@@ -2145,8 +2142,12 @@ def test_activity_vesum_text_filters_quiz_distractors_by_answer_spelling(
         "items": [
             {
                 "question": "Яка форма правильна для «я»?",
-                "options": ["користуювася", "користуюся"],
-                answer_key: "користуюся",
+                "options": [
+                    {"text": "користуювася", "intentional_error": True},
+                    {"text": "користуюся", "correct": True},
+                    {"text": "звичайний_дистрактор", "correct": False},
+                    "простий_дистрактор_рядок",
+                ],
             }
         ],
     }
@@ -2155,6 +2156,8 @@ def test_activity_vesum_text_filters_quiz_distractors_by_answer_spelling(
 
     assert "користуювася" not in vesum_text
     assert "користуюся" in vesum_text
+    assert "звичайний_дистрактор" in vesum_text
+    assert "простий_дистрактор_рядок" in vesum_text
 
 
 def test_activity_vesum_text_skips_false_true_false_statements() -> None:
@@ -2557,8 +2560,8 @@ def test_vesum_gate_skips_fillin_options_bare_list() -> None:
     assert report["passed"] is True
 
 
-def test_vesum_gate_skips_quiz_options_distractors() -> None:
-    """Regression for #1962 gate 1 leak 2. quiz non-answer options are distractors."""
+def test_vesum_gate_skips_quiz_options_distractors_with_opt_out() -> None:
+    """Regression for #1962 gate 1 leak 2, updated for #2738. quiz distractors are verified unless opted out."""
     activities = [
         {
             "id": "act-1",
@@ -2566,8 +2569,10 @@ def test_vesum_gate_skips_quiz_options_distractors() -> None:
             "items": [
                 {
                     "question": "Я ___ каву.",
-                    "options": ["п'юся", "п'ю"],
-                    "answer": "п'ю",
+                    "options": [
+                        {"text": "п'юся", "intentional_error": True},
+                        {"text": "п'ю", "correct": True},
+                    ],
                 }
             ],
         }
@@ -2665,7 +2670,7 @@ def test_vesum_gate_passes_m20_build_3_artifacts() -> None:
                 "items": [
                     {
                         "question": "Я ___ каву о восьмій.",
-                        "options": ["п'юся", "п'ю"],
+                        "options": [{"text": "п'юся", "intentional_error": True}, {"text": "п'ю", "correct": True}],
                         "answer": "п'ю",
                     }
                 ],

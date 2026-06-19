@@ -40,7 +40,7 @@ This is the load-bearing section. Chornovil's persecution was sustained, judicia
   - **15 November 1967:** the Lviv oblast court sentenced him to **3 years in strict-regime camps**, triggered by his compiling «Лихо з розуму» (Портрети двадцяти «злочинців»), a dossier on the 1965–66 arrests of the шістдесятники. Released 1969.
   - **1972:** arrested in the all-Ukraine «зачистка» (general purge of the Ukrainian intelligentsia); sentenced to **6 years of camps plus 3 years of exile**. Served in the Mordovian political-prisoner camps **ЖХ-385/17-А (с. Озерне)** and **ЖХ-385/3 (с. Барашево)**; spent over half the term in the punishment isolator (ШІЗО) and cell-type premises (ПКТ); then exiled to **с. Чаппанда, Якутія**.
   - **April 1980:** re-arrested at exile on a fabricated charge (in reality for his Helsinki-Group activity and opposition statements); held a **120-day protest hunger strike**; sentenced to 5 years. In his last word he accused the КДБ and police of fabrication and called on the court to refuse complicity. Released 1983 by a prosecutor's protest, but without the right to return to Ukraine; worked as a boiler-stoker.
-- **Document references (quoted, not paraphrased):** the title of «Лихо з розуму» itself records the regime's intent — Chornovil related that the Lviv КДБ captain Клименко told him he was «дуже розумний і що мені цей розум трохи збавлять» («very clever, and that this cleverness of mine would be cut down a little»), which the author turned into the book's ironic title. [T3: uk.wikipedia / chtyvo.org.ua — «Лихо з розуму»]
+- **Document references (quoted, not paraphrased):** the title of «Лихо з розуму» itself records the regime's intent — Chornovil related that the Lviv КДБ captain Клименко told him he was «дуже розумний і що мені цей розум трохи збавлять» («very clever, and that this cleverness of mine would be cut down a little»), which the author turned into the book's ironic title. [T3: uk.wikipedia / diasporiana.org.ua — «Лихо з розуму»]
 - **What survived / what was destroyed:** his samvydav and camp manuscripts were smuggled abroad and survive — «Хроніка таборових буднів» (1975) was published in «Сучасність» (1976); fragments of «Тільки один рік» were reconstructed from a smuggled manuscript; the ten-volume collected works (Смолоскип, 2002–2015) preserve the corpus. **In April 2022 Russian occupying forces destroyed В'ячеслав Чорновіл's archive in Bucha** — a posthumous extension of the same imperial assault on Ukrainian memory. [T3: uk.wikipedia, citing Львівський портал, 20.04.2022]
 
 ## 3. Major works
@@ -146,7 +146,7 @@ Written years before 2014 and 2022, this names the threat Chornovil spent his li
 
 **Tier 5 (general web — corroborated):**
 - NV. «Як у 1966 році 29-річний журналіст Чорновіл отримав свій перший вирок». — context for the 8.07.1966 last word (§4 quote 1).
-- Diasporiana / chtyvo.org.ua digitisations of «Лихо з розуму» — primary-text leads (cited, not fully read this pass).
+- Diasporiana digitisations of «Лихо з розуму» — primary-text leads (cited, not fully read this pass).
 
 **Primary-source documents accessed (in transcription only):** the 8 July 1966 court last word and the title-origin anecdote of «Лихо з розуму», accessed in transcription via the above; the КДБ case files and the full Смолоскип collected works were not opened this pass (honest gap, §4).
 

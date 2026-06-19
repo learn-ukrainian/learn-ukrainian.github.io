@@ -6,7 +6,7 @@ from scripts.build.linear_pipeline import _build_vesum_text, _vesum_gate
 
 
 def test_mc_distractor_text_not_verified() -> None:
-    """correct: false option text must not be checked against VESUM."""
+    """options marked intentional_error: true (deliberate wrong distractors) must not be checked against VESUM."""
     activity = {
         "type": "multiple-choice",
         "questions": [
@@ -14,8 +14,8 @@ def test_mc_distractor_text_not_verified() -> None:
                 "question": "Я ___ каву.",
                 "options": [
                     {"text": "п'ю", "correct": True},
-                    {"text": "п'юся", "correct": False},
-                    {"text": "п'єшся", "correct": False},
+                    {"text": "п'юся", "correct": False, "intentional_error": True},
+                    {"text": "п'єшся", "correct": False, "intentional_error": True},
                 ],
             }
         ],

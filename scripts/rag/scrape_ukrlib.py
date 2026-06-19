@@ -1103,6 +1103,14 @@ NAROD_SONG_GENRES = {
     3: ("Історичні пісні та коломийки", "historical_song"),
     5: ("Колядки", "carol"),
     6: ("Колядки й щедрівки", "carol"),
+    10: ("Народна лірика", "lyric_song"),
+    13: ("Народні балади", "ballad"),
+    14: ("Народні думи", "duma"),
+    18: ("Народні пісні", "folk_song"),
+    19: ("Обжинкові пісні", "harvest_song"),
+    23: ("Пісні-балади", "ballad"),
+    26: ("Соціально-побутові пісні", "lyric_song"),
+    27: ("Щедрівки", "carol"),
 }
 # Curated / non-enumerable genres: explicit (bookid, title) allowlists.
 NAROD_CURATED = [

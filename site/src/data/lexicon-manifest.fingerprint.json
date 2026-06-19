@@ -1,5 +1,5 @@
 {
-  "fingerprint": "4429414577f027a615128e36a7dca2dcaca468588588becccfef7b39b42bd4bc",
+  "fingerprint": "7dd6f12ec95468e0066e93bbaa83ee64ed3d592c617870bda500c973f8efafd5",
   "inputs": {
     "lexicon_code": [
       {
@@ -12,7 +12,7 @@
       },
       {
         "path": "scripts/lexicon/build_data_manifest.py",
-        "sha256": "fb283a095391fcc6f7738476fda36f164d14b2587ef44ad8b10efce62ecd3a81"
+        "sha256": "a41148b8e9d7305e571c9473744d4b72412f68b3bdb7cb830737e16ff209ffd2"
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",
@@ -24,7 +24,7 @@
       },
       {
         "path": "scripts/lexicon/calque_corrections.py",
-        "sha256": "b5d8ec683d1d8f3f4c64bbde9e6d8bab8c1778bd8af0eb13203dc80a5a434edc"
+        "sha256": "d1af3c47b47916c90f7e9fa6fa1e2a9e29283ffda14e430415a97848f91556c5"
       },
       {
         "path": "scripts/lexicon/check_manifest_freshness.py",
@@ -32,7 +32,7 @@
       },
       {
         "path": "scripts/lexicon/check_manifest_vocabulary_coverage.py",
-        "sha256": "56669779ca2f3af5047476db11ad7ffdb00fc41e962e2c0f13c61582b4ad1c6f"
+        "sha256": "48bb87980983b7e666e98aea37f1f4c13d7d5c9b9077ffae049d81eaff845502"
       },
       {
         "path": "scripts/lexicon/derivational_morphology.py",
@@ -40,7 +40,11 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "2c8922a6da0a6da4d07d24cc59ab063bd709d2a6cd567ae87bed1e42b114efd9"
+        "sha256": "c8814a4a1b97c7e8942c46077322ccfb12c0e687eb188cfa7396693a5bbe27e1"
+      },
+      {
+        "path": "scripts/lexicon/export_open_dataset.py",
+        "sha256": "0ceb0d6373e301c92611c239bb8bcd616f71af8ebb938d0e48b2b85346e6d065"
       },
       {
         "path": "scripts/lexicon/generate_vesum_aliases.py",
@@ -71,6 +75,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 16
+    "lexicon_code_files": 17
   }
 }

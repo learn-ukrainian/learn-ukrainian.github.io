@@ -23,12 +23,12 @@ import re
 import sys
 from pathlib import Path
 
-from calculate_richness_config import (
+from .calculate_richness_config import (
     DEFAULT_WEIGHTS,
     MODULE_TYPE_TARGETS,
     MODULE_TYPE_WEIGHTS,
 )
-from calculate_richness_counters import (
+from .calculate_richness_counters import (
     calculate_paragraph_variety,
     calculate_variety_score,
     count_analysis_sections,
@@ -55,7 +55,7 @@ from calculate_richness_counters import (
     count_video_embeds,
     count_visual_elements,
 )
-from calculate_richness_types import (
+from .calculate_richness_types import (
     extract_level,
     extract_module_type,
     get_prose_content,

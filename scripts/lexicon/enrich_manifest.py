@@ -1791,6 +1791,33 @@ def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
     return None
 
 
+def _reverse_calques(lemma: str, base: str) -> list[dict[str, Any]] | None:
+    """Find calques where this lemma is the recommended correction."""
+    results: list[dict[str, Any]] = []
+
+    for calque_dict in (CURATED_CALQUES, SENSE_RESTRICTED_CALQUES, PHRASAL_CALQUES):
+        for calque, row in calque_dict.items():
+            corrections = row.get("corrections", [])
+            if lemma in corrections or base in corrections:
+                kind = row.get("kind", "participle")
+                if calque_dict is SENSE_RESTRICTED_CALQUES:
+                    kind = "sense_restricted"
+                elif calque_dict is PHRASAL_CALQUES:
+                    kind = "phrasal"
+
+                result = {
+                    "calque": calque,
+                    "kind": str(kind),
+                    "note": str(row.get("note", "")),
+                    "source": list(row.get("source", [])),
+                }
+                if "calque_sense" in row:
+                    result["calque_sense"] = str(row["calque_sense"])
+                results.append(result)
+
+    return results if results else None
+
+
 def _entry_scoped_heritage_status(status: dict[str, Any]) -> dict[str, Any]:
     clean_status = dict(status)
     clean_status.pop("sovietization_risk", None)
@@ -3110,6 +3137,11 @@ def enrich() -> tuple[int, int]:
                     "source": list(curated_calque.get("source", [])),
                     "citation": "Антоненко-Давидович «Як ми говоримо» (davydov via MCP query_slovnyk_me + p145 prose via get_chunk_context; search_heritage guard applied)",
                 }
+
+            reverse_calques = _reverse_calques(lemma, base)
+            if reverse_calques:
+                entry["heritage_status"]["reverse_calques"] = reverse_calques
+
             pronunciation = _kaikki_pronunciation(kaikki_lookup, lemma)
             if pronunciation:
                 entry["pronunciation"] = pronunciation

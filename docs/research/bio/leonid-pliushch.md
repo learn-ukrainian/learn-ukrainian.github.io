@@ -107,7 +107,7 @@ Source: Pliushch's explanation of the memoir title in retrieved online text. Use
 - `mcp__sources.search_sources`, Realna Istoriia / punitive psychiatry retrieval for Pliushch searches and samvydav accusation context | accessed 2026-05-30
 
 **Tier 5 (general web):**
-- Chytivo, "У карнавалі історії: Свідчення" | https://chtyvo.org.ua/authors/Pliusch_Leonid/U_karnavali_istorii_Svidchennia/ | accessed 2026-05-30
+- Diasporiana, "У карнавалі історії: Свідчення" | https://diasporiana.org.ua/memuari/5057-plyushh-l-u-karnavali-istoriyi/ | accessed 2026-05-30
 - Coollib online text, "У карнавалі історії. Свідчення" | https://coollib.net/b/697342/read | accessed 2026-05-30
 
 **Primary-source documents accessed:**

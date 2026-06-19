@@ -1,0 +1,124 @@
+- lemma: дієприслівник доконаного виду
+  translation: perfective adverbial participle, perfective gerund
+  pos: phrase
+  usage: "Дієприслівник доконаного виду називає завершену попередню дію."
+- lemma: доконаний вид
+  translation: perfective aspect
+  pos: phrase
+  usage: "Доконаний вид показує дію як завершену або результативну."
+- lemma: різночасність
+  translation: temporal non-simultaneity
+  pos: noun:f
+  usage: "Форма прочитавши показує різночасність: спочатку читання, потім інша дія."
+- lemma: попередність
+  translation: precedence
+  pos: noun:f
+  usage: "Попередність означає, що додаткова дія відбулася перед основною."
+- lemma: завершена дія
+  translation: completed action
+  pos: phrase
+  usage: "У реченні Написавши листа, я перевірив адресу написання є завершена дія."
+- lemma: основна дія
+  translation: main action
+  pos: phrase
+  usage: "Основна дія виражена присудком: я перевірив адресу."
+- lemma: прочитавши
+  translation: having read
+  pos: gerund
+  usage: "Прочитавши інструкцію, я почав працювати."
+- lemma: написавши
+  translation: having written
+  pos: gerund
+  usage: "Написавши заяву, Олена перевірила дату."
+- lemma: побачивши
+  translation: having seen
+  pos: gerund
+  usage: "Побачивши помилку, редактор зупинив друк."
+- lemma: зробивши
+  translation: having done
+  pos: gerund
+  usage: "Зробивши вправу, студент звірив ключ."
+- lemma: дізнавшись
+  translation: having found out
+  pos: gerund
+  usage: "Дізнавшись адресу, ми поїхали до музею."
+- lemma: повернувшись
+  translation: having returned
+  pos: gerund
+  usage: "Повернувшись додому, я зателефонував сестрі."
+- lemma: зустрівшись
+  translation: having met
+  pos: gerund
+  usage: "Зустрівшись із колегою, ми уточнили план."
+- lemma: прокинувшись
+  translation: having woken up
+  pos: gerund
+  usage: "Прокинувшись рано, Андрій відкрив вікно."
+- lemma: умившись
+  translation: having washed up
+  pos: gerund
+  usage: "Умившись, Марія швидко зібралася."
+- lemma: зібравшись
+  translation: having gathered, having got ready
+  pos: gerund
+  usage: "Зібравшись за десять хвилин, ми вийшли з дому."
+- lemma: принісши
+  translation: having brought
+  pos: gerund
+  usage: "Принісши документи, секретар поклав їх на стіл."
+- lemma: завершивши
+  translation: having finished
+  pos: gerund
+  usage: "Завершивши вправу, студент звірив відповіді."
+- lemma: купивши
+  translation: having bought
+  pos: gerund
+  usage: "Купивши квитки, туристи перевірили маршрут."
+- lemma: оглянувши
+  translation: having inspected
+  pos: gerund
+  usage: "Оглянувши кімнату, детектив знайшов записку."
+- lemma: отримавши
+  translation: having received
+  pos: gerund
+  usage: "Отримавши повідомлення, команда виїхала."
+- lemma: поснідавши
+  translation: having had breakfast
+  pos: gerund
+  usage: "Поснідавши, Марія вийшла з дому."
+- lemma: підрядне речення
+  translation: subordinate clause
+  pos: phrase
+  usage: "Якщо підмети різні, краще використати підрядне речення."
+- lemma: після того як
+  translation: after
+  pos: phrase
+  usage: "Після того як я прочитав інструкцію, стало зрозуміло."
+- lemma: коли
+  translation: when
+  pos: conjunction
+  usage: "Коли я повернувся додому, почався дощ."
+- lemma: спільний підмет
+  translation: shared subject
+  pos: phrase
+  usage: "Дієприслівник і присудок мають мати спільний підмет."
+- lemma: логічний підмет
+  translation: logical subject
+  pos: phrase
+  usage: "Логічний підмет форми дізнавшись має бути зрозумілий."
+- lemma: зворотність
+  translation: reflexivity
+  pos: noun:f
+  usage: "У формі повернувшись зворотність зберігається через -сь."
+- lemma: суфікс
+  translation: suffix
+  pos: noun:m
+  usage: "Суфікс -вши бачимо у формі написавши."
+- lemma: постфікс
+  translation: postfix
+  pos: noun:m
+  usage: "Постфікс -сь стоїть після суфікса у формі дізнавшись."
+- lemma: стилістичний вибір
+  translation: stylistic choice
+  pos: phrase
+  usage: "Підрядне речення часто є природніший стилістичний вибір у розмові."

@@ -3,10 +3,8 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "predev": "node scripts/reconstitute_manifest.js",
     "dev": "astro dev",
     "start": "astro dev",
-    "prebuild": "node scripts/reconstitute_manifest.js",
     "build": "astro build",
     "build:full": "BUILD_ETYMOLOGY_ROUTES=1 astro build",
     "preview": "astro preview",
@@ -42,6 +40,10 @@
     "vitest": "^4.1.8"
   },
   "overrides": {
-    "yaml-language-server": "1.23.0"
+    "yaml-language-server": "1.23.0",
+    "esbuild": ">=0.28.1",
+    "vite": "7.3.5",
+    "js-yaml": ">=4.2.0",
+    "markdown-it": ">=14.2.0"
   }
 }
