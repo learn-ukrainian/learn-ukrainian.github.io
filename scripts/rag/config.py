@@ -1,14 +1,4 @@
-"""RAG pipeline configuration — model paths, collection names, trust tiers.
-
-NOTE (Colima): If using Colima with VZ framework, port forwarding may not work
-automatically. Set up an SSH tunnel before using Qdrant:
-
-    ssh -i ~/.colima/_lima/_config/user -o StrictHostKeyChecking=no \\
-        -p $(colima ssh-config 2>/dev/null | grep Port | awk '{print $2}') \\
-        -N -L 6333:localhost:6333 -L 6334:localhost:6334 \\
-        $(whoami)@127.0.0.1 &
-"""
-
+"""Shared configuration for legacy RAG helpers and VESUM verification."""
 from pathlib import Path
 
 # ── Paths ──────────────────────────────────────────────────────────
@@ -17,26 +7,6 @@ DATA_DIR = PROJECT_ROOT / "data"
 TEXTBOOKS_DIR = DATA_DIR / "textbooks"
 IMAGES_DIR = DATA_DIR / "textbook_images"
 CHUNKS_DIR = DATA_DIR / "textbook_chunks"
-
-# ── Qdrant ─────────────────────────────────────────────────────────
-QDRANT_HOST = "localhost"
-QDRANT_REST_PORT = 6333
-QDRANT_GRPC_PORT = 6334
-
-TEXT_COLLECTION = "textbook_chunks"
-IMAGE_COLLECTION = "textbook_images"
-LITERARY_COLLECTION = "literary_texts"
-
-# Dictionary / reference collections (#1022)
-STYLE_GUIDE_COLLECTION = "style_guide"
-PULS_CEFR_COLLECTION = "puls_cefr"
-SUM11_COLLECTION = "sum11"
-GRINCHENKO_COLLECTION = "grinchenko_dict"
-FRAZEOLOHICHNYI_COLLECTION = "frazeolohichnyi"
-BALLA_COLLECTION = "balla_en_uk"
-UKRAJINET_COLLECTION = "ukrajinet"
-DMKLINGER_COLLECTION = "dmklinger_uk_en"
-WIKTIONARY_COLLECTION = "wiktionary_uk"
 
 # ── Literary text paths ───────────────────────────────────────────
 LITERARY_DIR = DATA_DIR / "literary_texts"

@@ -4,7 +4,6 @@ Admin & Maintenance API router.
 Mounted at /api/admin/ in main.py.
 
 Endpoints:
-  POST /api/admin/backup/qdrant           Create Qdrant snapshot + copy to backup dir
   GET  /api/admin/backup/list             List existing backups
   DELETE /api/admin/backup/{filename}     Delete a backup file
   GET  /api/admin/health                  Unified health check
@@ -13,20 +12,19 @@ Endpoints:
   POST /api/admin/maintenance/clean-logs      Delete logs older than N days
   GET  /api/admin/maintenance/embedding-cache-stats  Embedding cache info
   GET  /api/admin/maintenance/annotation-stats       Image annotation quality stats
-  GET  /api/admin/collections             Extended collection stats
-  POST /api/admin/collections/verify      Verify Qdrant vs JSONL counts
 """
 
 import asyncio
 import contextlib
+import inspect
 import json
 import os
+import shutil
 import sqlite3
 import time
 from datetime import UTC, datetime
 from pathlib import Path
 
-import httpx
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import JSONResponse
 
@@ -39,10 +37,10 @@ from .config import MESSAGE_DB, PROJECT_ROOT
 from .resilience import connect_sqlite
 
 router = APIRouter(tags=["admin"])
+START_TIME = time.time()
 
 # ── Config ────────────────────────────────────────────────────────
 
-QDRANT_URL = os.environ.get("QDRANT_URL", "http://localhost:6333")
 BACKUP_DIR = Path(
     os.environ.get(
         "BACKUP_DIR",
@@ -79,57 +77,6 @@ def _format_bytes(n: int) -> str:
     return f"{n:.1f} TB"
 
 
-_qdrant_client = httpx.AsyncClient(base_url=QDRANT_URL, timeout=10)
-
-
-async def _qdrant_get(path: str) -> dict | None:
-    """GET request to Qdrant REST API. Returns None on failure."""
-    try:
-        r = await _qdrant_client.get(path)
-        r.raise_for_status()
-        return r.json()
-    except (httpx.HTTPError, json.JSONDecodeError):
-        return None
-
-
-async def _qdrant_post(path: str, timeout: float = 120) -> dict | None:
-    """POST request to Qdrant REST API. Returns None on failure.
-
-    Uses a dedicated client for long-running operations (e.g., /snapshots)
-    because the shared client's 10s timeout cannot be overridden per-request.
-    """
-    try:
-        async with httpx.AsyncClient(
-            base_url=QDRANT_URL, timeout=httpx.Timeout(timeout)
-        ) as client:
-            r = await client.post(path)
-            r.raise_for_status()
-            return r.json()
-    except (httpx.HTTPError, json.JSONDecodeError):
-        return None
-
-
-async def _qdrant_collection_details(names: list[str]) -> dict[str, dict | None]:
-    """Fetch details for multiple collections in parallel."""
-    results = await asyncio.gather(
-        *[_qdrant_get(f"/collections/{name}") for name in names]
-    )
-    return dict(zip(names, results, strict=False))
-
-
-async def _docker_status(container: str) -> str:
-    """Check Docker container status without blocking the event loop."""
-    try:
-        proc = await asyncio.create_subprocess_exec(
-            "docker", "inspect", "--format", "{{.State.Status}}", container,
-            stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
-        )
-        stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=5)
-        return stdout.decode().strip() if proc.returncode == 0 else "not found"
-    except Exception:
-        return "docker unavailable"
-
-
 def _broker_health() -> dict:
     """Read broker DB health synchronously."""
     result = {"status": "missing", "size_bytes": 0, "queue_depth": 0}
@@ -149,55 +96,6 @@ def _broker_health() -> dict:
 
 
 # ── Backup ────────────────────────────────────────────────────────
-
-
-@router.post("/backup/qdrant")
-async def create_qdrant_backup():
-    """Create a full Qdrant snapshot and stream it to the backup directory."""
-    result = await _qdrant_post("/snapshots")
-    if result is None:
-        return JSONResponse(
-            status_code=503,
-            content={"error": "Qdrant unreachable. Is Docker running?"},
-        )
-
-    snapshot_name = result.get("result", {}).get("name")
-    if not snapshot_name:
-        return JSONResponse(
-            status_code=500,
-            content={"error": "Snapshot creation failed", "detail": result},
-        )
-
-    BACKUP_DIR.mkdir(parents=True, exist_ok=True)
-    dest = BACKUP_DIR / snapshot_name
-
-    # Stream download to avoid buffering entire snapshot in memory
-    try:
-        async with httpx.AsyncClient(timeout=httpx.Timeout(300)) as client, client.stream(
-            "GET",
-            f"{QDRANT_URL}/snapshots/{snapshot_name}",
-            follow_redirects=True,
-        ) as r:
-            r.raise_for_status()
-            with open(dest, "wb") as f:
-                async for chunk in r.aiter_bytes(chunk_size=65536):
-                    f.write(chunk)
-    except Exception:
-        dest.unlink(missing_ok=True)
-        return JSONResponse(
-            status_code=500,
-            content={"error": "Failed to download snapshot"},
-        )
-
-    size = dest.stat().st_size
-    return {
-        "status": "ok",
-        "snapshot": snapshot_name,
-        "path": str(dest),
-        "size_bytes": size,
-        "size_human": _format_bytes(size),
-        "created_at": datetime.now(UTC).isoformat(),
-    }
 
 
 @router.get("/backup/list")
@@ -257,55 +155,28 @@ async def delete_backup(filename: str):
 
 
 # ── Health ────────────────────────────────────────────────────────
-
-
 @router.get("/health")
 async def unified_health():
-    """Unified health check: Qdrant, broker, disk, uptime."""
-    from .main import _SERVER_START
+    """Unified health check: broker, disk, and API uptime."""
+    broker = _broker_health()
+    if inspect.isawaitable(broker):
+        broker = await broker
+    disk = shutil.disk_usage(PROJECT_ROOT)
+    disk_pct = round(disk.used / disk.total * 100, 1)
 
-    now = datetime.now(UTC)
-    uptime = now - _SERVER_START
-
-    # Run independent checks in parallel
-    qdrant_future = _qdrant_get("/collections")
-    docker_future = _docker_status("qdrant")
-    broker = await asyncio.to_thread(_broker_health)
-    qdrant_info, docker_stat = await asyncio.gather(qdrant_future, docker_future)
-
-    # Qdrant details — fetch all collections in parallel
-    qdrant_ok = qdrant_info is not None
-    qdrant_collections = []
-    total_points = 0
-    if qdrant_ok:
-        names = [c.get("name", "") for c in qdrant_info.get("result", {}).get("collections", [])]
-        details = await _qdrant_collection_details(names)
-        for name in names:
-            detail = details.get(name)
-            points = detail.get("result", {}).get("points_count", 0) if detail else 0
-            total_points += points
-            qdrant_collections.append({"name": name, "points": points})
-
-    # Disk usage (quick summary) — run in thread to not block event loop
-    data_size = await asyncio.to_thread(_dir_size, DATA_DIR)
+    broker_payload = dict(broker)
+    if "size_bytes" in broker_payload:
+        broker_payload["size_human"] = _format_bytes(broker_payload["size_bytes"])
 
     return {
-        "status": "ok" if qdrant_ok and broker["status"] == "healthy" else "degraded",
-        "checked_at": now.isoformat(),
-        "uptime_seconds": int(uptime.total_seconds()),
-        "qdrant": {
-            "status": "healthy" if qdrant_ok else "unreachable",
-            "docker": docker_stat,
-            "collections": qdrant_collections,
-            "total_points": total_points,
-        },
-        "broker": {
-            **broker,
-            "size_human": _format_bytes(broker["size_bytes"]),
-        },
+        "status": "ok" if broker["status"] == "healthy" else "degraded",
+        "timestamp": datetime.now(UTC).isoformat(),
+        "uptime_seconds": round(time.time() - START_TIME, 1),
+        "broker": broker_payload,
         "disk": {
-            "data_dir_bytes": data_size,
-            "data_dir_human": _format_bytes(data_size),
+            "used_pct": disk_pct,
+            "free": _format_bytes(disk.free),
+            "total": _format_bytes(disk.total),
         },
     }
 
@@ -314,7 +185,6 @@ async def unified_health():
 async def disk_usage():
     """Detailed disk usage breakdown for data directories."""
     dirs = {
-        "qdrant_storage": DATA_DIR / "qdrant" / "storage",
         "textbook_images": DATA_DIR / "textbook_images",
         "textbooks": DATA_DIR / "textbooks",
         "literary_texts": DATA_DIR / "literary_texts",
@@ -510,103 +380,3 @@ async def annotation_stats():
 
 
 # ── Collection Management ────────────────────────────────────────
-
-
-@router.get("/collections")
-async def collection_details():
-    """Extended collection stats with coverage info."""
-    qdrant_info = await _qdrant_get("/collections")
-    if qdrant_info is None:
-        return JSONResponse(
-            status_code=503,
-            content={"error": "Qdrant unreachable. Start with: docker start qdrant"},
-        )
-
-    names = [c.get("name", "") for c in qdrant_info.get("result", {}).get("collections", [])]
-    details = await _qdrant_collection_details(names)
-
-    collections = []
-    for name in names:
-        detail = details.get(name)
-        if not detail:
-            collections.append({"name": name, "error": "could not fetch details"})
-            continue
-
-        info = detail.get("result", {})
-        collections.append({
-            "name": name,
-            "points_count": info.get("points_count", 0),
-            "vectors_count": info.get("vectors_count", 0),
-            "indexed_vectors_count": info.get("indexed_vectors_count", 0),
-            "status": info.get("status", "unknown"),
-            "config": {
-                "vector_size": info.get("config", {}).get("params", {}).get("vectors", {}),
-            },
-        })
-
-    return {"collections": collections, "count": len(collections)}
-
-
-@router.post("/collections/verify")
-async def verify_collections():
-    """Compare Qdrant point counts vs on-disk JSONL chunk counts."""
-    qdrant_info = await _qdrant_get("/collections")
-    if qdrant_info is None:
-        return JSONResponse(
-            status_code=503,
-            content={"error": "Qdrant unreachable"},
-        )
-
-    # Count on-disk sources
-    source_counts = {}
-
-    chunks_dir = DATA_DIR / "textbook_chunks"
-    if chunks_dir.exists():
-        chunk_count = 0
-        for f in chunks_dir.rglob("*.jsonl"):
-            with contextlib.suppress(OSError):
-                chunk_count += sum(1 for line in f.open() if line.strip())
-        source_counts["textbook_chunks"] = chunk_count
-
-    if IMAGE_DIR.exists():
-        img_count = 0
-        for grade_dir in IMAGE_DIR.iterdir():
-            if grade_dir.is_dir() and grade_dir.name.startswith("grade-"):
-                img_count += sum(
-                    1 for f in grade_dir.iterdir()
-                    if f.is_file() and f.suffix.lower() in ALLOWED_IMG_EXT
-                )
-        source_counts["textbook_images"] = img_count
-
-    lit_dir = DATA_DIR / "literary_texts"
-    if lit_dir.exists():
-        lit_count = 0
-        for f in lit_dir.rglob("*.jsonl"):
-            with contextlib.suppress(OSError):
-                lit_count += sum(1 for line in f.open() if line.strip())
-        source_counts["literary_texts"] = lit_count
-
-    # Fetch all collection details in parallel
-    names = [c.get("name", "") for c in qdrant_info.get("result", {}).get("collections", [])]
-    details = await _qdrant_collection_details(names)
-
-    results = []
-    for name in names:
-        detail = details.get(name)
-        qdrant_points = detail.get("result", {}).get("points_count", 0) if detail else 0
-        disk_count = source_counts.get(name)
-        gap = (qdrant_points - disk_count) if disk_count is not None else None
-
-        results.append({
-            "collection": name,
-            "qdrant_points": qdrant_points,
-            "disk_chunks": disk_count,
-            "gap": gap,
-            "status": "ok" if gap == 0 else ("surplus" if gap and gap > 0 else "deficit") if gap is not None else "no_source_mapping",
-        })
-
-    return {
-        "results": results,
-        "source_counts": source_counts,
-        "verified_at": datetime.now(UTC).isoformat(),
-    }

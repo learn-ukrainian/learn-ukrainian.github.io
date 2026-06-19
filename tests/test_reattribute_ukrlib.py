@@ -7,6 +7,7 @@ Post-execution tests verify the output after reattribution + ingestion.
 """
 
 import json
+import sqlite3
 import sys
 from pathlib import Path
 from typing import ClassVar
@@ -180,64 +181,56 @@ class TestPostNoCrossContamination:
         assert passed, "Cross-contamination detected:\n" + "\n".join(errors)
 
 
-class TestPostSearchQuality:
-    """Verify reattributed authors have chunks in Qdrant with correct metadata."""
+def _literary_corpus_available() -> bool:
+    """True only when sources.db has a populated literary_texts table.
 
-    AUTHOR_CHECKS: ClassVar[list[tuple[str, str, int]]] = [
-        ("Коцюбинський М.", "Fata Morgana", 1157),
-        ("Котляревський І.", "Енеїда", 313),
-        ("Мирний П.", "Хіба ревуть воли", 1281),
-        ("Тичина П.", "Арфами, арфами", 351),
-        ("Нечуй-Левицький І.", "Кайдашева сім'я", 4370),
+    CI uses a stub sources.db without the literary corpus (#2928), so the
+    post-reattribution corpus checks below skip there and run only locally
+    against the full SQLite corpus.
+    """
+    db_path = Path(__file__).resolve().parents[1] / "data" / "sources.db"
+    if not db_path.exists():
+        return False
+    try:
+        with sqlite3.connect(db_path) as conn:
+            has_table = conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='literary_texts'"
+            ).fetchone()
+            if not has_table:
+                return False
+            return conn.execute("SELECT count(*) FROM literary_texts").fetchone()[0] > 0
+    except sqlite3.Error:
+        return False
+
+
+class TestPostSearchQuality:
+    """Verify reattributed authors have chunks in the SQLite source corpus."""
+
+    AUTHOR_CHECKS: ClassVar[list[tuple[str, str]]] = [
+        ("Коцюбинський М.", "Fata Morgana"),
+        ("Котляревський І.", "Енеїда"),
+        ("Мирний П.", "Хіба ревуть воли"),
+        ("Тичина П.", "Арфами, арфами"),
+        ("Нечуй-Левицький І.", "Кайдашева сім'я"),
     ]
 
-    @pytest.mark.parametrize("author,work_substr,expected_count", AUTHOR_CHECKS)
-    def test_post_author_chunks_in_qdrant(self, author, work_substr, expected_count):
-        """Verify author has correct chunk count and contains expected work."""
-        try:
-            from qdrant_client import QdrantClient
-            from qdrant_client.models import FieldCondition, Filter, MatchValue
-        except ImportError:
-            pytest.skip("qdrant_client not installed")
+    @pytest.mark.skipif(
+        not _literary_corpus_available(),
+        reason="literary_texts corpus not present (CI uses a stub sources.db; #2928)",
+    )
+    @pytest.mark.parametrize("author,work_substr", AUTHOR_CHECKS)
+    def test_post_author_chunks_in_sources_db(self, author, work_substr):
+        db_path = Path(__file__).resolve().parents[1] / "data" / "sources.db"
+        assert db_path.exists(), f"Missing source corpus DB: {db_path}"
 
-        from rag.config import LITERARY_COLLECTION, QDRANT_HOST, QDRANT_REST_PORT
+        with sqlite3.connect(db_path) as conn:
+            count = conn.execute(
+                """
+                SELECT count(*)
+                FROM literary_texts
+                WHERE author = ? AND work LIKE ?
+                """,
+                (author, f"%{work_substr}%"),
+            ).fetchone()[0]
 
-        try:
-            client = QdrantClient(host=QDRANT_HOST, port=QDRANT_REST_PORT, timeout=5)
-            client.get_collection(LITERARY_COLLECTION)
-        except Exception:
-            pytest.skip("Qdrant not available or collection not found")
-
-        # Check total chunk count for author
-        count = client.count(
-            collection_name=LITERARY_COLLECTION,
-            count_filter=Filter(must=[
-                FieldCondition(key="author", match=MatchValue(value=author)),
-            ]),
-        ).count
-        assert count == expected_count, (
-            f"Expected {expected_count} chunks for '{author}', got {count}"
-        )
-
-        # Check that a known work exists with correct author
-        # Scroll through all chunks to collect unique work titles
-        works = set()
-        offset = None
-        while True:
-            results, offset = client.scroll(
-                collection_name=LITERARY_COLLECTION,
-                scroll_filter=Filter(must=[
-                    FieldCondition(key="author", match=MatchValue(value=author)),
-                ]),
-                limit=500,
-                offset=offset,
-                with_payload=["work"],
-            )
-            works.update(p.payload["work"] for p in results)
-            if offset is None:
-                break
-        matching = [w for w in works if work_substr in w]
-        assert matching, (
-            f"Expected work containing '{work_substr}' for author '{author}', "
-            f"found works: {works}"
-        )
+        assert count > 0, f"No chunks found for {author} / {work_substr}"

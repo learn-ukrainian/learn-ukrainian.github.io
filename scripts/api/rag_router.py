@@ -1,11 +1,8 @@
-"""RAG search and image browse endpoints.
+"""Legacy RAG browse/search endpoints backed by SQLite source helpers."""
 
-Mounts at /api/rag/ — wraps scripts/rag/query.py functions
-and ports the browse logic from image_review_server.py.
-"""
+from __future__ import annotations
 
 import re
-import socket
 import sys
 
 from fastapi import APIRouter, Query
@@ -13,7 +10,6 @@ from fastapi.responses import JSONResponse
 
 from .config import PROJECT_ROOT
 
-# Ensure scripts/ is importable for rag.query
 _scripts_dir = str(PROJECT_ROOT / "scripts")
 if _scripts_dir not in sys.path:
     sys.path.insert(0, _scripts_dir)
@@ -24,79 +20,56 @@ IMAGE_DIR = PROJECT_ROOT / "data" / "textbook_images"
 ALLOWED_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
 
 
-def _qdrant_available() -> bool:
-    """Quick check if Qdrant is reachable."""
-    try:
-        from rag.config import QDRANT_GRPC_PORT, QDRANT_HOST
-
-        with socket.create_connection((QDRANT_HOST, QDRANT_GRPC_PORT), timeout=0.25):
-            pass
-        from rag.query import get_client
-        get_client().get_collections()
-        return True
-    except Exception:
-        return False
-
-
-def _qdrant_503():
-    return JSONResponse(
-        status_code=503,
-        content={"error": "Qdrant is unavailable. Start it with: docker start qdrant"},
-    )
-
-
-# ── Search endpoints ──────────────────────────────────────────────
-
-
 @router.get("/search_text")
 async def search_text(
     q: str = Query(..., description="Search query in Ukrainian"),
     grade: int | None = Query(None, description="Filter by grade (1-11)"),
     subject: str | None = Query(None, description="Filter by subject"),
-    trust_tier: int | None = Query(None, description="Trust tier (1 or 2)"),
+    trust_tier: int | None = Query(None, description="Trust tier"),
     limit: int = Query(5, ge=1, le=20),
 ):
-    if not _qdrant_available():
-        return _qdrant_503()
     from rag.query import search_text as _search_text
+
     return _search_text(q, grade=grade, subject=subject, trust_tier=trust_tier, limit=limit)
 
 
 @router.get("/search_images")
 async def search_images(
-    q: str = Query(..., description="Image search query in Ukrainian"),
-    grade: int | None = Query(None, description="Filter by grade (1-11)"),
+    q: str = Query(..., description="Search query in Ukrainian"),
+    grade: int | None = Query(None, description="Filter by grade"),
+    teaching_value: str | None = Query(None, description="Filter: high/medium/low/none"),
+    subject: str | None = Query(None, description="Filter by subject"),
     limit: int = Query(5, ge=1, le=20),
 ):
-    if not _qdrant_available():
-        return _qdrant_503()
     from rag.query import search_images as _search_images
-    return _search_images(q, grade=grade, limit=limit)
+
+    return _search_images(
+        q,
+        grade=grade,
+        teaching_value=teaching_value,
+        subject=subject,
+        limit=limit,
+    )
 
 
 @router.get("/search_literary")
 async def search_literary(
-    q: str = Query(..., description="Search query in Ukrainian"),
-    work: str | None = Query(None, description="Filter by work title"),
+    q: str = Query(..., description="Search query"),
+    work: str | None = Query(None, description="Filter by work"),
     genre: str | None = Query(None, description="Filter by genre"),
     period: str | None = Query(None, description="Filter by language period"),
     limit: int = Query(5, ge=1, le=20),
 ):
-    if not _qdrant_available():
-        return _qdrant_503()
     from rag.query import search_literary as _search_literary
+
     return _search_literary(q, work=work, genre=genre, period=period, limit=limit)
 
 
 @router.get("/stats")
 async def collection_stats():
-    if not _qdrant_available():
-        return _qdrant_503()
     from rag.query import collection_stats as _collection_stats
+
     return _collection_stats()
-
-
-# ── Browse images (disk scan, ported from image_review_server.py) ─
 
 
 @router.get("/browse_images")
@@ -110,7 +83,6 @@ async def browse_images(
 ):
     """Browse textbook images on disk with filtering and pagination."""
     if grade:
-        # Validate grade format to prevent path traversal
         if not re.match(r"^grade-\d{2}$", grade):
             return JSONResponse(
                 status_code=400,
@@ -124,51 +96,39 @@ async def browse_images(
             )
     else:
         search_dirs = sorted(
-            d for d in IMAGE_DIR.iterdir()
-            if d.is_dir() and d.name.startswith("grade-")
-        )
+            d for d in IMAGE_DIR.iterdir() if d.is_dir() and d.name.startswith("grade-")
+        ) if IMAGE_DIR.exists() else []
 
     images = []
-    for d in search_dirs:
-        for f in d.iterdir():
-            if not f.is_file() or f.suffix.lower() not in ALLOWED_IMAGE_EXTENSIONS:
+    for directory in search_dirs:
+        for file_path in directory.iterdir():
+            if not file_path.is_file() or file_path.suffix.lower() not in ALLOWED_IMAGE_EXTENSIONS:
                 continue
-            size = f.stat().st_size
-            if max_size and size > max_size:
+            size = file_path.stat().st_size
+            if max_size is not None and size > max_size:
                 continue
-            if min_size and size < min_size:
+            if min_size is not None and size < min_size:
                 continue
-            images.append({
-                "path": f"data/textbook_images/{d.name}/{f.name}",
-                "name": f.name,
-                "size": size,
-                "grade": d.name,
-            })
+            images.append(
+                {
+                    "path": f"data/textbook_images/{directory.name}/{file_path.name}",
+                    "name": file_path.name,
+                    "size": size,
+                    "grade": directory.name,
+                }
+            )
 
     if sort == "size":
-        images.sort(key=lambda x: x["size"])
+        images.sort(key=lambda item: item["size"])
     elif sort == "name":
-        images.sort(key=lambda x: x["name"])
+        images.sort(key=lambda item: item["name"])
     elif sort == "grade":
-        images.sort(key=lambda x: (x["grade"], x["name"]))
+        images.sort(key=lambda item: (item["grade"], item["name"]))
 
     total = len(images)
     start = page * per_page
-    page_images = images[start:start + per_page]
+    page_images = images[start : start + per_page]
     total_pages = max(1, (total + per_page - 1) // per_page)
-
-    # Grade-level stats
-    grade_stats = {}
-    for d in sorted(IMAGE_DIR.iterdir()):
-        if not d.is_dir() or not d.name.startswith("grade-"):
-            continue
-        all_imgs = [f for f in d.iterdir() if f.is_file() and f.suffix.lower() in ALLOWED_IMAGE_EXTENSIONS]
-        sizes = [f.stat().st_size for f in all_imgs]
-        grade_stats[d.name] = {
-            "total": len(all_imgs),
-            "small": sum(1 for s in sizes if s < 5000),
-            "tiny": sum(1 for s in sizes if s < 2000),
-        }
 
     return {
         "images": page_images,
@@ -176,5 +136,4 @@ async def browse_images(
         "page": page,
         "per_page": per_page,
         "total_pages": total_pages,
-        "grade_stats": grade_stats,
     }
