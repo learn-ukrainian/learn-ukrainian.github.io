@@ -1,0 +1,128 @@
+- lemma: пряма мова
+  translation: direct speech
+  pos: phrase
+  usage: Пряма мова передає чужі слова дослівно в лапках або репліці діалогу.
+- lemma: непряма мова
+  translation: indirect speech, reported speech
+  pos: phrase
+  usage: Непряма мова переказує зміст чужих слів без дослівної цитати.
+- lemma: слова автора
+  translation: reporting clause, author's words
+  pos: phrase
+  usage: Слова автора пояснюють, хто сказав, запитав або відповів.
+- lemma: лапки
+  translation: quotation marks
+  pos: noun
+  usage: Українська пряма мова в рядку використовує лапки « ».
+- lemma: тире
+  translation: dash
+  pos: noun
+  usage: Тире відокремлює слова автора й починає репліку діалогу.
+- lemma: двокрапка
+  translation: colon
+  pos: noun
+  usage: Перед прямою мовою після слів автора ставимо двокрапку.
+- lemma: кома
+  translation: comma
+  pos: noun
+  usage: У схемі «П», — а після прямої мови стоїть кома.
+- lemma: діалог
+  translation: dialogue
+  pos: noun
+  usage: У діалозі кожна нова репліка починається з тире.
+- lemma: репліка
+  translation: line, utterance in dialogue
+  pos: noun
+  usage: Репліка одного мовця в діалозі починається з нового рядка.
+- lemma: авторська ремарка
+  translation: authorial remark, stage direction
+  pos: phrase
+  usage: Авторська ремарка додає дію або тон мовця.
+- lemma: дієслово мовлення
+  translation: speech verb
+  pos: phrase
+  usage: Сказати, запитати, відповісти й пояснити — дієслова мовлення.
+- lemma: сказати
+  translation: to say
+  pos: verb
+  usage: Олена сказала, що прийде наступного дня.
+- lemma: запитати
+  translation: to ask
+  pos: verb
+  usage: Марко запитав, чи зустріч почнеться о десятій.
+- lemma: відповісти
+  translation: to answer
+  pos: verb
+  usage: Ірина відповіла, що вже готова.
+- lemma: пояснити
+  translation: to explain
+  pos: verb
+  usage: Викладач пояснив, чому потрібна двокрапка.
+- lemma: додати
+  translation: to add
+  pos: verb
+  usage: Менеджерка додала, що файл надішле наступного дня.
+- lemma: попросити
+  translation: to ask, to request
+  pos: verb
+  usage: Мама попросила, щоб я зателефонував їй увечері.
+- lemma: дослівно
+  translation: verbatim
+  pos: adverb
+  usage: Цитату передають дослівно, без зміни слів.
+- lemma: переказ
+  translation: retelling
+  pos: noun
+  usage: Переказ зберігає зміст, але не завжди точні слова.
+- lemma: перетворення
+  translation: transformation
+  pos: noun
+  usage: Перетворення прямої мови на непряму змінює точку зору.
+- lemma: з'ясувальне речення
+  translation: content clause
+  pos: phrase
+  usage: Непряма мова часто має з'ясувальне речення зі сполучником що.
+- lemma: сполучник
+  translation: conjunction
+  pos: noun
+  usage: Сполучник що передає повідомлення, а щоб — прохання або наказ.
+- lemma: частка чи
+  translation: whether particle
+  pos: phrase
+  usage: Частка чи вводить непряме питання так або ні.
+- lemma: питальне слово
+  translation: question word
+  pos: phrase
+  usage: Питальне слово де або коли може вводити непряму мову.
+- lemma: наказовий спосіб
+  translation: imperative mood
+  pos: phrase
+  usage: Наказовий спосіб у непрямій мові переходить у конструкцію зі щоб.
+- lemma: вигук
+  translation: exclamation
+  pos: noun
+  usage: Вигук часто зникає, коли пряму мову переказують непрямо.
+- lemma: звертання
+  translation: address, vocative expression
+  pos: noun
+  usage: Звертання в прямій мові може стати додатком у переказі.
+- lemma: зміна особи
+  translation: person shift
+  pos: phrase
+  usage: Зміна особи пояснює, чому я стає він або вона.
+- lemma: вказівне слово
+  translation: deictic word
+  pos: phrase
+  usage: Тут, зараз і сьогодні — вказівні слова, які залежать від ситуації мовлення.
+- lemma: того дня
+  translation: that day
+  pos: phrase
+  usage: У переказі сьогодні часто стає того дня.
+- lemma: напередодні
+  translation: the day before
+  pos: adverb
+  usage: У непрямій мові вчора часто переходить у напередодні.
+- lemma: наступного дня
+  translation: the next day
+  pos: phrase
+  usage: У переказі завтра часто стає наступного дня.
