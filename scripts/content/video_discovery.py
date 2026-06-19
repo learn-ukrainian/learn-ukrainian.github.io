@@ -27,7 +27,7 @@ from batch_gemini_config import FLASH_MODEL
 
 # Import helpers — keyword building, blog/RAG search, formatting
 from content.video_discovery_helpers import (
-    _default_qdrant_check,
+    _default_sources_check,
     _search_blog_dbs,
     build_discovery_keywords,
     build_search_keywords,
@@ -209,9 +209,9 @@ def search_blogs(
 # RAG availability check
 # ---------------------------------------------------------------------------
 
-def _is_qdrant_available() -> bool:
-    """Check if Qdrant is reachable without loading heavy models."""
-    return _default_qdrant_check()
+def _is_sources_available() -> bool:
+    """Check if SQLite sources database is available."""
+    return _default_sources_check()
 
 
 def search_rag(
@@ -221,12 +221,12 @@ def search_rag(
     limit_text: int = 5,
     limit_images: int = 3,
     limit_literary: int = 3,
-    is_qdrant_available_fn=None,
+    is_sources_available_fn=None,
 ) -> dict[str, list[dict]]:
-    """Search RAG collections. Wrapper that defaults to module-level _is_qdrant_available."""
+    """Search SQLite-backed source collections via the helper wrapper."""
     return _search_rag_impl(
         keywords, track, level, limit_text, limit_images, limit_literary,
-        is_qdrant_available_fn=is_qdrant_available_fn or _is_qdrant_available,
+        is_sources_available_fn=is_sources_available_fn or _is_sources_available,
     )
 
 

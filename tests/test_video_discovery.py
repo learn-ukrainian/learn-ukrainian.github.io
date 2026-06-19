@@ -400,9 +400,9 @@ class TestFormatBlogDiscovery:
 # ---------------------------------------------------------------------------
 
 class TestSearchRag:
-    def test_returns_empty_when_qdrant_unavailable(self):
-        """Should gracefully degrade when Qdrant is not running."""
-        with patch("video_discovery._is_qdrant_available", return_value=False):
+    def test_returns_empty_when_sources_unavailable(self):
+        """Should gracefully degrade when SQLite sources are unavailable."""
+        with patch("video_discovery._is_sources_available", return_value=False):
             result = search_rag(["книга", "стіл"], track="a1", level="A1")
             assert result["text_chunks"] == []
             assert result["images"] == []
@@ -410,7 +410,7 @@ class TestSearchRag:
 
     def test_returns_empty_on_import_error(self):
         """Should degrade if rag.query is not importable."""
-        with patch("video_discovery._is_qdrant_available", return_value=True):
+        with patch("video_discovery._is_sources_available", return_value=True):
             with patch("builtins.__import__", side_effect=ImportError("no rag")):
                 result = search_rag(["тест"], track="a1")
                 assert result["text_chunks"] == []
@@ -429,7 +429,7 @@ class TestSearchRag:
         mock_rag_query.search_images = lambda *a, **kw: mock_img
         mock_rag_query.search_literary = lambda *a, **kw: mock_lit
 
-        with patch("video_discovery._is_qdrant_available", return_value=True):
+        with patch("video_discovery._is_sources_available", return_value=True):
             with patch.dict("sys.modules", {"rag.query": mock_rag_query}):
                 result = search_rag(["козаки"], track="hist", level="HIST")
                 assert len(result["text_chunks"]) >= 1
@@ -448,7 +448,7 @@ class TestSearchRag:
 
     def test_empty_keywords(self):
         """Empty keywords should return empty results."""
-        with patch("video_discovery._is_qdrant_available", return_value=True):
+        with patch("video_discovery._is_sources_available", return_value=True):
             with patch("builtins.__import__", side_effect=ImportError):
                 result = search_rag([], track="a1")
                 assert result["text_chunks"] == []

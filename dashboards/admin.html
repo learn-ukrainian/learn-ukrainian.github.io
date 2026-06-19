@@ -112,10 +112,8 @@ table.stats-table tr:hover { background: var(--bg3); }
 <div class="layout">
   <div class="sidebar">
     <a href="#health" class="active" data-section="health">Health</a>
-    <a href="#backup" data-section="backup">Backup</a>
     <a href="#maintenance" data-section="maintenance">Maintenance</a>
     <a href="#stats" data-section="stats">Stats</a>
-    <a href="#collections" data-section="collections">Collections</a>
   </div>
 
   <div class="main">
@@ -129,23 +127,6 @@ table.stats-table tr:hover { background: var(--bg3); }
       <div class="card">
         <h3>Disk Usage</h3>
         <div id="disk-bars"></div>
-      </div>
-    </div>
-
-    <!-- Backup Section -->
-    <div class="section" id="section-backup">
-      <h2>Qdrant Backups</h2>
-      <div class="card">
-        <h3>Create Backup</h3>
-        <p style="font-size:13px;color:var(--text2);margin-bottom:12px">
-          Creates a Qdrant snapshot and downloads it to the backup directory.
-        </p>
-        <button class="action-btn" id="btn-backup" onclick="createBackup()">Create Qdrant Backup</button>
-        <div class="result-box" id="backup-result"></div>
-      </div>
-      <div class="card">
-        <h3>Existing Backups</h3>
-        <div id="backup-list" class="backup-list">Loading...</div>
       </div>
     </div>
 
@@ -173,14 +154,6 @@ table.stats-table tr:hover { background: var(--bg3); }
         <button class="action-btn" id="btn-logs" onclick="cleanLogs()">Clean Old Logs</button>
         <div class="result-box" id="logs-result"></div>
       </div>
-      <div class="card">
-        <h3>Verify Collections</h3>
-        <p style="font-size:13px;color:var(--text2);margin-bottom:12px">
-          Compare Qdrant point counts vs on-disk chunk/file counts.
-        </p>
-        <button class="action-btn" id="btn-verify" onclick="verifyCollections()">Verify Collections</button>
-        <div class="result-box" id="verify-result"></div>
-      </div>
     </div>
 
     <!-- Stats Section -->
@@ -196,12 +169,6 @@ table.stats-table tr:hover { background: var(--bg3); }
       </div>
     </div>
 
-    <!-- Collections Section -->
-    <div class="section" id="section-collections">
-      <h2>Qdrant Collections</h2>
-      <div id="collections-table">Loading...</div>
-    </div>
-
   </div>
 </div>
 
@@ -213,7 +180,6 @@ const sectionLoaders = {
   backup:      () => loadBackupList(),
   maintenance: () => Promise.resolve(),
   stats:       () => Promise.all([loadEmbedStats(), loadAnnotationStats()]),
-  collections: () => loadCollections(),
 };
 const loadedSections = new Set();
 
@@ -280,44 +246,29 @@ function setLoading(btnId, loading) {
 }
 
 // ── Health ──────────────────────────────────────────
-
 async function loadHealth() {
   try {
     const data = await apiGet('/api/admin/health');
     const grid = document.getElementById('health-grid');
-    const q = data.qdrant;
     const b = data.broker;
 
     grid.innerHTML = `
       <div class="status-item">
         <div class="label">Overall</div>
         <div class="value"><span class="dot ${data.status === 'ok' ? 'green' : 'yellow'}"></span>${data.status}</div>
-        <div class="sub">Uptime: ${Math.floor(data.uptime_seconds / 3600)}h ${Math.floor((data.uptime_seconds % 3600) / 60)}m</div>
-      </div>
-      <div class="status-item">
-        <div class="label">Qdrant</div>
-        <div class="value"><span class="dot ${q.status === 'healthy' ? 'green' : 'red'}"></span>${q.status}</div>
-        <div class="sub">${q.total_points.toLocaleString()} points &middot; Docker: ${q.docker}</div>
+        <div class="sub">uptime ${Math.round(data.uptime_seconds || 0)}s</div>
       </div>
       <div class="status-item">
         <div class="label">Broker</div>
         <div class="value"><span class="dot ${b.status === 'healthy' ? 'green' : 'red'}"></span>${b.status}</div>
-        <div class="sub">${b.size_human} &middot; Queue: ${b.queue_depth}</div>
+        <div class="sub">${b.messages || 0} messages &middot; ${escapeHtml(b.size_human || b.size || '')}</div>
       </div>
       <div class="status-item">
-        <div class="label">Data Directory</div>
-        <div class="value">${data.disk.data_dir_human}</div>
-        <div class="sub">Total data on disk</div>
+        <div class="label">Disk</div>
+        <div class="value">${data.disk.used_pct}%</div>
+        <div class="sub">${escapeHtml(data.disk.free)} free</div>
       </div>
     `;
-
-    // Show collections
-    if (q.collections && q.collections.length > 0) {
-      let extra = '<div class="status-item"><div class="label">Collections</div><div class="value">' + q.collections.length + '</div><div class="sub">';
-      extra += q.collections.map(c => `${c.name}: ${c.points.toLocaleString()}`).join(' &middot; ');
-      extra += '</div></div>';
-      grid.innerHTML += extra;
-    }
   } catch (e) {
     document.getElementById('health-grid').innerHTML = `<div class="status-item"><div class="label">Error</div><div class="value" style="color:var(--red)">${e.message}</div></div>`;
   }
@@ -330,7 +281,7 @@ async function loadDisk() {
     const data = await apiGet('/api/admin/disk-usage');
     const container = document.getElementById('disk-bars');
     const maxSize = Math.max(...Object.values(data.breakdown).map(v => v.size_bytes), 1);
-    const colors = { qdrant_storage: 'var(--blue)', textbook_images: 'var(--yellow)', textbooks: 'var(--orange)', literary_texts: 'var(--purple)', textbook_chunks: 'var(--green)', backups: 'var(--text2)', logs: 'var(--red)', vesum_db: 'var(--text3)' };
+    const colors = { textbook_images: 'var(--yellow)', textbooks: 'var(--orange)', literary_texts: 'var(--purple)', textbook_chunks: 'var(--green)', backups: 'var(--text2)', logs: 'var(--red)', vesum_db: 'var(--text3)' };
 
     let html = '';
     for (const [key, val] of Object.entries(data.breakdown)) {
@@ -347,55 +298,6 @@ async function loadDisk() {
     container.innerHTML = html;
   } catch (e) {
     document.getElementById('disk-bars').innerHTML = `<span style="color:var(--red)">${e.message}</span>`;
-  }
-}
-
-// ── Backup ──────────────────────────────────────────
-
-async function createBackup() {
-  setLoading('btn-backup', true);
-  try {
-    const data = await apiPost('/api/admin/backup/qdrant');
-    showResult('backup-result', data);
-    loadBackupList();
-  } catch (e) {
-    showResult('backup-result', { error: e.message });
-  }
-  setLoading('btn-backup', false);
-}
-
-async function loadBackupList() {
-  try {
-    const data = await apiGet('/api/admin/backup/list');
-    const container = document.getElementById('backup-list');
-    if (data.backups.length === 0) {
-      container.innerHTML = '<span style="color:var(--text3)">No backups found. Backup dir: ' + (data.backup_dir || 'data/backups/') + '</span>';
-      return;
-    }
-    let html = `<div style="font-size:12px;color:var(--text3);margin-bottom:8px">${data.count} backups &middot; ${escapeHtml(data.total_size_human)} total</div>`;
-    for (const b of data.backups) {
-      const safe = escapeHtml(b.filename);
-      const safeJs = b.filename.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-      html += `<div class="backup-item">
-        <span class="name">${safe}</span>
-        <span class="size">${escapeHtml(b.size_human)}</span>
-        <span class="date">${new Date(b.created_at).toLocaleString()}</span>
-        <button class="action-btn danger" onclick="deleteBackup('${safeJs}')" style="padding:4px 8px;font-size:11px">Delete</button>
-      </div>`;
-    }
-    container.innerHTML = html;
-  } catch (e) {
-    document.getElementById('backup-list').innerHTML = `<span style="color:var(--red)">${e.message}</span>`;
-  }
-}
-
-async function deleteBackup(filename) {
-  if (!confirm(`Delete backup "${filename}"?`)) return;
-  try {
-    await apiDelete(`/api/admin/backup/${filename}`);
-    loadBackupList();
-  } catch (e) {
-    alert('Delete failed: ' + e.message);
   }
 }
 
@@ -424,16 +326,6 @@ async function cleanLogs() {
   setLoading('btn-logs', false);
 }
 
-async function verifyCollections() {
-  setLoading('btn-verify', true);
-  try {
-    const data = await apiPost('/api/admin/collections/verify');
-    showResult('verify-result', data);
-  } catch (e) {
-    showResult('verify-result', { error: e.message });
-  }
-  setLoading('btn-verify', false);
-}
 
 // ── Stats ───────────────────────────────────────────
 
@@ -482,33 +374,6 @@ async function loadAnnotationStats() {
   }
 }
 
-// ── Collections ─────────────────────────────────────
-
-async function loadCollections() {
-  try {
-    const data = await apiGet('/api/admin/collections');
-    const el = document.getElementById('collections-table');
-    if (!data.collections || data.collections.length === 0) {
-      el.innerHTML = '<span style="color:var(--text3)">No collections found. Is Qdrant running?</span>';
-      return;
-    }
-    let html = '<table class="stats-table"><tr><th>Collection</th><th>Points</th><th>Vectors</th><th>Indexed</th><th>Status</th></tr>';
-    for (const c of data.collections) {
-      const color = c.status === 'green' ? 'var(--green)' : 'var(--yellow)';
-      html += `<tr>
-        <td><strong>${c.name}</strong></td>
-        <td>${(c.points_count || 0).toLocaleString()}</td>
-        <td>${(c.vectors_count || 0).toLocaleString()}</td>
-        <td>${(c.indexed_vectors_count || 0).toLocaleString()}</td>
-        <td><span class="dot" style="background:${color}"></span>${c.status || 'unknown'}</td>
-      </tr>`;
-    }
-    html += '</table>';
-    el.innerHTML = html;
-  } catch (e) {
-    document.getElementById('collections-table').innerHTML = `<span style="color:var(--red)">${e.message}</span>`;
-  }
-}
 
 // ── Auto-refresh health every 30s ────────────────────
 

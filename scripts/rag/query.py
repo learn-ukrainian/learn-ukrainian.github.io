@@ -1,730 +1,332 @@
-"""Legacy CLI query tool for the Qdrant-backed RAG pipeline.
+"""SQLite-backed compatibility queries for older RAG callers.
 
-Deprecated for module-build knowledge packets by #1631. New V7 linear
-pipeline packet generation reads compiled wiki articles plus sources MCP
-registries in ``scripts.build.linear_pipeline.build_knowledge_packet``.
-This module remains for older API, oneoff, and RAG-specific test consumers.
-
-Usage:
-    # Hybrid text search
-    .venv/bin/python scripts/rag/query.py text "як утворюється минулий час"
-    .venv/bin/python scripts/rag/query.py text "загадка про тварин" --grade 3 --limit 3
-
-    # Image search (text-to-image via SigLIP)
-    .venv/bin/python scripts/rag/query.py images "яблуко"
-    .venv/bin/python scripts/rag/query.py images "ілюстрація до букви А" --grade 1
-
-    # Get surrounding context for a chunk
-    .venv/bin/python scripts/rag/query.py context <chunk_id> --window 2
-
-    # Collection stats
-    .venv/bin/python scripts/rag/query.py stats
+The project corpus now lives in ``data/sources.db`` and is queried through
+``scripts.wiki.sources_db``.  This module keeps the old public function names
+used by pipeline/debug scripts without retaining the retired vector DB client.
 """
+
+from __future__ import annotations
 
 import argparse
 import json
+import re
+import sqlite3
 import sys
 from pathlib import Path
+from typing import Any
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+SCRIPTS_DIR = Path(__file__).resolve().parents[1]
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
 
-from rag.config import (
-    IMAGE_COLLECTION,
-    LITERARY_COLLECTION,
-    QDRANT_GRPC_PORT,
-    QDRANT_HOST,
-    TEXT_COLLECTION,
-)
-
-# Module-level singletons (lazy-loaded)
-_qdrant_client = None
-_text_encoder = None
-_image_encoder = None
-_cross_encoder = None
+try:
+    from wiki import sources_db
+except ImportError:  # pragma: no cover - package import fallback
+    from scripts.wiki import sources_db
 
 
-def get_client():
-    global _qdrant_client
-    if _qdrant_client is None:
-        from qdrant_client import QdrantClient
-        _qdrant_client = QdrantClient(
-            host=QDRANT_HOST, grpc_port=QDRANT_GRPC_PORT,
-            prefer_grpc=True, check_compatibility=False,
-        )
-    return _qdrant_client
+def _keywords(query: str) -> set[str]:
+    """Extract Ukrainian/Latin tokens suitable for FTS helper APIs."""
+    return {tok.lower() for tok in re.findall(r"[\w'’ʼ-]+", query, flags=re.UNICODE)}
 
 
-def get_text_encoder():
-    global _text_encoder
-    if _text_encoder is None:
-        from rag.embed import TextEncoder
-        _text_encoder = TextEncoder()
-    return _text_encoder
-
-
-def get_image_encoder():
-    global _image_encoder
-    if _image_encoder is None:
-        from rag.embed import ImageEncoder
-        _image_encoder = ImageEncoder()
-    return _image_encoder
-
-
-def get_cross_encoder():
-    """Lazy-load cross-encoder reranker (#1097). Only loads on first reranked query."""
-    global _cross_encoder
-    if _cross_encoder is None:
-        from rag.embed import CrossEncoderReranker
-        _cross_encoder = CrossEncoderReranker()
-    return _cross_encoder
-
-
-def build_filter(grade: int | None = None, subject: str | None = None,
-                 trust_tier: int | None = None, author: str | None = None):
-    """Build Qdrant filter from optional parameters."""
-    from qdrant_client.models import FieldCondition, Filter, MatchValue
-
-    conditions = []
-    if grade is not None:
-        conditions.append(FieldCondition(key="grade", match=MatchValue(value=grade)))
-    if subject:
-        conditions.append(FieldCondition(key="subject", match=MatchValue(value=subject)))
-    if trust_tier is not None:
-        conditions.append(FieldCondition(key="trust_tier", match=MatchValue(value=trust_tier)))
-    if author:
-        conditions.append(FieldCondition(key="author", match=MatchValue(value=author)))
-
-    return Filter(must=conditions) if conditions else None
-
-
-def _keyword_search(client, query: str, qfilter, limit: int) -> list[dict]:
-    """Full-text keyword search on the text payload field.
-
-    Uses Qdrant's full-text index (multilingual tokenizer) to find chunks
-    containing the query words. This catches exact matches that semantic
-    search misses — e.g., a specific verse buried in a play script.
-    """
-    from qdrant_client.models import FieldCondition, Filter, MatchText
-
-    # Build filter combining keyword match + any grade/subject filters
-    keyword_condition = FieldCondition(key="text", match=MatchText(text=query))
-    if qfilter and qfilter.must:
-        combined_filter = Filter(must=[keyword_condition, *qfilter.must])
-    else:
-        combined_filter = Filter(must=[keyword_condition])
-
+def _score(row: dict[str, Any]) -> float:
+    raw = row.get("_kw_score", row.get("score", 0.0))
     try:
-        points, _ = client.scroll(
-            collection_name=TEXT_COLLECTION,
-            scroll_filter=combined_filter,
-            limit=limit,
-            with_payload=True,
-            with_vectors=False,
-        )
-    except Exception:
-        # Full-text index may not exist yet — degrade gracefully
-        return []
-    return points
+        return float(raw)
+    except (TypeError, ValueError):
+        return 0.0
 
 
-def search_text(query: str, grade: int | None = None, subject: str | None = None,
-                trust_tier: int | None = None, limit: int = 5,
-                rerank: bool = False) -> list[dict]:
-    """Hybrid text search combining dense + sparse + keyword scores.
-
-    Three-leg search:
-    1. Dense (semantic) — BGE-M3 embeddings for meaning-based matching
-    2. Sparse (BM25-style) — BGE-M3 lexical weights for term matching
-    3. Keyword (full-text) — Qdrant payload index for exact word matching
-
-    Legs 1+2 are fused via RRF. Leg 3 results are merged in, ensuring
-    exact text matches always surface even when buried in large chunks.
-    """
-    from qdrant_client.models import (
-        FusionQuery,
-        Prefetch,
-        SparseVector,
-    )
-
-    client = get_client()
-    encoder = get_text_encoder()
-
-    # Encode query
-    result = encoder.encode([query])
-    dense_vec = result["dense_vecs"][0].tolist()
-    sparse_w = result["lexical_weights"][0]
-
-    if isinstance(sparse_w, dict):
-        sparse_indices = [int(k) if isinstance(k, (int, float)) else hash(k) % (2**31) for k in sparse_w]
-        sparse_values = list(sparse_w.values())
-    else:
-        sparse_indices, sparse_values = [], []
-
-    qfilter = build_filter(grade, subject, trust_tier)
-
-    # Hybrid search via Reciprocal Rank Fusion (dense + sparse)
-    results = client.query_points(
-        collection_name=TEXT_COLLECTION,
-        prefetch=[
-            Prefetch(
-                query=dense_vec,
-                using="dense",
-                limit=limit * 5,
-                filter=qfilter,
-            ),
-            Prefetch(
-                query=SparseVector(indices=sparse_indices, values=sparse_values),
-                using="sparse",
-                limit=limit * 5,
-                filter=qfilter,
-            ),
-        ],
-        query=FusionQuery(fusion="rrf"),
-        limit=limit,
-        with_payload=True,
-    )
-
-    # Collect RRF hits
-    seen_ids = set()
-    hits = []
-    for point in results.points:
-        payload = point.payload or {}
-        chunk_id = payload.get("chunk_id", "")
-        seen_ids.add(chunk_id)
-        hits.append({
-            "score": point.score if hasattr(point, 'score') else 0,
-            "chunk_id": chunk_id,
-            "text": payload.get("text", ""),
-            "section_title": payload.get("section_title", ""),
-            "grade": payload.get("grade", 0),
-            "author": payload.get("author", ""),
-            "page": payload.get("page_start", ""),
-            "trust_tier": payload.get("trust_tier", 0),
-        })
-
-    # Keyword search — find exact text matches that RRF missed.
-    # These are chunks containing the actual query words, so they
-    # deserve to be in the results even if semantic search ranked
-    # them low (e.g., a verse buried in a play script).
-    keyword_points = _keyword_search(client, query, qfilter, limit)
-    keyword_hits = []
-    for point in keyword_points:
-        payload = point.payload or {}
-        chunk_id = payload.get("chunk_id", "")
-        if chunk_id not in seen_ids:
-            seen_ids.add(chunk_id)
-            keyword_hits.append({
-                "score": 0,  # placeholder, will be set below
-                "chunk_id": chunk_id,
-                "text": payload.get("text", ""),
-                "section_title": payload.get("section_title", ""),
-                "grade": payload.get("grade", 0),
-                "author": payload.get("author", ""),
-                "page": payload.get("page_start", ""),
-                "trust_tier": payload.get("trust_tier", 0),
-            })
-
-    if keyword_hits:
-        # Keyword matches are exact text hits — insert them among the
-        # top results by replacing the lowest-scoring RRF hits.
-        # Give keyword hits a score just above the median RRF score
-        # so they appear mid-results (not first, but visible).
-        mid_score = hits[len(hits) // 2]["score"] if hits else 0.5
-        for kh in keyword_hits:
-            kh["score"] = mid_score
-
-        # Merge: keep all keyword hits + fill remaining slots with RRF hits
-        merged = keyword_hits.copy()
-        for h in hits:
-            if h["chunk_id"] not in {kh["chunk_id"] for kh in keyword_hits}:
-                merged.append(h)
-        merged.sort(key=lambda x: x["score"], reverse=True)
-        results = merged
-    else:
-        results = hits
-
-    # Cross-encoder reranking for MCP tool calls (#1097)
-    if rerank and len(results) > 1:
-        try:
-            reranker = get_cross_encoder()
-            candidates = results[:limit * 3]
-            results = reranker.rerank(query, candidates, text_key="text", limit=limit)
-        except Exception:
-            results = results[:limit]
-    else:
-        results = results[:limit]
-
-    return results
-
-
-def search_literary(query: str, work: str | None = None, genre: str | None = None,
-                    period: str | None = None, limit: int = 5) -> list[dict]:
-    """Search literary texts (Slovo, PVL, chronicles, etc.) via dense + keyword."""
-    from qdrant_client.models import FieldCondition, Filter, MatchText, MatchValue
-
-    client = get_client()
-    encoder = get_text_encoder()
-
-    result = encoder.encode([query])
-    dense_vec = result["dense_vecs"][0].tolist()
-
-    conditions = []
-    if work:
-        conditions.append(FieldCondition(key="work", match=MatchValue(value=work)))
-    if genre:
-        conditions.append(FieldCondition(key="genre", match=MatchValue(value=genre)))
-    if period:
-        conditions.append(FieldCondition(key="language_period", match=MatchValue(value=period)))
-    qfilter = Filter(must=conditions) if conditions else None
-
-    results = client.query_points(
-        collection_name=LITERARY_COLLECTION,
-        query=dense_vec,
-        using="dense",
-        limit=limit,
-        query_filter=qfilter,
-        with_payload=True,
-    )
-
-    def _make_hit(payload, score=0):
-        hit = {
-            "score": score,
-            "chunk_id": payload.get("chunk_id", ""),
-            "text": payload.get("text", ""),
-            "work": payload.get("work", ""),
-            "author": payload.get("author", ""),
-            "year": payload.get("year", 0),
-            "genre": payload.get("genre", ""),
-            "language_period": payload.get("language_period", ""),
-            "source_url": payload.get("source_url", ""),
-        }
-        if payload.get("original_text"):
-            hit["original_text"] = payload["original_text"]
-        return hit
-
-    seen_ids = set()
-    hits = []
-    for point in results.points:
-        payload = point.payload or {}
-        chunk_id = payload.get("chunk_id", "")
-        seen_ids.add(chunk_id)
-        hits.append(_make_hit(payload, point.score if hasattr(point, "score") else 0))
-
-    # Keyword search — find exact text matches that dense search missed
-    kw_conditions = [FieldCondition(key="text", match=MatchText(text=query))]
-    if conditions:
-        kw_conditions.extend(conditions)
-    try:
-        kw_points, _ = client.scroll(
-            collection_name=LITERARY_COLLECTION,
-            scroll_filter=Filter(must=kw_conditions),
-            limit=limit,
-            with_payload=True,
-            with_vectors=False,
-        )
-    except Exception:
-        kw_points = []
-
-    keyword_hits = []
-    for point in kw_points:
-        payload = point.payload or {}
-        chunk_id = payload.get("chunk_id", "")
-        if chunk_id not in seen_ids:
-            seen_ids.add(chunk_id)
-            keyword_hits.append(_make_hit(payload))
-
-    if keyword_hits:
-        mid_score = hits[len(hits) // 2]["score"] if hits else 0.5
-        for kh in keyword_hits:
-            kh["score"] = mid_score
-        merged = keyword_hits.copy()
-        for h in hits:
-            if h["chunk_id"] not in {kh["chunk_id"] for kh in keyword_hits}:
-                merged.append(h)
-        merged.sort(key=lambda x: x["score"], reverse=True)
-        return merged[:limit]
-
-    return hits
-
-
-def get_full_text(work: str, max_chars: int = 50_000) -> dict:
-    """Load all chunks for a literary work, concatenated into full text.
-
-    For short works (<20 pages / ~8000 tokens), returns the complete text.
-    Caps at max_chars for safety.
-
-    Returns dict with keys: work, author, year, genre, language_period, text, chunk_count, truncated.
-    """
-    from qdrant_client.models import FieldCondition, Filter, MatchValue
-
-    client = get_client()
-
-    # Scroll all chunks for this work
-    all_points = []
-    offset = None
-    while True:
-        points, next_offset = client.scroll(
-            collection_name=LITERARY_COLLECTION,
-            scroll_filter=Filter(
-                must=[FieldCondition(key="work", match=MatchValue(value=work))]
-            ),
-            limit=100,
-            offset=offset,
-            with_payload=True,
-            with_vectors=False,
-        )
-        all_points.extend(points)
-        if next_offset is None:
-            break
-        offset = next_offset
-
-    if not all_points:
-        return {"error": f"No chunks found for work: {work}"}
-
-    # Sort by chunk_id for correct ordering
-    all_points.sort(key=lambda p: p.payload.get("chunk_id", ""))
-
-    # Extract metadata from first chunk
-    first = all_points[0].payload
-    metadata = {
-        "work": first.get("work", ""),
-        "author": first.get("author", ""),
-        "year": first.get("year", 0),
-        "genre": first.get("genre", ""),
-        "language_period": first.get("language_period", ""),
-        "chunk_count": len(all_points),
+def _text_hit(row: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "score": _score(row),
+        "chunk_id": row.get("chunk_id") or str(row.get("id", "")),
+        "text": row.get("text", ""),
+        "section_title": row.get("section_title") or row.get("title", ""),
+        "grade": row.get("grade", 0) or 0,
+        "author": row.get("author_uk") or row.get("author", ""),
+        "page": row.get("page_start", ""),
+        "trust_tier": row.get("trust_tier", 0) or 0,
+        "source_type": row.get("source_type", "textbook"),
+        "source_file": row.get("source_file", ""),
     }
 
-    # Concatenate text
-    texts = [p.payload.get("text", "") for p in all_points]
-    full_text = "\n\n".join(texts)
 
-    truncated = len(full_text) > max_chars
-    if truncated:
-        full_text = full_text[:max_chars] + "\n\n[... truncated at character limit ...]"
+def _literary_hit(row: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "score": _score(row),
+        "chunk_id": row.get("chunk_id") or str(row.get("id", "")),
+        "text": row.get("text", ""),
+        "section_title": row.get("title", ""),
+        "author": row.get("author", ""),
+        "work": row.get("work") or row.get("title", ""),
+        "work_id": row.get("work_id", ""),
+        "year": row.get("year", ""),
+        "genre": row.get("genre", ""),
+        "language_period": row.get("language_period", ""),
+        "source_url": row.get("source_url", ""),
+        "source_type": row.get("source_type", "literary"),
+        "source_file": row.get("source_file", ""),
+    }
 
-    metadata["text"] = full_text
-    metadata["truncated"] = truncated
-    return metadata
+
+def build_filter(
+    grade: int | None = None,
+    subject: str | None = None,
+    trust_tier: int | None = None,
+    author: str | None = None,
+) -> dict[str, Any]:
+    """Return a plain compatibility filter descriptor for tests/debug callers."""
+    return {
+        key: value
+        for key, value in {
+            "grade": grade,
+            "subject": subject,
+            "trust_tier": trust_tier,
+            "author": author,
+        }.items()
+        if value is not None
+    }
 
 
-def search_images(query: str, grade: int | None = None,
-                   teaching_value: str | None = None,
-                   subject: str | None = None,
-                   limit: int = 5) -> list[dict]:
-    """Image search via Ukrainian text query (SigLIP text-to-image).
-
-    Args:
-        teaching_value: Filter by annotation quality — "high", "medium", "low", or "none".
-        subject: Filter by textbook subject (e.g., "bukvar").
-    """
-    from qdrant_client.models import FieldCondition, Filter, MatchValue
-
-    client = get_client()
-    encoder = get_image_encoder()
-
-    query_vec = encoder.encode_text([query])[0].tolist()
-
-    conditions = []
+def search_text(
+    query: str,
+    grade: int | None = None,
+    subject: str | None = None,
+    trust_tier: int | None = None,
+    limit: int = 5,
+    rerank: bool = False,
+) -> list[dict[str, Any]]:
+    """Search textbook chunks through SQLite FTS5."""
+    del rerank
+    rows = sources_db.search_textbooks(_keywords(query), max_total=max(limit * 3, limit))
+    hits = [_text_hit(row) for row in rows]
     if grade is not None:
-        conditions.append(FieldCondition(key="grade", match=MatchValue(value=grade)))
+        hits = [hit for hit in hits if hit.get("grade") == grade]
     if subject:
-        conditions.append(FieldCondition(key="subject", match=MatchValue(value=subject)))
-    if teaching_value:
-        conditions.append(FieldCondition(key="teaching_value", match=MatchValue(value=teaching_value)))
-    qfilter = Filter(must=conditions) if conditions else None
-
-    results = client.query_points(
-        collection_name=IMAGE_COLLECTION,
-        query=query_vec,
-        limit=limit,
-        query_filter=qfilter,
-        with_payload=True,
-    )
-
-    hits = []
-    for point in results.points:
-        payload = point.payload or {}
-        hit = {
-            "score": point.score if hasattr(point, 'score') else 0,
-            "image_id": payload.get("image_id", ""),
-            "image_path": payload.get("image_path", ""),
-            "page": payload.get("page", 0),
-            "grade": payload.get("grade", 0),
-            "author": payload.get("author", ""),
-            "width": payload.get("width", 0),
-            "height": payload.get("height", 0),
-        }
-        # Include annotation fields when present
-        if payload.get("description_uk"):
-            hit["description_uk"] = payload["description_uk"]
-        if payload.get("associated_text_uk"):
-            hit["associated_text_uk"] = payload["associated_text_uk"]
-        if payload.get("teaching_value"):
-            hit["teaching_value"] = payload["teaching_value"]
-        hits.append(hit)
-    return hits
+        subject_l = subject.lower()
+        hits = [
+            hit
+            for hit in hits
+            if subject_l in str(hit.get("source_file", "")).lower()
+            or subject_l in str(hit.get("section_title", "")).lower()
+        ]
+    if trust_tier is not None:
+        hits = [hit for hit in hits if hit.get("trust_tier") == trust_tier]
+    return hits[:limit]
 
 
-def get_chunk_context(chunk_id: str, window: int = 2) -> list[dict]:
-    """Get surrounding chunks for context.
-
-    Finds the chunk by ID, then retrieves nearby chunks from the same PDF
-    based on sequential chunk numbering.
-    """
-    from qdrant_client.models import FieldCondition, Filter, MatchValue
-
-    client = get_client()
-
-    # Parse chunk_id to find pdf_stem and sequence number
-    # Format: {pdf_stem}_s{NNNN}
-    parts = chunk_id.rsplit("_s", 1)
-    if len(parts) != 2:
-        return [{"error": f"Invalid chunk_id format: {chunk_id}"}]
-
-    pdf_stem = parts[0]
-    try:
-        seq_num = int(parts[1])
-    except ValueError:
-        return [{"error": f"Invalid sequence number in chunk_id: {chunk_id}"}]
-
-    # Search for chunks from same PDF with nearby sequence numbers
-    nearby_ids = []
-    for offset in range(-window, window + 1):
-        nearby_id = f"{pdf_stem}_s{seq_num + offset:04d}"
-        nearby_ids.append(nearby_id)
-
-    # Search by chunk_id in payload
-    results = client.scroll(
-        collection_name=TEXT_COLLECTION,
-        scroll_filter=Filter(
-            must=[
-                FieldCondition(key="pdf_stem", match=MatchValue(value=pdf_stem)),
-            ]
-        ),
-        limit=100,
-        with_payload=True,
-    )
-
-    # Filter to nearby chunks and sort
-    context_chunks = []
-    for point in results[0]:
-        payload = point.payload or {}
-        cid = payload.get("chunk_id", "")
-        if cid in nearby_ids:
-            context_chunks.append({
-                "chunk_id": cid,
-                "text": payload.get("text", ""),
-                "section_title": payload.get("section_title", ""),
-                "is_target": cid == chunk_id,
-            })
-
-    # Sort by chunk_id (which is sequential)
-    context_chunks.sort(key=lambda x: x["chunk_id"])
-    return context_chunks
+def search_literary(
+    query: str,
+    work: str | None = None,
+    genre: str | None = None,
+    period: str | None = None,
+    limit: int = 5,
+) -> list[dict[str, Any]]:
+    """Search literary chunks through SQLite FTS5."""
+    rows = sources_db.search_literary(_keywords(query), max_total=max(limit * 3, limit))
+    hits = [_literary_hit(row) for row in rows]
+    if work:
+        work_l = work.lower()
+        hits = [hit for hit in hits if work_l in str(hit.get("work", "")).lower()]
+    if genre:
+        genre_l = genre.lower()
+        hits = [hit for hit in hits if genre_l in str(hit.get("genre", "")).lower()]
+    if period:
+        period_l = period.lower()
+        hits = [
+            hit
+            for hit in hits
+            if period_l in str(hit.get("language_period", "")).lower()
+        ]
+    return hits[:limit]
 
 
-def search_dictionary(query: str, collection: str, limit: int = 5,
-                      rerank: bool = True) -> list[dict]:
-    """Generic semantic search across any dictionary/reference collection.
+def get_full_text(work: str, max_chars: int = 50_000) -> dict[str, Any]:
+    """Return concatenated literary text snippets for a work search term."""
+    hits = search_literary(work, work=work, limit=200)
+    if not hits:
+        hits = search_literary(work, limit=200)
+    text = "\n\n".join(hit.get("text", "") for hit in hits if hit.get("text"))
+    truncated = len(text) > max_chars
+    if truncated:
+        text = text[:max_chars] + "\n\n[... truncated character limit ...]"
+    first = hits[0] if hits else {}
+    return {
+        "work": first.get("work", work),
+        "author": first.get("author", ""),
+        "year": first.get("year", ""),
+        "genre": first.get("genre", ""),
+        "language_period": first.get("language_period", ""),
+        "text": text,
+        "chunk_count": len(hits),
+        "truncated": truncated,
+    }
 
-    Works for: style_guide, sum11, grinchenko_dict, frazeolohichnyi,
-    balla_en_uk, ukrajinet, dmklinger_uk_en, wiktionary_uk, puls_cefr.
 
-    Uses dense-only search (BGE-M3) + cross-encoder reranking (#1097).
-    Dictionary lookups benefit most from reranking — exact term matching
-    where semantic similarity alone isn't enough.
-    """
-    client = get_client()
-    encoder = get_text_encoder()
+def search_images(
+    query: str,
+    grade: int | None = None,
+    teaching_value: str | None = None,
+    subject: str | None = None,
+    limit: int = 5,
+) -> list[dict[str, Any]]:
+    """Image vector search was retired with the vector DB backend."""
+    del query, grade, teaching_value, subject, limit
+    return []
 
-    result = encoder.encode([query])
-    dense_vec = result["dense_vecs"][0].tolist()
 
-    # Over-fetch for reranking
-    fetch_limit = limit * 3 if rerank else limit
-
-    try:
-        results = client.query_points(
-            collection_name=collection,
-            query=dense_vec,
-            using="dense",
-            limit=fetch_limit,
-            with_payload=True,
-        )
-    except Exception:
+def get_chunk_context(chunk_id: str, window: int = 2) -> list[dict[str, Any]]:
+    """Return nearby textbook chunks from SQLite by chunk id when available."""
+    db_path = sources_db.SOURCES_DB_PATH
+    if not db_path.exists():
         return []
+    with sqlite3.connect(db_path) as conn:
+        conn.row_factory = sqlite3.Row
+        row = conn.execute(
+            "SELECT source_file, chunk_id FROM textbooks WHERE chunk_id = ?",
+            (chunk_id,),
+        ).fetchone()
+        if row is None:
+            return []
+        rows = conn.execute(
+            """
+            SELECT chunk_id, title, text
+            FROM textbooks
+            WHERE source_file = ?
+            ORDER BY id
+            """,
+            (row["source_file"],),
+        ).fetchall()
+    ids = [r["chunk_id"] for r in rows]
+    try:
+        idx = ids.index(chunk_id)
+    except ValueError:
+        return []
+    selected = rows[max(0, idx - window) : idx + window + 1]
+    return [
+        {
+            "chunk_id": r["chunk_id"],
+            "text": r["text"],
+            "section_title": r["title"],
+            "is_target": r["chunk_id"] == chunk_id,
+        }
+        for r in selected
+    ]
 
-    hits = []
-    for point in results.points:
-        payload = point.payload or {}
-        hits.append({
-            "score": point.score,
-            "text": payload.get("text", ""),
-            "source": payload.get("source", ""),
-            "headword": payload.get("headword", payload.get("word", "")),
-            "metadata": {k: v for k, v in payload.items()
-                         if k not in ("text", "source", "headword", "word")},
-        })
 
-    # Cross-encoder reranking for precision (#1097)
-    if rerank and len(hits) > 1:
-        try:
-            reranker = get_cross_encoder()
-            hits = reranker.rerank(query, hits, text_key="text", limit=limit)
-        except Exception:
-            hits = hits[:limit]
+def search_dictionary(
+    query: str,
+    collection: str,
+    limit: int = 5,
+    rerank: bool = True,
+) -> list[dict[str, Any]]:
+    """Search dictionary/reference tables through SQLite helpers."""
+    del rerank
+    collection = collection.lower()
+    if collection in {"sum11", "sum", "definitions"}:
+        rows = sources_db.search_definitions(query, limit=limit)
+    elif collection in {"grinchenko", "grinchenko_dict", "grinchenko_1907"}:
+        rows = sources_db.search_grinchenko_1907(query, limit=limit)
+    elif collection in {"style_guide", "style"}:
+        rows = sources_db.search_style_guide(query, limit=limit)
+    elif collection in {"puls_cefr", "cefr"}:
+        rows = sources_db.query_cefr_level(query, limit=limit)
+    elif collection in {"frazeolohichnyi", "idioms"}:
+        rows = sources_db.search_idioms(query, limit=limit)
+    elif collection in {"ukrajinet", "synonyms"}:
+        rows = sources_db.search_synonyms(query, limit=limit)
+    elif collection in {"esum", "etymology"}:
+        rows = sources_db.search_esum(query, limit=limit)
     else:
-        hits = hits[:limit]
+        rows = sources_db.search_sources(query, track="a1", limit=limit)
 
+    hits: list[dict[str, Any]] = []
+    for row in rows[:limit]:
+        text = row.get("text") or row.get("definition") or row.get("guideword") or ""
+        hits.append(
+            {
+                "score": _score(row),
+                "text": text,
+                "word": row.get("word", query),
+                "collection": collection,
+                "source": row.get("source", ""),
+                "metadata": row,
+            }
+        )
     return hits
 
 
-def collection_stats() -> dict:
-    """Get stats for all RAG collections."""
-    from rag.config import (
-        BALLA_COLLECTION,
-        DMKLINGER_COLLECTION,
-        FRAZEOLOHICHNYI_COLLECTION,
-        GRINCHENKO_COLLECTION,
-        PULS_CEFR_COLLECTION,
-        STYLE_GUIDE_COLLECTION,
-        SUM11_COLLECTION,
-        UKRAJINET_COLLECTION,
-        WIKTIONARY_COLLECTION,
-    )
-
-    client = get_client()
-    stats = {}
-    all_collections = [
-        TEXT_COLLECTION, IMAGE_COLLECTION, LITERARY_COLLECTION,
-        STYLE_GUIDE_COLLECTION, PULS_CEFR_COLLECTION, SUM11_COLLECTION,
-        GRINCHENKO_COLLECTION, FRAZEOLOHICHNYI_COLLECTION, BALLA_COLLECTION,
-        UKRAJINET_COLLECTION, DMKLINGER_COLLECTION, WIKTIONARY_COLLECTION,
-    ]
-    for coll_name in all_collections:
-        try:
-            info = client.get_collection(coll_name)
-            stats[coll_name] = {
-                "points_count": info.points_count,
-                "indexed_vectors_count": info.indexed_vectors_count,
-                "status": str(info.status),
-            }
-        except Exception as e:
-            stats[coll_name] = {"error": str(e)}
-    return stats
+def collection_stats() -> dict[str, dict[str, Any]]:
+    """Return SQLite source database status."""
+    try:
+        total = sources_db.source_count()
+        tables = sources_db.list_tables()
+    except FileNotFoundError:
+        return {"sources_db": {"error": "data/sources.db not found"}}
+    return {
+        "sources_db": {
+            "points_count": total,
+            "tables": tables,
+            "status": "ok",
+        }
+    }
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Query the RAG pipeline")
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Query SQLite source corpus")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    # Text search
-    text_parser = subparsers.add_parser("text", help="Hybrid text search")
-    text_parser.add_argument("query", help="Search query in Ukrainian")
-    text_parser.add_argument("--grade", type=int, help="Filter by grade")
-    text_parser.add_argument("--subject", type=str, help="Filter by subject")
-    text_parser.add_argument("--trust-tier", type=int, help="Filter by trust tier (1 or 2)")
-    text_parser.add_argument("--limit", type=int, default=5, help="Number of results")
+    text_parser = subparsers.add_parser("text", help="Search textbook chunks")
+    text_parser.add_argument("query")
+    text_parser.add_argument("--grade", type=int)
+    text_parser.add_argument("--subject")
+    text_parser.add_argument("--trust-tier", type=int)
+    text_parser.add_argument("--limit", type=int, default=5)
 
-    # Literary text search
-    lit_parser = subparsers.add_parser("literary", help="Literary text search (Slovo, PVL, chronicles)")
-    lit_parser.add_argument("query", help="Search query in Ukrainian")
-    lit_parser.add_argument("--work", type=str, help="Filter by work title")
-    lit_parser.add_argument("--genre", type=str, help="Filter by genre")
-    lit_parser.add_argument("--period", type=str, help="Filter by language period")
-    lit_parser.add_argument("--limit", type=int, default=5, help="Number of results")
+    lit_parser = subparsers.add_parser("literary", help="Search literary texts")
+    lit_parser.add_argument("query")
+    lit_parser.add_argument("--work")
+    lit_parser.add_argument("--genre")
+    lit_parser.add_argument("--period")
+    lit_parser.add_argument("--limit", type=int, default=5)
 
-    # Image search
-    img_parser = subparsers.add_parser("images", help="Text-to-image search")
-    img_parser.add_argument("query", help="Search query in Ukrainian")
-    img_parser.add_argument("--grade", type=int, help="Filter by grade")
-    img_parser.add_argument("--limit", type=int, default=5, help="Number of results")
+    dict_parser = subparsers.add_parser("dict", help="Search dictionary/reference data")
+    dict_parser.add_argument("collection")
+    dict_parser.add_argument("query")
+    dict_parser.add_argument("--limit", type=int, default=5)
 
-    # Full text
-    full_parser = subparsers.add_parser("full-text", help="Get full text of a literary work")
-    full_parser.add_argument("work", help="Work title (e.g., 'Слово о полку Ігоревім')")
-    full_parser.add_argument("--max-chars", type=int, default=50000, help="Max characters")
+    full_parser = subparsers.add_parser("full-text", help="Concatenate literary text")
+    full_parser.add_argument("work")
+    full_parser.add_argument("--max-chars", type=int, default=50_000)
 
-    # Context
-    ctx_parser = subparsers.add_parser("context", help="Get surrounding chunks")
-    ctx_parser.add_argument("chunk_id", help="Chunk ID")
-    ctx_parser.add_argument("--window", type=int, default=2, help="Number of chunks before/after")
-
-    # Stats
-    subparsers.add_parser("stats", help="Collection statistics")
+    subparsers.add_parser("stats", help="Source table counts")
 
     args = parser.parse_args()
-
     if args.command == "text":
-        hits = search_text(
+        result = search_text(
             args.query,
             grade=args.grade,
             subject=args.subject,
             trust_tier=args.trust_tier,
             limit=args.limit,
         )
-        for i, hit in enumerate(hits, 1):
-            print(f"\n--- Result {i} (score: {hit['score']:.4f}) ---")
-            print(f"  Section: {hit['section_title']}")
-            print(f"  Grade {hit['grade']}, {hit['author']}, tier {hit['trust_tier']}")
-            print(f"  Chunk: {hit['chunk_id']}")
-            print(f"  Text: {hit['text'][:300]}...")
-
     elif args.command == "literary":
-        hits = search_literary(
+        result = search_literary(
             args.query,
             work=args.work,
             genre=args.genre,
             period=args.period,
             limit=args.limit,
         )
-        for i, hit in enumerate(hits, 1):
-            print(f"\n--- Result {i} (score: {hit['score']:.4f}) ---")
-            print(f"  Work: {hit['work']} ({hit['year']})")
-            print(f"  Genre: {hit['genre']}, Period: {hit['language_period']}")
-            print(f"  Chunk: {hit['chunk_id']}")
-            print(f"  Text: {hit['text'][:300]}...")
-            if hit.get("original_text"):
-                print(f"  Original: {hit['original_text'][:200]}...")
-
+    elif args.command == "dict":
+        result = search_dictionary(args.query, args.collection, limit=args.limit)
     elif args.command == "full-text":
         result = get_full_text(args.work, max_chars=args.max_chars)
-        if "error" in result:
-            print(f"Error: {result['error']}")
-        else:
-            print(f"Work: {result['work']} ({result['year']})")
-            print(f"Author: {result['author']}")
-            print(f"Genre: {result['genre']}, Period: {result['language_period']}")
-            print(f"Chunks: {result['chunk_count']}, Truncated: {result['truncated']}")
-            print(f"\n{'─' * 60}\n")
-            print(result["text"])
-
-    elif args.command == "images":
-        hits = search_images(args.query, grade=args.grade, limit=args.limit)
-        for i, hit in enumerate(hits, 1):
-            print(f"\n--- Image {i} (score: {hit['score']:.4f}) ---")
-            print(f"  Path: {hit['image_path']}")
-            print(f"  Grade {hit['grade']}, {hit['author']}, page {hit['page']}")
-            print(f"  Size: {hit['width']}x{hit['height']}")
-            if hit.get("description_uk"):
-                print(f"  Description: {hit['description_uk']}")
-            if hit.get("associated_text_uk"):
-                print(f"  Associated text: {hit['associated_text_uk']}")
-            if hit.get("teaching_value"):
-                print(f"  Teaching value: {hit['teaching_value']}")
-
-    elif args.command == "context":
-        chunks = get_chunk_context(args.chunk_id, window=args.window)
-        for chunk in chunks:
-            marker = ">>>" if chunk.get("is_target") else "   "
-            print(f"{marker} [{chunk['chunk_id']}] {chunk['section_title']}")
-            print(f"    {chunk['text'][:200]}...")
-            print()
-
-    elif args.command == "stats":
-        stats = collection_stats()
-        print(json.dumps(stats, indent=2))
+    else:
+        result = collection_stats()
+    print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":

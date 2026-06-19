@@ -523,7 +523,7 @@ def search_rag(
     limit_text: int = 5,
     limit_images: int = 3,
     limit_literary: int = 3,
-    is_qdrant_available_fn=None,
+    is_sources_available_fn=None,
 ) -> dict[str, list[dict]]:
     """Search RAG collections for relevant content."""
     result: dict[str, list[dict]] = {
@@ -532,9 +532,9 @@ def search_rag(
         "literary": [],
     }
 
-    check_fn = is_qdrant_available_fn or _default_qdrant_check
+    check_fn = is_sources_available_fn or _default_sources_check
     if not check_fn():
-        logger.debug("RAG: Qdrant not available, skipping")
+        logger.debug("RAG: SQLite sources not available, skipping")
         return result
 
     try:
@@ -602,16 +602,11 @@ def search_rag(
     return result
 
 
-def _default_qdrant_check() -> bool:
-    """Default Qdrant availability check."""
+def _default_sources_check() -> bool:
+    """Default SQLite sources availability check."""
     try:
-        from qdrant_client import QdrantClient
-        client = QdrantClient(
-            host="localhost", grpc_port=6334,
-            prefer_grpc=True, check_compatibility=False,
-            timeout=3,
-        )
-        client.get_collections()
-        return True
+        from wiki import sources_db
+
+        return sources_db.SOURCES_DB_PATH.exists()
     except Exception:
         return False
