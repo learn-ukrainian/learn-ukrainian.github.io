@@ -392,6 +392,10 @@ def test_mcp_tools_writer_runtime_gate_still_fires_for_empty_tool_calls() -> Non
 
 
 def test_resources_artifact_rejects_internal_wiki_urls() -> None:
+    # On-site wiki articles have no public student-facing route (served only via
+    # the internal /api/wiki API), so an internal `wiki/...` repo path renders as
+    # a dead link. reading-task links must be public allowlisted URLs; the on-site
+    # primary text reaches the learner through a :::primary-reading block instead.
     with pytest.raises(
         linear_pipeline.LinearPipelineError,
         match="student-facing sources only",
@@ -400,9 +404,10 @@ def test_resources_artifact_rejects_internal_wiki_urls() -> None:
             "resources.yaml",
             [
                 {
-                    "title": "Wiki: pedagogy/a1/sounds-letters-and-hello",
-                    "role": "wiki",
-                    "url": "wiki/pedagogy/a1/sounds-letters-and-hello.md",
+                    "title": "Wiki: folk/kupalo",
+                    "role": "reading",
+                    "url": "wiki/folk/kupalo.md",
+                    "notes": "прочитай локальний огляд теми",
                 }
             ],
         )

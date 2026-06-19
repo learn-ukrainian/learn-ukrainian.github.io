@@ -254,6 +254,7 @@ RESOURCE_ROLE_ICONS = {
     'blog': '📝',
     'podcast': '🎧',
     'audio': '🎧',
+    'reading': '📖',
     'article': '📄',
     'wiki': '🔗',
     'website': '🔗',
@@ -261,6 +262,7 @@ RESOURCE_ROLE_ICONS = {
 
 RESOURCE_GROUPS = (
     ('books', '📚', 'Books', 'Книги', {'textbook', 'book'}),
+    ('reading', '📖', 'Read the originals', 'Читай першоджерела', {'reading'}),
     ('videos', '📺', 'Videos', 'Відео', {'youtube', 'video'}),
     ('articles', '📝', 'Articles', 'Статті', {'blog', 'article'}),
     ('audio', '🎧', 'Audio', 'Аудіо', {'podcast', 'audio'}),

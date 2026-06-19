@@ -218,6 +218,33 @@
   border-left: 3px solid var(--lesson-green);
 }
 
+/* ============= 5b. PRIMARY READING (seminar) ============= */
+.primary-reading-box {
+  background: var(--lesson-yellow-light);
+  border: 2px solid var(--lesson-orange);
+  border-radius: var(--lesson-radius);
+  padding: 1.125rem 1.375rem;
+  margin: 1.375rem 0;
+}
+
+.primary-reading-header {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.625rem;
+  color: var(--lesson-orange);
+}
+
+.primary-reading-content {
+  margin: 0;
+}
+
+.primary-reading-content > :last-child {
+  margin-bottom: 0;
+}
+
 .myth-source {
   font-size: 0.8125rem;
   color: var(--ifm-color-emphasis-600, #757575);
