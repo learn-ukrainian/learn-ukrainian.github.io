@@ -120,6 +120,7 @@ interface LexiconEntry {
   lemma: string;
   url_slug: string;
   gloss: string | null;
+  form_of?: { lemma: string; url_slug: string } | null;
   pos: string | null;
   ipa: string | null;
   pronunciation?: { ipa: string; source: string } | null;
@@ -421,7 +422,37 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
   </div>
 
   <div id={`word-${entry.url_slug}`}>
-    <div class="word-hero">
+    {entry.form_of ? (
+      <>
+        <div class="word-hero">
+          <div class="word-hero-inner">
+            <span class="lexicon-badge">Лексикон · Форма слова</span>
+            <h1 class="word-title">{entry.lemma}</h1>
+            <div class="word-pos">
+              {[posLabel, headwordIpa, entry.gloss ? `«${entry.gloss}»` : null].filter(Boolean).join(" · ")}
+            </div>
+          </div>
+        </div>
+        <div class="content-area">
+          <section class="atlas-section">
+            <div class="editorial-calque info" style="margin-top: 2rem;">
+              <div class="editorial-calque-header">
+                <div class="editorial-info-icon" aria-hidden="true">→</div>
+                Форма слова
+              </div>
+              <p style="font-size: 1.1rem;">
+                <strong>{entry.lemma}</strong> — це граматична форма слова <a href={`/lexicon/${entry.form_of.url_slug}/`} style="font-weight: bold; text-decoration: underline;">{entry.form_of.lemma}</a>.
+              </p>
+              <p>
+                Перейдіть на сторінку леми <a href={`/lexicon/${entry.form_of.url_slug}/`}>«{entry.form_of.lemma}»</a> для перегляду повного значення, відмінювання та етимології.
+              </p>
+            </div>
+          </section>
+        </div>
+      </>
+    ) : (
+      <>
+        <div class="word-hero">
       <div class="word-hero-inner">
         <span class="lexicon-badge">Лексикон · A-Я · {letter}</span>
         <h1 class="word-title">
@@ -767,7 +798,11 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
           {maxSovietizationRisk > 0 && <span>СУМ-11 показано через прозорість, з обов'язковим прапорцем</span>}
         </div>
       </div>
+        </div>
+      </div>
     </div>
+      </>
+    )}
   </div>
 </div>
 

@@ -1,5 +1,5 @@
 {
-  "fingerprint": "c952286d427a0f778185edc26a463ab5b5321a1668a2761630d4c8dc4bb86871",
+  "fingerprint": "9a5e2cf3de1863c55dcd62596141f3b54a4e11a9551eb3bbfaf1492e31f72ab6",
   "inputs": {
     "lexicon_code": [
       {
@@ -12,7 +12,7 @@
       },
       {
         "path": "scripts/lexicon/build_data_manifest.py",
-        "sha256": "e89cda21e8ed0ae504b239adf1c80278b81efa098d2ae9605c6d10ec514aa0d8"
+        "sha256": "a41148b8e9d7305e571c9473744d4b72412f68b3bdb7cb830737e16ff209ffd2"
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",
@@ -32,7 +32,7 @@
       },
       {
         "path": "scripts/lexicon/check_manifest_vocabulary_coverage.py",
-        "sha256": "56669779ca2f3af5047476db11ad7ffdb00fc41e962e2c0f13c61582b4ad1c6f"
+        "sha256": "48bb87980983b7e666e98aea37f1f4c13d7d5c9b9077ffae049d81eaff845502"
       },
       {
         "path": "scripts/lexicon/derivational_morphology.py",

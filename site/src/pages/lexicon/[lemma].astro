@@ -10,6 +10,7 @@ interface LexiconEntry {
   lemma: string;
   url_slug: string;
   gloss: string | null;
+  form_of?: { lemma: string; url_slug: string } | null;
 }
 
 interface LexiconManifest {
@@ -30,7 +31,9 @@ export async function getStaticPaths() {
 const { entry } = Astro.props as { entry: LexiconEntry };
 const frontmatter = {
   title: entry.lemma,
-  description: entry.gloss ? `${entry.lemma} — ${entry.gloss}` : `${entry.lemma} — стаття Лексикону`,
+  description: entry.form_of
+    ? `${entry.lemma} — форма слова «${entry.form_of.lemma}»`
+    : entry.gloss ? `${entry.lemma} — ${entry.gloss}` : `${entry.lemma} — стаття Лексикону`,
 };
 ---
 

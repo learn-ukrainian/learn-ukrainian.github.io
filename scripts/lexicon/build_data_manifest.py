@@ -49,7 +49,9 @@ _NON_ATLAS_LEMMA_KEYS = {
         "в/у",
         "у/в",
         "і/й",
+        "з/із/зі",
         "б/би",
+        "най-",
         "-ся",
         "-сь",
         "1к",
@@ -57,7 +59,11 @@ _NON_ATLAS_LEMMA_KEYS = {
         "кв.м",
         "грн/міс",
         "б/м",
+        "неозначено-кількісний",
+        "палаючий",
+        "парковка",
         "пасивноподібний",
+        "питально-відносний",
     )
 }
 
@@ -266,6 +272,7 @@ _SOURCE_PRIORITY = {
     "built_vocabulary": 0,
     "built_vocabulary_normalized": 1,
     "built_vocabulary_canonicalized": 1,
+    "built_vocabulary_form": 1,
     "surzhyk_to_avoid": 1,
     "heritage_status_seed": 2,
 }
@@ -298,7 +305,7 @@ def _append_normalization(entry: dict, normalization: dict[str, str] | None) -> 
         normalizations.append(normalization)
 
 
-def _atlas_record_for_manifest(rec: dict, taught_lemma_keys: set[str]) -> dict | None:
+def _atlas_record_for_manifest(rec: dict, taught_lemma_keys: set[str]) -> dict | list[dict] | None:
     """Normalize course surfaces to Atlas lemma heads, or omit non-lemmas."""
     display_lemma = str(rec["lemma"])
     key = _lemma_key(display_lemma)
@@ -333,25 +340,12 @@ def _atlas_record_for_manifest(rec: dict, taught_lemma_keys: set[str]) -> dict |
         )
         return canonicalized
 
-    # Auto-generated VESUM aliasing: fold an inflected form into its lemma. The committed map
-    # is the authority — it is pre-gated by generate_vesum_aliases (unambiguous single VESUM
-    # lemma, OR homograph resolved to its sole taught candidate; form != lemma; functional
-    # interjections excluded). Folding to a lemma NOT yet taught CREATES that lemma page via
-    # _merge_lemma_records (tranche 2 "create-page" cases, e.g. вареники→вареник).
+    # Auto-generated VESUM aliasing: fold an inflected form into its lemma.
     alias_target = VESUM_INFLECTION_ALIASES_BY_KEY.get(key)
     if alias_target:
         aliased = dict(rec)
         aliased["lemma"] = alias_target
         aliased["source"] = "built_vocabulary_normalized"
-        # A create-case (target lemma taught NOWHERE else) materializes a NEW lemma page whose
-        # head IS this record. The surface form's gloss/pos describe the inflected surface —
-        # e.g. заходьте is imperative "come in, polite/plural"; восьма is the feminine ordinal /
-        # "eight o'clock" — and would mislabel the citation-form lemma head (заходити = verb
-        # infinitive; восьмий = masc. ordinal). Do NOT assert them on the new lemma: the
-        # enrichment pass supplies the lemma's own meaning and the renderer degrades gracefully
-        # on null gloss/pos. Surface values are preserved in the provenance reason. (A plain
-        # fold into an ALREADY-TAUGHT lemma keeps its fields — it merges into the taught head,
-        # whose own gloss/pos win, so the surface values are harmless there.)
         if _lemma_key(alias_target) not in taught_lemma_keys:
             surface_gloss = aliased.get("gloss")
             surface_pos = aliased.get("pos")
@@ -371,6 +365,17 @@ def _atlas_record_for_manifest(rec: dict, taught_lemma_keys: set[str]) -> dict |
             target_lemma=alias_target,
             reason=reason,
         )
+
+        # If it's a single word, yield a form_of record to preserve the URL and render a canonical card
+        if " " not in display_lemma.strip():
+            form_rec = dict(rec)
+            form_rec["form_of"] = {
+                "lemma": alias_target,
+                "url_slug": _slug_for_url(alias_target),
+            }
+            form_rec["source"] = "built_vocabulary_form"
+            return [aliased, form_rec]
+
         return aliased
 
     return rec
@@ -413,6 +418,8 @@ def _merge_lemma_records(
                 "primary_source": rec["source"],
                 "course_usage": [usage_entry],
             }
+            if "form_of" in rec:
+                by_lemma[key]["form_of"] = rec["form_of"]
             _append_normalization(by_lemma[key], rec.get("atlas_normalization"))
             continue
 
@@ -430,6 +437,8 @@ def _merge_lemma_records(
                 existing["pos"] = rec["pos"]
             if rec.get("ipa"):
                 existing["ipa"] = rec["ipa"]
+        if "form_of" in rec and "form_of" not in existing:
+            existing["form_of"] = rec["form_of"]
         _append_normalization(existing, rec.get("atlas_normalization"))
 
         # Dedupe course_usage by module identity, keeping the highest-signal
@@ -554,11 +563,14 @@ def build_manifest() -> dict:
     }
 
     for module, raw_records in raw_records_by_module:
-        built_records = [
-            record
-            for rec in raw_records
-            if (record := _atlas_record_for_manifest(rec, taught_lemma_keys)) is not None
-        ]
+        built_records = []
+        for rec in raw_records:
+            res = _atlas_record_for_manifest(rec, taught_lemma_keys)
+            if res:
+                if isinstance(res, list):
+                    built_records.extend(res)
+                else:
+                    built_records.append(res)
         _merge_lemma_records(by_lemma, module, built_records)
 
     _merge_seed_records(by_lemma)
@@ -580,6 +592,9 @@ def build_manifest() -> dict:
             ),
             "from_heritage_status_seed": sum(
                 1 for e in entries if e.get("seed_group") == "heritage-status-samples"
+            ),
+            "form_of_count": sum(
+                1 for e in entries if "form_of" in e
             ),
         },
         "modules": modules,

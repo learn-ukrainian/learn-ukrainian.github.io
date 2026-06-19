@@ -4,6 +4,7 @@ from scripts.lexicon.build_data_manifest import (
     SURZHYK_TO_AVOID_SEEDS,
     _atlas_record_for_manifest,
     _lemma_key,
+    _slug_for_url,
     build_manifest,
 )
 
@@ -16,13 +17,22 @@ def test_vesum_alias_folds_inflection_into_taught_lemma(monkeypatch) -> None:
     )
     rec = {"lemma": "брата", "source": "built_vocabulary", "gloss": "brother (gen./acc.)", "pos": "noun"}
     out = _atlas_record_for_manifest(rec, {_lemma_key("брат")})
-    assert out["lemma"] == "брат"
-    assert out["atlas_normalization"]["kind"] == "vesum_inflection_to_lemma"
-    assert out["atlas_normalization"]["source_lemma"] == "брата"
+    assert isinstance(out, list)
+    assert len(out) == 2
+    aliased, form_rec = out
+    assert aliased["lemma"] == "брат"
+    assert aliased["atlas_normalization"]["kind"] == "vesum_inflection_to_lemma"
+    assert aliased["atlas_normalization"]["source_lemma"] == "брата"
     # Fold into an ALREADY-TAUGHT lemma keeps surface fields — they merge into the taught
     # head (whose own gloss/pos win in _merge_lemma_records), so they are harmless here.
-    assert out["gloss"] == "brother (gen./acc.)"
-    assert out["pos"] == "noun"
+    assert aliased["gloss"] == "brother (gen./acc.)"
+    assert aliased["pos"] == "noun"
+    assert form_rec["lemma"] == "брата"
+    assert form_rec["source"] == "built_vocabulary_form"
+    assert form_rec["form_of"] == {
+        "lemma": "брат",
+        "url_slug": _slug_for_url("брат"),
+    }
 
 
 def test_vesum_alias_folds_create_case_even_when_target_not_taught(monkeypatch) -> None:
@@ -35,16 +45,25 @@ def test_vesum_alias_folds_create_case_even_when_target_not_taught(monkeypatch) 
     )
     rec = {"lemma": "вареники", "source": "built_vocabulary", "gloss": "varenyky", "pos": "noun"}
     out = _atlas_record_for_manifest(rec, set())  # вареник NOT in taught set
-    assert out["lemma"] == "вареник"
-    assert out["atlas_normalization"]["kind"] == "vesum_inflection_to_lemma"
+    assert isinstance(out, list)
+    assert len(out) == 2
+    aliased, form_rec = out
+    assert aliased["lemma"] == "вареник"
+    assert aliased["atlas_normalization"]["kind"] == "vesum_inflection_to_lemma"
     # Create-case: the surface's gloss/pos describe the inflected surface, NOT the new
     # citation-form lemma head, so they must NOT be asserted on it (#3277 real-data catch:
     # заходьте→заходити was published as pos="imperative", восьма→восьмий as "feminine").
     # Enrichment supplies the lemma's meaning; renderer degrades gracefully on null.
-    assert out["gloss"] is None
-    assert out["pos"] is None
+    assert aliased["gloss"] is None
+    assert aliased["pos"] is None
     # Surface values are preserved as provenance for traceability.
-    assert "varenyky" in out["atlas_normalization"]["reason"]
+    assert "varenyky" in aliased["atlas_normalization"]["reason"]
+    assert form_rec["lemma"] == "вареники"
+    assert form_rec["source"] == "built_vocabulary_form"
+    assert form_rec["form_of"] == {
+        "lemma": "вареник",
+        "url_slug": _slug_for_url("вареник"),
+    }
 
 
 def test_vesum_alias_leaves_unmapped_form_untouched(monkeypatch) -> None:
@@ -62,8 +81,23 @@ def test_slash_particle_not_published_as_atlas_head() -> None:
     assert _atlas_record_for_manifest(rec, set()) is None
 
 
-def test_suffixes_abbreviations_and_passive_like_label_not_published_as_atlas_heads() -> None:
-    for lemma in ("-ся", "-сь", "1к", "2к", "кв.м", "грн/міс", "б/м", "пасивноподібний"):
+def test_suffixes_abbreviations_and_labels_not_published_as_atlas_heads() -> None:
+    for lemma in (
+        "-ся",
+        "-сь",
+        "1к",
+        "2к",
+        "кв.м",
+        "грн/міс",
+        "б/м",
+        "з/із/зі",
+        "най-",
+        "неозначено-кількісний",
+        "палаючий",
+        "парковка",
+        "пасивноподібний",
+        "питально-відносний",
+    ):
         rec = {"lemma": lemma, "source": "built_vocabulary"}
 
         assert _atlas_record_for_manifest(rec, set()) is None
