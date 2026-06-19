@@ -40,6 +40,7 @@
     "vitest": "^4.1.8"
   },
   "overrides": {
-    "yaml-language-server": "1.23.0"
+    "yaml-language-server": "1.23.0",
+    "esbuild": ">=0.28.1"
   }
 }
