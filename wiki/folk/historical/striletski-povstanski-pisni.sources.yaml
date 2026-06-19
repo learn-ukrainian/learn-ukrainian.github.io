@@ -1,0 +1,105 @@
+# Source registry for wiki/folk/historical/striletski-povstanski-pisni.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-ukrlit-zabolotnyi-2025_s4432
+  type: textbook
+  title: Розділ 1. ПРОЧИТАЙТЕ ЗНОВУ ТУЮ СЛАВУ. Розділ 1
+  page: 8
+  grade: 8
+- id: S2
+  file: 7-klas-ukrlit-avramenko-2024_s3600
+  type: textbook
+  title: ПІСЕННА ЛІРИКА
+  page: 15
+  grade: 7
+- id: S4
+  file: wikipedia/Українська повстанська армія
+  type: wikipedia
+  title: Українська повстанська армія
+  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%BF%D0%BE%D0%B2%D1%81%D1%82%D0%B0%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%B0%D1%80%D0%BC%D1%96%D1%8F
+- id: S5
+  file: wikipedia/Історичні пісні
+  type: wikipedia
+  title: Історичні пісні
+  url: https://uk.wikipedia.org/wiki/%D0%86%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%BD%D1%96%20%D0%BF%D1%96%D1%81%D0%BD%D1%96
+- id: S6
+  file: wave7-krypyakevych-istkult_c0629
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S7
+  file: wave7-antonovych-kultura_c0630
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S8
+  file: wave7-entsyklopediia-ukrainoznavstva_c2048
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S9
+  file: wave7-entsyklopediia-ukrainoznavstva_c3169
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S10
+  file: wave7-entsyklopediia-ukrainoznavstva_c1444
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S11
+  file: wave7-entsyklopediia-ukrainoznavstva_c1472
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S12
+  file: wave7-entsyklopediia-ukrainoznavstva_c1473
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S13
+  file: wave8-ukr-lit-entsyklopediia_c4434
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S14
+  file: ukrlib-kalynets_c0054
+  type: literary
+  title: Ігор Калинець. Данка і Крак
+  author: Калинець І.
+- id: S15
+  file: ukrlib-samchuk_c0195
+  type: literary
+  title: Улас Самчук. Чого не гоїть огонь
+  author: Самчук У.
+- id: S16
+  file: wave7-entsyklopediia-ukrainoznavstva_c3170
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S17
+  file: wave7-entsyklopediia-ukrainoznavstva_c3171
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S18
+  file: ukrlib-bahryanyi_c0022
+  type: literary
+  title: Іван Багряний. Огненне коло
+  author: Багряний І.
+- id: S19
+  file: wave8-ukr-lit-entsyklopediia_c4111
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S20
+  file: ukrlib-yanovsky_c0005
+  type: literary
+  title: Юрій Яновський. Зимовий день
+  author: Яновський Ю.
+- id: S21
+  file: wave8-ukr-lit-entsyklopediia_c5070
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

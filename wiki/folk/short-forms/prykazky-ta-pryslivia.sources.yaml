@@ -1,0 +1,155 @@
+# Source registry for wiki/folk/short-forms/prykazky-ta-pryslivia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: folk-micro-прислів'я-0
+  type: unknown
+  title: folk-micro-прислів'я-0
+- id: S2
+  file: folk-micro-прислів'я-1
+  type: unknown
+  title: folk-micro-прислів'я-1
+- id: S3
+  file: folk-micro-прислів'я-2
+  type: unknown
+  title: folk-micro-прислів'я-2
+- id: S4
+  file: folk-micro-прислів'я-3
+  type: unknown
+  title: folk-micro-прислів'я-3
+- id: S5
+  file: folk-micro-прислів'я-4
+  type: unknown
+  title: folk-micro-прислів'я-4
+- id: S6
+  file: folk-micro-прислів'я-5
+  type: unknown
+  title: folk-micro-прислів'я-5
+- id: S7
+  file: folk-micro-прислів'я-6
+  type: unknown
+  title: folk-micro-прислів'я-6
+- id: S8
+  file: folk-micro-прислів'я-7
+  type: unknown
+  title: folk-micro-прислів'я-7
+- id: S9
+  file: folk-micro-прислів'я-8
+  type: unknown
+  title: folk-micro-прислів'я-8
+- id: S10
+  file: folk-micro-прислів'я-9
+  type: unknown
+  title: folk-micro-прислів'я-9
+- id: S11
+  file: 5-klas-ukrlit-zabolotnyi-2022_s1993
+  type: textbook
+  title: ПРИСЛІВ’Я ТА ПРИКАЗКИ ПРИСЛІВ’Я ТА ПРИКАЗКИ
+  page: 31
+  grade: 5
+- id: S12
+  file: 5-klas-ukrlit-avramenko-2022_s1943
+  type: textbook
+  title: Розділ 1. МИСТЕЦЬКИЙ СПАДОК НАЩАДКАМ
+  page: 4
+  grade: 5
+- id: S13
+  file: wave7-entsyklopediia-ukrainoznavstva_c0643
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S15
+  file: wikipedia/Прислів'я
+  type: wikipedia
+  title: Прислів'я
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%B8%D1%81%D0%BB%D1%96%D0%B2%27%D1%8F
+- id: S16
+  file: wikipedia/Фольклористичні терміни
+  type: wikipedia
+  title: Фольклористичні терміни
+  url: https://uk.wikipedia.org/wiki/%D0%A4%D0%BE%D0%BB%D1%8C%D0%BA%D0%BB%D0%BE%D1%80%D0%B8%D1%81%D1%82%D0%B8%D1%87%D0%BD%D1%96%20%D1%82%D0%B5%D1%80%D0%BC%D1%96%D0%BD%D0%B8
+- id: S17
+  file: wave8-ukr-lit-entsyklopediia_c3450
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S18
+  file: wave5-klementiy-zinoviiv_c0048
+  type: literary
+  title: Климентій Зіновіїв. Вірші. Приповісті.
+  author: Зіновіїв К.
+- id: S19
+  file: wave7-kostomarov-slovyanska-mifolohiia_c0497
+  type: literary
+  title: Костомаров — Слов'янська міфологія
+  author: Костомаров М.
+- id: S20
+  file: wave10-shevchenkivsky-slovnyk_c1385
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S21
+  file: wave8-ukr-lit-entsyklopediia_c4822
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S22
+  file: wave7-drahomanov-vybrani_c0309
+  type: literary
+  title: Драгоманов — Вибрані праці
+  author: Драгоманов М.
+- id: S23
+  file: wave7-entsyklopediia-ukrainoznavstva_c2329
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S24
+  file: wave8-ukr-lit-entsyklopediia_c2346
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S25
+  file: wave12-hrushevsky-iu-odnotom_c0242
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S26
+  file: wave8-ukr-lit-entsyklopediia_c5421
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S27
+  file: wave8-ukr-lit-entsyklopediia_c0583
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S28
+  file: wave4-hrushevsky-istlit_c0237
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S29
+  file: wave12-ukrainska-poeziia-xvi-xvii_c0043
+  type: literary
+  title: Українська поезія. Кінець XVI — середина XVII ст.
+  author: Антологія
+- id: S31
+  file: wave8-ukr-lit-entsyklopediia_c5172
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S32
+  file: wave7-kostomarov-slovyanska-mifolohiia_c0440
+  type: literary
+  title: Костомаров — Слов'янська міфологія
+  author: Костомаров М.
+- id: S33
+  file: wave10-shevchenkivsky-slovnyk_c0126
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S34
+  file: ukrlib-kotlyarevsky_c0123
+  type: literary
+  title: Іван Котляревський. Енеїда
+  author: Котляревський І.

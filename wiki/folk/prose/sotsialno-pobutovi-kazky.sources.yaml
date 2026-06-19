@@ -1,0 +1,91 @@
+# Source registry for wiki/folk/prose/sotsialno-pobutovi-kazky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/sotsialno-pobutovi-kazky_Український-фольклор-Соціально-побутові-казки-Народний-реалізм-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Український фольклор: Соціально-побутові казки: Народний реалізм'
+  section_path: 'Український фольклор: Соціально-побутові казки: Народний реалізм
+    > Короткий зміст'
+- id: S4
+  file: ukrainian_wiki/sotsialno-pobutovi-kazky_Український-фольклор-Соціально-побутові-казки-Народний-реалізм-Основний-зміст-Поетика-та-структурні-особливості-побутової-казки
+  type: ukrainian_wiki
+  title: 'Український фольклор: Соціально-побутові казки: Народний реалізм'
+  section_path: 'Український фольклор: Соціально-побутові казки: Народний реалізм
+    > Основний зміст > Поетика та структурні особливості побутової казки'
+- id: S6
+  file: wikipedia/Казка
+  type: wikipedia
+  title: Казка
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%B0%D0%B7%D0%BA%D0%B0
+- id: S7
+  file: 5-klas-ukrlit-zabolotnyi-2022_s2003
+  type: textbook
+  title: ВЕЛИКЕ ДИВО КАЗКИ ПОБУТОВІ ТА ФАНТАСТИЧНІ НАРОДНІ КАЗКИ
+  page: 40
+  grade: 5
+- id: S8
+  file: wave4-hrushevsky-istlit_c0481
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c3053
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S11
+  file: wave8-ukr-lit-entsyklopediia_c3055
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S12
+  file: wave8-ukr-lit-entsyklopediia_c3056
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S13
+  file: wave5-oldukr-xviii_c0148
+  type: literary
+  title: Українська література XVIII ст.
+  author: Антологія
+- id: S14
+  file: wave5-oldukr-xviii_c0172
+  type: literary
+  title: Українська література XVIII ст.
+  author: Антологія
+- id: S15
+  file: wave5-oldukr-xviii_c0173
+  type: literary
+  title: Українська література XVIII ст.
+  author: Антологія
+- id: S16
+  file: ukrlib-khotkevych_c0000
+  type: literary
+  title: Гнат Хоткевич. Чи можна грошима загатити річку?
+  author: Хоткевич Г.
+- id: S17
+  file: wave9-rusanivsky-ist-lit-movy_c0324
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S18
+  file: wave12-hrushevsky-iu-odnotom_c0462
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S19
+  file: wave8-ukr-lit-entsyklopediia_c5418
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S20
+  file: wave12-bajky-xvii-xviii_c0022
+  type: literary
+  title: Байки в українській літературі XVII-XVIII ст.
+  author: Антологія
+- id: S21
+  file: wave7-entsyklopediia-ukrainoznavstva_c0644
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив

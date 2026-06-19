@@ -1,0 +1,128 @@
+# Source registry for wiki/folk/lyric/suspilno-pobutovi-pisni.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s4979
+  type: textbook
+  title: ВСТУП
+  page: 4
+  grade: 9
+- id: S2
+  file: wikipedia/Українські соціально-побутові пісні
+  type: wikipedia
+  title: Українські соціально-побутові пісні
+  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96%20%D1%81%D0%BE%D1%86%D1%96%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE-%D0%BF%D0%BE%D0%B1%D1%83%D1%82%D0%BE%D0%B2%D1%96%20%D0%BF%D1%96%D1%81%D0%BD%D1%96
+- id: S3
+  file: ukrainian_wiki/chumatski-burlatski-pisni_Український-фольклор-Чумацькі-та-бурлацькі-пісні-Голос-мандрівника-Основний-зміст-Історичне-тло-та-соціальна-база-Від-козака-до-чумака-й-бурлаки
+  type: ukrainian_wiki
+  title: 'Український фольклор: Чумацькі та бурлацькі пісні: Голос мандрівника'
+  section_path: 'Український фольклор: Чумацькі та бурлацькі пісні: Голос мандрівника
+    > Основний зміст > Історичне тло та соціальна база: Від козака до чумака й бурлаки'
+- id: S4
+  file: 7-klas-ukrlit-avramenko-2024_s3598
+  type: textbook
+  title: § 2. –3. НАРОДНОПІСЕННА ЛІРИКА. СУСПІЛЬНО
+  page: 11
+  grade: 7
+- id: S5
+  file: 7-klas-ukrlit-zabolotnyi-2024_s3701
+  type: textbook
+  title: Розділ 1. НАРОДНА ТВОРЧІСТЬ
+  page: 11
+  grade: 7
+- id: S6
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4930
+  type: textbook
+  title: СОНЦЕ НИЗЕНЬКО
+  page: 10
+  grade: 9
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c4434
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c3557
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S11
+  file: wave8-ukr-lit-entsyklopediia_c0831
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S12
+  file: wave8-ukr-lit-entsyklopediia_c5390
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S13
+  file: wave8-ukr-lit-entsyklopediia_c2605
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S14
+  file: wave7-entsyklopediia-ukrainoznavstva_c0628
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S15
+  file: wave7-krypyakevych-istkult_c0452
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S16
+  file: wave7-kostomarov-slovyanska-mifolohiia_c0189
+  type: literary
+  title: Костомаров — Слов'янська міфологія
+  author: Костомаров М.
+- id: S17
+  file: wave7-kostomarov-slovyanska-mifolohiia_c0191
+  type: literary
+  title: Костомаров — Слов'янська міфологія
+  author: Костомаров М.
+- id: S18
+  file: wave7-kostomarov-slovyanska-mifolohiia_c0193
+  type: literary
+  title: Костомаров — Слов'янська міфологія
+  author: Костомаров М.
+- id: S19
+  file: wave10-shevchenko-tvory-t1_c0426
+  type: literary
+  title: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+- id: S20
+  file: ukrlib-narod-dumy_c0000
+  type: literary
+  title: Народна творчість. Ой на горі да женці жнуть
+  author: Народна творчість
+- id: S22
+  file: wave13-doroshenko-narys-istoriyi-ukrayiny-t1_c0358
+  type: literary
+  title: 'Дорошенко — Нарис історії України, том 1: До половини XVII століття'
+  author: Дорошенко Д.
+- id: S23
+  file: wave7-kostomarov-slovyanska-mifolohiia_c0035
+  type: literary
+  title: Костомаров — Слов'янська міфологія
+  author: Костомаров М.
+- id: S24
+  file: wave10-shevchenkivsky-slovnyk_c1253
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S25
+  file: ukrlib-kotlyarevsky_c0164
+  type: literary
+  title: Іван Котляревський. Енеїда
+  author: Котляревський І.
+- id: S26
+  file: wave8-hrabovych-do-istoriyi_c0597
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S27
+  file: wave7-heroes-ukr-kultura_c0033
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
