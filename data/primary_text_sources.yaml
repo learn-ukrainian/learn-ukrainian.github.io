@@ -1,0 +1,22 @@
+---
+# Curated allowlist for seminar/folk primary-text reading URLs.
+# Policy: include stable public primary-text hosts only; topic wikis inside this
+# repo are handled as on-site refs by the gate, not by this external allowlist.
+# Exclude chtyvo.org.ua per #3175 (defunct as of 2026-06-15), and do not add
+# broad article/category hosts such as osvita.ua or diasporiana.org.ua landings.
+sources:
+  - domain: litopys.org.ua
+    name: Ізборник / Літопис
+    notes: Chronicles and historical primary texts; use document pages, not the host root.
+  - domain: uk.wikisource.org
+    name: Вікіджерела
+    notes: Ukrainian Wikisource primary texts.
+  - domain: uk.wikipedia.org
+    name: Українська Вікіпедія
+    notes: Real article pages only; existence is API-checked when liveness runs.
+  - domain: uk.m.wikipedia.org
+    name: Українська Вікіпедія mobile
+    notes: Mobile mirror for real article pages only.
+  - domain: ukrlib.com.ua
+    name: УкрЛіб
+    notes: Work/document pages only; /narod/ landings and guessed numeric IDs are rejected by the gate.

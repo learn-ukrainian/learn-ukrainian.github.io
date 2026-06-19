@@ -391,21 +391,18 @@ def test_mcp_tools_writer_runtime_gate_still_fires_for_empty_tool_calls() -> Non
         )
 
 
-def test_resources_artifact_rejects_internal_wiki_urls() -> None:
-    with pytest.raises(
-        linear_pipeline.LinearPipelineError,
-        match="student-facing sources only",
-    ):
-        linear_pipeline._validate_writer_json_artifact(
-            "resources.yaml",
-            [
-                {
-                    "title": "Wiki: pedagogy/a1/sounds-letters-and-hello",
-                    "role": "wiki",
-                    "url": "wiki/pedagogy/a1/sounds-letters-and-hello.md",
-                }
-            ],
-        )
+def test_resources_artifact_accepts_on_site_wiki_urls() -> None:
+    linear_pipeline._validate_writer_json_artifact(
+        "resources.yaml",
+        [
+            {
+                "title": "Wiki: folk/kupalo",
+                "role": "reading",
+                "url": "wiki/folk/kupalo.md",
+                "notes": "прочитай локальний огляд теми",
+            }
+        ],
+    )
 
 
 def test_resources_artifact_accepts_public_wikipedia_urls() -> None:

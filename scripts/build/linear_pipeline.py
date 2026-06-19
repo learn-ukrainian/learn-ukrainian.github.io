@@ -22,6 +22,7 @@ import sqlite3
 import sys
 import tempfile
 import unicodedata
+import urllib.parse
 import xml.etree.ElementTree as ET
 from collections.abc import Callable, Collection, Mapping, Sequence
 from contextlib import contextmanager
@@ -41,6 +42,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 TEXTBOOK_SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 FOLK_HERITAGE_ATTESTATIONS_PATH = PROJECT_ROOT / "data" / "folk_heritage_attestations.yaml"
 FOREIGN_PROPER_NOUN_ATTESTATIONS_PATH = PROJECT_ROOT / "data" / "foreign_proper_noun_attestations.yaml"
+PRIMARY_TEXT_SOURCES_PATH = PROJECT_ROOT / "data" / "primary_text_sources.yaml"
 CLAUDE_WRITER_AGENT_SOURCE = PROJECT_ROOT / "agents_extensions/shared" / "agents" / "curriculum-writer.md"
 CLAUDE_WRITER_AGENT_TARGET = PROJECT_ROOT / ".claude" / "agents" / "curriculum-writer.md"
 
@@ -66,6 +68,7 @@ from scripts.common.review_loop import (
 from scripts.common.thresholds import QG_DIMS, aggregate_review
 from scripts.config import get_immersion_policy, get_immersion_range, get_immersion_rule
 from scripts.generate_mdx.core import generate_mdx
+from scripts.generate_mdx.resources import validate_and_clean_url
 from scripts.pipeline.learner_state import build_learner_state, format_learner_state
 from scripts.pipeline.module_archetypes import format_module_archetype, resolve_module_archetype
 
@@ -175,6 +178,7 @@ PYTHON_QG_GATE_ORDER = (
     "citations_resolve",
     "plan_reference_match",
     "resource_coverage",
+    "resources_url_resolve",
     "chunk_context_for_all_refs",
     "published_quote_for_publishable_refs",
     "textbook_quote_fidelity",
@@ -234,6 +238,7 @@ REVIEWER_FIX_GATES = DICTIONARY_CANDIDATE_GATES | frozenset(
         "l2_exposure_floor",
         "long_uk_ceiling",
         "component_density",
+        "resources_url_resolve",
         "ai_slop_clean",
     }
 )
@@ -245,6 +250,7 @@ REVIEWER_FIX_ADDITIONAL_ARTIFACTS_BY_GATE: dict[str, tuple[str, ...]] = {
     "paronym_clean": ("activities.yaml", "vocabulary.yaml", "resources.yaml"),
     "citations_resolve": ("resources.yaml",),
     "plan_reference_match": ("resources.yaml",),
+    "resources_url_resolve": ("resources.yaml",),
     "ai_slop_clean": ("activities.yaml", "vocabulary.yaml", "resources.yaml"),
 }
 PIPELINE_INSERT_GATES = frozenset({"inject_activity_ids"})
@@ -409,10 +415,14 @@ RESOURCE_ROLES = frozenset(
         "podcast",
         "audio",
         "article",
+        "reading",
         "wiki",
     }
 )
 INTERNAL_RESOURCE_URL_PREFIXES = ("wiki/", "docs/wiki/")
+URL_BEARING_RESOURCE_ROLES = frozenset(
+    {"reading", "article", "blog", "video", "youtube", "podcast", "audio", "wiki"}
+)
 MULTIMEDIA_SEARCH_TOOLS = frozenset(
     {
         "query_wikipedia",
@@ -8426,6 +8436,14 @@ def run_python_qg(
     with contextlib.suppress(LinearPipelineError, ValueError):
         wiki_manifest = build_wiki_manifest_data(plan_path, plan=plan)
     record("resource_coverage", _resource_coverage_gate(resources, plan, wiki_manifest))
+    record(
+        "resources_url_resolve",
+        _resources_url_resolve_gate(
+            resources,
+            level=level,
+            resource_liveness_fn=resource_liveness_fn,
+        ),
+    )
     # record("textbook_grounding", _textbook_grounding_gate(module_text, plan, module_dir))
     record(
         "chunk_context_for_all_refs",
@@ -8927,7 +8945,6 @@ def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
         if artifact == "resources.yaml":
             role = str(item.get("role") or "").strip()
             url = str(item.get("url") or "").strip()
-            normalized_url = url.lstrip("./")
             if role not in RESOURCE_ROLES:
                 raise LinearPipelineError(
                     f"{artifact} schema validation failed: item {index} "
@@ -8936,12 +8953,6 @@ def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
             if role != "textbook" and not url:
                 raise LinearPipelineError(
                     f"{artifact} schema validation failed: item {index} role {role!r} requires url"
-                )
-            if normalized_url.startswith(INTERNAL_RESOURCE_URL_PREFIXES):
-                raise LinearPipelineError(
-                    f"{artifact} schema validation failed: item {index} has internal "
-                    f"AI-facing resource url {url!r}; resources.yaml must contain "
-                    "student-facing sources only"
                 )
 
 
@@ -12611,6 +12622,221 @@ def _load_writer_tool_calls(module_dir: Path) -> list[dict[str, Any]]:
     return calls
 
 
+_PRIMARY_TEXT_SOURCE_DOMAINS_CACHE: frozenset[str] | None = None
+
+
+def _load_primary_text_source_domains() -> frozenset[str]:
+    global _PRIMARY_TEXT_SOURCE_DOMAINS_CACHE
+    if _PRIMARY_TEXT_SOURCE_DOMAINS_CACHE is not None:
+        return _PRIMARY_TEXT_SOURCE_DOMAINS_CACHE
+    try:
+        raw = yaml.safe_load(PRIMARY_TEXT_SOURCES_PATH.read_text(encoding="utf-8")) or {}
+    except FileNotFoundError:
+        raw = {}
+    domains: set[str] = set()
+    sources = raw.get("sources") if isinstance(raw, Mapping) else []
+    if isinstance(sources, list):
+        for entry in sources:
+            if isinstance(entry, Mapping):
+                domain = str(entry.get("domain") or "").strip().lower()
+            else:
+                domain = str(entry).strip().lower()
+            if not domain:
+                continue
+            host = urllib.parse.urlsplit(domain).hostname if "://" in domain else domain
+            if host:
+                domains.add(host.rstrip(".").lower())
+    _PRIMARY_TEXT_SOURCE_DOMAINS_CACHE = frozenset(domains)
+    return _PRIMARY_TEXT_SOURCE_DOMAINS_CACHE
+
+
+def _resource_url_resolve_applies(level: str) -> bool:
+    level_key = str(level or "").lower()
+    return level_key == "folk" or level_key in SEMINAR_LEVELS
+
+
+def _clean_resource_url(url: str, title: str = "") -> str:
+    return validate_and_clean_url(str(url or "").strip(), title=title).strip()
+
+
+def _is_on_site_resource_url(url: str) -> bool:
+    cleaned = str(url or "").strip()
+    if not cleaned:
+        return False
+    parts = urllib.parse.urlsplit(cleaned)
+    return not parts.scheme and not parts.netloc and not cleaned.startswith("//")
+
+
+def _matching_primary_text_domain(hostname: str, allowed_domains: frozenset[str]) -> str | None:
+    host = hostname.rstrip(".").lower()
+    candidates = [host]
+    if host.startswith("www."):
+        candidates.append(host[4:])
+    for candidate in candidates:
+        if candidate in allowed_domains:
+            return candidate
+    return None
+
+
+def _shallow_resource_url_reason(url: str) -> str | None:
+    parts = urllib.parse.urlsplit(url)
+    path = urllib.parse.unquote(parts.path or "")
+    path_key = re.sub(r"/+", "/", path).lower()
+    if path_key in {"", "/"}:
+        return "bare_domain"
+    if re.fullmatch(r"/narod/?", path_key):
+        return "ukrlib_narod_landing"
+    if re.fullmatch(r"/school/literature/?", path_key):
+        return "school_literature_landing"
+    if re.fullmatch(r"/category(?:/[^/?#]+)+/?", path_key):
+        return "category_landing"
+    query = urllib.parse.parse_qs(parts.query, keep_blank_values=True)
+    numeric_ids = query.get("id") or []
+    if path_key.endswith("/book.php") and len(numeric_ids) == 1 and numeric_ids[0].isdigit():
+        return "guessed_numeric_book_id"
+    if path_key.endswith("/") and not parts.query:
+        return "trailing_slash_directory"
+    return None
+
+
+def _resources_url_resolve_gate(
+    resources: list[dict[str, Any]],
+    *,
+    level: str,
+    resource_liveness_fn: Callable[[str], bool] | None = None,
+) -> dict[str, Any]:
+    if not _resource_url_resolve_applies(level):
+        # TODO(#3630): design a separate core-track link-hygiene policy that
+        # permits learner media/blog resources without using this primary-text allowlist.
+        return {
+            "passed": True,
+            "severity": None,
+            "skipped": "not_applicable_non_seminar_level",
+            "level": level,
+            "checked": 0,
+            "results": [],
+        }
+
+    allowed_domains = _load_primary_text_source_domains()
+    results: list[dict[str, Any]] = []
+    all_ok = True
+    checked = 0
+    for entry in resources:
+        if not isinstance(entry, Mapping):
+            all_ok = False
+            results.append({"resource": str(entry)[:80], "resolved": False, "reason": "not_a_mapping"})
+            continue
+        role = str(entry.get("role") or "").strip()
+        title = str(entry.get("title") or "").strip()
+        raw_url = str(entry.get("url") or "").strip()
+        if role == "textbook" and not raw_url:
+            continue
+        if role not in URL_BEARING_RESOURCE_ROLES:
+            continue
+        checked += 1
+        if not raw_url:
+            all_ok = False
+            results.append(
+                {
+                    "title": title,
+                    "role": role,
+                    "url": None,
+                    "resolved": False,
+                    "reason": "missing_url_for_url_bearing_role",
+                }
+            )
+            continue
+        url = _clean_resource_url(raw_url, title=title)
+        if _is_on_site_resource_url(url):
+            results.append(
+                {
+                    "title": title,
+                    "role": role,
+                    "url": url,
+                    "resolved": True,
+                    "reason": "on_site_reference",
+                    "live": None,
+                }
+            )
+            continue
+        parts = urllib.parse.urlsplit(url)
+        if parts.scheme not in {"http", "https"} or not parts.hostname:
+            all_ok = False
+            results.append(
+                {
+                    "title": title,
+                    "role": role,
+                    "url": url,
+                    "resolved": False,
+                    "reason": "invalid_external_url",
+                }
+            )
+            continue
+        matched_domain = _matching_primary_text_domain(parts.hostname, allowed_domains)
+        if matched_domain is None:
+            all_ok = False
+            results.append(
+                {
+                    "title": title,
+                    "role": role,
+                    "url": url,
+                    "resolved": False,
+                    "reason": "domain_not_allowlisted",
+                    "domain": parts.hostname.lower(),
+                }
+            )
+            continue
+        shallow_reason = _shallow_resource_url_reason(url)
+        if shallow_reason is not None:
+            all_ok = False
+            results.append(
+                {
+                    "title": title,
+                    "role": role,
+                    "url": url,
+                    "resolved": False,
+                    "reason": shallow_reason,
+                    "domain": matched_domain,
+                }
+            )
+            continue
+        live: bool | None = None
+        if resource_liveness_fn is not None:
+            live = bool(resource_liveness_fn(url))
+            if not live:
+                all_ok = False
+                results.append(
+                    {
+                        "title": title,
+                        "role": role,
+                        "url": url,
+                        "resolved": False,
+                        "reason": "url_not_live",
+                        "domain": matched_domain,
+                        "live": False,
+                    }
+                )
+                continue
+        results.append(
+            {
+                "title": title,
+                "role": role,
+                "url": url,
+                "resolved": True,
+                "reason": "resolved",
+                "domain": matched_domain,
+                "live": live,
+            }
+        )
+    return {
+        "passed": all_ok,
+        "severity": "HARD" if not all_ok else None,
+        "checked": checked,
+        "results": results,
+        "liveness_checked": resource_liveness_fn is not None,
+    }
+
+
 def _verify_resources_live(
     resources: list[dict[str, Any]],
     *,
@@ -12651,6 +12877,18 @@ def _verify_resources_live(
                 }
             )
             all_ok = all_ok and ok
+            continue
+        url = _clean_resource_url(url, title=str(title or ""))
+        if _is_on_site_resource_url(url):
+            results.append(
+                {
+                    "title": title,
+                    "role": role,
+                    "url": url,
+                    "live": True,
+                    "reason": "on_site_reference",
+                }
+            )
             continue
         live = bool(url_live_fn(url))
         results.append({"title": title, "role": role, "url": url, "live": live})

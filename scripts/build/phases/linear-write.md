@@ -164,12 +164,14 @@ If `external_resources` in the Wiki Obligations Manifest is non-empty, those URL
 
 Empty search results are acceptable, but the search attempt MUST be recorded in the writer telemetry. If you cannot find usable resources, you MUST still record the search attempt in writer telemetry. Skipping the search fails the `resources_search_attempted` gate.
 
-In `resources.yaml`, every entry MUST have a `role` field: `textbook`, `youtube`, `video`, `blog`, `podcast`, `audio`, `article`, or `wiki`.
+In `resources.yaml`, every entry MUST have a `role` field: `textbook`, `reading`, `youtube`, `video`, `blog`, `podcast`, `audio`, `article`, or `wiki`.
 
 **Schema rule for non-textbook roles: `url:` is REQUIRED.** `role: textbook`
-does NOT require `url:`; all other roles (`youtube`, `video`, `blog`, `podcast`,
+does NOT require `url:`; all other roles (`reading`, `youtube`, `video`, `blog`, `podcast`,
 `audio`, `article`, `wiki`) require a non-empty `url:` or schema validation
 halts. If a non-textbook entry lacks a verified URL, **OMIT THE ENTRY ENTIRELY**. Never emit `url: null`, `url: ""`, `url: TBD`, or an entry without `url:`; all fail. Honest omission does NOT regress `resources_search_attempted` because the gate counts telemetry.
+
+For seminar/folk modules, include at least one `role: reading` entry that tells the learner where to read a primary text. The on-site topic wiki article (`wiki/...` or another relative on-site path) is the guaranteed floor; add allowlisted external originals only when you have a specific resolving document page. Each `reading` entry MUST carry a one-line task prompt in `notes` (for example: `прочитай повну думу «...», зверни увагу на формулу повернення додому`). Never use bare-domain landings, category pages, section landings, or guessed opaque `?id=N` URLs.
 
 ### Phonetic rules — MUST emit IPA notation
 
