@@ -63,7 +63,29 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 66 HANDOFF (2026-06-19 — ✅ reading-tasks plan `hazy-dreaming-willow.md` Phases A+B SHIPPED, C started. Folk wikis 22/42, modules 6/42 certified + now anti-leakage-gated.) — **RESUME HERE**
+## ▶▶▶ SESSION 67 HANDOFF (2026-06-19 — ✅ koliadky-shchedrivky PRODUCTION-GRADE EXEMPLAR built + verified → PR opened, awaiting USER review) — **RESUME HERE**
+
+**🟢 ONE-LINE STATE:** User's TOP-PRIORITY ask — produce ONE production-grade folk exemplar — is DONE for `koliadky-shchedrivky`. PR opened (NOT merged; user explicitly wants to *review* the exemplar as the template). Reference standard + ship checklist written for the 36 remaining builds.
+
+### ✅ DONE THIS SESSION (exemplar pass)
+- **3 styled `:::primary-reading` boxes** wrap the verbatim folk originals (Розминка teaser + full космогонічна колядка + de-stitched щедрівка) — render as 📜 "Читаємо першоджерело", word-count-excluded.
+- **Corpus-hammer caught + fixed 2 real content defects:** (a) Розминка opening was a from-memory variant («Коли не било з нащада світа») **mis-attributed** to the wrong song → replaced with corpus-exact «Як ще не було початку світа» (`verify_quote`=1.0); (b) щедрівка was a **stitched** excerpt → restored full contiguous corpus passage incl. «три тереми» build-up (`verify_quote`=1.0); removed stale `NO_VERIFY`.
+- Grounded prose note on recorded variant-incipits (reinforces the variant/синкретизм thesis; VESUM-clean — dropped «нащада» which fails the vesum gate).
+- **DeepSeek-pro content review (off-seat, VESUM-backed)** applied: BLOCKER (7 "unreferenced" activities) **verified FALSE POSITIVE** — all 10 render (3 inline + 7 auto-appended workbook); MAJORs fixed (added **обрядодія** to Словничок + vocabulary.yaml; removed 4 **spurious `packet_chunk_id`** placeholders on scholarly sources); minors fixed (помилка пам'яті, наочним свідченням, місцеві традиції, gloss precision); «карта» nit declined (standard Ukr for "map").
+- **BONUS infra bug fixed (I own infra, #0.2):** essay-response `peer_review_guidelines` given as a *string* was iterated **char-by-char** into single-letter «Взаємоперевірка» bullets. Root-caused in `scripts/yaml_activities.py::ActivityParser._as_str_list` (coerces string→[string]) + **regression test**. Only caught by *reading the rendered page* — `mdx_render` passed because it was valid MDX (the #M-11 "metrics-green but broken" trap).
+- **Reference deliverable:** `docs/folk-epic/EXEMPLAR-STANDARD.md` — folk module production standard + per-module ship checklist for the ~36 builds.
+- **Verification:** `verify_shippable` GREEN (python_qg + assemble + mdx_render, all 18 islands); `--astro-build` un-runnable locally (astro not in node_modules) → CI is authoritative full-render gate; **132 pipeline tests pass**.
+- **CORRECTION (supersedes stale claim):** koliadky-shchedrivky **IS e2e-proper** — `llm_qg.json` terminal verdict **PASS** (decolonization 9.5, pedagogical 9.2, min 8.5 tone). The earlier "koliadky + dumy have NO llm_qg / not properly e2e" note was stale.
+
+### ⏭ NEXT ACTION
+1. **User reviews the exemplar PR.** Self-merge grant exists (#M-12), but HOLD — user asked to *present/review* it as the template. On user go → CI-green → self-merge.
+2. Then resume user-confirmed folk sequencing: **(2) finish wikis 22→42** (wave-8's 4 on `claude/folk-wikis-wave8` `6369788b8b` → corpus-hammer + PR → 26/42, then ~16 more), **(3) 36-module build-out** on the complete wiki base, using `EXEMPLAR-STANDARD.md` as the template + ship checklist.
+3. dumy-nevilnytski-lytsarski is the natural 2nd exemplar candidate (richer §4 corpus → can demo ≥4 primary-reading boxes).
+
+### 🧷 BOUNDARY
+PR opened, **NOT merged** — exemplar awaits user sign-off. No direct commits to `main`. Reference doc + handoff bundled in the same PR.
+
+## ▶▶▶ SESSION 66 HANDOFF (2026-06-19 — ✅ reading-tasks plan `hazy-dreaming-willow.md` Phases A+B SHIPPED, C started. Folk wikis 22/42, modules 6/42 certified + now anti-leakage-gated.)
 
 **🟢 ONE-LINE STATE:** The approved reading-tasks/anti-leakage plan (`docs/plans/hazy-dreaming-willow.md`) is executing. Phase A (#3599 `:::primary-reading`) + Phase B (#3632 URL-resolution gate + `role:reading`) **MERGED**; Phase C (retrofit 6 modules) **partially shipped this PR**, rest is bounded follow-up.
 

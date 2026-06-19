@@ -254,6 +254,34 @@ class TestParsing:
         assert "#### Взаємоперевірка" in mdx
         assert "- Позначте результат." in mdx
 
+    def test_parse_essay_response_string_peer_guidelines_not_char_exploded(self, parser, tmp_path):
+        """A bare-string peer_review_guidelines must become a single bullet, not one
+        bullet per character (koliadky-shchedrivky exemplar bug, 2026-06-19)."""
+        activity_path = tmp_path / "activities.yaml"
+        activity_path.write_text(
+            """
+- type: essay-response
+  title: Есе
+  instruction: Напишіть есе.
+  prompt: "Напишіть 8-10 речень."
+  model_answer: "Зразок відповіді."
+  peer_review_guidelines: Перевір, чи має есе чітку тезу.
+  rubric:
+  - Чітка теза
+""",
+            encoding="utf-8",
+        )
+
+        activities = parser.parse(activity_path)
+        mdx = parser.to_mdx(activities, is_ukrainian_forced=True)
+
+        # Coerced to a one-item list, not iterated character-by-character.
+        assert activities[0].peer_review_guidelines == ["Перевір, чи має есе чітку тезу."]
+        assert "- Перевір, чи має есе чітку тезу." in mdx
+        # Regression guard: the char-explosion produced single-letter bullets like "- П".
+        assert "\n- П\n" not in mdx
+        assert "\n- е\n" not in mdx
+
 
 class TestA2ActivitySchema:
     """Contract checks for A2 schema forms consumed by ActivityParser."""
