@@ -63,7 +63,25 @@
 > the "don't self-merge" restriction, not the "don't push to main" one. Stage-0 PR #2759 self-merged
 > under this grant (commit `abf280f490`).
 
-## ▶▶▶ SESSION 64 HANDOFF (2026-06-19 — 🎯 USER PIVOT to MODULE+SITE QUALITY: reading-tasks plan APPROVED; site immersion+nav bugs fixed (PR #3624); wave-8 wikis compiled+preserved. Several threads OPEN.) — **RESUME HERE**
+## ▶▶▶ SESSION 65 HANDOFF (2026-06-19 — 🏁 SESSION CLOSE: #3624 site fix CI-GREEN (awaiting orchestrator merge); worktrees cleaned; reading-tasks plan APPROVED + ready to build. Confirms S64 with final verified deltas.) — **RESUME HERE**
+
+**🟢 ONE-LINE STATE:** Folk wikis **22/42** (merged), modules **6/42 certified**. Session pivoted to module+site QUALITY. Everything below is the FINAL verified state (supersedes S64 where they differ).
+
+### ⚡ NEXT ACTIONS (priority order — start here)
+1. **PR #3624** `claude/folk-site-immersion-nav` — Ukrainian admonition labels (#M-13) + Ukrainian sidebar labels ALL tracks + **folk left-nav un-hidden** (`HIDDEN_LINK_TRACKS` emptied). **CI is GREEN ✅** (Frontend gate passed after I fixed the admonition test fixture — `Tip`→`Порада`). **NOT self-merged** — reverses orchestrator #3027 + touches core-track nav labels → **needs orchestrator sign-off, then merge.** Local worktree was cleaned; branch+PR live on remote (recreate worktree only if fixes needed).
+2. **APPROVED PLAN — reading-tasks + anti-leakage** (`docs/plans/hazy-dreaming-willow.md`). The big content arc; NOT started (fresh-session sized). 91% of folk external links are AI-hallucinated; ROOT CAUSE = no URL-resolution gate (`_verify_resources_live` at `linear_pipeline.py:12642` is optional). **Phase A** review+merge gemini **PR #3599** (`:::primary-reading` embed panel #3162 — adopt; nit: its `primary-reading-box` CSS undefined → unstyled); **Phase B** promote `_verify_resources_live` to a mandatory allowlist+resolve gate + add `role:reading` (resources.py icon/group + writer prompt) + `data/primary_text_sources.yaml` allowlist (Ізборник/litopys.org.ua, Вікіджерела/uk.wikisource, on-site wiki); **Phase C** retrofit the 6 modules' resources.yaml (purge 10 hallucinated links + add verified reading tasks). USER ANSWERS: drive #3599 first; sourcing = on-site wiki + embedded + verified-external-allowlist + resolve-gate.
+3. **Wave-8 wikis** — COMPILED + gate-PASSED (sotsialno-pobutovi-kazky 9.0, striletski-povstanski-pisni 8.0/REVISE-grnd, suspilno-pobutovi-pisni, prykazky-ta-pryslivia), **preserved (NOT corpus-hammered, NOT pushed)** on LOCAL branch `claude/folk-wikis-wave8` commit `6369788b8b` (worktree kept). NEXT: corpus-hammer (#M-11) each + PR (no index.md) → **26/42**.
+4. **36 remaining module builds** — PAUSED by user pending the reading-task + site quality work. (vesnianky-hayivky build was stopped + its worktree cleaned; codex merged #3294 fixing the foreign-proper-noun VESUM stall.)
+
+### 🧹 SESSION-CLOSE STATE (verified)
+- **Merged this session:** #3586 (wave-7 wikis→22/42), #3587 (dumy vesum→6/6 modules pass DoD), #3588 (S62), #3593 (S63), #3625 (S64). Issue hygiene: #2836 progress comment, #2837 (kalendarna E2E pilot) CLOSED.
+- **Worktrees cleaned:** removed wave7/dumy/s62/s63/s64/wave3 (merged), the killed vesnianky build, and (now-merged via #3626) atlas-slug-fix. **KEPT:** `claude/folk-wikis-wave8` (preserved un-shipped wave-8). Left all `codex/*`/`gemini/*`/`cursor/*`/`grok-build/*` worktrees untouched (not my lane).
+- **#M-4 lesson:** `gh pr checks --watch` exit code is UNRELIABLE — it exited 0 while Frontend FAILED. ALWAYS read actual check states (`gh pr checks <N>` → grep pass/fail), never trust the watch exit code.
+- **Coordination:** `linear_pipeline.py` + `site/` are HOT (codex #3079; many gemini site PRs #3595/#3599/#3601/#3603…). Branch from latest origin/main, rebase, flag overlaps.
+
+### IN-FLIGHT: PR #3624 (CI-green, awaiting orchestrator merge). 0 active dispatches/builds. Merge grant LIVE for folk wiki/module work; site-infra + #3027 reversal = orchestrator sign-off. Worktree-only; never main.
+
+## ▶▶▶ SESSION 64 HANDOFF (2026-06-19 — 🎯 USER PIVOT to MODULE+SITE QUALITY: reading-tasks plan APPROVED; site immersion+nav bugs fixed (PR #3624); wave-8 wikis compiled+preserved. Several threads OPEN.)
 
 **🟢 ONE-LINE STATE:** Folk: wikis **22/42** (merged), modules **6/42 certified**. This session the USER redirected to **module + site QUALITY** — reading-tasks, AI-link leakage, English UI leaks, broken nav. One site PR open + an APPROVED implementation plan for the content side + wave-8 compiled-but-not-shipped.
 
