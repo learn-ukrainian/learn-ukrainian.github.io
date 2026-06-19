@@ -333,8 +333,9 @@ def generate_mdx(
         "RitualSequencing": "import RitualSequencing from '@site/src/components/RitualSequencing';",
         "VariantComparison": "import VariantComparison from '@site/src/components/VariantComparison';",
         "MotifFormula": "import MotifFormula from '@site/src/components/MotifFormula';",
-        "PerformanceActivity": "import PerformanceActivity from '@site/src/components/PerformanceActivity';",
         "MythBuster": "import MythBuster from '@site/src/components/MythBuster';",
+        "PrimaryReading": "import PrimaryReading from '@site/src/components/PrimaryReading';",
+        "PerformanceActivity": "import PerformanceActivity from '@site/src/components/PerformanceActivity';",
         "HighCultureBridge": "import HighCultureBridge from '@site/src/components/HighCultureBridge';",
     }
 
@@ -521,7 +522,7 @@ sidebar:
         "import HighlightMorphemes from '@site/src/components/HighlightMorphemes';",
         "import { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';",
     ]
-    for component in ("RitualSequencing", "VariantComparison", "MotifFormula", "PerformanceActivity"):
+    for component in ("RitualSequencing", "VariantComparison", "MotifFormula", "PerformanceActivity", "PrimaryReading"):
         if re.search(rf"<{component}\b", tabbed):
             import_lines.append(optional_imports[component])
     import_lines.extend([

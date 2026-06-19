@@ -9631,8 +9631,8 @@ def _word_count(text: str) -> int:
 # rejects gemini-tools 1031/1200 (14% short).
 _WORD_COUNT_TOLERANCE_BELOW = 0.08
 _PRIMARY_READING_BLOCK_RE = re.compile(
-    r"<!--\s*PRIMARY-READING\s*-->.*?<!--\s*/PRIMARY-READING\s*-->",
-    re.IGNORECASE | re.DOTALL,
+    r"(?:<!--\s*PRIMARY-READING\s*-->.*?<!--\s*/PRIMARY-READING\s*-->|^:::primary-reading\s*\n.*?\n:::\s*$)",
+    re.IGNORECASE | re.DOTALL | re.MULTILINE,
 )
 
 
