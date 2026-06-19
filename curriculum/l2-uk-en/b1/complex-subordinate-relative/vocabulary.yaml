@@ -1,0 +1,120 @@
+- lemma: означальне речення
+  translation: "attributive clause, relative clause"
+  pos: phrase
+  usage: "Означальне речення описує іменник у головній частині."
+- lemma: підрядна означальна частина
+  translation: "subordinate attributive clause"
+  pos: phrase
+  usage: "Підрядна означальна частина відповідає на питання який? яка? яке? які?"
+- lemma: означуване слово
+  translation: "antecedent, word being described"
+  pos: phrase
+  usage: "Означуване слово стоїть у головній частині перед підрядною."
+- lemma: антецедент
+  translation: "antecedent"
+  pos: noun
+  usage: "Антецедент підказує рід і число займенника який."
+- lemma: сполучне слово
+  translation: "connective word, relative word"
+  pos: phrase
+  usage: "Сполучне слово з'єднує частини і має роль у підрядній частині."
+- lemma: відносний займенник
+  translation: "relative pronoun"
+  pos: phrase
+  usage: "Який є відносним займенником в означальних реченнях."
+- lemma: який
+  translation: "which, that, who"
+  pos: pronoun
+  usage: "Студент, який читає статтю, сидить біля вікна."
+- lemma: яка
+  translation: "which, that, who (feminine)"
+  pos: pronoun
+  usage: "Квітка, яка росте біля входу, цвіте навесні."
+- lemma: яке
+  translation: "which, that (neuter)"
+  pos: pronoun
+  usage: "Місце, яке ми обрали, було тихим."
+- lemma: які
+  translation: "which, that, who (plural)"
+  pos: pronoun
+  usage: "Люди, які працюють у саду, знають кожну алею."
+- lemma: якого
+  translation: "whom, which (genitive/accusative masculine or neuter)"
+  pos: pronoun form
+  usage: "Ботанік, якого ми слухали, показав старе дерево."
+- lemma: яку
+  translation: "which (accusative feminine)"
+  pos: pronoun form
+  usage: "Книгу, яку я читаю, написала українська дослідниця."
+- lemma: якому
+  translation: "to which, to whom; in which (masculine/neuter dative or locative)"
+  pos: pronoun form
+  usage: "Місто, в якому я живу, має багато парків."
+- lemma: якій
+  translation: "to which, to whom; in which (feminine dative or locative)"
+  pos: pronoun form
+  usage: "Студентка, якій я допоміг, подякувала після заняття."
+- lemma: якими
+  translation: "with which, with whom (plural instrumental)"
+  pos: pronoun form
+  usage: "Люди, з якими я працюю, уважні до деталей."
+- lemma: що
+  translation: "that, which"
+  pos: pronoun/conjunction
+  usage: "Дерево, що росте біля оранжереї, посадили давно."
+- lemma: де
+  translation: "where"
+  pos: adverb
+  usage: "Це місце, де можна відпочити після екскурсії."
+- lemma: куди
+  translation: "where to"
+  pos: adverb
+  usage: "Алея, куди ми йдемо, веде до теплиці."
+- lemma: звідки
+  translation: "where from"
+  pos: adverb
+  usage: "Країна, звідки привезли рослину, має теплий клімат."
+- lemma: коли
+  translation: "when"
+  pos: adverb
+  usage: "День, коли ми відвідали сад, був сонячним."
+- lemma: чий
+  translation: "whose"
+  pos: pronoun
+  usage: "Дослідниця, чию статтю ми читали, працює в університеті."
+- lemma: котрий
+  translation: "which, which one"
+  pos: pronoun
+  usage: "Котрий можливий як книжний синонім до який, але для B1 достатньо впізнавати його."
+- lemma: відмінок
+  translation: "case"
+  pos: noun
+  usage: "Відмінок слова який залежить від ролі в підрядній частині."
+- lemma: рід
+  translation: "gender"
+  pos: noun
+  usage: "Рід означуваного слова підказує форму який, яка або яке."
+- lemma: число
+  translation: "number"
+  pos: noun
+  usage: "Число означуваного слова підказує форму які для множини."
+- lemma: постпозиція
+  translation: "postposition"
+  pos: noun
+  usage: "Означальна підрядна частина зазвичай стоїть у постпозиції після означуваного слова."
+- lemma: кома перед підрядною частиною
+  translation: "comma before a subordinate clause"
+  pos: phrase
+  usage: "Кома перед підрядною частиною показує межу між частинами."
+- lemma: нульовий відносний займенник
+  translation: "zero relative pronoun"
+  pos: phrase
+  usage: "В українській не можна пропускати відносний займенник за англійською моделлю."
+- lemma: дієприкметниковий зворот
+  translation: "participial phrase"
+  pos: phrase
+  usage: "Дієприкметниковий зворот і означальне речення можуть описувати ту саму ознаку."
+- lemma: роль у підрядній частині
+  translation: "role inside the subordinate clause"
+  pos: phrase
+  usage: "Роль у підрядній частині визначає відмінок займенника який."
