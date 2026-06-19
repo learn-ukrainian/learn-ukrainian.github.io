@@ -207,43 +207,6 @@
   background: var(--lu-state-active);
 }
 
-.topnav {
-  padding: 14px 24px;
-  border-bottom: 1px solid var(--lu-border);
-  background: var(--lu-surface);
-}
-
-.topnav-inner {
-  max-width: var(--content-width);
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 28px;
-  font-size: 14px;
-}
-
-.topnav-brand {
-  font-weight: 700;
-  color: var(--blue);
-}
-
-.topnav-link {
-  color: var(--gray-600);
-  text-decoration: none;
-}
-
-.topnav-link:hover {
-  color: var(--blue);
-}
-
-.topnav-link.active {
-  color: var(--teal);
-  font-weight: 700;
-  border-bottom: 2px solid var(--teal);
-  padding-bottom: 12px;
-  margin-bottom: -14px;
-}
-
 .word-hero {
   background: var(--lu-id-lexicon);
   color: white;
@@ -995,13 +958,11 @@
 }
 
 @media (max-width: 720px) {
-  .word-switch,
-  .topnav {
+  .word-switch {
     padding-left: 14px;
     padding-right: 14px;
   }
 
-  .topnav-inner,
   .atlas-search,
   .used-in-card {
     align-items: stretch;

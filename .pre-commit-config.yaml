@@ -137,6 +137,22 @@ repos:
         files: ^(site/src/components/.*\.(tsx|astro)|scripts/pipeline/config_tables\.py|docs/lesson-contract\.md)$
         stages: [pre-commit]
 
+      # Atlas lexicon code-fingerprint must stay in sync with scripts/lexicon/*.py.
+      # Regenerate it, then diff: a drifted sidecar blocks the commit until it is
+      # staged. Root-cause fix for the recurring "Atlas Manifest Freshness" CI
+      # red (#3649) — drift can no longer reach main by someone forgetting
+      # `make atlas`.
+      - id: atlas-lexicon-fingerprint-drift
+        name: Atlas lexicon fingerprint freshness gate
+        entry: >-
+          bash -c 'bash scripts/pre_commit/project_python.sh
+          scripts/pre_commit/regen_lexicon_fingerprint.py && git diff --exit-code
+          site/src/data/lexicon-manifest.fingerprint.json'
+        language: system
+        pass_filenames: false
+        files: ^scripts/lexicon/.*\.py$
+        stages: [pre-commit]
+
       - id: lint-dispatch-brief-venv
         name: dispatch brief .venv worktree guardrail
         entry: >-
