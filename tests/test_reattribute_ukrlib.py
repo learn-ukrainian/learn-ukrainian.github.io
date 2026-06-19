@@ -181,6 +181,28 @@ class TestPostNoCrossContamination:
         assert passed, "Cross-contamination detected:\n" + "\n".join(errors)
 
 
+def _literary_corpus_available() -> bool:
+    """True only when sources.db has a populated literary_texts table.
+
+    CI uses a stub sources.db without the literary corpus (#2928), so the
+    post-reattribution corpus checks below skip there and run only locally
+    against the full SQLite corpus.
+    """
+    db_path = Path(__file__).resolve().parents[1] / "data" / "sources.db"
+    if not db_path.exists():
+        return False
+    try:
+        with sqlite3.connect(db_path) as conn:
+            has_table = conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='literary_texts'"
+            ).fetchone()
+            if not has_table:
+                return False
+            return conn.execute("SELECT count(*) FROM literary_texts").fetchone()[0] > 0
+    except sqlite3.Error:
+        return False
+
+
 class TestPostSearchQuality:
     """Verify reattributed authors have chunks in the SQLite source corpus."""
 
@@ -192,6 +214,10 @@ class TestPostSearchQuality:
         ("Нечуй-Левицький І.", "Кайдашева сім'я"),
     ]
 
+    @pytest.mark.skipif(
+        not _literary_corpus_available(),
+        reason="literary_texts corpus not present (CI uses a stub sources.db; #2928)",
+    )
     @pytest.mark.parametrize("author,work_substr", AUTHOR_CHECKS)
     def test_post_author_chunks_in_sources_db(self, author, work_substr):
         db_path = Path(__file__).resolve().parents[1] / "data" / "sources.db"
