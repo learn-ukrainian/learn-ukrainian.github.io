@@ -74,6 +74,36 @@ def test_manifest_fingerprint_ignores_vocab_lemma_churn(tmp_path: Path) -> None:
     assert after == before
 
 
+def test_write_fingerprint_is_idempotent(tmp_path: Path) -> None:
+    # The pre-commit hook regenerates the sidecar then `git diff --exit-code`s it.
+    # If write_fingerprint were non-deterministic, that gate would block every
+    # commit. Guarantee re-running on unchanged code yields byte-identical output.
+    root = _fixture_repo(tmp_path)
+    sidecar = root / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
+
+    write_fingerprint(sidecar, root=root)
+    first = sidecar.read_bytes()
+    write_fingerprint(sidecar, root=root)
+    second = sidecar.read_bytes()
+
+    assert first == second
+
+
+def test_write_fingerprint_changes_after_lexicon_edit(tmp_path: Path) -> None:
+    # Conversely, editing lexicon code MUST change the regenerated sidecar — that
+    # is the drift the pre-commit `git diff --exit-code` is meant to catch.
+    root = _fixture_repo(tmp_path)
+    sidecar = root / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
+
+    write_fingerprint(sidecar, root=root)
+    before = sidecar.read_bytes()
+    (root / "scripts" / "lexicon" / "alpha.py").write_text("VALUE = 999\n", encoding="utf-8")
+    write_fingerprint(sidecar, root=root)
+    after = sidecar.read_bytes()
+
+    assert after != before
+
+
 def test_manifest_freshness_check_passes_on_matching_sidecar(tmp_path: Path, capsys) -> None:
     root = _fixture_repo(tmp_path)
     sidecar = root / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"

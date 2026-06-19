@@ -1,5 +1,5 @@
 {
-  "fingerprint": "7dd6f12ec95468e0066e93bbaa83ee64ed3d592c617870bda500c973f8efafd5",
+  "fingerprint": "a20087447c4c25f1c5fd6ed9b0ecb31760c94de87e66f661c343883ca4b9f41c",
   "inputs": {
     "lexicon_code": [
       {
@@ -40,11 +40,19 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "c8814a4a1b97c7e8942c46077322ccfb12c0e687eb188cfa7396693a5bbe27e1"
+        "sha256": "bd65d1778fb42df607e51fb76ef9e4188ca4d81ad87dd8b67d4252ab1ebd90b9"
+      },
+      {
+        "path": "scripts/lexicon/esum_garbled.py",
+        "sha256": "e16ea0b5e2fe0362bd2363f766549c755bf772e60c689129424f06f636893b54"
       },
       {
         "path": "scripts/lexicon/export_open_dataset.py",
         "sha256": "0ceb0d6373e301c92611c239bb8bcd616f71af8ebb938d0e48b2b85346e6d065"
+      },
+      {
+        "path": "scripts/lexicon/fix_esum_garbled_etymologies.py",
+        "sha256": "5dc115380709adf1e85755b5b8df7c17898627d5560f686662ee63b99f5d93fd"
       },
       {
         "path": "scripts/lexicon/generate_vesum_aliases.py",
@@ -75,6 +83,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 17
+    "lexicon_code_files": 19
   }
 }
