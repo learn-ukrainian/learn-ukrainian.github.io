@@ -245,6 +245,15 @@
   margin-bottom: 0;
 }
 
+/* Folk verse (колядки/думи/щедрівки) is authored as Markdown blockquotes, whose
+   soft line breaks the browser otherwise collapses to spaces — making verse render
+   as a run-on paragraph (#3661). Preserve the newlines as line breaks so verse reads
+   as verse. Scoped to the primary-reading container ONLY: prose/scholarly blockquotes
+   elsewhere must keep normal wrapping. */
+.primary-reading-content blockquote {
+  white-space: pre-line;
+}
+
 .myth-source {
   font-size: 0.8125rem;
   color: var(--ifm-color-emphasis-600, #757575);
