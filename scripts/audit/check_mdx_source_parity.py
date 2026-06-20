@@ -177,6 +177,12 @@ def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | No
         if len(parts) == 2 and slug == "index":
             continue
 
+        # Хрестоматія readings (`<track>/readings/**`) are hand-authored primary-source
+        # texts (думи, колядки, …), NOT generated from a curriculum module source — so
+        # the MDX⟸source parity contract does not apply. Track-agnostic exemption.
+        if parts[1] == "readings":
+            continue
+
         if level in legacy_levels:
             continue
 
@@ -273,6 +279,10 @@ def main(argv: list[str] | None = None) -> int:
             level = parts[0]
             slug = rel_path.stem
             if len(parts) == 2 and slug == "index":
+                continue
+            # Хрестоматія readings are hand-authored primary sources, not generated
+            # from a curriculum module source — exempt from structural parity too.
+            if parts[1] == "readings":
                 continue
             if level in legacy_levels:
                 continue

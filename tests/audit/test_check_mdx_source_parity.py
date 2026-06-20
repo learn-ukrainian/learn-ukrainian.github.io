@@ -47,6 +47,26 @@ def test_check_parity_level_landing_page(mock_legacy_levels, mock_subprocess):
     violations = check_parity(mdx_files, changed_files)
     assert len(violations) == 0
 
+def test_check_parity_readings_exempt(mock_legacy_levels, mock_subprocess):
+    # Хрестоматія readings (`<track>/readings/**`) are hand-authored primary-source
+    # texts with no curriculum module source — an MDX-only change must NOT violate.
+    mdx_files = [MDX_DIR / "folk" / "readings" / "dumy-nevilnytski-lytsarski.mdx"]
+    changed_files = {MDX_DIR / "folk" / "readings" / "dumy-nevilnytski-lytsarski.mdx"}
+    mock_subprocess.return_value = "1 file changed\n"  # Not whitespace-only
+
+    violations = check_parity(mdx_files, changed_files)
+    assert len(violations) == 0
+
+def test_check_parity_readings_index_exempt(mock_legacy_levels, mock_subprocess):
+    # The readings section landing (`<track>/readings/index.mdx`) is also hand-authored.
+    # Generalizes across seminar tracks (folk now; lit/hist/… later).
+    mdx_files = [MDX_DIR / "lit" / "readings" / "index.mdx"]
+    changed_files = {MDX_DIR / "lit" / "readings" / "index.mdx"}
+    mock_subprocess.return_value = "1 file changed\n"
+
+    violations = check_parity(mdx_files, changed_files)
+    assert len(violations) == 0
+
 def test_check_parity_mdx_and_source(mock_legacy_levels, mock_subprocess):
     # MDX + source diff (pass)
     mdx_files = [MDX_DIR / "a1" / "01-hello.mdx"]
