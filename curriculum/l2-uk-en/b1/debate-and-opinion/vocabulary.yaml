@@ -1,0 +1,80 @@
+- lemma: аргументація
+  translation: argumentation
+  pos: noun
+  usage: Аргументація пояснює, чому з позицією варто погодитися.
+- lemma: теза
+  translation: thesis, claim
+  pos: noun
+  usage: Теза формулює головну позицію автора.
+- lemma: аргумент
+  translation: argument, reason
+  pos: noun
+  usage: Аргумент пояснює, чому теза має сенс.
+- lemma: дискусія
+  translation: discussion, debate
+  pos: noun
+  usage: У дискусії важливо слухати опонента.
+- lemma: висновок
+  translation: conclusion
+  pos: noun
+  usage: Висновок повертається до тези й підсумовує логіку.
+- lemma: переконувати
+  translation: to persuade
+  pos: verb
+  usage: Добрий приклад може переконувати краще за загальну фразу.
+- lemma: погоджуватися
+  translation: to agree
+  pos: verb
+  usage: Я погоджуюся з першою частиною аргументу.
+- lemma: заперечувати
+  translation: to object, disagree
+  pos: verb
+  usage: Треба заперечувати думку, а не атакувати людину.
+- lemma: доведення
+  translation: proof, reasoning
+  pos: noun
+  usage: Доведення потребує причини, прикладу і логічного зв'язку.
+- lemma: позиція
+  translation: position
+  pos: noun
+  usage: Позиція має бути чіткою і конкретною.
+- lemma: опонент
+  translation: opponent, interlocutor in debate
+  pos: noun
+  usage: Опонент може мати слушне заперечення.
+- lemma: міркування
+  translation: reasoning
+  pos: noun
+  usage: Міркування показує шлях від тези до висновку.
+- lemma: підміна тези
+  translation: straw man, changing the claim
+  pos: phrase
+  usage: Підміна тези переносить розмову на іншу думку.
+- lemma: аргумент до особи
+  translation: ad hominem
+  pos: phrase
+  usage: Аргумент до особи атакує людину замість ідеї.
+- lemma: хибна дилема
+  translation: false dilemma
+  pos: phrase
+  usage: Хибна дилема створює вигляд, що є лише два варіанти.
+- lemma: поспішне узагальнення
+  translation: hasty generalization
+  pos: phrase
+  usage: Поспішне узагальнення робить великий висновок з одного прикладу.
+- lemma: по-перше
+  translation: firstly
+  pos: adverb
+  usage: По-перше, ця пропозиція економить час.
+- lemma: отже
+  translation: therefore
+  pos: adverb
+  usage: Отже, аргумент підтримує тезу.
+- lemma: натомість
+  translation: instead, by contrast
+  pos: adverb
+  usage: Натомість можна запропонувати дешевший варіант.
+- lemma: брати участь
+  translation: to take part
+  pos: phrase
+  usage: Студенти брали участь у дискусії.
