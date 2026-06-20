@@ -1,0 +1,104 @@
+- lemma: вставне слово
+  translation: parenthetical word
+  pos: phrase
+  usage: Вставне слово мабуть показує невпевненість мовця.
+- lemma: вставна конструкція
+  translation: parenthetical construction
+  pos: phrase
+  usage: Вставна конструкція на мою думку називає джерело оцінки.
+- lemma: мабуть
+  translation: probably
+  pos: adverb
+  usage: Мабуть, ми запізнимося.
+- lemma: можливо
+  translation: possibly
+  pos: adverb
+  usage: Можливо, завтра буде дощ.
+- lemma: здається
+  translation: it seems
+  pos: verb/adverbial parenthetical
+  usage: Здається, тут пропущено кому.
+- lemma: на жаль
+  translation: unfortunately
+  pos: phrase
+  usage: На жаль, автобус уже поїхав.
+- lemma: на щастя
+  translation: fortunately
+  pos: phrase
+  usage: На щастя, файл зберігся.
+- lemma: отже
+  translation: therefore
+  pos: adverb
+  usage: Отже, план змінився.
+- lemma: по-перше
+  translation: firstly
+  pos: adverb
+  usage: По-перше, текст короткий.
+- lemma: наприклад
+  translation: for example
+  pos: adverb
+  usage: Наприклад, можна знайти метафору.
+- lemma: безумовно
+  translation: undoubtedly
+  pos: adverb
+  usage: Безумовно, це важливий аргумент.
+- lemma: до речі
+  translation: by the way
+  pos: phrase
+  usage: До речі, я вже прочитав цей уривок.
+- lemma: за даними
+  translation: according to data
+  pos: phrase
+  usage: За даними дослідників, читання вголос допомагає інтонації.
+- lemma: на думку
+  translation: in the opinion of
+  pos: phrase
+  usage: На думку авторки, образ верби ключовий.
+- lemma: однорідні члени речення
+  translation: homogeneous sentence members
+  pos: phrase
+  usage: Однорідні члени речення відповідають на одне питання.
+- lemma: узагальнювальне слово
+  translation: generalizing word
+  pos: phrase
+  usage: Узагальнювальне слово може стояти перед рядом однорідних членів.
+- lemma: безперечно
+  translation: certainly
+  pos: adverb
+  usage: Безперечно, автор створив сильний образ.
+- lemma: справді
+  translation: indeed
+  pos: adverb
+  usage: Справді, цей текст легко читати вголос.
+- lemma: либонь
+  translation: perhaps
+  pos: adverb
+  usage: Либонь, це слово частіше трапляється в художніх текстах.
+- lemma: на диво
+  translation: surprisingly
+  pos: phrase
+  usage: На диво, складний уривок читається легко.
+- lemma: зрештою
+  translation: after all, finally
+  pos: adverb
+  usage: Зрештою, ми повернулися до головної думки.
+- lemma: власне
+  translation: actually, in fact
+  pos: adverb
+  usage: Власне, проблема була в пунктуації.
+- lemma: мовляв
+  translation: reportedly, as if saying
+  pos: particle
+  usage: Мовляв, автор лише переказує чужу думку.
+- lemma: щоправда
+  translation: to be fair
+  pos: adverb
+  usage: Щоправда, текст потребує другого читання.
+- lemma: навпаки
+  translation: on the contrary
+  pos: adverb
+  usage: Навпаки, другий уривок звучить розмовно.
+- lemma: уяви собі
+  translation: imagine
+  pos: phrase
+  usage: Уяви собі, він прочитав увесь текст за вечір.
