@@ -283,6 +283,16 @@ const HIDDEN_LINK_TRACKS = new Set<string>();
 const SEARCH_LESSON_PREFIXES = new Set(['a1', 'a2']);
 const normalizeId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
 const hrefFromRoute = (route: string) => `/${route}/`;
+// Хрестоматія = a parallel per-track "primary-sources" reading section at
+// `<track>/readings/**`. Track-agnostic by design: any seminar (folk now; lit, hist,
+// etc. once their readings are authored + globbed) gets the same section behaviour.
+const isReadingId = (id: string) => id.split('/')[1] === 'readings';
+const pluralTexts = (n: number) => {
+  const d = n % 10, h = n % 100;
+  if (d === 1 && h !== 11) return 'текст';
+  if (d >= 2 && d <= 4 && (h < 12 || h > 14)) return 'тексти';
+  return 'текстів';
+};
 const trackIds = Object.keys(TRACKS);
 const searchTrackIds = trackIds.filter((id) => !HIDDEN_LINK_TRACKS.has(id));
 
@@ -296,6 +306,7 @@ const visibleDocs = allDocs.filter((entry) => {
 });
 
 const deployedDocsByTrack = new Map<string, DocsEntry[]>();
+const readingsByTrack = new Map<string, DocsEntry[]>();
 const landingDocsByTrack = new Map<string, DocsEntry>();
 for (const entry of visibleDocs) {
   const id = normalizeId(entry.id);
@@ -304,11 +315,25 @@ for (const entry of visibleDocs) {
     landingDocsByTrack.set(track, entry);
     continue;
   }
+  if (isReadingId(id)) {
+    // Хрестоматія readings are a parallel section, NOT numbered modules — keep them
+    // out of the module sidebar bucket (this is the root-cause fix for readings showing
+    // as a phantom "module 50"). The section landing (`<track>/readings`) is reachable
+    // via the back-link, so it is not listed as a reading item.
+    if (id === `${track}/readings`) continue;
+    const rb = readingsByTrack.get(track) ?? [];
+    rb.push(entry);
+    readingsByTrack.set(track, rb);
+    continue;
+  }
   const bucket = deployedDocsByTrack.get(track) ?? [];
   bucket.push(entry);
   deployedDocsByTrack.set(track, bucket);
 }
 for (const entries of deployedDocsByTrack.values()) {
+  entries.sort((a, b) => (a.data.sidebar?.order ?? 999) - (b.data.sidebar?.order ?? 999));
+}
+for (const entries of readingsByTrack.values()) {
   entries.sort((a, b) => (a.data.sidebar?.order ?? 999) - (b.data.sidebar?.order ?? 999));
 }
 
@@ -483,10 +508,15 @@ const pageMeta = (() => {
   const route = normalizeId(props.entry.id);
   const track = route.split('/')[0];
   const order = props.entry.data.sidebar?.order;
+  const onReadings = isReadingId(route);
   return {
     title: props.entry.data.title,
     description: props.entry.data.description ?? TRACKS[track]?.subtitle,
-    eyebrow: `${TRACKS[track]?.label ?? track.toUpperCase()} · ${order ? `Module ${String(order).padStart(2, '0')}` : 'Lesson'}`,
+    // Readings carry a "Хрестоматія" eyebrow, never "Module NN" — they are primary
+    // sources, not numbered lessons.
+    eyebrow: onReadings
+      ? `${TRACKS[track]?.label ?? track.toUpperCase()} · Хрестоматія`
+      : `${TRACKS[track]?.label ?? track.toUpperCase()} · ${order ? `Module ${String(order).padStart(2, '0')}` : 'Lesson'}`,
     subtitle: props.entry.data.description ?? TRACKS[track]?.subtitle,
     currentPath: hrefFromRoute(route),
     heroVariant: TRACKS[track]?.heroVariant ?? 'core',
@@ -518,31 +548,39 @@ const navItems = HIDDEN_LINK_TRACKS.has(currentTrackId)
 const sidebar = props.kind === 'doc'
   ? (() => {
       if (HIDDEN_LINK_TRACKS.has(docTrack)) return undefined;
-      const lessons = deployedDocsByTrack.get(docTrack) ?? [];
+      // On a Хрестоматія page the sidebar lists the track's primary-source readings
+      // (NOT the numbered modules); everywhere else it is the module ladder. Same
+      // CourseLayout component, different prop — so readings match the site exactly.
+      const onReadings = isReadingId(docRoute);
+      const lessons = onReadings
+        ? (readingsByTrack.get(docTrack) ?? [])
+        : (deployedDocsByTrack.get(docTrack) ?? []);
       if (lessons.length === 0) return undefined;
       const links = lessons.map((entry) => {
         const id = normalizeId(entry.id);
         const order = entry.data.sidebar?.order;
         return {
           href: hrefFromRoute(id),
-          label: entry.data.title,
-          num: order ? String(order).padStart(2, '0') : '•',
+          label: entry.data.sidebar?.label ?? entry.data.title,
+          num: onReadings ? '📜' : (order ? String(order).padStart(2, '0') : '•'),
           active: id === docRoute,
         };
       });
       const currentIndex = links.findIndex((link) => link.active);
       const position = currentIndex >= 0 ? currentIndex + 1 : 0;
+      const trackLabel = TRACKS[docTrack]?.label ?? docTrack.toUpperCase();
       return {
+        // Readings back-link returns to the track's lessons; modules to the track landing.
         backHref: `/${docTrack}/`,
-        backLabel: TRACKS[docTrack]?.label ?? docTrack.toUpperCase(),
-        // Ukrainian sidebar labels for ALL tracks (immersion rule #M-13) — was
-        // gated to b1 only, which leaked English nav text for folk/seminars/core.
-        positionLabel: position > 0
-          ? `Урок ${position} з ${links.length}`
-          : `${links.length} уроки`,
-        titleLabel: 'Уроки',
-        navLabel: 'Уроки цього рівня',
-        progressDone: position,
+        backLabel: onReadings ? `Уроки · ${trackLabel}` : trackLabel,
+        // Ukrainian sidebar labels for ALL tracks (immersion rule #M-13). Readings are
+        // counted ("N текстів"), never positioned as "Урок N з M".
+        positionLabel: onReadings
+          ? `${links.length} ${pluralTexts(links.length)}`
+          : (position > 0 ? `Урок ${position} з ${links.length}` : `${links.length} уроки`),
+        titleLabel: onReadings ? 'Хрестоматія' : 'Уроки',
+        navLabel: onReadings ? 'Першоджерела цього розділу' : 'Уроки цього рівня',
+        progressDone: onReadings ? 0 : position,
         progressTotal: links.length,
         links,
       };
