@@ -118,24 +118,6 @@
   font-size: 13px;
 }
 
-.word-switch label {
-  opacity: 0.7;
-}
-
-.word-switch select,
-.atlas-search input {
-  border: 1px solid var(--lu-border);
-  border-radius: 6px;
-  background: var(--lu-surface-muted);
-  color: var(--lu-text);
-  font-size: 13px;
-}
-
-.word-switch select {
-  max-width: min(100%, 320px);
-  padding: 4px 12px;
-}
-
 .word-switch .poc-label {
   margin-left: auto;
   color: var(--lu-primary);
@@ -143,23 +125,73 @@
   letter-spacing: 0.5px;
 }
 
-.atlas-search {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1 1 280px;
-  min-width: 260px;
+.atlas-typeahead {
+  position: relative;
+  flex: 1 1 320px;
+  min-width: 220px;
+  max-width: 520px;
 }
 
-.atlas-search input {
+.atlas-typeahead-input {
   width: 100%;
-  min-width: 140px;
-  padding: 6px 10px;
+  padding: 7px 12px;
+  border: 1px solid var(--lu-border);
+  border-radius: 8px;
+  background: var(--lu-surface-muted);
+  color: var(--lu-text);
+  font-size: 14px;
 }
 
-.atlas-search input::placeholder {
+.atlas-typeahead-input::placeholder {
   color: var(--lu-text-muted);
   opacity: 1;
+}
+
+.atlas-typeahead-input:focus {
+  outline: none;
+  border-color: var(--lu-primary);
+  box-shadow: 0 0 0 2px var(--lu-state-active);
+}
+
+.atlas-typeahead-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 200;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  max-height: 340px;
+  overflow-y: auto;
+  background: var(--lu-surface);
+  border: 1px solid var(--lu-border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.atlas-typeahead-opt {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.atlas-typeahead-opt.active,
+.atlas-typeahead-opt:hover {
+  background: var(--lu-state-active);
+}
+
+.ata-lemma {
+  font-weight: 700;
+  color: var(--lu-text);
+}
+
+.ata-gloss {
+  color: var(--lu-text-muted);
+  font-size: 13px;
 }
 
 .atlas-button {
@@ -169,42 +201,14 @@
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
-}
-
-.atlas-button.search {
-  background: var(--lu-state-active);
-  color: var(--lu-primary);
-  border-color: var(--lu-primary);
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 .atlas-button.filter {
   background: var(--lu-accent);
   color: var(--lu-on-accent);
   border-color: var(--lu-accent);
-}
-
-.theme-toggle {
-  display: inline-flex;
-  padding: 2px;
-  border: 1px solid var(--lu-border);
-  border-radius: 8px;
-  background: var(--lu-surface-muted);
-}
-
-.theme-toggle button {
-  border: 0;
-  border-radius: 6px;
-  padding: 4px 10px;
-  color: var(--lu-text-muted);
-  background: transparent;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.theme-toggle button.active {
-  color: var(--lu-text);
-  background: var(--lu-state-active);
 }
 
 .word-hero {
@@ -963,7 +967,11 @@
     padding-right: 14px;
   }
 
-  .atlas-search,
+  .atlas-typeahead {
+    flex-basis: 100%;
+    max-width: none;
+  }
+
   .used-in-card {
     align-items: stretch;
     flex-direction: column;
