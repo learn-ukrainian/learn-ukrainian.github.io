@@ -442,13 +442,19 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install PyYAML
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install PyYAML jsonschema
 
       - name: Check MDX source parity
         env:
           MDX_PARITY_BULK_REGEN: ${{ contains(github.event.pull_request.title, '[regen-mdx]') || contains(github.event.pull_request.title, '[bulk-regen]') || contains(github.event.pull_request.body, '[regen-mdx]') || contains(github.event.pull_request.body, '[bulk-regen]') && '1' || '0' }}
         run: |
-          python scripts/audit/check_mdx_source_parity.py --changed-vs-base origin/main
+          .venv/bin/python scripts/audit/check_mdx_source_parity.py --changed-vs-base origin/main
+
+      - name: Check source-to-site MDX forward parity
+        run: |
+          .venv/bin/python scripts/audit/check_mdx_forward_parity.py --changed-vs-base origin/main
 
   mdx-generation-drift:
     name: MDX Generation Drift
