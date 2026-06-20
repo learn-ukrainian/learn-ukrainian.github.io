@@ -1,0 +1,104 @@
+- lemma: офіційно-діловий стиль
+  translation: official-business style
+  pos: phrase
+  usage: Офіційно-діловий стиль використовують у документах, заявах і зверненнях до установ.
+- lemma: канцеляризм
+  translation: bureaucratic expression
+  pos: noun
+  usage: Канцеляризм може бути доречним у документі, але зайвим у розмові.
+- lemma: штамп
+  translation: fixed cliche, standard phrase
+  pos: noun
+  usage: Штамп у діловому тексті допомагає швидко впізнати функцію фрази.
+- lemma: заява
+  translation: application, formal statement
+  pos: noun
+  usage: Заява містить адресата, адресанта, текст прохання, дату й підпис.
+- lemma: автобіографія
+  translation: autobiography
+  pos: noun
+  usage: Автобіографія подає факти життя в хронологічному порядку.
+- lemma: оголошення
+  translation: announcement
+  pos: noun
+  usage: Оголошення коротко повідомляє, що, де й коли відбудеться.
+- lemma: повідомлення
+  translation: notification, message
+  pos: noun
+  usage: Офіційне повідомлення має чітку мету й нейтральний тон.
+- lemma: відповідно до
+  translation: in accordance with
+  pos: phrase
+  usage: Відповідно до правил курсу заяву треба подати до п'ятниці.
+- lemma: згідно з
+  translation: according to
+  pos: phrase
+  usage: Згідно з графіком заняття починається о вісімнадцятій.
+- lemma: доводжу до вашого відома
+  translation: I bring to your attention
+  pos: phrase
+  usage: Доводжу до вашого відома, що графік консультацій змінено.
+- lemma: з метою
+  translation: for the purpose of
+  pos: phrase
+  usage: З метою участі в конференції прошу видати довідку.
+- lemma: чинний
+  translation: current, valid
+  pos: adjective
+  usage: Чинний графік прийому опубліковано на сайті центру.
+- lemma: розпорядження
+  translation: order, directive
+  pos: noun
+  usage: Розпорядження директора стосується всіх груп курсу.
+- lemma: формула ввічливості
+  translation: politeness formula
+  pos: phrase
+  usage: Формула ввічливості допомагає почати й завершити офіційний діалог.
+- lemma: реквізити
+  translation: required document elements
+  pos: noun
+  usage: Реквізити заяви потрібно розміщувати в правильному порядку.
+- lemma: адресат
+  translation: addressee
+  pos: noun
+  usage: Адресат у шапці заяви часто стоїть у давальному відмінку.
+- lemma: адресант
+  translation: sender, applicant
+  pos: noun
+  usage: Адресант указує, від кого подано документ.
+- lemma: ділове листування
+  translation: business correspondence
+  pos: phrase
+  usage: У діловому листуванні варто уникати емодзі й розмовних скорочень.
+- lemma: вищезазначений
+  translation: above-mentioned
+  pos: adjective
+  usage: Вищезазначений документ потрібно додати до заяви.
+- lemma: нижчепідписаний
+  translation: undersigned
+  pos: adjective
+  usage: Нижчепідписаний підтверджує отримання документів.
+- lemma: у зв'язку з
+  translation: in connection with
+  pos: phrase
+  usage: У зв'язку з переїздом прошу змінити адресу.
+- lemma: повноваження
+  translation: authority, powers
+  pos: noun
+  usage: Працівник установи діє в межах своїх повноважень.
+- lemma: витяг
+  translation: excerpt, extract
+  pos: noun
+  usage: Витяг з наказу можна додати до пакета документів.
+- lemma: протокол
+  translation: minutes, protocol
+  pos: noun
+  usage: Протокол зборів фіксує рішення групи.
+- lemma: наказ
+  translation: order
+  pos: noun
+  usage: Наказ про зарахування опублікували після розгляду заяв.
+- lemma: шановний
+  translation: esteemed, dear
+  pos: adjective
+  usage: Шановний пане Андрію, прошу повідомити графік консультацій.

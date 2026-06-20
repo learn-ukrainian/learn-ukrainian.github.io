@@ -1,0 +1,100 @@
+- lemma: абревіатура
+  translation: abbreviation, acronym
+  pos: noun
+  usage: Абревіатура ООН розшифровується як Організація Об'єднаних Націй.
+- lemma: складноскорочене слово
+  translation: abbreviated compound word
+  pos: phrase
+  usage: Спецвипуск — складноскорочене слово від спеціальний випуск.
+- lemma: графічне скорочення
+  translation: graphic abbreviation
+  pos: phrase
+  usage: Графічне скорочення вул. читаємо як вулиця.
+- lemma: розшифрувати
+  translation: to decipher, expand
+  pos: verb
+  usage: Треба розшифрувати абревіатуру, щоб визначити її рід.
+- lemma: одиниці виміру
+  translation: units of measurement
+  pos: phrase
+  usage: Одиниці виміру кг, см і км пишемо без крапки.
+- lemma: гривня
+  translation: hryvnia
+  pos: noun
+  usage: Скорочення грн позначає українську гривню.
+- lemma: літерна абревіатура
+  translation: letter abbreviation
+  pos: phrase
+  usage: Літерна абревіатура ООН читається через назви літер.
+- lemma: звукова абревіатура
+  translation: sound abbreviation
+  pos: phrase
+  usage: Звукова абревіатура ЦНАП часто читається як одне слово.
+- lemma: скорочення
+  translation: shortened form, abbreviation
+  pos: noun
+  usage: Скорочення допомагають стисло записувати довгі назви.
+- lemma: відмінювання
+  translation: declension
+  pos: noun
+  usage: Відмінювання складноскорочених слів залежить від того, як вони стали звичайними словами.
+- lemma: узгодження
+  translation: agreement
+  pos: noun
+  usage: Узгодження з абревіатурою залежить від головного слова.
+- lemma: спецвипуск
+  translation: special edition
+  pos: noun
+  usage: Газета підготувала спецвипуск до свята.
+- lemma: зарплата
+  translation: salary
+  pos: noun
+  usage: Зарплата — скорочена форма від заробітна плата.
+- lemma: Кабмін
+  translation: Cabinet of Ministers
+  pos: noun
+  usage: Кабмін ухвалив нову постанову.
+- lemma: Верховна Рада
+  translation: Supreme Council, Ukrainian parliament
+  pos: proper noun
+  usage: Верховна Рада розглянула законопроєкт.
+- lemma: кілограм
+  translation: kilogram
+  pos: noun
+  usage: У рецепті потрібно два кілограми картоплі.
+- lemma: сантиметр
+  translation: centimeter
+  pos: noun
+  usage: Довжина деталі — двадцять сантиметрів.
+- lemma: прописом
+  translation: in words
+  pos: adverb
+  usage: У документі суму іноді дублюють прописом.
+- lemma: власна назва
+  translation: proper name
+  pos: phrase
+  usage: Власна назва може впливати на написання складноскороченого слова.
+- lemma: ЄС
+  translation: European Union
+  pos: abbreviation
+  usage: ЄС ухвалив нові рекомендації.
+- lemma: ООН
+  translation: United Nations
+  pos: abbreviation
+  usage: ООН заявила про підтримку програми.
+- lemma: ЗСУ
+  translation: Armed Forces of Ukraine
+  pos: abbreviation
+  usage: ЗСУ продовжили оборону міста.
+- lemma: ЗМІ
+  translation: mass media
+  pos: abbreviation
+  usage: Українські ЗМІ повідомили новину.
+- lemma: ЦНАП
+  translation: administrative service center
+  pos: abbreviation
+  usage: У ЦНАПі можна подати заяву.
+- lemma: крапка
+  translation: period, full stop
+  pos: noun
+  usage: Після грн крапка не ставиться.
