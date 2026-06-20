@@ -12756,13 +12756,14 @@ def _resources_url_resolve_gate(
             continue
         url = _clean_resource_url(raw_url, title=title)
         if _is_on_site_resource_url(url):
+            all_ok = False
             results.append(
                 {
                     "title": title,
                     "role": role,
                     "url": url,
-                    "resolved": True,
-                    "reason": "on_site_reference",
+                    "resolved": False,
+                    "reason": "relative_url_not_allowed",
                     "live": None,
                 }
             )

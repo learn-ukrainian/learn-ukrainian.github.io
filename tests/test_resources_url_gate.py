@@ -31,19 +31,13 @@ def test_resources_url_resolve_rejects_known_bad_folk_urls(url: str) -> None:
     assert result["results"][0]["resolved"] is False
 
 
-def test_resources_url_resolve_accepts_allowlisted_on_site_and_wikipedia_urls() -> None:
+def test_resources_url_resolve_accepts_allowlisted_absolute_urls() -> None:
     resources = [
         {
             "title": "Іпатіївський літопис",
             "role": "reading",
             "url": "http://litopys.org.ua/ipatlet/ipat.htm",
             "notes": "прочитай уривок літопису й познач формулу оповіді",
-        },
-        {
-            "title": "Topic wiki",
-            "role": "reading",
-            "url": "wiki/folk/kupalo",
-            "notes": "прочитай короткий локальний огляд теми",
         },
         {
             "title": "Купало",
@@ -64,8 +58,29 @@ def test_resources_url_resolve_accepts_allowlisted_on_site_and_wikipedia_urls() 
     )
 
     assert result["passed"] is True
-    assert result["checked"] == 4
-    assert {entry["reason"] for entry in result["results"]} == {"resolved", "on_site_reference"}
+    assert result["checked"] == 3
+    assert {entry["reason"] for entry in result["results"]} == {"resolved"}
+
+
+def test_resources_url_resolve_rejects_relative_urls() -> None:
+    result = linear_pipeline._resources_url_resolve_gate(
+        [
+            {
+                "title": "Topic wiki",
+                "role": "reading",
+                "url": "wiki/folk/kupalo",
+                "notes": "прочитай короткий локальний огляд теми",
+            }
+        ],
+        level="folk",
+        resource_liveness_fn=None,
+    )
+
+    assert result["passed"] is False
+    assert result["severity"] == "HARD"
+    assert result["checked"] == 1
+    assert result["results"][0]["resolved"] is False
+    assert result["results"][0]["reason"] == "relative_url_not_allowed"
 
 
 def test_resources_url_resolve_is_not_applicable_to_core_tracks() -> None:
@@ -105,7 +120,7 @@ def test_resources_url_resolve_static_path_does_not_attempt_liveness() -> None:
     assert result["results"][0]["live"] is None
 
 
-def test_resources_url_resolve_does_not_http_check_on_site_refs() -> None:
+def test_resources_url_resolve_does_not_http_check_relative_refs() -> None:
     def fail_if_called(url: str) -> bool:
         raise AssertionError(f"unexpected liveness check for {url}")
 
@@ -122,5 +137,26 @@ def test_resources_url_resolve_does_not_http_check_on_site_refs() -> None:
         resource_liveness_fn=fail_if_called,
     )
 
-    assert result["passed"] is True
-    assert result["results"][0]["reason"] == "on_site_reference"
+    assert result["passed"] is False
+    assert result["results"][0]["resolved"] is False
+    assert result["results"][0]["reason"] == "relative_url_not_allowed"
+
+
+def test_resources_url_resolve_rejects_scheme_less_relative_url() -> None:
+    result = linear_pipeline._resources_url_resolve_gate(
+        [
+            {
+                "title": "Local resource",
+                "role": "article",
+                "url": "foo/bar",
+            }
+        ],
+        level="folk",
+        resource_liveness_fn=None,
+    )
+
+    assert result["passed"] is False
+    assert result["severity"] == "HARD"
+    assert result["checked"] == 1
+    assert result["results"][0]["resolved"] is False
+    assert result["results"][0]["reason"] == "relative_url_not_allowed"
