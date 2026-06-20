@@ -1,7 +1,7 @@
 - lemma: контрольна робота
   translation: test, assessment
   pos: phrase
-  usage: Контрольна робота перевіряє блок M85-M89.
+  usage: Контрольна робота перевіряє блок тексту, стилю, заперечення й читання.
 - lemma: стиль мовлення
   translation: speech style, register
   pos: phrase
@@ -29,7 +29,7 @@
 - lemma: перевірка
   translation: check, verification
   pos: noun
-  usage: Перевірка охоплює стиль, скорочення, читання й пунктуацію.
+  usage: Перевірка охоплює стиль, скорочення, заперечення, читання й пунктуацію.
 - lemma: оцінювання
   translation: evaluation
   pos: noun
@@ -78,3 +78,35 @@
   translation: response, review
   pos: noun
   usage: Відгук має назвати настрій і художній засіб.
+- lemma: подвійне заперечення
+  translation: double negation
+  pos: phrase
+  usage: Подвійне заперечення вимагає не біля присудка.
+- lemma: заперечний займенник
+  translation: negative pronoun
+  pos: phrase
+  usage: Заперечний займенник ніхто поєднується з не.
+- lemma: не/ні
+  translation: ne/ni negative particles
+  pos: particle pair
+  usage: У контрольній треба розрізняти написання не й ні.
+- lemma: природа
+  translation: nature
+  pos: noun
+  usage: Природа в уривку показана через річку, верби й птахів.
+- lemma: довкілля
+  translation: environment
+  pos: noun
+  usage: Довкілля потребує щоденної уваги.
+- lemma: екологічний
+  translation: ecological
+  pos: adjective
+  usage: Екологічна програма стосується стану води й парку.
+- lemma: річка
+  translation: river
+  pos: noun
+  usage: Річка в уривку втомлено дихає під плівкою бруду.
+- lemma: стан води
+  translation: water condition
+  pos: phrase
+  usage: Стан води став темою інтегрованого тексту.
