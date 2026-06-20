@@ -1,0 +1,66 @@
+---
+/**
+ * Хрестоматія — primary-source reading detail page.
+ * Global, cross-track: renders one text from the `readings` collection, with a
+ * sidebar listing the whole library. Reuses CourseLayout + <PrimaryReading> so it
+ * matches the rest of the site by construction.
+ */
+import { getCollection, render } from 'astro:content';
+import CourseLayout from '../../layouts/CourseLayout.astro';
+
+export async function getStaticPaths() {
+  const readings = await getCollection('readings');
+  return readings.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry, readings },
+  }));
+}
+
+const { entry, readings } = Astro.props;
+const { Content } = await render(entry);
+
+const pluralTexts = (n: number) => {
+  const d = n % 10, h = n % 100;
+  if (d === 1 && h !== 11) return 'текст';
+  if (d >= 2 && d <= 4 && (h < 12 || h > 14)) return 'тексти';
+  return 'текстів';
+};
+
+const sorted = [...readings].sort(
+  (a, b) => (a.data.order ?? 999) - (b.data.order ?? 999) || a.data.title.localeCompare(b.data.title, 'uk'),
+);
+const links = sorted.map((r) => ({
+  href: `/readings/${r.id}/`,
+  label: r.data.title,
+  num: '📜',
+  active: r.id === entry.id,
+}));
+
+const sidebar = {
+  backHref: '/readings/',
+  backLabel: 'Хрестоматія',
+  titleLabel: 'Хрестоматія',
+  navLabel: 'Першоджерела',
+  positionLabel: `${links.length} ${pluralTexts(links.length)}`,
+  progressDone: 0,
+  progressTotal: links.length,
+  links,
+};
+---
+
+<CourseLayout
+  title={entry.data.title}
+  description={entry.data.excerpt}
+  eyebrow={`Хрестоматія · ${entry.data.genre}`}
+  subtitle={entry.data.excerpt}
+  currentPath={`/readings/${entry.id}/`}
+  heroVariant="readings"
+  navItems={[
+    { href: '/', label: 'Home' },
+    { href: '/readings/', label: 'Хрестоматія' },
+    { href: `/readings/${entry.id}/`, label: entry.data.title },
+  ]}
+  sidebar={sidebar}
+>
+  <Content />
+</CourseLayout>

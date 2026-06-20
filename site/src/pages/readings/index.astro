@@ -1,0 +1,113 @@
+---
+/**
+ * Хрестоматія landing — the global primary-source library: intro + browse-by-genre
+ * + client-side typeahead. Any track's lessons link into individual readings.
+ */
+import { getCollection } from 'astro:content';
+import CourseLayout from '../../layouts/CourseLayout.astro';
+
+const readings = await getCollection('readings');
+const sorted = [...readings].sort(
+  (a, b) => (a.data.order ?? 999) - (b.data.order ?? 999) || a.data.title.localeCompare(b.data.title, 'uk'),
+);
+
+// Group by genre (preserve first-seen order).
+const byGenre = new Map<string, typeof sorted>();
+for (const r of sorted) {
+  const g = r.data.genre || 'Інше';
+  (byGenre.get(g) ?? byGenre.set(g, []).get(g)!).push(r);
+}
+const genres = [...byGenre.keys()];
+
+const TRACK_LABELS: Record<string, string> = {
+  folk: 'Фольклор', lit: 'Література', hist: 'Історія', bio: 'Біографії',
+  istorio: 'Історіографія', oes: 'Давня мова', ruth: 'Бароко',
+};
+const cardData = sorted.map((r) => ({
+  id: r.id,
+  title: r.data.title,
+  genre: r.data.genre,
+  author: r.data.author ?? '',
+  excerpt: r.data.excerpt,
+  tracks: (r.data.tracks ?? []).map((t: string) => TRACK_LABELS[t] ?? t),
+}));
+---
+
+<CourseLayout
+  title="Хрестоматія"
+  description="Повні оригінальні тексти, з яких навчають семінари — першоджерела для читання й близького розбору."
+  eyebrow="Першоджерела · Readings"
+  subtitle="Повні оригінальні тексти, з яких навчають семінари. Уроки розбирають уривки й покликаються сюди на повний твір."
+  currentPath="/readings/"
+  heroVariant="readings"
+  wide
+  navItems={[{ href: '/', label: 'Home' }, { href: '/readings/', label: 'Хрестоматія' }]}
+>
+  <section class="readings-home">
+    <p class="readings-intro">
+      Це <strong>хрестоматія першоджерел</strong> — повні оригінали творів, які семінари
+      розбирають <strong>уривками</strong>. Усі тексти у <strong>суспільному надбанні</strong>,
+      подані дослівно за записом, з посиланням на джерело. Уроки з будь-якого розділу
+      покликаються сюди на повний твір.
+    </p>
+
+    <div class="readings-search">
+      <label for="readings-q" class="sr-only">Пошук у хрестоматії</label>
+      <input id="readings-q" type="search" placeholder="Шукати твір, жанр чи автора…" autocomplete="off" />
+      <p class="readings-count" data-readings-count>{sorted.length} {sorted.length === 1 ? 'текст' : 'текстів'}</p>
+    </div>
+
+    {genres.map((genre) => (
+      <section class="readings-genre" data-genre-block>
+        <h2>{genre}</h2>
+        <div class="readings-grid">
+          {byGenre.get(genre)!.map((r) => (
+            <a
+              class="reading-card"
+              href={`/readings/${r.id}/`}
+              data-reading
+              data-haystack={`${r.data.title} ${r.data.genre} ${r.data.author ?? ''} ${r.data.excerpt}`.toLocaleLowerCase('uk')}
+            >
+              <span class="reading-scroll" aria-hidden="true">📜</span>
+              <span class="reading-meta">{r.data.genre}{r.data.author ? ` · ${r.data.author}` : ''}</span>
+              <span class="reading-title">{r.data.title}</span>
+              <span class="reading-excerpt">{r.data.excerpt}</span>
+              {r.data.tracks?.length ? (
+                <span class="reading-tracks">{(r.data.tracks as string[]).map((t) => TRACK_LABELS[t] ?? t).join(' · ')}</span>
+              ) : null}
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+    <p class="readings-empty" data-readings-empty hidden>Нічого не знайдено. Спробуй інше слово.</p>
+  </section>
+
+  <script is:inline define:vars={{ total: sorted.length }}>
+    (() => {
+      const input = document.getElementById('readings-q');
+      const cards = [...document.querySelectorAll('[data-reading]')];
+      const blocks = [...document.querySelectorAll('[data-genre-block]')];
+      const countEl = document.querySelector('[data-readings-count]');
+      const emptyEl = document.querySelector('[data-readings-empty]');
+      const plural = (n) => (n === 1 ? 'текст' : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 'тексти' : 'текстів'));
+      const norm = (s) => String(s || '').toLocaleLowerCase('uk').trim();
+      const run = () => {
+        const q = norm(input && input.value);
+        let shown = 0;
+        cards.forEach((c) => {
+          const hit = !q || c.dataset.haystack.includes(q);
+          c.hidden = !hit;
+          if (hit) shown++;
+        });
+        blocks.forEach((b) => {
+          b.hidden = ![...b.querySelectorAll('[data-reading]')].some((c) => !c.hidden);
+        });
+        if (countEl) countEl.textContent = `${shown} ${plural(shown)}`;
+        if (emptyEl) emptyEl.hidden = shown !== 0;
+      };
+      input && input.addEventListener('input', run);
+      run();
+    })();
+  </script>
+</CourseLayout>

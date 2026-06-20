@@ -287,6 +287,8 @@ const trackIds = Object.keys(TRACKS);
 const searchTrackIds = trackIds.filter((id) => !HIDDEN_LINK_TRACKS.has(id));
 
 const allDocs = await getCollection('docs');
+// Хрестоматія readings — surfaced in site-wide search like Word Atlas entries.
+const allReadings = await getCollection('readings');
 const visibleDocs = allDocs.filter((entry) => {
   const id = normalizeId(entry.id);
   const track = id.split('/')[0];
@@ -346,6 +348,13 @@ const searchItems: SearchItem[] = [
     type: 'Word Atlas',
     track: 'Atlas',
     text: `${entry.lemma} ${entry.gloss ?? ''}`,
+  })),
+  ...allReadings.map((entry) => ({
+    title: entry.data.title,
+    href: `/readings/${entry.id}/`,
+    type: 'Хрестоматія',
+    track: 'Reference',
+    text: `${entry.data.title} ${entry.data.title_en ?? ''} ${entry.data.genre} ${entry.data.author ?? ''} ${entry.data.excerpt}`,
   })),
   {
     title: 'Етимологія',
