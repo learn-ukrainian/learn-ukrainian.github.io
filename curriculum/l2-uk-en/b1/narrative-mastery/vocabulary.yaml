@@ -1,0 +1,80 @@
+- lemma: розповідь
+  translation: narrative, story
+  pos: noun
+  usage: Розповідь відповідає на питання, що сталося.
+- lemma: зачин
+  translation: opening
+  pos: noun
+  usage: Зачин вводить місце, час і персонажів.
+- lemma: кінцівка
+  translation: ending
+  pos: noun
+  usage: Кінцівка завершує подію і часто дає післясмак.
+- lemma: зав'язка
+  translation: initiating event
+  pos: noun
+  usage: Зав'язка запускає несподіванку або конфлікт.
+- lemma: кульмінація
+  translation: climax
+  pos: noun
+  usage: Кульмінація є найнапруженішим моментом історії.
+- lemma: розв'язка
+  translation: resolution
+  pos: noun
+  usage: Розв'язка показує, як ситуація завершилася.
+- lemma: мікротема
+  translation: microtopic
+  pos: noun
+  usage: Кожна мікротема тримає один крок сюжету.
+- lemma: раптом
+  translation: suddenly
+  pos: adverb
+  usage: Раптом у коридорі згасло світло.
+- lemma: тим часом
+  translation: meanwhile
+  pos: phrase
+  usage: Тим часом Марко перевіряв табло.
+- lemma: нарешті
+  translation: finally
+  pos: adverb
+  usage: Нарешті двері відчинилися.
+- lemma: несподівано
+  translation: unexpectedly
+  pos: adverb
+  usage: Несподівано з папки випав аркуш.
+- lemma: чернетка
+  translation: draft
+  pos: noun
+  usage: Чернетка допомагає швидко зібрати події.
+- lemma: редагування
+  translation: editing
+  pos: noun
+  usage: Редагування робить історію яснішою.
+- lemma: вирушити
+  translation: to set off
+  pos: verb
+  usage: Ми вирушили ще до світанку.
+- lemma: зайти
+  translation: to enter, stop by
+  pos: verb
+  usage: Олена зайшла до книгарні перечекати дощ.
+- lemma: перейти
+  translation: to cross
+  pos: verb
+  usage: Ми перейшли міст і побачили площу.
+- lemma: обійти
+  translation: to go around
+  pos: verb
+  usage: Довелося обійти закритий двір.
+- lemma: повернутися
+  translation: to return
+  pos: verb
+  usage: Увечері ми повернулися додому.
+- lemma: пряма мова
+  translation: direct speech
+  pos: phrase
+  usage: Пряма мова дає персонажеві голос.
+- lemma: тло
+  translation: background
+  pos: noun
+  usage: Недоконаний вид часто створює тло розповіді.
