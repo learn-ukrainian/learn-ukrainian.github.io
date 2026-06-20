@@ -1,0 +1,100 @@
+- lemma: розмовний стиль
+  translation: colloquial style
+  pos: phrase
+  usage: Розмовний стиль використовують у побутових діалогах і неформальному спілкуванні.
+- lemma: невимушеність
+  translation: spontaneity, ease
+  pos: noun
+  usage: Невимушеність розмови видно в коротких репліках і природній реакції.
+- lemma: емоційно забарвлена лексика
+  translation: emotionally colored vocabulary
+  pos: phrase
+  usage: Емоційно забарвлена лексика показує ставлення мовця.
+- lemma: зменшувально-пестлива форма
+  translation: diminutive-affectionate form
+  pos: phrase
+  usage: Зменшувально-пестлива форма може передавати близькість або м'якість.
+- lemma: фразеологізм
+  translation: phraseological unit
+  pos: noun
+  usage: Фразеологізм робить розмову образнішою.
+- lemma: вигук
+  translation: interjection
+  pos: noun
+  usage: Вигук ого передає здивування.
+- lemma: частка
+  translation: particle
+  pos: noun
+  usage: Частка ж підсилює очевидну інформацію.
+- lemma: неповне речення
+  translation: elliptical sentence
+  pos: phrase
+  usage: Неповне речення пропускає те, що зрозуміло з контексту.
+- lemma: суржик
+  translation: surzhyk
+  pos: noun
+  usage: Суржик змішує українські й російські елементи та не є навчальною моделлю.
+- lemma: побутовий
+  translation: everyday, domestic
+  pos: adjective
+  usage: Побутовий діалог часто має короткі репліки.
+- lemma: діалогічний
+  translation: dialogic
+  pos: adjective
+  usage: Розмовний стиль зазвичай діалогічний.
+- lemma: інтонація
+  translation: intonation
+  pos: noun
+  usage: Інтонація може змінити зміст питання.
+- lemma: файний
+  translation: nice, pretty
+  pos: adjective
+  usage: Файний фільм — тепла розмовна оцінка.
+- lemma: бридкий
+  translation: ugly, disgusting
+  pos: adjective
+  usage: Бридка погода звучить емоційніше, ніж неприємна погода.
+- lemma: нахабний
+  translation: impudent, brazen
+  pos: adjective
+  usage: Нахабна відповідь може образити співрозмовника.
+- lemma: овва
+  translation: wow, oh my
+  pos: interjection
+  usage: Овва, ти вже все зробив?
+- lemma: отож
+  translation: exactly, that's right
+  pos: particle
+  usage: Отож, я про це й кажу.
+- lemma: невже
+  translation: really?, is it possible?
+  pos: particle
+  usage: Невже ти вже прочитав книжку?
+- lemma: хіба
+  translation: surely not?, is it really?
+  pos: particle
+  usage: Хіба це проблема?
+- lemma: водити за ніс
+  translation: to deceive
+  pos: phrase
+  usage: Він довго водив нас за ніс і не казав правди.
+- lemma: бувай
+  translation: bye, see you
+  pos: interjection
+  usage: Бувай, побачимось завтра.
+- lemma: коротше кажучи
+  translation: in short
+  pos: phrase
+  usage: Коротше кажучи, план змінився.
+- lemma: кличний відмінок
+  translation: vocative case
+  pos: phrase
+  usage: У розмові природно казати Олено, Марку, друже.
+- lemma: репліка
+  translation: conversational turn, line
+  pos: noun
+  usage: Кожна репліка в діалозі реагує на попередню.
+- lemma: побутова тема
+  translation: everyday topic
+  pos: phrase
+  usage: Їжа, дорога й плани на вихідні — типові побутові теми.

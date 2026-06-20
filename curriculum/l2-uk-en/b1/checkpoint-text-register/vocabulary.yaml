@@ -1,0 +1,112 @@
+- lemma: контрольна робота
+  translation: test, assessment
+  pos: phrase
+  usage: Контрольна робота перевіряє блок тексту, стилю, заперечення й читання.
+- lemma: стиль мовлення
+  translation: speech style, register
+  pos: phrase
+  usage: Стиль мовлення має відповідати адресату й меті.
+- lemma: абревіатура
+  translation: abbreviation, acronym
+  pos: noun
+  usage: Абревіатуру потрібно розшифрувати перед узгодженням.
+- lemma: вставне слово
+  translation: parenthetical word
+  pos: phrase
+  usage: Вставне слово виділяємо комами.
+- lemma: художній засіб
+  translation: literary device
+  pos: phrase
+  usage: Художній засіб створює образ у тексті.
+- lemma: самооцінка
+  translation: self-assessment
+  pos: noun
+  usage: Самооцінка показує, що треба повторити.
+- lemma: повторення
+  translation: review, revision
+  pos: noun
+  usage: Повторення має бути точковим після кожного блоку.
+- lemma: перевірка
+  translation: check, verification
+  pos: noun
+  usage: Перевірка охоплює стиль, скорочення, заперечення, читання й пунктуацію.
+- lemma: оцінювання
+  translation: evaluation
+  pos: noun
+  usage: Оцінювання враховує правильність і пояснення.
+- lemma: завдання
+  translation: task, exercise
+  pos: noun
+  usage: Кожне завдання має показати конкретне вміння.
+- lemma: регістр
+  translation: register
+  pos: noun
+  usage: Регістр може бути офіційним або розмовним.
+- lemma: графічне скорочення
+  translation: graphic abbreviation
+  pos: phrase
+  usage: Графічне скорочення читаємо як повне слово.
+- lemma: однорідні члени речення
+  translation: homogeneous sentence members
+  pos: phrase
+  usage: Однорідні члени речення потребують правильних ком.
+- lemma: узагальнювальне слово
+  translation: generalizing word
+  pos: phrase
+  usage: Узагальнювальне слово може вимагати двокрапки або тире.
+- lemma: художній стиль
+  translation: literary style
+  pos: phrase
+  usage: Художній стиль упізнаємо за образністю та настроєм.
+- lemma: офіційно-діловий стиль
+  translation: official-business style
+  pos: phrase
+  usage: Офіційно-діловий стиль має формули прохання й точні реквізити.
+- lemma: розмовний стиль
+  translation: colloquial style
+  pos: phrase
+  usage: Розмовний стиль має короткі репліки, частки й емоцію.
+- lemma: розшифрувати
+  translation: to expand, decode
+  pos: verb
+  usage: Розшифрувати ЗМІ означає назвати засоби масової інформації.
+- lemma: узгодження
+  translation: agreement
+  pos: noun
+  usage: Узгодження ООН іде за словом організація.
+- lemma: відгук
+  translation: response, review
+  pos: noun
+  usage: Відгук має назвати настрій і художній засіб.
+- lemma: подвійне заперечення
+  translation: double negation
+  pos: phrase
+  usage: Подвійне заперечення вимагає не біля присудка.
+- lemma: заперечний займенник
+  translation: negative pronoun
+  pos: phrase
+  usage: Заперечний займенник ніхто поєднується з не.
+- lemma: не/ні
+  translation: ne/ni negative particles
+  pos: particle pair
+  usage: У контрольній треба розрізняти написання не й ні.
+- lemma: природа
+  translation: nature
+  pos: noun
+  usage: Природа в уривку показана через річку, верби й птахів.
+- lemma: довкілля
+  translation: environment
+  pos: noun
+  usage: Довкілля потребує щоденної уваги.
+- lemma: екологічний
+  translation: ecological
+  pos: adjective
+  usage: Екологічна програма стосується стану води й парку.
+- lemma: річка
+  translation: river
+  pos: noun
+  usage: Річка в уривку втомлено дихає під плівкою бруду.
+- lemma: стан води
+  translation: water condition
+  pos: phrase
+  usage: Стан води став темою інтегрованого тексту.

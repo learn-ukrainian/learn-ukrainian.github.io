@@ -1,0 +1,100 @@
+- lemma: художній стиль
+  translation: literary, artistic style
+  pos: phrase
+  usage: Художній стиль створює образ і впливає на почуття читача.
+- lemma: образність
+  translation: imagery
+  pos: noun
+  usage: Образність допомагає читачеві уявити сцену.
+- lemma: епітет
+  translation: epithet
+  pos: noun
+  usage: Епітет важке небо створює тривожний настрій.
+- lemma: метафора
+  translation: metaphor
+  pos: noun
+  usage: Метафора місто прокинулося оживлює опис.
+- lemma: порівняння
+  translation: comparison, simile
+  pos: noun
+  usage: Порівняння лист важкий, як камінь показує страх героя.
+- lemma: персоніфікація
+  translation: personification
+  pos: noun
+  usage: Персоніфікація вітер шепоче надає природі людської дії.
+- lemma: гіпербола
+  translation: hyperbole
+  pos: noun
+  usage: Гіпербола чекаю сто років підсилює емоцію.
+- lemma: ліричний герой
+  translation: lyrical persona
+  pos: phrase
+  usage: Ліричний герой говорить у вірші, але не завжди є автором.
+- lemma: настрій
+  translation: mood
+  pos: noun
+  usage: Настрій уривка тихий і трохи тривожний.
+- lemma: уривок
+  translation: excerpt
+  pos: noun
+  usage: Уривок може бути частиною оповідання або роману.
+- lemma: художній засіб
+  translation: literary device
+  pos: phrase
+  usage: Художній засіб допомагає створити образ.
+- lemma: образ
+  translation: image, figure
+  pos: noun
+  usage: Образ старої верби пов'язаний зі спогадами.
+- lemma: алітерація
+  translation: alliteration
+  pos: noun
+  usage: Алітерація повторює подібні звуки для музичності.
+- lemma: строфа
+  translation: stanza
+  pos: noun
+  usage: Строфа складається з кількох рядків вірша.
+- lemma: ритм
+  translation: rhythm
+  pos: noun
+  usage: Ритм допомагає читати поезію вголос.
+- lemma: рима
+  translation: rhyme
+  pos: noun
+  usage: Рима поєднує закінчення рядків.
+- lemma: інверсія
+  translation: inversion
+  pos: noun
+  usage: Інверсія змінює звичний порядок слів для виразності.
+- lemma: вразити
+  translation: to impress, move
+  pos: verb
+  usage: Мене вразив образ нічного міста.
+- lemma: надихнути
+  translation: to inspire
+  pos: verb
+  usage: Цей вірш може надихнути на розмову про дім.
+- lemma: ущільненість
+  translation: density
+  pos: noun
+  usage: Ущільненість поезії означає багато змісту в небагатьох словах.
+- lemma: контекст
+  translation: context
+  pos: noun
+  usage: Контекст допомагає зрозуміти переносне значення.
+- lemma: відгук
+  translation: response, review
+  pos: noun
+  usage: Короткий відгук має враження, аналіз і власну думку.
+- lemma: персонаж
+  translation: character
+  pos: noun
+  usage: Персонаж боїться відкрити лист.
+- lemma: вірш
+  translation: poem
+  pos: noun
+  usage: Вірш можна читати вголос, щоб відчути ритм.
+- lemma: проза
+  translation: prose
+  pos: noun
+  usage: Проза часто дає ширший опис подій і персонажів.
