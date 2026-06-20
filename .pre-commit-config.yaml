@@ -153,6 +153,16 @@ repos:
         files: ^scripts/lexicon/.*\.py$
         stages: [pre-commit]
 
+      # Block committing a thin/un-enriched Atlas manifest (#3631 empty-atlas
+      # regression class, #3658). Fires when the manifest itself is staged.
+      - id: atlas-manifest-enrichment-depth
+        name: Atlas manifest enrichment-depth gate
+        entry: bash scripts/pre_commit/project_python.sh scripts/audit/check_atlas_manifest_enrichment.py
+        language: system
+        pass_filenames: false
+        files: ^site/src/data/lexicon-manifest\.json$
+        stages: [pre-commit]
+
       - id: lint-dispatch-brief-venv
         name: dispatch brief .venv worktree guardrail
         entry: >-

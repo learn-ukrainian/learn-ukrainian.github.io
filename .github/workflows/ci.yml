@@ -168,6 +168,12 @@ jobs:
       - name: Check DB-free Atlas manifest freshness
         run: python scripts/lexicon/check_manifest_freshness.py
 
+      # Root-cause guard for the #3631 empty-atlas regression: a manifest committed
+      # without enrichment (enrichment_generated False / ~0 enriched entries) renders
+      # an empty Atlas while the fingerprint/freshness gate above stays green. Blocks it.
+      - name: Block thin/un-enriched Atlas manifest (#3658)
+        run: python scripts/audit/check_atlas_manifest_enrichment.py
+
       # Diff-scoped + advisory (#3150): only flags modules whose vocabulary.yaml changed
       # in THIS PR (no cross-PR coupling on the merge-train), and never blocks merge — a
       # full manifest regen is ~33 min and the merge-train adds vocab faster than that.
