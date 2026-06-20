@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="uk" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>POC index · Learn Ukrainian design mockups</title>
+<!-- One place for all design POCs. Serve from repo root: `python3 -m http.server`
+     then open /docs/poc/. Each card links a self-contained mockup. -->
+<style>
+  :root{--bg:#111418;--surface:#171B21;--raised:#1D232B;--border:#303A46;--text:#F4F7FB;
+    --muted:#A9B2BF;--crimson:#A4133C;--bronze:#C9621A;--teal:#4DB6AC;--parch:#E9D8A6;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --serif:"Georgia","Times New Roman",ui-serif,serif;}
+  *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;}
+  a{color:var(--teal);text-decoration:none;} a:hover{text-decoration:underline;}
+  .hero{background:linear-gradient(135deg,#5E0C24,var(--crimson) 45%,var(--bronze));border-bottom:4px solid var(--parch);padding:2.2rem 1.5rem;}
+  .hero-in{max-width:1080px;margin:0 auto;}
+  .hero h1{font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.6rem);margin:.2rem 0;}
+  .hero p{margin:0;color:rgba(255,255,255,.92);max-width:62ch;}
+  .wrap{max-width:1080px;margin:0 auto;padding:1.6rem 1.5rem 4rem;}
+  h2{font-family:var(--serif);font-size:1.35rem;margin:2rem 0 .2rem;display:flex;align-items:baseline;gap:.6rem;}
+  h2::after{content:"";flex:1;height:1px;background:var(--border);}
+  .sub{color:var(--muted);font-size:.92rem;margin:.2rem 0 1rem;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.5rem;}
+  .card:hover{border-color:var(--bronze);}
+  .card h3{margin:.1rem 0;font-size:1.08rem;font-family:var(--serif);}
+  .card p{margin:0;color:var(--muted);font-size:.9rem;flex:1;}
+  .tag{align-self:flex-start;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;border-radius:999px;padding:.12rem .55rem;}
+  .tag.live{color:#0b2;border:1px solid #0b25;background:#0b21;}
+  .tag.mock{color:var(--parch);border:1px solid #e9d8a64d;}
+  .links{display:flex;flex-wrap:wrap;gap:.4rem .9rem;font-size:.9rem;font-weight:700;}
+  code{background:var(--raised);border:1px solid var(--border);border-radius:6px;padding:.05rem .35rem;font-size:.85em;}
+</style>
+</head>
+<body>
+  <header class="hero"><div class="hero-in">
+    <h1>Design POCs · Learn Ukrainian</h1>
+    <p>One place for the design mockups and prototypes. Serve from the repo root
+       (<code>python3 -m http.server</code>) and open <code>/docs/poc/</code>.</p>
+  </div></header>
+
+  <div class="wrap">
+    <h2>Shipped features <span></span></h2>
+    <p class="sub">Built for real — the live site is the reference (these are not mockups).</p>
+    <div class="grid">
+      <div class="card">
+        <span class="tag live">● Live · real site</span>
+        <h3>📜 Хрестоматія (primary-source readings)</h3>
+        <p>Parallel per-track anthology of full primary texts; track-agnostic (folk now, lit/hist/… next).
+           Reuses the real site layout. Spec + routes in <code>folk-khrestomatiia/README.md</code>.</p>
+        <div class="links">
+          <a href="folk-khrestomatiia/README.md">Design spec →</a>
+          <a href="/folk/readings/">/folk/readings/ (dev)</a>
+        </div>
+      </div>
+    </div>
+
+    <h2>Lesson &amp; site design mockups</h2>
+    <p class="sub">Self-contained HTML explorations of page/lesson visual design.</p>
+    <div class="grid">
+      <div class="card"><span class="tag mock">Mockup</span><h3>Site design</h3>
+        <p>Overall site shell, navigation, landing surfaces.</p>
+        <div class="links"><a href="poc-site-design.html">Open →</a></div></div>
+      <div class="card"><span class="tag mock">Mockup</span><h3>Lesson design</h3>
+        <p>Core lesson page layout (tabs, dialogue, rule cards, workbook).</p>
+        <div class="links"><a href="poc-lesson-design.html">Open →</a></div></div>
+      <div class="card"><span class="tag mock">Mockup</span><h3>Folk-experiential lesson</h3>
+        <p>Seminar/folk lesson variant — source notes, motif, performance.</p>
+        <div class="links"><a href="poc-folk-lesson-design.html">Open →</a></div></div>
+      <div class="card"><span class="tag mock">Mockup</span><h3>Literature lesson (all-round)</h3>
+        <p>LIT close-reading lesson template family.</p>
+        <div class="links"><a href="poc-lit-lesson-design.html">Open →</a></div></div>
+    </div>
+
+    <h2>Word Atlas mockups</h2>
+    <p class="sub">Атлас слів — lexicon surfaces.</p>
+    <div class="grid">
+      <div class="card"><span class="tag mock">Mockup</span><h3>Atlas — split mockups</h3>
+        <p>Index of the Word Atlas mockup set.</p>
+        <div class="links"><a href="poc-word-atlas-design.html">Open →</a>
+          <a href="word-atlas/landing.html">Landing</a>
+          <a href="word-atlas/detail.html">Detail</a>
+          <a href="word-atlas/heritage-defense.html">Heritage defense</a></div></div>
+    </div>
+  </div>
+</body>
+</html>
