@@ -4,6 +4,14 @@ Uses the MediaWiki API to fetch parsed HTML, converts to clean text,
 and chunks into JSONL for Qdrant ingestion.
 
 Usage:
+    # Scrape a public-domain folk category into JSONL only
+    .venv/bin/python scripts/rag/scrape_wikisource.py \
+        --category "Категорія:Думи" --dry-run
+
+    # Scrape + ingest a folk category into a local sources.db
+    .venv/bin/python scripts/rag/scrape_wikisource.py \
+        --category "Категорія:Думи" --ingest --db data/sources.db
+
     # Scrape all works by an author
     .venv/bin/python scripts/rag/scrape_wikisource.py \
         --author "Хвильовий" --author-full "Хвильовий Микола" \
@@ -26,16 +34,43 @@ import argparse
 import html
 import json
 import re
+import sqlite3
 import sys
 import time
 from pathlib import Path
+from urllib.parse import quote, urlencode
 
 import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from rag.config import CHUNK_MAX_TOKENS, LITERARY_DIR
+from rag.config import CHUNK_MAX_TOKENS, DATA_DIR, LITERARY_DIR
+from rag.scrape_ukrlib import (
+    NAROD_AUTHOR,
+    NAROD_PERIOD,
+    NAROD_YEAR,
+    audit_jsonl,
+)
+from rag.scrape_ukrlib import (
+    chunk_text as chunk_folk_text,
+)
+from wiki.sources import build_literary_row, work_to_id
 
 API = "https://uk.wikisource.org/w/api.php"
+WIKI_BASE_URL = "https://uk.wikisource.org/wiki"
+DEFAULT_FOLK_CATEGORY = "Категорія:Думи"
+DEFAULT_DB_PATH = DATA_DIR / "sources.db"
+DELAY_BETWEEN_WORKS = 0.5
+
+FOLK_CATEGORY_GENRES = {
+    "Думи": "Дума",
+    "Колядки": "Колядка",
+    "Казки": "Казка",
+    "Легенди": "Легенда",
+    "Пісні": "Пісня",
+    "Прислів'я": "Прислів'я",
+    "Приказки": "Приказка",
+    "Щедрівки": "Щедрівка",
+}
 
 # ── Rate limiting + 429 backoff ──────────────────────────────────────
 # Wikisource uses the same MediaWiki infrastructure as Wikipedia. The
@@ -105,6 +140,413 @@ def api_get(params: dict) -> dict:
             return {}
     print(f"    ❌ giving up after {_MAX_429_RETRIES} 429 retries")
     return {}
+
+
+def _api_url(params: dict[str, str | int]) -> str:
+    query = urlencode(params, doseq=True, quote_via=quote)
+    return f"{API}?{query}"
+
+
+def fetch_json(url: str, retries: int = 3) -> dict:
+    """Fetch JSON from the Wikisource API with pacing, retries, and backoff."""
+    last_error: Exception | None = None
+    for attempt in range(1, retries + 1):
+        _pace_api_call()
+        try:
+            response = SESSION.get(url, timeout=30)
+            if response.status_code == 429:
+                wait = min(_BACKOFF_BASE_S * (2 ** (attempt - 1)), _BACKOFF_MAX_S)
+                print(f"    rate-limited (429), sleeping {wait:.0f}s before retry {attempt}/{retries}")
+                time.sleep(wait)
+                continue
+            response.raise_for_status()
+            return response.json()
+        except (requests.RequestException, ValueError) as exc:
+            last_error = exc
+            if attempt < retries:
+                wait = attempt * 3
+                print(f"    retry {attempt}/{retries} for Wikisource API after {type(exc).__name__}; sleeping {wait}s")
+                time.sleep(wait)
+    raise RuntimeError(f"Wikisource API fetch failed after {retries} attempts: {url}") from last_error
+
+
+def _category_label(category: str) -> str:
+    return category.split(":", 1)[-1].strip()
+
+
+def _category_slug(category: str) -> str:
+    return work_to_id(_category_label(category))
+
+
+def genre_from_category(category: str) -> str:
+    label = _category_label(category)
+    if label in FOLK_CATEGORY_GENRES:
+        return FOLK_CATEGORY_GENRES[label]
+    if label.endswith("ки"):
+        return f"{label[:-1]}а"
+    if label.endswith("и"):
+        return f"{label[:-1]}а"
+    return label
+
+
+def source_url_for_title(title: str) -> str:
+    return f"{WIKI_BASE_URL}/{quote(title.replace(' ', '_'), safe='/:')}"
+
+
+def discover_category_pages(category: str) -> list[str]:
+    """List namespace-0 pages from a Wikisource category, following continuation."""
+    titles: list[str] = []
+    params: dict[str, str | int] = {
+        "action": "query",
+        "format": "json",
+        "list": "categorymembers",
+        "cmlimit": 500,
+        "cmtype": "page",
+        "cmnamespace": 0,
+        "cmtitle": category,
+    }
+
+    while True:
+        data = fetch_json(_api_url(params))
+        for member in data.get("query", {}).get("categorymembers", []):
+            title = str(member.get("title", "")).strip()
+            if title:
+                titles.append(title)
+
+        continuation = data.get("continue", {})
+        if "cmcontinue" not in continuation:
+            break
+        params["cmcontinue"] = continuation["cmcontinue"]
+        params["continue"] = continuation.get("continue", "")
+
+    return titles
+
+
+def fetch_parse(title: str) -> tuple[str, str]:
+    """Fetch wikitext and rendered HTML for a page through action=parse."""
+    data = fetch_json(_api_url({
+        "action": "parse",
+        "format": "json",
+        "formatversion": 2,
+        "page": title,
+        "prop": "wikitext|text",
+    }))
+    if "error" in data:
+        code = data["error"].get("code", "unknown")
+        info = data["error"].get("info", "")
+        raise RuntimeError(f"parse API error for {title!r}: {code} {info}".strip())
+
+    parsed = data.get("parse", {})
+    wikitext = parsed.get("wikitext", "")
+    html_text = parsed.get("text", "")
+    if isinstance(wikitext, dict):
+        wikitext = wikitext.get("*", "")
+    if isinstance(html_text, dict):
+        html_text = html_text.get("*", "")
+    return str(wikitext or ""), str(html_text or "")
+
+
+def _strip_templates(text: str) -> str:
+    previous = None
+    while previous != text:
+        previous = text
+        text = re.sub(r"\{\{[^{}]*\}\}", "", text, flags=re.DOTALL)
+    return text
+
+
+def _unwrap_wikilink(match: re.Match[str]) -> str:
+    body = match.group(1).strip()
+    lowered = body.lower()
+    if lowered.startswith(("категорія:", "category:", "файл:", "file:", "зображення:", "image:")):
+        return ""
+    return body.split("|")[-1].strip()
+
+
+def _version_target_title(wikitext: str) -> str | None:
+    if not re.search(r"\{\{\s*версії\b", wikitext or "", flags=re.IGNORECASE):
+        return None
+    for link in re.findall(r"\[\[([^\]]+)\]\]", wikitext):
+        target = link.split("|", 1)[0].strip()
+        lowered = target.lower()
+        if not target or lowered.startswith(("категорія:", "category:", "автор:", "author:", "файл:", "file:")):
+            continue
+        if target.startswith("#"):
+            continue
+        return target
+    return None
+
+
+def _normalize_extracted_text(text: str) -> str:
+    text = html.unescape(text)
+    lines: list[str] = []
+    previous_blank = False
+    for raw_line in text.splitlines():
+        line = re.sub(r"[ \t]+", " ", raw_line).strip()
+        if not line:
+            if lines and not previous_blank:
+                lines.append("")
+            previous_blank = True
+            continue
+        lines.append(line)
+        previous_blank = False
+    return "\n".join(lines).strip()
+
+
+def _clean_wikitext_fragment(text: str) -> str:
+    text = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
+    text = re.sub(r"<ref\b[^/>]*/>", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"<ref\b[^>]*>.*?</ref>", "", text, flags=re.IGNORECASE | re.DOTALL)
+    text = re.sub(r"\[\[\s*(?:Категорія|Category)\s*:[^\]]+\]\]", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"__[^_\n]+__", "", text)
+    text = _strip_templates(text)
+    text = re.sub(r"\[\[([^\]]+)\]\]", _unwrap_wikilink, text)
+    text = re.sub(r"'''+", "", text)
+    text = re.sub(r"''", "", text)
+    text = re.sub(r"<br\s*/?>", "\n", text, flags=re.IGNORECASE)
+    text = re.sub(r"</?(?:poem|nowiki|center|div|span|p)\b[^>]*>", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"<[^>]+>", "", text)
+    return _normalize_extracted_text(text)
+
+
+def _extract_html_text(html_text: str) -> str:
+    if not html_text:
+        return ""
+
+    from bs4 import BeautifulSoup
+
+    soup = BeautifulSoup(html_text, "html.parser")
+    strip_selectors = [
+        "span.mw-editsection",
+        "sup.reference",
+        "ol.references",
+        "div.reflist",
+        ".ws-noexport",
+        "#headertemplate",
+        "#ws-data",
+        "div.printfooter",
+        "div.catlinks",
+        "table.metadata",
+        "table.navbox",
+        "style",
+        "script",
+        "noscript",
+    ]
+    for selector in strip_selectors:
+        for element in soup.select(selector):
+            element.decompose()
+
+    for br in soup.find_all("br"):
+        br.replace_with("\n")
+
+    definition_lines = []
+    for item in soup.select("dl dd"):
+        line = _normalize_extracted_text(item.get_text(separator="\n", strip=False))
+        if not line:
+            continue
+        if not definition_lines and item.find(["b", "strong"]) and len(line.split()) <= 8:
+            continue
+        definition_lines.append(line)
+    if definition_lines:
+        return "\n".join(definition_lines)
+
+    poem_candidates = soup.select("div.poem, .poem")
+    candidates = poem_candidates or soup.select("div.mw-parser-output")
+    if not candidates:
+        candidates = [soup]
+
+    unique_candidates = []
+    seen_candidate_ids = set()
+    for candidate in candidates:
+        candidate_id = id(candidate)
+        if candidate_id not in seen_candidate_ids:
+            unique_candidates.append(candidate)
+            seen_candidate_ids.add(candidate_id)
+
+    parts = []
+    for candidate in unique_candidates:
+        text = candidate.get_text(separator="\n", strip=False)
+        if text.strip():
+            parts.append(text)
+    extracted = _normalize_extracted_text("\n\n".join(parts))
+    if poem_candidates:
+        return "\n".join(line for line in extracted.splitlines() if line.strip())
+    return extracted
+
+
+def extract_text(wikitext: str, html_text: str) -> str:
+    """Extract clean verse, preferring explicit <poem> wikitext when present."""
+    poem_blocks = re.findall(r"<poem\b[^>]*>(.*?)</poem>", wikitext or "", flags=re.IGNORECASE | re.DOTALL)
+    if poem_blocks:
+        return _normalize_extracted_text(
+            "\n\n".join(_clean_wikitext_fragment(block) for block in poem_blocks if block.strip())
+        )
+    return _extract_html_text(html_text)
+
+
+def _load_skip_titles(path: Path | None) -> set[str]:
+    if path is None:
+        return set()
+    titles = set()
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            title = line.split("#", 1)[0].strip()
+            if title:
+                titles.add(_title_key(title))
+    return titles
+
+
+def _title_key(title: str) -> str:
+    return re.sub(r"\s+", " ", title.replace("_", " ")).strip().casefold()
+
+
+def _is_skipped_title(title: str, skip_titles: set[str]) -> bool:
+    if not skip_titles:
+        return False
+    return _title_key(title) in skip_titles or _title_key(f"{NAROD_AUTHOR}. {title}") in skip_titles
+
+
+def build_worklist(
+    category: str,
+    *,
+    skip_titles_file: Path | None = None,
+    limit: int | None = None,
+) -> list[dict]:
+    pages = discover_category_pages(category)
+    skip_titles = _load_skip_titles(skip_titles_file)
+    worklist: list[dict] = []
+    for title in pages:
+        if _is_skipped_title(title, skip_titles):
+            print(f"  [skip] {title} (skip-titles-file)")
+            continue
+        worklist.append({"title": title, "source_url": source_url_for_title(title)})
+        if limit is not None and len(worklist) >= limit:
+            break
+    return worklist
+
+
+def _incipit(text: str, max_lines: int = 3) -> str:
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    return " / ".join(lines[:max_lines])
+
+
+def _folk_output_path(category: str) -> Path:
+    return LITERARY_DIR / f"wikisource-folk-{_category_slug(category)}.jsonl"
+
+
+def _write_folk_jsonl(
+    output_path: Path,
+    worklist: list[dict],
+    *,
+    genre: str,
+) -> int:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    total_chunks = 0
+    with open(output_path, "w", encoding="utf-8") as f:
+        for index, work in enumerate(worklist, 1):
+            title = work["title"]
+            source_url = work["source_url"]
+            print(f"  [{index}/{len(worklist)}] {title}")
+            try:
+                wikitext, html_text = fetch_parse(title)
+                version_target = _version_target_title(wikitext)
+                if version_target:
+                    print(f"    versions page → {version_target}")
+                    wikitext, html_text = fetch_parse(version_target)
+                    source_url = source_url_for_title(version_target)
+                text = extract_text(wikitext, html_text)
+            except Exception as exc:
+                print(f"    ERROR: {type(exc).__name__}: {exc}")
+                continue
+
+            if len(text) < 50:
+                print(f"    Skipped: too short ({len(text)} chars)")
+                continue
+
+            incipit = _incipit(text)
+            print(f"    incipit: {incipit}")
+
+            work_title = f"{NAROD_AUTHOR}. {title}"
+            chunks = chunk_folk_text(text, work_title, source_url, min_tokens=20)
+            for chunk in chunks:
+                chunk.update({
+                    "title": title,
+                    "work": work_title,
+                    "author": NAROD_AUTHOR,
+                    "year": NAROD_YEAR,
+                    "genre": genre,
+                    "language_period": NAROD_PERIOD,
+                    "incipit": incipit,
+                })
+                f.write(json.dumps(chunk, ensure_ascii=False) + "\n")
+            print(f"    {len(text):,} chars → {len(chunks)} chunks [{genre}]")
+            total_chunks += len(chunks)
+            if index < len(worklist):
+                time.sleep(DELAY_BETWEEN_WORKS)
+    return total_chunks
+
+
+def ingest_jsonl(jsonl_path: Path, db_path: Path) -> int:
+    source_file = jsonl_path.stem
+    rows = []
+    with open(jsonl_path, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            entry = json.loads(line)
+            rows.append(build_literary_row(entry, source_file=source_file, chunk_index=len(rows), warn=print))
+
+    lit_sql = """INSERT INTO literary_texts
+                 (chunk_id, title, text, source_file, source_url, author, work, work_id,
+                  year, genre, language_period, char_count)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+    conn = sqlite3.connect(str(db_path))
+    try:
+        with conn:
+            conn.execute("DELETE FROM literary_texts WHERE source_file = ?", (source_file,))
+            if rows:
+                conn.executemany(lit_sql, rows)
+            conn.execute("INSERT INTO literary_fts(literary_fts) VALUES('rebuild')")
+    finally:
+        conn.close()
+    return len(rows)
+
+
+def scrape_category(
+    category: str = DEFAULT_FOLK_CATEGORY,
+    *,
+    dry_run: bool = False,
+    ingest: bool = False,
+    skip_titles_file: Path | None = None,
+    limit: int | None = None,
+    genre: str | None = None,
+    db_path: Path = DEFAULT_DB_PATH,
+) -> int:
+    """Scrape one Wikisource folk category to JSONL, optionally replacing DB rows."""
+    output_path = _folk_output_path(category)
+    worklist = build_worklist(category, skip_titles_file=skip_titles_file, limit=limit)
+    resolved_genre = genre or genre_from_category(category)
+
+    print(f"[wikisource-folk] {category}: {len(worklist)} pages → {output_path}")
+    total_chunks = _write_folk_jsonl(output_path, worklist, genre=resolved_genre)
+
+    ok, errors = audit_jsonl(output_path)
+    if not ok:
+        print("[wikisource-folk] JSONL audit failed:")
+        for error in errors:
+            print(f"  {error}")
+        raise RuntimeError(f"JSONL audit failed for {output_path}")
+    print(f"[wikisource-folk] JSONL audit passed: {output_path}")
+
+    if dry_run:
+        print("[wikisource-folk] dry-run: wrote JSONL only; no DB changes")
+        return total_chunks
+
+    if ingest:
+        inserted = ingest_jsonl(output_path, db_path)
+        print(f"[wikisource-folk] ingested {inserted} rows into {db_path}")
+
+    return total_chunks
 
 
 def search_author_works(author_name: str, limit: int = 100) -> list[dict]:
@@ -449,16 +891,25 @@ def scrape_author(
     return total_chunks
 
 
-def main():
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Scrape Ukrainian Wikisource for literary RAG")
-    parser.add_argument("--author", required=True, help="Short author name for search (e.g., 'Хвильовий')")
-    parser.add_argument("--author-full", required=True, help="Full author name for metadata (e.g., 'Хвильовий М.')")
+    parser.add_argument("--category", default=DEFAULT_FOLK_CATEGORY, help="Folk category to scrape")
+    parser.add_argument("--skip-titles-file", type=Path, help="Newline list of titles already hosted/in corpus")
+    parser.add_argument("--limit", type=int, help="Limit page count for smoke tests")
+    parser.add_argument("--ingest", action="store_true", help="Replace rows for this JSONL in a sources.db")
+    parser.add_argument("--db", type=Path, default=DEFAULT_DB_PATH, help="SQLite sources DB for --ingest")
+    parser.add_argument("--author", help="Short author name for search (e.g., 'Хвильовий')")
+    parser.add_argument("--author-full", help="Full author name for metadata (e.g., 'Хвильовий М.')")
     parser.add_argument("--year", type=int, default=0, help="Publication year (for single works)")
     parser.add_argument("--year-range", default="", help="Year range (e.g., '1923-1933')")
-    parser.add_argument("--genre", default="prose", help="Genre: prose, poetry, drama, essay (default: prose)")
+    parser.add_argument("--genre", help="Genre override; author mode defaults to prose")
     parser.add_argument("--period", default="modern", help="Language period (default: modern)")
     parser.add_argument("--pages", nargs="+", help="Specific page titles to scrape")
-    parser.add_argument("--dry-run", action="store_true", help="List pages without scraping")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Category mode: write JSONL only, no DB changes. Author mode: list pages without scraping.",
+    )
     parser.add_argument(
         "--cyrillic-min", type=float, default=_DEFAULT_CYRILLIC_MIN,
         help=(
@@ -468,20 +919,46 @@ def main():
             "Constitution. Set to 0.0 to keep everything."
         ),
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
-    scrape_author(
-        author_short=args.author,
-        author_full=args.author_full,
-        year=args.year,
-        year_range=args.year_range,
-        genre=args.genre,
-        period=args.period,
+    if args.author:
+        if not args.author_full:
+            parser.error("--author-full is required with --author")
+        if args.ingest or args.skip_titles_file or args.limit is not None:
+            parser.error("--ingest, --skip-titles-file, and --limit are only supported in category mode")
+        scrape_author(
+            author_short=args.author,
+            author_full=args.author_full,
+            year=args.year,
+            year_range=args.year_range,
+            genre=args.genre or "prose",
+            period=args.period,
+            dry_run=args.dry_run,
+            pages=args.pages,
+            cyrillic_min=args.cyrillic_min,
+        )
+        return 0
+
+    if args.pages:
+        parser.error("--pages is only supported with --author")
+    if args.year or args.year_range or args.period != "modern" or args.cyrillic_min != _DEFAULT_CYRILLIC_MIN:
+        parser.error("--year, --year-range, --period, and --cyrillic-min are only supported with --author")
+    if args.dry_run and args.ingest:
+        parser.error("--dry-run and --ingest are mutually exclusive")
+    if not args.dry_run and not args.ingest:
+        parser.error("category mode requires --dry-run or --ingest")
+
+    scrape_category(
+        category=args.category,
         dry_run=args.dry_run,
-        pages=args.pages,
-        cyrillic_min=args.cyrillic_min,
+        ingest=args.ingest,
+        skip_titles_file=args.skip_titles_file,
+        limit=args.limit,
+        genre=args.genre,
+        db_path=args.db,
     )
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
