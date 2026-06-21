@@ -93,5 +93,6 @@ Recommended next batch: <batch id>
 Validation run: <commands>
 Files changed: <only docs/audits report, or none>
 swarm_used: true/false
+swarm_label: <none | solo | helper | swarm>
 swarm_note: <what helpers did, or solo run; no swarm used>
 ```

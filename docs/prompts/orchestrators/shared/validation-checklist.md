@@ -20,7 +20,7 @@ if [ -n "$CHANGED_FILES" ] && printf '%s\n' "$CHANGED_FILES" | rg '(^|/)status/.
   echo "Forbidden generated artifact in diff" >&2
   exit 1
 fi
-CHANGED_CODE_FILES="$(printf '%s\n' "$CHANGED_FILES" | awk '/^(scripts|site|curriculum|tests)\\// {print}')"
+CHANGED_CODE_FILES="$(printf '%s\n' "$CHANGED_FILES" | awk '/^(scripts|site|curriculum|tests)\// {print}')"
 if [ -n "$CHANGED_CODE_FILES" ]; then
   while IFS= read -r file; do
     [ -f "$file" ] || continue

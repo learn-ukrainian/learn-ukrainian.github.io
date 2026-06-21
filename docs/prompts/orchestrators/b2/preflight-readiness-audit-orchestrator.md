@@ -130,5 +130,6 @@ Report delivery: <draft PR URL or blocked reason>
 B2 production allowed now: yes/no
 Curriculum files modified: no
 swarm_used: true/false
+swarm_label: <none | solo | helper | swarm>
 swarm_note: <helpers used, or solo run; no swarm used>
 ```

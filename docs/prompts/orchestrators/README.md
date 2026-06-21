@@ -39,7 +39,7 @@ Each level prompt references these shared files, but also restates the critical 
 
 Helpers are optional. Use one to three read-only explorers only when they materially save time, such as surveying module shapes, checking doc references, or validating prompt consistency. Use worker helpers only for mechanical edits with a clearly owned file set. The main orchestrator remains responsible for design, integration, final review, PR creation, and merge decisions.
 
-Every module-build PR must state `swarm_used` and `swarm_note` in token telemetry. Solo runs still need `swarm_used: false` and a note such as `solo run; no swarm used`.
+Every module-build PR must state `swarm_used`, `swarm_label`, and `swarm_note` in token telemetry. Solo runs still need `swarm_used: false`, `swarm_label: none`, and a note such as `solo run; no swarm used`.
 
 ## Headroom Policy
 

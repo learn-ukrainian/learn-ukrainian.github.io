@@ -107,7 +107,7 @@ Run additional targeted checks required by the audit report. Run `scripts/audit/
 - Commit trailer: `X-Agent: codex/a1-remediation-<batch>`
 - Run `.venv/bin/python scripts/audit/lint_agent_trailer.py` before pushing.
 - Persist module-build telemetry using `docs/prompts/orchestrators/shared/telemetry-and-pr.md`.
-- Include `swarm_used` and `swarm_note` in telemetry and PR text.
+- Include `swarm_used`, `swarm_label`, and `swarm_note` in telemetry and PR text.
 - Require independent review before merge.
 
 ## Expected Final Response
@@ -122,5 +122,6 @@ Telemetry: <posted or unavailable with reason>
 Independent review: <status>
 Forbidden artifacts included: no
 swarm_used: true/false
+swarm_label: <none | solo | helper | swarm>
 swarm_note: <helpers used, or solo run; no swarm used>
 ```
