@@ -1,0 +1,20 @@
+- title: "План B1 M94: practice-exam"
+  role: curriculum
+  notes: "Джерело вимог до інтегрованого пробного екзамену: читання, аудіювання, письмо, говоріння, самооцінювання й підсумкова рубрика."
+  source_ref: curriculum/l2-uk-en/plans/B1/practice-exam.yaml
+- title: "Wiki grammar B1 practice-exam"
+  role: internal research notes
+  notes: "Опора для видів читання, ситуації спілкування, терміна аудіювання, редагування, риторики й типових екзаменаційних кальок."
+  source_ref: wiki/grammar/b1/practice-exam.md
+- title: "B1 M93: comprehensive-b1-review"
+  role: preceding review module
+  notes: "Передекзаменаційна карта повторення, самодіагностика й логіка вибору слабких місць для повторення."
+  source_ref: curriculum/l2-uk-en/b1/comprehensive-b1-review/module.md
+- title: "B1 M91-M92 synthesis modules"
+  role: recent synthesis shape
+  notes: "Локальна модель інтегрованих продуктивних завдань: розповідь, аргументація, регістр, приклади й редагування."
+  source_ref: curriculum/l2-uk-en/b1/debate-and-opinion/module.md
+- title: "B1 M84 and M90 checkpoint modules"
+  role: checkpoint shape
+  notes: "Опора для блочного оцінювання, рубрик, маршрутів виконання й самооцінки після контрольної."
+  source_ref: curriculum/l2-uk-en/b1/checkpoint-text-register/module.md

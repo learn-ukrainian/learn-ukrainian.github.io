@@ -1,0 +1,20 @@
+- title: "План B1 M93: comprehensive-b1-review"
+  role: curriculum
+  notes: "Джерело вимог до загального повторення B1: фонетика, морфологія, дієслова, рух, порівняння, словотвір, відмінки, синтаксис, стилі й самодіагностика."
+  source_ref: curriculum/l2-uk-en/plans/B1/comprehensive-b1-review.yaml
+- title: "Wiki grammar B1 comprehensive-b1-review"
+  role: internal research notes
+  notes: "Опора для концентричного повторення, типових помилок, морфологічних ланцюжків, порівняння, займенників і редагування."
+  source_ref: wiki/grammar/b1/comprehensive-b1-review.md
+- title: "B1 M91: narrative-mastery"
+  role: recent synthesis module
+  notes: "Локальна модель інтегрованого повторення через зв'язний текст, аспект, рухові дієслова, звороти й фінальний чекліст."
+  source_ref: curriculum/l2-uk-en/b1/narrative-mastery/module.md
+- title: "B1 M92: debate-and-opinion"
+  role: recent synthesis module
+  notes: "Локальна модель синтезу тези, аргументів, регістру, складних речень і редагування."
+  source_ref: curriculum/l2-uk-en/b1/debate-and-opinion/module.md
+- title: "B1 M84 and M90 checkpoint modules"
+  role: checkpoint shape
+  notes: "Опора для діагностичного маршруту, блокової перевірки, самооцінки й переходу до наступного модуля."
+  source_ref: curriculum/l2-uk-en/b1/checkpoint-syntax/module.md

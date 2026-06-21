@@ -1,0 +1,60 @@
+- lemma: повторення
+  translation: review, revision
+  pos: noun
+  usage: Повторення має бути точковим, а не механічним.
+- lemma: самодіагностика
+  translation: self-diagnosis
+  pos: noun
+  usage: Самодіагностика показує, які теми треба повторити.
+- lemma: інтегрований
+  translation: integrated
+  pos: adjective
+  usage: Інтегрований текст поєднує граматику, лексику й стиль.
+- lemma: впевнено
+  translation: confidently
+  pos: adverb
+  usage: Я впевнено використовую реальні умовні речення.
+- lemma: слабке місце
+  translation: weak point
+  pos: phrase
+  usage: Дієприслівниковий зворот поки що є моїм слабким місцем.
+- lemma: систематизувати
+  translation: to systematize
+  pos: verb
+  usage: Перед екзаменом треба систематизувати матеріал B1.
+- lemma: закріпити
+  translation: to reinforce
+  pos: verb
+  usage: Нову форму треба закріпити у власному тексті.
+- lemma: прогалина
+  translation: gap
+  pos: noun
+  usage: Прогалина в числівниках часто з'являється у письмі.
+- lemma: готовність
+  translation: readiness
+  pos: noun
+  usage: Готовність означає вміння виправляти власні помилки.
+- lemma: карта повторення
+  translation: review map
+  pos: phrase
+  usage: "Карта повторення має три зони: впевнено, частково, слабке місце."
+- lemma: уникнення
+  translation: avoidance
+  pos: noun
+  usage: Уникнення складних конструкцій теж треба помічати.
+- lemma: контрольна точка
+  translation: checkpoint, control point
+  pos: phrase
+  usage: Кожна контрольна точка перевіряє одну навичку B1.
+- lemma: точковий
+  translation: targeted, precise
+  pos: adjective
+  usage: Точковий план повторення економить час.
+- lemma: редагування
+  translation: editing
+  pos: noun
+  usage: Редагування перетворює помилки на навчальний матеріал.
+- lemma: діапазон
+  translation: range
+  pos: noun
+  usage: Активний діапазон показує, які конструкції учень реально використовує.

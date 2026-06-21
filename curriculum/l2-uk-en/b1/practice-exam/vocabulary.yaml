@@ -1,0 +1,64 @@
+- lemma: пробний екзамен
+  translation: practice exam
+  pos: phrase
+  usage: Пробний екзамен допомагає побачити реальні прогалини.
+- lemma: аудіювання
+  translation: listening comprehension
+  pos: noun
+  usage: У цьому модулі аудіювання симулюється через транскрипт.
+- lemma: розуміння
+  translation: comprehension
+  pos: noun
+  usage: Розуміння тексту включає факти й логічні зв'язки.
+- lemma: письмо
+  translation: writing
+  pos: noun
+  usage: Письмо B1 потребує чіткого адресата й регістру.
+- lemma: говоріння
+  translation: speaking
+  pos: noun
+  usage: Говоріння перевіряє здатність підтримувати розмову.
+- lemma: рубрика
+  translation: rubric
+  pos: noun
+  usage: Рубрика пояснює, за якими критеріями оцінювати відповідь.
+- lemma: критерій
+  translation: criterion
+  pos: noun
+  usage: Кожен критерій має бути пов'язаний із конкретним доказом.
+- lemma: самооцінювання
+  translation: self-assessment
+  pos: noun
+  usage: Самооцінювання після проби перетворює результат на план.
+- lemma: транскрипт
+  translation: transcript
+  pos: noun
+  usage: Транскрипт замінює аудіозапис у симуляції аудіювання.
+- lemma: чернетка
+  translation: draft
+  pos: noun
+  usage: Перед фінальним текстом корисно зробити коротку чернетку.
+- lemma: редагування
+  translation: editing
+  pos: noun
+  usage: Редагування письма має перевіряти зміст, регістр і граматику.
+- lemma: регістр
+  translation: register
+  pos: noun
+  usage: Регістр залежить від адресата й мети повідомлення.
+- lemma: адресат
+  translation: addressee
+  pos: noun
+  usage: Адресат визначає тон письмового завдання.
+- lemma: нотатки
+  translation: notes
+  pos: noun
+  usage: Нотатки під час аудіювання мають бути короткими.
+- lemma: взаємодія
+  translation: interaction
+  pos: noun
+  usage: У говорінні взаємодія включає питання й реакцію на партнера.
+- lemma: готовність
+  translation: readiness
+  pos: noun
+  usage: Готовність після проби оцінюють за доказами, а не за відчуттям.
