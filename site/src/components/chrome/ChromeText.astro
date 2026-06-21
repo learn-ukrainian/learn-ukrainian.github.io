@@ -1,0 +1,23 @@
+---
+/**
+ * ChromeText — renders an approved chrome string in BOTH locales, FOUC-safe.
+ *
+ * Both variants are emitted into the static HTML; CSS (in CourseLayout) shows
+ * exactly one based on `html[data-chrome-locale]`, which the pre-paint inline
+ * script sets before first paint. No English→Ukrainian flash, no hydration wait.
+ *
+ * Keys are the typed ChromeKey union — there is no raw-string fallback, so a
+ * non-chrome string cannot accidentally be routed through here.
+ */
+import { CHROME_STRINGS, type ChromeKey } from '../../lib/i18n/chrome';
+
+interface Props {
+  k: ChromeKey;
+}
+
+const { k } = Astro.props;
+const en = CHROME_STRINGS.en[k];
+const uk = CHROME_STRINGS.uk[k];
+---
+{/* No whitespace between the spans so the hidden variant leaves no stray gap. */}
+<span class="lu-i18n" data-i18n={k}><span data-loc="en" lang="en">{en}</span><span data-loc="uk" lang="uk">{uk}</span></span>

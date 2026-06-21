@@ -44,6 +44,14 @@ EXCLUSIONS = {
     "ActivityPlaceholder",
 }
 
+# Whole subdirectories under components/ that are site CHROME / infrastructure,
+# not lesson activities, and therefore carry no lesson-schema interface. Files
+# anywhere beneath these are skipped wholesale so new chrome utilities don't each
+# need adding to EXCLUSIONS (e.g. the i18n Chrome Locale Runtime, #3671).
+EXCLUDED_DIRS = {
+    "chrome",
+}
+
 PUBLIC_LEVELS = [
     "a1",
     "a2",
@@ -156,7 +164,12 @@ def _split_types(value: str) -> set[str]:
 
 def discover_components(components_dir: Path) -> list[Path]:
     files = [*components_dir.rglob("*.tsx"), *components_dir.rglob("*.astro")]
-    return sorted(path for path in files if path.stem not in EXCLUSIONS)
+    return sorted(
+        path
+        for path in files
+        if path.stem not in EXCLUSIONS
+        and EXCLUDED_DIRS.isdisjoint(p.name for p in path.relative_to(components_dir).parents)
+    )
 
 
 def _hash_files(paths: list[Path]) -> str:
