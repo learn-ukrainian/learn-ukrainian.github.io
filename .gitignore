@@ -340,6 +340,9 @@ curriculum/l2-uk-en/*/*/knowledge_packet.md
 # Regenerate when ESUM data changes:
 #   .venv/bin/python scripts/etymology/build_data_manifest.py
 data/lexicon/slovnyk_cache/
+# Generated build artifact: regenerate on demand with
+#   .venv/bin/python -m scripts.lexicon.grow_lexicon_from_content (#3675 P2; promotion = P3)
+data/lexicon/grow_candidates.json
 data/eval-archive/
 
 # clawpatch tool output (config + findings + locks + patches — regenerable)
