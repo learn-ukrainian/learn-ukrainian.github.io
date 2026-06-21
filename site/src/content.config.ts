@@ -43,7 +43,7 @@ export const collections = {
 			tracks: z.array(z.string()).default([]),
 			excerpt: z.string(),
 			source: z.string(),
-			public_domain: z.boolean().default(true),
+			public_domain: z.literal(true),  // require explicit rights assertion; missing => fail validation
 			order: z.number().optional(),
 		}).passthrough(),
 	}),

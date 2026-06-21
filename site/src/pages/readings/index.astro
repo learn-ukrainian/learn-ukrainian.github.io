@@ -45,7 +45,7 @@ const TRACK_LABELS: Record<string, string> = {
     <div class="readings-search">
       <label for="readings-q" class="sr-only">Search the reading reference</label>
       <input id="readings-q" type="search" placeholder="Search a text, genre, or author…" autocomplete="off" />
-      <p class="readings-count" data-readings-count>{sorted.length} {sorted.length === 1 ? 'text' : 'texts'}</p>
+      <p class="readings-count" data-readings-count role="status" aria-live="polite" aria-atomic="true">{sorted.length} {sorted.length === 1 ? 'text' : 'texts'}</p>
     </div>
 
     {genres.map((genre) => (
@@ -95,7 +95,7 @@ const TRACK_LABELS: Record<string, string> = {
           b.hidden = ![...b.querySelectorAll('[data-reading]')].some((c) => !c.hidden);
         });
         if (countEl) countEl.textContent = `${shown} ${plural(shown)}`;
-        if (emptyEl) emptyEl.hidden = shown !== 0;
+        if (emptyEl) emptyEl.hidden = shown !== 0 || !q;
       };
       input && input.addEventListener('input', run);
       run();
