@@ -1,5 +1,5 @@
 {
-  "fingerprint": "bafe50268d5cd79d8099145b58a5d00287623b0c9cf19623c50973115bde3531",
+  "fingerprint": "db70cb07bc394ea2791ff94e65c7c27c3cc3d4ca3ac45ca72cad589fecc99485",
   "inputs": {
     "lexicon_code": [
       {
@@ -55,6 +55,10 @@
         "sha256": "0ceb0d6373e301c92611c239bb8bcd616f71af8ebb938d0e48b2b85346e6d065"
       },
       {
+        "path": "scripts/lexicon/fill_from_content.py",
+        "sha256": "fce4f16b8710462abc1ec6d3da8b1f1e454184f608479f8f8b449efdac967592"
+      },
+      {
         "path": "scripts/lexicon/fix_esum_garbled_etymologies.py",
         "sha256": "5dc115380709adf1e85755b5b8df7c17898627d5560f686662ee63b99f5d93fd"
       },
@@ -87,6 +91,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 20
+    "lexicon_code_files": 21
   }
 }

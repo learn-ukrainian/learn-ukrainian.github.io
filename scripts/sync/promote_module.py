@@ -22,6 +22,7 @@ ATLAS_OUTPUT_FILES = (
     Path("site") / "src" / "data" / "lexicon-manifest.json",
     Path("site") / "src" / "data" / "lexicon-manifest.fingerprint.json",
 )
+READINGS_GENERATOR = "scripts.readings.generate_readings"
 
 LESSON_SOURCE_FILES = frozenset(
     {
@@ -323,6 +324,64 @@ def _run_make_atlas(repo_root: Path) -> int:
     return proc.returncode
 
 
+def _python(repo_root: Path) -> Path:
+    return repo_root / ".venv" / "bin" / "python"
+
+
+def _repo_rel(repo_root: Path, raw_path: str) -> Path:
+    path = Path(raw_path)
+    if not path.is_absolute():
+        return path
+    return path.resolve().relative_to(repo_root)
+
+
+def _run_generate_readings(repo_root: Path, source: SourceSpec) -> tuple[int, list[Path]]:
+    if source.level != "folk":
+        return 0, []
+    module_dir = CURRICULUM_ROOT / source.level / source.slug
+    proc = subprocess.run(
+        [
+            str(_python(repo_root)),
+            "-m",
+            READINGS_GENERATOR,
+            module_dir.as_posix(),
+            "--json",
+        ],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        env=_sanitized_git_env(),
+    )
+    if proc.stderr:
+        print(proc.stderr, file=sys.stderr, end="" if proc.stderr.endswith("\n") else "\n")
+    if proc.returncode != 0:
+        if proc.stdout:
+            print(proc.stdout, end="" if proc.stdout.endswith("\n") else "\n")
+        return proc.returncode, []
+
+    try:
+        payload = json.loads(proc.stdout or "{}")
+    except json.JSONDecodeError:
+        print("ERROR readings generator did not emit JSON", file=sys.stderr)
+        if proc.stdout:
+            print(proc.stdout, file=sys.stderr, end="" if proc.stdout.endswith("\n") else "\n")
+        return 1, []
+    written = []
+    for item in payload.get("written", []):
+        if isinstance(item, dict) and item.get("path"):
+            rel = _repo_rel(repo_root, str(item["path"]))
+            print(f"wrote reading {rel.as_posix()}")
+            written.append(rel)
+    for item in payload.get("existing", []):
+        if isinstance(item, dict) and item.get("path"):
+            rel = _repo_rel(repo_root, str(item["path"]))
+            print(f"reading {item.get('action', 'existing')} {rel.as_posix()}")
+    for item in payload.get("skipped", []):
+        if isinstance(item, dict):
+            print(f"reading skipped {item.get('title', '')}: {item.get('reason', '')}")
+    return 0, written
+
+
 def promote(args: argparse.Namespace, *, repo_root: Path = ROOT) -> int:
     repo_root = repo_root.resolve()
     try:
@@ -364,6 +423,14 @@ def promote(args: argparse.Namespace, *, repo_root: Path = ROOT) -> int:
         _write_atomically(dest, item.content)
         written.append(item.dest_rel)
         print(f"wrote {item.dest_rel.as_posix()}")
+
+    if source.level == "folk" and any(rel.name in {"module.md", "resources.yaml"} for rel in written):
+        print("generating Хрестоматія readings for promoted folk module")
+        readings_status, reading_rels = _run_generate_readings(repo_root, source)
+        if readings_status != 0:
+            print("ERROR readings generation failed; fix before committing promotion", file=sys.stderr)
+            return readings_status
+        written.extend(rel for rel in reading_rels if (repo_root / rel).exists())
 
     if args.refresh_atlas and any(rel.name == "vocabulary.yaml" for rel in written):
         print("refreshing Word Atlas manifest via `make atlas`")
