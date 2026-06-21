@@ -1,8 +1,18 @@
 ---
 import CourseLayout from '../layouts/CourseLayout.astro';
+import ChromeText from '../components/chrome/ChromeText.astro';
+import type { ChromeKey } from '../lib/i18n/chrome';
 import curriculumStats from '../data/curriculum-stats.json';
 
 type TrackStats = Record<string, { modules?: number } | number>;
+
+type TrackRow = {
+  id: string;
+  label: string;
+  titleKey: ChromeKey;
+  statusKey: ChromeKey;
+  href?: string;
+};
 
 const stats = curriculumStats as TrackStats;
 const moduleCount = (id: string) => {
@@ -10,37 +20,37 @@ const moduleCount = (id: string) => {
   return typeof entry === 'object' && entry ? entry.modules ?? 0 : 0;
 };
 
-const coreTracks = [
-  { id: 'a1', label: 'A1', title: 'Beginner Course', status: 'Released' },
-  { id: 'a2', label: 'A2', title: 'Pre-Intermediate Course', status: 'Released' },
-  { id: 'b1', label: 'B1', title: 'Intermediate Course', status: 'Preview' },
-  { id: 'b2', label: 'B2', title: 'Upper-Intermediate Course', status: 'Planned' },
-  { id: 'c1', label: 'C1', title: 'Advanced Course', status: 'Planned' },
-  { id: 'c2', label: 'C2', title: 'Mastery Course', status: 'Long-range' },
+const coreTracks: TrackRow[] = [
+  { id: 'a1', label: 'A1', titleKey: 'home.track.beginner', statusKey: 'status.released' },
+  { id: 'a2', label: 'A2', titleKey: 'home.track.preIntermediate', statusKey: 'status.released' },
+  { id: 'b1', label: 'B1', titleKey: 'home.track.intermediate', statusKey: 'status.preview' },
+  { id: 'b2', label: 'B2', titleKey: 'home.track.upperIntermediate', statusKey: 'status.planned' },
+  { id: 'c1', label: 'C1', titleKey: 'home.track.advanced', statusKey: 'status.planned' },
+  { id: 'c2', label: 'C2', titleKey: 'home.track.mastery', statusKey: 'status.longRange' },
 ];
 
-const seminarTracks = [
-  { id: 'folk', label: 'FOLK', title: 'Folklore & Oral Tradition', status: 'Preview · 3 of 42 live', href: '/folk/' },
-  { id: 'bio', label: 'BIO', title: 'Biographies', status: 'Planned seminar' },
-  { id: 'hist', label: 'HIST', title: 'History Of Ukraine', status: 'Planned seminar' },
-  { id: 'istorio', label: 'ISTORIO', title: 'Historiography', status: 'Planned seminar' },
-  { id: 'lit', label: 'LIT', title: 'Ukrainian Literature', status: 'Planned seminar' },
-  { id: 'lit-essay', label: 'LIT-ESSAY', title: 'Essays', status: 'Planned seminar' },
-  { id: 'lit-hist-fic', label: 'LIT-HIST-FIC', title: 'Historical Fiction', status: 'Planned seminar' },
-  { id: 'lit-fantastika', label: 'LIT-FANTASTIKA', title: 'Fantastika', status: 'Planned seminar' },
-  { id: 'lit-war', label: 'LIT-WAR', title: 'War Literature', status: 'Planned seminar' },
-  { id: 'lit-humor', label: 'LIT-HUMOR', title: 'Humor', status: 'Planned seminar' },
-  { id: 'lit-youth', label: 'LIT-YOUTH', title: 'Youth Literature', status: 'Planned seminar' },
-  { id: 'lit-drama', label: 'LIT-DRAMA', title: 'Drama', status: 'Planned seminar' },
-  { id: 'oes', label: 'OES', title: 'Old East Slavic', status: 'Planned seminar' },
-  { id: 'ruth', label: 'RUTH', title: 'Ruthenian Baroque', status: 'Planned seminar' },
+const seminarTracks: TrackRow[] = [
+  { id: 'folk', label: 'FOLK', titleKey: 'home.seminar.folk', statusKey: 'status.previewLive', href: '/folk/' },
+  { id: 'bio', label: 'BIO', titleKey: 'level.bio.name', statusKey: 'status.plannedSeminar' },
+  { id: 'hist', label: 'HIST', titleKey: 'home.seminar.hist', statusKey: 'status.plannedSeminar' },
+  { id: 'istorio', label: 'ISTORIO', titleKey: 'level.istorio.name', statusKey: 'status.plannedSeminar' },
+  { id: 'lit', label: 'LIT', titleKey: 'home.seminar.lit', statusKey: 'status.plannedSeminar' },
+  { id: 'lit-essay', label: 'LIT-ESSAY', titleKey: 'home.seminar.litEssay', statusKey: 'status.plannedSeminar' },
+  { id: 'lit-hist-fic', label: 'LIT-HIST-FIC', titleKey: 'home.seminar.litHistFic', statusKey: 'status.plannedSeminar' },
+  { id: 'lit-fantastika', label: 'LIT-FANTASTIKA', titleKey: 'home.seminar.litFantastika', statusKey: 'status.plannedSeminar' },
+  { id: 'lit-war', label: 'LIT-WAR', titleKey: 'home.seminar.litWar', statusKey: 'status.plannedSeminar' },
+  { id: 'lit-humor', label: 'LIT-HUMOR', titleKey: 'home.seminar.litHumor', statusKey: 'status.plannedSeminar' },
+  { id: 'lit-youth', label: 'LIT-YOUTH', titleKey: 'home.seminar.litYouth', statusKey: 'status.plannedSeminar' },
+  { id: 'lit-drama', label: 'LIT-DRAMA', titleKey: 'home.seminar.litDrama', statusKey: 'status.plannedSeminar' },
+  { id: 'oes', label: 'OES', titleKey: 'level.oes.name', statusKey: 'status.plannedSeminar' },
+  { id: 'ruth', label: 'RUTH', titleKey: 'home.seminar.ruth', statusKey: 'status.plannedSeminar' },
 ].filter((track) => moduleCount(track.id) > 0);
 ---
 
 <CourseLayout
   title="Learn Ukrainian"
   description="An English learner interface for released A1 and A2 Ukrainian courses, a B1 preview, and the Word Atlas reference tool."
-  eyebrow="Course ladder and reference tools"
+  eyebrowKey="home.eyebrow"
   subtitle="A practical English interface for learning Ukrainian."
   currentPath="/"
   wide
@@ -48,97 +58,92 @@ const seminarTracks = [
   <section class="home-intro">
     <div>
       <p class="home-kicker">Learn Ukrainian</p>
-      <h2>Start with A1. Continue with A2. Preview B1 when you are ready.</h2>
+      <h2><ChromeText k="home.introHeading" /></h2>
       <p>
-        The released course path is A1, then A2. B1 is open as an intermediate preview so learners
-        and teachers can see the next direction without treating it as a finished release. Word Atlas
-        supports the course as a reference tool, not as a separate course track. Seminar tracks are
-        listed for context, but they are not public entry points yet.
+        <ChromeText k="home.introBody" />
       </p>
       <div class="home-actions">
-        <a class="home-primary" href="/a1/">Start A1</a>
-        <a class="home-secondary" href="/b1/">Open B1 Preview</a>
+        <a class="home-primary" href="/a1/"><ChromeText k="home.actionStartA1" /></a>
+        <a class="home-secondary" href="/b1/"><ChromeText k="home.actionOpenB1Preview" /></a>
       </div>
     </div>
     <aside class="roadmap-panel" aria-label="Roadmap">
-      <div><strong>A1</strong><span>Released beginner course</span></div>
-      <div><strong>A2</strong><span>Released continuation course</span></div>
-      <div><strong>B1</strong><span>Intermediate preview</span></div>
-      <div><strong>Word Atlas</strong><span>Reference tool</span></div>
-      <div><strong>Seminars</strong><span>Not promoted yet</span></div>
+      <div><strong>A1</strong><span><ChromeText k="home.roadmapA1" /></span></div>
+      <div><strong>A2</strong><span><ChromeText k="home.roadmapA2" /></span></div>
+      <div><strong>B1</strong><span><ChromeText k="home.roadmapB1" /></span></div>
+      <div><strong><ChromeText k="nav.atlas" /></strong><span><ChromeText k="home.roadmapAtlasDesc" /></span></div>
+      <div><strong><ChromeText k="home.roadmapSeminars" /></strong><span><ChromeText k="home.roadmapSeminarsNote" /></span></div>
     </aside>
   </section>
 
   <section>
-    <h2>Available Now</h2>
+    <h2><ChromeText k="home.availableNow" /></h2>
     <div class="lu-card-grid">
       <a class="lu-card" href="/a1/">
         <span class="track-badge a1">A1</span>
-        <h3>Beginner Course</h3>
-        <p>55 modules for sounds, reading, first conversations, everyday needs, and an A1 finale.</p>
+        <h3><ChromeText k="home.track.beginner" /></h3>
+        <p><ChromeText k="home.cardA1Desc" /></p>
       </a>
       <a class="lu-card" href="/a2/">
         <span class="track-badge a2">A2</span>
-        <h3>Pre-Intermediate Course</h3>
-        <p>69 modules take learners from the A2 bridge through everyday situations, cases, aspect, and the A2 finale.</p>
+        <h3><ChromeText k="home.track.preIntermediate" /></h3>
+        <p><ChromeText k="home.cardA2Desc" /></p>
       </a>
       <a class="lu-card" href="/b1/">
-        <span class="track-badge b1">B1 Preview</span>
-        <h3>Intermediate Preview</h3>
-        <p>The first B1 module is open with Ukrainian-led explanations, activities, vocabulary, and resources.</p>
+        <span class="track-badge b1"><ChromeText k="nav.b1" /></span>
+        <h3><ChromeText k="home.track.intermediatePreview" /></h3>
+        <p><ChromeText k="home.cardB1Desc" /></p>
       </a>
       <a class="lu-card" href="/lexicon/">
-        <span class="track-badge atlas">Reference</span>
-        <h3>Word Atlas</h3>
-        <p>A learner reference that goes beyond a lexicon: meanings, morphology, usage, etymology where available, and course links.</p>
+        <span class="track-badge atlas"><ChromeText k="label.reference" /></span>
+        <h3><ChromeText k="nav.atlas" /></h3>
+        <p><ChromeText k="home.cardAtlasDesc" /></p>
       </a>
       <a class="lu-card" href="/readings/">
-        <span class="track-badge atlas">Reference</span>
-        <h3>Reading reference</h3>
-        <p>A searchable library of full primary-source texts that any seminar links into for close reading. Public-domain, verbatim, and sourced.</p>
+        <span class="track-badge atlas"><ChromeText k="label.reference" /></span>
+        <h3><ChromeText k="nav.readings" /></h3>
+        <p><ChromeText k="home.cardReadingsDesc" /></p>
       </a>
     </div>
   </section>
 
   <section class="track-inventory" aria-labelledby="upcoming-tracks">
     <div class="section-heading">
-      <h2 id="upcoming-tracks">Course Map</h2>
+      <h2 id="upcoming-tracks"><ChromeText k="home.courseMapHeading" /></h2>
       <p>
-        This map separates released courses, preview work, and future inventory. The recommended
-        learner path is A1 first, then A2, with B1 available as a preview. Seminar tracks are shown
-        for context only and are not promoted as learner entry points yet.
+        <ChromeText k="home.courseMapBody" />
       </p>
     </div>
 
     <div class="track-inventory-grid">
       <section class="track-column">
-        <h3>Course Ladder</h3>
+        <h3><ChromeText k="home.courseLadder" /></h3>
         <ul>
           {coreTracks.map((track) => (
             <li>
               <span class="track-code">{track.label}</span>
-              <span class="track-title">{track.title}</span>
-              <span class="track-meta">{moduleCount(track.id)} modules · {track.status}</span>
+              <span class="track-title"><ChromeText k={track.titleKey} /></span>
+              <span class="track-meta">{moduleCount(track.id)} <ChromeText k="stats.modules" /> · <ChromeText k={track.statusKey} /></span>
             </li>
           ))}
         </ul>
       </section>
       <section class="track-column">
-        <h3>Seminar Tracks</h3>
+        <h3><ChromeText k="home.seminarTracks" /></h3>
         <ul>
           {seminarTracks.map((track) => (
             <li>
               {track.href ? (
                 <a class="track-link" href={track.href}>
                   <span class="track-code">{track.label}</span>
-                  <span class="track-title">{track.title}</span>
-                  <span class="track-meta">{moduleCount(track.id)} modules · {track.status}</span>
+                  <span class="track-title"><ChromeText k={track.titleKey} /></span>
+                  <span class="track-meta">{moduleCount(track.id)} <ChromeText k="stats.modules" /> · <ChromeText k={track.statusKey} /></span>
                 </a>
               ) : (
                 <Fragment>
                   <span class="track-code">{track.label}</span>
-                  <span class="track-title">{track.title}</span>
-                  <span class="track-meta">{moduleCount(track.id)} modules · {track.status}</span>
+                  <span class="track-title"><ChromeText k={track.titleKey} /></span>
+                  <span class="track-meta">{moduleCount(track.id)} <ChromeText k="stats.modules" /> · <ChromeText k={track.statusKey} /></span>
                 </Fragment>
               )}
             </li>
