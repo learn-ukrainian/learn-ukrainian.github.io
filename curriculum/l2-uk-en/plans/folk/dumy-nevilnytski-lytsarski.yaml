@@ -103,23 +103,53 @@ references:
 - title: Історія української літератури
   author: Чижевський Д.
   note: Психологізм невільницьких дум, анонімність, три брати з Азова
-  type: primary
+  type: scholarly
   work: Історія української літератури
 - title: Слов'янська міфологія
   author: Костомаров М.
   note: Козацькі морські походи, зозуля та явір як символи, дівчина-бранка
-  type: primary
+  type: scholarly
   work: Слов'янська міфологія
 - title: Нарис історії культури України
   author: Попович М.
   note: Козацька героїка, набіги та работоргівля
-  type: primary
+  type: scholarly
   work: Нарис історії культури України
+readings:
+- title: «Втеча трьох братів з города Азова»
+  title_en: The Escape of Three Brothers from Azov
+  genre: Дума
+  source: Народна творчість; корпус ukrlib-narod-dumy; chunks 8d7b076e_c0000-c0004
+  source_url: https://www.ukrlib.com.ua/narod/printout.php?id=11&bookid=1
+  license: public_domain
+  hosting: host
+  reading_slug: duma-vtecha-trokh-brativ-z-azova
+- title: «Дума про Марусю Богуславку»
+  title_en: The Duma of Marusia Bohuslavka
+  genre: Дума
+  source: Народна творчість; запис подано за М. Драгомановим, «Вибране»; chunks c846b4d3_c0215-c0216
+  license: public_domain
+  hosting: host
+  reading_slug: duma-marusia-bohuslavka
+- title: «Дума про Самійла Кішку»
+  title_en: The Duma of Samiilo Kishka
+  genre: Дума
+  source: Народна творчість; запис подано за М. Драгомановим, «Вибране»; chunks c846b4d3_c0221-c0227
+  license: public_domain
+  hosting: host
+  reading_slug: duma-pro-samiila-kishku
+- title: «Плач невольника»
+  title_en: The Captive's Lament
+  genre: Дума
+  source: Народна творчість; запис подано за М. Драгомановим, «Вибране»; chunks c846b4d3_c0209-c0210
+  license: public_domain
+  hosting: host
+  reading_slug: duma-plach-nevolnyka
 sequence: 12
 slug: dumy-nevilnytski-lytsarski
 subtitle: 'Captivity and Knightly Dumas: Lament and Heroic Memory'
 title: 'Невільницькі та лицарські думи: Плач і героїка'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: полонений, раб — людина, позбавлена свободи та відірвана від батьківщини
   pos: ч.
