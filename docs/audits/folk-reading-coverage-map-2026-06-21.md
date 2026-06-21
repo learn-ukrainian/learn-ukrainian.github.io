@@ -259,14 +259,44 @@ Batch note: use Drahomanov `Малорусские народные предан
 
 Acquire: T055, T056, T057, T058, T059, T061, T062, T063, T064, T065, T066, T067, T080, T081, T082, T083, T116, T117, T118, T119, T132.
 
-Known entry points:
+**CORRECTED ENTRY POINTS (verified 2026-06-22, Claude folk driver).** The original draft cited
+`https://uk.wikisource.org/wiki/Українські_народні_думи`, which is a **disambiguation page, NOT a
+text index** — do not crawl it. Wikisource exposes folk texts through **category pages**, each listing
+individual hostable work pages. Verified counts via the MediaWiki `categorymembers` API:
 
-- `https://uk.wikisource.org/wiki/Українські_народні_думи`
-- `https://uk.wikisource.org/wiki/Про_українські_народні_думи`
-- `https://uk.wikisource.org/wiki/Народні_музичні_струменти_на_Вкраїні`
-- `uk.wikisource.org` authored PD pages for Shevchenko, Petrenko, Rudanskyi/Hlibov candidates, vertep texts, and Kotliarevsky.
+| Category | API title | Hostable pages | Feeds |
+| --- | --- | --- | --- |
+| Думи | `Категорія:Думи` | **45** | dumy-sotsialno-pobutovi (T055-T058), kobzarstvo (T059) |
+| Колядки | `Категорія:Колядки` | **136** | koliadky-shchedrivky |
+| Українські народні казки | `Категорія:Українські народні казки` | **307** | charivni/tvaryn/sotsialno-pobutovi kazky |
+| Веснянки / Гаївки | `Категорія:Веснянки`, `Категорія:Гаївки` | ~11+ | vesnianky-hayivky (T039-T040) |
+| Купальські / Русальні пісні | `Категорія:Купальські пісні`, `Категорія:Русальні пісні` | (cats exist) | kupalski-rusalni-pisni (T041-T044) |
+| Весільні пісні | `Категорія:Весільні пісні` | (exists) | vesilni-pisni (T047-T050) |
+| Жниварські пісні | `Категорія:Жниварські пісні` | (exists) | zhnyvarski (T045-T046) |
+| Колискові пісні | `Категорія:Колискові пісні` | (exists) | dytiachyi-folklor-kolyskovi (T112-T115) |
+| Коломийки | `Категорія:Коломийки` | (exists) | kolomyiky (T072-T074) |
+| Родинно-побутові пісні | `Категорія:Родинно-побутові пісні` | (exists) | rodynno-pobutovi-pisni (T068-T071) |
+| Стрілецькі пісні ⚠️ | `Категорія:Стрілецькі пісні` | (exists) | striletski (T064-T067) — RIGHTS REVIEW |
+| Українські народні легенди / Перекази | `Категорія:Українські народні легенди`, `Категорія:Перекази` | (exist) | narodni-lehendy, istorychni-perekazy |
 
-Rights note: T064-T067 require an explicit authorship/public-domain review before hosting; if the text is not safely hostable, classify the eventual module resource as linked-only or excerpt-only.
+Parent index categories: `Категорія:Українська усна народна творчість` (казки, легенди, колядки,
+щедрівки, перекази, засівалки) and `Категорія:Українські народні пісні` (17 song subcategories above).
+
+**Fetch API (verified):** `prop=extracts&explaintext` returns ONLY the title for Wikisource works
+(ProofreadPage transclusion) — it is the WRONG endpoint. Use `action=parse&prop=wikitext` (verse is
+inline inside `<poem>...</poem>`, with a `{{заголовок}}` header template and `[[Категорія:…]]` footer
+to strip) or `action=parse&prop=text` (rendered HTML). Confirmed on `Дума про козака Голоту` (T059):
+opening verse "Ой полем киліїмським, / То шляхом битим гординським, / Ой там гуляв козак Голота".
+
+**Implication for §D batch order:** most texts the draft routed to scanned scholarly PDFs
+(Chubynskyi/Hnatiuk/Drahomanov) are also available as clean individual Wikisource pages — prefer the
+Wikisource page where one exists; fall back to scholarly volumes only for texts with no Wikisource page.
+
+Rights note: T064-T067 (стрілецькі пісні) require explicit per-text authorship/PD review before
+hosting (e.g. «Чуєш, брате мій» = Богдан Лепкий, d. 1941; «Червона калина» has a named 1914 arranger);
+if not safely PD, classify as linked-only or excerpt-only. **`Категорія:Замовляння` is EMPTY** on
+Wikisource — zamovliannia (T027-T030) still needs the Yefymenko-1874 route below, not Wikisource.
+Every individual page must be browser-verified (full text + PD status) before hosting.
 
 ### Ukrlib Public-Domain Folk Pages Requiring Fetch Or Verifier Repair
 
