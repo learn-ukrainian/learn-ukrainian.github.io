@@ -127,3 +127,12 @@
   font-style: italic;
   margin: 1.5rem 0;
 }
+
+.reading-taught-in {
+  background: var(--lu-surface-muted);
+  border-left: 4px solid var(--lu-teal, #00695C);
+  border-radius: 8px;
+  color: var(--lu-text);
+  margin: 0 0 1.25rem;
+  padding: 0.75rem 1rem;
+}

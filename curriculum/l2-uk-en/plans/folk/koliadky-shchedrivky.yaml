@@ -115,11 +115,28 @@ references:
   note: Первинні записи колядок і щедрівок з Карпат та Полісся
   type: primary
   work: Праці етнографічно-статистичної експедиції в Західно-Руський край
+readings:
+- title: «Як ще не було початку світа»
+  title_en: When the world had no beginning
+  genre: Колядка
+  source: Народна творчість; корпус ukrlib-narod-dumy
+  source_url: https://www.ukrlib.com.ua/narod/printout.php?id=5&bookid=2
+  license: public_domain
+  hosting: host
+  reading_slug: koliadka-yak-shche-ne-bulo
+- title: «Ой сивая та і зозулечка»
+  title_en: Oh, the grey cuckoo
+  genre: Щедрівка
+  source: Народна творчість; корпус ukrlib-narod-dumy
+  source_url: https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=1
+  license: public_domain
+  hosting: host
+  reading_slug: shchedrivka-oi-syvaia-ta-i-zozulechka
 sequence: 5
 slug: koliadky-shchedrivky
 subtitle: 'Carols and Shchedrivky: The Cosmogonic Myth'
 title: 'Колядки та щедрівки: Міф про створення світу'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: обрядова пісня різдвяного циклу, що величає господаря та його родину
   pos: ж.

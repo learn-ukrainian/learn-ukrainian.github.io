@@ -254,6 +254,22 @@
   white-space: pre-line;
 }
 
+.primary-reading-footer {
+  border-top: 1px solid color-mix(in srgb, var(--lesson-orange) 45%, transparent);
+  margin-top: 0.875rem;
+  padding-top: 0.75rem;
+  font-weight: 700;
+}
+
+.primary-reading-footer a {
+  color: var(--lesson-orange);
+  text-decoration: none;
+}
+
+.primary-reading-footer a:hover {
+  text-decoration: underline;
+}
+
 .myth-source {
   font-size: 0.8125rem;
   color: var(--ifm-color-emphasis-600, #757575);
