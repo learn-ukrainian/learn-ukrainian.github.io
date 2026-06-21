@@ -1,5 +1,7 @@
 ---
 import '../styles/course.css';
+import ChromeText from '../components/chrome/ChromeText.astro';
+import type { ChromeKey } from '../lib/i18n/chrome';
 
 type NavItem = {
   href: string;
@@ -57,14 +59,14 @@ const sidebarPct =
 
 const canonicalPath = currentPath.endsWith('/') ? currentPath : `${currentPath}/`;
 
-const topNav = [
-  { href: '/', label: 'Home' },
-  { href: '/a1/', label: 'A1' },
-  { href: '/a2/', label: 'A2' },
-  { href: '/b1/', label: 'B1 Preview' },
-  { href: '/lexicon/', label: 'Word Atlas' },
-  { href: '/readings/', label: 'Reading reference' },
-  { href: '/lexicon/index/', label: 'Search' },
+const topNav: { href: string; key: ChromeKey }[] = [
+  { href: '/', key: 'nav.home' },
+  { href: '/a1/', key: 'nav.a1' },
+  { href: '/a2/', key: 'nav.a2' },
+  { href: '/b1/', key: 'nav.b1' },
+  { href: '/lexicon/', key: 'nav.atlas' },
+  { href: '/readings/', key: 'nav.readings' },
+  { href: '/lexicon/index/', key: 'nav.search' },
 ];
 
 const isActive = (href: string) => {
@@ -74,7 +76,7 @@ const isActive = (href: string) => {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-chrome-locale="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -123,6 +125,46 @@ const isActive = (href: string) => {
         });
       })();
     </script>
+    <script is:inline>
+      {/* Chrome Locale Runtime (#3671): pick the UI-chrome language BEFORE paint.
+          Precedence: explicit toggle choice (localStorage) → browser locale
+          (uk* → Ukrainian) → English fallback. CONTENT stays Ukrainian always;
+          this only swaps interface chrome. FOUC-safe: sets the attribute the
+          dual-render CSS keys off, before first paint. */}
+      (() => {
+        const KEY = 'lu-chrome-locale';
+        const norm = (value) => (value === 'uk' || value === 'en' ? value : null);
+        const stored = (() => {
+          try {
+            return norm(window.localStorage.getItem(KEY));
+          } catch {
+            return null;
+          }
+        })();
+        const detect = () => {
+          if (stored) return stored;
+          const langs =
+            navigator.languages && navigator.languages.length
+              ? navigator.languages
+              : [navigator.language || ''];
+          const primary = String(langs[0] || '').toLowerCase().split('-')[0];
+          return primary === 'uk' ? 'uk' : 'en';
+        };
+        document.documentElement.dataset.chromeLocale = detect();
+        // Delegated toggle — works regardless of when the button mounts.
+        document.addEventListener('click', (event) => {
+          const toggle = event.target.closest?.('#lu-locale-toggle');
+          if (!toggle) return;
+          const next = document.documentElement.dataset.chromeLocale === 'uk' ? 'en' : 'uk';
+          document.documentElement.dataset.chromeLocale = next;
+          try {
+            window.localStorage.setItem(KEY, next);
+          } catch {
+            // Storage can be unavailable in hardened browser contexts.
+          }
+        });
+      })();
+    </script>
     {/* Analytics: self-hosted GoatCounter, injected globally from astro.config.mjs (/count.js).
         Third-party Plausible was removed 2026-06-12 — consolidated to one privacy-friendly, self-hosted analytics. */}
     <style is:global>
@@ -150,11 +192,45 @@ const isActive = (href: string) => {
       .lu-theme-icon--moon { display: inline; }
       [data-theme='dark'] .lu-theme-icon--moon { display: none; }
       [data-theme='dark'] .lu-theme-icon--sun { display: inline; }
+
+      /* Chrome Locale Runtime (#3671) — dual-render show/hide. Default (no
+         attribute / English) shows the English variant; the Ukrainian variant
+         appears only when chrome-locale=uk. No FOUC: the pre-paint script sets
+         data-chrome-locale before first paint. */
+      .lu-i18n [data-loc='uk'] { display: none; }
+      html[data-chrome-locale='uk'] .lu-i18n [data-loc='uk'] { display: inline; }
+      html[data-chrome-locale='uk'] .lu-i18n [data-loc='en'] { display: none; }
+
+      .lu-locale-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 34px;
+        height: 34px;
+        margin-left: 0.25rem;
+        padding: 0 0.45rem;
+        border: 1px solid var(--lu-border, color-mix(in srgb, currentColor 22%, transparent));
+        border-radius: 8px;
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: 0.02em;
+      }
+      .lu-locale-toggle:hover {
+        background: var(--lu-surface-muted, rgba(127, 127, 127, 0.14));
+      }
+      .lu-locale-label { pointer-events: none; }
+      .lu-locale-label[data-loc-when='uk'] { display: none; }
+      html[data-chrome-locale='uk'] .lu-locale-label[data-loc-when='uk'] { display: inline; }
+      html[data-chrome-locale='uk'] .lu-locale-label[data-loc-when='en'] { display: none; }
     </style>
   </head>
   <body>
     <div class="lu-shell">
-      <a class="lu-skip-link" href="#main-content">Skip to content</a>
+      <a class="lu-skip-link" href="#main-content"><ChromeText k="a11y.skip" /></a>
       <header class="lu-header">
         <div class="lu-header-inner">
           <a class="lu-logo" href="/" aria-label="Learn Ukrainian home">
@@ -164,7 +240,7 @@ const isActive = (href: string) => {
           <nav class="lu-nav" aria-label="Primary">
             {topNav.map((item) => (
               <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
-                {item.label}
+                <ChromeText k={item.key} />
               </a>
             ))}
             <span class="lu-nav-divider" aria-hidden="true"></span>
@@ -173,13 +249,16 @@ const isActive = (href: string) => {
               <span class="lu-theme-icon lu-theme-icon--moon" aria-hidden="true">🌙</span>
               <span class="lu-theme-icon lu-theme-icon--sun" aria-hidden="true">☀️</span>
             </button>
+            <button id="lu-locale-toggle" class="lu-locale-toggle" type="button" aria-label="Switch interface language (English / Ukrainian)" title="Interface language — English / Ukrainian">
+              <span class="lu-locale-label" data-loc-when="en" aria-hidden="true">УКР</span><span class="lu-locale-label" data-loc-when="uk" aria-hidden="true">ENG</span>
+            </button>
           </nav>
           <details class="lu-mobile-menu">
-            <summary aria-label="Відкрити навігацію">Меню</summary>
+            <summary aria-label="Open navigation"><ChromeText k="nav.menu" /></summary>
             <nav aria-label="Mobile primary">
               {topNav.map((item) => (
                 <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
-                  {item.label}
+                  <ChromeText k={item.key} />
                 </a>
               ))}
               <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io">GitHub</a>
@@ -223,7 +302,7 @@ const isActive = (href: string) => {
           {sidebar && (
             <details class="lu-sidebar" open>
               <summary class="lu-sidebar-toggle">
-                {sidebar.titleLabel ?? 'Уроки'} · {sidebar.positionLabel}
+                {sidebar.titleLabel ? sidebar.titleLabel : <ChromeText k="sidebar.lessons" />} · {sidebar.positionLabel}
               </summary>
               <div class="lu-sidebar-body">
                 <a class="lu-sidebar-back" href={sidebar.backHref}>← {sidebar.backLabel}</a>
@@ -271,25 +350,18 @@ const isActive = (href: string) => {
           <div class="lu-footer-grid">
             <section>
               <h2>Learn Ukrainian</h2>
-              <p>
-                Self-study is welcome here, but the best learning happens with trained native Ukrainian teachers.
-                These materials support practice; they do not replace devoted teachers.
-              </p>
-              <p>
-                Pedagogical inspiration comes in part from Ukrainian Lessons and the public teaching work of
-                Anna Ohoiko, with gratitude for inspiration and help. Course content here is independently written:
-                it is not copied from ULP or Anna Ohoiko-authored books and does not imply formal endorsement.
-              </p>
+              <p><ChromeText k="footer.mission1" /></p>
+              <p><ChromeText k="footer.mission2" /></p>
             </section>
             <section>
-              <h3>Course</h3>
-              <a href="/a1/">A1</a>
-              <a href="/a2/">A2</a>
-              <a href="/b1/">B1 Preview</a>
-              <a href="/lexicon/">Word Atlas</a>
+              <h3><ChromeText k="footer.courseHeading" /></h3>
+              <a href="/a1/"><ChromeText k="nav.a1" /></a>
+              <a href="/a2/"><ChromeText k="nav.a2" /></a>
+              <a href="/b1/"><ChromeText k="nav.b1" /></a>
+              <a href="/lexicon/"><ChromeText k="nav.atlas" /></a>
             </section>
             <section>
-              <h3>External</h3>
+              <h3><ChromeText k="footer.externalHeading" /></h3>
               <a href="https://www.ukrainianlessons.com/">Ukrainian Lessons</a>
               <a href="https://www.ukrainianlessons.com/the-inukrainian-podcast/">ULP Podcast</a>
               <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io">Source repository</a>
