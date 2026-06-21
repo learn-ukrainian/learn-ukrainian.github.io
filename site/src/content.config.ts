@@ -26,4 +26,25 @@ export const collections = {
 			build_status: z.string().optional(),
 		}).passthrough(),
 	}),
+	// Хрестоматія — a global, cross-track library of full primary-source texts
+	// (думи, колядки, Шевченко, chronicles, …). NOT per-track: any lesson in any
+	// seminar references a reading the way lessons reference Word Atlas words.
+	// Lives OUTSIDE docs/ so the MDX↔source parity gate (which scans docs/) skips it.
+	readings: defineCollection({
+		loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/readings' }),
+		schema: z.object({
+			title: z.string(),
+			title_en: z.string().optional(),
+			author: z.string().optional(),
+			collector: z.string().optional(),
+			year: z.string().optional(),
+			period: z.string().optional(),
+			genre: z.string(),
+			tracks: z.array(z.string()).default([]),
+			excerpt: z.string(),
+			source: z.string(),
+			public_domain: z.literal(true),  // require explicit rights assertion; missing => fail validation
+			order: z.number().optional(),
+		}).passthrough(),
+	}),
 };

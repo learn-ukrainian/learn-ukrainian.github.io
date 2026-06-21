@@ -1,0 +1,129 @@
+/* ============================================================
+   Хрестоматія (Readings) — global primary-source library.
+   Self-contained; uses the site's --lu-* tokens so it follows
+   light/dark theme and matches the rest of the site.
+   ============================================================ */
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0);
+  white-space: nowrap; border: 0;
+}
+
+.readings-home {
+  max-width: 1080px;
+}
+
+.readings-intro {
+  font-size: 1.05rem;
+  color: var(--lu-text);
+  background: var(--lu-surface-muted);
+  border: 1px solid var(--lu-border);
+  border-left: 4px solid var(--lu-teal, #00695C);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin: 0 0 1.6rem;
+}
+
+/* search */
+.readings-search {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 0 0 1.6rem;
+}
+.readings-search input[type="search"] {
+  flex: 1;
+  min-width: 240px;
+  font-size: 1rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--lu-border);
+  border-radius: 10px;
+  background: var(--lu-surface);
+  color: var(--lu-text);
+}
+.readings-search input[type="search"]:focus {
+  outline: 2px solid var(--lu-teal, #00695C);
+  outline-offset: 1px;
+}
+.readings-count {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--lu-text-muted);
+  white-space: nowrap;
+}
+
+/* genre sections */
+.readings-genre {
+  margin: 1.8rem 0 0.4rem;
+}
+.readings-genre > h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  font-size: 1.3rem;
+  margin: 0 0 0.7rem;
+}
+.readings-genre > h2::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--lu-border);
+}
+
+/* cards */
+.readings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.reading-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1rem 1.15rem;
+  background: var(--lu-surface);
+  border: 1px solid var(--lu-border);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--lu-text);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.reading-card:hover {
+  border-color: var(--lu-teal, #00695C);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+.reading-scroll { font-size: 1.4rem; line-height: 1; }
+.reading-meta {
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--lu-teal, #00695C);
+}
+.reading-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.reading-excerpt {
+  font-size: 0.9rem;
+  color: var(--lu-text-muted);
+  flex: 1;
+}
+.reading-tracks {
+  font-size: 0.78rem;
+  color: var(--lu-text-muted);
+  border-top: 1px solid var(--lu-border);
+  padding-top: 0.5rem;
+}
+
+.readings-empty {
+  color: var(--lu-text-muted);
+  font-style: italic;
+  margin: 1.5rem 0;
+}

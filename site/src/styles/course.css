@@ -1,6 +1,7 @@
 @import './lesson.css';
 @import '../css/custom.css';
 @import './word-atlas.css';
+@import './readings.css';
 
 :root {
   color-scheme: light;
@@ -477,6 +478,12 @@ body {
 
 .lu-hero.history {
   background: linear-gradient(135deg, #BF360C, #6D4C41);
+}
+
+/* Хрестоматія (Readings) — a scholarly "reading-room" identity, distinct from the
+   folk/lit/lexicon heroes: deep ink-teal, neutral across all tracks. */
+.lu-hero.readings {
+  background: linear-gradient(135deg, #14323B, #1F6E5C);
 }
 
 .lu-hero.unavailable {

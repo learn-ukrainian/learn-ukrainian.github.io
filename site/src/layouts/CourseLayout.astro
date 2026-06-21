@@ -30,7 +30,7 @@ type Props = {
   eyebrow?: string;
   subtitle?: string;
   currentPath?: string;
-  heroVariant?: 'core' | 'folk' | 'lexicon' | 'seminar' | 'lit' | 'history' | 'unavailable';
+  heroVariant?: 'core' | 'folk' | 'lexicon' | 'seminar' | 'lit' | 'history' | 'readings' | 'unavailable';
   wide?: boolean;
   navItems?: NavItem[];
   sidebar?: Sidebar;
@@ -63,6 +63,7 @@ const topNav = [
   { href: '/a2/', label: 'A2' },
   { href: '/b1/', label: 'B1 Preview' },
   { href: '/lexicon/', label: 'Word Atlas' },
+  { href: '/readings/', label: 'Reading reference' },
   { href: '/lexicon/index/', label: 'Search' },
 ];
 
@@ -196,6 +197,7 @@ const isActive = (href: string) => {
             heroVariant === 'seminar' && 'seminar',
             heroVariant === 'lit' && 'lit',
             heroVariant === 'history' && 'history',
+            heroVariant === 'readings' && 'readings',
             heroVariant === 'unavailable' && 'unavailable',
           ]}>
             <div class="lu-hero-inner">
