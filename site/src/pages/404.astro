@@ -1,5 +1,6 @@
 ---
 import CourseLayout from '../layouts/CourseLayout.astro';
+import ChromeText from '../components/chrome/ChromeText.astro';
 ---
 
 <CourseLayout
@@ -13,16 +14,13 @@ import CourseLayout from '../layouts/CourseLayout.astro';
 >
   <section class="route-state-card big">
     <p class="state-code">404</p>
-    <h2>This page is not part of the public learner UI.</h2>
-    <p>
-      The route may be hidden, not published, or not generated yet. Use an available
-      course surface instead of guessing around draft paths.
-    </p>
+    <h2><ChromeText k="state.notFoundTitle" /></h2>
+    <p><ChromeText k="state.notFoundBody" /></p>
     <div class="state-actions">
-      <a href="/a1/">A1</a>
-      <a href="/b1/">B1 Preview</a>
-      <a href="/search/">Search</a>
-      <a href="/lexicon/">Word Atlas</a>
+      <a href="/a1/"><ChromeText k="nav.a1" /></a>
+      <a href="/b1/"><ChromeText k="nav.b1" /></a>
+      <a href="/search/"><ChromeText k="nav.search" /></a>
+      <a href="/lexicon/"><ChromeText k="nav.atlas" /></a>
     </div>
   </section>
 </CourseLayout>

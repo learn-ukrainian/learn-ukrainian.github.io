@@ -5,6 +5,8 @@
  */
 import { getCollection } from 'astro:content';
 import CourseLayout from '../../layouts/CourseLayout.astro';
+import ChromeText from '../../components/chrome/ChromeText.astro';
+import { CHROME_STRINGS } from '../../lib/i18n/chrome';
 
 const readings = await getCollection('readings');
 const sorted = [...readings].sort(
@@ -28,7 +30,7 @@ const TRACK_LABELS: Record<string, string> = {
 <CourseLayout
   title="Reading reference"
   description="The full original primary-source texts the seminars teach from — for reading and close study."
-  eyebrow="Reference · Primary sources"
+  eyebrowKey="readings.eyebrow"
   subtitle="The full original texts the seminars teach from. Lessons study excerpts and link here for the complete work."
   currentPath="/readings/"
   heroVariant="readings"
@@ -37,15 +39,18 @@ const TRACK_LABELS: Record<string, string> = {
 >
   <section class="readings-home">
     <p class="readings-intro">
-      A <strong>reference library of primary sources</strong> — the complete original texts the
-      seminars study in <strong>excerpts</strong>. Every text is <strong>public domain</strong>,
-      reproduced verbatim with its source cited. Lessons in any track link here for the full work.
+      <ChromeText k="readings.intro" />
     </p>
 
     <div class="readings-search">
-      <label for="readings-q" class="sr-only">Search the reading reference</label>
-      <input id="readings-q" type="search" placeholder="Search a text, genre, or author…" autocomplete="off" />
-      <p class="readings-count" data-readings-count role="status" aria-live="polite" aria-atomic="true">{sorted.length} {sorted.length === 1 ? 'text' : 'texts'}</p>
+      <label for="readings-q" class="sr-only"><ChromeText k="readings.searchLabel" /></label>
+      <input id="readings-q" type="search" placeholder={CHROME_STRINGS.en['readings.searchPlaceholder']} autocomplete="off" />
+      <p class="readings-count" data-readings-count role="status" aria-live="polite" aria-atomic="true">
+        <span class="lu-i18n">
+          <span data-loc="en">{sorted.length} {sorted.length === 1 ? 'text' : 'texts'}</span>
+          <span data-loc="uk">{sorted.length} {sorted.length === 1 ? 'текст' : 'тексти'}</span>
+        </span>
+      </p>
     </div>
 
     {genres.map((genre) => (
@@ -71,7 +76,7 @@ const TRACK_LABELS: Record<string, string> = {
         </div>
       </section>
     ))}
-    <p class="readings-empty" data-readings-empty hidden>No matches. Try another word.</p>
+    <p class="readings-empty" data-readings-empty hidden><ChromeText k="readings.empty" /></p>
   </section>
 
   <script is:inline define:vars={{ total: sorted.length }}>
@@ -81,8 +86,15 @@ const TRACK_LABELS: Record<string, string> = {
       const blocks = [...document.querySelectorAll('[data-genre-block]')];
       const countEl = document.querySelector('[data-readings-count]');
       const emptyEl = document.querySelector('[data-readings-empty]');
-      const plural = (n) => (n === 1 ? 'text' : 'texts');
+      const plural = (n, loc) => (loc === 'uk' ? (n === 1 ? 'текст' : 'тексти') : (n === 1 ? 'text' : 'texts'));
       const norm = (s) => String(s || '').toLocaleLowerCase('uk').trim();
+      const updateCount = (n) => {
+        if (!countEl) return;
+        const enSpan = countEl.querySelector('[data-loc="en"]');
+        const ukSpan = countEl.querySelector('[data-loc="uk"]');
+        if (enSpan) enSpan.textContent = `${n} ${plural(n, 'en')}`;
+        if (ukSpan) ukSpan.textContent = `${n} ${plural(n, 'uk')}`;
+      };
       const run = () => {
         const q = norm(input && input.value);
         let shown = 0;
@@ -94,7 +106,7 @@ const TRACK_LABELS: Record<string, string> = {
         blocks.forEach((b) => {
           b.hidden = ![...b.querySelectorAll('[data-reading]')].some((c) => !c.hidden);
         });
-        if (countEl) countEl.textContent = `${shown} ${plural(shown)}`;
+        updateCount(shown);
         if (emptyEl) emptyEl.hidden = shown !== 0 || !q;
       };
       input && input.addEventListener('input', run);
