@@ -98,17 +98,17 @@ references:
 - title: Слов'янська міфологія
   author: Костомаров М.
   note: Латинське походження слова «коляда», класифікація зимових обрядів, порівняння з великоросійськими
-  type: primary
+  type: scholarly
   work: Слов'янська міфологія
 - title: Нарис історії культури України
   author: Попович М.
   note: Тріада господар-господиня-діти, Світове дерево, провінційно-римські впливи
-  type: primary
+  type: scholarly
   work: Нарис історії культури України
 - title: Історія української літератури
   author: Чижевський Д.
   note: Фольклорні жанри як стилістичні епохи
-  type: primary
+  type: scholarly
   work: Історія української літератури
 - title: Праці етнографічно-статистичної експедиції в Західно-Руський край
   author: Чубинський П.
@@ -132,11 +132,18 @@ readings:
   license: public_domain
   hosting: host
   reading_slug: shchedrivka-oi-syvaia-ta-i-zozulechka
+- title: «Щедрик, щедрик, щедрівочка»
+  title_en: Shchedryk, shchedryk, little swallow
+  genre: Щедрівка
+  source: Народна творчість; корпус ukrlib-narod-dumy; chunk d4848a7e_c0000
+  license: public_domain
+  hosting: host
+  reading_slug: shchedrivka-shchedryk-lastivochka
 sequence: 5
 slug: koliadky-shchedrivky
 subtitle: 'Carols and Shchedrivky: The Cosmogonic Myth'
 title: 'Колядки та щедрівки: Міф про створення світу'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: обрядова пісня різдвяного циклу, що величає господаря та його родину
   pos: ж.
