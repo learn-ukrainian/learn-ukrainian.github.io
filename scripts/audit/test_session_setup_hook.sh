@@ -50,11 +50,12 @@ setup_fixture() {
 run_hook() {
   local root="$1"
   local allow_git_router="${2:-0}"
+  local handoff_agent="${3:-claude}"
 
   HOME="$TMP_ROOT/home" \
     CLAUDE_PROJECT_DIR="$root" \
     CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS=32000 \
-    SESSION_HANDOFF_AGENT=claude \
+    SESSION_HANDOFF_AGENT="$handoff_agent" \
     SESSION_HANDOFF_ALLOW_GIT_ROUTER="$allow_git_router" \
     "$HOOK"
 }
@@ -171,6 +172,19 @@ assert_contains "$output" "WARN: Could not locate latest brief in current.md und
 assert_contains "$output" "thread_handoff.py prepare --agent claude" "no table"
 assert_not_contains "$output" "NO TABLE FALLBACK BODY" "no table"
 fallback_warn_count=$((fallback_warn_count + $(count_warns "$output")))
+
+# 8. SESSION_HANDOFF_AGENT routes each lane to its OWN thread handoff slot.
+#    Regression guard for the infra/folk cold-start collision: with both handoff files
+#    present, agent=claude-infra must select the infra slot, never the folk `claude` slot.
+setup_fixture "$fixture_root"
+mkdir -p "$fixture_root/.agent"
+printf '# infra handoff\n' > "$fixture_root/.agent/claude-infra-thread-handoff.md"
+printf '# folk handoff\n' > "$fixture_root/.agent/claude-thread-handoff.md"
+output="$(run_hook "$fixture_root" 0 claude-infra)"
+assert_contains "$output" "Thread handoff: .agent/claude-infra-thread-handoff.md" "infra lane isolation"
+assert_contains "$output" "Bootstrap prompt: .agent/claude-infra-thread-bootstrap.md" "infra lane isolation"
+assert_not_contains "$output" "Thread handoff: .agent/claude-thread-handoff.md" "infra lane isolation"
+assert_not_contains "$output" "WARN:" "infra lane isolation"
 
 printf 'marker_hit_stdout_bytes=%s\n' "$marker_bytes"
 printf 'fallback_warn_count=%s\n' "$fallback_warn_count"

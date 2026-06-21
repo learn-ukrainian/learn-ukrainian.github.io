@@ -15,6 +15,7 @@ on:
       - 'scripts/deploy_prompts.sh'
       - 'scripts/ensure_headroom.sh'
       - 'start-claude.sh'
+      - 'start-claude-infra.sh'
       - 'start-codex.sh'
       - 'tests/**/*.py'
       - 'pyproject.toml'
@@ -84,6 +85,7 @@ jobs:
               - 'scripts/deploy_prompts.sh'
               - 'scripts/ensure_headroom.sh'
               - 'start-claude.sh'
+              - 'start-claude-infra.sh'
               - 'start-codex.sh'
               - 'tests/**/*.py'
               - 'package.json'
@@ -123,6 +125,7 @@ jobs:
               - 'package.json'
               - 'package-lock.json'
               - 'start-claude.sh'
+              - 'start-claude-infra.sh'
               - 'start-codex.sh'
               - 'scripts/check_rules_deployment.sh'
               - 'scripts/deploy_prompts.sh'
@@ -340,6 +343,7 @@ jobs:
         run: |
           bash -n \
             start-claude.sh \
+            start-claude-infra.sh \
             start-codex.sh \
             scripts/ensure_headroom.sh \
             scripts/deploy_prompts.sh \
