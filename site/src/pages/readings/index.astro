@@ -20,41 +20,32 @@ for (const r of sorted) {
 const genres = [...byGenre.keys()];
 
 const TRACK_LABELS: Record<string, string> = {
-  folk: 'Фольклор', lit: 'Література', hist: 'Історія', bio: 'Біографії',
-  istorio: 'Історіографія', oes: 'Давня мова', ruth: 'Бароко',
+  folk: 'Folk', lit: 'Literature', hist: 'History', bio: 'Biographies',
+  istorio: 'Historiography', oes: 'Old East Slavic', ruth: 'Ruthenian',
 };
-const cardData = sorted.map((r) => ({
-  id: r.id,
-  title: r.data.title,
-  genre: r.data.genre,
-  author: r.data.author ?? '',
-  excerpt: r.data.excerpt,
-  tracks: (r.data.tracks ?? []).map((t: string) => TRACK_LABELS[t] ?? t),
-}));
 ---
 
 <CourseLayout
-  title="Хрестоматія"
-  description="Повні оригінальні тексти, з яких навчають семінари — першоджерела для читання й близького розбору."
-  eyebrow="Першоджерела · Readings"
-  subtitle="Повні оригінальні тексти, з яких навчають семінари. Уроки розбирають уривки й покликаються сюди на повний твір."
+  title="Reading reference"
+  description="The full original primary-source texts the seminars teach from — for reading and close study."
+  eyebrow="Reference · Primary sources"
+  subtitle="The full original texts the seminars teach from. Lessons study excerpts and link here for the complete work."
   currentPath="/readings/"
   heroVariant="readings"
   wide
-  navItems={[{ href: '/', label: 'Home' }, { href: '/readings/', label: 'Хрестоматія' }]}
+  navItems={[{ href: '/', label: 'Home' }, { href: '/readings/', label: 'Reading reference' }]}
 >
   <section class="readings-home">
     <p class="readings-intro">
-      Це <strong>хрестоматія першоджерел</strong> — повні оригінали творів, які семінари
-      розбирають <strong>уривками</strong>. Усі тексти у <strong>суспільному надбанні</strong>,
-      подані дослівно за записом, з посиланням на джерело. Уроки з будь-якого розділу
-      покликаються сюди на повний твір.
+      A <strong>reference library of primary sources</strong> — the complete original texts the
+      seminars study in <strong>excerpts</strong>. Every text is <strong>public domain</strong>,
+      reproduced verbatim with its source cited. Lessons in any track link here for the full work.
     </p>
 
     <div class="readings-search">
-      <label for="readings-q" class="sr-only">Пошук у хрестоматії</label>
-      <input id="readings-q" type="search" placeholder="Шукати твір, жанр чи автора…" autocomplete="off" />
-      <p class="readings-count" data-readings-count>{sorted.length} {sorted.length === 1 ? 'текст' : 'текстів'}</p>
+      <label for="readings-q" class="sr-only">Search the reading reference</label>
+      <input id="readings-q" type="search" placeholder="Search a text, genre, or author…" autocomplete="off" />
+      <p class="readings-count" data-readings-count>{sorted.length} {sorted.length === 1 ? 'text' : 'texts'}</p>
     </div>
 
     {genres.map((genre) => (
@@ -80,7 +71,7 @@ const cardData = sorted.map((r) => ({
         </div>
       </section>
     ))}
-    <p class="readings-empty" data-readings-empty hidden>Нічого не знайдено. Спробуй інше слово.</p>
+    <p class="readings-empty" data-readings-empty hidden>No matches. Try another word.</p>
   </section>
 
   <script is:inline define:vars={{ total: sorted.length }}>
@@ -90,7 +81,7 @@ const cardData = sorted.map((r) => ({
       const blocks = [...document.querySelectorAll('[data-genre-block]')];
       const countEl = document.querySelector('[data-readings-count]');
       const emptyEl = document.querySelector('[data-readings-empty]');
-      const plural = (n) => (n === 1 ? 'текст' : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 'тексти' : 'текстів'));
+      const plural = (n) => (n === 1 ? 'text' : 'texts');
       const norm = (s) => String(s || '').toLocaleLowerCase('uk').trim();
       const run = () => {
         const q = norm(input && input.value);

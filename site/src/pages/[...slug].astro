@@ -352,7 +352,7 @@ const searchItems: SearchItem[] = [
   ...allReadings.map((entry) => ({
     title: entry.data.title,
     href: `/readings/${entry.id}/`,
-    type: 'Хрестоматія',
+    type: 'Reading reference',
     track: 'Reference',
     text: `${entry.data.title} ${entry.data.title_en ?? ''} ${entry.data.genre} ${entry.data.author ?? ''} ${entry.data.excerpt}`,
   })),
