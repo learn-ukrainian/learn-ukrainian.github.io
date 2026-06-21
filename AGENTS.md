@@ -225,7 +225,7 @@ This project runs **locally with pyenv**, NOT in Docker. Do not use:
 
 ## Economical Multi-Agent Delegation
 
-When Codex multi-agent support is enabled, the user explicitly authorizes the main Codex agent to use lower-cost routine subagents for bounded work that can run in parallel without lowering quality. The main agent stays responsible for planning, integration, final review, PR creation, Gemini review routing, and merge decisions.
+When Codex multi-agent support is enabled, the user explicitly authorizes the main Codex agent to use lower-cost routine subagents for bounded work that can run in parallel without lowering quality. The main agent stays responsible for planning, integration, final review, PR creation, independent review routing, and merge decisions.
 
 Prefer `explorer` subagents for read-only investigation and validation. Use `worker` subagents only for mechanical edits with a clearly owned file set and no ambiguity.
 
@@ -244,7 +244,7 @@ Use routine subagents for:
 - updating straightforward documentation or generated indexes when explicitly in scope
 - verifying a narrow behavior while the main agent keeps implementing elsewhere
 
-Do not use routine subagents for architecture decisions, security-sensitive judgment, ambiguous debugging, broad refactors, PR creation, Gemini review routing, merges, destructive actions, or work that blocks the main agent's next immediate step. Give each subagent a narrow task, a clear file ownership boundary when edits are allowed, and instructions not to revert unrelated changes. The main agent must review every routine-subagent diff before finalizing or presenting the work as complete.
+Do not use routine subagents for architecture decisions, security-sensitive judgment, ambiguous debugging, broad refactors, PR creation, independent review routing, merges, destructive actions, or work that blocks the main agent's next immediate step. Give each subagent a narrow task, a clear file ownership boundary when edits are allowed, and instructions not to revert unrelated changes. The main agent must review every routine-subagent diff before finalizing or presenting the work as complete.
 
 Cost controls:
 
@@ -253,7 +253,7 @@ Cost controls:
 - Do not spawn a subagent for work the main agent can finish faster than delegation overhead.
 - Keep routine delegation to one to three subagents at a time unless the user explicitly asks for a larger sweep.
 - Do not let subagents read secrets, source `.envrc`, call `gh`, request reviews, or merge PRs.
-- Do not delegate the independent-family review requirement. Gemini review is still mandatory before merge.
+- Do not delegate the independent-family review requirement. Before merge, request a read-only Claude Opus 4.8 review and treat unresolved findings as blockers. If Claude Opus 4.8 is unavailable, use Agy with Gemini 3.1 Pro High (`ab ask-agy --to-model gemini-3.1-pro-high`) as the fallback independent-family review.
 
 Module-build PRs must persist token telemetry through
 `POST /api/telemetry/module-builds` and include the same summary in the PR body
