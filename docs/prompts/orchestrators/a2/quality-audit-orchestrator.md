@@ -17,7 +17,7 @@ Audit A2 modules for transition-track pedagogy: immersion ramp, grammar complexi
 ## WORKTREE_ROOT Setup
 
 ```bash
-REPO_ROOT="$(git rev-parse --show-toplevel)"
+REPO_ROOT="${REPO_ROOT:-$(git rev-parse --show-toplevel)}"
 cd "$REPO_ROOT"
 git fetch origin main
 git worktree add -b codex/a2-quality-audit .worktrees/dispatch/codex/a2-quality-audit origin/main
@@ -83,40 +83,44 @@ Read-only explorers are allowed for phase summaries, module-shape surveys, or co
 
 Write the report to `docs/audits/a2-quality-audit-YYYY-MM-DD.md`.
 
-## Report Delivery
-
-After validation, commit and open a draft PR that contains only the report:
-
-```bash
-git add docs/audits/a2-quality-audit-YYYY-MM-DD.md
-git commit -m "docs: add A2 quality audit" --trailer "X-Agent: codex/a2-quality-audit"
-.venv/bin/python scripts/audit/lint_agent_trailer.py
-git push -u origin codex/a2-quality-audit
-gh pr create --draft --fill --head codex/a2-quality-audit --base main
-```
-
 ## Validation Commands
 
 ```bash
+REPORT="docs/audits/a2-quality-audit-$(date +%F).md"
 git status --short --branch
 .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a2/<slug>/module.md
 git diff --check
-git diff --name-only
-if git diff --name-only | rg -v '^docs/audits/a2-quality-audit-[0-9]{4}-[0-9]{2}-[0-9]{2}\.md$'; then
+test -f "$REPORT"
+CHANGED_FILES="$( { git diff --name-only; git diff --cached --name-only; git ls-files --others --exclude-standard; } | sort -u )"
+printf '%s\n' "$CHANGED_FILES"
+if [ -n "$CHANGED_FILES" ] && printf '%s\n' "$CHANGED_FILES" | rg -v '^docs/audits/a2-quality-audit-[0-9]{4}-[0-9]{2}-[0-9]{2}\.md$'; then
   echo "Unexpected file outside the durable audit report" >&2
   exit 1
 fi
-if git diff --name-only | rg '(^|/)status/.*\.json$|(^|/)audit/.*-review\.md$|(^|/)review/.*-review\.md$|^data/telemetry/'; then
+if [ -n "$CHANGED_FILES" ] && printf '%s\n' "$CHANGED_FILES" | rg '(^|/)status/.*\.json$|(^|/)audit/.*-review\.md$|(^|/)review/.*-review\.md$|^data/telemetry/'; then
   echo "Forbidden generated artifact in diff" >&2
   exit 1
 fi
-if rg -n 'sys\.executable' docs/audits/a2-quality-audit-YYYY-MM-DD.md; then
+if rg -n 'sys\.executable' "$REPORT"; then
   echo "Audit report mentions forbidden sys.executable" >&2
   exit 1
 fi
 ```
 
 Adapt the `audit_module.py` path for each built module audited. Do not pass `--fix`. Do not run module builds. Do not run commands that write generated curriculum audit/status/review artifacts.
+
+## Report Delivery
+
+After validation, commit and open a draft PR that contains only the report:
+
+```bash
+REPORT="docs/audits/a2-quality-audit-$(date +%F).md"
+git add "$REPORT"
+git commit -m "docs: add A2 quality audit" --trailer "X-Agent: codex/a2-quality-audit"
+.venv/bin/python scripts/audit/lint_agent_trailer.py
+git push -u origin codex/a2-quality-audit
+gh pr create --draft --fill --head codex/a2-quality-audit --base main
+```
 
 ## Expected Final Response
 

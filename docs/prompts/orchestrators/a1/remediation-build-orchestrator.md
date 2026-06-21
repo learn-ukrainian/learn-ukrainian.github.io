@@ -17,7 +17,7 @@ Fix all findings from the selected A1 audit batch without changing unrelated mod
 ## WORKTREE_ROOT Setup
 
 ```bash
-REPO_ROOT="$(git rev-parse --show-toplevel)"
+REPO_ROOT="${REPO_ROOT:-$(git rev-parse --show-toplevel)}"
 cd "$REPO_ROOT"
 git fetch origin main
 git worktree add -b codex/a1-remediation-<batch> .worktrees/dispatch/codex/a1-remediation-<batch> origin/main
@@ -92,7 +92,8 @@ Adapt module numbers from `curriculum.yaml`:
 .venv/bin/python scripts/generate_mdx.py l2-uk-en a1 <module_num> --validate
 .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/<slug>/module.md
 git diff --check
-if git diff --name-only | rg '(^|/)status/.*\.json$|(^|/)audit/.*-review\.md$|(^|/)review/.*-review\.md$|^data/telemetry/'; then
+CHANGED_FILES="$( { git diff --name-only; git diff --cached --name-only; git ls-files --others --exclude-standard; } | sort -u )"
+if [ -n "$CHANGED_FILES" ] && printf '%s\n' "$CHANGED_FILES" | rg '(^|/)status/.*\.json$|(^|/)audit/.*-review\.md$|(^|/)review/.*-review\.md$|^data/telemetry/'; then
   echo "Forbidden generated artifact in diff" >&2
   exit 1
 fi

@@ -23,6 +23,7 @@ Paste these rules into future orchestration prompts and then verify them against
 ## Worktree Layout
 
 - Work in a dispatch worktree, not the main checkout.
+- Run worktree setup from the main checkout, or set `REPO_ROOT` to the intended source checkout before pasting a setup block. This avoids nesting dispatch worktrees inside another worktree.
 - Use `.worktrees/dispatch/codex/<task>/` for Codex work.
 - Align the branch name with the path, for example `codex/<task>`.
 - Verify the worktree before editing:

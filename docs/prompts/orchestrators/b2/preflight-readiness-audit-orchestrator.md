@@ -17,7 +17,7 @@ Determine whether B2 is ready for module production. Validate plans, sequence, `
 ## WORKTREE_ROOT Setup
 
 ```bash
-REPO_ROOT="$(git rev-parse --show-toplevel)"
+REPO_ROOT="${REPO_ROOT:-$(git rev-parse --show-toplevel)}"
 cd "$REPO_ROOT"
 git fetch origin main
 git worktree add -b codex/b2-preflight-readiness .worktrees/dispatch/codex/b2-preflight-readiness origin/main
@@ -79,40 +79,44 @@ Read-only helpers are allowed for inventories or slug-matrix checks. The main au
 
 Write the report to `docs/audits/b2-preflight-readiness-YYYY-MM-DD.md`.
 
-## Report Delivery
-
-After validation, commit and open a draft PR that contains only the report:
-
-```bash
-git add docs/audits/b2-preflight-readiness-YYYY-MM-DD.md
-git commit -m "docs: add B2 preflight readiness audit" --trailer "X-Agent: codex/b2-preflight-readiness"
-.venv/bin/python scripts/audit/lint_agent_trailer.py
-git push -u origin codex/b2-preflight-readiness
-gh pr create --draft --fill --head codex/b2-preflight-readiness --base main
-```
-
 ## Validation Commands
 
 ```bash
+REPORT="docs/audits/b2-preflight-readiness-$(date +%F).md"
 .venv/bin/python scripts/validate_plans.py b2
 git status --short --branch
 git diff --check
-git diff --name-only
-if git diff --name-only | rg -v '^docs/audits/b2-preflight-readiness-[0-9]{4}-[0-9]{2}-[0-9]{2}\.md$'; then
+test -f "$REPORT"
+CHANGED_FILES="$( { git diff --name-only; git diff --cached --name-only; git ls-files --others --exclude-standard; } | sort -u )"
+printf '%s\n' "$CHANGED_FILES"
+if [ -n "$CHANGED_FILES" ] && printf '%s\n' "$CHANGED_FILES" | rg -v '^docs/audits/b2-preflight-readiness-[0-9]{4}-[0-9]{2}-[0-9]{2}\.md$'; then
   echo "Unexpected file outside the durable audit report" >&2
   exit 1
 fi
-if git diff --name-only | rg '(^|/)status/.*\.json$|(^|/)audit/.*-review\.md$|(^|/)review/.*-review\.md$|^data/telemetry/'; then
+if [ -n "$CHANGED_FILES" ] && printf '%s\n' "$CHANGED_FILES" | rg '(^|/)status/.*\.json$|(^|/)audit/.*-review\.md$|(^|/)review/.*-review\.md$|^data/telemetry/'; then
   echo "Forbidden generated artifact in diff" >&2
   exit 1
 fi
-if rg -n 'sys\.executable' docs/audits/b2-preflight-readiness-YYYY-MM-DD.md; then
+if rg -n 'sys\.executable' "$REPORT"; then
   echo "Audit report mentions forbidden sys.executable" >&2
   exit 1
 fi
 ```
 
 Do not run builds. Do not modify B2 plans, wiki files, discovery files, or modules.
+
+## Report Delivery
+
+After validation, commit and open a draft PR that contains only the report:
+
+```bash
+REPORT="docs/audits/b2-preflight-readiness-$(date +%F).md"
+git add "$REPORT"
+git commit -m "docs: add B2 preflight readiness audit" --trailer "X-Agent: codex/b2-preflight-readiness"
+.venv/bin/python scripts/audit/lint_agent_trailer.py
+git push -u origin codex/b2-preflight-readiness
+gh pr create --draft --fill --head codex/b2-preflight-readiness --base main
+```
 
 ## Expected Final Response
 

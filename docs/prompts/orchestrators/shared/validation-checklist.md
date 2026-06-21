@@ -10,25 +10,35 @@ Use this as a menu, not a blind script. First inspect the current local repo to 
 ```bash
 git status --short --branch
 git diff --check
-git diff --name-only
-git diff -- .python-version .yamllint .markdownlint.json
-if git diff --name-only | rg '(^|/)status/.*\.json$|(^|/)audit/.*-review\.md$|(^|/)review/.*-review\.md$|^docs/.*-STATUS\.md$|^data/telemetry/'; then
+CHANGED_FILES="$( { git diff --name-only; git diff --cached --name-only; git ls-files --others --exclude-standard; } | sort -u )"
+printf '%s\n' "$CHANGED_FILES"
+if ! git diff --quiet -- .python-version .yamllint .markdownlint.json || ! git diff --cached --quiet -- .python-version .yamllint .markdownlint.json; then
+  echo "Protected config changed" >&2
+  exit 1
+fi
+if [ -n "$CHANGED_FILES" ] && printf '%s\n' "$CHANGED_FILES" | rg '(^|/)status/.*\.json$|(^|/)audit/.*-review\.md$|(^|/)review/.*-review\.md$|^docs/.*-STATUS\.md$|^data/telemetry/'; then
   echo "Forbidden generated artifact in diff" >&2
   exit 1
 fi
-CHANGED_CODE_FILES="$(git diff --name-only -- scripts site curriculum tests)"
+CHANGED_CODE_FILES="$(printf '%s\n' "$CHANGED_FILES" | awk '/^(scripts|site|curriculum|tests)\\// {print}')"
 if [ -n "$CHANGED_CODE_FILES" ]; then
-  if printf '%s\n' "$CHANGED_CODE_FILES" | xargs rg -n 'sys\.executable'; then
-    echo "New or modified code path contains sys.executable" >&2
-    exit 1
-  fi
+  while IFS= read -r file; do
+    [ -f "$file" ] || continue
+    if rg -n 'sys\.executable' "$file"; then
+      echo "New or modified code path contains sys.executable" >&2
+      exit 1
+    fi
+  done <<EOF
+$CHANGED_CODE_FILES
+EOF
 fi
 ```
 
 For docs-only prompt infrastructure, add a scoped path gate:
 
 ```bash
-if git diff --name-only | rg -v '^docs/prompts/orchestrators/'; then
+CHANGED_FILES="$( { git diff --name-only; git diff --cached --name-only; git ls-files --others --exclude-standard; } | sort -u )"
+if [ -n "$CHANGED_FILES" ] && printf '%s\n' "$CHANGED_FILES" | rg -v '^docs/prompts/orchestrators/'; then
   echo "Unexpected file outside docs/prompts/orchestrators/" >&2
   exit 1
 fi

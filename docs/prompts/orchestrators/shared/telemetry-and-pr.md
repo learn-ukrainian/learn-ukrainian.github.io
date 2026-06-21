@@ -35,8 +35,7 @@ Required fields include:
 - `swarm_used`
 - `swarm_label`
 - `swarm_note`
-- `participants`
-- `token_source`
+- `participants`, each with `token_source`
 
 Solo runs still require `swarm_used: false` and a `swarm_note`.
 
@@ -56,7 +55,6 @@ curl -s -X POST "${MONITOR_API_BASE%/}/api/telemetry/module-builds" \
     "swarm_label": "none",
     "swarm_note": "solo run; no swarm used",
     "source": "codex-final",
-    "token_source": "unavailable",
     "participants": [
       {
         "role": "main",
