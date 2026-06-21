@@ -3107,6 +3107,118 @@ def _single_word_etymology_coverage(manifest: dict) -> tuple[int, int]:
     return covered, len(entries)
 
 
+def enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
+    """Enrich a single manifest entry in place (dictionary-grounded).
+    Returns True if any enrichment was attached. Extracted from enrich() so the
+    same per-lemma enrichment runs on delta lemmas (#3675 P2)."""
+    if entry.get("gloss"):
+        entry["gloss"] = clean_gloss(str(entry["gloss"]))
+    lemma = entry["lemma"]
+    base = _base_lemma(lemma)
+    slovnyk_cache = _slovnyk_cache(lemma)
+    definition_cards = _definition_cards(
+        conn,
+        lemma,
+        has_sum11_flags=has_sum11_flags,
+        cache=slovnyk_cache,
+    )
+    heritage_status = classify_lemma(lemma)
+    warning = (
+        _warning_slovnyk(lemma, slovnyk_cache)
+        if _is_slovnyk_warning_candidate(entry, heritage_status)
+        else None
+    )
+    entry["heritage_status"] = _entry_scoped_heritage_status(
+        _merge_slovnyk_warning(heritage_status, warning)
+    )
+    curated_calque = _curated_calque(lemma, base)
+    if curated_calque:
+        entry["heritage_status"]["curated_calque"] = curated_calque
+        # §6 decolonization moat note (PR1: active-present-participle calques only)
+        # Emits native replacement(s) + source citation (Antonenko davydov/p145 + heritage guard)
+        # for Atlas page §6 stylistic warning layer. See calque_corrections + issue #3098.
+        entry["heritage_status"]["§6_note"] = {
+            "corrections": list(curated_calque.get("corrections", [])),
+            "note": str(curated_calque.get("note", "")),
+            "source": list(curated_calque.get("source", [])),
+            "citation": "Антоненко-Давидович «Як ми говоримо» (davydov via MCP query_slovnyk_me + p145 prose via get_chunk_context; search_heritage guard applied)",
+        }
+
+    reverse_calques = _reverse_calques(lemma, base)
+    if reverse_calques:
+        entry["heritage_status"]["reverse_calques"] = reverse_calques
+
+    pronunciation = _kaikki_pronunciation(kaikki_lookup, lemma)
+    if pronunciation:
+        entry["pronunciation"] = pronunciation
+    else:
+        entry.pop("pronunciation", None)
+    sections: dict[str, object] = {}
+    synonyms = _synonyms_slovnyk(base, slovnyk_cache, entry_pos=entry.get("pos"))
+    if synonyms:
+        sections["synonyms"] = synonyms
+    antonyms = _antonyms_wiktionary(conn, base, entry_pos=entry.get("pos"))
+    if antonyms:
+        sections["antonyms"] = antonyms
+    idioms = _idioms(conn, lemma, slovnyk_cache)
+    if idioms:
+        sections["idioms"] = idioms
+    if sections:
+        entry["sections"] = sections
+    else:
+        entry.pop("sections", None)
+    block: dict[str, object] = {}
+    stressed_lemma = _stress_display_form(lemma)
+    if stressed_lemma:
+        block["stress"] = {"form": stressed_lemma, "source": _STRESS_SOURCE}
+    else:
+        kaikki_stress = _kaikki_stress(kaikki_lookup, lemma)
+        if kaikki_stress:
+            block["stress"] = kaikki_stress
+    cefr = _cefr(conn, lemma)
+    if cefr:
+        block["cefr"] = cefr
+    morph = _morphology(base)
+    if morph:
+        block["morphology"] = morph
+    meaning = _meaning(conn, lemma, has_sum11_flags=has_sum11_flags, kaikki_lookup=kaikki_lookup)
+    if _is_proper_noun_entry(entry):
+        meaning = _proper_noun_wikipedia_meaning(lemma) or meaning
+    if meaning:
+        block["meaning"] = meaning
+    if definition_cards:
+        block["definition_cards"] = definition_cards
+    etym = _etymology(conn, base, kaikki_lookup)
+    if etym:
+        block["etymology"] = etym
+    literary = _literary_attestation(conn, lemma)
+    if literary:
+        block["literary_attestation"] = literary
+    translation = _translation(conn, lemma, kaikki_lookup)
+    if translation:
+        block["translation"] = translation
+    if block:
+        sources = {v["source"] for v in block.values() if isinstance(v, dict) and v.get("source")}
+        for card in definition_cards:
+            if card.get("source"):
+                sources.add(str(card["source"]))
+        for section in sections.values():
+            if isinstance(section, dict) and section.get("source"):
+                sources.add(str(section["source"]))
+        block["sources"] = sorted(sources)
+        entry["enrichment"] = block
+    else:
+        entry.pop("enrichment", None)
+
+    wiki_ref = _wiki_reference(lemma, block.get("literary_attestation"))
+    if wiki_ref:
+        entry["wiki_reference"] = wiki_ref
+    else:
+        entry.pop("wiki_reference", None)
+
+    return bool(block or sections or pronunciation or wiki_ref)
+
+
 def enrich() -> tuple[int, int]:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     kaikki_lookup = _load_kaikki_lookup()
@@ -3116,112 +3228,7 @@ def enrich() -> tuple[int, int]:
         has_sum11_flags = _sum11_has_flag_columns(conn)
         _prepare_cefr_estimates(conn, manifest)
         for entry in manifest["entries"]:
-            if entry.get("gloss"):
-                entry["gloss"] = clean_gloss(str(entry["gloss"]))
-            lemma = entry["lemma"]
-            base = _base_lemma(lemma)
-            slovnyk_cache = _slovnyk_cache(lemma)
-            definition_cards = _definition_cards(
-                conn,
-                lemma,
-                has_sum11_flags=has_sum11_flags,
-                cache=slovnyk_cache,
-            )
-            heritage_status = classify_lemma(lemma)
-            warning = (
-                _warning_slovnyk(lemma, slovnyk_cache)
-                if _is_slovnyk_warning_candidate(entry, heritage_status)
-                else None
-            )
-            entry["heritage_status"] = _entry_scoped_heritage_status(
-                _merge_slovnyk_warning(heritage_status, warning)
-            )
-            curated_calque = _curated_calque(lemma, base)
-            if curated_calque:
-                entry["heritage_status"]["curated_calque"] = curated_calque
-                # §6 decolonization moat note (PR1: active-present-participle calques only)
-                # Emits native replacement(s) + source citation (Antonenko davydov/p145 + heritage guard)
-                # for Atlas page §6 stylistic warning layer. See calque_corrections + issue #3098.
-                entry["heritage_status"]["§6_note"] = {
-                    "corrections": list(curated_calque.get("corrections", [])),
-                    "note": str(curated_calque.get("note", "")),
-                    "source": list(curated_calque.get("source", [])),
-                    "citation": "Антоненко-Давидович «Як ми говоримо» (davydov via MCP query_slovnyk_me + p145 prose via get_chunk_context; search_heritage guard applied)",
-                }
-
-            reverse_calques = _reverse_calques(lemma, base)
-            if reverse_calques:
-                entry["heritage_status"]["reverse_calques"] = reverse_calques
-
-            pronunciation = _kaikki_pronunciation(kaikki_lookup, lemma)
-            if pronunciation:
-                entry["pronunciation"] = pronunciation
-            else:
-                entry.pop("pronunciation", None)
-            sections: dict[str, object] = {}
-            synonyms = _synonyms_slovnyk(base, slovnyk_cache, entry_pos=entry.get("pos"))
-            if synonyms:
-                sections["synonyms"] = synonyms
-            antonyms = _antonyms_wiktionary(conn, base, entry_pos=entry.get("pos"))
-            if antonyms:
-                sections["antonyms"] = antonyms
-            idioms = _idioms(conn, lemma, slovnyk_cache)
-            if idioms:
-                sections["idioms"] = idioms
-            if sections:
-                entry["sections"] = sections
-            else:
-                entry.pop("sections", None)
-            block: dict[str, object] = {}
-            stressed_lemma = _stress_display_form(lemma)
-            if stressed_lemma:
-                block["stress"] = {"form": stressed_lemma, "source": _STRESS_SOURCE}
-            else:
-                kaikki_stress = _kaikki_stress(kaikki_lookup, lemma)
-                if kaikki_stress:
-                    block["stress"] = kaikki_stress
-            cefr = _cefr(conn, lemma)
-            if cefr:
-                block["cefr"] = cefr
-            morph = _morphology(base)
-            if morph:
-                block["morphology"] = morph
-            meaning = _meaning(conn, lemma, has_sum11_flags=has_sum11_flags, kaikki_lookup=kaikki_lookup)
-            if _is_proper_noun_entry(entry):
-                meaning = _proper_noun_wikipedia_meaning(lemma) or meaning
-            if meaning:
-                block["meaning"] = meaning
-            if definition_cards:
-                block["definition_cards"] = definition_cards
-            etym = _etymology(conn, base, kaikki_lookup)
-            if etym:
-                block["etymology"] = etym
-            literary = _literary_attestation(conn, lemma)
-            if literary:
-                block["literary_attestation"] = literary
-            translation = _translation(conn, lemma, kaikki_lookup)
-            if translation:
-                block["translation"] = translation
-            if block:
-                sources = {v["source"] for v in block.values() if isinstance(v, dict) and v.get("source")}
-                for card in definition_cards:
-                    if card.get("source"):
-                        sources.add(str(card["source"]))
-                for section in sections.values():
-                    if isinstance(section, dict) and section.get("source"):
-                        sources.add(str(section["source"]))
-                block["sources"] = sorted(sources)
-                entry["enrichment"] = block
-            else:
-                entry.pop("enrichment", None)
-
-            wiki_ref = _wiki_reference(lemma, block.get("literary_attestation"))
-            if wiki_ref:
-                entry["wiki_reference"] = wiki_ref
-            else:
-                entry.pop("wiki_reference", None)
-
-            if block or sections or pronunciation or wiki_ref:
+            if enrich_entry(entry, conn, kaikki_lookup, has_sum11_flags=has_sum11_flags):
                 enriched += 1
     finally:
         conn.close()
