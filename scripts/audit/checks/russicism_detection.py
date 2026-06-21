@@ -59,10 +59,24 @@ _RUSSICISMS: list[dict] = [
         "note": "Russian 'относиться'",
     },
     {
-        "pattern": r"\bслідуючий\b",
+        # Active-participle calque + inflections (слідуюча/слідуюче/слідуючих…).
+        # Existence-gate accepts the real form (#3647); this layer surfaces the
+        # native suggestion (#3688). Stem-match like \bприкольн\w+ above so the
+        # flag fires on any inflected use, not just masc-nom.
+        "pattern": r"\bслідуюч\w*\b",
         "term": "слідуючий",
         "fix": "наступний",
-        "note": "Russian 'следующий'",
+        "note": "Russian 'следующий' — active-participle calque; use наступний",
+    },
+    {
+        # оточуюч* — calque active participle ('окружающий'). Curated in
+        # calque_corrections.CURATED_CALQUES (Atlas §6 reference) but missing
+        # from this gate's pattern set, so the suggestion never fired (#3688).
+        # довколишній/навколишній are VESUM-attested; оточуюче середовище → довкілля.
+        "pattern": r"\bоточуюч\w*\b",
+        "term": "оточуючий",
+        "fix": "довколишній / навколишній",
+        "note": "Russian 'окружающий' — active-participle calque; use довколишній/навколишній (оточуюче середовище → довкілля)",
     },
     # "любий" meaning "будь-який" (any) — not "любий" meaning "dear/beloved"
     # Only flag when followed by a noun that suggests "any" meaning
