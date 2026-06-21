@@ -10021,6 +10021,24 @@ _HERITAGE_FALLBACK_BLOCKED_SURFACES = frozenset(
     }
 )
 
+# Existence-gate accept-set (#3647, user decision 2026-06-21): real Ukrainian
+# active-participle surfaces that the heritage classifier flags is_russianism=True
+# yet are morphologically real forms of real verbs (оточувати → оточуючий,
+# слідувати → слідуючий). The folk/seminar VESUM gate is an EXISTENCE gate: a real
+# form passes. Calque-flagging ("we suggest довколишній / наступний") is a SEPARATE
+# concern handled by the russianism layer (Антоненко / UA-GEC / check_russian_shadow),
+# NOT by rejecting the form here — one gate, one job. This is the explicit accept
+# counterpart to _HERITAGE_FALLBACK_BLOCKED_SURFACES above; it bypasses the russianism
+# guard for these specific surfaces only, so genuine russianisms (діюча, протиріччя —
+# blocked above) keep failing. бажаючий / керуючий / завідуючий already pass via the
+# classifier (classification=standard) and need no entry here.
+_FOLK_EXISTENCE_ACCEPTED_CALQUE_PARTICIPLES = frozenset(
+    {
+        "оточуючий",
+        "слідуючий",
+    }
+)
+
 
 def _engine_classifies_authentic(candidate: str) -> bool:
     """True iff the shared heritage classifier (#2912) attests ``candidate`` as
@@ -10148,6 +10166,12 @@ def _resolve_folk_heritage_attested_missing(
     attested: set[str] = set()
     for word, candidates in candidates_by_missing.items():
         if candidates & _HERITAGE_FALLBACK_BLOCKED_SURFACES:
+            continue
+        # Existence-gate accept (#3647): real active-participle calques the classifier
+        # mislabels russianism. Checked before the russianism guard so they pass; the
+        # calque suggestion is the separate russianism layer's job, not a rejection here.
+        if candidates & _FOLK_EXISTENCE_ACCEPTED_CALQUE_PARTICIPLES:
+            attested.add(word)
             continue
         if attestation_index and any(candidate in attestation_index for candidate in candidates):
             attested.add(word)

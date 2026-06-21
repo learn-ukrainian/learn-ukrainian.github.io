@@ -116,14 +116,15 @@ def test_core_level_vesum_gate_does_not_use_folk_attestation_fallback() -> None:
 
 @requires_sources_db
 def test_folk_vesum_gate_accepts_engine_authentic_not_in_allowlist() -> None:
-    # `другоє` (poetic archaic `-оє`, verified in a 1955 Kupala song) and
-    # `Кострубонько` (ritual figure) are NOT in folk_heritage_attestations.yaml;
-    # only the classifier attests them as authentic-archaism.
-    gate = _gate("другоє Кострубонько")
+    # `Кострубонько` (ritual figure) is NOT in folk_heritage_attestations.yaml;
+    # only the classifier attests it as authentic-archaism. (#3647: `другоє` was
+    # dropped — VESUM has no such form and search_heritage returns no evidence, so
+    # the existence gate correctly does not attest it; the fixture overclaimed it.)
+    gate = _gate("Кострубонько")
 
     assert gate["passed"] is True
     assert gate["missing"] == []
-    assert gate["heritage_attested"] == 2
+    assert gate["heritage_attested"] == 1
 
 
 @requires_sources_db
@@ -179,11 +180,13 @@ def test_folk_vesum_gate_accepts_negated_participles_of_standard_bases() -> None
 
 @requires_sources_db
 def test_folk_vesum_gate_accepts_productive_derivational_bases() -> None:
-    gate = _gate("гаївковий знеособлювальними виворожувати виворожують другоє ягілки гагілку незгладжений")
+    # (#3647: `другоє` dropped — unattested in VESUM and the heritage classifier;
+    # the existence gate cannot attest it. The remaining 7 are real productive forms.)
+    gate = _gate("гаївковий знеособлювальними виворожувати виворожують ягілки гагілку незгладжений")
 
     assert gate["passed"] is True
     assert gate["missing"] == []
-    assert gate["heritage_attested"] == 8
+    assert gate["heritage_attested"] == 7
 
 
 @requires_sources_db
