@@ -1,0 +1,35 @@
+---
+- title: "B1 M23 plan: Умовний спосіб (нереальний)"
+  role: curriculum
+  notes: >-
+    Планове джерело для якби-речень, контрфактичних умов, частки б/би, варіантів
+    коли б/як би та межі між реальною й нереальною умовою.
+  source_ref: curriculum/l2-uk-en/plans/b1/conditionals-unreal.yaml
+- title: "B1 M22: Умовний спосіб (реальний)"
+  role: curriculum
+  notes: "Попередній модуль для контрасту якщо + дійсний спосіб з якби + умовний спосіб."
+  source_ref: curriculum/l2-uk-en/b1/conditionals-real/module.md
+- title: "B1 M24 plan: Вид в умовних реченнях"
+  role: curriculum
+  notes: "Наступний плановий модуль, що розгортає вибір доконаного й недоконаного виду в реальних і нереальних умовах."
+  source_ref: curriculum/l2-uk-en/plans/b1/aspect-in-conditionals.yaml
+- title: "State Standard 2024 B1 condition functions"
+  role: standard
+  notes: "Локальний стандарт для функції умови, наслідку, припущення й контрфактичного висловлення на B1."
+  source_ref: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt
+- title: "9 клас: складнопідрядні речення"
+  role: textbook
+  notes: "Локальне джерело для складнопідрядних обставинних речень, питань до підрядної частини та сполучників умови."
+  source_ref: docs/references/textbooks-txt/9-klas-ukrajinska-mova-voron-2017.txt
+- title: "11 клас: узагальнення підрядних обставинних"
+  role: textbook
+  notes: "Локальне джерело для повторення обставинних підрядних, розмежування умови з причиною, метою й допустом."
+  source_ref: docs/references/textbooks-txt/11-klas-ukrajinska-mova-voron-2019.txt
+- title: "Литвінова Grade 7, p.61-62"
+  role: textbook
+  notes: "Планове джерело для утворення умовного способу з часткою б/би та прикладів із коли б."
+  source_ref: "Литвінова Grade 7, p.61-62"
+- title: "Заболотний Grade 8, p.114"
+  role: textbook
+  notes: "Планове джерело для сполучників умови якщо, якби, коли б, аби та співвідносного слова то."
+  source_ref: "Заболотний Grade 8, p.114"

@@ -1,0 +1,35 @@
+---
+- title: "B1 M26 plan: Наказовий спосіб (деталі)"
+  role: curriculum
+  notes: >-
+    Планове джерело для повної парадигми наказового способу, хай/нехай,
+    м'якого знака, ввічливості й деколонізаційної норми.
+  source_ref: curriculum/l2-uk-en/plans/b1/imperative-nuances.yaml
+- title: "A2: Наказовий спосіб"
+  role: curriculum
+  notes: "Попередній модуль для базових форм наказового способу, на яких будується B1-розширення."
+  source_ref: curriculum/l2-uk-en/a2/imperative-complete/module.md
+- title: "B1 M27 plan: Вид у наказовому способі"
+  role: curriculum
+  notes: "Наступний плановий модуль для поглиблення аспектного вибору в наказах, заборонах і застереженнях."
+  source_ref: curriculum/l2-uk-en/plans/b1/aspect-in-imperatives.yaml
+- title: "B1 M27: Вид у наказовому способі"
+  role: curriculum
+  notes: "Сусідній модуль для доконаного результату, недоконаного процесу, заборон і попереджень у наказовому способі."
+  source_ref: curriculum/l2-uk-en/b1/aspect-in-imperatives/module.md
+- title: "State Standard 2024 B1 imperative functions"
+  role: standard
+  notes: "Локальний стандарт для спонукання, прохання, поради, інструкції, дозволу й побажання на B1."
+  source_ref: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt
+- title: "Заболотний, 7 клас, с.72-74"
+  role: textbook
+  notes: "Планове джерело для парадигми наказового способу, хай + 3-тя особа та вправ на правила поведінки."
+  source_ref: "Заболотний, 7 клас, с.72-74"
+- title: "Литвінова, 7 клас, с.58-62"
+  role: textbook
+  notes: "Планове джерело для формотворчих часток, обмежень м'якого знака й прикладів із хай."
+  source_ref: "Литвінова, 7 клас, с.58-62"
+- title: "Наказовий спосіб"
+  role: wiki
+  url: "https://uk.wikipedia.org/wiki/Наказовий_спосіб"
+  notes: "Довідковий огляд наказового способу в українській граматиці."
