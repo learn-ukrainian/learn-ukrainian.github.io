@@ -1,5 +1,5 @@
 {
-  "fingerprint": "a20087447c4c25f1c5fd6ed9b0ecb31760c94de87e66f661c343883ca4b9f41c",
+  "fingerprint": "bafe50268d5cd79d8099145b58a5d00287623b0c9cf19623c50973115bde3531",
   "inputs": {
     "lexicon_code": [
       {
@@ -33,6 +33,10 @@
       {
         "path": "scripts/lexicon/check_manifest_vocabulary_coverage.py",
         "sha256": "48bb87980983b7e666e98aea37f1f4c13d7d5c9b9077ffae049d81eaff845502"
+      },
+      {
+        "path": "scripts/lexicon/content_lexicon_reconciler.py",
+        "sha256": "8d88177afe906aa1ba78ac59307aac7485631a6d144dc6eb42465ce181b98120"
       },
       {
         "path": "scripts/lexicon/derivational_morphology.py",
@@ -83,6 +87,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 19
+    "lexicon_code_files": 20
   }
 }
