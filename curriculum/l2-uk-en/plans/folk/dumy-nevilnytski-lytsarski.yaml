@@ -103,23 +103,56 @@ references:
 - title: Історія української літератури
   author: Чижевський Д.
   note: Психологізм невільницьких дум, анонімність, три брати з Азова
-  type: primary
+  type: scholarly
   work: Історія української літератури
 - title: Слов'янська міфологія
   author: Костомаров М.
   note: Козацькі морські походи, зозуля та явір як символи, дівчина-бранка
-  type: primary
+  type: scholarly
   work: Слов'янська міфологія
 - title: Нарис історії культури України
   author: Попович М.
   note: Козацька героїка, набіги та работоргівля
-  type: primary
+  type: scholarly
   work: Нарис історії культури України
+readings:
+- title: «Втеча трьох братів з Азова, з турецької неволі»
+  title_en: The Escape of Three Brothers from Azov, from Turkish Captivity
+  genre: Невільницька дума
+  source: Народна творчість; корпус ukrlib-narod-dumy; chunks 8d7b076e_c0000-8d7b076e_c0004
+  source_url: https://www.ukrlib.com.ua/narod/printout.php?id=11&bookid=1
+  license: public_domain
+  hosting: host
+  reading_slug: duma-vtecha-trokh-brativ-z-azova
+- title: «Зажурилась Україна, бо нічим прожити»
+  title_en: Ukraine Has Fallen into Sorrow, for There Is Nothing to Live On
+  genre: Невільницька дума / історична пісня
+  source: Народна творчість; корпус ukrlib-narod-dumy; chunk 1f7ae6ee_c0000
+  source_url: https://www.ukrlib.com.ua/narod/printout.php?id=11&bookid=3
+  license: public_domain
+  hosting: host
+  reading_slug: duma-zazhurylas-ukraina
+- title: «Гей, не дивуйте, добрії люди»
+  title_en: Hey, Do Not Wonder, Good People
+  genre: Лицарська дума / козацька історична пісня
+  source: Народна творчість; корпус ukrlib-narod-dumy; chunk 8028b13a_c0000
+  source_url: https://www.ukrlib.com.ua/narod/printout.php?id=11&bookid=2
+  license: public_domain
+  hosting: host
+  reading_slug: duma-hey-ne-dyvuyte-dobrii-liudy
+- title: «Ой на горі да женці жнуть»
+  title_en: Oh, Reapers Are Reaping on the Hill
+  genre: Козацька історична пісня
+  source: Народна творчість; корпус ukrlib-narod-dumy; chunk d0c6550e_c0000
+  source_url: https://www.ukrlib.com.ua/narod/printout.php?id=11&bookid=5
+  license: public_domain
+  hosting: host
+  reading_slug: pisnia-oy-na-hori-da-zhentsi-zhnut
 sequence: 12
 slug: dumy-nevilnytski-lytsarski
 subtitle: 'Captivity and Knightly Dumas: Lament and Heroic Memory'
 title: 'Невільницькі та лицарські думи: Плач і героїка'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: полонений, раб — людина, позбавлена свободи та відірвана від батьківщини
   pos: ч.

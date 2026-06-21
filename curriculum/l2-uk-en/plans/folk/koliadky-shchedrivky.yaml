@@ -139,11 +139,19 @@ readings:
   license: public_domain
   hosting: host
   reading_slug: shchedrivka-shchedryk-lastivochka
+- title: «Ой над Дунаєм, над береженьком»
+  title_en: Oh, above the Danube, above the bank
+  genre: Колядка
+  source: Народна творчість; корпус ukrlib-narod-dumy; chunk 672a677a_c0000
+  source_url: https://www.ukrlib.com.ua/narod/printout.php?id=5&bookid=0
+  license: public_domain
+  hosting: host
+  reading_slug: koliadka-oy-nad-dunaiem-nad-berezhenkom
 sequence: 5
 slug: koliadky-shchedrivky
 subtitle: 'Carols and Shchedrivky: The Cosmogonic Myth'
 title: 'Колядки та щедрівки: Міф про створення світу'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: обрядова пісня різдвяного циклу, що величає господаря та його родину
   pos: ж.
