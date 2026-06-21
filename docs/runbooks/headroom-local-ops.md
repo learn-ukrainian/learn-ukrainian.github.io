@@ -185,7 +185,9 @@ Install it for the current checkout:
 
 ```bash
 PROJECT_ROOT="$(pwd)"
-sed "s#__PROJECT_ROOT__#${PROJECT_ROOT}#g" \
+sed \
+  -e "s#__PROJECT_ROOT__#${PROJECT_ROOT}#g" \
+  -e "s#__HOME__#${HOME}#g" \
   scripts/launchd/com.learn-ukrainian.headroom-update.plist.disabled \
   > "$HOME/Library/LaunchAgents/com.learn-ukrainian.headroom-update.plist"
 
@@ -213,6 +215,11 @@ On systems where cron is preferred:
 
 Use `crontab -e` and add the line manually so existing entries are not
 overwritten. The active local machine currently uses this crontab form.
+
+The updater uses a lock directory under `~/.headroom/` and writes its PID into
+that lock. If the previous process is gone, or if the lock is older than
+`HEADROOM_UPDATE_LOCK_TIMEOUT_SECONDS` (`21600` seconds by default), the next
+run removes the stale lock and continues.
 
 ## Validation
 
