@@ -66,7 +66,8 @@ it is attributed to.** Concretely:
 
 - Box only fragments that return `matched=true` (aim confidence ≥0.95) via `mcp__sources__verify_quote`
   with `author="Народна творчість"` (or the actual folk-collection author). The koliadky exemplar's
-  three boxes all verify at 1.0 against chunks `61bfde21` (колядка) and `70435c0b` (щедрівка).
+  boxes verify at 1.0 against real `ukrlib-narod-dumy` chunks (e.g. `61bfde21` колядка, `70435c0b`
+  щедрівка, `d4848a7e` «Щедрик»).
 - **A folk variant that exists in the corpus only as a quotation inside a scholarly work (Грушевський,
   Енциклопедія українознавства, etc.) is NOT a gate-safe folk-primary quote** — it returns
   `matched=false` under «Народна творчість» because the corpus row is authored by the scholar. Do NOT
@@ -78,7 +79,13 @@ it is attributed to.** Concretely:
   inside `:::primary-reading` (excluded from the gate); in prose use modern codified forms.
 - Never quote a folk song from memory — not even famous ones (`Щедрик-ведрик`, `Коляд-коляд`,
   `А ми просо сіяли`). Never embed literary-authored verse (Шевченко, Франко, …) as a folk primary text.
-- **≥4 is corpus-bound.** koliadky-shchedrivky's gate-safe folk corpus holds 2 distinct songs → 3 boxes.
+- **≥4 is corpus-bound — but verify availability, never assume it.** The preflight audit (#3696) found the
+  koliadky-shchedrivky gate-safe corpus actually holds **6** distinct verified carols/shchedrivky in
+  `ukrlib-narod-dumy`, not the 2 an earlier note assumed — so the exemplar's floor is ≥4 and its current 3
+  surfaced readings are a **deficit** (remediation pending; «Ой над Дунаєм, над береженьком» `672a677a`
+  verifies at 1.0 as a 4th). Surface fewer than 4 ONLY when the gate-safe corpus genuinely holds fewer than 4
+  standalone primary rows — e.g. `zamovliannia` / `narodni-viruvannia`, whose corpus carries the genre only as
+  encyclopedia-embedded formulas, not standalone primary texts → record `reading-needed`.
   Topics with a richer §4 dossier should hit ≥4. Do NOT backfill to 4 with memory or scholarly-cited
   fragments; honesty over count.
 
