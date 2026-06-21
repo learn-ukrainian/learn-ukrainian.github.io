@@ -5,8 +5,8 @@
 - **Tracks:** site-wide (all courses + the global Readings reference).
 - **Issue:** #3671.
 - **Author:** folk track-driver (Claude), per user order 2026-06-21 ("design the principled approach with Codex before building").
-- **Consulted:** Codex (bridge task `i18n-chrome-design-3671`, msg #1336).
-- **Governing rule:** project immersion rule **#M-13** (never raise English; maximum Ukrainian immersion). Threat-backed, top priority.
+- **Consulted:** Codex — design (task `i18n-chrome-design-3671`, msg #1336) + default-language correction (task `i18n-chrome-confirm-3671`, msg #1338).
+- **Governing rule:** project immersion rule **#M-13** (never raise English; maximum Ukrainian immersion in the **learning content**). Threat-backed, top priority. NB: #M-13 governs content language, **not** navigation chrome — see "Default language".
 - **Expiry / revisit:** when site chrome strings stabilize enough to expose the visible toggle (see Sequencing).
 
 ## Context
@@ -67,18 +67,36 @@ The pre-paint `is:inline` script reads `lu-chrome-locale` and sets
 `aria-label`, `placeholder`, `<title>` — a small runtime applier updates them from
 the same typed dictionary on load.
 
-### Default language
-**Static build defaults to Ukrainian chrome; English is an explicit opt-in.**
-This best satisfies #M-13: the default experience never raises English above the
-immersion layer, and first-time visitors see the immersive default immediately
-(only returning opt-in-English users need the pre-paint override). **Do NOT
-browser-auto-detect** English — that silently makes English the default for many
-learners and weakens the principle.
+### Default language — chrome follows the user (USER DECISION 2026-06-21)
+**Chrome defaults to the user's own interface language; Ukrainian chrome is the
+opt-in.** Detection precedence (all client-side, pre-paint, in the `is:inline`
+script):
+1. **Explicit toggle choice in `localStorage` (`lu-chrome-locale`) wins** (wrapped
+   in `try/catch` — Safari private / hardened contexts can throw on access).
+2. else **`navigator.languages?.[0] ?? navigator.language`**, lowercased, split on
+   `-`, **primary subtag only**: `uk` → Ukrainian chrome; anything else → English.
+   Region is irrelevant (`uk`, `uk-UA` … all mean Ukrainian chrome).
+3. **No-JS / pre-JS fallback = English**, baked into the static HTML as
+   `data-chrome-locale="en"`; the script then switches to `uk` synchronously before
+   paint when detection says so.
 
-> ⚠️ **This reverses the current interim "English chrome" state** (the Word Atlas
-> model shipped with PR #3669). It is the principled #M-13-aligned default and is
-> what Codex independently recommended on immersion grounds — but it is a visible
-> product change, so it is flagged to the user before the toggle ships.
+**Why this, not Ukrainian-default (corrects the first draft):** this is the
+`l2-uk-en` track — **"Ukrainian for English speakers"**, audience = English
+speakers incl. absolute A1 beginners. Ukrainian-default *chrome* would leave a
+beginner unable to read the nav and therefore unable to reach the immersive
+Ukrainian lesson content — i.e. *less* immersion, not more. **#M-13 governs the
+learning CONTENT (texts, teaching voice, dialogues, vocab, work titles, genre
+headers — always Ukrainian, for everyone), NOT the navigation chrome.** English
+chrome for an English-speaking beginner does not "raise English in the learning";
+the learning is still 100% Ukrainian. This is the standard
+*interface-follows-user, content-is-target* model (Duolingo/Babbel). Codex
+withdrew its earlier "no auto-detect" point **for chrome specifically** (msg
+#1338) — that point had conflated chrome usability with content immersion.
+
+> ✅ **Keeps the current "English chrome" default** (Word Atlas model, PR #3669)
+> for English-browser visitors, and *adds* (a) auto-selected Ukrainian chrome for
+> Ukrainian-locale browsers and (b) an explicit toggle either way. No regression
+> for beginners; opt-in extra exposure for those who want it.
 
 ### `<html lang>`
 Keep the document default biased to Ukrainian: `<html lang="uk"
@@ -111,13 +129,15 @@ right architecture.
 Per the 2026-06-20 fleet restructure, site/code/CI = **infra-Claude lane**. This
 ADR is the **spec**; the folk driver produced it (the design was the user's order)
 but does **not** implement it. Hand to infra Claude for build, in the sequenced
-order above. The **default-language flip** (Ukrainian chrome default) needs an
-explicit user "go" before it ships, since it changes the visible default.
+order above. The **default-language question is resolved** (user decision
+2026-06-21: chrome follows the user's locale, English fallback — see "Default
+language" above), so no further user gate blocks the build.
 
 ## Alternatives rejected
 - **Astro routing i18n (`/en/`,`/uk/`)** — route explosion + content duplication + canonical/SEO mess; URL-oriented, wrong tool for chrome-only swap.
 - **Pure post-load JS text replacement** — English→Ukrainian flash on every load; fails FOUC bar.
-- **Browser `Accept-Language` auto-detect** — silently raises English for many learners; violates #M-13.
+- **Ukrainian-default chrome (first-draft idea, rejected by user 2026-06-21)** — for the English-speakers track it strands A1 beginners who can't read the nav, *reducing* effective immersion; conflated chrome with content (#M-13 governs content, not chrome).
+- **Server-side `Accept-Language`** — impossible on static GitHub Pages (no SSR / no `Vary`). Client-side `navigator.language` detection (above) is the correct equivalent.
 
 ## Biggest risk
 Not the toggle — it's **keeping the chrome/content boundary enforceable as the UI
