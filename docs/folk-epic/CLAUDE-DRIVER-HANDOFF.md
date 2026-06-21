@@ -1,5 +1,16 @@
 # Folk Track — Claude Driver Handoff (MY OWN — not the orchestrator's)
 
+> ℹ️ Sessions 68–76 detail lives in the local thread handoff (`.agent/claude-thread-handoff.md`, gitignored) and in merged PRs (#3648 koliadky exemplar, #3651 Atlas, #3669 global Readings reference). This git-tracked file resumes the SSOT thread at Session 76 below; older in-file entries (≤67) are historical.
+
+## ▶▶▶ SESSION 76 (2026-06-21) — en/uk chrome i18n DESIGNED with Codex (no build) — RESUME HERE
+**User order (S76):** consult Codex on the principled web-UI language-support approach *before* building. ✅ DONE.
+- **Verdict:** single-URL **Chrome Locale Runtime** (runtime chrome-string layer), NOT Astro routing i18n (route i18n would duplicate ~4405 static pages + invariant Ukrainian content). Full spec ADR: **`docs/decisions/2026-06-21-chrome-locale-runtime-i18n.md`**. Posted to **issue #3671**. Codex bridge task `i18n-chrome-design-3671` (msg #1336).
+- **Shape:** `src/lib/i18n/chrome.ts` (typed `ChromeKey` dict, `DEFAULT_CHROME_LOCALE='uk'`) + `ChromeText.astro` + `lu-chrome-locale` toggle next to `lu-theme`, applied pre-paint via `is:inline` setting `data-chrome-locale` on `<html>`. FOUC: dual-render variants, CSS show/hide. Content protection = CI lint (ban `data-i18n` in `src/content/**`, ban `t()` outside chrome files). `<html lang="uk">` default, English spans `lang="en"`.
+- **Sequencing:** defer the *visible toggle*, NOT the architecture — (1) centralize chrome strings behind `t()`, (2) parity + no-i18n-in-content lint, (3) expose toggle once chrome strings stable.
+- **Lane:** site/code/CI = infra-Claude lane → this ADR is the spec; **infra Claude builds it.** Folk driver produced design only.
+- **✅ DEFAULT-LANGUAGE DECIDED (user, 2026-06-21):** chrome **follows the user's own locale** (client-side `navigator.language`, primary subtag `uk`→Ukrainian chrome, else **English fallback**); explicit toggle (localStorage) overrides; no-JS = English. Rationale: this is the *English-speakers* track — Ukrainian-default chrome would strand A1 beginners who can't read the nav. **#M-13 governs learning CONTENT, not nav chrome** (content stays 100% Ukrainian for all). My first-draft "Ukrainian-default" was wrong (conflated chrome with content); user caught it; Codex confirmed the correction (msg #1338). ADR updated.
+- **NEXT ACTION:** no user gate remains — hand the ADR spec to **infra Claude** for the sequenced build (centralize strings behind `t()` + lint → expose toggle once chrome strings stable). Other open driver work unchanged (PRs #3657 template-rewrite, #3653 agent-def→user; parked branches `folk-wikis-wave8`, `folk-retest2`).
+
 ## ▶▶▶ ROLE + PRIORITIES (updated 2026-06-13 — READ FIRST)
 > **MY ROLE (user 2026-06-13; infra-ownership added 2026-06-16):** I am the orchestrator of **FOLK + ALL
 > SEMINARS** (folk · hist · bio · istorio · lit · oes · ruth). **Codex owns CORE tracks (a1–c2)**. I drive
