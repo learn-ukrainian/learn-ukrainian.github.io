@@ -1,9 +1,9 @@
 # Shared Review Output Schema
 
-Prompt version: 0.1
+Prompt suite component version: 0.2
 Last reviewed: 2026-06-21
 
-Use this schema for durable audit reports under `docs/audits/`.
+Use this schema for durable audit reports under `docs/audits/`. Adapt the track fields and coverage matrices to the target. Do not import CEFR language-learning assumptions into seminar tracks unless the target prompt explicitly justifies them.
 
 ## Report Header
 
@@ -45,7 +45,7 @@ Do not truncate to a top 10. Record every issue found.
 ### <ISSUE-ID> <short title>
 
 Severity: blocker | high | medium | low
-Level: A1 | A2 | B1 | B2
+Track or level: <A1 | A2 | B1 | B2 | HIST | BIO | ISTORIO | LIT | OES | RUTH | other>
 Module: <M## slug>
 Files:
 - <path>
@@ -69,6 +69,7 @@ Use compact tables for:
 - vocabulary completeness
 - immersion and language-balance observations
 - stress/pronunciation policy observations
+- factuality, source-attribution, decolonization, and bias checks for seminar or sensitive tracks
 - module-specific blocker summary
 
 ## Remediation Batching Plan

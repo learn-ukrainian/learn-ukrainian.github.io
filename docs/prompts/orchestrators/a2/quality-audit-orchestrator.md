@@ -1,6 +1,6 @@
 # A2 Quality Audit Orchestrator
 
-Prompt version: 0.1
+Prompt version: 0.2
 Last reviewed: 2026-06-21
 
 ## Source Assumptions
@@ -8,7 +8,7 @@ Last reviewed: 2026-06-21
 - A2 is a transition track, not A1 with more words and not early B1.
 - Current repo policy gives A2 a steep Ukrainian immersion ramp. Verify exact bands from `scripts/config.py` before judging.
 - A2 must prepare learners for B1 grammar-in-Ukrainian while preserving controlled register, concrete examples, and support.
-- This audit is read-only except for the durable report under `docs/audits/`.
+- This audit must not modify curriculum or site sources. Its only content write is the durable report under `docs/audits/`, plus PR text needed to deliver that report.
 
 ## Goal
 
@@ -17,12 +17,13 @@ Audit A2 modules for transition-track pedagogy: immersion ramp, grammar complexi
 ## WORKTREE_ROOT Setup
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
 git fetch origin main
 git worktree add -b codex/a2-quality-audit .worktrees/dispatch/codex/a2-quality-audit origin/main
 cd .worktrees/dispatch/codex/a2-quality-audit
-test -e .venv || ln -s /Users/krisztiankoos/projects/learn-ukrainian/.venv .venv
-export WORKTREE_ROOT="/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a2-quality-audit"
+test -e .venv || ln -s "$REPO_ROOT/.venv" .venv
+export WORKTREE_ROOT="$(pwd)"
 pwd
 git status --short --branch
 git rev-parse --show-toplevel
@@ -50,6 +51,7 @@ git rev-parse --show-toplevel
 ## Allowed Writes
 
 - `docs/audits/a2-quality-audit-YYYY-MM-DD.md`
+- PR body or final orchestration note text for delivering the report
 
 ## Forbidden Writes
 
@@ -71,6 +73,7 @@ git rev-parse --show-toplevel
 - Check activities: variety, item quality, inline/workbook split where present, and language-practice focus.
 - Check vocabulary: terms are useful, examples are natural, and coverage matches the plan.
 - Check source/wiki coverage: each module should align with `curriculum/l2-uk-en/plans/a2/<slug>.yaml` and `wiki/grammar/a2/<slug>.md` plus sources.
+- Run deterministic module audits without `--fix` for built modules in scope where feasible, and record any failures alongside subjective findings.
 
 ## Helpers And Headroom
 
@@ -80,17 +83,40 @@ Read-only explorers are allowed for phase summaries, module-shape surveys, or co
 
 Write the report to `docs/audits/a2-quality-audit-YYYY-MM-DD.md`.
 
+## Report Delivery
+
+After validation, commit and open a draft PR that contains only the report:
+
+```bash
+git add docs/audits/a2-quality-audit-YYYY-MM-DD.md
+git commit -m "docs: add A2 quality audit" --trailer "X-Agent: codex/a2-quality-audit"
+.venv/bin/python scripts/audit/lint_agent_trailer.py
+git push -u origin codex/a2-quality-audit
+gh pr create --draft --fill --head codex/a2-quality-audit --base main
+```
+
 ## Validation Commands
 
 ```bash
 git status --short --branch
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a2/<slug>/module.md
 git diff --check
 git diff --name-only
-git diff --name-only | rg -v '^docs/audits/a2-quality-audit-[0-9]{4}-[0-9]{2}-[0-9]{2}\.md$' || true
-rg -n 'sys\.executable' docs/audits/a2-quality-audit-*.md
+if git diff --name-only | rg -v '^docs/audits/a2-quality-audit-[0-9]{4}-[0-9]{2}-[0-9]{2}\.md$'; then
+  echo "Unexpected file outside the durable audit report" >&2
+  exit 1
+fi
+if git diff --name-only | rg '(^|/)status/.*\.json$|(^|/)audit/.*-review\.md$|(^|/)review/.*-review\.md$|^data/telemetry/'; then
+  echo "Forbidden generated artifact in diff" >&2
+  exit 1
+fi
+if rg -n 'sys\.executable' docs/audits/a2-quality-audit-YYYY-MM-DD.md; then
+  echo "Audit report mentions forbidden sys.executable" >&2
+  exit 1
+fi
 ```
 
-Do not run module builds. Do not run commands that write generated curriculum audit/status/review artifacts.
+Adapt the `audit_module.py` path for each built module audited. Do not pass `--fix`. Do not run module builds. Do not run commands that write generated curriculum audit/status/review artifacts.
 
 ## Expected Final Response
 
@@ -101,6 +127,7 @@ Blockers: <n>
 Issues recorded: <n>
 Recommended remediation batches: <summary>
 Validation run: <commands and outcomes>
+Report delivery: <draft PR URL or blocked reason>
 Curriculum files modified: no
 swarm_used: true/false
 swarm_note: <helpers used, or solo run; no swarm used>

@@ -1,6 +1,6 @@
 # B2 Preflight Readiness Audit Orchestrator
 
-Prompt version: 0.1
+Prompt version: 0.2
 Last reviewed: 2026-06-21
 
 ## Source Assumptions
@@ -8,7 +8,7 @@ Last reviewed: 2026-06-21
 - B2 is the upcoming production track. Do not build modules until readiness passes.
 - Current local repo contains B2 plans, discovery YAML, and wiki grammar/source files; built `curriculum/l2-uk-en/b2/<slug>/module.md` directories may not exist.
 - Check Ukrainian State Standard 2024 alignment only through repo-supported sources, plan references, source YAML, and local docs. Do not invent external standards or unsupported claims.
-- This audit is read-only except for the durable report under `docs/audits/`.
+- This audit must not modify plans, wiki, curriculum, discovery, or site sources. Its only content write is the durable report under `docs/audits/`, plus PR text needed to deliver that report.
 
 ## Goal
 
@@ -17,12 +17,13 @@ Determine whether B2 is ready for module production. Validate plans, sequence, `
 ## WORKTREE_ROOT Setup
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
 git fetch origin main
 git worktree add -b codex/b2-preflight-readiness .worktrees/dispatch/codex/b2-preflight-readiness origin/main
 cd .worktrees/dispatch/codex/b2-preflight-readiness
-test -e .venv || ln -s /Users/krisztiankoos/projects/learn-ukrainian/.venv .venv
-export WORKTREE_ROOT="/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/b2-preflight-readiness"
+test -e .venv || ln -s "$REPO_ROOT/.venv" .venv
+export WORKTREE_ROOT="$(pwd)"
 pwd
 git status --short --branch
 git rev-parse --show-toplevel
@@ -46,6 +47,7 @@ git rev-parse --show-toplevel
 ## Allowed Writes
 
 - `docs/audits/b2-preflight-readiness-YYYY-MM-DD.md`
+- PR body or final orchestration note text for delivering the report
 
 ## Forbidden Writes
 
@@ -77,6 +79,18 @@ Read-only helpers are allowed for inventories or slug-matrix checks. The main au
 
 Write the report to `docs/audits/b2-preflight-readiness-YYYY-MM-DD.md`.
 
+## Report Delivery
+
+After validation, commit and open a draft PR that contains only the report:
+
+```bash
+git add docs/audits/b2-preflight-readiness-YYYY-MM-DD.md
+git commit -m "docs: add B2 preflight readiness audit" --trailer "X-Agent: codex/b2-preflight-readiness"
+.venv/bin/python scripts/audit/lint_agent_trailer.py
+git push -u origin codex/b2-preflight-readiness
+gh pr create --draft --fill --head codex/b2-preflight-readiness --base main
+```
+
 ## Validation Commands
 
 ```bash
@@ -84,8 +98,18 @@ Write the report to `docs/audits/b2-preflight-readiness-YYYY-MM-DD.md`.
 git status --short --branch
 git diff --check
 git diff --name-only
-git diff --name-only | rg -v '^docs/audits/b2-preflight-readiness-[0-9]{4}-[0-9]{2}-[0-9]{2}\.md$' || true
-rg -n 'sys\.executable' docs/audits/b2-preflight-readiness-*.md
+if git diff --name-only | rg -v '^docs/audits/b2-preflight-readiness-[0-9]{4}-[0-9]{2}-[0-9]{2}\.md$'; then
+  echo "Unexpected file outside the durable audit report" >&2
+  exit 1
+fi
+if git diff --name-only | rg '(^|/)status/.*\.json$|(^|/)audit/.*-review\.md$|(^|/)review/.*-review\.md$|^data/telemetry/'; then
+  echo "Forbidden generated artifact in diff" >&2
+  exit 1
+fi
+if rg -n 'sys\.executable' docs/audits/b2-preflight-readiness-YYYY-MM-DD.md; then
+  echo "Audit report mentions forbidden sys.executable" >&2
+  exit 1
+fi
 ```
 
 Do not run builds. Do not modify B2 plans, wiki files, discovery files, or modules.
@@ -98,6 +122,7 @@ Readiness status: pass | conditional pass | do not build
 Blockers: <n>
 Source/wiki/plan gaps: <summary>
 Validation run: <commands and outcomes>
+Report delivery: <draft PR URL or blocked reason>
 B2 production allowed now: yes/no
 Curriculum files modified: no
 swarm_used: true/false

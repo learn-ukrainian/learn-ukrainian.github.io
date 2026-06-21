@@ -1,28 +1,29 @@
 # B1 Quality Audit Orchestrator
 
-Prompt version: 0.1
+Prompt version: 0.2
 Last reviewed: 2026-06-21
 
 ## Source Assumptions
 
 - B1 is full Ukrainian immersion in module body, with English only where current repo policy permits vocabulary glosses.
-- The current B1 manifest has 94 modules. M83-M92 have built module sources in this checkout; M93-M94 may be plan/wiki-only and must not be assumed built.
-- This audit is for B1 M1-M82 normalization using the M83-M94 quality bar where those files exist.
-- This audit is read-only except for the durable report under `docs/audits/`.
+- The current B1 manifest has 94 modules. Recent main has built sources for M83-M94, including M93 `comprehensive-b1-review` and M94 `practice-exam`; verify current checkout state before judging.
+- This audit is for B1 M1-M82 normalization using the verified M83-M94 quality bar.
+- This audit must not modify curriculum or site sources. Its only content write is the durable report under `docs/audits/`, plus PR text needed to deliver that report.
 
 ## Goal
 
-Run a complete B1 normalization quality audit for M1-M82, using recent B1 quality expectations from M83-M94 when present. Record every issue without top-10 truncation, including plan/wiki/research coverage, engagement boxes, stress marks, wall-of-text risks, activities, vocabulary, and M82 quality. Include a full remediation batching plan but do not fix modules.
+Run a complete B1 normalization quality audit for M1-M82, using recent B1 quality expectations from the verified M83-M94 modules. Record every issue without top-10 truncation, including plan/wiki/research coverage, engagement boxes, stress marks, wall-of-text risks, activities, vocabulary, and M82 quality. Include a full remediation batching plan but do not fix modules.
 
 ## WORKTREE_ROOT Setup
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
 git fetch origin main
 git worktree add -b codex/b1-quality-audit .worktrees/dispatch/codex/b1-quality-audit origin/main
 cd .worktrees/dispatch/codex/b1-quality-audit
-test -e .venv || ln -s /Users/krisztiankoos/projects/learn-ukrainian/.venv .venv
-export WORKTREE_ROOT="/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/b1-quality-audit"
+test -e .venv || ln -s "$REPO_ROOT/.venv" .venv
+export WORKTREE_ROOT="$(pwd)"
 pwd
 git status --short --branch
 git rev-parse --show-toplevel
@@ -50,6 +51,7 @@ git rev-parse --show-toplevel
 ## Allowed Writes
 
 - `docs/audits/b1-normalization-quality-audit-YYYY-MM-DD.md`
+- PR body or final orchestration note text for delivering the report
 
 ## Forbidden Writes
 
@@ -72,6 +74,7 @@ git rev-parse --show-toplevel
 - Check wall-of-text risk: long grammar prose should be broken by tables, examples, comparison boxes, and activities.
 - Check activities and vocabulary against the target module focus and current `scripts/audit/config.py`.
 - Check M82 specifically as the final pre-M83 normalization boundary; note any quality discontinuity before `reported-speech`.
+- Run deterministic module audits without `--fix` for built modules in scope where feasible, and record any failures alongside subjective findings.
 - Record all findings and group them into targeted patch batches, full rebuild candidates, source/wiki gaps, and validation/tooling issues.
 
 ## Helpers And Headroom
@@ -82,17 +85,40 @@ Read-only helpers are allowed for module inventories or coverage matrices. Do no
 
 Write the report to `docs/audits/b1-normalization-quality-audit-YYYY-MM-DD.md`.
 
+## Report Delivery
+
+After validation, commit and open a draft PR that contains only the report:
+
+```bash
+git add docs/audits/b1-normalization-quality-audit-YYYY-MM-DD.md
+git commit -m "docs: add B1 normalization quality audit" --trailer "X-Agent: codex/b1-quality-audit"
+.venv/bin/python scripts/audit/lint_agent_trailer.py
+git push -u origin codex/b1-quality-audit
+gh pr create --draft --fill --head codex/b1-quality-audit --base main
+```
+
 ## Validation Commands
 
 ```bash
 git status --short --branch
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b1/<slug>/module.md
 git diff --check
 git diff --name-only
-git diff --name-only | rg -v '^docs/audits/b1-normalization-quality-audit-[0-9]{4}-[0-9]{2}-[0-9]{2}\.md$' || true
-rg -n 'sys\.executable' docs/audits/b1-normalization-quality-audit-*.md
+if git diff --name-only | rg -v '^docs/audits/b1-normalization-quality-audit-[0-9]{4}-[0-9]{2}-[0-9]{2}\.md$'; then
+  echo "Unexpected file outside the durable audit report" >&2
+  exit 1
+fi
+if git diff --name-only | rg '(^|/)status/.*\.json$|(^|/)audit/.*-review\.md$|(^|/)review/.*-review\.md$|^data/telemetry/'; then
+  echo "Forbidden generated artifact in diff" >&2
+  exit 1
+fi
+if rg -n 'sys\.executable' docs/audits/b1-normalization-quality-audit-YYYY-MM-DD.md; then
+  echo "Audit report mentions forbidden sys.executable" >&2
+  exit 1
+fi
 ```
 
-Do not run builds. Do not write generated curriculum audit/status/review artifacts.
+Adapt the `audit_module.py` path for each built module audited. Do not pass `--fix`. Do not run builds. Do not write generated curriculum audit/status/review artifacts.
 
 ## Expected Final Response
 
@@ -103,6 +129,7 @@ Blockers: <n>
 Issues recorded: <n>
 Recommended remediation batches: <summary>
 Validation run: <commands and outcomes>
+Report delivery: <draft PR URL or blocked reason>
 Curriculum files modified: no
 swarm_used: true/false
 swarm_note: <helpers used, or solo run; no swarm used>

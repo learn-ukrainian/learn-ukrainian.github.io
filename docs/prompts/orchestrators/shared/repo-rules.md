@@ -1,6 +1,6 @@
 # Shared Repo Rules For Orchestrator Prompts
 
-Prompt version: 0.1
+Prompt suite component version: 0.2
 Last reviewed: 2026-06-21
 
 Paste these rules into future orchestration prompts and then verify them against the current local `AGENTS.md`, `CLAUDE.md`, and `GEMINI.md`.
@@ -55,5 +55,5 @@ git rev-parse --show-toplevel
 - Every commit must include an `X-Agent` trailer.
 - Format: `X-Agent: codex/<task-id>` or the correct agent/task for the thread.
 - Run `.venv/bin/python scripts/audit/lint_agent_trailer.py` before pushing.
-- Module-build PRs must include token telemetry with `swarm_used` and `swarm_note`.
+- Module-build PRs must include token telemetry with `swarm_used`, `swarm_label`, and `swarm_note`.
 - Do not commit, push, or open a PR unless the user explicitly asks or the orchestrator prompt says that is part of the task.

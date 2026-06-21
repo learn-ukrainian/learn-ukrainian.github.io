@@ -1,6 +1,6 @@
 # Shared Telemetry And PR Requirements
 
-Prompt version: 0.1
+Prompt suite component version: 0.2
 Last reviewed: 2026-06-21
 
 Module-build and remediation prompts must encode this policy.
@@ -33,16 +33,18 @@ Required fields include:
 - `pr_number` and `pr_url` when known
 - `status`
 - `swarm_used`
+- `swarm_label`
 - `swarm_note`
 - `participants`
 - `token_source`
 
 Solo runs still require `swarm_used: false` and a `swarm_note`.
 
-Example API shape. Use the local Monitor API route `/api/telemetry/module-builds`; add the host only when the local runbook or shell context requires it:
+Example API shape. `curl` requires a scheme and host, so set `MONITOR_API_BASE` from the current local runbook or shell context before posting. Do not commit telemetry database files.
 
 ```bash
-curl -s -X POST /api/telemetry/module-builds \
+MONITOR_API_BASE="${MONITOR_API_BASE:?set Monitor API base URL from docs/runbooks/module-build-token-telemetry.md}"
+curl -s -X POST "${MONITOR_API_BASE%/}/api/telemetry/module-builds" \
   -H 'Content-Type: application/json' \
   -d '{
     "run_id": "<level>-<slug>-<task>",
@@ -54,6 +56,7 @@ curl -s -X POST /api/telemetry/module-builds \
     "swarm_label": "none",
     "swarm_note": "solo run; no swarm used",
     "source": "codex-final",
+    "token_source": "unavailable",
     "participants": [
       {
         "role": "main",

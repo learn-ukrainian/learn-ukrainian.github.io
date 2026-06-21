@@ -1,6 +1,6 @@
 # A2 Remediation Build Orchestrator
 
-Prompt version: 0.1
+Prompt version: 0.2
 Last reviewed: 2026-06-21
 
 ## Source Assumptions
@@ -17,12 +17,13 @@ Fix all findings from the selected A2 audit batch in small PR-sized batches. Reg
 ## WORKTREE_ROOT Setup
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
 git fetch origin main
 git worktree add -b codex/a2-remediation-<batch> .worktrees/dispatch/codex/a2-remediation-<batch> origin/main
 cd .worktrees/dispatch/codex/a2-remediation-<batch>
-test -e .venv || ln -s /Users/krisztiankoos/projects/learn-ukrainian/.venv .venv
-export WORKTREE_ROOT="/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a2-remediation-<batch>"
+test -e .venv || ln -s "$REPO_ROOT/.venv" .venv
+export WORKTREE_ROOT="$(pwd)"
 pwd
 git status --short --branch
 git rev-parse --show-toplevel
@@ -90,17 +91,22 @@ Adapt module numbers from `curriculum.yaml`:
 .venv/bin/python scripts/validate_activities.py l2-uk-en a2 <module_num>
 .venv/bin/python scripts/validate_vocab_yaml.py curriculum/l2-uk-en/a2/<slug>/vocabulary.yaml
 .venv/bin/python scripts/generate_mdx.py l2-uk-en a2 <module_num> --validate
-.venv/bin/python scripts/audit/check_mdx_generation_drift.py --files curriculum/l2-uk-en/a2/<slug>/module.md curriculum/l2-uk-en/a2/<slug>/activities.yaml curriculum/l2-uk-en/a2/<slug>/vocabulary.yaml
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a2/<slug>/module.md
 git diff --check
-git diff --name-only | rg '(^|/)status/.*\.json$|(^|/)audit/.*-review\.md$|(^|/)review/.*-review\.md$|^data/telemetry/' || true
+if git diff --name-only | rg '(^|/)status/.*\.json$|(^|/)audit/.*-review\.md$|(^|/)review/.*-review\.md$|^data/telemetry/'; then
+  echo "Forbidden generated artifact in diff" >&2
+  exit 1
+fi
 ```
+
+Run `scripts/audit/check_mdx_generation_drift.py` only when a drift-only check is needed after generation.
 
 ## PR, Commit, And Telemetry Requirements
 
 - Branch: `codex/a2-remediation-<batch>`
 - Commit trailer: `X-Agent: codex/a2-remediation-<batch>`
 - Run `.venv/bin/python scripts/audit/lint_agent_trailer.py` before pushing.
-- Persist module-build telemetry through `POST /api/telemetry/module-builds`.
+- Persist module-build telemetry using `docs/prompts/orchestrators/shared/telemetry-and-pr.md`.
 - Include `swarm_used` and `swarm_note` in telemetry and PR text.
 - Require independent review before merge.
 
