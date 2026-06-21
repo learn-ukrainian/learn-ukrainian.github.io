@@ -1,12 +1,12 @@
 # FOLK Production Build Orchestrator
 
-Prompt version: 0.1
+Prompt version: 0.2
 Last reviewed: 2026-06-21
 
 ## Source Assumptions
 
 - FOLK is the seminar pilot and must model reading-first seminar production.
-- Every module needs one or more primary reading candidates. If the text is not immediately available, stop or record a blocker; do not build around an empty reading layer.
+- Every module needs a **researched primary-text catalog** — survey the corpus for every distinct verified text on the topic and surface as many as it supports (**FOLK floor: ≥4 distinct primary readings when the gate-safe corpus holds ≥4 verified fragments**, `EXEMPLAR-STANDARD.md` §3; corpus-bound, never backfilled with from-memory or scholarly-quoted text). If a text is not available, record a `reading-needed` blocker; do not build around an empty or padded reading layer.
 - Hosted readings currently live in `site/src/content/readings/` and require `public_domain: true`. Non-hostable texts need `role: reading` external links and clear copyright notes.
 - FOLK uses `verify_shippable` and `assemble_mdx`, not the core `generate_mdx.py` path.
 
@@ -75,7 +75,8 @@ git rev-parse --show-toplevel
 ## Production Rules
 
 - Work one module at a time. Finish reading discovery, source writing, reading generation, MDX assembly, and validation before moving to the next slug.
-- Start each module from the primary reading candidates. Each candidate needs a copyright decision: hosted, linked-only, excerpt-only, or omit with reason.
+- Start each module from the primary reading candidates. Build the full corpus-supported catalog (FOLK target ≥4 distinct primary texts; fewer only when the gate-safe corpus genuinely lacks them, recorded as `reading-needed`). Each candidate needs a copyright decision: hosted, linked-only, excerpt-only, or omit with reason.
+- Keep scholarly/secondary works (monographs, surveys, analyses) as `type: scholarly` references — never tag them `type: primary` and never count them toward the reading floor. A primary text reconstructed inside a scholar's prose is not a clean hostable reading; source the standalone text from a primary-text corpus.
 - Search likely teaching/source locations such as Osvita only with exact URL and rights verification; do not invent links or assume teaching-site content is hostable.
 - Use `:::primary-reading` only for verified verbatim folk-primary fragments.
 - Keep archaic or dialectal forms inside quoted primary text unless VESUM/slovnyk.me/heritage verifies the form for exposition.

@@ -1,6 +1,6 @@
 # FOLK Quality Audit Orchestrator
 
-Prompt version: 0.1
+Prompt version: 0.2
 Last reviewed: 2026-06-21
 
 ## Source Assumptions
@@ -58,7 +58,7 @@ git rev-parse --show-toplevel
 
 ## Audit Dimensions
 
-- Reading coverage: one or more readings per module; hosted/link-only/excerpt-only/omit decisions are explicit.
+- Reading coverage: the module surfaces the corpus-supported primary-text catalog — **FOLK floor ≥4 distinct primary readings when the gate-safe corpus holds ≥4 verified fragments** (`EXEMPLAR-STANDARD.md` §3), fewer only when the corpus genuinely lacks them and never backfilled; hosted/link-only/excerpt-only/omit decisions are explicit; scholarly works are not miscounted as readings (any `type: primary` that is actually scholarly is a finding).
 - Hosted readings: valid frontmatter, `public_domain: true`, source notes, `taught_in`, and working `/readings/<slug>/` links.
 - Quote integrity: no from-memory fragments; every boxed primary text has source provenance and verification status.
 - Source fidelity: no ghost sources, invented collectors, unsupported dates, or citation drift.

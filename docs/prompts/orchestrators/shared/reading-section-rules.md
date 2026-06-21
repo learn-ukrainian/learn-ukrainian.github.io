@@ -1,15 +1,25 @@
 # Shared Reading Section Rules
 
-Prompt suite component version: 0.1
+Prompt suite component version: 0.2
 Last reviewed: 2026-06-21
 
 The global reading reference is the seminar equivalent of a lexicon: modules should connect learners to original texts, either hosted on-site when copyright allows or linked externally when hosting is not allowed.
 
 ## Required Reading Coverage
 
-- Every seminar module must identify one or more primary reading candidates.
+- A seminar module's reading layer is a **researched primary-text catalog**, not a single token reading. Before writing, survey the corpus and source registries for **every distinct, verifiable primary text** that belongs to the module's topic (each song, duma, poem, chronicle passage, or other primary artifact appropriate to the track) — then surface as many as the corpus genuinely supports.
+- **Per-track minimum (corpus-bound).** Each seminar track sets a primary-text floor. **FOLK targets ≥4 distinct primary readings per module when the gate-safe corpus holds ≥4 distinct verified fragments** (`docs/folk-epic/EXEMPLAR-STANDARD.md` §3). A module may surface fewer **only** when the corpus genuinely lacks that many distinct verified texts — e.g. `koliadky-shchedrivky`'s gate-safe corpus holds 2 distinct songs, so 2–3 is correct for it, not a deficiency.
+- **Never backfill to the floor.** Do not pad the catalog to hit a number with from-memory text, paraphrase, reconstructed fragments, or scholarly-quoted snippets. Under-coverage relative to corpus availability is recorded as a `reading-needed` finding — never hidden, never faked.
 - If no usable reading is present yet, record it as a blocker or explicit `reading-needed` task; do not silently omit readings.
 - A reading can be a full original text, an excerpt, a chronicle/source passage, a literary work, a folk text, or another primary artifact appropriate to the track.
+
+## Primary Text vs Scholarship
+
+The reading catalog holds **primary texts only** — the works learners read in the original. **Secondary/scholarly works are not readings**, even when a plan lists them under `references:`:
+
+- Scholarly monographs, surveys, and analyses (e.g. Костомаров «Слов'янська міфологія», Чижевський «Історія української літератури», Попович «Нарис історії культури України», Грушевський used as analysis) are `type: scholarly` references — **never `type: primary`, and never counted toward the reading floor**.
+- A primary text embedded inside a scholar's analytical prose (reconstructed or quoted by the author) is **not** a clean hostable reading; source the standalone text from a primary-text corpus instead.
+- When auditing or building, flag any reference tagged `type: primary` that is actually a secondary work and re-tag it `type: scholarly`. The reading floor counts only standalone primary texts.
 
 ## Current Repo Surfaces
 

@@ -1,6 +1,6 @@
 # FOLK Remediation Build Orchestrator
 
-Prompt version: 0.1
+Prompt version: 0.2
 Last reviewed: 2026-06-21
 
 ## Source Assumptions
@@ -65,6 +65,7 @@ git rev-parse --show-toplevel
 
 - Every audit finding selected for the batch must be fixed or explicitly deferred with reason.
 - Reading findings are first-class: fix missing `role: reading`, broken `/readings/` links, missing hosted files, bad copyright decisions, and missing learner tasks before declaring the module clean.
+- **Reading-deficit findings are first-class too:** when the gate-safe corpus holds ≥4 distinct verified primary texts but the module surfaces fewer (FOLK floor, `EXEMPLAR-STANDARD.md` §3), add the missing texts from the corpus — never backfill with from-memory, paraphrased, or scholarly-quoted content. Re-tag any `type: primary` reference that is actually a secondary/scholarly work as `type: scholarly`; it does not count toward the floor.
 - For unavailable texts, record the search and leave a visible reading-needed blocker instead of hiding the gap.
 - If hosting is not permitted, use link-only or excerpt-only treatment; do not paste full copyrighted text.
 - Regenerate readings and module MDX through current repo tooling; do not hand-edit generated output except with a documented reason. Assemble committed site MDX through `scripts.build.linear_pipeline.assemble_mdx`.
