@@ -72,6 +72,26 @@ class TestBasicDetection:
         violations = check_russicisms(content)
         assert len(violations) == 1
 
+    def test_detects_слідуюча_inflected(self):
+        """Broadened pattern fires on inflected слідуюч* too, not just masc-nom (#3688)."""
+        content = _wrap("Слідуюча тема — це наголос у словах.")
+        violations = check_russicisms(content)
+        assert len(violations) == 1
+        assert "наступний" in str(violations)
+
+    def test_detects_оточуюче_calque(self):
+        """оточуюч* calque surfaces with the native suggestion (#3688 — was missing from gate)."""
+        content = _wrap("Ми вивчаємо оточуюче середовище довкола села.")
+        violations = check_russicisms(content)
+        assert len(violations) == 1
+        assert "довколишній" in str(violations) or "навколишній" in str(violations)
+
+    def test_detects_оточуючих_inflected(self):
+        """Inflected оточуючих also fires (#3688)."""
+        content = _wrap("Опис оточуючих лісів, полів і річок.")
+        violations = check_russicisms(content)
+        assert len(violations) == 1
+
     def test_detects_кушати(self):
         """Detects 'кушати' (should be 'їсти')."""
         content = _wrap("Давайте кушати разом.")
