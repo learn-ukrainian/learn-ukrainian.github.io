@@ -24,12 +24,20 @@ from .converters import (
     resolve_slug_links,
     yaml_activities_to_jsx,
 )
+from .reading_links import reading_href_for
 from .resources import (
     embed_youtube_video_links,
     format_resources_for_mdx,
     vocab_items_to_components,
 )
-from .utils import CURRICULUM_DIR, PROJECT_ROOT, SCRIPT_DIR, STARLIGHT_DOCS_DIR, escape_jsx, fix_html_for_jsx
+from .utils import (
+    CURRICULUM_DIR,
+    PROJECT_ROOT,
+    SCRIPT_DIR,
+    STARLIGHT_DOCS_DIR,
+    escape_jsx,
+    fix_html_for_jsx,
+)
 
 # Ensure scripts/ is on sys.path for sibling imports
 if str(SCRIPT_DIR) not in sys.path:
@@ -161,6 +169,7 @@ def _activity_plans_to_jsx(plans: list[dict]) -> str:
 
 _INJECT_ACTIVITY_RE = re.compile(r'<!--\s*INJECT_ACTIVITY:\s*([A-Za-z0-9_-]+)\s*-->')
 _INLINE_SECTION_HEADING_RE = re.compile(r'^#{2,3}\s+(.+?)\s*#*\s*$')
+_READING_SECTION_RE = re.compile(r'^(##\s+(?:Читання|Reading)[^\n]*\n)', re.MULTILINE)
 
 
 def _activity_id(activity: Activity | dict) -> str:
@@ -264,6 +273,45 @@ def _inject_inline_activities(
     )
 
 
+def _format_plan_readings_for_mdx(readings: object) -> str:
+    """Render the plan-level reading assignment as an integrity-gated MDX list."""
+    if not isinstance(readings, list):
+        return ""
+
+    lines = ["**Texts you'll read**", ""]
+    for item in readings:
+        if not isinstance(item, dict):
+            continue
+        title = str(item.get("title") or "").strip()
+        slug = str(item.get("reading_slug") or "").strip()
+        if not title or not slug:
+            continue
+        href = reading_href_for(slug)
+        if not href:
+            continue
+        genre = str(item.get("genre") or "").strip()
+        title_en = str(item.get("title_en") or "").strip()
+        detail = " · ".join(value for value in (genre, title_en) if value)
+        suffix = f" — {detail}" if detail else ""
+        lines.append(f"- [{title}]({href}){suffix}")
+
+    return "\n".join(lines) if len(lines) > 2 else ""
+
+
+def _insert_plan_readings_block(body: str, readings: object) -> str:
+    block = _format_plan_readings_for_mdx(readings)
+    if not block:
+        return body
+
+    def replace(match: re.Match[str]) -> str:
+        return f"{match.group(1)}\n{block}\n\n"
+
+    updated, count = _READING_SECTION_RE.subn(replace, body, count=1)
+    if count:
+        return updated
+    return f"{block}\n\n{body}"
+
+
 def generate_mdx(
     md_content: str,
     module_num: int,
@@ -298,7 +346,7 @@ def generate_mdx(
             'module', 'level', 'sequence', 'slug', 'version', 'title', 'subtitle',
             'content_outline', 'vocabulary_hints', 'activity_hints', 'focus',
             'pedagogy', 'prerequisites', 'connects_to', 'objectives', 'grammar',
-            'register', 'phase', 'persona', 'word_target',
+            'register', 'phase', 'persona', 'word_target', 'readings',
         }
         if body and not md_content.lstrip().startswith('---'):
             first_line = body.lstrip().split('\n')[0]
@@ -384,6 +432,7 @@ sidebar:
 
     # --- TAB 1: Lesson (prose only) ---
     lesson_content = body
+    lesson_content = _insert_plan_readings_block(lesson_content, fm.get("readings"))
     lesson_content = embed_youtube_video_links(lesson_content)
     (
         lesson_content,
@@ -695,6 +744,7 @@ def main():
                 sys.exit(1)
 
         # Load PLAN file for title/subtitle
+        plan_data = None
         plan_file = CURRICULUM_DIR / lang_pair / 'plans' / mod.level.lower() / f"{mod.slug}.yaml"
         if plan_file.exists():
             try:
@@ -706,6 +756,8 @@ def main():
                         meta_data['title'] = plan_data['title']
                     if plan_data and 'subtitle' in plan_data and 'subtitle' not in meta_data:
                         meta_data['subtitle'] = plan_data['subtitle']
+                    if plan_data and 'readings' in plan_data:
+                        meta_data['readings'] = plan_data['readings']
             except Exception as e:
                 print(f'\n\u274c CRITICAL: Error parsing plan file for {mod.slug}: {e}')
                 sys.exit(1)

@@ -41,6 +41,7 @@ export const collections = {
 			period: z.string().optional(),
 			genre: z.string(),
 			tracks: z.array(z.string()).default([]),
+			taught_in: z.array(z.string()).default([]),
 			excerpt: z.string(),
 			source: z.string(),
 			public_domain: z.literal(true),  // require explicit rights assertion; missing => fail validation

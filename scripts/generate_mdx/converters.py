@@ -25,6 +25,7 @@ from .dataclasses_ import (
     RitualSequencingData,
     VariantComparisonData,
 )
+from .reading_links import reading_href_for
 from .utils import dump_json_for_jsx, escape_jsx
 
 # Ensure scripts/ is on sys.path for sibling imports
@@ -270,9 +271,11 @@ def performance_to_jsx(data: PerformanceData, title: str, is_ukrainian_forced: b
 # =============================================================================
 
 _FOLK_CONTENT_BLOCK_RE = re.compile(
-    r"^:::(myth-box|high-culture-bridge|primary-reading)\s*\n(.*?)\n:::\s*$",
+    r"^:::(myth-box|high-culture-bridge|primary-reading)([^\n]*)\n(.*?)\n:::\s*$",
     re.MULTILINE | re.DOTALL,
 )
+_DIRECTIVE_ATTR_RE = re.compile(r'([A-Za-z_][\w-]*)\s*=\s*"([^"]*)"')
+_PRIMARY_READING_ATTRIBUTION_RE = re.compile(r"^—[^\n]*[«\"“](?P<title>[^»\"”]+)[»\"”]", re.MULTILINE)
 
 
 def _yaml_directive_payload(raw: str) -> dict[str, Any]:
@@ -280,16 +283,35 @@ def _yaml_directive_payload(raw: str) -> dict[str, Any]:
     return payload if isinstance(payload, dict) else {}
 
 
+def _directive_attrs(raw: str) -> dict[str, str]:
+    raw = raw.strip()
+    if not raw.startswith("{") or not raw.endswith("}"):
+        return {}
+    return {match.group(1): match.group(2).strip() for match in _DIRECTIVE_ATTR_RE.finditer(raw[1:-1])}
+
+
+def _primary_reading_work_title(content: str) -> str:
+    matches = list(_PRIMARY_READING_ATTRIBUTION_RE.finditer(content))
+    if not matches:
+        return ""
+    return matches[-1].group("title").strip()
+
+
 def convert_folk_content_blocks(content: str) -> str:
     """Convert folk text-layer directives to dedicated MDX components."""
 
     def replace(match: re.Match[str]) -> str:
         block_type = match.group(1)
+        raw_attrs = match.group(2)
+        block_content = match.group(3).strip()
         if block_type == 'primary-reading':
-            content = match.group(2).strip()
-            return f"<PrimaryReading>\n\n{content}\n\n</PrimaryReading>"
+            attrs = _directive_attrs(raw_attrs)
+            work = attrs.get("reading") or _primary_reading_work_title(block_content)
+            href = reading_href_for(work) if work else None
+            href_prop = f' href="{escape_jsx(href)}"' if href else ''
+            return f"<PrimaryReading{href_prop}>\n\n{block_content}\n\n</PrimaryReading>"
 
-        payload = _yaml_directive_payload(match.group(2))
+        payload = _yaml_directive_payload(block_content)
         if block_type == 'myth-box':
             claim = str(payload.get('claim', '')).strip()
             truth = str(payload.get('truth', '')).strip()

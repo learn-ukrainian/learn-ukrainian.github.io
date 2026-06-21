@@ -2,9 +2,10 @@ import React from 'react';
 
 interface PrimaryReadingProps {
   children?: React.ReactNode;
+  href?: string;
 }
 
-export default function PrimaryReading({ children }: PrimaryReadingProps) {
+export default function PrimaryReading({ children, href }: PrimaryReadingProps) {
   return (
     <div className="primary-reading-box">
       <div className="primary-reading-header">
@@ -14,6 +15,11 @@ export default function PrimaryReading({ children }: PrimaryReadingProps) {
       <div className="primary-reading-content">
         {children}
       </div>
+      {href && (
+        <div className="primary-reading-footer">
+          <a href={href}>📖 Читати повний текст →</a>
+        </div>
+      )}
     </div>
   );
 }

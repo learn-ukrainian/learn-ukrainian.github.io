@@ -8,15 +8,18 @@
 import { getCollection, render } from 'astro:content';
 import CourseLayout from '../../layouts/CourseLayout.astro';
 
+const normalizeDocId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
+
 export async function getStaticPaths() {
   const readings = await getCollection('readings');
+  const docs = await getCollection('docs');
   return readings.map((entry) => ({
     params: { slug: entry.id },
-    props: { entry, readings },
+    props: { entry, readings, docs },
   }));
 }
 
-const { entry, readings } = Astro.props;
+const { entry, readings, docs } = Astro.props;
 const { Content } = await render(entry);
 
 const pluralTexts = (n: number) => (n === 1 ? 'text' : 'texts');
@@ -30,6 +33,19 @@ const links = sorted.map((r) => ({
   num: '📜',
   active: r.id === entry.id,
 }));
+
+const docsBySlug = new Map(
+  docs.map((doc) => {
+    const id = normalizeDocId(doc.id);
+    const slug = id.split('/').pop() ?? id;
+    return [slug, { href: `/${id}/`, title: doc.data.title }];
+  }),
+);
+const taughtInLinks = (entry.data.taught_in ?? [])
+  .map((slug) => {
+    const doc = docsBySlug.get(slug);
+    return doc ? { ...doc, slug } : { href: null, title: slug, slug };
+  });
 
 const sidebar = {
   backHref: '/readings/',
@@ -57,5 +73,16 @@ const sidebar = {
   ]}
   sidebar={sidebar}
 >
+  {taughtInLinks.length ? (
+    <p class="reading-taught-in">
+      <strong>Вивчається в:</strong>{' '}
+      {taughtInLinks.map((item, index) => (
+        <>
+          {index > 0 ? ', ' : ''}
+          {item.href ? <a href={item.href}>{item.title}</a> : <span>{item.title}</span>}
+        </>
+      ))}
+    </p>
+  ) : null}
   <Content />
 </CourseLayout>
