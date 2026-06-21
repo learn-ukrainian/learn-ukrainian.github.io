@@ -2,6 +2,8 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import CourseLayout from '../layouts/CourseLayout.astro';
 import LevelLanding from '../components/LevelLanding';
+import ChromeText from '../components/chrome/ChromeText.astro';
+import { CHROME_STRINGS } from '../lib/i18n/chrome';
 import curriculumStats from '../data/curriculum-stats.json';
 import lexiconManifest from '../data/lexicon-manifest.json';
 
@@ -549,6 +551,9 @@ const sidebar = props.kind === 'doc'
         positionLabel: position > 0
           ? `Урок ${position} з ${links.length}`
           : `${links.length} уроки`,
+        positionLabelEn: position > 0
+          ? `Lesson ${position} of ${links.length}`
+          : `${links.length} lessons`,
         titleLabel: 'Уроки',
         navLabel: 'Уроки цього рівня',
         progressDone: position,
@@ -599,39 +604,37 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
       moduleCount={moduleCount(props.track)}
       wordTarget={4000}
       color={`var(--lu-id-${props.track})`}
-      progressTitle={`${pageTrack.label} Build Status`}
-      progressDescription={`0 available · ${moduleCount(props.track)} planned`}
       modules={plannedModuleGroups(props.track, pageTrack)}
     />
   ) : props.kind === 'search' ? (
     <section class="search-page" data-search-root>
       <form class="search-panel" role="search">
-        <label for="course-search">Search lessons, tracks, and reference pages</label>
+        <label for="course-search"><ChromeText k="search.label" /></label>
         <div class="search-input-row">
-          <input id="course-search" name="q" type="search" placeholder="Try gender, колядки, вікно, etymology..." autocomplete="off" />
-          <button type="submit">Search</button>
+          <input id="course-search" name="q" type="search" placeholder={CHROME_STRINGS.en['search.placeholder']} autocomplete="off" />
+          <button type="submit"><ChromeText k="nav.search" /></button>
         </div>
       </form>
 
       <div class="search-state search-loading" data-search-loading hidden>
-        <span class="state-code">Loading</span>
-        <p>Preparing the local index.</p>
+        <span class="state-code"><ChromeText k="search.loadingCode" /></span>
+        <p><ChromeText k="search.loadingBody" /></p>
       </div>
       <div class="search-state search-error" data-search-error hidden>
-        <span class="state-code">Error</span>
-        <h2>Search could not run.</h2>
-        <p>The static page is still available. Use the course links below while the search script recovers.</p>
+        <span class="state-code"><ChromeText k="search.errorCode" /></span>
+        <h2><ChromeText k="search.errorTitle" /></h2>
+        <p><ChromeText k="search.errorBody" /></p>
       </div>
       <div class="search-state search-empty" data-search-empty hidden>
-        <span class="state-code">No Results</span>
-        <h2>No matching pages.</h2>
-        <p>Try a broader term, a Ukrainian lemma, or open A1, B1 Preview, Word Atlas, or Etymology directly.</p>
+        <span class="state-code"><ChromeText k="search.emptyCode" /></span>
+        <h2><ChromeText k="search.emptyTitle" /></h2>
+        <p><ChromeText k="search.emptyBody" /></p>
       </div>
 
       <section class="search-results-section" aria-live="polite">
         <div class="section-heading">
-          <h2 data-search-heading>Suggested Pages</h2>
-          <p data-search-count>Start with a broad query or use the shortcuts.</p>
+          <h2 data-search-heading><ChromeText k="search.suggested" /></h2>
+          <p data-search-count><ChromeText k="search.hint" /></p>
         </div>
         <div class="search-results" data-search-results>
           {searchItems.slice(0, 9).map((item) => (
@@ -643,7 +646,26 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
         </div>
       </section>
 
-      <script is:inline define:vars={{ searchItems }}>
+      <script is:inline define:vars={{ searchItems, searchI18n: {
+        en: {
+          resultsFor: 'Results for',
+          suggested: 'Suggested Pages',
+          match: 'match',
+          matches: 'matches',
+          matchesInIndex: 'in the static learner index.',
+          noPagesMatched: 'No pages matched this query.',
+          hint: 'Start with a broad query or use the shortcuts.',
+        },
+        uk: {
+          resultsFor: 'Результати для',
+          suggested: 'Рекомендовані сторінки',
+          match: 'збіг',
+          matches: 'збігів',
+          matchesInIndex: 'у статичному покажчику курсу.',
+          noPagesMatched: 'Немає сторінок за цим запитом.',
+          hint: 'Почніть із загального запиту або скористайтеся посиланнями.',
+        },
+      } }}>
         const root = document.querySelector('[data-search-root]');
         const input = root?.querySelector('#course-search');
         const form = root?.querySelector('form');
@@ -654,6 +676,8 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
         const error = root?.querySelector('[data-search-error]');
         const loading = root?.querySelector('[data-search-loading]');
         const params = new URLSearchParams(window.location.search);
+        const locale = () => (document.documentElement.dataset.chromeLocale === 'uk' ? 'uk' : 'en');
+        const s = () => searchI18n[locale()];
         const normalize = (value) => String(value || '').toLocaleLowerCase('uk');
         const escapeHtml = (value) => String(value || '')
           .replace(/&/g, '&amp;')
@@ -662,6 +686,7 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
           .replace(/"/g, '&quot;');
         const render = (query) => {
           const q = normalize(query).trim();
+          const strings = s();
           error.hidden = params.get('state') !== 'error';
           loading.hidden = true;
           if (!results || !count || !heading || !empty || !error.hidden) return;
@@ -669,12 +694,12 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
             ? searchItems.filter((item) => normalize(`${item.title} ${item.text} ${item.type} ${item.track}`).includes(q)).slice(0, 24)
             : searchItems.slice(0, 9);
           empty.hidden = matches.length !== 0 || !q;
-          heading.textContent = q ? `Results for "${query}"` : 'Suggested Pages';
+          heading.textContent = q ? `${strings.resultsFor} "${query}"` : strings.suggested;
           count.textContent = matches.length
-            ? `${matches.length} ${matches.length === 1 ? 'match' : 'matches'} in the static learner index.`
+            ? `${matches.length} ${matches.length === 1 ? strings.match : strings.matches} ${strings.matchesInIndex}`
             : q
-              ? 'No pages matched this query.'
-              : 'Start with a broad query or use the shortcuts.';
+              ? strings.noPagesMatched
+              : strings.hint;
           results.innerHTML = matches.map((item) => (
             `<a href="${escapeHtml(item.href)}"><span>${escapeHtml(item.type)} · ${escapeHtml(item.track)}</span><strong>${escapeHtml(item.title)}</strong></a>`
           )).join('');
@@ -700,41 +725,37 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
       </p>
       <h2>
         {props.state === 'not-found'
-          ? 'This page is not part of the public learner UI.'
+          ? <ChromeText k="state.notFoundTitle" />
           : props.state === 'missing-content'
-            ? 'The route exists, but the lesson content is not ready.'
-            : 'The reference template has an empty state.'}
+            ? <ChromeText k="state.missingTitle" />
+            : <ChromeText k="state.emptyTitle" />}
       </h2>
       <p>
         {props.state === 'not-found'
-          ? 'Hidden drafts and unknown routes should fail clearly, with useful recovery paths.'
+          ? <ChromeText k="state.notFoundBody" />
           : props.state === 'missing-content'
-            ? 'Learners should get a plain explanation and a path back to an available track.'
-            : 'Atlas and reference indexes should communicate when a filter or future dataset has no records.'}
+            ? <ChromeText k="state.missingBody" />
+            : <ChromeText k="state.emptyBody" />}
       </p>
       <div class="state-actions">
-        <a href="/a1/">A1</a>
-        <a href="/b1/">B1 Preview</a>
-        <a href="/search/">Search</a>
-        <a href="/lexicon/">Word Atlas</a>
+        <a href="/a1/"><ChromeText k="nav.a1" /></a>
+        <a href="/b1/"><ChromeText k="nav.b1" /></a>
+        <a href="/search/"><ChromeText k="nav.search" /></a>
+        <a href="/lexicon/"><ChromeText k="nav.atlas" /></a>
       </div>
     </section>
   ) : Content ? (
     <section class:list={['lesson-shell', isSeminarLesson && 'seminar-lesson']}>
       <aside class="lesson-companion" aria-label="Lesson context">
-        <p class="state-code">{isSeminarLesson ? 'Seminar' : 'Core lesson'}</p>
-        <h2>{isSeminarLesson ? 'Source-Heavy Reading' : 'Learner Path'}</h2>
-        <p>
-          {isSeminarLesson
-            ? 'Read for evidence, context, and interpretation. Source notes and workbook tasks stay visible as part of the seminar frame.'
-            : 'Use the lesson tab first, then vocabulary, activities, and resources. Dialogue and tables are styled for repeated practice.'}
-        </p>
+        <p class="state-code">{isSeminarLesson ? <ChromeText k="companion.seminarCode" /> : <ChromeText k="companion.coreCode" />}</p>
+        <h2>{isSeminarLesson ? <ChromeText k="companion.seminarTitle" /> : <ChromeText k="companion.coreTitle" />}</h2>
+        <p>{isSeminarLesson ? <ChromeText k="companion.seminarBody" /> : <ChromeText k="companion.coreBody" />}</p>
       </aside>
       <Content />
       {(previousLink || nextLink) && (
         <nav class="lesson-next-prev" aria-label="Lesson navigation">
-          {previousLink ? <a href={previousLink.href}>← {previousLink.label}</a> : <span></span>}
-          {nextLink ? <a href={nextLink.href}>{nextLink.label} →</a> : <span></span>}
+          {previousLink ? <a href={previousLink.href}>← <ChromeText k="label.previous" /></a> : <span></span>}
+          {nextLink ? <a href={nextLink.href}><ChromeText k="label.next" /> →</a> : <span></span>}
         </nav>
       )}
     </section>

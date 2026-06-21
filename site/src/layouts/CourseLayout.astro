@@ -19,6 +19,7 @@ type Sidebar = {
   backHref: string;
   backLabel: string;
   positionLabel: string;
+  positionLabelEn?: string;
   titleLabel?: string;
   navLabel?: string;
   progressDone: number;
@@ -30,6 +31,7 @@ type Props = {
   title: string;
   description?: string;
   eyebrow?: string;
+  eyebrowKey?: ChromeKey;
   subtitle?: string;
   currentPath?: string;
   heroVariant?: 'core' | 'folk' | 'lexicon' | 'seminar' | 'lit' | 'history' | 'readings' | 'unavailable';
@@ -43,6 +45,7 @@ const {
   title,
   description,
   eyebrow = 'Learn Ukrainian',
+  eyebrowKey,
   subtitle = description,
   currentPath = '/',
   heroVariant = 'core',
@@ -280,7 +283,7 @@ const isActive = (href: string) => {
             heroVariant === 'unavailable' && 'unavailable',
           ]}>
             <div class="lu-hero-inner">
-              <span class="lu-badge">{eyebrow}</span>
+              <span class="lu-badge">{eyebrowKey ? <ChromeText k={eyebrowKey} /> : eyebrow}</span>
               <h1>{title}</h1>
               {subtitle && <p>{subtitle}</p>}
             </div>
@@ -292,7 +295,7 @@ const isActive = (href: string) => {
             {navItems.map((item, index) => (
               <>
                 {index > 0 && <span>/</span>}
-                <a href={item.href}>{item.label}</a>
+                <a href={item.href}>{item.label === 'Home' ? <ChromeText k="nav.home" /> : item.label}</a>
               </>
             ))}
           </nav>
@@ -302,12 +305,12 @@ const isActive = (href: string) => {
           {sidebar && (
             <details class="lu-sidebar" open>
               <summary class="lu-sidebar-toggle">
-                {sidebar.titleLabel ? sidebar.titleLabel : <ChromeText k="sidebar.lessons" />} · {sidebar.positionLabel}
+                {sidebar.titleLabel ? sidebar.titleLabel : <ChromeText k="sidebar.lessons" />} · <span class="lu-i18n"><span data-loc="en">{sidebar.positionLabelEn ?? sidebar.positionLabel}</span><span data-loc="uk">{sidebar.positionLabel}</span></span>
               </summary>
               <div class="lu-sidebar-body">
                 <a class="lu-sidebar-back" href={sidebar.backHref}>← {sidebar.backLabel}</a>
                 <div class="lu-sidebar-progress">
-                  <div>{sidebar.positionLabel}</div>
+                  <div><span class="lu-i18n"><span data-loc="en">{sidebar.positionLabelEn ?? sidebar.positionLabel}</span><span data-loc="uk">{sidebar.positionLabel}</span></span></div>
                   <div class="lu-mini-bar">
                     <div class="lu-mini-fill" style={`width:${sidebarPct}%`} />
                   </div>

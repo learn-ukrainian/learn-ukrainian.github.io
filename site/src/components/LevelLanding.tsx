@@ -2,6 +2,8 @@ import React from 'react';
 import type { ReactNode } from 'react';
 import styles from './LevelLanding.module.css';
 import LiveStatus from './LiveStatus';
+import ChromeText, { ChromeDual } from '../lib/i18n/ChromeText';
+import type { ChromeKey } from '../lib/i18n/chrome';
 
 type ModuleItem = {
   num: number;
@@ -160,28 +162,36 @@ export default function LevelLanding(props: LevelLandingProps): ReactNode {
   const moduleCount = totalModules || unitGroups.reduce((acc, g) => acc + g.items.length, 0);
   const pct = moduleCount > 0 ? Math.round((doneCount / moduleCount) * 100) : 0;
   const heroBackground = getHeroBackground(color, accentColor);
-  const progressTitle = props.progressTitle ?? 'Your Progress';
-  const progressDescription = props.progressDescription ?? `${doneCount} of ${moduleCount} completed (${pct}%)`;
+  const badgeKey = getBadgeKey(level);
 
   return (
     <div className={styles.container}>
       {/* Hero */}
       <div className={styles.hero} style={{ background: heroBackground }}>
-        <span className={styles.badge}>{level.toUpperCase()} — {getBadgeLabel(level)}</span>
+        <span className={styles.badge}>
+          {level.toUpperCase()} — {badgeKey ? <ChromeText k={badgeKey} /> : getBadgeLabel(level)}
+        </span>
         <h1 className={styles.heroTitle}>{displayTitle}</h1>
         {displaySub && <div className={styles.heroSub}>{displaySub}</div>}
         <div className={styles.heroStats}>
-          <span>{'\uD83D\uDCD6'} {moduleCount} modules</span>
-          {wordTarget > 0 && <span>{'\uD83D\uDCAC'} {wordTarget.toLocaleString()} target words</span>}
-          {hours && <span>{'\u23F1'} ~{hours} hours</span>}
+          <span>{'\uD83D\uDCD6'} {moduleCount} <ChromeText k="stats.modules" /></span>
+          {wordTarget > 0 && <span>{'\uD83D\uDCAC'} {wordTarget.toLocaleString()} <ChromeText k="stats.targetWords" /></span>}
+          {hours && <span>{'\u23F1'} ~{hours} <ChromeText k="stats.hours" /></span>}
         </div>
       </div>
 
       {/* Progress */}
       <div className={styles.progressSection}>
         <div className={styles.progressHeader}>
-          <h3>{progressTitle}</h3>
-          <span>{progressDescription}</span>
+          <h3>{props.progressTitle ? props.progressTitle : <ChromeText k="progress.title" />}</h3>
+          <span>
+            {props.progressDescription ? props.progressDescription : (
+              <ChromeDual
+                en={`${doneCount} of ${moduleCount} completed (${pct}%)`}
+                uk={`${doneCount} з ${moduleCount} завершено (${pct}%)`}
+              />
+            )}
+          </span>
         </div>
         <div className={styles.progressBar}>
           <div className={styles.progressFill} style={{ width: `${pct}%`, background: color }} />
@@ -201,6 +211,14 @@ export default function LevelLanding(props: LevelLandingProps): ReactNode {
       ))}
     </div>
   );
+}
+
+function getBadgeKey(level: string): ChromeKey | null {
+  const keys: Record<string, ChromeKey> = {
+    A1: 'badge.beginner', A2: 'badge.elementary', B1: 'badge.intermediate',
+    B2: 'badge.upperIntermediate', C1: 'badge.advanced', C2: 'badge.mastery',
+  };
+  return keys[level.toUpperCase()] ?? null;
 }
 
 function getBadgeLabel(level: string): string {
