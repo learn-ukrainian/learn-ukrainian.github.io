@@ -30,6 +30,14 @@
   translation: conjunction
   pos: noun
   example: "Сполучник 'бо' показує причину."
+- word: частка
+  translation: particle
+  pos: noun
+  example: "Слово 'не' може бути часткою."
+- word: вигук
+  translation: interjection
+  pos: noun
+  example: "Слово 'ой!' - це вигук."
 - word: частина мови
   translation: part of speech
   pos: phrase

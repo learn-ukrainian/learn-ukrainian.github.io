@@ -20,6 +20,10 @@ inline:
         right: "preposition"
       - left: "сполучник"
         right: "conjunction"
+      - left: "частка"
+        right: "particle"
+      - left: "вигук"
+        right: "interjection"
   - id: act-1b
     type: quiz
     title: Частина мови в реченні
@@ -81,6 +85,20 @@ inline:
           - "дієслово"
         correct: 0
         explanation: "`До` зв'язує слова і вимагає родового відмінка."
+      - question: "`не` у реченні `Я не пишу`"
+        options:
+          - "частка"
+          - "сполучник"
+          - "прийменник"
+        correct: 0
+        explanation: "`Не` додає заперечення, тому це частка."
+      - question: "`ой!` у реченні `Ой! Я забув словник`"
+        options:
+          - "вигук"
+          - "прислівник"
+          - "іменник"
+        correct: 0
+        explanation: "`Ой!` виражає реакцію, тому це вигук."
   - id: act-1c
     type: group-sort
     title: Частини мови в групах
@@ -106,6 +124,16 @@ inline:
           - "швидко"
           - "тут"
           - "завтра"
+      - label: "частка"
+        items:
+          - "не"
+          - "лише"
+          - "хай"
+      - label: "вигук"
+        items:
+          - "ой!"
+          - "ура!"
+          - "алло!"
   - id: act-2
     type: fill-in
     title: Питання відмінків
