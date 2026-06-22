@@ -34,6 +34,10 @@
   translation: orthography, spelling
   pos: noun:m
   usage: Правопис фіксує нормативну форму слова.
+- lemma: закріплений
+  translation: fixed, established
+  pos: adjective
+  usage: Закріплений у правописі варіант треба запам'ятати.
 - lemma: письмо
   translation: writing
   pos: noun:n
@@ -46,6 +50,14 @@
   translation: word formation
   pos: noun:n
   usage: Спрощення часто з'являється під час словотворення.
+- lemma: прикметник
+  translation: adjective
+  pos: noun:m
+  usage: Прикметник радісний утворений від іменника радість.
+- lemma: іменник
+  translation: noun
+  pos: noun:m
+  usage: Іменник часто є базою для похідного прикметника.
 - lemma: похідний
   translation: derived
   pos: adjective
