@@ -37,7 +37,9 @@ Current hosted readings require explicit `public_domain: true` in frontmatter. D
 
 ## Plan And Resource Fields
 
-When the current track plan supports a `readings:` block, include for each candidate:
+Use `docs/prompts/orchestrators/shared/reading-catalog-template.md` for the
+preflight search record and rights decision log. When the current track plan
+supports a `readings:` block, include for each candidate:
 
 - `title`
 - `title_en` when useful
@@ -57,7 +59,8 @@ Every reading candidate must carry a decision:
 - `hosted`: public-domain or otherwise clearly hostable; create/update `site/src/content/readings/<slug>.mdx`.
 - `linked-only`: not hostable or uncertain, but a stable public teaching/source URL exists; add `role: reading` link and learner task.
 - `excerpt-only`: only a short compliant excerpt may be quoted; link to the original when possible.
-- `omit`: no reliable or legally usable source found yet; record the search and leave a reading-needed blocker.
+- `omit`: no reliable, learner-safe, or pedagogically usable source exists after search; record the search and reason.
+- `reading-needed`: the module needs the source, but no verified usable text or rights decision exists yet; record it as a blocker.
 
 Start with obvious public teaching/library sources such as Osvita when relevant, but verify the exact current domain, URL, license/copyright posture, and text identity. Do not invent `osvita` links or assume that a teaching site automatically grants republication rights.
 

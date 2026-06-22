@@ -54,7 +54,8 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/b2/**`
 - inactive LIT remnants
 - non-hostable full contemporary texts, captivity images, or propaganda-origin media
-- protected configs, generated status/audit/review artifacts, and `data/telemetry/**`
+- `.python-version`, `.yamllint`, `.markdownlint.json`
+- generated `status/`, curriculum `audit/`, curriculum `review/`, and `data/telemetry/**` artifacts
 
 ## Lifecycle Rules
 

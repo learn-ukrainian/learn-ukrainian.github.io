@@ -54,7 +54,8 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/b2/**`
 - a separate `lit-juvenile`, `lit-doc`, or `lit-crimea` prompt suite
 - non-hostable full children's/YA texts or illustrations
-- protected configs, generated status/audit/review artifacts, and `data/telemetry/**`
+- `.python-version`, `.yamllint`, `.markdownlint.json`
+- generated `status/`, curriculum `audit/`, curriculum `review/`, and `data/telemetry/**` artifacts
 
 ## Lifecycle Rules
 

@@ -25,9 +25,72 @@ PROMPT_SCAN_DIRS = [
     PROJECT_ROOT / "agents_extensions/shared" / "phases",
 ]
 
+ORCHESTRATOR_PROMPT_ROOT = PROJECT_ROOT / "docs" / "prompts" / "orchestrators"
+CURRICULUM_MANIFEST = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
+
 # Directories to scan for curriculum research files (--curriculum mode)
 CURRICULUM_RESEARCH_DIRS = [
     PROJECT_ROOT / "curriculum" / "l2-uk-en",
+]
+
+LEGACY_NON_SUITE_PROMPT_TRACKS = {"a1", "a2", "b1", "b2", "folk"}
+SEMINAR_SUITE_TRACKS = {
+    "hist",
+    "bio",
+    "lit",
+    "lit-drama",
+    "lit-essay",
+    "lit-fantastika",
+    "lit-hist-fic",
+    "lit-humor",
+    "lit-war",
+    "lit-youth",
+    "istorio",
+    "oes",
+    "ruth",
+}
+
+SUITE_REQUIRED_MARKERS = [
+    "Prompt version:",
+    "## Source Assumptions",
+    "## Goal",
+    "## WORKTREE_ROOT Setup",
+    "## Read First",
+    "## Allowed Writes",
+    "## Forbidden Writes",
+    "## Helpers And Headroom",
+    "## Validation Commands",
+    "## Expected Final Response",
+]
+
+SUITE_SHARED_REFERENCES = [
+    "docs/prompts/orchestrators/shared/repo-rules.md",
+    "docs/prompts/orchestrators/shared/validation-checklist.md",
+    "docs/prompts/orchestrators/shared/telemetry-and-pr.md",
+    "docs/prompts/orchestrators/shared/review-output-schema.md",
+]
+
+SEMINAR_SHARED_REFERENCES = [
+    "docs/prompts/orchestrators/shared/seminar-source-rules.md",
+    "docs/prompts/orchestrators/shared/reading-section-rules.md",
+]
+
+WORKTREE_SANITY_MARKERS = [
+    ".worktrees/dispatch/codex/",
+    "pwd",
+    "git status --short --branch",
+    "git rev-parse --show-toplevel",
+]
+
+FORBIDDEN_WRITE_MARKERS = [
+    "docs/prompts/orchestrators/b2/**",
+    ".python-version",
+    ".yamllint",
+    ".markdownlint.json",
+    "status/",
+    "audit/",
+    "review/",
+    "data/telemetry/**",
 ]
 
 # ---------- RULES ----------
@@ -190,7 +253,255 @@ def scan_prompts() -> list[dict]:
             all_violations.extend(check_line_rules(filepath))
             all_violations.extend(check_file_level_rule(filepath))
 
+    all_violations.extend(scan_orchestrator_suites())
     return all_violations
+
+
+def make_violation(
+    rule: str,
+    message: str,
+    filepath: Path,
+    *,
+    severity: str = "error",
+    line: int = 1,
+    content: str = "",
+) -> dict:
+    """Return a linter violation in the existing prompt-lint shape."""
+    try:
+        rel_file = str(filepath.relative_to(PROJECT_ROOT))
+    except ValueError:
+        rel_file = str(filepath)
+    return {
+        "rule": rule,
+        "severity": severity,
+        "file": rel_file,
+        "line": line,
+        "message": message,
+        "content": content[:120],
+    }
+
+
+def line_number_for(text: str, needle: str) -> int:
+    """Return the 1-based line number for a substring, or 1 if absent."""
+    index = text.find(needle)
+    if index == -1:
+        return 1
+    return text[:index].count("\n") + 1
+
+
+def extract_section(text: str, heading: str) -> str:
+    """Extract a markdown H2 section body."""
+    start = text.find(heading)
+    if start == -1:
+        return ""
+    next_heading = text.find("\n## ", start + len(heading))
+    if next_heading == -1:
+        return text[start:]
+    return text[start:next_heading]
+
+
+def extract_curriculum_level_keys(manifest_path: Path = CURRICULUM_MANIFEST) -> set[str]:
+    """Extract active level/track keys from curriculum.yaml without PyYAML."""
+    if not manifest_path.exists():
+        return set()
+
+    keys: set[str] = set()
+    in_levels = False
+    for raw_line in manifest_path.read_text(encoding="utf-8").splitlines():
+        if raw_line.strip() == "levels:":
+            in_levels = True
+            continue
+        if not in_levels:
+            continue
+        if raw_line and not raw_line.startswith(" "):
+            break
+        match = re.match(r"^  ([a-z0-9][a-z0-9-]*):\s*$", raw_line)
+        if match:
+            keys.add(match.group(1))
+    return keys
+
+
+def require_markers(
+    text: str,
+    filepath: Path,
+    markers: list[str],
+    rule: str,
+    message_prefix: str,
+    *,
+    line_anchor: str | None = None,
+) -> list[dict]:
+    """Return violations for missing text markers."""
+    line = line_number_for(text, line_anchor) if line_anchor else 1
+    return [
+        make_violation(
+            rule,
+            f"{message_prefix}: {marker}",
+            filepath,
+            line=line,
+        )
+        for marker in markers
+        if marker not in text
+    ]
+
+
+def check_suite_final_response(filepath: Path, text: str, track: str) -> list[dict]:
+    """Validate the Expected Final Response contract."""
+    final_section = extract_section(text, "## Expected Final Response")
+    violations = require_markers(
+        final_section,
+        filepath,
+        [
+            "Files changed: <paths>",
+            "Validation run: <commands and outcomes>",
+            "Telemetry: <posted | not module-build | unavailable with reason>",
+            "Independent review: <status>",
+            "Forbidden artifacts included: no",
+            "swarm_used: true/false",
+            "swarm_label: <none | helper | swarm>",
+            "swarm_note: <helpers used, or solo run; no swarm used>",
+        ],
+        "ORCH_SUITE_FINAL_RESPONSE",
+        "Expected Final Response missing field",
+        line_anchor="## Expected Final Response",
+    )
+    reading_field = "Reading coverage: <hosted/link-only/excerpt-only/omit/needed counts>"
+    if track in SEMINAR_SUITE_TRACKS and reading_field not in final_section:
+        violations.append(make_violation(
+            "ORCH_SUITE_READING_COVERAGE",
+            f"Seminar suite final response missing field: {reading_field}",
+            filepath,
+            line=line_number_for(text, "## Expected Final Response"),
+        ))
+    return violations
+
+
+def check_suite_seminar_references(filepath: Path, text: str, track: str) -> list[dict]:
+    """Validate seminar-only shared references."""
+    if track not in SEMINAR_SUITE_TRACKS:
+        return []
+    return require_markers(
+        text,
+        filepath,
+        SEMINAR_SHARED_REFERENCES,
+        "ORCH_SUITE_SEMINAR_REFERENCE",
+        "Seminar suite missing shared reference",
+    )
+
+
+def check_orchestrator_suite_file(filepath: Path) -> list[dict]:
+    """Validate one suite-orchestrator prompt contract."""
+    violations: list[dict] = []
+    text = filepath.read_text(encoding="utf-8")
+    track = filepath.parent.name
+
+    violations.extend(require_markers(
+        text,
+        filepath,
+        SUITE_REQUIRED_MARKERS,
+        "ORCH_SUITE_REQUIRED_SECTION",
+        "Missing required suite marker",
+    ))
+    violations.extend(require_markers(
+        text,
+        filepath,
+        SUITE_SHARED_REFERENCES,
+        "ORCH_SUITE_SHARED_REFERENCE",
+        "Missing shared prompt reference",
+    ))
+
+    worktree_section = extract_section(text, "## WORKTREE_ROOT Setup")
+    violations.extend(require_markers(
+        worktree_section,
+        filepath,
+        WORKTREE_SANITY_MARKERS,
+        "ORCH_SUITE_WORKTREE_SANITY",
+        "WORKTREE_ROOT setup missing",
+        line_anchor="## WORKTREE_ROOT Setup",
+    ))
+
+    forbidden_section = extract_section(text, "## Forbidden Writes")
+    violations.extend(require_markers(
+        forbidden_section,
+        filepath,
+        FORBIDDEN_WRITE_MARKERS,
+        "ORCH_SUITE_FORBIDDEN_WRITE",
+        "Forbidden Writes missing protected marker",
+        line_anchor="## Forbidden Writes",
+    ))
+    violations.extend(check_suite_final_response(filepath, text, track))
+    violations.extend(check_suite_seminar_references(filepath, text, track))
+    return violations
+
+
+def check_orchestrator_track_coverage(
+    root: Path,
+    manifest_path: Path,
+    prompt_track_dirs: set[str],
+    suite_tracks: set[str],
+) -> list[dict]:
+    """Validate prompt dirs and suites against active curriculum tracks."""
+    violations: list[dict] = []
+    active_tracks = extract_curriculum_level_keys(manifest_path)
+    manifest_display = manifest_path if manifest_path.exists() else root
+
+    for track in sorted(prompt_track_dirs - active_tracks):
+        violations.append(make_violation(
+            "ORCH_TRACK_NOT_ACTIVE",
+            f"Prompt directory has no active curriculum.yaml level: {track}",
+            root / track,
+        ))
+
+    for track in sorted(active_tracks - prompt_track_dirs):
+        violations.append(make_violation(
+            "ORCH_ACTIVE_TRACK_MISSING_PROMPT",
+            f"Active curriculum.yaml level has no orchestrator prompt dir: {track}",
+            manifest_display,
+        ))
+
+    for track in sorted((active_tracks - LEGACY_NON_SUITE_PROMPT_TRACKS) - suite_tracks):
+        violations.append(make_violation(
+            "ORCH_ACTIVE_TRACK_MISSING_SUITE",
+            f"Active non-legacy track has no suite-orchestrator.md: {track}",
+            root / track,
+        ))
+
+    for stale_track in ["lit-crimea", "lit-doc"]:
+        if stale_track in prompt_track_dirs:
+            violations.append(make_violation(
+                "ORCH_STALE_LIT_TRACK",
+                f"Stale plan-only LIT track must not have prompt suite: {stale_track}",
+                root / stale_track,
+            ))
+    return violations
+
+
+def scan_orchestrator_suites(
+    root: Path = ORCHESTRATOR_PROMPT_ROOT,
+    manifest_path: Path = CURRICULUM_MANIFEST,
+) -> list[dict]:
+    """Validate orchestrator prompt suite coverage and contracts."""
+    if not root.exists():
+        return []
+
+    violations: list[dict] = []
+    prompt_track_dirs = {
+        path.name for path in root.iterdir()
+        if path.is_dir() and path.name != "shared"
+    }
+    suite_tracks = {
+        path.parent.name for path in root.glob("*/suite-orchestrator.md")
+    }
+    violations.extend(check_orchestrator_track_coverage(
+        root,
+        manifest_path,
+        prompt_track_dirs,
+        suite_tracks,
+    ))
+
+    for filepath in sorted(root.glob("*/suite-orchestrator.md")):
+        violations.extend(check_orchestrator_suite_file(filepath))
+
+    return violations
 
 
 def scan_curriculum_research() -> list[dict]:

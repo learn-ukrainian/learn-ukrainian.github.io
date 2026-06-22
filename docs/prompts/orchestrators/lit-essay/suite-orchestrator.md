@@ -54,7 +54,8 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/b2/**`
 - inactive `lit-crimea` or `lit-doc` work
 - non-hostable copyrighted essays or excerpts beyond compliant limits
-- protected configs, generated status/audit/review artifacts, and `data/telemetry/**`
+- `.python-version`, `.yamllint`, `.markdownlint.json`
+- generated `status/`, curriculum `audit/`, curriculum `review/`, and `data/telemetry/**` artifacts
 
 ## Lifecycle Rules
 
