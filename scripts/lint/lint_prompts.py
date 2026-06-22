@@ -302,10 +302,16 @@ def extract_section(text: str, heading: str) -> str:
 
 def extract_curriculum_level_keys(manifest_path: Path = CURRICULUM_MANIFEST) -> set[str]:
     """Extract active level/track keys from curriculum.yaml without PyYAML."""
-    if not manifest_path.exists():
-        return set()
+    return set(extract_curriculum_level_types(manifest_path))
 
-    keys: set[str] = set()
+
+def extract_curriculum_level_types(manifest_path: Path = CURRICULUM_MANIFEST) -> dict[str, str]:
+    """Extract active level/track types from curriculum.yaml without PyYAML."""
+    if not manifest_path.exists():
+        return {}
+
+    level_types: dict[str, str] = {}
+    current_level: str | None = None
     in_levels = False
     for raw_line in manifest_path.read_text(encoding="utf-8").splitlines():
         if raw_line.strip() == "levels:":
@@ -313,12 +319,19 @@ def extract_curriculum_level_keys(manifest_path: Path = CURRICULUM_MANIFEST) -> 
             continue
         if not in_levels:
             continue
-        if raw_line and not raw_line.startswith(" "):
+        if not raw_line.strip() or raw_line.lstrip().startswith("#"):
+            continue
+        if not raw_line.startswith(" "):
             break
-        match = re.match(r"^  ([a-z0-9][a-z0-9-]*):\s*$", raw_line)
-        if match:
-            keys.add(match.group(1))
-    return keys
+        level_match = re.match(r"^  ([a-z0-9][a-z0-9-]*):\s*$", raw_line)
+        if level_match:
+            current_level = level_match.group(1)
+            level_types.setdefault(current_level, "")
+            continue
+        type_match = re.match(r"^    type:\s*([a-z0-9_-]+)\s*(?:#.*)?$", raw_line)
+        if current_level and type_match:
+            level_types[current_level] = type_match.group(1)
+    return level_types
 
 
 def require_markers(
@@ -344,7 +357,12 @@ def require_markers(
     ]
 
 
-def check_suite_final_response(filepath: Path, text: str, track: str) -> list[dict]:
+def check_suite_final_response(
+    filepath: Path,
+    text: str,
+    track: str,
+    seminar_tracks: set[str],
+) -> list[dict]:
     """Validate the Expected Final Response contract."""
     final_section = extract_section(text, "## Expected Final Response")
     violations = require_markers(
@@ -365,7 +383,7 @@ def check_suite_final_response(filepath: Path, text: str, track: str) -> list[di
         line_anchor="## Expected Final Response",
     )
     reading_field = "Reading coverage: <hosted/link-only/excerpt-only/omit/needed counts>"
-    if track in SEMINAR_SUITE_TRACKS and reading_field not in final_section:
+    if track in seminar_tracks and reading_field not in final_section:
         violations.append(make_violation(
             "ORCH_SUITE_READING_COVERAGE",
             f"Seminar suite final response missing field: {reading_field}",
@@ -375,9 +393,14 @@ def check_suite_final_response(filepath: Path, text: str, track: str) -> list[di
     return violations
 
 
-def check_suite_seminar_references(filepath: Path, text: str, track: str) -> list[dict]:
+def check_suite_seminar_references(
+    filepath: Path,
+    text: str,
+    track: str,
+    seminar_tracks: set[str],
+) -> list[dict]:
     """Validate seminar-only shared references."""
-    if track not in SEMINAR_SUITE_TRACKS:
+    if track not in seminar_tracks:
         return []
     return require_markers(
         text,
@@ -388,11 +411,15 @@ def check_suite_seminar_references(filepath: Path, text: str, track: str) -> lis
     )
 
 
-def check_orchestrator_suite_file(filepath: Path) -> list[dict]:
+def check_orchestrator_suite_file(
+    filepath: Path,
+    seminar_tracks: set[str] | None = None,
+) -> list[dict]:
     """Validate one suite-orchestrator prompt contract."""
     violations: list[dict] = []
     text = filepath.read_text(encoding="utf-8")
     track = filepath.parent.name
+    seminar_tracks = seminar_tracks or SEMINAR_SUITE_TRACKS
 
     violations.extend(require_markers(
         text,
@@ -428,8 +455,8 @@ def check_orchestrator_suite_file(filepath: Path) -> list[dict]:
         "Forbidden Writes missing protected marker",
         line_anchor="## Forbidden Writes",
     ))
-    violations.extend(check_suite_final_response(filepath, text, track))
-    violations.extend(check_suite_seminar_references(filepath, text, track))
+    violations.extend(check_suite_final_response(filepath, text, track, seminar_tracks))
+    violations.extend(check_suite_seminar_references(filepath, text, track, seminar_tracks))
     return violations
 
 
@@ -441,7 +468,7 @@ def check_orchestrator_track_coverage(
 ) -> list[dict]:
     """Validate prompt dirs and suites against active curriculum tracks."""
     violations: list[dict] = []
-    active_tracks = extract_curriculum_level_keys(manifest_path)
+    active_tracks = set(extract_curriculum_level_types(manifest_path))
     manifest_display = manifest_path if manifest_path.exists() else root
 
     for track in sorted(prompt_track_dirs - active_tracks):
@@ -491,6 +518,12 @@ def scan_orchestrator_suites(
     suite_tracks = {
         path.parent.name for path in root.glob("*/suite-orchestrator.md")
     }
+    seminar_tracks = {
+        track for track, track_type in extract_curriculum_level_types(manifest_path).items()
+        if track_type == "seminar"
+    }
+    if not seminar_tracks:
+        seminar_tracks = SEMINAR_SUITE_TRACKS
     violations.extend(check_orchestrator_track_coverage(
         root,
         manifest_path,
@@ -499,7 +532,7 @@ def scan_orchestrator_suites(
     ))
 
     for filepath in sorted(root.glob("*/suite-orchestrator.md")):
-        violations.extend(check_orchestrator_suite_file(filepath))
+        violations.extend(check_orchestrator_suite_file(filepath, seminar_tracks=seminar_tracks))
 
     return violations
 

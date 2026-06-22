@@ -19,6 +19,7 @@ from lint_prompts import (
     check_line_rules,
     check_orchestrator_suite_file,
     extract_curriculum_level_keys,
+    extract_curriculum_level_types,
     scan_orchestrator_suites,
     scan_prompts,
 )
@@ -325,12 +326,17 @@ class TestOrchestratorSuiteContracts:
             "levels:\n"
             "  c1:\n"
             "    type: core\n"
+            "# column-zero comments should not end levels parsing\n"
             "  lit-humor:\n"
             "    type: seminar\n"
             "other: ignored\n",
             encoding="utf-8",
         )
         assert extract_curriculum_level_keys(manifest) == {"c1", "lit-humor"}
+        assert extract_curriculum_level_types(manifest) == {
+            "c1": "core",
+            "lit-humor": "seminar",
+        }
 
     def test_seminar_suite_requires_reading_coverage(self, tmp_path: Path):
         suite_path = tmp_path / "lit" / "suite-orchestrator.md"
@@ -363,6 +369,25 @@ class TestOrchestratorSuiteContracts:
 
         violations = scan_orchestrator_suites(root=root, manifest_path=manifest)
         assert any(v["rule"] == "ORCH_ACTIVE_TRACK_MISSING_SUITE" for v in violations)
+
+    def test_scan_orchestrator_suites_derives_seminar_type(self, tmp_path: Path):
+        root = tmp_path / "orchestrators"
+        suite_path = root / "new-seminar" / "suite-orchestrator.md"
+        suite_path.parent.mkdir(parents=True)
+        suite_path.write_text(
+            _valid_suite_text("new-seminar", seminar=False),
+            encoding="utf-8",
+        )
+        manifest = tmp_path / "curriculum.yaml"
+        manifest.write_text(
+            "levels:\n  new-seminar:\n    type: seminar\n",
+            encoding="utf-8",
+        )
+
+        violations = scan_orchestrator_suites(root=root, manifest_path=manifest)
+        rules = {v["rule"] for v in violations}
+        assert "ORCH_SUITE_READING_COVERAGE" in rules
+        assert "ORCH_SUITE_SEMINAR_REFERENCE" in rules
 
     def test_scan_orchestrator_suites_accepts_valid_active_suite(self, tmp_path: Path):
         root = tmp_path / "orchestrators"
