@@ -26,6 +26,18 @@
   translation: third declension
   pos: phrase
   usage: "Ніч є іменником третьої відміни."
+- lemma: подвоєння
+  translation: doubling
+  pos: noun:n
+  usage: "Подвоєння видно в орудному відмінку: ніччю."
+- lemma: однина
+  translation: singular
+  pos: noun:f
+  usage: "В однині форма слова залежить від роду й відмінка."
+- lemma: множина
+  translation: plural
+  pos: noun:f
+  usage: "У множині рід зазвичай не розрізняється."
 - lemma: pluralia tantum
   translation: plural-only nouns
   pos: grammar term
@@ -86,6 +98,10 @@
   translation: to recover
   pos: verb:pf
   usage: "Після відпочинку пацієнт швидко одужав."
+- lemma: здоров'я
+  translation: health
+  pos: noun:n
+  usage: "Здоров'я часто з'являється в темах про лікаря й ліки."
 - lemma: біль
   translation: pain
   pos: noun:m
@@ -98,6 +114,10 @@
   translation: medicine, medication
   pos: noun:pl
   usage: "Ці ліки треба приймати після їжі."
+- lemma: лікар
+  translation: doctor
+  pos: noun:m
+  usage: "Лікар виписав рецепт після огляду."
 - lemma: рецепт
   translation: prescription
   pos: noun:m

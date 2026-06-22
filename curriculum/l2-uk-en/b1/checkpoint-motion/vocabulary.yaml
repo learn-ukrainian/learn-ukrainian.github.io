@@ -90,6 +90,10 @@
   translation: "route"
   pos: noun
   usage: "Опишіть маршрут від дому до вокзалу."
+- lemma: подорож
+  translation: "journey, trip"
+  pos: noun
+  usage: "Подорож Україною почалася з короткого маршруту через Львів."
 - lemma: розклад
   translation: "schedule"
   pos: noun
