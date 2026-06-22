@@ -10,6 +10,10 @@ Durable report path: docs/audits/b2-preflight-readiness-2026-06-22.md
 
 ## Executive Summary
 
+Current status note: this report is the historical baseline preflight audit.
+Its blockers were remediated by `docs/audits/b2-preflight-readiness-remediation-2026-06-22.md`,
+and B2 production proceeded only after that remediation gate.
+
 Readiness status: do not build
 
 B2 has complete top-level source coverage: the curriculum manifest lists 93 modules, and the checkout has 93 plan YAML files, 93 discovery YAML files, 93 wiki articles, and 93 wiki source registries. `scripts/validate_plans.py b2` passes with zero errors and zero warnings.
