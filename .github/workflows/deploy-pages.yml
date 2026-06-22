@@ -1,11 +1,14 @@
 name: Deploy to GitHub Pages
 
 on:
-  # Auto-deploy disabled — push to main no longer triggers deploy.
-  # To deploy: run manually via Actions tab (workflow_dispatch),
-  # or re-enable the push trigger below when ready.
-  # push:
-  #   branches: [main]
+  # Auto-deploy on content/site changes to main, path-scoped so pure-infra,
+  # test, script, and docs merges don't trigger a full prod rebuild. Manual
+  # deploy via workflow_dispatch (Actions tab) stays available as a gate.
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
 permissions:

@@ -20,17 +20,27 @@ const moduleCount = (id: string) => {
   return typeof entry === 'object' && entry ? entry.modules ?? 0 : 0;
 };
 
-const coreTracks: TrackRow[] = [
+// Tracks that have a generated `/{id}/` landing route — keep in sync with
+// `configuredTracks` in `[...slug].astro`. A course-map row links to its landing
+// only when its id is here, so a listed track without a landing (e.g. the lit-*
+// subgenres) stays plain text instead of linking to a 404.
+const LANDING_TRACKS = new Set([
+  'a1', 'a2', 'b1', 'b2', 'c1', 'c2',
+  'folk', 'bio', 'hist', 'istorio', 'lit', 'oes', 'ruth',
+]);
+const trackHref = (id: string) => (LANDING_TRACKS.has(id) ? `/${id}/` : undefined);
+
+const coreTracks: TrackRow[] = ([
   { id: 'a1', label: 'A1', titleKey: 'home.track.beginner', statusKey: 'status.released' },
   { id: 'a2', label: 'A2', titleKey: 'home.track.preIntermediate', statusKey: 'status.released' },
   { id: 'b1', label: 'B1', titleKey: 'home.track.intermediate', statusKey: 'status.released' },
-  { id: 'b2', label: 'B2', titleKey: 'home.track.upperIntermediate', statusKey: 'status.preview', href: '/b2/' },
+  { id: 'b2', label: 'B2', titleKey: 'home.track.upperIntermediate', statusKey: 'status.preview' },
   { id: 'c1', label: 'C1', titleKey: 'home.track.advanced', statusKey: 'status.planned' },
   { id: 'c2', label: 'C2', titleKey: 'home.track.mastery', statusKey: 'status.longRange' },
-];
+] as TrackRow[]).map((track) => ({ ...track, href: trackHref(track.id) }));
 
-const seminarTracks: TrackRow[] = [
-  { id: 'folk', label: 'FOLK', titleKey: 'home.seminar.folk', statusKey: 'status.previewLive', href: '/folk/' },
+const seminarTracks: TrackRow[] = ([
+  { id: 'folk', label: 'FOLK', titleKey: 'home.seminar.folk', statusKey: 'status.previewLive' },
   { id: 'bio', label: 'BIO', titleKey: 'level.bio.name', statusKey: 'status.plannedSeminar' },
   { id: 'hist', label: 'HIST', titleKey: 'home.seminar.hist', statusKey: 'status.plannedSeminar' },
   { id: 'istorio', label: 'ISTORIO', titleKey: 'level.istorio.name', statusKey: 'status.plannedSeminar' },
@@ -44,7 +54,9 @@ const seminarTracks: TrackRow[] = [
   { id: 'lit-drama', label: 'LIT-DRAMA', titleKey: 'home.seminar.litDrama', statusKey: 'status.plannedSeminar' },
   { id: 'oes', label: 'OES', titleKey: 'level.oes.name', statusKey: 'status.plannedSeminar' },
   { id: 'ruth', label: 'RUTH', titleKey: 'home.seminar.ruth', statusKey: 'status.plannedSeminar' },
-].filter((track) => moduleCount(track.id) > 0);
+] as TrackRow[])
+  .filter((track) => moduleCount(track.id) > 0)
+  .map((track) => ({ ...track, href: trackHref(track.id) }));
 ---
 
 <CourseLayout
