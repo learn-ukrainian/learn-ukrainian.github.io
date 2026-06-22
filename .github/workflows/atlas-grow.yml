@@ -1,0 +1,215 @@
+# ATLAS_GROW_TOKEN secret note (OPEN-ONLY — this workflow NEVER merges):
+# Use a fine-grained PAT scoped to THIS repo, contents:write + pull-requests:write,
+# used ONLY to push the branch and OPEN the PR. PRs opened with the default
+# GITHUB_TOKEN do not trigger pull_request workflows, so the PR's required checks
+# would never run and a reviewer couldn't trust the gates; ATLAS_GROW_TOKEN exists
+# solely to make those checks run. There is NO auto-merge step — every Atlas-grow PR
+# is left for a human to review and merge. If the secret is absent, the PR still opens
+# with GITHUB_TOKEN (its checks won't auto-run; re-run them before merging).
+#
+# NOTE: the scheduled run is a no-op on GitHub-hosted runners — it requires
+# data/vesum.db + data/sources.db, which are local/gitignored. It does real work only
+# where that dictionary data exists (a self-hosted runner, or run the pipeline locally).
+
+name: Atlas Grow
+
+on:
+  schedule:
+    - cron: '23 7 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  grow:
+    name: Promote clean Word Atlas grow candidates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version-file: '.python-version'
+
+      - name: Check local dictionary data
+        id: dictionary_data
+        run: |
+          missing=()
+          [[ -f data/vesum.db ]] || missing+=(data/vesum.db)
+          [[ -f data/sources.db ]] || missing+=(data/sources.db)
+          if ((${#missing[@]})); then
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Atlas grow skipped; missing local dictionary data: ${missing[*]}"
+            echo "::notice::Seed data/vesum.db and data/sources.db on the runner to enable scheduled Atlas grow."
+          else
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create local venv
+        if: steps.dictionary_data.outputs.available == 'true'
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install PyYAML requests ukrainian-word-stress
+
+      - name: Configure GitHub auth
+        if: steps.dictionary_data.outputs.available == 'true'
+        env:
+          ATLAS_GROW_TOKEN: ${{ secrets.ATLAS_GROW_TOKEN }}
+          FALLBACK_GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          if [[ -n "$ATLAS_GROW_TOKEN" ]]; then
+            token="$ATLAS_GROW_TOKEN"
+            echo "Using ATLAS_GROW_TOKEN to open the PR so its CI checks run."
+          else
+            token="$FALLBACK_GITHUB_TOKEN"
+            echo "::notice::ATLAS_GROW_TOKEN is not configured; opening the PR with GITHUB_TOKEN."
+            echo "::notice::The PR's checks will not auto-run; re-run them before reviewing and merging."
+          fi
+          echo "::add-mask::$token"
+          echo "GH_TOKEN=$token" >> "$GITHUB_ENV"
+          git config user.name "atlas-grow[bot]"
+          git config user.email "atlas-grow[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${token}@github.com/${GITHUB_REPOSITORY}.git"
+
+      - name: Run Atlas grow pipeline
+        if: steps.dictionary_data.outputs.available == 'true'
+        run: |
+          .venv/bin/python -m scripts.lexicon.content_lexicon_reconciler
+          .venv/bin/python -m scripts.lexicon.grow_lexicon_from_content --report
+          .venv/bin/python -m scripts.lexicon.promote_grow_candidates --write --report
+
+      - name: Detect manifest changes
+        if: steps.dictionary_data.outputs.available == 'true'
+        id: changes
+        run: |
+          git status --porcelain -- site/src/data/lexicon-manifest.json site/src/data/lexicon-manifest.fingerprint.json
+          if git diff --quiet -- site/src/data/lexicon-manifest.json; then
+            echo "manifest_changed=false" >> "$GITHUB_OUTPUT"
+            echo "No Atlas manifest changes to promote."
+          else
+            echo "manifest_changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Prepare PR body
+        if: steps.dictionary_data.outputs.available == 'true' && steps.changes.outputs.manifest_changed == 'true'
+        id: pr_body
+        run: |
+          .venv/bin/python - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+
+          from scripts.lexicon.build_data_manifest import _lemma_key
+
+          manifest_path = Path("site/src/data/lexicon-manifest.json")
+          base_manifest = json.loads(
+              subprocess.check_output(["git", "show", f"HEAD:{manifest_path.as_posix()}"], text=True)
+          )
+          current_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          base_keys = {
+              _lemma_key(entry.get("lemma"))
+              for entry in base_manifest.get("entries", [])
+              if isinstance(entry, dict) and entry.get("lemma")
+          }
+          promoted = [
+              str(entry.get("lemma"))
+              for entry in current_manifest.get("entries", [])
+              if isinstance(entry, dict)
+              and entry.get("lemma")
+              and _lemma_key(entry.get("lemma")) not in base_keys
+          ]
+          held_path = Path("data/lexicon/grow_needs_review.json")
+          held = json.loads(held_path.read_text(encoding="utf-8")) if held_path.exists() else []
+
+          lines = [
+              "## Summary",
+              f"Promotes {len(promoted)} deterministic Word Atlas grow candidate(s) from #3675.",
+              "",
+              "Held candidates are not written to the manifest and stay human-review only.",
+              "",
+              "## Promoted lemmas",
+          ]
+          lines.extend([f"- {lemma}" for lemma in promoted] or ["- none"])
+          lines.extend(["", "## Held for review"])
+          if held:
+              for item in held:
+                  lines.append(f"- {item.get('lemma', '')}: {item.get('reason', '')}")
+          else:
+              lines.append("- none")
+          lines.extend(
+              [
+                  "",
+                  "## Validation",
+                  "- Atlas grow workflow ran P1 -> P2 -> P3 promotion.",
+                  "- P3 validates the prospective manifest before writing it.",
+                  "",
+                  "## Automation note",
+                  "Opened automatically; NEVER auto-merged — a human reviews and merges this PR.",
+                  "`ATLAS_GROW_TOKEN` (open-only) exists solely so these checks run; it cannot merge.",
+              ]
+          )
+          body_path = Path("/tmp/atlas-grow-pr-body.md")
+          body_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+          with Path("/tmp/atlas-grow-pr-meta.env").open("w", encoding="utf-8") as out:
+              out.write(f"promoted_count={len(promoted)}\n")
+              out.write(f"held_count={len(held)}\n")
+              out.write(f"body_path={body_path}\n")
+          PY
+          cat /tmp/atlas-grow-pr-meta.env >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push branch
+        if: steps.dictionary_data.outputs.available == 'true' && steps.changes.outputs.manifest_changed == 'true'
+        id: push
+        env:
+          PROMOTED_COUNT: ${{ steps.pr_body.outputs.promoted_count }}
+        run: |
+          branch="atlas-grow/$(date -u +%F)"
+          git fetch --no-tags origin "refs/heads/${branch}:refs/remotes/origin/${branch}" || true
+          git switch -c "$branch"
+          git add site/src/data/lexicon-manifest.json site/src/data/lexicon-manifest.fingerprint.json
+          git commit \
+            -m "chore(atlas): grow lexicon from content (${PROMOTED_COUNT} lemmas) (#3675)" \
+            --trailer "X-Agent: codex/atlas-grow-3675-p3"
+          if git show-ref --verify --quiet "refs/remotes/origin/${branch}"; then
+            expect="$(git rev-parse "refs/remotes/origin/${branch}")"
+            git push --force-with-lease="refs/heads/${branch}:${expect}" -u origin "$branch"
+          else
+            git push -u origin "$branch"
+          fi
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+
+      - name: Open or update PR
+        if: steps.dictionary_data.outputs.available == 'true' && steps.changes.outputs.manifest_changed == 'true'
+        id: pr
+        env:
+          BODY_PATH: ${{ steps.pr_body.outputs.body_path }}
+          BRANCH: ${{ steps.push.outputs.branch }}
+          HELD_COUNT: ${{ steps.pr_body.outputs.held_count }}
+          PROMOTED_COUNT: ${{ steps.pr_body.outputs.promoted_count }}
+        run: |
+          gh label create atlas-grow --color 1f883d --description "Automated Word Atlas grow PR" || true
+          labels=(--label atlas-grow)
+          if [[ "$HELD_COUNT" != "0" ]]; then
+            gh label create needs-review --color d1242f --description "Contains held candidates needing human review" || true
+            labels+=(--label needs-review)
+          fi
+          title="chore(atlas): grow lexicon from content (${PROMOTED_COUNT} lemmas) (#3675)"
+          if gh pr view "$BRANCH" --json url --jq .url >/tmp/atlas-grow-pr-url.txt 2>/dev/null; then
+            pr_url="$(cat /tmp/atlas-grow-pr-url.txt)"
+            gh pr edit "$pr_url" --title "$title" --body-file "$BODY_PATH" --add-label atlas-grow
+            if [[ "$HELD_COUNT" != "0" ]]; then
+              gh pr edit "$pr_url" --add-label needs-review
+            fi
+          else
+            pr_url="$(gh pr create --base main --head "$BRANCH" --title "$title" --body-file "$BODY_PATH" "${labels[@]}")"
+          fi
+          echo "url=$pr_url" >> "$GITHUB_OUTPUT"
+          gh pr view "$pr_url" --json url

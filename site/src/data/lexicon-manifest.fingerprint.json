@@ -1,5 +1,5 @@
 {
-  "fingerprint": "efaecb035c422af0a29fafdb3ba375b0b88154a18ce36af0323a843c1da8e314",
+  "fingerprint": "4bdb402c5e8cfb1257c7bf9fa43645091c4793b85edd8e7ba5bc91d797973acd",
   "inputs": {
     "lexicon_code": [
       {
@@ -87,6 +87,10 @@
         "sha256": "4919c84c88b8cf0bc1508250e6da4c80860e8a33a4a4df49402c8aedef3e9e68"
       },
       {
+        "path": "scripts/lexicon/promote_grow_candidates.py",
+        "sha256": "df805e6d299a01c5f842b8bbcb8a56b69f22555040001d3b33c0ae64daaecce2"
+      },
+      {
         "path": "scripts/lexicon/verify_manifest.py",
         "sha256": "73f4c6842805558f86b825f11529b707150a4f47cf8815e790f1c9dc99b1aefd"
       }
@@ -95,6 +99,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 22
+    "lexicon_code_files": 23
   }
 }
