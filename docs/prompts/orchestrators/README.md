@@ -1,7 +1,7 @@
 # Orchestrator Prompt Suite
 
-Prompt suite version: 0.3
-Last reviewed: 2026-06-21
+Prompt suite version: 0.4
+Last reviewed: 2026-06-22
 
 This directory contains reusable prompts for future core-track and seminar-track orchestration threads. They are templates, not source-of-truth curriculum policy. Every production thread that uses them must inspect the current local repository before acting, especially `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `curriculum/l2-uk-en/curriculum.yaml`, `scripts/config.py`, `scripts/audit/config.py`, and the target level files.
 
@@ -25,8 +25,10 @@ This directory contains reusable prompts for future core-track and seminar-track
 - `b2/preflight-readiness-audit-orchestrator.md`: read-only readiness audit before B2 production.
 - `b2/production-build-orchestrator.md`: small sequential B2 production batches after preflight passes.
 - `b2/quality-audit-orchestrator.md`: post-build B2 audit for advanced syntax, register control, argumentation, and professional/academic readiness.
+- `c1/suite-orchestrator.md`: combined preflight, production, audit, and remediation suite for C1 academic/professional/stylistic core.
+- `c2/suite-orchestrator.md`: combined preflight, production, audit, and remediation suite for C2 native-level style, professional, literary, and capstone work.
 
-## Seminar Pilot Index
+## Seminar Track Index
 
 FOLK is the pilot seminar track. Its prompts should be treated as the model for later HIST, BIO, LIT, active `lit-*`, ISTORIO, OES, and RUTH suites, adjusted to each track's source base.
 
@@ -34,6 +36,19 @@ FOLK is the pilot seminar track. Its prompts should be treated as the model for 
 - `folk/production-build-orchestrator.md`: FOLK module production with mandatory primary readings, `:::primary-reading` blocks, reading-reference wiring, folk text-layer components, and `verify_shippable`.
 - `folk/quality-audit-orchestrator.md`: post-build audit for FOLK modules against the exemplar standard, source fidelity, readings, decolonization, and rendered-site behavior.
 - `folk/remediation-build-orchestrator.md`: remediation prompt for FOLK findings, including reading-link/copyright fixes and source-grounded content repair.
+- `hist/suite-orchestrator.md`: combined suite for Ukrainian history seminar modules, primary historical documents, source criticism, and decolonized framing.
+- `bio/suite-orchestrator.md`: combined suite for biography modules, source-tier dossiers, portrait rights, primary voice readings, and politically charged framing.
+- `lit/suite-orchestrator.md`: combined suite for the main Ukrainian literature canon track.
+- `lit-drama/suite-orchestrator.md`: combined suite for drama and performance texts.
+- `lit-essay/suite-orchestrator.md`: combined suite for intellectual essay, pamphlet, and decolonization thought.
+- `lit-fantastika/suite-orchestrator.md`: combined suite for speculative fiction, Gothic, fantasy, and science-fiction texts.
+- `lit-hist-fic/suite-orchestrator.md`: combined suite for historical fiction and national-memory novels.
+- `lit-humor/suite-orchestrator.md`: combined suite for humor, satire, burlesque, parody, and meme-era continuity.
+- `lit-war/suite-orchestrator.md`: combined suite for contemporary war literature, testimony, and trauma-aware pedagogy.
+- `lit-youth/suite-orchestrator.md`: combined suite for children's and young-adult literature; this active track maps to the older `LIT-JUVENILE` planning docs.
+- `istorio/suite-orchestrator.md`: combined suite for historiography, source methodology, and competing interpretive schools.
+- `oes/suite-orchestrator.md`: combined suite for Old Rus' historical-linguistic source work.
+- `ruth/suite-orchestrator.md`: combined suite for Ruthenian / Middle Ukrainian historical-linguistic source work.
 
 ## Shared Files
 
@@ -74,4 +89,4 @@ Do not infer active tracks from stale plan-only directories. Verify active track
 
 ## Adding C1, C2, Or Seminar Orchestrators
 
-Add a sibling directory such as `c1/`, `c2/`, `hist/`, `bio/`, `lit/`, `oes/`, or `ruth/`. Reuse only the track-agnostic shared scaffolding: repo hygiene, worktree discipline, PR rules, and report structure. Seminar tracks must not inherit CEFR immersion, decodability, beginner-safety, or grammar-sequencing assumptions by default. Before writing seminar prompts, inspect existing seminar precedents such as `docs/audits/bio-decolonization-checklist.md` and `docs/audits/bio-track-gap-audit-2026-05-26.md` when present, then add track-specific source attribution, factuality, decolonization, Russian-shadow, and bias checks.
+Add a sibling directory such as `c1/`, `c2/`, `hist/`, `bio/`, `lit/`, an active `lit-*` directory, `istorio/`, `oes/`, or `ruth/`. Reuse only the track-agnostic shared scaffolding: repo hygiene, worktree discipline, PR rules, and report structure. Seminar tracks must not inherit CEFR immersion, decodability, beginner-safety, or grammar-sequencing assumptions by default. Before writing seminar prompts, inspect existing seminar precedents such as `docs/audits/bio-decolonization-checklist.md` and `docs/audits/bio-track-gap-audit-2026-05-26.md` when present, then add track-specific source attribution, factuality, decolonization, Russian-shadow, and bias checks.

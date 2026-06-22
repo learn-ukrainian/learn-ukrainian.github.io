@@ -1,16 +1,16 @@
 # Shared Seminar Source Rules
 
-Prompt suite component version: 0.1
-Last reviewed: 2026-06-21
+Prompt suite component version: 0.2
+Last reviewed: 2026-06-22
 
-Use these rules for seminar tracks such as FOLK, HIST, BIO, LIT, ISTORIO, OES, and RUTH. Adapt them to the target track; do not copy core CEFR assumptions into seminar work.
+Use these rules for seminar tracks such as FOLK, HIST, BIO, LIT, active LIT subtracks, ISTORIO, OES, and RUTH. Adapt them to the target track; do not copy core CEFR assumptions into seminar work.
 
 ## Active Track Taxonomy
 
 - Verify active track names from the current repo before writing prompts or modules.
 - Prefer active source/site directories and `curriculum.yaml` over stale plan-only leftovers.
 - Do not create prompt suites for plan-only remnants such as `lit-crimea` or `lit-doc` unless the current curriculum and site manifest say they are active tracks.
-- For LIT work, create separate prompt suites for the active `lit` and active `lit-*` tracks that exist in the current manifest.
+- For LIT work, create separate prompt suites for the active `lit` and active `lit-*` tracks that exist in the current manifest. In the current taxonomy, `lit-youth` is the active children's/YA track; older docs may call the same planning area `LIT-JUVENILE`.
 
 ## Source Universe
 
@@ -18,6 +18,7 @@ Use these rules for seminar tracks such as FOLK, HIST, BIO, LIT, ISTORIO, OES, a
 - Do not invent titles, authors, collectors, publication dates, source IDs, or citations.
 - For FOLK, inspect `docs/folk-epic/EXEMPLAR-STANDARD.md`, `docs/folk-epic/folk-review-rubric.md`, `docs/folk-epic/folk-text-layer-spec.md`, and `scripts/build/phases/linear-write-seminar-folk-rules.md`.
 - For later seminar tracks, inspect the closest track-specific audit and rubric files before adapting FOLK rules.
+- For historical-linguistic tracks OES and RUTH, treat source passages, orthography, paleography, register, and terminology as factual content. Do not use "Old Russian" or "Common East Slavic" framing where the track docs require Old Rus' / Old Ukrainian / Ruthenian terminology.
 
 ## Quote And Claim Integrity
 
