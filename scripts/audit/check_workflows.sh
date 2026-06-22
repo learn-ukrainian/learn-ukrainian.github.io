@@ -43,9 +43,17 @@ checksum_for() {
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
+# Remove only a binary we downloaded ourselves (stays empty for ACTIONLINT_BIN
+# or a system actionlint). The EXIT trap fires on success, error, and SIGTERM,
+# so the temp dir never leaks for a local dev across runs.
+_DOWNLOAD_DIR=""
+cleanup() { [[ -n "$_DOWNLOAD_DIR" ]] && rm -rf "$_DOWNLOAD_DIR"; return 0; }
+trap cleanup EXIT
+
 sha256_verify() {
   # sha256_verify <expected> <file>
   local expected="$1" file="$2" actual
+  [[ -f "$file" ]] || { echo "❌ download missing, cannot verify: $file" >&2; return 1; }
   if command -v sha256sum >/dev/null 2>&1; then
     actual="$(sha256sum "$file" | awk '{print $1}')"
   elif command -v shasum >/dev/null 2>&1; then
@@ -62,15 +70,23 @@ sha256_verify() {
   fi
 }
 
+# Sets RESOLVED_BIN (and, when it downloads, _DOWNLOAD_DIR). Called directly —
+# NOT in $(...) — so the globals survive into the caller and the EXIT trap.
+RESOLVED_BIN=""
 resolve_actionlint() {
-  # Explicit override wins.
+  # Explicit override wins — but validate it so a stale path fails loudly here
+  # instead of with a cryptic "No such file" when we later try to run it.
   if [[ -n "${ACTIONLINT_BIN:-}" ]]; then
-    echo "$ACTIONLINT_BIN"
+    if [[ ! -x "$ACTIONLINT_BIN" ]]; then
+      echo "❌ ACTIONLINT_BIN is not an executable file: $ACTIONLINT_BIN" >&2
+      return 1
+    fi
+    RESOLVED_BIN="$ACTIONLINT_BIN"
     return 0
   fi
   # Local convenience: use a system actionlint unless CI forces a pinned fetch.
   if [[ -z "${ACTIONLINT_FORCE_DOWNLOAD:-}" ]] && command -v actionlint >/dev/null 2>&1; then
-    command -v actionlint
+    RESOLVED_BIN="$(command -v actionlint)"
     return 0
   fi
 
@@ -90,23 +106,24 @@ resolve_actionlint() {
     return 1
   fi
 
-  local tmp tarball url
-  tmp="$(mktemp -d)"
-  tarball="${tmp}/actionlint.tar.gz"
+  # Download into a temp dir the EXIT trap will remove.
+  _DOWNLOAD_DIR="$(mktemp -d)"
+  local tarball url
+  tarball="${_DOWNLOAD_DIR}/actionlint.tar.gz"
   url="https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_${platform}.tar.gz"
 
   echo "→ fetching actionlint v${ACTIONLINT_VERSION} (${platform})" >&2
   curl -fsSL -o "$tarball" "$url"
   sha256_verify "$expected" "$tarball"
-  tar -xzf "$tarball" -C "$tmp" actionlint
-  echo "${tmp}/actionlint"
+  tar -xzf "$tarball" -C "$_DOWNLOAD_DIR" actionlint
+  RESOLVED_BIN="${_DOWNLOAD_DIR}/actionlint"
 }
 
 main() {
   cd "$REPO_ROOT"
 
-  local bin
-  bin="$(resolve_actionlint)"
+  resolve_actionlint
+  local bin="$RESOLVED_BIN"
 
   # Targets: explicit args, else every workflow file.
   local -a targets=()
