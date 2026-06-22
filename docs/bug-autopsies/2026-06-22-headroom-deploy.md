@@ -1,6 +1,7 @@
 # Headroom deploy: two failure modes took the proxy down mid-upgrade
 
 **Date:** 2026-06-22
+**Issue:** #3725
 **Category:** deploy-tooling / pipx-uv-clobber + launchd-bootout
 **Tool:** `scripts/deploy_headroom.sh`
 **Impact:** Fleet-wide Headroom proxy (`127.0.0.1:8787`) left **down** after a failed
@@ -18,7 +19,9 @@ error: Failed to create virtual environment
 '/opt/homebrew/bin/uv venv --python /opt/homebrew/opt/python@3.14/libexec/bin/python --quiet ...' failed
 ```
 
-## Two independent root causes
+## Root cause
+
+Two independent root causes, either of which alone leaves the proxy down:
 
 ### 1. `pipx install --force` + uv backend + Python major.minor drift
 
@@ -58,7 +61,9 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.headroom.default.pli
 curl -s http://127.0.0.1:8787/health   # -> version 0.27.0, status healthy, memory disabled (intended)
 ```
 
-## Prevention (landed in `scripts/deploy_headroom.sh`)
+## Prevention
+
+Landed in `scripts/deploy_headroom.sh` (#3725):
 
 - **Step 3:** replaced `pipx install --force` with **uninstall-then-install**. Removing the
   venv dir first sidesteps the uv clobber guard entirely. The install is **pinned to the
@@ -79,3 +84,9 @@ curl -s http://127.0.0.1:8787/health   # -> version 0.27.0, status healthy, memo
 - The service's real config lives in `~/.headroom/deploy/<profile>/manifest.json`, not in CLI
   flags. Recovery that regenerates the manifest silently drops hand-applied tuning — re-bootstrap
   the existing plist instead.
+
+## Links
+
+- PR #3725 — `fix(infra): harden deploy_headroom.sh against pipx/uv clobber + launchd bootout`;
+  fix shipped in commit `04adadde6d`.
+- Precursor PR #3721 (commit `0e6f397f9f`) — added `scripts/deploy_headroom.sh`.

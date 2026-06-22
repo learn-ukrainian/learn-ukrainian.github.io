@@ -67,6 +67,9 @@ jobs:
       # atlas = inputs that can stale the committed DB-enriched Word Atlas
       # manifest but are available on CI.
       atlas: ${{ steps.filter.outputs.atlas }}
+      # postmortems = bug-autopsy docs + the checker. Gates the postmortem
+      # hygiene job so a malformed autopsy or stale INDEX cannot merge (#3725).
+      postmortems: ${{ steps.filter.outputs.postmortems }}
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
@@ -150,6 +153,10 @@ jobs:
               - 'curriculum/l2-uk-en/**/vocabulary.yaml'
               - 'site/src/data/lexicon-manifest.json'
               - 'site/src/data/lexicon-manifest.fingerprint.json'
+            postmortems:
+              - '.github/workflows/ci.yml'
+              - 'docs/bug-autopsies/**'
+              - 'scripts/audit/check_postmortems.py'
 
   atlas-freshness:
     name: Atlas Manifest Freshness
@@ -310,6 +317,29 @@ jobs:
 
       - name: Lint prompt templates
         run: python scripts/lint/lint_prompts.py
+
+  postmortem-hygiene:
+    name: Postmortem Hygiene
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.postmortems == 'true'
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.12'
+
+      # Validate bug-autopsy required fields + assert INDEX.md is current, without
+      # writing. Root-cause guard for #3725: a malformed autopsy (#3725 shipped one
+      # with non-canonical headings + no Links) previously only tripped an advisory
+      # SessionStart warning days later — nothing blocked it at PR time.
+      # Direct file path (NOT `-m`): the checker is stdlib-only, but `-m` would
+      # import scripts.audit/__init__ which needs pyyaml (absent on bare setup-python).
+      - name: Validate bug-autopsy fields + INDEX freshness (#3725)
+        run: python scripts/audit/check_postmortems.py --check
 
   agent-config:
     name: Agent Config
