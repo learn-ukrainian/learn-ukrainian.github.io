@@ -38,10 +38,10 @@
   translation: complex, compound
   pos: adjective
   example: "Складний текст легше читати через граматичні сигнали."
-- word: повна картина
-  translation: full picture
+- word: підсумкова карта
+  translation: summary map
   pos: phrase
-  example: "Повна картина допомагає бачити зв'язки між темами."
+  example: "Підсумкова карта допомагає бачити зв'язки між темами."
 - word: граматична тема
   translation: grammar topic
   pos: phrase

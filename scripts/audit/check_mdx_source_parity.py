@@ -186,6 +186,8 @@ def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | No
 
         expected_source_dir = SOURCE_DIR / level / slug
         expected_meta_file = SOURCE_DIR / level / "meta" / f"{slug}.yaml"
+        expected_plan_file = SOURCE_DIR / "plans" / level / f"{slug}.yaml"
+        expected_discovery_file = SOURCE_DIR / level / "discovery" / f"{slug}.yaml"
 
         if mdx_path in deleted_files and not expected_source_dir.exists() and not expected_meta_file.exists():
             continue
@@ -199,7 +201,7 @@ def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | No
         # Did any file in expected_source_dir or module meta change?
         source_changed = False
         for changed_file in changed_files:
-            if changed_file == expected_meta_file:
+            if changed_file in {expected_meta_file, expected_plan_file, expected_discovery_file}:
                 source_changed = True
                 break
             try:
@@ -214,8 +216,11 @@ def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | No
             violations.append((
                 mdx_path,
                 f"MDX file changed but no source files changed under "
-                f"curriculum/l2-uk-en/{level}/{slug}/ or curriculum/l2-uk-en/{level}/meta/{slug}.yaml"
-            ))
+                    f"curriculum/l2-uk-en/{level}/{slug}/, "
+                    f"curriculum/l2-uk-en/{level}/meta/{slug}.yaml, "
+                    f"curriculum/l2-uk-en/plans/{level}/{slug}.yaml, or "
+                    f"curriculum/l2-uk-en/{level}/discovery/{slug}.yaml"
+                ))
 
     return violations
 

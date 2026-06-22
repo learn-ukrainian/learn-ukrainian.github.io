@@ -71,6 +71,30 @@ def test_check_parity_mdx_and_meta_source(mock_legacy_levels, mock_subprocess):
     violations = check_parity(mdx_files, changed_files)
     assert len(violations) == 0
 
+def test_check_parity_mdx_and_plan_source(mock_legacy_levels, mock_subprocess):
+    # Plan titles/subtitles/objectives can flow into generated MDX.
+    mdx_files = [MDX_DIR / "a2" / "aspect-in-past.mdx"]
+    changed_files = {
+        MDX_DIR / "a2" / "aspect-in-past.mdx",
+        SOURCE_DIR / "plans" / "a2" / "aspect-in-past.yaml",
+    }
+    mock_subprocess.return_value = "1 file changed\n"
+    violations = check_parity(mdx_files, changed_files)
+    assert len(violations) == 0
+
+
+def test_check_parity_mdx_and_discovery_source(mock_legacy_levels, mock_subprocess):
+    # Discovery resources can flow into generated MDX resource sections.
+    mdx_files = [MDX_DIR / "a2" / "aspect-in-past.mdx"]
+    changed_files = {
+        MDX_DIR / "a2" / "aspect-in-past.mdx",
+        SOURCE_DIR / "a2" / "discovery" / "aspect-in-past.yaml",
+    }
+    mock_subprocess.return_value = "1 file changed\n"
+    violations = check_parity(mdx_files, changed_files)
+    assert len(violations) == 0
+
+
 def test_check_parity_adjacent_module_nav_only_change(mock_legacy_levels, mock_subprocess):
     # Adding a later source module can legitimately regenerate prev/next
     # frontmatter for the previous generated MDX page.

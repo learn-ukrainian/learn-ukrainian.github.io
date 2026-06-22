@@ -26,10 +26,14 @@ The vocabulary YAML is never modified — slugs are derived here at render time.
 
 from __future__ import annotations
 
-import json
 import unicodedata
 from functools import lru_cache
 from pathlib import Path
+
+try:
+    from lexicon.manifest_io import load_manifest
+except ModuleNotFoundError:  # pragma: no cover - package import path in tests
+    from scripts.lexicon.manifest_io import load_manifest
 
 # scripts/generate_mdx/atlas_links.py -> parents[2] == repo root (worktree-aware).
 _DEFAULT_MANIFEST = (
@@ -68,8 +72,8 @@ def _load_index(manifest_path: str) -> dict[str, str]:
     tests pass a unique tmp path and get isolated indices.
     """
     try:
-        data = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
-    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        data = load_manifest(Path(manifest_path))
+    except (FileNotFoundError, OSError, ValueError):
         return {}
 
     index: dict[str, str] = {}
