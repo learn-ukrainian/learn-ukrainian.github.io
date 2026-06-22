@@ -6,6 +6,7 @@
   translation: unreal condition
   pos: phrase
   usage: Нереальна умова починається словом якби.
+  notes: Нереальний тут означає умову, що не збігається з фактом.
 - lemma: реальна умова
   translation: real condition
   pos: phrase
@@ -106,6 +107,7 @@
   translation: to know
   pos: verb
   usage: Якби я знав, я б допоміг.
+  notes: "Форми для контрфактичних речень: знав/знала."
 - lemma: мати
   translation: to have
   pos: verb
@@ -114,6 +116,7 @@
   translation: to be able to
   pos: verb
   usage: Якби я міг, поїхав би завтра.
+  notes: "Форми для контрфактичних речень: міг/могла."
 - lemma: жити
   translation: to live
   pos: verb
