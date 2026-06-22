@@ -23,8 +23,8 @@ const moduleCount = (id: string) => {
 const coreTracks: TrackRow[] = [
   { id: 'a1', label: 'A1', titleKey: 'home.track.beginner', statusKey: 'status.released' },
   { id: 'a2', label: 'A2', titleKey: 'home.track.preIntermediate', statusKey: 'status.released' },
-  { id: 'b1', label: 'B1', titleKey: 'home.track.intermediate', statusKey: 'status.preview' },
-  { id: 'b2', label: 'B2', titleKey: 'home.track.upperIntermediate', statusKey: 'status.planned' },
+  { id: 'b1', label: 'B1', titleKey: 'home.track.intermediate', statusKey: 'status.released' },
+  { id: 'b2', label: 'B2', titleKey: 'home.track.upperIntermediate', statusKey: 'status.preview' },
   { id: 'c1', label: 'C1', titleKey: 'home.track.advanced', statusKey: 'status.planned' },
   { id: 'c2', label: 'C2', titleKey: 'home.track.mastery', statusKey: 'status.longRange' },
 ];
@@ -49,7 +49,7 @@ const seminarTracks: TrackRow[] = [
 
 <CourseLayout
   title="Learn Ukrainian"
-  description="An English learner interface for released A1 and A2 Ukrainian courses, a B1 preview, and the Word Atlas reference tool."
+  description="An English learner interface for released A1, A2, and B1 Ukrainian courses, a B2 preview, and the Word Atlas reference tool."
   eyebrowKey="home.eyebrow"
   subtitle="A practical English interface for learning Ukrainian."
   currentPath="/"
@@ -91,7 +91,7 @@ const seminarTracks: TrackRow[] = [
       </a>
       <a class="lu-card" href="/b1/">
         <span class="track-badge b1"><ChromeText k="nav.b1" /></span>
-        <h3><ChromeText k="home.track.intermediatePreview" /></h3>
+        <h3><ChromeText k="home.track.intermediate" /></h3>
         <p><ChromeText k="home.cardB1Desc" /></p>
       </a>
       <a class="lu-card" href="/lexicon/">
