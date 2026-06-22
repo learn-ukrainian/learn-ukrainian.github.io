@@ -46,6 +46,10 @@
   translation: "result of an action"
   pos: phrase
   usage: "Форми на -но, -то подають результат дії без названого виконавця."
+- lemma: результат
+  translation: "result"
+  pos: noun
+  usage: "У звіті важливо розрізняти процес роботи й результат, який уже зафіксовано."
 - lemma: відповідальність
   translation: "responsibility"
   pos: noun
@@ -98,6 +102,10 @@
   translation: "to be implemented"
   pos: verb
   usage: "Форма впроваджується можлива, коли йдеться про процес без названого діяча."
+- lemma: розроблятися
+  translation: "to be developed"
+  pos: verb
+  usage: "План розробляється поступово, але названого виконавця краще подати активним реченням."
 - lemma: здійснювати
   translation: "to carry out"
   pos: verb
@@ -126,6 +134,14 @@
   translation: "reporting"
   pos: noun
   usage: "У звітності результативні форми допомагають стисло перелічити виконані дії."
+- lemma: реформа
+  translation: "reform"
+  pos: noun
+  usage: "Коли реформа має відповідального виконавця, активне речення робить відповідальність видимою."
+- lemma: довкілля
+  translation: "environment"
+  pos: noun
+  usage: "У повідомленні про стан довкілля форми на -но, -то часто фіксують результати моніторингу."
 - lemma: моніторинг
   translation: "monitoring"
   pos: noun
