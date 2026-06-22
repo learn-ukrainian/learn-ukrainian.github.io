@@ -58,6 +58,16 @@ FOLK is the pilot seminar track. Its prompts should be treated as the model for 
 - `shared/review-output-schema.md`: durable audit report schema and issue inventory format.
 - `shared/seminar-source-rules.md`: seminar-track source, decolonization, quote, and active-track taxonomy rules.
 - `shared/reading-section-rules.md`: primary-reading and global reading-reference rules, including copyright decisions.
+- `shared/reading-catalog-template.md`: structured primary/source reading candidate template with hosting decisions and blocker fields.
+- `shared/seminar-track-checklists.md`: track-specific source families and high-risk checks for HIST, BIO, LIT, ISTORIO, OES, and RUTH.
+
+## Automated Prompt Guards
+
+`scripts/lint/lint_prompts.py` validates the suite prompt surface in CI. It
+checks active-track coverage against `curriculum/l2-uk-en/curriculum.yaml`,
+rejects stale prompt directories such as `lit-crimea` and `lit-doc`, and enforces
+required suite sections, worktree sanity commands, forbidden-write markers,
+seminar reading coverage, telemetry fields, and independent-review fields.
 
 Each level prompt references these shared files, but also restates the critical rules so it remains usable when pasted alone into Codex, Gemini, or Claude.
 

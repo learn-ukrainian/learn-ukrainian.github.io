@@ -17,6 +17,10 @@ sys.path.insert(0, str(ROOT / "scripts" / "lint"))
 from lint_prompts import (
     RESEARCH_RULES,
     check_line_rules,
+    check_orchestrator_suite_file,
+    extract_curriculum_level_keys,
+    extract_curriculum_level_types,
+    scan_orchestrator_suites,
     scan_prompts,
 )
 
@@ -227,3 +231,198 @@ class TestScanIntegration:
         assert len(retired_files) >= 5, (
             f"Expected 5+ retired templates, found {len(retired_files)}"
         )
+
+
+# ---------- Orchestrator suite contract tests ----------
+
+def _valid_suite_text(track: str, *, seminar: bool = True) -> str:
+    """Return a minimal valid suite prompt for contract tests."""
+    seminar_refs = ""
+    reading_line = ""
+    if seminar:
+        seminar_refs = "\n".join([
+            "- `docs/prompts/orchestrators/shared/seminar-source-rules.md`",
+            "- `docs/prompts/orchestrators/shared/reading-section-rules.md`",
+        ])
+        reading_line = "Reading coverage: <hosted/link-only/excerpt-only/omit/needed counts>\n"
+    return f"""# {track.upper()} Orchestrator Suite
+
+Prompt version: 0.1
+
+## Source Assumptions
+
+Current source assumptions.
+
+## Goal
+
+Build the scoped track.
+
+## WORKTREE_ROOT Setup
+
+```bash
+git worktree add -b codex/{track}-<stage> .worktrees/dispatch/codex/{track}-<stage> origin/main
+cd .worktrees/dispatch/codex/{track}-<stage>
+pwd
+git status --short --branch
+git rev-parse --show-toplevel
+```
+
+## Read First
+
+- `docs/prompts/orchestrators/shared/repo-rules.md`
+- `docs/prompts/orchestrators/shared/validation-checklist.md`
+- `docs/prompts/orchestrators/shared/telemetry-and-pr.md`
+- `docs/prompts/orchestrators/shared/review-output-schema.md`
+{seminar_refs}
+
+## Allowed Writes
+
+- Scoped files only.
+
+## Forbidden Writes
+
+- `docs/prompts/orchestrators/b2/**`
+- `.python-version`, `.yamllint`, `.markdownlint.json`
+- generated `status/`, curriculum `audit/`, curriculum `review/`, and `data/telemetry/**` artifacts
+
+## Lifecycle Rules
+
+- Run the right stage.
+
+## Helpers And Headroom
+
+Use helpers sparingly.
+
+## Validation Commands
+
+```bash
+git diff --check
+```
+
+## Expected Final Response
+
+```text
+{track.upper()} stage: <preflight | production | quality-audit | remediation>
+Scope: <slugs or audit report>
+{reading_line}Files changed: <paths>
+Validation run: <commands and outcomes>
+Telemetry: <posted | not module-build | unavailable with reason>
+Independent review: <status>
+Forbidden artifacts included: no
+swarm_used: true/false
+swarm_label: <none | helper | swarm>
+swarm_note: <helpers used, or solo run; no swarm used>
+```
+"""
+
+
+class TestOrchestratorSuiteContracts:
+    """Tests for docs/prompts/orchestrators suite hardening."""
+
+    def test_extract_curriculum_level_keys(self, tmp_path: Path):
+        manifest = tmp_path / "curriculum.yaml"
+        manifest.write_text(
+            "version: '1.0'\n"
+            "levels:\n"
+            "  c1:\n"
+            "    type: core\n"
+            "# column-zero comments should not end levels parsing\n"
+            "  lit-humor:\n"
+            "    type: seminar\n"
+            "other: ignored\n",
+            encoding="utf-8",
+        )
+        assert extract_curriculum_level_keys(manifest) == {"c1", "lit-humor"}
+        assert extract_curriculum_level_types(manifest) == {
+            "c1": "core",
+            "lit-humor": "seminar",
+        }
+
+    def test_seminar_suite_requires_reading_coverage(self, tmp_path: Path):
+        suite_path = tmp_path / "lit" / "suite-orchestrator.md"
+        suite_path.parent.mkdir()
+        suite_path.write_text(
+            _valid_suite_text("lit").replace(
+                "Reading coverage: <hosted/link-only/excerpt-only/omit/needed counts>\n",
+                "",
+            ),
+            encoding="utf-8",
+        )
+        violations = check_orchestrator_suite_file(suite_path)
+        assert any(v["rule"] == "ORCH_SUITE_READING_COVERAGE" for v in violations)
+
+    def test_scan_orchestrator_suites_rejects_stale_lit_track(self, tmp_path: Path):
+        root = tmp_path / "orchestrators"
+        (root / "lit-doc").mkdir(parents=True)
+        manifest = tmp_path / "curriculum.yaml"
+        manifest.write_text("levels:\n  lit:\n    type: seminar\n", encoding="utf-8")
+
+        violations = scan_orchestrator_suites(root=root, manifest_path=manifest)
+        assert any(v["rule"] == "ORCH_TRACK_NOT_ACTIVE" for v in violations)
+        assert any(v["rule"] == "ORCH_STALE_LIT_TRACK" for v in violations)
+
+    def test_scan_orchestrator_suites_requires_active_suite(self, tmp_path: Path):
+        root = tmp_path / "orchestrators"
+        (root / "c1").mkdir(parents=True)
+        manifest = tmp_path / "curriculum.yaml"
+        manifest.write_text("levels:\n  c1:\n    type: core\n", encoding="utf-8")
+
+        violations = scan_orchestrator_suites(root=root, manifest_path=manifest)
+        assert any(v["rule"] == "ORCH_ACTIVE_TRACK_MISSING_SUITE" for v in violations)
+
+    def test_scan_orchestrator_suites_derives_seminar_type(self, tmp_path: Path):
+        root = tmp_path / "orchestrators"
+        suite_path = root / "new-seminar" / "suite-orchestrator.md"
+        suite_path.parent.mkdir(parents=True)
+        suite_path.write_text(
+            _valid_suite_text("new-seminar", seminar=False),
+            encoding="utf-8",
+        )
+        manifest = tmp_path / "curriculum.yaml"
+        manifest.write_text(
+            "levels:\n  new-seminar:\n    type: seminar\n",
+            encoding="utf-8",
+        )
+
+        violations = scan_orchestrator_suites(root=root, manifest_path=manifest)
+        rules = {v["rule"] for v in violations}
+        assert "ORCH_SUITE_READING_COVERAGE" in rules
+        assert "ORCH_SUITE_SEMINAR_REFERENCE" in rules
+
+    def test_manifest_seminar_type_is_additive_to_curated_set(self, tmp_path: Path):
+        root = tmp_path / "orchestrators"
+        new_suite = root / "new-seminar" / "suite-orchestrator.md"
+        lit_suite = root / "lit" / "suite-orchestrator.md"
+        new_suite.parent.mkdir(parents=True)
+        lit_suite.parent.mkdir(parents=True)
+        new_suite.write_text(_valid_suite_text("new-seminar"), encoding="utf-8")
+        lit_suite.write_text(
+            _valid_suite_text("lit", seminar=False),
+            encoding="utf-8",
+        )
+        manifest = tmp_path / "curriculum.yaml"
+        manifest.write_text(
+            "levels:\n"
+            "  new-seminar:\n"
+            "    type: seminar\n"
+            "  lit:\n"
+            "    type: track\n",
+            encoding="utf-8",
+        )
+
+        violations = scan_orchestrator_suites(root=root, manifest_path=manifest)
+        assert any(
+            v["rule"] == "ORCH_SUITE_READING_COVERAGE"
+            and v["file"].endswith("lit/suite-orchestrator.md")
+            for v in violations
+        )
+
+    def test_scan_orchestrator_suites_accepts_valid_active_suite(self, tmp_path: Path):
+        root = tmp_path / "orchestrators"
+        suite_path = root / "lit" / "suite-orchestrator.md"
+        suite_path.parent.mkdir(parents=True)
+        suite_path.write_text(_valid_suite_text("lit"), encoding="utf-8")
+        manifest = tmp_path / "curriculum.yaml"
+        manifest.write_text("levels:\n  lit:\n    type: seminar\n", encoding="utf-8")
+
+        assert scan_orchestrator_suites(root=root, manifest_path=manifest) == []

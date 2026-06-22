@@ -31,6 +31,7 @@ on:
       - 'gemini_extensions/**'
       - 'scripts/build/phases/**/*.md'
       - 'scripts/build/contracts/**/*.md'
+      - 'docs/prompts/orchestrators/**'
       - 'docs/lesson-contract.md'
       - 'docs/lesson-schema.yaml'
       - 'site/**'
@@ -136,6 +137,7 @@ jobs:
               - 'agents_extensions/codex/**'
               - 'gemini_extensions/**'
               - 'scripts/build/phases/**/*.md'
+              - 'docs/prompts/orchestrators/**'
             lesson_schema:
               - '.github/workflows/ci.yml'
               - 'docs/lesson-contract.md'

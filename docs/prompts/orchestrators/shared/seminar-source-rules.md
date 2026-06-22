@@ -18,6 +18,7 @@ Use these rules for seminar tracks such as FOLK, HIST, BIO, LIT, active LIT subt
 - Do not invent titles, authors, collectors, publication dates, source IDs, or citations.
 - For FOLK, inspect `docs/folk-epic/EXEMPLAR-STANDARD.md`, `docs/folk-epic/folk-review-rubric.md`, `docs/folk-epic/folk-text-layer-spec.md`, and `scripts/build/phases/linear-write-seminar-folk-rules.md`.
 - For later seminar tracks, inspect the closest track-specific audit and rubric files before adapting FOLK rules.
+- Use `docs/prompts/orchestrators/shared/seminar-track-checklists.md` for track-specific source families and high-risk checks before adapting FOLK rules.
 - For historical-linguistic tracks OES and RUTH, treat source passages, orthography, paleography, register, and terminology as factual content. Do not use "Old Russian" or "Common East Slavic" framing where the track docs require Old Rus' / Old Ukrainian / Ruthenian terminology.
 
 ## Quote And Claim Integrity
