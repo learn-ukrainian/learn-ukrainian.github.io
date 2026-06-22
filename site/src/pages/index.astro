@@ -24,7 +24,7 @@ const coreTracks: TrackRow[] = [
   { id: 'a1', label: 'A1', titleKey: 'home.track.beginner', statusKey: 'status.released' },
   { id: 'a2', label: 'A2', titleKey: 'home.track.preIntermediate', statusKey: 'status.released' },
   { id: 'b1', label: 'B1', titleKey: 'home.track.intermediate', statusKey: 'status.released' },
-  { id: 'b2', label: 'B2', titleKey: 'home.track.upperIntermediate', statusKey: 'status.preview' },
+  { id: 'b2', label: 'B2', titleKey: 'home.track.upperIntermediate', statusKey: 'status.preview', href: '/b2/' },
   { id: 'c1', label: 'C1', titleKey: 'home.track.advanced', statusKey: 'status.planned' },
   { id: 'c2', label: 'C2', titleKey: 'home.track.mastery', statusKey: 'status.longRange' },
 ];
@@ -121,9 +121,19 @@ const seminarTracks: TrackRow[] = [
         <ul>
           {coreTracks.map((track) => (
             <li>
-              <span class="track-code">{track.label}</span>
-              <span class="track-title"><ChromeText k={track.titleKey} /></span>
-              <span class="track-meta">{moduleCount(track.id)} <ChromeText k="stats.modules" /> · <ChromeText k={track.statusKey} /></span>
+              {track.href ? (
+                <a class="track-link" href={track.href}>
+                  <span class="track-code">{track.label}</span>
+                  <span class="track-title"><ChromeText k={track.titleKey} /></span>
+                  <span class="track-meta">{moduleCount(track.id)} <ChromeText k="stats.modules" /> · <ChromeText k={track.statusKey} /></span>
+                </a>
+              ) : (
+                <Fragment>
+                  <span class="track-code">{track.label}</span>
+                  <span class="track-title"><ChromeText k={track.titleKey} /></span>
+                  <span class="track-meta">{moduleCount(track.id)} <ChromeText k="stats.modules" /> · <ChromeText k={track.statusKey} /></span>
+                </Fragment>
+              )}
             </li>
           ))}
         </ul>
