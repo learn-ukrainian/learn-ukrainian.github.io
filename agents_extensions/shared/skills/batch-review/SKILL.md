@@ -46,7 +46,8 @@ List the modules to review and any skipped modules.
 > module or a small batch (≤3), review INLINE** in this session (or defer to next session if context is heavy) —
 > do NOT spawn subagents. Subagents here are justified ONLY for a **genuinely large batch** where wall-clock +
 > context-overflow outweigh the per-subagent reload. When in doubt, prefer non-Claude dispatched reviewers
-> (DeepSeek/Codex) for the bulk and keep the Claude seat in-session.
+> (DeepSeek/Codex) for the bulk and prefer the Claude seat in-session for cost — dispatching Claude is
+> permitted when needed (user 2026-06-22), but it costs the multiple above, so route by need, not by ban.
 
 Split the reviewable modules into chunks of 2-3 modules each.
 Spawn up to 4 subagents using the Agent tool, each processing its chunk.

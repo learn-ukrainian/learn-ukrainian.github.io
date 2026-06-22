@@ -130,8 +130,9 @@ hash + a one-line summary, `headroom_retrieve` only the exact detail. Never run 
 
 ## Dispatch routing & caps
 - Per-task model assignment is in `agents_extensions/shared/rules/model-assignment.md` (served at
-  `/api/rules`). Inline IS yours: hard-bug reasoning, the adversarial/design/code-review seat (in-session,
-  never `claude -p`/`--agent claude`/Agent-subagent), browser/UI testing, `mcp__sources__*` verification.
+  `/api/rules`). Inline IS yours: hard-bug reasoning, the adversarial/design/code-review seat (prefer
+  in-session for cost; dispatching Claude — `claude -p`/`--agent claude`/`review-deep` — is permitted when
+  needed, user 2026-06-22, `-p` sunset cancelled), browser/UI testing, `mcp__sources__*` verification.
 - **>50 LOC non-test inline → STOP and dispatch.** Dispatch enforces worktree + commits.
 - Cap: 2 Claude + 2 Codex + 2 agy in flight; check `/api/delegate/active`, queue if hit. deepseek = off-seat
   review (use it; don't review inline). Use `/code-review` after non-trivial gate/adapter/pipeline changes.
