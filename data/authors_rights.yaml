@@ -1,0 +1,341 @@
+# Curated starter table for scripts/readings/rights_classifier.py.
+# Keys intentionally include plan-facing spellings and common aliases.
+
+"Котляревський":
+  death_year: 1838
+"Іван Котляревський":
+  death_year: 1838
+"Котляревський І.":
+  death_year: 1838
+
+"Шевченко":
+  death_year: 1861
+"Тарас Шевченко":
+  death_year: 1861
+"Шевченко Т.Г.":
+  death_year: 1861
+
+"Куліш":
+  death_year: 1897
+  note: Panteleimon Kulish
+"Пантелеймон Куліш":
+  death_year: 1897
+"Куліш П.":
+  death_year: 1897
+
+"Марко Вовчок":
+  death_year: 1907
+"Вовчок Марко":
+  death_year: 1907
+
+"Леся Українка":
+  death_year: 1913
+
+"Коцюбинський":
+  death_year: 1913
+"Михайло Коцюбинський":
+  death_year: 1913
+"Коцюбинський М.":
+  death_year: 1913
+
+"Франко":
+  death_year: 1916
+"Іван Франко":
+  death_year: 1916
+"Франко І.":
+  death_year: 1916
+"Франко І.Я.":
+  death_year: 1916
+
+"Нечуй-Левицький":
+  death_year: 1918
+"Іван Нечуй-Левицький":
+  death_year: 1918
+"Нечуй-Левицький І.":
+  death_year: 1918
+
+"Самійленко":
+  death_year: 1925
+"Володимир Самійленко":
+  death_year: 1925
+
+"Черемшина":
+  death_year: 1927
+"Марко Черемшина":
+  death_year: 1927
+
+"Грушевський":
+  death_year: 1934
+"Михайло Грушевський":
+  death_year: 1934
+"Грушевський М.":
+  death_year: 1934
+
+"Стефаник":
+  death_year: 1936
+"Василь Стефаник":
+  death_year: 1936
+"Стефаник В.":
+  death_year: 1936
+
+"Антонич":
+  death_year: 1937
+"Богдан-Ігор Антонич":
+  death_year: 1937
+"Антонич Б.-І.":
+  death_year: 1937
+
+"Кобилянська":
+  death_year: 1942
+"Ольга Кобилянська":
+  death_year: 1942
+"Кобилянська О.":
+  death_year: 1942
+
+"Олесь":
+  death_year: 1944
+"Олександр Олесь":
+  death_year: 1944
+
+"Винниченко":
+  death_year: 1951
+"Володимир Винниченко":
+  death_year: 1951
+"Винниченко В.":
+  death_year: 1951
+
+"Довженко":
+  death_year: 1956
+"Олександр Довженко":
+  death_year: 1956
+"Довженко О.":
+  death_year: 1956
+
+"Багряний":
+  death_year: 1963
+"Іван Багряний":
+  death_year: 1963
+"Багряний І.":
+  death_year: 1963
+
+"Симоненко":
+  death_year: 1963
+"Василь Симоненко":
+  death_year: 1963
+"Симоненко В.":
+  death_year: 1963
+
+"Рильський":
+  death_year: 1964
+"Максим Рильський":
+  death_year: 1964
+"Рильський М.":
+  death_year: 1964
+
+"Сосюра":
+  death_year: 1965
+"Володимир Сосюра":
+  death_year: 1965
+"Сосюра В.":
+  death_year: 1965
+
+"Тичина":
+  death_year: 1967
+"Павло Тичина":
+  death_year: 1967
+"Тичина П.":
+  death_year: 1967
+
+"Бажан":
+  death_year: 1983
+"Микола Бажан":
+  death_year: 1983
+"Бажан М.":
+  death_year: 1983
+
+"Стус":
+  death_year: 1985
+  note: dissident
+"Василь Стус":
+  death_year: 1985
+  note: dissident
+"Стус В.":
+  death_year: 1985
+  note: dissident
+
+"Гончар":
+  death_year: 1995
+"Олесь Гончар":
+  death_year: 1995
+"Гончар О.":
+  death_year: 1995
+
+"Костенко":
+  death_year: null
+  note: living
+"Ліна Костенко":
+  death_year: null
+  note: living
+"Костенко Л.":
+  death_year: null
+  note: living
+
+"Драч":
+  death_year: 2018
+"Іван Драч":
+  death_year: 2018
+"Драч І.":
+  death_year: 2018
+
+"Павличко":
+  death_year: 2023
+"Дмитро Павличко":
+  death_year: 2023
+"Павличко Д.":
+  death_year: 2023
+
+"Андрухович":
+  death_year: null
+  note: living
+"Юрій Андрухович":
+  death_year: null
+  note: living
+"Андрухович Ю.":
+  death_year: null
+  note: living
+
+"Забужко":
+  death_year: null
+  note: living
+"Оксана Забужко":
+  death_year: null
+  note: living
+"Забужко О.":
+  death_year: null
+  note: living
+
+"Жадан":
+  death_year: null
+  note: living
+"Сергій Жадан":
+  death_year: null
+  note: living
+"Жадан С.":
+  death_year: null
+  note: living
+
+"Матіос":
+  death_year: null
+  note: living
+"Марія Матіос":
+  death_year: null
+  note: living
+"Матіос М.":
+  death_year: null
+  note: living
+
+"Зеров":
+  death_year: 1937
+  repressed_rehabilitated: true
+  rehab_year: 1958
+"Микола Зеров":
+  death_year: 1937
+  repressed_rehabilitated: true
+  rehab_year: 1958
+"Зеров М.":
+  death_year: 1937
+  repressed_rehabilitated: true
+  rehab_year: 1958
+
+"Підмогильний":
+  death_year: 1937
+  repressed_rehabilitated: true
+  rehab_year: 1956
+"Валер'ян Підмогильний":
+  death_year: 1937
+  repressed_rehabilitated: true
+  rehab_year: 1956
+"Підмогильний В.":
+  death_year: 1937
+  repressed_rehabilitated: true
+  rehab_year: 1956
+
+"Микола Куліш":
+  death_year: 1937
+  repressed_rehabilitated: true
+  rehab_year: 1956
+"Куліш М.":
+  death_year: 1937
+  repressed_rehabilitated: true
+  rehab_year: 1956
+
+"Курбас":
+  death_year: 1937
+  repressed_rehabilitated: true
+  rehab_year: 1957
+"Лесь Курбас":
+  death_year: 1937
+  repressed_rehabilitated: true
+  rehab_year: 1957
+"Курбас Л.":
+  death_year: 1937
+  repressed_rehabilitated: true
+  rehab_year: 1957
+
+"Семенко":
+  death_year: 1937
+  repressed_rehabilitated: true
+  rehab_year: null
+  note: rehabilitation year uncertain
+"Михайль Семенко":
+  death_year: 1937
+  repressed_rehabilitated: true
+  rehab_year: null
+  note: rehabilitation year uncertain
+"Семенко М.":
+  death_year: 1937
+  repressed_rehabilitated: true
+  rehab_year: null
+  note: rehabilitation year uncertain
+
+"Плужник":
+  death_year: 1936
+  repressed_rehabilitated: true
+  rehab_year: 1956
+"Євген Плужник":
+  death_year: 1936
+  repressed_rehabilitated: true
+  rehab_year: 1956
+"Плужник Є.":
+  death_year: 1936
+  repressed_rehabilitated: true
+  rehab_year: 1956
+
+"Йогансен":
+  death_year: 1937
+  repressed_rehabilitated: true
+  rehab_year: 1958
+"Майк Йогансен":
+  death_year: 1937
+  repressed_rehabilitated: true
+  rehab_year: 1958
+"Йогансен М.":
+  death_year: 1937
+  repressed_rehabilitated: true
+  rehab_year: 1958
+
+"Хвильовий":
+  death_year: 1933
+  repressed_rehabilitated: true
+  rehab_year: null
+  note: banned/persecuted; conservative rehabilitation handling
+"Микола Хвильовий":
+  death_year: 1933
+  repressed_rehabilitated: true
+  rehab_year: null
+  note: banned/persecuted; conservative rehabilitation handling
+"Хвильовий М.":
+  death_year: 1933
+  repressed_rehabilitated: true
+  rehab_year: null
+  note: banned/persecuted; conservative rehabilitation handling
