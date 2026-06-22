@@ -18,6 +18,7 @@
   translation: simple form
   pos: noun phrase
   usage: 'Проста форма доконаного виду: я напишу.'
+  notes: Простий тут означає однословну форму доконаного майбутнього часу.
 - lemma: складна форма
   translation: synthetic one-word future form
   pos: noun phrase
@@ -30,6 +31,7 @@
   translation: synthetic form
   pos: noun phrase
   usage: 'Синтетична форма пишеться одним словом: читатиму.'
+  notes: Синтетичний тут означає форму, що пишеться одним словом.
 - lemma: аналітична форма
   translation: analytic form
   pos: noun phrase
@@ -106,6 +108,7 @@
   translation: prediction
   pos: noun:m
   usage: 'Прогноз може описувати процес: вони працюватимуть.'
+  notes: Прогноз і передбачення називають очікувану майбутню подію.
 - lemma: зобов'язання
   translation: obligation, commitment
   pos: noun:n

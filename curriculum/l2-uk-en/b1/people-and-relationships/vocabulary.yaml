@@ -6,6 +6,10 @@
   translation: portrait
   pos: noun
   usage: Портрет може показувати не тільки вигляд, а й характер.
+- lemma: характер
+  translation: character, personality
+  pos: noun
+  usage: Характер людини видно в її вчинках і ставленні до інших.
 - lemma: портретна лексика
   translation: portrait vocabulary
   pos: noun phrase
@@ -98,6 +102,10 @@
   translation: pale
   pos: adjective
   usage: Після хвороби він був блідий і втомлений.
+- lemma: вродливий
+  translation: beautiful, handsome
+  pos: adjective
+  usage: Вродливу людину краще описувати делікатно, без нав'язливої оцінки.
 - lemma: худорлявий
   translation: slim, lean
   pos: adjective

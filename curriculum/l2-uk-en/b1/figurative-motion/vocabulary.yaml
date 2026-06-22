@@ -134,6 +134,10 @@
   translation: "to conduct negotiations"
   pos: phrase
   usage: "Команда веде переговори з партнерами."
+- lemma: вести себе
+  translation: "to behave"
+  pos: phrase
+  usage: "У завданні може трапитися вислів `вести себе`, але нейтральніше: `поводитися спокійно`."
 - lemma: поводитися
   translation: "to behave"
   pos: verb

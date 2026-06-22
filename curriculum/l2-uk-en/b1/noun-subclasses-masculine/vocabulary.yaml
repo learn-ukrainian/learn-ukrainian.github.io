@@ -10,6 +10,10 @@
   translation: stem, base
   pos: noun:f
   usage: У слові школяр основа пов'язана зі словом школа.
+- lemma: іменник
+  translation: noun
+  pos: noun:m
+  usage: Іменник лікар належить до другої відміни.
 - lemma: відмінювання
   translation: declension
   pos: noun:n

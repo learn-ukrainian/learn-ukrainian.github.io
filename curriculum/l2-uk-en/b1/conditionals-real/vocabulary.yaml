@@ -10,6 +10,7 @@
   translation: real condition
   pos: phrase
   usage: "Реальна умова можлива в майбутньому або теперішньому."
+  notes: "Реальний тут означає умову, яку справді можна виконати."
 - lemma: наслідок
   translation: result, consequence
   pos: noun:m

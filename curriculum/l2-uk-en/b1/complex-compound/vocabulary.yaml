@@ -10,6 +10,10 @@
   translation: "coordinating conjunction"
   pos: phrase
   usage: "Сурядний сполучник показує зв'язок між частинами речення."
+- lemma: сполучник сурядності
+  translation: "coordinating conjunction"
+  pos: phrase
+  usage: "Сполучник сурядності поєднує рівноправні частини складного речення."
 - lemma: граматична основа
   translation: "grammatical base, subject-predicate core"
   pos: phrase
@@ -18,6 +22,10 @@
   translation: "coordinate parts"
   pos: phrase
   usage: "У складносурядному реченні рівноправні частини не залежать одна від одної."
+- lemma: рівноправний
+  translation: "equal, coordinate"
+  pos: adjective
+  usage: "Рівноправний зв'язок означає, що одна частина не підпорядковується іншій."
 - lemma: єднальний сполучник
   translation: "copulative conjunction"
   pos: phrase

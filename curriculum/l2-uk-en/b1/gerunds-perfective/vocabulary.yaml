@@ -10,6 +10,10 @@
   translation: temporal non-simultaneity
   pos: noun:f
   usage: "Форма прочитавши показує різночасність: спочатку читання, потім інша дія."
+- lemma: одночасність
+  translation: simultaneity
+  pos: noun:f
+  usage: "Одночасність типова для дієприслівників недоконаного виду; тут її повторюємо для контрасту."
 - lemma: попередність
   translation: precedence
   pos: noun:f

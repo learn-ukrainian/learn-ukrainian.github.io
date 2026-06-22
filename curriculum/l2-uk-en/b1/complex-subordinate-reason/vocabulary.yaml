@@ -5,7 +5,7 @@
 - lemma: підрядна обставинна частина причини
   translation: "causal adverbial subordinate clause"
   pos: phrase
-  usage: "Підрядна обставинна частина причини відповідає на питання чому?"
+  usage: "Підрядна обставинна частина причини пояснює причину дії головної частини."
 - lemma: причина
   translation: "cause, reason"
   pos: noun

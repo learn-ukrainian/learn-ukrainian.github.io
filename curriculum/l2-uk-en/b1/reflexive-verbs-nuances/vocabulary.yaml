@@ -22,10 +22,12 @@
   translation: "properly reflexive"
   pos: phrase
   usage: "Митися - власне зворотна дія."
+  notes: "У таблицях ця група може мати назву власне зворотні."
 - lemma: взаємний
   translation: "reciprocal"
   pos: adj
   usage: "Зустрічатися може позначати взаємну дію."
+  notes: "У таблицях ця група може мати назву взаємні."
 - lemma: безособовий
   translation: "impersonal"
   pos: adj

@@ -42,6 +42,10 @@
   translation: "single conjunction"
   pos: phrase
   usage: "Перед одиничним і між однорідними членами коми немає."
+- lemma: узагальнювальний
+  translation: "generalizing"
+  pos: adjective
+  usage: "Узагальнювальний елемент підсумовує весь перелік."
 - lemma: узагальнювальне слово
   translation: "generalizing word"
   pos: phrase

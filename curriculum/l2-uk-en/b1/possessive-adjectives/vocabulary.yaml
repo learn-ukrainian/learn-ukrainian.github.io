@@ -102,6 +102,10 @@
   translation: "Natalka's"
   pos: adjective
   usage: "Наталчин рюкзак стояв біля шафи."
+- lemma: відміна
+  translation: "declension class"
+  pos: noun
+  usage: "Відміна іменника допомагає вибрати суфікс присвійного прикметника."
 - lemma: суфікс -ів/-їв
   translation: "-iv/-yiv suffix"
   pos: suffix
