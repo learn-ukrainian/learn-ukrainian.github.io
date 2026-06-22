@@ -48,12 +48,13 @@ def test_shevchenko_initial_and_name_order_variants_use_author_table(
 @pytest.mark.parametrize(
     "author",
     [
-        "Стус",
         "Тичина",
         "Рильський",
     ],
 )
-def test_standard_life_plus_70_in_copyright(author: str) -> None:
+def test_unpersecuted_recent_author_no_free_source_is_in_copyright(author: str) -> None:
+    # Recent authors who were NOT persecuted and whose text carries no free-source signal
+    # fall to the conservative life+70 path. (With a ukrlib/textbook source they are hosted.)
     verdict = classify_rights(author, "Твір", None, "", "", current_year=CURRENT_YEAR)
 
     assert verdict["rights_class"] == "in_copyright"
@@ -65,13 +66,35 @@ def test_standard_life_plus_70_in_copyright(author: str) -> None:
         "Зеров",
         "Підмогильний",
         "Хвильовий",
+        "Стус",
     ],
 )
-def test_repressed_rehabilitated_authors_stay_in_copyright(author: str) -> None:
+def test_repressed_rehabilitated_authors_are_hosted_heritage(author: str) -> None:
+    # Executed Renaissance + persecuted authors (incl. Стус) are hosted in full as
+    # freely-accessible Ukrainian heritage — never gatekept (user order 2026-06-22).
     verdict = classify_rights(author, "Твір", None, "", "", current_year=CURRENT_YEAR)
 
-    assert verdict["rights_class"] == "in_copyright"
-    assert "rehabilitation" in verdict["basis"]
+    assert verdict["rights_class"] == "public_domain"
+    assert "repressed" in verdict["basis"]
+
+
+@pytest.mark.parametrize(
+    "source_file",
+    [
+        "ukrlib-stus",
+        "ukrlib-kostenko",
+        "ukrlib-shevchenko",
+        "textbook-10-klas-ukrlit",
+    ],
+)
+def test_ukrlib_or_textbook_source_is_hosted(source_file: str) -> None:
+    # Absolute rule: anything on ukrlib / in textbooks is hosted in full, regardless of
+    # the author's copyright status (incl. living authors like Ліна Костенко).
+    verdict = classify_rights(
+        "Будь-який Автор", "Твір", None, source_file, "", current_year=CURRENT_YEAR
+    )
+
+    assert verdict["rights_class"] == "public_domain"
 
 
 def test_folk_author_is_public_domain() -> None:
@@ -104,7 +127,9 @@ def test_unknown_author_with_old_year_defaults_in_copyright() -> None:
 @pytest.mark.parametrize(
     ("author", "year"),
     [
-        ("Драй-Хмара М.", 1889),
+        # Authors NOT in the rights table, with NO free-source signal: the unreliable
+        # birth-year must NOT trigger a year-based PD fallback. (Драй-Хмара is now a
+        # tabled persecuted author → hosted; covered by the repressed-heritage test.)
         ("Маланюк Є.", 1897),
         ("Малишко А.", 1912),
     ],
@@ -127,14 +152,14 @@ def test_boundary_death_years(tmp_path: Path) -> None:
   death_year: 1955
 "Boundary Copyright":
   death_year: 1956
-"Rehab PD":
+"Rehab Early":
   death_year: 1937
   repressed_rehabilitated: true
   rehab_year: 1955
-"Rehab Copyright":
+"Rehab Late":
   death_year: 1937
   repressed_rehabilitated: true
-  rehab_year: 1956
+  rehab_year: 1989
 """,
         encoding="utf-8",
     )
@@ -157,8 +182,8 @@ def test_boundary_death_years(tmp_path: Path) -> None:
         current_year=CURRENT_YEAR,
         rights_path=rights_path,
     )
-    rehab_pd_verdict = classify_rights(
-        "Rehab PD",
+    rehab_early_verdict = classify_rights(
+        "Rehab Early",
         "Твір",
         None,
         "",
@@ -166,8 +191,8 @@ def test_boundary_death_years(tmp_path: Path) -> None:
         current_year=CURRENT_YEAR,
         rights_path=rights_path,
     )
-    rehab_copyright_verdict = classify_rights(
-        "Rehab Copyright",
+    rehab_late_verdict = classify_rights(
+        "Rehab Late",
         "Твір",
         None,
         "",
@@ -178,10 +203,11 @@ def test_boundary_death_years(tmp_path: Path) -> None:
 
     assert pd_verdict["rights_class"] == "public_domain"
     assert copyright_verdict["rights_class"] == "in_copyright"
-    assert rehab_pd_verdict["rights_class"] == "public_domain"
-    assert "rehabilitation+70" in rehab_pd_verdict["basis"]
-    assert rehab_copyright_verdict["rights_class"] == "in_copyright"
-    assert "rehabilitation+70" in rehab_copyright_verdict["basis"]
+    # Persecuted-and-rehabilitated authors are hosted heritage regardless of rehab year.
+    assert rehab_early_verdict["rights_class"] == "public_domain"
+    assert "repressed" in rehab_early_verdict["basis"]
+    assert rehab_late_verdict["rights_class"] == "public_domain"
+    assert "repressed" in rehab_late_verdict["basis"]
 
 
 def test_ambiguous_canonical_author_key_keeps_exact_only(
@@ -209,7 +235,10 @@ def test_ambiguous_canonical_author_key_keeps_exact_only(
 
 
 def test_generate_readings_gate_delegates_to_classifier() -> None:
-    corpus = CorpusText(
+    # Стус — murdered by the Soviet regime, his work freely published on ukrlib — is
+    # hosted in full. The gate delegates to the classifier, which never gatekeeps
+    # persecuted Ukrainian authors or ukrlib/textbook texts (user order 2026-06-22).
+    hosted = CorpusText(
         chunk_id="x",
         author="Василь Стус",
         work="Вірш",
@@ -221,5 +250,20 @@ def test_generate_readings_gate_delegates_to_classifier() -> None:
         source_url="",
         text="",
     )
+    assert is_public_domain(hosted, current_year=CURRENT_YEAR) is True
 
-    assert is_public_domain(corpus, current_year=CURRENT_YEAR) is False
+    # Delegation also returns False for a genuinely-unknown modern author with no
+    # free-source signal (the light legal backstop).
+    unknown = CorpusText(
+        chunk_id="y",
+        author="Сучасний Невідомий Автор",
+        work="Вірш",
+        work_id="unknown",
+        year=None,
+        genre="poetry",
+        language_period="modern",
+        source_file="private-collection",
+        source_url="",
+        text="",
+    )
+    assert is_public_domain(unknown, current_year=CURRENT_YEAR) is False

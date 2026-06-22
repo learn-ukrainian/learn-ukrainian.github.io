@@ -155,13 +155,29 @@
 
 "Стус":
   death_year: 1985
-  note: dissident
+  repressed_rehabilitated: true
+  note: dissident murdered in a Soviet labour camp; rehabilitated — heritage hosted
 "Василь Стус":
   death_year: 1985
-  note: dissident
+  repressed_rehabilitated: true
+  note: dissident murdered in a Soviet labour camp; rehabilitated — heritage hosted
 "Стус В.":
   death_year: 1985
-  note: dissident
+  repressed_rehabilitated: true
+  note: dissident murdered in a Soviet labour camp; rehabilitated — heritage hosted
+
+"Драй-Хмара":
+  death_year: 1939
+  repressed_rehabilitated: true
+  note: Executed Renaissance; died in Kolyma — heritage hosted
+"Михайло Драй-Хмара":
+  death_year: 1939
+  repressed_rehabilitated: true
+  note: Executed Renaissance; died in Kolyma — heritage hosted
+"Драй-Хмара М.":
+  death_year: 1939
+  repressed_rehabilitated: true
+  note: Executed Renaissance; died in Kolyma — heritage hosted
 
 "Гончар":
   death_year: 1995

@@ -43,7 +43,8 @@ def test_in_copyright_work_in_corpus_emits_unverified_link(tmp_path: Path) -> No
     db_path = _write_sources_db(tmp_path)
     index = load_work_index(db_path)
 
-    result = resolve_clean_text("Безсонної ночі", "Стус В.", index, current_year=2026)
+    # A modern, non-persecuted author on a non-free source — the only in-copyright case.
+    result = resolve_clean_text("Нічний вірш", "Сучасна Авторка", index, current_year=2026)
 
     assert result["in_corpus"] is True
     assert result["hostable_full"] is False
@@ -51,7 +52,7 @@ def test_in_copyright_work_in_corpus_emits_unverified_link(tmp_path: Path) -> No
     assert result["clean_text_source"] is None
     link = result["free_full_text_link"]
     assert link is not None
-    assert link["url"] == "https://example.test/stus-bezsonnoi-nochi"
+    assert link["url"] == "https://example.test/suchasna-avtorka-nichnyi-virsh"
     assert link["source"] == "corpus_source_url"
     assert link["verified"] is False
 
@@ -146,7 +147,10 @@ def test_cli_manifest_writes_summary_with_expected_keys(tmp_path: Path) -> None:
 
 
 ZAPOVIT_TEXT = "Як умру, то поховайте мене на могилі."
-STUS_TEXT = "Безсонної ночі рядок за рядком."
+# A genuinely in-copyright work: a modern, non-persecuted author whose text carries NO
+# free-source signal (not on ukrlib / not in the textbook corpus). This is the only case
+# that resolves in_copyright → excerpt + unverified free-full-text link.
+MODERN_INCOPYRIGHT_TEXT = "Сучасний вірш, рядок за рядком."
 LISOVA_1 = "Лісова пісня початок. "
 LISOVA_2 = "Лісова пісня середина. "
 LISOVA_3 = "Лісова пісня кінець."
@@ -212,17 +216,17 @@ def _write_sources_db(tmp_path: Path) -> Path:
                 (
                     2,
                     1,
-                    "Безсонної ночі",
-                    STUS_TEXT,
-                    "ukrlib-stus",
-                    "Стус В.",
-                    "Стус В. Безсонної ночі",
-                    "stus-bezsonnoi-nochi",
-                    1970,
+                    "Нічний вірш",
+                    MODERN_INCOPYRIGHT_TEXT,
+                    "suchasna-zbirka-2019",
+                    "Сучасна Авторка",
+                    "Сучасна Авторка. Нічний вірш",
+                    "suchasna-avtorka-nichnyi-virsh",
+                    2015,
                     "poetry",
                     "modern",
-                    len(STUS_TEXT),
-                    "https://example.test/stus-bezsonnoi-nochi",
+                    len(MODERN_INCOPYRIGHT_TEXT),
+                    "https://example.test/suchasna-avtorka-nichnyi-virsh",
                 ),
                 (
                     5,
