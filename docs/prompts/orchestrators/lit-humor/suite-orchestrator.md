@@ -23,7 +23,9 @@ git worktree add -b codex/lit-humor-<stage>-<batch> .worktrees/dispatch/codex/li
 cd .worktrees/dispatch/codex/lit-humor-<stage>-<batch>
 test -e .venv || ln -s "$REPO_ROOT/.venv" .venv
 export WORKTREE_ROOT="$(pwd)"
+pwd
 git status --short --branch
+git rev-parse --show-toplevel
 ```
 
 ## Read First
