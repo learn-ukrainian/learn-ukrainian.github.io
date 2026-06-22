@@ -162,10 +162,43 @@ c_ok "service stopped"
 
 # ---- 3. upgrade the pipx package -----------------------------------------
 c_bold "== 3/6  Upgrade ${PKG_SPEC} -> ${TARGET_VERSION} =="
+# WHY NOT `pipx install --force`: --force RECREATES the venv, but pipx's uv
+# backend refuses to clobber a venv it did not create in-session ("Not removing
+# existing venv ... Use --clear"), so --force aborts whenever the target
+# interpreter differs from the one the venv was built with — e.g. when
+# PIPX_DEFAULT_PYTHON jumps 3.13 -> 3.14 after a Homebrew update. Instead:
+# uninstall first (removes the venv dir), then a plain install recreates it
+# cleanly. Pin the interpreter the venv already runs so a package upgrade never
+# silently jumps Python major.minor (which can pull deps without wheels);
+# override with HEADROOM_PYTHON=/path/to/python.
+# Autopsy: docs/bug-autopsies/2026-06-22-headroom-deploy.md
 if [ "$TARGET_VERSION" = "latest" ]; then
-  pipx upgrade "$PKG_BASE" || pipx install --force "$PKG_SPEC"
+  INSTALL_SPEC="$PKG_SPEC"
 else
-  pipx install --force "${PKG_SPEC}==${TARGET_VERSION}"
+  INSTALL_SPEC="${PKG_SPEC}==${TARGET_VERSION}"
+fi
+PIN_PY="${HEADROOM_PYTHON:-}"
+if [ -z "$PIN_PY" ]; then
+  PYVENV_CFG="${PIPX_HOME:-$HOME/.local/pipx}/venvs/${PKG_BASE}/pyvenv.cfg"
+  if [ -f "$PYVENV_CFG" ]; then
+    PIN_HOME="$(awk -F '= *' '/^home/{print $2; exit}' "$PYVENV_CFG")"
+    PIN_VER="$(awk -F '= *' '/^version_info/{print $2; exit}' "$PYVENV_CFG")"
+    PIN_MM="$(printf '%s' "$PIN_VER" | cut -d. -f1-2)"   # e.g. 3.13.13 -> 3.13
+    for cand in "${PIN_HOME}/python${PIN_MM}" "${PIN_HOME}/python3" "${PIN_HOME}/python"; do
+      if [ -x "$cand" ]; then PIN_PY="$cand"; break; fi
+    done
+  fi
+fi
+[ -n "$PIN_PY" ] && c_ok "interpreter pin: $PIN_PY (override: HEADROOM_PYTHON=)"
+if pipx list --short 2>/dev/null | grep -q "^${PKG_BASE} "; then
+  c_warn "removing existing ${PKG_BASE} venv for a clean reinstall (sidesteps uv clobber guard)"
+  pipx uninstall "$PKG_BASE" >/dev/null 2>&1 || true
+fi
+if [ -n "$PIN_PY" ]; then
+  pipx install --python "$PIN_PY" "$INSTALL_SPEC"
+else
+  c_warn "no interpreter pin resolved — using pipx default ($(pipx environment --value PIPX_DEFAULT_PYTHON 2>/dev/null || echo system))"
+  pipx install "$INSTALL_SPEC"
 fi
 NEWCLI="$(headroom --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || true)"
 echo "    headroom CLI now: ${NEWCLI:-unknown}"
@@ -187,7 +220,25 @@ fi
 
 # ---- 5. start the proxy service ------------------------------------------
 c_bold "== 5/6  Start the Headroom proxy service =="
-headroom install start --profile "$PROFILE"
+# `headroom install stop` (step 2) boots the launchd job OUT of the GUI domain,
+# but `headroom install start` uses `launchctl kickstart`, which only works on
+# an already-loaded job — after a stop it fails with
+#   Could not find service "com.headroom.<profile>" in domain for user gui: 501
+# Recover by re-bootstrapping the EXISTING plist (RunAtLoad=true starts it and
+# preserves manifest.json + its proxy tuning). Do NOT fall back to
+# `headroom install apply` — that regenerates the manifest and drops custom
+# tuning (concurrency, kompress flags, min/max items).
+PLIST="${HOME}/Library/LaunchAgents/com.headroom.${PROFILE}.plist"
+if ! headroom install start --profile "$PROFILE" 2>/dev/null; then
+  c_warn "install start failed (job booted out by stop) — re-bootstrapping plist"
+  if [ -f "$PLIST" ] && launchctl bootstrap "gui/$(id -u)" "$PLIST" 2>/dev/null; then
+    c_ok "re-bootstrapped $PLIST"
+  elif headroom install restart --profile "$PROFILE" 2>/dev/null; then
+    c_ok "restarted via headroom install restart"
+  else
+    die "could not start proxy (bootstrap + restart both failed) — check: headroom install status"
+  fi
+fi
 c_ok "service start issued"
 
 # ---- 6. verify ------------------------------------------------------------
