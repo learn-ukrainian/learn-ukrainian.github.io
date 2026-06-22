@@ -94,9 +94,13 @@ Add current module, sidecar, MDX, and site checks when production/remediation wr
 ```text
 LIT-DRAMA stage: <preflight | production | quality-audit | remediation>
 Scope: <slugs or audit report>
-Reading decisions: <summary>
+Reading coverage: <hosted/link-only/excerpt-only/omit/needed counts>
+Files changed: <paths>
 Validation run: <commands and outcomes>
+Telemetry: <posted | not module-build | unavailable with reason>
+Independent review: <status>
 Forbidden artifacts included: no
 swarm_used: true/false
+swarm_label: <none | helper | swarm>
 swarm_note: <helpers used, or solo run; no swarm used>
 ```

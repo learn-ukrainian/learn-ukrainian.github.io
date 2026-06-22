@@ -23,7 +23,9 @@ git worktree add -b codex/lit-war-<stage>-<batch> .worktrees/dispatch/codex/lit-
 cd .worktrees/dispatch/codex/lit-war-<stage>-<batch>
 test -e .venv || ln -s "$REPO_ROOT/.venv" .venv
 export WORKTREE_ROOT="$(pwd)"
+pwd
 git status --short --branch
+git rev-parse --show-toplevel
 ```
 
 ## Read First
@@ -91,9 +93,13 @@ Add content-generation validation for production/remediation.
 ```text
 LIT-WAR stage: <preflight | production | quality-audit | remediation>
 Scope: <slugs or audit report>
-Reading decisions: <summary>
+Reading coverage: <hosted/link-only/excerpt-only/omit/needed counts>
+Files changed: <paths>
 Validation run: <commands and outcomes>
+Telemetry: <posted | not module-build | unavailable with reason>
+Independent review: <status>
 Forbidden artifacts included: no
 swarm_used: true/false
+swarm_label: <none | helper | swarm>
 swarm_note: <helpers used, or solo run; no swarm used>
 ```

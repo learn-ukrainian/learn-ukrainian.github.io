@@ -132,6 +132,7 @@ Scope: <slugs or audit report>
 Reading coverage: <hosted/link-only/excerpt-only/omit/needed counts>
 Files changed: <paths>
 Validation run: <commands and outcomes>
+Telemetry: <posted | not module-build | unavailable with reason>
 Independent review: <status>
 Forbidden artifacts included: no
 swarm_used: true/false

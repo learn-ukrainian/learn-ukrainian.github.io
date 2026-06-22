@@ -105,9 +105,11 @@ For built modules, add activity, vocabulary, generated MDX, liveness, and site c
 BIO stage: <preflight | production | quality-audit | remediation>
 Scope: <slugs or audit report>
 Source-tier coverage: <summary>
-Reading/portrait decisions: <summary>
+Reading coverage: <hosted/link-only/excerpt-only/omit/needed counts>
+Portrait rights: <hosted/link-only/omit/needed counts>
 Files changed: <paths>
 Validation run: <commands and outcomes>
+Telemetry: <posted | not module-build | unavailable with reason>
 Independent review: <status>
 Forbidden artifacts included: no
 swarm_used: true/false
