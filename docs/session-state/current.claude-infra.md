@@ -4,12 +4,13 @@
 > harness, Atlas/lexicon. SEPARATE from the folk/seminar Claude (agent `claude`) and from
 > the curriculum track-orchestrators.
 >
-> **Handoff identity:** `claude-infra`. Launch with **`./start-claude-infra.sh`** so the
-> SessionStart hook routes cold-start to this lane's own slot
-> (`.agent/claude-infra-thread-handoff.md`) instead of the shared `claude` slot. Plain
-> `claude` / `start-claude.sh` (no `SESSION_HANDOFF_AGENT`) defaults to agent `claude`,
-> which the folk driver and track-orchestrators also use — that shared slot is the
-> cold-start collision this file's lane was created to avoid.
+> **Handoff identity:** `claude-infra`. Launch with **`./start-claude.sh --agent infra-orchestrator`**:
+> the launcher derives `SESSION_HANDOFF_AGENT=claude-infra` from the `--agent` selection (via
+> `scripts/lib/handoff_identity.sh`), so the SessionStart hook routes cold-start to this lane's own slot
+> (`.agent/claude-infra-thread-handoff.md`) instead of the shared `claude` slot. A bare `claude` /
+> `./start-claude.sh` with no `--agent` (or `--agent curriculum-orchestrator`) defaults to agent `claude`,
+> which the folk driver and track-orchestrators also use — that shared slot is the cold-start collision
+> this lane was created to avoid. (One launcher, one agent flag — there is no separate `start-claude-infra.sh`.)
 
 ## Cold-start
 1. `git fetch origin`

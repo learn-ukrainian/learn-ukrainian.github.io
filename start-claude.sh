@@ -133,5 +133,24 @@ if [ -f "$PROJECT_DIR/scripts/ensure_headroom.sh" ]; then
     source "$PROJECT_DIR/scripts/ensure_headroom.sh"
 fi
 
+# Derive the cold-start handoff identity from the selected `--agent`, so ONE
+# launcher serves every lane: the SessionStart hook keys the thread handoff off
+# SESSION_HANDOFF_AGENT, and each lane reads/writes its OWN
+# .agent/<id>-thread-handoff.md slot (no per-lane wrapper scripts). Folk /
+# curriculum default to the `claude` slot; `--agent infra-orchestrator` →
+# `claude-infra`. An explicit SESSION_HANDOFF_AGENT in the environment wins.
+# Mapping + argv parsing live in scripts/lib/handoff_identity.sh (unit-tested).
+if [ -z "${SESSION_HANDOFF_AGENT:-}" ] && [ -f "$PROJECT_DIR/scripts/lib/handoff_identity.sh" ]; then
+    # shellcheck source=scripts/lib/handoff_identity.sh
+    source "$PROJECT_DIR/scripts/lib/handoff_identity.sh"
+    _selected_agent="$(handoff_agent_from_argv "$@")"
+    _handoff_slot="$(handoff_identity_for_agent "$_selected_agent")"
+    if [ -n "$_handoff_slot" ]; then
+        export SESSION_HANDOFF_AGENT="$_handoff_slot"
+        echo "Handoff identity: $SESSION_HANDOFF_AGENT (from --agent $_selected_agent)"
+    fi
+    unset _selected_agent _handoff_slot
+fi
+
 echo "Launching Claude Code (native install)..."
 exec "$CLAUDE_BIN" --chrome --permission-mode bypassPermissions "$@"
