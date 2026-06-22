@@ -5,7 +5,7 @@
 - lemma: підрядна обставинна частина часу
   translation: "temporal adverbial subordinate clause"
   pos: phrase
-  usage: "Підрядна обставинна частина часу відповідає на питання коли? відколи? доки?"
+  usage: "Підрядна обставинна частина часу уточнює, коли відбувається дія головної частини."
 - lemma: головна частина
   translation: "main clause"
   pos: phrase

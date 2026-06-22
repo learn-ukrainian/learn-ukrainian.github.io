@@ -5,7 +5,7 @@
 - lemma: підрядна обставинна частина мети
   translation: "adverbial subordinate clause of purpose"
   pos: phrase
-  usage: "Підрядна обставинна частина мети відповідає на питання для чого? навіщо?"
+  usage: "Підрядна обставинна частина мети називає мету дії головної частини."
 - lemma: мета
   translation: "purpose, goal"
   pos: noun
