@@ -1,6 +1,6 @@
 # B2 Preflight Readiness Audit Orchestrator
 
-Prompt version: 0.2
+Prompt version: 0.3
 Last reviewed: 2026-06-21
 
 ## Source Assumptions
@@ -35,6 +35,7 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/shared/repo-rules.md`
 - `docs/prompts/orchestrators/shared/validation-checklist.md`
 - `docs/prompts/orchestrators/shared/review-output-schema.md`
+- `docs/prompts/orchestrators/shared/telemetry-and-pr.md`
 - `curriculum/l2-uk-en/curriculum.yaml`, B2 section
 - `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
 - `scripts/config.py`
@@ -71,9 +72,16 @@ git rev-parse --show-toplevel
 - Identify blockers that require plan/wiki/source work before production.
 - Mark readiness as `pass`, `conditional pass`, or `do not build`.
 
-## Helpers And Headroom
+## Helper Swarm Policy
 
-Read-only helpers are allowed for inventories or slug-matrix checks. The main auditor owns readiness judgment. Use Headroom compression for helper output or search results over 200 lines or 20 KB.
+Default to a solo preflight audit unless a helper will materially improve coverage or validation confidence. When helpers are useful, keep routine delegation to one to three helpers total.
+
+- Use `gpt-5.4-mini` explorer helpers for read-only source/wiki coverage matrices, stale-file sweeps, plan/discovery comparisons, and validation summaries.
+- Use `gpt-5.3-codex-spark` helpers only for narrow code-heavy validation such as parser, schema, or command-output triage.
+- The main auditor owns final readiness verdict, blocker inventory, remediation batching, PR creation, independent-family review routing, merge decisions, and git hygiene.
+- Do not let helpers read secrets, source `.envrc`, call `gh`, request reviews, open PRs, merge PRs, or edit plans/wiki/discovery/curriculum/site files.
+- Record helper roles in the durable report and PR body; set `swarm_used: true` when any helper or reviewer thread did bounded preflight audit work. Solo audits still require `swarm_used: false`, `swarm_label: none`, and `swarm_note`.
+- Use Headroom compression for helper output or logs over 200 lines or 20 KB; pass the hash plus a short summary.
 
 ## Durable Report Path
 
@@ -97,17 +105,28 @@ if [ -n "$CHANGED_FILES" ] && printf '%s\n' "$CHANGED_FILES" | rg '(^|/)status/.
   echo "Forbidden generated artifact in diff" >&2
   exit 1
 fi
-if rg -n 'sys\.executable' "$REPORT"; then
-  echo "Audit report mentions forbidden sys.executable" >&2
+FORBIDDEN_INTERPRETER_TOKEN='sys[.]executable'
+if rg -n "$FORBIDDEN_INTERPRETER_TOKEN" "$REPORT"; then
+  echo "Audit report mentions forbidden interpreter token" >&2
   exit 1
 fi
 ```
 
 Do not run builds. Do not modify B2 plans, wiki files, discovery files, or modules.
 
+## Independent-Family Review Gate
+
+Before merge, request a read-only independent-family review of the preflight audit-report PR. Prefer Claude Opus 4.8. If Claude Opus 4.8 is unavailable, use Agy with Gemini 3.1 Pro High, for example `agy --model gemini-3.1-pro-high --print-timeout 10m -p "<review prompt>"`.
+
+The review prompt must include the PR diff, preflight scope, validation summary, artifact-clean statement, helper/swarm note, and an explicit request for blocker-only findings. Record reviewer identity, review model, review scope, unresolved findings, and final disposition in the durable audit report or PR body. The merge rule is explicit: unresolved findings are blockers.
+
+## PR Body Requirements
+
+PR body must include: preflight scope, report path, readiness status, blocker count, source/wiki/plan gap summary, validation commands and outcomes, `swarm_used`, `swarm_label`, `swarm_note`, reviewer identity, review scope, final disposition, unresolved review findings count, and a statement that no plans, wiki, discovery, curriculum/site source files, generated curriculum artifacts, or telemetry database files are included.
+
 ## Report Delivery
 
-After validation, commit and open a draft PR that contains only the report:
+After validation, commit and open a draft PR that contains only the report plus PR body delivery text:
 
 ```bash
 REPORT="docs/audits/b2-preflight-readiness-$(date +%F).md"
@@ -127,8 +146,12 @@ Blockers: <n>
 Source/wiki/plan gaps: <summary>
 Validation run: <commands and outcomes>
 Report delivery: <draft PR URL or blocked reason>
+Review PR: <url, ready/merged/blocked>
+Independent review: <reviewer identity, model, scope, final disposition>
+Unresolved review findings: <n>
 B2 production allowed now: yes/no
 Curriculum files modified: no
+Forbidden artifacts included: no
 swarm_used: true/false
 swarm_label: <none | solo | helper | swarm>
 swarm_note: <helpers used, or solo run; no swarm used>
