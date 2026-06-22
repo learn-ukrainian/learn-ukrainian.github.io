@@ -1,7 +1,7 @@
 # B2 Production Build Orchestrator
 
-Prompt version: 0.2
-Last reviewed: 2026-06-21
+Prompt version: 0.3
+Last reviewed: 2026-06-22
 
 ## Source Assumptions
 
@@ -9,6 +9,8 @@ Last reviewed: 2026-06-21
 - B2 modules require advanced Ukrainian immersion, register control, argumentation, professional/academic readiness, and richer syntax.
 - B2 production should run in small sequential batches with module-tailored prompts, not generic batch instructions.
 - Plans are source of truth. Do not edit plans unless a preflight remediation PR explicitly scopes that work.
+- Some legacy B2 plans contain English planning scaffolding such as `Підсумок — Summary`, `Self-check`, English objectives, or English grammar labels. Treat that material as internal planning metadata only; do not copy it into B2 modules.
+- Some B2 discovery YAML files are auto-generated keyword stubs with empty `rag_chunks` and `rag_literary`. Treat them as query-keyword scaffolding unless they contain source chunks.
 
 ## Goal
 
@@ -71,6 +73,15 @@ git rev-parse --show-toplevel
 
 - Work in small sequential batches. Finish and validate each module before moving to the next.
 - Write a module-tailored mini-prompt for each slug using that module's plan, discovery, wiki, and source YAML.
+- In each module-tailored mini-prompt, include a `Plan Scaffolding Filter` note:
+  - Ignore any plan section titled `Підсумок — Summary` or containing English `Self-check` prose as copy source.
+  - Convert any legacy English planning notes into Ukrainian intent before writing.
+  - Do not quote English plan prose in the module body.
+  - English is allowed only in vocabulary translation/gloss contexts already permitted by live B2 config.
+- In each module-tailored mini-prompt, include a `Discovery Authority Check` note:
+  - If discovery YAML has empty `rag_chunks` and `rag_literary`, use only `query_keywords` as hints.
+  - The authoritative teaching brief is `wiki/grammar/b2/<slug>.md` plus `<slug>.sources.yaml`.
+  - Stop only when the target wiki article or source registry is missing, has no sources, or contains unresolved verification markers.
 - B2 content should be advanced but teachable: richer syntax, register and style awareness, argumentation, professional or academic tasks, and precise vocabulary.
 - Avoid generic filler, decorative complexity, and content trivia. Activities must practice Ukrainian language skills through the module topic.
 - Maintain B2 immersion according to current config; English should be limited to vocabulary glosses or current repo-permitted contexts.

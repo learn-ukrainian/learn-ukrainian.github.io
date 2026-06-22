@@ -2,15 +2,14 @@ module: b2-051
 level: B2
 sequence: 51
 slug: advanced-case-semantics
-version: 1.1.4
+version: '1.2.1'
 lifecycle: locked
-reviewed_at: '2026-06-15T09:08:00Z'
-reviewed_by: codex/b2-wiki-readiness-batch-2
+reviewed_at: '2026-06-22T15:55:00Z'
+reviewed_by: codex/b2-preflight-blockers
 review_notes: >-
-  Batch 2 B2 wiki-readiness lock. Removed only evidence-backed VERIFY markers
-  from wiki/grammar/b2/advanced-case-semantics.md, refreshed its source
-  registry to current local textbook chunks, and recorded the lock in
-  wiki/.reviews/grammar/b2/advanced-case-semantics-review-LOCKED.md.
+  Preflight blocker remediation. Preserves the Batch 2 wiki-readiness lock
+  evidence while localizing legacy English plan scaffolding and aligning the
+  State Standard reference with docs/l2-uk-en/state-standard-2024-mapping.yaml.
 title: Поглиблена семантика відмінків
 subtitle: Поглиблена семантика відмінків
 focus: grammar
@@ -21,12 +20,12 @@ objectives:
   контекстах.
 - Опанувати використання відмінків у складних прийменниково-іменникових
   конструкціях.
-- Зрозуміти роль відмінків у вираженні часових, просторових та причинових
+- Пояснювати роль відмінків у вираженні часових, просторових та причинових
   відношень на рівні B2.
-- Навчитися розрізняти тонкі змістові відтінки при варіативності відмінкових
+- Розрізняти тонкі змістові відтінки при варіативності відмінкових
   форм (напр. у родовому відмінку).
-- Learner can correctly decline advanced noun categories, including pluralia
-  tantum and nouns with shifting declension types.
+- Відмінювати складні категорії іменників, зокрема pluralia tantum та іменники
+  зі змінною відмінковою парадигмою.
 reading_situations:
 - source_type: наукова стаття
   topic: 'Семантичні функції родового відмінка в сучасній українській мові: партитивність
@@ -109,7 +108,9 @@ content_outline:
   subsections:
   - Відмінювання іменників pluralia tantum (двері, гроші, ножиці, штани).
   - Особливості відмінювання іменників з подвійним родом або зміною парадигми.
-  - Складні випадки родового відмінка множини (нульове закінчення vs -ів).
+  - >-
+    Складні випадки родового відмінка множини: вибір між нульовим закінченням
+    та -ів.
   key_concepts:
   - pluralia tantum
   - нульове закінчення
@@ -137,16 +138,18 @@ content_outline:
   - когезія
   - синтаксична позиція
   - мовна точність
-- section: Підсумок — Summary
+- section: Підсумок
   words: 250
   points:
-  - 'Advanced case usage extends beyond basic rules to abstract meanings, including
-    partitive Genitive, state-subject Dative, and instrumental comparisons. Self-check:
-    Describe an action using the Instrumental case for the method or tool. What is
-    the difference between spatial and temporal uses of cases?'
-  - "Complex declensions include pluralia tantum nouns and stylistic variances like
-    the -а/-я vs -у/-ю Genitive endings. Self-check: Decline 'гроші' and 'двері' in
-    all 7 cases. What is the difference in meaning between 'листопада' and 'листопаду'?"
+  - >-
+    Поглиблене вживання відмінків охоплює абстрактні значення: партитивний
+    родовий, давальний суб'єкта стану, орудний способу та порівняння.
+    Перевірте себе: опишіть дію через орудний способу або знаряддя.
+  - >-
+    Складне відмінювання охоплює pluralia tantum і варіативність родового
+    відмінка на -а/-я та -у/-ю. Перевірте себе: провідміняйте "гроші" і
+    "двері" в усіх семи відмінках та поясніть різницю між "листопада" і
+    "листопаду".
 vocabulary:
   required:
   - семантика
@@ -194,8 +197,19 @@ references:
 - wiki/grammar/b2/advanced-case-semantics.md — locked review 2026-06-15
 - Караман С. О. Українська мова. 10 клас (2018), §35-38 — Відмінкова система
 - Глазова О. П. Українська мова. 11 клас (2019), §11-15 — Морфологічна норма
-- 'State Standard 2024: B2 SS 4.4 — Lexicology and case semantics'
+- 'Державний стандарт 2024: B2 §4.1.2 — поглиблене вживання відмінків
+  (docs/l2-uk-en/state-standard-2024-mapping.yaml)'
 changelog:
+- version: '1.2.1'
+  date: '2026-06-22'
+  changes:
+  - >-
+    Уточнено посилання на Державний стандарт за локальною мапою:
+    вживання відмінків на рівні B2 належить до §4.1.2.
+- version: '1.2.0'
+  date: '2026-06-22'
+  changes:
+  - Локалізовано англомовну ціль і підсумок перед запуском модулів B2.
 - version: 1.1.4
   date: '2026-06-15'
   changes:
