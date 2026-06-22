@@ -38,9 +38,15 @@ jobs:
         with:
           # Astro 6 requires Node >=22.12.0; matches ci.yml. Node 20 broke the
           # deploy build ("Node.js v20.x is not supported by Astro").
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: site/package-lock.json
+        node-version: '22'
+        cache: 'npm'
+        cache-dependency-path: site/package-lock.json
+
+      - name: Cache Atlas lexicon manifest
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
 
       - name: Install dependencies
         run: npm ci

@@ -1,5 +1,5 @@
 {
-  "fingerprint": "4bdb402c5e8cfb1257c7bf9fa43645091c4793b85edd8e7ba5bc91d797973acd",
+  "fingerprint": "a49dded39dedb0af68004832a5746a5cea64fbd0f7b2585052c6b8403229be34",
   "inputs": {
     "lexicon_code": [
       {
@@ -32,7 +32,7 @@
       },
       {
         "path": "scripts/lexicon/check_manifest_vocabulary_coverage.py",
-        "sha256": "48bb87980983b7e666e98aea37f1f4c13d7d5c9b9077ffae049d81eaff845502"
+        "sha256": "5e77e3ec7739e086da31df0cdb491f7361a51166552655ee3f7f4b72b022948d"
       },
       {
         "path": "scripts/lexicon/content_lexicon_reconciler.py",
@@ -76,7 +76,7 @@
       },
       {
         "path": "scripts/lexicon/manifest_fingerprint.py",
-        "sha256": "6a406d00131e74cff8f56852e7d68d2e3a9ca507314df14191872b2c1e01ca55"
+        "sha256": "06db0476943928e3440767172e3bb9f91718d4504580dc156867e66b5535b5fb"
       },
       {
         "path": "scripts/lexicon/measure_manifest_coverage.py",
@@ -92,7 +92,7 @@
       },
       {
         "path": "scripts/lexicon/verify_manifest.py",
-        "sha256": "73f4c6842805558f86b825f11529b707150a4f47cf8815e790f1c9dc99b1aefd"
+        "sha256": "e128d60f2c72ca44fdc550fb99436adc27481d59b9877f22480f67a988ae3059"
       }
     ]
   },
