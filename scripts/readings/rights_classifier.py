@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import logging
 import re
 import unicodedata
 from dataclasses import dataclass
@@ -14,6 +15,8 @@ import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_RIGHTS_PATH = PROJECT_ROOT / "data" / "authors_rights.yaml"
+LOGGER = logging.getLogger(__name__)
+LOGGER.addHandler(logging.NullHandler())
 
 RightsClass = Literal["public_domain", "in_copyright"]
 
@@ -59,6 +62,41 @@ class AuthorRights:
     note: str = ""
 
 
+class AuthorRightsTable(dict[str, AuthorRights]):
+    """Rights table with exact lookup first, then safe canonical aliases."""
+
+    def __init__(
+        self,
+        exact: dict[str, AuthorRights],
+        canonical_index: dict[str, str],
+    ) -> None:
+        super().__init__(exact)
+        self._canonical_index = canonical_index
+
+    def get(self, key: str, default: AuthorRights | None = None) -> AuthorRights | None:
+        normalized_key = normalize_author(key)
+        exact = super().get(normalized_key)
+        if exact is not None:
+            return exact
+
+        for canonical_key in _canonical_author_keys(normalized_key):
+            exact_key = self._canonical_index.get(canonical_key)
+            if exact_key is not None:
+                return super().get(exact_key, default)
+        return default
+
+    def __contains__(self, key: object) -> bool:
+        if not isinstance(key, str):
+            return False
+        normalized_key = normalize_author(key)
+        if super().__contains__(normalized_key):
+            return True
+        return any(
+            canonical_key in self._canonical_index
+            for canonical_key in _canonical_author_keys(normalized_key)
+        )
+
+
 def classify_rights(
     author: str,
     work: str = "",
@@ -69,7 +107,12 @@ def classify_rights(
     current_year: int | None = None,
     rights_path: Path = DEFAULT_RIGHTS_PATH,
 ) -> RightsVerdict:
-    """Return the hosting-rights verdict for a demanded work."""
+    """Return the hosting-rights verdict for a demanded work.
+
+    Unknown authors conservatively remain in copyright because corpus years are
+    not reliable publication years. A separate table-expansion follow-up
+    restores public-domain recall for not-yet-tabled classics.
+    """
     threshold = _pd_threshold(current_year)
     normalized_author = normalize_author(author)
     normalized_track = normalize_token(track)
@@ -87,10 +130,11 @@ def classify_rights(
     if author_rights is not None:
         return _classify_known_author(author_rights, threshold)
 
-    if work_year is not None and work_year <= 1928:
-        return _verdict("public_domain", f"legacy publication-year fallback ({work_year} <= 1928)", 0.7)
-
-    return _verdict("in_copyright", "conservative default (unknown)", 0.5)
+    return _verdict(
+        "in_copyright",
+        "conservative default (author not in rights table)",
+        0.5,
+    )
 
 
 def is_public_domain_verdict(verdict: RightsVerdict) -> bool:
@@ -98,7 +142,7 @@ def is_public_domain_verdict(verdict: RightsVerdict) -> bool:
     return verdict["rights_class"] == "public_domain"
 
 
-def load_author_rights(rights_path: Path = DEFAULT_RIGHTS_PATH) -> dict[str, AuthorRights]:
+def load_author_rights(rights_path: Path = DEFAULT_RIGHTS_PATH) -> AuthorRightsTable:
     """Load the curated author-rights table keyed by normalized author name."""
     raw = yaml.safe_load(rights_path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
@@ -124,7 +168,82 @@ def load_author_rights(rights_path: Path = DEFAULT_RIGHTS_PATH) -> dict[str, Aut
         if existing is not None and existing != rights:
             raise ValueError(f"{rights_path}: conflicting duplicate author key after normalization: {author_key!r}")
         table[normalized_key] = rights
-    return table
+    return AuthorRightsTable(table, _build_canonical_index(table, rights_path))
+
+
+def _build_canonical_index(
+    table: dict[str, AuthorRights],
+    rights_path: Path,
+) -> dict[str, str]:
+    candidates: dict[str, tuple[str, tuple[int | None, bool, int | None]]] = {}
+    ambiguous: dict[str, set[str]] = {}
+
+    for exact_key, rights in table.items():
+        signature = _rights_signature(rights)
+        for canonical_key in _canonical_author_keys(exact_key):
+            existing = candidates.get(canonical_key)
+            if existing is None:
+                candidates[canonical_key] = (exact_key, signature)
+                continue
+            existing_key, existing_signature = existing
+            if existing_signature != signature:
+                ambiguous.setdefault(canonical_key, {existing_key}).add(exact_key)
+
+    for canonical_key, exact_keys in sorted(ambiguous.items()):
+        candidates.pop(canonical_key, None)
+        LOGGER.warning(
+            "%s: ambiguous canonical author key %r for %s; "
+            "canonical fallback disabled",
+            rights_path,
+            canonical_key,
+            ", ".join(sorted(exact_keys)),
+        )
+
+    return {
+        canonical_key: exact_key
+        for canonical_key, (exact_key, _signature) in candidates.items()
+    }
+
+
+def _rights_signature(rights: AuthorRights) -> tuple[int | None, bool, int | None]:
+    return (rights.death_year, rights.repressed_rehabilitated, rights.rehab_year)
+
+
+def _canonical_author_keys(normalized_author: str) -> set[str]:
+    tokens = normalized_author.split()
+    keys: set[str] = set()
+    if not tokens:
+        return keys
+
+    surname_indices = _surname_candidate_indices(tokens)
+    for surname_index in surname_indices:
+        surname = tokens[surname_index]
+        keys.add(f"surname:{surname}")
+        first_initial = _first_initial_for_surname(tokens, surname_index)
+        if first_initial:
+            keys.add(f"surname:{surname}|initial:{first_initial}")
+    return keys
+
+
+def _surname_candidate_indices(tokens: list[str]) -> list[int]:
+    non_initial_indices = [index for index, token in enumerate(tokens) if len(token) > 1]
+    if len(non_initial_indices) <= 1:
+        return non_initial_indices
+
+    if any(len(token) == 1 for token in tokens):
+        return non_initial_indices
+
+    return [non_initial_indices[-1]]
+
+
+def _first_initial_for_surname(tokens: list[str], surname_index: int) -> str | None:
+    for index, token in enumerate(tokens):
+        if index != surname_index and len(token) == 1:
+            return token
+    for index, token in enumerate(tokens):
+        if index != surname_index and token:
+            return token[0]
+    return None
 
 
 def normalize_author(author: str) -> str:
