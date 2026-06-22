@@ -47,6 +47,7 @@
   translation: duties, responsibilities
   pos: plural noun
   usage: Мої обов'язки включали роботу з клієнтами.
+  notes: Множина обов'язки є робочою формою слова обов'язок.
 - lemma: досвід
   translation: experience
   pos: noun:m
@@ -55,6 +56,10 @@
   translation: promotion, raise
   pos: noun:n
   usage: Після року роботи вона отримала підвищення.
+- lemma: звільнення
+  translation: dismissal, resignation
+  pos: noun:n
+  usage: Звільнення оформлюють наказом або заявою працівника.
 - lemma: зарплата
   translation: salary, pay
   pos: noun:f
