@@ -14,16 +14,41 @@ import yaml
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from slug_utils import to_bare_slug
 
+CORE_LEVELS = {'a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'bio', 'istorio'}
+
+
+def _folder_module_parts(md_path: Path) -> tuple[str, str, Path] | None:
+    """Return (level, slug, curriculum_root) for level/slug/module.md layout."""
+    if md_path.name != 'module.md':
+        return None
+    if md_path.parent.parent.name not in CORE_LEVELS:
+        return None
+    level = md_path.parent.parent.name
+    slug = md_path.parent.name
+    curriculum_root = md_path.parent.parent.parent
+    return level, slug, curriculum_root
+
 
 def load_yaml_meta(md_file_path: str) -> dict | None:
     """Load metadata from YAML sidecar if exists."""
     md_path = Path(md_file_path)
     bare = to_bare_slug(md_path.stem)
-    yaml_path = md_path.parent / 'meta' / (bare + '.yaml')
-    if not yaml_path.exists():
-        yaml_path = md_path.parent / 'meta' / (md_path.stem + '.yaml')
-        if not yaml_path.exists():
-            return None
+    candidates = []
+
+    folder_parts = _folder_module_parts(md_path)
+    if folder_parts:
+        level, slug, curriculum_root = folder_parts
+        candidates.append(curriculum_root / level / 'meta' / f'{slug}.yaml')
+
+    candidates.extend([
+        md_path.parent / 'meta' / (bare + '.yaml'),
+        md_path.parent / 'meta' / (md_path.stem + '.yaml'),
+    ])
+
+    yaml_path = next((path for path in candidates if path.exists()), None)
+    if yaml_path is None:
+        return None
+
     try:
         with open(yaml_path, encoding='utf-8') as f:
             return yaml.safe_load(f)
@@ -37,9 +62,23 @@ def load_yaml_plan(md_file_path: str) -> dict | None:
     """Load plan data from plans directory if exists (Split Architecture)."""
     md_path = Path(md_file_path)
 
+    folder_parts = _folder_module_parts(md_path)
+    if folder_parts:
+        level, slug, curriculum_root = folder_parts
+        plan_path = curriculum_root / 'plans' / level / f'{slug}.yaml'
+        if plan_path.exists():
+            try:
+                with open(plan_path, encoding='utf-8') as f:
+                    return yaml.safe_load(f)
+            except Exception as e:
+                print(f"  \u274c YAML parse error in plan sidecar: {plan_path}")
+                print(f"     {e}")
+                return None
+        return None
+
     try:
         level_part = md_path.parent.name
-        if level_part in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'bio', 'istorio']:
+        if level_part in CORE_LEVELS:
              level = level_part
         else:
              parts = md_path.parts
@@ -81,8 +120,12 @@ def load_yaml_vocab(md_file_path: str) -> tuple[list[dict] | None, str | None]:
     - (None, error_string) on parse error
     """
     md_path = Path(md_file_path)
-    yaml_path = md_path.parent / 'vocabulary' / (md_path.stem + '.yaml')
-    if not yaml_path.exists():
+    candidates = [
+        md_path.parent / 'vocabulary.yaml',
+        md_path.parent / 'vocabulary' / (md_path.stem + '.yaml'),
+    ]
+    yaml_path = next((path for path in candidates if path.exists()), None)
+    if yaml_path is None:
         return None, None
     try:
         with open(yaml_path, encoding='utf-8') as f:
@@ -104,11 +147,17 @@ def get_module_number_from_curriculum(file_path: str, level_code: str) -> int | 
 
     Returns module number (1-based) or None if not found.
     """
-    module_slug = Path(file_path).stem
+    md_path = Path(file_path)
+    folder_parts = _folder_module_parts(md_path)
+    if folder_parts:
+        _level, module_slug, curriculum_root = folder_parts
+        curriculum_yaml_path = curriculum_root / 'curriculum.yaml'
+    else:
+        module_slug = md_path.stem
+        curriculum_yaml_path = md_path.parent.parent / 'curriculum.yaml'
+
     bare = to_bare_slug(module_slug)
     slug_variants = [module_slug] if bare == module_slug else [module_slug, bare]
-
-    curriculum_yaml_path = Path(file_path).parent.parent / 'curriculum.yaml'
     if not curriculum_yaml_path.exists():
         return None
 

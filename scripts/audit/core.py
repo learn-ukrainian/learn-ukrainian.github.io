@@ -184,14 +184,18 @@ def _load_and_resolve(file_path: str, skip_activities: bool, skip_review: bool) 
     core_content = extract_core_content(body)
 
     yaml_activities = None
-    yaml_file = Path(file_path).parent / 'activities' / (Path(file_path).stem + '.yaml')
+    md_path = Path(file_path)
+    yaml_candidates = [
+        md_path.parent / 'activities.yaml',
+        md_path.parent / 'activities' / (md_path.stem + '.yaml'),
+        md_path.with_suffix('.activities.yaml'),
+    ]
+    yaml_file = next((path for path in yaml_candidates if path.exists()), yaml_candidates[0])
 
     if skip_activities:
         print("  \u23f3 Content-only audit: activities/vocab gates DEFERRED")
         use_yaml_activities = False
     else:
-        if not yaml_file.exists():
-            yaml_file = Path(file_path).with_suffix('.activities.yaml')
         if yaml_file.exists():
             parser = ActivityParser()
             try:
@@ -296,10 +300,7 @@ def _check_outline_and_structure(ctx: AuditContext, state: AuditState) -> GateRe
     struct_flags = check_structure(ctx.content)
     has_vocab_data = ctx.vocab_data is not None
 
-    activities_yaml_path = Path(ctx.file_path).parent / 'activities' / (Path(ctx.file_path).stem + '.yaml')
-    if not activities_yaml_path.exists():
-        activities_yaml_path = Path(ctx.file_path).with_suffix('.activities.yaml')
-    has_activities_data = activities_yaml_path.exists()
+    has_activities_data = ctx.yaml_file.exists()
 
     has_resources_data = False
     resources_path = Path('docs/resources/external_resources.yaml')

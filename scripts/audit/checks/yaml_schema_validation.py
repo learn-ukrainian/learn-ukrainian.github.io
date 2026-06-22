@@ -477,13 +477,19 @@ def check_activity_yaml_schema(
         })
         return violations
 
-    # Find the activities YAML file
+    # Find the activities YAML file.
+    # Current B1+ source modules use level/<slug>/activities.yaml; legacy
+    # modules may still use level/activities/<slug>.yaml or *.activities.yaml.
     md_path = Path(file_path)
     slug = md_path.stem
-    activities_dir = md_path.parent / "activities"
-    yaml_path = activities_dir / f"{slug}.yaml"
+    candidates = [
+        md_path.parent / "activities.yaml",
+        md_path.parent / "activities" / f"{slug}.yaml",
+        md_path.with_suffix(".activities.yaml"),
+    ]
+    yaml_path = next((path for path in candidates if path.exists()), None)
 
-    if not yaml_path.exists():
+    if yaml_path is None:
         # No YAML file - that's OK, module might use embedded activities
         return []
 
