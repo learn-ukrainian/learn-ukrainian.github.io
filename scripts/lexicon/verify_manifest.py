@@ -42,6 +42,11 @@ DEFAULT_VESUM = ROOT / "data" / "vesum.db"
 DEFAULT_SOURCES_DB = ROOT / "data" / "sources.db"
 DEFAULT_CURRICULUM = ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
 
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.lexicon.manifest_io import load_manifest
+
 # DEFINITIVELY cross-domain auto-translation junk that must never be a synonym.
 # Keep MINIMAL (see module docstring) — only tokens with zero defensible sense
 # overlap with any plausible lemma. NOT a place for dialectal/archaic terms.
@@ -164,7 +169,7 @@ def run(
     vesum_path: Path = DEFAULT_VESUM,
     sources_path: Path = DEFAULT_SOURCES_DB,
 ) -> int:
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest = load_manifest(manifest_path)
     entries = manifest.get("entries", [])
     cov = coverage(entries)
 

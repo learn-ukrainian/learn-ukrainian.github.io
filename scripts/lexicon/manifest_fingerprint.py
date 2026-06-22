@@ -14,6 +14,11 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_FINGERPRINT = ROOT / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
 LEXICON_CODE_GLOB = "scripts/lexicon/*.py"
+LEXICON_CODE_EXCLUDES = frozenset(
+    {
+        "scripts/lexicon/manifest_io.py",
+    }
+)
 SCHEMA_VERSION = 1
 
 
@@ -35,7 +40,7 @@ def lexicon_code_inputs(root: Path = ROOT) -> list[dict[str, str]]:
             "sha256": _sha256_bytes(path.read_bytes()),
         }
         for path in files
-        if path.is_file()
+        if path.is_file() and _repo_relative(path, root) not in LEXICON_CODE_EXCLUDES
     ]
 
 

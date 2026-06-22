@@ -8,9 +8,9 @@ Atlas even though every CI fingerprint/freshness check stays green (the fingerpr
 covers lexicon *code*, not manifest *content*). #3631 did exactly this: enrichment
 dropped from ~2499/4148 to 0 and the regression reached main; #3654 restored it.
 
-This gate inspects the committed ``site/src/data/lexicon-manifest.json`` and FAILS
-when it is thin, so the empty-atlas class can never reach main again. It is DB-free
-and reads only the committed JSON, so it runs in CI (unlike the DB-dependent
+This gate inspects the release-hydrated ``site/src/data/lexicon-manifest.json``
+and FAILS when it is thin, so the empty-atlas class can never reach main again.
+It is DB-free and fetches only the pinned Release asset, so it runs in CI (unlike the DB-dependent
 ``scripts/audit/validate_atlas_conformance.py``).
 
 NOTE: deliberately NOT placed under ``scripts/lexicon/`` — that dir is hashed by the
@@ -28,6 +28,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.lexicon.manifest_io import load_manifest
+
 # The #3631 regression was a cliff: ~85% enriched -> 0%. Healthy manifests have
 # historically run 60-85% enriched. A 0.40 floor decisively separates a thin
 # manifest (0%) from any legitimate state while leaving wide margin against false
@@ -42,14 +47,10 @@ def check_enrichment(
     min_ratio: float = MIN_ENRICHED_RATIO,
 ) -> int:
     """Return 0 when the manifest is adequately enriched, non-zero otherwise."""
-    if not manifest_path.exists():
-        print(f"::error::Atlas manifest missing at {manifest_path}; run `make atlas`.")
-        return 2
-
     try:
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        print(f"::error::Atlas manifest unreadable ({exc}); run `make atlas`.")
+        manifest = load_manifest(manifest_path)
+    except (OSError, json.JSONDecodeError, ValueError) as exc:
+        print(f"::error::Atlas manifest unreadable ({exc}).")
         return 2
 
     entries = manifest.get("entries") or []
@@ -77,7 +78,8 @@ def check_enrichment(
         )
         print(
             "Fix: re-run enrichment (`make atlas`, or enrich_manifest against the warm "
-            "slovnyk cache) and recommit site/src/data/lexicon-manifest.json."
+            "slovnyk cache), replace the atlas-manifest Release asset, and update "
+            "site/src/data/lexicon-manifest.pointer.json."
         )
         return 2
 

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import pytest
@@ -8,6 +7,7 @@ import yaml
 
 from scripts.audit.validate_atlas_conformance import HeritageLemmaLookup, VesumLemmaLookup, validate
 from scripts.lexicon.build_kaikki_lookup import KAIKKI_SOURCE
+from scripts.lexicon.manifest_io import load_manifest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
@@ -55,7 +55,7 @@ def _gates_for(
 
 
 def test_real_lexicon_manifest_conforms_to_atlas_gates():
-    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = load_manifest(MANIFEST_PATH)
     curriculum = yaml.safe_load(CURRICULUM_PATH.read_text(encoding="utf-8"))
 
     if VESUM_PATH.exists():

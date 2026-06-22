@@ -63,6 +63,15 @@ def test_manifest_fingerprint_changes_when_lexicon_source_byte_changes(tmp_path:
     assert after != before
 
 
+def test_manifest_fingerprint_excludes_release_asset_loader(tmp_path: Path) -> None:
+    root = _fixture_repo(tmp_path)
+    (root / "scripts" / "lexicon" / "manifest_io.py").write_text("VALUE = 999\n", encoding="utf-8")
+
+    paths = {item["path"] for item in build_fingerprint(root)["inputs"]["lexicon_code"]}
+
+    assert "scripts/lexicon/manifest_io.py" not in paths
+
+
 def test_manifest_fingerprint_ignores_vocab_lemma_churn(tmp_path: Path) -> None:
     root = _fixture_repo(tmp_path)
     before = build_fingerprint(root)["fingerprint"]

@@ -222,6 +222,7 @@ embed-venv/
 site/dist
 site/node_modules
 site/.astro
+site/src/data/lexicon-manifest.json
 /testbed/*
 !/testbed/reference/
 data/sum11/

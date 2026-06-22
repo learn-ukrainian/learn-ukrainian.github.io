@@ -22,6 +22,7 @@ from scripts.lexicon.build_data_manifest import (
     _entry_lemma,
     _lemma_key,
 )
+from scripts.lexicon.manifest_io import load_manifest
 
 DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 CURRICULUM_REL = Path("curriculum") / "l2-uk-en"
@@ -233,14 +234,6 @@ def check_vocabulary_coverage(
     restrict: set[tuple[str, str]] | None = None,
 ) -> int:
     root = root.resolve()
-    if not manifest_path.exists():
-        print(
-            "::error::Atlas vocabulary coverage manifest is missing; "
-            "run `make atlas` locally and commit site/src/data/lexicon-manifest.json "
-            "+ site/src/data/lexicon-manifest.fingerprint.json."
-        )
-        return 2
-
     if restrict is not None and not restrict:
         print(
             "Atlas vocabulary coverage OK: no module vocabulary changed in this diff "
@@ -248,7 +241,13 @@ def check_vocabulary_coverage(
         )
         return 0
 
-    manifest_entries = _manifest_entries_by_key(_load_json(manifest_path))
+    try:
+        manifest = load_manifest(manifest_path)
+    except (OSError, json.JSONDecodeError, ValueError) as exc:
+        print(f"::error::Atlas vocabulary coverage manifest unreadable ({exc}).")
+        return 2
+
+    manifest_entries = _manifest_entries_by_key(manifest)
     expected, module_count = expected_vocabulary_coverage(root, restrict=restrict)
 
     missing_entries = [
