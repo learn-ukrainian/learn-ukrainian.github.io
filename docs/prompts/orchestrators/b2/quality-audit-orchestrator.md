@@ -1,7 +1,7 @@
 # B2 Quality Audit Orchestrator
 
-Prompt version: 0.2
-Last reviewed: 2026-06-21
+Prompt version: 0.3
+Last reviewed: 2026-06-22
 
 ## Source Assumptions
 
@@ -93,7 +93,9 @@ Write the report to `docs/audits/b2-quality-audit-YYYY-MM-DD.md`.
 ```bash
 REPORT="docs/audits/b2-quality-audit-$(date +%F).md"
 git status --short --branch
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b2/<slug>/module.md
+.venv/bin/python scripts/audit_module.py --skip-review curriculum/l2-uk-en/b2/<slug>/module.md
+rm -f .cache/lemma-frequency-b2-<module_num>.json
+rm -rf curriculum/l2-uk-en/b2/<slug>/audit curriculum/l2-uk-en/b2/<slug>/status
 git diff --check
 test -f "$REPORT"
 CHANGED_FILES="$( { git diff --name-only; git diff --cached --name-only; git ls-files --others --exclude-standard; } | sort -u )"
@@ -112,7 +114,7 @@ if rg -n 'sys\.executable' "$REPORT"; then
 fi
 ```
 
-Adapt the `audit_module.py` path for each built module audited. Do not pass `--fix`. Do not run builds. Do not write generated curriculum audit/status/review artifacts.
+Adapt the `audit_module.py --skip-review` path and cleanup paths for each built module audited. Keep the review gate separate: cite the independent review source in the durable audit report or PR body. The audit command still writes local generated cache/status/audit outputs, so remove those known outputs before the diff gate; do not commit curriculum `review/`, `audit/`, or `status/` artifacts. Do not pass `--fix`. Do not run builds.
 
 ## Report Delivery
 

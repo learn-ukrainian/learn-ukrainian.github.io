@@ -36,7 +36,7 @@ M01 is production-usable after a narrow build-prompt vocabulary fix. The module 
 
 The production build prompt was applied retroactively before this audit. That pass found one exact plan-coverage gap: the vocabulary file missed required lemmas `результат` and `розроблятися`, plus recommended lemmas `реформа` and `довкілля`. Those four entries were added and MDX was regenerated before this report.
 
-No module-content blocker remains. One high-severity process issue remains: the literal production validation command `.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b2/passive-voice-system/module.md` fails because no internal review aggregate YAML exists. The same module passes deterministic content gates with review validation skipped, and PR #3722 already had a Claude Opus 4.8 independent review. This is a build-prompt/tooling contract mismatch to fix before relying on the prompt verbatim for future modules.
+No module-content blocker remains. The high-severity process issue found during audit was fixed in this PR: B2 production-build and quality-audit prompts now run `.venv/bin/python scripts/audit_module.py --skip-review curriculum/l2-uk-en/b2/<slug>/module.md` for deterministic gates, then remove the known local cache/status/audit outputs before the diff gate. Independent review evidence remains a separate PR/orchestration requirement. M01 passes deterministic content gates with review validation skipped, and PR #3722 already had Claude Opus 4.8 independent review.
 
 ## Issues
 
@@ -47,25 +47,28 @@ Track level: B2
 Module: M01 `passive-voice-system`
 Files:
 - `docs/prompts/orchestrators/b2/production-build-orchestrator.md`
+- `docs/prompts/orchestrators/b2/quality-audit-orchestrator.md`
 - `scripts/audit/checks/review_validation.py`
 - `curriculum/l2-uk-en/b2/passive-voice-system/module.md`
 
 Evidence:
-- The production prompt requires `.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b2/<slug>/module.md`.
-- Running that exact command on M01 fails with `No review aggregate YAML found`.
+- The original B2 prompts required `.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b2/<slug>/module.md`.
+- Running that exact command on M01 failed with `No review aggregate YAML found`.
 - `scripts/audit/checks/review_validation.py` looks for `review/<slug>-review-aggregate*.yaml` or `orchestration/<slug>/review-structured-r*.yaml`.
-- The production prompt and repo rules forbid committing generated curriculum review/status/audit artifacts.
+- The B2 prompts and repo rules forbid committing generated curriculum review/status/audit artifacts.
 - The same module passes all deterministic content gates when review validation is explicitly bypassed; PR #3722 also completed Claude Opus 4.8 independent review with no hard blocker.
 
 Why it matters:
 - Future B2 builds that follow the production prompt literally will appear blocked even after module content, local validation, CI, and independent review are good.
 - Builders may either bypass the command ad hoc or accidentally commit generated review artifacts to satisfy it.
 
-Expected fix:
-- Align the production prompt and audit tooling contract. Either persist an approved structured review artifact in a non-forbidden location, or make the production prompt explicitly use the external independent review record when the internal aggregate is absent.
+Resolution in this PR:
+- B2 production-build and quality-audit prompts now call `audit_module.py --skip-review` for deterministic module gates.
+- Both prompts remove known local cache/status/audit outputs before the diff gate, then keep independent review as a separate PR/orchestration requirement.
+- Both prompts forbid committing curriculum `review/`, `audit/`, or `status/` artifacts to satisfy the review gate.
 
 Batch recommendation:
-- `b2-prompt-tooling-contract`: update B2 production validation instructions and add a regression test for folder-layout B2 modules with external review recorded outside curriculum-generated review artifacts.
+- `b2-prompt-tooling-contract`: later add regression coverage that B2 prompt validation commands use `--skip-review` when review evidence is external to curriculum-generated artifacts.
 
 ### B2-M01-002 Plan vocabulary hints were not fully represented
 

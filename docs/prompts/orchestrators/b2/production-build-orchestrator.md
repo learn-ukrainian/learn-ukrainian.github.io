@@ -1,6 +1,6 @@
 # B2 Production Build Orchestrator
 
-Prompt version: 0.3
+Prompt version: 0.4
 Last reviewed: 2026-06-22
 
 ## Source Assumptions
@@ -99,7 +99,9 @@ Adapt module numbers from `curriculum.yaml`:
 .venv/bin/python scripts/validate_activities.py l2-uk-en b2 <module_num>
 .venv/bin/python scripts/validate_vocab_yaml.py curriculum/l2-uk-en/b2/<slug>/vocabulary.yaml
 .venv/bin/python scripts/generate_mdx.py l2-uk-en b2 <module_num> --validate
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b2/<slug>/module.md
+.venv/bin/python scripts/audit_module.py --skip-review curriculum/l2-uk-en/b2/<slug>/module.md
+rm -f .cache/lemma-frequency-b2-<module_num>.json
+rm -rf curriculum/l2-uk-en/b2/<slug>/audit curriculum/l2-uk-en/b2/<slug>/status
 git diff --check
 CHANGED_FILES="$( { git diff --name-only; git diff --cached --name-only; git ls-files --others --exclude-standard; } | sort -u )"
 if [ -n "$CHANGED_FILES" ] && printf '%s\n' "$CHANGED_FILES" | rg '(^|/)status/.*\.json$|(^|/)audit/.*-review\.md$|(^|/)review/.*-review\.md$|^data/telemetry/'; then
@@ -108,7 +110,7 @@ if [ -n "$CHANGED_FILES" ] && printf '%s\n' "$CHANGED_FILES" | rg '(^|/)status/.
 fi
 ```
 
-Run `scripts/audit/check_mdx_generation_drift.py` only when a drift-only check is needed after generation.
+Run `scripts/audit/check_mdx_generation_drift.py` only when a drift-only check is needed after generation. The `audit_module.py --skip-review` command intentionally validates deterministic module gates while leaving the review gate to the independent-review requirement below. It still writes local generated cache/status/audit outputs, so remove those known outputs before the diff gate; do not commit curriculum `review/`, `audit/`, or `status/` artifacts to satisfy the review gate.
 
 ## PR, Commit, And Telemetry Requirements
 
