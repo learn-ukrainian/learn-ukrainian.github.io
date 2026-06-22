@@ -27,6 +27,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.etymology.transliterate import transliterate
+from scripts.readings.rights_classifier import classify_rights
 
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 FOLK_ROOT = CURRICULUM_ROOT / "folk"
@@ -248,7 +249,7 @@ def generate_for_modules(
             if corpus is None:
                 skipped.append(SkippedReading(candidate.title, slug, "no matching corpus text"))
                 continue
-            if not is_public_domain(corpus):
+            if not is_public_domain(corpus, track=candidate.track):
                 skipped.append(SkippedReading(candidate.title, slug, "corpus row is not public-domain"))
                 continue
             verdict = verifier(candidate, corpus)
@@ -410,8 +411,28 @@ def verify_candidate_against_corpus(
     )
 
 
-def is_public_domain(corpus: CorpusText) -> bool:
+def is_public_domain(
+    corpus: CorpusText,
+    *,
+    track: str | None = None,
+    current_year: int | None = None,
+) -> bool:
     """Fail closed unless the row has a conservative public-domain signal."""
+    try:
+        verdict = classify_rights(
+            corpus.author,
+            corpus.work,
+            corpus.year,
+            corpus.source_file,
+            track or corpus.language_period,
+            current_year=current_year,
+        )
+    except (FileNotFoundError, ValueError):
+        return _legacy_is_public_domain(corpus)
+    return verdict["rights_class"] == "public_domain"
+
+
+def _legacy_is_public_domain(corpus: CorpusText) -> bool:
     if corpus.author == "Народна творчість" and corpus.source_file.startswith("ukrlib-narod"):
         return True
     return corpus.year is not None and corpus.year <= 1928
