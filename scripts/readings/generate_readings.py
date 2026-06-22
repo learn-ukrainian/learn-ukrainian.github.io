@@ -27,6 +27,8 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.etymology.transliterate import transliterate
+from scripts.readings.clean_text_resolver import load_work_index, resolve_clean_text
+from scripts.readings.primary_text_demand import DEFAULT_PLANS_DIR, build_manifest
 from scripts.readings.rights_classifier import classify_rights
 
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
@@ -96,6 +98,9 @@ class ResolvedReading:
     slug: str
     module_dirs: list[Path] = field(default_factory=list)
     tracks: set[str] = field(default_factory=set)
+    study_links: str | None = None
+    taught_in: tuple[str, ...] = ()
+    source_chunk_ids: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -170,6 +175,7 @@ SLUG_ALIASES: dict[str, str] = {
     "народна творчість::дума про марусю богуславку": "duma-marusia-bohuslavka",
     "народна творчість::ой сивая та і зозулечка": "shchedrivka-oi-syvaia-ta-i-zozulechka",
     "народна творчість::ой сивая та і зозуленька": "shchedrivka-oi-syvaia-ta-i-zozulechka",
+    "стус в::як добре що смерті не боюсь я": "stus-yak-dobre-te-shcho-smerti",
 }
 
 
@@ -276,6 +282,118 @@ def generate_for_modules(
                 resolved.module_dirs.append(module_dir)
                 resolved.tracks.add(candidate.track)
 
+    written, existing = _write_resolved_readings(
+        resolved_by_slug,
+        output_dir=output_dir,
+        dry_run=dry_run,
+    )
+
+    return GenerationSummary(tuple(written), tuple(skipped), tuple(existing))
+
+
+def generate_from_demand(
+    *,
+    plans_dir: Path = DEFAULT_PLANS_DIR,
+    track: str | None = None,
+    output_dir: Path = READINGS_ROOT,
+    sources_db: Path = SOURCES_DB,
+    dry_run: bool = False,
+) -> GenerationSummary:
+    """Generate readings from primary-text demand manifest entries."""
+    output_dir.mkdir(parents=True, exist_ok=True)
+    manifest = build_manifest(plans_dir, track=track)
+    index = load_work_index(sources_db)
+    chunk_rows = _load_corpus_chunk_rows(sources_db)
+    resolved_by_slug: dict[str, ResolvedReading] = {}
+    skipped: list[SkippedReading] = []
+
+    for entry in manifest.get("entries", []):
+        if not isinstance(entry, dict):
+            continue
+        work = str(entry.get("work") or "").strip()
+        author = str(entry.get("author") or "").strip()
+        taught_by = _entry_taught_by(entry)
+        resolution, resolved_work, resolved_author = _resolve_clean_text_for_demand(work, author, index)
+        candidate_title = str(resolution.get("matched_work") or resolved_work or work)
+        candidate_author = str(resolution.get("matched_author") or resolved_author or author)
+        candidate = PrimaryReadingCandidate(
+            module_dir=plans_dir,
+            track=_first_taught_value(taught_by, "track") or track or "",
+            slug=_first_taught_value(taught_by, "slug") or "",
+            author=candidate_author,
+            title=candidate_title,
+            note="",
+            quote_lines=(),
+        )
+        slug = _unique_reading_slug(reading_slug(candidate), candidate, resolved_by_slug)
+
+        if not resolution["in_corpus"]:
+            skipped.append(SkippedReading(work, slug, "not in corpus"))
+            continue
+        if not resolution["hostable_full"]:
+            skipped.append(
+                SkippedReading(
+                    work,
+                    slug,
+                    "in-copyright — needs browser-verified free-full-text link",
+                )
+            )
+            continue
+
+        clean_source = resolution["clean_text_source"]
+        if not clean_source or not clean_source.get("chunk_ids"):
+            skipped.append(SkippedReading(work, slug, "hostable corpus text missing chunks"))
+            continue
+
+        corpus = _read_corpus_chunks(chunk_rows, clean_source["chunk_ids"])
+        if corpus is None:
+            skipped.append(SkippedReading(work, slug, "corpus chunk text unavailable"))
+            continue
+
+        verdict = _verify_rendered_text_attested(corpus, candidate.title)
+        if not verdict.matched:
+            skipped.append(
+                SkippedReading(
+                    work,
+                    slug,
+                    f"quote verification failed: {verdict.detail}",
+                )
+            )
+            continue
+
+        tracks = {
+            str(item.get("track") or "").strip()
+            for item in taught_by
+            if str(item.get("track") or "").strip()
+        }
+        resolved_by_slug[slug] = ResolvedReading(
+            candidate=candidate,
+            corpus=corpus,
+            slug=slug,
+            tracks=tracks,
+            study_links=_study_links_from_taught_by(taught_by, plans_dir),
+            taught_in=tuple(
+                str(item.get("slug") or "").strip()
+                for item in taught_by
+                if str(item.get("slug") or "").strip()
+            ),
+            source_chunk_ids=tuple(str(chunk_id) for chunk_id in clean_source["chunk_ids"]),
+        )
+
+    written, existing = _write_resolved_readings(
+        resolved_by_slug,
+        output_dir=output_dir,
+        dry_run=dry_run,
+    )
+    return GenerationSummary(tuple(written), tuple(skipped), tuple(existing))
+
+
+def _write_resolved_readings(
+    resolved_by_slug: dict[str, ResolvedReading],
+    *,
+    output_dir: Path,
+    dry_run: bool,
+) -> tuple[list[WrittenReading], list[WrittenReading]]:
     written: list[WrittenReading] = []
     existing: list[WrittenReading] = []
     for slug, resolved in sorted(resolved_by_slug.items()):
@@ -297,8 +415,7 @@ def generate_for_modules(
         if not dry_run:
             path.write_text(rendered, encoding="utf-8")
         written.append(WrittenReading(slug, path, "created", resolved.corpus.chunk_id))
-
-    return GenerationSummary(tuple(written), tuple(skipped), tuple(existing))
+    return written, existing
 
 
 class CorpusLookup:
@@ -452,7 +569,7 @@ def render_reading(resolved: ResolvedReading) -> str:
     corpus = resolved.corpus
     metadata = _metadata_for(resolved)
     tracks = sorted(resolved.tracks)
-    study_links = _study_links(resolved.module_dirs)
+    study_links = resolved.study_links or _study_links(resolved.module_dirs)
     body_text = _display_text(corpus.text, candidate.title)
     quote = _blockquote(body_text)
     intro_template = metadata.pop("intro", None)
@@ -520,6 +637,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("module_dirs", nargs="*", type=Path, help="Folk module directories to scan")
     parser.add_argument("--all-folk", action="store_true", help="Scan all built folk modules")
+    parser.add_argument("--from-demand", action="store_true", help="Generate from primary-text demand manifest")
+    parser.add_argument("--track", help="Only scan one plans track when using --from-demand")
+    parser.add_argument("--plans-dir", type=Path, default=DEFAULT_PLANS_DIR)
     parser.add_argument("--output-dir", type=Path, default=READINGS_ROOT)
     parser.add_argument("--sources-db", type=Path, default=SOURCES_DB)
     parser.add_argument("--dry-run", action="store_true", help="Report writes without changing files")
@@ -530,16 +650,29 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    module_dirs = discover_folk_module_dirs() if args.all_folk else args.module_dirs
-    if not module_dirs:
-        parser.error("pass one or more module dirs, or --all-folk")
+    if args.from_demand:
+        if args.module_dirs or args.all_folk:
+            parser.error("--from-demand cannot be combined with folk module dirs or --all-folk")
+        summary = generate_from_demand(
+            plans_dir=args.plans_dir,
+            track=args.track,
+            output_dir=args.output_dir,
+            sources_db=args.sources_db,
+            dry_run=args.dry_run,
+        )
+    else:
+        if args.track:
+            parser.error("--track requires --from-demand")
+        module_dirs = discover_folk_module_dirs() if args.all_folk else args.module_dirs
+        if not module_dirs:
+            parser.error("pass one or more module dirs, --all-folk, or --from-demand")
 
-    summary = generate_for_modules(
-        module_dirs,
-        output_dir=args.output_dir,
-        sources_db=args.sources_db,
-        dry_run=args.dry_run,
-    )
+        summary = generate_for_modules(
+            module_dirs,
+            output_dir=args.output_dir,
+            sources_db=args.sources_db,
+            dry_run=args.dry_run,
+        )
     if args.json:
         print(
             json.dumps(
@@ -609,6 +742,161 @@ def _row_to_corpus(row: sqlite3.Row | None) -> CorpusText | None:
     )
 
 
+def _resolve_clean_text_for_demand(
+    work: str,
+    author: str,
+    index: Any,
+) -> tuple[dict[str, Any], str, str]:
+    fallback: tuple[dict[str, Any], str, str] | None = None
+    for work_variant in _demand_work_variants(work):
+        for author_variant in _demand_author_variants(author):
+            resolution = resolve_clean_text(work_variant, author_variant, index)
+            if fallback is None:
+                fallback = (resolution, work_variant, author_variant)
+            if resolution["in_corpus"]:
+                return resolution, work_variant, author_variant
+    if fallback is not None:
+        return fallback
+    return resolve_clean_text(work, author, index), work, author
+
+
+def _demand_work_variants(work: str) -> list[str]:
+    variants = _ordered_unique([work.strip()])
+    without_trailing_note = re.sub(r"\s*\([^)]*\)\s*$", "", work).strip()
+    variants = _ordered_unique([*variants, without_trailing_note])
+
+    quoted = re.search(r"«([^»]+)»", work)
+    if quoted:
+        variants = _ordered_unique([*variants, quoted.group(1).strip()])
+
+    plain_quoted = work.strip().strip("\"'“”„")
+    return _ordered_unique([*variants, plain_quoted])
+
+
+def _demand_author_variants(author: str) -> list[str]:
+    author = author.strip()
+    tokens = re.findall(r"[^\W\d_]+", author, flags=re.UNICODE)
+    variants = [author]
+    if len(tokens) >= 2:
+        if "," in author or len(tokens[0]) == 1 or len(tokens[1]) <= 2:
+            surname = tokens[0]
+            given = tokens[1]
+        else:
+            given = tokens[0]
+            surname = tokens[-1]
+        variants.append(f"{surname} {given[0]}.")
+    return _ordered_unique(variants)
+
+
+def _ordered_unique(values: Iterable[str]) -> list[str]:
+    seen: set[str] = set()
+    result: list[str] = []
+    for value in values:
+        normalized = value.strip()
+        if not normalized or normalized in seen:
+            continue
+        seen.add(normalized)
+        result.append(normalized)
+    return result
+
+
+def _load_corpus_chunk_rows(db_path: Path) -> dict[str, sqlite3.Row]:
+    rows_by_chunk_id: dict[str, sqlite3.Row] = {}
+    with sqlite3.connect(db_path) as conn:
+        conn.row_factory = sqlite3.Row
+        rows = conn.execute(
+            """
+            SELECT chunk_id, author, work, work_id, year, genre, language_period,
+                   source_file, source_url, text
+            FROM literary_texts
+            ORDER BY chunk_id, id
+            """
+        ).fetchall()
+    for row in rows:
+        rows_by_chunk_id.setdefault(str(row["chunk_id"]), row)
+    return rows_by_chunk_id
+
+
+def _read_corpus_chunks(rows_by_chunk_id: dict[str, sqlite3.Row], chunk_ids: Sequence[Any]) -> CorpusText | None:
+    if not chunk_ids:
+        return None
+    rows: list[sqlite3.Row] = []
+    for chunk_id in chunk_ids:
+        row = rows_by_chunk_id.get(str(chunk_id))
+        if row is None:
+            return None
+        rows.append(row)
+
+    first = _row_to_corpus(rows[0])
+    if first is None:
+        return None
+    text = "\n\n".join(str(row["text"] or "").strip() for row in rows if str(row["text"] or "").strip())
+    if not text:
+        return None
+    return CorpusText(
+        chunk_id=_chunk_id_label(chunk_ids),
+        author=first.author,
+        work=first.work,
+        work_id=first.work_id,
+        year=first.year,
+        genre=first.genre,
+        language_period=first.language_period,
+        source_file=first.source_file,
+        source_url=first.source_url,
+        text=text,
+    )
+
+
+def _chunk_id_label(chunk_ids: Sequence[Any]) -> str:
+    values = [str(chunk_id) for chunk_id in chunk_ids]
+    if len(values) <= 1:
+        return values[0] if values else ""
+    return f"{values[0]}-{values[-1]}"
+
+
+def _verify_rendered_text_attested(corpus: CorpusText, candidate_title: str) -> VerificationResult:
+    rendered_text = _display_text(corpus.text, candidate_title)
+    rendered_key = _block_key(rendered_text)
+    if not rendered_key:
+        return VerificationResult(False, 0.0, "rendered text is empty")
+    if rendered_key not in _block_key(corpus.text):
+        return VerificationResult(False, 0.0, f"rendered text not attested in chunk {corpus.chunk_id}")
+    return VerificationResult(True, 1.0, f"attested in chunk {corpus.chunk_id}")
+
+
+def _entry_taught_by(entry: dict[str, Any]) -> list[dict[str, Any]]:
+    taught_by = entry.get("taught_by")
+    if not isinstance(taught_by, list):
+        return []
+    return [item for item in taught_by if isinstance(item, dict)]
+
+
+def _first_taught_value(taught_by: Sequence[dict[str, Any]], key: str) -> str:
+    for item in taught_by:
+        value = str(item.get(key) or "").strip()
+        if value:
+            return value
+    return ""
+
+
+def _unique_reading_slug(
+    base_slug: str,
+    candidate: PrimaryReadingCandidate,
+    resolved_by_slug: dict[str, ResolvedReading],
+) -> str:
+    existing = resolved_by_slug.get(base_slug)
+    if existing is None or existing.candidate.work_key == candidate.work_key:
+        return base_slug
+
+    author_suffix = transliterate(candidate.author)
+    slug = f"{base_slug}-{author_suffix}" if author_suffix else base_slug
+    counter = 2
+    while slug in resolved_by_slug and resolved_by_slug[slug].candidate.work_key != candidate.work_key:
+        slug = f"{base_slug}-{author_suffix}-{counter}" if author_suffix else f"{base_slug}-{counter}"
+        counter += 1
+    return slug
+
+
 def _metadata_for(resolved: ResolvedReading) -> dict[str, Any]:
     candidate = resolved.candidate
     corpus = resolved.corpus
@@ -616,7 +904,7 @@ def _metadata_for(resolved: ResolvedReading) -> dict[str, Any]:
     curated = dict(CURATED_METADATA.get(slug, {}))
     genre = curated.get("genre") or _genre_from_note(candidate.note) or _genre_from_corpus(corpus.genre)
     source_file = corpus.source_file or "corpus"
-    return {
+    metadata = {
         "title": curated.get("title") or f"«{candidate.title}»" + (f" ({candidate.note})" if candidate.note else ""),
         **({"title_en": curated["title_en"]} if curated.get("title_en") else {}),
         "genre": genre,
@@ -634,6 +922,11 @@ def _metadata_for(resolved: ResolvedReading) -> dict[str, Any]:
         "order": curated.get("order") or _default_order(slug),
         **({"intro": curated["intro"]} if curated.get("intro") else {}),
     }
+    if resolved.taught_in:
+        metadata["taught_in"] = list(resolved.taught_in)
+    if resolved.source_chunk_ids:
+        metadata["source_chunk_ids"] = list(resolved.source_chunk_ids)
+    return metadata
 
 
 def _frontmatter(metadata: dict[str, Any], tracks: Sequence[str]) -> list[str]:
@@ -646,6 +939,8 @@ def _frontmatter(metadata: dict[str, Any], tracks: Sequence[str]) -> list[str]:
         "year",
         "period",
         "tracks",
+        "taught_in",
+        "source_chunk_ids",
         "excerpt",
         "source",
         "public_domain",
@@ -661,6 +956,8 @@ def _frontmatter(metadata: dict[str, Any], tracks: Sequence[str]) -> list[str]:
         value = metadata[key]
         if key == "public_domain":
             lines.append("public_domain: true")
+        elif isinstance(value, (list, tuple)):
+            lines.append(f"{key}: [{', '.join(_yaml_quote(str(item)) for item in value)}]")
         elif isinstance(value, int):
             lines.append(f"{key}: {value}")
         else:
@@ -700,9 +997,36 @@ def _study_links(module_dirs: Sequence[Path]) -> str:
     links = []
     for module_dir in sorted(module_dirs):
         title = _module_title(module_dir)
-        track_label = "Фольклор" if module_dir.parent.name == "folk" else module_dir.parent.name.upper()
+        track_label = _track_label(module_dir.parent.name)
         links.append(f"[{track_label} · «{title}»](/{module_dir.parent.name}/{module_dir.name}/)")
     return "; ".join(links)
+
+
+def _study_links_from_taught_by(taught_by: Sequence[dict[str, Any]], plans_dir: Path) -> str:
+    links: list[str] = []
+    seen: set[tuple[str, str]] = set()
+    for item in sorted(taught_by, key=lambda entry: (str(entry.get("track") or ""), str(entry.get("slug") or ""))):
+        track = str(item.get("track") or "").strip()
+        slug = str(item.get("slug") or "").strip()
+        if not track or not slug or (track, slug) in seen:
+            continue
+        seen.add((track, slug))
+        title = _plan_title(track, slug, plans_dir)
+        links.append(f"[{_track_label(track)} · «{title}»](/{track}/{slug}/)")
+    return "; ".join(links)
+
+
+def _plan_title(track: str, slug: str, plans_dir: Path) -> str:
+    plan = plans_dir / track / f"{slug}.yaml"
+    if plan.exists():
+        raw = yaml.safe_load(plan.read_text(encoding="utf-8")) or {}
+        if isinstance(raw, dict) and raw.get("title"):
+            return str(raw["title"]).strip()
+    return slug.replace("-", " ")
+
+
+def _track_label(track: str) -> str:
+    return "Фольклор" if track == "folk" else track.upper()
 
 
 def _module_title(module_dir: Path) -> str:
@@ -762,13 +1086,19 @@ def _genre_from_corpus(genre: str) -> str:
     return {
         "carol": "Календарно-обрядова пісня",
         "duma": "Дума",
+        "poem": "Вірш",
+        "poetry": "Поезія",
+        "novel": "Роман",
     }.get(genre, genre or "Народний текст")
 
 
 def _year_label(corpus: CorpusText) -> str:
+    is_traditional = _text_key(corpus.author) in {"народна творчість", "традиційний текст"}
     if corpus.year is None:
-        return "традиційний текст"
-    return f"традиційний текст; корпусна дата {corpus.year}"
+        return "традиційний текст" if is_traditional else "рік не зазначено"
+    if is_traditional:
+        return f"традиційний текст; корпусна дата {corpus.year}"
+    return str(corpus.year)
 
 
 def _period_label(corpus: CorpusText) -> str:
@@ -781,7 +1111,7 @@ def _period_label(corpus: CorpusText) -> str:
 def _fallback_excerpt(candidate: PrimaryReadingCandidate, corpus: CorpusText) -> str:
     display = _display_text(corpus.text, candidate.title)
     first = next((line.strip() for line in display.splitlines() if line.strip()), candidate.title)
-    return f"{_genre_from_note(candidate.note) or 'Народний текст'}: {first}"
+    return f"{_genre_from_note(candidate.note) or _genre_from_corpus(corpus.genre)}: {first}"
 
 
 def _default_order(slug: str) -> int:
@@ -816,4 +1146,7 @@ def _display_path(path: Path, project_root: Path) -> str:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except BrokenPipeError:
+        raise SystemExit(0) from None
