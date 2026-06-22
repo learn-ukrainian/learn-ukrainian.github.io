@@ -2,7 +2,7 @@ module: b2-052
 level: B2
 sequence: 52
 slug: pronoun-system-advanced
-version: 1.0.4
+version: '1.1.0'
 lifecycle: locked
 reviewed_at: '2026-06-15T12:51:30Z'
 reviewed_by: codex/b2-wiki-readiness-batch-14
@@ -18,14 +18,13 @@ focus: grammar
 pedagogy: PPP
 word_target: 4000
 objectives:
-- Learner can correctly use the reflexive pronoun 'себе' in all cases and
-  distinguish it from reflexive verbs (-ся).
-- Learner can apply the reciprocal pronoun construction 'один одного' to express
-  mutual actions.
-- 'Learner can distinguish and use definitive pronouns (означальні займенники): сам,
-  самий, весь, кожний, всякий, інший.'
-- Learner can understand semantic nuances created by different pronoun choices
-  in complex texts.
+- Правильно вживати зворотний займенник "себе" в непрямих відмінках і
+  відрізняти його від дієслів із постфіксом -ся.
+- Застосовувати взаємну конструкцію "один одного" для позначення взаємної дії.
+- >-
+  Розрізняти й уживати означальні займенники: сам, самий, весь, кожний,
+  всякий, інший.
+- Пояснювати смислові відтінки, які створює вибір займенника в складному тексті.
 reading_situations:
 - source_type: стаття з психології
   topic: Пізнання себе та взаємини з іншими
@@ -33,8 +32,8 @@ reading_situations:
   - взаємні дії
   - рефлексія
   - означальні займенники
-  motivation: Reading about self-reflection provides natural, dense usage of
-    'себе' and 'один одного'.
+  motivation: Текст про саморефлексію дає природні приклади вживання "себе" та
+    "один одного".
 writing_tasks:
 - task_type: есе-рефлексія
   prompt: Напишіть коротке есе на тему 'Як важливо розуміти самого себе та
@@ -47,64 +46,68 @@ writing_tasks:
     займенників. Очікується текст на зразок: ''Щоб краще розуміти самих
     себе, ми маємо чесно ставити собі запитання. Люди підтримують одне
     одного тоді, коли кожний бере на себе відповідальність за власні слова''.'
-  motivation: Practice using advanced pronouns to express abstract,
-    introspective thoughts.
+  motivation: Практика вживання складних займенників для абстрактних і
+    рефлексивних висловлювань.
 listening_situations:
 - media_type: подкаст
   setting: Інтерв'ю з психологом про стосунки в колективі.
   focus_points:
   - ідентифікація займенників
   - розуміння контексту
-  motivation: Listening for semantic nuances introduced by definitive pronouns
-    (кожний vs всякий).
+  motivation: Розпізнавання смислових відтінків означальних займенників
+    на прикладі пари "кожний" і "всякий".
 discussion_topics:
 - context: Обговорення лідерства та відповідальності.
   questions:
   - Чому кажуть, що лідер повинен починати з самого себе?
   - Як змінюється зміст, коли ми кажемо 'усі згодні' замість 'кожний згоден'?
-  motivation: Encourage communicative precision using nuanced pronouns.
+  motivation: Розвиток комунікативної точності через свідомий вибір займенника.
 content_outline:
 - section: 'Зворотний займенник: ''себе'''
   words: 1000
   points:
-  - The reflexive pronoun 'себе' has no nominative case, gender, or number.
-  - 'Declension paradigms: себе (Gen/Acc), собі (Dat/Loc), собою (Inst).'
-  - 'Semantic difference between using ''себе'' and a reflexive verb (-ся): ''мити
-    себе'' vs ''вмиватися''.'
-  - 'Idiomatic uses: ''прийти в себе'', ''брати на себе''.'
+  - Зворотний займенник "себе" не має називного відмінка, роду й числа.
+  - 'Парадигма відмінювання: себе (родовий/знахідний), собі (давальний/місцевий),
+    собою (орудний).'
+  - 'Смислова різниця між займенником "себе" і дієсловом із -ся: "мити себе"
+    і "вмиватися".'
+  - 'Ідіоматичні вживання: "прийти в себе", "брати на себе".'
 - section: 'Взаємний займенник: ''один одного'''
   words: 1000
   points:
-  - Structure and declension of 'один одного' (only the second part declines).
-  - 'Usage with prepositions: ''один з одним'', ''один на одного''.'
-  - 'Gender and number variations: ''одна одну'', ''одні одних'' (though ''один одного''
-    is often used universally).'
-  - Comparison with reflexive verbs for reciprocal actions (зустрічатися vs
-    бачити один одного).
+  - >-
+    Будова та відмінювання конструкції "один одного": змінюється лише друга
+    частина.
+  - 'Уживання з прийменниками: "один з одним", "один на одного".'
+  - 'Родові й числові варіанти: "одна одну", "одні одних"; нейтральне "один
+    одного" часто функціонує універсально.'
+  - 'Порівняння з дієсловами взаємної дії: зустрічатися і бачити один одного.'
 - section: 'Означальні займенники: сам, самий, весь, кожний'
   words: 1000
   points:
-  - Declension and semantics of означальні займенники.
-  - 'Сам vs самий: ''я сам це зробив'' (alone/myself) vs ''той самий'' (the same).'
-  - 'Весь, вся, все, всі: usage and declension.'
-  - 'Кожний vs всякий: nuance differences (every individual vs any kind).'
+  - Відмінювання й семантика означальних займенників.
+  - 'Сам і самий: "я сам це зробив" і "той самий".'
+  - 'Весь, вся, все, всі: уживання та відмінювання.'
+  - 'Кожний і всякий: індивідуалізація кожного елемента та узагальнення
+    будь-якого різновиду.'
 - section: Стилістичні особливості та практичне застосування
   words: 1000
   points:
-  - Register differences in pronoun usage.
-  - 'Common errors: calques from English (''мислити про себе'' vs ''розуміти себе'').'
-  - Using pronouns for cohesion in complex sentences.
-  - Summary and consolidation of advanced pronoun paradigms.
-- section: Підсумок — Summary
+  - Реєстрові відмінності у вживанні займенників.
+  - 'Типові помилки: кальки з англійської ("мислити про себе" замість
+    "розуміти себе").'
+  - Використання займенників для когезії в складних реченнях.
+  - Узагальнення й закріплення складних займенникових парадигм.
+- section: Підсумок
   words: 300
   points:
-  - "The reflexive pronoun 'себе' has no nominative form (себе, собі, собою) and differs
-    semantically from reflexive verbs. For reciprocal actions, use 'один одного',
-    where only the second word declines (один з одним). Definitive pronouns have distinct
-    meanings: 'сам' (myself) vs. 'самий' (the same)."
-  - "Self-check: What is the semantic difference between 'мити себе' and 'вмиватися'?
-    Translate 'We look at each other' using 'один на одного'. What's the difference
-    in nuance between 'кожний' and 'всякий'?"
+  - Займенник "себе" не має називної форми й відрізняється від зворотних
+    дієслів. Для взаємної дії використовуйте "один одного", де змінюється
+    друга частина конструкції.
+  - >-
+    Перевірте себе: чим відрізняються "мити себе" і "вмиватися"? Як сказати
+    "Ми дивимося один на одного" без калькування? Який відтінок розрізняє
+    "кожний" і "всякий"?
 vocabulary_hints:
   required:
   - себе
@@ -131,10 +134,16 @@ activity_hints:
 - type: match-up
   focus: З'єднати фразеологізми із займенником 'себе' з їхніми значеннями.
 references:
-- title: Заболотний Grade 9, p. 80-85
+- title: Заболотний, 9 клас, с. 80-85
   notes: Складні випадки використання займенників.
-- title: Авраменко Grade 10, p. 45-50
+- title: Авраменко, 10 клас, с. 45-50
   notes: Стилістика займенників та морфологічна норма.
 connects_to:
 - b2-051 (advanced-case-semantics)
 - b2-053 (checkpoint-cases-morphology)
+changelog:
+- version: '1.1.0'
+  date: '2026-06-22'
+  changes:
+  - Локалізовано англомовні цілі, мотивації, пункти плану та підсумок перед
+    запуском модулів B2.
