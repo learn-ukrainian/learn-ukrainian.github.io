@@ -2,16 +2,14 @@ module: b2-052
 level: B2
 sequence: 52
 slug: pronoun-system-advanced
-version: '1.1.0'
+version: '1.1.1'
 lifecycle: locked
-reviewed_at: '2026-06-15T12:51:30Z'
-reviewed_by: codex/b2-wiki-readiness-batch-14
+reviewed_at: '2026-06-22T15:55:00Z'
+reviewed_by: codex/b2-preflight-blockers
 review_notes: >-
-  Batch 14 wiki readiness lock. Cleared the remaining pronoun-system-advanced
-  VERIFY markers by checking the весь/всі accusative table and negative-pronoun
-  split rule against registered textbook sources, and removed unrelated
-  unsourced greeting/name-introduction claims from the pronoun page. See
-  wiki/.reviews/grammar/b2/pronoun-system-advanced-review-LOCKED.md.
+  Preflight blocker remediation. Preserves the Batch 14 wiki-readiness lock
+  evidence while localizing legacy English plan scaffolding and removing a
+  Russian-calque idiom from the content outline.
 title: Складна система займенників
 subtitle: 'Складна система займенників: зворотні, взаємні, означальні'
 focus: grammar
@@ -71,7 +69,7 @@ content_outline:
     собою (орудний).'
   - 'Смислова різниця між займенником "себе" і дієсловом із -ся: "мити себе"
     і "вмиватися".'
-  - 'Ідіоматичні вживання: "прийти в себе", "брати на себе".'
+  - 'Ідіоматичні вживання: "прийти до тями", "брати на себе".'
 - section: 'Взаємний займенник: ''один одного'''
   words: 1000
   points:
@@ -142,6 +140,10 @@ connects_to:
 - b2-051 (advanced-case-semantics)
 - b2-053 (checkpoint-cases-morphology)
 changelog:
+- version: '1.1.1'
+  date: '2026-06-22'
+  changes:
+  - Замінено калькований вислів у пункті про ідіоми на нормативне "прийти до тями".
 - version: '1.1.0'
   date: '2026-06-22'
   changes:
