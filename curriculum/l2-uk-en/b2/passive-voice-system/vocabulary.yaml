@@ -1,0 +1,132 @@
+- lemma: пасивний стан
+  translation: "passive voice"
+  pos: phrase
+  usage: "Пасивний стан в українській мові потребує уважного вибору форми й регістру."
+- lemma: активний стан
+  translation: "active voice"
+  pos: phrase
+  usage: "Коли діяч важливий, активний стан зазвичай звучить природніше."
+- lemma: безособова форма
+  translation: "impersonal form"
+  pos: phrase
+  usage: "Безособова форма на -но, -то зосереджує увагу на результаті."
+- lemma: форма на -но, -то
+  translation: "form in -no, -to"
+  pos: phrase
+  usage: "Форма на -но, -то не називає виконавця дії."
+- lemma: пасивний дієприкметник
+  translation: "passive participle"
+  pos: phrase
+  usage: "Пасивний дієприкметник найчастіше описує предмет після виконаної дії."
+- lemma: зворотне дієслово
+  translation: "reflexive verb"
+  pos: phrase
+  usage: "Зворотне дієслово на -ся не слід автоматично вживати як пасив."
+- lemma: діяч
+  translation: "agent, doer"
+  pos: noun
+  usage: "Якщо діяч названий, його краще зробити підметом активного речення."
+- lemma: виконавець
+  translation: "performer"
+  pos: noun
+  usage: "Виконавець дії має бути названий прямо, коли важлива відповідальність."
+- lemma: знаряддя
+  translation: "instrument, tool"
+  pos: noun
+  usage: "Орудний відмінок може позначати знаряддя дії, а не особового діяча."
+- lemma: засіб
+  translation: "means, tool"
+  pos: noun
+  usage: "У реченні файл захищено паролем слово паролем називає засіб."
+- lemma: орудний відмінок
+  translation: "instrumental case"
+  pos: phrase
+  usage: "Орудний відмінок має різні функції, тому треба розрізняти інструмент і діяча."
+- lemma: результат дії
+  translation: "result of an action"
+  pos: phrase
+  usage: "Форми на -но, -то подають результат дії без названого виконавця."
+- lemma: відповідальність
+  translation: "responsibility"
+  pos: noun
+  usage: "Активне речення часто краще показує відповідальність установи або людини."
+- lemma: калька
+  translation: "calque"
+  pos: noun
+  usage: "Речення звіт підготовлено аналітиками є синтаксичною калькою."
+- lemma: синтаксична норма
+  translation: "syntactic norm"
+  pos: phrase
+  usage: "Синтаксична норма не підтримує названого особового діяча після форми на -но, -то."
+- lemma: офіційно-діловий стиль
+  translation: "official business style"
+  pos: phrase
+  usage: "В офіційно-діловому стилі часто вживають форми на -но, -то."
+- lemma: науковий стиль
+  translation: "academic style"
+  pos: phrase
+  usage: "Науковий стиль може використовувати безособові форми для опису процедури."
+- lemma: публіцистичний стиль
+  translation: "journalistic style"
+  pos: phrase
+  usage: "У публіцистичному стилі активне речення часто робить відповідальність видимою."
+- lemma: редагувати
+  translation: "to edit"
+  pos: verb
+  usage: "На B2 студент має редагувати пасивні конструкції, а не лише впізнавати їх."
+- lemma: перебудувати
+  translation: "to restructure"
+  pos: verb
+  usage: "Кальковане речення треба перебудувати на активну конструкцію."
+- lemma: ухвалити
+  translation: "to adopt, approve"
+  pos: verb
+  usage: "Комісія ухвалила рішення, а в протоколі можна написати рішення ухвалено."
+- lemma: погодити
+  translation: "to approve, agree"
+  pos: verb
+  usage: "Заявку погоджено після перевірки документів."
+- lemma: оприлюднити
+  translation: "to publish, make public"
+  pos: verb
+  usage: "Дані оприлюднено на сайті установи."
+- lemma: впроваджувати
+  translation: "to implement"
+  pos: verb
+  usage: "Команда впроваджує нову систему поступово."
+- lemma: впроваджуватися
+  translation: "to be implemented"
+  pos: verb
+  usage: "Форма впроваджується можлива, коли йдеться про процес без названого діяча."
+- lemma: здійснювати
+  translation: "to carry out"
+  pos: verb
+  usage: "У природному тексті часто краще сказати фахівці здійснюють моніторинг."
+- lemma: здійснюватися
+  translation: "to take place, be carried out"
+  pos: verb
+  usage: "Форма здійснюється потребує перевірки: іноді актив звучить точніше."
+- lemma: погоджено
+  translation: "approved"
+  pos: other
+  usage: "У документах часто пишуть: проєкт погоджено без зауважень."
+- lemma: виконано
+  translation: "completed"
+  pos: other
+  usage: "План виконано частково, тому потрібен додатковий графік."
+- lemma: оприлюднено
+  translation: "published, made public"
+  pos: other
+  usage: "Звіт оприлюднено після засідання робочої групи."
+- lemma: доцільно
+  translation: "appropriate, advisable"
+  pos: adv
+  usage: "Якщо діяч відомий, доцільно використати активне речення."
+- lemma: звітність
+  translation: "reporting"
+  pos: noun
+  usage: "У звітності результативні форми допомагають стисло перелічити виконані дії."
+- lemma: моніторинг
+  translation: "monitoring"
+  pos: noun
+  usage: "Моніторинг стану води проведено за єдиною методикою."

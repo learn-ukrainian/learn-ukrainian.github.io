@@ -130,11 +130,25 @@ def load_content_outline(md_path: Path) -> list[dict] | None:
 
     Returns list of sections or None if no outline exists.
     """
-    # 1. Try Meta File first (Override)
-    meta_dir = md_path.parent / "meta"
-    meta_file = meta_dir / f"{md_path.stem}.yaml"
+    folder_level = None
+    folder_slug = None
+    curriculum_root = None
+    if md_path.name == "module.md" and md_path.parent.parent.name in [
+        'a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'bio', 'istorio'
+    ]:
+        folder_level = md_path.parent.parent.name
+        folder_slug = md_path.parent.name
+        curriculum_root = md_path.parent.parent.parent
 
-    if meta_file.exists():
+    # 1. Try Meta File first (Override)
+    meta_candidates = []
+    if folder_level and folder_slug and curriculum_root:
+        meta_candidates.append(curriculum_root / folder_level / "meta" / f"{folder_slug}.yaml")
+    meta_candidates.append(md_path.parent / "meta" / f"{md_path.stem}.yaml")
+
+    meta_file = next((path for path in meta_candidates if path.exists()), None)
+
+    if meta_file:
         try:
             with open(meta_file, encoding="utf-8") as f:
                 meta_data = yaml.safe_load(f)
@@ -145,14 +159,20 @@ def load_content_outline(md_path: Path) -> list[dict] | None:
 
     # 2. Fallback to Plan File (Base)
     try:
-        # Determine level from path or parent name
-        level = md_path.parent.name
-        if level not in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'bio', 'istorio']:
-             # Fallback logic if needed, but standard structure is reliable
-             pass
+        if folder_level and folder_slug and curriculum_root:
+            level = folder_level
+            base_dir = curriculum_root
+            slug = folder_slug
+        else:
+            # Determine level from path or parent name
+            level = md_path.parent.name
+            if level not in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'bio', 'istorio']:
+                 # Fallback logic if needed, but standard structure is reliable
+                 pass
+            base_dir = md_path.parent.parent # curriculum/l2-uk-en
+            slug = md_path.stem
 
-        base_dir = md_path.parent.parent # curriculum/l2-uk-en
-        plan_path = base_dir / 'plans' / level / f"{md_path.stem}.yaml"
+        plan_path = base_dir / 'plans' / level / f"{slug}.yaml"
 
         if plan_path.exists():
             with open(plan_path, encoding="utf-8") as f:
@@ -162,11 +182,10 @@ def load_content_outline(md_path: Path) -> list[dict] | None:
     except Exception:
         pass
 
-    # 2. Fallback to Meta File (Legacy / Pre-migration)
-    meta_dir = md_path.parent / "meta"
-    meta_file = meta_dir / f"{md_path.stem}.yaml"
+    # 3. Fallback to Meta File (Legacy / Pre-migration)
+    meta_file = next((path for path in meta_candidates if path.exists()), None)
 
-    if not meta_file.exists():
+    if not meta_file:
         return None
 
     try:
