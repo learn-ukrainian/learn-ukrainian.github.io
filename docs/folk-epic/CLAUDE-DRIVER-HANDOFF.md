@@ -2,7 +2,40 @@
 
 > ℹ️ Sessions 68–80 detail lives in the local thread handoff (`.agent/claude-thread-handoff.md`, gitignored) and in merged PRs (#3648 koliadky exemplar, #3651 Atlas, #3669 global Readings reference, #3715 Phase 0 demand manifest, #3720 Phase 1a rights classifier, #3724 approved primary-text plan). This git-tracked file resumes the SSOT thread at Session 81 below; older in-file entries (≤67) are historical.
 
-## ▶▶▶ SESSION 81 (2026-06-22) — primary-text system Phase 1b (curation) + 1c (clean-text resolver) — RESUME HERE
+## ▶▶▶ SESSION 82 (2026-06-23) — rights model fixed (host all heritage) + first persecuted-author reading hosted — RESUME HERE
+
+> 🟢 **USER PRIORITY (locked, 2026-06-23):** "when the engine is done get back to building the folk seminar
+> modules. only one is meeting the pedagogy limit." → SEQUENCE: (1) finish the engine [Phase 2], (2) THEN
+> folk seminar **module-building pedagogy remediation** — drive the 5 sub-bar modules up to koliadky's
+> standard. Pedagogy bar (LLM-QG, earlier audit): **koliadky-shchedrivky = ONLY PASS** (≥8.5 all dims).
+> Sub-bar: dumy (pedagogical 5.8), narodni-viruvannia (5.8), narodna-kultura (6.8, terminal REVISE),
+> zamovliannia (6.8/engagement, terminal REVISE), kalendarna (7.0). Use koliadky as the exemplar.
+
+**✅ TODAY (2026-06-23) — RIGHTS MODEL CORRECTED + HERITAGE HOSTING PROVEN.**
+- **Rights model = MAX ACCESS (#3734, merged):** anything on ukrlib / in the textbook corpus
+  (+wikisource/litopys/izbornyk/chtyvo) → hosted FULL with attribution (overrides copyright heuristics);
+  every persecuted/rehabilitated author (Executed Renaissance, Стус, Драй-Хмара) → hosted heritage
+  (rehabilitation+70 is NEVER a hosting gate). Reverses my earlier wrong "conservative safety" block.
+  **NEVER reintroduce a rule that blocks Ukrainian heritage available on ukrlib/textbooks.**
+- **First persecuted-author reading HOSTED + EYEBALL-VERIFIED (#3737 + #3738, merged):** Стус «Як добре
+  те, що смерті не боюсь я» at `/readings/stus-yak-dobre-te-shcho-smerti/`. Full verbatim text (ukrlib
+  chunk `e19a2388_c0000`, verify_quote 1.0); rendered page confirmed (HTTP 200, poem + **Джерело footer**
+  with attribution + provenance). **LESSON:** the readings detail template renders only title/excerpt —
+  `source`/`author` frontmatter are NOT shown; attribution MUST be a `**Джерело:**` footer in the MDX body
+  (folk readings do this). Eyeball every new reading page; don't trust the green build.
+
+**▶ NEXT — finish the ENGINE (Phase 2):** generalize `scripts/readings/generate_readings.py` (currently
+folk-only: `discover_folk_module_dirs` + `parse_primary_readings` of `:::primary-reading` blocks) to be
+**demand-driven across ALL tracks**: drive from `primary_text_demand.build_manifest()` + new
+`clean_text_resolver` (PD→host full / in-copyright→excerpt+verified link) + `rights_classifier` gate +
+`textbook_curation` (canon/excerpt boundary), reusing `verify_candidate_against_corpus` + `render_reading`
++ `taught_in`/dedup. Add a general primary-reading MDX converter (not folk-specific). Mind the
+template-attribution gap above (emit the Джерело footer). Prove on ~3-5 works (folk PD, Шевченко PD, Стус
+heritage). THEN per user priority → folk module pedagogy remediation.
+(Superseded: PR B sourced-death-year expansion is now largely moot — the ukrlib/textbook + persecuted
+rules host heritage regardless of death year; do later only for non-free-source precision.)
+
+## ▶▶▶ SESSION 81 (2026-06-22) — primary-text system Phase 1b (curation) + 1c (clean-text resolver)
 
 > 🔴🔴 **CORRECTION — RIGHTS MODEL = MAX ACCESS, NEVER GATEKEEP (user order 2026-06-22, threat-backed).**
 > My earlier "conservative safety fix" (#3733) WRONGLY blocked Executed Renaissance / persecuted authors
