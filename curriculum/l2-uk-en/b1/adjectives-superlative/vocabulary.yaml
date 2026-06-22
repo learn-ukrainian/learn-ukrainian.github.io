@@ -46,6 +46,14 @@
   translation: "highest, tallest"
   pos: adjective
   usage: "Говерла - найвища гора України."
+- lemma: найбільший
+  translation: "biggest, largest"
+  pos: adjective
+  usage: "Найбільший зал школи вміщує сто людей."
+- lemma: найменший
+  translation: "smallest"
+  pos: adjective
+  usage: "Найменший розділ підручника все одно треба прочитати уважно."
 - lemma: щонайкращий
   translation: "the very best"
   pos: adjective

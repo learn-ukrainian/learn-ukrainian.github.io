@@ -54,6 +54,10 @@
   translation: labial consonant
   pos: phrase
   usage: Б, п, в, м, ф є губними приголосними.
+- lemma: палаталізація
+  translation: palatalization
+  pos: noun:f
+  usage: Палаталізація пояснює пом'якшення приголосного перед певними закінченнями.
 - lemma: африката
   translation: affricate
   pos: noun:f

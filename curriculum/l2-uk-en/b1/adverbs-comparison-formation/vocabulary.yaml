@@ -34,6 +34,10 @@
   translation: "more quietly"
   pos: adverb
   usage: "Говоріть тихіше, будь ласка."
+- lemma: повільніше
+  translation: "more slowly"
+  pos: adverb
+  usage: "Після зауваження він читав повільніше."
 - lemma: дорожче
   translation: "more expensively"
   pos: adverb
