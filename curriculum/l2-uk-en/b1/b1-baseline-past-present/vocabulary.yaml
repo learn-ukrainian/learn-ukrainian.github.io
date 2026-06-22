@@ -10,6 +10,10 @@
   translation: conjugation class
   pos: noun
   usage: Дієвідміна допомагає вибрати особове закінчення.
+- lemma: дієвідмінювання
+  translation: conjugation
+  pos: noun
+  usage: Дієвідмінювання показує, як дієслово змінюється за особою й числом.
 - lemma: особа
   translation: grammatical person
   pos: noun
@@ -74,6 +78,7 @@
   translation: reflexive verb
   pos: noun phrase
   usage: Зворотне дієслово має постфікс -ся або -сь.
+  notes: Зворотний у цьому модулі означає дієслово з -ся/-сь.
 - lemma: постфікс
   translation: postfix
   pos: noun

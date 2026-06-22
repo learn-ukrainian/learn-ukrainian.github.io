@@ -38,6 +38,10 @@
   translation: "invitation"
   pos: noun:n
   usage: "Сідайте до столу - гостинне запрошення."
+- lemma: прохання
+  translation: "request"
+  pos: noun:n
+  usage: "Будь ласка, відчиніть вікно - це ввічливе прохання."
 - lemma: порада
   translation: "advice"
   pos: noun:f
@@ -54,6 +58,14 @@
   translation: "pragmatic"
   pos: adj
   usage: "Вибір виду є прагматичним, бо залежить від наміру."
+- lemma: ввічливий
+  translation: "polite"
+  pos: adj
+  usage: "Ввічливий наказ часто звучить м'якше з будь ласка або недоконаним видом."
+- lemma: категоричний
+  translation: "categorical, firm"
+  pos: adj
+  usage: "Категоричний наказ звучить твердо і вимагає конкретної дії."
 - lemma: намір
   translation: "intention"
   pos: noun:m
@@ -174,6 +186,14 @@
   translation: "to open (file/app/book)"
   pos: verb:impf
   usage: "Не відкривайте підозрілі файли."
+- lemma: закрити
+  translation: "to close"
+  pos: verb:pf
+  usage: "Закрийте вікно після провітрювання."
+- lemma: закривати
+  translation: "to close"
+  pos: verb:impf
+  usage: "Не закривайте двері на ключ."
 - lemma: зайти
   translation: "to enter, drop in"
   pos: verb:pf
