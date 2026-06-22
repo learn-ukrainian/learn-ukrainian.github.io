@@ -108,7 +108,7 @@ onnxruntime==1.24.3
 open_clip_torch==3.3.0
 openai==1.109.1
 opencv-python-headless==4.11.0.86
-packaging==26.0
+packaging==26.2
 pandas==3.0.1
 pathspec==1.1.1
 pdftext==0.6.3
