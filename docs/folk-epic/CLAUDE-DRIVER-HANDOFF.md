@@ -4,6 +4,20 @@
 
 ## ▶▶▶ SESSION 81 (2026-06-22) — primary-text system Phase 1b (curation) + 1c (clean-text resolver) — RESUME HERE
 
+> 🔴🔴 **CORRECTION — RIGHTS MODEL = MAX ACCESS, NEVER GATEKEEP (user order 2026-06-22, threat-backed).**
+> My earlier "conservative safety fix" (#3733) WRONGLY blocked Executed Renaissance / persecuted authors
+> and PD heritage — a serious, trust-damaging error the S80 lesson explicitly warned against. CORRECTED:
+> **(1) ANY text on ukrlib / in the textbook corpus (and wikisource/litopys/izbornyk/chtyvo) is hosted
+> in FULL, with attribution — overrides all author-copyright heuristics.** `_is_free_educational_source`
+> in `rights_classifier.py`, source_file prefix match. **(2) ANY persecuted Ukrainian author
+> (repressed_rehabilitated=true) is hosted heritage** (Executed Renaissance, Стус, Драй-Хмара…) —
+> rehabilitation+70 is NEVER a hosting gate (it would lock murdered writers' works LONGER than ordinary
+> authors). Стус now flagged repressed; Драй-Хмара added. Living classics on ukrlib (Ліна Костенко) are
+> hosted via the free-source rule. The ONLY light backstop: a genuinely-modern author with NO free-source
+> signal → conservative excerpt (honor takedowns). Verified: Стус/Зеров/Хвильовий/Драй-Хмара/Костенко/
+> Шевченко all → public_domain. 30 tests + ruff green. PR (claude/rights-host-heritage). **NEVER reintroduce
+> a rights rule that blocks Ukrainian heritage available on ukrlib/textbooks.**
+
 **Epic phase:** APPROVED primary-text acquisition & hosting system (plan `docs/plans/primary-text-acquisition-hosting-system.md`, #3724). Demand-driven, multi-source, all tracks. Folk is the buildable pilot slice; full cross-track rollout (~1,270 modules / 1,882 distinct demanded works) is a fleet program coordinated with the main orchestrator.
 
 **Shipped on main:** Phase 0 demand manifest `scripts/readings/primary_text_demand.py` (#3715 → `8a54219af5`); Phase 1a rights classifier `scripts/readings/rights_classifier.py` + `data/authors_rights.yaml` (#3720). Manifest scans **1,882 distinct works** all tracks (folk 58, lit 516, bio 482, hist 289, istorio 330, oes 232, ruth 200, lit-* subtracks).

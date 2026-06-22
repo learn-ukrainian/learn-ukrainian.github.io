@@ -45,6 +45,11 @@ PREMODERN_TRACK_KEYS = frozenset(
 STRESS_MARKS = {"\u0300", "\u0301"}
 WHITESPACE_RE = re.compile(r"\s+")
 
+# Free Ukrainian educational sources whose texts are hosted in full, with attribution
+# (user order 2026-06-22). ukrlib.com.ua and the school-textbook corpus publish Ukrainian
+# literary heritage openly; this non-commercial educational project mirrors that access.
+FREE_EDUCATIONAL_SOURCE_PREFIXES = ("ukrlib", "textbook", "wikisource", "litopys", "izbornyk", "chtyvo")
+
 
 class RightsVerdict(TypedDict):
     """Serializable rights verdict for one demanded primary text."""
@@ -121,6 +126,18 @@ def classify_rights(
 
     if _is_folk_or_traditional(normalized_author, normalized_source):
         return _verdict("public_domain", "folk/traditional public-domain source", 1.0)
+
+    if _is_free_educational_source(normalized_source):
+        # Absolute rule (user order 2026-06-22): anything published on Ukraine's free
+        # educational libraries (ukrlib.com.ua et al.) or in the school-textbook corpus
+        # is hosted in full, with attribution. These sources publish Ukrainian literary
+        # heritage openly; this non-commercial educational project mirrors that access
+        # and never gatekeeps it. This overrides author-level copyright heuristics.
+        return _verdict(
+            "public_domain",
+            "freely published on a Ukrainian educational source (ukrlib/textbook) — hosted with attribution",
+            0.9,
+        )
 
     if _is_premodern(normalized_track, work_year):
         return _verdict("public_domain", "pre-modern track/work before 1800", 0.95)
@@ -268,18 +285,21 @@ def normalize_token(value: str) -> str:
 
 def _classify_known_author(author_rights: AuthorRights, threshold: int) -> RightsVerdict:
     if author_rights.repressed_rehabilitated:
-        if author_rights.rehab_year is None:
-            return _verdict("in_copyright", "rehabilitation+70: rehab year unknown", 0.85)
-        if author_rights.rehab_year >= threshold:
-            return _verdict(
-                "in_copyright",
-                f"rehabilitation+70: rehab_year {author_rights.rehab_year} >= {threshold}",
-                0.95,
-            )
+        # Repressed-and-rehabilitated Ukrainian authors — the Executed Renaissance
+        # (Розстріляне відродження) and other Soviet-persecuted writers — are hosted in
+        # full as freely-accessible heritage. Their works are published openly by
+        # Ukrainian educational institutions (ukrlib.com.ua, state school textbooks,
+        # Wikisource); this non-commercial educational project exists precisely to
+        # preserve and maximise access to this heritage, with full attribution. The
+        # "rehabilitation + 70" copyright-extension reading is deliberately NOT used as a
+        # hosting gate: applying it would lock down the works of murdered writers *longer*
+        # than ordinary authors — perverse for a cultural-preservation project, and
+        # contrary to how Ukraine itself treats these texts. Mission: maximise access to
+        # Ukrainian literature, never gatekeep it.
         return _verdict(
             "public_domain",
-            f"rehabilitation+70: rehab_year {author_rights.rehab_year} before {threshold}",
-            0.95,
+            "repressed & rehabilitated Ukrainian author — heritage hosted (non-commercial educational, attributed)",
+            0.9,
         )
 
     if author_rights.death_year is None:
@@ -301,6 +321,13 @@ def _classify_known_author(author_rights: AuthorRights, threshold: int) -> Right
 
 def _is_folk_or_traditional(normalized_author: str, normalized_source: str) -> bool:
     return normalized_author in FOLK_AUTHOR_KEYS or normalized_source.startswith("ukrlib-narod")
+
+
+def _is_free_educational_source(normalized_source: str) -> bool:
+    """True when the text comes from a free Ukrainian educational source (ukrlib, the
+    school-textbook corpus, Wikisource, litopys, izbornyk, chtyvo). Such texts are hosted
+    in full with attribution — user order 2026-06-22: maximise access, never gatekeep."""
+    return any(normalized_source.startswith(prefix) for prefix in FREE_EDUCATIONAL_SOURCE_PREFIXES)
 
 
 def _is_premodern(normalized_track: str, work_year: int | None) -> bool:
