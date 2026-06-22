@@ -1,8 +1,15 @@
-# ATLAS_GROW_TOKEN secret note:
-# Use a PAT with contents:write and pull-requests:write for PR creation/push.
-# PRs opened with GITHUB_TOKEN do not trigger pull_request workflows, so required
-# checks never start and auto-merge cannot fire. If the secret is absent, this
-# workflow falls back to GITHUB_TOKEN, opens/updates the PR, and skips auto-merge.
+# ATLAS_GROW_TOKEN secret note (OPEN-ONLY — this workflow NEVER merges):
+# Use a fine-grained PAT scoped to THIS repo, contents:write + pull-requests:write,
+# used ONLY to push the branch and OPEN the PR. PRs opened with the default
+# GITHUB_TOKEN do not trigger pull_request workflows, so the PR's required checks
+# would never run and a reviewer couldn't trust the gates; ATLAS_GROW_TOKEN exists
+# solely to make those checks run. There is NO auto-merge step — every Atlas-grow PR
+# is left for a human to review and merge. If the secret is absent, the PR still opens
+# with GITHUB_TOKEN (its checks won't auto-run; re-run them before merging).
+#
+# NOTE: the scheduled run is a no-op on GitHub-hosted runners — it requires
+# data/vesum.db + data/sources.db, which are local/gitignored. It does real work only
+# where that dictionary data exists (a self-hosted runner, or run the pipeline locally).
 
 name: Atlas Grow
 
@@ -60,19 +67,14 @@ jobs:
         run: |
           if [[ -n "$ATLAS_GROW_TOKEN" ]]; then
             token="$ATLAS_GROW_TOKEN"
-            auto_merge_enabled=true
-            echo "Using ATLAS_GROW_TOKEN for PR creation and auto-merge."
+            echo "Using ATLAS_GROW_TOKEN to open the PR so its CI checks run."
           else
             token="$FALLBACK_GITHUB_TOKEN"
-            auto_merge_enabled=false
-            echo "::notice::ATLAS_GROW_TOKEN is not configured; falling back to GITHUB_TOKEN."
-            echo "::notice::Auto-merge skipped. Configure ATLAS_GROW_TOKEN and enable repository auto-merge."
+            echo "::notice::ATLAS_GROW_TOKEN is not configured; opening the PR with GITHUB_TOKEN."
+            echo "::notice::The PR's checks will not auto-run; re-run them before reviewing and merging."
           fi
           echo "::add-mask::$token"
-          {
-            echo "GH_TOKEN=$token"
-            echo "AUTO_MERGE_ENABLED=$auto_merge_enabled"
-          } >> "$GITHUB_ENV"
+          echo "GH_TOKEN=$token" >> "$GITHUB_ENV"
           git config user.name "atlas-grow[bot]"
           git config user.email "atlas-grow[bot]@users.noreply.github.com"
           git remote set-url origin "https://x-access-token:${token}@github.com/${GITHUB_REPOSITORY}.git"
@@ -150,8 +152,8 @@ jobs:
                   "- P3 validates the prospective manifest before writing it.",
                   "",
                   "## Automation note",
-                  "Auto-merge requires `ATLAS_GROW_TOKEN` plus repository Allow auto-merge.",
-                  "When the secret is absent, this workflow opens the PR with `GITHUB_TOKEN` and skips auto-merge.",
+                  "Opened automatically; NEVER auto-merged — a human reviews and merges this PR.",
+                  "`ATLAS_GROW_TOKEN` (open-only) exists solely so these checks run; it cannot merge.",
               ]
           )
           body_path = Path("/tmp/atlas-grow-pr-body.md")
@@ -211,15 +213,3 @@ jobs:
           fi
           echo "url=$pr_url" >> "$GITHUB_OUTPUT"
           gh pr view "$pr_url" --json url
-
-      - name: Enable auto-merge
-        if: steps.dictionary_data.outputs.available == 'true' && steps.changes.outputs.manifest_changed == 'true'
-        env:
-          PR_URL: ${{ steps.pr.outputs.url }}
-        run: |
-          if [[ "$AUTO_MERGE_ENABLED" == "true" ]]; then
-            gh pr merge --auto --squash --delete-branch "$PR_URL"
-          else
-            echo "::notice::Skipping auto-merge because ATLAS_GROW_TOKEN is absent."
-            echo "::notice::Configure ATLAS_GROW_TOKEN and repository Allow auto-merge for automatic merge on green CI."
-          fi
