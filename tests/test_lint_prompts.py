@@ -389,6 +389,34 @@ class TestOrchestratorSuiteContracts:
         assert "ORCH_SUITE_READING_COVERAGE" in rules
         assert "ORCH_SUITE_SEMINAR_REFERENCE" in rules
 
+    def test_manifest_seminar_type_is_additive_to_curated_set(self, tmp_path: Path):
+        root = tmp_path / "orchestrators"
+        new_suite = root / "new-seminar" / "suite-orchestrator.md"
+        lit_suite = root / "lit" / "suite-orchestrator.md"
+        new_suite.parent.mkdir(parents=True)
+        lit_suite.parent.mkdir(parents=True)
+        new_suite.write_text(_valid_suite_text("new-seminar"), encoding="utf-8")
+        lit_suite.write_text(
+            _valid_suite_text("lit", seminar=False),
+            encoding="utf-8",
+        )
+        manifest = tmp_path / "curriculum.yaml"
+        manifest.write_text(
+            "levels:\n"
+            "  new-seminar:\n"
+            "    type: seminar\n"
+            "  lit:\n"
+            "    type: track\n",
+            encoding="utf-8",
+        )
+
+        violations = scan_orchestrator_suites(root=root, manifest_path=manifest)
+        assert any(
+            v["rule"] == "ORCH_SUITE_READING_COVERAGE"
+            and v["file"].endswith("lit/suite-orchestrator.md")
+            for v in violations
+        )
+
     def test_scan_orchestrator_suites_accepts_valid_active_suite(self, tmp_path: Path):
         root = tmp_path / "orchestrators"
         suite_path = root / "lit" / "suite-orchestrator.md"

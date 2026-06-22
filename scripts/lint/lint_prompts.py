@@ -522,8 +522,7 @@ def scan_orchestrator_suites(
         track for track, track_type in extract_curriculum_level_types(manifest_path).items()
         if track_type == "seminar"
     }
-    if not seminar_tracks:
-        seminar_tracks = SEMINAR_SUITE_TRACKS
+    seminar_tracks |= SEMINAR_SUITE_TRACKS
     violations.extend(check_orchestrator_track_coverage(
         root,
         manifest_path,
