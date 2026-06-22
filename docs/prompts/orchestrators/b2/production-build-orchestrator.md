@@ -1,6 +1,6 @@
 # B2 Production Build Orchestrator
 
-Prompt version: 0.4
+Prompt version: 0.5
 Last reviewed: 2026-06-22
 
 ## Source Assumptions
@@ -87,9 +87,17 @@ git rev-parse --show-toplevel
 - Maintain B2 immersion according to current config; English should be limited to vocabulary glosses or current repo-permitted contexts.
 - If preflight blockers reappear, stop and record them rather than building around missing sources.
 
-## Helpers And Headroom
+## Helper Swarm Policy
 
-Helpers are allowed for source extraction, validation, or independent review preparation. Assign clear file ownership for any worker. Use Headroom compression for helper output or logs over 200 lines or 20 KB.
+Default to a solo run for one-module patches unless a helper will materially reduce risk or wall-clock time. When helpers are useful, keep routine delegation to one to three helpers total.
+
+- Use `gpt-5.4-mini` explorer helpers for bounded source lookup, plan/wiki/source coverage summaries, prompt consistency checks, and simple validation summaries.
+- Use `gpt-5.3-codex-spark` worker helpers only for narrow mechanical edits with a clearly owned file set.
+- The main orchestrator owns planning, integration, final review, PR creation, independent-family review routing, merge decisions, and git hygiene.
+- Do not let helpers read secrets, source `.envrc`, call `gh`, request reviews, open PRs, merge PRs, or revert unrelated changes.
+- Assign clear file ownership to every worker and tell helpers they are not alone in the codebase.
+- Record helper roles in telemetry `participants`; set `swarm_used: true` when any helper or reviewer thread did bounded module-build work. Solo runs still require `swarm_used: false`, `swarm_label: none`, and `swarm_note`.
+- Use Headroom compression for helper output or logs over 200 lines or 20 KB; pass the hash plus a short summary.
 
 ## Validation Commands
 
@@ -112,6 +120,22 @@ fi
 
 Run `scripts/audit/check_mdx_generation_drift.py` only when a drift-only check is needed after generation. The `audit_module.py --skip-review` command intentionally validates deterministic module gates while leaving the review gate to the independent-review requirement below. It still writes local generated cache/status/audit outputs, so remove those known outputs before the diff gate; do not commit curriculum `review/`, `audit/`, or `status/` artifacts to satisfy the review gate.
 
+## Telemetry Workflow
+
+For every module-build PR, persist a record through `POST /api/telemetry/module-builds` and include the same summary in the PR body. Use `docs/runbooks/module-build-token-telemetry.md` and `docs/prompts/orchestrators/shared/telemetry-and-pr.md`.
+
+Required PR/telemetry fields: `run_id`, `level`, `slug`, `branch`, `commit_sha`, `pr_number`, `pr_url`, `status`, `swarm_used`, `swarm_label`, `swarm_note`, `participants`, and each participant `token_source`. Use `token_source: unavailable` rather than inventing counts when provider usage is unavailable. Do not commit `data/telemetry/**`.
+
+## Independent-Family Review Gate
+
+Before merge, request a read-only independent-family review. Prefer Claude Opus 4.8. If Claude Opus 4.8 is unavailable, use Agy with Gemini 3.1 Pro High, for example `agy --model gemini-3.1-pro-high --print-timeout 10m -p "<review prompt>"` when that is the available local route.
+
+The review prompt must include the PR diff, validation summary, telemetry summary, artifact-clean statement, and explicit request for blocker-only findings. Record reviewer identity, review model, review scope, unresolved findings, and final disposition in the PR body or final orchestration note. The merge rule is explicit: unresolved findings are blockers.
+
+## PR Body Requirements
+
+PR body must include: changed modules, source/preflight report used, validation commands and outcomes, telemetry `run_id`, `swarm_used`, `swarm_label`, `swarm_note`, reviewer identity, review scope, final disposition, unresolved findings count, and a statement that no generated `status/`, curriculum `audit/`, curriculum `review/`, or telemetry DB artifacts are included.
+
 ## PR, Commit, And Telemetry Requirements
 
 - Branch: `codex/b2-production-<batch>`
@@ -119,7 +143,7 @@ Run `scripts/audit/check_mdx_generation_drift.py` only when a drift-only check i
 - Run `.venv/bin/python scripts/audit/lint_agent_trailer.py` before pushing.
 - Persist module-build telemetry using `docs/prompts/orchestrators/shared/telemetry-and-pr.md`.
 - Include `swarm_used`, `swarm_label`, and `swarm_note` in telemetry and PR text.
-- Require independent review before merge.
+- Require independent-family review before merge; unresolved findings are blockers.
 
 ## Expected Final Response
 
@@ -128,8 +152,10 @@ B2 preflight report used: <path>
 Modules built: <slugs>
 Files changed: <paths>
 Validation run: <commands and outcomes>
-Telemetry: <posted or unavailable with reason>
-Independent review: <status>
+Telemetry: <run_id, POST status, unavailable reason if any>
+PR: <url, ready/merged/blocked>
+Independent review: <reviewer identity, model, scope, final disposition>
+Unresolved review findings: <n>
 Forbidden artifacts included: no
 swarm_used: true/false
 swarm_label: <none | solo | helper | swarm>

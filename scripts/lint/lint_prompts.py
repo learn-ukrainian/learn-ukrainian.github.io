@@ -460,6 +460,68 @@ def check_orchestrator_suite_file(
     return violations
 
 
+def check_b2_prompt_contracts(root: Path) -> list[dict]:
+    """Validate B2 legacy prompts still carry executable review/swarm gates."""
+    marker_sets = {
+        root / "b2" / "preflight-readiness-audit-orchestrator.md": [
+            "## Helper Swarm Policy",
+            "gpt-5.4-mini",
+            "gpt-5.3-codex-spark",
+            "Do not let helpers read secrets",
+            "## Independent-Family Review Gate",
+            "Claude Opus 4.8",
+            "Gemini 3.1 Pro High",
+            "unresolved findings are blockers",
+            "## PR Body Requirements",
+            "reviewer identity",
+            "review scope",
+            "final disposition",
+        ],
+        root / "b2" / "production-build-orchestrator.md": [
+            "## Helper Swarm Policy",
+            "gpt-5.4-mini",
+            "gpt-5.3-codex-spark",
+            "Do not let helpers read secrets",
+            "## Independent-Family Review Gate",
+            "Claude Opus 4.8",
+            "Gemini 3.1 Pro High",
+            "unresolved findings are blockers",
+            "POST /api/telemetry/module-builds",
+            "pr_number",
+            "pr_url",
+            "reviewer identity",
+        ],
+        root / "b2" / "quality-audit-orchestrator.md": [
+            "## Helper Swarm Policy",
+            "gpt-5.4-mini",
+            "gpt-5.3-codex-spark",
+            "Do not let helpers read secrets",
+            "## Independent-Family Review Gate",
+            "Claude Opus 4.8",
+            "Gemini 3.1 Pro High",
+            "unresolved findings are blockers",
+            "## PR Body Requirements",
+            "reviewer identity",
+            "review scope",
+            "final disposition",
+        ],
+    }
+
+    violations: list[dict] = []
+    for filepath, markers in marker_sets.items():
+        if not filepath.exists():
+            continue
+        text = filepath.read_text(encoding="utf-8")
+        violations.extend(require_markers(
+            text,
+            filepath,
+            markers,
+            "ORCH_B2_REVIEW_SWARM_CONTRACT",
+            "B2 prompt missing executable review/swarm marker",
+        ))
+    return violations
+
+
 def check_orchestrator_track_coverage(
     root: Path,
     manifest_path: Path,
@@ -533,6 +595,7 @@ def scan_orchestrator_suites(
     for filepath in sorted(root.glob("*/suite-orchestrator.md")):
         violations.extend(check_orchestrator_suite_file(filepath, seminar_tracks=seminar_tracks))
 
+    violations.extend(check_b2_prompt_contracts(root))
     return violations
 
 
