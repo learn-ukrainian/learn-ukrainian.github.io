@@ -1,8 +1,24 @@
 # Folk Track — Claude Driver Handoff (MY OWN — not the orchestrator's)
 
-> ℹ️ Sessions 68–76 detail lives in the local thread handoff (`.agent/claude-thread-handoff.md`, gitignored) and in merged PRs (#3648 koliadky exemplar, #3651 Atlas, #3669 global Readings reference). This git-tracked file resumes the SSOT thread at Session 76 below; older in-file entries (≤67) are historical.
+> ℹ️ Sessions 68–80 detail lives in the local thread handoff (`.agent/claude-thread-handoff.md`, gitignored) and in merged PRs (#3648 koliadky exemplar, #3651 Atlas, #3669 global Readings reference, #3715 Phase 0 demand manifest, #3720 Phase 1a rights classifier, #3724 approved primary-text plan). This git-tracked file resumes the SSOT thread at Session 81 below; older in-file entries (≤67) are historical.
 
-## ▶▶▶ SESSION 76 (2026-06-21) — en/uk chrome i18n DESIGNED with Codex (no build) — RESUME HERE
+## ▶▶▶ SESSION 81 (2026-06-22) — primary-text system Phase 1b (textbook curation lookup) — RESUME HERE
+
+**Epic phase:** APPROVED primary-text acquisition & hosting system (plan `docs/plans/primary-text-acquisition-hosting-system.md`, #3724). Demand-driven, multi-source, all tracks. Folk is the buildable pilot slice; full cross-track rollout (~1,270 modules / 1,882 distinct demanded works) is a fleet program coordinated with the main orchestrator.
+
+**Shipped on main:** Phase 0 demand manifest `scripts/readings/primary_text_demand.py` (#3715 → `8a54219af5`); Phase 1a rights classifier `scripts/readings/rights_classifier.py` + `data/authors_rights.yaml` (#3720). Manifest scans **1,882 distinct works** all tracks (folk 58, lit 516, bio 482, hist 289, istorio 330, oes 232, ruth 200, lit-* subtracks).
+
+**This session — Phase 1b: textbook curation lookup (PR #3728).** New `scripts/readings/textbook_curation.py` (plan component 2): read-only resolver over `data/sources.db` `textbook_sections` (7,250 rows; cols section_title/grade/page_start/page_end/full_text). For a demanded (work, author) it answers "in the Ukrainian school canon? which textbook/grade/page-range/excerpt boundary?" — used to (a) confirm canon + level, (b) define the excerpt boundary for in-copyright works. NOT for verbatim hosting (full_text is abridged OCR — boundary metadata only). Normalized matching reuses `normalize_work_title` + `normalize_author` + `normalize_token`; PUA-glyph + trailing-page-number title decoration stripped; guillemet-token exact match; false-positive guard (author match disambiguates short titles — verified «Маруся» does NOT false-hit «Маруся Чурай»). REAL-DATA verified (Claude independent, not trusting codex's pasted output): «Камінний хрест»/Стефаник grade 10 pp149-150 conf 1.0; «Заповіт»/Шевченко conf 1.0; Shevelov scholarly → not-in-canon (correct); folk song → no hit (correct). Manifest summary: 44/1882 in-canon, 12 high-confidence — precision eyeballed, all 12 are genuine grade 10-11 ukrlit program texts. 6 tests green + ruff clean (re-run by me).
+
+**FOLLOW-UP noted (Phase 0 concern, not 1b):** demand manifest carries author-spelling-variant duplicates (Лісова пісня ×3, Тіні забутих предків ×4) because distinct (work, author) keys form when plans spell an author differently (Леся Українка / Українка Л. / Українка Леся). Phase 1b faithfully looks up each. Consider author-canonicalization in `primary_text_demand.py` later.
+
+**IN-FLIGHT:** none after PR #3728 merges. NEXT ACTION below.
+
+**NEXT ACTION (after 1b lands):** Phase 1c — multi-source clean-text resolver + free-full-text link resolver (literary_texts → Wikisource per-work via `scrape_wikisource.py` → ukrlib; verify_quote-gated; MANDATORY free-full-text link for in-copyright works). Prove on 3–5 works (folk PD, Shevchenko PD, an in-copyright author → ukrlib link). Then Phase 2 (generalize `generate_readings.py` + rendering across tracks; host first real PD lit batch).
+
+**Role/boundary reminders:** Folk + folk-adjacent infra owned end-to-end; I IMPLEMENT/DRIVE infra (dispatch+PR), never file-and-forget. PRs only — NEVER commit/merge to `main`; self-merge fleet-reviewed + CI-green folk work (#M-12), leave system/agent-def/governance PRs to the user. Verify the REAL artifact (read content, not just green gates); no overclaiming. MAX access to Ukrainian literature — never gatekeep; in-copyright works get a brief excerpt + MANDATORY free-full-text link.
+
+## ▶▶▶ SESSION 76 (2026-06-21) — en/uk chrome i18n DESIGNED with Codex (no build)
 **User order (S76):** consult Codex on the principled web-UI language-support approach *before* building. ✅ DONE.
 - **Verdict:** single-URL **Chrome Locale Runtime** (runtime chrome-string layer), NOT Astro routing i18n (route i18n would duplicate ~4405 static pages + invariant Ukrainian content). Full spec ADR: **`docs/decisions/2026-06-21-chrome-locale-runtime-i18n.md`**. Posted to **issue #3671**. Codex bridge task `i18n-chrome-design-3671` (msg #1336).
 - **Shape:** `src/lib/i18n/chrome.ts` (typed `ChromeKey` dict, `DEFAULT_CHROME_LOCALE='uk'`) + `ChromeText.astro` + `lu-chrome-locale` toggle next to `lu-theme`, applied pre-paint via `is:inline` setting `data-chrome-locale` on `<html>`. FOUC: dual-render variants, CSS show/hide. Content protection = CI lint (ban `data-i18n` in `src/content/**`, ban `t()` outside chrome files). `<html lang="uk">` default, English spans `lang="en"`.
