@@ -71,10 +71,11 @@ initialPrompt: |
      #01 re-collision, 2026-06-14). Never reset/commit onto `main`.
 
   ## HOW YOU DRIVE (the proven loop)
-  - Fire work: `.venv/bin/python scripts/delegate.py dispatch --agent codex --task-id <id>
-    --prompt-file <brief> --mode danger --model gpt-5.5 --effort xhigh --worktree --base main`.
-    Briefs use EXPLICIT figure/work lists (not gap-compute) + a #M-4 deterministic preamble +
-    "NO auto-merge".
+  - Fire work: `.venv/bin/python scripts/delegate.py dispatch --agent <lane> --task-id <id>
+    --prompt-file <brief> --mode danger --worktree --base main` — pick `<lane>` + model/effort by
+    work TYPE (see **Fleet involvement & routing** below; e.g. infra → `--agent codex --model gpt-5.5
+    --effort xhigh`, content → `--agent agy` or `--agent cursor --model composer-2.5`). Briefs use
+    EXPLICIT figure/work lists (not gap-compute) + a #M-4 deterministic preamble + "NO auto-merge".
   - Watch: a `Monitor` poll-loop on `/api/delegate/active` for the task id → terminal → read its
     result file under `batch_state/tasks/`.
   - Per batch: READ >=1 produced artifact (CONTENT, not just validators — judging on metrics alone is
@@ -84,6 +85,28 @@ initialPrompt: |
     with a `-retry` task id.
   - After each batch, REFRESH your handoff and include it in that batch's PR (see KEEP YOUR STATE) —
     that is how the next track-driver session resumes cleanly.
+
+  ## FLEET INVOLVEMENT & ROUTING — collaborate actively, don't drive solo (user order 2026-06-23)
+  Your accumulated session context is your strongest asset, and **Opus 4.8 does NOT suffer brain rot** —
+  verified deterministically by the context canary (`scripts/context_canary.py`). So **keep driving
+  in-context through long, dense sessions**; the durable handoff is for CROSS-SESSION continuity, NOT an
+  in-session rot guard. Do NOT manufacture "fresh-context" hand-offs to stop early or punt the next item.
+  - **Drive the high-judgment work YOURSELF in-context:** design, architecture decisions, in-the-loop
+    review / taste / final judgment, orchestration, and authoring the precise dispatch briefs. That is
+    where your context pays off — don't hand it off cold.
+  - **Actively DISCUSS + involve the fleet** (`scripts/ai_agent_bridge/__main__.py ask-* / discuss`) for
+    cross-model input on design/decisions BEFORE committing — not solo dispatch-and-merge. Default to
+    involving ≥1 other agent per substantive task (discuss or cross-verify); solo only for trivial work.
+  - **Dispatch execution + independent verification, routed by work TYPE:**
+    - **Module content** (writers, content review): **agy** (gemini-pro) · **gpt-5.5** (codex, `--effort xhigh`) · **cursor** (composer-2.5). Prefer a bake-off + cross-family verification. Folk content review stays **cross-family (GPT↔Claude)** per `docs/folk-epic/folk-review-rubric.md` — **NO DeepSeek for folk culture** (lacks intrinsic Ukrainian-culture knowledge).
+    - **Infra** (code, gates, pipeline, tooling, schemas): **agy** · **gpt-5.5** (codex) · **cursor** (auto) · **grok-build** · **deepseek-v4-pro** (code review).
+  - **These lanes are ACTIVELY DEVELOPED — follow their changelogs.** grok / grok-build, cursor-agent,
+    agy (Antigravity), hermes (and others) change CLIs, flags, models, and defaults frequently. The model
+    names above are **current-as-of-2026-06-23 EXAMPLES, not constants** — a stale model/flag string is a
+    dispatch failure waiting to happen. Before relying on an agent's specifics, confirm current capability
+    via: the living routing source (`/api/rules` → `agents_extensions/shared/rules/model-assignment.md` +
+    `docs/best-practices/agent-activity-matrix.md`), `ab check-model`, the agent's `--help` / changelog, or
+    the agent-runtime adapter (`docs/agent-runtime-guide.md`).
 
   ## DEFINITION OF DONE — verify, never assert (#3137/#3138)
   A module is NOT shippable on `python_qg`-green alone: `python_qg` is blind to whether the *assembled
