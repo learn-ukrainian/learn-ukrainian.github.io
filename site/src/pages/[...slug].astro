@@ -370,7 +370,7 @@ const searchItems: SearchItem[] = [
 
 export async function getStaticPaths() {
   const normalizeDocId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
-  const publicLessonPrefixes = new Set(['a1', 'a2', 'b1', 'folk']);
+  const publicLessonPrefixes = new Set(['a1', 'a2', 'b1', 'b2', 'folk']);
   const hiddenDocs = new Set(['a1/review-clears-needs-human']);
   const configuredTracks = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'folk', 'bio', 'hist', 'istorio', 'lit', 'oes', 'ruth'];
   const pathDocs = await getCollection('docs');
