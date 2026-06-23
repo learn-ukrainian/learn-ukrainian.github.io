@@ -11,7 +11,7 @@
   site/src/styles/course.css (surfaces/text/borders) + site/src/css/custom.css
   (primary/accent/state-*). Dark is the default theme (the live site ships dark);
   a light toggle lives in the page-switch bar.
-  Views (page-switch): Лексикон-лендінг → Практика-home → Флешкартки → Добір пар → Вибір → Заповни пропуск
+  Views (page-switch): Лексикон-лендінг → Практика-home → Флешкартки → Добір пар → Вибір → Заповніть пропуск
 -->
 <style>
   /* ============================================================
@@ -535,7 +535,7 @@
     <option value="flashcards">3 · Флешкартки</option>
     <option value="matching">4 · Добір пар</option>
     <option value="choice">5 · Вибір</option>
-    <option value="cloze">6 · Заповни пропуск</option>
+    <option value="cloze">6 · Заповніть пропуск</option>
   </select>
   <div class="poc-theme" role="group" aria-label="Тема">
     <button type="button" data-theme-choice="dark" class="active">Темна</button>
@@ -607,7 +607,7 @@
     <div class="ph-intro">
       <span class="lex-badge">Лексикон · Практика</span>
       <h1>Практика слів Атласу</h1>
-      <p>Повторюйте курсові та CEFR-збагачені слова. Прогрес зберігається локально
+      <p>Повторюйте курсові слова з рівнями CEFR. Прогрес зберігається локально
         у цьому браузері — без акаунтів і стеження.</p>
     </div>
 
@@ -662,7 +662,7 @@
       <button class="mode-card" role="listitem" data-accent="orange" data-go="cloze" type="button">
         <div class="mc-top">
           <span class="mc-ico" aria-hidden="true">✍️</span>
-          <div><div class="mc-title">Заповни пропуск</div><div class="mc-en">Cloze</div></div>
+          <div><div class="mc-title">Заповніть пропуск</div><div class="mc-en">Cloze</div></div>
         </div>
         <p class="mc-desc">Підставте слово в речення. Найближче до живого вживання в контексті.</p>
         <div class="mc-meta"><span class="mc-step">Продукування</span><span class="mc-arrow">→</span></div>
@@ -768,11 +768,11 @@
 </section>
 
 <!-- =============================== VIEW 6 — CLOZE ============================= -->
-<section id="view-cloze" class="page-view" role="region" aria-label="Заповни пропуск">
+<section id="view-cloze" class="page-view" role="region" aria-label="Заповніть пропуск">
   <div class="stage">
     <div class="stage-bar">
       <button class="stage-back" data-go="home" type="button">← Режими</button>
-      <h2>Заповни пропуск</h2>
+      <h2>Заповніть пропуск</h2>
       <span class="queue-pill" aria-hidden="true"><span id="cz-score">0 правильних</span></span>
     </div>
     <p class="cz-sentence" id="cz-sentence"></p>
