@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: de84a1f8edd254ed39f462a177ee32c7667881bcb76c9536d211559761890682
+  components_sha256: 24e7b7c5b1856b522c3daa48ef99df97c16277732da42858e196ab876e2a2fe1
   config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -1067,6 +1067,38 @@ components:
       letters:
       - <LetterEntry>
       title: Приклад
+    deprecated: false
+    deprecation_reason: null
+  LexiconPractice:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required: []
+      optional:
+      - name: deckUrl
+        type: string
+        description: deckUrl prop.
+        ukrainian_text: 'false'
+      - name: initialDeck
+        type: PracticeDeckEntry[]
+        description: initialDeck prop.
+        ukrainian_text: 'false'
+      - name: initialMode
+        type: PracticeMode
+        description: initialMode prop.
+        ukrainian_text: 'false'
+      - name: autoStart
+        type: boolean
+        description: autoStart prop.
+        ukrainian_text: 'false'
+      - name: advanceDelayMs
+        type: number
+        description: advanceDelayMs prop.
+        ukrainian_text: 'false'
+    nested_types: {}
+    example: {}
     deprecated: false
     deprecation_reason: null
   MarkTheWords:
