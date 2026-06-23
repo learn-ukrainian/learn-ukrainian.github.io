@@ -7,16 +7,43 @@ import argparse
 import contextlib
 import difflib
 import hashlib
+import importlib.util
 import json
 import os
 import re
 import subprocess
 import sys
 import tempfile
+import types
 from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+def _load_wiki_completeness_gate() -> None:
+    module_name = "scripts.audit.wiki_completeness_gate"
+    if module_name in sys.modules:
+        return
+    if "scripts.audit" not in sys.modules:
+        audit_package = types.ModuleType("scripts.audit")
+        audit_package.__path__ = [str(ROOT / "scripts" / "audit")]
+        sys.modules["scripts.audit"] = audit_package
+    spec = importlib.util.spec_from_file_location(
+        module_name,
+        ROOT / "scripts" / "audit" / "wiki_completeness_gate.py",
+    )
+    if spec is None or spec.loader is None:
+        raise RuntimeError("could not load wiki completeness gate")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+
+
+_load_wiki_completeness_gate()
+from scripts.build import promote_quality_gate
+
 CURRICULUM_ROOT = Path("curriculum") / "l2-uk-en"
 DOCS_ROOT = Path("site") / "src" / "content" / "docs"
 ATLAS_OUTPUT_FILES = (
@@ -24,6 +51,7 @@ ATLAS_OUTPUT_FILES = (
     Path("site") / "src" / "data" / "lexicon-manifest.fingerprint.json",
 )
 READINGS_GENERATOR = "scripts.readings.generate_readings"
+PROMOTE_QUALITY_FILE = "promote_quality.json"
 
 LESSON_SOURCE_FILES = frozenset(
     {
@@ -248,6 +276,17 @@ def _collect_source_files(repo_root: Path, source: SourceSpec) -> tuple[list[Sou
         else:
             files.append(SourceFile(source_rel=source_rel, dest_rel=source_rel, content=content))
 
+    quality_rel = _source_rel_for_lesson(source.level, source.slug, PROMOTE_QUALITY_FILE)
+    quality_content = _read_build_file(repo_root, source, quality_rel)
+    if quality_content is not None:
+        files.append(
+            SourceFile(
+                source_rel=quality_rel,
+                dest_rel=quality_rel,
+                content=quality_content,
+            )
+        )
+
     return files, missing_required, missing_optional
 
 
@@ -292,6 +331,16 @@ def _classify_destination(repo_root: Path, source: SourceSpec, files: list[Sourc
             mismatches.append(_diff_summary(dest_rel, current, item.content))
 
     return any_required_exists, mismatches
+
+
+def _has_pending_quality_sidecar(repo_root: Path, files: list[SourceFile]) -> bool:
+    for item in files:
+        if item.dest_rel.name != PROMOTE_QUALITY_FILE:
+            continue
+        dest = repo_root / item.dest_rel
+        if not dest.exists() or dest.read_bytes() != item.content:
+            return True
+    return False
 
 
 def _dry_run(repo_root: Path, files: list[SourceFile], missing_optional: list[Path]) -> None:
@@ -383,6 +432,36 @@ def _run_generate_readings(repo_root: Path, source: SourceSpec) -> tuple[int, li
     return 0, written
 
 
+def _promote_module_dir(repo_root: Path, source: SourceSpec) -> Path:
+    return repo_root / CURRICULUM_ROOT / source.level / source.slug
+
+
+def _check_promote_quality(repo_root: Path, source: SourceSpec, *, dry_run: bool) -> int:
+    report = promote_quality_gate.verify(
+        source.level,
+        source.slug,
+        module_dir=_promote_module_dir(repo_root, source),
+        repo_root=repo_root,
+    )
+    if not report["applicable"]:
+        return 0
+    if report["passed"]:
+        print(
+            f"PASS promote_quality {source.level}/{source.slug}: {report['reason']}"
+        )
+        return 0
+
+    prefix = "WARNING" if dry_run else "ERROR"
+    print(
+        f"{prefix} promote_quality failed for {source.level}/{source.slug}: "
+        f"{report['reason']}",
+        file=sys.stderr,
+    )
+    for failure in report.get("failures", []):
+        print(f"- {failure}", file=sys.stderr)
+    return 0 if dry_run else 1
+
+
 def promote(args: argparse.Namespace, *, repo_root: Path = ROOT) -> int:
     repo_root = repo_root.resolve()
     try:
@@ -403,6 +482,7 @@ def promote(args: argparse.Namespace, *, repo_root: Path = ROOT) -> int:
 
     if args.dry_run:
         _dry_run(repo_root, files, missing_optional)
+        _check_promote_quality(repo_root, source, dry_run=True)
         return 0
 
     any_required_exists, mismatches = _classify_destination(repo_root, source, files)
@@ -412,7 +492,11 @@ def promote(args: argparse.Namespace, *, repo_root: Path = ROOT) -> int:
             print(mismatch, file=sys.stderr, end="" if mismatch.endswith("\n") else "\n")
         return 1
 
-    if any_required_exists and not mismatches:
+    if any_required_exists and not mismatches and not _has_pending_quality_sidecar(
+        repo_root, files
+    ):
+        if _check_promote_quality(repo_root, source, dry_run=False) != 0:
+            return 1
         print("OK already-promoted")
         return 0
 
@@ -442,6 +526,10 @@ def promote(args: argparse.Namespace, *, repo_root: Path = ROOT) -> int:
         written.extend(rel for rel in ATLAS_OUTPUT_FILES if (repo_root / rel).exists())
     elif args.refresh_atlas:
         print("OK atlas refresh skipped; promoted files did not change vocabulary.yaml")
+
+    promote_quality_status = _check_promote_quality(repo_root, source, dry_run=False)
+    if promote_quality_status != 0:
+        return promote_quality_status
 
     if not written:
         print("OK no changes")
