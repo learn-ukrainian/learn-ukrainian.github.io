@@ -35,6 +35,7 @@ const frontmatter = {
         containerClass="atlas-typeahead-landing"
         labelClass="atlas-typeahead-label"
       />
+      <a class="lexicon-practice-link" href="/lexicon/practice">Practice Word Atlas</a>
     </section>
 
     <DailyWords />
@@ -74,13 +75,33 @@ const frontmatter = {
     line-height: 1;
   }
 
-  .lexicon-landing-hero p {
-    max-width: 720px;
-    margin: 1rem auto 0;
-    color: var(--lu-text-muted);
-    font-size: 1.1rem;
-    line-height: 1.65;
-  }
+.lexicon-landing-hero p {
+  max-width: 720px;
+  margin: 1rem auto 0;
+  color: var(--lu-text-muted);
+  font-size: 1.1rem;
+  line-height: 1.65;
+}
+
+.lexicon-practice-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  margin-top: 1.25rem;
+  padding: 0 0.9rem;
+  border: 1px solid var(--lu-primary);
+  border-radius: 6px;
+  background: var(--lu-primary);
+  color: var(--lu-on-primary);
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.lexicon-practice-link:hover,
+.lexicon-practice-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--lu-state-active);
+}
 
   @media (max-width: 680px) {
     .lexicon-landing-hero {

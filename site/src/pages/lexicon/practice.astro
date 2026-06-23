@@ -1,0 +1,202 @@
+---
+import LexiconPractice from "../../components/LexiconPractice";
+import CourseLayout from "../../layouts/CourseLayout.astro";
+
+const frontmatter = {
+  title: "Word Atlas Practice",
+  description: "Client-side Word Atlas flashcards, quiz practice, and progress.",
+};
+---
+
+<CourseLayout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  currentPath="/lexicon/practice"
+  heroVariant="lexicon"
+  wide
+  showHero={false}
+>
+  <main class="word-atlas lexicon-practice-page" data-word-atlas>
+    <section class="lexicon-practice-intro" aria-labelledby="lexicon-practice-page-title">
+      <span class="lexicon-practice-badge">Атлас слів</span>
+      <h1 id="lexicon-practice-page-title">Word Atlas Practice</h1>
+      <p>
+        Review eligible course and CEFR-enriched words with local progress stored in this browser.
+      </p>
+    </section>
+
+    <LexiconPractice client:only="react" />
+  </main>
+</CourseLayout>
+
+<style>
+  .lexicon-practice-page {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem 4.5rem;
+  }
+
+  .lexicon-practice-intro {
+    max-width: 780px;
+    margin-bottom: 2rem;
+  }
+
+  .lexicon-practice-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.75rem;
+    padding: 0 0.65rem;
+    border-radius: 4px;
+    background: var(--lu-state-active);
+    color: var(--lu-primary);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .lexicon-practice-intro h1 {
+    margin: 0.7rem 0 0;
+    color: var(--lu-text);
+    font-size: clamp(2.3rem, 4vw, 4rem);
+    line-height: 1;
+  }
+
+  .lexicon-practice-intro p {
+    max-width: 680px;
+    margin: 1rem 0 0;
+    color: var(--lu-text-muted);
+    font-size: 1.05rem;
+    line-height: 1.65;
+  }
+
+  :global(.lexicon-practice) {
+    display: grid;
+    gap: 1.25rem;
+    color: var(--lu-text);
+  }
+
+  :global(.lexicon-practice-toolbar) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--lu-border);
+  }
+
+  :global(.lexicon-practice-toolbar h2) {
+    margin: 0;
+    font-size: 1.45rem;
+    line-height: 1.2;
+  }
+
+  :global(.lexicon-practice-status) {
+    min-height: 1.4rem;
+    margin: 0.35rem 0 0;
+    color: var(--lu-text-muted);
+  }
+
+  :global(.lexicon-practice-modes),
+  :global(.lexicon-rating-bar) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  :global(.lexicon-practice button) {
+    min-height: 2.5rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 6px;
+    background: var(--lu-surface);
+    color: var(--lu-text);
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  :global(.lexicon-practice button:hover),
+  :global(.lexicon-practice button:focus-visible) {
+    border-color: var(--lu-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--lu-state-active);
+  }
+
+  :global(.lexicon-practice-modes button),
+  :global(.lexicon-rating-bar button),
+  :global(.lexicon-practice-start button) {
+    padding: 0 0.85rem;
+  }
+
+  :global(.lexicon-practice-modes button.active) {
+    border-color: var(--lu-primary);
+    background: var(--lu-primary);
+    color: var(--lu-on-primary);
+  }
+
+  :global(.lexicon-practice-progress) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  :global(.lexicon-practice-progress div) {
+    min-width: 0;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface);
+  }
+
+  :global(.lexicon-practice-progress span) {
+    display: block;
+    color: var(--lu-primary);
+    font-size: 1.75rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  :global(.lexicon-practice-progress strong) {
+    display: block;
+    margin-top: 0.35rem;
+    color: var(--lu-text-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+  }
+
+  :global(.lexicon-practice-stage) {
+    display: grid;
+    gap: 1rem;
+    max-width: 720px;
+  }
+
+  :global(.lexicon-rating-bar) {
+    justify-content: center;
+  }
+
+  :global(.lexicon-practice-muted),
+  :global(.lexicon-practice-warning) {
+    margin: 0;
+    color: var(--lu-text-muted);
+    line-height: 1.55;
+  }
+
+  :global(.lexicon-practice-warning) {
+    color: var(--lu-state-wrong-fg);
+  }
+
+  @media (max-width: 680px) {
+    .lexicon-practice-page {
+      padding: 2.5rem 1rem 3.5rem;
+    }
+
+    :global(.lexicon-practice-progress) {
+      grid-template-columns: 1fr;
+    }
+
+    :global(.lexicon-practice-toolbar) {
+      align-items: stretch;
+    }
+  }
+</style>
