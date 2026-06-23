@@ -1,7 +1,13 @@
 import json
 from pathlib import Path
 
-from scripts.lexicon.heritage_classifier import classify_lemma, classify_surface_form
+import pytest
+
+from scripts.lexicon.heritage_classifier import (
+    classify_lemma,
+    classify_surface_form,
+    compute_warning_severity,
+)
 
 DB = Path(__file__).resolve().parent / "fixtures" / "heritage_sample.db"
 VESUM_DB = Path(__file__).resolve().parent / "fixtures" / "vesum_sample.db"
@@ -149,3 +155,141 @@ def test_kobita_ignores_cached_sum20_regional_evidence(monkeypatch, tmp_path) ->
     assert [(attestation["source"], attestation["ref"]) for attestation in status["attestations"]] == [
         ("VESUM", "кобіта")
     ]
+
+
+@pytest.mark.parametrize(
+    ("heritage_status", "vesum_attested", "max_sovietization_risk", "expected"),
+    [
+        (
+            {"classification": "russianism", "is_russianism": True, "attestations": []},
+            False,
+            0,
+            "russianism_red",
+        ),
+        (
+            {
+                "classification": "unknown",
+                "is_russianism": False,
+                "russian_shadow": True,
+                "attestations": [],
+            },
+            False,
+            0,
+            "russianism_red",
+        ),
+        (
+            {
+                "classification": "unknown",
+                "is_russianism": False,
+                "russian_shadow": True,
+                "attestations": [{"source": "standard_alternative", "ref": "ануж"}],
+            },
+            False,
+            0,
+            "russianism_red",
+        ),
+        (
+            {
+                "classification": "unknown",
+                "is_russianism": False,
+                "russian_shadow": True,
+                "attestations": [{"source": "literary_fts", "ref": "chunk"}],
+            },
+            False,
+            0,
+            "none",
+        ),
+        (
+            {
+                "classification": "standard",
+                "is_russianism": False,
+                "russian_shadow": True,
+                "attestations": [],
+            },
+            False,
+            0,
+            "none",
+        ),
+        (
+            {
+                "classification": "standard",
+                "is_russianism": True,
+                "russian_shadow": True,
+                "attestations": [],
+            },
+            False,
+            0,
+            "none",
+        ),
+        (
+            {
+                "classification": "standard",
+                "is_russianism": False,
+                "russian_shadow": True,
+                "attestations": [{"source": "VESUM", "ref": "слово"}],
+            },
+            True,
+            0,
+            "treasured",
+        ),
+        (
+            {
+                "classification": "dialect",
+                "is_russianism": False,
+                "russian_shadow": True,
+                "attestations": [],
+            },
+            False,
+            0,
+            "treasured",
+        ),
+        (
+            {
+                "classification": "unknown",
+                "is_russianism": False,
+                "russian_shadow": False,
+                "attestations": [],
+                "curated_calque": {"corrections": ["чинний"]},
+            },
+            False,
+            0,
+            "calque_yellow",
+        ),
+        (
+            {
+                "classification": "unknown",
+                "is_russianism": False,
+                "russian_shadow": False,
+                "attestations": [],
+            },
+            False,
+            2,
+            "soviet_def_blue",
+        ),
+        (
+            {
+                "classification": "unknown",
+                "is_russianism": False,
+                "russian_shadow": True,
+                "attestations": [],
+            },
+            False,
+            2,
+            "russianism_red",
+        ),
+    ],
+)
+def test_compute_warning_severity_is_pure(
+    heritage_status: dict,
+    vesum_attested: bool,
+    max_sovietization_risk: int,
+    expected: str,
+) -> None:
+    assert (
+        compute_warning_severity(
+            heritage_status,
+            vesum_attested=vesum_attested,
+            max_sovietization_risk=max_sovietization_risk,
+        )
+        == expected
+    )

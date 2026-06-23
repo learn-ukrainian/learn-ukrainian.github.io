@@ -403,14 +403,14 @@
   border: 2px solid var(--green);
 }
 
-.editorial-calque {
+.editorial-calque:not(.info) {
   background: var(--yellow-light);
   border: 2px solid var(--yellow);
 }
 
 .editorial-calque.info {
   background: var(--blue-light);
-  border-color: var(--blue);
+  border: 2px solid var(--blue);
 }
 
 .editorial-warn-header,

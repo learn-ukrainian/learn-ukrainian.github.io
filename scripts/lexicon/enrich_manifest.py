@@ -72,7 +72,7 @@ from scripts.lexicon.esum_garbled import (
     strip_garbled_tail,
     trim_curated_goroh_text,
 )
-from scripts.lexicon.heritage_classifier import classify_lemma
+from scripts.lexicon.heritage_classifier import classify_lemma, compute_warning_severity
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, write_fingerprint
 from scripts.verification.vesum import verify_lemma, verify_word
 from scripts.wiki.slovnyk_me import primary_synonym_sense_text
@@ -1829,6 +1829,40 @@ def _entry_scoped_heritage_status(status: dict[str, Any]) -> dict[str, Any]:
     return clean_status
 
 
+def _vesum_attested_from_morphology(morphology: dict[str, Any] | None) -> bool:
+    if not isinstance(morphology, dict):
+        return False
+    return (
+        str(morphology.get("source") or "").upper() == "VESUM"
+        and int(morphology.get("form_count") or 0) > 0
+    )
+
+
+def _max_definition_sovietization_risk(cards: list[dict[str, Any]]) -> int:
+    risks = [int(card.get("sovietization_risk") or 0) for card in cards if isinstance(card, dict)]
+    return max(risks, default=0)
+
+
+def _finalize_heritage_status(
+    status: dict[str, Any],
+    *,
+    morphology: dict[str, Any] | None,
+    definition_cards: list[dict[str, Any]],
+) -> dict[str, Any]:
+    finalized = dict(status)
+    vesum_attested = bool(finalized.get("vesum_attested")) or _vesum_attested_from_morphology(
+        morphology
+    )
+    max_sovietization_risk = _max_definition_sovietization_risk(definition_cards)
+    finalized["vesum_attested"] = vesum_attested
+    finalized["warning_severity"] = compute_warning_severity(
+        finalized,
+        vesum_attested=vesum_attested,
+        max_sovietization_risk=max_sovietization_risk,
+    )
+    return finalized
+
+
 def _is_slovnyk_warning_candidate(entry: dict[str, Any], status: dict[str, Any]) -> bool:
     return bool(
         entry.get("primary_source") == "surzhyk_to_avoid"
@@ -3181,6 +3215,11 @@ def enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
     morph = _morphology(base)
     if morph:
         block["morphology"] = morph
+    entry["heritage_status"] = _finalize_heritage_status(
+        entry["heritage_status"],
+        morphology=morph,
+        definition_cards=definition_cards,
+    )
     meaning = _meaning(conn, lemma, has_sum11_flags=has_sum11_flags, kaikki_lookup=kaikki_lookup)
     if _is_proper_noun_entry(entry):
         meaning = _proper_noun_wikipedia_meaning(lemma) or meaning
@@ -3232,10 +3271,14 @@ def enrich() -> tuple[int, int]:
                 enriched += 1
     finally:
         conn.close()
+    fingerprint_payload = write_fingerprint(DEFAULT_FINGERPRINT, root=ROOT)
     manifest["enrichment_generated"] = True
+    manifest["manifest_fingerprint"] = {
+        "schema_version": fingerprint_payload["schema_version"],
+        "fingerprint": fingerprint_payload["fingerprint"],
+    }
     manifest = _clean_html_entities_in_obj(manifest)
     MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    write_fingerprint(DEFAULT_FINGERPRINT, root=ROOT)
     return enriched, len(manifest["entries"])
 
 

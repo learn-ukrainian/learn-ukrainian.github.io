@@ -1,5 +1,9 @@
 ---
 import AtlasTypeahead from "./AtlasTypeahead.astro";
+import {
+  resolveHeritageBoxes,
+  type WarningSeverity,
+} from "../lib/lexicon/heritage-severity";
 
 interface CourseUsage {
   track: string;
@@ -103,8 +107,16 @@ interface HeritageStatus {
   attestations: HeritageAttestation[];
   is_russianism: boolean;
   russian_shadow: boolean;
-  calque_warning?: { detail?: string } | null;
+  warning_severity?: WarningSeverity;
+  vesum_attested?: boolean;
+  calque_warning?: { detail?: string; standard_alternatives?: string[] } | null;
   curated_calque?: CuratedCalque | null;
+  "§6_note"?: {
+    corrections: string[];
+    note: string;
+    source: string[];
+    citation?: string;
+  } | null;
   reverse_calques?: ReverseCalque[] | null;
 }
 
@@ -162,6 +174,7 @@ const nounParadigm = paradigm?.kind === "noun" ? paradigm : null;
 const verbParadigm = paradigm?.kind === "verb" ? paradigm : null;
 const posLabel = formatPos(entry.pos, enrichment?.morphology?.pos);
 const headwordIpa = formatIpa(entry.pronunciation?.ipa ?? entry.ipa);
+const heritageBoxes = resolveHeritageBoxes(entry);
 const statusBadges = buildStatusBadges();
 const etymologyStages = buildEtymologyStages(enrichment?.etymology);
 const courseUsage = entry.course_usage.slice().sort((a, b) => {
@@ -173,14 +186,8 @@ const externalGroups = groupExternalMaterials(enrichment?.external_materials ?? 
 const componentLinks = buildComponentLinks(entry, allEntries);
 const sourceList = buildSourceList();
 const phraseHasGloss = Boolean(entry.gloss && (!enrichment?.meaning || enrichment.meaning.definitions.length === 0));
-const shouldShowEditorialWarning = Boolean(heritage?.is_russianism);
-const shouldShowHeritageDefense = Boolean(
-  heritage &&
-    !heritage.is_russianism &&
-    heritage.classification &&
-    heritage.classification !== "unknown" &&
-    (heritage.classification !== "standard" || heritage.attestations.length > 0 || maxSovietizationRisk > 0),
-);
+const shouldShowEditorialWarning = Boolean(heritageBoxes.red);
+const shouldShowHeritageDefense = Boolean(heritageBoxes.green);
 const styleNotes = buildStyleNotes();
 
 const CASE_ROWS = [
@@ -262,17 +269,20 @@ function stressDisplay(form: string | undefined | null) {
 
 function buildStatusBadges() {
   const badges: Array<{ className: string; label: string; title?: string }> = [];
-  if (heritage?.is_russianism) {
-    badges.push({ className: "heritage-warn", label: "⚠ Потребує українського відповідника" });
-  } else if (heritage?.classification && heritage.classification !== "unknown") {
-    const heritageLabel = heritage.classification === "dialect"
-      ? "✓ Питома українська (діалектизм)"
-      : heritage.classification === "borrowing"
-        ? "✓ Засвоєне українське запозичення"
-        : heritage.classification === "historism"
-          ? "✓ Питома українська лексика"
-          : "✓ Питома українська лексика";
-    badges.push({ className: "heritage-ok", label: heritageLabel });
+  if (heritageBoxes.red) {
+    badges.push({
+      className: "heritage-warn",
+      label: heritageBoxes.inline?.label ?? "⚠ Потребує українського відповідника",
+    });
+  } else if (heritageBoxes.yellow) {
+    badges.push({ className: "heritage-warn", label: "Калькове застереження" });
+  } else if (heritageBoxes.green) {
+    badges.push({
+      className: "heritage-ok",
+      label: heritageBoxes.inline?.label ?? "✓ Питома українська лексика",
+    });
+  } else if (heritageBoxes.blue) {
+    badges.push({ className: "heritage-warn", label: "СУМ-11: редакторський прапорець" });
   }
   if (cefrLevel) {
     badges.push({ className: "cefr", label: `CEFR ${cefrLevel}${enrichment?.cefr?.source?.includes("estimated") ? " · орієнтовно" : ""}` });
@@ -282,9 +292,6 @@ function buildStatusBadges() {
   }
   if (heritage?.classification === "dialect") {
     badges.push({ className: "dialect", label: "Регіонально-літературне" });
-  }
-  if (maxSovietizationRisk > 0) {
-    badges.push({ className: "heritage-warn", label: "⚠ Радянські формулювання в СУМ-11" });
   }
   return badges;
 }
@@ -319,13 +326,6 @@ function buildStyleNotes() {
   }
   if (heritage?.curated_calque) {
     notes.push(`${heritage.curated_calque.note} Нейтральні відповідники: ${heritage.curated_calque.corrections.join(", ")}.`);
-  }
-  if (heritage?.reverse_calques?.length) {
-    const calqueForms = heritage.reverse_calques.map((rev) => `«${rev.calque}»`);
-    notes.push(`Рекомендовано замість скалькованої форми ${calqueForms.join(" або ")} (стилістична порада §6).`);
-  }
-  if (maxSovietizationRisk > 0) {
-    notes.push("СУМ-11 подано для прозорості, але радянські ілюстрації не слід сприймати як стилістично нейтральний сучасний приклад.");
   }
   return notes;
 }
@@ -398,7 +398,7 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
         </div>
         <div class="content-area">
           <section class="atlas-section">
-            <div class="editorial-calque info" style="margin-top: 2rem;">
+            <div class="editorial-calque info" data-severity="blue" style="margin-top: 2rem;">
               <div class="editorial-calque-header">
                 <div class="editorial-info-icon" aria-hidden="true">→</div>
                 Форма слова
@@ -434,51 +434,56 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
     </div>
 
   <div class="content-area">
-    {maxSovietizationRisk > 0 && (
-      <section class="atlas-section">
-        <div class="editorial-calque info">
-          <div class="editorial-calque-header">
-            <div class="editorial-info-icon" aria-hidden="true">→</div>
-            Радянські формулювання в СУМ-11 (стосується означення, не слова)
-          </div>
-          <p>
-            СУМ-11 показано для прозорості, але ця картка має ознаки радянської редакторської політики.
-            Це не означає, що саме слово негативне: перевагу слід надавати сучасним або дорадянським джерелам.
-          </p>
-          <p class="atlas-muted">
-            Тригер: <code>sovietization_risk={maxSovietizationRisk}</code>
-            {sovietizationKeywords.length > 0 && <> · keywords: <code>{sovietizationKeywords.join(", ")}</code></>}
-          </p>
-        </div>
-      </section>
-    )}
-
-    {shouldShowEditorialWarning && (
-      <section class="atlas-section">
-        <div class="editorial-warn" data-editorial-warn="is_russianism">
-          <div class="editorial-warn-header">
-            <div class="editorial-warn-icon" aria-hidden="true">⚠</div>
-            Редакційне попередження
-          </div>
-          <p>Класифікатор позначає цю форму як проблемну для стандартної української. Перевіряйте рекомендовані відповідники в джерелах.</p>
-        </div>
-      </section>
-    )}
-
-      {shouldShowHeritageDefense && (
+      {shouldShowEditorialWarning && (
         <section class="atlas-section">
-          <div class="editorial-success">
+          <div class="editorial-warn" data-editorial-warn="russianism_red" data-severity="red">
+            <div class="editorial-warn-header">
+              <div class="editorial-warn-icon" aria-hidden="true">⚠</div>
+              {heritageBoxes.red?.title}
+            </div>
+            <p>{heritageBoxes.red?.body}</p>
+          </div>
+        </section>
+      )}
+
+      {heritageBoxes.yellow && (
+        <section class="atlas-section">
+          <div class="editorial-calque" data-severity="yellow">
+            <div class="editorial-calque-header">
+              <div class="editorial-calque-icon" aria-hidden="true">→</div>
+              {heritageBoxes.yellow.title}
+            </div>
+            <p>{heritageBoxes.yellow.body}</p>
+            {heritageBoxes.yellow.detail && <p class="atlas-muted">{heritageBoxes.yellow.detail}</p>}
+          </div>
+        </section>
+      )}
+
+      {shouldShowHeritageDefense && heritageBoxes.green && (
+        <section class="atlas-section">
+          <div class="editorial-success" data-severity="green">
             <div class="editorial-success-header">
               <div class="editorial-success-icon" aria-hidden="true">✓</div>
-              {heritage?.classification === "dialect"
-                ? "Питома українська — регіональна форма, не русизм"
-                : "Питома українська лексика"}
+              {heritageBoxes.green.title}
+            </div>
+            <p>{heritageBoxes.green.body}</p>
+          </div>
+        </section>
+      )}
+
+      {heritageBoxes.blue && (
+        <section class="atlas-section">
+          <div class="editorial-calque info" data-severity="blue">
+            <div class="editorial-calque-header">
+              <div class="editorial-info-icon" aria-hidden="true">→</div>
+              {heritageBoxes.blue.title} (стосується означення, не слова)
             </div>
             <p>
-              Статус за класифікатором: <strong>{heritage?.classification}</strong>.
-              {heritage?.attestations?.length
-                ? ` Засвідчення: ${heritage.attestations.map((item) => `${item.source} ${item.ref}`).join("; ")}.`
-                : " Форма не позначена як русизм."}
+              {heritageBoxes.blue.body}
+            </p>
+            <p class="atlas-muted">
+              Тригер: <code>{heritageBoxes.blue.detail}</code>
+              {sovietizationKeywords.length > 0 && <> · keywords: <code>{sovietizationKeywords.join(", ")}</code></>}
             </p>
           </div>
         </section>
@@ -606,7 +611,7 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
       {styleNotes.length > 0 && (
         <section class="atlas-section">
           <h2>Стилістичні нотатки</h2>
-          <div class="editorial-calque info">
+          <div class="editorial-calque info" data-severity="blue">
             <div class="editorial-calque-header">
               <div class="editorial-info-icon" aria-hidden="true">ℹ</div>
               Редакційна нотатка
