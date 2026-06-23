@@ -1,9 +1,9 @@
 module: c2-002
 level: C2
 sequence: 2
-version: 1.3.2
-title: 'Милозвучність української мови: повний курс'
-subtitle: Повна українська милозвучність
+version: 1.3.3
+title: 'Милозвучність української мови: C2-практикум'
+subtitle: Поглиблена українська милозвучність
 focus: grammar
 pedagogy: workshop
 objectives:
