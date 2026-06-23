@@ -1,0 +1,67 @@
+{
+  "assembled_mdx_sha256": null,
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v1",
+    "digest": "5d9da83a253db5ec77773157531c5bcfb8e4af1994ba5ec205e017c3349eeea1",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/narodni-viruvannia-mifolohiia-demonolohiia.yaml",
+        "sha256": "277d978c8154f8071630f5df2095c2783e011462d6f2a77a2b2f615584a6bc1a"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-viruvannia-mifolohiia-demonolohiia/module.md",
+        "sha256": "a9bb6cf919fb5eb91cf4a636e6193a9c98effef219acbea24a2bdded0bb75db8"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-viruvannia-mifolohiia-demonolohiia/activities.yaml",
+        "sha256": "c6c1617410edc7a0699b3238849686c3233ad9f02a334cc8943e8cbdd99443a5"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-viruvannia-mifolohiia-demonolohiia/vocabulary.yaml",
+        "sha256": "c96182a89e91f73f662d56a52b5f94cbd8f964e6546171552be2c0b9fcd9cf27"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-viruvannia-mifolohiia-demonolohiia/resources.yaml",
+        "sha256": "856a10b8775b802384973d476aa84f39c3bb687c9f08d5bd2f50c87ac77a0c14"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "handles imperial name-replacement + romantic pseudo-pantheon (\u0411\u0435\u0440\u0435\u0433\u0438\u043d\u044f) risks",
+    "pedagogical": "absence of folk-primary text becomes a teaching point; name-place-function + six-question method"
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5.5"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-06-23T13:00:00Z",
+  "scores": {
+    "beauty": 8.7,
+    "decolonization": 9.5,
+    "engagement": 8.8,
+    "naturalness": 8.7,
+    "pedagogical": 9.0,
+    "tone": 9.1
+  },
+  "slug": "narodni-viruvannia-mifolohiia-demonolohiia",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "claude-tools",
+    "family": "anthropic",
+    "model": "claude-opus-4.8"
+  }
+}

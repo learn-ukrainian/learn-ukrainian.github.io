@@ -1,0 +1,67 @@
+{
+  "assembled_mdx_sha256": null,
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v1",
+    "digest": "f56e1b012ab1017936f799bb3035b414b9520feb6664a5e27f217b2388d2d8a3",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/narodna-kultura-yak-systema.yaml",
+        "sha256": "d9463b4966720e3d602d7dbf38c91bbc8cf55e1640f869fba1899851e5563424"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodna-kultura-yak-systema/module.md",
+        "sha256": "aa061be4c01b41d070c693857b34d92cb64762595c5b311cbabfee4349ae1efd"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodna-kultura-yak-systema/activities.yaml",
+        "sha256": "34025c65ca2e84a4f09adc662f37313edd61e395c123cd5705a4892831e1d8d3"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodna-kultura-yak-systema/vocabulary.yaml",
+        "sha256": "6abdafb74b54dc0d97b457390f305d5ee3b5b839aceb82efab1ad5489f8fd4fe"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodna-kultura-yak-systema/resources.yaml",
+        "sha256": "834b7222c70e9b766a2d80a7b5958c2c8ef8c71ceabc8b9d87e7929bf75e77ff"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "module.md:197-198 myth-box rejects \u0435\u0442\u043d\u043e\u0433\u0440\u0430\u0444\u0456\u0447\u043d\u0430-\u043d\u0430\u0440\u043e\u0434\u043d\u0456\u0441\u0442\u044c frame",
+    "pedagogical": "module.md:55 reusable reading apparatus \u043d\u0430\u0437\u0432\u0438 \u0441\u0438\u0442\u0443\u0430\u0446\u0456\u044e\u2192\u0432\u0438\u043f\u0438\u0448\u0438 \u0434\u0456\u044e\u2192\u0441\u0444\u043e\u0440\u043c\u0443\u043b\u044e\u0439 \u0432\u0438\u0441\u043d\u043e\u0432\u043e\u043a"
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5.5"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-06-23T12:30:00Z",
+  "scores": {
+    "beauty": 8.7,
+    "decolonization": 9.2,
+    "engagement": 8.8,
+    "naturalness": 8.8,
+    "pedagogical": 9.0,
+    "tone": 9.0
+  },
+  "slug": "narodna-kultura-yak-systema",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "claude-tools",
+    "family": "anthropic",
+    "model": "claude-opus-4.8"
+  }
+}
