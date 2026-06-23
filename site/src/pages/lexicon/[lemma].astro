@@ -10,6 +10,7 @@ interface LexiconEntry {
   lemma: string;
   url_slug: string;
   gloss: string | null;
+  pos?: string | null;
   form_of?: { lemma: string; url_slug: string } | null;
 }
 
@@ -19,13 +20,28 @@ interface LexiconManifest {
   entries: LexiconEntry[];
 }
 
+// Grammar metaterms (pos === "grammar term", e.g. "singularia tantum") are not lemmas:
+// keep them out of word-page routes AND the cross-link set passed to WordAtlasArticle.
+// Mirrors scripts/audit/lexeme_filter.py::is_lexeme_entry (used by the search index +
+// daily pool), so all Atlas surfaces agree on what counts as a headword.
+function isLexemeEntry(entry: LexiconEntry): boolean {
+  return Boolean(entry.lemma) && Boolean(entry.url_slug) && entry.pos !== "grammar term";
+}
+
 const data = manifest as LexiconManifest;
+const lexemeEntries = data.entries.filter(isLexemeEntry);
 
 export async function getStaticPaths() {
-  return (manifest as LexiconManifest).entries.map((entry) => ({
-    params: { lemma: entry.url_slug },
-    props: { entry },
-  }));
+  // Astro runs getStaticPaths in an isolated scope — it cannot see the module-scope
+  // isLexemeEntry above, so the same predicate is inlined here (keep them in sync).
+  const isLexeme = (entry: LexiconEntry) =>
+    Boolean(entry.lemma) && Boolean(entry.url_slug) && entry.pos !== "grammar term";
+  return (manifest as LexiconManifest).entries
+    .filter(isLexeme)
+    .map((entry) => ({
+      params: { lemma: entry.url_slug },
+      props: { entry },
+    }));
 }
 
 const { entry } = Astro.props as { entry: LexiconEntry };
@@ -47,7 +63,7 @@ const frontmatter = {
 >
   <WordAtlasArticle
     entry={entry}
-    allEntries={data.entries}
+    allEntries={lexemeEntries}
     generatedAt={data.generated_at}
     manifestVersion={data.version}
   />

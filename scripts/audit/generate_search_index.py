@@ -8,22 +8,20 @@ from pathlib import Path
 from typing import Any
 
 from scripts.audit.generate_daily_pool import kind_for_source
+from scripts.audit.lexeme_filter import is_lexeme_entry
 from scripts.etymology.transliterate import transliterate
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_OUT = Path("site/src/data/lexicon-search-index.json")
 
 
-def _has_text(value: Any) -> bool:
-    return isinstance(value, str) and bool(value.strip())
-
-
 def _search_row(entry: dict[str, Any]) -> dict[str, Any] | None:
+    # Grammar metaterms (pos == "grammar term") are not lemmas — keep them out of search.
+    # is_lexeme_entry already guarantees a non-empty lemma + url_slug.
+    if not is_lexeme_entry(entry):
+        return None
     lemma = entry.get("lemma")
     slug = entry.get("url_slug")
-    if not _has_text(lemma) or not _has_text(slug):
-        return None
-
     gloss = entry.get("gloss")
     return {
         "l": lemma,
