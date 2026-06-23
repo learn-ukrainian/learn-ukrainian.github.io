@@ -408,14 +408,21 @@ def get_session(task_id: str) -> dict:
 
 
 # Agents whose sessions are PERSISTED for resumption. These are exactly the
-# columns `get_session` reads back. Agents NOT listed here are always-fresh
-# (resume_policy="never" — e.g. grok-build, agy, cursor, hermes/deepseek):
-# their session id is never read back, so we do not persist it.
+# columns `get_session` reads back.
 _SESSION_COLUMNS = {
     "claude": "claude_session_id",
     "gemini": "gemini_session_id",
     "codex": "codex_session_id",
 }
+
+# Always-fresh agents (resume_policy="never"): their runs never resume, so their
+# session id is intentionally NOT persisted. Listed explicitly so set_session stays
+# silent for them while still flagging a genuinely-unknown agent (e.g. a new
+# resumable agent whose _SESSION_COLUMNS entry was forgotten — that would otherwise
+# silently never persist).
+_ALWAYS_FRESH_AGENTS = frozenset(
+    {"grok-build", "agy", "cursor", "hermes", "deepseek-v4-pro", "qwen", "opencode"}
+)
 
 
 def _session_column(agent: str) -> str | None:
@@ -436,7 +443,14 @@ def set_session(task_id: str, agent: str, session_id: str):
 
     column = _session_column(agent)
     if column is None:
-        # Always-fresh agent (grok-build / agy / cursor / …) — nothing to persist.
+        # No session column => always-fresh agent, nothing to persist. Stay silent
+        # for the known set; warn for a genuinely-unknown agent so a forgotten
+        # _SESSION_COLUMNS entry doesn't fail silently.
+        if agent not in _ALWAYS_FRESH_AGENTS:
+            print(
+                f"⚠️  set_session: no session column for agent '{agent}'; not persisting. "
+                "Add it to _SESSION_COLUMNS (resumable) or _ALWAYS_FRESH_AGENTS (always-fresh)."
+            )
         return
 
     conn = get_db()

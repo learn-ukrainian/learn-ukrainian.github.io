@@ -61,8 +61,33 @@ def test_set_session_noop_for_grok_build_does_not_raise(bridge_db):
     assert sess["codex"] is None
 
 
-@pytest.mark.parametrize("agent", ["agy", "cursor", "hermes"])
+def test_set_session_noop_is_zero_touch(bridge_db):
+    """A no-op must not even create a sessions row for the task."""
+    from ai_agent_bridge._db import get_db
+
+    set_session("task-zero", "grok-build", "sess-x")
+    conn = get_db()
+    try:
+        row = conn.execute(
+            "SELECT COUNT(*) FROM sessions WHERE task_id = ?", ("task-zero",)
+        ).fetchone()
+    finally:
+        conn.close()
+    assert row[0] == 0
+
+
+@pytest.mark.parametrize("agent", ["agy", "cursor", "hermes", "deepseek-v4-pro"])
 def test_set_session_noop_for_other_fresh_agents(bridge_db, agent):
     set_session(f"task-{agent}", agent, "some-session-id")
     sess = get_session(f"task-{agent}")
     assert sess == {"claude": None, "gemini": None, "codex": None}
+
+
+def test_set_session_warns_for_unknown_agent(bridge_db, capsys):
+    """An agent that is neither resumable nor known-always-fresh warns (not silent),
+    so a forgotten _SESSION_COLUMNS entry is observable rather than failing silently."""
+    set_session("task-unknown", "totally-new-agent", "sess-y")  # must not raise
+    out = capsys.readouterr().out
+    assert "no session column for agent 'totally-new-agent'" in out
+    # still a genuine no-op
+    assert get_session("task-unknown") == {"claude": None, "gemini": None, "codex": None}
