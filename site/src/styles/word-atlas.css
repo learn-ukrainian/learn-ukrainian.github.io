@@ -207,8 +207,9 @@
 }
 
 .atlas-typeahead-opt {
-  display: flex;
-  align-items: baseline;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
   gap: 8px;
   padding: 7px 10px;
   border-radius: 6px;
@@ -220,14 +221,68 @@
   background: var(--lu-state-active);
 }
 
+.atlas-typeahead-state {
+  padding: 8px 10px;
+  color: var(--lu-text-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.ata-main {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .ata-lemma {
+  min-width: 0;
   font-weight: 700;
   color: var(--lu-text);
 }
 
 .ata-gloss {
+  min-width: 0;
   color: var(--lu-text-muted);
   font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.ata-lemma mark,
+.ata-gloss mark {
+  border-radius: 3px;
+  background: var(--yellow-light);
+  color: inherit;
+  padding: 0 1px;
+}
+
+.ata-kinds {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.ata-kind {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.25rem;
+  padding: 0 0.4rem;
+  border-radius: 4px;
+  background: var(--lu-state-active);
+  color: var(--lu-primary);
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.ata-kind-danger {
+  border: 1px solid var(--lu-state-wrong-fg);
+  background: var(--lu-state-wrong-bg);
+  color: var(--lu-state-wrong-fg);
+  text-transform: none;
 }
 
 .atlas-button {

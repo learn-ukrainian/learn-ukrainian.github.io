@@ -77,6 +77,7 @@ def test_build_pool_schema_sorting_and_filters() -> None:
         "lemma": "баба",
         "slug": "baba",
         "gloss": "grandmother",
+        "k": "other",
         "weight": 3,
         "lessonTag": "a1",
     }
@@ -84,10 +85,11 @@ def test_build_pool_schema_sorting_and_filters() -> None:
         "lemma": "дім",
         "slug": "dim",
         "gloss": "house",
+        "k": "other",
         "weight": 2,
         "cefr": "A1",
     }
-    assert set(by_lemma["добрий день"]) == {"lemma", "slug", "gloss", "weight"}
+    assert set(by_lemma["добрий день"]) == {"lemma", "slug", "gloss", "k", "weight"}
 
 
 def test_build_pool_top_n_uses_weight_then_lemma() -> None:

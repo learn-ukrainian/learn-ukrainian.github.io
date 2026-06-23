@@ -4,6 +4,7 @@ export interface DailyWord {
   lemma: string;
   slug: string;
   gloss: string | null;
+  k?: string;
   lessonTag?: string;
   cefr?: string;
   weight?: number;
