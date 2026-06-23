@@ -26,11 +26,11 @@
   };
 
   const renderChips = (word: DailyWord): string => {
-    const chips = [word.lessonTag, word.cefr].filter(Boolean);
-    if (!chips.length) return "";
-    return `<span class="lexicon-daily-chips">${chips
-      .map((chip) => `<span class="lexicon-daily-chip">${dwEsc(chip)}</span>`)
-      .join("")}</span>`;
+    // Show only the CEFR level (A1/A2/B1) — a single, meaningful "how hard is this word"
+    // badge. The course-track tag (a1/a2/b1) was redundant and rendered mashed next to it
+    // ("a1A1"); it lives on the word's full page instead.
+    if (!word.cefr) return "";
+    return `<span class="lexicon-daily-chips"><span class="lexicon-daily-chip">${dwEsc(word.cefr)}</span></span>`;
   };
 
   const renderCard = (word: DailyWord): string => {
