@@ -3,7 +3,7 @@
 Auto-generated index of compiled wiki articles.
 
 **Total articles:** 1686
-**Total words:** 3,823,989
+**Total words:** 3,823,969
 
 ## Academic
 
@@ -1436,7 +1436,7 @@ Auto-generated index of compiled wiki articles.
 - [Майстерність C2: Дослідницький проєкт: Збір та аналіз даних](mastery/c2/capstone-research-project.md) (2,303 words)
 - [Майстерність C2: Редагування та перегляд проєкту: Критичний аналіз та вдосконалення](mastery/c2/capstone-revision.md) (2,735 words)
 - [Майстерність C2: Вибір теми дипломного проєкту: Від ідеї до концепції](mastery/c2/capstone-topic-selection.md) (2,327 words)
-- [Майстерність C2: Повний граматичний огляд рівня С2: Системність та нюанси](mastery/c2/complete-grammar-review.md) (2,272 words)
+- [Майстерність C2: Системний граматичний огляд рівня С2: Системність та нюанси](mastery/c2/complete-grammar-review.md) (2,253 words)
 - [Майстерність C2: Конференційна комунікація: Написання тез та підготовка доповідей](mastery/c2/conference-thesis-notes.md) (2,090 words)
 - [Майстерність C2: Сучасний літературний процес в Україні](mastery/c2/contemporary-literature.md) (2,175 words)
 - [Майстерність C2: Корпусна лінгвістика](mastery/c2/corpus-linguistics.md) (2,631 words)
@@ -1470,7 +1470,7 @@ Auto-generated index of compiled wiki articles.
 - [Майстерність C2: Художній переклад II: проза та діалог](mastery/c2/literary-translation-ii.md) (2,011 words)
 - [Майстерність C2: Людина і суспільна роль: Ідентичність, гідність та права особистості](mastery/c2/liudyna-i-suspilna-rol.md) (2,323 words)
 - [Майстерність C2: Медіа та дезінформація: Інформаційна гігієна в епоху постправди](mastery/c2/media-i-dezinformatsiya.md) (2,618 words)
-- [Майстерність C2: Милозвучність української мови: повний курс](mastery/c2/milozvuchnist-complete.md) (2,485 words)
+- [Майстерність C2: Милозвучність української мови: C2-практикум](mastery/c2/milozvuchnist-complete.md) (2,484 words)
 - [Майстерність C2: Місто та село: Урбаністика, простір та регіональна ідентичність](mastery/c2/misto-selo-prostir.md) (2,702 words)
 - [Майстерність C2: Нарратологія: мистецтво оповіді](mastery/c2/narratology.md) (2,512 words)
 - [Майстерність C2: Вільне володіння на рівні носія](mastery/c2/native-like-fluency.md) (2,263 words)
@@ -1721,4 +1721,3 @@ Auto-generated index of compiled wiki articles.
 - [Історія України: Зборівська та Білоцерківська угоди](periods/zborivska-bila-tserkva.md) (2,576 words)
 - [Історія України: Злочини колонізаторів та національна стійкість у XVI–XVIII століттях](periods/zlochyny-stiikist.md) (2,896 words)
 - [Історія України: ЗУНР, Акт Злуки та їхні історичні передумови](periods/zunr.md) (2,673 words)
-

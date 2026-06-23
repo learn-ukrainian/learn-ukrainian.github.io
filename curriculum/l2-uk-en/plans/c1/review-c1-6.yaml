@@ -2,7 +2,7 @@ module: c1-089
 level: C1
 sequence: 89
 slug: review-c1-6
-version: 1.0.2
+version: 1.0.3
 title: 'Підсумкове повторення: C1.6 — Література, стилістика, граматика'
 subtitle: 'Огляд C1.6: література, стилістичні фігури, граматичні системи'
 focus: review
@@ -82,7 +82,7 @@ content_outline:
 - section: 'Граматичні системи C1: синтез'
   words: 1000
   subsections:
-  - 'Відмінкові функції: називний, родовий, давальний — усі значення'
+  - 'Відмінкові функції: називний, родовий, давальний — вивчені значення'
   - 'Складні речення: сурядність, підрядність, безсполучниковість'
   - Умовний спосіб та девербативні іменники
   key_concepts:
@@ -106,8 +106,8 @@ content_outline:
     devices (тропи, фігури). Self-check: What is the difference between антитеза and
     хіазм? Describe the evolution of Ukrainian literature from Nestor to Zhadan in
     three sentences.'
-  - 'Advanced grammar synthesis combines all case functions, complex sentence structures,
-    and conditional moods. Self-check: What distinguishes сурядність from підрядність
+  - 'Advanced grammar synthesis combines studied case functions, complex sentence
+    structures and conditional moods. Self-check: What distinguishes сурядність from підрядність
     in complex sentences? Create one sentence that uses both a deverbative noun and
     the умовний спосіб.'
 vocabulary:

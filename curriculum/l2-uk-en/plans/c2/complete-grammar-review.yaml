@@ -1,9 +1,9 @@
 module: c2-084
 level: C2
 sequence: 84
-version: 1.1.2
-title: 'Повний граматичний огляд рівня С2: Системність та нюанси'
-subtitle: Повний огляд граматики C2
+version: 1.1.3
+title: 'Системний граматичний огляд рівня С2: Системність та нюанси'
+subtitle: Синтез ключових граматичних тем C2
 focus: grammar
 pedagogy: review
 objectives:

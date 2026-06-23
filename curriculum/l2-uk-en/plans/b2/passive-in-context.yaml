@@ -2,7 +2,7 @@ module: b2-007
 slug: passive-in-context
 level: B2
 sequence: 7
-version: 1.3.3
+version: 1.3.4
 lifecycle: locked
 reviewed_at: '2026-06-15T09:30:00Z'
 reviewed_by: codex/b2-wiki-readiness-batch-3
@@ -175,7 +175,7 @@ activities:
   total_min_items: 25
 activity_hints:
 - type: reading
-  focus: Ідентифікувати всі типи пасивних конструкцій у змішаному тексті
+  focus: Ідентифікувати вивчені пасивні стратегії у змішаному тексті
     (офіційний звіт)
 - type: essay-response
   focus: Переписати формальний текст, усунувши зайві пасивні конструкції без
