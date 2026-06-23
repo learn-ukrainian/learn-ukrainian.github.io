@@ -2,6 +2,50 @@
 
 > ℹ️ Sessions 68–80 detail lives in the local thread handoff (`.agent/claude-thread-handoff.md`, gitignored) and in merged PRs (#3648 koliadky exemplar, #3651 Atlas, #3669 global Readings reference, #3715 Phase 0 demand manifest, #3720 Phase 1a rights classifier, #3724 approved primary-text plan). This git-tracked file resumes the SSOT thread at Session 81 below; older in-file entries (≤67) are historical.
 
+## ▶▶▶ SESSION 84 (2026-06-23) — ✅ INFRA GATE DONE (Option A, 3 PRs merged) — RESUME = next folk priority
+
+> ✅✅ **THE INFRA GATE IS LIVE + ENFORCED FOR FOLK (Task #3, Option A, complete).** A seminar/folk module
+> can no longer ship without a committed, content-hash-bound, **cross-family** LLM-QG score
+> (`promote_quality.json` beside `module.md`) meeting the floors (pedagogical/engagement/beauty/naturalness/
+> tone ≥8.5, decolonization ≥9.0). Three PRs, all self-merged on green CI (#M-12), all verified by me (not
+> trusted): adversarial fail-closed probes, my own pytest runs, scoping probes.
+> - **#3760 — mechanism.** `thresholds.SEMINAR_PROMOTE_PROFILES` + `seminar_promote_floors_for` (folk
+>   enrolled; data-driven — add a track = one dict entry) · NEW `scripts/build/promote_quality_gate.py`
+>   (`verify`/`record`; content hash over plan+module.md+activities/vocabulary/resources; rejects
+>   stale-hash / same-family / **deepseek-for-folk** / below-floor / missing-dim / bool-score; record
+>   computes hash LOCALLY) · `verify_shippable` wired. **In-build LLM-QG behavior UNTOUCHED** (no re-arm of
+>   the 2026-05-23 demote → no "0 ships" regression). Green-teamed cross-family (codex msg #1367). Also
+>   fixed a latent `import json` NameError in `promote_module.py`.
+> - **#3761 — bootstrap.** 6 folk sidecars recorded (all PASS: koliadky 9.0-9.4, narodna-kultura 8.7-9.2,
+>   kalendarna 8.8-9.4, dumy 8.9-9.5, narodni 8.7-9.5, zamovliannia 8.6-9.3). The gate CAUGHT A REAL BUG on
+>   first use: narodni-viruvannia mis-cited a Мирний pristrit passage as роман «Хіба ревуть воли» — actually
+>   повість «За водою» (verify_quote 1.0 `ukrlib-myrny`); **fixed** + MDX regen. (Shevchenko «Невольник» in
+>   the same module re-confirmed correct, 1.0.)
+> - **#3762 — enforcement.** `scripts/audit/check_promote_quality_changed.py` (CI wrapper: changed
+>   deployed-MDX/source/sidecar → gate verify; **enrolled+deployed hard-fail, non-enrolled warn-only, unbuilt
+>   = no target** → cannot wedge the 36 unbuilt folk modules or other tracks) + content-ci.yml
+>   `promote-quality` job (ADVISORY) + `promote_module.py` fail-closed hook (carries the sidecar on promote,
+>   re-checks even the already-promoted path).
+>
+> **🔴 KEY LESSON (recurring — pin):** the cross-family scorer (codex) **over-flags text-integrity AND its
+> dispatched MCP is often DEGRADED** ("HTTP could not bind"/"user cancelled MCP"), producing FALSE quote
+> flags + mis-attributing cosmetic YAML/H1 to pedagogy. A first scoring run put 4/6 modules at "8.3-8.4
+> pedagogical REVISE" — ALL artifacts (a PASS module shared the same YAML format; both kalendarna formulas
+> were verbatim in Енциклопедія українознавства). **ALWAYS corpus-hammer the reviewer's flags yourself with
+> the real `sources` MCP before acting (#M-11); supply verified evidence in a re-score to clear the noise.**
+> Single-reviewer-near-floor noise is the design's known risk; the human-in-loop (me) resolves it — never
+> fabricate a score, never lower a floor (#1). Re-score brief pattern: `scratch/folk-rescore-borderline.md`.
+>
+> **OPTIONAL GOVERNANCE FOLLOW-UP (orchestrator/user, NOT me):** flip the `Content Gate (promote quality)`
+> CI job to a REQUIRED branch-protection check (it runs advisory now; the promote_module hook already fails
+> closed). TRACK-UPDATE sent to codex (bridge msg #1371).
+>
+> **▶▶ RESUME = next folk priority** (gate done): candidates — (1) **#3695** deterministic folk
+> `reading_coverage` gate (plan readings:→module `:::primary-reading` fidelity HARD + ≥4 corpus-bound floor;
+> infra I own #0.2, grounded by the #3696 audit); (2) continue folk module builds (6/42 built); (3)
+> root-cause the religious-sensitivity "магія/pagan-core" framing in folk writer prompts (S82 follow-up).
+> Pick per user direction; all are in-lane.
+
 ## ▶▶▶ SESSION 83 (2026-06-23) — ENGINE merged + folk pedagogy remediation 5/5 COMPLETE · NEXT = INFRA GATE — RESUME HERE
 
 > ✅✅ **CAMPAIGN COMPLETE (user priority, locked, delivered):** all 5 sub-bar folk seminar modules driven
