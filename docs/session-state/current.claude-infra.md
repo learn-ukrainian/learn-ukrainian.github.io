@@ -24,7 +24,10 @@
 - Keep the main checkout read-only for committed work; use dispatch worktrees.
 - Shared git identity across agents is expected — judge work by content + lane, never flag
   identity collisions (it is noise the user does not want).
-- Self-merge grant: green + off-seat-reviewed infra PRs may be self-merged; honor blocking CI.
+- Merge ownership: I merge PRs I drive in my lane (infra/code/Atlas) once fleet/off-seat review clears
+  them AND blocking CI is green — INCLUDING my agent-def/governance/settings/hooks/launcher changes. The
+  user does NOT merge; do not park PRs (#M-12). Honor blocking CI (#M-0.5; never `--admin`). Content/
+  track-lane PRs keep their own protocol (Codex/main reconciles).
 
 > The live, session-by-session infra queue is hand-maintained in the gitignored
 > `.agent/claude-infra-thread-handoff.md` (machine-local runtime state, never committed).

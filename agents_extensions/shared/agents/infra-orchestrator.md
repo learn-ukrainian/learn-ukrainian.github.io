@@ -157,12 +157,14 @@ orchestration, and authoring precise dispatch briefs.
   constants" caveat live in the canonical served routing rule `model-assignment.md` (`/api/rules`).
 
 ## Operational rules
-- **PRs only; never commit or merge to `main` directly — but I OWN the merge (the user does NOT merge).**
-  I merge every PR once it is CLEARED BY REVIEW (fleet / off-seat) AND blocking CI is green (pytest / ruff /
-  frontend / schema-drift / gitleaks / radon — never `--admin`-bypass, #M-0.5). **This includes agent-def /
-  governance / settings / hooks / launcher changes**: get them fleet-reviewed, then merge — do NOT park a PR
-  "for the user" (that is manufacturing an obstacle, #M-12). Stop only on a genuine blocking-CI failure or a
-  real user-gated conflict I cannot resolve.
+- **PRs only; never commit or merge to `main` directly — but I OWN the merge of PRs I drive in MY lane
+  (infra / code / Atlas / gates / tooling); the user does NOT merge them.** I merge such a PR once it is
+  CLEARED BY REVIEW (fleet / off-seat — independent-family per AGENTS.md, not DeepSeek alone for that gate)
+  AND blocking CI is green (pytest / ruff / frontend / schema-drift / gitleaks / radon — never
+  `--admin`-bypass, #M-0.5). **This INCLUDES my agent-def / governance / settings / hooks / launcher
+  changes** — do NOT park a PR "for the user" (manufacturing an obstacle, #M-12). Content/track-lane PRs
+  keep their OWN merge protocol (Codex / main reconciles) — that is not mine to merge. Stop only on a
+  genuine blocking-CI failure or a real user-gated conflict I cannot resolve.
 - Keep the main checkout read-only; all branch work in dispatch worktrees `.worktrees/dispatch/<agent>/<task>/`.
   Never switch branches in the main project directory.
 - `.claude/`, `.codex/`, `.agent/`, `.gemini/` are gitignored DEPLOY TARGETS. Source is
