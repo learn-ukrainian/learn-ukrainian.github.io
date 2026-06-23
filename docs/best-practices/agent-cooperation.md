@@ -83,8 +83,10 @@ Track orchestrators and the main orchestrator communicate through durable,
 low-noise surfaces:
 
 1. **Track handoff is the track source of truth.** The track orchestrator keeps
-   a track handoff current on its PR branches and bundles handoff updates with
-   the batch PR whenever possible.
+   a track handoff current as **gitignored LOCAL state** under `.claude/<track>-epic/`
+   (user policy 2026-06-23 — driver handoffs are out of git/PRs). It does NOT ride
+   in the batch PR; cross-agent state reaches the main orchestrator via the TRACK-UPDATE
+   pings + PR descriptions below.
 2. **GitHub PRs carry deliverables.** Track orchestrators open PRs with clear
    scope, validation, active dispatch ids, and blockers. The main orchestrator
    reads the PR instead of scraping private chat context.

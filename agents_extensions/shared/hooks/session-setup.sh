@@ -134,7 +134,8 @@ fi
 # Excludes must match scripts/deploy_prompts.sh:
 #   - 6 rule files served by Monitor API (CLAUDE_RULE_AUTOLOAD_EXCLUDES) — intentionally
 #     removed from .claude/rules/ by remove_claude_autoload_rules() after sync.
-#   - ORPHAN_PATHS_CLAUDE: scheduled_tasks.lock (Claude scheduler state) + worktrees/.
+#   - ORPHAN_PATHS_CLAUDE: scheduled_tasks.lock (Claude scheduler state) + worktrees/ +
+#     folk-epic/ bio-epic/ (gitignored-local driver handoffs, user policy 2026-06-23).
 # Without these, every cold start flags a false-positive drift. Hook bug fix 2026-05-13.
 if [ -d "$PROJECT_DIR/agents_extensions/shared" ] && [ -d "$PROJECT_DIR/.claude" ]; then
   DRIFT=$(diff -rq "$PROJECT_DIR/agents_extensions/shared/" "$PROJECT_DIR/.claude/" \
@@ -142,6 +143,8 @@ if [ -d "$PROJECT_DIR/agents_extensions/shared" ] && [ -d "$PROJECT_DIR/.claude"
     --exclude='settings.local.json' \
     --exclude='scheduled_tasks.lock' \
     --exclude='worktrees' \
+    --exclude='folk-epic' \
+    --exclude='bio-epic' \
     --exclude='critical-rules.md' \
     --exclude='non-negotiable-rules.md' \
     --exclude='workflow.md' \

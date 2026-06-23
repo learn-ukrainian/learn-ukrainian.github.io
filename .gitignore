@@ -375,7 +375,7 @@ docs/outreach/
 /docs/folk-epic/briefs/
 
 # Driver handoffs are gitignored LOCAL state in .claude/<track>-epic/ — never in git/PRs
-# (user policy 2026-06-23). The .claude/ tree is already ignored (line 35); these guards
-# stop the old docs/ paths from ever being re-tracked by accident.
-/docs/folk-epic/CLAUDE-DRIVER-HANDOFF.md
-/docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md
+# (user policy 2026-06-23). The .claude/ tree is already ignored (line 35); this guard
+# stops ANY docs/<track>-epic/ handoff from ever being re-tracked by accident (generic,
+# so future tracks are covered, not just folk/bio).
+/docs/*-epic/CLAUDE-DRIVER-HANDOFF.md

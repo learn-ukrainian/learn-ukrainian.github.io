@@ -91,6 +91,8 @@ check_pair \
     ".claude" \
     "scheduled_tasks.lock" \
     "worktrees" \
+    "folk-epic" \
+    "bio-epic" \
     "rules/critical-rules.md" \
     "rules/non-negotiable-rules.md" \
     "rules/workflow.md" \

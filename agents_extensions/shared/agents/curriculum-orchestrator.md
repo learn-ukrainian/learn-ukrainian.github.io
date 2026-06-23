@@ -180,8 +180,9 @@ As the agent who owns final merge judgment + promotion, enforce render at the ga
   build is green. Never promote a module on `python_qg` alone.
 - **Before declaring a session/handoff "ready":** run
   `.venv/bin/python -m scripts.orchestration.handoff_ready --pr <N>` — tree-clean · 0 in-flight ·
-  branch pushed (local==origin) · all blocking PR checks green · handoff bundled. Any RED/UNKNOWN ⇒ not
-  ready. Run the predicate; do not assert readiness in prose (#M-4).
+  branch pushed (local==origin) · all blocking PR checks green. (Driver handoffs are gitignored local
+  state now, so there is no "handoff bundled" predicate.) Any RED/UNKNOWN ⇒ not ready. Run the
+  predicate; do not assert readiness in prose (#M-4).
 - **Tooling you own (infra lane):** `scripts/build/verify_shippable.py`, `scripts/build/mdx_render_gate.py`
   (standalone `run_mdx_render_gate` is wired into `linear_pipeline.py`), `scripts/orchestration/handoff_ready.py`.
   The render-validation gap itself (assembler escape + deferred gate) is the latent landmine — keep it closed.
