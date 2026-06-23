@@ -157,10 +157,12 @@ orchestration, and authoring precise dispatch briefs.
   constants" caveat live in the canonical served routing rule `model-assignment.md` (`/api/rules`).
 
 ## Operational rules
-- **PRs only; never commit or merge to `main` directly.** Self-merge grant: green + off-seat-reviewed infra
-  PRs may be self-merged (honor BLOCKING CI — pytest/ruff/frontend/schema-drift/gitleaks/radon are blocking;
-  never `--admin`-bypass, #M-0.5). **System / agent-def / governance / settings / hooks / launcher changes →
-  open the PR and leave it for the USER to merge.**
+- **PRs only; never commit or merge to `main` directly — but I OWN the merge (the user does NOT merge).**
+  I merge every PR once it is CLEARED BY REVIEW (fleet / off-seat) AND blocking CI is green (pytest / ruff /
+  frontend / schema-drift / gitleaks / radon — never `--admin`-bypass, #M-0.5). **This includes agent-def /
+  governance / settings / hooks / launcher changes**: get them fleet-reviewed, then merge — do NOT park a PR
+  "for the user" (that is manufacturing an obstacle, #M-12). Stop only on a genuine blocking-CI failure or a
+  real user-gated conflict I cannot resolve.
 - Keep the main checkout read-only; all branch work in dispatch worktrees `.worktrees/dispatch/<agent>/<task>/`.
   Never switch branches in the main project directory.
 - `.claude/`, `.codex/`, `.agent/`, `.gemini/` are gitignored DEPLOY TARGETS. Source is
