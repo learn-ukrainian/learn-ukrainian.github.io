@@ -872,6 +872,15 @@ var _seed = 1234567;
 function rnd(){ _seed = (_seed * 1103515245 + 12345) & 0x7fffffff; return _seed / 0x7fffffff; }
 function shuffle(a){ a = a.slice(); for (var i=a.length-1;i>0;i--){ var j=Math.floor(rnd()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
 function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+// Ukrainian numeral agreement: one (1,21…) / few (2–4,22–24…) / many (0,5–20,…).
+function uaPlural(n, one, few, many){
+  var a = Math.abs(n) % 100, b = a % 10;
+  if (a > 10 && a < 20) return many;
+  if (b === 1) return one;
+  if (b >= 2 && b <= 4) return few;
+  return many;
+}
+function correctLabel(n){ return n + " " + uaPlural(n, "правильна", "правильні", "правильних"); }
 function chip(sev,label){ return '<span class="her-chip" data-sev="'+sev+'">'+esc(label)+'</span>'; }
 
 /* ============================== VIEW ROUTER ================================= */
@@ -1097,7 +1106,7 @@ function answerChoice(btn){
   });
   if (ok){ chCorrect++; setLive("ch-live","✓ Правильно!","ok"); }
   else { btn.classList.add("wrong"); setLive("ch-live","✕ Правильна відповідь підсвічена.","bad"); }
-  document.getElementById("ch-score").textContent = chCorrect+" правильних";
+  document.getElementById("ch-score").textContent = correctLabel(chCorrect);
   document.getElementById("ch-next").hidden = false;
   document.getElementById("ch-next").focus();
 }
@@ -1158,7 +1167,7 @@ function answerCloze(value, btn){
   blank.classList.remove("bad"); blank.classList.add("filled");
   if (ok){ czCorrect++; setLive("cz-live","✓ Правильно — «"+(czWord.form||czWord.lemmaPlain)+"».","ok"); }
   else { if (btn) btn.classList.add("wrong"); setLive("cz-live","✕ Правильне слово: «"+(czWord.form||czWord.lemmaPlain)+"».","bad"); }
-  document.getElementById("cz-score").textContent = czCorrect+" правильних";
+  document.getElementById("cz-score").textContent = correctLabel(czCorrect);
   document.getElementById("cz-next").hidden = false;
 }
 document.getElementById("cz-form").addEventListener("submit", function(){
