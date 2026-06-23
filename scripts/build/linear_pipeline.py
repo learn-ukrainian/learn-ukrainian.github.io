@@ -178,6 +178,7 @@ PYTHON_QG_GATE_ORDER = (
     "citations_resolve",
     "plan_reference_match",
     "resource_coverage",
+    "reading_coverage",
     "resources_url_resolve",
     "chunk_context_for_all_refs",
     "published_quote_for_publishable_refs",
@@ -8436,6 +8437,7 @@ def run_python_qg(
     with contextlib.suppress(LinearPipelineError, ValueError):
         wiki_manifest = build_wiki_manifest_data(plan_path, plan=plan)
     record("resource_coverage", _resource_coverage_gate(resources, plan, wiki_manifest))
+    record("reading_coverage", _reading_coverage_gate(module_text, plan))
     record(
         "resources_url_resolve",
         _resources_url_resolve_gate(
@@ -12071,6 +12073,124 @@ def _extract_plan_pronunciation_video_urls(plan: Mapping[str, Any]) -> list[dict
         for key, value in group_values.items():
             add(f"pronunciation_videos.{group}.{key}", value)
     return records
+
+
+_HOSTED_READING_VALUES = frozenset({"host", "hosted"})
+_READING_COVERAGE_FLOOR = 4
+_READING_TITLE_STRIP_CHARS = " \t\r\n«»„“”\"'‘’"
+_PRIMARY_READING_BLOCK_RE = re.compile(
+    r"^:::primary-reading(?P<attrs>[^\n]*)\n(?P<body>.*?)^:::\s*$",
+    re.MULTILINE | re.DOTALL,
+)
+_PRIMARY_READING_SLUG_ATTR_RE = re.compile(r'\breading\s*=\s*"(?P<slug>[^"]+)"')
+
+
+def _normalize_reading_title(value: object) -> str:
+    text = str(value or "").strip(_READING_TITLE_STRIP_CHARS).casefold()
+    return re.sub(r"\s+", " ", text)
+
+
+def _primary_reading_blocks(module_text: str) -> list[re.Match[str]]:
+    return list(_PRIMARY_READING_BLOCK_RE.finditer(module_text))
+
+
+def _primary_reading_attribution_lines(block_body: str) -> list[str]:
+    lines: list[str] = []
+    for line in block_body.splitlines():
+        stripped = line.strip()
+        while stripped.startswith(">"):
+            stripped = stripped[1:].strip()
+        if stripped.startswith(("—", "–", "-")):
+            lines.append(stripped)
+    return lines
+
+
+def _primary_reading_slug_attrs(blocks: Sequence[re.Match[str]]) -> set[str]:
+    return {
+        match.group("slug").strip()
+        for block in blocks
+        for match in _PRIMARY_READING_SLUG_ATTR_RE.finditer(block.group("attrs"))
+    }
+
+
+def _hosted_plan_readings(plan: Mapping[str, Any]) -> list[dict[str, str]]:
+    readings = plan.get("readings")
+    if not isinstance(readings, list):
+        return []
+    hosted_readings: list[dict[str, str]] = []
+    for entry in readings:
+        if not isinstance(entry, Mapping):
+            continue
+        hosting = str(entry.get("hosting") or "").strip().casefold()
+        if hosting not in _HOSTED_READING_VALUES:
+            continue
+        hosted_readings.append(
+            {
+                "title": str(entry.get("title") or "").strip(),
+                "reading_slug": str(entry.get("reading_slug") or "").strip(),
+            }
+        )
+    return hosted_readings
+
+
+def _reading_coverage_gate(module_text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
+    level_key = str(plan.get("level") or "").strip().casefold()
+    if level_key not in SEMINAR_LEVELS:
+        return {"passed": True, "skipped": "non-seminar"}
+
+    blocks = _primary_reading_blocks(module_text)
+    hosted_readings = _hosted_plan_readings(plan)
+    normalized_attribution_lines = [
+        _normalize_reading_title(line)
+        for block in blocks
+        for line in _primary_reading_attribution_lines(block.group("body"))
+    ]
+    reading_slug_attrs = _primary_reading_slug_attrs(blocks)
+
+    missing: list[dict[str, str]] = []
+    matched: list[dict[str, str]] = []
+    for reading in hosted_readings:
+        normalized_title = _normalize_reading_title(reading["title"])
+        slug = reading["reading_slug"]
+        matched_by_title = bool(
+            normalized_title and any(normalized_title in line for line in normalized_attribution_lines)
+        )
+        matched_by_slug = bool(slug and f"/readings/{slug}/" in module_text)
+        # Source modules can surface generated hosted readings before MDX conversion
+        # as a primary-reading directive attribute rather than a rendered link.
+        matched_by_directive_attr = bool(slug and slug in reading_slug_attrs)
+        if matched_by_title or matched_by_slug or matched_by_directive_attr:
+            matched_by = "title"
+            if matched_by_slug:
+                matched_by = "reading_link"
+            elif matched_by_directive_attr:
+                matched_by = "primary_reading_attr"
+            matched.append({**reading, "matched_by": matched_by})
+        else:
+            missing.append(reading)
+
+    passed = not missing
+    report: dict[str, Any] = {
+        "passed": passed,
+        "severity": "HARD" if not passed else None,
+        "checked": len(hosted_readings),
+        "surfaced_primary_readings": len(blocks),
+        "matched_hosted_readings": matched,
+        "missing_hosted_readings": missing,
+    }
+
+    exception = str(plan.get("reading_coverage_exception") or "").strip()
+    if len(blocks) < _READING_COVERAGE_FLOOR and not exception:
+        report["warning"] = {
+            "severity": "WARNING",
+            "message": (
+                "fewer than 4 primary-reading blocks surfaced; floor is advisory "
+                "and does not affect gate pass/fail"
+            ),
+            "surfaced": len(blocks),
+            "expected_minimum": _READING_COVERAGE_FLOOR,
+        }
+    return report
 
 
 def _resource_coverage_gate(
