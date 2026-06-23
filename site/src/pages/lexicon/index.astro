@@ -26,7 +26,7 @@ const frontmatter = {
       <h1 id="lexicon-landing-title">Атлас слів</h1>
       <p>
         Шукайте курсові слова з джерелами, морфологією та місцями появи в модулях.
-        Нижче є щоденна добірка для швидкого повторення; повний А–Я перегляд лишається окремо.
+        Нижче — щоденна добірка для швидкого повторення й відкриття нових слів.
       </p>
       <AtlasTypeahead
         id="lexicon-landing-search"
@@ -38,14 +38,6 @@ const frontmatter = {
     </section>
 
     <DailyWords />
-
-    <section class="atlas-section lexicon-browse-section" aria-labelledby="lexicon-browse-title">
-      <div class="lexicon-browse-heading">
-        <h2 id="lexicon-browse-title">Перегляд А–Я</h2>
-        <p>Усі статті згруповано за першою літерою на окремій сторінці.</p>
-      </div>
-      <a class="lexicon-browse-link" href="/lexicon/index/">Переглянути всі слова за абеткою →</a>
-    </section>
   </div>
 </CourseLayout>
 
@@ -90,39 +82,6 @@ const frontmatter = {
     line-height: 1.65;
   }
 
-  .lexicon-browse-section {
-    max-width: var(--content-width);
-    margin: 0 auto;
-    padding: 0 1.5rem;
-  }
-
-  .lexicon-browse-heading {
-    margin-bottom: 1rem;
-  }
-
-.lexicon-browse-heading p {
-  max-width: 680px;
-  margin: 0;
-  color: var(--lu-text-muted);
-  line-height: 1.55;
-}
-
-.lexicon-browse-link {
-  display: inline-flex;
-  align-items: center;
-  margin-top: 0.85rem;
-  color: var(--lu-primary);
-  font-weight: 900;
-  text-decoration: none;
-  border-bottom: 2px solid currentColor;
-}
-
-.lexicon-browse-link:hover,
-.lexicon-browse-link:focus-visible {
-  color: var(--lu-text);
-  outline: none;
-}
-
   @media (max-width: 680px) {
     .lexicon-landing-hero {
       padding: 2.5rem 1rem 2rem;
@@ -130,10 +89,6 @@ const frontmatter = {
 
     .lexicon-landing-hero h1 {
       font-size: 2.4rem;
-    }
-
-    .lexicon-browse-section {
-      padding: 0 1rem;
     }
   }
 </style>
