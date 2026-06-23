@@ -223,6 +223,7 @@ site/dist
 site/node_modules
 site/.astro
 site/src/data/lexicon-manifest.json
+site/src/data/lexicon-manifest.json.gz
 /testbed/*
 !/testbed/reference/
 data/sum11/

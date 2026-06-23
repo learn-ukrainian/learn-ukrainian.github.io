@@ -102,4 +102,20 @@ describe('resolveHeritageBoxes', () => {
       expect((boxes.red ?? boxes.yellow)?.alternatives).toEqual(alternatives);
     }
   });
+
+  // agy off-seat review #3759: the green-box body must not assert a russian
+  // morphological shadow when the word has none.
+  test('green body omits the russian-shadow clause when russian_shadow is false', () => {
+    const noShadow = resolveHeritageBoxes({
+      heritage_status: {
+        classification: 'dialect',
+        is_russianism: false,
+        russian_shadow: false,
+        vesum_attested: true,
+        attestations: [{ source: 'grinchenko_1907', ref: 'x' }],
+      },
+    } as LexiconEntryForSeverity);
+    expect(noShadow.green?.body).toContain('підтвердження');
+    expect(noShadow.green?.body).not.toContain('тінь');
+  });
 });

@@ -348,6 +348,12 @@ def _has_calque_alternative(heritage_status: dict[str, Any]) -> bool:
     return isinstance(section_six, dict) and bool(section_six.get("corrections"))
 
 
+def _has_reverse_calque(heritage_status: dict[str, Any]) -> bool:
+    """A word that is the recommended replacement for a calque (§6 reverse note)."""
+    reverse = heritage_status.get("reverse_calques")
+    return isinstance(reverse, list) and bool(reverse)
+
+
 def compute_warning_severity(
     heritage_status: dict[str, Any] | None,
     *,
@@ -370,7 +376,7 @@ def compute_warning_severity(
     ):
         return "russianism_red"
 
-    if _has_calque_alternative(status):
+    if _has_calque_alternative(status) or _has_reverse_calque(status):
         return "calque_yellow"
 
     if classification in _TREASURED_CLASSIFICATIONS or (

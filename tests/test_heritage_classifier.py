@@ -256,6 +256,20 @@ def test_kobita_ignores_cached_sum20_regional_evidence(monkeypatch, tmp_path) ->
             "calque_yellow",
         ),
         (
+            # reverse-calque word (the recommended replacement) → yellow, matching
+            # the TS resolver (agy off-seat review #3759: data model must match UI).
+            {
+                "classification": "standard",
+                "is_russianism": False,
+                "russian_shadow": False,
+                "attestations": [{"source": "grinchenko_1907", "ref": "чинний"}],
+                "reverse_calques": [{"calque": "діючий"}],
+            },
+            True,
+            0,
+            "calque_yellow",
+        ),
+        (
             {
                 "classification": "unknown",
                 "is_russianism": False,

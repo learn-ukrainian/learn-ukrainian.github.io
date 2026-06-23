@@ -1,5 +1,5 @@
 {
-  "fingerprint": "88e1b10578ad9a9099c4b7667758622f70a8e7017216f0671a053519f45acbc4",
+  "fingerprint": "f5986436945edfca90769d25893e022c7fe58edbb42180437799402980d4488e",
   "inputs": {
     "lexicon_code": [
       {
@@ -72,7 +72,7 @@
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
-        "sha256": "e51d9d2f66cadbfbf27b12c04f9734497e6eeeaa969087ea562b2e9662acab6c"
+        "sha256": "fde3fb8e0fc380719aa1e11763f584b85e2b0ee0a48f45bc09bca0cdab2392ac"
       },
       {
         "path": "scripts/lexicon/manifest_fingerprint.py",

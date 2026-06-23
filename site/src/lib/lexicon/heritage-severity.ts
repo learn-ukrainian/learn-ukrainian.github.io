@@ -228,7 +228,9 @@ export function resolveHeritageBoxes(entry: LexiconEntryForSeverity): HeritageBo
       severity,
       dataSeverity: "green",
       title: greenTitle(status),
-      body: "Ця форма має українське джерельне підтвердження; російська морфологічна тінь сама по собі не є підставою для попередження.",
+      body: status?.russian_shadow
+        ? "Ця форма має українське джерельне підтвердження; російська морфологічна тінь сама по собі не є підставою для попередження."
+        : "Ця форма має українське джерельне підтвердження.",
     };
   }
 
