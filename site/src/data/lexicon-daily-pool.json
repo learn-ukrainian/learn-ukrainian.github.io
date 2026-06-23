@@ -1,0 +1,171 @@
+[
+  {
+    "lemma": "авось",
+    "slug": "avos",
+    "gloss": "avoid: ану ж",
+    "lessonTag": "a1",
+    "weight": 5
+  },
+  {
+    "lemma": "баба",
+    "slug": "baba",
+    "gloss": "grandmother",
+    "lessonTag": "a1",
+    "cefr": "A1",
+    "weight": 5
+  },
+  {
+    "lemma": "бачити",
+    "slug": "bachyty",
+    "gloss": "to see",
+    "lessonTag": "a1",
+    "weight": 3
+  },
+  {
+    "lemma": "вдома",
+    "slug": "vdoma",
+    "gloss": "at home",
+    "cefr": "A1",
+    "weight": 2
+  },
+  {
+    "lemma": "говорити",
+    "slug": "hovoryty",
+    "gloss": "to speak",
+    "lessonTag": "a1",
+    "weight": 3
+  },
+  {
+    "lemma": "добрий день",
+    "slug": "dobryi-den",
+    "gloss": "good afternoon",
+    "cefr": "A1",
+    "weight": 2
+  },
+  {
+    "lemma": "дякую",
+    "slug": "diakuiu",
+    "gloss": "thank you",
+    "cefr": "A1",
+    "weight": 2
+  },
+  {
+    "lemma": "дім",
+    "slug": "dim",
+    "gloss": "house",
+    "cefr": "A1",
+    "weight": 2
+  },
+  {
+    "lemma": "жити",
+    "slug": "zhyty",
+    "gloss": "to live",
+    "lessonTag": "a1",
+    "weight": 3
+  },
+  {
+    "lemma": "зараз",
+    "slug": "zaraz",
+    "gloss": "now",
+    "cefr": "A1",
+    "weight": 2
+  },
+  {
+    "lemma": "книга",
+    "slug": "knyha",
+    "gloss": "book",
+    "cefr": "A1",
+    "weight": 2
+  },
+  {
+    "lemma": "людина",
+    "slug": "liudyna",
+    "gloss": "person",
+    "cefr": "A1",
+    "weight": 2
+  },
+  {
+    "lemma": "мати",
+    "slug": "maty",
+    "gloss": "mother; to have",
+    "lessonTag": "a1",
+    "weight": 3
+  },
+  {
+    "lemma": "місто",
+    "slug": "misto",
+    "gloss": "city",
+    "cefr": "A1",
+    "weight": 2
+  },
+  {
+    "lemma": "мова",
+    "slug": "mova",
+    "gloss": "language",
+    "lessonTag": "a1",
+    "weight": 3
+  },
+  {
+    "lemma": "ні",
+    "slug": "ni",
+    "gloss": "no",
+    "cefr": "A1",
+    "weight": 2
+  },
+  {
+    "lemma": "питання",
+    "slug": "pytannia",
+    "gloss": "question",
+    "cefr": "A2",
+    "weight": 2
+  },
+  {
+    "lemma": "працювати",
+    "slug": "pratsiuvaty",
+    "gloss": "to work",
+    "lessonTag": "a2",
+    "weight": 3
+  },
+  {
+    "lemma": "родина",
+    "slug": "rodyna",
+    "gloss": "family",
+    "lessonTag": "a1",
+    "weight": 3
+  },
+  {
+    "lemma": "слово",
+    "slug": "slovo",
+    "gloss": "word",
+    "cefr": "A1",
+    "weight": 2
+  },
+  {
+    "lemma": "так",
+    "slug": "tak",
+    "gloss": "yes",
+    "cefr": "A1",
+    "weight": 2
+  },
+  {
+    "lemma": "український",
+    "slug": "ukrainskyi",
+    "gloss": "Ukrainian",
+    "lessonTag": "a1",
+    "weight": 3
+  },
+  {
+    "lemma": "читати",
+    "slug": "chytaty",
+    "gloss": "to read",
+    "lessonTag": "a1",
+    "weight": 3
+  },
+  {
+    "lemma": "їсти",
+    "slug": "isty",
+    "gloss": "to eat",
+    "lessonTag": "a1",
+    "weight": 3
+  }
+]
