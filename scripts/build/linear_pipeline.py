@@ -12078,7 +12078,7 @@ def _extract_plan_pronunciation_video_urls(plan: Mapping[str, Any]) -> list[dict
 _HOSTED_READING_VALUES = frozenset({"host", "hosted"})
 _READING_COVERAGE_FLOOR = 4
 _READING_TITLE_STRIP_CHARS = " \t\r\n«»„“”\"'‘’"
-_PRIMARY_READING_BLOCK_RE = re.compile(
+_READING_COVERAGE_BLOCK_RE = re.compile(
     r"^:::primary-reading(?P<attrs>[^\n]*)\n(?P<body>.*?)^:::\s*$",
     re.MULTILINE | re.DOTALL,
 )
@@ -12091,7 +12091,7 @@ def _normalize_reading_title(value: object) -> str:
 
 
 def _primary_reading_blocks(module_text: str) -> list[re.Match[str]]:
-    return list(_PRIMARY_READING_BLOCK_RE.finditer(module_text))
+    return list(_READING_COVERAGE_BLOCK_RE.finditer(module_text))
 
 
 def _primary_reading_attribution_lines(block_body: str) -> list[str]:
