@@ -1,0 +1,2390 @@
+[
+  {
+    "lemma": "Італія",
+    "slug": "італія",
+    "gloss": "Italy",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "Закарпаття",
+    "slug": "закарпаття",
+    "gloss": "Zakarpattia, area beyond the Carpathians",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "Павло",
+    "slug": "павло",
+    "gloss": "Pavlo",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "США",
+    "slug": "сша",
+    "gloss": "USA",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "Тарас",
+    "slug": "тарас",
+    "gloss": "Taras",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "Франція",
+    "slug": "франція",
+    "gloss": "France",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "Хрещатик",
+    "slug": "хрещатик",
+    "gloss": "Khreshchatyk",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "авось",
+    "slug": "авось",
+    "gloss": "avoid: ану ж / а може",
+    "weight": 2
+  },
+  {
+    "lemma": "автозагар",
+    "slug": "автозагар",
+    "gloss": "avoid: автозасмага",
+    "weight": 2
+  },
+  {
+    "lemma": "агенство",
+    "slug": "агенство",
+    "gloss": "avoid: агенція",
+    "weight": 2
+  },
+  {
+    "lemma": "адміністратор",
+    "slug": "адміністратор",
+    "gloss": "administrator, front desk manager",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "американець",
+    "slug": "американець",
+    "gloss": "American man",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "аптека",
+    "slug": "аптека",
+    "gloss": "pharmacy",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "аудиторія",
+    "slug": "аудиторія",
+    "gloss": "classroom, lecture hall",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "багаж",
+    "slug": "багаж",
+    "gloss": "luggage",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "бажання",
+    "slug": "бажання",
+    "gloss": "wish, desire",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "балкон",
+    "slug": "балкон",
+    "gloss": "balcony",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "батько",
+    "slug": "батько",
+    "gloss": "father",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "батьків",
+    "slug": "батьків",
+    "gloss": "father's",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "бачення",
+    "slug": "бачення",
+    "gloss": "vision; way of seeing",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "березень / березня",
+    "slug": "березень-березня",
+    "gloss": "March",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "благословення",
+    "slug": "благословення",
+    "gloss": "blessing",
+    "weight": 5,
+    "lessonTag": "folk",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "бланк",
+    "slug": "бланк",
+    "gloss": "form",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "ближчий",
+    "slug": "ближчий",
+    "gloss": "closer",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "варити / зварити",
+    "slug": "варити-зварити",
+    "gloss": "to cook, to boil",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "варта",
+    "slug": "варта",
+    "gloss": "worth, feminine",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "великий",
+    "slug": "великий",
+    "gloss": "big, masculine",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "веселий",
+    "slug": "веселий",
+    "gloss": "cheerful",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "весна",
+    "slug": "весна",
+    "gloss": "spring",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "вивчення",
+    "slug": "вивчення",
+    "gloss": "study; learning of a subject",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "виглядати",
+    "slug": "виглядати",
+    "gloss": "to look, to appear",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "викладач",
+    "slug": "викладач",
+    "gloss": "lecturer",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "вилетіти",
+    "slug": "вилетіти",
+    "gloss": "to fly out, depart from an airport; perfective",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "вимикати",
+    "slug": "вимикати",
+    "gloss": "to turn off",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "вирішити",
+    "slug": "вирішити",
+    "gloss": "to decide; perfective",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "вишитий",
+    "slug": "вишитий",
+    "gloss": "embroidered",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "вище",
+    "slug": "вище",
+    "gloss": "higher",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "вкрай",
+    "slug": "вкрай",
+    "gloss": "extremely",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "влітку",
+    "slug": "влітку",
+    "gloss": "in summer",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "водіння",
+    "slug": "водіння",
+    "gloss": "the leading/parading (e.g. of the goat in winter rites)",
+    "weight": 5,
+    "lessonTag": "folk",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "волонтер / волонтерка",
+    "slug": "волонтер-волонтерка",
+    "gloss": "volunteer",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "воно",
+    "slug": "воно",
+    "gloss": "it / neuter gender-test word",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "встановлено",
+    "slug": "встановлено",
+    "gloss": "has been installed; set",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "встановлюється",
+    "slug": "встановлюється",
+    "gloss": "is being installed",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "всупереч",
+    "slug": "всупереч",
+    "gloss": "contrary to (variant of усупереч)",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "всьо",
+    "slug": "всьо",
+    "gloss": "avoid: все",
+    "weight": 4,
+    "cefr": "A2"
+  },
+  {
+    "lemma": "вчити",
+    "slug": "вчити",
+    "gloss": "to study, to learn",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "відділ",
+    "slug": "відділ",
+    "gloss": "department",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "відкривати",
+    "slug": "відкривати",
+    "gloss": "to open (file/app/book)",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "відлік",
+    "slug": "відлік",
+    "gloss": "countdown, point of reckoning",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "відмінок",
+    "slug": "відмінок",
+    "gloss": "case",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "відновлення",
+    "slug": "відновлення",
+    "gloss": "restoration; renewal",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "відповідно до",
+    "slug": "відповідно-до",
+    "gloss": "in accordance with",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "відчинити",
+    "slug": "відчинити",
+    "gloss": "to open (door/window)",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "відійти",
+    "slug": "відійти",
+    "gloss": "to step away, move away on foot; perfective",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "вінок",
+    "slug": "вінок",
+    "gloss": "wreath",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "вірування",
+    "slug": "вірування",
+    "gloss": "belief, folk belief",
+    "weight": 5,
+    "lessonTag": "folk",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "вісім",
+    "slug": "вісім",
+    "gloss": "eight",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "вісімдесят",
+    "slug": "вісімдесят",
+    "gloss": "eighty",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "вісімнадцять",
+    "slug": "вісімнадцять",
+    "gloss": "eighteen",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "говорити / будемо говорити",
+    "slug": "говорити-будемо-говорити",
+    "gloss": "to talk, we will be talking",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "голитися",
+    "slug": "голитися",
+    "gloss": "to shave oneself",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "горище",
+    "slug": "горище",
+    "gloss": "attic",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "гривня",
+    "slug": "гривня",
+    "gloss": "hryvnia",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "громадський",
+    "slug": "громадський",
+    "gloss": "civic, public",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "громадянин",
+    "slug": "громадянин",
+    "gloss": "citizen",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "дарувати",
+    "slug": "дарувати",
+    "gloss": "to give as a gift",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "дата",
+    "slug": "дата",
+    "gloss": "date",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "два",
+    "slug": "два",
+    "gloss": "two, masculine/neuter",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "дешевий",
+    "slug": "дешевий",
+    "gloss": "cheap, masculine",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "деякий",
+    "slug": "деякий",
+    "gloss": "some, certain",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "джерело́",
+    "slug": "джерело",
+    "gloss": "source / spring",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "диван",
+    "slug": "диван",
+    "gloss": "sofa",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "дивитися",
+    "slug": "дивитися",
+    "gloss": "to watch; to look",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "директор",
+    "slug": "директор",
+    "gloss": "director, principal",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "дискусія",
+    "slug": "дискусія",
+    "gloss": "discussion",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "для",
+    "slug": "для",
+    "gloss": "for",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "довкілля",
+    "slug": "довкілля",
+    "gloss": "environment",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "додавати",
+    "slug": "додавати",
+    "gloss": "to add",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "дозвілля",
+    "slug": "дозвілля",
+    "gloss": "leisure, free time",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "доїхати",
+    "slug": "доїхати",
+    "gloss": "to arrive by vehicle",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "думати",
+    "slug": "думати",
+    "gloss": "to think",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "діапазон",
+    "slug": "діапазон",
+    "gloss": "range",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "дідусь",
+    "slug": "дідусь",
+    "gloss": "grandfather",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "дім",
+    "slug": "дім",
+    "gloss": "home",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "діюча",
+    "slug": "діюча",
+    "gloss": "avoid: чинна",
+    "weight": 4,
+    "cefr": "B1"
+  },
+  {
+    "lemma": "журналіст",
+    "slug": "журналіст",
+    "gloss": "journalist",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "журналістка",
+    "slug": "журналістка",
+    "gloss": "female journalist",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "завідувач",
+    "slug": "завідувач",
+    "gloss": "head, manager",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "закривати / закрити",
+    "slug": "закривати-закрити",
+    "gloss": "to close",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "залежати",
+    "slug": "залежати",
+    "gloss": "to depend on, be governed by",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "запис",
+    "slug": "запис",
+    "gloss": "record; note",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "записати",
+    "slug": "записати",
+    "gloss": "to write down",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "запитати",
+    "slug": "запитати",
+    "gloss": "to ask",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "затримка",
+    "slug": "затримка",
+    "gloss": "delay",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "заява",
+    "slug": "заява",
+    "gloss": "application, formal request",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "заявити",
+    "slug": "заявити",
+    "gloss": "to state officially",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "зберігається",
+    "slug": "зберігається",
+    "gloss": "is stored; is being saved",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "зв'язок",
+    "slug": "зв-язок",
+    "gloss": "connection, communication",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "звичайно",
+    "slug": "звичайно",
+    "gloss": "of course",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "звідки",
+    "slug": "звідки",
+    "gloss": "where from",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "згідно з",
+    "slug": "згідно-з",
+    "gloss": "according to",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "здійснювати",
+    "slug": "здійснювати",
+    "gloss": "to carry out",
+    "weight": 5,
+    "lessonTag": "b2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "здійснюватися",
+    "slug": "здійснюватися",
+    "gloss": "to take place, be carried out",
+    "weight": 5,
+    "lessonTag": "b2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "знижка",
+    "slug": "знижка",
+    "gloss": "discount",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "зуб",
+    "slug": "зуб",
+    "gloss": "tooth",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "камін",
+    "slug": "камін",
+    "gloss": "fireplace",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "квартира",
+    "slug": "квартира",
+    "gloss": "apartment",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "керувати",
+    "slug": "керувати",
+    "gloss": "to govern, to control",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "кислий",
+    "slug": "кислий",
+    "gloss": "sour",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "колего",
+    "slug": "колего",
+    "gloss": "colleague (vocative)",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "кома",
+    "slug": "кома",
+    "gloss": "comma",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "коментар",
+    "slug": "коментар",
+    "gloss": "comment",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "конкретний",
+    "slug": "конкретний",
+    "gloss": "specific, concrete",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "контекст",
+    "slug": "контекст",
+    "gloss": "context",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "корінь",
+    "slug": "корінь",
+    "gloss": "root",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "крик",
+    "slug": "крик",
+    "gloss": "shout",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "культура",
+    "slug": "культура",
+    "gloss": "culture",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "куратор",
+    "slug": "куратор",
+    "gloss": "student group advisor",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "кутя",
+    "slug": "кутя",
+    "gloss": "kutia, Christmas ritual dish",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "кучерявий",
+    "slug": "кучерявий",
+    "gloss": "curly",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "кілька",
+    "slug": "кілька",
+    "gloss": "a few, several",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "лавка",
+    "slug": "лавка",
+    "gloss": "bench",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "лагідний",
+    "slug": "лагідний",
+    "gloss": "gentle",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "ладен",
+    "slug": "ладен",
+    "gloss": "ready, willing",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "лекція",
+    "slug": "лекція",
+    "gloss": "lecture",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "ловити / піймати",
+    "slug": "ловити-піймати",
+    "gloss": "to catch",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "люблять",
+    "slug": "люблять",
+    "gloss": "they like; they love",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "любов",
+    "slug": "любов",
+    "gloss": "love",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "літр",
+    "slug": "літр",
+    "gloss": "liter",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "м'яч",
+    "slug": "м-яч",
+    "gloss": "ball",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "маршрут",
+    "slug": "маршрут",
+    "gloss": "route",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "маршрутка",
+    "slug": "маршрутка",
+    "gloss": "route minibus",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "мед",
+    "slug": "мед",
+    "gloss": "honey",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "мило",
+    "slug": "мило",
+    "gloss": "soap",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "миритися",
+    "slug": "миритися",
+    "gloss": "to make peace",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "мислити",
+    "slug": "мислити",
+    "gloss": "to think",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "митець",
+    "slug": "митець",
+    "gloss": "artist, creator",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "митися",
+    "slug": "митися",
+    "gloss": "to wash oneself",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "молодший",
+    "slug": "молодший",
+    "gloss": "younger",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "музей",
+    "slug": "музей",
+    "gloss": "museum",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "міроприємство",
+    "slug": "міроприємство",
+    "gloss": "avoid: захід",
+    "weight": 2
+  },
+  {
+    "lemma": "місяць",
+    "slug": "місяць",
+    "gloss": "month",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "мішати",
+    "slug": "мішати",
+    "gloss": "to stir, to mix",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "наближення",
+    "slug": "наближення",
+    "gloss": "approach",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "набрати",
+    "slug": "набрати",
+    "gloss": "to gather; to dial; to gain",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "нагода",
+    "slug": "нагода",
+    "gloss": "opportunity",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "надіслано",
+    "slug": "надіслано",
+    "gloss": "sent",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "називний",
+    "slug": "називний",
+    "gloss": "nominative",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "найвищий",
+    "slug": "найвищий",
+    "gloss": "highest, tallest",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "наліво",
+    "slug": "наліво",
+    "gloss": "to the left",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "написати / напишу",
+    "slug": "написати-напишу",
+    "gloss": "to write, I will write",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "народність",
+    "slug": "народність",
+    "gloss": "“folksiness” (loaded ethnographic term)",
+    "weight": 5,
+    "lessonTag": "folk",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "наступний",
+    "slug": "наступний",
+    "gloss": "next",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "небесний",
+    "slug": "небесний",
+    "gloss": "celestial, heavenly",
+    "weight": 5,
+    "lessonTag": "folk",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "нежить",
+    "slug": "нежить",
+    "gloss": "runny nose",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "нечисть",
+    "slug": "нечисть",
+    "gloss": "evil spirits, the unclean force (collectively)",
+    "weight": 5,
+    "lessonTag": "folk",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "неістота",
+    "slug": "неістота",
+    "gloss": "inanimate thing",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "нижчий",
+    "slug": "нижчий",
+    "gloss": "lower, shorter",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "ніхто",
+    "slug": "ніхто",
+    "gloss": "nobody",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "обрати",
+    "slug": "обрати",
+    "gloss": "to choose",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "огляд",
+    "slug": "огляд",
+    "gloss": "review, overview",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "одягатися",
+    "slug": "одягатися",
+    "gloss": "to get dressed",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "озеро",
+    "slug": "озеро",
+    "gloss": "lake",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "оповідати",
+    "slug": "оповідати",
+    "gloss": "to narrate, to tell",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "опонент",
+    "slug": "опонент",
+    "gloss": "opponent, interlocutor in debate",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "опудало",
+    "slug": "опудало",
+    "gloss": "effigy, scarecrow",
+    "weight": 5,
+    "lessonTag": "folk",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "орендар",
+    "slug": "орендар",
+    "gloss": "tenant",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "освіта",
+    "slug": "освіта",
+    "gloss": "education",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "основа",
+    "slug": "основа",
+    "gloss": "stem, base",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "офіс",
+    "slug": "офіс",
+    "gloss": "office",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "офіціантка",
+    "slug": "офіціантка",
+    "gloss": "waitress",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "п'ятдесят",
+    "slug": "п-ятдесят",
+    "gloss": "fifty",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "пам'ятка",
+    "slug": "пам-ятка",
+    "gloss": "landmark, monument, site",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "перевезти",
+    "slug": "перевезти",
+    "gloss": "to transport across; perfective",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "перенесення",
+    "slug": "перенесення",
+    "gloss": "transfer (of harm to another place)",
+    "weight": 5,
+    "lessonTag": "folk",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "перукарня",
+    "slug": "перукарня",
+    "gloss": "hair salon",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "письмо",
+    "slug": "письмо",
+    "gloss": "writing",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "платити",
+    "slug": "платити",
+    "gloss": "to pay",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "племінниця",
+    "slug": "племінниця",
+    "gloss": "niece",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "повідомлення",
+    "slug": "повідомлення",
+    "gloss": "message",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "подзвонити / подзвоню",
+    "slug": "подзвонити-подзвоню",
+    "gloss": "to call, I will call",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "позбутися",
+    "slug": "позбутися",
+    "gloss": "to get rid of",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "поки",
+    "slug": "поки",
+    "gloss": "while; until",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "полуничний",
+    "slug": "полуничний",
+    "gloss": "strawberry",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "поліція",
+    "slug": "поліція",
+    "gloss": "police",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "помешкання",
+    "slug": "помешкання",
+    "gloss": "dwelling, place to live",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "порада",
+    "slug": "порада",
+    "gloss": "advice, recommendation",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "порівняти",
+    "slug": "порівняти",
+    "gloss": "to compare",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "посилка",
+    "slug": "посилка",
+    "gloss": "parcel, package",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "потрібен",
+    "slug": "потрібен",
+    "gloss": "needed",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "потім",
+    "slug": "потім",
+    "gloss": "then",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "починати",
+    "slug": "починати",
+    "gloss": "to begin",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "починатися",
+    "slug": "починатися",
+    "gloss": "to begin",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "поширити",
+    "slug": "поширити",
+    "gloss": "to distribute, complete",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "поїду",
+    "slug": "поїду",
+    "gloss": "I will go by transport",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "правопис",
+    "slug": "правопис",
+    "gloss": "orthography, spelling",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "працюємо",
+    "slug": "працюємо",
+    "gloss": "we work; are working",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "прибирати",
+    "slug": "прибирати",
+    "gloss": "to clean",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "привезти",
+    "slug": "привезти",
+    "gloss": "to bring or deliver by vehicle; perfective",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "привітання",
+    "slug": "привітання",
+    "gloss": "greeting",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "прикраса",
+    "slug": "прикраса",
+    "gloss": "decoration",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "природа",
+    "slug": "природа",
+    "gloss": "nature",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "приєднати",
+    "slug": "приєднати",
+    "gloss": "to attach; to join",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "приїжджати",
+    "slug": "приїжджати",
+    "gloss": "to arrive or visit by transport habitually; common imperfective",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "провідник",
+    "slug": "провідник",
+    "gloss": "train attendant, conductor",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "проза",
+    "slug": "проза",
+    "gloss": "prose",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "професія",
+    "slug": "професія",
+    "gloss": "profession",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "пі́сня",
+    "slug": "пі-сня",
+    "gloss": "song",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "півострів",
+    "slug": "півострів",
+    "gloss": "peninsula",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "підлога",
+    "slug": "підлога",
+    "gloss": "floor",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "підрахувати",
+    "slug": "підрахувати",
+    "gloss": "to count up, tally completely",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "підсилити",
+    "slug": "підсилити",
+    "gloss": "to strengthen; to reinforce",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "підтвердження",
+    "slug": "підтвердження",
+    "gloss": "confirmation",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "підтримати",
+    "slug": "підтримати",
+    "gloss": "to support",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "пізно",
+    "slug": "пізно",
+    "gloss": "late",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "разом",
+    "slug": "разом",
+    "gloss": "together",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "рентген",
+    "slug": "рентген",
+    "gloss": "X-ray",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "родич",
+    "slug": "родич",
+    "gloss": "relative",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "розв'язання",
+    "slug": "розв-язання",
+    "gloss": "solution",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "розповідь",
+    "slug": "розповідь",
+    "gloss": "narrative, story",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "розповісти",
+    "slug": "розповісти",
+    "gloss": "to tell, to narrate",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "розпорядження",
+    "slug": "розпорядження",
+    "gloss": "order, directive",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "роль",
+    "slug": "роль",
+    "gloss": "role",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "рушник",
+    "slug": "рушник",
+    "gloss": "towel",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "рідко",
+    "slug": "рідко",
+    "gloss": "rarely",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "рік",
+    "slug": "рік",
+    "gloss": "year",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "салат",
+    "slug": "салат",
+    "gloss": "salad",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "самостійно",
+    "slug": "самостійно",
+    "gloss": "independently",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "свіжий",
+    "slug": "свіжий",
+    "gloss": "fresh",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "серпень / серпня",
+    "slug": "серпень-серпня",
+    "gloss": "August",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "сивий",
+    "slug": "сивий",
+    "gloss": "gray-haired",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "син",
+    "slug": "син",
+    "gloss": "son",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "систематизувати",
+    "slug": "систематизувати",
+    "gloss": "to systematize",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "скульптура",
+    "slug": "скульптура",
+    "gloss": "sculpture",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "слюсар",
+    "slug": "слюсар",
+    "gloss": "mechanic, fitter",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "слідуючий",
+    "slug": "слідуючий",
+    "gloss": "avoid: наступний",
+    "weight": 2
+  },
+  {
+    "lemma": "смажений",
+    "slug": "смажений",
+    "gloss": "fried",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "сніг",
+    "slug": "сніг",
+    "gloss": "snow",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "собор",
+    "slug": "собор",
+    "gloss": "cathedral",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "соломка",
+    "slug": "соломка",
+    "gloss": "straw",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "сорок",
+    "slug": "сорок",
+    "gloss": "forty",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "співати",
+    "slug": "співати",
+    "gloss": "to sing",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "спілкуватися",
+    "slug": "спілкуватися",
+    "gloss": "to communicate",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "стадіон",
+    "slug": "стадіон",
+    "gloss": "stadium",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "стажування",
+    "slug": "стажування",
+    "gloss": "internship, traineeship",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "стиль",
+    "slug": "стиль",
+    "gloss": "style",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "стипендія",
+    "slug": "стипендія",
+    "gloss": "stipend, scholarship",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "стілець",
+    "slug": "стілець",
+    "gloss": "chair",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "сумка",
+    "slug": "сумка",
+    "gloss": "bag",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "суспільство",
+    "slug": "суспільство",
+    "gloss": "society",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "сусід",
+    "slug": "сусід",
+    "gloss": "male neighbor",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "сцена",
+    "slug": "сцена",
+    "gloss": "scene",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "сценарій",
+    "slug": "сценарій",
+    "gloss": "scenario",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "сітка",
+    "slug": "сітка",
+    "gloss": "net",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "та",
+    "slug": "та",
+    "gloss": "that, feminine",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "тату",
+    "slug": "тату",
+    "gloss": "Dad! (vocative)",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "теза",
+    "slug": "теза",
+    "gloss": "thesis, claim",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "телефонувати",
+    "slug": "телефонувати",
+    "gloss": "to call",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "тема",
+    "slug": "тема",
+    "gloss": "topic, theme",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "термін",
+    "slug": "термін",
+    "gloss": "deadline, term",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "тестувати",
+    "slug": "тестувати",
+    "gloss": "to test",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "тисяча",
+    "slug": "тисяча",
+    "gloss": "one thousand",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "тихіше",
+    "slug": "тихіше",
+    "gloss": "more quietly",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "тканина",
+    "slug": "тканина",
+    "gloss": "fabric",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "товариський",
+    "slug": "товариський",
+    "gloss": "sociable",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "точний",
+    "slug": "точний",
+    "gloss": "precise",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "трава",
+    "slug": "трава",
+    "gloss": "grass",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "традиція",
+    "slug": "традиція",
+    "gloss": "tradition",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "трохи",
+    "slug": "трохи",
+    "gloss": "a little",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "туалет",
+    "slug": "туалет",
+    "gloss": "toilet",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "туман",
+    "slug": "туман",
+    "gloss": "fog",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "тістечко",
+    "slug": "тістечко",
+    "gloss": "pastry; small cake",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "узбіччя",
+    "slug": "узбіччя",
+    "gloss": "roadside",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "уникати",
+    "slug": "уникати",
+    "gloss": "to avoid",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "утворювати",
+    "slug": "утворювати",
+    "gloss": "to form",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "учасник",
+    "slug": "учасник",
+    "gloss": "participant",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "фото",
+    "slug": "фото",
+    "gloss": "photo",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "фінал",
+    "slug": "фінал",
+    "gloss": "finale",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "хвилястий",
+    "slug": "хвилястий",
+    "gloss": "wavy",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "ходить",
+    "slug": "ходить",
+    "gloss": "he/she goes regularly; he/she walks",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "ходіння",
+    "slug": "ходіння",
+    "gloss": "walking as process",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "холодно",
+    "slug": "холодно",
+    "gloss": "cold",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "цікаво",
+    "slug": "цікаво",
+    "gloss": "interesting, it is interesting",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "час",
+    "slug": "час",
+    "gloss": "time",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "часовий",
+    "slug": "часовий",
+    "gloss": "temporal, related to time",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "червень",
+    "slug": "червень",
+    "gloss": "June",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "чомусь",
+    "slug": "чомусь",
+    "gloss": "for some reason",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "чорна",
+    "slug": "чорна",
+    "gloss": "black, feminine",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "чорні",
+    "slug": "чорні",
+    "gloss": "black, plural",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "швидко",
+    "slug": "швидко",
+    "gloss": "quickly",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "шістнадцять",
+    "slug": "шістнадцять",
+    "gloss": "sixteen",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "щодо",
+    "slug": "щодо",
+    "gloss": "regarding",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "щось",
+    "slug": "щось",
+    "gloss": "something",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "яблуко",
+    "slug": "яблуко",
+    "gloss": "apple",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "який",
+    "slug": "який",
+    "gloss": "which; what kind, masculine",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
+  },
+  {
+    "lemma": "якось",
+    "slug": "якось",
+    "gloss": "somehow, once",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "ярмарок",
+    "slug": "ярмарок",
+    "gloss": "fair",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "B1"
+  },
+  {
+    "lemma": "індекс",
+    "slug": "індекс",
+    "gloss": "postal code",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A2"
+  },
+  {
+    "lemma": "інтернет",
+    "slug": "інтернет",
+    "gloss": "internet",
+    "weight": 5,
+    "lessonTag": "b1",
+    "cefr": "A1"
+  }
+]

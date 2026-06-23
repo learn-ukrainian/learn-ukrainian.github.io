@@ -4,32 +4,7 @@
  */
 import CourseLayout from "../../layouts/CourseLayout.astro";
 import AtlasTypeahead from "../../lexicon/AtlasTypeahead.astro";
-import LexiconBrowse from "../../lexicon/LexiconBrowse.astro";
-import manifest from "../../data/lexicon-manifest.json";
-
-interface CourseUsage {
-  track: string;
-  module_num: number;
-  slug: string;
-  context: string;
-}
-
-interface LexiconEntry {
-  lemma: string;
-  url_slug: string;
-  gloss: string | null;
-  primary_source: string;
-  course_usage: CourseUsage[];
-}
-
-interface LexiconManifest {
-  version: string;
-  generated_at: string;
-  stats: Record<string, number>;
-  entries: LexiconEntry[];
-}
-
-const data = manifest as LexiconManifest;
+import DailyWords from "../../lexicon/DailyWords.astro";
 
 const frontmatter = {
   title: "Атлас слів",
@@ -51,7 +26,7 @@ const frontmatter = {
       <h1 id="lexicon-landing-title">Атлас слів</h1>
       <p>
         Шукайте курсові слова з джерелами, морфологією та місцями появи в модулях.
-        Або перегляньте всі {data.stats.lemmas_total ?? data.entries.length} лем за українським алфавітом.
+        Нижче є щоденна добірка для швидкого повторення; повний А–Я перегляд лишається окремо.
       </p>
       <AtlasTypeahead
         id="lexicon-landing-search"
@@ -62,12 +37,14 @@ const frontmatter = {
       />
     </section>
 
+    <DailyWords />
+
     <section class="atlas-section lexicon-browse-section" aria-labelledby="lexicon-browse-title">
       <div class="lexicon-browse-heading">
         <h2 id="lexicon-browse-title">Перегляд А–Я</h2>
-        <p>Усі статті згруповано за першою літерою; кожна картка веде до повної словникової статті.</p>
+        <p>Усі статті згруповано за першою літерою на окремій сторінці.</p>
       </div>
-      <LexiconBrowse entries={data.entries} />
+      <a class="lexicon-browse-link" href="/lexicon/index/">Переглянути всі слова за абеткою →</a>
     </section>
   </div>
 </CourseLayout>
@@ -123,12 +100,28 @@ const frontmatter = {
     margin-bottom: 1rem;
   }
 
-  .lexicon-browse-heading p {
-    max-width: 680px;
-    margin: 0;
-    color: var(--lu-text-muted);
-    line-height: 1.55;
-  }
+.lexicon-browse-heading p {
+  max-width: 680px;
+  margin: 0;
+  color: var(--lu-text-muted);
+  line-height: 1.55;
+}
+
+.lexicon-browse-link {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.85rem;
+  color: var(--lu-primary);
+  font-weight: 900;
+  text-decoration: none;
+  border-bottom: 2px solid currentColor;
+}
+
+.lexicon-browse-link:hover,
+.lexicon-browse-link:focus-visible {
+  color: var(--lu-text);
+  outline: none;
+}
 
   @media (max-width: 680px) {
     .lexicon-landing-hero {

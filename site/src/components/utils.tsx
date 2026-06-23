@@ -4,7 +4,7 @@ import React from 'react';
  * Simple seeded PRNG (mulberry32). Produces the same sequence for the same seed,
  * so SSR and client hydration get identical shuffle results.
  */
-function seededRandom(seed: number): () => number {
+export function seededRandom(seed: number): () => number {
   return () => {
     seed |= 0; seed = seed + 0x6D2B79F5 | 0;
     let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
@@ -16,7 +16,7 @@ function seededRandom(seed: number): () => number {
 /**
  * Derive a numeric seed from array content so shuffle is deterministic.
  */
-function deriveSeed<T>(array: T[]): number {
+export function deriveSeed<T>(array: T[]): number {
   let hash = 0;
   const str = JSON.stringify(array);
   for (let i = 0; i < str.length; i++) {
