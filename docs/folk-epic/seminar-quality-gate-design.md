@@ -7,6 +7,10 @@
 
 ## 0. Core principle — AGENTS IN TANDEM > the best solo model (user 2026-06-17)
 
+> **2026-06-23 supersession note:** §9 supersedes the model PANEL idea as the
+> gating mechanism for PR1. A panel remains a future option; the locked MVP gate
+> is one recorded cross-family reviewer bound to the exact content hash.
+
 > *"Agents working in tandem surpass the most advanced LLM model. We have to stick to this."*
 > Proven in-house this very session: Codex (a different model) found **3 real holes** in the
 > liveness gate that my own (Claude) review missed. Tandem catches what solo cannot.
@@ -87,6 +91,10 @@ decolonization) for history-leaning tracks, that's the sanctioned 7th dim — bu
 when a track's profile demands it, and keep MIN-aggregation noise in mind (§3).
 
 ## 3. The gate change (Phase A)
+
+> **2026-06-23 supersession note:** §9 supersedes this phase for the gating
+> mechanism. Do not re-arm in-build LLM-QG terminal dims; enforce quality at the
+> promote boundary through the deterministic recorded sidecar.
 
 **Make `pedagogy + engagement + beauty` gating at ≥8 — but for SEMINAR profiles ONLY.**
 
@@ -181,3 +189,45 @@ a non-word-counted primary-text reading panel).
 2. Phase C foundation: #3162 literary-corpus routing + finish 6 wikis + 6 dossiers (fleet writers, deepseek review).
 3. Phase D: rebuild 6 modules → ≥8 (fleet bake-off workflow + gate + correction loop), one at a time.
 4. Phase E: verify 6 live ≥8, regen MDX (resolve generator discrepancy), REGROUP for user judgment → then generalize to all seminar tracks.
+
+## 9. Option A — deterministic PRE-PROMOTE gate (LOCKED 2026-06-23, supersedes §3)
+
+The May-2026 demotion of subjective LLM-QG dimensions is permanent for in-build
+behavior. Do **not** re-arm `QG_DIMS`, `aggregate_review`,
+`terminal_dims_for`, or `v7_build.py` LLM-QG enforcement. The in-build reviewer
+continues to warn on subjective dimensions so the build loop does not recreate
+the 2026-05-23 "0 ships" failure.
+
+Quality is enforced separately at the promote boundary. A seminar module may
+promote only when it has a git-tracked `promote_quality.json` sidecar next to
+`llm_qg.json`, containing a recorded cross-family LLM-QG score that is bound to
+the exact lesson source content hash. The hash basis is `lesson_sources_v1`:
+the source plan plus `module.md`, `activities.yaml`, `vocabulary.yaml`, and
+`resources.yaml` when present.
+
+The mechanism components are:
+
+- `scripts/common/thresholds.py`: source of truth for per-track promote floors
+  via `SEMINAR_PROMOTE_DIMS`, `SEMINAR_PROMOTE_PROFILES`, and
+  `seminar_promote_floors_for`.
+- `scripts/build/promote_quality_gate.py`: deterministic `record` and `verify`
+  tool. `record` computes hashes from disk and stamps current floors; `verify`
+  fails closed on missing, stale, same-family, unknown-family, barred reviewer,
+  below-floor, missing-dimension, or weaker-recorded-floor sidecars.
+- `scripts/build/verify_shippable.py`: adds a `promote_quality` step after the
+  existing render/build checks. Unenrolled levels are non-blocking `n/a`; enrolled
+  tracks fail shippability when the sidecar is absent or invalid.
+- `scripts/sync/promote_module.py`: PR1 includes only the missing `json` import
+  bug fix for the folk readings promote path. The actual promote hook remains
+  PR2 scope.
+- `tests/test_promote_quality_gate.py` and
+  `tests/test_threshold_source_of_truth.py`: cover the fail-closed sidecar
+  behavior and keep the threshold floors in the SSOT.
+
+MVP reviewer policy is a single cross-family reviewer. A second review is an
+appeal or audit path, not a default blocker. For folk, DeepSeek is barred as the
+promote-quality reviewer in code. Enrollment is folk-first and per-track:
+adding another seminar track is a thresholds profile entry plus tests, not an
+in-build LLM-QG behavior change. PR1 is mechanism only; CI enforcement,
+`promote_module.py` gate wiring, sidecar bootstrap, and required-check governance
+belong to PR2.

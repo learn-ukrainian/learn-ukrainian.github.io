@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from common.thresholds import (
     REVIEW_PASS_FLOOR,
     REVIEW_REJECT_FLOOR,
+    SEMINAR_PROMOTE_PROFILES,
     STYLE_REVIEW_DIMENSION_FLOOR,
     STYLE_REVIEW_TARGET,
 )
@@ -37,6 +38,8 @@ _CANONICAL_NAMES: frozenset[str] = frozenset({
     "STYLE_REVIEW_TARGET",
     "STYLE_REVIEW_DIMENSION_FLOOR",
     "LEVEL_THRESHOLDS",
+    "SEMINAR_PROMOTE_DIMS",
+    "SEMINAR_PROMOTE_PROFILES",
 })
 
 # Float literals that are threshold-valued. 5.0 / 7.0 are common but not
@@ -46,7 +49,9 @@ _THRESHOLD_VALUES: frozenset[float] = frozenset({
     REVIEW_REJECT_FLOOR,
     STYLE_REVIEW_TARGET,
     STYLE_REVIEW_DIMENSION_FLOOR,
-})
+}) | frozenset(
+    value for profile in SEMINAR_PROMOTE_PROFILES.values() for value in profile.values()
+)
 
 # Words that make a nearby float literal "look like" a threshold. If none
 # of these appear within 3 lines of the literal, we don't flag — an 8.0
