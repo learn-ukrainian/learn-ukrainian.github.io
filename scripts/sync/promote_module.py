@@ -7,6 +7,7 @@ import argparse
 import contextlib
 import difflib
 import hashlib
+import json
 import os
 import re
 import subprocess

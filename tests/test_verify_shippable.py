@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import scripts.build.linear_pipeline as lp
 import scripts.build.verify_shippable as vs
+from scripts.build import promote_quality_gate as pqg
 
 
 def _mk(tmp_path):
@@ -26,10 +27,21 @@ def test_shippable_when_all_green(tmp_path, monkeypatch):
     monkeypatch.setattr(
         lp, "run_mdx_render_gate", lambda t: {"passed": True, "message": "ok", "failures": []}
     )
+    monkeypatch.setattr(
+        pqg,
+        "verify",
+        lambda *args, **kwargs: {
+            "applicable": True,
+            "passed": True,
+            "reason": "ok",
+            "failures": [],
+        },
+    )
     rep = vs.verify("folk", "x", module_dir=md, plan_path=plan)
     assert rep["shippable"] is True
     steps = {s["step"]: s["passed"] for s in rep["steps"]}
     assert steps["python_qg"] and steps["assemble_mdx"] and steps["mdx_render"]
+    assert steps["promote_quality"]
     assert rep["corpus_hammer_required"] is True
 
 

@@ -196,6 +196,7 @@ def verify(
         run_mdx_render_gate,
         run_python_qg,
     )
+    from scripts.build.promote_quality_gate import verify as _promote_verify
 
     module_dir = module_dir or _default_module_dir(level, slug)
     plan_path = plan_path or _default_plan_path(level, slug)
@@ -272,6 +273,20 @@ def verify(
                 site_mdx.unlink(missing_ok=True)
             else:
                 site_mdx.write_text(prior, encoding="utf-8")
+
+    # --- 5. seminar pre-promote quality sidecar (Option A) ---
+    try:
+        promote_rep = _promote_verify(level, slug, module_dir=module_dir)
+        if promote_rep.get("applicable") is False:
+            add("promote_quality", None, "n/a — level not enrolled")
+        else:
+            add(
+                "promote_quality",
+                promote_rep.get("passed"),
+                promote_rep.get("reason") or "; ".join(promote_rep.get("failures", [])),
+            )
+    except Exception as exc:
+        add("promote_quality", False, f"promote_quality raised: {type(exc).__name__}: {str(exc)[:200]}")
 
     return _finalize(level, slug, steps)
 

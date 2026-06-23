@@ -100,6 +100,44 @@ shippable."""
 STYLE_REVIEW_DIMENSION_FLOOR: float = 8.5
 """Per-dimension floor for the style reviewer."""
 
+# Seminar pre-promote quality gate (Option A, 2026-06-23). SEPARATE from
+# in-build LLM-QG (which stays warning-only — do NOT change
+# QG_DIMS/aggregate_review/terminal_dims_for). Per-track, data-driven (design
+# §2a): enrolling a track = a dict entry.
+SEMINAR_PROMOTE_DIMS: tuple[str, ...] = (
+    "pedagogical",
+    "engagement",
+    "beauty",
+    "naturalness",
+    "tone",
+    "decolonization",
+)
+SEMINAR_PROMOTE_PROFILES: Mapping[str, Mapping[str, float]] = MappingProxyType(
+    {
+        "folk": MappingProxyType(
+            {
+                "pedagogical": 8.5,
+                "engagement": 8.5,
+                "beauty": 8.5,
+                "naturalness": 8.5,
+                "tone": 8.5,
+                "decolonization": 9.0,
+            }
+        ),
+    }
+)
+
+
+def seminar_promote_floors_for(level: str | None) -> Mapping[str, float] | None:
+    """Per-dim promote floors for a seminar track enrolled in the gate.
+
+    Returns None for pass-through levels, including core levels and seminar
+    tracks not yet enrolled.
+    """
+    if not level:
+        return None
+    return SEMINAR_PROMOTE_PROFILES.get(str(level).strip().casefold())
+
 # ---------------------------------------------------------------------------
 # Per-level thresholds — families (A1..C2)
 # ---------------------------------------------------------------------------
