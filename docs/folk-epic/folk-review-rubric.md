@@ -32,6 +32,16 @@ The reviewer MUST hammer the corpus — judging on metrics/structure alone is ho
      East-Slavic/Kyivan-inheritance problem, don't inherit the imperial frame.
    - **No romantic-nationalist over-claim** — do NOT present Перун/Велес/Мокоша/**Берегиня** as a
      tidy reconstructed pagan pantheon; Берегиня especially is a modern reconstruction, flag it.
+   - **No Soviet-atheist "magic / pagan-core, Christian veneer" framing of Christian-folk genres** —
+     NEVER reduce колядки/щедрівки (or any Christian-folk tradition) to «прикладна магія» / a "magic"
+     ritual, and NEVER frame them as a pagan/dohristиянське "core" under a Christian "shell/оболонка/
+     нашарування". That frame both offends religious learners and reproduces the Soviet-atheist
+     "pagan-survival" distortion. Required reframe: колядки/щедрівки are **величально-побажальні**
+     (praise + well-wishing) and the Nativity/religious meaning gets **parity** with any archaic stratum;
+     щедрування is an Eastern-rite folk-Christian tradition. If the "magic/pagan-survival" reading is
+     discussed, name it as a contested/Soviet-era frame, don't assert it as neutral. `продукувальна
+     магія` terminology is acceptable ONLY for genuinely pre-Christian agrarian rites (spring/summer
+     веснянки/купальські), never for колядки/щедрівки. (Origin: user flag + #3745.)
    - **No flattening** — regional variation (Гуцул/Бойко/Лемко/Полісся…) surfaced, not pan-Ukrainian-
      smoothed; source disagreements named.
 8. **Anti-colonial role is concrete, not slogan** — §7 of the dossier ties THIS genre to specific
