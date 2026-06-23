@@ -2,7 +2,7 @@
 
 > ℹ️ Sessions 68–80 detail lives in the local thread handoff (`.agent/claude-thread-handoff.md`, gitignored) and in merged PRs (#3648 koliadky exemplar, #3651 Atlas, #3669 global Readings reference, #3715 Phase 0 demand manifest, #3720 Phase 1a rights classifier, #3724 approved primary-text plan). This git-tracked file resumes the SSOT thread at Session 81 below; older in-file entries (≤67) are historical.
 
-## ▶▶▶ SESSION 84 (2026-06-23) — ✅ INFRA GATE DONE (Option A, 3 PRs merged) — RESUME = next folk priority
+## ▶▶▶ SESSION 84 (2026-06-23) — ✅ FOLK-INFRA-QUALITY LAYER DONE (6 PRs) — RESUME = folk module builds
 
 > ✅✅ **THE INFRA GATE IS LIVE + ENFORCED FOR FOLK (Task #3, Option A, complete).** A seminar/folk module
 > can no longer ship without a committed, content-hash-bound, **cross-family** LLM-QG score
@@ -40,11 +40,20 @@
 > CI job to a REQUIRED branch-protection check (it runs advisory now; the promote_module hook already fails
 > closed). TRACK-UPDATE sent to codex (bridge msg #1371).
 >
-> **▶▶ RESUME = next folk priority** (gate done): candidates — (1) **#3695** deterministic folk
-> `reading_coverage` gate (plan readings:→module `:::primary-reading` fidelity HARD + ≥4 corpus-bound floor;
-> infra I own #0.2, grounded by the #3696 audit); (2) continue folk module builds (6/42 built); (3)
-> root-cause the religious-sensitivity "магія/pagan-core" framing in folk writer prompts (S82 follow-up).
-> Pick per user direction; all are in-lane.
+> **▶▶ FOLK-INFRA-QUALITY LAYER COMPLETE this session (6 PRs):** quality gate #3760/#3761/#3762/#3763,
+> **reading_coverage gate #3764 (closes #3695)**, **religious-framing prompt guard #3765 (closes S82 follow-up:**
+> writer rule `#R-FOLK-RELIGIOUS-FRAMING` + folk-rubric §7 — never frame колядки/щедрівки as «прикладна магія»/
+> pagan-core; величально-побажальні + religious parity). All merged, verified, lane clean.
+>   - reading_coverage gate (`linear_pipeline.py` `_reading_coverage_gate`, in PYTHON_QG_GATE_ORDER): HARD
+>     plan readings:host→module `:::primary-reading`/`/readings/` fidelity + advisory ≥4 floor (optional
+>     `reading_coverage_exception` plan marker). All 6 built modules pass; non-seminar no-op. LESSON: a name
+>     collision (`_PRIMARY_READING_BLOCK_RE` shadowing word_count's) slipped past my targeted tests, caught by
+>     CI full-suite — on shared-module edits run a BROADER local test slice + check module-global name collisions.
+> **▶▶ RESUME = next folk priority:** continue **folk module builds (6/42 built)** — now protected by both
+> new gates (reading coverage + promote-quality) and the religious-framing guard. Per V7 build policy
+> (`--worktree`), one module per invocation; bake-off writers per fleet routing; cross-family codex promote-
+> score + `promote_quality_gate record` before ship. Pick the next topic per `curriculum.yaml` order / user
+> direction. (Acquisition-blocked topics narodni-viruvannia/zamovliannia source-acquisition still pending, #3162.)
 
 ## ▶▶▶ SESSION 83 (2026-06-23) — ENGINE merged + folk pedagogy remediation 5/5 COMPLETE · NEXT = INFRA GATE — RESUME HERE
 
