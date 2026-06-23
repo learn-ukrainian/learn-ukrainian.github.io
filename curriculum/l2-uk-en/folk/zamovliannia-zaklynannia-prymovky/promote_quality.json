@@ -1,0 +1,67 @@
+{
+  "assembled_mdx_sha256": null,
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v1",
+    "digest": "9738fc5f58ba124310b3d4ec304d9275218f902d8dd00fbacce9720a2655618c",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/zamovliannia-zaklynannia-prymovky.yaml",
+        "sha256": "127c97c0995705d4f09e8af3d0fabccc716bd2931006c0f88e632963a84d89bf"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/zamovliannia-zaklynannia-prymovky/module.md",
+        "sha256": "64fcb161fba7e12974de2a2ed94d2abbc9c758f410189e2a390d49d03b3f0080"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/zamovliannia-zaklynannia-prymovky/activities.yaml",
+        "sha256": "b00608a2403f163266d8002189fa1f7fc2072112690e1d173f4fc598ca498f2a"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/zamovliannia-zaklynannia-prymovky/vocabulary.yaml",
+        "sha256": "cc710ca40629395b32bb84098243796e3cc1bc381e403277638f5b2355efdf9f"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/zamovliannia-zaklynannia-prymovky/resources.yaml",
+        "sha256": "ea1a8f7a8e3248d0425db0c308e0d4ff847a24953d2a0457446a615564146ab6"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "names Ukrainian terms, addresses imperial '\u043c\u0430\u043b\u043e\u0440\u043e\u0441\u0456\u0439\u0441\u044c\u043a\u0438\u0439' source labels, blocks pantheon reconstruction",
+    "pedagogical": "read formula as action: addressee/command/space/reinforcement + source mediation; activities apply the sequence"
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5.5"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-06-23T13:00:00Z",
+  "scores": {
+    "beauty": 8.7,
+    "decolonization": 9.3,
+    "engagement": 8.7,
+    "naturalness": 8.6,
+    "pedagogical": 8.9,
+    "tone": 9.1
+  },
+  "slug": "zamovliannia-zaklynannia-prymovky",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "claude-tools",
+    "family": "anthropic",
+    "model": "claude-opus-4.8"
+  }
+}

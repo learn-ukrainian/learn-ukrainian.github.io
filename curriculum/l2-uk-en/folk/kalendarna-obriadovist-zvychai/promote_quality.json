@@ -1,0 +1,67 @@
+{
+  "assembled_mdx_sha256": null,
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v1",
+    "digest": "9d6cc89ba80fefe395f42d5408b986dad921ba9b9fe3ff45b849bffd2ceb8da7",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/kalendarna-obriadovist-zvychai.yaml",
+        "sha256": "4cbc9ea112c4746536fecf95cf91cb6a3ba8fb1c7d3241c6d2b8bc718991b9e7"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/module.md",
+        "sha256": "2dc747af09b4403190c46a25e27687561373afde00dc18232ebed0b01df53982"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/activities.yaml",
+        "sha256": "f52133702699ee71e49234caec530c9037af063a37757f677a45f5a547238d54"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/vocabulary.yaml",
+        "sha256": "f2a02ec111aa10bd5aabf0b4b506398d2999b4a7538ad2de820eed8416417982"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/resources.yaml",
+        "sha256": "4151fa439920c93ebbcd4bae29154ee31f4ef749e354386d1603c523e82e1675"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "resists Slavic flattening + romantic over-reconstruction; regional variation + source limits surfaced",
+    "pedagogical": "reusable apparatus: \u0441\u0438\u0442\u0443\u0430\u0446\u0456\u044f/\u0434\u0456\u044f/\u0432\u0438\u0441\u043d\u043e\u0432\u043e\u043a, motif, variant, self-checks (module.md:69,150-158,294-304)"
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5.5"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-06-23T13:00:00Z",
+  "scores": {
+    "beauty": 8.9,
+    "decolonization": 9.4,
+    "engagement": 9.0,
+    "naturalness": 8.8,
+    "pedagogical": 9.1,
+    "tone": 9.2
+  },
+  "slug": "kalendarna-obriadovist-zvychai",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "claude-tools",
+    "family": "anthropic",
+    "model": "claude-opus-4.8"
+  }
+}

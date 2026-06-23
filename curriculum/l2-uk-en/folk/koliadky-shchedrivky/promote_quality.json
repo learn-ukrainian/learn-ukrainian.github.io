@@ -1,0 +1,67 @@
+{
+  "assembled_mdx_sha256": null,
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v1",
+    "digest": "de061743cf70b87718f56de3ee19a021520e9184c7729c1b9cae67a962b3affd",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/koliadky-shchedrivky.yaml",
+        "sha256": "da5c74c7d9306f3d9d18dbcdf54670f47b55d8babd3b98c81827f687031994d3"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/module.md",
+        "sha256": "6154d373af2d316b9461c2c47d759ed4416c2fc51a84a7921605e6134cf1d6fb"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/activities.yaml",
+        "sha256": "1af05f68b2e811463ec990381e03746b981ca2b18efafc61cf1081e9b067ac48"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/vocabulary.yaml",
+        "sha256": "71540be8de541e9381e9d4b1e9d5a92a280d78c16c8a8c6ebe497c7667f7c883"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/resources.yaml",
+        "sha256": "3a5343d06f469c77c1a2f62759643264666a5202e840e07c114a6b00af3495b6"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "module.md:119-120 myth-box rejects \u0432\u0435\u043b\u0438\u043a\u043e\u0440\u0443\u0441\u044c\u043a\u043e\u0457-\u0442\u0440\u0430\u0434\u0438\u0446\u0456\u0457 frame, names Ukrainian triad",
+    "pedagogical": "module.md:26 \u043f\u043e\u0441\u043b\u0456\u0434\u043e\u0432\u043d\u0438\u0439 \u0440\u0443\u0445: \u043c\u043e\u0434\u0435\u043b\u044c \u0440\u043e\u0437\u0431\u043e\u0440\u0443 \u2192 \u043a\u0435\u0440\u043e\u0432\u0430\u043d\u0435 \u0447\u0438\u0442\u0430\u043d\u043d\u044f \u2192 \u0441\u0430\u043c\u043e\u043f\u0435\u0440\u0435\u0432\u0456\u0440\u043a\u0430 \u0437\u0430 \u0434\u0436\u0435\u0440\u0435\u043b\u043e\u043c"
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5.5"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-06-23T12:30:00Z",
+  "scores": {
+    "beauty": 9.3,
+    "decolonization": 9.4,
+    "engagement": 9.2,
+    "naturalness": 9.0,
+    "pedagogical": 9.4,
+    "tone": 9.2
+  },
+  "slug": "koliadky-shchedrivky",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "claude-tools",
+    "family": "anthropic",
+    "model": "claude-opus-4.8"
+  }
+}

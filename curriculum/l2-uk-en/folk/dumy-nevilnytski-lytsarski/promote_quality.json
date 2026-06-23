@@ -1,0 +1,67 @@
+{
+  "assembled_mdx_sha256": null,
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v1",
+    "digest": "96775239f7f1335dca173ce533a4107b6aa2d4c3a37d64f9963f2243cf850dcd",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/dumy-nevilnytski-lytsarski.yaml",
+        "sha256": "6ddcc02bc9f7406841820eceb30185dd9cf25322b956f81baad7f5a0b82ff7ff"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/dumy-nevilnytski-lytsarski/module.md",
+        "sha256": "a13a1f3fba7efb366110fde2fabcc1d684679d93796a00e114baceebd6239b16"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/dumy-nevilnytski-lytsarski/activities.yaml",
+        "sha256": "8675310eab2fcb3d689e56ce82cd807f392397773d099cecc198f0d4d29eca17"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/dumy-nevilnytski-lytsarski/vocabulary.yaml",
+        "sha256": "cfb1a1e286e04f2618ef65ce7d39b6709c3b20461379b86e9d9a0ca15fb6b15b"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/dumy-nevilnytski-lytsarski/resources.yaml",
+        "sha256": "7359fe9e7cb8220541df7500a5d730a76a0a806caa999e08e733374f7ecfaa9e"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "names imperial/Soviet framing, kobzar suppression, survivor bias, Cossack-side captives",
+    "pedagogical": "scaffolds situation/device/conclusion then applies to \u041f\u043b\u0430\u0447/\u041c\u0430\u0440\u0443\u0441\u044f/\u0421\u0430\u043c\u0456\u0439\u043b\u043e \u041a\u0456\u0448\u043a\u0430/three brothers; self-checks repeat the method"
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5.5"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-06-23T13:00:00Z",
+  "scores": {
+    "beauty": 9.2,
+    "decolonization": 9.5,
+    "engagement": 9.2,
+    "naturalness": 8.9,
+    "pedagogical": 9.3,
+    "tone": 9.3
+  },
+  "slug": "dumy-nevilnytski-lytsarski",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "claude-tools",
+    "family": "anthropic",
+    "model": "claude-opus-4.8"
+  }
+}
