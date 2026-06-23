@@ -10,7 +10,7 @@ interface Props {
 const {
   id,
   label,
-  placeholder = "Шукати слово…",
+  placeholder = "офіс / ofis / office",
   containerClass = "",
   labelClass = "atlas-typeahead-label sr-only",
 } = Astro.props as Props;
@@ -45,141 +45,203 @@ const listId = `${id}-list`;
   ></ul>
 </div>
 
-<script is:inline>
-  (() => {
-    const initAtlasTypeahead = (ta) => {
-      if (ta.dataset.atlasTypeaheadReady === "true") return;
+<script>
+  import { normalize, rankMatches, highlight, type SearchRow } from "../lib/lexicon/search";
 
-      const taInput = ta.querySelector("[data-atlas-typeahead-input]");
-      const taList = ta.querySelector("[data-atlas-typeahead-list]");
-      if (!taInput || !taList) return;
+  const EMPTY_MESSAGE = "Нічого не знайдено — спробуйте українською, латиницею або англійською";
+  const LOADING_MESSAGE = "Завантажуємо…";
+  const KIND_LABELS: Record<string, string> = {
+    vyv: "ВиВ",
+    obov: "обов.",
+    rek: "рек.",
+    avoid: "уникати",
+    other: "інше",
+  };
 
-      ta.dataset.atlasTypeaheadReady = "true";
+  const taEsc = (value: unknown): string =>
+    String(value ?? "").replace(
+      /[&<>"']/g,
+      (c) =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        })[c] ?? c,
+    );
 
-      let taIndex = null;
-      let taLoading = null;
-      let taItems = [];
-      let taActive = -1;
+  const closeList = (input: HTMLInputElement, list: HTMLUListElement) => {
+    list.innerHTML = "";
+    list.hidden = true;
+    input.setAttribute("aria-expanded", "false");
+    input.removeAttribute("aria-activedescendant");
+  };
 
-      const taLoad = () => {
-        if (taIndex) return Promise.resolve(taIndex);
-        if (!taLoading) {
-          taLoading = fetch("/lexicon/search-index.json")
-            .then((r) => r.json())
-            .then((data) => {
-              taIndex = Array.isArray(data) ? data : [];
-              return taIndex;
-            })
-            .catch(() => {
-              taIndex = [];
-              return taIndex;
-            });
-        }
-        return taLoading;
-      };
+  const kindPills = (row: SearchRow): string => {
+    const kind = row.k ?? "other";
+    const label = KIND_LABELS[kind] ?? KIND_LABELS.other;
+    const danger =
+      kind === "avoid" ? '<span class="ata-kind ata-kind-danger">остерігайтеся</span>' : "";
+    return `<span class="ata-kind" data-kind="${taEsc(kind)}">${taEsc(label)}</span>${danger}`;
+  };
 
-      const taNorm = (s) => (s || "").toLowerCase().normalize("NFC").replace(/['́̀ˈ]/g, "").trim();
-      const taEsc = (s) =>
-        (s || "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
-      const taGo = (slug) => {
-        if (slug) window.location.href = `/lexicon/${encodeURIComponent(slug)}/`;
-      };
-      const taOptionId = (i) => `${taInput.id || "atlas-typeahead"}-opt-${i}`;
+  const initAtlasTypeahead = (ta: HTMLElement) => {
+    if (ta.dataset.atlasTypeaheadReady === "true") return;
 
-      const taRender = () => {
-        if (!taItems.length) {
-          taList.hidden = true;
-          taList.innerHTML = "";
-          taInput.setAttribute("aria-expanded", "false");
-          taInput.removeAttribute("aria-activedescendant");
+    const taInput = ta.querySelector<HTMLInputElement>("[data-atlas-typeahead-input]");
+    const taList = ta.querySelector<HTMLUListElement>("[data-atlas-typeahead-list]");
+    if (!taInput || !taList) return;
+
+    ta.dataset.atlasTypeaheadReady = "true";
+
+    let taIndex: SearchRow[] | null = null;
+    let taLoading: Promise<SearchRow[]> | null = null;
+    let taItems: SearchRow[] = [];
+    let taActive = -1;
+    let taState: "loading" | "empty" | null = null;
+
+    const taOptionId = (i: number) => `${taList.id || taInput.id}-option-${i}`;
+
+    const taRender = () => {
+      if (!taItems.length) {
+        taInput.removeAttribute("aria-activedescendant");
+        taActive = -1;
+        if (!taState) {
+          closeList(taInput, taList);
           return;
         }
 
-        taList.innerHTML = taItems
-          .map(
-            (it, i) =>
-              `<li role="option" id="${taEsc(taOptionId(i))}" class="atlas-typeahead-opt${
-                i === taActive ? " active" : ""
-              }" data-slug="${taEsc(it.s)}" aria-selected="${i === taActive}">` +
-              `<span class="ata-lemma">${taEsc(it.l)}</span>` +
-              (it.g ? `<span class="ata-gloss">${taEsc(it.g)}</span>` : "") +
-              "</li>",
-          )
-          .join("");
+        const message = taState === "loading" ? LOADING_MESSAGE : EMPTY_MESSAGE;
+        taList.innerHTML = `<li class="atlas-typeahead-state" role="option" aria-disabled="true">${taEsc(
+          message,
+        )}</li>`;
         taList.hidden = false;
         taInput.setAttribute("aria-expanded", "true");
-        if (taActive >= 0) taInput.setAttribute("aria-activedescendant", taOptionId(taActive));
-      };
+        return;
+      }
 
-      const taSearch = (q) => {
-        const nq = taNorm(q);
-        if (!nq || !taIndex) {
-          taItems = [];
-          taActive = -1;
-          taRender();
-          return;
-        }
-
-        const starts = [];
-        const contains = [];
-        for (const e of taIndex) {
-          const nl = taNorm(e.l);
-          if (nl.startsWith(nq)) {
-            if (starts.length < 12) starts.push(e);
-          } else if (contains.length < 12 && (nl.includes(nq) || taNorm(e.g).includes(nq))) {
-            contains.push(e);
-          }
-          if (starts.length >= 12) break;
-        }
-        taItems = starts.concat(contains).slice(0, 12);
-        taActive = taItems.length ? 0 : -1;
-        taRender();
-      };
-
-      taInput.addEventListener("focus", taLoad, { once: true });
-      taInput.addEventListener("input", () => {
-        taLoad().then(() => taSearch(taInput.value));
-      });
-      taInput.addEventListener("keydown", (ev) => {
-        if (ev.key === "ArrowDown") {
-          ev.preventDefault();
-          if (taItems.length) {
-            taActive = (taActive + 1) % taItems.length;
-            taRender();
-          }
-        } else if (ev.key === "ArrowUp") {
-          ev.preventDefault();
-          if (taItems.length) {
-            taActive = (taActive - 1 + taItems.length) % taItems.length;
-            taRender();
-          }
-        } else if (ev.key === "Enter") {
-          if (taItems[taActive]) {
-            ev.preventDefault();
-            taGo(taItems[taActive].s);
-          }
-        } else if (ev.key === "Escape") {
-          taItems = [];
-          taActive = -1;
-          taRender();
-        }
-      });
-      taList.addEventListener("mousedown", (ev) => {
-        const li = ev.target.closest("[data-slug]");
-        if (li) {
-          ev.preventDefault();
-          taGo(li.getAttribute("data-slug"));
-        }
-      });
-      document.addEventListener("click", (ev) => {
-        if (ta && !ta.contains(ev.target)) {
-          taItems = [];
-          taActive = -1;
-          taRender();
-        }
-      });
+      taList.innerHTML = taItems
+        .map((item, i) => {
+          const gloss = item.g ? `<span class="ata-gloss">${highlight(item.g, taInput.value)}</span>` : "";
+          return `<li role="option" id="${taEsc(taOptionId(i))}" class="atlas-typeahead-opt${
+            i === taActive ? " active" : ""
+          }" data-slug="${taEsc(item.s)}" aria-selected="${i === taActive}">
+            <span class="ata-main">
+              <span class="ata-lemma">${highlight(item.l, taInput.value)}</span>
+              ${gloss}
+            </span>
+            <span class="ata-kinds">${kindPills(item)}</span>
+          </li>`;
+        })
+        .join("");
+      taList.hidden = false;
+      taInput.setAttribute("aria-expanded", "true");
+      if (taActive >= 0) taInput.setAttribute("aria-activedescendant", taOptionId(taActive));
     };
 
-    document.querySelectorAll("[data-atlas-typeahead]").forEach(initAtlasTypeahead);
-  })();
+    const taLoad = () => {
+      if (taIndex) return Promise.resolve(taIndex);
+      if (!taLoading) {
+        taState = "loading";
+        taRender();
+        taLoading = fetch("/lexicon/search-index.json")
+          .then((response) => {
+            if (!response.ok) throw new Error(`search index fetch failed: ${response.status}`);
+            return response.json();
+          })
+          .then((data) => {
+            taIndex = Array.isArray(data) ? (data as SearchRow[]) : [];
+            return taIndex;
+          })
+          .catch(() => {
+            taIndex = [];
+            return taIndex;
+          });
+      }
+      return taLoading;
+    };
+
+    const taSearch = (q: string) => {
+      if (!normalize(q)) {
+        taItems = [];
+        taState = null;
+        taRender();
+        return;
+      }
+
+      if (!taIndex) {
+        taState = "loading";
+        taRender();
+        return;
+      }
+
+      taItems = rankMatches(taIndex, q, 12);
+      taActive = taItems.length ? 0 : -1;
+      taState = taItems.length ? null : "empty";
+      taRender();
+    };
+
+    const taGo = (slug: string | null) => {
+      if (slug) window.location.assign(`/lexicon/${encodeURIComponent(slug)}/`);
+    };
+
+    taInput.addEventListener("focus", () => {
+      void taLoad().then(() => taSearch(taInput.value));
+    });
+
+    taInput.addEventListener("input", () => {
+      if (!normalize(taInput.value)) {
+        taSearch(taInput.value);
+        return;
+      }
+      void taLoad().then(() => taSearch(taInput.value));
+    });
+
+    taInput.addEventListener("keydown", (ev) => {
+      if (ev.key === "ArrowDown") {
+        ev.preventDefault();
+        if (taItems.length) {
+          taActive = (taActive + 1) % taItems.length;
+          taRender();
+        }
+      } else if (ev.key === "ArrowUp") {
+        ev.preventDefault();
+        if (taItems.length) {
+          taActive = (taActive - 1 + taItems.length) % taItems.length;
+          taRender();
+        }
+      } else if (ev.key === "Enter") {
+        if (taItems[taActive]) {
+          ev.preventDefault();
+          taGo(taItems[taActive].s);
+        }
+      } else if (ev.key === "Escape") {
+        taInput.value = "";
+        taItems = [];
+        taState = null;
+        taRender();
+      }
+    });
+
+    taList.addEventListener("mousedown", (ev) => {
+      const target = ev.target instanceof Element ? ev.target : null;
+      const li = target?.closest("[data-slug]");
+      if (li instanceof HTMLElement) {
+        ev.preventDefault();
+        taGo(li.getAttribute("data-slug"));
+      }
+    });
+
+    document.addEventListener("click", (ev) => {
+      const target = ev.target instanceof Node ? ev.target : null;
+      if (target && !ta.contains(target)) {
+        taItems = [];
+        taState = null;
+        taRender();
+      }
+    });
+  };
+
+  document.querySelectorAll<HTMLElement>("[data-atlas-typeahead]").forEach(initAtlasTypeahead);
 </script>

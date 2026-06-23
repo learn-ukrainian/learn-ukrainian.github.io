@@ -26,11 +26,18 @@
   };
 
   const renderChips = (word: DailyWord): string => {
-    // Show only the CEFR level (A1/A2/B1) — a single, meaningful "how hard is this word"
-    // badge. The course-track tag (a1/a2/b1) was redundant and rendered mashed next to it
+    const chips: string[] = [];
+    if (word.k === "avoid") {
+      chips.push('<span class="lexicon-daily-chip danger">остерігайтеся</span>');
+    }
+    // Show only CEFR level (A1/A2/B1) — a single, meaningful "how hard this word is"
+    // badge. The course-track tag (a1/a2/b1) is redundant and renders mashed next to it
     // ("a1A1"); it lives on the word's full page instead.
-    if (!word.cefr) return "";
-    return `<span class="lexicon-daily-chips"><span class="lexicon-daily-chip">${dwEsc(word.cefr)}</span></span>`;
+    if (word.cefr) {
+      chips.push(`<span class="lexicon-daily-chip">${dwEsc(word.cefr)}</span>`);
+    }
+    if (!chips.length) return "";
+    return `<span class="lexicon-daily-chips">${chips.join("")}</span>`;
   };
 
   const renderCard = (word: DailyWord): string => {
@@ -62,7 +69,6 @@
       }
       dailyList.innerHTML = picks.map(renderCard).join("");
       if (dailyStatus) dailyStatus.hidden = true;
-      dailySection.hidden = false;
     } catch {
       hideDailySection();
     }
@@ -164,6 +170,13 @@
     font-size: 0.72rem;
     font-weight: 800;
     text-transform: uppercase;
+  }
+
+  .lexicon-daily-chip.danger {
+    border: 1px solid var(--lu-state-wrong-fg);
+    background: var(--lu-state-wrong-bg);
+    color: var(--lu-state-wrong-fg);
+    text-transform: none;
   }
 
   @media (max-width: 680px) {

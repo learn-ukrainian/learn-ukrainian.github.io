@@ -24,6 +24,19 @@ _DERIVED_FORM_SOURCES = frozenset(
 _SURZHYK_SOURCE = "surzhyk_to_avoid"
 
 
+def kind_for_source(source: Any) -> str:
+    """Return the compact Atlas source-kind bucket for a manifest source."""
+    if isinstance(source, str) and source.startswith("built_vocabulary"):
+        return "vyv"
+    if source == "plan_required":
+        return "obov"
+    if source == "plan_recommended":
+        return "rek"
+    if source == _SURZHYK_SOURCE:
+        return "avoid"
+    return "other"
+
+
 def _has_text(value: Any) -> bool:
     return isinstance(value, str) and bool(value.strip())
 
@@ -89,6 +102,7 @@ def _pool_item(entry: dict[str, Any]) -> dict[str, Any] | None:
         "lemma": lemma,
         "slug": slug,
         "gloss": gloss if isinstance(gloss, str) else None,
+        "k": kind_for_source(entry.get("primary_source")),
         "weight": compute_weight(entry),
     }
     lesson_tag = _first_course_track(entry)
