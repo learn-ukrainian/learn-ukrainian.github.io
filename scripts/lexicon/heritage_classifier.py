@@ -39,6 +39,14 @@ _AUTHENTIC_CLASSIFICATIONS = {
     "borrowing",
     "standard",
 }
+_TREASURED_CLASSIFICATIONS = {
+    "authentic-archaism",
+    "dialect",
+    "historism",
+    "borrowing",
+}
+_POSITIVE_ATTESTATION_PREFIXES = ("grinchenko", "literary")
+_POSITIVE_ATTESTATION_SOURCES = {"vesum", "esum", "гринченко", "есум"}
 
 _KNOWN_STANDARD_ALTERNATIVES: dict[str, tuple[str, ...]] = {
     "аранжировка": ("аранжування",),
@@ -174,7 +182,13 @@ def _classify(
     vesum_db_path: str | Path | None = None,
 ) -> dict[str, Any]:
     if not term:
-        return _status("unknown", [], is_russianism=False, russian_shadow=False)
+        return _status(
+            "unknown",
+            [],
+            is_russianism=False,
+            russian_shadow=False,
+            vesum_attested=False,
+        )
 
     russian_shadow, russian_shadow_detail = _check_russian_shadow(
         term,
@@ -192,7 +206,11 @@ def _classify(
         vesum_archaism and not vesum_archaism["has_modern"]
     )
 
-    russianism = _russianism_status(term, russian_shadow=russian_shadow)
+    russianism = _russianism_status(
+        term,
+        russian_shadow=russian_shadow,
+        vesum_attested=bool(vesum),
+    )
 
     attestations: list[dict[str, Any]] = []
     classification = "unknown"
@@ -247,6 +265,7 @@ def _classify(
             attestations,
             is_russianism=False,
             russian_shadow=russian_shadow,
+            vesum_attested=bool(vesum),
             sovietization_risk=sovietization_risk,
         )
 
@@ -259,6 +278,7 @@ def _classify(
             [vesum],
             is_russianism=False,
             russian_shadow=russian_shadow,
+            vesum_attested=True,
             sovietization_risk=sovietization_risk,
         )
 
@@ -268,6 +288,7 @@ def _classify(
         [],
         is_russianism=False,
         russian_shadow=russian_shadow,
+        vesum_attested=False,
         calque_warning=calque_warning,
     )
 
@@ -278,17 +299,95 @@ def _status(
     *,
     is_russianism: bool,
     russian_shadow: bool,
+    vesum_attested: bool = False,
     sovietization_risk: int = 0,
     calque_warning: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    return {
+    status = {
         "classification": classification,
         "attestations": _dedupe_attestations(attestations),
         "is_russianism": is_russianism,
         "russian_shadow": russian_shadow,
+        "vesum_attested": vesum_attested,
         "sovietization_risk": sovietization_risk,
         "calque_warning": calque_warning,
     }
+    status["warning_severity"] = compute_warning_severity(
+        status,
+        vesum_attested=vesum_attested,
+        max_sovietization_risk=sovietization_risk,
+    )
+    return status
+
+
+def has_positive_attestation(heritage_status: dict[str, Any]) -> bool:
+    """Return True for source-backed positive lexical attestation only."""
+    for attestation in heritage_status.get("attestations") or []:
+        if not isinstance(attestation, dict):
+            continue
+        source = str(attestation.get("source") or "").strip().casefold()
+        if not source:
+            continue
+        if source in _POSITIVE_ATTESTATION_SOURCES:
+            return True
+        if any(source.startswith(prefix) for prefix in _POSITIVE_ATTESTATION_PREFIXES):
+            return True
+    return False
+
+
+def _has_calque_alternative(heritage_status: dict[str, Any]) -> bool:
+    curated = heritage_status.get("curated_calque")
+    if isinstance(curated, dict) and curated.get("corrections"):
+        return True
+
+    calque_warning = heritage_status.get("calque_warning")
+    if isinstance(calque_warning, dict) and calque_warning.get("standard_alternatives"):
+        return True
+
+    section_six = heritage_status.get("§6_note")
+    return isinstance(section_six, dict) and bool(section_six.get("corrections"))
+
+
+def _has_reverse_calque(heritage_status: dict[str, Any]) -> bool:
+    """A word that is the recommended replacement for a calque (§6 reverse note)."""
+    reverse = heritage_status.get("reverse_calques")
+    return isinstance(reverse, list) and bool(reverse)
+
+
+def compute_warning_severity(
+    heritage_status: dict[str, Any] | None,
+    *,
+    vesum_attested: bool,
+    max_sovietization_risk: int = 0,
+) -> str:
+    """Compute the Word Atlas warning severity from status data only."""
+    status = heritage_status or {}
+    classification = str(status.get("classification") or "unknown")
+    positive_attestation = has_positive_attestation(status)
+
+    if bool(status.get("is_russianism")) and classification not in _AUTHENTIC_CLASSIFICATIONS:
+        return "russianism_red"
+
+    if (
+        bool(status.get("russian_shadow"))
+        and not vesum_attested
+        and classification == "unknown"
+        and not positive_attestation
+    ):
+        return "russianism_red"
+
+    if _has_calque_alternative(status) or _has_reverse_calque(status):
+        return "calque_yellow"
+
+    if classification in _TREASURED_CLASSIFICATIONS or (
+        classification == "standard" and positive_attestation
+    ):
+        return "treasured"
+
+    if max_sovietization_risk > 0:
+        return "soviet_def_blue"
+
+    return "none"
 
 
 def _source_db_path(db_path: str | Path | None = None) -> Path:
@@ -1143,7 +1242,12 @@ def _form_default_classification(term: str) -> str:
     return "standard"
 
 
-def _russianism_status(term: str, *, russian_shadow: bool) -> dict[str, Any] | None:
+def _russianism_status(
+    term: str,
+    *,
+    russian_shadow: bool,
+    vesum_attested: bool = False,
+) -> dict[str, Any] | None:
     alternatives = _standard_alternatives(term)
     if not alternatives:
         return None
@@ -1170,6 +1274,7 @@ def _russianism_status(term: str, *, russian_shadow: bool) -> dict[str, Any] | N
         attestations,
         is_russianism=True,
         russian_shadow=russian_shadow,
+        vesum_attested=vesum_attested,
         calque_warning={"standard_alternatives": alternatives},
     )
 
@@ -1240,6 +1345,7 @@ def _merge_variant_statuses(statuses: list[dict[str, Any]]) -> dict[str, Any]:
         attestations,
         is_russianism=is_russianism,
         russian_shadow=any(bool(status.get("russian_shadow")) for status in statuses),
+        vesum_attested=any(bool(status.get("vesum_attested")) for status in statuses),
         sovietization_risk=max(int(status.get("sovietization_risk") or 0) for status in statuses),
         calque_warning=calque_warning if classification == "russianism" else None,
     )

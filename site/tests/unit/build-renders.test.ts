@@ -56,6 +56,7 @@ describe('Astro build renders all pages', () => {
     try {
       buildOutput = execSync('npm run build 2>&1', {
         cwd: STARLIGHT_DIR,
+        env: { ...process.env, ATLAS_MANIFEST_ALLOW_STALE_POINTER: '1' },
         timeout: 240000,
         encoding: 'utf-8',
         maxBuffer: 50 * 1024 * 1024, // 50MB: full build output for 31k pages exceeds default 1MB

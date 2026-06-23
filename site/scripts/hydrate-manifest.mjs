@@ -2,16 +2,31 @@ import { existsSync } from "node:fs";
 import { readFile, rename, unlink, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { gunzipSync } from "node:zlib";
 
 const RECOVERY_COMMAND =
   "gh release download atlas-manifest -p lexicon-manifest.json.gz -O - | gunzip -c > site/src/data/lexicon-manifest.json";
 
-const scriptDir = dirname(decodeURIComponent(new URL(import.meta.url).pathname));
+const REQUIRED_POINTER_KEYS = [
+  "asset_url",
+  "release_tag",
+  "manifest_version",
+  "manifest_fingerprint",
+  "fingerprint_schema_version",
+  "gz_sha256",
+  "json_sha256",
+  "gz_bytes",
+  "json_bytes",
+];
+
+const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, "../..");
 const pointerPath = resolve(repoRoot, "site/src/data/lexicon-manifest.pointer.json");
+const fingerprintPath = resolve(repoRoot, "site/src/data/lexicon-manifest.fingerprint.json");
 const manifestPath = resolve(repoRoot, "site/src/data/lexicon-manifest.json");
 const tempPath = `${manifestPath}.tmp`;
+const allowStalePointer = process.env.ATLAS_MANIFEST_ALLOW_STALE_POINTER === "1";
 
 function sha256(data) {
   return createHash("sha256").update(data).digest("hex");
@@ -25,21 +40,79 @@ function recoveryMessage() {
   return `Manual recovery command:\n${RECOVERY_COMMAND}`;
 }
 
-async function readPointer() {
-  return JSON.parse(await readFile(pointerPath, "utf8"));
+async function readJson(path) {
+  return JSON.parse(await readFile(path, "utf8"));
+}
+
+function assertPointerFresh(pointer, fingerprint) {
+  if (allowStalePointer) return;
+
+  const missing = REQUIRED_POINTER_KEYS.filter((key) => pointer[key] === undefined || pointer[key] === null || pointer[key] === "");
+  if (missing.length > 0) {
+    throw new Error(
+      `Atlas manifest pointer missing freshness keys: ${missing.join(", ")}. Run make atlas-publish.`,
+    );
+  }
+
+  if (pointer.fingerprint_schema_version !== fingerprint.schema_version) {
+    throw new Error(
+      `Atlas manifest pointer schema ${pointer.fingerprint_schema_version} is stale; expected ${fingerprint.schema_version}. Run make atlas-publish.`,
+    );
+  }
+
+  if (pointer.manifest_fingerprint !== fingerprint.fingerprint) {
+    throw new Error(
+      `Atlas manifest pointer fingerprint ${pointer.manifest_fingerprint} is stale; expected ${fingerprint.fingerprint}. Run make atlas-publish.`,
+    );
+  }
+}
+
+function assertManifestFresh(manifest, pointer, sourceLabel) {
+  if (allowStalePointer) return;
+
+  if (manifest.version !== pointer.manifest_version) {
+    throw new Error(
+      `${sourceLabel} manifest version ${manifest.version ?? "<missing>"} does not match pointer ${pointer.manifest_version}. Run make atlas-publish.`,
+    );
+  }
+
+  const embedded = manifest.manifest_fingerprint;
+  if (!embedded || typeof embedded !== "object") {
+    throw new Error(`${sourceLabel} lacks manifest_fingerprint. Run make atlas-publish.`);
+  }
+
+  if (embedded.schema_version !== pointer.fingerprint_schema_version) {
+    throw new Error(
+      `${sourceLabel} fingerprint schema ${embedded.schema_version ?? "<missing>"} does not match pointer ${pointer.fingerprint_schema_version}. Run make atlas-publish.`,
+    );
+  }
+
+  if (embedded.fingerprint !== pointer.manifest_fingerprint) {
+    throw new Error(
+      `${sourceLabel} fingerprint ${embedded.fingerprint ?? "<missing>"} does not match pointer ${pointer.manifest_fingerprint}. Run make atlas-publish.`,
+    );
+  }
+}
+
+function parseManifest(jsonBytes, pointer, sourceLabel) {
+  const manifest = JSON.parse(jsonBytes.toString("utf8"));
+  assertManifestFresh(manifest, pointer, sourceLabel);
+  return manifest;
 }
 
 async function alreadyHydrated(pointer) {
-  if (!existsSync(manifestPath)) {
-    return false;
-  }
+  if (!existsSync(manifestPath)) return false;
 
   const data = await readFile(manifestPath);
-  return sha256(data) === pointer.json_sha256;
+  if (sha256(data) !== pointer.json_sha256) return false;
+
+  parseManifest(data, pointer, manifestPath);
+  return true;
 }
 
 async function hydrate() {
-  const pointer = await readPointer();
+  const [pointer, fingerprint] = await Promise.all([readJson(pointerPath), readJson(fingerprintPath)]);
+  assertPointerFresh(pointer, fingerprint);
 
   if (await alreadyHydrated(pointer)) {
     console.log("✓ manifest already hydrated");
@@ -54,32 +127,29 @@ async function hydrate() {
   const gzBytes = Buffer.from(await response.arrayBuffer());
   const actualGzSha = sha256(gzBytes);
   if (actualGzSha !== pointer.gz_sha256) {
-    throw new Error(
-      `gz sha256 mismatch: expected ${pointer.gz_sha256}, got ${actualGzSha}\n${recoveryMessage()}`,
-    );
+    throw new Error(`gz sha mismatch: expected ${pointer.gz_sha256}, got ${actualGzSha}`);
+  }
+  if (gzBytes.length !== pointer.gz_bytes) {
+    throw new Error(`gz size mismatch: expected ${pointer.gz_bytes}, got ${gzBytes.length}`);
   }
 
   const jsonBytes = gunzipSync(gzBytes);
   const actualJsonSha = sha256(jsonBytes);
   if (actualJsonSha !== pointer.json_sha256) {
-    throw new Error(
-      `json sha256 mismatch after gunzip: expected ${pointer.json_sha256}, got ${actualJsonSha}\n${recoveryMessage()}`,
-    );
+    throw new Error(`json sha mismatch: expected ${pointer.json_sha256}, got ${actualJsonSha}`);
+  }
+  if (jsonBytes.length !== pointer.json_bytes) {
+    throw new Error(`json size mismatch: expected ${pointer.json_bytes}, got ${jsonBytes.length}`);
   }
 
+  parseManifest(jsonBytes, pointer, pointer.asset_url);
   await writeFile(tempPath, jsonBytes);
   await rename(tempPath, manifestPath);
-  console.log(`hydrated ${mb(gzBytes.length)} gz -> ${mb(jsonBytes.length)} json`);
+  console.log(`✓ hydrated manifest ${mb(jsonBytes.length)} from ${mb(gzBytes.length)} release asset`);
 }
 
 hydrate().catch(async (error) => {
-  try {
-    await unlink(tempPath);
-  } catch {
-    // Best effort cleanup; the failure above is the actionable error.
-  }
-
-  console.error(error instanceof Error ? error.message : String(error));
-  console.error(recoveryMessage());
+  await unlink(tempPath).catch(() => {});
+  console.error(`Failed to hydrate lexicon manifest: ${error.message}`);
   process.exit(1);
 });
