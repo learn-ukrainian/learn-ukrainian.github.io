@@ -67,7 +67,7 @@ does not micromanage that track.
 | Scope | Main orchestrator owns | Track orchestrator owns |
 |---|---|---|
 | Branch policy | `main`, merge sequencing, release safety | Dispatch worktrees and PR branches only |
-| State | `docs/session-state/codex-orchestrator-handoff.md` and router | Track handoff, e.g. `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md` |
+| State | `docs/session-state/codex-orchestrator-handoff.md` and router | Track handoff (gitignored local), e.g. `.claude/bio-epic/CLAUDE-DRIVER-HANDOFF.md` — not in git/PRs |
 | Work selection | Repo-wide priorities, A1 spine, tooling, infra, tech debt, issues | Track backlog, batches, reviews, content quality |
 | Agent dispatch | Cross-track/tooling agents | Track-local writers/reviewers, including headless Codex |
 | Merge authority | Final reconcile and merge decision | Open PRs and route track feedback, never merge |

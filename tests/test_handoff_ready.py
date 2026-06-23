@@ -14,26 +14,25 @@ def _all_ok(monkeypatch):
     monkeypatch.setattr(hr, "check_no_inflight", lambda: (hr.OK, "0 in flight"))
     monkeypatch.setattr(hr, "check_branch_pushed", lambda b: (hr.OK, "pushed"))
     monkeypatch.setattr(hr, "check_pr_checks", lambda pr: (hr.OK, "green"))
-    monkeypatch.setattr(hr, "check_handoff_bundled", lambda b, h: (hr.OK, "bundled"))
 
 
 def test_ready_when_all_ok(monkeypatch):
     _all_ok(monkeypatch)
-    rep = hr.evaluate("br", 5, "h.md")
+    rep = hr.evaluate("br", 5)
     assert rep["ready"] is True
 
 
 def test_red_blocks_ready(monkeypatch):
     _all_ok(monkeypatch)
     monkeypatch.setattr(hr, "check_tree_clean", lambda: (hr.RED, "3 uncommitted"))
-    assert hr.evaluate("br", 5, "h.md")["ready"] is False
+    assert hr.evaluate("br", 5)["ready"] is False
 
 
 def test_unknown_blocks_ready(monkeypatch):
     """Anti-fabrication: a check you could not run ⇒ NOT ready (#M-4)."""
     _all_ok(monkeypatch)
     monkeypatch.setattr(hr, "check_pr_checks", lambda pr: (hr.UNKNOWN, "gh unavailable"))
-    assert hr.evaluate("br", 5, "h.md")["ready"] is False
+    assert hr.evaluate("br", 5)["ready"] is False
 
 
 def test_branch_pushed_logic(monkeypatch):
@@ -56,15 +55,6 @@ def test_branch_pushed_logic(monkeypatch):
 
     state["remote"] = ""
     assert hr.check_branch_pushed("br")[0] == hr.RED  # not pushed at all
-
-
-def test_handoff_bundled_logic(monkeypatch):
-    handoff = "docs/folk-epic/CLAUDE-DRIVER-HANDOFF.md"
-    monkeypatch.setattr(hr, "_git", lambda *a: (0, f"{handoff}\nfoo.py\nbar.py"))
-    assert hr.check_handoff_bundled("br", handoff)[0] == hr.OK
-
-    monkeypatch.setattr(hr, "_git", lambda *a: (0, "foo.py\nbar.py"))
-    assert hr.check_handoff_bundled("br", handoff)[0] == hr.RED
 
 
 def test_no_inflight_logic(monkeypatch):

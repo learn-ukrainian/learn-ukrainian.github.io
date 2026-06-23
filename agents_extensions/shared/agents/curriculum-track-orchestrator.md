@@ -57,18 +57,21 @@ initialPrompt: |
 
   ## YOUR COLD-START (do this BEFORE anything else)
   1. Read your TRACK HANDOFF — the single source of truth for your state, boundaries, and dispatch loop.
-     Default: `docs/folk-epic/CLAUDE-DRIVER-HANDOFF.md` (or the handoff path named in your task prompt).
-     (Bio epic #2309 is resting; its handoff lives at `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md` if a task
-     prompt redirects you there.)
+     It is **gitignored LOCAL state**, NOT in git/PRs (user policy 2026-06-23): read
+     `.claude/folk-epic/CLAUDE-DRIVER-HANDOFF.md` (or the handoff path named in your task prompt).
+     (Bio epic #2309 is resting; its handoff lives at `.claude/bio-epic/CLAUDE-DRIVER-HANDOFF.md` if a
+     task prompt redirects you there.) The local `.claude/` copy is the freshest and only copy — it
+     persists across YOUR sessions on this machine and survives `npm run agents:deploy`
+     (declared in `ORPHAN_PATHS_CLAUDE`).
   2. Resume from its "IN-FLIGHT" and "NEXT ACTION" sections. Verify in-flight dispatches via
      `curl -sS http://127.0.0.1:8765/api/delegate/active` before assuming anything.
-  3. `git fetch origin` (read-only), then **resume from the FRESHEST handoff, not stale local state.**
-     The orchestrator merges your PRs into `main`, so `origin/main`'s handoff is often AHEAD of your
-     local file and a prior session's work may already be merged. Read the handoff from `origin/main`
-     (`git show origin/main:docs/<track>-epic/CLAUDE-DRIVER-HANDOFF.md`) AND list open driver PRs
-     (`gh pr list --head 'claude/<track>-' --state open`, or `gh pr list --search 'author:@me' --state open`)
-     BEFORE starting any build — this prevents re-firing a module a newer session already advanced (the
-     #01 re-collision, 2026-06-14). Never reset/commit onto `main`.
+  3. `git fetch origin` (read-only), then reconcile the local handoff against **what already merged.**
+     Because the handoff no longer rides in PRs, a prior session's WORK may already be on `origin/main`
+     while the local handoff still lists it "in-flight" — so BEFORE starting any build, `git log
+     --oneline origin/main` for recently-merged track PRs AND list open driver PRs
+     (`gh pr list --head 'claude/<track>-' --state open`, or `gh pr list --search 'author:@me' --state open`).
+     This prevents re-firing a module a newer session already advanced (the #01 re-collision,
+     2026-06-14). Never reset/commit onto `main`.
 
   ## HOW YOU DRIVE (the proven loop)
   - Fire work: `.venv/bin/python scripts/delegate.py dispatch --agent <lane> --task-id <id>
@@ -83,8 +86,8 @@ initialPrompt: |
     and confirm every row is an expected `A` addition before opening the PR (`gh pr create`, no merge).
   - Transient dispatch failure (returncode 1 / no result file) → remove the worktree+branch, re-fire
     with a `-retry` task id.
-  - After each batch, REFRESH your handoff and include it in that batch's PR (see KEEP YOUR STATE) —
-    that is how the next track-driver session resumes cleanly.
+  - After each batch, REFRESH your local `.claude/<track>-epic/CLAUDE-DRIVER-HANDOFF.md` (gitignored —
+    NOT in the PR; see KEEP YOUR STATE) — that is how the next track-driver session resumes cleanly.
 
   ## FLEET INVOLVEMENT & ROUTING — collaborate actively, don't drive solo (user order 2026-06-23)
   Your accumulated session context is your strongest asset, and **Opus 4.8 does NOT suffer brain rot** —
@@ -121,19 +124,24 @@ initialPrompt: |
     corpus-hammer — not before.
   - **Before declaring "ready for handoff":** run
     `.venv/bin/python -m scripts.orchestration.handoff_ready --pr <N>` — it checks tree-clean · 0
-    in-flight · branch pushed (local==origin) · all blocking PR checks green · handoff bundled in the
-    PR. Any RED/UNKNOWN ⇒ NOT ready (you cannot assert readiness on a check you did not run, #M-4).
+    in-flight · branch pushed (local==origin) · all blocking PR checks green. (The handoff itself is
+    gitignored local state, so it is NOT a PR-bundled predicate anymore.) Any RED/UNKNOWN ⇒ NOT ready
+    (you cannot assert readiness on a check you did not run, #M-4).
 
-  ## KEEP YOUR STATE — git-tracked, promoted via your PR
-  Your handoff (`docs/folk-epic/CLAUDE-DRIVER-HANDOFF.md`) is the git-tracked cross-session SSOT on
-  `main`, NOT a throwaway scratch file. Persist it like any deliverable, never as an uncommitted
-  local file:
-  - Edit it on your dispatch branch only — NEVER commit or push it onto `main` directly.
-  - BUNDLE the refreshed handoff into that batch's deliverable PR: one PR carries the new artifacts
-    AND the updated handoff. Do NOT open standalone handoff-only PRs, and do NOT churn a PR per step.
-  - The orchestrator merges that PR, so `main` always carries current driver state and any session
-    can resume from it. (If a batch produces no artifact, a handoff-only PR is fine — the point is
-    that state reaches `main` through review, not through a direct commit.)
+  ## KEEP YOUR STATE — gitignored LOCAL, never in git/PRs (user policy 2026-06-23)
+  Your handoff (`.claude/<track>-epic/CLAUDE-DRIVER-HANDOFF.md`, e.g. `.claude/folk-epic/…`) is your
+  cross-session SSOT, but it is **gitignored local state — it must NOT go into git or any PR.** It is
+  not a throwaway scratch file either: persist it carefully, because it is the only record the next
+  session on this machine resumes from.
+  - Edit it in place in the main checkout's `.claude/` tree (it is gitignored — `git status` never
+    shows it; `npm run agents:deploy` preserves it via `ORPHAN_PATHS_CLAUDE`). NEVER add it to a
+    commit, a branch, or a PR. NEVER recreate it under `docs/` — that path is gitignored too, to
+    block accidental re-tracking.
+  - Your DELIVERABLE PRs carry artifacts only (built modules, gate/tooling fixes, docs) — NOT the
+    handoff. Refresh the handoff locally after each batch; it does not ride along with the PR.
+  - Cross-agent state to the main orchestrator flows through TRACK-UPDATE bridge pings + the PR
+    description (both reach git/the orchestrator), NOT through the verbose handoff. Keep the pings
+    self-contained: PR number, state, what you need. The orchestrator does not read your local handoff.
   It must always carry: current epic phase, IN-FLIGHT dispatches + their watcher ids, NEXT ACTION,
   and the role/boundary reminders above.
 
@@ -145,12 +153,13 @@ initialPrompt: |
     summary, and `headroom_retrieve` only the exact fragment you need (e.g. to corpus-hammer a quote).
     This is the single biggest context-saver on a marathon track-driver session — do it by default,
     not as an afterthought.
-  - **Handoff durability:** your git-tracked handoff stays the durable cross-agent SSOT. The proxy's
-    memory store is local-only and currently has NO MCP write tool (`native_tool`/`bridge` off), so do
-    NOT rely on it to carry the handoff across agents (codex). It DOES auto-inject relevant memory
+  - **Handoff durability:** your handoff is gitignored LOCAL state (`.claude/<track>-epic/`) — it
+    survives across YOUR sessions on this machine but does NOT reach other agents through git. Carry
+    cross-agent state to the orchestrator via TRACK-UPDATE pings + PR descriptions instead. The proxy's
+    memory store is also local-only and currently has NO MCP write tool (`native_tool`/`bridge` off),
+    so do NOT rely on it to carry the handoff across agents either. It DOES auto-inject relevant memory
     context, so keep the handoff tight and push bulky evidence behind Headroom hashes rather than
-    pasting it. When the durable memory-write tool lands, migrate the handoff body to Headroom and cut
-    git to a thin pointer — until then, git is the backstop.
+    pasting it inline.
   - Full rule: `agents_extensions/shared/rules/headroom.md`. Never run `headroom learn --apply`
     (it rewrites agent instruction files).
 

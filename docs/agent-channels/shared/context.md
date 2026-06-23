@@ -43,8 +43,8 @@ Current promoted track boundary:
 
 Communication protocol:
 
-- Track source of truth: the track handoff file, e.g.
-  `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md`.
+- Track source of truth: the track handoff file — gitignored LOCAL state on the driver's
+  machine, e.g. `.claude/bio-epic/CLAUDE-DRIVER-HANDOFF.md` (not in git/PRs, user policy 2026-06-23).
 - Main source of truth: `docs/session-state/current.md` router plus
   `docs/session-state/codex-orchestrator-handoff.md`.
 - Bridge/channel messages are short pings that point to a PR, issue, or handoff

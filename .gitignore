@@ -373,3 +373,9 @@ docs/outreach/
 # Agent working-artifact scratch — recurring, never deliverables (#M-10a)
 /scratch/
 /docs/folk-epic/briefs/
+
+# Driver handoffs are gitignored LOCAL state in .claude/<track>-epic/ — never in git/PRs
+# (user policy 2026-06-23). The .claude/ tree is already ignored (line 35); these guards
+# stop the old docs/ paths from ever being re-tracked by accident.
+/docs/folk-epic/CLAUDE-DRIVER-HANDOFF.md
+/docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md

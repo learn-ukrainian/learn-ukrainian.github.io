@@ -8,8 +8,11 @@ readiness a deterministic predicate a driver runs (never asserts):
   2. no in-flight       — /api/delegate/active reports 0 running dispatches
   3. branch pushed      — local branch tip == origin branch tip (nothing unpushed)
   4. pr checks green    — every BLOCKING status check on the PR is green
-  5. handoff bundled    — the driver handoff is part of the PR diff (state reaches
-                          main via review, not a stale origin/main RESUME-HERE)
+
+(The driver handoff is gitignored LOCAL state under .claude/<track>-epic/ as of the
+2026-06-23 policy change — it no longer rides in PRs, so there is no "handoff bundled"
+predicate. Cross-agent state reaches the orchestrator via TRACK-UPDATE pings + the PR
+description, not the handoff file.)
 
 Any check that is RED *or* UNKNOWN ⇒ NOT READY. Unknown counts as not-ready on
 purpose: you cannot assert readiness on a check you could not run (anti-fabrication,
@@ -17,7 +20,7 @@ mirrors MEMORY.md #M-4). Exit 0 iff READY.
 
 Usage:
     python -m scripts.orchestration.handoff_ready --pr 3140
-    python -m scripts.orchestration.handoff_ready --branch claude/folk-x --handoff docs/folk-epic/CLAUDE-DRIVER-HANDOFF.md
+    python -m scripts.orchestration.handoff_ready --branch claude/folk-x
 """
 
 from __future__ import annotations
@@ -29,7 +32,6 @@ import urllib.request
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_HANDOFF = "docs/folk-epic/CLAUDE-DRIVER-HANDOFF.md"
 DELEGATE_ACTIVE_URL = "http://127.0.0.1:8765/api/delegate/active"
 
 OK, RED, UNKNOWN = "ok", "red", "unknown"
@@ -136,16 +138,6 @@ def check_pr_checks(pr: int | None) -> tuple[str, str]:
     return _blocking_state(pr)
 
 
-def check_handoff_bundled(branch: str, handoff: str) -> tuple[str, str]:
-    rc, out = _git("diff", "--name-only", f"origin/main...{branch}")
-    if rc != 0:
-        return UNKNOWN, f"git diff failed: {out[:120]}"
-    files = set(out.splitlines())
-    if handoff in files:
-        return OK, f"{handoff} is in the PR diff"
-    return RED, f"{handoff} NOT in the PR diff — refreshed state won't reach main"
-
-
 def _discover_pr(branch: str) -> int | None:
     rc, data = _gh_json("pr", "list", "--head", branch, "--state", "open", "--json", "number")
     if rc == 0 and isinstance(data, list) and data:
@@ -153,7 +145,7 @@ def _discover_pr(branch: str) -> int | None:
     return None
 
 
-def evaluate(branch: str, pr: int | None, handoff: str) -> dict:
+def evaluate(branch: str, pr: int | None) -> dict:
     if pr is None:
         pr = _discover_pr(branch)
     checks = {
@@ -161,7 +153,6 @@ def evaluate(branch: str, pr: int | None, handoff: str) -> dict:
         "no_inflight": check_no_inflight(),
         "branch_pushed": check_branch_pushed(branch),
         "pr_checks_green": check_pr_checks(pr),
-        "handoff_bundled": check_handoff_bundled(branch, handoff),
     }
     ready = all(status == OK for status, _ in checks.values())
     return {"branch": branch, "pr": pr, "ready": ready, "checks": checks}
@@ -184,7 +175,6 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="Machine-checked handoff-readiness predicate (#3138)")
     ap.add_argument("--branch", default=None, help="branch to check (default: current HEAD)")
     ap.add_argument("--pr", type=int, default=None, help="PR number (default: discover via gh)")
-    ap.add_argument("--handoff", default=DEFAULT_HANDOFF, help="driver handoff path that must be bundled")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args(argv)
 
@@ -193,7 +183,7 @@ def main(argv: list[str] | None = None) -> int:
         rc, out = _git("rev-parse", "--abbrev-ref", "HEAD")
         branch = out if rc == 0 else "HEAD"
 
-    report = evaluate(branch, args.pr, args.handoff)
+    report = evaluate(branch, args.pr)
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2))
     else:

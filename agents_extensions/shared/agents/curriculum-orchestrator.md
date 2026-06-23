@@ -132,8 +132,10 @@ review, orchestration, precise dispatch briefs.
   constants" caveat live in the canonical served routing rule `model-assignment.md` (`/api/rules`).
 
 ## Track Orchestrator Protocol
-- Track orchestrator source of truth: its track handoff, e.g.
-  `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md`.
+- Track orchestrator source of truth: its track handoff, which is **gitignored LOCAL state** on the
+  driver's machine, e.g. `.claude/bio-epic/CLAUDE-DRIVER-HANDOFF.md` (user policy 2026-06-23 — driver
+  handoffs are out of git/PRs). You (main) do NOT read it; track drivers report to you via TRACK-UPDATE
+  pings + their PR descriptions.
 - Main orchestrator source of truth: `docs/session-state/current.md` router plus
   `docs/session-state/current.orchestrator.md`.
 - Track pings use:
