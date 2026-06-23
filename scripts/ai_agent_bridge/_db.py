@@ -407,27 +407,55 @@ def get_session(task_id: str) -> dict:
     return {"claude": None, "gemini": None, "codex": None}
 
 
-def _session_column(agent: str) -> str:
-    """Map agent name to session table column."""
-    columns = {
-        "claude": "claude_session_id",
-        "gemini": "gemini_session_id",
-        "codex": "codex_session_id",
-    }
-    if agent not in columns:
-        raise ValueError(f"Unknown session agent: {agent}")
-    return columns[agent]
+# Agents whose sessions are PERSISTED for resumption. These are exactly the
+# columns `get_session` reads back.
+_SESSION_COLUMNS = {
+    "claude": "claude_session_id",
+    "gemini": "gemini_session_id",
+    "codex": "codex_session_id",
+}
+
+# Always-fresh agents (resume_policy="never"): their runs never resume, so their
+# session id is intentionally NOT persisted. Listed explicitly so set_session stays
+# silent for them while still flagging a genuinely-unknown agent (e.g. a new
+# resumable agent whose _SESSION_COLUMNS entry was forgotten — that would otherwise
+# silently never persist).
+_ALWAYS_FRESH_AGENTS = frozenset(
+    {"grok-build", "agy", "cursor", "hermes", "deepseek-v4-pro", "qwen", "opencode"}
+)
+
+
+def _session_column(agent: str) -> str | None:
+    """Map a resumable agent to its session column, or None for always-fresh agents."""
+    return _SESSION_COLUMNS.get(agent)
 
 
 def set_session(task_id: str, agent: str, session_id: str):
-    """Set session ID for an agent on a task."""
+    """Persist an agent's session id for later resumption.
+
+    No-op for always-fresh agents (those without a session column): their runs
+    never resume, so nothing reads the id back. Previously this raised
+    ``ValueError: Unknown session agent`` and crashed ``ask-grok-build`` after a
+    successful run (grok-build is resume_policy="never" yet returns a session id).
+    """
     if not task_id:
+        return
+
+    column = _session_column(agent)
+    if column is None:
+        # No session column => always-fresh agent, nothing to persist. Stay silent
+        # for the known set; warn for a genuinely-unknown agent so a forgotten
+        # _SESSION_COLUMNS entry doesn't fail silently.
+        if agent not in _ALWAYS_FRESH_AGENTS:
+            print(
+                f"⚠️  set_session: no session column for agent '{agent}'; not persisting. "
+                "Add it to _SESSION_COLUMNS (resumable) or _ALWAYS_FRESH_AGENTS (always-fresh)."
+            )
         return
 
     conn = get_db()
     cursor = conn.cursor()
     timestamp = datetime.now(UTC).isoformat()
-    column = _session_column(agent)
 
     # Upsert session
     cursor.execute("SELECT task_id FROM sessions WHERE task_id = ?", (task_id,))
