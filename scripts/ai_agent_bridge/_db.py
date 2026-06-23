@@ -407,27 +407,41 @@ def get_session(task_id: str) -> dict:
     return {"claude": None, "gemini": None, "codex": None}
 
 
-def _session_column(agent: str) -> str:
-    """Map agent name to session table column."""
-    columns = {
-        "claude": "claude_session_id",
-        "gemini": "gemini_session_id",
-        "codex": "codex_session_id",
-    }
-    if agent not in columns:
-        raise ValueError(f"Unknown session agent: {agent}")
-    return columns[agent]
+# Agents whose sessions are PERSISTED for resumption. These are exactly the
+# columns `get_session` reads back. Agents NOT listed here are always-fresh
+# (resume_policy="never" — e.g. grok-build, agy, cursor, hermes/deepseek):
+# their session id is never read back, so we do not persist it.
+_SESSION_COLUMNS = {
+    "claude": "claude_session_id",
+    "gemini": "gemini_session_id",
+    "codex": "codex_session_id",
+}
+
+
+def _session_column(agent: str) -> str | None:
+    """Map a resumable agent to its session column, or None for always-fresh agents."""
+    return _SESSION_COLUMNS.get(agent)
 
 
 def set_session(task_id: str, agent: str, session_id: str):
-    """Set session ID for an agent on a task."""
+    """Persist an agent's session id for later resumption.
+
+    No-op for always-fresh agents (those without a session column): their runs
+    never resume, so nothing reads the id back. Previously this raised
+    ``ValueError: Unknown session agent`` and crashed ``ask-grok-build`` after a
+    successful run (grok-build is resume_policy="never" yet returns a session id).
+    """
     if not task_id:
+        return
+
+    column = _session_column(agent)
+    if column is None:
+        # Always-fresh agent (grok-build / agy / cursor / …) — nothing to persist.
         return
 
     conn = get_db()
     cursor = conn.cursor()
     timestamp = datetime.now(UTC).isoformat()
-    column = _session_column(agent)
 
     # Upsert session
     cursor.execute("SELECT task_id FROM sessions WHERE task_id = ?", (task_id,))
