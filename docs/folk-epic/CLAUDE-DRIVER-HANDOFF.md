@@ -51,16 +51,29 @@ tone 9.0 → **PASS all dims**; Russianism check clean. My own read agrees. What
 2. **dumy** #3751 (5.8→bar). Close-reading scaffolding added (teach HOW not WHAT); дума texts verified to Драгоманов; CODEX REVISE → polish («першим ділом»→«найперше» calque + ongoing-war framing). Codex over-flagged "smoothed quotes"/"broken joins" — both false (verify_quote 1.0 / clean prose).
 3. **narodni-viruvannia** #3752 + **zamovliannia** #3753 (acquisition-blocked, 0 primary folk texts #3162). Honest `:::caution` source-criticism + clearly-labelled literary reflections (Мирний/Шевченко, verify_quote 1.0). CODEX REVISE on naturalness (VESUM-confirmed: «спожиє»→«споживе», «нехтує берегову межу»→«береговою межею») + narodni beauty 8.4 → polishes (grammar + a resonant Шевченко close-read beat).
 
-**▶▶ ACTIVE NEXT — INFRA GATE (root-cause, I own it #0.2).** `scripts/common/thresholds.py`
-`LLM_QG_TERMINAL_DIMS = {decolonization}` only → pedagogical/engagement/naturalness/tone are WARNING-ONLY ⇒
-weak seminar content can still ship (that's how all 5 shipped sub-bar originally). FIX: make
-pedagogical+engagement terminal at floor for seminar/folk via `terminal_dims_for(profile)` + tests.
-**DESIGN INSIGHT from this campaign:** the 2026-05-23 demote was due to single-SAME-FAMILY-model NOISE — but a
-single **CODEX cross-family** score gave well-calibrated REVISE/PASS verdicts on all 5 (caught real defects
-every time; only minor over-flagging that corpus-hammering caught). So the gate likely does NOT need a full
-4-model panel — a cross-family (GPT-for-Claude-writer) scorer at the floor, or a 2-model agree-to-fail, may
-suffice. Decide panel-vs-cross-family in the gate PR. **Do NOT enable a noisy same-family gate** (re-creates
-the 0-ships failure). Substantial infra → fresh-context focused effort, not a context-exhausted bolt-on.
+**✅ AGENT-DEF (#3755 merged):** track-driver def now mandates drive-in-context (Opus 4.8 = no brain rot,
+canary-verified) + active fleet discussion + content/infra routing (content→agy/gpt-5.5-xhigh/cursor-composer;
+infra→agy/gpt-5.5/cursor-auto/grok-build/deepseek-v4-pro) + treat actively-developed lanes' models as
+changelog-checked, not constants. Applies after `npm run agents:deploy` (orchestrator reconcile).
+
+**▶▶ ACTIVE NEXT — INFRA GATE (Task #3, root-cause, I own it #0.2). DECISION LOCKED: OPTION A (user 2026-06-23).**
+Enforce seminar LLM-QG quality as a **deterministic PRE-PROMOTE gate, NOT an in-build terminal flip.**
+- **Why A, not B (the in-build flip):** the 2026-05-23 demote was a STRUCTURAL reset (268KB prompt + 23 gates
+  + brittle auto-correction = 0 ships in 6 builds); subjective quality was deliberately moved OUT of the
+  in-build loop INTO "manual review as the promote gate". Re-arming `terminal_dims_for` in-build re-arms that
+  broken loop → re-creates 0-ships. Option A operationalizes the workflow this campaign ran 5× (rebuild →
+  CROSS-FAMILY codex score ≥bar → polish-if-REVISE → merge) — that IS the manual promote gate, made deterministic.
+- **Design (drive in-context → DISCUSS with codex per the new def → dispatch infra-lane impl + tests):**
+  a seminar/folk module cannot PROMOTE until a **recorded cross-family LLM-QG score ≥ bar** exists
+  (pedagogical/engagement/beauty/naturalness/tone ≥8.5; decolonization ≥9). KEEP in-build subjective dims as
+  WARNINGS — do NOT change `terminal_dims_for`'s in-build behavior. Likely shape: extend
+  `scripts/build/verify_shippable.py` (or a new `promote` gate) to require an auditable, committed score
+  sidecar (model/dims/verdict). Cross-family = GPT-for-Claude-writer (codex); NO DeepSeek for folk (rubric).
+  Open design question for the codex discussion: single cross-family score vs 2-model agree-to-fail (campaign:
+  single codex was well-calibrated but DID over-flag twice — corpus-hammer caught it).
+- **Code anchors:** `scripts/common/thresholds.py` (`aggregate_review`:~300, `terminal_dims_for`:~82, floors
+  PASS=8.0/STYLE=8.5); `scripts/build/v7_build.py`:~2035 (in-build terminal enforce — LEAVE AS WARNING);
+  `scripts/build/verify_shippable.py` (promote-gate extension point); `docs/folk-epic/seminar-quality-gate-design.md`.
 
 ## ▶▶▶ SESSION 82 (2026-06-23) — rights model fixed (host all heritage) + first persecuted-author reading hosted — RESUME HERE
 
