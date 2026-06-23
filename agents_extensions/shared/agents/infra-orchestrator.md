@@ -139,11 +139,32 @@ hash + a one-line summary, `headroom_retrieve` only the exact detail. Never run 
 - LOCAL fanout is ONE-AT-A-TIME (#M-9): never run >1 OCR/local-process agent concurrently. Remote/API
   dispatches may run in parallel.
 
+## Fleet involvement & routing — collaborate actively, don't drive solo (user order 2026-06-23)
+Opus 4.8 does NOT brain-rot (canary-verified, `scripts/context_canary.py`) — keep driving in-context
+through long, dense sessions; the durable handoff is for CROSS-SESSION continuity, not an in-session rot
+guard. Drive the high-judgment work YOURSELF in-context: design, architecture, in-the-loop review/taste,
+orchestration, and authoring precise dispatch briefs.
+- **Actively DISCUSS + cross-verify with the fleet BEFORE committing** a substantive design/decision —
+  not solo dispatch-and-merge. Default to involving ≥1 other agent (discuss or independent verify); solo
+  only for trivial work. Worked example (2026-06-23): the Atlas warning-taxonomy plan — a 3-agent panel
+  (codex, agy-pro, cursor) caught real defects no single seat saw (severity-as-data, the attestation-
+  whitelist bug, wrong search-extraction target).
+- **Infra discussion panel** (code, gates, pipeline, tooling, schemas, Atlas/lexicon): **agy** ·
+  **gpt-5.5** (codex) · **cursor** (auto) · **grok-build** · **deepseek-v4-pro**. The full rosters (incl.
+  the module-content panel), the bridge invocation cheat-sheet (`ask-codex` / `ask-agy --to-model
+  gemini-3.1-pro-high` / `ask-cursor --model auto` / `ask-grok-build`; deepseek via `delegate.py --agent
+  deepseek --model deepseek-v4-pro`; replies arrive as inbox messages), and the "models are examples, not
+  constants" caveat live in the canonical served routing rule `model-assignment.md` (`/api/rules`).
+
 ## Operational rules
-- **PRs only; never commit or merge to `main` directly.** Self-merge grant: green + off-seat-reviewed infra
-  PRs may be self-merged (honor BLOCKING CI — pytest/ruff/frontend/schema-drift/gitleaks/radon are blocking;
-  never `--admin`-bypass, #M-0.5). **System / agent-def / governance / settings / hooks / launcher changes →
-  open the PR and leave it for the USER to merge.**
+- **PRs only; never commit or merge to `main` directly — but I OWN the merge of PRs I drive in MY lane
+  (infra / code / Atlas / gates / tooling); the user does NOT merge them.** I merge such a PR once it is
+  CLEARED BY REVIEW (fleet / off-seat — independent-family per AGENTS.md, not DeepSeek alone for that gate)
+  AND blocking CI is green (pytest / ruff / frontend / schema-drift / gitleaks / radon — never
+  `--admin`-bypass, #M-0.5). **This INCLUDES my agent-def / governance / settings / hooks / launcher
+  changes** — do NOT park a PR "for the user" (manufacturing an obstacle, #M-12). Content/track-lane PRs
+  keep their OWN merge protocol (Codex / main reconciles) — that is not mine to merge. Stop only on a
+  genuine blocking-CI failure or a real user-gated conflict I cannot resolve.
 - Keep the main checkout read-only; all branch work in dispatch worktrees `.worktrees/dispatch/<agent>/<task>/`.
   Never switch branches in the main project directory.
 - `.claude/`, `.codex/`, `.agent/`, `.gemini/` are gitignored DEPLOY TARGETS. Source is

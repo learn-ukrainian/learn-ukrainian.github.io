@@ -119,6 +119,18 @@ Bad pedagogy creates durable learner errors. Strong modules beat many mediocre m
 - UI work via Desktop: `codex-desktop` or `claude-desktop`; Desktop needs explicit polling.
 - Bridge: `scripts/ai_agent_bridge/__main__.py` (`ab`) for multi-agent discussions and one-shot asks.
 
+## Fleet involvement & routing — collaborate actively, don't drive solo (user order 2026-06-23)
+Opus 4.8 does NOT brain-rot (canary-verified) — keep driving in-context; the durable handoff is for
+CROSS-SESSION continuity. Drive the high-judgment work YOURSELF: design, pedagogy/taste, in-the-loop
+review, orchestration, precise dispatch briefs.
+- **Actively DISCUSS + cross-verify with the fleet BEFORE committing** a substantive design/decision —
+  not solo dispatch-and-merge. Default to involving ≥1 other agent (discuss or independent verify).
+- **Module-content panel** (writers, content review): **agy** (gemini-pro) · **gpt-5.5** (codex,
+  `--effort xhigh`) · **cursor** (composer-2.5). Prefer a bake-off + cross-family verification. Folk
+  content review stays **cross-family (GPT↔Claude)** per `docs/folk-epic/folk-review-rubric.md` — **NO
+  DeepSeek for folk culture**. Full rosters + bridge cheat-sheet + the "models are examples, not
+  constants" caveat live in the canonical served routing rule `model-assignment.md` (`/api/rules`).
+
 ## Track Orchestrator Protocol
 - Track orchestrator source of truth: its track handoff, e.g.
   `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md`.
