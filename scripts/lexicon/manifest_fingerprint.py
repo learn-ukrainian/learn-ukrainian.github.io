@@ -17,7 +17,6 @@ LEXICON_CODE_GLOB = "scripts/lexicon/*.py"
 LEXICON_CODE_EXCLUDES = frozenset(
     {
         "scripts/lexicon/manifest_io.py",
-        "scripts/lexicon/generate_daily_pool.py",
     }
 )
 SCHEMA_VERSION = 1
