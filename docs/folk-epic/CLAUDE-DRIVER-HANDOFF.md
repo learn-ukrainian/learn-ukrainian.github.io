@@ -2,10 +2,26 @@
 
 > ℹ️ Sessions 68–80 detail lives in the local thread handoff (`.agent/claude-thread-handoff.md`, gitignored) and in merged PRs (#3648 koliadky exemplar, #3651 Atlas, #3669 global Readings reference, #3715 Phase 0 demand manifest, #3720 Phase 1a rights classifier, #3724 approved primary-text plan). This git-tracked file resumes the SSOT thread at Session 81 below; older in-file entries (≤67) are historical.
 
-## ▶▶▶ SESSION 83 (2026-06-23) — ENGINE merged + folk pedagogy remediation STARTED · kalendarna pilot PASSED — RESUME HERE
+## ▶▶▶ SESSION 83 (2026-06-23) — ENGINE merged + folk pedagogy remediation 5/5 COMPLETE · NEXT = INFRA GATE — RESUME HERE
 
-> 🟢 **USER PRIORITY (unchanged, locked):** folk seminar module pedagogy remediation — drive the 5
-> sub-bar modules up to koliadky's standard (≥8.5 all dims). The engine [Phase 2] is DONE.
+> ✅✅ **CAMPAIGN COMPLETE (user priority, locked, delivered):** all 5 sub-bar folk seminar modules driven
+> to the koliadky ≥8.5 bar and MERGED. All 6 built folk modules now meet the bar. Sequence: kalendarna
+> #3748 → narodna-kultura #3750 → dumy #3751 → narodni-viruvannia #3752 → zamovliannia #3753. Clean tree.
+>
+> **▶▶ RESUME ACTION = the INFRA GATE (root-cause, see bottom of this block).**
+>
+> **METHOD that worked (proven ×5):** diagnose (structural scan or cheap model read) → claude-tools rebuild
+> vs koliadky+merged exemplars (`--worktree --mode danger --base main`) → VERIFY (corpus-hammer every
+> embedded text #M-11 + read changed sections + `verify_shippable folk <slug>`) → **CODEX cross-family
+> 6-dim score** (NOT deepseek — folk-review-rubric line 5 bars it; reviewer must be cross-family GPT↔Claude)
+> → if REVISE, surgical polish dispatch on same branch (`--base <branch>`, push `HEAD:<branch>`) → self-merge
+> on CLEAN CI (#M-12) → clean worktree+branch (#M-10a). KEY LESSONS: (1) writers leave plan `version:`
+> un-bumped (immutability hook blocks YOUR follow-up commit) — bump it. (2) outline_sum must be within ±15%
+> of word_target (keep word_target where module≥target so python_qg stays green). (3) ALWAYS corpus-hammer
+> the REVIEWER's text-integrity claims too — codex over-flagged "smoothed quotes"/"broken joins" on dumy
+> that verify_quote'd at 1.0 / read cleanly. (4) acquisition-blocked modules (narodni-viruvannia, zamovliannia
+> — 0 primary folk texts, #3162): honest `:::caution` source-criticism + clearly-labelled literary reflections
+> (verify_quote'd, «це художній текст, а не народний запис»); NEVER fake folk voice.
 
 **✅ ENGINE (Phase 2) MERGED — PR #3744 → main `2026-06-22T23:35Z`.** Demand-driven readings engine
 across all tracks. Verified before merge (not green-only): 7/7 tests incl. explicit hand-authored
@@ -30,16 +46,21 @@ tone 9.0 → **PASS all dims**; Russianism check clean. My own read agrees. What
 - I fixed a CI blocker myself: rebalanced the plan `content_outline` budgets (6800→5500) to word_target
   tolerance + bumped version 1.0→1.1 (writer left them over-budget; kept word_target=5000 so python_qg stays green).
 
-**▶ NEXT — ROLL OUT the proven method to the other 4, one at a time (fleet bake-off, cross-model verify each):**
-1. **narodna-kultura-yak-systema** (6.8) — SAME gap pattern as kalendarna (0 readings, flat 12-H2/0-H3); audit says corpus supports ≥4 cross-genre readings. Easiest next win — reuse the kalendarna brief template (`scratch/folk-pedagogy-pilot-kalendarna-brief.md`).
-2. **dumy-nevilnytski-lytsarski** (5.8) — OUTLIER: already has 7 readings + 12 callouts (material-rich) → its weakness is PROSE/pedagogy, not material. Different brief: focus on arc/scaffolding/redundancy, not adding readings.
-3. **narodni-viruvannia-mifolohiia-demonolohiia** (5.8) + **zamovliannia-zaklynannia-prymovky** (6.8) — ACQUISITION-BLOCKED: 0 standalone corpus rows (#3162). Either source texts first OR remediate prose+structure and handle the no-reading gap honestly like kalendarna's summer/autumn caution (proven pattern).
+**✅ ROLLOUT DONE — all 4 remaining modules driven to ≥8.5 and merged (after the kalendarna pilot):**
+1. **narodna-kultura** #3750 (6.8→bar). Meta-module; reused 5 hosted readings via taught_in. deepseek REVISE (beauty 7.5) → polish (lyrical warmup + `:::caution` + 8-components bridge). *[deepseek was the WRONG scorer — corrected from dumy on; see method lesson at top.]*
+2. **dumy** #3751 (5.8→bar). Close-reading scaffolding added (teach HOW not WHAT); дума texts verified to Драгоманов; CODEX REVISE → polish («першим ділом»→«найперше» calque + ongoing-war framing). Codex over-flagged "smoothed quotes"/"broken joins" — both false (verify_quote 1.0 / clean prose).
+3. **narodni-viruvannia** #3752 + **zamovliannia** #3753 (acquisition-blocked, 0 primary folk texts #3162). Honest `:::caution` source-criticism + clearly-labelled literary reflections (Мирний/Шевченко, verify_quote 1.0). CODEX REVISE on naturalness (VESUM-confirmed: «спожиє»→«споживе», «нехтує берегову межу»→«береговою межею») + narodni beauty 8.4 → polishes (grammar + a resonant Шевченко close-read beat).
 
-**INFRA root-cause (own it, AFTER ≥2 modules pass so the loop is proven):** `scripts/common/thresholds.py`
-`LLM_QG_TERMINAL_DIMS = {decolonization}` only → pedagogy/engagement/etc. are warning-only ⇒ weak content
-ships. Phase A: make pedagogical+engagement terminal at floor for seminar/folk via `terminal_dims_for(profile)`,
-with model-PANEL median aggregation (deepseek+codex+agy+claude) to control the 2026-05-23 noise. PR+tests.
-Do NOT enable before the correction loop demonstrably reaches the bar (pilot proves it does).
+**▶▶ ACTIVE NEXT — INFRA GATE (root-cause, I own it #0.2).** `scripts/common/thresholds.py`
+`LLM_QG_TERMINAL_DIMS = {decolonization}` only → pedagogical/engagement/naturalness/tone are WARNING-ONLY ⇒
+weak seminar content can still ship (that's how all 5 shipped sub-bar originally). FIX: make
+pedagogical+engagement terminal at floor for seminar/folk via `terminal_dims_for(profile)` + tests.
+**DESIGN INSIGHT from this campaign:** the 2026-05-23 demote was due to single-SAME-FAMILY-model NOISE — but a
+single **CODEX cross-family** score gave well-calibrated REVISE/PASS verdicts on all 5 (caught real defects
+every time; only minor over-flagging that corpus-hammering caught). So the gate likely does NOT need a full
+4-model panel — a cross-family (GPT-for-Claude-writer) scorer at the floor, or a 2-model agree-to-fail, may
+suffice. Decide panel-vs-cross-family in the gate PR. **Do NOT enable a noisy same-family gate** (re-creates
+the 0-ships failure). Substantial infra → fresh-context focused effort, not a context-exhausted bolt-on.
 
 ## ▶▶▶ SESSION 82 (2026-06-23) — rights model fixed (host all heritage) + first persecuted-author reading hosted — RESUME HERE
 
