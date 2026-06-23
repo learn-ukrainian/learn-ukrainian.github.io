@@ -132,6 +132,34 @@
   max-width: 520px;
 }
 
+.atlas-typeahead-label {
+  display: block;
+  margin-bottom: 0.55rem;
+  color: var(--lu-text);
+  font-size: 0.95rem;
+  font-weight: 900;
+  text-align: left;
+}
+
+.atlas-typeahead-label.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.atlas-typeahead-landing {
+  width: 100%;
+  max-width: 620px;
+  margin: 2rem auto 0;
+  padding: 0 1rem;
+}
+
 .atlas-typeahead-input {
   width: 100%;
   padding: 7px 12px;
@@ -140,6 +168,14 @@
   background: var(--lu-surface-muted);
   color: var(--lu-text);
   font-size: 14px;
+}
+
+.atlas-typeahead-landing .atlas-typeahead-input {
+  min-height: 3.25rem;
+  padding: 0.85rem 1rem;
+  border-width: 2px;
+  background: var(--lu-surface);
+  font-size: 1rem;
 }
 
 .atlas-typeahead-input::placeholder {

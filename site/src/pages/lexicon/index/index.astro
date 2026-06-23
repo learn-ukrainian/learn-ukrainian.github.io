@@ -3,6 +3,7 @@
  * Атлас слів (Лексикон) — full А-Я index view.
  */
 import CourseLayout from "../../../layouts/CourseLayout.astro";
+import LexiconBrowse from "../../../lexicon/LexiconBrowse.astro";
 import manifest from "../../../data/lexicon-manifest.json";
 
 interface CourseUsage {
@@ -37,21 +38,6 @@ const SOURCE_LABELS_UK: Record<string, string> = {
   plan_recommended: "рекомендована",
   surzhyk_to_avoid: "остерігайтеся",
 };
-
-const groups = new Map<string, LexiconEntry[]>();
-for (const entry of data.entries) {
-  const letter = entry.lemma.charAt(0).toLocaleUpperCase("uk");
-  const bucket = groups.get(letter) ?? [];
-  bucket.push(entry);
-  groups.set(letter, bucket);
-}
-
-const sortedGroups = Array.from(groups.entries())
-  .sort(([a], [b]) => ukCollator.compare(a, b))
-  .map(([letter, entries]) => ({
-    letter,
-    entries: entries.slice().sort((a, b) => ukCollator.compare(a.lemma, b.lemma)),
-  }));
 
 const sourceOptions = Array.from(
   new Set(data.entries.map((entry) => entry.primary_source).filter(Boolean)),
@@ -122,49 +108,7 @@ const frontmatter = {
       <p>Спробуйте коротший запит або приберіть обмеження за типом появи.</p>
     </div>
 
-    <nav class="atlas-letter-nav" aria-label="Український алфавіт">
-      {sortedGroups.map(({ letter }) => (
-        <a href={`#letter-${letter}`}>{letter}</a>
-      ))}
-    </nav>
-
-    <div class="atlas-letter-groups">
-      {sortedGroups.map(({ letter, entries }) => (
-        <section class="atlas-letter-section" data-lex-section>
-          <h2 id={`letter-${letter}`}>{letter}</h2>
-          <ul class="atlas-entry-list">
-            {entries.map((entry) => {
-              const usageLabel = entry.course_usage.length === 1 ? "модуль" : "модулів";
-              const searchText = [
-                entry.lemma,
-                entry.gloss ?? "",
-                entry.primary_source,
-                ...entry.course_usage.map((usage) => `${usage.track} ${usage.slug}`),
-              ].join(" ");
-
-              return (
-                <li
-                  data-lex-entry
-                  data-source={entry.primary_source}
-                  data-search={searchText}
-                >
-                  <a class="atlas-entry-lemma" href={`/lexicon/${entry.url_slug}/`}>
-                    {entry.lemma}
-                  </a>
-                  {entry.gloss && <span class="atlas-entry-gloss">«{entry.gloss}»</span>}
-                  <span class="atlas-entry-source">
-                    {SOURCE_LABELS_UK[entry.primary_source] ?? entry.primary_source}
-                  </span>
-                  <span class="atlas-entry-usage">
-                    {entry.course_usage.length} {usageLabel}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      ))}
-    </div>
+    <LexiconBrowse entries={data.entries} />
   </div>
 
   <script is:inline>
@@ -352,12 +296,10 @@ const frontmatter = {
     background: var(--lu-surface-muted);
   }
 
-  .atlas-filter-panel[hidden],
-  .atlas-empty-state[hidden],
-  .atlas-letter-section[hidden],
-  .atlas-entry-list li[hidden] {
-    display: none;
-  }
+.atlas-filter-panel[hidden],
+.atlas-empty-state[hidden] {
+  display: none;
+}
 
   .atlas-empty-state {
     padding: 1rem;
@@ -386,102 +328,11 @@ const frontmatter = {
     color: var(--lu-text-muted);
   }
 
-  .atlas-letter-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    padding: 0.75rem;
+@media (max-width: 680px) {
+  .atlas-filter-row,
+  .atlas-filter-panel {
+    grid-template-columns: 1fr;
   }
-
-  .atlas-letter-nav a {
-    min-width: 2rem;
-    min-height: 2rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    color: var(--lu-primary);
-    font-weight: 900;
-    text-decoration: none;
-  }
-
-  .atlas-letter-nav a:hover {
-    background: var(--lu-state-active);
-  }
-
-  .atlas-letter-groups {
-    display: flex;
-    flex-direction: column;
-    gap: 1.4rem;
-  }
-
-  .atlas-letter-section h2 {
-    margin: 0 0 0.7rem;
-    padding-bottom: 0.35rem;
-    border-bottom: 2px solid var(--lu-accent);
-    color: var(--lu-primary);
-    font-size: 1.3rem;
-  }
-
-  .atlas-entry-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-    gap: 0.7rem;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-  }
-
-  .atlas-entry-list li {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 0.28rem 0.65rem;
-    align-items: start;
-    min-height: 7.6rem;
-    padding: 0.85rem;
-    border-left: 4px solid var(--lu-primary);
-  }
-
-  .atlas-entry-lemma {
-    grid-column: 1 / -1;
-    color: var(--lu-text);
-    font-size: 1.05rem;
-    font-weight: 900;
-    text-decoration: none;
-  }
-
-  .atlas-entry-lemma:hover {
-    color: var(--lu-primary);
-  }
-
-  .atlas-entry-gloss {
-    min-width: 0;
-    color: var(--lu-text-muted);
-    font-style: italic;
-  }
-
-  .atlas-entry-source,
-  .atlas-entry-usage {
-    align-self: end;
-    padding: 0.1rem 0.5rem;
-    border: 1px solid var(--lu-border);
-    border-radius: 4px;
-    background: var(--lu-surface-muted);
-    color: var(--lu-text-muted);
-    font-size: 0.78rem;
-    font-weight: 800;
-  }
-
-  .atlas-entry-usage {
-    white-space: nowrap;
-  }
-
-  @media (max-width: 680px) {
-    .atlas-filter-row,
-    .atlas-filter-panel,
-    .atlas-entry-list li {
-      grid-template-columns: 1fr;
-    }
 
     .atlas-view-nav {
       width: 100%;
