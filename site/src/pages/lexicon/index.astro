@@ -1,34 +1,39 @@
 ---
 /**
- * Атлас слів (Лексикон) — default Word Atlas surface.
+ * Атлас слів (Лексикон) landing page.
  */
 import CourseLayout from "../../layouts/CourseLayout.astro";
-import WordAtlasArticle from "../../lexicon/WordAtlasArticle.astro";
+import AtlasTypeahead from "../../lexicon/AtlasTypeahead.astro";
+import LexiconBrowse from "../../lexicon/LexiconBrowse.astro";
 import manifest from "../../data/lexicon-manifest.json";
+
+interface CourseUsage {
+  track: string;
+  module_num: number;
+  slug: string;
+  context: string;
+}
 
 interface LexiconEntry {
   lemma: string;
   url_slug: string;
   gloss: string | null;
+  primary_source: string;
+  course_usage: CourseUsage[];
 }
 
 interface LexiconManifest {
   version: string;
   generated_at: string;
+  stats: Record<string, number>;
   entries: LexiconEntry[];
 }
 
 const data = manifest as LexiconManifest;
-const defaultEntry =
-  data.entries.find((entry) => entry.lemma === "князь") ??
-  data.entries.find((entry) => entry.lemma === "прапор") ??
-  data.entries[0];
 
 const frontmatter = {
-  title: defaultEntry?.lemma ?? "Лексикон",
-  description: defaultEntry?.gloss
-    ? `${defaultEntry.lemma} — ${defaultEntry.gloss}`
-    : "Український атлас курсових слів із джерелами, морфологією та курсом.",
+  title: "Атлас слів",
+  description: "Пошук і А-Я перегляд українських слів курсу з джерелами, морфологією та місцями появи.",
 };
 ---
 
@@ -40,12 +45,102 @@ const frontmatter = {
   wide
   showHero={false}
 >
-  {defaultEntry && (
-    <WordAtlasArticle
-      entry={defaultEntry}
-      allEntries={data.entries}
-      generatedAt={data.generated_at}
-      manifestVersion={data.version}
-    />
-  )}
+  <div class="word-atlas lexicon-landing" data-word-atlas>
+    <section class="lexicon-landing-hero" aria-labelledby="lexicon-landing-title">
+      <span class="lexicon-badge">Лексикон</span>
+      <h1 id="lexicon-landing-title">Атлас слів</h1>
+      <p>
+        Шукайте курсові слова з джерелами, морфологією та місцями появи в модулях.
+        Або перегляньте всі {data.stats.lemmas_total ?? data.entries.length} лем за українським алфавітом.
+      </p>
+      <AtlasTypeahead
+        id="lexicon-landing-search"
+        label="Шукати слово в Атласі"
+        placeholder="Введіть українське слово…"
+        containerClass="atlas-typeahead-landing"
+        labelClass="atlas-typeahead-label"
+      />
+    </section>
+
+    <section class="atlas-section lexicon-browse-section" aria-labelledby="lexicon-browse-title">
+      <div class="lexicon-browse-heading">
+        <h2 id="lexicon-browse-title">Перегляд А–Я</h2>
+        <p>Усі статті згруповано за першою літерою; кожна картка веде до повної словникової статті.</p>
+      </div>
+      <LexiconBrowse entries={data.entries} />
+    </section>
+  </div>
 </CourseLayout>
+
+<style>
+  .lexicon-landing {
+    padding-bottom: 4rem;
+  }
+
+  .lexicon-landing-hero {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem 2.75rem;
+    text-align: center;
+  }
+
+  .lexicon-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.75rem;
+    padding: 0 0.65rem;
+    border-radius: 4px;
+    background: var(--lu-state-active);
+    color: var(--lu-primary);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .lexicon-landing-hero h1 {
+    margin: 0.7rem 0 0;
+    color: var(--lu-text);
+    font-size: clamp(2.4rem, 4vw, 4.25rem);
+    line-height: 1;
+  }
+
+  .lexicon-landing-hero p {
+    max-width: 720px;
+    margin: 1rem auto 0;
+    color: var(--lu-text-muted);
+    font-size: 1.1rem;
+    line-height: 1.65;
+  }
+
+  .lexicon-browse-section {
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .lexicon-browse-heading {
+    margin-bottom: 1rem;
+  }
+
+  .lexicon-browse-heading p {
+    max-width: 680px;
+    margin: 0;
+    color: var(--lu-text-muted);
+    line-height: 1.55;
+  }
+
+  @media (max-width: 680px) {
+    .lexicon-landing-hero {
+      padding: 2.5rem 1rem 2rem;
+    }
+
+    .lexicon-landing-hero h1 {
+      font-size: 2.4rem;
+    }
+
+    .lexicon-browse-section {
+      padding: 0 1rem;
+    }
+  }
+</style>

@@ -1,4 +1,6 @@
 ---
+import AtlasTypeahead from "./AtlasTypeahead.astro";
+
 interface CourseUsage {
   track: string;
   module_num: number;
@@ -171,7 +173,7 @@ const externalGroups = groupExternalMaterials(enrichment?.external_materials ?? 
 const componentLinks = buildComponentLinks(entry, allEntries);
 const sourceList = buildSourceList();
 const phraseHasGloss = Boolean(entry.gloss && (!enrichment?.meaning || enrichment.meaning.definitions.length === 0));
-const shouldShowEditorialWarning = maxSovietizationRisk > 0 || Boolean(heritage?.is_russianism);
+const shouldShowEditorialWarning = Boolean(heritage?.is_russianism);
 const shouldShowHeritageDefense = Boolean(
   heritage &&
     !heritage.is_russianism &&
@@ -377,29 +379,7 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
 
 <div class="word-atlas" data-word-atlas>
   <div class="word-switch">
-    <div class="atlas-typeahead" data-atlas-typeahead>
-      <input
-        type="search"
-        class="atlas-typeahead-input"
-        placeholder="Шукати слово…"
-        aria-label="Шукати слово в Лексиконі"
-        role="combobox"
-        aria-expanded="false"
-        aria-autocomplete="list"
-        aria-controls="atlas-typeahead-list"
-        autocomplete="off"
-        spellcheck="false"
-        data-atlas-typeahead-input
-      />
-      <ul
-        id="atlas-typeahead-list"
-        class="atlas-typeahead-list"
-        role="listbox"
-        aria-label="Результати пошуку"
-        hidden
-        data-atlas-typeahead-list
-      ></ul>
-    </div>
+    <AtlasTypeahead id="atlas-article-search" label="Шукати слово в Лексиконі" />
     <a class="atlas-button filter" href="/lexicon/index/">Перегляд А–Я</a>
     <span class="poc-label">Атлас слів (Лексикон)</span>
   </div>
@@ -453,31 +433,37 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
       </div>
     </div>
 
-    <div class="content-area">
-      {shouldShowEditorialWarning && (
-        <section class="atlas-section">
-          <div class="editorial-warn">
-            <div class="editorial-warn-header">
-              <div class="editorial-warn-icon" aria-hidden="true">⚠</div>
-              {maxSovietizationRisk > 0 ? "Радянські ідеологічні формулювання у СУМ-11" : "Редакційне попередження"}
-            </div>
-            {maxSovietizationRisk > 0 ? (
-              <>
-                <p>
-                  СУМ-11 показано для прозорості, але ця картка має ознаки радянської редакторської політики.
-                  Це не означає, що саме слово негативне: перевагу слід надавати сучасним або дорадянським джерелам.
-                </p>
-                <p class="atlas-muted">
-                  Тригер: <code>sovietization_risk={maxSovietizationRisk}</code>
-                  {sovietizationKeywords.length > 0 && <> · keywords: <code>{sovietizationKeywords.join(", ")}</code></>}
-                </p>
-              </>
-            ) : (
-              <p>Класифікатор позначає цю форму як проблемну для стандартної української. Перевіряйте рекомендовані відповідники в джерелах.</p>
-            )}
+  <div class="content-area">
+    {maxSovietizationRisk > 0 && (
+      <section class="atlas-section">
+        <div class="editorial-calque info">
+          <div class="editorial-calque-header">
+            <div class="editorial-info-icon" aria-hidden="true">→</div>
+            Радянські формулювання в СУМ-11 (стосується означення, не слова)
           </div>
-        </section>
-      )}
+          <p>
+            СУМ-11 показано для прозорості, але ця картка має ознаки радянської редакторської політики.
+            Це не означає, що саме слово негативне: перевагу слід надавати сучасним або дорадянським джерелам.
+          </p>
+          <p class="atlas-muted">
+            Тригер: <code>sovietization_risk={maxSovietizationRisk}</code>
+            {sovietizationKeywords.length > 0 && <> · keywords: <code>{sovietizationKeywords.join(", ")}</code></>}
+          </p>
+        </div>
+      </section>
+    )}
+
+    {shouldShowEditorialWarning && (
+      <section class="atlas-section">
+        <div class="editorial-warn" data-editorial-warn="is_russianism">
+          <div class="editorial-warn-header">
+            <div class="editorial-warn-icon" aria-hidden="true">⚠</div>
+            Редакційне попередження
+          </div>
+          <p>Класифікатор позначає цю форму як проблемну для стандартної української. Перевіряйте рекомендовані відповідники в джерелах.</p>
+        </div>
+      </section>
+    )}
 
       {shouldShowHeritageDefense && (
         <section class="atlas-section">
@@ -792,81 +778,6 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
 <script is:inline>
   (() => {
     const root = document.querySelector('[data-word-atlas]');
-    const ta = root?.querySelector('[data-atlas-typeahead]');
-    const taInput = ta?.querySelector('[data-atlas-typeahead-input]');
-    const taList = ta?.querySelector('[data-atlas-typeahead-list]');
-    if (taInput && taList) {
-      let taIndex = null;
-      let taLoading = null;
-      let taItems = [];
-      let taActive = -1;
-
-      const taLoad = () => {
-        if (taIndex) return Promise.resolve(taIndex);
-        if (!taLoading) {
-          taLoading = fetch('/lexicon/search-index.json')
-            .then((r) => r.json())
-            .then((data) => { taIndex = Array.isArray(data) ? data : []; return taIndex; })
-            .catch(() => { taIndex = []; return taIndex; });
-        }
-        return taLoading;
-      };
-
-      const taNorm = (s) => (s || '').toLowerCase().normalize('NFC').replace(/['́̀ˈ]/g, '').trim();
-      const taEsc = (s) => (s || '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-      const taGo = (slug) => { if (slug) window.location.href = `/lexicon/${encodeURIComponent(slug)}/`; };
-
-      const taRender = () => {
-        if (!taItems.length) {
-          taList.hidden = true;
-          taList.innerHTML = '';
-          taInput.setAttribute('aria-expanded', 'false');
-          taInput.removeAttribute('aria-activedescendant');
-          return;
-        }
-        taList.innerHTML = taItems.map((it, i) =>
-          `<li role="option" id="ata-opt-${i}" class="atlas-typeahead-opt${i === taActive ? ' active' : ''}" data-slug="${taEsc(it.s)}" aria-selected="${i === taActive}">`
-          + `<span class="ata-lemma">${taEsc(it.l)}</span>`
-          + (it.g ? `<span class="ata-gloss">${taEsc(it.g)}</span>` : '')
-          + '</li>'
-        ).join('');
-        taList.hidden = false;
-        taInput.setAttribute('aria-expanded', 'true');
-        if (taActive >= 0) taInput.setAttribute('aria-activedescendant', `ata-opt-${taActive}`);
-      };
-
-      const taSearch = (q) => {
-        const nq = taNorm(q);
-        if (!nq || !taIndex) { taItems = []; taActive = -1; taRender(); return; }
-        const starts = [];
-        const contains = [];
-        for (const e of taIndex) {
-          const nl = taNorm(e.l);
-          if (nl.startsWith(nq)) { if (starts.length < 12) starts.push(e); }
-          else if (contains.length < 12 && (nl.includes(nq) || taNorm(e.g).includes(nq))) contains.push(e);
-          if (starts.length >= 12) break;
-        }
-        taItems = starts.concat(contains).slice(0, 12);
-        taActive = taItems.length ? 0 : -1;
-        taRender();
-      };
-
-      taInput.addEventListener('focus', taLoad, { once: true });
-      taInput.addEventListener('input', () => { taLoad().then(() => taSearch(taInput.value)); });
-      taInput.addEventListener('keydown', (ev) => {
-        if (ev.key === 'ArrowDown') { ev.preventDefault(); if (taItems.length) { taActive = (taActive + 1) % taItems.length; taRender(); } }
-        else if (ev.key === 'ArrowUp') { ev.preventDefault(); if (taItems.length) { taActive = (taActive - 1 + taItems.length) % taItems.length; taRender(); } }
-        else if (ev.key === 'Enter') { if (taItems[taActive]) { ev.preventDefault(); taGo(taItems[taActive].s); } }
-        else if (ev.key === 'Escape') { taItems = []; taActive = -1; taRender(); }
-      });
-      taList.addEventListener('mousedown', (ev) => {
-        const li = ev.target.closest('[data-slug]');
-        if (li) { ev.preventDefault(); taGo(li.getAttribute('data-slug')); }
-      });
-      document.addEventListener('click', (ev) => {
-        if (ta && !ta.contains(ev.target)) { taItems = []; taActive = -1; taRender(); }
-      });
-    }
 
     root?.querySelectorAll('[data-ety-note]').forEach((stage) => {
       stage.addEventListener('click', () => {
