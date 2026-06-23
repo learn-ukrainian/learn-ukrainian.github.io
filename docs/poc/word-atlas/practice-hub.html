@@ -851,8 +851,10 @@ var DECK = [
   { lemma:"мо́ва", lemmaPlain:"мова", ipa:"[ˈmɔʋɐ]", gloss:"language", pos:"іменник · ж.р.",
     cefr:"A1", sev:"green", her:"✓ Питома",
     sentence:"Українська ___ — мелодійна.", clozeEn:"The Ukrainian language is melodious." },
-  { lemma:"ро́бота", lemmaPlain:"робота", ipa:"[ˈrɔbotɐ]", gloss:"work", pos:"іменник · ж.р.",
+  { lemma:"ро́бота", lemmaPlain:"робота", form:"роботу", ipa:"[ˈrɔbotɐ]", gloss:"work", pos:"іменник · ж.р.",
     cefr:"A2", sev:"green", her:"✓ Питома",
+    // `form` = the sentence-slot DECLINED surface form (знахідний). In the live build it comes
+    // straight from enrichment.morphology.paradigm.cases.<відмінок>.singular — never the bare lemma.
     sentence:"Уранці я йду на ___.", clozeEn:"In the morning I go to work." },
   { lemma:"роди́на", lemmaPlain:"родина", ipa:"[rɔˈdɪnɐ]", gloss:"family", pos:"іменник · ж.р.",
     cefr:"A2", sev:"green", her:"✓ Питома",
@@ -963,7 +965,7 @@ function renderFlash(){
     '<span class="cefr-chip">'+esc(w.cefr)+'</span>' + chip(w.sev,w.her)
     + '<span class="her-chip" data-sev="blue">'+esc(w.pos)+'</span>';
   document.getElementById("fc-ex").innerHTML =
-    esc(w.sentence.replace("___", w.lemmaPlain)) + '<em>'+esc(w.clozeEn)+'</em>';
+    esc(w.sentence.replace("___", (w.form||w.lemmaPlain))) + '<em>'+esc(w.clozeEn)+'</em>';
   fcRating.hidden = true; fcHint2.hidden = true;
   fcLive.setAttribute("data-tone","info");
   fcLive.textContent = "Картка "+(fcIdx+1)+" з "+total+". Згадайте значення.";
@@ -1135,7 +1137,11 @@ function nextCloze(){
 }
 function answerCloze(value, btn){
   if (czAnswered) return;
-  var ok = value.trim().toLocaleLowerCase("uk") === czWord.lemmaPlain.toLocaleLowerCase("uk");
+  var t = value.trim().toLocaleLowerCase("uk");
+  // Accept the declined surface form (preferred — teaches the case) OR the dictionary lemma
+  // (so clicking the correct chip, which carries the lemma, also counts).
+  var ok = t === (czWord.form||czWord.lemmaPlain).toLocaleLowerCase("uk")
+        || t === czWord.lemmaPlain.toLocaleLowerCase("uk");
   var blank = document.getElementById("cz-blank");
   if (!ok && !btn){ // typed wrong
     blank.textContent = value || "?"; blank.classList.add("filled","bad");
@@ -1148,10 +1154,10 @@ function answerCloze(value, btn){
     b.disabled = true;
     if (b.dataset.correct === "1") b.classList.add("correct");
   });
-  blank.textContent = czWord.lemmaPlain;
+  blank.textContent = (czWord.form||czWord.lemmaPlain);
   blank.classList.remove("bad"); blank.classList.add("filled");
-  if (ok){ czCorrect++; setLive("cz-live","✓ Правильно — «"+czWord.lemmaPlain+"».","ok"); }
-  else { if (btn) btn.classList.add("wrong"); setLive("cz-live","✕ Правильне слово: «"+czWord.lemmaPlain+"».","bad"); }
+  if (ok){ czCorrect++; setLive("cz-live","✓ Правильно — «"+(czWord.form||czWord.lemmaPlain)+"».","ok"); }
+  else { if (btn) btn.classList.add("wrong"); setLive("cz-live","✕ Правильне слово: «"+(czWord.form||czWord.lemmaPlain)+"».","bad"); }
   document.getElementById("cz-score").textContent = czCorrect+" правильних";
   document.getElementById("cz-next").hidden = false;
 }
