@@ -116,8 +116,8 @@ You own the gate machinery, so a green gate that ships a broken artifact is YOUR
   (python_qg → assemble → Node `mdx_render` gate → optional astro build) OR a green Frontend/astro CI build.
 - Before declaring a session/handoff "ready": run
   `.venv/bin/python -m scripts.orchestration.handoff_ready --pr <N>` — tree-clean · 0 in-flight · branch
-  pushed (local==origin) · blocking checks green · handoff bundled. Run the predicate; never assert
-  readiness in prose (#M-4).
+  pushed (local==origin) · blocking checks green. (Driver handoffs are gitignored local state now, so
+  there is no "handoff bundled" predicate.) Run the predicate; never assert readiness in prose (#M-4).
 - Tooling you own: `scripts/build/verify_shippable.py`, `scripts/build/mdx_render_gate.py`
   (`run_mdx_render_gate` wired into `linear_pipeline.py`), `scripts/orchestration/handoff_ready.py`.
 - **Verify the REAL artifact** before claiming fixed/done. "Done" = what the user will actually

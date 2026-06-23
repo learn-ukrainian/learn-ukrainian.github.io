@@ -67,7 +67,7 @@ does not micromanage that track.
 | Scope | Main orchestrator owns | Track orchestrator owns |
 |---|---|---|
 | Branch policy | `main`, merge sequencing, release safety | Dispatch worktrees and PR branches only |
-| State | `docs/session-state/codex-orchestrator-handoff.md` and router | Track handoff, e.g. `docs/bio-epic/CLAUDE-DRIVER-HANDOFF.md` |
+| State | `docs/session-state/codex-orchestrator-handoff.md` and router | Track handoff (gitignored local), e.g. `.claude/bio-epic/CLAUDE-DRIVER-HANDOFF.md` — not in git/PRs |
 | Work selection | Repo-wide priorities, A1 spine, tooling, infra, tech debt, issues | Track backlog, batches, reviews, content quality |
 | Agent dispatch | Cross-track/tooling agents | Track-local writers/reviewers, including headless Codex |
 | Merge authority | Final reconcile and merge decision | Open PRs and route track feedback, never merge |
@@ -83,8 +83,10 @@ Track orchestrators and the main orchestrator communicate through durable,
 low-noise surfaces:
 
 1. **Track handoff is the track source of truth.** The track orchestrator keeps
-   a track handoff current on its PR branches and bundles handoff updates with
-   the batch PR whenever possible.
+   a track handoff current as **gitignored LOCAL state** under `.claude/<track>-epic/`
+   (user policy 2026-06-23 — driver handoffs are out of git/PRs). It does NOT ride
+   in the batch PR; cross-agent state reaches the main orchestrator via the TRACK-UPDATE
+   pings + PR descriptions below.
 2. **GitHub PRs carry deliverables.** Track orchestrators open PRs with clear
    scope, validation, active dispatch ids, and blockers. The main orchestrator
    reads the PR instead of scraping private chat context.

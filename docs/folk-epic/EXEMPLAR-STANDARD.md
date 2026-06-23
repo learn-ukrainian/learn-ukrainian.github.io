@@ -136,4 +136,4 @@ Green means: `python_qg` all gates · `assemble_mdx` ok · `mdx_render` all isla
 - [ ] `verify_shippable` green (python_qg + assemble + mdx_render); CI astro build green
 - [ ] Site MDX regenerated via `assemble_mdx` and committed in the same PR
 - [ ] DeepSeek-pro content review clean (or deltas applied)
-- [ ] Handoff refreshed + bundled in the PR; PR opened, NOT merged to main
+- [ ] Handoff refreshed in gitignored `.claude/folk-epic/` (NOT in the PR); PR opened, NOT merged to main
