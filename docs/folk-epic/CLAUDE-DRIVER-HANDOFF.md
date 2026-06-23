@@ -2,6 +2,45 @@
 
 > ℹ️ Sessions 68–80 detail lives in the local thread handoff (`.agent/claude-thread-handoff.md`, gitignored) and in merged PRs (#3648 koliadky exemplar, #3651 Atlas, #3669 global Readings reference, #3715 Phase 0 demand manifest, #3720 Phase 1a rights classifier, #3724 approved primary-text plan). This git-tracked file resumes the SSOT thread at Session 81 below; older in-file entries (≤67) are historical.
 
+## ▶▶▶ SESSION 83 (2026-06-23) — ENGINE merged + folk pedagogy remediation STARTED · kalendarna pilot PASSED — RESUME HERE
+
+> 🟢 **USER PRIORITY (unchanged, locked):** folk seminar module pedagogy remediation — drive the 5
+> sub-bar modules up to koliadky's standard (≥8.5 all dims). The engine [Phase 2] is DONE.
+
+**✅ ENGINE (Phase 2) MERGED — PR #3744 → main `2026-06-22T23:35Z`.** Demand-driven readings engine
+across all tracks. Verified before merge (not green-only): 7/7 tests incl. explicit hand-authored
+protection; real-data dry-run 92 additive writes / 0 existing touched; corpus-hammered generated
+`perebendia.mdx` (verify_quote 1.0). Demand path is **manual CLI, not auto-fired on promote**. The Стус
+hand-authored reading is protected (not in demand + unit-tested). Branch+worktree cleaned.
+
+**✅ PILOT CONVERGED — kalendarna 7.0 → ≥8.5 (PR #3748, ready to merge on CI-green).** De-risk pilot for
+the 5-module campaign. claude-tools rebuild to koliadky standard. **Independently cross-model verified
+(deepseek-pro):** pedagogical 8.5 · engagement 9.0 · beauty 8.5 · naturalness 8.5 · decolonization 9.5 ·
+tone 9.0 → **PASS all dims**; Russianism check clean. My own read agrees. What the rebuild did:
+- Cut the 4–5× redundancy (four cycles/достаток/синкретизм/варіантність each restated many times) →
+  single guided pass through the year with per-season H3 sub-beats.
+- Replaced the dry «Постановка проблеми» opener with a Розминка hook + «Конфліктна карта» (koliadky model).
+- Promoted 5 `:::primary-reading` blocks (was 0), all verify_quote 1.0 (Народна творчість): «Ой весна
+  весна» `2df42ee0`, «Щедрик» `d4848a7e`, «Ой над Дунаєм» `672a677a`, «Ой виорю я нивку» `cdffaaff`.
+- **Fixed integrity bug:** removed «Ой Лелю-Ладо» (attested ONLY in Костомаров «Слов'янська міфологія»
+  1847 romantic pseudo-myth — the module elsewhere condemns exactly that); replaced with a principled note.
+- **Honest corpus-gap handling:** summer/autumn have no self-attested corpus text — writer REFUSED to
+  embed a scholar's paraphrase as a folk voice, turned the gap into a source-criticism teaching point
+  (`:::caution` + self-check Q5). Hosted 2 new readings + reused 2 winter readings (taught_in dedup).
+- I fixed a CI blocker myself: rebalanced the plan `content_outline` budgets (6800→5500) to word_target
+  tolerance + bumped version 1.0→1.1 (writer left them over-budget; kept word_target=5000 so python_qg stays green).
+
+**▶ NEXT — ROLL OUT the proven method to the other 4, one at a time (fleet bake-off, cross-model verify each):**
+1. **narodna-kultura-yak-systema** (6.8) — SAME gap pattern as kalendarna (0 readings, flat 12-H2/0-H3); audit says corpus supports ≥4 cross-genre readings. Easiest next win — reuse the kalendarna brief template (`scratch/folk-pedagogy-pilot-kalendarna-brief.md`).
+2. **dumy-nevilnytski-lytsarski** (5.8) — OUTLIER: already has 7 readings + 12 callouts (material-rich) → its weakness is PROSE/pedagogy, not material. Different brief: focus on arc/scaffolding/redundancy, not adding readings.
+3. **narodni-viruvannia-mifolohiia-demonolohiia** (5.8) + **zamovliannia-zaklynannia-prymovky** (6.8) — ACQUISITION-BLOCKED: 0 standalone corpus rows (#3162). Either source texts first OR remediate prose+structure and handle the no-reading gap honestly like kalendarna's summer/autumn caution (proven pattern).
+
+**INFRA root-cause (own it, AFTER ≥2 modules pass so the loop is proven):** `scripts/common/thresholds.py`
+`LLM_QG_TERMINAL_DIMS = {decolonization}` only → pedagogy/engagement/etc. are warning-only ⇒ weak content
+ships. Phase A: make pedagogical+engagement terminal at floor for seminar/folk via `terminal_dims_for(profile)`,
+with model-PANEL median aggregation (deepseek+codex+agy+claude) to control the 2026-05-23 noise. PR+tests.
+Do NOT enable before the correction loop demonstrably reaches the bar (pilot proves it does).
+
 ## ▶▶▶ SESSION 82 (2026-06-23) — rights model fixed (host all heritage) + first persecuted-author reading hosted — RESUME HERE
 
 > 🟢 **USER PRIORITY (locked, 2026-06-23):** "when the engine is done get back to building the folk seminar
