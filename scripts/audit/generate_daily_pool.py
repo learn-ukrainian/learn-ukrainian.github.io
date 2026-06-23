@@ -8,20 +8,20 @@ import json
 from pathlib import Path
 from typing import Any
 
+from scripts.audit.lexeme_filter import (
+    DERIVED_FORM_SOURCES,
+    SURZHYK_SOURCE,
+    is_lexeme_entry,
+)
+
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_OUT = Path("site/src/data/lexicon-daily-pool.json")
 EARLY_CEFR = {"A1", "A2", "B1"}
-# Inflected / normalized duplicates of a canonical lemma (e.g. "Іване" voc. of "Іван",
-# "автобусом" instr. of "автобус"). They are not study headwords — keep them out of the
-# daily pool so cards show lemmas, not random case forms (the #3450 class).
-_DERIVED_FORM_SOURCES = frozenset(
-    {
-        "built_vocabulary_form",
-        "built_vocabulary_normalized",
-        "built_vocabulary_canonicalized",
-    }
-)
-_SURZHYK_SOURCE = "surzhyk_to_avoid"
+# Derived-form + surzhyk source tags live in scripts.audit.lexeme_filter (single source
+# of truth, shared with the search index, word-page routes, and the practice deck).
+# Keep the underscore-prefixed aliases for the existing references in this module.
+_DERIVED_FORM_SOURCES = DERIVED_FORM_SOURCES
+_SURZHYK_SOURCE = SURZHYK_SOURCE
 
 
 def kind_for_source(source: Any) -> str:
@@ -76,11 +76,11 @@ def compute_weight(entry: dict[str, Any]) -> int:
 
 
 def _is_eligible(entry: dict[str, Any]) -> bool:
-    """A daily card needs a real lemma, slug, and a translation; drop inflected/normalized
-    duplicates so cards show headwords rather than random case forms."""
+    """A daily card needs a real lemma headword and a translation; drop grammar metaterms
+    (via is_lexeme_entry) and inflected/normalized duplicates so cards show headwords
+    rather than case forms or grammar labels."""
     return (
-        _has_text(entry.get("lemma"))
-        and _has_text(entry.get("url_slug"))
+        is_lexeme_entry(entry)
         and _has_text(entry.get("gloss"))
         and entry.get("primary_source") not in _DERIVED_FORM_SOURCES
     )
