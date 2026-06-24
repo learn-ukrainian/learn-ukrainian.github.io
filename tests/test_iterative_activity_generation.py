@@ -40,18 +40,20 @@ def _plan_with_activity_hints() -> dict[str, Any]:
 def _section_response(section_id: str, title: str) -> str:
     payload = {
         "section_id": section_id,
-        "markdown": f"## {title}\n\nGrounded sentence for {title}.",
         "citations_used": [],
         "primary_readings_used": [],
         "vocab_candidates": [],
         "activity_refs": [],
         "self_check": {},
     }
-    return "```section_artifact.json\n" + json.dumps(payload) + "\n```"
+    return (
+        f"````markdown section.md\nGrounded sentence for {title}.\n````\n"
+        f"```json section_artifact.json\n{json.dumps(payload)}\n```"
+    )
 
 
-def _activities_response() -> str:
-    payload = [
+def _activities_payload() -> list[dict[str, Any]]:
+    return [
         {
             "type": "quiz",
             "title": "Opening Check",
@@ -73,7 +75,58 @@ def _activities_response() -> str:
             "self_check": ["I used one idea from each section."],
         },
     ]
-    return "```json file=activities.yaml\n" + json.dumps(payload) + "\n```"
+def _activities_response(fence: str = "```json file=activities.yaml") -> str:
+    return f"{fence}\n" + json.dumps(_activities_payload()) + "\n```"
+
+
+def test_iterative_activity_parser_accepts_bare_json_fence() -> None:
+    output = _activities_response("```json")
+
+    activities = linear_pipeline.parse_iterative_activities_output(output)
+
+    assert activities[0]["title"] == "Opening Check"
+    assert activities[1]["type"] == "performance"
+
+
+def test_iterative_activity_parser_accepts_yaml_differently_labeled_fence() -> None:
+    output = (
+        "```yaml file=practice.yaml\n"
+        + yaml.safe_dump(_activities_payload(), allow_unicode=True, sort_keys=False)
+        + "```"
+    )
+
+    activities = linear_pipeline.parse_iterative_activities_output(output)
+
+    assert activities[0]["type"] == "quiz"
+    assert activities[1]["self_check"] == ["I used one idea from each section."]
+
+
+def test_iterative_activity_parser_prefers_exact_activities_fence() -> None:
+    output = '```json\n{"note": "not activities"}\n```\n' + _activities_response()
+
+    activities = linear_pipeline.parse_iterative_activities_output(output)
+
+    assert activities[0]["title"] == "Opening Check"
+    assert activities[1]["type"] == "performance"
+
+
+def test_iterative_activity_parser_accepts_bare_top_level_list() -> None:
+    activities = linear_pipeline.parse_iterative_activities_output(
+        json.dumps(_activities_payload())
+    )
+
+    assert activities[0]["title"] == "Opening Check"
+    assert activities[1]["type"] == "performance"
+
+
+def test_iterative_activity_parser_rejects_no_recoverable_artifact() -> None:
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match=r"Iterative activity writer output.*activities\.yaml",
+    ):
+        linear_pipeline.parse_iterative_activities_output(
+            "I cannot create activities for this module."
+        )
 
 
 def test_iterative_writer_generates_schema_valid_activities(tmp_path: Path) -> None:
@@ -84,7 +137,7 @@ def test_iterative_writer_generates_schema_valid_activities(tmp_path: Path) -> N
         section = kwargs["sections"][0]
         calls.append(section)
         if section == linear_pipeline.ITERATIVE_ACTIVITY_WRITER_SECTION:
-            return _activities_response()
+            return _activities_response("```json")
         return _section_response(f"s{len(calls)}", section)
 
     result = linear_pipeline.run_iterative_writer(
