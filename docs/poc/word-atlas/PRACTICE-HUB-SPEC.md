@@ -135,7 +135,7 @@ Soft variety levers (penalty score, never override scheduling):
   («що означає X?» / «яке слово означає Y?») so the *felt* shape changes, not just metadata.
 
 **Tests**: drive ~50 selections and assert the **precedence** (due/lapsed never starved; lapsed exempt from
-exact-item / word-spacing / mode drops), and that the **soft** rules apply only when they do NOT starve
+exact-item / word-spacing drops), and that the **soft** rules apply only when they do NOT starve
 scheduling (mode-penalty respected absent due pressure; conditional case coverage; no frame immediate-repeat;
 perceptual rotation), plus the §5 option-validator. Violations = build red.
 
