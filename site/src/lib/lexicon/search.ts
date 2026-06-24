@@ -4,6 +4,7 @@ export interface SearchRow {
   g: string | null;
   r?: string;
   k?: string;
+  c?: string;
 }
 
 const CYRILLIC_RE = /[\u0400-\u04ff]/;
