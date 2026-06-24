@@ -205,6 +205,42 @@ def test_runtime_tool_config_emits_resolution_event_success(
     assert events[0][1]["resolved_servers"] == ["sources"]
 
 
+def test_runtime_tool_config_agy_tools_resolves_sources(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config_path = _valid_sources_config(tmp_path / "mcp_config.json")
+    monkeypatch.delenv("AGY_APP_DATA_DIR", raising=False)
+    monkeypatch.setattr(
+        tool_config_mod,
+        "_DEFAULT_AGY_MCP_CONFIG_PATH",
+        str(config_path),
+    )
+    events: list[tuple[str, dict[str, Any]]] = []
+
+    config = linear_pipeline._runtime_tool_config(
+        "agy-tools",
+        workspace_dir=linear_pipeline.PROJECT_ROOT,
+        event_sink=lambda event, **fields: events.append((event, fields)),
+    )
+
+    assert config["output_format"] == "stream-json"
+    assert config["mcp_server_names"] == ["sources"]
+    assert events == [
+        (
+            "mcp_config_resolved",
+            {
+                "writer": "agy-tools",
+                "requested_servers": ["sources"],
+                "resolved_servers": ["sources"],
+                "config_path": str(config_path.resolve()),
+                "resolution_status": "ok",
+                "missing_server_names": [],
+            },
+        )
+    ]
+
+
 def test_runtime_tool_config_codex_tools_disables_writer_unsafe_features(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

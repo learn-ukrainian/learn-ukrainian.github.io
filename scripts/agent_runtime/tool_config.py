@@ -10,7 +10,7 @@ from typing import Any
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _DEFAULT_MCP_CONFIG_PATH = _REPO_ROOT / ".mcp.json"
 _AGY_APP_DATA_ENV = "AGY_APP_DATA_DIR"
-_DEFAULT_AGY_APP_DATA_DIR = "~/.gemini/antigravity-cli"
+_DEFAULT_AGY_MCP_CONFIG_PATH = "~/.gemini/config/mcp_config.json"
 _RESOLUTION_STATUSES = {"ok", "config_missing", "config_empty", "servers_not_found"}
 _CODEX_MCP_SERVER_FIELDS = frozenset(
     {
@@ -53,8 +53,10 @@ def _resolved_mcp_config_path(mcp_config_path: Path | None) -> Path:
 
 def _resolved_agy_mcp_config_path() -> Path:
     """Return agy's global Antigravity MCP config path."""
-    app_data_dir = os.environ.get(_AGY_APP_DATA_ENV, _DEFAULT_AGY_APP_DATA_DIR)
-    return (Path(app_data_dir).expanduser() / "mcp_config.json").resolve()
+    app_data_dir = os.environ.get(_AGY_APP_DATA_ENV)
+    if app_data_dir:
+        return (Path(app_data_dir).expanduser() / "mcp_config.json").resolve()
+    return Path(_DEFAULT_AGY_MCP_CONFIG_PATH).expanduser().resolve()
 
 
 def _codex_sanitize_server_config(server_config: dict) -> dict:
