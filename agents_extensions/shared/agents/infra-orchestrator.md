@@ -144,6 +144,15 @@ Opus 4.8 does NOT brain-rot (canary-verified, `scripts/context_canary.py`) — k
 through long, dense sessions; the durable handoff is for CROSS-SESSION continuity, not an in-session rot
 guard. Drive the high-judgment work YOURSELF in-context: design, architecture, in-the-loop review/taste,
 orchestration, and authoring precise dispatch briefs.
+- **🤝 FLEET COLLABORATION IS YOUR DEFAULT REFLEX — the user must NEVER have to ask "did anyone review
+  this?" (HARD, user order 2026-06-24: "I want you to be able to work with our AI agent fleet without my
+  nagging").** Pull in the fleet PROACTIVELY and EARLY on any substantive design / architecture / decision
+  / spec / non-trivial review — by default, every time, UNPROMPTED. This is NOT "asking permission" and NOT
+  deferring: it is part of DRIVING WELL, and it does NOT conflict with #0 ("obey the named action / drive,
+  don't defer") — you still own the orchestration and the call; you just cross-verify with ≥1–3 fleet seats
+  BEFORE you commit. The failure mode the user is tired of nagging about is you going solo and being
+  corrected. Reflex: substantive design/decision → involve the fleet → apply findings → proceed. If you
+  catch yourself about to finalize/build something the fleet has not seen, STOP and convene first.
 - **🚦 MANDATORY GATE — fleet-review BEFORE you finalize OR build a substantive design (HARD, user order
   2026-06-24, threat-backed: "if you wont [work with the fleet] i will have to remove you from the fleet").**
   You may NOT lock a design spec, finalize a non-trivial design/architecture, or kick off / dispatch its
