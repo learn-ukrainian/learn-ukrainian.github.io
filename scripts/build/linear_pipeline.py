@@ -2289,6 +2289,8 @@ Before returning, complete this in-call SELF-CHECK and record it under
   not merely named
 """
 
+ITERATIVE_ACTIVITY_WRITER_SECTION = "activities.yaml"
+
 
 def _writer_specific_directives(writer: str | None) -> str:
     if not writer:
@@ -9983,6 +9985,164 @@ def render_section_writer_prompt(
     return "\n".join(lines).rstrip() + "\n"
 
 
+def render_iterative_activity_prompt(
+    *,
+    plan: Mapping[str, Any],
+    module_md: str,
+    section_artifacts: Sequence[SectionArtifact],
+    knowledge_packet: object,
+    writer: str = "claude-tools",
+    plan_content: str = "",
+    wiki_manifest: str | Mapping[str, Any] | None = None,
+    implementation_map: Mapping[str, Any] | None = None,
+    obligation_checklist: Mapping[str, Any] | None = None,
+) -> str:
+    """Render the bounded activity-only pass for iterative writer mode."""
+    level = str(plan.get("level") or "").lower()
+    module_num = int(plan.get("sequence") or plan.get("module") or 1)
+    slug = str(plan.get("slug") or "")
+    activity_config = _activity_config(level, module_num, slug)
+    allowed_example_types = [
+        item.strip()
+        for item in activity_config["ALLOWED_ACTIVITY_TYPES"].split(",")
+        if item.strip()
+    ]
+    example_type = allowed_example_types[0] if allowed_example_types else "quiz"
+    inline_ids = _dedupe_preserve_order(_INJECT_RE.findall(module_md))
+    section_context = [
+        {
+            "section_id": artifact.section_id,
+            "title": _artifact_title(artifact.markdown),
+            "activity_refs": list(artifact.activity_refs),
+        }
+        for artifact in section_artifacts
+    ]
+
+    lines = [
+        "# Iterative Writer Activity Pass",
+        "",
+        "Create only the final `activities.yaml` artifact for the assembled "
+        "iterative module. Expand plan activity hints into complete learner "
+        "activities; do not copy hint-only fields into the artifact.",
+        "",
+        "## Module",
+        f"- level: {level}",
+        f"- module_num: {module_num}",
+        f"- slug: {slug}",
+        f"- title: {plan.get('title', '')}",
+        "",
+        "## Activity Type Constraints",
+        f"- Allowed inline types: {activity_config['INLINE_ALLOWED_TYPES']}",
+        f"- Allowed workbook types: {activity_config['WORKBOOK_ALLOWED_TYPES']}",
+        f"- Allowed any-context types: {activity_config['ALLOWED_ACTIVITY_TYPES']}",
+        f"- Forbidden types: {activity_config['FORBIDDEN_ACTIVITY_TYPES']}",
+        f"- Activity count target: {activity_config['ACTIVITY_COUNT_TARGET']}",
+        "",
+        "## Authoring Schema",
+        _render_component_props_schema(activity_config["ALLOWED_ACTIVITY_TYPES"]),
+        "",
+        "## Activity Hints From Plan",
+        _prompt_dump(_plan_activity_hints(plan)) or "[]",
+        "",
+        "## Existing Inline Activity Markers",
+        _prompt_dump(inline_ids) or "[]",
+        "",
+        "## Section Activity Context",
+        _prompt_dump(section_context),
+        "",
+        "## Knowledge Packet",
+        _knowledge_packet_text(knowledge_packet) or "(none)",
+    ]
+    if plan_content:
+        lines.extend(["", "## Source Plan Content", plan_content.strip()])
+    if wiki_manifest is not None:
+        lines.extend(["", "## Wiki Manifest", _prompt_dump(wiki_manifest)])
+    if implementation_map is not None:
+        lines.extend(["", "## Implementation Map", _prompt_dump(implementation_map)])
+    if obligation_checklist is not None:
+        lines.extend(["", "## Obligation Checklist", _prompt_dump(obligation_checklist)])
+
+    lines.extend(
+        [
+            "",
+            "## Assembled Module Content",
+            module_md.strip() or "(empty)",
+            "",
+            "## Rules",
+            "- Emit a bare JSON list for `activities.yaml`.",
+            "- Use only allowed activity types. If a plan hint names a forbidden "
+            "type, preserve the pedagogical focus with the closest allowed type.",
+            "- Never emit plan-hint fields: `after_section`, `focus`, `placement`, "
+            "`activity_id`, or `self_checklist`.",
+            "- Include `id` only for activities matching an existing inline marker "
+            "from the module. Workbook activities must omit `id`.",
+            "- Do not invent inline marker ids. If no marker exists for an inline "
+            "hint, convert it into a workbook activity and omit `id`.",
+            "- A `performance` activity's `self_check` field must be a JSON list.",
+            "- Ground prompts/items in the assembled module content above.",
+            "",
+            "## Output Contract",
+            "Return exactly one fenced block and no surrounding prose:",
+            "```json file=activities.yaml",
+            "[",
+            f"  {{\"type\": \"{example_type}\", \"title\": \"Practice\", "
+            "\"instruction\": \"Complete the activity.\"}",
+            "]",
+            "```",
+        ]
+    )
+    directives = _writer_specific_directives(writer).strip()
+    if directives:
+        lines.extend(["", directives])
+    return "\n".join(lines).rstrip() + "\n"
+
+
+_ITERATIVE_ACTIVITY_FENCE_RE = re.compile(
+    r"^[ \t]*(?P<run>`{3,})(?P<info>[^\n]*)\n"
+    r"(?P<body>.*?)"
+    r"^[ \t]*(?P=run)[ \t]*$",
+    re.DOTALL | re.MULTILINE,
+)
+
+
+def _artifact_name_from_fence_info(info: str) -> str | None:
+    for token in info.strip().split()[1:]:
+        value = token.removeprefix("file=")
+        if value in WRITER_JSON_ARTIFACTS:
+            return value
+    return None
+
+
+def parse_iterative_activities_output(output: str) -> list[dict[str, Any]]:
+    """Parse and validate the activity-only iterative writer response."""
+    matches = [
+        match
+        for match in _ITERATIVE_ACTIVITY_FENCE_RE.finditer(output)
+        if _artifact_name_from_fence_info(match.group("info")) == "activities.yaml"
+    ]
+    if not matches:
+        raise LinearPipelineError(
+            "Iterative activity writer output must contain `json file=activities.yaml`"
+        )
+    if len(matches) > 1:
+        raise LinearPipelineError(
+            "Iterative activity writer output contains duplicate activities.yaml blocks"
+        )
+    match = matches[0]
+    info = match.group("info")
+    if _fence_language(info) != "json":
+        got = _fence_language(info) or "<none>"
+        raise LinearPipelineError(f"activities.yaml must be fenced json, got {got}")
+    content_start_line = output[: match.start("body")].count("\n") + 1
+    activities_yaml = _parse_and_dump_writer_json_artifact(
+        "activities.yaml",
+        match.group("body"),
+        content_start_line,
+    )
+    activities = yaml.safe_load(activities_yaml)
+    return _validate_activities_artifact(activities)
+
+
 def _load_section_artifact_metadata(raw: str) -> dict[str, Any]:
     parsed = yaml.safe_load(raw)
     if not isinstance(parsed, Mapping):
@@ -10285,6 +10445,32 @@ def run_iterative_writer(
         (str(summary.get("module")) for summary in phase_writer_summaries if summary.get("module")),
         "",
     )
+    partial_result = assemble_iterative(artifacts, plan, activities=[])
+    activity_prompt = render_iterative_activity_prompt(
+        plan=plan,
+        module_md=str(partial_result["module_md"]),
+        section_artifacts=artifacts,
+        knowledge_packet=knowledge_packet,
+        writer=writer,
+        plan_content=plan_content,
+        wiki_manifest=wiki_manifest,
+        implementation_map=implementation_map,
+        obligation_checklist=obligation_checklist,
+    )
+    activity_invoke_kwargs: dict[str, Any] = {
+        "cwd": cwd,
+        "module": module,
+        "sections": [ITERATIVE_ACTIVITY_WRITER_SECTION],
+        "event_sink": iterative_event_sink,
+        "tool_trace_path": tool_trace_path,
+        "stdout_silence_timeout": stdout_silence_timeout,
+        "effort": effort,
+    }
+    if invoke_fn is None:
+        activity_invoke_kwargs["enforce_mcp_tools_never_invoked"] = False
+    activity_output = invoke(activity_prompt, writer, **activity_invoke_kwargs)
+    activities = parse_iterative_activities_output(activity_output)
+
     if module_ref and phase_writer_summaries:
         _enforce_writer_runtime_gates(
             writer=writer,
@@ -10294,7 +10480,7 @@ def run_iterative_writer(
             event_sink=event_sink,
         )
 
-    return assemble_iterative(artifacts, plan)
+    return assemble_iterative(artifacts, plan, activities=activities)
 
 
 def _dedupe_preserve_order(values: Sequence[object]) -> list[str]:
@@ -10421,7 +10607,7 @@ def _merge_vocab_candidates(artifacts: Sequence[SectionArtifact]) -> list[dict[s
 
 def _plan_activity_configs(plan: Mapping[str, Any]) -> list[dict[str, Any]]:
     configs: list[dict[str, Any]] = []
-    for key in ("activity_configs", "activities", "activity_hints"):
+    for key in ("activity_configs", "activities"):
         raw_configs = plan.get(key)
         if isinstance(raw_configs, Mapping):
             inline = raw_configs.get("inline", [])
@@ -10438,8 +10624,26 @@ def _plan_activity_configs(plan: Mapping[str, Any]) -> list[dict[str, Any]]:
             config = dict(raw_config)
             if "id" not in config and "activity_id" in config:
                 config["id"] = config.pop("activity_id")
-            configs.append(_normalize_activity_config(config))
+        configs.append(_normalize_activity_config(config))
     return configs
+
+
+def _plan_activity_hints(plan: Mapping[str, Any]) -> list[dict[str, Any]]:
+    hints: list[dict[str, Any]] = []
+    raw_hints = plan.get("activity_hints", [])
+    if isinstance(raw_hints, Mapping):
+        inline = raw_hints.get("inline", [])
+        workbook = raw_hints.get("workbook", [])
+        raw_hints = [
+            *(inline if isinstance(inline, list) else []),
+            *(workbook if isinstance(workbook, list) else []),
+        ]
+    if not isinstance(raw_hints, list):
+        return hints
+    for raw_hint in raw_hints:
+        if isinstance(raw_hint, Mapping):
+            hints.append(dict(raw_hint))
+    return hints
 
 
 def _normalize_activity_config(config: dict[str, Any]) -> dict[str, Any]:
@@ -10465,6 +10669,22 @@ def _placeholder_activity(activity_id: str) -> dict[str, Any]:
     }
 
 
+def _validate_activities_artifact(activities: Any) -> list[dict[str, Any]]:
+    if not isinstance(activities, list):
+        raise LinearPipelineError(
+            f"activities.yaml schema validation failed: root must list, got {type(activities).__name__}"
+        )
+    normalized = [
+        dict(activity) if isinstance(activity, Mapping) else activity
+        for activity in activities
+    ]
+    _validate_writer_json_artifact("activities.yaml", normalized)
+    schema_report = _activity_schema_gate(normalized)
+    if not schema_report.get("passed"):
+        raise LinearPipelineError(f"activities.yaml schema validation failed: {schema_report}")
+    return normalized
+
+
 def _merge_activities(artifacts: Sequence[SectionArtifact], plan: Mapping[str, Any]) -> list[dict[str, Any]]:
     activity_refs = _dedupe_preserve_order([ref for artifact in artifacts for ref in artifact.activity_refs])
     activities = _plan_activity_configs(plan)
@@ -10473,11 +10693,7 @@ def _merge_activities(artifacts: Sequence[SectionArtifact], plan: Mapping[str, A
         if activity_id not in activity_ids:
             activities.append(_placeholder_activity(activity_id))
             activity_ids.add(activity_id)
-    _validate_writer_json_artifact("activities.yaml", activities)
-    schema_report = _activity_schema_gate(activities)
-    if not schema_report.get("passed"):
-        raise LinearPipelineError(f"activities.yaml schema validation failed: {schema_report}")
-    return activities
+    return _validate_activities_artifact(activities)
 
 
 def _normalize_plan_resource(resource: Mapping[str, Any], default_role: str) -> dict[str, Any] | None:
@@ -10569,6 +10785,8 @@ def _artifact_sidecar_entry(
 def assemble_iterative(
     artifacts: Sequence[SectionArtifact],
     plan: Mapping[str, Any],
+    *,
+    activities: Sequence[Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
     ordered_artifacts = _artifact_by_plan_order(artifacts, plan)
 
@@ -10593,13 +10811,17 @@ def assemble_iterative(
         module_md += "\n"
 
     vocabulary = _merge_vocab_candidates(ordered_artifacts)
-    activities = _merge_activities(ordered_artifacts, plan)
+    activity_items = (
+        _merge_activities(ordered_artifacts, plan)
+        if activities is None
+        else _validate_activities_artifact(list(activities))
+    )
     resources = _merge_resources(plan, ordered_artifacts)
 
     return {
         "module_md": module_md,
         "vocabulary_yaml": yaml.safe_dump(vocabulary, allow_unicode=True, sort_keys=False),
-        "activities_yaml": yaml.safe_dump(activities, allow_unicode=True, sort_keys=False),
+        "activities_yaml": yaml.safe_dump(activity_items, allow_unicode=True, sort_keys=False),
         "resources_yaml": yaml.safe_dump(resources, allow_unicode=True, sort_keys=False),
         "sidecar": sidecar,
     }
