@@ -54,8 +54,11 @@ committed deck vs a Release-asset-hydrated deck, so build it once the deck-hosti
 
 ## Open backlog (the "rest of the lexicon stuff")
 - **#3796** — migrate the committed ~2.9 MB practice deck → Release-asset hydration (before it churns).
-- **#3449** — publish the open dataset: `export_open_dataset.py` exists + runs from the fresh manifest, but
-  its output (`data/lexicon-dataset/`) is **not committed** → run + commit + PR (check it isn't gitignored).
+- **#3449** — open dataset is **already published in git** (`data/lexicon-dataset/`, 36 files / 1.6 MB,
+  committed in #3633). BUT re-running `export_open_dataset.py` on today's manifest produces **31 MB** (the
+  enrichment grew since #3633) — so the committed-dataset approach **bloats on every regen**. This is the
+  same derived-artifact-hosting problem as the manifest (#3659) and the deck (#3796): **migrate the dataset
+  to a Release asset** (and `git rm` the committed copy) so regen doesn't grow git history.
 - **#3450** — inflected-form dedupe → canonical "form of «lemma»" cards (filter drops them at consumers via
   `lexeme_filter`; the manifest-level canonicalization is the remaining piece).
 - **#3406** — ~24 ЕСУМ entries carry OCR mojibake bibliographic text (careful: a prior dirty regen was
