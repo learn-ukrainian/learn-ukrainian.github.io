@@ -10749,13 +10749,25 @@ def _merge_resources(plan: Mapping[str, Any], artifacts: Sequence[SectionArtifac
         for raw_reading in raw_readings:
             if not isinstance(raw_reading, Mapping):
                 continue
+            # A `role: reading` entry in resources.yaml is the EXTERNAL free-full-text
+            # link ("read the original at ukrlib/wikisource/…"), validated against the
+            # primary-text domain allowlist by _resources_url_resolve_gate. Corpus-only /
+            # on-site-hosted readings have no external URL — they are surfaced via the
+            # module's :::primary-reading block + the reading_coverage gate, NOT as a
+            # URL-bearing resource. Never fabricate an on-site /readings/<slug>/ URL here
+            # (single-shot built modules never do, and the url-resolve gate rejects it).
+            external_url = str(
+                raw_reading.get("source_url") or raw_reading.get("url") or ""
+            ).strip()
+            if not external_url or _is_on_site_resource_url(external_url):
+                continue
             resource = _normalize_plan_resource(raw_reading, "reading")
             if resource is None:
                 continue
+            resource["url"] = external_url
             reading_slug = str(raw_reading.get("reading_slug") or raw_reading.get("reading_id") or "").strip()
             if reading_slug:
                 resource["source_ref"] = reading_slug
-                resource.setdefault("url", f"/readings/{reading_slug}/")
             resource_key = _resource_key(resource)
             if resource_key not in seen:
                 resources.append(resource)
