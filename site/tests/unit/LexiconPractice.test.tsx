@@ -284,6 +284,45 @@ describe('LexiconPractice', () => {
     }
   });
 
+  test('choice backfills distractors across POS when same-POS pool is too small', () => {
+    // The answer (a verb) has only ONE same-POS peer, but four other eligible words
+    // exist. The old strict-subset logic discarded the cross-POS pool and starved the
+    // distractor list (<3) -> the card could not render. It must now backfill to a
+    // full 4-option card.
+    const lexemes = [
+      lexeme('bachyty', 'бачити', 'to see', { nominative: 'бачити', accusative: 'бачити', locative: 'бачити' }, { pos: 'verb' }),
+      lexeme('ity', 'іти', 'to go', { nominative: 'іти', accusative: 'іти', locative: 'іти' }, { pos: 'verb' }),
+      lexeme('sad', 'сад', 'garden', { nominative: 'сад', accusative: 'сад', locative: 'саду' }),
+      lexeme('dim', 'дім', 'house', { nominative: 'дім', accusative: 'дім', locative: 'домі' }),
+      lexeme('lis', 'ліс', 'forest', { nominative: 'ліс', accusative: 'ліс', locative: 'лісі' }),
+    ];
+    const deck: PracticeDeckData = {
+      deckVersion: 'test-small-pos-pool',
+      level: 'A1',
+      lexemes,
+      index: lexemes.map((entry, index) => ({
+        lemmaId: entry.lemmaId,
+        lemma: entry.lemma,
+        cefr: 'A1',
+        modes: ['flashcards', 'matching', 'choice'],
+        hasCloze: false,
+        clozeIds: [],
+        newOrder: index,
+      })),
+      cloze: [],
+    };
+    render(<LexiconPractice initialDeck={deck} autoStart initialMode="choice" />);
+    const choice = screen.getByTestId('practice-choice');
+    const labels = within(choice)
+      .getAllByRole('button')
+      .map((button) => button.textContent ?? '');
+    // First card is the small-POS verb (newOrder 0). Without cross-POS backfill it
+    // would starve (<3 distractors) and not render; it must show a full 4-option set.
+    expect(labels).toHaveLength(4);
+    // The verb answer is present whichever polarity the selector picked.
+    expect(labels.some((label) => label === 'бачити' || label === 'to see')).toBe(true);
+  });
+
   test('cloze wrong-case answer records one case miss and leaves blank open', async () => {
     seedRecognitionMastery('knyha');
     const user = userEvent.setup();

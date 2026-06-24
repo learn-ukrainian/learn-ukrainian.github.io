@@ -107,6 +107,29 @@ def test_option_set_validator_rejects_phrase_labels() -> None:
     assert "option labels must not be phrase glosses" in validate_option_set(cloze)
 
 
+def test_multi_sense_gloss_first_sense_is_meaning_mc_eligible() -> None:
+    # A multi-sense content word ("forest; woods") has a clean concise first sense and
+    # must stay eligible for Choice/Matching. The raw-gloss `;` check used to over-exclude
+    # any multi-sense gloss even when its first sense was a perfect single-concept meaning.
+    entries = [
+        {
+            "lemma": "ліс",
+            "url_slug": "lis",
+            "gloss": "forest; woods",
+            "pos": "noun",
+            "primary_source": "course_vocab",
+            "cefr": "A1",
+        },
+    ]
+    shards = build_practice_shards(
+        entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({})
+    )
+    lexeme = shards["A1"]["lexemes"]["lexemes"][0]
+    assert lexeme["glossClean"] == "forest"
+    assert lexeme["meaningMcEligible"] is True
+    assert {"matching", "choice"}.issubset(set(shards["A1"]["index"]["items"][0]["modes"]))
+
+
 def test_real_manifest_shapes_still_yield_recognition_lexemes() -> None:
     entries = [
         {

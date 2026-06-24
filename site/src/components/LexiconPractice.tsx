@@ -125,7 +125,10 @@ function glossHeadword(entry: PracticeLexeme): string {
 
 function isPhraseGloss(label: string): boolean {
   const clean = label.replace(/\s+/g, ' ').trim();
-  const wordCount = clean ? clean.split(/\s+/).length : 0;
+  // Count alphanumeric tokens (ignoring standalone punctuation) to match the
+  // Python deck generator's `_meaning_label_word_count` regex exactly, so the
+  // served deck and this runtime guard never disagree on eligibility.
+  const wordCount = clean ? (clean.match(/[^\W_]+(?:[-'][^\W_]+)?/gu) || []).length : 0;
   return (
     !clean ||
     clean.length > MEANING_MC_MAX_CHARS ||
@@ -139,14 +142,8 @@ function isPhraseGloss(label: string): boolean {
 function isMeaningMcEligible(entry: PracticeLexeme): boolean {
   const label = glossLabel(entry);
   if (entry.meaningMcEligible === false) return false;
-  if (
-    entry.gloss.includes(';') ||
-    entry.gloss.includes('?') ||
-    entry.gloss.includes('(') ||
-    entry.gloss.includes(')')
-  ) {
-    return false;
-  }
+  // Judge the CLEAN first-sense label, not the raw multi-sense gloss: a word like
+  // "dog; hound" has a perfectly concise glossClean ("dog") and must stay eligible.
   if (isPhraseGloss(label)) return false;
   if (FUNCTION_GLOSS_HEADWORDS.has(glossHeadword(entry))) return false;
   if (entry.pos && FUNCTION_POS.has(entry.pos.toLocaleLowerCase('en-US'))) return false;
@@ -273,7 +270,7 @@ function orderedChoiceOptions(
 ): ChoiceOption[] {
   if (!isMeaningMcEligible(selection.lemma)) return [];
   const distractors = meaningDistractors(selection.lemma, deck, 3);
-  if (!distractors.length) return [];
+  if (distractors.length < 3) return [];
   const answer = polarity === 'word-to-meaning' ? glossLabel(selection.lemma) : selection.lemma.lemma;
   const options = [
     { label: answer, correct: true },
@@ -302,19 +299,19 @@ function meaningDistractors(
       isMeaningMcEligible(candidate) &&
       glossHeadword(candidate) !== answerHeadword,
   );
-  const samePos = candidates.filter((candidate) => candidate.pos === answer.pos);
-  const primary = samePos.length ? samePos : candidates;
-  const comparable = primary.filter(
-    (candidate) => Math.abs(glossLabel(candidate).length - answerLength) <= 12,
-  );
+  // PRIORITIZE same-POS + comparable gloss length via sort keys — never hard-filter
+  // the candidate pool down to a subset, which would starve distractors when a word
+  // has fewer than 3 same-POS peers even though hundreds of valid candidates exist.
   const seenLabels = new Set<string>();
-  return (comparable.length ? comparable : primary)
-    .sort(
-      (left, right) =>
-        Math.abs(glossLabel(left).length - answerLength) -
-          Math.abs(glossLabel(right).length - answerLength) ||
-        left.lemmaId.localeCompare(right.lemmaId),
-    )
+  return candidates
+    .sort((left, right) => {
+      const leftPos = left.pos === answer.pos ? 0 : 1;
+      const rightPos = right.pos === answer.pos ? 0 : 1;
+      if (leftPos !== rightPos) return leftPos - rightPos;
+      const leftLen = Math.abs(glossLabel(left).length - answerLength);
+      const rightLen = Math.abs(glossLabel(right).length - answerLength);
+      return leftLen - rightLen || left.lemmaId.localeCompare(right.lemmaId);
+    })
     .filter((entry) => {
       const key = glossLabel(entry).toLocaleLowerCase('en-US');
       if (seenLabels.has(key)) return false;
@@ -327,7 +324,7 @@ function meaningDistractors(
 function matchingPairs(selection: PracticeSelection, deck: PracticeDeckData) {
   if (!isMeaningMcEligible(selection.lemma)) return [];
   const distractors = meaningDistractors(selection.lemma, deck, 3);
-  if (!distractors.length) return [];
+  if (distractors.length < 3) return [];
   return [selection.lemma, ...distractors].map((entry) => ({
     left: entry.lemma,
     right: glossLabel(entry),

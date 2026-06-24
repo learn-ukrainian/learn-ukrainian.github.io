@@ -321,12 +321,10 @@ def _is_transliteration_only_gloss(gloss_clean: str, lemma_plain: str) -> bool:
     return bool(romanized) and _ascii_key(gloss_clean) == romanized
 
 
-def _meaning_mc_eligible(gloss: str, gloss_clean: str, lemma_plain: str, pos: str | None) -> bool:
+def _meaning_mc_eligible(gloss_clean: str, lemma_plain: str, pos: str | None) -> bool:
     if not gloss_clean or len(gloss_clean) > MEANING_MC_MAX_CHARS:
         return False
     if _meaning_label_is_phrase(gloss_clean):
-        return False
-    if ";" in gloss or "?" in gloss or "(" in gloss or ")" in gloss:
         return False
     if re.search(r"[.!:]$", gloss_clean):
         return False
@@ -846,7 +844,7 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
     lemma_plain = _plain(lemma)
     pos = _clean_text(entry.get("pos"))
     gloss_clean = _gloss_clean(gloss)
-    meaning_mc_eligible = _meaning_mc_eligible(gloss, gloss_clean, lemma_plain, pos)
+    meaning_mc_eligible = _meaning_mc_eligible(gloss_clean, lemma_plain, pos)
     # Recognition (matching/choice/flashcard) needs only lemma+gloss+level, so the word is
     # ALWAYS kept. Attach the paradigm for flashcard declensions ONLY when every form
     # VESUM-verifies; otherwise blank it so the UI never displays an unverified declension.

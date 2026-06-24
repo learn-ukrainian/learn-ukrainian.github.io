@@ -482,9 +482,7 @@
       "lemma": "сало",
       "lemmaId": "сало",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 36
     },
@@ -495,9 +493,7 @@
       "lemma": "сусіда",
       "lemmaId": "сусіда",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 37
     },
@@ -534,9 +530,7 @@
       "lemma": "намисто",
       "lemmaId": "намисто",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 40
     },
@@ -898,9 +892,7 @@
       "lemma": "кефір",
       "lemmaId": "кефір",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 68
     },
@@ -1119,9 +1111,7 @@
       "lemma": "тату",
       "lemmaId": "тату",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 85
     },
@@ -1301,9 +1291,7 @@
       "lemma": "щоб",
       "lemmaId": "щоб",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 99
     },
@@ -1379,9 +1367,7 @@
       "lemma": "після",
       "lemmaId": "після",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 105
     },
@@ -1496,9 +1482,7 @@
       "lemma": "зустрітися",
       "lemmaId": "зустрітися",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 114
     },
@@ -1821,9 +1805,7 @@
       "lemma": "Мар'я́на",
       "lemmaId": "мар-я-на",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 139
     },
@@ -1886,9 +1868,7 @@
       "lemma": "Ілля",
       "lemmaId": "ілля",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 144
     },
@@ -1912,9 +1892,7 @@
       "lemma": "отой",
       "lemmaId": "отой",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 146
     },
@@ -1925,9 +1903,7 @@
       "lemma": "оцей",
       "lemmaId": "оцей",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 147
     },
@@ -2029,9 +2005,7 @@
       "lemma": "говорите",
       "lemmaId": "говорите",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 155
     },
@@ -2055,9 +2029,7 @@
       "lemma": "робите",
       "lemmaId": "робите",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 157
     },
@@ -2380,9 +2352,7 @@
       "lemma": "Хрещатик",
       "lemmaId": "хрещатик",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 182
     },
@@ -2406,9 +2376,7 @@
       "lemma": "спасибі",
       "lemmaId": "спасибі",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 184
     },
@@ -3004,9 +2972,7 @@
       "lemma": "адміністратор",
       "lemmaId": "адміністратор",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 230
     },
@@ -4369,9 +4335,7 @@
       "lemma": "матеріал",
       "lemmaId": "матеріал",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 335
     },
@@ -4538,9 +4502,7 @@
       "lemma": "хай",
       "lemmaId": "хай",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 348
     },
@@ -4564,9 +4526,7 @@
       "lemma": "будь-хто",
       "lemmaId": "будь-хто",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 350
     },
@@ -4577,9 +4537,7 @@
       "lemma": "будь-що",
       "lemmaId": "будь-що",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 351
     },
@@ -4655,9 +4613,7 @@
       "lemma": "хтось",
       "lemmaId": "хтось",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 357
     },
@@ -4668,9 +4624,7 @@
       "lemma": "щось",
       "lemmaId": "щось",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 358
     },
@@ -4798,9 +4752,7 @@
       "lemma": "між",
       "lemmaId": "між",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 368
     },
@@ -4811,9 +4763,7 @@
       "lemma": "над",
       "lemmaId": "над",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 369
     },
@@ -4824,9 +4774,7 @@
       "lemma": "під",
       "lemmaId": "під",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 370
     },
@@ -6020,9 +5968,7 @@
       "lemma": "то",
       "lemmaId": "то",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 462
     },
@@ -6267,9 +6213,7 @@
       "lemma": "себе",
       "lemmaId": "себе",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 481
     },
@@ -6384,9 +6328,7 @@
       "lemma": "складати / скласти іспит",
       "lemmaId": "складати-скласти-іспит",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 490
     },
@@ -6423,9 +6365,7 @@
       "lemma": "поїхати / їздити",
       "lemmaId": "поїхати-їздити",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 493
     },
@@ -6449,9 +6389,7 @@
       "lemma": "ходити по місту",
       "lemmaId": "ходити-по-місту",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 495
     },
@@ -6514,9 +6452,7 @@
       "lemma": "винести наперед",
       "lemmaId": "винести-наперед",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 500
     },
@@ -6540,9 +6476,7 @@
       "lemma": "не..., а...",
       "lemmaId": "не-а",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 502
     },
@@ -6865,9 +6799,7 @@
       "lemma": "дочекатися",
       "lemmaId": "дочекатися",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 527
     },
@@ -6904,9 +6836,7 @@
       "lemma": "попрацювати",
       "lemmaId": "попрацювати",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 530
     },
@@ -7034,9 +6964,7 @@
       "lemma": "відкривати",
       "lemmaId": "відкривати",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 540
     },
@@ -7047,9 +6975,7 @@
       "lemma": "відчинити",
       "lemmaId": "відчинити",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 541
     },
@@ -7957,9 +7883,7 @@
       "lemma": "всупереч",
       "lemmaId": "всупереч",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 611
     },
@@ -7970,9 +7894,7 @@
       "lemma": "дебати",
       "lemmaId": "дебати",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 612
     },
@@ -8282,9 +8204,7 @@
       "lemma": "семінар",
       "lemmaId": "семінар",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 636
     },
@@ -8321,9 +8241,7 @@
       "lemma": "з-поміж",
       "lemmaId": "з-поміж",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 639
     },
@@ -8373,9 +8291,7 @@
       "lemma": "говорячи",
       "lemmaId": "говорячи",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 643
     },
@@ -8386,9 +8302,7 @@
       "lemma": "працюючи",
       "lemmaId": "працюючи",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 644
     },
@@ -8399,9 +8313,7 @@
       "lemma": "слухаючи",
       "lemmaId": "слухаючи",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 645
     },
@@ -8529,9 +8441,7 @@
       "lemma": "симптом",
       "lemmaId": "симптом",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 655
     },
@@ -8932,9 +8842,7 @@
       "lemma": "бігти",
       "lemmaId": "бігти",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 686
     },
@@ -8945,9 +8853,7 @@
       "lemma": "нести",
       "lemmaId": "нести",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 687
     },
@@ -8958,9 +8864,7 @@
       "lemma": "пливти",
       "lemmaId": "пливти",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 688
     },
@@ -8984,9 +8888,7 @@
       "lemma": "їздити",
       "lemmaId": "їздити",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 690
     },
@@ -9049,9 +8951,7 @@
       "lemma": "термінал",
       "lemmaId": "термінал",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 695
     },
@@ -9075,9 +8975,7 @@
       "lemma": "донести",
       "lemmaId": "донести",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 697
     },
@@ -9101,9 +8999,7 @@
       "lemma": "приходити",
       "lemmaId": "приходити",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 699
     },
@@ -9114,9 +9010,7 @@
       "lemma": "приїжджати",
       "lemmaId": "приїжджати",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 700
     },
@@ -9179,9 +9073,7 @@
       "lemma": "поїду",
       "lemmaId": "поїду",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 705
     },
@@ -9231,9 +9123,7 @@
       "lemma": "виносити",
       "lemmaId": "виносити",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 709
     },
@@ -9244,9 +9134,7 @@
       "lemma": "завести",
       "lemmaId": "завести",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 710
     },
@@ -9374,9 +9262,7 @@
       "lemma": "по",
       "lemmaId": "по",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 720
     },
@@ -10180,9 +10066,7 @@
       "lemma": "Черкаси",
       "lemmaId": "черкаси",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 782
     },
@@ -10193,9 +10077,7 @@
       "lemma": "Чернівці",
       "lemmaId": "чернівці",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 783
     },
@@ -10245,9 +10127,7 @@
       "lemma": "унаслідок",
       "lemmaId": "унаслідок",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 787
     },
@@ -10258,9 +10138,7 @@
       "lemma": "коло",
       "lemmaId": "коло",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 788
     },
@@ -10297,9 +10175,7 @@
       "lemma": "попід",
       "lemmaId": "попід",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 791
     },
@@ -11350,9 +11226,7 @@
       "lemma": "привласнення",
       "lemmaId": "привласнення",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 872
     },
@@ -11363,9 +11237,7 @@
       "lemma": "реконструкція",
       "lemmaId": "реконструкція",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 873
     },
@@ -11389,9 +11261,7 @@
       "lemma": "ідентичність",
       "lemmaId": "ідентичність",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 875
     },
@@ -11402,9 +11272,7 @@
       "lemma": "бандура",
       "lemmaId": "бандура",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 876
     },
@@ -11480,9 +11348,7 @@
       "lemma": "перенесення",
       "lemmaId": "перенесення",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 882
     }
@@ -11491,10 +11357,10 @@
   "schema": "atlas-practice-index",
   "schemaVersion": 1,
   "sizeBudget": {
-    "gzipBytes": 13641,
+    "gzipBytes": 13780,
     "gzipLimitBytes": 140000,
     "ok": true,
-    "rawBytes": 230571,
+    "rawBytes": 228025,
     "rawLimitBytes": 550000
   },
   "source": "manifest"

@@ -3,7 +3,7 @@
     "cloze": 0,
     "clozeCoverage": 0.0,
     "clozeEligibleLexemes": 0,
-    "lexemes": 1315
+    "lexemes": 1119
   },
   "deckVersion": "atlas-practice-v1-622fc3d93d1ad580",
   "items": [
@@ -14,9 +14,7 @@
       "lemma": "Лавра",
       "lemmaId": "лавра",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 0
     },
@@ -131,9 +129,7 @@
       "lemma": "пишете",
       "lemmaId": "пишете",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 9
     },
@@ -144,9 +140,7 @@
       "lemma": "працюєте",
       "lemmaId": "працюєте",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 10
     },
@@ -261,9 +255,7 @@
       "lemma": "глечик",
       "lemmaId": "глечик",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 19
     },
@@ -274,9 +266,7 @@
       "lemma": "писанки",
       "lemmaId": "писанки",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 20
     },
@@ -287,9 +277,7 @@
       "lemma": "та",
       "lemmaId": "та",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 21
     },
@@ -326,9 +314,7 @@
       "lemma": "навпроти",
       "lemmaId": "навпроти",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 24
     },
@@ -365,9 +351,7 @@
       "lemma": "гей",
       "lemmaId": "гей",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 27
     },
@@ -469,9 +453,7 @@
       "lemma": "маслом",
       "lemmaId": "маслом",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 35
     },
@@ -508,9 +490,7 @@
       "lemma": "але",
       "lemmaId": "але",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 38
     },
@@ -534,9 +514,7 @@
       "lemma": "поки",
       "lemmaId": "поки",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 40
     },
@@ -560,9 +538,7 @@
       "lemma": "проте",
       "lemmaId": "проте",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 42
     },
@@ -638,9 +614,7 @@
       "lemma": "допізна",
       "lemmaId": "допізна",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 48
     },
@@ -1132,9 +1106,7 @@
       "lemma": "пробачте",
       "lemmaId": "пробачте",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 86
     },
@@ -1210,9 +1182,7 @@
       "lemma": "вітаємо",
       "lemmaId": "вітаємо",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 92
     },
@@ -2276,9 +2246,7 @@
       "lemma": "нехай",
       "lemmaId": "нехай",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 174
     },
@@ -2328,9 +2296,7 @@
       "lemma": "дехто",
       "lemmaId": "дехто",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 178
     },
@@ -2341,9 +2307,7 @@
       "lemma": "дещо",
       "lemmaId": "дещо",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 179
     },
@@ -2354,9 +2318,7 @@
       "lemma": "деякий",
       "lemmaId": "деякий",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 180
     },
@@ -2367,9 +2329,7 @@
       "lemma": "ніякий",
       "lemmaId": "ніякий",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 181
     },
@@ -2380,9 +2340,7 @@
       "lemma": "хто-небудь",
       "lemmaId": "хто-небудь",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 182
     },
@@ -2393,9 +2351,7 @@
       "lemma": "чийсь",
       "lemmaId": "чийсь",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 183
     },
@@ -2406,9 +2362,7 @@
       "lemma": "що-небудь",
       "lemmaId": "що-небудь",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 184
     },
@@ -2445,9 +2399,7 @@
       "lemma": "перед",
       "lemmaId": "перед",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 187
     },
@@ -2822,9 +2774,7 @@
       "lemma": "кутя",
       "lemmaId": "кутя",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 216
     },
@@ -2900,9 +2850,7 @@
       "lemma": "чим",
       "lemmaId": "чим",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 222
     },
@@ -2913,9 +2861,7 @@
       "lemma": "адже",
       "lemmaId": "адже",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 223
     },
@@ -3121,9 +3067,7 @@
       "lemma": "якби",
       "lemmaId": "якби",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 239
     },
@@ -3277,9 +3221,7 @@
       "lemma": "свій",
       "lemmaId": "свій",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 251
     },
@@ -3290,9 +3232,7 @@
       "lemma": "собі",
       "lemmaId": "собі",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 252
     },
@@ -3810,9 +3750,7 @@
       "lemma": "чим... тим...",
       "lemmaId": "чим-тим",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 292
     },
@@ -4551,9 +4489,7 @@
       "lemma": "суфікс -м",
       "lemmaId": "суфікс-м",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 349
     },
@@ -4733,9 +4669,7 @@
       "lemma": "відчиняти",
       "lemmaId": "відчиняти",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 363
     },
@@ -5383,9 +5317,7 @@
       "lemma": "читаючи",
       "lemmaId": "читаючи",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 413
     },
@@ -5630,9 +5562,7 @@
       "lemma": "понад",
       "lemmaId": "понад",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 432
     },
@@ -6904,9 +6834,7 @@
       "lemma": "складнопідрядне речення",
       "lemmaId": "складнопідрядне-речення",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 530
     },
@@ -6956,9 +6884,7 @@
       "lemma": "єднальний сполучник",
       "lemmaId": "єднальний-сполучник",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 534
     },
@@ -7190,9 +7116,7 @@
       "lemma": "могли б",
       "lemmaId": "могли-б",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 552
     },
@@ -7632,9 +7556,7 @@
       "lemma": "дарма що",
       "lemmaId": "дарма-що",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 586
     },
@@ -7658,9 +7580,7 @@
       "lemma": "незважаючи на",
       "lemmaId": "незважаючи-на",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 588
     },
@@ -7671,9 +7591,7 @@
       "lemma": "незважаючи на те що",
       "lemmaId": "незважаючи-на-те-що",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 589
     },
@@ -7710,9 +7628,7 @@
       "lemma": "підрядне обставинне допусту",
       "lemmaId": "підрядне-обставинне-допусту",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 592
     },
@@ -7736,9 +7652,7 @@
       "lemma": "усупереч",
       "lemmaId": "усупереч",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 594
     },
@@ -7749,9 +7663,7 @@
       "lemma": "хоч",
       "lemmaId": "хоч",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 595
     },
@@ -7775,9 +7687,7 @@
       "lemma": "коли б",
       "lemmaId": "коли-б",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 597
     },
@@ -7788,9 +7698,7 @@
       "lemma": "підрядна обставинна частина умови",
       "lemmaId": "підрядна-обставинна-частина-умови",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 598
     },
@@ -7866,9 +7774,7 @@
       "lemma": "якщо тільки",
       "lemmaId": "якщо-тільки",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 604
     },
@@ -7957,9 +7863,7 @@
       "lemma": "кома перед підрядною частиною",
       "lemmaId": "кома-перед-підрядною-частиною",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 611
     },
@@ -8048,9 +7952,7 @@
       "lemma": "аби",
       "lemmaId": "аби",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 618
     },
@@ -8178,9 +8080,7 @@
       "lemma": "підрядна обставинна частина мети",
       "lemmaId": "підрядна-обставинна-частина-мети",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 628
     },
@@ -8269,9 +8169,7 @@
       "lemma": "завдяки тому що",
       "lemmaId": "завдяки-тому-що",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 635
     },
@@ -8334,9 +8232,7 @@
       "lemma": "підрядна обставинна частина причини",
       "lemmaId": "підрядна-обставинна-частина-причини",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 640
     },
@@ -8360,9 +8256,7 @@
       "lemma": "у зв'язку з тим що",
       "lemmaId": "у-зв-язку-з-тим-що",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 642
     },
@@ -8373,9 +8267,7 @@
       "lemma": "через те що",
       "lemmaId": "через-те-що",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 643
     },
@@ -8425,9 +8317,7 @@
       "lemma": "роль у підрядній частині",
       "lemmaId": "роль-у-підрядній-частині",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 647
     },
@@ -8464,9 +8354,7 @@
       "lemma": "доти...доки",
       "lemmaId": "доти-доки",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 650
     },
@@ -8529,9 +8417,7 @@
       "lemma": "поки не",
       "lemmaId": "поки-не",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 655
     },
@@ -8542,9 +8428,7 @@
       "lemma": "підрядна обставинна частина часу",
       "lemmaId": "підрядна-обставинна-частина-часу",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 656
     },
@@ -8737,9 +8621,7 @@
       "lemma": "якщо б",
       "lemmaId": "якщо-б",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 671
     },
@@ -8750,9 +8632,7 @@
       "lemma": "виносити сміття",
       "lemmaId": "виносити-сміття",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 672
     },
@@ -8945,9 +8825,7 @@
       "lemma": "завдяки",
       "lemmaId": "завдяки",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 687
     },
@@ -8971,9 +8849,7 @@
       "lemma": "назустріч",
       "lemmaId": "назустріч",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 689
     },
@@ -9647,9 +9523,7 @@
       "lemma": "не вийшло",
       "lemmaId": "не-вийшло",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 741
     },
@@ -9751,9 +9625,7 @@
       "lemma": "урок іде",
       "lemmaId": "урок-іде",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 749
     },
@@ -9842,9 +9714,7 @@
       "lemma": "з-за",
       "lemmaId": "з-за",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 756
     },
@@ -9855,9 +9725,7 @@
       "lemma": "замість",
       "lemmaId": "замість",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 757
     },
@@ -9868,9 +9736,7 @@
       "lemma": "крім",
       "lemmaId": "крім",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 758
     },
@@ -9920,9 +9786,7 @@
       "lemma": "щодо",
       "lemmaId": "щодо",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 762
     },
@@ -10050,9 +9914,7 @@
       "lemma": "не чуючи ніг",
       "lemmaId": "не-чуючи-ніг",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 772
     },
@@ -10180,9 +10042,7 @@
       "lemma": "пишучи",
       "lemmaId": "пишучи",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 782
     },
@@ -10193,9 +10053,7 @@
       "lemma": "усміхаючись",
       "lemmaId": "усміхаючись",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 783
     },
@@ -10921,9 +10779,7 @@
       "lemma": "хочу уточнити",
       "lemmaId": "хочу-уточнити",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 839
     },
@@ -10947,9 +10803,7 @@
       "lemma": "Шановний пане",
       "lemmaId": "шановний-пане",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 841
     },
@@ -11129,9 +10983,7 @@
       "lemma": "згідно з",
       "lemmaId": "згідно-з",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 855
     },
@@ -11155,9 +11007,7 @@
       "lemma": "порівняно з",
       "lemmaId": "порівняно-з",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 857
     },
@@ -11194,9 +11044,7 @@
       "lemma": "у зв'язку з",
       "lemmaId": "у-зв-язку-з",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 860
     },
@@ -11350,9 +11198,7 @@
       "lemma": "живопис",
       "lemmaId": "живопис",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 872
     },
@@ -11467,9 +11313,7 @@
       "lemma": "везти",
       "lemmaId": "везти",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 881
     },
@@ -11480,9 +11324,7 @@
       "lemma": "вести",
       "lemmaId": "вести",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 882
     },
@@ -11584,9 +11426,7 @@
       "lemma": "пливуть",
       "lemmaId": "пливуть",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 890
     },
@@ -11597,9 +11437,7 @@
       "lemma": "порт",
       "lemmaId": "порт",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 891
     },
@@ -11662,9 +11500,7 @@
       "lemma": "прилітати",
       "lemmaId": "прилітати",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 896
     },
@@ -11714,9 +11550,7 @@
       "lemma": "доїжджати",
       "lemmaId": "доїжджати",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 900
     },
@@ -11805,9 +11639,7 @@
       "lemma": "привезти",
       "lemmaId": "привезти",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 907
     },
@@ -11818,9 +11650,7 @@
       "lemma": "привести",
       "lemmaId": "привести",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 908
     },
@@ -11831,9 +11661,7 @@
       "lemma": "привозити",
       "lemmaId": "привозити",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 909
     },
@@ -11844,9 +11672,7 @@
       "lemma": "приносити",
       "lemmaId": "приносити",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 910
     },
@@ -12026,9 +11852,7 @@
       "lemma": "повести",
       "lemmaId": "повести",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 924
     },
@@ -12117,9 +11941,7 @@
       "lemma": "завезти",
       "lemmaId": "завезти",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 931
     },
@@ -12169,9 +11991,7 @@
       "lemma": "повз",
       "lemmaId": "повз",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 935
     },
@@ -12780,9 +12600,7 @@
       "lemma": "ознака за дією",
       "lemmaId": "ознака-за-дією",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 982
     },
@@ -12832,9 +12650,7 @@
       "lemma": "дія над предметом",
       "lemmaId": "дія-над-предметом",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 986
     },
@@ -12923,9 +12739,7 @@
       "lemma": "форма на -но/-то",
       "lemmaId": "форма-на-но-то",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 993
     },
@@ -14184,9 +13998,7 @@
       "lemma": "заради того щоб",
       "lemmaId": "заради-того-щоб",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 1090
     },
@@ -14301,9 +14113,7 @@
       "lemma": "кіоск",
       "lemmaId": "кіоск",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 1099
     },
@@ -14327,9 +14137,7 @@
       "lemma": "обабіч",
       "lemmaId": "обабіч",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 1101
     },
@@ -14366,9 +14174,7 @@
       "lemma": "серед",
       "lemmaId": "серед",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 1104
     },
@@ -14431,9 +14237,7 @@
       "lemma": "координаторка",
       "lemmaId": "координаторка",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 1109
     },
@@ -14522,9 +14326,7 @@
       "lemma": "протягом",
       "lemmaId": "протягом",
       "modes": [
-        "flashcards",
-        "matching",
-        "choice"
+        "flashcards"
       ],
       "newOrder": 1116
     },
@@ -14553,2564 +14355,16 @@
         "choice"
       ],
       "newOrder": 1118
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "цього року",
-      "lemmaId": "цього-року",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1119
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "часовий",
-      "lemmaId": "часовий",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1120
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "щопонеділка",
-      "lemmaId": "щопонеділка",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1121
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "щосереди",
-      "lemmaId": "щосереди",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1122
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "ліричний герой",
-      "lemmaId": "ліричний-герой",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1123
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "персонаж",
-      "lemmaId": "персонаж",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1124
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "проза",
-      "lemmaId": "проза",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1125
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "уривок",
-      "lemmaId": "уривок",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1126
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "бачитися",
-      "lemmaId": "бачитися",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1127
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "взаємний",
-      "lemmaId": "взаємний",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1128
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "власне зворотний",
-      "lemmaId": "власне-зворотний",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1129
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "відкриватися",
-      "lemmaId": "відкриватися",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1130
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "відчинятися",
-      "lemmaId": "відчинятися",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1131
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "вітатися",
-      "lemmaId": "вітатися",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1132
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "емоція",
-      "lemmaId": "емоція",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1133
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "зачинятися",
-      "lemmaId": "зачинятися",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1134
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "знайомити",
-      "lemmaId": "знайомити",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1135
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "знайомитися",
-      "lemmaId": "знайомитися",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1136
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "подаватися",
-      "lemmaId": "подаватися",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1137
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "прошу вибачення",
-      "lemmaId": "прошу-вибачення",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1138
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "радіти",
-      "lemmaId": "радіти",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1139
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "сердитися",
-      "lemmaId": "сердитися",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1140
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "спілкуватися",
-      "lemmaId": "спілкуватися",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1141
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "сумувати",
-      "lemmaId": "сумувати",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1142
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "цілуватися",
-      "lemmaId": "цілуватися",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1143
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "авторська ремарка",
-      "lemmaId": "авторська-ремарка",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1144
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "дослівно",
-      "lemmaId": "дослівно",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1145
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "наступного дня",
-      "lemmaId": "наступного-дня",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1146
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "питальне слово",
-      "lemmaId": "питальне-слово",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1147
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "того дня",
-      "lemmaId": "того-дня",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1148
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "частка чи",
-      "lemmaId": "частка-чи",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1149
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "друга страва",
-      "lemmaId": "друга-страва",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1150
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "куштувати",
-      "lemmaId": "куштувати",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1151
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "перша страва",
-      "lemmaId": "перша-страва",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1152
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "юшка",
-      "lemmaId": "юшка",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1153
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "ательє",
-      "lemmaId": "ательє",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1154
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "здача",
-      "lemmaId": "здача",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1155
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "майстерня",
-      "lemmaId": "майстерня",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1156
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "обмін валют",
-      "lemmaId": "обмін-валют",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1157
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "обслуговування",
-      "lemmaId": "обслуговування",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1158
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "перукарня",
-      "lemmaId": "перукарня",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1159
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "повільніший",
-      "lemmaId": "повільніший",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1160
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "тканина",
-      "lemmaId": "тканина",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1161
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "якісний",
-      "lemmaId": "якісний",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1162
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "якість",
-      "lemmaId": "якість",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1163
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "варт",
-      "lemmaId": "варт",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1164
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "годен",
-      "lemmaId": "годен",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1165
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "ладна",
-      "lemmaId": "ладна",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1166
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "нестягнена форма",
-      "lemmaId": "нестягнена-форма",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1167
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "неузгоджуваний",
-      "lemmaId": "неузгоджуваний",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1168
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "повен",
-      "lemmaId": "повен",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1169
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "повний прикметник",
-      "lemmaId": "повний-прикметник",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1170
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "стягнена форма",
-      "lemmaId": "стягнена-форма",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1171
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "ясен",
-      "lemmaId": "ясен",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1172
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "група приголосних",
-      "lemmaId": "група-приголосних",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1173
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "закріплений",
-      "lemmaId": "закріплений",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1174
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "зникати",
-      "lemmaId": "зникати",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1175
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "радісний",
-      "lemmaId": "радісний",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1176
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "тиснути",
-      "lemmaId": "тиснути",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1177
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "чесний",
-      "lemmaId": "чесний",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1178
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "благодійність",
-      "lemmaId": "благодійність",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1179
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "громадянське суспільство",
-      "lemmaId": "громадянське-суспільство",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1180
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "допис",
-      "lemmaId": "допис",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1181
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "електорат",
-      "lemmaId": "електорат",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1182
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "засоби масової інформації",
-      "lemmaId": "засоби-масової-інформації",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1183
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "коментар",
-      "lemmaId": "коментар",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1184
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "кореспондент",
-      "lemmaId": "кореспондент",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1185
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "кореспондентка",
-      "lemmaId": "кореспондентка",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1186
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "маніпулювання",
-      "lemmaId": "маніпулювання",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1187
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "медіаманіпулювання",
-      "lemmaId": "медіаманіпулювання",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1188
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "петиція",
-      "lemmaId": "петиція",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1189
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "прес-конференція",
-      "lemmaId": "прес-конференція",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1190
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "публіцистичний стиль",
-      "lemmaId": "публіцистичний-стиль",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1191
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "фейк",
-      "lemmaId": "фейк",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1192
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "Верховна Рада",
-      "lemmaId": "верховна-рада",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1193
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "звукова абревіатура",
-      "lemmaId": "звукова-абревіатура",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1194
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "крапка",
-      "lemmaId": "крапка",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1195
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "літерна абревіатура",
-      "lemmaId": "літерна-абревіатура",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1196
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "одиниці виміру",
-      "lemmaId": "одиниці-виміру",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1197
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "складноскорочене слово",
-      "lemmaId": "складноскорочене-слово",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1198
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "ЦНАП",
-      "lemmaId": "цнап",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1199
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "автобіографія",
-      "lemmaId": "автобіографія",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1200
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "відповідно до",
-      "lemmaId": "відповідно-до",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1201
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "доводжу до вашого відома",
-      "lemmaId": "доводжу-до-вашого-відома",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1202
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "ділове листування",
-      "lemmaId": "ділове-листування",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1203
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "реквізити",
-      "lemmaId": "реквізити",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1204
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "формула ввічливості",
-      "lemmaId": "формула-ввічливості",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1205
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "шановний",
-      "lemmaId": "шановний",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1206
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "штамп",
-      "lemmaId": "штамп",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1207
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "емоційно забарвлена лексика",
-      "lemmaId": "емоційно-забарвлена-лексика",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1208
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "зменшувально-пестлива форма",
-      "lemmaId": "зменшувально-пестлива-форма",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1209
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "коротше кажучи",
-      "lemmaId": "коротше-кажучи",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1210
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "невже",
-      "lemmaId": "невже",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1211
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "неповне речення",
-      "lemmaId": "неповне-речення",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1212
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "овва",
-      "lemmaId": "овва",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1213
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "отож",
-      "lemmaId": "отож",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1214
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "побутова тема",
-      "lemmaId": "побутова-тема",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1215
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "побутовий",
-      "lemmaId": "побутовий",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1216
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "файний",
-      "lemmaId": "файний",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1217
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "хіба",
-      "lemmaId": "хіба",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1218
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "багаж",
-      "lemmaId": "багаж",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1219
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "вирушати",
-      "lemmaId": "вирушати",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1220
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "закордонний паспорт",
-      "lemmaId": "закордонний-паспорт",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1221
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "зал очікування",
-      "lemmaId": "зал-очікування",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1222
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "затримка",
-      "lemmaId": "затримка",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1223
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "зворотний квиток",
-      "lemmaId": "зворотний-квиток",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1224
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "мандрівка",
-      "lemmaId": "мандрівка",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1225
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "посадка",
-      "lemmaId": "посадка",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1226
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "прикордонний контроль",
-      "lemmaId": "прикордонний-контроль",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1227
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "провідник",
-      "lemmaId": "провідник",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1228
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "розклад руху",
-      "lemmaId": "розклад-руху",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1229
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "сидячий вагон",
-      "lemmaId": "сидячий-вагон",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1230
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "хостел",
-      "lemmaId": "хостел",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1231
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "вимкнути",
-      "lemmaId": "вимкнути",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1232
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "встановити",
-      "lemmaId": "встановити",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1233
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "відключити",
-      "lemmaId": "відключити",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1234
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "відрізати",
-      "lemmaId": "відрізати",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1235
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "завершення дії",
-      "lemmaId": "завершення-дії",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1236
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "заплакати",
-      "lemmaId": "заплакати",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1237
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "значення",
-      "lemmaId": "значення",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1238
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "копіювати",
-      "lemmaId": "копіювати",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1239
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "механічний",
-      "lemmaId": "механічний",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1240
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "одноразова дія",
-      "lemmaId": "одноразова-дія",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1241
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "початок дії",
-      "lemmaId": "початок-дії",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1242
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "пришвидшити",
-      "lemmaId": "пришвидшити",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1243
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "приєднати",
-      "lemmaId": "приєднати",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1244
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "програмувати",
-      "lemmaId": "програмувати",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1245
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "підсилити",
-      "lemmaId": "підсилити",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1246
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "розбір",
-      "lemmaId": "розбір",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1247
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "розкласти",
-      "lemmaId": "розкласти",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1248
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "словотвірна основа",
-      "lemmaId": "словотвірна-основа",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1249
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "спосіб творення",
-      "lemmaId": "спосіб-творення",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1250
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "творення дієслів",
-      "lemmaId": "творення-дієслів",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1251
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "увімкнути",
-      "lemmaId": "увімкнути",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1252
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "бачення",
-      "lemmaId": "бачення",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1253
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "біг",
-      "lemmaId": "біг",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1254
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "вивчення",
-      "lemmaId": "вивчення",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1255
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "виробляти",
-      "lemmaId": "виробляти",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1256
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "документація",
-      "lemmaId": "документація",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1257
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "здобути",
-      "lemmaId": "здобути",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1258
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "знання",
-      "lemmaId": "знання",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1259
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "копіювання",
-      "lemmaId": "копіювання",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1260
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "лет",
-      "lemmaId": "лет",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1261
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "навчальний центр",
-      "lemmaId": "навчальний-центр",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1262
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "навчати",
-      "lemmaId": "навчати",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1263
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "надсилання",
-      "lemmaId": "надсилання",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1264
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "обмін",
-      "lemmaId": "обмін",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1265
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "оплатити",
-      "lemmaId": "оплатити",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1266
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "розвивати",
-      "lemmaId": "розвивати",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1267
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "розвиток",
-      "lemmaId": "розвиток",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1268
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "сканування",
-      "lemmaId": "сканування",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1269
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "спів",
-      "lemmaId": "спів",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1270
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "створити",
-      "lemmaId": "створити",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1271
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "тестувати",
-      "lemmaId": "тестувати",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1272
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "ходіння",
-      "lemmaId": "ходіння",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1273
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "цифрові навички",
-      "lemmaId": "цифрові-навички",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1274
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "голово",
-      "lemmaId": "голово",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1275
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "державний службовець",
-      "lemmaId": "державний-службовець",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1276
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "добродій",
-      "lemmaId": "добродій",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1277
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "добродію",
-      "lemmaId": "добродію",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1278
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "діловий",
-      "lemmaId": "діловий",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1279
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "електронний лист",
-      "lemmaId": "електронний-лист",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1280
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "знак оклику",
-      "lemmaId": "знак-оклику",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1281
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "колего",
-      "lemmaId": "колего",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1282
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "конференція",
-      "lemmaId": "конференція",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1283
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "лікарю",
-      "lemmaId": "лікарю",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1284
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "пані та панове",
-      "lemmaId": "пані-та-панове",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1285
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "професоре",
-      "lemmaId": "професоре",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1286
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "редакторка",
-      "lemmaId": "редакторка",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1287
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "урочистий",
-      "lemmaId": "урочистий",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1288
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "учасниця",
-      "lemmaId": "учасниця",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1289
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "формальний",
-      "lemmaId": "формальний",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1290
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "формула звертання",
-      "lemmaId": "формула-звертання",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1291
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "церемонія",
-      "lemmaId": "церемонія",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1292
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "шановна",
-      "lemmaId": "шановна",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1293
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "козацький",
-      "lemmaId": "козацький",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1294
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "мотивувальне слово",
-      "lemmaId": "мотивувальне-слово",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1295
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "похідне слово",
-      "lemmaId": "похідне-слово",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1296
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "післявоєнний",
-      "lemmaId": "післявоєнний",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1297
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "складний прикметник",
-      "lemmaId": "складний-прикметник",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1298
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "сполучна голосна",
-      "lemmaId": "сполучна-голосна",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1299
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "суфікс -зьк-",
-      "lemmaId": "суфікс-зьк",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1300
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "суфікс -ськ-",
-      "lemmaId": "суфікс-ськ",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1301
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "суфікс -цьк-",
-      "lemmaId": "суфікс-цьк",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1302
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "твірна основа",
-      "lemmaId": "твірна-основа",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1303
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "доброта",
-      "lemmaId": "доброта",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1304
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "збірний іменник",
-      "lemmaId": "збірний-іменник",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1305
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "козацтво",
-      "lemmaId": "козацтво",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1306
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "назва особи",
-      "lemmaId": "назва-особи",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1307
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "назва приміщення",
-      "lemmaId": "назва-приміщення",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1308
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "непродуктивний суфікс",
-      "lemmaId": "непродуктивний-суфікс",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1309
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "пекарня",
-      "lemmaId": "пекарня",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1310
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "перехід",
-      "lemmaId": "перехід",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1311
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "похідний іменник",
-      "lemmaId": "похідний-іменник",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1312
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "префіксально-суфіксальний спосіб",
-      "lemmaId": "префіксально-суфіксальний-спосіб",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1313
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "продуктивний суфікс",
-      "lemmaId": "продуктивний-суфікс",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1314
     }
   ],
   "level": "B1",
   "schema": "atlas-practice-index",
   "schemaVersion": 1,
   "sizeBudget": {
-    "gzipBytes": 23155,
+    "gzipBytes": 19999,
     "gzipLimitBytes": 140000,
     "ok": true,
-    "rawBytes": 356494,
+    "rawBytes": 299684,
     "rawLimitBytes": 550000
   },
   "source": "manifest"
