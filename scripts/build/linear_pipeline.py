@@ -9879,6 +9879,7 @@ _SECTION_MARKDOWN_FENCE_RE = re.compile(
     r"```[^\n`]*section\.md[^\n`]*\n(?P<body>.*?)\n```",
     re.DOTALL,
 )
+_SECTION_FENCE_OPEN_RE = re.compile(r"^(?P<fence>`{3,}|~{3,})(?P<info>[^\n]*)$")
 
 
 def _prompt_dump(value: object) -> str:
@@ -9994,11 +9995,26 @@ def render_section_writer_prompt(
         [
             "",
             "## Output Contract",
-            "Return one `json file=section_artifact.json` fenced block with keys: "
-            "`section_id`, `markdown`, `citations_used`, `primary_readings_used`, "
-            "`vocab_candidates`, `activity_refs`, and `self_check`. For tests and "
-            "diagnostics, plain section markdown is also accepted; missing metadata "
-            "will be inferred conservatively.",
+            "Return exactly two fenced blocks, in this order:",
+            "````markdown file=section.md",
+            "<raw section body only; no section heading>",
+            "````",
+            "```json file=section_artifact.json",
+            "{",
+            f'  "section_id": "{task.section_id}",',
+            '  "citations_used": [],',
+            '  "primary_readings_used": [],',
+            '  "vocab_candidates": [',
+            '    {"word": "", "ipa": "", "pos": "", "definition": "", "translation": "", "usage": ""}',
+            "  ],",
+            '  "activity_refs": [],',
+            '  "self_check": {}',
+            "}",
+            "```",
+            "Do NOT put the section prose inside the JSON. The JSON block is only "
+            "small structured metadata: `section_id`, `citations_used`, "
+            "`primary_readings_used`, `vocab_candidates`, `activity_refs`, and "
+            "`self_check`.",
             "",
             "## SELF-CHECK",
             ITERATIVE_SECTION_SELF_CHECK_INSTRUCTION.strip(),
@@ -10165,25 +10181,137 @@ def parse_iterative_activities_output(output: str) -> list[dict[str, Any]]:
     return _validate_activities_artifact(activities)
 
 
-def _load_section_artifact_metadata(raw: str) -> dict[str, Any]:
-    parsed = yaml.safe_load(raw)
+def _section_parse_label(section_id: str | None) -> str:
+    return section_id or "<unknown section>"
+
+
+def _load_section_artifact_metadata(
+    raw: str,
+    *,
+    section_id: str | None = None,
+) -> dict[str, Any]:
+    label = _section_parse_label(section_id)
+    stripped = raw.strip()
+    if not stripped:
+        raise LinearPipelineError(
+            f"Section writer metadata for {label} in section_artifact.json is empty"
+        )
+    try:
+        parsed = json.loads(stripped, parse_constant=_reject_non_strict_json_constant)
+    except (json.JSONDecodeError, ValueError) as json_exc:
+        try:
+            parsed = yaml.safe_load(stripped)
+        except yaml.YAMLError as yaml_exc:
+            raise LinearPipelineError(
+                "Section writer metadata for "
+                f"{label} in section_artifact.json is unrecoverable: {json_exc}"
+            ) from yaml_exc
     if not isinstance(parsed, Mapping):
-        raise LinearPipelineError("section_artifact metadata must be a mapping")
+        raise LinearPipelineError(
+            f"Section writer metadata for {label} in section_artifact.json must be a mapping"
+        )
     return dict(parsed)
 
 
-def _extract_section_metadata(output: str) -> tuple[str, dict[str, Any]]:
-    json_match = _SECTION_ARTIFACT_JSON_FENCE_RE.search(output)
-    if json_match:
-        metadata = _load_section_artifact_metadata(json_match.group("body"))
+def _section_fence_body(body: str) -> str:
+    if body.endswith("\r\n"):
+        return body[:-2]
+    if body.endswith("\n"):
+        return body[:-1]
+    return body
+
+
+def _iter_section_fenced_blocks(output: str) -> list[tuple[str, str]]:
+    blocks: list[tuple[str, str]] = []
+    lines = output.splitlines(keepends=True)
+    index = 0
+    while index < len(lines):
+        line = lines[index].rstrip("\r\n")
+        match = _SECTION_FENCE_OPEN_RE.match(line)
+        if not match:
+            index += 1
+            continue
+
+        fence = match.group("fence")
+        info = match.group("info").strip()
+        marker = re.escape(fence[0])
+        min_length = len(fence)
+        close_re = re.compile(rf"^{marker}{{{min_length},}}\s*$")
+        body_lines: list[str] = []
+        index += 1
+        while index < len(lines):
+            close_candidate = lines[index].rstrip("\r\n")
+            if close_re.match(close_candidate):
+                blocks.append((info, _section_fence_body("".join(body_lines))))
+                break
+            body_lines.append(lines[index])
+            index += 1
+        index += 1
+    return blocks
+
+
+def _section_markdown_fence(info: str) -> bool:
+    lowered = info.lower()
+    return "section.md" in lowered or _fence_language(info) == "markdown"
+
+
+def _section_metadata_fence(info: str) -> bool:
+    return "section_artifact.json" in info.lower()
+
+
+def _extract_section_metadata(
+    output: str,
+    *,
+    section_id: str | None = None,
+) -> tuple[str, dict[str, Any]]:
+    label = _section_parse_label(section_id)
+    fenced_blocks = _iter_section_fenced_blocks(output)
+    markdown_blocks = [body for info, body in fenced_blocks if _section_markdown_fence(info)]
+    metadata_blocks = [body for info, body in fenced_blocks if _section_metadata_fence(info)]
+
+    if len(markdown_blocks) > 1:
+        raise LinearPipelineError(f"Section writer output for {label} has duplicate markdown fences")
+    if len(metadata_blocks) > 1:
+        raise LinearPipelineError(
+            f"Section writer output for {label} has duplicate section_artifact.json fences"
+        )
+
+    if markdown_blocks:
+        if not metadata_blocks:
+            raise LinearPipelineError(
+                f"Section writer output for {label} missing section_artifact.json metadata fence"
+            )
+        metadata = _load_section_artifact_metadata(metadata_blocks[0], section_id=section_id)
+        return markdown_blocks[0], metadata
+
+    if metadata_blocks:
+        metadata = _load_section_artifact_metadata(metadata_blocks[0], section_id=section_id)
         markdown = str(metadata.get("markdown") or "").strip()
         if not markdown:
-            raise LinearPipelineError("section_artifact.json missing markdown")
+            raise LinearPipelineError(
+                f"section_artifact.json for {label} missing markdown or section.md fence"
+            )
+        return markdown, metadata
+
+    json_match = _SECTION_ARTIFACT_JSON_FENCE_RE.search(output)
+    if json_match:
+        metadata = _load_section_artifact_metadata(
+            json_match.group("body"),
+            section_id=section_id,
+        )
+        markdown = str(metadata.get("markdown") or "").strip()
+        if not markdown:
+            raise LinearPipelineError(
+                f"section_artifact.json for {label} missing markdown or section.md fence"
+            )
         return markdown, metadata
 
     comment_match = _SECTION_ARTIFACT_COMMENT_RE.search(output)
     if comment_match:
-        metadata = _load_section_artifact_metadata(comment_match.group("body"))
+        metadata = _load_section_artifact_metadata(
+            comment_match.group("body"),
+            section_id=section_id,
+        )
         markdown = (
             output[: comment_match.start()] + output[comment_match.end() :]
         ).strip()
@@ -10236,7 +10364,7 @@ def _infer_primary_readings_used(task: SectionTask, markdown: str) -> list[str]:
 
 
 def parse_section_writer_output(output: str, task: SectionTask) -> SectionArtifact:
-    markdown, metadata = _extract_section_metadata(output)
+    markdown, metadata = _extract_section_metadata(output, section_id=task.section_id)
     if not markdown:
         raise LinearPipelineError(f"Writer returned empty section for {task.section_id}")
 
