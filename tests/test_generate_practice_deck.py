@@ -175,9 +175,9 @@ def test_cli_writes_fixture_shards(tmp_path: Path) -> None:
     )
 
     assert exit_code == 0
-    index_path = tmp_path / "lexicon-practice-index.A1.json"
-    lexeme_path = tmp_path / "lexicon-practice-lexemes.A1.json"
-    cloze_path = tmp_path / "lexicon-practice-cloze.A1.json"
+    index_path = tmp_path / "practice-index.A1.json"
+    lexeme_path = tmp_path / "practice-lexemes.A1.json"
+    cloze_path = tmp_path / "practice-cloze.A1.json"
     assert index_path.exists()
     assert lexeme_path.exists()
     assert cloze_path.exists()

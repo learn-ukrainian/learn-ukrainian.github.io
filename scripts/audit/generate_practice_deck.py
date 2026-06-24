@@ -28,7 +28,11 @@ if str(AUDIT_DIR) not in sys.path:
 from lexeme_filter import is_practice_eligible
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
-DEFAULT_OUT_DIR = Path("site/src/data")
+# Deck shards are served as literal static files from public/ (not via dynamic .json.ts
+# endpoints) so the fetch URL resolves identically in dev and prod — astro's
+# `trailingSlash: 'always'` otherwise serves a dynamic endpoint only at the trailing-slash
+# path in dev while a static host serves it only without one (no single URL works for both).
+DEFAULT_OUT_DIR = Path("site/public/lexicon")
 DEFAULT_ALLOWLIST = Path("site/src/data/lexicon-practice-reviewed-sources.json")
 DEFAULT_CLOZE_SOURCES = Path("site/src/data/lexicon-practice-cloze-sources.json")
 DEFAULT_TARGET = 3000
@@ -1098,7 +1102,7 @@ def write_shards(shards: dict[str, dict[str, dict[str, Any]]], out_dir: Path) ->
     written: list[Path] = []
     for level, level_shards in sorted(shards.items()):
         for kind, payload in sorted(level_shards.items()):
-            path = out_dir / f"lexicon-practice-{kind}.{level}.json"
+            path = out_dir / f"practice-{kind}.{level}.json"
             path.write_bytes(_json_bytes(payload))
             written.append(path)
     return written
