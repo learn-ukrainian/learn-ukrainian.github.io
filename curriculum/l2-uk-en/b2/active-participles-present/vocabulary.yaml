@@ -1,0 +1,160 @@
+- lemma: активний дієприкметник
+  translation: "active participle"
+  pos: phrase
+  usage: "Активний дієприкметник теперішнього часу в українській мові потребує дуже обережного редагування."
+- lemma: теперішній час
+  translation: "present tense"
+  pos: phrase
+  usage: "Форма теперішнього часу допомагає зрозуміти, звідки береться суфікс."
+- lemma: суфікс
+  translation: "suffix"
+  pos: noun
+  usage: "Суфікс може підказати походження форми, але не гарантує її нормативності."
+- lemma: лексикалізований
+  translation: "lexicalized"
+  pos: adj
+  usage: "Лексикалізований прикметник називає сталу властивість, а не дію в момент мовлення."
+- lemma: стала ознака
+  translation: "stable feature"
+  pos: phrase
+  usage: "Форма родючий передає сталу ознаку ґрунту."
+- lemma: тимчасова дія
+  translation: "temporary action"
+  pos: phrase
+  usage: "Тимчасова дія людини найчастіше потребує підрядного речення."
+- lemma: підрядне означальне речення
+  translation: "relative clause"
+  pos: phrase
+  usage: "Підрядне означальне речення природно замінює кальковану форму працюючий."
+- lemma: віддієслівний прикметник
+  translation: "deverbal adjective"
+  pos: phrase
+  usage: "Віддієслівний прикметник зволожувальний називає призначення крему."
+- lemma: іменник діяча
+  translation: "agent noun"
+  pos: phrase
+  usage: "Іменник діяча користувач звучить природніше, ніж користуючийся."
+- lemma: зворотне дієслово
+  translation: "reflexive verb"
+  pos: phrase
+  usage: "Від зворотного дієслова на -ся не творять активних дієприкметників."
+- lemma: калькування
+  translation: "calquing"
+  pos: noun
+  usage: "Калькування часто приносить у текст форми на -учий, не властиві українській нормі."
+- lemma: інтерференція
+  translation: "interference"
+  pos: noun
+  usage: "Міжмовна інтерференція посилює спокусу писати діючий закон."
+- lemma: відповідник
+  translation: "equivalent"
+  pos: noun
+  usage: "У природоохоронному тексті слово довкілля часто точніше за кальковану назву середовища."
+- lemma: доречність
+  translation: "appropriateness"
+  pos: noun
+  usage: "Доречність форми залежить від значення, стилю і контексту."
+- lemma: мовна стійкість
+  translation: "language resilience"
+  pos: phrase
+  usage: "Мовна стійкість починається з уважного редагування кальок."
+- lemma: мовний слух
+  translation: "linguistic intuition"
+  pos: phrase
+  usage: "Мовний слух допомагає відчути, що працюючий студент звучить неприродно."
+- lemma: канцелярщина
+  translation: "bureaucratic jargon"
+  pos: noun
+  usage: "Канцелярщина часто маскує просту думку під важкою калькованою формою."
+- lemma: редагування
+  translation: "editing"
+  pos: noun
+  usage: "Редагування активних дієприкметників вимагає вибору між кількома стратегіями."
+- lemma: охочі
+  translation: "willing participants, volunteers"
+  pos: noun
+  usage: "Усі охочі можуть долучитися до обговорення."
+- lemma: довкілля
+  translation: "environment"
+  pos: noun
+  usage: "Захист довкілля потребує точних слів і відповідальної політики."
+- lemma: прилеглий
+  translation: "adjacent"
+  pos: adj
+  usage: "Прилеглу територію прибрали перед відкриттям центру."
+- lemma: зворушливий
+  translation: "moving, touching"
+  pos: adj
+  usage: "Зворушливий виступ волонтерки запам'ятався всій аудиторії."
+- lemma: панівний
+  translation: "dominant, prevailing"
+  pos: adj
+  usage: "Панівний підхід до редагування змінився після мовної дискусії."
+- lemma: чинний
+  translation: "valid, in force"
+  pos: adj
+  usage: "Чинний закон визначає процедуру подання заяви."
+- lemma: навколишній
+  translation: "surrounding"
+  pos: adj
+  usage: "Навколишні громади підтримали екологічну ініціативу."
+- lemma: наступний
+  translation: "next"
+  pos: adj
+  usage: "У наступному розділі автор пояснює винятки."
+- lemma: прийдешній
+  translation: "upcoming, forthcoming"
+  pos: adj
+  usage: "Прийдешні свята планують відзначити в громаді."
+- lemma: мийний
+  translation: "cleaning, washing"
+  pos: adj
+  usage: "Мийні засоби зберігають окремо від харчових продуктів."
+- lemma: зволожувальний
+  translation: "moisturizing"
+  pos: adj
+  usage: "Зволожувальний крем не варто називати зволожуючим."
+- lemma: знеболювальний
+  translation: "pain-relieving"
+  pos: adj
+  usage: "Лікар порадив знеболювальні ліки після процедури."
+- lemma: завідувач
+  translation: "head, manager"
+  pos: noun
+  usage: "Завідувач кафедри підписав оновлений графік."
+- lemma: користувач
+  translation: "user"
+  pos: noun
+  usage: "Користувач сервісу отримує повідомлення про зміни."
+- lemma: протестувальник
+  translation: "protester"
+  pos: noun
+  usage: "Протестувальники вимагали прозорого рішення."
+- lemma: початківець
+  translation: "beginner"
+  pos: noun
+  usage: "Автор-початківець часто копіює чужі граматичні моделі."
+- lemma: родючий
+  translation: "fertile"
+  pos: adj
+  usage: "Родючий ґрунт є прикладом лексикалізованого прикметника."
+- lemma: співучий
+  translation: "melodious, songful"
+  pos: adj
+  usage: "Співучий голос описує сталу якість, а не дію співу в цю мить."
+- lemma: цілющий
+  translation: "healing"
+  pos: adj
+  usage: "Цілюща вода вживається як прикметникова сполука."
+- lemma: терплячий
+  translation: "patient"
+  pos: adj
+  usage: "Терпляча людина має сталу рису характеру."
+- lemma: квітучий
+  translation: "flourishing, blooming"
+  pos: adj
+  usage: "Квітуче місто звучить як образний прикметник."
+- lemma: робоча група
+  translation: "working group"
+  pos: phrase
+  usage: "Робоча група звучить природніше, ніж працююча група."
