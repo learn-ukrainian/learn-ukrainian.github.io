@@ -46,9 +46,9 @@ def test_fixture_build_emits_sharded_schema() -> None:
     assert a1["lexemes"]["schema"] == "atlas-practice-lexemes"
     assert a1["cloze"]["schema"] == "atlas-practice-cloze"
     assert a1["index"]["fixtureNote"] == "fixture sample"
-    assert a1["index"]["counts"]["lexemes"] == 5
+    assert a1["index"]["counts"]["lexemes"] == 7
     assert a1["index"]["counts"]["cloze"] == 2
-    assert a1["index"]["counts"]["clozeCoverage"] == 0.4
+    assert a1["index"]["counts"]["clozeCoverage"] == 0.2857
 
     lexeme = next(item for item in a1["lexemes"]["lexemes"] if item["lemmaId"] == "knyha")
     assert lexeme["lemma"] == "книга"
@@ -76,9 +76,35 @@ def test_reviewed_allowlist_and_vesum_ambiguity_fail_closed() -> None:
 def test_manifest_cloze_fields_are_ignored_without_curated_sources() -> None:
     shards = _build(cloze_sources_path=None)
 
-    assert shards["A1"]["index"]["counts"]["lexemes"] == 5
+    assert shards["A1"]["index"]["counts"]["lexemes"] == 7
     assert shards["A1"]["index"]["counts"]["cloze"] == 0
     assert shards["A1"]["cloze"]["cloze"] == []
+
+
+def test_meaning_mc_eligibility_marks_clean_and_messy_glosses() -> None:
+    shards = _build()
+    a1 = shards["A1"]
+    lexemes = {item["lemmaId"]: item for item in a1["lexemes"]["lexemes"]}
+    index_items = {item["lemmaId"]: item for item in a1["index"]["items"]}
+
+    assert lexemes["knyha"]["glossClean"] == "book"
+    assert lexemes["knyha"]["meaningMcEligible"] is True
+    assert {"matching", "choice"}.issubset(set(index_items["knyha"]["modes"]))
+
+    assert lexemes["ta"]["glossClean"] == "and"
+    assert lexemes["ta"]["meaningMcEligible"] is False
+    assert index_items["ta"]["modes"] == ["flashcards"]
+
+    assert lexemes["borshch"]["glossClean"] == "borshch"
+    assert lexemes["borshch"]["meaningMcEligible"] is False
+    assert index_items["borshch"]["modes"] == ["flashcards"]
+
+
+def test_option_set_validator_rejects_phrase_labels() -> None:
+    cloze = json.loads(json.dumps(_build()["A1"]["cloze"]["cloze"][0]))
+    cloze["options"][1]["label"] = "and yours? formal"
+
+    assert "option labels must not be phrase glosses" in validate_option_set(cloze)
 
 
 def test_real_manifest_shapes_still_yield_recognition_lexemes() -> None:

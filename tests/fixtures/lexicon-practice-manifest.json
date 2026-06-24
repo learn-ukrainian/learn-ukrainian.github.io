@@ -260,8 +260,44 @@
               }
             }
           }
-        }
       }
     }
-  ]
+  },
+  {
+    "lemma": "та",
+    "url_slug": "ta",
+    "gloss": "and; but; while",
+    "pos": "conj",
+    "primary_source": "course_vocab",
+    "course_usage": [
+      {
+        "track": "a1",
+        "slug": "connectors"
+      }
+    ],
+    "enrichment": {
+      "cefr": {
+        "level": "A1"
+      }
+    }
+  },
+  {
+    "lemma": "борщ",
+    "url_slug": "borshch",
+    "gloss": "borshch",
+    "pos": "noun",
+    "primary_source": "course_vocab",
+    "course_usage": [
+      {
+        "track": "a1",
+        "slug": "food"
+      }
+    ],
+    "enrichment": {
+      "cefr": {
+        "level": "A1"
+      }
+    }
+  }
+]
 }
