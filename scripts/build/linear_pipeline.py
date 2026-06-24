@@ -3341,17 +3341,19 @@ def _enforce_writer_runtime_gates(
     phase_writer_summary: Mapping[str, Any],
     tool_calls: list[Mapping[str, Any]] | None,
     event_sink: Callable[..., None] | None = None,
+    enforce_mcp_tools_never_invoked: bool = True,
 ) -> None:
     failures = [
         *classify_writer_trace(tool_calls or []),
     ]
-    mcp_failure = _mcp_tools_never_invoked_failure(
-        writer=writer,
-        module=module,
-        phase_writer_summary=phase_writer_summary,
-    )
-    if mcp_failure is not None:
-        failures.append(mcp_failure)
+    if enforce_mcp_tools_never_invoked:
+        mcp_failure = _mcp_tools_never_invoked_failure(
+            writer=writer,
+            module=module,
+            phase_writer_summary=phase_writer_summary,
+        )
+        if mcp_failure is not None:
+            failures.append(mcp_failure)
     if not failures:
         return
 
@@ -3880,6 +3882,7 @@ def invoke_writer(
     tool_trace_path: Path | None = None,
     stdout_silence_timeout: int | None = None,
     effort: str | None = None,
+    enforce_mcp_tools_never_invoked: bool = True,
 ) -> str:
     """Call the selected writer through the universal agent runtime.
 
@@ -3984,6 +3987,7 @@ def invoke_writer(
             phase_writer_summary=phase_writer_summary,
             tool_calls=tool_calls,
             event_sink=event_sink,
+            enforce_mcp_tools_never_invoked=enforce_mcp_tools_never_invoked,
         )
     return response_text
 
@@ -10154,6 +10158,58 @@ def _task_with_ledger(task: SectionTask, ledger: Ledger) -> SectionTask:
     )
 
 
+def _sum_phase_writer_summary_int(
+    summaries: Sequence[Mapping[str, Any]],
+    key: str,
+) -> int:
+    return sum(int(summary.get(key) or 0) for summary in summaries)
+
+
+def _sum_nullable_phase_writer_summary_int(
+    summaries: Sequence[Mapping[str, Any]],
+    key: str,
+) -> int | None:
+    total = 0
+    saw_unknown = False
+    for summary in summaries:
+        value = summary.get(key)
+        if value is None:
+            saw_unknown = True
+            continue
+        total += int(value)
+    if saw_unknown and total == 0:
+        return None
+    return total
+
+
+def _aggregate_iterative_phase_writer_summaries(
+    summaries: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    violations: list[Any] = []
+    for summary in summaries:
+        raw_violations = summary.get("tool_theatre_violations") or []
+        if isinstance(raw_violations, list):
+            violations.extend(raw_violations)
+
+    return {
+        "sections_total": _sum_phase_writer_summary_int(summaries, "sections_total"),
+        "sections_with_cot": _sum_phase_writer_summary_int(summaries, "sections_with_cot"),
+        "tool_calls_total": _sum_nullable_phase_writer_summary_int(summaries, "tool_calls_total"),
+        "verify_words_calls": _sum_nullable_phase_writer_summary_int(summaries, "verify_words_calls"),
+        "tool_call_telemetry_available": all(
+            summary.get("tool_call_telemetry_available") is not False for summary in summaries
+        ),
+        "end_gate_fired": any(bool(summary.get("end_gate_fired")) for summary in summaries),
+        "removed_via_gate": _sum_phase_writer_summary_int(summaries, "removed_via_gate"),
+        "tool_theatre_violations": violations[:TELEMETRY_MAX_THEATRE_VIOLATIONS],
+        "tool_theatre_violation_count": _sum_phase_writer_summary_int(
+            summaries,
+            "tool_theatre_violation_count",
+        ),
+        "iterative_invocations_total": len(summaries),
+    }
+
+
 def run_iterative_writer(
     plan: Mapping[str, Any],
     knowledge_packet: object,
@@ -10188,6 +10244,13 @@ def run_iterative_writer(
     invoke = invoke_fn or invoke_writer
     ledger = Ledger()
     artifacts: list[SectionArtifact] = []
+    phase_writer_summaries: list[dict[str, Any]] = []
+
+    def iterative_event_sink(event: str, **fields: Any) -> None:
+        if event == "phase_writer_summary":
+            phase_writer_summaries.append(dict(fields))
+        if event_sink is not None:
+            event_sink(event, **fields)
 
     for base_task in tasks:
         task = _task_with_ledger(base_task, ledger)
@@ -10202,20 +10265,34 @@ def run_iterative_writer(
             implementation_map=implementation_map,
             obligation_checklist=obligation_checklist,
         )
-        output = invoke(
-            prompt,
-            writer,
-            cwd=cwd,
-            module=module,
-            sections=[task.title],
-            event_sink=event_sink,
-            tool_trace_path=tool_trace_path,
-            stdout_silence_timeout=stdout_silence_timeout,
-            effort=effort,
-        )
+        invoke_kwargs: dict[str, Any] = {
+            "cwd": cwd,
+            "module": module,
+            "sections": [task.title],
+            "event_sink": iterative_event_sink,
+            "tool_trace_path": tool_trace_path,
+            "stdout_silence_timeout": stdout_silence_timeout,
+            "effort": effort,
+        }
+        if invoke_fn is None:
+            invoke_kwargs["enforce_mcp_tools_never_invoked"] = False
+        output = invoke(prompt, writer, **invoke_kwargs)
         artifact = _record_section_precheck(task, parse_section_writer_output(output, task))
         artifacts.append(artifact)
         ledger = update_ledger(ledger, artifact)
+
+    module_ref = module or next(
+        (str(summary.get("module")) for summary in phase_writer_summaries if summary.get("module")),
+        "",
+    )
+    if module_ref and phase_writer_summaries:
+        _enforce_writer_runtime_gates(
+            writer=writer,
+            module=module_ref,
+            phase_writer_summary=_aggregate_iterative_phase_writer_summaries(phase_writer_summaries),
+            tool_calls=[],
+            event_sink=event_sink,
+        )
 
     return assemble_iterative(artifacts, plan)
 
