@@ -202,6 +202,10 @@ test_git_mtime/
 # Downloaded textbook PDFs (561 MB+, not for version control)
 data/textbooks/
 
+# Open dataset export (#3449) — 31MB regenerable re-export of the manifest; publish as a
+# Release asset (like the manifest, #3659), never commit to git.
+data/lexicon-dataset/
+
 # RAG pipeline artifacts (generated at runtime)
 data/qdrant/
 data/qdrant_db/
