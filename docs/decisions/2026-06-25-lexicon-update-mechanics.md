@@ -35,13 +35,14 @@ run** (or a self-hosted runner). Net: the lexicon does not actually auto-update 
   CI-friendly subset) onto CI to *detect* deltas + open a "lexicon is N words behind content" issue, while
   the heavy enrich stays local. Lowest-maintenance signal without a self-hosted runner.
 
-### Gap 2 — the practice deck is NOT wired into the regen → it drifts (CLOSING THIS NOW)
+### Gap 2 — the practice deck is NOT wired into the regen → it drifts (open; sequence after #3796)
 `generate_practice_deck.py` (shipped #3795) is not in `make atlas` nor any freshness gate, so when the
 manifest updates the deck (`site/public/lexicon/practice-*.json`) silently goes stale vs the Atlas.
 **Fix:** (1) add the deck regen to `make atlas`; (2) a CI **deck-freshness gate** — the deck's
 `deckVersion` already embeds `_manifest_fingerprint(entries)`, so CI (which hydrates the manifest for the
 Frontend build) can recompute the fingerprint and fail if it ≠ the committed deck's `deckVersion`. This is
-the load-bearing guard so the deck can't drift. (Pairs with #3796 — Release-asset hosting for the deck.)
+the load-bearing guard so the deck can't drift. **Sequence after #3796**: the freshness check differs for a
+committed deck vs a Release-asset-hydrated deck, so build it once the deck-hosting decision lands.
 
 ## Proposed cadence (recommendation)
 1. **On content milestones** (a batch of modules/readings shipped): local `make atlas` → auto-grow → gated
