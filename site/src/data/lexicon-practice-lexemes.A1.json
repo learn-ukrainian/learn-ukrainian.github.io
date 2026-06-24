@@ -1,0 +1,157 @@
+{
+  "deckVersion": "atlas-practice-v1-1f926d8bca300232",
+  "fixtureNote": "fixture sample only; finalizer regenerates with hydrated lexicon-manifest.json and data/vesum.db",
+  "level": "A1",
+  "lexemes": [
+    {
+      "cefr": "A1",
+      "gloss": "apple",
+      "heritage": "inherited",
+      "ipa": "ˈjɑblʊkɔ",
+      "lemma": "яблуко",
+      "lemmaId": "yabluko",
+      "lemmaPlain": "яблуко",
+      "paradigm": {
+        "cases": {
+          "accusative": {
+            "plural": "яблука",
+            "singular": "яблуко"
+          },
+          "locative": {
+            "plural": "яблуках",
+            "singular": "яблуці"
+          },
+          "nominative": {
+            "plural": "яблука",
+            "singular": "яблуко"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": "food",
+      "severity": "standard"
+    },
+    {
+      "cefr": "A1",
+      "gloss": "city",
+      "heritage": "inherited",
+      "ipa": "ˈmisto",
+      "lemma": "місто",
+      "lemmaId": "misto",
+      "lemmaPlain": "місто",
+      "paradigm": {
+        "cases": {
+          "accusative": {
+            "plural": "міста",
+            "singular": "місто"
+          },
+          "locative": {
+            "plural": "містах",
+            "singular": "місті"
+          },
+          "nominative": {
+            "plural": "міста",
+            "singular": "місто"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": "places",
+      "severity": "standard"
+    },
+    {
+      "cefr": "A1",
+      "gloss": "book",
+      "heritage": "inherited",
+      "ipa": "ˈknɪɦɐ",
+      "lemma": "книга",
+      "lemmaId": "knyha",
+      "lemmaPlain": "книга",
+      "paradigm": {
+        "cases": {
+          "accusative": {
+            "plural": "книги",
+            "singular": "книгу"
+          },
+          "locative": {
+            "plural": "книгах",
+            "singular": "книзі"
+          },
+          "nominative": {
+            "plural": "книги",
+            "singular": "книга"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": "objects",
+      "severity": "standard"
+    },
+    {
+      "cefr": "A1",
+      "gloss": "school",
+      "heritage": "borrowed",
+      "ipa": "ˈʃkɔlɐ",
+      "lemma": "школа",
+      "lemmaId": "shkola",
+      "lemmaPlain": "школа",
+      "paradigm": {
+        "cases": {
+          "accusative": {
+            "plural": "школи",
+            "singular": "школу"
+          },
+          "locative": {
+            "plural": "школах",
+            "singular": "школі"
+          },
+          "nominative": {
+            "plural": "школи",
+            "singular": "школа"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": "places",
+      "severity": "standard"
+    },
+    {
+      "cefr": "A1",
+      "gloss": "work",
+      "heritage": "inherited",
+      "ipa": "rɔˈbɔtɐ",
+      "lemma": "робота",
+      "lemmaId": "robota",
+      "lemmaPlain": "робота",
+      "paradigm": {
+        "cases": {
+          "accusative": {
+            "plural": "роботи",
+            "singular": "роботу"
+          },
+          "locative": {
+            "plural": "роботах",
+            "singular": "роботі"
+          },
+          "nominative": {
+            "plural": "роботи",
+            "singular": "робота"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": "daily-life",
+      "severity": "standard"
+    }
+  ],
+  "schema": "atlas-practice-lexemes",
+  "schemaVersion": 1,
+  "sizeBudget": {
+    "gzipBytes": 727,
+    "gzipLimitBytes": 140000,
+    "ok": true,
+    "rawBytes": 3735,
+    "rawLimitBytes": 550000
+  },
+  "source": "fixture"
+}

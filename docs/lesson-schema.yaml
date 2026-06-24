@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 24e7b7c5b1856b522c3daa48ef99df97c16277732da42858e196ab876e2a2fe1
+  components_sha256: ef1222f45a69ffbff1bb4287f0025735af0dd0e605cec1d6ef70b3b08fe2d5a4
   config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -1077,16 +1077,20 @@ components:
     props:
       required: []
       optional:
-      - name: deckUrl
+      - name: deckLevel
         type: string
-        description: deckUrl prop.
+        description: deckLevel prop.
+        ukrainian_text: 'false'
+      - name: shardBaseUrl
+        type: string
+        description: shardBaseUrl prop.
         ukrainian_text: 'false'
       - name: initialDeck
-        type: PracticeDeckEntry[]
+        type: PracticeDeckData | PracticeLexeme[]
         description: initialDeck prop.
         ukrainian_text: 'false'
       - name: initialMode
-        type: PracticeMode
+        type: PracticeModeFilter
         description: initialMode prop.
         ukrainian_text: 'false'
       - name: autoStart

@@ -1,0 +1,94 @@
+{
+  "counts": {
+    "cloze": 2,
+    "clozeCoverage": 0.4,
+    "clozeEligibleLexemes": 2,
+    "lexemes": 5
+  },
+  "deckVersion": "atlas-practice-v1-1f926d8bca300232",
+  "fixtureNote": "fixture sample only; finalizer regenerates with hydrated lexicon-manifest.json and data/vesum.db",
+  "items": [
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "яблуко",
+      "lemmaId": "yabluko",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 0
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [
+        "misto:cloze:1"
+      ],
+      "hasCloze": true,
+      "lemma": "місто",
+      "lemmaId": "misto",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice",
+        "cloze"
+      ],
+      "newOrder": 1
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [
+        "knyha:cloze:1"
+      ],
+      "hasCloze": true,
+      "lemma": "книга",
+      "lemmaId": "knyha",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice",
+        "cloze"
+      ],
+      "newOrder": 2
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "школа",
+      "lemmaId": "shkola",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 3
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "робота",
+      "lemmaId": "robota",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 4
+    }
+  ],
+  "level": "A1",
+  "schema": "atlas-practice-index",
+  "schemaVersion": 1,
+  "sizeBudget": {
+    "gzipBytes": 501,
+    "gzipLimitBytes": 140000,
+    "ok": true,
+    "rawBytes": 1701,
+    "rawLimitBytes": 550000
+  },
+  "source": "fixture"
+}

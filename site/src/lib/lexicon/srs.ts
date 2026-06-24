@@ -12,22 +12,114 @@ export const SRS_STORAGE_KEY = 'lu-lexicon-srs';
 export const SRS_SETTINGS_KEY = 'lu-lexicon-srs-settings';
 export const SRS_BACKUP_KEY = 'lu-lexicon-srs.backup';
 
-const CURRENT_VERSION = 2;
+const CURRENT_VERSION = 3;
 const SETTINGS_VERSION = 1;
 const DAY_MS = 24 * 60 * 60 * 1000;
+const DEFAULT_RECOGNITION_STABILITY = 3;
 
 export type PracticeRating = 'again' | 'hard' | 'good' | 'easy';
+export type PracticeMode = 'flashcards' | 'matching' | 'choice' | 'cloze';
+export type PracticeModeFilter = PracticeMode | 'mixed';
+export type RecallDirection = 'uk-to-meaning' | 'meaning-to-uk';
+export type ChoicePolarity = 'word-to-meaning' | 'meaning-to-word';
 
-export interface PracticeDeckEntry {
+export interface PracticeParadigm {
+  cases: Record<string, Partial<Record<'singular' | 'plural', string>>>;
+}
+
+export interface PracticeLexeme {
+  lemmaId: string;
   lemma: string;
-  slug: string;
-  gloss: string;
+  lemmaPlain: string;
   ipa: string | null;
+  gloss: string;
   pos: string | null;
   cefr: string | null;
   heritage: string | null;
-  example: string | null;
-  audioKey: null;
+  severity: string | null;
+  paradigm: PracticeParadigm;
+  semanticBucket?: string | null;
+}
+
+export interface PracticeDeckEntry extends PracticeLexeme {
+  slug?: string;
+  example?: string | null;
+  audioKey?: null;
+}
+
+export interface PracticeIndexItem {
+  lemmaId: string;
+  lemma: string;
+  cefr: string;
+  modes: PracticeMode[];
+  hasCloze: boolean;
+  clozeIds: string[];
+  newOrder: number;
+}
+
+export interface PracticeClozeOption {
+  optionId: string;
+  label: string;
+  lemmaId: string;
+  kind: 'answer' | 'same-root-lemma' | 'decoy-lemma' | 'decoy-oblique' | string;
+  case?: string;
+}
+
+export interface PracticeCaseRule {
+  ruleId: string;
+  case: string;
+  caseLabel: string;
+  trigger: string;
+  triggerLabel: string;
+  feedback: string;
+}
+
+export interface PracticeClozeItem {
+  clozeId: string;
+  lemmaId: string;
+  sentenceFrameId: string;
+  sentence: string;
+  blankCase: string;
+  form: string;
+  caseRule: PracticeCaseRule;
+  clozeEn: string;
+  options: PracticeClozeOption[];
+}
+
+export interface PracticeShardMeta {
+  schema: string;
+  schemaVersion: number;
+  deckVersion: string;
+  level: string;
+  source: string;
+  fixtureNote?: string;
+}
+
+export interface PracticeIndexShard extends PracticeShardMeta {
+  items: PracticeIndexItem[];
+  counts: {
+    lexemes: number;
+    cloze: number;
+    clozeEligibleLexemes: number;
+    clozeCoverage: number;
+  };
+}
+
+export interface PracticeLexemeShard extends PracticeShardMeta {
+  lexemes: PracticeLexeme[];
+}
+
+export interface PracticeClozeShard extends PracticeShardMeta {
+  cloze: PracticeClozeItem[];
+}
+
+export interface PracticeDeckData {
+  deckVersion: string;
+  level: string;
+  index: PracticeIndexItem[];
+  lexemes: PracticeLexeme[];
+  cloze: PracticeClozeItem[];
+  fixtureNote?: string;
 }
 
 export interface CardState {
@@ -44,7 +136,9 @@ export interface CardState {
 }
 
 export interface ReviewLogEntry {
-  slug: string;
+  cardKey: string;
+  lemmaId: string;
+  mode: PracticeMode;
   rating: PracticeRating;
   state: State;
   due: number;
@@ -85,16 +179,55 @@ export interface LoadedSrsState {
   raw: string | null;
 }
 
-interface PersistedSrsSchemaV2 {
-  version: typeof CURRENT_VERSION;
-  cards: Record<string, CardState>;
-  reviews: ReviewLogEntry[];
-  lastSavedAt: number;
+export interface SelectionHistoryItem {
+  itemId: string;
+  lemmaId: string;
+  mode: PracticeMode;
+  clozeId?: string;
+  sentenceFrameId?: string;
+  blankCase?: string;
+  recallDirection?: RecallDirection;
+  choicePolarity?: ChoicePolarity;
+  lapsed?: boolean;
 }
 
-type StorageLike = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
+export interface PracticeSelection {
+  itemId: string;
+  lemma: PracticeLexeme;
+  indexItem: PracticeIndexItem;
+  mode: PracticeMode;
+  cardKey: string;
+  cardState: CardState | null;
+  due: number;
+  lapsed: boolean;
+  cloze?: PracticeClozeItem;
+  recallDirection: RecallDirection;
+  choicePolarity: ChoicePolarity;
+}
 
-export const FSRS6_DEFAULT_PARAMS: FSRSParameters = {
+export interface SelectPracticeOptions {
+  now?: Date | number;
+  history?: SelectionHistoryItem[];
+  modeFilter?: PracticeModeFilter;
+  minRecognitionStability?: number;
+  clozeSoftCap?: number;
+  dueWindowMs?: number;
+}
+
+interface PersistedSrsSchemaV3 {
+  version: typeof CURRENT_VERSION;
+  cards: Record<string, CardState>;
+  reviews?: ReviewLogEntry[];
+  lastSavedAt?: number;
+}
+
+interface StorageLike {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem(key: string): void;
+}
+
+const FSRS6_DEFAULT_PARAMS: FSRSParameters = {
   request_retention: 0.9,
   maximum_interval: 36500,
   w: [
@@ -114,6 +247,8 @@ const RATING_TO_FSRS: Record<PracticeRating, Rating> = {
   good: Rating.Good,
   easy: Rating.Easy,
 };
+
+const PRACTICE_MODES: PracticeMode[] = ['flashcards', 'matching', 'choice', 'cloze'];
 
 const memoryStore = new Map<string, string>();
 const memoryStorage: StorageLike = {
@@ -220,30 +355,53 @@ function normalizeCard(raw: unknown): CardState | null {
   };
 }
 
-function normalizeCards(rawCards: unknown): Map<string, CardState> | null {
+function normalizeCards(rawCards: unknown, migrateLegacyKeys = false): Map<string, CardState> | null {
   if (!rawCards || typeof rawCards !== 'object' || Array.isArray(rawCards)) return null;
   const cards = new Map<string, CardState>();
-  for (const [slug, rawCard] of Object.entries(rawCards as Record<string, unknown>)) {
+  for (const [rawKey, rawCard] of Object.entries(rawCards as Record<string, unknown>)) {
     const normalized = normalizeCard(rawCard);
     if (!normalized) return null;
-    cards.set(slug, normalized);
+    const key = migrateLegacyKeys && !rawKey.includes('::') ? cardKey(rawKey, 'flashcards') : rawKey;
+    cards.set(key, normalized);
   }
   return cards;
+}
+
+function isPracticeRating(value: unknown): value is PracticeRating {
+  return value === 'again' || value === 'hard' || value === 'good' || value === 'easy';
+}
+
+function isPracticeMode(value: unknown): value is PracticeMode {
+  return (
+    value === 'flashcards' || value === 'matching' || value === 'choice' || value === 'cloze'
+  );
+}
+
+function parseCardKey(key: string): { lemmaId: string; mode: PracticeMode } {
+  const [lemmaId, rawMode] = key.split('::');
+  return {
+    lemmaId: lemmaId || key,
+    mode: isPracticeMode(rawMode) ? rawMode : 'flashcards',
+  };
 }
 
 function normalizeReview(raw: unknown): ReviewLogEntry | null {
   if (!raw || typeof raw !== 'object') return null;
   const source = raw as Record<string, unknown>;
-  if (typeof source.slug !== 'string') return null;
   const due = toTime(source.due as Date | number | string | undefined);
   const review = toTime(source.review as Date | number | string | undefined);
   if (due === null || review === null) return null;
   const rating = source.rating;
-  if (rating !== 'again' && rating !== 'hard' && rating !== 'good' && rating !== 'easy') {
-    return null;
-  }
+  if (!isPracticeRating(rating)) return null;
+  const legacySlug = typeof source.slug === 'string' ? source.slug : null;
+  const lemmaId = typeof source.lemmaId === 'string' ? source.lemmaId : legacySlug;
+  if (!lemmaId) return null;
+  const mode = isPracticeMode(source.mode) ? source.mode : 'flashcards';
+  const key = typeof source.cardKey === 'string' ? source.cardKey : cardKey(lemmaId, mode);
   return {
-    slug: source.slug,
+    cardKey: key,
+    lemmaId,
+    mode,
     rating,
     state: normalizeStateValue(source.state),
     due,
@@ -270,7 +428,7 @@ function normalizeReviews(rawReviews: unknown): ReviewLogEntry[] | null {
 }
 
 function hydrateStore(
-  store: PersistedSrsSchemaV2,
+  store: PersistedSrsSchemaV3,
   settings: SrsSettings,
   raw: string | null,
   flags: SrsFlags,
@@ -288,10 +446,10 @@ function hydrateStore(
   };
 }
 
-function migrateToCurrent(parsed: Record<string, unknown>): PersistedSrsSchemaV2 | null {
-  if (parsed.version === CURRENT_VERSION) return parsed as PersistedSrsSchemaV2;
-  if (parsed.version !== 1) return null;
-  const cards = normalizeCards(parsed.cards);
+function migrateToCurrent(parsed: Record<string, unknown>): PersistedSrsSchemaV3 | null {
+  if (parsed.version === CURRENT_VERSION) return parsed as unknown as PersistedSrsSchemaV3;
+  if (parsed.version !== 1 && parsed.version !== 2) return null;
+  const cards = normalizeCards(parsed.cards, true);
   const reviews = normalizeReviews(parsed.reviews);
   if (!cards || !reviews) return null;
   return {
@@ -303,7 +461,7 @@ function migrateToCurrent(parsed: Record<string, unknown>): PersistedSrsSchemaV2
 }
 
 function serializeState(state: LoadedSrsState, savedAt: number): string {
-  const store: PersistedSrsSchemaV2 = {
+  const store: PersistedSrsSchemaV3 = {
     version: CURRENT_VERSION,
     cards: Object.fromEntries(state.cards),
     reviews: state.reviews,
@@ -320,8 +478,8 @@ function serializeSettings(settings: SrsSettings): string {
 }
 
 export function detectClockJump(
-  previous: Date | number | string | undefined | null,
-  now: Date | number | string,
+  previous: Date | number | string | undefined,
+  now: Date | number = Date.now(),
 ): ClockJump | null {
   const previousTime = toTime(previous);
   const nowTime = toTime(now);
@@ -368,10 +526,10 @@ export function loadState(
   }
 
   if (parsed.version === CURRENT_VERSION) {
-    const state = hydrateStore(parsed as PersistedSrsSchemaV2, settings, raw, {
+    const state = hydrateStore(parsed as PersistedSrsSchemaV3, settings, raw, {
       ...emptyFlags(),
       settingsCorrupt,
-      clockJump: detectClockJump((parsed as PersistedSrsSchemaV2).lastSavedAt, now),
+      clockJump: detectClockJump((parsed as PersistedSrsSchemaV3).lastSavedAt, now),
     });
     if (state) {
       activeState = state;
@@ -417,25 +575,38 @@ export function loadState(
   }
 }
 
+function currentState(): LoadedSrsState {
+  return activeState ?? loadState();
+}
+
 export function saveState(
-  state: LoadedSrsState = activeState ?? loadState(),
+  state: LoadedSrsState = currentState(),
   storage: StorageLike = resolveStorage(),
   savedAt: number = Date.now(),
-): { ok: boolean; reason?: string } {
+): { ok: boolean; error?: unknown } {
   if (state.flags.corrupt || state.flags.migrationFailed) {
-    return { ok: false, reason: 'existing SRS data is not writable' };
+    return { ok: false, error: new Error('SRS storage is corrupt') };
   }
-  const previousRaw = storage.getItem(SRS_STORAGE_KEY);
-  const nextRaw = serializeState(state, savedAt);
-  if (previousRaw && previousRaw !== nextRaw) {
-    storage.setItem(SRS_BACKUP_KEY, previousRaw);
-    state.flags.backupWritten = true;
+  const previousRaw = state.raw;
+  let nextRaw: string;
+  try {
+    nextRaw = serializeState(state, savedAt);
+  } catch (error) {
+    return { ok: false, error };
   }
-  storage.setItem(SRS_STORAGE_KEY, nextRaw);
-  storage.setItem(SRS_SETTINGS_KEY, serializeSettings(state.settings));
-  state.raw = nextRaw;
-  activeState = state;
-  return { ok: true };
+  try {
+    if (previousRaw && previousRaw !== nextRaw) {
+      storage.setItem(SRS_BACKUP_KEY, previousRaw);
+      state.flags.backupWritten = true;
+    }
+    storage.setItem(SRS_STORAGE_KEY, nextRaw);
+    storage.setItem(SRS_SETTINGS_KEY, serializeSettings(state.settings));
+    state.raw = nextRaw;
+    activeState = state;
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error };
+  }
 }
 
 function fsrsCardFromState(card: CardState): FsrsCard {
@@ -468,9 +639,17 @@ function stateFromFsrsCard(card: FsrsCard): CardState {
   };
 }
 
-function serializeReview(slug: string, rating: PracticeRating, record: RecordLogItem): ReviewLogEntry {
+function serializeReview(
+  key: string,
+  lemmaId: string,
+  mode: PracticeMode,
+  rating: PracticeRating,
+  record: RecordLogItem,
+): ReviewLogEntry {
   return {
-    slug,
+    cardKey: key,
+    lemmaId,
+    mode,
     rating,
     state: record.log.state,
     due: record.log.due.getTime(),
@@ -484,56 +663,361 @@ function serializeReview(slug: string, rating: PracticeRating, record: RecordLog
   };
 }
 
-function currentState(): LoadedSrsState {
-  return activeState ?? loadState();
-}
-
-export function getDueQueue(
-  deck: PracticeDeckEntry[],
-  now: Date | number = Date.now(),
-): PracticeDeckEntry[] {
-  const state = currentState();
-  const nowTime = toTime(now) ?? Date.now();
-  return deck
-    .map((entry, index) => {
-      const card = state.cards.get(entry.slug);
-      return {
-        entry,
-        index,
-        due: card?.due ?? Number.NEGATIVE_INFINITY,
-      };
-    })
-    .filter((item) => item.due <= nowTime)
-    .sort((a, b) => a.due - b.due || a.index - b.index)
-    .map((item) => item.entry);
+export function cardKey(lemmaId: string, mode: PracticeMode): string {
+  return `${lemmaId}::${mode}`;
 }
 
 export function rateCard(
-  slug: string,
+  lemmaId: string,
   rating: PracticeRating,
-  now: Date | number = Date.now(),
+  reviewDate?: Date | number,
+): CardState;
+export function rateCard(
+  lemmaId: string,
+  mode: PracticeMode,
+  rating: PracticeRating,
+  reviewDate?: Date | number,
+): CardState;
+export function rateCard(
+  lemmaId: string,
+  modeOrRating: PracticeMode | PracticeRating,
+  ratingOrDate?: PracticeRating | Date | number,
+  maybeDate?: Date | number,
 ): CardState {
-  const state = currentState();
-  if (state.flags.corrupt || state.flags.migrationFailed) {
-    throw new Error('Cannot write SRS review while stored data is corrupt');
+  const mode = isPracticeRating(modeOrRating) ? 'flashcards' : modeOrRating;
+  const rating = isPracticeRating(modeOrRating) ? modeOrRating : ratingOrDate;
+  if (!isPracticeRating(rating)) {
+    throw new Error('rating is required');
   }
-  const reviewDate = now instanceof Date ? now : new Date(now);
+  const rawDate = isPracticeRating(modeOrRating) ? ratingOrDate : maybeDate;
+  const reviewDate = rawDate instanceof Date ? rawDate : new Date(rawDate ?? Date.now());
+  const state = currentState();
   const scheduler = fsrs(state.settings.params);
-  const currentCard = state.cards.get(slug);
+  const key = cardKey(lemmaId, mode);
+  const currentCard = state.cards.get(key);
   const fsrsCard = currentCard ? fsrsCardFromState(currentCard) : createEmptyCard(reviewDate);
   const record = scheduler.next(fsrsCard, reviewDate, RATING_TO_FSRS[rating]);
   const next = stateFromFsrsCard(record.card);
-  state.cards.set(slug, next);
-  state.reviews.push(serializeReview(slug, rating, record));
+  state.cards.set(key, next);
+  state.reviews.push(serializeReview(key, lemmaId, mode, rating, record));
   saveState(state, resolveStorage(), reviewDate.getTime());
   return next;
 }
 
-export function masteredCount(threshold = 21): number {
+export function masteredCount(threshold = 21, mode: PracticeMode = 'flashcards'): number {
   const state = currentState();
   let count = 0;
-  for (const card of state.cards.values()) {
-    if (card.stability >= threshold) count += 1;
+  for (const [key, card] of state.cards.entries()) {
+    if (parseCardKey(key).mode === mode && card.stability >= threshold) count += 1;
   }
   return count;
+}
+
+function lexemeId(entry: Pick<PracticeLexeme, 'lemmaId'> | { slug?: string; lemma?: string }): string {
+  return 'lemmaId' in entry && entry.lemmaId ? entry.lemmaId : entry.slug ?? entry.lemma ?? '';
+}
+
+export function getDueQueue<T extends Pick<PracticeLexeme, 'lemmaId'> | PracticeDeckEntry>(
+  entries: T[],
+  now: Date | number = Date.now(),
+  mode: PracticeMode = 'flashcards',
+): T[] {
+  const state = currentState();
+  const nowTime = toTime(now) ?? Date.now();
+  return [...entries]
+    .filter((entry) => {
+      const key = cardKey(lexemeId(entry), mode);
+      const card = state.cards.get(key);
+      return !card || card.due <= nowTime;
+    })
+    .sort((left, right) => {
+      const leftCard = state.cards.get(cardKey(lexemeId(left), mode));
+      const rightCard = state.cards.get(cardKey(lexemeId(right), mode));
+      const leftDue = leftCard?.due ?? 0;
+      const rightDue = rightCard?.due ?? 0;
+      return leftDue - rightDue || lexemeId(left).localeCompare(lexemeId(right));
+    });
+}
+
+function deckMaps(deck: PracticeDeckData) {
+  return {
+    lexemes: new Map(deck.lexemes.map((lexeme) => [lexeme.lemmaId, lexeme])),
+    cloze: new Map(deck.cloze.map((item) => [item.clozeId, item])),
+  };
+}
+
+function recognitionMastered(
+  lemmaId: string,
+  state: LoadedSrsState,
+  threshold: number,
+): boolean {
+  return (['flashcards', 'matching'] as PracticeMode[]).some((mode) => {
+    const card = state.cards.get(cardKey(lemmaId, mode));
+    return Boolean(card && card.stability >= threshold);
+  });
+}
+
+function makeItemId(lemmaId: string, mode: PracticeMode, clozeId?: string): string {
+  return clozeId ? `${lemmaId}:${mode}:${clozeId}` : `${lemmaId}:${mode}`;
+}
+
+function directionFor(candidateKey: string, history: SelectionHistoryItem[]): RecallDirection {
+  const last = [...history].reverse().find((item) => item.recallDirection)?.recallDirection;
+  if (last === 'uk-to-meaning') return 'meaning-to-uk';
+  if (last === 'meaning-to-uk') return 'uk-to-meaning';
+  return candidateKey.length % 2 === 0 ? 'uk-to-meaning' : 'meaning-to-uk';
+}
+
+function polarityFor(candidateKey: string, history: SelectionHistoryItem[]): ChoicePolarity {
+  const last = [...history].reverse().find((item) => item.choicePolarity)?.choicePolarity;
+  if (last === 'word-to-meaning') return 'meaning-to-word';
+  if (last === 'meaning-to-word') return 'word-to-meaning';
+  return candidateKey.length % 2 === 0 ? 'word-to-meaning' : 'meaning-to-word';
+}
+
+function sessionCounts(history: SelectionHistoryItem[]): Record<PracticeMode, number> {
+  return PRACTICE_MODES.reduce(
+    (counts, mode) => {
+      counts[mode] = history.filter((item) => item.mode === mode).length;
+      return counts;
+    },
+    {} as Record<PracticeMode, number>,
+  );
+}
+
+function candidatePenalty(
+  candidate: PracticeSelection,
+  candidates: PracticeSelection[],
+  history: SelectionHistoryItem[],
+  clozeSoftCap: number,
+  nowTime: number,
+): number {
+  if (candidate.lapsed) return -100_000;
+  let penalty = 0;
+  const recent = history.slice(-12);
+  const lastThreeModes = history.slice(-3).map((item) => item.mode);
+  if (lastThreeModes.includes(candidate.mode)) penalty += 18;
+  const counts = sessionCounts(history);
+  const availableModes = new Set(candidates.map((item) => item.mode));
+  if (history.length < 8 && !counts[candidate.mode] && availableModes.size > 1) {
+    penalty -= 45;
+  }
+  const total = Math.max(1, history.length);
+  const expected = total / Math.max(1, availableModes.size);
+  penalty -= Math.max(0, expected - counts[candidate.mode]) * 3;
+
+  if (candidate.mode === 'cloze' && recent.length >= 4) {
+    const clozeRatio = recent.filter((item) => item.mode === 'cloze').length / recent.length;
+    const overdueBy = nowTime - candidate.due;
+    if (clozeRatio >= clozeSoftCap && overdueBy < DAY_MS) penalty += 35;
+  }
+
+  if (candidate.cloze) {
+    const candidateCases = new Set(
+      candidates.filter((item) => item.cloze).map((item) => item.cloze?.blankCase),
+    );
+    const recentCases = new Set(
+      history
+        .slice(-8)
+        .filter((item) => item.mode === 'cloze' && item.blankCase)
+        .map((item) => item.blankCase),
+    );
+    if (candidateCases.size >= 3 && recentCases.size < 3) {
+      penalty += recentCases.has(candidate.cloze.blankCase) ? 16 : -12;
+    }
+    const last = history.at(-1);
+    if (last?.sentenceFrameId === candidate.cloze.sentenceFrameId) penalty += 60;
+  }
+  return penalty;
+}
+
+export function selectNextPracticeItem(
+  deck: PracticeDeckData,
+  options: SelectPracticeOptions = {},
+): PracticeSelection | null {
+  const state = currentState();
+  const nowTime = toTime(options.now ?? Date.now()) ?? Date.now();
+  const history = options.history ?? [];
+  const modeFilter = options.modeFilter ?? 'mixed';
+  const minRecognitionStability = options.minRecognitionStability ?? DEFAULT_RECOGNITION_STABILITY;
+  const clozeSoftCap = options.clozeSoftCap ?? 0.25;
+  const dueWindowMs = options.dueWindowMs ?? 0;
+  const maps = deckMaps(deck);
+  const candidates: PracticeSelection[] = [];
+
+  for (const indexItem of deck.index) {
+    const lemma = maps.lexemes.get(indexItem.lemmaId);
+    if (!lemma) continue;
+    const modes = indexItem.modes.filter((mode) => modeFilter === 'mixed' || mode === modeFilter);
+    for (const mode of modes) {
+      if (mode === 'cloze') {
+        if (!recognitionMastered(indexItem.lemmaId, state, minRecognitionStability)) continue;
+        for (const clozeId of indexItem.clozeIds) {
+          const cloze = maps.cloze.get(clozeId);
+          if (!cloze) continue;
+          const key = cardKey(indexItem.lemmaId, 'cloze');
+          const card = state.cards.get(key) ?? null;
+          candidates.push({
+            itemId: makeItemId(indexItem.lemmaId, mode, clozeId),
+            lemma,
+            indexItem,
+            mode,
+            cardKey: key,
+            cardState: card,
+            due: card?.due ?? 0,
+            lapsed: Boolean(card && card.lapses > 0 && card.due <= nowTime),
+            cloze,
+            recallDirection: directionFor(key, history),
+            choicePolarity: polarityFor(key, history),
+          });
+        }
+        continue;
+      }
+      const key = cardKey(indexItem.lemmaId, mode);
+      const card = state.cards.get(key) ?? null;
+      candidates.push({
+        itemId: makeItemId(indexItem.lemmaId, mode),
+        lemma,
+        indexItem,
+        mode,
+        cardKey: key,
+        cardState: card,
+        due: card?.due ?? 0,
+        lapsed: Boolean(card && card.lapses > 0 && card.due <= nowTime),
+        recallDirection: directionFor(key, history),
+        choicePolarity: polarityFor(key, history),
+      });
+    }
+  }
+
+  const dueCandidates = candidates.filter(
+    (candidate) => candidate.due <= nowTime || candidate.due <= nowTime + dueWindowMs,
+  );
+  const scheduledPool =
+    dueCandidates.length > 0
+      ? dueCandidates
+      : candidates
+          .filter((candidate) => candidate.due > nowTime)
+          .sort((left, right) => left.due - right.due)
+          .slice(0, Math.max(1, Math.min(4, candidates.length)));
+  if (!scheduledPool.length) return null;
+
+  const last = history.at(-1);
+  let filtered = scheduledPool.filter(
+    (candidate) => candidate.lapsed || !last || candidate.itemId !== last.itemId,
+  );
+  filtered = filtered.filter(
+    (candidate) =>
+      candidate.lapsed ||
+      !candidate.cloze ||
+      !last?.sentenceFrameId ||
+      candidate.cloze.sentenceFrameId !== last.sentenceFrameId,
+  );
+  const wordSpaced = filtered.filter(
+    (candidate) =>
+      candidate.lapsed || !history.slice(-2).some((item) => item.lemmaId === candidate.lemma.lemmaId),
+  );
+  if (wordSpaced.length > 0) filtered = wordSpaced;
+  if (!filtered.length) filtered = scheduledPool;
+
+  return [...filtered].sort((left, right) => {
+    const leftUrgency = left.lapsed ? -1_000_000_000 : left.cardState ? left.due - nowTime : 0;
+    const rightUrgency = right.lapsed ? -1_000_000_000 : right.cardState ? right.due - nowTime : 0;
+    const leftScore = leftUrgency + candidatePenalty(left, filtered, history, clozeSoftCap, nowTime);
+    const rightScore = rightUrgency + candidatePenalty(right, filtered, history, clozeSoftCap, nowTime);
+    return (
+      leftScore - rightScore ||
+      left.indexItem.newOrder - right.indexItem.newOrder ||
+      left.itemId.localeCompare(right.itemId)
+    );
+  })[0];
+}
+
+export function czNorm(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/\u0301/g, '')
+    .replace(/[’ʼ`]/g, "'")
+    .trim()
+    .toLocaleLowerCase('uk-UA');
+}
+
+export function isWrongCaseAnswer(value: string, lemma: PracticeLexeme, cloze: PracticeClozeItem): boolean {
+  const normalized = czNorm(value);
+  if (!normalized || normalized === czNorm(cloze.form)) return false;
+  if (normalized === czNorm(lemma.lemma)) return true;
+  for (const caseForms of Object.values(lemma.paradigm.cases)) {
+    for (const form of Object.values(caseForms)) {
+      if (form && czNorm(form) === normalized && normalized !== czNorm(cloze.form)) return true;
+    }
+  }
+  return false;
+}
+
+export function validateClozeOptions(cloze: PracticeClozeItem): string[] {
+  const errors: string[] = [];
+  if (cloze.options.length < 4) {
+    errors.push('option set must contain at least four options');
+  }
+  const labels = cloze.options.map((option) => option.label);
+  const normalized = labels.map(czNorm);
+  if (new Set(normalized).size !== normalized.length) {
+    errors.push('option labels must be unique after normalization');
+  }
+  const answerCount = normalized.filter((label) => label === czNorm(cloze.form)).length;
+  if (answerCount !== 1) {
+    errors.push('answer form must be present exactly once');
+  }
+  const obliqueTotal = cloze.options.filter((option) => option.case && option.case !== 'nominative').length;
+  const obliqueDistractors = cloze.options.filter(
+    (option) => option.kind !== 'answer' && option.case && option.case !== 'nominative',
+  ).length;
+  if (obliqueTotal < 2 || obliqueDistractors < 1) {
+    errors.push('option set must contain the answer plus at least one oblique distractor');
+  }
+  const rootCounts = new Map<string, number>();
+  for (const option of cloze.options) {
+    rootCounts.set(option.lemmaId, (rootCounts.get(option.lemmaId) ?? 0) + 1);
+  }
+  const pairCount = [...rootCounts.values()].filter((count) => count >= 2).length;
+  if (pairCount === 1) {
+    errors.push('option set must not contain exactly one same-root pair');
+  }
+  const lengths = labels.map((label) => label.length);
+  if (lengths.length && Math.max(...lengths) - Math.min(...lengths) > 12) {
+    errors.push('option label lengths exceed bounded distribution');
+  }
+  return errors;
+}
+
+export function uaPlural(
+  count: number,
+  forms: { one: string; few: string; many: string } = {
+    one: 'правильна',
+    few: 'правильні',
+    many: 'правильних',
+  },
+): string {
+  const abs = Math.abs(count);
+  const mod10 = abs % 10;
+  const mod100 = abs % 100;
+  if (mod100 >= 11 && mod100 <= 14) return forms.many;
+  if (mod10 === 1) return forms.one;
+  if (mod10 >= 2 && mod10 <= 4) return forms.few;
+  return forms.many;
+}
+
+export function combinePracticeShards(
+  indexShard: PracticeIndexShard,
+  lexemeShard: PracticeLexemeShard,
+  clozeShard?: PracticeClozeShard,
+): PracticeDeckData {
+  return {
+    deckVersion: indexShard.deckVersion,
+    level: indexShard.level,
+    index: indexShard.items,
+    lexemes: lexemeShard.lexemes,
+    cloze: clozeShard?.cloze ?? [],
+    fixtureNote: indexShard.fixtureNote,
+  };
 }

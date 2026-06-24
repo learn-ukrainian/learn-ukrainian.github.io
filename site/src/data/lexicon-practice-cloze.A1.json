@@ -1,0 +1,121 @@
+{
+  "cloze": [
+    {
+      "blankCase": "locative",
+      "caseRule": {
+        "case": "locative",
+        "caseLabel": "місцевий",
+        "feedback": "у/в (статична позиція) -> місцевий (місто -> місті)",
+        "ruleId": "locative_static_u",
+        "trigger": "у/в (static location)",
+        "triggerLabel": "у/в (статична позиція)"
+      },
+      "clozeEn": "She is in the city.",
+      "clozeId": "misto:cloze:1",
+      "form": "місті",
+      "lemmaId": "misto",
+      "options": [
+        {
+          "case": "locative",
+          "kind": "decoy-oblique",
+          "label": "книзі",
+          "lemmaId": "knyha",
+          "optionId": "misto:cloze:1:decoy-oblique"
+        },
+        {
+          "case": "nominative",
+          "kind": "decoy-lemma",
+          "label": "книга",
+          "lemmaId": "knyha",
+          "optionId": "misto:cloze:1:decoy-lemma"
+        },
+        {
+          "case": "nominative",
+          "kind": "same-root-lemma",
+          "label": "місто",
+          "lemmaId": "misto",
+          "optionId": "misto:cloze:1:lemma"
+        },
+        {
+          "case": "locative",
+          "kind": "answer",
+          "label": "місті",
+          "lemmaId": "misto",
+          "optionId": "misto:cloze:1:answer"
+        }
+      ],
+      "provenance": {
+        "cardId": "places-misto-1",
+        "path": "curriculum/l2-uk-en/a1/vocabulary/places.yaml",
+        "status": "reviewed"
+      },
+      "sentence": "Вона у ___.",
+      "sentenceFrameId": "sf_5e678138a858"
+    },
+    {
+      "blankCase": "accusative",
+      "caseRule": {
+        "case": "accusative",
+        "caseLabel": "знахідний",
+        "feedback": "бачити/мати/читати + знахідний (книга -> книгу)",
+        "ruleId": "accusative_direct_object",
+        "trigger": "direct-object",
+        "triggerLabel": "прямий додаток"
+      },
+      "clozeEn": "I am reading a book.",
+      "clozeId": "knyha:cloze:1",
+      "form": "книгу",
+      "lemmaId": "knyha",
+      "options": [
+        {
+          "case": "accusative",
+          "kind": "answer",
+          "label": "книгу",
+          "lemmaId": "knyha",
+          "optionId": "knyha:cloze:1:answer"
+        },
+        {
+          "case": "nominative",
+          "kind": "decoy-lemma",
+          "label": "школа",
+          "lemmaId": "shkola",
+          "optionId": "knyha:cloze:1:decoy-lemma"
+        },
+        {
+          "case": "accusative",
+          "kind": "decoy-oblique",
+          "label": "школу",
+          "lemmaId": "shkola",
+          "optionId": "knyha:cloze:1:decoy-oblique"
+        },
+        {
+          "case": "nominative",
+          "kind": "same-root-lemma",
+          "label": "книга",
+          "lemmaId": "knyha",
+          "optionId": "knyha:cloze:1:lemma"
+        }
+      ],
+      "provenance": {
+        "cardId": "reading-knyha-1",
+        "path": "curriculum/l2-uk-en/a1/vocabulary/reading.yaml",
+        "status": "reviewed"
+      },
+      "sentence": "Я читаю ___.",
+      "sentenceFrameId": "sf_4f4a5d4b1a53"
+    }
+  ],
+  "deckVersion": "atlas-practice-v1-1f926d8bca300232",
+  "fixtureNote": "fixture sample only; finalizer regenerates with hydrated lexicon-manifest.json and data/vesum.db",
+  "level": "A1",
+  "schema": "atlas-practice-cloze",
+  "schemaVersion": 1,
+  "sizeBudget": {
+    "gzipBytes": 935,
+    "gzipLimitBytes": 140000,
+    "ok": true,
+    "rawBytes": 3456,
+    "rawLimitBytes": 550000
+  },
+  "source": "fixture"
+}

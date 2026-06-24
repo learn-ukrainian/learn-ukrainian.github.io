@@ -2,29 +2,146 @@ import { beforeEach, describe, expect, test } from 'vitest';
 import {
   SRS_BACKUP_KEY,
   SRS_STORAGE_KEY,
+  cardKey,
   detectClockJump,
   getDueQueue,
   loadState,
   masteredCount,
   rateCard,
   saveState,
-  type PracticeDeckEntry,
+  selectNextPracticeItem,
+  uaPlural,
+  validateClozeOptions,
+  type PracticeClozeItem,
+  type PracticeDeckData,
+  type PracticeLexeme,
+  type PracticeMode,
+  type SelectionHistoryItem,
 } from '@site/src/lib/lexicon/srs';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
+const DAY_MS = 24 * 60 * 60 * 1000;
 
-function deck(slugs: string[]): PracticeDeckEntry[] {
-  return slugs.map((slug) => ({
-    lemma: slug,
-    slug,
-    gloss: `${slug} gloss`,
+function stateCard(overrides: Partial<ReturnType<typeof rateCard>> = {}) {
+  return {
+    due: NOW.getTime(),
+    stability: 5,
+    difficulty: 4,
+    elapsed_days: 0,
+    scheduled_days: 1,
+    learning_steps: 0,
+    reps: 2,
+    lapses: 0,
+    state: 2,
+    ...overrides,
+  };
+}
+
+function lexeme(lemmaId: string, lemma = lemmaId, gloss = `${lemmaId} gloss`): PracticeLexeme {
+  return {
+    lemmaId,
+    lemma,
+    lemmaPlain: lemma,
+    gloss,
     ipa: null,
     pos: 'noun',
     cefr: 'A1',
     heritage: null,
-    example: null,
-    audioKey: null,
-  }));
+    severity: null,
+    paradigm: {
+      cases: {
+        nominative: { singular: lemma },
+        accusative: { singular: `${lemma}у` },
+        locative: { singular: `${lemma}і` },
+      },
+    },
+  };
+}
+
+function deck(ids: string[]): PracticeLexeme[] {
+  return ids.map((id) => lexeme(id));
+}
+
+function cloze(
+  lemmaId: string,
+  clozeId: string,
+  blankCase: string,
+  form: string,
+  frame = `${clozeId}-frame`,
+): PracticeClozeItem {
+  return {
+    clozeId,
+    lemmaId,
+    sentenceFrameId: frame,
+    sentence: 'Я бачу ___.',
+    blankCase,
+    form,
+    clozeEn: 'I see it.',
+    caseRule: {
+      ruleId: `${blankCase}-rule`,
+      case: blankCase,
+      caseLabel: blankCase,
+      trigger: 'trigger',
+      triggerLabel: 'trigger',
+      feedback: `trigger -> ${blankCase}`,
+    },
+    options: [
+      { optionId: `${clozeId}:a`, label: form, lemmaId, kind: 'answer', case: blankCase },
+      { optionId: `${clozeId}:b`, label: lemmaId, lemmaId, kind: 'same-root-lemma', case: 'nominative' },
+      {
+        optionId: `${clozeId}:c`,
+        label: `${lemmaId}-decoy`,
+        lemmaId: `${lemmaId}-decoy`,
+        kind: 'decoy-lemma',
+        case: 'nominative',
+      },
+      {
+        optionId: `${clozeId}:d`,
+        label: `${lemmaId}-decoyu`,
+        lemmaId: `${lemmaId}-decoy`,
+        kind: 'decoy-oblique',
+        case: blankCase,
+      },
+    ],
+  };
+}
+
+function practiceDeck(): PracticeDeckData {
+  const lexemes = [lexeme('alpha'), lexeme('beta'), lexeme('gamma'), lexeme('delta')];
+  const clozeItems = [
+    cloze('alpha', 'alpha-cloze', 'accusative', 'alphaу'),
+    cloze('beta', 'beta-cloze', 'locative', 'betaі'),
+    cloze('gamma', 'gamma-cloze', 'dative', 'gammaові'),
+  ];
+  return {
+    deckVersion: 'test',
+    level: 'A1',
+    lexemes,
+    cloze: clozeItems,
+    index: lexemes.map((entry, index) => ({
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      cefr: 'A1',
+      modes: ['flashcards', 'matching', 'choice', ...(index < 3 ? ['cloze' as const] : [])],
+      hasCloze: index < 3,
+      clozeIds: index < 3 ? [clozeItems[index].clozeId] : [],
+      newOrder: index,
+    })),
+  };
+}
+
+function historyFromSelection(selection: NonNullable<ReturnType<typeof selectNextPracticeItem>>) {
+  return {
+    itemId: selection.itemId,
+    lemmaId: selection.lemma.lemmaId,
+    mode: selection.mode,
+    clozeId: selection.cloze?.clozeId,
+    sentenceFrameId: selection.cloze?.sentenceFrameId,
+    blankCase: selection.cloze?.blankCase,
+    recallDirection: selection.recallDirection,
+    choicePolarity: selection.choicePolarity,
+    lapsed: selection.lapsed,
+  } satisfies SelectionHistoryItem;
 }
 
 beforeEach(() => {
@@ -44,16 +161,20 @@ describe('lexicon SRS facade', () => {
     expect(first.due).toBe(new Date('2026-06-23T12:10:00.000Z').getTime());
   });
 
-  test('round-trips state through localStorage', () => {
-    rateCard('alpha', 'easy', NOW);
-    const before = loadState(localStorage, NOW);
-    const reloaded = loadState(localStorage, NOW);
+  test('keys cards by lemmaId and mode', () => {
+    rateCard('alpha', 'choice', 'easy', NOW);
+    const state = loadState(localStorage, NOW);
 
-    expect(reloaded.cards.get('alpha')).toEqual(before.cards.get('alpha'));
-    expect(reloaded.reviews).toHaveLength(1);
+    expect(state.cards.has(cardKey('alpha', 'choice'))).toBe(true);
+    expect(state.cards.has(cardKey('alpha', 'flashcards'))).toBe(false);
+    expect(state.reviews[0]).toMatchObject({
+      lemmaId: 'alpha',
+      mode: 'choice',
+      cardKey: cardKey('alpha', 'choice'),
+    });
   });
 
-  test('migrates version 1 storage and writes backup', () => {
+  test('migrates legacy storage into flashcard card keys and writes backup', () => {
     const oldRaw = JSON.stringify({
       version: 1,
       cards: {
@@ -63,11 +184,9 @@ describe('lexicon SRS facade', () => {
           difficulty: 4,
           elapsed_days: 0,
           scheduled_days: 1,
-          learning_steps: 0,
-          reps: 3,
+          learning_steps: 2,
           lapses: 0,
           state: 2,
-          last_review: '2026-06-23T12:00:00.000Z',
         },
       },
       reviews: [],
@@ -79,17 +198,18 @@ describe('lexicon SRS facade', () => {
     expect(state.flags.migrated).toBe(true);
     expect(state.flags.backupWritten).toBe(true);
     expect(localStorage.getItem(SRS_BACKUP_KEY)).toBe(oldRaw);
-    expect(state.cards.get('alpha')?.due).toBe(new Date('2026-06-24T12:00:00.000Z').getTime());
-    expect(JSON.parse(localStorage.getItem(SRS_STORAGE_KEY) ?? '{}').version).toBe(2);
+    expect(state.cards.get(cardKey('alpha', 'flashcards'))?.due).toBe(
+      new Date('2026-06-24T12:00:00.000Z').getTime(),
+    );
   });
 
-  test('backs up existing raw state before save overwrites it', () => {
+  test('backs up existing raw state before save overwrites', () => {
     rateCard('alpha', 'good', NOW);
-    const firstRaw = localStorage.getItem(SRS_STORAGE_KEY);
+    const before = localStorage.getItem(SRS_STORAGE_KEY);
 
     rateCard('alpha', 'hard', new Date('2026-06-23T12:10:00.000Z'));
 
-    expect(localStorage.getItem(SRS_BACKUP_KEY)).toBe(firstRaw);
+    expect(localStorage.getItem(SRS_BACKUP_KEY)).toBe(before);
   });
 
   test('keeps corrupt storage and surfaces fallback flag', () => {
@@ -111,39 +231,96 @@ describe('lexicon SRS facade', () => {
     expect(detectClockJump(NOW, new Date('2026-06-25T12:00:00.000Z'))).toBeNull();
   });
 
-  test('due queue includes new cards and excludes future reviews', () => {
+  test('due queue includes new cards and excludes future reviews per mode', () => {
     const entries = deck(['alpha', 'beta']);
 
-    rateCard('alpha', 'good', NOW);
+    rateCard('alpha', 'flashcards', 'good', NOW);
 
-    expect(getDueQueue(entries, NOW).map((entry) => entry.slug)).toEqual(['beta']);
+    expect(getDueQueue(entries, NOW).map((entry) => entry.lemmaId)).toEqual(['beta']);
   });
 
-  test('counts mastered cards above stability threshold', () => {
+  test('counts mastered cards for the requested mode', () => {
     const state = loadState(localStorage, NOW);
-    state.cards.set('alpha', {
-      due: NOW.getTime(),
-      stability: 30,
-      difficulty: 4,
-      elapsed_days: 0,
-      scheduled_days: 30,
-      learning_steps: 0,
-      reps: 5,
-      lapses: 0,
-      state: 2,
-    });
-    state.cards.set('beta', {
-      due: NOW.getTime(),
-      stability: 5,
-      difficulty: 4,
-      elapsed_days: 0,
-      scheduled_days: 5,
-      learning_steps: 0,
-      reps: 2,
-      lapses: 0,
-      state: 2,
-    });
+    state.cards.set(cardKey('alpha', 'flashcards'), stateCard({ stability: 30 }));
+    state.cards.set(cardKey('alpha', 'choice'), stateCard({ stability: 30 }));
+    state.cards.set(cardKey('beta', 'flashcards'), stateCard({ stability: 5 }));
 
     expect(masteredCount(21)).toBe(1);
+    expect(masteredCount(21, 'choice')).toBe(1);
+  });
+
+  test('selector keeps lapsed cards ahead of hard variety drops', () => {
+    const state = loadState(localStorage, NOW);
+    state.cards.set(cardKey('alpha', 'choice'), stateCard({ lapses: 1, due: NOW.getTime() - 1000 }));
+    const selection = selectNextPracticeItem(practiceDeck(), {
+      now: NOW,
+      modeFilter: 'choice',
+      history: [
+        {
+          itemId: 'alpha:choice',
+          lemmaId: 'alpha',
+          mode: 'choice',
+        },
+      ],
+    });
+
+    expect(selection?.lemma.lemmaId).toBe('alpha');
+    expect(selection?.lapsed).toBe(true);
+  });
+
+  test('selector applies soft variety without starving due cards over fifty draws', () => {
+    const state = loadState(localStorage, NOW);
+    for (const id of ['alpha', 'beta', 'gamma']) {
+      state.cards.set(cardKey(id, 'flashcards'), stateCard({ stability: 6 }));
+    }
+    const history: SelectionHistoryItem[] = [];
+
+    for (let index = 0; index < 50; index += 1) {
+      const selection = selectNextPracticeItem(practiceDeck(), {
+        now: NOW,
+        history,
+        minRecognitionStability: 3,
+      });
+      expect(selection).not.toBeNull();
+      history.push(historyFromSelection(selection!));
+    }
+
+    const modes = new Set(history.slice(0, 8).map((item) => item.mode));
+    expect(modes.has('flashcards')).toBe(true);
+    expect(modes.has('matching')).toBe(true);
+    expect(modes.has('choice')).toBe(true);
+    expect(history.some((item) => item.mode === 'cloze')).toBe(true);
+    for (let index = 1; index < history.length; index += 1) {
+      expect(history[index].itemId === history[index - 1].itemId).toBe(false);
+    }
+  });
+
+  test('cloze soft cap yields to lapsed cloze pressure', () => {
+    const state = loadState(localStorage, NOW);
+    state.cards.set(cardKey('alpha', 'flashcards'), stateCard({ stability: 6 }));
+    state.cards.set(cardKey('alpha', 'cloze'), stateCard({ lapses: 1, due: NOW.getTime() - DAY_MS }));
+    const clozeHeavyHistory: SelectionHistoryItem[] = Array.from({ length: 8 }, (_, index) => ({
+      itemId: `old-${index}`,
+      lemmaId: 'alpha',
+      mode: 'cloze',
+    }));
+
+    const selection = selectNextPracticeItem(practiceDeck(), {
+      now: NOW,
+      history: clozeHeavyHistory,
+    });
+
+    expect(selection?.mode).toBe('cloze');
+    expect(selection?.lapsed).toBe(true);
+  });
+
+  test('validates cloze option sets and Ukrainian plural forms', () => {
+    expect(validateClozeOptions(cloze('alpha', 'alpha-cloze', 'accusative', 'alphaу'))).toEqual([]);
+    expect(uaPlural(0)).toBe('правильних');
+    expect(uaPlural(1)).toBe('правильна');
+    expect(uaPlural(2)).toBe('правильні');
+    expect(uaPlural(5)).toBe('правильних');
+    expect(uaPlural(11)).toBe('правильних');
+    expect(uaPlural(21)).toBe('правильна');
   });
 });

@@ -1,35 +1,50 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import FlashcardDeck from './FlashcardDeck';
-import Quiz from './Quiz';
-import { shuffleNotCorrect } from './utils';
 import {
-  getDueQueue,
+  combinePracticeShards,
+  czNorm,
+  isWrongCaseAnswer,
   loadState,
   masteredCount,
   rateCard,
-  type PracticeDeckEntry,
+  selectNextPracticeItem,
+  uaPlural,
+  validateClozeOptions,
+  type ChoicePolarity,
+  type PracticeClozeItem,
+  type PracticeDeckData,
+  type PracticeIndexShard,
+  type PracticeLexeme,
+  type PracticeLexemeShard,
+  type PracticeModeFilter,
   type PracticeRating,
+  type PracticeSelection,
+  type SelectionHistoryItem,
 } from '../lib/lexicon/srs';
 
-type PracticeMode = 'flashcards' | 'quiz';
-
 interface LexiconPracticeProps {
-  deckUrl?: string;
-  initialDeck?: PracticeDeckEntry[];
-  initialMode?: PracticeMode;
+  deckLevel?: string;
+  shardBaseUrl?: string;
+  initialDeck?: PracticeDeckData | PracticeLexeme[];
+  initialMode?: PracticeModeFilter;
   autoStart?: boolean;
   advanceDelayMs?: number;
-}
-
-interface QuizQuestionModel {
-  entry: PracticeDeckEntry;
-  options: string[];
 }
 
 interface StreakState {
   version: 1;
   current: number;
   lastPracticeDate: string | null;
+}
+
+interface ChoiceOption {
+  label: string;
+  correct: boolean;
+}
+
+interface ClozeFeedback {
+  kind: 'correct' | 'case-miss' | 'wrong-word';
+  text: string;
 }
 
 const STREAK_KEY = 'lu-lexicon-practice-streak';
@@ -40,6 +55,14 @@ const RATING_LABELS: Record<PracticeRating, string> = {
   hard: 'Hard',
   good: 'Good',
   easy: 'Easy',
+};
+
+const MODE_LABELS: Record<PracticeModeFilter, string> = {
+  mixed: 'Mixed',
+  flashcards: 'Flashcards',
+  matching: 'Matching',
+  choice: 'Choice',
+  cloze: 'Cloze',
 };
 
 const HERITAGE_COLORS: Record<string, string> = {
@@ -69,21 +92,24 @@ function readStreak(): StreakState {
     const raw = window.localStorage.getItem(STREAK_KEY);
     if (!raw) return { version: 1, current: 0, lastPracticeDate: null };
     const parsed = JSON.parse(raw) as Partial<StreakState>;
+    if (parsed.version !== 1 || typeof parsed.current !== 'number') {
+      return { version: 1, current: 0, lastPracticeDate: null };
+    }
     return {
       version: 1,
-      current: typeof parsed.current === 'number' ? parsed.current : 0,
-      lastPracticeDate: typeof parsed.lastPracticeDate === 'string' ? parsed.lastPracticeDate : null,
+      current: parsed.current,
+      lastPracticeDate: parsed.lastPracticeDate ?? null,
     };
   } catch {
     return { version: 1, current: 0, lastPracticeDate: null };
   }
 }
 
-function writeStreak(next: StreakState): void {
+function writeStreak(streak: StreakState): void {
   try {
-    window.localStorage.setItem(STREAK_KEY, JSON.stringify(next));
+    window.localStorage.setItem(STREAK_KEY, JSON.stringify(streak));
   } catch {
-    // Storage can be unavailable in hardened browser contexts.
+    // SRS storage warning is handled by the caller.
   }
 }
 
@@ -102,7 +128,7 @@ function heritageTagColor(heritage: string | null): string | undefined {
   return HERITAGE_COLORS[heritage.toLowerCase()] ?? '#334155';
 }
 
-function cardData(entry: PracticeDeckEntry) {
+function cardData(entry: PracticeLexeme) {
   return {
     front: entry.lemma,
     back: entry.gloss,
@@ -112,47 +138,116 @@ function cardData(entry: PracticeDeckEntry) {
   };
 }
 
-function uniqueGlosses(entries: PracticeDeckEntry[]): string[] {
-  const seen = new Set<string>();
-  const glosses: string[] = [];
-  for (const entry of entries) {
-    if (seen.has(entry.gloss)) continue;
-    seen.add(entry.gloss);
-    glosses.push(entry.gloss);
-  }
-  return glosses;
-}
-
-function quizFor(entry: PracticeDeckEntry, deck: PracticeDeckEntry[]): QuizQuestionModel | null {
-  const sameBand = deck.filter(
-    (candidate) =>
-      candidate.slug !== entry.slug &&
-      candidate.cefr === entry.cefr &&
-      candidate.gloss !== entry.gloss,
-  );
-  const distractors = shuffleNotCorrect(uniqueGlosses(sameBand), uniqueGlosses(sameBand)).slice(0, 3);
-  if (distractors.length < 3) return null;
-  const ordered = [entry.gloss, ...distractors];
+function normalizeInitialDeck(initialDeck?: PracticeDeckData | PracticeLexeme[]): PracticeDeckData | null {
+  if (!initialDeck) return null;
+  if (!Array.isArray(initialDeck)) return initialDeck;
+  const lexemes = initialDeck.map((entry) => {
+    const legacy = entry as PracticeLexeme & { slug?: string; example?: string | null };
+    const lemmaId = legacy.lemmaId ?? legacy.slug ?? legacy.lemma;
+    return {
+      ...entry,
+      lemmaId,
+      lemmaPlain: legacy.lemmaPlain ?? czNorm(legacy.lemma),
+      severity: legacy.severity ?? null,
+      paradigm: legacy.paradigm ?? { cases: {} },
+    };
+  });
   return {
-    entry,
-    options: shuffleNotCorrect(ordered, ordered),
+    deckVersion: 'test-fixture',
+    level: lexemes[0]?.cefr ?? 'A1',
+    index: lexemes.map((entry, index) => ({
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      cefr: entry.cefr ?? 'A1',
+      modes: ['flashcards', 'matching', 'choice'],
+      hasCloze: false,
+      clozeIds: [],
+      newOrder: index,
+    })),
+    lexemes,
+    cloze: [],
   };
 }
 
+function historyFromSelection(selection: PracticeSelection): SelectionHistoryItem {
+  return {
+    itemId: selection.itemId,
+    lemmaId: selection.lemma.lemmaId,
+    mode: selection.mode,
+    clozeId: selection.cloze?.clozeId,
+    sentenceFrameId: selection.cloze?.sentenceFrameId,
+    blankCase: selection.cloze?.blankCase,
+    recallDirection: selection.recallDirection,
+    choicePolarity: selection.choicePolarity,
+    lapsed: selection.lapsed,
+  };
+}
+
+function orderedChoiceOptions(
+  selection: PracticeSelection,
+  deck: PracticeDeckData,
+  polarity: ChoicePolarity,
+): ChoiceOption[] {
+  const sameBand = deck.lexemes.filter(
+    (candidate) =>
+      candidate.lemmaId !== selection.lemma.lemmaId &&
+      candidate.cefr === selection.lemma.cefr &&
+      candidate.gloss !== selection.lemma.gloss,
+  );
+  const distractors = sameBand
+    .sort((left, right) => left.lemmaId.localeCompare(right.lemmaId))
+    .slice(0, 3);
+  if (distractors.length < 3) return [];
+  const answer = polarity === 'word-to-meaning' ? selection.lemma.gloss : selection.lemma.lemma;
+  const options = [
+    { label: answer, correct: true },
+    ...distractors.map((entry) => ({
+      label: polarity === 'word-to-meaning' ? entry.gloss : entry.lemma,
+      correct: false,
+    })),
+  ];
+  const answerIndex = selection.itemId.length % options.length;
+  const [first] = options.splice(0, 1);
+  options.splice(answerIndex, 0, first);
+  return options;
+}
+
+function choicePrompt(selection: PracticeSelection): string {
+  if (selection.choicePolarity === 'word-to-meaning') {
+    return `What does ${selection.lemma.lemma} mean?`;
+  }
+  return `Which word means ${selection.lemma.gloss}?`;
+}
+
+function clozeParts(item: PracticeClozeItem): [string, string] {
+  const [before, ...after] = item.sentence.split('___');
+  return [before, after.join('___')];
+}
+
+function shouldLoadCloze(mode: PracticeModeFilter): boolean {
+  return mode === 'mixed' || mode === 'cloze';
+}
+
 export default function LexiconPractice({
-  deckUrl = '/lexicon/practice-deck.json',
+  deckLevel = 'A1',
+  shardBaseUrl = '/lexicon',
   initialDeck,
-  initialMode = 'flashcards',
+  initialMode = 'mixed',
   autoStart = false,
   advanceDelayMs = 650,
 }: LexiconPracticeProps) {
-  const [deck, setDeck] = useState<PracticeDeckEntry[] | null>(initialDeck ?? null);
+  const [deck, setDeck] = useState<PracticeDeckData | null>(() => normalizeInitialDeck(initialDeck));
+  const [clozeLoaded, setClozeLoaded] = useState(() => {
+    const normalized = normalizeInitialDeck(initialDeck);
+    return Boolean(normalized && normalized.cloze.length > 0);
+  });
   const [started, setStarted] = useState(autoStart);
-  const [mode, setMode] = useState<PracticeMode>(initialMode);
+  const [mode, setMode] = useState<PracticeModeFilter>(initialMode);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState('');
   const [revision, setRevision] = useState(0);
+  const [history, setHistory] = useState<SelectionHistoryItem[]>([]);
   const [answerLocked, setAnswerLocked] = useState(false);
   const [streak, setStreak] = useState<StreakState>({
     version: 1,
@@ -160,7 +255,12 @@ export default function LexiconPractice({
     lastPracticeDate: null,
   });
   const [mastered, setMastered] = useState(0);
+  const [correctToday, setCorrectToday] = useState(0);
   const [storageWarning, setStorageWarning] = useState<string | null>(null);
+  const [clozeInput, setClozeInput] = useState('');
+  const [clozeFeedback, setClozeFeedback] = useState<ClozeFeedback | null>(null);
+  const [clozeAttemptRecorded, setClozeAttemptRecorded] = useState(false);
+  const stageRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const state = loadState();
@@ -169,34 +269,62 @@ export default function LexiconPractice({
     if (state.flags.corrupt || state.flags.migrationFailed) {
       setStorageWarning('Progress is paused until browser storage is readable.');
     } else if (state.flags.clockJump) {
-      setStorageWarning('Review timing may be off because the device clock changed.');
+      setStorageWarning('Review timing may be off because device clock changed.');
     }
   }, []);
 
-  const dueQueue = useMemo(() => {
-    if (!deck) return [];
-    return getDueQueue(deck, new Date());
-  }, [deck, revision]);
-
-  const quizQuestion = useMemo(() => {
+  const selection = useMemo(() => {
     if (!deck) return null;
-    for (const entry of dueQueue) {
-      const question = quizFor(entry, deck);
-      if (question) return question;
-    }
-    return null;
-  }, [deck, dueQueue]);
+    return selectNextPracticeItem(deck, {
+      history,
+      modeFilter: mode,
+      now: new Date(),
+    });
+  }, [deck, history, mode, revision]);
 
-  async function ensureDeck(): Promise<PracticeDeckEntry[] | null> {
-    if (deck) return deck;
+  useEffect(() => {
+    setAnswerLocked(false);
+    setClozeInput('');
+    setClozeFeedback(null);
+    setClozeAttemptRecorded(false);
+    if (selection) {
+      window.setTimeout(() => stageRef.current?.focus(), 0);
+    }
+  }, [selection?.itemId]);
+
+  useEffect(() => {
+    if (!started) return;
+    document.title = `${MODE_LABELS[mode]} Practice - Word Atlas`;
+  }, [mode, started]);
+
+  async function ensureDeck(includeCloze = shouldLoadCloze(mode)): Promise<PracticeDeckData | null> {
+    if (deck && (!includeCloze || clozeLoaded)) return deck;
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(deckUrl);
-      if (!response.ok) throw new Error(`Deck request failed: ${response.status}`);
-      const loaded = (await response.json()) as PracticeDeckEntry[];
-      setDeck(loaded);
-      return loaded;
+      let nextDeck = deck;
+      if (!nextDeck) {
+        const [indexResponse, lexemeResponse] = await Promise.all([
+          fetch(`${shardBaseUrl}/practice-index.${deckLevel}.json`),
+          fetch(`${shardBaseUrl}/practice-lexemes.${deckLevel}.json`),
+        ]);
+        if (!indexResponse.ok || !lexemeResponse.ok) {
+          throw new Error('Practice shard request failed');
+        }
+        const indexShard = (await indexResponse.json()) as PracticeIndexShard;
+        const lexemeShard = (await lexemeResponse.json()) as PracticeLexemeShard;
+        nextDeck = combinePracticeShards(indexShard, lexemeShard);
+      }
+      if (includeCloze && !clozeLoaded) {
+        const clozeResponse = await fetch(`${shardBaseUrl}/practice-cloze.${deckLevel}.json`);
+        if (clozeResponse.ok) {
+          const clozeShard = (await clozeResponse.json()) as { cloze: PracticeClozeItem[] };
+          nextDeck = { ...nextDeck, cloze: clozeShard.cloze };
+          setClozeLoaded(true);
+        }
+      }
+      setDeck(nextDeck);
+      return nextDeck;
     } catch {
       setError('Practice deck could not be loaded.');
       return null;
@@ -205,10 +333,10 @@ export default function LexiconPractice({
     }
   }
 
-  async function start(nextMode: PracticeMode = mode) {
+  async function start(nextMode: PracticeModeFilter = mode) {
     setMode(nextMode);
     setStarted(true);
-    await ensureDeck();
+    await ensureDeck(shouldLoadCloze(nextMode));
   }
 
   function refreshProgress() {
@@ -220,19 +348,31 @@ export default function LexiconPractice({
     setRevision((value) => value + 1);
   }
 
-  function recordReview(entry: PracticeDeckEntry, rating: PracticeRating) {
+  function completeSelection(current: PracticeSelection) {
+    setHistory((items) => [...items.slice(-49), historyFromSelection(current)]);
+    refreshProgress();
+  }
+
+  function recordReview(current: PracticeSelection, rating: PracticeRating) {
     try {
-      rateCard(entry.slug, rating, new Date());
+      rateCard(current.lemma.lemmaId, current.mode, rating, new Date());
       setStreak(recordStreak());
-      setFeedback(`${entry.lemma}: ${RATING_LABELS[rating]}`);
-      refreshProgress();
+      if (rating === 'good' || rating === 'easy') {
+        setCorrectToday((value) => value + 1);
+      }
+      setFeedback(`${current.lemma.lemma}: ${RATING_LABELS[rating]}`);
     } catch {
       setStorageWarning('Progress is paused until browser storage is readable.');
     }
   }
 
+  function rateAndComplete(current: PracticeSelection, rating: PracticeRating) {
+    recordReview(current, rating);
+    completeSelection(current);
+  }
+
   useEffect(() => {
-    if (!started || mode !== 'flashcards' || !dueQueue[0]) return undefined;
+    if (!started || !selection || selection.mode !== 'flashcards') return undefined;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.altKey || event.ctrlKey || event.metaKey) return;
       const key = event.key.toLowerCase();
@@ -248,35 +388,77 @@ export default function LexiconPractice({
                 : null;
       if (!rating) return;
       event.preventDefault();
-      recordReview(dueQueue[0], rating);
+      rateAndComplete(selection, rating);
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [started, mode, dueQueue]);
+  }, [started, selection]);
 
-  function handleQuizClick(event: React.MouseEvent<HTMLDivElement>) {
-    if (!quizQuestion || answerLocked) return;
-    const target = event.target instanceof HTMLElement ? event.target.closest('button') : null;
-    if (!target || !target.closest('[data-activity="quiz-options"]')) return;
-    const selected = target.textContent?.trim();
-    if (!selected) return;
-    const correct = selected === quizQuestion.entry.gloss;
-    try {
-      rateCard(quizQuestion.entry.slug, correct ? 'good' : 'again', new Date());
-      setStreak(recordStreak());
-      setFeedback(correct ? `${quizQuestion.entry.lemma}: Correct` : `${quizQuestion.entry.lemma}: Again`);
+  function handleChoice(option: ChoiceOption) {
+    if (!selection || answerLocked) return;
+    const rating = option.correct ? 'good' : 'again';
+    recordReview(selection, rating);
+    setAnswerLocked(true);
+    setFeedback(option.correct ? `${selection.lemma.lemma}: Correct` : `${selection.lemma.lemma}: Again`);
+    window.setTimeout(() => {
+      setAnswerLocked(false);
+      completeSelection(selection);
+    }, advanceDelayMs);
+  }
+
+  function submitCloze(value: string, source: 'typed' | 'chip') {
+    if (!selection?.cloze || answerLocked) return;
+    const answer = value.trim();
+    if (!answer) return;
+    const cloze = selection.cloze;
+    const correct = czNorm(answer) === czNorm(cloze.form);
+    const caseMiss = isWrongCaseAnswer(answer, selection.lemma, cloze);
+
+    if (correct) {
+      if (!clozeAttemptRecorded) {
+        recordReview(selection, 'good');
+      }
+      setClozeFeedback({
+        kind: 'correct',
+        text: `✓ ${cloze.form} (${cloze.caseRule.caseLabel})`,
+      });
       setAnswerLocked(true);
       window.setTimeout(() => {
         setAnswerLocked(false);
-        refreshProgress();
+        completeSelection(selection);
       }, advanceDelayMs);
-    } catch {
-      setStorageWarning('Progress is paused until browser storage is readable.');
+      return;
+    }
+
+    if (caseMiss) {
+      if (!clozeAttemptRecorded) {
+        recordReview(selection, 'hard');
+        setClozeAttemptRecorded(true);
+      }
+      setClozeInput('');
+      setClozeFeedback({
+        kind: 'case-miss',
+        text: `✓ Правильне слово! Тепер постав його у ${cloze.caseRule.caseLabel}: ${cloze.caseRule.feedback}`,
+      });
+      return;
+    }
+
+    if (!clozeAttemptRecorded) {
+      recordReview(selection, 'again');
+      setClozeAttemptRecorded(true);
+    }
+    setClozeFeedback({ kind: 'wrong-word', text: '✗ Не те слово' });
+    if (source === 'chip') {
+      setAnswerLocked(true);
+      window.setTimeout(() => {
+        setAnswerLocked(false);
+        completeSelection(selection);
+      }, advanceDelayMs);
     }
   }
 
-  const currentFlashcard = dueQueue[0] ?? null;
-  const dueCountLabel = deck ? String(dueQueue.length) : '—';
+  const dueCount = deck ? deck.index.length : 0;
+  const correctLabel = `${correctToday} ${uaPlural(correctToday)}`;
 
   return (
     <section className="lexicon-practice" aria-labelledby="lexicon-practice-title">
@@ -288,29 +470,35 @@ export default function LexiconPractice({
           </p>
         </div>
         <div className="lexicon-practice-modes" role="group" aria-label="Practice mode">
-          <button
-            type="button"
-            className={mode === 'flashcards' ? 'active' : ''}
-            onClick={() => void start('flashcards')}
-          >
-            Flashcards
-          </button>
-          <button type="button" className={mode === 'quiz' ? 'active' : ''} onClick={() => void start('quiz')}>
-            Quiz
-          </button>
+          {(['mixed', 'flashcards', 'matching', 'choice', 'cloze'] as PracticeModeFilter[]).map(
+            (practiceMode) => (
+              <button
+                type="button"
+                key={practiceMode}
+                className={mode === practiceMode ? 'active' : ''}
+                onClick={() => void start(practiceMode)}
+              >
+                {MODE_LABELS[practiceMode]}
+              </button>
+            ),
+          )}
         </div>
       </div>
 
-      <div className="lexicon-practice-progress" aria-label="Practice progress">
-        <div>
-          <span>{dueCountLabel}</span>
-          <strong>Due today</strong>
+      <div className="lexicon-practice-progress">
+        <div aria-label={`${dueCount} practice words loaded`}>
+          <span>{deck ? dueCount : '—'}</span>
+          <strong>Words</strong>
         </div>
-        <div>
+        <div aria-label={`${streak.current} day streak`}>
           <span>{streak.current}</span>
           <strong>Day streak</strong>
         </div>
-        <div>
+        <div aria-label={correctLabel}>
+          <span>{correctToday}</span>
+          <strong>{uaPlural(correctToday)}</strong>
+        </div>
+        <div aria-label={`${mastered} mastered flashcards`}>
           <span>{mastered}</span>
           <strong>Mastered</strong>
         </div>
@@ -328,34 +516,26 @@ export default function LexiconPractice({
 
       {loading && <p className="lexicon-practice-muted">Loading…</p>}
       {error && <p className="lexicon-practice-warning">{error}</p>}
-
-      {started && deck && deck.length === 0 && <p className="lexicon-practice-muted">No practice cards yet.</p>}
-
-      {started && deck && deck.length > 0 && mode === 'flashcards' && (
-        <div className="lexicon-practice-stage">
-          {currentFlashcard ? (
-            <>
-              <PracticeFlashcard entry={currentFlashcard} />
-              <div className="lexicon-rating-bar" role="group" aria-label="Rate this card">
-                {(['again', 'hard', 'good', 'easy'] as const).map((rating) => (
-                  <button type="button" key={rating} onClick={() => recordReview(currentFlashcard, rating)}>
-                    {RATING_LABELS[rating]}
-                  </button>
-                ))}
-              </div>
-            </>
-          ) : (
-            <p className="lexicon-practice-muted">All due cards are done for now.</p>
-          )}
-        </div>
+      {started && deck && deck.index.length === 0 && (
+        <p className="lexicon-practice-muted">No practice cards yet.</p>
       )}
 
-      {started && deck && deck.length > 0 && mode === 'quiz' && (
-        <div className="lexicon-practice-stage" data-testid="practice-quiz" onClickCapture={handleQuizClick}>
-          {quizQuestion ? (
-            <PracticeQuiz model={quizQuestion} />
+      {started && deck && deck.index.length > 0 && (
+        <div className="lexicon-practice-stage" ref={stageRef} tabIndex={-1}>
+          {selection ? (
+            <PracticeItem
+              selection={selection}
+              deck={deck}
+              answerLocked={answerLocked}
+              clozeInput={clozeInput}
+              clozeFeedback={clozeFeedback}
+              onClozeInput={setClozeInput}
+              onFlashcardRating={(rating) => rateAndComplete(selection, rating)}
+              onChoice={handleChoice}
+              onClozeSubmit={submitCloze}
+            />
           ) : (
-            <p className="lexicon-practice-muted">No quiz-ready cards are due right now.</p>
+            <p className="lexicon-practice-muted">All due cards are done for now.</p>
           )}
         </div>
       )}
@@ -363,25 +543,148 @@ export default function LexiconPractice({
   );
 }
 
-function PracticeFlashcard({ entry }: { entry: PracticeDeckEntry }) {
-  return <FlashcardDeck key={entry.slug} cards={[cardData(entry)]} />;
+function PracticeItem({
+  selection,
+  deck,
+  answerLocked,
+  clozeInput,
+  clozeFeedback,
+  onClozeInput,
+  onFlashcardRating,
+  onChoice,
+  onClozeSubmit,
+}: {
+  selection: PracticeSelection;
+  deck: PracticeDeckData;
+  answerLocked: boolean;
+  clozeInput: string;
+  clozeFeedback: ClozeFeedback | null;
+  onClozeInput(value: string): void;
+  onFlashcardRating(rating: PracticeRating): void;
+  onChoice(option: ChoiceOption): void;
+  onClozeSubmit(value: string, source: 'typed' | 'chip'): void;
+}) {
+  if (selection.mode === 'flashcards') {
+    return (
+      <>
+        <FlashcardDeck key={selection.itemId} cards={[cardData(selection.lemma)]} />
+        <div className="lexicon-rating-bar" role="group" aria-label="Rate this card">
+          {(['again', 'hard', 'good', 'easy'] as const).map((rating) => (
+            <button type="button" key={rating} onClick={() => onFlashcardRating(rating)}>
+              {RATING_LABELS[rating]}
+            </button>
+          ))}
+        </div>
+      </>
+    );
+  }
+
+  if (selection.mode === 'cloze' && selection.cloze) {
+    return (
+      <PracticeCloze
+        selection={selection}
+        input={clozeInput}
+        feedback={clozeFeedback}
+        answerLocked={answerLocked}
+        onInput={onClozeInput}
+        onSubmit={onClozeSubmit}
+      />
+    );
+  }
+
+  const options = orderedChoiceOptions(selection, deck, selection.choicePolarity);
+  if (!options.length) {
+    return <p className="lexicon-practice-muted">No option-ready cards are due right now.</p>;
+  }
+  const prompt =
+    selection.mode === 'matching'
+      ? selection.recallDirection === 'uk-to-meaning'
+        ? `Match ${selection.lemma.lemma}`
+        : `Match ${selection.lemma.gloss}`
+      : choicePrompt(selection);
+  return (
+    <div className="lexicon-choice" data-testid={`practice-${selection.mode}`}>
+      <p className="lexicon-choice-prompt">{prompt}</p>
+      <ul className="lexicon-option-list">
+        {options.map((option) => (
+          <li key={option.label}>
+            <button type="button" disabled={answerLocked} onClick={() => onChoice(option)}>
+              {option.label}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
-function PracticeQuiz({ model }: { model: QuizQuestionModel }) {
+function PracticeCloze({
+  selection,
+  input,
+  feedback,
+  answerLocked,
+  onInput,
+  onSubmit,
+}: {
+  selection: PracticeSelection;
+  input: string;
+  feedback: ClozeFeedback | null;
+  answerLocked: boolean;
+  onInput(value: string): void;
+  onSubmit(value: string, source: 'typed' | 'chip'): void;
+}) {
+  const cloze = selection.cloze;
+  if (!cloze) return null;
+  const [before, after] = clozeParts(cloze);
+  const optionErrors = validateClozeOptions(cloze);
   return (
-    <Quiz
-      key={model.entry.slug}
-      instruction="Choose the meaning"
-      questions={[
-        {
-          question: `What does ${model.entry.lemma} mean?`,
-          options: model.options.map((text) => ({
-            text,
-            correct: text === model.entry.gloss,
-          })),
-          explanation: model.entry.example ?? undefined,
-        },
-      ]}
-    />
+    <div className="lexicon-cloze" data-testid="practice-cloze">
+      <p className="lexicon-cloze-translation">{cloze.clozeEn}</p>
+      <form
+        className="lexicon-cloze-row"
+        onSubmit={(event) => {
+          event.preventDefault();
+          onSubmit(input, 'typed');
+        }}
+      >
+        <span>{before}</span>
+        <input
+          value={input}
+          disabled={answerLocked}
+          aria-label={`Answer in ${cloze.caseRule.caseLabel}`}
+          onChange={(event) => onInput(event.currentTarget.value)}
+        />
+        <span>{after}</span>
+        <button type="submit" disabled={answerLocked}>
+          Check
+        </button>
+      </form>
+      {optionErrors.length > 0 ? (
+        <p className="lexicon-practice-warning">Cloze options failed validation.</p>
+      ) : (
+        <ul className="lexicon-option-list lexicon-cloze-options">
+          {cloze.options.map((option) => (
+            <li key={option.optionId}>
+              <button
+                type="button"
+                disabled={answerLocked}
+                onClick={() => onSubmit(option.label, 'chip')}
+              >
+                {option.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {feedback && (
+        <p
+          className={`lexicon-cloze-feedback ${feedback.kind}`}
+          role={feedback.kind === 'wrong-word' ? 'alert' : 'status'}
+          aria-live="polite"
+        >
+          {feedback.text}
+        </p>
+      )}
+    </div>
   );
 }

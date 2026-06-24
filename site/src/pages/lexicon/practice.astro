@@ -4,7 +4,7 @@ import CourseLayout from "../../layouts/CourseLayout.astro";
 
 const frontmatter = {
   title: "Word Atlas Practice",
-  description: "Client-side Word Atlas flashcards, quiz practice, and progress.",
+  description: "Client-side Word Atlas practice modes and progress.",
 };
 ---
 
@@ -20,9 +20,7 @@ const frontmatter = {
     <section class="lexicon-practice-intro" aria-labelledby="lexicon-practice-page-title">
       <span class="lexicon-practice-badge">Атлас слів</span>
       <h1 id="lexicon-practice-page-title">Word Atlas Practice</h1>
-      <p>
-        Review eligible course and CEFR-enriched words with local progress stored in this browser.
-      </p>
+      <p>Review eligible course and CEFR-enriched words with local progress stored in this browser.</p>
     </section>
 
     <LexiconPractice client:only="react" />
@@ -106,7 +104,7 @@ const frontmatter = {
   }
 
   :global(.lexicon-practice button) {
-    min-height: 2.5rem;
+    min-height: 44px;
     border: 1px solid var(--lu-border);
     border-radius: 6px;
     background: var(--lu-surface);
@@ -116,10 +114,18 @@ const frontmatter = {
     cursor: pointer;
   }
 
+  :global(.lexicon-practice button:disabled) {
+    cursor: wait;
+    opacity: 0.7;
+  }
+
   :global(.lexicon-practice button:hover),
-  :global(.lexicon-practice button:focus-visible) {
+  :global(.lexicon-practice button:focus-visible),
+  :global(.lexicon-practice-stage:focus-visible),
+  :global(.lexicon-cloze-row input:focus-visible) {
     border-color: var(--lu-primary);
-    outline: none;
+    outline: 2px solid var(--lu-primary);
+    outline-offset: 2px;
     box-shadow: 0 0 0 3px var(--lu-state-active);
   }
 
@@ -137,7 +143,7 @@ const frontmatter = {
 
   :global(.lexicon-practice-progress) {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.75rem;
   }
 
@@ -168,11 +174,86 @@ const frontmatter = {
   :global(.lexicon-practice-stage) {
     display: grid;
     gap: 1rem;
-    max-width: 720px;
+    max-width: 760px;
+    border-radius: 8px;
   }
 
   :global(.lexicon-rating-bar) {
     justify-content: center;
+  }
+
+  :global(.lexicon-choice),
+  :global(.lexicon-cloze) {
+    display: grid;
+    gap: 1rem;
+  }
+
+  :global(.lexicon-choice-prompt),
+  :global(.lexicon-cloze-translation) {
+    margin: 0;
+    color: var(--lu-text);
+    font-size: 1.15rem;
+    font-weight: 850;
+    line-height: 1.45;
+  }
+
+  :global(.lexicon-option-list) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  :global(.lexicon-option-list button) {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    text-align: left;
+  }
+
+  :global(.lexicon-cloze-row) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+
+  :global(.lexicon-cloze-row input) {
+    min-width: 11rem;
+    min-height: 44px;
+    padding: 0.45rem 0.65rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 6px;
+    background: var(--lu-surface);
+    color: var(--lu-text);
+    font: inherit;
+    font-size: 16px;
+  }
+
+  :global(.lexicon-cloze-feedback) {
+    margin: 0;
+    padding: 0.75rem 0.9rem;
+    border-radius: 8px;
+    font-weight: 800;
+    line-height: 1.45;
+  }
+
+  :global(.lexicon-cloze-feedback.correct) {
+    background: var(--lu-state-correct-bg);
+    color: var(--lu-state-correct-fg);
+  }
+
+  :global(.lexicon-cloze-feedback.case-miss) {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  :global(.lexicon-cloze-feedback.wrong-word) {
+    background: var(--lu-state-wrong-bg);
+    color: var(--lu-state-wrong-fg);
   }
 
   :global(.lexicon-practice-muted),
@@ -186,17 +267,27 @@ const frontmatter = {
     color: var(--lu-state-wrong-fg);
   }
 
-  @media (max-width: 680px) {
+  @media (max-width: 760px) {
     .lexicon-practice-page {
       padding: 2.5rem 1rem 3.5rem;
     }
 
-    :global(.lexicon-practice-progress) {
+    :global(.lexicon-practice-progress),
+    :global(.lexicon-option-list) {
       grid-template-columns: 1fr;
     }
 
     :global(.lexicon-practice-toolbar) {
       align-items: stretch;
+    }
+
+    :global(.lexicon-cloze-row) {
+      align-items: stretch;
+    }
+
+    :global(.lexicon-cloze-row input),
+    :global(.lexicon-cloze-row button) {
+      width: 100%;
     }
   }
 </style>
