@@ -30,7 +30,7 @@ Known behavioral facts as of agy 1.0.0 (verified locally 2026-05-20):
   and ``import gemini`` is a no-op in a default install.
 
 MCP enablement is managed by agy's global Antigravity configuration at
-``~/.gemini/antigravity-cli/mcp_config.json`` using ``httpUrl``
+``~/.gemini/config/mcp_config.json`` using ``httpUrl``
 streamable-HTTP server entries. Verified locally on 2026-06-13:
 ``agy -p`` invoked ``mcp__sources__verify_word`` through that global config.
 The adapter still does not pass a per-invocation MCP flag because agy has

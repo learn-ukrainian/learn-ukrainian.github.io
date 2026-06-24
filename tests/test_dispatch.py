@@ -350,10 +350,10 @@ class TestDispatchAgent:
             "mcp_server_names": ["sources"],
             "auth_mode": "subscription",
         }
-        # Rung 2: agy-cli (the new rung) — tool_config is None, agent is "agy"
+        # Rung 2: agy-cli resolves agy's global sources MCP config.
         assert second_call["model"] == "gemini-3.5-flash-high"
         assert mock_invoke.call_args_list[1].args[0] == "agy"
-        assert second_call["tool_config"] is None
+        assert second_call["tool_config"] == {"mcp_server_names": ["sources"]}
         # Rung 3: gemini-cli flash + oauth
         assert third_call["model"] == "gemini-3-flash-preview"
         assert third_call["tool_config"] == {

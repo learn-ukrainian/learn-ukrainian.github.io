@@ -645,9 +645,15 @@ def _dispatch_via_runtime(
     if is_gemini:
         # Gemini in the pipeline is always -y (write-enabled) — existing behavior.
         runtime_mode = "workspace-write"
+        agy_tool_config = None
+        agy_mcp_diagnostics = {}
         if mcp_tools:
             tool_config, _diagnostics = build_mcp_tool_config(
                 "gemini",
+                mcp_servers=["sources"],
+            )
+            agy_tool_config, agy_mcp_diagnostics = build_mcp_tool_config(
+                "agy",
                 mcp_servers=["sources"],
             )
         else:
@@ -771,14 +777,13 @@ def _dispatch_via_runtime(
             call_timeout: int | None,
         ) -> AttemptOutcome:
             # Agy rung (PR #2375): separate-quota probe via Antigravity CLI.
-            # No MCP tool_config (agy doesn't share the gemini-tools MCP plumbing);
-            # caller of the dispatch path that requested MCP grounding may need
-            # to evaluate the agy response independently.
+            # agy resolves MCP from Antigravity's global config, not Gemini's
+            # per-call --allowed-mcp-server-names plumbing.
             is_agy = rung.cli == "agy-cli"
             if is_agy:
                 attempt_agent = "agy"
                 auth_mode_label = "AGY-CLI"
-                call_tool_config = None
+                call_tool_config = dict(agy_tool_config or {})
             else:
                 attempt_agent = runtime_agent_name
                 auth_mode_label = "OAuth" if rung.auth_mode == "oauth" else "API"
@@ -794,8 +799,33 @@ def _dispatch_via_runtime(
                 prompt_chars=len(prompt),
                 timeout=call_timeout_effective,
                 initial_response_timeout=initial_response_timeout,
-                mcp_tools=mcp_tools and not is_agy,
+                mcp_tools=mcp_tools,
             )
+            if is_agy and mcp_tools and not call_tool_config:
+                elapsed = time.monotonic() - t0
+                status = agy_mcp_diagnostics.get("resolution_status", "config_empty")
+                message = (
+                    "Agy MCP tool_config requested but resolver returned none "
+                    f"({status}). Refusing dispatch tool-less."
+                )
+                _save_dispatch_log(
+                    orch_dir,
+                    phase,
+                    label,
+                    model=rung.model,
+                    prompt_chars=len(prompt),
+                    response_chars=0,
+                    stderr=message,
+                    returncode=None,
+                    duration_s=elapsed,
+                    ok=False,
+                    prompt=prompt,
+                )
+                return AttemptOutcome(
+                    status="fatal",
+                    elapsed_s=elapsed,
+                    stderr_excerpt=message,
+                )
             try:
                 if not is_agy:
                     _pace_gemini_calls()

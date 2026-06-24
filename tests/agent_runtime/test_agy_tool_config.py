@@ -26,6 +26,12 @@ def _write_agy_mcp_config(app_data_dir: Path, data: dict) -> Path:
     return config_path
 
 
+def _write_mcp_config(config_path: Path, data: dict) -> Path:
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+    config_path.write_text(json.dumps(data), encoding="utf-8")
+    return config_path
+
+
 def test_agy_resolves_requested_global_mcp_server(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -42,6 +48,36 @@ def test_agy_resolves_requested_global_mcp_server(
     monkeypatch.setenv("AGY_APP_DATA_DIR", str(app_data_dir))
 
     tool_config, diagnostics = build_mcp_tool_config("agy", mcp_servers=["sources"])
+
+    assert tool_config == {"mcp_server_names": ["sources"]}
+    assert diagnostics["config_path"] == str(config_path.resolve())
+    assert diagnostics["resolution_status"] == "ok"
+    assert diagnostics["resolved_servers"] == ["sources"]
+    assert diagnostics["missing_server_names"] == []
+
+
+def test_agy_tools_resolves_requested_default_mcp_config_path(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config_path = _write_mcp_config(
+        tmp_path / ".gemini" / "config" / "mcp_config.json",
+        {
+            "mcpServers": {
+                "sources": {"url": "http://127.0.0.1:8766/mcp"},
+            }
+        },
+    )
+    monkeypatch.delenv("AGY_APP_DATA_DIR", raising=False)
+    monkeypatch.setattr(
+        "agent_runtime.tool_config._DEFAULT_AGY_MCP_CONFIG_PATH",
+        str(config_path),
+    )
+
+    tool_config, diagnostics = build_mcp_tool_config(
+        "agy-tools",
+        mcp_servers=["sources"],
+    )
 
     assert tool_config == {"mcp_server_names": ["sources"]}
     assert diagnostics["config_path"] == str(config_path.resolve())
