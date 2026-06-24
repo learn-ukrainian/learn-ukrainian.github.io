@@ -20,6 +20,7 @@ import {
 } from '@site/src/lib/lexicon/srs';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
+const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 function stateCard(overrides: Partial<ReturnType<typeof rateCard>> = {}) {
@@ -125,6 +126,25 @@ function practiceDeck(): PracticeDeckData {
       modes: ['flashcards', 'matching', 'choice', ...(index < 3 ? ['cloze' as const] : [])],
       hasCloze: index < 3,
       clozeIds: index < 3 ? [clozeItems[index].clozeId] : [],
+      newOrder: index,
+    })),
+  };
+}
+
+function modeDeck(rows: { id: string; modes: PracticeMode[] }[]): PracticeDeckData {
+  const lexemes = rows.map((row) => lexeme(row.id));
+  return {
+    deckVersion: 'test',
+    level: 'A1',
+    lexemes,
+    cloze: [],
+    index: rows.map((row, index) => ({
+      lemmaId: row.id,
+      lemma: row.id,
+      cefr: 'A1',
+      modes: row.modes,
+      hasCloze: false,
+      clozeIds: [],
       newOrder: index,
     })),
   };
@@ -268,31 +288,87 @@ describe('lexicon SRS facade', () => {
     expect(selection?.lapsed).toBe(true);
   });
 
-  test('selector applies soft variety without starving due cards over fifty draws', () => {
+  test('selector applies soft variety across realistic due-time spread', () => {
     const state = loadState(localStorage, NOW);
-    for (const id of ['alpha', 'beta', 'gamma']) {
-      state.cards.set(cardKey(id, 'flashcards'), stateCard({ stability: 6 }));
-    }
-    const history: SelectionHistoryItem[] = [];
+    state.cards.set(cardKey('alpha', 'flashcards'), stateCard({ due: NOW.getTime() - 45 * 60 * 1000 }));
+    state.cards.set(cardKey('beta', 'choice'), stateCard({ due: NOW.getTime() - 5 * 60 * 1000 }));
+    const history: SelectionHistoryItem[] = [
+      { itemId: 'old-flash-1', lemmaId: 'old-1', mode: 'flashcards' },
+      { itemId: 'old-flash-2', lemmaId: 'old-2', mode: 'flashcards' },
+      { itemId: 'old-flash-3', lemmaId: 'old-3', mode: 'flashcards' },
+    ];
 
-    for (let index = 0; index < 50; index += 1) {
-      const selection = selectNextPracticeItem(practiceDeck(), {
-        now: NOW,
-        history,
-        minRecognitionStability: 3,
-      });
-      expect(selection).not.toBeNull();
-      history.push(historyFromSelection(selection!));
-    }
+    const selection = selectNextPracticeItem(modeDeck([
+      { id: 'alpha', modes: ['flashcards'] },
+      { id: 'beta', modes: ['choice'] },
+    ]), {
+      now: NOW,
+      history,
+    });
 
-    const modes = new Set(history.slice(0, 8).map((item) => item.mode));
-    expect(modes.has('flashcards')).toBe(true);
-    expect(modes.has('matching')).toBe(true);
-    expect(modes.has('choice')).toBe(true);
-    expect(history.some((item) => item.mode === 'cloze')).toBe(true);
-    for (let index = 1; index < history.length; index += 1) {
-      expect(history[index].itemId === history[index - 1].itemId).toBe(false);
-    }
+    expect(selection?.mode).toBe('choice');
+    expect(selection?.lemma.lemmaId).toBe('beta');
+  });
+
+  test('selector never borrows not-due cards while overdue cards exist', () => {
+    const state = loadState(localStorage, NOW);
+    state.cards.set(cardKey('alpha', 'flashcards'), stateCard({ due: NOW.getTime() - HOUR_MS }));
+    state.cards.set(cardKey('beta', 'choice'), stateCard({ due: NOW.getTime() + DAY_MS }));
+
+    const selection = selectNextPracticeItem(modeDeck([
+      { id: 'alpha', modes: ['flashcards'] },
+      { id: 'beta', modes: ['choice'] },
+    ]), {
+      now: NOW,
+      history: [
+        { itemId: 'choice-1', lemmaId: 'x1', mode: 'choice' },
+        { itemId: 'choice-2', lemmaId: 'x2', mode: 'choice' },
+        { itemId: 'choice-3', lemmaId: 'x3', mode: 'choice' },
+      ],
+    });
+
+    expect(selection?.lemma.lemmaId).toBe('alpha');
+    expect(selection?.due).toBeLessThanOrEqual(NOW.getTime());
+  });
+
+  test('selector widens the due window before borrowing farther not-due cards', () => {
+    const state = loadState(localStorage, NOW);
+    state.cards.set(cardKey('alpha', 'flashcards'), stateCard({ due: NOW.getTime() + 2 * HOUR_MS }));
+    state.cards.set(cardKey('beta', 'flashcards'), stateCard({ due: NOW.getTime() + 2 * DAY_MS }));
+
+    const selection = selectNextPracticeItem(modeDeck([
+      { id: 'alpha', modes: ['flashcards'] },
+      { id: 'beta', modes: ['flashcards'] },
+    ]), {
+      now: NOW,
+      history: [{ itemId: 'recent-alpha', lemmaId: 'alpha', mode: 'flashcards' }],
+    });
+
+    expect(selection?.lemma.lemmaId).toBe('alpha');
+  });
+
+  test('selector mode debt surfaces a starved due mode', () => {
+    const state = loadState(localStorage, NOW);
+    state.cards.set(cardKey('alpha', 'flashcards'), stateCard({ due: NOW.getTime() - 10 * 60 * 1000 }));
+    state.cards.set(cardKey('beta', 'choice'), stateCard({ due: NOW.getTime() - 10 * 60 * 1000 }));
+    state.cards.set(cardKey('gamma', 'matching'), stateCard({ due: NOW.getTime() - 10 * 60 * 1000 }));
+
+    const history: SelectionHistoryItem[] = [
+      { itemId: 'f1', lemmaId: 'f1', mode: 'flashcards' },
+      { itemId: 'f2', lemmaId: 'f2', mode: 'flashcards' },
+      { itemId: 'c1', lemmaId: 'c1', mode: 'choice' },
+      { itemId: 'c2', lemmaId: 'c2', mode: 'choice' },
+    ];
+    const selection = selectNextPracticeItem(modeDeck([
+      { id: 'alpha', modes: ['flashcards'] },
+      { id: 'beta', modes: ['choice'] },
+      { id: 'gamma', modes: ['matching'] },
+    ]), {
+      now: NOW,
+      history,
+    });
+
+    expect(selection?.mode).toBe('matching');
   });
 
   test('cloze soft cap yields to lapsed cloze pressure', () => {
@@ -312,6 +388,43 @@ describe('lexicon SRS facade', () => {
 
     expect(selection?.mode).toBe('cloze');
     expect(selection?.lapsed).toBe(true);
+  });
+
+  test('cloze soft cap exempts overdue non-lapsed cloze', () => {
+    const state = loadState(localStorage, NOW);
+    state.cards.set(cardKey('alpha', 'flashcards'), stateCard({ stability: 6, due: NOW.getTime() + DAY_MS }));
+    state.cards.set(cardKey('alpha', 'cloze'), stateCard({ due: NOW.getTime() - HOUR_MS, lapses: 0 }));
+    state.cards.set(cardKey('beta', 'choice'), stateCard({ due: NOW.getTime() }));
+    const baseDeck = practiceDeck();
+    const testDeck: PracticeDeckData = {
+      ...baseDeck,
+      lexemes: baseDeck.lexemes.slice(0, 2),
+      cloze: [baseDeck.cloze[0]],
+      index: [
+        { ...baseDeck.index[0], modes: ['cloze'], clozeIds: [baseDeck.cloze[0].clozeId], hasCloze: true },
+        { ...baseDeck.index[1], modes: ['choice'], clozeIds: [], hasCloze: false },
+      ],
+    };
+    const clozeHeavyHistory: SelectionHistoryItem[] = [
+      ...Array.from({ length: 4 }, (_, index) => ({
+        itemId: `old-cloze-${index}`,
+        lemmaId: `old-cloze-${index}`,
+        mode: 'cloze' as const,
+      })),
+      ...Array.from({ length: 4 }, (_, index) => ({
+        itemId: `old-choice-${index}`,
+        lemmaId: `old-choice-${index}`,
+        mode: 'choice' as const,
+      })),
+    ];
+
+    const selection = selectNextPracticeItem(testDeck, {
+      now: NOW,
+      history: clozeHeavyHistory,
+    });
+
+    expect(selection?.mode).toBe('cloze');
+    expect(selection?.lapsed).toBe(false);
   });
 
   test('validates cloze option sets and Ukrainian plural forms', () => {

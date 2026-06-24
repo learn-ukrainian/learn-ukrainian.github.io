@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import FlashcardDeck from './FlashcardDeck';
+import MatchUp from './MatchUp';
 import {
   combinePracticeShards,
   czNorm,
@@ -210,6 +211,23 @@ function orderedChoiceOptions(
   const [first] = options.splice(0, 1);
   options.splice(answerIndex, 0, first);
   return options;
+}
+
+function matchingPairs(selection: PracticeSelection, deck: PracticeDeckData) {
+  const distractors = deck.lexemes
+    .filter(
+      (candidate) =>
+        candidate.lemmaId !== selection.lemma.lemmaId &&
+        candidate.cefr === selection.lemma.cefr &&
+        candidate.gloss !== selection.lemma.gloss,
+    )
+    .sort((left, right) => left.lemmaId.localeCompare(right.lemmaId))
+    .slice(0, 3);
+  if (distractors.length < 3) return [];
+  return [selection.lemma, ...distractors].map((entry) => ({
+    left: entry.lemma,
+    right: entry.gloss,
+  }));
 }
 
 function choicePrompt(selection: PracticeSelection): string {
@@ -438,7 +456,7 @@ export default function LexiconPractice({
       setClozeInput('');
       setClozeFeedback({
         kind: 'case-miss',
-        text: `✓ Правильне слово! Тепер постав його у ${cloze.caseRule.caseLabel}: ${cloze.caseRule.feedback}`,
+        text: `→ Правильне слово. Тепер постав його у ${cloze.caseRule.caseLabel}: ${cloze.caseRule.feedback}`,
       });
       return;
     }
@@ -529,11 +547,12 @@ export default function LexiconPractice({
               answerLocked={answerLocked}
               clozeInput={clozeInput}
               clozeFeedback={clozeFeedback}
-              onClozeInput={setClozeInput}
-              onFlashcardRating={(rating) => rateAndComplete(selection, rating)}
-              onChoice={handleChoice}
-              onClozeSubmit={submitCloze}
-            />
+                onClozeInput={setClozeInput}
+                onFlashcardRating={(rating) => rateAndComplete(selection, rating)}
+                onChoice={handleChoice}
+                onMatchingComplete={() => rateAndComplete(selection, 'good')}
+                onClozeSubmit={submitCloze}
+              />
           ) : (
             <p className="lexicon-practice-muted">All due cards are done for now.</p>
           )}
@@ -552,6 +571,7 @@ function PracticeItem({
   onClozeInput,
   onFlashcardRating,
   onChoice,
+  onMatchingComplete,
   onClozeSubmit,
 }: {
   selection: PracticeSelection;
@@ -562,6 +582,7 @@ function PracticeItem({
   onClozeInput(value: string): void;
   onFlashcardRating(rating: PracticeRating): void;
   onChoice(option: ChoiceOption): void;
+  onMatchingComplete(): void;
   onClozeSubmit(value: string, source: 'typed' | 'chip'): void;
 }) {
   if (selection.mode === 'flashcards') {
@@ -592,16 +613,27 @@ function PracticeItem({
     );
   }
 
+  if (selection.mode === 'matching') {
+    const pairs = matchingPairs(selection, deck);
+    if (!pairs.length) {
+      return <p className="lexicon-practice-muted">No matching-ready cards are due right now.</p>;
+    }
+    return (
+      <div data-testid="practice-matching">
+        <MatchUp
+          pairs={pairs}
+          instruction={`Match ${selection.lemma.lemma}`}
+          onComplete={onMatchingComplete}
+        />
+      </div>
+    );
+  }
+
   const options = orderedChoiceOptions(selection, deck, selection.choicePolarity);
   if (!options.length) {
     return <p className="lexicon-practice-muted">No option-ready cards are due right now.</p>;
   }
-  const prompt =
-    selection.mode === 'matching'
-      ? selection.recallDirection === 'uk-to-meaning'
-        ? `Match ${selection.lemma.lemma}`
-        : `Match ${selection.lemma.gloss}`
-      : choicePrompt(selection);
+  const prompt = choicePrompt(selection);
   return (
     <div className="lexicon-choice" data-testid={`practice-${selection.mode}`}>
       <p className="lexicon-choice-prompt">{prompt}</p>

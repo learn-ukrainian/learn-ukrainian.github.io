@@ -12,6 +12,7 @@ import gzip
 import hashlib
 import json
 import random
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -29,6 +30,7 @@ from lexeme_filter import is_practice_eligible
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_OUT_DIR = Path("site/src/data")
 DEFAULT_ALLOWLIST = Path("site/src/data/lexicon-practice-reviewed-sources.json")
+DEFAULT_CLOZE_SOURCES = Path("site/src/data/lexicon-practice-cloze-sources.json")
 DEFAULT_TARGET = 3000
 DEFAULT_RAW_LIMIT = 550_000
 DEFAULT_GZIP_LIMIT = 140_000
@@ -36,6 +38,14 @@ SCHEMA_VERSION = 1
 CEFR_ORDER = ("A1", "A2", "B1", "B2", "C1", "C2")
 CEFR_RANK = {level: index for index, level in enumerate(CEFR_ORDER)}
 NUMBER_KEYS = ("singular", "plural")
+NO_PAIR_PROBABILITY = {
+    "A1": 0.70,
+    "A2": 0.62,
+    "B1": 0.55,
+    "B2": 0.50,
+    "C1": 0.45,
+    "C2": 0.45,
+}
 
 CASE_LABELS_UA = {
     "nominative": "називний",
@@ -216,14 +226,33 @@ def _manifest_fingerprint(entries: list[dict[str, Any]]) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
 
 
+def _normalize_cefr(value: Any) -> str | None:
+    if isinstance(value, dict):
+        value = value.get("level") or value.get("cefr")
+    level_text = _clean_text(value)
+    if not level_text:
+        return None
+    match = re.search(r"\b([ABC][12])\b", level_text.upper())
+    if not match:
+        return None
+    level = match.group(1)
+    return level if level in CEFR_RANK else None
+
+
 def _cefr_level(entry: dict[str, Any]) -> str | None:
     enrichment = entry.get("enrichment")
-    if not isinstance(enrichment, dict):
-        return None
-    cefr = enrichment.get("cefr")
-    level = cefr.get("level") if isinstance(cefr, dict) else cefr
-    level_text = _clean_text(level)
-    return level_text if level_text in CEFR_RANK else None
+    if isinstance(enrichment, dict):
+        level = _normalize_cefr(enrichment.get("cefr"))
+        if level:
+            return level
+    level = _normalize_cefr(entry.get("cefr"))
+    if level:
+        return level
+    for usage in _course_usage(entry):
+        level = _normalize_cefr(usage.get("track"))
+        if level:
+            return level
+    return None
 
 
 def _ipa(entry: dict[str, Any]) -> str | None:
@@ -309,6 +338,8 @@ def _vesum_pos(pos: str | None) -> str | None:
 
 def _course_usage(entry: dict[str, Any]) -> list[dict[str, Any]]:
     usage = entry.get("course_usage")
+    if isinstance(usage, dict):
+        return [usage]
     if not isinstance(usage, list):
         return []
     return [item for item in usage if isinstance(item, dict)]
@@ -324,29 +355,14 @@ def _course_key(entry: dict[str, Any]) -> tuple[str, str, str]:
     )
 
 
-def _cloze_sources(entry: dict[str, Any]) -> list[dict[str, Any]]:
-    sources: list[dict[str, Any]] = []
-
-    def add(value: Any) -> None:
-        if isinstance(value, list):
-            sources.extend(row for row in value if isinstance(row, dict))
-        elif isinstance(value, dict):
-            sources.append(value)
-
-    add(entry.get("cloze"))
-    add(entry.get("practice_cloze"))
-    practice = entry.get("practice")
-    if isinstance(practice, dict):
-        add(practice.get("cloze"))
-    enrichment = entry.get("enrichment")
-    if isinstance(enrichment, dict):
-        enrichment_practice = enrichment.get("practice")
-        if isinstance(enrichment_practice, dict):
-            add(enrichment_practice.get("cloze"))
-    for usage in _course_usage(entry):
-        add(usage.get("cloze"))
-        add(usage.get("practice_cloze"))
-    return sources
+def _cloze_join_key(row: dict[str, Any]) -> tuple[str, str] | None:
+    lemma_id = _clean_text(row.get("lemmaId"))
+    if lemma_id:
+        return ("lemmaId", lemma_id)
+    lemma = _clean_text(row.get("lemma"))
+    if lemma:
+        return ("lemma", _plain(lemma))
+    return None
 
 
 def _all_paradigm_forms(paradigm: dict[str, Any]) -> list[str]:
@@ -366,10 +382,13 @@ def _all_paradigm_forms(paradigm: dict[str, Any]) -> list[str]:
     return forms
 
 
-def _match_has_case(match: dict[str, Any], case_name: str) -> bool:
-    tag = CASE_VESUM_TAGS.get(case_name)
-    tags = str(match.get("tags") or "")
-    return bool(tag and tag in tags)
+def _match_cases(match: dict[str, Any]) -> set[str]:
+    tokens = set(str(match.get("tags") or "").replace(":", " ").split())
+    return {
+        case_name
+        for case_name, tag in CASE_VESUM_TAGS.items()
+        if tag in tokens
+    }
 
 
 def _verify_paradigm(
@@ -404,7 +423,7 @@ def _verify_discriminative_form(
     match = matches[0]
     if _plain(str(match.get("lemma") or "")) != lemma_plain:
         return False
-    return _match_has_case(match, case_name)
+    return _match_cases(match) == {case_name}
 
 
 def _case_form(
@@ -436,8 +455,7 @@ def _case_rule_payload(rule_id: str, lemma: str, form: str) -> dict[str, str] | 
 
 
 def _candidate_sentence_level(candidate: dict[str, Any], fallback: str) -> str:
-    level = _clean_text(candidate.get("cefr")) or _clean_text(candidate.get("level")) or fallback
-    return level if level in CEFR_RANK else fallback
+    return _normalize_cefr(candidate.get("cefr")) or _normalize_cefr(candidate.get("level")) or fallback
 
 
 def _cloze_candidate_ok_for_level(candidate: dict[str, Any], word_level: str) -> bool:
@@ -445,12 +463,12 @@ def _cloze_candidate_ok_for_level(candidate: dict[str, Any], word_level: str) ->
     return CEFR_RANK[sentence_level] <= CEFR_RANK[word_level]
 
 
-def _pick_decoy(
+def _eligible_decoys(
     answer: dict[str, Any],
     lexemes: list[dict[str, Any]],
-    rng: random.Random,
     case_name: str,
-) -> tuple[dict[str, Any], str] | None:
+    number: str,
+) -> list[tuple[dict[str, Any], str]]:
     answer_head = _headword(answer["gloss"])
     candidates: list[tuple[dict[str, Any], str]] = []
     for lexeme in lexemes:
@@ -460,18 +478,139 @@ def _pick_decoy(
             continue
         if _headword(lexeme["gloss"]) == answer_head:
             continue
-        forms = lexeme.get("paradigm", {}).get("cases", {})
-        if not isinstance(forms, dict):
-            continue
-        case_forms = forms.get(case_name)
-        if not isinstance(case_forms, dict):
-            continue
-        decoy_form = _clean_text(case_forms.get("singular")) or _clean_text(case_forms.get("plural"))
+        decoy_form = _case_form(lexeme.get("paradigm", {}), case_name, number)
         if decoy_form and _plain(decoy_form) != _plain(lexeme["lemma"]):
             candidates.append((lexeme, decoy_form))
+    return candidates
+
+
+def _pick_decoy(
+    answer: dict[str, Any],
+    lexemes: list[dict[str, Any]],
+    rng: random.Random,
+    case_name: str,
+    number: str,
+) -> tuple[dict[str, Any], str] | None:
+    candidates = _eligible_decoys(answer, lexemes, case_name, number)
     if not candidates:
         return None
     return rng.choice(candidates)
+
+
+def _option(
+    cloze_id: str,
+    suffix: str,
+    label: str,
+    lemma_id: str,
+    kind: str,
+    case_name: str,
+    pos: str | None,
+) -> dict[str, str]:
+    return {
+        "optionId": f"{cloze_id}:{suffix}",
+        "label": label,
+        "lemmaId": lemma_id,
+        "kind": kind,
+        "case": case_name,
+        "pos": pos or "",
+    }
+
+
+def _option_strategy_for_level(level: str, rng: random.Random) -> str:
+    no_pair_probability = NO_PAIR_PROBABILITY.get(level, NO_PAIR_PROBABILITY["B1"])
+    return "no-pair" if rng.random() < no_pair_probability else "two-pair"
+
+
+def _make_two_pair_options(
+    cloze: dict[str, Any],
+    answer: dict[str, Any],
+    lexemes: list[dict[str, Any]],
+    rng: random.Random,
+) -> list[dict[str, str]]:
+    decoy = _pick_decoy(answer, lexemes, rng, cloze["blankCase"], cloze["number"])
+    if decoy is None:
+        return []
+    decoy_lexeme, decoy_form = decoy
+    options = [
+        _option(
+            cloze["clozeId"],
+            "answer",
+            cloze["form"],
+            answer["lemmaId"],
+            "answer",
+            cloze["blankCase"],
+            answer.get("pos"),
+        ),
+        _option(
+            cloze["clozeId"],
+            "lemma",
+            answer["lemma"],
+            answer["lemmaId"],
+            "same-root-lemma",
+            "nominative",
+            answer.get("pos"),
+        ),
+        _option(
+            cloze["clozeId"],
+            "decoy-lemma",
+            decoy_lexeme["lemma"],
+            decoy_lexeme["lemmaId"],
+            "decoy-lemma",
+            "nominative",
+            decoy_lexeme.get("pos"),
+        ),
+        _option(
+            cloze["clozeId"],
+            "decoy-oblique",
+            decoy_form,
+            decoy_lexeme["lemmaId"],
+            "decoy-oblique",
+            cloze["blankCase"],
+            decoy_lexeme.get("pos"),
+        ),
+    ]
+    rng.shuffle(options)
+    return options
+
+
+def _make_no_pair_options(
+    cloze: dict[str, Any],
+    answer: dict[str, Any],
+    lexemes: list[dict[str, Any]],
+    rng: random.Random,
+) -> list[dict[str, str]]:
+    decoys = _eligible_decoys(answer, lexemes, cloze["blankCase"], cloze["number"])
+    rng.shuffle(decoys)
+    if len(decoys) < 3:
+        return []
+    options = [
+        _option(
+            cloze["clozeId"],
+            "answer",
+            cloze["form"],
+            answer["lemmaId"],
+            "answer",
+            cloze["blankCase"],
+            answer.get("pos"),
+        )
+    ]
+    for index, (decoy_lexeme, decoy_form) in enumerate(decoys[:3], start=1):
+        label = decoy_form if index <= 2 else decoy_lexeme["lemma"]
+        case_name = cloze["blankCase"] if index <= 2 else "nominative"
+        kind = "decoy-oblique" if index <= 2 else "decoy-lemma"
+        options.append(
+            _option(
+                cloze["clozeId"],
+                f"decoy-{index}",
+                label,
+                decoy_lexeme["lemmaId"],
+                kind,
+                case_name,
+                decoy_lexeme.get("pos"),
+            )
+        )
+    rng.shuffle(options)
+    return options
 
 
 def _make_options(
@@ -480,41 +619,17 @@ def _make_options(
     lexemes: list[dict[str, Any]],
     rng: random.Random,
 ) -> list[dict[str, str]]:
-    decoy = _pick_decoy(answer, lexemes, rng, cloze["blankCase"])
-    if decoy is None:
-        return []
-    decoy_lexeme, decoy_form = decoy
-    options = [
-        {
-            "optionId": f"{cloze['clozeId']}:answer",
-            "label": cloze["form"],
-            "lemmaId": answer["lemmaId"],
-            "kind": "answer",
-            "case": cloze["blankCase"],
-        },
-        {
-            "optionId": f"{cloze['clozeId']}:lemma",
-            "label": answer["lemma"],
-            "lemmaId": answer["lemmaId"],
-            "kind": "same-root-lemma",
-            "case": "nominative",
-        },
-        {
-            "optionId": f"{cloze['clozeId']}:decoy-lemma",
-            "label": decoy_lexeme["lemma"],
-            "lemmaId": decoy_lexeme["lemmaId"],
-            "kind": "decoy-lemma",
-            "case": "nominative",
-        },
-        {
-            "optionId": f"{cloze['clozeId']}:decoy-oblique",
-            "label": decoy_form,
-            "lemmaId": decoy_lexeme["lemmaId"],
-            "kind": "decoy-oblique",
-            "case": cloze["blankCase"],
-        },
-    ]
-    rng.shuffle(options)
+    strategy = _option_strategy_for_level(answer["cefr"], rng)
+    options = (
+        _make_no_pair_options(cloze, answer, lexemes, rng)
+        if strategy == "no-pair"
+        else _make_two_pair_options(cloze, answer, lexemes, rng)
+    )
+    if not options:
+        strategy = "two-pair"
+        options = _make_two_pair_options(cloze, answer, lexemes, rng)
+    for option in options:
+        option["strategy"] = strategy
     return options
 
 
@@ -530,15 +645,33 @@ def validate_option_set(cloze: dict[str, Any]) -> list[str]:
     answer_count = sum(1 for label in normalized if label == _plain(str(cloze.get("form") or "")))
     if answer_count != 1:
         errors.append("answer form must be present exactly once")
+    accepted = [cloze.get("form")]
+    accepted_alt = cloze.get("acceptedAlt")
+    if isinstance(accepted_alt, list):
+        accepted.extend(accepted_alt)
+    accepted_normalized = {_plain(str(value)) for value in accepted if _clean_text(value)}
+    distractors = [
+        option
+        for option in options
+        if isinstance(option, dict) and option.get("kind") != "answer"
+    ]
+    if any(_plain(str(option.get("label") or "")) in accepted_normalized for option in distractors):
+        errors.append("accepted alternate must not equal a distractor")
     oblique_count = sum(
         1
         for option in options
         if isinstance(option, dict)
         and option.get("case") not in {None, "", "nominative"}
-        and option.get("kind") != "answer"
     )
-    if oblique_count < 1:
-        errors.append("option set must contain at least one oblique distractor")
+    if oblique_count < 2:
+        errors.append("option set must contain at least two oblique-looking forms")
+    pos_values = {
+        str(option.get("pos") or "")
+        for option in options
+        if isinstance(option, dict) and option.get("pos")
+    }
+    if len(pos_values) > 1:
+        errors.append("option set must stay within one POS bucket")
     root_counts: dict[str, int] = {}
     for option in options:
         if not isinstance(option, dict):
@@ -548,10 +681,28 @@ def validate_option_set(cloze: dict[str, Any]) -> list[str]:
     pair_count = sum(1 for count in root_counts.values() if count >= 2)
     if pair_count == 1:
         errors.append("option set must not contain exactly one same-root pair")
+    if pair_count > 1 and any(count > 2 for count in root_counts.values()):
+        errors.append("option set must not contain answer-equivalent root leaks")
     lengths = [len(label) for label in labels]
     if lengths and max(lengths) - min(lengths) > 12:
         errors.append("option label lengths exceed bounded distribution")
     return errors
+
+
+def validate_option_sets(cloze_items: list[dict[str, Any]]) -> list[str]:
+    positions: list[int] = []
+    for item in cloze_items:
+        options = item.get("options")
+        if not isinstance(options, list):
+            continue
+        normalized_answer = _plain(str(item.get("form") or ""))
+        for index, option in enumerate(options):
+            if isinstance(option, dict) and _plain(str(option.get("label") or "")) == normalized_answer:
+                positions.append(index)
+                break
+    if len(positions) > 1 and len(set(positions)) == 1:
+        return ["answer position must vary across the deck"]
+    return []
 
 
 def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, Any] | None:
@@ -563,8 +714,6 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
     paradigm = _paradigm(entry)
     lemma_plain = _plain(lemma)
     pos = _clean_text(entry.get("pos"))
-    if not _verify_paradigm(lemma_plain, pos, paradigm, verifier):
-        return None
     return {
         "lemmaId": _stable_lemma_id(entry),
         "lemma": lemma,
@@ -580,31 +729,76 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
     }
 
 
+def _candidate_rule_id(candidate: dict[str, Any], case_name: str) -> str | None:
+    raw_rule = (
+        candidate.get("caseRuleId")
+        or candidate.get("ruleId")
+        or candidate.get("caseRule")
+    )
+    if isinstance(raw_rule, dict):
+        raw_rule = raw_rule.get("ruleId") or raw_rule.get("id")
+    rule_id = _clean_text(raw_rule)
+    if rule_id:
+        if rule_id in CASE_RULES and CASE_RULES[rule_id]["case"] == case_name:
+            return rule_id
+        return None
+    for fallback_id, rule in CASE_RULES.items():
+        if rule["case"] == case_name:
+            return fallback_id
+    return None
+
+
+def _infer_number(paradigm: dict[str, Any], case_name: str, form: str | None) -> str | None:
+    if form:
+        normalized = _plain(form)
+        for number in NUMBER_KEYS:
+            candidate = _case_form(paradigm, case_name, number)
+            if candidate and _plain(candidate) == normalized:
+                return number
+    return "singular"
+
+
+def _accepted_alts(candidate: dict[str, Any]) -> list[str]:
+    raw = candidate.get("acceptedAlt")
+    if raw is None:
+        raw = candidate.get("accepted_alt")
+    if isinstance(raw, list):
+        return [value for value in (_clean_text(item) for item in raw) if value]
+    text = _clean_text(raw)
+    if not text:
+        return []
+    return [value for value in (part.strip() for part in text.split("|")) if value]
+
+
 def _build_cloze_items(
-    entry: dict[str, Any],
     lexeme: dict[str, Any],
+    cloze_rows: list[dict[str, Any]],
     allowlist: ReviewedSourceAllowlist,
     verifier: VesumVerifier,
     deck_version: str,
 ) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
-    for index, candidate in enumerate(_cloze_sources(entry)):
+    for index, candidate in enumerate(cloze_rows):
         provenance = candidate.get("provenance")
         if not allowlist.allows(provenance):
             continue
-        rule_id = _clean_text(candidate.get("caseRuleId")) or _clean_text(candidate.get("ruleId"))
-        if not rule_id or rule_id not in CASE_RULES:
+        case_name = _clean_text(candidate.get("blankCase"))
+        if not case_name or case_name not in CASE_LABELS_UA:
             continue
-        case_name = str(CASE_RULES[rule_id]["case"])
-        candidate_case = _clean_text(candidate.get("blankCase"))
-        if candidate_case and candidate_case != case_name:
+        rule_id = _candidate_rule_id(candidate, case_name)
+        if not rule_id:
             continue
         if not _cloze_candidate_ok_for_level(candidate, lexeme["cefr"]):
             continue
-        number = _clean_text(candidate.get("number")) or "singular"
+        curated_form = _clean_text(candidate.get("form"))
+        number = _clean_text(candidate.get("number")) or _infer_number(
+            lexeme["paradigm"],
+            case_name,
+            curated_form,
+        )
         if number not in NUMBER_KEYS:
             continue
-        form = _case_form(lexeme["paradigm"], case_name, number)
+        form = curated_form or _case_form(lexeme["paradigm"], case_name, number)
         if not form or _plain(form) == lexeme["lemmaPlain"]:
             continue
         if not _verify_discriminative_form(
@@ -621,7 +815,7 @@ def _build_cloze_items(
             continue
         frame_key = "\x1f".join((deck_version, lexeme["lemmaId"], sentence, rule_id))
         sentence_frame_id = "sf_" + hashlib.sha1(frame_key.encode("utf-8")).hexdigest()[:12]
-        cloze_id = f"{lexeme['lemmaId']}:cloze:{index + 1}"
+        cloze_id = _clean_text(candidate.get("clozeId")) or f"{lexeme['lemmaId']}:cloze:{index + 1}"
         case_rule = _case_rule_payload(rule_id, lexeme["lemma"], form)
         if not case_rule:
             continue
@@ -633,8 +827,11 @@ def _build_cloze_items(
                 "sentence": sentence,
                 "blankCase": case_name,
                 "form": form,
+                "number": number,
+                "lemma": lexeme["lemma"],
                 "caseRule": case_rule,
                 "clozeEn": cloze_en,
+                "acceptedAlt": _accepted_alts(candidate),
                 "provenance": {
                     "status": provenance["status"],
                     "path": provenance["path"],
@@ -670,8 +867,12 @@ def build_practice_shards(
     entries: list[dict[str, Any]],
     allowlist: ReviewedSourceAllowlist,
     verifier: VesumVerifier,
+    cloze_sources: list[dict[str, Any]] | None = None,
     config: BuildConfig | None = None,
 ) -> dict[str, dict[str, dict[str, Any]]]:
+    if isinstance(cloze_sources, BuildConfig) and config is None:
+        config = cloze_sources
+        cloze_sources = None
     if config is None:
         config = BuildConfig()
     if config.target < 0:
@@ -697,10 +898,24 @@ def build_practice_shards(
             lexemes_by_entry.append((entry, lexeme))
 
     all_lexemes = [lexeme for _, lexeme in lexemes_by_entry]
+    cloze_sources = cloze_sources or []
+    cloze_by_lemma_id: dict[str, list[dict[str, Any]]] = {}
+    cloze_by_lemma: dict[str, list[dict[str, Any]]] = {}
+    for row in cloze_sources:
+        key = _cloze_join_key(row)
+        if key is None:
+            continue
+        key_type, key_value = key
+        target = cloze_by_lemma_id if key_type == "lemmaId" else cloze_by_lemma
+        target.setdefault(key_value, []).append(row)
     cloze_by_level: dict[str, list[dict[str, Any]]] = {level: [] for level in CEFR_ORDER}
     cloze_ids_by_lemma: dict[str, list[str]] = {}
-    for entry, lexeme in lexemes_by_entry:
-        items = _build_cloze_items(entry, lexeme, allowlist, verifier, deck_version)
+    for _entry, lexeme in lexemes_by_entry:
+        source_rows = [
+            *cloze_by_lemma_id.get(lexeme["lemmaId"], []),
+            *cloze_by_lemma.get(lexeme["lemmaPlain"], []),
+        ]
+        items = _build_cloze_items(lexeme, source_rows, allowlist, verifier, deck_version)
         for item in items:
             item["options"] = _make_options(item, lexeme, all_lexemes, rng)
             option_errors = validate_option_set(item)
@@ -715,6 +930,15 @@ def build_practice_shards(
         if not level_lexemes:
             continue
         level_cloze = cloze_by_level[level]
+        option_set_errors = validate_option_sets(level_cloze)
+        if option_set_errors:
+            print(
+                f"WARN: {level} cloze option mix skipped deck-level validation: {option_set_errors}",
+                file=sys.stderr,
+            )
+            level_cloze = []
+            for item in cloze_by_level[level]:
+                cloze_ids_by_lemma.get(item["lemmaId"], []).clear()
         index_items = []
         for order, lexeme in enumerate(level_lexemes):
             cloze_ids = cloze_ids_by_lemma.get(lexeme["lemmaId"], [])
@@ -733,6 +957,11 @@ def build_practice_shards(
                 }
             )
         coverage = round(len({item["lemmaId"] for item in level_cloze}) / len(level_lexemes), 4)
+        if level == "A1" and coverage < 0.10:
+            print(
+                f"WARN: A1 clozeCoverage {coverage:.4f} below 0.10; recognition deck still emitted",
+                file=sys.stderr,
+            )
         index_payload = _level_payload(
             "atlas-practice-index",
             deck_version,
@@ -779,6 +1008,19 @@ def read_manifest(path: Path) -> list[dict[str, Any]]:
     return [entry for entry in entries if isinstance(entry, dict)]
 
 
+def read_cloze_sources(path: Path | None) -> list[dict[str, Any]]:
+    if path is None or not path.exists():
+        print("WARN: no curated cloze sources found; emitting recognition-only deck", file=sys.stderr)
+        return []
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, list):
+        raise ValueError("cloze sources must be a list")
+    rows = [row for row in payload if isinstance(row, dict)]
+    if not rows:
+        print("WARN: curated cloze sources empty; emitting recognition-only deck", file=sys.stderr)
+    return rows
+
+
 def _json_bytes(payload: dict[str, Any]) -> bytes:
     text = json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
     return text.encode("utf-8")
@@ -801,13 +1043,48 @@ def apply_size_budgets(
     raw_limit: int,
     gzip_limit: int,
 ) -> None:
-    for level_shards in shards.values():
-        for payload in level_shards.values():
-            payload["sizeBudget"] = _size_budget(payload, raw_limit, gzip_limit)
-            if not payload["sizeBudget"]["ok"]:
-                raise ValueError(
-                    f"{payload['schema']}.{payload['level']} exceeds size budget: "
-                    f"{payload['sizeBudget']}"
+    for level, level_shards in shards.items():
+        while True:
+            oversized: list[dict[str, Any]] = []
+            for payload in level_shards.values():
+                payload["sizeBudget"] = _size_budget(payload, raw_limit, gzip_limit)
+                if not payload["sizeBudget"]["ok"]:
+                    oversized.append(payload)
+            if not oversized:
+                break
+
+            schemas = ", ".join(f"{payload['schema']}.{level}" for payload in oversized)
+            print(f"WARN: {schemas} exceeds size budget; trimming {level} shard", file=sys.stderr)
+            index_items = level_shards.get("index", {}).get("items", [])
+            if not isinstance(index_items, list) or not index_items:
+                break
+            removed = index_items.pop()
+            removed_lemma_id = removed.get("lemmaId") if isinstance(removed, dict) else None
+            if not removed_lemma_id:
+                break
+            lexemes = level_shards.get("lexemes", {}).get("lexemes", [])
+            if isinstance(lexemes, list):
+                lexemes[:] = [
+                    lexeme
+                    for lexeme in lexemes
+                    if not isinstance(lexeme, dict) or lexeme.get("lemmaId") != removed_lemma_id
+                ]
+            cloze_items = level_shards.get("cloze", {}).get("cloze", [])
+            if isinstance(cloze_items, list):
+                cloze_items[:] = [
+                    item
+                    for item in cloze_items
+                    if not isinstance(item, dict) or item.get("lemmaId") != removed_lemma_id
+                ]
+            counts = level_shards.get("index", {}).get("counts")
+            if isinstance(counts, dict) and isinstance(lexemes, list) and isinstance(cloze_items, list):
+                counts["lexemes"] = len(lexemes)
+                counts["cloze"] = len(cloze_items)
+                counts["clozeEligibleLexemes"] = len(
+                    {item["lemmaId"] for item in cloze_items if isinstance(item, dict)}
+                )
+                counts["clozeCoverage"] = (
+                    round(counts["clozeEligibleLexemes"] / len(lexemes), 4) if lexemes else 0
                 )
 
 
@@ -827,6 +1104,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--reviewed-allowlist", type=Path, default=DEFAULT_ALLOWLIST)
+    parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES)
     parser.add_argument("--vesum-fixture", type=Path)
     parser.add_argument("--target", type=int, default=DEFAULT_TARGET)
     parser.add_argument("--raw-limit", type=int, default=DEFAULT_RAW_LIMIT)
@@ -836,6 +1114,7 @@ def main(argv: list[str] | None = None) -> int:
 
     entries = read_manifest(args.manifest)
     allowlist = ReviewedSourceAllowlist.from_path(args.reviewed_allowlist)
+    cloze_sources = read_cloze_sources(args.cloze_sources)
     verifier: VesumVerifier = (
         JsonVesumVerifier.from_path(args.vesum_fixture)
         if args.vesum_fixture
@@ -848,7 +1127,7 @@ def main(argv: list[str] | None = None) -> int:
         fixture_note=args.fixture_note,
         source_label="fixture" if args.vesum_fixture else "manifest",
     )
-    shards = build_practice_shards(entries, allowlist, verifier, config)
+    shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, config)
     apply_size_budgets(shards, config.raw_limit, config.gzip_limit)
     written = write_shards(shards, args.out_dir)
     for path in written:

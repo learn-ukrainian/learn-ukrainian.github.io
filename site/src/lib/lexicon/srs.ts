@@ -14,7 +14,10 @@ export const SRS_BACKUP_KEY = 'lu-lexicon-srs.backup';
 
 const CURRENT_VERSION = 3;
 const SETTINGS_VERSION = 1;
+const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
+const WIDENED_DUE_WINDOW_MS = 6 * HOUR_MS;
+const MIN_WORD_REPEAT_WINDOW = 8;
 const DEFAULT_RECOGNITION_STABILITY = 3;
 
 export type PracticeRating = 'again' | 'hard' | 'good' | 'easy';
@@ -63,6 +66,8 @@ export interface PracticeClozeOption {
   lemmaId: string;
   kind: 'answer' | 'same-root-lemma' | 'decoy-lemma' | 'decoy-oblique' | string;
   case?: string;
+  pos?: string;
+  strategy?: string;
 }
 
 export interface PracticeCaseRule {
@@ -81,6 +86,8 @@ export interface PracticeClozeItem {
   sentence: string;
   blankCase: string;
   form: string;
+  lemma?: string;
+  acceptedAlt?: string[];
   caseRule: PracticeCaseRule;
   clozeEn: string;
   options: PracticeClozeOption[];
@@ -212,6 +219,7 @@ export interface SelectPracticeOptions {
   minRecognitionStability?: number;
   clozeSoftCap?: number;
   dueWindowMs?: number;
+  wordRepeatWindow?: number;
 }
 
 interface PersistedSrsSchemaV3 {
@@ -808,8 +816,7 @@ function candidatePenalty(
 
   if (candidate.mode === 'cloze' && recent.length >= 4) {
     const clozeRatio = recent.filter((item) => item.mode === 'cloze').length / recent.length;
-    const overdueBy = nowTime - candidate.due;
-    if (clozeRatio >= clozeSoftCap && overdueBy < DAY_MS) penalty += 35;
+    if (clozeRatio >= clozeSoftCap && candidate.due > nowTime) penalty += 35;
   }
 
   if (candidate.cloze) {
@@ -831,6 +838,55 @@ function candidatePenalty(
   return penalty;
 }
 
+function applySpacingFilters(
+  pool: PracticeSelection[],
+  history: SelectionHistoryItem[],
+  wordRepeatWindow: number,
+): PracticeSelection[] {
+  const last = history.at(-1);
+  let filtered = pool.filter(
+    (candidate) => candidate.lapsed || !last || candidate.itemId !== last.itemId,
+  );
+  filtered = filtered.filter(
+    (candidate) =>
+      candidate.lapsed ||
+      !candidate.cloze ||
+      !last?.sentenceFrameId ||
+      candidate.cloze.sentenceFrameId !== last.sentenceFrameId,
+  );
+  const wordSpaced = filtered.filter(
+    (candidate) =>
+      candidate.lapsed ||
+      !history.slice(-wordRepeatWindow).some((item) => item.lemmaId === candidate.lemma.lemmaId),
+  );
+  return wordSpaced.length > 0 ? wordSpaced : filtered;
+}
+
+function urgencyBucket(candidate: PracticeSelection, nowTime: number): number {
+  if (candidate.lapsed) return -1_000_000_000;
+  if (!candidate.cardState) return 0;
+  return Math.floor((candidate.due - nowTime) / HOUR_MS);
+}
+
+function rankCandidates(
+  pool: PracticeSelection[],
+  history: SelectionHistoryItem[],
+  clozeSoftCap: number,
+  nowTime: number,
+): PracticeSelection | null {
+  return (
+    [...pool].sort((left, right) => {
+      const leftScore = urgencyBucket(left, nowTime) + candidatePenalty(left, pool, history, clozeSoftCap, nowTime);
+      const rightScore = urgencyBucket(right, nowTime) + candidatePenalty(right, pool, history, clozeSoftCap, nowTime);
+      return (
+        leftScore - rightScore ||
+        left.indexItem.newOrder - right.indexItem.newOrder ||
+        left.itemId.localeCompare(right.itemId)
+      );
+    })[0] ?? null
+  );
+}
+
 export function selectNextPracticeItem(
   deck: PracticeDeckData,
   options: SelectPracticeOptions = {},
@@ -842,6 +898,7 @@ export function selectNextPracticeItem(
   const minRecognitionStability = options.minRecognitionStability ?? DEFAULT_RECOGNITION_STABILITY;
   const clozeSoftCap = options.clozeSoftCap ?? 0.25;
   const dueWindowMs = options.dueWindowMs ?? 0;
+  const wordRepeatWindow = Math.max(MIN_WORD_REPEAT_WINDOW, options.wordRepeatWindow ?? MIN_WORD_REPEAT_WINDOW);
   const maps = deckMaps(deck);
   const candidates: PracticeSelection[] = [];
 
@@ -890,47 +947,24 @@ export function selectNextPracticeItem(
     }
   }
 
-  const dueCandidates = candidates.filter(
-    (candidate) => candidate.due <= nowTime || candidate.due <= nowTime + dueWindowMs,
+  const overduePool = candidates.filter((candidate) => candidate.due <= nowTime);
+  const windowPool = candidates.filter(
+    (candidate) => candidate.due <= nowTime + Math.max(dueWindowMs, WIDENED_DUE_WINDOW_MS),
   );
-  const scheduledPool =
-    dueCandidates.length > 0
-      ? dueCandidates
-      : candidates
-          .filter((candidate) => candidate.due > nowTime)
-          .sort((left, right) => left.due - right.due)
-          .slice(0, Math.max(1, Math.min(4, candidates.length)));
+  let scheduledPool = overduePool.length ? overduePool : windowPool;
+  scheduledPool = applySpacingFilters(scheduledPool, history, wordRepeatWindow);
+  if (!scheduledPool.length && windowPool.length) scheduledPool = windowPool;
+  if (!scheduledPool.length) {
+    const borrowedPool = candidates
+      .filter((candidate) => candidate.due > nowTime)
+      .sort((left, right) => left.due - right.due)
+      .slice(0, Math.max(1, Math.min(4, candidates.length)));
+    scheduledPool = applySpacingFilters(borrowedPool, history, wordRepeatWindow);
+    if (!scheduledPool.length) scheduledPool = borrowedPool;
+  }
   if (!scheduledPool.length) return null;
 
-  const last = history.at(-1);
-  let filtered = scheduledPool.filter(
-    (candidate) => candidate.lapsed || !last || candidate.itemId !== last.itemId,
-  );
-  filtered = filtered.filter(
-    (candidate) =>
-      candidate.lapsed ||
-      !candidate.cloze ||
-      !last?.sentenceFrameId ||
-      candidate.cloze.sentenceFrameId !== last.sentenceFrameId,
-  );
-  const wordSpaced = filtered.filter(
-    (candidate) =>
-      candidate.lapsed || !history.slice(-2).some((item) => item.lemmaId === candidate.lemma.lemmaId),
-  );
-  if (wordSpaced.length > 0) filtered = wordSpaced;
-  if (!filtered.length) filtered = scheduledPool;
-
-  return [...filtered].sort((left, right) => {
-    const leftUrgency = left.lapsed ? -1_000_000_000 : left.cardState ? left.due - nowTime : 0;
-    const rightUrgency = right.lapsed ? -1_000_000_000 : right.cardState ? right.due - nowTime : 0;
-    const leftScore = leftUrgency + candidatePenalty(left, filtered, history, clozeSoftCap, nowTime);
-    const rightScore = rightUrgency + candidatePenalty(right, filtered, history, clozeSoftCap, nowTime);
-    return (
-      leftScore - rightScore ||
-      left.indexItem.newOrder - right.indexItem.newOrder ||
-      left.itemId.localeCompare(right.itemId)
-    );
-  })[0];
+  return rankCandidates(scheduledPool, history, clozeSoftCap, nowTime);
 }
 
 export function czNorm(value: string): string {
@@ -968,12 +1002,27 @@ export function validateClozeOptions(cloze: PracticeClozeItem): string[] {
   if (answerCount !== 1) {
     errors.push('answer form must be present exactly once');
   }
+  const accepted = new Set(
+    [cloze.form, ...(cloze.acceptedAlt ?? [])]
+      .filter((value): value is string => Boolean(value))
+      .map(czNorm),
+  );
+  const distractorLeak = cloze.options.some(
+    (option) => option.kind !== 'answer' && accepted.has(czNorm(option.label)),
+  );
+  if (distractorLeak) {
+    errors.push('accepted alternate must not equal a distractor');
+  }
   const obliqueTotal = cloze.options.filter((option) => option.case && option.case !== 'nominative').length;
   const obliqueDistractors = cloze.options.filter(
     (option) => option.kind !== 'answer' && option.case && option.case !== 'nominative',
   ).length;
   if (obliqueTotal < 2 || obliqueDistractors < 1) {
     errors.push('option set must contain the answer plus at least one oblique distractor');
+  }
+  const posValues = new Set(cloze.options.map((option) => option.pos).filter(Boolean));
+  if (posValues.size > 1) {
+    errors.push('option set must stay within one POS bucket');
   }
   const rootCounts = new Map<string, number>();
   for (const option of cloze.options) {
