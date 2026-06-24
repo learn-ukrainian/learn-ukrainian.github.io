@@ -40,6 +40,14 @@ def _iterative_plan() -> dict[str, Any]:
             {"section": "Intro", "words": 1, "points": ["Open the module."]},
             {"section": "Discussion", "words": 1, "points": ["Synthesize the module."]},
         ],
+        "activity_hints": [
+            {
+                "after_section": "Intro",
+                "focus": "Check the opening idea.",
+                "placement": "inline",
+                "type": "quiz",
+            }
+        ],
     }
 
 
@@ -56,6 +64,24 @@ def _section_artifact_response(section_id: str, title: str) -> str:
     return "```section_artifact.json\n" + json.dumps(payload) + "\n```"
 
 
+def _activity_artifact_response() -> str:
+    payload = [
+        {
+            "type": "quiz",
+            "title": "Opening Check",
+            "instruction": "Choose the best answer.",
+            "items": [
+                {
+                    "question": "What does the opening section do?",
+                    "answer": "It opens the module.",
+                    "options": ["It opens the module.", "It closes the module."],
+                }
+            ],
+        }
+    ]
+    return "```json file=activities.yaml\n" + json.dumps(payload) + "\n```"
+
+
 def _patch_invoke_writer_with_tool_totals(
     monkeypatch: pytest.MonkeyPatch,
     tool_totals: list[int],
@@ -65,9 +91,14 @@ def _patch_invoke_writer_with_tool_totals(
 
     def fake_invoke_writer(prompt: str, writer: str, **kwargs: Any) -> str:
         section_title = kwargs["sections"][0]
-        section_index = len(section_calls)
+        call_index = len(section_calls)
         section_calls.append(section_title)
-        tool_calls_total = tool_totals[section_index]
+        section_index = sum(
+            1
+            for title in section_calls
+            if title != linear_pipeline.ITERATIVE_ACTIVITY_WRITER_SECTION
+        )
+        tool_calls_total = tool_totals[call_index]
         tool_calls = [
             {
                 "tool": "mcp__sources__search_text",
@@ -78,8 +109,13 @@ def _patch_invoke_writer_with_tool_totals(
         ]
 
         def fake_runtime_invoker(_agent: str, _prompt: str, **_runtime_kwargs: Any) -> SimpleNamespace:
+            response = (
+                _activity_artifact_response()
+                if section_title == linear_pipeline.ITERATIVE_ACTIVITY_WRITER_SECTION
+                else _section_artifact_response(f"s{section_index}", section_title)
+            )
             return SimpleNamespace(
-                response=_section_artifact_response(f"s{section_index + 1}", section_title),
+                response=response,
                 tool_calls=tool_calls,
                 tool_calls_total=tool_calls_total,
             )
@@ -100,7 +136,7 @@ def test_iterative_tools_writer_runtime_gate_aggregates_module_tool_calls(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     _seed_sources_mcp_config(tmp_path, monkeypatch)
-    section_calls = _patch_invoke_writer_with_tool_totals(monkeypatch, [2, 0])
+    section_calls = _patch_invoke_writer_with_tool_totals(monkeypatch, [2, 0, 0])
 
     result = linear_pipeline.run_iterative_writer(
         _iterative_plan(),
@@ -111,7 +147,7 @@ def test_iterative_tools_writer_runtime_gate_aggregates_module_tool_calls(
         module="folk/iterative-tools-gate",
     )
 
-    assert section_calls == ["Intro", "Discussion"]
+    assert section_calls == ["Intro", "Discussion", linear_pipeline.ITERATIVE_ACTIVITY_WRITER_SECTION]
     assert "## Intro" in result["module_md"]
     assert "## Discussion" in result["module_md"]
 
@@ -121,7 +157,7 @@ def test_iterative_tools_writer_runtime_gate_fails_when_module_has_zero_tool_cal
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     _seed_sources_mcp_config(tmp_path, monkeypatch)
-    section_calls = _patch_invoke_writer_with_tool_totals(monkeypatch, [0, 0])
+    section_calls = _patch_invoke_writer_with_tool_totals(monkeypatch, [0, 0, 0])
     events: list[dict[str, Any]] = []
 
     with pytest.raises(linear_pipeline.LinearPipelineError, match="mcp_tools_never_invoked"):
@@ -135,7 +171,7 @@ def test_iterative_tools_writer_runtime_gate_fails_when_module_has_zero_tool_cal
             event_sink=lambda event, **fields: events.append({"event": event, **fields}),
         )
 
-    assert section_calls == ["Intro", "Discussion"]
+    assert section_calls == ["Intro", "Discussion", linear_pipeline.ITERATIVE_ACTIVITY_WRITER_SECTION]
     assert any(
         event["event"] == "writer_failure_class"
         and event["failure_class"] == "mcp_tools_never_invoked"
