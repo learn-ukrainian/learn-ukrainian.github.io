@@ -13,6 +13,20 @@ from scripts.etymology.transliterate import transliterate
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_OUT = Path("site/src/data/lexicon-search-index.json")
+CEFR_LEVELS = {"A1", "A2", "B1", "B2", "C1", "C2"}
+
+
+def _cefr_level(entry: dict[str, Any]) -> str | None:
+    enrichment = entry.get("enrichment")
+    cefr = enrichment.get("cefr") if isinstance(enrichment, dict) else None
+    level = cefr.get("level") if isinstance(cefr, dict) else cefr
+    if not isinstance(level, str):
+        root_cefr = entry.get("cefr")
+        level = root_cefr.get("level") if isinstance(root_cefr, dict) else root_cefr
+    if not isinstance(level, str):
+        return None
+    normalized = level.strip().upper()
+    return normalized if normalized in CEFR_LEVELS else None
 
 
 def _search_row(entry: dict[str, Any]) -> dict[str, Any] | None:
@@ -23,13 +37,17 @@ def _search_row(entry: dict[str, Any]) -> dict[str, Any] | None:
     lemma = entry.get("lemma")
     slug = entry.get("url_slug")
     gloss = entry.get("gloss")
-    return {
+    row = {
         "l": lemma,
         "s": slug,
         "g": gloss if isinstance(gloss, str) else None,
         "r": transliterate(lemma),
         "k": kind_for_source(entry.get("primary_source")),
     }
+    cefr = _cefr_level(entry)
+    if cefr is not None:
+        row["c"] = cefr
+    return row
 
 
 def build_index(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:

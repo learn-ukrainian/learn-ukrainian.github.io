@@ -3,8 +3,8 @@
  * Атлас слів (Лексикон) landing page.
  */
 import CourseLayout from "../../layouts/CourseLayout.astro";
+import AtlasBrowse from "../../lexicon/AtlasBrowse.astro";
 import AtlasTypeahead from "../../lexicon/AtlasTypeahead.astro";
-import DailyWords from "../../lexicon/DailyWords.astro";
 
 const frontmatter = {
   title: "Атлас слів",
@@ -25,8 +25,8 @@ const frontmatter = {
       <span class="lexicon-badge">Лексикон</span>
       <h1 id="lexicon-landing-title">Атлас слів</h1>
       <p>
-        Шукайте курсові слова з джерелами, морфологією та місцями появи в модулях.
-        Нижче — щоденна добірка для швидкого повторення й відкриття нових слів.
+        Шукайте курсові слова з джерелами, морфологією та місцями появи в модулях,
+        або переглядайте Атлас за літерами й рівнем.
       </p>
       <AtlasTypeahead
         id="lexicon-landing-search"
@@ -38,7 +38,7 @@ const frontmatter = {
       <a class="lexicon-practice-link" href="/lexicon/practice">Practice Word Atlas</a>
     </section>
 
-    <DailyWords />
+    <AtlasBrowse />
   </div>
 </CourseLayout>
 

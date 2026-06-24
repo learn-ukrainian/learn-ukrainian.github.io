@@ -1,0 +1,79 @@
+---
+import CourseLayout from "../layouts/CourseLayout.astro";
+import DailyWords from "../lexicon/DailyWords.astro";
+
+const frontmatter = {
+  title: "Слова дня / Words of the Day",
+  description: "A daily Word Atlas surface with CEFR-capped Ukrainian vocabulary picks.",
+};
+---
+
+<CourseLayout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  currentPath="/words-of-the-day/"
+  heroVariant="lexicon"
+  wide
+  showHero={false}
+>
+  <main class="word-atlas words-day-page" data-word-atlas>
+    <section class="words-day-hero" aria-labelledby="words-day-title">
+      <span class="words-day-badge">Слова дня</span>
+      <h1 id="words-day-title">Слова дня / Words of the Day</h1>
+      <p>Щоденна добірка слів з Атласу, обмежена вашим поточним рівнем.</p>
+    </section>
+
+    <DailyWords
+      title="Добірка на сьогодні"
+      description="Слова оновлюються за календарною датою; кожна картка веде до повної статті Атласу."
+      count={12}
+      showLevelSelector
+    />
+  </main>
+</CourseLayout>
+
+<style>
+  .words-day-page {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem 4.5rem;
+  }
+
+  .words-day-hero {
+    max-width: 820px;
+    margin-bottom: 2rem;
+  }
+
+  .words-day-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.75rem;
+    padding: 0 0.65rem;
+    border-radius: 4px;
+    background: var(--lu-state-active);
+    color: var(--lu-primary);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .words-day-hero h1 {
+    margin: 0.7rem 0 0;
+    color: var(--lu-text);
+    font-size: clamp(2.3rem, 4vw, 4rem);
+    line-height: 1;
+  }
+
+  .words-day-hero p {
+    max-width: 680px;
+    margin: 1rem 0 0;
+    color: var(--lu-text-muted);
+    font-size: 1.05rem;
+    line-height: 1.65;
+  }
+
+  :global(.words-day-page .lexicon-daily-section) {
+    padding: 0;
+  }
+</style>

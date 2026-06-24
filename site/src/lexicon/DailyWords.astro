@@ -1,18 +1,65 @@
-<section class="atlas-section lexicon-daily-section" aria-labelledby="lexicon-daily-title" data-daily-words>
+---
+import { CEFR_LEVELS } from "../lib/lexicon/levels";
+
+type Props = {
+  title?: string;
+  description?: string;
+  count?: number;
+  showLevelSelector?: boolean;
+};
+
+const {
+  title = "Слова дня",
+  description = "Коротка щоденна добірка для повторення й відкриття словникових статей.",
+  count = 8,
+  showLevelSelector = false,
+} = Astro.props as Props;
+
+const dailyCount = Math.max(1, Math.floor(count));
+---
+
+<section
+  class="atlas-section lexicon-daily-section"
+  aria-labelledby="lexicon-daily-title"
+  data-daily-words
+  data-daily-count={dailyCount}
+  data-daily-level-selector={showLevelSelector ? "true" : "false"}
+>
   <div class="lexicon-daily-heading">
-    <h2 id="lexicon-daily-title">Слова дня</h2>
-    <p>Коротка щоденна добірка для повторення й відкриття словникових статей.</p>
+    <h2 id="lexicon-daily-title">{title}</h2>
+    <p>{description}</p>
   </div>
-  <p class="lexicon-daily-status" data-daily-status>Завантажуємо добірку…</p>
+
+  {showLevelSelector && (
+    <div class="lexicon-daily-controls" aria-label="Learner level">
+      <span class="lexicon-daily-control-label">Рівень</span>
+      <div class="lexicon-daily-levels" role="list" data-daily-levels>
+        {CEFR_LEVELS.map((level) => (
+          <button
+            class="lexicon-daily-level-chip"
+            type="button"
+            data-daily-level={level}
+            aria-pressed={level === "A1" ? "true" : "false"}
+          >
+            {level}
+          </button>
+        ))}
+      </div>
+    </div>
+  )}
+
+  <p class="lexicon-daily-status" data-daily-status>Завантажуємо добірку...</p>
   <ul id="lexicon-daily-list" class="lexicon-daily-grid" aria-live="polite" data-daily-list></ul>
 </section>
 
 <script>
   import { dateSeed, pickDaily, type DailyWord } from "../lib/lexicon/daily";
-
-  const dailySection = document.querySelector<HTMLElement>("[data-daily-words]");
-  const dailyList = dailySection?.querySelector<HTMLUListElement>("[data-daily-list]");
-  const dailyStatus = dailySection?.querySelector<HTMLElement>("[data-daily-status]");
+  import {
+    filterByCumulativeLevel,
+    LEARNER_LEVEL_STORAGE_KEY,
+    normalizeCefrLevel,
+    type CefrLevel,
+  } from "../lib/lexicon/levels";
 
   const dwEsc = (value: unknown): string =>
     String(value ?? "").replace(
@@ -20,9 +67,20 @@
       (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] ?? c,
     );
 
-  const hideDailySection = () => {
-    if (dailyList) dailyList.innerHTML = "";
-    if (dailySection) dailySection.hidden = true;
+  const readLearnerLevel = (): CefrLevel => {
+    try {
+      return normalizeCefrLevel(window.localStorage.getItem(LEARNER_LEVEL_STORAGE_KEY));
+    } catch {
+      return "A1";
+    }
+  };
+
+  const storeLearnerLevel = (level: CefrLevel) => {
+    try {
+      window.localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, level);
+    } catch {
+      // Storage can be unavailable in hardened browser contexts.
+    }
   };
 
   const renderChips = (word: DailyWord): string => {
@@ -30,51 +88,109 @@
     if (word.k === "avoid") {
       chips.push('<span class="lexicon-daily-chip danger">остерігайтеся</span>');
     }
-    // Show only CEFR level (A1/A2/B1) — a single, meaningful "how hard this word is"
-    // badge. The course-track tag (a1/a2/b1) is redundant and renders mashed next to it
-    // ("a1A1"); it lives on the word's full page instead.
     if (word.cefr) {
       chips.push(`<span class="lexicon-daily-chip">${dwEsc(word.cefr)}</span>`);
     }
-    if (!chips.length) return "";
-    return `<span class="lexicon-daily-chips">${chips.join("")}</span>`;
+    return chips.length > 0 ? `<span class="lexicon-daily-chips">${chips.join("")}</span>` : "";
   };
 
   const renderCard = (word: DailyWord): string => {
-    const href = `/lexicon/${encodeURIComponent(word.slug)}/`;
-    const gloss = word.gloss
-      ? `<span class="lexicon-daily-gloss">${dwEsc(word.gloss)}</span>`
-      : "";
+    const href = `/lexicon/${encodeURIComponent(String(word.slug))}/`;
     return `<li class="lexicon-daily-item">
-      <a class="lexicon-daily-card" href="${dwEsc(href)}">
+      <a class="lexicon-daily-card" href="${href}">
         <span class="lexicon-daily-lemma">${dwEsc(word.lemma)}</span>
-        ${gloss}
+        ${word.gloss ? `<span class="lexicon-daily-gloss">${dwEsc(word.gloss)}</span>` : ""}
         ${renderChips(word)}
       </a>
     </li>`;
   };
 
-  const renderDailyWords = async () => {
-    if (!dailySection || !dailyList) return;
-    try {
-      const response = await fetch("/lexicon/daily-pool.json");
-      if (!response.ok) throw new Error(`daily pool fetch failed: ${response.status}`);
-      const data = await response.json();
-      const pool: DailyWord[] = Array.isArray(data) ? data : [];
-      const seed = dateSeed(new Date());
-      const picks = pickDaily(pool, seed, 24);
-      if (!picks.length) {
-        hideDailySection();
+  const hydrateDailySection = (dailySection: HTMLElement) => {
+    const dailyList = dailySection.querySelector<HTMLUListElement>("[data-daily-list]");
+    const dailyStatus = dailySection.querySelector<HTMLElement>("[data-daily-status]");
+    const levelButtons = Array.from(
+      dailySection.querySelectorAll<HTMLButtonElement>("[data-daily-level]"),
+    );
+    const count = Number(dailySection.dataset.dailyCount ?? "8") || 8;
+    const useLevelSelector = dailySection.dataset.dailyLevelSelector === "true";
+
+    let activeLevel = readLearnerLevel();
+    let pool: DailyWord[] = [];
+
+    if (useLevelSelector) {
+      storeLearnerLevel(activeLevel);
+    }
+
+    const hideDailySection = () => {
+      if (dailyList) dailyList.innerHTML = "";
+      dailySection.hidden = true;
+    };
+
+    const syncLevelButtons = () => {
+      for (const button of levelButtons) {
+        button.setAttribute(
+          "aria-pressed",
+          normalizeCefrLevel(button.dataset.dailyLevel) === activeLevel ? "true" : "false",
+        );
+      }
+    };
+
+    const renderDailyWords = () => {
+      if (!dailyList) return;
+      const eligiblePool = useLevelSelector ? filterByCumulativeLevel(pool, activeLevel) : pool;
+      const picks = pickDaily(eligiblePool, dateSeed(new Date()), count);
+
+      if (picks.length === 0) {
+        dailyList.innerHTML = "";
+        if (dailyStatus) {
+          dailyStatus.hidden = false;
+          dailyStatus.textContent = `Немає слів для рівня ${activeLevel}.`;
+        }
         return;
       }
+
       dailyList.innerHTML = picks.map(renderCard).join("");
-      if (dailyStatus) dailyStatus.hidden = true;
-    } catch {
-      hideDailySection();
+      if (dailyStatus) {
+        dailyStatus.hidden = false;
+        dailyStatus.textContent = useLevelSelector
+          ? `${activeLevel} · ${picks.length} слів`
+          : "";
+        dailyStatus.hidden = !useLevelSelector;
+      }
+      syncLevelButtons();
+    };
+
+    for (const button of levelButtons) {
+      button.addEventListener("click", () => {
+        activeLevel = normalizeCefrLevel(button.dataset.dailyLevel);
+        storeLearnerLevel(activeLevel);
+        renderDailyWords();
+      });
     }
+
+    const loadDailyWords = async () => {
+      try {
+        const response = await fetch("/lexicon/daily-pool.json");
+        if (!response.ok) throw new Error(`Daily pool request failed: ${response.status}`);
+        const data = (await response.json()) as DailyWord[];
+        if (!Array.isArray(data) || data.length === 0) {
+          hideDailySection();
+          return;
+        }
+        pool = data;
+        syncLevelButtons();
+        renderDailyWords();
+      } catch {
+        hideDailySection();
+      }
+    };
+
+    loadDailyWords();
   };
 
-  renderDailyWords();
+  for (const dailySection of document.querySelectorAll<HTMLElement>("[data-daily-words]")) {
+    hydrateDailySection(dailySection);
+  }
 </script>
 
 <style>
@@ -82,8 +198,14 @@
     padding: 0 1.5rem 1.5rem;
   }
 
+  .lexicon-daily-heading,
+  .lexicon-daily-controls,
+  .lexicon-daily-status,
+  .lexicon-daily-grid {
+    max-width: 960px;
+  }
+
   .lexicon-daily-heading {
-    max-width: 920px;
     margin: 0 auto 1.15rem;
   }
 
@@ -100,8 +222,62 @@
     line-height: 1.55;
   }
 
+  .lexicon-daily-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem;
+    margin: 0 auto 1rem;
+  }
+
+  .lexicon-daily-control-label {
+    color: var(--lu-text);
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .lexicon-daily-levels {
+    display: flex;
+    gap: 0.45rem;
+    max-width: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.15rem;
+    scrollbar-width: thin;
+  }
+
+  .lexicon-daily-level-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 0.85rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface);
+    color: var(--lu-text);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 900;
+  }
+
+  .lexicon-daily-level-chip:hover,
+  .lexicon-daily-level-chip:focus-visible {
+    border-color: var(--lu-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--lu-state-active);
+  }
+
+  .lexicon-daily-level-chip[aria-pressed="true"] {
+    border-color: var(--lu-primary);
+    background: var(--lu-primary);
+    color: #fff;
+  }
+
   .lexicon-daily-status {
-    max-width: 920px;
     margin: 0 auto 1rem;
   }
 
@@ -109,7 +285,6 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 0.75rem;
-    max-width: 920px;
     margin: 0 auto;
     padding: 0;
     list-style: none;
