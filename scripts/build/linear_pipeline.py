@@ -10135,50 +10135,106 @@ def render_iterative_activity_prompt(
     return "\n".join(lines).rstrip() + "\n"
 
 
-_ITERATIVE_ACTIVITY_FENCE_RE = re.compile(
-    r"^[ \t]*(?P<run>`{3,})(?P<info>[^\n]*)\n"
-    r"(?P<body>.*?)"
-    r"^[ \t]*(?P=run)[ \t]*$",
-    re.DOTALL | re.MULTILINE,
-)
+_ACTIVITY_ARTIFACT_FENCE_LANGUAGES = {"json", "yaml", "yml"}
 
 
 def _artifact_name_from_fence_info(info: str) -> str | None:
-    for token in info.strip().split()[1:]:
+    for token in info.strip().split():
         value = token.removeprefix("file=")
         if value in WRITER_JSON_ARTIFACTS:
             return value
     return None
 
 
+def _activity_fence_language(info: str) -> str | None:
+    language = _fence_language(info)
+    if language in _ACTIVITY_ARTIFACT_FENCE_LANGUAGES:
+        return language
+    if _artifact_name_from_fence_info(info) == "activities.yaml":
+        return "yaml"
+    return None
+
+
+def _load_iterative_activities_data(raw: str, *, source: str) -> Any:
+    stripped = raw.strip()
+    if not stripped:
+        raise LinearPipelineError(f"Iterative activity writer output {source} is empty")
+    try:
+        return json.loads(stripped, parse_constant=_reject_non_strict_json_constant)
+    except (json.JSONDecodeError, ValueError) as json_exc:
+        try:
+            return yaml.safe_load(stripped)
+        except yaml.YAMLError as yaml_exc:
+            raise LinearPipelineError(
+                f"Iterative activity writer output {source} is unrecoverable: {json_exc}"
+            ) from yaml_exc
+
+
+def _validate_iterative_activities_data(
+    activities: Any, *, source: str
+) -> list[dict[str, Any]]:
+    if activities is None:
+        raise LinearPipelineError(f"Iterative activity writer output {source} is empty")
+    _normalize_writer_json_artifact("activities.yaml", activities)
+    return _validate_activities_artifact(activities)
+
+
+def _parse_iterative_activities_artifact(raw: str, *, source: str) -> list[dict[str, Any]]:
+    return _validate_iterative_activities_data(
+        _load_iterative_activities_data(raw, source=source),
+        source=source,
+    )
+
+
 def parse_iterative_activities_output(output: str) -> list[dict[str, Any]]:
     """Parse and validate the activity-only iterative writer response."""
-    matches = [
-        match
-        for match in _ITERATIVE_ACTIVITY_FENCE_RE.finditer(output)
-        if _artifact_name_from_fence_info(match.group("info")) == "activities.yaml"
+    fenced_blocks = _iter_section_fenced_blocks(output)
+    exact_blocks = [
+        (info, body)
+        for info, body in fenced_blocks
+        if _artifact_name_from_fence_info(info) == "activities.yaml"
+        and _activity_fence_language(info) is not None
     ]
-    if not matches:
-        raise LinearPipelineError(
-            "Iterative activity writer output must contain `json file=activities.yaml`"
-        )
-    if len(matches) > 1:
+    if len(exact_blocks) > 1:
         raise LinearPipelineError(
             "Iterative activity writer output contains duplicate activities.yaml blocks"
         )
-    match = matches[0]
-    info = match.group("info")
-    if _fence_language(info) != "json":
-        got = _fence_language(info) or "<none>"
-        raise LinearPipelineError(f"activities.yaml must be fenced json, got {got}")
-    content_start_line = output[: match.start("body")].count("\n") + 1
-    activities_yaml = _parse_and_dump_writer_json_artifact(
-        "activities.yaml",
-        match.group("body"),
-        content_start_line,
+    if exact_blocks:
+        _info, body = exact_blocks[0]
+        return _parse_iterative_activities_artifact(
+            body,
+            source="activities.yaml fence",
+        )
+
+    language_blocks = [
+        (info, body)
+        for info, body in fenced_blocks
+        if _fence_language(info) in _ACTIVITY_ARTIFACT_FENCE_LANGUAGES
+    ]
+    if language_blocks:
+        info, body = language_blocks[0]
+        return _parse_iterative_activities_artifact(
+            body,
+            source=f"{_fence_language(info)} fence",
+        )
+
+    try:
+        activities = _load_iterative_activities_data(
+            output,
+            source="bare top-level document",
+        )
+    except LinearPipelineError as exc:
+        raise LinearPipelineError(
+            "Iterative activity writer output contains no recoverable activities.yaml artifact"
+        ) from exc
+    if not isinstance(activities, (list, Mapping)):
+        raise LinearPipelineError(
+            "Iterative activity writer output contains no recoverable activities.yaml artifact"
+        )
+    return _validate_iterative_activities_data(
+        activities,
+        source="bare top-level document",
     )
-    activities = yaml.safe_load(activities_yaml)
-    return _validate_activities_artifact(activities)
 
 
 def _section_parse_label(section_id: str | None) -> str:
