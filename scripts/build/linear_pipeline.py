@@ -2279,6 +2279,17 @@ def render_writer_prompt(
     )
 
 
+ITERATIVE_SECTION_SELF_CHECK_INSTRUCTION = """\
+Before returning, complete this in-call SELF-CHECK and record it under
+`self_check` in the section artifact:
+- word floor: section prose, excluding PRIMARY-READING blocks and comments,
+  meets or exceeds the section word budget
+- points covered: every listed section point is substantively addressed
+- readings embedded: each assigned reading is embedded or quoted in the section,
+  not merely named
+"""
+
+
 def _writer_specific_directives(writer: str | None) -> str:
     if not writer:
         return ""
@@ -9850,6 +9861,365 @@ def build_section_tasks(
     return tasks
 
 
+_SECTION_ARTIFACT_COMMENT_RE = re.compile(
+    r"<!--\s*SECTION-ARTIFACT\s*(?P<body>\{.*?\})\s*-->",
+    re.DOTALL,
+)
+_SECTION_ARTIFACT_JSON_FENCE_RE = re.compile(
+    r"```[^\n`]*section_artifact\.json[^\n`]*\n(?P<body>.*?)\n```",
+    re.DOTALL,
+)
+_SECTION_MARKDOWN_FENCE_RE = re.compile(
+    r"```[^\n`]*section\.md[^\n`]*\n(?P<body>.*?)\n```",
+    re.DOTALL,
+)
+
+
+def _prompt_dump(value: object) -> str:
+    if value in (None, "", [], {}):
+        return "(none)"
+    if isinstance(value, str):
+        return value.strip() or "(none)"
+    return yaml.safe_dump(value, allow_unicode=True, sort_keys=False).strip()
+
+
+def _section_plan_excerpt(plan: Mapping[str, Any], task: SectionTask) -> dict[str, Any]:
+    excerpt: dict[str, Any] = {}
+    for key in ("level", "sequence", "module", "slug", "title", "module_type"):
+        if key in plan:
+            excerpt[key] = plan[key]
+    excerpt["content_outline"] = [
+        {
+            "section_id": task.section_id,
+            "title": task.title,
+            "words": task.word_budget,
+            "points": list(task.points),
+        }
+    ]
+    return excerpt
+
+
+def render_section_writer_prompt(
+    *,
+    plan: Mapping[str, Any],
+    task: SectionTask,
+    knowledge_packet: object,
+    readings: Sequence[Mapping[str, Any]],
+    writer: str = "claude-tools",
+    plan_content: str = "",
+    wiki_manifest: str | Mapping[str, Any] | None = None,
+    implementation_map: Mapping[str, Any] | None = None,
+    obligation_checklist: Mapping[str, Any] | None = None,
+) -> str:
+    """Render the section-scoped iterative companion to ``render_writer_prompt``."""
+
+    del readings
+    point_lines = "\n".join(f"- {point}" for point in task.points) or "- (none)"
+    assigned_readings = _prompt_dump(task.assigned_readings)
+    ledger = _prompt_dump(asdict(task.ledger))
+    writer_directives = _writer_specific_directives(writer).strip()
+
+    lines = [
+        "# Iterative Writer Section Pass",
+        "",
+        "This is a section-scoped adaptation of the V7 writer prompt. Write only "
+        "the requested section; the final module will be assembled after all "
+        "sections complete.",
+        "",
+        "## Section",
+        f"- section_id: {task.section_id}",
+        f"- title: {task.title}",
+        f"- word_budget: {task.word_budget}",
+        "",
+        "## Points To Cover",
+        point_lines,
+        "",
+        "## Assigned Readings",
+        assigned_readings,
+        "",
+        "## Knowledge Slice",
+        task.knowledge_slice or _knowledge_packet_text(knowledge_packet) or "(none)",
+        "",
+        "## Framing",
+        task.framing_rules or "(none)",
+        "",
+        "## Current Ledger For Anti-Repetition",
+        "Use this ledger to avoid repeating prior gists, claims, citations, "
+        "readings, vocabulary, or activities.",
+        ledger,
+        "",
+        "## Module Plan Excerpt",
+        _prompt_dump(_section_plan_excerpt(plan, task)),
+    ]
+    if plan_content:
+        lines.extend(["", "## Source Plan Content", plan_content.strip()])
+    if wiki_manifest is not None:
+        lines.extend(["", "## Wiki Manifest", _prompt_dump(wiki_manifest)])
+    if implementation_map is not None:
+        lines.extend(["", "## Implementation Map", _prompt_dump(implementation_map)])
+    if obligation_checklist is not None:
+        lines.extend(["", "## Obligation Checklist", _prompt_dump(obligation_checklist)])
+    if writer_directives:
+        lines.extend(["", "## Writer-Specific Directives", writer_directives])
+
+    lines.extend(
+        [
+            "",
+            "## Output Contract",
+            "Return one `json file=section_artifact.json` fenced block with keys: "
+            "`section_id`, `markdown`, `citations_used`, `primary_readings_used`, "
+            "`vocab_candidates`, `activity_refs`, and `self_check`. For tests and "
+            "diagnostics, plain section markdown is also accepted; missing metadata "
+            "will be inferred conservatively.",
+            "",
+            "## SELF-CHECK",
+            ITERATIVE_SECTION_SELF_CHECK_INSTRUCTION.strip(),
+        ]
+    )
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def _load_section_artifact_metadata(raw: str) -> dict[str, Any]:
+    parsed = yaml.safe_load(raw)
+    if not isinstance(parsed, Mapping):
+        raise LinearPipelineError("section_artifact metadata must be a mapping")
+    return dict(parsed)
+
+
+def _extract_section_metadata(output: str) -> tuple[str, dict[str, Any]]:
+    json_match = _SECTION_ARTIFACT_JSON_FENCE_RE.search(output)
+    if json_match:
+        metadata = _load_section_artifact_metadata(json_match.group("body"))
+        markdown = str(metadata.get("markdown") or "").strip()
+        if not markdown:
+            raise LinearPipelineError("section_artifact.json missing markdown")
+        return markdown, metadata
+
+    comment_match = _SECTION_ARTIFACT_COMMENT_RE.search(output)
+    if comment_match:
+        metadata = _load_section_artifact_metadata(comment_match.group("body"))
+        markdown = (
+            output[: comment_match.start()] + output[comment_match.end() :]
+        ).strip()
+        if "markdown" in metadata:
+            markdown = str(metadata["markdown"]).strip()
+        return markdown, metadata
+
+    markdown_match = _SECTION_MARKDOWN_FENCE_RE.search(output)
+    if markdown_match:
+        return markdown_match.group("body").strip(), {}
+
+    return output.strip(), {}
+
+
+def _metadata_string_list(metadata: Mapping[str, Any], *keys: str) -> list[str]:
+    for key in keys:
+        raw_value = metadata.get(key)
+        if raw_value is None:
+            continue
+        if isinstance(raw_value, str):
+            return _dedupe_preserve_order([raw_value])
+        if isinstance(raw_value, Sequence) and not isinstance(
+            raw_value, (bytes, bytearray)
+        ):
+            return _dedupe_preserve_order(raw_value)
+    return []
+
+
+def _metadata_mapping_list(metadata: Mapping[str, Any], key: str) -> list[dict[str, Any]]:
+    raw_value = metadata.get(key, [])
+    if not isinstance(raw_value, list):
+        return []
+    return [dict(item) for item in raw_value if isinstance(item, Mapping)]
+
+
+def _assigned_reading_ids(task: SectionTask) -> list[str]:
+    return _dedupe_preserve_order(
+        reading.get("reading_id") or reading.get("id") or ""
+        for reading in task.assigned_readings
+        if isinstance(reading, Mapping)
+    )
+
+
+def _infer_primary_readings_used(task: SectionTask, markdown: str) -> list[str]:
+    assigned_ids = _assigned_reading_ids(task)
+    if not assigned_ids:
+        return []
+    used = [reading_id for reading_id in assigned_ids if reading_id in markdown]
+    return used or assigned_ids
+
+
+def parse_section_writer_output(output: str, task: SectionTask) -> SectionArtifact:
+    markdown, metadata = _extract_section_metadata(output)
+    if not markdown:
+        raise LinearPipelineError(f"Writer returned empty section for {task.section_id}")
+
+    section_id = str(metadata.get("section_id") or task.section_id)
+    if section_id != task.section_id:
+        raise LinearPipelineError(
+            f"Section writer returned {section_id!r}, expected {task.section_id!r}"
+        )
+
+    citations_used = _metadata_string_list(metadata, "citations_used", "citations")
+    primary_readings_used = _metadata_string_list(
+        metadata,
+        "primary_readings_used",
+        "readings_used",
+        "readings",
+    ) or _infer_primary_readings_used(task, markdown)
+    activity_refs = _dedupe_preserve_order(
+        [
+            *_metadata_string_list(metadata, "activity_refs", "activities"),
+            *_INJECT_RE.findall(markdown),
+        ]
+    )
+    self_check = metadata.get("self_check", {})
+    if not isinstance(self_check, Mapping):
+        self_check = {}
+
+    return SectionArtifact(
+        section_id=task.section_id,
+        markdown=markdown,
+        citations_used=citations_used,
+        primary_readings_used=primary_readings_used,
+        vocab_candidates=_metadata_mapping_list(metadata, "vocab_candidates"),
+        activity_refs=activity_refs,
+        self_check=dict(self_check),
+    )
+
+
+def _record_section_precheck(task: SectionTask, artifact: SectionArtifact) -> SectionArtifact:
+    count = _word_count(_strip_comments(_strip_primary_reading_blocks(artifact.markdown)))
+    word_floor = {
+        "passed": count >= task.word_budget,
+        "count": count,
+        "target": task.word_budget,
+    }
+    existing_precheck = artifact.self_check.get("precheck", {})
+    if not isinstance(existing_precheck, Mapping):
+        existing_precheck = {}
+    self_check = dict(artifact.self_check)
+    self_check["precheck"] = {
+        **dict(existing_precheck),
+        "word_floor": word_floor,
+    }
+    return SectionArtifact(
+        section_id=artifact.section_id,
+        markdown=artifact.markdown,
+        citations_used=list(artifact.citations_used),
+        primary_readings_used=list(artifact.primary_readings_used),
+        vocab_candidates=[dict(item) for item in artifact.vocab_candidates],
+        activity_refs=list(artifact.activity_refs),
+        self_check=self_check,
+    )
+
+
+def iterative_result_to_writer_artifacts(result: Mapping[str, Any]) -> dict[str, str]:
+    required = ("module_md", "activities_yaml", "vocabulary_yaml", "resources_yaml")
+    missing = [key for key in required if key not in result]
+    if missing:
+        raise LinearPipelineError(f"Missing iterative writer result keys: {', '.join(missing)}")
+    return {
+        "module.md": str(result["module_md"]),
+        "activities.yaml": str(result["activities_yaml"]),
+        "vocabulary.yaml": str(result["vocabulary_yaml"]),
+        "resources.yaml": str(result["resources_yaml"]),
+    }
+
+
+def render_writer_artifacts_output(artifacts: Mapping[str, str]) -> str:
+    lines: list[str] = []
+    for name in WRITER_ARTIFACTS:
+        if name == "module.md":
+            value = str(artifacts[name]).rstrip()
+            language = "markdown"
+        else:
+            parsed = yaml.safe_load(str(artifacts[name]))
+            value = json.dumps(parsed, ensure_ascii=False, indent=2)
+            language = "json"
+        lines.extend([f"```{language} file={name}", value, "```", ""])
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def _task_with_ledger(task: SectionTask, ledger: Ledger) -> SectionTask:
+    return SectionTask(
+        section_id=task.section_id,
+        title=task.title,
+        word_budget=task.word_budget,
+        points=list(task.points),
+        assigned_readings=[dict(reading) for reading in task.assigned_readings],
+        knowledge_slice=task.knowledge_slice,
+        framing_rules=task.framing_rules,
+        ledger=ledger,
+    )
+
+
+def run_iterative_writer(
+    plan: Mapping[str, Any],
+    knowledge_packet: object,
+    readings: Sequence[Mapping[str, Any]],
+    *,
+    writer: str,
+    invoke_fn: Callable[..., str] | None = None,
+    plan_content: str = "",
+    wiki_manifest: str | Mapping[str, Any] | None = None,
+    implementation_map: Mapping[str, Any] | None = None,
+    obligation_checklist: Mapping[str, Any] | None = None,
+    reading_section_map: Mapping[str, str] | None = None,
+    default_reading_section_id: str | None = None,
+    framing_rules: str = "",
+    cwd: Path = PROJECT_ROOT,
+    module: str | None = None,
+    event_sink: Callable[..., None] | None = None,
+    tool_trace_path: Path | None = None,
+    stdout_silence_timeout: int | None = None,
+    effort: str | None = None,
+) -> dict[str, Any]:
+    """Run the P2 iterative writer loop with one writer call per section."""
+
+    tasks = build_section_tasks(
+        plan,
+        knowledge_packet,
+        readings,
+        reading_section_map=reading_section_map,
+        default_reading_section_id=default_reading_section_id,
+        framing_rules=framing_rules,
+    )
+    invoke = invoke_fn or invoke_writer
+    ledger = Ledger()
+    artifacts: list[SectionArtifact] = []
+
+    for base_task in tasks:
+        task = _task_with_ledger(base_task, ledger)
+        prompt = render_section_writer_prompt(
+            plan=plan,
+            task=task,
+            knowledge_packet=knowledge_packet,
+            readings=readings,
+            writer=writer,
+            plan_content=plan_content,
+            wiki_manifest=wiki_manifest,
+            implementation_map=implementation_map,
+            obligation_checklist=obligation_checklist,
+        )
+        output = invoke(
+            prompt,
+            writer,
+            cwd=cwd,
+            module=module,
+            sections=[task.title],
+            event_sink=event_sink,
+            tool_trace_path=tool_trace_path,
+            stdout_silence_timeout=stdout_silence_timeout,
+            effort=effort,
+        )
+        artifact = _record_section_precheck(task, parse_section_writer_output(output, task))
+        artifacts.append(artifact)
+        ledger = update_ledger(ledger, artifact)
+
+    return assemble_iterative(artifacts, plan)
+
+
 def _dedupe_preserve_order(values: Sequence[object]) -> list[str]:
     deduped: list[str] = []
     seen: set[str] = set()
@@ -10115,6 +10485,7 @@ def _artifact_sidecar_entry(
         "citation_keys": _dedupe_preserve_order(artifact.citations_used),
         "vocab_surfaces": _vocab_candidate_surfaces(artifact.vocab_candidates),
         "activity_ids": _dedupe_preserve_order(artifact.activity_refs),
+        "self_check": dict(artifact.self_check),
     }
 
 

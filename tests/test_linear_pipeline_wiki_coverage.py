@@ -92,8 +92,8 @@ def test_v7_build_orders_wiki_gate_before_aggregate_qg() -> None:
     # PR #2108 (Path 3 PR1) split build_wiki_manifest into a dict-returning
     # build_wiki_manifest_data + a json-stringifying wrapper so the deterministic
     # implementation_map seeder can consume the dict before the writer phase.
-    # The structural assertion (manifest built before writer prompt) is unchanged.
-    assert run_body.index("build_wiki_manifest_data(") < run_body.index("_writer_prompt(")
+    # The structural assertion (manifest built before writer phase) is unchanged.
+    assert run_body.index("build_wiki_manifest_data(") < run_body.index("_run_writer_mode(")
     # PR3 (#2123) replaced run_wiki_coverage_gate with the
     # run_wiki_coverage_with_corrections wrapper at the v7_build call site.
     # The ordering invariant remains: wiki coverage runs BEFORE review/LLM QG.
