@@ -1594,6 +1594,44 @@ def _phase_artifact_passes(module_dir: Path, phase: str) -> bool:
     return False
 
 
+def _iterative_result_from_writer_phase_artifacts(module_dir: Path) -> dict[str, Any]:
+    artifacts = {
+        name: (module_dir / name).read_text(encoding="utf-8")
+        for name in linear_pipeline.WRITER_ARTIFACTS
+    }
+    sidecar = _read_json(module_dir / "iterative_writer_sidecar.json")
+    if not isinstance(sidecar, Mapping):
+        sidecar = {}
+    return {
+        "module_md": artifacts["module.md"],
+        "activities_yaml": artifacts["activities.yaml"],
+        "vocabulary_yaml": artifacts["vocabulary.yaml"],
+        "resources_yaml": artifacts["resources.yaml"],
+        "sidecar": sidecar,
+    }
+
+
+def _writer_phase_artifacts(
+    *,
+    writer_mode: str,
+    module_dir: Path,
+    writer_output: str,
+    iterative_result: Mapping[str, Any] | None,
+) -> tuple[dict[str, str], Mapping[str, Any] | None]:
+    if iterative_result is not None:
+        return (
+            linear_pipeline.iterative_result_to_writer_artifacts(iterative_result),
+            iterative_result,
+        )
+    if writer_mode == "iterative":
+        resumed_result = _iterative_result_from_writer_phase_artifacts(module_dir)
+        return (
+            linear_pipeline.iterative_result_to_writer_artifacts(resumed_result),
+            resumed_result,
+        )
+    return linear_pipeline.parse_writer_output(writer_output), None
+
+
 def _run_stress_annotation_for_level(module_dir: Path, level: str) -> dict[str, Any]:
     if level.lower() in SEMINAR_LEVELS:
         return linear_pipeline.strip_stress_marks_for_seminar(module_dir)
@@ -1824,12 +1862,13 @@ def _run(args: argparse.Namespace) -> int:
                 wiki_manifest,
                 encoding="utf-8",
             )
-        if iterative_result is None:
-            artifacts = linear_pipeline.parse_writer_output(writer_output)
-        else:
-            artifacts = linear_pipeline.iterative_result_to_writer_artifacts(
-                iterative_result
-            )
+        artifacts, iterative_result = _writer_phase_artifacts(
+            writer_mode=writer_mode,
+            module_dir=module_dir,
+            writer_output=writer_output,
+            iterative_result=iterative_result,
+        )
+        if iterative_result is not None:
             linear_pipeline.write_json(
                 module_dir / "iterative_writer_sidecar.json",
                 iterative_result.get("sidecar", {}),

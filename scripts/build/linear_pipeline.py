@@ -9937,6 +9937,12 @@ def render_section_writer_prompt(
         f"- title: {task.title}",
         f"- word_budget: {task.word_budget}",
         "",
+        "## Section Body Rules",
+        "- Do not write the section heading. The assembler emits the exact "
+        "plan title as an H2.",
+        "- Start `markdown` with the section body. In-body subheadings are "
+        "allowed after body text when useful.",
+        "",
         "## Points To Cover",
         point_lines,
         "",
@@ -10809,6 +10815,31 @@ def _artifact_sidecar_entry(
     }
 
 
+_ITERATIVE_LEADING_SECTION_HEADING_RE = re.compile(r"^\s{0,3}#{1,3}(?:\s+|$)")
+
+
+def _strip_leading_iterative_section_headings(markdown: str) -> str:
+    lines = markdown.strip("\n").splitlines()
+    index = 0
+    while index < len(lines) and not lines[index].strip():
+        index += 1
+    while index < len(lines) and _ITERATIVE_LEADING_SECTION_HEADING_RE.match(
+        lines[index]
+    ):
+        index += 1
+        while index < len(lines) and not lines[index].strip():
+            index += 1
+    return "\n".join(lines[index:]).strip("\n")
+
+
+def _canonical_iterative_section_markdown(markdown: str, title: str) -> str:
+    body = _strip_leading_iterative_section_headings(markdown)
+    heading = f"## {title}"
+    if not body:
+        return heading
+    return f"{heading}\n\n{body}"
+
+
 def assemble_iterative(
     artifacts: Sequence[SectionArtifact],
     plan: Mapping[str, Any],
@@ -10816,12 +10847,20 @@ def assemble_iterative(
     activities: Sequence[Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
     ordered_artifacts = _artifact_by_plan_order(artifacts, plan)
+    outline_entries = _section_outline_entries(plan)
 
     markdown_parts: list[str] = []
     sidecar: dict[str, dict[str, Any]] = {}
     next_line = 1
-    for artifact in ordered_artifacts:
-        section_markdown = artifact.markdown.strip("\n")
+    for index, (artifact, outline_entry) in enumerate(
+        zip(ordered_artifacts, outline_entries, strict=True),
+        start=1,
+    ):
+        section_title = _section_outline_title(outline_entry, index)
+        section_markdown = _canonical_iterative_section_markdown(
+            artifact.markdown,
+            section_title,
+        )
         section_lines = section_markdown.splitlines() or [""]
         line_start = next_line
         line_end = line_start + len(section_lines) - 1
