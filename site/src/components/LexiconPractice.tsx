@@ -75,6 +75,81 @@ const HERITAGE_COLORS: Record<string, string> = {
   avoid: '#b91c1c',
 };
 
+const MEANING_MC_MAX_WORDS = 4;
+const MEANING_MC_MAX_CHARS = 32;
+const FUNCTION_POS = new Set([
+  'adp',
+  'conj',
+  'conjunction',
+  'det',
+  'determiner',
+  'interj',
+  'interjection',
+  'particle',
+  'prep',
+  'preposition',
+  'pron',
+  'pronoun',
+  'sconj',
+]);
+const FUNCTION_GLOSS_HEADWORDS = new Set([
+  'and',
+  'because',
+  'but',
+  'if',
+  'nor',
+  'or',
+  'than',
+  'that',
+  'though',
+  'unless',
+  'until',
+  'when',
+  'where',
+  'whether',
+  'while',
+  'yet',
+]);
+
+function cleanGloss(gloss: string): string {
+  return gloss.split(/[;,]/, 1)[0].replace(/\s+/g, ' ').trim();
+}
+
+function glossLabel(entry: PracticeLexeme): string {
+  return entry.glossClean?.trim() || cleanGloss(entry.gloss);
+}
+
+function glossHeadword(entry: PracticeLexeme): string {
+  return glossLabel(entry).toLocaleLowerCase('en-US').split(/\s+/)[0] ?? '';
+}
+
+function isPhraseGloss(label: string): boolean {
+  const clean = label.replace(/\s+/g, ' ').trim();
+  // Count alphanumeric tokens (ignoring standalone punctuation) to match the
+  // Python deck generator's `_meaning_label_word_count` regex exactly, so the
+  // served deck and this runtime guard never disagree on eligibility.
+  const wordCount = clean ? (clean.match(/[^\W_]+(?:[-'][^\W_]+)?/gu) || []).length : 0;
+  return (
+    !clean ||
+    clean.length > MEANING_MC_MAX_CHARS ||
+    wordCount > MEANING_MC_MAX_WORDS ||
+    clean.includes('?') ||
+    clean.includes('(') ||
+    clean.includes(')')
+  );
+}
+
+function isMeaningMcEligible(entry: PracticeLexeme): boolean {
+  const label = glossLabel(entry);
+  if (entry.meaningMcEligible === false) return false;
+  // Judge the CLEAN first-sense label, not the raw multi-sense gloss: a word like
+  // "dog; hound" has a perfectly concise glossClean ("dog") and must stay eligible.
+  if (isPhraseGloss(label)) return false;
+  if (FUNCTION_GLOSS_HEADWORDS.has(glossHeadword(entry))) return false;
+  if (entry.pos && FUNCTION_POS.has(entry.pos.toLocaleLowerCase('en-US'))) return false;
+  return entry.meaningMcEligible ?? true;
+}
+
 function todayKey(date = new Date()): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -145,10 +220,14 @@ function normalizeInitialDeck(initialDeck?: PracticeDeckData | PracticeLexeme[])
   const lexemes = initialDeck.map((entry) => {
     const legacy = entry as PracticeLexeme & { slug?: string; example?: string | null };
     const lemmaId = legacy.lemmaId ?? legacy.slug ?? legacy.lemma;
+    const glossClean = legacy.glossClean ?? cleanGloss(legacy.gloss);
+    const meaningMcEligible = legacy.meaningMcEligible ?? !isPhraseGloss(glossClean);
     return {
       ...entry,
       lemmaId,
       lemmaPlain: legacy.lemmaPlain ?? czNorm(legacy.lemma),
+      glossClean,
+      meaningMcEligible,
       severity: legacy.severity ?? null,
       paradigm: legacy.paradigm ?? { cases: {} },
     };
@@ -160,7 +239,7 @@ function normalizeInitialDeck(initialDeck?: PracticeDeckData | PracticeLexeme[])
       lemmaId: entry.lemmaId,
       lemma: entry.lemma,
       cefr: entry.cefr ?? 'A1',
-      modes: ['flashcards', 'matching', 'choice'],
+      modes: entry.meaningMcEligible ? ['flashcards', 'matching', 'choice'] : ['flashcards'],
       hasCloze: false,
       clozeIds: [],
       newOrder: index,
@@ -189,21 +268,14 @@ function orderedChoiceOptions(
   deck: PracticeDeckData,
   polarity: ChoicePolarity,
 ): ChoiceOption[] {
-  const sameBand = deck.lexemes.filter(
-    (candidate) =>
-      candidate.lemmaId !== selection.lemma.lemmaId &&
-      candidate.cefr === selection.lemma.cefr &&
-      candidate.gloss !== selection.lemma.gloss,
-  );
-  const distractors = sameBand
-    .sort((left, right) => left.lemmaId.localeCompare(right.lemmaId))
-    .slice(0, 3);
+  if (!isMeaningMcEligible(selection.lemma)) return [];
+  const distractors = meaningDistractors(selection.lemma, deck, 3);
   if (distractors.length < 3) return [];
-  const answer = polarity === 'word-to-meaning' ? selection.lemma.gloss : selection.lemma.lemma;
+  const answer = polarity === 'word-to-meaning' ? glossLabel(selection.lemma) : selection.lemma.lemma;
   const options = [
     { label: answer, correct: true },
     ...distractors.map((entry) => ({
-      label: polarity === 'word-to-meaning' ? entry.gloss : entry.lemma,
+      label: polarity === 'word-to-meaning' ? glossLabel(entry) : entry.lemma,
       correct: false,
     })),
   ];
@@ -213,20 +285,49 @@ function orderedChoiceOptions(
   return options;
 }
 
+function meaningDistractors(
+  answer: PracticeLexeme,
+  deck: PracticeDeckData,
+  limit: number,
+): PracticeLexeme[] {
+  const answerHeadword = glossHeadword(answer);
+  const answerLength = glossLabel(answer).length;
+  const candidates = deck.lexemes.filter(
+    (candidate) =>
+      candidate.lemmaId !== answer.lemmaId &&
+      candidate.cefr === answer.cefr &&
+      isMeaningMcEligible(candidate) &&
+      glossHeadword(candidate) !== answerHeadword,
+  );
+  // PRIORITIZE same-POS + comparable gloss length via sort keys — never hard-filter
+  // the candidate pool down to a subset, which would starve distractors when a word
+  // has fewer than 3 same-POS peers even though hundreds of valid candidates exist.
+  const seenLabels = new Set<string>();
+  return candidates
+    .sort((left, right) => {
+      const leftPos = left.pos === answer.pos ? 0 : 1;
+      const rightPos = right.pos === answer.pos ? 0 : 1;
+      if (leftPos !== rightPos) return leftPos - rightPos;
+      const leftLen = Math.abs(glossLabel(left).length - answerLength);
+      const rightLen = Math.abs(glossLabel(right).length - answerLength);
+      return leftLen - rightLen || left.lemmaId.localeCompare(right.lemmaId);
+    })
+    .filter((entry) => {
+      const key = glossLabel(entry).toLocaleLowerCase('en-US');
+      if (seenLabels.has(key)) return false;
+      seenLabels.add(key);
+      return true;
+    })
+    .slice(0, limit);
+}
+
 function matchingPairs(selection: PracticeSelection, deck: PracticeDeckData) {
-  const distractors = deck.lexemes
-    .filter(
-      (candidate) =>
-        candidate.lemmaId !== selection.lemma.lemmaId &&
-        candidate.cefr === selection.lemma.cefr &&
-        candidate.gloss !== selection.lemma.gloss,
-    )
-    .sort((left, right) => left.lemmaId.localeCompare(right.lemmaId))
-    .slice(0, 3);
+  if (!isMeaningMcEligible(selection.lemma)) return [];
+  const distractors = meaningDistractors(selection.lemma, deck, 3);
   if (distractors.length < 3) return [];
   return [selection.lemma, ...distractors].map((entry) => ({
     left: entry.lemma,
-    right: entry.gloss,
+    right: glossLabel(entry),
   }));
 }
 
@@ -234,7 +335,7 @@ function choicePrompt(selection: PracticeSelection): string {
   if (selection.choicePolarity === 'word-to-meaning') {
     return `What does ${selection.lemma.lemma} mean?`;
   }
-  return `Which word means ${selection.lemma.gloss}?`;
+  return `Which word means ${glossLabel(selection.lemma)}?`;
 }
 
 function clozeParts(item: PracticeClozeItem): [string, string] {

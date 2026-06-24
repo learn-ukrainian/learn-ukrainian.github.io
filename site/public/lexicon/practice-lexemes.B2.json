@@ -5,11 +5,13 @@
     {
       "cefr": "B2",
       "gloss": "magnet",
+      "glossClean": "magnet",
       "heritage": "standard",
       "ipa": null,
       "lemma": "магніт",
       "lemmaId": "магніт",
       "lemmaPlain": "магніт",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -20,11 +22,13 @@
     {
       "cefr": "B2",
       "gloss": "barista",
+      "glossClean": "barista",
       "heritage": "standard",
       "ipa": null,
       "lemma": "бариста",
       "lemmaId": "бариста",
       "lemmaPlain": "бариста",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -35,11 +39,13 @@
     {
       "cefr": "B2",
       "gloss": "tip; gratuity",
+      "glossClean": "tip",
       "heritage": "standard",
       "ipa": null,
       "lemma": "чайові",
       "lemmaId": "чайові",
       "lemmaPlain": "чайові",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -50,11 +56,13 @@
     {
       "cefr": "B2",
       "gloss": "to wash up",
+      "glossClean": "to wash up",
       "heritage": "standard",
       "ipa": null,
       "lemma": "вмиватися",
       "lemmaId": "вмиватися",
       "lemmaPlain": "вмиватися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -65,11 +73,13 @@
     {
       "cefr": "B2",
       "gloss": "I walk",
+      "glossClean": "I walk",
       "heritage": "standard",
       "ipa": null,
       "lemma": "гуляю",
       "lemmaId": "гуляю",
       "lemmaPlain": "гуляю",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -80,11 +90,13 @@
     {
       "cefr": "B2",
       "gloss": "ready",
+      "glossClean": "ready",
       "heritage": "standard",
       "ipa": null,
       "lemma": "готово",
       "lemmaId": "готово",
       "lemmaPlain": "готово",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -95,11 +107,13 @@
     {
       "cefr": "B2",
       "gloss": "poster",
+      "glossClean": "poster",
       "heritage": "standard",
       "ipa": null,
       "lemma": "плакат",
       "lemmaId": "плакат",
       "lemmaPlain": "плакат",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -110,11 +124,13 @@
     {
       "cefr": "B2",
       "gloss": "new, neuter",
+      "glossClean": "new",
       "heritage": "standard",
       "ipa": null,
       "lemma": "нове",
       "lemmaId": "нове",
       "lemmaPlain": "нове",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -125,11 +141,13 @@
     {
       "cefr": "B2",
       "gloss": "from there",
+      "glossClean": "from there",
       "heritage": "standard",
       "ipa": null,
       "lemma": "звідти",
       "lemmaId": "звідти",
       "lemmaPlain": "звідти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -140,11 +158,13 @@
     {
       "cefr": "B2",
       "gloss": "rescue",
+      "glossClean": "rescue",
       "heritage": "standard",
       "ipa": null,
       "lemma": "порятунок",
       "lemmaId": "порятунок",
       "lemmaPlain": "порятунок",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -155,11 +175,13 @@
     {
       "cefr": "B2",
       "gloss": "address; speaking to someone",
+      "glossClean": "address",
       "heritage": "standard",
       "ipa": null,
       "lemma": "звертання",
       "lemmaId": "звертання",
       "lemmaPlain": "звертання",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -170,11 +192,13 @@
     {
       "cefr": "B2",
       "gloss": "because",
+      "glossClean": "because",
       "heritage": "standard",
       "ipa": null,
       "lemma": "бо",
       "lemmaId": "бо",
       "lemmaPlain": "бо",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -185,11 +209,13 @@
     {
       "cefr": "B2",
       "gloss": "since when",
+      "glossClean": "since when",
       "heritage": "standard",
       "ipa": null,
       "lemma": "відколи",
       "lemmaId": "відколи",
       "lemmaPlain": "відколи",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -200,11 +226,13 @@
     {
       "cefr": "B2",
       "gloss": "however",
+      "glossClean": "however",
       "heritage": "standard",
       "ipa": null,
       "lemma": "однак",
       "lemmaId": "однак",
       "lemmaPlain": "однак",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -215,11 +243,13 @@
     {
       "cefr": "B2",
       "gloss": "alphabet",
+      "glossClean": "alphabet",
       "heritage": "standard",
       "ipa": null,
       "lemma": "абе́тка",
       "lemmaId": "абе-тка",
       "lemmaPlain": "абетка",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -230,11 +260,13 @@
     {
       "cefr": "B2",
       "gloss": "cashier",
+      "glossClean": "cashier",
       "heritage": "standard",
       "ipa": null,
       "lemma": "касирка",
       "lemmaId": "касирка",
       "lemmaPlain": "касирка",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -245,11 +277,13 @@
     {
       "cefr": "B2",
       "gloss": "atlas / satin",
+      "glossClean": "atlas / satin",
       "heritage": "standard",
       "ipa": null,
       "lemma": "атлас",
       "lemmaId": "атлас",
       "lemmaPlain": "атлас",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -260,11 +294,13 @@
     {
       "cefr": "B2",
       "gloss": "stressed",
+      "glossClean": "stressed",
       "heritage": "standard",
       "ipa": null,
       "lemma": "наголошений",
       "lemmaId": "наголошений",
       "lemmaPlain": "наголошений",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -275,11 +311,13 @@
     {
       "cefr": "B2",
       "gloss": "I study; I am learning",
+      "glossClean": "I study",
       "heritage": "standard",
       "ipa": null,
       "lemma": "вивчаю",
       "lemmaId": "вивчаю",
       "lemmaPlain": "вивчаю",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -290,11 +328,13 @@
     {
       "cefr": "B2",
       "gloss": "we learn; we study",
+      "glossClean": "we learn",
       "heritage": "standard",
       "ipa": null,
       "lemma": "вчимо",
       "lemmaId": "вчимо",
       "lemmaPlain": "вчимо",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -305,11 +345,13 @@
     {
       "cefr": "B2",
       "gloss": "I am learning; I study (preview)",
+      "glossClean": "I am learning",
       "heritage": "standard",
       "ipa": null,
       "lemma": "вчуся",
       "lemmaId": "вчуся",
       "lemmaPlain": "вчуся",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -320,11 +362,13 @@
     {
       "cefr": "B2",
       "gloss": "you ask for (plural/formal)",
+      "glossClean": "you ask for (plural/formal)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "просите",
       "lemmaId": "просите",
       "lemmaPlain": "просите",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -335,11 +379,13 @@
     {
       "cefr": "B2",
       "gloss": "you ask for",
+      "glossClean": "you ask for",
       "heritage": "standard",
       "ipa": null,
       "lemma": "просиш",
       "lemmaId": "просиш",
       "lemmaPlain": "просиш",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -350,11 +396,13 @@
     {
       "cefr": "B2",
       "gloss": "you go regularly; you walk (plural/formal)",
+      "glossClean": "you go regularly",
       "heritage": "standard",
       "ipa": null,
       "lemma": "ходите",
       "lemmaId": "ходите",
       "lemmaPlain": "ходите",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -365,11 +413,13 @@
     {
       "cefr": "B2",
       "gloss": "man from Odesa",
+      "glossClean": "man from Odesa",
       "heritage": "standard",
       "ipa": null,
       "lemma": "одесит",
       "lemmaId": "одесит",
       "lemmaPlain": "одесит",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -380,11 +430,13 @@
     {
       "cefr": "B2",
       "gloss": "woman from Odesa",
+      "glossClean": "woman from Odesa",
       "heritage": "standard",
       "ipa": null,
       "lemma": "одеситка",
       "lemmaId": "одеситка",
       "lemmaPlain": "одеситка",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -395,11 +447,13 @@
     {
       "cefr": "B2",
       "gloss": "woman from Kharkiv",
+      "glossClean": "woman from Kharkiv",
       "heritage": "standard",
       "ipa": null,
       "lemma": "харків'янка",
       "lemmaId": "харків-янка",
       "lemmaPlain": "харків'янка",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -410,11 +464,13 @@
     {
       "cefr": "B2",
       "gloss": "alternation",
+      "glossClean": "alternation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "чергування",
       "lemmaId": "чергування",
       "lemmaPlain": "чергування",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -425,11 +481,13 @@
     {
       "cefr": "B2",
       "gloss": "self-assessment",
+      "glossClean": "self-assessment",
       "heritage": "standard",
       "ipa": null,
       "lemma": "самооцінка",
       "lemmaId": "самооцінка",
       "lemmaPlain": "самооцінка",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -469,11 +527,13 @@
     {
       "cefr": "B2",
       "gloss": "confidently",
+      "glossClean": "confidently",
       "heritage": "standard",
       "ipa": null,
       "lemma": "впевнено",
       "lemmaId": "впевнено",
       "lemmaPlain": "впевнено",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -484,11 +544,13 @@
     {
       "cefr": "B2",
       "gloss": "appropriate",
+      "glossClean": "appropriate",
       "heritage": "standard",
       "ipa": null,
       "lemma": "доречний",
       "lemmaId": "доречний",
       "lemmaPlain": "доречний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -499,11 +561,13 @@
     {
       "cefr": "B2",
       "gloss": "to register",
+      "glossClean": "to register",
       "heritage": "standard",
       "ipa": null,
       "lemma": "зареєструватися",
       "lemmaId": "зареєструватися",
       "lemmaPlain": "зареєструватися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -514,11 +578,13 @@
     {
       "cefr": "B2",
       "gloss": "timer",
+      "glossClean": "timer",
       "heritage": "standard",
       "ipa": null,
       "lemma": "таймер",
       "lemmaId": "таймер",
       "lemmaPlain": "таймер",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -529,11 +595,13 @@
     {
       "cefr": "B2",
       "gloss": "completed",
+      "glossClean": "completed",
       "heritage": "standard",
       "ipa": null,
       "lemma": "завершений",
       "lemmaId": "завершений",
       "lemmaPlain": "завершений",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -544,11 +612,13 @@
     {
       "cefr": "B2",
       "gloss": "boundary, endpoint",
+      "glossClean": "boundary",
       "heritage": "standard",
       "ipa": null,
       "lemma": "межа",
       "lemmaId": "межа",
       "lemmaPlain": "межа",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -588,11 +658,13 @@
     {
       "cefr": "B2",
       "gloss": "to memorize",
+      "glossClean": "to memorize",
       "heritage": "standard",
       "ipa": null,
       "lemma": "запам'ятовувати",
       "lemmaId": "запам-ятовувати",
       "lemmaPlain": "запам'ятовувати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -603,11 +675,13 @@
     {
       "cefr": "B2",
       "gloss": "prefix",
+      "glossClean": "prefix",
       "heritage": "standard",
       "ipa": null,
       "lemma": "префікс",
       "lemmaId": "префікс",
       "lemmaPlain": "префікс",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -618,11 +692,13 @@
     {
       "cefr": "B2",
       "gloss": "suffix",
+      "glossClean": "suffix",
       "heritage": "standard",
       "ipa": null,
       "lemma": "суфікс",
       "lemmaId": "суфікс",
       "lemmaPlain": "суфікс",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -633,11 +709,13 @@
     {
       "cefr": "B2",
       "gloss": "negation",
+      "glossClean": "negation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "заперечення",
       "lemmaId": "заперечення",
       "lemmaPlain": "заперечення",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -648,11 +726,13 @@
     {
       "cefr": "B2",
       "gloss": "addition",
+      "glossClean": "addition",
       "heritage": "standard",
       "ipa": null,
       "lemma": "додавання",
       "lemmaId": "додавання",
       "lemmaPlain": "додавання",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -663,11 +743,13 @@
     {
       "cefr": "B2",
       "gloss": "test",
+      "glossClean": "test",
       "heritage": "standard",
       "ipa": null,
       "lemma": "контрольна",
       "lemmaId": "контрольна",
       "lemmaPlain": "контрольна",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -707,11 +789,13 @@
     {
       "cefr": "B2",
       "gloss": "absence",
+      "glossClean": "absence",
       "heritage": "standard",
       "ipa": null,
       "lemma": "відсутність",
       "lemmaId": "відсутність",
       "lemmaPlain": "відсутність",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -722,11 +806,13 @@
     {
       "cefr": "B2",
       "gloss": "purpose, intended recipient",
+      "glossClean": "purpose",
       "heritage": "standard",
       "ipa": null,
       "lemma": "призначення",
       "lemmaId": "призначення",
       "lemmaPlain": "призначення",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -737,11 +823,13 @@
     {
       "cefr": "B2",
       "gloss": "agreement",
+      "glossClean": "agreement",
       "heritage": "standard",
       "ipa": null,
       "lemma": "узгодження",
       "lemmaId": "узгодження",
       "lemmaPlain": "узгодження",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -752,11 +840,13 @@
     {
       "cefr": "B2",
       "gloss": "function",
+      "glossClean": "function",
       "heritage": "standard",
       "ipa": null,
       "lemma": "функція",
       "lemmaId": "функція",
       "lemmaPlain": "функція",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -796,11 +886,13 @@
     {
       "cefr": "B2",
       "gloss": "ingredient",
+      "glossClean": "ingredient",
       "heritage": "standard",
       "ipa": null,
       "lemma": "інгредієнт",
       "lemmaId": "інгредієнт",
       "lemmaPlain": "інгредієнт",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -811,11 +903,13 @@
     {
       "cefr": "B2",
       "gloss": "subordinate",
+      "glossClean": "subordinate",
       "heritage": "standard",
       "ipa": null,
       "lemma": "підрядний",
       "lemmaId": "підрядний",
       "lemmaPlain": "підрядний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -826,11 +920,13 @@
     {
       "cefr": "B2",
       "gloss": "to edit",
+      "glossClean": "to edit",
       "heritage": "standard",
       "ipa": null,
       "lemma": "редагувати",
       "lemmaId": "редагувати",
       "lemmaPlain": "редагувати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -841,11 +937,13 @@
     {
       "cefr": "B2",
       "gloss": "inversion",
+      "glossClean": "inversion",
       "heritage": "standard",
       "ipa": null,
       "lemma": "інверсія",
       "lemmaId": "інверсія",
       "lemmaPlain": "інверсія",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -885,11 +983,13 @@
     {
       "cefr": "B2",
       "gloss": "comparison",
+      "glossClean": "comparison",
       "heritage": "standard",
       "ipa": null,
       "lemma": "порівняння",
       "lemmaId": "порівняння",
       "lemmaPlain": "порівняння",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -900,11 +1000,13 @@
     {
       "cefr": "B2",
       "gloss": "recipient",
+      "glossClean": "recipient",
       "heritage": "standard",
       "ipa": null,
       "lemma": "одержувач",
       "lemmaId": "одержувач",
       "lemmaPlain": "одержувач",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -915,11 +1017,13 @@
     {
       "cefr": "B2",
       "gloss": "to trust",
+      "glossClean": "to trust",
       "heritage": "standard",
       "ipa": null,
       "lemma": "довіряти",
       "lemmaId": "довіряти",
       "lemmaPlain": "довіряти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -930,11 +1034,13 @@
     {
       "cefr": "B2",
       "gloss": "to bother, to disturb",
+      "glossClean": "to bother",
       "heritage": "standard",
       "ipa": null,
       "lemma": "заважати",
       "lemmaId": "заважати",
       "lemmaPlain": "заважати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -945,11 +1051,13 @@
     {
       "cefr": "B2",
       "gloss": "to envy",
+      "glossClean": "to envy",
       "heritage": "standard",
       "ipa": null,
       "lemma": "заздрити",
       "lemmaId": "заздрити",
       "lemmaPlain": "заздрити",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -960,11 +1068,13 @@
     {
       "cefr": "B2",
       "gloss": "to sympathize",
+      "glossClean": "to sympathize",
       "heritage": "standard",
       "ipa": null,
       "lemma": "співчувати",
       "lemmaId": "співчувати",
       "lemmaPlain": "співчувати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -975,11 +1085,13 @@
     {
       "cefr": "B2",
       "gloss": "entertainment",
+      "glossClean": "entertainment",
       "heritage": "standard",
       "ipa": null,
       "lemma": "розвага",
       "lemmaId": "розвага",
       "lemmaPlain": "розвага",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -1019,11 +1131,13 @@
     {
       "cefr": "B2",
       "gloss": "smooth",
+      "glossClean": "smooth",
       "heritage": "standard",
       "ipa": null,
       "lemma": "плавний",
       "lemmaId": "плавний",
       "lemmaPlain": "плавний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1034,11 +1148,13 @@
     {
       "cefr": "B2",
       "gloss": "housewarming party",
+      "glossClean": "housewarming party",
       "heritage": "standard",
       "ipa": null,
       "lemma": "новосілля",
       "lemmaId": "новосілля",
       "lemmaPlain": "новосілля",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1049,11 +1165,13 @@
     {
       "cefr": "B2",
       "gloss": "cover",
+      "glossClean": "cover",
       "heritage": "standard",
       "ipa": null,
       "lemma": "обкладинка",
       "lemmaId": "обкладинка",
       "lemmaPlain": "обкладинка",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -1093,11 +1211,13 @@
     {
       "cefr": "B2",
       "gloss": "attitude",
+      "glossClean": "attitude",
       "heritage": "standard",
       "ipa": null,
       "lemma": "ставлення",
       "lemmaId": "ставлення",
       "lemmaPlain": "ставлення",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1108,11 +1228,13 @@
     {
       "cefr": "B2",
       "gloss": "to help oneself to food",
+      "glossClean": "to help oneself to food",
       "heritage": "standard",
       "ipa": null,
       "lemma": "пригощатися",
       "lemmaId": "пригощатися",
       "lemmaPlain": "пригощатися",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -1123,11 +1245,13 @@
     {
       "cefr": "B2",
       "gloss": "nobody's, belonging to nobody",
+      "glossClean": "nobody's",
       "heritage": "standard",
       "ipa": null,
       "lemma": "нічий",
       "lemmaId": "нічий",
       "lemmaPlain": "нічий",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -1138,11 +1262,13 @@
     {
       "cefr": "B2",
       "gloss": "in no way, not at all",
+      "glossClean": "in no way",
       "heritage": "standard",
       "ipa": null,
       "lemma": "ніяк",
       "lemmaId": "ніяк",
       "lemmaPlain": "ніяк",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1153,11 +1279,13 @@
     {
       "cefr": "B2",
       "gloss": "persistent, determined",
+      "glossClean": "persistent",
       "heritage": "standard",
       "ipa": null,
       "lemma": "наполегливий",
       "lemmaId": "наполегливий",
       "lemmaPlain": "наполегливий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1168,11 +1296,13 @@
     {
       "cefr": "B2",
       "gloss": "to prompt, to give one helpful hint",
+      "glossClean": "to prompt",
       "heritage": "standard",
       "ipa": null,
       "lemma": "підказати",
       "lemmaId": "підказати",
       "lemmaPlain": "підказати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1183,11 +1313,13 @@
     {
       "cefr": "B2",
       "gloss": "to prompt, to give hints habitually",
+      "glossClean": "to prompt",
       "heritage": "standard",
       "ipa": null,
       "lemma": "підказувати",
       "lemmaId": "підказувати",
       "lemmaPlain": "підказувати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1198,11 +1330,13 @@
     {
       "cefr": "B2",
       "gloss": "patient",
+      "glossClean": "patient",
       "heritage": "standard",
       "ipa": null,
       "lemma": "терплячий",
       "lemmaId": "терплячий",
       "lemmaPlain": "терплячий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1213,11 +1347,13 @@
     {
       "cefr": "B2",
       "gloss": "caring, responsive",
+      "glossClean": "caring",
       "heritage": "standard",
       "ipa": null,
       "lemma": "чуйний",
       "lemmaId": "чуйний",
       "lemmaPlain": "чуйний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1228,11 +1364,13 @@
     {
       "cefr": "B2",
       "gloss": "interjection",
+      "glossClean": "interjection",
       "heritage": "standard",
       "ipa": null,
       "lemma": "вигук",
       "lemmaId": "вигук",
       "lemmaPlain": "вигук",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1243,11 +1381,13 @@
     {
       "cefr": "B2",
       "gloss": "changeable",
+      "glossClean": "changeable",
       "heritage": "standard",
       "ipa": null,
       "lemma": "змінний",
       "lemmaId": "змінний",
       "lemmaPlain": "змінний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1258,11 +1398,13 @@
     {
       "cefr": "B2",
       "gloss": "related",
+      "glossClean": "related",
       "heritage": "standard",
       "ipa": null,
       "lemma": "споріднений",
       "lemmaId": "споріднений",
       "lemmaPlain": "споріднений",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1273,11 +1415,13 @@
     {
       "cefr": "B2",
       "gloss": "particle",
+      "glossClean": "particle",
       "heritage": "standard",
       "ipa": null,
       "lemma": "частка",
       "lemmaId": "частка",
       "lemmaPlain": "частка",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -1317,11 +1461,13 @@
     {
       "cefr": "B2",
       "gloss": "to pronounce",
+      "glossClean": "to pronounce",
       "heritage": "standard",
       "ipa": null,
       "lemma": "вимовляти",
       "lemmaId": "вимовляти",
       "lemmaPlain": "вимовляти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1332,11 +1478,13 @@
     {
       "cefr": "B2",
       "gloss": "linguistics",
+      "glossClean": "linguistics",
       "heritage": "standard",
       "ipa": null,
       "lemma": "мовознавство",
       "lemmaId": "мовознавство",
       "lemmaPlain": "мовознавство",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1347,11 +1495,13 @@
     {
       "cefr": "B2",
       "gloss": "phonetics",
+      "glossClean": "phonetics",
       "heritage": "standard",
       "ipa": null,
       "lemma": "фонетика",
       "lemmaId": "фонетика",
       "lemmaPlain": "фонетика",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -1391,11 +1541,13 @@
     {
       "cefr": "B2",
       "gloss": "predicate",
+      "glossClean": "predicate",
       "heritage": "standard",
       "ipa": null,
       "lemma": "присудок",
       "lemmaId": "присудок",
       "lemmaPlain": "присудок",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1406,11 +1558,13 @@
     {
       "cefr": "B2",
       "gloss": "subject",
+      "glossClean": "subject",
       "heritage": "standard",
       "ipa": null,
       "lemma": "підмет",
       "lemmaId": "підмет",
       "lemmaPlain": "підмет",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1421,11 +1575,13 @@
     {
       "cefr": "B2",
       "gloss": "to combine",
+      "glossClean": "to combine",
       "heritage": "standard",
       "ipa": null,
       "lemma": "поєднуватися",
       "lemmaId": "поєднуватися",
       "lemmaPlain": "поєднуватися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1436,11 +1592,13 @@
     {
       "cefr": "B2",
       "gloss": "syntax",
+      "glossClean": "syntax",
       "heritage": "standard",
       "ipa": null,
       "lemma": "синтаксис",
       "lemmaId": "синтаксис",
       "lemmaPlain": "синтаксис",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1451,11 +1609,13 @@
     {
       "cefr": "B2",
       "gloss": "dash",
+      "glossClean": "dash",
       "heritage": "standard",
       "ipa": null,
       "lemma": "тире",
       "lemmaId": "тире",
       "lemmaPlain": "тире",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -1495,11 +1655,13 @@
     {
       "cefr": "B2",
       "gloss": "conjugation class",
+      "glossClean": "conjugation class",
       "heritage": "standard",
       "ipa": null,
       "lemma": "дієвідміна",
       "lemmaId": "дієвідміна",
       "lemmaPlain": "дієвідміна",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -1539,11 +1701,13 @@
     {
       "cefr": "B2",
       "gloss": "abbreviation",
+      "glossClean": "abbreviation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "скорочення",
       "lemmaId": "скорочення",
       "lemmaPlain": "скорочення",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1554,11 +1718,13 @@
     {
       "cefr": "B2",
       "gloss": "to agree grammatically",
+      "glossClean": "to agree grammatically",
       "heritage": "standard",
       "ipa": null,
       "lemma": "узгоджуватися",
       "lemmaId": "узгоджуватися",
       "lemmaPlain": "узгоджуватися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1569,11 +1735,13 @@
     {
       "cefr": "B2",
       "gloss": "cardinal",
+      "glossClean": "cardinal",
       "heritage": "standard",
       "ipa": null,
       "lemma": "кількісний",
       "lemmaId": "кількісний",
       "lemmaPlain": "кількісний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1584,11 +1752,13 @@
     {
       "cefr": "B2",
       "gloss": "lion",
+      "glossClean": "lion",
       "heritage": "standard",
       "ipa": null,
       "lemma": "лев",
       "lemmaId": "лев",
       "lemmaPlain": "лев",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1599,11 +1769,13 @@
     {
       "cefr": "B2",
       "gloss": "inanimate, non-living",
+      "glossClean": "inanimate",
       "heritage": "standard",
       "ipa": null,
       "lemma": "неживий",
       "lemmaId": "неживий",
       "lemmaPlain": "неживий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1614,11 +1786,13 @@
     {
       "cefr": "B2",
       "gloss": "disagreement",
+      "glossClean": "disagreement",
       "heritage": "standard",
       "ipa": null,
       "lemma": "незгода",
       "lemmaId": "незгода",
       "lemmaPlain": "незгода",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -1658,11 +1832,13 @@
     {
       "cefr": "B2",
       "gloss": "convinced, masculine",
+      "glossClean": "convinced",
       "heritage": "standard",
       "ipa": null,
       "lemma": "переконаний",
       "lemmaId": "переконаний",
       "lemmaPlain": "переконаний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1673,11 +1849,13 @@
     {
       "cefr": "B2",
       "gloss": "rightness, reason in the phrase мати рацію",
+      "glossClean": "rightness",
       "heritage": "standard",
       "ipa": null,
       "lemma": "рація",
       "lemmaId": "рація",
       "lemmaPlain": "рація",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -1717,11 +1895,13 @@
     {
       "cefr": "B2",
       "gloss": "to water",
+      "glossClean": "to water",
       "heritage": "standard",
       "ipa": null,
       "lemma": "полити",
       "lemmaId": "полити",
       "lemmaPlain": "полити",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1732,11 +1912,13 @@
     {
       "cefr": "B2",
       "gloss": "attributive, descriptive",
+      "glossClean": "attributive",
       "heritage": "standard",
       "ipa": null,
       "lemma": "означальний",
       "lemmaId": "означальний",
       "lemmaPlain": "означальний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1747,11 +1929,13 @@
     {
       "cefr": "B2",
       "gloss": "sender",
+      "glossClean": "sender",
       "heritage": "standard",
       "ipa": null,
       "lemma": "відправник",
       "lemmaId": "відправник",
       "lemmaPlain": "відправник",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1762,11 +1946,13 @@
     {
       "cefr": "B2",
       "gloss": "pharmacist",
+      "glossClean": "pharmacist",
       "heritage": "standard",
       "ipa": null,
       "lemma": "фармацевт",
       "lemmaId": "фармацевт",
       "lemmaPlain": "фармацевт",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1777,11 +1963,13 @@
     {
       "cefr": "B2",
       "gloss": "expressiveness",
+      "glossClean": "expressiveness",
       "heritage": "standard",
       "ipa": null,
       "lemma": "виразність",
       "lemmaId": "виразність",
       "lemmaPlain": "виразність",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1792,11 +1980,13 @@
     {
       "cefr": "B2",
       "gloss": "epithet",
+      "glossClean": "epithet",
       "heritage": "standard",
       "ipa": null,
       "lemma": "епітет",
       "lemmaId": "епітет",
       "lemmaPlain": "епітет",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1807,11 +1997,13 @@
     {
       "cefr": "B2",
       "gloss": "tender, affectionate",
+      "glossClean": "tender",
       "heritage": "standard",
       "ipa": null,
       "lemma": "ласкавий",
       "lemmaId": "ласкавий",
       "lemmaPlain": "ласкавий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1822,11 +2014,13 @@
     {
       "cefr": "B2",
       "gloss": "figurative, expressive",
+      "glossClean": "figurative",
       "heritage": "standard",
       "ipa": null,
       "lemma": "образний",
       "lemmaId": "образний",
       "lemmaPlain": "образний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1837,11 +2031,13 @@
     {
       "cefr": "B2",
       "gloss": "repetition",
+      "glossClean": "repetition",
       "heritage": "standard",
       "ipa": null,
       "lemma": "повтор",
       "lemmaId": "повтор",
       "lemmaPlain": "повтор",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1852,11 +2048,13 @@
     {
       "cefr": "B2",
       "gloss": "quickly, briskly",
+      "glossClean": "quickly",
       "heritage": "standard",
       "ipa": null,
       "lemma": "прудко",
       "lemmaId": "прудко",
       "lemmaPlain": "прудко",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -1867,11 +2065,13 @@
     {
       "cefr": "B2",
       "gloss": "stylistics",
+      "glossClean": "stylistics",
       "heritage": "standard",
       "ipa": null,
       "lemma": "стилістика",
       "lemmaId": "стилістика",
       "lemmaPlain": "стилістика",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -1911,11 +2111,13 @@
     {
       "cefr": "B2",
       "gloss": "waterfront, embankment",
+      "glossClean": "waterfront",
       "heritage": "standard",
       "ipa": null,
       "lemma": "набережна",
       "lemmaId": "набережна",
       "lemmaPlain": "набережна",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -1955,11 +2157,13 @@
     {
       "cefr": "B2",
       "gloss": "transfer, change",
+      "glossClean": "transfer",
       "heritage": "standard",
       "ipa": null,
       "lemma": "пересадка",
       "lemmaId": "пересадка",
       "lemmaPlain": "пересадка",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -1999,11 +2203,13 @@
     {
       "cefr": "B2",
       "gloss": "train attendant",
+      "glossClean": "train attendant",
       "heritage": "standard",
       "ipa": null,
       "lemma": "провідниця",
       "lemmaId": "провідниця",
       "lemmaPlain": "провідниця",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2014,11 +2220,13 @@
     {
       "cefr": "B2",
       "gloss": "small cottage",
+      "glossClean": "small cottage",
       "heritage": "standard",
       "ipa": null,
       "lemma": "хатинка",
       "lemmaId": "хатинка",
       "lemmaPlain": "хатинка",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -2058,11 +2266,13 @@
     {
       "cefr": "B2",
       "gloss": "polite",
+      "glossClean": "polite",
       "heritage": "standard",
       "ipa": null,
       "lemma": "ввічливий",
       "lemmaId": "ввічливий",
       "lemmaPlain": "ввічливий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2073,11 +2283,13 @@
     {
       "cefr": "B2",
       "gloss": "compass",
+      "glossClean": "compass",
       "heritage": "standard",
       "ipa": null,
       "lemma": "компас",
       "lemmaId": "компас",
       "lemmaPlain": "компас",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2088,11 +2300,13 @@
     {
       "cefr": "B2",
       "gloss": "characteristic, description",
+      "glossClean": "characteristic",
       "heritage": "standard",
       "ipa": null,
       "lemma": "характеристика",
       "lemmaId": "характеристика",
       "lemmaPlain": "характеристика",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -2132,11 +2346,13 @@
     {
       "cefr": "B2",
       "gloss": "to highlight, to single out",
+      "glossClean": "to highlight",
       "heritage": "standard",
       "ipa": null,
       "lemma": "виділяти",
       "lemmaId": "виділяти",
       "lemmaPlain": "виділяти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2147,11 +2363,13 @@
     {
       "cefr": "B2",
       "gloss": "to emphasize",
+      "glossClean": "to emphasize",
       "heritage": "standard",
       "ipa": null,
       "lemma": "підкреслювати",
       "lemmaId": "підкреслювати",
       "lemmaPlain": "підкреслювати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2162,11 +2380,13 @@
     {
       "cefr": "B2",
       "gloss": "to sprinkle",
+      "glossClean": "to sprinkle",
       "heritage": "standard",
       "ipa": null,
       "lemma": "посипати",
       "lemmaId": "посипати",
       "lemmaPlain": "посипати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2177,11 +2397,13 @@
     {
       "cefr": "B2",
       "gloss": "very beautiful",
+      "glossClean": "very beautiful",
       "heritage": "standard",
       "ipa": null,
       "lemma": "прегарний",
       "lemmaId": "прегарний",
       "lemmaPlain": "прегарний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2192,11 +2414,13 @@
     {
       "cefr": "B2",
       "gloss": "intensified",
+      "glossClean": "intensified",
       "heritage": "standard",
       "ipa": null,
       "lemma": "підсилений",
       "lemmaId": "підсилений",
       "lemmaPlain": "підсилений",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2207,11 +2431,13 @@
     {
       "cefr": "B2",
       "gloss": "stylistic",
+      "glossClean": "stylistic",
       "heritage": "standard",
       "ipa": null,
       "lemma": "стилістичний",
       "lemmaId": "стилістичний",
       "lemmaPlain": "стилістичний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2222,11 +2448,13 @@
     {
       "cefr": "B2",
       "gloss": "negative",
+      "glossClean": "negative",
       "heritage": "standard",
       "ipa": null,
       "lemma": "заперечний",
       "lemmaId": "заперечний",
       "lemmaPlain": "заперечний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2237,11 +2465,13 @@
     {
       "cefr": "B2",
       "gloss": "reflexive",
+      "glossClean": "reflexive",
       "heritage": "standard",
       "ipa": null,
       "lemma": "зворотний",
       "lemmaId": "зворотний",
       "lemmaPlain": "зворотний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2252,11 +2482,13 @@
     {
       "cefr": "B2",
       "gloss": "indefinite",
+      "glossClean": "indefinite",
       "heritage": "standard",
       "ipa": null,
       "lemma": "неозначений",
       "lemmaId": "неозначений",
       "lemmaPlain": "неозначений",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2267,11 +2499,13 @@
     {
       "cefr": "B2",
       "gloss": "prefixal",
+      "glossClean": "prefixal",
       "heritage": "standard",
       "ipa": null,
       "lemma": "префіксальний",
       "lemmaId": "префіксальний",
       "lemmaPlain": "префіксальний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2282,11 +2516,13 @@
     {
       "cefr": "B2",
       "gloss": "of one's own will",
+      "glossClean": "of one's own will",
       "heritage": "standard",
       "ipa": null,
       "lemma": "самохіть",
       "lemmaId": "самохіть",
       "lemmaPlain": "самохіть",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2297,11 +2533,13 @@
     {
       "cefr": "B2",
       "gloss": "suffixal",
+      "glossClean": "suffixal",
       "heritage": "standard",
       "ipa": null,
       "lemma": "суфіксальний",
       "lemmaId": "суфіксальний",
       "lemmaPlain": "суфіксальний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2312,11 +2550,13 @@
     {
       "cefr": "B2",
       "gloss": "formation",
+      "glossClean": "formation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "творення",
       "lemmaId": "творення",
       "lemmaPlain": "творення",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2327,11 +2567,13 @@
     {
       "cefr": "B2",
       "gloss": "productive",
+      "glossClean": "productive",
       "heritage": "standard",
       "ipa": null,
       "lemma": "продуктивний",
       "lemmaId": "продуктивний",
       "lemmaPlain": "продуктивний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2342,11 +2584,13 @@
     {
       "cefr": "B2",
       "gloss": "word formation",
+      "glossClean": "word formation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "словотворення",
       "lemmaId": "словотворення",
       "lemmaPlain": "словотворення",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2357,11 +2601,13 @@
     {
       "cefr": "B2",
       "gloss": "pronunciation",
+      "glossClean": "pronunciation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "вимова",
       "lemmaId": "вимова",
       "lemmaPlain": "вимова",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2372,11 +2618,13 @@
     {
       "cefr": "B2",
       "gloss": "dropping, disappearance",
+      "glossClean": "dropping",
       "heritage": "standard",
       "ipa": null,
       "lemma": "випадіння",
       "lemmaId": "випадіння",
       "lemmaPlain": "випадіння",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2387,11 +2635,13 @@
     {
       "cefr": "B2",
       "gloss": "completion",
+      "glossClean": "completion",
       "heritage": "standard",
       "ipa": null,
       "lemma": "завершеність",
       "lemmaId": "завершеність",
       "lemmaPlain": "завершеність",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2402,11 +2652,13 @@
     {
       "cefr": "B2",
       "gloss": "repetition",
+      "glossClean": "repetition",
       "heritage": "standard",
       "ipa": null,
       "lemma": "повторюваність",
       "lemmaId": "повторюваність",
       "lemmaPlain": "повторюваність",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2417,11 +2669,13 @@
     {
       "cefr": "B2",
       "gloss": "to make an effort, perfective",
+      "glossClean": "to make an effort",
       "heritage": "standard",
       "ipa": null,
       "lemma": "постаратися",
       "lemmaId": "постаратися",
       "lemmaPlain": "постаратися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2432,11 +2686,13 @@
     {
       "cefr": "B2",
       "gloss": "hypothetical",
+      "glossClean": "hypothetical",
       "heritage": "standard",
       "ipa": null,
       "lemma": "гіпотетичний",
       "lemmaId": "гіпотетичний",
       "lemmaPlain": "гіпотетичний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2447,11 +2703,13 @@
     {
       "cefr": "B2",
       "gloss": "you will write, you will have written",
+      "glossClean": "you will write",
       "heritage": "standard",
       "ipa": null,
       "lemma": "напишеш",
       "lemmaId": "напишеш",
       "lemmaPlain": "напишеш",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2462,11 +2720,13 @@
     {
       "cefr": "B2",
       "gloss": "to save",
+      "glossClean": "to save",
       "heritage": "standard",
       "ipa": null,
       "lemma": "зберегти",
       "lemmaId": "зберегти",
       "lemmaPlain": "зберегти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2477,11 +2737,13 @@
     {
       "cefr": "B2",
       "gloss": "categorical, firm",
+      "glossClean": "categorical",
       "heritage": "standard",
       "ipa": null,
       "lemma": "категоричний",
       "lemmaId": "категоричний",
       "lemmaPlain": "категоричний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2492,11 +2754,13 @@
     {
       "cefr": "B2",
       "gloss": "controlled",
+      "glossClean": "controlled",
       "heritage": "standard",
       "ipa": null,
       "lemma": "контрольований",
       "lemmaId": "контрольований",
       "lemmaPlain": "контрольований",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2507,11 +2771,13 @@
     {
       "cefr": "B2",
       "gloss": "to mix",
+      "glossClean": "to mix",
       "heritage": "standard",
       "ipa": null,
       "lemma": "перемішувати",
       "lemmaId": "перемішувати",
       "lemmaPlain": "перемішувати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2522,11 +2788,13 @@
     {
       "cefr": "B2",
       "gloss": "pragmatic",
+      "glossClean": "pragmatic",
       "heritage": "standard",
       "ipa": null,
       "lemma": "прагматичний",
       "lemmaId": "прагматичний",
       "lemmaPlain": "прагматичний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2537,11 +2805,13 @@
     {
       "cefr": "B2",
       "gloss": "to break, smash",
+      "glossClean": "to break",
       "heritage": "standard",
       "ipa": null,
       "lemma": "розбивати",
       "lemmaId": "розбивати",
       "lemmaPlain": "розбивати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2552,11 +2822,13 @@
     {
       "cefr": "B2",
       "gloss": "to watch, monitor",
+      "glossClean": "to watch",
       "heritage": "standard",
       "ipa": null,
       "lemma": "стежити",
       "lemmaId": "стежити",
       "lemmaPlain": "стежити",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2567,11 +2839,13 @@
     {
       "cefr": "B2",
       "gloss": "atmosphere",
+      "glossClean": "atmosphere",
       "heritage": "standard",
       "ipa": null,
       "lemma": "атмосфера",
       "lemmaId": "атмосфера",
       "lemmaPlain": "атмосфера",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2582,11 +2856,13 @@
     {
       "cefr": "B2",
       "gloss": "sequentially",
+      "glossClean": "sequentially",
       "heritage": "standard",
       "ipa": null,
       "lemma": "послідовно",
       "lemmaId": "послідовно",
       "lemmaPlain": "послідовно",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2597,11 +2873,13 @@
     {
       "cefr": "B2",
       "gloss": "to finish doing",
+      "glossClean": "to finish doing",
       "heritage": "standard",
       "ipa": null,
       "lemma": "доробити",
       "lemmaId": "доробити",
       "lemmaPlain": "доробити",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2612,11 +2890,13 @@
     {
       "cefr": "B2",
       "gloss": "to finish reading",
+      "glossClean": "to finish reading",
       "heritage": "standard",
       "ipa": null,
       "lemma": "дочитати",
       "lemmaId": "дочитати",
       "lemmaPlain": "дочитати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2627,11 +2907,13 @@
     {
       "cefr": "B2",
       "gloss": "statement of fact",
+      "glossClean": "statement of fact",
       "heritage": "standard",
       "ipa": null,
       "lemma": "констатація",
       "lemmaId": "констатація",
       "lemmaPlain": "констатація",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2642,11 +2924,13 @@
     {
       "cefr": "B2",
       "gloss": "unfinished; incomplete",
+      "glossClean": "unfinished",
       "heritage": "standard",
       "ipa": null,
       "lemma": "незавершений",
       "lemmaId": "незавершений",
       "lemmaPlain": "незавершений",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2657,11 +2941,13 @@
     {
       "cefr": "B2",
       "gloss": "expectation",
+      "glossClean": "expectation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "очікування",
       "lemmaId": "очікування",
       "lemmaPlain": "очікування",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2672,11 +2958,13 @@
     {
       "cefr": "B2",
       "gloss": "progress",
+      "glossClean": "progress",
       "heritage": "standard",
       "ipa": null,
       "lemma": "прогрес",
       "lemmaId": "прогрес",
       "lemmaPlain": "прогрес",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2687,11 +2975,13 @@
     {
       "cefr": "B2",
       "gloss": "incompleteness",
+      "glossClean": "incompleteness",
       "heritage": "standard",
       "ipa": null,
       "lemma": "незавершеність",
       "lemmaId": "незавершеність",
       "lemmaPlain": "незавершеність",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2702,11 +2992,13 @@
     {
       "cefr": "B2",
       "gloss": "poster, event announcement",
+      "glossClean": "poster",
       "heritage": "standard",
       "ipa": null,
       "lemma": "афіша",
       "lemmaId": "афіша",
       "lemmaPlain": "афіша",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -2746,11 +3038,13 @@
     {
       "cefr": "B2",
       "gloss": "conjugation",
+      "glossClean": "conjugation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "дієвідмінювання",
       "lemmaId": "дієвідмінювання",
       "lemmaPlain": "дієвідмінювання",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2761,11 +3055,13 @@
     {
       "cefr": "B2",
       "gloss": "calque",
+      "glossClean": "calque",
       "heritage": "standard",
       "ipa": null,
       "lemma": "калька",
       "lemmaId": "калька",
       "lemmaPlain": "калька",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -2805,11 +3101,13 @@
     {
       "cefr": "B2",
       "gloss": "donation",
+      "glossClean": "donation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "пожертва",
       "lemmaId": "пожертва",
       "lemmaPlain": "пожертва",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -2849,11 +3147,13 @@
     {
       "cefr": "B2",
       "gloss": "to count, tally",
+      "glossClean": "to count",
       "heritage": "standard",
       "ipa": null,
       "lemma": "підраховувати",
       "lemmaId": "підраховувати",
       "lemmaPlain": "підраховувати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2864,11 +3164,13 @@
     {
       "cefr": "B2",
       "gloss": "conversation partner",
+      "glossClean": "conversation partner",
       "heritage": "standard",
       "ipa": null,
       "lemma": "співрозмовник / співрозмовниця",
       "lemmaId": "співрозмовник-співрозмовниця",
       "lemmaPlain": "співрозмовник / співрозмовниця",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2879,11 +3181,13 @@
     {
       "cefr": "B2",
       "gloss": "after reading",
+      "glossClean": "after reading",
       "heritage": "standard",
       "ipa": null,
       "lemma": "прочитавши",
       "lemmaId": "прочитавши",
       "lemmaPlain": "прочитавши",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2894,11 +3198,13 @@
     {
       "cefr": "B2",
       "gloss": "declension",
+      "glossClean": "declension",
       "heritage": "standard",
       "ipa": null,
       "lemma": "відмінювання",
       "lemmaId": "відмінювання",
       "lemmaPlain": "відмінювання",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2909,11 +3215,13 @@
     {
       "cefr": "B2",
       "gloss": "for the third time",
+      "glossClean": "for the third time",
       "heritage": "standard",
       "ipa": null,
       "lemma": "утретє",
       "lemmaId": "утретє",
       "lemmaPlain": "утретє",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2924,11 +3232,13 @@
     {
       "cefr": "B2",
       "gloss": "deadline",
+      "glossClean": "deadline",
       "heritage": "standard",
       "ipa": null,
       "lemma": "дедлайн",
       "lemmaId": "дедлайн",
       "lemmaPlain": "дедлайн",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2939,11 +3249,13 @@
     {
       "cefr": "B2",
       "gloss": "fraction",
+      "glossClean": "fraction",
       "heritage": "standard",
       "ipa": null,
       "lemma": "дріб",
       "lemmaId": "дріб",
       "lemmaPlain": "дріб",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2954,11 +3266,13 @@
     {
       "cefr": "B2",
       "gloss": "landlord",
+      "glossClean": "landlord",
       "heritage": "standard",
       "ipa": null,
       "lemma": "орендодавець",
       "lemmaId": "орендодавець",
       "lemmaPlain": "орендодавець",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -2969,11 +3283,13 @@
     {
       "cefr": "B2",
       "gloss": "gap in knowledge",
+      "glossClean": "gap in knowledge",
       "heritage": "standard",
       "ipa": null,
       "lemma": "прогалина",
       "lemmaId": "прогалина",
       "lemmaPlain": "прогалина",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -3013,11 +3329,13 @@
     {
       "cefr": "B2",
       "gloss": "rubric",
+      "glossClean": "rubric",
       "heritage": "standard",
       "ipa": null,
       "lemma": "рубрика",
       "lemmaId": "рубрика",
       "lemmaPlain": "рубрика",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -3057,11 +3375,13 @@
     {
       "cefr": "B2",
       "gloss": "agent, person who acts",
+      "glossClean": "agent",
       "heritage": "standard",
       "ipa": null,
       "lemma": "діяч",
       "lemmaId": "діяч",
       "lemmaPlain": "діяч",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3072,11 +3392,13 @@
     {
       "cefr": "B2",
       "gloss": "doubling",
+      "glossClean": "doubling",
       "heritage": "standard",
       "ipa": null,
       "lemma": "подвоєння",
       "lemmaId": "подвоєння",
       "lemmaPlain": "подвоєння",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3087,11 +3409,13 @@
     {
       "cefr": "B2",
       "gloss": "moving away",
+      "glossClean": "moving away",
       "heritage": "standard",
       "ipa": null,
       "lemma": "віддалення",
       "lemmaId": "віддалення",
       "lemmaPlain": "віддалення",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3102,11 +3426,13 @@
     {
       "cefr": "B2",
       "gloss": "unidirectional",
+      "glossClean": "unidirectional",
       "heritage": "standard",
       "ipa": null,
       "lemma": "односпрямований",
       "lemmaId": "односпрямований",
       "lemmaPlain": "односпрямований",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3117,11 +3443,13 @@
     {
       "cefr": "B2",
       "gloss": "pier, dock",
+      "glossClean": "pier",
       "heritage": "standard",
       "ipa": null,
       "lemma": "причал",
       "lemmaId": "причал",
       "lemmaPlain": "причал",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3132,11 +3460,13 @@
     {
       "cefr": "B2",
       "gloss": "film screening",
+      "glossClean": "film screening",
       "heritage": "standard",
       "ipa": null,
       "lemma": "кінопоказ",
       "lemmaId": "кінопоказ",
       "lemmaPlain": "кінопоказ",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3147,11 +3477,13 @@
     {
       "cefr": "B2",
       "gloss": "dialogue line, utterance",
+      "glossClean": "dialogue line",
       "heritage": "standard",
       "ipa": null,
       "lemma": "репліка",
       "lemmaId": "репліка",
       "lemmaPlain": "репліка",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -3191,11 +3523,13 @@
     {
       "cefr": "B2",
       "gloss": "abbreviation, acronym",
+      "glossClean": "abbreviation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "абревіатура",
       "lemmaId": "абревіатура",
       "lemmaPlain": "абревіатура",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -3235,11 +3569,13 @@
     {
       "cefr": "B2",
       "gloss": "register",
+      "glossClean": "register",
       "heritage": "standard",
       "ipa": null,
       "lemma": "регістр",
       "lemmaId": "регістр",
       "lemmaPlain": "регістр",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3250,11 +3586,13 @@
     {
       "cefr": "B2",
       "gloss": "to become green",
+      "glossClean": "to become green",
       "heritage": "standard",
       "ipa": null,
       "lemma": "зеленіти",
       "lemmaId": "зеленіти",
       "lemmaPlain": "зеленіти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3265,11 +3603,13 @@
     {
       "cefr": "B2",
       "gloss": "work goes; it is working for someone",
+      "glossClean": "work goes",
       "heritage": "standard",
       "ipa": null,
       "lemma": "працюється",
       "lemmaId": "працюється",
       "lemmaPlain": "працюється",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3280,11 +3620,13 @@
     {
       "cefr": "B2",
       "gloss": "to distribute; to spread",
+      "glossClean": "to distribute",
       "heritage": "standard",
       "ipa": null,
       "lemma": "розповсюдити",
       "lemmaId": "розповсюдити",
       "lemmaPlain": "розповсюдити",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3295,11 +3637,13 @@
     {
       "cefr": "B2",
       "gloss": "to filter",
+      "glossClean": "to filter",
       "heritage": "standard",
       "ipa": null,
       "lemma": "фільтрувати",
       "lemmaId": "фільтрувати",
       "lemmaPlain": "фільтрувати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3310,11 +3654,13 @@
     {
       "cefr": "B2",
       "gloss": "equal, coordinate",
+      "glossClean": "equal",
       "heritage": "standard",
       "ipa": null,
       "lemma": "рівноправний",
       "lemmaId": "рівноправний",
       "lemmaPlain": "рівноправний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3325,11 +3671,13 @@
     {
       "cefr": "B2",
       "gloss": "concession (in argument)",
+      "glossClean": "concession (in argument)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "поступка",
       "lemmaId": "поступка",
       "lemmaPlain": "поступка",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -3369,11 +3717,13 @@
     {
       "cefr": "B2",
       "gloss": "restriction, limitation",
+      "glossClean": "restriction",
       "heritage": "standard",
       "ipa": null,
       "lemma": "обмеження",
       "lemmaId": "обмеження",
       "lemmaPlain": "обмеження",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3384,11 +3734,13 @@
     {
       "cefr": "B2",
       "gloss": "for the sake of",
+      "glossClean": "for the sake of",
       "heritage": "standard",
       "ipa": null,
       "lemma": "заради",
       "lemmaId": "заради",
       "lemmaPlain": "заради",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -3399,11 +3751,13 @@
     {
       "cefr": "B2",
       "gloss": "while, until",
+      "glossClean": "while",
       "heritage": "standard",
       "ipa": null,
       "lemma": "доки",
       "lemmaId": "доки",
       "lemmaPlain": "доки",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -3414,11 +3768,13 @@
     {
       "cefr": "B2",
       "gloss": "avoidance",
+      "glossClean": "avoidance",
       "heritage": "standard",
       "ipa": null,
       "lemma": "уникнення",
       "lemmaId": "уникнення",
       "lemmaPlain": "уникнення",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3429,11 +3785,13 @@
     {
       "cefr": "B2",
       "gloss": "politeness",
+      "glossClean": "politeness",
       "heritage": "standard",
       "ipa": null,
       "lemma": "ввічливість",
       "lemmaId": "ввічливість",
       "lemmaPlain": "ввічливість",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3444,11 +3802,13 @@
     {
       "cefr": "B2",
       "gloss": "open",
+      "glossClean": "open",
       "heritage": "standard",
       "ipa": null,
       "lemma": "відчинений",
       "lemmaId": "відчинений",
       "lemmaPlain": "відчинений",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3459,11 +3819,13 @@
     {
       "cefr": "B2",
       "gloss": "to be late",
+      "glossClean": "to be late",
       "heritage": "standard",
       "ipa": null,
       "lemma": "спізнитися",
       "lemmaId": "спізнитися",
       "lemmaPlain": "спізнитися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3474,11 +3836,13 @@
     {
       "cefr": "B2",
       "gloss": "imagined, hypothetical",
+      "glossClean": "imagined",
       "heritage": "standard",
       "ipa": null,
       "lemma": "уявний",
       "lemmaId": "уявний",
       "lemmaPlain": "уявний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3489,11 +3853,13 @@
     {
       "cefr": "B2",
       "gloss": "to manage in time",
+      "glossClean": "to manage in time",
       "heritage": "standard",
       "ipa": null,
       "lemma": "встигати",
       "lemmaId": "встигати",
       "lemmaPlain": "встигати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3504,11 +3870,13 @@
     {
       "cefr": "B2",
       "gloss": "to get up, rise",
+      "glossClean": "to get up",
       "heritage": "standard",
       "ipa": null,
       "lemma": "підводитися",
       "lemmaId": "підводитися",
       "lemmaPlain": "підводитися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3519,11 +3887,13 @@
     {
       "cefr": "B2",
       "gloss": "to have fun",
+      "glossClean": "to have fun",
       "heritage": "standard",
       "ipa": null,
       "lemma": "розважатися",
       "lemmaId": "розважатися",
       "lemmaPlain": "розважатися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3534,11 +3904,13 @@
     {
       "cefr": "B2",
       "gloss": "to owe gratitude to",
+      "glossClean": "to owe gratitude to",
       "heritage": "standard",
       "ipa": null,
       "lemma": "завдячувати",
       "lemmaId": "завдячувати",
       "lemmaPlain": "завдячувати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3549,11 +3921,13 @@
     {
       "cefr": "B2",
       "gloss": "recipient",
+      "glossClean": "recipient",
       "heritage": "standard",
       "ipa": null,
       "lemma": "отримувач",
       "lemmaId": "отримувач",
       "lemmaPlain": "отримувач",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3564,11 +3938,13 @@
     {
       "cefr": "B2",
       "gloss": "conclusion",
+      "glossClean": "conclusion",
       "heritage": "standard",
       "ipa": null,
       "lemma": "висновок",
       "lemmaId": "висновок",
       "lemmaPlain": "висновок",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3579,11 +3955,13 @@
     {
       "cefr": "B2",
       "gloss": "applicant, prospective student",
+      "glossClean": "applicant",
       "heritage": "standard",
       "ipa": null,
       "lemma": "абітурієнт",
       "lemmaId": "абітурієнт",
       "lemmaPlain": "абітурієнт",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3594,11 +3972,13 @@
     {
       "cefr": "B2",
       "gloss": "to soar, rise sharply",
+      "glossClean": "to soar",
       "heritage": "standard",
       "ipa": null,
       "lemma": "злетіти",
       "lemmaId": "злетіти",
       "lemmaPlain": "злетіти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3609,11 +3989,13 @@
     {
       "cefr": "B2",
       "gloss": "to behave",
+      "glossClean": "to behave",
       "heritage": "standard",
       "ipa": null,
       "lemma": "поводитися",
       "lemmaId": "поводитися",
       "lemmaPlain": "поводитися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3624,11 +4006,13 @@
     {
       "cefr": "B2",
       "gloss": "to pass quickly",
+      "glossClean": "to pass quickly",
       "heritage": "standard",
       "ipa": null,
       "lemma": "пролетіти",
       "lemmaId": "пролетіти",
       "lemmaPlain": "пролетіти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3639,11 +4023,13 @@
     {
       "cefr": "B2",
       "gloss": "idiom, phraseological unit",
+      "glossClean": "idiom",
       "heritage": "standard",
       "ipa": null,
       "lemma": "фразеологізм",
       "lemmaId": "фразеологізм",
       "lemmaPlain": "фразеологізм",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3654,11 +4040,13 @@
     {
       "cefr": "B2",
       "gloss": "from under",
+      "glossClean": "from under",
       "heritage": "standard",
       "ipa": null,
       "lemma": "з-під",
       "lemmaId": "з-під",
       "lemmaPlain": "з-під",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -3669,11 +4057,13 @@
     {
       "cefr": "B2",
       "gloss": "while running",
+      "glossClean": "while running",
       "heritage": "standard",
       "ipa": null,
       "lemma": "біжучи",
       "lemmaId": "біжучи",
       "lemmaPlain": "біжучи",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -3684,11 +4074,13 @@
     {
       "cefr": "B2",
       "gloss": "while watching, looking",
+      "glossClean": "while watching",
       "heritage": "standard",
       "ipa": null,
       "lemma": "дивлячись",
       "lemmaId": "дивлячись",
       "lemmaPlain": "дивлячись",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -3699,11 +4091,13 @@
     {
       "cefr": "B2",
       "gloss": "while studying",
+      "glossClean": "while studying",
       "heritage": "standard",
       "ipa": null,
       "lemma": "навчаючись",
       "lemmaId": "навчаючись",
       "lemmaPlain": "навчаючись",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -3714,11 +4108,13 @@
     {
       "cefr": "B2",
       "gloss": "invariable",
+      "glossClean": "invariable",
       "heritage": "standard",
       "ipa": null,
       "lemma": "незмінюваний",
       "lemmaId": "незмінюваний",
       "lemmaPlain": "незмінюваний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3729,11 +4125,13 @@
     {
       "cefr": "B2",
       "gloss": "while sitting",
+      "glossClean": "while sitting",
       "heritage": "standard",
       "ipa": null,
       "lemma": "сидячи",
       "lemmaId": "сидячи",
       "lemmaPlain": "сидячи",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -3744,11 +4142,13 @@
     {
       "cefr": "B2",
       "gloss": "while standing",
+      "glossClean": "while standing",
       "heritage": "standard",
       "ipa": null,
       "lemma": "стоячи",
       "lemmaId": "стоячи",
       "lemmaPlain": "стоячи",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -3759,11 +4159,13 @@
     {
       "cefr": "B2",
       "gloss": "while worrying",
+      "glossClean": "while worrying",
       "heritage": "standard",
       "ipa": null,
       "lemma": "хвилюючись",
       "lemmaId": "хвилюючись",
       "lemmaPlain": "хвилюючись",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -3774,11 +4176,13 @@
     {
       "cefr": "B2",
       "gloss": "having finished",
+      "glossClean": "having finished",
       "heritage": "standard",
       "ipa": null,
       "lemma": "завершивши",
       "lemmaId": "завершивши",
       "lemmaPlain": "завершивши",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3789,11 +4193,13 @@
     {
       "cefr": "B2",
       "gloss": "having met",
+      "glossClean": "having met",
       "heritage": "standard",
       "ipa": null,
       "lemma": "зустрівшись",
       "lemmaId": "зустрівшись",
       "lemmaPlain": "зустрівшись",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3804,11 +4210,13 @@
     {
       "cefr": "B2",
       "gloss": "having gathered, having got ready",
+      "glossClean": "having gathered",
       "heritage": "standard",
       "ipa": null,
       "lemma": "зібравшись",
       "lemmaId": "зібравшись",
       "lemmaPlain": "зібравшись",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3819,11 +4227,13 @@
     {
       "cefr": "B2",
       "gloss": "having bought",
+      "glossClean": "having bought",
       "heritage": "standard",
       "ipa": null,
       "lemma": "купивши",
       "lemmaId": "купивши",
       "lemmaPlain": "купивши",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3834,11 +4244,13 @@
     {
       "cefr": "B2",
       "gloss": "having written",
+      "glossClean": "having written",
       "heritage": "standard",
       "ipa": null,
       "lemma": "написавши",
       "lemmaId": "написавши",
       "lemmaPlain": "написавши",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3849,11 +4261,13 @@
     {
       "cefr": "B2",
       "gloss": "having had breakfast",
+      "glossClean": "having had breakfast",
       "heritage": "standard",
       "ipa": null,
       "lemma": "поснідавши",
       "lemmaId": "поснідавши",
       "lemmaPlain": "поснідавши",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3864,11 +4278,13 @@
     {
       "cefr": "B2",
       "gloss": "having brought",
+      "glossClean": "having brought",
       "heritage": "standard",
       "ipa": null,
       "lemma": "принісши",
       "lemmaId": "принісши",
       "lemmaPlain": "принісши",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3879,11 +4295,13 @@
     {
       "cefr": "B2",
       "gloss": "rash",
+      "glossClean": "rash",
       "heritage": "standard",
       "ipa": null,
       "lemma": "висип",
       "lemmaId": "висип",
       "lemmaPlain": "висип",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3894,11 +4312,13 @@
     {
       "cefr": "B2",
       "gloss": "dosage",
+      "glossClean": "dosage",
       "heritage": "standard",
       "ipa": null,
       "lemma": "дозування",
       "lemmaId": "дозування",
       "lemmaPlain": "дозування",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3909,11 +4329,13 @@
     {
       "cefr": "B2",
       "gloss": "ointment",
+      "glossClean": "ointment",
       "heritage": "standard",
       "ipa": null,
       "lemma": "мазь",
       "lemmaId": "мазь",
       "lemmaPlain": "мазь",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3924,11 +4346,13 @@
     {
       "cefr": "B2",
       "gloss": "state of health, how one feels",
+      "glossClean": "state of health",
       "heritage": "standard",
       "ipa": null,
       "lemma": "самопочуття",
       "lemmaId": "самопочуття",
       "lemmaPlain": "самопочуття",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3939,11 +4363,13 @@
     {
       "cefr": "B2",
       "gloss": "spray",
+      "glossClean": "spray",
       "heritage": "standard",
       "ipa": null,
       "lemma": "спрей",
       "lemmaId": "спрей",
       "lemmaPlain": "спрей",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3954,11 +4380,13 @@
     {
       "cefr": "B2",
       "gloss": "homogeneous, syntactically parallel",
+      "glossClean": "homogeneous",
       "heritage": "standard",
       "ipa": null,
       "lemma": "однорідний",
       "lemmaId": "однорідний",
       "lemmaPlain": "однорідний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3969,11 +4397,13 @@
     {
       "cefr": "B2",
       "gloss": "water heater",
+      "glossClean": "water heater",
       "heritage": "standard",
       "ipa": null,
       "lemma": "бойлер",
       "lemmaId": "бойлер",
       "lemmaPlain": "бойлер",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3984,11 +4414,13 @@
     {
       "cefr": "B2",
       "gloss": "deposit",
+      "glossClean": "deposit",
       "heritage": "standard",
       "ipa": null,
       "lemma": "завдаток",
       "lemmaId": "завдаток",
       "lemmaPlain": "завдаток",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -3999,11 +4431,13 @@
     {
       "cefr": "B2",
       "gloss": "broke down",
+      "glossClean": "broke down",
       "heritage": "standard",
       "ipa": null,
       "lemma": "зламалася",
       "lemmaId": "зламалася",
       "lemmaPlain": "зламалася",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4014,11 +4448,13 @@
     {
       "cefr": "B2",
       "gloss": "storage room",
+      "glossClean": "storage room",
       "heritage": "standard",
       "ipa": null,
       "lemma": "комора",
       "lemmaId": "комора",
       "lemmaPlain": "комора",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4029,11 +4465,13 @@
     {
       "cefr": "B2",
       "gloss": "to leak",
+      "glossClean": "to leak",
       "heritage": "standard",
       "ipa": null,
       "lemma": "протікати",
       "lemmaId": "протікати",
       "lemmaPlain": "протікати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4044,11 +4482,13 @@
     {
       "cefr": "B2",
       "gloss": "bathroom/toilet unit",
+      "glossClean": "bathroom/toilet unit",
       "heritage": "standard",
       "ipa": null,
       "lemma": "санвузол",
       "lemmaId": "санвузол",
       "lemmaPlain": "санвузол",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4059,11 +4499,13 @@
     {
       "cefr": "B2",
       "gloss": "mold",
+      "glossClean": "mold",
       "heritage": "standard",
       "ipa": null,
       "lemma": "цвіль",
       "lemmaId": "цвіль",
       "lemmaPlain": "цвіль",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4074,11 +4516,13 @@
     {
       "cefr": "B2",
       "gloss": "to make noise",
+      "glossClean": "to make noise",
       "heritage": "standard",
       "ipa": null,
       "lemma": "шуміти",
       "lemmaId": "шуміти",
       "lemmaPlain": "шуміти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4089,11 +4533,13 @@
     {
       "cefr": "B2",
       "gloss": "instruction, direction",
+      "glossClean": "instruction",
       "heritage": "standard",
       "ipa": null,
       "lemma": "вказівка",
       "lemmaId": "вказівка",
       "lemmaPlain": "вказівка",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4104,11 +4550,13 @@
     {
       "cefr": "B2",
       "gloss": "command, order",
+      "glossClean": "command",
       "heritage": "standard",
       "ipa": null,
       "lemma": "наказ",
       "lemmaId": "наказ",
       "lemmaPlain": "наказ",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4119,11 +4567,13 @@
     {
       "cefr": "B2",
       "gloss": "prompting, encouragement to act",
+      "glossClean": "prompting",
       "heritage": "standard",
       "ipa": null,
       "lemma": "спонукання",
       "lemmaId": "спонукання",
       "lemmaPlain": "спонукання",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4134,11 +4584,13 @@
     {
       "cefr": "B2",
       "gloss": "to unite",
+      "glossClean": "to unite",
       "heritage": "standard",
       "ipa": null,
       "lemma": "єднатися",
       "lemmaId": "єднатися",
       "lemmaPlain": "єднатися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4149,11 +4601,13 @@
     {
       "cefr": "B2",
       "gloss": "to be satisfied with",
+      "glossClean": "to be satisfied with",
       "heritage": "standard",
       "ipa": null,
       "lemma": "задовольнятися",
       "lemmaId": "задовольнятися",
       "lemmaPlain": "задовольнятися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4164,11 +4618,13 @@
     {
       "cefr": "B2",
       "gloss": "accompaniment, togetherness",
+      "glossClean": "accompaniment",
       "heritage": "standard",
       "ipa": null,
       "lemma": "сумісність",
       "lemmaId": "сумісність",
       "lemmaPlain": "сумісність",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4179,11 +4635,13 @@
     {
       "cefr": "B2",
       "gloss": "reportedly, as if saying",
+      "glossClean": "reportedly",
       "heritage": "standard",
       "ipa": null,
       "lemma": "мовляв",
       "lemmaId": "мовляв",
       "lemmaPlain": "мовляв",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4194,11 +4652,13 @@
     {
       "cefr": "B2",
       "gloss": "to be fair",
+      "glossClean": "to be fair",
       "heritage": "standard",
       "ipa": null,
       "lemma": "щоправда",
       "lemmaId": "щоправда",
       "lemmaPlain": "щоправда",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4209,11 +4669,13 @@
     {
       "cefr": "B2",
       "gloss": "spring ritual songs and dances",
+      "glossClean": "spring ritual songs and dances",
       "heritage": "dialect",
       "ipa": null,
       "lemma": "гаївки",
       "lemmaId": "гаївки",
       "lemmaPlain": "гаївки",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4224,11 +4686,13 @@
     {
       "cefr": "B2",
       "gloss": "to swim or sail out, emerge on water; perfective",
+      "glossClean": "to swim or sail out",
       "heritage": "standard",
       "ipa": null,
       "lemma": "виплисти",
       "lemmaId": "виплисти",
       "lemmaPlain": "виплисти",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4239,11 +4703,13 @@
     {
       "cefr": "B2",
       "gloss": "to fly away, depart by air; perfective",
+      "glossClean": "to fly away",
       "heritage": "standard",
       "ipa": null,
       "lemma": "відлетіти",
       "lemmaId": "відлетіти",
       "lemmaPlain": "відлетіти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4254,11 +4720,13 @@
     {
       "cefr": "B2",
       "gloss": "to fly all the way to; perfective",
+      "glossClean": "to fly all the way to",
       "heritage": "standard",
       "ipa": null,
       "lemma": "долетіти",
       "lemmaId": "долетіти",
       "lemmaPlain": "долетіти",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4269,11 +4737,13 @@
     {
       "cefr": "B2",
       "gloss": "bay",
+      "glossClean": "bay",
       "heritage": "standard",
       "ipa": null,
       "lemma": "затока",
       "lemmaId": "затока",
       "lemmaPlain": "затока",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4284,11 +4754,13 @@
     {
       "cefr": "B2",
       "gloss": "you are flying",
+      "glossClean": "you are flying",
       "heritage": "standard",
       "ipa": null,
       "lemma": "летиш",
       "lemmaId": "летиш",
       "lemmaPlain": "летиш",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4299,11 +4771,13 @@
     {
       "cefr": "B2",
       "gloss": "I am flying",
+      "glossClean": "I am flying",
       "heritage": "standard",
       "ipa": null,
       "lemma": "лечу",
       "lemmaId": "лечу",
       "lemmaPlain": "лечу",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4314,11 +4788,13 @@
     {
       "cefr": "B2",
       "gloss": "deck",
+      "glossClean": "deck",
       "heritage": "standard",
       "ipa": null,
       "lemma": "палуба",
       "lemmaId": "палуба",
       "lemmaPlain": "палуба",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4329,11 +4805,13 @@
     {
       "cefr": "B2",
       "gloss": "to swim or sail across; perfective",
+      "glossClean": "to swim or sail across",
       "heritage": "standard",
       "ipa": null,
       "lemma": "переплисти",
       "lemmaId": "переплисти",
       "lemmaPlain": "переплисти",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4344,11 +4822,13 @@
     {
       "cefr": "B2",
       "gloss": "I am swimming or sailing",
+      "glossClean": "I am swimming or sailing",
       "heritage": "standard",
       "ipa": null,
       "lemma": "пливу",
       "lemmaId": "пливу",
       "lemmaPlain": "пливу",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4359,11 +4839,13 @@
     {
       "cefr": "B2",
       "gloss": "to set sail, start swimming; perfective",
+      "glossClean": "to set sail",
       "heritage": "standard",
       "ipa": null,
       "lemma": "поплисти",
       "lemmaId": "поплисти",
       "lemmaPlain": "поплисти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4374,11 +4856,13 @@
     {
       "cefr": "B2",
       "gloss": "ferry",
+      "glossClean": "ferry",
       "heritage": "standard",
       "ipa": null,
       "lemma": "пором",
       "lemmaId": "пором",
       "lemmaPlain": "пором",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4389,11 +4873,13 @@
     {
       "cefr": "B2",
       "gloss": "to run as far as, reach running; perfective",
+      "glossClean": "to run as far as",
       "heritage": "standard",
       "ipa": null,
       "lemma": "добігти",
       "lemmaId": "добігти",
       "lemmaPlain": "добігти",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4404,11 +4890,13 @@
     {
       "cefr": "B2",
       "gloss": "to transport all the way to; perfective",
+      "glossClean": "to transport all the way to",
       "heritage": "standard",
       "ipa": null,
       "lemma": "довезти",
       "lemmaId": "довезти",
       "lemmaPlain": "довезти",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4419,11 +4907,13 @@
     {
       "cefr": "B2",
       "gloss": "to lead all the way to; perfective",
+      "glossClean": "to lead all the way to",
       "heritage": "standard",
       "ipa": null,
       "lemma": "довести",
       "lemmaId": "довести",
       "lemmaPlain": "довести",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4434,11 +4924,13 @@
     {
       "cefr": "B2",
       "gloss": "to reach habitually, extend as far as; imperfective",
+      "glossClean": "to reach habitually",
       "heritage": "standard",
       "ipa": null,
       "lemma": "доходити",
       "lemmaId": "доходити",
       "lemmaPlain": "доходити",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4449,11 +4941,13 @@
     {
       "cefr": "B2",
       "gloss": "to come by transport habitually; imperfective",
+      "glossClean": "to come by transport habitually",
       "heritage": "standard",
       "ipa": null,
       "lemma": "приїздити",
       "lemmaId": "приїздити",
       "lemmaPlain": "приїздити",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4464,11 +4958,13 @@
     {
       "cefr": "B2",
       "gloss": "to be leaving by vehicle; imperfective",
+      "glossClean": "to be leaving by vehicle",
       "heritage": "standard",
       "ipa": null,
       "lemma": "від'їжджати",
       "lemmaId": "від-їжджати",
       "lemmaPlain": "від'їжджати",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4479,11 +4975,13 @@
     {
       "cefr": "B2",
       "gloss": "to drive or ride away; perfective",
+      "glossClean": "to drive or ride away",
       "heritage": "standard",
       "ipa": null,
       "lemma": "від'їхати",
       "lemmaId": "від-їхати",
       "lemmaPlain": "від'їхати",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4494,11 +4992,13 @@
     {
       "cefr": "B2",
       "gloss": "I will step away",
+      "glossClean": "I will step away",
       "heritage": "standard",
       "ipa": null,
       "lemma": "відійду",
       "lemmaId": "відійду",
       "lemmaPlain": "відійду",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4509,11 +5009,13 @@
     {
       "cefr": "B2",
       "gloss": "to start carrying, carry away; perfective",
+      "glossClean": "to start carrying",
       "heritage": "standard",
       "ipa": null,
       "lemma": "понести",
       "lemmaId": "понести",
       "lemmaPlain": "понести",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4524,11 +5026,13 @@
     {
       "cefr": "B2",
       "gloss": "to run out habitually or in process",
+      "glossClean": "to run out habitually or in process",
       "heritage": "standard",
       "ipa": null,
       "lemma": "вибігати",
       "lemmaId": "вибігати",
       "lemmaPlain": "вибігати",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4539,11 +5043,13 @@
     {
       "cefr": "B2",
       "gloss": "to run out; perfective",
+      "glossClean": "to run out",
       "heritage": "standard",
       "ipa": null,
       "lemma": "вибігти",
       "lemmaId": "вибігти",
       "lemmaPlain": "вибігти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4554,11 +5060,13 @@
     {
       "cefr": "B2",
       "gloss": "I will carry out",
+      "glossClean": "I will carry out",
       "heritage": "standard",
       "ipa": null,
       "lemma": "винесу",
       "lemmaId": "винесу",
       "lemmaPlain": "винесу",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4569,11 +5077,13 @@
     {
       "cefr": "B2",
       "gloss": "I will drive out",
+      "glossClean": "I will drive out",
       "heritage": "standard",
       "ipa": null,
       "lemma": "виїду",
       "lemmaId": "виїду",
       "lemmaPlain": "виїду",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4584,11 +5094,13 @@
     {
       "cefr": "B2",
       "gloss": "courtyard, yard",
+      "glossClean": "courtyard",
       "heritage": "standard",
       "ipa": null,
       "lemma": "двір",
       "lemmaId": "двір",
       "lemmaPlain": "двір",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4599,11 +5111,13 @@
     {
       "cefr": "B2",
       "gloss": "to run in, pop in habitually; imperfective",
+      "glossClean": "to run in",
       "heritage": "standard",
       "ipa": null,
       "lemma": "забігати",
       "lemmaId": "забігати",
       "lemmaPlain": "забігати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4614,11 +5128,13 @@
     {
       "cefr": "B2",
       "gloss": "to carry in habitually or repeatedly",
+      "glossClean": "to carry in habitually or repeatedly",
       "heritage": "standard",
       "ipa": null,
       "lemma": "заносити",
       "lemmaId": "заносити",
       "lemmaPlain": "заносити",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4629,11 +5145,13 @@
     {
       "cefr": "B2",
       "gloss": "I will drive in, I will stop by",
+      "glossClean": "I will drive in",
       "heritage": "standard",
       "ipa": null,
       "lemma": "заїду",
       "lemmaId": "заїду",
       "lemmaPlain": "заїду",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4644,11 +5162,13 @@
     {
       "cefr": "B2",
       "gloss": "to drive in, stop by habitually; imperfective",
+      "glossClean": "to drive in",
       "heritage": "standard",
       "ipa": null,
       "lemma": "заїжджати",
       "lemmaId": "заїжджати",
       "lemmaPlain": "заїжджати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4659,11 +5179,13 @@
     {
       "cefr": "B2",
       "gloss": "to run across habitually or in process",
+      "glossClean": "to run across habitually or in process",
       "heritage": "standard",
       "ipa": null,
       "lemma": "перебігати",
       "lemmaId": "перебігати",
       "lemmaPlain": "перебігати",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4674,11 +5196,13 @@
     {
       "cefr": "B2",
       "gloss": "to run across; perfective",
+      "glossClean": "to run across",
       "heritage": "standard",
       "ipa": null,
       "lemma": "перебігти",
       "lemmaId": "перебігти",
       "lemmaPlain": "перебігти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4689,11 +5213,13 @@
     {
       "cefr": "B2",
       "gloss": "I will cross on foot",
+      "glossClean": "I will cross on foot",
       "heritage": "standard",
       "ipa": null,
       "lemma": "перейду",
       "lemmaId": "перейду",
       "lemmaPlain": "перейду",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4704,11 +5230,13 @@
     {
       "cefr": "B2",
       "gloss": "to run past or through; perfective",
+      "glossClean": "to run past or through",
       "heritage": "standard",
       "ipa": null,
       "lemma": "пробігти",
       "lemmaId": "пробігти",
       "lemmaPlain": "пробігти",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4719,11 +5247,13 @@
     {
       "cefr": "B2",
       "gloss": "to transport through or past; perfective",
+      "glossClean": "to transport through or past",
       "heritage": "standard",
       "ipa": null,
       "lemma": "провезти",
       "lemmaId": "провезти",
       "lemmaPlain": "провезти",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4734,11 +5264,13 @@
     {
       "cefr": "B2",
       "gloss": "I will pass, I will go through",
+      "glossClean": "I will pass",
       "heritage": "standard",
       "ipa": null,
       "lemma": "пройду",
       "lemmaId": "пройду",
       "lemmaPlain": "пройду",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4749,11 +5281,13 @@
     {
       "cefr": "B2",
       "gloss": "to carry through or past; perfective",
+      "glossClean": "to carry through or past",
       "heritage": "standard",
       "ipa": null,
       "lemma": "пронести",
       "lemmaId": "пронести",
       "lemmaPlain": "пронести",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4764,11 +5298,13 @@
     {
       "cefr": "B2",
       "gloss": "to drive past or through habitually; imperfective",
+      "glossClean": "to drive past or through habitually",
       "heritage": "standard",
       "ipa": null,
       "lemma": "проїжджати",
       "lemmaId": "проїжджати",
       "lemmaPlain": "проїжджати",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -4779,11 +5315,13 @@
     {
       "cefr": "B2",
       "gloss": "climax",
+      "glossClean": "climax",
       "heritage": "standard",
       "ipa": null,
       "lemma": "кульмінація",
       "lemmaId": "кульмінація",
       "lemmaPlain": "кульмінація",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -4823,11 +5361,13 @@
     {
       "cefr": "B2",
       "gloss": "ending",
+      "glossClean": "ending",
       "heritage": "standard",
       "ipa": null,
       "lemma": "кінцівка",
       "lemmaId": "кінцівка",
       "lemmaPlain": "кінцівка",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -4867,11 +5407,13 @@
     {
       "cefr": "B2",
       "gloss": "periwinkle",
+      "glossClean": "periwinkle",
       "heritage": "standard",
       "ipa": null,
       "lemma": "барвінок",
       "lemmaId": "барвінок",
       "lemmaPlain": "барвінок",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -4882,11 +5424,13 @@
     {
       "cefr": "B2",
       "gloss": "deforestation, logging",
+      "glossClean": "deforestation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "вирубка",
       "lemmaId": "вирубка",
       "lemmaPlain": "вирубка",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -4926,11 +5470,13 @@
     {
       "cefr": "B2",
       "gloss": "ecosystem",
+      "glossClean": "ecosystem",
       "heritage": "standard",
       "ipa": null,
       "lemma": "екосистема",
       "lemmaId": "екосистема",
       "lemmaPlain": "екосистема",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -4970,11 +5516,13 @@
     {
       "cefr": "B2",
       "gloss": "blizzard",
+      "glossClean": "blizzard",
       "heritage": "standard",
       "ipa": null,
       "lemma": "завірюха",
       "lemmaId": "завірюха",
       "lemmaPlain": "завірюха",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -5014,11 +5562,13 @@
     {
       "cefr": "B2",
       "gloss": "preservation, conservation",
+      "glossClean": "preservation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "збереження",
       "lemmaId": "збереження",
       "lemmaPlain": "збереження",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5029,11 +5579,13 @@
     {
       "cefr": "B2",
       "gloss": "European bison",
+      "glossClean": "European bison",
       "heritage": "standard",
       "ipa": null,
       "lemma": "зубр",
       "lemmaId": "зубр",
       "lemmaPlain": "зубр",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5044,11 +5596,13 @@
     {
       "cefr": "B2",
       "gloss": "drizzle",
+      "glossClean": "drizzle",
       "heritage": "standard",
       "ipa": null,
       "lemma": "мряка",
       "lemmaId": "мряка",
       "lemmaPlain": "мряка",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5059,11 +5613,13 @@
     {
       "cefr": "B2",
       "gloss": "dew",
+      "glossClean": "dew",
       "heritage": "standard",
       "ipa": null,
       "lemma": "роса",
       "lemmaId": "роса",
       "lemmaPlain": "роса",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -5103,11 +5659,13 @@
     {
       "cefr": "B2",
       "gloss": "to sort",
+      "glossClean": "to sort",
       "heritage": "standard",
       "ipa": null,
       "lemma": "сортувати",
       "lemmaId": "сортувати",
       "lemmaPlain": "сортувати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5118,11 +5676,13 @@
     {
       "cefr": "B2",
       "gloss": "marigolds",
+      "glossClean": "marigolds",
       "heritage": "standard",
       "ipa": null,
       "lemma": "чорнобривці",
       "lemmaId": "чорнобривці",
       "lemmaPlain": "чорнобривці",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5133,11 +5693,13 @@
     {
       "cefr": "B2",
       "gloss": "hoarfrost",
+      "glossClean": "hoarfrost",
       "heritage": "standard",
       "ipa": null,
       "lemma": "іній",
       "lemmaId": "іній",
       "lemmaPlain": "іній",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5148,11 +5710,13 @@
     {
       "cefr": "B2",
       "gloss": "wisdom",
+      "glossClean": "wisdom",
       "heritage": "standard",
       "ipa": null,
       "lemma": "мудрість",
       "lemmaId": "мудрість",
       "lemmaPlain": "мудрість",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5163,11 +5727,13 @@
     {
       "cefr": "B2",
       "gloss": "copper",
+      "glossClean": "copper",
       "heritage": "standard",
       "ipa": null,
       "lemma": "мідь",
       "lemmaId": "мідь",
       "lemmaPlain": "мідь",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5178,11 +5744,13 @@
     {
       "cefr": "B2",
       "gloss": "tenderness",
+      "glossClean": "tenderness",
       "heritage": "standard",
       "ipa": null,
       "lemma": "ніжність",
       "lemmaId": "ніжність",
       "lemmaPlain": "ніжність",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5193,11 +5761,13 @@
     {
       "cefr": "B2",
       "gloss": "mixture",
+      "glossClean": "mixture",
       "heritage": "standard",
       "ipa": null,
       "lemma": "суміш",
       "lemmaId": "суміш",
       "lemmaPlain": "суміш",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5208,11 +5778,13 @@
     {
       "cefr": "B2",
       "gloss": "ladle, dipper",
+      "glossClean": "ladle",
       "heritage": "standard",
       "ipa": null,
       "lemma": "ківш",
       "lemmaId": "ківш",
       "lemmaPlain": "ківш",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5223,11 +5795,13 @@
     {
       "cefr": "B2",
       "gloss": "personification",
+      "glossClean": "personification",
       "heritage": "standard",
       "ipa": null,
       "lemma": "персоніфікація",
       "lemmaId": "персоніфікація",
       "lemmaPlain": "персоніфікація",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5238,11 +5812,13 @@
     {
       "cefr": "B2",
       "gloss": "listener, course participant",
+      "glossClean": "listener",
       "heritage": "standard",
       "ipa": null,
       "lemma": "слухач",
       "lemmaId": "слухач",
       "lemmaPlain": "слухач",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5253,11 +5829,13 @@
     {
       "cefr": "B2",
       "gloss": "situation, position",
+      "glossClean": "situation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "становище",
       "lemmaId": "становище",
       "lemmaPlain": "становище",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5268,11 +5846,13 @@
     {
       "cefr": "B2",
       "gloss": "to drop out",
+      "glossClean": "to drop out",
       "heritage": "standard",
       "ipa": null,
       "lemma": "випадати",
       "lemmaId": "випадати",
       "lemmaPlain": "випадати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5283,11 +5863,13 @@
     {
       "cefr": "B2",
       "gloss": "potter",
+      "glossClean": "potter",
       "heritage": "standard",
       "ipa": null,
       "lemma": "гончар",
       "lemmaId": "гончар",
       "lemmaPlain": "гончар",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5298,11 +5880,13 @@
     {
       "cefr": "B2",
       "gloss": "Georgian man",
+      "glossClean": "Georgian man",
       "heritage": "standard",
       "ipa": null,
       "lemma": "грузин",
       "lemmaId": "грузин",
       "lemmaPlain": "грузин",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5313,11 +5897,13 @@
     {
       "cefr": "B2",
       "gloss": "kobza player",
+      "glossClean": "kobza player",
       "heritage": "standard",
       "ipa": null,
       "lemma": "кобзар",
       "lemmaId": "кобзар",
       "lemmaPlain": "кобзар",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5328,11 +5914,13 @@
     {
       "cefr": "B2",
       "gloss": "townsperson; burgher in historical contexts",
+      "glossClean": "townsperson",
       "heritage": "standard",
       "ipa": null,
       "lemma": "міщанин",
       "lemmaId": "міщанин",
       "lemmaPlain": "міщанин",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5343,11 +5931,13 @@
     {
       "cefr": "B2",
       "gloss": "baker",
+      "glossClean": "baker",
       "heritage": "standard",
       "ipa": null,
       "lemma": "пекар",
       "lemmaId": "пекар",
       "lemmaPlain": "пекар",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5358,11 +5948,13 @@
     {
       "cefr": "B2",
       "gloss": "villager; peasant in historical contexts",
+      "glossClean": "villager",
       "heritage": "standard",
       "ipa": null,
       "lemma": "селянин",
       "lemmaId": "селянин",
       "lemmaPlain": "селянин",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5373,11 +5965,13 @@
     {
       "cefr": "B2",
       "gloss": "carpenter",
+      "glossClean": "carpenter",
       "heritage": "standard",
       "ipa": null,
       "lemma": "столяр",
       "lemmaId": "столяр",
       "lemmaPlain": "столяр",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5388,11 +5982,13 @@
     {
       "cefr": "B2",
       "gloss": "lathe operator",
+      "glossClean": "lathe operator",
       "heritage": "standard",
       "ipa": null,
       "lemma": "токар",
       "lemmaId": "токар",
       "lemmaPlain": "токар",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5403,11 +5999,13 @@
     {
       "cefr": "B2",
       "gloss": "worn, emaciated",
+      "glossClean": "worn",
       "heritage": "standard",
       "ipa": null,
       "lemma": "змарнілий",
       "lemmaId": "змарнілий",
       "lemmaPlain": "змарнілий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5418,11 +6016,13 @@
     {
       "cefr": "B2",
       "gloss": "disappeared, missing",
+      "glossClean": "disappeared",
       "heritage": "standard",
       "ipa": null,
       "lemma": "зниклий",
       "lemmaId": "зниклий",
       "lemmaPlain": "зниклий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5433,11 +6033,13 @@
     {
       "cefr": "B2",
       "gloss": "blooming",
+      "glossClean": "blooming",
       "heritage": "standard",
       "ipa": null,
       "lemma": "квітучий",
       "lemmaId": "квітучий",
       "lemmaPlain": "квітучий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5448,11 +6050,13 @@
     {
       "cefr": "B2",
       "gloss": "willing, eager",
+      "glossClean": "willing",
       "heritage": "standard",
       "ipa": null,
       "lemma": "охочий",
       "lemmaId": "охочий",
       "lemmaPlain": "охочий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5463,11 +6067,13 @@
     {
       "cefr": "B2",
       "gloss": "melodious, songlike",
+      "glossClean": "melodious",
       "heritage": "standard",
       "ipa": null,
       "lemma": "співучий",
       "lemmaId": "співучий",
       "lemmaPlain": "співучий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5478,11 +6084,13 @@
     {
       "cefr": "B2",
       "gloss": "beaten, broken-in",
+      "glossClean": "beaten",
       "heritage": "standard",
       "ipa": null,
       "lemma": "битий",
       "lemmaId": "битий",
       "lemmaPlain": "битий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5493,11 +6101,13 @@
     {
       "cefr": "B2",
       "gloss": "built",
+      "glossClean": "built",
       "heritage": "standard",
       "ipa": null,
       "lemma": "збудований",
       "lemmaId": "збудований",
       "lemmaPlain": "збудований",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5508,11 +6118,13 @@
     {
       "cefr": "B2",
       "gloss": "washed",
+      "glossClean": "washed",
       "heritage": "standard",
       "ipa": null,
       "lemma": "митий",
       "lemmaId": "митий",
       "lemmaPlain": "митий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5523,11 +6135,13 @@
     {
       "cefr": "B2",
       "gloss": "brought",
+      "glossClean": "brought",
       "heritage": "standard",
       "ipa": null,
       "lemma": "принесений",
       "lemmaId": "принесений",
       "lemmaPlain": "принесений",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5538,11 +6152,13 @@
     {
       "cefr": "B2",
       "gloss": "was being built",
+      "glossClean": "was being built",
       "heritage": "standard",
       "ipa": null,
       "lemma": "будувався",
       "lemmaId": "будувався",
       "lemmaPlain": "будувався",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5553,11 +6169,13 @@
     {
       "cefr": "B2",
       "gloss": "to be built; to be under construction",
+      "glossClean": "to be built",
       "heritage": "standard",
       "ipa": null,
       "lemma": "будуватися",
       "lemmaId": "будуватися",
       "lemmaPlain": "будуватися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5568,11 +6186,13 @@
     {
       "cefr": "B2",
       "gloss": "to be produced",
+      "glossClean": "to be produced",
       "heritage": "standard",
       "ipa": null,
       "lemma": "вироблятися",
       "lemmaId": "вироблятися",
       "lemmaPlain": "вироблятися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5583,11 +6203,13 @@
     {
       "cefr": "B2",
       "gloss": "has been uploaded; loaded",
+      "glossClean": "has been uploaded",
       "heritage": "standard",
       "ipa": null,
       "lemma": "завантажено",
       "lemmaId": "завантажено",
       "lemmaPlain": "завантажено",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5598,11 +6220,13 @@
     {
       "cefr": "B2",
       "gloss": "closes; is closing",
+      "glossClean": "closes",
       "heritage": "standard",
       "ipa": null,
       "lemma": "зачиняється",
       "lemmaId": "зачиняється",
       "lemmaPlain": "зачиняється",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5613,11 +6237,13 @@
     {
       "cefr": "B2",
       "gloss": "unnatural",
+      "glossClean": "unnatural",
       "heritage": "standard",
       "ipa": null,
       "lemma": "неприродний",
       "lemmaId": "неприродний",
       "lemmaPlain": "неприродний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5628,11 +6254,13 @@
     {
       "cefr": "B2",
       "gloss": "has been read",
+      "glossClean": "has been read",
       "heritage": "standard",
       "ipa": null,
       "lemma": "прочитано",
       "lemmaId": "прочитано",
       "lemmaPlain": "прочитано",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5643,11 +6271,13 @@
     {
       "cefr": "B2",
       "gloss": "to design",
+      "glossClean": "to design",
       "heritage": "standard",
       "ipa": null,
       "lemma": "проєктувати",
       "lemmaId": "проєктувати",
       "lemmaPlain": "проєктувати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5658,11 +6288,13 @@
     {
       "cefr": "B2",
       "gloss": "to be published; to publish oneself",
+      "glossClean": "to be published",
       "heritage": "standard",
       "ipa": null,
       "lemma": "публікуватися",
       "lemmaId": "публікуватися",
       "lemmaPlain": "публікуватися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5673,11 +6305,13 @@
     {
       "cefr": "B2",
       "gloss": "is being repaired",
+      "glossClean": "is being repaired",
       "heritage": "standard",
       "ipa": null,
       "lemma": "ремонтується",
       "lemmaId": "ремонтується",
       "lemmaPlain": "ремонтується",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5688,11 +6322,13 @@
     {
       "cefr": "B2",
       "gloss": "talkative",
+      "glossClean": "talkative",
       "heritage": "standard",
       "ipa": null,
       "lemma": "балакучий",
       "lemmaId": "балакучий",
       "lemmaPlain": "балакучий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5703,11 +6339,13 @@
     {
       "cefr": "B2",
       "gloss": "formal relations",
+      "glossClean": "formal relations",
       "heritage": "standard",
       "ipa": null,
       "lemma": "відносини",
       "lemmaId": "відносини",
       "lemmaPlain": "відносини",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5718,11 +6356,13 @@
     {
       "cefr": "B2",
       "gloss": "to introduce oneself formally",
+      "glossClean": "to introduce oneself formally",
       "heritage": "standard",
       "ipa": null,
       "lemma": "відрекомендуватися",
       "lemmaId": "відрекомендуватися",
       "lemmaPlain": "відрекомендуватися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5733,11 +6373,13 @@
     {
       "cefr": "B2",
       "gloss": "tact, delicacy",
+      "glossClean": "tact",
       "heritage": "standard",
       "ipa": null,
       "lemma": "делікатність",
       "lemmaId": "делікатність",
       "lemmaPlain": "делікатність",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5748,11 +6390,13 @@
     {
       "cefr": "B2",
       "gloss": "withdrawn",
+      "glossClean": "withdrawn",
       "heritage": "standard",
       "ipa": null,
       "lemma": "замкнутий",
       "lemmaId": "замкнутий",
       "lemmaPlain": "замкнутий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5763,11 +6407,13 @@
     {
       "cefr": "B2",
       "gloss": "quick-witted",
+      "glossClean": "quick-witted",
       "heritage": "standard",
       "ipa": null,
       "lemma": "кмітливий",
       "lemmaId": "кмітливий",
       "lemmaPlain": "кмітливий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5778,11 +6424,13 @@
     {
       "cefr": "B2",
       "gloss": "facial expression",
+      "glossClean": "facial expression",
       "heritage": "standard",
       "ipa": null,
       "lemma": "міміка",
       "lemmaId": "міміка",
       "lemmaPlain": "міміка",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -5822,11 +6470,13 @@
     {
       "cefr": "B2",
       "gloss": "impatient",
+      "glossClean": "impatient",
       "heritage": "standard",
       "ipa": null,
       "lemma": "нетерплячий",
       "lemmaId": "нетерплячий",
       "lemmaPlain": "нетерплячий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5837,11 +6487,13 @@
     {
       "cefr": "B2",
       "gloss": "rosy",
+      "glossClean": "rosy",
       "heritage": "standard",
       "ipa": null,
       "lemma": "рум'яний",
       "lemmaId": "рум-яний",
       "lemmaPlain": "рум'яний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5852,11 +6504,13 @@
     {
       "cefr": "B2",
       "gloss": "overconfident",
+      "glossClean": "overconfident",
       "heritage": "standard",
       "ipa": null,
       "lemma": "самовпевнений",
       "lemmaId": "самовпевнений",
       "lemmaPlain": "самовпевнений",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5867,11 +6521,13 @@
     {
       "cefr": "B2",
       "gloss": "swarthy, dark-complexioned",
+      "glossClean": "swarthy",
       "heritage": "standard",
       "ipa": null,
       "lemma": "смаглявий",
       "lemmaId": "смаглявий",
       "lemmaPlain": "смаглявий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5882,11 +6538,13 @@
     {
       "cefr": "B2",
       "gloss": "build, physique",
+      "glossClean": "build",
       "heritage": "standard",
       "ipa": null,
       "lemma": "статура",
       "lemmaId": "статура",
       "lemmaPlain": "статура",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -5926,11 +6584,13 @@
     {
       "cefr": "B2",
       "gloss": "delicate, slender",
+      "glossClean": "delicate",
       "heritage": "standard",
       "ipa": null,
       "lemma": "тендітний",
       "lemmaId": "тендітний",
       "lemmaPlain": "тендітний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5941,11 +6601,13 @@
     {
       "cefr": "B2",
       "gloss": "to be companions, to socialize",
+      "glossClean": "to be companions",
       "heritage": "standard",
       "ipa": null,
       "lemma": "товаришувати",
       "lemmaId": "товаришувати",
       "lemmaPlain": "товаришувати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5956,11 +6618,13 @@
     {
       "cefr": "B2",
       "gloss": "stubborn",
+      "glossClean": "stubborn",
       "heritage": "standard",
       "ipa": null,
       "lemma": "упертий",
       "lemmaId": "упертий",
       "lemmaPlain": "упертий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5971,11 +6635,13 @@
     {
       "cefr": "B2",
       "gloss": "broad-shouldered",
+      "glossClean": "broad-shouldered",
       "heritage": "standard",
       "ipa": null,
       "lemma": "широкоплечий",
       "lemmaId": "широкоплечий",
       "lemmaPlain": "широкоплечий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -5986,11 +6652,13 @@
     {
       "cefr": "B2",
       "gloss": "outskirts, surrounding area",
+      "glossClean": "outskirts",
       "heritage": "standard",
       "ipa": null,
       "lemma": "околиця",
       "lemmaId": "околиця",
       "lemmaPlain": "околиця",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -6030,11 +6698,13 @@
     {
       "cefr": "B2",
       "gloss": "plain",
+      "glossClean": "plain",
       "heritage": "standard",
       "ipa": null,
       "lemma": "рівнина",
       "lemmaId": "рівнина",
       "lemmaPlain": "рівнина",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -6074,11 +6744,13 @@
     {
       "cefr": "B2",
       "gloss": "steppe",
+      "glossClean": "steppe",
       "heritage": "standard",
       "ipa": null,
       "lemma": "степ",
       "lemmaId": "степ",
       "lemmaPlain": "степ",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6089,11 +6761,13 @@
     {
       "cefr": "B2",
       "gloss": "friendship",
+      "glossClean": "friendship",
       "heritage": "standard",
       "ipa": null,
       "lemma": "дружба",
       "lemmaId": "дружба",
       "lemmaPlain": "дружба",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6104,11 +6778,13 @@
     {
       "cefr": "B2",
       "gloss": "Andrii's",
+      "glossClean": "Andrii's",
       "heritage": "unknown",
       "ipa": null,
       "lemma": "Андріїв",
       "lemmaId": "андріїв",
       "lemmaPlain": "андріїв",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6119,11 +6795,13 @@
     {
       "cefr": "B2",
       "gloss": "grandmother's",
+      "glossClean": "grandmother's",
       "heritage": "standard",
       "ipa": null,
       "lemma": "бабусин",
       "lemmaId": "бабусин",
       "lemmaPlain": "бабусин",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6134,11 +6812,13 @@
     {
       "cefr": "B2",
       "gloss": "father's, feminine nominative",
+      "glossClean": "father's",
       "heritage": "standard",
       "ipa": null,
       "lemma": "батькова",
       "lemmaId": "батькова",
       "lemmaPlain": "батькова",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6149,11 +6829,13 @@
     {
       "cefr": "B2",
       "gloss": "brother's",
+      "glossClean": "brother's",
       "heritage": "standard",
       "ipa": null,
       "lemma": "братів",
       "lemmaId": "братів",
       "lemmaPlain": "братів",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6164,11 +6846,13 @@
     {
       "cefr": "B2",
       "gloss": "mother's",
+      "glossClean": "mother's",
       "heritage": "standard",
       "ipa": null,
       "lemma": "материн",
       "lemmaId": "материн",
       "lemmaPlain": "материн",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6179,11 +6863,13 @@
     {
       "cefr": "B2",
       "gloss": "mother's, feminine nominative",
+      "glossClean": "mother's",
       "heritage": "standard",
       "ipa": null,
       "lemma": "материна",
       "lemmaId": "материна",
       "lemmaPlain": "материна",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6194,11 +6880,13 @@
     {
       "cefr": "B2",
       "gloss": "heritage, legacy",
+      "glossClean": "heritage",
       "heritage": "standard",
       "ipa": null,
       "lemma": "спадщина",
       "lemmaId": "спадщина",
       "lemmaPlain": "спадщина",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -6238,11 +6926,13 @@
     {
       "cefr": "B2",
       "gloss": "Shevchenko's",
+      "glossClean": "Shevchenko's",
       "heritage": "unknown",
       "ipa": null,
       "lemma": "Шевченків",
       "lemmaId": "шевченків",
       "lemmaPlain": "шевченків",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6253,11 +6943,13 @@
     {
       "cefr": "B2",
       "gloss": "listening comprehension",
+      "glossClean": "listening comprehension",
       "heritage": "standard",
       "ipa": null,
       "lemma": "аудіювання",
       "lemmaId": "аудіювання",
       "lemmaPlain": "аудіювання",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6268,11 +6960,13 @@
     {
       "cefr": "B2",
       "gloss": "speaking",
+      "glossClean": "speaking",
       "heritage": "standard",
       "ipa": null,
       "lemma": "говоріння",
       "lemmaId": "говоріння",
       "lemmaPlain": "говоріння",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6283,11 +6977,13 @@
     {
       "cefr": "B2",
       "gloss": "reaction",
+      "glossClean": "reaction",
       "heritage": "standard",
       "ipa": null,
       "lemma": "реакція",
       "lemmaId": "реакція",
       "lemmaPlain": "реакція",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -6327,11 +7023,13 @@
     {
       "cefr": "B2",
       "gloss": "navigation",
+      "glossClean": "navigation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "навігація",
       "lemmaId": "навігація",
       "lemmaPlain": "навігація",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6342,11 +7040,13 @@
     {
       "cefr": "B2",
       "gloss": "behind; takes genitive when prepositional",
+      "glossClean": "behind",
       "heritage": "standard",
       "ipa": null,
       "lemma": "позаду",
       "lemmaId": "позаду",
       "lemmaPlain": "позаду",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6357,11 +7057,13 @@
     {
       "cefr": "B2",
       "gloss": "in front of, ahead of; takes genitive when prepositional",
+      "glossClean": "in front of",
       "heritage": "standard",
       "ipa": null,
       "lemma": "попереду",
       "lemmaId": "попереду",
       "lemmaPlain": "попереду",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6372,11 +7074,13 @@
     {
       "cefr": "B2",
       "gloss": "to impress, move",
+      "glossClean": "to impress",
       "heritage": "standard",
       "ipa": null,
       "lemma": "вразити",
       "lemmaId": "вразити",
       "lemmaPlain": "вразити",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6387,11 +7091,13 @@
     {
       "cefr": "B2",
       "gloss": "to inspire",
+      "glossClean": "to inspire",
       "heritage": "standard",
       "ipa": null,
       "lemma": "надихнути",
       "lemmaId": "надихнути",
       "lemmaPlain": "надихнути",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6402,11 +7108,13 @@
     {
       "cefr": "B2",
       "gloss": "imagery",
+      "glossClean": "imagery",
       "heritage": "standard",
       "ipa": null,
       "lemma": "образність",
       "lemmaId": "образність",
       "lemmaPlain": "образність",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6417,11 +7125,13 @@
     {
       "cefr": "B2",
       "gloss": "stanza",
+      "glossClean": "stanza",
       "heritage": "standard",
       "ipa": null,
       "lemma": "строфа",
       "lemmaId": "строфа",
       "lemmaPlain": "строфа",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -6461,11 +7171,13 @@
     {
       "cefr": "B2",
       "gloss": "to be surprised",
+      "glossClean": "to be surprised",
       "heritage": "standard",
       "ipa": null,
       "lemma": "дивуватися",
       "lemmaId": "дивуватися",
       "lemmaPlain": "дивуватися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6476,11 +7188,13 @@
     {
       "cefr": "B2",
       "gloss": "one breathes, it is breathable",
+      "glossClean": "one breathes",
       "heritage": "standard",
       "ipa": null,
       "lemma": "дихається",
       "lemmaId": "дихається",
       "lemmaPlain": "дихається",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6491,11 +7205,13 @@
     {
       "cefr": "B2",
       "gloss": "to correspond",
+      "glossClean": "to correspond",
       "heritage": "standard",
       "ipa": null,
       "lemma": "листуватися",
       "lemmaId": "листуватися",
       "lemmaPlain": "листуватися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6506,11 +7222,13 @@
     {
       "cefr": "B2",
       "gloss": "to hug each other",
+      "glossClean": "to hug each other",
       "heritage": "standard",
       "ipa": null,
       "lemma": "обійматися",
       "lemmaId": "обійматися",
       "lemmaPlain": "обійматися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6521,11 +7239,13 @@
     {
       "cefr": "B2",
       "gloss": "to be ashamed, shy",
+      "glossClean": "to be ashamed",
       "heritage": "standard",
       "ipa": null,
       "lemma": "соромитися",
       "lemmaId": "соромитися",
       "lemmaPlain": "соромитися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6536,11 +7256,13 @@
     {
       "cefr": "B2",
       "gloss": "to worry, move emotionally",
+      "glossClean": "to worry",
       "heritage": "standard",
       "ipa": null,
       "lemma": "хвилювати",
       "lemmaId": "хвилювати",
       "lemmaPlain": "хвилювати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6551,11 +7273,13 @@
     {
       "cefr": "B2",
       "gloss": "the day before",
+      "glossClean": "the day before",
       "heritage": "standard",
       "ipa": null,
       "lemma": "напередодні",
       "lemmaId": "напередодні",
       "lemmaPlain": "напередодні",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6566,11 +7290,13 @@
     {
       "cefr": "B2",
       "gloss": "smoked",
+      "glossClean": "smoked",
       "heritage": "standard",
       "ipa": null,
       "lemma": "копчений",
       "lemmaId": "копчений",
       "lemmaPlain": "копчений",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6581,11 +7307,13 @@
     {
       "cefr": "B2",
       "gloss": "grain, groats",
+      "glossClean": "grain",
       "heritage": "standard",
       "ipa": null,
       "lemma": "крупа",
       "lemmaId": "крупа",
       "lemmaPlain": "крупа",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6596,11 +7324,13 @@
     {
       "cefr": "B2",
       "gloss": "politely",
+      "glossClean": "politely",
       "heritage": "standard",
       "ipa": null,
       "lemma": "ввічливо",
       "lemmaId": "ввічливо",
       "lemmaPlain": "ввічливо",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6611,11 +7341,13 @@
     {
       "cefr": "B2",
       "gloss": "tailor",
+      "glossClean": "tailor",
       "heritage": "standard",
       "ipa": null,
       "lemma": "кравець",
       "lemmaId": "кравець",
       "lemmaPlain": "кравець",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6626,11 +7358,13 @@
     {
       "cefr": "B2",
       "gloss": "female tailor",
+      "glossClean": "female tailor",
       "heritage": "standard",
       "ipa": null,
       "lemma": "кравчиня",
       "lemmaId": "кравчиня",
       "lemmaPlain": "кравчиня",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6641,11 +7375,13 @@
     {
       "cefr": "B2",
       "gloss": "haircut",
+      "glossClean": "haircut",
       "heritage": "standard",
       "ipa": null,
       "lemma": "стрижка",
       "lemmaId": "стрижка",
       "lemmaPlain": "стрижка",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6656,11 +7392,13 @@
     {
       "cefr": "B2",
       "gloss": "faster",
+      "glossClean": "faster",
       "heritage": "standard",
       "ipa": null,
       "lemma": "швидший",
       "lemmaId": "швидший",
       "lemmaPlain": "швидший",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6671,11 +7409,13 @@
     {
       "cefr": "B2",
       "gloss": "capable, feminine",
+      "glossClean": "capable",
       "heritage": "standard",
       "ipa": null,
       "lemma": "годна",
       "lemmaId": "годна",
       "lemmaPlain": "годна",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6686,11 +7426,13 @@
     {
       "cefr": "B2",
       "gloss": "contrasting, high-contrast",
+      "glossClean": "contrasting",
       "heritage": "standard",
       "ipa": null,
       "lemma": "контрастний",
       "lemmaId": "контрастний",
       "lemmaPlain": "контрастний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6701,11 +7443,13 @@
     {
       "cefr": "B2",
       "gloss": "derived",
+      "glossClean": "derived",
       "heritage": "standard",
       "ipa": null,
       "lemma": "похідний",
       "lemmaId": "похідний",
       "lemmaPlain": "похідний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6716,11 +7460,13 @@
     {
       "cefr": "B2",
       "gloss": "travel pass; for travel",
+      "glossClean": "travel pass",
       "heritage": "standard",
       "ipa": null,
       "lemma": "проїзний",
       "lemmaId": "проїзний",
       "lemmaPlain": "проїзний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6731,11 +7477,13 @@
     {
       "cefr": "B2",
       "gloss": "heartfelt, cordial; cardiac in some contexts",
+      "glossClean": "heartfelt",
       "heritage": "standard",
       "ipa": null,
       "lemma": "сердечний",
       "lemmaId": "сердечний",
       "lemmaPlain": "сердечний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6746,11 +7494,13 @@
     {
       "cefr": "B2",
       "gloss": "weekly",
+      "glossClean": "weekly",
       "heritage": "standard",
       "ipa": null,
       "lemma": "тижневий",
       "lemmaId": "тижневий",
       "lemmaPlain": "тижневий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6761,11 +7511,13 @@
     {
       "cefr": "B2",
       "gloss": "honor",
+      "glossClean": "honor",
       "heritage": "standard",
       "ipa": null,
       "lemma": "честь",
       "lemmaId": "честь",
       "lemmaPlain": "честь",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6776,11 +7528,13 @@
     {
       "cefr": "B2",
       "gloss": "reliable, trustworthy",
+      "glossClean": "reliable",
       "heritage": "russianism",
       "ipa": null,
       "lemma": "достовірний",
       "lemmaId": "достовірний",
       "lemmaPlain": "достовірний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6791,11 +7545,13 @@
     {
       "cefr": "B2",
       "gloss": "headline",
+      "glossClean": "headline",
       "heritage": "standard",
       "ipa": null,
       "lemma": "заголовок",
       "lemmaId": "заголовок",
       "lemmaPlain": "заголовок",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6806,11 +7562,13 @@
     {
       "cefr": "B2",
       "gloss": "mass media",
+      "glossClean": "mass media",
       "heritage": "unknown",
       "ipa": null,
       "lemma": "масмедіа",
       "lemmaId": "масмедіа",
       "lemmaPlain": "масмедіа",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6821,11 +7579,13 @@
     {
       "cefr": "B2",
       "gloss": "label",
+      "glossClean": "label",
       "heritage": "standard",
       "ipa": null,
       "lemma": "ярлик",
       "lemmaId": "ярлик",
       "lemmaPlain": "ярлик",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6836,11 +7596,13 @@
     {
       "cefr": "B2",
       "gloss": "sender, applicant",
+      "glossClean": "sender",
       "heritage": "standard",
       "ipa": null,
       "lemma": "адресант",
       "lemmaId": "адресант",
       "lemmaPlain": "адресант",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6851,11 +7613,13 @@
     {
       "cefr": "B2",
       "gloss": "ugly, disgusting",
+      "glossClean": "ugly",
       "heritage": "standard",
       "ipa": null,
       "lemma": "бридкий",
       "lemmaId": "бридкий",
       "lemmaPlain": "бридкий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6866,11 +7630,13 @@
     {
       "cefr": "B2",
       "gloss": "bye, see you",
+      "glossClean": "bye",
       "heritage": "standard",
       "ipa": null,
       "lemma": "бувай",
       "lemmaId": "бувай",
       "lemmaPlain": "бувай",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -6881,11 +7647,13 @@
     {
       "cefr": "B2",
       "gloss": "impudent, brazen",
+      "glossClean": "impudent",
       "heritage": "standard",
       "ipa": null,
       "lemma": "нахабний",
       "lemmaId": "нахабний",
       "lemmaPlain": "нахабний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6896,11 +7664,13 @@
     {
       "cefr": "B2",
       "gloss": "surzhyk",
+      "glossClean": "surzhyk",
       "heritage": "standard",
       "ipa": null,
       "lemma": "суржик",
       "lemmaId": "суржик",
       "lemmaPlain": "суржик",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -6911,11 +7681,13 @@
     {
       "cefr": "B2",
       "gloss": "intonation",
+      "glossClean": "intonation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "інтонація",
       "lemmaId": "інтонація",
       "lemmaPlain": "інтонація",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -6955,11 +7727,13 @@
     {
       "cefr": "B2",
       "gloss": "to depart by air, take off",
+      "glossClean": "to depart by air",
       "heritage": "standard",
       "ipa": null,
       "lemma": "вилітати",
       "lemmaId": "вилітати",
       "lemmaPlain": "вилітати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6970,11 +7744,13 @@
     {
       "cefr": "B2",
       "gloss": "to book; to reserve",
+      "glossClean": "to book",
       "heritage": "standard",
       "ipa": null,
       "lemma": "бронювати",
       "lemmaId": "бронювати",
       "lemmaPlain": "бронювати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -6985,11 +7761,13 @@
     {
       "cefr": "B2",
       "gloss": "to winter; to spend the winter",
+      "glossClean": "to winter",
       "heritage": "standard",
       "ipa": null,
       "lemma": "зимувати",
       "lemmaId": "зимувати",
       "lemmaPlain": "зимувати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7000,11 +7778,13 @@
     {
       "cefr": "B2",
       "gloss": "excess",
+      "glossClean": "excess",
       "heritage": "standard",
       "ipa": null,
       "lemma": "надмірність",
       "lemmaId": "надмірність",
       "lemmaPlain": "надмірність",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7015,11 +7795,13 @@
     {
       "cefr": "B2",
       "gloss": "to not eat enough; to leave uneaten",
+      "glossClean": "to not eat enough",
       "heritage": "standard",
       "ipa": null,
       "lemma": "недоїсти",
       "lemmaId": "недоїсти",
       "lemmaPlain": "недоїсти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7030,11 +7812,13 @@
     {
       "cefr": "B2",
       "gloss": "to think over",
+      "glossClean": "to think over",
       "heritage": "standard",
       "ipa": null,
       "lemma": "обдумати",
       "lemmaId": "обдумати",
       "lemmaPlain": "обдумати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7045,11 +7829,13 @@
     {
       "cefr": "B2",
       "gloss": "to arm; to equip",
+      "glossClean": "to arm",
       "heritage": "standard",
       "ipa": null,
       "lemma": "озброїти",
       "lemmaId": "озброїти",
       "lemmaPlain": "озброїти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7060,11 +7846,13 @@
     {
       "cefr": "B2",
       "gloss": "to switch",
+      "glossClean": "to switch",
       "heritage": "standard",
       "ipa": null,
       "lemma": "перемкнути",
       "lemmaId": "перемкнути",
       "lemmaPlain": "перемкнути",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7075,11 +7863,13 @@
     {
       "cefr": "B2",
       "gloss": "to attach; to fasten",
+      "glossClean": "to attach",
       "heritage": "standard",
       "ipa": null,
       "lemma": "прикріпити",
       "lemmaId": "прикріпити",
       "lemmaPlain": "прикріпити",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7090,11 +7880,13 @@
     {
       "cefr": "B2",
       "gloss": "to forge; to work extra",
+      "glossClean": "to forge",
       "heritage": "standard",
       "ipa": null,
       "lemma": "підробити",
       "lemmaId": "підробити",
       "lemmaPlain": "підробити",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7105,11 +7897,13 @@
     {
       "cefr": "B2",
       "gloss": "separation; splitting apart",
+      "glossClean": "separation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "роз'єднання",
       "lemmaId": "роз-єднання",
       "lemmaPlain": "роз'єднання",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7120,11 +7914,13 @@
     {
       "cefr": "B2",
       "gloss": "to disarm",
+      "glossClean": "to disarm",
       "heritage": "standard",
       "ipa": null,
       "lemma": "роззброїти",
       "lemmaId": "роззброїти",
       "lemmaPlain": "роззброїти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7135,11 +7931,13 @@
     {
       "cefr": "B2",
       "gloss": "to decompose; to break down",
+      "glossClean": "to decompose",
       "heritage": "standard",
       "ipa": null,
       "lemma": "розкладати",
       "lemmaId": "розкладати",
       "lemmaPlain": "розкладати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7150,11 +7948,13 @@
     {
       "cefr": "B2",
       "gloss": "to turn red; to blush",
+      "glossClean": "to turn red",
       "heritage": "standard",
       "ipa": null,
       "lemma": "червоніти",
       "lemmaId": "червоніти",
       "lemmaPlain": "червоніти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7165,11 +7965,13 @@
     {
       "cefr": "B2",
       "gloss": "to push repeatedly",
+      "glossClean": "to push repeatedly",
       "heritage": "standard",
       "ipa": null,
       "lemma": "штовхати",
       "lemmaId": "штовхати",
       "lemmaPlain": "штовхати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7180,11 +7982,13 @@
     {
       "cefr": "B2",
       "gloss": "to push once",
+      "glossClean": "to push once",
       "heritage": "standard",
       "ipa": null,
       "lemma": "штовхнути",
       "lemmaId": "штовхнути",
       "lemmaPlain": "штовхнути",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7195,11 +7999,13 @@
     {
       "cefr": "B2",
       "gloss": "admission; entrance",
+      "glossClean": "admission",
       "heritage": "standard",
       "ipa": null,
       "lemma": "вступ",
       "lemmaId": "вступ",
       "lemmaPlain": "вступ",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7210,11 +8016,13 @@
     {
       "cefr": "B2",
       "gloss": "to restore; renew",
+      "glossClean": "to restore",
       "heritage": "standard",
       "ipa": null,
       "lemma": "відновити",
       "lemmaId": "відновити",
       "lemmaPlain": "відновити",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7225,11 +8033,13 @@
     {
       "cefr": "B2",
       "gloss": "to research; investigate",
+      "glossClean": "to research",
       "heritage": "standard",
       "ipa": null,
       "lemma": "досліджувати",
       "lemmaId": "досліджувати",
       "lemmaPlain": "досліджувати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7240,11 +8050,13 @@
     {
       "cefr": "B2",
       "gloss": "speech; speaking",
+      "glossClean": "speech",
       "heritage": "standard",
       "ipa": null,
       "lemma": "мовлення",
       "lemmaId": "мовлення",
       "lemmaPlain": "мовлення",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7255,11 +8067,13 @@
     {
       "cefr": "B2",
       "gloss": "to exchange",
+      "glossClean": "to exchange",
       "heritage": "standard",
       "ipa": null,
       "lemma": "обміняти",
       "lemmaId": "обміняти",
       "lemmaPlain": "обміняти",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7270,11 +8084,13 @@
     {
       "cefr": "B2",
       "gloss": "concept",
+      "glossClean": "concept",
       "heritage": "standard",
       "ipa": null,
       "lemma": "поняття",
       "lemmaId": "поняття",
       "lemmaPlain": "поняття",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7285,11 +8101,13 @@
     {
       "cefr": "B2",
       "gloss": "preparation",
+      "glossClean": "preparation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "підготовка",
       "lemmaId": "підготовка",
       "lemmaPlain": "підготовка",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7300,11 +8118,13 @@
     {
       "cefr": "B2",
       "gloss": "most respected",
+      "glossClean": "most respected",
       "heritage": "standard",
       "ipa": null,
       "lemma": "вельмишановний",
       "lemmaId": "вельмишановний",
       "lemmaPlain": "вельмишановний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7315,11 +8135,13 @@
     {
       "cefr": "B2",
       "gloss": "director (vocative)",
+      "glossClean": "director (vocative)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "директоре",
       "lemmaId": "директоре",
       "lemmaPlain": "директоре",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -7330,11 +8152,13 @@
     {
       "cefr": "B2",
       "gloss": "madam (very formal vocative)",
+      "glossClean": "madam (very formal vocative)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "добродійко",
       "lemmaId": "добродійко",
       "lemmaPlain": "добродійко",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -7345,11 +8169,13 @@
     {
       "cefr": "B2",
       "gloss": "institution",
+      "glossClean": "institution",
       "heritage": "standard",
       "ipa": null,
       "lemma": "установа",
       "lemmaId": "установа",
       "lemmaPlain": "установа",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -7389,11 +8215,13 @@
     {
       "cefr": "B2",
       "gloss": "approximate",
+      "glossClean": "approximate",
       "heritage": "standard",
       "ipa": null,
       "lemma": "наближений",
       "lemmaId": "наближений",
       "lemmaPlain": "наближений",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7404,11 +8232,13 @@
     {
       "cefr": "B2",
       "gloss": "Parisian",
+      "glossClean": "Parisian",
       "heritage": "standard",
       "ipa": null,
       "lemma": "паризький",
       "lemmaId": "паризький",
       "lemmaPlain": "паризький",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7419,11 +8249,13 @@
     {
       "cefr": "B2",
       "gloss": "sandy",
+      "glossClean": "sandy",
       "heritage": "standard",
       "ipa": null,
       "lemma": "піщаний",
       "lemmaId": "піщаний",
       "lemmaPlain": "піщаний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7434,11 +8266,13 @@
     {
       "cefr": "B2",
       "gloss": "female defender",
+      "glossClean": "female defender",
       "heritage": "standard",
       "ipa": null,
       "lemma": "захисниця",
       "lemmaId": "захисниця",
       "lemmaPlain": "захисниця",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7449,11 +8283,13 @@
     {
       "cefr": "B2",
       "gloss": "female artist, creator",
+      "glossClean": "female artist",
       "heritage": "standard",
       "ipa": null,
       "lemma": "мисткиня",
       "lemmaId": "мисткиня",
       "lemmaPlain": "мисткиня",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7464,11 +8300,13 @@
     {
       "cefr": "B2",
       "gloss": "student body",
+      "glossClean": "student body",
       "heritage": "standard",
       "ipa": null,
       "lemma": "студентство",
       "lemmaId": "студентство",
       "lemmaPlain": "студентство",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7479,11 +8317,13 @@
     {
       "cefr": "B2",
       "gloss": "female specialist, expert",
+      "glossClean": "female specialist",
       "heritage": "standard",
       "ipa": null,
       "lemma": "фахівчиня",
       "lemmaId": "фахівчиня",
       "lemmaPlain": "фахівчиня",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7494,11 +8334,13 @@
     {
       "cefr": "B2",
       "gloss": "reading room",
+      "glossClean": "reading room",
       "heritage": "standard",
       "ipa": null,
       "lemma": "читальня",
       "lemmaId": "читальня",
       "lemmaPlain": "читальня",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -7538,11 +8380,13 @@
     {
       "cefr": "B2",
       "gloss": "to be getting hired, to apply for a job",
+      "glossClean": "to be getting hired",
       "heritage": "standard",
       "ipa": null,
       "lemma": "влаштовуватися",
       "lemmaId": "влаштовуватися",
       "lemmaPlain": "влаштовуватися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7553,11 +8397,13 @@
     {
       "cefr": "B2",
       "gloss": "dismissal, resignation",
+      "glossClean": "dismissal",
       "heritage": "standard",
       "ipa": null,
       "lemma": "звільнення",
       "lemmaId": "звільнення",
       "lemmaPlain": "звільнення",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7568,11 +8414,13 @@
     {
       "cefr": "B2",
       "gloss": "to be resigning, to leave jobs repeatedly",
+      "glossClean": "to be resigning",
       "heritage": "standard",
       "ipa": null,
       "lemma": "звільнятися",
       "lemmaId": "звільнятися",
       "lemmaPlain": "звільнятися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7583,11 +8431,13 @@
     {
       "cefr": "B2",
       "gloss": "to be implemented",
+      "glossClean": "to be implemented",
       "heritage": "standard",
       "ipa": null,
       "lemma": "впроваджуватися",
       "lemmaId": "впроваджуватися",
       "lemmaPlain": "впроваджуватися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7598,11 +8448,13 @@
     {
       "cefr": "B2",
       "gloss": "academic style",
+      "glossClean": "academic style",
       "heritage": "unknown",
       "ipa": null,
       "lemma": "науковий стиль",
       "lemmaId": "науковий-стиль",
       "lemmaPlain": "науковий стиль",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7613,11 +8465,13 @@
     {
       "cefr": "B2",
       "gloss": "result of an action",
+      "glossClean": "result of an action",
       "heritage": "unknown",
       "ipa": null,
       "lemma": "результат дії",
       "lemmaId": "результат-дії",
       "lemmaPlain": "результат дії",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7628,11 +8482,13 @@
     {
       "cefr": "B2",
       "gloss": "reform",
+      "glossClean": "reform",
       "heritage": "standard",
       "ipa": null,
       "lemma": "реформа",
       "lemmaId": "реформа",
       "lemmaPlain": "реформа",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -7672,11 +8528,13 @@
     {
       "cefr": "B2",
       "gloss": "to be developed",
+      "glossClean": "to be developed",
       "heritage": "standard",
       "ipa": null,
       "lemma": "розроблятися",
       "lemmaId": "розроблятися",
       "lemmaPlain": "розроблятися",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7687,11 +8545,13 @@
     {
       "cefr": "B2",
       "gloss": "syntactic norm",
+      "glossClean": "syntactic norm",
       "heritage": "unknown",
       "ipa": null,
       "lemma": "синтаксична норма",
       "lemmaId": "синтаксична-норма",
       "lemmaPlain": "синтаксична норма",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7702,11 +8562,13 @@
     {
       "cefr": "B2",
       "gloss": "to edit",
+      "glossClean": "to edit",
       "heritage": "standard",
       "ipa": null,
       "lemma": "відредагувати",
       "lemmaId": "відредагувати",
       "lemmaPlain": "відредагувати",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7717,11 +8579,13 @@
     {
       "cefr": "B2",
       "gloss": "past participle",
+      "glossClean": "past participle",
       "heritage": "unknown",
       "ipa": null,
       "lemma": "дієприкметник минулого часу",
       "lemmaId": "дієприкметник-минулого-часу",
       "lemmaPlain": "дієприкметник минулого часу",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7732,11 +8596,13 @@
     {
       "cefr": "B2",
       "gloss": "forgotten",
+      "glossClean": "forgotten",
       "heritage": "standard",
       "ipa": null,
       "lemma": "забутий",
       "lemmaId": "забутий",
       "lemmaPlain": "забутий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7747,11 +8613,13 @@
     {
       "cefr": "B2",
       "gloss": "crumpled",
+      "glossClean": "crumpled",
       "heritage": "standard",
       "ipa": null,
       "lemma": "зім'ятий",
       "lemmaId": "зім-ятий",
       "lemmaPlain": "зім'ятий",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7762,11 +8630,13 @@
     {
       "cefr": "B2",
       "gloss": "conciseness",
+      "glossClean": "conciseness",
       "heritage": "standard",
       "ipa": null,
       "lemma": "лаконічність",
       "lemmaId": "лаконічність",
       "lemmaPlain": "лаконічність",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7777,11 +8647,13 @@
     {
       "cefr": "B2",
       "gloss": "literary modifier",
+      "glossClean": "literary modifier",
       "heritage": "unknown",
       "ipa": null,
       "lemma": "художнє означення",
       "lemmaId": "художнє-означення",
       "lemmaPlain": "художнє означення",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7792,11 +8664,13 @@
     {
       "cefr": "B2",
       "gloss": "nominal part of the predicate",
+      "glossClean": "nominal part of the predicate",
       "heritage": "unknown",
       "ipa": null,
       "lemma": "іменна частина присудка",
       "lemmaId": "іменна-частина-присудка",
       "lemmaPlain": "іменна частина присудка",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -7807,11 +8681,13 @@
     {
       "cefr": "B2",
       "gloss": "anonymity, namelessness",
+      "glossClean": "anonymity",
       "heritage": "standard",
       "ipa": null,
       "lemma": "анонімність",
       "lemmaId": "анонімність",
       "lemmaPlain": "анонімність",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7822,11 +8698,13 @@
     {
       "cefr": "B2",
       "gloss": "captive, prisoner taken in a raid",
+      "glossClean": "captive",
       "heritage": "standard",
       "ipa": null,
       "lemma": "бранець",
       "lemmaId": "бранець",
       "lemmaPlain": "бранець",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7837,11 +8715,13 @@
     {
       "cefr": "B2",
       "gloss": "galley (oared warship); a place of penal rowing",
+      "glossClean": "galley (oared warship)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "галера",
       "lemmaId": "галера",
       "lemmaPlain": "галера",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -7881,11 +8761,13 @@
     {
       "cefr": "B2",
       "gloss": "epic (as genre)",
+      "glossClean": "epic (as genre)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "епос",
       "lemmaId": "епос",
       "lemmaPlain": "епос",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -7896,11 +8778,13 @@
     {
       "cefr": "B2",
       "gloss": "self-sacrifice",
+      "glossClean": "self-sacrifice",
       "heritage": "standard",
       "ipa": null,
       "lemma": "жертовність",
       "lemmaId": "жертовність",
       "lemmaPlain": "жертовність",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7911,11 +8795,13 @@
     {
       "cefr": "B2",
       "gloss": "cuckoo; symbol of a mother's lament and longing for home",
+      "glossClean": "cuckoo",
       "heritage": "standard",
       "ipa": null,
       "lemma": "зозуля",
       "lemmaId": "зозуля",
       "lemmaPlain": "зозуля",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7926,11 +8812,13 @@
     {
       "cefr": "B2",
       "gloss": "galley; later, hard penal labour",
+      "glossClean": "galley",
       "heritage": "standard",
       "ipa": null,
       "lemma": "каторга",
       "lemmaId": "каторга",
       "lemmaPlain": "каторга",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -7970,11 +8858,13 @@
     {
       "cefr": "B2",
       "gloss": "raid, sudden military incursion",
+      "glossClean": "raid",
       "heritage": "standard",
       "ipa": null,
       "lemma": "набіг",
       "lemmaId": "набіг",
       "lemmaPlain": "набіг",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -7985,11 +8875,13 @@
     {
       "cefr": "B2",
       "gloss": "captivity, bondage",
+      "glossClean": "captivity",
       "heritage": "standard",
       "ipa": null,
       "lemma": "неволя",
       "lemmaId": "неволя",
       "lemmaPlain": "неволя",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -8029,11 +8921,13 @@
     {
       "cefr": "B2",
       "gloss": "captive, slave; one deprived of freedom and torn from the homeland",
+      "glossClean": "captive",
       "heritage": "standard",
       "ipa": null,
       "lemma": "невільник",
       "lemmaId": "невільник",
       "lemmaPlain": "невільник",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8044,11 +8938,13 @@
     {
       "cefr": "B2",
       "gloss": "psychologism; focus on inner emotional state",
+      "glossClean": "psychologism",
       "heritage": "standard",
       "ipa": null,
       "lemma": "психологізм",
       "lemmaId": "психологізм",
       "lemmaPlain": "психологізм",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8059,11 +8955,13 @@
     {
       "cefr": "B2",
       "gloss": "sycamore; symbol of misfortune, sorrow and death in a foreign land",
+      "glossClean": "sycamore",
       "heritage": "standard",
       "ipa": null,
       "lemma": "явір",
       "lemmaId": "явір",
       "lemmaPlain": "явір",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8074,11 +8972,13 @@
     {
       "cefr": "B2",
       "gloss": "janissary (Ottoman soldier)",
+      "glossClean": "janissary (Ottoman soldier)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "яничар",
       "lemmaId": "яничар",
       "lemmaPlain": "яничар",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -8089,11 +8989,13 @@
     {
       "cefr": "B2",
       "gloss": "captives seized as living goods during raids (Turkic borrowing)",
+      "glossClean": "captives seized as living goods during raids (Turkic borrowing)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "ясир",
       "lemmaId": "ясир",
       "lemmaPlain": "ясир",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -8104,11 +9006,13 @@
     {
       "cefr": "B2",
       "gloss": "didukh (ceremonial sheaf)",
+      "glossClean": "didukh (ceremonial sheaf)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "дідух",
       "lemmaId": "дідух",
       "lemmaPlain": "дідух",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -8119,11 +9023,13 @@
     {
       "cefr": "B2",
       "gloss": "carolling (the rite of going house to house)",
+      "glossClean": "carolling (the rite of going house to house)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "колядування",
       "lemmaId": "колядування",
       "lemmaPlain": "колядування",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -8134,11 +9040,13 @@
     {
       "cefr": "B2",
       "gloss": "ritual practice, body of rites",
+      "glossClean": "ritual practice",
       "heritage": "standard",
       "ipa": null,
       "lemma": "обрядовість",
       "lemmaId": "обрядовість",
       "lemmaPlain": "обрядовість",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8149,11 +9057,13 @@
     {
       "cefr": "B2",
       "gloss": "fertility (of land)",
+      "glossClean": "fertility (of land)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "родючість",
       "lemmaId": "родючість",
       "lemmaPlain": "родючість",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -8164,11 +9074,13 @@
     {
       "cefr": "B2",
       "gloss": "equinox",
+      "glossClean": "equinox",
       "heritage": "standard",
       "ipa": null,
       "lemma": "рівнодення",
       "lemmaId": "рівнодення",
       "lemmaPlain": "рівнодення",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8179,11 +9091,13 @@
     {
       "cefr": "B2",
       "gloss": "syncretism (coexistence of religious layers)",
+      "glossClean": "syncretism (coexistence of religious layers)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "синкретизм",
       "lemmaId": "синкретизм",
       "lemmaPlain": "синкретизм",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -8194,11 +9108,13 @@
     {
       "cefr": "B2",
       "gloss": "solstice",
+      "glossClean": "solstice",
       "heritage": "standard",
       "ipa": null,
       "lemma": "сонцестояння",
       "lemmaId": "сонцестояння",
       "lemmaPlain": "сонцестояння",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8209,11 +9125,13 @@
     {
       "cefr": "B2",
       "gloss": "cycle",
+      "glossClean": "cycle",
       "heritage": "standard",
       "ipa": null,
       "lemma": "цикл",
       "lemmaId": "цикл",
       "lemmaPlain": "цикл",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8224,11 +9142,13 @@
     {
       "cefr": "B2",
       "gloss": "parallelism; repetition of similar syntactic constructions",
+      "glossClean": "parallelism",
       "heritage": "standard",
       "ipa": null,
       "lemma": "паралелізм",
       "lemmaId": "паралелізм",
       "lemmaPlain": "паралелізм",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8239,11 +9159,13 @@
     {
       "cefr": "B2",
       "gloss": "existence in everyday use; how a form lives among people",
+      "glossClean": "existence in everyday use",
       "heritage": "standard",
       "ipa": null,
       "lemma": "побутування",
       "lemmaId": "побутування",
       "lemmaPlain": "побутування",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8254,11 +9176,13 @@
     {
       "cefr": "B2",
       "gloss": "refrain; a repeated line returning after each verse",
+      "glossClean": "refrain",
       "heritage": "standard",
       "ipa": null,
       "lemma": "рефрен",
       "lemmaId": "рефрен",
       "lemmaPlain": "рефрен",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8269,11 +9193,13 @@
     {
       "cefr": "B2",
       "gloss": "stylization; conscious imitation of another era's or genre's style",
+      "glossClean": "stylization",
       "heritage": "standard",
       "ipa": null,
       "lemma": "стилізація",
       "lemmaId": "стилізація",
       "lemmaPlain": "стилізація",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -8313,11 +9239,13 @@
     {
       "cefr": "B2",
       "gloss": "triad; here: host–hostess–children as a cosmic model",
+      "glossClean": "triad",
       "heritage": "standard",
       "ipa": null,
       "lemma": "тріада",
       "lemmaId": "тріада",
       "lemmaPlain": "тріада",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -8357,11 +9285,13 @@
     {
       "cefr": "B2",
       "gloss": "veneration, honouring",
+      "glossClean": "veneration",
       "heritage": "standard",
       "ipa": null,
       "lemma": "ушанування",
       "lemmaId": "ушанування",
       "lemmaPlain": "ушанування",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8372,11 +9302,13 @@
     {
       "cefr": "B2",
       "gloss": "funeral lament",
+      "glossClean": "funeral lament",
       "heritage": "standard",
       "ipa": null,
       "lemma": "голосіння",
       "lemmaId": "голосіння",
       "lemmaPlain": "голосіння",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8387,11 +9319,13 @@
     {
       "cefr": "B2",
       "gloss": "kobza (folk lute)",
+      "glossClean": "kobza (folk lute)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "кобза",
       "lemmaId": "кобза",
       "lemmaPlain": "кобза",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -8431,11 +9365,13 @@
     {
       "cefr": "B2",
       "gloss": "ritual wedding bread",
+      "glossClean": "ritual wedding bread",
       "heritage": "standard",
       "ipa": null,
       "lemma": "коровай",
       "lemmaId": "коровай",
       "lemmaPlain": "коровай",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8446,11 +9382,13 @@
     {
       "cefr": "B2",
       "gloss": "lira (Ukrainian hurdy-gurdy)",
+      "glossClean": "lira (Ukrainian hurdy-gurdy)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "ліра",
       "lemmaId": "ліра",
       "lemmaPlain": "ліра",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -8490,11 +9428,13 @@
     {
       "cefr": "B2",
       "gloss": "layering, stratification",
+      "glossClean": "layering",
       "heritage": "standard",
       "ipa": null,
       "lemma": "нашарування",
       "lemmaId": "нашарування",
       "lemmaPlain": "нашарування",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8505,11 +9445,13 @@
     {
       "cefr": "B2",
       "gloss": "water spirit",
+      "glossClean": "water spirit",
       "heritage": "standard",
       "ipa": null,
       "lemma": "водяник",
       "lemmaId": "водяник",
       "lemmaPlain": "водяник",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8520,11 +9462,13 @@
     {
       "cefr": "B2",
       "gloss": "divination, fortune-telling",
+      "glossClean": "divination",
       "heritage": "standard",
       "ipa": null,
       "lemma": "ворожіння",
       "lemmaId": "ворожіння",
       "lemmaPlain": "ворожіння",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8535,11 +9479,13 @@
     {
       "cefr": "B2",
       "gloss": "house spirit, domovyk",
+      "glossClean": "house spirit",
       "heritage": "standard",
       "ipa": null,
       "lemma": "домовик",
       "lemmaId": "домовик",
       "lemmaPlain": "домовик",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8550,11 +9496,13 @@
     {
       "cefr": "B2",
       "gloss": "euphemism",
+      "glossClean": "euphemism",
       "heritage": "standard",
       "ipa": null,
       "lemma": "евфемізм",
       "lemmaId": "евфемізм",
       "lemmaPlain": "евфемізм",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8565,11 +9513,13 @@
     {
       "cefr": "B2",
       "gloss": "incantation, spell-formula",
+      "glossClean": "incantation",
       "heritage": "standard",
       "ipa": null,
       "lemma": "замовляння",
       "lemmaId": "замовляння",
       "lemmaPlain": "замовляння",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8580,11 +9530,13 @@
     {
       "cefr": "B2",
       "gloss": "folk healer",
+      "glossClean": "folk healer",
       "heritage": "standard",
       "ipa": null,
       "lemma": "знахар",
       "lemmaId": "знахар",
       "lemmaPlain": "знахар",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8595,11 +9547,13 @@
     {
       "cefr": "B2",
       "gloss": "forest spirit",
+      "glossClean": "forest spirit",
       "heritage": "standard",
       "ipa": null,
       "lemma": "лісовик",
       "lemmaId": "лісовик",
       "lemmaPlain": "лісовик",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8610,11 +9564,13 @@
     {
       "cefr": "B2",
       "gloss": "mavka, forest nymph",
+      "glossClean": "mavka",
       "heritage": "standard",
       "ipa": null,
       "lemma": "мавка",
       "lemmaId": "мавка",
       "lemmaPlain": "мавка",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -8625,11 +9581,13 @@
     {
       "cefr": "B2",
       "gloss": "the dead one, corpse-revenant",
+      "glossClean": "the dead one",
       "heritage": "standard",
       "ipa": null,
       "lemma": "мрець",
       "lemmaId": "мрець",
       "lemmaPlain": "мрець",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8640,11 +9598,13 @@
     {
       "cefr": "B2",
       "gloss": "mythology",
+      "glossClean": "mythology",
       "heritage": "standard",
       "ipa": null,
       "lemma": "міфологія",
       "lemmaId": "міфологія",
       "lemmaPlain": "міфологія",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8655,11 +9615,13 @@
     {
       "cefr": "B2",
       "gloss": "pantheon",
+      "glossClean": "pantheon",
       "heritage": "standard",
       "ipa": null,
       "lemma": "пантеон",
       "lemmaId": "пантеон",
       "lemmaPlain": "пантеон",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8670,11 +9632,13 @@
     {
       "cefr": "B2",
       "gloss": "shapeshifter",
+      "glossClean": "shapeshifter",
       "heritage": "standard",
       "ipa": null,
       "lemma": "перевертень",
       "lemmaId": "перевертень",
       "lemmaPlain": "перевертень",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8685,11 +9649,13 @@
     {
       "cefr": "B2",
       "gloss": "borderland, liminal zone",
+      "glossClean": "borderland",
       "heritage": "standard",
       "ipa": null,
       "lemma": "пограниччя",
       "lemmaId": "пограниччя",
       "lemmaPlain": "пограниччя",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8700,11 +9666,13 @@
     {
       "cefr": "B2",
       "gloss": "ancestor",
+      "glossClean": "ancestor",
       "heritage": "standard",
       "ipa": null,
       "lemma": "предок",
       "lemmaId": "предок",
       "lemmaPlain": "предок",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8715,11 +9683,13 @@
     {
       "cefr": "B2",
       "gloss": "rusalka, water-and-field nymph",
+      "glossClean": "rusalka",
       "heritage": "standard",
       "ipa": null,
       "lemma": "русалка",
       "lemmaId": "русалка",
       "lemmaPlain": "русалка",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -8730,11 +9700,13 @@
     {
       "cefr": "B2",
       "gloss": "upyr, undead vampire",
+      "glossClean": "upyr",
       "heritage": "standard",
       "ipa": null,
       "lemma": "упир",
       "lemmaId": "упир",
       "lemmaPlain": "упир",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -8745,11 +9717,13 @@
     {
       "cefr": "B2",
       "gloss": "gradation (rising intensity)",
+      "glossClean": "gradation (rising intensity)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "градація",
       "lemmaId": "градація",
       "lemmaPlain": "градація",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -8760,11 +9734,13 @@
     {
       "cefr": "B2",
       "gloss": "researcher, scholar",
+      "glossClean": "researcher",
       "heritage": "standard",
       "ipa": null,
       "lemma": "дослідник",
       "lemmaId": "дослідник",
       "lemmaPlain": "дослідник",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8775,11 +9751,13 @@
     {
       "cefr": "B2",
       "gloss": "ethnonym (name of a people)",
+      "glossClean": "ethnonym (name of a people)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "етнонім",
       "lemmaId": "етнонім",
       "lemmaPlain": "етнонім",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -8790,11 +9768,13 @@
     {
       "cefr": "B2",
       "gloss": "incantatory (of a charm)",
+      "glossClean": "incantatory (of a charm)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "замовний",
       "lemmaId": "замовний",
       "lemmaPlain": "замовний",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -8805,11 +9785,13 @@
     {
       "cefr": "B2",
       "gloss": "collector (of folklore)",
+      "glossClean": "collector (of folklore)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "збирач",
       "lemmaId": "збирач",
       "lemmaPlain": "збирач",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -8820,11 +9802,13 @@
     {
       "cefr": "B2",
       "gloss": "magical",
+      "glossClean": "magical",
       "heritage": "standard",
       "ipa": null,
       "lemma": "магічний",
       "lemmaId": "магічний",
       "lemmaPlain": "магічний",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8835,11 +9819,13 @@
     {
       "cefr": "B2",
       "gloss": "poetics",
+      "glossClean": "poetics",
       "heritage": "standard",
       "ipa": null,
       "lemma": "поетика",
       "lemmaId": "поетика",
       "lemmaPlain": "поетика",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8850,11 +9836,13 @@
     {
       "cefr": "B2",
       "gloss": "verbal (of words)",
+      "glossClean": "verbal (of words)",
       "heritage": "standard",
       "ipa": null,
       "lemma": "словесний",
       "lemmaId": "словесний",
       "lemmaPlain": "словесний",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -8865,11 +9853,13 @@
     {
       "cefr": "B2",
       "gloss": "identity, sameness",
+      "glossClean": "identity",
       "heritage": "standard",
       "ipa": null,
       "lemma": "тотожність",
       "lemmaId": "тотожність",
       "lemmaPlain": "тотожність",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
@@ -8880,11 +9870,13 @@
     {
       "cefr": "B2",
       "gloss": "hetman",
+      "glossClean": "hetman",
       "heritage": "standard",
       "ipa": null,
       "lemma": "гетьман",
       "lemmaId": "гетьман",
       "lemmaPlain": "гетьман",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -8895,11 +9887,13 @@
     {
       "cefr": "B2",
       "gloss": "tithe; historical land unit",
+      "glossClean": "tithe",
       "heritage": "standard",
       "ipa": null,
       "lemma": "десятина",
       "lemmaId": "десятина",
       "lemmaPlain": "десятина",
+      "meaningMcEligible": true,
       "paradigm": {
         "cases": {
           "давальний": {
@@ -8939,11 +9933,13 @@
     {
       "cefr": "B2",
       "gloss": "opryshok",
+      "glossClean": "opryshok",
       "heritage": "historism",
       "ipa": null,
       "lemma": "опришок",
       "lemmaId": "опришок",
       "lemmaPlain": "опришок",
+      "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
@@ -8955,10 +9951,10 @@
   "schema": "atlas-practice-lexemes",
   "schemaVersion": 1,
   "sizeBudget": {
-    "gzipBytes": 18566,
+    "gzipBytes": 20705,
     "gzipLimitBytes": 140000,
     "ok": true,
-    "rawBytes": 225166,
+    "rawBytes": 259282,
     "rawLimitBytes": 550000
   },
   "source": "manifest"

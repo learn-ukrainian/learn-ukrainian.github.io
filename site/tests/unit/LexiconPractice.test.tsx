@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import LexiconPractice from '@site/src/components/LexiconPractice';
 import {
@@ -18,6 +18,7 @@ function lexeme(
   lemma: string,
   gloss: string,
   forms: { nominative: string; accusative: string; locative: string },
+  overrides: Partial<PracticeLexeme> = {},
 ): PracticeLexeme {
   return {
     lemmaId,
@@ -36,6 +37,7 @@ function lexeme(
         locative: { singular: forms.locative },
       },
     },
+    ...overrides,
   };
 }
 
@@ -127,6 +129,71 @@ function sampleDeck(): PracticeDeckData {
   };
 }
 
+function wordToMeaningDeck(): PracticeDeckData {
+  const lexemes = [
+    lexeme('sady', 'сад', 'garden', {
+      nominative: 'сад',
+      accusative: 'сад',
+      locative: 'саду',
+    }),
+    lexeme('dimy', 'дім', 'house', {
+      nominative: 'дім',
+      accusative: 'дім',
+      locative: 'домі',
+    }),
+    lexeme('lisy', 'ліс', 'forest', {
+      nominative: 'ліс',
+      accusative: 'ліс',
+      locative: 'лісі',
+    }),
+    lexeme('rich', 'річка', 'river', {
+      nominative: 'річка',
+      accusative: 'річку',
+      locative: 'річці',
+    }),
+    lexeme(
+      'taxy',
+      'та',
+      'and; but; while',
+      {
+        nominative: 'та',
+        accusative: 'та',
+        locative: 'та',
+      },
+      { glossClean: 'and', meaningMcEligible: false, pos: 'conj' },
+    ),
+    lexeme(
+      'ityx',
+      'іти',
+      'to go',
+      {
+        nominative: 'іти',
+        accusative: 'іти',
+        locative: 'іти',
+      },
+      { pos: 'verb' },
+    ),
+  ];
+  return {
+    deckVersion: 'test-choice-clean-glosses',
+    level: 'A1',
+    lexemes,
+    index: lexemes.map((entry, index) => ({
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      cefr: 'A1',
+      modes:
+        entry.meaningMcEligible === false
+          ? ['flashcards']
+          : ['flashcards', 'matching', 'choice'],
+      hasCloze: false,
+      clozeIds: [],
+      newOrder: index,
+    })),
+    cloze: [],
+  };
+}
+
 function storedState() {
   return JSON.parse(localStorage.getItem(SRS_STORAGE_KEY) ?? '{}');
 }
@@ -196,6 +263,64 @@ describe('LexiconPractice', () => {
         rating: 'good',
       });
     });
+  });
+
+  test('choice mode shows only clean same-pos meaning labels', () => {
+    render(<LexiconPractice initialDeck={wordToMeaningDeck()} autoStart initialMode="choice" />);
+    const choice = screen.getByTestId('practice-choice');
+
+    expect(screen.getByText('What does сад mean?')).toBeInTheDocument();
+    const labels = within(choice)
+      .getAllByRole('button')
+      .map((button) => button.textContent ?? '');
+
+    expect(new Set(labels)).toEqual(new Set(['garden', 'house', 'forest', 'river']));
+    expect(labels).not.toContain('and');
+    expect(labels).not.toContain('and; but; while');
+    expect(labels).not.toContain('to go');
+    for (const label of labels) {
+      expect(label).not.toMatch(/[?(]/);
+      expect(label.trim().split(/\s+/)).toHaveLength(1);
+    }
+  });
+
+  test('choice backfills distractors across POS when same-POS pool is too small', () => {
+    // The answer (a verb) has only ONE same-POS peer, but four other eligible words
+    // exist. The old strict-subset logic discarded the cross-POS pool and starved the
+    // distractor list (<3) -> the card could not render. It must now backfill to a
+    // full 4-option card.
+    const lexemes = [
+      lexeme('bachyty', 'бачити', 'to see', { nominative: 'бачити', accusative: 'бачити', locative: 'бачити' }, { pos: 'verb' }),
+      lexeme('ity', 'іти', 'to go', { nominative: 'іти', accusative: 'іти', locative: 'іти' }, { pos: 'verb' }),
+      lexeme('sad', 'сад', 'garden', { nominative: 'сад', accusative: 'сад', locative: 'саду' }),
+      lexeme('dim', 'дім', 'house', { nominative: 'дім', accusative: 'дім', locative: 'домі' }),
+      lexeme('lis', 'ліс', 'forest', { nominative: 'ліс', accusative: 'ліс', locative: 'лісі' }),
+    ];
+    const deck: PracticeDeckData = {
+      deckVersion: 'test-small-pos-pool',
+      level: 'A1',
+      lexemes,
+      index: lexemes.map((entry, index) => ({
+        lemmaId: entry.lemmaId,
+        lemma: entry.lemma,
+        cefr: 'A1',
+        modes: ['flashcards', 'matching', 'choice'],
+        hasCloze: false,
+        clozeIds: [],
+        newOrder: index,
+      })),
+      cloze: [],
+    };
+    render(<LexiconPractice initialDeck={deck} autoStart initialMode="choice" />);
+    const choice = screen.getByTestId('practice-choice');
+    const labels = within(choice)
+      .getAllByRole('button')
+      .map((button) => button.textContent ?? '');
+    // First card is the small-POS verb (newOrder 0). Without cross-POS backfill it
+    // would starve (<3 distractors) and not render; it must show a full 4-option set.
+    expect(labels).toHaveLength(4);
+    // The verb answer is present whichever polarity the selector picked.
+    expect(labels.some((label) => label === 'бачити' || label === 'to see')).toBe(true);
   });
 
   test('cloze wrong-case answer records one case miss and leaves blank open', async () => {

@@ -36,6 +36,8 @@ export interface PracticeLexeme {
   lemmaPlain: string;
   ipa: string | null;
   gloss: string;
+  glossClean?: string;
+  meaningMcEligible?: boolean;
   pos: string | null;
   cefr: string | null;
   heritage: string | null;

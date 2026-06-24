@@ -41,6 +41,8 @@ DEFAULT_GZIP_LIMIT = 140_000
 SCHEMA_VERSION = 1
 CEFR_ORDER = ("A1", "A2", "B1", "B2", "C1", "C2")
 CEFR_RANK = {level: index for index, level in enumerate(CEFR_ORDER)}
+MEANING_MC_MAX_WORDS = 4
+MEANING_MC_MAX_CHARS = 32
 NUMBER_KEYS = ("singular", "plural")
 NO_PAIR_PROBABILITY = {
     "A1": 0.70,
@@ -209,6 +211,128 @@ def _plain(value: str) -> str:
 def _headword(gloss: str) -> str:
     head = gloss.split(";")[0].split(",")[0].strip().casefold()
     return head.split()[0] if head.split() else head
+
+
+_FUNCTION_POS = frozenset(
+    {
+        "adp",
+        "conj",
+        "conjunction",
+        "det",
+        "determiner",
+        "interj",
+        "interjection",
+        "particle",
+        "prep",
+        "preposition",
+        "pron",
+        "pronoun",
+        "sconj",
+    }
+)
+_FUNCTION_GLOSS_HEADWORDS = frozenset(
+    {
+        "and",
+        "because",
+        "but",
+        "if",
+        "nor",
+        "or",
+        "than",
+        "that",
+        "though",
+        "unless",
+        "until",
+        "when",
+        "where",
+        "whether",
+        "while",
+        "yet",
+    }
+)
+_UKRAINIAN_ROMANIZATION = {
+    "а": "a",
+    "б": "b",
+    "в": "v",
+    "г": "h",
+    "ґ": "g",
+    "д": "d",
+    "е": "e",
+    "є": "ie",
+    "ж": "zh",
+    "з": "z",
+    "и": "y",
+    "і": "i",
+    "ї": "i",
+    "й": "i",
+    "к": "k",
+    "л": "l",
+    "м": "m",
+    "н": "n",
+    "о": "o",
+    "п": "p",
+    "р": "r",
+    "с": "s",
+    "т": "t",
+    "у": "u",
+    "ф": "f",
+    "х": "kh",
+    "ц": "ts",
+    "ч": "ch",
+    "ш": "sh",
+    "щ": "shch",
+    "ь": "",
+    "ю": "iu",
+    "я": "ia",
+    "'": "",
+}
+
+
+def _gloss_clean(gloss: str) -> str:
+    first_sense = re.split(r"[;,]", gloss, maxsplit=1)[0]
+    return re.sub(r"\s+", " ", first_sense).strip()
+
+
+def _meaning_label_word_count(label: str) -> int:
+    return len(re.findall(r"[^\W_]+(?:[-'][^\W_]+)?", label, flags=re.UNICODE))
+
+
+def _meaning_label_is_phrase(label: str) -> bool:
+    clean = re.sub(r"\s+", " ", label).strip()
+    return (
+        not clean
+        or "?" in clean
+        or "(" in clean
+        or ")" in clean
+        or _meaning_label_word_count(clean) > MEANING_MC_MAX_WORDS
+    )
+
+
+def _romanize_ukrainian_plain(value: str) -> str:
+    return "".join(_UKRAINIAN_ROMANIZATION.get(char, char) for char in value.casefold())
+
+
+def _ascii_key(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "", value.casefold())
+
+
+def _is_transliteration_only_gloss(gloss_clean: str, lemma_plain: str) -> bool:
+    romanized = _ascii_key(_romanize_ukrainian_plain(lemma_plain))
+    return bool(romanized) and _ascii_key(gloss_clean) == romanized
+
+
+def _meaning_mc_eligible(gloss_clean: str, lemma_plain: str, pos: str | None) -> bool:
+    if not gloss_clean or len(gloss_clean) > MEANING_MC_MAX_CHARS:
+        return False
+    if _meaning_label_is_phrase(gloss_clean):
+        return False
+    if re.search(r"[.!:]$", gloss_clean):
+        return False
+    if _headword(gloss_clean) in _FUNCTION_GLOSS_HEADWORDS:
+        return False
+    if pos and pos.casefold() in _FUNCTION_POS:
+        return False
+    return not _is_transliteration_only_gloss(gloss_clean, lemma_plain)
 
 
 def _stable_lemma_id(entry: dict[str, Any]) -> str:
@@ -643,6 +767,8 @@ def validate_option_set(cloze: dict[str, Any]) -> list[str]:
     if not isinstance(options, list) or len(options) < 4:
         return ["option set must contain at least four options"]
     labels = [str(option.get("label") or "") for option in options if isinstance(option, dict)]
+    if any(_meaning_label_is_phrase(label) for label in labels):
+        errors.append("option labels must not be phrase glosses")
     normalized = [_plain(label) for label in labels]
     if len(set(normalized)) != len(normalized):
         errors.append("option labels must be unique after normalization")
@@ -717,6 +843,8 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
         return None
     lemma_plain = _plain(lemma)
     pos = _clean_text(entry.get("pos"))
+    gloss_clean = _gloss_clean(gloss)
+    meaning_mc_eligible = _meaning_mc_eligible(gloss_clean, lemma_plain, pos)
     # Recognition (matching/choice/flashcard) needs only lemma+gloss+level, so the word is
     # ALWAYS kept. Attach the paradigm for flashcard declensions ONLY when every form
     # VESUM-verifies; otherwise blank it so the UI never displays an unverified declension.
@@ -729,6 +857,8 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
         "lemmaPlain": lemma_plain,
         "ipa": _ipa(entry),
         "gloss": gloss,
+        "glossClean": gloss_clean,
+        "meaningMcEligible": meaning_mc_eligible,
         "pos": pos,
         "cefr": level,
         "heritage": _heritage(entry),
@@ -951,7 +1081,9 @@ def build_practice_shards(
         index_items = []
         for order, lexeme in enumerate(level_lexemes):
             cloze_ids = cloze_ids_by_lemma.get(lexeme["lemmaId"], [])
-            modes = ["flashcards", "matching", "choice"]
+            modes = ["flashcards"]
+            if lexeme.get("meaningMcEligible"):
+                modes.extend(["matching", "choice"])
             if cloze_ids:
                 modes.append("cloze")
             index_items.append(
