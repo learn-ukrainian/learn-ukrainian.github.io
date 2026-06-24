@@ -474,6 +474,7 @@
   .stage-foot .spacer { flex: 1; }
 
   /* ============================== VIEW 6 — CLOZE =================== */
+  .cz-task { margin: 0 0 .85rem; color: var(--lu-text-muted); font-size: .92rem; font-weight: 600; }
   .cz-sentence { font-size: 1.45rem; font-weight: 600; line-height: 1.6; margin: 0 0 .4rem;
     padding: 1.4rem 1.5rem; border-radius: 14px; border: 1px solid var(--lu-border);
     background: var(--lu-surface-raised); box-shadow: var(--lu-shadow); }
@@ -775,11 +776,12 @@
       <h2>Заповніть пропуск</h2>
       <span class="queue-pill" aria-hidden="true"><span id="cz-score">0 правильних</span></span>
     </div>
+    <p class="cz-task">Поставте пропущене слово у правильному відмінку.</p>
     <p class="cz-sentence" id="cz-sentence"></p>
     <p class="cz-translate" id="cz-translate"></p>
     <p class="live-status" id="cz-live" data-tone="info" aria-live="polite" role="status">&nbsp;</p>
     <form class="cz-input-row" id="cz-form" onsubmit="return false">
-      <input class="cz-input" id="cz-input" type="text" placeholder="наберіть слово…" autocomplete="off" aria-label="Введіть пропущене слово">
+      <input class="cz-input" id="cz-input" type="text" placeholder="наберіть слово у потрібній формі…" autocomplete="off" aria-label="Введіть пропущене слово у правильному відмінку">
       <button class="btn btn-accent" type="submit">Перевірити</button>
     </form>
     <div class="cz-or">або оберіть</div>
@@ -827,44 +829,58 @@
    This is design sample data, NOT a live attestation feed.
    ============================================================================ */
 var DECK = [
+  // Each entry's `form` = the DECLINED surface form the cloze blank requires (an oblique case),
+  // so the bare lemma (lemmaPlain) is always offered as a wrong-case DISTRACTOR, never the answer.
+  // In the live build `form` + `ansCase`/`caseRule` come from
+  // enrichment.morphology.paradigm.cases.<відмінок>.singular — never invented.
   { lemma:"ра́нок", lemmaPlain:"ранок", ipa:"[ˈrɑnok]", gloss:"morning", pos:"іменник · ч.р.",
     cefr:"A1", sev:"green", her:"✓ Питома",
-    sentence:"Кожен ___ я п’ю каву.", clozeEn:"Every morning I drink coffee." },
+    sentence:"Бажаю тобі доброго ___!", form:"ранку", ansCase:"родовий відмінок",
+    caseRule:"доброго → родовий", clozeEn:"I wish you a good morning!" },
   { lemma:"со́нце", lemmaPlain:"сонце", ipa:"[ˈsɔnt͡se]", gloss:"sun", pos:"іменник · с.р.",
     cefr:"A1", sev:"green", her:"✓ Питома",
-    sentence:"Уранці сходить ___.", clozeEn:"The sun rises in the morning." },
+    sentence:"Небо сьогодні без ___.", form:"сонця", ansCase:"родовий відмінок",
+    caseRule:"без → родовий", clozeEn:"The sky is without sun today." },
   { lemma:"ка́ва", lemmaPlain:"кава", ipa:"[ˈkɑʋɐ]", gloss:"coffee", pos:"іменник · ж.р.",
     cefr:"A1", sev:"green", her:"Засвоєне запозичення",
-    sentence:"Це смачна ___.", clozeEn:"This is tasty coffee." },
+    sentence:"Я щоранку п’ю ___.", form:"каву", ansCase:"знахідний відмінок",
+    caseRule:"прямий додаток → знахідний", clozeEn:"I drink coffee every morning." },
   { lemma:"мі́сто", lemmaPlain:"місто", ipa:"[ˈmisto]", gloss:"city", pos:"іменник · с.р.",
     cefr:"A1", sev:"green", her:"✓ Питома",
-    sentence:"Київ — велике ___.", clozeEn:"Kyiv is a big city." },
+    sentence:"Я живу у великому ___.", form:"місті", ansCase:"місцевий відмінок",
+    caseRule:"у (де?) → місцевий", clozeEn:"I live in a big city." },
   { lemma:"кни́жка", lemmaPlain:"книжка", ipa:"[ˈknɪʒkɐ]", gloss:"book", pos:"іменник · ж.р.",
     cefr:"A1", sev:"green", her:"✓ Питома",
-    sentence:"На столі лежить ___.", clozeEn:"A book lies on the table." },
+    sentence:"Я читаю цікаву ___.", form:"книжку", ansCase:"знахідний відмінок",
+    caseRule:"прямий додаток → знахідний", clozeEn:"I'm reading an interesting book." },
   { lemma:"вода́", lemmaPlain:"вода", ipa:"[wɔˈdɑ]", gloss:"water", pos:"іменник · ж.р.",
     cefr:"A1", sev:"green", her:"✓ Питома",
-    sentence:"У склянці чиста ___.", clozeEn:"There is clean water in the glass." },
+    sentence:"У склянці немає ___.", form:"води", ansCase:"родовий відмінок",
+    caseRule:"немає → родовий", clozeEn:"There's no water in the glass." },
   { lemma:"хліб", lemmaPlain:"хліб", ipa:"[xlʲib]", gloss:"bread", pos:"іменник · ч.р.",
     cefr:"A1", sev:"green", her:"✓ Питома",
-    sentence:"На сніданок я їм ___.", clozeEn:"For breakfast I eat bread." },
+    sentence:"Я купив буханець ___.", form:"хліба", ansCase:"родовий відмінок",
+    caseRule:"буханець (чого?) → родовий", clozeEn:"I bought a loaf of bread." },
   { lemma:"мо́ва", lemmaPlain:"мова", ipa:"[ˈmɔʋɐ]", gloss:"language", pos:"іменник · ж.р.",
     cefr:"A1", sev:"green", her:"✓ Питома",
-    sentence:"Українська ___ — мелодійна.", clozeEn:"The Ukrainian language is melodious." },
-  { lemma:"ро́бота", lemmaPlain:"робота", form:"роботу", ipa:"[ˈrɔbotɐ]", gloss:"work", pos:"іменник · ж.р.",
+    sentence:"Я вивчаю українську ___.", form:"мову", ansCase:"знахідний відмінок",
+    caseRule:"прямий додаток → знахідний", clozeEn:"I'm learning the Ukrainian language." },
+  { lemma:"ро́бота", lemmaPlain:"робота", ipa:"[ˈrɔbotɐ]", gloss:"work", pos:"іменник · ж.р.",
     cefr:"A2", sev:"green", her:"✓ Питома",
-    // `form` = the sentence-slot DECLINED surface form (знахідний). In the live build it comes
-    // straight from enrichment.morphology.paradigm.cases.<відмінок>.singular — never the bare lemma.
-    sentence:"Уранці я йду на ___.", clozeEn:"In the morning I go to work." },
+    sentence:"Уранці я йду на ___.", form:"роботу", ansCase:"знахідний відмінок",
+    caseRule:"на (куди?) → знахідний", clozeEn:"In the morning I go to work." },
   { lemma:"роди́на", lemmaPlain:"родина", ipa:"[rɔˈdɪnɐ]", gloss:"family", pos:"іменник · ж.р.",
     cefr:"A2", sev:"green", her:"✓ Питома",
-    sentence:"У нас велика ___.", clozeEn:"We have a big family." },
+    sentence:"Я люблю свою ___.", form:"родину", ansCase:"знахідний відмінок",
+    caseRule:"прямий додаток → знахідний", clozeEn:"I love my family." },
   { lemma:"кві́тка", lemmaPlain:"квітка", ipa:"[ˈkʋitkɐ]", gloss:"flower", pos:"іменник · ж.р.",
     cefr:"A2", sev:"green", her:"✓ Питома",
-    sentence:"На вікні стоїть ___.", clozeEn:"There is a flower on the windowsill." },
+    sentence:"Я подарував мамі ___.", form:"квітку", ansCase:"знахідний відмінок",
+    caseRule:"прямий додаток → знахідний", clozeEn:"I gave mom a flower." },
   { lemma:"дру́г", lemmaPlain:"друг", ipa:"[druɦ]", gloss:"friend", pos:"іменник · ч.р.",
     cefr:"A1", sev:"green", her:"✓ Питома",
-    sentence:"Це мій найкращий ___.", clozeEn:"This is my best friend." }
+    sentence:"Я телефоную своєму ___.", form:"другові", ansCase:"давальний відмінок",
+    caseRule:"телефонувати (кому?) → давальний", clozeEn:"I'm calling my friend." }
 ];
 
 /* ---- deterministic shuffle (no Math.random reliance for repeatability) ---- */
@@ -1120,59 +1136,79 @@ document.addEventListener("keydown", function(e){
 });
 
 /* ============================== CLOZE ===================================== */
-var czWord = null, czAnswered = false, czCorrect = 0;
-function initCloze(){ czCorrect = 0; nextCloze(); }
+/* The cloze DEMANDS the correct CASE form. The bare lemma (nominative) is offered among the
+   options as a wrong-case distractor but is NEVER accepted: a wrong-case answer gets a teaching
+   message naming the right form + rule, not a silent pass. Typos / stress marks are forgiven;
+   the case is not. */
+var czWord = null, czAnswered = false, czCorrect = 0, czLast = null;
+function czNorm(s){ return (s||"").trim().toLocaleLowerCase("uk").replace(/́/g,"").replace(/’/g,"'"); }
+function initCloze(){ czCorrect = 0; czLast = null; nextCloze(); }
 function nextCloze(){
   czAnswered = false;
-  czWord = shuffle(DECK.filter(function(w){ return w.sentence.indexOf("___") >= 0; }))[0];
+  var pool = DECK.filter(function(w){ return w.form && w.sentence.indexOf("___") >= 0; });
+  if (pool.length > 1 && czLast) pool = pool.filter(function(w){ return w.lemmaPlain !== czLast; });
+  czWord = shuffle(pool)[0];
+  czLast = czWord.lemmaPlain;
   document.getElementById("cz-sentence").innerHTML =
     esc(czWord.sentence).replace("___", '<span class="cz-blank" id="cz-blank">?</span>');
   document.getElementById("cz-translate").textContent = czWord.clozeEn;
-  var distract = shuffle(DECK.filter(function(w){ return w.lemmaPlain !== czWord.lemmaPlain; })).slice(0,3);
-  var opts = shuffle(distract.concat([czWord]));
+  // options = correct case form + the SAME word's wrong case (its lemma) + 2 other words' forms
+  var others = shuffle(DECK.filter(function(w){ return w.form && w.lemmaPlain !== czWord.lemmaPlain; })).slice(0,2);
+  var opts = [{ label: czWord.form, role:"answer" }, { label: czWord.lemmaPlain, role:"wrongcase" }]
+    .concat(others.map(function(w){ return { label: w.form, role:"other" }; }));
+  opts = shuffle(opts);
   var box = document.getElementById("cz-options");
   box.innerHTML = "";
-  opts.forEach(function(w){
+  opts.forEach(function(o){
     var b = document.createElement("button");
-    b.type="button"; b.className="cz-chip"; b.textContent = w.lemmaPlain;
-    b.dataset.correct = (w.lemmaPlain === czWord.lemmaPlain) ? "1":"0";
-    b.addEventListener("click", function(){ answerCloze(w.lemmaPlain, b); });
+    b.type="button"; b.className="cz-chip"; b.textContent = o.label;
+    b.dataset.role = o.role;
+    b.addEventListener("click", function(){ answerCloze(o.label, b, o.role); });
     box.appendChild(b);
   });
   var input = document.getElementById("cz-input");
   input.value = ""; input.disabled = false;
-  setLive("cz-live"," ","info");
+  setLive("cz-live"," ","info");
   document.getElementById("cz-next").hidden = true;
 }
-function answerCloze(value, btn){
+function answerCloze(value, btn, role){
   if (czAnswered) return;
-  var t = value.trim().toLocaleLowerCase("uk");
-  // Accept the declined surface form (preferred — teaches the case) OR the dictionary lemma
-  // (so clicking the correct chip, which carries the lemma, also counts).
-  var ok = t === (czWord.form||czWord.lemmaPlain).toLocaleLowerCase("uk")
-        || t === czWord.lemmaPlain.toLocaleLowerCase("uk");
+  var t = czNorm(value);
+  var correct   = t === czNorm(czWord.form);
+  var wrongCase = !correct && (role === "wrongcase" || t === czNorm(czWord.lemmaPlain));
   var blank = document.getElementById("cz-blank");
-  if (!ok && !btn){ // typed wrong
+  if (!correct && !btn){ // typed but not right yet — keep the attempt open
     blank.textContent = value || "?"; blank.classList.add("filled","bad");
-    setLive("cz-live","✕ Не те слово. Спробуйте ще або оберіть нижче.","bad");
+    if (wrongCase)
+      setLive("cz-live","✕ Правильне слово, але інший відмінок. Тут «"+czWord.form+"» ("+czWord.caseRule+"). Спробуйте ще.","bad");
+    else
+      setLive("cz-live","✕ Не те слово. Спробуйте ще або оберіть нижче.","bad");
     return;
   }
   czAnswered = true;
   document.getElementById("cz-input").disabled = true;
   document.querySelectorAll("#cz-options .cz-chip").forEach(function(b){
     b.disabled = true;
-    if (b.dataset.correct === "1") b.classList.add("correct");
+    if (b.dataset.role === "answer") b.classList.add("correct");
   });
-  blank.textContent = (czWord.form||czWord.lemmaPlain);
-  blank.classList.remove("bad"); blank.classList.add("filled");
-  if (ok){ czCorrect++; setLive("cz-live","✓ Правильно — «"+(czWord.form||czWord.lemmaPlain)+"».","ok"); }
-  else { if (btn) btn.classList.add("wrong"); setLive("cz-live","✕ Правильне слово: «"+(czWord.form||czWord.lemmaPlain)+"».","bad"); }
+  blank.textContent = czWord.form; blank.classList.remove("bad"); blank.classList.add("filled");
+  if (correct){
+    czCorrect++;
+    setLive("cz-live","✓ Правильно — «"+czWord.form+"» ("+czWord.ansCase+").","ok");
+  } else if (wrongCase){
+    if (btn) btn.classList.add("wrong");
+    setLive("cz-live","✕ Правильне слово, але інший відмінок — тут «"+czWord.form+"» ("+czWord.caseRule+").","bad");
+  } else {
+    if (btn) btn.classList.add("wrong");
+    setLive("cz-live","✕ Правильна відповідь: «"+czWord.form+"» ("+czWord.ansCase+").","bad");
+  }
   document.getElementById("cz-score").textContent = correctLabel(czCorrect);
   document.getElementById("cz-next").hidden = false;
 }
-document.getElementById("cz-form").addEventListener("submit", function(){
+document.getElementById("cz-form").addEventListener("submit", function(e){
+  if (e && e.preventDefault) e.preventDefault();
   if (czAnswered) return;
-  answerCloze(document.getElementById("cz-input").value, null);
+  answerCloze(document.getElementById("cz-input").value, null, null);
 });
 document.getElementById("cz-next").addEventListener("click", nextCloze);
 
