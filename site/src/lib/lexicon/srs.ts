@@ -874,12 +874,16 @@ function rankCandidates(
   clozeSoftCap: number,
   nowTime: number,
 ): PracticeSelection | null {
+  // Urgency is the PRIMARY sort key (lapsed first, then most-overdue); the soft
+  // anti-monotony penalty is only a TIEBREAK within the same urgency bucket. Adding the
+  // penalty to the urgency score (as before) let a +18–60 penalty leak across hour-buckets
+  // and overtake a genuinely-more-due card — variety must never delay a due/lapsed card.
   return (
     [...pool].sort((left, right) => {
-      const leftScore = urgencyBucket(left, nowTime) + candidatePenalty(left, pool, history, clozeSoftCap, nowTime);
-      const rightScore = urgencyBucket(right, nowTime) + candidatePenalty(right, pool, history, clozeSoftCap, nowTime);
       return (
-        leftScore - rightScore ||
+        urgencyBucket(left, nowTime) - urgencyBucket(right, nowTime) ||
+        candidatePenalty(left, pool, history, clozeSoftCap, nowTime) -
+          candidatePenalty(right, pool, history, clozeSoftCap, nowTime) ||
         left.indexItem.newOrder - right.indexItem.newOrder ||
         left.itemId.localeCompare(right.itemId)
       );

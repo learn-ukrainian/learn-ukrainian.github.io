@@ -711,9 +711,14 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
     level = _cefr_level(entry)
     if not lemma or not gloss or not level:
         return None
-    paradigm = _paradigm(entry)
     lemma_plain = _plain(lemma)
     pos = _clean_text(entry.get("pos"))
+    # Recognition (matching/choice/flashcard) needs only lemma+gloss+level, so the word is
+    # ALWAYS kept. Attach the paradigm for flashcard declensions ONLY when every form
+    # VESUM-verifies; otherwise blank it so the UI never displays an unverified declension.
+    paradigm = _paradigm(entry)
+    if not _verify_paradigm(lemma_plain, pos, paradigm, verifier):
+        paradigm = {"cases": {}}
     return {
         "lemmaId": _stable_lemma_id(entry),
         "lemma": lemma,

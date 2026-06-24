@@ -310,6 +310,30 @@ describe('lexicon SRS facade', () => {
     expect(selection?.lemma.lemmaId).toBe('beta');
   });
 
+  test('soft variety never overtakes a genuinely more-due card (no penalty leak across urgency buckets)', () => {
+    const state = loadState(localStorage, NOW);
+    // alpha is ~10h more overdue but in the recently-spammed mode (max variety penalty);
+    // beta is only just due in a fresh mode. The more-due card MUST still win — the soft
+    // penalty (tens) must never overtake hours of real urgency.
+    state.cards.set(cardKey('alpha', 'flashcards'), stateCard({ due: NOW.getTime() - 10 * HOUR_MS }));
+    state.cards.set(cardKey('beta', 'choice'), stateCard({ due: NOW.getTime() }));
+    const history: SelectionHistoryItem[] = [
+      { itemId: 'h1', lemmaId: 'h1', mode: 'flashcards' },
+      { itemId: 'h2', lemmaId: 'h2', mode: 'flashcards' },
+      { itemId: 'h3', lemmaId: 'h3', mode: 'flashcards' },
+    ];
+
+    const selection = selectNextPracticeItem(modeDeck([
+      { id: 'alpha', modes: ['flashcards'] },
+      { id: 'beta', modes: ['choice'] },
+    ]), {
+      now: NOW,
+      history,
+    });
+
+    expect(selection?.lemma.lemmaId).toBe('alpha');
+  });
+
   test('selector never borrows not-due cards while overdue cards exist', () => {
     const state = loadState(localStorage, NOW);
     state.cards.set(cardKey('alpha', 'flashcards'), stateCard({ due: NOW.getTime() - HOUR_MS }));

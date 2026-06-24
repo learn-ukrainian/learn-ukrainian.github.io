@@ -10,6 +10,7 @@ from scripts.audit.generate_practice_deck import (
     BuildConfig,
     JsonVesumVerifier,
     ReviewedSourceAllowlist,
+    _build_lexeme,
     _option_strategy_for_level,
     apply_size_budgets,
     build_practice_shards,
@@ -183,3 +184,32 @@ def test_cli_writes_fixture_shards(tmp_path: Path) -> None:
     payload = json.loads(index_path.read_text(encoding="utf-8"))
     assert payload["schema"] == "atlas-practice-index"
     assert payload["source"] == "fixture"
+
+
+def test_word_without_paradigm_is_recognition_eligible() -> None:
+    # Recognition (matching/choice) needs only lemma+gloss+level. A word with no morphological
+    # paradigm must still produce a lexeme (regression for the 1413->312 over-gating collapse).
+    verifier = JsonVesumVerifier.from_path(VESUM)
+    entry = {"lemma": "тому", "gloss": "therefore", "enrichment": {"cefr": {"level": "A1"}}}
+    lexeme = _build_lexeme(entry, verifier)
+    assert lexeme is not None
+    assert lexeme["gloss"] == "therefore"
+    assert lexeme["paradigm"] == {"cases": {}}
+
+
+def test_unverified_paradigm_is_blanked_not_dropped() -> None:
+    # A paradigm whose forms do NOT VESUM-verify must be BLANKED (so the flashcard never shows an
+    # unverified declension) while the word itself is still kept as a recognition lexeme.
+    verifier = JsonVesumVerifier.from_path(VESUM)
+    entry = {
+        "lemma": "видумане",
+        "gloss": "made-up",
+        "pos": "noun",
+        "enrichment": {
+            "cefr": {"level": "A1"},
+            "morphology": {"paradigm": {"cases": {"nominative": {"singular": "видуманеформа"}}}},
+        },
+    }
+    lexeme = _build_lexeme(entry, verifier)
+    assert lexeme is not None  # word kept
+    assert lexeme["paradigm"] == {"cases": {}}  # unverified paradigm blanked
