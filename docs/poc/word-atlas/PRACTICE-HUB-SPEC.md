@@ -161,6 +161,9 @@ perceptual rotation), plus the §5 option-validator. Violations = build red.
 - Counts use `uaPlural` (locked).
 
 ---
-*Revision log: v1 (design locked with user) → v2 (this) folds in the codex/agy/cursor fleet review of
-2026-06-24. v3 applies the codex re-review (5 consistency fixes: hard rules → SRS-subordinate). Must pass a fleet re-review before #3777 build kickoff (per infra-orchestrator
-mandatory fleet-gate).*
+*Revision log: v1 (design locked with user) → v2 folds in the codex/agy/cursor fleet review of
+2026-06-24. v3 applies the codex re-review (5 consistency fixes: hard rules → SRS-subordinate).
+**v3.1 — FLEET RE-REVIEW PASSED** (the mandatory infra-orchestrator fleet-gate is satisfied): codex
+"All 5 are resolved; blocker cleared" (bridge msg 1427, 2026-06-24); agy "v2 correctly resolves all
+my prior findings… no blocker" (bridge msg 1424). Build kickoff AUTHORIZED by the user and dispatched
+to codex as task `practice-hub-pr1b-build` (2026-06-24) — supersedes the empty-placeholder #3777.*
