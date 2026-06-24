@@ -1152,10 +1152,19 @@ function nextCloze(){
   document.getElementById("cz-sentence").innerHTML =
     esc(czWord.sentence).replace("___", '<span class="cz-blank" id="cz-blank">?</span>');
   document.getElementById("cz-translate").textContent = czWord.clozeEn;
-  // options = correct case form + the SAME word's wrong case (its lemma) + 2 other words' forms
-  var others = shuffle(DECK.filter(function(w){ return w.form && w.lemmaPlain !== czWord.lemmaPlain; })).slice(0,2);
-  var opts = [{ label: czWord.form, role:"answer" }, { label: czWord.lemmaPlain, role:"wrongcase" }]
-    .concat(others.map(function(w){ return { label: w.form, role:"other" }; }));
+  // Break the "two-of-the-same-root → the answer is one of those two" tell: present EITHER two
+  // lemma+declined pairs (the answer's AND a decoy word's — so the shape reveals nothing and the
+  // decoy's declined form is a trap), OR no pair at all (answer among mixed lemma/declined forms).
+  var pool2 = shuffle(DECK.filter(function(w){ return w.form && w.lemmaPlain !== czWord.lemmaPlain; }));
+  var opts;
+  if (Math.random() < 0.55){
+    var decoy = pool2[0];                         // a WRONG word, also shown in both forms
+    opts = [{ label: czWord.form, role:"answer" }, { label: czWord.lemmaPlain, role:"wrongcase" },
+            { label: decoy.form, role:"other" },  { label: decoy.lemmaPlain, role:"other" }];
+  } else {
+    opts = [{ label: czWord.form, role:"answer" }].concat(   // 3 distinct words, each lemma OR declined
+      pool2.slice(0,3).map(function(w){ return { label: (Math.random() < 0.5 ? w.form : w.lemmaPlain), role:"other" }; }));
+  }
   opts = shuffle(opts);
   var box = document.getElementById("cz-options");
   box.innerHTML = "";
