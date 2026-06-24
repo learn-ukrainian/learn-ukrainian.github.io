@@ -39,6 +39,118 @@ def _small_plan() -> dict:
     }
 
 
+def _length_plan(*, word_target: int = 12) -> dict:
+    return {
+        "module": "folk-001",
+        "level": "folk",
+        "sequence": 1,
+        "slug": "sample",
+        "title": "Sample",
+        "subtitle": "Sample",
+        "word_target": word_target,
+        "content_outline": [
+            {"section": "Context", "words": 8, "points": []},
+            {"section": "Poetics", "words": 8, "points": []},
+        ],
+        "references": [],
+    }
+
+
+def _module_with_sections(context: str, poetics: str) -> str:
+    return f"# Sample\n\n## Context\n\n{context}\n\n## Poetics\n\n{poetics}\n"
+
+
+def test_writer_draft_length_report_excludes_primary_reading_blocks() -> None:
+    module_text = _module_with_sections(
+        "one two\n\n:::primary-reading\nthis quoted block has many excluded words\n:::\n\nthree",
+        "four five six seven eight nine",
+    )
+
+    report = linear_pipeline.writer_draft_length_report(_length_plan(), module_text)
+
+    assert report["count"] == 12
+    assert report["sections"][0]["section"] == "Context"
+    assert report["sections"][0]["count"] == 3
+    assert report["sections"][0]["shortfall"] == 5
+
+
+def test_writer_draft_length_precheck_applies_targeted_writer_reprompt(tmp_path: Path) -> None:
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    initial = _module_with_sections(
+        "one two",
+        "three four five six seven eight nine ten",
+    )
+    (module_dir / "module.md").write_text(initial, encoding="utf-8")
+    plan_path = tmp_path / "plan.yaml"
+    plan_path.write_text("level: folk\nsequence: 1\nslug: sample\n", encoding="utf-8")
+    prompts: list[str] = []
+
+    def corrector(context: linear_pipeline.CorrectionContext) -> str:
+        prompts.append(context.prompt)
+        patched = _module_with_sections(
+            "one two three four five six seven eight",
+            "three four five six seven eight nine ten",
+        )
+        return f"```markdown file=module.md\n{patched}```"
+
+    result = linear_pipeline.run_writer_draft_length_precheck(
+        plan=_length_plan(word_target=16),
+        module_dir=module_dir,
+        plan_path=plan_path,
+        writer_corrector=corrector,
+    )
+
+    assert result["applied"] is True
+    assert result["patch_status"] == "module_patch"
+    assert "Context: 6 words short of 8" in prompts[0]
+    assert "Keep ALL existing content" in prompts[0]
+    assert result["after"]["passed"] is True
+
+
+def test_writer_draft_length_precheck_skips_when_at_or_over_target(tmp_path: Path) -> None:
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    module_text = _module_with_sections(
+        "one two three four five six seven eight nine",
+        "ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen",
+    )
+    (module_dir / "module.md").write_text(module_text, encoding="utf-8")
+    plan_path = tmp_path / "plan.yaml"
+    plan_path.write_text("level: folk\nsequence: 1\nslug: sample\n", encoding="utf-8")
+
+    def corrector(_context: linear_pipeline.CorrectionContext) -> str:
+        raise AssertionError("precheck should not invoke writer when draft is long enough")
+
+    result = linear_pipeline.run_writer_draft_length_precheck(
+        plan=_length_plan(word_target=16),
+        module_dir=module_dir,
+        plan_path=plan_path,
+        writer_corrector=corrector,
+    )
+
+    assert result["applied"] is False
+    assert result["before"]["passed"] is True
+
+
+def test_writer_draft_length_prompt_names_short_sections_and_shortfalls() -> None:
+    module_text = _module_with_sections("one two", "three four")
+    report = linear_pipeline.writer_draft_length_report(
+        _length_plan(word_target=20),
+        module_text,
+    )
+
+    prompt = linear_pipeline.render_writer_draft_length_expansion_prompt(
+        plan=_length_plan(word_target=20),
+        module_text=module_text,
+        length_report=report,
+    )
+
+    assert "Overall draft is 13 words short of 20" in prompt
+    assert "Context: 6 words short of 8" in prompt
+    assert "Poetics: 6 words short of 8" in prompt
+
+
 def test_plan_check_accepts_a1_20_plan() -> None:
     plan = linear_pipeline.plan_check(
         linear_pipeline.plan_path_for("a1", "my-morning")

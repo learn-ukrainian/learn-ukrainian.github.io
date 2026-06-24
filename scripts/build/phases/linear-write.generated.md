@@ -30,6 +30,18 @@ RAG chunks.
   self-counted `wc -w` runs ~15% high. Do NOT calibrate length down because the
   topic feels simple — write to the depth the directives below demand.
 
+## Section Word Budgets — hard first-draft requirements
+
+The first draft must meet or exceed `{WORD_TARGET}` and must hit every section
+`words:` budget below. If the first draft is short, the pipeline immediately
+re-prompts for targeted expansion before Python QG continues. Each planned
+section must reach its own budget with substantive exposition, examples,
+close-reading, source comparison, and cultural/grammar analysis.
+`:::primary-reading` quoted text is excluded from counted words; surrounding
+explanation must carry the budget.
+
+{SECTION_WORD_BUDGETS}
+
 {WRITER_SPECIFIC_DIRECTIVES}
 
 # 1. LESSON SOURCE — read ALL of this BEFORE writing anything

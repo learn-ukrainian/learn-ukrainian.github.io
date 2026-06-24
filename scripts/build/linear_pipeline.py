@@ -3413,6 +3413,33 @@ def _seminar_folk_writer_rules(level: str, context: Mapping[str, Any]) -> str:
     return _inline_prompt_tokens(block, context)
 
 
+def _render_section_word_budgets(plan: Mapping[str, Any]) -> str:
+    """Render plan section word budgets as a compact writer checklist."""
+    outline = plan.get("content_outline")
+    if not isinstance(outline, list):
+        return "- No `content_outline` section budgets found."
+
+    lines: list[str] = []
+    running_total = 0
+    for index, section in enumerate(outline, start=1):
+        if not isinstance(section, Mapping):
+            continue
+        title = str(section.get("section") or "").strip()
+        words = section.get("words")
+        if not title or words is None:
+            continue
+        try:
+            budget = int(words)
+        except (TypeError, ValueError):
+            continue
+        running_total += budget
+        lines.append(f"{index}. {title}: {budget} words (running total {running_total})")
+
+    if not lines:
+        return "- No valid `content_outline[].section` + `words` budgets found."
+    return "\n".join(lines)
+
+
 def writer_context(
     plan: Mapping[str, Any],
     plan_content: str,
@@ -3456,6 +3483,7 @@ def writer_context(
         "TOPIC_TITLE": str(plan["title"]),
         "PHASE": str(plan.get("phase", "")),
         "WORD_TARGET": str(plan["word_target"]),
+        "SECTION_WORD_BUDGETS": _render_section_word_budgets(plan),
         "WRITER_SPECIFIC_DIRECTIVES": _writer_specific_directives(writer),
         "PLAN_CONTENT": plan_content,
         "KNOWLEDGE_PACKET": knowledge_packet,
@@ -9670,6 +9698,227 @@ def _word_count_gate(text: str, target: int) -> dict[str, Any]:
         "target": target,
         "min_with_tolerance": min_with_tolerance,
         "tolerance_below_pct": _WORD_COUNT_TOLERANCE_BELOW * 100,
+    }
+
+
+_WRITER_DRAFT_SECTION_FLOOR_RATIO = 0.85
+
+
+def _writer_draft_countable_words(text: str) -> int:
+    return _word_count(_strip_comments(_strip_primary_reading_blocks(text)))
+
+
+def _writer_draft_section_length_report(
+    plan: Mapping[str, Any],
+    module_text: str,
+    *,
+    section_floor_ratio: float = _WRITER_DRAFT_SECTION_FLOOR_RATIO,
+) -> list[dict[str, Any]]:
+    outline = plan.get("content_outline")
+    if not isinstance(outline, list):
+        return []
+
+    archetype = resolve_module_archetype(
+        str(plan.get("level") or ""),
+        int(plan.get("sequence") or 0),
+    )
+    archetype_id = str(archetype.get("id") or "")
+    reports: list[dict[str, Any]] = []
+    for section in outline:
+        if not isinstance(section, Mapping):
+            continue
+        title = str(section.get("section") or "").strip()
+        if not title:
+            continue
+        try:
+            budget = int(section["words"])
+        except (KeyError, TypeError, ValueError):
+            continue
+        section_text = _extract_section_text(module_text, title, archetype_key=archetype_id)
+        count = _writer_draft_countable_words(section_text)
+        floor = int(budget * section_floor_ratio)
+        reports.append(
+            {
+                "section": title,
+                "count": count,
+                "budget": budget,
+                "floor": floor,
+                "floor_ratio": section_floor_ratio,
+                "shortfall": max(0, budget - count),
+                "passed": count >= floor,
+            }
+        )
+    return reports
+
+
+def writer_draft_length_report(
+    plan: Mapping[str, Any],
+    module_text: str,
+    *,
+    section_floor_ratio: float = _WRITER_DRAFT_SECTION_FLOOR_RATIO,
+) -> dict[str, Any]:
+    target = int(plan["word_target"])
+    count = _writer_draft_countable_words(module_text)
+    section_reports = _writer_draft_section_length_report(
+        plan,
+        module_text,
+        section_floor_ratio=section_floor_ratio,
+    )
+    short_sections = [section for section in section_reports if section["passed"] is False]
+    total_shortfall = max(0, target - count)
+    return {
+        "passed": total_shortfall == 0 and not short_sections,
+        "count": count,
+        "target": target,
+        "total_shortfall": total_shortfall,
+        "section_floor_ratio": section_floor_ratio,
+        "sections": section_reports,
+        "short_sections": short_sections,
+    }
+
+
+def _writer_draft_shortfall_lines(report: Mapping[str, Any]) -> list[str]:
+    lines: list[str] = []
+    total_shortfall = int(report.get("total_shortfall") or 0)
+    if total_shortfall > 0:
+        lines.append(
+            f"- Overall draft is {total_shortfall} words short of "
+            f"{int(report.get('target') or 0)} (counted {int(report.get('count') or 0)})."
+        )
+    for section in report.get("short_sections") or []:
+        if not isinstance(section, Mapping):
+            continue
+        lines.append(
+            "- "
+            f"{section.get('section')}: {int(section.get('shortfall') or 0)} words short "
+            f"of {int(section.get('budget') or 0)} "
+            f"(counted {int(section.get('count') or 0)}; "
+            f"85% floor {int(section.get('floor') or 0)})."
+        )
+    return lines or ["- No shortfalls."]
+
+
+def render_writer_draft_length_expansion_prompt(
+    *,
+    plan: Mapping[str, Any],
+    module_text: str,
+    length_report: Mapping[str, Any],
+) -> str:
+    shortfall_lines = "\n".join(_writer_draft_shortfall_lines(length_report))
+    diagnostic = _yaml_inline(length_report)
+    return "\n".join(
+        [
+            "# Writer Draft Length Pre-check",
+            "",
+            "The deterministic first-draft length pre-check failed before the full Python QG loop.",
+            "Gate-counted words exclude markdown comments and `:::primary-reading` blocks.",
+            "",
+            "## Required expansion",
+            shortfall_lines,
+            "",
+            "Expand the named short sections with real analytic/textual substance: deeper close-reading, richer source comparison, more cultural context from the provided material, and clearer explanation of examples.",
+            "Do NOT add padding, filler transitions, meta-narration, invented citations, or new uncited claims.",
+            "Keep ALL existing content, citations, headings, activities, vocabulary, resources, and `:::primary-reading` blocks verbatim.",
+            "Do not edit text inside any `:::primary-reading` block. Add explanatory prose around those blocks instead.",
+            "Return the FULL patched `module.md`; do not return the other writer artifacts.",
+            "",
+            "## Output contract",
+            "Return exactly one fenced markdown block and nothing else:",
+            "```markdown file=module.md",
+            "... full patched module.md content ...",
+            "```",
+            "",
+            "## Length diagnostic",
+            "```yaml",
+            diagnostic,
+            "```",
+            "",
+            "## Current module.md",
+            "```markdown",
+            module_text,
+            "```",
+        ]
+    )
+
+
+def run_writer_draft_length_precheck(
+    *,
+    plan: Mapping[str, Any],
+    module_dir: Path,
+    plan_path: Path,
+    writer: str = "claude-tools",
+    writer_corrector: Callable[[CorrectionContext], str | Mapping[str, str] | None] | None = None,
+    invoker: Callable[..., Any] | None = None,
+    event_sink: Callable[..., None] | None = None,
+) -> dict[str, Any]:
+    """Run one targeted writer expansion before the full Python QG loop."""
+    module_path = module_dir / "module.md"
+    before_text = _read_required(module_path)
+    before = writer_draft_length_report(plan, before_text)
+    if before.get("passed") is True:
+        _emit(
+            event_sink,
+            "writer_draft_length_precheck",
+            status="skipped",
+            count=before["count"],
+            target=before["target"],
+            short_section_count=0,
+        )
+        return {"applied": False, "before": before, "after": before}
+
+    prompt = render_writer_draft_length_expansion_prompt(
+        plan=plan,
+        module_text=before_text,
+        length_report=before,
+    )
+    context = CorrectionContext(
+        gate="writer_draft_length_precheck",
+        gate_report=before,
+        module_dir=module_dir,
+        plan_path=plan_path,
+        qg_report={"gates": {"writer_draft_length_precheck": before}},
+        prompt=prompt,
+    )
+    if writer_corrector is None:
+        response: str | Mapping[str, str] | None = invoke_writer(
+            prompt,
+            writer=writer,
+            cwd=module_dir,
+            invoker=invoker,
+        )
+    else:
+        response = writer_corrector(context)
+
+    applied = "unparseable"
+    if isinstance(response, Mapping):
+        write_writer_artifacts(module_dir, response)
+        applied = "writer_artifacts_mapping"
+    elif isinstance(response, str):
+        patched = parse_writer_correction_module_only(response)
+        if patched is not None:
+            module_path.write_text(patched, encoding="utf-8")
+            applied = "module_patch"
+
+    after_text = _read_required(module_path)
+    after = writer_draft_length_report(plan, after_text)
+    _emit(
+        event_sink,
+        "writer_draft_length_precheck",
+        status="applied" if applied != "unparseable" else "unparseable",
+        applied=applied,
+        count_before=before["count"],
+        count_after=after["count"],
+        target=before["target"],
+        short_section_count=len(before["short_sections"]),
+    )
+    return {
+        "applied": applied != "unparseable",
+        "kind": "writer_draft_length_precheck",
+        "prompt": prompt,
+        "response": dict(response) if isinstance(response, Mapping) else response,
+        "patch_status": applied,
+        "before": before,
+        "after": after,
     }
 
 
