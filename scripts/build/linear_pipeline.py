@@ -9971,6 +9971,22 @@ def render_section_writer_prompt(
     lines.extend(
         [
             "",
+            "## Vocabulary Candidates",
+            "- Include 6-10 `vocab_candidates` entries for useful learner "
+            "vocabulary introduced in this section.",
+            "- Each candidate must include `word`, `ipa`, `pos`, `definition`, "
+            "`translation`, and `usage`.",
+            "- `translation` is a concise English gloss; `usage` is one short "
+            "Ukrainian example sentence that uses the lemma and matches the "
+            "section's register.",
+            "- Do not emit a candidate unless `word`, `translation`, `pos`, "
+            "and `usage` are all known.",
+        ]
+    )
+
+    lines.extend(
+        [
+            "",
             "## Output Contract",
             "Return one `json file=section_artifact.json` fenced block with keys: "
             "`section_id`, `markdown`, `citations_used`, `primary_readings_used`, "
@@ -10521,7 +10537,7 @@ def _artifact_claims(artifact: SectionArtifact) -> list[str]:
 
 def _vocab_candidate_surfaces(candidates: Sequence[Mapping[str, Any]]) -> list[str]:
     return _dedupe_preserve_order(
-        candidate.get("surface") or candidate.get("lemma") or ""
+        candidate.get("word") or candidate.get("surface") or candidate.get("lemma") or ""
         for candidate in candidates
         if isinstance(candidate, Mapping)
     )
@@ -10570,25 +10586,24 @@ def _artifact_by_plan_order(
 
 
 def _normalize_vocab_candidate(candidate: Mapping[str, Any]) -> dict[str, Any] | None:
-    surface = str(candidate.get("surface") or candidate.get("lemma") or "").strip()
-    if not surface:
+    lemma = str(candidate.get("word") or "").strip()
+    translation = str(candidate.get("translation") or "").strip()
+    pos = str(candidate.get("pos") or "").strip()
+    usage = str(candidate.get("usage") or "").strip()
+    if not all((lemma, translation, pos, usage)):
         return None
-    gloss = str(candidate.get("gloss") or candidate.get("translation") or "").strip()
-    note = str(candidate.get("note") or candidate.get("notes") or "").strip()
-    item: dict[str, Any] = {
-        "lemma": surface,
-        "translation": gloss,
-        "pos": str(candidate.get("pos") or "phrase").strip(),
-        "usage": str(candidate.get("usage") or note or surface).strip(),
+    return {
+        "lemma": lemma,
+        "translation": translation,
+        "pos": pos,
+        "usage": usage,
     }
-    if note:
-        item["notes"] = note
-    return item
 
 
-def _merge_vocab_candidates(artifacts: Sequence[SectionArtifact]) -> list[dict[str, Any]]:
+def _merge_vocab(plan: Mapping[str, Any], artifacts: Sequence[SectionArtifact]) -> list[dict[str, Any]]:
+    del plan
     vocab_items: list[dict[str, Any]] = []
-    seen_surfaces: set[str] = set()
+    seen_lemmas: set[str] = set()
     for artifact in artifacts:
         for candidate in artifact.vocab_candidates:
             if not isinstance(candidate, Mapping):
@@ -10596,11 +10611,11 @@ def _merge_vocab_candidates(artifacts: Sequence[SectionArtifact]) -> list[dict[s
             item = _normalize_vocab_candidate(candidate)
             if item is None:
                 continue
-            surface_key = item["lemma"].casefold()
-            if surface_key in seen_surfaces:
+            lemma_key = item["lemma"].casefold()
+            if lemma_key in seen_lemmas:
                 continue
             vocab_items.append(item)
-            seen_surfaces.add(surface_key)
+            seen_lemmas.add(lemma_key)
     _validate_writer_json_artifact("vocabulary.yaml", vocab_items)
     return vocab_items
 
@@ -10822,7 +10837,7 @@ def assemble_iterative(
     if module_md:
         module_md += "\n"
 
-    vocabulary = _merge_vocab_candidates(ordered_artifacts)
+    vocabulary = _merge_vocab(plan, ordered_artifacts)
     activity_items = (
         _merge_activities(ordered_artifacts, plan)
         if activities is None
