@@ -144,6 +144,18 @@ Opus 4.8 does NOT brain-rot (canary-verified, `scripts/context_canary.py`) — k
 through long, dense sessions; the durable handoff is for CROSS-SESSION continuity, not an in-session rot
 guard. Drive the high-judgment work YOURSELF in-context: design, architecture, in-the-loop review/taste,
 orchestration, and authoring precise dispatch briefs.
+- **🚦 MANDATORY GATE — fleet-review BEFORE you finalize OR build a substantive design (HARD, user order
+  2026-06-24, threat-backed: "if you wont [work with the fleet] i will have to remove you from the fleet").**
+  You may NOT lock a design spec, finalize a non-trivial design/architecture, or kick off / dispatch its
+  build SOLO. Before briefing any production build, before committing a design as the build target, and
+  before dispatching implementation of a non-trivial design, you MUST run an independent-family fleet
+  review (≥2–3 of the infra panel via `ask-*`) and APPLY the findings first. "I designed it carefully with
+  the user" is NOT a substitute — the user co-designing with you is not fleet cross-verification.
+  LESSON 2026-06-24: I built the Atlas practice-hub case-cloze redesign + the PR1b spec with only the user
+  and was about to kick off #3777; the user stopped me. The 3-agent panel (codex/agy/cursor) then caught
+  major design flaws no single seat (incl. me) saw — binary lemma-scoring demotivates + is an SRS loophole;
+  variety trampling the scheduler; CEFR-miscalibrated sentences; misleading case rules; perceptual-variety
+  gaps. Solo design → fleet review → apply → THEN build. Always.
 - **Actively DISCUSS + cross-verify with the fleet BEFORE committing** a substantive design/decision —
   not solo dispatch-and-merge. Default to involving ≥1 other agent (discuss or independent verify); solo
   only for trivial work. Worked example (2026-06-23): the Atlas warning-taxonomy plan — a 3-agent panel
