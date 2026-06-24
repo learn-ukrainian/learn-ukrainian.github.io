@@ -6023,6 +6023,7 @@ def _run_python_qg_with_bounded_corrections(
     corrections: list[dict[str, Any]] = []
     stopped_reason = "max_rounds"
     consecutive_regressions = 0
+    iterative_section_attempts: dict[str, int] = {}
 
     def _run_qg() -> dict[str, Any]:
         if qg_runner is not None:
@@ -6082,17 +6083,30 @@ def _run_python_qg_with_bounded_corrections(
         correction_round += 1
         before = report
         artifact_snapshot = rounds[-1]["artifacts"]
-        handled, unmatched_anchors, correction_payload = _apply_python_qg_correction(
-            failed_gate,
-            report,
-            module_dir=module_dir,
-            plan_path=plan_path,
-            writer_corrector=writer_corrector,
-            reviewer_corrector=reviewer_corrector,
-            dictionary_lookup_fn=dictionary_lookup_fn,
-            writer=writer,
-            invoker=invoker,
-        )
+        if _should_attempt_iterative_targeted_correction(failed_gate, module_dir):
+            handled, unmatched_anchors, correction_payload = (
+                _apply_iterative_targeted_section_correction(
+                    failed_gate,
+                    report,
+                    module_dir=module_dir,
+                    plan_path=plan_path,
+                    writer=writer,
+                    invoker=invoker,
+                    section_attempts=iterative_section_attempts,
+                )
+            )
+        else:
+            handled, unmatched_anchors, correction_payload = _apply_python_qg_correction(
+                failed_gate,
+                report,
+                module_dir=module_dir,
+                plan_path=plan_path,
+                writer_corrector=writer_corrector,
+                reviewer_corrector=reviewer_corrector,
+                dictionary_lookup_fn=dictionary_lookup_fn,
+                writer=writer,
+                invoker=invoker,
+            )
         if not handled:
             _write_correction_artifact(
                 module_dir / f"python_qg_correction_r{correction_round}.json",
@@ -9925,6 +9939,7 @@ def render_section_writer_prompt(
     assigned_readings = _prompt_dump(task.assigned_readings)
     ledger = _prompt_dump(asdict(task.ledger))
     writer_directives = _writer_specific_directives(writer).strip()
+    word_upper_range = (task.word_budget * 3 + 1) // 2
 
     lines = [
         "# Iterative Writer Section Pass",
@@ -9937,8 +9952,13 @@ def render_section_writer_prompt(
         f"- section_id: {task.section_id}",
         f"- title: {task.title}",
         f"- word_budget: {task.word_budget}",
+        f"- hard_minimum_words: {task.word_budget}",
+        f"- upper_range_words: {word_upper_range}",
         "",
         "## Section Body Rules",
+        f"- Write AT LEAST {task.word_budget} words for this section; aim for "
+        f"{task.word_budget}-{word_upper_range} words. Undershooting the "
+        "target is a failure.",
         "- Do not write the section heading. The assembler emits the exact "
         "plan title as an H2.",
         "- Start `markdown` with the section body. In-body subheadings are "
@@ -11063,6 +11083,459 @@ def assemble_iterative(
         "resources_yaml": yaml.safe_dump(resources, allow_unicode=True, sort_keys=False),
         "sidecar": sidecar,
     }
+
+
+ITERATIVE_SECTION_CORRECTION_RETRY_CAP = 2
+_ITERATIVE_WRITER_SIDECAR_NAME = "iterative_writer_sidecar.json"
+_GATE_LINE_LOCATION_KEYS = frozenset(
+    {
+        "line",
+        "line_number",
+        "lineno",
+        "line_start",
+        "line_end",
+        "start_line",
+        "end_line",
+    }
+)
+_GATE_LOCATION_TEXT_KEYS = frozenset({"anchor", "location", "where"})
+_GATE_LINE_LOCATION_RE = re.compile(
+    r"(?:\b(?:line|ln)\s*[:#]?\s*|:[ \t]*)(?P<line>[1-9]\d*)\b",
+    re.IGNORECASE,
+)
+
+
+def _coerce_positive_int(value: object) -> int | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value if value > 0 else None
+    if isinstance(value, str) and value.strip().isdigit():
+        number = int(value.strip())
+        return number if number > 0 else None
+    return None
+
+
+def _iterative_section_for_line(
+    sidecar: Mapping[str, Any],
+    line_number: int,
+) -> str | None:
+    for section_id, raw_entry in sorted(
+        sidecar.items(),
+        key=lambda item: _coerce_positive_int(
+            item[1].get("line_start") if isinstance(item[1], Mapping) else None
+        )
+        or 0,
+    ):
+        if not isinstance(raw_entry, Mapping):
+            continue
+        line_start = _coerce_positive_int(raw_entry.get("line_start"))
+        line_end = _coerce_positive_int(raw_entry.get("line_end"))
+        if line_start is None or line_end is None:
+            continue
+        if line_start <= line_number <= line_end:
+            return str(section_id)
+    return None
+
+
+def _line_numbers_from_location_text(text: str) -> list[int]:
+    numbers: list[int] = []
+    for match in _GATE_LINE_LOCATION_RE.finditer(text):
+        number = _coerce_positive_int(match.group("line"))
+        if number is not None:
+            numbers.append(number)
+    return numbers
+
+
+def _gate_line_numbers(value: object) -> list[int]:
+    numbers: list[int] = []
+
+    def visit(item: object, *, key_hint: str = "") -> None:
+        if isinstance(item, Mapping):
+            for key, nested_value in item.items():
+                key_text = str(key).strip().casefold()
+                if key_text in _GATE_LINE_LOCATION_KEYS or key_text.endswith("_line"):
+                    if isinstance(nested_value, Sequence) and not isinstance(
+                        nested_value,
+                        (str, bytes, bytearray),
+                    ):
+                        for candidate in nested_value:
+                            number = _coerce_positive_int(candidate)
+                            if number is not None:
+                                numbers.append(number)
+                    else:
+                        number = _coerce_positive_int(nested_value)
+                        if number is not None:
+                            numbers.append(number)
+                if key_text in _GATE_LOCATION_TEXT_KEYS and isinstance(nested_value, str):
+                    numbers.extend(_line_numbers_from_location_text(nested_value))
+                visit(nested_value, key_hint=key_text)
+            return
+        if isinstance(item, Sequence) and not isinstance(item, (str, bytes, bytearray)):
+            for nested_item in item:
+                visit(nested_item, key_hint=key_hint)
+            return
+        if key_hint in _GATE_LOCATION_TEXT_KEYS and isinstance(item, str):
+            numbers.extend(_line_numbers_from_location_text(item))
+
+    visit(value)
+    return [int(number) for number in _dedupe_preserve_order(numbers)]
+
+
+def _iterative_sections_for_gate_locations(
+    gate_report: Mapping[str, Any],
+    sidecar: Mapping[str, Any],
+) -> list[str]:
+    section_ids: list[str] = []
+    for line_number in _gate_line_numbers(gate_report):
+        section_id = _iterative_section_for_line(sidecar, line_number)
+        if section_id is not None:
+            section_ids.append(section_id)
+    return _dedupe_preserve_order(section_ids)
+
+
+def _section_word_targets(plan: Mapping[str, Any]) -> dict[str, int]:
+    return {
+        f"s{index}": _section_outline_word_budget(
+            entry,
+            _section_outline_title(entry, index),
+        )
+        for index, entry in enumerate(_section_outline_entries(plan), start=1)
+    }
+
+
+def _iterative_word_count_section_deficits(
+    plan: Mapping[str, Any],
+    artifacts: Sequence[SectionArtifact],
+) -> list[dict[str, Any]]:
+    targets = _section_word_targets(plan)
+    deficits: list[dict[str, Any]] = []
+    for artifact in artifacts:
+        target = targets.get(artifact.section_id)
+        if target is None:
+            continue
+        count = _word_count(_strip_comments(_strip_primary_reading_blocks(artifact.markdown)))
+        deficit = target - count
+        if deficit <= 0:
+            continue
+        deficits.append(
+            {
+                "section_id": artifact.section_id,
+                "count": count,
+                "target": target,
+                "deficit": deficit,
+            }
+        )
+    return sorted(deficits, key=lambda item: (-int(item["deficit"]), item["section_id"]))
+
+
+def _select_iterative_word_count_sections(
+    plan: Mapping[str, Any],
+    artifacts: Sequence[SectionArtifact],
+) -> list[str]:
+    return [item["section_id"] for item in _iterative_word_count_section_deficits(plan, artifacts)]
+
+
+def _sidecar_str_list(entry: Mapping[str, Any], key: str) -> list[str]:
+    value = entry.get(key, [])
+    if isinstance(value, str):
+        return [value] if value.strip() else []
+    if isinstance(value, Sequence) and not isinstance(value, (bytes, bytearray)):
+        return _dedupe_preserve_order(value)
+    return []
+
+
+def _current_vocab_candidates_by_surface(module_dir: Path) -> dict[str, dict[str, Any]]:
+    vocab_path = module_dir / "vocabulary.yaml"
+    if not vocab_path.exists():
+        return {}
+    candidates: dict[str, dict[str, Any]] = {}
+    for item in _load_yaml_list(vocab_path, "vocabulary"):
+        lemma = _vocab_item_lemma(item)
+        if not lemma:
+            continue
+        candidate = dict(item)
+        candidate.setdefault("word", lemma)
+        candidate.setdefault("definition", str(candidate.get("translation") or ""))
+        candidates[_vocab_lemma_key(lemma)] = candidate
+    return candidates
+
+
+def _section_vocab_candidates_from_sidecar(
+    module_dir: Path,
+    entry: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    candidates_by_surface = _current_vocab_candidates_by_surface(module_dir)
+    candidates: list[dict[str, Any]] = []
+    for surface in _sidecar_str_list(entry, "vocab_surfaces"):
+        candidate = candidates_by_surface.get(_vocab_lemma_key(surface))
+        if candidate is not None:
+            candidates.append(dict(candidate))
+    return candidates
+
+
+def _extract_iterative_artifacts_from_current_module(
+    *,
+    module_dir: Path,
+    plan: Mapping[str, Any],
+    sidecar: Mapping[str, Any],
+) -> list[SectionArtifact]:
+    module_lines = _read_required(module_dir / "module.md").splitlines()
+    artifacts: list[SectionArtifact] = []
+    for index, _entry in enumerate(_section_outline_entries(plan), start=1):
+        section_id = f"s{index}"
+        sidecar_entry = sidecar.get(section_id)
+        if not isinstance(sidecar_entry, Mapping):
+            raise LinearPipelineError(f"Missing iterative sidecar entry for {section_id}")
+        line_start = _coerce_positive_int(sidecar_entry.get("line_start"))
+        line_end = _coerce_positive_int(sidecar_entry.get("line_end"))
+        if line_start is None or line_end is None or line_end < line_start:
+            raise LinearPipelineError(f"Invalid iterative sidecar range for {section_id}")
+        section_lines = module_lines[line_start - 1 : line_end]
+        if section_lines and section_lines[0].lstrip().startswith("## "):
+            section_lines = section_lines[1:]
+        self_check = sidecar_entry.get("self_check", {})
+        artifacts.append(
+            SectionArtifact(
+                section_id=section_id,
+                markdown="\n".join(section_lines).strip("\n"),
+                citations_used=_sidecar_str_list(sidecar_entry, "citation_keys"),
+                primary_readings_used=_sidecar_str_list(sidecar_entry, "reading_ids"),
+                vocab_candidates=_section_vocab_candidates_from_sidecar(
+                    module_dir,
+                    sidecar_entry,
+                ),
+                activity_refs=_sidecar_str_list(sidecar_entry, "activity_ids"),
+                self_check=dict(self_check) if isinstance(self_check, Mapping) else {},
+            )
+        )
+    return artifacts
+
+
+def _load_iterative_sidecar(module_dir: Path) -> dict[str, Any]:
+    sidecar_path = module_dir / _ITERATIVE_WRITER_SIDECAR_NAME
+    if not sidecar_path.exists():
+        return {}
+    sidecar = json.loads(sidecar_path.read_text(encoding="utf-8"))
+    return dict(sidecar) if isinstance(sidecar, Mapping) else {}
+
+
+def _iterative_targeted_section_prompt(
+    *,
+    base_prompt: str,
+    gate: str,
+    gate_report: Mapping[str, Any],
+    section_id: str,
+    current_markdown: str,
+    current_count: int,
+    target_words: int,
+) -> str:
+    if gate == "word_count":
+        instruction = (
+            f"Expand this section to at least {target_words} words, preserving "
+            "meaning and structure. Keep existing grounded claims and add only "
+            "section-local elaboration needed to clear the floor."
+        )
+    else:
+        instruction = (
+            "Fix only the failed gate inside this section. Preserve the section's "
+            "meaning, structure, citations, vocabulary metadata, and activity refs."
+        )
+    correction_block = [
+        "",
+        "## Targeted Correction",
+        f"- gate: {gate}",
+        f"- section_id: {section_id}",
+        f"- current_section_words: {current_count}",
+        f"- target_section_words: {target_words}",
+        f"- instruction: {instruction}",
+        "- Return only this section's two fenced blocks. Do not regenerate any "
+        "other section.",
+        "",
+        "## Gate Diagnostic",
+        _prompt_dump(dict(gate_report)),
+        "",
+        "## Current Section Markdown",
+        "```markdown",
+        current_markdown.strip(),
+        "```",
+    ]
+    return base_prompt.rstrip() + "\n" + "\n".join(correction_block).rstrip() + "\n"
+
+
+def _invoke_iterative_targeted_section_writer(
+    *,
+    prompt: str,
+    task: SectionTask,
+    module_dir: Path,
+    writer: str,
+    invoker: Callable[..., Any] | None,
+    invoke_fn: Callable[..., str] | None,
+) -> SectionArtifact:
+    if invoke_fn is None:
+        output = invoke_writer(
+            prompt,
+            writer=writer,
+            cwd=module_dir,
+            invoker=invoker,
+            sections=[task.section_id],
+        )
+    else:
+        output = invoke_fn(prompt, writer, cwd=module_dir, sections=[task.section_id])
+    return _record_section_precheck(task, parse_section_writer_output(str(output), task))
+
+
+def _apply_iterative_targeted_section_correction(
+    gate: str,
+    qg_report: Mapping[str, Any],
+    *,
+    module_dir: Path,
+    plan_path: Path,
+    writer: str,
+    invoker: Callable[..., Any] | None = None,
+    invoke_fn: Callable[..., str] | None = None,
+    section_attempts: dict[str, int] | None = None,
+    max_attempts_per_section: int = ITERATIVE_SECTION_CORRECTION_RETRY_CAP,
+) -> tuple[bool, frozenset[str], dict[str, Any]]:
+    sidecar = _load_iterative_sidecar(module_dir)
+    if not sidecar:
+        return False, frozenset(), {"reason": "missing_iterative_sidecar"}
+    gates = qg_report.get("gates")
+    if not isinstance(gates, Mapping):
+        return False, frozenset(), {"reason": "missing gates mapping"}
+    gate_report = gates.get(gate)
+    if not isinstance(gate_report, Mapping):
+        return False, frozenset(), {"reason": "missing gate report"}
+
+    plan = plan_check(plan_path)
+    artifacts = _extract_iterative_artifacts_from_current_module(
+        module_dir=module_dir,
+        plan=plan,
+        sidecar=sidecar,
+    )
+    if gate == "word_count":
+        section_ids = _select_iterative_word_count_sections(plan, artifacts)
+        selection_reason = "word_count_deficit"
+    else:
+        section_ids = _iterative_sections_for_gate_locations(gate_report, sidecar)
+        selection_reason = "line_location"
+    if not section_ids:
+        return (
+            False,
+            frozenset(),
+            {
+                "kind": "iterative_targeted_section",
+                "gate": gate,
+                "reason": "no_target_sections",
+                "selection_reason": selection_reason,
+            },
+        )
+
+    attempts = section_attempts if section_attempts is not None else {}
+    eligible_section_ids = [
+        section_id
+        for section_id in section_ids
+        if attempts.get(section_id, 0) < max_attempts_per_section
+    ]
+    if not eligible_section_ids:
+        return (
+            False,
+            frozenset(),
+            {
+                "kind": "iterative_targeted_section",
+                "gate": gate,
+                "reason": "retry_cap_reached",
+                "selected_section_ids": section_ids,
+                "max_attempts_per_section": max_attempts_per_section,
+            },
+        )
+
+    tasks = build_section_tasks(plan, "", [], framing_rules="")
+    tasks_by_id = {task.section_id: task for task in tasks}
+    artifacts_by_id = {artifact.section_id: artifact for artifact in artifacts}
+    targets = _section_word_targets(plan)
+    replacement_records: list[dict[str, Any]] = []
+
+    for section_id in eligible_section_ids:
+        task = tasks_by_id.get(section_id)
+        artifact = artifacts_by_id.get(section_id)
+        if task is None or artifact is None:
+            continue
+        current_count = _word_count(
+            _strip_comments(_strip_primary_reading_blocks(artifact.markdown))
+        )
+        target_words = targets.get(section_id, task.word_budget)
+        base_prompt = render_section_writer_prompt(
+            plan=plan,
+            task=task,
+            knowledge_packet="",
+            readings=[],
+            writer=writer,
+        )
+        prompt = _iterative_targeted_section_prompt(
+            base_prompt=base_prompt,
+            gate=gate,
+            gate_report=gate_report,
+            section_id=section_id,
+            current_markdown=artifact.markdown,
+            current_count=current_count,
+            target_words=target_words,
+        )
+        replacement = _invoke_iterative_targeted_section_writer(
+            prompt=prompt,
+            task=task,
+            module_dir=module_dir,
+            writer=writer,
+            invoker=invoker,
+            invoke_fn=invoke_fn,
+        )
+        artifacts_by_id[section_id] = replacement
+        attempts[section_id] = attempts.get(section_id, 0) + 1
+        replacement_records.append(
+            {
+                "section_id": section_id,
+                "attempt": attempts[section_id],
+                "current_count": current_count,
+                "target": target_words,
+            }
+        )
+
+    if not replacement_records:
+        return (
+            False,
+            frozenset(),
+            {
+                "kind": "iterative_targeted_section",
+                "gate": gate,
+                "reason": "no_replacements",
+                "selected_section_ids": eligible_section_ids,
+            },
+        )
+
+    updated_artifacts = _artifact_by_plan_order(list(artifacts_by_id.values()), plan)
+    activities_path = module_dir / "activities.yaml"
+    activities = _load_bare_activity_list(activities_path) if activities_path.exists() else None
+    result = assemble_iterative(updated_artifacts, plan, activities=activities)
+    write_writer_artifacts(module_dir, iterative_result_to_writer_artifacts(result))
+    write_json(module_dir / _ITERATIVE_WRITER_SIDECAR_NAME, result["sidecar"])
+    return (
+        True,
+        frozenset(),
+        {
+            "kind": "iterative_targeted_section",
+            "gate": gate,
+            "selection_reason": selection_reason,
+            "selected_section_ids": eligible_section_ids,
+            "replacements": replacement_records,
+            "retry_cap": max_attempts_per_section,
+        },
+    )
+
+
+def _should_attempt_iterative_targeted_correction(gate: str, module_dir: Path) -> bool:
+    if gate not in WRITER_CORRECTION_GATES or gate == "activity_schema":
+        return False
+    return (module_dir / _ITERATIVE_WRITER_SIDECAR_NAME).exists()
 
 
 _A1_M1_M7_SECTION_ALIASES = {
