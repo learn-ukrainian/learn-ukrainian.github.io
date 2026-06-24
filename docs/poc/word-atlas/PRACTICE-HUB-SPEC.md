@@ -1,43 +1,56 @@
 # Atlas Practice Hub — production spec (build target for PR #3777)
 
-> The PoC `practice-hub.html` (this folder) is the **interaction source-of-truth**. The production
-> React components must match the answer model + variety behaviours specified here. Verified design
-> decisions from the user, 2026-06-24.
+> The PoC `practice-hub.html` (this folder) is the **interaction source-of-truth**. The production React
+> components must match the answer model + variety behaviours here. Design locked with the user 2026-06-24,
+> then **revised against a 3-agent fleet review (codex / agy / cursor)** — their corrections are folded in
+> and marked ⟦fleet⟧.
 
-## 0. Headline requirement — the session must FEEL varied
+## 0. Headline requirement — the session must FEEL varied, WITHOUT fighting the scheduler
 
-The single most important UX property: **learners must feel the tasks keep changing — never "the same
-kind repeating."** Every selection decision below (mode, word, case, sentence, options) routes through one
-**anti-monotony selector** that biases AWAY from whatever was shown recently. Monotony is a bug, not a
-polish item. Concrete, testable rules are in §6.
+Learners must feel the tasks keep changing — never "the same kind repeating." BUT ⟦fleet: all 3⟧ variety is
+**secondary to spaced-repetition scheduling**. The anti-monotony selector reorders and decorates; it must
+never delay a due card or block re-showing a just-failed (lapsed) one. Precedence and the testable rules are
+in §6.
 
 ## 1. Architecture — static, build-time, no backend
 
-GitHub Pages is static; there is no server to generate exercises at runtime, and we must **not** invent or
-template sentences in the browser (quality bar: no unvetted content). The pattern: **move generation to
-build time → static JSON; assemble exercises client-side.**
+GitHub Pages is static; no server generates exercises at runtime, and we must not invent/template sentences
+in the browser (quality bar). Pattern: **move generation to build time → static JSON; assemble client-side.**
 
-- **One prebuilt practice pool**, segmented by CEFR level (`practice-deck.A1.json`, `.A2.json`, …) for
-  lazy-loading. Not per-user, not per-session — one pool per level.
-- **Per-session variety + scheduling is client-side**: `ts-fsrs` (FSRS-6) over the pool + `localStorage`
-  state. One pool → endless varied sessions, zero backend.
-- Deck size: a bounded enriched subset (far smaller than the 39 MB manifest). Lazy-load the active level.
+- **One prebuilt practice pool, CEFR-level-segmented** (`practice-*.A1.json`, …), lazy-loaded.
+- ⟦fleet codex/cursor⟧ **Shard the deck** so cloze content isn't paid for unless used:
+  `practice-index.{lvl}.json` (ids + scheduling metadata), `practice-lexemes.{lvl}.json` (gloss/ipa/paradigm),
+  `practice-cloze.{lvl}.json` (sentences). Load cloze only when cloze is enabled. **CI raw+gzip size budget
+  per file per level.**
+- **Scheduling state is client-side**: `ts-fsrs` (FSRS-6) + `localStorage`. ⟦fleet codex⟧ The **FSRS card unit
+  is `lemmaId + mode`** (NOT per sentence/case) — compact deltas keyed by stable ids + `deckVersion`
+  invalidation; move to **IndexedDB** if state can exceed a few MB.
+- ⟦fleet codex⟧ **Deterministic build**: seeded RNG per `deckVersion`; deterministic ordering; snapshot tests
+  for representative entries; schema validator. No unseeded randomness in deck generation.
 
-## 2. Deck schema (per entry) and where each field is sourced
+## 2. Deck schema + field sourcing
 
 | Field | Source |
 |---|---|
-| `lemma`, `lemmaPlain`, `ipa`, `gloss`, `pos`, `cefr`, `heritage`/`severity` | manifest enrichment |
+| `lemmaId`, `lemma`, `lemmaPlain`, `ipa`, `gloss`, `pos`, `cefr`, `heritage`/`severity` | manifest enrichment |
 | `paradigm.cases.<відмінок>.{singular,plural}` | manifest `enrichment.morphology.paradigm` |
-| `cloze: [{ sentence, blankCase, form, caseRule, clozeEn }]` | `sentence`/`clozeEn` from **reviewed curriculum-module vocab cards**; `form` + `blankCase` from the paradigm; `caseRule` from a small curated case→trigger map |
+| `cloze: [{ clozeId, sentenceFrameId, sentence, blankCase, form, caseRule, clozeEn }]` | sentence from **reviewed module vocab cards**; `form`+`blankCase` from paradigm; `caseRule` from a curated case→trigger map |
 
 - **Eligibility**: `is_practice_eligible` (gloss + CEFR/course anchor, no derived forms, no surzhyk) —
-  already in `scripts/audit/lexeme_filter.py`.
-- **Cloze is the only authored-content mode.** A word gets cloze items only if it has ≥1 **vetted** sentence
-  from real content. The generator **skips** (never invents) when no vetted sentence exists.
-- `form` is ALWAYS an oblique (declined) case form — the slot must never be answered by the bare lemma.
+  `scripts/audit/lexeme_filter.py`.
+- ⟦fleet codex⟧ **Stable ids**: `clozeId` + `sentenceFrameId` assigned at build time. The variety selector
+  tracks IDs, never sentence strings (text edits must not break "don't repeat a frame").
+- ⟦fleet codex⟧ **Reviewed-source allowlist, fail-closed**: the generator only ingests a vocab card whose
+  provenance is in an explicit reviewed-status/path allowlist; missing provenance → skip (never emit).
+- ⟦fleet codex⟧ **VESUM ambiguity**: store morphology metadata; if a target `form` is valid for multiple
+  cases/lemmas (non-discriminative), either give ambiguity-aware feedback or **skip that cloze item**.
+- ⟦fleet agy⟧ **CEFR-appropriate sentences (A1/A2)**: prototypical, transparent case triggers only.
+  Accusative direct object («Я бачу брата»), Locative static position («Вона у школі»). **Avoid** partitive
+  genitive / complex quantifiers («буханець хліба» = B1+) and **lexicalised chunks** (fixed greetings like
+  «доброго ранку» — retrieved whole, not via grammar, so worthless as case practice). Sentence level ≤ word
+  level.
 
-## 3. Exercise modes and their data needs
+## 3. Exercise modes + data needs
 
 | Mode | Needs | Coverage |
 |---|---|---|
@@ -46,73 +59,102 @@ build time → static JSON; assemble exercises client-side.**
 | Choice (meaning MC) | lemma + gloss | every eligible word (free) |
 | **Cloze** | sentence + `blankCase` + `form` + `caseRule` | only words with a vetted sentence |
 
-Recognition modes scale to the whole lexicon at zero authoring cost. Cloze is gated on sentence content.
+⟦fleet cursor⟧ **Cloze is scarce** (most words are recognition-only) → it has its own `clozeDue` sub-queue and
+is **capped at ≤25% of a session** (unless the learner opts into a "grammar focus"). Build emits
+`clozeCoverage` per level; **CI warns if an A1 deck is <10% cloze-eligible.**
 
-## 4. Cloze answer model (case-demanding) — from the PoC, locked
+## 4. Cloze answer model (case-demanding, SCAFFOLDED) — revised ⟦fleet all 3⟧
 
-1. **Demand the declined `form`.** The bare lemma is **never** accepted — typed OR clicked.
-2. A wrong-case answer → **teaching message**, not a silent pass, and **not scored**:
-   `«✕ Правильне слово, але інший відмінок — тут «роботу» (на → знахідний).»` (`caseRule` supplies the «(…)»).
-3. **Typo / stress tolerant, case strict.** Normalise both sides: lowercase (uk), strip combining stress
-   `́`, normalise apostrophes. The CASE is the learning target, so it is never forgiven.
-4. Wrong *word* (a distractor) → retry on typed input; reveal + mark on chip click.
-5. On resolve, fill the blank with the correct `form` and show the case name.
+The cloze still **demands the correct case form; the bare lemma is never the final accepted answer.** But it
+is **not a flat "wrong"** — that demotivates A1/A2 learners (conflates *knowing the word* with *knowing the
+morphology*) and, if unscored, is an SRS loophole. Three states:
 
-(Reference impl: PoC `czNorm` / `answerCloze`.)
+| State | Visual | Scored? | Advance? | Copy |
+|---|---|---|---|---|
+| **Correct** (the `form`) | green | ✓ pass | yes | `✓ … (знахідний відмінок)` |
+| **Wrong case** (the lemma, or any non-target case of the right word) | **amber** `role="status"` | **counts as a CASE-MISS in SRS** (card returns sooner / lower ease) — NOT a free retry | **no** — blank stays empty, chips re-enabled | `✓ Правильне слово! Тепер постав його у [місцевий]: …` + the §4a rule |
+| **Wrong word** (a distractor) | red | fail (SRS) | after resolve (typed → retry; chip → reveal) | `✗ Не те слово` |
 
-## 5. Cloze option generation (anti-gaming) — from the PoC, locked
+- ⟦fleet agy⟧ **Gate cloze behind recognition mastery**: a word enters cloze only after it reaches a baseline
+  FSRS stability in flashcards/matching. No case-production on day-one vocab.
+- **Typo/stress tolerant, case strict** (`czNorm`): forgive a missing stress mark or apostrophe variant; never
+  forgive the case.
 
-If the answer is always the only `lemma + declined` pair among the options, a learner games it by shape
-(pick the oblique member of the single pair) without knowing the word or the case. **Never present exactly
-one same-root pair.** Randomise composition:
+### 4a. Case-rule feedback — revised ⟦fleet agy⟧
 
-- **~55% two-pair**: answer (`form`) + its own lemma (wrong-case distractor) + a **decoy word in BOTH forms**
-  (lemma + a declined form). Two pairs → shape reveals nothing; the decoy's declined form is a trap.
-- **~45% no-pair**: answer + 3 distinct distractor words, each shown as **either** its lemma **or** a
-  declined form (random). Zero pairs.
+Naming the case is not enough and can be wrong: «на/в» trigger **both** accusative (motion) **and** locative
+(position). Feedback must **disambiguate the trigger and show the inflection**:
+`на (напрямок) → знахідний (робот**а** → робот**у**)`. The curated case→trigger map supplies the
+disambiguated trigger gloss + the lemma→form delta per item.
 
-Distractors are drawn from (a) the same word's other cases and (b) other words' mixed forms. (Reference
-impl: PoC `nextCloze` option builder. Verified over 300 draws: answer always present; ~55/45; no lone pair.)
+## 5. Cloze option generation (anti-gaming) — strengthened ⟦fleet codex/cursor⟧
 
-## 6. VARIETY — first-class, testable (the headline requirement)
+Never let the option *shape* reveal the answer. The user's case-contrast requirement (show робота **and**
+роботу so the learner discriminates the case) is kept — but hardened against tells:
 
-All item selection flows through one **anti-monotony selector** that tracks a sliding window of the last
-`K` items (`{mode, word, case, sentenceFrame}`) and biases selection away from recent values. Requirements:
+- The lemma stays an option (the case contrast the user asked for); clicking it triggers the **scaffold**
+  (§4), not a fail.
+- ⟦fleet codex⟧ **≥2–3 oblique-looking forms per set** so "the oblique one is the answer" is not a tell.
+- Modes (never exactly one same-root pair): ~two same-root pairs (answer's + a decoy word's, both declined =
+  trap) / ~no pair (answer among mixed lemma|declined distractors). ⟦fleet cursor⟧ **CEFR-ramp the mix**:
+  A1 ≈ 70% no-pair / 30% two-pair → 55/45 by B1.
+- ⟦fleet codex⟧ **Randomise the answer's length/position** so neither betrays it.
+- ⟦fleet codex⟧ **Build-time/test-time option-set VALIDATOR** for every generated set: unique normalised
+  labels; answer present exactly once; no accepted alternate equals a distractor; ≥ min oblique distractors;
+  no fixed answer position; option lengths within a bounded distribution; no homograph/answer-equivalent leak.
+- ⟦fleet codex⟧ **Distractor buckets** (testable, not "near/far"): same POS; mixed semantic-bucket ratio;
+  avoid sharing the answer's English gloss headword.
 
-- **a. Mode rotation.** Never serve the same exercise mode more than **twice consecutively**; interleave
-  flashcards / matching / choice / cloze (+ future modes). Weighted by SRS need, but immediate-repeat-capped.
-- **b. Word anti-repeat + SRS.** Never the same word within the last `K` items (`K ≥ 8`); `ts-fsrs`
-  due-ordering over the full pool gives natural spacing; a large pool means words don't recycle fast.
-- **c. Case variety (cloze).** Rotate the grammatical case tested (знах./род./дав./місц./оруд.). The last
-  8 cloze items must cover **≥3 distinct cases**; prefer under-used cases for the current word.
-- **d. Sentence variety.** Multiple sentence frames per case; if a word has >1 vetted sentence, rotate them;
-  never show the same sentence frame back-to-back.
-- **e. Option-composition variety (cloze).** The two-pair / no-pair modes (§5) also serve variety — they
-  must alternate, not settle into one shape.
-- **f. Distractor variety.** Vary which words are distractors across items; mix near (same semantic field)
-  and far distractors so the wrong options aren't predictable.
-- **g. Within-mode variety.** Flashcards alternate recall direction (UK→meaning / meaning→UK); Choice
-  alternates «що означає X?» vs «яке слово означає Y?»; Matching varies set membership each round.
+## 6. VARIETY — first-class, SRS-subordinate, testable — revised ⟦fleet all 3⟧
 
-**Anti-monotony as a test**: a unit test drives ~50 selections and asserts (no mode 3× in a row; no word
-within K; ≥3 cases per 8 cloze; sentence frame never immediately repeats). Monotony failing the test = build
-red, same as any other gate.
+One **selector** produces the next item. **Precedence (merge order)** ⟦fleet codex/cursor⟧:
+
+1. Build the **due/lapsed candidate set** from FSRS (lapsed items are highest urgency).
+2. Drop only **hard** variety violations (e.g. exact item just shown).
+3. Rank remaining by **FSRS urgency**.
+4. Apply soft anti-monotony as a **penalty score** (not a filter) to break ties / reorder near-equal-urgency
+   candidates.
+5. ⟦fleet codex/agy⟧ If too few candidates remain, **widen the due window / relax word-spacing BEFORE**
+   pulling not-due cards; **lapsed items are EXEMPT from the word-anti-repeat** (re-expose immediately).
+
+Soft variety levers (penalty score, never override scheduling):
+- ⟦fleet cursor⟧ **Mode**: forbid the same mode in the **last 3**; **per-mode debt counters** so cloze/choice
+  don't vanish behind flashcard due-volume; ⟦fleet cursor⟧ **session bootstrap** — first ~8–12 items include
+  each available mode at least once.
+- ⟦fleet agy⟧ **Sequence by mastery, not random rotation**: a word moves recognition→production by its own
+  FSRS stability.
+- **Case (cloze)**: ⟦fleet codex⟧ *conditional* invariant — *if* ≥3 cases are eligible in the candidate pool,
+  the last 8 cloze items must cover ≥3; else assert max-available coverage.
+- **Sentence / distractors**: rotate `sentenceFrameId`s and distractor sets; never repeat a frame back-to-back.
+- ⟦fleet cursor⟧ **Perceptual variety**: track `recallDirection` (UK→meaning / meaning→UK) and choice polarity
+  («що означає X?» / «яке слово означає Y?») so the *felt* shape changes, not just metadata.
+
+**Tests**: drive ~50 selections and assert the precedence (due/lapsed never starved; lapsed exempt from
+anti-repeat), the soft rules (no mode in last 3; conditional case coverage; no frame immediate-repeat;
+perceptual rotation), and the §5 option-validator. Violations = build red.
 
 ## 7. Quality / verification gates
 
-- **All forms VESUM-verified at build time.** The generator emits a `form` only if VESUM confirms it for the
-  lemma+case; otherwise skip that cloze item.
-- **Sentences from reviewed content only** — no invention, no runtime templating. Generator **fails closed**.
-- Reuse the existing gates: `check_atlas_manifest_enrichment`, manifest freshness, render-verify.
-- The deck generator (`scripts/audit/generate_practice_deck.py`) is the build-time owner of all of the above.
+- All forms **VESUM-verified at build time** (skip non-discriminative/ambiguous forms — §2).
+- **Sentences from reviewed content only** (allowlist, fail-closed) — no invention, no runtime templating.
+- **Option-set validator** (§5) + **seeded-RNG snapshot tests** (§1) + **`clozeCoverage` gate** (§3) + **deck
+  size budgets** (§1).
+- Reuse: `check_atlas_manifest_enrichment`, manifest freshness, render-verify.
 
-## 8. What to change in the current PR #3777 artifacts
+## 8. What to change in PR #3777 artifacts
 
-- `generate_practice_deck.py`: emit the §2 schema incl. `cloze[]` (sentence+blankCase+form+caseRule) sourced
-  from module vocab cards + paradigm; VESUM-gate every form; segment output per CEFR level; **replace the
-  empty placeholder deck**.
-- `srs.ts`: keep; it's the per-word scheduler. Add the §6 anti-monotony selector as a sibling that consumes
-  the SRS due-queue but enforces mode/case/word/sentence spacing.
-- `LexiconPractice.tsx`: cloze component implements §4 (case-strict, teaching feedback, typo-tolerant) and §5
-  (anti-gaming options); all modes pull their next item from the anti-monotony selector, not a raw shuffle.
-- `correctLabel`/count displays already use `uaPlural` — keep (locked principle).
+- `generate_practice_deck.py`: emit the §2 schema (sharded index/lexemes/cloze; stable `clozeId`/
+  `sentenceFrameId`; reviewed-source allowlist fail-closed; VESUM-gate + ambiguity skip; CEFR-appropriate
+  sentence selection); seeded RNG; size budgets; **replace the empty placeholder deck**.
+- `srs.ts`: FSRS card = `lemmaId+mode`; add the §6 selector (precedence + lapse-exemption + per-mode debt +
+  cloze ≤25% sub-queue) consuming the due-queue.
+- `LexiconPractice.tsx` / cloze component: §4 three-state scaffolded model (correct / amber case-miss /
+  red wrong-word; case-miss costs SRS, blank stays open, chips re-enabled); §4a disambiguated case-rule
+  feedback; §5 anti-gaming + validator; recognition-mastery gate before a word enters cloze. All modes pull
+  the next item from the §6 selector, not a raw shuffle.
+- Counts use `uaPlural` (locked).
+
+---
+*Revision log: v1 (design locked with user) → v2 (this) folds in the codex/agy/cursor fleet review of
+2026-06-24. v2 must itself pass a fleet re-review before #3777 build kickoff (per infra-orchestrator
+mandatory fleet-gate).*
