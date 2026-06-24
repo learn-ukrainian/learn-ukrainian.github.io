@@ -43,7 +43,7 @@ in the browser (quality bar). Pattern: **move generation to build time → stati
 - ⟦fleet codex⟧ **Reviewed-source allowlist, fail-closed**: the generator only ingests a vocab card whose
   provenance is in an explicit reviewed-status/path allowlist; missing provenance → skip (never emit).
 - ⟦fleet codex⟧ **VESUM ambiguity**: store morphology metadata; if a target `form` is valid for multiple
-  cases/lemmas (non-discriminative), either give ambiguity-aware feedback or **skip that cloze item**.
+  cases/lemmas (non-discriminative), **skip that cloze item (fail-closed)** — for case-demanding cloze a non-discriminative target form is unusable (consistent with §7).
 - ⟦fleet agy⟧ **CEFR-appropriate sentences (A1/A2)**: prototypical, transparent case triggers only.
   Accusative direct object («Я бачу брата»), Locative static position («Вона у школі»). **Avoid** partitive
   genitive / complex quantifiers («буханець хліба» = B1+) and **lexicalised chunks** (fixed greetings like
@@ -60,7 +60,7 @@ in the browser (quality bar). Pattern: **move generation to build time → stati
 | **Cloze** | sentence + `blankCase` + `form` + `caseRule` | only words with a vetted sentence |
 
 ⟦fleet cursor⟧ **Cloze is scarce** (most words are recognition-only) → it has its own `clozeDue` sub-queue and
-is **capped at ≤25% of a session** (unless the learner opts into a "grammar focus"). Build emits
+is **soft-capped at ~25% of a session** (a weighting guideline, not a hard ceiling — ⟦fleet codex⟧ **lapsed / urgent-due cloze is EXEMPT** so the scheduler is never starved; unless the learner opts into a "grammar focus"). Build emits
 `clozeCoverage` per level; **CI warns if an A1 deck is <10% cloze-eligible.**
 
 ## 4. Cloze answer model (case-demanding, SCAFFOLDED) — revised ⟦fleet all 3⟧
@@ -79,6 +79,9 @@ morphology*) and, if unscored, is an SRS loophole. Three states:
   FSRS stability in flashcards/matching. No case-production on day-one vocab.
 - **Typo/stress tolerant, case strict** (`czNorm`): forgive a missing stress mark or apostrophe variant; never
   forgive the case.
+- ⟦fleet codex⟧ **One grade per presentation**: the SRS outcome is set by the **first** attempt. A wrong-case
+  first attempt records the case-miss; the subsequent scaffolded correction advances the UI but does **not**
+  also record a pass for that same presentation.
 
 ### 4a. Case-rule feedback — revised ⟦fleet agy⟧
 
@@ -110,7 +113,8 @@ Never let the option *shape* reveal the answer. The user's case-contrast require
 One **selector** produces the next item. **Precedence (merge order)** ⟦fleet codex/cursor⟧:
 
 1. Build the **due/lapsed candidate set** from FSRS (lapsed items are highest urgency).
-2. Drop only **hard** variety violations (e.g. exact item just shown).
+2. Drop only **hard** variety violations (e.g. the exact item just shown). ⟦fleet codex⟧ **Lapsed cards are
+   EXEMPT** from this and from word-spacing drops — re-expose them immediately.
 3. Rank remaining by **FSRS urgency**.
 4. Apply soft anti-monotony as a **penalty score** (not a filter) to break ties / reorder near-equal-urgency
    candidates.
@@ -118,7 +122,8 @@ One **selector** produces the next item. **Precedence (merge order)** ⟦fleet c
    pulling not-due cards; **lapsed items are EXEMPT from the word-anti-repeat** (re-expose immediately).
 
 Soft variety levers (penalty score, never override scheduling):
-- ⟦fleet cursor⟧ **Mode**: forbid the same mode in the **last 3**; **per-mode debt counters** so cloze/choice
+- ⟦fleet cursor/codex⟧ **Mode**: a **penalty** (not a hard ban) discouraging the same mode within the last 3,
+  **overridden by due/lapsed pressure**; **per-mode debt counters** so cloze/choice
   don't vanish behind flashcard due-volume; ⟦fleet cursor⟧ **session bootstrap** — first ~8–12 items include
   each available mode at least once.
 - ⟦fleet agy⟧ **Sequence by mastery, not random rotation**: a word moves recognition→production by its own
@@ -129,9 +134,10 @@ Soft variety levers (penalty score, never override scheduling):
 - ⟦fleet cursor⟧ **Perceptual variety**: track `recallDirection` (UK→meaning / meaning→UK) and choice polarity
   («що означає X?» / «яке слово означає Y?») so the *felt* shape changes, not just metadata.
 
-**Tests**: drive ~50 selections and assert the precedence (due/lapsed never starved; lapsed exempt from
-anti-repeat), the soft rules (no mode in last 3; conditional case coverage; no frame immediate-repeat;
-perceptual rotation), and the §5 option-validator. Violations = build red.
+**Tests**: drive ~50 selections and assert the **precedence** (due/lapsed never starved; lapsed exempt from
+exact-item / word-spacing / mode drops), and that the **soft** rules apply only when they do NOT starve
+scheduling (mode-penalty respected absent due pressure; conditional case coverage; no frame immediate-repeat;
+perceptual rotation), plus the §5 option-validator. Violations = build red.
 
 ## 7. Quality / verification gates
 
@@ -156,5 +162,5 @@ perceptual rotation), and the §5 option-validator. Violations = build red.
 
 ---
 *Revision log: v1 (design locked with user) → v2 (this) folds in the codex/agy/cursor fleet review of
-2026-06-24. v2 must itself pass a fleet re-review before #3777 build kickoff (per infra-orchestrator
+2026-06-24. v3 applies the codex re-review (5 consistency fixes: hard rules → SRS-subordinate). Must pass a fleet re-review before #3777 build kickoff (per infra-orchestrator
 mandatory fleet-gate).*
