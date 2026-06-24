@@ -1,0 +1,15 @@
+{
+  "cloze": [],
+  "deckVersion": "atlas-practice-v1-622fc3d93d1ad580",
+  "level": "B2",
+  "schema": "atlas-practice-cloze",
+  "schemaVersion": 1,
+  "sizeBudget": {
+    "gzipBytes": 136,
+    "gzipLimitBytes": 140000,
+    "ok": true,
+    "rawBytes": 172,
+    "rawLimitBytes": 550000
+  },
+  "source": "manifest"
+}

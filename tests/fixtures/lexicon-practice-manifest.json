@@ -1,0 +1,267 @@
+{
+  "entries": [
+    {
+      "lemma": "книга",
+      "url_slug": "knyha",
+      "gloss": "book",
+      "pos": "noun",
+      "primary_source": "course_vocab",
+      "semantic_bucket": "objects",
+      "course_usage": [
+        {
+          "track": "a1",
+          "slug": "reading"
+        }
+      ],
+      "enrichment": {
+        "cefr": {
+          "level": "A1"
+        },
+        "ipa": "ˈknɪɦɐ",
+        "heritage": "inherited",
+        "severity": "standard",
+        "morphology": {
+          "paradigm": {
+            "cases": {
+              "nominative": {
+                "singular": "книга",
+                "plural": "книги"
+              },
+              "accusative": {
+                "singular": "книгу",
+                "plural": "книги"
+              },
+              "locative": {
+                "singular": "книзі",
+                "plural": "книгах"
+              }
+            }
+          }
+        },
+        "practice": {
+          "cloze": [
+            {
+              "sentence": "Я читаю ___.",
+              "clozeEn": "I am reading a book.",
+              "blankCase": "accusative",
+              "caseRuleId": "accusative_direct_object",
+              "number": "singular",
+              "cefr": "A1",
+              "provenance": {
+                "status": "reviewed",
+                "path": "curriculum/l2-uk-en/a1/vocabulary/reading.yaml",
+                "cardId": "reading-knyha-1"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "lemma": "місто",
+      "url_slug": "misto",
+      "gloss": "city",
+      "pos": "noun",
+      "primary_source": "course_vocab",
+      "semantic_bucket": "places",
+      "course_usage": [
+        {
+          "track": "a1",
+          "slug": "places"
+        }
+      ],
+      "enrichment": {
+        "cefr": {
+          "level": "A1"
+        },
+        "ipa": "ˈmisto",
+        "heritage": "inherited",
+        "severity": "standard",
+        "morphology": {
+          "paradigm": {
+            "cases": {
+              "nominative": {
+                "singular": "місто",
+                "plural": "міста"
+              },
+              "accusative": {
+                "singular": "місто",
+                "plural": "міста"
+              },
+              "locative": {
+                "singular": "місті",
+                "plural": "містах"
+              }
+            }
+          }
+        },
+        "practice": {
+          "cloze": [
+            {
+              "sentence": "Вона у ___.",
+              "clozeEn": "She is in the city.",
+              "blankCase": "locative",
+              "caseRuleId": "locative_static_u",
+              "number": "singular",
+              "cefr": "A1",
+              "provenance": {
+                "status": "reviewed",
+                "path": "curriculum/l2-uk-en/a1/vocabulary/places.yaml",
+                "cardId": "places-misto-1"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "lemma": "робота",
+      "url_slug": "robota",
+      "gloss": "work",
+      "pos": "noun",
+      "primary_source": "course_vocab",
+      "semantic_bucket": "daily-life",
+      "course_usage": [
+        {
+          "track": "a1",
+          "slug": "work"
+        }
+      ],
+      "enrichment": {
+        "cefr": {
+          "level": "A1"
+        },
+        "ipa": "rɔˈbɔtɐ",
+        "heritage": "inherited",
+        "severity": "standard",
+        "morphology": {
+          "paradigm": {
+            "cases": {
+              "nominative": {
+                "singular": "робота",
+                "plural": "роботи"
+              },
+              "accusative": {
+                "singular": "роботу",
+                "plural": "роботи"
+              },
+              "locative": {
+                "singular": "роботі",
+                "plural": "роботах"
+              }
+            }
+          }
+        },
+        "practice": {
+          "cloze": [
+            {
+              "sentence": "Я бачу ___.",
+              "clozeEn": "I see work.",
+              "blankCase": "accusative",
+              "caseRuleId": "accusative_direct_object",
+              "number": "singular",
+              "cefr": "A1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "lemma": "школа",
+      "url_slug": "shkola",
+      "gloss": "school",
+      "pos": "noun",
+      "primary_source": "course_vocab",
+      "semantic_bucket": "places",
+      "course_usage": [
+        {
+          "track": "a1",
+          "slug": "school"
+        }
+      ],
+      "enrichment": {
+        "cefr": {
+          "level": "A1"
+        },
+        "ipa": "ˈʃkɔlɐ",
+        "heritage": "borrowed",
+        "severity": "standard",
+        "morphology": {
+          "paradigm": {
+            "cases": {
+              "nominative": {
+                "singular": "школа",
+                "plural": "школи"
+              },
+              "accusative": {
+                "singular": "школу",
+                "plural": "школи"
+              },
+              "locative": {
+                "singular": "школі",
+                "plural": "школах"
+              }
+            }
+          }
+        },
+        "practice": {
+          "cloze": [
+            {
+              "sentence": "Вона у ___.",
+              "clozeEn": "She is at school.",
+              "blankCase": "locative",
+              "caseRuleId": "locative_static_u",
+              "number": "singular",
+              "cefr": "A1",
+              "provenance": {
+                "status": "reviewed",
+                "path": "curriculum/l2-uk-en/a1/vocabulary/school.yaml",
+                "cardId": "school-shkola-1"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "lemma": "яблуко",
+      "url_slug": "yabluko",
+      "gloss": "apple",
+      "pos": "noun",
+      "primary_source": "course_vocab",
+      "semantic_bucket": "food",
+      "course_usage": [
+        {
+          "track": "a1",
+          "slug": "food"
+        }
+      ],
+      "enrichment": {
+        "cefr": {
+          "level": "A1"
+        },
+        "ipa": "ˈjɑblʊkɔ",
+        "heritage": "inherited",
+        "severity": "standard",
+        "morphology": {
+          "paradigm": {
+            "cases": {
+              "nominative": {
+                "singular": "яблуко",
+                "plural": "яблука"
+              },
+              "accusative": {
+                "singular": "яблуко",
+                "plural": "яблука"
+              },
+              "locative": {
+                "singular": "яблуці",
+                "plural": "яблуках"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

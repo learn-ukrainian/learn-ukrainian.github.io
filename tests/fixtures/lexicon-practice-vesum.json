@@ -1,0 +1,168 @@
+{
+  "книга": [
+    {
+      "lemma": "книга",
+      "pos": "noun",
+      "tags": "noun:inanim:f:v_naz"
+    }
+  ],
+  "книги": [
+    {
+      "lemma": "книга",
+      "pos": "noun",
+      "tags": "noun:inanim:p:v_naz"
+    }
+  ],
+  "книгу": [
+    {
+      "lemma": "книга",
+      "pos": "noun",
+      "tags": "noun:inanim:f:v_zna"
+    }
+  ],
+  "книзі": [
+    {
+      "lemma": "книга",
+      "pos": "noun",
+      "tags": "noun:inanim:f:v_mis"
+    }
+  ],
+  "книгах": [
+    {
+      "lemma": "книга",
+      "pos": "noun",
+      "tags": "noun:inanim:p:v_mis"
+    }
+  ],
+  "місто": [
+    {
+      "lemma": "місто",
+      "pos": "noun",
+      "tags": "noun:inanim:n:v_naz"
+    }
+  ],
+  "міста": [
+    {
+      "lemma": "місто",
+      "pos": "noun",
+      "tags": "noun:inanim:p:v_naz"
+    }
+  ],
+  "місті": [
+    {
+      "lemma": "місто",
+      "pos": "noun",
+      "tags": "noun:inanim:n:v_mis"
+    }
+  ],
+  "містах": [
+    {
+      "lemma": "місто",
+      "pos": "noun",
+      "tags": "noun:inanim:p:v_mis"
+    }
+  ],
+  "робота": [
+    {
+      "lemma": "робота",
+      "pos": "noun",
+      "tags": "noun:inanim:f:v_naz"
+    }
+  ],
+  "роботи": [
+    {
+      "lemma": "робота",
+      "pos": "noun",
+      "tags": "noun:inanim:p:v_naz"
+    }
+  ],
+  "роботу": [
+    {
+      "lemma": "робота",
+      "pos": "noun",
+      "tags": "noun:inanim:f:v_zna"
+    }
+  ],
+  "роботі": [
+    {
+      "lemma": "робота",
+      "pos": "noun",
+      "tags": "noun:inanim:f:v_mis"
+    }
+  ],
+  "роботах": [
+    {
+      "lemma": "робота",
+      "pos": "noun",
+      "tags": "noun:inanim:p:v_mis"
+    }
+  ],
+  "школа": [
+    {
+      "lemma": "школа",
+      "pos": "noun",
+      "tags": "noun:inanim:f:v_naz"
+    }
+  ],
+  "школи": [
+    {
+      "lemma": "школа",
+      "pos": "noun",
+      "tags": "noun:inanim:p:v_naz"
+    }
+  ],
+  "школу": [
+    {
+      "lemma": "школа",
+      "pos": "noun",
+      "tags": "noun:inanim:f:v_zna"
+    }
+  ],
+  "школі": [
+    {
+      "lemma": "школа",
+      "pos": "noun",
+      "tags": "noun:inanim:f:v_dav"
+    },
+    {
+      "lemma": "школа",
+      "pos": "noun",
+      "tags": "noun:inanim:f:v_mis"
+    }
+  ],
+  "школах": [
+    {
+      "lemma": "школа",
+      "pos": "noun",
+      "tags": "noun:inanim:p:v_mis"
+    }
+  ],
+  "яблуко": [
+    {
+      "lemma": "яблуко",
+      "pos": "noun",
+      "tags": "noun:inanim:n:v_naz"
+    }
+  ],
+  "яблука": [
+    {
+      "lemma": "яблуко",
+      "pos": "noun",
+      "tags": "noun:inanim:p:v_naz"
+    }
+  ],
+  "яблуці": [
+    {
+      "lemma": "яблуко",
+      "pos": "noun",
+      "tags": "noun:inanim:n:v_mis"
+    }
+  ],
+  "яблуках": [
+    {
+      "lemma": "яблуко",
+      "pos": "noun",
+      "tags": "noun:inanim:p:v_mis"
+    }
+  ]
+}

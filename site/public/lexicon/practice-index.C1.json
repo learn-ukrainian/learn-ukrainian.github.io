@@ -1,0 +1,4624 @@
+{
+  "counts": {
+    "cloze": 0,
+    "clozeCoverage": 0.0,
+    "clozeEligibleLexemes": 0,
+    "lexemes": 354
+  },
+  "deckVersion": "atlas-practice-v1-622fc3d93d1ad580",
+  "items": [
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "соломинка",
+      "lemmaId": "соломинка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 0
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "канадка",
+      "lemmaId": "канадка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "світло-синій",
+      "lemmaId": "світло-синій",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 2
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "темно-зелений",
+      "lemmaId": "темно-зелений",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 3
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "милозвучність",
+      "lemmaId": "милозвучність",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 4
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "музика",
+      "lemmaId": "музика",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 5
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "щедрувати",
+      "lemmaId": "щедрувати",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 6
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "причісуватися",
+      "lemmaId": "причісуватися",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 7
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "руханка",
+      "lemmaId": "руханка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 8
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "апо́строф",
+      "lemmaId": "апо-строф",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 9
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "буханка",
+      "lemmaId": "буханка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 10
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "крамниця",
+      "lemmaId": "крамниця",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 11
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "йото́ваний",
+      "lemmaId": "йото-ваний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 12
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "розді́льно",
+      "lemmaId": "розді-льно",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 13
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "мелодика",
+      "lemmaId": "мелодика",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 14
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "ненаголошений",
+      "lemmaId": "ненаголошений",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 15
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "вивчаєте",
+      "lemmaId": "вивчаєте",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 16
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "гуляєш",
+      "lemmaId": "гуляєш",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 17
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "вчите",
+      "lemmaId": "вчите",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 18
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "вчиш",
+      "lemmaId": "вчиш",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 19
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "канадієць",
+      "lemmaId": "канадієць",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 20
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "частувати",
+      "lemmaId": "частувати",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 21
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "допуст",
+      "lemmaId": "допуст",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 22
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "сурядний",
+      "lemmaId": "сурядний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 23
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "хоча",
+      "lemmaId": "хоча",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 24
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "самоперевірка",
+      "lemmaId": "самоперевірка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 25
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "рема",
+      "lemmaId": "рема",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 26
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "магістратура",
+      "lemmaId": "магістратура",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 27
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "евфонія",
+      "lemmaId": "евфонія",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 28
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "наліпка",
+      "lemmaId": "наліпка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 29
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "перевірмо",
+      "lemmaId": "перевірмо",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 30
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "пишімо",
+      "lemmaId": "пишімо",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 31
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "починаймо",
+      "lemmaId": "починаймо",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 32
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "абиде",
+      "lemmaId": "абиде",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 33
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "абикому",
+      "lemmaId": "абикому",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 34
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "абихто",
+      "lemmaId": "абихто",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 35
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "кароокий",
+      "lemmaId": "кароокий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 36
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "світловолосий",
+      "lemmaId": "світловолосий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 37
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "темноволосий",
+      "lemmaId": "темноволосий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 38
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "морфема",
+      "lemmaId": "морфема",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 39
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "морфологія",
+      "lemmaId": "морфологія",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 40
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "словотвір",
+      "lemmaId": "словотвір",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 41
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "спільнокореневий",
+      "lemmaId": "спільнокореневий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 42
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "губний",
+      "lemmaId": "губний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 43
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "звукосполука",
+      "lemmaId": "звукосполука",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 44
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "орфографія",
+      "lemmaId": "орфографія",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 45
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "орфоепія",
+      "lemmaId": "орфоепія",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 46
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "пом'якшений",
+      "lemmaId": "пом-якшений",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 47
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "свистячий",
+      "lemmaId": "свистячий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 48
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "сонорний",
+      "lemmaId": "сонорний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 49
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "транскрипція",
+      "lemmaId": "транскрипція",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 50
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "фонема",
+      "lemmaId": "фонема",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 51
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "шиплячий",
+      "lemmaId": "шиплячий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 52
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "пунктуація",
+      "lemmaId": "пунктуація",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 53
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "метамова",
+      "lemmaId": "метамова",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 54
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "розквітати",
+      "lemmaId": "розквітати",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 55
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "розтанути",
+      "lemmaId": "розтанути",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 56
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "пінгвін",
+      "lemmaId": "пінгвін",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 57
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "воліти",
+      "lemmaId": "воліти",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 58
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "грядка",
+      "lemmaId": "грядка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 59
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "змокнути",
+      "lemmaId": "змокнути",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 60
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "бандероль",
+      "lemmaId": "бандероль",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 61
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "горджуся",
+      "lemmaId": "горджуся",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 62
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "буквальний",
+      "lemmaId": "буквальний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 63
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "еліпсис",
+      "lemmaId": "еліпсис",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 64
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "зменшувальний",
+      "lemmaId": "зменшувальний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 65
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "пестливий",
+      "lemmaId": "пестливий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 66
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "тригер",
+      "lemmaId": "тригер",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 67
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "емфатичний",
+      "lemmaId": "емфатичний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 68
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "маркований",
+      "lemmaId": "маркований",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 69
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "білісінький",
+      "lemmaId": "білісінький",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 70
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "синонімічний",
+      "lemmaId": "синонімічний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 71
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "щонайкращий",
+      "lemmaId": "щонайкращий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 72
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "якнайшвидший",
+      "lemmaId": "якнайшвидший",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 73
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "абиякий",
+      "lemmaId": "абиякий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 74
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "суфіксально-префіксальний",
+      "lemmaId": "суфіксально-префіксальний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 75
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "щонайкраще",
+      "lemmaId": "щонайкраще",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 76
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "задньоязиковий",
+      "lemmaId": "задньоязиковий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 77
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "непродуктивний",
+      "lemmaId": "непродуктивний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 78
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "орфограма",
+      "lemmaId": "орфограма",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 79
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "палаталізація",
+      "lemmaId": "палаталізація",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 80
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "саморедагування",
+      "lemmaId": "саморедагування",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 81
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "африката",
+      "lemmaId": "африката",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 82
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "морфонологія",
+      "lemmaId": "морфонологія",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 83
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "контрфактичний",
+      "lemmaId": "контрфактичний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 84
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "писатимеш",
+      "lemmaId": "писатимеш",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 85
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "повторюваний",
+      "lemmaId": "повторюваний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 86
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "обпектися",
+      "lemmaId": "обпектися",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 87
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "домити",
+      "lemmaId": "домити",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 88
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "мнемоніка",
+      "lemmaId": "мнемоніка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 89
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "прагматика",
+      "lemmaId": "прагматика",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 90
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "однократність",
+      "lemmaId": "однократність",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 91
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "одновидовий",
+      "lemmaId": "одновидовий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 92
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "безособовий",
+      "lemmaId": "безособовий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 93
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "посивілий",
+      "lemmaId": "посивілий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 94
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "посинілий",
+      "lemmaId": "посинілий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 95
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "постфікс",
+      "lemmaId": "постфікс",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 96
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "бракований",
+      "lemmaId": "бракований",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 97
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "префіксально-суфіксальний",
+      "lemmaId": "префіксально-суфіксальний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 98
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "вирушання",
+      "lemmaId": "вирушання",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 99
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "різноспрямований",
+      "lemmaId": "різноспрямований",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 100
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "медіатекст",
+      "lemmaId": "медіатекст",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 101
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "одночасність",
+      "lemmaId": "одночасність",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 102
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "перефразування",
+      "lemmaId": "перефразування",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 103
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "різночасність",
+      "lemmaId": "різночасність",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 104
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "фактчекінг",
+      "lemmaId": "фактчекінг",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 105
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "двокрапка",
+      "lemmaId": "двокрапка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 106
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "білити",
+      "lemmaId": "білити",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 107
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "біліти",
+      "lemmaId": "біліти",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 108
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "заземлити",
+      "lemmaId": "заземлити",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 109
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "знебарвити",
+      "lemmaId": "знебарвити",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 110
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "канцелярит",
+      "lemmaId": "канцелярит",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 111
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "логування",
+      "lemmaId": "логування",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 112
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "недооцінити",
+      "lemmaId": "недооцінити",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 113
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "перевантажити",
+      "lemmaId": "перевантажити",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 114
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "перевстановити",
+      "lemmaId": "перевстановити",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 115
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "перевтомитися",
+      "lemmaId": "перевтомитися",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 116
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "взаємовиключення",
+      "lemmaId": "взаємовиключення",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 117
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "контраргумент",
+      "lemmaId": "контраргумент",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 118
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "антецедент",
+      "lemmaId": "антецедент",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 119
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "постпозиція",
+      "lemmaId": "постпозиція",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 120
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "препозиція",
+      "lemmaId": "препозиція",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 121
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "самодіагностика",
+      "lemmaId": "самодіагностика",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 122
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "точковий",
+      "lemmaId": "точковий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 123
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "жаль",
+      "lemmaId": "жаль",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 124
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "підстелити",
+      "lemmaId": "підстелити",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 125
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "пилососити",
+      "lemmaId": "пилососити",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 126
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "перескладання",
+      "lemmaId": "перескладання",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 127
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "першокурсник",
+      "lemmaId": "першокурсник",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 128
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "старшокурсниця",
+      "lemmaId": "старшокурсниця",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 129
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "облетіти",
+      "lemmaId": "облетіти",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 130
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "зворотність",
+      "lemmaId": "зворотність",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 131
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "зробивши",
+      "lemmaId": "зробивши",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 132
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "попередність",
+      "lemmaId": "попередність",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 133
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "умившись",
+      "lemmaId": "умившись",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 134
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "безболісний",
+      "lemmaId": "безболісний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 135
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "асиндетон",
+      "lemmaId": "асиндетон",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 136
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "полісиндетон",
+      "lemmaId": "полісиндетон",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 137
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "протиставний",
+      "lemmaId": "протиставний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 138
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "розділовий",
+      "lemmaId": "розділовий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 139
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "узагальнювальний",
+      "lemmaId": "узагальнювальний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 140
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "єднальний",
+      "lemmaId": "єднальний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 141
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "вмебльована",
+      "lemmaId": "вмебльована",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 142
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "мебльована",
+      "lemmaId": "мебльована",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 143
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "новобудова",
+      "lemmaId": "новобудова",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 144
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "орендарка",
+      "lemmaId": "орендарка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 145
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "посудомийка",
+      "lemmaId": "посудомийка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 146
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "сантехнік",
+      "lemmaId": "сантехнік",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 147
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "євроремонт",
+      "lemmaId": "євроремонт",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 148
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "бережімо",
+      "lemmaId": "бережімо",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 149
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "вірмо",
+      "lemmaId": "вірмо",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 150
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "занось",
+      "lemmaId": "занось",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 151
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "кличмо",
+      "lemmaId": "кличмо",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 152
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "обговорімо",
+      "lemmaId": "обговорімо",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 153
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "поставмо",
+      "lemmaId": "поставмо",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 154
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "тримаймося",
+      "lemmaId": "тримаймося",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 155
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "кирилиця",
+      "lemmaId": "кирилиця",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 156
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "латиниця",
+      "lemmaId": "латиниця",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 157
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "банош",
+      "lemmaId": "банош",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 158
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "екскурсоводка",
+      "lemmaId": "екскурсоводка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 159
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "відпливти",
+      "lemmaId": "відпливти",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 160
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "допливати",
+      "lemmaId": "допливати",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 161
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "доплисти",
+      "lemmaId": "доплисти",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 162
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "залетіти",
+      "lemmaId": "залетіти",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 163
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "заплисти",
+      "lemmaId": "заплисти",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 164
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "каюта",
+      "lemmaId": "каюта",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 165
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "обплисти",
+      "lemmaId": "обплисти",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 166
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "пливеш",
+      "lemmaId": "пливеш",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 167
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "припливати",
+      "lemmaId": "припливати",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 168
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "припливти",
+      "lemmaId": "припливти",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 169
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "проплисти",
+      "lemmaId": "проплисти",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 170
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "підлетіти",
+      "lemmaId": "підлетіти",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 171
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "підплисти",
+      "lemmaId": "підплисти",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 172
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "від'їду",
+      "lemmaId": "від-їду",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 173
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "відбігти",
+      "lemmaId": "відбігти",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 174
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "вибіжу",
+      "lemmaId": "вибіжу",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 175
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "забіжу",
+      "lemmaId": "забіжу",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 176
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "занесу",
+      "lemmaId": "занесу",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 177
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "перенесу",
+      "lemmaId": "перенесу",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 178
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "переїду",
+      "lemmaId": "переїду",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 179
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "пробігати",
+      "lemmaId": "пробігати",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 180
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "проїду",
+      "lemmaId": "проїду",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 181
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "зав'язка",
+      "lemmaId": "зав-язка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 182
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "зачин",
+      "lemmaId": "зачин",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 183
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "мікротема",
+      "lemmaId": "мікротема",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 184
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "чернетка",
+      "lemmaId": "чернетка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 185
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "борсук",
+      "lemmaId": "борсук",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 186
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "брунька",
+      "lemmaId": "брунька",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 187
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "злива",
+      "lemmaId": "злива",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 188
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "русизм",
+      "lemmaId": "русизм",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 189
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "бондар",
+      "lemmaId": "бондар",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 190
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "каменяр",
+      "lemmaId": "каменяр",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 191
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "належність",
+      "lemmaId": "належність",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 192
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "осетин",
+      "lemmaId": "осетин",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 193
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "пунктограма",
+      "lemmaId": "пунктограма",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 194
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "живучий",
+      "lemmaId": "живучий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 195
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "збанкрутілий",
+      "lemmaId": "збанкрутілий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 196
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "зів'ялий",
+      "lemmaId": "зів-ялий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 197
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "мийний",
+      "lemmaId": "мийний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 198
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "опалий",
+      "lemmaId": "опалий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 199
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "пожовклий",
+      "lemmaId": "пожовклий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 200
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "розквітлий",
+      "lemmaId": "розквітлий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 201
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "воджений",
+      "lemmaId": "воджений",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 202
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "загоєний",
+      "lemmaId": "загоєний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 203
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "закручений",
+      "lemmaId": "закручений",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 204
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "заметений",
+      "lemmaId": "заметений",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 205
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "колотий",
+      "lemmaId": "колотий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 206
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "ношений",
+      "lemmaId": "ношений",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 207
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "побачений",
+      "lemmaId": "побачений",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 208
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "відреставровано",
+      "lemmaId": "відреставровано",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 209
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "лагодиться",
+      "lemmaId": "лагодиться",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 210
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "пофарбовано",
+      "lemmaId": "пофарбовано",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 211
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "спроєктовано",
+      "lemmaId": "спроєктовано",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 212
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "вередливий",
+      "lemmaId": "вередливий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 213
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "заздрісний",
+      "lemmaId": "заздрісний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 214
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "нетактовний",
+      "lemmaId": "нетактовний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 215
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "приземкуватий",
+      "lemmaId": "приземкуватий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 216
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "височина",
+      "lemmaId": "височина",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 217
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "низовина",
+      "lemmaId": "низовина",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 218
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "Лесин",
+      "lemmaId": "лесин",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 219
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "Марійчин",
+      "lemmaId": "марійчин",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 220
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "Маріїн",
+      "lemmaId": "маріїн",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 221
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "Наталчин",
+      "lemmaId": "наталчин",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 222
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "Олексіїв",
+      "lemmaId": "олексіїв",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 223
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "Оленчин",
+      "lemmaId": "оленчин",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 224
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "Ольжин",
+      "lemmaId": "ольжин",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 225
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "Сергіїв",
+      "lemmaId": "сергіїв",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 226
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "сестрин",
+      "lemmaId": "сестрин",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 227
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "Софіїн",
+      "lemmaId": "софіїн",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 228
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "тітчин",
+      "lemmaId": "тітчин",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 229
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "самооцінювання",
+      "lemmaId": "самооцінювання",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 230
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "транскрипт",
+      "lemmaId": "транскрипт",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 231
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "алітерація",
+      "lemmaId": "алітерація",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 232
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "гіпербола",
+      "lemmaId": "гіпербола",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 233
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "рима",
+      "lemmaId": "рима",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 234
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "ущільненість",
+      "lemmaId": "ущільненість",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 235
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "взуватися",
+      "lemmaId": "взуватися",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 236
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "зачісуватися",
+      "lemmaId": "зачісуватися",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 237
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "пратися",
+      "lemmaId": "пратися",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 238
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "читатися",
+      "lemmaId": "читатися",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 239
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "бануш",
+      "lemmaId": "бануш",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 240
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "запечений",
+      "lemmaId": "запечений",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 241
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "тушкований",
+      "lemmaId": "тушкований",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 242
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "надійніший",
+      "lemmaId": "надійніший",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 243
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "найвигідніший",
+      "lemmaId": "найвигідніший",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 244
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "покупчиня",
+      "lemmaId": "покупчиня",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 245
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "дрібен",
+      "lemmaId": "дрібен",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 246
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "зелен",
+      "lemmaId": "зелен",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 247
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "красен",
+      "lemmaId": "красен",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 248
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "народнопоетичний",
+      "lemmaId": "народнопоетичний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 249
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "присудковий",
+      "lemmaId": "присудковий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 250
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "славен",
+      "lemmaId": "славен",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 251
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "усічений",
+      "lemmaId": "усічений",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 252
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "бризнути",
+      "lemmaId": "бризнути",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 253
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "зап'ястний",
+      "lemmaId": "зап-ястний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 254
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "кістлявий",
+      "lemmaId": "кістлявий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 255
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "масний",
+      "lemmaId": "масний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 256
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "хвастливий",
+      "lemmaId": "хвастливий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 257
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "медіаграмотність",
+      "lemmaId": "медіаграмотність",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 258
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "підписник",
+      "lemmaId": "підписник",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 259
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "прописом",
+      "lemmaId": "прописом",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 260
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "спецвипуск",
+      "lemmaId": "спецвипуск",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 261
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "вищезазначений",
+      "lemmaId": "вищезазначений",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 262
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "канцеляризм",
+      "lemmaId": "канцеляризм",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 263
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "нижчепідписаний",
+      "lemmaId": "нижчепідписаний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 264
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "діалогічний",
+      "lemmaId": "діалогічний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 265
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "невимушеність",
+      "lemmaId": "невимушеність",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 266
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "зневоднити",
+      "lemmaId": "зневоднити",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 267
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "навантажити",
+      "lemmaId": "навантажити",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 268
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "наготувати",
+      "lemmaId": "наготувати",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 269
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "освітлити",
+      "lemmaId": "освітлити",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 270
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "перенавантажити",
+      "lemmaId": "перенавантажити",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 271
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "приставка",
+      "lemmaId": "приставка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 272
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "свиснути",
+      "lemmaId": "свиснути",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 273
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "свистіти",
+      "lemmaId": "свистіти",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 274
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "синіти",
+      "lemmaId": "синіти",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 275
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "чорніти",
+      "lemmaId": "чорніти",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 276
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "безафіксний",
+      "lemmaId": "безафіксний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 277
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "книжний",
+      "lemmaId": "книжний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 278
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "номіналізація",
+      "lemmaId": "номіналізація",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 279
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "подвоєний",
+      "lemmaId": "подвоєний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 280
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "добродійка",
+      "lemmaId": "добродійка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 281
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "звання",
+      "lemmaId": "звання",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 282
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "координаторе",
+      "lemmaId": "координаторе",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 283
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "редакторко",
+      "lemmaId": "редакторко",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 284
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "антивоєнний",
+      "lemmaId": "антивоєнний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 285
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "безхмарний",
+      "lemmaId": "безхмарний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 286
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "збільшувальний",
+      "lemmaId": "збільшувальний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 287
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "передсвятковий",
+      "lemmaId": "передсвятковий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 288
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "прибережний",
+      "lemmaId": "прибережний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 289
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "чорноокий",
+      "lemmaId": "чорноокий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 290
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "віддієслівний",
+      "lemmaId": "віддієслівний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 291
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "пекарка",
+      "lemmaId": "пекарка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 292
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "формант",
+      "lemmaId": "формант",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 293
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "ненормативний",
+      "lemmaId": "ненормативний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 294
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "спечений",
+      "lemmaId": "спечений",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 295
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "стертий",
+      "lemmaId": "стертий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 296
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "агентність",
+      "lemmaId": "агентність",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 297
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "бранка",
+      "lemmaId": "бранка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 298
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "бусурман",
+      "lemmaId": "бусурман",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 299
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "віктимність",
+      "lemmaId": "віктимність",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 300
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "віровідступництво",
+      "lemmaId": "віровідступництво",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 301
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "героїка",
+      "lemmaId": "героїка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 302
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "мореплавство",
+      "lemmaId": "мореплавство",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 303
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "поневолювач",
+      "lemmaId": "поневолювач",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 304
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "попівна",
+      "lemmaId": "попівна",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 305
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "потурчитися",
+      "lemmaId": "потурчитися",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 306
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "работоргівля",
+      "lemmaId": "работоргівля",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 307
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "ренегат",
+      "lemmaId": "ренегат",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 308
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "темниця",
+      "lemmaId": "темниця",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 309
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "величальний",
+      "lemmaId": "величальний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 310
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "веснянка",
+      "lemmaId": "веснянка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 311
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "гагілки",
+      "lemmaId": "гагілки",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 312
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "гільце",
+      "lemmaId": "гільце",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 313
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "деколонізація",
+      "lemmaId": "деколонізація",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 314
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "зажинки",
+      "lemmaId": "зажинки",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 315
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "закликальний",
+      "lemmaId": "закликальний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 316
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "обжинки",
+      "lemmaId": "обжинки",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 317
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "обрядовий",
+      "lemmaId": "обрядовий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 318
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "обрядодія",
+      "lemmaId": "обрядодія",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 319
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "перформативність",
+      "lemmaId": "перформативність",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 320
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "посівання",
+      "lemmaId": "посівання",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 321
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "ряджений",
+      "lemmaId": "ряджений",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 322
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "синкретичний",
+      "lemmaId": "синкретичний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 323
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "хоровод",
+      "lemmaId": "хоровод",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 324
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "автохтонний",
+      "lemmaId": "автохтонний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 325
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "величання",
+      "lemmaId": "величання",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 326
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "величати",
+      "lemmaId": "величати",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 327
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "дохристиянський",
+      "lemmaId": "дохристиянський",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 328
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "засівання",
+      "lemmaId": "засівання",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 329
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "космогонічний",
+      "lemmaId": "космогонічний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 330
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "космогонія",
+      "lemmaId": "космогонія",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 331
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "солярний",
+      "lemmaId": "солярний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 332
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "християнізація",
+      "lemmaId": "християнізація",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 333
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "язичницький",
+      "lemmaId": "язичницький",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 334
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "кобзарство",
+      "lemmaId": "кобзарство",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 335
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "меншовартість",
+      "lemmaId": "меншовартість",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 336
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "речитатив",
+      "lemmaId": "речитатив",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 337
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "фольклористика",
+      "lemmaId": "фольклористика",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 338
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "демонологія",
+      "lemmaId": "демонологія",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 339
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "дух",
+      "lemmaId": "дух",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 340
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "нявка",
+      "lemmaId": "нявка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 341
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "перелесник",
+      "lemmaId": "перелесник",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 342
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "польовик",
+      "lemmaId": "польовик",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 343
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "потерча",
+      "lemmaId": "потерча",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 344
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "хованець",
+      "lemmaId": "хованець",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 345
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "чугайстер",
+      "lemmaId": "чугайстер",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 346
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "віншування",
+      "lemmaId": "віншування",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 347
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "примовка",
+      "lemmaId": "примовка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 348
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "примівка",
+      "lemmaId": "примівка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 349
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "проклін",
+      "lemmaId": "проклін",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 350
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "шептуха",
+      "lemmaId": "шептуха",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 351
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "глагол",
+      "lemmaId": "глагол",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 352
+    },
+    {
+      "cefr": "C1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "кобіта",
+      "lemmaId": "кобіта",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 353
+    }
+  ],
+  "level": "C1",
+  "schema": "atlas-practice-index",
+  "schemaVersion": 1,
+  "sizeBudget": {
+    "gzipBytes": 5872,
+    "gzipLimitBytes": 140000,
+    "ok": true,
+    "rawBytes": 93792,
+    "rawLimitBytes": 550000
+  },
+  "source": "manifest"
+}
