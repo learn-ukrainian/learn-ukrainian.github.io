@@ -27,6 +27,7 @@ import xml.etree.ElementTree as ET
 from collections.abc import Callable, Collection, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
+from dataclasses import field as dataclass_field
 from datetime import UTC, datetime
 from fnmatch import fnmatch
 from pathlib import Path
@@ -9670,6 +9671,489 @@ def _word_count_gate(text: str, target: int) -> dict[str, Any]:
         "target": target,
         "min_with_tolerance": min_with_tolerance,
         "tolerance_below_pct": _WORD_COUNT_TOLERANCE_BELOW * 100,
+    }
+
+
+@dataclass(frozen=True)
+class Ledger:
+    sections_done: list[dict[str, str]] = dataclass_field(default_factory=list)
+    claims_made: list[str] = dataclass_field(default_factory=list)
+    citations_consumed: list[str] = dataclass_field(default_factory=list)
+    readings_consumed: list[str] = dataclass_field(default_factory=list)
+    vocab_introduced: list[str] = dataclass_field(default_factory=list)
+    activities_assigned: list[str] = dataclass_field(default_factory=list)
+    reserved_for_later: list[str] = dataclass_field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class SectionTask:
+    section_id: str
+    title: str
+    word_budget: int
+    points: list[str]
+    assigned_readings: list[dict[str, Any]]
+    knowledge_slice: str
+    framing_rules: str
+    ledger: Ledger
+
+
+@dataclass(frozen=True)
+class SectionArtifact:
+    section_id: str
+    markdown: str
+    citations_used: list[str]
+    primary_readings_used: list[str]
+    vocab_candidates: list[dict[str, Any]]
+    activity_refs: list[str]
+    self_check: dict[str, Any]
+
+
+def _section_outline_entries(plan: Mapping[str, Any]) -> list[Mapping[str, Any]]:
+    entries = plan.get("content_outline")
+    if not isinstance(entries, list) or not entries:
+        raise LinearPipelineError("Plan content_outline must be a non-empty list")
+    for index, entry in enumerate(entries, start=1):
+        if not isinstance(entry, Mapping):
+            raise LinearPipelineError(f"Plan section {index} must be mapping")
+    return entries
+
+
+def _section_outline_title(entry: Mapping[str, Any], index: int) -> str:
+    title = str(entry.get("title") or entry.get("section") or "").strip()
+    if not title:
+        raise LinearPipelineError(f"Plan section {index} missing title")
+    return title
+
+
+def _section_outline_points(entry: Mapping[str, Any], title: str) -> list[str]:
+    raw_points = entry.get("points", [])
+    if not isinstance(raw_points, list) or not all(isinstance(point, str) for point in raw_points):
+        raise LinearPipelineError(f"Plan section {title!r} points must be a list of strings")
+    return [point.strip() for point in raw_points if point.strip()]
+
+
+def _section_outline_word_budget(entry: Mapping[str, Any], title: str) -> int:
+    words = entry.get("words")
+    if not isinstance(words, int) or words <= 0:
+        raise LinearPipelineError(f"Plan section {title!r} invalid words")
+    return words
+
+
+def _reading_assignment_id(reading: Mapping[str, Any]) -> str:
+    for key in ("reading_id", "id", "reading_slug", "slug", "chunk_id"):
+        value = str(reading.get(key) or "").strip()
+        if value:
+            return value
+    raise LinearPipelineError("Assigned reading missing reading_id")
+
+
+def _normalize_section_reading(reading: Mapping[str, Any]) -> dict[str, Any]:
+    reading_id = _reading_assignment_id(reading)
+    return {
+        "reading_id": reading_id,
+        "title": str(reading.get("title") or "").strip(),
+        "author": str(reading.get("author") or "").strip(),
+        "verbatim_text": str(reading.get("verbatim_text") or reading.get("text") or "").strip(),
+        "chunk_id": str(reading.get("chunk_id") or "").strip(),
+        "verify_quote_conf": reading.get("verify_quote_conf"),
+    }
+
+
+def _iter_normalized_section_readings(readings: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    normalized: list[dict[str, Any]] = []
+    for index, reading in enumerate(readings, start=1):
+        if not isinstance(reading, Mapping):
+            raise LinearPipelineError(f"Reading {index} must be mapping")
+        normalized.append(_normalize_section_reading(reading))
+    return normalized
+
+
+def _knowledge_packet_text(knowledge_packet: object) -> str:
+    if knowledge_packet is None:
+        return ""
+    if isinstance(knowledge_packet, str):
+        return knowledge_packet.strip()
+    return yaml.safe_dump(knowledge_packet, allow_unicode=True, sort_keys=False).strip()
+
+
+def _knowledge_match_terms(title: str, points: Sequence[str]) -> list[str]:
+    raw_terms = [title, *points]
+    terms: list[str] = []
+    seen: set[str] = set()
+    for raw_term in raw_terms:
+        for token in _WORD_RE.findall(raw_term.casefold()):
+            if len(token) < 4 or token in seen:
+                continue
+            terms.append(token)
+            seen.add(token)
+    return terms
+
+
+def _slice_knowledge_for_section(knowledge_packet: object, title: str, points: Sequence[str]) -> str:
+    if isinstance(knowledge_packet, Mapping):
+        for key in (title, title.casefold()):
+            value = knowledge_packet.get(key)
+            if value:
+                return _knowledge_packet_text(value)
+    text = _knowledge_packet_text(knowledge_packet)
+    if not text:
+        return ""
+    terms = _knowledge_match_terms(title, points)
+    if not terms:
+        return text
+    matched_lines = [line for line in text.splitlines() if any(term in line.casefold() for term in terms)]
+    # TODO(P2): replace this line-match heuristic with citation-aware dossier slicing.
+    return "\n".join(matched_lines).strip() or text
+
+
+def build_section_tasks(
+    plan: Mapping[str, Any],
+    knowledge_packet: object,
+    readings: Sequence[Mapping[str, Any]],
+    *,
+    reading_section_map: Mapping[str, str] | None = None,
+    default_reading_section_id: str | None = None,
+    framing_rules: str = "",
+) -> list[SectionTask]:
+    outline_entries = _section_outline_entries(plan)
+    section_ids = [f"s{index}" for index in range(1, len(outline_entries) + 1)]
+    target_section_id = default_reading_section_id or section_ids[0]
+    if target_section_id not in section_ids:
+        raise LinearPipelineError(f"Unknown default reading section: {target_section_id}")
+
+    assigned_by_section: dict[str, list[dict[str, Any]]] = {section_id: [] for section_id in section_ids}
+    for reading in _iter_normalized_section_readings(readings):
+        reading_id = reading["reading_id"]
+        section_id = str((reading_section_map or {}).get(reading_id) or target_section_id).strip()
+        if section_id not in assigned_by_section:
+            raise LinearPipelineError(f"Reading {reading_id!r} assigned to unknown section {section_id!r}")
+        assigned_by_section[section_id].append(reading)
+
+    ledger = Ledger()
+    tasks: list[SectionTask] = []
+    for index, entry in enumerate(outline_entries, start=1):
+        section_id = f"s{index}"
+        title = _section_outline_title(entry, index)
+        points = _section_outline_points(entry, title)
+        tasks.append(
+            SectionTask(
+                section_id=section_id,
+                title=title,
+                word_budget=_section_outline_word_budget(entry, title),
+                points=points,
+                assigned_readings=list(assigned_by_section[section_id]),
+                knowledge_slice=_slice_knowledge_for_section(knowledge_packet, title, points),
+                framing_rules=framing_rules,
+                ledger=ledger,
+            )
+        )
+    return tasks
+
+
+def _dedupe_preserve_order(values: Sequence[object]) -> list[str]:
+    deduped: list[str] = []
+    seen: set[str] = set()
+    for value in values:
+        text = str(value or "").strip()
+        if not text or text in seen:
+            continue
+        deduped.append(text)
+        seen.add(text)
+    return deduped
+
+
+def _artifact_title(markdown: str) -> str:
+    for line in markdown.splitlines():
+        match = _HEADING_RE.match(line)
+        if match:
+            return match.group(1).strip()
+    return ""
+
+
+def _artifact_one_line_gist(markdown: str) -> str:
+    for line in _strip_primary_reading_blocks(markdown).splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith(("#", ":::", "<!--")):
+            continue
+        return stripped[:160]
+    return ""
+
+
+def _artifact_claims(artifact: SectionArtifact) -> list[str]:
+    claims = artifact.self_check.get("claims_made", artifact.self_check.get("claims", []))
+    if not isinstance(claims, list):
+        return []
+    return _dedupe_preserve_order(claims)
+
+
+def _vocab_candidate_surfaces(candidates: Sequence[Mapping[str, Any]]) -> list[str]:
+    return _dedupe_preserve_order(
+        candidate.get("surface") or candidate.get("lemma") or ""
+        for candidate in candidates
+        if isinstance(candidate, Mapping)
+    )
+
+
+def update_ledger(ledger: Ledger, artifact: SectionArtifact) -> Ledger:
+    section_ids_done = {section["section_id"] for section in ledger.sections_done if "section_id" in section}
+    sections_done = [dict(section) for section in ledger.sections_done]
+    if artifact.section_id not in section_ids_done:
+        sections_done.append(
+            {
+                "section_id": artifact.section_id,
+                "title": _artifact_title(artifact.markdown),
+                "one_line_gist": _artifact_one_line_gist(artifact.markdown),
+            }
+        )
+
+    return Ledger(
+        sections_done=sections_done,
+        claims_made=_dedupe_preserve_order([*ledger.claims_made, *_artifact_claims(artifact)]),
+        citations_consumed=_dedupe_preserve_order([*ledger.citations_consumed, *artifact.citations_used]),
+        readings_consumed=_dedupe_preserve_order(
+            [*ledger.readings_consumed, *artifact.primary_readings_used]
+        ),
+        vocab_introduced=_dedupe_preserve_order(
+            [*ledger.vocab_introduced, *_vocab_candidate_surfaces(artifact.vocab_candidates)]
+        ),
+        activities_assigned=_dedupe_preserve_order([*ledger.activities_assigned, *artifact.activity_refs]),
+        reserved_for_later=list(ledger.reserved_for_later),
+    )
+
+
+def _artifact_by_plan_order(
+    artifacts: Sequence[SectionArtifact],
+    plan: Mapping[str, Any],
+) -> list[SectionArtifact]:
+    section_ids = [f"s{index}" for index in range(1, len(_section_outline_entries(plan)) + 1)]
+    artifact_by_id = {artifact.section_id: artifact for artifact in artifacts}
+    unexpected = sorted(set(artifact_by_id) - set(section_ids))
+    if unexpected:
+        raise LinearPipelineError(f"Unexpected section artifacts: {', '.join(unexpected)}")
+    missing = [section_id for section_id in section_ids if section_id not in artifact_by_id]
+    if missing:
+        raise LinearPipelineError(f"Missing section artifacts: {', '.join(missing)}")
+    return [artifact_by_id[section_id] for section_id in section_ids]
+
+
+def _normalize_vocab_candidate(candidate: Mapping[str, Any]) -> dict[str, Any] | None:
+    surface = str(candidate.get("surface") or candidate.get("lemma") or "").strip()
+    if not surface:
+        return None
+    gloss = str(candidate.get("gloss") or candidate.get("translation") or "").strip()
+    note = str(candidate.get("note") or candidate.get("notes") or "").strip()
+    item: dict[str, Any] = {
+        "lemma": surface,
+        "translation": gloss,
+        "pos": str(candidate.get("pos") or "phrase").strip(),
+        "usage": str(candidate.get("usage") or note or surface).strip(),
+    }
+    if note:
+        item["notes"] = note
+    return item
+
+
+def _merge_vocab_candidates(artifacts: Sequence[SectionArtifact]) -> list[dict[str, Any]]:
+    vocab_items: list[dict[str, Any]] = []
+    seen_surfaces: set[str] = set()
+    for artifact in artifacts:
+        for candidate in artifact.vocab_candidates:
+            if not isinstance(candidate, Mapping):
+                continue
+            item = _normalize_vocab_candidate(candidate)
+            if item is None:
+                continue
+            surface_key = item["lemma"].casefold()
+            if surface_key in seen_surfaces:
+                continue
+            vocab_items.append(item)
+            seen_surfaces.add(surface_key)
+    _validate_writer_json_artifact("vocabulary.yaml", vocab_items)
+    return vocab_items
+
+
+def _plan_activity_configs(plan: Mapping[str, Any]) -> list[dict[str, Any]]:
+    configs: list[dict[str, Any]] = []
+    for key in ("activity_configs", "activities", "activity_hints"):
+        raw_configs = plan.get(key)
+        if isinstance(raw_configs, Mapping):
+            inline = raw_configs.get("inline", [])
+            workbook = raw_configs.get("workbook", [])
+            raw_configs = [
+                *(inline if isinstance(inline, list) else []),
+                *(workbook if isinstance(workbook, list) else []),
+            ]
+        if not isinstance(raw_configs, list):
+            continue
+        for raw_config in raw_configs:
+            if not isinstance(raw_config, Mapping) or "type" not in raw_config:
+                continue
+            config = dict(raw_config)
+            if "id" not in config and "activity_id" in config:
+                config["id"] = config.pop("activity_id")
+            configs.append(_normalize_activity_config(config))
+    return configs
+
+
+def _normalize_activity_config(config: dict[str, Any]) -> dict[str, Any]:
+    if config.get("type") == "performance":
+        self_check = config.get("self_check", config.get("self_checklist", []))
+        if self_check is None:
+            self_check = []
+        if not isinstance(self_check, list):
+            self_check = [str(self_check)]
+        config["self_check"] = [str(item) for item in self_check if str(item).strip()]
+        config.pop("self_checklist", None)
+    return config
+
+
+def _placeholder_activity(activity_id: str) -> dict[str, Any]:
+    return {
+        "id": activity_id,
+        "type": "observe",
+        "title": activity_id,
+        "instruction": "Review the linked section.",
+        "prompt": "Review the linked section.",
+        "examples": [],
+    }
+
+
+def _merge_activities(artifacts: Sequence[SectionArtifact], plan: Mapping[str, Any]) -> list[dict[str, Any]]:
+    activity_refs = _dedupe_preserve_order([ref for artifact in artifacts for ref in artifact.activity_refs])
+    activities = _plan_activity_configs(plan)
+    activity_ids = {str(activity.get("id") or "").strip() for activity in activities}
+    for activity_id in activity_refs:
+        if activity_id not in activity_ids:
+            activities.append(_placeholder_activity(activity_id))
+            activity_ids.add(activity_id)
+    _validate_writer_json_artifact("activities.yaml", activities)
+    schema_report = _activity_schema_gate(activities)
+    if not schema_report.get("passed"):
+        raise LinearPipelineError(f"activities.yaml schema validation failed: {schema_report}")
+    return activities
+
+
+def _normalize_plan_resource(resource: Mapping[str, Any], default_role: str) -> dict[str, Any] | None:
+    title = str(
+        resource.get("title")
+        or resource.get("name")
+        or resource.get("work")
+        or resource.get("url")
+        or resource.get("source_ref")
+        or ""
+    ).strip()
+    if not title:
+        return None
+    item: dict[str, Any] = {
+        "title": title,
+        "role": str(resource.get("role") or default_role).strip() or default_role,
+    }
+    for key in ("notes", "description", "source_ref", "packet_chunk_id", "chunk_id", "url", "author"):
+        value = resource.get(key)
+        if value:
+            item[key] = str(value).strip()
+    return item
+
+
+def _resource_key(resource: Mapping[str, Any]) -> tuple[str, str]:
+    return (
+        str(resource.get("title") or "").casefold(),
+        str(resource.get("url") or resource.get("source_ref") or resource.get("chunk_id") or "").casefold(),
+    )
+
+
+def _merge_resources(plan: Mapping[str, Any], artifacts: Sequence[SectionArtifact]) -> list[dict[str, Any]]:
+    del artifacts
+    resources: list[dict[str, Any]] = []
+    seen: set[tuple[str, str]] = set()
+    for key, default_role in (("resources", "article"), ("references", "textbook")):
+        raw_resources = plan.get(key, [])
+        if not isinstance(raw_resources, list):
+            continue
+        for raw_resource in raw_resources:
+            if not isinstance(raw_resource, Mapping):
+                continue
+            resource = _normalize_plan_resource(raw_resource, default_role)
+            if resource is None:
+                continue
+            resource_key = _resource_key(resource)
+            if resource_key not in seen:
+                resources.append(resource)
+                seen.add(resource_key)
+
+    raw_readings = plan.get("readings", [])
+    if isinstance(raw_readings, list):
+        for raw_reading in raw_readings:
+            if not isinstance(raw_reading, Mapping):
+                continue
+            resource = _normalize_plan_resource(raw_reading, "reading")
+            if resource is None:
+                continue
+            reading_slug = str(raw_reading.get("reading_slug") or raw_reading.get("reading_id") or "").strip()
+            if reading_slug:
+                resource["source_ref"] = reading_slug
+                resource.setdefault("url", f"/readings/{reading_slug}/")
+            resource_key = _resource_key(resource)
+            if resource_key not in seen:
+                resources.append(resource)
+                seen.add(resource_key)
+
+    _validate_writer_json_artifact("resources.yaml", resources)
+    return resources
+
+
+def _artifact_sidecar_entry(
+    artifact: SectionArtifact,
+    *,
+    line_start: int,
+    line_end: int,
+) -> dict[str, Any]:
+    return {
+        "line_start": line_start,
+        "line_end": line_end,
+        "reading_ids": _dedupe_preserve_order(artifact.primary_readings_used),
+        "citation_keys": _dedupe_preserve_order(artifact.citations_used),
+        "vocab_surfaces": _vocab_candidate_surfaces(artifact.vocab_candidates),
+        "activity_ids": _dedupe_preserve_order(artifact.activity_refs),
+    }
+
+
+def assemble_iterative(
+    artifacts: Sequence[SectionArtifact],
+    plan: Mapping[str, Any],
+) -> dict[str, Any]:
+    ordered_artifacts = _artifact_by_plan_order(artifacts, plan)
+
+    markdown_parts: list[str] = []
+    sidecar: dict[str, dict[str, Any]] = {}
+    next_line = 1
+    for artifact in ordered_artifacts:
+        section_markdown = artifact.markdown.strip("\n")
+        section_lines = section_markdown.splitlines() or [""]
+        line_start = next_line
+        line_end = line_start + len(section_lines) - 1
+        markdown_parts.append(section_markdown)
+        sidecar[artifact.section_id] = _artifact_sidecar_entry(
+            artifact,
+            line_start=line_start,
+            line_end=line_end,
+        )
+        next_line = line_end + 2
+
+    module_md = "\n\n".join(markdown_parts).rstrip()
+    if module_md:
+        module_md += "\n"
+
+    vocabulary = _merge_vocab_candidates(ordered_artifacts)
+    activities = _merge_activities(ordered_artifacts, plan)
+    resources = _merge_resources(plan, ordered_artifacts)
+
+    return {
+        "module_md": module_md,
+        "vocabulary_yaml": yaml.safe_dump(vocabulary, allow_unicode=True, sort_keys=False),
+        "activities_yaml": yaml.safe_dump(activities, allow_unicode=True, sort_keys=False),
+        "resources_yaml": yaml.safe_dump(resources, allow_unicode=True, sort_keys=False),
+        "sidecar": sidecar,
     }
 
 
