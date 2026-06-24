@@ -368,6 +368,8 @@
   .live-status[data-tone="ok"] { color: var(--lu-state-correct-fg); }
   .live-status[data-tone="bad"] { color: var(--lu-state-wrong-fg); }
   .live-status[data-tone="info"] { color: var(--lu-text-muted); font-weight: 700; }
+  .live-status[data-tone="warn"] { color: #E6A23C; }
+  [data-theme='light'] .live-status[data-tone="warn"] { color: #B26A00; }
 
   /* ============================== VIEW 3 — FLASHCARDS ================ */
   .fc-scene { perspective: 1400px; }
@@ -835,8 +837,7 @@ var DECK = [
   // enrichment.morphology.paradigm.cases.<відмінок>.singular — never invented.
   { lemma:"ра́нок", lemmaPlain:"ранок", ipa:"[ˈrɑnok]", gloss:"morning", pos:"іменник · ч.р.",
     cefr:"A1", sev:"green", her:"✓ Питома",
-    sentence:"Бажаю тобі доброго ___!", form:"ранку", ansCase:"родовий відмінок",
-    caseRule:"доброго → родовий", clozeEn:"I wish you a good morning!" },
+    sentence:"Це ранок.", clozeEn:"It is morning." },
   { lemma:"со́нце", lemmaPlain:"сонце", ipa:"[ˈsɔnt͡se]", gloss:"sun", pos:"іменник · с.р.",
     cefr:"A1", sev:"green", her:"✓ Питома",
     sentence:"Небо сьогодні без ___.", form:"сонця", ansCase:"родовий відмінок",
@@ -859,8 +860,7 @@ var DECK = [
     caseRule:"немає → родовий", clozeEn:"There's no water in the glass." },
   { lemma:"хліб", lemmaPlain:"хліб", ipa:"[xlʲib]", gloss:"bread", pos:"іменник · ч.р.",
     cefr:"A1", sev:"green", her:"✓ Питома",
-    sentence:"Я купив буханець ___.", form:"хліба", ansCase:"родовий відмінок",
-    caseRule:"буханець (чого?) → родовий", clozeEn:"I bought a loaf of bread." },
+    sentence:"Це свіжий хліб.", clozeEn:"This is fresh bread." },
   { lemma:"мо́ва", lemmaPlain:"мова", ipa:"[ˈmɔʋɐ]", gloss:"language", pos:"іменник · ж.р.",
     cefr:"A1", sev:"green", her:"✓ Питома",
     sentence:"Я вивчаю українську ___.", form:"мову", ansCase:"знахідний відмінок",
@@ -879,8 +879,8 @@ var DECK = [
     caseRule:"прямий додаток → знахідний", clozeEn:"I gave mom a flower." },
   { lemma:"дру́г", lemmaPlain:"друг", ipa:"[druɦ]", gloss:"friend", pos:"іменник · ч.р.",
     cefr:"A1", sev:"green", her:"✓ Питома",
-    sentence:"Я телефоную своєму ___.", form:"другові", ansCase:"давальний відмінок",
-    caseRule:"телефонувати (кому?) → давальний", clozeEn:"I'm calling my friend." }
+    sentence:"Я бачу свого ___.", form:"друга", ansCase:"знахідний відмінок",
+    caseRule:"бачу (кого?) → знахідний", clozeEn:"I see my friend." }
 ];
 
 /* ---- deterministic shuffle (no Math.random reliance for repeatability) ---- */
@@ -1186,14 +1186,22 @@ function answerCloze(value, btn, role){
   var correct   = t === czNorm(czWord.form);
   var wrongCase = !correct && (role === "wrongcase" || t === czNorm(czWord.lemmaPlain));
   var blank = document.getElementById("cz-blank");
-  if (!correct && !btn){ // typed but not right yet — keep the attempt open
+  if (wrongCase){
+    // SCAFFOLD: right word, wrong case → name the case + trigger (NOT the form), keep the blank
+    // OPEN, let them retry. The live build records ONE case-miss in SRS per presentation; the
+    // demo just re-opens the attempt — the lemma is never accepted as the answer.
+    if (btn){ btn.classList.add("wrong"); btn.disabled = true; }   // retire the wrong-case chip
+    blank.textContent = "?"; blank.classList.remove("filled","bad");
+    document.getElementById("cz-input").value = "";
+    setLive("cz-live","✓ Правильне слово! Тепер поставте його у "+czWord.ansCase+" — "+czWord.caseRule+". Спробуйте ще.","warn");
+    return;  // do NOT advance — retry
+  }
+  if (!correct && !btn){ // typed a wrong WORD — let them retry
     blank.textContent = value || "?"; blank.classList.add("filled","bad");
-    if (wrongCase)
-      setLive("cz-live","✕ Правильне слово, але інший відмінок. Тут «"+czWord.form+"» ("+czWord.caseRule+"). Спробуйте ще.","bad");
-    else
-      setLive("cz-live","✕ Не те слово. Спробуйте ще або оберіть нижче.","bad");
+    setLive("cz-live","✕ Не те слово. Спробуйте ще або оберіть нижче.","bad");
     return;
   }
+  // resolved: a correct answer, or a wrong-WORD chip click
   czAnswered = true;
   document.getElementById("cz-input").disabled = true;
   document.querySelectorAll("#cz-options .cz-chip").forEach(function(b){
@@ -1204,9 +1212,6 @@ function answerCloze(value, btn, role){
   if (correct){
     czCorrect++;
     setLive("cz-live","✓ Правильно — «"+czWord.form+"» ("+czWord.ansCase+").","ok");
-  } else if (wrongCase){
-    if (btn) btn.classList.add("wrong");
-    setLive("cz-live","✕ Правильне слово, але інший відмінок — тут «"+czWord.form+"» ("+czWord.caseRule+").","bad");
   } else {
     if (btn) btn.classList.add("wrong");
     setLive("cz-live","✕ Правильна відповідь: «"+czWord.form+"» ("+czWord.ansCase+").","bad");
