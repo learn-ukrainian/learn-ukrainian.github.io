@@ -24,7 +24,7 @@ import tempfile
 import unicodedata
 import urllib.parse
 import xml.etree.ElementTree as ET
-from collections.abc import Callable, Collection, Mapping, Sequence
+from collections.abc import Callable, Collection, Iterable, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
@@ -8416,6 +8416,7 @@ def run_python_qg(
             verify_words_fn=verify_words_fn,
             level=level,
             ignored_missing_surfaces=ignored_vesum_missing_surfaces,
+            plan_vesum_exemptions=plan.get("vesum_exemptions"),
         ),
     )
     record(
@@ -9911,9 +9912,17 @@ def _foreign_proper_noun_attestation_urls(row: Mapping[str, Any]) -> list[str]:
     return []
 
 
+_UK_WIKI_ARTICLE_PREFIX = "https://uk.wikipedia.org/wiki/"
+
+
 def _foreign_proper_noun_attestation_is_valid(row: Mapping[str, Any]) -> bool:
+    # Require a non-empty article slug after the prefix: the degenerate
+    # "https://uk.wikipedia.org/wiki/" (no article) must NOT validate, so a
+    # plan-declared foreign_cultural_terms exemption cannot be blessed with a
+    # placeholder URL that points at no real page.
     return any(
-        url.startswith("https://uk.wikipedia.org/wiki/")
+        url.startswith(_UK_WIKI_ARTICLE_PREFIX)
+        and url[len(_UK_WIKI_ARTICLE_PREFIX) :].strip("/").strip() != ""
         for url in _foreign_proper_noun_attestation_urls(row)
     )
 
@@ -9995,6 +10004,175 @@ def _resolve_foreign_proper_noun_attested_missing(
                 break
 
     return attested
+
+
+_PLAN_VESUM_EXEMPTION_CATEGORIES: tuple[str, ...] = (
+    "foreign_cultural_terms",
+    "quoted_critical_terms",
+    "corpus_attested_quotes",
+)
+
+
+def _span_surface_lc(span_texts: Iterable[str]) -> set[str]:
+    surfaces: set[str] = set()
+    for span_text in span_texts:
+        for word in _iter_vesum_word_surfaces(_normalize_for_vesum(span_text)):
+            normalized = _normalize_for_vesum(word).lower()
+            if normalized:
+                surfaces.add(normalized)
+    return surfaces
+
+
+_BACKTICK_SPAN_RE = re.compile(r"`([^`]*)`")
+
+# A legitimate inline «…» citation in seminar/folk prose is short (the longest
+# across all shipped folk modules is ~65 chars; verbatim verse lives in stripped
+# :::primary-reading fences, not inline guillemets). An unbalanced «  paired with
+# a far-later » by the stack below would otherwise yield a runaway span that
+# falsely marks an un-quoted token as quoted (→ a false exemption). Bounding the
+# span length cleanly separates real citations from such parse artifacts.
+_MAX_GUILLEMET_SPAN_CHARS = 200
+
+
+def _guillemet_span_texts(module_text: str) -> list[str]:
+    spans: list[str] = []
+    starts: list[int] = []
+    for index, char in enumerate(module_text):
+        if char == "«":
+            starts.append(index + 1)
+        elif char == "»" and starts:
+            start = starts.pop()
+            if index - start <= _MAX_GUILLEMET_SPAN_CHARS:
+                spans.append(module_text[start:index])
+    return spans
+
+
+def _backtick_span_texts(module_text: str) -> list[str]:
+    return [match.group(1) for match in _BACKTICK_SPAN_RE.finditer(module_text)]
+
+
+def _quoted_surface_lc(module_text: str) -> set[str]:
+    """Return normalized-lowercase surfaces quoted in guillemets or backticks."""
+    return _span_surface_lc(_guillemet_span_texts(module_text)) | _span_surface_lc(
+        _backtick_span_texts(module_text)
+    )
+
+
+def _guillemet_surface_lc(module_text: str) -> set[str]:
+    return _span_surface_lc(_guillemet_span_texts(module_text))
+
+
+def _plan_vesum_exemption_surfaces_lc(
+    category: str,
+    entry: Mapping[str, Any],
+    index: int,
+) -> set[str]:
+    term = entry.get("term")
+    if not isinstance(term, str) or not term.strip():
+        raise ValueError(f"vesum_exemptions.{category}[{index}] missing non-empty term")
+
+    forms = entry.get("forms")
+    if not isinstance(forms, list):
+        raise ValueError(f"vesum_exemptions.{category}[{index}] missing forms list")
+
+    rationale = entry.get("rationale")
+    if not isinstance(rationale, str) or not rationale.strip():
+        raise ValueError(
+            f"vesum_exemptions.{category}[{index}] missing non-empty rationale"
+        )
+
+    if category == "foreign_cultural_terms":
+        wikipedia_url = entry.get("wikipedia_url")
+        if (
+            not isinstance(wikipedia_url, str)
+            or not wikipedia_url.strip()
+            or not _foreign_proper_noun_attestation_is_valid(entry)
+        ):
+            raise ValueError(
+                f"vesum_exemptions.{category}[{index}] "
+                "missing valid uk.wikipedia.org wikipedia_url"
+            )
+
+    if category == "corpus_attested_quotes":
+        source_chunk = entry.get("source_chunk")
+        if not isinstance(source_chunk, str) or not source_chunk.strip():
+            raise ValueError(
+                f"vesum_exemptions.{category}[{index}] missing non-empty source_chunk"
+            )
+
+    surfaces = {_normalize_for_vesum(term).lower()}
+    for form_index, form in enumerate(forms):
+        if not isinstance(form, str):
+            raise ValueError(
+                f"vesum_exemptions.{category}[{index}].forms[{form_index}] must be string"
+            )
+        normalized = _normalize_for_vesum(form).lower()
+        if not normalized:
+            raise ValueError(
+                f"vesum_exemptions.{category}[{index}].forms[{form_index}] is empty"
+            )
+        surfaces.add(normalized)
+    if "" in surfaces:
+        raise ValueError(f"vesum_exemptions.{category}[{index}] has empty term")
+    return surfaces
+
+
+def _resolve_plan_declared_vesum_exemptions(
+    missing_lc: set[str],
+    unchecked_pairs: Sequence[tuple[str, str, str]],
+    module_text: str,
+    plan_vesum_exemptions: Mapping[str, Any] | None,
+) -> tuple[set[str], dict[str, list[str]]]:
+    if plan_vesum_exemptions is None:
+        return set(), {category: [] for category in _PLAN_VESUM_EXEMPTION_CATEGORIES}
+    if not isinstance(plan_vesum_exemptions, Mapping):
+        raise ValueError("vesum_exemptions must be a mapping")
+
+    unknown_categories = sorted(
+        set(plan_vesum_exemptions) - set(_PLAN_VESUM_EXEMPTION_CATEGORIES)
+    )
+    if unknown_categories:
+        raise ValueError(
+            "vesum_exemptions contains unknown categories: "
+            + ", ".join(unknown_categories)
+        )
+
+    quoted_lc: set[str] | None = None
+    guillemet_lc: set[str] | None = None
+    by_category_lc: dict[str, set[str]] = {
+        category: set() for category in _PLAN_VESUM_EXEMPTION_CATEGORIES
+    }
+
+    for category in _PLAN_VESUM_EXEMPTION_CATEGORIES:
+        rows = plan_vesum_exemptions.get(category, [])
+        if not isinstance(rows, list):
+            raise ValueError(f"vesum_exemptions.{category} must be a list")
+        for index, row in enumerate(rows):
+            if not isinstance(row, Mapping):
+                raise ValueError(f"vesum_exemptions.{category}[{index}] must be a mapping")
+            declared_lc = _plan_vesum_exemption_surfaces_lc(category, row, index)
+            candidates = declared_lc & missing_lc
+            if category == "quoted_critical_terms":
+                if guillemet_lc is None:
+                    guillemet_lc = _guillemet_surface_lc(module_text)
+                candidates &= guillemet_lc
+            elif category == "corpus_attested_quotes":
+                if quoted_lc is None:
+                    quoted_lc = _quoted_surface_lc(module_text)
+                candidates &= quoted_lc
+            by_category_lc[category].update(candidates)
+
+    exempted_lc = set().union(*by_category_lc.values())
+    by_category_words: dict[str, list[str]] = {}
+    for category, category_lc in by_category_lc.items():
+        by_category_words[category] = sorted(
+            {
+                surface
+                for surface, lower, _original in unchecked_pairs
+                if lower in category_lc
+            }
+        )
+    return exempted_lc, by_category_words
 
 
 _HERITAGE_AUTHENTIC_CLASSIFICATIONS = frozenset(
@@ -10207,6 +10385,7 @@ def _vesum_gate(
     verify_words_fn: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None,
     level: str | None = None,
     ignored_missing_surfaces: Collection[str] = (),
+    plan_vesum_exemptions: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Verify Ukrainian words against VESUM, walking artifacts structurally.
 
@@ -10460,7 +10639,28 @@ def _vesum_gate(
                 "error": str(exc),
                 "checked": len(unchecked_pairs),
             }
-        missing_lc -= heritage_attested_lc
+    missing_lc -= heritage_attested_lc
+    plan_exempted_lc: set[str] = set()
+    plan_exempted_by_category: dict[str, list[str]] = {
+        category: [] for category in _PLAN_VESUM_EXEMPTION_CATEGORIES
+    }
+    if _vesum_heritage_attestation_enabled(level) and plan_vesum_exemptions is not None:
+        try:
+            plan_exempted_lc, plan_exempted_by_category = (
+                _resolve_plan_declared_vesum_exemptions(
+                    missing_lc,
+                    unchecked_pairs,
+                    module_text,
+                    plan_vesum_exemptions,
+                )
+            )
+        except Exception as exc:
+            return {
+                "passed": False,
+                "error": str(exc),
+                "checked": len(unchecked_pairs),
+            }
+    missing_lc -= plan_exempted_lc
     missing = sorted(
         {
             surface
@@ -10474,6 +10674,9 @@ def _vesum_gate(
     )
     foreign_proper_attested_words = sorted(
         {surface for surface, lower, _original in unchecked_pairs if lower in foreign_proper_attested_lc}
+    )
+    plan_exempted_words = sorted(
+        {surface for words in plan_exempted_by_category.values() for surface in words}
     )
     ignored_missing_lc = _vesum_missing_exclusion_keys(
         ignored_missing_surfaces,
@@ -10489,6 +10692,11 @@ def _vesum_gate(
         "heritage_attested_words": heritage_attested_words[:100],
         "foreign_proper_noun_attested": len(foreign_proper_attested_words),
         "foreign_proper_noun_attested_words": foreign_proper_attested_words[:100],
+        "plan_exempted": len(plan_exempted_words),
+        "plan_exempted_words": plan_exempted_words[:100],
+        "plan_exempted_by_category": {
+            category: words[:100] for category, words in plan_exempted_by_category.items()
+        },
         "missing": missing[:100],
         "missing_count": len(missing),
     }
