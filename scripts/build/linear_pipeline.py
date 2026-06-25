@@ -9969,6 +9969,18 @@ def render_section_writer_prompt(
         "plan title as an H2.",
         "- Start `markdown` with the section body. In-body subheadings are "
         "allowed after body text when useful.",
+        *(
+            [
+                "- `[S#]`/`[С#]` source markers, Knowledge Packet anchors, "
+                "`truth_source:`, `self_check:`, section ids, ledger notes, "
+                "`knowledge_packet`, `implementation_map`, and `wiki_manifest` "
+                "names are internal scaffolding. Never print them in published "
+                "`section.md` prose or primary-reading blocks; use natural "
+                "attribution instead.",
+            ]
+            if str(plan.get("level", "")).lower() in SEMINAR_LEVELS
+            else []
+        ),
         "",
         "## Points To Cover",
         point_lines,
@@ -11014,6 +11026,17 @@ def _artifact_sidecar_entry(
 
 
 _ITERATIVE_LEADING_SECTION_HEADING_RE = re.compile(r"^\s{0,3}#{1,3}(?:\s+|$)")
+_ITERATIVE_SCAFFOLDING_SOURCE_MARKER_RE = re.compile(
+    r"\[[SС]\d+(?:\s*,\s*[SС]\d+)*\]"
+)
+_ITERATIVE_SCAFFOLDING_FIELD_LINE_RE = re.compile(
+    r"^\s*(?:"
+    r"truth_source|claim_source|self_check|section_id|ledger|"
+    r"knowledge_packet|implementation_map|wiki_manifest|"
+    r"citations_used|primary_readings_used|vocab_candidates|activity_refs"
+    r")\s*:\s*.*$",
+    re.IGNORECASE,
+)
 
 
 def _strip_leading_iterative_section_headings(markdown: str) -> str:
@@ -11038,6 +11061,31 @@ def _canonical_iterative_section_markdown(markdown: str, title: str) -> str:
     return f"{heading}\n\n{body}"
 
 
+def _strip_iterative_scaffolding_leaks(markdown: str) -> str:
+    cleaned_lines: list[str] = []
+    in_primary_reading = False
+
+    for line in markdown.splitlines(keepends=True):
+        stripped = line.strip()
+        if stripped.startswith(":::primary-reading"):
+            in_primary_reading = True
+            cleaned_lines.append(line)
+            continue
+        if in_primary_reading:
+            cleaned_lines.append(line)
+            if stripped == ":::":
+                in_primary_reading = False
+            continue
+        if _ITERATIVE_SCAFFOLDING_FIELD_LINE_RE.match(line):
+            continue
+        clean_line = _ITERATIVE_SCAFFOLDING_SOURCE_MARKER_RE.sub("", line)
+        clean_line = re.sub(r"\s+([,.;:!?])", r"\1", clean_line)
+        clean_line = re.sub(r" {2,}", " ", clean_line)
+        cleaned_lines.append(clean_line)
+
+    return "".join(cleaned_lines)
+
+
 def assemble_iterative(
     artifacts: Sequence[SectionArtifact],
     plan: Mapping[str, Any],
@@ -11059,6 +11107,8 @@ def assemble_iterative(
             artifact.markdown,
             section_title,
         )
+        if str(plan.get("level", "")).lower() in SEMINAR_LEVELS:
+            section_markdown = _strip_iterative_scaffolding_leaks(section_markdown)
         section_lines = section_markdown.splitlines() or [""]
         line_start = next_line
         line_end = line_start + len(section_lines) - 1
