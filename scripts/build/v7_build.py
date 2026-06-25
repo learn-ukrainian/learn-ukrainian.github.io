@@ -30,6 +30,7 @@ from scripts.build.phases.implementation_map import (
 )
 from scripts.common.thresholds import QG_DIMS, terminal_dims_for
 from scripts.orchestration import reap_worktrees
+from scripts.readings.generate_readings import GenerationSummary, generate_from_plan
 
 DEFAULT_WRITER_TIMEOUT_S = 1800
 FETCH_TIMEOUT_S = 30
@@ -1484,6 +1485,49 @@ def _run_stress_annotation_for_level(module_dir: Path, level: str) -> dict[str, 
     return linear_pipeline.run_stress_annotation(module_dir)
 
 
+def _run_readings_prebuild_phase(
+    *,
+    level: str,
+    slug: str,
+    plan_path: Path,
+    output_dir: Path,
+    sources_db: Path,
+    dry_run: bool,
+    event_sink: Callable[..., None] = emit_event,
+) -> GenerationSummary | None:
+    if level.lower() not in SEMINAR_LEVELS:
+        return None
+
+    summary = generate_from_plan(
+        plan_path,
+        output_dir=output_dir,
+        sources_db=sources_db,
+        dry_run=dry_run,
+    )
+    for item in (*summary.written, *summary.existing):
+        event_sink(
+            "reading_generated",
+            level=level,
+            slug=slug,
+            reading_slug=item.slug,
+            action=item.action,
+            path=item.path.as_posix(),
+            source_chunk_id=item.source_chunk_id,
+            dry_run=dry_run,
+        )
+    for item in summary.skipped:
+        event_sink(
+            "reading_skipped",
+            level=level,
+            slug=slug,
+            reading_slug=item.slug,
+            title=item.title,
+            reason=item.reason,
+            dry_run=dry_run,
+        )
+    return summary
+
+
 def _run(args: argparse.Namespace) -> int:
     level = args.level.lower()
     slug = args.slug
@@ -1526,6 +1570,31 @@ def _run(args: argparse.Namespace) -> int:
             slug=slug,
             event_sink=tracker.emit,
             archive=archive,
+        )
+
+        phase = "readings"
+        _phase_started(archive, phase)
+        started_at = time.monotonic()
+        readings_summary = _run_readings_prebuild_phase(
+            level=level,
+            slug=slug,
+            plan_path=plan_path,
+            output_dir=PROJECT_ROOT / "site" / "src" / "content" / "readings",
+            sources_db=PROJECT_ROOT / "data" / "sources.db",
+            dry_run=args.dry_run,
+            event_sink=tracker.emit,
+        )
+        _phase_done(
+            phase,
+            started_at,
+            level=level,
+            slug=slug,
+            event_sink=tracker.emit,
+            archive=archive,
+            readings_written=len(readings_summary.written) if readings_summary else 0,
+            readings_existing=len(readings_summary.existing) if readings_summary else 0,
+            readings_skipped=len(readings_summary.skipped) if readings_summary else 0,
+            skipped="non-seminar" if readings_summary is None else None,
         )
 
         phase = "knowledge_packet"
