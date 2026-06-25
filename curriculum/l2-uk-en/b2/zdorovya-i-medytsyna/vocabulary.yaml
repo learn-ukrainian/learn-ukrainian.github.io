@@ -1,0 +1,160 @@
+- lemma: здоров'я
+  translation: health
+  pos: noun
+  usage: Здоров'я потребує щоденної уваги.
+- lemma: лікар
+  translation: doctor
+  pos: noun
+  usage: Сімейний лікар дав направлення.
+- lemma: симптом
+  translation: symptom
+  pos: noun
+  usage: Перший симптом з'явився вранці.
+- lemma: діагноз
+  translation: diagnosis
+  pos: noun
+  usage: Лікар поставив діагноз після обстеження.
+- lemma: рецепт
+  translation: prescription
+  pos: noun
+  usage: Ліки продаються лише за рецептом.
+- lemma: щеплення
+  translation: vaccination
+  pos: noun
+  usage: Щеплення від грипу роблять восени.
+- lemma: профілактика
+  translation: prevention
+  pos: noun
+  usage: Профілактика зменшує ризик хвороби.
+- lemma: медицина
+  translation: medicine
+  pos: noun
+  usage: Доказова медицина спирається на дані.
+- lemma: скарга
+  translation: complaint
+  pos: noun
+  usage: Основна скарга пацієнта — біль у спині.
+- lemma: обстеження
+  translation: examination, checkup
+  pos: noun
+  usage: Обстеження призначено на завтра.
+- lemma: дозування
+  translation: dosage
+  pos: noun
+  usage: Дозування залежить від стану пацієнта.
+- lemma: побічний
+  translation: side, adverse
+  pos: adj
+  usage: Побічний ефект треба повідомити лікареві.
+- lemma: поліклініка
+  translation: outpatient clinic
+  pos: noun
+  usage: Я записався до поліклініки на завтра.
+- lemma: страхування
+  translation: insurance
+  pos: noun
+  usage: Медичне страхування покриває консультацію.
+- lemma: запаморочення
+  translation: dizziness
+  pos: noun
+  usage: Після травми було запаморочення.
+- lemma: виснаження
+  translation: exhaustion, burnout
+  pos: noun
+  usage: Емоційне виснаження впливає на здоров'я.
+- lemma: направлення
+  translation: referral
+  pos: noun
+  usage: Для кардіолога потрібне направлення.
+- lemma: декларація
+  translation: declaration with a family doctor
+  pos: noun
+  usage: Декларацію з лікарем можна підписати онлайн.
+- lemma: огляд
+  translation: examination
+  pos: noun
+  usage: Профілактичний огляд триває недовго.
+- lemma: діагностика
+  translation: diagnostics
+  pos: noun
+  usage: Діагностика починається з опису симптомів.
+- lemma: лікування
+  translation: treatment
+  pos: noun
+  usage: Призначене лікування треба завершити.
+- lemma: аналіз
+  translation: test, analysis
+  pos: noun
+  usage: Лікар призначив аналіз крові.
+- lemma: кров
+  translation: blood
+  pos: noun
+  usage: Аналіз крові здали вранці.
+- lemma: рентген
+  translation: X-ray
+  pos: noun
+  usage: Рентген призначили після травми.
+- lemma: УЗД
+  translation: ultrasound
+  pos: noun
+  usage: УЗД допомогло уточнити діагноз.
+- lemma: кардіограма
+  translation: cardiogram
+  pos: noun
+  usage: Кардіограма була в нормі.
+- lemma: показання
+  translation: indication
+  pos: noun
+  usage: Показання описані в інструкції.
+- lemma: протипоказання
+  translation: contraindication
+  pos: noun
+  usage: Протипоказання треба перевірити до лікування.
+- lemma: терапевт
+  translation: general practitioner, therapist
+  pos: noun
+  usage: Терапевт оглянув пацієнта.
+- lemma: кардіолог
+  translation: cardiologist
+  pos: noun
+  usage: Кардіолог пояснив результати.
+- lemma: хірург
+  translation: surgeon
+  pos: noun
+  usage: Хірург провів огляд після травми.
+- lemma: пацієнт
+  translation: patient
+  pos: noun
+  usage: Пацієнт описав симптоми точно.
+- lemma: препарат
+  translation: medication, drug
+  pos: noun
+  usage: Препарат треба приймати за інструкцією.
+- lemma: ліки
+  translation: medicine, medication
+  pos: noun
+  usage: Ліки не слід поєднувати без консультації.
+- lemma: інструкція
+  translation: instruction leaflet
+  pos: noun
+  usage: Інструкція містить дозування і протипоказання.
+- lemma: ефект
+  translation: effect
+  pos: noun
+  usage: Побічний ефект з'явився після першої дози.
+- lemma: послуга
+  translation: service
+  pos: noun
+  usage: Страхування покриває основні послуги.
+- lemma: психолог
+  translation: psychologist
+  pos: noun
+  usage: Психолог допомагає працювати зі стресом.
+- lemma: температура
+  translation: temperature, fever
+  pos: noun
+  usage: Температура тримається другий день.
+- lemma: кашель
+  translation: cough
+  pos: noun
+  usage: Кашель посилився ввечері.
