@@ -3,24 +3,28 @@ import LexiconPractice from "../../components/LexiconPractice";
 import CourseLayout from "../../layouts/CourseLayout.astro";
 
 const frontmatter = {
-  title: "Word Atlas Practice",
-  description: "Client-side Word Atlas practice modes and progress.",
+  title: "Практика — Слова дня",
+  description: "Інтервальне повторення слів вашого рівня (CEFR) з локальним прогресом у браузері.",
 };
 ---
 
 <CourseLayout
   title={frontmatter.title}
   description={frontmatter.description}
-  currentPath="/lexicon/practice"
+  currentPath="/words-of-the-day/practice/"
   heroVariant="lexicon"
   wide
   showHero={false}
 >
   <main class="word-atlas lexicon-practice-page" data-word-atlas>
     <section class="lexicon-practice-intro" aria-labelledby="lexicon-practice-page-title">
-      <span class="lexicon-practice-badge">Атлас слів</span>
-      <h1 id="lexicon-practice-page-title">Word Atlas Practice</h1>
-      <p>Review eligible course and CEFR-enriched words with local progress stored in this browser.</p>
+      <span class="lexicon-practice-badge">Слова дня</span>
+      <h1 id="lexicon-practice-page-title">Практика</h1>
+      <p>
+        Інтервальне повторення слів вашого рівня — картки, добір і вибір значення.
+        Прогрес зберігається у цьому браузері. Слова добираються за вашим рівнем CEFR,
+        як і «Слова дня».
+      </p>
     </section>
 
     <LexiconPractice client:only="react" />

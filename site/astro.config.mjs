@@ -25,10 +25,26 @@ const isHiddenPublicPage = (page) => {
   );
 };
 
+// Re-homed routes. The practice surface moved from the Word Atlas (`/lexicon/`) to
+// Words of the Day (its real home). Astro emits a meta-refresh stub at the old path for
+// the static build (GitHub Pages has no real 301), and we keep the stub out of the sitemap
+// so we never publish two URLs for the same page.
+const redirects = {
+  '/lexicon/practice': '/words-of-the-day/practice/',
+};
+
+const isRedirectSource = (page) => {
+  const pathname = page.startsWith('http') ? new URL(page).pathname : page;
+  return Object.keys(redirects).some(
+    (src) => pathname === src || pathname === `${src}/`,
+  );
+};
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://learn-ukrainian.github.io',
   trailingSlash: 'always',
+  redirects,
 
   compressHTML: true,
 
@@ -83,7 +99,7 @@ export default defineConfig({
     }),
     react(),
     sitemap({
-      filter: (page) => !isHiddenPublicPage(page),
+      filter: (page) => !isHiddenPublicPage(page) && !isRedirectSource(page),
     }),
   ],
 });
