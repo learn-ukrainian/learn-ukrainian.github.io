@@ -22,6 +22,12 @@ import {
   type PracticeSelection,
   type SelectionHistoryItem,
 } from '../lib/lexicon/srs';
+import {
+  CEFR_LEVELS,
+  LEARNER_LEVEL_STORAGE_KEY,
+  normalizeCefrLevel,
+  type CefrLevel,
+} from '../lib/lexicon/levels';
 
 interface LexiconPracticeProps {
   deckLevel?: string;
@@ -347,6 +353,42 @@ function shouldLoadCloze(mode: PracticeModeFilter): boolean {
   return mode === 'mixed' || mode === 'cloze';
 }
 
+/** Learner level persisted in the shared `lu-learner-level` key (also used by Words of the Day). */
+function readLearnerLevel(fallback: CefrLevel): CefrLevel {
+  if (typeof window === 'undefined') return fallback;
+  try {
+    return normalizeCefrLevel(window.localStorage.getItem(LEARNER_LEVEL_STORAGE_KEY), fallback);
+  } catch {
+    return fallback;
+  }
+}
+
+function writeLearnerLevel(level: CefrLevel): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, level);
+  } catch {
+    // Persisting the preference is best-effort; the in-memory selection still applies.
+  }
+}
+
+/** CEFR levels at or below `level` (cumulative: B1 -> A1, A2, B1). */
+function levelsUpTo(level: CefrLevel): CefrLevel[] {
+  const cap = CEFR_LEVELS.indexOf(level);
+  return CEFR_LEVELS.slice(0, cap + 1);
+}
+
+/** Concatenate per-level decks into one cumulative deck (CEFR shards are disjoint). */
+function mergeDecks(decks: PracticeDeckData[], level: CefrLevel): PracticeDeckData {
+  return {
+    deckVersion: decks[0]?.deckVersion ?? `cumulative-${level}`,
+    level,
+    index: decks.flatMap((deck) => deck.index),
+    lexemes: decks.flatMap((deck) => deck.lexemes),
+    cloze: decks.flatMap((deck) => deck.cloze),
+  };
+}
+
 export default function LexiconPractice({
   deckLevel = 'A1',
   shardBaseUrl = '/lexicon',
@@ -362,6 +404,9 @@ export default function LexiconPractice({
   });
   const [started, setStarted] = useState(autoStart);
   const [mode, setMode] = useState<PracticeModeFilter>(initialMode);
+  const [learnerLevel, setLearnerLevel] = useState<CefrLevel>(() =>
+    readLearnerLevel(normalizeCefrLevel(deckLevel)),
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState('');
@@ -416,31 +461,54 @@ export default function LexiconPractice({
     document.title = `${MODE_LABELS[mode]} Practice - Word Atlas`;
   }, [mode, started]);
 
-  async function ensureDeck(includeCloze = shouldLoadCloze(mode)): Promise<PracticeDeckData | null> {
-    if (deck && (!includeCloze || clozeLoaded)) return deck;
+  async function ensureDeck(
+    includeCloze = shouldLoadCloze(mode),
+    options: { level?: CefrLevel; force?: boolean } = {},
+  ): Promise<PracticeDeckData | null> {
+    // `level`/`force` are passed explicitly on a level change so we don't read the
+    // stale `learnerLevel`/`deck` closures before their state updates have flushed.
+    const level = options.level ?? learnerLevel;
+    const force = options.force ?? false;
+    const current = force ? null : deck;
+    if (current && (!includeCloze || clozeLoaded)) return current;
     setLoading(true);
     setError(null);
     try {
-      let nextDeck = deck;
+      let nextDeck = current;
+      const levels = levelsUpTo(level);
       if (!nextDeck) {
-        const [indexResponse, lexemeResponse] = await Promise.all([
-          fetch(`${shardBaseUrl}/practice-index.${deckLevel}.json`),
-          fetch(`${shardBaseUrl}/practice-lexemes.${deckLevel}.json`),
-        ]);
-        if (!indexResponse.ok || !lexemeResponse.ok) {
+        // Load every CEFR shard at or below the learner level and merge them, so an
+        // A1 learner only ever practices A1 words while a B1 learner gets A1+A2+B1.
+        const perLevel = await Promise.all(
+          levels.map(async (shardLevel) => {
+            const [indexResponse, lexemeResponse] = await Promise.all([
+              fetch(`${shardBaseUrl}/practice-index.${shardLevel}.json`),
+              fetch(`${shardBaseUrl}/practice-lexemes.${shardLevel}.json`),
+            ]);
+            // A level shard may not be published yet (e.g. C2); skip it gracefully.
+            if (!indexResponse.ok || !lexemeResponse.ok) return null;
+            const indexShard = (await indexResponse.json()) as PracticeIndexShard;
+            const lexemeShard = (await lexemeResponse.json()) as PracticeLexemeShard;
+            return combinePracticeShards(indexShard, lexemeShard);
+          }),
+        );
+        const loaded = perLevel.filter((entry): entry is PracticeDeckData => entry !== null);
+        if (loaded.length === 0) {
           throw new Error('Practice shard request failed');
         }
-        const indexShard = (await indexResponse.json()) as PracticeIndexShard;
-        const lexemeShard = (await lexemeResponse.json()) as PracticeLexemeShard;
-        nextDeck = combinePracticeShards(indexShard, lexemeShard);
+        nextDeck = mergeDecks(loaded, level);
       }
-      if (includeCloze && !clozeLoaded) {
-        const clozeResponse = await fetch(`${shardBaseUrl}/practice-cloze.${deckLevel}.json`);
-        if (clozeResponse.ok) {
-          const clozeShard = (await clozeResponse.json()) as { cloze: PracticeClozeItem[] };
-          nextDeck = { ...nextDeck, cloze: clozeShard.cloze };
-          setClozeLoaded(true);
-        }
+      if (includeCloze && (force || !clozeLoaded)) {
+        const clozeBatches = await Promise.all(
+          levels.map(async (shardLevel) => {
+            const clozeResponse = await fetch(`${shardBaseUrl}/practice-cloze.${shardLevel}.json`);
+            if (!clozeResponse.ok) return [];
+            const clozeShard = (await clozeResponse.json()) as { cloze: PracticeClozeItem[] };
+            return clozeShard.cloze ?? [];
+          }),
+        );
+        nextDeck = { ...nextDeck, cloze: clozeBatches.flat() };
+        setClozeLoaded(true);
       }
       setDeck(nextDeck);
       return nextDeck;
@@ -456,6 +524,21 @@ export default function LexiconPractice({
     setMode(nextMode);
     setStarted(true);
     await ensureDeck(shouldLoadCloze(nextMode));
+  }
+
+  async function changeLevel(nextLevel: CefrLevel) {
+    if (nextLevel === learnerLevel) return;
+    setLearnerLevel(nextLevel);
+    writeLearnerLevel(nextLevel);
+    // The pool changed: drop the loaded deck + per-session history and, if a session is
+    // already running, immediately reload the cumulative pool for the new level.
+    setClozeLoaded(false);
+    setHistory([]);
+    if (started) {
+      await ensureDeck(shouldLoadCloze(mode), { level: nextLevel, force: true });
+    } else {
+      setDeck(null);
+    }
   }
 
   function refreshProgress() {
@@ -602,6 +685,30 @@ export default function LexiconPractice({
             ),
           )}
         </div>
+      </div>
+
+      <div className="lexicon-practice-levels">
+        <div
+          className="lexicon-practice-levels-row"
+          role="group"
+          aria-label="Learner level — caps practice to this level and below"
+        >
+          <span className="lexicon-practice-levels-label">Рівень</span>
+          {CEFR_LEVELS.map((level) => (
+            <button
+              type="button"
+              key={level}
+              className={learnerLevel === level ? 'active' : ''}
+              aria-pressed={learnerLevel === level}
+              onClick={() => void changeLevel(level)}
+            >
+              {level}
+            </button>
+          ))}
+        </div>
+        <p className="lexicon-practice-muted lexicon-practice-levels-hint">
+          Практика обмежена вашим рівнем і нижчими (накопичувально).
+        </p>
       </div>
 
       <div className="lexicon-practice-progress">

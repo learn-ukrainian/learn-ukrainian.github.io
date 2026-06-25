@@ -10,8 +10,63 @@ import {
   type PracticeDeckData,
   type PracticeLexeme,
 } from '@site/src/lib/lexicon/srs';
+import { LEARNER_LEVEL_STORAGE_KEY, type CefrLevel } from '@site/src/lib/lexicon/levels';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
+
+function okJson(body: unknown): Response {
+  return { ok: true, json: async () => body } as unknown as Response;
+}
+
+function notFoundResponse(): Response {
+  return { ok: false, json: async () => ({}) } as unknown as Response;
+}
+
+/** Mock fetch for the level-sharded practice deck; `counts` lists which levels are published. */
+function mockShardFetch(counts: Partial<Record<CefrLevel, number>>) {
+  const requested: string[] = [];
+  const fn = vi.fn(async (input: RequestInfo | URL) => {
+    const url = String(input);
+    requested.push(url);
+    const match = url.match(/practice-(index|lexemes|cloze)\.([ABC][12])\.json/);
+    if (!match) return notFoundResponse();
+    const kind = match[1] as 'index' | 'lexemes' | 'cloze';
+    const level = match[2] as CefrLevel;
+    const n = counts[level];
+    if (n === undefined) return notFoundResponse(); // shard not published (e.g. C2)
+    if (kind === 'cloze') return okJson({ cloze: [] });
+    const lexemes = Array.from({ length: n }, (_unused, i) =>
+      lexeme(
+        `${level}-${i}`,
+        `слово-${level}-${i}`,
+        `gloss ${level} ${i}`,
+        {
+          nominative: `слово-${level}-${i}`,
+          accusative: `слово-${level}-${i}`,
+          locative: `слово-${level}-${i}`,
+        },
+        { cefr: level },
+      ),
+    );
+    if (kind === 'index') {
+      return okJson({
+        deckVersion: `v-${level}`,
+        level,
+        items: lexemes.map((lex, order) => ({
+          lemmaId: lex.lemmaId,
+          lemma: lex.lemma,
+          cefr: level,
+          modes: ['flashcards', 'matching', 'choice'],
+          hasCloze: false,
+          clozeIds: [],
+          newOrder: order,
+        })),
+      });
+    }
+    return okJson({ deckVersion: `v-${level}`, level, lexemes });
+  });
+  return { fn, requested };
+}
 
 function lexeme(
   lemmaId: string,
@@ -227,6 +282,46 @@ describe('LexiconPractice', () => {
     render(<LexiconPractice />);
 
     expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  test('caps the practice pool at the learner level (cumulative, never higher levels)', async () => {
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'B1');
+    const { fn, requested } = mockShardFetch({ A1: 2, A2: 1, B1: 3, B2: 5, C1: 4 });
+    vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+    const user = userEvent.setup();
+    render(<LexiconPractice initialMode="flashcards" />);
+
+    await user.click(screen.getByRole('button', { name: 'Start Practice' }));
+
+    // A1+A2+B1 = 6 words; B2/C1 are above the learner level and must never be loaded.
+    await waitFor(() =>
+      expect(screen.getByLabelText('6 practice words loaded')).toBeInTheDocument(),
+    );
+    expect(requested.some((u) => u.includes('practice-index.A1'))).toBe(true);
+    expect(requested.some((u) => u.includes('practice-index.A2'))).toBe(true);
+    expect(requested.some((u) => u.includes('practice-index.B1'))).toBe(true);
+    expect(requested.some((u) => u.includes('practice-index.B2'))).toBe(false);
+    expect(requested.some((u) => u.includes('practice-index.C1'))).toBe(false);
+  });
+
+  test('level selector re-caps the pool and persists the shared learner-level key', async () => {
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
+    const { fn } = mockShardFetch({ A1: 2, A2: 1, B1: 3 });
+    vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+    const user = userEvent.setup();
+    render(<LexiconPractice initialMode="flashcards" />);
+
+    await user.click(screen.getByRole('button', { name: 'Start Practice' }));
+    await waitFor(() =>
+      expect(screen.getByLabelText('2 practice words loaded')).toBeInTheDocument(),
+    );
+
+    // Raise the level to B1 -> pool grows cumulatively to A1+A2+B1 = 6 and persists.
+    await user.click(screen.getByRole('button', { name: 'B1' }));
+    await waitFor(() =>
+      expect(screen.getByLabelText('6 practice words loaded')).toBeInTheDocument(),
+    );
+    expect(localStorage.getItem(LEARNER_LEVEL_STORAGE_KEY)).toBe('B1');
   });
 
   test('flashcard rating persists mode-specific SRS progress', async () => {
