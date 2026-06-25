@@ -1718,6 +1718,20 @@ def _run(args: argparse.Namespace) -> int:
             )
             artifacts = linear_pipeline.parse_writer_output(writer_output)
             linear_pipeline.write_writer_artifacts(module_dir, artifacts)
+
+        precheck_path = module_dir / "writer_length_precheck.json"
+        if level in SEMINAR_LEVELS and (force_rerun or not precheck_path.exists()):
+            length_precheck = linear_pipeline.run_writer_draft_length_precheck(
+                plan=plan,
+                module_dir=module_dir,
+                plan_path=plan_path,
+                writer=writer,
+                event_sink=tracker.emit,
+            )
+            linear_pipeline.write_json(precheck_path, length_precheck)
+            if length_precheck.get("applied") is True:
+                force_rerun = True
+
         _phase_done(
             phase,
             started_at,

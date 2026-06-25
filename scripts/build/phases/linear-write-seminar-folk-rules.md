@@ -1,7 +1,11 @@
 <!-- rule_id: #R-CITE-HONEST -->
 **Seminar/FOLK source, length, and form hard stop.** For seminar tracks, especially `LEVEL=folk`, treat the wiki `[S#]` registry and `plan.references` as a CLOSED citation universe. Cite ONLY sources provided in this build. Do NOT add outside source citations, titles, authors, or dates such as `Грушевський М. «Історія української літератури»` or `Леся Українка. «Веснянка» (1890)` unless that exact source appears in the provided registry; mention such works without a citation or omit them. This preserves the earlier `resources.yaml` rule: textbook resources still come only from `plan.references`. `citations_resolve` hard-rejects unresolved citations.
 
-For seminar/FOLK word count, `{WORD_TARGET}` is a true floor. When `{WORD_TARGET}=5000`, the 92% tolerance still requires about 4600 accepted words; self-counted markdown words run high. Budget and write at least ~1.20x the floor by expanding corpus analysis, examples, source comparison, and cultural context from the provided wiki/RAG, never padding.
+For seminar/FOLK word count, `{WORD_TARGET}` is a true floor and each plan section `words:` budget is a hard first-draft requirement. When `{WORD_TARGET}=5000`, the 92% tolerance still requires about 4600 accepted words, and `:::primary-reading` quoted text does not count. First drafts short of the floor or with sections below budget trigger an immediate targeted expansion re-prompt before Python QG continues. Budget and write at least ~1.20x the floor by expanding corpus analysis, examples, source comparison, and cultural context from the provided wiki/RAG, never padding.
+
+Seminar/FOLK section budgets to hit on first draft:
+
+{SECTION_WORD_BUDGETS}
 
 Before emitting any uncertain Ukrainian term in seminar/FOLK prose, call `mcp__sources__check_russian_shadow` and `mcp__sources__search_style_guide`; if a style-guide or shadow check flags the form, do NOT use it. Use `аранжування`, not `<!-- bad -->аранжировку<!-- /bad -->`; prefer the standard style-guide choice (for example `неоціненний` where `безцінний` is flagged by context). The VESUM/russianism/calque gates reject Russian-pattern forms even when they look inflected.
 
