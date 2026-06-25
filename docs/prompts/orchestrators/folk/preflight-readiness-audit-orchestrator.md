@@ -5,6 +5,7 @@ Last reviewed: 2026-06-21
 
 ## Source Assumptions
 
+- ⛔ **Framing is governed by `docs/folk-epic/FOLK-FRAMING-STANDARD.md`.** Folk is a **pre-literature course** (oral foundation of *written* literature), **Christian-heritage-first**, school-canonical sourcing, **no occult / pagan-as-belief**. The readiness audit must apply the **school-canon validity test** (below) and flag every framing risk against this standard.
 - FOLK is the pilot seminar track. Use it to establish patterns for later seminar tracks, but verify every rule against the current repo.
 - FOLK modules require a researched primary-text catalog, not a single token reading — target ≥4 distinct corpus-verified primary texts per module when the corpus supports it (`EXEMPLAR-STANDARD.md` §3), corpus-bound and never backfilled. If readings are not yet available, record blockers/reading-needed tasks rather than omitting them.
 - The current reading system includes `site/src/content/readings/`, `PrimaryReading`, `scripts/generate_mdx/reading_links.py`, and `scripts/readings/generate_readings.py`.
@@ -37,6 +38,7 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/shared/review-output-schema.md`
 - `docs/prompts/orchestrators/shared/seminar-source-rules.md`
 - `docs/prompts/orchestrators/shared/reading-section-rules.md`
+- **`docs/folk-epic/FOLK-FRAMING-STANDARD.md` (READ FIRST — the non-negotiable framing standard)**
 - `docs/folk-epic/EXEMPLAR-STANDARD.md`
 - `docs/folk-epic/folk-review-rubric.md`
 - `docs/folk-epic/folk-text-layer-spec.md`
@@ -63,6 +65,8 @@ git rev-parse --show-toplevel
 
 ## Audit Checks
 
+- **School-canon validity test (does this module deserve to exist?)** — for each topic, query the school textbooks in `data/sources.db` (`textbook_sections`/`textbooks`, gr 5–8 ukrlit = the МОН/osvita.ua canon). If the topic is a real taught unit (колядки, щедрівки, думи, казки, легенди, прислів'я, …), it is valid. If it is nearly absent from the canon (окультизм, замовляння-as-spells, демонологія-as-belief, standalone material-culture/народознавство), raise a **module-validity finding: CUT or redesign** — do not greenlight building the contaminated frame. Material-culture topics become context inside genre modules, not standalone literature units (`FOLK-FRAMING-STANDARD.md` Pillar 4 + validity test).
+- **Framing-standard risk check** — flag any plan/module/dossier that frames Christian-folk genres as «прикладна магія» / "magic", builds a «дохристиянське ядро / християнська оболонка» pagan-core-veneer structure, presents pagan cosmogony as the creation account, or treats demonology/occult/spell-craft as real practice (`FOLK-FRAMING-STANDARD.md` NEVER list). Each is a blocker for production.
 - Confirm active FOLK track shape from current source/site files; do not infer active tracks from plan-only leftovers.
 - For every selected plan, survey corpus/source availability and report the **primary-text catalog**: how many distinct verified primary texts the corpus holds for the topic vs how many the plan/module currently surfaces. Raise a **reading-deficit** finding when the corpus supports ≥4 distinct texts but the plan/module surfaces fewer (FOLK floor, `EXEMPLAR-STANDARD.md` §3); raise `reading-needed` when no usable text exists. The floor is corpus-bound — fewer than 4 is acceptable only when the gate-safe corpus genuinely lacks that many distinct verified texts, and is **never** met by backfilled or scholarly-quoted text.
 - Flag any `references:` entry tagged `type: primary` that is actually a secondary/scholarly work (monograph, survey, analysis, e.g. Костомаров/Чижевський/Попович); these must be `type: scholarly` and must not count toward the reading floor.

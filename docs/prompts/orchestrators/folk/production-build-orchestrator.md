@@ -5,6 +5,7 @@ Last reviewed: 2026-06-21
 
 ## Source Assumptions
 
+- ⛔ **Framing is governed by `docs/folk-epic/FOLK-FRAMING-STANDARD.md` — obey all 4 pillars on every module.** Folk is a **pre-literature course**: усна народна творчість taught as the oral foundation of *written* Ukrainian literature, **Christian-heritage-first**, written-text/school-canonical sourcing, **no occult / pagan-as-held-belief**. Never frame Christian-folk genres (колядки/щедрівки…) as «прикладна магія» or a pagan core under a Christian shell; never present demonology/occult/spell-craft as real practice. A framing violation is a build-blocker.
 - FOLK is the seminar pilot and must model reading-first seminar production.
 - Every module needs a **researched primary-text catalog** — survey the corpus for every distinct verified text on the topic and surface as many as it supports (**FOLK floor: ≥4 distinct primary readings when the gate-safe corpus holds ≥4 verified fragments**, `EXEMPLAR-STANDARD.md` §3; corpus-bound, never backfilled with from-memory or scholarly-quoted text). If a text is not available, record a `reading-needed` blocker; do not build around an empty or padded reading layer.
 - Hosted readings currently live in `site/src/content/readings/` and require `public_domain: true`. Non-hostable texts need `role: reading` external links and clear copyright notes.
@@ -37,6 +38,7 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/shared/telemetry-and-pr.md`
 - `docs/prompts/orchestrators/shared/seminar-source-rules.md`
 - `docs/prompts/orchestrators/shared/reading-section-rules.md`
+- **`docs/folk-epic/FOLK-FRAMING-STANDARD.md` (READ FIRST — the non-negotiable framing standard)**
 - `docs/folk-epic/EXEMPLAR-STANDARD.md`
 - `docs/folk-epic/folk-review-rubric.md`
 - `docs/folk-epic/folk-text-layer-spec.md`
@@ -74,6 +76,8 @@ git rev-parse --show-toplevel
 
 ## Production Rules
 
+- **Apply the framing standard to every module** (`docs/folk-epic/FOLK-FRAMING-STANDARD.md`): Christian-heritage-first, pre-literature identity, no occult/pagan-as-belief, no «магія» framing of Christian-folk genres. If the assigned topic itself fails the school-canon validity test (no real gr 5–8 ukrlit basis — e.g. демонологія, замовляння-as-spells, standalone material-culture), STOP and flag it as a cut/redesign candidate instead of building the contaminated frame.
+- **Sourcing precedence:** the school textbooks in `data/sources.db` (gr 5–8 ukrlit) are the **primary canonical** source — host the **standard school form**; ukrlib/uk.wikisource/litopys are secondary corroboration; `osvita.ua` is authoritative-but-© (verify + link, never host). Do not ship an archaic-dialect reading where a codified school form exists. Tag provenance.
 - Work one module at a time. Finish reading discovery, source writing, reading generation, MDX assembly, and validation before moving to the next slug.
 - Start each module from the primary reading candidates. Build the full corpus-supported catalog (FOLK target ≥4 distinct primary texts; fewer only when the gate-safe corpus genuinely lacks them, recorded as `reading-needed`). Each candidate needs a copyright decision: hosted, linked-only, excerpt-only, or omit with reason.
 - Keep scholarly/secondary works (monographs, surveys, analyses) as `type: scholarly` references — never tag them `type: primary` and never count them toward the reading floor. A primary text reconstructed inside a scholar's prose is not a clean hostable reading; source the standalone text from a primary-text corpus.

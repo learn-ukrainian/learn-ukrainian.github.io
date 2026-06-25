@@ -1,5 +1,9 @@
 # Folk Dossier + Wiki Review Rubric (Stage-0)
 
+> ⛔ **Read [`FOLK-FRAMING-STANDARD.md`](FOLK-FRAMING-STANDARD.md) before reviewing.** Its 4 pillars
+> (pre-literature · Christian-heritage-first · written-text/school-canonical sourcing · no occult-or-
+> pagan-as-belief) and its NEVER list are a **hard, fail-the-artifact gate** here — see Gate 0.
+
 The review scorecard for every folk dossier and the grounded wiki compiled from it. A dossier/wiki
 ships only when it passes **all** gates. **Reviewer = cross-family to the writer** (GPT↔Claude).
 **NO DeepSeek for folk culture** (user 2026-06-06: lacks the intrinsic Ukrainian-culture knowledge to
@@ -8,6 +12,23 @@ The reviewer MUST hammer the corpus — judging on metrics/structure alone is ho
 (the m20 lesson, MEMORY #M-11).
 
 ## Hard gates (deterministic — must pass; quote raw tool output, #M-4)
+0. **Framing standard (THE foundational gate — [`FOLK-FRAMING-STANDARD.md`](FOLK-FRAMING-STANDARD.md))** —
+   the artifact obeys all 4 pillars and violates none of the NEVER list. A **single** violation = **BLOCK**,
+   regardless of every other score:
+   - **(a) Christian-heritage-first** — Christian-folk genres (колядки/щедрівки/вертеп/Великдень…) carry the
+     Christian meaning at parity/primacy; no «прикладна магія», no "magic-ritual" reduction, no «дохристиянське
+     ядро / християнська оболонка» pagan-core-veneer structure; pagan cosmogony is never *the* creation account.
+   - **(b) No occult / pagan-as-held-belief** — no demonology/occultism/witchcraft/spell-craft as real practice
+     (the Russian "Ukrainians-as-witches/характерники" smear); pre-Christian motifs only as minor poetic/folk-art
+     imagery or an explicitly-scholarly older layer, never doctrine, never foregrounded.
+   - **(c) Pre-literature identity** — folklore is framed as the oral foundation of *written* Ukrainian literature,
+     not as a worldview manual or standalone ethnography; material culture is context, not the subject.
+   - **(d) Source provenance** — primary = school-canon textbooks (host the standard school form), secondary =
+     ukrlib/wikisource (corroboration); no archaic-dialect reading where a codified school form exists; provenance tagged.
+   - If a "pagan-survival / magic" reading is mentioned at all, it is attributed explicitly as a contested/Soviet-era
+     frame and balanced — never asserted as neutral fact. Older agrarian strata (spring веснянки/гаївки, купальські)
+     appear only as scholarly-noted poetic motifs/formulae, never as the learner-facing thesis; the term
+     `продукувальна магія` only inside a cited scholarly note, never as framing and never for колядки/щедрівки.
 1. **Quote integrity** — every verbatim folk text (duma line, song lyric, замовляння, proverb) is
    **`verify_quote`-confirmed** (record the score) OR attributed to a named edition and marked
    do-not-quote/paraphrase-only. NEVER an invented or altered line. This is the folk analogue of the
@@ -33,15 +54,10 @@ The reviewer MUST hammer the corpus — judging on metrics/structure alone is ho
    - **No romantic-nationalist over-claim** — do NOT present Перун/Велес/Мокоша/**Берегиня** as a
      tidy reconstructed pagan pantheon; Берегиня especially is a modern reconstruction, flag it.
    - **No Soviet-atheist "magic / pagan-core, Christian veneer" framing of Christian-folk genres** —
-     NEVER reduce колядки/щедрівки (or any Christian-folk tradition) to «прикладна магія» / a "magic"
-     ritual, and NEVER frame them as a pagan/dohristиянське "core" under a Christian "shell/оболонка/
-     нашарування". That frame both offends religious learners and reproduces the Soviet-atheist
-     "pagan-survival" distortion. Required reframe: колядки/щедрівки are **величально-побажальні**
-     (praise + well-wishing) and the Nativity/religious meaning gets **parity** with any archaic stratum;
-     щедрування is an Eastern-rite folk-Christian tradition. If the "magic/pagan-survival" reading is
-     discussed, name it as a contested/Soviet-era frame, don't assert it as neutral. `продукувальна
-     магія` terminology is acceptable ONLY for genuinely pre-Christian agrarian rites (spring/summer
-     веснянки/купальські), never for колядки/щедрівки. (Origin: user flag + #3745.)
+     this is now the foundational **Gate 0** above (`FOLK-FRAMING-STANDARD.md`): a single «прикладна магія»
+     / pagan-core-veneer / pagan-cosmogony-as-creation framing of колядки/щедрівки (or any Christian-folk
+     tradition) is a **BLOCK**, not just a quality deduction. See Gate 0 for the full rule and the
+     `продукувальна магія` constraint. (Origin: user flag + #3745, superseded by the 2026-06-25 standard.)
    - **No flattening** — regional variation (Гуцул/Бойко/Лемко/Полісся…) surfaced, not pan-Ukrainian-
      smoothed; source disagreements named.
 8. **Anti-colonial role is concrete, not slogan** — §7 of the dossier ties THIS genre to specific
