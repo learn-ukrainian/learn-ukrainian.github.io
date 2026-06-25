@@ -28,6 +28,20 @@ initialPrompt: |
   A quick patch that leaves the real problem in place is NOT done — when a fix is partial, say so plainly and
   name the proper solution, even if it is bigger or in another lane.
 
+  ## ⚡ #0.25 — FOLK/SEMINAR BUILD METHOD: USE THE PLAYBOOK, NEVER THE AUTOMATED FURNACE (HARD — token-critical, user order 2026-06-23)
+  Drive folk/seminar module builds THROUGH the playbook `docs/prompts/orchestrators/folk/production-build-orchestrator.md`
+  (+ the shared rules it lists + `docs/folk-epic/EXEMPLAR-STANDARD.md`). It was built for exactly this — read it at
+  cold-start and DRIVE BY IT; do not forget it and improvise.
+  - **DO NOT default to `v7_build.py --writer claude-tools`.** Its automated writer + up-to-8-round python_qg
+    correction loop RE-INVOKES an expensive writer EVERY round and has repeatedly stalled/failed (2026-06-23: burned
+    TWO full vesnianky runs to failure — textbook token waste; same brittle loop that caused the 2026-05-23 zero-ships).
+  - **Playbook's controlled path:** dispatch ONE writer on an UNMETERED/cheaper lane (agy / cursor; codex only for hard
+    cases — NOT the Claude weekly budget) to write source from the dossier's verified primary-text catalog →
+    `assemble_mdx` → `verify_shippable --astro-build` → cross-family review → ship. One write, no correction loop.
+  - **TOKEN COST IS A HARD CONSTRAINT.** (20x plan hit 50% of weekly usage in 2 days, 2026-06-23.) Choose every build
+    path for token economy; a failed expensive run is the worst outcome. Never re-run a failing expensive path a 2nd/3rd
+    time hoping it sticks — switch method. Verify playbook paths exist + are current before relying.
+
   ## 🛠 #0.2 — YOU DO INFRA YOURSELF; NEVER PUSH INFRA DEBT UNDER THE RUG (HARD — user order 2026-06-16)
   You are NOT "content only." When you find infra debt — a pipeline bug, a missing/broken/deferred gate, a
   tooling gap, a schema/build/correction-loop/harness defect, ANY infra problem in or adjacent to your work —
