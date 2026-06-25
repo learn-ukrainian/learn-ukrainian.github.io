@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PoC — Атлас слів · Слова дня · Практика (Word Atlas / Words of the Day)</title>
+<!--
+  DESIGN SOURCE-OF-TRUTH PoC — NOT production code.
+  Self-contained: all CSS + JS inline, no build step. Opens directly in a browser.
+  Tokens are the EXACT live --lu-* custom properties from
+  site/src/styles/course.css (surfaces/text/borders) + site/src/css/custom.css
+  (primary/accent/state-*). Dark is the default theme (the live site ships dark);
+  a light toggle lives in the page-switch bar.
+  Views (page-switch): Лексикон-лендінг → Практика-home → Флешкартки → Добір пар → Вибір → Заповніть пропуск
+-->
+<style>
+  /* ============================================================
+     DESIGN TOKENS — copied verbatim from the live stylesheets.
+     :root = light · [data-theme='dark'] = dark (DEFAULT).
+     ============================================================ */
+  :root {
+    color-scheme: light;
+    /* course.css :root */
+    --lu-blue: #0057B8; --lu-blue-dark: #004B9C; --lu-blue-light: #E8F0FE;
+    --lu-yellow: #FFD700; --lu-yellow-dark: #E6B800; --lu-yellow-light: #FFF9E0;
+    --lu-green: #2E7D32; --lu-green-light: #E8F5E9;
+    --lu-red: #C62828; --lu-red-light: #FFEBEE;
+    --lu-teal: #00695C; --lu-teal-light: #E0F2F1;
+    --lu-purple: #6A1B9A; --lu-purple-light: #F3E5F5;
+    --lu-orange: #E65100; --lu-orange-light: #FFF3E0;
+    --lu-gray-600: #757575; --lu-gray-900: #212121;
+    --lu-page-bg: #FAFAFA;
+    --lu-surface: #FFFFFF;
+    --lu-surface-raised: #FFFFFF;
+    --lu-surface-muted: #F5F7FA;
+    --lu-border: #E4E7EC;
+    --lu-header-bg: rgba(255, 255, 255, 0.96);
+    --lu-text: #212121;
+    --lu-text-muted: #676F7A;
+    --lu-radius: 8px;
+    --lu-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --lu-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --lu-max-width: 1200px;
+    --lu-content-width: 840px;
+    /* fixed-on-color (never inverts) */
+    --lu-on-yellow: #1A1A1A;
+    --lu-footer-bg: #1A1F26;
+    /* custom.css :root */
+    --lu-primary: #0057B7; --lu-on-primary: #FFFFFF;
+    --lu-accent: #FFD700; --lu-on-accent: #1c1e21;
+    --lu-state-active: rgba(0, 87, 183, .08);
+    --lu-state-correct-bg: rgba(46, 125, 50, .08); --lu-state-correct-fg: #2E7D32;
+    --lu-state-wrong-bg: rgba(198, 40, 40, .08); --lu-state-wrong-fg: #C62828;
+    --lu-state-missed: rgba(251, 188, 4, .15);
+    --lu-id-lexicon: linear-gradient(135deg, #00695C, #004D40);
+  }
+  [data-theme='dark'] {
+    color-scheme: dark;
+    /* course.css [data-theme='dark'] */
+    --lu-blue: #6AA9FF; --lu-blue-dark: #A8CFFF; --lu-blue-light: rgba(106, 169, 255, 0.16);
+    --lu-yellow: #FFD84D; --lu-yellow-dark: #FFE58A; --lu-yellow-light: rgba(255, 216, 77, 0.12);
+    --lu-green: #7BCF86; --lu-green-light: rgba(123, 207, 134, 0.14);
+    --lu-red: #F47770; --lu-red-light: rgba(244, 119, 112, 0.14);
+    --lu-teal: #7AD7CB; --lu-teal-light: rgba(122, 215, 203, 0.14);
+    --lu-purple: #C58BFF; --lu-purple-light: rgba(197, 139, 255, 0.14);
+    --lu-orange: #FFB061; --lu-orange-light: rgba(255, 176, 97, 0.14);
+    --lu-gray-600: #A9B2BF; --lu-gray-900: #F4F7FB;
+    --lu-page-bg: #111418;
+    --lu-surface: #171B21;
+    --lu-surface-raised: #1D232B;
+    --lu-surface-muted: #222A33;
+    --lu-border: #303A46;
+    --lu-header-bg: rgba(17, 20, 24, 0.94);
+    --lu-text: #F4F7FB;
+    --lu-text-muted: #A9B2BF;
+    --lu-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+    --lu-shadow-lg: 0 4px 18px rgba(0, 0, 0, 0.36);
+    /* custom.css [data-theme='dark'] */
+    --lu-primary: #5B9BD5; --lu-on-primary: #10151B;
+    --lu-state-active: rgba(91, 155, 213, .22);
+    --lu-state-correct-bg: rgba(46, 160, 70, .26); --lu-state-correct-fg: #81C995;
+    --lu-state-wrong-bg: rgba(210, 70, 70, .26); --lu-state-wrong-fg: #F28B82;
+    --lu-state-missed: rgba(251, 188, 4, .22);
+    --lu-id-lexicon: linear-gradient(135deg, #175A50, #123F39);
+  }
+
+  /* ============================================================ RESET ===== */
+  * { box-sizing: border-box; }
+  html { background: var(--lu-page-bg); color: var(--lu-text);
+    font-family: "Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+  body { margin: 0; background: var(--lu-page-bg); color: var(--lu-text); line-height: 1.7;
+    -webkit-font-smoothing: antialiased; }
+  h1, h2, h3 { line-height: 1.2; }
+  a { color: var(--lu-blue); }
+  :focus-visible { outline: none; box-shadow: 0 0 0 3px var(--lu-state-active); border-radius: 6px; }
+  button:focus-visible { box-shadow: 0 0 0 3px var(--lu-state-active); }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  /* ============================================ POC PAGE-SWITCH BAR ====== */
+  .pocbar {
+    position: sticky; top: 0; z-index: 300;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px;
+    padding: 9px 20px; font-size: 13px;
+    background: #0d1014; color: #E9EDF3;
+    border-bottom: 1px solid #2a323d;
+  }
+  .pocbar label { opacity: .68; font-weight: 700; letter-spacing: .02em; }
+  .pocbar select {
+    appearance: none; -webkit-appearance: none;
+    background: #1b222b url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23aeb6c2'/%3E%3C/svg%3E") no-repeat right 12px center;
+    color: #E9EDF3; border: 1px solid #39424e; border-radius: 7px;
+    padding: 6px 30px 6px 12px; font: inherit; font-weight: 700; cursor: pointer;
+  }
+  .pocbar select:hover { border-color: #5a6675; }
+  .poc-theme { display: inline-flex; gap: 0; border: 1px solid #39424e; border-radius: 7px; overflow: hidden; }
+  .poc-theme button {
+    border: 0; background: transparent; color: #aeb6c2; font: inherit; font-weight: 800;
+    padding: 6px 12px; cursor: pointer; min-height: 32px;
+  }
+  .poc-theme button.active { background: var(--lu-accent); color: #1c1e21; }
+  .poc-label {
+    margin-left: auto; color: var(--lu-accent); font-weight: 800; letter-spacing: .03em;
+    white-space: nowrap;
+  }
+  .page-view { display: none; }
+  .page-view.active { display: block; animation: viewfade .28s ease; }
+  @keyframes viewfade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  /* tiny inline annotation labels scattered in the design */
+  .poc-anno {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin: 0 0 14px; padding: 4px 10px; border-radius: 999px;
+    background: var(--lu-yellow-light); border: 1px dashed var(--lu-yellow-dark);
+    color: var(--lu-text-muted); font-size: 11.5px; font-weight: 700; letter-spacing: .02em;
+  }
+  .poc-anno::before { content: "✦"; color: var(--lu-yellow-dark); }
+
+  .skip-link {
+    position: fixed; top: 8px; left: 8px; z-index: 400;
+    padding: 8px 12px; border-radius: 6px; background: var(--lu-yellow);
+    color: var(--lu-on-yellow); font-weight: 900; text-decoration: none;
+    transform: translateY(-160%);
+  }
+  .skip-link:focus { transform: none; }
+
+  /* ====================================================== SITE CHROME ==== */
+  .lu-header {
+    position: sticky; top: 41px; z-index: 50;
+    background: var(--lu-header-bg); border-bottom: 1px solid var(--lu-border);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .04); backdrop-filter: blur(12px);
+  }
+  .lu-header-inner {
+    max-width: var(--lu-max-width); height: 56px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; gap: 18px;
+  }
+  .lu-logo { display: flex; align-items: center; gap: 10px; color: var(--lu-text);
+    font-size: 1rem; font-weight: 800; text-decoration: none; white-space: nowrap; }
+  .lu-logo-mark { width: 32px; height: 32px; display: inline-grid; place-items: center;
+    border-radius: 8px; background: #0057B8; color: #fff; font-weight: 900; font-size: .82rem; }
+  .lu-logo small { color: var(--lu-text-muted); font-weight: 700; font-size: .82rem; }
+  .lu-nav { display: flex; align-items: center; gap: 2px; min-width: 0; flex: 1; }
+  .lu-nav a { padding: 6px 11px; border-radius: 8px; color: var(--lu-gray-600);
+    font-size: .82rem; font-weight: 700; text-decoration: none; white-space: nowrap; cursor: pointer; }
+  .lu-nav a:hover { background: var(--lu-blue-light); color: var(--lu-blue); }
+  .lu-nav a.is-current { background: #0057B8; color: #fff; }
+  [data-theme='dark'] .lu-nav a.is-current { background: var(--lu-primary); color: var(--lu-on-primary); }
+  .lu-nav-divider { width: 1px; height: 22px; margin: 0 6px; background: var(--lu-border); }
+  .lu-header-tools { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+  .lu-ghost {
+    display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 0 11px;
+    border: 1px solid var(--lu-border); border-radius: 8px; background: transparent;
+    color: var(--lu-text); font: inherit; font-size: .8rem; font-weight: 800; cursor: pointer;
+    text-decoration: none;
+  }
+  .lu-ghost:hover { border-color: var(--lu-primary); color: var(--lu-primary); }
+
+  .lu-footer {
+    margin-top: 64px; padding: 44px 24px 22px;
+    background: var(--lu-footer-bg); color: rgba(255, 255, 255, .72);
+    border-top: 4px solid var(--lu-yellow);
+  }
+  .lu-footer-inner { max-width: var(--lu-max-width); margin: 0 auto; }
+  .lu-footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 28px;
+    padding-bottom: 26px; border-bottom: 1px solid rgba(255, 255, 255, .12); }
+  .lu-footer h2 { margin: 0 0 10px; color: #fff; font-size: 1rem; }
+  .lu-footer h3 { margin: 0 0 10px; color: var(--lu-yellow); font-size: .76rem;
+    letter-spacing: .08em; text-transform: uppercase; }
+  .lu-footer p { margin: 0; font-size: .82rem; max-width: 46ch; }
+  .lu-footer a { display: block; padding: 2px 0; color: rgba(255, 255, 255, .68);
+    font-size: .82rem; text-decoration: none; }
+  .lu-footer a:hover { color: var(--lu-yellow); }
+  .lu-footer-bottom { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between;
+    padding-top: 16px; font-size: .75rem; }
+  .lu-footer-tagline { color: var(--lu-yellow); font-weight: 800; }
+
+  /* ================================================== SHARED ATOMS ====== */
+  .wrap { max-width: var(--lu-max-width); margin: 0 auto; padding: 0 24px; }
+  .wrap-narrow { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+
+  .lex-badge {
+    display: inline-flex; align-items: center; min-height: 1.75rem; padding: 0 .65rem;
+    border-radius: 4px; background: var(--lu-state-active); color: var(--lu-primary);
+    font-size: .78rem; font-weight: 900; letter-spacing: .04em; text-transform: uppercase;
+  }
+  .cefr-chip {
+    display: inline-flex; align-items: center; min-height: 1.35rem; padding: 0 .45rem;
+    border-radius: 4px; background: var(--lu-state-active); color: var(--lu-primary);
+    font-size: .72rem; font-weight: 800; text-transform: uppercase;
+  }
+  /* heritage chips — mirror heritage-severity.ts dataSeverity classes */
+  .her-chip {
+    display: inline-flex; align-items: center; gap: 4px; min-height: 1.35rem; padding: 0 .45rem;
+    border-radius: 4px; font-size: .72rem; font-weight: 800; border: 1px solid transparent;
+  }
+  .her-chip[data-sev="green"] { background: var(--lu-green-light); color: var(--lu-green); border-color: color-mix(in srgb, var(--lu-green) 35%, transparent); }
+  .her-chip[data-sev="yellow"] { background: var(--lu-yellow-light); color: var(--lu-yellow-dark); border-color: color-mix(in srgb, var(--lu-yellow-dark) 40%, transparent); }
+  .her-chip[data-sev="red"] { background: var(--lu-state-wrong-bg); color: var(--lu-state-wrong-fg); border-color: color-mix(in srgb, var(--lu-state-wrong-fg) 40%, transparent); }
+  .her-chip[data-sev="blue"] { background: var(--lu-blue-light); color: var(--lu-blue); border-color: color-mix(in srgb, var(--lu-blue) 35%, transparent); }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 44px; padding: 0 18px; border-radius: 8px; border: 1px solid var(--lu-border);
+    background: var(--lu-surface); color: var(--lu-text); font: inherit; font-weight: 800;
+    cursor: pointer; text-decoration: none; transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+  }
+  .btn:hover { border-color: var(--lu-primary); transform: translateY(-1px); box-shadow: var(--lu-shadow); }
+  .btn-primary { border: 0; background: var(--lu-yellow); color: var(--lu-on-yellow); font-weight: 900; }
+  .btn-primary:hover { filter: brightness(1.03); }
+  .btn-accent { border: 0; background: var(--lu-primary); color: var(--lu-on-primary); font-weight: 900; }
+
+  /* section header with the signature yellow underline accent */
+  .sec-head { max-width: var(--lu-content-width); margin: 0 auto 1.15rem; }
+  .sec-head h2 {
+    display: inline-block; margin: 0; padding-bottom: 6px;
+    color: var(--lu-text); font-size: clamp(1.5rem, 3vw, 2.1rem);
+    border-bottom: 3px solid var(--lu-yellow);
+  }
+  .sec-head p { margin: .5rem 0 0; max-width: 64ch; color: var(--lu-text-muted); }
+
+  /* ===================================== VIEW 1 — LEXICON LANDING ====== */
+  .lex-hero { max-width: 960px; margin: 0 auto; padding: 3.5rem 1.5rem 2.5rem; text-align: center; }
+  .lex-hero h1 { margin: .7rem 0 0; color: var(--lu-text);
+    font-size: clamp(2.4rem, 4vw, 4.25rem); line-height: 1; }
+  .lex-hero > p { max-width: 720px; margin: 1rem auto 0; color: var(--lu-text-muted);
+    font-size: 1.1rem; line-height: 1.65; }
+  .lex-search { max-width: 620px; margin: 1.9rem auto 0; text-align: left; }
+  .lex-search label { display: block; margin-bottom: 8px; font-weight: 900; color: var(--lu-text); }
+  .lex-search-row { display: flex; gap: 10px; }
+  .lex-search input {
+    flex: 1; min-height: 48px; padding: 0 14px; font-size: 16px;
+    border: 2px solid var(--lu-border); border-radius: 8px;
+    background: var(--lu-surface); color: var(--lu-text); font-family: inherit;
+  }
+  .lex-search input:focus { outline: none; border-color: var(--lu-primary); box-shadow: 0 0 0 3px var(--lu-state-active); }
+
+  /* practice cross-sell banner on the landing */
+  .lex-cta {
+    max-width: var(--lu-content-width); margin: 1.5rem auto 0;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 14px;
+    padding: 16px 20px; border: 1px solid var(--lu-border); border-radius: 12px;
+    background: linear-gradient(135deg, var(--lu-state-active), transparent);
+  }
+  .lex-cta .cta-icon { width: 44px; height: 44px; display: grid; place-items: center; flex-shrink: 0;
+    border-radius: 10px; background: var(--lu-primary); color: var(--lu-on-primary); font-size: 1.3rem; }
+  .lex-cta b { color: var(--lu-text); font-size: 1.02rem; }
+  .lex-cta span { display: block; color: var(--lu-text-muted); font-size: .9rem; }
+  .lex-cta .btn { margin-left: auto; }
+
+  .daily-section { padding: 2.5rem 1.5rem 1.5rem; }
+  .daily-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .75rem;
+    max-width: var(--lu-content-width); margin: 0 auto; padding: 0; list-style: none;
+  }
+  .daily-card {
+    display: flex; flex-direction: column; gap: .5rem; min-height: 7.25rem; height: 100%;
+    padding: .95rem 1rem; border: 1px solid var(--lu-border); border-radius: 8px;
+    background: var(--lu-surface); color: var(--lu-text); text-decoration: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .04); transition: border-color .12s, box-shadow .12s, transform .12s;
+  }
+  .daily-card:hover, .daily-card:focus-visible { outline: none; border-color: var(--lu-primary);
+    transform: translateY(-2px); box-shadow: 0 0 0 3px var(--lu-state-active); }
+  .daily-lemma { font-weight: 900; line-height: 1.25; color: var(--lu-blue); }
+  .daily-gloss { color: var(--lu-text-muted); font-size: .92rem; line-height: 1.45; }
+  .daily-chips { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: auto; }
+
+  /* ============================ VIEW 2 — PRACTICE HOME ================ */
+  .ph { max-width: var(--lu-content-width); margin: 0 auto; padding: 3rem 1.5rem 1.5rem; }
+  .ph-intro { max-width: 720px; }
+  .ph-intro h1 { margin: .7rem 0 0; font-size: clamp(2.2rem, 3.6vw, 3.4rem); line-height: 1.04; }
+  .ph-intro p { margin: 1rem 0 0; max-width: 60ch; color: var(--lu-text-muted); font-size: 1.05rem; }
+
+  .progress-strip {
+    display: grid; grid-template-columns: 1.1fr repeat(3, 1fr); gap: .9rem;
+    margin: 1.9rem 0 .4rem;
+  }
+  .pstat {
+    display: flex; flex-direction: column; justify-content: center; gap: 2px;
+    padding: 1rem 1.1rem; border: 1px solid var(--lu-border); border-radius: 12px;
+    background: var(--lu-surface-raised); box-shadow: var(--lu-shadow);
+  }
+  .pstat .val { font-size: 1.85rem; font-weight: 900; line-height: 1; color: var(--lu-text); }
+  .pstat .lab { margin-top: .35rem; color: var(--lu-text-muted); font-size: .78rem;
+    font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
+  .pstat.streak { background: linear-gradient(135deg, var(--lu-state-missed), transparent); }
+  .pstat.streak .val { color: var(--lu-orange); }
+  /* today ring */
+  .pstat.today { flex-direction: row; align-items: center; gap: 14px; }
+  .ring { --pct: 58; width: 58px; height: 58px; flex-shrink: 0; border-radius: 50%;
+    background: conic-gradient(var(--lu-green) calc(var(--pct) * 1%), var(--lu-surface-muted) 0);
+    display: grid; place-items: center; }
+  .ring::after { content: ""; width: 42px; height: 42px; border-radius: 50%; background: var(--lu-surface-raised); grid-area: 1/1; }
+  .ring b { grid-area: 1/1; z-index: 1; font-size: .82rem; font-weight: 900; color: var(--lu-text); }
+
+  .mode-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1.6rem; }
+  .mode-card {
+    position: relative; display: flex; flex-direction: column; gap: .5rem;
+    padding: 1.3rem 1.35rem; border: 1px solid var(--lu-border); border-radius: 14px;
+    background: var(--lu-surface-raised); color: var(--lu-text); text-align: left;
+    font: inherit; cursor: pointer; box-shadow: var(--lu-shadow);
+    transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
+  }
+  .mode-card:hover, .mode-card:focus-visible { outline: none; transform: translateY(-3px);
+    border-color: var(--lu-primary); box-shadow: var(--lu-shadow-lg); }
+  .mode-card .mc-top { display: flex; align-items: center; gap: 12px; }
+  .mode-card .mc-ico { width: 46px; height: 46px; flex-shrink: 0; display: grid; place-items: center;
+    border-radius: 12px; font-size: 1.4rem; }
+  .mode-card .mc-title { font-size: 1.15rem; font-weight: 900; }
+  .mode-card .mc-en { color: var(--lu-text-muted); font-size: .8rem; font-weight: 700; }
+  .mode-card .mc-desc { color: var(--lu-text-muted); font-size: .92rem; line-height: 1.5; }
+  .mode-card .mc-meta { display: flex; align-items: center; gap: 8px; margin-top: auto; padding-top: .3rem; }
+  .mode-card .mc-step { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em;
+    color: var(--lu-text-muted); }
+  .mode-card .mc-arrow { margin-left: auto; color: var(--lu-primary); font-weight: 900; transition: transform .15s; }
+  .mode-card:hover .mc-arrow { transform: translateX(3px); }
+  /* per-mode accent tints on the icon */
+  .mode-card[data-accent="blue"] .mc-ico { background: var(--lu-blue-light); color: var(--lu-blue); }
+  .mode-card[data-accent="teal"] .mc-ico { background: var(--lu-teal-light); color: var(--lu-teal); }
+  .mode-card[data-accent="purple"] .mc-ico { background: var(--lu-purple-light); color: var(--lu-purple); }
+  .mode-card[data-accent="orange"] .mc-ico { background: var(--lu-orange-light); color: var(--lu-orange); }
+
+  .ph-track { margin-top: 1.4rem; padding: 14px 16px; border-radius: 10px;
+    border: 1px solid var(--lu-border); background: var(--lu-surface-muted);
+    color: var(--lu-text-muted); font-size: .9rem; }
+  .ph-track b { color: var(--lu-text); }
+
+  /* =========================== SHARED PRACTICE SHELL ================= */
+  .stage { max-width: 760px; margin: 0 auto; padding: 2.2rem 1.5rem 2rem; }
+  .stage-bar {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+    padding-bottom: 1rem; margin-bottom: 1.4rem; border-bottom: 1px solid var(--lu-border);
+  }
+  .stage-bar h2 { margin: 0; font-size: 1.4rem; }
+  .stage-back { display: inline-flex; align-items: center; gap: 6px; min-height: 38px; padding: 0 12px;
+    border: 1px solid var(--lu-border); border-radius: 8px; background: var(--lu-surface);
+    color: var(--lu-text); font: inherit; font-weight: 800; cursor: pointer; }
+  .stage-back:hover { border-color: var(--lu-primary); color: var(--lu-primary); }
+  .queue-pill {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 8px;
+    padding: 5px 12px; border-radius: 999px; background: var(--lu-surface-muted);
+    border: 1px solid var(--lu-border); color: var(--lu-text-muted);
+    font-size: .82rem; font-weight: 800;
+  }
+  .queue-pill .qbar { width: 88px; height: 6px; border-radius: 3px; background: var(--lu-border); overflow: hidden; }
+  .queue-pill .qbar i { display: block; height: 100%; background: var(--lu-primary); border-radius: 3px; transition: width .3s ease; }
+  .live-status { min-height: 1.4rem; margin: 0 0 1rem; font-weight: 800; }
+  .live-status[data-tone="ok"] { color: var(--lu-state-correct-fg); }
+  .live-status[data-tone="bad"] { color: var(--lu-state-wrong-fg); }
+  .live-status[data-tone="info"] { color: var(--lu-text-muted); font-weight: 700; }
+  .live-status[data-tone="warn"] { color: #E6A23C; }
+  [data-theme='light'] .live-status[data-tone="warn"] { color: #B26A00; }
+
+  /* ============================== VIEW 3 — FLASHCARDS ================ */
+  .fc-scene { perspective: 1400px; }
+  .fc-card {
+    position: relative; width: 100%; min-height: 300px; cursor: pointer;
+    border: 0; padding: 0; background: none; font: inherit; text-align: left;
+    transform-style: preserve-3d; transition: transform .5s cubic-bezier(.2,.7,.2,1);
+  }
+  .fc-card.flipped { transform: rotateY(180deg); }
+  .fc-face {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    padding: 2rem; border: 1px solid var(--lu-border); border-radius: 18px;
+    background: var(--lu-surface-raised); box-shadow: var(--lu-shadow-lg);
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  }
+  .fc-front { align-items: center; justify-content: center; text-align: center; gap: 14px; }
+  .fc-lemma { font-size: clamp(2.4rem, 6vw, 3.6rem); font-weight: 900; line-height: 1.05; color: var(--lu-text); }
+  .fc-stress { color: var(--lu-text-muted); font-weight: 700; font-size: .5em; }
+  .fc-hint { color: var(--lu-text-muted); font-size: .9rem; }
+  .fc-hint kbd { font: inherit; font-size: .82rem; padding: 1px 7px; border-radius: 5px;
+    border: 1px solid var(--lu-border); background: var(--lu-surface-muted); }
+  .fc-audio {
+    display: inline-flex; align-items: center; gap: 7px; min-height: 38px; padding: 0 14px;
+    border: 1px solid var(--lu-border); border-radius: 999px; background: var(--lu-surface);
+    color: var(--lu-text-muted); font: inherit; font-weight: 800; font-size: .85rem; cursor: not-allowed; opacity: .8;
+  }
+  .fc-back { transform: rotateY(180deg); gap: 12px; }
+  .fc-back .fc-lemma-sm { font-size: 1.7rem; font-weight: 900; color: var(--lu-blue); }
+  .fc-back .fc-ipa { color: var(--lu-text-muted); font-weight: 700; }
+  .fc-back .fc-gloss { font-size: 1.25rem; font-weight: 800; }
+  .fc-back .fc-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .fc-back .fc-ex { margin-top: auto; padding: 12px 14px; border-radius: 10px;
+    border-left: 3px solid var(--lu-teal); background: var(--lu-surface-muted);
+    color: var(--lu-text); font-size: .98rem; }
+  .fc-back .fc-ex em { color: var(--lu-text-muted); display: block; margin-top: 3px; font-size: .86rem; }
+
+  .rating-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: .6rem; margin-top: 1.3rem; }
+  .rate-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    min-height: 58px; padding: 8px 6px; border: 1px solid var(--lu-border); border-radius: 12px;
+    background: var(--lu-surface); color: var(--lu-text); font: inherit; cursor: pointer;
+    transition: transform .1s, border-color .12s, background .12s;
+  }
+  .rate-btn:hover { transform: translateY(-2px); }
+  .rate-btn .rk { font-size: .72rem; color: var(--lu-text-muted); font-weight: 800; }
+  .rate-btn .rt { font-weight: 900; font-size: .98rem; }
+  .rate-btn[data-rate="again"]:hover { border-color: var(--lu-red); background: var(--lu-red-light); }
+  .rate-btn[data-rate="hard"]:hover  { border-color: var(--lu-orange); background: var(--lu-orange-light); }
+  .rate-btn[data-rate="good"]:hover  { border-color: var(--lu-green); background: var(--lu-green-light); }
+  .rate-btn[data-rate="easy"]:hover  { border-color: var(--lu-blue); background: var(--lu-blue-light); }
+  .rating-hint { margin: .8rem 0 0; color: var(--lu-text-muted); font-size: .84rem; text-align: center; }
+  .fc-done {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+    min-height: 300px; padding: 2rem; text-align: center;
+    border: 1px solid var(--lu-border); border-radius: 18px;
+    background: var(--lu-surface-raised); box-shadow: var(--lu-shadow-lg);
+  }
+  .fc-done .big { font-size: 3rem; }
+  .fc-done[hidden] { display: none; }
+  .fc-scene[hidden] { display: none; }
+
+  /* ============================== VIEW 4 — MATCHING ================= */
+  .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+  .match-col { display: grid; gap: .6rem; align-content: start; }
+  .match-col h3 { margin: 0 0 .2rem; font-size: .78rem; text-transform: uppercase; letter-spacing: .05em;
+    color: var(--lu-text-muted); }
+  .match-tile {
+    display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 10px 14px;
+    border: 1px solid var(--lu-border); border-radius: 10px; background: var(--lu-surface);
+    color: var(--lu-text); font: inherit; font-weight: 700; text-align: left; cursor: pointer;
+    transition: border-color .12s, background .12s, transform .1s;
+  }
+  .match-tile:hover { border-color: var(--lu-primary); }
+  .match-tile.lemma { font-weight: 900; color: var(--lu-blue); }
+  .match-tile.selected { border-color: var(--lu-primary); background: var(--lu-state-active); box-shadow: 0 0 0 2px var(--lu-state-active); }
+  .match-tile.correct { border-color: var(--lu-green); background: var(--lu-state-correct-bg); color: var(--lu-state-correct-fg); cursor: default; }
+  .match-tile.correct::after { content: "✓"; margin-left: auto; font-weight: 900; }
+  .match-tile.wrong { border-color: var(--lu-red); background: var(--lu-state-wrong-bg); animation: shake .35s; }
+  @keyframes shake { 0%,100%{transform:none} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+  .match-tile:disabled { opacity: .55; }
+
+  /* ============================== VIEW 5 — MULTIPLE CHOICE ========= */
+  .mc-q { font-size: 1.5rem; font-weight: 900; margin: 0 0 .3rem; }
+  .mc-q b { color: var(--lu-blue); }
+  .mc-sub { margin: 0 0 1.3rem; color: var(--lu-text-muted); }
+  .mc-options { display: grid; gap: .7rem; }
+  .mc-opt {
+    display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 12px 16px;
+    border: 1px solid var(--lu-border); border-radius: 12px; background: var(--lu-surface);
+    color: var(--lu-text); font: inherit; font-size: 1rem; font-weight: 700; text-align: left; cursor: pointer;
+    transition: border-color .12s, background .12s, transform .1s;
+  }
+  .mc-opt:hover:not(:disabled) { border-color: var(--lu-primary); transform: translateX(2px); }
+  .mc-opt .mc-key { width: 26px; height: 26px; flex-shrink: 0; display: grid; place-items: center;
+    border-radius: 7px; border: 1px solid var(--lu-border); font-size: .8rem; font-weight: 900; color: var(--lu-text-muted); }
+  .mc-opt.correct { border-color: var(--lu-green); background: var(--lu-state-correct-bg); color: var(--lu-state-correct-fg); }
+  .mc-opt.correct .mc-key { border-color: var(--lu-green); color: var(--lu-state-correct-fg); }
+  .mc-opt.correct::after { content: "✓ правильно"; margin-left: auto; font-weight: 900; font-size: .85rem; }
+  .mc-opt.wrong { border-color: var(--lu-red); background: var(--lu-state-wrong-bg); color: var(--lu-state-wrong-fg); }
+  .mc-opt.wrong .mc-key { border-color: var(--lu-red); color: var(--lu-state-wrong-fg); }
+  .mc-opt.wrong::after { content: "✕"; margin-left: auto; font-weight: 900; }
+  .mc-opt:disabled { cursor: default; }
+  .stage-foot { display: flex; align-items: center; gap: 12px; margin-top: 1.4rem; }
+  .stage-foot .spacer { flex: 1; }
+
+  /* ============================== VIEW 6 — CLOZE =================== */
+  .cz-task { margin: 0 0 .85rem; color: var(--lu-text-muted); font-size: .92rem; font-weight: 600; }
+  .cz-sentence { font-size: 1.45rem; font-weight: 600; line-height: 1.6; margin: 0 0 .4rem;
+    padding: 1.4rem 1.5rem; border-radius: 14px; border: 1px solid var(--lu-border);
+    background: var(--lu-surface-raised); box-shadow: var(--lu-shadow); }
+  .cz-blank { display: inline-flex; align-items: center; justify-content: center; min-width: 96px;
+    padding: 0 10px; margin: 0 4px; border-bottom: 3px solid var(--lu-primary);
+    color: var(--lu-primary); font-weight: 900; }
+  .cz-blank.filled { border-bottom-color: var(--lu-green); color: var(--lu-state-correct-fg); }
+  .cz-blank.filled.bad { border-bottom-color: var(--lu-red); color: var(--lu-state-wrong-fg); }
+  .cz-translate { margin: .8rem 0 1.4rem; color: var(--lu-text-muted); font-style: italic; }
+  .cz-input-row { display: flex; gap: 10px; margin-bottom: 1.1rem; }
+  .cz-input { flex: 1; min-height: 48px; padding: 0 14px; font-size: 16px;
+    border: 2px solid var(--lu-border); border-radius: 8px; background: var(--lu-surface);
+    color: var(--lu-text); font-family: inherit; font-weight: 700; }
+  .cz-input:focus { outline: none; border-color: var(--lu-primary); box-shadow: 0 0 0 3px var(--lu-state-active); }
+  .cz-or { text-align: center; margin: .2rem 0 1rem; color: var(--lu-text-muted); font-size: .82rem;
+    font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+  .cz-options { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .cz-chip {
+    min-height: 48px; padding: 0 18px; border: 1px solid var(--lu-border); border-radius: 999px;
+    background: var(--lu-surface); color: var(--lu-text); font: inherit; font-weight: 900; cursor: pointer;
+    transition: border-color .12s, background .12s, transform .1s;
+  }
+  .cz-chip:hover:not(:disabled) { border-color: var(--lu-primary); transform: translateY(-2px); }
+  .cz-chip.correct { border-color: var(--lu-green); background: var(--lu-state-correct-bg); color: var(--lu-state-correct-fg); }
+  .cz-chip.wrong { border-color: var(--lu-red); background: var(--lu-state-wrong-bg); color: var(--lu-state-wrong-fg); }
+  .cz-chip:disabled { opacity: .5; cursor: default; }
+
+  /* ============================================== RESPONSIVE ======== */
+  @media (max-width: 860px) {
+    .lu-nav { display: none; }
+    .lu-footer-grid { grid-template-columns: 1fr; gap: 22px; }
+    .progress-strip { grid-template-columns: 1fr 1fr; }
+    .mode-grid { grid-template-columns: 1fr; }
+    .match-grid { grid-template-columns: 1fr; gap: 1rem; }
+  }
+  @media (max-width: 560px) {
+    .wrap, .wrap-narrow { padding: 0 16px; }
+    .progress-strip { grid-template-columns: 1fr; }
+    .lex-cta .btn { margin-left: 0; width: 100%; }
+    .rating-bar {
+      position: sticky; bottom: 0; z-index: 5; margin: 1.3rem -16px 0; padding: 12px 16px;
+      background: var(--lu-header-bg); backdrop-filter: blur(10px);
+      border-top: 1px solid var(--lu-border); grid-template-columns: repeat(2, 1fr);
+    }
+    .stage-foot { flex-direction: column; align-items: stretch; }
+    .stage-foot .btn { width: 100%; }
+  }
+
+  /* ---- Atlas А–Я browse (restored full index) ---- */
+  .brz-letters {
+    position: sticky; top: .25rem; z-index: 3;
+    max-width: var(--lu-content-width, 1000px); margin: 0 auto 1rem;
+    display: flex; flex-wrap: wrap; gap: .3rem; padding: .6rem;
+    border: 1px solid var(--lu-border); border-radius: 8px; background: var(--lu-surface); box-shadow: var(--lu-shadow);
+  }
+  .brz-letter {
+    min-width: 2.1rem; min-height: 2.1rem; display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 6px; color: var(--lu-primary); font-weight: 900; text-decoration: none;
+  }
+  .brz-letter:hover, .brz-letter:focus-visible { background: var(--lu-state-active); outline: none; }
+  .brz-letter.is-empty { opacity: .3; pointer-events: none; }
+  .brz-status { max-width: var(--lu-content-width, 1000px); margin: 0 auto .9rem; color: var(--lu-text-muted, #989898); font-weight: 700; }
+  .brz-groups { max-width: var(--lu-content-width, 1000px); margin: 0 auto; display: grid; gap: 1.6rem; }
+  .brz-section[hidden], .brz-item[hidden] { display: none; }
+  .brz-head {
+    margin: 0 0 .7rem; padding-bottom: .3rem; border-bottom: 2px solid var(--lu-accent);
+    color: var(--lu-primary); font-size: 1.3rem; scroll-margin-top: 4rem;
+  }
+  .brz-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: .5rem; margin: 0; padding: 0; list-style: none; }
+  .brz-card {
+    display: grid; gap: .25rem; padding: .6rem .75rem; border: 1px solid var(--lu-border);
+    border-left: 3px solid var(--lu-primary); border-radius: 6px; background: var(--lu-surface); color: var(--lu-text); text-decoration: none;
+  }
+  .brz-card:hover, .brz-card:focus-visible { border-color: var(--lu-primary); outline: none; box-shadow: var(--lu-shadow); }
+  .brz-lemma { font-weight: 900; }
+  .brz-gloss { color: var(--lu-text-muted, #989898); font-size: .9rem; }
+  .brz-tags { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .15rem; }
+
+  /* ---- Words of the Day level chips ---- */
+  .wod-levels { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin-top: .6rem; }
+  .wod-levels-label { font-size: .78rem; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; color: var(--lu-text-muted, #989898); margin-right: .25rem; }
+  .wod-lvl { min-height: 2.2rem; padding: 0 .8rem; border: 1px solid var(--lu-border); border-radius: 6px; background: var(--lu-surface); color: var(--lu-text); font: inherit; font-weight: 800; cursor: pointer; }
+  .wod-lvl:hover, .wod-lvl:focus-visible { border-color: var(--lu-primary); outline: none; }
+  .wod-lvl.active { border-color: var(--lu-primary); background: var(--lu-primary); color: var(--lu-on-primary); }
+</style>
+</head>
+<body data-theme="dark">
+<a class="skip-link" href="#main">Перейти до вмісту</a>
+
+<!-- ============================ POC PAGE-SWITCH BAR ============================ -->
+<div class="pocbar">
+  <label for="poc-view">Екран</label>
+  <select id="poc-view" aria-label="Перемкнути екран PoC">
+    <option value="landing" selected>1 · Атлас слів — пошук (словник)</option>
+    <option value="browse">2 · Атлас — перегляд А–Я</option>
+    <option value="wod">3 · Слова дня</option>
+    <option value="home">4 · Практика — головна</option>
+    <option value="flashcards">5 · Флешкартки</option>
+    <option value="matching">6 · Добір пар</option>
+    <option value="choice">7 · Вибір</option>
+    <option value="cloze">8 · Заповніть пропуск</option>
+  </select>
+  <div class="poc-theme" role="group" aria-label="Тема">
+    <button type="button" data-theme-choice="dark" class="active">Темна</button>
+    <button type="button" data-theme-choice="light">Світла</button>
+  </div>
+  <span class="poc-label">PoC — джерело істини дизайну · design source of truth</span>
+</div>
+
+<!-- ====================================================== SHARED HEADER ======= -->
+<header class="lu-header">
+  <div class="lu-header-inner">
+    <a class="lu-logo" data-go="landing">
+      <span class="lu-logo-mark">LU</span><span>Learn Ukrainian</span>
+    </a>
+    <nav class="lu-nav" aria-label="Основна навігація">
+      <a data-go="landing">Home</a>
+      <a>A1</a><a>A2</a><a>B1</a>
+      <a data-go="wod" data-nav="wod">Words of the Day</a>
+      <a data-go="landing" data-nav="atlas">Word Atlas</a>
+      <a>Reading reference</a>
+    </nav>
+    <div class="lu-header-tools">
+      <a class="lu-ghost" href="https://github.com" rel="noopener" target="_blank">GitHub</a>
+      <button class="lu-ghost" id="theme-quick" type="button" aria-label="Перемкнути тему">☀</button>
+      <button class="lu-ghost" type="button">УКР</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- =============================== VIEW 1 — LEXICON LANDING =================== -->
+<section id="view-landing" class="page-view" role="region" aria-label="Атлас слів — пошук">
+  <div class="lex-hero">
+    <span class="lex-badge">Лексикон</span>
+    <h1>Атлас слів</h1>
+    <p>Словник курсу: шукайте слова з джерелами, морфологією та місцями появи в модулях.</p>
+    <form class="lex-search" onsubmit="return false">
+      <label for="lex-q">Шукати слово в Атласі</label>
+      <div class="lex-search-row">
+        <input id="lex-q" type="search" placeholder="офіс / ofis / office" autocomplete="off">
+        <button class="btn btn-primary" type="submit">Шукати</button>
+      </div>
+    </form>
+    <button class="btn btn-accent" data-go="browse" type="button" style="margin-top:1.1rem">Перегляд А–Я →</button>
+    <p class="poc-anno" style="margin-top:1.1rem">PoC — Атлас = словник: пошук + повний перегляд А–Я.
+      «Слова дня» й практику винесено на власну вкладку «Слова дня».</p>
+  </div>
+</section>
+
+<!-- =============================== VIEW — ATLAS А–Я BROWSE ==================== -->
+<section id="view-browse" class="page-view" role="region" aria-label="Атлас — перегляд А–Я">
+  <div class="lex-hero" style="padding-bottom:1.2rem">
+    <span class="lex-badge">Лексикон · перегляд</span>
+    <h1>Перегляд А–Я</h1>
+    <p>Усі слова Атласу за українським алфавітом. Натисніть літеру, щоб перейти до розділу.</p>
+    <form class="lex-search" onsubmit="return false">
+      <label for="brz-q">Шукати в покажчику</label>
+      <div class="lex-search-row">
+        <input id="brz-q" type="search" placeholder="слово, переклад або латинкою…" autocomplete="off">
+      </div>
+    </form>
+  </div>
+  <nav class="brz-letters" id="brz-letters" aria-label="Український алфавіт"></nav>
+  <p class="brz-status" id="brz-status" aria-live="polite"></p>
+  <div class="brz-groups" id="brz-groups"></div>
+  <p class="poc-anno" style="max-width:960px;margin:1rem auto 0">PoC — повний покажчик (на лайві ~4500 слів,
+    SSG зі службового search-index ~487 КБ, не з 39 МБ маніфесту). Тут показано репрезентативну вибірку.</p>
+</section>
+
+<!-- =============================== VIEW — WORDS OF THE DAY ==================== -->
+<section id="view-wod" class="page-view" role="region" aria-label="Слова дня">
+  <div class="lex-hero">
+    <span class="lex-badge">Слова дня</span>
+    <h1>Слова дня / Words of the Day</h1>
+    <p>Щоденна добірка слів з Атласу, обмежена вашим поточним рівнем (CEFR, накопичувально).</p>
+    <button class="btn btn-primary" data-go="home" type="button" style="margin-top:1rem">
+      Практика — інтервальне повторення вашого рівня →</button>
+  </div>
+
+  <section class="daily-section" aria-labelledby="daily-title">
+    <div class="sec-head">
+      <span class="poc-anno">PoC — щоденна добірка + рівневий фільтр; кожна картка веде до статті Атласу</span>
+      <h2 id="daily-title">Добірка на сьогодні</h2>
+      <div class="wod-levels" role="group" aria-label="Рівень">
+        <span class="wod-levels-label">Рівень</span>
+        <button class="wod-lvl" type="button">A1</button>
+        <button class="wod-lvl" type="button">A2</button>
+        <button class="wod-lvl active" type="button" aria-pressed="true">B1</button>
+        <button class="wod-lvl" type="button">B2</button>
+        <button class="wod-lvl" type="button">C1</button>
+        <button class="wod-lvl" type="button">C2</button>
+      </div>
+    </div>
+    <ul class="daily-grid" id="daily-grid" aria-live="polite"></ul>
+  </section>
+</section>
+
+<!-- =============================== VIEW 2 — PRACTICE HOME ===================== -->
+<section id="view-home" class="page-view" role="region" aria-label="Практика — головна">
+  <div class="ph">
+    <div class="ph-intro">
+      <a class="stage-back" data-go="wod" style="display:inline-flex;margin-bottom:.7rem">← Слова дня</a>
+      <span class="lex-badge">Слова дня · Практика</span>
+      <h1>Практика</h1>
+      <p>Інтервальне повторення слів вашого рівня (CEFR, накопичувально) — картки, добір, вибір і пропуски.
+        Прогрес зберігається локально у цьому браузері — без акаунтів і стеження.</p>
+    </div>
+
+    <span class="poc-anno">PoC — головна практики: прогрес + вибір режиму</span>
+    <div class="progress-strip" role="group" aria-label="Сьогоднішній прогрес">
+      <div class="pstat streak">
+        <span class="val">🔥 5</span>
+        <span class="lab">днів поспіль</span>
+      </div>
+      <div class="pstat">
+        <span class="val" id="due-count">12</span>
+        <span class="lab">до повторення</span>
+      </div>
+      <div class="pstat">
+        <span class="val">48</span>
+        <span class="lab">опановано</span>
+      </div>
+      <div class="pstat today">
+        <div class="ring" style="--pct:58" role="img" aria-label="Сьогодні виконано 7 із 12"><b>7/12</b></div>
+        <div><span class="lab" style="margin:0">сьогодні</span></div>
+      </div>
+    </div>
+
+    <div class="mode-grid" role="list">
+      <button class="mode-card" role="listitem" data-accent="blue" data-go="flashcards" type="button">
+        <div class="mc-top">
+          <span class="mc-ico" aria-hidden="true">🃏</span>
+          <div><div class="mc-title">Флешкартки</div><div class="mc-en">Flashcards</div></div>
+        </div>
+        <p class="mc-desc">Картка за карткою з інтервальним повторенням (SRS). Згадайте значення, тоді переверніть.</p>
+        <div class="mc-meta"><span class="mc-step">Розпізнавання</span><span class="mc-arrow">→</span></div>
+      </button>
+
+      <button class="mode-card" role="listitem" data-accent="teal" data-go="matching" type="button">
+        <div class="mc-top">
+          <span class="mc-ico" aria-hidden="true">🔗</span>
+          <div><div class="mc-title">Добір пар</div><div class="mc-en">Matching</div></div>
+        </div>
+        <p class="mc-desc">З'єднайте українські слова з їхніми значеннями. Швидке закріплення зв'язків.</p>
+        <div class="mc-meta"><span class="mc-step">Розпізнавання</span><span class="mc-arrow">→</span></div>
+      </button>
+
+      <button class="mode-card" role="listitem" data-accent="purple" data-go="choice" type="button">
+        <div class="mc-top">
+          <span class="mc-ico" aria-hidden="true">🎯</span>
+          <div><div class="mc-title">Вибір</div><div class="mc-en">Multiple-choice</div></div>
+        </div>
+        <p class="mc-desc">«Що означає слово?» — оберіть правильне значення з чотирьох варіантів.</p>
+        <div class="mc-meta"><span class="mc-step">Перехід до продукування</span><span class="mc-arrow">→</span></div>
+      </button>
+
+      <button class="mode-card" role="listitem" data-accent="orange" data-go="cloze" type="button">
+        <div class="mc-top">
+          <span class="mc-ico" aria-hidden="true">✍️</span>
+          <div><div class="mc-title">Заповніть пропуск</div><div class="mc-en">Cloze</div></div>
+        </div>
+        <p class="mc-desc">Підставте слово в речення. Найближче до живого вживання в контексті.</p>
+        <div class="mc-meta"><span class="mc-step">Продукування</span><span class="mc-arrow">→</span></div>
+      </button>
+    </div>
+
+    <p class="ph-track">📈 Режими йдуть від <b>розпізнавання</b> до <b>продукування</b> — так слово закріплюється
+      глибше. Сьогодні до повторення: <b id="track-due">12 слів</b>.</p>
+  </div>
+</section>
+
+<!-- =============================== VIEW 3 — FLASHCARDS ======================== -->
+<section id="view-flashcards" class="page-view" role="region" aria-label="Флешкартки">
+  <div class="stage">
+    <div class="stage-bar">
+      <button class="stage-back" data-go="home" type="button">← Режими</button>
+      <h2>Флешкартки</h2>
+      <span class="queue-pill" aria-hidden="true">
+        <span id="fc-pos">1 / 12</span>
+        <span class="qbar"><i id="fc-qbar" style="width:8%"></i></span>
+      </span>
+    </div>
+
+    <p class="live-status" id="fc-live" data-tone="info" aria-live="polite" role="status">
+      Натисніть картку, щоб побачити значення.</p>
+
+    <div class="fc-scene" id="fc-scene">
+      <button class="fc-card" id="fc-card" type="button" aria-pressed="false"
+        aria-label="Картка — натисніть, щоб перевернути">
+        <div class="fc-face fc-front">
+          <div class="fc-lemma" id="fc-lemma">ра́нок</div>
+          <span class="fc-audio" aria-disabled="true" title="Аудіо незабаром">🔊 звук скоро</span>
+          <p class="fc-hint">Згадайте значення · натисніть або <kbd>Space</kbd> щоб перевернути</p>
+        </div>
+        <div class="fc-face fc-back">
+          <div><span class="fc-lemma-sm" id="fc-blemma">ранок</span>
+            <span class="fc-ipa" id="fc-ipa">[ˈrɑnok]</span></div>
+          <div class="fc-gloss" id="fc-gloss">morning</div>
+          <div class="fc-chips" id="fc-chips"></div>
+          <div class="fc-ex" id="fc-ex"></div>
+        </div>
+      </button>
+    </div>
+
+    <div class="fc-done" id="fc-done" hidden>
+      <div class="big" aria-hidden="true">🎉</div>
+      <div class="fc-lemma" style="font-size:1.6rem">Колоду пройдено!</div>
+      <p class="fc-hint" id="fc-done-msg">Інтервали оновлено локально.</p>
+      <button class="btn btn-accent" id="fc-restart" type="button">↻ Ще раз</button>
+    </div>
+
+    <div class="rating-bar" id="fc-rating" role="group" aria-label="Оцініть, наскільки легко згадалось" hidden>
+      <button class="rate-btn" data-rate="again" type="button" aria-keyshortcuts="1">
+        <span class="rk">1</span><span class="rt">Ще раз</span></button>
+      <button class="rate-btn" data-rate="hard" type="button" aria-keyshortcuts="2">
+        <span class="rk">2</span><span class="rt">Важко</span></button>
+      <button class="rate-btn" data-rate="good" type="button" aria-keyshortcuts="3">
+        <span class="rk">3</span><span class="rt">Добре</span></button>
+      <button class="rate-btn" data-rate="easy" type="button" aria-keyshortcuts="4">
+        <span class="rk">4</span><span class="rt">Легко</span></button>
+    </div>
+    <p class="rating-hint" id="fc-hint2" hidden>Клавіші <kbd>1</kbd>–<kbd>4</kbd> · інтервал повтору залежить від оцінки</p>
+  </div>
+</section>
+
+<!-- =============================== VIEW 4 — MATCHING ========================== -->
+<section id="view-matching" class="page-view" role="region" aria-label="Добір пар">
+  <div class="stage">
+    <div class="stage-bar">
+      <button class="stage-back" data-go="home" type="button">← Режими</button>
+      <h2>Добір пар</h2>
+      <span class="queue-pill" aria-hidden="true"><span id="mt-score">0 / 6</span></span>
+    </div>
+    <p class="live-status" id="mt-live" data-tone="info" aria-live="polite" role="status">
+      Оберіть слово, потім його значення.</p>
+    <div class="match-grid">
+      <div class="match-col" id="mt-left"><h3>Слово</h3></div>
+      <div class="match-col" id="mt-right"><h3>Значення</h3></div>
+    </div>
+    <div class="stage-foot">
+      <button class="btn" id="mt-reset" type="button">↻ Нова добірка</button>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== VIEW 5 — MULTIPLE CHOICE =================== -->
+<section id="view-choice" class="page-view" role="region" aria-label="Вибір значення">
+  <div class="stage">
+    <div class="stage-bar">
+      <button class="stage-back" data-go="home" type="button">← Режими</button>
+      <h2>Вибір</h2>
+      <span class="queue-pill" aria-hidden="true"><span id="ch-score">0 правильних</span></span>
+    </div>
+    <p class="mc-q" id="ch-q">Що означає «<b>ранок</b>»?</p>
+    <p class="mc-sub">Оберіть правильне значення · клавіші <kbd>1</kbd>–<kbd>4</kbd></p>
+    <p class="live-status" id="ch-live" data-tone="info" aria-live="polite" role="status">&nbsp;</p>
+    <div class="mc-options" id="ch-options"></div>
+    <div class="stage-foot">
+      <div class="spacer"></div>
+      <button class="btn btn-accent" id="ch-next" type="button" hidden>Далі →</button>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== VIEW 6 — CLOZE ============================= -->
+<section id="view-cloze" class="page-view" role="region" aria-label="Заповніть пропуск">
+  <div class="stage">
+    <div class="stage-bar">
+      <button class="stage-back" data-go="home" type="button">← Режими</button>
+      <h2>Заповніть пропуск</h2>
+      <span class="queue-pill" aria-hidden="true"><span id="cz-score">0 правильних</span></span>
+    </div>
+    <p class="cz-task">Поставте пропущене слово у правильному відмінку.</p>
+    <p class="cz-sentence" id="cz-sentence"></p>
+    <p class="cz-translate" id="cz-translate"></p>
+    <p class="live-status" id="cz-live" data-tone="info" aria-live="polite" role="status">&nbsp;</p>
+    <form class="cz-input-row" id="cz-form" onsubmit="return false">
+      <input class="cz-input" id="cz-input" type="text" placeholder="наберіть слово у потрібній формі…" autocomplete="off" aria-label="Введіть пропущене слово у правильному відмінку">
+      <button class="btn btn-accent" type="submit">Перевірити</button>
+    </form>
+    <div class="cz-or">або оберіть</div>
+    <div class="cz-options" id="cz-options"></div>
+    <div class="stage-foot">
+      <div class="spacer"></div>
+      <button class="btn btn-accent" id="cz-next" type="button" hidden>Далі →</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ====================================================== SHARED FOOTER ======= -->
+<footer class="lu-footer">
+  <div class="lu-footer-inner">
+    <div class="lu-footer-grid">
+      <div>
+        <h2>Learn Ukrainian</h2>
+        <p>Безкоштовний відкритий курс української з деколонізованою педагогікою,
+          опорою на підручники та джерельно звіреним словником.</p>
+      </div>
+      <div>
+        <h3>Курс</h3>
+        <a>A1 · A2 · B1</a><a>Семінари</a><a class="is-current">Атлас слів</a><a>Хрестоматія</a>
+      </div>
+      <div>
+        <h3>Зовнішнє</h3>
+        <a>GitHub</a><a>Джерела</a><a>Про проєкт</a>
+      </div>
+    </div>
+    <div class="lu-footer-bottom">
+      <span>© Learn Ukrainian · некомерційний відкритий проєкт</span>
+      <span class="lu-footer-tagline">Мова — душа народу</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+"use strict";
+/* ============================================================================
+   PoC DECK — sample data drawn from the same "Слова дня" vocabulary language.
+   Honest linguistics: every lemma below is питома/засвоєна Ukrainian lexicon;
+   heritage severity mirrors heritage-severity.ts dataSeverity ("green"/"blue"…).
+   This is design sample data, NOT a live attestation feed.
+   ============================================================================ */
+var DECK = [
+  // Each entry's `form` = the DECLINED surface form the cloze blank requires (an oblique case),
+  // so the bare lemma (lemmaPlain) is always offered as a wrong-case DISTRACTOR, never the answer.
+  // In the live build `form` + `ansCase`/`caseRule` come from
+  // enrichment.morphology.paradigm.cases.<відмінок>.singular — never invented.
+  { lemma:"ра́нок", lemmaPlain:"ранок", ipa:"[ˈrɑnok]", gloss:"morning", pos:"іменник · ч.р.",
+    cefr:"A1", sev:"green", her:"✓ Питома",
+    sentence:"Це ранок.", clozeEn:"It is morning." },
+  { lemma:"со́нце", lemmaPlain:"сонце", ipa:"[ˈsɔnt͡se]", gloss:"sun", pos:"іменник · с.р.",
+    cefr:"A1", sev:"green", her:"✓ Питома",
+    sentence:"Небо сьогодні без ___.", form:"сонця", ansCase:"родовий відмінок",
+    caseRule:"без → родовий", clozeEn:"The sky is without sun today." },
+  { lemma:"ка́ва", lemmaPlain:"кава", ipa:"[ˈkɑʋɐ]", gloss:"coffee", pos:"іменник · ж.р.",
+    cefr:"A1", sev:"green", her:"Засвоєне запозичення",
+    sentence:"Я щоранку п’ю ___.", form:"каву", ansCase:"знахідний відмінок",
+    caseRule:"прямий додаток → знахідний", clozeEn:"I drink coffee every morning." },
+  { lemma:"мі́сто", lemmaPlain:"місто", ipa:"[ˈmisto]", gloss:"city", pos:"іменник · с.р.",
+    cefr:"A1", sev:"green", her:"✓ Питома",
+    sentence:"Я живу у великому ___.", form:"місті", ansCase:"місцевий відмінок",
+    caseRule:"у (де?) → місцевий", clozeEn:"I live in a big city." },
+  { lemma:"кни́жка", lemmaPlain:"книжка", ipa:"[ˈknɪʒkɐ]", gloss:"book", pos:"іменник · ж.р.",
+    cefr:"A1", sev:"green", her:"✓ Питома",
+    sentence:"Я читаю цікаву ___.", form:"книжку", ansCase:"знахідний відмінок",
+    caseRule:"прямий додаток → знахідний", clozeEn:"I'm reading an interesting book." },
+  { lemma:"вода́", lemmaPlain:"вода", ipa:"[wɔˈdɑ]", gloss:"water", pos:"іменник · ж.р.",
+    cefr:"A1", sev:"green", her:"✓ Питома",
+    sentence:"У склянці немає ___.", form:"води", ansCase:"родовий відмінок",
+    caseRule:"немає → родовий", clozeEn:"There's no water in the glass." },
+  { lemma:"хліб", lemmaPlain:"хліб", ipa:"[xlʲib]", gloss:"bread", pos:"іменник · ч.р.",
+    cefr:"A1", sev:"green", her:"✓ Питома",
+    sentence:"Це свіжий хліб.", clozeEn:"This is fresh bread." },
+  { lemma:"мо́ва", lemmaPlain:"мова", ipa:"[ˈmɔʋɐ]", gloss:"language", pos:"іменник · ж.р.",
+    cefr:"A1", sev:"green", her:"✓ Питома",
+    sentence:"Я вивчаю українську ___.", form:"мову", ansCase:"знахідний відмінок",
+    caseRule:"прямий додаток → знахідний", clozeEn:"I'm learning the Ukrainian language." },
+  { lemma:"ро́бота", lemmaPlain:"робота", ipa:"[ˈrɔbotɐ]", gloss:"work", pos:"іменник · ж.р.",
+    cefr:"A2", sev:"green", her:"✓ Питома",
+    sentence:"Уранці я йду на ___.", form:"роботу", ansCase:"знахідний відмінок",
+    caseRule:"на (куди?) → знахідний", clozeEn:"In the morning I go to work." },
+  { lemma:"роди́на", lemmaPlain:"родина", ipa:"[rɔˈdɪnɐ]", gloss:"family", pos:"іменник · ж.р.",
+    cefr:"A2", sev:"green", her:"✓ Питома",
+    sentence:"Я люблю свою ___.", form:"родину", ansCase:"знахідний відмінок",
+    caseRule:"прямий додаток → знахідний", clozeEn:"I love my family." },
+  { lemma:"кві́тка", lemmaPlain:"квітка", ipa:"[ˈkʋitkɐ]", gloss:"flower", pos:"іменник · ж.р.",
+    cefr:"A2", sev:"green", her:"✓ Питома",
+    sentence:"Я подарував мамі ___.", form:"квітку", ansCase:"знахідний відмінок",
+    caseRule:"прямий додаток → знахідний", clozeEn:"I gave mom a flower." },
+  { lemma:"дру́г", lemmaPlain:"друг", ipa:"[druɦ]", gloss:"friend", pos:"іменник · ч.р.",
+    cefr:"A1", sev:"green", her:"✓ Питома",
+    sentence:"Я бачу свого ___.", form:"друга", ansCase:"знахідний відмінок",
+    caseRule:"бачу (кого?) → знахідний", clozeEn:"I see my friend." }
+];
+
+/* ---- deterministic shuffle (no Math.random reliance for repeatability) ---- */
+var _seed = 1234567;
+function rnd(){ _seed = (_seed * 1103515245 + 12345) & 0x7fffffff; return _seed / 0x7fffffff; }
+function shuffle(a){ a = a.slice(); for (var i=a.length-1;i>0;i--){ var j=Math.floor(rnd()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+// Ukrainian numeral agreement: one (1,21…) / few (2–4,22–24…) / many (0,5–20,…).
+function uaPlural(n, one, few, many){
+  var a = Math.abs(n) % 100, b = a % 10;
+  if (a > 10 && a < 20) return many;
+  if (b === 1) return one;
+  if (b >= 2 && b <= 4) return few;
+  return many;
+}
+function correctLabel(n){ return n + " " + uaPlural(n, "правильна", "правильні", "правильних"); }
+function chip(sev,label){ return '<span class="her-chip" data-sev="'+sev+'">'+esc(label)+'</span>'; }
+
+/* ============================== VIEW ROUTER ================================= */
+var VIEWS = ["landing","browse","wod","home","flashcards","matching","choice","cloze"];
+var sel = document.getElementById("poc-view");
+function showView(id){
+  if (VIEWS.indexOf(id) < 0) id = "landing";
+  VIEWS.forEach(function(v){
+    document.getElementById("view-"+v).classList.toggle("active", v===id);
+  });
+  sel.value = id;
+  window.scrollTo(0,0);
+  // Nav highlight: Word Atlas owns the dictionary (landing/browse); Words of the Day owns the daily surface + practice.
+  var navKey = (id==="landing"||id==="browse") ? "atlas" : "wod";
+  document.querySelectorAll("[data-nav]").forEach(function(a){
+    a.classList.toggle("is-current", a.getAttribute("data-nav")===navKey);
+  });
+  if (id==="wod") renderDaily();
+  if (id==="browse") renderBrowse();
+  if (id==="flashcards") initFlash();
+  if (id==="matching") initMatch();
+  if (id==="choice") initChoice();
+  if (id==="cloze") initCloze();
+}
+sel.addEventListener("change", function(){ showView(sel.value); });
+document.addEventListener("click", function(e){
+  var t = e.target.closest("[data-go]");
+  if (t){ e.preventDefault(); showView(t.getAttribute("data-go")); }
+});
+
+/* ============================== THEME TOGGLE =============================== */
+function setTheme(mode){
+  document.body.setAttribute("data-theme", mode);
+  document.querySelectorAll("[data-theme-choice]").forEach(function(b){
+    b.classList.toggle("active", b.dataset.themeChoice===mode);
+  });
+}
+document.querySelectorAll("[data-theme-choice]").forEach(function(b){
+  b.addEventListener("click", function(){ setTheme(b.dataset.themeChoice); });
+});
+document.getElementById("theme-quick").addEventListener("click", function(){
+  setTheme(document.body.getAttribute("data-theme")==="dark" ? "light" : "dark");
+});
+
+/* ============================== LANDING — DAILY ============================ */
+function renderDaily(){
+  var grid = document.getElementById("daily-grid");
+  if (grid.childElementCount) return;
+  grid.innerHTML = DECK.map(function(w){
+    return '<li><a class="daily-card" href="#" onclick="return false">'
+      + '<span class="daily-lemma">'+esc(w.lemmaPlain)+'</span>'
+      + '<span class="daily-gloss">'+esc(w.gloss)+'</span>'
+      + '<span class="daily-chips"><span class="cefr-chip">'+esc(w.cefr)+'</span>'
+      + chip(w.sev, w.her)+'</span></a></li>';
+  }).join("");
+}
+
+/* ============================== ATLAS — А–Я BROWSE ======================== */
+var UK_ALPHABET = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ".split("");
+function firstLetter(s){ var c = String(s||"").trim().toUpperCase().charAt(0); return UK_ALPHABET.indexOf(c)>=0 ? c : null; }
+var brzBuilt = false;
+function renderBrowse(){
+  if (brzBuilt) return; brzBuilt = true;
+  var groups = {};
+  DECK.forEach(function(w){ var L = firstLetter(w.lemmaPlain); if(!L) return; (groups[L]=groups[L]||[]).push(w); });
+  var populated = UK_ALPHABET.filter(function(L){ return groups[L]; });
+  var nav = document.getElementById("brz-letters");
+  var status = document.getElementById("brz-status");
+  var totalLabel = DECK.length + " слів · " + populated.length + " літер (PoC-вибірка)";
+  nav.innerHTML = UK_ALPHABET.map(function(L){
+    return '<a class="brz-letter'+(groups[L]?'':' is-empty')+'" href="#brz-'+L+'" data-letter="'+L+'">'+L+'</a>';
+  }).join("");
+  status.textContent = totalLabel;
+  document.getElementById("brz-groups").innerHTML = populated.map(function(L){
+    var items = groups[L].slice().sort(function(a,b){ return a.lemmaPlain.localeCompare(b.lemmaPlain,"uk"); });
+    return '<section class="brz-section" data-sec="'+L+'"><h3 id="brz-'+L+'" class="brz-head">'+L+'</h3><ul class="brz-list">'
+      + items.map(function(w){
+          return '<li class="brz-item" data-hay="'+esc((w.lemmaPlain+" "+w.gloss).toLowerCase())+'">'
+            + '<a class="brz-card" href="#" onclick="return false">'
+            + '<span class="brz-lemma">'+esc(w.lemmaPlain)+'</span>'
+            + '<span class="brz-gloss">«'+esc(w.gloss)+'»</span>'
+            + '<span class="brz-tags"><span class="cefr-chip">'+esc(w.cefr)+'</span>'+chip(w.sev,w.her)+'</span>'
+            + '</a></li>';
+        }).join("")
+      + '</ul></section>';
+  }).join("");
+  var q = document.getElementById("brz-q");
+  q.addEventListener("input", function(){
+    var query = q.value.trim().toLowerCase(), vis = 0;
+    document.querySelectorAll("#brz-groups .brz-section").forEach(function(sec){
+      var sv = 0;
+      sec.querySelectorAll(".brz-item").forEach(function(it){
+        var m = !query || it.getAttribute("data-hay").indexOf(query) >= 0;
+        it.hidden = !m; if (m) sv++;
+      });
+      sec.hidden = sv === 0; vis += sv;
+      var link = nav.querySelector('[data-letter="'+sec.getAttribute("data-sec")+'"]');
+      if (link) link.classList.toggle("is-empty", sv === 0);
+    });
+    status.textContent = query ? (vis + " слів за запитом «" + q.value.trim() + "»") : totalLabel;
+  });
+}
+
+/* ============================== FLASHCARDS ================================= */
+var fcQueue = [], fcIdx = 0, fcDone = 0, fcInit = false;
+var fcCard = document.getElementById("fc-card");
+var fcRating = document.getElementById("fc-rating");
+var fcHint2 = document.getElementById("fc-hint2");
+var fcLive = document.getElementById("fc-live");
+var RATE_LABEL = { again:"Ще раз", hard:"Важко", good:"Добре", easy:"Легко" };
+
+function initFlash(){
+  if (!fcInit){
+    fcQueue = shuffle(DECK); fcIdx = 0; fcDone = 0;
+    fcInit = true;
+    renderFlash();
+  }
+}
+function renderFlash(){
+  var total = fcQueue.length;
+  if (fcIdx >= total){
+    document.getElementById("fc-scene").hidden = true;
+    document.getElementById("fc-done").hidden = false;
+    document.getElementById("fc-done-msg").textContent =
+      "Опрацьовано " + fcDone + " карток. Інтервали оновлено локально.";
+    fcRating.hidden = true; fcHint2.hidden = true;
+    fcLive.textContent = "Сесію завершено. Опрацьовано "+fcDone+" карток.";
+    fcLive.setAttribute("data-tone","ok");
+    document.getElementById("fc-pos").textContent = total+" / "+total;
+    document.getElementById("fc-qbar").style.width = "100%";
+    return;
+  }
+  document.getElementById("fc-scene").hidden = false;
+  document.getElementById("fc-done").hidden = true;
+  var w = fcQueue[fcIdx];
+  fcCard.classList.remove("flipped");
+  fcCard.setAttribute("aria-pressed","false");
+  document.getElementById("fc-lemma").textContent = w.lemma; // includes stress mark
+  document.getElementById("fc-blemma").textContent = w.lemmaPlain;
+  document.getElementById("fc-ipa").textContent = w.ipa;
+  document.getElementById("fc-gloss").textContent = w.gloss;
+  document.getElementById("fc-chips").innerHTML =
+    '<span class="cefr-chip">'+esc(w.cefr)+'</span>' + chip(w.sev,w.her)
+    + '<span class="her-chip" data-sev="blue">'+esc(w.pos)+'</span>';
+  document.getElementById("fc-ex").innerHTML =
+    esc(w.sentence.replace("___", (w.form||w.lemmaPlain))) + '<em>'+esc(w.clozeEn)+'</em>';
+  fcRating.hidden = true; fcHint2.hidden = true;
+  fcLive.setAttribute("data-tone","info");
+  fcLive.textContent = "Картка "+(fcIdx+1)+" з "+total+". Згадайте значення.";
+  document.getElementById("fc-pos").textContent = (fcIdx+1)+" / "+total;
+  document.getElementById("fc-qbar").style.width = Math.round((fcIdx)/total*100)+"%";
+}
+function flipFlash(){
+  if (fcIdx >= fcQueue.length) return;
+  var flipped = fcCard.classList.toggle("flipped");
+  fcCard.setAttribute("aria-pressed", flipped ? "true":"false");
+  fcRating.hidden = !flipped; fcHint2.hidden = !flipped;
+  if (flipped){
+    fcLive.setAttribute("data-tone","info");
+    fcLive.textContent = "Значення показано. Оцініть, як легко згадалось (клавіші 1–4).";
+  }
+}
+fcCard.addEventListener("click", flipFlash);
+function rateFlash(rate){
+  if (fcRating.hidden) return;
+  var w = fcQueue[fcIdx];
+  fcDone++;
+  if (rate === "again"){ fcQueue.push(w); } // SRS: re-queue at the end
+  fcIdx++;
+  fcLive.setAttribute("data-tone", rate==="again" ? "bad" : "ok");
+  fcLive.textContent = "Оцінено: "+RATE_LABEL[rate]+"."
+    + (rate==="again" ? " Слово повернеться наприкінці черги." : " Наступна картка.");
+  setTimeout(renderFlash, 220);
+}
+fcRating.querySelectorAll("[data-rate]").forEach(function(b){
+  b.addEventListener("click", function(){ rateFlash(b.getAttribute("data-rate")); });
+});
+document.getElementById("fc-restart").addEventListener("click", function(){
+  fcInit = false; initFlash();
+});
+/* keyboard: Space/Enter flips (only when card is NOT the focused button —
+   a focused <button> already flips natively on activation, avoid double-flip);
+   1-4 rate the flipped card. */
+document.addEventListener("keydown", function(e){
+  if (!document.getElementById("view-flashcards").classList.contains("active")) return;
+  if ((e.key === " " || e.key === "Enter") && document.activeElement !== fcCard){
+    var tag = (e.target.tagName || "").toLowerCase();
+    if (tag !== "button" && tag !== "input" && tag !== "select" && tag !== "a"){
+      e.preventDefault(); flipFlash();
+    }
+  }
+  if (!fcRating.hidden && ["1","2","3","4"].indexOf(e.key) >= 0){
+    var map = {"1":"again","2":"hard","3":"good","4":"easy"};
+    rateFlash(map[e.key]);
+  }
+});
+
+/* ============================== MATCHING =================================== */
+var mtSel = null, mtMatched = 0, mtPairs = [];
+function initMatch(){
+  mtSel = null; mtMatched = 0;
+  mtPairs = shuffle(DECK).slice(0, 6);
+  var left = document.getElementById("mt-left");
+  var right = document.getElementById("mt-right");
+  left.innerHTML = "<h3>Слово</h3>";
+  right.innerHTML = "<h3>Значення</h3>";
+  mtPairs.forEach(function(w){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "match-tile lemma"; b.textContent = w.lemmaPlain;
+    b.dataset.id = w.lemmaPlain; b.addEventListener("click", function(){ pickLemma(b,w); });
+    left.appendChild(b);
+  });
+  shuffle(mtPairs).forEach(function(w){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "match-tile"; b.textContent = w.gloss;
+    b.dataset.id = w.lemmaPlain; b.addEventListener("click", function(){ pickGloss(b,w); });
+    right.appendChild(b);
+  });
+  document.getElementById("mt-score").textContent = "0 / 6";
+  setLive("mt-live","Оберіть слово, потім його значення.","info");
+}
+function pickLemma(btn,w){
+  if (btn.classList.contains("correct")) return;
+  document.querySelectorAll("#mt-left .match-tile").forEach(function(t){ t.classList.remove("selected"); });
+  btn.classList.add("selected"); mtSel = w.lemmaPlain;
+  setLive("mt-live","Слово «"+w.lemmaPlain+"» обрано. Тепер оберіть значення.","info");
+}
+function pickGloss(btn,w){
+  if (btn.classList.contains("correct")) return;
+  if (!mtSel){ setLive("mt-live","Спершу оберіть слово зліва.","info"); return; }
+  var lemBtn = document.querySelector('#mt-left .match-tile.selected');
+  if (w.lemmaPlain === mtSel){
+    btn.classList.add("correct"); btn.disabled = true;
+    if (lemBtn){ lemBtn.classList.remove("selected"); lemBtn.classList.add("correct"); lemBtn.disabled = true; }
+    mtMatched++; mtSel = null;
+    document.getElementById("mt-score").textContent = mtMatched+" / 6";
+    setLive("mt-live","Правильно! «"+w.lemmaPlain+"» → «"+w.gloss+"».", "ok");
+    if (mtMatched === 6) setLive("mt-live","🎉 Усі пари дібрано правильно!","ok");
+  } else {
+    btn.classList.add("wrong");
+    setLive("mt-live","Не та пара. Спробуйте ще раз.","bad");
+    setTimeout(function(){ btn.classList.remove("wrong"); }, 360);
+  }
+}
+document.getElementById("mt-reset").addEventListener("click", initMatch);
+
+/* ============================== MULTIPLE CHOICE =========================== */
+var chWord = null, chAnswered = false, chCorrect = 0;
+function initChoice(){ chCorrect = 0; nextChoice(); }
+function nextChoice(){
+  chAnswered = false;
+  chWord = shuffle(DECK)[0];
+  var distract = shuffle(DECK.filter(function(w){ return w.lemmaPlain !== chWord.lemmaPlain; })).slice(0,3);
+  var opts = shuffle(distract.concat([chWord]));
+  document.getElementById("ch-q").innerHTML = "Що означає «<b>"+esc(chWord.lemmaPlain)+"</b>»?";
+  var box = document.getElementById("ch-options");
+  box.innerHTML = "";
+  opts.forEach(function(w,i){
+    var b = document.createElement("button");
+    b.type="button"; b.className="mc-opt";
+    b.innerHTML = '<span class="mc-key">'+(i+1)+'</span>'+esc(w.gloss);
+    b.dataset.correct = (w.lemmaPlain === chWord.lemmaPlain) ? "1":"0";
+    b.addEventListener("click", function(){ answerChoice(b); });
+    box.appendChild(b);
+  });
+  setLive("ch-live"," ","info");
+  document.getElementById("ch-next").hidden = true;
+}
+function answerChoice(btn){
+  if (chAnswered) return; chAnswered = true;
+  var ok = btn.dataset.correct === "1";
+  document.querySelectorAll("#ch-options .mc-opt").forEach(function(b){
+    b.disabled = true;
+    if (b.dataset.correct === "1") b.classList.add("correct");
+  });
+  if (ok){ chCorrect++; setLive("ch-live","✓ Правильно!","ok"); }
+  else { btn.classList.add("wrong"); setLive("ch-live","✕ Правильна відповідь підсвічена.","bad"); }
+  document.getElementById("ch-score").textContent = correctLabel(chCorrect);
+  document.getElementById("ch-next").hidden = false;
+  document.getElementById("ch-next").focus();
+}
+document.getElementById("ch-next").addEventListener("click", nextChoice);
+document.addEventListener("keydown", function(e){
+  if (!document.getElementById("view-choice").classList.contains("active")) return;
+  if (["1","2","3","4"].indexOf(e.key) >= 0 && !chAnswered){
+    var b = document.querySelectorAll("#ch-options .mc-opt")[+e.key-1];
+    if (b) answerChoice(b);
+  } else if (e.key === "Enter" && chAnswered){ nextChoice(); }
+});
+
+/* ============================== CLOZE ===================================== */
+/* The cloze DEMANDS the correct CASE form. The bare lemma (nominative) is offered among the
+   options as a wrong-case distractor but is NEVER accepted: a wrong-case answer gets a teaching
+   message naming the right form + rule, not a silent pass. Typos / stress marks are forgiven;
+   the case is not. */
+var czWord = null, czAnswered = false, czCorrect = 0, czLast = null;
+function czNorm(s){ return (s||"").trim().toLocaleLowerCase("uk").replace(/́/g,"").replace(/’/g,"'"); }
+function initCloze(){ czCorrect = 0; czLast = null; nextCloze(); }
+function nextCloze(){
+  czAnswered = false;
+  var pool = DECK.filter(function(w){ return w.form && w.sentence.indexOf("___") >= 0; });
+  if (pool.length > 1 && czLast) pool = pool.filter(function(w){ return w.lemmaPlain !== czLast; });
+  czWord = shuffle(pool)[0];
+  czLast = czWord.lemmaPlain;
+  document.getElementById("cz-sentence").innerHTML =
+    esc(czWord.sentence).replace("___", '<span class="cz-blank" id="cz-blank">?</span>');
+  document.getElementById("cz-translate").textContent = czWord.clozeEn;
+  // Break the "two-of-the-same-root → the answer is one of those two" tell: present EITHER two
+  // lemma+declined pairs (the answer's AND a decoy word's — so the shape reveals nothing and the
+  // decoy's declined form is a trap), OR no pair at all (answer among mixed lemma/declined forms).
+  var pool2 = shuffle(DECK.filter(function(w){ return w.form && w.lemmaPlain !== czWord.lemmaPlain; }));
+  var opts;
+  if (Math.random() < 0.55){
+    var decoy = pool2[0];                         // a WRONG word, also shown in both forms
+    opts = [{ label: czWord.form, role:"answer" }, { label: czWord.lemmaPlain, role:"wrongcase" },
+            { label: decoy.form, role:"other" },  { label: decoy.lemmaPlain, role:"other" }];
+  } else {
+    opts = [{ label: czWord.form, role:"answer" }].concat(   // 3 distinct words, each lemma OR declined
+      pool2.slice(0,3).map(function(w){ return { label: (Math.random() < 0.5 ? w.form : w.lemmaPlain), role:"other" }; }));
+  }
+  opts = shuffle(opts);
+  var box = document.getElementById("cz-options");
+  box.innerHTML = "";
+  opts.forEach(function(o){
+    var b = document.createElement("button");
+    b.type="button"; b.className="cz-chip"; b.textContent = o.label;
+    b.dataset.role = o.role;
+    b.addEventListener("click", function(){ answerCloze(o.label, b, o.role); });
+    box.appendChild(b);
+  });
+  var input = document.getElementById("cz-input");
+  input.value = ""; input.disabled = false;
+  setLive("cz-live"," ","info");
+  document.getElementById("cz-next").hidden = true;
+}
+function answerCloze(value, btn, role){
+  if (czAnswered) return;
+  var t = czNorm(value);
+  var correct   = t === czNorm(czWord.form);
+  var wrongCase = !correct && (role === "wrongcase" || t === czNorm(czWord.lemmaPlain));
+  var blank = document.getElementById("cz-blank");
+  if (wrongCase){
+    // SCAFFOLD: right word, wrong case → name the case + trigger (NOT the form), keep the blank
+    // OPEN, let them retry. The live build records ONE case-miss in SRS per presentation; the
+    // demo just re-opens the attempt — the lemma is never accepted as the answer.
+    if (btn){ btn.classList.add("wrong"); btn.disabled = true; }   // retire the wrong-case chip
+    blank.textContent = "?"; blank.classList.remove("filled","bad");
+    document.getElementById("cz-input").value = "";
+    setLive("cz-live","✓ Правильне слово! Тепер поставте його у "+czWord.ansCase+" — "+czWord.caseRule+". Спробуйте ще.","warn");
+    return;  // do NOT advance — retry
+  }
+  if (!correct && !btn){ // typed a wrong WORD — let them retry
+    blank.textContent = value || "?"; blank.classList.add("filled","bad");
+    setLive("cz-live","✕ Не те слово. Спробуйте ще або оберіть нижче.","bad");
+    return;
+  }
+  // resolved: a correct answer, or a wrong-WORD chip click
+  czAnswered = true;
+  document.getElementById("cz-input").disabled = true;
+  document.querySelectorAll("#cz-options .cz-chip").forEach(function(b){
+    b.disabled = true;
+    if (b.dataset.role === "answer") b.classList.add("correct");
+  });
+  blank.textContent = czWord.form; blank.classList.remove("bad"); blank.classList.add("filled");
+  if (correct){
+    czCorrect++;
+    setLive("cz-live","✓ Правильно — «"+czWord.form+"» ("+czWord.ansCase+").","ok");
+  } else {
+    if (btn) btn.classList.add("wrong");
+    setLive("cz-live","✕ Правильна відповідь: «"+czWord.form+"» ("+czWord.ansCase+").","bad");
+  }
+  document.getElementById("cz-score").textContent = correctLabel(czCorrect);
+  document.getElementById("cz-next").hidden = false;
+}
+document.getElementById("cz-form").addEventListener("submit", function(e){
+  if (e && e.preventDefault) e.preventDefault();
+  if (czAnswered) return;
+  answerCloze(document.getElementById("cz-input").value, null, null);
+});
+document.getElementById("cz-next").addEventListener("click", nextCloze);
+
+/* ============================== HELPERS / BOOT ============================ */
+function setLive(id, msg, tone){
+  var el = document.getElementById(id);
+  el.textContent = msg; el.setAttribute("data-tone", tone || "info");
+}
+
+/* boot on the Practice home (matches the page-switch default) */
+showView("landing");
+</script>
+</body>
+</html>
