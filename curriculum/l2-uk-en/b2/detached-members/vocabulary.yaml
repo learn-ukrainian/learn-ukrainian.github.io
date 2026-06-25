@@ -1,0 +1,128 @@
+- lemma: відокремлений
+  translation: detached, separated
+  pos: adjective
+  usage: Відокремлений член речення виділяється інтонаційно й пунктуаційно.
+- lemma: відокремлення
+  translation: detachment
+  pos: noun
+  usage: Відокремлення допомагає виділити додаткову деталь.
+- lemma: дієприкметниковий зворот
+  translation: participial phrase
+  pos: phrase
+  usage: Дієприкметниковий зворот після означуваного слова часто відокремлюється.
+- lemma: дієприслівниковий зворот
+  translation: adverbial participial phrase
+  pos: phrase
+  usage: Дієприслівниковий зворот має стосуватися того самого виконавця.
+- lemma: прикладка
+  translation: apposition
+  pos: noun
+  usage: Прикладка по-іншому називає предмет або особу.
+- lemma: уточнювальний
+  translation: clarifying
+  pos: adjective
+  usage: Уточнювальний член звужує попереднє значення.
+- lemma: обставина
+  translation: adverbial modifier
+  pos: noun
+  usage: Відокремлена обставина може передавати причину або допуст.
+- lemma: додаток
+  translation: object
+  pos: noun
+  usage: Відокремлений додаток часто вводять слова крім або окрім.
+- lemma: деталізація
+  translation: detailing
+  pos: noun
+  usage: Деталізація робить опис точнішим.
+- lemma: акцентування
+  translation: emphasis
+  pos: noun
+  usage: Акцентування допомагає керувати увагою читача.
+- lemma: синтаксична норма
+  translation: syntactic norm
+  pos: phrase
+  usage: Синтаксична норма визначає природну будову речення.
+- lemma: інтонаційна пауза
+  translation: intonational pause
+  pos: phrase
+  usage: Інтонаційна пауза часто відповідає письмовій комі.
+- lemma: уточнення
+  translation: clarification
+  pos: noun
+  usage: Уточнення звужує попереднє значення.
+- lemma: постпозиція
+  translation: postposition
+  pos: noun
+  usage: Постпозиція означення часто створює умову для відокремлення.
+- lemma: препозиція
+  translation: preposition
+  pos: noun
+  usage: Препозиція означення частіше не потребує коми.
+- lemma: означуване слово
+  translation: modified word
+  pos: phrase
+  usage: Означуване слово стоїть перед або після означення.
+- lemma: поширене означення
+  translation: expanded attribute
+  pos: phrase
+  usage: Поширене означення має залежні слова.
+- lemma: одиничне означення
+  translation: single attribute
+  pos: phrase
+  usage: Одиничне означення може виділятися для описового ефекту.
+- lemma: допуст
+  translation: concession
+  pos: noun
+  usage: Обставина допусту показує дію всупереч перешкоді.
+- lemma: фразеологізм
+  translation: idiom
+  pos: noun
+  usage: Фразеологізм не покладаючи рук часто не відокремлюється.
+- lemma: керування
+  translation: government
+  pos: noun
+  usage: Після окрім треба перевірити керування родовим відмінком.
+- lemma: родовий відмінок
+  translation: genitive case
+  pos: phrase
+  usage: Відокремлені додатки з крім часто потребують родового відмінка.
+- lemma: обмеження
+  translation: limitation
+  pos: noun
+  usage: Відокремлений додаток може вводити обмеження.
+- lemma: зіставлення
+  translation: comparison
+  pos: noun
+  usage: На відміну від вводить зіставлення.
+- lemma: смислова пауза
+  translation: semantic pause
+  pos: phrase
+  usage: Смислова пауза показує додатковість конструкції.
+- lemma: додатковість
+  translation: additivity
+  pos: noun
+  usage: Додатковість пояснює, чому зворот можна вилучити без руйнування основи.
+- lemma: перевантаження
+  translation: overload
+  pos: noun
+  usage: Надмір відокремлених конструкцій створює перевантаження речення.
+- lemma: уточнювати
+  translation: to clarify
+  pos: verb
+  usage: Уточнювати місце можна через відокремлену обставину.
+- lemma: виділяти
+  translation: to set off
+  pos: verb
+  usage: Коми виділяють відокремлений член речення.
+- lemma: перебудувати
+  translation: to restructure
+  pos: verb
+  usage: Речення з неправильним дієприслівниковим зворотом треба перебудувати.
+- lemma: нормативний
+  translation: standard
+  pos: adjective
+  usage: Нормативний варіант відповідає граматичній і стилістичній нормі.
+- lemma: ритм речення
+  translation: sentence rhythm
+  pos: phrase
+  usage: Ритм речення змінюється від кількості відокремлених конструкцій.
