@@ -43,6 +43,18 @@ _ATTRIBUTION_RE = re.compile(
     re.MULTILINE,
 )
 _PLAN_SOURCE_CHUNK_RE = re.compile(r"\bchunk\s+([0-9a-f]+_c\d+)\b", re.IGNORECASE)
+_APOSTROPHE_TRANSLATION = str.maketrans(
+    {
+        "\u02bc": "'",
+        "\u02bb": "'",
+        "\u2018": "'",
+        "\u2019": "'",
+        "`": "'",
+    }
+)
+_STRESS_MARKS = {"\u0300", "\u0301", "\u0341"}
+_DOUBLE_QUOTE_CHARS_RE = re.compile(r'[«»“”„‟"]')
+_HYPHENATED_LINE_BREAK_RE = re.compile(r"(?<=\w)[\-\u2010\u2011\u2012]\s+(?=\w)")
 _PLAN_TITLE_STRIP_CHARS = " \t\r\n«»“”„\"'`"
 _STRESS_RE = re.compile("[\u0300\u0301]")
 _NON_WORD_RE = re.compile(r"[^\w]+", re.UNICODE)
@@ -103,6 +115,8 @@ class ResolvedReading:
     study_links: str | None = None
     taught_in: tuple[str, ...] = ()
     source_chunk_ids: tuple[str, ...] = ()
+    body_text: str | None = None
+    text_match: str | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
 
 
@@ -112,6 +126,7 @@ class WrittenReading:
     path: Path
     action: str
     source_chunk_id: str
+    text_match: str | None = None
 
 
 @dataclass(frozen=True)
@@ -400,7 +415,7 @@ def generate_from_plan(
     quote_verifier: QuoteVerifier | None = None,
 ) -> GenerationSummary:
     """Generate hosted reading MDX files from one plan's readings block."""
-    verifier = quote_verifier or verify_candidate_against_corpus
+    _ = quote_verifier
     output_dir.mkdir(parents=True, exist_ok=True)
     raw_plan = yaml.safe_load(plan_path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw_plan, dict):
@@ -414,6 +429,7 @@ def generate_from_plan(
     module_slug = str(raw_plan.get("slug") or plan_path.stem).strip()
     study_links = _study_link_from_plan(raw_plan, plan_path, level=level, slug=module_slug)
     lookup = CorpusLookup(sources_db)
+    chunk_rows: dict[str, sqlite3.Row] | None = None
     hosted_values = _hosted_reading_values()
     resolved_by_slug: dict[str, ResolvedReading] = {}
     skipped: list[SkippedReading] = []
@@ -433,6 +449,13 @@ def generate_from_plan(
         if not raw_title:
             skipped.append(SkippedReading("<untitled>", slug, "missing title"))
             continue
+        if "text" not in entry or entry.get("text") is None:
+            skipped.append(SkippedReading(raw_title, slug, "no curated text: field"))
+            continue
+        curated_text = _normalize_curated_text(str(entry.get("text") or ""))
+        if not curated_text:
+            skipped.append(SkippedReading(raw_title, slug, "no curated text: field"))
+            continue
 
         source = str(entry.get("source") or "").strip()
         source_chunk_id = _source_chunk_id(source)
@@ -447,7 +470,12 @@ def generate_from_plan(
             quote_lines=(candidate_title,),
         )
         hints = _plan_resource_hints(candidate, source, source_chunk_id, raw_title)
-        corpus = lookup.resolve(candidate, hints)
+        if source_chunk_id:
+            if chunk_rows is None:
+                chunk_rows = _load_corpus_chunk_rows(sources_db) if sources_db.exists() else {}
+            corpus = _read_corpus_chunks(chunk_rows, (source_chunk_id,))
+        else:
+            corpus = lookup.resolve(candidate, hints)
         if corpus is None:
             skipped.append(SkippedReading(raw_title, slug, "no matching corpus text"))
             continue
@@ -455,13 +483,13 @@ def generate_from_plan(
         if not is_public_domain(rights_corpus, track=candidate.track):
             skipped.append(SkippedReading(raw_title, slug, "corpus row is not public-domain"))
             continue
-        verdict = verifier(candidate, corpus)
-        if not verdict.matched:
+        text_match = _curated_text_match(curated_text, corpus)
+        if text_match is None:
             skipped.append(
                 SkippedReading(
                     raw_title,
                     slug,
-                    f"quote verification failed: {verdict.detail}",
+                    f"curated text not attested in corpus chunk {source_chunk_id or corpus.chunk_id}",
                 )
             )
             continue
@@ -474,6 +502,8 @@ def generate_from_plan(
             study_links=study_links,
             taught_in=(module_slug,) if module_slug else (),
             source_chunk_ids=(source_chunk_id or corpus.chunk_id,),
+            body_text=curated_text,
+            text_match=text_match,
             metadata=_plan_reading_metadata(entry),
         )
 
@@ -499,19 +529,29 @@ def _write_resolved_readings(
         if path.exists():
             current = path.read_text(encoding="utf-8")
             if GENERATED_MARKER not in current:
-                existing.append(WrittenReading(slug, path, "existing-hand-authored", resolved.corpus.chunk_id))
+                existing.append(
+                    WrittenReading(
+                        slug,
+                        path,
+                        "existing-hand-authored",
+                        resolved.corpus.chunk_id,
+                        resolved.text_match,
+                    )
+                )
                 continue
             if current == rendered:
-                existing.append(WrittenReading(slug, path, "unchanged", resolved.corpus.chunk_id))
+                existing.append(
+                    WrittenReading(slug, path, "unchanged", resolved.corpus.chunk_id, resolved.text_match)
+                )
                 continue
             if not dry_run:
                 path.write_text(rendered, encoding="utf-8")
-            written.append(WrittenReading(slug, path, "updated", resolved.corpus.chunk_id))
+            written.append(WrittenReading(slug, path, "updated", resolved.corpus.chunk_id, resolved.text_match))
             continue
 
         if not dry_run:
             path.write_text(rendered, encoding="utf-8")
-        written.append(WrittenReading(slug, path, "created", resolved.corpus.chunk_id))
+        written.append(WrittenReading(slug, path, "created", resolved.corpus.chunk_id, resolved.text_match))
     return written, existing
 
 
@@ -668,8 +708,9 @@ def render_reading(resolved: ResolvedReading) -> str:
     metadata = _metadata_for(resolved)
     tracks = sorted(resolved.tracks)
     study_links = resolved.study_links or _study_links(resolved.module_dirs)
-    body_text = _display_text(corpus.text, candidate.title)
+    body_text = resolved.body_text if resolved.body_text is not None else _display_text(corpus.text, candidate.title)
     quote = _blockquote(body_text)
+    attribution = _attribution(candidate) if resolved.body_text is not None else None
     intro_template = metadata.pop("intro", None)
     if intro_template:
         intro = intro_template.format(links=study_links)
@@ -690,6 +731,7 @@ def render_reading(resolved: ResolvedReading) -> str:
         "<PrimaryReading>",
         "",
         quote,
+        *(["", attribution] if attribution else []),
         "",
         "</PrimaryReading>",
         "",
@@ -1004,7 +1046,7 @@ def _load_corpus_chunk_rows(db_path: Path) -> dict[str, sqlite3.Row]:
             SELECT chunk_id, author, work, work_id, year, genre, language_period,
                    source_file, source_url, text
             FROM literary_texts
-            ORDER BY chunk_id, id
+            ORDER BY chunk_id, rowid
             """
         ).fetchall()
     for row in rows:
@@ -1047,6 +1089,37 @@ def _chunk_id_label(chunk_ids: Sequence[Any]) -> str:
     if len(values) <= 1:
         return values[0] if values else ""
     return f"{values[0]}-{values[-1]}"
+
+
+def _normalize_curated_text(raw_text: str) -> str:
+    lines = raw_text.replace("\r\n", "\n").replace("\r", "\n").splitlines()
+    while lines and not lines[0].strip():
+        lines.pop(0)
+    while lines and not lines[-1].strip():
+        lines.pop()
+    return "\n".join(line.rstrip() for line in lines)
+
+
+def _curated_text_match(curated_text: str, corpus: CorpusText) -> str | None:
+    corpus_text = corpus.text.replace("\r\n", "\n").replace("\r", "\n")
+    if curated_text and curated_text in corpus_text:
+        return "exact"
+
+    normalized_curated = _normalize_for_quote_match(curated_text)
+    normalized_corpus = _normalize_for_quote_match(corpus.text)
+    if normalized_curated and normalized_curated in normalized_corpus:
+        return "normalized"
+    return None
+
+
+def _normalize_for_quote_match(text: str) -> str:
+    text = text.replace("\r\n", "\n").replace("\r", "\n").translate(_APOSTROPHE_TRANSLATION)
+    decomposed = unicodedata.normalize("NFD", text)
+    without_stress = "".join(char for char in decomposed if char not in _STRESS_MARKS)
+    text = unicodedata.normalize("NFC", without_stress).replace("\u00ad", "")
+    text = _DOUBLE_QUOTE_CHARS_RE.sub("", text)
+    text = _HYPHENATED_LINE_BREAK_RE.sub("", text)
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def _verify_rendered_text_attested(corpus: CorpusText, candidate_title: str) -> VerificationResult:
@@ -1122,6 +1195,8 @@ def _metadata_for(resolved: ResolvedReading) -> dict[str, Any]:
         metadata["taught_in"] = list(resolved.taught_in)
     if resolved.source_chunk_ids:
         metadata["source_chunk_ids"] = list(resolved.source_chunk_ids)
+    if resolved.text_match:
+        metadata["text_match"] = resolved.text_match
     return metadata
 
 
@@ -1137,6 +1212,7 @@ def _frontmatter(metadata: dict[str, Any], tracks: Sequence[str]) -> list[str]:
         "tracks",
         "taught_in",
         "source_chunk_ids",
+        "text_match",
         "excerpt",
         "source",
         "public_domain",
@@ -1187,6 +1263,11 @@ def _looks_like_title_line(line: str, candidate_title: str) -> bool:
 
 def _blockquote(text: str) -> str:
     return "\n".join(f"> {line}" if line else ">" for line in text.splitlines())
+
+
+def _attribution(candidate: PrimaryReadingCandidate) -> str:
+    note = f" ({candidate.note})" if candidate.note else ""
+    return f"— {candidate.author}, «{candidate.title}»{note}"
 
 
 def _study_links(module_dirs: Sequence[Path]) -> str:
