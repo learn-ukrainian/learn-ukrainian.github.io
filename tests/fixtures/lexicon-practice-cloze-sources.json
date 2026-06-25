@@ -1,0 +1,32 @@
+[
+  {
+    "lemma": "книга",
+    "lemmaId": "knyha",
+    "sentence": "Я читаю ___.",
+    "blankCase": "accusative",
+    "form": "книгу",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I am reading a book.",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/vocabulary/reading.yaml",
+      "cardId": "reading-knyha-1"
+    }
+  },
+  {
+    "lemma": "місто",
+    "lemmaId": "misto",
+    "sentence": "Я живу у ___.",
+    "blankCase": "locative",
+    "form": "місті",
+    "number": "singular",
+    "caseRule": "locative_static_u",
+    "clozeEn": "I live in the city.",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/vocabulary/places.yaml",
+      "cardId": "places-misto-1"
+    }
+  }
+]

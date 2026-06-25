@@ -93,6 +93,11 @@ def _install_pass_fixture(
         lambda **_: {"passed": True, "coverage_pct": 1.0},
     )
     monkeypatch.setattr(
+        v7_build.linear_pipeline,
+        "run_ulp_fidelity_with_correction",
+        lambda *_args, **_kwargs: {"passed": True, "failed_checks": []},
+    )
+    monkeypatch.setattr(
         v7_build,
         "_run_wiki_coverage_review",
         lambda **_: {"overall_verdict": "PASS", "verdicts": []},

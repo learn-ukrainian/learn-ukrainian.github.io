@@ -43,6 +43,7 @@
   --lu-primary: #0057B7;
   --lu-accent: #FFD700;
   --lu-on-accent: #1c1e21;
+  --lu-on-primary: #fff;
   --lu-state-active: rgba(0,87,183,.08);
   --lu-state-correct-bg: rgba(46,125,50,.08);
   --lu-state-correct-fg: #2E7D32;
@@ -146,6 +147,7 @@
   --lu-primary: #5B9BD5;
   --lu-accent: #FFD700;
   --lu-on-accent: #1c1e21;
+  --lu-on-primary: #fff;
   --lu-state-active: rgba(91,155,213,.22);
   --lu-state-correct-bg: rgba(46,160,70,.26);
   --lu-state-correct-fg: #81C995;

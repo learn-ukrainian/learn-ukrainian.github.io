@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './Activities.module.css';
 import { parseMarkdown, shuffle } from './utils';
 import ActivityHelp from './ActivityHelp';
@@ -32,12 +32,14 @@ interface MatchUpProps {
    * @ukrainianText false
    */
   isUkrainian?: boolean;
+  onComplete?: () => void;
 }
 
-export default function MatchUp({ pairs, instruction, isUkrainian }: MatchUpProps) {
+export default function MatchUp({ pairs, instruction, isUkrainian, onComplete }: MatchUpProps) {
   const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
   const [matched, setMatched] = useState<Set<number>>(new Set());
   const [wrongPair, setWrongPair] = useState<{ left: number; right: number } | null>(null);
+  const completedRef = useRef(false);
 
   // Shuffle right side (deterministic — seeded by content)
   const shuffledRight = useMemo(() => {
@@ -69,6 +71,14 @@ export default function MatchUp({ pairs, instruction, isUkrainian }: MatchUpProp
   };
 
   const allMatched = matched.size === pairs.length;
+
+  useEffect(() => {
+    if (allMatched && !completedRef.current) {
+      completedRef.current = true;
+      onComplete?.();
+    }
+    if (!allMatched) completedRef.current = false;
+  }, [allMatched, onComplete]);
   const headerLabel = isUkrainian ? 'Знайдіть пару' : 'Match Up';
   const successLabel = isUkrainian ? '✓ Все з’єднано правильно!' : '✓ All matched correctly!';
 

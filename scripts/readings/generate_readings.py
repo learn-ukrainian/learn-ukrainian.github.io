@@ -42,6 +42,8 @@ _ATTRIBUTION_RE = re.compile(
     r"^—\s*(?P<author>[^,\n]+),\s*«(?P<title>[^»]+)»(?:\s*\((?P<note>[^)\n]+)\))?",
     re.MULTILINE,
 )
+_PLAN_SOURCE_CHUNK_RE = re.compile(r"\bchunk\s+([0-9a-f]+_c\d+)\b", re.IGNORECASE)
+_PLAN_TITLE_STRIP_CHARS = " \t\r\n«»“”„\"'`"
 _STRESS_RE = re.compile("[\u0300\u0301]")
 _NON_WORD_RE = re.compile(r"[^\w]+", re.UNICODE)
 
@@ -101,6 +103,7 @@ class ResolvedReading:
     study_links: str | None = None
     taught_in: tuple[str, ...] = ()
     source_chunk_ids: tuple[str, ...] = ()
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -388,6 +391,100 @@ def generate_from_demand(
     return GenerationSummary(tuple(written), tuple(skipped), tuple(existing))
 
 
+def generate_from_plan(
+    plan_path: Path,
+    *,
+    output_dir: Path = READINGS_ROOT,
+    sources_db: Path = SOURCES_DB,
+    dry_run: bool = False,
+    quote_verifier: QuoteVerifier | None = None,
+) -> GenerationSummary:
+    """Generate hosted reading MDX files from one plan's readings block."""
+    verifier = quote_verifier or verify_candidate_against_corpus
+    output_dir.mkdir(parents=True, exist_ok=True)
+    raw_plan = yaml.safe_load(plan_path.read_text(encoding="utf-8")) or {}
+    if not isinstance(raw_plan, dict):
+        return GenerationSummary((), (SkippedReading(plan_path.stem, None, "plan is not a mapping"),), ())
+
+    readings = raw_plan.get("readings")
+    if not isinstance(readings, list):
+        return GenerationSummary((), (), ())
+
+    level = str(raw_plan.get("level") or plan_path.parent.name).strip().lower()
+    module_slug = str(raw_plan.get("slug") or plan_path.stem).strip()
+    study_links = _study_link_from_plan(raw_plan, plan_path, level=level, slug=module_slug)
+    lookup = CorpusLookup(sources_db)
+    hosted_values = _hosted_reading_values()
+    resolved_by_slug: dict[str, ResolvedReading] = {}
+    skipped: list[SkippedReading] = []
+
+    for entry in readings:
+        if not isinstance(entry, dict):
+            continue
+        hosting = str(entry.get("hosting") or "").strip().casefold()
+        if hosting not in hosted_values:
+            continue
+
+        raw_title = str(entry.get("title") or "").strip()
+        slug = str(entry.get("reading_slug") or "").strip()
+        if not slug:
+            skipped.append(SkippedReading(raw_title or "<untitled>", None, "missing reading_slug"))
+            continue
+        if not raw_title:
+            skipped.append(SkippedReading("<untitled>", slug, "missing title"))
+            continue
+
+        source = str(entry.get("source") or "").strip()
+        source_chunk_id = _source_chunk_id(source)
+        candidate_title = _plan_candidate_title(raw_title)
+        candidate = PrimaryReadingCandidate(
+            module_dir=plan_path.parent,
+            track=level,
+            slug=module_slug,
+            author=_plan_entry_author(entry),
+            title=candidate_title,
+            note=str(entry.get("genre") or "").strip(),
+            quote_lines=(candidate_title,),
+        )
+        hints = _plan_resource_hints(candidate, source, source_chunk_id, raw_title)
+        corpus = lookup.resolve(candidate, hints)
+        if corpus is None:
+            skipped.append(SkippedReading(raw_title, slug, "no matching corpus text"))
+            continue
+        rights_corpus = _plan_rights_corpus(candidate, corpus, entry)
+        if not is_public_domain(rights_corpus, track=candidate.track):
+            skipped.append(SkippedReading(raw_title, slug, "corpus row is not public-domain"))
+            continue
+        verdict = verifier(candidate, corpus)
+        if not verdict.matched:
+            skipped.append(
+                SkippedReading(
+                    raw_title,
+                    slug,
+                    f"quote verification failed: {verdict.detail}",
+                )
+            )
+            continue
+
+        resolved_by_slug[slug] = ResolvedReading(
+            candidate=candidate,
+            corpus=corpus,
+            slug=slug,
+            tracks={level} if level else set(),
+            study_links=study_links,
+            taught_in=(module_slug,) if module_slug else (),
+            source_chunk_ids=(source_chunk_id or corpus.chunk_id,),
+            metadata=_plan_reading_metadata(entry),
+        )
+
+    written, existing = _write_resolved_readings(
+        resolved_by_slug,
+        output_dir=output_dir,
+        dry_run=dry_run,
+    )
+    return GenerationSummary(tuple(written), tuple(skipped), tuple(existing))
+
+
 def _write_resolved_readings(
     resolved_by_slug: dict[str, ResolvedReading],
     *,
@@ -479,11 +576,12 @@ class CorpusLookup:
                    language_period, source_file, source_url, text
             FROM literary_texts
         """
-        title_like = f"%{candidate.title}%"
-        add(
-            f"{select} WHERE author = ? AND (work LIKE ? OR text LIKE ?) LIMIT 25",
-            (candidate.author, title_like, title_like),
-        )
+        for title_variant in _title_lookup_variants(candidate.title):
+            title_like = f"%{title_variant}%"
+            add(
+                f"{select} WHERE author = ? AND (work LIKE ? OR text LIKE ?) LIMIT 25",
+                (candidate.author, title_like, title_like),
+            )
         first_line = next((line for line in candidate.quote_lines if line.strip()), "")
         if first_line:
             add(
@@ -638,6 +736,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("module_dirs", nargs="*", type=Path, help="Folk module directories to scan")
     parser.add_argument("--all-folk", action="store_true", help="Scan all built folk modules")
     parser.add_argument("--from-demand", action="store_true", help="Generate from primary-text demand manifest")
+    parser.add_argument("--from-plan", type=Path, help="Generate hosted readings from a single plan YAML")
     parser.add_argument("--track", help="Only scan one plans track when using --from-demand")
     parser.add_argument("--plans-dir", type=Path, default=DEFAULT_PLANS_DIR)
     parser.add_argument("--output-dir", type=Path, default=READINGS_ROOT)
@@ -650,7 +749,16 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    if args.from_demand:
+    if args.from_plan:
+        if args.from_demand or args.module_dirs or args.all_folk or args.track:
+            parser.error("--from-plan cannot be combined with other generation modes or --track")
+        summary = generate_from_plan(
+            args.from_plan,
+            output_dir=args.output_dir,
+            sources_db=args.sources_db,
+            dry_run=args.dry_run,
+        )
+    elif args.from_demand:
         if args.module_dirs or args.all_folk:
             parser.error("--from-demand cannot be combined with folk module dirs or --all-folk")
         summary = generate_from_demand(
@@ -697,6 +805,93 @@ def _dedupe_candidates(candidates: Sequence[PrimaryReadingCandidate]) -> list[Pr
         if existing is None or len(candidate.quote_lines) > len(existing.quote_lines):
             by_key[candidate.work_key] = candidate
     return list(by_key.values())
+
+
+def _hosted_reading_values() -> set[str]:
+    try:
+        from scripts.build.linear_pipeline import _HOSTED_READING_VALUES
+    except (ImportError, AttributeError):
+        return {"host", "hosted"}
+    return {str(value).strip().casefold() for value in _HOSTED_READING_VALUES}
+
+
+def _source_chunk_id(source: str) -> str | None:
+    match = _PLAN_SOURCE_CHUNK_RE.search(source)
+    return match.group(1) if match else None
+
+
+def _plan_candidate_title(title: str) -> str:
+    return title.strip(_PLAN_TITLE_STRIP_CHARS) or title.strip()
+
+
+def _plan_entry_author(entry: dict[str, Any]) -> str:
+    explicit = str(entry.get("author") or "").strip()
+    if explicit:
+        return explicit
+    source = str(entry.get("source") or "").strip()
+    source_author = source.split(";", 1)[0].strip()
+    return source_author or "Народна творчість"
+
+
+def _plan_resource_hints(
+    candidate: PrimaryReadingCandidate,
+    source: str,
+    source_chunk_id: str | None,
+    raw_title: str,
+) -> list[ResourceHint]:
+    if not source_chunk_id:
+        return []
+    return [
+        ResourceHint(
+            title=candidate.title,
+            source_ref=source,
+            role="plan-reading",
+            notes=raw_title,
+            packet_chunk_id=source_chunk_id,
+        )
+    ]
+
+
+def _plan_reading_metadata(entry: dict[str, Any]) -> dict[str, Any]:
+    metadata: dict[str, Any] = {}
+    for key in ("title", "title_en", "genre", "source"):
+        value = str(entry.get(key) or "").strip()
+        if value:
+            metadata[key] = value
+    return metadata
+
+
+def _plan_rights_corpus(
+    candidate: PrimaryReadingCandidate,
+    corpus: CorpusText,
+    entry: dict[str, Any],
+) -> CorpusText:
+    license_value = str(entry.get("license") or "").strip().casefold().replace("-", "_")
+    if license_value != "public_domain":
+        return corpus
+    return CorpusText(
+        chunk_id=corpus.chunk_id,
+        author=candidate.author or corpus.author,
+        work=candidate.title or corpus.work,
+        work_id=corpus.work_id,
+        year=corpus.year,
+        genre=corpus.genre,
+        language_period=corpus.language_period,
+        source_file=corpus.source_file,
+        source_url=corpus.source_url,
+        text=corpus.text,
+    )
+
+
+def _study_link_from_plan(plan: dict[str, Any], plan_path: Path, *, level: str, slug: str) -> str:
+    title = str(plan.get("title") or plan_path.stem).strip()
+    return f"[{_track_label(level)} · «{title}»](/{level}/{slug}/)"
+
+
+def _title_lookup_variants(title: str) -> list[str]:
+    quoted = re.findall(r"«([^»]+)»", title)
+    stripped = title.strip(_PLAN_TITLE_STRIP_CHARS)
+    return _ordered_unique([title, stripped, *quoted])
 
 
 def _quote_lines(block: str) -> Iterable[str]:
@@ -902,6 +1097,7 @@ def _metadata_for(resolved: ResolvedReading) -> dict[str, Any]:
     corpus = resolved.corpus
     slug = resolved.slug
     curated = dict(CURATED_METADATA.get(slug, {}))
+    curated.update(resolved.metadata)
     genre = curated.get("genre") or _genre_from_note(candidate.note) or _genre_from_corpus(corpus.genre)
     source_file = corpus.source_file or "corpus"
     metadata = {

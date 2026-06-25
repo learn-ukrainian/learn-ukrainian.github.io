@@ -62,6 +62,8 @@ def is_lexeme_entry(entry: dict[str, Any]) -> bool:
 
 def _has_course_usage(entry: dict[str, Any]) -> bool:
     course_usage = entry.get("course_usage")
+    if isinstance(course_usage, dict):
+        return True
     return isinstance(course_usage, list) and len(course_usage) > 0
 
 
@@ -72,11 +74,13 @@ def _has_cefr_level(entry: dict[str, Any]) -> bool:
     string is tolerated defensively.
     """
     enrichment = entry.get("enrichment")
-    if not isinstance(enrichment, dict):
-        return False
-    cefr = enrichment.get("cefr")
+    cefr = enrichment.get("cefr") if isinstance(enrichment, dict) else None
     level = cefr.get("level") if isinstance(cefr, dict) else cefr
-    return _has_text(level)
+    if _has_text(level):
+        return True
+    root_cefr = entry.get("cefr")
+    root_level = root_cefr.get("level") if isinstance(root_cefr, dict) else root_cefr
+    return _has_text(root_level)
 
 
 def is_practice_eligible(entry: dict[str, Any]) -> bool:

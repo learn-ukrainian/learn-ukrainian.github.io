@@ -1,0 +1,451 @@
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import LexiconPractice from '@site/src/components/LexiconPractice';
+import {
+  SRS_STORAGE_KEY,
+  cardKey,
+  loadState,
+  saveState,
+  type PracticeDeckData,
+  type PracticeLexeme,
+} from '@site/src/lib/lexicon/srs';
+import { LEARNER_LEVEL_STORAGE_KEY, type CefrLevel } from '@site/src/lib/lexicon/levels';
+
+const NOW = new Date('2026-06-23T12:00:00.000Z');
+
+function okJson(body: unknown): Response {
+  return { ok: true, json: async () => body } as unknown as Response;
+}
+
+function notFoundResponse(): Response {
+  return { ok: false, json: async () => ({}) } as unknown as Response;
+}
+
+/** Mock fetch for the level-sharded practice deck; `counts` lists which levels are published. */
+function mockShardFetch(counts: Partial<Record<CefrLevel, number>>) {
+  const requested: string[] = [];
+  const fn = vi.fn(async (input: RequestInfo | URL) => {
+    const url = String(input);
+    requested.push(url);
+    const match = url.match(/practice-(index|lexemes|cloze)\.([ABC][12])\.json/);
+    if (!match) return notFoundResponse();
+    const kind = match[1] as 'index' | 'lexemes' | 'cloze';
+    const level = match[2] as CefrLevel;
+    const n = counts[level];
+    if (n === undefined) return notFoundResponse(); // shard not published (e.g. C2)
+    if (kind === 'cloze') return okJson({ cloze: [] });
+    const lexemes = Array.from({ length: n }, (_unused, i) =>
+      lexeme(
+        `${level}-${i}`,
+        `слово-${level}-${i}`,
+        `gloss ${level} ${i}`,
+        {
+          nominative: `слово-${level}-${i}`,
+          accusative: `слово-${level}-${i}`,
+          locative: `слово-${level}-${i}`,
+        },
+        { cefr: level },
+      ),
+    );
+    if (kind === 'index') {
+      return okJson({
+        deckVersion: `v-${level}`,
+        level,
+        items: lexemes.map((lex, order) => ({
+          lemmaId: lex.lemmaId,
+          lemma: lex.lemma,
+          cefr: level,
+          modes: ['flashcards', 'matching', 'choice'],
+          hasCloze: false,
+          clozeIds: [],
+          newOrder: order,
+        })),
+      });
+    }
+    return okJson({ deckVersion: `v-${level}`, level, lexemes });
+  });
+  return { fn, requested };
+}
+
+function lexeme(
+  lemmaId: string,
+  lemma: string,
+  gloss: string,
+  forms: { nominative: string; accusative: string; locative: string },
+  overrides: Partial<PracticeLexeme> = {},
+): PracticeLexeme {
+  return {
+    lemmaId,
+    lemma,
+    lemmaPlain: lemma,
+    gloss,
+    ipa: null,
+    pos: 'noun',
+    cefr: 'A1',
+    heritage: 'native',
+    severity: 'standard',
+    paradigm: {
+      cases: {
+        nominative: { singular: forms.nominative },
+        accusative: { singular: forms.accusative },
+        locative: { singular: forms.locative },
+      },
+    },
+    ...overrides,
+  };
+}
+
+function sampleDeck(): PracticeDeckData {
+  const lexemes = [
+    lexeme('knyha', 'книга', 'book', {
+      nominative: 'книга',
+      accusative: 'книгу',
+      locative: 'книзі',
+    }),
+    lexeme('robota', 'робота', 'work', {
+      nominative: 'робота',
+      accusative: 'роботу',
+      locative: 'роботі',
+    }),
+    lexeme('misto', 'місто', 'city', {
+      nominative: 'місто',
+      accusative: 'місто',
+      locative: 'місті',
+    }),
+    lexeme('shkola', 'школа', 'school', {
+      nominative: 'школа',
+      accusative: 'школу',
+      locative: 'школі',
+    }),
+  ];
+  return {
+    deckVersion: 'test',
+    level: 'A1',
+    lexemes,
+    index: lexemes.map((entry, index) => ({
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      cefr: 'A1',
+      modes: ['flashcards', 'matching', 'choice', ...(entry.lemmaId === 'knyha' ? ['cloze' as const] : [])],
+      hasCloze: entry.lemmaId === 'knyha',
+      clozeIds: entry.lemmaId === 'knyha' ? ['knyha-cloze-1'] : [],
+      newOrder: index,
+    })),
+    cloze: [
+      {
+        clozeId: 'knyha-cloze-1',
+        lemmaId: 'knyha',
+        sentenceFrameId: 'reading-knyha-frame',
+        sentence: 'Я читаю ___.',
+        blankCase: 'accusative',
+        form: 'книгу',
+        clozeEn: 'I am reading a book.',
+        caseRule: {
+          ruleId: 'accusative_direct_object',
+          case: 'accusative',
+          caseLabel: 'знахідний',
+          trigger: 'direct-object',
+          triggerLabel: 'прямий додаток',
+          feedback: 'читати + знахідний (книга -> книгу)',
+        },
+        options: [
+          {
+            optionId: 'knyha-cloze-1:answer',
+            label: 'книгу',
+            lemmaId: 'knyha',
+            kind: 'answer',
+            case: 'accusative',
+          },
+          {
+            optionId: 'knyha-cloze-1:lemma',
+            label: 'книга',
+            lemmaId: 'knyha',
+            kind: 'same-root-lemma',
+            case: 'nominative',
+          },
+          {
+            optionId: 'knyha-cloze-1:decoy-lemma',
+            label: 'робота',
+            lemmaId: 'robota',
+            kind: 'decoy-lemma',
+            case: 'nominative',
+          },
+          {
+            optionId: 'knyha-cloze-1:decoy-oblique',
+            label: 'роботу',
+            lemmaId: 'robota',
+            kind: 'decoy-oblique',
+            case: 'accusative',
+          },
+        ],
+      },
+    ],
+  };
+}
+
+function wordToMeaningDeck(): PracticeDeckData {
+  const lexemes = [
+    lexeme('sady', 'сад', 'garden', {
+      nominative: 'сад',
+      accusative: 'сад',
+      locative: 'саду',
+    }),
+    lexeme('dimy', 'дім', 'house', {
+      nominative: 'дім',
+      accusative: 'дім',
+      locative: 'домі',
+    }),
+    lexeme('lisy', 'ліс', 'forest', {
+      nominative: 'ліс',
+      accusative: 'ліс',
+      locative: 'лісі',
+    }),
+    lexeme('rich', 'річка', 'river', {
+      nominative: 'річка',
+      accusative: 'річку',
+      locative: 'річці',
+    }),
+    lexeme(
+      'taxy',
+      'та',
+      'and; but; while',
+      {
+        nominative: 'та',
+        accusative: 'та',
+        locative: 'та',
+      },
+      { glossClean: 'and', meaningMcEligible: false, pos: 'conj' },
+    ),
+    lexeme(
+      'ityx',
+      'іти',
+      'to go',
+      {
+        nominative: 'іти',
+        accusative: 'іти',
+        locative: 'іти',
+      },
+      { pos: 'verb' },
+    ),
+  ];
+  return {
+    deckVersion: 'test-choice-clean-glosses',
+    level: 'A1',
+    lexemes,
+    index: lexemes.map((entry, index) => ({
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      cefr: 'A1',
+      modes:
+        entry.meaningMcEligible === false
+          ? ['flashcards']
+          : ['flashcards', 'matching', 'choice'],
+      hasCloze: false,
+      clozeIds: [],
+      newOrder: index,
+    })),
+    cloze: [],
+  };
+}
+
+function storedState() {
+  return JSON.parse(localStorage.getItem(SRS_STORAGE_KEY) ?? '{}');
+}
+
+function seedRecognitionMastery(lemmaId: string) {
+  const state = loadState(localStorage, NOW);
+  state.cards.set(cardKey(lemmaId, 'flashcards'), {
+    due: NOW.getTime(),
+    stability: 6,
+    difficulty: 4,
+    elapsed_days: 0,
+    scheduled_days: 3,
+    learning_steps: 0,
+    reps: 3,
+    lapses: 0,
+    state: 2,
+  });
+  saveState(state, localStorage, NOW.getTime());
+}
+
+beforeEach(() => {
+  localStorage.clear();
+  loadState(localStorage, NOW);
+  vi.restoreAllMocks();
+});
+
+describe('LexiconPractice', () => {
+  test('does not fetch deck before start mode action', () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+
+    render(<LexiconPractice />);
+
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  test('caps the practice pool at the learner level (cumulative, never higher levels)', async () => {
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'B1');
+    const { fn, requested } = mockShardFetch({ A1: 2, A2: 1, B1: 3, B2: 5, C1: 4 });
+    vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+    const user = userEvent.setup();
+    render(<LexiconPractice initialMode="flashcards" />);
+
+    await user.click(screen.getByRole('button', { name: 'Start Practice' }));
+
+    // A1+A2+B1 = 6 words; B2/C1 are above the learner level and must never be loaded.
+    await waitFor(() =>
+      expect(screen.getByLabelText('6 practice words loaded')).toBeInTheDocument(),
+    );
+    expect(requested.some((u) => u.includes('practice-index.A1'))).toBe(true);
+    expect(requested.some((u) => u.includes('practice-index.A2'))).toBe(true);
+    expect(requested.some((u) => u.includes('practice-index.B1'))).toBe(true);
+    expect(requested.some((u) => u.includes('practice-index.B2'))).toBe(false);
+    expect(requested.some((u) => u.includes('practice-index.C1'))).toBe(false);
+  });
+
+  test('level selector re-caps the pool and persists the shared learner-level key', async () => {
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
+    const { fn } = mockShardFetch({ A1: 2, A2: 1, B1: 3 });
+    vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+    const user = userEvent.setup();
+    render(<LexiconPractice initialMode="flashcards" />);
+
+    await user.click(screen.getByRole('button', { name: 'Start Practice' }));
+    await waitFor(() =>
+      expect(screen.getByLabelText('2 practice words loaded')).toBeInTheDocument(),
+    );
+
+    // Raise the level to B1 -> pool grows cumulatively to A1+A2+B1 = 6 and persists.
+    await user.click(screen.getByRole('button', { name: 'B1' }));
+    await waitFor(() =>
+      expect(screen.getByLabelText('6 practice words loaded')).toBeInTheDocument(),
+    );
+    expect(localStorage.getItem(LEARNER_LEVEL_STORAGE_KEY)).toBe('B1');
+  });
+
+  test('flashcard rating persists mode-specific SRS progress', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="flashcards" />,
+    );
+
+    const flashcard = container.querySelector<HTMLElement>('[data-activity="flashcard"]');
+    expect(flashcard).toBeInTheDocument();
+    await user.click(flashcard!);
+    expect(flashcard).toHaveAttribute('data-flipped', 'true');
+
+    await user.click(screen.getByRole('button', { name: 'Good' }));
+
+    await waitFor(() => {
+      expect(storedState().cards[cardKey('knyha', 'flashcards')]).toBeTruthy();
+    });
+  });
+
+  test('choice mode records result and advances through selector', async () => {
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="choice" />);
+
+    const choice = screen.getByTestId('practice-choice');
+    expect(choice).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'книга' }));
+
+    await waitFor(() => {
+      const state = storedState();
+      expect(state.reviews[0]).toMatchObject({
+        lemmaId: 'knyha',
+        mode: 'choice',
+        rating: 'good',
+      });
+    });
+  });
+
+  test('choice mode shows only clean same-pos meaning labels', () => {
+    render(<LexiconPractice initialDeck={wordToMeaningDeck()} autoStart initialMode="choice" />);
+    const choice = screen.getByTestId('practice-choice');
+
+    expect(screen.getByText('What does сад mean?')).toBeInTheDocument();
+    const labels = within(choice)
+      .getAllByRole('button')
+      .map((button) => button.textContent ?? '');
+
+    expect(new Set(labels)).toEqual(new Set(['garden', 'house', 'forest', 'river']));
+    expect(labels).not.toContain('and');
+    expect(labels).not.toContain('and; but; while');
+    expect(labels).not.toContain('to go');
+    for (const label of labels) {
+      expect(label).not.toMatch(/[?(]/);
+      expect(label.trim().split(/\s+/)).toHaveLength(1);
+    }
+  });
+
+  test('choice backfills distractors across POS when same-POS pool is too small', () => {
+    // The answer (a verb) has only ONE same-POS peer, but four other eligible words
+    // exist. The old strict-subset logic discarded the cross-POS pool and starved the
+    // distractor list (<3) -> the card could not render. It must now backfill to a
+    // full 4-option card.
+    const lexemes = [
+      lexeme('bachyty', 'бачити', 'to see', { nominative: 'бачити', accusative: 'бачити', locative: 'бачити' }, { pos: 'verb' }),
+      lexeme('ity', 'іти', 'to go', { nominative: 'іти', accusative: 'іти', locative: 'іти' }, { pos: 'verb' }),
+      lexeme('sad', 'сад', 'garden', { nominative: 'сад', accusative: 'сад', locative: 'саду' }),
+      lexeme('dim', 'дім', 'house', { nominative: 'дім', accusative: 'дім', locative: 'домі' }),
+      lexeme('lis', 'ліс', 'forest', { nominative: 'ліс', accusative: 'ліс', locative: 'лісі' }),
+    ];
+    const deck: PracticeDeckData = {
+      deckVersion: 'test-small-pos-pool',
+      level: 'A1',
+      lexemes,
+      index: lexemes.map((entry, index) => ({
+        lemmaId: entry.lemmaId,
+        lemma: entry.lemma,
+        cefr: 'A1',
+        modes: ['flashcards', 'matching', 'choice'],
+        hasCloze: false,
+        clozeIds: [],
+        newOrder: index,
+      })),
+      cloze: [],
+    };
+    render(<LexiconPractice initialDeck={deck} autoStart initialMode="choice" />);
+    const choice = screen.getByTestId('practice-choice');
+    const labels = within(choice)
+      .getAllByRole('button')
+      .map((button) => button.textContent ?? '');
+    // First card is the small-POS verb (newOrder 0). Without cross-POS backfill it
+    // would starve (<3 distractors) and not render; it must show a full 4-option set.
+    expect(labels).toHaveLength(4);
+    // The verb answer is present whichever polarity the selector picked.
+    expect(labels.some((label) => label === 'бачити' || label === 'to see')).toBe(true);
+  });
+
+  test('cloze wrong-case answer records one case miss and leaves blank open', async () => {
+    seedRecognitionMastery('knyha');
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="cloze" />);
+
+    expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'книга' }));
+
+    const status = screen.getByRole('status');
+    expect(status).toHaveTextContent('Правильне слово');
+    expect(status).toHaveClass('case-miss');
+    expect(screen.getByLabelText('Answer in знахідний')).toHaveValue('');
+    expect(screen.getByRole('button', { name: 'книгу' })).not.toBeDisabled();
+
+    await waitFor(() => {
+      const state = storedState();
+      expect(state.reviews).toHaveLength(1);
+      expect(state.reviews[0]).toMatchObject({
+        lemmaId: 'knyha',
+        mode: 'cloze',
+        rating: 'hard',
+      });
+    });
+
+    await user.click(screen.getByRole('button', { name: 'книгу' }));
+
+    await waitFor(() => {
+      expect(storedState().reviews).toHaveLength(1);
+    });
+  });
+});
