@@ -1,0 +1,120 @@
+- lemma: консолідація
+  translation: "consolidation"
+  pos: noun
+  usage: "Ця контрольна завершує консолідацію всього пасивного блоку B2."
+- lemma: ревізія
+  translation: "review, revision"
+  pos: noun
+  usage: "Ревізія пасивної системи допомагає побачити ієрархію конструкцій."
+- lemma: нормативність
+  translation: "normativity, standardness"
+  pos: noun
+  usage: "Нормативність форми треба перевіряти разом зі стилістичною доречністю."
+- lemma: стилістична гнучкість
+  translation: "stylistic flexibility"
+  pos: phrase
+  usage: "Стилістична гнучкість дає змогу не зводити всі жанри до одного шаблону."
+- lemma: канцеляризм
+  translation: "officialese, bureaucratism"
+  pos: noun
+  usage: "Канцеляризм часто маскується під солідність, але послаблює український текст."
+- lemma: трансформація
+  translation: "transformation"
+  pos: noun
+  usage: "Трансформація речення показує, як змінюється фокус висловлення."
+- lemma: пунктуаційна пильність
+  translation: "punctuation vigilance"
+  pos: phrase
+  usage: "Пунктуаційна пильність потрібна, коли дієприкметниковий зворот відокремлюється комами."
+- lemma: функціональність
+  translation: "functionality"
+  pos: noun
+  usage: "Функціональність форми залежить від того, яку роль вона виконує в жанрі."
+- lemma: аудит
+  translation: "audit"
+  pos: noun
+  usage: "Стилістичний аудит змушує не тільки знайти помилку, а й пояснити її."
+- lemma: рефлексія
+  translation: "reflection"
+  pos: noun
+  usage: "Після вправи корисна коротка рефлексія над повторюваними хибами."
+- lemma: ієрархія
+  translation: "hierarchy"
+  pos: noun
+  usage: "Ієрархія пасивних стратегій допомагає вибрати природний варіант."
+- lemma: автоматизм
+  translation: "automaticity"
+  pos: noun
+  usage: "Автоматизм з'являється тоді, коли редакторське рішення ухвалюється швидко, але мотивовано."
+- lemma: експресивність
+  translation: "expressiveness"
+  pos: noun
+  usage: "Експресивність доречна в описі, але не повинна руйнувати точність."
+- lemma: безособова форма
+  translation: "impersonal form"
+  pos: phrase
+  usage: "Безособова форма на -но, -то фіксує результат без названого виконавця."
+- lemma: неозначено-особове речення
+  translation: "indefinite-personal sentence"
+  pos: phrase
+  usage: "Неозначено-особове речення добре передає повторювану інституційну дію."
+- lemma: пасивний дієприкметник
+  translation: "passive participle"
+  pos: phrase
+  usage: "Пасивний дієприкметник найприродніше працює як означення до предмета."
+- lemma: активний дієприкметник
+  translation: "active participle"
+  pos: phrase
+  usage: "Активний дієприкметник теперішнього часу вимагає суворого стилістичного контролю."
+- lemma: лексикалізація
+  translation: "lexicalization"
+  pos: noun
+  usage: "Лексикалізація пояснює, чому окремі форми вже сприймаються як прикметники."
+- lemma: віддієслівний прикметник
+  translation: "deverbal adjective"
+  pos: phrase
+  usage: "Віддієслівний прикметник часто точніше називає призначення предмета, ніж калькований дієприкметник."
+- lemma: підрядне означальне речення
+  translation: "relative clause"
+  pos: phrase
+  usage: "Підрядне означальне речення часто рятує текст від неприродної активної форми на -учий."
+- lemma: результативність
+  translation: "resultativity"
+  pos: noun
+  usage: "Результативність форми на -но, -то особливо відчутна в підсумкових абзацах."
+- lemma: відповідальність
+  translation: "responsibility"
+  pos: noun
+  usage: "У новині важливо не ховати відповідальність за безособовою конструкцією."
+- lemma: фокус висловлення
+  translation: "utterance focus"
+  pos: phrase
+  usage: "Фокус висловлення визначає, чи потрібен актив, результат або означення."
+- lemma: калька
+  translation: "calque"
+  pos: noun
+  usage: "Калька на зразок бажаючі або діючий одразу послаблює враження від тексту."
+- lemma: перебудувати
+  translation: "to restructure"
+  pos: verb
+  usage: "Редактор повинен уміти швидко перебудувати важкий пасив на природніше речення."
+- lemma: відредагувати
+  translation: "to edit"
+  pos: verb
+  usage: "На контрольній потрібно не лише впізнати, а й відредагувати хибну конструкцію."
+- lemma: чинний
+  translation: "valid, in force"
+  pos: adj
+  usage: "Чинний закон звучить природно там, де кальковане діючий закон є небажаним."
+- lemma: охочі
+  translation: "interested, willing"
+  pos: adj
+  usage: "В оголошеннях природно писати усі охочі, а не усі бажаючі."
+- lemma: мийний
+  translation: "washing, cleaning"
+  pos: adj
+  usage: "Мийний засіб називає призначення предмета точніше за кальковану форму."
+- lemma: зворушливий
+  translation: "moving, touching"
+  pos: adj
+  usage: "Зворушливий спогад є кращою українською заміною для калькованого хвилюючого спогаду."
