@@ -425,6 +425,8 @@ export default function LexiconPractice({
   const [clozeFeedback, setClozeFeedback] = useState<ClozeFeedback | null>(null);
   const [clozeAttemptRecorded, setClozeAttemptRecorded] = useState(false);
   const stageRef = useRef<HTMLDivElement | null>(null);
+  // Monotonic id so a slow earlier deck fetch can't overwrite a newer one (rapid level switches).
+  const deckRequestId = useRef(0);
 
   useEffect(() => {
     const state = loadState();
@@ -471,10 +473,12 @@ export default function LexiconPractice({
     const force = options.force ?? false;
     const current = force ? null : deck;
     if (current && (!includeCloze || clozeLoaded)) return current;
+    const requestId = ++deckRequestId.current;
     setLoading(true);
     setError(null);
     try {
       let nextDeck = current;
+      let nextClozeLoaded = clozeLoaded;
       const levels = levelsUpTo(level);
       if (!nextDeck) {
         // Load every CEFR shard at or below the learner level and merge them, so an
@@ -508,15 +512,18 @@ export default function LexiconPractice({
           }),
         );
         nextDeck = { ...nextDeck, cloze: clozeBatches.flat() };
-        setClozeLoaded(true);
+        nextClozeLoaded = true;
       }
+      // Ignore the result if a newer fetch (e.g. a later level switch) has superseded this one.
+      if (deckRequestId.current !== requestId) return nextDeck;
       setDeck(nextDeck);
+      setClozeLoaded(nextClozeLoaded);
       return nextDeck;
     } catch {
-      setError('Practice deck could not be loaded.');
+      if (deckRequestId.current === requestId) setError('Practice deck could not be loaded.');
       return null;
     } finally {
-      setLoading(false);
+      if (deckRequestId.current === requestId) setLoading(false);
     }
   }
 
