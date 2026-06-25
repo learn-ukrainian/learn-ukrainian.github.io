@@ -347,15 +347,21 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const rows = (await response.json()) as BrowseRow[];
         cache.set(letter, rows);
+        // Guard against a stale fetch: if a newer letter was selected while this
+        // request was in flight, drop the result rather than clobber the active letter.
+        if (state.letter !== letter) return;
         state.rows = rows;
         state.error = null;
       } catch {
+        if (state.letter !== letter) return;
         state.rows = [];
         state.error = `Не вдалося завантажити ${letter}`;
       } finally {
-        state.loading = false;
-        render();
-        if (focusHeading && heading) heading.focus({ preventScroll: true });
+        if (state.letter === letter) {
+          state.loading = false;
+          render();
+          if (focusHeading && heading) heading.focus({ preventScroll: true });
+        }
       }
     };
 

@@ -92,8 +92,11 @@ def classification_code(entry: Mapping[str, Any]) -> str | None:
     warning_severity = _clean_text(status.get("warning_severity"))
     is_russianism = status.get("is_russianism") is True
 
-    if warning_severity == "russianism_red" or (
-        is_russianism and classification not in AUTHENTIC_RUSSIANISM_EXEMPTIONS
+    # An authentic treasured class (archaism/dialect/historism) must NEVER be tagged
+    # русизм, even when a stale/hand-edited row also carries warning_severity=russianism_red.
+    # Mirrors compute_warning_severity, which gates russianism_red on the same exemption.
+    if classification not in AUTHENTIC_RUSSIANISM_EXEMPTIONS and (
+        warning_severity == "russianism_red" or is_russianism
     ):
         return "rus"
     if warning_severity == "calque_yellow":

@@ -106,6 +106,19 @@ def test_russianism_does_not_override_treasured_authentic_classifications() -> N
         classification_code(entry("осавул", classification="historism", is_russianism=True))
         == "hist"
     )
+    # A stale/hand-edited row may carry BOTH an authentic classification AND
+    # warning_severity=russianism_red; the authentic class must still win (the
+    # russianism_red branch was previously unconditional — cursor review catch).
+    assert (
+        classification_code(
+            entry(
+                "другоє",
+                classification="authentic-archaism",
+                warning_severity="russianism_red",
+            )
+        )
+        == "arch"
+    )
 
 
 def test_browse_meta_counts_and_shards() -> None:
