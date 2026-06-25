@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "d20528b4f5b3159618eb937223df0ccd8adcb9e9c401d0586d9662d4dd7b8b16",
+  "assembled_mdx_sha256": null,
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "0e7b5aae3191acb612dfe616871f02b11ffd55e85f1395280c6e4dd69c825700",
+    "digest": "cf4e378052ba9eba97616e9d24928807d727ccff8a5862bc589aeea803d3b808",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/kalendarna-obriadovist-zvychai.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/module.md",
-        "sha256": "2dc747af09b4403190c46a25e27687561373afde00dc18232ebed0b01df53982"
+        "sha256": "e10701d998b185d887cb0889a01913cc6e65f597a1bd314340aee3ac6e9ae5f3"
       },
       {
         "path": "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/activities.yaml",
@@ -28,8 +28,7 @@
     ]
   },
   "evidence": {
-    "decolonization": "resists Slavic flattening + romantic over-reconstruction; regional variation + source limits surfaced",
-    "pedagogical": "reusable apparatus: ситуація/дія/висновок, motif, variant, self-checks (module.md:69,150-158,294-304)"
+    "framing-fix": "cross-family codex re-confirm HOLDS (bridge #1470): \u043f\u0440\u043e\u0434\u0443\u043a\u0443\u0432\u0430\u043b\u044c\u043d\u0430-\u043c\u0430\u0433\u0456\u044f example \u0449\u0435\u0434\u0440\u0456\u0432\u043a\u0430\u2192\u0432\u0435\u0441\u043d\u044f\u043d\u043a\u0430 per FOLK-FRAMING-STANDARD; no dim regresses, tone/decol improve"
   },
   "floors": {
     "beauty": 8.5,
@@ -47,7 +46,7 @@
     "model": "gpt-5.5"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-23T13:00:00Z",
+  "scored_at": "2026-06-25T21:37:58Z",
   "scores": {
     "beauty": 8.9,
     "decolonization": 9.4,
@@ -60,7 +59,7 @@
   "track": "folk",
   "verdict": "PASS",
   "writer": {
-    "agent": "claude-tools",
+    "agent": "claude",
     "family": "anthropic",
     "model": "claude-opus-4.8"
   }
