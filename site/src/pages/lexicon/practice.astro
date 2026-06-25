@@ -97,10 +97,30 @@ const frontmatter = {
   }
 
   :global(.lexicon-practice-modes),
+  :global(.lexicon-practice-levels-row),
   :global(.lexicon-rating-bar) {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 0.5rem;
+  }
+
+  :global(.lexicon-practice-levels) {
+    margin: 1.25rem 0 0;
+  }
+
+  :global(.lexicon-practice-levels-label) {
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--lu-text-muted);
+    margin-right: 0.35rem;
+  }
+
+  :global(.lexicon-practice-levels-hint) {
+    margin: 0.5rem 0 0;
+    font-size: 0.85rem;
   }
 
   :global(.lexicon-practice button) {
@@ -130,12 +150,14 @@ const frontmatter = {
   }
 
   :global(.lexicon-practice-modes button),
+  :global(.lexicon-practice-levels-row button),
   :global(.lexicon-rating-bar button),
   :global(.lexicon-practice-start button) {
     padding: 0 0.85rem;
   }
 
-  :global(.lexicon-practice-modes button.active) {
+  :global(.lexicon-practice-modes button.active),
+  :global(.lexicon-practice-levels-row button.active) {
     border-color: var(--lu-primary);
     background: var(--lu-primary);
     color: var(--lu-on-primary);
