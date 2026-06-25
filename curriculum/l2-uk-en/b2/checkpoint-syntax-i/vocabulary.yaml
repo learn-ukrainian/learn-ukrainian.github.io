@@ -1,0 +1,80 @@
+- lemma: словосполучення
+  translation: word combination
+  pos: noun
+  usage: Словосполучення має головне й залежне слово.
+- lemma: граматична основа
+  translation: grammatical base
+  pos: phrase
+  usage: Граматична основа складається з підмета й присудка або одного головного члена.
+- lemma: предикативний зв'язок
+  translation: predicative relation
+  pos: phrase
+  usage: Предикативний зв'язок відрізняє речення від словосполучення.
+- lemma: узгодження
+  translation: agreement
+  pos: noun
+  usage: Узгодження змінює залежне слово за родом, числом і відмінком.
+- lemma: керування
+  translation: government
+  pos: noun
+  usage: Керування вимагає певного відмінка залежного слова.
+- lemma: прилягання
+  translation: adjunction
+  pos: noun
+  usage: Прилягання спирається на незмінну залежну форму.
+- lemma: простий присудок
+  translation: simple predicate
+  pos: phrase
+  usage: Простий присудок виражений однією дієслівною формою.
+- lemma: складений присудок
+  translation: compound predicate
+  pos: phrase
+  usage: Складений присудок має допоміжну та основну частини.
+- lemma: односкладне речення
+  translation: one-member sentence
+  pos: phrase
+  usage: Односкладне речення має один головний член.
+- lemma: двоскладне речення
+  translation: two-member sentence
+  pos: phrase
+  usage: Двоскладне речення має підмет і присудок.
+- lemma: однорідні члени
+  translation: homogeneous members
+  pos: phrase
+  usage: Однорідні члени виконують однакову синтаксичну роль.
+- lemma: узагальнювальне слово
+  translation: generalizing word
+  pos: phrase
+  usage: Узагальнювальне слово охоплює весь однорідний ряд.
+- lemma: відокремлений член
+  translation: detached member
+  pos: phrase
+  usage: Відокремлений член виділяється інтонаційно й пунктуаційно.
+- lemma: уточнювальний член
+  translation: clarifying member
+  pos: phrase
+  usage: Уточнювальний член звужує попереднє значення.
+- lemma: вставне слово
+  translation: parenthetical word
+  pos: phrase
+  usage: Вставне слово показує ставлення мовця до повідомлення.
+- lemma: синтаксичний розбір
+  translation: syntactic analysis
+  pos: phrase
+  usage: Синтаксичний розбір починається з граматичної основи.
+- lemma: пунктуаційна норма
+  translation: punctuation norm
+  pos: phrase
+  usage: Пунктуаційна норма має спиратися на синтаксичну будову.
+- lemma: редагування
+  translation: editing
+  pos: noun
+  usage: Редагування речення починається з діагностики структури.
+- lemma: цілісність
+  translation: coherence
+  pos: noun
+  usage: Цілісність тексту залежить від ясних синтаксичних зв'язків.
+- lemma: синтаксична модель
+  translation: syntactic model
+  pos: phrase
+  usage: Синтаксична модель допомагає уникати кальок.
