@@ -78,7 +78,7 @@ content_outline:
 focus: Cosmogonic myths in winter ritual songs, world tree symbolism, pre-Christian layers, historiographical
   debate on origins
 level: FOLK
-module: folk-005
+module: folk-003
 objectives:
 - Критично аналізувати конкурентні гіпотези про походження колядок, розрізняючи первинні джерела та інтерпретації
 - Читати повний текст архаїчної колядки з лінгвістичним та міфологічним коментарем
@@ -147,7 +147,7 @@ readings:
   license: public_domain
   hosting: host
   reading_slug: koliadka-oi-nad-dunaiem-nad-berezhenkom
-sequence: 5
+sequence: 3
 slug: koliadky-shchedrivky
 subtitle: 'Carols and Shchedrivky: The Cosmogonic Myth'
 title: 'Колядки та щедрівки: Міф про створення світу'

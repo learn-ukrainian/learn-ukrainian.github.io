@@ -11,7 +11,6 @@ activity_hints:
   type: motif-formula
 cefr_min: C1
 connects_to:
-- zamovliannia-zaklynannia-prymovky
 - koliadky-shchedrivky
 content_outline:
 - section: Розминка
@@ -67,7 +66,7 @@ content_outline:
   - Методологічний урок за межі фольклору — право народу називати власну культуру
 focus: Calendar-rite system as seasonal performance, belief, song, food, and regional variation
 level: FOLK
-module: folk-004
+module: folk-002
 objectives:
 - Пояснювати жанр або культурну практику як частину ширшої системи народної культури.
 - Аналізувати корпусні приклади, символи, формули або перформативні послідовності на основі досьє.
@@ -127,11 +126,11 @@ references:
   note: Соціально-побутова пісня про долю двох сестер; корпус ukrlib-narod-dumy, chunk cdffaaff_c0000; verify_quote 1.0
   type: primary
   work: ukrlib-narod-dumy
-sequence: 4
+sequence: 2
 slug: kalendarna-obriadovist-zvychai
 subtitle: Calendar Rites and Customs
 title: Календарна обрядовість і звичаї
-version: '1.1'
+version: '1.2'
 vocabulary_hints:
 - word: обряд
   pos: ч.

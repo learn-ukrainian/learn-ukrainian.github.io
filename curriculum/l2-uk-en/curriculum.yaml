@@ -2385,7 +2385,7 @@ levels:
     groups:
       - label: Блок A · Світогляд і основа · Worldview & Foundation
         start: narodna-kultura-yak-systema
-        end: zamovliannia-zaklynannia-prymovky
+        end: narodna-kultura-yak-systema
       - label: Блок B · Календарна обрядовість · Calendar Ritual
         start: kalendarna-obriadovist-zvychai
         end: zhnyvarski-obzhynkovi-pisni
@@ -2415,10 +2415,10 @@ levels:
       # Build order + slug renames/folds per docs/folk-epic/phase-folk-queue.md +
       # folk-ssot-migration.md (GPT cross-check bridge #1148). Plan-file + code (FOLK_DOMAIN_MAP,
       # module_archetypes folk-experiential) migration tracked in folk-ssot-migration.md.
-      # A · Frame / worldview / magic
+      # A · Frame / worldview (pre-literature intro)
+      # CUT 2026-06-25 (folk reset, FOLK-FRAMING-STANDARD.md): narodni-viruvannia-mifolohiia-demonolohiia
+      # + zamovliannia-zaklynannia-prymovky — demonology/occult/spell-craft framing, no school-canon basis.
       - narodna-kultura-yak-systema
-      - narodni-viruvannia-mifolohiia-demonolohiia
-      - zamovliannia-zaklynannia-prymovky
       # B · Calendar ritual cycle
       - kalendarna-obriadovist-zvychai
       - koliadky-shchedrivky

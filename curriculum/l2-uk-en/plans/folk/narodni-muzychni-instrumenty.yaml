@@ -35,7 +35,7 @@ content_outline:
   - 'Stub: module build will synthesize why this folk form matters now.'
 focus: Bandura, kobza, trembita, tsymbaly, and performance context
 level: FOLK
-module: folk-034
+module: folk-032
 objectives:
 - Пояснювати жанр або культурну практику як частину ширшої системи народної культури.
 - Аналізувати корпусні приклади, символи, формули або перформативні послідовності на основі досьє.
@@ -49,7 +49,7 @@ references:
 - title: "Народні музичні інструменти"
   note: 'Stub — corpus-grounded sources pending the dossier (docs/folk-epic/folk-dossier-schema.md §6 Збирачі та дослідники).'
   type: pending
-sequence: 34
+sequence: 32
 slug: narodni-muzychni-instrumenty
 status: stub
 subtitle: Folk Musical Instruments

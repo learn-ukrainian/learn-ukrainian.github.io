@@ -171,8 +171,8 @@ def test_non_seminar_level_is_skipped(tmp_path: Path) -> None:
         ("kalendarna-obriadovist-zvychai", False),
         ("narodna-kultura-yak-systema", False),
         ("dumy-nevilnytski-lytsarski", False),
-        ("narodni-viruvannia-mifolohiia-demonolohiia", True),
-        ("zamovliannia-zaklynannia-prymovky", True),
+        # narodni-viruvannia-mifolohiia-demonolohiia + zamovliannia-zaklynannia-prymovky CUT 2026-06-25
+        # (folk reset — see FOLK-FRAMING-STANDARD.md; modules removed from the track).
     ],
 )
 def test_real_built_folk_modules_all_pass_reading_coverage(slug: str, expect_floor_warning: bool) -> None:

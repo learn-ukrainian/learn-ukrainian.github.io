@@ -100,8 +100,8 @@ from wiki.state import log_event, read_log
 # For other tracks, we may want to group multiple slugs into one article
 FOLK_DOMAIN_MAP: dict[str, str] = {
     "narodna-kultura-yak-systema": "folk/overview",
-    "narodni-viruvannia-mifolohiia-demonolohiia": "folk/belief",
-    "zamovliannia-zaklynannia-prymovky": "folk/belief",
+    # narodni-viruvannia-mifolohiia-demonolohiia + zamovliannia-zaklynannia-prymovky CUT 2026-06-25
+    # (folk reset — demonology/occult/spell-craft framing, no school-canon basis; FOLK-FRAMING-STANDARD.md)
     "kalendarna-obriadovist-zvychai": "folk/ritual",
     "koliadky-shchedrivky": "folk/ritual",
     "vesnianky-hayivky": "folk/ritual",

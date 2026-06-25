@@ -10,7 +10,7 @@ activity_hints:
   focus: Regional, temporal, or performance variants
 cefr_min: C1
 connects_to:
-- narodni-viruvannia-mifolohiia-demonolohiia
+- kalendarna-obriadovist-zvychai
 content_outline:
 - section: Розминка
   words: 360
@@ -164,7 +164,7 @@ slug: narodna-kultura-yak-systema
 status: stub
 subtitle: Folk Culture as a System
 title: Народна культура як система
-version: '1.0'
+version: '1.1'
 vocabulary_hints:
 - word: обряд
   pos: ч.
