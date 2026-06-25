@@ -1,8 +1,22 @@
 # Lexicon / Word Atlas — update mechanics & cadence
 
-> **Status:** proposal — captures how lexicon content updates TODAY (#M-4-traced from config) and
-> proposes the cadence + the two gaps to close. The cadence redesign (Gap 1) needs a fleet + user
-> decision before building. **Lane:** infra (claude-infra). **Date:** 2026-06-25.
+> **Status:** ACCEPTED — captures how lexicon content updates TODAY (#M-4-traced from config) and
+> records the cadence + the two gaps to close. **The user decided both open questions on 2026-06-25**
+> (see "User decisions" below): all big derived artifacts → Release assets, and Gap 1 is resolved by
+> publishing the DBs as Release assets so a hosted cron hydrates them at runtime. **Lane:** infra
+> (claude-infra). **Date:** 2026-06-25.
+
+## User decisions (2026-06-25) — both open questions resolved
+
+- **Q1 — host all big derived artifacts as Release assets: CONFIRMED.** The manifest already is (#3659);
+  the **practice deck (#3796)**, the **open dataset (#3449)**, AND the source DBs (`vesum.db`,
+  `sources.db`) all move to Release assets + `git rm` the committed copies + hydrate at build/run time.
+  Rationale: derived/large artifacts bloat git history on every regen (git can't delta-compress them);
+  Release assets are the project's standard escape hatch.
+- **Q2 — Gap 1 (serverless auto-grow): RESOLVED.** Publish `vesum.db` + `sources.db` as Release assets;
+  the GitHub-hosted weekly `atlas-grow` cron downloads them at runtime → serverless grow, **no
+  self-hosted runner**. (~1 GB weekly download — acceptable on Actions.) This supersedes options
+  (a)/(b)/(c) below with a fourth path: **(d) hosted runner hydrates the DBs from Release assets.**
 
 ## TL;DR — when does lexicon content update?
 
@@ -26,14 +40,19 @@ CI gate + `check_atlas_manifest_enrichment` guard staleness/thin-manifest.
 `atlas-grow.yml` needs `data/vesum.db` + `data/sources.db` on the runner; hosted runners don't have them,
 so the weekly run skips with a `::notice::`. So **content→lexicon growth only happens via a local manual
 run** (or a self-hosted runner). Net: the lexicon does not actually auto-update from new content today.
-**Options (needs user decision):**
+**RESOLVED (user, 2026-06-25) → option (d):** publish `vesum.db` + `sources.db` as Release assets; the
+existing hosted `atlas-grow` cron downloads (hydrates) them at the start of the run, then grows + opens a
+gated PR — no self-hosted runner. The options below are recorded for context but (d) is the chosen path.
 - (a) **Self-hosted runner** with the DBs → the Monday cron actually grows + opens a gated PR. Most
-  automated; needs a machine + the DBs maintained on it.
+  automated; needs a machine + the DBs maintained on it. *(Not chosen — a self-hosted machine is a
+  maintenance liability the project wants to avoid.)*
 - (b) **Documented local cadence** — run `make atlas && atlas-grow` after each content batch / on a manual
-  schedule; commit the resulting gated PR. Simplest; relies on a human remembering.
+  schedule; commit the resulting gated PR. Simplest; relies on a human remembering. *(Not chosen — the
+  user wants it automated, not human-memory-dependent.)*
 - (c) **Hybrid** — split the reconciler (lemmatization needs only VESUM, which could ship as a slim
   CI-friendly subset) onto CI to *detect* deltas + open a "lexicon is N words behind content" issue, while
-  the heavy enrich stays local. Lowest-maintenance signal without a self-hosted runner.
+  the heavy enrich stays local. Lowest-maintenance signal without a self-hosted runner. *(Not chosen —
+  (d) gives the full grow, not just a detection signal.)*
 
 ### Gap 2 — the practice deck is NOT wired into the regen → it drifts (open; sequence after #3796)
 `generate_practice_deck.py` (shipped #3795) is not in `make atlas` nor any freshness gate, so when the
@@ -50,7 +69,8 @@ committed deck vs a Release-asset-hydrated deck, so build it once the deck-hosti
 2. **On dictionary-source updates** (rare — a VESUM/ЕСУМ bump): local `make atlas` full regen.
 3. **Every manifest change regenerates ALL derived artifacts including the deck** (Gap 2 fix) — enforced by
    freshness gates so nothing silently drifts.
-4. **Weekly auto-grow** stays as the safety net once Gap 1 is resolved (runner or hybrid signal).
+4. **Weekly auto-grow** becomes the live safety net once option (d) lands — the hosted cron hydrates the
+   DBs from Release assets, grows, and opens a gated PR.
 
 ## Open backlog (the "rest of the lexicon stuff")
 - **#3796** — migrate the committed ~2.9 MB practice deck → Release-asset hydration (before it churns).
@@ -63,4 +83,13 @@ committed deck vs a Release-asset-hydrated deck, so build it once the deck-hosti
   `lexeme_filter`; the manifest-level canonicalization is the remaining piece).
 - **#3406** — ~24 ЕСУМ entries carry OCR mojibake bibliographic text (careful: a prior dirty regen was
   discarded — fix the data, re-enrich only those entries).
-- **#3675** — auto-grow P1–P3 shipped; Gap 1 above is the remaining "make it actually run" piece.
+- **#3675** — auto-grow P1–P3 shipped; Gap 1 above is the remaining "make it actually run" piece, now
+  unblocked by the option-(d) decision (publish the DBs as Release assets → hosted cron hydrates them).
+
+## Sequencing (the order the Release-asset migrations land)
+1. **#3796 — practice deck → Release asset** (named-first, "before it churns"; establishes the
+   deck-hydration pattern these others reuse).
+2. **DBs (`vesum.db`, `sources.db`) → Release assets + atlas-grow cron hydration** (Gap 1 / #3675-(d)).
+3. **#3449 — open dataset → Release asset** (`git rm` the committed 1.6 MB copy that re-exports to 31 MB).
+4. **Gap 2 — deck-freshness gate** (after #3796, once the deck is hydrated, so the freshness check targets
+   the pointer rather than committed shards).
