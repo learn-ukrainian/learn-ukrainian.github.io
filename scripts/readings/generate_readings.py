@@ -1182,7 +1182,12 @@ def _metadata_for(resolved: ResolvedReading) -> dict[str, Any]:
         "year": curated.get("year") or _year_label(corpus),
         "period": curated.get("period") or _period_label(corpus),
         "tracks": [],
-        "excerpt": curated.get("excerpt") or _fallback_excerpt(candidate, corpus),
+        "excerpt": curated.get("excerpt")
+        or (
+            _curated_excerpt(candidate, resolved.body_text)
+            if resolved.body_text
+            else _fallback_excerpt(candidate, corpus)
+        ),
         "source": curated.get("source") or (
             f"{candidate.author}; корпус {source_file}. Текст у суспільному надбанні; "
             "подано дослівно за корпусним записом."
@@ -1389,6 +1394,17 @@ def _fallback_excerpt(candidate: PrimaryReadingCandidate, corpus: CorpusText) ->
     display = _display_text(corpus.text, candidate.title)
     first = next((line.strip() for line in display.splitlines() if line.strip()), candidate.title)
     return f"{_genre_from_note(candidate.note) or _genre_from_corpus(corpus.genre)}: {first}"
+
+
+def _curated_excerpt(candidate: PrimaryReadingCandidate, body_text: str) -> str:
+    """Excerpt for a curated reading: the verse incipit, not the source chunk.
+
+    A curated reading's body IS the clean folk verse, so the listing excerpt must
+    come from that verse — never from the scholarly corpus chunk (which would
+    surface ethnographic prose / a ``scholarly:`` tag on the readings index)."""
+    first = next((line.strip() for line in body_text.splitlines() if line.strip()), candidate.title)
+    genre = _genre_from_note(candidate.note)
+    return f"{genre}: {first}" if genre else first
 
 
 def _default_order(slug: str) -> int:

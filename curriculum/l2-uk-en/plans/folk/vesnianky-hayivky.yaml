@@ -94,6 +94,9 @@ readings:
   title_en: Spring has risen again
   genre: Веснянка
   source: Народна творчість; запис Грушевського; корпус chunk da46aa92_c0178 (verify_quote 1.0)
+  text: |
+    Вже весна воскресла,
+    Що ж сь нам принесла?
   license: public_domain
   hosting: host
   reading_slug: vesnianka-vzhe-vesna-voskresla
@@ -101,6 +104,13 @@ readings:
   title_en: Fly out, goldeneye, bring summer with you
   genre: Веснянка-закличка
   source: Народна творчість; запис Грушевського; корпус chunk da46aa92_c0284 (verify_quote 1.0)
+  text: |
+    Ой вилинь, вилинь, гоголю,
+    Винеси літо з собою,
+    Винеси літо-літечко,
+    Зеленеє житечко,
+    Хрещатенький барвіночок,
+    Запашненький васильочок!
   license: public_domain
   hosting: host
   reading_slug: vesnianka-oi-vylyn-hoholu
@@ -108,6 +118,8 @@ readings:
   title_en: By the valley, the poppy
   genre: Гаївка (ігрова)
   source: Народна творчість; Енциклопедія українознавства; корпус chunk feaa5fa7_c0604 (verify_quote 1.0)
+  text: |
+    При долині мак, при широкій мак! Ой, як чистий, головастий і корінням коренистий!
   license: public_domain
   hosting: host
   reading_slug: haivka-pry-dolyni-mak
@@ -115,6 +127,8 @@ readings:
   title_en: We walk the crooked dance
   genre: Гаївка (кривий танець)
   source: Народна творчість; Енциклопедія українознавства; корпус chunk feaa5fa7_c0605 (verify_quote 1.0)
+  text: |
+    Кривого танця йдемо, кінця му не знайдемо, то вгору, то в долину, то в ружу, то в калину. А ми кривому танцю не виведемо кінцю, бо його треба вести, як віночок плести.
   license: public_domain
   hosting: host
   reading_slug: haivka-kryvoho-tantsia
@@ -122,6 +136,8 @@ readings:
   title_en: Our Kostrubonko has come alive
   genre: Гаївка (Кострубонько)
   source: Народна творчість; Енциклопедія українознавства; корпус chunk feaa5fa7_c0611 (verify_quote 1.0)
+  text: |
+    Ожив, ожив наш Кострубонько, ожив, ожив наш голубонько!
   license: public_domain
   hosting: host
   reading_slug: haivka-ozhyv-kostrubonko
@@ -150,7 +166,7 @@ sequence: 6
 slug: vesnianky-hayivky
 subtitle: 'Spring Songs and Circle Dances: Awakening of Nature'
 title: 'Веснянки та гаївки: Пробудження природи'
-version: '4.2'
+version: '4.3'
 vesum_exemptions:
   # Per-module VESUM-gate exemptions (gate: scripts/build/linear_pipeline.py _vesum_gate).
   # Each entry is rationale-bearing and module-scoped. The two REAL spelling errors
