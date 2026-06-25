@@ -1,0 +1,128 @@
+- lemma: однорідні члени речення
+  translation: homogeneous sentence members
+  pos: phrase
+  usage: Однорідні члени речення виконують однакову синтаксичну роль.
+- lemma: однорідний ряд
+  translation: homogeneous series
+  pos: phrase
+  usage: Однорідний ряд має спільну логіку й спільний синтаксичний центр.
+- lemma: узагальнююче слово
+  translation: generalizing word
+  pos: phrase
+  usage: Узагальнююче слово відкриває або підсумовує перелік.
+- lemma: сполучниковий зв'язок
+  translation: conjunctional connection
+  pos: phrase
+  usage: Сполучниковий зв'язок показує відношення між елементами ряду.
+- lemma: безсполучниковий зв'язок
+  translation: asyndetic connection
+  pos: phrase
+  usage: Безсполучниковий зв'язок спирається на перелічувальну інтонацію.
+- lemma: перелічувальна інтонація
+  translation: enumerative intonation
+  pos: phrase
+  usage: Перелічувальна інтонація допомагає почути межі однорідного ряду.
+- lemma: двокрапка
+  translation: colon
+  pos: noun
+  usage: Двокрапка стоїть після узагальнюючого слова перед переліком.
+- lemma: тире
+  translation: dash
+  pos: noun
+  usage: Тире може підсумовувати однорідний ряд перед узагальнюючим словом.
+- lemma: градація
+  translation: gradation
+  pos: noun
+  usage: Градація розташовує елементи за наростанням або спаданням сили.
+- lemma: антитеза
+  translation: antithesis
+  pos: noun
+  usage: Антитеза протиставляє однорідні або паралельні елементи.
+- lemma: систематизація
+  translation: systematization
+  pos: noun
+  usage: Систематизація матеріалу часто спирається на чіткий перелік.
+- lemma: пунктограма
+  translation: punctuation pattern
+  pos: noun
+  usage: Пунктограма допомагає пояснити вибір коми, двокрапки або тире.
+- lemma: сурядність
+  translation: coordination
+  pos: noun
+  usage: Сурядність означає рівноправний зв'язок елементів.
+- lemma: супідрядність
+  translation: co-subordination
+  pos: noun
+  usage: Супідрядність показує, що елементи однаково залежать від спільного слова.
+- lemma: семантична однорідність
+  translation: semantic homogeneity
+  pos: phrase
+  usage: Семантична однорідність вимагає понять одного логічного поля.
+- lemma: контекст
+  translation: context
+  pos: noun
+  usage: Контекст вирішує, чи означення звучать однорідно.
+- lemma: єднальний сполучник
+  translation: additive conjunction
+  pos: phrase
+  usage: Єднальний сполучник додає елемент до елемента.
+- lemma: протиставний сполучник
+  translation: adversative conjunction
+  pos: phrase
+  usage: Перед протиставним сполучником у ряду ставимо кому.
+- lemma: розділовий сполучник
+  translation: disjunctive conjunction
+  pos: phrase
+  usage: Розділовий сполучник передає вибір або чергування.
+- lemma: повторюваний сполучник
+  translation: repeated conjunction
+  pos: phrase
+  usage: Повторюваний сполучник виділяє кожен елемент ряду.
+- lemma: парний сполучник
+  translation: correlative conjunction
+  pos: phrase
+  usage: Парний сполучник потребує симетричної будови.
+- lemma: логічна сумісність
+  translation: logical compatibility
+  pos: phrase
+  usage: Логічна сумісність захищає перелік від випадкових елементів.
+- lemma: неоднорідні означення
+  translation: non-homogeneous attributes
+  pos: phrase
+  usage: Неоднорідні означення описують предмет з різних боків.
+- lemma: однорідні означення
+  translation: homogeneous attributes
+  pos: phrase
+  usage: Однорідні означення рівноправно характеризують предмет.
+- lemma: перелік
+  translation: list, enumeration
+  pos: noun
+  usage: Перелік має бути граматично й логічно впорядкованим.
+- lemma: ритм речення
+  translation: sentence rhythm
+  pos: phrase
+  usage: Ритм речення змінюється від довжини однорідного ряду.
+- lemma: накопичення
+  translation: accumulation
+  pos: noun
+  usage: Накопичення деталей може створити відчуття достатку або хаосу.
+- lemma: симетрія
+  translation: symmetry
+  pos: noun
+  usage: Симетрія важлива для парних сполучників.
+- lemma: смислове поле
+  translation: semantic field
+  pos: phrase
+  usage: Елементи однорідного ряду мають належати до спільного смислового поля.
+- lemma: риторичний ефект
+  translation: rhetorical effect
+  pos: phrase
+  usage: Риторичний ефект однорідності залежить від порядку елементів.
+- lemma: службовий текст
+  translation: administrative text
+  pos: phrase
+  usage: У службовому тексті довгі переліки часто краще подавати списком.
+- lemma: пунктуаційна норма
+  translation: punctuation norm
+  pos: phrase
+  usage: Пунктуаційна норма має спиратися на синтаксичну логіку.
