@@ -1,0 +1,128 @@
+- lemma: фізична активність
+  translation: physical activity
+  pos: phrase
+  usage: Регулярна фізична активність підтримує витривалість.
+- lemma: тренування
+  translation: training session
+  pos: noun
+  usage: Перед змаганням команда провела відкрите тренування.
+- lemma: змагання
+  translation: competition
+  pos: noun
+  usage: Змагання тривало два дні й зібрало молодих спортсменів.
+- lemma: команда
+  translation: team
+  pos: noun
+  usage: Команда грала дисципліновано й підтримувала темп.
+- lemma: суперник
+  translation: opponent
+  pos: noun
+  usage: Суперник швидко перейшов у контратаку.
+- lemma: рахунок
+  translation: score
+  pos: noun
+  usage: Рахунок змінився після кутового.
+- lemma: вболівальник
+  translation: supporter, fan
+  pos: noun
+  usage: Вболівальники підтримували команду до фінального свистка.
+- lemma: розминка
+  translation: warm-up
+  pos: noun
+  usage: Розминка допомагає підготувати м'язи до навантаження.
+- lemma: навантаження
+  translation: load, training intensity
+  pos: noun
+  usage: Тренер поступово збільшив навантаження.
+- lemma: витривалість
+  translation: endurance
+  pos: noun
+  usage: Біг на довгу дистанцію розвиває витривалість.
+- lemma: відновлення
+  translation: recovery
+  pos: noun
+  usage: Після травми спортсменка зосередилася на відновленні.
+- lemma: реабілітація
+  translation: rehabilitation
+  pos: noun
+  usage: Спорт може стати частиною реабілітації ветеранів.
+- lemma: фехтування
+  translation: fencing
+  pos: noun
+  usage: Фехтування вимагає реакції, дистанції й точності.
+- lemma: плавання
+  translation: swimming
+  pos: noun
+  usage: Плавання корисне для спини й дихання.
+- lemma: біг
+  translation: running
+  pos: noun
+  usage: Біг уздовж набережної став моєю ранковою звичкою.
+- lemma: спортзал
+  translation: gym
+  pos: noun
+  usage: У спортзалі я працюю над силою й рівновагою.
+- lemma: похід
+  translation: hike
+  pos: noun
+  usage: Похід у гори потребує води, карти й зручного взуття.
+- lemma: дозвілля
+  translation: leisure
+  pos: noun
+  usage: Дозвілля має допомагати відновлювати сили.
+- lemma: хобі
+  translation: hobby
+  pos: noun
+  usage: Моє хобі поєднує творчість і спокій.
+- lemma: активний відпочинок
+  translation: active recreation
+  pos: phrase
+  usage: Активний відпочинок може бути без змагання й рахунку.
+- lemma: культурне дозвілля
+  translation: cultural leisure
+  pos: phrase
+  usage: Культурне дозвілля охоплює театр, кіно, музеї та виставки.
+- lemma: цифрове дозвілля
+  translation: digital leisure
+  pos: phrase
+  usage: Цифрове дозвілля потребує здорових меж.
+- lemma: рукоділля
+  translation: handicraft
+  pos: noun
+  usage: Рукоділля допомагає зосередитися після роботи.
+- lemma: запрошення
+  translation: invitation
+  pos: noun
+  usage: Запрошення має звучати доброзичливо, а не як наказ.
+- lemma: планування
+  translation: planning
+  pos: noun
+  usage: Планування вихідних вимагає компромісу.
+- lemma: домовленість
+  translation: arrangement
+  pos: noun
+  usage: Домовленість про час зустрічі краще підтвердити письмово.
+- lemma: враження
+  translation: impression
+  pos: noun
+  usage: Після виставки я поділився враженнями з друзями.
+- lemma: однорідні члени
+  translation: homogeneous sentence members
+  pos: phrase
+  usage: Однорідні члени допомагають рівно перелічити дії й предмети.
+- lemma: дієприслівник
+  translation: adverbial participle
+  pos: noun
+  usage: Дієприслівник стискає додаткову дію того самого виконавця.
+- lemma: керування
+  translation: government
+  pos: noun
+  usage: Керування дієслова визначає прийменник і відмінок.
+- lemma: обставина мети
+  translation: adverbial of purpose
+  pos: phrase
+  usage: Обставина мети пояснює, навіщо відбувається дія.
+- lemma: обставина допусту
+  translation: adverbial of concession
+  pos: phrase
+  usage: Обставина допусту показує перешкоду, попри яку дія триває.
