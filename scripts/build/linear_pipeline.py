@@ -9912,9 +9912,17 @@ def _foreign_proper_noun_attestation_urls(row: Mapping[str, Any]) -> list[str]:
     return []
 
 
+_UK_WIKI_ARTICLE_PREFIX = "https://uk.wikipedia.org/wiki/"
+
+
 def _foreign_proper_noun_attestation_is_valid(row: Mapping[str, Any]) -> bool:
+    # Require a non-empty article slug after the prefix: the degenerate
+    # "https://uk.wikipedia.org/wiki/" (no article) must NOT validate, so a
+    # plan-declared foreign_cultural_terms exemption cannot be blessed with a
+    # placeholder URL that points at no real page.
     return any(
-        url.startswith("https://uk.wikipedia.org/wiki/")
+        url.startswith(_UK_WIKI_ARTICLE_PREFIX)
+        and url[len(_UK_WIKI_ARTICLE_PREFIX) :].strip("/").strip() != ""
         for url in _foreign_proper_noun_attestation_urls(row)
     )
 
@@ -10017,6 +10025,14 @@ def _span_surface_lc(span_texts: Iterable[str]) -> set[str]:
 
 _BACKTICK_SPAN_RE = re.compile(r"`([^`]*)`")
 
+# A legitimate inline «…» citation in seminar/folk prose is short (the longest
+# across all shipped folk modules is ~65 chars; verbatim verse lives in stripped
+# :::primary-reading fences, not inline guillemets). An unbalanced «  paired with
+# a far-later » by the stack below would otherwise yield a runaway span that
+# falsely marks an un-quoted token as quoted (→ a false exemption). Bounding the
+# span length cleanly separates real citations from such parse artifacts.
+_MAX_GUILLEMET_SPAN_CHARS = 200
+
 
 def _guillemet_span_texts(module_text: str) -> list[str]:
     spans: list[str] = []
@@ -10025,7 +10041,9 @@ def _guillemet_span_texts(module_text: str) -> list[str]:
         if char == "«":
             starts.append(index + 1)
         elif char == "»" and starts:
-            spans.append(module_text[starts.pop() : index])
+            start = starts.pop()
+            if index - start <= _MAX_GUILLEMET_SPAN_CHARS:
+                spans.append(module_text[start:index])
     return spans
 
 
