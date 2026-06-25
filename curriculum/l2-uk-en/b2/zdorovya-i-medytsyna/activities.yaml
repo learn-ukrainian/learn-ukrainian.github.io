@@ -1,0 +1,633 @@
+version: '1.0'
+module: zdorovya-i-medytsyna
+level: b2
+inline: []
+workbook:
+- type: fill-in
+  title: Медична лексика в контексті
+  instruction: Заповніть пропуск доречним словом.
+  items:
+  - sentence: У мене ____ і кашель.
+    answer: температура
+    options:
+    - температура
+    - рецепт
+    - декларація
+    - страхування
+  - sentence: Лікар поставив ____ після обстеження.
+    answer: діагноз
+    options:
+    - діагноз
+    - дозування
+    - профілактику
+    - поліклініку
+  - sentence: Для антибіотика важливе правильне ____.
+    answer: дозування
+    options:
+    - дозування
+    - запаморочення
+    - направлення
+    - щеплення
+  - sentence: Пацієнт отримав ____ до кардіолога.
+    answer: направлення
+    options:
+    - направлення
+    - страхування
+    - побічний
+    - скаргу
+  - sentence: ____ ефект треба повідомити лікарю.
+    answer: Побічний
+    options:
+    - Побічний
+    - Сімейний
+    - Доказовий
+    - Направлений
+  - sentence: ____ допомагає виявити хворобу раніше.
+    answer: Профілактика
+    options:
+    - Профілактика
+    - Виписка
+    - Скарга
+    - Рецепт
+  - sentence: Після лікування пацієнт отримав ____.
+    answer: виписку
+    options:
+    - виписку
+    - щеплення
+    - поліклініку
+    - симптом
+  - sentence: З сімейним лікарем підписують ____.
+    answer: декларацію
+    options:
+    - декларацію
+    - дозування
+    - кардіограму
+    - скаргу
+  - sentence: Під час огляду лікар уточнює основні ____.
+    answer: симптоми
+    options:
+    - симптоми
+    - страхування
+    - медицину
+    - побічні
+  - sentence: Пацієнт скаржиться на ____ після роботи.
+    answer: виснаження
+    options:
+    - виснаження
+    - рецепт
+    - поліклініку
+    - декларацію
+- type: quiz
+  title: На прийомі в лікаря
+  instruction: Оберіть найприроднішу репліку або формулювання.
+  items:
+  - question: Як повідомити головну скаргу?
+    options:
+    - text: У мене болить спина після тренування.
+      correct: true
+    - text: Я маю біль спини тренування.
+      correct: false
+    - text: Мною болиться спина.
+      correct: false
+    - text: Спина є маюча біль.
+      correct: false
+    explanation: Українською природно назвати симптом через безособову модель болить.
+  - question: Як уточнити тривалість симптому?
+    options:
+    - text: Температура тримається третій день.
+      correct: true
+    - text: Температура є тримаюча третій день.
+      correct: false
+    - text: Я маю температуру триману.
+      correct: false
+    - text: Третій день температуриться.
+      correct: false
+    explanation: Форма тримається природна для стану.
+  - question: Як коректно попросити запис?
+    options:
+    - text: Я хотів би записатися до терапевта.
+      correct: true
+    - text: Я хочу зробити запис на терапевта себе.
+      correct: false
+    - text: Мені треба записуючий лікар.
+      correct: false
+    - text: Запишіть мене в хворобу.
+      correct: false
+    explanation: Ввічлива формула записатися до лікаря.
+  - question: Як передати результат діагностики?
+    options:
+    - text: Діагноз поставлено після обстеження.
+      correct: true
+    - text: Діагноз був поставлений лікарем мною.
+      correct: false
+    - text: Діагноз поставлявся лікарем.
+      correct: false
+    - text: Поставлений лікар діагнозував.
+      correct: false
+    explanation: Безособова форма фіксує результат.
+  - question: Що природніше для ліків?
+    options:
+    - text: призначене лікування
+      correct: true
+    - text: лікуюче лікування
+      correct: false
+    - text: діючий лікарство
+      correct: false
+    - text: пʼюча таблетка
+      correct: false
+    explanation: Пасивний дієприкметник називає призначений план.
+  - question: Як назвати людину, що веде пацієнта?
+    options:
+    - text: лікар, який лікує пацієнта
+      correct: true
+    - text: лікуючий пацієнта лікар у кожному контексті
+      correct: false
+    - text: діючий по пацієнту лікар
+      correct: false
+    - text: лікарство лікаря
+      correct: false
+    explanation: Підрядна конструкція часто природніша за активний дієприкметник.
+  - question: Як пояснити побічний ефект?
+    options:
+    - text: Після препарату зʼявилося запаморочення.
+      correct: true
+    - text: Препарат зробив мене запаморочуючим.
+      correct: false
+    - text: Я маю побочний запаморок.
+      correct: false
+    - text: Запаморочення приймає препарат.
+      correct: false
+    explanation: Називаємо симптом і його звʼязок із препаратом.
+  - question: Що сказати про профілактику?
+    options:
+    - text: Щеплення зменшує ризик тяжкого перебігу.
+      correct: true
+    - text: Щеплення робить непотрібну всю медицину.
+      correct: false
+    - text: Профілактика є лікуванням будь-чого.
+      correct: false
+    - text: Щеплення діючий лікар.
+      correct: false
+    explanation: Формулювання має бути точним і не перебільшувати.
+  - question: Як згадати декларацію?
+    options:
+    - text: Я підписав декларацію із сімейним лікарем.
+      correct: true
+    - text: Я зробив політичну декларацію лікарю.
+      correct: false
+    - text: Мене задекларовано медициною.
+      correct: false
+    - text: Декларація лікує симптом.
+      correct: false
+    explanation: У медичному контексті декларація - адміністративний звʼязок.
+  - question: Як уточнити дозування?
+    options:
+    - text: Як часто приймати препарат і в якій дозі?
+      correct: true
+    - text: Яка сила є пʼюча?
+      correct: false
+    - text: Скільки таблетка робить?
+      correct: false
+    - text: Який препарат мене дозує?
+      correct: false
+    explanation: Питання про дозу і частоту має бути прямим.
+- type: error-correction
+  title: Виправте медичні кальки
+  instruction: Замініть хибну або неприродну форму.
+  items:
+  - sentence: Я маю тридцять років і маю температуру.
+    error: маю тридцять років
+    correction: Мені тридцять років
+    explanation: Вік українською подаємо давальним відмінком.
+  - sentence: Діагноз був поставлений лікарем учора.
+    error: був поставлений лікарем
+    correction: Лікар поставив діагноз / Діагноз поставлено
+    explanation: Актив або безособова форма природніші.
+  - sentence: Лікуючий мене лікар призначив аналізи.
+    error: Лікуючий мене лікар
+    correction: лікар, який мене лікує / сімейний лікар
+    explanation: Підрядна конструкція точніша.
+  - sentence: Діючий препарат треба приймати вранці.
+    error: Діючий препарат
+    correction: призначений препарат / чинний протокол
+    explanation: Діючий часто калькує чужу модель.
+  - sentence: У мене побочний ефект.
+    error: побочний
+    correction: побічний
+    explanation: Нормативна форма - побічний.
+  - sentence: Я записаний на поліклініку.
+    error: на поліклініку
+    correction: до поліклініки / на прийом
+    explanation: Потрібне правильне керування.
+  - sentence: Доктор виписав рецепт приймаючий таблетки.
+    error: приймаючий
+    correction: для приймання / на препарат
+    explanation: Функцію передає іменникова конструкція.
+  - sentence: Пацієнтом було повідомлено симптом лікарю.
+    error: Пацієнтом було повідомлено
+    correction: Пацієнт повідомив лікарю симптом
+    explanation: Актив простіший, коли діяч важливий.
+- type: match-up
+  title: Термін і пояснення
+  instruction: Поєднайте медичний термін із поясненням.
+  pairs:
+  - left: симптом
+    right: ознака стану, яку описує пацієнт
+  - left: діагноз
+    right: медичний висновок після обстеження
+  - left: рецепт
+    right: документ для отримання ліків
+  - left: дозування
+    right: кількість і частота приймання
+  - left: побічний ефект
+    right: небажана реакція на лікування
+  - left: направлення
+    right: документ до спеціаліста або на обстеження
+  - left: декларація
+    right: звʼязок пацієнта із сімейним лікарем
+  - left: профілактика
+    right: дії для запобігання хворобі
+  - left: щеплення
+    right: вакцинація проти інфекцій
+  - left: виписка
+    right: медичний документ після лікування
+  - left: обстеження
+    right: збір медичних даних
+  - left: страхування
+    right: механізм оплати або покриття послуг
+  - left: поліклініка
+    right: медичний заклад амбулаторної допомоги
+  - left: виснаження
+    right: сильна втома після навантаження чи хвороби
+- type: group-sort
+  title: Медичні ситуації
+  instruction: Розподіліть вислови за ситуаціями.
+  groups:
+  - name: скарги пацієнта
+    items:
+    - болить спина
+    - тримається температура
+    - є запаморочення
+    - відчуваю виснаження
+    - кашель посилився
+  - name: дії лікаря
+    items:
+    - поставив діагноз
+    - призначив аналіз
+    - виписав рецепт
+    - дав направлення
+    - пояснив дозування
+  - name: документи й система
+    items:
+    - декларація із сімейним лікарем
+    - електронний рецепт
+    - виписка після лікування
+    - страховий поліс
+    - запис до поліклініки
+- type: true-false
+  title: Медична точність
+  instruction: Позначте правильність твердження.
+  items:
+  - statement: Симптом треба описувати з часом і силою прояву.
+    correct: true
+    explanation: Це допомагає лікарю оцінити стан.
+  - statement: Побочний є нормативною формою для небажаної реакції.
+    correct: false
+    explanation: 'Нормативно: побічний.'
+  - statement: Декларація із сімейним лікарем є адміністративним медичним документом.
+    correct: true
+    explanation: Це не політична декларація.
+  - statement: Дозування можна змінювати без консультації.
+    correct: false
+    explanation: Це небезпечно.
+  - statement: Профілактика стосується запобігання хворобам.
+    correct: true
+    explanation: Профілактичні дії зменшують ризики.
+  - statement: Діагноз завжди є здогадкою пацієнта.
+    correct: false
+    explanation: Діагноз ставить лікар після оцінки даних.
+  - statement: Направлення може бути потрібне для спеціаліста.
+    correct: true
+    explanation: Так працює багато маршрутів пацієнта.
+  - statement: Лікуючий лікар завжди найкраща форма.
+    correct: false
+    explanation: Часто краще сімейний лікар або лікар, який лікує.
+  - statement: Призначене лікування - нормативна пасивна конструкція.
+    correct: true
+    explanation: Вона називає результат призначення.
+  - statement: Запаморочення варто повідомити лікарю.
+    correct: true
+    explanation: Це важливий симптом або побічний ефект.
+- type: select
+  title: Оберіть природні медичні формули
+  instruction: Позначте всі нормативні варіанти.
+  items:
+  - question: Як описати біль?
+    min_correct: 2
+    options:
+    - text: У мене болить горло.
+      correct: true
+    - text: Біль посилюється ввечері.
+      correct: true
+    - text: Я маю горловий біль є.
+      correct: false
+    - text: Мене болить горло я маю.
+      correct: false
+    explanation: Перші два варіанти природні.
+  - question: Як говорити про лікування?
+    min_correct: 2
+    options:
+    - text: Лікар призначив лікування.
+      correct: true
+    - text: Призначене лікування триває пʼять днів.
+      correct: true
+    - text: Лікуюче лікування діє.
+      correct: false
+    - text: Лікування призначаюче пацієнта.
+      correct: false
+    explanation: Актив і пасивний дієприкметник можливі.
+  - question: Як уточнити препарат?
+    min_correct: 2
+    options:
+    - text: Як приймати препарат?
+      correct: true
+    - text: Яке дозування?
+      correct: true
+    - text: Як препарат мене приймає?
+      correct: false
+    - text: Я маю дозуючий прийом?
+      correct: false
+    explanation: Питання має бути прямим.
+  - question: Як назвати документи?
+    min_correct: 2
+    options:
+    - text: електронний рецепт
+      correct: true
+    - text: виписка після лікування
+      correct: true
+    - text: рецептуючий документ
+      correct: false
+    - text: виписуючася виписка
+      correct: false
+    explanation: Нормативні медичні документи.
+  - question: Як говорити про систему?
+    min_correct: 2
+    options:
+    - text: сімейний лікар
+      correct: true
+    - text: направлення до спеціаліста
+      correct: true
+    - text: діючий лікар по мені
+      correct: false
+    - text: поліклініка мене записує на себе
+      correct: false
+    explanation: Перші варіанти природні.
+  - question: Як описати профілактику?
+    min_correct: 2
+    options:
+    - text: профілактичний огляд
+      correct: true
+    - text: щеплення проти грипу
+      correct: true
+    - text: лікуюча профілактика всього
+      correct: false
+    - text: страхування симптомів
+      correct: false
+    explanation: Профілактика має точні сполуки.
+  - question: Як повідомити побічну реакцію?
+    min_correct: 2
+    options:
+    - text: Після препарату зʼявився висип.
+      correct: true
+    - text: Мене нудить після таблетки.
+      correct: true
+    - text: Я маю побочну побічність.
+      correct: false
+    - text: Препарат робить запаморочення мене.
+      correct: false
+    explanation: Перші два варіанти зрозумілі лікарю.
+  - question: Як попросити запис?
+    min_correct: 2
+    options:
+    - text: Я хотів би записатися до терапевта.
+      correct: true
+    - text: Чи є вільний час на завтра?
+      correct: true
+    - text: Я хочу записуючий час.
+      correct: false
+    - text: Мене запишіть у лікар.
+      correct: false
+    explanation: Перші два варіанти ввічливі.
+- type: translate
+  title: Медичний переклад без кальки
+  instruction: Оберіть природний український варіант.
+  items:
+  - source: I am thirty years old.
+    options:
+    - text: Мені тридцять років.
+      correct: true
+    - text: Я маю тридцять років.
+      correct: false
+    - text: Я є тридцять років.
+      correct: false
+    explanation: Вік подаємо давальним.
+  - source: I feel dizzy.
+    options:
+    - text: У мене запаморочення.
+      correct: true
+    - text: Я маю крутіння голови.
+      correct: false
+    - text: Мене є запаморочуюче.
+      correct: false
+    explanation: Називаємо симптом.
+  - source: The doctor prescribed treatment.
+    options:
+    - text: Лікар призначив лікування.
+      correct: true
+    - text: Лікар написав лікування на мене.
+      correct: false
+    - text: Лікуючий лікар лікував лікування.
+      correct: false
+    explanation: Актив простий і точний.
+  - source: The dose is written on the prescription.
+    options:
+    - text: Дозування зазначено в рецепті.
+      correct: true
+    - text: Доза пише на рецепті.
+      correct: false
+    - text: Рецепт дозуючий.
+      correct: false
+    explanation: Безособова форма фіксує результат.
+  - source: side effect
+    options:
+    - text: побічний ефект
+      correct: true
+    - text: побочний ефект
+      correct: false
+    - text: стороння дія в кожному контексті
+      correct: false
+    explanation: Нормативно побічний.
+  - source: family doctor
+    options:
+    - text: сімейний лікар
+      correct: true
+    - text: родинний доктор діючий
+      correct: false
+    - text: лікуючий сімʼю лікар завжди
+      correct: false
+    explanation: Усталений термін.
+  - source: medical referral
+    options:
+    - text: направлення
+      correct: true
+    - text: спрямовуючий папір
+      correct: false
+    - text: дирекція до лікаря
+      correct: false
+    explanation: Медичний термін - направлення.
+  - source: preventive check-up
+    options:
+    - text: профілактичний огляд
+      correct: true
+    - text: попереджуючий огляд всього
+      correct: false
+    - text: профілактуючий чек
+      correct: false
+    explanation: Нормативна сполука.
+- id: essay-medical-visit
+  type: essay-response
+  title: Опис візиту до лікаря
+  instruction: Напишіть звʼязний текст українською.
+  prompt: 'Опишіть візит до сімейного лікаря: скарга, симптоми, обстеження, діагноз, призначене лікування, подальші дії. Уникайте
+    кальок і використайте щонайменше 8 медичних слів із модуля.'
+  min_words: 180
+  model_answer: 'Учора я звернувся до сімейного лікаря, бо третій день трималася температура і зʼявився кашель. На прийомі
+    я коротко описав скарги: болить горло, є виснаження, запаморочення немає. Лікар оглянув мене, послухав легені й призначив
+    аналіз крові. Після обстеження діагноз поставлено без поспіху, а призначене лікування пояснено письмово. У рецепті зазначено
+    дозування препарату і час приймання. Лікар також попередив про можливий побічний ефект і попросив звернутися повторно,
+    якщо температура не знизиться. На завершення він порадив профілактику: відпочинок, пиття, щеплення проти грипу восени
+    й контрольний огляд через кілька днів. Такий опис допомагає пацієнтові говорити точно й не губити важливих деталей.'
+  rubric:
+  - criteria: Лексика
+    description: Використано медичні терміни точно.
+    points: 4
+  - criteria: Послідовність
+    description: Є скарга, обстеження, діагноз, лікування.
+    points: 3
+  - criteria: Норма
+    description: Немає кальок на зразок маю тридцять років чи побочний.
+    points: 3
+- type: quiz
+  title: Документи, симптоми, лікування
+  instruction: Оберіть точний варіант.
+  items:
+  - question: Що показує головну скаргу пацієнта?
+    options:
+    - text: У мене болить горло.
+      correct: true
+    - text: Я маю горлову біль.
+      correct: false
+    - text: Мною болиться горло.
+      correct: false
+    - text: Горло є болюче мене.
+      correct: false
+    explanation: Природна безособова модель.
+  - question: Який документ потрібен до спеціаліста?
+    options:
+    - text: направлення
+      correct: true
+    - text: щеплення
+      correct: false
+    - text: дозування
+      correct: false
+    - text: виснаження
+      correct: false
+    explanation: Направлення веде пацієнта до спеціаліста.
+  - question: Що описує кількість і частоту ліків?
+    options:
+    - text: дозування
+      correct: true
+    - text: скарга
+      correct: false
+    - text: поліклініка
+      correct: false
+    - text: декларація
+      correct: false
+    explanation: Дозування визначає приймання препарату.
+  - question: Як назвати небажану реакцію?
+    options:
+    - text: побічний ефект
+      correct: true
+    - text: побочний ефект
+      correct: false
+    - text: сторонній результат в усьому
+      correct: false
+    - text: діючий симптом
+      correct: false
+    explanation: Нормативно побічний.
+  - question: Що роблять для запобігання хворобі?
+    options:
+    - text: профілактику
+      correct: true
+    - text: виписку
+      correct: false
+    - text: скаргу
+      correct: false
+    - text: діагнозування себе
+      correct: false
+    explanation: Профілактика зменшує ризик.
+  - question: Як сказати про вік?
+    options:
+    - text: Мені тридцять років.
+      correct: true
+    - text: Я маю тридцять років.
+      correct: false
+    - text: Я є тридцять.
+      correct: false
+    - text: Мене тридцять мається.
+      correct: false
+    explanation: Вік подаємо давальним.
+  - question: Що створює звʼязок із сімейним лікарем?
+    options:
+    - text: декларація
+      correct: true
+    - text: кардіограма
+      correct: false
+    - text: побічний ефект
+      correct: false
+    - text: дозування
+      correct: false
+    explanation: Декларація має адміністративне значення.
+  - question: Який варіант природний для результату?
+    options:
+    - text: Призначене лікування треба завершити.
+      correct: true
+    - text: Лікуюче лікування треба лікувати.
+      correct: false
+    - text: Діючий лікарство працює мене.
+      correct: false
+    - text: Приймаючий препарат дозується.
+      correct: false
+    explanation: Пасивний дієприкметник називає результат призначення.
+  - question: Що є симптомом?
+    options:
+    - text: запаморочення
+      correct: true
+    - text: страхування
+      correct: false
+    - text: рецепт
+      correct: false
+    - text: поліклініка
+      correct: false
+    explanation: Запаморочення описує стан.
+  - question: Як ввічливо попросити запис?
+    options:
+    - text: Я хотів би записатися до терапевта.
+      correct: true
+    - text: Я хочу записуючого терапевта.
+      correct: false
+    - text: Запишіть мене на хворобу.
+      correct: false
+    - text: Мене зробіть записаним лікарем.
+      correct: false
+    explanation: Формула записатися до лікаря природна.
