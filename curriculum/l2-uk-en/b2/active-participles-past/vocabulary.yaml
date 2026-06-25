@@ -1,0 +1,120 @@
+- lemma: пожовклий
+  translation: yellowed
+  pos: adj
+  usage: Пожовкле листя лежало біля воріт.
+- lemma: зблідлий
+  translation: paled
+  pos: adj
+  usage: Зблідле обличчя видало втому.
+- lemma: змарнілий
+  translation: wasted, gaunt
+  pos: adj
+  usage: Змарнілий чоловік мовчав.
+- lemma: застарілий
+  translation: outdated
+  pos: adj
+  usage: Застарілий підхід потребує редагування.
+- lemma: здичавілий
+  translation: gone wild
+  pos: adj
+  usage: Здичавілий сад заріс травою.
+- lemma: охололий
+  translation: cooled
+  pos: adj
+  usage: Охолола рідина змінила колір.
+- lemma: дозрілий
+  translation: ripened, mature
+  pos: adj
+  usage: Дозрілий колос стояв у полі.
+- lemma: вицвілий
+  translation: faded
+  pos: adj
+  usage: Вицвіла афіша висіла на стіні.
+- lemma: ад'єктивація
+  translation: adjectivization
+  pos: noun
+  usage: Ад'єктивація послаблює відчуття дії.
+- lemma: неперехідність
+  translation: intransitivity
+  pos: noun
+  usage: Неперехідність дієслова важлива для форми на -л-.
+- lemma: архаїзм
+  translation: archaism
+  pos: noun
+  usage: Архаїзм не завжди є помилкою.
+- lemma: експресивність
+  translation: expressiveness
+  pos: noun
+  usage: Експресивність форми залежить від контексту.
+- lemma: лаконічність
+  translation: conciseness
+  pos: noun
+  usage: Лаконічність корисна в репортажі.
+- lemma: розквітлий
+  translation: bloomed
+  pos: adj
+  usage: Розквітле дерево стояло в саду.
+- lemma: посинілий
+  translation: turned blue
+  pos: adj
+  usage: Посинілий від холоду хлопець зайшов у дім.
+- lemma: засохлий
+  translation: dried out
+  pos: adj
+  usage: Засохлий шматок хліба лежав на столі.
+- lemma: зів'ялий
+  translation: withered
+  pos: adj
+  usage: Зів'яле листя опадає восени.
+- lemma: достиглий
+  translation: ripened
+  pos: adj
+  usage: Достигле яблуко було солодким.
+- lemma: опалий
+  translation: fallen
+  pos: adj
+  usage: Опале листя лежало біля сходів.
+- lemma: почорнілий
+  translation: blackened
+  pos: adj
+  usage: Почорніле небо нависло над містом.
+- lemma: згорілий
+  translation: burned down
+  pos: adj
+  usage: Згоріле дерево стояло біля дороги.
+- lemma: побілілий
+  translation: turned white
+  pos: adj
+  usage: Побілілий від морозу двір був тихий.
+- lemma: постарілий
+  translation: aged
+  pos: adj
+  usage: Постарілий майстер повернувся додому.
+- lemma: потемнілий
+  translation: darkened
+  pos: adj
+  usage: Потемнілий коридор здавався довшим.
+- lemma: промоклий
+  translation: soaked, wet through
+  pos: adj
+  usage: Промоклий двір швидко темнів.
+- lemma: навислий
+  translation: overhanging
+  pos: adj
+  usage: Нависла хмара закрила небо.
+- lemma: скреслий
+  translation: thawed, broken up after freezing
+  pos: adj
+  usage: Скреслий лід рухався річкою.
+- lemma: притихлий
+  translation: fallen silent
+  pos: adj
+  usage: Притихлий двір чекав ранку.
+- lemma: осиротілий
+  translation: orphaned, left lonely
+  pos: adj
+  usage: Осиротілий будинок стояв край дороги.
+- lemma: обвислий
+  translation: sagging
+  pos: adj
+  usage: Обвисла гілка торкалася землі.
