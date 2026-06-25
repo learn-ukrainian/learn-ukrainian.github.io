@@ -1,0 +1,128 @@
+- lemma: другорядний член речення
+  translation: secondary sentence member
+  pos: phrase
+  usage: Другорядний член речення поширює граматичну основу й уточнює зміст.
+- lemma: означення
+  translation: attribute
+  pos: noun
+  usage: Означення називає ознаку предмета або дає йому уточнення.
+- lemma: узгоджене означення
+  translation: agreeing attribute
+  pos: phrase
+  usage: Узгоджене означення змінюється разом із головним іменником.
+- lemma: неузгоджене означення
+  translation: non-agreeing attribute
+  pos: phrase
+  usage: Неузгоджене означення уточнює іменник без повного узгодження.
+- lemma: прикладка
+  translation: apposition
+  pos: noun
+  usage: Прикладка дає предмету другу назву або конкретизує його роль.
+- lemma: додаток
+  translation: object
+  pos: noun
+  usage: Додаток називає предмет, на який спрямована дія.
+- lemma: прямий додаток
+  translation: direct object
+  pos: phrase
+  usage: Прямий додаток найчастіше стоїть у знахідному відмінку без прийменника.
+- lemma: непрямий додаток
+  translation: indirect object
+  pos: phrase
+  usage: Непрямий додаток виражається непрямими відмінками або прийменниковими формами.
+- lemma: обставина
+  translation: adverbial modifier
+  pos: noun
+  usage: Обставина задає час, місце, причину, мету або спосіб дії.
+- lemma: обставина місця
+  translation: adverbial of place
+  pos: phrase
+  usage: Обставина місця відповідає на питання де, куди або звідки.
+- lemma: обставина часу
+  translation: adverbial of time
+  pos: phrase
+  usage: Обставина часу розміщує подію в часовій рамці.
+- lemma: обставина причини
+  translation: adverbial of cause
+  pos: phrase
+  usage: Обставина причини пояснює, чому відбулася дія.
+- lemma: обставина мети
+  translation: adverbial of purpose
+  pos: phrase
+  usage: Обставина мети показує, навіщо виконується дія.
+- lemma: обставина способу дії
+  translation: adverbial of manner
+  pos: phrase
+  usage: Обставина способу дії уточнює, як саме відбувається дія.
+- lemma: обставина умови
+  translation: adverbial of condition
+  pos: phrase
+  usage: Обставина умови називає ситуацію, за якої дія можлива.
+- lemma: обставина допусту
+  translation: adverbial of concession
+  pos: phrase
+  usage: Обставина допусту показує перешкоду, попри яку дія відбувається.
+- lemma: поширене речення
+  translation: extended sentence
+  pos: phrase
+  usage: Поширене речення має хоча б один другорядний член.
+- lemma: непоширене речення
+  translation: unextended sentence
+  pos: phrase
+  usage: Непоширене речення містить тільки граматичну основу.
+- lemma: граматична основа
+  translation: grammatical base
+  pos: phrase
+  usage: Граматична основа складається з головних членів речення.
+- lemma: головне слово
+  translation: head word
+  pos: phrase
+  usage: Головне слово визначає синтаксичну роль залежної частини.
+- lemma: залежне слово
+  translation: dependent word
+  pos: phrase
+  usage: Залежне слово уточнює головне слово в словосполученні.
+- lemma: керування
+  translation: government
+  pos: noun
+  usage: Керування визначає відмінок або прийменник залежного слова.
+- lemma: узгодження
+  translation: agreement
+  pos: noun
+  usage: Узгодження пов'язує форми залежного й головного слова.
+- lemma: прилягання
+  translation: adjunction
+  pos: noun
+  usage: Прилягання поєднує незмінне залежне слово з головним.
+- lemma: інфінітив
+  translation: infinitive
+  pos: noun
+  usage: Інфінітив може бути частиною присудка, додатком, означенням або обставиною.
+- lemma: дієприслівниковий зворот
+  translation: adverbial participial phrase
+  pos: phrase
+  usage: Дієприслівниковий зворот відокремлюють і перевіряють за спільним виконавцем.
+- lemma: дієприкметниковий зворот
+  translation: participial phrase
+  pos: phrase
+  usage: Дієприкметниковий зворот після означуваного слова часто відокремлюється.
+- lemma: логічний наголос
+  translation: logical emphasis
+  pos: phrase
+  usage: Позиція обставини може змінювати логічний наголос речення.
+- lemma: деталізація
+  translation: detailing
+  pos: noun
+  usage: Деталізація додає до речення потрібну конкретику.
+- lemma: канцелярит
+  translation: bureaucratic style
+  pos: noun
+  usage: Канцелярит часто виникає через довгі ланцюжки неузгоджених означень.
+- lemma: синтаксична роль
+  translation: syntactic role
+  pos: phrase
+  usage: Синтаксична роль залежить від зв'язку слова з іншими членами речення.
+- lemma: стилістична доречність
+  translation: stylistic appropriateness
+  pos: phrase
+  usage: Стилістична доречність важлива для вибору довжини й позиції другорядних членів.
