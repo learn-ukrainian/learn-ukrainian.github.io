@@ -1,0 +1,144 @@
+- lemma: пасивна конструкція
+  translation: "passive construction"
+  pos: phrase
+  usage: "Пасивна конструкція вимагає точного вибору фокусу, а не автоматичного наслідування шаблону."
+- lemma: форма на -но, -то
+  translation: "form in -no, -to"
+  pos: phrase
+  usage: "Форма на -но, -то природно називає результат без особового діяча."
+- lemma: безособова форма
+  translation: "impersonal form"
+  pos: phrase
+  usage: "Безособова форма добре працює в протоколі, якщо читачеві важливий підсумок."
+- lemma: неозначено-особове речення
+  translation: "indefinite-personal sentence"
+  pos: phrase
+  usage: "Неозначено-особове речення часто рятує новину від важкого пасиву."
+- lemma: пасив на -ся
+  translation: "reflexive passive in -sia"
+  pos: phrase
+  usage: "Пасив на -ся доречний тоді, коли текст описує процедуру або регулярний процес."
+- lemma: пасивний дієприкметник
+  translation: "passive participle"
+  pos: phrase
+  usage: "Пасивний дієприкметник працює як означення: погоджений документ, уточнена редакція."
+- lemma: результативність
+  translation: "resultativity"
+  pos: noun
+  usage: "Результативність особливо виразна у формулах на кшталт звернення опрацьовано."
+- lemma: суб'єктна перспектива
+  translation: "subject perspective"
+  pos: phrase
+  usage: "Суб'єктна перспектива змінюється, коли діяча називають підметом або приховують."
+- lemma: діяч
+  translation: "agent, doer"
+  pos: noun
+  usage: "Якщо діяч важливий для відповідальності, його краще назвати прямо."
+- lemma: виконавець
+  translation: "performer, executor"
+  pos: noun
+  usage: "Виконавець може зникати з речення лише тоді, коли це виправдано жанром."
+- lemma: фокус висловлення
+  translation: "focus of utterance"
+  pos: phrase
+  usage: "Фокус висловлення підказує, чи потрібен актив, чи форма на -но, -то."
+- lemma: регістр
+  translation: "register"
+  pos: noun
+  usage: "Вибір форми залежить від регістру: наукового, офіційного чи медійного."
+- lemma: дискурс
+  translation: "discourse"
+  pos: noun
+  usage: "У різних типах дискурсу один і той самий пасивний хід може звучати по-різному."
+- lemma: науковий стиль
+  translation: "academic style"
+  pos: phrase
+  usage: "Науковий стиль часто допускає безособові форми для опису процедури."
+- lemma: офіційно-діловий стиль
+  translation: "official-business style"
+  pos: phrase
+  usage: "В офіційно-діловому стилі лаконічні результативні формули особливо помітні."
+- lemma: медійний стиль
+  translation: "media style"
+  pos: phrase
+  usage: "У медійному стилі активні речення часто потрібні для видимої відповідальності."
+- lemma: регламентація
+  translation: "regulation, procedural formalization"
+  pos: noun
+  usage: "Надмірна регламентація мови не завжди робить текст зрозумілішим."
+- lemma: інцидент
+  translation: "incident"
+  pos: noun
+  usage: "Під час інциденту особливо важливо не ховати відповідального діяча."
+- lemma: відповідність
+  translation: "compliance, correspondence"
+  pos: noun
+  usage: "Юридичний відділ перевіряє відповідність шаблонів чинним правилам."
+- lemma: прозорість
+  translation: "transparency"
+  pos: noun
+  usage: "Прозорість мовлення зростає, коли інституція називає свої дії прямо."
+- lemma: підзвітність
+  translation: "accountability"
+  pos: noun
+  usage: "Підзвітність у публічному тексті часто вимагає активного речення."
+- lemma: передбачається
+  translation: "is envisaged, is expected"
+  pos: verb
+  usage: "У плані роботи передбачається кілька етапів громадського обговорення."
+- lemma: здійснюється
+  translation: "is carried out"
+  pos: verb
+  usage: "Контроль якості здійснюється за окремим протоколом."
+- lemma: погоджено
+  translation: "approved, agreed"
+  pos: verb
+  usage: "Остаточну редакцію вже погоджено без зауважень."
+- lemma: враховано
+  translation: "taken into account"
+  pos: verb
+  usage: "У фінальній версії враховано ключові пропозиції мешканців."
+- lemma: забезпечено
+  translation: "ensured, provided"
+  pos: verb
+  usage: "Для учасників зустрічі забезпечено переклад і доступ до матеріалів."
+- lemma: зафіксовано
+  translation: "recorded, documented"
+  pos: verb
+  usage: "У журналі спостережень зафіксовано дві повторювані помилки."
+- lemma: опрацьовано
+  translation: "processed, worked through"
+  pos: verb
+  usage: "Усі звернення за понеділок уже опрацьовано."
+- lemma: вжито заходів
+  translation: "measures have been taken"
+  pos: phrase
+  usage: "Після перевірки вжито заходів для усунення ризиків."
+- lemma: крайній строк
+  translation: "deadline, final deadline"
+  pos: phrase
+  usage: "Крайній строк подання виправлених документів перенесено на понеділок."
+- lemma: чинний
+  translation: "valid, in force"
+  pos: adj
+  usage: "Чинний порядок подання заяв варто називати прямо, без зайвого офіціозу."
+- lemma: уточнити
+  translation: "to clarify, to refine"
+  pos: verb
+  usage: "Редакція має уточнити формулювання перед публікацією."
+- lemma: оприлюднити
+  translation: "to publish, to make public"
+  pos: verb
+  usage: "Підсумковий звіт оприлюднять після погодження з наглядовою радою."
+- lemma: пояснювальна записка
+  translation: "explanatory memo"
+  pos: phrase
+  usage: "Пояснювальна записка не повинна маскувати причини затримки за пасивом."
+- lemma: наглядова рада
+  translation: "supervisory board"
+  pos: phrase
+  usage: "Наглядова рада погодить фінальну редакцію звіту."
+- lemma: правка
+  translation: "edit, correction"
+  pos: noun
+  usage: "Редакторська правка часто починається з вибору між активом і результативною формою."
