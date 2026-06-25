@@ -916,6 +916,15 @@ def _plan_reading_section_map(plan: Mapping[str, Any]) -> Mapping[str, str] | No
     return None
 
 
+def _iterative_writer_framing_rules(plan: Mapping[str, Any], writer_mode: str) -> str:
+    if writer_mode != "iterative":
+        return ""
+    return linear_pipeline._seminar_folk_writer_rules(
+        str(plan.get("level", "")),
+        {"WORD_TARGET": plan.get("word_target", "")},
+    )
+
+
 def _iterative_writer_prompt_summary(result: Mapping[str, Any]) -> str:
     sidecar = result.get("sidecar", {})
     sections = sidecar.keys() if isinstance(sidecar, Mapping) else []
@@ -954,6 +963,7 @@ def _run_writer_mode(
     writer_cwd = PROJECT_ROOT if writer == "gemini-tools" else module_dir
     if writer_mode == "iterative":
         module_ref = f"{str(plan.get('level', '')).lower()}/{int(plan.get('sequence', 0))}"
+        framing_rules = _iterative_writer_framing_rules(plan, writer_mode)
         iterative_result = linear_pipeline.run_iterative_writer(
             plan,
             knowledge_packet,
@@ -964,6 +974,7 @@ def _run_writer_mode(
             implementation_map=implementation_map,
             obligation_checklist=obligation_checklist,
             reading_section_map=_plan_reading_section_map(plan),
+            framing_rules=framing_rules,
             cwd=writer_cwd,
             module=module_ref,
             tool_trace_path=module_dir / "writer_tool_calls.json",
@@ -1795,6 +1806,7 @@ def _run(args: argparse.Namespace) -> int:
         obligation_checklist: Mapping[str, Any] | None = None
         iterative_result: Mapping[str, Any] | None = None
         writer_mode = _writer_mode_from_env()
+        iterative_framing_rules = _iterative_writer_framing_rules(plan, writer_mode)
         if (
             resume_enabled
             and not force_rerun
@@ -1978,6 +1990,7 @@ def _run(args: argparse.Namespace) -> int:
                 module_dir,
                 plan_path,
                 writer=writer,
+                framing_rules=iterative_framing_rules,
             )
             linear_pipeline.write_json(module_dir / "python_qg.json", python_qg)
         _phase_done(
@@ -2130,6 +2143,7 @@ def _run(args: argparse.Namespace) -> int:
                     use_generator=use_generator,
                     obligation_checklist=obligation_checklist,
                     max_rounds=linear_pipeline.llm_qg_max_rounds_for_level(level),
+                    framing_rules=iterative_framing_rules,
                     event_sink=tracker.emit,
                     reviewer_samples=llm_qg_reviewer_samples,
                 )
