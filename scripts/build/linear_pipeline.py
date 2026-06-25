@@ -5806,6 +5806,7 @@ def run_llm_qg_with_corrections(
     use_generator: bool = False,
     obligation_checklist: Mapping[str, Any] | None = None,
     max_rounds: int | None = None,
+    framing_rules: str = "",
     corrector: Callable[[CorrectionContext], str | None] | None = None,
     python_qg_runner: Callable[[], dict[str, Any]] | None = None,
     invoker: Callable[..., Any] | None = None,
@@ -5926,6 +5927,7 @@ def run_llm_qg_with_corrections(
                 module_dir,
                 plan_path,
                 writer=writer,
+                framing_rules=framing_rules,
                 event_sink=event_sink,
             )
         else:
@@ -5969,6 +5971,7 @@ def run_python_qg_with_corrections(
     writer: str = "claude-tools",
     invoker: Callable[..., Any] | None = None,
     event_sink: Callable[..., None] | None = None,
+    framing_rules: str = "",
 ) -> dict[str, Any]:
     """Run Python QG with core legacy behavior and seminar best-round selection."""
     level = _python_qg_level_from_plan_path(plan_path)
@@ -5985,6 +5988,7 @@ def run_python_qg_with_corrections(
             writer=writer,
             invoker=invoker,
             event_sink=event_sink,
+            framing_rules=framing_rules,
             max_correction_rounds=python_qg_max_correction_rounds_for_level(level),
         )
     return _run_python_qg_with_legacy_single_shot_corrections(
@@ -6015,6 +6019,7 @@ def _run_python_qg_with_bounded_corrections(
     writer: str = "claude-tools",
     invoker: Callable[..., Any] | None = None,
     event_sink: Callable[..., None] | None = None,
+    framing_rules: str = "",
     max_correction_rounds: int = PYTHON_QG_SEMINAR_MAX_CORRECTION_ROUNDS,
 ) -> dict[str, Any]:
     """Run seminar Python QG with bounded corrections and restore the best round."""
@@ -6093,6 +6098,7 @@ def _run_python_qg_with_bounded_corrections(
                     writer=writer,
                     invoker=invoker,
                     section_attempts=iterative_section_attempts,
+                    framing_rules=framing_rules,
                 )
             )
         else:
@@ -11396,6 +11402,7 @@ def _apply_iterative_targeted_section_correction(
     invoke_fn: Callable[..., str] | None = None,
     section_attempts: dict[str, int] | None = None,
     max_attempts_per_section: int = ITERATIVE_SECTION_CORRECTION_RETRY_CAP,
+    framing_rules: str = "",
 ) -> tuple[bool, frozenset[str], dict[str, Any]]:
     sidecar = _load_iterative_sidecar(module_dir)
     if not sidecar:
@@ -11450,7 +11457,7 @@ def _apply_iterative_targeted_section_correction(
             },
         )
 
-    tasks = build_section_tasks(plan, "", [], framing_rules="")
+    tasks = build_section_tasks(plan, "", [], framing_rules=framing_rules)
     tasks_by_id = {task.section_id: task for task in tasks}
     artifacts_by_id = {artifact.section_id: artifact for artifact in artifacts}
     targets = _section_word_targets(plan)
