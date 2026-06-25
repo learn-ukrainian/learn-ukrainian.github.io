@@ -1,17 +1,17 @@
 {
-  "assembled_mdx_sha256": "06d0b8b9f900eae8c85a8895a9096cc9d54932969c5dd1f2593f45189b6a50a9",
+  "assembled_mdx_sha256": null,
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "ab1f3b646b757e6f7e18a26c36573d3fbf3ecfc5d74fdaa3a2322d346ac3699c",
+    "digest": "cb275ba99ab52b98f2f846d6046a8b6028ab2295699d691c5fcb8b18217105b3",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/koliadky-shchedrivky.yaml",
-        "sha256": "2a7785d1b3cffa870f097a1c3a173b52dea8c6c4db9e89383602be6f3a50b9e9"
+        "sha256": "a6ffd4e9bc3afaf03c4537ac4bd9b7bd5e493c4f5d76cff2e7261ea42efe2a79"
       },
       {
         "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/module.md",
-        "sha256": "6154d373af2d316b9461c2c47d759ed4416c2fc51a84a7921605e6134cf1d6fb"
+        "sha256": "9828f15b56920680d85895704baec8843c35dae5a5aee89fa3c7b60dfc925dae"
       },
       {
         "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/activities.yaml",
@@ -28,8 +28,7 @@
     ]
   },
   "evidence": {
-    "decolonization": "module.md:119-120 myth-box rejects великоруської-традиції frame, names Ukrainian triad",
-    "pedagogical": "module.md:26 послідовний рух: модель розбору → кероване читання → самоперевірка за джерелом"
+    "reframe": "cosmogony-thesis\u2192noted-layer + Nativity primacy + retitle per FOLK-FRAMING-STANDARD; cross-family codex content review #1472 FIX-BEFORE-MERGE \u2192 all 5 fixes applied verbatim (\u043a\u043e\u043b\u044f\u0434\u043a\u0438/\u0449\u0435\u0434\u0440\u0456\u0432\u043a\u0438 cycle accuracy, line-58 equivalence, line-86 literary framing, God-as-Creator, prose polish); framing_compliance_gate PASS"
   },
   "floors": {
     "beauty": 8.5,
@@ -47,7 +46,7 @@
     "model": "gpt-5.5"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-23T12:30:00Z",
+  "scored_at": "2026-06-25T22:05:54Z",
   "scores": {
     "beauty": 9.3,
     "decolonization": 9.4,
