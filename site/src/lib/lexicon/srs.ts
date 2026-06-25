@@ -914,7 +914,7 @@ export function selectNextPracticeItem(
     const modes = indexItem.modes.filter((mode) => modeFilter === 'mixed' || mode === modeFilter);
     for (const mode of modes) {
       if (mode === 'cloze') {
-        if (!recognitionMastered(indexItem.lemmaId, state, minRecognitionStability)) continue;
+        if (modeFilter !== 'cloze' && !recognitionMastered(indexItem.lemmaId, state, minRecognitionStability)) continue;
         for (const clozeId of indexItem.clozeIds) {
           const cloze = maps.cloze.get(clozeId);
           if (!cloze) continue;

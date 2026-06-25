@@ -136,7 +136,7 @@ def test_browse_meta_counts_and_shards() -> None:
         ]
     )
 
-    meta, shards = build_browse_outputs(rows)
+    meta, shards, flagged = build_browse_outputs(rows)
 
     assert meta["total"] == 9
     assert meta["letterCounts"]["А"] == 2
@@ -158,6 +158,17 @@ def test_browse_meta_counts_and_shards() -> None:
     assert meta["letterChip"]["Ґ"]["dial"] == 2
     assert meta["letterChip"]["Я"]["avoid"] == 0
 
+    assert flagged == [
+        {"l": "архаїзм", "s": "архаїзм", "g": "archaism", "c": None, "cls": "arch", "letter": "А"},
+        {"l": "бета", "s": "бета", "g": "beta", "c": None, "cls": "rus", "letter": "Б"},
+        {"l": "борщ", "s": "борщ", "g": "borshch", "c": None, "cls": "borr", "letter": "Б"},
+        {"l": "всьо", "s": "всьо", "g": "avoid all", "c": None, "cls": "avoid", "letter": "В"},
+        {"l": "гетьман", "s": "гетьман", "g": "hetman", "c": None, "cls": "hist", "letter": "Г"},
+        {"l": "ґазда", "s": "ґазда", "g": "host", "c": None, "cls": "dial", "letter": "Ґ"},
+        {"l": "ґанок", "s": "ґанок", "g": "porch", "c": None, "cls": "dial", "letter": "Ґ"},
+        {"l": "калька", "s": "калька", "g": "calque", "c": None, "cls": "calq", "letter": "К"},
+    ]
+
     assert list(shards) == ["А", "Б", "В", "Г", "Ґ", "К"]
     assert [row["l"] for row in shards["Ґ"]] == ["ґазда", "ґанок"]
     assert shards["А"][0] == {
@@ -176,6 +187,7 @@ def test_main_writes_search_meta_and_per_letter_shards(tmp_path: Path) -> None:
     manifest = tmp_path / "manifest.json"
     search_out = tmp_path / "search.json"
     meta_out = tmp_path / "meta.json"
+    flagged_out = tmp_path / "flagged.json"
     browse_dir = tmp_path / "browse"
     manifest.write_text(
         json.dumps(
@@ -197,10 +209,12 @@ def test_main_writes_search_meta_and_per_letter_shards(tmp_path: Path) -> None:
                 str(manifest),
                 "--out",
                 str(search_out),
-                "--browse-meta-out",
-                str(meta_out),
-                "--browse-dir",
-                str(browse_dir),
+            "--browse-meta-out",
+            str(meta_out),
+            "--browse-flagged-out",
+            str(flagged_out),
+            "--browse-dir",
+            str(browse_dir),
             ]
         )
         == 0
@@ -208,11 +222,13 @@ def test_main_writes_search_meta_and_per_letter_shards(tmp_path: Path) -> None:
 
     search_rows = json.loads(search_out.read_text(encoding="utf-8"))
     meta = json.loads(meta_out.read_text(encoding="utf-8"))
+    flagged = json.loads(flagged_out.read_text(encoding="utf-8"))
     shard = json.loads((browse_dir / "В.json").read_text(encoding="utf-8"))
 
     assert search_rows[1]["cls"] == "avoid"
     assert meta["total"] == 2
     assert meta["chipCounts"] == {"avoid": 1}
+    assert flagged == [{"l": "всьо", "s": "всьо", "g": "avoid all", "c": None, "cls": "avoid", "letter": "В"}]
     assert shard == [
         {
             "l": "всьо",

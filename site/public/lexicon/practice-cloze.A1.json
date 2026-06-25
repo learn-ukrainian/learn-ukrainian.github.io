@@ -1,5 +1,57 @@
 {
-  "cloze": [],
+  "cloze": [
+    {
+      "clozeId": "місто-cloze-1",
+      "lemmaId": "місто",
+      "sentenceFrameId": "fixture-places-misto-frame",
+      "sentence": "Я живу у ___.",
+      "blankCase": "locative",
+      "form": "місті",
+      "clozeEn": "I live in a city.",
+      "caseRule": {
+        "ruleId": "locative_static_u",
+        "case": "locative",
+        "caseLabel": "місцевий",
+        "trigger": "у/в (static location)",
+        "triggerLabel": "у/в (статична позиція)",
+        "feedback": "у/в (статична позиція) → місцевий (місто → місті)"
+      },
+      "options": [
+        {
+          "optionId": "місто-cloze-1:answer",
+          "label": "місті",
+          "lemmaId": "місто",
+          "kind": "answer",
+          "case": "locative",
+          "pos": "noun"
+        },
+        {
+          "optionId": "місто-cloze-1:lemma",
+          "label": "місто",
+          "lemmaId": "місто",
+          "kind": "same-root-lemma",
+          "case": "nominative",
+          "pos": "noun"
+        },
+        {
+          "optionId": "місто-cloze-1:decoy-oblique",
+          "label": "школі",
+          "lemmaId": "школа",
+          "kind": "decoy-oblique",
+          "case": "locative",
+          "pos": "noun"
+        },
+        {
+          "optionId": "місто-cloze-1:decoy-lemma",
+          "label": "школа",
+          "lemmaId": "школа",
+          "kind": "decoy-lemma",
+          "case": "nominative",
+          "pos": "noun"
+        }
+      ]
+    }
+  ],
   "deckVersion": "atlas-practice-v1-622fc3d93d1ad580",
   "level": "A1",
   "schema": "atlas-practice-cloze",
