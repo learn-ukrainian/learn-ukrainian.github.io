@@ -1,7 +1,14 @@
 # Folk module production standard + ship checklist
 
-**Canonical reference exemplar:** `curriculum/l2-uk-en/folk/koliadky-shchedrivky/`
-(promoted as the quality bar for the ~36 remaining folk seminar builds, 2026-06-19).
+> ⛔ **FRAMING IS GOVERNED BY [`FOLK-FRAMING-STANDARD.md`](FOLK-FRAMING-STANDARD.md) — READ IT FIRST.**
+> This doc covers the mechanical *shape* of a finished module; the framing-standard doc governs the
+> editorial *content* that fills the shape (Christian-heritage-first, pre-literature identity, no
+> occult/pagan-as-belief, school-canonical sourcing). Where the two disagree, the framing standard wins.
+
+**Reference shape (mechanical):** `curriculum/l2-uk-en/folk/koliadky-shchedrivky/` — copy its section
+shape and component usage. ⚠️ It is **KEEP & FIX, not an unqualified content exemplar:** its old
+cosmogonic / "magic" framing and its archaic-dialect reading are being corrected per the framing
+standard (2026-06-25). Copy its *structure*, not its old *lens*.
 
 This is the practical, copy-this-shape standard. The deeper design rationale lives in
 `docs/best-practices/v7-design-and-corpus.md` (V7 SSOT) and the folk write rules at
@@ -19,9 +26,15 @@ A folk seminar module is long-form Ukrainian prose (≈5,000+ words) with these 
    settled fact. Teaches the reader to separate *claim type* (etymological / textual / ritual / comparative).
 3. **Читання** — guided close-reading of the verbatim primary texts, with an explicit read-model
    (name the situation → extract the action → state the conclusion, each tied to a line).
-4. **Аналіз** — poetics + ritual function (the thesis that every device is applied magic, not ornament).
-5. **Дискусія** — "what survived and why," competing hypotheses held side by side, honest treatment of
-   dark motifs (the antisemitism `:::caution`), and modern relevance (2022–2025).
+4. **Аналіз** — poetics + cultural/ritual function as **verbal art** (how the devices make the text
+   memorable, performable, and expressive). Do NOT frame the poetics as "applied magic" or as a
+   pagan-survival mechanism — that is the contaminated lens the framing standard bans. Where a genre is
+   Christian (колядки/щедрівки), explain its величально-побажальна function with the Christian meaning at
+   parity/primacy (see [`FOLK-FRAMING-STANDARD.md`](FOLK-FRAMING-STANDARD.md)).
+5. **Дискусія** — competing scholarly interpretations held side by side, honest treatment of dark motifs
+   (the antisemitism `:::caution`), and modern relevance (2022–2025). When tradition-history ("older
+   strata") is discussed, attribute the "pagan-survival" reading explicitly as a contested/Soviet-era
+   frame — never assert it as neutral fact, and never demote the Christian meaning to a "shell."
 6. **Підсумок** — returns to the opening question; the reader now answers with evidence.
 7. **Словничок** — key terms consolidated.
 8. **Питання для самоперевірки** — source-grounded self-check questions.
@@ -60,6 +73,14 @@ exemplar; root-caused in `scripts/yaml_activities.py::ActivityParser._as_str_lis
 string to a one-item list, with a regression test). Author it as a list of 1–3 guideline sentences.
 
 ## 3. Corpus-hammer law (the part that bites — learned on this exemplar)
+
+> **Sourcing precedence (per [`FOLK-FRAMING-STANDARD.md`](FOLK-FRAMING-STANDARD.md) Pillar 3):** the
+> **school textbooks in `data/sources.db` are the PRIMARY canonical source** (gr 5–8 ukrlit — the МОН/
+> osvita.ua-aligned canon); ukrlib / uk.wikisource / litopys are **secondary corroboration.** When a text
+> exists in both a standard school form and an archaic-dialect variant, host the **standard school form**
+> — do NOT ship an archaic-dialect reading where a codified one exists (the `koliadka-yak-shche-ne-bulo`
+> «лем / небонько / сонінько…» reading is the anti-example). **Tag provenance** on every text. The
+> verify_quote gate below is about *gate-safety*; this is about *which text you choose to begin with*.
 
 **Every embedded verbatim folk fragment must `verify_quote` against the build corpus, under the author
 it is attributed to.** Concretely:

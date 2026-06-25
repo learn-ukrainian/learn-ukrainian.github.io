@@ -5,6 +5,7 @@ Last reviewed: 2026-06-21
 
 ## Source Assumptions
 
+- ⛔ **Framing is governed by `docs/folk-epic/FOLK-FRAMING-STANDARD.md`.** Framing fixes (Christian-heritage-first, pre-literature identity, removing «магія»/occult/pagan-as-belief framing, school-form sourcing) are **first-class remediations** — never leave a framing-standard violation unfixed in a "clean" module.
 - This prompt consumes a durable FOLK audit report under `docs/audits/`.
 - FOLK remediation fixes source-grounding, readings, quote integrity, copyright, rendered links, and seminar pedagogy in small PR-sized batches.
 - Do not turn FOLK into a generic core-language lesson. Preserve seminar source work and the folk text layer.
@@ -37,6 +38,7 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/shared/seminar-source-rules.md`
 - `docs/prompts/orchestrators/shared/reading-section-rules.md`
 - selected FOLK audit report under `docs/audits/`
+- **`docs/folk-epic/FOLK-FRAMING-STANDARD.md` (READ FIRST — the non-negotiable framing standard)**
 - `docs/folk-epic/EXEMPLAR-STANDARD.md`
 - `docs/folk-epic/folk-review-rubric.md`
 - affected FOLK plans, source modules, resources, activities, vocabulary, generated MDX, and reading files
@@ -63,6 +65,7 @@ git rev-parse --show-toplevel
 
 ## Remediation Rules
 
+- **Framing-standard findings are first-class (`FOLK-FRAMING-STANDARD.md`):** rewrite any «прикладна магія» / "magic" / pagan-core-veneer / pagan-cosmogony-as-creation / demonology-or-occult-as-belief framing to the standard — Christian meaning at parity/primacy, pre-literature identity, pre-Christian motifs only as minor scholarly-noted layers. Replace archaic-dialect readings with the standard school form and tag source provenance (textbook=primary, ukrlib/wikisource=secondary). Re-run a framing read after editing; a module is not "clean" while any framing violation remains.
 - Every audit finding selected for the batch must be fixed or explicitly deferred with reason.
 - Reading findings are first-class: fix missing `role: reading`, broken `/readings/` links, missing hosted files, bad copyright decisions, and missing learner tasks before declaring the module clean.
 - **Reading-deficit findings are first-class too:** when the gate-safe corpus holds ≥4 distinct verified primary texts but the module surfaces fewer (FOLK floor, `EXEMPLAR-STANDARD.md` §3), add the missing texts from the corpus — never backfill with from-memory, paraphrased, or scholarly-quoted content. Re-tag any `type: primary` reference that is actually a secondary/scholarly work as `type: scholarly`; it does not count toward the floor.

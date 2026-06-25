@@ -5,7 +5,8 @@ Last reviewed: 2026-06-21
 
 ## Source Assumptions
 
-- This is a post-build audit for FOLK modules, using `koliadky-shchedrivky` and `docs/folk-epic/EXEMPLAR-STANDARD.md` as the current quality bar.
+- ⛔ **Framing is governed by `docs/folk-epic/FOLK-FRAMING-STANDARD.md` — a framing violation is the highest-priority finding, ahead of any metric.** Audit every module against the 4 pillars (pre-literature, Christian-heritage-first, school-canonical sourcing, no occult/pagan-as-belief) and the NEVER list.
+- This is a post-build audit for FOLK modules, using `koliadky-shchedrivky` and `docs/folk-epic/EXEMPLAR-STANDARD.md` as the current quality bar. ⚠️ `koliadky-shchedrivky` is KEEP & FIX (its old cosmogonic/"magic" frame and archaic-dialect reading are being corrected) — use it as a *shape* bar, not a *framing* bar.
 - FOLK audits must inspect readings, quote provenance, source fidelity, copyright decisions, and rendered reading links.
 - This audit must not modify curriculum, readings, site, plans, wiki, or source files. Its only content write is the durable report under `docs/audits/`.
 
@@ -36,6 +37,7 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/shared/review-output-schema.md`
 - `docs/prompts/orchestrators/shared/seminar-source-rules.md`
 - `docs/prompts/orchestrators/shared/reading-section-rules.md`
+- **`docs/folk-epic/FOLK-FRAMING-STANDARD.md` (READ FIRST — the non-negotiable framing standard)**
 - `docs/folk-epic/EXEMPLAR-STANDARD.md`
 - `docs/folk-epic/folk-review-rubric.md`
 - `docs/folk-epic/folk-text-layer-spec.md`
@@ -62,6 +64,7 @@ git rev-parse --show-toplevel
 - Hosted readings: valid frontmatter, `public_domain: true`, source notes, `taught_in`, and working `/readings/<slug>/` links.
 - Quote integrity: no from-memory fragments; every boxed primary text has source provenance and verification status.
 - Source fidelity: no ghost sources, invented collectors, unsupported dates, or citation drift.
+- **Framing standard (highest priority, `FOLK-FRAMING-STANDARD.md`):** Christian-folk genres carry their Christian meaning at parity/primacy (no «прикладна магія», no pagan-core-veneer structure, no pagan cosmogony as the creation account); no demonology/occult/spell-craft as real practice; pre-literature identity held; school-canonical sourcing with provenance tagged. A single violation is a BLOCK-class finding.
 - Decolonization: no Russocentric, Soviet, imperial, or romantic-nationalist framing errors.
 - FOLK design layer: `:::primary-reading`, `:::myth-box`, `:::high-culture-bridge`, and folk activity families where evidence supports them.
 - Pedagogy: seminar-style source work, close reading, comparison, and argumentation rather than encyclopedia prose.
