@@ -38,23 +38,39 @@ test('browse supports search, category, and letter entry points without dumping 
   expect(new URL(page.url()).searchParams.get('letter')).toBe('Д');
 });
 
-test('practice cloze and matching modes render real rounds for a fresh learner', async ({ page }) => {
+test('practice cloze mode never dead-ends for a fresh learner', async ({ page }) => {
   await page.goto('/words-of-the-day/practice/');
 
   await page.getByRole('button', { name: 'Cloze' }).click();
-  await expect(page.locator('[data-testid="practice-cloze"]')).toBeVisible();
-  await expect(page.locator('[data-testid="practice-cloze"] input')).toBeVisible();
+  // Cloze is fail-closed until reviewed sentences are authored (#3797). The mode must show a
+  // real cloze card OR a clear "being prepared" message — never the ambiguous "all done"
+  // dead-end the user reported. This invariant holds before AND after cloze content lands.
+  const clozeCard = page.locator('[data-testid="practice-cloze"]');
+  const clozeEmpty = page.locator('[data-testid="practice-cloze-empty"]');
+  await expect(clozeCard.or(clozeEmpty)).toBeVisible();
+});
+
+test('practice matching renders a real round (>=3 pairs) for a fresh learner', async ({ page }) => {
+  await page.goto('/words-of-the-day/practice/');
 
   await page.getByRole('button', { name: 'Matching' }).click();
   await expect(page.locator('[data-testid="practice-matching"]')).toBeVisible();
   await expect.poll(() => page.locator('[data-activity="match-left-tile"]').count()).toBeGreaterThanOrEqual(3);
 });
 
-test('Sovietized SUM-11 definition cards are not rendered on word pages', async ({ page }) => {
+test('all СУМ-11 definition cards are hidden from word pages (Soviet dictionary)', async ({ page }) => {
+  // прапор carries a *flagged* (sovietization_risk>0) СУМ-11 definition card.
   await page.goto('/lexicon/прапор/');
-
   await expect(page.locator('h1.word-title')).toContainText('прапор');
   await expect(page.locator('.def-card.sum11-flagged')).toHaveCount(0);
+
+  // вареник carries a *clean* (risk==0) СУМ-11 card. Hide-all (2026-06-25) drops it too;
+  // the meaning block (rendered as a СУМ-20 card) still gives the learner a definition, so
+  // the page is never left definition-less.
+  await page.goto('/lexicon/вареник/');
+  await expect(page.locator('h1.word-title')).toContainText('вареник');
+  await expect(page.locator('.def-card.sum11, .def-card.sum11-flagged')).toHaveCount(0);
+  await expect(page.locator('.def-card.sum20')).toHaveCount(1);
 });
 
 for (const path of ['/lexicon/', '/words-of-the-day/', '/lexicon/browse/']) {

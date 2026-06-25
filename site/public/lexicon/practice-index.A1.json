@@ -1,8 +1,8 @@
 {
   "counts": {
-    "cloze": 1,
-    "clozeCoverage": 0.0009,
-    "clozeEligibleLexemes": 1,
+    "cloze": 0,
+    "clozeCoverage": 0.0,
+    "clozeEligibleLexemes": 0,
     "lexemes": 1079
   },
   "deckVersion": "atlas-practice-v1-622fc3d93d1ad580",
@@ -363,17 +363,14 @@
     },
     {
       "cefr": "A1",
-      "clozeIds": [
-        "місто-cloze-1"
-      ],
-      "hasCloze": true,
+      "clozeIds": [],
+      "hasCloze": false,
       "lemma": "місто",
       "lemmaId": "місто",
       "modes": [
         "flashcards",
         "matching",
-        "choice",
-        "cloze"
+        "choice"
       ],
       "newOrder": 28
     },

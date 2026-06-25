@@ -163,12 +163,7 @@ const enrichment = entry.enrichment ?? null;
 const sections = entry.sections ?? null;
 const heritage = entry.heritage_status ?? null;
 const rawDefinitionCards = enrichment?.definition_cards ?? [];
-const cleanSum11FallbackAllowed = !rawDefinitionCards.some((card) => !isSum11DefinitionCard(card))
-  && !enrichment?.meaning
-  && !entry.gloss;
-const definitionCards = rawDefinitionCards
-  .filter(shouldRenderDefinitionCard)
-  .map(displayDefinitionCard);
+const definitionCards = rawDefinitionCards.filter(shouldRenderDefinitionCard);
 const sovietizedCards = rawDefinitionCards.filter(isSovietizedSum11DefinitionCard);
 const maxSovietizationRisk = Math.max(0, ...sovietizedCards.map((card) => card.sovietization_risk ?? 1));
 const sovietizationKeywords = Array.from(new Set(sovietizedCards.flatMap((card) => card.sovietization_keywords ?? [])));
@@ -269,18 +264,13 @@ function isSovietizedSum11DefinitionCard(card: DefinitionCard) {
 }
 
 function shouldRenderDefinitionCard(card: DefinitionCard) {
-  if (isSovietizedSum11DefinitionCard(card)) return false;
-  if (isSum11DefinitionCard(card)) return cleanSum11FallbackAllowed;
-  return true;
-}
-
-function displayDefinitionCard(card: DefinitionCard): DefinitionCard {
-  if (!isSum11DefinitionCard(card)) return card;
-  return {
-    ...card,
-    source_pill: card.source_pill ?? "СУМ-11 (резерв)",
-    note: card.note ?? "резервне джерело: немає СУМ-20, Грінченка або курсової глоси",
-  };
+  // Hide ALL СУМ-11 cards (Soviet-era dictionary), regardless of sovietization_risk.
+  // Decision 2026-06-25 (user/teacher): never surface СУМ-11 — it is the compromised
+  // Soviet authority. Prefer СУМ-20 / Грінченко / the course gloss instead. risk==0 is
+  // absence-of-detection (we didn't flag this card's text), not proof the source is clean,
+  // so clean СУМ-11 is dropped too. The page never goes empty: gloss / meaning / heritage /
+  // paradigm all remain.
+  return !isSum11DefinitionCard(card);
 }
 
 function sourceClass(card: DefinitionCard) {

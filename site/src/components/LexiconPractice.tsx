@@ -775,6 +775,13 @@ export default function LexiconPractice({
                 onMatchingComplete={() => rateAndComplete(selection, 'good')}
                 onClozeSubmit={submitCloze}
               />
+          ) : mode === 'cloze' && deck.cloze.length === 0 ? (
+            // Cloze is fail-closed until reviewed sentences are authored (#3797). Show a
+            // clear, honest state instead of the ambiguous "all done" dead-end.
+            <p className="lexicon-practice-muted" data-testid="practice-cloze-empty">
+              Cloze exercises for this level are being prepared. Try Flashcards, Matching, or
+              Choice for now.
+            </p>
           ) : (
             <p className="lexicon-practice-muted">All due cards are done for now.</p>
           )}
