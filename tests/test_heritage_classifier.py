@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.audit.generate_search_index import classification_code
 from scripts.lexicon.heritage_classifier import (
     classify_lemma,
     classify_surface_form,
@@ -62,6 +63,10 @@ def test_specified_russianisms_keep_standard_alternatives() -> None:
 
         assert status["classification"] == "russianism"
         assert status["is_russianism"] is True
+        assert (
+            classification_code({"primary_source": "built_vocabulary", "heritage_status": status})
+            == "rus"
+        )
         assert any(
             attestation["source"] == "standard_alternative" and attestation["ref"] == alternative
             for attestation in status["attestations"]
@@ -81,6 +86,15 @@ def test_atlas_heritage_labels_use_source_backed_evidence() -> None:
 
         assert status["classification"] == classification
         assert status["is_russianism"] is False
+        expected_cls = {
+            "authentic-archaism": "arch",
+            "dialect": "dial",
+            "historism": "hist",
+        }[classification]
+        assert (
+            classification_code({"primary_source": "built_vocabulary", "heritage_status": status})
+            == expected_cls
+        )
         assert any(
             attestation["source"] in {"grinchenko_1907", "esum"}
             for attestation in status["attestations"]

@@ -1,165 +1,437 @@
 ---
 /**
- * Full А-Я Word Atlas index (the restored "old browse" — #3771 design). Rendered
- * server-side (SSG) from the committed lightweight search index (~487 KB, the same
- * {l,s,g,r,k,c} records the typeahead uses) — NOT the 39 MB manifest. Sticky alphabet
- * nav + every word grouped by letter; the client script only filters the pre-rendered
- * rows. Lives on /lexicon/browse/ so the landing stays search-first.
+ * А-Я Word Atlas browse shell. The SSG page inlines only the small metadata
+ * file; word rows are fetched from per-letter JSON shards after a letter click.
  */
-import index from "../data/lexicon-search-index.json";
-import {
-  firstUkrainianLetter,
-  parseCefrLevel,
-  type LexiconBrowseRow,
-  type UkrainianLetter,
-} from "../lib/lexicon/levels";
+import browseMeta from "../data/lexicon-browse-meta.json";
+import { UKRAINIAN_ALPHABET } from "../lib/lexicon/levels";
 
-const rows = (index as LexiconBrowseRow[]).filter(
-  (row) => typeof row?.l === "string" && typeof row?.s === "string",
-);
+const clsLabels = {
+  avoid: "уникати",
+  rus: "русизм",
+  calq: "калька",
+  arch: "архаїзм",
+  dial: "діалектизм",
+  hist: "історизм",
+  borr: "запозичення",
+} as const;
 
-const collator = new Intl.Collator("uk", { sensitivity: "base" });
-
-const byLetter = new Map<UkrainianLetter, LexiconBrowseRow[]>();
-for (const row of rows) {
-  const letter = firstUkrainianLetter(row.l);
-  if (!letter) continue;
-  const bucket = byLetter.get(letter) ?? [];
-  bucket.push(row);
-  byLetter.set(letter, bucket);
-}
-
-const groups = Array.from(byLetter.entries())
-  .sort(([a], [b]) => collator.compare(a, b))
-  .map(([letter, items]) => ({
-    letter,
-    items: items.slice().sort((a, b) => collator.compare(a.l, b.l)),
-  }));
-
-const totalWords = groups.reduce((sum, group) => sum + group.items.length, 0);
-
-// Pre-compute a lowercased lemma+gloss+romanized haystack per row so the client filter
-// is a cheap substring test (and matches Latin queries like "ofis" → офіс).
-const haystackOf = (row: LexiconBrowseRow): string =>
-  [row.l, row.g ?? "", row.r ?? ""].join(" ").normalize("NFC").toLocaleLowerCase("uk");
+const chipCounts = (browseMeta.chipCounts ?? {}) as Record<string, number>;
+const chips = Object.entries(clsLabels).filter(([code]) => (chipCounts[code] ?? 0) > 0);
+const letterCounts = (browseMeta.letterCounts ?? {}) as Record<string, number>;
+const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.length} літери`;
 ---
 
-<section class="atlas-index" aria-labelledby="atlas-index-title" data-atlas-index>
+<section
+  class="atlas-index"
+  data-atlas-index
+  data-browse-meta={JSON.stringify(browseMeta)}
+  data-total-label={totalLabel}
+>
   <div class="atlas-index-heading">
-    <h2 id="atlas-index-title">Перегляд А–Я</h2>
-    <p>Усі слова Атласу за українським алфавітом. Натисніть літеру, щоб перейти до розділу.</p>
+    <h2>Перегляд Атласу А–Я</h2>
+    <p>Алфавітний покажчик відкриває слова по одній літері.</p>
   </div>
 
-  <form class="atlas-index-filter" role="search" data-index-filter>
-    <label for="atlas-index-search">Шукати в покажчику</label>
-    <input
-      id="atlas-index-search"
-      name="q"
-      type="search"
-      placeholder="слово, переклад або латинкою…"
-      autocomplete="off"
-      data-index-search
-    />
-  </form>
-
-  <nav class="atlas-letter-nav" aria-label="Український алфавіт">
+  <nav class="atlas-letter-nav" aria-label="Літери українського алфавіту">
     {
-      groups.map(({ letter }) => (
-        <a class="atlas-letter-link" href={`#letter-${letter}`} data-letter={letter}>
-          {letter}
-        </a>
-      ))
+      UKRAINIAN_ALPHABET.map((letter) => {
+        const count = letterCounts[letter] ?? 0;
+        return (
+          <button
+            type="button"
+            class:list={["atlas-letter-link", count === 0 && "is-empty"]}
+            data-letter={letter}
+            data-base-count={count}
+            aria-pressed="false"
+            disabled={count === 0}
+          >
+            {letter}
+          </button>
+        );
+      })
     }
   </nav>
+
+  {
+    chips.length > 0 && (
+      <div class="atlas-chip-row" aria-label="Фільтр за позначкою">
+        {chips.map(([code, label]) => (
+          <button
+            type="button"
+            class="atlas-chip"
+            data-chip={code}
+            aria-pressed="false"
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+    )
+  }
+
+  <label class="atlas-index-filter">
+    <span>Пошук у вибраній літері</span>
+    <input
+      type="search"
+      data-index-search
+      placeholder="Спершу оберіть літеру"
+      autocomplete="off"
+      disabled
+    />
+  </label>
 
   <p
     class="atlas-index-status"
     data-index-status
-    data-total-label={`${totalWords} слів · ${groups.length} літер`}
     aria-live="polite"
   >
-    {totalWords} слів · {groups.length} літер
+    {totalLabel}
   </p>
 
-  <div class="atlas-letter-groups">
-    {
-      groups.map(({ letter, items }) => (
-        <section class="atlas-letter-section" data-letter-section={letter}>
-          <h3 id={`letter-${letter}`} class="atlas-letter-heading">
-            {letter}
-          </h3>
-          <ul class="atlas-index-list">
-            {items.map((row) => {
-              const cefr = parseCefrLevel(row.c);
-              const surzhyk = row.k === "avoid";
-              return (
-                <li class="atlas-index-item" data-haystack={haystackOf(row)}>
-                  <a class="atlas-index-link" href={`/lexicon/${encodeURIComponent(row.s)}/`}>
-                    <span class="atlas-index-lemma">{row.l}</span>
-                    {row.g && <span class="atlas-index-gloss">«{row.g}»</span>}
-                    <span class="atlas-index-tags">
-                      {cefr && <span class="atlas-index-cefr">{cefr}</span>}
-                      {surzhyk && <span class="atlas-index-warn">остерігайтеся</span>}
-                    </span>
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      ))
-    }
-  </div>
+  <section class="atlas-letter-section" data-letter-section hidden>
+    <h3 id="atlas-selected-letter" class="atlas-letter-heading" tabindex="-1" data-letter-heading></h3>
+    <ul class="atlas-index-list" data-index-list></ul>
+    <button class="atlas-more-button" type="button" data-index-more hidden>Показати ще</button>
+    <div class="atlas-sentinel" data-index-sentinel aria-hidden="true"></div>
+  </section>
 
-  <div class="atlas-index-empty" data-index-empty hidden>
-    <p class="atlas-index-empty-code">Немає збігів</p>
-    <p>Спробуйте коротший запит.</p>
+  <div class="atlas-index-empty" data-index-empty>
+    <p class="atlas-index-empty-code">Оберіть літеру алфавіту, щоб переглянути слова</p>
   </div>
 </section>
 
 <script>
+  import { UKRAINIAN_ALPHABET } from "../lib/lexicon/levels";
+
+  type BrowseRow = {
+    l: string;
+    s: string;
+    g: string | null;
+    c?: string | null;
+    cls?: string;
+    hay?: string;
+  };
+
+  type BrowseMeta = {
+    total: number;
+    letterCounts: Record<string, number>;
+    chipCounts: Record<string, number>;
+    letterChip: Record<string, Record<string, number>>;
+  };
+
+  const CLS_LABELS: Record<string, string> = {
+    avoid: "уникати",
+    rus: "русизм",
+    calq: "калька",
+    arch: "архаїзм",
+    dial: "діалектизм",
+    hist: "історизм",
+    borr: "запозичення",
+  };
+
+  const CHUNK_SIZE = 150;
+  const alphabet = new Set<string>(UKRAINIAN_ALPHABET);
   const root = document.querySelector<HTMLElement>("[data-atlas-index]");
-  const searchInput = root?.querySelector<HTMLInputElement>("[data-index-search]");
-  const letterNav = root?.querySelector<HTMLElement>(".atlas-letter-nav");
-  const status = root?.querySelector<HTMLElement>("[data-index-status]");
-  const groups = root?.querySelector<HTMLElement>(".atlas-letter-groups");
-  const empty = root?.querySelector<HTMLElement>("[data-index-empty]");
+  const normalize = (value: string): string => value.normalize("NFC").toLocaleLowerCase("uk-UA");
+  const escapeHtml = (value: string): string =>
+    value.replace(/[&<>"']/g, (char) => {
+      const entities: Record<string, string> = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      };
+      return entities[char] ?? char;
+    });
 
-  const norm = (value: string): string => value.normalize("NFC").toLocaleLowerCase("uk");
-
-  if (root && searchInput && letterNav && status && groups && empty) {
-    const totalLabel = status.dataset.totalLabel ?? status.textContent ?? "";
-    const sections = Array.from(groups.querySelectorAll<HTMLElement>("[data-letter-section]"));
-
-    const applyFilter = () => {
-      const query = norm(searchInput.value).trim();
-      let visible = 0;
-
-      for (const section of sections) {
-        let sectionVisible = 0;
-        for (const item of section.querySelectorAll<HTMLElement>(".atlas-index-item")) {
-          const match = !query || (item.dataset.haystack ?? "").includes(query);
-          item.hidden = !match;
-          if (match) sectionVisible += 1;
-        }
-        section.hidden = sectionVisible === 0;
-        visible += sectionVisible;
-        const letter = section.dataset.letterSection ?? "";
-        const navLink = letterNav.querySelector<HTMLElement>(`[data-letter="${CSS.escape(letter)}"]`);
-        if (navLink) navLink.classList.toggle("is-empty", sectionVisible === 0);
-      }
-
-      empty.hidden = visible !== 0;
-      status.textContent = query
-        ? `${visible} слів за запитом «${searchInput.value.trim()}»`
-        : totalLabel;
+  if (root) {
+    const meta = JSON.parse(root.dataset.browseMeta ?? "{}") as BrowseMeta;
+    const totalLabel = root.dataset.totalLabel ?? `${meta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.length} літери`;
+    const searchInput = root.querySelector<HTMLInputElement>("[data-index-search]");
+    const status = root.querySelector<HTMLElement>("[data-index-status]");
+    const section = root.querySelector<HTMLElement>("[data-letter-section]");
+    const heading = root.querySelector<HTMLElement>("[data-letter-heading]");
+    const list = root.querySelector<HTMLElement>("[data-index-list]");
+    const empty = root.querySelector<HTMLElement>("[data-index-empty]");
+    const moreButton = root.querySelector<HTMLButtonElement>("[data-index-more]");
+    const sentinel = root.querySelector<HTMLElement>("[data-index-sentinel]");
+    const letterButtons = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-letter]"));
+    const chipButtons = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-chip]"));
+    const cache = new Map<string, BrowseRow[]>();
+    const state: {
+      letter: string | null;
+      cls: string | null;
+      q: string;
+      rows: BrowseRow[];
+      visibleLimit: number;
+      loading: boolean;
+      error: string | null;
+    } = {
+      letter: null,
+      cls: null,
+      q: "",
+      rows: [],
+      visibleLimit: CHUNK_SIZE,
+      loading: false,
+      error: null,
     };
 
+    const filteredRows = (): BrowseRow[] => {
+      const query = normalize(state.q).trim();
+      return state.rows.filter((row) => {
+        if (state.cls && row.cls !== state.cls) return false;
+        if (!query) return true;
+        return normalize(row.hay ?? [row.l, row.g ?? ""].join(" ")).includes(query);
+      });
+    };
+
+    const setStatus = (filteredCount = 0): void => {
+      if (!status) return;
+      if (!state.letter) {
+        status.textContent = state.cls
+          ? `Обрано: ${CLS_LABELS[state.cls] ?? state.cls} — оберіть підсвічену літеру`
+          : totalLabel;
+        return;
+      }
+      if (state.loading) {
+        status.textContent = `Завантажуємо ${state.letter}…`;
+        return;
+      }
+      if (state.error) {
+        status.textContent = state.error;
+        return;
+      }
+      status.textContent = `${state.letter}: ${filteredCount} слів`;
+    };
+
+    const updateControls = (): void => {
+      for (const button of letterButtons) {
+        const letter = button.dataset.letter ?? "";
+        const baseCount = Number(button.dataset.baseCount ?? 0);
+        const chipCount = state.cls ? (meta.letterChip?.[letter]?.[state.cls] ?? 0) : baseCount;
+        const disabled = baseCount === 0 || (!state.letter && Boolean(state.cls) && chipCount === 0);
+        button.disabled = disabled;
+        button.classList.toggle("is-empty", baseCount === 0);
+        button.classList.toggle("is-chip-empty", baseCount > 0 && Boolean(state.cls) && chipCount === 0);
+        button.setAttribute("aria-pressed", String(letter === state.letter));
+      }
+      for (const button of chipButtons) {
+        button.setAttribute("aria-pressed", String(button.dataset.chip === state.cls));
+      }
+      if (searchInput) {
+        searchInput.disabled = !state.letter;
+        searchInput.placeholder = state.letter ? "Фільтрувати слова цієї літери" : "Спершу оберіть літеру";
+      }
+    };
+
+    const rowId = (row: BrowseRow): string => `word-${row.s}`;
+    const rowHtml = (row: BrowseRow): string => {
+      const cefr = row.c ? `<span class="atlas-index-cefr">${escapeHtml(row.c)}</span>` : "";
+      const warn = row.cls === "avoid" ? '<span class="atlas-index-warn">остерігайтеся</span>' : "";
+      const gloss = row.g ? `<span class="atlas-index-gloss">«${escapeHtml(row.g)}»</span>` : "";
+      return `
+        <li class="atlas-index-item">
+          <a
+            id="${escapeHtml(rowId(row))}"
+            class="atlas-index-link"
+            href="/lexicon/${encodeURIComponent(row.s)}/"
+          >
+            <span class="atlas-index-lemma">${escapeHtml(row.l)}</span>
+            ${gloss}
+            <span class="atlas-index-tags">${cefr}${warn}</span>
+          </a>
+        </li>
+      `;
+    };
+
+    const focusHashTarget = (rows: BrowseRow[]): boolean => {
+      const rawHash = decodeURIComponent(window.location.hash.slice(1));
+      if (!rawHash) return false;
+      const slug = rawHash.startsWith("word-") ? rawHash.slice(5) : rawHash;
+      const index = rows.findIndex((row) => row.s === slug || rowId(row) === rawHash);
+      if (index < 0) return false;
+      if (index >= state.visibleLimit) {
+        state.visibleLimit = Math.ceil((index + 1) / CHUNK_SIZE) * CHUNK_SIZE;
+        render();
+        return true;
+      }
+      const target = document.getElementById(rowId(rows[index]));
+      if (target instanceof HTMLElement) {
+        target.focus({ preventScroll: true });
+        target.scrollIntoView({ block: "center" });
+      }
+      return true;
+    };
+
+    function render(): void {
+      updateControls();
+      if (!section || !heading || !list || !empty || !moreButton || !sentinel) return;
+      if (!state.letter) {
+        section.hidden = true;
+        list.innerHTML = "";
+        empty.hidden = false;
+        empty.innerHTML = '<p class="atlas-index-empty-code">Оберіть літеру алфавіту, щоб переглянути слова</p>';
+        setStatus();
+        return;
+      }
+
+      section.hidden = false;
+      heading.textContent = state.letter;
+      if (state.loading) {
+        list.innerHTML = "";
+        empty.hidden = true;
+        moreButton.hidden = true;
+        sentinel.hidden = true;
+        setStatus();
+        return;
+      }
+      if (state.error) {
+        list.innerHTML = "";
+        empty.hidden = false;
+        empty.innerHTML = '<p class="atlas-index-empty-code">Не вдалося завантажити літеру</p>';
+        moreButton.hidden = true;
+        sentinel.hidden = true;
+        setStatus();
+        return;
+      }
+
+      const rows = filteredRows();
+      const visibleRows = rows.slice(0, state.visibleLimit);
+      list.innerHTML = visibleRows.map(rowHtml).join("");
+      empty.hidden = rows.length !== 0;
+      if (rows.length === 0) {
+        empty.innerHTML = '<p class="atlas-index-empty-code">Немає збігів</p><p>Спробуйте інший фільтр.</p>';
+      }
+      const hasMore = rows.length > visibleRows.length;
+      moreButton.hidden = !hasMore;
+      sentinel.hidden = !hasMore;
+      setStatus(rows.length);
+      focusHashTarget(rows);
+    }
+
+    const updateUrl = (replace = false): void => {
+      const url = new URL(window.location.href);
+      if (state.letter) url.searchParams.set("letter", state.letter);
+      else url.searchParams.delete("letter");
+      if (state.cls) url.searchParams.set("cls", state.cls);
+      else url.searchParams.delete("cls");
+      if (state.q.trim()) url.searchParams.set("q", state.q.trim());
+      else url.searchParams.delete("q");
+      if (replace) {
+        window.history.replaceState({}, "", url);
+      } else {
+        window.history.pushState({}, "", url);
+      }
+    };
+
+    const loadLetter = async (letter: string, focusHeading = true): Promise<void> => {
+      if (!alphabet.has(letter)) return;
+      state.letter = letter;
+      state.visibleLimit = CHUNK_SIZE;
+      state.error = null;
+      if (searchInput) searchInput.value = state.q;
+      if (cache.has(letter)) {
+        state.rows = cache.get(letter) ?? [];
+        state.loading = false;
+        render();
+        if (focusHeading && heading) heading.focus({ preventScroll: true });
+        return;
+      }
+      state.loading = true;
+      state.rows = [];
+      render();
+      try {
+        const response = await fetch(`/lexicon/browse/${encodeURIComponent(letter)}.json`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const rows = (await response.json()) as BrowseRow[];
+        cache.set(letter, rows);
+        // Guard against a stale fetch: if a newer letter was selected while this
+        // request was in flight, drop the result rather than clobber the active letter.
+        if (state.letter !== letter) return;
+        state.rows = rows;
+        state.error = null;
+      } catch {
+        if (state.letter !== letter) return;
+        state.rows = [];
+        state.error = `Не вдалося завантажити ${letter}`;
+      } finally {
+        if (state.letter === letter) {
+          state.loading = false;
+          render();
+          if (focusHeading && heading) heading.focus({ preventScroll: true });
+        }
+      }
+    };
+
+    const applyLocation = async (replace = true): Promise<void> => {
+      const params = new URLSearchParams(window.location.search);
+      const nextLetter = params.get("letter")?.toLocaleUpperCase("uk-UA") ?? null;
+      const nextCls = params.get("cls");
+      state.cls = nextCls && CLS_LABELS[nextCls] ? nextCls : null;
+      state.q = params.get("q") ?? "";
+      if (searchInput) searchInput.value = state.q;
+      if (nextLetter && alphabet.has(nextLetter)) {
+        await loadLetter(nextLetter, false);
+      } else {
+        state.letter = null;
+        state.rows = [];
+        state.visibleLimit = CHUNK_SIZE;
+        render();
+      }
+      updateUrl(replace);
+    };
+
+    for (const button of letterButtons) {
+      button.addEventListener("click", () => {
+        const letter = button.dataset.letter;
+        if (!letter) return;
+        void loadLetter(letter).then(() => updateUrl());
+      });
+    }
+
+    for (const button of chipButtons) {
+      button.addEventListener("click", () => {
+        const chip = button.dataset.chip ?? null;
+        state.cls = state.cls === chip ? null : chip;
+        state.visibleLimit = CHUNK_SIZE;
+        render();
+        updateUrl();
+      });
+    }
+
     let filterTimer: ReturnType<typeof setTimeout> | undefined;
-    searchInput.addEventListener("input", () => {
+    searchInput?.addEventListener("input", () => {
+      if (!searchInput || searchInput.disabled) return;
       if (filterTimer) clearTimeout(filterTimer);
-      filterTimer = setTimeout(applyFilter, 150);
+      filterTimer = setTimeout(() => {
+        state.q = searchInput.value;
+        state.visibleLimit = CHUNK_SIZE;
+        render();
+        updateUrl();
+      }, 150);
     });
+
+    const showMore = (): void => {
+      const rows = filteredRows();
+      if (state.visibleLimit >= rows.length) return;
+      state.visibleLimit += CHUNK_SIZE;
+      render();
+    };
+    moreButton?.addEventListener("click", showMore);
+    if (sentinel && "IntersectionObserver" in window) {
+      const observer = new IntersectionObserver((entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) showMore();
+      });
+      observer.observe(sentinel);
+    }
+
+    window.addEventListener("popstate", () => {
+      void applyLocation(true);
+    });
+
+    void applyLocation(true);
   }
 </script>
 
@@ -185,12 +457,78 @@ const haystackOf = (row: LexiconBrowseRow): string =>
     line-height: 1.55;
   }
 
+  .atlas-letter-nav,
+  .atlas-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .atlas-letter-nav {
+    position: sticky;
+    top: 0.25rem;
+    z-index: 2;
+    padding: 0.6rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface);
+    box-shadow: 0 6px 18px rgb(15 23 42 / 10%);
+  }
+
+  .atlas-letter-link,
+  .atlas-chip,
+  .atlas-more-button {
+    min-height: 2.25rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface);
+    color: var(--lu-primary);
+    font: inherit;
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  .atlas-letter-link {
+    width: 2.25rem;
+    padding: 0;
+  }
+
+  .atlas-chip,
+  .atlas-more-button {
+    padding: 0 0.8rem;
+  }
+
+  .atlas-letter-link:hover,
+  .atlas-letter-link:focus-visible,
+  .atlas-chip:hover,
+  .atlas-chip:focus-visible,
+  .atlas-more-button:hover,
+  .atlas-more-button:focus-visible {
+    outline: none;
+    background: var(--lu-state-active);
+    box-shadow: 0 0 0 2px var(--lu-primary);
+  }
+
+  .atlas-letter-link[aria-pressed="true"],
+  .atlas-chip[aria-pressed="true"] {
+    border-color: var(--lu-primary);
+    background: var(--lu-primary);
+    color: var(--lu-surface);
+  }
+
+  .atlas-letter-link.is-empty,
+  .atlas-letter-link.is-chip-empty,
+  .atlas-letter-link:disabled {
+    opacity: 0.32;
+    cursor: not-allowed;
+  }
+
   .atlas-index-filter {
     display: grid;
     gap: 0.4rem;
   }
 
-  .atlas-index-filter label {
+  .atlas-index-filter span {
     color: var(--lu-text);
     font-size: 0.82rem;
     font-weight: 900;
@@ -209,48 +547,14 @@ const haystackOf = (row: LexiconBrowseRow): string =>
     font-size: 16px;
   }
 
+  .atlas-index-filter input:disabled {
+    opacity: 0.58;
+  }
+
   .atlas-index-filter input:focus-visible {
     border-color: var(--lu-primary);
     outline: none;
     box-shadow: 0 0 0 3px var(--lu-state-active);
-  }
-
-  .atlas-letter-nav {
-    position: sticky;
-    top: 0.25rem;
-    z-index: 2;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-    padding: 0.6rem;
-    border: 1px solid var(--lu-border);
-    border-radius: 8px;
-    background: var(--lu-surface);
-    box-shadow: 0 6px 18px color-mix(in srgb, var(--lu-text) 8%, transparent);
-  }
-
-  .atlas-letter-link {
-    min-width: 2.1rem;
-    min-height: 2.1rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    color: var(--lu-primary);
-    font-weight: 900;
-    text-decoration: none;
-  }
-
-  .atlas-letter-link:hover,
-  .atlas-letter-link:focus-visible {
-    outline: none;
-    background: var(--lu-state-active);
-    box-shadow: 0 0 0 2px var(--lu-primary);
-  }
-
-  .atlas-letter-link.is-empty {
-    opacity: 0.3;
-    pointer-events: none;
   }
 
   .atlas-index-status {
@@ -258,14 +562,10 @@ const haystackOf = (row: LexiconBrowseRow): string =>
     font-weight: 700;
   }
 
-  .atlas-letter-groups {
-    display: grid;
-    gap: 1.6rem;
-  }
-
   .atlas-letter-section[hidden],
-  .atlas-index-item[hidden],
-  .atlas-index-empty[hidden] {
+  .atlas-index-empty[hidden],
+  .atlas-more-button[hidden],
+  .atlas-sentinel[hidden] {
     display: none;
   }
 
@@ -275,109 +575,130 @@ const haystackOf = (row: LexiconBrowseRow): string =>
     border-bottom: 2px solid var(--lu-accent);
     color: var(--lu-primary);
     font-size: 1.3rem;
-    /* Clear the sticky alphabet nav when jumping to an anchor. */
     scroll-margin-top: 4rem;
+  }
+
+  /* Cards/rows are injected via list.innerHTML, so Astro's scoped styles don't reach
+     them — these selectors must be :global (the template container stays scoped). */
+  .atlas-letter-heading:focus-visible,
+  :global(.atlas-index-link:focus-visible) {
+    outline: 3px solid var(--lu-primary);
+    outline-offset: 3px;
   }
 
   .atlas-index-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-    gap: 0.5rem;
-    margin: 0;
+    gap: 0.55rem;
     padding: 0;
+    margin: 0;
     list-style: none;
   }
 
-  .atlas-index-item {
-    min-width: 0;
-  }
-
-  .atlas-index-link {
+  :global(.atlas-index-link) {
     display: grid;
-    gap: 0.2rem;
-    padding: 0.6rem 0.75rem;
+    grid-template-columns: minmax(9rem, 1fr) minmax(0, 1.5fr) auto;
+    gap: 0.65rem;
+    align-items: center;
+    padding: 0.75rem 0.9rem;
     border: 1px solid var(--lu-border);
-    border-left: 3px solid var(--lu-primary);
-    border-radius: 6px;
+    border-radius: 8px;
     background: var(--lu-surface);
     color: var(--lu-text);
     text-decoration: none;
+    scroll-margin-top: 4rem;
   }
 
-  .atlas-index-link:hover,
-  .atlas-index-link:focus-visible {
+  :global(.atlas-index-link:hover) {
     border-color: var(--lu-primary);
-    outline: none;
-    box-shadow: 0 0 0 3px var(--lu-state-active);
+    background: var(--lu-state-active);
   }
 
-  .atlas-index-lemma {
+  :global(.atlas-index-lemma) {
+    color: var(--lu-primary);
     font-weight: 900;
-    line-height: 1.25;
   }
 
-  .atlas-index-gloss {
+  :global(.atlas-index-gloss) {
+    min-width: 0;
     color: var(--lu-text-muted);
-    font-size: 0.9rem;
-    line-height: 1.4;
+    overflow-wrap: anywhere;
   }
 
-  .atlas-index-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-    margin-top: 0.1rem;
-  }
-
-  .atlas-index-cefr,
-  .atlas-index-warn {
+  :global(.atlas-index-tags) {
     display: inline-flex;
-    align-items: center;
-    min-height: 1.3rem;
-    padding: 0 0.4rem;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    font-weight: 800;
-    text-transform: uppercase;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.3rem;
   }
 
-  .atlas-index-cefr {
+  :global(.atlas-index-cefr),
+  :global(.atlas-index-warn) {
+    display: inline-flex;
+    min-height: 1.55rem;
+    align-items: center;
+    padding: 0 0.45rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  :global(.atlas-index-cefr) {
     background: var(--lu-state-active);
     color: var(--lu-primary);
   }
 
-  .atlas-index-warn {
-    background: var(--lu-state-wrong-bg, #fee2e2);
-    color: var(--lu-state-wrong-fg, #991b1b);
-    text-transform: none;
+  :global(.atlas-index-warn) {
+    background: #fff0d1;
+    color: #7a4300;
   }
 
   .atlas-index-empty {
     padding: 1rem;
-    border: 1px solid var(--lu-border);
-    border-left: 4px solid var(--lu-accent);
+    border: 1px dashed var(--lu-border);
     border-radius: 8px;
-    background: var(--lu-surface);
-  }
-
-  .atlas-index-empty-code {
-    margin: 0;
-    color: var(--lu-primary);
-    font-weight: 900;
-  }
-
-  .atlas-index-empty p:last-child {
-    margin: 0.35rem 0 0;
+    background: var(--lu-surface-muted);
     color: var(--lu-text-muted);
   }
 
-  @media (max-width: 680px) {
+  .atlas-index-empty :global(p) {
+    margin: 0;
+  }
+
+  .atlas-index-empty :global(p + p) {
+    margin-top: 0.25rem;
+  }
+
+  :global(.atlas-index-empty-code) {
+    color: var(--lu-text);
+    font-weight: 900;
+  }
+
+  .atlas-more-button {
+    width: fit-content;
+    margin-top: 0.9rem;
+  }
+
+  .atlas-sentinel {
+    min-height: 1px;
+  }
+
+  @media (max-width: 720px) {
     .atlas-index {
-      padding: 0 1rem 3rem;
+      padding-inline: 1rem;
     }
 
-    .atlas-index-list {
+    .atlas-letter-nav {
+      position: static;
+    }
+
+    :global(.atlas-index-link) {
       grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+
+    :global(.atlas-index-tags) {
+      justify-content: flex-start;
     }
   }
 </style>

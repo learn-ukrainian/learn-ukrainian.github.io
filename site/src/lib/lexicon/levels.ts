@@ -20,6 +20,8 @@ export interface LexiconBrowseRow {
   r?: string;
   k?: string;
   c?: string;
+  cls?: string;
+  hay?: string;
 }
 
 export const UKRAINIAN_ALPHABET = [

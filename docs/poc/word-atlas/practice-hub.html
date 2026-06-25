@@ -561,7 +561,14 @@
   .wod-lvl { min-height: 2.2rem; padding: 0 .8rem; border: 1px solid var(--lu-border); border-radius: 6px; background: var(--lu-surface); color: var(--lu-text); font: inherit; font-weight: 800; cursor: pointer; }
   .wod-lvl:hover, .wod-lvl:focus-visible { border-color: var(--lu-primary); outline: none; }
   .wod-lvl.active { border-color: var(--lu-primary); background: var(--lu-primary); color: var(--lu-on-primary); }
-</style>
+  .brz-chips { max-width: var(--lu-content-width, 1000px); margin: .7rem auto .75rem; display: flex; flex-wrap: wrap; gap: .35rem; }
+  .brz-letter, .brz-chip { min-height: 2.25rem; border: 1px solid var(--lu-border); border-radius: 8px; background: var(--lu-surface); color: var(--lu-primary); font: inherit; font-weight: 900; cursor: pointer; }
+  .brz-letter[aria-pressed="true"], .brz-chip[aria-pressed="true"] { border-color: var(--lu-primary); background: var(--lu-primary); color: var(--lu-on-primary); }
+  .brz-letter:disabled, .brz-letter.is-empty { opacity: .32; cursor: not-allowed; pointer-events: none; }
+  .brz-chip { padding: 0 .8rem; }
+  .brz-empty { max-width: var(--lu-content-width, 1000px); margin: 0 auto; padding: 1rem; border: 1px dashed var(--lu-border); border-radius: 8px; background: var(--lu-surface-muted); color: var(--lu-text); font-weight: 900; }
+  .brz-more { margin-top: .85rem; }
+  </style>
 </head>
 <body data-theme="dark">
 <a class="skip-link" href="#main">Перейти до вмісту</a>
@@ -633,19 +640,19 @@
   <div class="lex-hero" style="padding-bottom:1.2rem">
     <span class="lex-badge">Лексикон · перегляд</span>
     <h1>Перегляд А–Я</h1>
-    <p>Усі слова Атласу за українським алфавітом. Натисніть літеру, щоб перейти до розділу.</p>
+        <p>Оберіть літеру, щоб завантажити слова цієї частини покажчика.</p>
     <form class="lex-search" onsubmit="return false">
-      <label for="brz-q">Шукати в покажчику</label>
+        <label for="brz-q">Пошук у вибраній літері</label>
       <div class="lex-search-row">
-        <input id="brz-q" type="search" placeholder="слово, переклад або латинкою…" autocomplete="off">
+            <input id="brz-q" type="search" placeholder="Спершу оберіть літеру" autocomplete="off" disabled>
       </div>
     </form>
   </div>
   <nav class="brz-letters" id="brz-letters" aria-label="Український алфавіт"></nav>
   <p class="brz-status" id="brz-status" aria-live="polite"></p>
   <div class="brz-groups" id="brz-groups"></div>
-  <p class="poc-anno" style="max-width:960px;margin:1rem auto 0">PoC — повний покажчик (на лайві ~4500 слів,
-    SSG зі службового search-index ~487 КБ, не з 39 МБ маніфесту). Тут показано репрезентативну вибірку.</p>
+  <p class="poc-anno" style="max-width:960px;margin:1rem auto 0">PoC ледачого перегляду: навігація й фільтри доступні одразу,
+    картки зʼявляються тільки після вибору літери.</p>
 </section>
 
 <!-- =============================== VIEW — WORDS OF THE DAY ==================== -->
@@ -1073,7 +1080,168 @@ function renderBrowse(){
   });
 }
 
-/* ============================== FLASHCARDS ================================= */
+  /* ============================== ATLAS А–Я BROWSE — LAZY MIRROR ============= */
+  var BROWSE_CLS_LABELS = {
+    avoid: "уникати",
+    rus: "русизм",
+    calq: "калька",
+    arch: "архаїзм",
+    dial: "діалектизм",
+    hist: "історизм",
+    borr: "запозичення"
+  };
+  var BROWSE_ROWS = DECK.map(function(w){
+    return {
+      lemmaPlain: w.lemmaPlain,
+      gloss: w.gloss,
+      cefr: w.cefr,
+      cls: w.cls || "",
+      hay: (w.lemmaPlain + " " + w.gloss).toLowerCase()
+    };
+  }).concat([
+    { lemmaPlain:"всьо", gloss:"avoid: все", cefr:"A1", cls:"avoid", hay:"всьо avoid все vso" },
+    { lemmaPlain:"протиріччя", gloss:"use суперечність", cefr:"B1", cls:"rus", hay:"протиріччя use суперечність protyrichchia" },
+    { lemmaPlain:"приймати участь", gloss:"calque: брати участь", cefr:"B1", cls:"calq", hay:"приймати участь calque брати uchast" },
+    { lemmaPlain:"глагол", gloss:"old word for verb", cefr:"B2", cls:"arch", hay:"глагол old word verb hlahol" },
+    { lemmaPlain:"ягілка", gloss:"regional spring song", cefr:"B2", cls:"dial", hay:"ягілка regional spring song yahilka" },
+    { lemmaPlain:"опришок", gloss:"historical insurgent", cefr:"C1", cls:"hist", hay:"опришок historical insurgent opryshok" },
+    { lemmaPlain:"кава", gloss:"coffee", cefr:"A1", cls:"borr", hay:"кава coffee kava" }
+  ]);
+  var BROWSE_CHUNK = 150;
+  var browseInit = false;
+  var browseState = { letter:null, cls:null, q:"", limit:BROWSE_CHUNK };
+  var BROWSE_GROUPS = {};
+  BROWSE_ROWS.forEach(function(row){
+    var letter = row.lemmaPlain.trim().charAt(0).toLocaleUpperCase("uk-UA");
+    if (UK_ALPHABET.indexOf(letter) < 0) return;
+    if (!BROWSE_GROUPS[letter]) BROWSE_GROUPS[letter] = [];
+    BROWSE_GROUPS[letter].push(row);
+  });
+  Object.keys(BROWSE_GROUPS).forEach(function(letter){
+    BROWSE_GROUPS[letter].sort(function(a,b){
+      return a.lemmaPlain.localeCompare(b.lemmaPlain, "uk");
+    });
+  });
+  var BROWSE_CHIP_COUNTS = {};
+  var BROWSE_LETTER_CHIP = {};
+  BROWSE_ROWS.forEach(function(row){
+    var letter = row.lemmaPlain.trim().charAt(0).toLocaleUpperCase("uk-UA");
+    if (!BROWSE_LETTER_CHIP[letter]) BROWSE_LETTER_CHIP[letter] = {};
+    if (row.cls) {
+      BROWSE_CHIP_COUNTS[row.cls] = (BROWSE_CHIP_COUNTS[row.cls] || 0) + 1;
+      BROWSE_LETTER_CHIP[letter][row.cls] = (BROWSE_LETTER_CHIP[letter][row.cls] || 0) + 1;
+    }
+  });
+  function browseFilteredRows(){
+    if (!browseState.letter) return [];
+    var query = browseState.q.trim().toLowerCase();
+    return (BROWSE_GROUPS[browseState.letter] || []).filter(function(row){
+      if (browseState.cls && row.cls !== browseState.cls) return false;
+      return !query || row.hay.indexOf(query) >= 0;
+    });
+  }
+  function updateBrowseControls(){
+    document.querySelectorAll("#brz-letters [data-letter]").forEach(function(btn){
+      var letter = btn.getAttribute("data-letter");
+      var baseCount = (BROWSE_GROUPS[letter] || []).length;
+      var chipCount = browseState.cls ? ((BROWSE_LETTER_CHIP[letter] || {})[browseState.cls] || 0) : baseCount;
+      var disabled = baseCount === 0 || (!browseState.letter && browseState.cls && chipCount === 0);
+      btn.disabled = disabled;
+      btn.classList.toggle("is-empty", disabled);
+      btn.setAttribute("aria-pressed", String(letter === browseState.letter));
+    });
+    document.querySelectorAll("#brz-chips [data-chip]").forEach(function(btn){
+      btn.setAttribute("aria-pressed", String(btn.getAttribute("data-chip") === browseState.cls));
+    });
+    var q = document.getElementById("brz-q");
+    q.disabled = !browseState.letter;
+    q.placeholder = browseState.letter ? "Фільтрувати слова цієї літери" : "Спершу оберіть літеру";
+  }
+  function paintBrowse(){
+    var status = document.getElementById("brz-status");
+    var groups = document.getElementById("brz-groups");
+    updateBrowseControls();
+    if (!browseState.letter) {
+      groups.innerHTML = '<div class="brz-empty">Оберіть літеру алфавіту, щоб переглянути слова</div>';
+      status.textContent = browseState.cls
+        ? "Обрано: " + BROWSE_CLS_LABELS[browseState.cls] + " — оберіть підсвічену літеру"
+        : BROWSE_ROWS.length + " слів · " + UK_ALPHABET.length + " літери (PoC-вибірка)";
+      return;
+    }
+    var rows = browseFilteredRows();
+    var visible = rows.slice(0, browseState.limit);
+    status.textContent = browseState.letter + ": " + rows.length + " слів";
+    if (!rows.length) {
+      groups.innerHTML = '<section class="brz-section"><h3 class="brz-head" tabindex="-1">' + esc(browseState.letter) + '</h3><div class="brz-empty">Немає збігів</div></section>';
+      groups.querySelector(".brz-head").focus();
+      return;
+    }
+    groups.innerHTML =
+      '<section class="brz-section"><h3 class="brz-head" tabindex="-1">' + esc(browseState.letter) + '</h3><ul class="brz-list">' +
+      visible.map(function(w){
+        var warn = w.cls === "avoid" ? chip("yellow", "остерігайтеся") : "";
+        return '<li class="brz-item"><a class="brz-card" href="#" onclick="return false">' +
+          '<span class="brz-lemma">'+esc(w.lemmaPlain)+'</span>' +
+          '<span class="brz-gloss">«'+esc(w.gloss)+'»</span>' +
+          '<span class="brz-tags"><span class="cefr-chip">'+esc(w.cefr)+'</span>'+warn+'</span>' +
+        '</a></li>';
+      }).join("") +
+      '</ul>' + (rows.length > visible.length ? '<button class="btn brz-more" id="brz-more" type="button">Показати ще</button>' : '') + '</section>';
+    groups.querySelector(".brz-head").focus();
+    var more = document.getElementById("brz-more");
+    if (more) more.addEventListener("click", function(){
+      browseState.limit += BROWSE_CHUNK;
+      paintBrowse();
+    });
+  }
+  function renderBrowse(){
+    var nav = document.getElementById("brz-letters");
+    var chips = document.getElementById("brz-chips");
+    var q = document.getElementById("brz-q");
+    if (!chips) {
+      chips = document.createElement("div");
+      chips.id = "brz-chips";
+      chips.className = "brz-chips";
+      chips.setAttribute("aria-label", "Фільтр за позначкою");
+      nav.insertAdjacentElement("afterend", chips);
+    }
+    if (!browseInit) {
+      nav.innerHTML = UK_ALPHABET.map(function(L){
+        var count = (BROWSE_GROUPS[L] || []).length;
+        return '<button class="brz-letter'+(count ? '' : ' is-empty')+'" type="button" data-letter="'+L+'" aria-pressed="false"'+(count ? '' : ' disabled')+'>'+L+'</button>';
+      }).join("");
+      chips.innerHTML = Object.keys(BROWSE_CLS_LABELS).filter(function(code){
+        return BROWSE_CHIP_COUNTS[code] > 0;
+      }).map(function(code){
+        return '<button class="brz-chip" type="button" data-chip="'+code+'" aria-pressed="false">'+BROWSE_CLS_LABELS[code]+'</button>';
+      }).join("");
+      nav.addEventListener("click", function(e){
+        var btn = e.target.closest("[data-letter]");
+        if (!btn || btn.disabled) return;
+        browseState.letter = btn.getAttribute("data-letter");
+        browseState.limit = BROWSE_CHUNK;
+        paintBrowse();
+      });
+      chips.addEventListener("click", function(e){
+        var btn = e.target.closest("[data-chip]");
+        if (!btn) return;
+        var chipCode = btn.getAttribute("data-chip");
+        browseState.cls = browseState.cls === chipCode ? null : chipCode;
+        browseState.limit = BROWSE_CHUNK;
+        paintBrowse();
+      });
+      q.addEventListener("input", function(){
+        if (q.disabled) return;
+        browseState.q = q.value;
+        browseState.limit = BROWSE_CHUNK;
+        paintBrowse();
+      });
+      browseInit = true;
+    }
+    paintBrowse();
+  }
+
+  /* ============================== FLASHCARDS ================================= */
 var fcQueue = [], fcIdx = 0, fcDone = 0, fcInit = false;
 var fcCard = document.getElementById("fc-card");
 var fcRating = document.getElementById("fc-rating");
