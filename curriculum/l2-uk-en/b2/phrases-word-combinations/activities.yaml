@@ -1,0 +1,982 @@
+version: '1.0'
+module: phrases-word-combinations
+level: b2
+inline:
+- type: match-up
+  title: Головне слово
+  instruction: Зістав словосполучення з його синтаксичним центром.
+  pairs:
+  - left: шкільний музей
+    right: музей
+  - left: хтось із команди
+    right: хтось
+  - left: один зі спортсменів
+    right: один
+  - left: редагувати текст
+    right: редагувати
+  - left: працювати послідовно
+    right: працювати
+  - left: дуже швидко
+    right: швидко
+  - left: потребує допомоги
+    right: потребує
+  - left: звіт про виконання
+    right: звіт
+  - left: готовий до розмови
+    right: готовий
+  - left: майже точно
+    right: точно
+  - left: підготовлений учора
+    right: підготовлений
+  - left: повага до людей
+    right: повага
+- type: select
+  title: Ознаки узгодження
+  instruction: Познач конструкції, у яких залежне слово змінюється разом із головним.
+  items:
+  - question: Де є узгодження?
+    min_correct: 3
+    options:
+    - text: рясний дощ
+      correct: true
+    - text: синтаксична норма
+      correct: true
+    - text: цей документ
+      correct: true
+    - text: дякувати колезі
+      correct: false
+    - text: працювати мовчки
+      correct: false
+  - question: Які форми показують узгодження з іменником звіт?
+    min_correct: 2
+    options:
+    - text: річний звіт
+      correct: true
+    - text: підготовлений звіт
+      correct: true
+    - text: звітувати завтра
+      correct: false
+    - text: потребує звіту
+      correct: false
+    - text: швидко звітувати
+      correct: false
+  - question: Де залежне слово має форму головного центру?
+    min_correct: 2
+    options:
+    - text: обґрунтоване рішення
+      correct: true
+    - text: перша спроба
+      correct: true
+    - text: запобігати ризику
+      correct: false
+    - text: дуже обережно
+      correct: false
+    - text: сміятися з помилки
+      correct: false
+  - question: Які приклади не є узгодженням?
+    min_correct: 2
+    options:
+    - text: потребує підтримки
+      correct: true
+    - text: відповісти коротко
+      correct: true
+    - text: державна мова
+      correct: false
+    - text: цей проєкт
+      correct: false
+    - text: підписаний акт
+      correct: false
+  - question: Де прикметник мусить змінитися при зміні відмінка іменника?
+    min_correct: 3
+    options:
+    - text: складний проєкт
+      correct: true
+    - text: уважний редактор
+      correct: true
+    - text: нормативний вислів
+      correct: true
+    - text: працювати системно
+      correct: false
+    - text: говорити про текст
+      correct: false
+  - question: Які сполуки мають атрибутивний зв’язок?
+    min_correct: 3
+    options:
+    - text: мовна стійкість
+      correct: true
+    - text: корисна порада
+      correct: true
+    - text: підготовлена заява
+      correct: true
+    - text: навчатися мови
+      correct: false
+    - text: читати захоплено
+      correct: false
+  - question: Де центр треба шукати не в найближчому слові?
+    min_correct: 2
+    options:
+    - text: рішення, ухвалене більшістю
+      correct: true
+    - text: звіт, підготовлений комісією
+      correct: true
+    - text: дуже швидко
+      correct: false
+    - text: дякувати вам
+      correct: false
+    - text: сміятися з мене
+      correct: false
+  - question: Які дії допомагають перевірити узгодження?
+    min_correct: 3
+    options:
+    - text: знайти синтаксичний центр
+      correct: true
+    - text: змінити центр у відмінку
+      correct: true
+    - text: перевірити форму залежного слова
+      correct: true
+    - text: ігнорувати рід і число
+      correct: false
+    - text: замінити залежне слово прийменником
+      correct: false
+- type: fill-in
+  title: Керування дієслова
+  instruction: Заповни пропуск нормативною формою залежного слова.
+  items:
+  - sentence: Команда потребує ____ перед поданням звіту.
+    answer: підтримки
+    options:
+    - підтримки
+    - підтримку
+    - підтримка
+    - підтримкою
+  - sentence: Ми дякуємо ____ за детальні пояснення.
+    answer: викладачеві
+    options:
+    - викладачеві
+    - викладача
+    - викладач
+    - викладачем
+  - sentence: Студенти навчаються ____ в академічному контексті.
+    answer: мови
+    options:
+    - мови
+    - мову
+    - мовою
+    - мова
+  - sentence: Автор відповідає ____ професійного стилю.
+    answer: нормі
+    options:
+    - нормі
+    - норму
+    - норма
+    - нормою
+  - sentence: Редактор запобігає ____ у фінальній версії.
+    answer: помилці
+    options:
+    - помилці
+    - помилку
+    - помилка
+    - помилкою
+  - sentence: Учасник сміявся ____ власної неточності.
+    answer: з
+    options:
+    - з
+    - на
+    - до
+    - у
+  - sentence: Вона одружилася ____ коханою людиною.
+    answer: з
+    options:
+    - з
+    - на
+    - до
+    - після
+  - sentence: Війна завдає ____ громадам.
+    answer: шкоди
+    options:
+    - шкоди
+    - шкоду
+    - шкода
+    - шкодою
+  - sentence: Звіт відповідає ____ конкурсу.
+    answer: вимогам
+    options:
+    - вимогам
+    - вимоги
+    - вимогами
+    - вимогу
+  - sentence: Команда дотримується ____ безпеки.
+    answer: правил
+    options:
+    - правил
+    - правила
+    - правилами
+    - правило
+- type: group-sort
+  title: Три механізми зв’язку
+  instruction: Розподіли словосполучення за типом підрядного зв’язку.
+  groups:
+  - name: Узгодження
+    items:
+    - рясний дощ
+    - цей документ
+    - підготовлена заява
+    - синтаксична норма
+    - перша спроба
+  - name: Керування
+    items:
+    - потребує допомоги
+    - дякувати колезі
+    - сміятися з помилки
+    - запобігати ризику
+    - повага до людей
+  - name: Прилягання
+    items:
+    - читати уважно
+    - працювати мовчки
+    - дуже швидко
+    - відповісти коротко
+    - діяти обережно
+- type: true-false
+  title: Культура сполучуваності
+  instruction: Визнач, чи правильне твердження.
+  items:
+  - statement: Сполучуваність перевіряє не окреме слово, а його природне оточення.
+    correct: true
+  - statement: Усталений вислів можна змінювати так само вільно, як будь-яке словосполучення.
+    correct: false
+  - statement: Плеоназм завжди корисний в офіційно-діловому стилі.
+    correct: false
+  - statement: Дієслово може вимагати певного відмінка залежного слова.
+    correct: true
+  - statement: У фразі працювати системно слово системно прилягає до дієслова.
+    correct: true
+  - statement: Керування не може мати прийменника.
+    correct: false
+  - statement: Редактор має перевіряти і відмінок, і прийменник у ризикових моделях.
+    correct: true
+  - statement: Підмет і присудок разом утворюють звичайне словосполучення.
+    correct: false
+  - statement: Фраза вжити заходів є природною професійною колокацією.
+    correct: true
+  - statement: У фразі дотримуватися правил головне слово не має жодного керування.
+    correct: false
+workbook:
+- type: match-up
+  title: Тип зв’язку
+  instruction: Зістав словосполучення з типом підрядного зв’язку.
+  pairs:
+  - left: рясний дощ
+    right: узгодження
+  - left: потребує допомоги
+    right: керування
+  - left: читати захоплено
+    right: прилягання
+  - left: словниковий запас
+    right: узгодження
+  - left: завдавати збитків
+    right: керування
+  - left: дуже швидко
+    right: прилягання
+  - left: цей проєкт
+    right: узгодження
+  - left: сподіватися на успіх
+    right: керування
+  - left: відповісти коротко
+    right: прилягання
+  - left: державна мова
+    right: узгодження
+  - left: повага до людей
+    right: керування
+  - left: майже точно
+    right: прилягання
+  - left: підготовлений документ
+    right: узгодження
+  - left: запобігати конфлікту
+    right: керування
+- type: group-sort
+  title: Головне слово
+  instruction: Розподіли словосполучення за частиною мови головного слова.
+  groups:
+  - name: Іменне
+    items:
+    - шкільний музей
+    - словниковий запас
+    - цей проєкт
+    - повага до людей
+    - звіт про виконання
+    - троє учасників
+  - name: Дієслівне
+    items:
+    - редагувати текст
+    - дякувати колезі
+    - потребує допомоги
+    - завдає шкоди
+    - працювати мовчки
+    - говорити про відповідальність
+  - name: Прислівникове
+    items:
+    - дуже швидко
+    - майже точно
+    - зовні спокійно
+    - надто пізно
+    - досить переконливо
+    - цілком природно
+- type: fill-in
+  title: Відмінкова форма
+  instruction: Добери нормативну форму залежного слова.
+  items:
+  - sentence: Цей проєкт потребує ____.
+    answer: допомоги
+    options:
+    - допомоги
+    - допомогу
+    - допомога
+    - допомогою
+  - sentence: Автор дотримується ____.
+    answer: правил
+    options:
+    - правил
+    - правила
+    - правилами
+    - правило
+  - sentence: Команда запобігла ____.
+    answer: ризику
+    options:
+    - ризику
+    - ризик
+    - ризиком
+    - ризика
+  - sentence: Стаття відповідає ____ видання.
+    answer: вимогам
+    options:
+    - вимогам
+    - вимоги
+    - вимогами
+    - вимогу
+  - sentence: Ми навчаємося ____ аргументовано.
+    answer: писати
+    options:
+    - писати
+    - письмо
+    - пишемо
+    - писанням
+  - sentence: Редактор уважний ____ деталей.
+    answer: до
+    options:
+    - до
+    - на
+    - за
+    - у
+  - sentence: Звіт багатий ____ приклади.
+    answer: на
+    options:
+    - на
+    - до
+    - з
+    - при
+  - sentence: Пояснення подібне ____ оригіналу.
+    answer: до
+    options:
+    - до
+    - на
+    - з
+    - від
+  - sentence: Вони сміялися ____ власної помилки.
+    answer: з
+    options:
+    - з
+    - на
+    - до
+    - у
+  - sentence: Громада потребує ____ підтримки.
+    answer: послідовної
+    options:
+    - послідовної
+    - послідовну
+    - послідовна
+    - послідовною
+  - sentence: Рішення не відповідає ____.
+    answer: закону
+    options:
+    - закону
+    - закон
+    - законом
+    - закона
+  - sentence: Він вибачив братові ____.
+    answer: різкість
+    options:
+    - різкість
+    - різкості
+    - різкістю
+    - різкістью
+  - sentence: Учасники говорили ____ відповідальність.
+    answer: про
+    options:
+    - про
+    - на
+    - до
+    - з
+  - sentence: План спрямований ____ відновлення.
+    answer: на
+    options:
+    - на
+    - до
+    - з
+    - у
+- type: error-correction
+  title: Редагування керування
+  instruction: Виправ ненормативну форму залежного слова.
+  items:
+  - sentence: Я дякую колегу за допомогу.
+    error: дякую колегу
+    correction: дякую колезі
+    explanation: Дякувати керує давальним відмінком.
+  - sentence: Цей проєкт потребує підтримку.
+    error: потребує підтримку
+    correction: потребує підтримки
+    explanation: Потребувати керує родовим відмінком.
+  - sentence: Команда запобігла конфлікт.
+    error: запобігла конфлікт
+    correction: запобігла конфлікту
+    explanation: Запобігати керує давальним відмінком.
+  - sentence: Текст відповідає норму академічного стилю.
+    error: відповідає норму
+    correction: відповідає нормі
+    explanation: Відповідати у значенні відповідності керує давальним.
+  - sentence: Він сміявся на помилці.
+    error: сміявся на помилці
+    correction: сміявся з помилки
+    explanation: 'Нормативна модель: сміятися з кого або з чого.'
+  - sentence: Вона одружилася на коханій людині.
+    error: одружилася на коханій людині
+    correction: одружилася з коханою людиною
+    explanation: 'Нормативна модель: одружитися з ким.'
+  - sentence: Війна завдає великі збитки громадам.
+    error: завдає великі збитки
+    correction: завдає великих збитків
+    explanation: Завдавати керує родовим відмінком.
+  - sentence: Редактор уважний на деталі.
+    error: уважний на деталі
+    correction: уважний до деталей
+    explanation: Прикметник уважний вимагає моделі до чого.
+  - sentence: Заява багата прикладами.
+    error: багата прикладами
+    correction: багата на приклади
+    explanation: У значенні наявності природна модель багатий на що.
+  - sentence: Автор дотримується правила.
+    error: дотримується правила
+    correction: дотримується правил
+    explanation: Дотримуватися керує родовим відмінком множини в цій моделі.
+- type: select
+  title: Тип залежності
+  instruction: Обери всі правильні твердження.
+  items:
+  - question: Що правильно описує керування?
+    min_correct: 2
+    options:
+    - text: головне слово вимагає певного відмінка
+      correct: true
+    - text: прийменник може входити в модель
+      correct: true
+    - text: залежне слово завжди узгоджується в роді
+      correct: false
+    - text: залежним завжди є прислівник
+      correct: false
+    - text: підмет і присудок утворюють керування
+      correct: false
+  - question: Що правильно описує прилягання?
+    min_correct: 2
+    options:
+    - text: залежне слово приєднується за змістом
+      correct: true
+    - text: прислівник часто є залежним словом
+      correct: true
+    - text: залежне слово має керований відмінок
+      correct: false
+    - text: форма залежного слова змінюється з центром
+      correct: false
+    - text: це сурядний зв’язок
+      correct: false
+  - question: Які конструкції мають прийменникове керування?
+    min_correct: 3
+    options:
+    - text: сміятися з помилки
+      correct: true
+    - text: сподіватися на успіх
+      correct: true
+    - text: готовий до розмови
+      correct: true
+    - text: читати уважно
+      correct: false
+    - text: рясний дощ
+      correct: false
+  - question: Які приклади не є словосполученнями?
+    min_correct: 2
+    options:
+    - text: студент читає
+      correct: true
+    - text: досвід і відповідальність
+      correct: true
+    - text: складний проєкт
+      correct: false
+    - text: читати статтю
+      correct: false
+    - text: працювати мовчки
+      correct: false
+  - question: Які сполуки показують культуру професійного стилю?
+    min_correct: 3
+    options:
+    - text: ухвалити рішення
+      correct: true
+    - text: дотримуватися процедури
+      correct: true
+    - text: запобігати ризику
+      correct: true
+    - text: робити відповідальність
+      correct: false
+    - text: мати шкоду
+      correct: false
+  - question: Які кроки належать до аналізу словосполучення?
+    min_correct: 3
+    options:
+    - text: знайти головне слово
+      correct: true
+    - text: поставити питання до залежного
+      correct: true
+    - text: визначити тип зв’язку
+      correct: true
+    - text: ігнорувати відмінок
+      correct: false
+    - text: завжди починати з перекладу
+      correct: false
+  - question: Де є прилягання?
+    min_correct: 3
+    options:
+    - text: відповісти коротко
+      correct: true
+    - text: діяти обережно
+      correct: true
+    - text: працювати системно
+      correct: true
+    - text: повага до людей
+      correct: false
+    - text: цей висновок
+      correct: false
+  - question: Де є узгодження?
+    min_correct: 3
+    options:
+    - text: обґрунтоване рішення
+      correct: true
+    - text: ця заява
+      correct: true
+    - text: державна мова
+      correct: true
+    - text: говорити про звіт
+      correct: false
+    - text: навчатися мови
+      correct: false
+  - question: Які залежні форми спричинені валентністю головного слова?
+    min_correct: 3
+    options:
+    - text: допомоги у потребує допомоги
+      correct: true
+    - text: колезі у дякувати колезі
+      correct: true
+    - text: ризику у запобігати ризику
+      correct: true
+    - text: швидко у дуже швидко
+      correct: false
+    - text: рясний у рясний дощ
+      correct: false
+  - question: Що допомагає редагувати сполучуваність?
+    min_correct: 3
+    options:
+    - text: перевірка відмінка
+      correct: true
+    - text: перевірка прийменника
+      correct: true
+    - text: перевірка стилістичної доречності
+      correct: true
+    - text: довільна заміна стійких висловів
+      correct: false
+    - text: уникання всіх залежних слів
+      correct: false
+- type: quiz
+  title: Контрольні питання
+  instruction: Обери один правильний варіант.
+  items:
+  - question: Яке словосполучення має узгодження?
+    options:
+    - text: річний звіт
+      correct: true
+    - text: запобігати ризику
+      correct: false
+    - text: дуже точно
+      correct: false
+    - text: читати статтю
+      correct: false
+  - question: Яке словосполучення має керування?
+    options:
+    - text: потребує редагування
+      correct: true
+    - text: складна тема
+      correct: false
+    - text: працювати мовчки
+      correct: false
+    - text: дуже уважно
+      correct: false
+  - question: Яке словосполучення має прилягання?
+    options:
+    - text: говорити спокійно
+      correct: true
+    - text: державна мова
+      correct: false
+    - text: вивчати історію
+      correct: false
+    - text: відповідати вимогам
+      correct: false
+  - question: Що не є словосполученням?
+    options:
+    - text: комісія працює
+      correct: true
+    - text: комісійне рішення
+      correct: false
+    - text: працювати послідовно
+      correct: false
+    - text: рішення комісії
+      correct: false
+  - question: Яка модель керування нормативна?
+    options:
+    - text: дякувати викладачеві
+      correct: true
+    - text: дякувати викладача
+      correct: false
+    - text: дякувати з викладачем
+      correct: false
+    - text: дякувати на викладачі
+      correct: false
+  - question: Яка модель керування нормативна?
+    options:
+    - text: одружитися з нею
+      correct: true
+    - text: одружитися на ній
+      correct: false
+    - text: одружитися до неї
+      correct: false
+    - text: одружитися її
+      correct: false
+  - question: Яке слово є головним у словосполученні звіт про виконання?
+    options:
+    - text: звіт
+      correct: true
+    - text: про
+      correct: false
+    - text: виконання
+      correct: false
+    - text: виконаний
+      correct: false
+  - question: Яке слово є залежним у словосполученні працювати системно?
+    options:
+    - text: системно
+      correct: true
+    - text: працювати
+      correct: false
+    - text: праця
+      correct: false
+    - text: система
+      correct: false
+  - question: Яке питання допомагає перевірити дякувати колезі?
+    options:
+    - text: кому?
+      correct: true
+    - text: кого?
+      correct: false
+    - text: чим?
+      correct: false
+    - text: де?
+      correct: false
+  - question: Яке питання допомагає перевірити потребує допомоги?
+    options:
+    - text: чого?
+      correct: true
+    - text: що?
+      correct: false
+    - text: ким?
+      correct: false
+    - text: куди?
+      correct: false
+- type: true-false
+  title: Самоперевірка синтаксису
+  instruction: Познач істинність тверджень.
+  items:
+  - statement: Узгодження пов’язане з формою залежного слова.
+    correct: true
+  - statement: Керування може бути прийменниковим і безприйменниковим.
+    correct: true
+  - statement: Прилягання завжди має залежний іменник у родовому відмінку.
+    correct: false
+  - statement: Підмет і присудок разом є граматичною основою, а не словосполученням.
+    correct: true
+  - statement: Однорідні члени пов’язані сурядно.
+    correct: true
+  - statement: У словосполученні рясного дощу прикметник узгоджується з іменником.
+    correct: true
+  - statement: У словосполученні сміятися з помилки залежна частина приєднана через керування.
+    correct: true
+  - statement: У словосполученні дуже швидко слово дуже має керований відмінок.
+    correct: false
+  - statement: Культура сполучуваності важлива лише для художнього стилю.
+    correct: false
+  - statement: Редакторська перевірка починається з пошуку синтаксичного центру.
+    correct: true
+- type: translate
+  title: Природний український варіант
+  instruction: Оберіть природне українське словосполучення.
+  items:
+  - source: to need support
+    options:
+    - text: потребувати підтримки
+      correct: true
+    - text: потребувати підтримку
+      correct: false
+    - text: мати потребу підтримку
+      correct: false
+    - text: потребувати з підтримкою
+      correct: false
+  - source: to thank a colleague
+    options:
+    - text: дякувати колезі
+      correct: true
+    - text: дякувати колегу
+      correct: false
+    - text: дякувати з колегою
+      correct: false
+    - text: дякувати на колезі
+      correct: false
+  - source: to prevent a risk
+    options:
+    - text: запобігати ризику
+      correct: true
+    - text: запобігати ризик
+      correct: false
+    - text: запобігати з ризиком
+      correct: false
+    - text: запобігати на ризику
+      correct: false
+  - source: to answer requirements
+    options:
+    - text: відповідати вимогам
+      correct: true
+    - text: відповідати вимоги
+      correct: false
+    - text: відповідати з вимогами
+      correct: false
+    - text: відповідати на вимогах
+      correct: false
+  - source: to act carefully
+    options:
+    - text: діяти обережно
+      correct: true
+    - text: діяти обережний
+      correct: false
+    - text: діяти до обережності
+      correct: false
+    - text: діяти обережністю
+      correct: false
+  - source: a prepared report
+    options:
+    - text: підготовлений звіт
+      correct: true
+    - text: звіт підготовити
+      correct: false
+    - text: підготовити звітний
+      correct: false
+    - text: звіт підготовкою
+      correct: false
+  - source: respect for people
+    options:
+    - text: повага до людей
+      correct: true
+    - text: повага людей без прийменника
+      correct: false
+    - text: повага на людей
+      correct: false
+    - text: повага з людьми
+      correct: false
+  - source: to laugh at a mistake
+    options:
+    - text: сміятися з помилки
+      correct: true
+    - text: сміятися на помилці
+      correct: false
+    - text: сміятися помилку
+      correct: false
+    - text: сміятися до помилки
+      correct: false
+- type: fill-in
+  title: Колокації професійного стилю
+  instruction: Заповни пропуск словом, яке природно поєднується з контекстом.
+  items:
+  - sentence: Комісія ____ рішення після обговорення.
+    answer: ухвалила
+    options:
+    - ухвалила
+    - зробила
+    - взяла
+    - поставила
+  - sentence: Автор ____ проблему в аналітичній статті.
+    answer: порушив
+    options:
+    - порушив
+    - поставився
+    - пішов
+    - подякував
+  - sentence: Команда ____ заходів для безпеки.
+    answer: вжила
+    options:
+    - вжила
+    - зробилася
+    - зайняла
+    - побула
+  - sentence: Учасники ____ правил дискусії.
+    answer: дотримувалися
+    options:
+    - дотримувалися
+    - тримали
+    - додержували
+    - стояли
+  - sentence: Громада ____ підтримки після обстрілу.
+    answer: потребує
+    options:
+    - потребує
+    - потребує у
+    - потребує на
+    - потребує за
+  - sentence: Звіт ____ нормі офіційного стилю.
+    answer: відповідає
+    options:
+    - відповідає
+    - відповідає на
+    - відповідний
+    - відповів
+  - sentence: Редактор ____ увагу на керування дієслів.
+    answer: звернув
+    options:
+    - звернув
+    - повернув
+    - ставив
+    - зайняв
+  - sentence: Проєкт ____ доопрацювання перед голосуванням.
+    answer: потребує
+    options:
+    - потребує
+    - потребує у
+    - потребує на
+    - потребує з
+  - sentence: Команда ____ ризику повторення помилки.
+    answer: запобігла
+    options:
+    - запобігла
+    - запобігла від
+    - уникнула до
+    - попередила на
+  - sentence: Автор ____ пропозицію для фінальної редакції.
+    answer: висунув
+    options:
+    - висунув
+    - високий
+    - витягнув
+    - вийшов
+  - sentence: Пояснення ____ прикладами з офіційного стилю.
+    answer: багате
+    options:
+    - багате
+    - багате на
+    - багато у
+    - багатіє
+  - sentence: Фраза ____ зайву надмірність.
+    answer: містить
+    options:
+    - містить
+    - має у собі
+    - розміщує
+    - коштує
+  - sentence: Учень ____ тип зв’язку за формою залежного слова.
+    answer: визначає
+    options:
+    - визначає
+    - визначний
+    - ставить
+    - прилягає
+  - sentence: Синтаксис ____ ясність професійного тексту.
+    answer: підтримує
+    options:
+    - підтримує
+    - підпирає
+    - служить на
+    - дає у
+- type: error-correction
+  title: Редагування сполучуваності
+  instruction: Заміни неприродне словосполучення нормативним.
+  items:
+  - sentence: Комісія зробила рішення після обговорення.
+    error: зробила рішення
+    correction: ухвалила рішення
+    explanation: У професійному стилі рішення ухвалюють.
+  - sentence: Автор поставив проблему в статті.
+    error: поставив проблему
+    correction: порушив проблему
+    explanation: 'Усталена колокація: порушити проблему.'
+  - sentence: Ми взяли заходи для безпеки.
+    error: взяли заходи
+    correction: вжили заходів
+    explanation: 'Нормативна модель: вжити заходів.'
+  - sentence: Команда трималася правил дискусії.
+    error: трималася правил
+    correction: дотримувалася правил
+    explanation: Дотримуватися правил — природна сполука.
+  - sentence: Звіт має відповідність вимоги.
+    error: має відповідність вимоги
+    correction: відповідає вимогам
+    explanation: Краще дієслівне керування давальним відмінком.
+  - sentence: Фраза робить ясність тексту.
+    error: робить ясність
+    correction: увиразнює текст / робить текст яснішим
+    explanation: Потрібна природна дієслівна модель.
+  - sentence: Редактор дивиться керування дієслів.
+    error: дивиться керування
+    correction: перевіряє керування
+    explanation: У професійному описі керування перевіряють.
+  - sentence: Пояснення багате прикладами.
+    error: багате прикладами
+    correction: багате на приклади
+    explanation: У цій моделі прикметник керує прийменником на.
+  - sentence: Автор зробив пропозицію для правки.
+    error: зробив пропозицію
+    correction: висунув пропозицію / запропонував правку
+    explanation: Обидва варіанти природніші за кальковану модель.
+  - sentence: Текст має зайву надмірність у вислові.
+    error: зайву надмірність
+    correction: надмірність / зайве слово
+    explanation: Плеоназм треба скоротити.
+- type: essay-response
+  id: syntax-editing-note
+  title: 'Письмо: редакторський коментар до словосполучень'
+  instruction: Напишіть короткий редакторський коментар українською.
+  prompt: 'Відредагуйте абзац із п’ятьма помилками сполучуваності: «Комісія зробила рішення, що проєкт потребує підтримку.
+    Автор дякує команду, сміється на власній помилці й має увагу на деталі». Подайте нормативну версію й поясніть щонайменше
+    три типи підрядного зв’язку.'
+  min_words: 170
+  model_answer: Комісія ухвалила рішення, що проєкт потребує підтримки. Автор дякує команді, сміється з власної помилки й
+    звертає увагу на деталі. У словосполученні потребує підтримки дієслово керує родовим відмінком. У дякує команді працює
+    давальний відмінок, бо дякувати відповідає на питання кому. У сміється з помилки прийменник з входить до моделі керування.
+    У фразі власної помилки прикметник узгоджується з іменником, а у звертає увагу маємо стійку колокацію професійного стилю.
+    Така редакція точніша, бо виправляє не окремі слова, а зв’язки між ними.
+  rubric:
+  - criteria: Нормативність керування
+    description: Виправлено форми після потребувати, дякувати, сміятися та звертати увагу.
+  - criteria: Пояснення типів зв’язку
+    description: Коментар називає керування й узгодження, а також пояснює роль стійкої колокації.
+  - criteria: Редакторський регістр
+    description: Відповідь написано чіткою українською без англійських підказок.
