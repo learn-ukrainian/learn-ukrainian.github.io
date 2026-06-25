@@ -78,7 +78,7 @@ content_outline:
 focus: Summer ritual songs across Kupala and Rusalka traditions, water and vegetation symbolism, fire
   purification, and seasonal danger
 level: FOLK
-module: folk-007
+module: folk-005
 objectives:
 - Критично аналізувати Купало як складний обрядовий комплекс з язичницькими та християнськими елементами
 - Читати купальські пісні з увагою до еротичної символіки та ритуальної функції
@@ -109,7 +109,7 @@ references:
   note: Перші згадки про «купалії» в XIII ст., фольклор як стилістична епоха
   type: primary
   work: Історія української літератури
-sequence: 7
+sequence: 5
 slug: kupalski-rusalni-pisni
 subtitle: 'Kupala and Rusalni Songs: The Summer Ritual Cycle'
 title: 'Купальські та русальні пісні: Літній обрядовий цикл'

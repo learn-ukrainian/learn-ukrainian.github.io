@@ -79,7 +79,7 @@ content_outline:
 focus: Fundamental conflict between Cossack freedom and family duty, mother's curse as ultimate sanction,
   widow and orphan as moral test, kozak brotherhood vs blood ties
 level: FOLK
-module: folk-013
+module: folk-011
 objectives:
 - Аналізувати фундаментальний конфлікт козацьких побутових дум — побратимство vs біологічна родина
 - Інтерпретувати материнське прокляття як абсолютну моральну санкцію в народній етиці
@@ -111,7 +111,7 @@ references:
   note: Мотив «блудного сина» в українській традиції, козацький антисвіт
   type: primary
   work: Нарис історії культури України
-sequence: 13
+sequence: 11
 slug: dumy-sotsialno-pobutovi
 subtitle: 'Domestic Dumas: Family Morality'
 title: 'Соціально-побутові думи: Родинна мораль'

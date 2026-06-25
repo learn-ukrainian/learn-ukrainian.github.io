@@ -10,6 +10,8 @@ from collections.abc import Iterable, Mapping
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
 from scripts.common.thresholds import seminar_promote_floors_for
 
@@ -26,7 +28,17 @@ KNOWN_FAMILIES = {
     "mistral",
 }
 CONTENT_HASH_ALGORITHM = "sha256"
-CONTENT_HASH_BASIS = "lesson_sources_v1"
+CONTENT_HASH_BASIS = "lesson_sources_v2"
+
+# Plan bookkeeping/positional fields excluded from the quality content hash. Changing a module's
+# position in the track (resequence/renumber via `module:`/`sequence:`), its cross-links
+# (`connects_to:`/`prerequisites:`), its slug/level, or a version bump must NOT invalidate a
+# recorded quality score — none of those affect lesson quality. Mirrors
+# check_plan_immutability.METADATA_ONLY_FIELDS (+ `version`). (v1→v2: 2026-06-25, folk reset
+# resequence — a mid-track cut renumbered every later plan and falsely staled passing scores.)
+_PLAN_HASH_EXCLUDED_FIELDS = frozenset(
+    {"module", "sequence", "slug", "slug_intentional", "level", "connects_to", "prerequisites", "version"}
+)
 SCHEMA_VERSION = 1
 
 
@@ -79,14 +91,44 @@ def lesson_source_paths(
     )
 
 
+def _is_plan_path(path: Path) -> bool:
+    return "plans" in path.parts and path.suffix in {".yaml", ".yml"}
+
+
+def _canonical_plan_bytes(path: Path) -> bytes:
+    """Plan bytes for hashing with bookkeeping/positional fields stripped, canonically dumped.
+
+    A resequence (`module:`/`sequence:`), a cross-link edit (`connects_to:`/`prerequisites:`),
+    a slug/level change, or a version bump does not change lesson quality, so it must not stale a
+    recorded score. Falls back to raw bytes if the plan cannot be parsed as a YAML mapping.
+    """
+    try:
+        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except (yaml.YAMLError, OSError, UnicodeDecodeError):
+        return path.read_bytes()
+    if not isinstance(data, dict):
+        return path.read_bytes()
+    filtered = {k: v for k, v in data.items() if k not in _PLAN_HASH_EXCLUDED_FIELDS}
+    return yaml.safe_dump(filtered, allow_unicode=True, sort_keys=True).encode("utf-8")
+
+
+def _hash_bytes_for(path: Path) -> bytes:
+    """Raw bytes for content files; canonical metadata-stripped bytes for plan files."""
+    return _canonical_plan_bytes(path) if _is_plan_path(path) else path.read_bytes()
+
+
 def content_digest(files: Iterable[Path], *, repo_root: Path = ROOT) -> dict[str, Any]:
-    """Compute the stable lesson_sources_v1 digest and per-file sha list."""
+    """Compute the stable lesson_sources_v2 digest and per-file sha list.
+
+    Plan files contribute a canonical hash with positional/bookkeeping fields stripped
+    (see ``_PLAN_HASH_EXCLUDED_FIELDS``); all other lesson sources hash their raw bytes.
+    """
     digest = hashlib.sha256()
     file_rows: list[dict[str, str]] = []
     for path in files:
         if not path.exists():
             continue
-        data = path.read_bytes()
+        data = _hash_bytes_for(path)
         file_sha = hashlib.sha256(data)
         rel = _repo_rel(path, repo_root)
         digest.update(rel.encode("utf-8") + b"\0" + file_sha.digest() + b"\0")
@@ -153,7 +195,7 @@ def _content_staleness_failures(sidecar_hash: Mapping[str, Any], current_hash: M
     if sidecar_hash.get("algorithm") != CONTENT_HASH_ALGORITHM:
         failures.append("content_hash algorithm is not sha256")
     if sidecar_hash.get("basis") != CONTENT_HASH_BASIS:
-        failures.append("content_hash basis is not lesson_sources_v1")
+        failures.append(f"content_hash basis is not {CONTENT_HASH_BASIS}")
 
     sidecar_digest = sidecar_hash.get("digest")
     if not isinstance(sidecar_digest, str):

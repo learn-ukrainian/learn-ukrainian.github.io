@@ -34,7 +34,7 @@ content_outline:
   - 'Stub: module build will synthesize why this folk form matters now.'
 focus: Folk forms in opera, literature, art, music, and cultural identity under pressure
 level: FOLK
-module: folk-042
+module: folk-040
 objectives:
 - Пояснювати жанр або культурну практику як частину ширшої системи народної культури.
 - Аналізувати корпусні приклади, символи, формули або перформативні послідовності на основі досьє.
@@ -48,7 +48,7 @@ references:
 - title: "Народна культура та висока культура: містки"
   note: 'Stub — corpus-grounded sources pending the dossier (docs/folk-epic/folk-dossier-schema.md §6 Збирачі та дослідники).'
   type: pending
-sequence: 42
+sequence: 40
 slug: narodna-kultura-ta-vysoka-kultura-mistky
 status: stub
 subtitle: Folk Culture and High Culture Bridges

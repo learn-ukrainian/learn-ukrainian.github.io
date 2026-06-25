@@ -20,7 +20,9 @@ def test_folk_llm_qg_track_returns_scored_modules():
 
     assert resp.status_code == 200
     assert body["track"] == "folk"
-    assert body["summary"]["scored"] >= 6
+    # 4 built+scored folk modules after the 2026-06-25 folk reset cut (was 6; cut
+    # narodni-viruvannia-mifolohiia-demonolohiia + zamovliannia-zaklynannia-prymovky).
+    assert body["summary"]["scored"] >= 4
     assert body["summary"]["total"] == len(state_router.get_plan_slugs("folk"))
     assert len(body["modules"]) == body["summary"]["total"]
 

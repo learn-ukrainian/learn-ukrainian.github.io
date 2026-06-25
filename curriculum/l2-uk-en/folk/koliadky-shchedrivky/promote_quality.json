@@ -1,13 +1,13 @@
 {
-  "assembled_mdx_sha256": null,
+  "assembled_mdx_sha256": "06d0b8b9f900eae8c85a8895a9096cc9d54932969c5dd1f2593f45189b6a50a9",
   "content_hash": {
     "algorithm": "sha256",
-    "basis": "lesson_sources_v1",
-    "digest": "de061743cf70b87718f56de3ee19a021520e9184c7729c1b9cae67a962b3affd",
+    "basis": "lesson_sources_v2",
+    "digest": "ab1f3b646b757e6f7e18a26c36573d3fbf3ecfc5d74fdaa3a2322d346ac3699c",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/koliadky-shchedrivky.yaml",
-        "sha256": "da5c74c7d9306f3d9d18dbcdf54670f47b55d8babd3b98c81827f687031994d3"
+        "sha256": "2a7785d1b3cffa870f097a1c3a173b52dea8c6c4db9e89383602be6f3a50b9e9"
       },
       {
         "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/module.md",
@@ -28,8 +28,8 @@
     ]
   },
   "evidence": {
-    "decolonization": "module.md:119-120 myth-box rejects \u0432\u0435\u043b\u0438\u043a\u043e\u0440\u0443\u0441\u044c\u043a\u043e\u0457-\u0442\u0440\u0430\u0434\u0438\u0446\u0456\u0457 frame, names Ukrainian triad",
-    "pedagogical": "module.md:26 \u043f\u043e\u0441\u043b\u0456\u0434\u043e\u0432\u043d\u0438\u0439 \u0440\u0443\u0445: \u043c\u043e\u0434\u0435\u043b\u044c \u0440\u043e\u0437\u0431\u043e\u0440\u0443 \u2192 \u043a\u0435\u0440\u043e\u0432\u0430\u043d\u0435 \u0447\u0438\u0442\u0430\u043d\u043d\u044f \u2192 \u0441\u0430\u043c\u043e\u043f\u0435\u0440\u0435\u0432\u0456\u0440\u043a\u0430 \u0437\u0430 \u0434\u0436\u0435\u0440\u0435\u043b\u043e\u043c"
+    "decolonization": "module.md:119-120 myth-box rejects великоруської-традиції frame, names Ukrainian triad",
+    "pedagogical": "module.md:26 послідовний рух: модель розбору → кероване читання → самоперевірка за джерелом"
   },
   "floors": {
     "beauty": 8.5,

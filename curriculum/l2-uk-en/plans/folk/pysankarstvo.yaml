@@ -35,7 +35,7 @@ content_outline:
   - 'Stub: module build will synthesize why this folk form matters now.'
 focus: Pysanka motifs, ritual symbolism, and regional visual systems
 level: FOLK
-module: folk-036
+module: folk-034
 objectives:
 - Пояснювати жанр або культурну практику як частину ширшої системи народної культури.
 - Аналізувати корпусні приклади, символи, формули або перформативні послідовності на основі досьє.
@@ -49,7 +49,7 @@ references:
 - title: "Писанкарство"
   note: 'Stub — corpus-grounded sources pending the dossier (docs/folk-epic/folk-dossier-schema.md §6 Збирачі та дослідники).'
   type: pending
-sequence: 36
+sequence: 34
 slug: pysankarstvo
 status: stub
 subtitle: Pysanka Art

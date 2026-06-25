@@ -84,7 +84,7 @@ content_outline:
 focus: Wedding as multi-act folk drama, rite of passage (van Gennep), symbolic death and rebirth of bride,
   korovai as cosmic act, two clans as ritual enemies
 level: FOLK
-module: folk-010
+module: folk-008
 objectives:
 - Аналізувати українське весілля як багатоактову ритуальну драму з чіткою структурою обряду переходу
 - Інтерпретувати символіку короваю, гільця та рушника в контексті космологічних уявлень
@@ -115,7 +115,7 @@ references:
   note: Князівська термінологія у весільному обряді, фольклорні жанри
   type: primary
   work: Історія української літератури
-sequence: 10
+sequence: 8
 slug: vesilni-pisni
 subtitle: 'Wedding Rituals: The Drama of Passage'
 title: 'Весільна обрядовість: Драматизм переходу'

@@ -81,7 +81,7 @@ content_outline:
 focus: Dvovirya (dual faith) as syncretic worldview, apocryphal influence, dualism (God vs Devil in creation),
   pagan deities behind Christian saints, folk theodicy
 level: FOLK
-module: folk-026
+module: folk-024
 objectives:
 - Критично аналізувати двовір'я як складну синкретичну систему, а не «помилку» чи «мудрість»
 - Розуміти механізм функціональної заміни — як язичницькі боги стали християнськими святими
@@ -113,7 +113,7 @@ references:
   note: Апокрифічна література, вплив на народні казки та легенди
   type: primary
   work: Історія української літератури
-sequence: 26
+sequence: 24
 slug: narodni-lehendy
 subtitle: 'Folk Legends: Popular Christianity'
 title: 'Народні легенди: Народне християнство'
