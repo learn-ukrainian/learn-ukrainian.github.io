@@ -1,0 +1,128 @@
+- lemma: односкладне речення
+  translation: one-member sentence
+  pos: phrase
+  usage: Односкладне речення має один головний член і завершений зміст.
+- lemma: двоскладне речення
+  translation: two-member sentence
+  pos: phrase
+  usage: У двоскладному реченні є підмет і присудок.
+- lemma: головний член
+  translation: main member
+  pos: phrase
+  usage: Головний член односкладного речення тримає центр думки.
+- lemma: означено-особове
+  translation: definite-personal
+  pos: adjective
+  usage: Означено-особове речення вказує особу через форму дієслова.
+- lemma: неозначено-особове
+  translation: indefinite-personal
+  pos: adjective
+  usage: Неозначено-особове речення зосереджує увагу на події.
+- lemma: узагальнено-особове
+  translation: generalized-personal
+  pos: adjective
+  usage: Узагальнено-особове речення часто звучить як правило.
+- lemma: безособове
+  translation: impersonal
+  pos: adjective
+  usage: Безособове речення передає стан без активного діяча.
+- lemma: називне речення
+  translation: nominative sentence
+  pos: phrase
+  usage: Називне речення створює короткий кадр або експозицію.
+- lemma: категорія стану
+  translation: category of state
+  pos: phrase
+  usage: Категорія стану допомагає описати самопочуття без підмета.
+- lemma: форма на -но, -то
+  translation: -no/-to impersonal form
+  pos: phrase
+  usage: Форму на -но, -то використовують для підкреслення результату.
+- lemma: виконавець
+  translation: doer, performer
+  pos: noun
+  usage: У неозначено-особовому реченні виконавця не названо.
+- lemma: діяч
+  translation: agent
+  pos: noun
+  usage: Безособове речення може не мати діяча.
+- lemma: підмет
+  translation: subject
+  pos: noun
+  usage: Односкладне речення не завжди потребує підмета.
+- lemma: присудок
+  translation: predicate
+  pos: noun
+  usage: У двоскладному реченні присудок поєднується з підметом.
+- lemma: давальний відмінок
+  translation: dative case
+  pos: phrase
+  usage: Давальний відмінок часто називає носія стану.
+- lemma: носій стану
+  translation: experiencer of a state
+  pos: phrase
+  usage: У реченні «Мені холодно» носій стану виражений давальним.
+- lemma: синтаксична незалежність
+  translation: syntactic independence
+  pos: phrase
+  usage: Синтаксична незалежність означає, що речення самодостатнє.
+- lemma: лаконічність
+  translation: concision
+  pos: noun
+  usage: Лаконічність односкладних речень корисна в репортажі.
+- lemma: динамізм
+  translation: dynamism
+  pos: noun
+  usage: Короткі односкладні речення додають тексту динамізму.
+- lemma: афористичність
+  translation: aphoristic quality
+  pos: noun
+  usage: Узагальнено-особові речення мають афористичність.
+- lemma: експресивність
+  translation: expressiveness
+  pos: noun
+  usage: Називні речення підсилюють експресивність опису.
+- lemma: експозиція
+  translation: exposition
+  pos: noun
+  usage: Називні речення часто відкривають експозицію оповідання.
+- lemma: пейзаж
+  translation: landscape
+  pos: noun
+  usage: У пейзажі природно звучать безособові й називні речення.
+- lemma: трансформація
+  translation: transformation
+  pos: noun
+  usage: Трансформація змінює фокус речення.
+- lemma: стилістичний вибір
+  translation: stylistic choice
+  pos: phrase
+  usage: Стилістичний вибір визначає, чи називати виконавця.
+- lemma: відсторонення
+  translation: distancing
+  pos: noun
+  usage: Безособова форма може створювати відсторонення.
+- lemma: відповідальність
+  translation: responsibility
+  pos: noun
+  usage: Іноді треба назвати відповідальність прямо.
+- lemma: неминучість
+  translation: inevitability
+  pos: noun
+  usage: Безособові речення можуть передавати неминучість.
+- lemma: самодостатній
+  translation: self-sufficient
+  pos: adjective
+  usage: Односкладне речення є самодостатнім у своєму контексті.
+- lemma: узагальнення
+  translation: generalization
+  pos: noun
+  usage: Узагальнення робить пораду правилом для багатьох.
+- lemma: кадр
+  translation: frame, shot
+  pos: noun
+  usage: Називне речення може працювати як окремий кадр.
+- lemma: синтаксична синонімія
+  translation: syntactic synonymy
+  pos: phrase
+  usage: Синтаксична синонімія дає кілька способів подати той самий зміст.
