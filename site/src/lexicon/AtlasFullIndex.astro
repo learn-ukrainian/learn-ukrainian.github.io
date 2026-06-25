@@ -572,8 +572,10 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
     scroll-margin-top: 4rem;
   }
 
+  /* Cards/rows are injected via list.innerHTML, so Astro's scoped styles don't reach
+     them — these selectors must be :global (the template container stays scoped). */
   .atlas-letter-heading:focus-visible,
-  .atlas-index-link:focus-visible {
+  :global(.atlas-index-link:focus-visible) {
     outline: 3px solid var(--lu-primary);
     outline-offset: 3px;
   }
@@ -586,7 +588,7 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
     list-style: none;
   }
 
-  .atlas-index-link {
+  :global(.atlas-index-link) {
     display: grid;
     grid-template-columns: minmax(9rem, 1fr) minmax(0, 1.5fr) auto;
     gap: 0.65rem;
@@ -600,31 +602,31 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
     scroll-margin-top: 4rem;
   }
 
-  .atlas-index-link:hover {
+  :global(.atlas-index-link:hover) {
     border-color: var(--lu-primary);
     background: var(--lu-state-active);
   }
 
-  .atlas-index-lemma {
+  :global(.atlas-index-lemma) {
     color: var(--lu-primary);
     font-weight: 900;
   }
 
-  .atlas-index-gloss {
+  :global(.atlas-index-gloss) {
     min-width: 0;
     color: var(--lu-text-muted);
     overflow-wrap: anywhere;
   }
 
-  .atlas-index-tags {
+  :global(.atlas-index-tags) {
     display: inline-flex;
     flex-wrap: wrap;
     justify-content: flex-end;
     gap: 0.3rem;
   }
 
-  .atlas-index-cefr,
-  .atlas-index-warn {
+  :global(.atlas-index-cefr),
+  :global(.atlas-index-warn) {
     display: inline-flex;
     min-height: 1.55rem;
     align-items: center;
@@ -635,12 +637,12 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
     white-space: nowrap;
   }
 
-  .atlas-index-cefr {
+  :global(.atlas-index-cefr) {
     background: var(--lu-state-active);
     color: var(--lu-primary);
   }
 
-  .atlas-index-warn {
+  :global(.atlas-index-warn) {
     background: #fff0d1;
     color: #7a4300;
   }
@@ -653,15 +655,15 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
     color: var(--lu-text-muted);
   }
 
-  .atlas-index-empty p {
+  .atlas-index-empty :global(p) {
     margin: 0;
   }
 
-  .atlas-index-empty p + p {
+  .atlas-index-empty :global(p + p) {
     margin-top: 0.25rem;
   }
 
-  .atlas-index-empty-code {
+  :global(.atlas-index-empty-code) {
     color: var(--lu-text);
     font-weight: 900;
   }
@@ -684,12 +686,12 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
       position: static;
     }
 
-    .atlas-index-link {
+    :global(.atlas-index-link) {
       grid-template-columns: 1fr;
       gap: 0.35rem;
     }
 
-    .atlas-index-tags {
+    :global(.atlas-index-tags) {
       justify-content: flex-start;
     }
   }
