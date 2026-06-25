@@ -1,13 +1,13 @@
 {
-  "assembled_mdx_sha256": null,
+  "assembled_mdx_sha256": "3efc9451e0e6c403a7818a1d4b39deacd9df297cae494d23160b7d437545c128",
   "content_hash": {
     "algorithm": "sha256",
-    "basis": "lesson_sources_v1",
-    "digest": "f56e1b012ab1017936f799bb3035b414b9520feb6664a5e27f217b2388d2d8a3",
+    "basis": "lesson_sources_v2",
+    "digest": "244cf5b914a84f9b0b044adf478965094952f7684439e7ffa88b1b7848ea6d28",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodna-kultura-yak-systema.yaml",
-        "sha256": "d9463b4966720e3d602d7dbf38c91bbc8cf55e1640f869fba1899851e5563424"
+        "sha256": "08bb5bc257f19d8ec697969020d35280e495336df5fbf8150c00d4f196e124a2"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodna-kultura-yak-systema/module.md",
@@ -28,8 +28,8 @@
     ]
   },
   "evidence": {
-    "decolonization": "module.md:197-198 myth-box rejects \u0435\u0442\u043d\u043e\u0433\u0440\u0430\u0444\u0456\u0447\u043d\u0430-\u043d\u0430\u0440\u043e\u0434\u043d\u0456\u0441\u0442\u044c frame",
-    "pedagogical": "module.md:55 reusable reading apparatus \u043d\u0430\u0437\u0432\u0438 \u0441\u0438\u0442\u0443\u0430\u0446\u0456\u044e\u2192\u0432\u0438\u043f\u0438\u0448\u0438 \u0434\u0456\u044e\u2192\u0441\u0444\u043e\u0440\u043c\u0443\u043b\u044e\u0439 \u0432\u0438\u0441\u043d\u043e\u0432\u043e\u043a"
+    "decolonization": "module.md:197-198 myth-box rejects етнографічна-народність frame",
+    "pedagogical": "module.md:55 reusable reading apparatus назви ситуацію→випиши дію→сформулюй висновок"
   },
   "floors": {
     "beauty": 8.5,

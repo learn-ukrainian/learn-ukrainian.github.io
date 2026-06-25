@@ -216,6 +216,48 @@ def test_record_verify_round_trip_and_computes_digest_locally(tmp_path: Path) ->
     assert gate.verify("folk", SLUG, module_dir=module_dir, repo_root=repo_root)["passed"] is True
 
 
+def test_plan_bookkeeping_changes_do_not_stale_quality_hash(tmp_path: Path) -> None:
+    """Resequence / renumber / cross-link / version bump must NOT invalidate a recorded score.
+
+    Regression for the 2026-06-25 folk reset: a mid-track cut renumbered every later plan's
+    positional module:/sequence: fields, which falsely staled passing quality scores because the
+    hash basis (lesson_sources_v1) hashed the whole plan.yaml bytes. lesson_sources_v2 strips
+    bookkeeping fields from the plan's contribution to the content hash.
+    """
+    repo_root, module_dir = _write_stub_repo(tmp_path)
+    plan_path = repo_root / "curriculum" / "l2-uk-en" / "plans" / "folk" / f"{SLUG}.yaml"
+    plan_path.write_text(
+        "title: Stub plan\nmodule: folk-008\nsequence: 8\n"
+        "connects_to:\n- other-module\nversion: '1.0'\n"
+        "objectives:\n- learn things\n",
+        encoding="utf-8",
+    )
+    _record_passing(repo_root, module_dir)
+    assert gate.verify("folk", SLUG, module_dir=module_dir, repo_root=repo_root)["passed"] is True
+
+    # Pure bookkeeping churn: resequence + renumber + relink + version bump — quality unchanged.
+    plan_path.write_text(
+        "title: Stub plan\nmodule: folk-006\nsequence: 6\n"
+        "connects_to:\n- different-module\nversion: '2.0'\n"
+        "objectives:\n- learn things\n",
+        encoding="utf-8",
+    )
+    report = gate.verify("folk", SLUG, module_dir=module_dir, repo_root=repo_root)
+    assert report["passed"] is True, report["failures"]
+    assert not any("stale" in failure for failure in report["failures"])
+
+    # A genuine content change (objectives) MUST still stale the recorded score.
+    plan_path.write_text(
+        "title: Stub plan\nmodule: folk-006\nsequence: 6\n"
+        "connects_to:\n- different-module\nversion: '2.0'\n"
+        "objectives:\n- learn DIFFERENT things\n",
+        encoding="utf-8",
+    )
+    report = gate.verify("folk", SLUG, module_dir=module_dir, repo_root=repo_root)
+    assert report["passed"] is False
+    assert any("stale" in failure and f"{SLUG}.yaml" in failure for failure in report["failures"])
+
+
 def test_gate_reads_floors_from_thresholds_ssot(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo_root, module_dir = _write_stub_repo(tmp_path)
     _record_passing(repo_root, module_dir)
