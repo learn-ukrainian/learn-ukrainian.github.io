@@ -1,0 +1,180 @@
+- lemma: трансформація
+  translation: transformation
+  pos: noun
+  usage: Трансформація зберігає зміст лише тоді, коли не змінює час і вид.
+- lemma: еквівалентність
+  translation: equivalence
+  pos: noun
+  usage: Еквівалентність не означає повної стилістичної тотожності.
+- lemma: відокремлене означення
+  translation: detached attribute
+  pos: phrase
+  usage: Відокремлене означення після іменника виділяється комами.
+- lemma: підрядний зв'язок
+  translation: subordinate connection
+  pos: phrase
+  usage: Підрядний зв'язок показує залежність однієї частини від іншої.
+- lemma: сполучне слово
+  translation: relative connector
+  pos: phrase
+  usage: Сполучне слово має синтаксичну роль у підрядній частині.
+- lemma: стилістичне забарвлення
+  translation: stylistic coloring
+  pos: phrase
+  usage: Стилістичне забарвлення змінюється після трансформації.
+- lemma: синтаксична конструкція
+  translation: syntactic construction
+  pos: phrase
+  usage: Синтаксична конструкція впливає на темп речення.
+- lemma: лаконічність
+  translation: conciseness
+  pos: noun
+  usage: Лаконічність корисна в офіційному документі.
+- lemma: чергування
+  translation: alternation
+  pos: noun
+  usage: Чергування конструкцій зменшує монотонність.
+- lemma: монотонність
+  translation: monotony
+  pos: noun
+  usage: Монотонність виникає від надміру однакових конструкцій.
+- lemma: ритмомелодика
+  translation: rhythmic and melodic pattern
+  pos: noun
+  usage: Ритмомелодика фрази залежить від пауз і ком.
+- lemma: когнітивний
+  translation: cognitive
+  pos: adj
+  usage: Когнітивне навантаження зростає в надто довгому реченні.
+- lemma: сприйняття
+  translation: perception
+  pos: noun
+  usage: Сприйняття тексту погіршується через нанизування підрядних частин.
+- lemma: номіналізація
+  translation: nominalization
+  pos: noun
+  usage: Номіналізація часто потрібна в науковому стилі.
+- lemma: ритміка
+  translation: rhythm
+  pos: noun
+  usage: Ритміка абзацу змінюється після заміни конструкції.
+- lemma: функціональний стиль
+  translation: functional style
+  pos: phrase
+  usage: Функціональний стиль визначає природність конструкції.
+- lemma: модальність
+  translation: modality
+  pos: noun
+  usage: Модальність може зникнути після механічного скорочення.
+- lemma: семантична втрата
+  translation: semantic loss
+  pos: phrase
+  usage: Семантична втрата виникає, коли дія стає нечіткою.
+- lemma: редакторська правка
+  translation: editorial revision
+  pos: phrase
+  usage: Редакторська правка має пояснювати причину зміни.
+- lemma: логіка викладу
+  translation: logic of presentation
+  pos: phrase
+  usage: Логіка викладу важливіша за механічну стислість.
+- lemma: нанизування
+  translation: stringing together
+  pos: noun
+  usage: Нанизування підрядних частин робить речення важким.
+- lemma: означуване слово
+  translation: modified word
+  pos: phrase
+  usage: Означуване слово керує змістом усього звороту.
+- lemma: особова форма
+  translation: finite personal form
+  pos: phrase
+  usage: Особова форма дієслова з'являється в підрядній частині.
+- lemma: підрядна частина
+  translation: subordinate clause
+  pos: phrase
+  usage: Підрядна частина має власний присудок.
+- lemma: головна частина
+  translation: main clause
+  pos: phrase
+  usage: Головна частина містить означуване слово.
+- lemma: синтаксична роль
+  translation: syntactic role
+  pos: phrase
+  usage: Синтаксична роль визначає відмінок сполучного слова.
+- lemma: семантика
+  translation: semantics
+  pos: noun
+  usage: Семантика речення не завжди зберігається після скорочення.
+- lemma: морфологічний
+  translation: morphological
+  pos: adj
+  usage: Морфологічний спосіб вираження відрізняє зворот від підрядної частини.
+- lemma: вираження
+  translation: expression
+  pos: noun
+  usage: Вираження ознаки може бути стислим або розгорнутим.
+- lemma: дієслово
+  translation: verb
+  pos: noun
+  usage: Дієслово в підрядній частині показує дію прямо.
+- lemma: іменник
+  translation: noun
+  pos: noun
+  usage: Іменник може бути означуваним словом.
+- lemma: прикметник
+  translation: adjective
+  pos: noun
+  usage: Прикметник іноді замінює неприродний дієприкметник.
+- lemma: займенник
+  translation: pronoun
+  pos: noun
+  usage: Займенник не дублює сполучне слово.
+- lemma: підмет
+  translation: subject
+  pos: noun
+  usage: Сполучне слово який може бути підметом.
+- lemma: присудок
+  translation: predicate
+  pos: noun
+  usage: Підрядна частина має присудок.
+- lemma: пунктуація
+  translation: punctuation
+  pos: noun
+  usage: Пунктуація показує межі відокремленого означення.
+- lemma: кома
+  translation: comma
+  pos: noun
+  usage: Кома відокремлює підрядну означальну частину.
+- lemma: пауза
+  translation: pause
+  pos: noun
+  usage: Пауза допомагає почути межі конструкції.
+- lemma: оптимізація
+  translation: optimization
+  pos: noun
+  usage: Оптимізація тексту не зводиться до скорочення.
+- lemma: однозначність
+  translation: unambiguity
+  pos: noun
+  usage: Однозначність особливо важлива в договорі.
+- lemma: договір
+  translation: contract
+  pos: noun
+  usage: Договір часто використовує лаконічні звороти.
+- lemma: послуга
+  translation: service
+  pos: noun
+  usage: Послуги, зазначені в договорі, мають чіткий строк.
+- lemma: обставина
+  translation: circumstance
+  pos: noun
+  usage: Викладені обставини належать до офіційного стилю.
+- lemma: термін
+  translation: term; deadline
+  pos: noun
+  usage: Зазначені терміни мають бути однозначними.
+- lemma: сторона
+  translation: party; side
+  pos: noun
+  usage: Сторона, що підписала договір, бере відповідальність.
