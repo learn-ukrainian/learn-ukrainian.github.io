@@ -26,6 +26,8 @@ Seminar/FOLK `resources.yaml` MUST include at least one `role: reading` entry wi
 
 **FOLK experiential TEXT layer.** For `LEVEL=folk` modules, emit the implemented text-achievable folk layer, not the generic seminar activity mix. In `module.md`, include at least one `:::myth-box` and at least one `:::high-culture-bridge` where wiki/dossier evidence supports them. In `activities.yaml`, use folk activity families `ritual-sequencing` (#42), `variant-comparison` (#43), `motif-formula` (#44), and `performance` (#45) where the wiki/dossier supports the surface, in place of generic `true-false`, `group-sort`, or `match-up` tasks. Do NOT emit `audio-block`, `symbolic-decode`, or `aural-genre-id`; audio and symbolic-decode surfaces are deferred.
 
+**FOLK engagement floor.** Include at least one content-anchored `:::tip`, `:::note`, or `:::caution`; `:::myth-box` does not count for this floor.
+
 Canonical `module.md` source shapes:
 
 ```md

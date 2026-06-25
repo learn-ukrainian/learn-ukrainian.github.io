@@ -60,7 +60,7 @@ def test_assemble_iterative_strips_source_markers_and_metadata_lines() -> None:
     assert linear_pipeline._scaffolding_leak_gate(module_md)["passed"] is True
 
 
-def test_assemble_iterative_preserves_primary_reading_blocks_verbatim() -> None:
+def test_assemble_iterative_strips_source_markers_inside_primary_reading_blocks() -> None:
     primary_reading = "\n".join(
         [
             ":::primary-reading",
@@ -78,7 +78,9 @@ def test_assemble_iterative_preserves_primary_reading_blocks_verbatim() -> None:
 
     module_md = str(result["module_md"])
 
-    assert primary_reading in module_md
+    assert "> Ой весна, весна, днем красна..." in module_md
+    assert 'truth_source: "kept because this line is inside the quoted block"' in module_md
+    assert "[S4]" not in module_md
     assert "Пояснення має зайвий маркер." in module_md
 
 

@@ -69,6 +69,7 @@ from scripts.common.review_loop import (
 from scripts.common.thresholds import QG_DIMS, aggregate_review
 from scripts.config import get_immersion_policy, get_immersion_range, get_immersion_rule
 from scripts.generate_mdx.core import generate_mdx
+from scripts.generate_mdx.reading_links import normalize_work_title
 from scripts.generate_mdx.resources import validate_and_clean_url
 from scripts.pipeline.learner_state import build_learner_state, format_learner_state
 from scripts.pipeline.module_archetypes import format_module_archetype, resolve_module_archetype
@@ -11050,6 +11051,10 @@ _ITERATIVE_SCAFFOLDING_FIELD_LINE_RE = re.compile(
     r")\s*:\s*.*$",
     re.IGNORECASE,
 )
+_HOSTED_READINGS_DIR = PROJECT_ROOT / "site" / "src" / "content" / "readings"
+_ITERATIVE_READING_SOURCE_MARKER_RE = re.compile(r"\[S\d+(?:\s*,\s*S\d+)*\]")
+_ITERATIVE_READING_TITLE_SPAN_RE = re.compile(r"[«\"“](?P<title>[^»\"”]+)[»\"”]")
+_ITERATIVE_READING_DIAGNOSTIC_EVENT = "reading_structure_unmatched"
 
 
 def _strip_leading_iterative_section_headings(markdown: str) -> str:
@@ -11085,9 +11090,13 @@ def _strip_iterative_scaffolding_leaks(markdown: str) -> str:
             cleaned_lines.append(line)
             continue
         if in_primary_reading:
-            cleaned_lines.append(line)
             if stripped == ":::":
+                cleaned_lines.append(line)
                 in_primary_reading = False
+                continue
+            clean_line = _strip_iterative_reading_source_markers(line)
+            if clean_line is not None:
+                cleaned_lines.append(clean_line)
             continue
         if _ITERATIVE_SCAFFOLDING_FIELD_LINE_RE.match(line):
             continue
@@ -11097,6 +11106,282 @@ def _strip_iterative_scaffolding_leaks(markdown: str) -> str:
         cleaned_lines.append(clean_line)
 
     return "".join(cleaned_lines)
+
+
+def _strip_iterative_reading_source_markers(line: str) -> str | None:
+    cleaned = _ITERATIVE_READING_SOURCE_MARKER_RE.sub("", line)
+    newline = "\n" if cleaned.endswith("\n") else ""
+    body = cleaned[:-1] if newline else cleaned
+    body = re.sub(r"\s+([,.;:!?])", r"\1", body)
+    body = re.sub(r" {2,}", " ", body).rstrip()
+    if not body.strip(" >\t"):
+        return None
+    return f"{body}{newline}"
+
+
+def _frontmatter_and_body_for_reading(path: Path) -> tuple[dict[str, Any], str]:
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---\n"):
+        return {}, text
+    end = text.find("\n---", 4)
+    if end == -1:
+        return {}, text
+    try:
+        frontmatter = yaml.safe_load(text[4:end]) or {}
+    except yaml.YAMLError:
+        frontmatter = {}
+    if not isinstance(frontmatter, dict):
+        frontmatter = {}
+    return frontmatter, text[end + 4 :]
+
+
+def _reading_title_variants(frontmatter: Mapping[str, Any]) -> set[str]:
+    variants: set[str] = set()
+
+    def add(value: object) -> None:
+        if isinstance(value, str) and value.strip():
+            variants.add(value.strip())
+            variants.update(
+                match.group("title").strip()
+                for match in _ITERATIVE_READING_TITLE_SPAN_RE.finditer(value)
+                if match.group("title").strip()
+            )
+        elif isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
+            for item in value:
+                add(item)
+
+    for key in (
+        "title",
+        "title_en",
+        "aliases",
+        "alias",
+        "title_variants",
+        "variants",
+        "alternate_titles",
+        "alt_titles",
+    ):
+        add(frontmatter.get(key))
+    return variants
+
+
+def _plan_title_variants(reading: Mapping[str, Any]) -> set[str]:
+    title = str(reading.get("title") or "").strip()
+    if not title:
+        return set()
+    variants = {title}
+    variants.update(
+        match.group("title").strip()
+        for match in _ITERATIVE_READING_TITLE_SPAN_RE.finditer(title)
+        if match.group("title").strip()
+    )
+    return variants
+
+
+def _reading_body_for_significant_lines(body: str) -> str:
+    start = body.find("<PrimaryReading>")
+    end = body.find("</PrimaryReading>", start + 1)
+    if start != -1 and end != -1:
+        return body[start + len("<PrimaryReading>") : end]
+    return body
+
+
+def _significant_reading_lines(body: str) -> list[str]:
+    lines: list[str] = []
+    for raw_line in _reading_body_for_significant_lines(body).splitlines():
+        line = _ITERATIVE_READING_SOURCE_MARKER_RE.sub("", raw_line).strip()
+        while line.startswith(">"):
+            line = line[1:].strip()
+        if not line:
+            continue
+        if line in {":::", "<PrimaryReading>", "</PrimaryReading>"}:
+            continue
+        if line.startswith(("import ", "export ", "<", "{/*", "**Джерело:**", "**Де вивчають:**")):
+            continue
+        if line.startswith(("—", "–", "-")):
+            continue
+        lines.append(line)
+    return lines
+
+
+def _normalized_reading_key(value: str) -> str:
+    return normalize_work_title(value)
+
+
+def _variant_matches_block(variant: str, block_line_keys: set[str], block_body_key: str) -> bool:
+    key = _normalized_reading_key(variant)
+    return bool(key and (key in block_line_keys or key in block_body_key))
+
+
+def _incipit_matches(first: str, second: str) -> bool:
+    first_key = _normalized_reading_key(first)
+    second_key = _normalized_reading_key(second)
+    return bool(first_key and second_key and first_key == second_key)
+
+
+def _hosted_reading_candidates(plan: Mapping[str, Any]) -> list[dict[str, Any]]:
+    readings = plan.get("readings")
+    if not isinstance(readings, list):
+        return []
+    candidates: list[dict[str, Any]] = []
+    for reading in readings:
+        if not isinstance(reading, Mapping):
+            continue
+        hosting = str(reading.get("hosting") or "").strip().casefold()
+        if hosting not in _HOSTED_READING_VALUES:
+            continue
+        slug = str(reading.get("reading_slug") or "").strip()
+        if not slug:
+            continue
+        path = _HOSTED_READINGS_DIR / f"{slug}.mdx"
+        if not path.is_file():
+            continue
+        frontmatter, body = _frontmatter_and_body_for_reading(path)
+        hosted_lines = _significant_reading_lines(body)
+        candidates.append(
+            {
+                "reading": reading,
+                "slug": slug,
+                "path": path,
+                "file_title_variants": _reading_title_variants(frontmatter),
+                "plan_title_variants": _plan_title_variants(reading),
+                "hosted_lines": hosted_lines,
+                "hosted_first_line": hosted_lines[0] if hosted_lines else "",
+                "hosted_body_key": _normalized_reading_key("\n".join(hosted_lines)),
+            }
+        )
+    return candidates
+
+
+def _reading_attribution(reading: Mapping[str, Any]) -> str:
+    source = str(reading.get("source") or reading.get("author") or "").strip()
+    title = str(reading.get("title") or "").strip()
+    if title and not title.startswith(("«", "“", '"')):
+        title = f"«{title}»"
+    if source and title:
+        return f"— {source}, {title}"
+    if source:
+        return f"— {source}"
+    if title:
+        return f"— {title}"
+    return ""
+
+
+def _inject_reading_attr(fence_attrs: str, slug: str) -> str:
+    attrs = fence_attrs.rstrip()
+    if attrs.endswith("}") and "{" in attrs:
+        return f":::primary-reading{attrs[:-1]} reading=\"{slug}\"}}"
+    return f":::primary-reading{{reading=\"{slug}\"}}{fence_attrs}"
+
+
+def _reading_structure_diagnostic(
+    *,
+    incipit: str,
+    candidate_count: int,
+    reason: str,
+    matched_by: str | None = None,
+) -> dict[str, Any]:
+    event: dict[str, Any] = {
+        "event": _ITERATIVE_READING_DIAGNOSTIC_EVENT,
+        "incipit": incipit,
+        "candidate_count": candidate_count,
+        "reason": reason,
+    }
+    if matched_by:
+        event["matched_by"] = matched_by
+    return event
+
+
+def _select_reading_structure_candidate(
+    body: str,
+    candidates: Sequence[Mapping[str, Any]],
+) -> tuple[Mapping[str, Any] | None, dict[str, Any] | None]:
+    block_lines = _significant_reading_lines(body)
+    incipit = block_lines[0] if block_lines else ""
+    block_line_keys = {_normalized_reading_key(line) for line in block_lines}
+    block_line_keys.discard("")
+    block_body_key = _normalized_reading_key("\n".join(block_lines))
+    failed_match: tuple[str, int] | None = None
+
+    checks: tuple[tuple[str, Callable[[Mapping[str, Any]], bool]], ...] = (
+        (
+            "hosted_file_title",
+            lambda candidate: any(
+                _variant_matches_block(variant, block_line_keys, block_body_key)
+                for variant in candidate.get("file_title_variants", set())
+            ),
+        ),
+        (
+            "plan_title",
+            lambda candidate: any(
+                _variant_matches_block(variant, block_line_keys, block_body_key)
+                for variant in candidate.get("plan_title_variants", set())
+            ),
+        ),
+        (
+            "incipit",
+            lambda candidate: _incipit_matches(incipit, str(candidate.get("hosted_first_line") or "")),
+        ),
+    )
+
+    for matched_by, predicate in checks:
+        matches = [candidate for candidate in candidates if predicate(candidate)]
+        if len(matches) == 1:
+            candidate = matches[0]
+            incipit_key = _normalized_reading_key(incipit)
+            hosted_body_key = str(candidate.get("hosted_body_key") or "")
+            if not incipit_key or incipit_key not in hosted_body_key:
+                return None, _reading_structure_diagnostic(
+                    incipit=incipit,
+                    candidate_count=1,
+                    reason="incipit_not_in_hosted_file",
+                    matched_by=matched_by,
+                )
+            return candidate, None
+        if len(matches) > 1:
+            failed_match = (matched_by, len(matches))
+
+    if failed_match is not None:
+        matched_by, candidate_count = failed_match
+        return None, _reading_structure_diagnostic(
+            incipit=incipit,
+            candidate_count=candidate_count,
+            reason="ambiguous_match",
+            matched_by=matched_by,
+        )
+    return None, _reading_structure_diagnostic(
+        incipit=incipit,
+        candidate_count=0,
+        reason="no_unique_match",
+    )
+
+
+def _inject_iterative_reading_structure(
+    markdown: str,
+    plan: Mapping[str, Any],
+    diagnostics: list[dict[str, Any]],
+) -> str:
+    candidates = _hosted_reading_candidates(plan)
+
+    def replace_block(match: re.Match[str]) -> str:
+        attrs = match.group("attrs")
+        if _PRIMARY_READING_SLUG_ATTR_RE.search(attrs):
+            return match.group(0)
+        body = match.group("body")
+        candidate, diagnostic = _select_reading_structure_candidate(body, candidates)
+        if candidate is None:
+            if diagnostic is not None:
+                diagnostics.append(diagnostic)
+            return match.group(0)
+        reading = candidate["reading"]
+        slug = str(candidate["slug"])
+        fence = _inject_reading_attr(attrs, slug)
+        attribution = _reading_attribution(reading)
+        body_without_trailing_blank = body.rstrip("\n")
+        if attribution:
+            body_without_trailing_blank = f"{body_without_trailing_blank}\n{attribution}"
+        return f"{fence}\n{body_without_trailing_blank}\n:::"
+
+    return _READING_COVERAGE_BLOCK_RE.sub(replace_block, markdown)
 
 
 def assemble_iterative(
@@ -11110,6 +11395,7 @@ def assemble_iterative(
 
     markdown_parts: list[str] = []
     sidecar: dict[str, dict[str, Any]] = {}
+    reading_structure_diagnostics: list[dict[str, Any]] = []
     next_line = 1
     for index, (artifact, outline_entry) in enumerate(
         zip(ordered_artifacts, outline_entries, strict=True),
@@ -11122,6 +11408,11 @@ def assemble_iterative(
         )
         if str(plan.get("level", "")).lower() in SEMINAR_LEVELS:
             section_markdown = _strip_iterative_scaffolding_leaks(section_markdown)
+            section_markdown = _inject_iterative_reading_structure(
+                section_markdown,
+                plan,
+                reading_structure_diagnostics,
+            )
         section_lines = section_markdown.splitlines() or [""]
         line_start = next_line
         line_end = line_start + len(section_lines) - 1
@@ -11151,6 +11442,13 @@ def assemble_iterative(
         "activities_yaml": yaml.safe_dump(activity_items, allow_unicode=True, sort_keys=False),
         "resources_yaml": yaml.safe_dump(resources, allow_unicode=True, sort_keys=False),
         "sidecar": sidecar,
+        "reading_structure_diagnostics_jsonl": (
+            "\n".join(
+                json.dumps(event, ensure_ascii=False, sort_keys=True)
+                for event in reading_structure_diagnostics
+            )
+            + ("\n" if reading_structure_diagnostics else "")
+        ),
     }
 
 
