@@ -1,0 +1,88 @@
+---
+/**
+ * Атлас слів — full А-Я browse page (/lexicon/browse/).
+ * The dictionary's complete alphabetical index; the landing (/lexicon/) stays search-first.
+ */
+import CourseLayout from "../../layouts/CourseLayout.astro";
+import AtlasFullIndex from "../../lexicon/AtlasFullIndex.astro";
+
+const frontmatter = {
+  title: "Перегляд Атласу А–Я",
+  description: "Повний алфавітний покажчик слів Атласу з перекладами та рівнями CEFR.",
+};
+---
+
+<CourseLayout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  currentPath="/lexicon/browse/"
+  heroVariant="lexicon"
+  wide
+  showHero={false}
+>
+  <div class="word-atlas lexicon-browse-page" data-word-atlas>
+    <nav class="atlas-view-nav" aria-label="Навігація Атласу">
+      <a href="/lexicon/">Пошук</a>
+      <a href="/lexicon/browse/" aria-current="page">Перегляд А–Я</a>
+    </nav>
+
+    <AtlasFullIndex />
+  </div>
+</CourseLayout>
+
+<style>
+  .lexicon-browse-page {
+    padding: 2.5rem 0 4rem;
+  }
+
+  .atlas-view-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: fit-content;
+    max-width: 1000px;
+    margin: 0 auto 1.5rem;
+    padding: 0.35rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface-muted);
+  }
+
+  .atlas-view-nav a {
+    min-height: 2.2rem;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 0.85rem;
+    border-radius: 6px;
+    color: var(--lu-text-muted);
+    font-weight: 900;
+    text-decoration: none;
+  }
+
+  .atlas-view-nav a[aria-current="page"] {
+    background: var(--lu-state-active);
+    color: var(--lu-primary);
+  }
+
+  .atlas-view-nav a:hover,
+  .atlas-view-nav a:focus-visible {
+    outline: none;
+    color: var(--lu-primary);
+    box-shadow: 0 0 0 2px var(--lu-primary);
+  }
+
+  @media (max-width: 680px) {
+    .lexicon-browse-page {
+      padding: 1.5rem 0 3rem;
+    }
+
+    .atlas-view-nav {
+      width: 100%;
+    }
+
+    .atlas-view-nav a {
+      flex: 1;
+      justify-content: center;
+    }
+  }
+</style>

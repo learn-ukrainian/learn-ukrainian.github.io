@@ -3,7 +3,6 @@
  * Атлас слів (Лексикон) landing page.
  */
 import CourseLayout from "../../layouts/CourseLayout.astro";
-import AtlasBrowse from "../../lexicon/AtlasBrowse.astro";
 import AtlasTypeahead from "../../lexicon/AtlasTypeahead.astro";
 
 const frontmatter = {
@@ -25,8 +24,7 @@ const frontmatter = {
       <span class="lexicon-badge">Лексикон</span>
       <h1 id="lexicon-landing-title">Атлас слів</h1>
       <p>
-        Шукайте курсові слова з джерелами, морфологією та місцями появи в модулях,
-        або переглядайте Атлас за літерами й рівнем.
+        Шукайте курсові слова з джерелами, морфологією та місцями появи в модулях.
       </p>
       <AtlasTypeahead
         id="lexicon-landing-search"
@@ -35,10 +33,8 @@ const frontmatter = {
         containerClass="atlas-typeahead-landing"
         labelClass="atlas-typeahead-label"
       />
-      <a class="lexicon-practice-link" href="/lexicon/practice">Practice Word Atlas</a>
+      <a class="lexicon-browse-link" href="/lexicon/browse/">Перегляд А–Я →</a>
     </section>
-
-    <AtlasBrowse />
   </div>
 </CourseLayout>
 
@@ -83,7 +79,9 @@ const frontmatter = {
   line-height: 1.65;
 }
 
-.lexicon-practice-link {
+/* `.word-atlas.lexicon-landing` (0,3,0) deterministically beats the global
+   `.lu-content .word-atlas a` (0,2,1) link color so the CTA text stays white. */
+.word-atlas.lexicon-landing .lexicon-browse-link {
   display: inline-flex;
   align-items: center;
   min-height: 2.5rem;
@@ -97,8 +95,8 @@ const frontmatter = {
   text-decoration: none;
 }
 
-.lexicon-practice-link:hover,
-.lexicon-practice-link:focus-visible {
+.lexicon-browse-link:hover,
+.lexicon-browse-link:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px var(--lu-state-active);
 }

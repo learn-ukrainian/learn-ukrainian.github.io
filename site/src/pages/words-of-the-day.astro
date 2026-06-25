@@ -21,6 +21,9 @@ const frontmatter = {
       <span class="words-day-badge">Слова дня</span>
       <h1 id="words-day-title">Слова дня / Words of the Day</h1>
       <p>Щоденна добірка слів з Атласу, обмежена вашим поточним рівнем.</p>
+      <a class="words-day-practice-cta" href="/words-of-the-day/practice/">
+        Практика — інтервальне повторення вашого рівня →
+      </a>
     </section>
 
     <DailyWords
@@ -71,6 +74,28 @@ const frontmatter = {
     color: var(--lu-text-muted);
     font-size: 1.05rem;
     line-height: 1.65;
+  }
+
+  /* `.word-atlas.words-day-page` (0,3,0) beats the global `.lu-content .word-atlas a`
+     (0,2,1) link color so the CTA text stays white on the primary fill. */
+  .word-atlas.words-day-page .words-day-practice-cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    margin-top: 1.5rem;
+    padding: 0 1.1rem;
+    border: 1px solid var(--lu-primary);
+    border-radius: 8px;
+    background: var(--lu-primary);
+    color: var(--lu-on-primary);
+    font-weight: 900;
+    text-decoration: none;
+  }
+
+  .words-day-practice-cta:hover,
+  .words-day-practice-cta:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--lu-state-active);
   }
 
   :global(.words-day-page .lexicon-daily-section) {

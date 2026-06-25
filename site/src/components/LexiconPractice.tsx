@@ -460,7 +460,7 @@ export default function LexiconPractice({
 
   useEffect(() => {
     if (!started) return;
-    document.title = `${MODE_LABELS[mode]} Practice - Word Atlas`;
+    document.title = `${MODE_LABELS[mode]} Practice - Words of the Day`;
   }, [mode, started]);
 
   async function ensureDeck(
