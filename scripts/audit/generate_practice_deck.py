@@ -761,6 +761,16 @@ def _make_options(
     return options
 
 
+def _initial_capitalization(value: Any) -> bool | None:
+    text = _clean_text(value)
+    if not text:
+        return None
+    for char in text:
+        if char.isalpha():
+            return char.upper() == char and char.lower() != char
+    return None
+
+
 def validate_option_set(cloze: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     options = cloze.get("options")
@@ -787,13 +797,31 @@ def validate_option_set(cloze: dict[str, Any]) -> list[str]:
     ]
     if any(_plain(str(option.get("label") or "")) in accepted_normalized for option in distractors):
         errors.append("accepted alternate must not equal a distractor")
+    answer_labels = [
+        str(option.get("label") or "")
+        for option in options
+        if isinstance(option, dict) and option.get("kind") == "answer"
+    ]
+    answer_cap = _initial_capitalization(answer_labels[0] if answer_labels else cloze.get("form"))
+    distractor_caps = {
+        cap
+        for cap in (
+            _initial_capitalization(option.get("label"))
+            for option in distractors
+            if isinstance(option, dict)
+        )
+        if cap is not None
+    }
+    if answer_cap is not None and len(distractor_caps) == 1 and answer_cap not in distractor_caps:
+        errors.append("answer capitalization must not uniquely reveal the answer")
     oblique_count = sum(
         1
         for option in options
         if isinstance(option, dict)
         and option.get("case") not in {None, "", "nominative"}
     )
-    if oblique_count < 2:
+    blank_case = _clean_text(cloze.get("blankCase")) or "nominative"
+    if blank_case != "nominative" and oblique_count < 2:
         errors.append("option set must contain at least two oblique-looking forms")
     pos_values = {
         str(option.get("pos") or "")

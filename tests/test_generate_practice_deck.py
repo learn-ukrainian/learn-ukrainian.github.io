@@ -107,6 +107,36 @@ def test_option_set_validator_rejects_phrase_labels() -> None:
     assert "option labels must not be phrase glosses" in validate_option_set(cloze)
 
 
+def test_option_set_validator_rejects_capitalization_leak() -> None:
+    cloze = {
+        "form": "Книгу",
+        "blankCase": "accusative",
+        "options": [
+            {"label": "Книгу", "kind": "answer", "case": "accusative", "lemmaId": "knyha", "pos": "noun"},
+            {"label": "місто", "kind": "decoy", "case": "accusative", "lemmaId": "misto", "pos": "noun"},
+            {"label": "школу", "kind": "decoy", "case": "accusative", "lemmaId": "shkola", "pos": "noun"},
+            {"label": "роботу", "kind": "decoy", "case": "accusative", "lemmaId": "robota", "pos": "noun"},
+        ],
+    }
+
+    assert "answer capitalization must not uniquely reveal the answer" in validate_option_set(cloze)
+
+
+def test_option_set_validator_allows_nominative_answer_without_oblique_pair() -> None:
+    cloze = {
+        "form": "книга",
+        "blankCase": "nominative",
+        "options": [
+            {"label": "книга", "kind": "answer", "case": "nominative", "lemmaId": "knyha", "pos": "noun"},
+            {"label": "місто", "kind": "decoy", "case": "nominative", "lemmaId": "misto", "pos": "noun"},
+            {"label": "школа", "kind": "decoy", "case": "nominative", "lemmaId": "shkola", "pos": "noun"},
+            {"label": "робота", "kind": "decoy", "case": "nominative", "lemmaId": "robota", "pos": "noun"},
+        ],
+    }
+
+    assert "option set must contain at least two oblique-looking forms" not in validate_option_set(cloze)
+
+
 def test_multi_sense_gloss_first_sense_is_meaning_mc_eligible() -> None:
     # A multi-sense content word ("forest; woods") has a clean concise first sense and
     # must stay eligible for Choice/Matching. The raw-gloss `;` check used to over-exclude

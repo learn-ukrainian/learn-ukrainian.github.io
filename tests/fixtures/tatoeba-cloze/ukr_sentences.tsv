@@ -1,0 +1,15 @@
+id	lang	text	author	license
+1001	ukr	Я бачу цю книгу.	olena_uk	CC-BY 2.0 FR
+1002	ukr	Я живу у місті тепер.	taras_uk	CC0
+1003	ukr	Книга лежить на роботі зараз.	ira_uk	CC-BY 2.0 FR
+1004	ukr	Я бачу це місто.	max_uk	CC-BY 2.0 FR
+1005	ukr	Книгу.	short_uk	CC-BY 2.0 FR
+1006	ukr	Я бачу книгу і книгу.	double_uk	CC-BY 2.0 FR
+1007	ukr	Я живу у школі тепер.	ambiguous_uk	CC-BY 2.0 FR
+1008	ukr	Я бачу ту книгу.	near_dup_uk	CC-BY 2.0 FR
+1009	ukr	Я бачу цю книгу блядь.	blocked_uk	CC-BY 2.0 FR
+1010	ukr	Сейчас я бачу цю книгу.	russianism_uk	CC-BY 2.0 FR
+1011	ukr	Я флублю цю книгу.	unknown_uk	CC-BY 2.0 FR
+1012	ukr	Я читаю цю книгу.	reader_uk	CC-BY 2.0 FR
+1013	ukr	Я бачу цю роботу.	unlinked_uk	CC-BY 2.0 FR
+1014	ukr	Я бачу цю книгу.	exact_dup_uk	CC-BY 2.0 FR
