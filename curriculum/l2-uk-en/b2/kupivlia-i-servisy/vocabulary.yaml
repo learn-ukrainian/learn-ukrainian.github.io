@@ -1,0 +1,184 @@
+- lemma: купівля
+  translation: purchase, buying
+  pos: noun
+  usage: Купівля потребує уважного порівняння ціни, якості й умов повернення.
+- lemma: послуга
+  translation: service
+  pos: noun
+  usage: Послуга має чітко описувати обсяг роботи, строк і вартість.
+- lemma: товар
+  translation: product, goods
+  pos: noun
+  usage: Перед оплатою варто перевірити товар і комплектацію.
+- lemma: покупець
+  translation: buyer, customer
+  pos: noun
+  usage: Покупець зберіг чек і звернувся до підтримки.
+- lemma: продавець
+  translation: seller
+  pos: noun
+  usage: Продавець пояснив характеристики товару й умови гарантії.
+- lemma: клієнт
+  translation: client, customer
+  pos: noun
+  usage: Клієнт потребує письмового підтвердження умов ремонту.
+- lemma: споживач
+  translation: consumer
+  pos: noun
+  usage: Споживач має право отримати зрозумілу інформацію про товар.
+- lemma: замовлення
+  translation: order
+  pos: noun
+  usage: Замовлення підтвердили через кілька хвилин після оплати.
+- lemma: доставка
+  translation: delivery
+  pos: noun
+  usage: Доставка була швидкою, але повідомлення про час прийшло запізно.
+- lemma: кошик
+  translation: shopping cart
+  pos: noun
+  usage: Покупець додав товар до кошика й обрав спосіб оплати.
+- lemma: оплата
+  translation: payment
+  pos: noun
+  usage: Оплата можлива карткою або готівкою після перевірки товару.
+- lemma: знижка
+  translation: discount
+  pos: noun
+  usage: Продавець запропонував знижку на додатковий аксесуар.
+- lemma: гарантія
+  translation: warranty, guarantee
+  pos: noun
+  usage: Гарантія на ремонт діє протягом зазначеного строку.
+- lemma: повернення
+  translation: return
+  pos: noun
+  usage: Повернення коштів потребує підтвердження оплати.
+- lemma: обмін
+  translation: exchange
+  pos: noun
+  usage: Покупець просить обмін бракованого товару.
+- lemma: чек
+  translation: receipt
+  pos: noun
+  usage: Чек допомагає підтвердити оплату й дату купівлі.
+- lemma: квитанція
+  translation: receipt, service slip
+  pos: noun
+  usage: Майстер видав квитанцію після прийняття техніки на ремонт.
+- lemma: відгук
+  translation: review, feedback
+  pos: noun
+  usage: Відгук має називати факти, а не лише емоції.
+- lemma: рейтинг
+  translation: rating
+  pos: noun
+  usage: Рейтинг корисний лише разом із докладними відгуками.
+- lemma: якість
+  translation: quality
+  pos: noun
+  usage: Якість послуги видно в точності, ввічливості й передбачуваності.
+- lemma: рекламація
+  translation: complaint, claim
+  pos: noun
+  usage: Рекламація містить факт, доказ і очікуване рішення.
+- lemma: дефект
+  translation: defect
+  pos: noun
+  usage: Фото дефекту додали до звернення в сервіс.
+- lemma: бракований
+  translation: defective
+  pos: adjective
+  usage: Бракований товар потребує перевірки або обміну.
+- lemma: ремонт
+  translation: repair
+  pos: noun
+  usage: Ремонт має прозорий кошторис і зрозумілий гарантійний строк.
+- lemma: майстер
+  translation: technician, craftsperson
+  pos: noun
+  usage: Майстер пояснив, які деталі замінено під час ремонту.
+- lemma: сервіс
+  translation: service provider, service
+  pos: noun
+  usage: Сервіс не повинен нехтувати повторними скаргами клієнтів.
+- lemma: обслуговування
+  translation: service, maintenance
+  pos: noun
+  usage: Гарантійне обслуговування має бути зрозуміло описане.
+- lemma: характеристика
+  translation: feature, specification
+  pos: noun
+  usage: Характеристика товару допомагає порівняти кілька моделей.
+- lemma: комплектація
+  translation: package contents
+  pos: noun
+  usage: Комплектація має відповідати опису на сайті.
+- lemma: маркетплейс
+  translation: marketplace
+  pos: noun
+  usage: Маркетплейс поєднує багато продавців і різні умови доставки.
+- lemma: інтернет-магазин
+  translation: online store
+  pos: noun
+  usage: Інтернет-магазин має чітко пояснювати правила повернення.
+- lemma: підтримка
+  translation: support
+  pos: noun
+  usage: Підтримка відповіла ввічливо, але не назвала строк розгляду.
+- lemma: відстеження
+  translation: tracking
+  pos: noun
+  usage: Номер відстеження допомагає перевірити статус доставки.
+- lemma: передплата
+  translation: prepayment
+  pos: noun
+  usage: Передплата без зрозумілих контактів може бути ризикованою.
+- lemma: кошторис
+  translation: estimate, cost breakdown
+  pos: noun
+  usage: Прозорий кошторис пояснює ціну деталей і роботи.
+- lemma: гарантійний випадок
+  translation: warranty case
+  pos: phrase
+  usage: Сервіс перевіряє, чи є поломка гарантійним випадком.
+- lemma: свідоме споживання
+  translation: conscious consumption
+  pos: phrase
+  usage: Свідоме споживання враховує довговічність, ремонт і кількість відходів.
+- lemma: вітчизняний
+  translation: domestic, locally produced
+  pos: adjective
+  usage: Вітчизняний товар може підтримати локального виробника.
+- lemma: переробка
+  translation: recycling
+  pos: noun
+  usage: Переробка пакування допомагає зменшити кількість відходів.
+- lemma: торгуватися
+  translation: bargain, haggle
+  pos: verb
+  usage: На ринку можна торгуватися ввічливо й без тиску.
+- lemma: оплатити
+  translation: pay for, settle payment
+  pos: verb
+  usage: Нормативно кажемо оплатити товар, оплатити доставку, оплатити ремонт.
+- lemma: дякувати
+  translation: thank
+  pos: verb
+  usage: Після дієслова дякувати потрібен давальний відмінок.
+- lemma: потребувати
+  translation: need, require
+  pos: verb
+  usage: Товар потребує перевірки, а клієнт потребує допомоги.
+- lemma: завдати збитків
+  translation: cause losses, cause damages
+  pos: phrase
+  usage: Затримка доставки може завдати матеріальних збитків.
+- lemma: нехтувати
+  translation: neglect, disregard
+  pos: verb
+  usage: Сервіс не повинен нехтувати скаргами клієнтів.
+- lemma: відповідно до
+  translation: according to, in accordance with
+  pos: phrase
+  usage: Магазин діє відповідно до умов договору.
