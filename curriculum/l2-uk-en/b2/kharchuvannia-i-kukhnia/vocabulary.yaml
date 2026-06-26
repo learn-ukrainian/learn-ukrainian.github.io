@@ -1,0 +1,172 @@
+- lemma: харчування
+  translation: nutrition, eating habits
+  pos: noun
+  usage: Харчування відображає звички, сезонність і доступні продукти.
+- lemma: кухня
+  translation: cuisine, kitchen
+  pos: noun
+  usage: Українська кухня має регіональні й родинні варіанти.
+- lemma: страва
+  translation: dish
+  pos: noun
+  usage: Страва з квасолі може бути ситною й простою.
+- lemma: інгредієнт
+  translation: ingredient
+  pos: noun
+  usage: Кожен інгредієнт має свою роль у рецепті.
+- lemma: продукт
+  translation: food product
+  pos: noun
+  usage: На етикетці вказують склад продукту.
+- lemma: рецептура
+  translation: recipe formulation
+  pos: noun
+  usage: Рецептура має точно називати кількість і порядок дій.
+- lemma: послідовність
+  translation: sequence
+  pos: noun
+  usage: Послідовність дій робить рецепт зрозумілим.
+- lemma: спосіб приготування
+  translation: cooking method
+  pos: phrase
+  usage: Спосіб приготування впливає на смак і текстуру.
+- lemma: варити
+  translation: to boil, to cook in liquid
+  pos: verb
+  usage: Квасолю треба варити, доки вона не стане м'якою.
+- lemma: смажити
+  translation: to fry
+  pos: verb
+  usage: Цибулю смажать на олії до прозорості.
+- lemma: тушкувати
+  translation: to stew, to braise
+  pos: verb
+  usage: Овочі тушкують на повільному вогні.
+- lemma: запікати
+  translation: to bake, to roast
+  pos: verb
+  usage: Пиріг запікають у розігрітій духовці.
+- lemma: парити
+  translation: to steam
+  pos: verb
+  usage: Овочі можна парити, щоб зберегти текстуру.
+- lemma: нарізавши
+  translation: having cut
+  pos: adverbial participle
+  usage: Нарізавши зелень, додайте її наприкінці.
+- lemma: помішуючи
+  translation: while stirring
+  pos: adverbial participle
+  usage: Тушкуйте соус, постійно помішуючи.
+- lemma: орудний відмінок
+  translation: instrumental case
+  pos: phrase
+  usage: Орудний відмінок називає інструмент або засіб дії.
+- lemma: родовий відмінок
+  translation: genitive case
+  pos: phrase
+  usage: Родовий відмінок потрібний після слів кількості.
+- lemma: засіб дії
+  translation: means of action
+  pos: phrase
+  usage: У фразі залити окропом слово окропом називає засіб дії.
+- lemma: інструмент
+  translation: tool, instrument
+  pos: noun
+  usage: Ніж є інструментом, тому кажемо нарізати ножем.
+- lemma: окріп
+  translation: boiling water
+  pos: noun
+  usage: Чайні листочки заливають окропом.
+- lemma: пательня
+  translation: frying pan
+  pos: noun
+  usage: Овочі тушкували на пательні.
+- lemma: вінчик
+  translation: whisk
+  pos: noun
+  usage: Тісто перемішали вінчиком.
+- lemma: кришка
+  translation: lid
+  pos: noun
+  usage: Каструлю накривають кришкою.
+- lemma: жменя
+  translation: handful
+  pos: noun
+  usage: Жменя зелені освіжає готову страву.
+- lemma: щіпка
+  translation: pinch
+  pos: noun
+  usage: Щіпка солі може змінити смак.
+- lemma: грамів
+  translation: grams
+  pos: noun
+  usage: Додайте двісті грамів кисломолочного сиру.
+- lemma: порція
+  translation: portion
+  pos: noun
+  usage: Порція дерунів зазвичай подається зі сметаною.
+- lemma: раціон
+  translation: diet, daily food intake
+  pos: noun
+  usage: Збалансований раціон має різні джерела поживних речовин.
+- lemma: калорійність
+  translation: calorie content
+  pos: noun
+  usage: Калорійність страви залежить від способу приготування.
+- lemma: білок
+  translation: protein
+  pos: noun
+  usage: Джерело білка робить обід ситнішим.
+- lemma: клітковина
+  translation: fiber
+  pos: noun
+  usage: Овочі додають до раціону клітковину.
+- lemma: збалансований
+  translation: balanced
+  pos: adjective
+  usage: Збалансований обід поєднує білок, овочі й крупи.
+- lemma: ферментований
+  translation: fermented
+  pos: adjective
+  usage: Ферментовані овочі мають виразний смак.
+- lemma: цільнозерновий
+  translation: whole-grain
+  pos: adjective
+  usage: Цільнозерновий хліб містить більше клітковини.
+- lemma: локальний
+  translation: local
+  pos: adjective
+  usage: Локальні продукти часто пов'язані з сезоном.
+- lemma: сезонний
+  translation: seasonal
+  pos: adjective
+  usage: Сезонна зелень робить страву свіжішою.
+- lemma: борщ
+  translation: borshch
+  pos: noun
+  usage: Борщ має багато родинних і регіональних варіантів.
+- lemma: вареники
+  translation: varenyky
+  pos: noun
+  usage: Вареники можуть бути з картоплею, сиром або вишнями.
+- lemma: деруни
+  translation: potato pancakes
+  pos: noun
+  usage: Деруни подають гарячими зі сметаною.
+- lemma: кутя
+  translation: kutia
+  pos: noun
+  usage: Кутю готують із пшениці, маку, меду й горіхів.
+- lemma: узвар
+  translation: dried fruit compote
+  pos: noun
+  usage: Узвар із сухофруктів часто подають на Святвечір.
+- lemma: їдальня
+  translation: canteen, cafeteria
+  pos: noun
+  usage: Їдальня може бути темою соціальної історії харчування.
+- lemma: гостинність
+  translation: hospitality
+  pos: noun
+  usage: Хліб і сіль у мові пов'язані з гостинністю.
