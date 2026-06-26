@@ -1,21 +1,21 @@
 {
-  "assembled_mdx_sha256": null,
+  "assembled_mdx_sha256": "7799c9b6162e5fca9c275fd2479465e95d8943f5363029e3bcf08ab7c448fbce",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "394ae609756f38d9c2e4e0cbade7bf3cd2282077f7c4ef4ec6e8aec7dd283b42",
+    "digest": "90949ab39b60759eb75a540cd0b0247aa1d0c08c6e5cea8503c29423046953aa",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/istorychni-pisni.yaml",
-        "sha256": "9d70744ae4d151e72ffb72737274b9e77bba0741d4750431d9d32e6e07e44460"
+        "sha256": "1ccac85d07f93cd6c2561c46c00f0f0a58dea5801efde78149907ded5ff6c614"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/module.md",
-        "sha256": "e136b67350823c71222dbb435c3af5a5eaef7626a36fc6c04071eacc7000beba"
+        "sha256": "9b2f88332cdf1765210cab09ae7530ba00577cfb5cb36c4d087c815c750fcc9a"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/activities.yaml",
-        "sha256": "322ef0212c36ae3a0b9abe9062d3526c67f1ce9297e0793fa042662d9c572ca3"
+        "sha256": "6b7a9c52cb41c8a1cee2cac8802e92d313dee7aa0a60a9fe3275252b3afa7757"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/vocabulary.yaml",
@@ -23,13 +23,15 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/resources.yaml",
-        "sha256": "0737992bdc1c2b33880c0bb470d136e2af91a5e34d890a921b837234d5ac1f49"
+        "sha256": "8cbd3293457a2a9616f0d35e8f5181c9cb8cb1f45105ad897cce344420fec632"
       }
     ]
   },
   "evidence": {
-    "naturalness": "Russianism \u043c\u043e\u0434\u0435\u043b\u0438->\u043c\u043e\u0434\u0435\u043b\u0456 fixed; vesum_verified clean",
-    "readings": "6 readings ALL folk/school canon corpus; \u0417\u0430\u043b\u0456\u0437\u043d\u044f\u043a re-sourced to folk 83f36b8b; \u0425\u043c\u0435\u043b\u044c\u043d\u0438\u0446\u044c\u043a\u0438\u0439/\u044f\u0441\u0456\u0440 literary-witness dropped"
+    "framing": "Claude Opus 4.8 PASS: all FOLK framing pillars met; secular-historical genre, school-canon sourcing, no occult or pagan-core framing.",
+    "note": "Claude Opus 4.8 calibrated PASS/no blockers; resources stabilized after scoring by replacing flaky duplicate Wikipedia entries with locked ukrlib public reading URLs.",
+    "pedagogy": "C1 seminar spine remains clear: genre boundary, provenance method, decolonization frame, myth boxes, high-culture bridge, workbook practice.",
+    "quote_integrity": "Six lesson primary-reading excerpts rechecked with mcp__sources.verify_quote at 1.0; six hosted readings match data/sources.db text/source_url."
   },
   "floors": {
     "beauty": 8.5,
@@ -47,13 +49,13 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-26T07:05:29Z",
+  "scored_at": "2026-06-26T21:58:11Z",
   "scores": {
     "beauty": 9.0,
-    "decolonization": 9.5,
-    "engagement": 9.0,
+    "decolonization": 9.7,
+    "engagement": 8.6,
     "naturalness": 9.0,
-    "pedagogical": 9.5,
+    "pedagogical": 9.0,
     "tone": 9.0
   },
   "slug": "istorychni-pisni",
@@ -62,6 +64,6 @@
   "writer": {
     "agent": "codex",
     "family": "openai",
-    "model": "gpt-5.5"
+    "model": "gpt-5"
   }
 }
