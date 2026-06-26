@@ -37,6 +37,15 @@ def _candidate_sentence_ids(report) -> set[int]:
     return {candidate["provenance"]["sentenceId"] for candidate in report.candidates}
 
 
+def test_tatoeba_manifest_fixture_uses_real_ukrainian_case_keys() -> None:
+    entries = read_manifest(MANIFEST)
+    cases = entries[0]["enrichment"]["morphology"]["paradigm"]["cases"]
+
+    assert set(cases) == {"називний", "знахідний", "місцевий"}
+    assert cases["знахідний"]["singular"] == "книгу"
+    assert cases["місцевий"]["plural"] == "книгах"
+
+
 def test_tatoeba_ingest_requires_en_pair_and_carries_authors_licenses() -> None:
     pairs = read_tatoeba_pairs(UK_SENTENCES, EN_SENTENCES, LINKS)
     pair_by_id = {pair.uk.sentence_id: pair for pair in pairs}

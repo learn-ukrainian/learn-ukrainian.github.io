@@ -2,6 +2,167 @@
 
 Run date: 2026-06-26
 
+## Phase 1.5 (post-fix) - 2026-06-26
+
+### Inputs
+
+Same real-data setup as Phase 1, rerun in worktree
+`/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/tatoeba-cloze-fix-3797`.
+The hydrated manifest was symlinked from the main checkout at
+`site/src/data/lexicon-manifest.json`; `data/vesum.db` and `data/sources.db`
+were symlinked from the main checkout. Real Tatoeba exports were downloaded
+fresh into `.agent/tmp/tatoeba/` on 2026-06-26:
+
+* `ukr_sentences_detailed.tsv.bz2`
+* `eng_sentences_detailed.tsv.bz2`
+* `links.tar.bz2`
+* `sentences_CC0.tar.bz2`
+
+The detailed sentence exports still omit explicit license strings, so the same
+scratch-only augmentation as Phase 1 appended `CC0` for sentence IDs present in
+`sentences_CC0.csv` and `CC-BY 2.0 FR` otherwise. Augmented counts match Phase 1:
+Ukrainian `CC0=393`, `CC-BY 2.0 FR=188,212`; English `CC0=41,487`,
+`CC-BY 2.0 FR=1,985,925`. `read_tatoeba_pairs` loaded 217,297 linked UK-EN
+pairs.
+
+### Fixes Applied
+
+The real manifest case shape was confirmed from
+`enrichment.morphology.paradigm.cases`: keys are Ukrainian grammatical labels
+`називний`, `родовий`, `давальний`, `знахідний`, `орудний`, `місцевий`,
+`кличний`, while each case still uses English number keys such as `singular` and
+`plural`. The generator now maps supported case rules to those manifest labels:
+`accusative_direct_object -> знахідний`; `locative_static_u -> місцевий`;
+`locative_static_na -> місцевий`. Output and VESUM validation still use the
+canonical case names `accusative` and `locative`.
+
+Filter tuning:
+
+* Sentence CEFR now uses known token lemmas and tolerates up to 4 unknown content
+  tokens before rejecting the sentence as `sentence_cefr_unknown`.
+* Default sentence length widened from 4-12 words to 3-16 words.
+* Russianism prescreen is now conservative: it hard-drops only explicit
+  high-confidence Russian tokens in the fixed regex, not every broad
+  russian-shadow checker hit.
+* Review caps were relaxed so this report reflects the real accepted fixed-filter
+  yield instead of trimming most accepted examples at `max_per_lemma_case_rule=3`.
+
+### Final Fixed Run
+
+| Metric | Count |
+| --- | ---: |
+| Pairs processed | 217,297 |
+| Candidates emitted | 2,070 |
+| Candidate license `CC-BY 2.0 FR` | 2,070 |
+| Candidate license `CC0` | 0 |
+
+By case rule:
+
+| caseRuleId | Candidates |
+| --- | ---: |
+| `accusative_direct_object` | 2,000 |
+| `locative_static_u` | 37 |
+| `locative_static_na` | 33 |
+
+By emitted sentence CEFR:
+
+| CEFR | Candidates |
+| --- | ---: |
+| A1 | 1,120 |
+| A2 | 634 |
+| B1 | 141 |
+| B2 | 173 |
+| C1 | 2 |
+| C2 | 0 |
+
+Full rejection breakdown:
+
+| Rejection | Count |
+| --- | ---: |
+| `blocked_register` | 56 |
+| `exact_duplicate` | 454 |
+| `multiword_lemma` | 993 |
+| `near_duplicate` | 1,253 |
+| `russianism_prescreen` | 195 |
+| `sentence_cefr_above_word` | 2,370 |
+| `sentence_cefr_unknown` | 14,872 |
+| `sentence_length` | 20,078 |
+| `single_target_occurrence` | 131 |
+| `surface_equals_lemma` | 947 |
+| `target_punctuation_or_multiword` | 2,017 |
+| `unsupported_trigger` | 11,533 |
+| `vesum_ambiguous` | 14,897 |
+
+Raw generator stdout:
+
+```text
+wrote 2070 candidates to .agent/tmp/tatoeba/candidates-fixed-full.json
+rejected.blocked_register=56
+rejected.exact_duplicate=454
+rejected.multiword_lemma=993
+rejected.near_duplicate=1253
+rejected.russianism_prescreen=195
+rejected.sentence_cefr_above_word=2370
+rejected.sentence_cefr_unknown=14872
+rejected.sentence_length=20078
+rejected.single_target_occurrence=131
+rejected.surface_equals_lemma=947
+rejected.target_punctuation_or_multiword=2017
+rejected.unsupported_trigger=11533
+rejected.vesum_ambiguous=14897
+```
+
+### Deltas vs Phase 1
+
+The mandatory real-manifest baseline in Phase 1 emitted 0 candidates because the
+generator looked up English case IDs in a manifest keyed by Ukrainian case
+labels. The Phase 1 scratch normalized estimate, which manually added English
+case aliases, emitted 155 candidates. Phase 1.5 emits 2,070 candidates from the
+real manifest without scratch aliasing.
+
+| Metric | Phase 1 scratch estimate | Phase 1.5 fixed | Delta |
+| --- | ---: | ---: | ---: |
+| Total candidates | 155 | 2,070 | +1,915 |
+| `accusative_direct_object` | 146 | 2,000 | +1,854 |
+| `locative_static_u` | 6 | 37 | +31 |
+| `locative_static_na` | 3 | 33 | +30 |
+| A1 candidates | 90 | 1,120 | +1,030 |
+| A2 candidates | 43 | 634 | +591 |
+| B1 candidates | 17 | 141 | +124 |
+| B2 candidates | 5 | 173 | +168 |
+
+Filter deltas against the Phase 1 scratch estimate:
+
+| Rejection | Phase 1 | Phase 1.5 | Change |
+| --- | ---: | ---: | ---: |
+| `sentence_cefr_unknown` | 108,865 | 14,872 | -93,993 |
+| `sentence_length` | 62,349 | 20,078 | -42,271 |
+| `russianism_prescreen` | 14,233 | 195 | -14,038 |
+
+Diagnostic variants before relaxing caps showed that increasing unknown-token
+tolerance from 2 to 3 or 4 cut `sentence_cefr_unknown` substantially but added
+only a small number of capped candidates. Raising the max length from 16 to 18
+did not increase candidate yield. That means the original three filters were
+real blockers, but after the fixes the remaining yield ceiling is mostly
+downstream: `vesum_ambiguous`, `unsupported_trigger`, and the narrow supported
+case-rule trigger set.
+
+### Read
+
+The total target is now in the thousands and strongly A1/A2-weighted
+(1,754 of 2,070 candidates are A1/A2). However, yield is not balanced across the
+three case rules: 2,000 candidates are accusative and only 70 are locative. The
+locative lane remains low because relatively few Tatoeba sentences survive the
+strict `у/в` and `на` trigger checks with an unambiguous VESUM locative form.
+
+The refreshed committed sample at `docs/atlas/tatoeba-cloze-sample.json` contains
+30 candidates: 15 accusative, 9 `locative_static_u`, and 6 `locative_static_na`;
+19 A1, 5 A2, 3 B1, and 3 B2. Quality is good enough for a reviewed pilot, not
+automatic publication. The same review concerns remain visible: Tatoeba English
+translations often omit articles, some links are terse, and idioms such as
+`мати рацію` can pass as accusative forms even though they are weak noun-case
+practice.
+
 ## Inputs
 
 * Worktree: `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/tatoeba-cloze-yield-3797`
