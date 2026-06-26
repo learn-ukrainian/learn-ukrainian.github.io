@@ -137,6 +137,27 @@ repos:
           /.*\.(md|ya?ml)$
         stages: [pre-commit]
 
+      - id: check-no-internal-ids
+        name: check no internal IDs in published seminar MDX
+        entry: bash scripts/pre_commit/project_python.sh scripts/audit/check_no_internal_ids.py --files
+        language: system
+        files: >-
+          (?x)^site/src/content/
+          (
+            docs/(folk|hist|istorio|bio|lit|lit-essay|lit-hist-fic|lit-fantastika|
+            lit-war|lit-humor|lit-youth|lit-doc|lit-drama|lit-crimea|oes|ruth)/.*\.mdx|
+            readings/.*\.mdx
+          )$
+        stages: [pre-commit]
+      - id: check-locked-module-not-published
+        name: check locked modules are not published
+        entry: bash scripts/pre_commit/project_python.sh scripts/audit/check_locked_module_not_published.py --files
+        language: system
+        files: >-
+          (?x)^site/src/content/docs/
+          (folk|hist|istorio|bio|lit|lit-essay|lit-hist-fic|lit-fantastika|
+          lit-war|lit-humor|lit-youth|lit-doc|lit-drama|lit-crimea|oes|ruth)/.*\.mdx$
+        stages: [pre-commit]
       - id: lesson-schema-drift
         name: lesson schema drift gate
         entry: >-

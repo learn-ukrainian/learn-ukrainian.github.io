@@ -498,6 +498,14 @@ jobs:
         run: |
           .venv/bin/python scripts/audit/check_mdx_forward_parity.py --changed-vs-base origin/main
 
+      - name: Check internal IDs are not published
+        run: |
+          .venv/bin/python scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
+
+      - name: Check locked modules are not published
+        run: |
+          .venv/bin/python scripts/audit/check_locked_module_not_published.py --changed-vs-base origin/main
+
   mdx-generation-drift:
     name: MDX Generation Drift
     runs-on: ubuntu-latest
