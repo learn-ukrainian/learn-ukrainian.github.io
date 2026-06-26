@@ -289,13 +289,14 @@ describe('LexiconPractice', () => {
     const { fn, requested } = mockShardFetch({ A1: 2, A2: 1, B1: 3, B2: 5, C1: 4 });
     vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
     const user = userEvent.setup();
-    render(<LexiconPractice initialMode="flashcards" />);
+    const { container } = render(<LexiconPractice initialMode="flashcards" />);
 
-    await user.click(screen.getByRole('button', { name: 'Start Practice' }));
+    // Start = clicking a mode card (the redesign has no separate "Start Practice" button).
+    await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
 
-    // A1+A2+B1 = 6 words; B2/C1 are above the learner level and must never be loaded.
+    // A1+A2+B1 load (cumulative); B2/C1 are above the learner level and must never be fetched.
     await waitFor(() =>
-      expect(screen.getByLabelText('6 practice words loaded')).toBeInTheDocument(),
+      expect(requested.some((u) => u.includes('practice-index.B1'))).toBe(true),
     );
     expect(requested.some((u) => u.includes('practice-index.A1'))).toBe(true);
     expect(requested.some((u) => u.includes('practice-index.A2'))).toBe(true);
@@ -306,22 +307,23 @@ describe('LexiconPractice', () => {
 
   test('level selector re-caps the pool and persists the shared learner-level key', async () => {
     localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
-    const { fn } = mockShardFetch({ A1: 2, A2: 1, B1: 3 });
+    const { fn, requested } = mockShardFetch({ A1: 2, A2: 1, B1: 3 });
     vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
     const user = userEvent.setup();
-    render(<LexiconPractice initialMode="flashcards" />);
+    const { container } = render(<LexiconPractice initialMode="flashcards" />);
 
-    await user.click(screen.getByRole('button', { name: 'Start Practice' }));
-    await waitFor(() =>
-      expect(screen.getByLabelText('2 practice words loaded')).toBeInTheDocument(),
-    );
-
-    // Raise the level to B1 -> pool grows cumulatively to A1+A2+B1 = 6 and persists.
+    // The level chips live on the practice home; raising the level persists the shared key.
     await user.click(screen.getByRole('button', { name: 'B1' }));
-    await waitFor(() =>
-      expect(screen.getByLabelText('6 practice words loaded')).toBeInTheDocument(),
-    );
     expect(localStorage.getItem(LEARNER_LEVEL_STORAGE_KEY)).toBe('B1');
+
+    // Starting now loads the cumulative B1 pool (A1+A2+B1); B2 is above the level and never loads.
+    await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
+    await waitFor(() =>
+      expect(requested.some((u) => u.includes('practice-index.B1'))).toBe(true),
+    );
+    expect(requested.some((u) => u.includes('practice-index.A1'))).toBe(true);
+    expect(requested.some((u) => u.includes('practice-index.A2'))).toBe(true);
+    expect(requested.some((u) => u.includes('practice-index.B2'))).toBe(false);
   });
 
   test('flashcard rating persists mode-specific SRS progress', async () => {
@@ -335,7 +337,8 @@ describe('LexiconPractice', () => {
     await user.click(flashcard!);
     expect(flashcard).toHaveAttribute('data-flipped', 'true');
 
-    await user.click(screen.getByRole('button', { name: 'Good' }));
+    // Rating buttons carry a "1-4" key span; target the stable data-rate hook.
+    await user.click(container.querySelector<HTMLButtonElement>('[data-rate="good"]')!);
 
     await waitFor(() => {
       expect(storedState().cards[cardKey('knyha', 'flashcards')]).toBeTruthy();
@@ -348,7 +351,8 @@ describe('LexiconPractice', () => {
 
     const choice = screen.getByTestId('practice-choice');
     expect(choice).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'книга' }));
+    // Option buttons now carry a "1-4" key span, so the accessible name is e.g. "1 книга".
+    await user.click(screen.getByRole('button', { name: /книга/ }));
 
     await waitFor(() => {
       const state = storedState();
@@ -364,10 +368,11 @@ describe('LexiconPractice', () => {
     render(<LexiconPractice initialDeck={wordToMeaningDeck()} autoStart initialMode="choice" />);
     const choice = screen.getByTestId('practice-choice');
 
-    expect(screen.getByText('What does сад mean?')).toBeInTheDocument();
+    expect(screen.getByText('Що означає «сад»?')).toBeInTheDocument();
+    // The option label lives in its own span next to the "1-4" key span; read just the label.
     const labels = within(choice)
       .getAllByRole('button')
-      .map((button) => button.textContent ?? '');
+      .map((button) => button.querySelector('span:not(.mc-key)')?.textContent ?? '');
 
     expect(new Set(labels)).toEqual(new Set(['garden', 'house', 'forest', 'river']));
     expect(labels).not.toContain('and');
@@ -410,7 +415,7 @@ describe('LexiconPractice', () => {
     const choice = screen.getByTestId('practice-choice');
     const labels = within(choice)
       .getAllByRole('button')
-      .map((button) => button.textContent ?? '');
+      .map((button) => button.querySelector('span:not(.mc-key)')?.textContent ?? '');
     // First card is the small-POS verb (newOrder 0). Without cross-POS backfill it
     // would starve (<3 distractors) and not render; it must show a full 4-option set.
     expect(labels).toHaveLength(4);
@@ -429,7 +434,7 @@ describe('LexiconPractice', () => {
     const status = screen.getByRole('status');
     expect(status).toHaveTextContent('Правильне слово');
     expect(status).toHaveClass('case-miss');
-    expect(screen.getByLabelText('Answer in знахідний')).toHaveValue('');
+    expect(screen.getByLabelText('Відповідь у знахідний')).toHaveValue('');
     expect(screen.getByRole('button', { name: 'книгу' })).not.toBeDisabled();
 
     await waitFor(() => {

@@ -41,7 +41,7 @@ test('browse supports search, category, and letter entry points without dumping 
 test('practice cloze mode never dead-ends for a fresh learner', async ({ page }) => {
   await page.goto('/words-of-the-day/practice/');
 
-  await page.getByRole('button', { name: 'Cloze' }).click();
+  await page.locator('button[data-mode="cloze"]').click();
   // Cloze is fail-closed until reviewed sentences are authored (#3797). The mode must show a
   // real cloze card OR a clear "being prepared" message — never the ambiguous "all done"
   // dead-end the user reported. This invariant holds before AND after cloze content lands.
@@ -53,7 +53,7 @@ test('practice cloze mode never dead-ends for a fresh learner', async ({ page })
 test('practice matching renders a real round (>=3 pairs) for a fresh learner', async ({ page }) => {
   await page.goto('/words-of-the-day/practice/');
 
-  await page.getByRole('button', { name: 'Matching' }).click();
+  await page.locator('button[data-mode="matching"]').click();
   await expect(page.locator('[data-testid="practice-matching"]')).toBeVisible();
   await expect.poll(() => page.locator('[data-activity="match-left-tile"]').count()).toBeGreaterThanOrEqual(3);
 });

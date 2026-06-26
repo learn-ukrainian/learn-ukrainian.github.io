@@ -210,7 +210,10 @@ const dailyCount = Math.max(1, Math.floor(count));
   }
 
   .lexicon-daily-heading h2 {
+    display: inline-block;
     margin: 0;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--lu-accent);
     color: var(--lu-text);
     font-size: clamp(1.55rem, 3vw, 2.15rem);
   }
@@ -274,7 +277,7 @@ const dailyCount = Math.max(1, Math.floor(count));
   .lexicon-daily-level-chip[aria-pressed="true"] {
     border-color: var(--lu-primary);
     background: var(--lu-primary);
-    color: #fff;
+    color: var(--lu-on-primary);
   }
 
   .lexicon-daily-status {
@@ -290,11 +293,11 @@ const dailyCount = Math.max(1, Math.floor(count));
     list-style: none;
   }
 
-  .lexicon-daily-item {
+  :global(.lexicon-daily-item) {
     min-width: 0;
   }
 
-  .lexicon-daily-card {
+  :global(.lexicon-daily-card) {
     display: flex;
     min-height: 7.25rem;
     height: 100%;
@@ -309,32 +312,33 @@ const dailyCount = Math.max(1, Math.floor(count));
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   }
 
-  .lexicon-daily-card:hover,
-  .lexicon-daily-card:focus-visible {
+  :global(.lexicon-daily-card:hover),
+  :global(.lexicon-daily-card:focus-visible) {
     border-color: var(--lu-primary);
     outline: none;
     box-shadow: 0 0 0 3px var(--lu-state-active);
   }
 
-  .lexicon-daily-lemma {
+  :global(.lexicon-daily-lemma) {
+    color: var(--lu-blue);
     font-weight: 900;
     line-height: 1.25;
   }
 
-  .lexicon-daily-gloss {
+  :global(.lexicon-daily-gloss) {
     color: var(--lu-text-muted);
     font-size: 0.92rem;
     line-height: 1.45;
   }
 
-  .lexicon-daily-chips {
+  :global(.lexicon-daily-chips) {
     display: flex;
     flex-wrap: wrap;
     gap: 0.35rem;
     margin-top: auto;
   }
 
-  .lexicon-daily-chip {
+  :global(.lexicon-daily-chip) {
     display: inline-flex;
     align-items: center;
     min-height: 1.35rem;
@@ -347,7 +351,7 @@ const dailyCount = Math.max(1, Math.floor(count));
     text-transform: uppercase;
   }
 
-  .lexicon-daily-chip.danger {
+  :global(.lexicon-daily-chip.danger) {
     border: 1px solid var(--lu-state-wrong-fg);
     background: var(--lu-state-wrong-bg);
     color: var(--lu-state-wrong-fg);
