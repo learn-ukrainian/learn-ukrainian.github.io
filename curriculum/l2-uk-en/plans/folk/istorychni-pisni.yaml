@@ -133,8 +133,9 @@ readings:
   genre: "Історична пісня"
   role: primary
   type: primary
-  source: "69b7d2f1_c0032 | verify_quote(author=\"Грінченко Б.\", text=\"Ой Морозе та Морозенку, ой ти славний козаче! Ой за тобою, та Морозенку, уся Україна плаче.\") -> matched: true; best_confidence: 1.0; source chunk_id: 69b7d2f1_c0032"
+  source: "208e8198_c0001 | verify_quote(author=\"Народна творчість\", text=\"Ой Морозе, Морозенку, ти славний козаче\") -> matched: true; best_confidence: 1.0; source chunk_id: 208e8198_c0001"
   canon_attestation: "S4432"
+  corroborating_witness: "Грінченко Б. 69b7d2f1_c0032 (1863)"
   license: public_domain
   hosting: hosted
   provenance_note: "verified via literary context, not a direct field record"
@@ -161,13 +162,19 @@ readings:
   hosting: hosted
   provenance_note: "verified via literary context, not a direct field record"
   reading_slug: istorychna-pisnia-maksym-kozak-zalizniak
+- title: "За Сибіром сонце сходить"
+  title_en: "Behind Siberia the Sun Rises"
+  genre: "Історична пісня"
+  role: primary
+  type: primary
+  source: "ff912500_c0000 | verify_quote(author=\"Народна творчість\", text=\"За Сибіром сонце сходить Хлопці, не зівайте\") -> matched: true; best_confidence: 0.9767; source chunk_id: ff912500_c0000"
+  canon_attestation: "8-klas-ukrlit-zabolotnyi-2025_s0008"
+  license: public_domain
+  hosting: hosted
+  reading_slug: istorychna-pisnia-za-sybirom
 do_not_quote:
-- line: "Ой Морозе, Морозенку, ти славний козаче"
-  reason: "verify_quote(author=\"Народна творчість\", text=\"Ой Морозе, Морозенку, ти славний козаче\") -> matched: false; best_confidence: 0.0; source chunk_id: none"
-- line: "За Сибіром сонце сходить Хлопці, не зівайте"
-  reason: "verify_quote(author=\"Народна творчість\", text=\"За Сибіром сонце сходить Хлопці, не зівайте\") -> matched: false; best_confidence: 0.0; source chunk_id: none"
 - line: "Ой на горі та женці жнуть, а попід горою, яром-долиною козаки йдуть"
-  reason: "verify_quote(author=\"Народна творчість\", text=\"Ой на горі та женці жнуть, а попід горою, яром-долиною козаки йдуть\") -> matched: false; best_confidence: 0.0; source chunk_id: none"
+  reason: "verify_quote(author=\"Народна творчість\", text=\"Ой на горі та женці жнуть, а попід горою, яром-долиною козаки йдуть\") -> matched: true; best_confidence: 0.8806; source chunk_id: d0c6550e_c0000; partial match 0.88, below 0.95 hosting threshold"
 - line: "Чи не той то хміль, що коло тичин в'ється"
   reason: "verify_quote(author=\"Народна творчість\", text=\"Чи не той то хміль, що коло тичин в'ється\") -> matched: false; best_confidence: 0.0; source chunk_id: none"
 - line: "Та ой як крикнув же козак Сірко, та на своїх козаків"
@@ -179,7 +186,7 @@ slug: istorychni-pisni
 status: reviewed
 subtitle: Historical Songs
 title: Історичні пісні
-version: '0.2'
+version: '0.3'
 vocabulary_hints:
 - word: обряд
   pos: ч.
