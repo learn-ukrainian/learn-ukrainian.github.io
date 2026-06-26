@@ -1,0 +1,120 @@
+- lemma: складне речення
+  translation: complex sentence
+  pos: phrase
+  usage: Складне речення має дві або більше граматичних основ.
+- lemma: багатокомпонентне речення
+  translation: multi-clause sentence
+  pos: phrase
+  usage: Багатокомпонентне речення поєднує кілька предикативних частин.
+- lemma: сурядність
+  translation: coordination
+  pos: noun
+  usage: Сурядність поєднує рівноправні частини речення.
+- lemma: підрядність
+  translation: subordination
+  pos: noun
+  usage: Підрядність створює залежність однієї частини від іншої.
+- lemma: безсполучниковий зв'язок
+  translation: asyndetic connection
+  pos: phrase
+  usage: Безсполучниковий зв'язок спирається на інтонацію і смислову близькість.
+- lemma: збіг сполучників
+  translation: conjunction junction
+  pos: phrase
+  usage: Збіг сполучників виникає у конструкціях типу що коли або і якщо.
+- lemma: предикативна частина
+  translation: predicative clause
+  pos: phrase
+  usage: Кожна предикативна частина має власну граматичну основу.
+- lemma: граматична основа
+  translation: grammatical base
+  pos: phrase
+  usage: Граматична основа допомагає знайти межі частин.
+- lemma: ієрархія
+  translation: hierarchy
+  pos: noun
+  usage: Ієрархія показує, яка частина головна, а яка залежна.
+- lemma: синтаксична конструкція
+  translation: syntactic construction
+  pos: phrase
+  usage: Синтаксична конструкція має відповідати жанру тексту.
+- lemma: пунктуаційна грамотність
+  translation: punctuation literacy
+  pos: phrase
+  usage: Пунктуаційна грамотність починається з розуміння меж речення.
+- lemma: логічна єдність
+  translation: logical unity
+  pos: phrase
+  usage: Логічна єдність тримає довге речення зрозумілим.
+- lemma: трансформація
+  translation: transformation
+  pos: noun
+  usage: Трансформація допомагає перетворити довге речення на кілька коротших.
+- lemma: стилістична фігура
+  translation: stylistic device
+  pos: phrase
+  usage: Парцеляція може бути стилістичною фігурою.
+- lemma: сполучник
+  translation: conjunction
+  pos: noun
+  usage: Сполучник прямо називає зв'язок між частинами.
+- lemma: сполучне слово
+  translation: connective word
+  pos: phrase
+  usage: Сполучне слово водночас приєднує підрядну частину і є її членом.
+- lemma: співвідносне слово
+  translation: correlative word
+  pos: phrase
+  usage: Співвідносне слово то впливає на кому між сусідніми сполучниками.
+- lemma: підрядна частина
+  translation: subordinate clause
+  pos: phrase
+  usage: Підрядна частина пояснює час, причину, умову або мету.
+- lemma: сурядна частина
+  translation: coordinate clause
+  pos: phrase
+  usage: Сурядна частина має рівне право на увагу.
+- lemma: смисловий зв'язок
+  translation: semantic relation
+  pos: phrase
+  usage: Смисловий зв'язок визначає вибір сполучника.
+- lemma: причинно-наслідковий зв'язок
+  translation: cause-and-effect relation
+  pos: phrase
+  usage: Причинно-наслідковий зв'язок часто передають словами бо і тому.
+- lemma: допустовість
+  translation: concessive relation
+  pos: noun
+  usage: Допустовість показує перешкоду, яка не скасовує головної дії.
+- lemma: двокрапка
+  translation: colon
+  pos: noun
+  usage: Двокрапка вводить пояснення або причину.
+- lemma: тире
+  translation: dash
+  pos: noun
+  usage: Тире може підкреслювати наслідок або різкий поворот думки.
+- lemma: крапка з комою
+  translation: semicolon
+  pos: phrase
+  usage: Крапка з комою розділяє великі частини з власними комами.
+- lemma: парцеляція
+  translation: parcelling
+  pos: noun
+  usage: Парцеляція відокремлює частину висловлення для акценту.
+- lemma: громіздкість
+  translation: unwieldiness
+  pos: noun
+  usage: Громіздкість виникає, коли речення приховує головну думку.
+- lemma: двозначність
+  translation: ambiguity
+  pos: noun
+  usage: Двозначність зникає, коли автор називає точний зв'язок.
+- lemma: когезія
+  translation: cohesion
+  pos: noun
+  usage: Когезія допомагає частинам тексту триматися разом.
+- lemma: регістр
+  translation: register
+  pos: noun
+  usage: Регістр визначає, наскільки складним може бути речення.
