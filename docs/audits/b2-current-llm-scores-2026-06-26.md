@@ -25,10 +25,15 @@ B2 M23 `multi-clause-sentences`,9/10,B+,Yes,Strong multi-clause syntax module wi
 B2 M24 `kharchuvannia-i-kukhnia`,9/10,B+,Yes,Strong food and kitchen communication module with validated activity and vocabulary coverage. Score held at 9 for retained non-blocking section-balance warnings.
 B2 M25 `correlative-constructions`,9/10,B+,Yes,Strong correlative-constructions module with 99.6% immersion and 99% richness. Independent review passed with no blockers.
 B2 M26 `emphasis-and-inversion`,9/10,B+,Yes,Strong emphasis and inversion module with 100% immersion and 99% richness. Independent review passed; non-blocking activity nits were fixed before merge.
+B2 M27 `stylistic-connectors`,9/10,B+,Yes,Strong stylistic-connectors module. Initial independent blockers fixed before merge; final Agy/Gemini review passed. Score held at 9 for conservative post-fix polish risk.
+B2 M28 `kupivlia-i-servisy`,9/10,B+,Yes,Strong shopping/services communication module with validated activity and vocabulary coverage. Initial independent blocker fixed; final Agy/Gemini review passed.
+B2 M29 `complex-syntax-ellipsis-parcelling`,9/10,B+,Yes,Strong ellipsis/parcelling module. Agy/Claude Opus blocker review passed with no unresolved findings.
+B2 M30 `direct-indirect-speech`,9/10,B+,Yes,Strong direct/indirect speech module. Agy/Claude Opus blocker review passed with no unresolved findings.
+B2 M31 `checkpoint-syntax-ii`,9/10,B+,Yes,Strong Syntax II checkpoint with broad review coverage, 20 workbook activities, and passing deterministic audit. Agy/Claude Opus review passed; score held at 9 for checkpoint size and minor non-blocking notes.
 
 Score,Count,Modules
 10/10,2,"M01, M08"
-9/10,23,"M02-M07, M09-M13, M15-M26"
+9/10,28,"M02-M07, M09-M13, M15-M31"
 8/10,1,M14
 
 Durable Report,Scope
@@ -36,6 +41,7 @@ Durable Report,Scope
 `docs/audits/b2-m11-m15-llm-score-report-2026-06-25.md`,M11-M15
 `docs/audits/b2-m16-m21-llm-score-report-2026-06-25.md`,M16-M21
 `docs/audits/b2-m22-m26-llm-score-report-2026-06-26.md`,M22-M26
+`docs/audits/b2-m27-m31-llm-score-report-2026-06-26.md`,M27-M31
 
 Module,Raw Word Count,Activities,Vocabulary
 M03 `b2-impersonal-passive`,4608,7 workbook / 4 inline,35
@@ -62,6 +68,11 @@ M23 `multi-clause-sentences`,5881,11 workbook / 0 inline,30
 M24 `kharchuvannia-i-kukhnia`,4753,11 workbook / 0 inline,43
 M25 `correlative-constructions`,4822,10 workbook / 0 inline,35
 M26 `emphasis-and-inversion`,4633,11 workbook / 0 inline,38
+M27 `stylistic-connectors`,5212,10 workbook / 0 inline,32
+M28 `kupivlia-i-servisy`,6004,10 workbook / 0 inline,46
+M29 `complex-syntax-ellipsis-parcelling`,4686,10 workbook / 0 inline,45
+M30 `direct-indirect-speech`,4683,12 workbook / 0 inline,46
+M31 `checkpoint-syntax-ii`,7247,20 workbook / 0 inline,35
 
 Score,Pass Count
 10/10,5/5 with no meaningful content polish
@@ -75,3 +86,4 @@ See `docs/audits/b2-m03-m10-llm-score-report-2026-06-25.md`.,M03-M10
 See `docs/audits/b2-m11-m15-llm-score-report-2026-06-25.md`.,M11-M15
 See `docs/audits/b2-m16-m21-llm-score-report-2026-06-25.md`.,M16-M21
 See `docs/audits/b2-m22-m26-llm-score-report-2026-06-26.md`.,M22-M26
+See `docs/audits/b2-m27-m31-llm-score-report-2026-06-26.md`.,M27-M31
