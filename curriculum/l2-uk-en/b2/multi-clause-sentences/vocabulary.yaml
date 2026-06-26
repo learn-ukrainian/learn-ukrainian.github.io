@@ -19,7 +19,7 @@
   pos: phrase
   usage: Безсполучниковий зв'язок спирається на інтонацію і смислову близькість.
 - lemma: збіг сполучників
-  translation: conjunction junction
+  translation: conjunction cluster
   pos: phrase
   usage: Збіг сполучників виникає у конструкціях типу що коли або і якщо.
 - lemma: предикативна частина
