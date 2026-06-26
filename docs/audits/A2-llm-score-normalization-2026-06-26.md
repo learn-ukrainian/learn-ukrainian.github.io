@@ -42,6 +42,7 @@ human-review readiness.
 | Current PASS-only modules | 0 | No current deterministic status files exist. |
 | Current FAIL/problem modules | 0 | No current deterministic status files exist. |
 | Historical PASS-only entries | 37 | Stale deterministic context only. |
+| Historical PROSE-only entries | 33 | Stale deterministic context only. |
 | Historical FAIL/problem entries | 1 | Stale deterministic context only. |
 
 ## Future Update Path
