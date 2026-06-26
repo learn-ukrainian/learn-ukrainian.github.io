@@ -59,10 +59,12 @@ test('practice matching renders a real round (>=3 pairs) for a fresh learner', a
 });
 
 test('all СУМ-11 definition cards are hidden from word pages (Soviet dictionary)', async ({ page }) => {
-  // прапор carries a *flagged* (sovietization_risk>0) СУМ-11 definition card.
+  // прапор carries a *flagged* (sovietization_risk>0) СУМ-11 definition card. Assert
+  // BOTH the flagged and clean СУМ-11 classes are absent, so a regression that rendered
+  // the flagged card as a clean `.sum11` card can't sneak through (agy review 2026-06-26).
   await page.goto('/lexicon/прапор/');
   await expect(page.locator('h1.word-title')).toContainText('прапор');
-  await expect(page.locator('.def-card.sum11-flagged')).toHaveCount(0);
+  await expect(page.locator('.def-card.sum11, .def-card.sum11-flagged')).toHaveCount(0);
 
   // вареник carries a *clean* (risk==0) СУМ-11 card. Hide-all (2026-06-25) drops it too;
   // the meaning block (rendered as a СУМ-20 card) still gives the learner a definition, so
