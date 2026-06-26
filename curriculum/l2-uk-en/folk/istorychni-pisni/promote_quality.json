@@ -1,0 +1,68 @@
+{
+  "assembled_mdx_sha256": null,
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "1da457048e3284962888f9e30369b7436fefa366d18c06e89cc819e18fea934f",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/istorychni-pisni.yaml",
+        "sha256": "401ab5ce300df5ba3ca961e2015318d684838efadb21dca2ceab7ab6fd2a6df7"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/istorychni-pisni/module.md",
+        "sha256": "68e7511099bb56c4e4acc624664a60a9258814403e8c89abf10c9aaeb3d543a4"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/istorychni-pisni/activities.yaml",
+        "sha256": "322ef0212c36ae3a0b9abe9062d3526c67f1ce9297e0793fa042662d9c572ca3"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/istorychni-pisni/vocabulary.yaml",
+        "sha256": "91b200af0925e5eeccc174dce75a5cec22feb742481d40be8d080c8e0145e405"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/istorychni-pisni/resources.yaml",
+        "sha256": "0737992bdc1c2b33880c0bb470d136e2af91a5e34d890a921b837234d5ac1f49"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "7-step frame: malorosiyskyi-as-edition-marker, Soviet vozzjednannia myth, Zaporozhskaya-Starina falsifications, anti-hagiography of haidamaky",
+    "naturalness": "fluent C1+ register; yasyr/haidamachchyna/opryshok flagged as historicisms; liakh only as historicism",
+    "pedagogical": "4-step seminar method (form->layer->provenance->function); explicit pisnia/duma/perekaz genre boundaries with corpus chunk-ids"
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-06-26T04:53:34Z",
+  "scores": {
+    "beauty": 9.0,
+    "decolonization": 9.5,
+    "engagement": 9.0,
+    "naturalness": 9.0,
+    "pedagogical": 9.5,
+    "tone": 9.0
+  },
+  "slug": "istorychni-pisni",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5.5"
+  }
+}
