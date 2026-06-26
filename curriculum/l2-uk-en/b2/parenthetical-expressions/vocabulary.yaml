@@ -1,0 +1,128 @@
+- lemma: вставне слово
+  translation: parenthetical word
+  pos: phrase
+  usage: Вставне слово виражає ставлення мовця до всього повідомлення.
+- lemma: вставна конструкція
+  translation: parenthetical construction
+  pos: phrase
+  usage: Вставна конструкція не є членом речення.
+- lemma: вставлене речення
+  translation: inserted sentence
+  pos: phrase
+  usage: Вставлене речення часто виділяють тире або дужками.
+- lemma: модальність
+  translation: modality
+  pos: noun
+  usage: Модальність показує ступінь упевненості мовця.
+- lemma: упевненість
+  translation: certainty
+  pos: noun
+  usage: Слово безперечно передає високу упевненість.
+- lemma: невпевненість
+  translation: uncertainty
+  pos: noun
+  usage: Невпевненість можна передати словами мабуть або можливо.
+- lemma: припущення
+  translation: assumption
+  pos: noun
+  usage: Припущення треба відрізняти від перевіреного факту.
+- lemma: джерело інформації
+  translation: source of information
+  pos: phrase
+  usage: Конструкція за словами експертів називає джерело інформації.
+- lemma: послідовність
+  translation: sequence
+  pos: noun
+  usage: По-перше і по-друге позначають послідовність аргументів.
+- lemma: емоційна оцінка
+  translation: emotional evaluation
+  pos: phrase
+  usage: На жаль передає емоційну оцінку повідомлення.
+- lemma: суб'єктивність
+  translation: subjectivity
+  pos: noun
+  usage: Вставні слова часто показують суб'єктивність автора.
+- lemma: аргументація
+  translation: argumentation
+  pos: noun
+  usage: Вставні конструкції допомагають будувати аргументацію.
+- lemma: пунктуаційна норма
+  translation: punctuation norm
+  pos: phrase
+  usage: Пунктуаційна норма вимагає виділяти вставні слова комами.
+- lemma: парантеза
+  translation: parenthesis
+  pos: noun
+  usage: Парантеза додає коментар усередині основного речення.
+- lemma: логічність викладу
+  translation: logical coherence of presentation
+  pos: phrase
+  usage: Отже й зрештою підтримують логічність викладу.
+- lemma: семантична група
+  translation: semantic group
+  pos: phrase
+  usage: Кожна семантична група має свою комунікативну функцію.
+- lemma: омонімічний
+  translation: homonymous
+  pos: adjective
+  usage: Омонімічний варіант може бути членом речення, а не вставкою.
+- lemma: граматична основа
+  translation: grammatical base
+  pos: phrase
+  usage: Граматична основа зберігається після вилучення вставного слова.
+- lemma: синтаксично ізольований
+  translation: syntactically isolated
+  pos: phrase
+  usage: Синтаксично ізольований компонент не залежить від інших членів речення.
+- lemma: відокремлювати
+  translation: to set off
+  pos: verb
+  usage: Вставні слова треба відокремлювати комами.
+- lemma: вилучення
+  translation: removal
+  pos: noun
+  usage: Тест вилучення допомагає перевірити вставність.
+- lemma: застереження
+  translation: reservation, caveat
+  pos: noun
+  usage: Слово правда може вводити застереження.
+- lemma: регістр
+  translation: register
+  pos: noun
+  usage: Регістр визначає, чи доречна емоційна вставка.
+- lemma: доречність
+  translation: appropriateness
+  pos: noun
+  usage: Доречність вставної конструкції залежить від жанру.
+- lemma: перевантаження
+  translation: overload
+  pos: noun
+  usage: Надмір вставних слів створює перевантаження речення.
+- lemma: джерельний
+  translation: source-based
+  pos: adjective
+  usage: Джерельний коментар називає, звідки походить інформація.
+- lemma: авторська позиція
+  translation: authorial position
+  pos: phrase
+  usage: Авторська позиція має бути відділена від чужого повідомлення.
+- lemma: ступінь упевненості
+  translation: degree of certainty
+  pos: phrase
+  usage: Мабуть і безперечно передають різний ступінь упевненості.
+- lemma: порядок викладу
+  translation: order of exposition
+  pos: phrase
+  usage: Порядок викладу видно через слова по-перше і по-друге.
+- lemma: комунікативна функція
+  translation: communicative function
+  pos: phrase
+  usage: Комунікативна функція вставки важливіша за її позицію.
+- lemma: повнозначний
+  translation: lexical, full-meaning
+  pos: adjective
+  usage: Повнозначний член речення не можна вилучити без втрати граматики.
+- lemma: присудкове слово
+  translation: predicative word
+  pos: phrase
+  usage: У реченні з вікна видно площу слово видно є присудковим.
