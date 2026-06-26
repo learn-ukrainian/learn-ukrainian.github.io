@@ -183,15 +183,6 @@
     "cefr": "A1"
   },
   {
-    "lemma": "благословення",
-    "slug": "благословення",
-    "gloss": "blessing",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "folk",
-    "cefr": "A2"
-  },
-  {
     "lemma": "бланк",
     "slug": "бланк",
     "gloss": "form",
@@ -208,6 +199,15 @@
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2"
+  },
+  {
+    "lemma": "буква",
+    "slug": "буква",
+    "gloss": "letter",
+    "k": "vyv",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "A1"
   },
   {
     "lemma": "варити / зварити",
@@ -494,15 +494,6 @@
     "k": "vyv",
     "weight": 5,
     "lessonTag": "a2",
-    "cefr": "B1"
-  },
-  {
-    "lemma": "вірування",
-    "slug": "вірування",
-    "gloss": "belief, folk belief",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "folk",
     "cefr": "B1"
   },
   {
@@ -1063,6 +1054,15 @@
     "cefr": "B1"
   },
   {
+    "lemma": "курча",
+    "slug": "курча",
+    "gloss": "chick",
+    "k": "vyv",
+    "weight": 5,
+    "lessonTag": "a2",
+    "cefr": "B1"
+  },
+  {
     "lemma": "кутя",
     "slug": "кутя",
     "gloss": "kutia, Christmas ritual dish",
@@ -1169,6 +1169,15 @@
     "weight": 5,
     "lessonTag": "a1",
     "cefr": "A2"
+  },
+  {
+    "lemma": "мама",
+    "slug": "мама",
+    "gloss": "mom",
+    "k": "vyv",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A1"
   },
   {
     "lemma": "маршрут",
@@ -1394,15 +1403,6 @@
     "cefr": "A2"
   },
   {
-    "lemma": "нечисть",
-    "slug": "нечисть",
-    "gloss": "evil spirits, the unclean force (collectively)",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "folk",
-    "cefr": "B1"
-  },
-  {
     "lemma": "неістота",
     "slug": "неістота",
     "gloss": "inanimate thing",
@@ -1565,13 +1565,13 @@
     "cefr": "B1"
   },
   {
-    "lemma": "перенесення",
-    "slug": "перенесення",
-    "gloss": "transfer (of harm to another place)",
+    "lemma": "перекладати / перекласти",
+    "slug": "перекладати-перекласти",
+    "gloss": "to translate",
     "k": "vyv",
     "weight": 5,
-    "lessonTag": "folk",
-    "cefr": "A2"
+    "lessonTag": "a2",
+    "cefr": "A1"
   },
   {
     "lemma": "перукарня",
