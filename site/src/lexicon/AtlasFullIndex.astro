@@ -3,6 +3,7 @@
  * А-Я Word Atlas browse shell. The SSG page inlines only the small metadata
  * file; word rows are fetched from per-letter JSON shards after a letter click.
  */
+import flaggedRows from "../data/lexicon-browse-flagged.json";
 import browseMeta from "../data/lexicon-browse-meta.json";
 import { UKRAINIAN_ALPHABET } from "../lib/lexicon/levels";
 
@@ -26,6 +27,7 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
   class="atlas-index"
   data-atlas-index
   data-browse-meta={JSON.stringify(browseMeta)}
+  data-flagged-rows={JSON.stringify(flaggedRows)}
   data-total-label={totalLabel}
 >
   <div class="atlas-index-heading">
@@ -71,15 +73,14 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
   }
 
   <label class="atlas-index-filter">
-    <span>Пошук у вибраній літері</span>
-    <input
-      type="search"
-      data-index-search
-      placeholder="Спершу оберіть літеру"
-      autocomplete="off"
-      disabled
-    />
-  </label>
+  <span>Пошук в Атласі</span>
+  <input
+    type="search"
+    data-index-search
+    placeholder="Шукати слово, переклад або латинку"
+    autocomplete="off"
+  />
+</label>
 
   <p
     class="atlas-index-status"
@@ -90,11 +91,12 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
   </p>
 
   <section class="atlas-letter-section" data-letter-section hidden>
-    <h3 id="atlas-selected-letter" class="atlas-letter-heading" tabindex="-1" data-letter-heading></h3>
-    <ul class="atlas-index-list" data-index-list></ul>
-    <button class="atlas-more-button" type="button" data-index-more hidden>Показати ще</button>
-    <div class="atlas-sentinel" data-index-sentinel aria-hidden="true"></div>
-  </section>
+  <h3 id="atlas-selected-letter" class="atlas-letter-heading" tabindex="-1" data-letter-heading></h3>
+  <ul class="atlas-index-list" data-index-list></ul>
+  <button class="atlas-more-button" type="button" data-index-more hidden>Показати ще</button>
+  <p class="atlas-index-overflow" data-index-overflow hidden></p>
+  <div class="atlas-sentinel" data-index-sentinel aria-hidden="true"></div>
+</section>
 
   <div class="atlas-index-empty" data-index-empty>
     <p class="atlas-index-empty-code">Оберіть літеру алфавіту, щоб переглянути слова</p>
@@ -104,14 +106,16 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
 <script>
   import { UKRAINIAN_ALPHABET } from "../lib/lexicon/levels";
 
-  type BrowseRow = {
-    l: string;
-    s: string;
-    g: string | null;
-    c?: string | null;
-    cls?: string;
-    hay?: string;
-  };
+type BrowseRow = {
+  l: string;
+  s: string;
+  g: string | null;
+  c?: string | null;
+  cls?: string;
+  hay?: string;
+  r?: string | null;
+  letter?: string | null;
+};
 
   type BrowseMeta = {
     total: number;
@@ -130,7 +134,8 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
     borr: "запозичення",
   };
 
-  const CHUNK_SIZE = 150;
+const CHUNK_SIZE = 150;
+const GLOBAL_SEARCH_LIMIT = 200;
   const alphabet = new Set<string>(UKRAINIAN_ALPHABET);
   const root = document.querySelector<HTMLElement>("[data-atlas-index]");
   const normalize = (value: string): string => value.normalize("NFC").toLocaleLowerCase("uk-UA");
@@ -147,54 +152,137 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
     });
 
   if (root) {
-    const meta = JSON.parse(root.dataset.browseMeta ?? "{}") as BrowseMeta;
-    const totalLabel = root.dataset.totalLabel ?? `${meta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.length} літери`;
+  const meta = JSON.parse(root.dataset.browseMeta ?? "{}") as BrowseMeta;
+  const flaggedRows = JSON.parse(root.dataset.flaggedRows ?? "[]") as BrowseRow[];
+  const totalLabel = root.dataset.totalLabel ?? `${meta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.length} літери`;
     const searchInput = root.querySelector<HTMLInputElement>("[data-index-search]");
     const status = root.querySelector<HTMLElement>("[data-index-status]");
     const section = root.querySelector<HTMLElement>("[data-letter-section]");
     const heading = root.querySelector<HTMLElement>("[data-letter-heading]");
     const list = root.querySelector<HTMLElement>("[data-index-list]");
-    const empty = root.querySelector<HTMLElement>("[data-index-empty]");
-    const moreButton = root.querySelector<HTMLButtonElement>("[data-index-more]");
-    const sentinel = root.querySelector<HTMLElement>("[data-index-sentinel]");
-    const letterButtons = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-letter]"));
-    const chipButtons = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-chip]"));
-    const cache = new Map<string, BrowseRow[]>();
-    const state: {
-      letter: string | null;
-      cls: string | null;
-      q: string;
-      rows: BrowseRow[];
-      visibleLimit: number;
-      loading: boolean;
-      error: string | null;
-    } = {
-      letter: null,
-      cls: null,
-      q: "",
-      rows: [],
-      visibleLimit: CHUNK_SIZE,
-      loading: false,
-      error: null,
-    };
+  const empty = root.querySelector<HTMLElement>("[data-index-empty]");
+  const moreButton = root.querySelector<HTMLButtonElement>("[data-index-more]");
+  const overflow = root.querySelector<HTMLElement>("[data-index-overflow]");
+  const sentinel = root.querySelector<HTMLElement>("[data-index-sentinel]");
+  const letterButtons = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-letter]"));
+  const chipButtons = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-chip]"));
+  const cache = new Map<string, BrowseRow[]>();
+  let globalSearchRows: BrowseRow[] | null = null;
+  let globalSearchRequest: Promise<BrowseRow[]> | null = null;
+  const state: {
+    letter: string | null;
+    cls: string | null;
+    q: string;
+    rows: BrowseRow[];
+    visibleLimit: number;
+    loading: boolean;
+    error: string | null;
+    overflow: number;
+  } = {
+    letter: null,
+    cls: null,
+    q: "",
+    rows: [],
+    visibleLimit: CHUNK_SIZE,
+    loading: false,
+    error: null,
+    overflow: 0,
+  };
 
-    const filteredRows = (): BrowseRow[] => {
-      const query = normalize(state.q).trim();
-      return state.rows.filter((row) => {
+  const filteredRows = (): BrowseRow[] => {
+    const query = normalize(state.q).trim();
+    return state.rows.filter((row) => {
+      if (state.cls && row.cls !== state.cls) return false;
+      if (!query) return true;
+      return normalize(row.hay ?? [row.l, row.g ?? "", row.r ?? ""].join(" ")).includes(query);
+    });
+  };
+
+  const setNoLetterRows = (rows: BrowseRow[], overflow = 0): void => {
+    state.rows = rows;
+    state.overflow = overflow;
+    state.loading = false;
+    state.error = null;
+  };
+
+  const categoryRows = (): BrowseRow[] => {
+    if (!state.cls) return [];
+    return flaggedRows.filter((row) => row.cls === state.cls);
+  };
+
+  const loadGlobalSearchRows = async (): Promise<BrowseRow[]> => {
+    if (globalSearchRows) return globalSearchRows;
+    if (!globalSearchRequest) {
+      globalSearchRequest = fetch("/lexicon/search-index.json")
+        .then((response) => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.json() as Promise<BrowseRow[]>;
+        })
+        .then((rows) => {
+          globalSearchRows = rows;
+          return rows;
+        })
+        .catch((error) => {
+          globalSearchRequest = null;
+          throw error;
+        });
+    }
+    return globalSearchRequest;
+  };
+
+  const refreshNoLetterRows = async (): Promise<void> => {
+    if (state.letter) return;
+    const query = normalize(state.q).trim();
+    state.visibleLimit = CHUNK_SIZE;
+    state.overflow = 0;
+    if (!query) {
+      setNoLetterRows(categoryRows());
+      render();
+      return;
+    }
+    state.loading = true;
+    state.error = null;
+    render();
+    try {
+      const rows = await loadGlobalSearchRows();
+      if (state.letter || normalize(state.q).trim() !== query) return;
+      const matches = rows.filter((row) => {
         if (state.cls && row.cls !== state.cls) return false;
-        if (!query) return true;
-        return normalize(row.hay ?? [row.l, row.g ?? ""].join(" ")).includes(query);
+        return normalize(row.hay ?? [row.l, row.g ?? "", row.r ?? ""].join(" ")).includes(query);
       });
-    };
+      setNoLetterRows(matches.slice(0, GLOBAL_SEARCH_LIMIT), Math.max(0, matches.length - GLOBAL_SEARCH_LIMIT));
+    } catch {
+      if (state.letter || normalize(state.q).trim() !== query) return;
+      state.rows = [];
+      state.overflow = 0;
+      state.loading = false;
+      state.error = "Не вдалося завантажити пошук";
+    }
+    render();
+  };
 
     const setStatus = (filteredCount = 0): void => {
       if (!status) return;
-      if (!state.letter) {
-        status.textContent = state.cls
-          ? `Обрано: ${CLS_LABELS[state.cls] ?? state.cls} — оберіть підсвічену літеру`
-          : totalLabel;
+    if (!state.letter) {
+      if (state.loading) {
+        status.textContent = "Шукаємо…";
         return;
       }
+      if (state.error) {
+        status.textContent = state.error;
+        return;
+      }
+      if (state.q.trim()) {
+        status.textContent = `${state.cls ? `${CLS_LABELS[state.cls] ?? state.cls}: ` : ""}${filteredCount} збігів`;
+        return;
+      }
+      if (state.cls) {
+        status.textContent = `${CLS_LABELS[state.cls] ?? state.cls}: ${filteredCount} слів`;
+        return;
+      }
+      status.textContent = totalLabel;
+      return;
+    }
       if (state.loading) {
         status.textContent = `Завантажуємо ${state.letter}…`;
         return;
@@ -219,12 +307,12 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
       }
       for (const button of chipButtons) {
         button.setAttribute("aria-pressed", String(button.dataset.chip === state.cls));
-      }
-      if (searchInput) {
-        searchInput.disabled = !state.letter;
-        searchInput.placeholder = state.letter ? "Фільтрувати слова цієї літери" : "Спершу оберіть літеру";
-      }
-    };
+    }
+    if (searchInput) {
+      searchInput.disabled = false;
+      searchInput.placeholder = state.letter ? "Фільтрувати слова цієї літери" : "Шукати слово, переклад або латинку";
+    }
+  };
 
     const rowId = (row: BrowseRow): string => `word-${row.s}`;
     const rowHtml = (row: BrowseRow): string => {
@@ -265,37 +353,42 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
       return true;
     };
 
-    function render(): void {
-      updateControls();
-      if (!section || !heading || !list || !empty || !moreButton || !sentinel) return;
-      if (!state.letter) {
-        section.hidden = true;
-        list.innerHTML = "";
-        empty.hidden = false;
-        empty.innerHTML = '<p class="atlas-index-empty-code">Оберіть літеру алфавіту, щоб переглянути слова</p>';
-        setStatus();
-        return;
-      }
+  function render(): void {
+    updateControls();
+    if (!section || !heading || !list || !empty || !moreButton || !overflow || !sentinel) return;
+    const hasEntryPoint = Boolean(state.letter || state.cls || state.q.trim());
+    if (!hasEntryPoint) {
+      section.hidden = true;
+      list.innerHTML = "";
+      empty.hidden = false;
+      empty.innerHTML = '<p class="atlas-index-empty-code">Оберіть літеру алфавіту, щоб переглянути слова</p>';
+      overflow.hidden = true;
+      setStatus();
+      return;
+    }
 
-      section.hidden = false;
-      heading.textContent = state.letter;
-      if (state.loading) {
-        list.innerHTML = "";
-        empty.hidden = true;
-        moreButton.hidden = true;
-        sentinel.hidden = true;
-        setStatus();
-        return;
-      }
-      if (state.error) {
-        list.innerHTML = "";
-        empty.hidden = false;
-        empty.innerHTML = '<p class="atlas-index-empty-code">Не вдалося завантажити літеру</p>';
-        moreButton.hidden = true;
-        sentinel.hidden = true;
-        setStatus();
-        return;
-      }
+    section.hidden = false;
+    heading.textContent = state.letter
+      ?? (state.cls ? CLS_LABELS[state.cls] ?? state.cls : `Пошук: ${state.q.trim()}`);
+    if (state.loading) {
+      list.innerHTML = "";
+      empty.hidden = true;
+      moreButton.hidden = true;
+      overflow.hidden = true;
+      sentinel.hidden = true;
+      setStatus();
+      return;
+    }
+    if (state.error) {
+      list.innerHTML = "";
+      empty.hidden = false;
+      empty.innerHTML = '<p class="atlas-index-empty-code">Не вдалося завантажити дані</p>';
+      moreButton.hidden = true;
+      overflow.hidden = true;
+      sentinel.hidden = true;
+      setStatus();
+      return;
+    }
 
       const rows = filteredRows();
       const visibleRows = rows.slice(0, state.visibleLimit);
@@ -303,11 +396,13 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
       empty.hidden = rows.length !== 0;
       if (rows.length === 0) {
         empty.innerHTML = '<p class="atlas-index-empty-code">Немає збігів</p><p>Спробуйте інший фільтр.</p>';
-      }
-      const hasMore = rows.length > visibleRows.length;
-      moreButton.hidden = !hasMore;
-      sentinel.hidden = !hasMore;
-      setStatus(rows.length);
+    }
+    const hasMore = rows.length > visibleRows.length;
+    moreButton.hidden = !hasMore;
+    overflow.hidden = state.overflow === 0 || hasMore;
+    overflow.textContent = state.overflow > 0 ? `+${state.overflow} more — звузьте запит` : "";
+    sentinel.hidden = !hasMore;
+    setStatus(rows.length);
       focusHashTarget(rows);
     }
 
@@ -328,14 +423,16 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
 
     const loadLetter = async (letter: string, focusHeading = true): Promise<void> => {
       if (!alphabet.has(letter)) return;
-      state.letter = letter;
-      state.visibleLimit = CHUNK_SIZE;
-      state.error = null;
-      if (searchInput) searchInput.value = state.q;
-      if (cache.has(letter)) {
-        state.rows = cache.get(letter) ?? [];
-        state.loading = false;
-        render();
+    state.letter = letter;
+    state.visibleLimit = CHUNK_SIZE;
+    state.error = null;
+    state.overflow = 0;
+    if (searchInput) searchInput.value = state.q;
+    if (cache.has(letter)) {
+      state.rows = cache.get(letter) ?? [];
+      state.loading = false;
+      state.overflow = 0;
+      render();
         if (focusHeading && heading) heading.focus({ preventScroll: true });
         return;
       }
@@ -349,9 +446,10 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
         cache.set(letter, rows);
         // Guard against a stale fetch: if a newer letter was selected while this
         // request was in flight, drop the result rather than clobber the active letter.
-        if (state.letter !== letter) return;
-        state.rows = rows;
-        state.error = null;
+      if (state.letter !== letter) return;
+      state.rows = rows;
+      state.error = null;
+      state.overflow = 0;
       } catch {
         if (state.letter !== letter) return;
         state.rows = [];
@@ -372,16 +470,15 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
       state.cls = nextCls && CLS_LABELS[nextCls] ? nextCls : null;
       state.q = params.get("q") ?? "";
       if (searchInput) searchInput.value = state.q;
-      if (nextLetter && alphabet.has(nextLetter)) {
-        await loadLetter(nextLetter, false);
-      } else {
-        state.letter = null;
-        state.rows = [];
-        state.visibleLimit = CHUNK_SIZE;
-        render();
-      }
-      updateUrl(replace);
-    };
+    if (nextLetter && alphabet.has(nextLetter)) {
+      await loadLetter(nextLetter, false);
+    } else {
+      state.letter = null;
+      state.visibleLimit = CHUNK_SIZE;
+      await refreshNoLetterRows();
+    }
+    updateUrl(replace);
+  };
 
     for (const button of letterButtons) {
       button.addEventListener("click", () => {
@@ -393,25 +490,33 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
 
     for (const button of chipButtons) {
       button.addEventListener("click", () => {
-        const chip = button.dataset.chip ?? null;
-        state.cls = state.cls === chip ? null : chip;
-        state.visibleLimit = CHUNK_SIZE;
+      const chip = button.dataset.chip ?? null;
+      state.cls = state.cls === chip ? null : chip;
+      state.visibleLimit = CHUNK_SIZE;
+      if (state.letter) {
         render();
-        updateUrl();
-      });
-    }
-
-    let filterTimer: ReturnType<typeof setTimeout> | undefined;
-    searchInput?.addEventListener("input", () => {
-      if (!searchInput || searchInput.disabled) return;
-      if (filterTimer) clearTimeout(filterTimer);
-      filterTimer = setTimeout(() => {
-        state.q = searchInput.value;
-        state.visibleLimit = CHUNK_SIZE;
-        render();
-        updateUrl();
-      }, 150);
+      } else {
+        void refreshNoLetterRows();
+      }
+      updateUrl();
     });
+  }
+
+  let filterTimer: ReturnType<typeof setTimeout> | undefined;
+  searchInput?.addEventListener("input", () => {
+    if (!searchInput) return;
+    if (filterTimer) clearTimeout(filterTimer);
+    filterTimer = setTimeout(() => {
+      state.q = searchInput.value;
+      state.visibleLimit = CHUNK_SIZE;
+      if (state.letter) {
+        render();
+      } else {
+        void refreshNoLetterRows();
+      }
+      updateUrl();
+    }, 150);
+  });
 
     const showMore = (): void => {
       const rows = filteredRows();
@@ -562,14 +667,22 @@ const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.le
     font-weight: 700;
   }
 
-  .atlas-letter-section[hidden],
-  .atlas-index-empty[hidden],
-  .atlas-more-button[hidden],
-  .atlas-sentinel[hidden] {
-    display: none;
-  }
+.atlas-letter-section[hidden],
+.atlas-index-empty[hidden],
+.atlas-more-button[hidden],
+.atlas-index-overflow[hidden],
+.atlas-sentinel[hidden] {
+  display: none;
+}
 
-  .atlas-letter-heading {
+.atlas-index-overflow {
+  margin: 0.25rem 0 0;
+  color: var(--lu-text-muted);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.atlas-letter-heading {
     margin: 0 0 0.7rem;
     padding-bottom: 0.3rem;
     border-bottom: 2px solid var(--lu-accent);

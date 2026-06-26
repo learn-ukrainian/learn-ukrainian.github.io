@@ -16,6 +16,7 @@ from scripts.etymology.transliterate import transliterate
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_SEARCH_OUT = Path("site/src/data/lexicon-search-index.json")
 DEFAULT_BROWSE_META_OUT = Path("site/src/data/lexicon-browse-meta.json")
+DEFAULT_BROWSE_FLAGGED_OUT = Path("site/src/data/lexicon-browse-flagged.json")
 DEFAULT_BROWSE_DIR = Path("site/public/lexicon/browse")
 
 CEFR_LEVELS = {"A1", "A2", "B1", "B2", "C1", "C2"}
@@ -155,6 +156,17 @@ def _browse_row(row: Mapping[str, Any]) -> dict[str, Any]:
     return browse_row
 
 
+def _flagged_browse_row(row: Mapping[str, Any], letter: str) -> dict[str, Any]:
+    return {
+        "l": row["l"],
+        "s": row["s"],
+        "g": row.get("g"),
+        "c": row.get("c"),
+        "cls": row["cls"],
+        "letter": letter,
+    }
+
+
 def build_index(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
     rows = [row for entry in entries if (row := _search_row(entry))]
     return sorted(rows, key=lambda row: _uk_sort_key(row["l"]))
@@ -162,10 +174,11 @@ def build_index(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def build_browse_outputs(
     rows: list[dict[str, Any]],
-) -> tuple[dict[str, Any], dict[str, list[dict[str, Any]]]]:
+) -> tuple[dict[str, Any], dict[str, list[dict[str, Any]]], list[dict[str, Any]]]:
     letter_rows: dict[str, list[dict[str, Any]]] = defaultdict(list)
     letter_chip: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     chip_counts: dict[str, int] = defaultdict(int)
+    flagged_rows: list[dict[str, Any]] = []
 
     for row in rows:
         letter = _first_ukrainian_letter(str(row["l"]))
@@ -177,6 +190,7 @@ def build_browse_outputs(
         if isinstance(cls, str):
             chip_counts[cls] += 1
             letter_chip[letter][cls] += 1
+            flagged_rows.append(_flagged_browse_row(row, letter))
 
     shards = {
         letter: sorted(items, key=lambda item: _uk_sort_key(item["l"]))
@@ -200,7 +214,8 @@ def build_browse_outputs(
             for letter in UKRAINIAN_ALPHABET
         },
     }
-    return meta, shards
+    flagged_rows = sorted(flagged_rows, key=lambda item: _uk_sort_key(item["l"]))
+    return meta, shards, flagged_rows
 
 
 def write_index(rows: list[dict[str, Any]], out_path: Path) -> None:
@@ -214,12 +229,19 @@ def write_index(rows: list[dict[str, Any]], out_path: Path) -> None:
 def write_browse_outputs(
     meta: Mapping[str, Any],
     shards: Mapping[str, list[dict[str, Any]]],
+    flagged_rows: list[dict[str, Any]],
     meta_out: Path,
+    flagged_out: Path,
     browse_dir: Path,
 ) -> None:
     meta_out.parent.mkdir(parents=True, exist_ok=True)
     meta_out.write_text(
         json.dumps(meta, ensure_ascii=False, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    flagged_out.parent.mkdir(parents=True, exist_ok=True)
+    flagged_out.write_text(
+        json.dumps(flagged_rows, ensure_ascii=False, separators=(",", ":")) + "\n",
         encoding="utf-8",
     )
     browse_dir.mkdir(parents=True, exist_ok=True)
@@ -237,6 +259,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--out", type=Path, default=DEFAULT_SEARCH_OUT)
     parser.add_argument("--browse-meta-out", type=Path, default=DEFAULT_BROWSE_META_OUT)
+    parser.add_argument("--browse-flagged-out", type=Path, default=DEFAULT_BROWSE_FLAGGED_OUT)
     parser.add_argument("--browse-dir", type=Path, default=DEFAULT_BROWSE_DIR)
     args = parser.parse_args(argv)
 
@@ -246,9 +269,16 @@ def main(argv: list[str] | None = None) -> int:
         raise ValueError("manifest entries must be a list")
 
     rows = build_index(entries)
-    meta, shards = build_browse_outputs(rows)
+    meta, shards, flagged_rows = build_browse_outputs(rows)
     write_index(rows, args.out)
-    write_browse_outputs(meta, shards, args.browse_meta_out, args.browse_dir)
+    write_browse_outputs(
+        meta,
+        shards,
+        flagged_rows,
+        args.browse_meta_out,
+        args.browse_flagged_out,
+        args.browse_dir,
+    )
     return 0
 
 

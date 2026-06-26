@@ -298,13 +298,20 @@ function meaningDistractors(
 ): PracticeLexeme[] {
   const answerHeadword = glossHeadword(answer);
   const answerLength = glossLabel(answer).length;
-  const candidates = deck.lexemes.filter(
+  const candidatePool = deck.lexemes.filter(
     (candidate) =>
       candidate.lemmaId !== answer.lemmaId &&
-      candidate.cefr === answer.cefr &&
       isMeaningMcEligible(candidate) &&
       glossHeadword(candidate) !== answerHeadword,
   );
+  const sameLevel = candidatePool.filter((candidate) => candidate.cefr === answer.cefr);
+  const candidates =
+    sameLevel.length >= limit
+      ? sameLevel
+      : [
+        ...sameLevel,
+        ...candidatePool.filter((candidate) => candidate.cefr !== answer.cefr),
+      ];
   // PRIORITIZE same-POS + comparable gloss length via sort keys — never hard-filter
   // the candidate pool down to a subset, which would starve distractors when a word
   // has fewer than 3 same-POS peers even though hundreds of valid candidates exist.
@@ -329,8 +336,8 @@ function meaningDistractors(
 
 function matchingPairs(selection: PracticeSelection, deck: PracticeDeckData) {
   if (!isMeaningMcEligible(selection.lemma)) return [];
-  const distractors = meaningDistractors(selection.lemma, deck, 3);
-  if (distractors.length < 3) return [];
+  const distractors = meaningDistractors(selection.lemma, deck, 5);
+  if (distractors.length < 2) return [];
   return [selection.lemma, ...distractors].map((entry) => ({
     left: entry.lemma,
     right: glossLabel(entry),
@@ -768,6 +775,13 @@ export default function LexiconPractice({
                 onMatchingComplete={() => rateAndComplete(selection, 'good')}
                 onClozeSubmit={submitCloze}
               />
+          ) : mode === 'cloze' && deck.cloze.length === 0 ? (
+            // Cloze is fail-closed until reviewed sentences are authored (#3797). Show a
+            // clear, honest state instead of the ambiguous "all done" dead-end.
+            <p className="lexicon-practice-muted" data-testid="practice-cloze-empty">
+              Cloze exercises for this level are being prepared. Try Flashcards, Matching, or
+              Choice for now.
+            </p>
           ) : (
             <p className="lexicon-practice-muted">All due cards are done for now.</p>
           )}

@@ -395,6 +395,16 @@ describe('lexicon SRS facade', () => {
     expect(selection?.mode).toBe('matching');
   });
 
+  test('explicit cloze mode reaches authored cloze before recognition mastery', () => {
+    const selection = selectNextPracticeItem(practiceDeck(), {
+      now: NOW,
+      modeFilter: 'cloze',
+    });
+
+    expect(selection?.mode).toBe('cloze');
+    expect(selection?.cloze?.clozeId).toBe('alpha-cloze');
+  });
+
   test('cloze soft cap yields to lapsed cloze pressure', () => {
     const state = loadState(localStorage, NOW);
     state.cards.set(cardKey('alpha', 'flashcards'), stateCard({ stability: 6 }));

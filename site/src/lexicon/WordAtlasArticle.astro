@@ -162,8 +162,9 @@ const { entry, allEntries, generatedAt, manifestVersion } = Astro.props as Props
 const enrichment = entry.enrichment ?? null;
 const sections = entry.sections ?? null;
 const heritage = entry.heritage_status ?? null;
-const definitionCards = enrichment?.definition_cards ?? [];
-const sovietizedCards = definitionCards.filter((card) => (card.sovietization_risk ?? 0) > 0 || card.id.includes("flagged"));
+const rawDefinitionCards = enrichment?.definition_cards ?? [];
+const definitionCards = rawDefinitionCards.filter(shouldRenderDefinitionCard);
+const sovietizedCards = rawDefinitionCards.filter(isSovietizedSum11DefinitionCard);
 const maxSovietizationRisk = Math.max(0, ...sovietizedCards.map((card) => card.sovietization_risk ?? 1));
 const sovietizationKeywords = Array.from(new Set(sovietizedCards.flatMap((card) => card.sovietization_keywords ?? [])));
 const letter = entry.lemma.charAt(0).toLocaleUpperCase("uk");
@@ -185,7 +186,7 @@ const textbookItems = enrichment?.textbooks ?? [];
 const externalGroups = groupExternalMaterials(enrichment?.external_materials ?? []);
 const componentLinks = buildComponentLinks(entry, allEntries);
 const sourceList = buildSourceList();
-const phraseHasGloss = Boolean(entry.gloss && (!enrichment?.meaning || enrichment.meaning.definitions.length === 0));
+const phraseHasGloss = Boolean(entry.gloss && definitionCards.length === 0 && !enrichment?.meaning);
 const shouldShowEditorialWarning = Boolean(heritageBoxes.red);
 const shouldShowHeritageDefense = Boolean(heritageBoxes.green);
 const styleNotes = buildStyleNotes();
@@ -250,6 +251,26 @@ function formatPos(pos: string | null | undefined, morphologyPos: string | undef
     interjection: "вигук",
   };
   return morphologyPos ?? (pos ? labels[pos] ?? pos : null);
+}
+
+function isSum11DefinitionCard(card: DefinitionCard) {
+  return card.id.includes("sum11")
+    || card.source.includes("СУМ-11")
+    || Boolean(card.source_pill?.includes("СУМ-11"));
+}
+
+function isSovietizedSum11DefinitionCard(card: DefinitionCard) {
+  return isSum11DefinitionCard(card) && ((card.sovietization_risk ?? 0) > 0 || card.id.includes("flagged"));
+}
+
+function shouldRenderDefinitionCard(card: DefinitionCard) {
+  // Hide ALL СУМ-11 cards (Soviet-era dictionary), regardless of sovietization_risk.
+  // Decision 2026-06-25 (user/teacher): never surface СУМ-11 — it is the compromised
+  // Soviet authority. Prefer СУМ-20 / Грінченко / the course gloss instead. risk==0 is
+  // absence-of-detection (we didn't flag this card's text), not proof the source is clean,
+  // so clean СУМ-11 is dropped too. The page never goes empty: gloss / meaning / heritage /
+  // paradigm all remain.
+  return !isSum11DefinitionCard(card);
 }
 
 function sourceClass(card: DefinitionCard) {
@@ -769,7 +790,7 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
         <div class="meta-line">
           <span>manifest: {manifestVersion}</span>
           <span>згенеровано: {generatedAt}</span>
-          {maxSovietizationRisk > 0 && <span>СУМ-11 показано через прозорість, з обов'язковим прапорцем</span>}
+          {maxSovietizationRisk > 0 && <span>СУМ-11 із радянським ризиком приховано з тлумачень</span>}
         </div>
       </div>
         </div>
