@@ -2334,13 +2334,12 @@ def _definition_cards(
     cache: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     # СУМ-11 (Soviet-era dictionary) is intentionally excluded — decolonization
-    # decision 2026-06-26. Modern Ukrainian-grounded sources only: СУМ-20, then VTS
-    # (Великий тлумачний словник) as a clean fallback for words СУМ-20 doesn't cover.
+    # decision 2026-06-26. Show clean modern Ukrainian dictionaries: VTS (Великий
+    # тлумачний словник) on top, СУМ-20 below — both when available. Inflected-form
+    # entries resolve to their base lemma inside each builder.
+    vts = _vts_definition_card(lemma, cache)
     sum20 = _sum20_definition_card(lemma, cache)
-    cards = [sum20]
-    if not sum20:
-        cards.append(_vts_definition_card(lemma, cache))
-    return [card for card in cards if card]
+    return [card for card in (vts, sum20) if card]
 
 
 def _lookup_key(value: str) -> str:

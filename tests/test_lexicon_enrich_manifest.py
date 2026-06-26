@@ -1190,6 +1190,10 @@ def test_definition_cards_exclude_sum11(monkeypatch) -> None:
             "definitions": ["ПРАПОР, а, ч. Офіційний символ."],
         },
     )
+    # Isolate from the live VTS lookup — this test asserts СУМ-11 exclusion, not coverage.
+    monkeypatch.setattr(
+        enrich_manifest_module, "_vts_definition_card", lambda lemma, cache=None: None
+    )
 
     cards = _definition_cards(conn, "прапор", has_sum11_flags=True)
 
@@ -1223,13 +1227,13 @@ def test_vts_fills_definition_when_sum20_missing(monkeypatch) -> None:
     assert [card["id"] for card in cards] == ["vts"]
     assert cards[0]["source"] == "ВТС"
     assert "Вишита сорочка" in cards[0]["definitions"][0]
-    # СУМ-20 card present → VTS is NOT fetched (СУМ-20 wins, no redundant lookup).
+    # СУМ-20 also present → BOTH cards show, VTS on top and СУМ-20 below.
     monkeypatch.setattr(
         enrich_manifest_module,
         "_sum20_definition_card",
         lambda lemma, cache=None: {"id": "sum20", "source": "СУМ-20", "definitions": ["x"]},
     )
-    assert [c["id"] for c in _definition_cards(conn, "вишиванка", has_sum11_flags=False)] == ["sum20"]
+    assert [c["id"] for c in _definition_cards(conn, "вишиванка", has_sum11_flags=False)] == ["vts", "sum20"]
 
 
 def test_definition_card_resolves_inflected_form_to_base_lemma(monkeypatch) -> None:
