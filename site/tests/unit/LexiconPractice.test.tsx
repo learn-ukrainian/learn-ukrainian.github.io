@@ -276,12 +276,33 @@ beforeEach(() => {
 });
 
 describe('LexiconPractice', () => {
-  test('does not fetch deck before start mode action', () => {
-    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+  test('eager-loads only the index (not lexemes/cloze) before a mode starts', async () => {
+    const { fn, requested } = mockShardFetch({ A1: 2 });
+    vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
 
     render(<LexiconPractice />);
 
-    expect(fetchSpy).not.toHaveBeenCalled();
+    // The due-count tile eager-loads the lightweight index on mount so a returning
+    // learner sees their SRS due-count immediately...
+    await waitFor(() =>
+      expect(requested.some((u) => u.includes('practice-index.A1'))).toBe(true),
+    );
+    // ...while the heavy lexeme/cloze shards stay lazy until a mode actually starts.
+    expect(requested.some((u) => u.includes('practice-lexemes'))).toBe(false);
+    expect(requested.some((u) => u.includes('practice-cloze'))).toBe(false);
+  });
+
+  test('shows the real SRS due-count on the home before any mode starts', async () => {
+    const { fn } = mockShardFetch({ A1: 3 });
+    vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+
+    render(<LexiconPractice />);
+
+    // Three never-reviewed A1 cards are all due → the «До повторення» tile shows 3
+    // on mount (not the placeholder '—'), without entering a mode first.
+    await waitFor(() =>
+      expect(screen.getByLabelText('3 до повторення')).toBeInTheDocument(),
+    );
   });
 
   test('caps the practice pool at the learner level (cumulative, never higher levels)', async () => {

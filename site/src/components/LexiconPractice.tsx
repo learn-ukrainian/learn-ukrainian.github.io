@@ -15,6 +15,7 @@ import {
   type ChoicePolarity,
   type PracticeClozeItem,
   type PracticeDeckData,
+  type PracticeIndexItem,
   type PracticeIndexShard,
   type PracticeLexeme,
   type PracticeLexemeShard,
@@ -538,6 +539,9 @@ export default function LexiconPractice({
   const [clozeInput, setClozeInput] = useState('');
   const [clozeFeedback, setClozeFeedback] = useState<ClozeFeedback | null>(null);
   const [clozeAttemptRecorded, setClozeAttemptRecorded] = useState(false);
+  // Lightweight per-level index used to show the due-count on the home BEFORE a mode
+  // is started. Superseded by `deck.index` once a full deck loads.
+  const [dueIndex, setDueIndex] = useState<PracticeIndexItem[] | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
   // Monotonic id so a slow earlier deck fetch can't overwrite a newer one (rapid level switches).
   const deckRequestId = useRef(0);
@@ -552,6 +556,39 @@ export default function LexiconPractice({
       setStorageWarning('Час повторення може бути неточним: змінився годинник пристрою.');
     }
   }, []);
+
+  // Eager-load ONLY the lightweight per-level index shards on mount (and on a
+  // pre-session level change) so the «До повторення» tile + today ring reflect the
+  // learner's real SRS due-count immediately — the most motivating number on the
+  // home, and the reason a returning learner opens this page. The heavy
+  // lexeme/cloze shards stay lazy until a mode actually starts (ensureDeck). Once a
+  // full deck is loaded its own `index` supersedes this. The `cancelled` flag drops
+  // a stale fetch when the learner switches level before it resolves.
+  useEffect(() => {
+    if (deck) {
+      setDueIndex(null);
+      return;
+    }
+    let cancelled = false;
+    void (async () => {
+      try {
+        const batches = await Promise.all(
+          levelsUpTo(learnerLevel).map(async (shardLevel) => {
+            const response = await fetch(`${shardBaseUrl}/practice-index.${shardLevel}.json`);
+            if (!response.ok) return [];
+            const shard = (await response.json()) as PracticeIndexShard;
+            return shard.items ?? [];
+          }),
+        );
+        if (!cancelled) setDueIndex(batches.flat());
+      } catch {
+        if (!cancelled) setDueIndex(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [deck, learnerLevel, shardBaseUrl]);
 
   const selection = useMemo(() => {
     if (!deck) return null;
@@ -782,11 +819,12 @@ export default function LexiconPractice({
     }
   }
 
-  const dueNow = useMemo(() => (deck ? getDueQueue(deck.index, new Date()).length : 0), [
-    correctToday,
-    deck,
-    revision,
-  ]);
+  // Prefer the full deck's index once loaded; otherwise fall back to the eager
+  // index so the due-count is live on the home before any mode starts.
+  const dueNow = useMemo(() => {
+    const entries = deck ? deck.index : dueIndex;
+    return entries ? getDueQueue(entries, new Date()).length : 0;
+  }, [correctToday, deck, dueIndex, revision]);
   const todayWorkload = correctToday + dueNow;
   const todayPct =
     todayWorkload > 0 ? Math.min(100, (correctToday / todayWorkload) * 100) : correctToday > 0 ? 100 : 0;
@@ -819,7 +857,7 @@ export default function LexiconPractice({
               <span className="lab">Днів поспіль</span>
             </div>
             <div className="pstat" aria-label={`${dueNow} до повторення`}>
-              <span className="val">{deck ? dueNow : '—'}</span>
+              <span className="val">{deck || dueIndex ? dueNow : '—'}</span>
               <span className="lab">До повторення</span>
             </div>
             <div className="pstat" aria-label={`${mastered} опановано`}>
