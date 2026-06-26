@@ -278,6 +278,9 @@ function sourceClass(card: DefinitionCard) {
     return "sum11-flagged";
   }
   if (card.id.includes("sum20")) return "sum20";
+  // VTS (Великий тлумачний словник) is a clean modern dictionary — style it like
+  // СУМ-20; the "ВТС" source pill still distinguishes it. (Soviet СУМ-11 removed 2026-06-26.)
+  if (card.id.includes("vts")) return "sum20";
   if (card.id.includes("grinchenko")) return "grinchenko";
   if (card.id.includes("sum11")) return "sum11";
   return card.id;

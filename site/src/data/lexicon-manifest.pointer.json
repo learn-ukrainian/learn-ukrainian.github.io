@@ -2,12 +2,12 @@
   "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest.json.gz",
   "release_tag": "atlas-manifest",
   "manifest_version": "0.1",
-  "manifest_fingerprint": "f5986436945edfca90769d25893e022c7fe58edbb42180437799402980d4488e",
+  "manifest_fingerprint": "0329a0f2aa98944f6014dc397fa36a2415ec19768316adcfa6340cb331c05552",
   "fingerprint_schema_version": 1,
   "generated_at": "2026-06-23T11:01:00+00:00",
-  "gz_sha256": "697a9f35585c37c0011eebe6056fa087b4c367881cf4a8e552aecc38673f5352",
-  "json_sha256": "85821c5ae07f834f0420ffe453304436a7e1f1416dd6ad6236199a29094282bb",
-  "gz_bytes": 5846070,
-  "json_bytes": 41492812,
+  "gz_sha256": "76bbc8a75e82a8683ec0c4bc7487bc0f3be3db0ee603803d54e41affb5b8e38f",
+  "json_sha256": "49f5ccb4113b641b50bbdc3bda01754e1121e0d3ff83233cad06007b38a99067",
+  "gz_bytes": 5510877,
+  "json_bytes": 39666784,
   "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON."
 }
