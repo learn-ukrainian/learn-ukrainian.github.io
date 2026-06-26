@@ -13,7 +13,7 @@
   <label>Слово:</label>
   <select onchange="switchWord(this.value)">
     <option value="knyaz">князь — повні дані без редакційних ризиків</option>
-    <option value="prapor" selected>прапор — попередження про радянські формулювання</option>
+    <option value="prapor" selected>прапор — сучасні словники (ВТС + СУМ-20), без СУМ-11</option>
     <option value="faynyy">файний — захист питомості (галицизм)</option>
   </select>
   <div class="atlas-search">
@@ -42,10 +42,15 @@
 
 
 <!-- ============================================================
-     PAGE 2: прапор — sovietization warning
-     Demonstrates: red editorial banner at top, sovietized
-     СУМ-11 entry shown but flagged, Грінченко as pre-Soviet
-     baseline.
+     PAGE 2: прапор — post-СУМ-11 decolonization model (2026-06-26)
+     Demonstrates: NO Soviet СУМ-11 source cards at all (purged at
+     source, #3852). Definition cards: ВТС (Великий тлумачний
+     словник) on top, СУМ-20 below — both clean modern Ukrainian
+     dictionaries. A calm blue note records that the СУМ-11
+     definition was ideological and is therefore hidden — the note
+     is about the DEFINITION, not the word. The word itself is
+     питома and gets the green treasured box.
+     Mirrors the live WordAtlasArticle.astro rendering.
      ============================================================ -->
 <div id="word-prapor">
   <div class="word-hero">
@@ -56,7 +61,6 @@
       <div class="word-badges">
         <span class="status-badge heritage-ok">✓ Питома українська лексика</span>
         <span class="status-badge cefr">CEFR A2</span>
-        <span class="status-badge heritage-warn">⚠ Радянські формулювання в СУМ-11</span>
       </div>
     </div>
   </div>
@@ -64,11 +68,10 @@
   <div class="content-area">
 
     <section class="atlas-section">
-      <div class="editorial-warn">
-        <div class="editorial-warn-header"><div class="editorial-warn-icon">⚠</div>Радянські ідеологічні формулювання у СУМ-11</div>
-        <p>Тлумачення слова «прапор» у СУМ-11 (1970–1980) подане в радянському ідеологічному ключі: дефініції містять обов'язкові посилання на «прапор СРСР», «прапор Леніна», «прапор партії». Це <strong>не означає, що саме слово негативне</strong> — слово питоме, давнє, спільнослов'янське. Йдеться про <strong>радянську редакторську політику словника</strong>.</p>
-        <p style="margin-top: 10px;">Для нейтральної довідки звертайтеся до Грінченка (1907) та ЕСУМ. СУМ-11 показано нижче <em>з позначками</em> для прозорості.</p>
-        <p style="font-size: 12px; color: var(--gray-600); margin-top: 10px;">Тригер: <code>sovietization_risk=2</code> · keywords: <code>радянськ, ленін, партійн</code> · аудит #1659</p>
+      <div class="editorial-calque info">
+        <div class="editorial-calque-header"><div class="editorial-info-icon">→</div>Радянське тлумачення приховано (стосується означення, не слова)</div>
+        <p>Тлумачення слова «прапор» у СУМ-11 (1970–1980) подане в радянському ідеологічному ключі — дефініції обтяжені посиланнями на «прапор СРСР», «прапор Леніна», «прапор партії». Тому <strong>СУМ-11 не показуємо взагалі</strong> (вилучено з джерел Атласу, #3852). Це <strong>не означає, що саме слово негативне</strong> — воно питоме, давнє, спільнослов'янське. Нижче подаємо чисті сучасні словники: ВТС та СУМ-20.</p>
+        <p class="atlas-muted">Тригер: <code>sovietization_risk=2</code> · keywords: <code>радянськ, ленін, партійн</code> · аудит #1659</p>
       </div>
     </section>
 
@@ -83,20 +86,18 @@
     <section class="atlas-section">
       <h2>Значення</h2>
 
-      <div class="def-card grinchenko">
-        <div class="def-source"><span class="src-pill">Грінченко 1907</span><span>дорадянське засвідчення</span></div>
-        <div class="def-text">Прапоръ, -ра, м. Знамя. <em>Розгорнули червоні прапори. О. 1862. III. 23.</em></div>
+      <!-- ВТС on top, СУМ-20 below — both clean modern Ukrainian dictionaries.
+           Production styles the ВТС card like СУМ-20 (sourceClass → "sum20");
+           the "ВТС" source pill distinguishes it. No Грінченко-def (its 1907
+           glosses are Russian), no СУМ-11. -->
+      <div class="def-card sum20">
+        <div class="def-source"><span class="src-pill">ВТС</span><span>Великий тлумачний словник сучасної української мови</span></div>
+        <div class="def-text">Полотнище певного кольору, прикріплене до древка або шнура, що є офіційним символом держави, організації чи військового підрозділу.</div>
       </div>
 
       <div class="def-card sum20">
         <div class="def-source"><span class="src-pill">СУМ-20</span><span>сучасний тлумачний словник</span></div>
         <div class="def-text">1. Знамено, прикріплене до древка, що є офіційним символом держави, військового підрозділу, організації. 2. <em>перен.</em> Ідейний символ, гасло руху або боротьби.</div>
-      </div>
-
-      <div class="def-card sum11-flagged">
-        <div class="def-source"><span class="src-pill">СУМ-11 · ⚠ позначено</span><span>радянське видання · risk=2</span></div>
-        <div class="def-text">Полотнище певного кольору і розміру, прикріплене до древка чи шнура, що є офіційним символом держави, певної організації або частини збройних сил. <em>Червоний прапор Радянського Союзу майорів над Рейхстагом. Над сільрадою — червоний прапор з серпом і молотом. Прапор Леніна освітлює шлях радянському народові.</em></div>
-        <div class="def-flag-inline">⚠ Дефініція ілюстрована радянською ідеологією. Триггери: «Радянський Союз», «серп і молот», «прапор Леніна». Рекомендуємо звернутися до СУМ-20 або Грінченка для нейтрального тлумачення.</div>
       </div>
     </section>
 
@@ -127,15 +128,14 @@
       <h3>Походження даних</h3>
       <div class="provenance-list">
         <span class="src">vesum</span>
-        <span class="src">grinchenko_1907</span>
-        <span class="src">sum20</span>
-        <span class="src" style="background:var(--red-light);color:var(--red);">СУМ-11 · позначено risk=2</span>
+        <span class="src">ВТС</span>
+        <span class="src">СУМ-20</span>
         <span class="src">esum</span>
         <span class="src">literary_fts</span>
       </div>
       <div class="meta-line">
-        <span>згенеровано: 2026-05-23T10:42Z</span>
-        <span>СУМ-11 показано через прозорість, з обов'язковим прапорцем</span>
+        <span>згенеровано: 2026-06-26</span>
+        <span>СУМ-11 (радянський словник) вилучено з джерел Атласу — #3852</span>
       </div>
     </div>
   </div>
