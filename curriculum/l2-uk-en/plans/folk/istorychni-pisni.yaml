@@ -117,17 +117,6 @@ readings:
   license: public_domain
   hosting: hosted
   reading_slug: istorychna-pisnia-hei-ne-dyvuite
-- title: "Чи не той то козак Хмельницький, що з Ляхами бється?"
-  title_en: "Is That Not the Cossack Khmelnytsky Who Fights the Poles?"
-  genre: "Історична пісня"
-  role: primary
-  type: primary
-  source: "5794da94_c2949 | verify_quote(author=\"Грушевський М.\", text=\"Чи не той то хміль зелений, що на тичку вється? Чи не той то козак Хмельницький, що з Ляхами бється?\") -> matched: true; best_confidence: 0.99; source chunk_id: 5794da94_c2949"
-  canon_attestation: "fc2291b5_c2976"
-  license: public_domain
-  hosting: hosted
-  provenance_note: "verified via literary context, not a direct field record"
-  reading_slug: istorychna-pisnia-chy-ne-toi-to-khmelnytskyi
 - title: "Ой Морозе та Морозенку, ой ти славний козаче!"
   title_en: "Oh Moroz, Morozko, Oh You Glorious Cossack!"
   genre: "Історична пісня"
@@ -140,27 +129,15 @@ readings:
   hosting: hosted
   provenance_note: "verified via literary context, not a direct field record"
   reading_slug: istorychna-pisnia-oi-moroze-morozenku
-- title: "Ой, у степу огні горять, Там татари полон ділять"
-  title_en: "Oh, Fires Are Burning in the Steppe, There Tatars Divide the Captives"
-  genre: "Історична пісня"
-  role: primary
-  type: primary
-  source: "9b25b2cc_c0015 | verify_quote(author=\"Нечуй-Левицький І.\", text=\"Ой, у степу огні горять, Там татари полон ділять\") -> matched: true; best_confidence: 1.0; source chunk_id: 9b25b2cc_c0015"
-  canon_attestation: "S4432"
-  license: public_domain
-  hosting: hosted
-  provenance_note: "verified via literary context, not a direct field record"
-  reading_slug: istorychna-pisnia-oi-u-stepu-ohni-horiat
 - title: "Максим козак Залізняк, козак з Запорожжя"
   title_en: "Maksym, Cossack Zaliznyak, a Cossack from Zaporozhia"
   genre: "Історична пісня"
   role: primary
   type: primary
-  source: "d20168e4_c0008 | verify_quote(author=\"Нечуй-Левицький І.\", text=\"Максим козак Залізняк, козак з Запорожжя; як виїхав на Вкраїну, як повная рожа\") -> matched: true; best_confidence: 1.0; source chunk_id: d20168e4_c0008"
+  source: "83f36b8b_c0000 | verify_quote(author=\"Народна творчість\", text=\"Козак з Запорожжя. Як поїхав на Вкраїну — Як пишная рожа!\") -> matched: true; best_confidence: 1.0; source chunk_id: 83f36b8b_c0000"
   canon_attestation: "fc2291b5_c2976"
   license: public_domain
   hosting: hosted
-  provenance_note: "verified via literary context, not a direct field record"
   reading_slug: istorychna-pisnia-maksym-kozak-zalizniak
 - title: "За Сибіром сонце сходить"
   title_en: "Behind Siberia the Sun Rises"
@@ -173,6 +150,10 @@ readings:
   hosting: hosted
   reading_slug: istorychna-pisnia-za-sybirom
 do_not_quote:
+- line: "Чи не той то козак Хмельницький, що з Ляхами бється?"
+  reason: "Грушевський records only a scholarly reconstruction over Nechay variants — no clean folk text"
+- line: "Ой, у степу огні горять, Там татари полон ділять"
+  reason: "literary-witness only (Нечуй play); not in folk canon corpus, not on gr8 canon list"
 - line: "Ой на горі та женці жнуть, а попід горою, яром-долиною козаки йдуть"
   reason: "verify_quote(author=\"Народна творчість\", text=\"Ой на горі та женці жнуть, а попід горою, яром-долиною козаки йдуть\") -> matched: true; best_confidence: 0.8806; source chunk_id: d0c6550e_c0000; partial match 0.88, below 0.95 hosting threshold"
 - line: "Чи не той то хміль, що коло тичин в'ється"
@@ -186,7 +167,7 @@ slug: istorychni-pisni
 status: locked
 subtitle: Historical Songs
 title: Історичні пісні
-version: '0.4'
+version: '0.5'
 vocabulary_hints:
 - word: обряд
   pos: ч.
