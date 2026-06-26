@@ -1,0 +1,168 @@
+- lemma: орієнтир
+  translation: landmark, reference point
+  pos: noun
+  usage: "Головним орієнтиром стала дзвіниця собору."
+- lemma: пам'ятка
+  translation: monument, heritage site
+  pos: noun
+  usage: "Софійський собор - пам'ятка світового значення."
+- lemma: район
+  translation: district, area
+  pos: noun
+  usage: "Подільський район має складну історію забудови."
+- lemma: мікрорайон
+  translation: residential neighborhood
+  pos: noun
+  usage: "У цьому мікрорайоні школа стоїть поруч із кінцевою зупинкою."
+- lemma: околиця
+  translation: outskirts, edge
+  pos: noun
+  usage: "На околиці міста починається сосновий ліс."
+- lemma: передмістя
+  translation: suburb
+  pos: noun
+  usage: "З передмістя до центру можна доїхати електричкою."
+- lemma: забудова
+  translation: development, built environment
+  pos: noun
+  usage: "Нова забудова змінила силует району."
+- lemma: архітектура
+  translation: architecture
+  pos: noun
+  usage: "Львівська архітектура поєднує кілька історичних шарів."
+- lemma: набережна
+  translation: embankment, waterfront
+  pos: noun
+  usage: "Набережна Дніпра веде до пішохідного мосту."
+- lemma: перехрестя
+  translation: intersection, crossroads
+  pos: noun
+  usage: "На перехресті поверніть праворуч."
+- lemma: заповідник
+  translation: nature reserve
+  pos: noun
+  usage: "У заповіднику потрібно триматися промаркованої стежки."
+- lemma: полонина
+  translation: high mountain meadow
+  pos: noun
+  usage: "Карпатська стежка піднімається до полонини."
+- lemma: фортеця
+  translation: fortress
+  pos: noun
+  usage: "Хотинська фортеця стоїть над Дністром."
+- lemma: собор
+  translation: cathedral
+  pos: noun
+  usage: "Золоті куполи собору видно з площі."
+- lemma: маршрут
+  translation: route, itinerary
+  pos: noun
+  usage: "Маршрут проходить через три області."
+- lemma: пересадка
+  translation: transfer
+  pos: noun
+  usage: "На станції треба зробити пересадку на трамвай."
+- lemma: кінцева зупинка
+  translation: final stop
+  pos: phrase
+  usage: "Вийдіть на кінцевій зупинці й пройдіть уздовж парку."
+- lemma: фасад
+  translation: facade
+  pos: noun
+  usage: "Фасад театру виходить на центральну площу."
+- lemma: купол
+  translation: dome
+  pos: noun
+  usage: "Купол храму видно з протилежного берега."
+- lemma: вежа
+  translation: tower
+  pos: noun
+  usage: "Вежа ратуші стала головним міським орієнтиром."
+- lemma: арка
+  translation: arch
+  pos: noun
+  usage: "Через арку видно внутрішній двір."
+- lemma: брама
+  translation: gate
+  pos: noun
+  usage: "Кам'яна брама веде до замкового двору."
+- lemma: бруківка
+  translation: cobblestone pavement
+  pos: noun
+  usage: "Стара бруківка змінює ритм ходи."
+- lemma: спадщина
+  translation: heritage
+  pos: noun
+  usage: "Культурна спадщина потребує захисту й документування."
+- lemma: реставрація
+  translation: restoration
+  pos: noun
+  usage: "Реставрація фасаду тривала кілька місяців."
+- lemma: відбудова
+  translation: reconstruction, rebuilding
+  pos: noun
+  usage: "Відбудова має врахувати пам'ять громади."
+- lemma: узвіз
+  translation: steep descent or ascent street
+  pos: noun
+  usage: "Андріївський узвіз піднімається від Подолу."
+- lemma: узбіччя
+  translation: roadside
+  pos: noun
+  usage: "Автобус зупинився на узбіччі дороги."
+- lemma: узбережжя
+  translation: coast, shoreline
+  pos: noun
+  usage: "Одеське узбережжя добре підходить для прогулянки."
+- lemma: хребет
+  translation: mountain ridge
+  pos: noun
+  usage: "З полонини видно темний карпатський хребет."
+- lemma: потік
+  translation: mountain stream
+  pos: noun
+  usage: "Стежка веде вздовж холодного потоку."
+- lemma: перевал
+  translation: mountain pass
+  pos: noun
+  usage: "Після перевалу маршрут спускається до села."
+- lemma: лиман
+  translation: estuary, lagoon
+  pos: noun
+  usage: "Лиман був нерухомий після ранкового вітру."
+- lemma: обрій
+  translation: horizon
+  pos: noun
+  usage: "Степ тримає погляд на далекому обрії."
+- lemma: стежка
+  translation: trail, path
+  pos: noun
+  usage: "Після дощу стежка стала слизькою."
+- lemma: путівник
+  translation: guidebook
+  pos: noun
+  usage: "Путівник має пояснювати красу маршруту разом із правилами безпеки."
+- lemma: бронювання
+  translation: booking, reservation
+  pos: noun
+  usage: "Бронювання житла краще зробити заздалегідь."
+- lemma: київський
+  translation: Kyiv-related
+  pos: adj
+  usage: "Київський узвіз поєднує історію й сучасне міське життя."
+- lemma: одеський
+  translation: Odesa-related
+  pos: adj
+  usage: "Одеський дворик має особливий ритм і світло."
+- lemma: харківський
+  translation: Kharkiv-related
+  pos: adj
+  usage: "Харківський конструктивізм важливий для історії модерної архітектури."
+- lemma: чернівецький
+  translation: Chernivtsi-related
+  pos: adj
+  usage: "Чернівецький університет є помітною архітектурною пам'яткою."
+- lemma: карпатський
+  translation: Carpathian
+  pos: adj
+  usage: "Карпатський маршрут потребує перевірки погоди."
