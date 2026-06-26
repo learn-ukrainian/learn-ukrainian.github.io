@@ -1087,6 +1087,31 @@ def _vesum_word_poses(word: str) -> set[str]:
     return {pos for _lemma, pos in _vesum_word_analyses(word)}
 
 
+def _vesum_base_lemma(word: str) -> str | None:
+    """Resolve an inflected surface form to its VESUM base lemma (моєму → мій,
+    п'ємо → пити). Returns None when the word is already its own lemma or VESUM has
+    no analysis, so callers only do the extra base lookup for genuine forms — this
+    is what lets clean dictionaries (СУМ-20/VTS) cover inflected-form entries."""
+    surface = _lookup_key(word).casefold()
+    for lemma, _pos in _vesum_word_analyses(surface):
+        if lemma and lemma.casefold() != surface:
+            return lemma
+    return None
+
+
+@lru_cache(maxsize=8192)
+def _slovnyk_base_row(base_lemma: str, slug: str) -> dict[str, Any] | None:
+    """Fetch a slovnyk.me row for a resolved base lemma, deduped within a run so a
+    base shared by many forms (мій ← моєму, мого, моїй …) is fetched once."""
+    lookup_word = _slovnyk_lookup_word(base_lemma)
+    if not lookup_word:
+        return None
+    try:
+        return _fetch_slovnyk_entry(base_lemma, lookup_word, slug)
+    except _SlovnykTransientError:
+        return None
+
+
 def _safe_synonym_set(lemma: str) -> set[str]:
     return {_lookup_key(item) for item in _A1_SENSE_SYNONYMS.get(_lookup_key(lemma), ())}
 
@@ -2194,6 +2219,12 @@ def _sum20_definition_card(
         if cache is not None and not transient:
             _cache_store_lookup(lemma, cache, "newsum", row)
     if not row:
+        # Inflected-form entry (e.g. моєму) → resolve to its base lemma (мій) and
+        # fetch the base's clean СУМ-20 definition. Closes the coverage gap, zero Soviet.
+        base = _vesum_base_lemma(lemma)
+        if base and _sum20_in_coverage(base):
+            row = _slovnyk_base_row(base, "newsum")
+    if not row:
         return None
     text = _definition_body(
         row.get("text"),
@@ -2234,6 +2265,11 @@ def _vts_definition_card(
             row = None
         if cache is not None and not transient:
             _cache_store_lookup(lemma, cache, "vts", row)
+    if not row:
+        # Inflected-form entry → fetch the VTS definition of its base lemma.
+        base = _vesum_base_lemma(lemma)
+        if base:
+            row = _slovnyk_base_row(base, "vts")
     if not row:
         return None
     text = _definition_body(

@@ -1232,6 +1232,39 @@ def test_vts_fills_definition_when_sum20_missing(monkeypatch) -> None:
     assert [c["id"] for c in _definition_cards(conn, "вишиванка", has_sum11_flags=False)] == ["sum20"]
 
 
+def test_definition_card_resolves_inflected_form_to_base_lemma(monkeypatch) -> None:
+    """An inflected-form entry (моєму) resolves to its base lemma (мій) so a clean
+    dictionary still covers it — closing the apparent coverage gap from removing
+    СУМ-11 without ever touching the Soviet source (2026-06-26)."""
+    conn = _conn()
+    monkeypatch.setattr(
+        enrich_manifest_module, "_sum20_definition_card", lambda lemma, cache=None: None
+    )
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_vesum_base_lemma",
+        lambda word: "мій" if word == "моєму" else None,
+    )
+    enrich_manifest_module._slovnyk_base_row.cache_clear()
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_fetch_slovnyk_entry",
+        lambda lemma, lookup_word, slug: (
+            {"word": "мій", "text": "МІЙ, моя́, моє́. Займ. присв. до я.", "source_url": ""}
+            if (slug == "vts" and lemma == "мій")
+            else None
+        ),
+    )
+
+    cards = _definition_cards(conn, "моєму", has_sum11_flags=False)
+
+    # Card built from the base lemma's VTS entry (leading headword "МІЙ" is stripped
+    # by _definition_body, so assert on the surviving definition text).
+    assert [c["id"] for c in cards] == ["vts"]
+    assert "присв" in cards[0]["definitions"][0]
+    enrich_manifest_module._slovnyk_base_row.cache_clear()
+
+
 def test_cefr_lookup_uses_exact_puls_row() -> None:
     conn = _conn()
     conn.execute(
